@@ -1,0 +1,491 @@
+Dune II - The Maker
+===================
+Contact	: stefanhen83@planet.nl , stefan@dune2k.com
+Url	#1	: http://d2tm.duneii.com
+Url	#2	: http://arrakis.dune2k.com
+
+==========
+DISCLAIMER
+==========
+THIS PROGRAM IS NOT SUPPORTED BY ELECTRONIC ARTS. YOU MUST OWN THE ORIGINAL
+SOFTWARE (DUNE 2 - THE BUILDING FOR A DYNASTY / DUNE 2 - THE BATTLE FOR ARRAKIS)
+IN ORDER TO USE THIS SOFTWARE. YOU UNDERSTAND THAT THIS PROGRAM IS NOT DUNE 2.
+
+IF YOU DO NOT OWN DUNE 2 (ONE OF ITS TITLES, AS DESCRIBED ABOVE) YOU MUST DELETE
+THIS PROGRAM FROM YOUR COMPUTER IMMIDIATLY.
+
+USE AT YOUR OWN RISK.
+
+
+========
+CONTENTS
+========
+
+
+
+
+
+===================
+System Requirements
+===================
+The program has been tested on several systems; though it is timer based
+the ideal is 30 fps or higher for a fluent gameplay overall. Windowed mode
+is slower in general then full-screen. Most systems with just Windows would
+run the program. 
+
+
+===========
+Description
+===========
+
+* Game that must be as close to DUNE 2 as possible, with some enhanced features, 
+  but enormous nostalgic entertainment.
+
+Features:
+* 640x480 screen resolution
+ - Bit depth is 16 or 32 bit, windowed mode = desktop bit depth, full screen = 16 bit.
+* Smooth gameplay
+  - C&C like controls
+  - "point and click" gameplay
+  - easy to use interface
+* Double sized and enhanced dune 2 graphics:
+  - sharp units/structures
+  - real-shadows blending for units
+  - enhanced terrain
+  - enhanced shroud
+  - drawn graphics resemble size of original dune 2 (so it looks 'big' , yes, but better)  
+* Able to load any dune 2 scenario file
+  - spice blooms
+  - spice fields (determined in scenario file)
+  - structures
+  - units
+  - player settings (credits, quota, etc)
+  - reinforcements
+* Able to show the strategy/campaign map, use similiar animations and has the same
+  campaigns as in the original dune 2
+* Uses the dune 2 tech-level tree
+* Uses all original dune 2 (english) mission briefings
+* Little animation 'system' for nice effects (fading, explosions, smoke, etc)
+* Optimized, but still nostalgic, DUNE II GUI.
+
+
+
+==================================
+BALACING NOTES / UNIT DESCRIPTIONS
+==================================
+One of the things DUNE 2 lacked, was real balancing. Mostly you would win by just having bigger
+better , and mostly, more units then your computer opponent. In D2TM this issue should be solved;
+though I am not there yet, I do intent to get there!
+
+In order to tackle this issue, a few things have been changed:
+
+Troopers/Trooper:
+-----------------
+These units have big impact on units now. They can take out a tank/quad in a few shots. Though tanks
+cannot kill any infantry with their massive firepower. Yet they do have effect on structures and other
+units.
+
+Infantry/Soldier:
+-----------------
+These units have little to no effect on bigger units, but they are the best weapon against the Trooper
+and Troopers. Having no soldiers around your base, makes it a lot tougher to defend it. Even trikes
+and Quads will have a more harder time to take out Trooper/Troopers then the Infantry/Soldier.
+
+
+Quad/Trike/Raider:
+------------------
+These units are quick and have machineguns, so they are better against legged units. They can take out
+any infantry (troopers, etc) quicker then any other tracked unit. In groups these units can be a 
+massacre for any infantry legion.
+
+Tank/Siege Tank:
+----------------
+With their massive brute force firepower, the tanks can take out any wheeled units without trouble.
+They do have a lot of trouble with Troopers and the Trooper. A few Troopers take out tanks in no-time
+so its not wise just to use these units.
+
+Rocket Launcher:
+----------------
+Like in the original Dune 2. These units are devastating, when set on the right range towards their
+target. It is not wise to use them against units who like to fire at close range. Once the target 
+gets too near, the rockets will never hit their target and miss terribly. These units are perfect
+for taking out bases quickly, especially turrets while your tanks distract the turrets firepower
+from the Launcher.
+
+Devastator/Sonic Tank:
+----------------------
+These units are accessible once you have built the House of IX and upgraded your Heavy Factory. 
+The units deliver more firepower. The Devastator has more armor and is harder to destroy; yet it is 
+a slow tank. When destroyed the Devastator will take any surrounding units/structures with it or
+damage them horribly.
+
+The Sonic Tank uses a sonic wave to attack its units. Effective against infantry and troopers! It
+is fast but it lacks armor. Therefor it is easy to destroy.
+
+Deviator:
+---------
+The Deviator acts like a normal Rocket Launcher. However, by firing its nerve gas it will convert
+any unit to its own side. (Unline Dune 2, the units will STAY that way and not be converted back).
+The unit is fast, light-weighted and has little armor; thus easily to destroy. However, do NOT
+underestimate the power and danger of this unit!
+
+=======
+CREDITS
+=======
+Dune 2 - The Maker could never get this far, without the help of the following people:
+
+Libraries:
+Allegro (www.allegro.cc)
+RakNet  (www.raknet.com)
+AlFONT  (Javier Gonzalez)
+AlMP3   (Javier Gonzalez)
+FBlend  (Robert J Ohannessian)
+
+
+D2TM - TEAM:
+Vidiware (www.vidiware.com)
+Timen
+Nema Fakei
+MrFlibble
+
+Others:
+Jesse Reid (Gobalopper, www.dune2k.com)
+Amarillion (allegro.cc)
+
+Testers:
+Guillaume Lavoie
+Dennis Stansert
+Ash
+Ruurd Nijdam
+
+Books:
+C++ Grand Cru (Stevem Holzner)
+
+
+D2TM is based on:
+
+Dune 2 - "The Battle for Arrakis" by Westwood Studios & Virgin Interactive
+
+TODO:(search all those names who made dune 2!)
+
+==========
+TO-DO LIST
+==========
+* Make tech-tree 100% accurate
+* Ability to let heavy units (tanks/harvester) squish infantry
+* Balance game more (game.ini)
+* Mentat for 'advice' and unit descriptions
+* Eventually clean up code (perhaps release source code?)
+
+New features:
+* Skirmish
+* Multiplayer (<- will be tough, i cannot code networking stuff)
+* Options
+
+===========================
+CHANGELOG: (current -> old)
+===========================
+
+RELEASE CANDIDATE 03
+--------------------
+FIXED:
+- Houses start with other house-unique units in skirmish mode.
+- Graphical bug: IX shadow.
+- Graphical bug: Flag bug barracks.
+- Concrete dissapearing beneath buildings on impact by bullets.
+- Concrete dissapearing by gunfire or sonic wave.
+- AI building troopers for human player.
+
+CHANGED:
+- Behaviour of F11 (screenshot) mode.
+
+RELEASE CANDIDATE 02
+--------------------
+FIXED:
+- INI loading bug in campaign mode (where scenario/story telling would not function)
+- Text string in story telling (being too high)
+- Crash when hitting P when building unit(s).
+- Units respect now map borders with: deploying, path finding
+- Able to place a structure while not finished building
+
+ADDED:
+- Additive blending for explosions, creating VERY nice lighting effects.
+  QUESTION: Need to be in as default or as additional option?
+- Rocket Turrets & Turrets are power depended now. 
+  - In CAMPAIGN mode, the AI cheats (like in Dune 2). Else the dune 2 missions are unplayable.
+  - In Skirmish mode, the AI does NOT cheat.
+
+DEMO 4 - DEMO 3 (released at: dd/mm/yyyy)
+-----------------------------------------
+TODO:
+- make options screen
+- fix starport bug
+- finish off skirmish menu so you can setup teams (and play with computer then!)
+- fix up AI for skirmish mode, make it more agressive and less cpu eating when building
+  base.
+- AI should retaliate when you attack its structures or harvesters , and not wait till you get near them...
+
+BALANCING:
+- Ornithopter rockets do more damage
+- Rockets from Troopers do a bit less damage
+- Rocket Turrets do a bit more damage to infantry & vehicles
+- Normal Turrets do a bit more damage to infantry & vehicles
+- Combat Tank does a bit more damage to infantry
+
+FIXED:
+- AI able to build multiple units from the same building at the same time (oops, cheating!)
+- Workaround for harvesters doing nothing.
+- Building troopers/etc for human player.
+- Bug where "order" button would be misplaced (too low)
+- Bug where you could select computer units via 'team' key's (ie, by pressing 1-5)
+- Able to 'repair' units when no repair facility is built.
+- Fixed bug Repair Facility. (Units always repair as if they were totally damaged)
+- Memory bug in loading INI file. (causing byte shifts, which *could* eventually screw things up)
+- Able to select enemy units when pressing group number
+
+CHANGED:
+- "Devided" -> "Divided" 
+- Unit drawing , more accurate on cells.
+- Unit drawing , health bar and spice bar is different.
+- Unit drawing , selection box is changed
+- Unit variables a bit more efficient.
+- When buttons are unavailable, they are darkened instead of greyed out.
+- AI will now not walk over spice blooms, but shoot them.
+- Upgraded Allegro from version 4.0.3 to 4.2.0
+- Upgraded Alfont from 1.19 to 2.10
+- Source is now compiled under MSVC 7.0
+- Dune 2 missions, briefings, etc is now centered in one "campaign" folder
+
+NEW:
+- More scenes added.
+- Very smooth fading for Windtraps now (instead of using 256 color palette Blue values, it uses 16 bit values)
+- Using some FBLEND routines for drawing transparant graphics and so on.
+- "easy on cpu" auto-code. Will try to give cpu some slack if fps is above "ideal fps" (can be set). Especially useful on
+  laptops.
+- Skirmish mode, AI is primitive, but tough.
+  - with totally new random map generator built in
+  - able to create your own skirmish missions via INI files (up to 99 missions)
+  - 4 players maximum (1 human, 3 CPU)
+  - CPU can be Sardaukar
+  * Able to see random created map by hovering mouse on the question mark. Default = invisible, so you can
+    be really suprised to play (hit 'random map' and then 'play').
+- Completely new written structures code (same functionaly as in demo 3 though): using true OOP.
+   *NOTE: Bug detected, starport does not function 100% yet.
+* - Skirmish mode - maps are named as "map##.ini" , up to 99 maps supported.
+- RakNet library is compiled in project and will assist in network code in future releases.
+- MCV can be deployed with D now (select and press D).
+- Carry-Alls blow sand/spice when picking up unit on sandy/spicy terrain.
+- Structures graphics updates
+  - Real shadow blending done
+  - Structures show ground underneath, so if no fundament is built the building
+    appears on rock, etc. 
+- When infantry or troopers get 30% health; a single soldier/trooper appears
+  with 100% health. The other 2 died (leaving bodies on the ground).
+- When not enough money, icons are a bit greyed out + a red cross is drawn over them.
+- Tanks are able to squish infantry (leaves big blood splatter for infantry and tiny for soldier, etc)
+- Shortkey B added to build last built icon on list (also applies for units)
+- Shortkey P added to place built structure
+- Shortkey U added to quick-upgrade
+- Units can gain experience:
+  - no stars = no experience
+  - yellow stars (max 3)
+  - orange stars (max 3)
+  - red stars (max 3) -> max experience: twice damage done
+  (*) Stars are gained by kills; infantry kills give units 2.5/10th star experience. 
+      bigger units 4.5/10th star.  
+  Units with more experience will deliver bigger hits on enemy units. 
+- Tech Tree changes:
+  - Repair Facility & High Tech is available from level 5 now.
+  - Ordos WOR available at level 5.
+- Force attack : Hold left control and click on cell to attack.
+- Units & Structures blink when targetted, etc. 
+- Rally points can be assigned to buildings. Select structure , hold left control and click on map.
+  NOTE: Do not give an invalid location or the paths will fail to that. When units are unable to
+        deploy from starport, they are brought via Carry-All to the rallypoint.
+- Force move   (ALT)
+- Force attack (CTRL)
+
+REMOVED:
+- 32/16 bit adjustment in windowed mode. (speed increasement was minimal)
+
+DEMO 3 - DEMO 2 (released at: 15/12/2006)
+-----------------------------------------
+BALANCING:
+
+* In General:
+
+- Infantry, Troopers, Trooper and Soldier are more of use now. Harder to kill, tougher in fights.
+  NOTE: Do not take this to lightly , the above units where nearly useless in Dune 2, 
+        in D2TM they are really functional!
+
+- Quads and Trikes have a bit weaker anti-infantry guns now (though they are the best to kill infantry with)
+
+- Special weapons are balanced more; deviator is not as dangerous as before, and can easily be
+  killed. Though if used well, it can be a very usefull weapon as it turns units into yours
+  for all time.
+
+* Detailed:
+- Trooper HP INCREASED from 45 to 80
+
+- Troopers HP INCREASED from 110 to 140
+- Troopers sight/range INCREASED from 4 to 5
+- Troopers damage to vehicles INCREASED from 8 to 16
+- Troopers Attackfrequency LOWERED from 25 to 18
+
+- Soldier HP INCREASED from 20 to 80
+- Infantry HP INCREASED from 50 to 150
+
+- Quad damage to infantry(*) LOWERED from 12 to 8
+- Quad attack frequency INCREASED from 10 to 12
+
+- Trike damage to infantry LOWERED from 7 to 6
+
+- Deviator chance to deviate lowered from 100% to 40%
+- Deviator move speed LOWERED from 4 to 3 (means faster!)
+- Deviator turn speed LOWERED from 4 to 3 (means faster!)
+- Deviator HP DECREASED	from 110 to 70
+
+(* Infantry=Troopers, Trooper, Soldier, Infantry)
+
+
+FIXED:
+- Several bugs in attack thinking, guard thinking of AI etc. AI units should be tougher
+  to beat and also units behave more correctly. 
+- Gun turrets damaging friendly structures.
+- Several bugs concerning odd movement. (mostly after attacking)
+- Now you will REALLY get a reinforcement when you have lost all harvesters, but you still have
+  a refinery...
+- Bug where ai would suddendly attack own unit or structure.
+- Fixed a bug where walls turn into spice (by field= entries).
+- Sandworm is now drawn ok (under units, not 'above' them).
+- Devastator who would explode and damage surrounding units will not cause a stack overflow anymore.
+- Fixed several bugs in moving code.
+- Fixed 'harvester suddendly dissapearing'.
+- Fixed 'shroud reveal' bug on up and left part of the screen.
+  (When unit was moving upwards and visible , or going left and visible, the shroud would not
+   be removed correctly when revealing parts that are not visible on screen).
+
+CHANGED:
+- Upgraded concrete slabs can be placed even when red squares appear. The only exception is you
+  cannot build them out of range (ie, not bordered to another concrete or friendly structure)
+- Some unit graphics are upgraded, thanks to Nema Fakei.
+  - Combat Tank
+  - Launcher
+  - Siege Tank
+  - Sonic Tank
+- Better removal of unit data on map (faster, more effecient).
+- Logging of pathfinder in log.txt
+- Harvesters prioritize spice hills above normal spice now. 
+ 
+NEW:
+- DEBUG mode EXE file delivered.
+- Low power means:
+  - twice as slow building
+- Spice blooms are generated 'instantly'. There is a minimum requirement of 3 spiceblooms a map.
+- Compile date and time are now in log.txt (check this to be sure to have the latest
+  version if you are not sure).
+- Damage done by units/structures is now House depended:
+  - Ordos do at least 80% damage
+  - Harkonnen do 120% damage
+  - Atreides = 100% for everything
+  (as you may have noticed, moving , harvesting, dumping etc is already House
+   dependant. So is Ordos quicker with moving, dumping and harvesting)
+- Return harvester to refinery: Select harvester, press D. (from Dump/Deploy spice)
+- Ornithopters work now. Swift attacks of 2 rockets. However, in order to be taken down
+  the Rocket Turrets are able to shoot "homing missiles" which will track down the ornithopters
+  for an amount of time. Units are able to damage the ornithopter mostly with luck.
+- Rocket Turrets will now shoot 'bullets' when target gets too close.
+- Rocket Turrets have priorities now in targets
+  - Aircraft (ornithopters) , high priority
+  - Enemy ground units, normal priority
+  - Sandworms, lowest priority
+  EXAMPLE: When the enemy attacks with aircraft & enemy units. The aircraft is the target
+           , then the ground units.
+- Worm leaves now a trail of 'distorted sand'. 
+- When insufficient concrete is built beneath a structure, the structure will damage easily 
+  through time and will require frequent repairs. Eventually it will stop at 50% damage.
+  AI will react to this and repair at 75% damage.
+- Clock-wise progress indicator is now 32 frames instead of 16, more fluently and only
+  on ICON-picture (not text).
+- Repair facility works. Hold R and hover above units to order them to repair. They will be
+  picked up by Carry-Alls automaticly if available. They will be brought to the nearest
+  available repair facility.
+
+AI SPECIFIC:
+- AI will build more harvesters, and will rebuild harvesters when eaten or destroyed to keep
+  harvester/refinery ratio 1/1. If possible, it will try to build the ratio as 2/1
+- AI will build carry-alls.
+- AI will build ornithopters
+- AI will use repair facilities for damaged vehicles.
+- AI will blow up spice blooms by walking over them with light infantry or troopers.
+
+
+DEMO 2 - DEMO 1 (released at: 05/02/2006)
+-----------------------------------------
+FIXED:
+- Palette bug when going from mission to mentat again. (Atreides book was blue
+  etc).
+- Loading a new scenario will remove now the old icon list and refresh it (ie, you 
+  can no longer build advanced stuff in a new mission. The tech-tree is restarted)
+- Ability to attack non-visible units/structures.
+- Ability to build WOR sometimes as Atreides/Ordos
+
+CHANGED:
+- Scrolling is now timer based, not fps based. 
+- Scrolling is now also possible when placing a structure.
+- Health bar of units do not stay on the top.
+- Mentat speaking animations will now not 'hang' for too long.
+- Mentat speaking is a bit faster
+- UI in game is changed with new graphics from Nema Fakei
+- Win and lose 'announcement' changed.
+- Build speed is now set to normal
+- All Houses Mission 9 changed, quota's where set to win mission. Seems to me like
+  a lack of finishing things from Westwood earlier and made it work code-wise. Its
+  sloppy so i removed the quota= lines to make it work properly.
+
+NEW:
+- When hovering over unit, mouse turns into "select" picture
+- When units selected, moving over other friendly units will now make it possible to
+  select them.
+- As an addition, holding SHIFT, will ADD the units to the already selected group!
+- Smoothly fading between several sections in menu/briefing/combat
+- Rewritten "hover over unit" detection. (single unit detection only)
+- Original Atreides briefings (all missions)
+- "Select your next conquest" screen introduced. Including campaign support!
+- Campaign can be edited through the ini files in "campaign" directory
+- All house mission briefing/win/lose/advice are added, thanks to:
+  - Gilneas -> Harkonnen
+  - Josh -> Atreides
+  - MrFlibble -> Ordos
+- House briefings and mission briefings now through "mentatx.ini"
+- You can fail your mission.
+- When enemy unit revealed, or when enemy unit is getting too close the music changes
+  and you will hear "enemy unit approaching".
+- Turrets work now, so watch your units!
+- Ability to create groups: CTRL-1/5 to create. Press 1/5 to select. Hold SHIFT + <number>
+  to add group to selection.
+- Sound effects are distance related. Everything on screen = 100% sound volume. The further
+  away from the sound-origin, the less volume the sound has. No panning though.
+- Enemy structures repair now when damaged:
+  - When AI has a lot of money, they instant repair on a bit damage
+  - When AI does not have a lot of money, repair starts at 50% damage
+- Sandworms will be attacked , but units will not chase them.
+- Thanks to MrFlibble, all Ordos Seed files are now revealed! All missions work now properly!
+- Pathfinder optimized; not speed wize but work-wise. The path generator will now not have
+  odd corners and twists, but a real fast-path calculation. Bloody sandworms forced me to 
+  work on this one.
+- When all harvesters gone and still having a refinery; automaticly harvester being reinforced
+  to ensure some income. (For the player & AI)
+- Simple AI opponent; which will build an army and create groups of units to attack you.
+  Has exactly the same build-speeds; money income flow (no unlimited money!). Can only
+  Attack what it can see.
+- Reinforcements; loaded from INI file, and works like Dune 2. 
+
+REMOVED:
+- GIF support files, since using own DAT format
+
+KNOWN 'BUGS':
+- There is still no "Select your house < name >". The < name > is missing. 
+- Harvester is not 100% yet controllable; ie, you cannot send it to the refinery.
+- The repair facility does not function
+- The ornithopter does not attack

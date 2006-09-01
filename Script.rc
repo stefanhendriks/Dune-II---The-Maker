@@ -1,0 +1,2 @@
+#include <windows.h>
+allegro_icon ICON "icon1.ico"
