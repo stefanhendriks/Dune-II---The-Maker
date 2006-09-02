@@ -34,6 +34,9 @@ IniReader::IniReader() {
 
 }
 
+/*
+ Read a line in the INI file and put it into currentLine
+*/
 
 void IniReader::ReadLine(FILE *file) {
 
@@ -57,7 +60,7 @@ void IniReader::ReadLine(FILE *file) {
     }
  }
 
-  memcpy(currentLine, result, MAX_LINE_LENGTH);
+  memcpy(currentLine, result, sizeof(currentLine));
 }
 
 // Reads out an entire sentence and returns it

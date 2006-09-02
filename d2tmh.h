@@ -20,9 +20,8 @@
 
 #include <assert.h>
 
-// Allegro: must be after any default header...
+// Allegro: must be after any default headers...
 #include <allegro.h>
-//#include <OpenLayer.hpp> 
 
 #define ALFONT_DLL
 #define ALMP3_DLL
@@ -71,9 +70,7 @@
 
 #define PROFILE	&Profile
 #include "HWProf.h"
-
 // PROFILER
-
 
 // Structures
 #include "structures\\cConstYard.h"
