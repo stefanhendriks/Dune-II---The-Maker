@@ -87,8 +87,8 @@ void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
 }
 
 int IniReader::getSection() {
-    int result = sectionMap.getValue(key);
-    
+    int result = sectionMap.getValue(""); // - Stefan 02-09, temp hack to keep it compiling
+
     if (result > -1 && result != currentSection) {
         return result;
     } 

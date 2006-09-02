@@ -33,9 +33,9 @@
 #include "sse.h"
 #include "mmx.h"
 
-#include "RakClientInterface.h"
-#include "RakNetworkFactory.h"
-#include "RakServerInterface.h"
+#include "Raknet\\RakClientInterface.h"
+#include "Raknet\\RakNetworkFactory.h"
+#include "Raknet\\RakServerInterface.h"
 
 // GIF Support
 //#include "algif\\algif.h"
