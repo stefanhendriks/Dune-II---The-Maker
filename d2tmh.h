@@ -33,12 +33,10 @@
 #include "sse.h"
 #include "mmx.h"
 
+// Make sure we refer to our own sub dir and not a global one
 #include "Raknet\\RakClientInterface.h"
 #include "Raknet\\RakNetworkFactory.h"
 #include "Raknet\\RakServerInterface.h"
-
-// GIF Support
-//#include "algif\\algif.h"
 
 // data file header(s)                          - THIS
 #include "data\\gfxdata.h"						// general gfx
@@ -46,8 +44,6 @@
 #include "data\\gfxinter.h"                  // sidebar/downbar gfx
 #include "data\\gfxworld.h"                  // world / regions gfx
 #include "data\\gfxmentat.h"                  // mentat gfx
-
-//#include "mp3mus.h"
 
 // actual source headers                        - ORDER
 //                                                (in every file!) 
@@ -97,8 +93,6 @@
 #include "structures\\cBarracks.h"
 #include "structures\\cIx.h"
 
-
-
-// Units
+// TODO: Units
 
 #endif
