@@ -220,6 +220,11 @@ private:
 	void draw_placeit();
 	void draw_order();
 
+	void runGameState();
+	void shakeScreenAndBlitBuffer();
+	void handleTimeSlicing();
+	void handleKeys();
+
     void draw_movie(int iType);  // draw movie sequence
 
 

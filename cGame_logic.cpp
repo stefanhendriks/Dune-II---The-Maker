@@ -263,7 +263,6 @@ void cGame::think_winlose()
     bool bSucces=false;
     bool bFailed=true;
 
-
     // determine if player is still alive
     for (int i=0; i < MAX_STRUCTURES; i++)
         if (structure[i])
@@ -376,7 +375,6 @@ void cGame::think_movie()
 
         if (TIMER_movie > 20)
         {
-
             iMovieFrame++;
 
             if (gfxmovie[iMovieFrame].type == DAT_END ||
@@ -604,7 +602,7 @@ void cGame::think_starport()
 		// step 2:
 		// create new starport list
 
-	for ( i=0; i < MAX_UNITTYPES; i++)
+	for (i=0; i < MAX_UNITTYPES; i++)
 	{
 		if (i == TRIKE ||
 			i == QUAD ||
@@ -4964,147 +4962,93 @@ void GAME_KEYS()
 }
 
 
+void cGame::handleTimeSlicing() {
+ 
+	if (iRest > 0) {
+		rest(iRest);
+	}
+}
 
-void cGame::run()
-{
+/**
+	Handle keyboard keys. 
+	
+	TAB + key = debug action
+*/
+void cGame::handleKeys() {
 
-	set_trans_blender(0, 0, 0, 128);
-
-    
-	while (bPlaying)
-	{
-
-		
-		poll();
-		TIME_process();       // PROCESS timed events
-
-        if (iRest > 0)
-            rest(iRest);
-		
-        
-		if (state == GAME_PLAYING)
-			combat();
-		else if (state == GAME_BRIEFING)
+	if (key[KEY_TAB]) {
+		if (key[KEY_F4] && key[KEY_LSHIFT])
 		{
-			if (iMentatSpeak == -1)
-				preparementat(false); // prepare mission briefing
-			
-			// and speak it
-			mentat(iHouse);
-		}
-        else if (state == GAME_SETUPSKIRMISH)
-            setup_skirmish();
-		else if (state == GAME_MENU)
-			menu();
-		else if (state == GAME_REGION)
-			region();
-		else if (state == GAME_HOUSE)
-			house();
-		else if (state == GAME_TELLHOUSE)
-			tellhouse();
-        else if (state == GAME_WINNING)
-            winning();
-        else if (state == GAME_LOSING)
-            losing();
-        else if (state == GAME_WINBRIEF)
-        {
-            if (iMentatSpeak == -1)
-                preparementat(false);
-
-            mentat(iHouse);
-        }
-        else if (state == GAME_LOSEBRIEF)
-        {
-            if (iMentatSpeak == -1)
-                preparementat(false);
-
-            mentat(iHouse);
-        }
-
-        // debug keys
-        if (key[KEY_TAB])
-            DEBUG_KEYS();
-        else 
-            GAME_KEYS();
-
-
-		// KILL DA BASTARD
-        if (key[KEY_F4] && key[KEY_LSHIFT])
-        {
-            int mc = map.mouse_cell();
-
-            if (mc > -1)
+			int mc = map.mouse_cell();
+			if (mc > -1)
 			{
-                if (map.cell[mc].id[MAPID_UNITS] > -1)
-                {
-                    int id = map.cell[mc].id[MAPID_UNITS];
-                     unit[id].die(true, false);
-                }
+				if (map.cell[mc].id[MAPID_UNITS] > -1)
+				{
+					int id = map.cell[mc].id[MAPID_UNITS];
+					unit[id].die(true, false);
+				}
 
 				if (map.cell[mc].id[MAPID_STRUCTURES] > -1)
-                {
-                    int id = map.cell[mc].id[MAPID_STRUCTURES];
-                     structure[id]->die();
-                }
+				{
+					int id = map.cell[mc].id[MAPID_STRUCTURES];
+					structure[id]->die();
+				}
 			}
-        }
+		}
+		DEBUG_KEYS();
+	} else {
+		GAME_KEYS();
 
-
-
-		if (key[KEY_ESC])
+		if (key[KEY_ESC]) {
 			bPlaying=false;
-	
-
+		}
 
 		// take screenshot
 		if (key[KEY_F11])
 		{
 			char filename[25];      
-            
-            if (screenshot < 10)
-                sprintf(filename, "%dx%d_000%d.pcx", screen_x, screen_y, screenshot);
-            else if (screenshot < 100)
-                sprintf(filename, "%dx%d_00%d.pcx", screen_x, screen_y, screenshot);
-            else if (screenshot < 1000)
-                sprintf(filename, "%dx%d_0%d.pcx", screen_x, screen_y, screenshot);
-            else
-                sprintf(filename, "%dx%d_%d.pcx", screen_x, screen_y, screenshot);
+
+			if (screenshot < 10)
+				sprintf(filename, "%dx%d_000%d.pcx", screen_x, screen_y, screenshot);
+			else if (screenshot < 100)
+				sprintf(filename, "%dx%d_00%d.pcx", screen_x, screen_y, screenshot);
+			else if (screenshot < 1000)
+				sprintf(filename, "%dx%d_0%d.pcx", screen_x, screen_y, screenshot);
+			else
+				sprintf(filename, "%dx%d_%d.pcx", screen_x, screen_y, screenshot);
 
 
 			save_bmp(filename, bmp_screen, general_palette);
-           
+
 			screenshot++;
 		}
 
-	
-		// FPS
-		if (key[KEY_F] || DEBUGGING)
+
+	}
+
+	/* Handle here keys that are only active when debugging */
+	if (DEBUGGING) {
+		if (key[KEY_F]) {
 			alfont_textprintf(bmp_screen, game_font, 0,44, makecol(255,255,255), "FPS: %d", fps);
-		
-		if (key[KEY_C] || DEBUGGING)
-            alfont_textprintf(bmp_screen, game_font, 0,64, makecol(255,255,255), "MOUSECELL: %d (x%d, y%d)", map.mouse_cell(), iCellGiveX(map.mouse_cell()),iCellGiveY(map.mouse_cell()));
+		}
 
-		
-		
+		if (key[KEY_F4])
+		{
+			if (map.mouse_cell() > -1)
+			{
+				map.clear_spot(map.mouse_cell(), 3, 0);
+			}
+		}
+	}
+}
 
-        
-		if (TIMER_throttle == 0)
+void cGame::shakeScreenAndBlitBuffer() {
+if (TIMER_throttle == 0)
 		{		
 			TIMER_throttle = -1;			
 		}
-
-        if (key[KEY_F4] && DEBUGGING)
-        {
-         //            PARTICLE_CREATE(mouse_x + (map.scroll_x*32), mouse_y + (map.scroll_y*32), BULLET_PUF);
-            if (map.mouse_cell() > -1)
-            {
-               //create_bullet(ROCKET_NORMAL, rnd(4095), map.mouse_cell(), 0, -1);
-                map.clear_spot(map.mouse_cell(), 3, 0);
-            }
-        }		
-
 		// blit on screen
-		frame_count++; 
+		
         if (TIMER_throttle > 0)
 		{
 		// the more we get to the 'end' the less we 'throttle'.
@@ -5130,27 +5074,74 @@ void cGame::run()
             if (iAlphaScreen == 255)
                 blit(bmp_screen, screen, 0, 0, 0, 0, screen_x, screen_y);
             else
-            {
-                //   allegro_message("!");
-                // blit it opaque
-                BITMAP *temp = create_bitmap(game.screen_x, game.screen_y);
-
+            {   
+				BITMAP *temp = create_bitmap(game.screen_x, game.screen_y);
                 clear(temp);
-                //set_trans_blender(0,0,0,iAlphaScreen);
-                
-                //draw_trans_sprite(temp, bmp_screen, 0, 0);
-
                 fblend_trans(bmp_screen, temp, 0, 0, iAlphaScreen);                
                 blit(temp, screen, 0, 0, 0, 0, screen_x, screen_y);
-                
                 destroy_bitmap(temp);
             }
             
         }
+}
 
-		// use vsyncing
-		//vsync();
+void cGame::runGameState() {
+	if (state == GAME_PLAYING)
+		combat();
+	else if (state == GAME_BRIEFING)
+	{
+		if (iMentatSpeak == -1)
+			preparementat(false); // prepare mission briefing
 
+		// and speak it
+		mentat(iHouse);
+	}
+	else if (state == GAME_SETUPSKIRMISH)
+		setup_skirmish();
+	else if (state == GAME_MENU)
+		menu();
+	else if (state == GAME_REGION)
+		region();
+	else if (state == GAME_HOUSE)
+		house();
+	else if (state == GAME_TELLHOUSE)
+		tellhouse();
+	else if (state == GAME_WINNING)
+		winning();
+	else if (state == GAME_LOSING)
+		losing();
+	else if (state == GAME_WINBRIEF)
+	{
+		if (iMentatSpeak == -1) {
+			preparementat(false);
+		}
+		mentat(iHouse);
+	}
+	else if (state == GAME_LOSEBRIEF)
+	{
+		if (iMentatSpeak == -1)
+			preparementat(false);
+
+		mentat(iHouse);
+	}
+}
+
+/**
+	Main game loop
+*/
+void cGame::run()
+{
+	set_trans_blender(0, 0, 0, 128);
+
+	while (bPlaying)
+	{
+		poll();
+		TIME_process();
+		handleTimeSlicing();
+        runGameState();
+		handleKeys();	    
+		shakeScreenAndBlitBuffer();
+		frame_count++;
 	}
 }
 
