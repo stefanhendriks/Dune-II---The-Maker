@@ -1,21 +1,19 @@
-Microsoft Visual Studio Solution File, Format Version 7.00
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dune 2", "Dune 2.vcproj", "{FB9D6C0C-78F1-4FBF-8F74-315D1C022D00}"
 EndProject
 Global
-	GlobalSection(SolutionConfiguration) = preSolution
-		ConfigName.0 = Debug
-		ConfigName.1 = Release
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
 	EndGlobalSection
-	GlobalSection(ProjectDependencies) = postSolution
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB9D6C0C-78F1-4FBF-8F74-315D1C022D00}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FB9D6C0C-78F1-4FBF-8F74-315D1C022D00}.Debug|Win32.Build.0 = Debug|Win32
+		{FB9D6C0C-78F1-4FBF-8F74-315D1C022D00}.Release|Win32.ActiveCfg = Release|Win32
+		{FB9D6C0C-78F1-4FBF-8F74-315D1C022D00}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
-	GlobalSection(ProjectConfiguration) = postSolution
-		{FB9D6C0C-78F1-4FBF-8F74-315D1C022D00}.Debug.ActiveCfg = Debug|Win32
-		{FB9D6C0C-78F1-4FBF-8F74-315D1C022D00}.Debug.Build.0 = Debug|Win32
-		{FB9D6C0C-78F1-4FBF-8F74-315D1C022D00}.Release.ActiveCfg = Release|Win32
-		{FB9D6C0C-78F1-4FBF-8F74-315D1C022D00}.Release.Build.0 = Release|Win32
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-	EndGlobalSection
-	GlobalSection(ExtensibilityAddIns) = postSolution
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
