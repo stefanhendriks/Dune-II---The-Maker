@@ -144,7 +144,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;C:\Projecten\DUNE II - The Maker\Source\RakNet&quot;"
-				PreprocessorDefinitions="WIN32,_DEBUG,_WINDOWS"
+				PreprocessorDefinitions="WIN32,_DEBUG,_WINDOWS,_CRT_SECURE_NO_DEPRECATE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				RuntimeTypeInfo="true"
@@ -228,10 +228,6 @@
 			</File>
 			<File
 				RelativePath="gui.cpp"
-				>
-			</File>
-			<File
-				RelativePath="hwprof.cpp"
 				>
 			</File>
 			<File

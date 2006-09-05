@@ -97,14 +97,17 @@ void cMap::init()
         structure[i] = NULL;
     }
 
-	for (i=0; i < MAX_BULLETS; i++)
+	for (int i=0; i < MAX_BULLETS; i++) {
 		bullet[i].init();
+	}
         
-	for (i=0; i < MAX_PARTICLES; i++)
+	for (int i=0; i < MAX_PARTICLES; i++) {
         particle[i].init();
+	}
 
-	for (i=0; i < MAX_UNITS; i++)
+	for (int i=0; i < MAX_UNITS; i++) {
 		unit[i].init(i);
+	}
 	
 }
 
@@ -956,7 +959,7 @@ void cMap::clear_spot(int c, int size, int player)
   // go around 360 fDegrees and calculate new stuff
   for (int dr=1; dr < size; dr++)
   {
-    for (int d=0; d < 360; d++)  
+    for (double d=0; d < 360; d++)  
     {
       int x = cx, y = cy;
 
@@ -1493,7 +1496,7 @@ void cMap::draw_units()
     }
 
     // draw all units
-    for (i=0; i < MAX_UNITS; i++)
+    for (int i=0; i < MAX_UNITS; i++)
     {
         if (unit[i].isValid())
         {
@@ -1528,9 +1531,8 @@ void cMap::draw_units()
 
     }
 
-
     // draw all units
-    for (i=0; i < MAX_UNITS; i++)
+    for (int i=0; i < MAX_UNITS; i++)
     {
         if (unit[i].isValid())
         {
@@ -1614,7 +1616,7 @@ void cMap::draw_units_2nd()
     }
 
         // draw all units
-    for ( i=0; i < MAX_UNITS; i++)
+    for (int i=0; i < MAX_UNITS; i++)
     {
         if (unit[i].isValid())
         {

@@ -11,7 +11,7 @@ Source Profiler -- Copyright (C) 1995, 1996, 1997, 1998 - Harald Hoyer
 #include "hwprof.h"
 //#include "str.h"
 #pragma warning (disable : 4201) // C4201 nonstandard extension used : nameless struct/union
-#include "windows.h"
+#include <windows.h>
 #pragma warning (default : 4201) // C4201 nonstandard extension used : nameless struct/union
 
 

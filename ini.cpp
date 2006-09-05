@@ -2185,7 +2185,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 									cCell[cc] = '\0';
 
 								int iCC=0;
-								for (cc=3; cc < iIS; cc++)
+								for (int cc=3; cc < iIS; cc++)
 								{
 									cCell[iCC] = linefeed[cc];
 									iCC++;
@@ -2438,7 +2438,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
      // At this point, show list of unit types
 	
 	// now add the fields
-    for (iB=0; iB < 30; iB++)
+    for (int iB=0; iB < 30; iB++)
     {
           // when 
           if (fields[iB] > -1)

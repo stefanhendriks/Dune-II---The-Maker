@@ -15,8 +15,6 @@
 
 
 // Process 'extern' stuff, so we can access our classes
-
-extern CHWProfile Profile;
 extern bool		bDoDebug;
 extern int		iRest;	// rest value
 

@@ -12,7 +12,6 @@
 
 #include "d2tmh.h" 
 
-CHWProfile Profile;
 bool		bDoDebug=false;
 int	iRest=1;	// rest value
 
@@ -215,7 +214,6 @@ void TIME_process()
 		{
 
 			// units think
-			BEGIN_PROF("Unit think");
 			for (int i=0; i < MAX_UNITS; i++)
 				if (unit[i].isValid())
 				{ 
@@ -225,7 +223,6 @@ void TIME_process()
 					if (unit[i].iAction == ACTION_ATTACK)
 						unit[i].think_attack();          
 				}
-				END_PROF();
 
 				map.think_minimap();
 		}  
@@ -263,7 +260,6 @@ void TIME_process()
 		if (game.state == GAME_PLAYING)
 		{	
 
-			BEGIN_PROF("Structures think");
 			// structures think
 			for (int i=0; i < MAX_STRUCTURES; i++)
 				if (structure[i])
@@ -273,10 +269,8 @@ void TIME_process()
 					structure[i]->think_guard();     // think about 'guarding' the area (turrets only)
 				}
 
-				END_PROF();
-
 				// DO NOT THINK FOR HUMAN PLAYER (== 0)
-				for (i=0; i < MAX_PLAYERS; i++)
+				for (int i=0; i < MAX_PLAYERS; i++)
 					aiplayer[i].think();
 
 				game.TIMER_scroll++;
@@ -304,9 +298,8 @@ void TIME_process()
 
 
 
-				BEGIN_PROF("Unit move think");
 				// units think (move only)
-				for (i=0; i < MAX_UNITS; i++)
+				for (int i=0; i < MAX_UNITS; i++)
 					if (unit[i].isValid())
 					{
 						// move
@@ -330,14 +323,10 @@ void TIME_process()
 
 					}
 
-					END_PROF();
 
-
-					BEGIN_PROF("Particles think");      
-					for (i=0; i < MAX_PARTICLES; i++)
+					for (int i=0; i < MAX_PARTICLES; i++)
 						if (particle[i].isValid())
 							particle[i].think();
-					END_PROF();
 
 					/*
 					BEGIN_PROF("Players think");      
@@ -350,14 +339,11 @@ void TIME_process()
 
 
 					// when not drawing the options, the game does all it needs to do	
-
-					BEGIN_PROF("Bullet think");
 					// bullets think 
-					for (i=0; i < MAX_BULLETS; i++)
+					for (int i=0; i < MAX_BULLETS; i++)
 						if (bullet[i].bAlive)
 							bullet[i].think(); 
 
-					END_PROF();
 
 		}
 
@@ -938,8 +924,6 @@ int main()
  allegro_exit();
  logbook("Allegro shut down.");
  logbook("\nThanks for playing!");
- 
- Profile.dumpprint(0);
  return 0;
 }
 END_OF_MAIN();

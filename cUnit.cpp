@@ -402,8 +402,7 @@ if (bSquish)
 	}
 
 	init(iID);	// init
-
-	for (i=0; i < MAPID_MAX; i++)
+	for (int i=0; i < MAPID_MAX; i++)
 	{	
         if (i != MAPID_STRUCTURES)
             map.remove_id(iID, i);		
@@ -3229,9 +3228,6 @@ int CREATE_PATH(int iID, int iPathCountUnits)
         return -3;
     }
 
-    // Start profiler
-    BEGIN_PROF("CREATE_PATH()");
-
     int iCell = unit[iID].iCell; // current cell
  
     // do not start calculating anything before we are on 0,0 x,y wise on a cell
@@ -3251,8 +3247,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
         map.occupied(CELL_U_LEFT(iCell), iID))
     {    
         unit[iID].TIMER_movewait = 30 + rnd(50);		
-        END_PROF();
-        return -2;
+       return -2;
     }                 
 
     // Now start create path
@@ -3269,7 +3264,6 @@ int CREATE_PATH(int iID, int iPathCountUnits)
     if (unit[iID].iCell == unit[iID].iGoalCell)
     {
         logbook("ODD: The goal = cell?");		
-        END_PROF();
         return -1;
     }
 
@@ -3685,7 +3679,6 @@ int CREATE_PATH(int iID, int iPathCountUnits)
  
 
  //logbook("SUCCES");
- END_PROF(); 
  return 0; // succes!
  
  }
@@ -3696,7 +3689,6 @@ int CREATE_PATH(int iID, int iPathCountUnits)
    //path_id=-1;   
  } 
 
-  END_PROF(); 
   logbook("CREATE_PATH: Failed to create path!");
   return -1;
 }

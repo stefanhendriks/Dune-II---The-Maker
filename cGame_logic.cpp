@@ -42,7 +42,7 @@ void cGame::init()
     memset(cRegionText, 0, sizeof(cRegionText));
     //int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
 
-	windowed=false;
+	windowed=true;
     screen_x = 640;
     screen_y = 480;
 
@@ -1704,7 +1704,7 @@ void cGame::list_insert_item(int iListID, int iIcon, int iPrice, int iStructureI
     
 
    int iNext=0;
-   for (i=(MAX_ICONS-2); i >= iPosition; i--)
+   for (int i=(MAX_ICONS-2); i >= iPosition; i--)
    {
 	   	   iconlist[iListID][(i+1)].iIcon = iconlist[iListID][i].iIcon;
 		   iconlist[iListID][(i+1)].iPrice = iconlist[iListID][i].iPrice;
@@ -1820,8 +1820,9 @@ void cGame::draw_list()
         }
        
     }
+	int i;
 	// Now draw list stuff
-	for (int i=iconscroll[iList]; i < MAX_ICONS; i++)
+	for (i=iconscroll[iList]; i < MAX_ICONS; i++)
 	{
 		if (iconlist[iList][i].iIcon > -1)
 		{
@@ -1985,7 +1986,7 @@ void cGame::draw_list()
                     // draw the other progress stuff
 
 					//draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESS001+iFrame].dat, iDrawX, iDrawY);
-                     fblend_trans((BITMAP *)gfxinter[PROGRESSFIX].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);                     
+                     fblend_trans((BITMAP *)gfxinter[PROGRESSFIX].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
                      fblend_trans((BITMAP *)gfxinter[PROGRESS001+iFrame].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);					
 
 
@@ -2149,7 +2150,7 @@ void cGame::draw_list()
 		if (iAmount > 4)
 			break;
 
-	}
+}
 
     // MOUSE WHEEL
     if (mouse_z > iMouseZ)
@@ -2200,7 +2201,6 @@ void cGame::draw_list()
 		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_DOWN_PRESSED].dat, 623, 315);
 		}
 	}
-
 
 }
 
@@ -2689,7 +2689,7 @@ void cGame::draw_placeit()
 
     
 	// Draw over it the mask for good/bad placing
-	for (iX=0; iX < iWidth; iX++)
+	for (int iX=0; iX < iWidth; iX++)
 		for (int iY=0; iY < iHeight; iY++)
 		{
 			iTile = PLACE_ROCK;
@@ -4559,7 +4559,7 @@ void cGame::region()
         // Animate here (so add regions that are conquered)
 
         bool bDone=true;
-        for ( i=0; i < MAX_REGIONS; i++)
+        for (int i=0; i < MAX_REGIONS; i++)
         {
             // anything in the list
             if (iRegionConquer[i] > -1)
@@ -4756,7 +4756,7 @@ void DEBUG_KEYS()
                         if (structure[i]->iPlayer > 0)
                             structure[i]->die();
 
-                for (i=0; i < MAX_UNITS; i++)
+                for (int i=0; i < MAX_UNITS; i++)
                     if (unit[i].isValid())
                         if (unit[i].iPlayer > 0)
                             unit[i].die(true, false);
@@ -4774,7 +4774,7 @@ void DEBUG_KEYS()
                         if (structure[i]->iPlayer == 0)
                             structure[i]->die();
 
-                for (i=0; i < MAX_UNITS; i++)
+                for (int i=0; i < MAX_UNITS; i++)
                     if (unit[i].isValid())
                         if (unit[i].iPlayer == 0)
                             unit[i].die(true, false);
@@ -4877,7 +4877,7 @@ void GAME_KEYS()
         }
 
         // now add
-        for (i=0; i < MAX_UNITS; i++)
+        for (int i=0; i < MAX_UNITS; i++)
         {
             if (unit[i].isValid())
                 if (unit[i].iPlayer == 0)

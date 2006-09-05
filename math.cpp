@@ -253,7 +253,7 @@ double length(int x1, int y1, int x2, int y2)
   A *= A;
   B *= B;
 
-  return sqrt((A+B)); // A2 + B2 = C2 :)
+  return sqrt((double)(A+B)); // A2 + B2 = C2 :)
 }
 
 
@@ -265,7 +265,7 @@ double ABS_length(int x1, int y1, int x2, int y2)
 
   int A = abs(x2-x1) * abs(x2-x1);
   int B = abs(y2-y1) * abs(y2-y1);  
-  return sqrt(A+B); // A2 + B2 = C2 :)
+  return sqrt((double)(A+B)); // A2 + B2 = C2 :)
 }
 
 

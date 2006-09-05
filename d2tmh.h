@@ -67,9 +67,6 @@
 
 // PROFILER
 #include "stdlib.h"
-
-#define PROFILE	&Profile
-#include "HWProf.h"
 // PROFILER
 
 // Structures

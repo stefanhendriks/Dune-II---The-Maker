@@ -219,7 +219,7 @@ void cAIPlayer::think_building()
 	/* 
 		unit building
 	*/
-    for (i=0; i < MAX_UNITTYPES; i++)
+    for (int i=0; i < MAX_UNITTYPES; i++)
     {
         if (iBuildingUnit[i] > -1)
         {
@@ -664,7 +664,7 @@ void cAIPlayer::think_attack()
 
  int iUnits=0;
 
- for (i=0; i < MAX_UNITS; i++)
+ for (int i=0; i < MAX_UNITS; i++)
  {
    if (unit[i].isValid())
        if (unit[i].iPlayer == ID && 
@@ -1312,7 +1312,8 @@ int cAIPlayer::iPlaceStructureCell(int iType)
 		iCheckingPlaceStructure=0;
 
 	// loop through structures
-	for (int i=iCheckingPlaceStructure; i < iCheckingPlaceStructure+2; i++)
+	int i;
+	for (i=iCheckingPlaceStructure; i < iCheckingPlaceStructure+2; i++)
 	{
 		// just in case
 		if (i >= MAX_STRUCTURES)

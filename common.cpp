@@ -1573,7 +1573,7 @@ void Shimmer(int r, int x, int y)
   // go around 360 fDegrees (twice as fast now)
   for (int dr=0; dr < r; dr+=3)
   {
-    for (int d=0; d < 360; d++)
+    for (double d=0; d < 360; d++)
     {
        x1 = (x + (cos(d)*(dr)));
        y1 = (y + (sin(d)*(dr)));
