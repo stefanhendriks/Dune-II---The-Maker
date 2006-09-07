@@ -1,0 +1,109 @@
+SOURCE NAMING CONVENTION / FORMAT RULES:
+----------------------------------------
+Here is a simple guideline how to format code; these rules where set up later then the code
+was written, therefor any code you think you can reformat which should comply with these
+rules is always encouraged.
+
+DISCLAIMER ;)
+The current code does not comply, and its one of the things that should be done to guarentee
+this project can be coded further without having problems in the future.
+
+CURLY BRACES:
+-------------
+Always use them, even with 1 line of code within a code block.
+
+
+IF/ELSE:
+--------
+
+If (expression) {
+<code>
+} else(if) (expression) {
+<code>
+}
+
+If you have only one line of code, there still need to be the curly braces!
+// WRONG
+if (bla == 0)
+ bla = 1;
+
+// RIGHT
+if (bla == 0) {
+ bla = 1;
+}
+
+I know, a LOT of code is still not compliant with the curly braces rules.
+
+
+FOR/ETC
+-------
+
+int var;
+for (var = 0; var < max; var++) {
+
+}
+
+Notice the curly braces, and the definition of var OUTSIDE the scope of the for loop. Some
+compilers do:
+
+for (int var = 0...)
+
+this should be avoided.
+
+CLASSES
+-------
+Classes start with a c and then the following words are with a starting capital. 
+
+cGame
+cThisSuperClassRocks
+
+Functions
+are starting with a lower case and have every word then a Capital. Ie:
+
+lowerCase()
+thisIsMyFirstFunctionEver()
+
+etc.
+
+Long names are NOT discouraged. But TRY to keep it as simple as possible. Ie:
+
+NOT: doThisIfItApplies
+BUT: doThis
+
+In the function doThis, you can always see if something applies. So keep the information
+practical.
+
+
+STRUCTS
+-------
+Should start lowercase s, same naming as with classes:
+
+sThisStructIsCool
+
+Basic rule: If code has to be executed twice, try to avoid and put it into a function.
+
+
+COMMENTS:
+---------
+The less comments, the better. The code should be self-explenationary. Atm the code is NOT
+and therefor has a lot of comments. So a lot of code can be rewritten to make it easier to
+understand and thus having less comments.
+
+If you comment...:
+
+Before function definition:
+
+/*
+ This function does this and this
+
+ <returns something.>
+*/
+
+IN a function, or code itself use:
+//
+//
+//
+
+
+If you have to use 3 or more lines of comments, then either it must be having a real good
+reason. OR, your code can be made even more simple.
