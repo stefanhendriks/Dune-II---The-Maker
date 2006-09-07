@@ -4840,125 +4840,126 @@ void DEBUG_KEYS()
 
 }
 
+int getGroupNumberFromKeyboard() {
+	if (key[KEY_1]) {
+		return 1; 
+	}
+	if (key[KEY_2]) { 
+		return 2;
+	}
+	if (key[KEY_3]) {
+		return 3;
+	}
+	if (key[KEY_4]) { 
+		return 4;
+	}
+	if (key[KEY_5]) { 
+		return 5;
+	}
+
+	return 0;
+}
 
 // WHen holding CTRL
 void GAME_KEYS()
 {
-    
-    // WHEN PRESSED CTRL, MEANING, ADD....
-    if (key[KEY_LCONTROL])
-    {
+	int iGroup = getGroupNumberFromKeyboard();
 
-        // UNIT GROUPING
-    if (key[KEY_1] ||
-        key[KEY_2] ||
-        key[KEY_3] ||
-        key[KEY_4] ||
-        key[KEY_5])
-    {
-        int iG = 0;
+	// WHEN PRESSED CTRL, MEANING, ADD....
+	if (key[KEY_LCONTROL])
+	{
+		// UNIT GROUPING
+		if (iGroup > 0)
+		{
+		
+			// First: Any unit that is already this group number, but NOT selected, must be removed
+			for (int i=0; i < MAX_UNITS; i++)
+			{
+				// TODO: This can be done smaller.
+				if (unit[i].isValid()) {
+					if (unit[i].iPlayer == 0) {
+						if (unit[i].iGroup == iGroup) {
+							if (unit[i].bSelected == false) {
+								unit[i].iGroup = -1;
+							}
+						}
+					}
+				}	
+			}
 
-        if (key[KEY_1]) iG = 1;
-        if (key[KEY_2]) iG = 2;
-        if (key[KEY_3]) iG = 3;
-        if (key[KEY_4]) iG = 4;
-        if (key[KEY_5]) iG = 5;
+			// now add
+			for (int i=0; i < MAX_UNITS; i++)
+			{
+				if (unit[i].isValid()) {
+					if (unit[i].iPlayer == 0) {
+						if (unit[i].bSelected) {
+							unit[i].iGroup = iGroup;
+						}
+					}
+				}
+			}
+		}
 
-        // First: Any unit that is already this group number, but NOT selected, must be removed
-        for (int i=0; i < MAX_UNITS; i++)
-        {
-            if (unit[i].isValid())
-				if (unit[i].iPlayer == 0)
-					if (unit[i].iGroup == iG)
-						if (unit[i].bSelected == false)
-							unit[i].iGroup = -1;
-        }
+	} // HOLDING CTRL -> create group
+	else    
+	{
+		// Center on focus cell
+		if (key[KEY_H]) {
+			map.set_pos(-1,-1, player[0].focus_cell);
+		}
 
-        // now add
-        for (int i=0; i < MAX_UNITS; i++)
-        {
-            if (unit[i].isValid())
-                if (unit[i].iPlayer == 0)
-					if (unit[i].bSelected)
-						unit[i].iGroup = iG;
-        }
+		if (iGroup > 0)
+		{
+			// First: Any unit that is already this group number, but NOT selected, must be removed
 
-    }
+			// not pressing shift, meaning, we remove all selected stuff
+			if (key[KEY_LSHIFT] == false)
+			{
+				for (int i=0; i < MAX_UNITS; i++)
+				{
+					if (unit[i].isValid()) {
+						if (unit[i].iPlayer == 0) {
+							if (unit[i].bSelected) {
+								unit[i].bSelected = false;
+							}
+						}
+					}
+				}
+			}
 
-    } // HOLDING CTRL -> create group
-    else    
-    {
-        // Center on focus cell
-        if (key[KEY_H])
-            map.set_pos(-1,-1, player[0].focus_cell);
+			bool bPlayRep=false;
+			bool bPlayInf=false;
+			// now add
+			for (int i=0; i < MAX_UNITS; i++)
+			{
+				if (unit[i].isValid())
+					if (unit[i].iPlayer == 0)
+						if (unit[i].iGroup == iGroup)
+						{
+							unit[i].bSelected=true;
 
-        // not pressed, so select it
-    if (key[KEY_1] ||
-        key[KEY_2] ||
-        key[KEY_3] ||
-        key[KEY_4] ||
-        key[KEY_5])
-    {
-        int iG = 0;
+							if (units[unit[i].iType].infantry) {
+								bPlayInf=true;
+							} else {
+								bPlayRep=true;
+							}
+						}
+			}
 
+			// HACK HACK: This should actually not be randomized. This is done
+			// so you will not hear 100x "yes sir" at a time, blowing your speakers
+			if (rnd(100) < 15)
+			{
+				if (bPlayRep) {
+					play_sound_id(SOUND_REPORTING,-1);
+				}
 
-        if (key[KEY_1]) iG = 1;      
-        if (key[KEY_2]) iG = 2;
-        if (key[KEY_3]) iG = 3;
-        if (key[KEY_4]) iG = 4;
-        if (key[KEY_5]) iG = 5;
-
-        if (iG > 0)
-        {
-        // First: Any unit that is already this group number, but NOT selected, must be removed
-        
-        // not pressing shift, meaning, we remove all selected stuff
-        if (key[KEY_LSHIFT] == false)
-        {
-        for (int i=0; i < MAX_UNITS; i++)
-        {
-            if (unit[i].isValid())
-				if (unit[i].iPlayer == 0)
-					if (unit[i].bSelected)
-						unit[i].bSelected = false;
-        }
-        }
-
-        bool bPlayRep=false;
-        bool bPlayInf=false;
-        // now add
-        for (int i=0; i < MAX_UNITS; i++)
-        {
-            if (unit[i].isValid())
-				if (unit[i].iPlayer == 0)
-                if (unit[i].iGroup == iG)
-                {
-                    unit[i].bSelected=true;
-
-                    if (units[unit[i].iType].infantry)
-                        bPlayInf=true;
-                    else
-                        bPlayRep=true;
-                }
-        }
-
-        if (rnd(100) < 15)
-        {
-			if (bPlayRep)
-				play_sound_id(SOUND_REPORTING,-1);
-
-
-			if (bPlayInf)
-				play_sound_id(SOUND_YESSIR,-1);
-            
-		} // HACK HACK
-        }
-
-    }
-
-    }
-
-
+				if (bPlayInf) {
+					play_sound_id(SOUND_YESSIR,-1);
+				}
+			} // END HACK
+		}
+	}
 }
 
 
@@ -5043,14 +5044,13 @@ void cGame::handleKeys() {
 }
 
 void cGame::shakeScreenAndBlitBuffer() {
-if (TIMER_throttle == 0)
-		{		
-			TIMER_throttle = -1;			
-		}
-		// blit on screen
-		
-        if (TIMER_throttle > 0)
-		{
+	if (TIMER_throttle == 0) {		
+		TIMER_throttle = -1;			
+	}
+	// blit on screen
+
+	if (TIMER_throttle > 0)
+	{
 		// the more we get to the 'end' the less we 'throttle'.
 		// Structure explosions are 6 time units per cell.
 		// Max is 9 cells (9*6=54)
@@ -5061,28 +5061,28 @@ if (TIMER_throttle == 0)
 		int border=TIMER_throttle / 5;
 		if (border > 9)
 			border = 9;
-		
+
 		throttle_x = -abs(border/2) + rnd(border);
 		throttle_y = -abs(border/2) + rnd(border);
 
-        blit(bmp_screen, bmp_throttle, 0, 0, 0+throttle_x, 0+throttle_y, screen_x, screen_y);
+		blit(bmp_screen, bmp_throttle, 0, 0, 0+throttle_x, 0+throttle_y, screen_x, screen_y);
 		blit(bmp_throttle, screen, 0, 0, 0, 0, screen_x, screen_y);
-        }
+	}
+	else
+	{
+		// when fading
+		if (iAlphaScreen == 255)
+			blit(bmp_screen, screen, 0, 0, 0, 0, screen_x, screen_y);
 		else
-        {
-            // when fading
-            if (iAlphaScreen == 255)
-                blit(bmp_screen, screen, 0, 0, 0, 0, screen_x, screen_y);
-            else
-            {   
-				BITMAP *temp = create_bitmap(game.screen_x, game.screen_y);
-                clear(temp);
-                fblend_trans(bmp_screen, temp, 0, 0, iAlphaScreen);                
-                blit(temp, screen, 0, 0, 0, 0, screen_x, screen_y);
-                destroy_bitmap(temp);
-            }
-            
-        }
+		{   
+			BITMAP *temp = create_bitmap(game.screen_x, game.screen_y);
+			clear(temp);
+			fblend_trans(bmp_screen, temp, 0, 0, iAlphaScreen);                
+			blit(temp, screen, 0, 0, 0, 0, screen_x, screen_y);
+			destroy_bitmap(temp);
+		}
+
+	}
 }
 
 void cGame::runGameState() {
