@@ -35,6 +35,13 @@ if (bla == 0) {
 I know, a LOT of code is still not compliant with the curly braces rules.
 
 
+INDENTING:
+----------
+If your code needs to indent more then 2 or 3 times, it could be wise to create tiny
+functions to handle pieces of code to reduce indenting: 
+- the less indenting, the less mistakes you will make. 
+
+
 FOR/ETC
 -------
 
