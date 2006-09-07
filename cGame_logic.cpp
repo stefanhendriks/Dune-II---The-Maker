@@ -5086,43 +5086,50 @@ void cGame::shakeScreenAndBlitBuffer() {
 }
 
 void cGame::runGameState() {
-	if (state == GAME_PLAYING)
-		combat();
-	else if (state == GAME_BRIEFING)
-	{
-		if (iMentatSpeak == -1)
-			preparementat(false); // prepare mission briefing
+	switch (state) {
+		case GAME_PLAYING: 
+			combat();
+			break;
+		case GAME_BRIEFING:
+			if (iMentatSpeak == -1) {
+				preparementat(false);
+			}
 
-		// and speak it
-		mentat(iHouse);
-	}
-	else if (state == GAME_SETUPSKIRMISH)
-		setup_skirmish();
-	else if (state == GAME_MENU)
-		menu();
-	else if (state == GAME_REGION)
-		region();
-	else if (state == GAME_HOUSE)
-		house();
-	else if (state == GAME_TELLHOUSE)
-		tellhouse();
-	else if (state == GAME_WINNING)
-		winning();
-	else if (state == GAME_LOSING)
-		losing();
-	else if (state == GAME_WINBRIEF)
-	{
-		if (iMentatSpeak == -1) {
-			preparementat(false);
-		}
-		mentat(iHouse);
-	}
-	else if (state == GAME_LOSEBRIEF)
-	{
-		if (iMentatSpeak == -1)
-			preparementat(false);
-
-		mentat(iHouse);
+			mentat(iHouse);
+			break;
+		case GAME_SETUPSKIRMISH:
+			setup_skirmish();
+			break;
+		case GAME_MENU:
+			menu();
+			break;
+		case GAME_REGION:
+			region();
+			break;
+		case GAME_HOUSE:
+			house();
+			break;
+		case GAME_TELLHOUSE:
+			tellhouse();
+			break;
+		case GAME_WINNING:
+			winning();
+			break;
+		case GAME_LOSING:
+			losing();
+			break;
+		case GAME_WINBRIEF:
+			if (iMentatSpeak == -1) {
+				preparementat(false);
+			}
+			mentat(iHouse);
+			break;
+		case GAME_LOSEBRIEF:
+			if (iMentatSpeak == -1) {
+				preparementat(false);
+			}
+			mentat(iHouse);
+			break;
 	}
 }
 

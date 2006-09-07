@@ -12,11 +12,11 @@
 
 #include "d2tmh.h" 
 
-bool		bDoDebug=false;
-int	iRest=1;	// rest value
+bool bDoDebug = false;
+int	iRest = 1;	// rest value
 
 // Game settings
-int iIdealFPS=60;           // Ideal FPS = 60
+int iIdealFPS = 60;           // Ideal FPS = 60
 
 // Server/Client system
 
