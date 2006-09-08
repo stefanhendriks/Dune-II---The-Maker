@@ -4739,105 +4739,123 @@ void cGame::region()
 
 }
 
+void destroyAllUnits(bool bHumanPlayer) {
+	if (bHumanPlayer) {
+		for (int i=0; i < MAX_UNITS; i++) {
+			if (unit[i].isValid()) {
+				if (unit[i].iPlayer == 0) {
+					unit[i].die(true, false); {
+					}
+				}
+			}
+		}
+
+	} else {
+		for (int i=0; i < MAX_UNITS; i++) {
+			if (unit[i].isValid()) {
+				if (unit[i].iPlayer > 0) {
+					unit[i].die(true, false);
+				}
+			}
+		}
+	}
+}
+
+void destroyAllStructures(bool bHumanPlayer) {
+	if (bHumanPlayer) {
+		for (int i=0; i < MAX_STRUCTURES; i++) {
+			if (structure[i]) {
+				if (structure[i]->iPlayer == 0) {
+					structure[i]->die();
+				}
+			}
+		}
+	} else {
+		for (int i=0; i < MAX_STRUCTURES; i++) {
+			if (structure[i]) {
+				if (structure[i]->iPlayer > 0) {
+					structure[i]->die();
+				}
+			}
+		}
+	}
+}
+
 
 void DEBUG_KEYS()
 {
-        // WIN MISSION
-		if (key[KEY_F2])
-        {
-            if (game.iWinQuota > -1)
-                player[0].credits = game.iWinQuota + 1;
-            else
-            {
-                for (int i=0; i < MAX_STRUCTURES; i++)
-                    if (structure[i])
-                        if (structure[i]->iPlayer > 0)
-                            structure[i]->die();
-
-                for (int i=0; i < MAX_UNITS; i++)
-                    if (unit[i].isValid())
-                        if (unit[i].iPlayer > 0)
-                            unit[i].die(true, false);
-
-            }
-            
-            //
-        }
-
-        // LOSE MISSION
-        if (key[KEY_F3])
-        {
-                for (int i=0; i < MAX_STRUCTURES; i++)
-                    if (structure[i])
-                        if (structure[i]->iPlayer == 0)
-                            structure[i]->die();
-
-                for (int i=0; i < MAX_UNITS; i++)
-                    if (unit[i].isValid())
-                        if (unit[i].iPlayer == 0)
-                            unit[i].die(true, false);
-
-
-        }
-
-	    if (key[KEY_F1] && game.iHouse > 0)
+	// WIN MISSION
+	if (key[KEY_F2])
+	{
+		if (game.iWinQuota > -1)
+			player[0].credits = game.iWinQuota + 1;
+		else
 		{
-            game.mission_init();
-            game.iMission = 9;
-            game.iRegion  = 22;
-            game.iWinQuota = -1;
-            game.state = GAME_BRIEFING;        
-            play_music(MUSIC_BRIEFING);
-            game.iMentatSpeak=-1;
-		} 
+			destroyAllStructures(false);
+			destroyAllUnits(false);				
+		}
+	}
 
-        if (key[KEY_F6] && game.iHouse > 0)
-		{
-            game.mission_init();
-            game.iMission = 3;
-            game.iRegion  = 6;
-            game.iWinQuota = -1;
-            game.state = GAME_BRIEFING;        
-            play_music(MUSIC_BRIEFING);
-            game.iMentatSpeak=-1;
-		} 
+	// LOSE MISSION
+	if (key[KEY_F3])
+	{
+		destroyAllStructures(true);
+		destroyAllUnits(true);			
+	}
 
-		if (key[KEY_F7] && game.iHouse > 0)
-		{
-            game.mission_init();
-            game.iMission = 4;
-            game.iRegion  = 10;
-            game.iWinQuota = -1;
-            game.state = GAME_BRIEFING;        
-            play_music(MUSIC_BRIEFING);
-            game.iMentatSpeak=-1;
-		} 
+	if (key[KEY_F1] && game.iHouse > 0)
+	{
+		game.mission_init();
+		game.iMission = 9;
+		game.iRegion  = 22;
+		game.iWinQuota = -1;
+		game.state = GAME_BRIEFING;        
+		play_music(MUSIC_BRIEFING);
+		game.iMentatSpeak=-1;
+	} 
 
-        if (key[KEY_F8] && game.iHouse > 0)
-		{
-            game.mission_init();
-            game.iMission = 5;
-            game.iRegion  = 13;
-            game.iWinQuota = -1;
-            game.state = GAME_BRIEFING;        
-            play_music(MUSIC_BRIEFING);
-            game.iMentatSpeak=-1;
-		} 
+	if (key[KEY_F6] && game.iHouse > 0)
+	{
+		game.mission_init();
+		game.iMission = 3;
+		game.iRegion  = 6;
+		game.iWinQuota = -1;
+		game.state = GAME_BRIEFING;        
+		play_music(MUSIC_BRIEFING);
+		game.iMentatSpeak=-1;
+	} 
 
-        
+	if (key[KEY_F7] && game.iHouse > 0)
+	{
+		game.mission_init();
+		game.iMission = 4;
+		game.iRegion  = 10;
+		game.iWinQuota = -1;
+		game.state = GAME_BRIEFING;        
+		play_music(MUSIC_BRIEFING);
+		game.iMentatSpeak=-1;
+	} 
 
+	if (key[KEY_F8] && game.iHouse > 0)
+	{
+		game.mission_init();
+		game.iMission = 5;
+		game.iRegion  = 13;
+		game.iWinQuota = -1;
+		game.state = GAME_BRIEFING;        
+		play_music(MUSIC_BRIEFING);
+		game.iMentatSpeak=-1;
+	} 
 
-        if (key[KEY_F4])
-        {
-            player[0].credits = 299999;
-            player[0].draw_credits = 299999;
-        }
+	if (key[KEY_F4])
+	{
+		player[0].credits = 299999;
+		player[0].draw_credits = 299999;
+	}
 
-        if (key[KEY_F5])
-			map.clear_all();
-
-
-
+	if (key[KEY_F5]) {
+		map.clear_all();
+	}
 }
 
 int getGroupNumberFromKeyboard() {
@@ -4871,7 +4889,7 @@ void GAME_KEYS()
 		// UNIT GROUPING
 		if (iGroup > 0)
 		{
-		
+
 			// First: Any unit that is already this group number, but NOT selected, must be removed
 			for (int i=0; i < MAX_UNITS; i++)
 			{
@@ -5009,15 +5027,15 @@ void cGame::handleKeys() {
 		{
 			char filename[25];      
 
-			if (screenshot < 10)
+			if (screenshot < 10) {
 				sprintf(filename, "%dx%d_000%d.pcx", screen_x, screen_y, screenshot);
-			else if (screenshot < 100)
+			} else if (screenshot < 100) {
 				sprintf(filename, "%dx%d_00%d.pcx", screen_x, screen_y, screenshot);
-			else if (screenshot < 1000)
+			} else if (screenshot < 1000) {
 				sprintf(filename, "%dx%d_0%d.pcx", screen_x, screen_y, screenshot);
-			else
+			} else {
 				sprintf(filename, "%dx%d_%d.pcx", screen_x, screen_y, screenshot);
-
+			}
 
 			save_bmp(filename, bmp_screen, general_palette);
 
