@@ -2876,7 +2876,6 @@ void cGame::losing()
 
         // PREPARE NEW MENTAT BABBLE
         iMentatSpeak=-1;
-
         
         // FADE OUT
         FADE_OUT();

@@ -15,7 +15,7 @@
 #include "..\d2tmc.h"
 
 cAtreidesMentat::cAtreidesMentat() {
-
+	
 }
 
 cAtreidesMentat::~cAtreidesMentat() {

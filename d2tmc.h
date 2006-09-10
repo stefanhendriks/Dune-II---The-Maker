@@ -28,7 +28,7 @@ extern cAIPlayer      aiplayer[MAX_PLAYERS];           // related to aiplayer (e
 extern cParticle      particle[MAX_PARTICLES];
 extern cBullet        bullet[MAX_BULLETS];
 extern cRegion        world[MAX_REGIONS];
-
+extern cMentat		  *mentat;
 
 extern int MAXVOICES;            // USE THIS FOR DETERMINING VOICES
 

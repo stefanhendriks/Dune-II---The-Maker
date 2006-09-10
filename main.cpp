@@ -30,6 +30,7 @@ cAIPlayer      aiplayer[MAX_PLAYERS];           // related to aiplayer (except n
 cParticle      particle[MAX_PARTICLES];
 cBullet        bullet[MAX_BULLETS];
 cRegion        world[MAX_REGIONS];
+cMentat		   *mentat;
 
 // Structs
 sPreviewMap     PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory
@@ -39,7 +40,7 @@ s_UnitP         units[MAX_UNITTYPES];              // unit types
 s_Bullet        bullets[MAX_BULLET_TYPES];          // bullet slots
 sReinforcement  reinforcements[MAX_REINFORCEMENTS];  // reinforcement slots
 
-int MAXVOICES=8;            // USE THIS FOR DETERMINING VOICES
+int MAXVOICES = 8;            // USE THIS FOR DETERMINING VOICES
 
 // palette
 PALETTE general_palette;
@@ -762,6 +763,9 @@ bool install()
 	game.bPlaying = true;
 	game.screenshot = 0;
 	game.state = -1; 
+
+	// Mentat class pointer set at null
+	mentat = NULL;
 
 	// Mouse stuff
 	mouse_status = MOUSE_STATE_NORMAL;
