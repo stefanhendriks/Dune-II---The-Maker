@@ -227,6 +227,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\d2tm_math.cpp"
+				>
+			</File>
+			<File
 				RelativePath="gui.cpp"
 				>
 			</File>
@@ -247,10 +251,6 @@
 				>
 			</File>
 			<File
-				RelativePath="math.cpp"
-				>
-			</File>
-			<File
 				RelativePath="network.cpp"
 				>
 			</File>
@@ -267,6 +267,10 @@
 				</File>
 				<File
 					RelativePath="cGame_logic.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\cMentat.cpp"
 					>
 				</File>
 				<File
@@ -357,6 +361,22 @@
 					Name="Units"
 					>
 				</Filter>
+				<Filter
+					Name="Mentat"
+					>
+					<File
+						RelativePath=".\mentat\cAtreidesMentat.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\mentat\cHarkonnenMentat.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\mentat\cOrdosMentat.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -386,6 +406,10 @@
 			</File>
 			<File
 				RelativePath="common.h"
+				>
+			</File>
+			<File
+				RelativePath=".\d2tm_math.h"
 				>
 			</File>
 			<File
@@ -422,10 +446,6 @@
 			</File>
 			<File
 				RelativePath="map.h"
-				>
-			</File>
-			<File
-				RelativePath="math.h"
 				>
 			</File>
 			<File
@@ -696,6 +716,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\cMentat.h"
+					>
+				</File>
+				<File
 					RelativePath="cParticle.h"
 					>
 				</File>
@@ -783,6 +807,22 @@
 					Name="Units"
 					>
 				</Filter>
+				<Filter
+					Name="Mentat"
+					>
+					<File
+						RelativePath=".\mentat\cAtreidesMentat.h"
+						>
+					</File>
+					<File
+						RelativePath=".\mentat\cHarkonnenMentat.h"
+						>
+					</File>
+					<File
+						RelativePath=".\mentat\cOrdosMentat.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -796,19 +836,19 @@
 		<Filter
 			Name="Text files"
 			>
+			<File
+				RelativePath="controls.txt"
+				>
+			</File>
+			<File
+				RelativePath="DEBUGMODE.TXT"
+				>
+			</File>
+			<File
+				RelativePath="version history.txt"
+				>
+			</File>
 		</Filter>
-		<File
-			RelativePath="controls.txt"
-			>
-		</File>
-		<File
-			RelativePath="DEBUGMODE.TXT"
-			>
-		</File>
-		<File
-			RelativePath="version history.txt"
-			>
-		</File>
 		<File
 			RelativePath="world.asp"
 			>

@@ -1,0 +1,70 @@
+DUNE II - The Maker
+-------------------
+
+0| -------------------
+0| Version information
+0| -------------------
+0| DEM3.5
+0| Compiled at Sep  9 2006 , 23:11:06
+0| Windowed mode
+0| 
+-------
+0| Allegro
+0| -------
+0| Allegro 4.2.0, MSVC
+0| yield_timeslice()
+0| install_timer()
+0| alfont_init()
+0| install_keyboard()
+0| install_mouse()
+0| setting up timer functions / locking functions & memory
+0| Timers installed
+0| Window title set: [Dune II - The Maker [DEM3.5] - (by Stefan Hendriks)]
+0| Loading font data
+0| Display 'switch to background' mode set
+0| Initializing sound
+0| Succes with 32 reserved voices.
+0| Bitmap created: bmp_screen
+0| Bitmap created: bmp_throttle
+0| Bitmap created: bmp_winlose
+0| Bitmap created: bmp_fadeout
+0| Color conversion method set
+0| Mouse speed set
+0| 
+0| ----
+0| GAME 
+0| ----
+0| Datafile hooked: gfxdata.dat
+0| Datafile hooked: gfxaudio.dat
+0| Datafile hooked: gfxinter.dat
+0| Datafile hooked: gfxworld.dat
+0| Datafile hooked: gfxmentat.dat
+0| MP3MUS.DAT not found, using MIDI to play music
+0| Installing:  PLAYERS
+0| Installing:  HOUSES
+0| Installing:  STRUCTURES
+0| Installing:  BULLET TYPES
+0| Installing:  UNITS
+0| Installing:  WORLD
+0| 
+0| --------------
+0| BATTLE CONTROL
+0| --------------
+0| 
+3...2...1... GO!
+
+0| [GAME.INI] Opening file
+0| [GAME.INI] -> [UNITS]
+0| [GAME.INI] -> [STRUCTURES]
+0| [GAME.INI] Done
+1| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+2| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+2| 
+--------
+2| SHUTDOWN
+2| --------
+2| Allegro FONT library shut down.
+2| Allegro MP3 library shut down.
+2| Allegro shut down.
+2| 
+Thanks for playing!

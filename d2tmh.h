@@ -45,11 +45,11 @@
 #include "data\\gfxmentat.h"                  // mentat gfx
 
 // actual source headers                        - ORDER
-//                                                (in every file!) 
-#include "main.h"                           // main
-#include "math.h"                           // mathematics
-#include "cStructure.h"						// structures
-#include "cUnit.h"							// units	
+#include "main.h"
+#include "d2tm_math.h"
+#include "cStructure.h"
+#include "cUnit.h"
+#include "cMentat.h"
 #include "ini.h"							// INI loading
 #include "cGame.h"							// game class
 #include "common.h"							// commonly used functions
@@ -68,6 +68,11 @@
 // PROFILER
 #include "stdlib.h"
 // PROFILER
+
+// Mentats
+#include "mentat\\cOrdosMentat.h"
+#include "mentat\\cHarkonnenMentat.h"
+#include "mentat\\cAtreidesMentat.h"
 
 // Structures
 #include "structures\\cConstYard.h"

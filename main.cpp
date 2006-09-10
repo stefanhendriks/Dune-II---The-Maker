@@ -376,510 +376,456 @@ void TIME_process()
   Purpose  : Will install game variables, sets up the entire game.
 ***/
 bool install()
-{ 
-  // Each time we run the game, we clear out the logbook
-  FILE *fp;
-  fp = fopen("log.txt", "wt");
+{ 	
+	game.init(); // Must be first!
 
-  if (fp) 
-   {
-     fprintf(fp, "DUNE II - The Maker\n");
-     fprintf(fp, "-------------------\n\n"); // print head of logbook
-     fclose(fp);
-   }
+	// Each time we run the game, we clear out the logbook
+	FILE *fp;
+	fp = fopen("log.txt", "wt");
 
-  logbook("-------------------");
-  logbook("Version information");
-  logbook("-------------------");
-  logbook(game.version);
-  char msg[255];
-  sprintf(msg, "Compiled at %s , %s", __DATE__, __TIME__);
-  logbook(msg);   
+	if (fp) 
+	{
+		fprintf(fp, "DUNE II - The Maker\n");
+		fprintf(fp, "-------------------\n\n"); // print head of logbook
+		fclose(fp);
+	}
 
-  if (DEBUGGING) logbook("DEBUG MODE ENABLED");
+	logbook("-------------------");
+	logbook("Version information");
+	logbook("-------------------");
+	logbook(game.version);
+	char msg[255];
+	sprintf(msg, "Compiled at %s , %s", __DATE__, __TIME__);
+	logbook(msg);   
 
-  // init game
-  if (game.windowed)
-      logbook("Windowed mode");
-  else
-      logbook("Fullscreen mode");
+	if (DEBUGGING) logbook("DEBUG MODE ENABLED");
 
-
-  
-  mouse_co_x1 = -1;      // coordinates
-  mouse_co_y1 = -1;      // of
-  mouse_co_x2 = -1;      // the
-  mouse_co_y2 = -1;      // mouse border
-
-  // TODO: load eventual game settings (resolution, etc)
+	// init game
+	if (game.windowed)
+		logbook("Windowed mode");
+	else
+		logbook("Fullscreen mode");
 
 
-  // Logbook notification
-  logbook("\n-------");
-  logbook("Allegro");
-  logbook("-------");
 
-  // ALLEGRO - INIT    
-  if (allegro_init() != 0)
-    return false;
+	mouse_co_x1 = -1;      // coordinates
+	mouse_co_y1 = -1;      // of
+	mouse_co_x2 = -1;      // the
+	mouse_co_y2 = -1;      // mouse border
 
-  logbook(allegro_id);
-  yield_timeslice();
-  
-  logbook("yield_timeslice()");
-
-  int r = install_timer();
-  if (r > -1) logbook("install_timer()");
-  else
-  {
-	  allegro_message("Failed to install timer");
-	logbook("FAILED");
-	return false;
-  }	
-
-  alfont_init();
-  logbook("alfont_init()");
-  install_keyboard();
-  logbook("install_keyboard()");
-  install_mouse();
-  logbook("install_mouse()");
-
-  logbook("setting up timer functions / locking functions & memory");
-  /* set up the interrupt routines... */  
-  LOCK_VARIABLE(RUNNING_TIMER_units);
-  LOCK_VARIABLE(RUNNING_TIMER_tenth);  
-  LOCK_VARIABLE(RUNNING_TIMER_fps);  
-  LOCK_FUNCTION(timer_units);  
-  LOCK_FUNCTION(timer_tenth);  
-  LOCK_FUNCTION(fps_proc);  
-  
-  game.TIMER_money=0;
-  game.TIMER_message=0;
-  game.TIMER_throttle=0;
-
-  //install_int(timer_units, 100);
-  //install_int(timer_tenth, 10);
-  install_int(timer_units, 100);
-  install_int(timer_tenth, 5);  
-  install_int(fps_proc, 1000);
-  
-  logbook("Timers installed");
-
-  frame_count = fps = 0;
-
-  // set window title
-  char title[128];
-  sprintf(title, "Dune II - The Maker [%s] - (by Stefan Hendriks)", game.version);
-  
-    // Set window title
-  set_window_title(title);  
-  char window_title[256];
-  sprintf(window_title, "Window title set: [%s]", title);
-  logbook(window_title);
-  
-  set_window_close_button(0);
+	// TODO: load eventual game settings (resolution, etc)
 
 
-  set_color_depth(16);
+	// Logbook notification
+	logbook("\n-------");
+	logbook("Allegro");
+	logbook("-------");
 
-  
+	// ALLEGRO - INIT    
+	if (allegro_init() != 0)
+		return false;
 
-  //if (iDepth > 15 && iDepth != 24)
-      //set_color_depth(iDepth);
-  
-  if (game.windowed)
-  {
-      /*
-	 int 	iDepth = desktop_color_depth();
+	logbook(allegro_id);
+	yield_timeslice();
 
-  // dont switch to 15 bit or lower, or at 24 bit
-  if (iDepth > 15 && iDepth != 24)
-  {
-	  char msg[255];
-	  sprintf(msg,"DESKTOP: Found desktop color depth. Will switch to %d bit.", iDepth);
-	  logbook(msg);
-	  set_color_depth(iDepth);      // run in the same bit depth as the desktop
-  }
-  else
-  {
+	logbook("yield_timeslice()");
+
+	int r = install_timer();
+	if (r > -1) logbook("install_timer()");
+	else
+	{
+		allegro_message("Failed to install timer");
+		logbook("FAILED");
+		return false;
+	}	
+
+	alfont_init();
+	logbook("alfont_init()");
+	install_keyboard();
+	logbook("install_keyboard()");
+	install_mouse();
+	logbook("install_mouse()");
+
+	logbook("setting up timer functions / locking functions & memory");
+	/* set up the interrupt routines... */  
+	LOCK_VARIABLE(RUNNING_TIMER_units);
+	LOCK_VARIABLE(RUNNING_TIMER_tenth);  
+	LOCK_VARIABLE(RUNNING_TIMER_fps);  
+	LOCK_FUNCTION(timer_units);  
+	LOCK_FUNCTION(timer_tenth);  
+	LOCK_FUNCTION(fps_proc);  
+
+	game.TIMER_money=0;
+	game.TIMER_message=0;
+	game.TIMER_throttle=0;
+
+	//install_int(timer_units, 100);
+	//install_int(timer_tenth, 10);
+	install_int(timer_units, 100);
+	install_int(timer_tenth, 5);  
+	install_int(fps_proc, 1000);
+
+	logbook("Timers installed");
+
+	frame_count = fps = 0;
+
+	// set window title
+	char title[128];
+	sprintf(title, "Dune II - The Maker [%s] - (by Stefan Hendriks)", game.version);
+
+	// Set window title
+	set_window_title(title);  
+	char window_title[256];
+	sprintf(window_title, "Window title set: [%s]", title);
+	logbook(window_title);
+
+	set_window_close_button(0);
+
+
+	set_color_depth(16);
+
+
+
+	//if (iDepth > 15 && iDepth != 24)
+	//set_color_depth(iDepth);
+
+	if (game.windowed)
+	{
+		/*
+		int 	iDepth = desktop_color_depth();
+
+		// dont switch to 15 bit or lower, or at 24 bit
+		if (iDepth > 15 && iDepth != 24)
+		{
+		char msg[255];
+		sprintf(msg,"DESKTOP: Found desktop color depth. Will switch to %d bit.", iDepth);
+		logbook(msg);
+		set_color_depth(iDepth);      // run in the same bit depth as the desktop
+		}
+		else
+		{
 		// default color depth is 16
-	  logbook("DESKTOP: No bit depth autodetected. Will switch to default, 16 bit.");
-	  set_color_depth(16);
-  }*/
-	  //GFX_AUTODETECT_WINDOWED
-    int r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);  
-    if (r > -1)
-    {
-      // Succes      
-    }
-    else
-    {      
-      // GFX_DIRECTX_ACCEL / GFX_AUTODETECT
-      r = set_gfx_mode(GFX_DIRECTX_ACCEL, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
-      
-      if (r > -1)
-      {  
-        game.windowed = false;
+		logbook("DESKTOP: No bit depth autodetected. Will switch to default, 16 bit.");
+		set_color_depth(16);
+		}*/
+		//GFX_AUTODETECT_WINDOWED
+		int r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);  
+		if (r > -1)
+		{
+			// Succes      
+		}
+		else
+		{      
+			// GFX_DIRECTX_ACCEL / GFX_AUTODETECT
+			r = set_gfx_mode(GFX_DIRECTX_ACCEL, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
 
-        /*
-        FILE *f;
-        f = fopen("settings.d3", "wb");
+			if (r > -1)
+			{  
+				game.windowed = false;
 
-        fwrite(&game.play_music , sizeof(bool)    ,1 , f);        
-        fwrite(&game.play_sound , sizeof(bool)    ,1 , f);
-        fwrite(&game.fade , sizeof(bool)    ,1 , f);
-        fwrite(&game.windowed , sizeof(bool)    ,1 , f);  
-        fwrite(&game.screen_x , sizeof(int)    ,1 , f);            
-        fwrite(&game.screen_y , sizeof(int)    ,1 , f);            
-        fclose(f);          
-        logbook("Could not enter windowed-mode; settings.d3 adjusted"); */
-      
-      }
-      else
-      {        
-		  allegro_message("Failed to set resolution");
-        return false;
-      }
-    }
-  }
-  else
-  {
+				/*
+				FILE *f;
+				f = fopen("settings.d3", "wb");
 
-    int r = set_gfx_mode(GFX_AUTODETECT, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+				fwrite(&game.play_music , sizeof(bool)    ,1 , f);        
+				fwrite(&game.play_sound , sizeof(bool)    ,1 , f);
+				fwrite(&game.fade , sizeof(bool)    ,1 , f);
+				fwrite(&game.windowed , sizeof(bool)    ,1 , f);  
+				fwrite(&game.screen_x , sizeof(int)    ,1 , f);            
+				fwrite(&game.screen_y , sizeof(int)    ,1 , f);            
+				fclose(f);          
+				logbook("Could not enter windowed-mode; settings.d3 adjusted"); */
 
-    // succes
-    if (r > -1)
-    {
-      
-    }
-    else
-    {
-      return false;
-    }
+			}
+			else
+			{        
+				allegro_message("Failed to set resolution");
+				return false;
+			}
+		}
+	}
+	else
+	{
 
-  }
-    
-  
-  text_mode(-1);
-  alfont_text_mode(-1);
+		int r = set_gfx_mode(GFX_AUTODETECT, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
 
-  
-  logbook("Loading font data");
-  // loading font
+		// succes
+		if (r > -1)
+		{
 
-  game_font = alfont_load_font("data\\arakeen.fon");  
+		}
+		else
+		{
+			return false;
+		}
 
-  if (game_font != NULL)
-    alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
-  else
-  {
-    allegro_message("Failed to load arakeen.fon");
-    return false;
-  }
+	}
 
-  
-  bene_font = alfont_load_font("data\\benegess.fon");  
 
-  if (bene_font != NULL)
-    alfont_set_font_size(bene_font, 10); // set size
-  else
-  {
-    allegro_message("Failed to load benegess.fon");
-    return false;
-  }
-  
- 
-  
-  if (set_display_switch_mode(SWITCH_BACKGROUND) < 0)
-  {
-      set_display_switch_mode(SWITCH_PAUSE);
-      logbook("Display 'switch and pause' mode set");
-  }
-  else
-        logbook("Display 'switch to background' mode set");
-      
-  
+	text_mode(-1);
+	alfont_text_mode(-1);
 
-  // sound
-  logbook("Initializing sound");
-  bool bSucces=false;
-   int voices = 32;
-    while (1) {
-        if (voices <= 4) {
-            break;
-        }
 
-        reserve_voices(voices, 0);
-        if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) == 0) 
-        {
-            char msg[255];
-            sprintf(msg, "Succes with %d reserved voices.", voices);
-            logbook(msg);
-            MAXVOICES=voices;
-            bSucces=true;            
-            break;
-        }
-        else {
-            voices /= 2;
-        }
-    }
-  
-    if (bSucces==false)
+	logbook("Loading font data");
+	// loading font
+
+	game_font = alfont_load_font("data\\arakeen.fon");  
+
+	if (game_font != NULL)
+		alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
+	else
+	{
+		allegro_message("Failed to load arakeen.fon");
+		return false;
+	}
+
+
+	bene_font = alfont_load_font("data\\benegess.fon");  
+
+	if (bene_font != NULL)
+		alfont_set_font_size(bene_font, 10); // set size
+	else
+	{
+		allegro_message("Failed to load benegess.fon");
+		return false;
+	}
+
+
+
+	if (set_display_switch_mode(SWITCH_BACKGROUND) < 0)
+	{
+		set_display_switch_mode(SWITCH_PAUSE);
+		logbook("Display 'switch and pause' mode set");
+	}
+	else
+		logbook("Display 'switch to background' mode set");
+
+
+
+	// sound
+	logbook("Initializing sound");
+	bool bSucces = false;
+	int voices = 32;
+	while (1) {
+		if (voices <= 4) {
+			break;
+		}
+
+		reserve_voices(voices, 0);
+		if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) == 0) 
+		{
+			char msg[255];
+			sprintf(msg, "Succes with %d reserved voices.", voices);
+			logbook(msg);
+			MAXVOICES=voices;
+			bSucces=true;            
+			break;
+		}
+		else {
+			voices /= 2;
+		}
+	}
+
+	if (!bSucces) {
 		logbook("ERROR: Cannot initialize sound card");
+	}
 
-  /*** 
-   Bitmap Creation
-   ***/
-  
+	/***
+	Bitmap Creation
+	***/
 
-  
-/*
-  bmp_dummy = create_video_bitmap(game.screen_x, game.screen_y);
-  clear(bmp_dummy); 
+	bmp_screen = create_bitmap(game.screen_x, game.screen_y);
 
-  show_video_bitmap(bmp_dummy);*/
+	if (bmp_screen == NULL)
+	{
+		allegro_message("Failed to create a memory bitmap");
+		logbook("ERROR: Could not create bitmap: bmp_screen");
+		return false;
+	}
+	else
+	{
+		logbook("Bitmap created: bmp_screen");
+		clear(bmp_screen);
+	}
 
-  bmp_screen = create_bitmap(game.screen_x, game.screen_y);
-    
-  if (bmp_screen == NULL)
-  {
-	allegro_message("Failed to create a memory bitmap");
-    logbook("ERROR: Could not create bitmap: bmp_screen");
-    return false;
-  }
-  else
-  {
-    logbook("Bitmap created: bmp_screen");
-   clear(bmp_screen);      
+	bmp_throttle = create_bitmap(game.screen_x, game.screen_y);
 
-  }
-  
-  bmp_throttle = create_bitmap(game.screen_x, game.screen_y);
-  
-  if (bmp_throttle == NULL)
-  {
-	allegro_message("Failed to create a memory bitmap");
-    logbook("ERROR: Could not create bitmap: bmp_throttle");
-    return false;
-  }
-  else
-    logbook("Bitmap created: bmp_throttle");
-  
-  bmp_winlose = create_bitmap(game.screen_x, game.screen_y);
-  
-  if (bmp_winlose == NULL)
-  {
-	allegro_message("Failed to create a memory bitmap");
-    logbook("ERROR: Could not create bitmap: bmp_winlose");
-    return false;
-  }
-  else
-    logbook("Bitmap created: bmp_winlose");
-  
-  bmp_fadeout = create_bitmap(game.screen_x, game.screen_y);
-  
-  if (bmp_fadeout == NULL)
-  {
-	allegro_message("Failed to create a memory bitmap");
-    logbook("ERROR: Could not create bitmap: bmp_fadeout");
-    return false;
-  }
-  else
-    logbook("Bitmap created: bmp_fadeout");
-  
+	if (bmp_throttle == NULL)
+	{
+		allegro_message("Failed to create a memory bitmap");
+		logbook("ERROR: Could not create bitmap: bmp_throttle");
+		return false;
+	}
+	else {
+		logbook("Bitmap created: bmp_throttle");	
+	}
 
-  
+	bmp_winlose = create_bitmap(game.screen_x, game.screen_y);
 
-   // The size of the icon bar is:
-   // from 0 to X - minimap - 6
-/*
-    icons = create_video_bitmap((game.screen_x-214), 50);
+	if (bmp_winlose == NULL)
+	{
+		allegro_message("Failed to create a memory bitmap");
+		logbook("ERROR: Could not create bitmap: bmp_winlose");
+		return false;
+	}
+	else {
+		logbook("Bitmap created: bmp_winlose");
+	}
 
-  if (icons == NULL)
-  {
-	  allegro_message("Failed to create a memory bitmap");
-    logbook("ERROR: Could not create bitmap: icons");
-    return false;
-  }
-  else
-    logbook("Bitmap created: icons");*/
+	bmp_fadeout = create_bitmap(game.screen_x, game.screen_y);
 
-  /*** End of Bitmap Creation ***/
-  
-  set_color_conversion(COLORCONV_MOST);  
-  //set_color_conversion(COLORCONV_MOST);
-  //set_color_conversion(COLORCONV_PARTIAL);
-  
-  logbook("Color conversion method set");
-  
-  // setup mouse speed
-  set_mouse_speed(-1,-1);
+	if (bmp_fadeout == NULL)
+	{
+		allegro_message("Failed to create a memory bitmap");
+		logbook("ERROR: Could not create bitmap: bmp_fadeout");
+		return false;
+	}
+	else {
+		logbook("Bitmap created: bmp_fadeout");
+	} 
 
-  logbook("Mouse speed set");
+	/*** End of Bitmap Creation ***/
+	set_color_conversion(COLORCONV_MOST);  
 
-  logbook("");
-  logbook("----");
-  logbook("GAME ");
-  logbook("----");
+	logbook("Color conversion method set");
 
-  // Data files
+	// setup mouse speed
+	set_mouse_speed(-1,-1);
 
-  // load datafiles
-  // todo : add check if file is loaded properly
-  gfxdata = load_datafile("data\\gfxdata.dat");
-  if (gfxdata == NULL)  
-  {
-    logbook("ERROR: Could not hook/load datafile: gfxdata.dat");
-    return false;
-  }
-  else
-  {
-    logbook("Datafile hooked: gfxdata.dat");
+	logbook("MOUSE: Mouse speed set");
 
-	// copy palette and set palette to general.
-  memcpy (general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
+	logbook("\n----");
+	logbook("GAME ");
+	logbook("----");
 
-  }
+	/*** Data files ***/
 
-  gfxaudio = load_datafile("data\\gfxaudio.dat");
-  if (gfxaudio == NULL)  
-  {
-    logbook("ERROR: Could not hook/load datafile: gfxaudio.dat");
-    return false;
-  }
-  else
-  {
-    logbook("Datafile hooked: gfxaudio.dat");
-  }
+	// load datafiles  
+	gfxdata = load_datafile("data\\gfxdata.dat");
+	if (gfxdata == NULL) {
+		logbook("ERROR: Could not hook/load datafile: gfxdata.dat");
+		return false;
+	} else {
+		logbook("Datafile hooked: gfxdata.dat");
+		memcpy (general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
+	}
 
-  gfxinter = load_datafile("data\\gfxinter.dat");
-  if (gfxinter == NULL)  
-  {
-    logbook("ERROR: Could not hook/load datafile: gfxinter.dat");
-    return false;
-  }
-  else
-  {
-    logbook("Datafile hooked: gfxinter.dat");
-  }
+	gfxaudio = load_datafile("data\\gfxaudio.dat");
+	if (gfxaudio == NULL)  {
+		logbook("ERROR: Could not hook/load datafile: gfxaudio.dat");
+		return false;
+	} else {
+		logbook("Datafile hooked: gfxaudio.dat");
+	}
 
-  gfxworld = load_datafile("data\\gfxworld.dat");
-  if (gfxworld == NULL)  
-  {
-    logbook("ERROR: Could not hook/load datafile: gfxworld.dat");
-    return false;
-  }
-  else
-  {
-    logbook("Datafile hooked: gfxworld.dat");
-	
-  }
+	gfxinter = load_datafile("data\\gfxinter.dat");
+	if (gfxinter == NULL)  {
+		logbook("ERROR: Could not hook/load datafile: gfxinter.dat");
+		return false;
+	} else {
+		logbook("Datafile hooked: gfxinter.dat");
+	}
 
-  gfxmentat = load_datafile("data\\gfxmentat.dat");
-  if (gfxworld == NULL)  
-  {
-    logbook("ERROR: Could not hook/load datafile: gfxmentat.dat");
-    return false;
-  }
-  else
-  {
-    logbook("Datafile hooked: gfxmentat.dat");
-	
-  }
+	gfxworld = load_datafile("data\\gfxworld.dat");
+	if (gfxworld == NULL) {
+		logbook("ERROR: Could not hook/load datafile: gfxworld.dat");
+		return false;
+	} else {
+		logbook("Datafile hooked: gfxworld.dat");
+	}
 
-  gfxmovie=NULL; // nothing
+	gfxmentat = load_datafile("data\\gfxmentat.dat");
+	if (gfxworld == NULL) {
+		logbook("ERROR: Could not hook/load datafile: gfxmentat.dat");
+		return false;
+	} else {
+		logbook("Datafile hooked: gfxmentat.dat");	
+	}
 
-/*
-  sound    = load_datafile("data\\sound.dat");
-  if (sound == NULL)
-  {
-    logbook("ERROR: Could not load datafile: sound.dat");
-    return false;
-  }
-  else
-    logbook("Datafile loaded: sound.dat");
-*/
+	gfxmovie = NULL; // nothing loaded at start. This is done when loading a mission briefing.
 
+	DATAFILE *mp3music = load_datafile("data\\mp3mus.dat");
 
-  DATAFILE *mp3music = load_datafile("data\\mp3mus.dat");
-  
-  if (mp3music == NULL)  
-  {
-    logbook("MP3MUS.DAT not found, using MIDI to play music");
-    game.bMp3=false;
-  }
-  else
-  {
-    logbook("MP3MUS.DAT found, using mp3 files to play music");
-    // Immidiatly load menu music
-    game.bMp3=true;
-  }
+	if (mp3music == NULL) {
+		logbook("MP3MUS.DAT not found, using MIDI to play music");
+		game.bMp3=false;
+	} else {
+		logbook("MP3MUS.DAT found, using mp3 files to play music");
+		// Immidiatly load menu music
+		game.bMp3=true;
+	}
 
+	// randomize timer
 
-  // randomize timer
-  
-  srand((unsigned int) time(0));
+	srand((unsigned int) time(0));
 
-  // SET UP THE GAME VARIABLES
-  // BULLETS
-  // ETC
-  // ETC
-  // UNIT TYPES
-  // STRUCTURE TYPES
-  // ETC
+	game.bPlaying = true;
+	game.screenshot = 0;
+	game.state = -1; 
 
-  // GOOD TIME TO READ THE GAME.INI FILE
+	// Mouse stuff
+	mouse_status = MOUSE_STATE_NORMAL;
+	mouse_tile = 0;
 
-  // Process GAME.INI of this mod. 
-  
-  game.bPlaying = true;
-  game.screenshot = 0;
-  game.state = -1; 
+	set_palette(general_palette);  
 
-  // Mouse stuff
-  mouse_status = MOUSE_STATE_NORMAL;
-  mouse_tile = 0;
-  
-  set_palette(general_palette);  
+	// normal sounds are loud, the music is lower (its background music, so it should not be disturbing)
+	set_volume(255, 150);
 
-  // TOPLAY:
-  // blur my presenting logo (uncomment to make my name blur and the menu)
-  //Blur((BITMAP *)menu[INTRO_MYNAME].dat, 1);
-  //Blur((BI		TMAP *)menu[MENU_DUNE].dat, 1);
-  
-  // normal sounds are loud, the music is lower (its background music, so it should not be disturbing)
-  set_volume(255, 150);
+	// A few messages for the player
+	logbook("Installing:  PLAYERS");
+	INSTALL_PLAYERS();  
+	logbook("Installing:  HOUSES");
+	INSTALL_HOUSES();
+	logbook("Installing:  STRUCTURES");
+	install_structures();
+	logbook("Installing:  BULLET TYPES");
+	install_bullets();
+	logbook("Installing:  UNITS");
+	install_units();
+	logbook("Installing:  WORLD");
+	INSTALL_WORLD();
 
+	logbook("'\n--------------");
+	logbook("BATTLE CONTROL");
+	logbook("--------------"); 
+	logbook("\n3...2...1... GO!\n");
 
-  // A few welcome messages for the player
-  logbook("Installing:  PLAYERS");
-  INSTALL_PLAYERS();
-  logbook("Installing:  HOUSES");
-  INSTALL_HOUSES();
-  logbook("Installing:  STRUCTURES");
-  install_structures();
-  logbook("Installing:  BULLET TYPES");
-  install_bullets();
-  logbook("Installing:  UNITS");
-  install_units();
-  logbook("Installing:  WORLD");
-  INSTALL_WORLD();
-  
-  logbook("");
-  logbook("--------------");
-  logbook("BATTLE CONTROL");
-  logbook("--------------"); 
-  logbook("\n3...2...1... GO!\n");
+	game.init();
+	game.setup_list();
 
-  game.init();
-  game.setup_list();
+	play_music(MUSIC_MENU);
 
-  //game.iHouse = ATREIDES;
-  //player[0].set_house(ATREIDES);
-    
-  play_music(MUSIC_MENU);
-  
-  return true;
+	// all has installed well. Lets rock and role.
+	return true;
+}
+
+void shutdown() {
+	// Destroy font of Allegro FONT library
+	alfont_destroy_font(game_font);
+	alfont_destroy_font(bene_font);
+
+	logbook("\n--------");
+	logbook("SHUTDOWN");
+	logbook("--------");
+
+	// Exit the font library (must be first)
+
+	alfont_exit();
+	logbook("Allegro FONT library shut down.");
+
+	if (mp3_music != NULL)
+	{
+		almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
+		almp3_destroy_mp3(mp3_music);
+	}
+
+	logbook("Allegro MP3 library shut down.");
+
+	// Now we are all neatly closed, we exit Allegro and return to OS hell.
+	allegro_exit();
+	logbook("Allegro shut down.");
+	logbook("\nThanks for playing!");
 }
 
 
@@ -887,43 +833,13 @@ bool install()
 Function: main()
 Purpose : make sure the darn thing works.
   */
-int main()
-{
-
- // Initialize game first
- game.init();
-
- // Install everything
- if (install()) 
- {   
-   game.run(); // run 
+int main() {
+ 
+ if (install()) {   
+   game.run();
  }
 
- // Destroy font of Allegro FONT library
- alfont_destroy_font(game_font);
- alfont_destroy_font(bene_font);
-
- logbook("\n--------");
- logbook("SHUTDOWN");
- logbook("--------");
-
- // Exit the font library (must be first)
-
- alfont_exit();
- logbook("Allegro FONT library shut down.");
-
- if (mp3_music != NULL)
- {
-	 almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
-	 almp3_destroy_mp3(mp3_music);
- }
-
- logbook("Allegro MP3 library shut down.");
-
- // Now we are all neatly closed, we exit Allegro and return to OS hell.
- allegro_exit();
- logbook("Allegro shut down.");
- logbook("\nThanks for playing!");
+ shutdown();
  return 0;
 }
 END_OF_MAIN();

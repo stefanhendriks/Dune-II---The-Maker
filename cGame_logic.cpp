@@ -150,8 +150,9 @@ void cGame::init()
     //if (mp3_music != NULL)
 	  //almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
 
-    if (mp3_music != NULL)
+	if (mp3_music != NULL) {
         almp3_destroy_mp3(mp3_music);
+	}
 
 	iMentatSpeak=-1;			// = sentence to draw and speak with (-1 = not ready)
 
@@ -367,24 +368,22 @@ void cGame::think_winlose()
     }
 }
 
+// MOVIE: Play frames
 void cGame::think_movie()
 {
-    if (gfxmovie != NULL)
-    {
+    if (gfxmovie != NULL) {
         TIMER_movie++;
 
-        if (TIMER_movie > 20)
-        {
+        if (TIMER_movie > 20) {
             iMovieFrame++;
 
             if (gfxmovie[iMovieFrame].type == DAT_END ||
-                gfxmovie[iMovieFrame].type != DAT_BITMAP)            
+				gfxmovie[iMovieFrame].type != DAT_BITMAP) {
                 iMovieFrame=0;
-
+			}
             TIMER_movie=0;
-        }
+		}
     }
-
 }
 
 void cGame::think_mentat()
@@ -3121,7 +3120,6 @@ void cGame::MENTAT_draw_mouth(int iMentat)
         iDrawY = 270;
 		draw_sprite(bmp_screen, (BITMAP *)gfxmentat[ORD_MOUTH01+ iMentatMouth].dat, iDrawX, iDrawY);
     }
-
 }
 
 

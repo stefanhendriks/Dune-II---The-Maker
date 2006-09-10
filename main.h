@@ -8,6 +8,8 @@
 
   2001 - 2006 (c) code by Stefan Hendriks
 
+  TODO: Reduce this crap to minimum
+
   */
 #define DEBUGGING bDoDebug
 
@@ -424,8 +426,7 @@ struct s_Bullet
 
 
 // SKIRMISH MAP PREVIEW DATA
-struct sPreviewMap
-{
+struct sPreviewMap {
      BITMAP *terrain;        // terrain
      int mapdata[MAX_CELLS]; // map data
      int iPlayers;           // players
@@ -434,8 +435,7 @@ struct sPreviewMap
 };
 
 // SETTINGS
-struct sGameSettings
-{
+struct sGameSettings {
     int iIdealFPS;          // ideal fps to reach
     bool bUseRest;          // use Rest technique
     int iScollSpeed;        // scroll speed
