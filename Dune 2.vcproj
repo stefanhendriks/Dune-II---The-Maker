@@ -211,172 +211,172 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
+			Name="CPP"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="ai.cpp"
+				RelativePath="cGame_draw.cpp"
 				>
 			</File>
 			<File
-				RelativePath="bullet.cpp"
+				RelativePath="cGame_logic.cpp"
 				>
 			</File>
 			<File
-				RelativePath="common.cpp"
+				RelativePath=".\cMentat.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\d2tm_math.cpp"
+				RelativePath="cParticle.cpp"
 				>
 			</File>
 			<File
-				RelativePath="gui.cpp"
+				RelativePath="cPlayer.cpp"
 				>
 			</File>
 			<File
-				RelativePath="ini.cpp"
+				RelativePath="cStructure.cpp"
 				>
 			</File>
 			<File
-				RelativePath="keyval.cpp"
-				>
-			</File>
-			<File
-				RelativePath="main.cpp"
-				>
-			</File>
-			<File
-				RelativePath="map.cpp"
-				>
-			</File>
-			<File
-				RelativePath="network.cpp"
-				>
-			</File>
-			<File
-				RelativePath="regions.cpp"
+				RelativePath="cUnit.cpp"
 				>
 			</File>
 			<Filter
-				Name="classes"
+				Name="C files"
 				>
 				<File
-					RelativePath="cGame_draw.cpp"
+					RelativePath="ai.cpp"
 					>
 				</File>
 				<File
-					RelativePath="cGame_logic.cpp"
+					RelativePath="bullet.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\cMentat.cpp"
+					RelativePath="common.cpp"
 					>
 				</File>
 				<File
-					RelativePath="cParticle.cpp"
+					RelativePath=".\d2tm_math.cpp"
 					>
 				</File>
 				<File
-					RelativePath="cPlayer.cpp"
+					RelativePath="gui.cpp"
 					>
 				</File>
 				<File
-					RelativePath="cStructure.cpp"
+					RelativePath="ini.cpp"
 					>
 				</File>
 				<File
-					RelativePath="cUnit.cpp"
+					RelativePath="keyval.cpp"
 					>
 				</File>
-				<Filter
-					Name="Structures"
+				<File
+					RelativePath="main.cpp"
 					>
-					<File
-						RelativePath="structures\cBarracks.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cConstYard.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cGunTurret.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cHeavyFactory.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cHighTech.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cIx.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cLightFactory.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cOutPost.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cPalace.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cRefinery.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cRepairFacility.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cRocketTurret.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cSpiceSilo.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cStarPort.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cWindTrap.cpp"
-						>
-					</File>
-					<File
-						RelativePath="structures\cWor.cpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Units"
+				</File>
+				<File
+					RelativePath="map.cpp"
 					>
-				</Filter>
-				<Filter
-					Name="Mentat"
+				</File>
+				<File
+					RelativePath="network.cpp"
 					>
-					<File
-						RelativePath=".\mentat\cAtreidesMentat.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\mentat\cHarkonnenMentat.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\mentat\cOrdosMentat.cpp"
-						>
-					</File>
-				</Filter>
+				</File>
+				<File
+					RelativePath="regions.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Mentat"
+				>
+				<File
+					RelativePath=".\mentat\cAtreidesMentat.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\mentat\cHarkonnenMentat.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\mentat\cOrdosMentat.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Structures"
+				>
+				<File
+					RelativePath="structures\cBarracks.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cConstYard.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cGunTurret.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cHeavyFactory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cHighTech.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cIx.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cLightFactory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cOutPost.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cPalace.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cRefinery.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cRepairFacility.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cRocketTurret.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cSpiceSilo.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cStarPort.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cWindTrap.cpp"
+					>
+				</File>
+				<File
+					RelativePath="structures\cWor.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Units"
+				>
 			</Filter>
 		</Filter>
 		<Filter
@@ -393,23 +393,35 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Header Files"
+			Name="HEADER"
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath="ai.h"
+				RelativePath="cGame.h"
 				>
 			</File>
 			<File
-				RelativePath="bullet.h"
+				RelativePath=".\cIniReader.h"
 				>
 			</File>
 			<File
-				RelativePath="common.h"
+				RelativePath=".\cMentat.h"
 				>
 			</File>
 			<File
-				RelativePath=".\d2tm_math.h"
+				RelativePath="cParticle.h"
+				>
+			</File>
+			<File
+				RelativePath="cPlayer.h"
+				>
+			</File>
+			<File
+				RelativePath="cStructure.h"
+				>
+			</File>
+			<File
+				RelativePath="cUnit.h"
 				>
 			</File>
 			<File
@@ -418,46 +430,6 @@
 			</File>
 			<File
 				RelativePath="d2tmh.h"
-				>
-			</File>
-			<File
-				RelativePath="gui.h"
-				>
-			</File>
-			<File
-				RelativePath="hwprof.h"
-				>
-			</File>
-			<File
-				RelativePath="ini.h"
-				>
-			</File>
-			<File
-				RelativePath="IniReader.h"
-				>
-			</File>
-			<File
-				RelativePath="keyval.h"
-				>
-			</File>
-			<File
-				RelativePath="main.h"
-				>
-			</File>
-			<File
-				RelativePath="map.h"
-				>
-			</File>
-			<File
-				RelativePath="network.h"
-				>
-			</File>
-			<File
-				RelativePath="regions.h"
-				>
-			</File>
-			<File
-				RelativePath="resource.h"
 				>
 			</File>
 			<Filter
@@ -681,7 +653,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Datafile headers"
+				Name="DAT FILES"
 				>
 				<File
 					RelativePath="data\gfxaudio.h"
@@ -709,124 +681,152 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="classes"
+				Name="C HEADERS"
 				>
 				<File
-					RelativePath="cGame.h"
+					RelativePath="ai.h"
 					>
 				</File>
 				<File
-					RelativePath=".\cMentat.h"
+					RelativePath="bullet.h"
 					>
 				</File>
 				<File
-					RelativePath="cParticle.h"
+					RelativePath="common.h"
 					>
 				</File>
 				<File
-					RelativePath="cPlayer.h"
+					RelativePath=".\d2tm_math.h"
 					>
 				</File>
 				<File
-					RelativePath="cStructure.h"
+					RelativePath="gui.h"
 					>
 				</File>
 				<File
-					RelativePath="cUnit.h"
+					RelativePath="hwprof.h"
 					>
 				</File>
-				<Filter
-					Name="Structures"
+				<File
+					RelativePath="ini.h"
 					>
-					<File
-						RelativePath="structures\cBarracks.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cConstYard.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cGunTurret.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cHeavyFactory.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cHighTech.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cIx.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cLightFactory.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cOutPost.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cPalace.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cRefinery.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cRepairFacility.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cRocketTurret.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cSpiceSilo.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cStarPort.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cWindTrap.h"
-						>
-					</File>
-					<File
-						RelativePath="structures\cWor.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="Units"
+				</File>
+				<File
+					RelativePath="keyval.h"
 					>
-				</Filter>
-				<Filter
-					Name="Mentat"
+				</File>
+				<File
+					RelativePath="main.h"
 					>
-					<File
-						RelativePath=".\mentat\cAtreidesMentat.h"
-						>
-					</File>
-					<File
-						RelativePath=".\mentat\cHarkonnenMentat.h"
-						>
-					</File>
-					<File
-						RelativePath=".\mentat\cOrdosMentat.h"
-						>
-					</File>
-				</Filter>
+				</File>
+				<File
+					RelativePath="map.h"
+					>
+				</File>
+				<File
+					RelativePath="network.h"
+					>
+				</File>
+				<File
+					RelativePath="regions.h"
+					>
+				</File>
+				<File
+					RelativePath="resource.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Mentat"
+				>
+				<File
+					RelativePath=".\mentat\cAtreidesMentat.h"
+					>
+				</File>
+				<File
+					RelativePath=".\mentat\cHarkonnenMentat.h"
+					>
+				</File>
+				<File
+					RelativePath=".\mentat\cOrdosMentat.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Structures"
+				>
+				<File
+					RelativePath="structures\cBarracks.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cConstYard.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cGunTurret.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cHeavyFactory.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cHighTech.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cIx.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cLightFactory.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cOutPost.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cPalace.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cRefinery.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cRepairFacility.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cRocketTurret.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cSpiceSilo.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cStarPort.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cWindTrap.h"
+					>
+				</File>
+				<File
+					RelativePath="structures\cWor.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Units"
+				>
 			</Filter>
 		</Filter>
 		<Filter
-			Name="INI files"
+			Name="INI"
 			>
 			<File
 				RelativePath="game.ini"

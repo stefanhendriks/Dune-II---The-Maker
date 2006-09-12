@@ -13,9 +13,9 @@
 #include "d2tmh.h"
 #include "d2tmc.h" 
 
-#include "IniReader.h"
+#include "cIniReader.h"
 
-IniReader::IniReader() {
+cIniReader::cIniReader() {
     
     // set key / value for sections
     sectionMap.setValue("UNITS", INI_UNITS);
@@ -38,7 +38,7 @@ IniReader::IniReader() {
  Read a line in the INI file and put it into currentLine
 */
 
-void IniReader::ReadLine(FILE *file) {
+void cIniReader::ReadLine(FILE *file) {
 
   if (file == NULL) {
       return;
@@ -89,7 +89,7 @@ void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
 
 }
 
-int IniReader::getSection() {
+int cIniReader::getSection() {
     int result = sectionMap.getValue(""); // - Stefan 02-09, temp hack to keep it compiling
 
     if (result > -1 && result != currentSection) {

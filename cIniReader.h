@@ -2,7 +2,7 @@
     Ini class to read INI files
 */
 
-class IniReader {
+class cIniReader {
 
     
     private:
@@ -16,6 +16,6 @@ class IniReader {
         int getSection();
         
     public:
-        IniReader();
+        cIniReader();
 
 };
