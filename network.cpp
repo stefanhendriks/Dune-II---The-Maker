@@ -1,9 +1,12 @@
 #include "d2tmh.h"
 #include "d2tmc.h"
 
+// this code will not be extended just yet. As long as the MultiMediaEngine is not 
+// written, (the layer on top).
 // Sets variables if the game can setup a server or client
 void bCanBeServerOrClient()
-{/*
+{
+	/*
 	RakServerInterface *server=RakNetworkFactory::GetRakServerInterface(); 
 	RakClientInterface *client=RakNetworkFactory::GetRakClientInterface();
 
