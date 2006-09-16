@@ -1,9 +1,0 @@
-House Atreides     
-               
-Caladan, home planet of the Atreides, has a warm, calm climate and the
-lands are lush and green.
-The rich soils and mild weather supports and extensive variety of
-agricultural activities.
-In recent centuries industrial and technological development has added
-to the propsperity of the Caladanian peoples.
-#END
