@@ -26,7 +26,7 @@
 
 #ifdef ALLEGRO_H 
 	// note: timer specific declarations are done in timer.h
-
+	
 #ifndef UNIX
 #  define ALFONT_DLL
 #  define ALMP3_DLL
@@ -56,7 +56,13 @@
 #include "main.h"
 #include "timers.h"							/** declare correct functions at compile time here **/
 #include "d2tm_math.h"
+#include "cMultiMediaEngine.h"
+
+// Any MME layer is defined here
+#include "cMMEAllegro.h"
+
 #include "cTimeManager.h"
+#include "cDrawManager.h"
 #include "cStructure.h"
 #include "cUnit.h"
 #include "cMentat.h"
@@ -108,5 +114,3 @@
 #include "d2tmc.h"
 
 #endif
-
-

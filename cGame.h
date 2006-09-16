@@ -185,6 +185,8 @@ public:
 
 	void think_mentat();
 
+	void think();
+
     void FADE_OUT(); // fade out with current screen_bmp, this is a little game loop itself!
 
 	void preparementat(bool bTellHouse);
@@ -196,6 +198,9 @@ public:
 	void setState(int thisState);
 
 private:
+	int fps;			/** last frames per seconds */
+	int frames;			/** frame count */
+
 	void poll();
 	void gerald();		// interface and such, which is called by combat
 	void combat();		// the combat part (main) of the game

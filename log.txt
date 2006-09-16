@@ -5,7 +5,7 @@ DUNE II - The Maker
 0| Version information
 0| -------------------
 0| DEM3.5
-0| Compiled at Sep 16 2006 , 19:17:02
+0| Compiled at Sep 17 2006 , 00:11:01
 0| Windowed mode
 0| 
 -------
@@ -57,44 +57,6 @@ DUNE II - The Maker
 0| [GAME.INI] -> [UNITS]
 0| [GAME.INI] -> [STRUCTURES]
 0| [GAME.INI] Done
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| LOAD SCENE: data/scenes/platr.dat
-0| [BRIEFING] Opening file
-0| campaign/briefings/mentata.ini
-0| [BRIEFING] File opened
-0| MENTAT: sentences prepared
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| [SCENARIO] 'campaign/maps/scena001.ini' (Mission 1)
-0| [SCENARIO] Opening file
-0| LOAD SCENE: data/scenes/harvest.dat
-0| [SCENARIO] -> [MAP] Field=
-0| [SCENARIO] -> [MAP] Bloom=
-0| [SCENARIO] -> [MAP] Seed=
-0| [SEED] NR 353.
-[SEED] LOCATION 'campaign/maps/seed/353.map'
-0| [SEED] Opening file
-0| [SEED] Done.
-0| [SCENARIO] Done reading
-0| [BRIEFING] Opening file
-0| campaign/briefings/mentata.ini
-0| [BRIEFING] File opened
-0| MENTAT: sentences prepared
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
 0| 
 --------
 0| SHUTDOWN

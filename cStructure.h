@@ -71,7 +71,7 @@ class cStructure
     virtual void draw(int iStage)=0;              // draw
     virtual void think()=0;           // think
     virtual void think_animation()=0; // think animation stuff        
-    virtual void think_guard();       // think guard stuff
+    virtual void think_guard()=0;     // think guard stuff
     void think_prebuild();            // prebuild animation
     void think_repair();              // repair thinking
     void think_damage();              // think about damaging through time

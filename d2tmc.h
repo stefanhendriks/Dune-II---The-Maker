@@ -12,9 +12,9 @@
 
 #ifndef D2TMC_H
 
-void timer_units();
-void timer_global();
-void timer_fps();
+#ifdef ALLEGRO_H
+	extern cMultiMediaEngine *MMEngine;
+#endif
 
 // Process 'extern' stuff, so we can access our classes
 extern bool		bDoDebug;
@@ -70,7 +70,6 @@ extern BITMAP *bmp_winlose;
 
 
 // VARIABLES
-extern int fps, frame_count;
 extern int mouse_tile;
 extern int mouse_status;     // status of the mouse (see main.h)
 

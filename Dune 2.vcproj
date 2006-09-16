@@ -215,6 +215,10 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath=".\cDrawManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath="cGame_draw.cpp"
 				>
 			</File>
@@ -228,6 +232,10 @@
 			</File>
 			<File
 				RelativePath=".\cMentatFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\cMMEAllegro.cpp"
 				>
 			</File>
 			<File
@@ -417,6 +425,10 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath=".\cDrawManager.h"
+				>
+			</File>
+			<File
 				RelativePath="cGame.h"
 				>
 			</File>
@@ -430,6 +442,14 @@
 			</File>
 			<File
 				RelativePath=".\cMentatFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cMMEAllegro.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cMultiMediaEngine.h"
 				>
 			</File>
 			<File

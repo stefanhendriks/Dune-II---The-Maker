@@ -18,10 +18,11 @@
 
 #include "d2tmh.h"
 
-
-
 void cGame::init()
 {
+	frames = 0;
+	fps = 0;
+
 	screenshot=0;
 	bPlaying=true;
 
@@ -1440,8 +1441,11 @@ void cGame::combat_mouse()
         draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
     else if (mouse_tile == MOUSE_PICK)
         draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);	
-	else
-		draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+	else {
+		//draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y); 
+		MMEngine->drawSprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+		//draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y); 
+	}
 
 
 }
@@ -4978,8 +4982,9 @@ void GAME_KEYS()
 }
 
 
-void cGame::handleTimeSlicing() {
- 
+/** When the game wants to give the CPU some time to rest,
+	it is done here **/
+void cGame::handleTimeSlicing() { 
 	if (iRest > 0) {
 		rest(iRest);
 	}
@@ -5163,7 +5168,7 @@ void cGame::run()
         runGameState();
 		handleKeys();	    
 		shakeScreenAndBlitBuffer();
-		frame_count++;
+		frames++;
 	}
 }
 
@@ -5284,6 +5289,7 @@ bool cGame::setupGame() {
 	game.TIMER_throttle=0;
 	
 #ifdef ALLEGRO_H 
+
 	LOCK_VARIABLE(allegro_timerUnits);
 	LOCK_VARIABLE(allegro_timerGlobal);  
 	LOCK_VARIABLE(allegro_timerSecond);
@@ -5303,8 +5309,6 @@ bool cGame::setupGame() {
 
 	logbook("Timers installed");
 
-	frame_count = fps = 0;
-
 	// set window title
 	char title[128];
 	sprintf(title, "Dune II - The Maker [%s] - (by Stefan Hendriks)", game.version);
@@ -5316,7 +5320,6 @@ bool cGame::setupGame() {
 	logbook(window_title);
 
 	set_window_close_button(0);
-
 
 	set_color_depth(16);
 
@@ -5359,26 +5362,9 @@ bool cGame::setupGame() {
 			r = set_gfx_mode(GFX_DIRECTX_ACCEL, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
 #endif
 
-			if (r > -1)
-			{  
+			if (r > -1) {  
 				game.windowed = false;
-
-				/*
-				FILE *f;
-				f = fopen("settings.d3", "wb");
-
-				fwrite(&game.play_music , sizeof(bool)    ,1 , f);        
-				fwrite(&game.play_sound , sizeof(bool)    ,1 , f);
-				fwrite(&game.fade , sizeof(bool)    ,1 , f);
-				fwrite(&game.windowed , sizeof(bool)    ,1 , f);  
-				fwrite(&game.screen_x , sizeof(int)    ,1 , f);            
-				fwrite(&game.screen_y , sizeof(int)    ,1 , f);            
-				fclose(f);          
-				logbook("Could not enter windowed-mode; settings.d3 adjusted"); */
-
-			}
-			else
-			{        
+			} else {        
 				allegro_message("Failed to set resolution");
 				return false;
 			}
@@ -5653,4 +5639,29 @@ bool cGame::isState(int thisState) {
 
 void cGame::setState(int thisState) {
 	state = thisState;
+}
+
+/** 
+	Think function, called every second
+*/
+void cGame::think() {
+	fps = frames;
+	frames = 0;
+
+	/** Auto adjust cpu usage */
+	if (fps < IDEAL_FPS) {		
+		if (iRest > 0) {
+			iRest-=2;
+		}
+		if (iRest < 0) {
+			iRest=0;
+		}
+	} else {		
+		if (iRest < 500) {
+			iRest+=2;
+		}
+		if (iRest > 500) {
+			iRest=500;
+		}		
+	}
 }

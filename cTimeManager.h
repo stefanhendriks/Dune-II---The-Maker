@@ -7,11 +7,10 @@
 class cTimeManager {
 
 private:
-	
 	int timerUnits;		/** !!Specificly!! used for units **/
 	int timerSecond;
 	int timerGlobal;
-
+	
 	void handleTimerUnits();
 	void handleTimerFPS();
 	void handleTimerGlobal();

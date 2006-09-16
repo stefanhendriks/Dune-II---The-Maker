@@ -73,14 +73,14 @@ int mouse_co_y2;      // mouse border
 int mouse_status;     // status of the mouse (see main.h)
 int mouse_tile;       // mouse picture in gfxdata
 
-// Timers
-int frame_count, fps;  // fps and such 
-
 /** Allegro specific timer creation starts here **/
+
 #ifdef ALLEGRO_H 
+	cMultiMediaEngine *MMEngine = new cMMEAllegro();
+
 	volatile int allegro_timerSecond = 0;
 	volatile int allegro_timerGlobal = 0;
-	volatile int allegro_timerUnits = 0;
+	volatile int allegro_timerUnits = 0;	
 #endif
 
 /**

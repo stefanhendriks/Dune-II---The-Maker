@@ -44,6 +44,7 @@ void cTimeManager::handleTimerFPS() {
 	while (timerSecond > 0)
 	{
 		gameTime++;
+		game.think();
 
 		if (game.isState(GAME_PLAYING))
 		{
@@ -61,45 +62,7 @@ void cTimeManager::handleTimerFPS() {
 
 
         } // game specific stuff
-         
-
-		// Frame Per Second counter
-		fps = frame_count;
-
         
-
-		// 'auto resting'
-		if (fps < IDEAL_FPS)
-		{
-			// reduce with 10
-			if (iRest > 0)
-				iRest-=2;
-
-			if (iRest < 0)
-				iRest=0;
-
-			char msg[255];
-			sprintf(msg, "AUTO-REST: FPS is lower then ideal (=%d), reducing rest value", IDEAL_FPS);
-			logbook(msg);
-		}
-		else
-		{
-			// we go fast enough, so increase rest
-			if (iRest < 500)
-				iRest+=2;
-
-			if (iRest > 500)
-				iRest=500;
-
-			char msg[255];
-			sprintf(msg, "AUTO-REST: FPS is higher then ideal (=%d), increasing rest value", IDEAL_FPS);
-			logbook(msg);
-		}
-
-
-		// log the status
-		frame_count = 0;   
-
 		timerSecond--; // done!
 	}
 
