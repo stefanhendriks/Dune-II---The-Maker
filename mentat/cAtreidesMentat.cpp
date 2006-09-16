@@ -10,7 +10,6 @@
 
   */
 
-
 #include "../d2tmh.h"
 
 cAtreidesMentat::cAtreidesMentat() {
