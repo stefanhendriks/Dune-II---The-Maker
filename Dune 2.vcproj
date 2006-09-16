@@ -247,11 +247,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cTimeManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath="cUnit.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\cUnitFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\timers.cpp"
 				>
 			</File>
 			<Filter
@@ -441,6 +449,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cTimeManager.h"
+				>
+			</File>
+			<File
 				RelativePath="cUnit.h"
 				>
 			</File>
@@ -454,6 +466,10 @@
 			</File>
 			<File
 				RelativePath="d2tmh.h"
+				>
+			</File>
+			<File
+				RelativePath=".\timers.h"
 				>
 			</File>
 			<Filter

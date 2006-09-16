@@ -14,7 +14,6 @@
 */
 
 #include "d2tmh.h"
-#include "d2tmc.h"
 
 // Fading between menu items
 void cGame::FADE_OUT()

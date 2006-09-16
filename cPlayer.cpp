@@ -11,7 +11,6 @@
   */
 
 #include "d2tmh.h"
-#include "d2tmc.h"
 
 
 void cPlayer::init()

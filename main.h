@@ -307,9 +307,6 @@
 #define SMUDGE_WALL 2
 
 
-void TIME_process();
-
-
 // Unit properties
 // note: This is NOT the unit class, this is simply a 'prefix' for a unit!
 // note: The unit properties are actually set in common.cpp , like the houses!

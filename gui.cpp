@@ -1,7 +1,6 @@
 // GUI functions
 
 #include "d2tmh.h"
-#include "d2tmc.h"
 
 void GUI_INIT()
 {

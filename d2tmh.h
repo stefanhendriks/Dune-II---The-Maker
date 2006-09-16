@@ -11,7 +11,6 @@
   */
 #ifndef D2TMH_H
 
-
 // include this stuff
 #include <time.h> 
 #include <stdlib.h>
@@ -23,9 +22,16 @@
 // Allegro: must be after any default headers...
 #include <allegro.h>
 
+#define IDEAL_FPS	60
+
+#ifdef ALLEGRO_H 
+	// note: timer specific declarations are done in timer.h
+
 #ifndef UNIX
 #  define ALFONT_DLL
 #  define ALMP3_DLL
+#endif
+
 #endif
 
 #include <alfont.h>
@@ -48,7 +54,9 @@
 
 // actual source headers                        - ORDER
 #include "main.h"
+#include "timers.h"							/** declare correct functions at compile time here **/
 #include "d2tm_math.h"
+#include "cTimeManager.h"
 #include "cStructure.h"
 #include "cUnit.h"
 #include "cMentat.h"
@@ -95,5 +103,8 @@
 #include "structures/cIx.h"
 
 // TODO: Units
+
+// Extern references & variable declarations
+#include "d2tmc.h"
 
 #endif

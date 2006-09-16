@@ -10,6 +10,7 @@
 
   */
 
+// TODO: Clean this class up big time.
 
 // List structure
 struct tListIcon
@@ -23,12 +24,11 @@ struct tListIcon
 
 class cGame
 {
- 
+
 public:
 
 	bool windowed;				// windowed
 	char version[15];			// version number, or name.
-
 
     int iGameTimer;             // game timer
 
@@ -72,8 +72,6 @@ public:
 	int map_width;
 	int map_height;
 
-	int state;			// state of the game
-
     int iRegion;        // what region is selected?
 	int iMission;		// what mission are we playing? (= techlevel)
 	int iHouse;			// what house is selected for playing? 
@@ -89,13 +87,6 @@ public:
 
 	int paths_created;
 
-
-    // DAY NIGHT SEQUENCE, EXPERIMENTAL
-    int iRed[2], iGreen[2], iBlue[2], iAlpha[2]; // 0 = current, 1 -> go to, when 0 == 1, do nothing
-    int TIMER_daynight;
-    int iDayTime;       // time of day
-
-
 	// MESSAGING / HELPER
 	char cMessage[255];
 	int iMessageAlpha;
@@ -103,7 +94,6 @@ public:
 
     int iMouseZ;
     int iSoundsPlayed;
-
 
     int iMusicVolume;       // volume of the mp3 / midi
 
@@ -199,6 +189,12 @@ public:
 
 	void preparementat(bool bTellHouse);
 
+	bool setupGame();
+	void shutdown();
+	
+	bool isState(int thisState);
+	void setState(int thisState);
+
 private:
 	void poll();
 	void gerald();		// interface and such, which is called by combat
@@ -233,7 +229,9 @@ private:
 
 	// upgrade button drawing and behaviour
 	void draw_upgrade();
-    
+
+	/** game state **/
+	int state;
 
 	// List specific
 	void draw_list();

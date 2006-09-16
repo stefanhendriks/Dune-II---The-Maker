@@ -12,7 +12,6 @@
 
 #include <math.h>
 #include "d2tmh.h"
-#include "d2tmc.h"
 
 // Path creation definitions / var
 #define CLOSED        -1
