@@ -33,16 +33,16 @@
 #include "mmx.h"
 
 // Make sure we refer to our own sub dir and not a global one
-#include "Raknet\\RakClientInterface.h"
-#include "Raknet\\RakNetworkFactory.h"
-#include "Raknet\\RakServerInterface.h"
+#include "Raknet/RakClientInterface.h"
+#include "Raknet/RakNetworkFactory.h"
+#include "Raknet/RakServerInterface.h"
 
 // data file header(s)                          - THIS
-#include "data\\gfxdata.h"						// general gfx
-#include "data\\gfxaudio.h"                     // audio 
-#include "data\\gfxinter.h"                  // sidebar/downbar gfx
-#include "data\\gfxworld.h"                  // world / regions gfx
-#include "data\\gfxmentat.h"                  // mentat gfx
+#include "data/gfxdata.h"						// general gfx
+#include "data/gfxaudio.h"                     // audio 
+#include "data/gfxinter.h"                  // sidebar/downbar gfx
+#include "data/gfxworld.h"                  // world / regions gfx
+#include "data/gfxmentat.h"                  // mentat gfx
 
 // actual source headers                        - ORDER
 #include "main.h"
@@ -70,27 +70,27 @@
 // PROFILER
 
 // Mentats
-#include "mentat\\cOrdosMentat.h"
-#include "mentat\\cHarkonnenMentat.h"
-#include "mentat\\cAtreidesMentat.h"
+#include "mentat/cOrdosMentat.h"
+#include "mentat/cHarkonnenMentat.h"
+#include "mentat/cAtreidesMentat.h"
 
 // Structures
-#include "structures\\cConstYard.h"
-#include "structures\\cStarPort.h"
-#include "structures\\cWindTrap.h"
-#include "structures\\cSpiceSilo.h"
-#include "structures\\cRefinery.h"
-#include "structures\\cOutPost.h"
-#include "structures\\cPalace.h"
-#include "structures\\cRepairFacility.h"
-#include "structures\\cLightFactory.h"
-#include "structures\\cHeavyFactory.h"
-#include "structures\\cHighTech.h"
-#include "structures\\cGunTurret.h"
-#include "structures\\cRocketTurret.h"
-#include "structures\\cWor.h"
-#include "structures\\cBarracks.h"
-#include "structures\\cIx.h"
+#include "structures/cConstYard.h"
+#include "structures/cStarPort.h"
+#include "structures/cWindTrap.h"
+#include "structures/cSpiceSilo.h"
+#include "structures/cRefinery.h"
+#include "structures/cOutPost.h"
+#include "structures/cPalace.h"
+#include "structures/cRepairFacility.h"
+#include "structures/cLightFactory.h"
+#include "structures/cHeavyFactory.h"
+#include "structures/cHighTech.h"
+#include "structures/cGunTurret.h"
+#include "structures/cRocketTurret.h"
+#include "structures/cWor.h"
+#include "structures/cBarracks.h"
+#include "structures/cIx.h"
 
 // TODO: Units
 
