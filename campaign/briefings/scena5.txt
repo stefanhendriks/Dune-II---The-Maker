@@ -1,0 +1,10 @@
+# Mission briefing is put on screen 2 lines a time. Depending on length
+# the mentat talks more/less. If you want to pause a bit more, add spaces
+# in a line. 
+#
+# MAXIMUM OF 10 LINES
+The Battle with the other Houses are intensified, and we are now forced
+to engage in some selected offensive maneuveres.
+The Harkonnen are being extremely troublesome in your next region, and
+we must ask that you remove their presence from the area.
+# END OF BRIEFING - DO NOT REMOVE THIS LINE

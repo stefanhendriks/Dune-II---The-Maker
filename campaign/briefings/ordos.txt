@@ -1,0 +1,9 @@
+House Ordos        
+            
+The home planet of the Ordos is a frigid and ice-covered world.
+             
+We presume the Ordos import their agricultural and technological goods from
+nearby star systems.
+Acting as traders and brokers, the Ordos produce no physical products but
+instead rely upon their merchandising skills to make their profits.
+#END

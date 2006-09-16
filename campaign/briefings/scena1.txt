@@ -1,0 +1,14 @@
+# Mission briefing is put on screen 2 lines a time. Depending on length
+# the mentat talks more/less. If you want to pause a bit more, add spaces
+# in a line. 
+#
+# MAXIMUM OF 10 LINES
+Greetings, I am your Mentat Cyril.
+                                 
+Together we will purge this planet of the foulness of the other Houses.
+                       
+The High Command wishes you to produce 1000 credits.
+          
+You may earn credits by building a refinery and harvesting spice.
+                                     
+# END OF BRIEFING - DO NOT REMOVE THIS LINE

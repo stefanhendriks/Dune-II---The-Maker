@@ -5,13 +5,13 @@ DUNE II - The Maker
 0| Version information
 0| -------------------
 0| DEM3.5
-0| Compiled at Sep 16 2006 , 13:28:41
+0| Compiled at Sep 16 2006 , 13:46:33
 0| Windowed mode
 0| 
 -------
 0| Allegro
 0| -------
-0| Allegro 4.2.0, Unix
+0| Allegro 4.2.0, MSVC
 0| yield_timeslice()
 0| install_timer()
 0| alfont_init()
@@ -23,8 +23,7 @@ DUNE II - The Maker
 0| Loading font data
 0| Display 'switch to background' mode set
 0| Initializing sound
-0| Digital sound driver not found
-0| ERROR: Cannot initialize sound card
+0| Succes with 32 reserved voices.
 0| Bitmap created: bmp_screen
 0| Bitmap created: bmp_throttle
 0| Bitmap created: bmp_winlose
@@ -60,70 +59,11 @@ DUNE II - The Maker
 0| [GAME.INI] Done
 1| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
 2| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-3| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
-4| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
-4| LOAD SCENE: data/scenes/platr.dat
-5| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
-5| [BRIEFING] Opening file
-5| campaign/briefings/mentata.ini
-5| [BRIEFING] File opened
-5| MENTAT: sentences prepared
-6| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
-7| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
-8| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
-8| [SCENARIO] 'campaign/maps/scena001.ini' (Mission 1)
-8| [SCENARIO] Opening file
-8| [SCENARIO] -> [MAP] Field=
-8| [SCENARIO] -> [MAP] Bloom=
-8| [SCENARIO] -> [MAP] Seed=
-8| [SEED] NR 353.
-[SEED] LOCATION 'campaign/maps/seed/353.map'
-8| [SEED] Opening file
-8| [SEED] Done.
-8| WARNING: Cannot identify house/controller -> STRING ''
-8| INI (WARNING) : Could not find unit:
-8| 
-8| WARNING: Identifying house/controller of structure (typo?)
-8| 
-8| Could not find structure:
-8| 
-8| WARNING: Identifying house/controller of structure (typo?)
-8| [SCENARIO] Done reading
-8| [BRIEFING] Opening file
-8| campaign/briefings/mentata.ini
-8| [BRIEFING] File opened
-8| MENTAT: sentences prepared
-9| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-10| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
-11| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
-12| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-13| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-14| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-14| [UNIT[2]: Soldier - House 2, iCell = 1439, iGoal = 1439 ] 'ORDERED TO MOVE'
-14| Soldier
-14| [UNIT[4]: Trike - House 2, iCell = 1501, iGoal = 1501 ] 'ORDERED TO MOVE'
-14| Trike
-14| [UNIT[5]: Soldier - House 2, iCell = 1569, iGoal = 1569 ] 'ORDERED TO MOVE'
-14| Soldier
-14| [UNIT[6]: Soldier - House 2, iCell = 1697, iGoal = 1697 ] 'ORDERED TO MOVE'
-14| Soldier
-14| [UNIT[8]: Trike - House 2, iCell = 1824, iGoal = 1824 ] 'ORDERED TO MOVE'
-14| Trike
-14| [UNIT[2]: Soldier - House 2, iCell = 1439, iGoal = 1691 ] 'No pathindex & no nextcell, resetting unit'
-14| CREATE_PATH: Found the goal cell, succes, bailing out
-14| [UNIT[2]: Soldier - House 2, iCell = 1439, iGoal = 1691 ] 'Create path ... result = 0'
-14| [UNIT[4]: Trike - House 2, iCell = 1501, iGoal = 1691 ] 'No pathindex & no nextcell, resetting unit'
-14| CREATE_PATH: Found the goal cell, succes, bailing out
-14| [UNIT[4]: Trike - House 2, iCell = 1501, iGoal = 1691 ] 'Create path ... result = 0'
-14| [UNIT[5]: Soldier - House 2, iCell = 1569, iGoal = 1691 ] 'No pathindex & no nextcell, resetting unit'
-14| CREATE_PATH: Found the goal cell, succes, bailing out
-14| [UNIT[5]: Soldier - House 2, iCell = 1569, iGoal = 1691 ] 'Create path ... result = 0'
-14| [UNIT[6]: Soldier - House 2, iCell = 1697, iGoal = 1691 ] 'No pathindex & no nextcell, resetting unit'
-14| CREATE_PATH: Found the goal cell, succes, bailing out
-14| [UNIT[6]: Soldier - House 2, iCell = 1697, iGoal = 1691 ] 'Create path ... result = 0'
-14| [UNIT[8]: Trike - House 2, iCell = 1824, iGoal = 1691 ] 'No pathindex & no nextcell, resetting unit'
-14| CREATE_PATH: Found the goal cell, succes, bailing out
-14| [UNIT[8]: Trike - House 2, iCell = 1824, iGoal = 1691 ] 'Create path ... result = 0'
-15| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
-16| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-17| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+3| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+3| LOAD SCENE: data/scenes/platr.dat
+4| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+4| [BRIEFING] Opening file
+4| campaign/briefings/mentata.ini
+4| [BRIEFING] File opened
+4| MENTAT: sentences prepared
+5| AUTO-REST: FPS is lower then ideal (=60), reducing rest value

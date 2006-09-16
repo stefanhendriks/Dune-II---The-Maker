@@ -1,0 +1,13 @@
+# Mission briefing is put on screen 2 lines a time. Depending on length
+# the mentat talks more/less. If you want to pause a bit more, add spaces
+# in a line. 
+#
+# MAXIMUM OF 10 LINES
+I am Radnor. If you do well we might conquer this 
+dusty little planet together. It will suit our needs perfectly.
+Your first mission requires you to mine 1000 credits worth of spice.
+         
+Build a windtrap and a refinery. Do not care about repairs, only about
+the money.
+Any resistance in this mission will be crushed. Failure is not an option.
+# END OF BRIEFING - DO NOT REMOVE THIS LINE
