@@ -4207,3 +4207,4 @@ int UNIT_FREE_AROUND_MOVE(int iUnit)
 
 	return (iClls[rnd(iC)]); // fail
 }
+

@@ -1739,3 +1739,4 @@ void mask_to_color(BITMAP *bmp, int color)
 	//destroy_bitmap(temp16);
 	
 }
+

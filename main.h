@@ -438,3 +438,4 @@ struct sGameSettings {
     int iScollSpeed;        // scroll speed
     bool bWindowed;         // launch default as windowed or not?
 };
+

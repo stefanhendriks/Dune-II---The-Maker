@@ -92,3 +92,5 @@ class cStructure
 int STRUCTURE_FREE_TYPE(int iPlyr, int iCll, int iTpe);
 int STRUCTURE_VALID_LOCATION(int iCll, int iTpe, int iUnitID);
 int STRUCTURE_CREATE(int iCll, int iTpe, int iHP, int iPlyer);
+
+

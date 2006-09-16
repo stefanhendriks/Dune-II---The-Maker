@@ -702,3 +702,4 @@ int STRUCTURE_CREATE(int iCll, int iTpe, int iHP, int iPlyer)
     return iNewId;
 }
 
+

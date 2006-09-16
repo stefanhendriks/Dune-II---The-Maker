@@ -239,3 +239,4 @@ private:
 	int  list_new_id(int iListID);		// find new entry in this list
 
 };
+

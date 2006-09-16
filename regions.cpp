@@ -162,3 +162,4 @@ int REGION_OVER()
    destroy_bitmap(tempreg);
    return iRegion;
 }
+

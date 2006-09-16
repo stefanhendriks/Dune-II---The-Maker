@@ -24,3 +24,4 @@ public:
     int iTile;          // tile refering to gfxworld.dat
     bool bSelectable;   // selectable for attacking (default = false)
 };
+

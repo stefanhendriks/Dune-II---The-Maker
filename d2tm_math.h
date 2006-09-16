@@ -49,3 +49,4 @@ int CELL_L_LEFT(int c);
 int CELL_L_RIGHT(int c);
 
 bool CELL_BORDERS(int iOrigin, int iCell);
+

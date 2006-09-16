@@ -172,3 +172,5 @@ void INI_Load_Regionfile(int iHouse, int iMission);
 int INI_SectionType(char section[30], int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
 void INI_PRESCAN_SKIRMISH();
+
+

@@ -123,3 +123,5 @@ int cipherUpdateRounds(cipherInstance *cipher, keyInstance *key, BYTE *input,
 
 
 #endif // __RIJNDAEL_API_H  
+
+

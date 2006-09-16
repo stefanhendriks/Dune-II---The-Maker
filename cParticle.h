@@ -50,3 +50,5 @@ public:
 };
 
 void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame);
+
+
