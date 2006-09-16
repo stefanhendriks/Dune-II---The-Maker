@@ -518,7 +518,11 @@ bool install()
 		else
 		{      
 			// GFX_DIRECTX_ACCEL / GFX_AUTODETECT
+#ifdef UNIX
+			r = set_gfx_mode(GFX_XWINDOWS, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+#else
 			r = set_gfx_mode(GFX_DIRECTX_ACCEL, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+#endif
 
 			if (r > -1)
 			{  
@@ -570,7 +574,7 @@ bool install()
 	logbook("Loading font data");
 	// loading font
 
-	game_font = alfont_load_font("data\\arakeen.fon");  
+	game_font = alfont_load_font("data/arakeen.fon");  
 
 	if (game_font != NULL)
 		alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
@@ -581,7 +585,7 @@ bool install()
 	}
 
 
-	bene_font = alfont_load_font("data\\benegess.fon");  
+	bene_font = alfont_load_font("data/benegess.fon");  
 
 	if (bene_font != NULL)
 		alfont_set_font_size(bene_font, 10); // set size
@@ -628,6 +632,9 @@ bool install()
 	}
 
 	if (!bSucces) {
+		char msg[255];
+		sprintf(msg, "%s", allegro_error);
+		logbook(msg); 
 		logbook("ERROR: Cannot initialize sound card");
 	}
 
@@ -702,7 +709,7 @@ bool install()
 	/*** Data files ***/
 
 	// load datafiles  
-	gfxdata = load_datafile("data\\gfxdata.dat");
+	gfxdata = load_datafile("data/gfxdata.dat");
 	if (gfxdata == NULL) {
 		logbook("ERROR: Could not hook/load datafile: gfxdata.dat");
 		return false;
@@ -711,7 +718,7 @@ bool install()
 		memcpy (general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
 	}
 
-	gfxaudio = load_datafile("data\\gfxaudio.dat");
+	gfxaudio = load_datafile("data/gfxaudio.dat");
 	if (gfxaudio == NULL)  {
 		logbook("ERROR: Could not hook/load datafile: gfxaudio.dat");
 		return false;
@@ -719,7 +726,7 @@ bool install()
 		logbook("Datafile hooked: gfxaudio.dat");
 	}
 
-	gfxinter = load_datafile("data\\gfxinter.dat");
+	gfxinter = load_datafile("data/gfxinter.dat");
 	if (gfxinter == NULL)  {
 		logbook("ERROR: Could not hook/load datafile: gfxinter.dat");
 		return false;
@@ -727,7 +734,7 @@ bool install()
 		logbook("Datafile hooked: gfxinter.dat");
 	}
 
-	gfxworld = load_datafile("data\\gfxworld.dat");
+	gfxworld = load_datafile("data/gfxworld.dat");
 	if (gfxworld == NULL) {
 		logbook("ERROR: Could not hook/load datafile: gfxworld.dat");
 		return false;
@@ -735,7 +742,7 @@ bool install()
 		logbook("Datafile hooked: gfxworld.dat");
 	}
 
-	gfxmentat = load_datafile("data\\gfxmentat.dat");
+	gfxmentat = load_datafile("data/gfxmentat.dat");
 	if (gfxworld == NULL) {
 		logbook("ERROR: Could not hook/load datafile: gfxmentat.dat");
 		return false;
@@ -745,7 +752,7 @@ bool install()
 
 	gfxmovie = NULL; // nothing loaded at start. This is done when loading a mission briefing.
 
-	DATAFILE *mp3music = load_datafile("data\\mp3mus.dat");
+	DATAFILE *mp3music = load_datafile("data/mp3mus.dat");
 
 	if (mp3music == NULL) {
 		logbook("MP3MUS.DAT not found, using MIDI to play music");

@@ -1219,7 +1219,7 @@ void INI_Load_seed(int seed)
 	for (int ic=0; ic < 50; ic++)
 		filename[ic] = '\0';
 
-	sprintf(filename, "campaign\\maps\\seed\\%d.map", seed);
+	sprintf(filename, "campaign/maps/seed/%d.map", seed);
 
 	FILE *stream; 
 	int iY=1;
@@ -1314,7 +1314,7 @@ void INI_Load_Regionfile(int iHouse, int iMission)
 	if (iHouse == FREMEN)	sprintf(cHouse, "fremen");
 	if (iHouse == MERCENARY)	sprintf(cHouse, "mercenary");
 	
-	sprintf(filename, "campaign\\%s\\mission%d.ini", cHouse, iMission);
+	sprintf(filename, "campaign/%s/mission%d.ini", cHouse, iMission);
 
 	char msg[256];
 	sprintf(msg, "[CAMPAIGN] '%s' (Mission %d)", filename, game.iMission);	
@@ -1464,9 +1464,9 @@ void INI_Load_scenario(int iHouse, int iRegion)
 	char filename[60];
 	
 	if (iRegion < 10)
-		sprintf(filename, "campaign//maps//Scen%s00%d.ini", cHouse, iRegion);
+		sprintf(filename, "campaign/maps/scen%s00%d.ini", cHouse, iRegion);
 	else
-		sprintf(filename, "campaign//maps//Scen%s0%d.ini", cHouse, iRegion);
+		sprintf(filename, "campaign/maps/scen%s0%d.ini", cHouse, iRegion);
 
 
     
@@ -2487,7 +2487,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
     // clear mentat
     memset(game.mentat_sentence, 0, sizeof(game.mentat_sentence));
 
-    sprintf(path, "campaign\\briefings\\%s", filename);
+    sprintf(path, "campaign/briefings/%s", filename);
 
     logbook(path);
 

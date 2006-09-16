@@ -11,8 +11,8 @@
   */
 
 
-#include "..\d2tmh.h"
-#include "..\d2tmc.h"
+#include "../d2tmh.h"
+#include "../d2tmc.h"
 
 cAtreidesMentat::cAtreidesMentat() {
 	

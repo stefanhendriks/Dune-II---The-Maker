@@ -23,8 +23,10 @@
 // Allegro: must be after any default headers...
 #include <allegro.h>
 
-#define ALFONT_DLL
-#define ALMP3_DLL
+#ifndef UNIX
+#  define ALFONT_DLL
+#  define ALMP3_DLL
+#endif
 
 #include <alfont.h>
 #include <almp3.h>

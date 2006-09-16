@@ -1425,31 +1425,31 @@ void play_music(int iType)
         memset(filename, 0, sizeof(filename));
 
         if (iType == 0)
-            sprintf(filename, "mp3\\win%d.mp3", iNumber);
+            sprintf(filename, "mp3/win%d.mp3", iNumber);
 
         if (iType == 1)
-            sprintf(filename, "mp3\\lose%d.mp3", iNumber);
+            sprintf(filename, "mp3/lose%d.mp3", iNumber);
 
         if (iType == 2)
-            sprintf(filename, "mp3\\attack%d.mp3", iNumber);
+            sprintf(filename, "mp3/attack%d.mp3", iNumber);
 
         if (iType == 3)
-            sprintf(filename, "mp3\\peace%d.mp3", iNumber);
+            sprintf(filename, "mp3/peace%d.mp3", iNumber);
 
 		if (iType == 4)
-            sprintf(filename, "mp3\\menu.mp3");
+            sprintf(filename, "mp3/menu.mp3");
 
         if (iType == 5)
-            sprintf(filename, "mp3\\nextconq.mp3");
+            sprintf(filename, "mp3/nextconq.mp3");
 
         if (iType == 6)
         {   
             if (game.iHouse == ATREIDES)
-                sprintf(filename, "mp3\\mentata.mp3");
+                sprintf(filename, "mp3/mentata.mp3");
             if (game.iHouse == HARKONNEN)
-                sprintf(filename, "mp3\\mentath.mp3");
+                sprintf(filename, "mp3/mentath.mp3");
             if (game.iHouse == ORDOS)
-                sprintf(filename, "mp3\\mentato.mp3");
+                sprintf(filename, "mp3/mentato.mp3");
         }
 
         mp3_play_file(filename);
@@ -1613,7 +1613,7 @@ void LOAD_SCENE(char file[30])
   gfxmovie = NULL;
 
   char filename[128];
-  sprintf(filename, "data\\scenes\\%s.dat", file);
+  sprintf(filename, "data/scenes/%s.dat", file);
 
   gfxmovie = load_datafile(filename);
 
