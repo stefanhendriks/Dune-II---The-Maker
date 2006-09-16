@@ -12,9 +12,6 @@
 
 #ifndef D2TMC_H
 
-#ifdef ALLEGRO_H
-	extern cMultiMediaEngine *MMEngine;
-#endif
 
 // Process 'extern' stuff, so we can access our classes
 extern bool		bDoDebug;
@@ -32,6 +29,8 @@ extern cBullet        bullet[MAX_BULLETS];
 extern cRegion        world[MAX_REGIONS];
 extern cMentat		  *Mentat;
 extern cTimeManager   TimeManager;
+
+extern cMultiMediaEngine *MMEngine;
 
 extern int MAXVOICES;            // USE THIS FOR DETERMINING VOICES
 
