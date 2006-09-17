@@ -76,7 +76,8 @@ int mouse_tile;       // mouse picture in gfxdata
 /** Allegro specific timer creation starts here **/
 
 #ifdef ALLEGRO_H 
-	cMultiMediaEngine *MMEngine = new cMMEAllegro();
+	cMultiMediaEngine *MMEngine = new cMMEAllegro;
+	
 
 	volatile int allegro_timerSecond = 0;
 	volatile int allegro_timerGlobal = 0;

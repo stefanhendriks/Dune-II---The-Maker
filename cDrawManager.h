@@ -7,6 +7,8 @@ class cDrawManager {
 private:
 	MME_SURFACE *buffer;
 
+	void drawMouse();
+
 public:
 	cDrawManager();
 

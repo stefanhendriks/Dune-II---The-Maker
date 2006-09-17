@@ -4,3 +4,6 @@ cDrawManager::cDrawManager() {
 
 }
 
+void cDrawManager::drawBufferOnScreen() {
+	
+}

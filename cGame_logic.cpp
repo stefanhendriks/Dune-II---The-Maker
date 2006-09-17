@@ -342,11 +342,8 @@ void cGame::think_winlose()
 
         play_music(MUSIC_WIN);
 
-        // copy over
-        blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
-
-        draw_sprite(bmp_winlose, (BITMAP *)gfxinter[BMP_WINNING].dat, 77, 182);
-        
+        MMEngine->doBlit(bmp_screen, bmp_winlose, 0, 0);
+		MMEngine->drawSprite((BITMAP *)gfxinter[BMP_WINNING].dat, bmp_winlose, 77, 182);
     }
 
     if (bFailed)
@@ -361,11 +358,8 @@ void cGame::think_winlose()
 
         play_music(MUSIC_LOSE);
 
-        // copy over
-        blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
-
-        draw_sprite(bmp_winlose, (BITMAP *)gfxinter[BMP_LOSING].dat, 77, 182);
-
+        MMEngine->doBlit(bmp_screen, bmp_winlose, 0, 0);       
+		MMEngine->drawSprite((BITMAP *)gfxinter[BMP_LOSING].dat, bmp_winlose, 77, 182);
     }
 }
 
@@ -1430,21 +1424,19 @@ void cGame::combat_mouse()
 
 	// DRAWING
 	if (mouse_tile == MOUSE_DOWN)
-		draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y-16);
+		MMEngine->drawSprite((BITMAP *)gfxdata[mouse_tile].dat, bmp_screen, mouse_x, mouse_y-16);		
 	else if (mouse_tile == MOUSE_RIGHT)
-		draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y);
+		MMEngine->drawSprite((BITMAP *)gfxdata[mouse_tile].dat, bmp_screen, mouse_x-16, mouse_y);		
 	else if (mouse_tile == MOUSE_MOVE || mouse_tile == MOUSE_RALLY)
-		draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
+		MMEngine->drawSprite((BITMAP *)gfxdata[mouse_tile].dat, bmp_screen, mouse_x-16, mouse_y-16);
     else if (mouse_tile == MOUSE_ATTACK)
-		draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
+		MMEngine->drawSprite((BITMAP *)gfxdata[mouse_tile].dat, bmp_screen, mouse_x-16, mouse_y-16);
     else if (mouse_tile == MOUSE_REPAIR)
-        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
+        MMEngine->drawSprite((BITMAP *)gfxdata[mouse_tile].dat, bmp_screen, mouse_x-16, mouse_y-16);
     else if (mouse_tile == MOUSE_PICK)
-        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);	
+		MMEngine->drawSprite((BITMAP *)gfxdata[mouse_tile].dat, bmp_screen, mouse_x-16, mouse_y-16);
 	else {
-		//draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y); 
-		MMEngine->drawSprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
-		//draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y); 
+		MMEngine->drawSprite((BITMAP *)gfxdata[mouse_tile].dat, bmp_screen, mouse_x, mouse_y);
 	}
 
 
@@ -1454,47 +1446,7 @@ void cGame::combat_mouse()
 void cGame::think_money()
 {
 	int iDif=abs(player[0].draw_credits - player[0].credits);
-	/*
-
-
-	if (iDif < 1000)
-	{
-		if (player[0].draw_credits > player[0].credits)
-		{
-			player[0].draw_credits --;
-		}
-
-		if (player[0].draw_credits < player[0].credits)
-		{
-			player[0].draw_credits ++;
-		}
-	}
-	else if (iDif > 1000 && iDif < 2000)
-	{
-		if (player[0].draw_credits > player[0].credits)
-		{
-			player[0].draw_credits-=2;
-		}
-
-		if (player[0].draw_credits < player[0].credits)
-		{
-			player[0].draw_credits+=2;
-		}
-	}
-	else
-	{
-		if (player[0].draw_credits > player[0].credits)
-		{
-			player[0].draw_credits-=5;
-		}
-
-		if (player[0].draw_credits < player[0].credits)
-		{
-			player[0].draw_credits+=5;
-		}
-
-	}*/
-
+	
 	if (iDif != 0)
 		iCountSoundMoney++;
 
@@ -5085,20 +5037,20 @@ void cGame::shakeScreenAndBlitBuffer() {
 		throttle_x = -abs(border/2) + rnd(border);
 		throttle_y = -abs(border/2) + rnd(border);
 
-		blit(bmp_screen, bmp_throttle, 0, 0, 0+throttle_x, 0+throttle_y, screen_x, screen_y);
-		blit(bmp_throttle, screen, 0, 0, 0, 0, screen_x, screen_y);
+		MMEngine->doBlit(bmp_screen, bmp_throttle, 0, 0, 
+						0 + throttle_x, 0 + throttle_y, screen_x, screen_y );
+		MMEngine->doBlit(bmp_throttle, MME_SCREENBUFFER, 0, 0);	
 	}
 	else
 	{
 		// when fading
-		if (iAlphaScreen == 255)
-			blit(bmp_screen, screen, 0, 0, 0, 0, screen_x, screen_y);
-		else
-		{   
+		if (iAlphaScreen == 255) {
+			MMEngine->doBlit(bmp_screen, MME_SCREENBUFFER, 0, 0);			
+		} else	{   
 			BITMAP *temp = create_bitmap(game.screen_x, game.screen_y);
 			clear(temp);
-			fblend_trans(bmp_screen, temp, 0, 0, iAlphaScreen);                
-			blit(temp, screen, 0, 0, 0, 0, screen_x, screen_y);
+			fblend_trans(bmp_screen, temp, 0, 0, iAlphaScreen);
+			MMEngine->doBlit(temp, MME_SCREENBUFFER, 0, 0);
 			destroy_bitmap(temp);
 		}
 
