@@ -36,3 +36,27 @@ void cMMEAllegro::doBlit(BITMAP *source, BITMAP *dest, int x, int y, int width, 
 void cMMEAllegro::doBlit(MME_SURFACE source, MME_SURFACE dest, int x, int y) {
 	doBlit(source, dest, x, y, source->w, source->h);
 }
+
+MME_SURFACE cMMEAllegro::createSurface(int width, int height) {
+	return create_bitmap(width, height);	
+}
+
+MME_SURFACE cMMEAllegro::createSurface(int width, int height, int bitdepth) {
+	if (bitdepth == 8 || bitdepth == 16 || bitdepth == 32) {
+		return create_bitmap_ex(bitdepth, width, height); 
+	}
+
+	return createSurface(width, height);
+}
+
+void cMMEAllegro::colorSurface(MME_SURFACE surface, int color) {
+	if (color < 0) {
+		clear(surface);
+	} else {
+		clear_to_color(surface, color);
+	}
+}
+
+void cMMEAllegro::clearSurface(MME_SURFACE surface) {
+	colorSurface(surface, -1);
+}

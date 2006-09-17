@@ -5,7 +5,7 @@ DUNE II - The Maker
 0| Version information
 0| -------------------
 0| DEM3.5
-0| Compiled at Sep 17 2006 , 12:24:24
+0| Compiled at Sep 17 2006 , 14:16:43
 0| Windowed mode
 0| 
 -------
@@ -57,12 +57,3 @@ DUNE II - The Maker
 0| [GAME.INI] -> [UNITS]
 0| [GAME.INI] -> [STRUCTURES]
 0| [GAME.INI] Done
-0| 
---------
-0| SHUTDOWN
-0| --------
-0| Allegro FONT library shut down.
-0| Allegro MP3 library shut down.
-0| Allegro shut down.
-0| 
-Thanks for playing!

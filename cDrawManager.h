@@ -5,7 +5,7 @@
 class cDrawManager {
 
 private:
-	MME_SURFACE *buffer;
+	MME_SURFACE buffer;
 
 	void drawMouse();
 	void drawByGameState();
@@ -15,6 +15,7 @@ private:
 	
 public:
 	cDrawManager();
-	
+	MME_SURFACE getBuffer();
+
 	void draw();
 };

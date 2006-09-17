@@ -5110,8 +5110,8 @@ void cGame::run()
 		EventManager.handleEvents();
 		runGameState();
 		handleKeys();	   // <-- should be in event manager
-		shakeScreenAndBlitBuffer(); // <-- should be in draw manager
-		DrawManager.draw();
+		DrawManager->draw();
+		shakeScreenAndBlitBuffer(); // <-- should be in draw manager		
 		frames++;
 	}
 }
@@ -5160,8 +5160,10 @@ bool cGame::setupGame() {
 
 	/** Set up the correct MultiMediaEngine depending on the lib */
 #ifdef ALLEGRO_H
-	MMEngine = new cMMEAllegro;
+	MMEngine = new cMMEAllegro;	
 #endif
+
+	/** TODO: Lib specific install routine (in MMEngine) **/
 
 	// Each time we run the game, we clear out the logbook
 	FILE *fp;
@@ -5208,6 +5210,9 @@ bool cGame::setupGame() {
 	// ALLEGRO - INIT    
 	if (allegro_init() != 0)
 		return false;
+
+	/** Now create DrawManager AFTER the lib is set up **/
+	DrawManager = new cDrawManager();
 
 	logbook(allegro_id);
 	yield_timeslice();

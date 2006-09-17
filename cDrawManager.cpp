@@ -1,16 +1,20 @@
 #include "d2tmh.h"
 
 cDrawManager::cDrawManager() {
-
+	buffer = MMEngine->createSurface(game.screen_x, game.screen_y);
+	MMEngine->clearSurface(buffer);
 }
 
-/** Only function public **/
+/** Only function public responsible for drawing everything **/
 void cDrawManager::draw() {
 	drawEverythingOnBuffer();
 	drawBufferOnScreen();	
 }
 
-
+/** Needed for DrawManager **/
+MME_SURFACE cDrawManager::getBuffer() {
+	return buffer;
+}
 
 void cDrawManager::drawEverythingOnBuffer() {
 	drawByGameState();
@@ -18,8 +22,9 @@ void cDrawManager::drawEverythingOnBuffer() {
 }
 
 void cDrawManager::drawByGameState() {
-
+	/** TODO: Draw stuff by game state **/
 }
+
 
 void cDrawManager::drawMouse() {
 	Mouse.draw();
@@ -30,6 +35,6 @@ void cDrawManager::drawMouse() {
 	onto the screen buffer.
 **/
 void cDrawManager::drawBufferOnScreen() {
-	
+	//MMEngine->doBlit(buffer, MME_SCREENBUFFER, 0, 0);
 }
 

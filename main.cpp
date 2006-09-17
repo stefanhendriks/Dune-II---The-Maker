@@ -30,8 +30,8 @@ cRegion        world[MAX_REGIONS];
 cMentat		   *Mentat;
 cTimeManager   TimeManager;
 cEventManager  EventManager;
-cDrawManager   DrawManager;
 cMultiMediaEngine *MMEngine;
+cDrawManager   *DrawManager;
 cMouse			Mouse;
 
 // Structs
