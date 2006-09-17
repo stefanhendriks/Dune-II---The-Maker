@@ -19,9 +19,10 @@ void cEventManager::pollKeyboard() {
 	
 }
 
-/** Poll mouse coordinates **/
+/** Poll mouse coordinates & Buttons **/
 void cEventManager::pollMouse() {
 	Mouse.setPoll(MMEngine->getMouseX(), 
 				  MMEngine->getMouseY(), 
 				  MMEngine->getMouseZ());
+	Mouse.poll();
 }

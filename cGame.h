@@ -68,9 +68,6 @@ public:
 	void mission_init(); // initialize variables for mission loading only
 	void run();			// run the game
 
-	bool bMousePressedLeft, bMousePressedRight;
-	bool mouse_left, mouse_right;
-
 	int map_width;
 	int map_height;
 

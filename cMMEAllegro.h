@@ -14,7 +14,8 @@ public:
 	int getMouseX();
 	int getMouseY();
 	int getMouseZ();
-
+	bool getMouseButton(int button);
+	
 	void drawSprite(MME_SURFACE source, MME_SURFACE dest, int x, int y);
 	void doBlit(MME_SURFACE source, MME_SURFACE dest, int x, int y);
 	void doBlit(MME_SURFACE source, MME_SURFACE dest, int x, int y, int width, int height);

@@ -626,7 +626,7 @@ void cMap::draw_minimap()
  // Mouse reaction
  if (mouse_x >= 511 && mouse_y >= 351)
  {
-	if (MOUSE_BTN_LEFT() && mouse_co_x1 < 0 && mouse_co_y1 < 0)
+	 if (Mouse.btnLeft && mouse_co_x1 < 0 && mouse_co_y1 < 0)
 	{
 		// change scroll positions and such :)
 		scroll_x = (((mouse_x-(iWidth)) - 511) / 2);

@@ -16,6 +16,23 @@ int cMMEAllegro::getMouseZ() {
 	return mouse_z;
 }
 
+bool cMMEAllegro::getMouseButton(int button) {
+	if (button == MOUSE_BTN_LEFT) {
+		if (mouse_b & 1) {
+			return true;
+		}
+		return false;
+	}
+
+	if (button == MOUSE_BTN_RIGHT) {
+		if (mouse_b & 2) {
+			return true;
+		}
+		return false;
+	}
+
+	return false;
+}
 
 /** Allegro draw_sprite */
 void cMMEAllegro::drawSprite(MME_SURFACE source, MME_SURFACE dest, int x, int y) {

@@ -126,7 +126,7 @@ void cGame::draw_order()
 	// react on mouse
 	if (bMouseHover && bDrawOrder)
 	{
-		if (bMousePressedLeft)
+		if (Mouse.btnSingleClickLeft())
 		{
 			TIMER_ordered=30; // 30 seconds
 		}
@@ -375,7 +375,7 @@ void cGame::draw_upgrade()
 
             bool bUpgrade=false;
 
-            if (bMousePressedLeft && bMouseHover)
+			if (Mouse.btnSingleClickLeft() && bMouseHover)
                 bUpgrade=true;
 
             if (key[KEY_U] && iUpgradeProgressLimit[iType] <= 0)

@@ -14,10 +14,7 @@
 class cMouse {
 
 private:
-	int mouseX;
-	int mouseY;
-	int mouseZ;		/* Scrollwheel */
-
+	
 	/** Select box coordinates **/
 	int mouseSelectX[2];
 	int mouseSelectY[2];
@@ -31,9 +28,23 @@ private:
 public:
 	cMouse();
 
+	int mouseX;
+	int mouseY;
+	int mouseZ;		/* Scrollwheel */
+
+	bool holdingMouseButton[2];
+
+	void poll();
 	void think();
 	void draw();
+
+	/** return true when button is being pressed **/
+	bool btnLeft;
+	bool btnRight;
 	
+	bool btnSingleClickLeft();
+	bool btnSingleClickRight();
+
 	/** Called by MME **/
 	void setPoll(int x, int y, int z);
 };

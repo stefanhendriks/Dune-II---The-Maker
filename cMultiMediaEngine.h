@@ -7,6 +7,10 @@
 
 #ifndef CMULTIMEDIAENGINE_H
 
+#define MOUSE_BTN_LEFT 0
+#define MOUSE_BTN_RIGHT 1
+#define MOUSE_BTN_MIDDLE 2
+
 /** Compile time must-have definitions */
 #ifdef ALLEGRO_H 
 	#define MME_SURFACE			BITMAP *
@@ -27,6 +31,7 @@ public:
 	virtual int getMouseX()=0;
 	virtual int getMouseY()=0;
 	virtual int getMouseZ()=0;
+	virtual bool getMouseButton(int button) = 0;
 
 	/** Keyboard specific routines **/
 

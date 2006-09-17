@@ -79,7 +79,7 @@ void REGION_DRAW(int i)
                 world[i].iAlpha += 7;
                 
                 if (game.iRegionState <= 2)
-                    if (MOUSE_BTN_LEFT())
+					if (Mouse.btnLeft)
                         world[i].iAlpha += 25;
             }
 
