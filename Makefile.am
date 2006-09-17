@@ -18,6 +18,6 @@ d2tm_SOURCES = ai.cpp bullet.cpp cGame_draw.cpp cGame_logic.cpp cMentat.cpp \
 	structures/cLightFactory.cpp structures/cOutPost.cpp structures/cPalace.cpp structures/cRefinery.cpp \
 	structures/cRepairFacility.cpp structures/cRocketTurret.cpp structures/cSpiceSilo.cpp \
 	structures/cStarPort.cpp structures/cWindTrap.cpp structures/cWor.cpp \
-	timers.cpp cTimeManager.cpp cDrawManager.cpp cMMEAllegro.cpp
+	timers.cpp cTimeManager.cpp cDrawManager.cpp cMMEAllegro.cpp cEventManager.cpp
 
 
