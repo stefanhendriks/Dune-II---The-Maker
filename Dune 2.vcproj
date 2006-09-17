@@ -219,6 +219,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cEventManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath="cGame_draw.cpp"
 				>
 			</File>
@@ -426,6 +430,10 @@
 			>
 			<File
 				RelativePath=".\cDrawManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cEventManager.h"
 				>
 			</File>
 			<File

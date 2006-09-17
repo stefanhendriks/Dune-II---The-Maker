@@ -29,7 +29,8 @@ cBullet        bullet[MAX_BULLETS];
 cRegion        world[MAX_REGIONS];
 cMentat		   *Mentat;
 cTimeManager   TimeManager;
-
+cEventManager  EventManager;
+cMultiMediaEngine *MMEngine;
 // Structs
 sPreviewMap     PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory
 s_House         houses[MAX_HOUSES];
@@ -76,9 +77,6 @@ int mouse_tile;       // mouse picture in gfxdata
 /** Allegro specific timer creation starts here **/
 
 #ifdef ALLEGRO_H 
-	cMultiMediaEngine *MMEngine = new cMMEAllegro;
-	
-
 	volatile int allegro_timerSecond = 0;
 	volatile int allegro_timerGlobal = 0;
 	volatile int allegro_timerUnits = 0;	

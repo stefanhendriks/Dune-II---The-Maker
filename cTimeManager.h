@@ -14,6 +14,7 @@ private:
 	void handleTimerUnits();
 	void handleTimerFPS();
 	void handleTimerGlobal();
+	void handleTimeSlicing();
 
 	void capTimers();
 

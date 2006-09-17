@@ -4933,15 +4933,6 @@ void GAME_KEYS()
 	}
 }
 
-
-/** When the game wants to give the CPU some time to rest,
-	it is done here **/
-void cGame::handleTimeSlicing() { 
-	if (iRest > 0) {
-		rest(iRest);
-	}
-}
-
 /**
 	Handle keyboard keys. 
 	
@@ -5116,8 +5107,7 @@ void cGame::run()
 	{
 		poll();
 		TimeManager.processTime();
-		handleTimeSlicing();
-        runGameState();
+		runGameState();
 		handleKeys();	    
 		shakeScreenAndBlitBuffer();
 		frames++;
@@ -5165,6 +5155,11 @@ void cGame::shutdown() {
 */
 bool cGame::setupGame() {
 	game.init(); // Must be first!
+
+	/** Set up the correct MultiMediaEngine depending on the lib */
+#ifdef ALLEGRO_H
+	MMEngine = new cMMEAllegro;
+#endif
 
 	// Each time we run the game, we clear out the logbook
 	FILE *fp;

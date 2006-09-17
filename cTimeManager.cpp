@@ -247,6 +247,7 @@ void cTimeManager::processTime() {
 #endif
 	
 	capTimers();
+	handleTimeSlicing();
 	handleTimerFPS();
 	handleTimerUnits();
 	handleTimerGlobal();
@@ -254,6 +255,13 @@ void cTimeManager::processTime() {
 #ifdef ALLEGRO_H
 	syncAllegroTimers();
 #endif
+}
+/** When the game wants to give the CPU some time to rest,
+	it is done here **/
+void cTimeManager::handleTimeSlicing() {
+	if (iRest > 0) {
+		rest(iRest);
+	}
 }
 
 void cTimeManager::increaseTimerForFPS() {
