@@ -17,9 +17,19 @@
 class cMultiMediaEngine {
 
 private:
-	
+
 public:
 	
+	/** Mouse specific routines **/
+	virtual int getMouseX()=0;
+	virtual int getMouseY()=0;
+	virtual int getMouseZ()=0;
+
+	/** Keyboard specific routines **/
+
+	/** Sound **/
+
+	/** Drawing **/
 	virtual void drawSprite(MME_SURFACE source, MME_SURFACE dest, int x, int y) = 0;
 	virtual void doBlit(MME_SURFACE source, MME_SURFACE dest, int x, int y) = 0;
 	virtual void doBlit(MME_SURFACE source, MME_SURFACE dest, int x, int y, int width, int height) = 0;

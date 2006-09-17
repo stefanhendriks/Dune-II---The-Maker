@@ -9,6 +9,10 @@ class cEventManager {
 
 private:
 
+
+	void pollMouse();
+	void pollKeyboard();
+
 public:
 	cEventManager();
 

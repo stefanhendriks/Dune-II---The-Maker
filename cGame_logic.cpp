@@ -5107,9 +5107,11 @@ void cGame::run()
 	{
 		poll();
 		TimeManager.processTime();
+		EventManager.handleEvents();
 		runGameState();
-		handleKeys();	    
-		shakeScreenAndBlitBuffer();
+		handleKeys();	   // <-- should be in event manager
+		shakeScreenAndBlitBuffer(); // <-- should be in draw manager
+		DrawManager.draw();
 		frames++;
 	}
 }

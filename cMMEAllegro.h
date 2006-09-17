@@ -5,8 +5,13 @@ class cMMEAllegro : public cMultiMediaEngine {
 
 private:
 
+
 public:
 	cMMEAllegro();
+	
+	int getMouseX();
+	int getMouseY();
+	int getMouseZ();
 
 	void drawSprite(MME_SURFACE source, MME_SURFACE dest, int x, int y);
 	void doBlit(MME_SURFACE source, MME_SURFACE dest, int x, int y);

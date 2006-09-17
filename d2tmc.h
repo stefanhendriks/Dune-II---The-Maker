@@ -29,7 +29,9 @@ extern cBullet        bullet[MAX_BULLETS];
 extern cRegion        world[MAX_REGIONS];
 extern cMentat		  *Mentat;
 extern cTimeManager   TimeManager;
-
+extern cEventManager  EventManager;
+extern cDrawManager   DrawManager;
+extern cMouse		  Mouse;
 extern cMultiMediaEngine *MMEngine;
 
 extern int MAXVOICES;            // USE THIS FOR DETERMINING VOICES

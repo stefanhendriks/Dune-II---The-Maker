@@ -243,6 +243,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cMouse.cpp"
+				>
+			</File>
+			<File
 				RelativePath="cParticle.cpp"
 				>
 			</File>
@@ -454,6 +458,10 @@
 			</File>
 			<File
 				RelativePath=".\cMMEAllegro.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cMouse.h"
 				>
 			</File>
 			<File

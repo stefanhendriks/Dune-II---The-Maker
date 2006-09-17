@@ -30,7 +30,10 @@ cRegion        world[MAX_REGIONS];
 cMentat		   *Mentat;
 cTimeManager   TimeManager;
 cEventManager  EventManager;
+cDrawManager   DrawManager;
 cMultiMediaEngine *MMEngine;
+cMouse			Mouse;
+
 // Structs
 sPreviewMap     PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory
 s_House         houses[MAX_HOUSES];

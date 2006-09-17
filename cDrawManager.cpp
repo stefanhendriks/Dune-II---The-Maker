@@ -4,13 +4,25 @@ cDrawManager::cDrawManager() {
 
 }
 
+/** Only function public **/
+void cDrawManager::draw() {
+	drawEverythingOnBuffer();
+	drawBufferOnScreen();
+}
+
+
+
 void cDrawManager::drawEverythingOnBuffer() {
 	drawByGameState();
-	drawBufferOnScreen();
+	drawMouse();
 }
 
 void cDrawManager::drawByGameState() {
 
+}
+
+void cDrawManager::drawMouse() {
+	Mouse.draw();
 }
 
 /**
