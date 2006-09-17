@@ -7,7 +7,7 @@ cDrawManager::cDrawManager() {
 /** Only function public **/
 void cDrawManager::draw() {
 	drawEverythingOnBuffer();
-	drawBufferOnScreen();
+	drawBufferOnScreen();	
 }
 
 

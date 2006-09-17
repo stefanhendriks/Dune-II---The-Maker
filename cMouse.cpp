@@ -12,3 +12,7 @@ void cMouse::setPoll(int x, int y, int z) {
 	mouseY = y;
 	mouseZ = z;
 }
+
+void cMouse::draw() {
+
+}
