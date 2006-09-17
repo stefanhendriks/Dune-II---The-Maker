@@ -29,6 +29,6 @@ void cMouse::draw() {
 	int drawY = mouseY;
 	/** todo: depending on status and such fix the x, y coordinates for drawing **/
 	
-	MMEngine->drawSprite(mouseSurface, bmp_screen, 0, 0);
-//	MMEngine->drawSprite(mouseSurface, DrawManager->getBuffer(), drawX, drawY);
+//	MMEngine->drawSprite(mouseSurface, bmp_screen, 0, 0);
+	MMEngine->drawSprite(mouseSurface, (DrawManager->getBuffer()), drawX, drawY);
 }

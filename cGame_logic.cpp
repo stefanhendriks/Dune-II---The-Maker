@@ -5210,10 +5210,7 @@ bool cGame::setupGame() {
 	// ALLEGRO - INIT    
 	if (allegro_init() != 0)
 		return false;
-
-	/** Now create DrawManager AFTER the lib is set up **/
-	DrawManager = new cDrawManager();
-
+	
 	logbook(allegro_id);
 	yield_timeslice();
 
@@ -5581,6 +5578,9 @@ bool cGame::setupGame() {
 	game.setup_list();
 
 	play_music(MUSIC_MENU);
+
+	/** Now create DrawManager AFTER the lib is set up **/
+	DrawManager = new cDrawManager();
 
 	// all has installed well. Lets rock and role.
 	return true;

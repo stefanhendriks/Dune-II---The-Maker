@@ -35,6 +35,6 @@ void cDrawManager::drawMouse() {
 	onto the screen buffer.
 **/
 void cDrawManager::drawBufferOnScreen() {
-	//MMEngine->doBlit(buffer, MME_SCREENBUFFER, 0, 0);
+//	MMEngine->doBlit(buffer, MME_SCREENBUFFER, 0, 0);
 }
 
