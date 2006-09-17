@@ -2474,116 +2474,92 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
 
     char filename[80];
     
-    if (iHouse == ATREIDES)       sprintf(filename, "mentata.ini");
-    if (iHouse == ORDOS)          sprintf(filename, "mentato.ini");
-    if (iHouse == HARKONNEN)      sprintf(filename, "mentath.ini");
+	switch (iHouse) {
+		case ATREIDES:
+			sprintf(filename, "mentata.ini");
+			break;
+		case HARKONNEN:
+			sprintf(filename, "mentath.ini");
+			break;
+		case ORDOS:
+			sprintf(filename, "mentato.ini");
+			break;
+	}
 
     FILE *stream; 
-
-    char path[50];
-
-
-    // clear mentat
-    memset(game.mentat_sentence, 0, sizeof(game.mentat_sentence));
-
+    char path[50];  
     sprintf(path, "campaign/briefings/%s", filename);
-
     Logger.print(path);
 
-	if (DEBUGGING)
-	{
-    char msg[255];
-    sprintf(msg, "Going to find SCEN ID #%d and SectionID %d", iScenarioFind, iSectionFind);
-    Logger.print(msg);
+	if (DEBUGGING) {
+		char msg[255];
+		sprintf(msg, "Going to find SCEN ID #%d and SectionID %d", iScenarioFind, iSectionFind);
+		Logger.print(msg);
 	}
 
     int iScenario=0;
     int iSection=0;
     int iLine=0; // max 8 lines
 
-
-    if( (stream = fopen( path, "r+t" )) != NULL )
-    {
-
+    if( (stream = fopen( path, "r+t" )) != NULL ) {
         char linefeed[MAX_LINE_LENGTH];
         char lineword[25];
         char linesection[30];
 
-        while( !feof( stream ) )
-        { 
+        while( !feof( stream ) ) { 
             INI_Sentence(stream, linefeed);
 
-                  // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-      // character (which is "//", ";" or "#"), or an empty line, then skip it
-      if (linefeed[0] == ';' ||
-          linefeed[0] == '#' ||
-         (linefeed[0] == '/' && linefeed[1] == '/')
-          )
-          continue;   // Skip
+			// Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
+			// character (which is "//", ";" or "#"), or an empty line, then skip it
+			if (linefeed[0] == ';' ||
+				linefeed[0] == '#' ||
+				(linefeed[0] == '/' && linefeed[1] == '/')) {
+				continue;   // Skip
+			}
 
-      INI_Section(linefeed,linesection);
+			INI_Section(linefeed,linesection);
 
-      if (linesection[0] != '\0' && strlen(linesection) > 1)              
-      {           
-          // until we found the right sections/parts, keep searching
-          iSection=INI_SectionType(linesection, iSection);            
-      }
+			if (linesection[0] != '\0' && strlen(linesection) > 1)	{           
+				// until we found the right sections/parts, keep searching
+				iSection=INI_SectionType(linesection, iSection);            
+			}
 
-      if (iSection == INI_SCEN)
-      {
-         INI_Word(linefeed, lineword);
-         int wordtype = INI_WordType(lineword, iSection);
+			if (iSection == INI_SCEN) {
+				INI_Word(linefeed, lineword);
+				int wordtype = INI_WordType(lineword, iSection);
 
-         if (wordtype == WORD_NUMBER)
-         {
-             iScenario = INI_WordValueINT(linefeed);
-             continue;
-         }
-      }
+				if (wordtype == WORD_NUMBER) {
+					iScenario = INI_WordValueINT(linefeed);
+					continue;
+				}
+			}
 
-        if (iScenario == iScenarioFind)
-        {
-            if (iSection == iSectionFind)
-            {
-                INI_Word(linefeed, lineword);
-        
-                int wordtype = INI_WordType(lineword, iSection);
-                
-                if (wordtype == WORD_REGIONTEXT)
-                {
-                    char cHouseText[256];
-                    INI_WordValueSENTENCE(linefeed, cHouseText);
-                    
-                    // this is not a comment, add this....
-                    sprintf(game.mentat_sentence[iLine], "%s",cHouseText);
-                   // Logger.print(game.mentat_sentence[iLine]);
-                    iLine++;
-                    
-                    if (iLine > 9)
-                        break;
-                }
+			if (iScenario == iScenarioFind)	{
+				if (iSection == iSectionFind) {
+					INI_Word(linefeed, lineword);
 
-            }
-        
+					int wordtype = INI_WordType(lineword, iSection);
 
-        }
+					if (wordtype == WORD_REGIONTEXT) {
+						char cHouseText[256];
+						INI_WordValueSENTENCE(linefeed, cHouseText);
 
+						// this is not a comment, add this....
+						sprintf(game.mentat_sentence[iLine], "%s",cHouseText);
+						// Logger.print(game.mentat_sentence[iLine]);
+						iLine++;
 
-      /*
+						if (iLine > 9) {
+							break;
+						}
+					}
+				}
+			}
 
-
-  */
-
-
-        }
-
-
-    }
-
-    fclose(stream);
-
-    Logger.print("[BRIEFING] File opened");
-
+		}
+	}
+	fclose(stream);
+	Logger.print("[BRIEFING] File opened");
 }
 
 

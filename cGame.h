@@ -168,22 +168,7 @@ public:
 	char mentat_sentence[10][255];		// draw 2 sentences at once, so 0 1, 2 3, 4 5, 6 7, 8 9
 
 	int TIMER_mentat_Speaking;	// speaking = time
-
-	int iMentatSpeak;			// = sentence to draw and speak with (-1 = not ready)
-	int iMentatMouth;			// frames	...
-	int iMentatEyes;				// ... for mentat ...
-	int iMentatOther;			// ... animations .
-
-	int TIMER_mentat_Mouth;			// timer for animations
-	int TIMER_mentat_Eyes;			// timer for animations
-	int TIMER_mentat_Other;			// timer for animations
-
-	void MENTAT_draw_mouth(int iMentat);
-	void MENTAT_draw_eyes(int iMentat);
-	void MENTAT_draw_other(int iMentat);
-
-	void think_mentat();
-
+	
 	void think();
 
     void FADE_OUT(); // fade out with current screen_bmp, this is a little game loop itself!
@@ -194,7 +179,10 @@ public:
 	void shutdown();
 	
 	bool isState(int thisState);
+	int getState();
 	void setState(int thisState);
+
+	void draw_movie(int iType);  // draw movie sequence
 
 private:
 	int fps;			/** last frames per seconds */
@@ -224,9 +212,6 @@ private:
 	void shakeScreenAndBlitBuffer();
 	void handleTimeSlicing();
 	void handleKeys();
-
-    void draw_movie(int iType);  // draw movie sequence
-
 
 	void draw_message();
 	

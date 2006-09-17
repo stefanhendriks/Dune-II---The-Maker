@@ -76,10 +76,7 @@ void cGame::init()
 
 	memset(cMessage, 0 , sizeof(cMessage));
 	iMessageAlpha=-1;
-
-	// mentat	
-	memset(mentat_sentence, 0, sizeof(mentat_sentence));
-
+	
 	bPlaceIt=false;			// we do not place
 	bPlacedIt=false;
 
@@ -151,18 +148,7 @@ void cGame::init()
         almp3_destroy_mp3(mp3_music);
 	}
 
-	iMentatSpeak=-1;			// = sentence to draw and speak with (-1 = not ready)
-
-	TIMER_mentat_Speaking=-1;	// speaking = time
-	TIMER_mentat_Mouth=0;
-	TIMER_mentat_Eyes=0;
-	TIMER_mentat_Other=0;
-
-	iMentatMouth=3;			// frames	... (mouth)
-	iMentatEyes=3;				// ... for mentat ... (eyes)
-	iMentatOther=0;			// ... animations . (book/ring)
-
-    mp3_music=NULL;
+	mp3_music=NULL;
 }
 
 
@@ -188,10 +174,7 @@ void cGame::mission_init()
 
 	memset(cMessage, 0 , sizeof(cMessage));
 	iMessageAlpha=-1;
-
-	// mentat	
-	memset(mentat_sentence, 0, sizeof(mentat_sentence));
-
+	
 	bPlaceIt=false;			// we do not place
 	bPlacedIt=false;
 
@@ -375,136 +358,6 @@ void cGame::think_movie()
             TIMER_movie=0;
 		}
     }
-}
-
-void cGame::think_mentat()
-{
-
-	if (TIMER_mentat_Speaking > 0)
-		TIMER_mentat_Speaking--;
-
-	if (TIMER_mentat_Speaking == 0)
-	{
-		// calculate speaking stuff
-
-		iMentatSpeak += 2; // makes 0, 2, etc.
-
-		if (iMentatSpeak > 8)
-		{
-			iMentatSpeak = -2;
-			TIMER_mentat_Speaking=-1;
-			return;
-		}
-
-		// lentgh calculation of time
-		int iLength = strlen(mentat_sentence[iMentatSpeak]);
-		iLength += strlen(mentat_sentence[iMentatSpeak+1]);
-
-		if (iLength < 2)
-		{
-			iMentatSpeak = -2;
-			TIMER_mentat_Speaking=-1;
-			return;
-		}
-		
-
-		TIMER_mentat_Speaking = iLength*12;
-	}
-
-
-	// think wohoo
-	if (TIMER_mentat_Mouth > 0)
-	{
-		TIMER_mentat_Mouth--;
-	}
-	else if (TIMER_mentat_Mouth == 0)
-	{
-
-		if (TIMER_mentat_Speaking > 0)
-		{
-			int iOld = iMentatMouth;
-
-			if (iMentatMouth == 0)
-			{
-				// when mouth is shut, we wait a bit.
-				if (rnd(100) < 45)
-				{
-					iMentatMouth += (1 + rnd(4));				
-				}
-				else
-					TIMER_mentat_Mouth=3; // wait
-
-				// correct any frame
-				if (iMentatMouth > 4)
-					iMentatMouth-=5;
-			}
-			else
-			{
-				iMentatMouth += (1 + rnd(4));									
-
-				if (iMentatMouth > 4)
-					iMentatMouth-=5;
-			}
-
-			// Test if we did not set the timer, when not, we changed stuff, and we
-			// have to make sure we do not reshow the same animation.. which looks
-			// odd!
-			if (TIMER_mentat_Mouth == 0)
-			{
-				if (iMentatMouth == iOld)
-					iMentatMouth++;
-
-				// correct if nescesary:
-				if (iMentatMouth > 4)
-					iMentatMouth-=5;
-
-				// Done!
-			}
-		}
-		else
-			iMentatMouth=0; // when there is no sentence, do not animate mouth
-		
-		TIMER_mentat_Mouth=-1; // this way we make sure we do not update it too much
-	} // speaking
-
-	
-	if (TIMER_mentat_Eyes > 0)
-	{
-		TIMER_mentat_Eyes--;
-	}
-	else
-	{
-		int i = rnd(100);
-
-        int iWas = iMentatEyes;
-        
-        if (i < 30)
-			iMentatEyes = 3;
-		else if (i >= 30 && i < 60)
-			iMentatEyes = 0;
-		else
-			iMentatEyes=4;
-
-        // its the same
-        if (iMentatEyes == iWas)
-            iMentatEyes = rnd(4);
-		
-        if (iMentatEyes != 4)
-            TIMER_mentat_Eyes = 90 + rnd(160); 
-        else
-            TIMER_mentat_Eyes = 30;
-	}
-
-	// think wohoo
-	if (TIMER_mentat_Other > 0)
-	{
-		TIMER_mentat_Other--;
-	}
-	else
-	{
-		iMentatOther = rnd(5); 
-	}
-
 }
 
 // thinking for starport prices
@@ -2779,6 +2632,7 @@ void cGame::gerald()
 
 }
 
+/** TODO: Move to map class **/
 void cGame::mapdraw()
 {
     // make it ready to show night or something
@@ -2822,12 +2676,10 @@ void cGame::losing()
         // OMG, MENTAT IS NOT HAPPY
         state = GAME_LOSEBRIEF;
 		
-        if (bSkirmish)
+		if (bSkirmish) {
             game.mission_init();
+		}
 
-        // PREPARE NEW MENTAT BABBLE
-        iMentatSpeak=-1;
-        
         // FADE OUT
         FADE_OUT();
     }
@@ -2845,13 +2697,10 @@ void cGame::winning()
         // SELECT YOUR NEXT CONQUEST
         state = GAME_WINBRIEF;
 		
-        if (bSkirmish)
+		if (bSkirmish) {
             game.mission_init();
+		}
 
-        // PREPARE NEW MENTAT BABBLE
-        iMentatSpeak=-1;
-
-        
         // FADE OUT
         FADE_OUT();
     }
@@ -2995,77 +2844,6 @@ void cGame::draw_mentat(int iType)
     // SPEAKING ANIMATIONS IS DONE IN MENTAT()	   
 }
 
-void cGame::MENTAT_draw_eyes(int iMentat)
-{
-	int iDrawX=128;
-	int iDrawY=240;
-
-	// now draw eyes
-	if (iMentat  < 0)
-		draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BEN_EYES01+ iMentatEyes].dat, iDrawX, iDrawY);
-
-    
-
-    if (iMentat  == HARKONNEN)
-    {
-        iDrawX = 64;
-        iDrawY = 256;
-		draw_sprite(bmp_screen, (BITMAP *)gfxmentat[HAR_EYES01+ iMentatEyes].dat, iDrawX, iDrawY);
-   }
-
-    if (iMentat  == ATREIDES)
-    {
-        iDrawX = 80;
-        iDrawY = 241;
-		draw_sprite(bmp_screen, (BITMAP *)gfxmentat[ATR_EYES01+ iMentatEyes].dat, iDrawX, iDrawY);
-   }
-
-
-    if (iMentat  == ORDOS)
-    {
-        iDrawX = 32;
-        iDrawY = 240;
-		draw_sprite(bmp_screen, (BITMAP *)gfxmentat[ORD_EYES01+ iMentatEyes].dat, iDrawX, iDrawY);
-   }
-
-}
-
-
-void cGame::MENTAT_draw_mouth(int iMentat)
-{
-
-	int iDrawX=112;
-	int iDrawY=272;
-
-	// now draw speaking and such
-	if (iMentat  < 0)
-		draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BEN_MOUTH01+ iMentatMouth].dat, iDrawX, iDrawY);
-    
-    
-    if (iMentat  == HARKONNEN)
-    {
-        iDrawX = 64;
-        iDrawY = 288;
-		draw_sprite(bmp_screen, (BITMAP *)gfxmentat[HAR_MOUTH01+ iMentatMouth].dat, iDrawX, iDrawY);
-    }
-
-    // 31, 270
-
-    if (iMentat  == ATREIDES)
-    {
-        iDrawX = 80;
-        iDrawY = 273;
-		draw_sprite(bmp_screen, (BITMAP *)gfxmentat[ATR_MOUTH01+ iMentatMouth].dat, iDrawX, iDrawY);
-    }
-
-    if (iMentat  == ORDOS)
-    {
-        iDrawX = 31;
-        iDrawY = 270;
-		draw_sprite(bmp_screen, (BITMAP *)gfxmentat[ORD_MOUTH01+ iMentatMouth].dat, iDrawX, iDrawY);
-    }
-}
-
 
 // draw mentat
 void cGame::mentat(int iType)
@@ -3083,122 +2861,7 @@ void cGame::mentat(int iType)
     bool bFadeOut=false;
 
 	// draw speaking animation, and text, etc
-
-	if (iType > -1) {
-		draw_mentat(iType); // draw houses
-	}
-
-	MENTAT_draw_mouth(iType);
-	MENTAT_draw_eyes(iType);
-
-	// draw text
-	if (iMentatSpeak >= 0) {
-		alfont_textprintf(bmp_screen, bene_font, 17,17, makecol(0,0,0), "%s", mentat_sentence[iMentatSpeak]);
-		alfont_textprintf(bmp_screen, bene_font, 16,16, makecol(255,255,255), "%s", mentat_sentence[iMentatSpeak]);
-		alfont_textprintf(bmp_screen, bene_font, 17,33, makecol(0,0,0), "%s", mentat_sentence[iMentatSpeak+1]);
-		alfont_textprintf(bmp_screen, bene_font, 16,32, makecol(255,255,255), "%s", mentat_sentence[iMentatSpeak+1]);
-	}
-
-	// mentat mouth
-	if (TIMER_mentat_Mouth <= 0) {
-		TIMER_mentat_Mouth = 13+rnd(5);
-	}
-
-    if (TIMER_mentat_Speaking < 0 && iType > -1)
-    {        
-        // NO
-		
-        draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BTN_REPEAT].dat, 293, 423);
-		if ((mouse_x > 293 && mouse_x < 446) && (mouse_y > 423 && mouse_y < 468)) {
-            if (Mouse.btnSingleClickLeft())
-            {
-                // head back to choose house
-                iMentatSpeak=-1; // prepare speaking
-                //state = GAME_HOUSE;
-            }
-		}
-
-        // YES/PROCEED
-        draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BTN_PROCEED].dat, 466, 423);
-		
-		if ((mouse_x > 446 && mouse_x < 619) && (mouse_y >423 && mouse_y < 468)) {
-            if (Mouse.btnSingleClickLeft())
-            {
-                if (isState(GAME_BRIEFING))
-                {
-                // proceed, play mission
-                state = GAME_PLAYING;
-                
-                // CENTER MOUSE
-                position_mouse(320, 240);
-                                
-                bFadeOut=true;
-                
-                play_music(MUSIC_PEACE);
-                }
-                else if (state == GAME_WINBRIEF)
-                {
-                //
-					if (bSkirmish)
-					{
-						state = GAME_SETUPSKIRMISH;
-						play_music(MUSIC_MENU);
-					}
-					else
-					{
-					
-                    state = GAME_REGION;
-                    REGION_SETUP(game.iMission, game.iHouse);
-
-                    
-                    // PLAY THE MUSIC
-                    play_music(MUSIC_CONQUEST);
-					}
-
-					// PREPARE NEW MENTAT BABBLE
-                    iMentatSpeak=-1;
-                    
-                    bFadeOut=true;
-                }
-                else if (state == GAME_LOSEBRIEF)
-                {
-                //
-					if (bSkirmish)
-					{
-						state = GAME_SETUPSKIRMISH;
-						play_music(MUSIC_MENU);
-					}
-					else
-					{
-						if (game.iMission > 1)
-						{
-							state = GAME_REGION;
-
-							game.iMission--; // we did not win
-							REGION_SETUP(game.iMission, game.iHouse);
-
-							// PLAY THE MUSIC
-							play_music(MUSIC_CONQUEST);
-						}
-						else
-						{
-							state = GAME_BRIEFING;
-							play_music(MUSIC_BRIEFING);
-						}
-					
-					}
-                    // PREPARE NEW MENTAT BABBLE
-                    iMentatSpeak=-1;
-                                        
-                    bFadeOut=true;
-                }
-
-			} 			
-		}
-
-    }    
-
-
+	Mentat->draw();
 
 	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
@@ -4163,7 +3826,7 @@ void cGame::house()
             LOAD_SCENE("platr"); // load planet of atreides
 
 			state = GAME_TELLHOUSE;
-            iMentatSpeak=-1;
+			Mentat->prepare(true);
             bFadeOut=true;
         }
 	}
@@ -4184,7 +3847,7 @@ void cGame::house()
             LOAD_SCENE("plord"); // load planet of ordos
 
 			state = GAME_TELLHOUSE;
-            iMentatSpeak=-1;
+            Mentat->prepare(true);
             bFadeOut=true;
 		}
 	}
@@ -4205,7 +3868,7 @@ void cGame::house()
             LOAD_SCENE("plhar"); // load planet of harkonnen
 
 			state = GAME_TELLHOUSE;
-            iMentatSpeak=-1;
+            Mentat->prepare(true);
             bFadeOut=true;
 		}
 	}
@@ -4213,62 +3876,10 @@ void cGame::house()
 
 	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
-
-	
-
 	
     if (bFadeOut)
         game.FADE_OUT();
         
-}
-
-
-
-void cGame::preparementat(bool bTellHouse)
-{
-    // clear first
-    memset(mentat_sentence, 0, sizeof(mentat_sentence));
-
-	if (bTellHouse)
-	{
-		if (iHouse == ATREIDES)	{
-            INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION);            
-		} else if (iHouse == HARKONNEN)	{
-            INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION);            
-		} else if (iHouse == ORDOS)	{
-            INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION);            
-		}
-	}
-	else
-	{   
-        if (state == GAME_BRIEFING) {
-			INI_Load_scenario(iHouse, iRegion);
-			INI_LOAD_BRIEFING(iHouse, iRegion, INI_BRIEFING);
-        } else if (state == GAME_WINBRIEF) {
-            if (rnd(100) < 50)
-                LOAD_SCENE("win01"); // ltank
-            else
-                LOAD_SCENE("win02"); // ltank
-
-            INI_LOAD_BRIEFING(iHouse, iRegion, INI_WIN);
-        }
-        else if (state == GAME_LOSEBRIEF)
-        {
-            if (rnd(100) < 50)
-                LOAD_SCENE("lose01"); // ltank
-            else
-                LOAD_SCENE("lose02"); // ltank
-
-            INI_LOAD_BRIEFING(iHouse, iRegion, INI_LOSE);
-        }
-       // LOAD_BRIEFING(filename);
-        
-            
-    }
-
-	Logger.print("MENTAT: sentences prepared");
-	iMentatSpeak=-2;			// = sentence to draw and speak with (-1 = not ready, -2 means starting)
-	TIMER_mentat_Speaking=0; //	0 means, set it up
 }
 
 void cGame::tellhouse()
@@ -4286,55 +3897,9 @@ void cGame::tellhouse()
 
     bool bFadeOut=false;
 
-	draw_mentat(-1); // draw benegesserit
-
-	// -1 means prepare
-	if (iMentatSpeak == -1)
-		preparementat(true); // prepare for house telling
-	else if (iMentatSpeak > -1) {
-		mentat(-1); // speak dammit!	
-	} else if (iMentatSpeak == -2) {
-		// do you wish to , bla bla?
-	}
-
-    // draw buttons
-    if (TIMER_mentat_Speaking < 0)
-    {
-		rectfill(bmp_screen, 20, 20, 520, 320, makecol(25,25,255));
-        // NO
-        draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BTN_NO].dat, 293, 423);
-
-		if ((mouse_x > 293 && mouse_x < 446) && (mouse_y > 423 && mouse_y < 468)) {
-            if (Mouse.btnSingleClickLeft())
-            {
-                // head back to choose house
-                iHouse=-1;
-                state = GAME_HOUSE;
-                bFadeOut=true;
-         	}
-		}
-        // YES
-        draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BTN_YES].dat, 466, 423);
-        if ((mouse_x > 446 && mouse_x < 619) && (mouse_y >423 && mouse_y < 468))
-            if (Mouse.btnSingleClickLeft())
-            {
-                // yes!
-                state = GAME_BRIEFING; // briefing
-                iMission = 1;
-                iRegion  = 1;
-                iMentatSpeak=-1; // prepare speaking
-
-                player[0].set_house(iHouse);
-                
-                // play correct mentat music
-                play_music(MUSIC_BRIEFING);
-                bFadeOut=true;               
-                
-            }
-        
-
-    }    
-
+	Mentat->draw();
+	
+	
     // draw mouse    
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
@@ -4606,7 +4171,7 @@ void cGame::region()
 		game.iRegion = iNewReg;
 		game.iMission++;						// FINALLY ADD MISSION NUMBER...
         //    iRegion++;
-        iMentatSpeak=-1;
+        Mentat->init();
 
 		INI_Load_scenario(iHouse, game.iRegion);
 
@@ -4730,7 +4295,7 @@ void DEBUG_KEYS()
 		destroyAllUnits(true);			
 	}
 
-	if (key[KEY_F1] && game.iHouse > 0)
+	/*if (key[KEY_F1] && game.iHouse > 0)
 	{
 		game.mission_init();
 		game.iMission = 9;
@@ -4738,7 +4303,7 @@ void DEBUG_KEYS()
 		game.iWinQuota = -1;
 		game.setState(GAME_BRIEFING);
 		play_music(MUSIC_BRIEFING);
-		game.iMentatSpeak=-1;
+		Mentat->prepare(false, iState, iHouse, iRegion);
 	} 
 
 	if (key[KEY_F6] && game.iHouse > 0)
@@ -4772,7 +4337,7 @@ void DEBUG_KEYS()
 		game.setState(GAME_BRIEFING);
 		play_music(MUSIC_BRIEFING);
 		game.iMentatSpeak=-1;
-	} 
+	} */
 
 	if (key[KEY_F4])
 	{
@@ -5022,16 +4587,15 @@ void cGame::shakeScreenAndBlitBuffer() {
 	}
 }
 
+/** TODO: Should be LOGIC only!
+	Drawing should be put in the DrawManager**/
 void cGame::runGameState() {
-	switch (state) {
+	switch (getState()) {
 		case GAME_PLAYING: 
 			combat();
 			break;
-		case GAME_BRIEFING:
-			if (iMentatSpeak == -1) {
-				preparementat(false);
-			}
-			mentat(iHouse);
+		case GAME_BRIEFING:			
+			Mentat->think();
 			break;
 		case GAME_SETUPSKIRMISH:
 			setup_skirmish();
@@ -5046,7 +4610,7 @@ void cGame::runGameState() {
 			house();
 			break;
 		case GAME_TELLHOUSE:
-			tellhouse();
+			Mentat->think();
 			break;
 		case GAME_WINNING:
 			winning();
@@ -5055,43 +4619,13 @@ void cGame::runGameState() {
 			losing();
 			break;
 		case GAME_WINBRIEF:
-			if (iMentatSpeak == -1) {
-				preparementat(false);
-			}
-			mentat(iHouse);
+			Mentat->think();
 			break;
 		case GAME_LOSEBRIEF:
-			if (iMentatSpeak == -1) {
-				preparementat(false);
-			}
-			mentat(iHouse);
+			Mentat->think();
 			break;
 	}
 }
-
-/**
-	Main game loop
-*/
-void cGame::run()
-{
-	set_trans_blender(0, 0, 0, 128);
-
-	while (bPlaying)
-	{
-		poll();
-		TimeManager.processTime();
-		EventManager.handleEvents();
-		runGameState();
-		handleKeys();	   // <-- should be in event manager
-		DrawManager->draw();
-		alfont_textprintf(bmp_screen, game_font, 10,20, makecol(255,255,255), "LEFT BTN %d / %d / %d", Mouse.btnLeft, Mouse.btnSingleClickLeft(), Mouse.holdingMouseButton[MOUSE_BTN_RIGHT]);
-		alfont_textprintf(bmp_screen, game_font, 10,40, makecol(255,255,255), "RIGHT BTN %d / %d / %d", Mouse.btnRight, Mouse.btnSingleClickRight(), Mouse.holdingMouseButton[MOUSE_BTN_RIGHT]);
-		alfont_textprintf(bmp_screen, game_font, 10,60, makecol(255,255,255), "%d / %d (%d, %d)",mouse_x, mouse_y, Mouse.mouseX, Mouse.mouseY);
-		shakeScreenAndBlitBuffer(); // <-- should be in draw manager		
-		frames++;
-	}
-}
-
 
 /** 
 	Shutdown the game	
@@ -5148,14 +4682,13 @@ bool cGame::setupGame() {
 	// randomize timer
 	srand((unsigned int) time(0));
 
-	// Mentat class pointer set at null
-	Mentat = NULL;
-
 	// Mouse stuff
 	mouse_status = MOUSE_STATUS_NORMAL;
 	mouse_tile = 0;
 
-	// A few messages for the player	
+	/** Todo: make this more neat
+
+		Ugly installment of stuff **/
 	INSTALL_PLAYERS();  
 	INSTALL_HOUSES();	
 	install_structures();	
@@ -5168,17 +4701,21 @@ bool cGame::setupGame() {
 	Logger.print("--------------"); 
 	Logger.print("\n3...2...1... GO!\n");
 
-	game.init();
 	game.setup_list();
 
 	play_music(MUSIC_MENU);
 
 	/** Now create DrawManager AFTER the lib is set up **/
 	DrawManager = new cDrawManager();
+	MentatFactory.create(BENEGES); /** default start with BENEGES mentat **/
 
 	// all has installed well. Lets rock and role.
 	return true;
 
+}
+
+int cGame::getState() {
+	return state;
 }
 
 bool cGame::isState(int thisState) {
@@ -5213,3 +4750,25 @@ void cGame::think() {
 		}		
 	}
 }
+
+/**
+	Main game loop
+*/
+void cGame::run()
+{
+	set_trans_blender(0, 0, 0, 128);
+
+	while (bPlaying)
+	{
+		poll();		// <-- move to event manager
+		TimeManager.processTime();
+		EventManager.handleEvents();
+		runGameState();
+		handleKeys();	   // <-- should be in event manager
+		DrawManager->draw();
+		shakeScreenAndBlitBuffer(); // <-- should be in draw manager		
+		frames++;	// <-- should be in draw manager
+	}
+}
+
+

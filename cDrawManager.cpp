@@ -18,11 +18,39 @@ MME_SURFACE cDrawManager::getBuffer() {
 
 void cDrawManager::drawEverythingOnBuffer() {
 	drawByGameState();
-	drawMouse();
+	drawMouse();	
 }
 
 void cDrawManager::drawByGameState() {
 	/** TODO: Draw stuff by game state **/
+		switch (game.getState()) {
+		case GAME_PLAYING: 
+			break;
+		case GAME_BRIEFING:			
+			Mentat->draw();
+			break;
+		case GAME_SETUPSKIRMISH:			
+			break;
+		case GAME_MENU:			
+			break;
+		case GAME_REGION:			
+			break;
+		case GAME_HOUSE:			
+			break;
+		case GAME_TELLHOUSE:
+			Mentat->draw();
+			break;
+		case GAME_WINNING:			
+			break;
+		case GAME_LOSING:			
+			break;
+		case GAME_WINBRIEF:
+			Mentat->draw();
+			break;
+		case GAME_LOSEBRIEF:
+			Mentat->draw();
+			break;
+	}
 }
 
 

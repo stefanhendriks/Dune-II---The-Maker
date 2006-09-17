@@ -184,6 +184,7 @@
 #define CORRINO   7         // == SARDAUKAR!!!   ---- in this code we use this 'house' for sandworms
 #define SANDHOUSE 9
 #define GREYHOUSE	10
+#define BENEGES   11
 
 #define ATREIDES_TALK	20
 #define HARKONNEN_TALK	21

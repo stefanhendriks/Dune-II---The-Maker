@@ -338,6 +338,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\mentat\cBenegesMentat.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\mentat\cHarkonnenMentat.cpp"
 					>
 				</File>
@@ -825,6 +829,10 @@
 				>
 				<File
 					RelativePath=".\mentat\cAtreidesMentat.h"
+					>
+				</File>
+				<File
+					RelativePath=".\mentat\cBenegesMentat.h"
 					>
 				</File>
 				<File

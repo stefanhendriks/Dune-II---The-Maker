@@ -91,7 +91,9 @@ void cTimeManager::handleTimerGlobal() {
 			}
 		}
 		game.think_music();
-		game.think_mentat();
+		if (Mentat) {
+			Mentat->think();
+		}		
 		game.think_movie();
 		game.think_message();
 

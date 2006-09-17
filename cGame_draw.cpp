@@ -26,11 +26,9 @@ void cGame::FADE_OUT()
 void cGame::draw_movie(int iType)
 {
     if (gfxmovie != NULL && iMovieFrame > -1)
-    {    
-
+    {
         // drawing only, circulating is done in think function
         draw_sprite(bmp_screen, (BITMAP *)gfxmovie[iMovieFrame].dat, 256, 120);
-
     }
 }
 

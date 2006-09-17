@@ -14,7 +14,7 @@ DUNE II - The Maker
 0| Version information
 0| -------------------
 0| DEM3.5
-0| Compiled at Sep 17 2006 , 17:13:43
+0| Compiled at Sep 17 2006 , 20:26:18
 0| Windowed mode
 0| 
 -------
@@ -61,21 +61,5 @@ DUNE II - The Maker
 0| 
 3...2...1... GO!
 
-0| [GAME.INI] Opening file
-0| [GAME.INI] -> [UNITS]
-0| [GAME.INI] -> [STRUCTURES]
-0| [GAME.INI] Done
-0| LOAD SCENE: data/scenes/platr.dat
-0| [BRIEFING] Opening file
-0| campaign/briefings/mentata.ini
-0| [BRIEFING] File opened
+0| LOAD SCENE: data/scenes/plord.dat
 0| MENTAT: sentences prepared
-0| 
---------
-0| SHUTDOWN
-0| --------
-0| Allegro FONT library shut down.
-0| Allegro MP3 library shut down.
-0| Allegro shut down.
-0| 
-Thanks for playing!

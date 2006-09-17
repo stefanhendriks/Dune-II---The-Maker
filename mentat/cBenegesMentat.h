@@ -10,15 +10,15 @@
 
   */
 
-class cAtreidesMentat : public cMentat {
-private:
+class cBenegesMentat : public cMentat {
+private:	
 	void draw_mouth();
 	void draw_eyes();
 	void draw_other();
 
 public:
-	cAtreidesMentat();
-	~cAtreidesMentat();
+	cBenegesMentat();
+	~cBenegesMentat();
 	
 	void draw();
 };

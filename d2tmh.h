@@ -63,6 +63,9 @@
 
 #include "cLog.h"
 #include "cMouse.h"
+#include "cMentatFactory.h"
+#include "cStructureFactory.h"
+#include "cUnitFactory.h"
 #include "cEventManager.h"
 #include "cTimeManager.h"
 #include "cDrawManager.h"
@@ -92,6 +95,7 @@
 #include "mentat/cOrdosMentat.h"
 #include "mentat/cHarkonnenMentat.h"
 #include "mentat/cAtreidesMentat.h"
+#include "mentat/cBenegesMentat.h"
 
 // Structures
 #include "structures/cConstYard.h"
