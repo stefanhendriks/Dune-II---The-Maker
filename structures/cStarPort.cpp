@@ -107,15 +107,15 @@ void cStarPort::think_animation()
 // called every second, to deploy a unit 
 void cStarPort::think_deploy()
 {
-    logbook("think deploy");
+    Logger.print("think deploy");
     if (TIMER_deploy > -1)
 	{
 		TIMER_deploy--;
-        logbook("timer deploy was > -1");
+        Logger.print("timer deploy was > -1");
 
 		if (TIMER_deploy == 0)
 		{
-            logbook("timer deploy == 0");
+            Logger.print("timer deploy == 0");
 			bool bDeployed=false;
 
             // deploy stuff
@@ -170,7 +170,7 @@ void cStarPort::think_deploy()
 		
             if (bDeployed)
             {
-                logbook("Deployed a unit?");
+                Logger.print("Deployed a unit?");
                 TIMER_deploy=2;
                 game.TIMER_mayorder = 2;
             }

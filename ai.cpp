@@ -71,8 +71,8 @@ void cAIPlayer::BUILD_STRUCTURE(int iStrucType)
 
 	if (DEBUGGING)
 	{
-		logbook("Building STRUCTURE: ");
-		logbook(structures[iStrucType].name);
+		Logger.print("Building STRUCTURE: ");
+		Logger.print(structures[iStrucType].name);
 	}
 	
 }
@@ -148,8 +148,8 @@ void cAIPlayer::BUILD_UNIT(int iUnitType)
 	
 	if (DEBUGGING)
 	{
-		logbook("Building UNIT: ");
-		logbook(units[iUnitType].name);
+		Logger.print("Building UNIT: ");
+		Logger.print(units[iUnitType].name);
 	}
 }
 
@@ -241,7 +241,7 @@ void cAIPlayer::think_building()
 
             if (iBuildingUnit[i] >= units[i].build_time)
             {
-            //logbook("DONE BUILDING");
+            //Logger.print("DONE BUILDING");
 
             // produce now
             int iStr = player[ID].iPrimaryBuilding[iStrucType];
@@ -519,7 +519,7 @@ void cAIPlayer::think_repair()
                              }
                              else
                              {
-                                 logbook("Order move #3");
+                                 Logger.print("Order move #3");
                                  UNIT_ORDER_MOVE(i, structure[iNewID]->iCell);   
                              }
 
@@ -586,7 +586,7 @@ void cAIPlayer::think_attack()
 		{
 			char msg[255];
 			sprintf(msg, "Attacking player id %d", iAttackPlayer);
-			logbook(msg);
+			Logger.print(msg);
 		}
  }
 
@@ -624,7 +624,7 @@ void cAIPlayer::think_attack()
  if (iTarget < 0)
  {
 	 if (DEBUGGING)
-		 logbook("No target!");
+		 Logger.print("No target!");
 
 	 
     return;
@@ -655,7 +655,7 @@ void cAIPlayer::think_attack()
  if (iWe <= iThem && rnd(100) < 50)
  {
 	 if (DEBUGGING)
-		 logbook("AI: Decission to wait, no use to attack opponent which is equal or stronger then AI");
+		 Logger.print("AI: Decission to wait, no use to attack opponent which is equal or stronger then AI");
 
      TIMER_attack = -250;
 
@@ -1122,7 +1122,7 @@ void cAIPlayer::think_worm()
                             map.cell[iMoveTo].type == TERRAIN_SPICE ||
                             map.cell[iMoveTo].type == TERRAIN_SPICEHILL)
                         {
-                            logbook("Order move #4");
+                            Logger.print("Order move #4");
                             UNIT_ORDER_MOVE(i, iMoveTo);
                             break;
                         }
@@ -1207,7 +1207,7 @@ int AI_RANDOM_UNIT_TARGET(int iPlayer, int iAttackPlayer)
 				{
 				char msg[255];
 				sprintf(msg, "AI %d (House %d) -> Visible = %d", iPlayer, player[iPlayer].house, map.iVisible[unit[i].iCell][iPlayer]);
-				logbook(msg);
+				Logger.print(msg);
 				}
 
 				if (map.iVisible[unit[i].iCell][iPlayer] || game.bSkirmish)
@@ -1225,7 +1225,7 @@ int AI_RANDOM_UNIT_TARGET(int iPlayer, int iAttackPlayer)
 	{
 	char msg[255];
 	sprintf(msg, "Targets %d", iT);
-	logbook(msg);
+	Logger.print(msg);
 	}
 
     return (iTargets[rnd(iT)]);
@@ -1258,7 +1258,7 @@ int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer)
 	{
 	char msg[255];
 	sprintf(msg, "STR] Targets %d", iT);
-	logbook(msg);
+	Logger.print(msg);
 	}
 
 
@@ -1382,7 +1382,7 @@ int cAIPlayer::iPlaceStructureCell(int iType)
 	if (bGood)
 	{					
 		//					STRUCTURE_CREATE(iGoodCells[rnd(iGoodCellID)], iType, structures[iType].hp, ID);
-		logbook("FOUND CELL TO PLACE");
+		Logger.print("FOUND CELL TO PLACE");
         iCheckingPlaceStructure=-1;
 		return (iGoodCells[rnd(iGoodCellID)]);					
 	}

@@ -5,7 +5,7 @@ DUNE II - The Maker
 0| Version information
 0| -------------------
 0| DEM3.5
-0| Compiled at Sep 17 2006 , 14:48:39
+0| Compiled at Sep 17 2006 , 15:50:50
 0| Windowed mode
 0| 
 -------

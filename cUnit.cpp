@@ -128,7 +128,7 @@ void cUnit::die(bool bBlowUp, bool bSquish)
         player[iPlayer].iStructures[REFINERY] > 0)
     {
 		if (DEBUGGING)
-			logbook("Harvester died, looking for more...");
+			Logger.print("Harvester died, looking for more...");
 
         bool bFound=false;
         for (int i=0; i < MAX_UNITS; i++)
@@ -143,7 +143,7 @@ void cUnit::die(bool bBlowUp, bool bSquish)
         if (bFound == false)
         {
 			if (DEBUGGING)
-				logbook("no friends, reinforcing...");
+				Logger.print("no friends, reinforcing...");
 
             // deliver
             for (int k=0; k < MAX_STRUCTURES; k++)
@@ -395,7 +395,7 @@ if (bSquish)
 					unit[i].iAction = ACTION_GUARD;
 
 					// Ai will still move to this location
-                    logbook("Another move to");
+                    Logger.print("Another move to");
 					unit[i].move_to(iCell, -1, -1);					
 				}
 	}
@@ -766,7 +766,7 @@ void cUnit::move_to(int iCll, int iStrucID, int iUnitID)
 
     char msg[255];
     sprintf(msg, "%s", units[iType].name);
-    logbook(msg);
+    Logger.print(msg);
 }
 
 
@@ -830,7 +830,7 @@ void cUnit::think_guard()
 									// ATTACK
 									iDistance = distance;
 									iDanger=i;
-									// logbook("WORM FOUND ENEMY");
+									// Logger.print("WORM FOUND ENEMY");
 								}
 							} // valid terrain
 						}
@@ -1180,7 +1180,7 @@ void cUnit::think()
             {
                 UNIT_ORDER_ATTACK(iID, unit[iTarget].iCell, iTarget, -1,-1);
 				if (DEBUGGING)
-					logbook("FOUND ENEMY TO ATTACK");
+					Logger.print("FOUND ENEMY TO ATTACK");
             }
 
         }
@@ -1339,7 +1339,7 @@ void cUnit::think()
 				iHitPoints=-1; // 'kill' unit
 
 				if (DEBUGGING)
-					logbook("[UNIT] -> Enter refinery #1");
+					Logger.print("[UNIT] -> Enter refinery #1");
 
 				map.remove_id(iID, MAPID_UNITS);
 			} // enter..
@@ -1366,7 +1366,7 @@ void cUnit::think()
 				iHitPoints=-1; // 'kill' unit
 
 				if (DEBUGGING)
-					logbook("[UNIT] -> Enter Structure");
+					Logger.print("[UNIT] -> Enter Structure");
 
 				map.remove_id(iID, MAPID_UNITS);
 			} // enter..
@@ -1413,7 +1413,7 @@ void cUnit::think_move_air()
 
 		// KILL UNITS WHO SOMEHOW GET INVALID
 		if (DEBUGGING)
-			logbook("ERROR: Unit became invalid somehow, killed it");
+			Logger.print("ERROR: Unit became invalid somehow, killed it");
 
 		return;
 	}
@@ -1502,13 +1502,13 @@ void cUnit::think_move_air()
                             }
 							//iGoalCell = iTheGoal;
 							
-							//logbook("HEADING FOR PICKUP UNIT");
+							//Logger.print("HEADING FOR PICKUP UNIT");
 							return;
 						}
 					}
 					else  // unit is not valid anymore!
 					{						
-						logbook("THIS UNIT IS NOT VALID ANYMORE");
+						Logger.print("THIS UNIT IS NOT VALID ANYMORE");
 						iTransferType = TRANSFER_NONE; // nope...					
 						return;
 					}			
@@ -1572,7 +1572,7 @@ void cUnit::think_move_air()
 									map.remove_id(iuID, MAPID_UNITS);
 
 									if (DEBUGGING)
-										logbook("[UNIT] -> Enter refinery #2");
+										Logger.print("[UNIT] -> Enter refinery #2");
 
 								} // enter..
                                 }
@@ -1587,7 +1587,7 @@ void cUnit::think_move_air()
 						else
 						{
 							if (DEBUGGING)
-								logbook("Could not dump here, searching other spot");
+								Logger.print("Could not dump here, searching other spot");
 
 							// find a new spot
 							poll();
@@ -1885,7 +1885,7 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe)
 		if (unit[iuID].isValid())
 		{
 			if (DEBUGGING)
-				logbook("GOING TO PICKUP UNIT");
+				Logger.print("GOING TO PICKUP UNIT");
 
 			iTransferType = iTransfer;
 		
@@ -2082,7 +2082,7 @@ void cUnit::LOG(char *txt)
 	// logs unit stuff, but gives unit information
 	char msg[512];
 	sprintf(msg, "[UNIT[%d]: %s - House %d, iCell = %d, iGoal = %d ] '%s'",iID,  units[iType].name, player[iPlayer].house, iCell, iGoalCell, txt);
-	logbook(msg);
+	Logger.print(msg);
 }
 
 void cUnit::think_attack()
@@ -2470,7 +2470,7 @@ void cUnit::think_move()
 
     //char msg[256];
     //sprintf(msg, "cell=%d, nextcell=%d, goalcell=%d, iPath[0] = %d", iCell, iNextCell, iGoalCell, iPath[0]);
-    //logbook(msg);
+    //Logger.print(msg);
 
     // Same cell? Get out of here
     if (iNextCell == iCell)
@@ -2493,7 +2493,7 @@ void cUnit::think_move()
                 // simply failed
                 if (iResult == -1)
                 {					
-                    logbook("Reason: Could not find path (goal unreachable)");
+                    Logger.print("Reason: Could not find path (goal unreachable)");
                     
                     // Check why, is our goal cell occupied?
                     int uID =  map.cell[iGoalCell].id[MAPID_UNITS];
@@ -2550,7 +2550,7 @@ void cUnit::think_move()
                         
                         if (iF > -1)
                         {
-                            logbook("Order move #1");
+                            Logger.print("Order move #1");
                             UNIT_ORDER_MOVE(iID, iF);
                         }
                     }
@@ -2560,7 +2560,7 @@ void cUnit::think_move()
                 {
                     // we have a problem here, units/stuff around us blocks the unit
 					if (DEBUGGING)
-						logbook("Units surround me, what to do?");
+						Logger.print("Units surround me, what to do?");
 
                 
                 }
@@ -2568,7 +2568,7 @@ void cUnit::think_move()
                 if (iResult == -3)
                 {
 					if (DEBUGGING)
-						logbook("I just failed, ugh");
+						Logger.print("I just failed, ugh");
 
                     return;
                 }
@@ -2590,7 +2590,7 @@ void cUnit::think_move()
             }
             else
             {
-                //logbook("SUCCES");
+                //Logger.print("SUCCES");
             }
                 
 
@@ -2770,7 +2770,7 @@ void cUnit::think_move()
 
 				char msg[255];
 				sprintf(msg, "MY ID = %d", iID);
-				logbook(msg);
+				Logger.print(msg);
 
 				map.remove_id(iID, MAPID_UNITS);
                 iCell = structure[iStructureID]->iCell;
@@ -3010,19 +3010,19 @@ void cUnit::think_move()
         // The goal did change probably, or something else forces us to reconsider
         if (bCalculateNewPath)
         {
-            logbook("SHOULD CALCULATE NEW PATH");
+            Logger.print("SHOULD CALCULATE NEW PATH");
             iPathIndex=-1;
             memset(iPath, -1, sizeof(iPath));
 
 
 
-            //logbook("C");
+            //Logger.print("C");
             //CREATE_PATH(iID, 0);
         }
 
 		if (iCarryAll > -1)
 		{
-			logbook("A carry all is after me...");
+			Logger.print("A carry all is after me...");
 			iPathIndex=-1;
 			memset(iPath, -1, sizeof(iPath));
 			TIMER_movewait=9999;
@@ -3040,7 +3040,7 @@ void cUnit::think_move()
 				if (iStructureID > -1)
                 if (iStructureID == map.cell[iCell].id[MAPID_STRUCTURES])
                 {
-					logbook("Enter structure");
+					Logger.print("Enter structure");
                     // when this structure is not occupied
                     if (structure[iStructureID]->iUnitID < 0)
                     {
@@ -3096,7 +3096,7 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart)
 {    
 	if (bCellValid(iCll) == false)
 	{
-		logbook("UNIT_CREATE: Invalid cell as param");
+		Logger.print("UNIT_CREATE: Invalid cell as param");
 		return -1;
 	}
 
@@ -3130,7 +3130,7 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart)
 
     if (iNewId < 0)
 	{
-		logbook("UNIT_CREATE:Could not find new unit index");
+		Logger.print("UNIT_CREATE:Could not find new unit index");
         return -1;
 	}
 
@@ -3160,7 +3160,7 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart)
         
         if (iF > -1)
         {
-            logbook("Order move #2");
+            Logger.print("Order move #2");
             UNIT_ORDER_MOVE(iNewId, iF);
         }
     }       
@@ -3262,7 +3262,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
     // When the goal == cell, then skip.
     if (unit[iID].iCell == unit[iID].iGoalCell)
     {
-        logbook("ODD: The goal = cell?");		
+        Logger.print("ODD: The goal = cell?");		
         return -1;
     }
 
@@ -3320,7 +3320,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
             {
                 valid=false;
                 succes=true;
-                logbook("Found structure ID");
+                Logger.print("Found structure ID");
                 break;
             }
 
@@ -3329,7 +3329,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
             {
                 valid=false;
                 succes=true;
-                logbook("Found attack structure ID");
+                Logger.print("Found attack structure ID");
                 break;
             }
         }
@@ -3350,9 +3350,9 @@ int CREATE_PATH(int iID, int iPathCountUnits)
         FIX_BORDER_POS(ex, ey);
      
         if (ex <= cx)
-            logbook("CX = EX");
+            Logger.print("CX = EX");
         if (ey <= cy)
-            logbook("CY = EY");
+            Logger.print("CY = EY");
 
         cost=999999999; 
         the_cll=-1;
@@ -3477,7 +3477,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
                  succes=true;
                  found_one=true;
                  bail_out=true;
-                 logbook("CREATE_PATH: Found the goal cell, succes, bailing out");
+                 Logger.print("CREATE_PATH: Found the goal cell, succes, bailing out");
                  break;
              }
 
@@ -3508,7 +3508,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
 /*
                  char msg[255];
                  sprintf(msg, "Waypoint found : cell %d - goalcell = %d", cll, goal_cell);
-                 logbook(msg);*/                 
+                 Logger.print(msg);*/                 
                  
              } // END OF LOOP #2
    } // Y thingy
@@ -3516,7 +3516,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
    // bail out
    if (bail_out)
    {
-       //logbook("BAIL");
+       //Logger.print("BAIL");
        break;
    }
 
@@ -3550,7 +3550,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
      {
        valid=false;
        succes=false;	  
-       logbook("FAILED TO CREATE PATH - nothing found to continue");
+       Logger.print("FAILED TO CREATE PATH - nothing found to continue");
        break;
      }
  
@@ -3561,7 +3561,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
   // read path!
   int temp_path[MAX_PATH];
 
-  //logbook("NEW PATH FOUND");
+  //Logger.print("NEW PATH FOUND");
   memset(temp_path, -1, sizeof(temp_path));
   //for (int copy=0; copy < PATH_MAX; copy++)
     // temp_path[copy] = -1;
@@ -3677,7 +3677,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
  unit[iID].bCalculateNewPath=false;
  
 
- //logbook("SUCCES");
+ //Logger.print("SUCCES");
  return 0; // succes!
  
  }
@@ -3688,7 +3688,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
    //path_id=-1;   
  } 
 
-  logbook("CREATE_PATH: Failed to create path!");
+  Logger.print("CREATE_PATH: Failed to create path!");
   return -1;
 }
 
@@ -3930,7 +3930,7 @@ void SPAWN_FRIGATE(int iPlr, int iCll)
 	
 	if (iStartCell < 0)
 	{
-		logbook("ERROR (reinforce): Could not figure a startcell");
+		Logger.print("ERROR (reinforce): Could not figure a startcell");
 		return;
 	}
 
@@ -3979,13 +3979,13 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart)
 
 	if (iStartCell < 0)
 	{
-		logbook("ERROR (reinforce): Could not figure a startcell");
+		Logger.print("ERROR (reinforce): Could not figure a startcell");
 		return;
 	}
 	
 	char msg[255];
 	sprintf(msg, "REINFORCE: Starting from cell %d, going to cell %d", iStartCell, iCll);
-	logbook(msg);
+	Logger.print(msg);
 
 	// STEP 2: create carryall
 	int iUnit = UNIT_CREATE(iStartCell, CARRYALL, iPlr, true);
@@ -4129,31 +4129,31 @@ void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType)
 
 	if (iCll < 0)
 	{
-		logbook("REINFORCEMENT: Cannot set; invalid cell given");
+		Logger.print("REINFORCEMENT: Cannot set; invalid cell given");
 		return;
 	}
 
 	if (iPlyr < 0)
 	{
-		logbook("REINFORCEMENT: Cannot set; invalid plyr");
+		Logger.print("REINFORCEMENT: Cannot set; invalid plyr");
 		return;
 	}
 
 	if (iTime < 0)
 	{
-		logbook("REINFORCEMENT: Cannot set; invalid time given");
+		Logger.print("REINFORCEMENT: Cannot set; invalid time given");
 		return;
 	}
 
 	if (iUType < 0)
 	{
-		logbook("REINFORCEMENT: Cannot set; invalid unit type given");
+		Logger.print("REINFORCEMENT: Cannot set; invalid unit type given");
 		return;
 	}
 	
 	char msg[255];
 	sprintf(msg, "[%d] Reinforcement: Controller = %d, House %d, Time %d, Type = %d", iIndex, iPlyr, player[iPlyr].house, iTime, iUType);
-	logbook(msg);
+	Logger.print(msg);
 	
 	// DEBUG DEBUG
     if (!DEBUGGING)
@@ -4169,7 +4169,7 @@ int UNIT_FREE_AROUND_MOVE(int iUnit)
 {
 	if (iUnit < 0)
 	{
-		logbook("Invalid unit");
+		Logger.print("Invalid unit");
 		return -1;
 	}
 

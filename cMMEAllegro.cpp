@@ -60,3 +60,13 @@ void cMMEAllegro::colorSurface(MME_SURFACE surface, int color) {
 void cMMEAllegro::clearSurface(MME_SURFACE surface) {
 	colorSurface(surface, -1);
 }
+
+/** 
+	Set up the library, install drivers, and do anything needed so anything
+	after this function that is called WORKS 
+
+	return false on any trouble
+*/
+bool cMMEAllegro::setupLib() {
+	return true;
+}

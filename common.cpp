@@ -13,20 +13,6 @@
 #include "d2tmh.h"
 #include <math.h>
 
-// Keep a logbook
-void logbook(char *txt) 
-{
-  FILE *fp;
-  fp = fopen("log.txt", "at");
-    
-  if (fp) 
-  {
-    fprintf(fp, "%d| %s\n", game.iGameTimer, txt); // print the text into the file
-  }
-
-  fclose(fp);
-}
-
 // determine if this cell is not out of boundries
 bool BORDER_POS(int x, int y)
 {	
@@ -137,11 +123,6 @@ void INSTALL_WORLD()
     REGION_NEW(406,  213, 1, -1, PIECE_DUNE_025);
     REGION_NEW(448,  269, 1, -1, PIECE_DUNE_026);
     REGION_NEW(514,  227, 1, -1, PIECE_DUNE_027);
-
-  //  game.iHouse = ATREIDES;
-    //REGION_SETUP(4, game.iHouse);
-
-    
 }
 
 void INSTALL_HOUSES()
@@ -185,9 +166,6 @@ void INSTALL_HOUSES()
   houses[CORRINO].swap_color   = 136;
   houses[FREMEN].minimap_color = makecol(192,192,192); // grey
 
-
-  // TEMP
-  //map.randommap();
 }
 
 
@@ -255,18 +233,10 @@ bool mouse_pressed_right()
  *****************************/
 void install_units()
 {  
-  // Every unit thinks at 0.1 second. When the unit thinks, it is thinking about the path it
-  // is taking, the enemies around him, etc. The speed of how a unit should move is depended on
-  // time aswell. Every 0.01 second a unit 'can' move. The movespeed is like this:
-  // 0    - slowest (1 second per pixel)
-  // 1000 - fastest (1 pixel per 0.01 second)
-  // So, the higher the number, the faster it is.
-
-
   // some things for ALL unit types; initialization
   for (int i = 0; i < MAX_UNITTYPES; i++)
   {
-    units[i].bmp              = (BITMAP *)gfxdata[UNIT_QUAD].dat; // in case an invalid unit is choosen, it is a quad! :D
+    units[i].bmp              = (BITMAP *)gfxdata[UNIT_QUAD].dat;
     units[i].top              = NULL;  // no top
     units[i].shadow           = NULL;  // no shadow (deliverd with picture itself)
     units[i].bmp_width        = 0;
@@ -285,21 +255,18 @@ void install_units()
     units[i].squish           = true;     // most units can squish
     units[i].range            = -1;
     units[i].sight            = -1;
-
-    // harvester properties
     units[i].harvesting_amount= 0;
     units[i].harvesting_speed = 0;
     units[i].credit_capacity  = 0;
-    
     strcpy(units[i].name, "\0");
   }
 
-    // Unit        : CarryAll 
+  // Unit        : CarryAll 
   // Description : CarryAll, the flying pickuptruck
   units[CARRYALL].bmp = (BITMAP *)gfxdata[UNIT_CARRYALL].dat;      // pointer to the original 8bit bitmap
   units[CARRYALL].shadow = (BITMAP *)gfxdata[UNIT_CARRYALL_SHADOW].dat;      // pointer to the original 8bit bitmap
-  units[CARRYALL].bmp_width  = 24*2;
-  units[CARRYALL].bmp_height = 24*2;
+  units[CARRYALL].bmp_width  = 48;
+  units[CARRYALL].bmp_height = 48;
   units[CARRYALL].bmp_startpixel = 0;
   units[CARRYALL].bmp_frames = 2; // we have at max 1 extra frame
   units[CARRYALL].icon = ICON_UNIT_CARRYALL;
@@ -1118,7 +1085,7 @@ int iFindCloseBorderCell(int iCll)
 	/*
 	char msg[255];
 	sprintf(msg, "WXH = %dx%d", game.map_width, game.map_height);
-	logbook(msg);*/
+	Logger.print(msg);*/
 
 	// STEP 1: determine starting location of carryall: 
 	int iStartCell=-1;
@@ -1205,7 +1172,7 @@ int FIND_PRIMARY_BUILDING(int iType, int iPlayer)
 	{
 	char msg[255];
 	sprintf(msg, "Looking for primary building (type %d, name %s, player %d)", iType, structures[iType].name, iPlayer);
-	logbook(msg);
+	Logger.print(msg);
 	}
 
 	for (int i=0; i < MAX_STRUCTURES; i++)
@@ -1263,7 +1230,7 @@ void play_sound_id(int s, int iOnScreen)
         /*
         char msg[255];
         sprintf(msg, "Playing sound , iOnScreen=%d", iOnScreen);
-        logbook(msg);*/
+        Logger.print(msg);*/
 
 
 
@@ -1339,7 +1306,7 @@ void mp3_play_file(char filename[255])
   }
   else
   {
-       logbook("MP3: Could not find mp3 file for add-on, switching to MIDI mode");
+       Logger.print("MP3: Could not find mp3 file for add-on, switching to MIDI mode");
        allegro_message("Could not find MP3 file, add-on incomplete. Switching to MIDI mode");
        game.bMp3=false;
 
@@ -1618,7 +1585,7 @@ void LOAD_SCENE(char file[30])
 
   char msg[255];
   sprintf(msg, "LOAD SCENE: %s", filename);
-  logbook(msg);
+  Logger.print(msg);
 
   if (gfxmovie != NULL)  
   {    
@@ -1629,7 +1596,7 @@ void LOAD_SCENE(char file[30])
   {   
     gfxmovie=NULL;
     game.iMovieFrame=-1;
-    logbook("FAILED");
+    Logger.print("FAILED");
   }
 
 }
@@ -1683,7 +1650,7 @@ void CREATE_STRUCTURE(int iCell, int iType, int iPlayer, int iPercent)
  int s = STRUCTURE_CREATE(iCell, iType, fHealth, iPlayer);
 
  if (s < 0)
-     logbook("ERRORRRRRRRRRRRRRRRRRRRRR");
+     Logger.print("ERRORRRRRRRRRRRRRRRRRRRRR");
  else
      structure[s]->fConcrete = (1 - fPercent);
 

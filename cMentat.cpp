@@ -74,7 +74,7 @@ void cMentat::prepare(bool bTellHouse, int state, int house, int region) {
 		}
 	}
 
-	logbook("MENTAT: sentences prepared");
+	Logger.print("MENTAT: sentences prepared");
 	iMentatSentence = -2;	// = sentence to draw and speak with (-1 = not ready, -2 means starting)
 	TIMER_Speaking = 0;		// 0 means, set it up
 }

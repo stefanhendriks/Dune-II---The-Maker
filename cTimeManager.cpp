@@ -19,14 +19,14 @@ cTimeManager::cTimeManager() {
 void cTimeManager::capTimers() {
 	if (timerUnits > 10) {
 		if (DEBUGGING) {
-			logbook("WARNING: Exeptional high timer; capped");
+			Logger.print("WARNING: Exeptional high timer; capped");
 			timerUnits = 10;
 		}
 	}
 
 	if (timerGlobal > 40) {
 		if (DEBUGGING)	{
-			logbook("WARNING: Exeptional high timer; capped");
+			Logger.print("WARNING: Exeptional high timer; capped");
 			timerGlobal = 40;
 		}
 	}
@@ -34,7 +34,7 @@ void cTimeManager::capTimers() {
 	/* Taking 10 seconds to render a frame? i hope not **/
 	if (timerSecond > 10) {
 		if (DEBUGGING)	{
-			logbook("WARNING: Exeptional high timer; capped");
+			Logger.print("WARNING: Exeptional high timer; capped");
 			timerSecond = 10;
 		}
 	}

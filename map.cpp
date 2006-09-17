@@ -142,7 +142,7 @@ bool cMap::occupied(int iCll)
     if (iCll < 0)
 	{
 		if (DEBUGGING)
-			logbook("No valid cell specified in cMap::Occupied(int)");
+			Logger.print("No valid cell specified in cMap::Occupied(int)");
 
         return true;
 	}
@@ -1032,7 +1032,7 @@ void cMap::clear_spot(int c, int size, int player)
 	   {
 	   char msg[255];
 	   sprintf(msg, "X %d, Y %d -> CX %d, CY = %d", x, y, cell_x, cell_y);
-	   logbook(msg);
+	   Logger.print(msg);
 	   }*/
        
        int cl = iCellMake(cell_x, cell_y);
@@ -1675,7 +1675,7 @@ void cMap::create_spot(int c, int type, int tile)
     if (c < 0 || c > MAX_CELLS)
     {
 		if (DEBUGGING)
-			logbook("ERROR: create_spot()");
+			Logger.print("ERROR: create_spot()");
 
         return;
     }

@@ -33,6 +33,7 @@ cEventManager  EventManager;
 cMultiMediaEngine *MMEngine;
 cDrawManager   *DrawManager;
 cMouse			Mouse;
+cLog			Logger;
 
 // Structs
 sPreviewMap     PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory

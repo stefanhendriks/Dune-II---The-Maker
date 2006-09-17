@@ -692,7 +692,7 @@ void cGame::think_music()
         if (MIDI_music_playing() == false)
         {
 			if (DEBUGGING)
-				logbook("Going to play the same kind of music (MIDI)");
+				Logger.print("Going to play the same kind of music (MIDI)");
 
             if (iMusicType == MUSIC_ATTACK)
                 iMusicType = MUSIC_PEACE; // set back to peace
@@ -1019,7 +1019,7 @@ void cGame::think_build()
 								iconprogress[i]=-1;
 								
 								if (DEBUGGING)
-									logbook("THINK_BUILD: Unit will be sent over by carryall");
+									Logger.print("THINK_BUILD: Unit will be sent over by carryall");
 
 								return;
 								}
@@ -1033,7 +1033,7 @@ void cGame::think_build()
 						if (iStr < 0)
 						{
 							if (DEBUGGING)
-								logbook("ERROR: Unit cannot be built");
+								Logger.print("ERROR: Unit cannot be built");
 
 							return; // bad!!
 						}
@@ -1111,7 +1111,7 @@ void cGame::combat_mouse()
                                 }
                                 else
                                 {
-                                    logbook("Order move #5");
+                                    Logger.print("Order move #5");
                                     UNIT_ORDER_MOVE(hover_unit, structure[iNewID]->iCell);   
                                 }
 
@@ -1315,7 +1315,7 @@ void cGame::combat_mouse()
 
               //  char msg[256];
               //  sprintf(msg, "MINX=%d, MAXX=%d, MINY=%d, MAXY=%d", min_x, min_y, max_x, max_y);
-              //  logbook(msg);
+              //  Logger.print(msg);
 
                 // Now do it!
            // deselect all units
@@ -2634,7 +2634,7 @@ void cGame::draw_placeit()
 			/*
 	char msg[255];
 	sprintf(msg, "The closest building is %s, distance %d", structures[structure[iClosestBuilding].iType].name, iDistanceToBuilding);
-	logbook(msg);*/
+	Logger.print(msg);*/
 
 
 	//if (iClosestBuilding < 0 || iDistanceToBuilding > 2)
@@ -4112,7 +4112,7 @@ void cGame::setup_skirmish()
 					u++;
 					char msg[255];
 					sprintf(msg,"%d wants %d units, got %d", p, aiplayer[p].iUnits, u);
-					logbook(msg);
+					Logger.print(msg);
 				}				
 			}
 		}
@@ -4288,7 +4288,7 @@ void cGame::preparementat(bool bTellHouse)
             
     }
 
-	logbook("MENTAT: sentences prepared");
+	Logger.print("MENTAT: sentences prepared");
 	iMentatSpeak=-2;			// = sentence to draw and speak with (-1 = not ready, -2 means starting)
 	TIMER_mentat_Speaking=0; //	0 means, set it up
 }
@@ -5125,14 +5125,14 @@ void cGame::shutdown() {
 	alfont_destroy_font(game_font);
 	alfont_destroy_font(bene_font);
 
-	logbook("\n--------");
-	logbook("SHUTDOWN");
-	logbook("--------");
+	Logger.print("\n--------");
+	Logger.print("SHUTDOWN");
+	Logger.print("--------");
 
 	// Exit the font library (must be first)
 
 	alfont_exit();
-	logbook("Allegro FONT library shut down.");
+	Logger.print("Allegro FONT library shut down.");
 
 	if (mp3_music != NULL)
 	{
@@ -5140,12 +5140,12 @@ void cGame::shutdown() {
 		almp3_destroy_mp3(mp3_music);
 	}
 
-	logbook("Allegro MP3 library shut down.");
+	Logger.print("Allegro MP3 library shut down.");
 
 	// Now we are all neatly closed, we exit Allegro and return to OS hell.
 	allegro_exit();
-	logbook("Allegro shut down.");
-	logbook("\nThanks for playing!");
+	Logger.print("Allegro shut down.");
+	Logger.print("\nThanks for playing!");
 }
 
 /**
@@ -5176,21 +5176,21 @@ bool cGame::setupGame() {
 		fclose(fp);
 	}
 
-	logbook("-------------------");
-	logbook("Version information");
-	logbook("-------------------");
-	logbook(game.version);
+	Logger.print("-------------------");
+	Logger.print("Version information");
+	Logger.print("-------------------");
+	Logger.print(game.version);
 	char msg[255];
 	sprintf(msg, "Compiled at %s , %s", __DATE__, __TIME__);
-	logbook(msg);   
+	Logger.print(msg);   
 
-	if (DEBUGGING) logbook("DEBUG MODE ENABLED");
+	if (DEBUGGING) Logger.print("DEBUG MODE ENABLED");
 
 	// init game
 	if (game.windowed)
-		logbook("Windowed mode");
+		Logger.print("Windowed mode");
 	else
-		logbook("Fullscreen mode");
+		Logger.print("Fullscreen mode");
 
 
 
@@ -5203,36 +5203,36 @@ bool cGame::setupGame() {
 
 
 	// Logbook notification
-	logbook("\n-------");
-	logbook("Allegro");
-	logbook("-------");
+	Logger.print("\n-------");
+	Logger.print("Allegro");
+	Logger.print("-------");
 
 	// ALLEGRO - INIT    
 	if (allegro_init() != 0)
 		return false;
 	
-	logbook(allegro_id);
+	Logger.print(allegro_id);
 	yield_timeslice();
 
-	logbook("yield_timeslice()");
+	Logger.print("yield_timeslice()");
 
 	int r = install_timer();
-	if (r > -1) logbook("install_timer()");
+	if (r > -1) Logger.print("install_timer()");
 	else
 	{
 		allegro_message("Failed to install timer");
-		logbook("FAILED");
+		Logger.print("FAILED");
 		return false;
 	}	
 
 	alfont_init();
-	logbook("alfont_init()");
+	Logger.print("alfont_init()");
 	install_keyboard();
-	logbook("install_keyboard()");
+	Logger.print("install_keyboard()");
 	install_mouse();
-	logbook("install_mouse()");
+	Logger.print("install_mouse()");
 
-	logbook("setting up timer functions / locking functions & memory");
+	Logger.print("setting up timer functions / locking functions & memory");
 	
 	/* set up the interrupt routines... */  
 	game.TIMER_money=0;
@@ -5258,7 +5258,7 @@ bool cGame::setupGame() {
 	// the TimeManager functions.
 #endif
 
-	logbook("Timers installed");
+	Logger.print("Timers installed");
 
 	// set window title
 	char title[128];
@@ -5268,7 +5268,7 @@ bool cGame::setupGame() {
 	set_window_title(title);  
 	char window_title[256];
 	sprintf(window_title, "Window title set: [%s]", title);
-	logbook(window_title);
+	Logger.print(window_title);
 
 	set_window_close_button(0);
 
@@ -5289,13 +5289,13 @@ bool cGame::setupGame() {
 		{
 		char msg[255];
 		sprintf(msg,"DESKTOP: Found desktop color depth. Will switch to %d bit.", iDepth);
-		logbook(msg);
+		Logger.print(msg);
 		set_color_depth(iDepth);      // run in the same bit depth as the desktop
 		}
 		else
 		{
 		// default color depth is 16
-		logbook("DESKTOP: No bit depth autodetected. Will switch to default, 16 bit.");
+		Logger.print("DESKTOP: No bit depth autodetected. Will switch to default, 16 bit.");
 		set_color_depth(16);
 		}*/
 		//GFX_AUTODETECT_WINDOWED
@@ -5343,7 +5343,7 @@ bool cGame::setupGame() {
 	alfont_text_mode(-1);
 
 
-	logbook("Loading font data");
+	Logger.print("Loading font data");
 	// loading font
 
 	game_font = alfont_load_font("data/arakeen.fon");  
@@ -5372,15 +5372,15 @@ bool cGame::setupGame() {
 	if (set_display_switch_mode(SWITCH_BACKGROUND) < 0)
 	{
 		set_display_switch_mode(SWITCH_PAUSE);
-		logbook("Display 'switch and pause' mode set");
+		Logger.print("Display 'switch and pause' mode set");
 	}
 	else
-		logbook("Display 'switch to background' mode set");
+		Logger.print("Display 'switch to background' mode set");
 
 
 
 	// sound
-	logbook("Initializing sound");
+	Logger.print("Initializing sound");
 	bool bSucces = false;
 	int voices = 32;
 	while (1) {
@@ -5393,7 +5393,7 @@ bool cGame::setupGame() {
 		{
 			char msg[255];
 			sprintf(msg, "Succes with %d reserved voices.", voices);
-			logbook(msg);
+			Logger.print(msg);
 			MAXVOICES=voices;
 			bSucces=true;            
 			break;
@@ -5406,8 +5406,8 @@ bool cGame::setupGame() {
 	if (!bSucces) {
 		char msg[255];
 		sprintf(msg, "%s", allegro_error);
-		logbook(msg); 
-		logbook("ERROR: Cannot initialize sound card");
+		Logger.print(msg); 
+		Logger.print("ERROR: Cannot initialize sound card");
 	}
 
 	/***
@@ -5419,12 +5419,12 @@ bool cGame::setupGame() {
 	if (bmp_screen == NULL)
 	{
 		allegro_message("Failed to create a memory bitmap");
-		logbook("ERROR: Could not create bitmap: bmp_screen");
+		Logger.print("ERROR: Could not create bitmap: bmp_screen");
 		return false;
 	}
 	else
 	{
-		logbook("Bitmap created: bmp_screen");
+		Logger.print("Bitmap created: bmp_screen");
 		clear(bmp_screen);
 	}
 
@@ -5433,11 +5433,11 @@ bool cGame::setupGame() {
 	if (bmp_throttle == NULL)
 	{
 		allegro_message("Failed to create a memory bitmap");
-		logbook("ERROR: Could not create bitmap: bmp_throttle");
+		Logger.print("ERROR: Could not create bitmap: bmp_throttle");
 		return false;
 	}
 	else {
-		logbook("Bitmap created: bmp_throttle");	
+		Logger.print("Bitmap created: bmp_throttle");	
 	}
 
 	bmp_winlose = create_bitmap(game.screen_x, game.screen_y);
@@ -5445,11 +5445,11 @@ bool cGame::setupGame() {
 	if (bmp_winlose == NULL)
 	{
 		allegro_message("Failed to create a memory bitmap");
-		logbook("ERROR: Could not create bitmap: bmp_winlose");
+		Logger.print("ERROR: Could not create bitmap: bmp_winlose");
 		return false;
 	}
 	else {
-		logbook("Bitmap created: bmp_winlose");
+		Logger.print("Bitmap created: bmp_winlose");
 	}
 
 	bmp_fadeout = create_bitmap(game.screen_x, game.screen_y);
@@ -5457,69 +5457,69 @@ bool cGame::setupGame() {
 	if (bmp_fadeout == NULL)
 	{
 		allegro_message("Failed to create a memory bitmap");
-		logbook("ERROR: Could not create bitmap: bmp_fadeout");
+		Logger.print("ERROR: Could not create bitmap: bmp_fadeout");
 		return false;
 	}
 	else {
-		logbook("Bitmap created: bmp_fadeout");
+		Logger.print("Bitmap created: bmp_fadeout");
 	} 
 
 	/*** End of Bitmap Creation ***/
 	set_color_conversion(COLORCONV_MOST);  
 
-	logbook("Color conversion method set");
+	Logger.print("Color conversion method set");
 
 	// setup mouse speed
 	set_mouse_speed(-1,-1);
 
-	logbook("MOUSE: Mouse speed set");
+	Logger.print("MOUSE: Mouse speed set");
 
-	logbook("\n----");
-	logbook("GAME ");
-	logbook("----");
+	Logger.print("\n----");
+	Logger.print("GAME ");
+	Logger.print("----");
 
 	/*** Data files ***/
 
 	// load datafiles  
 	gfxdata = load_datafile("data/gfxdata.dat");
 	if (gfxdata == NULL) {
-		logbook("ERROR: Could not hook/load datafile: gfxdata.dat");
+		Logger.print("ERROR: Could not hook/load datafile: gfxdata.dat");
 		return false;
 	} else {
-		logbook("Datafile hooked: gfxdata.dat");
+		Logger.print("Datafile hooked: gfxdata.dat");
 		memcpy (general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
 	}
 
 	gfxaudio = load_datafile("data/gfxaudio.dat");
 	if (gfxaudio == NULL)  {
-		logbook("ERROR: Could not hook/load datafile: gfxaudio.dat");
+		Logger.print("ERROR: Could not hook/load datafile: gfxaudio.dat");
 		return false;
 	} else {
-		logbook("Datafile hooked: gfxaudio.dat");
+		Logger.print("Datafile hooked: gfxaudio.dat");
 	}
 
 	gfxinter = load_datafile("data/gfxinter.dat");
 	if (gfxinter == NULL)  {
-		logbook("ERROR: Could not hook/load datafile: gfxinter.dat");
+		Logger.print("ERROR: Could not hook/load datafile: gfxinter.dat");
 		return false;
 	} else {
-		logbook("Datafile hooked: gfxinter.dat");
+		Logger.print("Datafile hooked: gfxinter.dat");
 	}
 
 	gfxworld = load_datafile("data/gfxworld.dat");
 	if (gfxworld == NULL) {
-		logbook("ERROR: Could not hook/load datafile: gfxworld.dat");
+		Logger.print("ERROR: Could not hook/load datafile: gfxworld.dat");
 		return false;
 	} else {
-		logbook("Datafile hooked: gfxworld.dat");
+		Logger.print("Datafile hooked: gfxworld.dat");
 	}
 
 	gfxmentat = load_datafile("data/gfxmentat.dat");
 	if (gfxworld == NULL) {
-		logbook("ERROR: Could not hook/load datafile: gfxmentat.dat");
+		Logger.print("ERROR: Could not hook/load datafile: gfxmentat.dat");
 		return false;
 	} else {
-		logbook("Datafile hooked: gfxmentat.dat");	
+		Logger.print("Datafile hooked: gfxmentat.dat");	
 	}
 
 	gfxmovie = NULL; // nothing loaded at start. This is done when loading a mission briefing.
@@ -5527,10 +5527,10 @@ bool cGame::setupGame() {
 	DATAFILE *mp3music = load_datafile("data/mp3mus.dat");
 
 	if (mp3music == NULL) {
-		logbook("MP3MUS.DAT not found, using MIDI to play music");
+		Logger.print("MP3MUS.DAT not found, using MIDI to play music");
 		game.bMp3=false;
 	} else {
-		logbook("MP3MUS.DAT found, using mp3 files to play music");
+		Logger.print("MP3MUS.DAT found, using mp3 files to play music");
 		// Immidiatly load menu music
 		game.bMp3=true;
 	}
@@ -5556,23 +5556,23 @@ bool cGame::setupGame() {
 	set_volume(255, 150);
 
 	// A few messages for the player
-	logbook("Installing:  PLAYERS");
+	Logger.print("Installing:  PLAYERS");
 	INSTALL_PLAYERS();  
-	logbook("Installing:  HOUSES");
+	Logger.print("Installing:  HOUSES");
 	INSTALL_HOUSES();
-	logbook("Installing:  STRUCTURES");
+	Logger.print("Installing:  STRUCTURES");
 	install_structures();
-	logbook("Installing:  BULLET TYPES");
+	Logger.print("Installing:  BULLET TYPES");
 	install_bullets();
-	logbook("Installing:  UNITS");
+	Logger.print("Installing:  UNITS");
 	install_units();
-	logbook("Installing:  WORLD");
+	Logger.print("Installing:  WORLD");
 	INSTALL_WORLD();
 
-	logbook("'\n--------------");
-	logbook("BATTLE CONTROL");
-	logbook("--------------"); 
-	logbook("\n3...2...1... GO!\n");
+	Logger.print("'\n--------------");
+	Logger.print("BATTLE CONTROL");
+	Logger.print("--------------"); 
+	Logger.print("\n3...2...1... GO!\n");
 
 	game.init();
 	game.setup_list();

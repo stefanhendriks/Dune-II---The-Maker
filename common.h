@@ -9,9 +9,6 @@
   2001 - 2006 (c) code by Stefan Hendriks
 
   */
-
-void logbook(char *txt);
-
 bool BORDER_POS(int x, int y);
 void FIX_BORDER_POS(int &x, int &y);
 void FIX_POS(int &x, int &y);

@@ -20,6 +20,9 @@ private:
 
 public:
 	
+	/** Set up lib **/
+	virtual bool setupLib()=0;
+
 	/** Mouse specific routines **/
 	virtual int getMouseX()=0;
 	virtual int getMouseY()=0;

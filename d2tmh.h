@@ -61,6 +61,7 @@
 // Any MME layer is defined here
 #include "cMMEAllegro.h"
 
+#include "cLog.h"
 #include "cMouse.h"
 #include "cEventManager.h"
 #include "cTimeManager.h"

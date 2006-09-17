@@ -33,7 +33,7 @@ extern cEventManager  EventManager;
 extern cMultiMediaEngine *MMEngine;
 extern cDrawManager   *DrawManager;
 extern cMouse		  Mouse;
-
+extern cLog			Logger;
 
 extern int MAXVOICES;            // USE THIS FOR DETERMINING VOICES
 

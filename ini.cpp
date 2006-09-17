@@ -1139,8 +1139,8 @@ int INI_Structure_ID(char *structure)
 	if (strcmp(structure, "R-Turret") == 0)
 		return RTURRET;
 
-	logbook("Could not find structure:");
-	logbook(structure);
+	Logger.print("Could not find structure:");
+	Logger.print(structure);
 	return CONSTYARD;
 }
 
@@ -1204,8 +1204,8 @@ int INI_Unit_ID(char *unit)
 	if (strcmp(unit, "Saboteur") == 0)
 		return SABOTEUR;    
 
-	logbook("INI (WARNING) : Could not find unit:");
-	logbook(unit);
+	Logger.print("INI (WARNING) : Could not find unit:");
+	Logger.print(unit);
 	return QUAD;
 }
 
@@ -1225,9 +1225,9 @@ void INI_Load_seed(int seed)
 
 	char msg[256];
 	sprintf(msg, "[SEED] NR %d.\n[SEED] LOCATION '%s'", seed, filename);
-	logbook(msg);
+	Logger.print(msg);
 
-	logbook("[SEED] Opening file");
+	Logger.print("[SEED] Opening file");
 
 	if( (stream = fopen( filename, "r+t" )) != NULL )
 	{
@@ -1289,7 +1289,7 @@ void INI_Load_seed(int seed)
 			if (iY > 61)
 				break;
 		}
-		logbook("[SEED] Done.");
+		Logger.print("[SEED] Done.");
 		fclose(stream);
 	} // eof
 
@@ -1317,7 +1317,7 @@ void INI_Load_Regionfile(int iHouse, int iMission)
 
 	char msg[256];
 	sprintf(msg, "[CAMPAIGN] '%s' (Mission %d)", filename, game.iMission);	
-	logbook(msg);
+	Logger.print(msg);
 
 	
   ////////////////////////////
@@ -1331,7 +1331,7 @@ void INI_Load_Regionfile(int iHouse, int iMission)
 
   if( (stream = fopen( filename, "r+t" )) != NULL )
   {
-	  logbook("[CAMPAIGN] Opening file"); // make note on logbook
+	  Logger.print("[CAMPAIGN] Opening file"); // make note on logbook
 
     char linefeed[MAX_LINE_LENGTH];
     char lineword[25];
@@ -1388,10 +1388,10 @@ void INI_Load_Regionfile(int iHouse, int iMission)
 			memset(cHouseRegion, 0, sizeof(cHouseRegion));
 			INI_WordValueCHAR(linefeed, cHouseRegion);
 
-			logbook("Region house");
+			Logger.print("Region house");
             int iH=-1;
 
-			logbook(cHouseRegion);
+			Logger.print(cHouseRegion);
 			if (strcmp(cHouseRegion, "Atreides") == 0)     iH   = ATREIDES;
 			if (strcmp(cHouseRegion, "Harkonnen") == 0)    iH   = HARKONNEN;
 			if (strcmp(cHouseRegion, "Ordos") == 0)        iH   = ORDOS;
@@ -1427,10 +1427,10 @@ void INI_Load_Regionfile(int iHouse, int iMission)
 	}
 
    fclose(stream); 
-   logbook("[CAMPAIGN] Done"); // make note on logbook	
+   Logger.print("[CAMPAIGN] Done"); // make note on logbook	
   }
   else
-	  logbook("[CAMPAIGN] Error, could not open file"); // make note on logbook	
+	  Logger.print("[CAMPAIGN] Error, could not open file"); // make note on logbook	
 	
 
 }
@@ -1513,10 +1513,10 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
 	char msg[256];
 	sprintf(msg, "[SCENARIO] '%s' (Mission %d)", filename, game.iMission);	
-	logbook(msg);
+	Logger.print(msg);
 
-	logbook("[SCENARIO] Opening file"); // make note on logbook
-	//logbook(filename);
+	Logger.print("[SCENARIO] Opening file"); // make note on logbook
+	//Logger.print(filename);
   
 	// Dune 2 scenario loading requires us to remember player data first and later to set up
 	// this is done at the UNITS section, when everything has been preloaded.
@@ -1598,7 +1598,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 		// Only original dune 2 scenario's have this section, auto set to true
 		if (section == INI_BASIC)
         {			
-            //logbook("NOTE: found '[BASIC]' section. Meaning this is a DUNE II scenario afterall...");
+            //Logger.print("NOTE: found '[BASIC]' section. Meaning this is a DUNE II scenario afterall...");
 
 			// Read out tactical CELL here... "TODO"
 
@@ -1727,7 +1727,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 			// original dune 2 maps have 64x64 maps
             if (wordtype == WORD_MAPSEED)
 			{
-				logbook("[SCENARIO] -> [MAP] Seed="); 
+				Logger.print("[SCENARIO] -> [MAP] Seed="); 
 				INI_Load_seed(INI_WordValueINT(linefeed));
 			}
 
@@ -1737,7 +1737,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
                 // This should put spice blooms in our array
                 // Logic: read till next "," , then use that number to determine
                 // where the bloom will be (as cell nr)
-				logbook("[SCENARIO] -> [MAP] Bloom="); 
+				Logger.print("[SCENARIO] -> [MAP] Bloom="); 
 
                 int iBloomID=0;				
                 int iStringID=6;    // B L O O M = <6>
@@ -1795,7 +1795,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
                 // Logic: read till next "," , then use that number to determine
                 // where the bloom will be (as cell nr)
 				
-			logbook("[SCENARIO] -> [MAP] Field="); 
+			Logger.print("[SCENARIO] -> [MAP] Field="); 
                 int iFieldID=0;
                 int iStringID=6;    // F I E L D = <6>
                 int iWordID=0;
@@ -1969,7 +1969,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 							{
                                 char msg[256];
                                 sprintf(msg,"WARNING: Cannot identify house/controller -> STRING '%s'", chunk);
-                                logbook(msg);								
+                                Logger.print(msg);								
 							}
 
 						}
@@ -2122,7 +2122,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 								{
 									//char msg[80];
 									//sprintf(msg, "i=%d, ihouse=%d, house=%d", i, iHouse, player[i].house);
-									//logbook(msg);
+									//Logger.print(msg);
 									if (player[i].house == iHouse)
 									{
 										iController = i; // set controller here.. phew
@@ -2136,8 +2136,8 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
 								if (iController < 0)
 								{
-									logbook("WARNING: Identifying house/controller of structure (typo?)");
-									logbook(chunk);
+									Logger.print("WARNING: Identifying house/controller of structure (typo?)");
+									Logger.print(chunk);
 								}
 							}
 							else if (iPart == 1)
@@ -2231,11 +2231,11 @@ void INI_Load_scenario(int iHouse, int iRegion)
 					}
 				}				
 			}
-			else logbook("WARNING: Identifying house/controller of structure (typo?)");
+			else Logger.print("WARNING: Identifying house/controller of structure (typo?)");
 		}
         else if (section == INI_REINFORCEMENTS)
         {
-            logbook("[SCENARIO] -> REINFORCEMENTS");
+            Logger.print("[SCENARIO] -> REINFORCEMENTS");
 
             	int iPart=-1; /*
 							0 = Controller
@@ -2331,7 +2331,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
                         if (strcmp(chunk, "Homebase") == 0)
                         {							
                             iCell = player[iController].focus_cell;
-							//logbook("HOMEBASE");
+							//Logger.print("HOMEBASE");
                         }
                         else                        
                         {
@@ -2344,7 +2344,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
                                 if (player[i].house == iHouse && i != iController)
                                 {
                                     iCell = player[i].focus_cell;
-									//logbook("ENEMYBASE");
+									//Logger.print("ENEMYBASE");
 									break;
                                 }
 							}
@@ -2426,7 +2426,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 			  {
               char msg[256];
               sprintf(msg, "[SCENARIO] Placing spice BLOOM at cell : %d", blooms[iB]);
-              logbook(msg);
+              Logger.print(msg);
 			  }
 			  
 			  map.create_spot(blooms[iB], TERRAIN_BLOOM, 0);
@@ -2446,14 +2446,14 @@ void INI_Load_scenario(int iHouse, int iRegion)
 			  {
 			  char msg[256];
               sprintf(msg, "[SCENARIO] Placing spice FIELD at cell : %d", fields[iB]);
-              logbook(msg);
+              Logger.print(msg);
 			  }
 		  	  map.create_field(TERRAIN_SPICE, fields[iB], 25+(rnd(50)));
 		  }
 		  
 	}
 
-    logbook("[SCENARIO] Done reading");
+    Logger.print("[SCENARIO] Done reading");
   }  
 
   
@@ -2470,7 +2470,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
 void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
 {
-    logbook("[BRIEFING] Opening file");
+    Logger.print("[BRIEFING] Opening file");
 
     char filename[80];
     
@@ -2488,13 +2488,13 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
 
     sprintf(path, "campaign/briefings/%s", filename);
 
-    logbook(path);
+    Logger.print(path);
 
 	if (DEBUGGING)
 	{
     char msg[255];
     sprintf(msg, "Going to find SCEN ID #%d and SectionID %d", iScenarioFind, iSectionFind);
-    logbook(msg);
+    Logger.print(msg);
 	}
 
     int iScenario=0;
@@ -2556,7 +2556,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
                     
                     // this is not a comment, add this....
                     sprintf(game.mentat_sentence[iLine], "%s",cHouseText);
-                   // logbook(game.mentat_sentence[iLine]);
+                   // Logger.print(game.mentat_sentence[iLine]);
                     iLine++;
                     
                     if (iLine > 9)
@@ -2582,7 +2582,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
 
     fclose(stream);
 
-    logbook("[BRIEFING] File opened");
+    Logger.print("[BRIEFING] File opened");
 
 }
 
@@ -2594,7 +2594,7 @@ void INI_Install_Game()
     Goal of this file:
 
   */
-  logbook("[GAME.INI] Opening file");
+  Logger.print("[GAME.INI] Opening file");
 
   FILE *stream; 
   int section=INI_GAME;
@@ -2649,8 +2649,8 @@ void INI_Install_Game()
           id=-1;
           
           // Show in log file we entered a new section
-          if (section == INI_UNITS)       logbook("[GAME.INI] -> [UNITS]");
-          if (section == INI_STRUCTURES)  logbook("[GAME.INI] -> [STRUCTURES]");
+          if (section == INI_UNITS)       Logger.print("[GAME.INI] -> [UNITS]");
+          if (section == INI_STRUCTURES)  Logger.print("[GAME.INI] -> [STRUCTURES]");
         }
 
         if (section == INI_TEAMS)
@@ -2802,7 +2802,7 @@ void INI_Install_Game()
   }
   
  
-logbook("[GAME.INI] Done");  
+Logger.print("[GAME.INI] Done");  
 }
 
 
@@ -2898,7 +2898,7 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
           if (wordtype == WORD_MAPNAME)
           {
             INI_WordValueSENTENCE(linefeed, PreviewMap[iNew].name);
-            logbook(PreviewMap[iNew].name);
+            Logger.print(PreviewMap[iNew].name);
           }
 
 		  if (wordtype == WORD_STARTCELL)

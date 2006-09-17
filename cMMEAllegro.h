@@ -9,6 +9,8 @@ private:
 public:
 	cMMEAllegro();
 	
+	bool setupLib();
+
 	int getMouseX();
 	int getMouseY();
 	int getMouseZ();

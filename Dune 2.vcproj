@@ -231,6 +231,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cLog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\cMentat.cpp"
 				>
 			</File>
@@ -446,6 +450,10 @@
 			</File>
 			<File
 				RelativePath=".\cIniReader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cLog.h"
 				>
 			</File>
 			<File
