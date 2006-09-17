@@ -5,6 +5,10 @@ cMouse::cMouse() {
 
 	memset(mouseSelectX, 0, sizeof(mouseSelectX));
 	memset(mouseSelectY, 0, sizeof(mouseSelectY));
+
+	status = MOUSE_STATUS_NORMAL;
+	
+	sprite = MOUSE_NORMAL;
 }
 
 void cMouse::setPoll(int x, int y, int z) {

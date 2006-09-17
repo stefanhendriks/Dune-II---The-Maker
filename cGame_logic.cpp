@@ -1284,7 +1284,7 @@ void cGame::combat_mouse()
                 mouse_co_x2 != mouse_co_x1 && mouse_co_y2 != mouse_co_y1 &&
                 mouse_co_x2 > -1 && mouse_co_y2 > -1)
             {
-                mouse_status = MOUSE_STATE_NORMAL;
+                mouse_status = MOUSE_STATUS_NORMAL;
 
                 int min_x, min_y;
                 int max_x, max_y;
@@ -1335,7 +1335,7 @@ void cGame::combat_mouse()
                             {
                                 // It is in the borders, select it
                                 unit[i].bSelected=true;
-                               // mouse_status = MOUSE_STATE_MOVE;
+                               // mouse_status = MOUSE_STATUS_MOVE;
             //                    bPlayRep=true;
 
                              
@@ -5545,7 +5545,7 @@ bool cGame::setupGame() {
 	Mentat = NULL;
 	
 	// Mouse stuff
-	mouse_status = MOUSE_STATE_NORMAL;
+	mouse_status = MOUSE_STATUS_NORMAL;
 	mouse_tile = 0;
 
 	set_palette(general_palette);  
