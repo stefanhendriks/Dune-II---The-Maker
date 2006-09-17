@@ -9,7 +9,11 @@
 class cLog {
 
 private:
-
+	void printTitle();
+	bool titlePrinted;
 public:
+	cLog();
+	
+	void printVersion();
 	void print(char *msg);
 };

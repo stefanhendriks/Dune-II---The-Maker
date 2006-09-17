@@ -27,6 +27,8 @@ class cGame
 
 public:
 
+	static const int BITDEPTH = 16;
+
 	bool windowed;				// windowed
 	char version[15];			// version number, or name.
 

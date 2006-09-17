@@ -67,6 +67,7 @@ void FIX_POS(int &x, int &y)
 
 void INSTALL_PLAYERS()
 {
+	Logger.print("Installing:  PLAYERS");
 	for (int i=0; i < MAX_PLAYERS; i++)
 		player[i].init();
 }
@@ -75,6 +76,7 @@ void INSTALL_PLAYERS()
 
 void INSTALL_WORLD()
 {
+	Logger.print("Installing:  WORLD");
     // create regions
     for (int i=0; i < MAX_REGIONS; i++)
     {
@@ -127,6 +129,7 @@ void INSTALL_WORLD()
 
 void INSTALL_HOUSES()
 {
+Logger.print("Installing:  HOUSES");
 /********************************
  House Rules
  ********************************/
@@ -233,6 +236,7 @@ bool mouse_pressed_right()
  *****************************/
 void install_units()
 {  
+	Logger.print("Installing:  UNITS");
   // some things for ALL unit types; initialization
   for (int i = 0; i < MAX_UNITTYPES; i++)
   {
@@ -580,6 +584,7 @@ void install_units()
  ****************/
 void install_bullets()
 {  
+	Logger.print("Installing:  BULLET TYPES");
   for (int i=0; i < MAX_BULLET_TYPES; i++)
   {
     bullets[i].bmp = NULL; // in case an invalid bitmap; default is a small rocket
@@ -796,6 +801,7 @@ void install_bullets()
  *****************************/
 void install_structures()
 {  
+	Logger.print("Installing:  STRUCTURES");
   for (int i = 0; i < MAX_STRUCTURETYPES; i++)
   {
     structures[i].bmp = (BITMAP *)gfxdata[BUILD_WINDTRAP].dat; // in case an invalid bitmap, we are a windtrap  

@@ -1,18 +1,26 @@
 DUNE II - The Maker
 -------------------
 
+0| [GAME.INI] Opening file
+0| [GAME.INI] -> [UNITS]
+0| [GAME.INI] -> [STRUCTURES]
+0| [GAME.INI] Done
+0| [GAME.INI] Opening file
+0| [GAME.INI] -> [UNITS]
+0| [GAME.INI] -> [STRUCTURES]
+0| [GAME.INI] Done
+0| 
 0| -------------------
 0| Version information
 0| -------------------
 0| DEM3.5
-0| Compiled at Sep 17 2006 , 15:50:50
+0| Compiled at Sep 17 2006 , 16:12:30
 0| Windowed mode
 0| 
 -------
 0| Allegro
 0| -------
 0| Allegro 4.2.0, MSVC
-0| yield_timeslice()
 0| install_timer()
 0| alfont_init()
 0| install_keyboard()
@@ -57,6 +65,277 @@ DUNE II - The Maker
 0| [GAME.INI] -> [UNITS]
 0| [GAME.INI] -> [STRUCTURES]
 0| [GAME.INI] Done
+0| LOAD SCENE: data/scenes/plord.dat
+0| [BRIEFING] Opening file
+0| campaign/briefings/mentato.ini
+0| [BRIEFING] File opened
+0| MENTAT: sentences prepared
+0| [SCENARIO] 'campaign/maps/sceno001.ini' (Mission 1)
+0| [SCENARIO] Opening file
+0| LOAD SCENE: data/scenes/harvest.dat
+0| [SCENARIO] -> [MAP] Seed=
+0| [SEED] NR 1498.
+[SEED] LOCATION 'campaign/maps/seed/1498.map'
+0| [SEED] Opening file
+0| [SEED] Done.
+0| WARNING: Identifying house/controller of structure (typo?)
+0| 
+0| Could not find structure:
+0| 
+0| WARNING: Identifying house/controller of structure (typo?)
+0| [SCENARIO] Done reading
+0| [BRIEFING] Opening file
+0| campaign/briefings/mentato.ini
+0| [BRIEFING] File opened
+0| MENTAT: sentences prepared
+0| ERRORRRRRRRRRRRRRRRRRRRRR
+0| [UNIT[7]: Soldier - House 3, iCell = 2209, iGoal = 2209 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2207, iGoal = 2207 ] 'ORDERED TO MOVE'
+0| Raider Trike
+0| [UNIT[9]: Soldier - House 3, iCell = 2267, iGoal = 2267 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[10]: Soldier - House 3, iCell = 2394, iGoal = 2394 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2460, iGoal = 2460 ] 'ORDERED TO MOVE'
+0| Raider Trike
+0| [UNIT[7]: Soldier - House 3, iCell = 2209, iGoal = 2464 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[7]: Soldier - House 3, iCell = 2209, iGoal = 2464 ] 'Create path ... result = 0'
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2207, iGoal = 2464 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2207, iGoal = 2464 ] 'Create path ... result = 0'
+0| [UNIT[9]: Soldier - House 3, iCell = 2267, iGoal = 2464 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[9]: Soldier - House 3, iCell = 2267, iGoal = 2464 ] 'Create path ... result = 0'
+0| [UNIT[10]: Soldier - House 3, iCell = 2394, iGoal = 2464 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[10]: Soldier - House 3, iCell = 2394, iGoal = 2464 ] 'Create path ... result = 0'
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2460, iGoal = 2464 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2460, iGoal = 2464 ] 'Create path ... result = 0'
+0| [UNIT[7]: Soldier - House 3, iCell = 2209, iGoal = 2464 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2400, iGoal = 2400 ] 'ORDERED TO MOVE'
+0| Raider Trike
+0| [UNIT[9]: Soldier - House 3, iCell = 2332, iGoal = 2464 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[10]: Soldier - House 3, iCell = 2394, iGoal = 2464 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2464, iGoal = 2464 ] 'ORDERED TO MOVE'
+0| Raider Trike
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2400, iGoal = 2008 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2400, iGoal = 2008 ] 'Create path ... result = 0'
+0| [UNIT[9]: Soldier - House 3, iCell = 2332, iGoal = 2008 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[9]: Soldier - House 3, iCell = 2332, iGoal = 2008 ] 'Create path ... result = 0'
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2464, iGoal = 2008 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2464, iGoal = 2008 ] 'Create path ... result = 0'
+0| [UNIT[10]: Soldier - House 3, iCell = 2459, iGoal = 2008 ] 'No valid iPATH[pathindex]'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[10]: Soldier - House 3, iCell = 2459, iGoal = 2008 ] 'Create path ... result = 0'
+0| [UNIT[7]: Soldier - House 3, iCell = 2272, iGoal = 2008 ] 'No valid iPATH[pathindex]'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[7]: Soldier - House 3, iCell = 2272, iGoal = 2008 ] 'Create path ... result = 0'
+0| [UNIT[7]: Soldier - House 3, iCell = 2012, iGoal = 2008 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[7]: Soldier - House 3, iCell = 2012, iGoal = 2207 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[7]: Soldier - House 3, iCell = 2012, iGoal = 2207 ] 'Create path ... result = 0'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[10]: Soldier - House 3, iCell = 2136, iGoal = 2008 ] 'Create path ... result = 0'
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2008, iGoal = 2008 ] 'ORDERED TO MOVE'
+0| Raider Trike
+0| [UNIT[9]: Soldier - House 3, iCell = 2072, iGoal = 2072 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2009, iGoal = 2009 ] 'ORDERED TO MOVE'
+0| Raider Trike
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2008, iGoal = 2144 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2008, iGoal = 2144 ] 'Create path ... result = 0'
+0| [UNIT[9]: Soldier - House 3, iCell = 2072, iGoal = 2144 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[9]: Soldier - House 3, iCell = 2072, iGoal = 2144 ] 'Create path ... result = 0'
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2009, iGoal = 2144 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2009, iGoal = 2144 ] 'Create path ... result = 0'
+0| [UNIT[10]: Soldier - House 3, iCell = 2071, iGoal = 2071 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[10]: Soldier - House 3, iCell = 2071, iGoal = 2015 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[10]: Soldier - House 3, iCell = 2071, iGoal = 2015 ] 'Create path ... result = 0'
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2144, iGoal = 2144 ] 'ORDERED TO MOVE'
+0| Raider Trike
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2144, iGoal = 2017 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2144, iGoal = 2017 ] 'Create path ... result = 0'
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2017, iGoal = 2017 ] 'Attacking UNIT ID 5, STRUC ID -1, ATTACKCLL -1, GoalCell 1953'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 1953 ] 'Attacking UNIT ID 12, STRUC ID -1, ATTACKCLL -1, GoalCell 2017'
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2017, iGoal = 1953 ] 'Attacking UNIT ID 5, STRUC ID -1, ATTACKCLL -1, GoalCell 1953'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2017 ] 'Attacking UNIT ID 12, STRUC ID -1, ATTACKCLL -1, GoalCell 2017'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2017 ] 'Attacking UNIT ID 12, STRUC ID -1, ATTACKCLL -1, GoalCell 2017'
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2143, iGoal = 2143 ] 'Attacking UNIT ID 5, STRUC ID -1, ATTACKCLL -1, GoalCell 1953'
+0| [UNIT[9]: Soldier - House 3, iCell = 2141, iGoal = 2144 ] 'Attacking UNIT ID 5, STRUC ID -1, ATTACKCLL -1, GoalCell 1953'
+0| [UNIT[10]: Soldier - House 3, iCell = 2013, iGoal = 2015 ] 'Attacking UNIT ID 5, STRUC ID -1, ATTACKCLL -1, GoalCell 1953'
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2017, iGoal = 1953 ] 'Attacking UNIT ID 5, STRUC ID -1, ATTACKCLL -1, GoalCell 1953'
+0| SHOULD CALCULATE NEW PATH
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[9]: Soldier - House 3, iCell = 2142, iGoal = 1953 ] 'Create path ... result = 0'
+0| SHOULD CALCULATE NEW PATH
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[10]: Soldier - House 3, iCell = 2014, iGoal = 1953 ] 'Create path ... result = 0'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2017 ] 'Attacking UNIT ID 12, STRUC ID -1, ATTACKCLL -1, GoalCell 2017'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2017 ] 'Attacking UNIT ID 12, STRUC ID -1, ATTACKCLL -1, GoalCell 2017'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2017 ] 'Attacking UNIT ID 8, STRUC ID -1, ATTACKCLL -1, GoalCell 2143'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2143 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2143 ] 'Create path ... result = 0'
+0| SHOULD CALCULATE NEW PATH
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2143 ] 'Attacking UNIT ID 12, STRUC ID -1, ATTACKCLL -1, GoalCell 2017'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2017 ] 'Attacking UNIT ID 8, STRUC ID -1, ATTACKCLL -1, GoalCell 2143'
+0| SHOULD CALCULATE NEW PATH
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2143 ] 'Attacking UNIT ID 9, STRUC ID -1, ATTACKCLL -1, GoalCell 2016'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2016 ] 'Attacking UNIT ID 12, STRUC ID -1, ATTACKCLL -1, GoalCell 2017'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2017 ] 'Attacking UNIT ID 8, STRUC ID -1, ATTACKCLL -1, GoalCell 2143'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2143 ] 'Attacking UNIT ID 10, STRUC ID -1, ATTACKCLL -1, GoalCell 1952'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 1952 ] 'Attacking UNIT ID 9, STRUC ID -1, ATTACKCLL -1, GoalCell 2016'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2016 ] 'Attacking UNIT ID 12, STRUC ID -1, ATTACKCLL -1, GoalCell 2017'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2017 ] 'Attacking UNIT ID 8, STRUC ID -1, ATTACKCLL -1, GoalCell 2143'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2143 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2143 ] 'Create path ... result = 0'
+0| [UNIT[5]: Soldier - House 1, iCell = 1953, iGoal = 2143 ] 'Attacking UNIT ID 10, STRUC ID -1, ATTACKCLL -1, GoalCell 1952'
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2143, iGoal = 2143 ] 'Destroyed unit target'
+0| [UNIT[9]: Soldier - House 3, iCell = 2016, iGoal = 2016 ] 'Destroyed unit target'
+0| [UNIT[10]: Soldier - House 3, iCell = 1952, iGoal = 1952 ] 'Destroyed unit target'
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2017, iGoal = 2017 ] 'Destroyed unit target'
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2143, iGoal = 2143 ] 'ORDERED TO MOVE'
+0| Raider Trike
+0| [UNIT[9]: Soldier - House 3, iCell = 2016, iGoal = 2016 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[10]: Soldier - House 3, iCell = 1952, iGoal = 1952 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2017, iGoal = 2017 ] 'ORDERED TO MOVE'
+0| Raider Trike
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2143, iGoal = 2339 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2143, iGoal = 2339 ] 'Create path ... result = 0'
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2017, iGoal = 2339 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2017, iGoal = 2339 ] 'Create path ... result = 0'
+0| [UNIT[9]: Soldier - House 3, iCell = 2016, iGoal = 2339 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[9]: Soldier - House 3, iCell = 2016, iGoal = 2339 ] 'Create path ... result = 0'
+0| [UNIT[10]: Soldier - House 3, iCell = 1952, iGoal = 2339 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[10]: Soldier - House 3, iCell = 1952, iGoal = 2339 ] 'Create path ... result = 0'
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2339, iGoal = 2339 ] 'ORDERED TO MOVE'
+0| Raider Trike
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2339, iGoal = 2522 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[8]: Raider Trike - House 3, iCell = 2339, iGoal = 2522 ] 'Create path ... result = 0'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[9]: Soldier - House 3, iCell = 2211, iGoal = 2339 ] 'Create path ... result = 0'
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2275, iGoal = 2275 ] 'ORDERED TO MOVE'
+0| Raider Trike
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2275, iGoal = 2137 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[12]: Raider Trike - House 3, iCell = 2275, iGoal = 2137 ] 'Create path ... result = 0'
+0| [UNIT[9]: Soldier - House 3, iCell = 2339, iGoal = 2339 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[10]: Soldier - House 3, iCell = 2211, iGoal = 2339 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[9]: Soldier - House 3, iCell = 2339, iGoal = 2594 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[9]: Soldier - House 3, iCell = 2339, iGoal = 2594 ] 'Create path ... result = 0'
+0| [UNIT[10]: Soldier - House 3, iCell = 2275, iGoal = 2594 ] 'No valid iPATH[pathindex]'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[10]: Soldier - House 3, iCell = 2275, iGoal = 2594 ] 'Create path ... result = 0'
+0| LOAD SCENE: data/scenes/win01.dat
+0| [BRIEFING] Opening file
+0| campaign/briefings/mentato.ini
+0| [BRIEFING] File opened
+0| MENTAT: sentences prepared
+0| [CAMPAIGN] 'campaign/ordos/mission1.ini' (Mission 1)
+0| [CAMPAIGN] Opening file
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| [CAMPAIGN] Done
+0| [CAMPAIGN] 'campaign/ordos/mission1.ini' (Mission 1)
+0| [CAMPAIGN] Opening file
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| [CAMPAIGN] Done
 0| 
 --------
 0| SHUTDOWN
