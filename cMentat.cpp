@@ -20,7 +20,7 @@ cMentat::~cMentat() {
 	init();
 }
 
-void cMentat::init() {
+void cMentat::init() {	
 	iMentatSentence = -1;
 
 	TIMER_Speaking = -1;
@@ -29,7 +29,7 @@ void cMentat::init() {
 	TIMER_Other = 0;
 
 	iMentatMouth = 3;
-	iMentatEyes = 3;
+	iMentatEyes = 3; 
 	iMentatOther = 0;
 
 	bReadyToSpeak = false;
@@ -38,11 +38,13 @@ void cMentat::init() {
 	memset(sentence, 0, sizeof(sentence));
 }
 
-void cMentat::prepare(bool bTellHouse) {
-	prepare(true, 0, 0, 0);
+void cMentat::prepare(int house) {
+	if (house > -1) {
+		prepare(true, 0, house, 0);
+	}
 }
 
-void cMentat::prepare(bool bTellHouse, int state, int house, int region) {
+void cMentat::prepare(bool bTellHouse, int state, int house, int region) {	
 	if (bTellHouse)
 	{
 		if (house == ATREIDES) {
@@ -73,12 +75,15 @@ void cMentat::prepare(bool bTellHouse, int state, int house, int region) {
 			INI_LOAD_BRIEFING(house, region, INI_LOSE);
 		}
 	}
-
-	Logger.print("MENTAT: sentences prepared");
-	iMentatSentence = -2;	// = sentence to draw and speak with (-1 = not ready, -2 means starting)
-	TIMER_Speaking = 0;		// 0 means, set it up
+	Logger.print("MENTAT: sentences prepared - ready to speak");
+	
+	// On purpose the iMentatSentence is set to -2; when timer_speaking is at 0
+	// the first 2 sentences will be read from they array and the wait time calculated.
+	iMentatSentence = -2;	
+	TIMER_Speaking = 0;		
 }
 
+// Remember: called by TimeManager (Global Timer)
 void cMentat::think() {
 	thinkSpeaking();
 	thinkMouth();
@@ -87,27 +92,35 @@ void cMentat::think() {
 }
 
 void cMentat::thinkSpeaking() {
+	if (!bReadyToSpeak) {
+		return;
+	}
+	
 	if (TIMER_Speaking > 0) {
 		TIMER_Speaking--;
-	} else if (TIMER_Speaking == 0) {
+		/* whoever puts a return here because he thinks he is smart, will be thrown in a sand pit **/
+	}
+	
+	if (TIMER_Speaking == 0 || Mouse.btnSingleClickLeft()) {
 		/** Next sentences to read for the player **/
-		iMentatSentence += 2; 
-
-		if (iMentatSentence > 8) {
-			bWaitingForAnswer = true;
-			return;
+		if (iMentatSentence < 8) {
+			iMentatSentence += 2; 
+		} else {
+			bWaitingForAnswer = true;			
 		}
-
-		// lentgh calculation of time
+		// Calculate next time before we show next sentences. 
+		// Based on length of text.
 		int iLength = strlen(sentence[iMentatSentence]);
 		iLength += strlen(sentence[iMentatSentence + 1]);
+
+		TIMER_Speaking = iLength * 12;		
+
+		iMentatMouth = 0; // force mentat to close mouth
 
 		if (iLength < 2) {
 			bWaitingForAnswer = true;
 			return;
 		}
-
-		TIMER_Speaking = iLength * 12;
 	}
 }
 
@@ -150,19 +163,18 @@ void cMentat::thinkOther() {
 void cMentat::thinkMouth() {
 	if (TIMER_Mouth > 0) {
 		TIMER_Mouth--;
-	} else if (TIMER_Mouth == 0) {
+	} else if (TIMER_Mouth == 0) {		
 		if (TIMER_Speaking > 0) {
 			int iOld = iMentatMouth;
 
-			if (iMentatMouth == 0) {
-				// when mouth is shut, perhaps wait a bit.
-				if (rnd(100) < 45) {
-					iMentatMouth += (1 + rnd(4));				
-				} else {
-					TIMER_Mouth=3; // wait
+			// when mouth is shut, perhaps wait a bit.
+			if (iMentatMouth == 0) {				
+				if (rnd(100) > 55) {
+					TIMER_Mouth = 15 + rnd(20);
 				}
-				
-			} else {
+			}
+
+			if (TIMER_Mouth == 0) {
 				iMentatMouth += (1 + rnd(4));
 			}
 
@@ -183,12 +195,13 @@ void cMentat::thinkMouth() {
 				if (iMentatMouth > 4) {
 					iMentatMouth -= 5;
 				}
+
+				TIMER_Mouth += 20 + rnd(20);
 			}
 		} else {
 			iMentatMouth = 0; /** stop animation when no sentence is available **/
-		}
 
-		TIMER_Mouth = -1;
+		}
 	}
 }
 
@@ -211,16 +224,36 @@ int cMentat::getMentatSentence() {
 int cMentat::getTimerSpeaking() {
 	return TIMER_Speaking;
 }
+
+bool cMentat::isWaitingForAnAnswer() {
+	return bWaitingForAnswer;
+}
+bool cMentat::shouldDrawSentences() {
+	if (iMentatSentence > -1 && iMentatSentence < 10 && bReadyToSpeak) {
+		return true;
+	}
+
+	return false;
+}
+
 void cMentat::drawSentences() {		
-	/** It seems to crash here 17-09-06 - the derived class cannot access sentence[] via this function
-		a sollution would be to move the variable or this function.
-	**/
-	/*if (iMentatSentence >= 0) {
+	if (shouldDrawSentences()) {
+		assert(iMentatSentence < 10);	// these should 
+		assert(iMentatSentence > -1);	// never fail
+
 		alfont_textprintf(bmp_screen, bene_font, 17,17, makecol(0,0,0), "%s", sentence[iMentatSentence]);
 		alfont_textprintf(bmp_screen, bene_font, 16,16, makecol(255,255,255), "%s", sentence[iMentatSentence]);
 		alfont_textprintf(bmp_screen, bene_font, 17,33, makecol(0,0,0), "%s", sentence[iMentatSentence+1]);
 		alfont_textprintf(bmp_screen, bene_font, 16,32, makecol(255,255,255), "%s", sentence[iMentatSentence+1]);
-	}*/
+	}
+}
+
+void cMentat::setSentence(int index, char sent[255]) {
+	sprintf(sentence[index], "%s", sent);	
+}
+
+void cMentat::setReadyToSpeak(bool value) {
+	bReadyToSpeak = value;
 }
 
 /*

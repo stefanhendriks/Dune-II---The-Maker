@@ -29,7 +29,7 @@ void cHarkonnenMentat::draw_eyes() {
 }
 
 void cHarkonnenMentat::draw_other() {
-
+	/** don't know by hearth what was so special about the harkonnen here - Stefan **/
 }
 
 void cHarkonnenMentat::draw() {

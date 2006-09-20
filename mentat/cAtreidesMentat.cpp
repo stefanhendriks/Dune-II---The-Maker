@@ -30,7 +30,7 @@ void cAtreidesMentat::draw_eyes() {
 }
 
 void cAtreidesMentat::draw_other() {
-
+	/** nothing to draw here **/
 }
 
 void cAtreidesMentat::draw() {

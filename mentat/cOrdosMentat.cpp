@@ -30,7 +30,7 @@ void cOrdosMentat::draw_eyes() {
 }
 
 void cOrdosMentat::draw_other() {
-
+	/** the ordos ring **/
 }
 
 void cOrdosMentat::draw() {

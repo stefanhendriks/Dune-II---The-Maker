@@ -57,14 +57,17 @@ public:
 	int getMentatEyes();
 	int getMentatOther();
 	int getMentatSentence();
-
 	int getTimerSpeaking();
 
 	void init();
 	void think();
+	void setReadyToSpeak(bool value);
 	void drawSentences();
 	void prepare(bool bTellHouse, int state, int house, int region);
-	void prepare(bool bTellHouse);
+	void prepare(int house);
+	bool shouldDrawSentences();
+	bool isWaitingForAnAnswer();
+	void setSentence(int index, char sent[255]);
 };
 
 

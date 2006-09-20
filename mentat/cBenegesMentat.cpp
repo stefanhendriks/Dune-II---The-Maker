@@ -30,15 +30,15 @@ void cBenegesMentat::draw_eyes() {
 }
 
 void cBenegesMentat::draw_other() {
-
+	/** nothing to draw here **/
 }
 
 void cBenegesMentat::draw() {
 	select_palette( general_palette  );
     game.draw_movie(BENEGES);
 	draw_sprite(bmp_screen, (BITMAP *)gfxmentat[MENTATM].dat, 0, 0);
-    if (getTimerSpeaking() < 0) {
-            draw_sprite(bmp_screen, (BITMAP *)gfxmentat[MEN_WISH].dat, 16, 16);
+    if (isWaitingForAnAnswer()) {
+        draw_sprite(bmp_screen, (BITMAP *)gfxmentat[MEN_WISH].dat, 16, 16);
     }
 	draw_mouth();
 	draw_eyes();

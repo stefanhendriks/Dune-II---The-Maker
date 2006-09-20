@@ -2545,8 +2545,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
 						INI_WordValueSENTENCE(linefeed, cHouseText);
 
 						// this is not a comment, add this....
-						sprintf(game.mentat_sentence[iLine], "%s",cHouseText);
-						// Logger.print(game.mentat_sentence[iLine]);
+						Mentat->setSentence(iLine, cHouseText);						
 						iLine++;
 
 						if (iLine > 9) {

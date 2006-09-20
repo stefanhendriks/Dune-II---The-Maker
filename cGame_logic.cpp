@@ -3826,7 +3826,7 @@ void cGame::house()
             LOAD_SCENE("platr"); // load planet of atreides
 
 			state = GAME_TELLHOUSE;
-			Mentat->prepare(true);
+			Mentat->prepare(ATREIDES);
             bFadeOut=true;
         }
 	}
@@ -3847,7 +3847,7 @@ void cGame::house()
             LOAD_SCENE("plord"); // load planet of ordos
 
 			state = GAME_TELLHOUSE;
-            Mentat->prepare(true);
+            Mentat->prepare(ORDOS);
             bFadeOut=true;
 		}
 	}
@@ -3868,7 +3868,7 @@ void cGame::house()
             LOAD_SCENE("plhar"); // load planet of harkonnen
 
 			state = GAME_TELLHOUSE;
-            Mentat->prepare(true);
+            Mentat->prepare(HARKONNEN);
             bFadeOut=true;
 		}
 	}
@@ -3877,8 +3877,8 @@ void cGame::house()
 	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 	
-    if (bFadeOut)
-        game.FADE_OUT();
+   // if (bFadeOut)
+     //   game.FADE_OUT();
         
 }
 
@@ -3894,11 +3894,10 @@ void cGame::tellhouse()
     if (iAlphaScreen == 0)
         iFadeAction = 2;    
     // -----------------
-
+	Mentat->setReadyToSpeak(true);
     bool bFadeOut=false;
 
 	Mentat->draw();
-	
 	
     // draw mouse    
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
@@ -4595,7 +4594,6 @@ void cGame::runGameState() {
 			combat();
 			break;
 		case GAME_BRIEFING:			
-			Mentat->think();
 			break;
 		case GAME_SETUPSKIRMISH:
 			setup_skirmish();
@@ -4609,8 +4607,8 @@ void cGame::runGameState() {
 		case GAME_HOUSE:
 			house();
 			break;
-		case GAME_TELLHOUSE:
-			Mentat->think();
+		case GAME_TELLHOUSE:			
+			tellhouse();
 			break;
 		case GAME_WINNING:
 			winning();
@@ -4618,11 +4616,9 @@ void cGame::runGameState() {
 		case GAME_LOSING:
 			losing();
 			break;
-		case GAME_WINBRIEF:
-			Mentat->think();
+		case GAME_WINBRIEF:			
 			break;
-		case GAME_LOSEBRIEF:
-			Mentat->think();
+		case GAME_LOSEBRIEF:			
 			break;
 	}
 }

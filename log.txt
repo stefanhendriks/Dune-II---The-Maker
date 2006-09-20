@@ -14,7 +14,7 @@ DUNE II - The Maker
 0| Version information
 0| -------------------
 0| DEM3.5
-0| Compiled at Sep 17 2006 , 20:26:18
+0| Compiled at Sep 20 2006 , 22:21:52
 0| Windowed mode
 0| 
 -------
@@ -62,4 +62,15 @@ DUNE II - The Maker
 3...2...1... GO!
 
 0| LOAD SCENE: data/scenes/plord.dat
-0| MENTAT: sentences prepared
+0| [BRIEFING] Opening file
+0| campaign/briefings/mentato.ini
+0| House Ordos        
+0|             
+0| The home planet of the Ordos is a frigid and ice-covered world.
+0|              
+0| We presume the Ordos import their agricultural and technological goods from
+0| nearby star systems.
+0| Acting as traders and brokers, the Ordos produce no physical products but
+0| instead rely upon their merchandising skills to make their profits.
+0| [BRIEFING] File opened
+0| MENTAT: sentences prepared - ready to speak

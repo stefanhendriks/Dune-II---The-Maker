@@ -92,7 +92,12 @@ void cTimeManager::handleTimerGlobal() {
 		}
 		game.think_music();
 		if (Mentat) {
+			if (game.getState() == GAME_BRIEFING ||
+				game.getState() == GAME_TELLHOUSE ||
+				game.getState() == GAME_WINBRIEF ||
+				game.getState() == GAME_LOSEBRIEF) {
 			Mentat->think();
+			}
 		}		
 		game.think_movie();
 		game.think_message();
