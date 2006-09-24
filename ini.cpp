@@ -33,6 +33,22 @@ cIniReader::cIniReader() {
 
 }
 
+/**
+	Check if this line is commented using one of the comment identifiers
+*/
+bool isCommentedOrEmpty(char linefeed[MAX_LINE_LENGTH]) {
+	  // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
+      // character (which is "//", ";" or "#"), or an empty line, then skip it
+      if (linefeed[0] == ';' ||
+          linefeed[0] == '#' ||
+         (linefeed[0] == '/' && linefeed[1] == '/') ||
+          linefeed[0] == '\n' ||
+          linefeed[0] == '\0')
+          return true;   // Skip
+
+	  return false;
+}
+
 /*
  Read a line in the INI file and put it into currentLine
 */
@@ -1350,14 +1366,9 @@ void INI_Load_Regionfile(int iHouse, int iMission)
       INI_Sentence(stream, linefeed);
 
       // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-      // character (which is "//", ";" or "#"), or an empty line, then skip it
-      if (linefeed[0] == ';' ||
-          linefeed[0] == '#' ||
-         (linefeed[0] == '/' && linefeed[1] == '/') ||
-          linefeed[0] == '\n' ||
-          linefeed[0] == '\0')
-          continue;   // Skip
-
+     if (isCommentedOrEmpty(linefeed)) {
+         continue;   // Skip
+	  }
 	  wordtype=WORD_NONE;
 
     // Every line is checked for a new section.
@@ -1435,10 +1446,45 @@ void INI_Load_Regionfile(int iHouse, int iMission)
 
 }
 
+/**
+	Calculate mission from region:
+	region 1 = mission 1
+    region 2, 3, 4 = mission 2
+    region 5, 6, 7 = mission 3
+    region 8, 9, 10 = mission 4
+    region 11,12,13 = mission 5
+    region 14,15,16 = mission 6
+    region 17,18,19 = mission 7
+    region 20,21    = mission 8
+	region 22 = mission 9
+*/	
+int convertRegionToMission(int iRegion) {
+	if (iRegion == 1)
+		return 1;
+	else if (iRegion == 2 || iRegion == 3 || iRegion == 4)
+		return 2;
+	else if (iRegion == 5 || iRegion == 6 || iRegion == 7)
+		return 3;
+	else if (iRegion == 8 || iRegion == 9 || iRegion == 10)
+		 return 4;
+	else if (iRegion == 11 || iRegion == 12 || iRegion == 13)
+		 return 5;
+	else if (iRegion == 14 || iRegion == 15 || iRegion == 16)
+		return 6;
+	else if (iRegion == 17 || iRegion == 18 || iRegion == 19)
+		return 7;
+	else if (iRegion == 20 || iRegion == 21)
+		return 8;
+	else if (iRegion == 22)
+		return 9;
+
+	return -1;
+}
+
+
 // SCENxxxx.ini loader (for both DUNE II as for DUNE II - The Maker)
 void INI_Load_scenario(int iHouse, int iRegion)
 {
-
 	// Always set to false (TODO: undo this, but this is now for debugging purposes
 	// hot jumping to missions from skirmish mode into scenario mode).
 	game.bSkirmish=false;
@@ -1451,8 +1497,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 	// Start assembling file name for loading
 	char cHouse[4];
 	memset(cHouse, 0, sizeof(cHouse));
-  
-	
+  	
 	if (iHouse == ATREIDES) sprintf(cHouse, "a");
 	if (iHouse == HARKONNEN) sprintf(cHouse, "h");  
 	if (iHouse == ORDOS) sprintf(cHouse, "o");
@@ -1467,8 +1512,9 @@ void INI_Load_scenario(int iHouse, int iRegion)
 	else
 		sprintf(filename, "campaign/maps/scen%s0%d.ini", cHouse, iRegion);
 
-
-    
+    game.iMission = convertRegionToMission(iRegion);
+	
+	assert(game.iMission > 0);
 
 	// Done assembling. Now calculate the mission (techlevel) out of the region
 
@@ -1476,38 +1522,6 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
     // MISSION = TECHLEVEL
     // REGION = SCEN*NR
-
-	// Calculate mission from region:
-	// region 1 = mission 1
-    // region 2, 3, 4 = mission 2
-    // region 5, 6, 7 = mission 3
-    // region 8, 9, 10 = mission 4
-    // region 11,12,13 = mission 5
-    // region 14,15,16 = mission 6
-    // region 17,18,19 = mission 7
-    // region 20,21    = mission 8
-	// region 22 = mission 9
-
-	if (iRegion == 1)
-		game.iMission = 1;
-	else if (iRegion == 2 || iRegion == 3 || iRegion == 4)
-		game.iMission = 2;
-	else if (iRegion == 5 || iRegion == 6 || iRegion == 7)
-		game.iMission = 3;
-	else if (iRegion == 8 || iRegion == 9 || iRegion == 10)
-		game.iMission = 4;
-	else if (iRegion == 11 || iRegion == 12 || iRegion == 13)
-		game.iMission = 5;
-	else if (iRegion == 14 || iRegion == 15 || iRegion == 16)
-		game.iMission = 6;
-	else if (iRegion == 17 || iRegion == 18 || iRegion == 19)
-		game.iMission = 7;
-	else if (iRegion == 20 || iRegion == 21)
-		game.iMission = 8;
-	else if (iRegion == 22)
-		game.iMission = 9;
-
-
 
 	// Open up the file and read data.
 
@@ -1531,9 +1545,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
 	memset(blooms, -1, sizeof(blooms));
 	memset(fields, -1, sizeof(fields));
-	//for (int iB=0; iB < 30; iB++)
-	//	blooms[iB]=-1;    // reset array
-
+	
 	// Load file
 	FILE *stream;					// file stream
 	int section=INI_NONE;			// section
@@ -1574,20 +1586,14 @@ void INI_Load_scenario(int iHouse, int iRegion)
 		if (iCl < 30) linesection[iCl] = '\0';
 	}
 
-    // infinite loop baby
+    // loop until end of file
     while( !feof( stream ) )
     {
       INI_Sentence(stream, linefeed);
 
-      // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-      // character (which is "//", ";" or "#"), or an empty line, then skip it
-      if (linefeed[0] == ';' ||
-          linefeed[0] == '#' ||
-         (linefeed[0] == '/' && linefeed[1] == '/') ||
-          linefeed[0] == '\n' ||
-          linefeed[0] == '\0')
-          continue;   // Skip
-
+	  if (isCommentedOrEmpty(linefeed)) {
+         continue;   // Skip
+	  }
       // Every line is checked for a new section.
       INI_Section(linefeed,linesection);
 
@@ -2598,13 +2604,9 @@ void INI_Install_Game()
 
       // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
       // character (which is "//", ";" or "#"), or an empty line, then skip it
-      if (linefeed[0] == ';' ||
-          linefeed[0] == '#' ||
-         (linefeed[0] == '/' && linefeed[1] == '/') ||
-          linefeed[0] == '\n' ||
-          linefeed[0] == '\0')
-          continue;   // Skip
-
+	  if (isCommentedOrEmpty(linefeed)) {
+         continue;   // Skip
+	  }
       wordtype=WORD_NONE;
 
       // Every line is checked for a new section.
