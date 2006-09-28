@@ -73,13 +73,13 @@ void cTimeManager::handleTimerFPS() {
 **/
 void cTimeManager::handleTimerGlobal() {	
 	while (timerGlobal > 0)	{
-		if (game.iFadeAction == 1) {
+		if (game.iFadeAction == 1) {	// todo --> 1 & 2 must be const or define FADE_IN/OUT
 			game.iAlphaScreen-=2;
 			if (game.iAlphaScreen < 0) {
 				game.iAlphaScreen = 0;
 				game.iFadeAction=0;
 			}
-		} else if (game.iFadeAction == 2) {
+		} else if (game.iFadeAction == 2) { // todo --> 1 & 2 must be const or define FADE_IN/OUT
 			game.iAlphaScreen+=2;
 			if (game.iAlphaScreen > 255) {
 				game.iAlphaScreen = 255;
