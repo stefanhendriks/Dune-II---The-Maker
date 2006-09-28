@@ -449,6 +449,9 @@ void cAIPlayer::think_harvester()
  
 }
 
+/**
+ AI Thinking
+ **/
 void cAIPlayer::think()
 {
     think_building();

@@ -189,7 +189,6 @@ void INI_Word(char input[MAX_LINE_LENGTH], char word[25])
 // Reads out word[], checks structure type, and returns actual source-id
 int INI_StructureType(char word[45])
 {
-
   if (strcmp(word, "WINDTRAP") == 0)
     return WINDTRAP;
 
