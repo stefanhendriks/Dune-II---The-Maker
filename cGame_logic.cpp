@@ -4669,9 +4669,8 @@ bool cGame::setupGame() {
 	MMEngine = new cMMEAllegro;	
 #endif
 
-	/** TODO: Lib specific install routine (in MMEngine) **/
-	bool lib = MMEngine->setupLib();
-	if (!lib) {
+	// Setup lib specific things.
+	if (!MMEngine->setupLib()) {
 		return false;
 	}
 
