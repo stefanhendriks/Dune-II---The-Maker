@@ -14,13 +14,13 @@ void cMentatFactory::deleteCurrent() {
 			delete (cAtreidesMentat *)Mentat;
 			break;
 		case HARKONNEN:
-			delete (cAtreidesMentat *)Mentat;
+			delete (cHarkonnenMentat *)Mentat;
 			break;
 		case ORDOS:
-			delete (cAtreidesMentat *)Mentat;
+			delete (cOrdosMentat *)Mentat;
 			break;
 		case BENEGES:
-			delete (cAtreidesMentat *)Mentat;
+			delete (cBenegesMentat *)Mentat;
 			break;
 	}
 }
