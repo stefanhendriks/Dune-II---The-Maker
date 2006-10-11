@@ -174,6 +174,7 @@
 #define FACE_UPLEFT       7
 
 // House id's
+#define NOT_DEFINED	-1
 #define GENERALHOUSE   0     // no house at all, general house (gray)
 #define HARKONNEN 1
 #define ATREIDES  2

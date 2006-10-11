@@ -5,7 +5,7 @@
 #include "d2tmh.h"
 
 cMentatFactory::cMentatFactory() {
-	type = -1;
+	type = NOT_DEFINED;
 }
 
 void cMentatFactory::deleteCurrent() {
@@ -26,9 +26,12 @@ void cMentatFactory::deleteCurrent() {
 }
 
 void cMentatFactory::create(int mentatType) {
-	if (type > -1) {
+	if (type != NOT_DEFINED) {
 		if (mentatType != type) {
 			deleteCurrent();
+		} else {
+			// already created
+			return; 
 		}
 	}
 	/** It is safe to create a new Mentat now **/	
