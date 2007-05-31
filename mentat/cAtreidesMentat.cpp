@@ -37,7 +37,10 @@ void cAtreidesMentat::draw() {
 	select_palette( general_palette  );
     game.draw_movie(ATREIDES);
 	draw_sprite(bmp_screen, (BITMAP *)gfxmentat[MENTATA].dat, 0, 0);
-
+	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+    if (isWaitingForAnAnswer()) {
+		Mentat->buttonPress(false);
+    }
 	draw_mouth();
 	draw_eyes();
 	draw_other();

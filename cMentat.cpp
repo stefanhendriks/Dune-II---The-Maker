@@ -256,6 +256,48 @@ void cMentat::setReadyToSpeak(bool value) {
 	bReadyToSpeak = value;
 }
 
+void cMentat::buttonPress(bool firsttime) {
+	if (firsttime) {
+        draw_sprite(bmp_screen, (BITMAP *)gfxmentat[MEN_WISH].dat, 16, 16);
+		draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BTN_YES].dat, 466, 423);
+        draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BTN_NO].dat, 293, 423);
+		draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+		if ((mouse_x > 293 && mouse_x < 446) && (mouse_y > 423 && mouse_y < 468)) { // No
+			if (Mouse.btnSingleClickLeft()) {
+				bWaitingForAnswer = false;
+				game.FADE_OUT();
+				game.iHouse = -1;
+				game.setState(GAME_HOUSE);
+			}
+		}
+		if ((mouse_x > 446 && mouse_x < 619) && (mouse_y >423 && mouse_y < 468)) { // Yes
+			if (Mouse.btnSingleClickLeft()) {
+				bWaitingForAnswer = false;
+				game.setState(GAME_BRIEFING);
+				game.firstbrief(game.iHouse);
+			}
+		}
+	}
+	else {
+		draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BTN_PROCEED].dat, 466, 423);
+        // draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BTN_REPEAT].dat, 293, 423);
+		draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+		// if ((mouse_x > 293 && mouse_x < 446) && (mouse_y > 423 && mouse_y < 468)) { // No
+		// 	if (Mouse.btnSingleClickLeft()) {
+		//		bWaitingForAnswer = false;
+		//		thinkSpeaking();
+		//	}
+		// }	
+		if ((mouse_x > 446 && mouse_x < 619) && (mouse_y >423 && mouse_y < 468)) { // Yes
+			if (Mouse.btnSingleClickLeft()) {
+				bWaitingForAnswer = false;
+				game.setState(GAME_PLAYING);
+			}
+		}
+	}
+}
+
+
 /*
 
 // mentat mouth

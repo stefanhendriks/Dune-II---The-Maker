@@ -2667,6 +2667,18 @@ void cGame::mapdraw()
 
 void cGame::losing()
 {
+    // FADING
+    if (iFadeAction == 1) // fading out
+    {
+        draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
+        return;
+    }
+
+    if (iAlphaScreen == 0)
+        iFadeAction = 2;    
+    // -----------------
+	bool bFadeOut=false;
+
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, screen_x, screen_y);
 
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
@@ -2681,6 +2693,7 @@ void cGame::losing()
 		}
 
         // FADE OUT
+	if (bFadeOut)
         FADE_OUT();
     }
 }
@@ -2688,6 +2701,18 @@ void cGame::losing()
 // winning animation
 void cGame::winning()
 {
+	// FADING
+    if (iFadeAction == 1) // fading out
+    {
+        draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
+        return;
+    }
+
+    if (iAlphaScreen == 0)
+        iFadeAction = 2;    
+    // -----------------
+	bool bFadeOut=false;
+
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, screen_x, screen_y);
 
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
@@ -2702,6 +2727,7 @@ void cGame::winning()
 		}
 
         // FADE OUT
+		if (bFadeOut)
         FADE_OUT();
     }
 }
@@ -2811,7 +2837,7 @@ void cGame::setup_list()
 
 }
 
-void cGame::draw_mentat(int iType)
+/* void cGame::draw_mentat(int iType)
 {
 	select_palette( general_palette  );
     
@@ -2843,7 +2869,7 @@ void cGame::draw_mentat(int iType)
 	}
     // SPEAKING ANIMATIONS IS DONE IN MENTAT()	   
 }
-
+*/
 
 // draw mentat
 void cGame::mentat(int iType)
@@ -3801,7 +3827,6 @@ void cGame::house()
     if (iAlphaScreen == 0)
         iFadeAction = 2;    
     // -----------------
-
     bool bFadeOut=false;
 
 	// draw menu
@@ -3827,7 +3852,7 @@ void cGame::house()
 
 			state = GAME_TELLHOUSE;
 			Mentat->prepare(ATREIDES);
-            bFadeOut=true;
+            // FADE_OUT();
         }
 	}
 
@@ -3848,7 +3873,7 @@ void cGame::house()
 
 			state = GAME_TELLHOUSE;
             Mentat->prepare(ORDOS);
-            bFadeOut=true;
+            // FADE_OUT();
 		}
 	}
 
@@ -3869,17 +3894,11 @@ void cGame::house()
 
 			state = GAME_TELLHOUSE;
             Mentat->prepare(HARKONNEN);
-            bFadeOut=true;
+            // FADE_OUT();
+
 		}
 	}
-	
-
-	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
-	
-   // if (bFadeOut)
-     //   game.FADE_OUT();
-        
 }
 
 void cGame::tellhouse()
@@ -3894,18 +3913,17 @@ void cGame::tellhouse()
     if (iAlphaScreen == 0)
         iFadeAction = 2;    
     // -----------------
+
 	Mentat->setReadyToSpeak(true);
-    bool bFadeOut=false;
-
 	Mentat->draw();
-	
-    // draw mouse    
-	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+}
 
-
-    if (bFadeOut)
-        FADE_OUT();
-	
+void cGame::firstbrief(int iHouse)
+{	
+	MentatFactory.create(iHouse);
+	Mentat->prepare(false, GAME_BRIEFING, iHouse, 1);
+	Mentat->setReadyToSpeak(true);
+	Mentat->draw();
 }
 
 // select your next conquest
@@ -4765,5 +4783,3 @@ void cGame::run()
 		frames++;	// <-- should be in draw manager
 	}
 }
-
-

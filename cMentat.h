@@ -68,6 +68,7 @@ public:
 	bool shouldDrawSentences();
 	bool isWaitingForAnAnswer();
 	void setSentence(int index, char sent[255]);
+	void buttonPress(bool firsttime);
 };
 
 

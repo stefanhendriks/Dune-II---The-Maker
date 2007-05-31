@@ -184,6 +184,8 @@ public:
 
 	void draw_movie(int iType);  // draw movie sequence
 
+	void firstbrief(int iHouse); // first briefing
+
 private:
 	int fps;			/** last frames per seconds */
 	int frames;			/** frame count */
