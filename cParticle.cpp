@@ -213,7 +213,7 @@ void cParticle::think()
 
         if (iFrame > 9)
         {
-            //Logger.print("Particle died");
+            //logbook("Particle died");
             iAlpha-=35;
             iFrame=9;
 
@@ -766,7 +766,7 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
 		particle[iNewId].iHeight=128;
 	}
 
- //   Logger.print("Particle created");
+ //   logbook("Particle created");
 }
 
 

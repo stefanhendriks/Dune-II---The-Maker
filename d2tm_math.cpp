@@ -37,7 +37,7 @@ int iCellGiveX(int c)
   if (c < 0 || c >= MAX_CELLS) 
   {
 	  if (DEBUGGING)
-		  Logger.print("ERROR: Encountered invalid cell");
+		  logbook("ERROR: Encountered invalid cell");
 
     return -1;
   }
@@ -50,7 +50,7 @@ int iCellGiveY(int c)
     if (c < 0 || c >= MAX_CELLS) 
     {
 		if (DEBUGGING)
-			Logger.print("ERROR: Encountered invalid cell");
+			logbook("ERROR: Encountered invalid cell");
 
         return -1;
     }

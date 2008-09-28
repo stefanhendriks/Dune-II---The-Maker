@@ -84,7 +84,7 @@ void cStructure::die()
 
     if (iIndex < 0)
     {
-        Logger.print("cStructure(): Could not die");
+        logbook("cStructure(): Could not die");
         return;
     }
 
@@ -378,7 +378,7 @@ int STRUCTURE_VALID_LOCATION(int iCll, int iTpe, int iUnitID)
             if (map.cell[cll].type != TERRAIN_ROCK &&
                 map.cell[cll].type != TERRAIN_SLAB)
             {
-                Logger.print("euh?");
+                logbook("euh?");
                 return -2; // cannot place on sand
             }
 
@@ -420,7 +420,7 @@ void STRUCTURE_POWER(int iID, int iTpe, int iPlyer)
 	{
 	char msg[255];
 	sprintf(msg, "Drain=%d, Give=%d - PLAYER USE =%d, PLAYER HAS = %d", structures[iTpe].power_drain,structures[iTpe].power_give, player[iPlyer].use_power, player[iPlyer].has_power);
-	Logger.print(msg);
+	logbook(msg);
 	}
 
 	if (iTpe == SILO)
@@ -546,7 +546,7 @@ int STRUCTURE_CREATE(int iCll, int iTpe, int iHP, int iPlyer)
 				{
                 char msg[256];
                 sprintf(msg, "Cannot place %s on specified area", structures[iTpe].name);
-				Logger.print(msg);
+				logbook(msg);
 				}
 		    }
 
@@ -626,7 +626,7 @@ int STRUCTURE_CREATE(int iCll, int iTpe, int iHP, int iPlyer)
     // Double check
     if (structure[iNewId] == NULL) 
     {
-        Logger.print("FAILED: Could not create structure (class missing to create)");
+        logbook("FAILED: Could not create structure (class missing to create)");
         return -1;
     }
 

@@ -13,6 +13,20 @@
 #include "d2tmh.h"
 #include <math.h>
 
+// Keep a logbook
+void logbook(char *txt) 
+{
+  FILE *fp;
+  fp = fopen("log.txt", "at");
+    
+  if (fp) 
+  {
+    fprintf(fp, "%d| %s\n", game.iGameTimer, txt); // print the text into the file
+  }
+
+  fclose(fp);
+}
+
 // determine if this cell is not out of boundries
 bool BORDER_POS(int x, int y)
 {	
@@ -67,7 +81,6 @@ void FIX_POS(int &x, int &y)
 
 void INSTALL_PLAYERS()
 {
-	Logger.print("Installing:  PLAYERS");
 	for (int i=0; i < MAX_PLAYERS; i++)
 		player[i].init();
 }
@@ -76,7 +89,6 @@ void INSTALL_PLAYERS()
 
 void INSTALL_WORLD()
 {
-	Logger.print("Installing:  WORLD");
     // create regions
     for (int i=0; i < MAX_REGIONS; i++)
     {
@@ -125,11 +137,15 @@ void INSTALL_WORLD()
     REGION_NEW(406,  213, 1, -1, PIECE_DUNE_025);
     REGION_NEW(448,  269, 1, -1, PIECE_DUNE_026);
     REGION_NEW(514,  227, 1, -1, PIECE_DUNE_027);
+
+  //  game.iHouse = ATREIDES;
+    //REGION_SETUP(4, game.iHouse);
+
+    
 }
 
 void INSTALL_HOUSES()
 {
-Logger.print("Installing:  HOUSES");
 /********************************
  House Rules
  ********************************/
@@ -169,60 +185,88 @@ Logger.print("Installing:  HOUSES");
   houses[CORRINO].swap_color   = 136;
   houses[FREMEN].minimap_color = makecol(192,192,192); // grey
 
+
+  // TEMP
+  //map.randommap();
 }
 
-//
-//// Did we press the left mouse button?
-//bool mouse_pressed_left()
-//{
-//  if (MOUSE_BTN_LEFT())
-//  {
-//    // not yet pressed
-//    if (game.mouse_left == false)
-//    {
-//      // we pressed this just for once
-//      game.mouse_left=true;
-//      return true;    // yeap
-//    }
-//  }
-//  else
-//  {
-//    game.mouse_left=false;
-//    return false;   // no way
-//  }
-//
-//  return false;
-//}
-//
-//// Did we press the right mouse button?
-//bool mouse_pressed_right()
-//{
-//  if (MOUSE_BTN_RIGHT())
-//  {
-//    if (game.mouse_right == false)
-//    {
-//      game.mouse_right = true;
-//      return true;    // yeap
-//    }
-//  }
-//  else
-//  {
-//    game.mouse_right = false;
-//    return false;   // no way
-//  }
-//
-//  return false;
-//}
+
+bool MOUSE_BTN_LEFT()
+{
+  if (mouse_b & 1)
+    return true; // return true, no check for 'already pressed'
+
+  return false;
+}
+
+// Did we press the right mouse button? (instant)
+bool MOUSE_BTN_RIGHT()
+{
+  if (mouse_b & 2)
+      return true;    // yeap    
+  
+  return false;
+}
+
+
+// Did we press the left mouse button?
+bool mouse_pressed_left()
+{
+  if (MOUSE_BTN_LEFT())
+  {
+    // not yet pressed
+    if (game.mouse_left == false)
+    {
+      // we pressed this just for once
+      game.mouse_left=true;
+      return true;    // yeap
+    }
+  }
+  else
+  {
+    game.mouse_left=false;
+    return false;   // no way
+  }
+
+  return false;
+}
+
+// Did we press the right mouse button?
+bool mouse_pressed_right()
+{
+  if (MOUSE_BTN_RIGHT())
+  {
+    if (game.mouse_right == false)
+    {
+      game.mouse_right = true;
+      return true;    // yeap
+    }
+  }
+  else
+  {
+    game.mouse_right = false;
+    return false;   // no way
+  }
+
+  return false;
+}
 /*****************************
  Unit Rules
  *****************************/
 void install_units()
 {  
-	Logger.print("Installing:  UNITS");
+  // Every unit thinks at 0.1 second. When the unit thinks, it is thinking about the path it
+  // is taking, the enemies around him, etc. The speed of how a unit should move is depended on
+  // time aswell. Every 0.01 second a unit 'can' move. The movespeed is like this:
+  // 0    - slowest (1 second per pixel)
+  // 1000 - fastest (1 pixel per 0.01 second)
+  // So, the higher the number, the faster it is.
+
+
   // some things for ALL unit types; initialization
   for (int i = 0; i < MAX_UNITTYPES; i++)
   {
-    units[i].bmp              = (BITMAP *)gfxdata[UNIT_QUAD].dat;
+    units[i].bmp              = (BITMAP *)gfxdata[UNIT_QUAD].dat; // in case an invalid unit is choosen, it is a quad! :D
     units[i].top              = NULL;  // no top
     units[i].shadow           = NULL;  // no shadow (deliverd with picture itself)
     units[i].bmp_width        = 0;
@@ -241,18 +285,21 @@ void install_units()
     units[i].squish           = true;     // most units can squish
     units[i].range            = -1;
     units[i].sight            = -1;
+
+    // harvester properties
     units[i].harvesting_amount= 0;
     units[i].harvesting_speed = 0;
     units[i].credit_capacity  = 0;
+    
     strcpy(units[i].name, "\0");
   }
 
-  // Unit        : CarryAll 
+    // Unit        : CarryAll 
   // Description : CarryAll, the flying pickuptruck
   units[CARRYALL].bmp = (BITMAP *)gfxdata[UNIT_CARRYALL].dat;      // pointer to the original 8bit bitmap
   units[CARRYALL].shadow = (BITMAP *)gfxdata[UNIT_CARRYALL_SHADOW].dat;      // pointer to the original 8bit bitmap
-  units[CARRYALL].bmp_width  = 48;
-  units[CARRYALL].bmp_height = 48;
+  units[CARRYALL].bmp_width  = 24*2;
+  units[CARRYALL].bmp_height = 24*2;
   units[CARRYALL].bmp_startpixel = 0;
   units[CARRYALL].bmp_frames = 2; // we have at max 1 extra frame
   units[CARRYALL].icon = ICON_UNIT_CARRYALL;
@@ -566,7 +613,6 @@ void install_units()
  ****************/
 void install_bullets()
 {  
-	Logger.print("Installing:  BULLET TYPES");
   for (int i=0; i < MAX_BULLET_TYPES; i++)
   {
     bullets[i].bmp = NULL; // in case an invalid bitmap; default is a small rocket
@@ -783,7 +829,6 @@ void install_bullets()
  *****************************/
 void install_structures()
 {  
-	Logger.print("Installing:  STRUCTURES");
   for (int i = 0; i < MAX_STRUCTURETYPES; i++)
   {
     structures[i].bmp = (BITMAP *)gfxdata[BUILD_WINDTRAP].dat; // in case an invalid bitmap, we are a windtrap  
@@ -1073,7 +1118,7 @@ int iFindCloseBorderCell(int iCll)
 	/*
 	char msg[255];
 	sprintf(msg, "WXH = %dx%d", game.map_width, game.map_height);
-	Logger.print(msg);*/
+	logbook(msg);*/
 
 	// STEP 1: determine starting location of carryall: 
 	int iStartCell=-1;
@@ -1160,7 +1205,7 @@ int FIND_PRIMARY_BUILDING(int iType, int iPlayer)
 	{
 	char msg[255];
 	sprintf(msg, "Looking for primary building (type %d, name %s, player %d)", iType, structures[iType].name, iPlayer);
-	Logger.print(msg);
+	logbook(msg);
 	}
 
 	for (int i=0; i < MAX_STRUCTURES; i++)
@@ -1218,7 +1263,7 @@ void play_sound_id(int s, int iOnScreen)
         /*
         char msg[255];
         sprintf(msg, "Playing sound , iOnScreen=%d", iOnScreen);
-        Logger.print(msg);*/
+        logbook(msg);*/
 
 
 
@@ -1294,7 +1339,7 @@ void mp3_play_file(char filename[255])
   }
   else
   {
-       Logger.print("MP3: Could not find mp3 file for add-on, switching to MIDI mode");
+       logbook("MP3: Could not find mp3 file for add-on, switching to MIDI mode");
        allegro_message("Could not find MP3 file, add-on incomplete. Switching to MIDI mode");
        game.bMp3=false;
 
@@ -1573,7 +1618,7 @@ void LOAD_SCENE(char file[30])
 
   char msg[255];
   sprintf(msg, "LOAD SCENE: %s", filename);
-  Logger.print(msg);
+  logbook(msg);
 
   if (gfxmovie != NULL)  
   {    
@@ -1584,7 +1629,7 @@ void LOAD_SCENE(char file[30])
   {   
     gfxmovie=NULL;
     game.iMovieFrame=-1;
-    Logger.print("FAILED");
+    logbook("FAILED");
   }
 
 }
@@ -1638,7 +1683,7 @@ void CREATE_STRUCTURE(int iCell, int iType, int iPlayer, int iPercent)
  int s = STRUCTURE_CREATE(iCell, iType, fHealth, iPlayer);
 
  if (s < 0)
-     Logger.print("ERRORRRRRRRRRRRRRRRRRRRRR");
+     logbook("ERRORRRRRRRRRRRRRRRRRRRRR");
  else
      structure[s]->fConcrete = (1 - fPercent);
 

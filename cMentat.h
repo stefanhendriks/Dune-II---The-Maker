@@ -35,40 +35,19 @@ private:
 	// draw 2 sentences at once, so 0 1, 2 3, 4 5, 6 7, 8 9
 	char sentence[10][255];
 
-	bool bReadyToSpeak;
-	bool bWaitingForAnswer;
-
-	int iMentatSentence;	
+	int iMentatSentence;			// = sentence to draw and speak with (-1 = not ready)
+	
 	int iMentatMouth;
 	int iMentatEyes;
 	int iMentatOther;
 
-	void thinkSpeaking();
-	void thinkMouth();
-	void thinkEyes();
-	void thinkOther();
 public:
+	virtual void draw()=0;
+
+	void think();
+	void prepare(bool bTellHouse, int state, int house, int region);
+			
 	cMentat();
 	~cMentat();
-
-	virtual void draw()=0;
-	
-	int getMentatMouth();
-	int getMentatEyes();
-	int getMentatOther();
-	int getMentatSentence();
-	int getTimerSpeaking();
-
-	void init();
-	void think();
-	void setReadyToSpeak(bool value);
-	void drawSentences();
-	void prepare(bool bTellHouse, int state, int house, int region);
-	void prepare(int house);
-	bool shouldDrawSentences();
-	bool isWaitingForAnAnswer();
-	void setSentence(int index, char sent[255]);
-	void buttonPress(bool firsttime);
 };
-
 

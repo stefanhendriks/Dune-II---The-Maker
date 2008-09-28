@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dune 2", "Dune 2.vcproj", "{FB9D6C0C-78F1-4FBF-8F74-315D1C022D00}"
 EndProject
 Global

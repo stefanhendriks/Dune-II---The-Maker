@@ -20,8 +20,8 @@ void bCanBeServerOrClient()
 		bCanBeClient=false;
 
 	if (bCanBeServer)
-		Logger.print("RakNet: Server interface created");
+		logbook("RakNet: Server interface created");
 
 	if (bCanBeClient)
-		Logger.print("RakNet: Client interface created");*/
+		logbook("RakNet: Client interface created");*/
 }

@@ -142,7 +142,7 @@ bool cMap::occupied(int iCll)
     if (iCll < 0)
 	{
 		if (DEBUGGING)
-			Logger.print("No valid cell specified in cMap::Occupied(int)");
+			logbook("No valid cell specified in cMap::Occupied(int)");
 
         return true;
 	}
@@ -626,7 +626,7 @@ void cMap::draw_minimap()
  // Mouse reaction
  if (mouse_x >= 511 && mouse_y >= 351)
  {
-	 if (Mouse.btnLeft && mouse_co_x1 < 0 && mouse_co_y1 < 0)
+	if (MOUSE_BTN_LEFT() && mouse_co_x1 < 0 && mouse_co_y1 < 0)
 	{
 		// change scroll positions and such :)
 		scroll_x = (((mouse_x-(iWidth)) - 511) / 2);
@@ -1032,7 +1032,7 @@ void cMap::clear_spot(int c, int size, int player)
 	   {
 	   char msg[255];
 	   sprintf(msg, "X %d, Y %d -> CX %d, CY = %d", x, y, cell_x, cell_y);
-	   Logger.print(msg);
+	   logbook(msg);
 	   }*/
        
        int cl = iCellMake(cell_x, cell_y);
@@ -1675,7 +1675,7 @@ void cMap::create_spot(int c, int type, int tile)
     if (c < 0 || c > MAX_CELLS)
     {
 		if (DEBUGGING)
-			Logger.print("ERROR: create_spot()");
+			logbook("ERROR: create_spot()");
 
         return;
     }

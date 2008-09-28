@@ -29,12 +29,6 @@ cBullet        bullet[MAX_BULLETS];
 cRegion        world[MAX_REGIONS];
 cMentat		   *Mentat;
 cTimeManager   TimeManager;
-cEventManager  EventManager;
-cMultiMediaEngine *MMEngine;
-cDrawManager   *DrawManager;
-cMouse			Mouse;
-cLog			Logger;
-cMentatFactory MentatFactory;
 
 // Structs
 sPreviewMap     PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory
@@ -79,12 +73,14 @@ int mouse_co_y2;      // mouse border
 int mouse_status;     // status of the mouse (see main.h)
 int mouse_tile;       // mouse picture in gfxdata
 
-/** Allegro specific timer creation starts here **/
+// Timers
+int frame_count, fps;  // fps and such 
 
+/** Allegro specific timer creation starts here **/
 #ifdef ALLEGRO_H 
 	volatile int allegro_timerSecond = 0;
 	volatile int allegro_timerGlobal = 0;
-	volatile int allegro_timerUnits = 0;	
+	volatile int allegro_timerUnits = 0;
 #endif
 
 /**

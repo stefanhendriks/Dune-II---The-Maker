@@ -1,0 +1,127 @@
+DUNE II - The Maker
+-------------------
+
+0| -------------------
+0| Version information
+0| -------------------
+0| DEM3.5
+0| Compiled at Sep 28 2008 , 21:29:01
+0| Windowed mode
+0| 
+-------
+0| Allegro
+0| -------
+0| Allegro 4.2.0, MSVC
+0| yield_timeslice()
+0| install_timer()
+0| alfont_init()
+0| install_keyboard()
+0| install_mouse()
+0| setting up timer functions / locking functions & memory
+0| Timers installed
+0| Window title set: [Dune II - The Maker [DEM3.5] - (by Stefan Hendriks)]
+0| Loading font data
+0| Display 'switch to background' mode set
+0| Initializing sound
+0| Succes with 32 reserved voices.
+0| Bitmap created: bmp_screen
+0| Bitmap created: bmp_throttle
+0| Bitmap created: bmp_winlose
+0| Bitmap created: bmp_fadeout
+0| Color conversion method set
+0| MOUSE: Mouse speed set
+0| 
+----
+0| GAME 
+0| ----
+0| Datafile hooked: gfxdata.dat
+0| Datafile hooked: gfxaudio.dat
+0| Datafile hooked: gfxinter.dat
+0| Datafile hooked: gfxworld.dat
+0| Datafile hooked: gfxmentat.dat
+0| MP3MUS.DAT not found, using MIDI to play music
+0| Installing:  PLAYERS
+0| Installing:  HOUSES
+0| Installing:  STRUCTURES
+0| Installing:  BULLET TYPES
+0| Installing:  UNITS
+0| Installing:  WORLD
+0| '
+--------------
+0| BATTLE CONTROL
+0| --------------
+0| 
+3...2...1... GO!
+
+0| [GAME.INI] Opening file
+0| [GAME.INI] -> [UNITS]
+0| [GAME.INI] -> [STRUCTURES]
+0| [GAME.INI] Done
+0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| LOAD SCENE: data/scenes/platr.dat
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| [BRIEFING] Opening file
+0| campaign/briefings/mentata.ini
+0| [BRIEFING] File opened
+0| MENTAT: sentences prepared
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| [SCENARIO] 'campaign/maps/scena001.ini' (Mission 1)
+0| [SCENARIO] Opening file
+0| LOAD SCENE: data/scenes/harvest.dat
+0| [SCENARIO] -> [MAP] Field=
+0| [SCENARIO] -> [MAP] Bloom=
+0| [SCENARIO] -> [MAP] Seed=
+0| [SEED] NR 353.
+[SEED] LOCATION 'campaign/maps/seed/353.map'
+0| [SEED] Opening file
+0| [SEED] Done.
+0| [SCENARIO] Done reading
+0| [BRIEFING] Opening file
+0| campaign/briefings/mentata.ini
+0| [BRIEFING] File opened
+0| MENTAT: sentences prepared
+0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+0| [UNIT[2]: Soldier - House 2, iCell = 1439, iGoal = 1439 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[4]: Trike - House 2, iCell = 1501, iGoal = 1501 ] 'ORDERED TO MOVE'
+0| Trike
+0| [UNIT[5]: Soldier - House 2, iCell = 1569, iGoal = 1569 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[6]: Soldier - House 2, iCell = 1697, iGoal = 1697 ] 'ORDERED TO MOVE'
+0| Soldier
+0| [UNIT[8]: Trike - House 2, iCell = 1824, iGoal = 1824 ] 'ORDERED TO MOVE'
+0| Trike
+0| [UNIT[2]: Soldier - House 2, iCell = 1439, iGoal = 1820 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[2]: Soldier - House 2, iCell = 1439, iGoal = 1820 ] 'Create path ... result = 0'
+0| [UNIT[4]: Trike - House 2, iCell = 1501, iGoal = 1820 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[4]: Trike - House 2, iCell = 1501, iGoal = 1820 ] 'Create path ... result = 0'
+0| [UNIT[5]: Soldier - House 2, iCell = 1569, iGoal = 1820 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[5]: Soldier - House 2, iCell = 1569, iGoal = 1820 ] 'Create path ... result = 0'
+0| [UNIT[6]: Soldier - House 2, iCell = 1697, iGoal = 1820 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[6]: Soldier - House 2, iCell = 1697, iGoal = 1820 ] 'Create path ... result = 0'
+0| [UNIT[8]: Trike - House 2, iCell = 1824, iGoal = 1820 ] 'No pathindex & no nextcell, resetting unit'
+0| CREATE_PATH: Found the goal cell, succes, bailing out
+0| [UNIT[8]: Trike - House 2, iCell = 1824, iGoal = 1820 ] 'Create path ... result = 0'
+0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| 
+--------
+0| SHUTDOWN
+0| --------
+0| Allegro FONT library shut down.
+0| Allegro MP3 library shut down.
+0| Allegro shut down.
+0| 
+Thanks for playing!

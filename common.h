@@ -9,9 +9,18 @@
   2001 - 2006 (c) code by Stefan Hendriks
 
   */
+
+void logbook(char *txt);
+
 bool BORDER_POS(int x, int y);
 void FIX_BORDER_POS(int &x, int &y);
 void FIX_POS(int &x, int &y);
+
+bool mouse_pressed_left();
+bool mouse_pressed_right();
+
+bool MOUSE_BTN_LEFT();
+bool MOUSE_BTN_RIGHT();
 
 // Installment of properties/settings in the game.
 void INSTALL_HOUSES();

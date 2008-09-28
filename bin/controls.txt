@@ -1,0 +1,49 @@
+Controls & keys:
+----------------
+
+LEFT  mouse click -> action
+RIGHT mouse click -> deselect / cancel
+
+* use the drag-box to select groups of units
+* Move mouse around the borders of the screen to scroll around the map
+
+
+DEBUG MODE KEYS
+---------------
+To access the debug keys, you should hold TAB. Press one of the following
+keys then to perform the specific given action:
+
+(TAB plus....)
+
+F1			-	Jump to mission 9 of your selected house
+F2			-	Win mission
+F3			-	Lose mission
+F4			-	Instant 9999 credits
+F5			-	Reveal all shroud
+
+Note:
+You can press D anytime, also without holding TAB:
+
+D		- Show all non-passable cells (keep key pressed)
+		  Colored: RED = IMPASSABLE TERRAIN
+				   BLUE= IMPASSABLE UNIT
+				   GREEN=IMPASSABLE STRUCTURE
+D		- Show ID's of unit/Structures (keep key pressed)
+
+
+GAME KEYS:
+----------
+
+Arrows		- scroll through the map
+ESC			- quit
+F11			- Take screenshot
+
+Mouse wheel - Scroll through iconlist
+R			- hold, hover above structures. Mouse will turn into repair icon when structure
+			  can be repaired.
+F			- Show FPS
+D		    - When harvester selected, it will return to refinery (carryall will pickup if possible)
+SHIFT		- Hold and click on other units to add them to your selection
+H			- Set screen to Construction Yard / Start location
+CTRL-<NR>	- Create group of selected units (till nr 5)
+<number>	- Select created group

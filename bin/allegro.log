@@ -1,0 +1,10 @@
+al-main INFO: Allegro initialised (instance 1)
+al-gfx INFO: Called set_gfx_mode(2, 640, 480, 640, 480).
+al-gfx INFO: Firt call, remembering console state.
+al-gfx INFO: Autodetecing graphic driver.
+al-gfx INFO: The driver will wait for vsync.
+al-gfx INFO: set_gfx_card success for 640x480x16.
+al-gfx INFO: Called set_gfx_mode(-1, 0, 0, 0, 0).
+al-gfx INFO: Closing graphics driver (100C8FE0) DirectDraw window.
+al-gfx INFO: Closing, restoring original console state.
+al-gfx INFO: Graphic mode closed.

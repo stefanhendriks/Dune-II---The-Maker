@@ -12,6 +12,9 @@
 
 #ifndef D2TMC_H
 
+void timer_units();
+void timer_global();
+void timer_fps();
 
 // Process 'extern' stuff, so we can access our classes
 extern bool		bDoDebug;
@@ -29,12 +32,6 @@ extern cBullet        bullet[MAX_BULLETS];
 extern cRegion        world[MAX_REGIONS];
 extern cMentat		  *Mentat;
 extern cTimeManager   TimeManager;
-extern cEventManager  EventManager;
-extern cMultiMediaEngine *MMEngine;
-extern cDrawManager   *DrawManager;
-extern cMouse		  Mouse;
-extern cLog			Logger;
-extern cMentatFactory MentatFactory;
 
 extern int MAXVOICES;            // USE THIS FOR DETERMINING VOICES
 
@@ -73,6 +70,7 @@ extern BITMAP *bmp_winlose;
 
 
 // VARIABLES
+extern int fps, frame_count;
 extern int mouse_tile;
 extern int mouse_status;     // status of the mouse (see main.h)
 

@@ -26,9 +26,11 @@ void cGame::FADE_OUT()
 void cGame::draw_movie(int iType)
 {
     if (gfxmovie != NULL && iMovieFrame > -1)
-    {
+    {    
+
         // drawing only, circulating is done in think function
         draw_sprite(bmp_screen, (BITMAP *)gfxmovie[iMovieFrame].dat, 256, 120);
+
     }
 }
 
@@ -124,7 +126,7 @@ void cGame::draw_order()
 	// react on mouse
 	if (bMouseHover && bDrawOrder)
 	{
-		if (Mouse.btnSingleClickLeft())
+		if (bMousePressedLeft)
 		{
 			TIMER_ordered=30; // 30 seconds
 		}
@@ -373,7 +375,7 @@ void cGame::draw_upgrade()
 
             bool bUpgrade=false;
 
-			if (Mouse.btnSingleClickLeft() && bMouseHover)
+            if (bMousePressedLeft && bMouseHover)
                 bUpgrade=true;
 
             if (key[KEY_U] && iUpgradeProgressLimit[iType] <= 0)

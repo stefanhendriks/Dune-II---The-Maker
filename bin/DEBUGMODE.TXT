@@ -1,0 +1,41 @@
+DEBUG MODE:
+This version includes a D2TM - DEBUG.EXE file. This will enable D2TM into
+debugging mode to spit out a lot of information into log.txt 
+
+You can use this to see how the pathfinder works, but mostly to track down bugs.
+
+Use TAB-D to see unit/structure ID's and information. Use SHIFT-F4 to destroy
+instantly a unit and so on. The DEBUG version has less eye-candy and can run a
+bit 'stuttery' due the fact it writes to disk more then the original d2tm exe files.
+
+When launching the D2TM - DEBUG.EXE file you will see the word "DEBUG" on main
+screen and you will see the game has a raster of cells, no fancy shroud and paths
+drawn for pathfinding. 
+
+If you find a bug and you want to replicate it or get more info about this try:
+- run with "d2tm - debug.exe"
+- get the unit ID (so you know what to look for later), by pressing TAB-D
+- use te unit to replicate the bug, or wait until the bug seems to happen, you can
+  quickly jump to missions where nescesary (see controls.txt)
+- when the bug occurs, wait a bit and quit the game (ESC)
+- open up LOG.TXT and try to find the unit , you can search by its name and 
+  an ID will be shown:
+
+Example:
+  [UNIT[8]: Raider Trike - House 3, iCell = 2207, iGoal = 2207 ] 'ORDERED TO MOVE'
+
+Shortly:
+
+  [UNIT[ # ID ] : <name > - House <ID> , iCell = <current cell>, iGoal = <current goal cell> ] 
+
+  and a message between ' ' telling some more about its behaviour or messages.
+
+Typcally when a unit is ordered to move, you will see: 
+
+  [UNIT[8]: Raider Trike - House 3, iCell = 2207, iGoal = 2207 ] 'ORDERED TO MOVE'
+  [UNIT[8]: Raider Trike - House 3, iCell = 2207, iGoal = 2527 ] 'No pathindex & no nextcell, resetting unit'
+  [UNIT[8]: Raider Trike - House 3, iCell = 2207, iGoal = 2527 ] 'Create path ... result = 0'
+
+DEBUG mode is only available in DEMO 3 , perhaps in DEMO 4. The question is how much
+use it will be for a user / player to use this debug version to track down bugs. If 
+anyone seriously wants to playtest any latest version, contact me at stefanhen83@planet.nl

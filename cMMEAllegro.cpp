@@ -1,8 +1,10 @@
 #include "d2tmh.h"
 
-cMMEAllegro::cMMEAllegro() {
+/**
+	Allegro implementation of MME
+**/
 
-}
+cMMEAllegro::cMMEAllegro() { /* */ }
 
 int cMMEAllegro::getMouseX() {
 	return mouse_x;
@@ -30,6 +32,8 @@ bool cMMEAllegro::getMouseButton(int button) {
 		}
 		return false;
 	}
+
+	assert(false); // this is an unknown button, so we will fail
 
 	return false;
 }

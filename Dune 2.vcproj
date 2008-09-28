@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="9,00"
 	Name="Dune 2"
 	ProjectGUID="{FB9D6C0C-78F1-4FBF-8F74-315D1C022D00}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -84,6 +85,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Release/Dune 2.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -102,9 +105,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -180,6 +180,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/Dune 2.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -200,9 +202,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -215,14 +214,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\cDrawManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\cEventManager.cpp"
-				>
-			</File>
-			<File
 				RelativePath="cGame_draw.cpp"
 				>
 			</File>
@@ -231,23 +222,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cLog.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\cMentat.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\cMentatFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\cMMEAllegro.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\cMouse.cpp"
 				>
 			</File>
 			<File
@@ -335,10 +314,6 @@
 				>
 				<File
 					RelativePath=".\mentat\cAtreidesMentat.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\mentat\cBenegesMentat.cpp"
 					>
 				</File>
 				<File
@@ -441,14 +416,6 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\cDrawManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cEventManager.h"
-				>
-			</File>
-			<File
 				RelativePath="cGame.h"
 				>
 			</File>
@@ -457,27 +424,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cLog.h"
-				>
-			</File>
-			<File
 				RelativePath=".\cMentat.h"
 				>
 			</File>
 			<File
 				RelativePath=".\cMentatFactory.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cMMEAllegro.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cMouse.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cMultiMediaEngine.h"
 				>
 			</File>
 			<File
@@ -829,10 +780,6 @@
 				>
 				<File
 					RelativePath=".\mentat\cAtreidesMentat.h"
-					>
-				</File>
-				<File
-					RelativePath=".\mentat\cBenegesMentat.h"
 					>
 				</File>
 				<File

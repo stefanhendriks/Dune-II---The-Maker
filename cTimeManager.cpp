@@ -19,14 +19,14 @@ cTimeManager::cTimeManager() {
 void cTimeManager::capTimers() {
 	if (timerUnits > 10) {
 		if (DEBUGGING) {
-			Logger.print("WARNING: Exeptional high timer; capped");
+			logbook("WARNING: Exeptional high timer; capped");
 			timerUnits = 10;
 		}
 	}
 
 	if (timerGlobal > 40) {
 		if (DEBUGGING)	{
-			Logger.print("WARNING: Exeptional high timer; capped");
+			logbook("WARNING: Exeptional high timer; capped");
 			timerGlobal = 40;
 		}
 	}
@@ -34,7 +34,7 @@ void cTimeManager::capTimers() {
 	/* Taking 10 seconds to render a frame? i hope not **/
 	if (timerSecond > 10) {
 		if (DEBUGGING)	{
-			Logger.print("WARNING: Exeptional high timer; capped");
+			logbook("WARNING: Exeptional high timer; capped");
 			timerSecond = 10;
 		}
 	}
@@ -44,7 +44,6 @@ void cTimeManager::handleTimerFPS() {
 	while (timerSecond > 0)
 	{
 		gameTime++;
-		game.think();
 
 		if (game.isState(GAME_PLAYING))
 		{
@@ -62,135 +61,189 @@ void cTimeManager::handleTimerFPS() {
 
 
         } // game specific stuff
+         
+
+		// Frame Per Second counter
+		fps = frame_count;
+
         
+
+		// 'auto resting'
+		if (fps < IDEAL_FPS)
+		{
+			// reduce with 10
+			if (iRest > 0)
+				iRest-=2;
+
+			if (iRest < 0)
+				iRest=0;
+
+			char msg[255];
+			sprintf(msg, "AUTO-REST: FPS is lower then ideal (=%d), reducing rest value", IDEAL_FPS);
+			logbook(msg);
+		}
+		else
+		{
+			// we go fast enough, so increase rest
+			if (iRest < 500)
+				iRest+=2;
+
+			if (iRest > 500)
+				iRest=500;
+
+			char msg[255];
+			sprintf(msg, "AUTO-REST: FPS is higher then ideal (=%d), increasing rest value", IDEAL_FPS);
+			logbook(msg);
+		}
+
+
+		// log the status
+		frame_count = 0;   
+
 		timerSecond--; // done!
 	}
 
 }
 
-/**
-	Global time unit handler
-**/
-void cTimeManager::handleTimerGlobal() {	
-	while (timerGlobal > 0)	{
-		if (game.iFadeAction == 1) {	// todo --> 1 & 2 must be const or define FADE_IN/OUT
+void cTimeManager::handleTimerGlobal() {
+// keep up with time cycles	
+	while (timerGlobal > 0)
+	{
+		if (game.iFadeAction == 1)
+		{
 			game.iAlphaScreen-=2;
-			if (game.iAlphaScreen < 0) {
+			if (game.iAlphaScreen < 0)
+			{
 				game.iAlphaScreen = 0;
 				game.iFadeAction=0;
-			}
-		} else if (game.iFadeAction == 2) { // todo --> 1 & 2 must be const or define FADE_IN/OUT
+			}        
+		}
+		else if (game.iFadeAction == 2)
+		{
 			game.iAlphaScreen+=2;
-			if (game.iAlphaScreen > 255) {
+			if (game.iAlphaScreen > 255)
+			{
 				game.iAlphaScreen = 255;
 				game.iFadeAction=0;
 			}
 		}
 		game.think_music();
-		if (Mentat) {
-			if (game.getState() == GAME_BRIEFING ||
-				game.getState() == GAME_TELLHOUSE ||
-				game.getState() == GAME_WINBRIEF ||
-				game.getState() == GAME_LOSEBRIEF) {
-					Mentat->think();
-			}
-		}		
+		game.think_mentat();
 		game.think_movie();
 		game.think_message();
 
 		// THINKING ONLY WHEN PLAYING / COMBAT
-		if (game.isState(GAME_PLAYING)) {	
+		if (game.isState(GAME_PLAYING))
+		{	
 
 			// structures think
-			for (int i=0; i < MAX_STRUCTURES; i++) {
+			for (int i=0; i < MAX_STRUCTURES; i++)
 				if (structure[i])
 				{
 					structure[i]->think();           // think about actions going on
 					structure[i]->think_animation(); // think about animating
 					structure[i]->think_guard();     // think about 'guarding' the area (turrets only)
 				}
-			}
 
-			// Do not start from 0 , but from 1 (because 0 = human player id)
-			for (int i=1; i < MAX_PLAYERS; i++) {
-				aiplayer[i].think();
-			}
+				// DO NOT THINK FOR HUMAN PLAYER (== 0)
+				for (int i=0; i < MAX_PLAYERS; i++)
+					aiplayer[i].think();
 
-			game.TIMER_scroll++;
+				game.TIMER_scroll++;
 
-			if (game.TIMER_scroll > game.iScrollSpeed)
-			{
-				map.think();
-				game.TIMER_scroll=0;
+				if (game.TIMER_scroll > game.iScrollSpeed)
+				{
+					map.think();
+					game.TIMER_scroll=0;
 
-			}
+				}
+              
+				game.think_build();
+				game.think_upgrade();
+				game.TIMER_money++;
+                
+				if (game.TIMER_money > 5)
+				{
+					game.think_money();
+					game.TIMER_money=0;
+				}
 
-			game.think_build();
-			game.think_upgrade();
-			game.TIMER_money++;
 
-			if (game.TIMER_money > 5)
-			{
-				game.think_money();
-				game.TIMER_money=0;
-			}
+				if (game.TIMER_throttle > 0)
+					game.TIMER_throttle--;
 
-			if (game.TIMER_throttle > 0) {
-				game.TIMER_throttle--;
-			}
 
-			// units think (move only)
-			for (int i=0; i < MAX_UNITS; i++) {
-				if (unit[i].isValid())	{
-					// move
-					if (unit[i].iAction == ACTION_MOVE || unit[i].iAction == ACTION_CHASE) {
-						unit[i].think_move();
-					}
-					// guard
-					if (unit[i].iAction == ACTION_GUARD) {
-						unit[i].think_guard();
-					}
 
-					// move in air
-					if (unit[i].iType == ORNITHOPTER &&
-						unit[i].iAction == ACTION_ATTACK) {
+				// units think (move only)
+				for (int i=0; i < MAX_UNITS; i++)
+					if (unit[i].isValid())
+					{
+						// move
+						if (unit[i].iAction == ACTION_MOVE || unit[i].iAction == ACTION_CHASE)
+							unit[i].think_move();
+
+						// guard
+						if (unit[i].iAction == ACTION_GUARD)
+							unit[i].think_guard();
+
+
+						// move in air
+						if (unit[i].iType == ORNITHOPTER &&
+							unit[i].iAction == ACTION_ATTACK)
 							unit[i].think_move_air(); // keep flying even when attacking
+
+
 					}
-				}			
-			}
+					else
+					{
 
-			for (int i=0; i < MAX_PARTICLES; i++) {
-				if (particle[i].isValid()) {
-					particle[i].think();
-				}
-			}
+					}
 
-			// when not drawing the options, the game does all it needs to do	
-			// bullets think 
-			for (int i=0; i < MAX_BULLETS; i++) {
-				if (bullet[i].bAlive) {
-					bullet[i].think(); 
-				}
-			}
+
+					for (int i=0; i < MAX_PARTICLES; i++)
+						if (particle[i].isValid())
+							particle[i].think();
+
+					/*
+					BEGIN_PROF("Players think");      
+					for (i=0; i < MAX_PLAYERS; i++)        
+					player[i].think(i);
+					END_PROF();
+
+					} // game playing
+					*/      
+
+
+					// when not drawing the options, the game does all it needs to do	
+					// bullets think 
+					for (int i=0; i < MAX_BULLETS; i++)
+						if (bullet[i].bAlive)
+							bullet[i].think(); 
+
+
 		}
 
-		if (game.isState(GAME_WINNING)) {
-			/** todo: global winning timer things **/
+		if (game.isState(GAME_WINNING))
+		{
+
 		}
 
 		// Fading of selected stuff
-		if (game.bFadeSelectDir) {
+		if (game.bFadeSelectDir)
+		{
 			game.fade_select++;
 			if (game.fade_select > 254)
 				game.bFadeSelectDir=false;
-		} else {
+		}
+		else
+		{
 			game.fade_select--;
 			if (game.fade_select < 32)
 				game.bFadeSelectDir = true;
 		}
 
 		timerGlobal--;
-	}
+  }
 }
 
 void cTimeManager::handleTimerUnits() {
@@ -231,7 +284,6 @@ void cTimeManager::processTime() {
 #endif
 	
 	capTimers();
-	handleTimeSlicing();
 	handleTimerFPS();
 	handleTimerUnits();
 	handleTimerGlobal();
@@ -239,13 +291,6 @@ void cTimeManager::processTime() {
 #ifdef ALLEGRO_H
 	syncAllegroTimers();
 #endif
-}
-/** When the game wants to give the CPU some time to rest,
-	it is done here **/
-void cTimeManager::handleTimeSlicing() {
-	if (iRest > 0) {
-		rest(iRest);
-	}
 }
 
 void cTimeManager::increaseTimerForFPS() {
