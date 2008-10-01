@@ -1078,15 +1078,10 @@ bool INI_WordValueBOOL(char result[MAX_LINE_LENGTH])
   INI_WordValueCHAR(result, val);
   
   // When its TRUE , return true
-  if (strcmp(val, "TRUE") == 0)
-    return true;
-
-  // When its FALSE , return false
-  if (strcmp(val, "FALSE") == 0)
-    return false;
-
-  // Return NULL (no answer, or we cannot identify it as a BOOL)
-  return NULL;  
+  if (strcmp(val, "TRUE") == 0) return true;
+  if (strstr(val, "TRUE") != NULL) return true;
+  
+  return false;  
 }
 // return ID of structure
 int INI_Structure_ID(char *structure)

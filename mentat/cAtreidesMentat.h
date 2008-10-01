@@ -11,7 +11,7 @@
   */
 
 class cAtreidesMentat : public cMentat {
-private:
+private:	
 	void draw_mouth();
 	void draw_eyes();
 	void draw_other();

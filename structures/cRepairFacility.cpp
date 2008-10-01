@@ -61,7 +61,7 @@ void cRepairFacility::think()
                             unit[iUnitID].iCell = iNewCell;
                         }
                         else
-                            Logger.print("Could not find space for this unit");
+                            logbook("Could not find space for this unit");
 
                         // done & restore unit
                         unit[iUnitID].iStructureID = -1;                            

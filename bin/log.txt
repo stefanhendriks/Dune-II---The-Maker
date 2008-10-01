@@ -5,7 +5,7 @@ DUNE II - The Maker
 0| Version information
 0| -------------------
 0| DEM3.5
-0| Compiled at Sep 28 2008 , 21:29:01
+0| Compiled at Oct  1 2008 , 20:02:45
 0| Windowed mode
 0| 
 -------
@@ -59,9 +59,6 @@ DUNE II - The Maker
 0| [GAME.INI] Done
 0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
 0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
-0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
-0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
-0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
 0| LOAD SCENE: data/scenes/platr.dat
 0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
 0| [BRIEFING] Opening file
@@ -84,36 +81,115 @@ DUNE II - The Maker
 0| campaign/briefings/mentata.ini
 0| [BRIEFING] File opened
 0| MENTAT: sentences prepared
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+0| LOAD SCENE: data/scenes/win01.dat
+0| [BRIEFING] Opening file
+0| campaign/briefings/mentata.ini
+0| [BRIEFING] File opened
+0| MENTAT: sentences prepared
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+0| [CAMPAIGN] 'campaign/atreides/mission1.ini' (Mission 1)
+0| [CAMPAIGN] Opening file
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| [CAMPAIGN] Done
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| [CAMPAIGN] 'campaign/atreides/mission1.ini' (Mission 1)
+0| [CAMPAIGN] Opening file
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Atreides
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Ordos
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| Region house
+0| Harkonnen
+0| [CAMPAIGN] Done
+0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
 0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
 0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
 0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
 0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
 0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
-0| [UNIT[2]: Soldier - House 2, iCell = 1439, iGoal = 1439 ] 'ORDERED TO MOVE'
-0| Soldier
-0| [UNIT[4]: Trike - House 2, iCell = 1501, iGoal = 1501 ] 'ORDERED TO MOVE'
-0| Trike
-0| [UNIT[5]: Soldier - House 2, iCell = 1569, iGoal = 1569 ] 'ORDERED TO MOVE'
-0| Soldier
-0| [UNIT[6]: Soldier - House 2, iCell = 1697, iGoal = 1697 ] 'ORDERED TO MOVE'
-0| Soldier
-0| [UNIT[8]: Trike - House 2, iCell = 1824, iGoal = 1824 ] 'ORDERED TO MOVE'
-0| Trike
-0| [UNIT[2]: Soldier - House 2, iCell = 1439, iGoal = 1820 ] 'No pathindex & no nextcell, resetting unit'
-0| CREATE_PATH: Found the goal cell, succes, bailing out
-0| [UNIT[2]: Soldier - House 2, iCell = 1439, iGoal = 1820 ] 'Create path ... result = 0'
-0| [UNIT[4]: Trike - House 2, iCell = 1501, iGoal = 1820 ] 'No pathindex & no nextcell, resetting unit'
-0| CREATE_PATH: Found the goal cell, succes, bailing out
-0| [UNIT[4]: Trike - House 2, iCell = 1501, iGoal = 1820 ] 'Create path ... result = 0'
-0| [UNIT[5]: Soldier - House 2, iCell = 1569, iGoal = 1820 ] 'No pathindex & no nextcell, resetting unit'
-0| CREATE_PATH: Found the goal cell, succes, bailing out
-0| [UNIT[5]: Soldier - House 2, iCell = 1569, iGoal = 1820 ] 'Create path ... result = 0'
-0| [UNIT[6]: Soldier - House 2, iCell = 1697, iGoal = 1820 ] 'No pathindex & no nextcell, resetting unit'
-0| CREATE_PATH: Found the goal cell, succes, bailing out
-0| [UNIT[6]: Soldier - House 2, iCell = 1697, iGoal = 1820 ] 'Create path ... result = 0'
-0| [UNIT[8]: Trike - House 2, iCell = 1824, iGoal = 1820 ] 'No pathindex & no nextcell, resetting unit'
-0| CREATE_PATH: Found the goal cell, succes, bailing out
-0| [UNIT[8]: Trike - House 2, iCell = 1824, iGoal = 1820 ] 'Create path ... result = 0'
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
+0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
+0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
 0| AUTO-REST: FPS is lower then ideal (=60), reducing rest value
 0| AUTO-REST: FPS is higher then ideal (=60), increasing rest value
 0| 

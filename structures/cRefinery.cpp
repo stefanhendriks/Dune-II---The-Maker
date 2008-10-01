@@ -110,7 +110,7 @@ void cRefinery::think()
 					}
 					else
 					{
-						Logger.print("Could not find space for this unit");
+						logbook("Could not find space for this unit");
 
 						// TODO: make carryall pick this up
 						return;
