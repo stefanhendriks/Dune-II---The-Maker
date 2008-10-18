@@ -4,6 +4,7 @@
 	Version="9,00"
 	Name="Dune 2"
 	ProjectGUID="{FB9D6C0C-78F1-4FBF-8F74-315D1C022D00}"
+	RootNamespace="Dune 2"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -29,6 +30,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Copying executable into bin"
+				CommandLine="copy Release\*.exe bin"
+				Outputs="Dune 2.exe"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -125,6 +129,8 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				Description="Copying Debug binary to bin"
+				CommandLine="copy Debug\*.exe bin"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -179,6 +185,104 @@
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/Dune 2.pdb"
+				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Clean|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC70.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Copying executable into bin"
+				CommandLine="create_binary.bat&#x0D;&#x0A;copy Release\*.exe bin"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Release/Dune 2.tlb"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="2"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				AdditionalIncludeDirectories="&quot;C:\Projecten\DUNE II - The Maker\Source\RakNet&quot;"
+				PreprocessorDefinitions="WIN32,NDEBUG,_WINDOWS"
+				RuntimeLibrary="0"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile=".\Release/Dune 2.pch"
+				AssemblerListingLocation=".\Release/"
+				ObjectFile=".\Release/"
+				ProgramDataBaseFileName=".\Release/"
+				BrowseInformation="1"
+				WarningLevel="4"
+				SuppressStartupBanner="true"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1043"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="alleg.lib alfontdll.lib almp3dll.lib RakNetDLL.lib fblend.lib"
+				OutputFile=".\Release/Dune 2.exe"
+				LinkIncremental="1"
+				SuppressStartupBanner="true"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile=".\Release/Dune 2.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"

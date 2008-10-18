@@ -201,7 +201,7 @@ void cUnit::die(bool bBlowUp, bool bSquish)
 
         if (iType == HARVESTER)
         {
-            game.TIMER_throttle=25;
+            game.TIMER_shake=25;
             map.create_field(TERRAIN_SPICE, iCell, ((iCredits+1)/7));
         }
 
@@ -1113,7 +1113,7 @@ void cUnit::think()
 		map.remove_id(iID, MAPID_UNITS);
         
 		die(true, false);
-		game.TIMER_throttle=20;
+		game.TIMER_shake=20;
 		return;
 	}
 

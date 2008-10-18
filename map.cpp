@@ -55,42 +55,9 @@ void cMap::init()
     for (int i=0; i < MAX_STRUCTURES; i++)
     {   
         // clear out all structures
-        if (structure[i])
-        {
-            // delete memory that was aquired
-            if (structure[i]->iType == CONSTYARD) 
-                delete (cConstYard *)structure[i];
-            else if (structure[i]->iType == STARPORT)
-                delete (cStarPort *)structure[i];
-            else if (structure[i]->iType == WINDTRAP)
-                delete (cWindTrap *)structure[i];
-            else if (structure[i]->iType == SILO)
-                delete (cSpiceSilo *)structure[i];
-            else if (structure[i]->iType == RADAR)
-                delete (cOutPost *)structure[i];
-            else if (structure[i]->iType == HIGHTECH)
-                delete (cHighTech *)structure[i];
-            else if (structure[i]->iType == LIGHTFACTORY)
-                delete (cLightFactory *)structure[i];
-            else if (structure[i]->iType == HEAVYFACTORY)
-                delete (cHeavyFactory *)structure[i];
-            else if (structure[i]->iType == PALACE)
-                delete (cPalace *)structure[i];
-            else if (structure[i]->iType == TURRET)
-                delete (cGunTurret *)structure[i];
-            else if (structure[i]->iType == RTURRET)
-                delete (cRocketTurret *)structure[i];
-            else if (structure[i]->iType == REPAIR)
-                delete (cRepairFacility *)structure[i];
-            else if (structure[i]->iType == BARRACKS)
-                delete (cBarracks *)structure[i];
-            else if (structure[i]->iType == WOR)
-                delete (cWor *)structure[i];
-            else if (structure[i]->iType == IX)
-                delete (cIx *)structure[i];
-            else
-                delete structure[i];
-        }  
+        if (structure[i]) {
+			cStructureFactory().getInstance()->deleteStructure(structure[i]);
+        }
         
         // clear pointer
         structure[i] = NULL;

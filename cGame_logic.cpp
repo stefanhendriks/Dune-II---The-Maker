@@ -106,9 +106,9 @@ void cGame::init()
 
 	TIMER_message=0;
 
-    throttle_x=0;
-    throttle_y=0;
-    TIMER_throttle=0;
+    shake_x=0;
+    shake_y=0;
+    TIMER_shake=0;
 
     iMusicType=MUSIC_MENU;
 
@@ -208,9 +208,9 @@ void cGame::mission_init()
 
 	TIMER_message=0;
 
-    throttle_x=0;
-    throttle_y=0;
-    TIMER_throttle=0;
+    shake_x=0;
+    shake_y=0;
+    TIMER_shake=0;
 
     TIMER_movie=0;
     iMovieFrame=-1;
@@ -333,9 +333,9 @@ void cGame::think_winlose()
     {
         state = GAME_WINNING;
 
-        throttle_x=0;
-        throttle_y=0;
-        TIMER_throttle=0;
+        shake_x=0;
+        shake_y=0;
+        TIMER_shake=0;
 
 		play_voice(SOUND_VOICE_07_ATR);
 
@@ -352,9 +352,9 @@ void cGame::think_winlose()
     {
         state = GAME_LOSING;
 
-        throttle_x=0;
-        throttle_y=0;
-        TIMER_throttle=0;
+        shake_x=0;
+        shake_y=0;
+        TIMER_shake=0;
 
 		play_voice(SOUND_VOICE_08_ATR);
 
@@ -5059,28 +5059,27 @@ void cGame::handleKeys() {
 }
 
 void cGame::shakeScreenAndBlitBuffer() {
-	if (TIMER_throttle == 0) {		
-		TIMER_throttle = -1;			
+	if (TIMER_shake == 0) {		
+		TIMER_shake = -1;			
 	}
 	// blit on screen
 
-	if (TIMER_throttle > 0)
+	if (TIMER_shake > 0)
 	{
 		// the more we get to the 'end' the less we 'throttle'.
 		// Structure explosions are 6 time units per cell.
 		// Max is 9 cells (9*6=54)
 		// the max border is then 9. So, we do time / 6
-		if (TIMER_throttle > 69)
-			TIMER_throttle = 69;
+		if (TIMER_shake > 69) TIMER_shake = 69;
 
-		int border=TIMER_throttle / 5;
-		if (border > 9)
-			border = 9;
+		int offset = TIMER_shake / 5;
+		if (offset > 9)
+			offset = 9;
 
-		throttle_x = -abs(border/2) + rnd(border);
-		throttle_y = -abs(border/2) + rnd(border);
+		shake_x = -abs(offset/2) + rnd(offset);
+		shake_y = -abs(offset/2) + rnd(offset);
 
-		blit(bmp_screen, bmp_throttle, 0, 0, 0+throttle_x, 0+throttle_y, screen_x, screen_y);
+		blit(bmp_screen, bmp_throttle, 0, 0, 0+shake_x, 0+shake_y, screen_x, screen_y);
 		blit(bmp_throttle, screen, 0, 0, 0, 0, screen_x, screen_y);
 	}
 	else
@@ -5176,7 +5175,7 @@ void cGame::shutdown() {
 	alfont_destroy_font(game_font);
 	alfont_destroy_font(bene_font);
 
-	logbook("\n--------");
+	logbook("--------");
 	logbook("SHUTDOWN");
 	logbook("--------");
 
@@ -5196,7 +5195,7 @@ void cGame::shutdown() {
 	// Now we are all neatly closed, we exit Allegro and return to OS hell.
 	allegro_exit();
 	logbook("Allegro shut down.");
-	logbook("\nThanks for playing!");
+	logbook("Thanks for playing!");
 }
 
 /**
@@ -5228,7 +5227,7 @@ bool cGame::setupGame() {
 	sprintf(msg, "Compiled at %s , %s", __DATE__, __TIME__);
 	logbook(msg);   
 
-	if (DEBUGGING) logbook("DEBUG MODE ENABLED");
+	if (DEBUGGING) logbook("DEBUG MODE IS ENABLED");
 
 	// init game
 	if (game.windowed)
@@ -5281,7 +5280,7 @@ bool cGame::setupGame() {
 	/* set up the interrupt routines... */  
 	game.TIMER_money=0;
 	game.TIMER_message=0;
-	game.TIMER_throttle=0;
+	game.TIMER_shake=0;
 	
 #ifdef ALLEGRO_H 
 	LOCK_VARIABLE(allegro_timerUnits);

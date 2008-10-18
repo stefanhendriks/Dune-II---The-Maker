@@ -66,8 +66,6 @@ void cTimeManager::handleTimerFPS() {
 		// Frame Per Second counter
 		fps = frame_count;
 
-        
-
 		// 'auto resting'
 		if (fps < IDEAL_FPS)
 		{
@@ -106,7 +104,7 @@ void cTimeManager::handleTimerFPS() {
 }
 
 void cTimeManager::handleTimerGlobal() {
-// keep up with time cycles	
+	// keep up with time cycles	
 	while (timerGlobal > 0)
 	{
 		if (game.iFadeAction == 1)
@@ -169,15 +167,13 @@ void cTimeManager::handleTimerGlobal() {
 				}
 
 
-				if (game.TIMER_throttle > 0)
-					game.TIMER_throttle--;
+				if (game.TIMER_shake > 0) game.TIMER_shake--;
 
 
 
 				// units think (move only)
-				for (int i=0; i < MAX_UNITS; i++)
-					if (unit[i].isValid())
-					{
+				for (int i=0; i < MAX_UNITS; i++) {
+					if (unit[i].isValid()) {
 						// move
 						if (unit[i].iAction == ACTION_MOVE || unit[i].iAction == ACTION_CHASE)
 							unit[i].think_move();
@@ -198,11 +194,11 @@ void cTimeManager::handleTimerGlobal() {
 					{
 
 					}
+				}
 
-
-					for (int i=0; i < MAX_PARTICLES; i++)
-						if (particle[i].isValid())
-							particle[i].think();
+					for (int i=0; i < MAX_PARTICLES; i++) {
+						if (particle[i].isValid()) particle[i].think();
+					}
 
 					/*
 					BEGIN_PROF("Players think");      

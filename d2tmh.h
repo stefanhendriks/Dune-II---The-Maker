@@ -58,6 +58,7 @@
 #include "d2tm_math.h"
 #include "cTimeManager.h"
 #include "cStructure.h"
+#include "cStructureFactory.h"				// Responsible for creation of Structures
 #include "cUnit.h"
 #include "cMentat.h"
 #include "ini.h"							// INI loading

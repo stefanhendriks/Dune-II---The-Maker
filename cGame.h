@@ -102,9 +102,9 @@ public:
     int iMovieFrame;
 
     // throttle stuff
-	int throttle_x;
-    int throttle_y;
-    int TIMER_throttle;
+	int shake_x;
+    int shake_y;
+    int TIMER_shake;
 
     int TIMER_money;
     int iCountSoundMoney;

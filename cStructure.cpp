@@ -164,7 +164,7 @@ void cStructure::die()
     map.remove_id(iIndex, MAPID_STRUCTURES);
 
     // screen shaking
-    game.TIMER_throttle=(iWidth*iHeight)*20;
+    game.TIMER_shake=(iWidth*iHeight)*20;
 
     // eventually die
     delete this;
@@ -396,11 +396,10 @@ int STRUCTURE_VALID_LOCATION(int iCll, int iTpe, int iUnitID)
 }
 
 // return new valid ID
-int STRUCTURE_NEW()
-{
-    for (int i=0; i < MAX_STRUCTURES; i++)
-        if (structure[i] == NULL)
-            return i;
+int STRUCTURE_NEW() {
+	for (int i=0; i < MAX_STRUCTURES; i++) {
+        if (structure[i] == NULL) return i;
+	}
 
     return -1; // NONE
 }
@@ -604,24 +603,7 @@ int STRUCTURE_CREATE(int iCll, int iTpe, int iHP, int iPlyer)
         return -1;
     }
     
-    // Depending on type, create proper derived class. The constructor
-    // will take care of the rest
-    if (iTpe == CONSTYARD)  structure[iNewId] = new cConstYard;
-    if (iTpe == STARPORT)   structure[iNewId] = new cStarPort;
-    if (iTpe == WINDTRAP)   structure[iNewId] = new cWindTrap;
-    if (iTpe == SILO)       structure[iNewId] = new cSpiceSilo;
-    if (iTpe == REFINERY)   structure[iNewId] = new cRefinery;
-    if (iTpe == RADAR)      structure[iNewId] = new cOutPost;
-    if (iTpe == PALACE)      structure[iNewId] = new cPalace;
-    if (iTpe == HIGHTECH)      structure[iNewId] = new cHighTech;
-    if (iTpe == LIGHTFACTORY)      structure[iNewId] = new cLightFactory;
-    if (iTpe == HEAVYFACTORY)      structure[iNewId] = new cHeavyFactory;
-    if (iTpe == TURRET)      structure[iNewId] = new cGunTurret;
-    if (iTpe == RTURRET)      structure[iNewId] = new cRocketTurret;
-    if (iTpe == REPAIR)      structure[iNewId] = new cRepairFacility;
-    if (iTpe == IX)      structure[iNewId] = new cIx;
-    if (iTpe == WOR)      structure[iNewId] = new cWor;
-    if (iTpe == BARRACKS)      structure[iNewId] = new cBarracks;
+	structure[iNewId] = cStructureFactory().getInstance()->createStructure(iTpe);
 
     // Double check
     if (structure[iNewId] == NULL) 

@@ -1,12 +1,8 @@
 @echo off
-if %1 == "" goto ERR
-
 cls
 echo Syntax: create_binary #executablefolder 
 echo.
-echo Prepare binary package of D2TM.
-echo.
-echo Using release directory : %1
+echo Prepare binary package of D2TM. All that is needed is to copy the exe file.
 echo.
 echo 1. Removing bin directory
 rd /S /Q bin
@@ -18,12 +14,14 @@ mkdir bin\campaign\atreides
 mkdir bin\campaign\ordos
 mkdir bin\campaign\harkonnen
 mkdir bin\campaign\maps
+mkdir bin\campaign\maps\seed
 mkdir bin\campaign\briefings
 echo 4. Copying campaign files
 copy campaign\atreides\*.* bin\campaign\atreides
 copy campaign\ordos\*.* bin\campaign\ordos
 copy campaign\harkonnen\*.* bin\campaign\harkonnen
 copy campaign\maps\*.* bin\campaign\maps
+copy campaign\maps\seed\*.* bin\campaign\maps\seed
 copy campaign\briefings\*.* bin\campaign\briefings
 copy campaign\info.txt bin\campaign\info.txt
 echo 5. Creating new data directory
@@ -46,17 +44,10 @@ copy skirmish\*.ini bin\skirmish
 echo 10. Copying dll files
 copy dll\*.* bin
 echo 11. Copy executable from %1
-copy %1\*.exe bin
+copy Release\*.exe bin
 echo 12. Copy game rules file (game.ini)
 copy game.ini bin
 echo 13. Copy txt files
 copy *.txt bin
-goto DONE
-
-:ERR
-echo Missing parameter, syntax is : 
-
-goto DONE
-
-:DONE
 echo Done!
+echo Now copy your executable into the bin directory to make it work!

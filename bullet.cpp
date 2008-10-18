@@ -428,7 +428,7 @@ void cBullet::think_move()
 			map.create_field(TERRAIN_SPICE, iCell, 25+(rnd(50)));
 
 			// kill unit
-			game.TIMER_throttle=20;
+			game.TIMER_shake=20;
 			
         }
 
