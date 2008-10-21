@@ -1334,6 +1334,12 @@ void cGame::combat_mouse()
                     if (unit[i].isValid())
                         if (unit[i].iPlayer == 0)
                         {
+
+							// do not select airborn units
+							if (unit[i].iType == ORNITHOPTER &&
+								unit[i].iType == CARRYALL) 
+								continue;
+
                             // now check X and Y coordinates
                             if ((unit[i].draw_x() >= min_x && (unit[i].draw_x() + units[unit[i].iType].bmp_width) <= max_x) &&
                                 (unit[i].draw_y() >= min_y && (unit[i].draw_y() + units[unit[i].iType].bmp_height) <= max_y) )
@@ -1344,10 +1350,11 @@ void cGame::combat_mouse()
             //                    bPlayRep=true;
 
                              
-                                if (units[unit[i].iType].infantry)
+								if (units[unit[i].iType].infantry) {
                                     bPlayInf=true;
-                                else
-                                    bPlayRep=true;                             
+								} else {
+                                    bPlayRep=true;
+								}
 
                             }
 

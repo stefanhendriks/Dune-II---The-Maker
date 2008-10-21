@@ -81,7 +81,7 @@ void cGunTurret::think()
                 TIMER_fire++;
 
                 int iDistance=9999;
-                int iSlowDown=350;
+                int iSlowDown=200;
 
                 if (iType == RTURRET)
                     iSlowDown=450;                
@@ -140,10 +140,10 @@ void cGunTurret::think()
             {
                 TIMER_turn++;
 
-                int iSlowDown = 250;
+                int iSlowDown = 125;
 
                 if (iType == RTURRET)
-                    iSlowDown = 350; // even more slow
+                    iSlowDown = 200; // even more slow
 
                 if (TIMER_turn > iSlowDown)
                 {                    

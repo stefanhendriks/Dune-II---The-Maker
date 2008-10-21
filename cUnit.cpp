@@ -675,12 +675,16 @@ void cUnit::draw()
     // DRAW SHADOW
     if (units[iType].shadow)
     {        
-        if (iType != CARRYALL)
+		if (iType != CARRYALL) {
             blit((BITMAP *)units[iType].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
-        else
-            blit((BITMAP *)units[iType].shadow, shadow, start_x+2, start_y+2, 0, 0, bmp_width, bmp_height);
+			draw_trans_sprite(bmp_screen, shadow, ux-startpixel,uy);        
+	} else {
+//            blit((BITMAP *)units[iType].shadow, shadow, start_x+2, start_y+2, 0, 0, bmp_width, bmp_height);
+	            blit((BITMAP *)units[iType].shadow, shadow, start_x+2, start_y+2, 0, 0, bmp_width, bmp_height);
+				draw_trans_sprite(bmp_screen, shadow, ux-startpixel,(uy + 24));        
+		}
 
-		draw_trans_sprite(bmp_screen, shadow, ux-startpixel,uy);        
+		//draw_trans_sprite(bmp_screen, shadow, ux-startpixel,uy);        
 //        fblend_trans(shadow, bmp_screen, ux-startpixel, uy, 128);
     }   
     

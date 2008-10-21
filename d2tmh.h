@@ -60,6 +60,8 @@
 #include "cStructure.h"
 #include "cStructureFactory.h"				// Responsible for creation of Structures
 #include "cUnit.h"
+#include "cAbstractUnit.h"					// Abstract Unit class (will replace cUnit.h eventually)
+#include "cUnitFactory.h"					// Responsible for creation of Units
 #include "cMentat.h"
 #include "ini.h"							// INI loading
 #include "cGame.h"							// game class

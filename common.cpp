@@ -749,7 +749,7 @@ void install_bullets()
   bullets[BULLET_TURRET].bmp     = (BITMAP *)gfxdata[BULLET_DOT_MEDIUM].dat;
   bullets[BULLET_TURRET].deadbmp = EXPLOSION_BULLET; // not used anyway
   bullets[BULLET_TURRET].bmp_width = 8;
-  bullets[BULLET_TURRET].damage = 18;
+  bullets[BULLET_TURRET].damage = 12;
   bullets[BULLET_TURRET].damage_inf = 12; // infantry is a hard target
   bullets[BULLET_TURRET].max_frames = 0;
   bullets[BULLET_TURRET].max_deadframes = 1; 
@@ -769,7 +769,7 @@ void install_bullets()
   bullets[ROCKET_RTURRET].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_NORMAL].dat;
   bullets[ROCKET_RTURRET].deadbmp = EXPLOSION_ROCKET_SMALL;
   bullets[ROCKET_RTURRET].bmp_width = 16*2;
-  bullets[ROCKET_RTURRET].damage = 40;
+  bullets[ROCKET_RTURRET].damage = 25;
   bullets[ROCKET_RTURRET].damage_inf = 10; // infantry is a bit tougher
   bullets[ROCKET_RTURRET].max_frames = 1;
   bullets[ROCKET_RTURRET].sound = SOUND_ROCKET;

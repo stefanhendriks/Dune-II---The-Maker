@@ -69,12 +69,8 @@ void cTimeManager::handleTimerFPS() {
 		// 'auto resting'
 		if (fps < IDEAL_FPS)
 		{
-			// reduce with 10
-			if (iRest > 0)
-				iRest-=2;
-
-			if (iRest < 0)
-				iRest=0;
+			if (iRest > 0) iRest-=2;
+			if (iRest < 0) iRest=0;
 
 			char msg[255];
 			sprintf(msg, "AUTO-REST: FPS is lower then ideal (=%d), reducing rest value", IDEAL_FPS);
@@ -82,12 +78,8 @@ void cTimeManager::handleTimerFPS() {
 		}
 		else
 		{
-			// we go fast enough, so increase rest
-			if (iRest < 500)
-				iRest+=2;
-
-			if (iRest > 500)
-				iRest=500;
+			if (iRest < 500) iRest+=2;
+			if (iRest > 500) iRest=500;
 
 			char msg[255];
 			sprintf(msg, "AUTO-REST: FPS is higher then ideal (=%d), increasing rest value", IDEAL_FPS);

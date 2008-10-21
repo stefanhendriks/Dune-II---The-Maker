@@ -31,7 +31,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Copying executable into bin"
-				CommandLine="copy Release\*.exe bin"
+				CommandLine="copy Release\*.exe bin&#x0D;&#x0A;"
 				Outputs="Dune 2.exe"
 			/>
 			<Tool
@@ -130,7 +130,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Copying Debug binary to bin"
-				CommandLine="copy Debug\*.exe bin"
+				CommandLine="copy Debug\*.exe bin&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -227,7 +227,7 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Copying executable into bin"
-				CommandLine="create_binary.bat&#x0D;&#x0A;copy Release\*.exe bin"
+				CommandLine="create_binary.bat&#x0D;&#x0A;copy Release\*.exe bin&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -317,6 +317,10 @@
 			Name="CPP"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
+			<File
+				RelativePath=".\cAbstractUnit.cpp"
+				>
+			</File>
 			<File
 				RelativePath="cGame_draw.cpp"
 				>
@@ -519,6 +523,10 @@
 			Name="HEADER"
 			Filter="h;hpp;hxx;hm;inl"
 			>
+			<File
+				RelativePath=".\cAbstractUnit.h"
+				>
+			</File>
 			<File
 				RelativePath="cGame.h"
 				>
