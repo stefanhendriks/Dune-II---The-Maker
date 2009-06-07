@@ -56,7 +56,7 @@ void cMap::init()
     {   
         // clear out all structures
         if (structure[i]) {
-			cStructureFactory().getInstance()->deleteStructure(structure[i]);
+			cStructureFactory::getInstance()->deleteStructure(structure[i]);
         }
         
         // clear pointer
@@ -1658,7 +1658,7 @@ void cMap::create_spot(int c, int type, int tile)
 
     // when spice
     if (type == TERRAIN_SPICE || type == TERRAIN_SPICEHILL)
-        cell[c].credits = 150 + rnd(75);
+        cell[c].credits = 150 + rnd(250);
 
     if (type == TERRAIN_MOUNTAIN)
         cell[c].passable = false;

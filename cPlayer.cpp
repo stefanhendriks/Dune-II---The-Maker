@@ -32,12 +32,12 @@ void cPlayer::init()
 
     iTeam=-1;
 
-    lHarvested=0;    
-    memset(iKills, 0, sizeof(iKills));        // Kills (0 units, 1 = struc)
-    memset(iLost, 0, sizeof(iLost));         // Casualties
+    lHarvested=0;
+    memset(iKills, 0, sizeof(iKills));			// Kills (0 units, 1 = struc)
+    memset(iLost, 0, sizeof(iLost));			// Casualties
  
     TIMER_think=rnd(10);        // timer for thinking itself (calling main routine)
-    TIMER_attack=-1;       // -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
+    TIMER_attack=-1;			// -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 
 }
 
@@ -52,12 +52,10 @@ void cPlayer::set_house(int iHouse)
   memcpy (pal, general_palette, sizeof(pal));
 
   // now set the different colors based uppon house
-  if (houses[house].swap_color > -1)
-  {
+  if (houses[house].swap_color > -1) {
     int start = houses[house].swap_color;
     int s=144;                // original position (harkonnen)
-     for (int j = start; j < (start+7);j++)
-     {
+    for (int j = start; j < (start+7);j++) {
       // swap everything from S with J
        pal[s] = pal[j];
        s++;
@@ -68,36 +66,29 @@ void cPlayer::set_house(int iHouse)
 
 bool cPlayer::bEnoughPower()
 {
-    if (game.bSkirmish)
-    {
-
-       if (has_power >= use_power)
-           return true;
-
-    }
-    else
-    {
+    if (game.bSkirmish) {
+       if (has_power >= use_power) return true;
+    } else {
         int iMyID=-1;
-        for (int i=0; i < MAX_PLAYERS; i++)
+
+		for (int i=0; i < MAX_PLAYERS; i++) {
             if (&player[i] == this)
             {
                 iMyID=i;
                 break;
             }
+		}
 
         // AI cheats on power   
-        if (iMyID > 0)
-        {
-
+        if (iMyID > 0) {
             // original dune 2 , the AI cheats. Unfortunatly D2TM has to cheat too, else the game will
             // be unplayable.
-            if (iStructures[WINDTRAP] > 0)
-            {
+            if (iStructures[WINDTRAP] > 0) {
                 // always enough power so it seems
                 return true;
-            }
-            else
+			} else {
                 return false; // not enough power
+			}
         }
         else
         {
@@ -112,13 +103,24 @@ bool cPlayer::bEnoughPower()
 }
 
 
+/**
+	Return the damage done by house type:
+	Atreides == 100% (normal)
+	Harkonnen = stronger
+	Sardaukar = a bit stronger then Harkonnen
+	Fremen == Sardaukar
+	Ordos = weaker
+
+	How much is determined here.
+
+**/
 int cPlayer::iDamage(int iDamage)
 {
 	// return proper move speed of unit type
 	float fOriginal = 100;
 
-	if (house == HARKONNEN || house == SARDAUKAR)
-		fOriginal = 120;
+	if (house == HARKONNEN) fOriginal = 120;
+	if (house == SARDAUKAR) fOriginal = 125;
 
 	if (house == ORDOS || house == FREMEN)
 		fOriginal = 80;

@@ -366,6 +366,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cUnitUtils.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\timers.cpp"
 				>
 			</File>
@@ -569,6 +573,10 @@
 			</File>
 			<File
 				RelativePath=".\cUnitFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cUnitUtils.h"
 				>
 			</File>
 			<File

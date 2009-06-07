@@ -603,11 +603,10 @@ int STRUCTURE_CREATE(int iCll, int iTpe, int iHP, int iPlyer)
         return -1;
     }
     
-	structure[iNewId] = cStructureFactory().getInstance()->createStructure(iTpe);
+	structure[iNewId] = cStructureFactory::getInstance()->createStructure(iTpe);
 
     // Double check
-    if (structure[iNewId] == NULL) 
-    {
+    if (structure[iNewId] == NULL) {
         logbook("FAILED: Could not create structure (class missing to create)");
         return -1;
     }

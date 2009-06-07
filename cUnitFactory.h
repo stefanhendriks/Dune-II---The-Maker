@@ -3,12 +3,14 @@
 class cUnitFactory {
 
 private:
-	cUnitFactory *instance;
+	static cUnitFactory *instance;
 
-public:
+protected:
 	cUnitFactory();
 
-	cUnitFactory *getInstance();
+public:
+
+	static cUnitFactory *getInstance();
 	
 	void deleteUnit(cAbstractUnit *unit);
 	cAbstractUnit *createUnit(int type);

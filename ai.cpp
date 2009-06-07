@@ -84,7 +84,6 @@ void cAIPlayer::BUILD_UNIT(int iUnitType)
     {
         if (iUnitType == INFANTRY) iUnitType = TROOPERS;
         if (iUnitType == SOLDIER) iUnitType = TROOPER;
-
         if (iUnitType == TRIKE) iUnitType = QUAD;
     }
 
@@ -360,12 +359,15 @@ void cAIPlayer::think_harvester()
 	int iBloom =  CLOSE_SPICE_BLOOM(-1);
 	for (int i=0; i < MAX_UNITS; i++)
 	{
-		if (unit[i].isValid())
-			if (unit[i].iPlayer > 0)
-			if (unit[i].iPlayer == ID && unit[i].iAction == ACTION_GUARD)
-				if (units[unit[i].iType].infantry)
-				{
-					int d = ABS_length(iCellGiveX(iBloom), iCellGiveY(iBloom), iCellGiveX(unit[i].iCell), iCellGiveY(unit[i].iCell));
+		if (unit[i].isValid()){
+			if (unit[i].iPlayer > 0 &&
+				unit[i].iPlayer == ID && unit[i].iAction == ACTION_GUARD) {
+
+				if (units[unit[i].iType].infantry) {
+					int d = ABS_length(	iCellGiveX(iBloom), 
+										iCellGiveY(iBloom), 
+										iCellGiveX(unit[i].iCell), 
+										iCellGiveY(unit[i].iCell));
 					
 					if (d < iDist)
 					{
@@ -373,6 +375,8 @@ void cAIPlayer::think_harvester()
 						iDist = d;
 					}
 				}
+			}
+		}
 
 	}
 
@@ -454,8 +458,7 @@ void cAIPlayer::think()
     think_building();
 
     // not time yet to think
-    if (player[ID].TIMER_think < 10)
-    {
+    if (player[ID].TIMER_think < 10) {
         player[ID].TIMER_think++;
         return;
     }
@@ -469,8 +472,7 @@ void cAIPlayer::think()
         return; // we do not think further
     
     // depening on player, do thinking
-    if (ID == AI_WORM)
-    {
+    if (ID == AI_WORM) {
         if (rnd(100) < 25)
             think_worm();
 
@@ -1267,14 +1269,13 @@ int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer)
 
 void cAIPlayer::think_repair_structure(cStructure *struc)
 {
-// AUTO-REPAIR BY AI (caused by damage due units here!!!)
-    if (struc->iHitPoints < (structures[struc->iType].hp/2))
-        struc->bRepair=true;
-
     // when ai has a lot of money, repair even faster
-    if (player[struc->iPlayer].credits > 1000)
-        if (struc->iHitPoints < (structures[struc->iType].hp))
-            struc->bRepair=true;
+	if (player[struc->iPlayer].credits > 1000) {
+        if (struc->iHitPoints < (structures[struc->iType].hp))  struc->bRepair=true;
+	} else {
+		// AUTO-REPAIR BY AI (caused by damage due units here!!!)
+		if (struc->iHitPoints < (structures[struc->iType].hp/2)) struc->bRepair=true;
+	}
 }
 
 int cAIPlayer::iPlaceStructureCell(int iType)
@@ -1384,7 +1385,7 @@ int cAIPlayer::iPlaceStructureCell(int iType)
 		//					STRUCTURE_CREATE(iGoodCells[rnd(iGoodCellID)], iType, structures[iType].hp, ID);
 		logbook("FOUND CELL TO PLACE");
         iCheckingPlaceStructure=-1;
-		return (iGoodCells[rnd(iGoodCellID)]);					
+		return (iGoodCells[rnd(iGoodCellID)]);
 	}
 
     iCheckingPlaceStructure=i;    

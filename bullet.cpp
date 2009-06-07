@@ -425,7 +425,7 @@ void cBullet::think_move()
 			// change type of terrain to sand
 			map.create_spot(iCell, TERRAIN_SAND, 0);
 
-			map.create_field(TERRAIN_SPICE, iCell, 25+(rnd(50)));
+			map.create_field(TERRAIN_SPICE, iCell, 50+(rnd(75)));
 
 			// kill unit
 			game.TIMER_shake=20;

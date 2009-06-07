@@ -22,7 +22,7 @@ public:
     bool bAlive;        // alive
 
     // Drawing effects
-    long x, y;        // x and y position to draw (absolute numbers)
+    long x, y;			// x and y position to draw (absolute numbers)
     int iFrame;         // frame
     int iType;          // type
 	int iAlpha;			// alpha

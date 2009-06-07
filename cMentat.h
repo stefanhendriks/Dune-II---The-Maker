@@ -16,8 +16,10 @@
 	c<anyhouse>Mentat.cpp / c<anyhouse>Mentat.h which will be derived from this class.
 
 	There is only one mentat in-game shown to the player. Therefor a good creation/deletion of it (when switching
-	houses) is essential.
+	houses) is essential. These responsibilities should lay in the cMentatFactory class.
 */
+#ifndef CMENTAT_H
+#define CMENTAT_H
 
 class cMentat {
 
@@ -51,3 +53,4 @@ public:
 	~cMentat();
 };
 
+#endif

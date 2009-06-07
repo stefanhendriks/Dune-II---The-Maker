@@ -68,7 +68,7 @@ void cUnit::init(int i)
 
     iAction = ACTION_GUARD;
     
-    iAttackUnit=-1;    // attacking unit id
+    iAttackUnit=-1;      // attacking unit id
     iAttackStructure=-1; // attack structure id
     iAttackCell=-1;
 

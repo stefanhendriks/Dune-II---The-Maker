@@ -1,7 +1,8 @@
 #include "d2tmh.h"
 
-cStructureFactory::cStructureFactory() {
-	instance = NULL;
+cStructureFactory *cStructureFactory::instance = NULL;
+
+cStructureFactory::cStructureFactory() {	
 }
 
 cStructureFactory *cStructureFactory::getInstance() {
@@ -11,7 +12,7 @@ cStructureFactory *cStructureFactory::getInstance() {
 
 	return instance;
 }
-
+ 
 cStructure *cStructureFactory::createStructure(int type) {
 	 // Depending on type, create proper derived class. The constructor
     // will take care of the rest

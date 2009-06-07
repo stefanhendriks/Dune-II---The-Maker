@@ -34,6 +34,12 @@
 
 #endif
 
+//#if defined(_CRT_SECURE_NO_DEPRECATE) && !defined(_CRT_SECURE_NO_WARNINGS)
+
+#define _CRT_SECURE_NO_WARNINGS
+
+//#endif
+
 #include <alfont.h>
 #include <almp3.h>
 #include "fblend.h"             // fast blending
@@ -62,6 +68,7 @@
 #include "cUnit.h"
 #include "cAbstractUnit.h"					// Abstract Unit class (will replace cUnit.h eventually)
 #include "cUnitFactory.h"					// Responsible for creation of Units
+#include "cUnitUtils.h"						// Responsible for generic operations on units (ie finding a unit, etc)
 #include "cMentat.h"
 #include "ini.h"							// INI loading
 #include "cGame.h"							// game class
