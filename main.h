@@ -3,14 +3,15 @@
   Dune II - The Maker
 
   Author : Stefan Hendriks
-  Contact: stefan@dune2k.com / stefanhen83@planet.nl
+  Contact: stefanhen83@gmail.com
   Website: http://d2tm.duneii.com
 
-  2001 - 2006 (c) code by Stefan Hendriks
+  2001 - 2009 (c) code by Stefan Hendriks
 
   TODO: Reduce this crap to minimum
 
   */
+
 #define DEBUGGING bDoDebug
 
 // MAP ID                        

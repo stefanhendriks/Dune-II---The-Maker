@@ -3,10 +3,10 @@
 	Dune II - The Maker
 
 	Author : Stefan Hendriks
-	Contact: stefan@dune2k.com / stefanhen83@planet.nl
+	Contact: stefanhen83@gmail.com
 	Website: http://d2tm.duneii.com
 
-	2001 - 2006 (c) code by Stefan Hendriks
+	2001 - 2009 (c) code by Stefan Hendriks
 
 	Mentat class
 
@@ -15,7 +15,7 @@
 
 	c<anyhouse>Mentat.cpp / c<anyhouse>Mentat.h which will be derived from this class.
 
-	There is only one mentat in-game shown to the player. Therefor a good creation/deletion of it (when switching
+	There is only one mentat in-game shown to the player. Therefore a good creation/deletion of it (when switching
 	houses) is essential. These responsibilities should lay in the cMentatFactory class.
 */
 #ifndef CMENTAT_H

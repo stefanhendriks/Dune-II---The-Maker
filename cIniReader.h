@@ -1,5 +1,19 @@
+/* 
+
+  Dune II - The Maker
+
+  Author : Stefan Hendriks
+  Contact: stefanhen83@gmail.com
+  Website: http://d2tm.duneii.com
+
+  2001 - 2009 (c) code by Stefan Hendriks
+
+  */
+
 /*
-    Ini class to read INI files
+    TODO: Make singleton, (perhaps not, Singleton= sort of anti-pattern).
+
+	Ini class to read INI files
 */
 
 class cIniReader {

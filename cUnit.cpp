@@ -3,10 +3,10 @@
   Dune II - The Maker
 
   Author : Stefan Hendriks
-  Contact: stefan@dune2k.com / stefanhen83@planet.nl
+  Contact: stefanhen83@gmail.com
   Website: http://d2tm.duneii.com
 
-  2001 - 2006 (c) code by Stefan Hendriks
+  2001 - 2009 (c) code by Stefan Hendriks
 
   */
 
@@ -114,10 +114,8 @@ void cUnit::init(int i)
     TIMER_wormeat=0;
 }
 
-void cUnit::die(bool bBlowUp, bool bSquish)
-{
+void cUnit::die(bool bBlowUp, bool bSquish) {
     // Animation / Sound
-
     player[iPlayer].iLost[INDEX_KILLS_UNITS]++;
 
     int iDieX=(draw_x() + 16 ) + (map.scroll_x*32);
@@ -622,15 +620,14 @@ void cUnit::draw()
 	
     if (iTempHitPoints > -1)
         return; // temp hitpoints filled in, meaning it should NOT show up at all!
+
     int ux = draw_x();  // draw unit, compensate wideness
     int uy = draw_y(); // same here, for height
 
     
-    if (iType == SANDWORM)
-    {
+    if (iType == SANDWORM) {
         Shimmer(20, ux+16, uy+16);
-		//line(bmp_screen, 0,0,ux,uy, makecol(255,255,255));
-        return;
+		return;
     }
     
     // Temp bitmap (16 bits)

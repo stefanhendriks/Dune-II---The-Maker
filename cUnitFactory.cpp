@@ -14,7 +14,6 @@ cUnitFactory *cUnitFactory::getInstance() {
 	return instance;
 }
 
-
 cAbstractUnit *cUnitFactory::createUnit(int type) {
 	// return new c<bla>Unit (extends cAbstractUnit)
 	return NULL;
