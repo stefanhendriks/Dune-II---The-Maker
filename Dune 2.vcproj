@@ -330,6 +330,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cHitpointCalculator.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\cMentat.cpp"
 				>
 			</File>
@@ -537,6 +541,10 @@
 			</File>
 			<File
 				RelativePath="cGame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cHitpointCalculator.h"
 				>
 			</File>
 			<File

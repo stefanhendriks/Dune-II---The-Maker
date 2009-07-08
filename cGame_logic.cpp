@@ -42,7 +42,7 @@ void cGame::init()
     memset(cRegionText, 0, sizeof(cRegionText));
     //int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
 
-	windowed=false;
+	windowed=true;
     screen_x = 640;
     screen_y = 480;
 
@@ -1755,7 +1755,7 @@ void cGame::list_new_item(int iListID, int iIcon, int iPrice, int iStructureID, 
 
 void cGame::draw_list()
 {
-	if (game.iActiveList== LIST_NONE)
+	if (game.iActiveList == LIST_NONE)
 		return;
 
 
@@ -2752,23 +2752,24 @@ void cGame::draw_placeit()
 
 		destroy_bitmap(temp);
 
-		if (bMousePressedLeft)
-			if (bMayPlace && bOutOfBorder == false)
-			{
-				int iHealthPercent =  50;
+		// clicked mouse button
+		if (bMousePressedLeft) {
+			if (bMayPlace && bOutOfBorder == false)	{
+				int iHealthPercent =  50; // the minimum is 50% (with no slabs)
 
-				if (iTotalRocks > 0)
+				if (iTotalRocks > 0) {
 					iHealthPercent += health_bar(50, iTotalRocks, iTotalBlocks);
+				}
 				
-                play_sound_id(SOUND_PLACE,-1);
+                play_sound_id(SOUND_PLACE, -1);
 
-				CREATE_STRUCTURE(iMouseCell, iStructureID, 0, iHealthPercent);
+				cStructureFactory::getInstance()->createStructure(iMouseCell, iStructureID, 0, iHealthPercent);
 				bPlaceIt=false;
 				iconbuilding[LIST_CONSTYARD]	= -1;
 				iconprogress[LIST_CONSTYARD]    = -1;
 			
 			}
-
+		}
 
 
 	//iDrawX *=32;
@@ -3518,8 +3519,7 @@ void cGame::setup_skirmish()
 
     draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_GAME_DUNE].dat, 0, 350);
 
-	for (int dy=0; dy < game.screen_y; dy+=2)
-	{
+	for (int dy=0; dy < game.screen_y; dy+=2) {
 		line(bmp_screen, 0, dy, 640, dy, makecol(0,0,0));
 	}
 
@@ -4093,11 +4093,12 @@ void cGame::setup_skirmish()
 				map.set_pos(-1, -1, player[p].focus_cell);
 
 			// create constyard
-			int s = STRUCTURE_CREATE(player[p].focus_cell, CONSTYARD, structures[CONSTYARD].hp, p);			
+			cStructure *s = cStructureFactory::getInstance()->createStructure(player[p].focus_cell, CONSTYARD, p);
 
 			// when failure, create mcv instead
-			if (s < 0)
+			if (s == NULL) {
 				UNIT_CREATE(player[p].focus_cell, MCV, p, true);
+			}
 
 			// amount of units
 			int u=0;
@@ -5637,11 +5638,6 @@ bool cGame::setupGame() {
 	install_units();
 	logbook("Installing:  WORLD");
 	INSTALL_WORLD();
-
-	logbook("'\n--------------");
-	logbook("BATTLE CONTROL");
-	logbook("--------------"); 
-	logbook("\n3...2...1... GO!\n");
 
 	game.init();
 	game.setup_list();

@@ -20,6 +20,12 @@
 
 class cStructure
 {
+
+	protected:
+    // Width and Height in cells (preset by constructor of type)
+    int iWidth;
+    int iHeight;
+
     public:
 
     // Constructor & Destructor:
@@ -31,7 +37,11 @@ class cStructure
     int iHitPoints;      // HitPoints this structure has
     int iCell;           // What cell it is (most upper left part of structure where
                          // drawing starts)
-    float fConcrete;     // how much concrete is beneath this building (percentage)?    
+    
+	float fConcrete;     // how much concrete is *not* beneath this building (percentage)?
+						 // meaning, when 0% , it is all concrete. But if 10%, it means 10% of the building
+					     // is not covered.
+
     int iPlayer;         // belongs to...
     int iFrame;          // Frame (flag animation)
     int iType;           // Type of structure to identify
@@ -64,9 +74,7 @@ class cStructure
 
 	// -------------
     
-    // Width and Height in cells (preset by constructor of type)
-    int iWidth;
-    int iHeight;
+
 
     // Filled in by derived classes    
     virtual void draw(int iStage)=0;              // draw
@@ -86,11 +94,16 @@ class cStructure
     // Functionality
     int iFreeAround();
 
+
+	// getters
+	int getWidth() { return iWidth; } 
+	int getHeight() { return iHeight; }
+
     private:
     
 };
 
+void upgradeTechTree(int iPlayer, int iStructureType);
 int STRUCTURE_FREE_TYPE(int iPlyr, int iCll, int iTpe);
-int STRUCTURE_CREATE(int iCll, int iTpe, int iHP, int iPlyer);
 
 

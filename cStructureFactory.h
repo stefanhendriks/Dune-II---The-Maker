@@ -29,9 +29,20 @@ public:
 	
 	cStructure *createStructureInstance(int type);
 
-	cStructure *createStructure(int type);
+	cStructure *createStructure(int iCell, int iStructureType, int iPlayer, int iPercent);
+	cStructure *createStructure(int iCell, int iStructureType, int iPlayer);
+
+	int getFreeSlot();
+
+	void clearFogForStructureType(int iCell, cStructure *str);
+	void clearFogForStructureType(int iCell, int iStructureType, int iSight, int iPlayer);
+
+	void placeStructure(int iCell, int iStructureType, int iPlayer);
 
 	int getSlabStatus(int iCell, int iStructureType, int iUnitIDToIgnore);
+
+	void powerUp(int iStructureType, int iPlayer);
+	void powerDown(int iStructureType, int iPlayer);
 
 };
 /*

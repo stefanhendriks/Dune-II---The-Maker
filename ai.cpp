@@ -196,7 +196,7 @@ void cAIPlayer::think_building()
 					{
 						iBuildingStructure[i]=-1;
 						TIMER_BuildStructure[i]=-1;
-						STRUCTURE_CREATE(iCll, i, structures[i].hp, ID);
+						cStructureFactory::getInstance()->createStructure(iCll, i, structures[i].hp, ID);
 					}
 					else
 					{

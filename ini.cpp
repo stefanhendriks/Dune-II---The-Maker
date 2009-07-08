@@ -2210,7 +2210,8 @@ void INI_Load_scenario(int iHouse, int iRegion)
             {
 				if (iType < SLAB1)
 				{
-					CREATE_STRUCTURE(iCell, iType, iController, 100);
+					cStructureFactory::getInstance()->createStructure(iCell, iType, iController, 100);
+					//CREATE_STRUCTURE(iCell, iType, iController, 100);
 					//sID = STRUCTURE_CREATE(iCell, iType, -1, iController);
 				}                 
 				else

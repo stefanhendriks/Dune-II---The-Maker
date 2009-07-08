@@ -61,6 +61,7 @@
 // actual source headers                        - ORDER
 #include "main.h"
 #include "timers.h"							/** declare correct functions at compile time here **/
+#include "cHitpointCalculator.h"			/** math for hitpoints **/
 #include "d2tm_math.h"
 #include "cTimeManager.h"
 #include "cStructure.h"

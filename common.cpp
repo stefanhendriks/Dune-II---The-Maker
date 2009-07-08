@@ -1056,14 +1056,15 @@ float health_bar(float max_w, int i, int w)
   float flHP   = i;
   float flMAX  = w;
   
-  if (flHP > flMAX)
+  if (flHP > flMAX) {
       return max_w;
+  }
 
   // amount of pixels (max_w = 100%)
 
   health = (float)(flHP / flMAX);
 
-  return (health*max_w);
+  return (health * max_w);
 }
 
 
@@ -1662,34 +1663,6 @@ void INIT_PREVIEWS()
 	//PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;	
 	PreviewMap[0].terrain = create_bitmap(128,128);
 }
-
-///////////////////////////////////////////////////////////////////////////////
-///
-/// CREATION OF LIFE
-///
-///////////////////////////////////////////////////////////////////////////////
-
-
-void CREATE_STRUCTURE(int iCell, int iType, int iPlayer, int iPercent)
-{
-
-	// Convert INT to FLOAT and THEN do calculation please
- float fPercent = iPercent;
- fPercent /=100;			// devide by 100 (to make it 0.x)
-
- float fHealth= structures[iType].hp;
- fHealth *= fPercent;		// now do HEALTH * 0.x = TOTAL HEALTH
-
- int s = STRUCTURE_CREATE(iCell, iType, fHealth, iPlayer);
-
- if (s < 0)
-     logbook("ERRORRRRRRRRRRRRRRRRRRRRR");
- else
-     structure[s]->fConcrete = (1 - fPercent);
-
-
-}
-
 
 // 8 bit memory putpixel
 void memory_putpixel(BITMAP *bmp, int x, int y, int color)

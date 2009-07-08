@@ -1007,7 +1007,7 @@ void cUnit::think()
                         die(false, false);
 
                         // place const yard
-                        CREATE_STRUCTURE(iLocation, CONSTYARD, 0, 100);                        
+						cStructureFactory::getInstance()->createStructure(iLocation, CONSTYARD, 0, 100);
                     }
                 }
         }

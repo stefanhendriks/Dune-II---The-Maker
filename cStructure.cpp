@@ -75,15 +75,15 @@ void cStructure::die()
 {
     // find myself and set to zero
     int iIndex=-1;
-    for (int i=0; i < MAX_STRUCTURES; i++)
+	for (int i=0; i < MAX_STRUCTURES; i++) {
         if (structure[i] == this)
         {
             iIndex=i;
             break;
         }
+	}
 
-    if (iIndex < 0)
-    {
+    if (iIndex < 0) {
         logbook("cStructure(): Could not die");
         return;
     }
@@ -144,7 +144,7 @@ void cStructure::die()
                                 iDrawY() + (map.scroll_y*32) + (h*32) + 16 + (-8 + rnd(16)), EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
 
                 // create smoke
-                if (rnd(100) < 10)
+                if (rnd(100) < 7)
                     PARTICLE_CREATE(iDrawX() + (map.scroll_x*32) + (w*32) + 16 + (-8 + rnd(16)), 
                                     iDrawY() + (map.scroll_y*32) + (h*32) + 16 + (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
 
@@ -185,15 +185,9 @@ void cStructure::think_prebuild()
         }    
 }
 
-// Free around structure
+// Free around structure, return the first cell that is free.
 int cStructure::iFreeAround()
 {
-
-	//int iType = structure[iStructure].iType;
-
-    //int w = structures[iType].bmp_width/32;
-    //int h = structures[iType].bmp_height/32;
-
 	int iStartX = iCellGiveX(iCell);
 	int iStartY = iCellGiveY(iCell);
 
@@ -216,17 +210,18 @@ int cStructure::iFreeAround()
 			
 			int cll = iCellMake(iCx, iCy);
 			
-            if (map.occupied(cll) == false)
+			if (map.occupied(cll) == false) {
 				return cll;
+			}
 		}
 
 	return -1; // fail
 }
 
-void cStructure::think_guard()
-{
+void cStructure::think_guard() {
  // filled in by derived class
 }
+
 
 void cStructure::think_damage()
 {
@@ -273,34 +268,13 @@ void cStructure::think_repair()
 	}
 }
 
-void cStructure::draw(int iStage)
-{
+void cStructure::draw(int iStage) {
    return;
-
-   /*
-   
-		
-    
-		// Palace tops fade    
-		if (iType == PALACE || iType == REFINERY)    
-		{
-        //int swap_color = houses[player[iPlayer].iHouse].swap_color;
-        RGB c = player[iPlayer].pal[144 + iFade];
-        set_color(239, &c);    
-		}
-    
-		
-
-		
-   
-   */
-
-   /*
-  
-*/
-
 }
 
+/**
+	return free structure, closest to iCell of type iTpe
+**/
 int STRUCTURE_FREE_TYPE(int iPlyr, int iCll, int iTpe)
 {
     if (iPlyr < 0)
@@ -332,294 +306,3 @@ int STRUCTURE_FREE_TYPE(int iPlyr, int iCll, int iTpe)
     // eventually return value
     return iTheID;
 }
-
-
-// return new valid ID
-int STRUCTURE_NEW() {
-	for (int i=0; i < MAX_STRUCTURES; i++) {
-        if (structure[i] == NULL) return i;
-	}
-
-    return -1; // NONE
-}
-
-
-// Handle power usage (on creation)
-void STRUCTURE_POWER(int iID, int iTpe, int iPlyer)
-{
-	
-    // fix up power usage
-    player[iPlyer].use_power += structures[iTpe].power_drain;
-
-    // fix up power supply
-    player[iPlyer].has_power += structures[iTpe].power_give;
-
-	if (DEBUGGING)
-	{
-	char msg[255];
-	sprintf(msg, "Drain=%d, Give=%d - PLAYER USE =%d, PLAYER HAS = %d", structures[iTpe].power_drain,structures[iTpe].power_give, player[iPlyer].use_power, player[iPlyer].has_power);
-	logbook(msg);
-	}
-
-	if (iTpe == SILO)
-		player[iPlyer].max_credits += 1000;
-
-	if (iTpe == REFINERY)
-		player[iPlyer].max_credits += 1500;
-
-
-}
-
-// Handle power usage on destruction
-void STRUCTURE_DEPOWER(int iID, int iTpe, int iPlyer)
-{
-    // fix up power usage
-    player[iPlyer].use_power -= structures[iTpe].power_drain;
-    
-    // less power
-    player[iPlyer].has_power -= structures[iTpe].power_give;
-
-	if (iTpe == SILO)
-		player[iPlyer].max_credits -= 1000;
-
-	if (iTpe == REFINERY)
-		player[iPlyer].max_credits -= 1500;
-}
-
-// Handle logic for upgrades and such (when building placed)
-// Only applies to PLAYER 0 (human), since AI needs special
-// routines
-void STRUCTURE_UPGRADE(int iID, int iTpe)
-{
-	
-	int iHouse = player[structure[iID]->iPlayer].house;
-	int iMission = game.iMission; // MISSION IS OK NOW, IS CORRECTLY SET AT LOADING
-
-    // Upgrade/update lists
-    if (iTpe == WINDTRAP)
-    {
-		game.list_new_item(LIST_CONSTYARD, ICON_STR_REFINERY, structures[REFINERY].cost, REFINERY, -1);
-    }
-
-    // refinery built
-    if (iTpe == REFINERY)
-    {		
-		if (iMission >= 2)		
-		{
-
-			game.list_new_item(LIST_CONSTYARD, ICON_STR_LIGHTFACTORY, structures[LIGHTFACTORY].cost, LIGHTFACTORY, -1);
-
-			if (iHouse == ATREIDES || iHouse == ORDOS || iHouse == FREMEN)
-				game.list_new_item(LIST_CONSTYARD, ICON_STR_BARRACKS, structures[BARRACKS].cost, BARRACKS, -1);
-				
-			if (iHouse == HARKONNEN || iHouse == SARDAUKAR || iHouse == FREMEN || iHouse == MERCENARY)
-				game.list_new_item(LIST_CONSTYARD, ICON_STR_WOR, structures[WOR].cost, WOR, -1);				
-		}
-
-		if (iMission >= 3)
-			game.list_new_item(LIST_CONSTYARD, ICON_STR_RADAR, structures[RADAR].cost, RADAR, -1);			
-        
-		
-		// add silo
-		game.list_new_item(LIST_CONSTYARD, ICON_STR_SILO, structures[SILO].cost, SILO, -1);					
-        
-    }
-
-    // Lightfactory built
-    if (iTpe == RADAR)
-    {
-		if (iMission >= 5)
-			game.list_new_item(LIST_CONSTYARD, ICON_STR_TURRET, structures[TURRET].cost, TURRET, -1);	
-
-		if (iMission >= 8)
-			game.list_new_item(LIST_CONSTYARD, ICON_STR_PALACE, structures[PALACE].cost, PALACE, -1);
-    }
-    
-    // Lightfactory built
-    if (iTpe == LIGHTFACTORY)
-    {
-		if (iMission >=4)
-			game.list_new_item(LIST_CONSTYARD, ICON_STR_HEAVYFACTORY, structures[HEAVYFACTORY].cost, HEAVYFACTORY, -1);
-
-		if (iMission >=5)
-		{
-			game.list_new_item(LIST_CONSTYARD, ICON_STR_HIGHTECH, structures[HIGHTECH].cost, HIGHTECH, -1);
-			game.list_new_item(LIST_CONSTYARD, ICON_STR_REPAIR, structures[REPAIR].cost, REPAIR, -1);
-		}
-
-		if (iMission >= 6)
-			game.list_new_item(LIST_CONSTYARD, ICON_STR_STARPORT, structures[STARPORT].cost, STARPORT, -1);
-			
-    }
-
-    // Heavyfactory
-    if (iTpe == HEAVYFACTORY)
-    {
-		if (iMission >= 7)
-			game.list_new_item(LIST_CONSTYARD, ICON_STR_IX, structures[IX].cost, IX, -1);			
-
-		//if (iMission >= 5)
-		//	game.list_new_item(LIST_CONSTYARD, ICON_STR_REPAIR, structures[REPAIR].cost, REPAIR, -1);			
-    }
-}
-
-// Creates a new structure
-int STRUCTURE_CREATE(int iCll, int iTpe, int iHP, int iPlyer)
-{
-    int iNewId = STRUCTURE_NEW();
-
-    if (iNewId < 0)
-    {
-        return -1;
-    }
-
-    // Now check if we may place this structure
-	int result = cStructureFactory::getInstance()->getSlabStatus(iCll, iTpe, -1);
-   
-        if (result < -1 && iTpe != SLAB4)
-        {
-            if (iPlyer == 0)
-            {
-				if (DEBUGGING)
-				{
-                char msg[256];
-                sprintf(msg, "Cannot place %s on specified area", structures[iTpe].name);
-				logbook(msg);
-				}
-		    }
-
-           return -1;
-        }
-
-    // special type of structures:
-    // SLABS
-    // WALLS
-    if (iTpe == SLAB1 ||
-        iTpe == SLAB4 ||
-        iTpe == WALL)
-    {
-		// last fase is to add this structure to the array of the player
-		player[iPlyer].iStructures[iTpe]++;
-
-        if (iTpe == SLAB1)
-        {
-            map.create_spot(iCll, TERRAIN_SLAB, 0);
-        }
-        
-
-        if (iTpe == SLAB4)
-        {
-            if (map.occupied(iCll) == false)	
-                if (map.cell[iCll].type == TERRAIN_ROCK)
-                    map.create_spot(iCll, TERRAIN_SLAB, 0);
-
-			if (map.occupied(iCll+1) == false)    
-                if (map.cell[iCll+1].type == TERRAIN_ROCK)
-                    map.create_spot(iCll+1, TERRAIN_SLAB, 0);
-
-			if (map.occupied(iCll+MAP_W_MAX) == false)    
-                if (map.cell[iCll+MAP_W_MAX].type == TERRAIN_ROCK)
-                    map.create_spot(iCll+MAP_W_MAX, TERRAIN_SLAB, 0);
-
-			if (map.occupied(iCll+MAP_W_MAX+1) == false)    
-                if (map.cell[iCll+MAP_W_MAX+1].type == TERRAIN_ROCK)
-                    map.create_spot(iCll+MAP_W_MAX+1, TERRAIN_SLAB, 0);
-          
-            map.clear_spot(iCll+1, 2, 0);
-            map.clear_spot(iCll+MAP_W_MAX, 2, 0);
-            map.clear_spot(iCll+MAP_W_MAX+1, 2, 0);
-        }
-
-        if (iTpe == WALL)
-        {
-			map.create_spot(iCll, TERRAIN_WALL, 0);            
-            map.smooth_spot(iCll);
-        }
-
-        map.clear_spot(iCll, 2, 0);
-        
-
-        return -1;
-    }
-    
-	structure[iNewId] = cStructureFactory::getInstance()->createStructureInstance(iTpe);
-
-    // Double check
-    if (structure[iNewId] == NULL) {
-        logbook("FAILED: Could not create structure (class missing to create)");
-        return -1;
-    }
-
-    // Now set it up for location & player
-    structure[iNewId]->iCell   = iCll;
-    structure[iNewId]->iPlayer = iPlyer;
-    structure[iNewId]->iBuildFase = 1; // prebuild
-    structure[iNewId]->TIMER_prebuild = 250; // prebuild timer
-    structure[iNewId]->TIMER_damage = rnd(1000)+100;
-
-    // fix up power usage
-    player[iPlyer].use_power += structures[iTpe].power_drain;
-
-    // fix up power supply
-    player[iPlyer].has_power += structures[iTpe].power_give;
-
-    // fix up spice storage stuff
-    if (iTpe == SILO)	    player[iPlyer].max_credits += 1000;
-	if (iTpe == REFINERY)   player[iPlyer].max_credits += 1500;
-
-    
-	if (iHP < 0)
-		structure[iNewId]->iHitPoints = structures[iTpe].hp;
-	else
-		structure[iNewId]->iHitPoints = iHP;
-
-    // Animation set up
-    structure[iNewId]->iFrame = rnd(1); // random frame
-  
-    //else if (iTpe == PALACE)
-      //  structure[iNewId]->iFade = rnd(5); // its a palace
-    //else
-      //  structure[iNewId]->iFade = 0; // no fading
-
-   // structure[iNewId].TIMER_flag = rnd(10); // random
-
-
-    // Clear shroud now:
-    int iSize = structures[iTpe].sight;
-
-    for (int w=0; w < structure[iNewId]->iWidth; w++)
-        for (int h=0; h < structure[iNewId]->iHeight; h++)
-        {
-            int sx=iCellGiveX(iCll);
-            int sy=iCellGiveY(iCll);
-
-            sx+=w;
-            sy+=h;
-            
-            map.clear_spot(iCellMake(sx, sy), iSize, iPlyer);        
-
-			// when AI , place slabs underneath
-			if (iPlyer != 0 && iTpe != CONSTYARD)
-				map.create_spot(iCellMake(sx, sy), TERRAIN_SLAB, 0);
-        }
-		
-	// additional forces: (UNITS)
-	if (iTpe == REFINERY)
-		REINFORCE(iPlyer, HARVESTER, iCll+2, iCll+2);
-		
-
-    // Use power
-    STRUCTURE_POWER(iNewId, iTpe, iPlyer);
-
-    // And finally handle upgrades if any...
-    if (iPlyer == 0)
-        STRUCTURE_UPGRADE(iNewId, iTpe);
-    
-
-	// last fase is to add this structure to the array of the player
-	player[iPlyer].iStructures[iTpe]++;
-
-    return iNewId;
-}
-
-

@@ -227,8 +227,8 @@ void cMap::draw_structures(int iStage)
         if (structure[i])
         {
             // put this thing on the map
-            for (int w=0; w < structure[i]->iWidth; w++)
-                for (int h=0; h < structure[i]->iHeight; h++)
+            for (int w=0; w < structure[i]->getWidth(); w++)
+                for (int h=0; h < structure[i]->getHeight(); h++)
                 {
                     int cll = iCellMake((iCellGiveX(structure[i]->iCell)+w), 
                         (iCellGiveY(structure[i]->iCell)+h));
