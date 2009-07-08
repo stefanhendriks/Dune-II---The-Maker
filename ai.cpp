@@ -1345,9 +1345,9 @@ int cAIPlayer::iPlaceStructureCell(int iType)
 				{
 					for (int sy=iStartY; sy < iEndY; sy++)
 					{	
-						int r =  STRUCTURE_VALID_LOCATION(iCellMake(sx, sy), iType, -1);
+						int r =  cStructureFactory::getInstance()->getSlabStatus(iCellMake(sx, sy), iType, -1);
 
-						if (r > -1)
+						if (r > -2)
 						{
 							if (iType != TURRET && iType != RTURRET)
 							{

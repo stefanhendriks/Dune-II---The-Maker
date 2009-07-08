@@ -56,7 +56,7 @@ void cMap::init()
     {   
         // clear out all structures
         if (structure[i]) {
-			cStructureFactory::getInstance()->deleteStructure(structure[i]);
+			cStructureFactory::getInstance()->deleteStructureInstance(structure[i]);
         }
         
         // clear pointer

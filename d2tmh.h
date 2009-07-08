@@ -69,6 +69,7 @@
 #include "cAbstractUnit.h"					// Abstract Unit class (will replace cUnit.h eventually)
 #include "cUnitFactory.h"					// Responsible for creation of Units
 #include "cUnitUtils.h"						// Responsible for generic operations on units (ie finding a unit, etc)
+#include "cUnitDrawer.h"					// Responsible for drawing units
 #include "cMentat.h"
 #include "ini.h"							// INI loading
 #include "cGame.h"							// game class

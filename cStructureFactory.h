@@ -25,8 +25,13 @@ public:
 
 	static cStructureFactory *getInstance();
 	
-	void deleteStructure(cStructure *structure);
+	void deleteStructureInstance(cStructure *structure);
+	
+	cStructure *createStructureInstance(int type);
+
 	cStructure *createStructure(int type);
+
+	int getSlabStatus(int iCell, int iStructureType, int iUnitIDToIgnore);
 
 };
 /*

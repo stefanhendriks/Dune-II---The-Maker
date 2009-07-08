@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="Dune 2"
 	ProjectGUID="{FB9D6C0C-78F1-4FBF-8F74-315D1C022D00}"
 	RootNamespace="Dune 2"
@@ -30,9 +30,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Copying executable into bin"
-				CommandLine="copy Release\*.exe bin&#x0D;&#x0A;"
-				Outputs="Dune 2.exe"
+				Description="Create binary directory"
+				CommandLine="call create_binary.bat&#x0D;&#x0A;"
+				Outputs="custom_build.temp"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -362,6 +362,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cUnitDrawer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\cUnitFactory.cpp"
 				>
 			</File>
@@ -569,6 +573,10 @@
 			</File>
 			<File
 				RelativePath="cUnit.h"
+				>
+			</File>
+			<File
+				RelativePath=".\cUnitDrawer.h"
 				>
 			</File>
 			<File

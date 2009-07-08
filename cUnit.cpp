@@ -436,7 +436,7 @@ int cUnit::draw_x()
 
 int cUnit::draw_y()
 {
-  return ( (( iCellY * 32 ) - (map.scroll_y*32)) + iOffsetY) + 42;
+  return ( (( iCellY * 32 ) - (map.scroll_y*32)) + iOffsetY) + 42; // 42 = the options bar height
 }
 
 void cUnit::draw_spice()
@@ -998,7 +998,7 @@ void cUnit::think()
             if (bSelected)
                 if (key[KEY_D])
                 {
-                    int iGood = STRUCTURE_VALID_LOCATION(iCell, CONSTYARD, iID);
+					int iGood = cStructureFactory::getInstance()->getSlabStatus(iCell, CONSTYARD, iID);
 
                     if (iGood >= -1)
                     {

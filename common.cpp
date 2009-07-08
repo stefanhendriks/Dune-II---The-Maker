@@ -294,7 +294,7 @@ void install_units()
     strcpy(units[i].name, "\0");
   }
 
-    // Unit        : CarryAll 
+  // Unit        : CarryAll 
   // Description : CarryAll, the flying pickuptruck
   units[CARRYALL].bmp = (BITMAP *)gfxdata[UNIT_CARRYALL].dat;      // pointer to the original 8bit bitmap
   units[CARRYALL].shadow = (BITMAP *)gfxdata[UNIT_CARRYALL_SHADOW].dat;      // pointer to the original 8bit bitmap
@@ -468,7 +468,7 @@ void install_units()
   units[FRIGATE].turnspeed = 40;
   units[FRIGATE].airborn = true;
   units[FRIGATE].squish = false;
-  units[FRIGATE].free_roam = true; // HACK HACK
+  units[FRIGATE].free_roam = true; // Frigate does not roam, yet needed?
   units[FRIGATE].hp = 9999;
   strcpy(units[FRIGATE].name, "Frigate");
 

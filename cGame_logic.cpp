@@ -42,7 +42,7 @@ void cGame::init()
     memset(cRegionText, 0, sizeof(cRegionText));
     //int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
 
-	windowed=true;
+	windowed=false;
     screen_x = 640;
     screen_y = 480;
 
@@ -92,7 +92,7 @@ void cGame::init()
 	mouse_tile = MOUSE_NORMAL;
 
 	memset(version, 0, sizeof(version));
-	sprintf(version, "DEM3.5");
+	sprintf(version, "DEMO 4");
 
 	fade_select=255;
 	

@@ -334,67 +334,6 @@ int STRUCTURE_FREE_TYPE(int iPlyr, int iCll, int iTpe)
 }
 
 
-// Returns:
-// -1 = ERROR
-// 0  = PERFECT (all green)
-// > 0= GOOD but it is not slabbed all (so not perfect)
-int STRUCTURE_VALID_LOCATION(int iCll, int iTpe, int iUnitID)
-{
-    // checks if this structure can be placed on this cell
-    int w = structures[iTpe].bmp_width/32;
-    int h = structures[iTpe].bmp_height/32;
-
-    
-    int slabs=0;
-    int total=w*h;
-    int x = iCellGiveX(iCll);
-    int y = iCellGiveY(iCll);
-    
-    for (int cx=0; cx < w; cx++)
-        for (int cy=0; cy < h; cy++)
-        {
-            int cll=iCellMake(cx+x, cy+y);
-            
-            if (map.cell[cll].id[MAPID_STRUCTURES] > -1)
-            {                
-                return -2;
-            }
-            
-            if (map.cell[cll].id[MAPID_UNITS] > -1)
-            {
-                if (iUnitID > -1)
-                {
-                    if (map.cell[cll].id[MAPID_UNITS] == iUnitID)
-                    {
-                        // ok! Same unit
-                    }
-                    else
-                        return -2;
-                }
-                else
-                    return -2;            
-            }
-
-            if (map.cell[cll].type != TERRAIN_ROCK &&
-                map.cell[cll].type != TERRAIN_SLAB)
-            {
-                logbook("euh?");
-                return -2; // cannot place on sand
-            }
-
-
-            // still valid, check if its slabbed
-            if (map.cell[cll].type == TERRAIN_SLAB)
-                slabs++;
-        }
-
-
-    if (slabs >= total)
-        return -1; // perfect
-
-    return slabs;
-}
-
 // return new valid ID
 int STRUCTURE_NEW() {
 	for (int i=0; i < MAX_STRUCTURES; i++) {
@@ -535,7 +474,7 @@ int STRUCTURE_CREATE(int iCll, int iTpe, int iHP, int iPlyer)
     }
 
     // Now check if we may place this structure
-    int result = STRUCTURE_VALID_LOCATION(iCll, iTpe, -1);
+	int result = cStructureFactory::getInstance()->getSlabStatus(iCll, iTpe, -1);
    
         if (result < -1 && iTpe != SLAB4)
         {
@@ -603,7 +542,7 @@ int STRUCTURE_CREATE(int iCll, int iTpe, int iHP, int iPlyer)
         return -1;
     }
     
-	structure[iNewId] = cStructureFactory::getInstance()->createStructure(iTpe);
+	structure[iNewId] = cStructureFactory::getInstance()->createStructureInstance(iTpe);
 
     // Double check
     if (structure[iNewId] == NULL) {
