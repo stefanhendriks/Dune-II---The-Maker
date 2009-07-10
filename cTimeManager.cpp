@@ -56,7 +56,7 @@ void cTimeManager::handleTimerFPS() {
 			// starports think per second for deployment (if any)
 			for (int i =0; i < MAX_STRUCTURES; i++)
 				if (structure[i])
-					if (structure[i]->iType == STARPORT)
+					if (structure[i]->getType() == STARPORT)
 						((cStarPort *)structure[i])->think_deploy(); 
 
 

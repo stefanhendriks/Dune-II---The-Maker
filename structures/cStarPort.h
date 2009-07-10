@@ -14,6 +14,8 @@ public:
 
     void draw(int iStage);
 
+	int getType();
+
     // TIMERs
     int TIMER_deploy;
 };

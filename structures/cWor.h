@@ -15,6 +15,7 @@ public:
     void think_guard();
 
     void draw(int iStage);
+	int getType();
 
 };
 

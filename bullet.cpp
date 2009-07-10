@@ -249,8 +249,7 @@ void cBullet::think_move()
         iType == BULLET_TANK ||
         iType == BULLET_SIEGE ||
         iType == BULLET_DEVASTATOR ||
-        iType == BULLET_TURRET)
-    {
+        iType == BULLET_TURRET) {
         bDamageRockets=false;
 
         // hit structures , walls and mountains
@@ -286,6 +285,11 @@ void cBullet::think_move()
         
         if (map.cell[iCell].id[MAPID_STRUCTURES] > -1)
         {
+			logbook("Structure id on map > -1");
+			if (DEBUGGING) {
+				logbook("Bullet hit structure!");
+			}
+
             // structure hit!
             int id = map.cell[iCell].id[MAPID_STRUCTURES];
 
@@ -293,33 +297,37 @@ void cBullet::think_move()
 
             if (iType == BULLET_TURRET)
             {
-                if (id == iOwnerStructure)
+				if (id == iOwnerStructure) {
+					logbook("Turret bullet shot itself, will skip friendly fire");
                     bSkipSelf=true; // do not shoot yourself
-                else
-                {
-                    if (structure[id]->iPlayer == iPlayer)
+				} else {
+					if (structure[id]->iPlayer == iPlayer) {
                         bSkipSelf=true; // do not shoot own buildings    
+						logbook("Bullet shot itself, will skip friendly fire");
+					}
                 }
             }
 
-//            if (id == iOwnerUnit)
-  //              bSkipSelf=true;
-
-            if (bSkipSelf == false)
-            {                 
+            if (bSkipSelf == false) {                 
 				int iDamage = player[iPlayer].iDamage(bullets[iType].damage);
 
-				if (iOwnerUnit > -1)
-				{
+				// increase damage by experience of unit
+				if (iOwnerUnit > -1) {
 					int iDam = (unit[iOwnerUnit].fExpDamage() * iDamage);
 					iDamage += iDam;
 				}
 				
-				structure[id]->iHitPoints -= iDamage;
+				
+				logbook("Bullet will cause damage");
+				int oldHp = structure[id]->getHitPoints();
+				assert(iDamage > 0);
+				structure[id]->damage(iDamage);
+
+				assert(oldHp > structure[id]->getHitPoints()); // damage should be done
 				
 				int iChance = 10;
 
-				if (structure[id]->iHitPoints < (structures[structure[id]->iType].hp / 2))
+				if (structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
 					iChance = 30;
 
 				if (rnd(100) < iChance)
@@ -327,7 +335,7 @@ void cBullet::think_move()
 
 
 				// NO HP LEFT, DIE
-				if (structure[id]->iHitPoints <= 0)
+				if (structure[id]->getHitPoints() <= 0)
 				{
 					if (iOwnerUnit > -1)
 						if (unit[iOwnerUnit].isValid())
@@ -340,7 +348,9 @@ void cBullet::think_move()
 
 				bDie=true;
             } // skip self
-            
+			else {
+				logbook("Skipped friendly fire");
+			}
 
         }
 
@@ -364,11 +374,12 @@ void cBullet::think_move()
 					iDamage += iDam;
 				}
 
-				structure[id]->iHitPoints -= iDamage;
+				assert(iDamage > 0);
+				structure[id]->damage(iDamage);
 				
 				int iChance=15;
 
-				if (structure[id]->iHitPoints < (structures[structure[id]->iType].hp / 2))
+				if (structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
 					iChance = 45;
 
 				// smoke
@@ -377,7 +388,7 @@ void cBullet::think_move()
 
 				
 				// NO HP LEFT, DIE
-				if (structure[id]->iHitPoints <= 0)
+				if (structure[id]->getHitPoints() <= 0)
 				{
 					if (iOwnerUnit > -1)
 						if (unit[iOwnerUnit].isValid())

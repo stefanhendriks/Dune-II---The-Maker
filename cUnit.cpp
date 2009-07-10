@@ -148,7 +148,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
             {
                 if (structure[k])
                     if (structure[k]->iPlayer == iPlayer)
-                        if (structure[k]->iType == REFINERY)
+                        if (structure[k]->getType() == REFINERY)
                         {
                             REINFORCE(iPlayer, HARVESTER, structure[k]->iCell, -1);
                             break;
@@ -276,51 +276,49 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                     // structure hit!                    
                     int id = map.cell[cll].id[MAPID_STRUCTURES];
 
-                    if (structure[id]->iHitPoints > 0)
-                    {
-                    structure[id]->iHitPoints -= 150+rnd(100);
+                    if (structure[id]->getHitPoints() > 0) {
+
+						int iDamage = 150+rnd(100);
+						structure[id]->damage(iDamage);
                     
-                    int iChance = 10;
+						int iChance = 10;
 
-                    if (structure[id]->iHitPoints < (structures[structure[id]->iType].hp / 2))
-                        iChance = 30;
+						if (structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
+							iChance = 30;
 
-                    if (rnd(100) < iChance)
-                        PARTICLE_CREATE(draw_x()+(map.scroll_x*32)+16+ (-8 + rnd(16)), draw_y()+(map.scroll_y*32)+16+ (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
+						if (rnd(100) < iChance)
+							PARTICLE_CREATE(draw_x()+(map.scroll_x*32)+16+ (-8 + rnd(16)), draw_y()+(map.scroll_y*32)+16+ (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
 
-                    // NO HP LEFT, DIE
-                    if (structure[id]->iHitPoints <= 0)
-                        structure[id]->die();
-                    }
-                }
+						}
+					}
 
 
-                if (map.cell[cll].type == TERRAIN_ROCK)
-                {
-                    if (map.cell[cll].type != TERRAIN_WALL)
-                        map.cell[cll].health -= 30;
+					if (map.cell[cll].type == TERRAIN_ROCK)
+					{
+						if (map.cell[cll].type != TERRAIN_WALL)
+							map.cell[cll].health -= 30;
 
-                    if (map.cell[cll].health < -25)
-                    {
-                        map.smudge_increase(SMUDGE_ROCK, cll);
-                        map.cell[cll].health += rnd(25);
-                    }
-                }
-                else if (map.cell[cll].type == TERRAIN_SAND ||
-                    map.cell[cll].type == TERRAIN_HILL ||
-                    map.cell[cll].type == TERRAIN_SPICE ||
-                    map.cell[cll].type == TERRAIN_SPICEHILL)
-                {
-                    if (map.cell[cll].type != TERRAIN_WALL)
-                        map.cell[cll].health -= 30;
-                    
-                    if (map.cell[cll].health < -25)
-                    {
-                        map.smudge_increase(SMUDGE_SAND, cll);
-                        map.cell[cll].health += rnd(25);
-                    }
-                }
-            }
+						if (map.cell[cll].health < -25)
+						{
+							map.smudge_increase(SMUDGE_ROCK, cll);
+							map.cell[cll].health += rnd(25);
+						}
+					}
+					else if (map.cell[cll].type == TERRAIN_SAND ||
+						map.cell[cll].type == TERRAIN_HILL ||
+						map.cell[cll].type == TERRAIN_SPICE ||
+						map.cell[cll].type == TERRAIN_SPICEHILL)
+					{
+						if (map.cell[cll].type != TERRAIN_WALL)
+							map.cell[cll].health -= 30;
+	                    
+						if (map.cell[cll].health < -25)
+						{
+							map.smudge_increase(SMUDGE_SAND, cll);
+							map.cell[cll].health += rnd(25);
+						}
+					}
+			 }
 
 			
 
@@ -2166,27 +2164,28 @@ void cUnit::think_attack()
         LOG("I am attacking a cell.. right");
     }
 
-    if (iAttackUnit > -1)
-            if (unit[iAttackUnit].iHitPoints < 0)
-            {
-                iAttackUnit=-1;
-                iGoalCell=iCell;
-                iAction = ACTION_GUARD;
-                LOG("Destroyed unit target");
-                return;
-            }
+	if (iAttackUnit > -1) {
+        if (unit[iAttackUnit].iHitPoints < 0)
+        {
+            iAttackUnit=-1;
+            iGoalCell=iCell;
+            iAction = ACTION_GUARD;
+            LOG("Destroyed unit target");
+            return;
+        }
+	}
         
-    if (iAttackStructure > -1)
-           if (structure[iAttackStructure]->iHitPoints < 0)
-           {
-               iAttackStructure=-1;
-               iGoalCell=iCell;
-               iAction = ACTION_GUARD;
-			   LOG("Destroyed structure target");
-               return;
-           }
-        
-
+	if (iAttackStructure > -1) {
+	   if (structure[iAttackStructure]->getHitPoints() < 0)
+	   {
+		   iAttackStructure=-1;
+		   iGoalCell=iCell;
+		   iAction = ACTION_GUARD;
+		   LOG("Destroyed structure target");
+		   return;
+	   }
+	}
+    
     if (iAttackCell > -1)
     {
         if (map.cell[iAttackCell].type == TERRAIN_BLOOM)
@@ -2651,7 +2650,7 @@ void cUnit::think_move()
         if (structure[iStructureID]->iUnitID > -1)
         {
             // already occupied, find alternative
-            int iNewID = STRUCTURE_FREE_TYPE(iPlayer, iCell, structure[iStructureID]->iType);
+            int iNewID = STRUCTURE_FREE_TYPE(iPlayer, iCell, structure[iStructureID]->getType());
 
             if (iNewID > -1 && iNewID != iStructureID)
             {

@@ -1093,8 +1093,8 @@ float health_unit(int i, float w)
 float health_structure(int i, int w)
 {  
   float health = 0.0f;  
-  float flHP   = structure[i]->iHitPoints;
-  float flMAX  = structures[structure[i]->iType].hp;
+  float flHP   = structure[i]->getHitPoints();
+  float flMAX  = structures[structure[i]->getType()].hp;
   
   // amount of pixels (max 16 = 100%)
 
@@ -1214,7 +1214,7 @@ int FIND_PRIMARY_BUILDING(int iType, int iPlayer)
 		// valid , and its for this player too
 		if (structure[i] && structure[i]->iPlayer == iPlayer)
 		{
-			if (structure[i]->iType == iType)
+			if (structure[i]->getType() == iType)
 				if (structure[i]->iFreeAround() > -1) // free!
 				{				
 					return i; // return this structure

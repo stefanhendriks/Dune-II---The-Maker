@@ -1,17 +1,14 @@
 #include "../d2tmh.h"
 
 // Constructor
-cRepairFacility::cRepairFacility()
-{
- iType = REPAIR;
-
- // From the iType get data and set the info that is in the base class
- iWidth     = structures[iType].bmp_width/32;
- iHeight    = structures[iType].bmp_height/32;
- iHitPoints = structures[iType].hp;
+cRepairFacility::cRepairFacility() {
 
  // other variables (class specific)
  TIMER_repairunit=0;
+}
+
+int cRepairFacility::getType() {
+	return REPAIR;
 }
 
 cRepairFacility::~cRepairFacility()
@@ -131,8 +128,8 @@ void cRepairFacility::think_animation()
 
 			if (iRepairAlpha < 1)
 			{
-				iRepairX = rnd((structures[iType].bmp_width-16));
-				iRepairY = rnd((structures[iType].bmp_height-32));
+				iRepairX = rnd((structures[getType()].bmp_width-16));
+				iRepairY = rnd((structures[getType()].bmp_height-32));
 				iRepairAlpha = 255;
 			}
 			else
@@ -161,7 +158,7 @@ void cRepairFacility::draw(int iStage)
     // Draw structure
 	if (iStage <= 1)
 	{
-        int iSourceY = structures[iType].bmp_height * iFrame;
+        int iSourceY = structures[getType()].bmp_height * iFrame;
 		int iDrawPreBuild=-1;
 
        
@@ -193,23 +190,23 @@ void cRepairFacility::draw(int iStage)
             // Fix this up, since NEMA now posted a structure which somehow needs transculency
             // and does not work. Sloppy work Stefan! Fixed @ 13-04-2005
             
-            BITMAP *temp=create_bitmap_ex(8, structures[iType].bmp_width, structures[iType].bmp_height);
-            BITMAP *temp_shadow=create_bitmap(structures[iType].bmp_width, structures[iType].bmp_height);
+            BITMAP *temp=create_bitmap_ex(8, structures[getType()].bmp_width, structures[getType()].bmp_height);
+            BITMAP *temp_shadow=create_bitmap(structures[getType()].bmp_width, structures[getType()].bmp_height);
 
             // Only for Construction Yard
             clear(temp);			
 
             clear_to_color(temp_shadow, makecol(255,0,255));
-            blit(structures[iType].bmp, temp, 0, iSourceY, 0, 0, structures[iType].bmp_width, structures[iType].bmp_height);		
+            blit(structures[getType()].bmp, temp, 0, iSourceY, 0, 0, structures[getType()].bmp_width, structures[getType()].bmp_height);		
             
             // in case shadow
-            if (structures[iType].shadow)
-                blit(structures[iType].shadow, temp_shadow, 0, iSourceY, 0, 0, structures[iType].bmp_width, structures[iType].bmp_height);
+            if (structures[getType()].shadow)
+                blit(structures[getType()].shadow, temp_shadow, 0, iSourceY, 0, 0, structures[getType()].bmp_width, structures[getType()].bmp_height);
 
             draw_sprite(bmp_screen, temp, iDrawX(), iDrawY());
             
             // in case shadow
-            if (structures[iType].shadow)
+            if (structures[getType()].shadow)
             {
                 set_trans_blender(0,0,0,128);
                 draw_trans_sprite(bmp_screen, temp_shadow, iDrawX(), iDrawY());

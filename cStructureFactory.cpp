@@ -37,35 +37,35 @@ cStructure *cStructureFactory::createStructureInstance(int type) {
 
 void cStructureFactory::deleteStructureInstance(cStructure *structure) {
 	// delete memory that was aquired
-    if (structure->iType == CONSTYARD) 
+    if (structure->getType() == CONSTYARD) 
         delete (cConstYard *)structure;
-    else if (structure->iType == STARPORT)
+    else if (structure->getType() == STARPORT)
         delete (cStarPort *)structure;
-    else if (structure->iType == WINDTRAP)
+    else if (structure->getType() == WINDTRAP)
         delete (cWindTrap *)structure;
-    else if (structure->iType == SILO)
+    else if (structure->getType() == SILO)
         delete (cSpiceSilo *)structure;
-    else if (structure->iType == RADAR)
+    else if (structure->getType() == RADAR)
         delete (cOutPost *)structure;
-    else if (structure->iType == HIGHTECH)
+    else if (structure->getType() == HIGHTECH)
         delete (cHighTech *)structure;
-    else if (structure->iType == LIGHTFACTORY)
+    else if (structure->getType() == LIGHTFACTORY)
         delete (cLightFactory *)structure;
-    else if (structure->iType == HEAVYFACTORY)
+    else if (structure->getType() == HEAVYFACTORY)
         delete (cHeavyFactory *)structure;
-    else if (structure->iType == PALACE)
+    else if (structure->getType() == PALACE)
         delete (cPalace *)structure;
-    else if (structure->iType == TURRET)
+    else if (structure->getType() == TURRET)
         delete (cGunTurret *)structure;
-    else if (structure->iType == RTURRET)
+    else if (structure->getType() == RTURRET)
         delete (cRocketTurret *)structure;
-    else if (structure->iType == REPAIR)
+    else if (structure->getType() == REPAIR)
         delete (cRepairFacility *)structure;
-    else if (structure->iType == BARRACKS)
+    else if (structure->getType() == BARRACKS)
         delete (cBarracks *)structure;
-    else if (structure->iType == WOR)
+    else if (structure->getType() == WOR)
         delete (cWor *)structure;
-    else if (structure->iType == IX)
+    else if (structure->getType() == IX)
         delete (cIx *)structure;
     else
         delete structure;
@@ -87,6 +87,10 @@ cStructure* cStructureFactory::createStructure(int iCell, int iStructureType, in
 **/
 cStructure* cStructureFactory::createStructure(int iCell, int iStructureType, int iPlayer, int iPercent) {
     int iNewId = getFreeSlot();
+
+	assert(iPercent < 200); // percentages may not really exceed 200, above is weird behavior
+	assert(iPlayer >= 0);
+	assert(iPlayer <= MAX_PLAYERS);
 
 	// fail
     if (iNewId < 0) {
@@ -131,13 +135,12 @@ cStructure* cStructureFactory::createStructure(int iCell, int iStructureType, in
 	structure[iNewId] = str;
 
     // Now set it up for location & player
-    structure[iNewId]->iCell   = iCell;
-    structure[iNewId]->iPlayer = iPlayer;
-    structure[iNewId]->iBuildFase = 1; // prebuild
-    structure[iNewId]->TIMER_prebuild = 250; // prebuild timer
-    structure[iNewId]->TIMER_damage = rnd(1000)+100;
-    structure[iNewId]->fConcrete = (1 - fPercent);
-
+    str->iCell   = iCell;
+    str->iPlayer = iPlayer;
+    str->iBuildFase = 1; // prebuild
+    str->TIMER_prebuild = 250; // prebuild timer
+    str->TIMER_damage = rnd(1000)+100;
+    str->fConcrete = (1 - fPercent);
 
     // fix up power usage
     player[iPlayer].use_power += structures[iStructureType].power_drain;
@@ -149,19 +152,14 @@ cStructure* cStructureFactory::createStructure(int iCell, int iStructureType, in
     if (iStructureType == SILO)	    player[iPlayer].max_credits += 1000;
 	if (iStructureType == REFINERY)   player[iPlayer].max_credits += 1500;
 	
-	structure[iNewId]->iHitPoints = structures[iStructureType].hp;
+	str->setHitPoints((int)fHealth);
+	str->setWidth(structures[str->getType()].bmp_width/32);
+	str->setHeight(structures[str->getType()].bmp_height/32);
 
     // Animation set up
     structure[iNewId]->iFrame = rnd(1); // random frame
   
-    //else if (iTpe == PALACE)
-      //  structure[iNewId]->iFade = rnd(5); // its a palace
-    //else
-      //  structure[iNewId]->iFade = 0; // no fading
-
-   // structure[iNewId].TIMER_flag = rnd(10); // random
-
-	// clear fog around structure
+ 	// clear fog around structure
 	clearFogForStructureType(iCell, str);
 
 	// additional forces: (UNITS)
@@ -179,7 +177,7 @@ cStructure* cStructureFactory::createStructure(int iCell, int iStructureType, in
 	}
 
 	// deletion of objects used
-	delete calc;
+	delete (cHitpointCalculator *)calc;
 
     return str;
 }
@@ -246,7 +244,7 @@ void cStructureFactory::clearFogForStructureType(int iCell, cStructure *str) {
 		return; 
 	}
 
-	clearFogForStructureType(iCell, str->iType, structures[str->iType].sight, str->iPlayer);
+	clearFogForStructureType(iCell, str->getType(), structures[str->getType()].sight, str->iPlayer);
 }
 
 /**

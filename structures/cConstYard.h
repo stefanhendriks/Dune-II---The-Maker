@@ -13,5 +13,6 @@ public:
 
     void draw(int iStage);
 
+	int getType();
 };
 

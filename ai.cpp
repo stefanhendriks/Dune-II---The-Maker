@@ -196,7 +196,7 @@ void cAIPlayer::think_building()
 					{
 						iBuildingStructure[i]=-1;
 						TIMER_BuildStructure[i]=-1;
-						cStructureFactory::getInstance()->createStructure(iCll, i, structures[i].hp, ID);
+						cStructureFactory::getInstance()->createStructure(iCll, i, ID, 100);
 					}
 					else
 					{
@@ -299,7 +299,7 @@ void cAIPlayer::think_building()
 				{
 					if (structure[s])
 						if (structure[s]->iPlayer == ID)
-							if (structure[s]->iType == iStrucType)
+							if (structure[s]->getType() == iStrucType)
 							{
 								REINFORCE(ID, i, structure[s]->iCell, -1);
 							}
@@ -438,7 +438,7 @@ void cAIPlayer::think_harvester()
             {
                 if (structure[k])
                     if (structure[k]->iPlayer == ID)
-                        if (structure[k]->iType == REFINERY)
+                        if (structure[k]->getType() == REFINERY)
                         {                            
                             REINFORCE(ID, HARVESTER, structure[k]->iCell, -1);
                             
@@ -1271,10 +1271,16 @@ void cAIPlayer::think_repair_structure(cStructure *struc)
 {
     // when ai has a lot of money, repair even faster
 	if (player[struc->iPlayer].credits > 1000) {
-        if (struc->iHitPoints < (structures[struc->iType].hp))  struc->bRepair=true;
+		if (struc->getHitPoints() < (structures[struc->getType()].hp))  {
+			struc->bRepair=true;
+			logbook("AI Will repair structure");
+		}
 	} else {
-		// AUTO-REPAIR BY AI (caused by damage due units here!!!)
-		if (struc->iHitPoints < (structures[struc->iType].hp/2)) struc->bRepair=true;
+		// AUTO-REPAIR BY AI
+		if (struc->getHitPoints() < (structures[struc->getType()].hp/2)) {
+			struc->bRepair=true;
+			logbook("AI Will repair structure");
+		}
 	}
 }
 
@@ -1330,8 +1336,8 @@ int cAIPlayer::iPlaceStructureCell(int iType)
 				int iStartX=iCellGiveX(structure[i]->iCell);
 				int iStartY=iCellGiveY(structure[i]->iCell);
 
-				int iEndX = iStartX + (structures[structure[i]->iType].bmp_width/32) + 1;
-				int iEndY = iStartY + (structures[structure[i]->iType].bmp_height/32) + 1;
+				int iEndX = iStartX + (structures[structure[i]->getType()].bmp_width/32) + 1;
+				int iEndY = iStartY + (structures[structure[i]->getType()].bmp_height/32) + 1;
 
 				iStartX -= iWidth;
 				iStartY -= iHeight;

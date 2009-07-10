@@ -35,8 +35,6 @@ cStructure::cStructure()
     
     iBuildFase=-1;
 
-    iType=-1;               // Type of structure (defined by derived class constructor)
-
     iUnitID=-1;
 
     iWidth=-1;
@@ -95,18 +93,18 @@ void cStructure::die()
     structure[iIndex]=NULL;
 
     // Destroy structure, take stuff in effect for the player    
-    player[iPlayer].iStructures[iType]--; // remove from player building indexes
+    player[iPlayer].iStructures[getType()]--; // remove from player building indexes
 
     // fix up power usage
-    player[iPlayer].use_power -= structures[iType].power_drain;
+    player[iPlayer].use_power -= structures[getType()].power_drain;
     
     // less power
-    player[iPlayer].has_power -= structures[iType].power_give;
+    player[iPlayer].has_power -= structures[getType()].power_give;
 
-	if (iType == SILO)
+	if (getType() == SILO)
 		player[iPlayer].max_credits -= 1000;
 
-	if (iType == REFINERY)
+	if (getType() == REFINERY)
 		player[iPlayer].max_credits -= 1500;
 
     
@@ -234,37 +232,85 @@ void cStructure::think_damage()
         // damage done is 5 to building, but using percentage
         float fDamage = fConcrete * 5;
 
-        if (iHitPoints > (structures[iType].hp / 2))
+        if (iHitPoints > (structures[getType()].hp / 2))
             iHitPoints -= (int)fDamage;
 
         // AI reacting to this damage
-        if (iPlayer != 0 && player[iPlayer].credits > 50)
-            if (iHitPoints < ((structures[iType].hp / 4)*3))
+		if (iPlayer != 0 && player[iPlayer].credits > 50) {
+			if (iHitPoints < ((structures[getType()].hp / 4)*3)) { // lower than 75%
                 bRepair=true;
+				logbook("AI auto repair on decay");
+			}
+		}
     }
+}
+
+void cStructure::setWidth(int width) {
+	iWidth = width;
+}
+
+void cStructure::setHeight(int height) {
+	iHeight = height;
+}
+
+/**
+	Damage structure by amount of hp. The amount passed to this method
+	must be > 0. When it is < 0, it will be wrapped to > 0 anyway and 
+	an error is written in the log.
+**/
+void cStructure::damage(int hp) {
+	int damage = hp;
+	if (damage < 0) {
+		logbook("cStructure::damage() got negative parameter, wrapped");
+		damage *= -1; // - * - = +
+	}
+
+	iHitPoints -= damage; // do damage
+
+	// die when out of hp
+	if (iHitPoints < 1) {
+		die();
+	}	
+}
+
+void cStructure::setHitPoints(int hp) {
+	iHitPoints = hp;
+	int maxHp = structures[getType()].hp;
+
+	if (iHitPoints > maxHp) {
+		char msg[256];
+		sprintf(msg, "setHitpoints(%d) while max is %d; capped at max.", hp, maxHp);
+		logbook(msg);
+
+		// will fail (uncomment to let it be capped)
+		assert(iHitPoints <= maxHp); // may never be more than the maximum of that structure
+
+		iHitPoints = maxHp;
+	}
+	
 }
 
 void cStructure::think_repair()
 {
     // REPAIRING
-    if (bRepair)
-    {
+    if (bRepair) {
 		if (player[iPlayer].credits > 1)
 			TIMER_repair++;
 
 		if (TIMER_repair > 7)
 		{
 			TIMER_repair=0;
-			iHitPoints += structures[iType].fixhp;
+			iHitPoints += structures[getType()].fixhp;
 			player[iPlayer].credits--;
 		}
 
 		// done repairing
-		if (iHitPoints >= structures[iType].hp)
-		{
-			iHitPoints = structures[iType].hp;
+		if (iHitPoints >= structures[getType()].hp) {
+			iHitPoints = structures[getType()].hp;
 			bRepair=false;
 		}
+
+		assert(iHitPoints <= structures[getType()].hp);
 	}
 }
 
@@ -291,7 +337,7 @@ int STRUCTURE_FREE_TYPE(int iPlyr, int iCll, int iTpe)
     for (int i=0; i < MAX_STRUCTURES; i++)
         if (structure[i])                     // valid
             if (structure[i]->iPlayer == iPlyr)         // same player
-                if (structure[i]->iType == iTpe)     // refinery
+                if (structure[i]->getType() == iTpe)     // refinery
                     if (structure[i]->iUnitID < 0)       // no unit took this
                     {                       
                         long d = ABS_length(iX, iY, iCellGiveX(structure[i]->iCell), iCellGiveY(structure[i]->iCell));

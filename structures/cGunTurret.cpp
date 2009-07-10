@@ -1,15 +1,7 @@
 #include "../d2tmh.h"
 
 // Constructor
-cGunTurret::cGunTurret()
-{
- iType = TURRET;
-
- // From the iType get data and set the info that is in the base class
- iWidth     = structures[iType].bmp_width/32;
- iHeight    = structures[iType].bmp_height/32;
- iHitPoints = structures[iType].hp;
-
+cGunTurret::cGunTurret() {
  // other variables (class specific)
  iHeadFacing=FACE_UP;        // (for turrets only) what is this structure facing at?
  iShouldHeadFacing=FACE_UP;  // where should we look face at? 
@@ -19,6 +11,12 @@ cGunTurret::cGunTurret()
  TIMER_turn=0;
  TIMER_guard=0;         // timed 'area scanning'
 }
+
+
+int cGunTurret::getType() {
+	return TURRET;
+}
+
 
 cGunTurret::~cGunTurret()
 {
@@ -83,7 +81,7 @@ void cGunTurret::think()
                 int iDistance=9999;
                 int iSlowDown=200;
 
-                if (iType == RTURRET)
+                if (getType() == RTURRET)
                     iSlowDown=450;                
 
                 if (unit[iTargetID].isValid())
@@ -91,7 +89,7 @@ void cGunTurret::think()
                     // calculate distance
                     iDistance = ABS_length(iCellX, iCellY, iTargetX, iTargetY);
 
-                    if (iDistance > structures[iType].sight)
+                    if (iDistance > structures[getType()].sight)
                         iTargetID=-1;
                 }
                 else
@@ -106,7 +104,7 @@ void cGunTurret::think()
 
                     int iBullet = BULLET_TURRET;
 
-                    if (iType == RTURRET && iDistance > 3)
+                    if (getType() == RTURRET && iDistance > 3)
                         iBullet = ROCKET_RTURRET;
                     else
                     {
@@ -142,7 +140,7 @@ void cGunTurret::think()
 
                 int iSlowDown = 125;
 
-                if (iType == RTURRET)
+                if (getType() == RTURRET)
                     iSlowDown = 200; // even more slow
 
                 if (TIMER_turn > iSlowDown)
@@ -201,8 +199,8 @@ void cGunTurret::think_animation()
 
 			if (iRepairAlpha < 1)
 			{
-				iRepairX = rnd((structures[iType].bmp_width-16));
-				iRepairY = rnd((structures[iType].bmp_height-32));
+				iRepairX = rnd((structures[getType()].bmp_width-16));
+				iRepairY = rnd((structures[getType()].bmp_height-32));
 				iRepairAlpha = 255;
 			}
 			else
@@ -252,7 +250,7 @@ void cGunTurret::think_guard()
                 // not ours and its visible
                 if (unit[i].iPlayer != iPlayer && map.iVisible[unit[i].iCell][iPlayer] && bAlly == false)
                 {
-                    if (iType == TURRET)
+                    if (getType() == TURRET)
                         if (units[unit[i].iType].airborn)
                             continue; // it was airborn, and normal turrets cannot hit this
                      
@@ -260,19 +258,19 @@ void cGunTurret::think_guard()
 
                     if (unit[i].iType == ORNITHOPTER)
                     {
-                        if (distance <= structures[iType].sight)
+                        if (distance <= structures[getType()].sight)
                         {
                             iAir=i;
                         }
                     }
                     else if (unit[i].iType == SANDWORM)
                     {
-                        if (distance <= structures[iType].sight)
+                        if (distance <= structures[getType()].sight)
                         {
                             iWorm=i;
                         }
                     }
-                    else if (distance <= structures[iType].sight && distance < iDistance)
+                    else if (distance <= structures[getType()].sight && distance < iDistance)
                     {
                         // ATTACK
                         iDistance = distance;
@@ -311,7 +309,7 @@ void cGunTurret::draw(int iStage)
         // When turret, frame = iHeadFacing
         int iFrame = convert_angle(iHeadFacing);
 
-        int iSourceY = structures[iType].bmp_height * iFrame;
+        int iSourceY = structures[getType()].bmp_height * iFrame;
 		int iDrawPreBuild=-1;
 
        
@@ -343,23 +341,23 @@ void cGunTurret::draw(int iStage)
             // Fix this up, since NEMA now posted a structure which somehow needs transculency
             // and does not work. Sloppy work Stefan! Fixed @ 13-04-2005
             
-            BITMAP *temp=create_bitmap_ex(8, structures[iType].bmp_width, structures[iType].bmp_height);
-            BITMAP *temp_shadow=create_bitmap(structures[iType].bmp_width, structures[iType].bmp_height);
+            BITMAP *temp=create_bitmap_ex(8, structures[getType()].bmp_width, structures[getType()].bmp_height);
+            BITMAP *temp_shadow=create_bitmap(structures[getType()].bmp_width, structures[getType()].bmp_height);
 
             // Only for Construction Yard
             clear(temp);			
 
             clear_to_color(temp_shadow, makecol(255,0,255));
-            blit(structures[iType].bmp, temp, 0, iSourceY, 0, 0, structures[iType].bmp_width, structures[iType].bmp_height);		
+            blit(structures[getType()].bmp, temp, 0, iSourceY, 0, 0, structures[getType()].bmp_width, structures[getType()].bmp_height);		
             
             // in case shadow
-            if (structures[iType].shadow)
-                blit(structures[iType].shadow, temp_shadow, 0, iSourceY, 0, 0, structures[iType].bmp_width, structures[iType].bmp_height);
+            if (structures[getType()].shadow)
+                blit(structures[getType()].shadow, temp_shadow, 0, iSourceY, 0, 0, structures[getType()].bmp_width, structures[getType()].bmp_height);
 
             draw_sprite(bmp_screen, temp, iDrawX(), iDrawY());
             
             // in case shadow
-            if (structures[iType].shadow)
+            if (structures[getType()].shadow)
             {
                 set_trans_blender(0,0,0,128);
                 draw_trans_sprite(bmp_screen, temp_shadow, iDrawX(), iDrawY());

@@ -116,18 +116,14 @@ bool cPlayer::bEnoughPower()
 **/
 int cPlayer::iDamage(int iDamage)
 {
-	// return proper move speed of unit type
-	float fOriginal = 100;
+	float fOriginal = 1;
 
-	if (house == HARKONNEN) fOriginal = 120;
-	if (house == SARDAUKAR) fOriginal = 125;
+	if (house == HARKONNEN) fOriginal = 1.2;
+	if (house == SARDAUKAR) fOriginal = 1.25;
+	if (house == ORDOS || house == FREMEN) fOriginal = 0.8;
 
-	if (house == ORDOS || house == FREMEN)
-		fOriginal = 80;
-
-	if (fOriginal <= 1.0) fOriginal = 1.0f;			// fix it
-	float fDamage = fOriginal/100;					// devide by 100 (so we get in 0-1 range)		
-	return (int)(iDamage*fDamage);			        // * original	
+	float fDamage = iDamage;					// make float for calculation
+	return (int)(fOriginal*fDamage);			// * range , convert back to int and return
 }
 
 // return proper speeds

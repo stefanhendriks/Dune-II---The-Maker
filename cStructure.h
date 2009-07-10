@@ -18,89 +18,94 @@
 
 
 
-class cStructure
-{
+class cStructure {
+
+	private:
+		int iHitPoints;      // HitPoints this structure has
 
 	protected:
-    // Width and Height in cells (preset by constructor of type)
-    int iWidth;
-    int iHeight;
+		// Width and Height in cells (preset by constructor of type)
+		int iWidth;
+		int iHeight;
 
     public:
 
-    // Constructor & Destructor:
-    cStructure(); // default constructor (never used actually!)
-    
-    cStructure(int iID);
-    ~cStructure();
+		// Constructor & Destructor:
+		cStructure(); // default constructor (never used actually!)
+	    
+		cStructure(int iID);
+		~cStructure();
+	    
+		int iCell;           // What cell it is (most upper left part of structure where
+							 // drawing starts)
+	    
+		float fConcrete;     // how much concrete is *not* beneath this building (percentage)?
+							 // meaning, when 0% , it is all concrete. But if 10%, it means 10% of the building
+							 // is not covered.
 
-    int iHitPoints;      // HitPoints this structure has
-    int iCell;           // What cell it is (most upper left part of structure where
-                         // drawing starts)
-    
-	float fConcrete;     // how much concrete is *not* beneath this building (percentage)?
-						 // meaning, when 0% , it is all concrete. But if 10%, it means 10% of the building
-					     // is not covered.
+		int iPlayer;         // belongs to...
+		int iFrame;          // Frame (flag animation)
 
-    int iPlayer;         // belongs to...
-    int iFrame;          // Frame (flag animation)
-    int iType;           // Type of structure to identify
+		// Repairing stuff
+		bool bRepair;       // repairing? (using timer + gives animation)
+		int iRepairY;		// raising repair thingy
+		int iRepairX;		// repair X position (changes everytime?)
+		int iRepairAlpha;	// repair alpha
 
-    // Repairing stuff
-    bool bRepair;       // repairing? (using timer + gives animation)
-	int iRepairY;		// raising repair thingy
-	int iRepairX;		// repair X position (changes everytime?)
-	int iRepairAlpha;	// repair alpha
+		// Other stuff
+		bool bAnimate;      // Do its special animation? (unit leaving building, starport
+							// dropping something, etc)
 
-    // Other stuff
-    bool bAnimate;      // Do its special animation? (unit leaving building, starport
-                        // dropping something, etc)
+		int iRallyPoint;    // rallypoint ...
 
-    int iRallyPoint;    // rallypoint ...
+		int iUnitID;        // >-1 means ID to unit
 
-    int iUnitID;        // >-1 means ID to unit
+		// Building animation
+		int iBuildFase;
 
-    // Building animation
-    int iBuildFase;
+		// TIMERS that all structures use
+		int TIMER_repair;   // repairing timer
+		int TIMER_repairanimation; // repair animation timer
+		int TIMER_flag;     // flag animation
+		int TIMER_fade;     // fading timer
 
-    // TIMERS that all structures use
-    int TIMER_repair;   // repairing timer
-    int TIMER_repairanimation; // repair animation timer
-    int TIMER_flag;     // flag animation
-    int TIMER_fade;     // fading timer
+		int TIMER_damage;   // damaging stuff
+		int TIMER_prebuild; // prebuild timer
 
-    int TIMER_damage;   // damaging stuff
-    int TIMER_prebuild; // prebuild timer
-
-	// -------------
-    
+		// -------------
+	    
 
 
-    // Filled in by derived classes    
-    virtual void draw(int iStage)=0;              // draw
-    virtual void think()=0;           // think
-    virtual void think_animation()=0; // think animation stuff        
-    virtual void think_guard();       // think guard stuff
-    void think_prebuild();            // prebuild animation
-    void think_repair();              // repair thinking
-    void think_damage();              // think about damaging through time
+		// Filled in by derived classes    
+		virtual void draw(int iStage)=0;              // draw
+		virtual void think()=0;           // think
+		virtual void think_animation()=0; // think animation stuff        
+		virtual void think_guard();       // think guard stuff
+		
+		virtual int getType()=0;					  // implementation gives type of structure
+		void think_prebuild();            // prebuild animation
+		void think_repair();              // repair thinking
+		void think_damage();              // think about damaging through time
 
-    void die();                     // die
+		void die();                       // die
 
-    // drawing
-    int iDrawX();
-    int iDrawY();
-    
-    // Functionality
-    int iFreeAround();
+		// drawing
+		int iDrawX();
+		int iDrawY();
+	    
+		// Functionality
+		int iFreeAround();
 
+		// getters
+		int getWidth() { return iWidth; } 
+		int getHeight() { return iHeight; }
+		int getHitPoints() { return iHitPoints; }
 
-	// getters
-	int getWidth() { return iWidth; } 
-	int getHeight() { return iHeight; }
+		void setHeight(int height);
+		void setWidth(int width);
+		void setHitPoints(int hp);
 
-    private:
-    
+		void damage(int hp); // damage structure for x amount of hp, die when < 0
 };
 
 void upgradeTechTree(int iPlayer, int iStructureType);

@@ -189,14 +189,14 @@ void cMap::draw_structures_health()
         // Draw structure health
         int draw_x = structure[i]->iDrawX()-1;
         int draw_y = structure[i]->iDrawY()-5;
-        int width_x = structures[structure[i]->iType].bmp_width-1;
+        int width_x = structures[structure[i]->getType()].bmp_width-1;
         int height_y = 4;
 
         if (draw_y < 30) draw_y = 30;
 
-        int w = health_structure(i, structures[structure[i]->iType].bmp_width);
+        int w = health_structure(i, structures[structure[i]->getType()].bmp_width);
         
-        int step = (255/structures[structure[i]->iType].bmp_width);
+        int step = (255/structures[structure[i]->getType()].bmp_width);
         int r = 255-(w*step);
         int g = w*step;
         
@@ -236,13 +236,13 @@ void cMap::draw_structures(int iStage)
                     cell[cll].id[MAPID_STRUCTURES] = i;
                 }
 
-            if (((structure[i]->iDrawX()+structures[structure[i]->iType].bmp_width) > 0 && structure[i]->iDrawX() < game.screen_x) &&
-                ((structure[i]->iDrawY()+structures[structure[i]->iType].bmp_height) > 0 && structure[i]->iDrawY() < game.screen_y))
+            if (((structure[i]->iDrawX()+structures[structure[i]->getType()].bmp_width) > 0 && structure[i]->iDrawX() < game.screen_x) &&
+                ((structure[i]->iDrawY()+structures[structure[i]->getType()].bmp_height) > 0 && structure[i]->iDrawY() < game.screen_y))
             {
                 // draw               
                 structure[i]->draw(iStage);
 
-				if (player[0].iPrimaryBuilding[structure[i]->iType] == i)
+				if (player[0].iPrimaryBuilding[structure[i]->getType()] == i)
 				{
 					alfont_textprintf(bmp_screen, game_font, structure[i]->iDrawX()-1, structure[i]->iDrawY()-1, makecol(0,0,0), "P");
 					alfont_textprintf(bmp_screen, game_font, structure[i]->iDrawX(), structure[i]->iDrawY(), makecol(255,255,255), "P");
@@ -250,14 +250,14 @@ void cMap::draw_structures(int iStage)
 
 
                 // When mouse hovers over this structure
-                if (((mouse_x >= structure[i]->iDrawX() && mouse_x <= (structure[i]->iDrawX() + structures[structure[i]->iType].bmp_width))) &&
-                    ((mouse_y >= structure[i]->iDrawY() && mouse_y <= (structure[i]->iDrawY() + structures[structure[i]->iType].bmp_height))))
+                if (((mouse_x >= structure[i]->iDrawX() && mouse_x <= (structure[i]->iDrawX() + structures[structure[i]->getType()].bmp_width))) &&
+                    ((mouse_y >= structure[i]->iDrawY() && mouse_y <= (structure[i]->iDrawY() + structures[structure[i]->getType()].bmp_height))))
                 {
                     // draw some cool id of it
 					if (key[KEY_D] && key[KEY_TAB])
                     {
 						alfont_textprintf(bmp_screen, game_font, structure[i]->iDrawX(),structure[i]->iDrawY(), makecol(255,255,255), "%d", i);
-                        alfont_textprintf(bmp_screen, game_font, structure[i]->iDrawX(),structure[i]->iDrawY()-16, makecol(255,255,255), "%s", structures[structure[i]->iType].name);
+                        alfont_textprintf(bmp_screen, game_font, structure[i]->iDrawX(),structure[i]->iDrawY()-16, makecol(255,255,255), "%s", structures[structure[i]->getType()].name);
                     }
 
 
@@ -269,8 +269,8 @@ void cMap::draw_structures(int iStage)
                     // draw rectangle around it fading, like dune 2
                     int draw_x = structure[i]->iDrawX();
                     int draw_y = structure[i]->iDrawY();
-                    int width_x = structures[structure[i]->iType].bmp_width-1;
-                    int height_y = structures[structure[i]->iType].bmp_height-1;
+                    int width_x = structures[structure[i]->getType()].bmp_width-1;
+                    int height_y = structures[structure[i]->getType()].bmp_height-1;
 
                     rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(game.fade_select, game.fade_select, game.fade_select));
                 }

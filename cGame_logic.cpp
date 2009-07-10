@@ -60,7 +60,8 @@ void cGame::init()
 
 	mouse_left=mouse_right=false;
 
-    iMusicVolume=128; // volume is 0...
+    //iMusicVolume=128; // volume is 0...
+	iMusicVolume=0;
 
 	paths_created=0;
 	hover_structure=-1;
@@ -177,6 +178,7 @@ void cGame::mission_init()
     iSoundsPlayed=0;
 
     iMusicVolume=128; // volume is 0...
+	iMusicVolume=0;
 
 	paths_created=0;
 	hover_structure=-1;
@@ -1399,14 +1401,14 @@ void cGame::combat_mouse()
 
 			if (structure[iStr]->iPlayer == 0)
 			{
-				if (structure[iStr]->iType == LIGHTFACTORY ||
-					structure[iStr]->iType == HEAVYFACTORY ||
-					structure[iStr]->iType == HIGHTECH ||
-					structure[iStr]->iType == STARPORT ||
-					structure[iStr]->iType == WOR ||
-					structure[iStr]->iType == BARRACKS ||
-					structure[iStr]->iType == REPAIR)
-					player[0].iPrimaryBuilding[structure[iStr]->iType] = iStr;
+				if (structure[iStr]->getType() == LIGHTFACTORY ||
+					structure[iStr]->getType() == HEAVYFACTORY ||
+					structure[iStr]->getType() == HIGHTECH ||
+					structure[iStr]->getType() == STARPORT ||
+					structure[iStr]->getType() == WOR ||
+					structure[iStr]->getType() == BARRACKS ||
+					structure[iStr]->getType() == REPAIR)
+					player[0].iPrimaryBuilding[structure[iStr]->getType()] = iStr;
 			}
 		}
 
@@ -1414,7 +1416,7 @@ void cGame::combat_mouse()
         if (key[KEY_R] && bOrderingUnits==false)
         {
             if (structure[game.hover_structure]->iPlayer == 0 &&
-                structure[game.hover_structure]->iHitPoints < structures[structure[game.hover_structure]->iType].hp)
+                structure[game.hover_structure]->getHitPoints() < structures[structure[game.hover_structure]->getType()].hp)
             {
                 if (bMousePressedLeft )
                 {
@@ -2952,7 +2954,7 @@ void cGame::setup_list()
 //	int iHouse = player[0].house;
 	
 	// Any house, any mission, start with this
-	list_new_item(LIST_CONSTYARD, ICON_STR_1SLAB, structures[SLAB1].cost, SLAB1, -1);
+		list_new_item(LIST_CONSTYARD, ICON_STR_1SLAB, structures[SLAB1].cost, SLAB1, -1);
 
 	if (game.iMission >= 4)
 		list_new_item(LIST_CONSTYARD, ICON_STR_WALL, structures[WALL].cost, WALL, -1);
