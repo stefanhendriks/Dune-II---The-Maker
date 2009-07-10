@@ -224,11 +224,10 @@ void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlaye
 		return;
     }
 
-    if (iCell == WALL) {
+    if (iStructureType == WALL) {
 		map.create_spot(iCell, TERRAIN_WALL, 0);            
 		// change surrounding walls here
         map.smooth_spot(iCell);
-
 		return;
     }
 
