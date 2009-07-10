@@ -5033,13 +5033,13 @@ void cGame::handleKeys() {
 			char filename[25];      
 
 			if (screenshot < 10) {
-				sprintf(filename, "%dx%d_000%d.pcx", screen_x, screen_y, screenshot);
+				sprintf(filename, "%dx%d_000%d.bmp", screen_x, screen_y, screenshot);
 			} else if (screenshot < 100) {
-				sprintf(filename, "%dx%d_00%d.pcx", screen_x, screen_y, screenshot);
+				sprintf(filename, "%dx%d_00%d.bmp", screen_x, screen_y, screenshot);
 			} else if (screenshot < 1000) {
-				sprintf(filename, "%dx%d_0%d.pcx", screen_x, screen_y, screenshot);
+				sprintf(filename, "%dx%d_0%d.bmp", screen_x, screen_y, screenshot);
 			} else {
-				sprintf(filename, "%dx%d_%d.pcx", screen_x, screen_y, screenshot);
+				sprintf(filename, "%dx%d_%d.bmp", screen_x, screen_y, screenshot);
 			}
 
 			save_bmp(filename, bmp_screen, general_palette);
