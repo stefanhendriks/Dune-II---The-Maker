@@ -283,13 +283,8 @@ void cBullet::think_move()
         }
 
         
-        if (map.cell[iCell].id[MAPID_STRUCTURES] > -1)
-        {
-			logbook("Structure id on map > -1");
-			if (DEBUGGING) {
-				logbook("Bullet hit structure!");
-			}
-
+        if (map.cell[iCell].id[MAPID_STRUCTURES] > -1) {	
+		
             // structure hit!
             int id = map.cell[iCell].id[MAPID_STRUCTURES];
 
@@ -313,12 +308,11 @@ void cBullet::think_move()
 
 				// increase damage by experience of unit
 				if (iOwnerUnit > -1) {
+					// extra damage by experience:
 					int iDam = (unit[iOwnerUnit].fExpDamage() * iDamage);
-					iDamage += iDam;
+					iDamage = iDamage + iDam;
 				}
 				
-				
-				logbook("Bullet will cause damage");
 				int oldHp = structure[id]->getHitPoints();
 				assert(iDamage > 0);
 				structure[id]->damage(iDamage);
@@ -379,7 +373,8 @@ void cBullet::think_move()
 				
 				int iChance=15;
 
-				if (structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
+				// structure could be dead here (damage->calls die when dead)
+				if (structure && structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
 					iChance = 45;
 
 				// smoke

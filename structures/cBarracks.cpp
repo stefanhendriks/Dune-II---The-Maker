@@ -16,12 +16,8 @@ cBarracks::~cBarracks() {
 // Specific Construction Yard thinking
 void cBarracks::think()
 {
-    // AI
-    if (iPlayer > 0) aiplayer[iPlayer].think_repair_structure(this);
-
-    // Other
-    think_damage();
-    think_repair();  
+	// last but not least, think like our abstraction
+	cStructure::think();
 }
 
 int cBarracks::getType() {

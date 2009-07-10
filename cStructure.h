@@ -109,7 +109,7 @@ class cStructure {
 		void setHitPoints(int hp);
 		void setCell(int cell);
 
-		void damage(int hp); // damage structure for x amount of hp, die when < 0
+		void damage(int hp); // damage structure for x amount of hp
 
 };
 

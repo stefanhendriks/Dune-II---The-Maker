@@ -24,13 +24,7 @@ cRefinery::~cRefinery()
 // Specific Construction Yard thinking
 void cRefinery::think()
 {
-    // AI
-    if (iPlayer > 0) aiplayer[iPlayer].think_repair_structure(this);
 
-    // Other
-    think_damage();
-    think_repair();  
-	
      // When a refinery, and expecting a unit
      if (iUnitID > -1)
         {
@@ -156,7 +150,10 @@ void cRefinery::think()
             }            
             
             
-        }        
+        }   
+
+	// think like base class
+	cStructure::think();
 
 }
 

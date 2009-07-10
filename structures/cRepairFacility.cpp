@@ -17,18 +17,10 @@ cRepairFacility::~cRepairFacility()
 }
 
 
-/*  OVERLOADED FUNCTIONS  */
 
-// Specific Construction Yard thinking
 void cRepairFacility::think()
 {
-   // AI
-    if (iPlayer > 0) aiplayer[iPlayer].think_repair_structure(this);
-
-    // Other
-    think_damage();
-    think_repair();  
-    
+   
     // Repair unit here (if any)
     if (iUnitID > -1)
     {
@@ -88,6 +80,9 @@ void cRepairFacility::think()
             }
         }
     }
+
+	// think like base class
+	cStructure::think();
 
 }
 

@@ -90,6 +90,7 @@ void cStructure::die()
     if (game.selected_structure == iIndex)
         game.selected_structure = -1;
 
+	// remove from array
     structure[iIndex]=NULL;
 
     // Destroy structure, take stuff in effect for the player    
@@ -257,6 +258,10 @@ void cStructure::setHeight(int height) {
 	Damage structure by amount of hp. The amount passed to this method
 	must be > 0. When it is < 0, it will be wrapped to > 0 anyway and 
 	an error is written in the log.
+
+	When the hitpoints drop below 1, the structure will die. The actual call
+	to the die method will be done by the abstract think function. So it is
+	still safe to refer to this structure even if it is declared dead (ie hp < 1).
 **/
 void cStructure::damage(int hp) {
 	int damage = hp;
@@ -266,11 +271,8 @@ void cStructure::damage(int hp) {
 	}
 
 	iHitPoints -= damage; // do damage
-
-	// die when out of hp
-	if (iHitPoints < 1) {
-		die();
-	}	
+	
+	// do not die right here; it will cause havoc. Instead do that in the think method.
 }
 
 void cStructure::setHitPoints(int hp) {
@@ -292,6 +294,23 @@ void cStructure::setHitPoints(int hp) {
 
 void cStructure::setCell(int cell) {
 	iCell = cell;
+}
+
+/**
+	Think actions like any other structure would have.
+**/
+void cStructure::think() {
+	// AI
+    if (iPlayer > 0) aiplayer[iPlayer].think_repair_structure(this);
+
+    // Other
+    think_damage();
+    think_repair();
+
+	// die when out of hp
+	if (iHitPoints < 1) {
+		die();
+	}	
 }
 
 void cStructure::think_repair()

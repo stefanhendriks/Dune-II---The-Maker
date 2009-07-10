@@ -20,17 +20,10 @@ cHighTech::~cHighTech()
 }
 
 
-/*  OVERLOADED FUNCTIONS  */
-
-// Specific Construction Yard thinking
 void cHighTech::think()
 {
-   // AI
-    if (iPlayer > 0) aiplayer[iPlayer].think_repair_structure(this);
-
-    // Other
-    think_damage();
-    think_repair();  
+	// last but not least, think like our abstraction
+	cStructure::think();
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)

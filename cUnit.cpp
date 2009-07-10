@@ -283,7 +283,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                     
 						int iChance = 10;
 
-						if (structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
+						if (structure && structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
 							iChance = 30;
 
 						if (rnd(100) < iChance)
@@ -504,16 +504,20 @@ void cUnit::draw_health()
 
 }
 
+// this method returns the amount of percent extra damage may be done
 float cUnit::fExpDamage()
 {
-	// returns extra damage points of bullet type fired by this unit 
-	// that is gained by experience.
+	if (fExperience < 1) return 0; // no stars, no increasement
 
 	// MAX EXPERIENCE = 10 (9 stars)
 
 	// A unit can do 2x damage on full experience; being very powerfull.
 	// it does take a long time to get there though.
-	return (fExperience/10); 
+	float fResult = (fExperience/10);
+	
+	// never make a unit weaker.
+	if (fResult < 1.0) fResult = 1.0F;
+	return fResult;
 }
 
 void cUnit::draw_experience()

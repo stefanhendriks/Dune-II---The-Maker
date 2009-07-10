@@ -15,18 +15,11 @@ cWor::~cWor()
 
 }
 
-
-/*  OVERLOADED FUNCTIONS  */
-
-// Specific Construction Yard thinking
 void cWor::think()
 {
-   // AI
-    if (iPlayer > 0) aiplayer[iPlayer].think_repair_structure(this);
+	// think like base class
+	cStructure::think();
 
-    // Other
-    think_damage();
-    think_repair();  
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)

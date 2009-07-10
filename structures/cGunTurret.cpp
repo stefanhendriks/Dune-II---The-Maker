@@ -24,18 +24,8 @@ cGunTurret::~cGunTurret()
 }
 
 
-/*  OVERLOADED FUNCTIONS  */
-
-// Specific Construction Yard thinking
 void cGunTurret::think()
 {
-    // AI
-    if (iPlayer > 0) aiplayer[iPlayer].think_repair_structure(this);
-
-    // Other
-    think_damage();
-    think_repair();  
-
     int iMyIndex=-1;
 
     for (int i=0; i < MAX_STRUCTURES; i++)
@@ -175,6 +165,8 @@ void cGunTurret::think()
                 iTargetID=-1;
         }
 
+	// last but not least, think like our abstraction
+	cStructure::think();
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)

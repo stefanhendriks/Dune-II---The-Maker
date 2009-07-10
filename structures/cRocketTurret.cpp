@@ -29,13 +29,6 @@ cRocketTurret::~cRocketTurret()
 // Specific Construction Yard thinking
 void cRocketTurret::think()
 {
-    // AI
-    if (iPlayer > 0) aiplayer[iPlayer].think_repair_structure(this);
-
-    // Other
-    think_damage();
-    think_repair();  
-
     int iMyIndex=-1;
 
     for (int i=0; i < MAX_STRUCTURES; i++)
@@ -172,6 +165,10 @@ void cRocketTurret::think()
             else
                 iTargetID=-1;
         }
+
+	// think like base class
+	cStructure::think();
+
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)
