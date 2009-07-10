@@ -23,6 +23,9 @@ class cStructure {
 	private:
 		int iHitPoints;      // HitPoints this structure has
 
+		int iCell;           // What cell it is (most upper left part of structure where
+							 // drawing starts)
+
 	protected:
 		// Width and Height in cells (preset by constructor of type)
 		int iWidth;
@@ -36,8 +39,7 @@ class cStructure {
 		cStructure(int iID);
 		~cStructure();
 	    
-		int iCell;           // What cell it is (most upper left part of structure where
-							 // drawing starts)
+		
 	    
 		float fConcrete;     // how much concrete is *not* beneath this building (percentage)?
 							 // meaning, when 0% , it is all concrete. But if 10%, it means 10% of the building
@@ -100,12 +102,15 @@ class cStructure {
 		int getWidth() { return iWidth; } 
 		int getHeight() { return iHeight; }
 		int getHitPoints() { return iHitPoints; }
+		int getCell() { return iCell; }
 
 		void setHeight(int height);
 		void setWidth(int width);
 		void setHitPoints(int hp);
+		void setCell(int cell);
 
 		void damage(int hp); // damage structure for x amount of hp, die when < 0
+
 };
 
 void upgradeTechTree(int iPlayer, int iStructureType);

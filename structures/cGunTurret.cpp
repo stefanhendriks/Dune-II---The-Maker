@@ -60,8 +60,8 @@ void cGunTurret::think()
             if (unit[iTargetID].isValid())
             {
             // first make sure we face okay!
-            int iCellX=iCellGiveX(iCell);
-            int iCellY=iCellGiveY(iCell);
+            int iCellX=iCellGiveX(getCell());
+            int iCellY=iCellGiveY(getCell());
 
             int iTargetX = iCellGiveX(unit[iTargetID].iCell);
             int iTargetY = iCellGiveY(unit[iTargetID].iCell);
@@ -116,7 +116,7 @@ void cGunTurret::think()
 
                     }
 
-                    int iBull = create_bullet(iBullet, iCell, iTargetCell, -1, iMyIndex);
+                    int iBull = create_bullet(iBullet, getCell(), iTargetCell, -1, iMyIndex);
 
                     if (unit[iTargetID].iType == ORNITHOPTER)
                     {
@@ -223,8 +223,8 @@ void cGunTurret::think_guard()
 
     if (TIMER_guard > 10)
     {
-        int iCellX = iCellGiveX(iCell);
-        int iCellY = iCellGiveY(iCell);
+        int iCellX = iCellGiveX(getCell());
+        int iCellY = iCellGiveY(getCell());
 
         int iDistance=9999; // closest distance
         

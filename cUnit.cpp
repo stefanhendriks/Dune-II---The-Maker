@@ -150,7 +150,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                     if (structure[k]->iPlayer == iPlayer)
                         if (structure[k]->getType() == REFINERY)
                         {
-                            REINFORCE(iPlayer, HARVESTER, structure[k]->iCell, -1);
+                            REINFORCE(iPlayer, HARVESTER, structure[k]->getCell(), -1);
                             break;
                         }
 
@@ -940,9 +940,11 @@ void cUnit::think_guard()
 							
 							
 							// not ours and its visible
-							if (structure[i]->iPlayer != iPlayer && map.iVisible[structure[i]->iCell][iPlayer] && bAlly == false)
-							{
-								int distance = ABS_length(iCellX, iCellY, iCellGiveX(structure[i]->iCell), iCellGiveY(structure[i]->iCell));
+							if (structure[i]->iPlayer != iPlayer && 
+								map.iVisible[structure[i]->getCell()][iPlayer] && 
+								bAlly == false)	{
+								int distance = ABS_length(iCellX, iCellY, iCellGiveX(structure[i]->getCell()), 
+															iCellGiveY(structure[i]->getCell()));
 
 								if (distance <= units[iType].sight && distance < iDistance)
 								{
@@ -958,7 +960,7 @@ void cUnit::think_guard()
 
 			if (iDanger > -1)
 			{
-				UNIT_ORDER_ATTACK(iID, structure[iDanger]->iCell, -1, iDanger,-1);
+				UNIT_ORDER_ATTACK(iID, structure[iDanger]->getCell(), -1, iDanger,-1);
 
 				if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0)
 				{
@@ -1284,7 +1286,7 @@ void cUnit::think()
                 }
 
 				// find carry-all (TEST)				
-				int r = CARRYALL_TRANSFER(iID, structure[iTheID]->iCell+2);
+				int r = CARRYALL_TRANSFER(iID, structure[iTheID]->getCell()+2);
                 
                 iStructureID = iTheID;
 
@@ -1293,7 +1295,7 @@ void cUnit::think()
                     char msg[255];
                     sprintf(msg, "Returning to refinery ID %d", iTheID);
                     LOG(msg);
-					move_to(structure[iTheID]->iCell+rnd(2)+ (rnd(2) * 64), iTheID, -1); // move yourself...                    
+					move_to(structure[iTheID]->getCell()+rnd(2)+ (rnd(2) * 64), iTheID, -1); // move yourself...                    
                     structure[iTheID]->bAnimate = true;
 				}
 				else
@@ -2030,7 +2032,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
                         iDestCell = unit[iAttackUnit].iCell;
 
                     if (iAttackStructure > -1)
-                        iDestCell = structure[iAttackStructure]->iCell;
+                        iDestCell = structure[iAttackStructure]->getCell();
 
                     if (ABS_length(iCellX, iCellY, iCellGiveX(iDestCell), iCellGiveY(iDestCell)) < units[iType].range)
                     {
@@ -2146,7 +2148,7 @@ void cUnit::think_attack()
     if (iAttackStructure > -1)
     {
         if (structure[iAttackStructure])
-            iGoalCell = structure[iAttackStructure]->iCell;
+            iGoalCell = structure[iAttackStructure]->getCell();
         else
         {
             iAttackUnit=-1;
@@ -2655,7 +2657,7 @@ void cUnit::think_move()
             if (iNewID > -1 && iNewID != iStructureID)
             {
                 iStructureID = iNewID;
-                move_to(structure[iNewID]->iCell, iNewID, -1);
+                move_to(structure[iNewID]->getCell(), iNewID, -1);
             }
             else
             {                
@@ -2773,7 +2775,7 @@ void cUnit::think_move()
 				logbook(msg);
 
 				map.remove_id(iID, MAPID_UNITS);
-                iCell = structure[iStructureID]->iCell;
+                iCell = structure[iStructureID]->getCell();
 
 				LOG("-> Enter structure #3");
 			} // enter..

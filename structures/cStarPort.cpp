@@ -142,8 +142,8 @@ void cStarPort::think_deploy()
 						
 						// when nothing found now, it means the structure is the only
 						// one. So, we cannot dump it. Send over a reinforcement
-						int rX = (iCellGiveX(iCell) - 5) + rnd(10);
-						int rY = (iCellGiveY(iCell) - 5) + rnd(10);
+						int rX = (iCellGiveX(getCell()) - 5) + rnd(10);
+						int rY = (iCellGiveY(getCell()) - 5) + rnd(10);
 						
                         if (iRallyPoint > -1)
                         {

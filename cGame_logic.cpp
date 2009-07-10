@@ -545,7 +545,7 @@ void cGame::think_starport()
 		{
 			player[0].iPrimaryBuilding[STARPORT] = iStr; // assign
 			structure[iStr]->bAnimate=true;
-			SPAWN_FRIGATE(0, structure[iStr]->iCell);
+			SPAWN_FRIGATE(0, structure[iStr]->getCell());
             TIMER_mayorder=10;
 			play_voice(SOUND_VOICE_06_ATR);
 		}
@@ -1013,8 +1013,8 @@ void cGame::think_build()
 
 								// when nothing found now, it means the structure is the only
 								// one. So, we cannot dump it. Send over a reinforcement
-								int rX = (iCellGiveX(structure[iStr]->iCell) - 5) + rnd(10);
-								int rY = (iCellGiveY(structure[iStr]->iCell) - 5) + rnd(10);
+								int rX = (iCellGiveX(structure[iStr]->getCell()) - 5) + rnd(10);
+								int rY = (iCellGiveY(structure[iStr]->getCell()) - 5) + rnd(10);
 								
 								FIX_POS(rX, rY);
 
@@ -1105,7 +1105,7 @@ void cGame::combat_mouse()
 
                             if (iNewID > -1)
                             {   
-                                int iCarry = CARRYALL_TRANSFER(hover_unit, structure[iNewID]->iCell+2);
+                                int iCarry = CARRYALL_TRANSFER(hover_unit, structure[iNewID]->getCell()+2);
                                 
                                 
                                 if (iCarry > -1)
@@ -1117,12 +1117,12 @@ void cGame::combat_mouse()
                                 else
                                 {
                                     logbook("Order move #5");
-                                    UNIT_ORDER_MOVE(hover_unit, structure[iNewID]->iCell);   
+                                    UNIT_ORDER_MOVE(hover_unit, structure[iNewID]->getCell());   
                                 }
 
                                 unit[hover_unit].TIMER_blink  = 5;
                                 unit[hover_unit].iStructureID = iNewID;
-                                unit[hover_unit].iGoalCell = structure[iNewID]->iCell;
+                                unit[hover_unit].iGoalCell = structure[iNewID]->getCell();
                                 
                             }
                         

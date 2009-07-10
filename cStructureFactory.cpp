@@ -135,7 +135,7 @@ cStructure* cStructureFactory::createStructure(int iCell, int iStructureType, in
 	structure[iNewId] = str;
 
     // Now set it up for location & player
-    str->iCell   = iCell;
+    str->setCell(iCell);
     str->iPlayer = iPlayer;
     str->iBuildFase = 1; // prebuild
     str->TIMER_prebuild = 250; // prebuild timer

@@ -290,6 +290,10 @@ void cStructure::setHitPoints(int hp) {
 	
 }
 
+void cStructure::setCell(int cell) {
+	iCell = cell;
+}
+
 void cStructure::think_repair()
 {
     // REPAIRING
@@ -340,7 +344,7 @@ int STRUCTURE_FREE_TYPE(int iPlyr, int iCll, int iTpe)
                 if (structure[i]->getType() == iTpe)     // refinery
                     if (structure[i]->iUnitID < 0)       // no unit took this
                     {                       
-                        long d = ABS_length(iX, iY, iCellGiveX(structure[i]->iCell), iCellGiveY(structure[i]->iCell));
+                        long d = ABS_length(iX, iY, iCellGiveX(structure[i]->getCell()), iCellGiveY(structure[i]->getCell()));
 
                         if (d < distance)
                         {

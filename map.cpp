@@ -230,8 +230,8 @@ void cMap::draw_structures(int iStage)
             for (int w=0; w < structure[i]->getWidth(); w++)
                 for (int h=0; h < structure[i]->getHeight(); h++)
                 {
-                    int cll = iCellMake((iCellGiveX(structure[i]->iCell)+w), 
-                        (iCellGiveY(structure[i]->iCell)+h));
+                    int cll = iCellMake((iCellGiveX(structure[i]->getCell())+w), 
+                        (iCellGiveY(structure[i]->getCell())+h));
 
                     cell[cll].id[MAPID_STRUCTURES] = i;
                 }

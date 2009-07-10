@@ -12,7 +12,7 @@
 
 #include "d2tmh.h" 
 
-bool bDoDebug = true;
+bool bDoDebug = false;
 int	iRest = 1;	// rest value
 
 // Server/Client system
