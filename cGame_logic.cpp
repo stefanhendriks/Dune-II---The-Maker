@@ -60,9 +60,8 @@ void cGame::init()
 
 	mouse_left=mouse_right=false;
 
-    //iMusicVolume=128; // volume is 0...
-	iMusicVolume=0;
-
+    iMusicVolume=128; // volume is 0...
+	
 	paths_created=0;
 	hover_structure=-1;
 	hover_unit=-1;
@@ -178,8 +177,7 @@ void cGame::mission_init()
     iSoundsPlayed=0;
 
     iMusicVolume=128; // volume is 0...
-	iMusicVolume=0;
-
+	
 	paths_created=0;
 	hover_structure=-1;
 	hover_unit=-1;
