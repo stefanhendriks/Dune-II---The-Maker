@@ -136,7 +136,7 @@ cStructure* cStructureFactory::createStructure(int iCell, int iStructureType, in
 
     // Now set it up for location & player
     str->setCell(iCell);
-    str->iPlayer = iPlayer;
+    str->setOwner(iPlayer);
     str->iBuildFase = 1; // prebuild
     str->TIMER_prebuild = 250; // prebuild timer
     str->TIMER_damage = rnd(1000)+100;
@@ -243,7 +243,7 @@ void cStructureFactory::clearFogForStructureType(int iCell, cStructure *str) {
 		return; 
 	}
 
-	clearFogForStructureType(iCell, str->getType(), structures[str->getType()].sight, str->iPlayer);
+	clearFogForStructureType(iCell, str->getType(), structures[str->getType()].sight, str->getOwner());
 }
 
 /**

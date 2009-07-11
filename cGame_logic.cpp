@@ -268,7 +268,7 @@ void cGame::think_winlose()
     // determine if player is still alive
     for (int i=0; i < MAX_STRUCTURES; i++)
         if (structure[i])
-            if (structure[i]->iPlayer == 0)
+            if (structure[i]->getOwner() == 0)
             {
                 bFailed=false; // no, we are not failing just yet
                 break;
@@ -303,7 +303,7 @@ void cGame::think_winlose()
         bool bAllDead=true;
         for (int i=0; i < MAX_STRUCTURES; i++)
             if (structure[i])
-                if (structure[i]->iPlayer > 0 && structure[i]->iPlayer != AI_WORM)
+                if (structure[i]->getOwner() > 0 && structure[i]->getOwner() != AI_WORM)
                 {
                     bAllDead=false;
                     break;
@@ -539,7 +539,7 @@ void cGame::think_starport()
 		// structure got destroyed or taken over
 		if (iStr > -1)
 			if (structure[iStr] == NULL ||
-				structure[iStr]->iPlayer != 0) // somehow not ours
+				structure[iStr]->getOwner() != 0) // somehow not ours
 				iStr = FIND_PRIMARY_BUILDING(STARPORT, 0); // find new one
 			
 		if (iStr > -1)
@@ -755,7 +755,7 @@ void cGame::poll()
             {
                 int id = map.cell[mc].id[MAPID_STRUCTURES];
 
-                if (structure[id]->iPlayer > 0)
+                if (structure[id]->getOwner() > 0)
                     mouse_tile = MOUSE_ATTACK;
             }
 
@@ -775,7 +775,7 @@ void cGame::poll()
         if (game.selected_structure > -1)
         {
             int id = game.selected_structure;
-            if (structure[id]->iPlayer == 0)
+            if (structure[id]->getOwner() == 0)
                 if (key[KEY_LCONTROL])
                     mouse_tile = MOUSE_RALLY;
                 
@@ -987,7 +987,7 @@ void cGame::think_build()
                             int iOldStr=iStr;
 
 							if (structure[iStr] == NULL ||
-								structure[iStr]->iPlayer != 0) // somehow not ours
+								structure[iStr]->getOwner() != 0) // somehow not ours
 									iStr = FIND_PRIMARY_BUILDING(iType, 0);
 
                             if (iStr < 0)
@@ -1148,7 +1148,7 @@ void cGame::combat_mouse()
             {
                 int id = game.selected_structure;
                 if (id > -1)
-                    if (structure[id]->iPlayer == 0)
+                    if (structure[id]->getOwner() == 0)
                     {
                         structure[id]->iRallyPoint = mc;
                         bParticle=true;
@@ -1398,7 +1398,7 @@ void cGame::combat_mouse()
 		{
 			int iStr=game.hover_structure;
 
-			if (structure[iStr]->iPlayer == 0)
+			if (structure[iStr]->getOwner() == 0)
 			{
 				if (structure[iStr]->getType() == LIGHTFACTORY ||
 					structure[iStr]->getType() == HEAVYFACTORY ||
@@ -1414,7 +1414,7 @@ void cGame::combat_mouse()
         // REPAIR
         if (key[KEY_R] && bOrderingUnits==false)
         {
-            if (structure[game.hover_structure]->iPlayer == 0 &&
+            if (structure[game.hover_structure]->getOwner() == 0 &&
                 structure[game.hover_structure]->getHitPoints() < structures[structure[game.hover_structure]->getType()].hp)
             {
                 if (bMousePressedLeft )
@@ -2640,7 +2640,7 @@ void cGame::draw_placeit()
 			{
 				int iID = map.cell[iCll].id[MAPID_STRUCTURES];
 
-				if (structure[iID]->iPlayer == 0)
+				if (structure[iID]->getOwner() == 0)
 					bOutOfBorder=false; // connection!	
                 else
                     bMayPlace=false;
@@ -4771,7 +4771,7 @@ void destroyAllStructures(bool bHumanPlayer) {
 	if (bHumanPlayer) {
 		for (int i=0; i < MAX_STRUCTURES; i++) {
 			if (structure[i]) {
-				if (structure[i]->iPlayer == 0) {
+				if (structure[i]->getOwner() == 0) {
 					structure[i]->die();
 				}
 			}
@@ -4779,7 +4779,7 @@ void destroyAllStructures(bool bHumanPlayer) {
 	} else {
 		for (int i=0; i < MAX_STRUCTURES; i++) {
 			if (structure[i]) {
-				if (structure[i]->iPlayer > 0) {
+				if (structure[i]->getOwner() > 0) {
 					structure[i]->die();
 				}
 			}

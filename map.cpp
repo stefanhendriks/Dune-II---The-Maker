@@ -527,7 +527,7 @@ void cMap::draw_minimap()
             	if (cell[iCll].id[MAPID_STRUCTURES] > -1)
 			{
                
-				int iPlr=structure[cell[iCll].id[MAPID_STRUCTURES]]->iPlayer;
+				int iPlr=structure[cell[iCll].id[MAPID_STRUCTURES]]->getOwner();
 				// get house color from the player of this structure
                 if (iPlr ==0 || (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower()))
                 {

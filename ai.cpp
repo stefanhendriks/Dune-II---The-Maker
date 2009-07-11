@@ -298,7 +298,7 @@ void cAIPlayer::think_building()
 				for (int s=0; s < MAX_STRUCTURES; s++)
 				{
 					if (structure[s])
-						if (structure[s]->iPlayer == ID)
+						if (structure[s]->getOwner() == ID)
 							if (structure[s]->getType() == iStrucType)
 							{
 								REINFORCE(ID, i, structure[s]->getCell(), -1);
@@ -437,7 +437,7 @@ void cAIPlayer::think_harvester()
             for (int k=0; k < MAX_STRUCTURES; k++)
             {
                 if (structure[k])
-                    if (structure[k]->iPlayer == ID)
+                    if (structure[k]->getOwner() == ID)
                         if (structure[k]->getType() == REFINERY)
                         {                            
                             REINFORCE(ID, HARVESTER, structure[k]->getCell(), -1);
@@ -1243,7 +1243,7 @@ int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer)
 
     for (int i=0; i < MAX_STRUCTURES; i++)
         if (structure[i])
-            if (structure[i]->iPlayer == iAttackPlayer)
+            if (structure[i]->getOwner() == iAttackPlayer)
 				if (map.iVisible[structure[i]->getCell()][iPlayer] || 
 					game.bSkirmish)
 				{
@@ -1272,7 +1272,7 @@ void cAIPlayer::think_repair_structure(cStructure *struc)
 	// think of repairing, only when it is not being repaired yet.
 	if (struc->bRepair == false) {
 		// when ai has a lot of money, repair even faster
-		if (player[struc->iPlayer].credits > 1000) {
+		if (player[struc->getOwner()].credits > 1000) {
 			if (struc->getHitPoints() < (structures[struc->getType()].hp))  {
 				struc->bRepair=true;
 				logbook("AI Will repair structure");
@@ -1333,7 +1333,7 @@ int cAIPlayer::iPlaceStructureCell(int iType)
 		if (structure[i])
 		{
 			// same owner
-			if (structure[i]->iPlayer == ID)
+			if (structure[i]->getOwner() == ID)
 			{
 				// scan around
 				int iStartX=iCellGiveX(structure[i]->getCell());

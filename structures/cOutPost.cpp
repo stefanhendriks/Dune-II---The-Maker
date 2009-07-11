@@ -83,7 +83,7 @@ void cOutPost::think_guard()
 void cOutPost::draw(int iStage)
 {   
     // Select proper palette
-    select_palette(player[iPlayer].pal);
+    select_palette(player[getOwner()].pal);
 
     // iStage <= 1 -> Draw structure
     // iStage >  1 -> Draw structure repair icon (fading)

@@ -1212,7 +1212,7 @@ int FIND_PRIMARY_BUILDING(int iType, int iPlayer)
 	for (int i=0; i < MAX_STRUCTURES; i++)
 	{
 		// valid , and its for this player too
-		if (structure[i] && structure[i]->iPlayer == iPlayer)
+		if (structure[i] && structure[i]->getOwner() == iPlayer)
 		{
 			if (structure[i]->getType() == iType)
 				if (structure[i]->iFreeAround() > -1) // free!
@@ -1537,8 +1537,8 @@ int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstr
 
   if (ownerstruc > -1)
   {
-      bullet[new_id].iPlayer = structure[ownerstruc]->iPlayer;
-      map.clear_spot(cell, 3, structure[ownerstruc]->iPlayer);
+      bullet[new_id].iPlayer = structure[ownerstruc]->getOwner();
+      map.clear_spot(cell, 3, structure[ownerstruc]->getOwner());
   }
 
 

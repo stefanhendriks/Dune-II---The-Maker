@@ -33,10 +33,10 @@ void cRepairFacility::think()
             {
                 TIMER_repairunit=0;
 
-                if (player[iPlayer].credits > 2)
+                if (player[getOwner()].credits > 2)
                 {
                     unit[iUnitID].iTempHitPoints+=3;
-                    player[iPlayer].credits--;
+                    player[getOwner()].credits--;
 
                     if (unit[iUnitID].iTempHitPoints >= units[unit[iUnitID].iType].hp)
                     {
@@ -145,7 +145,7 @@ void cRepairFacility::think_guard()
 void cRepairFacility::draw(int iStage)
 {   
     // Select proper palette
-    select_palette(player[iPlayer].pal);
+    select_palette(player[getOwner()].pal);
 
     // iStage <= 1 -> Draw structure
     // iStage >  1 -> Draw structure repair icon (fading)

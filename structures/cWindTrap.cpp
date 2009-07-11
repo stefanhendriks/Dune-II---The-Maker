@@ -87,7 +87,7 @@ void cWindTrap::think_animation()
 		TIMER_repairanimation++;
 
         // if possible to repair
-		if (TIMER_repairanimation > 1 && player[iPlayer].credits > 2)
+		if (TIMER_repairanimation > 1 && player[getOwner()].credits > 2)
 		{			
 			TIMER_repairanimation=0;
 			iRepairAlpha -= 7;
@@ -115,7 +115,7 @@ void cWindTrap::think_guard()
 void cWindTrap::draw(int iStage)
 {   
     // Select proper palette
-    select_palette(player[iPlayer].pal);
+    select_palette(player[getOwner()].pal);
 
     // iStage <= 1 -> Draw structure
     // iStage >  1 -> Draw structure repair icon (fading)

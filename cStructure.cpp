@@ -296,6 +296,10 @@ void cStructure::setCell(int cell) {
 	iCell = cell;
 }
 
+void cStructure::setOwner(int player) {
+	iPlayer = player;
+}
+
 /**
 	Think actions like any other structure would have.
 **/
@@ -359,7 +363,7 @@ int STRUCTURE_FREE_TYPE(int iPlyr, int iCll, int iTpe)
 
     for (int i=0; i < MAX_STRUCTURES; i++)
         if (structure[i])                     // valid
-            if (structure[i]->iPlayer == iPlyr)         // same player
+            if (structure[i]->getOwner() == iPlyr)         // same player
                 if (structure[i]->getType() == iTpe)     // refinery
                     if (structure[i]->iUnitID < 0)       // no unit took this
                     {                       

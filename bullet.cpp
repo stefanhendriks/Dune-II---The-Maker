@@ -296,7 +296,7 @@ void cBullet::think_move()
 					logbook("Turret bullet shot itself, will skip friendly fire");
                     bSkipSelf=true; // do not shoot yourself
 				} else {
-					if (structure[id]->iPlayer == iPlayer) {
+					if (structure[id]->getOwner() == iPlayer) {
                         bSkipSelf=true; // do not shoot own buildings    
 						logbook("Bullet shot itself, will skip friendly fire");
 					}
@@ -527,12 +527,11 @@ void cBullet::think_move()
             {
 				if (rnd(100) < 40)
 				{
-                    if (iOwnerUnit > -1)
-                    {
+                    if (iOwnerUnit > -1) {
                         unit[id].iPlayer = unit[iOwnerUnit].iPlayer;
-                    }
-                    else if (iOwnerStructure > -1)
-                        unit[id].iPlayer = structure[iOwnerStructure]->iPlayer;
+                    } else if (iOwnerStructure > -1) {
+                        unit[id].iPlayer = structure[iOwnerStructure]->getOwner();
+					}
                     
                     unit[id].iAttackStructure = -1;
                     unit[id].iAttackUnit=-1;

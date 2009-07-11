@@ -9,7 +9,17 @@
   2001 - 2009 (c) code by Stefan Hendriks
 
   */
+#ifndef _CRT_SECURE_NO_DEPRECATE
+	#define _CRT_SECURE_NO_DEPRECATE
+#endif
+
+#ifndef _CRT_SECURE_NO_WARNINGS
+	#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #ifndef D2TMH_H
+
+
 
 // include this stuff
 #include <time.h> 

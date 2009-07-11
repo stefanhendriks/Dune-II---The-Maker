@@ -24,26 +24,26 @@ cRocketTurret::~cRocketTurret()
 }
 
 
-/*  OVERLOADED FUNCTIONS  */
-
-// Specific Construction Yard thinking
 void cRocketTurret::think()
 {
     int iMyIndex=-1;
 
-    for (int i=0; i < MAX_STRUCTURES; i++)
+	for (int i=0; i < MAX_STRUCTURES; i++) {
         if (structure[i] == this)
         {
             iMyIndex=i;
             break;
         }
+	}
 
     // this should not happen, but just in case
-    if (iMyIndex < 0)
+	if (iMyIndex < 0) {
         return;
+	}
 
-    if (player[iPlayer].bEnoughPower() == false)
+	if (player[getOwner()].bEnoughPower() == false) {
         return;  // do not fire a thing now
+	}
 
     // turning & shooting
      if (iTargetID > -1)
@@ -129,10 +129,7 @@ void cRocketTurret::think()
             {
                 TIMER_turn++;
 
-                int iSlowDown = 125;
-
-                if (getType() == RTURRET)
-                    iSlowDown = 200; // even more slow
+                int iSlowDown = 200;
 
                 if (TIMER_turn > iSlowDown)
                 {                    
@@ -206,19 +203,16 @@ void cRocketTurret::think_animation()
     
 }
 
-void cRocketTurret::think_guard()
-{
- // TURRET CODE HERE
+void cRocketTurret::think_guard() {
 
-    if (player[iPlayer].bEnoughPower() == false)
+	// no power = no defense
+	if (player[getOwner()].bEnoughPower() == false) {
         return; 
-
+	}
 
     TIMER_guard++;
 
-
-    if (TIMER_guard > 10)
-    {
+    if (TIMER_guard > 10) {
         int iCellX = iCellGiveX(getCell());
         int iCellY = iCellGiveY(getCell());
 
@@ -236,69 +230,44 @@ void cRocketTurret::think_guard()
             // is valid
             if (unit[i].isValid())
             {
-				bool bAlly=false;
-
-                /*
-				// When we are player 1 till 5 (6 = SANDWORM) then we have a lot of allies)
-				if (iPlayer >= 1 && iPlayer <= 5)
-					if (unit[i].iPlayer >= 1 && unit[i].iPlayer <= 5)
-                        bAlly=true; // friend dude! 
-				
-
-				if (iPlayer == 0 && player[0].house == ATREIDES)
-				{
-					// when the unit player == FREMEN
-					if (player[unit[i].iPlayer].house == FREMEN)
-						bAlly=true;
-				}*/
-
-
-                if (player[iPlayer].iTeam == player[unit[i].iPlayer].iTeam)
-                    bAlly=true;
-
-				
-
+				bool bAlly=player[getOwner()].iTeam == player[unit[i].iPlayer].iTeam;
+                
                 // not ours and its visible
-                if (unit[i].iPlayer != iPlayer && map.iVisible[unit[i].iCell][iPlayer] && bAlly == false)
-                {
-                    if (getType() == TURRET)
-                        if (units[unit[i].iType].airborn)
-                            continue; // it was airborn, and normal turrets cannot hit this
+                if (unit[i].iPlayer != getOwner() && 
+					map.iVisible[unit[i].iCell][getOwner()] && 
+					bAlly == false) {
                      
                     int distance = ABS_length(iCellX, iCellY, iCellGiveX(unit[i].iCell), iCellGiveY(unit[i].iCell));
 
-                    if (unit[i].iType == ORNITHOPTER)
-                    {
-                        if (distance <= structures[getType()].sight)
-                        {
+					// when worm or ornithopter is in range, they are not limited to the iDistance (closest
+					// unit) range.
+					if (distance <= structures[getType()].sight) {
+						if (unit[i].iType == ORNITHOPTER) {
                             iAir=i;
-                        }
-                    }
-                    else if (unit[i].iType == SANDWORM)
-                    {
-                        if (distance <= structures[getType()].sight)
-                        {
+	                    } else if (unit[i].iType == SANDWORM) {
                             iWorm=i;
                         }
                     }
-                    else if (distance <= structures[getType()].sight && distance < iDistance)
+                    
+					// when distance < closest range so far, this one is the most dangerous.
+					if (distance <= structures[getType()].sight && distance < iDistance)
                     {
                         // ATTACK
                         iDistance = distance;
                         iDanger=i;
                     }
-
                 }
             }
         }
 
         // set target
-        if (iAir > -1)
+		if (iAir > -1) {
             iTargetID = iAir;
-        else if (iDanger > -1)
+		} else if (iDanger > -1) {
             iTargetID = iDanger;
-        else if (iWorm > -1)
+		} else if (iWorm > -1) {
             iTargetID = iWorm; // else pick worm
+		}
 
         TIMER_guard=0-rnd(20); // redo
 
@@ -309,7 +278,7 @@ void cRocketTurret::think_guard()
 void cRocketTurret::draw(int iStage)
 {   
     // Select proper palette
-    select_palette(player[iPlayer].pal);
+    select_palette(player[getOwner()].pal);
 
     // iStage <= 1 -> Draw structure
     // iStage >  1 -> Draw structure repair icon (fading)

@@ -16,18 +16,9 @@ cPalace::~cPalace()
 
 }
 
-
-/*  OVERLOADED FUNCTIONS  */
-
-// Specific Construction Yard thinking
 void cPalace::think()
 {
-    // AI
-    if (iPlayer > 0) aiplayer[iPlayer].think_repair_structure(this);
-
-    // Other
-    think_damage();
-    think_repair();  
+	cStructure::think();
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)
@@ -89,7 +80,7 @@ void cPalace::think_guard()
 void cPalace::draw(int iStage)
 {   
     // Select proper palette
-    select_palette(player[iPlayer].pal);
+    select_palette(player[getOwner()].pal);
 
     // iStage <= 1 -> Draw structure
     // iStage >  1 -> Draw structure repair icon (fading)

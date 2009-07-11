@@ -28,20 +28,23 @@ void cGunTurret::think()
 {
     int iMyIndex=-1;
 
-    for (int i=0; i < MAX_STRUCTURES; i++)
+	for (int i=0; i < MAX_STRUCTURES; i++) {
         if (structure[i] == this)
         {
             iMyIndex=i;
             break;
         }
+	}
 
     // this should not happen, but just in case
-    if (iMyIndex < 0)
+	if (iMyIndex < 0) {
         return;
+	}
 
     
-    if (player[iPlayer].bEnoughPower() == false)
+	if (player[getOwner()].bEnoughPower() == false) {
         return; 
+	}
 
 
     // turning & shooting
@@ -70,9 +73,6 @@ void cGunTurret::think()
 
                 int iDistance=9999;
                 int iSlowDown=200;
-
-                if (getType() == RTURRET)
-                    iSlowDown=450;                
 
                 if (unit[iTargetID].isValid())
                 {
@@ -129,10 +129,7 @@ void cGunTurret::think()
                 TIMER_turn++;
 
                 int iSlowDown = 125;
-
-                if (getType() == RTURRET)
-                    iSlowDown = 200; // even more slow
-
+             
                 if (TIMER_turn > iSlowDown)
                 {                    
                     TIMER_turn=0;
@@ -208,7 +205,7 @@ void cGunTurret::think_guard()
 {
  // TURRET CODE HERE
 
-    if (player[iPlayer].bEnoughPower() == false)
+    if (player[getOwner()].bEnoughPower() == false)
         return; 
 
     TIMER_guard++;
@@ -234,14 +231,16 @@ void cGunTurret::think_guard()
             {
 				bool bAlly=false;
 
-                if (player[iPlayer].iTeam == player[unit[i].iPlayer].iTeam)
+                if (player[getOwner()].iTeam == player[unit[i].iPlayer].iTeam)
                     bAlly=true;
 
 				
 
                 // not ours and its visible
-                if (unit[i].iPlayer != iPlayer && map.iVisible[unit[i].iCell][iPlayer] && bAlly == false)
-                {
+                if (unit[i].iPlayer != getOwner() && 
+					map.iVisible[unit[i].iCell][getOwner()] && 
+					bAlly == false) {
+
                     if (getType() == TURRET)
                         if (units[unit[i].iType].airborn)
                             continue; // it was airborn, and normal turrets cannot hit this
@@ -290,7 +289,7 @@ void cGunTurret::think_guard()
 void cGunTurret::draw(int iStage)
 {   
     // Select proper palette
-    select_palette(player[iPlayer].pal);
+    select_palette(player[getOwner()].pal);
 
     // iStage <= 1 -> Draw structure
     // iStage >  1 -> Draw structure repair icon (fading)

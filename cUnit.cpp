@@ -147,7 +147,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
             for (int k=0; k < MAX_STRUCTURES; k++)
             {
                 if (structure[k])
-                    if (structure[k]->iPlayer == iPlayer)
+                    if (structure[k]->getOwner() == iPlayer)
                         if (structure[k]->getType() == REFINERY)
                         {
                             REINFORCE(iPlayer, HARVESTER, structure[k]->getCell(), -1);
@@ -931,7 +931,7 @@ void cUnit::think_guard()
 							if (structure[i].iPlayer >= 1 && structure[i].iPlayer <= 5)
 								bAlly=true; // friend dude!*/
 
-                        if (player[iPlayer].iTeam == player[structure[i]->iPlayer].iTeam)
+                        if (player[iPlayer].iTeam == player[structure[i]->getOwner()].iTeam)
                             bAlly=true;
 
 							
@@ -944,7 +944,7 @@ void cUnit::think_guard()
 							
 							
 							// not ours and its visible
-							if (structure[i]->iPlayer != iPlayer && 
+							if (structure[i]->getOwner() != iPlayer && 
 								map.iVisible[structure[i]->getCell()][iPlayer] && 
 								bAlly == false)	{
 								int distance = ABS_length(iCellX, iCellY, iCellGiveX(structure[i]->getCell()), 

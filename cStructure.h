@@ -26,6 +26,8 @@ class cStructure {
 		int iCell;           // What cell it is (most upper left part of structure where
 							 // drawing starts)
 
+		int iPlayer;         // belongs to...
+
 	protected:
 		// Width and Height in cells (preset by constructor of type)
 		int iWidth;
@@ -45,7 +47,7 @@ class cStructure {
 							 // meaning, when 0% , it is all concrete. But if 10%, it means 10% of the building
 							 // is not covered.
 
-		int iPlayer;         // belongs to...
+
 		int iFrame;          // Frame (flag animation)
 
 		// Repairing stuff
@@ -103,11 +105,13 @@ class cStructure {
 		int getHeight() { return iHeight; }
 		int getHitPoints() { return iHitPoints; }
 		int getCell() { return iCell; }
+		int getOwner() { return iPlayer; } // return the player id who owns this structure
 
 		void setHeight(int height);
 		void setWidth(int width);
 		void setHitPoints(int hp);
 		void setCell(int cell);
+		void setOwner(int player); // what player owns this structure?
 
 		void damage(int hp); // damage structure for x amount of hp
 

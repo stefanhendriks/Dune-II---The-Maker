@@ -57,7 +57,7 @@ void cRefinery::think()
 
             unit[iUnitID].TIMER_harvest++;
             
-            if (unit[iUnitID].TIMER_harvest > player[iPlayer].iDumpSpeed(10))
+            if (unit[iUnitID].TIMER_harvest > player[getOwner()].iDumpSpeed(10))
             {
                 unit[iUnitID].TIMER_harvest = 0;
 
@@ -230,7 +230,7 @@ void cRefinery::think_guard()
 void cRefinery::draw(int iStage)
 {   
     // Select proper palette
-    select_palette(player[iPlayer].pal);
+    select_palette(player[getOwner()].pal);
 
     // iStage <= 1 -> Draw structure
     // iStage >  1 -> Draw structure repair icon (fading)
