@@ -215,8 +215,8 @@ ADDED:
   - In CAMPAIGN mode, the AI cheats (like in Dune 2). Else the dune 2 missions are unplayable.
   - In Skirmish mode, the AI does NOT cheat.
 
-DEMO 4 - DEMO 3 (released at: dd/mm/yyyy)
------------------------------------------
+Version 1.0
+-----------
 TODO:
 - make options screen
 - fix starport bug
@@ -225,6 +225,8 @@ TODO:
   base.
 - AI should retaliate when you attack its structures or harvesters , and not wait till you get near them...
 
+DEMO 3.5 - DEMO 3 
+-----------------------------------------
 BALANCING:
 - Ornithopter rockets do more damage
 - Rockets from Troopers do a bit less damage

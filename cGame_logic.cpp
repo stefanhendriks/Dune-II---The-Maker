@@ -42,8 +42,9 @@ void cGame::init()
     memset(cRegionText, 0, sizeof(cRegionText));
     //int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
 
-	windowed=true;
-    screen_x = 640;
+	windowed = true;
+    
+	screen_x = 640;
     screen_y = 480;
 
     bPlaySound = true;
@@ -4929,6 +4930,15 @@ void GAME_KEYS()
 		// Center on focus cell
 		if (key[KEY_H]) {
 			map.set_pos(-1,-1, player[0].focus_cell);
+		}
+
+		// Center on the selected structure
+		if (key[KEY_C]) {
+			if (game.selected_structure > -1) {
+				if (structure[game.selected_structure]) {
+					map.set_pos(-1,-1, structure[game.selected_structure]->getCell());
+				}
+			}
 		}
 
 		if (iGroup > 0)
