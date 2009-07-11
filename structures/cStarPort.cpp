@@ -122,8 +122,9 @@ void cStarPort::think_deploy()
 					{
 						int id = UNIT_CREATE(iNewCell, iID, 0, true);
                         
-                        if (iRallyPoint > -1)
-                            unit[id].move_to(iRallyPoint, -1, -1);
+						if (getRallyPoint() > -1) {
+                            unit[id].move_to(getRallyPoint(), -1, -1);
+						}
 
 						bDeployed=true;
 						game.iconFrigate[i]--;
@@ -138,11 +139,11 @@ void cStarPort::think_deploy()
 						int rX = (iCellGiveX(getCell()) - 5) + rnd(10);
 						int rY = (iCellGiveY(getCell()) - 5) + rnd(10);
 						
-                        if (iRallyPoint > -1)
+                        if (getRallyPoint() > -1)
                         {
                          //   unit[id].move_to(iRallyPoint, -1, -1);
-                          rX = (iCellGiveX(iRallyPoint) - 2) + rnd(4);
-                          rY = (iCellGiveY(iRallyPoint) - 2) + rnd(4);
+                          rX = (iCellGiveX(getRallyPoint()) - 2) + rnd(4);
+                          rY = (iCellGiveY(getRallyPoint()) - 2) + rnd(4);
 						}
 
 						FIX_BORDER_POS(rX, rY);

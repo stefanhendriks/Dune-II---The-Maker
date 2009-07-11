@@ -63,8 +63,8 @@ void cRepairFacility::think()
                         unit[iUnitID].TIMER_movewait = 0;
                         unit[iUnitID].TIMER_thinkwait = 0;
 
-                        if (iRallyPoint > -1)
-                            unit[iUnitID].move_to(iRallyPoint, -1, -1);
+                        if (getRallyPoint() > -1)
+                            unit[iUnitID].move_to(getRallyPoint(), -1, -1);
 
                         if (DEBUGGING)
                             assert(iUnitID > -1);

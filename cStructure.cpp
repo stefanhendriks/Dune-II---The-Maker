@@ -254,6 +254,12 @@ void cStructure::setHeight(int height) {
 	iHeight = height;
 }
 
+void cStructure::setRallyPoint(int cell) {
+	assert(cell > -2); // -1 is allowed (means disable);
+	assert(cell < MAX_CELLS);
+	iRallyPoint = cell;
+}
+
 /**
 	Damage structure by amount of hp. The amount passed to this method
 	must be > 0. When it is < 0, it will be wrapped to > 0 anyway and 

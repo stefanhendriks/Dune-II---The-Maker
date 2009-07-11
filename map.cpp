@@ -767,8 +767,8 @@ void cMap::draw()
             if (game.selected_structure > -1)
             {
                 // show draw a target on this cell so we know this is the rally point.
-                if (structure[game.selected_structure]->iRallyPoint > -1)
-                    if (structure[game.selected_structure]->iRallyPoint == cll)
+                if (structure[game.selected_structure]->getRallyPoint() > -1)
+                    if (structure[game.selected_structure]->getRallyPoint() == cll)
                     {
                         // draw this thing ...
                         set_trans_blender(0,0,0,128);

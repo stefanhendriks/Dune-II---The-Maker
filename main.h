@@ -49,7 +49,7 @@
 #define MAP_W_MAX        64     // max of width
 #define MAP_H_MAX        64     // max of height
 
-#define MAX_CELLS    4096
+#define MAX_CELLS    (MAP_W_MAX * MAP_H_MAX) // use width and height to determine max
 
 // SCENES USED FOR GIF PLAYBACK:
 #define SCENE_NONE		-1

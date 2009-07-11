@@ -1049,8 +1049,8 @@ void cGame::think_build()
 						structure[iStr]->bAnimate=true; // animate
 						int id = UNIT_CREATE(iSpot, iconlist[i][iIconID].iUnitID, 0, true);
 
-                        if (structure[iStr]->iRallyPoint > -1 && id > -1)
-                            unit[id].move_to(structure[iStr]->iRallyPoint, -1, -1);
+                        if (structure[iStr]->getRallyPoint() > -1 && id > -1)
+                            unit[id].move_to(structure[iStr]->getRallyPoint(), -1, -1);
 
 						iconbuilding[i]=-1;
 						iconprogress[i]=-1;
@@ -1150,7 +1150,7 @@ void cGame::combat_mouse()
                 if (id > -1)
                     if (structure[id]->getOwner() == 0)
                     {
-                        structure[id]->iRallyPoint = mc;
+                        structure[id]->setRallyPoint(mc);
                         bParticle=true;
                     }
             }
