@@ -35,7 +35,7 @@ void cHeavyFactory::think_animation()
     if (iBuildFase < 10)
         think_prebuild();
 
-    if (bAnimate == false)
+    if (!isAnimating())
     {
         TIMER_flag++;
         
@@ -58,7 +58,7 @@ void cHeavyFactory::think_animation()
             if(iFrame > 2) // 2 animation frames
             {
                 iFrame=0;
-                bAnimate=false;
+                setAnimating(false);
             }
             else if (iFrame < 1)
                 iFrame=1;

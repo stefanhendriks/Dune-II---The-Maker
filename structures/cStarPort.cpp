@@ -31,7 +31,7 @@ void cStarPort::think_animation()
     if (iBuildFase < 10)
         think_prebuild();
 
-    if (bAnimate == false)
+    if (!isAnimating())
     {
      TIMER_flag++;
 
@@ -169,7 +169,7 @@ void cStarPort::think_deploy()
             {
                 // its empty, so we are done
                 iFrame=0;
-                bAnimate=false;
+                setAnimating(false);
                 TIMER_deploy=-1;
                 game.TIMER_mayorder=-1;
             }

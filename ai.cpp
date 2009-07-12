@@ -259,7 +259,7 @@ void cAIPlayer::think_building()
                 {
                     int iSpot = structure[iStr]->iFreeAround();
                     player[ID].iPrimaryBuilding[iStrucType] = iStr;
-                    structure[iStr]->bAnimate=true; // animate
+                    structure[iStr]->setAnimating(true); // animate
                     iProducedUnit=UNIT_CREATE(iSpot, i, ID, false);                
                 }
                 else
@@ -271,7 +271,7 @@ void cAIPlayer::think_building()
                     {
                         int iSpot = structure[iNewStr]->iFreeAround();                        
                         player[ID].iPrimaryBuilding[iStrucType] = iNewStr;
-                        structure[iNewStr]->bAnimate=true; // animate
+                        structure[iNewStr]->setAnimating(true); // animate
                         iProducedUnit=UNIT_CREATE(iSpot, i, ID, false);                
                     }
 					else

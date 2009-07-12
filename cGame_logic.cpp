@@ -545,7 +545,7 @@ void cGame::think_starport()
 		if (iStr > -1)
 		{
 			player[0].iPrimaryBuilding[STARPORT] = iStr; // assign
-			structure[iStr]->bAnimate=true;
+			structure[iStr]->setAnimating(true);
 			SPAWN_FRIGATE(0, structure[iStr]->getCell());
             TIMER_mayorder=10;
 			play_voice(SOUND_VOICE_06_ATR);
@@ -1046,7 +1046,7 @@ void cGame::think_build()
 
 						int iSpot= structure[iStr]->iFreeAround();
 					
-						structure[iStr]->bAnimate=true; // animate
+						structure[iStr]->setAnimating(true); // animate
 						int id = UNIT_CREATE(iSpot, iconlist[i][iIconID].iUnitID, 0, true);
 
                         if (structure[iStr]->getRallyPoint() > -1 && id > -1)
@@ -1069,10 +1069,6 @@ void cGame::think_build()
 
 
 }
-
-
-
-
 
 // Draw the mouse in combat mode, and do its interactions
 void cGame::combat_mouse()

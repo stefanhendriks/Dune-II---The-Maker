@@ -247,10 +247,14 @@ void cStructure::think_damage()
 }
 
 void cStructure::setWidth(int width) {
+	assert(width > 0);
+	assert(width < 10);
 	iWidth = width;
 }
 
 void cStructure::setHeight(int height) {
+	assert(height > 0);
+	assert(height < 10);
 	iHeight = height;
 }
 
@@ -258,6 +262,10 @@ void cStructure::setRallyPoint(int cell) {
 	assert(cell > -2); // -1 is allowed (means disable);
 	assert(cell < MAX_CELLS);
 	iRallyPoint = cell;
+}
+
+void cStructure::setAnimating(bool value) {
+	bAnimate = value;
 }
 
 /**

@@ -376,7 +376,7 @@ if (bSquish)
     if (iStructureID > -1)
     {
         if (structure[iStructureID])
-            structure[iStructureID]->bAnimate = false;        
+            structure[iStructureID]->setAnimating(false);
     }
 
 	// Anyone who was attacking this unit is on guard
@@ -1300,7 +1300,7 @@ void cUnit::think()
                     sprintf(msg, "Returning to refinery ID %d", iTheID);
                     LOG(msg);
 					move_to(structure[iTheID]->getCell()+rnd(2)+ (rnd(2) * 64), iTheID, -1); // move yourself...                    
-                    structure[iTheID]->bAnimate = true;
+                    structure[iTheID]->setAnimating(true);
 				}
 				else
 				{
@@ -1335,7 +1335,7 @@ void cUnit::think()
 			if (structure[iStructureID]->iUnitID < 0)
 			{
 				// get in!
-				structure[iStructureID]->bAnimate = false;
+				structure[iStructureID]->setAnimating(false);
 				structure[iStructureID]->iUnitID = iID;  // !!    
 				structure[iStructureID]->iFrame = 0;
 								
@@ -1362,7 +1362,7 @@ void cUnit::think()
 			if (structure[iStructureID]->iUnitID < 0)
 			{
 				// get in!
-				structure[iStructureID]->bAnimate = false;
+				structure[iStructureID]->setAnimating(false);
 				structure[iStructureID]->iUnitID = iID;  // !!    
 				structure[iStructureID]->iFrame = 0;
 								
@@ -1566,7 +1566,7 @@ void cUnit::think_move_air()
 								if (structure[unit[iuID].iStructureID]->iUnitID < 0)
 								{
 									// get in!
-									structure[unit[iuID].iStructureID]->bAnimate = false;
+									structure[unit[iuID].iStructureID]->setAnimating(false);
 									structure[unit[iuID].iStructureID]->iUnitID = iuID;  // !!    
 									structure[unit[iuID].iStructureID]->iFrame = 0;
 									
@@ -1637,7 +1637,7 @@ void cUnit::think_move_air()
                     game.TIMER_mayorder=2;
 
                     structure[iStrucId]->iFrame = 4; // show package on this structure
-					structure[iStrucId]->bAnimate = true; // keep animating
+					structure[iStrucId]->setAnimating(true); // keep animating
                     ((cStarPort *)structure[iStrucId])->TIMER_deploy = 3; // 1 second, just pick something
 				}
 				
@@ -2766,7 +2766,7 @@ void cUnit::think_move()
 			if (structure[iStructureID]->iUnitID < 0)
 			{
 				// get in!
-				structure[iStructureID]->bAnimate = false;
+				structure[iStructureID]->setAnimating(false);
 				structure[iStructureID]->iUnitID = iID;  // !!    
 				structure[iStructureID]->iFrame = 0;
 				
@@ -3051,7 +3051,7 @@ void cUnit::think_move()
                     if (structure[iStructureID]->iUnitID < 0)
                     {
                         // get in!
-                        structure[iStructureID]->bAnimate = false;
+                        structure[iStructureID]->setAnimating(false);
                         structure[iStructureID]->iUnitID = iID;      
                         structure[iStructureID]->iFrame = 0;
                         

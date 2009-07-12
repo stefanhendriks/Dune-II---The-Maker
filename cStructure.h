@@ -21,14 +21,17 @@
 class cStructure {
 
 	private:
-		int iHitPoints;      // HitPoints this structure has
+		int iHitPoints;     // HitPoints this structure has
 
-		int iCell;           // What cell it is (most upper left part of structure where
-							 // drawing starts)
+		int iCell;          // What cell it is (most upper left part of structure where
+							// drawing starts)
 
-		int iPlayer;         // belongs to...
+		int iPlayer;        // owner
 	
 		int iRallyPoint;    // rallypoint ...
+
+		bool bAnimate;      // Do its special animation? (unit leaving building, starport
+							// dropping something, etc)
 
 	protected:
 		// Width and Height in cells (preset by constructor of type)
@@ -57,10 +60,6 @@ class cStructure {
 		int iRepairY;		// raising repair thingy
 		int iRepairX;		// repair X position (changes everytime?)
 		int iRepairAlpha;	// repair alpha
-
-		// Other stuff
-		bool bAnimate;      // Do its special animation? (unit leaving building, starport
-							// dropping something, etc)
 
 		int iUnitID;        // >-1 means ID to unit
 
@@ -108,13 +107,15 @@ class cStructure {
 		int getOwner() { return iPlayer; } // return the player id who owns this structure
 		int getRallyPoint() { return iRallyPoint; }
 
+		bool isAnimating() { return bAnimate; }
+
 		void setHeight(int height);
 		void setWidth(int width);
 		void setHitPoints(int hp);
 		void setCell(int cell);
 		void setOwner(int player); // set owner (player id) of structure
 		void setRallyPoint(int cell); // set rally point of structure
-
+		void setAnimating(bool value); // set animation on / off
 
 		void damage(int hp); // damage structure for x amount of hp
 

@@ -40,14 +40,14 @@ void cRefinery::think()
             if (unit[iUnitID].isValid() == false)
             {
                 iUnitID=-1;
-				bAnimate=false;
+				setAnimating(false);
                 return;
             }
 
 			if (unit[iUnitID].iStructureID != iMyID)
 			{
 				iUnitID=-1;
-				bAnimate=false;
+				setAnimating(false);
 				return;
 			}                
             
@@ -164,7 +164,7 @@ void cRefinery::think_animation()
     if (iBuildFase < 10)
         think_prebuild();
        
-    if (bAnimate == false)
+    if (!isAnimating())
     {
         // FLAG animation
         TIMER_flag++;

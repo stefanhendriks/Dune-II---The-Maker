@@ -31,7 +31,7 @@ void cIx::think_animation()
     if (iBuildFase < 10)
         think_prebuild();
 
-    if (bAnimate == false)
+    if (!isAnimating())
     {
         TIMER_flag++;
         
