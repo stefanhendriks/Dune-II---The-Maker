@@ -1,6 +1,6 @@
 // Structure class
 
-class cRefinery : public cStructure
+class cRefinery : public cAbstractStructure
 {
 private:
     int iFade;          // Fading progress (windtraps)
@@ -8,6 +8,8 @@ private:
     
     // TIMER
     int TIMER_fade;
+
+	void think_harvester_deploy();
 
 public:
     cRefinery();

@@ -1,6 +1,6 @@
 // Structure class
 
-class cSpiceSilo : public cStructure
+class cSpiceSilo : public cAbstractStructure
 {
 private:
    

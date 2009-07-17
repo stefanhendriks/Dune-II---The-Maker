@@ -1,8 +1,9 @@
 // Structure class
 
-class cHighTech : public cStructure
+class cHighTech : public cAbstractStructure
 {
 private:
+	void think_animation_unitDeploy();
     
 public:
     cHighTech();

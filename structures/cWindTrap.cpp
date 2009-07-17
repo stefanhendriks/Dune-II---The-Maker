@@ -24,94 +24,58 @@ cWindTrap::~cWindTrap()
 void cWindTrap::think()
 {
 	// think like base class
-	cStructure::think();
+	cAbstractStructure::think();
      
 }
 
-// Specific Animation thinking (flag animation OR its deploy animation)
-void cWindTrap::think_animation()
-{
-    // show (common) prebuild animation
-    if (iBuildFase < 10)
-        think_prebuild();        
+void cWindTrap::think_fade() {
+	TIMER_fade++;
 
-    TIMER_fade++;
-
-    int iTime;
+    int iTime; // the speed of fading
     
     // depending on fade direction, fade in slower/faster
-    if (bFadeDir)
-        iTime = 2;
-    else
+	if (bFadeDir) { // go to blue
         iTime = 3;
+	} else { // go to black
+        iTime = 4;
+	}
     
-    // timer based
-    if (TIMER_fade > iTime)
-    {
-        if (bFadeDir)
-        {
+    // time passed, we may change fade color
+    if (TIMER_fade > iTime) {
+        if (bFadeDir) {
             iFade++;
             
-            if (iFade > 254)
+			if (iFade > 254) {
                 bFadeDir=false;
-/*
-            if (iFade > 62)
-                bFadeDir=false;*/
-        }
-        else
-        {
+			}
+        } else {
             iFade--;
-            if (iFade < 1)
+
+			if (iFade < 1) {
                 bFadeDir=true;
+			}
         }
 
         TIMER_fade=0;
     }
-
-    // FLAG animation
-    TIMER_flag++;
-
-     if (TIMER_flag > 70)
-     {
-         iFrame++;
-
-         if (iFrame > 1)
-             iFrame=0;
-         
-         TIMER_flag=0;            
-     }
-
-     // Repair blink
-     if (bRepair)
-     {
-		TIMER_repairanimation++;
-
-        // if possible to repair
-		if (TIMER_repairanimation > 1 && player[getOwner()].credits > 2)
-		{			
-			TIMER_repairanimation=0;
-			iRepairAlpha -= 7;
-
-			if (iRepairAlpha < 1)
-			{
-				iRepairX = rnd((structures[getType()].bmp_width-16));
-				iRepairY = rnd((structures[getType()].bmp_height-32));
-				iRepairAlpha = 255;
-			}
-			else
-				iRepairY--;
-			
-		}
-     }
-
 }
 
-void cWindTrap::think_guard()
-{
+void cWindTrap::think_animation() {
+	cAbstractStructure::think_animation();
+	think_fade(); // windtrap specific blue fading
+	cAbstractStructure::think_flag();
+}
+
+void cWindTrap::think_guard() {
 
 }
 
 // Draw function to draw this structure()
+
+// TODO: make prebuild seperate method, so that could be removed here, made more abstract
+// leaving out only the real difference in drawing in the windtrap method.
+// the difference is within the drawing of the actual building, where lit_windtrap is called.
+// causing the nice blueish effect.
 void cWindTrap::draw(int iStage)
 {   
     // Select proper palette
@@ -223,19 +187,8 @@ void cWindTrap::draw(int iStage)
     }
     
 } // stage <= 1
-    else if (iStage == 2)
-    {
-        // now draw the repair alpha when repairing
-        if (bRepair)
-        {
-            if (iRepairAlpha > -1)
-            {
-                set_trans_blender(0, 0, 0, iRepairAlpha);
-                draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_REPAIR].dat, iDrawX()+iRepairX, iDrawY() + iRepairY);
-            }
-            else
-                iRepairAlpha = rnd(255);
-        }
+    else if (iStage == 2) {
+       cAbstractStructure::draw(iStage);
     }   
 }
 

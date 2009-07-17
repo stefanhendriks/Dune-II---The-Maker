@@ -1,6 +1,6 @@
 // Structure class
 
-class cConstYard : public cStructure
+class cConstYard : public cAbstractStructure
 {
 public:
     cConstYard();

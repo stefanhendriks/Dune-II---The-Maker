@@ -143,8 +143,8 @@ float fDegrees(int x1, int y1, int x2, int y2)
   float delta_x = (x2-x1);
   float delta_y = (y2-y1);
   
-  // NOTE: Actually this is A BUG , delta_x and delta_y are actually the other way around
-  // however, i am not bothered about it to fix it because it works okay now
+  // TOFIX: Somehow delta_x and delta_y need to be twisted here (should be y , x in the atan2 method)
+  // should be fixed some day, it works but I feel itchy about this.
   angle = (atan2(delta_x, delta_y));
   
   // convert to fDegrees
@@ -173,7 +173,6 @@ int bullet_correct_angle(int face_angle)
 // Give correct facing angle, used in MAIN.H
 // note: Not to be used with drawing yet, use convert_angle() with this result first then
 // - face angle is for units only
-// Rofl, the actual code in this function is 4 lines!!!
 int face_angle(float angle)
 {
   int a = (int)angle;
@@ -221,7 +220,7 @@ int convert_angle(int face_angle)
   // Due the fact that we use 0 as UP , and since WW uses 0 as RIGHT, we have to convert.
   // another problem is that we go clockwise and WW does NOT. 
   
-  // How the real facing is................ and what it should be for drawing... (multiplier!)
+  // How the real facing is................ and what it should be for drawing...
   if (face_angle == FACE_RIGHT)       return 0;
   if (face_angle == FACE_UPRIGHT)     return 1;
   if (face_angle == FACE_UP)          return 2;
@@ -231,10 +230,11 @@ int convert_angle(int face_angle)
   if (face_angle == FACE_DOWN)        return 6;
   if (face_angle == FACE_DOWNRIGHT)   return 7;
    
-  return 0; // just to make the compiler stop whining ;)
+  assert(false);
+  return 0; // theoretically cannot reach here, return 0 in all other cases
 }
 
-// euhh, gimme a number dude
+// return random number between 0 and 'max'
 int rnd(int max)
 {
   if (max < 1) return 0;

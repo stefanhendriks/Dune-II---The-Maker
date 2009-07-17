@@ -1,6 +1,6 @@
 // Structure class
 
-class cRocketTurret : public cStructure
+class cRocketTurret : public cAbstractStructure
 {
 private:    
    int iHeadFacing;        // (for turrets only) what is this structure facing at?

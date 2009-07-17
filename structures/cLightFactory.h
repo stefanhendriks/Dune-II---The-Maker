@@ -1,8 +1,9 @@
 // Structure class
 
-class cLightFactory : public cStructure
+class cLightFactory : public cAbstractStructure
 {
 private:
+	void think_animation_unitDeploy();
     
 public:
     cLightFactory();

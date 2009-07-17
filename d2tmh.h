@@ -74,7 +74,7 @@
 #include "cHitpointCalculator.h"			/** math for hitpoints **/
 #include "d2tm_math.h"
 #include "cTimeManager.h"
-#include "cStructure.h"
+#include "cAbstractStructure.h"
 #include "cStructureFactory.h"				// Responsible for creation of Structures
 #include "cUnit.h"
 #include "cAbstractUnit.h"					// Abstract Unit class (will replace cUnit.h eventually)
@@ -82,6 +82,7 @@
 #include "cUnitUtils.h"						// Responsible for generic operations on units (ie finding a unit, etc)
 #include "cUnitDrawer.h"					// Responsible for drawing units
 #include "cMentat.h"
+#include "cCellCalculator.h"			    /** math with cells , with handy references to structures and units **/
 #include "ini.h"							// INI loading
 #include "cGame.h"							// game class
 #include "common.h"							// commonly used functions

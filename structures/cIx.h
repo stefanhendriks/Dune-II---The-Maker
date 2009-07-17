@@ -1,6 +1,6 @@
 // Structure class
 
-class cIx : public cStructure
+class cIx : public cAbstractStructure
 {
 private:
     

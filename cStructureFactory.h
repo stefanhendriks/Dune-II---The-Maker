@@ -25,16 +25,16 @@ public:
 
 	static cStructureFactory *getInstance();
 	
-	void deleteStructureInstance(cStructure *structure);
+	void deleteStructureInstance(cAbstractStructure *structure);
 	
-	cStructure *createStructureInstance(int type);
+	cAbstractStructure *createStructureInstance(int type);
 
-	cStructure *createStructure(int iCell, int iStructureType, int iPlayer, int iPercent);
-	cStructure *createStructure(int iCell, int iStructureType, int iPlayer);
+	cAbstractStructure *createStructure(int iCell, int iStructureType, int iPlayer, int iPercent);
+	cAbstractStructure *createStructure(int iCell, int iStructureType, int iPlayer);
 
 	int getFreeSlot();
 
-	void clearFogForStructureType(int iCell, cStructure *str);
+	void clearFogForStructureType(int iCell, cAbstractStructure *str);
 	void clearFogForStructureType(int iCell, int iStructureType, int iSight, int iPlayer);
 
 	void placeStructure(int iCell, int iStructureType, int iPlayer);
@@ -45,17 +45,4 @@ public:
 	void powerDown(int iStructureType, int iPlayer);
 
 };
-/*
-class Singleton 
-  {
-  public:
-      static Singleton* Instance();
-  protected:
-      Singleton();
-      Singleton(const Singleton&);
-      Singleton& operator= (const Singleton&);
-  private:
-      static Singleton* pinstance;
-  };*/
-
 #endif

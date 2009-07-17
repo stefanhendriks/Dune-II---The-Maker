@@ -1,6 +1,6 @@
 // Structure class
 
-class cWindTrap : public cStructure
+class cWindTrap : public cAbstractStructure
 {
 private:
     int iFade;          // Fading progress (windtraps)
@@ -8,6 +8,9 @@ private:
     
     // TIMER
     int TIMER_fade;
+
+	// windtrap specific animation:
+	void think_fade();
 
 public:
     cWindTrap();
@@ -20,6 +23,5 @@ public:
 
     void draw(int iStage);
 	int getType();
-
 };
 

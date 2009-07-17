@@ -492,8 +492,7 @@ void cMap::draw_minimap()
 
 		if (iVisible[iCll][0])
 		{
-            if (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower())
-            {
+            if (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower()) {
 			// change color
 			if (cell[iCll].type == TERRAIN_ROCK)
 				iColor = makecol(80,80,60);
@@ -524,7 +523,7 @@ void cMap::draw_minimap()
 
             }
 
-            	if (cell[iCll].id[MAPID_STRUCTURES] > -1)
+            if (cell[iCll].id[MAPID_STRUCTURES] > -1)
 			{
                
 				int iPlr=structure[cell[iCll].id[MAPID_STRUCTURES]]->getOwner();
@@ -551,25 +550,37 @@ void cMap::draw_minimap()
                 }
 			}
 
-            if (cell[iCll].id[MAPID_WORMS] > -1)
-			{				
-				iColor = makecol(game.fade_select,game.fade_select,game.fade_select);				
+			if (cell[iCll].id[MAPID_AIR] > -1)
+			{
+				int iPlr=unit[cell[iCll].id[MAPID_AIR]].iPlayer;
+				int type=unit[cell[iCll].id[MAPID_AIR]].iType;
+				// only show own aircraft
+                if (iPlr == 0) {
+					if (type == CARRYALL) {
+						iColor = makecol(128,128,128);
+					} else if (type == ORNITHOPTER) {
+						// brighter for orni's
+						iColor = makecol(196,196,196);
+					} else {
+						iColor = makecol(255,255,255);
+					}
+                }
 			}
 
-		
 
+            if (cell[iCll].id[MAPID_WORMS] > -1) {				
+				iColor = makecol(game.fade_select,game.fade_select,game.fade_select);				
+			}
 		}
 
-        
-
-		// do not show the helper border ;)
+		// do not show the helper border
 		if (x == 0 || y == 0)
 			iColor = makecol(0,0,0);
 
 		if (x == 63 || y == 63)
 			iColor = makecol(0,0,0);
 
-
+		// double sized 'pixels'.
 		putpixel(bmp_screen, iDrawX+x, iDrawY+y, iColor);
 		putpixel(bmp_screen, iDrawX+x+1, iDrawY+y, iColor);
 		putpixel(bmp_screen, iDrawX+x+1, iDrawY+y+1, iColor);
@@ -577,11 +588,11 @@ void cMap::draw_minimap()
 
 		iDrawY+=1;
 	 }
+
 	 iDrawX+=1;
  }
 
-
- // Draw the magic rectangle
+ // Draw the magic rectangle (viewport)
  int iWidth=((game.screen_x-160)/32);
  int iHeight=((game.screen_y-42)/32)+1;
 

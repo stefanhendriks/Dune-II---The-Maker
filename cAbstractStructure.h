@@ -18,7 +18,7 @@
 
 
 
-class cStructure {
+class cAbstractStructure {
 
 	private:
 		int iHitPoints;     // HitPoints this structure has
@@ -34,26 +34,24 @@ class cStructure {
 							// dropping something, etc)
 
 	protected:
-		// Width and Height in cells (preset by constructor of type)
-		int iWidth;
-		int iHeight;
+		int iWidth;			// width in cells (set by factory)
+		int iHeight;		// height in cells (set by factory)
+
+		int iFrame;          // Frame for animation (flag and other)
 
     public:
 
 		// Constructor & Destructor:
-		cStructure(); // default constructor (never used actually!)
+		cAbstractStructure(); // default constructor (never used actually!)
 	    
-		cStructure(int iID);
-		~cStructure();
+		cAbstractStructure(int iID);
+		~cAbstractStructure();
 	    
 		
 	    
 		float fConcrete;     // how much concrete is *not* beneath this building (percentage)?
 							 // meaning, when 0% , it is all concrete. But if 10%, it means 10% of the building
 							 // is not covered.
-
-
-		int iFrame;          // Frame (flag animation)
 
 		// Repairing stuff
 		bool bRepair;       // repairing? (using timer + gives animation)
@@ -79,7 +77,7 @@ class cStructure {
 	    
 
 
-		// Filled in by derived classes    
+		// Filled in by derived classes 
 		virtual void draw(int iStage)=0;              // draw
 		virtual void think()=0;           // think
 		virtual void think_animation()=0; // think animation stuff        
@@ -89,6 +87,7 @@ class cStructure {
 		void think_prebuild();            // prebuild animation
 		void think_repair();              // repair thinking
 		void think_damage();              // think about damaging through time
+		void think_flag();				  // think method for flag animation
 
 		void die();                       // die
 
@@ -106,6 +105,7 @@ class cStructure {
 		int getCell() { return iCell; }
 		int getOwner() { return iPlayer; } // return the player id who owns this structure
 		int getRallyPoint() { return iRallyPoint; }
+		int getFrame() { return iFrame; }
 
 		bool isAnimating() { return bAnimate; }
 
@@ -116,10 +116,9 @@ class cStructure {
 		void setOwner(int player); // set owner (player id) of structure
 		void setRallyPoint(int cell); // set rally point of structure
 		void setAnimating(bool value); // set animation on / off
+		void setFrame(int frame);
 
 		void damage(int hp); // damage structure for x amount of hp
-
-
 };
 
 void upgradeTechTree(int iPlayer, int iStructureType);

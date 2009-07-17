@@ -10,6 +10,12 @@
 
   */
 
+/**
+	These are the globals used by D2TM. Global variables are considered 'evil'. They should
+	be moved to their respective context/classes. Ie, the game bitmap should be either in a Screen
+	class which is eventually used in a Game class.
+**/
+
 #ifndef D2TMC_H
 
 void timer_units();
@@ -22,7 +28,7 @@ extern int		iRest;	// rest value
 
 // game
 extern cGame		  game;
-extern cStructure     *structure[MAX_STRUCTURES];
+extern cAbstractStructure     *structure[MAX_STRUCTURES];
 extern cUnit          unit[MAX_UNITS];
 extern cMap           map;
 extern cPlayer        player[MAX_PLAYERS];

@@ -1,9 +1,10 @@
 // Structure class
 
-class cHeavyFactory : public cStructure
+class cHeavyFactory : public cAbstractStructure
 {
 private:
-    
+	void think_animation_unitDeploy();
+
 public:
     cHeavyFactory();
     ~cHeavyFactory();

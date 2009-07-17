@@ -13,7 +13,7 @@ cStructureFactory *cStructureFactory::getInstance() {
 	return instance;
 }
  
-cStructure *cStructureFactory::createStructureInstance(int type) {
+cAbstractStructure *cStructureFactory::createStructureInstance(int type) {
 	 // Depending on type, create proper derived class. The constructor
     // will take care of the rest
     if (type == CONSTYARD)		return new cConstYard;
@@ -35,7 +35,7 @@ cStructure *cStructureFactory::createStructureInstance(int type) {
 	return NULL;
 }
 
-void cStructureFactory::deleteStructureInstance(cStructure *structure) {
+void cStructureFactory::deleteStructureInstance(cAbstractStructure *structure) {
 	// delete memory that was aquired
     if (structure->getType() == CONSTYARD) 
         delete (cConstYard *)structure;
@@ -75,7 +75,7 @@ void cStructureFactory::deleteStructureInstance(cStructure *structure) {
 /**
 	Shorter version, creates structure at full health.
 **/
-cStructure* cStructureFactory::createStructure(int iCell, int iStructureType, int iPlayer) {
+cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructureType, int iPlayer) {
 	return createStructure(iCell, iStructureType, iPlayer, 100);
 }
 
@@ -85,7 +85,7 @@ cStructure* cStructureFactory::createStructure(int iCell, int iStructureType, in
 	This method will return NULL when either an error occured, or the creation
 	of a non-structure (ie SLAB/WALL) is done.
 **/
-cStructure* cStructureFactory::createStructure(int iCell, int iStructureType, int iPlayer, int iPercent) {
+cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructureType, int iPlayer, int iPercent) {
     int iNewId = getFreeSlot();
 
 	assert(iPercent < 200); // percentages may not really exceed 200, above is weird behavior
@@ -94,18 +94,18 @@ cStructure* cStructureFactory::createStructure(int iCell, int iStructureType, in
 
 	// fail
     if (iNewId < 0) {
-		logbook("cStructureFactory::createStructure -> No free slot available, returning NULL");
+		logbook("cStructureFactory::createStructure -> cannot create structure: No free slot available, returning NULL");
         return NULL;
     }
 
 	// When 100% of the structure is blocked, this method is never called
 	// therefore we can assume that SLAB4 can be placed always partially
 	// when here.
-	int result = cStructureFactory::getInstance()->getSlabStatus(iCell, iStructureType, -1);
+	int result = getSlabStatus(iCell, iStructureType, -1);
    
 	// we may not place it, GUI messed up
     if (result < -1 && iStructureType != SLAB4) {
-	   logbook("cStructureFactory::createStructure -> slab status < -1, and type != SLAB4");
+		logbook("cStructureFactory::createStructure -> cannot create structure: slab status < -1, and type != SLAB4, returning NULL");
        return NULL;
     }
 
@@ -125,7 +125,7 @@ cStructure* cStructureFactory::createStructure(int iCell, int iStructureType, in
 		return NULL;
 	}
 
-	cStructure *str = cStructureFactory::getInstance()->createStructureInstance(iStructureType);
+	cAbstractStructure *str = createStructureInstance(iStructureType);
 
 	if (str == NULL) {
 		return NULL; // fail
@@ -141,7 +141,9 @@ cStructure* cStructureFactory::createStructure(int iCell, int iStructureType, in
     str->TIMER_prebuild = 250; // prebuild timer
     str->TIMER_damage = rnd(1000)+100;
     str->fConcrete = (1 - fPercent);
-
+	str->setHitPoints((int)fHealth);
+    str->setFrame(rnd(1)); // random start frame (flag)
+  
     // fix up power usage
     player[iPlayer].use_power += structures[iStructureType].power_drain;
 
@@ -152,13 +154,10 @@ cStructure* cStructureFactory::createStructure(int iCell, int iStructureType, in
     if (iStructureType == SILO)	    player[iPlayer].max_credits += 1000;
 	if (iStructureType == REFINERY)   player[iPlayer].max_credits += 1500;
 	
-	str->setHitPoints((int)fHealth);
 	str->setWidth(structures[str->getType()].bmp_width/32);
 	str->setHeight(structures[str->getType()].bmp_height/32);
 
-    // Animation set up
-    structure[iNewId]->iFrame = rnd(1); // random frame
-  
+    
  	// clear fog around structure
 	clearFogForStructureType(iCell, str);
 
@@ -236,9 +235,9 @@ void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlaye
 
 
 /**
-	Clear fog around structure, using a cStructure class.
+	Clear fog around structure, using a cAbstractStructure class.
 **/
-void cStructureFactory::clearFogForStructureType(int iCell, cStructure *str) {
+void cStructureFactory::clearFogForStructureType(int iCell, cAbstractStructure *str) {
 	if (str == NULL) {
 		return; 
 	}

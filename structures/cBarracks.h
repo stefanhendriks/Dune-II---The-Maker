@@ -1,6 +1,6 @@
 // Structure class
 
-class cBarracks : public cStructure
+class cBarracks : public cAbstractStructure
 {
 private:
   

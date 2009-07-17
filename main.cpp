@@ -13,13 +13,13 @@
 #include "d2tmh.h" 
 
 bool bDoDebug = false;
-int	iRest = 1;	// rest value
+int	iRest = 1;	// default rest value
 
 // Server/Client system
 
 // the ultimate game variable(s)
 cGame          game;
-cStructure     *structure[MAX_STRUCTURES];
+cAbstractStructure     *structure[MAX_STRUCTURES];
 cUnit          unit[MAX_UNITS];
 cMap           map;
 cPlayer        player[MAX_PLAYERS];             // player is 

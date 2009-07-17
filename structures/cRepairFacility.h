@@ -1,6 +1,6 @@
 // Structure class
 
-class cRepairFacility : public cStructure
+class cRepairFacility : public cAbstractStructure
 {
 private:
     

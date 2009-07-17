@@ -59,7 +59,7 @@ public:
     void think_building();
     void think_harvester();
     
-    void think_repair_structure(cStructure *struc);
+    void think_repair_structure(cAbstractStructure *struc);
     
     void think_repair(); // ai repairing units
 

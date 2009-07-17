@@ -23,9 +23,7 @@ cGunTurret::~cGunTurret()
 
 }
 
-
-void cGunTurret::think()
-{
+void cGunTurret::think() {
     int iMyIndex=-1;
 
 	for (int i=0; i < MAX_STRUCTURES; i++) {
@@ -45,7 +43,6 @@ void cGunTurret::think()
 	if (player[getOwner()].bEnoughPower() == false) {
         return; 
 	}
-
 
     // turning & shooting
      if (iTargetID > -1)
@@ -163,42 +160,12 @@ void cGunTurret::think()
         }
 
 	// last but not least, think like our abstraction
-	cStructure::think();
+	cAbstractStructure::think();
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)
-void cGunTurret::think_animation()
-{
-    // show (common) prebuild animation
-    if (iBuildFase < 10)
-        think_prebuild();
- 
-
-     // Repair blink
-     if (bRepair)
-     {
-		TIMER_repairanimation++;
-
-		if (TIMER_repairanimation > 1 && 
-            player[0].credits > 2)
-		{
-			
-			TIMER_repairanimation=0;
-			iRepairAlpha -= 7;
-
-			if (iRepairAlpha < 1)
-			{
-				iRepairX = rnd((structures[getType()].bmp_width-16));
-				iRepairY = rnd((structures[getType()].bmp_height-32));
-				iRepairAlpha = 255;
-			}
-			else
-				iRepairY--;
-			
-		}
-     }
-
-    
+void cGunTurret::think_animation() {
+	cAbstractStructure::think_animation();
 }
 
 void cGunTurret::think_guard()
@@ -286,105 +253,10 @@ void cGunTurret::think_guard()
 }
 
 // Draw function to draw this structure()
-void cGunTurret::draw(int iStage)
-{   
-    // Select proper palette
-    select_palette(player[getOwner()].pal);
-
-    // iStage <= 1 -> Draw structure
-    // iStage >  1 -> Draw structure repair icon (fading)
-        
-    // Draw structure
-	if (iStage <= 1)
-	{    
-        // When turret, frame = iHeadFacing
-        int iFrame = convert_angle(iHeadFacing);
-
-        int iSourceY = structures[getType()].bmp_height * iFrame;
-		int iDrawPreBuild=-1;
-
-       
-        // prebuild
-        if (iBuildFase == 1 ||  
-            iBuildFase == 3 ||
-            iBuildFase == 5 ||
-            iBuildFase == 7 ||
-            iBuildFase == 9)
-        {
-            // Check width
-            if (iWidth == 1 && iHeight == 1)
-                iDrawPreBuild = BUILD_PRE_1X1;
-
-            if (iWidth == 2 && iHeight == 2)
-                iDrawPreBuild = BUILD_PRE_2X2;
-
-            if (iWidth == 3 && iHeight == 2)
-                iDrawPreBuild = BUILD_PRE_3X2;
-            
-            if (iWidth == 3 && iHeight == 3)
-                iDrawPreBuild = BUILD_PRE_3X3;
-           
-        }
-
-        // Draw structure itself
-        if (iDrawPreBuild < 0)
-        {
-            // Fix this up, since NEMA now posted a structure which somehow needs transculency
-            // and does not work. Sloppy work Stefan! Fixed @ 13-04-2005
-            
-            BITMAP *temp=create_bitmap_ex(8, structures[getType()].bmp_width, structures[getType()].bmp_height);
-            BITMAP *temp_shadow=create_bitmap(structures[getType()].bmp_width, structures[getType()].bmp_height);
-
-            // Only for Construction Yard
-            clear(temp);			
-
-            clear_to_color(temp_shadow, makecol(255,0,255));
-            blit(structures[getType()].bmp, temp, 0, iSourceY, 0, 0, structures[getType()].bmp_width, structures[getType()].bmp_height);		
-            
-            // in case shadow
-            if (structures[getType()].shadow)
-                blit(structures[getType()].shadow, temp_shadow, 0, iSourceY, 0, 0, structures[getType()].bmp_width, structures[getType()].bmp_height);
-
-            draw_sprite(bmp_screen, temp, iDrawX(), iDrawY());
-            
-            // in case shadow
-            if (structures[getType()].shadow)
-            {
-                set_trans_blender(0,0,0,128);
-                draw_trans_sprite(bmp_screen, temp_shadow, iDrawX(), iDrawY());
-            }
-
-            destroy_bitmap(temp);
-            destroy_bitmap(temp_shadow);
-        }
-        // Draw prebuild
-        else
-        {
-            // Draw prebuild
-            draw_sprite(bmp_screen, (BITMAP *)gfxdata[iDrawPreBuild].dat, iDrawX(), iDrawY());    
-            
-            // Draw shadow of the prebuild animation
-            if (iDrawPreBuild != BUILD_PRE_CONST)
-            {
-                set_trans_blender(0,0,0,128);
-                draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[iDrawPreBuild+1].dat, iDrawX(), iDrawY());
-            }
-        }
-} // stage <= 1
-else if (iStage == 2)
-{
-	// now draw the repair alpha when repairing
-	if (bRepair)
-	{
-		if (iRepairAlpha > -1)
-		{
-            set_trans_blender(0, 0, 0, iRepairAlpha);
-            draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_REPAIR].dat, iDrawX()+iRepairX, iDrawY() + iRepairY);
-		}
-		else
-			iRepairAlpha = rnd(255);
-    }
-}   
+void cGunTurret::draw(int iStage) {   
+	// When turret, frame = iHeadFacing
+    setFrame(convert_angle(iHeadFacing));
+	cAbstractStructure::draw(iStage);
 }
 
 

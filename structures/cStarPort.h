@@ -1,7 +1,10 @@
 // Structure class
 
-class cStarPort : public cStructure
+class cStarPort : public cAbstractStructure
 {
+private:
+	void think_deployment();
+
 public:
     cStarPort();
     ~cStarPort();

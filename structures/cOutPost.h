@@ -1,6 +1,6 @@
 // Structure class
 
-class cOutPost : public cStructure
+class cOutPost : public cAbstractStructure
 {
 private:
   // outpost does not use any variables in p

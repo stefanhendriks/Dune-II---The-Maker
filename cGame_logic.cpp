@@ -42,7 +42,7 @@ void cGame::init()
     memset(cRegionText, 0, sizeof(cRegionText));
     //int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
 
-	windowed = false;
+	windowed = true;
     
 	screen_x = 640;
     screen_y = 480;
@@ -93,7 +93,7 @@ void cGame::init()
 	mouse_tile = MOUSE_NORMAL;
 
 	memset(version, 0, sizeof(version));
-	sprintf(version, "DEMO 4");
+	sprintf(version, "0.5.0");
 
 	fade_select=255;
 	
@@ -1044,7 +1044,7 @@ void cGame::think_build()
 							return; // bad!!
 						}
 
-						int iSpot= structure[iStr]->iFreeAround();
+						int iSpot = structure[iStr]->iFreeAround();
 					
 						structure[iStr]->setAnimating(true); // animate
 						int id = UNIT_CREATE(iSpot, iconlist[i][iIconID].iUnitID, 0, true);
@@ -1750,11 +1750,10 @@ void cGame::list_new_item(int iListID, int iIcon, int iPrice, int iStructureID, 
 	iconlist[iListID][iNewID].iUnitID = iUnitID;
 }
 
-void cGame::draw_list()
-{
-	if (game.iActiveList == LIST_NONE)
+void cGame::draw_list() {
+	if (game.iActiveList == LIST_NONE) {
 		return;
-
+	}
 
 	int iList=game.iActiveList;
 	int iDrawX=572;
@@ -1809,18 +1808,21 @@ void cGame::draw_list()
 
         int iList=game.iActiveList;
         
-        if (iconbuilding[iList] < 0 && iconprogress[iList] < 0 && player[0].credits >= iconlist[iList][iLastBuilt[iList]].iPrice && bUpgrading == false && bPlaceIt==false)
-        {
+        if (iconbuilding[iList] < 0 && 
+			iconprogress[iList] < 0 && 
+			player[0].credits >= iconlist[iList][iLastBuilt[iList]].iPrice && 
+			bUpgrading == false && 
+			bPlaceIt==false) {
+
             iconbuilding[iList] = iLastBuilt[iList]; // remember this ID of the icon, so we know we build
             iconprogress[iList] = 0; // start with 0 progress
-
-            //iLastBuilt[iList]=i;
 
             // PAY immidiatly
             player[0].credits -= iconlist[iList][iLastBuilt[iList]].iPrice;
         }
        
     }
+
 	int i;
 	// Now draw list stuff
 	for (i=iconscroll[iList]; i < MAX_ICONS; i++)
@@ -2854,7 +2856,7 @@ void cGame::mapdraw()
 
     map.draw_bullets();
 
-    map.draw_structures(2);
+    map.draw_structures(2); // draw repair things (HACK HACK!)
     map.draw_structures_health();
 	map.draw_units_2nd();
 
@@ -4090,7 +4092,7 @@ void cGame::setup_skirmish()
 				map.set_pos(-1, -1, player[p].focus_cell);
 
 			// create constyard
-			cStructure *s = cStructureFactory::getInstance()->createStructure(player[p].focus_cell, CONSTYARD, p);
+			cAbstractStructure *s = cStructureFactory::getInstance()->createStructure(player[p].focus_cell, CONSTYARD, p);
 
 			// when failure, create mcv instead
 			if (s == NULL) {
@@ -5056,11 +5058,12 @@ void cGame::handleKeys() {
 
 	}
 
+	if (key[KEY_F]) {
+		alfont_textprintf(bmp_screen, game_font, 0,44, makecol(255,255,255), "FPS: %d", fps);
+	}
+
 	/* Handle here keys that are only active when debugging */
 	if (DEBUGGING) {
-		if (key[KEY_F]) {
-			alfont_textprintf(bmp_screen, game_font, 0,44, makecol(255,255,255), "FPS: %d", fps);
-		}
 
 		if (key[KEY_F4])
 		{
@@ -5333,6 +5336,9 @@ bool cGame::setupGame() {
 
 	set_color_depth(16);
 
+	// TODO: read/write rest value so it does not have to 'fine-tune' 
+	// but is already set up. Perhaps even offer it in the options screen? So the user
+	// can specify how much CPU this game may use?
 
 
 	//if (iDepth > 15 && iDepth != 24)
@@ -5340,7 +5346,10 @@ bool cGame::setupGame() {
 
 	if (game.windowed)
 	{
-		/*
+		// bit depth detection speeds up incredibly in Vista and Windows 7 (also will
+		// cause the aero effect to remain!) However, running with this code somehow
+		// screws up the windtrap drawing , so this has to be figured out before release.
+		
 		int 	iDepth = desktop_color_depth();
 
 		// dont switch to 15 bit or lower, or at 24 bit
@@ -5356,7 +5365,8 @@ bool cGame::setupGame() {
 		// default color depth is 16
 		logbook("DESKTOP: No bit depth autodetected. Will switch to default, 16 bit.");
 		set_color_depth(16);
-		}*/
+		}
+
 		//GFX_AUTODETECT_WINDOWED
 		int r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);  
 		if (r > -1)
@@ -5500,7 +5510,7 @@ bool cGame::setupGame() {
 	}
 	else
 	{
-		logbook("Bitmap created: bmp_screen");
+		logbook("Memory bitmap created: bmp_screen");
 		clear(bmp_screen);
 	}
 
@@ -5513,7 +5523,7 @@ bool cGame::setupGame() {
 		return false;
 	}
 	else {
-		logbook("Bitmap created: bmp_throttle");	
+		logbook("Memory bitmap created: bmp_throttle");	
 	}
 
 	bmp_winlose = create_bitmap(game.screen_x, game.screen_y);
@@ -5525,7 +5535,7 @@ bool cGame::setupGame() {
 		return false;
 	}
 	else {
-		logbook("Bitmap created: bmp_winlose");
+		logbook("Memory bitmap created: bmp_winlose");
 	}
 
 	bmp_fadeout = create_bitmap(game.screen_x, game.screen_y);
@@ -5537,7 +5547,7 @@ bool cGame::setupGame() {
 		return false;
 	}
 	else {
-		logbook("Bitmap created: bmp_fadeout");
+		logbook("Memory bitmap created: bmp_fadeout");
 	} 
 
 	/*** End of Bitmap Creation ***/
@@ -5612,8 +5622,12 @@ bool cGame::setupGame() {
 	}
 
 	// randomize timer
-
-	srand((unsigned int) time(0));
+	unsigned int t = (unsigned int) time(0);
+	char seedtxt[80];
+	sprintf(seedtxt, "Seed is %d", t);
+	logbook(seedtxt);
+	
+	srand(t);
 
 	game.bPlaying = true;
 	game.screenshot = 0;

@@ -1267,7 +1267,7 @@ int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer)
     return (iTargets[rnd(iT)]);
 }
 
-void cAIPlayer::think_repair_structure(cStructure *struc)
+void cAIPlayer::think_repair_structure(cAbstractStructure *struc)
 {
 	// think of repairing, only when it is not being repaired yet.
 	if (struc->bRepair == false) {
@@ -1275,13 +1275,11 @@ void cAIPlayer::think_repair_structure(cStructure *struc)
 		if (player[struc->getOwner()].credits > 1000) {
 			if (struc->getHitPoints() < (structures[struc->getType()].hp))  {
 				struc->bRepair=true;
-				logbook("AI Will repair structure");
 			}
 		} else {
 			// AUTO-REPAIR BY AI
 			if (struc->getHitPoints() < (structures[struc->getType()].hp/2)) {
 				struc->bRepair=true;
-				logbook("AI Will repair structure");
 			}
 		}
 	}

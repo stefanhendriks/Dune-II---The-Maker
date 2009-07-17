@@ -1,6 +1,6 @@
 // Structure class
 
-class cWor : public cStructure
+class cWor : public cAbstractStructure
 {
 private:
     

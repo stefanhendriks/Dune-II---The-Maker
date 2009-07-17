@@ -1337,7 +1337,7 @@ void cUnit::think()
 				// get in!
 				structure[iStructureID]->setAnimating(false);
 				structure[iStructureID]->iUnitID = iID;  // !!    
-				structure[iStructureID]->iFrame = 0;
+				structure[iStructureID]->setFrame(0);
 								
 				// store this
 				iTempHitPoints = iHitPoints;
@@ -1364,7 +1364,7 @@ void cUnit::think()
 				// get in!
 				structure[iStructureID]->setAnimating(false);
 				structure[iStructureID]->iUnitID = iID;  // !!    
-				structure[iStructureID]->iFrame = 0;
+				structure[iStructureID]->setFrame(0);
 								
 				// store this
 				iTempHitPoints = iHitPoints;
@@ -1568,7 +1568,7 @@ void cUnit::think_move_air()
 									// get in!
 									structure[unit[iuID].iStructureID]->setAnimating(false);
 									structure[unit[iuID].iStructureID]->iUnitID = iuID;  // !!    
-									structure[unit[iuID].iStructureID]->iFrame = 0;
+									structure[unit[iuID].iStructureID]->setFrame(0);
 									
 									// store this
 									unit[iuID].iTempHitPoints = unit[iuID].iHitPoints;
@@ -1636,7 +1636,7 @@ void cUnit::think_move_air()
 
                     game.TIMER_mayorder=2;
 
-                    structure[iStrucId]->iFrame = 4; // show package on this structure
+                    structure[iStrucId]->setFrame(4); // show package on this structure
 					structure[iStrucId]->setAnimating(true); // keep animating
                     ((cStarPort *)structure[iStrucId])->TIMER_deploy = 3; // 1 second, just pick something
 				}
@@ -2768,7 +2768,7 @@ void cUnit::think_move()
 				// get in!
 				structure[iStructureID]->setAnimating(false);
 				structure[iStructureID]->iUnitID = iID;  // !!    
-				structure[iStructureID]->iFrame = 0;
+				structure[iStructureID]->setFrame(0);
 				
 				// store this
 				iTempHitPoints = iHitPoints;
@@ -3053,7 +3053,7 @@ void cUnit::think_move()
                         // get in!
                         structure[iStructureID]->setAnimating(false);
                         structure[iStructureID]->iUnitID = iID;      
-                        structure[iStructureID]->iFrame = 0;
+                        structure[iStructureID]->setFrame(0);
                         
                         // store this                                                                   
                         iTempHitPoints = iHitPoints;

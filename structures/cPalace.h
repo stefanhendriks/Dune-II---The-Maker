@@ -1,6 +1,6 @@
 // Structure class
 
-class cPalace : public cStructure
+class cPalace : public cAbstractStructure
 {
 private:
     
