@@ -82,7 +82,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="alleg.lib alfontdll.lib almp3dll.lib RakNetDLL.lib fblend.lib"
+				AdditionalDependencies="alleg.lib alfontdll.lib almp3dll.lib fblend.lib"
 				OutputFile=".\Release/Dune 2.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

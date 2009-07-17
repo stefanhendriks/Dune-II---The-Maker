@@ -56,11 +56,6 @@
 #include "sse.h"
 #include "mmx.h"
 
-// Make sure we refer to our own sub dir and not a global one
-#include "raknet/RakClientInterface.h"
-#include "raknet/RakNetworkFactory.h"
-#include "raknet/RakServerInterface.h"
-
 // data file header(s)                          - THIS
 #include "data/gfxdata.h"						// general gfx
 #include "data/gfxaudio.h"                     // audio 

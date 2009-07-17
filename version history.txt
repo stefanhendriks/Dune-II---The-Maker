@@ -136,7 +136,6 @@ Dune 2 - The Maker could never get this far, without the help of the following p
 
 Libraries:
 Allegro (www.allegro.cc)
-RakNet  (www.raknet.com)
 AlFONT  (Javier Gonzalez)
 AlMP3   (Javier Gonzalez)
 FBlend  (Robert J Ohannessian)
