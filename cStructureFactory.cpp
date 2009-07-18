@@ -37,6 +37,7 @@ cAbstractStructure *cStructureFactory::createStructureInstance(int type) {
 
 void cStructureFactory::deleteStructureInstance(cAbstractStructure *structure) {
 	// delete memory that was aquired
+	/*
     if (structure->getType() == CONSTYARD)
         delete (cConstYard *)structure;
     else if (structure->getType() == STARPORT)
@@ -68,6 +69,7 @@ void cStructureFactory::deleteStructureInstance(cAbstractStructure *structure) {
     else if (structure->getType() == IX)
         delete (cIx *)structure;
     else
+		*/
         delete structure;
 }
 

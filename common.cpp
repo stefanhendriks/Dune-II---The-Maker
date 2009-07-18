@@ -649,7 +649,7 @@ void install_bullets()
   bullets[ROCKET_SMALL].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_SMALL].dat;
   bullets[ROCKET_SMALL].deadbmp = EXPLOSION_ROCKET_SMALL;
   bullets[ROCKET_SMALL].bmp_width = 16;
-  bullets[ROCKET_SMALL].damage = 20; // was 8
+  bullets[ROCKET_SMALL].damage = 10; // was 8
   bullets[ROCKET_SMALL].damage_inf = 8; // was 4
   bullets[ROCKET_SMALL].max_frames = 1;
   bullets[ROCKET_SMALL].sound = SOUND_ROCKET_SMALL;
@@ -659,7 +659,7 @@ void install_bullets()
   bullets[ROCKET_SMALL_FREMEN].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_SMALL].dat;
   bullets[ROCKET_SMALL_FREMEN].deadbmp = EXPLOSION_ROCKET_SMALL;
   bullets[ROCKET_SMALL_FREMEN].bmp_width = 16;
-  bullets[ROCKET_SMALL_FREMEN].damage = 35;
+  bullets[ROCKET_SMALL_FREMEN].damage = 22;
   bullets[ROCKET_SMALL_FREMEN].damage_inf = 20;
   bullets[ROCKET_SMALL_FREMEN].max_frames = 1;
   bullets[ROCKET_SMALL_FREMEN].sound = SOUND_ROCKET_SMALL;
@@ -1670,6 +1670,9 @@ void memory_putpixel(BITMAP *bmp, int x, int y, int color)
 	bmp->line[y][x] = color;
 }
 
+/**
+	BMP must be 16 bit.
+**/
 void lit_windtrap_color(BITMAP *bmp, int iColor)
 {
 	for (int x=0; x < bmp->w; x++)
@@ -1677,8 +1680,10 @@ void lit_windtrap_color(BITMAP *bmp, int iColor)
 		for (int y=0; y < bmp->h; y++)
 		{
             // masked
-            if (getpixel(bmp, x, y) == makecol(40,40,182))            
-                _putpixel16(bmp, x, y, iColor);            
+			if (getpixel(bmp, x, y) == makecol(40,40,182)) {
+                //_putpixel16(bmp, x, y, iColor);
+				putpixel(bmp, x, y, iColor);
+			}
 		}
 	}
 }
