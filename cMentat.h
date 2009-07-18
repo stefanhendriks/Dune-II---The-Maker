@@ -1,4 +1,4 @@
-/* 
+/*
 
 	Dune II - The Maker
 
@@ -10,7 +10,7 @@
 
 	Mentat class
 
-	The mentat class encapsulates all mentat specific functions. 
+	The mentat class encapsulates all mentat specific functions.
 	This is a global class. In the Mentat directory there will be:
 
 	c<anyhouse>Mentat.cpp / c<anyhouse>Mentat.h which will be derived from this class.
@@ -33,12 +33,12 @@ private:
 	int TIMER_Eyes;
 	int TIMER_Other;
 	int TIMER_Speaking;
-	
+
 	// draw 2 sentences at once, so 0 1, 2 3, 4 5, 6 7, 8 9
 	char sentence[10][255];
 
 	int iMentatSentence;			// = sentence to draw and speak with (-1 = not ready)
-	
+
 	int iMentatMouth;
 	int iMentatEyes;
 	int iMentatOther;
@@ -48,7 +48,7 @@ public:
 
 	void think();
 	void prepare(bool bTellHouse, int state, int house, int region);
-			
+
 	cMentat();
 	~cMentat();
 };

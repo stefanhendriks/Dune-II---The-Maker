@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -10,7 +10,7 @@
 
   */
 
-#include "d2tmh.h" 
+#include "d2tmh.h"
 
 bool bDoDebug = false;
 int	iRest = 1;	// default rest value
@@ -22,7 +22,7 @@ cGame          game;
 cAbstractStructure     *structure[MAX_STRUCTURES];
 cUnit          unit[MAX_UNITS];
 cMap           map;
-cPlayer        player[MAX_PLAYERS];             // player is 
+cPlayer        player[MAX_PLAYERS];             // player is
 cAIPlayer      aiplayer[MAX_PLAYERS];           // related to aiplayer (except nr 0=human)
 cParticle      particle[MAX_PARTICLES];
 cBullet        bullet[MAX_BULLETS];
@@ -74,10 +74,10 @@ int mouse_status;     // status of the mouse (see main.h)
 int mouse_tile;       // mouse picture in gfxdata
 
 // Timers
-int frame_count, fps;  // fps and such 
+int frame_count, fps;  // fps and such
 
 /** Allegro specific timer creation starts here **/
-#ifdef ALLEGRO_H 
+#ifdef ALLEGRO_H
 	volatile int allegro_timerSecond = 0;
 	volatile int allegro_timerGlobal = 0;
 	volatile int allegro_timerUnits = 0;
@@ -95,7 +95,7 @@ int main() {
 	}
 
 	game.shutdown();
-	
+
 	return 0;
 }
 END_OF_MAIN();

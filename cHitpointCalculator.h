@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -23,3 +23,4 @@ public:
 };
 
 #endif
+

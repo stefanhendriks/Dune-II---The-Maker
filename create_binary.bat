@@ -1,8 +1,8 @@
 @echo off
-cls
-echo Syntax: create_binary #executablefolder 
+cls 
 echo.
-echo Prepare binary package of D2TM. All that is needed is to copy the exe file.
+echo Prepare binary package (./bin) of D2TM. Will copy "Dune 2.exe" from the Release dir
+echo created by MSVC.
 echo.
 echo 1. Removing bin directory
 rd /S /Q bin
@@ -49,5 +49,4 @@ echo 12. Copy game rules file (game.ini)
 copy game.ini bin
 echo 13. Copy txt files
 copy *.txt bin
-echo Done!
-echo Now copy your executable into the bin directory to make it work!
+echo Done.

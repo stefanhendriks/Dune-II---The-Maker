@@ -2,7 +2,7 @@
 
 cStructureFactory *cStructureFactory::instance = NULL;
 
-cStructureFactory::cStructureFactory() {	
+cStructureFactory::cStructureFactory() {
 }
 
 cStructureFactory *cStructureFactory::getInstance() {
@@ -12,7 +12,7 @@ cStructureFactory *cStructureFactory::getInstance() {
 
 	return instance;
 }
- 
+
 cAbstractStructure *cStructureFactory::createStructureInstance(int type) {
 	 // Depending on type, create proper derived class. The constructor
     // will take care of the rest
@@ -37,7 +37,7 @@ cAbstractStructure *cStructureFactory::createStructureInstance(int type) {
 
 void cStructureFactory::deleteStructureInstance(cAbstractStructure *structure) {
 	// delete memory that was aquired
-    if (structure->getType() == CONSTYARD) 
+    if (structure->getType() == CONSTYARD)
         delete (cConstYard *)structure;
     else if (structure->getType() == STARPORT)
         delete (cStarPort *)structure;
@@ -102,7 +102,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	// therefore we can assume that SLAB4 can be placed always partially
 	// when here.
 	int result = getSlabStatus(iCell, iStructureType, -1);
-   
+
 	// we may not place it, GUI messed up
     if (result < -1 && iStructureType != SLAB4) {
 		logbook("cStructureFactory::createStructure -> cannot create structure: slab status < -1, and type != SLAB4, returning NULL");
@@ -121,7 +121,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 
 	// SLAB and WALL is not a real structure. The terrain will be manipulated
 	// therefore quit here.
-    if (iStructureType == SLAB1 || iStructureType == SLAB4 || iStructureType == WALL) {		
+    if (iStructureType == SLAB1 || iStructureType == SLAB4 || iStructureType == WALL) {
 		return NULL;
 	}
 
@@ -143,7 +143,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
     str->fConcrete = (1 - fPercent);
 	str->setHitPoints((int)fHealth);
     str->setFrame(rnd(1)); // random start frame (flag)
-  
+
     // fix up power usage
     player[iPlayer].use_power += structures[iStructureType].power_drain;
 
@@ -153,11 +153,11 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
     // fix up spice storage stuff
     if (iStructureType == SILO)	    player[iPlayer].max_credits += 1000;
 	if (iStructureType == REFINERY)   player[iPlayer].max_credits += 1500;
-	
+
 	str->setWidth(structures[str->getType()].bmp_width/32);
 	str->setHeight(structures[str->getType()].bmp_height/32);
 
-    
+
  	// clear fog around structure
 	clearFogForStructureType(iCell, str);
 
@@ -165,11 +165,11 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	if (iStructureType == REFINERY) {
 		REINFORCE(iPlayer, HARVESTER, iCell+2, iCell+2);
 	}
-		
+
 
     // Use power
 	powerUp(iStructureType, iPlayer);
-   
+
     // And finally handle upgrades if any...
 	if (iPlayer == 0) {
 		upgradeTechTree(iPlayer, iStructureType);
@@ -193,7 +193,7 @@ void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlaye
 		map.create_spot(iCell, TERRAIN_SLAB, 0);
 		return; // done
 	}
-    
+
     if (iStructureType == SLAB4)   {
 
 		if (map.occupied(iCell) == false) {
@@ -208,7 +208,7 @@ void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlaye
 			}
 		}
 
-		if (map.occupied(iCell+MAP_W_MAX) == false) {    
+		if (map.occupied(iCell+MAP_W_MAX) == false) {
 			if (map.cell[iCell+MAP_W_MAX].type == TERRAIN_ROCK) {
                 map.create_spot(iCell+MAP_W_MAX, TERRAIN_SLAB, 0);
 			}
@@ -224,7 +224,7 @@ void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlaye
     }
 
     if (iStructureType == WALL) {
-		map.create_spot(iCell, TERRAIN_WALL, 0);            
+		map.create_spot(iCell, TERRAIN_WALL, 0);
 		// change surrounding walls here
         map.smooth_spot(iCell);
 		return;
@@ -239,7 +239,7 @@ void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlaye
 **/
 void cStructureFactory::clearFogForStructureType(int iCell, cAbstractStructure *str) {
 	if (str == NULL) {
-		return; 
+		return;
 	}
 
 	clearFogForStructureType(iCell, str->getType(), structures[str->getType()].sight, str->getOwner());
@@ -281,7 +281,7 @@ int cStructureFactory::getFreeSlot() {
 /**
 	This function will check if at iCell (the upper left corner of a structure) a structure
 	can be placed of type "iStructureType". If iUnitIDTOIgnore is > -1, then if any unit is
-	supposidly 'blocking' this structure from placing, it will be ignored. 
+	supposidly 'blocking' this structure from placing, it will be ignored.
 
 	Ie, you will use the iUnitIDToIgnore value when you want to create a Const Yard on the
 	location of an MCV.
@@ -300,12 +300,12 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDT
     int total=w*h;
     int x = iCellGiveX(iCell);
     int y = iCellGiveY(iCell);
-    
+
     for (int cx=0; cx < w; cx++)
         for (int cy=0; cy < h; cy++)
         {
             int cll=iCellMake(cx+x, cy+y); // <-- some evil global thing that calculates the cell...
-            
+
 			// check if terrain allows it.
             if (map.cell[cll].type != TERRAIN_ROCK &&
                 map.cell[cll].type != TERRAIN_SLAB) {
@@ -318,7 +318,7 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDT
 				logbook("getSlabStatus will return -2, reason: another structure found on one of the cells");
                 return -2;
             }
-            
+
 			// unit found on location where structure wants to be placed. Check if
 			// it may be ignored, if not, return -2.
             if (map.cell[cll].id[MAPID_UNITS] > -1)
@@ -335,7 +335,7 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDT
 				} else {
 					// no iUnitIDToIgnore given, this means always -2
 					logbook("getSlabStatus will return -2, reason: unit found that blocks placement; no id to ignore");
-                    return -2;            
+                    return -2;
 				}
             }
 
@@ -376,7 +376,7 @@ void cStructureFactory::powerUp(int iStructureType, int iPlayer) {
 void cStructureFactory::powerDown(int iStructureType, int iPlayer) {
     // fix up power usage
     player[iPlayer].use_power -= structures[iStructureType].power_drain;
-    
+
     // less power
     player[iPlayer].has_power -= structures[iStructureType].power_give;
 
@@ -394,7 +394,7 @@ void cStructureFactory::powerDown(int iStructureType, int iPlayer) {
 // Only applies to PLAYER 0 (human), since AI needs special
 // routines
 void upgradeTechTree(int iPlayer, int iStructureType) {
-	
+
 	if (iPlayer != 0) {
 		logbook("tried to update tech tree for a non-human player");
 		return;
@@ -412,38 +412,38 @@ void upgradeTechTree(int iPlayer, int iStructureType) {
 
     // refinery built
     if (iStructureType == REFINERY)
-    {		
-		if (iMission >= 2)		
+    {
+		if (iMission >= 2)
 		{
 
 			game.list_new_item(LIST_CONSTYARD, ICON_STR_LIGHTFACTORY, structures[LIGHTFACTORY].cost, LIGHTFACTORY, -1);
 
 			if (iHouse == ATREIDES || iHouse == ORDOS || iHouse == FREMEN)
 				game.list_new_item(LIST_CONSTYARD, ICON_STR_BARRACKS, structures[BARRACKS].cost, BARRACKS, -1);
-				
+
 			if (iHouse == HARKONNEN || iHouse == SARDAUKAR || iHouse == FREMEN || iHouse == MERCENARY)
-				game.list_new_item(LIST_CONSTYARD, ICON_STR_WOR, structures[WOR].cost, WOR, -1);				
+				game.list_new_item(LIST_CONSTYARD, ICON_STR_WOR, structures[WOR].cost, WOR, -1);
 		}
 
 		if (iMission >= 3)
-			game.list_new_item(LIST_CONSTYARD, ICON_STR_RADAR, structures[RADAR].cost, RADAR, -1);			
-        
-		
+			game.list_new_item(LIST_CONSTYARD, ICON_STR_RADAR, structures[RADAR].cost, RADAR, -1);
+
+
 		// add silo
-		game.list_new_item(LIST_CONSTYARD, ICON_STR_SILO, structures[SILO].cost, SILO, -1);					
-        
+		game.list_new_item(LIST_CONSTYARD, ICON_STR_SILO, structures[SILO].cost, SILO, -1);
+
     }
 
     // Lightfactory built
     if (iStructureType == RADAR)
     {
 		if (iMission >= 5)
-			game.list_new_item(LIST_CONSTYARD, ICON_STR_TURRET, structures[TURRET].cost, TURRET, -1);	
+			game.list_new_item(LIST_CONSTYARD, ICON_STR_TURRET, structures[TURRET].cost, TURRET, -1);
 
 		if (iMission >= 8)
 			game.list_new_item(LIST_CONSTYARD, ICON_STR_PALACE, structures[PALACE].cost, PALACE, -1);
     }
-    
+
     // Lightfactory built
     if (iStructureType == LIGHTFACTORY)
     {
@@ -458,16 +458,16 @@ void upgradeTechTree(int iPlayer, int iStructureType) {
 
 		if (iMission >= 6)
 			game.list_new_item(LIST_CONSTYARD, ICON_STR_STARPORT, structures[STARPORT].cost, STARPORT, -1);
-			
+
     }
 
     // Heavyfactory
     if (iStructureType == HEAVYFACTORY)
     {
 		if (iMission >= 7)
-			game.list_new_item(LIST_CONSTYARD, ICON_STR_IX, structures[IX].cost, IX, -1);			
+			game.list_new_item(LIST_CONSTYARD, ICON_STR_IX, structures[IX].cost, IX, -1);
 
 		//if (iMission >= 5)
-		//	game.list_new_item(LIST_CONSTYARD, ICON_STR_REPAIR, structures[REPAIR].cost, REPAIR, -1);			
+		//	game.list_new_item(LIST_CONSTYARD, ICON_STR_REPAIR, structures[REPAIR].cost, REPAIR, -1);
     }
 }
