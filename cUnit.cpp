@@ -579,7 +579,7 @@ void cUnit::draw_path()
 	iPrevX+=16;
 	iPrevY+=16;
 
-	for (int i=1; i < MAX_PATH; i++)
+	for (int i=1; i < MAX_PATH_SIZE; i++)
 	{
 		if (iPath[i] > -1)
 		{
@@ -3258,7 +3258,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
     // Now start create path
     
     // Clear unit path settings (index & path string)
-	//for (int i=0; i < MAX_PATH; i++)
+	//for (int i=0; i < MAX_PATH_SIZE; i++)
 	//	unit[iID].iPath[i] = -1;
 
     memset(unit[iID].iPath, -1, sizeof(unit[iID].iPath));
@@ -3565,7 +3565,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
  if (succes)
  {     
   // read path!
-  int temp_path[MAX_PATH];
+  int temp_path[MAX_PATH_SIZE];
 
   //logbook("NEW PATH FOUND");
   memset(temp_path, -1, sizeof(temp_path));
@@ -3602,7 +3602,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
     else    
      cp=false;     
    
-   if (pi >= MAX_PATH)
+   if (pi >= MAX_PATH_SIZE)
      cp=false;
 
    if (sc==unit[iID].iCell)
@@ -3610,7 +3610,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
  }
 
  // reverse
- int z=MAX_PATH-1;
+ int z=MAX_PATH_SIZE-1;
  int a=0; 
  int iPrevCell=-1;
  
@@ -3655,7 +3655,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
  unit[iID].iPathIndex=1;
 
  // take the closest bordering cell as 'far' away to start with
- for (int i=1; i < MAX_PATH; i++)
+ for (int i=1; i < MAX_PATH_SIZE; i++)
  {
 	if (unit[iID].iPath[i] > -1)
 	{
@@ -3668,7 +3668,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
 
  /*
  // debug debug
- for (int i=0; i <	MAX_PATH; i++)
+ for (int i=0; i <	MAX_PATH_SIZE; i++)
  {
 	if (unit[iID].iPath[i] > -1)
 	{

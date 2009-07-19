@@ -41,7 +41,7 @@
 #define MP3_BUFFER_LEN  16384
 
 // Max length of a path (per unit)
-#define MAX_PATH    256
+#define MAX_PATH_SIZE    256
 
 // maximum of 99 orders
 #define MAX_QUE 99

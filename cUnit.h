@@ -58,7 +58,7 @@ public:
     int iCellY;         // my cell y
     float iOffsetX;       // X offset
     float iOffsetY;       // Y offset
-    int iPath[MAX_PATH];    // path of unit
+    int iPath[MAX_PATH_SIZE];    // path of unit
     int iPathIndex;     // where are we?
     int iPathFails;     // failed...
     bool bCalculateNewPath; // calculate new path?	

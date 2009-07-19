@@ -19,9 +19,6 @@
 
 #ifndef D2TMH_H
 
-
-
-// include this stuff
 #include <time.h> 
 #include <stdlib.h>
 #include <stdio.h>
@@ -29,7 +26,7 @@
 
 #include <assert.h>
 
-// Allegro: must be after any default headers...
+// Allegro: must be after a`ny default headers...
 #include <allegro.h>
 
 #define IDEAL_FPS	60
