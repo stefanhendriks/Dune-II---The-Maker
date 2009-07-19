@@ -1,0 +1,7 @@
+ECLIPSE CDT PROJECT FILE: (for MinGW32)
+
+copy the .cproject and .project file into the dune2themaker main dir. 
+Then add this project to your Eclipse CDT workspace. Check the properties of this project
+and check if the paths are ok (if needed).
+
+This project file has a default configuration which should compile out of the box.
