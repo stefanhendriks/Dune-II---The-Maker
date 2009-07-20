@@ -42,7 +42,7 @@ echo 9. Create skirmish directory
 mkdir bin\skirmish
 copy skirmish\*.ini bin\skirmish
 echo 10. Copying dll files
-copy dll\*.* bin
+copy dll\msvc\*.* bin
 echo 11. Copy executable from %1
 copy Release\*.exe bin
 echo 12. Copy game rules file (game.ini)

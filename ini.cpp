@@ -3019,6 +3019,21 @@ void INI_PRESCAN_SKIRMISH() {
 
        INI_LOAD_SKIRMISH(filename, true);        
    }
+
+   	struct al_ffblk file;
+	if (!al_findfirst("skirmish/*", &file, FA_ARCH)) {
+		do {		 
+			char msg[1024];
+			char fullname[1024];
+			sprintf(fullname, "skirmish/%s", file.name);
+			sprintf(msg, "Loading skirmish map: %s", fullname);
+			logbook(msg);
+		//	INI_LOAD_SKIRMISH(fullname, true);
+	  } while (!al_findnext(&file));
+	} else {
+		logbook("No skirmish maps found in skirmish directory.");
+	}
+	al_findclose(&file);
    
 }
 
