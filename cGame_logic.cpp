@@ -5107,6 +5107,7 @@ void cGame::shakeScreenAndBlitBuffer() {
 		else
 		{   
 			BITMAP *temp = create_bitmap(game.screen_x, game.screen_y);
+			assert(temp != NULL);
 			clear(temp);
 			fblend_trans(bmp_screen, temp, 0, 0, iAlphaScreen);                
 			blit(temp, screen, 0, 0, 0, 0, screen_x, screen_y);

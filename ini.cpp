@@ -3003,8 +3003,7 @@ Pre-scanning of skirmish maps:
 - read [SKIRMISH] data (name of map, startcells, etc)
 - create preview of map in BITMAP (minimap preview)
 */
-void INI_PRESCAN_SKIRMISH()
-{
+void INI_PRESCAN_SKIRMISH() {
    // scans for all ini files                                       
    INIT_PREVIEWS(); // clear all of them
 
@@ -3022,5 +3021,34 @@ void INI_PRESCAN_SKIRMISH()
    }
    
 }
+
+// this code should make it possible to read any ini file in the skirmish
+// directory. However, Allegro 4.2.0 somehow gives weird results.
+// when upgrading to Allegro 4.2.2, the method works. But FBLEND crashes, even
+// after recompiling it against Allegro 4.2.2...
+//
+// See: http://www.allegro.cc/forums/thread/600998
+/*
+
+void INI_PRESCAN_SKIRMISH() {
+	// scans for all ini files                                       
+	INIT_PREVIEWS(); // clear all of them
+
+	struct al_ffblk file;
+	if (!al_findfirst("skirmish/*", &file, FA_ARCH)) {
+		do {		 
+			char msg[1024];
+			char fullname[1024];
+			sprintf(fullname, "skirmish/%s", file.name);
+			sprintf(msg, "Loading skirmish map: %s", fullname);
+			logbook(msg);
+			INI_LOAD_SKIRMISH(fullname, true);
+	  } while (!al_findnext(&file));
+	} else {
+		logbook("No skirmish maps found in skirmish directory.");
+	}
+	al_findclose(&file);
+}
+*/
 
 

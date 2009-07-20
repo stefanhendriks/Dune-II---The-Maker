@@ -80,5 +80,3 @@ void fblend_fade_to_color(BITMAP *src, BITMAP *dst, int x, int y, int color, int
 
 #endif
 
-
-
