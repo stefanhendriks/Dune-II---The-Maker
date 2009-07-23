@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -17,11 +17,11 @@ void cBullet::init()
 {
     bAlive=false;        // alive or not?, when dying, a particle is created
 
-    iCell=-1;          // cell of bullet   
-    iType=-1;          // type of bullet    
-    
+    iCell=-1;          // cell of bullet
+    iType=-1;          // type of bullet
+
     // Movement
-    iGoalCell=-1;      // the goal cell (goal of path)    
+    iGoalCell=-1;      // the goal cell (goal of path)
     iOffsetX=-1;       // X offset
     iOffsetY=-1;       // Y offset
 
@@ -68,7 +68,7 @@ void cBullet::draw()
     y1 = iCellGiveY(iCell);
     x2 = iCellGiveX(iGoalCell);
     y2 = iCellGiveY(iGoalCell);
-    
+
     int a  = bullet_face_angle(fDegrees(x1, y1, x2, y2));
     int fa = bullet_face_angle(fDegrees(x1, y1, x2, y2));
     int ba = bullet_correct_angle(fa);
@@ -79,15 +79,15 @@ void cBullet::draw()
     h = 32;
 
     int sx, sy;
-    
-    sy = iFrame * h; 
+
+    sy = iFrame * h;
 
     if (iType == ROCKET_SMALL ||
         iType == ROCKET_SMALL_FREMEN ||
         iType == ROCKET_SMALL_ORNI)
         sy = (iFrame *16);
 
-    if (iType != BULLET_SMALL && 
+    if (iType != BULLET_SMALL &&
         iType != BULLET_TRIKE &&
         iType != BULLET_QUAD &&
         iType != BULLET_TANK &&
@@ -143,11 +143,11 @@ void cBullet::think()
 
             if (iType == ROCKET_SMALL_ORNI)
                 bCreatePuf=true;
-            
+
         }
 
         // except for orni's
-        
+
 
 
         if (bCreatePuf)
@@ -184,12 +184,12 @@ void cBullet::think_move()
     int iSlowDown=0;
 
     // use this when picking something up
-    
+
     // step 1 : look to the correct direction
     int d = fDegrees(iCellX, iCellY, cx, cy);
-    float angle = fRadians(iCellX, iCellY, cx, cy);              
-    
-    // now do some thing to make 
+    float angle = fRadians(iCellX, iCellY, cx, cy);
+
+    // now do some thing to make
     // 1/8 of a cell (2 pixels) per movement
     iOffsetX += cos(angle)*2;
     iOffsetY += sin(angle)*2;
@@ -202,7 +202,7 @@ void cBullet::think_move()
         iCell++;
         update_me=true;
     }
-    
+
     // update when to much on the left
     if (iOffsetX < -31)
     {
@@ -210,7 +210,7 @@ void cBullet::think_move()
         iCell--;
         update_me=true;
     }
-    
+
                   // update when to much up
     if (iOffsetY < -31)
     {
@@ -218,25 +218,25 @@ void cBullet::think_move()
         iCell -= MAP_W_MAX;
         update_me=true;
     }
-    
+
     // update when to much down
     if (iOffsetY > 31)
     {
         iOffsetY -= 32;
         iCell += MAP_W_MAX;
         update_me=true;
-    }    
-    
+    }
+
     if (iCell==iGoalCell)
-        iOffsetX=iOffsetY=0;       
+        iOffsetX=iOffsetY=0;
 
     if (update_me)
-    {		
+    {
         if (bCellValid(iCell) == false)
         {
             if (iCell > (MAX_CELLS-1)) iCell = MAX_CELLS-1;
             if (iCell < 0) iCell = 0;
-        }      
+        }
     }
 
     bool bDie=false;
@@ -256,7 +256,7 @@ void cBullet::think_move()
         if (map.cell[iCell].type == TERRAIN_MOUNTAIN)
             bDie=true;
 
-        if (map.cell[iCell].type == TERRAIN_WALL)
+        if (map.cell[iCell].type == TERRAIN_WALL && iType != BULLET_TURRET) // except for bullet turret that do not hit walls...
         {
             // damage this type of wall...
 			int iDamage = player[iPlayer].iDamage(bullets[iType].damage);
@@ -282,9 +282,9 @@ void cBullet::think_move()
             bDie=true;
         }
 
-        
-        if (map.cell[iCell].id[MAPID_STRUCTURES] > -1) {	
-		
+
+        if (map.cell[iCell].id[MAPID_STRUCTURES] > -1) {
+
             // structure hit!
             int id = map.cell[iCell].id[MAPID_STRUCTURES];
 
@@ -293,17 +293,17 @@ void cBullet::think_move()
             if (iType == BULLET_TURRET)
             {
 				if (id == iOwnerStructure) {
-					logbook("Turret bullet shot itself, will skip friendly fire");
+					//logbook("Turret bullet shot itself, will skip friendly fire");
                     bSkipSelf=true; // do not shoot yourself
 				} else {
 					if (structure[id]->getOwner() == iPlayer) {
-                        bSkipSelf=true; // do not shoot own buildings    
-						logbook("Bullet shot itself, will skip friendly fire");
+                        bSkipSelf=true; // do not shoot own buildings
+						//logbook("Bullet shot itself, will skip friendly fire");
 					}
                 }
             }
 
-            if (bSkipSelf == false) {                 
+            if (bSkipSelf == false) {
 				int iDamage = player[iPlayer].iDamage(bullets[iType].damage);
 
 				// increase damage by experience of unit
@@ -312,13 +312,13 @@ void cBullet::think_move()
 					int iDam = (unit[iOwnerUnit].fExpDamage() * iDamage);
 					iDamage = iDamage + iDam;
 				}
-				
+
 				int oldHp = structure[id]->getHitPoints();
 				assert(iDamage > 0);
 				structure[id]->damage(iDamage);
 
 				assert(oldHp > structure[id]->getHitPoints()); // damage should be done
-				
+
 				int iChance = 10;
 
 				if (structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
@@ -334,10 +334,10 @@ void cBullet::think_move()
 					if (iOwnerUnit > -1)
 						if (unit[iOwnerUnit].isValid())
 						{
-							player[unit[iOwnerUnit].iPlayer].iKills[INDEX_KILLS_STRUCTURES]++;  // we killed!                        
+							player[unit[iOwnerUnit].iPlayer].iKills[INDEX_KILLS_STRUCTURES]++;  // we killed!
 						}
 
-						structure[id]->die();                
+						structure[id]->die();
 				}
 
 				bDie=true;
@@ -370,7 +370,7 @@ void cBullet::think_move()
 
 				assert(iDamage > 0);
 				structure[id]->damage(iDamage);
-				
+
 				int iChance=15;
 
 				// structure could be dead here (damage->calls die when dead)
@@ -381,7 +381,7 @@ void cBullet::think_move()
 				if (rnd(100) < iChance)
 					PARTICLE_CREATE(draw_x()+(map.scroll_x*32)+16+ (-8 + rnd(16)), draw_y()+(map.scroll_y*32)+16+ (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
 
-				
+
 				// NO HP LEFT, DIE
 				if (structure[id]->getHitPoints() <= 0)
 				{
@@ -435,7 +435,7 @@ void cBullet::think_move()
 
 			// kill unit
 			game.TIMER_shake=20;
-			
+
         }
 
 		// Ok sandworm damaged
@@ -445,14 +445,14 @@ void cBullet::think_move()
             int id = map.cell[iCell].id[MAPID_WORMS];
 
             unit[id].iHitPoints -= player[iPlayer].iDamage(bullets[iType].damage);
-                        
+
             // NO HP LEFT, DIE
             if (unit[id].iHitPoints <= 0)
             {
                 unit[id].die(true, false);
             }
 
-            bDie=true;           
+            bDie=true;
         }
 
         // OK, units damaged:
@@ -478,7 +478,7 @@ void cBullet::think_move()
 				int iDamage = player[iPlayer].iDamage(bullets[iType].damage);
 
 				if (iOwnerUnit > -1)
-				{					
+				{
 					int iDam = unit[iOwnerUnit].fExpDamage() * iDamage;
 					iDamage = iDamage + iDam;
 				}
@@ -487,8 +487,8 @@ void cBullet::think_move()
 				//unit[id].iHitPoints -= player[iPlayer].iDamage(bullets[iType].damage);
 
 			}
-            
-            
+
+
             // NO HP LEFT, DIE
             if (unit[id].iHitPoints <= 0)
             {
@@ -503,17 +503,17 @@ void cBullet::think_move()
 				   {
                     if (unit[iID].isValid())
                     {
-                        player[unit[iID].iPlayer].iKills[INDEX_KILLS_UNITS]++;  // we killed!                        												
-						
+                        player[unit[iID].iPlayer].iKills[INDEX_KILLS_UNITS]++;  // we killed!
+
 						if (units[unit[id].iType].infantry)
 							unit[iID].fExperience += 0.25; // 4 kills = 1 star
 						else
 							unit[iID].fExperience += 0.45; // ~ 3 kills = 1 star
-                    }					
+                    }
 				   }
 
-					
-               } 
+
+               }
 
                unit[id].die(true, false);
             }
@@ -532,13 +532,13 @@ void cBullet::think_move()
                     } else if (iOwnerStructure > -1) {
                         unit[id].iPlayer = structure[iOwnerStructure]->getOwner();
 					}
-                    
+
                     unit[id].iAttackStructure = -1;
                     unit[id].iAttackUnit=-1;
                     unit[id].iAction = ACTION_GUARD;
 				}
             }
-           
+
         }
 
 
@@ -553,23 +553,23 @@ void cBullet::think_move()
             {
             // structure hit!
             int id = map.cell[iCell].id[MAPID_AIR];
-            
+
             if (id != iOwnerUnit)
             {
-				
+
 				int iDamage = player[iPlayer].iDamage(bullets[iType].damage);
 
 				if (iOwnerUnit > -1)
 				{
 					int iDam = (unit[iOwnerUnit].fExpDamage() * iDamage);
-					
+
 					iDamage += iDam;
 				}
 
 	            unit[id].iHitPoints -= iDamage;
 
 //            unit[id].iHitPoints -= player[iPlayer].iDamage(bullets[iType].damage);
-            
+
             // NO HP LEFT, DIE
             if (unit[id].iHitPoints <= 0)
             {
@@ -584,9 +584,9 @@ void cBullet::think_move()
                {
                     if (unit[iID].isValid())
                     {
-                        player[unit[iID].iPlayer].iKills[INDEX_KILLS_UNITS]++;  // we killed!                        
+                        player[unit[iID].iPlayer].iKills[INDEX_KILLS_UNITS]++;  // we killed!
                     }
-               } 
+               }
 
 
             }
@@ -605,17 +605,17 @@ void cBullet::think_move()
             PARTICLE_CREATE(draw_x()+(map.scroll_x*32)+16+ (-8 + rnd(16)), draw_y()+(map.scroll_y*32)+16+ (-8 + rnd(16)), bullets[iType].deadbmp, -1, -1);
 
 		int iDamage = player[iPlayer].iDamage(bullets[iType].damage);
-		
+
 		if (iOwnerUnit > -1)
 		{
 			int iDam = (unit[iOwnerUnit].fExpDamage() * iDamage);
 			iDamage += iDam;
 		}
-		
+
         if (map.cell[iCell].type == TERRAIN_ROCK)
         {
-            if (map.cell[iCell].type != TERRAIN_WALL)			
-                map.cell[iCell].health -= iDamage;		
+            if (map.cell[iCell].type != TERRAIN_WALL)
+                map.cell[iCell].health -= iDamage;
 
 
             if (map.cell[iCell].health < -25)
@@ -627,7 +627,7 @@ void cBullet::think_move()
 		else if (map.cell[iCell].type == TERRAIN_SLAB)
 		{
 			// change into rock, get destroyed
-			if (map.cell[iCell].id[MAPID_STRUCTURES] < 0 && 
+			if (map.cell[iCell].id[MAPID_STRUCTURES] < 0 &&
 				iType != BULLET_SMALL &&
 				iType != BULLET_SHIMMER)
 			{
@@ -650,10 +650,10 @@ void cBullet::think_move()
                 map.cell[iCell].health += rnd(25);
             }
         }
-            
-       
 
-        
+
+
+
 
         bAlive=false;
     }

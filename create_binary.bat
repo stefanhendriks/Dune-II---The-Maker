@@ -1,8 +1,10 @@
 @echo off
 cls 
 echo.
-echo Prepare binary package (./bin) of D2TM. Will copy "Dune 2.exe" from the Release dir
-echo created by MSVC.
+echo Prepare binary package (./bin) of D2TM. 
+echo.
+echo Will copy "Dune 2.exe" from the Default dir created by Eclipse CDT.
+echo Will copy DLL files from dll/mingw32
 echo.
 echo 1. Removing bin directory
 rd /S /Q bin
@@ -42,9 +44,9 @@ echo 9. Create skirmish directory
 mkdir bin\skirmish
 copy skirmish\*.ini bin\skirmish
 echo 10. Copying dll files
-copy dll\msvc\*.* bin
+copy dll\mingw32\*.* bin
 echo 11. Copy executable from %1
-copy Release\*.exe bin
+copy Default\*.exe bin
 echo 12. Copy game rules file (game.ini)
 copy game.ini bin
 echo 13. Copy txt files

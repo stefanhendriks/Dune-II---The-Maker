@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -29,28 +29,28 @@ void cGame::init()
 
     bSkirmish=false;
 	iSkirmishStartPoints=2;
-    
+
     // Alpha (for fading in/out)
     iAlphaScreen=0;           // 255 = opaque , anything else
     iFadeAction=2;            // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
-    
+
     iRegionState=1;// default = 0
     iRegionScene=0;           // scene
     iRegionSceneAlpha=0;           // scene
     memset(iRegionConquer, -1, sizeof(iRegionConquer));
-    memset(iRegionHouse, -1, sizeof(iRegionHouse));    
+    memset(iRegionHouse, -1, sizeof(iRegionHouse));
     memset(cRegionText, 0, sizeof(cRegionText));
     //int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
 
 	windowed = true;
-    
+
 	screen_x = 640;
     screen_y = 480;
 
     bPlaySound = true;
 
     iSkirmishMap=-1;
-    
+
 	bMousePressedLeft = bMousePressedRight=false;
 
 	iCountSoundMoney=0;
@@ -62,12 +62,12 @@ void cGame::init()
 	mouse_left=mouse_right=false;
 
     iMusicVolume=128; // volume is 0...
-	
+
 	paths_created=0;
 	hover_structure=-1;
 	hover_unit=-1;
     iMouseZ=mouse_z;
-	
+
     state = GAME_MENU;
     //state=GAME_REGION;
 
@@ -81,7 +81,7 @@ void cGame::init()
 	memset(cMessage, 0 , sizeof(cMessage));
 	iMessageAlpha=-1;
 
-	// mentat	
+	// mentat
 	memset(mentat_sentence, 0, sizeof(mentat_sentence));
 
 	bPlaceIt=false;			// we do not place
@@ -96,14 +96,14 @@ void cGame::init()
 	sprintf(version, "0.5.0");
 
 	fade_select=255;
-	
+
     bFadeSelectDir=true;    // fade select direction
 
 	iActiveList=LIST_CONSTYARD;		// what list is active to view? (refering to ID of list)
 
     iRegion=1;          // what region ? (calumative, from player perspective, NOT the actual region number)
 	iMission=0;         // calculated by mission loading (region -> mission calculation)
-	iHouse=-1;			// what house is selected for playing? 
+	iHouse=-1;			// what house is selected for playing?
 
 	TIMER_message=0;
 
@@ -173,17 +173,17 @@ void cGame::init()
 // initialize for missions
 void cGame::mission_init()
 {
-    
+
 	iCountSoundMoney=0;
     iSoundsPlayed=0;
 
     iMusicVolume=128; // volume is 0...
-	
+
 	paths_created=0;
 	hover_structure=-1;
 	hover_unit=-1;
     iMouseZ=mouse_z;
-	
+
     TIMER_money=0;
 
     iWinQuota=-1;              // > 0 means, get this to win the mission, else, destroy all!
@@ -193,7 +193,7 @@ void cGame::mission_init()
 	memset(cMessage, 0 , sizeof(cMessage));
 	iMessageAlpha=-1;
 
-	// mentat	
+	// mentat
 	memset(mentat_sentence, 0, sizeof(mentat_sentence));
 
 	bPlaceIt=false;			// we do not place
@@ -202,7 +202,7 @@ void cGame::mission_init()
 	mouse_tile = MOUSE_NORMAL;
 
 	fade_select=255;
-	
+
     bFadeSelectDir=true;    // fade select direction
 
 	iActiveList=LIST_CONSTYARD;		// what list is active to view? (refering to ID of list)
@@ -219,7 +219,7 @@ void cGame::mission_init()
 
 	// TODO:
 	// Initialize units/structures/reinforcements, etc.
-	
+
 
 	TIMER_starport=-2;
 	TIMER_ordered=-1;			// timer for ordering stuff ( -1 = nothing, 0 = delivering, > 0 t-minus)
@@ -235,7 +235,7 @@ void cGame::mission_init()
 
     map.init();
 
-	init_lists(); 
+	init_lists();
 
     // clear out players but not entirely
     for (int i=0; i < MAX_PLAYERS; i++)
@@ -250,7 +250,7 @@ void cGame::mission_init()
         if (bSkirmish)
             player[i].credits = 2500;
     }
-    
+
 //	for (int i=0; i < MAX_PLAYERS; i++)
 //		player[i].init();
 
@@ -346,7 +346,7 @@ void cGame::think_winlose()
         blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
 
         draw_sprite(bmp_winlose, (BITMAP *)gfxinter[BMP_WINNING].dat, 77, 182);
-        
+
     }
 
     if (bFailed)
@@ -416,7 +416,7 @@ void cGame::think_mentat()
 			TIMER_mentat_Speaking=-1;
 			return;
 		}
-		
+
 
 		TIMER_mentat_Speaking = iLength*12;
 	}
@@ -439,7 +439,7 @@ void cGame::think_mentat()
 				// when mouth is shut, we wait a bit.
 				if (rnd(100) < 45)
 				{
-					iMentatMouth += (1 + rnd(4));				
+					iMentatMouth += (1 + rnd(4));
 				}
 				else
 					TIMER_mentat_Mouth=3; // wait
@@ -450,7 +450,7 @@ void cGame::think_mentat()
 			}
 			else
 			{
-				iMentatMouth += (1 + rnd(4));									
+				iMentatMouth += (1 + rnd(4));
 
 				if (iMentatMouth > 4)
 					iMentatMouth-=5;
@@ -473,11 +473,11 @@ void cGame::think_mentat()
 		}
 		else
 			iMentatMouth=0; // when there is no sentence, do not animate mouth
-		
+
 		TIMER_mentat_Mouth=-1; // this way we make sure we do not update it too much
 	} // speaking
 
-	
+
 	if (TIMER_mentat_Eyes > 0)
 	{
 		TIMER_mentat_Eyes--;
@@ -487,7 +487,7 @@ void cGame::think_mentat()
 		int i = rnd(100);
 
         int iWas = iMentatEyes;
-        
+
         if (i < 30)
 			iMentatEyes = 3;
 		else if (i >= 30 && i < 60)
@@ -498,9 +498,9 @@ void cGame::think_mentat()
         // its the same
         if (iMentatEyes == iWas)
             iMentatEyes = rnd(4);
-		
+
         if (iMentatEyes != 4)
-            TIMER_mentat_Eyes = 90 + rnd(160); 
+            TIMER_mentat_Eyes = 90 + rnd(160);
         else
             TIMER_mentat_Eyes = 30;
 	}
@@ -512,7 +512,7 @@ void cGame::think_mentat()
 	}
 	else
 	{
-		iMentatOther = rnd(5); 
+		iMentatOther = rnd(5);
 	}
 
 }
@@ -541,7 +541,7 @@ void cGame::think_starport()
 			if (structure[iStr] == NULL ||
 				structure[iStr]->getOwner() != 0) // somehow not ours
 				iStr = FIND_PRIMARY_BUILDING(STARPORT, 0); // find new one
-			
+
 		if (iStr > -1)
 		{
 			player[0].iPrimaryBuilding[STARPORT] = iStr; // assign
@@ -550,9 +550,9 @@ void cGame::think_starport()
             TIMER_mayorder=10;
 			play_voice(SOUND_VOICE_06_ATR);
 		}
-		
-		
-		TIMER_ordered = -1; // 
+
+
+		TIMER_ordered = -1; //
 	}
 
 
@@ -580,7 +580,7 @@ void cGame::think_starport()
 			play_sound_id(iSnd, -1);
 		}
 
-		TIMER_ordered--;		
+		TIMER_ordered--;
 	}
 
 
@@ -589,7 +589,7 @@ void cGame::think_starport()
 	{
 		// step 1:
 		// clear starport list
-		int i = LIST_STARPORT;	
+		int i = LIST_STARPORT;
 
 		for (int j=0; j < MAX_ICONS; j++)
 		{
@@ -616,8 +616,8 @@ void cGame::think_starport()
 
 			iPrice -= (iPrice/4);
 
-			iPrice += (rnd(iPrice)); 
-	
+			iPrice += (rnd(iPrice));
+
 			// add item, with 'random price'
 			list_new_item(LIST_STARPORT, units[i].icon, iPrice, -1, i);
 		}
@@ -671,7 +671,7 @@ void cGame::think_message()
 void cGame::think_music()
 {
     // all this does is repeating music in the same theme.
-    
+
     if (iMusicType < 0)
         return;
 
@@ -680,7 +680,7 @@ void cGame::think_music()
     {
 
         if (mp3_music != NULL)
-        {			
+        {
             int s = almp3_poll_mp3(mp3_music);
 
             if (s == ALMP3_POLL_PLAYJUSTFINISHED || s == ALMP3_POLL_NOTPLAYING)
@@ -703,11 +703,11 @@ void cGame::think_music()
             if (iMusicType == MUSIC_ATTACK)
                 iMusicType = MUSIC_PEACE; // set back to peace
 
-            play_music(iMusicType); // 
+            play_music(iMusicType); //
         }
     }
 
-    
+
 }
 
 
@@ -731,8 +731,7 @@ void cGame::poll()
 	for (int i=0; i < MAX_UNITS; i++)
 		if (unit[i].isValid())
 			if (unit[i].iPlayer == 0)
-				if (unit[i].bSelected)
-                {
+				if (unit[i].bSelected) {
 					mouse_tile = MOUSE_MOVE;
                     break;
                 }
@@ -778,8 +777,8 @@ void cGame::poll()
             if (structure[id]->getOwner() == 0)
                 if (key[KEY_LCONTROL])
                     mouse_tile = MOUSE_RALLY;
-                
-        }       
+
+        }
     }
 
 	bPlacedIt=false;
@@ -798,7 +797,7 @@ void cGame::think_upgrade()
 		// ok, we upgrade
 		if (iUpgradeProgress[i] > -1 && iUpgradeProgressLimit[i] > -1)
 		{
-			
+
 			iUpgradeTIMER[i]++;
 
 			if (iUpgradeTIMER[i] > 35)
@@ -841,7 +840,7 @@ void cGame::think_upgrade()
                         if (player[0].house == ATREIDES || player[0].house == ORDOS)
                         {
                             list_new_item(LIST_INFANTRY, ICON_UNIT_INFANTRY, units[INFANTRY].cost, -1, INFANTRY);
-                            
+
                             if (player[0].house == ORDOS)
                                 list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPERS, units[TROOPERS].cost, -1, TROOPERS);
                         }
@@ -857,7 +856,7 @@ void cGame::think_upgrade()
                         if (player[0].house == HARKONNEN || player[0].house == SARDAUKAR || player[0].house == ORDOS)
                         {
                             list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPERS, units[TROOPERS].cost, -1, TROOPERS);
-                            
+
                             if (player[0].house == ORDOS)
                                list_new_item(LIST_INFANTRY, ICON_UNIT_INFANTRY, units[INFANTRY].cost, -1, INFANTRY);
                         }
@@ -888,7 +887,7 @@ void cGame::think_upgrade()
                             list_new_item(LIST_HEAVYFC, ICON_UNIT_DEVIATOR, units[DEVIATOR].cost, -1, DEVIATOR);
                         if (player[0].house == HARKONNEN)
                             list_new_item(LIST_HEAVYFC, ICON_UNIT_DEVASTATOR, units[DEVASTATOR].cost, -1, DEVASTATOR);
-    
+
                     }
 
 
@@ -921,7 +920,7 @@ void cGame::think_build()
 				iBuildTime = structures[iconlist[i][iIconID].iStructureID].build_time;
 			else
 				iBuildTime = units[iconlist[i][iIconID].iUnitID].build_time;
-			
+
 			int iTimerCap = 35; // was 35 = ORIGINAL
 
 			if (DEBUGGING)
@@ -929,26 +928,26 @@ void cGame::think_build()
 
 			// when player has low power, produce twice as slow
 			if (player[0].bEnoughPower() == false)
-				iTimerCap *= 2; 
+				iTimerCap *= 2;
 
 			int iType=-1;
 
 			if (i == LIST_CONSTYARD) iType = CONSTYARD;
 			if (i == LIST_LIGHTFC) iType = LIGHTFACTORY;
 			if (i == LIST_HEAVYFC) iType = HEAVYFACTORY;
-			
+
 			if (i == LIST_INFANTRY) iType = BARRACKS; // todo...	 (WOR for other house)
 
 			if (player[0].house == HARKONNEN ||
 				player[0].house == SARDAUKAR)
 			{
-				if (i == LIST_INFANTRY) iType = WOR; // todo...	 (WOR for other house)						
+				if (i == LIST_INFANTRY) iType = WOR; // todo...	 (WOR for other house)
 			}
 
 			if (iconlist[i][iIconID].iUnitID == TROOPER ||
 				iconlist[i][iIconID].iUnitID == TROOPERS)
 				iType = WOR;
-			
+
 			if (i == LIST_ORNI) iType = HIGHTECH;
 			if (i == LIST_STARPORT) iType = STARPORT;
 			if (i == LIST_PALACE) iType = PALACE;
@@ -958,7 +957,7 @@ void cGame::think_build()
 
 			iTimerCap = player[0].iBuildSpeed(iTimerCap);
 
-			
+
 			// build stuff
 			if (iconTIMER[i] >= iTimerCap)
 			{
@@ -975,7 +974,7 @@ void cGame::think_build()
 				{
 					if (i != LIST_NONE && i != LIST_CONSTYARD)
 					{
-						
+
 						// create unit
 						int iStr = player[0].iPrimaryBuilding[iType];
 
@@ -993,7 +992,7 @@ void cGame::think_build()
                             if (iStr < 0)
                                 iStr=iOldStr;
                         }
-								
+
 
 						if (iStr > -1)
                         {
@@ -1009,21 +1008,21 @@ void cGame::think_build()
 								}
 								else
 								{
-									
+
 								iStr = player[0].iPrimaryBuilding[iType];
 
 								// when nothing found now, it means the structure is the only
 								// one. So, we cannot dump it. Send over a reinforcement
 								int rX = (iCellGiveX(structure[iStr]->getCell()) - 5) + rnd(10);
 								int rY = (iCellGiveY(structure[iStr]->getCell()) - 5) + rnd(10);
-								
+
 								FIX_POS(rX, rY);
 
 								REINFORCE(0, iconlist[i][iIconID].iUnitID, iCellMake(rX, rY), -1);
 
 								iconbuilding[i]=-1;
 								iconprogress[i]=-1;
-								
+
 								if (DEBUGGING)
 									logbook("THINK_BUILD: Unit will be sent over by carryall");
 
@@ -1034,7 +1033,7 @@ void cGame::think_build()
 
 						// SET AS PRIMARY  BUILDING
 						if (player[0].iPrimaryBuilding[iType] < 0)
-							player[0].iPrimaryBuilding[iType] = iStr; 
+							player[0].iPrimaryBuilding[iType] = iStr;
 
 						if (iStr < 0)
 						{
@@ -1045,7 +1044,7 @@ void cGame::think_build()
 						}
 
 						int iSpot = structure[iStr]->iFreeAround();
-					
+
 						structure[iStr]->setAnimating(true); // animate
 						int id = UNIT_CREATE(iSpot, iconlist[i][iIconID].iUnitID, 0, true);
 
@@ -1062,7 +1061,7 @@ void cGame::think_build()
 			}
 			else
 				iconTIMER[i]++;
-			
+
 		}
 	}
 
@@ -1090,51 +1089,51 @@ void cGame::combat_mouse()
             if (key[KEY_R] && player[0].iStructures[REPAIR] > 0)
             if (unit[hover_unit].iPlayer == 0)
                 if (unit[hover_unit].iHitPoints < units[unit[hover_unit].iType].hp &&
-                    units[unit[hover_unit].iType].infantry == false && 
+                    units[unit[hover_unit].iType].infantry == false &&
                     units[unit[hover_unit].iType].airborn == false)
                 {
 
                     if (bMousePressedLeft)
                     {
                         // find closest repair bay to move to
-                        
+
                             int iNewID = STRUCTURE_FREE_TYPE(0, unit[hover_unit].iCell, REPAIR);
 
                             if (iNewID > -1)
-                            {   
+                            {
                                 int iCarry = CARRYALL_TRANSFER(hover_unit, structure[iNewID]->getCell()+2);
-                                
-                                
+
+
                                 if (iCarry > -1)
                                 {
                                     // yehaw we will be picked up!
                                     unit[hover_unit].TIMER_movewait = 100;
-                                    unit[hover_unit].TIMER_thinkwait = 100;	                                
+                                    unit[hover_unit].TIMER_thinkwait = 100;
                                 }
                                 else
                                 {
                                     logbook("Order move #5");
-                                    UNIT_ORDER_MOVE(hover_unit, structure[iNewID]->getCell());   
+                                    UNIT_ORDER_MOVE(hover_unit, structure[iNewID]->getCell());
                                 }
 
                                 unit[hover_unit].TIMER_blink  = 5;
                                 unit[hover_unit].iStructureID = iNewID;
                                 unit[hover_unit].iGoalCell = structure[iNewID]->getCell();
-                                
+
                             }
-                        
+
                     }
 
                     mouse_tile = MOUSE_REPAIR;
                 }
         }
-            
+
 	if (mc > -1)
 	{
 		if (bMousePressedRight)
 			UNIT_deselect_all();
 
-        
+
 		// single clicking and moving
 		if (bMousePressedLeft)
 		{
@@ -1156,10 +1155,10 @@ void cGame::combat_mouse()
 				if (unit[hover_unit].iPlayer == 0)
 				{
                     if (!key[KEY_LSHIFT])
-                        UNIT_deselect_all();				
+                        UNIT_deselect_all();
 
-				unit[hover_unit].bSelected=true;	
-                
+				unit[hover_unit].bSelected=true;
+
                 if (units[unit[hover_unit].iType].infantry == false)
                     play_sound_id(SOUND_REPORTING, -1);
                 else
@@ -1167,15 +1166,15 @@ void cGame::combat_mouse()
 
 				}
 			}
-			else 
+			else
 			{
-                
+
                 bool bPlayInf=false;
                 bool bPlayRep=false;
 
                 if (mouse_tile == MOUSE_MOVE)
                 {
-                
+
                     // any selected unit will move
 				for (int i=0; i < MAX_UNITS; i++)
 					if (unit[i].isValid())
@@ -1183,12 +1182,12 @@ void cGame::combat_mouse()
 							if (unit[i].bSelected)
 							{
 								UNIT_ORDER_MOVE(i, mc);
-                              
+
                                 if (units[unit[i].iType].infantry)
                                     bPlayInf=true;
                                 else
                                     bPlayRep=true;
-                               
+
 								bParticle=true;
 							}
 
@@ -1205,7 +1204,7 @@ void cGame::combat_mouse()
 							if (unit[i].bSelected)
 							{
                                 int iAttackCell=-1;
-                                
+
                                 if (game.hover_structure < 0 && game.hover_unit < 0)
                                     iAttackCell = mc;
 
@@ -1213,12 +1212,12 @@ void cGame::combat_mouse()
 
 								if (game.hover_unit > -1)
 									unit[game.hover_unit].TIMER_blink = 5;
-                              
+
                                 if (units[unit[i].iType].infantry)
                                     bPlayInf=true;
                                 else
                                     bPlayRep=true;
-                               
+
 								bParticle=true;
 							}
 
@@ -1231,7 +1230,7 @@ void cGame::combat_mouse()
                 {
                     if (bPlayInf)
                         play_sound_id(SOUND_MOVINGOUT+rnd(2), -1);
-                    
+
                     if (bPlayRep)
                         play_sound_id(SOUND_ACKNOWLEDGED+rnd(3), -1);
 
@@ -1246,7 +1245,7 @@ void cGame::combat_mouse()
                     PARTICLE_CREATE(mouse_x + (map.scroll_x*32), mouse_y + (map.scroll_y*32), ATTACK_INDICATOR, -1, -1);
                     else
                     PARTICLE_CREATE(mouse_x + (map.scroll_x*32), mouse_y + (map.scroll_y*32), MOVE_INDICATOR, -1, -1);
-				
+
 
 		}
 	}
@@ -1260,29 +1259,29 @@ void cGame::combat_mouse()
 
 			  // keep the mouse pressed ;)
               if (mouse_co_x1 > -1 && mouse_co_y1 > -1 )
-              {             
+              {
 				  if (abs(mouse_x-mouse_co_x1) > 4 && abs(mouse_y-mouse_co_y1) > 4)
 				  {
                       mouse_co_x2 = mouse_x;
                       mouse_co_y2 = mouse_y;
-				  
-                     					 
+
+
                       rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2, makecol(game.fade_select, game.fade_select, game.fade_select));
 				  }
 
                 // Note that we have to fix up the coordinates when checking 'within border'
-                // for units (when X2 < X1 for example!)                  
+                // for units (when X2 < X1 for example!)
               }
               else if (mc > -1)
               {
                  mouse_co_x1 = mouse_x;
                  mouse_co_y1 = mouse_y;
-               
-              }            
+
+              }
         }
 	else
 	{
-		 if (mouse_co_x1 > -1 && mouse_co_y1 > -1 && 
+		 if (mouse_co_x1 > -1 && mouse_co_y1 > -1 &&
                 mouse_co_x2 != mouse_co_x1 && mouse_co_y2 != mouse_co_y1 &&
                 mouse_co_x2 > -1 && mouse_co_y2 > -1)
             {
@@ -1334,19 +1333,19 @@ void cGame::combat_mouse()
 
 							// do not select airborn units
 							if (unit[i].iType == ORNITHOPTER &&
-								unit[i].iType == CARRYALL) 
+								unit[i].iType == CARRYALL)
 								continue;
 
                             // now check X and Y coordinates
-                            if ((unit[i].draw_x() >= min_x && (unit[i].draw_x() + units[unit[i].iType].bmp_width) <= max_x) &&
-                                (unit[i].draw_y() >= min_y && (unit[i].draw_y() + units[unit[i].iType].bmp_height) <= max_y) )
+                            if (((unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) >= min_x && (unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) <= max_x) &&
+                                (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2 >= min_y && (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2) <= max_y) )
                             {
                                 // It is in the borders, select it
                                 unit[i].bSelected=true;
                                // mouse_status = MOUSE_STATE_MOVE;
             //                    bPlayRep=true;
 
-                             
+
 								if (units[unit[i].iType].infantry) {
                                     bPlayInf=true;
 								} else {
@@ -1357,7 +1356,7 @@ void cGame::combat_mouse()
 
 
                         }
-                }               
+                }
 
                 if (bPlayInf || bPlayRep)
                 {
@@ -1369,7 +1368,7 @@ void cGame::combat_mouse()
                        play_sound_id(SOUND_YESSIR, -1);
 
                    bOrderingUnits=true;
-                
+
                 }
 
             }
@@ -1415,15 +1414,15 @@ void cGame::combat_mouse()
             {
                 if (bMousePressedLeft )
                 {
-                    
+
                     if (structure[game.hover_structure]->bRepair==false)
                         structure[game.hover_structure]->bRepair=true;
                     else
                         structure[game.hover_structure]->bRepair=false;
                 }
-                
+
                 mouse_tile = MOUSE_REPAIR;
-            }// MOUSE PRESSED                        
+            }// MOUSE PRESSED
         }
 
 		if (bMousePressedLeft && bOrderingUnits == false)
@@ -1443,7 +1442,7 @@ void cGame::combat_mouse()
     else if (mouse_tile == MOUSE_REPAIR)
         draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
     else if (mouse_tile == MOUSE_PICK)
-        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);	
+        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
 	else
 		draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
@@ -1504,12 +1503,12 @@ void cGame::think_money()
 	}
 
 	if (iDif < 500)
-	{		
+	{
 		if (player[0].draw_credits > player[0].credits)
 		{
 			player[0].draw_credits --;
 
-	
+
             if (iCountSoundMoney > 3)
 			{
 				play_sound_id(SOUND_CREDITDOWN, -1);
@@ -1525,7 +1524,7 @@ void cGame::think_money()
 				play_sound_id(SOUND_CREDITUP,-1);
 				iCountSoundMoney=0;
 			}
-			
+
 		}
 	}
 	else if (iDif > 500 && iDif < 1500)
@@ -1533,13 +1532,13 @@ void cGame::think_money()
 		if (player[0].draw_credits > player[0].credits)
 		{
 			player[0].draw_credits-=7;
-			
+
 			if (iCountSoundMoney > 3)
 			{
 				play_sound_id(SOUND_CREDITDOWN,-1);
 				iCountSoundMoney=0;
 			}
-			
+
 		}
 
 		if (player[0].draw_credits < player[0].credits)
@@ -1593,7 +1592,7 @@ void cGame::draw_credits()
   sprintf(credits, "%d", player[0].draw_credits);
 
   int offset = 1;
-  
+
   if (player[0].draw_credits > 0)
     offset = 4;   // offset
 
@@ -1616,11 +1615,11 @@ void cGame::draw_credits()
   for (int i=0; i < 6; i++)
   {
     // the actual position to draw on is:
-    //        screen        -  14 + (6 digits (each 10 pixels due borders)) 
+    //        screen        -  14 + (6 digits (each 10 pixels due borders))
     int dx = ((game.screen_x - 122) + ((offset + i) * 20))+2;
-    //rect(bmp_screen, dx, 0, 512, 10, makecol(255,255,255));    
-    int nr = CREDITS_NONE;    
-    
+    //rect(bmp_screen, dx, 0, 512, 10, makecol(255,255,255));
+    int nr = CREDITS_NONE;
+
     if (credits[i] == '1') nr = CREDITS_1;
     if (credits[i] == '2') nr = CREDITS_2;
     if (credits[i] == '3') nr = CREDITS_3;
@@ -1632,7 +1631,7 @@ void cGame::draw_credits()
     if (credits[i] == '9') nr = CREDITS_9;
     if (credits[i] == '0') nr = CREDITS_0;
 
-   
+
     // draw
       if (nr != CREDITS_NONE)
         draw_sprite(bmp_screen, (BITMAP *)gfxdata[nr].dat, dx, 8);
@@ -1683,12 +1682,12 @@ int  cGame::list_new_id(int iListID)
 
 void cGame::list_insert_item(int iListID, int iIcon, int iPrice, int iStructureID, int iUnitID, int iPosition)
 {
-	
+
 // check first if the item does not exist
 	for (int i=0; i < MAX_ICONS; i++)
 	{
 		// same icon exists, check if it has the same properties
-		if (iconlist[iListID][i].iIcon == iIcon)		
+		if (iconlist[iListID][i].iIcon == iIcon)
 		{
             if (iStructureID > -1)
                 if (iconlist[iListID][i].iStructureID == iStructureID)
@@ -1702,7 +1701,7 @@ void cGame::list_insert_item(int iListID, int iIcon, int iPrice, int iStructureI
 	}
 
 
-    
+
 
    int iNext=0;
    for (int i=(MAX_ICONS-2); i >= iPosition; i--)
@@ -1711,11 +1710,11 @@ void cGame::list_insert_item(int iListID, int iIcon, int iPrice, int iStructureI
 		   iconlist[iListID][(i+1)].iPrice = iconlist[iListID][i].iPrice;
 		   iconlist[iListID][(i+1)].iStructureID = iconlist[iListID][i].iStructureID;
 		   iconlist[iListID][(i+1)].iUnitID = iconlist[iListID][i].iUnitID;
-	   
+
    }
-   
+
    int iNewID = iPosition;
-   
+
    iconlist[iListID][iNewID].iIcon = iIcon;
    iconlist[iListID][iNewID].iPrice = iPrice;
    iconlist[iListID][iNewID].iStructureID = iStructureID;
@@ -1729,7 +1728,7 @@ void cGame::list_new_item(int iListID, int iIcon, int iPrice, int iStructureID, 
 	for (int i=0; i < MAX_ICONS; i++)
 	{
 		// same icon exists, check if it has the same properties
-		if (iconlist[iListID][i].iIcon == iIcon)		
+		if (iconlist[iListID][i].iIcon == iIcon)
 		{
 			if (iconlist[iListID][i].iStructureID == iStructureID)
 				return; // its the same
@@ -1743,7 +1742,7 @@ void cGame::list_new_item(int iListID, int iIcon, int iPrice, int iStructureID, 
 	// From here its really something new
 
 	int iNewID=list_new_id(iListID);
-	
+
 	iconlist[iListID][iNewID].iIcon = iIcon;
 	iconlist[iListID][iNewID].iPrice = iPrice;
 	iconlist[iListID][iNewID].iStructureID = iStructureID;
@@ -1773,7 +1772,7 @@ void cGame::draw_list() {
 	if (game.iActiveList == LIST_CONSTYARD) iType = CONSTYARD;
 	if (game.iActiveList == LIST_LIGHTFC) iType = LIGHTFACTORY;
 	if (game.iActiveList == LIST_HEAVYFC) iType = HEAVYFACTORY;
-	
+
 	if (game.iActiveList == LIST_INFANTRY) iType = BARRACKS; // todo...	 (WOR for other house)
 
 	if (game.iActiveList == LIST_ORNI) iType = HIGHTECH;
@@ -1799,19 +1798,19 @@ void cGame::draw_list() {
         {
             bUpgrading=true; // hack hack, it is not available
             game.iActiveList = LIST_NONE;
-        }        
+        }
     }
-    
- 
+
+
     if (key[KEY_B] && iLastBuilt[iList] > -1)
     {
 
         int iList=game.iActiveList;
-        
-        if (iconbuilding[iList] < 0 && 
-			iconprogress[iList] < 0 && 
-			player[0].credits >= iconlist[iList][iLastBuilt[iList]].iPrice && 
-			bUpgrading == false && 
+
+        if (iconbuilding[iList] < 0 &&
+			iconprogress[iList] < 0 &&
+			player[0].credits >= iconlist[iList][iLastBuilt[iList]].iPrice &&
+			bUpgrading == false &&
 			bPlaceIt==false) {
 
             iconbuilding[iList] = iLastBuilt[iList]; // remember this ID of the icon, so we know we build
@@ -1820,7 +1819,7 @@ void cGame::draw_list() {
             // PAY immidiatly
             player[0].credits -= iconlist[iList][iLastBuilt[iList]].iPrice;
         }
-       
+
     }
 
 	int i;
@@ -1830,7 +1829,7 @@ void cGame::draw_list() {
 		if (iconlist[iList][i].iIcon > -1)
 		{
 			draw_sprite(bmp_screen, (BITMAP *)gfxinter[iconlist[iList][i].iIcon].dat, iDrawX, iDrawY);
-		
+
             if (iLastBuilt[iList] == i)
                 rect(bmp_screen, iDrawX, iDrawY, iDrawX+63, iDrawY+47, makecol(game.fade_select, game.fade_select, game.fade_select));
 
@@ -1859,7 +1858,7 @@ void cGame::draw_list() {
 				//set_trans_blender(0, 0, 0, 192);
 
 				//draw_trans_sprite(bmp_screen, temp, iDrawX+43, iDrawY+20);
-                
+
                 fblend_trans(temp, bmp_screen, iDrawX+43, iDrawY+20, 192);
 
 				set_trans_blender(0, 0, 0, 128);
@@ -1874,7 +1873,7 @@ void cGame::draw_list() {
 			// black it out.
 			if ((bBuilding != false && iconbuilding[iList] != i) || (bUpgrading))
 			{
-				// draw transculent 
+				// draw transculent
 				//draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESSNA].dat, iDrawX, iDrawY);
                 fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 128);
 			}
@@ -1888,7 +1887,7 @@ void cGame::draw_list() {
 				if (player[0].iStructures[WOR] < 1)
 					bAvailable=false;
 			}
-			
+
 			// When it is not available
 			if (iconlist[iList][i].iUnitID == SOLDIER ||
 				iconlist[iList][i].iUnitID == INFANTRY)
@@ -1919,14 +1918,14 @@ void cGame::draw_list() {
 				line(bmp_screen, iDrawX, iDrawY+47, iDrawX+63, iDrawY, makecol(game.fade_select, 0, 0));
 				set_trans_blender(0,0,0,128);
 			}
-						
+
 			if (iList == LIST_STARPORT)
-			{				
+			{
 				if (iconFrigate[i] > 0)
 				{
 					// this one is reserved
 					//set_trans_blender(0, 0, 0, 64);
-					
+
 					//draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESSNA].dat, iDrawX, iDrawY);
                     fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
 
@@ -1942,7 +1941,7 @@ void cGame::draw_list() {
 						TIMER_mayorder > -1)
 					{
 						set_trans_blender(0, 0, 0, 64);
-					
+
                         fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 128);
 						//draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESSNA].dat, iDrawX, iDrawY);
 
@@ -1952,7 +1951,7 @@ void cGame::draw_list() {
 
 				}
 
-				
+
 
 			}
 
@@ -1975,14 +1974,14 @@ void cGame::draw_list() {
 
 				if (iPiece < 0.1)
 					iPiece = 0.1;
-				
+
 				//int iFrame = iconprogress[iList] / iPiece;
 				//int iFrame = health_bar(17, iconprogress[iList], iTotal);
                 int iFrame = health_bar(31, iconprogress[iList], iTotal);
 
 				if (iFrame > 31)
 					iFrame = 31;
-				
+
 
 				if (iconprogress[iList] < iTotal)
                 {
@@ -1990,7 +1989,7 @@ void cGame::draw_list() {
 
 					//draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESS001+iFrame].dat, iDrawX, iDrawY);
                      fblend_trans((BITMAP *)gfxinter[PROGRESSFIX].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
-                     fblend_trans((BITMAP *)gfxinter[PROGRESS001+iFrame].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);					
+                     fblend_trans((BITMAP *)gfxinter[PROGRESS001+iFrame].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
 
 
                      /*
@@ -2002,12 +2001,12 @@ void cGame::draw_list() {
 					if (iList == LIST_CONSTYARD)
 						draw_sprite(bmp_screen, (BITMAP *)gfxinter[READY01].dat, iDrawX+3, iDrawY+16);
 					else
-					{				
+					{
 
 
 					}
 
-				
+
 				}
 
 			}
@@ -2031,14 +2030,14 @@ void cGame::draw_list() {
 
 				int iID=-1;
 				char msg[255];
-				
+
 				if (iList == LIST_CONSTYARD)
-				{					
+				{
 					iID = iconlist[iList][i].iStructureID;
 					sprintf(msg, "$%d | %s", structures[iID].cost, structures[iID].name);
 
 				}
-				else 
+				else
 				{
 					iID = iconlist[iList][i].iUnitID;
 					sprintf(msg, "$%d | %s", iconlist[iList][i].iPrice, units[iID].name);
@@ -2047,9 +2046,9 @@ void cGame::draw_list() {
 				set_message(msg);
 
 				// clicking....
-				
+
 				if (iList != LIST_STARPORT)
-				{                    
+				{
 
 				// LEFT MOUSE BUTTON - NOT BUILDING - NO PROGRESS YET - ENOUGH MONEY
 				if (bMousePressedLeft && iconbuilding[iList] < 0 && iconprogress[iList] < 0 && player[0].credits >= iconlist[iList][i].iPrice && bUpgrading == false && bPlaceIt==false && bAvailable)
@@ -2071,7 +2070,7 @@ void cGame::draw_list() {
 
 					// pay back
 					player[0].credits += iconlist[iList][i].iPrice;
-				}			
+				}
 
 				} // NOT STARPORT
 				else
@@ -2103,10 +2102,10 @@ void cGame::draw_list() {
 					} // something is not being delivered
 				}
 
-				
-				
+
+
 			}
-            
+
             if (iconbuilding[iList] == i)
             {
             int iTotal = 0;
@@ -2115,14 +2114,14 @@ void cGame::draw_list() {
 					iTotal = structures[ iconlist[iList][i].iStructureID ].build_time;
 				else
 					iTotal = units[ iconlist[iList][i].iUnitID ].build_time;
-			
+
                 // UNDO PLACING, THEN UNDO MONEY
 				if (iconprogress[iList] >= iTotal && iconprogress[iList] > -1)
-				{   
+				{
                     if (iList == LIST_CONSTYARD)
                     {
                         if (key[KEY_P] && bPlaceIt == false)
-                        {                           
+                        {
                             bPlaceIt=true;
                         }
 
@@ -2130,7 +2129,7 @@ void cGame::draw_list() {
 					if ((mouse_x >= iDrawX && mouse_x <= (iDrawX+64)) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+48)) )
 					{
 						if (bMousePressedLeft && bPlaceIt == false)
-							bPlaceIt=true; // place it						
+							bPlaceIt=true; // place it
 					}
 
 					// Undo placing, even when NOT on the icon itself
@@ -2212,12 +2211,12 @@ void cGame::draw_list() {
 // Draw sidebar buttons, to switch lists
 void cGame::draw_sidebarbuttons()
 {
-	
+
 
     // clear
     BITMAP *bmp_trans=create_bitmap(((BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat)->w,((BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat)->h);
     clear_to_color(bmp_trans, makecol(0,0, 0));
-    
+
     // set blender
     set_trans_blender(0,0,0,128);
 
@@ -2227,13 +2226,13 @@ void cGame::draw_sidebarbuttons()
 	///////////////////////////////////////////////////////////////////////////////////
 
 	int iDrawStatus=0;		// 0 = grey, 1 = pressed , anything else = draw nothing (meaning, unpressed, active!)
-	int iDrawY=45;			// DrawX = 513, 
+	int iDrawY=45;			// DrawX = 513,
 	int iDrawX=513;
-	
+
 		// RULE 2: Do we have the nescesary building?
 		if (player[0].iStructures[CONSTYARD] > 0)
 		{
-			// Do a check what the active list is. 
+			// Do a check what the active list is.
 			if (game.iActiveList == LIST_CONSTYARD)
 				iDrawStatus=1;
 			else
@@ -2274,25 +2273,25 @@ void cGame::draw_sidebarbuttons()
 	iDrawStatus=0;
 
 		// RULE 2: Do we have the nescesary building?
-		if (player[0].iStructures[BARRACKS] > 0 || 
+		if (player[0].iStructures[BARRACKS] > 0 ||
 			player[0].iStructures[WOR] > 0)
 		{
-			// Do a check what the active list is. 
+			// Do a check what the active list is.
 			if (game.iActiveList == LIST_INFANTRY)
 				iDrawStatus=1;
 			else
 				iDrawStatus=2; // draw the button, colored, but not pressed
 		}
 
-	// Exception here for houses, harkonnen draws troopers... 
+	// Exception here for houses, harkonnen draws troopers...
 	// Atreides and Ordos have simple infantry.
-	
+
 	if (player[0].house == ATREIDES || player[0].house == ORDOS)
 	{
 
 	// Draw button:
 	if (iDrawStatus==0)
-    {     
+    {
         // clear
         // trans
         //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
@@ -2302,11 +2301,11 @@ void cGame::draw_sidebarbuttons()
     }
 	else if (iDrawStatus == 1)
         draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat, iDrawX, iDrawY);
-    
+
 	}
 	else
 	{
-	
+
 		// Draw button:
 	if (iDrawStatus==0)
     {
@@ -2315,7 +2314,7 @@ void cGame::draw_sidebarbuttons()
         // trans
         //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
         fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
-        
+
 		//draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_TROOPER_GREY].dat, iDrawX, iDrawY);
     }
 	else if (iDrawStatus == 1)
@@ -2347,7 +2346,7 @@ void cGame::draw_sidebarbuttons()
 		// RULE 2: Do we have the nescesary building?
 		if (player[0].iStructures[LIGHTFACTORY] > 0)
 		{
-			// Do a check what the active list is. 
+			// Do a check what the active list is.
 			if (game.iActiveList == LIST_LIGHTFC)
 				iDrawStatus=1;
 			else
@@ -2362,8 +2361,8 @@ void cGame::draw_sidebarbuttons()
         // trans
         //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
         fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
-        
-        
+
+
     }
 	else if (iDrawStatus == 1)
 		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_LIGHTFC_PRESSED].dat, iDrawX, iDrawY);
@@ -2389,7 +2388,7 @@ void cGame::draw_sidebarbuttons()
 		// RULE 2: Do we have the nescesary building?
 		if (player[0].iStructures[HEAVYFACTORY] > 0)
 		{
-			// Do a check what the active list is. 
+			// Do a check what the active list is.
 			if (game.iActiveList == LIST_HEAVYFC)
 				iDrawStatus=1;
 			else
@@ -2404,8 +2403,8 @@ void cGame::draw_sidebarbuttons()
         // trans
         //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
         fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
-        
-        
+
+
     }
 	else if (iDrawStatus == 1)
 		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_HEAVYFC_PRESSED].dat, iDrawX, iDrawY);
@@ -2430,7 +2429,7 @@ void cGame::draw_sidebarbuttons()
 		// RULE 2: Do we have the nescesary building?
 		if (player[0].iStructures[HIGHTECH] > 0)
 		{
-			// Do a check what the active list is. 
+			// Do a check what the active list is.
 			if (game.iActiveList == LIST_ORNI)
 				iDrawStatus=1;
 			else
@@ -2442,11 +2441,11 @@ void cGame::draw_sidebarbuttons()
     {
 	//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_ORNI_GREY].dat, iDrawX, iDrawY);
         // clear
-        
+
         // trans
         //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
         fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
-        
+
     }
 	else if (iDrawStatus == 1)
 		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_ORNI_PRESSED].dat, iDrawX, iDrawY);
@@ -2472,7 +2471,7 @@ void cGame::draw_sidebarbuttons()
 		// RULE 2: Do we have the nescesary building?
 		if (player[0].iStructures[STARPORT] > 0)
 		{
-			// Do a check what the active list is. 
+			// Do a check what the active list is.
 			if (game.iActiveList == LIST_STARPORT)
 				iDrawStatus=1;
 			else
@@ -2487,8 +2486,8 @@ void cGame::draw_sidebarbuttons()
         // trans
         //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
         fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
-        
-        
+
+
     }
 	else if (iDrawStatus == 1)
 		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_STARPORT_PRESSED].dat, iDrawX, iDrawY);
@@ -2503,7 +2502,7 @@ void cGame::draw_sidebarbuttons()
 
         }
 
-	
+
 	///////////////////////////////////////////////////////////////////////////////////
 	// Palace
 	///////////////////////////////////////////////////////////////////////////////////
@@ -2515,7 +2514,7 @@ void cGame::draw_sidebarbuttons()
 		// RULE 2: Do we have the nescesary building?
 		if (player[0].iStructures[PALACE] > 0)
 		{
-			// Do a check what the active list is. 
+			// Do a check what the active list is.
 			if (game.iActiveList == LIST_PALACE)
 				iDrawStatus=1;
 			else
@@ -2526,12 +2525,12 @@ void cGame::draw_sidebarbuttons()
 	if (iDrawStatus==0)
     {
 	//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_PALACE_GREY].dat, iDrawX, iDrawY);
-        
+
         // trans
         //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
         fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
-        
-        
+
+
     }
 	else if (iDrawStatus == 1)
 		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_PALACE_PRESSED].dat, iDrawX, iDrawY);
@@ -2557,20 +2556,20 @@ void cGame::draw_placeit()
 {
 
 	// this is only done when bPlaceIt=true
-	
+
 	int iMouseCell = map.mouse_cell();
 
 	if (iMouseCell < 0)
 		return;
 
-	
+
 
 	// Using list LIST_CONSTYARD
 	int iBuilding = iconbuilding[LIST_CONSTYARD];	// what are we building?
 	int iStructureID = iconlist[LIST_CONSTYARD][iBuilding].iStructureID;
 	int iWidth = structures[iStructureID].bmp_width/32;
 	int iHeight = structures[iStructureID].bmp_height/32;
-	
+
 	// Draw rectangle
 	//int iDrawX = (iCellGiveX(iMouseCell)-map.scroll_x) * 32;
 	//int iDrawY = 42 + (iCellGiveY(iMouseCell)-map.scroll_y) * 32;
@@ -2591,7 +2590,7 @@ void cGame::draw_placeit()
 		BITMAP *temp;
 		temp = create_bitmap(structures[iStructureID].bmp_width, structures[iStructureID].bmp_height);
 		clear_bitmap(temp);
-		
+
 		//draw_sprite(temp, structures[iStructureID].bmp, 0, 0);
 		blit(structures[iStructureID].bmp, temp, 0,0, 0,0, structures[iStructureID].bmp_width, structures[iStructureID].bmp_height);
 
@@ -2604,11 +2603,11 @@ void cGame::draw_placeit()
 	bool bMayPlace=true;
 
 	int iTile = PLACE_ROCK;	// rocky placement = ok, but bad for power
-	
+
 	BITMAP *temp;
 	temp = create_bitmap(structures[iStructureID].bmp_width, structures[iStructureID].bmp_height);
 	clear_bitmap(temp);
-	
+
 	int iTotalBlocks=iWidth*iHeight;
 	int iTotalRocks=0.0f;
 
@@ -2639,7 +2638,7 @@ void cGame::draw_placeit()
 				int iID = map.cell[iCll].id[MAPID_STRUCTURES];
 
 				if (structure[iID]->getOwner() == 0)
-					bOutOfBorder=false; // connection!	
+					bOutOfBorder=false; // connection!
                 else
                     bMayPlace=false;
 			}
@@ -2658,24 +2657,24 @@ void cGame::draw_placeit()
 	/*
 
 
-	// Find closest building to X,Y, position. 
+	// Find closest building to X,Y, position.
 	for (int i=0; i < MAX_STRUCTURES; i++)
 		if (structure[i].isValid())
 			if (structure[i].iPlayer == 0)
 			{
 				int iCell=structure[i].iCell;
 				int x, y;
-				
+
 				x=iCellGiveX(iCell);
 				y=iCellGiveY(iCell);
 
 				int iDist = ABS_length(iCellX, iCellY, x, y);
-				
 
-			
+
+
 
 						if (iDist < iDistanceToBuilding)
-						{		
+						{
 							iClosestBuilding=i;
 							iDistanceToBuilding=iDist;
 						}
@@ -2690,7 +2689,7 @@ void cGame::draw_placeit()
 	//if (iClosestBuilding < 0 || iDistanceToBuilding > 2)
 	//	bOutOfBorder=true;
 
-    
+
 	// Draw over it the mask for good/bad placing
 	for (int iX=0; iX < iWidth; iX++)
 		for (int iY=0; iY < iHeight; iY++)
@@ -2704,8 +2703,8 @@ void cGame::draw_placeit()
 				break;
 			}
 
-			int iCll=iCellMake((iCellX+iX), (iCellY+ iY));			
-			
+			int iCll=iCellMake((iCellX+iX), (iCellY+ iY));
+
 			if (map.cell[iCll].passable == false)
 				iTile = PLACE_BAD;
 
@@ -2726,12 +2725,12 @@ void cGame::draw_placeit()
 			// DRAWING & RULER
 			if (iTile == PLACE_BAD && iStructureID != SLAB4)
 				bMayPlace=false;
-			
+
 
 			// Count this as GOOD stuff
 			if (iTile == PLACE_GOOD)
 				iTotalRocks++;
-				
+
 
 			// Draw bad gfx on spot
 			draw_sprite(temp, (BITMAP *)gfxdata[iTile].dat, iX*32, iY*32);
@@ -2759,14 +2758,14 @@ void cGame::draw_placeit()
 				if (iTotalRocks > 0) {
 					iHealthPercent += health_bar(50, iTotalRocks, iTotalBlocks);
 				}
-				
+
                 play_sound_id(SOUND_PLACE, -1);
 
 				cStructureFactory::getInstance()->createStructure(iMouseCell, iStructureID, 0, iHealthPercent);
 				bPlaceIt=false;
 				iconbuilding[LIST_CONSTYARD]	= -1;
 				iconprogress[LIST_CONSTYARD]    = -1;
-			
+
 			}
 		}
 
@@ -2782,7 +2781,7 @@ void cGame::draw_placeit()
 
 // Interaction and drawing of / with the interface
 void cGame::gerald()
-{    
+{
 	set_palette(player[0].pal);
 
 	if (bPlaceIt)
@@ -2790,26 +2789,26 @@ void cGame::gerald()
 
 	// black out
 	rectfill(bmp_screen, (game.screen_x-160), 0, game.screen_x, game.screen_y-128, makecol(0,0,0));
-	
+
     // upper bar
     rectfill(bmp_screen, 0, 0, game.screen_x, 42, makecol(0,0,0));
-	
+
     if (iHouse == ATREIDES)
         draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_ATR].dat, 0, 0); // draw interface skeleton
     else if (iHouse == HARKONNEN)
         draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_HAR].dat, 0, 0); // draw interface skeleton
     else if (iHouse == ORDOS)
-        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_ORD].dat, 0, 0); // draw interface skeleton	
+        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_ORD].dat, 0, 0); // draw interface skeleton
 //	else
   //      draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD].dat, 0, 0); // draw interface skeleton (THIS IS BAD IF THIS IS SHOWN)
-	
+
 	// Draw the bars
 	int iHeight=79 - health_bar(79, player[0].use_power,player[0].has_power);
 
     int step = (255/79);
     int r = 255-(iHeight*step);
     int g = iHeight*step;
-    
+
     if (g > 255)
         g = 255;
     if (r < 0) r= 0;
@@ -2820,7 +2819,7 @@ void cGame::gerald()
 	rectfill(bmp_screen, 497,442, 499, 442-iHeight, makecol(0,0,255));
 
 	// draw money, etc, etc
-    
+
 
 	draw_credits();
 
@@ -2828,7 +2827,7 @@ void cGame::gerald()
 
 	draw_list();
 
-	draw_upgrade(); 
+	draw_upgrade();
 
 	draw_order();
 
@@ -2838,11 +2837,11 @@ void cGame::gerald()
 void cGame::mapdraw()
 {
     // make it ready to show night or something
-    
+
 	map.draw_think();
-	
+
 	map.draw();
-	
+
 	// Only draw units/structures, etc, when we do NOT press D
 	if (!key[KEY_D] || !key[KEY_TAB])
 	{
@@ -2877,13 +2876,13 @@ void cGame::losing()
     {
         // OMG, MENTAT IS NOT HAPPY
         state = GAME_LOSEBRIEF;
-		
+
         if (bSkirmish)
             game.mission_init();
 
         // PREPARE NEW MENTAT BABBLE
         iMentatSpeak=-1;
-        
+
         // FADE OUT
         FADE_OUT();
     }
@@ -2900,21 +2899,21 @@ void cGame::winning()
     {
         // SELECT YOUR NEXT CONQUEST
         state = GAME_WINBRIEF;
-		
+
         if (bSkirmish)
             game.mission_init();
 
         // PREPARE NEW MENTAT BABBLE
         iMentatSpeak=-1;
 
-        
+
         // FADE OUT
         FADE_OUT();
     }
 }
 
 void cGame::combat()
-{    
+{
 
     if (iFadeAction == 1) // fading out
     {
@@ -2923,7 +2922,7 @@ void cGame::combat()
     }
 
     if (iAlphaScreen == 0)
-        iFadeAction = 2;    
+        iFadeAction = 2;
     // -----------------
 
 
@@ -2936,7 +2935,7 @@ void cGame::combat()
 	gerald();
 
 	draw_message();
- 
+
 
     // think win/lose
     think_winlose();
@@ -2949,15 +2948,15 @@ void cGame::combat()
 void cGame::setup_list()
 {
 //	int iHouse = player[0].house;
-	
+
 	// Any house, any mission, start with this
 		list_new_item(LIST_CONSTYARD, ICON_STR_1SLAB, structures[SLAB1].cost, SLAB1, -1);
 
 	if (game.iMission >= 4)
 		list_new_item(LIST_CONSTYARD, ICON_STR_WALL, structures[WALL].cost, WALL, -1);
 
-	list_new_item(LIST_CONSTYARD, ICON_STR_WINDTRAP, structures[WINDTRAP].cost, WINDTRAP, -1);	
-	
+	list_new_item(LIST_CONSTYARD, ICON_STR_WINDTRAP, structures[WINDTRAP].cost, WINDTRAP, -1);
+
 
 	// Barracks
 	if (game.iMission >= 2)
@@ -2971,11 +2970,11 @@ void cGame::setup_list()
 		else
 			list_new_item(LIST_CONSTYARD, ICON_STR_WOR, structures[WOR].cost, WOR, -1);
 
-	
+
 	// At start the player does not have other icons to use for building
 
 	// STARTING UNIT LISTS
-	
+
 	// LIGHT FACTORY
 	if (iHouse == ATREIDES)
 		list_new_item(LIST_LIGHTFC, ICON_UNIT_TRIKE, units[TRIKE].cost, -1, TRIKE);
@@ -2998,12 +2997,12 @@ void cGame::setup_list()
 	// BARRACKS OR WOR
 	if (iHouse == HARKONNEN || iHouse == SARDAUKAR)
 	{
-		list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPER, units[TROOPER].cost, -1, TROOPER);	
+		list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPER, units[TROOPER].cost, -1, TROOPER);
 	}
 	else
 	{
 		list_new_item(LIST_INFANTRY, ICON_UNIT_SOLDIER, units[SOLDIER].cost, -1, SOLDIER);
-		
+
 		// ordos gain trooper(s).
 		if (iHouse == ORDOS && iMission > 5)
 			list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPER, units[TROOPER].cost, -1, TROOPER);
@@ -3021,10 +3020,10 @@ void cGame::setup_list()
 void cGame::draw_mentat(int iType)
 {
 	select_palette( general_palette  );
-    
+
     // movie
     draw_movie(iType);
-    
+
 	// draw proper background
 	if (iType == ATREIDES)
 		draw_sprite(bmp_screen, (BITMAP *)gfxmentat[MENTATA].dat, 0, 0);
@@ -3051,9 +3050,9 @@ void cGame::draw_mentat(int iType)
             TIMER_mentat_Speaking = 1;
         }
 
-    // SPEAKING ANIMATIONS IS DONE IN MENTAT()	   
+    // SPEAKING ANIMATIONS IS DONE IN MENTAT()
 
-    
+
 
 }
 
@@ -3066,7 +3065,7 @@ void cGame::MENTAT_draw_eyes(int iMentat)
 	if (iMentat  < 0)
 		draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BEN_EYES01+ iMentatEyes].dat, iDrawX, iDrawY);
 
-    
+
 
     if (iMentat  == HARKONNEN)
     {
@@ -3102,8 +3101,8 @@ void cGame::MENTAT_draw_mouth(int iMentat)
 	// now draw speaking and such
 	if (iMentat  < 0)
 		draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BEN_MOUTH01+ iMentatMouth].dat, iDrawX, iDrawY);
-    
-    
+
+
     if (iMentat  == HARKONNEN)
     {
         iDrawX = 64;
@@ -3139,7 +3138,7 @@ void cGame::mentat(int iType)
     }
 
     if (iAlphaScreen == 0)
-        iFadeAction = 2;    
+        iFadeAction = 2;
     // -----------------
 
     bool bFadeOut=false;
@@ -3165,11 +3164,11 @@ void cGame::mentat(int iType)
 	if (TIMER_mentat_Mouth <= 0)
 	{
 		TIMER_mentat_Mouth = 13+rnd(5);
-	}	
+	}
 
 
     if (TIMER_mentat_Speaking < 0)
-    {        
+    {
         // NO
         draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BTN_REPEAT].dat, 293, 423);
 
@@ -3190,12 +3189,12 @@ void cGame::mentat(int iType)
                 {
                 // proceed, play mission
                 state = GAME_PLAYING;
-                
+
                 // CENTER MOUSE
                 position_mouse(320, 240);
-                                
+
                 bFadeOut=true;
-                
+
                 play_music(MUSIC_PEACE);
                 }
                 else if (state == GAME_WINBRIEF)
@@ -3208,18 +3207,18 @@ void cGame::mentat(int iType)
 					}
 					else
 					{
-					
+
                     state = GAME_REGION;
                     REGION_SETUP(game.iMission, game.iHouse);
 
-                    
+
                     // PLAY THE MUSIC
                     play_music(MUSIC_CONQUEST);
 					}
 
 					// PREPARE NEW MENTAT BABBLE
                     iMentatSpeak=-1;
-                    
+
                     bFadeOut=true;
                 }
                 else if (state == GAME_LOSEBRIEF)
@@ -3247,18 +3246,18 @@ void cGame::mentat(int iType)
 							state = GAME_BRIEFING;
 							play_music(MUSIC_BRIEFING);
 						}
-					
+
 					}
                     // PREPARE NEW MENTAT BABBLE
                     iMentatSpeak=-1;
-                                        
+
                     bFadeOut=true;
                 }
 
             }
-        
 
-    }    
+
+    }
 
 
 
@@ -3281,14 +3280,14 @@ void cGame::menu()
     }
 
     if (iAlphaScreen == 0)
-        iFadeAction = 2;    
+        iFadeAction = 2;
     // -----------------
 
     bool bFadeOut=false;
-	
+
 	if (DEBUGGING)
 	{
-		
+
 		for (int x=0; x < game.screen_x; x+= 60)
 		{
 			for (int y=0; y < game.screen_y; y+= 20)
@@ -3300,7 +3299,7 @@ void cGame::menu()
 
 		}
 	}
-	
+
 	// draw menu
 	draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_D2TM].dat,  0, 0);
     GUI_DRAW_FRAME(257, 319, 130,143);
@@ -3310,10 +3309,10 @@ void cGame::menu()
 	// PLAY
 	if ((mouse_x >= 246 && mouse_x <=373) &&
 		(mouse_y >= 323 && mouse_y <=340))
-	{   
+	{
         alfont_textprintf(bmp_screen, bene_font, 261, 324, makecol(0,0,0), "Campaign");
         alfont_textprintf(bmp_screen, bene_font, 261, 323, makecol(255,0,0), "Campaign");
-		
+
 		if (bMousePressedLeft)
         {
 			state = GAME_HOUSE; // select house
@@ -3325,9 +3324,9 @@ void cGame::menu()
     {
         alfont_textprintf(bmp_screen, bene_font, 261, 324, makecol(0,0,0), "Campaign");
         alfont_textprintf(bmp_screen, bene_font, 261, 323, makecol(255,255,255), "Campaign");
-        
+
     }
-	
+
 
 	// SKIRMISH
 	if ((mouse_x >= 246 && mouse_x <=373) &&
@@ -3335,7 +3334,7 @@ void cGame::menu()
 	{
         alfont_textprintf(bmp_screen, bene_font, 261, 344, makecol(0,0,0), "Skirmish");
         alfont_textprintf(bmp_screen, bene_font, 261, 343, makecol(255,0,0), "Skirmish");
-	
+
         if (bMousePressedLeft)
         {
             game.state = GAME_SETUPSKIRMISH;
@@ -3343,11 +3342,11 @@ void cGame::menu()
             INI_PRESCAN_SKIRMISH();
 
 			game.mission_init();
-			
+
 			for (int p=0; p < AI_WORM; p++)
 			{
 				player[p].credits = 2500;
-				player[p].iTeam = p;	
+				player[p].iTeam = p;
 			}
         }
 
@@ -3358,7 +3357,7 @@ void cGame::menu()
     {
         alfont_textprintf(bmp_screen, bene_font, 261, 344, makecol(0,0,0), "Skirmish");
         alfont_textprintf(bmp_screen, bene_font, 261, 343, makecol(255,255,255), "Skirmish");
-        
+
     }
 
     // LOAD
@@ -3367,14 +3366,14 @@ void cGame::menu()
 	{
         alfont_textprintf(bmp_screen, bene_font, 261, 364, makecol(0,0,0), "Multiplayer");
         alfont_textprintf(bmp_screen, bene_font, 261, 363, makecol(255,0,0), "Multiplayer");
-	
+
         if (bMousePressedLeft)
         {
             //game.state = GAME_SETUPSKIRMISH;
             bFadeOut=true;
- 		    
+
 			// check if the game can be server or client
-			//bCanBeServerOrClient(); 
+			//bCanBeServerOrClient();
         }
 
 	//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[D2TM_LOAD].dat, 303, 369);
@@ -3383,7 +3382,7 @@ void cGame::menu()
     {
         alfont_textprintf(bmp_screen, bene_font, 261, 364, makecol(0,0,0), "Multiplayer");
         alfont_textprintf(bmp_screen, bene_font, 261, 363, makecol(255,255,255), "Multiplayer");
-        
+
     }
 
     // OPTIONS
@@ -3392,7 +3391,7 @@ void cGame::menu()
 	{
         alfont_textprintf(bmp_screen, bene_font, 261, 384, makecol(0,0,0), "Load");
         alfont_textprintf(bmp_screen, bene_font, 261, 383, makecol(255,0,0), "Load");
-	
+
         if (bMousePressedLeft)
         {
 //            game.state = GAME_SETUPSKIRMISH;
@@ -3405,7 +3404,7 @@ void cGame::menu()
     else
     {
         alfont_textprintf(bmp_screen, bene_font, 261, 384, makecol(0,0,0), "Load");
-        alfont_textprintf(bmp_screen, bene_font, 261, 383, makecol(255,255,255), "Load");        
+        alfont_textprintf(bmp_screen, bene_font, 261, 383, makecol(255,255,255), "Load");
     }
 
     // HALL OF FAME
@@ -3414,7 +3413,7 @@ void cGame::menu()
 	{
         alfont_textprintf(bmp_screen, bene_font, 261, 404, makecol(0,0,0), "Options");
         alfont_textprintf(bmp_screen, bene_font, 261, 403, makecol(255,0,0), "Options");
-	
+
         if (bMousePressedLeft)
         {
 //            game.state = GAME_SETUPSKIRMISH;
@@ -3426,31 +3425,31 @@ void cGame::menu()
     else
     {
         alfont_textprintf(bmp_screen, bene_font, 261, 404, makecol(0,0,0), "Options");
-        alfont_textprintf(bmp_screen, bene_font, 261, 403, makecol(255,255,255), "Options");        
+        alfont_textprintf(bmp_screen, bene_font, 261, 403, makecol(255,255,255), "Options");
     }
 
 	// EXIT
 	if ((mouse_x >= 246 && mouse_x <=373) &&
 		(mouse_y >= 424 && mouse_y <=442))
 	{
-		
+
         alfont_textprintf(bmp_screen, bene_font, 261, 424, makecol(0,0,0), "Hall of Fame");
         alfont_textprintf(bmp_screen, bene_font, 261, 423, makecol(255,0,0), "Hall of Fame");
 	}
     else
     {
         alfont_textprintf(bmp_screen, bene_font, 261, 424, makecol(0,0,0), "Hall of Fame");
-        alfont_textprintf(bmp_screen, bene_font, 261, 423, makecol(255,255,255), "Hall of Fame");        
+        alfont_textprintf(bmp_screen, bene_font, 261, 423, makecol(255,255,255), "Hall of Fame");
     }
 
-    
+
     // EXIT
 	if ((mouse_x >= 246 && mouse_x <=373) &&
 		(mouse_y >= 444 && mouse_y <=462))
-	{	
+	{
         alfont_textprintf(bmp_screen, bene_font, 261, 444, makecol(0,0,0), "Exit");
         alfont_textprintf(bmp_screen, bene_font, 261, 443, makecol(255,0,0), "Exit");
-	
+
 		// quit
 		if (bMousePressedLeft)
 			game.bPlaying = false;
@@ -3458,10 +3457,10 @@ void cGame::menu()
     else
     {
         alfont_textprintf(bmp_screen, bene_font, 261, 444, makecol(0,0,0), "Exit");
-        alfont_textprintf(bmp_screen, bene_font, 261, 443, makecol(255,255,255), "Exit");        
+        alfont_textprintf(bmp_screen, bene_font, 261, 443, makecol(255,255,255), "Exit");
     }
 
-    
+
     alfont_textprintf(bmp_screen, bene_font, 291, 1, makecol(64,64,64), "CREDITS");
 
     if (mouse_y < 24)
@@ -3472,11 +3471,11 @@ void cGame::menu()
 	// version
     //alfont_textprintf(bmp_screen, bene_font, 621,467, makecol(64,64,64), "%s", version);
 	//alfont_textprintf(bmp_screen, bene_font, 620,466, makecol(255,255,255), "%s", version);
-	
+
     // version (demo)
     alfont_textprintf(bmp_screen, bene_font, 581,467, makecol(64,64,64), "%s", version);
 	alfont_textprintf(bmp_screen, bene_font, 580,466, makecol(255,255,255), "%s", version);
-	
+
 	// mp3 addon?
 	if (bMp3)
     {
@@ -3492,12 +3491,12 @@ void cGame::menu()
    	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
-    
+
 	if (key[KEY_ESC])
 		bPlaying=false;
 
     if (bFadeOut)
-        game.FADE_OUT();          
+        game.FADE_OUT();
 
 }
 
@@ -3511,7 +3510,7 @@ void cGame::setup_skirmish()
     }
 
     if (iAlphaScreen == 0)
-        iFadeAction = 2;    
+        iFadeAction = 2;
     // -----------------
 
     bool bFadeOut=false;
@@ -3524,25 +3523,25 @@ void cGame::setup_skirmish()
 
     // title box
     GUI_DRAW_FRAME(-1, -1, 642, 21);
-    
+
     // title name
     alfont_textprintf(bmp_screen, bene_font, 280,3, makecol(0,0,0), "Skirmish");
     alfont_textprintf(bmp_screen, bene_font, 280,2, makecol(255,0,0), "Skirmish");
-  
+
     // box at the right
     GUI_DRAW_FRAME(364, 21, 276, 443);
-	
+
 	// draw box for map data
     GUI_DRAW_FRAME(510, 26, 129, 129);
     //rectfill(bmp_screen, 640-130, 26, 640-1, 26+129, makecol(186,190,149));
     //rect(bmp_screen, 640-130, 26, 640-1, 26+129, makecol(227,229,211));
-	
+
     // rectangle for map list
-    rectfill(bmp_screen, 366, (26+128)+4, 638, 461, makecol(32,32,32)); 
-    rect(bmp_screen, 366, (26+128)+4, 638, 461, makecol(227,229,211)); 
-	
+    rectfill(bmp_screen, 366, (26+128)+4, 638, 461, makecol(32,32,32));
+    rect(bmp_screen, 366, (26+128)+4, 638, 461, makecol(227,229,211));
+
 	int iStartingPoints=0;
-	
+
 	// draw preview map (if any)
 	if (iSkirmishMap > -1)
 	{
@@ -3576,7 +3575,7 @@ void cGame::setup_skirmish()
 		}
 
 	}
-	
+
 	alfont_textprintf(bmp_screen, bene_font, 366, 27, makecol(0,0,0),"Startpoints: %d", iStartingPoints);
 	alfont_textprintf(bmp_screen, bene_font, 366, 26, makecol(255,255,255),"Startpoints: %d", iStartingPoints);
 
@@ -3590,7 +3589,7 @@ void cGame::setup_skirmish()
 		if (bMousePressedLeft)
 		{
 			iSkirmishStartPoints++;
-			
+
 			if (iSkirmishStartPoints > 4)
 				iSkirmishStartPoints=2;
 
@@ -3600,7 +3599,7 @@ void cGame::setup_skirmish()
 		if (bMousePressedRight)
 		{
 			iSkirmishStartPoints--;
-			
+
 			if (iSkirmishStartPoints < 2)
 				iSkirmishStartPoints=4;
 
@@ -3619,8 +3618,8 @@ void cGame::setup_skirmish()
 	int const iHeightPixels=17;
 
 	int iDrawY=-1;
-	int iDrawX=367; 
-	int iEndX=637-16;	
+	int iDrawX=367;
+	int iEndX=637-16;
 	int iColor=makecol(255,255,255);
 
 	// scroll barr
@@ -3663,7 +3662,7 @@ void cGame::setup_skirmish()
                 GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, 254, iHeightPixels);
 			}
 
-			
+
 			// dark sides
 		//	line(bmp_screen, 367, iDrawY+iHeightPixels, iEndX,iDrawY+iHeightPixels, makecol(128,128,128));
 		//	line(bmp_screen, iEndX, iDrawY, iEndX,iDrawY+iHeightPixels, makecol(128,128,128));
@@ -3674,21 +3673,21 @@ void cGame::setup_skirmish()
 			{
 			// Mouse reaction
 				iColor = makecol(255,207,41);
-				
+
 				if (bMousePressedLeft)
 				{
-					iSkirmishMap=i;			
-					
+					iSkirmishMap=i;
+
 					if (i == 0)
 						bDoRandomMap=true;
 				}
 
-				
+
 			}
 
 			if (i==iSkirmishMap)
 				iColor=makecol(255,0, 0);
-	
+
 			alfont_textprintf(bmp_screen, bene_font, 368,iDrawY+3, makecol(0,0,0), PreviewMap[i].name);
 			alfont_textprintf(bmp_screen, bene_font, 368,iDrawY+2, iColor, PreviewMap[i].name);
 		}
@@ -3707,7 +3706,7 @@ void cGame::setup_skirmish()
 	alfont_textprintf(bmp_screen, bene_font, 4, 26, makecol(0,0,0), "Player      House      Credits       Units    Team");
 	alfont_textprintf(bmp_screen, bene_font, 4, 25, makecol(255,255,255), "Player      House      Credits       Units    Team");
 
-	
+
 
 	bool bHover=false;
 
@@ -3742,7 +3741,7 @@ void cGame::setup_skirmish()
 
 
 					}
-				}	
+				}
 				else
 				{
 					if (aiplayer[p].bPlaying)
@@ -3750,34 +3749,34 @@ void cGame::setup_skirmish()
 					else
 						alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol(128,128,128), "  CPU");
 				}
-				
+
 			}
 
-			// HOUSE 
+			// HOUSE
 			bHover=false;
 			char cHouse[30];
 			memset(cHouse, 0, sizeof(cHouse));
-			
-			if (player[p].house == ATREIDES) 
+
+			if (player[p].house == ATREIDES)
 				sprintf(cHouse, "Atreides");
-			else if (player[p].house == HARKONNEN) 
+			else if (player[p].house == HARKONNEN)
 				sprintf(cHouse, "Harkonnen");
-			else if (player[p].house == ORDOS) 
-				sprintf(cHouse, "Ordos");			
-			else if (player[p].house == SARDAUKAR) 
+			else if (player[p].house == ORDOS)
+				sprintf(cHouse, "Ordos");
+			else if (player[p].house == SARDAUKAR)
 				sprintf(cHouse, "Sardaukar");
 			else
 				sprintf(cHouse, "Random");
 
 			alfont_textprintf(bmp_screen, bene_font, 74,iDrawY+1, makecol(0,0,0), "%s",cHouse);
-			
+
 //			rect(bmp_screen, 74, (40+(p*22)), 150, (40+(p*22))+16, makecol(255,255,255));
 
 			if ((mouse_x >= 74 && mouse_x <= 150) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16)))
 				bHover=true;
-			
-			if (p == 0)			
-			{				
+
+			if (p == 0)
+			{
 				alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol(255,255,255), "%s", cHouse);
 			}
 			else
@@ -3786,9 +3785,9 @@ void cGame::setup_skirmish()
 					alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol(255,255,255), "%s", cHouse);
 				else
 					alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol(128,128,128), "%s", cHouse);
-				
+
 			}
-			
+
 			if (bHover)
 			{
 				if (aiplayer[p].bPlaying)
@@ -3796,7 +3795,7 @@ void cGame::setup_skirmish()
 				else
 					alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol((fade_select/2),(fade_select/2),(fade_select/2)), "%s", cHouse);
 
-				
+
 				if (bMousePressedLeft)
 				{
 					player[p].house++;
@@ -3832,14 +3831,14 @@ void cGame::setup_skirmish()
 			bHover=false;
 
 			alfont_textprintf(bmp_screen, bene_font, 174,iDrawY+1, makecol(0,0,0), "%d",player[p].credits);
-			
+
 			//rect(bmp_screen, 174, iDrawY, 230, iDrawY+16, makecol(255,255,255));
 
 			if ((mouse_x >= 174 && mouse_x <= 230) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16)))
 				bHover=true;
-			
-			if (p == 0)			
-			{				
+
+			if (p == 0)
+			{
 				alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", player[p].credits);
 			}
 			else
@@ -3848,9 +3847,9 @@ void cGame::setup_skirmish()
 					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", player[p].credits);
 				else
 					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(128,128,128), "%d", player[p].credits);
-				
+
 			}
-			
+
 			if (bHover)
 			{
 				if (aiplayer[p].bPlaying)
@@ -3877,14 +3876,14 @@ void cGame::setup_skirmish()
 			bHover=false;
 
 			alfont_textprintf(bmp_screen, bene_font, 269,iDrawY+1, makecol(0,0,0), "%d",aiplayer[p].iUnits);
-			
+
 			//rect(bmp_screen, 269, iDrawY, 290, iDrawY+16, makecol(255,255,255));
 
 			if ((mouse_x >= 269 && mouse_x <= 290) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16)))
 				bHover=true;
-			
-			if (p == 0)			
-			{				
+
+			if (p == 0)
+			{
 				alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol(255,255,255), "%d", aiplayer[p].iUnits);
 			}
 			else
@@ -3893,9 +3892,9 @@ void cGame::setup_skirmish()
 					alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol(255,255,255), "%d", aiplayer[p].iUnits);
 				else
 					alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol(128,128,128), "%d", aiplayer[p].iUnits);
-				
+
 			}
-			
+
 			if (bHover)
 			{
 				if (aiplayer[p].bPlaying)
@@ -3907,14 +3906,14 @@ void cGame::setup_skirmish()
 				{
 					aiplayer[p].iUnits++;
 					if (aiplayer[p].iUnits > 10)
-						aiplayer[p].iUnits = 1;					
+						aiplayer[p].iUnits = 1;
 				}
 
 				if (bMousePressedRight)
 				{
 					aiplayer[p].iUnits--;
 					if (aiplayer[p].iUnits < 1)
-						aiplayer[p].iUnits = 10;					
+						aiplayer[p].iUnits = 10;
 				}
 			}
 
@@ -3922,14 +3921,14 @@ void cGame::setup_skirmish()
 			bHover=false;
 			/*
 			alfont_textprintf(bmp_screen, bene_font, 269,iDrawY+1, makecol(0,0,0), "%d",aiplayer[p].iUnits);
-			
+
 			rect(bmp_screen, 329, iDrawY, 350, iDrawY+16, makecol(255,255,255));
 
 			if ((mouse_x >= 269 && mouse_x <= 290) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16)))
 				bHover=true;
-			
-			if (p == 0)			
-			{				
+
+			if (p == 0)
+			{
 				alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol(255,255,255), "%d", aiplayer[p].iUnits);
 			}
 			else
@@ -3938,9 +3937,9 @@ void cGame::setup_skirmish()
 					alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol(255,255,255), "%d", aiplayer[p].iUnits);
 				else
 					alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol(128,128,128), "%d", aiplayer[p].iUnits);
-				
+
 			}
-			
+
 			if (bHover)
 			{
 				if (aiplayer[p].bPlaying)
@@ -3952,14 +3951,14 @@ void cGame::setup_skirmish()
 				{
 					aiplayer[p].iUnits++;
 					if (aiplayer[p].iUnits > 10)
-						aiplayer[p].iUnits = 1;					
+						aiplayer[p].iUnits = 1;
 				}
 
 				if (bMousePressedRight)
 				{
 					aiplayer[p].iUnits--;
 					if (aiplayer[p].iUnits < 1)
-						aiplayer[p].iUnits = 10;					
+						aiplayer[p].iUnits = 10;
 				}
 			}
 */
@@ -3967,16 +3966,16 @@ void cGame::setup_skirmish()
 	}
 
 
-    GUI_DRAW_FRAME(-1, 465, 642, 21);    
+    GUI_DRAW_FRAME(-1, 465, 642, 21);
 
     // back
     alfont_textprintf(bmp_screen, bene_font, 0, 467, makecol(0,0,0), " BACK");
     alfont_textprintf(bmp_screen, bene_font, 0, 466, makecol(255,255,255), " BACK");
-    
+
     // start
     alfont_textprintf(bmp_screen, bene_font, 580, 467, makecol(0,0,0), "START");
     alfont_textprintf(bmp_screen, bene_font, 580, 466, makecol(255,255,255), "START");
-        
+
 
 	if (bDoRandomMap)
 		map.randommap();
@@ -3985,7 +3984,7 @@ void cGame::setup_skirmish()
     if ((mouse_x >= 0 && mouse_x <= 50) && (mouse_y >= 465 && mouse_y <= 480))
     {
         alfont_textprintf(bmp_screen, bene_font, 0, 466, makecol(255,0,0), " BACK");
-    
+
         if (bMousePressedLeft)
         {
             bFadeOut=true;
@@ -4001,14 +4000,14 @@ void cGame::setup_skirmish()
 	{
         // Starting skirmish mode
 		bSkirmish=true;
-		
+
         /* set up starting positions */
 		int iStartPositions[5];
 		int iMax=0;
 		for (int s=0; s < 5; s++)
 		{
 			iStartPositions[s] = PreviewMap[iSkirmishMap].iStartCell[s];
-			
+
 			if (PreviewMap[iSkirmishMap].iStartCell[s] > -1)
 				iMax=s;
 		}
@@ -4056,7 +4055,7 @@ void cGame::setup_skirmish()
 			// set credits
 			player[p].draw_credits = player[p].credits;
 			player[p].focus_cell = iStartPositions[p];
-			
+
             int iHouse=player[p].house;
 
 			// house = 0 , random.
@@ -4064,14 +4063,14 @@ void cGame::setup_skirmish()
 			{
 				int pl=0;
 				bool bOk=false;
-				
+
 				while (bOk == false)
 				{
 					if (p > 0)
 						iHouse = rnd(4)+1;
 					else
 						iHouse = rnd(3)+1;
-					
+
 					bool bFound=false;
 					for (int pl=0; pl < AI_WORM; pl++)
 						if (player[pl].house > 0 && player[pl].house == iHouse)
@@ -4080,9 +4079,9 @@ void cGame::setup_skirmish()
 					if (!bFound)
 						bOk=true;
 
-							
-				}				
-			} 
+
+				}
+			}
 
 			// Set house
 			player[p].set_house(iHouse);
@@ -4101,12 +4100,12 @@ void cGame::setup_skirmish()
 
 			// amount of units
 			int u=0;
-			
+
 			// create units
 			while (u < aiplayer[p].iUnits)
 			{
 				int iX=iCellGiveX(player[p].focus_cell);
-				int iY=iCellGiveY(player[p].focus_cell);				
+				int iY=iCellGiveY(player[p].focus_cell);
 				int iType=rnd(12);
 
 				iX-=4;
@@ -4124,7 +4123,7 @@ void cGame::setup_skirmish()
 						iType = INFANTRY;
 
 					if (iType == TROOPER)
-						iType = SOLDIER;				
+						iType = SOLDIER;
 
 					if (iType == RAIDER)
 						iType = TRIKE;
@@ -4164,7 +4163,7 @@ void cGame::setup_skirmish()
 					char msg[255];
 					sprintf(msg,"%d wants %d units, got %d", p, aiplayer[p].iUnits, u);
 					logbook(msg);
-				}				
+				}
 			}
 		}
 
@@ -4176,7 +4175,7 @@ void cGame::setup_skirmish()
         play_music(MUSIC_PEACE);
 	}
 
-	
+
 
    	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
@@ -4198,7 +4197,7 @@ void cGame::house()
     }
 
     if (iAlphaScreen == 0)
-        iFadeAction = 2;    
+        iFadeAction = 2;
     // -----------------
 
     bool bFadeOut=false;
@@ -4208,18 +4207,18 @@ void cGame::house()
     draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_GAME_DUNE].dat, 0, 350);
 
 	// HOUSES
-	
+
 	// ATREIDES
 	if ((mouse_y >= 168 && mouse_y <=267) &&
 		(mouse_x >= 116 && mouse_x <=207))
 	{
 		if (bMousePressedLeft)
-		{			
+		{
 			iHouse=ATREIDES;
-			
+
 			// let bene gesserit tell about atreides
-			// when NO, iHouse gets reset to -1			
-			
+			// when NO, iHouse gets reset to -1
+
 			play_sound_id(SOUND_ATREIDES,-1);
 
             LOAD_SCENE("platr"); // load planet of atreides
@@ -4235,14 +4234,14 @@ void cGame::house()
 		(mouse_x >= 271 && mouse_x <=360))
 	{
 		if (bMousePressedLeft)
-		{			
+		{
 			iHouse=ORDOS;
-			
+
 			// let bene gesserit tell about harkonnen
-			// when NO, iHouse gets reset to -1			
-			
+			// when NO, iHouse gets reset to -1
+
 			play_sound_id(SOUND_ORDOS,-1);
-			
+
             LOAD_SCENE("plord"); // load planet of ordos
 
 			state = GAME_TELLHOUSE;
@@ -4256,11 +4255,11 @@ void cGame::house()
 		(mouse_x >= 418 && mouse_x <=506))
 	{
 		if (bMousePressedLeft)
-		{			
+		{
 			iHouse=HARKONNEN;
-			
+
 			// let bene gesserit tell about harkonnen
-			// when NO, iHouse gets reset to -1			
+			// when NO, iHouse gets reset to -1
 
 			play_sound_id(SOUND_HARKONNEN,-1);
 
@@ -4271,17 +4270,17 @@ void cGame::house()
             bFadeOut=true;
 		}
 	}
-	
+
 
 	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
-	
 
-	
+
+
     if (bFadeOut)
         game.FADE_OUT();
-        
+
 }
 
 
@@ -4302,7 +4301,7 @@ void cGame::preparementat(bool bTellHouse)
 		{
             INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION);
             //LOAD_BRIEFING("harkonnen.txt");
-		}		
+		}
 		else if (iHouse == ORDOS)
 		{
             INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION);
@@ -4310,7 +4309,7 @@ void cGame::preparementat(bool bTellHouse)
 		}
 	}
 	else
-	{   
+	{
         if (state == GAME_BRIEFING)
         {
         INI_Load_scenario(iHouse, iRegion);
@@ -4335,8 +4334,8 @@ void cGame::preparementat(bool bTellHouse)
             INI_LOAD_BRIEFING(iHouse, iRegion, INI_LOSE);
         }
        // LOAD_BRIEFING(filename);
-        
-            
+
+
     }
 
 	logbook("MENTAT: sentences prepared");
@@ -4345,7 +4344,7 @@ void cGame::preparementat(bool bTellHouse)
 }
 
 void cGame::tellhouse()
-{	
+{
     // FADING
 
     if (iFadeAction == 1) // fading out
@@ -4355,7 +4354,7 @@ void cGame::tellhouse()
     }
 
     if (iAlphaScreen == 0)
-        iFadeAction = 2;    
+        iFadeAction = 2;
     // -----------------
 
     bool bFadeOut=false;
@@ -4367,7 +4366,7 @@ void cGame::tellhouse()
 		preparementat(true); // prepare for house telling
 	else if (iMentatSpeak > -1)
 	{
-		mentat(-1); // speak dammit!	
+		mentat(-1); // speak dammit!
 	}
 	else if (iMentatSpeak == -2)
 	{
@@ -4402,23 +4401,23 @@ void cGame::tellhouse()
                 iMentatSpeak=-1; // prepare speaking
 
                 player[0].set_house(iHouse);
-                
+
                 // play correct mentat music
                 play_music(MUSIC_BRIEFING);
-                bFadeOut=true;               
-                
+                bFadeOut=true;
+
             }
-        
 
-    }    
 
-    // draw mouse    
+    }
+
+    // draw mouse
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
 
     if (bFadeOut)
         FADE_OUT();
-	
+
 }
 
 // select your next conquest
@@ -4435,7 +4434,7 @@ void cGame::region()
     }
 
     if (iAlphaScreen == 0)
-        iFadeAction = 2;    
+        iFadeAction = 2;
     // -----------------
 
     bool bFadeOut=false;
@@ -4450,10 +4449,10 @@ void cGame::region()
 
     select_palette(player[0].pal);
 
-    
+
     // region = one we have won, only changing after we have choosen this one
     if (iRegionState <= 0)
-        iRegionState = 1; 
+        iRegionState = 1;
 
     if (iRegionSceneAlpha > 255)
         iRegionSceneAlpha = 255;
@@ -4471,19 +4470,19 @@ void cGame::region()
         }
         else if (iRegionScene == 1)
         {
-            // draw the 
+            // draw the
             set_trans_blender(0,0,0,iRegionSceneAlpha);
             draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GAME_DUNE].dat, 0, 12);
             if (cMessage[0] == '\0' && iRegionSceneAlpha >= 255)
             {
-                set_message("To take control of the land.");    
+                set_message("To take control of the land.");
                 iRegionScene++;
                 iRegionSceneAlpha=-5;
-            }            
+            }
         }
         else if (iRegionScene == 2)
         {
-            draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GAME_DUNE].dat, 0, 12);            
+            draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GAME_DUNE].dat, 0, 12);
             set_trans_blender(0,0,0,iRegionSceneAlpha);
             draw_trans_sprite(bmp_screen, (BITMAP *)gfxworld[WORLD_DUNE].dat, 16, 73);
 
@@ -4503,14 +4502,14 @@ void cGame::region()
             if (iRegionSceneAlpha >= 255)
             {
             iRegionScene = 4;
-            iRegionState++;            
+            iRegionState++;
             }
 
-            
+
         }
         else if (iRegionScene > 3)
             iRegionState++;
-        
+
         if (iRegionSceneAlpha < 255)
 		{
 			iRegionSceneAlpha+=5;
@@ -4519,7 +4518,7 @@ void cGame::region()
         // when  mission is 1, do the '3 houses has come to dune, blah blah story)
 
         //iRegionState++;
-    }    
+    }
 
     // Draw
     draw_sprite(bmp_screen, (BITMAP *)gfxworld[BMP_NEXTCONQ].dat, 0, 0);
@@ -4532,7 +4531,7 @@ void cGame::region()
 
     if (iHouse == ORDOS)
         iLogo=BMP_NCORD;
-    
+
     if (iHouse == HARKONNEN)
         iLogo=BMP_NCHAR;
 
@@ -4581,13 +4580,13 @@ void cGame::region()
                         // set this up
                         world[iRegNr].iHouse = iRegionHouse[i];
                         world[iRegNr].iAlpha = 1;
-                        
+
                         if (cRegionText[i][0] != '\0')
                             set_message(cRegionText[i]);
 
                         bDone=false;
-                        break;                        
-                        
+                        break;
+
                         }
                         else
                         {
@@ -4603,9 +4602,9 @@ void cGame::region()
                         {
                             // remove from list
                             iRegionConquer[i] = -1;
-                            iRegionHouse[i] = -1; // 
+                            iRegionHouse[i] = -1; //
                             bDone=false;
-                            
+
                             break;
                         }
                         else if (world[iRegNr].iAlpha < 255)
@@ -4647,7 +4646,7 @@ void cGame::region()
 				mouse_tile = MOUSE_ATTACK;
 				bClickable=true;
 		}
-	
+
 	if (bMousePressedLeft && bClickable)
 	{
 		// selected....
@@ -4670,13 +4669,13 @@ void cGame::region()
 		if (iMission == 6)	iNewReg=17;
 		if (iMission == 7)	iNewReg=20;
 		if (iMission == 8)	iNewReg=22;
-		
+
 		iNewReg += iReg;
 
 		//char msg[255];
 		//sprintf(msg, "Mission = %d", game.iMission);
 		//allegro_message(msg);
-		
+
         game.mission_init();
 		game.iRegionState=0;
         game.state = GAME_BRIEFING;
@@ -4689,9 +4688,9 @@ void cGame::region()
 
 		//sprintf(msg, "Mission = %d", game.iMission);
 		//allegro_message(msg);
-		
+
 		play_music(MUSIC_BRIEFING);
-		
+
 		//allegro_message(msg);
 
 		bFadeOut=true;
@@ -4722,14 +4721,14 @@ void cGame::region()
 
 		// draw message
 		alfont_textprintf(temp, game_font, 13,18, makecol(0,0,0), cMessage);
-		
+
 		// draw temp
 		draw_trans_sprite(bmp_screen, temp, 73, 358);
 
 		destroy_bitmap(temp);
 	}
 
-    
+
     // mouse
 	if (mouse_tile == MOUSE_ATTACK)
 		draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
@@ -4796,7 +4795,7 @@ void DEBUG_KEYS()
 		else
 		{
 			destroyAllStructures(false);
-			destroyAllUnits(false);				
+			destroyAllUnits(false);
 		}
 	}
 
@@ -4804,7 +4803,7 @@ void DEBUG_KEYS()
 	if (key[KEY_F3])
 	{
 		destroyAllStructures(true);
-		destroyAllUnits(true);			
+		destroyAllUnits(true);
 	}
 
 	if (key[KEY_F1] && game.iHouse > 0)
@@ -4816,7 +4815,7 @@ void DEBUG_KEYS()
 		game.setState(GAME_BRIEFING);
 		play_music(MUSIC_BRIEFING);
 		game.iMentatSpeak=-1;
-	} 
+	}
 
 	if (key[KEY_F6] && game.iHouse > 0)
 	{
@@ -4827,7 +4826,7 @@ void DEBUG_KEYS()
 		game.setState(GAME_BRIEFING);
 		play_music(MUSIC_BRIEFING);
 		game.iMentatSpeak=-1;
-	} 
+	}
 
 	if (key[KEY_F7] && game.iHouse > 0)
 	{
@@ -4838,7 +4837,7 @@ void DEBUG_KEYS()
 		game.setState(GAME_BRIEFING);
 		play_music(MUSIC_BRIEFING);
 		game.iMentatSpeak=-1;
-	} 
+	}
 
 	if (key[KEY_F8] && game.iHouse > 0)
 	{
@@ -4849,7 +4848,7 @@ void DEBUG_KEYS()
 		game.setState(GAME_BRIEFING);
 		play_music(MUSIC_BRIEFING);
 		game.iMentatSpeak=-1;
-	} 
+	}
 
 	if (key[KEY_F4])
 	{
@@ -4864,18 +4863,18 @@ void DEBUG_KEYS()
 
 int getGroupNumberFromKeyboard() {
 	if (key[KEY_1]) {
-		return 1; 
+		return 1;
 	}
-	if (key[KEY_2]) { 
+	if (key[KEY_2]) {
 		return 2;
 	}
 	if (key[KEY_3]) {
 		return 3;
 	}
-	if (key[KEY_4]) { 
+	if (key[KEY_4]) {
 		return 4;
 	}
-	if (key[KEY_5]) { 
+	if (key[KEY_5]) {
 		return 5;
 	}
 
@@ -4906,7 +4905,7 @@ void GAME_KEYS()
 							}
 						}
 					}
-				}	
+				}
 			}
 
 			// now add
@@ -4923,7 +4922,7 @@ void GAME_KEYS()
 		}
 
 	} // HOLDING CTRL -> create group
-	else    
+	else
 	{
 		// Center on focus cell
 		if (key[KEY_H]) {
@@ -4995,15 +4994,15 @@ void GAME_KEYS()
 
 
 void cGame::handleTimeSlicing() {
- 
+
 	if (iRest > 0) {
 		rest(iRest);
 	}
 }
 
 /**
-	Handle keyboard keys. 
-	
+	Handle keyboard keys.
+
 	TAB + key = debug action
 */
 void cGame::handleKeys() {
@@ -5038,7 +5037,7 @@ void cGame::handleKeys() {
 		// take screenshot
 		if (key[KEY_F11])
 		{
-			char filename[25];      
+			char filename[25];
 
 			if (screenshot < 10) {
 				sprintf(filename, "%dx%d_000%d.bmp", screen_x, screen_y, screenshot);
@@ -5076,8 +5075,8 @@ void cGame::handleKeys() {
 }
 
 void cGame::shakeScreenAndBlitBuffer() {
-	if (TIMER_shake == 0) {		
-		TIMER_shake = -1;			
+	if (TIMER_shake == 0) {
+		TIMER_shake = -1;
 	}
 	// blit on screen
 
@@ -5105,11 +5104,11 @@ void cGame::shakeScreenAndBlitBuffer() {
 		if (iAlphaScreen == 255)
 			blit(bmp_screen, screen, 0, 0, 0, 0, screen_x, screen_y);
 		else
-		{   
+		{
 			BITMAP *temp = create_bitmap(game.screen_x, game.screen_y);
 			assert(temp != NULL);
 			clear(temp);
-			fblend_trans(bmp_screen, temp, 0, 0, iAlphaScreen);                
+			fblend_trans(bmp_screen, temp, 0, 0, iAlphaScreen);
 			blit(temp, screen, 0, 0, 0, 0, screen_x, screen_y);
 			destroy_bitmap(temp);
 		}
@@ -5119,7 +5118,7 @@ void cGame::shakeScreenAndBlitBuffer() {
 
 void cGame::runGameState() {
 	switch (state) {
-		case GAME_PLAYING: 
+		case GAME_PLAYING:
 			combat();
 			break;
 		case GAME_BRIEFING:
@@ -5178,15 +5177,15 @@ void cGame::run()
 		TimeManager.processTime();
 		handleTimeSlicing();
         runGameState();
-		handleKeys();	    
+		handleKeys();
 		shakeScreenAndBlitBuffer();
 		frame_count++;
 	}
 }
 
 
-/** 
-	Shutdown the game	
+/**
+	Shutdown the game
 */
 void cGame::shutdown() {
 	// Destroy font of Allegro FONT library
@@ -5230,7 +5229,7 @@ bool cGame::setupGame() {
 	FILE *fp;
 	fp = fopen("log.txt", "wt");
 
-	if (fp) 
+	if (fp)
 	{
 		fprintf(fp, "DUNE II - The Maker\n");
 		fprintf(fp, "-------------------\n\n"); // print head of logbook
@@ -5243,7 +5242,7 @@ bool cGame::setupGame() {
 	logbook(game.version);
 	char msg[255];
 	sprintf(msg, "Compiled at %s , %s", __DATE__, __TIME__);
-	logbook(msg);   
+	logbook(msg);
 
 	if (DEBUGGING) logbook("DEBUG MODE IS ENABLED");
 
@@ -5268,7 +5267,7 @@ bool cGame::setupGame() {
 	logbook("Allegro");
 	logbook("-------");
 
-	// ALLEGRO - INIT    
+	// ALLEGRO - INIT
 	if (allegro_init() != 0)
 		return false;
 
@@ -5284,7 +5283,7 @@ bool cGame::setupGame() {
 		allegro_message("Failed to install timer");
 		logbook("FAILED");
 		return false;
-	}	
+	}
 
 	alfont_init();
 	logbook("alfont_init()");
@@ -5294,24 +5293,24 @@ bool cGame::setupGame() {
 	logbook("install_mouse()");
 
 	logbook("setting up timer functions / locking functions & memory");
-	
-	/* set up the interrupt routines... */  
+
+	/* set up the interrupt routines... */
 	game.TIMER_money=0;
 	game.TIMER_message=0;
 	game.TIMER_shake=0;
-	
-#ifdef ALLEGRO_H 
+
+#ifdef ALLEGRO_H
 	LOCK_VARIABLE(allegro_timerUnits);
-	LOCK_VARIABLE(allegro_timerGlobal);  
+	LOCK_VARIABLE(allegro_timerGlobal);
 	LOCK_VARIABLE(allegro_timerSecond);
 
-	LOCK_FUNCTION(allegro_timerunits);	
-	LOCK_FUNCTION(allegro_timerglobal);  	
+	LOCK_FUNCTION(allegro_timerunits);
+	LOCK_FUNCTION(allegro_timerglobal);
 	LOCK_FUNCTION(allegro_timerfps);
 
 	// Install timers
 	install_int(allegro_timerunits, 100);
-	install_int(allegro_timerglobal, 5);  
+	install_int(allegro_timerglobal, 5);
 	install_int(allegro_timerfps, 1000);
 #else
 	// other lib defines other timers, as long as they eventually call
@@ -5327,7 +5326,7 @@ bool cGame::setupGame() {
 	sprintf(title, "Dune II - The Maker [%s] - (by Stefan Hendriks)", game.version);
 
 	// Set window title
-	set_window_title(title);  
+	set_window_title(title);
 	char window_title[256];
 	sprintf(window_title, "Window title set: [%s]", title);
 	logbook(window_title);
@@ -5337,7 +5336,7 @@ bool cGame::setupGame() {
 
 	set_color_depth(16);
 
-	// TODO: read/write rest value so it does not have to 'fine-tune' 
+	// TODO: read/write rest value so it does not have to 'fine-tune'
 	// but is already set up. Perhaps even offer it in the options screen? So the user
 	// can specify how much CPU this game may use?
 
@@ -5350,7 +5349,7 @@ bool cGame::setupGame() {
 		// bit depth detection speeds up incredibly in Vista and Windows 7 (also will
 		// cause the aero effect to remain!) However, running with this code somehow
 		// screws up the windtrap drawing , so this has to be figured out before release.
-		
+
 		int 	iDepth = desktop_color_depth();
 
 		// dont switch to 15 bit or lower, or at 24 bit
@@ -5369,13 +5368,13 @@ bool cGame::setupGame() {
 		}
 
 		//GFX_AUTODETECT_WINDOWED
-		int r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);  
+		int r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
 		if (r > -1)
 		{
-			// Succes      
+			// Succes
 		}
 		else
-		{      
+		{
 			// GFX_DIRECTX_ACCEL / GFX_AUTODETECT
 #ifdef UNIX
 			r = set_gfx_mode(GFX_XWINDOWS, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
@@ -5384,25 +5383,25 @@ bool cGame::setupGame() {
 #endif
 
 			if (r > -1)
-			{  
+			{
 				game.windowed = false;
 
 				/*
 				FILE *f;
 				f = fopen("settings.d3", "wb");
 
-				fwrite(&game.play_music , sizeof(bool)    ,1 , f);        
+				fwrite(&game.play_music , sizeof(bool)    ,1 , f);
 				fwrite(&game.play_sound , sizeof(bool)    ,1 , f);
 				fwrite(&game.fade , sizeof(bool)    ,1 , f);
-				fwrite(&game.windowed , sizeof(bool)    ,1 , f);  
-				fwrite(&game.screen_x , sizeof(int)    ,1 , f);            
-				fwrite(&game.screen_y , sizeof(int)    ,1 , f);            
-				fclose(f);          
+				fwrite(&game.windowed , sizeof(bool)    ,1 , f);
+				fwrite(&game.screen_x , sizeof(int)    ,1 , f);
+				fwrite(&game.screen_y , sizeof(int)    ,1 , f);
+				fclose(f);
 				logbook("Could not enter windowed-mode; settings.d3 adjusted"); */
 
 			}
 			else
-			{        
+			{
 				allegro_message("Failed to set resolution");
 				return false;
 			}
@@ -5433,7 +5432,7 @@ bool cGame::setupGame() {
 	logbook("Loading font data");
 	// loading font
 
-	game_font = alfont_load_font("data/arakeen.fon");  
+	game_font = alfont_load_font("data/arakeen.fon");
 
 	if (game_font != NULL)
 		alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
@@ -5444,7 +5443,7 @@ bool cGame::setupGame() {
 	}
 
 
-	bene_font = alfont_load_font("data/benegess.fon");  
+	bene_font = alfont_load_font("data/benegess.fon");
 
 	if (bene_font != NULL)
 		alfont_set_font_size(bene_font, 10); // set size
@@ -5476,13 +5475,13 @@ bool cGame::setupGame() {
 		}
 
 		reserve_voices(voices, 0);
-		if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) == 0) 
+		if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) == 0)
 		{
 			char msg[255];
 			sprintf(msg, "Succes with %d reserved voices.", voices);
 			logbook(msg);
 			MAXVOICES=voices;
-			bSucces=true;            
+			bSucces=true;
 			break;
 		}
 		else {
@@ -5493,7 +5492,7 @@ bool cGame::setupGame() {
 	if (!bSucces) {
 		char msg[255];
 		sprintf(msg, "%s", allegro_error);
-		logbook(msg); 
+		logbook(msg);
 		logbook("ERROR: Cannot initialize sound card");
 	}
 
@@ -5524,7 +5523,7 @@ bool cGame::setupGame() {
 		return false;
 	}
 	else {
-		logbook("Memory bitmap created: bmp_throttle");	
+		logbook("Memory bitmap created: bmp_throttle");
 	}
 
 	bmp_winlose = create_bitmap(game.screen_x, game.screen_y);
@@ -5549,10 +5548,10 @@ bool cGame::setupGame() {
 	}
 	else {
 		logbook("Memory bitmap created: bmp_fadeout");
-	} 
+	}
 
 	/*** End of Bitmap Creation ***/
-	set_color_conversion(COLORCONV_MOST);  
+	set_color_conversion(COLORCONV_MOST);
 
 	logbook("Color conversion method set");
 
@@ -5567,7 +5566,7 @@ bool cGame::setupGame() {
 
 	/*** Data files ***/
 
-	// load datafiles  
+	// load datafiles
 	gfxdata = load_datafile("data/gfxdata.dat");
 	if (gfxdata == NULL) {
 		logbook("ERROR: Could not hook/load datafile: gfxdata.dat");
@@ -5606,7 +5605,7 @@ bool cGame::setupGame() {
 		logbook("ERROR: Could not hook/load datafile: gfxmentat.dat");
 		return false;
 	} else {
-		logbook("Datafile hooked: gfxmentat.dat");	
+		logbook("Datafile hooked: gfxmentat.dat");
 	}
 
 	gfxmovie = NULL; // nothing loaded at start. This is done when loading a mission briefing.
@@ -5627,28 +5626,28 @@ bool cGame::setupGame() {
 	char seedtxt[80];
 	sprintf(seedtxt, "Seed is %d", t);
 	logbook(seedtxt);
-	
+
 	srand(t);
 
 	game.bPlaying = true;
 	game.screenshot = 0;
-	game.state = -1; 
+	game.state = -1;
 
 	// Mentat class pointer set at null
 	Mentat = NULL;
-	
+
 	// Mouse stuff
 	mouse_status = MOUSE_STATE_NORMAL;
 	mouse_tile = 0;
 
-	set_palette(general_palette);  
+	set_palette(general_palette);
 
 	// normal sounds are loud, the music is lower (its background music, so it should not be disturbing)
 	set_volume(255, 150);
 
 	// A few messages for the player
 	logbook("Installing:  PLAYERS");
-	INSTALL_PLAYERS();  
+	INSTALL_PLAYERS();
 	logbook("Installing:  HOUSES");
 	INSTALL_HOUSES();
 	logbook("Installing:  STRUCTURES");
