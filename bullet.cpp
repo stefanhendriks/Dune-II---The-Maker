@@ -314,10 +314,12 @@ void cBullet::think_move()
 				}
 
 				int oldHp = structure[id]->getHitPoints();
-				assert(iDamage > 0);
+				assert(iDamage > -1); // as long not giving health it is fine. (0 too!)
 				structure[id]->damage(iDamage);
 
-				assert(oldHp > structure[id]->getHitPoints()); // damage should be done
+				// this assert is disabled, because it is not obliged to have bullets that cause damage
+				// think of the deviator missiles.
+				//assert(oldHp >= structure[id]->getHitPoints()); // damage should be done
 
 				int iChance = 10;
 

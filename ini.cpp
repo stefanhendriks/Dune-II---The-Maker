@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -15,7 +15,7 @@
 #include "cIniReader.h"
 
 cIniReader::cIniReader() {
-    
+
     // set key / value for sections
     sectionMap.setValue("UNITS", INI_UNITS);
     sectionMap.setValue("SKIRMISH", INI_SKIRMISH);
@@ -64,25 +64,25 @@ void cIniReader::ReadLine(FILE *file) {
 
 // Reads out an entire sentence and returns it
 void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
-{ 
+{
   char ch;
   int pos=0;
 
   // clear out entire string
  for (int i=0; i < MAX_LINE_LENGTH;i++)
    result[i] = '\0';
-  
+
  while ((feof(f) == 0) && ((ch=fgetc(f)) != '\n'))
  {
   result[pos]=ch;
-  pos++;  
-  
+  pos++;
+
   // do not allow strings greater then 80 characters. This check prevents a crash for
   // users who do exceed the limit.
   if (pos> (MAX_LINE_LENGTH-1))
     break;
 
-  putchar(ch);   
+  putchar(ch);
  }
 
 
@@ -93,8 +93,8 @@ int cIniReader::getSection() {
 
     if (result > -1 && result != currentSection) {
         return result;
-    } 
-    
+    }
+
     return currentSection;
 }
 
@@ -104,19 +104,19 @@ int cIniReader::getSection() {
 // to get the correct ID for that.
 void INI_Section(char input[MAX_LINE_LENGTH], char section[30])
 {
- 
+
   int pos=0;
-  int end_pos=-1;  
+  int end_pos=-1;
 
   // clear out entire string
  for (int i=0; i < 30;i++)
    section[i] = '\0';
- 
+
  // check if the first character is a '['
  if (input[0] == '[')
  {
    pos=1; // Begin at character 1
-   
+
    while (pos < (MAX_LINE_LENGTH-1))
    {
     if (input[pos] == ']')
@@ -124,15 +124,15 @@ void INI_Section(char input[MAX_LINE_LENGTH], char section[30])
       end_pos=pos-1;
       break;
     }
-    pos++;    
+    pos++;
    }
- 
+
  if (end_pos > 1 && end_pos < 29)
  {
    for (int wc=0; wc < end_pos; wc++)
      section[wc]=input[wc+1];
 
-   section[end_pos]='\0'; // terminate string   
+   section[end_pos]='\0'; // terminate string
  }
  }
 
@@ -150,8 +150,8 @@ void INI_Word(char input[MAX_LINE_LENGTH], char word[25])
   // clear out entire string
  for (int i=0; i < 25;i++)
    word[i] = '\0';
- 
- 
+
+
  while (pos < (MAX_LINE_LENGTH-1))
  {
   if (input[pos] == '=')
@@ -159,15 +159,15 @@ void INI_Word(char input[MAX_LINE_LENGTH], char word[25])
     word_pos=pos;
     break;
   }
-    pos++;  
+    pos++;
  }
- 
+
  if (word_pos > -1 && word_pos < 23)
  {
    for (int wc=0; wc < word_pos; wc++)
      word[wc]=input[wc];
 
-   word[word_pos]='\0'; // terminate string   
+   word[word_pos]='\0'; // terminate string
  }
 }
 // Reads out word[], checks structure type, and returns actual source-id
@@ -194,10 +194,10 @@ int INI_StructureType(char word[45])
 
   if (strcmp(word, "HIGHTECH") == 0)
     return HIGHTECH;
-  
+
   if (strcmp(word, "IX") == 0)
     return IX;
-  
+
   if (strcmp(word, "REPAIR") == 0)
     return REPAIR;
 
@@ -234,9 +234,9 @@ int INI_StructureType(char word[45])
 
 
   // notify user here
-  alert("ERROR: Could not identify structure type", word, "", "OK", NULL, 13, 0);  
-  
-  
+  alert("ERROR: Could not identify structure type", word, "", "OK", NULL, 13, 0);
+
+
    return -1;
 
 }
@@ -249,7 +249,7 @@ int INI_HouseType(char word[35])
 
   if (strcmp(word, "Harkonnen") == 0)
     return HARKONNEN;
-  
+
   if (strcmp(word, "Ordos") == 0)
     return ORDOS;
 
@@ -272,13 +272,13 @@ int INI_HouseType(char word[35])
 // Reads out word[], checks unit type, and returns actual source-id
 int INI_UnitType(char word[35])
 {
-  
+
   if (strcmp(word, "HARVESTER") == 0)
     return HARVESTER;
 
   if (strcmp(word, "DEVIATOR") == 0)
     return DEVIATOR;
-  
+
   if (strcmp(word, "TRIKE") == 0)
     return TRIKE;
 
@@ -311,10 +311,10 @@ int INI_UnitType(char word[35])
 
   if (strcmp(word, "CARRYALL") == 0)
     return CARRYALL;
-  
+
   if (strcmp(word, "ORNITHOPTER") == 0)
     return ORNITHOPTER;
-  
+
   if (strcmp(word, "LAUNCHER") == 0)
     return LAUNCHER;
 
@@ -335,9 +335,9 @@ int INI_UnitType(char word[35])
 
 
 
-  alert("ERROR: Could not identify unit type", word, "", "OK", NULL, 13, 0);  
-  
-  
+  alert("ERROR: Could not identify unit type", word, "", "OK", NULL, 13, 0);
+
+
    return -1;
 }
 
@@ -346,7 +346,7 @@ int INI_UnitType(char word[35])
 int INI_WordType(char word[25], int section)
 {
 	if (section == SEC_REGION)
-	{   
+	{
 		if (strcmp(word, "Region") == 0)
 			return WORD_REGION;
 
@@ -365,7 +365,7 @@ int INI_WordType(char word[25], int section)
 		return WORD_NONE;
 	}
 
-    if (section == INI_SCEN || 
+    if (section == INI_SCEN ||
         section == INI_DESCRIPTION ||
         section == INI_BRIEFING ||
         section == INI_ADVICE ||
@@ -386,7 +386,7 @@ int INI_WordType(char word[25], int section)
     if (strcmp(word, "Title") == 0)
         return WORD_MAPNAME;
 
-	
+
 	if (strcmp(word, "StartCell") == 0)
         return WORD_STARTCELL;
 
@@ -408,7 +408,7 @@ int INI_WordType(char word[25], int section)
 
   }
   else if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY)
-  { 
+  {
 	if (strcmp(word, "Team") == 0)
 		return WORD_TEAM;
 
@@ -452,7 +452,7 @@ int INI_WordType(char word[25], int section)
     // Dir of mod
     if (strcmp(word, "Dir") == 0)
       return WORD_DIR;
-  
+
   }
   else if (section == INI_SIDEBAR)
   {
@@ -470,11 +470,11 @@ int INI_WordType(char word[25], int section)
     // normal mouse
     if (strcmp(word, "Normal") == 0)
       return WORD_MOUSENORMAL;
-    
+
     // cannot move
     if (strcmp(word, "CannotMove") == 0)
       return WORD_MOUSENOMOVE;
-    
+
     // Move
     if (strcmp(word, "Move") == 0)
       return WORD_MOUSEMOVE;
@@ -512,8 +512,8 @@ int INI_WordType(char word[25], int section)
 	if (strcmp(word, "Field") == 0)
       return WORD_MAPFIELD;
 
-    
-  }  
+
+  }
   else if (section == INI_BULLETS)
   {
     // Bitmap
@@ -539,7 +539,7 @@ int INI_WordType(char word[25], int section)
     // Damage
     if (strcmp(word, "Damage") == 0)
       return WORD_DAMAGE;
-  
+
     // Definition
     if (strcmp(word, "Definition") == 0)
       return WORD_DEFINITION;
@@ -624,11 +624,11 @@ int INI_WordType(char word[25], int section)
     // Sight
     if (strcmp(word, "Sight") == 0)
       return WORD_SIGHT;
-    
+
     // Range
     if (strcmp(word, "Range") == 0)
       return WORD_RANGE;
-      
+
     // Build time
     if (strcmp(word, "BuildTime") == 0)
       return WORD_BUILDTIME;
@@ -656,7 +656,7 @@ int INI_WordType(char word[25], int section)
     if (strcmp(word, "FreeRoam") == 0)
       return WORD_FREEROAM;
 
-    // HARVESTER 
+    // HARVESTER
     if (strcmp(word, "MaxCredits") == 0)
       return WORD_HARVESTLIMIT;
 
@@ -706,20 +706,20 @@ int INI_WordType(char word[25], int section)
   else if (section == INI_STRUCTURES)
   {
     if (strlen(word) > 1)
-    {      
+    {
       // Structure properties
       if (strcmp(word, "PreBuild") == 0)
         return WORD_PREBUILD;
-      
+
       if (strcmp(word, "Description") == 0)
         return WORD_DESCRIPTION;
-     
+
       if (strcmp(word, "Power") == 0)
         return WORD_POWER;        // What power it takes
-     
+
     }
-    else 
-      return WORD_NONE;   
+    else
+      return WORD_NONE;
   }
   else if (section == INI_HOUSES)
   {
@@ -755,12 +755,12 @@ int INI_WordType(char word[25], int section)
 
 	  if (strcmp(word, "HarvestSpeed") == 0)
         return WORD_HARVESTSPEED;
-		
+
 		if (strcmp(word, "DumpSpeed") == 0)
         return WORD_DUMPSPEED;
 
   }
-  
+
 
 
   return WORD_NONE;
@@ -772,7 +772,7 @@ int SCEN_INI_SectionType(char section[30], int last)
 {
 // if (strcmp(section, "PLAYERS") == 0)
   //  return INI_PLAYER;
- 
+
  //if (strcmp(section, "MAP") == 0)
    //return INI_TERRAIN;
 
@@ -815,7 +815,7 @@ int SCEN_INI_SectionType(char section[30], int last)
 
 
   // When nothing found; we assume its just a new ID tag for some unit or structure
-  // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's  
+  // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's
   return last;
 }
 
@@ -825,21 +825,21 @@ int GAME_INI_SectionType(char section[30], int last)
 {
 
 // if (strcmp(section, "BULLETS") == 0)
-//   return INI_BULLETS; 
- 
+//   return INI_BULLETS;
+
  if (strcmp(section, "UNITS") == 0)
-   return INI_UNITS; 
- 
+   return INI_UNITS;
+
  if (strcmp(section, "STRUCTURES") == 0)
-   return INI_STRUCTURES; 
- 
+   return INI_STRUCTURES;
+
   // When nothing found; we assume its just a new ID tag for some unit or structure
-  // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's  
+  // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's
   return last;
 }
 // Reads out section[], does a string compare and returns type id
 int INI_SectionType(char section[30], int last)
-{  
+{
   if (strcmp(section, "MAP") == 0)
     return INI_MAP;
 
@@ -872,14 +872,14 @@ int INI_SectionType(char section[30], int last)
 
   if (strcmp(section, "STRUCTURES") == 0)
   {
-    alert("Structure Section found", section, "", "OK", NULL, 13, 0);    
+    alert("Structure Section found", section, "", "OK", NULL, 13, 0);
     return INI_STRUCTURES;
   }
- 
-  alert("No SECTION id found, assuming its an ID nested in section", section, "", "OK", NULL, 13, 0);  
+
+  alert("No SECTION id found, assuming its an ID nested in section", section, "", "OK", NULL, 13, 0);
 
   // When nothing found; we assume its just a new ID tag for some unit or structure
-  // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's  
+  // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's
   return last;
 }
 
@@ -889,7 +889,7 @@ int INI_WordValueINT(char result[MAX_LINE_LENGTH])
 {
  int pos=0;
  int is_pos=-1;
- 
+
  while (pos < (MAX_LINE_LENGTH-1))
  {
   if (result[pos] == '=')
@@ -899,7 +899,7 @@ int INI_WordValueINT(char result[MAX_LINE_LENGTH])
   }
     pos++;
  }
- 
+
  if (is_pos > -1)
  {
    // Whenever the IS (=) position is known, we make a number out of 'IS_POS' till the next empty
@@ -914,16 +914,16 @@ int INI_WordValueINT(char result[MAX_LINE_LENGTH])
       break;
     }
       pos++;
-  } 
-  
+  }
+
   // End position found!
   if (end_pos > -1)
   {
     // We know the END position. We will use that piece of string to read out a number.
     char number[10];
-  
+
     // clear out entire string
-    for (int i=0; i < 10;i++)    
+    for (int i=0; i < 10;i++)
       number[i] = '\0';
 
     // Copy the part to 'number', Make sure we won't get outside the array of the character.
@@ -954,10 +954,10 @@ void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256])
  // clear out entire string
  memset(value, 0, sizeof(value));
 
- for (int i=0; i < MAX_LINE_LENGTH;i++)    
+ for (int i=0; i < MAX_LINE_LENGTH;i++)
      value[i] = '\0';
 
- 
+
  while (pos < (MAX_LINE_LENGTH-1))
  {
   if (result[pos] == '"')
@@ -967,7 +967,7 @@ void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256])
   }
     pos++;
  }
- 
+
  if (is_pos > -1)
  {
    // Whenever the IS (=) position is known, we make a number out of 'IS_POS' till the next empty
@@ -983,13 +983,13 @@ void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256])
       break;
     }
       pos++;
-  } 
-  
+  }
+
   // End position found!
   if (end_pos > -1)
   {
     // We know the END position. We will use that piece of string to read out a number.
-    
+
     // Copy the part to 'value', Make sure we won't get outside the array of the character.
     int cp=is_pos+1;
     int c=0;
@@ -1000,9 +1000,9 @@ void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256])
       cp++;
       if (c > 254)
         break;
-    }    
-  } 
- } 
+    }
+  }
+ }
 }
 
 // Reads out 'result' and will return the value after the '='. Returns nothing but will put
@@ -1015,10 +1015,10 @@ void INI_WordValueCHAR(char result[MAX_LINE_LENGTH], char value[256])
  // clear out entire string
  memset(value, 0, sizeof(value));
 
- //for (int i=0; i < MAX_LINE_LENGTH;i++)    
+ //for (int i=0; i < MAX_LINE_LENGTH;i++)
   //value[i] = '\0';
 
- 
+
  while (pos < (MAX_LINE_LENGTH-1))
  {
   if (result[pos] == '=')
@@ -1028,7 +1028,7 @@ void INI_WordValueCHAR(char result[MAX_LINE_LENGTH], char value[256])
   }
     pos++;
  }
- 
+
  if (is_pos > -1)
  {
    // Whenever the IS (=) position is known, we make a number out of 'IS_POS' till the next empty
@@ -1043,13 +1043,13 @@ void INI_WordValueCHAR(char result[MAX_LINE_LENGTH], char value[256])
       break;
     }
       pos++;
-  } 
-  
+  }
+
   // End position found!
   if (end_pos > -1)
   {
     // We know the END position. We will use that piece of string to read out a number.
-    
+
     // Copy the part to 'value', Make sure we won't get outside the array of the character.
     int cp=is_pos+1;
     int c=0;
@@ -1061,11 +1061,11 @@ void INI_WordValueCHAR(char result[MAX_LINE_LENGTH], char value[256])
       if (c > 80)
         break;
     }
-  } 
- 
- } 
+  }
 
- 
+ }
+
+
 }
 
 
@@ -1076,12 +1076,12 @@ bool INI_WordValueBOOL(char result[MAX_LINE_LENGTH])
   // use INI_WordValueCHAR to know if its 'true'
   char val[256];
   INI_WordValueCHAR(result, val);
-  
+
   // When its TRUE , return true
   if (strcmp(val, "TRUE") == 0) return true;
   if (strstr(val, "TRUE") != NULL) return true;
-  
-  return false;  
+
+  return false;
 }
 // return ID of structure
 int INI_Structure_ID(char *structure)
@@ -1150,13 +1150,13 @@ int INI_Unit_ID(char *unit)
 
 	if (strcmp(unit, "Trike") == 0)
 		return TRIKE;
-	
+
 	if (strcmp(unit, "Raider Trike") == 0)
 		return RAIDER;
-	
+
 	if (strcmp(unit, "Trooper") == 0)
 		return TROOPER;
-	
+
 	if (strcmp(unit, "Soldier") == 0)
 		return SOLDIER;
 
@@ -1197,7 +1197,7 @@ int INI_Unit_ID(char *unit)
 		return SANDWORM;
 
 	if (strcmp(unit, "Saboteur") == 0)
-		return SABOTEUR;    
+		return SABOTEUR;
 
 	logbook("INI (WARNING) : Could not find unit:");
 	logbook(unit);
@@ -1215,7 +1215,7 @@ void INI_Load_seed(int seed)
 
 	sprintf(filename, "campaign/maps/seed/%d.map", seed);
 
-	FILE *stream; 
+	FILE *stream;
 	int iY=1;
 
 	char msg[256];
@@ -1226,9 +1226,9 @@ void INI_Load_seed(int seed)
 
 	if( (stream = fopen( filename, "r+t" )) != NULL )
 	{
-	
+
 		char linefeed[MAX_LINE_LENGTH];
-		
+
 		// infinite loop baby
 		while( !feof( stream ) )
 		{
@@ -1242,8 +1242,8 @@ void INI_Load_seed(int seed)
 				char letter[1];
 				letter[0] = '\0';
 				letter[0] = linefeed[iX];
-				
-				if (letter[0] == '%')                
+
+				if (letter[0] == '%')
                     map.create_spot(iCell, TERRAIN_ROCK, 0);
 
 				if (letter[0] == '^')
@@ -1251,10 +1251,10 @@ void INI_Load_seed(int seed)
 
                 if (letter[0] == '&')
 					map.create_spot(iCell, TERRAIN_ROCK, 0);
-                
+
                 if (letter[0] == '(')
 					map.create_spot(iCell, TERRAIN_ROCK, 0);
-                
+
 				if (letter[0] == 'R')
 				{
 					map.create_spot(iCell, TERRAIN_MOUNTAIN, 0);
@@ -1265,7 +1265,7 @@ void INI_Load_seed(int seed)
 				}
 				if (letter[0] == '+')
 				{
-                    map.create_spot(iCell, TERRAIN_SPICEHILL, 0);					
+                    map.create_spot(iCell, TERRAIN_SPICEHILL, 0);
 				}
 				if (letter[0] == '-')
 				{
@@ -1278,7 +1278,7 @@ void INI_Load_seed(int seed)
 
 				if (letter[0] == 'h')
 					map.create_spot(iCell, TERRAIN_HILL, 0);
-                
+
 			}
 			iY++;
 			if (iY > 61)
@@ -1297,7 +1297,7 @@ void INI_Load_Regionfile(int iHouse, int iMission)
 {
 	char filename[80];
 	char cHouse[15];
-	
+
     memset(filename, 0, sizeof(filename));
     memset(cHouse, 0, sizeof(cHouse));
 
@@ -1307,14 +1307,14 @@ void INI_Load_Regionfile(int iHouse, int iMission)
 	if (iHouse == ORDOS)	sprintf(cHouse, "ordos");
 	if (iHouse == FREMEN)	sprintf(cHouse, "fremen");
 	if (iHouse == MERCENARY)	sprintf(cHouse, "mercenary");
-	
+
 	sprintf(filename, "campaign/%s/mission%d.ini", cHouse, iMission);
 
 	char msg[256];
-	sprintf(msg, "[CAMPAIGN] '%s' (Mission %d)", filename, game.iMission);	
+	sprintf(msg, "[CAMPAIGN] '%s' (Mission %d)", filename, game.iMission);
 	logbook(msg);
 
-	
+
   ////////////////////////////
   // START OPENING FILE
   ////////////////////////////
@@ -1360,19 +1360,19 @@ void INI_Load_Regionfile(int iHouse, int iMission)
 	  wordtype = INI_WordType(lineword, SEC_REGION);
 
 	  if (wordtype == WORD_REGION)
-	  {	
+	  {
           iRegionNumber=-1;
           iRegionConquer=-1;
-		  iRegionNumber = INI_WordValueINT(linefeed)-1;          
+		  iRegionNumber = INI_WordValueINT(linefeed)-1;
 	  }
 
       else if (wordtype == WORD_REGIONCONQUER)
-	  {	
+	  {
           iRegionNumber=-1;
           iRegionConquer=-1;
 		  iRegionIndex++;
 		  iRegionConquer = INI_WordValueINT(linefeed)-1;
-          game.iRegionConquer[iRegionIndex] = iRegionConquer;          
+          game.iRegionConquer[iRegionIndex] = iRegionConquer;
 	  }
 
 	  if (iRegionIndex > -1 || iRegionNumber > -1)
@@ -1397,7 +1397,7 @@ void INI_Load_Regionfile(int iHouse, int iMission)
             if (iRegionNumber > -1)
             {
                 world[iRegionNumber].iHouse = iH;
-                world[iRegionNumber].iAlpha = 255;                
+                world[iRegionNumber].iAlpha = 255;
             }
 
             if (iRegionConquer > -1)
@@ -1407,9 +1407,9 @@ void INI_Load_Regionfile(int iHouse, int iMission)
 
         if (wordtype == WORD_REGIONTEXT && iRegionConquer > -1 && iRegionIndex > -1)
         {
-			char cHouseText[256];			
+			char cHouseText[256];
             INI_WordValueSENTENCE(linefeed, cHouseText);
-            sprintf(game.cRegionText[iRegionIndex], "%s", cHouseText);            
+            sprintf(game.cRegionText[iRegionIndex], "%s", cHouseText);
         }
 
         if (wordtype == WORD_REGIONSELECT)
@@ -1421,12 +1421,12 @@ void INI_Load_Regionfile(int iHouse, int iMission)
 	  }
 	}
 
-   fclose(stream); 
-   logbook("[CAMPAIGN] Done"); // make note on logbook	
+   fclose(stream);
+   logbook("[CAMPAIGN] Done"); // make note on logbook
   }
   else
-	  logbook("[CAMPAIGN] Error, could not open file"); // make note on logbook	
-	
+	  logbook("[CAMPAIGN] Error, could not open file"); // make note on logbook
+
 
 }
 
@@ -1439,31 +1439,31 @@ void INI_Load_scenario(int iHouse, int iRegion)
 	game.bSkirmish=false;
 
 	// First initialize the map data
-	//map.init(); 
+	//map.init();
 
 	game.mission_init();
 
 	// Start assembling file name for loading
 	char cHouse[4];
 	memset(cHouse, 0, sizeof(cHouse));
-  
-	
+
+
 	if (iHouse == ATREIDES) sprintf(cHouse, "a");
-	if (iHouse == HARKONNEN) sprintf(cHouse, "h");  
+	if (iHouse == HARKONNEN) sprintf(cHouse, "h");
 	if (iHouse == ORDOS) sprintf(cHouse, "o");
 	if (iHouse == SARDAUKAR) sprintf(cHouse, "s");
 	if (iHouse == MERCENARY) sprintf(cHouse, "m");
 	if (iHouse == FREMEN) sprintf(cHouse, "f");
 
 	char filename[60];
-	
+
 	if (iRegion < 10)
 		sprintf(filename, "campaign/maps/scen%s00%d.ini", cHouse, iRegion);
 	else
 		sprintf(filename, "campaign/maps/scen%s0%d.ini", cHouse, iRegion);
 
 
-    
+
 
 	// Done assembling. Now calculate the mission (techlevel) out of the region
 
@@ -1507,12 +1507,12 @@ void INI_Load_scenario(int iHouse, int iRegion)
 	// Open up the file and read data.
 
 	char msg[256];
-	sprintf(msg, "[SCENARIO] '%s' (Mission %d)", filename, game.iMission);	
+	sprintf(msg, "[SCENARIO] '%s' (Mission %d)", filename, game.iMission);
 	logbook(msg);
 
 	logbook("[SCENARIO] Opening file"); // make note on logbook
 	//logbook(filename);
-  
+
 	// Dune 2 scenario loading requires us to remember player data first and later to set up
 	// this is done at the UNITS section, when everything has been preloaded.
 
@@ -1537,17 +1537,17 @@ void INI_Load_scenario(int iHouse, int iRegion)
 	int iHumanID=-1;				// what player ID is the same as our HUMAN (0) id?
 	bool bSetUpPlayers=true;		// may we set up player data when entering the UNITS section?
 
-  
+
 	// Preloaded player data
 	int iPl_credits[MAX_PLAYERS];
 	int iPl_house[MAX_PLAYERS];
     int iPl_quota[MAX_PLAYERS]; // get quota
-  
-	
+
+
 	// clear info
-	for (int i=0; i < MAX_PLAYERS; i++)  
+	for (int i=0; i < MAX_PLAYERS; i++)
 	{
-		iPl_credits[i] = 0;	    
+		iPl_credits[i] = 0;
 		iPl_house[i]=-1;
         iPl_quota[i]=0;
 	}
@@ -1592,7 +1592,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
 		// Only original dune 2 scenario's have this section, auto set to true
 		if (section == INI_BASIC)
-        {			
+        {
             //logbook("NOTE: found '[BASIC]' section. Meaning this is a DUNE II scenario afterall...");
 
 			// Read out tactical CELL here... "TODO"
@@ -1600,7 +1600,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
             // READ OUT STARTING MOVIE
 
         }
-        
+
         if (section >= INI_HOUSEATREIDES &&
             section <= INI_HOUSEMERCENARY)
         {
@@ -1608,14 +1608,14 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
 		if (iPlayerID > (MAX_PLAYERS-1))
             iPlayerID = (MAX_PLAYERS-1);
-                
+
         if (section == INI_HOUSEATREIDES)   iPl_house[iPlayerID] = ATREIDES;
         if (section == INI_HOUSEORDOS)      iPl_house[iPlayerID] = ORDOS;
         if (section == INI_HOUSEHARKONNEN)  iPl_house[iPlayerID] = HARKONNEN;
         if (section == INI_HOUSEMERCENARY)  iPl_house[iPlayerID] = MERCENARY;
         if (section == INI_HOUSEFREMEN)     iPl_house[iPlayerID] = FREMEN;
         if (section == INI_HOUSESARDAUKAR)  iPl_house[iPlayerID] = SARDAUKAR;
- 
+
 		}
         continue; // next line
       }
@@ -1630,15 +1630,15 @@ void INI_Load_scenario(int iHouse, int iRegion)
         {
             if (wordtype == WORD_BRIEFPICTURE)
             {
-                // Load name, and load proper briefingpicture               
+                // Load name, and load proper briefingpicture
                 memset(value, 0, sizeof(value));
-                
-                INI_WordValueCHAR(linefeed, value); 
+
+                INI_WordValueCHAR(linefeed, value);
 
                 gfxmovie=NULL;
                 game.iMovieFrame=-1;
 
-                // wsa / data 
+                // wsa / data
                 if (strcmp(value, "HARVEST.WSA") == 0)
                    LOAD_SCENE("harvest"); // load harvester
 
@@ -1669,7 +1669,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
                 //assert(value);
 
-            }            
+            }
         }
 
 		// Dune 2 house found, load player data
@@ -1686,11 +1686,11 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
 					// We know the human brain now, this should be player 0...
 					if (strcmp(cBrain, "Human") == 0)
-						iHumanID = iPlayerID;                    
+						iHumanID = iPlayerID;
 
 				}
 
-				if (wordtype == WORD_CREDITS)										
+				if (wordtype == WORD_CREDITS)
 					iPl_credits[iPlayerID] = INI_WordValueINT(linefeed)-1;
 
                 if (wordtype == WORD_QUOTA)
@@ -1698,7 +1698,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 					iPl_quota[iPlayerID] = INI_WordValueINT(linefeed);
                 }
 
-                
+
 			}
 
 		}
@@ -1718,11 +1718,11 @@ void INI_Load_scenario(int iHouse, int iRegion)
 		{
 			game.map_height = 64;
 			game.map_width = 64;
-			
+
 			// original dune 2 maps have 64x64 maps
             if (wordtype == WORD_MAPSEED)
 			{
-				logbook("[SCENARIO] -> [MAP] Seed="); 
+				logbook("[SCENARIO] -> [MAP] Seed=");
 				INI_Load_seed(INI_WordValueINT(linefeed));
 			}
 
@@ -1732,9 +1732,9 @@ void INI_Load_scenario(int iHouse, int iRegion)
                 // This should put spice blooms in our array
                 // Logic: read till next "," , then use that number to determine
                 // where the bloom will be (as cell nr)
-				logbook("[SCENARIO] -> [MAP] Bloom="); 
+				logbook("[SCENARIO] -> [MAP] Bloom=");
 
-                int iBloomID=0;				
+                int iBloomID=0;
                 int iStringID=6;    // B L O O M = <6>
                 int iWordID=0;
 
@@ -1752,7 +1752,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
                     // its a comma!
                     if (letter[0] == ',' || letter[0] == '\0' || letter[0] == '\n')
                     {
-                        // from prevID TILL now is a number                       
+                        // from prevID TILL now is a number
                         iWordID=0;
 
                         int original_dune2_cell = atoi(word);
@@ -1762,8 +1762,8 @@ void INI_Load_scenario(int iHouse, int iRegion)
                         int iCellY=(original_dune2_cell / 64);
 
                         // Now recalculate it
-                        d2tm_cell = iCellMake(iCellX, iCellY);                       
-                        blooms[iBloomID] = d2tm_cell;                        
+                        d2tm_cell = iCellMake(iCellX, iCellY);
+                        blooms[iBloomID] = d2tm_cell;
                         memset(word, 0, sizeof(word)); // clear string
 
                         if (iBloomID < 29)
@@ -1777,11 +1777,11 @@ void INI_Load_scenario(int iHouse, int iRegion)
                         word[iWordID] = letter[0]; // copy
                         if (iWordID < 9)
                             iWordID++;
-                        
+
                     }
                 }
 
-                
+
 			}
 			// Loaded before SEED
         else if (wordtype == WORD_MAPFIELD)
@@ -1789,8 +1789,8 @@ void INI_Load_scenario(int iHouse, int iRegion)
                 // This should put spice blooms in our array
                 // Logic: read till next "," , then use that number to determine
                 // where the bloom will be (as cell nr)
-				
-			logbook("[SCENARIO] -> [MAP] Field="); 
+
+			logbook("[SCENARIO] -> [MAP] Field=");
                 int iFieldID=0;
                 int iStringID=6;    // F I E L D = <6>
                 int iWordID=0;
@@ -1809,7 +1809,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
                     // its a comma!
                     if (letter[0] == ',' || letter[0] == '\0' || letter[0] == '\n')
                     {
-                        // from prevID TILL now is a number                       
+                        // from prevID TILL now is a number
                         iWordID=0;
 
                         int original_dune2_cell = atoi(word);
@@ -1819,8 +1819,8 @@ void INI_Load_scenario(int iHouse, int iRegion)
                         int iCellY=(original_dune2_cell / 64);
 
                         // Now recalculate it
-                        d2tm_cell = iCellMake(iCellX, iCellY);                       
-                        fields[iFieldID] = d2tm_cell;                        
+                        d2tm_cell = iCellMake(iCellX, iCellY);
+                        fields[iFieldID] = d2tm_cell;
                         memset(word, 0, sizeof(word)); // clear string
 
                         if (iFieldID < 29)
@@ -1834,22 +1834,22 @@ void INI_Load_scenario(int iHouse, int iRegion)
                         word[iWordID] = letter[0]; // copy
                         if (iWordID < 9)
                             iWordID++;
-                        
+
                     }
                 }
 
-                
+
 			}
-		
-		}		
+
+		}
 		else if (section == INI_UNITS)
-		{  			
+		{
 
             // ORIGINAL DUNE 2 MISSION. EVERYBODY IS AGAINST U
 			if (bSetUpPlayers)
-			{                
+			{
                 int iRealID=1;
-                
+
                 for (int iP=0; iP < MAX_PLAYERS; iP++) // till 6 , since player 6 itself is sandworm
                 {
                     if (iPl_house[iP] > -1)
@@ -1860,7 +1860,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 							player[0].set_house(iPl_house[iP]);
                             player[0].iTeam=0;
                             game.iHouse = iPl_house[iP];
-                            
+
                             if (iPl_quota[iP] > 0)
                                 game.iWinQuota = iPl_quota[iP];
 						}
@@ -1874,12 +1874,12 @@ void INI_Load_scenario(int iHouse, int iRegion)
                                 if (player[0].house == ATREIDES)
                                     player[iRealID].iTeam = 0;
 
-							player[iRealID].credits = iPl_credits[iP];							
-							player[iRealID].set_house(iPl_house[iP]);							
+							player[iRealID].credits = iPl_credits[iP];
+							player[iRealID].set_house(iPl_house[iP]);
 							iRealID++;
-						}						
+						}
 					}
-					bSetUpPlayers=false;				
+					bSetUpPlayers=false;
             }
 
 			int iPart=-1; /*
@@ -1899,7 +1899,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 			bool bClearChunk=true;
 			bool bSkipped=false;
 			int iC=-1;
-			
+
 			for (int c=0; c < MAX_LINE_LENGTH; c++)
 			{
 				// clear chunk
@@ -1909,7 +1909,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 						chunk[ic] = '\0';
 					iC=0;
 					bClearChunk=false;
-				}				
+				}
 
 				// Fill in chunk
 				if (iC < 25 && bSkipped && linefeed[c] != ',')
@@ -1920,9 +1920,9 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
 				// , means next part. A ' ' means end
 				if (linefeed[c] == ',' || linefeed[c] == '\0')
-				{					
+				{
 					iPart++;
-				
+
 						if (iPart == 0)
 						{
 							int iHouse=-1;
@@ -1936,7 +1936,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 							if (strcmp(chunk, "Corrino") == 0)     iHouse = CORRINO;
 							if (strcmp(chunk, "General") == 0)     iHouse = GENERALHOUSE;
 
-							// Search for a player with this house						
+							// Search for a player with this house
 							for (int i=0; i < MAX_PLAYERS; i++)
 								if (player[i].house == iHouse)
 								{
@@ -1946,15 +1946,15 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
 								// HACK HACK : Set up fremen house here
 							if (iHouse == FREMEN)
-							{	
+							{
 								player[5].set_house(FREMEN); // set up palette
 								player[5].house = FREMEN;
-								player[5].credits = 9999; // lots of money for the fremen							
+								player[5].credits = 9999; // lots of money for the fremen
 
 								iController = 5;
 							}
 
-							
+
 							// Quickfix: fremen house in original dune 2, is house 6 (not detectable)
 							// in this game.
 							//if (iHouse == FREMEN)
@@ -1964,7 +1964,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 							{
                                 char msg[256];
                                 sprintf(msg,"WARNING: Cannot identify house/controller -> STRING '%s'", chunk);
-                                logbook(msg);								
+                                logbook(msg);
 							}
 
 						}
@@ -1976,23 +1976,23 @@ void INI_Load_scenario(int iHouse, int iRegion)
 						else if (iPart == 3)
 						{
 							iCell = atoi(chunk);
-							
+
 
 						}
 						else if (iPart == 4)
 							break;
 
-				
+
 
 					bClearChunk=true;
 				}
 
 				// found the = mark, this means we start chopping now!
-				if (linefeed[c] == '=')				
+				if (linefeed[c] == '=')
 					bSkipped=true;
 			}
 
-			
+
 			if (iController > -1)
 			{
 				//int uID = create_unit(iController, iCell, iType, ACTION_GUARD, -1);
@@ -2016,9 +2016,9 @@ void INI_Load_scenario(int iHouse, int iRegion)
 			// har har har..
             // ORIGINAL DUNE 2 MISSION. EVERYBODY IS AGAINST U
 			if (bSetUpPlayers)
-			{                
+			{
                 int iRealID=1;
-                
+
                 for (int iP=0; iP < MAX_PLAYERS; iP++) // till 6 , since player 6 itself is sandworm
                 {
                     if (iPl_house[iP] > -1)
@@ -2029,7 +2029,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 							player[0].set_house(iPl_house[iP]);
                             player[0].iTeam=0;
                             game.iHouse = iPl_house[iP];
-                            
+
                             if (iPl_quota[iP] > 0)
                                 game.iWinQuota = iPl_quota[iP];
 						}
@@ -2043,12 +2043,12 @@ void INI_Load_scenario(int iHouse, int iRegion)
                                 if (player[0].house == ATREIDES)
                                     player[iRealID].iTeam = 0;
 
-							player[iRealID].credits = iPl_credits[iP];							
-							player[iRealID].set_house(iPl_house[iP]);							
+							player[iRealID].credits = iPl_credits[iP];
+							player[iRealID].set_house(iPl_house[iP]);
 							iRealID++;
-						}						
+						}
 					}
-					bSetUpPlayers=false;				
+					bSetUpPlayers=false;
             }
 
 
@@ -2056,7 +2056,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 							0 = Controller
 							1 = Type
 							2 = HP
-							3 = Cell							
+							3 = Cell
 							*/
 
 			// Skip ID= part. It is just for fun there.
@@ -2073,7 +2073,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 			// check if this is a 'gen'
 			if (strstr(linefeed, "GEN") != NULL) bGen=true;
 
-			for (int c=0; c < MAX_LINE_LENGTH; c++)			
+			for (int c=0; c < MAX_LINE_LENGTH; c++)
 			{
 				// clear chunk
 				if (bClearChunk)
@@ -2082,8 +2082,8 @@ void INI_Load_scenario(int iHouse, int iRegion)
 						chunk[ic] = '\0';
 					iC=0;
 					bClearChunk=false;
-				}				
-				
+				}
+
 				// Fill in chunk
 				if (iC < 25 && bSkipped && linefeed[c] != ',')
 				{
@@ -2094,9 +2094,9 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
 				// , means next part. A ' ' means end
 				if (linefeed[c] == ',' || linefeed[c] == '\0')
-				{					
+				{
 					iPart++;
-				
+
 						if (bGen == false)
 						{
 							if (iPart == 0)
@@ -2111,8 +2111,8 @@ void INI_Load_scenario(int iHouse, int iRegion)
 								if (strcmp(chunk, "Fremen") == 0)		 iHouse = FREMEN;
 								if (strcmp(chunk, "Corrino") == 0)		 iHouse = CORRINO;
 								if (strcmp(chunk, "General") == 0)		 iHouse = GENERALHOUSE;
-							
-								// Search for a player with this house								
+
+								// Search for a player with this house
 								for (int i=0; i < MAX_PLAYERS; i++)
 								{
 									//char msg[80];
@@ -2141,8 +2141,8 @@ void INI_Load_scenario(int iHouse, int iRegion)
 							}
 							else if (iPart == 3)
 							{
-								iCell = atoi(chunk);								
-								
+								iCell = atoi(chunk);
+
 								break;
 							}
 						}
@@ -2161,7 +2161,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 								if (strcmp(chunk, "Corrino") == 0)     iHouse = CORRINO;
 								if (strcmp(chunk, "General") == 0)     iHouse = GENERALHOUSE;
 
-								// Search for a player with this house							
+								// Search for a player with this house
 								for (int i=0; i < MAX_PLAYERS; i++)
 								{
 									if (player[i].house == iHouse)
@@ -2184,9 +2184,9 @@ void INI_Load_scenario(int iHouse, int iRegion)
 									cCell[iCC] = linefeed[cc];
 									iCC++;
 								}
-																
-								int iGenCell = atoi(cCell);	
-								
+
+								int iGenCell = atoi(cCell);
+
 								iCell = iGenCell;
 
 								if (strcmp(chunk, "Wall") == 0) iType = WALL;
@@ -2194,7 +2194,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 								break;
 							}
 						}
-					
+
 					bClearChunk=true;
 				}
 
@@ -2213,19 +2213,19 @@ void INI_Load_scenario(int iHouse, int iRegion)
 					cStructureFactory::getInstance()->createStructure(iCell, iType, iController, 100);
 					//CREATE_STRUCTURE(iCell, iType, iController, 100);
 					//sID = STRUCTURE_CREATE(iCell, iType, -1, iController);
-				}                 
+				}
 				else
 				{
-					if (iType == SLAB1) 
+					if (iType == SLAB1)
                     {
                         map.create_spot(iCell, TERRAIN_SLAB, 0);
                         //map.cell[iCell].tile = SLAB;
                     }
-					if (iType == WALL) 
+					if (iType == WALL)
 					{
 					    map.create_spot(iCell, TERRAIN_WALL, 0);
 					}
-				}				
+				}
 			}
 			else logbook("WARNING: Identifying house/controller of structure (typo?)");
 		}
@@ -2237,7 +2237,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 							0 = Controller
 							1 = Type
 							2 = HP
-							3 = Cell							
+							3 = Cell
 							*/
 
 			// Skip ID= part. It is just for fun there.
@@ -2251,7 +2251,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 			int iIS=-1;
 
 
-			for (int c=0; c < MAX_LINE_LENGTH; c++)			
+			for (int c=0; c < MAX_LINE_LENGTH; c++)
 			{
 				// clear chunk
 				if (bClearChunk)
@@ -2261,8 +2261,8 @@ void INI_Load_scenario(int iHouse, int iRegion)
 					//	chunk[ic] = '\0';
 					iC=0;
 					bClearChunk=false;
-				}				
-				
+				}
+
 				// Fill in chunk
 				if (iC < 25 && bSkipped && linefeed[c] != ',')
 				{
@@ -2272,13 +2272,13 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
 				// , means next part. A ' ' means end
 				if (linefeed[c] == ',' || linefeed[c] == '\0' || linefeed[c] == '+')
-				{					
-					iPart++;				
-                    
+				{
+					iPart++;
+
                     if (iPart == 0)
                     {
                         int iHouse=-1;
-						
+
                         if (strcmp(chunk, "Atreides") == 0)    iHouse = ATREIDES;
                         if (strcmp(chunk, "Harkonnen") == 0)   iHouse = HARKONNEN;
                         if (strcmp(chunk, "Ordos") == 0)       iHouse = ORDOS;
@@ -2290,9 +2290,9 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
 						if (iHouse > -1)
 						{
-							// Search for a player with this house							
+							// Search for a player with this house
 							for (int i=0; i < MAX_PLAYERS; i++)
-							{                            
+							{
 								if (player[i].house == iHouse)
 								{
 									iController = i; // set controller here.. phew
@@ -2325,14 +2325,14 @@ void INI_Load_scenario(int iHouse, int iRegion)
                     {
                         // Homebase is home of that house
                         if (strcmp(chunk, "Homebase") == 0)
-                        {							
+                        {
                             iCell = player[iController].focus_cell;
 							//logbook("HOMEBASE");
                         }
-                        else                        
+                        else
                         {
                             // enemy base
-                            
+
 							if (iController == 0)
 							{
                             // Find corresponding house and get controller
@@ -2350,14 +2350,14 @@ void INI_Load_scenario(int iHouse, int iRegion)
 								iCell = player[0].focus_cell;
 							}
                         }
-                        
+
                     }
 					else if (iPart == 3)
 					{
-						// Figure out the cell shit of this GEN						
+						// Figure out the cell shit of this GEN
 						char cCell[5];
 						memset(cCell, 0, sizeof(cCell));
-						
+
 						/*
                         int iCC=0;
 						for (cc=3; cc < iIS; cc++)
@@ -2365,17 +2365,17 @@ void INI_Load_scenario(int iHouse, int iRegion)
 							cCell[iCC] = linefeed[cc];
 							iCC++;
 						}*/
-														
-						int iGenCell = atoi(chunk);	
-						
+
+						int iGenCell = atoi(chunk);
+
 						iTime = iGenCell;
-                        
-						
+
+
 						SET_REINFORCEMENT(iCell, iController, iTime, iType);
-						break;						
+						break;
 					}
 
-					bClearChunk=true;					
+					bClearChunk=true;
 				}
 
 				// found the = mark, this means we start chopping now!
@@ -2385,27 +2385,27 @@ void INI_Load_scenario(int iHouse, int iRegion)
 					iIS=c;
 				}
 
-                
+
 			}
         }
 
-    
+
       wordtype=WORD_NONE;
 
-      }              
-    
+      }
+
 	  fclose(stream);
 	// When loading an original dune 2 scenario, we do a trick now to make the
-	// players start okay.    
+	// players start okay.
 
 	// Now apply map settings to all players
 	for (int iP=0; iP < MAX_PLAYERS; iP++)
-	{	
+	{
        		// minimum of 1000 credits storage per level
 			if (player[iP].max_credits < 1000)
 				player[iP].max_credits = 1000;
 
-        
+
 	}
 
     map.smooth();
@@ -2413,9 +2413,9 @@ void INI_Load_scenario(int iHouse, int iRegion)
     // now add the spice blooms! :)
     for (int iB=0; iB < 30; iB++)
     {
-          // when 
+          // when
           if (blooms[iB] > -1)
-          {              
+          {
            //   map.cell[blooms[iB]].tile = BLOOM;
 
 			  if (DEBUGGING)
@@ -2424,20 +2424,20 @@ void INI_Load_scenario(int iHouse, int iRegion)
               sprintf(msg, "[SCENARIO] Placing spice BLOOM at cell : %d", blooms[iB]);
               logbook(msg);
 			  }
-			  
+
 			  map.create_spot(blooms[iB], TERRAIN_BLOOM, 0);
 
           }
       }
 
      // At this point, show list of unit types
-	
+
 	// now add the fields
     for (int iB=0; iB < 30; iB++)
     {
-          // when 
+          // when
           if (fields[iB] > -1)
-          {             
+          {
 			  if (DEBUGGING)
 			  {
 			  char msg[256];
@@ -2446,13 +2446,13 @@ void INI_Load_scenario(int iHouse, int iRegion)
 			  }
 		  	  map.create_field(TERRAIN_SPICE, fields[iB], 25+(rnd(50)));
 		  }
-		  
+
 	}
 
     logbook("[SCENARIO] Done reading");
-  }  
+  }
 
-  
+
   player[AI_WORM].iTeam=-2; // worm is nobodies friend.
 
   game.setup_list(); // set up the list
@@ -2461,7 +2461,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
   map.smooth();
 
   if (player[0].iStructures[CONSTYARD] < 1)
-      game.iActiveList=LIST_NONE;  
+      game.iActiveList=LIST_NONE;
 }
 
 void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
@@ -2469,12 +2469,12 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
     logbook("[BRIEFING] Opening file");
 
     char filename[80];
-    
+
     if (iHouse == ATREIDES)       sprintf(filename, "mentata.ini");
     if (iHouse == ORDOS)          sprintf(filename, "mentato.ini");
     if (iHouse == HARKONNEN)      sprintf(filename, "mentath.ini");
 
-    FILE *stream; 
+    FILE *stream;
 
     char path[50];
 
@@ -2506,7 +2506,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
         char linesection[30];
 
         while( !feof( stream ) )
-        { 
+        {
             INI_Sentence(stream, linefeed);
 
                   // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
@@ -2519,10 +2519,10 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
 
       INI_Section(linefeed,linesection);
 
-      if (linesection[0] != '\0' && strlen(linesection) > 1)              
-      {           
+      if (linesection[0] != '\0' && strlen(linesection) > 1)
+      {
           // until we found the right sections/parts, keep searching
-          iSection=INI_SectionType(linesection, iSection);            
+          iSection=INI_SectionType(linesection, iSection);
       }
 
       if (iSection == INI_SCEN)
@@ -2542,25 +2542,25 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
             if (iSection == iSectionFind)
             {
                 INI_Word(linefeed, lineword);
-        
+
                 int wordtype = INI_WordType(lineword, iSection);
-                
+
                 if (wordtype == WORD_REGIONTEXT)
                 {
                     char cHouseText[256];
                     INI_WordValueSENTENCE(linefeed, cHouseText);
-                    
+
                     // this is not a comment, add this....
                     sprintf(game.mentat_sentence[iLine], "%s",cHouseText);
                    // logbook(game.mentat_sentence[iLine]);
                     iLine++;
-                    
+
                     if (iLine > 9)
                         break;
                 }
 
             }
-        
+
 
         }
 
@@ -2586,13 +2586,13 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
 // Game.ini loader
 void INI_Install_Game()
 {
-  /* 
+  /*
     Goal of this file:
 
   */
   logbook("[GAME.INI] Opening file");
 
-  FILE *stream; 
+  FILE *stream;
   int section=INI_GAME;
   int wordtype=WORD_NONE;
   int id=-1;
@@ -2603,7 +2603,7 @@ void INI_Install_Game()
   team_r=team_g=team_b=-1;
 
   char path[50];
-  
+
   sprintf(path, "game.ini");
 
   if( (stream = fopen( path, "r+t" )) != NULL )
@@ -2611,7 +2611,7 @@ void INI_Install_Game()
     char linefeed[MAX_LINE_LENGTH];
     char lineword[25];
     char linesection[30];
-    
+
     // infinite loop baby
     while( !feof( stream ) )
     {
@@ -2632,9 +2632,9 @@ void INI_Install_Game()
       INI_Section(linefeed,linesection);
 
       if (linesection[0] != '\0' && strlen(linesection) > 1)
-      { 
+      {
         int last=section;
-        
+
         // determine section
         section=GAME_INI_SectionType(linesection, section);
 
@@ -2643,7 +2643,7 @@ void INI_Install_Game()
         if (last != section)
         {
           id=-1;
-          
+
           // Show in log file we entered a new section
           if (section == INI_UNITS)       logbook("[GAME.INI] -> [UNITS]");
           if (section == INI_STRUCTURES)  logbook("[GAME.INI] -> [STRUCTURES]");
@@ -2659,7 +2659,7 @@ void INI_Install_Game()
             if (id > MAX_HOUSES) id--;
           }
         }
-        
+
         // New unit type
         if (section == INI_UNITS)
         {
@@ -2670,7 +2670,7 @@ void INI_Install_Game()
             // [UNIT: <NAME>]
             // 1234567890123...]
             char name_unit[35];
-            
+
             for (int nu=0; nu < 35; nu++)
               name_unit[nu]='\0';
 
@@ -2690,7 +2690,7 @@ void INI_Install_Game()
 
             id = INI_UnitType(name_unit);
             if (id >= MAX_UNITTYPES) id--;
-            
+
           } // found a new unit type
         }
 
@@ -2704,7 +2704,7 @@ void INI_Install_Game()
             // [STRUCTURE: <NAME>]
             // 123456789012345678]
             char name_structure[45];
-            
+
             for (int nu=0; nu < 45; nu++)
               name_structure[nu]='\0';
 
@@ -2724,7 +2724,7 @@ void INI_Install_Game()
 
             id = INI_StructureType(name_structure);
             if (id >= MAX_STRUCTURETYPES) id--;
-            
+
           } // found a new unit type
         }
 
@@ -2740,21 +2740,21 @@ void INI_Install_Game()
         /**** [UNITS] ****/
         // Valid ID
         if (section == INI_UNITS && id > -1)
-        {          
+        {
           // Unit properties
           if (wordtype == WORD_HITPOINTS)     units[id].hp            = INI_WordValueINT(linefeed);
-          
+
           if (wordtype == WORD_COST)          units[id].cost          = INI_WordValueINT(linefeed);
 
           if (wordtype == WORD_MOVESPEED)     units[id].speed         = INI_WordValueINT(linefeed);
           if (wordtype == WORD_TURNSPEED)     units[id].turnspeed     = INI_WordValueINT(linefeed);
           if (wordtype == WORD_ATTACKFREQ)    units[id].attack_frequency = INI_WordValueINT(linefeed);
-          
-          if (wordtype == WORD_SIGHT)         units[id].sight     = INI_WordValueINT(linefeed);              
-          
+
+          if (wordtype == WORD_SIGHT)         units[id].sight     = INI_WordValueINT(linefeed);
+
           if (wordtype == WORD_RANGE)         units[id].range     = INI_WordValueINT(linefeed);
           if (wordtype == WORD_BUILDTIME)     units[id].build_time = INI_WordValueINT(linefeed);
-          
+
           // Unit description
           if (wordtype == WORD_DESCRIPTION)
           {
@@ -2764,7 +2764,7 @@ void INI_Install_Game()
           }
 
           // Booleans
-          if (wordtype == WORD_SECONDSHOT)             units[id].second_shot  = INI_WordValueBOOL(linefeed);          
+          if (wordtype == WORD_SECONDSHOT)             units[id].second_shot  = INI_WordValueBOOL(linefeed);
           if (wordtype == WORD_ISINFANTRY)             units[id].infantry     = INI_WordValueBOOL(linefeed);
           if (wordtype == WORD_FREEROAM)               units[id].free_roam    = INI_WordValueBOOL(linefeed);
           if (wordtype == WORD_ISAIRBORN)              units[id].airborn      = INI_WordValueBOOL(linefeed);
@@ -2775,30 +2775,30 @@ void INI_Install_Game()
           if (wordtype == WORD_HARVESTAMOUNT)          units[id].harvesting_amount = INI_WordValueINT(linefeed);
 
         }
-      } 
+      }
 
       // Structure w0h00
       if (section == INI_STRUCTURES && id > -1)
       {
           if (wordtype == WORD_HITPOINTS)     structures[id].hp           = INI_WordValueINT(linefeed);
 		  if (wordtype == WORD_FIXHP)         structures[id].fixhp        = INI_WordValueINT(linefeed);
-          
+
           if (wordtype == WORD_POWERDRAIN)    structures[id].power_drain  = INI_WordValueINT(linefeed);
           if (wordtype == WORD_POWERGIVE)     structures[id].power_give   = INI_WordValueINT(linefeed);
-          
+
           if (wordtype == WORD_COST)          structures[id].cost         = INI_WordValueINT(linefeed);
           if (wordtype == WORD_BUILDTIME)     structures[id].build_time   = INI_WordValueINT(linefeed);
 
       }
-   
-    }
- 
 
-    fclose(stream);  
+    }
+
+
+    fclose(stream);
   }
-  
- 
-logbook("[GAME.INI] Done");  
+
+
+logbook("[GAME.INI] Done");
 }
 
 
@@ -2820,11 +2820,11 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
         return;
 
 	// Load file
-    
+
 	FILE *stream;					// file stream
 	int section=INI_NONE;			// section
 	int wordtype=WORD_NONE;			// word
-    
+
 	int iYLine=0;
 	int iStart=0;
 
@@ -2880,7 +2880,7 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
       }
 
        // Okay, we found a new section; if its NOT [GAME] then we remember this one!
-	
+
       if (section != INI_NONE)
       {
           INI_Word(linefeed, lineword);
@@ -2910,14 +2910,14 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
 			  {
 				  PreviewMap[iNew].iStartCell[iStart]= INI_WordValueINT(linefeed);
 				  iStart++;
-			  }			  
+			  }
 		  }
       }
 
 	  if (section == INI_MAP)
-	  {			  
-		  int iLength=strlen(linefeed);	  
-		  
+	  {
+		  int iLength=strlen(linefeed);
+
 		  // END!
 		  if (iLength < 2)
 			  break; // done
@@ -2927,17 +2927,17 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
 			  char letter[1];
 			  letter[0] = '\0';
 			  letter[0] = linefeed[iX];
-			  
+
               int iCll=iCellMake((iX+1),(iYLine+1));
 
-              
+
 			  int iColor=makecol(194, 125, 60);
 
 			  // rock
 			  if (letter[0] == '%') iColor = makecol(80,80,60);
 			  if (letter[0] == '^') iColor = makecol(80,80,60);
 			  if (letter[0] == '&') iColor = makecol(80,80,60);
-			  if (letter[0] == '(') iColor = makecol(80,80,60);				
+			  if (letter[0] == '(') iColor = makecol(80,80,60);
 
 			  // mountain
 			  if (letter[0] == 'R') iColor = makecol(48, 48, 36);
@@ -2971,7 +2971,7 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
 			  putpixel(PreviewMap[iNew].terrain, 1+(iX*2), 1+(iYLine*2)+1, iColor);
 
 		  }
-		  iYLine++;	
+		  iYLine++;
 	  }
 
     } // end of file
@@ -2983,7 +2983,7 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
 		{
 			int x=iCellGiveX(PreviewMap[iNew].iStartCell[i]);
 			int y=iCellGiveY(PreviewMap[iNew].iStartCell[i]);
-            
+
 			putpixel(PreviewMap[iNew].terrain, 1+(x*2), 1+(y*2), makecol(255,255,255));
 			putpixel(PreviewMap[iNew].terrain, 1+(x*2)+1, 1+(y*2), makecol(255,255,255));
 			putpixel(PreviewMap[iNew].terrain, 1+(x*2)+1, 1+(y*2)+1, makecol(255,255,255));
@@ -3004,37 +3004,37 @@ Pre-scanning of skirmish maps:
 - create preview of map in BITMAP (minimap preview)
 */
 void INI_PRESCAN_SKIRMISH() {
-   // scans for all ini files                                       
+   // scans for all ini files
    INIT_PREVIEWS(); // clear all of them
 
-   char filename[80];
-   memset(filename, 0, sizeof(filename));
-   
-   for (int i=0; i < MAX_SKIRMISHMAPS; i++)
-   {
-       if (i < 10)
-           sprintf(filename, "skirmish//map0%d.ini", i);
-       else
-           sprintf(filename, "skirmish//map%d.ini",i);
-
-       INI_LOAD_SKIRMISH(filename, true);        
-   }
+//   char filename[80];
+//   memset(filename, 0, sizeof(filename));
+//
+//   for (int i=0; i < MAX_SKIRMISHMAPS; i++)
+//   {
+//       if (i < 10)
+//           sprintf(filename, "skirmish//map0%d.ini", i);
+//       else
+//           sprintf(filename, "skirmish//map%d.ini",i);
+//
+//       INI_LOAD_SKIRMISH(filename, true);
+//   }
 
    	struct al_ffblk file;
 	if (!al_findfirst("skirmish/*", &file, FA_ARCH)) {
-		do {		 
+		do {
 			char msg[1024];
 			char fullname[1024];
 			sprintf(fullname, "skirmish/%s", file.name);
 			sprintf(msg, "Loading skirmish map: %s", fullname);
 			logbook(msg);
-		//	INI_LOAD_SKIRMISH(fullname, true);
+			INI_LOAD_SKIRMISH(fullname, true);
 	  } while (!al_findnext(&file));
 	} else {
 		logbook("No skirmish maps found in skirmish directory.");
 	}
 	al_findclose(&file);
-   
+
 }
 
 // this code should make it possible to read any ini file in the skirmish
@@ -3046,12 +3046,12 @@ void INI_PRESCAN_SKIRMISH() {
 /*
 
 void INI_PRESCAN_SKIRMISH() {
-	// scans for all ini files                                       
+	// scans for all ini files
 	INIT_PREVIEWS(); // clear all of them
 
 	struct al_ffblk file;
 	if (!al_findfirst("skirmish/*", &file, FA_ARCH)) {
-		do {		 
+		do {
 			char msg[1024];
 			char fullname[1024];
 			sprintf(fullname, "skirmish/%s", file.name);
