@@ -2996,10 +2996,10 @@ void cUnit::think_move()
 		// POLL now
 		poll();
 
-                // quick scan for infantry we squish
-        for (int iq=0; iq < MAX_UNITS; iq++)
-        {
+        // quick scan for infantry we squish
+        for (int iq=0; iq < MAX_UNITS; iq++) {
             if (unit[iq].isValid())
+            	if (unit[iq].iType != SANDWORM) // sandworms do not squish (TODO: units[unit[iq].iType].canSquish)
                 if (units[unit[iq].iType].infantry)
                     if (unit[iq].iPlayer != iPlayer)
                         if (unit[iq].iCell == iCell)
