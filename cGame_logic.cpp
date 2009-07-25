@@ -247,8 +247,9 @@ void cGame::mission_init()
 
         aiplayer[i].init(i);
 
-        if (bSkirmish)
+        if (bSkirmish) {
             player[i].credits = 2500;
+        }
     }
 
 //	for (int i=0; i < MAX_PLAYERS; i++)
@@ -2879,8 +2880,9 @@ void cGame::losing()
         // OMG, MENTAT IS NOT HAPPY
         state = GAME_LOSEBRIEF;
 
-        if (bSkirmish)
+        if (bSkirmish) {
             game.mission_init();
+        }
 
         // PREPARE NEW MENTAT BABBLE
         iMentatSpeak=-1;
@@ -2902,8 +2904,9 @@ void cGame::winning()
         // SELECT YOUR NEXT CONQUEST
         state = GAME_WINBRIEF;
 
-        if (bSkirmish)
+        if (bSkirmish) {
             game.mission_init();
+        }
 
         // PREPARE NEW MENTAT BABBLE
         iMentatSpeak=-1;
@@ -4169,6 +4172,8 @@ void cGame::setup_skirmish()
 			}
 		}
 
+		// TODO: spawn a few worms
+
 		iHouse=player[0].house;
 		iMission=9; // high tech level
 		state = GAME_PLAYING;
@@ -4182,10 +4187,9 @@ void cGame::setup_skirmish()
    	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
-    if (bFadeOut)
+    if (bFadeOut) {
         game.FADE_OUT();
-
-
+    }
 }
 
 // select house

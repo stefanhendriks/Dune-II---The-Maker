@@ -4,7 +4,7 @@
 
 void GUI_INIT()
 {
-    
+
 }
 
 void GUI_DRAW()
@@ -48,9 +48,10 @@ bool GUI_DRAW_FRAME(int x1, int y1, int width, int height)
     line(bmp_screen, x1+width, y1, x1+width , y1+height, makecol(84,84,120));
     line(bmp_screen, x1, y1+height, x1+width , y1+height, makecol(84,84,120));
 
-    if ((mouse_x >= x1 && mouse_x < (x1+width)) && (mouse_y >= y1 && mouse_y <= (y1+height)))
+    if ((mouse_x >= x1 && mouse_x < (x1+width)) && (mouse_y >= y1 && mouse_y <= (y1+height))) {
         return true;
+    }
 
 
-    return false; // not hovering on it    
+    return false; // not hovering on it
 }

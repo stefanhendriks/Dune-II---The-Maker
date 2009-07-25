@@ -2894,11 +2894,10 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
           if (wordtype == WORD_MAPNAME)
           {
             INI_WordValueSENTENCE(linefeed, PreviewMap[iNew].name);
-            logbook(PreviewMap[iNew].name);
+            //logbook(PreviewMap[iNew].name);
           }
 
-		  if (wordtype == WORD_STARTCELL)
-		  {
+		  if (wordtype == WORD_STARTCELL) {
 			  if (iStart == 0)
 			  {
 				for (int i=0; i < 5; i++)
