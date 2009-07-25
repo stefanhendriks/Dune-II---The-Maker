@@ -1327,24 +1327,25 @@ void cGame::combat_mouse()
 
                 for (int i=0 ; i < MAX_UNITS; i++)
                 {
-                    if (unit[i].isValid())
+                    if (unit[i].isValid()) {
                         if (unit[i].iPlayer == 0)
                         {
 
 							// do not select airborn units
-							if (unit[i].iType == ORNITHOPTER &&
-								unit[i].iType == CARRYALL)
+							if (units[unit[i].iType].airborn) {
+								// always deselect unit:
+								unit[i].bSelected = false;
 								continue;
+							}
 
-                            // now check X and Y coordinates
-                            if (((unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) >= min_x && (unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) <= max_x) &&
-                                (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2 >= min_y && (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2) <= max_y) )
+                            // now check X and Y coordinates (center of unit now)
+                            if (((unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) >= min_x &&
+                            	 (unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) <= max_x) &&
+                                 (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2 >= min_y &&
+                                 (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2) <= max_y) )
                             {
                                 // It is in the borders, select it
-                                unit[i].bSelected=true;
-                               // mouse_status = MOUSE_STATE_MOVE;
-            //                    bPlayRep=true;
-
+                                unit[i].bSelected = true;
 
 								if (units[unit[i].iType].infantry) {
                                     bPlayInf=true;
@@ -1356,6 +1357,7 @@ void cGame::combat_mouse()
 
 
                         }
+                    }
                 }
 
                 if (bPlayInf || bPlayRep)

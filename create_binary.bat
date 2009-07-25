@@ -1,4 +1,9 @@
 @echo off
+
+REM Edit the line beneath to go to your dune2themaker project directory
+cd \dev\projects\dune2themaker\
+
+REM Now execute creation of binary.
 cls 
 echo.
 echo Prepare binary package (./bin) of D2TM. 

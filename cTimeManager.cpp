@@ -11,7 +11,7 @@ cTimeManager::cTimeManager() {
 /**
 	In case the system locks up, or the computer is on heavy duty. The capping
 	makes sure the computer will not cause a chainreaction (getting extremely high timers
-	and doing a lot of loops, sucking mure cpu power). 
+	and doing a lot of loops, sucking mure cpu power).
 
 	In most coses this is not nescesary.
 **/
@@ -52,16 +52,16 @@ void cTimeManager::handleTimerFPS() {
 			game.think_starport(); // think about lists for starport
 
 			THINK_REINFORCEMENTS();
-			
+
 			// starports think per second for deployment (if any)
 			for (int i =0; i < MAX_STRUCTURES; i++)
 				if (structure[i])
 					if (structure[i]->getType() == STARPORT)
-						((cStarPort *)structure[i])->think_deploy(); 
+						((cStarPort *)structure[i])->think_deploy();
 
 
         } // game specific stuff
-         
+
 
 		// Frame Per Second counter
 		fps = frame_count;
@@ -72,23 +72,23 @@ void cTimeManager::handleTimerFPS() {
 			if (iRest > 0) iRest-=2;
 			if (iRest < 0) iRest=0;
 
-			char msg[255];
-			sprintf(msg, "AUTO-REST: FPS is lower then ideal (=%d), reducing rest value", IDEAL_FPS);
-			logbook(msg);
+//			char msg[255];
+//			sprintf(msg, "AUTO-REST: FPS is lower then ideal (=%d), reducing rest value", IDEAL_FPS);
+//			logbook(msg);
 		}
 		else
 		{
 			if (iRest < 500) iRest+=2;
 			if (iRest > 500) iRest=500;
 
-			char msg[255];
-			sprintf(msg, "AUTO-REST: FPS is higher then ideal (=%d), increasing rest value", IDEAL_FPS);
-			logbook(msg);
+//			char msg[255];
+//			sprintf(msg, "AUTO-REST: FPS is higher then ideal (=%d), increasing rest value", IDEAL_FPS);
+//			logbook(msg);
 		}
 
 
 		// log the status
-		frame_count = 0;   
+		frame_count = 0;
 
 		timerSecond--; // done!
 	}
@@ -96,7 +96,7 @@ void cTimeManager::handleTimerFPS() {
 }
 
 void cTimeManager::handleTimerGlobal() {
-	// keep up with time cycles	
+	// keep up with time cycles
 	while (timerGlobal > 0)
 	{
 		if (game.iFadeAction == 1)
@@ -106,7 +106,7 @@ void cTimeManager::handleTimerGlobal() {
 			{
 				game.iAlphaScreen = 0;
 				game.iFadeAction=0;
-			}        
+			}
 		}
 		else if (game.iFadeAction == 2)
 		{
@@ -124,7 +124,7 @@ void cTimeManager::handleTimerGlobal() {
 
 		// THINKING ONLY WHEN PLAYING / COMBAT
 		if (game.isState(GAME_PLAYING))
-		{	
+		{
 
 			// structures think
 			for (int i=0; i < MAX_STRUCTURES; i++)
@@ -147,11 +147,11 @@ void cTimeManager::handleTimerGlobal() {
 					game.TIMER_scroll=0;
 
 				}
-              
+
 				game.think_build();
 				game.think_upgrade();
 				game.TIMER_money++;
-                
+
 				if (game.TIMER_money > 5)
 				{
 					game.think_money();
@@ -193,20 +193,20 @@ void cTimeManager::handleTimerGlobal() {
 					}
 
 					/*
-					BEGIN_PROF("Players think");      
-					for (i=0; i < MAX_PLAYERS; i++)        
+					BEGIN_PROF("Players think");
+					for (i=0; i < MAX_PLAYERS; i++)
 					player[i].think(i);
 					END_PROF();
 
 					} // game playing
-					*/      
+					*/
 
 
-					// when not drawing the options, the game does all it needs to do	
-					// bullets think 
+					// when not drawing the options, the game does all it needs to do
+					// bullets think
 					for (int i=0; i < MAX_BULLETS; i++)
 						if (bullet[i].bAlive)
-							bullet[i].think(); 
+							bullet[i].think();
 
 
 		}
@@ -244,23 +244,23 @@ void cTimeManager::handleTimerUnits() {
 			// units think
 			for (int i=0; i < MAX_UNITS; i++)
 				if (unit[i].isValid())
-				{ 
+				{
 					unit[i].think();
 
 					// Think attack style
 					if (unit[i].iAction == ACTION_ATTACK)
-						unit[i].think_attack();          
+						unit[i].think_attack();
 				}
 
 				map.think_minimap();
-		}  
+		}
 		timerUnits--;
 	}
 }
 
 /**
 	This function is called by the game class in the run() function.
-	
+
 	It is important that this function is called first, as it will make sure
 	the situation is set as it should be (since time passed between the first
 	and the next frame), therefor any think() function is relying on the data
@@ -270,7 +270,7 @@ void cTimeManager::processTime() {
 #ifdef ALLEGRO_H
 	syncFromAllegroTimers();
 #endif
-	
+
 	capTimers();
 	handleTimerFPS();
 	handleTimerUnits();
