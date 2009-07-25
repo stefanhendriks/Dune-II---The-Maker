@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -26,7 +26,7 @@ void cGame::FADE_OUT()
 void cGame::draw_movie(int iType)
 {
     if (gfxmovie != NULL && iMovieFrame > -1)
-    {    
+    {
 
         // drawing only, circulating is done in think function
         draw_sprite(bmp_screen, (BITMAP *)gfxmovie[iMovieFrame].dat, 256, 120);
@@ -48,10 +48,10 @@ void cGame::draw_message()
 		// draw message
 //		alfont_textprintf(temp, game_font, 13,7, makecol(0,0,0), cMessage);
 		alfont_textprintf(temp, game_font, 13,21, makecol(0,0,0), cMessage);
-		
+
 		//alfont_textprintf_aa(temp, game_font, 13,21, makecol(1,1,1), cMessage);
-		
-		
+
+
 		// draw temp
 		draw_trans_sprite(bmp_screen, temp, 1, 42);
 
@@ -72,15 +72,15 @@ void cGame::draw_order()
 	bool bMouseHover=false;
 
 		// determine if mouse is over the button..
-	if (  (mouse_x > 29 && mouse_x < 187) && (mouse_y > 2 && mouse_y < 31))		
+	if (  (mouse_x > 29 && mouse_x < 187) && (mouse_y > 2 && mouse_y < 31))
 			bMouseHover=true;
 
 	bool bDrawOrder=false;
-	
+
 	// we ordered stuff
 	for (int i = 0; i < MAX_ICONS; i++)
 	{
-		if (iconFrigate[i] > 0)		
+		if (iconFrigate[i] > 0)
 			bDrawOrder=true;
 	}
 
@@ -91,7 +91,7 @@ void cGame::draw_order()
 		bDrawOrder=false;
 
 	if (bDrawOrder)
-    {        
+    {
 		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_ORDER].dat, 29, 0);
     }
 	else
@@ -99,8 +99,8 @@ void cGame::draw_order()
                     // clear
             BITMAP *bmp_trans=create_bitmap(((BITMAP *)gfxinter[BTN_ORDER].dat)->w,((BITMAP *)gfxinter[BTN_ORDER].dat)->h);
             clear_to_color(bmp_trans, makecol(255,0,255));
-            
-            // copy 
+
+            // copy
             draw_sprite(bmp_trans, (BITMAP *)gfxinter[BTN_ORDER].dat, 0, 0);
 
             // make black
@@ -108,18 +108,18 @@ void cGame::draw_order()
 
             // set blender
             //set_trans_blender(0,0,0,128);
-            
+
             // trans
             fblend_trans(bmp_trans, bmp_screen, 29, 0, 128);
             //draw_trans_sprite(bmp_screen, bmp_trans, 29, 0);
-            
+
             // destroy - phew
             destroy_bitmap(bmp_trans);
 
 //        rectfill(bmp_screen, 29, 0, 187, 29, makecol(0,0,0));
   //      set_trans_blender(0,0,0,128);
     //    draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_ORDER].dat, 29, 0);
-		//draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_ORDER_GREY].dat, 29, 0);        
+		//draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_ORDER_GREY].dat, 29, 0);
     }
 
 
@@ -143,16 +143,16 @@ void cGame::draw_upgrade()
 	int iPrice=-1;
 
 	int iDrawXLimit=-1;
-	
+
 	if (iActiveList == LIST_NONE)
 		return; // nothing selected, so nothing to upgrade
 
 	// determine if mouse is over the button..
-	if (  (mouse_x > 29 && mouse_x < 187) && (mouse_y > 2 && mouse_y < 31))		
+	if (  (mouse_x > 29 && mouse_x < 187) && (mouse_y > 2 && mouse_y < 31))
 		if (iconbuilding[iActiveList] < 0) // not building, then we may do this
 			bMouseHover=true;
 
-	
+
 
 	// determine what list is selected
 
@@ -165,7 +165,7 @@ void cGame::draw_upgrade()
 
 		// first upgrade
 		if (iStructureUpgrade[CONSTYARD] == 0 && iMission >= 4)
-		{			
+		{
 			bDrawUpgradeButton=true;
 			if (iUpgradeProgress[CONSTYARD] < 0)
 			{
@@ -181,7 +181,7 @@ void cGame::draw_upgrade()
 		// * Upgrade for Rocket Turret, but only when we have radar
 		if (iStructureUpgrade[CONSTYARD] == 1 && iMission >= 6 &&
 			player[0].iStructures[RADAR] > 0)
-		{			
+		{
 			bDrawUpgradeButton=true;
 			if (iUpgradeProgress[CONSTYARD] < 0)
 			{
@@ -203,18 +203,18 @@ void cGame::draw_upgrade()
 	////////////////////////
 	if (iActiveList == LIST_LIGHTFC)
 	{
-		
+
 		// Lightfactory upgrading is done only for house Atreides and Ordos
 
 		iType=LIGHTFACTORY;
 
 		// first upgrade
 		if (iStructureUpgrade[LIGHTFACTORY] == 0 && iMission >= 2)
-		{			
+		{
 			bDrawUpgradeButton=true;
 			if (iUpgradeProgress[LIGHTFACTORY] < 0)
 			{
-			
+
 			// * upgrade for Quad
 			iLimit=50;
 			iPrice=500;
@@ -229,7 +229,7 @@ void cGame::draw_upgrade()
 	////////////////////////
 	if (iActiveList == LIST_INFANTRY)
 	{
-		
+
 		// Lightfactory upgrading is done only for house Atreides and Ordos
 
         if (player[0].house == ATREIDES ||
@@ -240,7 +240,7 @@ void cGame::draw_upgrade()
 
 		// first upgrade
 		if (iStructureUpgrade[iType] == 0 && iMission >= 2)
-		{			
+		{
 			bDrawUpgradeButton=true;
 			if (iUpgradeProgress[iType] < 0)
 			{
@@ -264,24 +264,24 @@ void cGame::draw_upgrade()
 	////////////////////////
 	if (iActiveList == LIST_ORNI && player[0].house != HARKONNEN)
 	{
-		
+
 		// Lightfactory upgrading is done only for house Atreides and Ordos
 
 		iType=HIGHTECH;
 
 		// first upgrade
 		if (iStructureUpgrade[HIGHTECH] == 0 && iMission >= 6)
-		{			
+		{
 			bDrawUpgradeButton=true;
 			if (iUpgradeProgress[HIGHTECH] < 0)
 			{
-			
+
 			// * upgrade for ORNI
 			iLimit=100;
 			iPrice=700;
 			}
 
-		
+
 		}
 
     }
@@ -292,71 +292,68 @@ void cGame::draw_upgrade()
 	////////////////////////
 	if (iActiveList == LIST_HEAVYFC)
 	{
-		
+
 		// Lightfactory upgrading is done only for house Atreides and Ordos
 
 		iType=HEAVYFACTORY;
 
 		// first upgrade
 		if (iStructureUpgrade[HEAVYFACTORY] == 0 && iMission >= 4)
-		{			
+		{
 			bDrawUpgradeButton=true;
 			if (iUpgradeProgress[HEAVYFACTORY] < 0)
 			{
-			
+
 			// * upgrade for MCV
 			iLimit=60;
 			iPrice=500;
 			}
 
-		
+
 		}
 
 
 		if (iStructureUpgrade[HEAVYFACTORY] == 1 && iMission >= 5)
-		{			
+		{
 			bDrawUpgradeButton=true;
 			if (iUpgradeProgress[HEAVYFACTORY] < 0)
 			{
-			
+
 			// * upgrade for LAUNCHER
 			iLimit=80;
 			iPrice=500;
 			}
 
 
-		
+
 		}
 
 		if (iStructureUpgrade[HEAVYFACTORY] == 2 && iMission >= 6)
-		{			
+		{
 			bDrawUpgradeButton=true;
 			if (iUpgradeProgress[HEAVYFACTORY] < 0)
 			{
-			
+
 			// * upgrade for SIEGE
 			iLimit=100;
 			iPrice=700;
 			}
 
 
-		
+
 		}
 
 		if (iStructureUpgrade[HEAVYFACTORY] == 3 && iMission >= 7 &&
 			player[0].iStructures[IX] > 0) // AND we do own a house of IX
-		{			
+		{
 			bDrawUpgradeButton=true;
 			if (iUpgradeProgress[HEAVYFACTORY] < 0)
 			{
-			
+
 			// * upgrade for SPECIAL WEAPON
 			iLimit=120;
 			iPrice=1000;
 			}
-
-
-		
 		}
 	}
 
@@ -368,35 +365,42 @@ void cGame::draw_upgrade()
 	}
 
 	// Start upgrading sequence when pressing button and such
-	if (bDrawUpgradeButton)
-    	if (iconbuilding[iActiveList] < 0 || player[0].credits < iPrice)
-		{
+	if (bDrawUpgradeButton) {
+		// when nothing is being built in the list and there is enough money (if not, the button should be dark
+
+    	if (iconbuilding[iActiveList] < 0 && player[0].credits >= iPrice) {
 			draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_UPGRADE].dat, 29, 0);
 
-            bool bUpgrade=false;
+			// determine if we should take action
+            bool bShouldUpgrade=false;
 
-            if (bMousePressedLeft && bMouseHover)
-                bUpgrade=true;
+            if (iUpgradeProgressLimit[iType] <= 0) {
+				if (bMousePressedLeft && bMouseHover) {
+					bShouldUpgrade=true;
+				}
 
-            if (key[KEY_U] && iUpgradeProgressLimit[iType] <= 0)
-                bUpgrade=true;
+				if (key[KEY_U]) {
+					bShouldUpgrade=true;
+				}
+            }
 
-			if (bUpgrade) // able to press button, valid and enough money
-				if (iType > -1 && player[0].credits >= iPrice)
-				{
+			if (bShouldUpgrade) {
+				// able to press button, valid and enough money
+				if (iType > -1) {
 					iUpgradeTIMER[iType]=0;
 					iUpgradeProgress[iType]=0;
 					iUpgradeProgressLimit[iType]=iLimit;
-					player[0].credits -= iPrice;					
+					player[0].credits -= iPrice;
 				}
+			}
 		}
 		else
         {
             // clear
             BITMAP *bmp_trans=create_bitmap(((BITMAP *)gfxinter[BTN_UPGRADE].dat)->w,((BITMAP *)gfxinter[BTN_UPGRADE].dat)->h);
             clear_to_color(bmp_trans, makecol(255,0,255));
-            
-            // copy 
+
+            // copy
             draw_sprite(bmp_trans, (BITMAP *)gfxinter[BTN_UPGRADE].dat, 0, 0);
 
             // make black
@@ -404,16 +408,16 @@ void cGame::draw_upgrade()
 
             // set blender
             set_trans_blender(0,0,0,128);
-            
-            // trans
+
+            // trans (makes upgrade button show like it is disabled)
             draw_trans_sprite(bmp_screen, bmp_trans, 29, 0);
-            
+
             // destroy - phew
             destroy_bitmap(bmp_trans);
         }
+	}
 
-
-	// Draw progress bar
+	// Draw progress bar (when upgrading)
     if (iType > -1 && iUpgradeProgress[iType] > -1)
     {
         iDrawXLimit = health_bar(157, iUpgradeProgress[iType], iUpgradeProgressLimit[iType]);
@@ -424,14 +428,13 @@ void cGame::draw_upgrade()
             BITMAP *temp = create_bitmap(157, 28);
             clear_to_color(temp, makecol(255,0,255));
 
-            
             if (player[0].house == ATREIDES) iColor = makecol(0,0,255);
             if (player[0].house == HARKONNEN) iColor = makecol(255,0,0);
             if (player[0].house == ORDOS) iColor = makecol(0,255,0);
             if (player[0].house == SARDAUKAR) iColor = makecol(255,0,255);
-            
+
             rectfill(temp, 0, 0, (157-iDrawXLimit), 30, iColor);
-            
+
             draw_trans_sprite(bmp_screen, temp, 30, 1);
             destroy_bitmap(temp);
         }
