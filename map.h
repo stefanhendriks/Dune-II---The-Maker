@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -15,17 +15,19 @@ struct tCell
 {
     int credits;        // harvesting
     int type;           // refers to gfxdata
-    int tile;           // * 32 (on x scale)
-    int smudgetile;     // smudge tile id
+    int tile;           // the tile to draw (* 32 (on x scale))
+    int smudgetile;     // smudge tile id (drawn upon the tile)
     int smudgetype;     // smudge type id
-    int health;         // walls
-    bool passable;      // pathfinder (TRUE = default)
+    int health;         // hitpoints for specific tile (used for walls)
+    bool passable;      // passable? > pathfinder (TRUE = default)
 
+    // there are 4 'dimensions' of this cell. Each represents the perspective of
+    // an entity that is either a unit, structure, the 'worms' dimension and the 'air' dimension.
     int id[4];          // ID of
                         // 0 = unit
                         // 1 = structure
                         // 2 = air
-                        // 3 = worm	
+                        // 3 = worm
 };
 
 
@@ -43,8 +45,10 @@ public:
 
     void think_minimap();
 
-	bool occupied(int iCll);
+	bool occupied(int iCell);
 	bool occupied(int iCll, int iUnitID);
+	bool occupiedInDimension(int iCll, int dimension);
+	bool occupiedByType(int iCell);
 
 	void soft();
 
@@ -78,12 +82,12 @@ public:
     int scroll_x, scroll_y;            // scrolling (per tile)
 
     // static animation
-    int iStaticFrame;    
+    int iStaticFrame;
     int iStatus;                        // 0 = show minimap , -1 = no minimap (static animation, of going down)
                                         // 1 = static animation 'getting up'...
     int iTrans;                         // trasparancy...
 
-    
+
     tCell cell[MAX_CELLS];
 
     void remove_id(int iIndex, int iIDType);    // removes ID of IDtype (unit/structure), etc

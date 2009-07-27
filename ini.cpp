@@ -1209,6 +1209,7 @@ int INI_Unit_ID(char *unit)
 // After all these years, Dunedit still is 'needed' somehow.
 void INI_Load_seed(int seed)
 {
+
 	char filename[50];
 	for (int ic=0; ic < 50; ic++)
 		filename[ic] = '\0';
@@ -1224,70 +1225,26 @@ void INI_Load_seed(int seed)
 
 	logbook("[SEED] Opening file");
 
-	if( (stream = fopen( filename, "r+t" )) != NULL )
-	{
+	cSeedMapGenerator *seedGenerator = new cSeedMapGenerator(seed);
 
-		char linefeed[MAX_LINE_LENGTH];
+	cSeedMap *seedMap = seedGenerator->generateSeedMap();
+	logbook("seedMap generated");
 
-		// infinite loop baby
-		while( !feof( stream ) )
-		{
-			INI_Sentence(stream, linefeed);
-
-			// each line is 64 chars. In fact 62 chars are used.
-			for (int iX=0; iX < 62; iX++)
-			{
-				int iCell = iCellMake((iX+1), (iY));
-
-				char letter[1];
-				letter[0] = '\0';
-				letter[0] = linefeed[iX];
-
-				if (letter[0] == '%')
-                    map.create_spot(iCell, TERRAIN_ROCK, 0);
-
-				if (letter[0] == '^')
-					map.create_spot(iCell, TERRAIN_ROCK, 0);
-
-                if (letter[0] == '&')
-					map.create_spot(iCell, TERRAIN_ROCK, 0);
-
-                if (letter[0] == '(')
-					map.create_spot(iCell, TERRAIN_ROCK, 0);
-
-				if (letter[0] == 'R')
-				{
-					map.create_spot(iCell, TERRAIN_MOUNTAIN, 0);
-				}
-				if (letter[0] == 'r')
-				{
-					map.create_spot(iCell, TERRAIN_MOUNTAIN, 0);
-				}
-				if (letter[0] == '+')
-				{
-                    map.create_spot(iCell, TERRAIN_SPICEHILL, 0);
-				}
-				if (letter[0] == '-')
-				{
-					map.create_spot(iCell, TERRAIN_SPICE, 0);
-				}
-
-				// HILLS (NEW)
-				if (letter[0] == 'H')
-					map.create_spot(iCell, TERRAIN_HILL, 0);
-
-				if (letter[0] == 'h')
-					map.create_spot(iCell, TERRAIN_HILL, 0);
-
-			}
-			iY++;
-			if (iY > 61)
-				break;
+	for (int testY = 0; testY < 64; testY++) {
+		char line[64];
+		memset(line, 0, sizeof(line));
+		// write down character in line
+		for (int testX = 0; testX < 64; testX++) {
+			char c = seedMap->getCellTypeCharacter(testX, testY);
+			line[testX] = c;
+			int type = seedMap->getCellType(testX, testY);
+			int iCell = iCellMake(testX, testY);
+			map.create_spot(iCell, type, 0);
 		}
-		logbook("[SEED] Done.");
-		fclose(stream);
-	} // eof
-
+		// write line in logbook
+		logbook(line);
+	}
+	logbook("Seedmap should be printed now.");
 }
 
 

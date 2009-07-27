@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -18,8 +18,9 @@
 #endif
 
 #ifndef D2TMH_H
+#define D2TMH_H
 
-#include <time.h> 
+#include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -31,7 +32,7 @@
 
 #define IDEAL_FPS	60
 
-#ifdef ALLEGRO_H 
+#ifdef ALLEGRO_H
 	// note: timer specific declarations are done in timer.h
 
 #ifndef UNIX
@@ -55,7 +56,7 @@
 
 // data file header(s)                          - THIS
 #include "data/gfxdata.h"						// general gfx
-#include "data/gfxaudio.h"                     // audio 
+#include "data/gfxaudio.h"                     // audio
 #include "data/gfxinter.h"                  // sidebar/downbar gfx
 #include "data/gfxworld.h"                  // world / regions gfx
 #include "data/gfxmentat.h"                  // mentat gfx
@@ -80,6 +81,8 @@
 #include "common.h"							// commonly used functions
 #include "cPlayer.h"							// player data
 #include "map.h"							// map data
+#include "cSeedMap.h"
+#include "cSeedMapGenerator.h"
 #include "cParticle.h"                       // explosion animations and such
 #include "bullet.h"                         // bullets
 #include "regions.h"
@@ -123,5 +126,3 @@
 #include "d2tmc.h"
 
 #endif
-
-
