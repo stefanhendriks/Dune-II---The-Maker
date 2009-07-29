@@ -23,7 +23,9 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+
+#include <string>
+#include <iostream>
 
 #include <assert.h>
 

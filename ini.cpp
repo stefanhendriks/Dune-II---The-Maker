@@ -14,6 +14,8 @@
 
 #include "cIniReader.h"
 
+using namespace std;
+
 cIniReader::cIniReader() {
 
     // set key / value for sections
@@ -240,107 +242,6 @@ int INI_StructureType(char word[45])
    return -1;
 
 }
-
-// return house relation ship
-int INI_HouseType(char word[35])
-{
-  if (strcmp(word, "Atreides") == 0)
-    return ATREIDES;
-
-  if (strcmp(word, "Harkonnen") == 0)
-    return HARKONNEN;
-
-  if (strcmp(word, "Ordos") == 0)
-    return ORDOS;
-
-  if (strcmp(word, "Fremen") == 0)
-    return FREMEN;
-
-  if (strcmp(word, "Mercenary") == 0)
-    return MERCENARY;
-
-  if (strcmp(word, "Sardaukar") == 0)
-    return SARDAUKAR;
-
-  // d2tm specifics:
-  //if (strcmp(word, "Guild") == 0)
-    //return HOUSE_MERCENARY;
-
-  return -1;
-}
-
-// Reads out word[], checks unit type, and returns actual source-id
-int INI_UnitType(char word[35])
-{
-
-  if (strcmp(word, "HARVESTER") == 0)
-    return HARVESTER;
-
-  if (strcmp(word, "DEVIATOR") == 0)
-    return DEVIATOR;
-
-  if (strcmp(word, "TRIKE") == 0)
-    return TRIKE;
-
-  if (strcmp(word, "QUAD") == 0)
-    return QUAD;
-
-  if (strcmp(word, "MCV") == 0)
-    return MCV;
-
-  if (strcmp(word, "RAIDER") == 0)
-    return RAIDER;
-
-  if (strcmp(word, "SOLDIER") == 0)
-    return SOLDIER;
-
-  if (strcmp(word, "INFANTRY") == 0)
-    return INFANTRY;
-
-  if (strcmp(word, "COMBATTANK") == 0)
-    return TANK;
-
-  if (strcmp(word, "SONICTANK") == 0)
-    return SONICTANK;
-
-  if (strcmp(word, "SIEGETANK") == 0)
-    return SIEGETANK;
-
-  if (strcmp(word, "DEVASTATOR") == 0)
-    return DEVASTATOR;
-
-  if (strcmp(word, "CARRYALL") == 0)
-    return CARRYALL;
-
-  if (strcmp(word, "ORNITHOPTER") == 0)
-    return ORNITHOPTER;
-
-  if (strcmp(word, "LAUNCHER") == 0)
-    return LAUNCHER;
-
-  if (strcmp(word, "TROOPER") == 0)
-    return TROOPER;
-
-  if (strcmp(word, "TROOPERS") == 0)
-    return TROOPERS;
-
-  if (strcmp(word, "FREMEN") == 0)
-    return UNIT_FREMEN;
-
-  if (strcmp(word, "SABOTEUR") == 0)
-    return SABOTEUR;
-
-  if (strcmp(word, "MISSILE") == 0)
-    return   UPGR_MISSILE;
-
-
-
-  alert("ERROR: Could not identify unit type", word, "", "OK", NULL, 13, 0);
-
-
-   return -1;
-}
-
 
 // Reads out word[], does a string compare and returns type id
 int INI_WordType(char word[25], int section)
@@ -1084,7 +985,7 @@ bool INI_WordValueBOOL(char result[MAX_LINE_LENGTH])
   return false;
 }
 // return ID of structure
-int INI_Structure_ID(char *structure)
+int getStructureTypeFromChar(char *structure)
 {
 	if (strcmp(structure, "Const Yard") == 0)
 		return CONSTYARD;
@@ -1139,72 +1040,6 @@ int INI_Structure_ID(char *structure)
 	return CONSTYARD;
 }
 
-// return ID of unit
-int INI_Unit_ID(char *unit)
-{
-	if (strcmp(unit, "Quad") == 0)
-		return QUAD;
-
-	if (strcmp(unit, "MCV") == 0)
-		return MCV;
-
-	if (strcmp(unit, "Trike") == 0)
-		return TRIKE;
-
-	if (strcmp(unit, "Raider Trike") == 0)
-		return RAIDER;
-
-	if (strcmp(unit, "Trooper") == 0)
-		return TROOPER;
-
-	if (strcmp(unit, "Soldier") == 0)
-		return SOLDIER;
-
-	if (strcmp(unit, "Troopers") == 0)
-		return TROOPERS;
-
-	if (strcmp(unit, "Tank") == 0)
-		return TANK;
-
-	if (strcmp(unit, "Launcher") == 0)
-		return LAUNCHER;
-
-	if (strcmp(unit, "Sonic Tank") == 0)
-		return SONICTANK;
-
-	if (strcmp(unit, "Siege Tank") == 0)
-		return SIEGETANK;
-
-	if (strcmp(unit, "Infantry") == 0)
-		return INFANTRY;
-
-	if (strcmp(unit, "Devastator") == 0)
-		return DEVASTATOR;
-
-	if (strcmp(unit, "Deviator") == 0)
-		return DEVIATOR;
-
-	if (strcmp(unit, "Harvester") == 0)
-		return HARVESTER;
-
-	if (strcmp(unit, "CarryAll") == 0)
-		return CARRYALL;
-
-	if (strcmp(unit, "Ornithopter") == 0)
-		return ORNITHOPTER;
-
-	if (strcmp(unit, "Sandworm") == 0)
-		return SANDWORM;
-
-	if (strcmp(unit, "Saboteur") == 0)
-		return SABOTEUR;
-
-	logbook("INI (WARNING) : Could not find unit:");
-	logbook(unit);
-	return QUAD;
-}
-
-
 // loads dunedit seed file
 // After all these years, Dunedit still is 'needed' somehow.
 void INI_Load_seed(int seed)
@@ -1249,6 +1084,17 @@ void INI_Load_seed(int seed)
 
 
 // Load
+/**
+ * Return true when line starts with:
+ * ; # // \n \0
+ *
+ * @param linefeed
+ * @return
+ */
+bool isCommentLine(char linefeed[MAX_LINE_LENGTH]) {
+    return linefeed[0] == ';' || linefeed[0] == '#' || (linefeed[0] == '/' && linefeed[1] == '/') || linefeed[0] == '\n' || linefeed[0] == '\0';
+}
+
 
 void INI_Load_Regionfile(int iHouse, int iMission)
 {
@@ -1303,11 +1149,7 @@ void INI_Load_Regionfile(int iHouse, int iMission)
 
       // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
       // character (which is "//", ";" or "#"), or an empty line, then skip it
-      if (linefeed[0] == ';' ||
-          linefeed[0] == '#' ||
-         (linefeed[0] == '/' && linefeed[1] == '/') ||
-          linefeed[0] == '\n' ||
-          linefeed[0] == '\0')
+      if (isCommentLine(linefeed))
           continue;   // Skip
 
 	  wordtype=WORD_NONE;
@@ -1341,15 +1183,7 @@ void INI_Load_Regionfile(int iHouse, int iMission)
 			INI_WordValueCHAR(linefeed, cHouseRegion);
 
 			logbook("Region house");
-            int iH=-1;
-
-			logbook(cHouseRegion);
-			if (strcmp(cHouseRegion, "Atreides") == 0)     iH   = ATREIDES;
-			if (strcmp(cHouseRegion, "Harkonnen") == 0)    iH   = HARKONNEN;
-			if (strcmp(cHouseRegion, "Ordos") == 0)        iH   = ORDOS;
-			if (strcmp(cHouseRegion, "Sardaukar") == 0)    iH   = SARDAUKAR;
-			if (strcmp(cHouseRegion, "Fremen" ) == 0)      iH   = FREMEN;
-			if (strcmp(cHouseRegion, "Mercenary") == 0)    iH   = MERCENARY;
+            int iH= getHouseFromChar(cHouseRegion);
 
             if (iRegionNumber > -1)
             {
@@ -1387,7 +1221,68 @@ void INI_Load_Regionfile(int iHouse, int iMission)
 
 }
 
+inline bool caseInsCharCompareN(char a, char b) {
+   return(toupper(a) == toupper(b));
+}
+
+
+bool caseInsCompare(const string& s1, const string& s2) {
+   return((s1.size( ) == s2.size( )) &&
+          equal(s1.begin( ), s1.end( ), s2.begin( ), caseInsCharCompareN));
+}
+
 // SCENxxxx.ini loader (for both DUNE II as for DUNE II - The Maker)
+int getUnitTypeFromChar(char chunk[35]) {
+	string unitString(chunk);
+    if (caseInsCompare(unitString, "Harvester"))	return HARVESTER;
+    if (caseInsCompare(unitString, "Tank"))			return TANK;
+    if (caseInsCompare(unitString, "Siege Tank"))   return SIEGETANK;
+    if (caseInsCompare(unitString, "SIEGETANK"))   return SIEGETANK;
+    if (caseInsCompare(unitString, "Launcher"))		return LAUNCHER;
+    if (caseInsCompare(unitString, "Trooper"))		return TROOPER;
+    if (caseInsCompare(unitString, "Troopers"))		return TROOPERS;
+    if (caseInsCompare(unitString, "Sonic Tank"))	return SONICTANK;
+    if (caseInsCompare(unitString, "SONICTANK"))	return SONICTANK;
+    if (caseInsCompare(unitString, "Quad"))			return QUAD;
+    if (caseInsCompare(unitString, "Trike"))		return TRIKE;
+    if (caseInsCompare(unitString, "Raider Trike")) return RAIDER;
+    if (caseInsCompare(unitString, "RAIDER")) return RAIDER;
+    if (caseInsCompare(unitString, "Soldier"))		return SOLDIER;
+    if (caseInsCompare(unitString, "Infantry"))		return INFANTRY;
+    if (caseInsCompare(unitString, "Devastator"))   return DEVASTATOR;
+    if (caseInsCompare(unitString, "Deviator"))		return DEVIATOR;
+	if (caseInsCompare(unitString, "MCV"))			return MCV;
+	if (caseInsCompare(unitString, "Trike"))		return TRIKE;
+	if (caseInsCompare(unitString, "Soldier"))		return SOLDIER;
+	if (caseInsCompare(unitString, "CarryAll"))		return CARRYALL;
+	if (caseInsCompare(unitString, "Ornithopter"))	return ORNITHOPTER;
+	if (caseInsCompare(unitString, "Sandworm"))		return SANDWORM;
+	if (caseInsCompare(unitString, "Saboteur"))		return SABOTEUR;
+	if (caseInsCompare(unitString, "MISSILE"))		return UPGR_MISSILE;
+	if (caseInsCompare(unitString, "FREMEN"))		return UNIT_FREMEN;
+
+	char msg[255];
+	sprintf(msg, "getUnitTypeFromChar could not determine what unit type '%s' (original is '%s%') is. Returning -1; this will probably cause problems.", unitString.c_str(), chunk);
+	logbook(msg);
+	return -1;
+}
+
+int getHouseFromChar(char chunk[25])
+{
+    if (strcmp(chunk, "Atreides") == 0)    return ATREIDES;
+    if (strcmp(chunk, "Harkonnen") == 0)   return HARKONNEN;
+    if (strcmp(chunk, "Ordos") == 0)       return ORDOS;
+    if (strcmp(chunk, "Sardaukar") == 0)   return SARDAUKAR;
+    if (strcmp(chunk, "Mercenary") == 0)   return MERCENARY;
+    if (strcmp(chunk, "Fremen") == 0)      return FREMEN;
+    if (strcmp(chunk, "Corrino") == 0)     return CORRINO;
+    if (strcmp(chunk, "General") == 0)     return GENERALHOUSE;
+    char msg[255];
+    sprintf(msg, "getHouseFromChar could not determine what house type '%s' is. Returning -1; this will probably cause problems.", chunk);
+    logbook(msg);
+    return -1;
+}
+
 void INI_Load_scenario(int iHouse, int iRegion)
 {
 
@@ -1882,16 +1777,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
 						if (iPart == 0)
 						{
-							int iHouse=-1;
-
-							if (strcmp(chunk, "Atreides") == 0)     iHouse = ATREIDES;
-							if (strcmp(chunk, "Harkonnen") == 0)     iHouse = HARKONNEN;
-							if (strcmp(chunk, "Ordos") == 0)     iHouse = ORDOS;
-							if (strcmp(chunk, "Sardaukar") == 0)     iHouse = SARDAUKAR;
-							if (strcmp(chunk, "Mercenary") == 0)     iHouse = MERCENARY;
-							if (strcmp(chunk, "Fremen") == 0)     iHouse = FREMEN;
-							if (strcmp(chunk, "Corrino") == 0)     iHouse = CORRINO;
-							if (strcmp(chunk, "General") == 0)     iHouse = GENERALHOUSE;
+							int iHouse = getHouseFromChar(chunk);
 
 							// Search for a player with this house
 							for (int i=0; i < MAX_PLAYERS; i++)
@@ -1927,7 +1813,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 						}
 						else if (iPart == 1)
 						{
-							iType = INI_Unit_ID(chunk);
+							iType = getUnitTypeFromChar(chunk);
 						}
 						// do nothing in part 2
 						else if (iPart == 3)
@@ -2058,16 +1944,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 						{
 							if (iPart == 0)
 							{
-								int iHouse=-1;
-
-								if (strcmp(chunk, "Atreides") == 0)     iHouse = ATREIDES;
-								if (strcmp(chunk, "Harkonnen") == 0)     iHouse = HARKONNEN;
-								if (strcmp(chunk, "Ordos") == 0)     iHouse = ORDOS;
-								if (strcmp(chunk, "Sardaukar") == 0)     iHouse = SARDAUKAR;
-								if (strcmp(chunk, "Mercenary") == 0)     iHouse = MERCENARY;
-								if (strcmp(chunk, "Fremen") == 0)		 iHouse = FREMEN;
-								if (strcmp(chunk, "Corrino") == 0)		 iHouse = CORRINO;
-								if (strcmp(chunk, "General") == 0)		 iHouse = GENERALHOUSE;
+								int iHouse = getHouseFromChar(chunk);
 
 								// Search for a player with this house
 								for (int i=0; i < MAX_PLAYERS; i++)
@@ -2094,7 +1971,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 							}
 							else if (iPart == 1)
 							{
-								iType = INI_Structure_ID(chunk);
+								iType = getStructureTypeFromChar(chunk);
 							}
 							else if (iPart == 3)
 							{
@@ -2107,16 +1984,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 						{
 							if (iPart == 0)
 							{
-								int iHouse=-1;
-
-								if (strcmp(chunk, "Atreides") == 0)     iHouse = ATREIDES;
-								if (strcmp(chunk, "Harkonnen") == 0)     iHouse = HARKONNEN;
-								if (strcmp(chunk, "Ordos") == 0)     iHouse = ORDOS;
-								if (strcmp(chunk, "Sardaukar") == 0)     iHouse = SARDAUKAR;
-								if (strcmp(chunk, "Mercenary") == 0)     iHouse = MERCENARY;
-								if (strcmp(chunk, "Fremen") == 0)     iHouse = FREMEN;
-								if (strcmp(chunk, "Corrino") == 0)     iHouse = CORRINO;
-								if (strcmp(chunk, "General") == 0)     iHouse = GENERALHOUSE;
+								int iHouse= getHouseFromChar(chunk);;
 
 								// Search for a player with this house
 								for (int i=0; i < MAX_PLAYERS; i++)
@@ -2234,16 +2102,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
                     if (iPart == 0)
                     {
-                        int iHouse=-1;
-
-                        if (strcmp(chunk, "Atreides") == 0)    iHouse = ATREIDES;
-                        if (strcmp(chunk, "Harkonnen") == 0)   iHouse = HARKONNEN;
-                        if (strcmp(chunk, "Ordos") == 0)       iHouse = ORDOS;
-                        if (strcmp(chunk, "Sardaukar") == 0)   iHouse = SARDAUKAR;
-                        if (strcmp(chunk, "Mercenary") == 0)   iHouse = MERCENARY;
-                        if (strcmp(chunk, "Fremen") == 0)      iHouse = FREMEN;
-                        if (strcmp(chunk, "Corrino") == 0)     iHouse = CORRINO;
-                        if (strcmp(chunk, "General") == 0)     iHouse = GENERALHOUSE;
+                        int iHouse = getHouseFromChar(chunk);
 
 						if (iHouse > -1)
 						{
@@ -2260,22 +2119,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 					}
                     else if (iPart == 1)
                     {
-                        // what to transport?
-
-                        if (strcmp(chunk, "Harvester") == 0)   iType = HARVESTER;
-                        if (strcmp(chunk, "Tank") == 0)   iType = TANK;
-                        if (strcmp(chunk, "Siege Tank") == 0)   iType = SIEGETANK;
-                        if (strcmp(chunk, "Launcher") == 0)   iType = LAUNCHER;
-                        if (strcmp(chunk, "Trooper") == 0)   iType = TROOPER;
-                        if (strcmp(chunk, "Troopers") == 0)   iType = TROOPERS;
-                        if (strcmp(chunk, "Sonic Tank") == 0)   iType = SONICTANK;
-                        if (strcmp(chunk, "Quad") == 0)   iType = QUAD;
-                        if (strcmp(chunk, "Trike") == 0)   iType = TRIKE;
-                        if (strcmp(chunk, "Raider Trike") == 0)   iType = RAIDER;
-                        if (strcmp(chunk, "Soldier") == 0)   iType = SOLDIER;
-                        if (strcmp(chunk, "Infantry") == 0)   iType = INFANTRY;
-                        if (strcmp(chunk, "Devastator") == 0)   iType = DEVASTATOR;
-                        if (strcmp(chunk, "Deviator") == 0)   iType = DEVIATOR;
+                        iType = getUnitTypeFromChar(chunk);
 
                     }
                     else if (iPart == 2)
@@ -2645,7 +2489,7 @@ void INI_Install_Game()
                 break; // get out
             }
 
-            id = INI_UnitType(name_unit);
+            id = getUnitTypeFromChar(name_unit);
             if (id >= MAX_UNITTYPES) id--;
 
           } // found a new unit type

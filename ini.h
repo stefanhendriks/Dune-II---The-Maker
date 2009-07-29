@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -173,4 +173,5 @@ int INI_SectionType(char section[30], int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);
 void INI_PRESCAN_SKIRMISH();
 
-
+int getHouseFromChar(char chunk[25]);
+int getUnitTypeFromChar(char chunk[25]);
