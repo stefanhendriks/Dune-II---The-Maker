@@ -1651,18 +1651,9 @@ int cMap::mouse_cell()
 // at CELL
 void cMap::create_spot(int c, int type, int tile)
 {
-    // set to 0
-    if (tile < 0)
-        tile = 0;
-
-    // boundries
-    if (c < 0 || c > MAX_CELLS)
-    {
-		if (DEBUGGING)
-			logbook("ERROR: create_spot()");
-
-        return;
-    }
+	assert(c > -1);
+	assert(c < MAX_CELLS);
+	assert(tile > -1);
 
     // Set
     cell[c].type = type;

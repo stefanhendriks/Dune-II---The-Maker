@@ -2562,9 +2562,9 @@ void cGame::draw_placeit()
 
 	int iMouseCell = map.mouse_cell();
 
-	if (iMouseCell < 0)
+	if (iMouseCell < 0) {
 		return;
-
+	}
 
 
 	// Using list LIST_CONSTYARD
@@ -2654,8 +2654,9 @@ void cGame::draw_placeit()
             }
 		}
 
-	if (bOutOfBorder)
+	if (bOutOfBorder) {
 		bMayPlace=false;
+	}
 
 	/*
 
@@ -2721,8 +2722,11 @@ void cGame::draw_placeit()
 			if (map.cell[iCll].id[MAPID_STRUCTURES] > -1)
 				iTile = PLACE_BAD;
 
-			if (map.cell[iCll].id[MAPID_UNITS] > -1)
-				iTile = PLACE_BAD;
+			int unitIdOnMap = map.cell[iCll].id[MAPID_UNITS];
+			if (unitIdOnMap > -1) {
+				if (!unit[unitIdOnMap].bPickedUp) // only when not picked up, take this in (fixes carryall carrying this unit bug)
+					iTile = PLACE_BAD;
+			}
 
 
 			// DRAWING & RULER
