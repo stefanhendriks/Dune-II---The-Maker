@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -18,7 +18,7 @@ struct tListIcon
 	int iIcon;
 	int iStructureID;		// any id attached
 	int iUnitID;			// any id attached
-	int iPrice;				// price of this thing	
+	int iPrice;				// price of this thing
 };
 
 
@@ -26,6 +26,8 @@ class cGame
 {
 
 public:
+
+	std::string game_filename;
 
 	bool windowed;				// windowed
 	char version[15];			// version number, or name.
@@ -42,7 +44,7 @@ public:
     // 3. Click next region
     // 4. Set up region and go to GAME_BRIEFING, which will do the rest...-> fade out
 
-    int iRegionState;           // 
+    int iRegionState;           //
     int iRegionScene;           // scene
     int iRegionSceneAlpha;           // scene alpha
     int iRegionConquer[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
@@ -57,7 +59,7 @@ public:
     bool bMp3;                  // use mp3 files instead of midi
 
 	bool bPlaying;				// playing or not
-    bool bSkirmish;             // playing a skirmish game  or not 
+    bool bSkirmish;             // playing a skirmish game  or not
 	int  iSkirmishMap;			// what map is selected
 	int screenshot;				// screenshot taking number
 	int iSkirmishStartPoints;	// random map startpoints
@@ -74,7 +76,7 @@ public:
 
     int iRegion;        // what region is selected?
 	int iMission;		// what mission are we playing? (= techlevel)
-	int iHouse;			// what house is selected for playing? 
+	int iHouse;			// what house is selected for playing?
 
 	int selected_structure;
 	int hover_structure;
@@ -117,7 +119,7 @@ public:
 
     // Condition to win the mission:
     int iWinQuota;              // > 0 means, get this to win the mission, else, destroy all!
-    
+
 	// Starport stuff
 	int TIMER_starport;			// timer for refreshing list
 	int TIMER_ordered;			// timer for ordering stuff ( -1 = nothing, 0 = delivering, > 0 t-minus)
@@ -131,7 +133,7 @@ public:
 	int iconprogress[LIST_MAX];	// progress done on this icon?
     int iLastBuilt[LIST_MAX];   // last type built per list
 
-	
+
 	// Frigate stuff
 	int iconFrigate[MAX_ICONS]; // what is ordered? (how many of them?)
 
@@ -191,7 +193,7 @@ public:
 
 	bool setupGame();
 	void shutdown();
-	
+
 	bool isState(int thisState);
 	void setState(int thisState);
 
@@ -199,7 +201,7 @@ private:
 	void poll();
 	void gerald();		// interface and such, which is called by combat
 	void combat();		// the combat part (main) of the game
-	
+
 	void draw_mentat(int iType); // draw mentat type
 
     void setup_skirmish();  // set up a skirmish game
@@ -225,7 +227,7 @@ private:
 
 
 	void draw_message();
-	
+
 
 	// upgrade button drawing and behaviour
 	void draw_upgrade();

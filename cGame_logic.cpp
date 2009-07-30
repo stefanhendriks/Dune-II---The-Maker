@@ -142,14 +142,12 @@ void cGame::init()
         aiplayer[i].init(i);
     }
 
-
 	// Units & Structures are already initialized in map.init()
-
-	// Load properties
-	INI_Install_Game();
 
     //if (mp3_music != NULL)
 	  //almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
+	// Load properties
+	INI_Install_Game(game_filename);
 
 	if (mp3_music != NULL) {
         almp3_destroy_mp3(mp3_music);
@@ -5241,6 +5239,7 @@ bool cGame::setupGame() {
 
 	if (fp)
 	{
+		fprintf(fp, "-------------------\n");
 		fprintf(fp, "DUNE II - The Maker\n");
 		fprintf(fp, "-------------------\n\n"); // print head of logbook
 		fclose(fp);

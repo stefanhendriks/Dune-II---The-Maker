@@ -1236,6 +1236,7 @@ int getUnitTypeFromChar(char chunk[35]) {
 	string unitString(chunk);
     if (caseInsCompare(unitString, "Harvester"))	return HARVESTER;
     if (caseInsCompare(unitString, "Tank"))			return TANK;
+    if (caseInsCompare(unitString, "COMBATTANK"))	return TANK;
     if (caseInsCompare(unitString, "Siege Tank"))   return SIEGETANK;
     if (caseInsCompare(unitString, "SIEGETANK"))   return SIEGETANK;
     if (caseInsCompare(unitString, "Launcher"))		return LAUNCHER;
@@ -2385,13 +2386,14 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
 
 
 // Game.ini loader
-void INI_Install_Game()
+void INI_Install_Game(string filename)
 {
   /*
     Goal of this file:
 
   */
   logbook("[GAME.INI] Opening file");
+  // Load properties
 
   FILE *stream;
   int section=INI_GAME;
@@ -2403,11 +2405,11 @@ void INI_Install_Game()
   side_r=side_g=side_b=-1;
   team_r=team_g=team_b=-1;
 
-  char path[50];
+  char msg[255];
+  sprintf(msg, "Opening game settings from : %s", filename.c_str());
+  logbook(msg);
 
-  sprintf(path, "game.ini");
-
-  if( (stream = fopen( path, "r+t" )) != NULL )
+  if( (stream = fopen( filename.c_str(), "r+t" )) != NULL )
   {
     char linefeed[MAX_LINE_LENGTH];
     char lineword[25];
@@ -2420,11 +2422,7 @@ void INI_Install_Game()
 
       // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
       // character (which is "//", ";" or "#"), or an empty line, then skip it
-      if (linefeed[0] == ';' ||
-          linefeed[0] == '#' ||
-         (linefeed[0] == '/' && linefeed[1] == '/') ||
-          linefeed[0] == '\n' ||
-          linefeed[0] == '\0')
+      if (isCommentLine(linefeed))
           continue;   // Skip
 
       wordtype=WORD_NONE;
@@ -2597,7 +2595,6 @@ void INI_Install_Game()
 
     fclose(stream);
   }
-
 
 logbook("[GAME.INI] Done");
 }

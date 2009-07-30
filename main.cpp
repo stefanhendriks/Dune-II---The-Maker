@@ -12,6 +12,8 @@
 
 #include "d2tmh.h"
 
+using namespace std;
+
 bool bDoDebug = false;
 int	iRest = 1;	// default rest value
 
@@ -83,10 +85,33 @@ int frame_count, fps;  // fps and such
 	volatile int allegro_timerUnits = 0;
 #endif
 
+int handleArguments(int argc, char *argv[]) {
+
+	if (argc > 1) {
+		for (int i = 1; i < argc; i++) {
+			string command = argv[i];
+			if (command.compare("-game") == 0) {
+				if ((i + 1) < argc) {
+					i++;
+					game.game_filename = string(argv[i]);
+				}
+			}
+		}
+	} // arguments passed
+
+	return 0;
+}
+
+
 /**
 	Entry point of the game
 */
-int main() {
+int main(int argc, char **argv) {
+	game.game_filename = "game.ini";
+
+	if (handleArguments(argc, argv) > 0) {
+		return 0;
+	}
 
 	game.init();
 
