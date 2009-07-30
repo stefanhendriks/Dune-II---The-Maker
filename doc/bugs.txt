@@ -49,6 +49,8 @@ BUGS FIXED:
 - Sandworm: it kills infantry when it's beneath infantry without eating them. (it wasn't like this in the original)
 - Sandorm able to squish infantry when going under infantry.
 - It is no longer possible to select airborn units with box-selecting.
+- animation fixes for structures (WOR/Barracks stopped animating after building unit)
+- box selecting problem (needed to cover entire unit). Now only the center is required to select a unit.
 
 GAME BALANCING:
 - Harvester has more HP (300->450)
@@ -56,3 +58,6 @@ GAME BALANCING:
 
 NEW ADDED:
 - Dune 2 Seed map generator. Thanks to jpexs for completing the generator and making this possible!
+
+CHANGED:
+- skirmish maps do not need to be MAP##.ini anymore, they can be named anything
