@@ -8,11 +8,12 @@ private:
 public:
     cOutPost();
     ~cOutPost();
-  
-    // overloaded functions    
+
+    // overloaded functions
     void think();
     void think_animation();
     void think_guard();
+    void think_flag();
 
     void draw(int iStage);
 
