@@ -35,6 +35,8 @@ Some big and small bugs I've discovered during a 1v1 skirmish game:
 -Repairfacility still has some bugs. I've just played another skirmish game and I had to use the repairbutton on a Siegetank 5 times before a carryall dropped it into the facility. The other 4 times the tank as picked up, the carryall hovered above the R.F. but dropped the tank next to it.
 
 
+STILL NOT FIXED! :(
+- Sandworm: it kills infantry when it's beneath infantry without eating them. (it wasn't like this in the original)
 
 NEW:
 -stop button for units.
@@ -46,10 +48,10 @@ DONE:
 ===================================
 BUGS FIXED:
 - Instead, if I were to click on the Upgrade button again, the upgrade is completed INSTANTLY.
-- Sandworm: it kills infantry when it's beneath infantry without eating them. (it wasn't like this in the original)
 - Sandorm able to squish infantry when going under infantry.
 - It is no longer possible to select airborn units with box-selecting.
 - animation fixes for structures (WOR/Barracks stopped animating after building unit)
+- animaiton fix for outpost
 - box selecting problem (needed to cover entire unit). Now only the center is required to select a unit.
 
 GAME BALANCING:
@@ -58,6 +60,7 @@ GAME BALANCING:
 
 NEW ADDED:
 - Dune 2 Seed map generator. Thanks to jpexs for completing the generator and making this possible!
+- "game" switch to load own ini file (ie, use d2tm.exe -game myinifile.ini)
 
 CHANGED:
 - skirmish maps do not need to be MAP##.ini anymore, they can be named anything
