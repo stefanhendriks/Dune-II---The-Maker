@@ -1040,46 +1040,31 @@ int getStructureTypeFromChar(char *structure)
 	return CONSTYARD;
 }
 
-// loads dunedit seed file
-// After all these years, Dunedit still is 'needed' somehow.
-void INI_Load_seed(int seed)
-{
-
-	char filename[50];
-	for (int ic=0; ic < 50; ic++)
-		filename[ic] = '\0';
-
-	sprintf(filename, "campaign/maps/seed/%d.map", seed);
-
-	FILE *stream;
-	int iY=1;
+/**
+ * Create seed map.
+ *
+ * @param seed
+ */
+void INI_Load_seed(int seed) {
 
 	char msg[256];
-	sprintf(msg, "[SEED] NR %d.\n[SEED] LOCATION '%s'", seed, filename);
+	sprintf(msg, "Generating seed map with seed %d.", seed);
 	logbook(msg);
-
-	logbook("[SEED] Opening file");
 
 	cSeedMapGenerator *seedGenerator = new cSeedMapGenerator(seed);
 
 	cSeedMap *seedMap = seedGenerator->generateSeedMap();
-	logbook("seedMap generated");
+	logbook("Seedmap generated");
 
-	for (int testY = 0; testY < 64; testY++) {
-		char line[64];
-		memset(line, 0, sizeof(line));
-		// write down character in line
-		for (int testX = 0; testX < 64; testX++) {
-			char c = seedMap->getCellTypeCharacter(testX, testY);
-			line[testX] = c;
-			int type = seedMap->getCellType(testX, testY);
-			int iCell = iCellMake(testX, testY);
+	for (int mapY = 0; mapY < 64; mapY++) {
+		for (int mapX = 0; mapX < 64; mapX++) {
+			char c = seedMap->getCellTypeCharacter(mapX, mapY);
+			int type = seedMap->getCellType(mapX, mapY);
+			int iCell = iCellMake(mapX, mapY);
 			map.create_spot(iCell, type, 0);
 		}
-		// write line in logbook
-		logbook(line);
 	}
-	logbook("Seedmap should be printed now.");
+	logbook("Seedmap converted into D2TM map.");
 }
 
 
