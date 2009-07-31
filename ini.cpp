@@ -2631,11 +2631,7 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
 
       // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
       // character (which is "//", ";" or "#"), or an empty line, then skip it
-      if (linefeed[0] == ';' ||
-          linefeed[0] == '#' ||
-         (linefeed[0] == '/' && linefeed[1] == '/') ||
-          linefeed[0] == '\n' ||
-          linefeed[0] == '\0')
+      if (isCommentLine(linefeed))
           continue;   // Skip
 
       // Every line is checked for a new section.
@@ -2789,19 +2785,6 @@ void INI_PRESCAN_SKIRMISH() {
    // scans for all ini files
    INIT_PREVIEWS(); // clear all of them
 
-//   char filename[80];
-//   memset(filename, 0, sizeof(filename));
-//
-//   for (int i=0; i < MAX_SKIRMISHMAPS; i++)
-//   {
-//       if (i < 10)
-//           sprintf(filename, "skirmish//map0%d.ini", i);
-//       else
-//           sprintf(filename, "skirmish//map%d.ini",i);
-//
-//       INI_LOAD_SKIRMISH(filename, true);
-//   }
-
    	struct al_ffblk file;
 	if (!al_findfirst("skirmish/*", &file, FA_ARCH)) {
 		do {
@@ -2825,27 +2808,3 @@ void INI_PRESCAN_SKIRMISH() {
 // after recompiling it against Allegro 4.2.2...
 //
 // See: http://www.allegro.cc/forums/thread/600998
-/*
-
-void INI_PRESCAN_SKIRMISH() {
-	// scans for all ini files
-	INIT_PREVIEWS(); // clear all of them
-
-	struct al_ffblk file;
-	if (!al_findfirst("skirmish/*", &file, FA_ARCH)) {
-		do {
-			char msg[1024];
-			char fullname[1024];
-			sprintf(fullname, "skirmish/%s", file.name);
-			sprintf(msg, "Loading skirmish map: %s", fullname);
-			logbook(msg);
-			INI_LOAD_SKIRMISH(fullname, true);
-	  } while (!al_findnext(&file));
-	} else {
-		logbook("No skirmish maps found in skirmish directory.");
-	}
-	al_findclose(&file);
-}
-*/
-
-

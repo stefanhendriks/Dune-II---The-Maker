@@ -4002,6 +4002,8 @@ void cGame::setup_skirmish()
     if ((mouse_x >= 580 && mouse_x <= 640) && (mouse_y >= 465 && mouse_y <= 480))
         alfont_textprintf(bmp_screen, bene_font, 580, 466, makecol(255,0,0), "START");
 
+
+    cCellCalculator *cellCalculator = new cCellCalculator();
     // START
 	if ((mouse_x >= 580 && mouse_x <= 640) && (mouse_y >= 465 && mouse_y <= 480) && bMousePressedLeft && iSkirmishMap > -1)
 	{
@@ -4094,8 +4096,9 @@ void cGame::setup_skirmish()
 			player[p].set_house(iHouse);
 
 			// Set map position
-			if (p == 0)
+			if (p == 0) {
 				map.set_pos(-1, -1, player[p].focus_cell);
+			}
 
 			// create constyard
 			cAbstractStructure *s = cStructureFactory::getInstance()->createStructure(player[p].focus_cell, CONSTYARD, p);
@@ -4121,49 +4124,58 @@ void cGame::setup_skirmish()
 				iY+=rnd(9);
 
 				// convert house specific stuff
-				if (player[p].house == ATREIDES)
-				{
-					if (iType == DEVASTATOR || iType == DEVIATOR)
+				if (player[p].house == ATREIDES) {
+					if (iType == DEVASTATOR || iType == DEVIATOR) {
 						iType = SONICTANK;
+					}
 
-					if (iType == TROOPERS)
+					if (iType == TROOPERS) {
 						iType = INFANTRY;
+					}
 
-					if (iType == TROOPER)
+					if (iType == TROOPER) {
 						iType = SOLDIER;
+					}
 
-					if (iType == RAIDER)
+					if (iType == RAIDER) {
 						iType = TRIKE;
+					}
 				}
 
 				// ordos
 				if (player[p].house == ORDOS)
 				{
-					if (iType == DEVASTATOR || iType == SONICTANK)
+					if (iType == DEVASTATOR || iType == SONICTANK) {
 						iType = DEVIATOR;
+					}
 
-					if (iType == TRIKE)
+					if (iType == TRIKE) {
 						iType = RAIDER;
+					}
 				}
 
 				// harkonnen
 				if (player[p].house == HARKONNEN)
 				{
-					if (iType == DEVIATOR || iType == SONICTANK)
+					if (iType == DEVIATOR || iType == SONICTANK) {
 						iType = DEVASTATOR;
+					}
 
-					if (iType == TRIKE || iType == RAIDER)
+					if (iType == TRIKE || iType == RAIDER) {
 						iType = QUAD;
+					}
 
-					if (iType == SOLDIER)
+					if (iType == SOLDIER) {
 						iType = TROOPER;
+					}
 
-					if (iType == INFANTRY)
+					if (iType == INFANTRY) {
 						iType = TROOPERS;
+					}
 				}
 
-				int r = UNIT_CREATE(iCellMake(iX, iY), iType, p, true);
-
+				int cell = cellCalculator->getCellWithMapBorders(iX, iY);
+				int r = UNIT_CREATE(cell, iType, p, true);
 				if (r > -1)
 				{
 					u++;
@@ -4184,6 +4196,8 @@ void cGame::setup_skirmish()
         play_music(MUSIC_PEACE);
 	}
 
+	// delete cell calculator
+	delete cellCalculator;
 
 
    	// MOUSE

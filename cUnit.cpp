@@ -3093,6 +3093,7 @@ int UNIT_REMOVE(int iID)
     // STEP 2: remove from cell map data
     map.remove_id(iID, MAPID_UNITS);
     map.remove_id(iID, MAPID_WORMS);
+    map.remove_id(iID, MAPID_AIR);
 
     return 0; // success
 }
@@ -3100,37 +3101,38 @@ int UNIT_REMOVE(int iID)
 
 int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart)
 {
+
 	if (bCellValid(iCll) == false)
 	{
 		logbook("UNIT_CREATE: Invalid cell as param");
 		return -1;
 	}
 
-    if (iTpe != CARRYALL &&
-        iTpe != ORNITHOPTER &&
-        iTpe != FRIGATE)
-    {
-        if (map.cell[iCll].id[MAPID_UNITS] > -1 && iTpe != SANDWORM)
-            return -1; // cannot place unit
-    }
-    else
-    {
-        // Aircraft
-        if (map.cell[iCll].id[MAPID_AIR] > -1 && iTpe != SANDWORM)
-            return -1; // cannot place unit
-    }
+	int mapIdIndex = MAPID_UNITS;
+	if (units[iTpe].airborn) mapIdIndex = MAPID_AIR;
+	if (iTpe == SANDWORM) mapIdIndex = MAPID_WORMS;
 
-    if (iTpe == SANDWORM)
+	// check if unit already exists on location
+	if (map.cell[iCll].id[mapIdIndex] > -1) {
+		return -1; // cannot place unit
+	}
+
+    // check if placed on invalid terrain type
+    if (iTpe == SANDWORM) {
         if (map.cell[iCll].type != TERRAIN_SAND &&
             map.cell[iCll].type != TERRAIN_SPICE &&
             map.cell[iCll].type != TERRAIN_HILL &&
             map.cell[iCll].type != TERRAIN_SPICEHILL)
-            return -1; // do not place on rock
+            return -1;
+    }
 
 
-	if (map.cell[iCll].type == TERRAIN_MOUNTAIN || map.cell[iCll].type == TERRAIN_WALL)
-		if (iTpe != INFANTRY && iTpe != SOLDIER && iTpe != TROOPER && iTpe != TROOPERS)
+    // not airborn, and not infantry, may not be placed on walls and mountains.
+    if (!units[iTpe].infantry && !units[iTpe].airborn) {
+		if (map.cell[iCll].type == TERRAIN_MOUNTAIN || map.cell[iCll].type == TERRAIN_WALL) {
 			return -1;
+		}
+    }
 
     int iNewId = UNIT_NEW();
 
@@ -3172,25 +3174,22 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart)
     }
 
 
+    // set player id:
+    int iPlayer = iPlyr;
+    if (iTpe == SANDWORM) iPlayer = AI_WORM;
 
+    unit[iNewId].iPlayer = iPlayer;
     // Put on map too!:
+    map.cell[iCll].id[mapIdIndex] = iNewId;
 
-    if (iTpe == SANDWORM)
-    {
-        unit[iNewId].iPlayer = AI_WORM;       // sandworms are controlled by the last player
+    if (iTpe == SANDWORM) {
+        // sandworms are controlled by the last player
         map.cell[iCll].id[MAPID_WORMS] = iNewId;
-    }
-    else if (iTpe != ORNITHOPTER &&
-             iTpe != FRIGATE && iTpe != CARRYALL)
-    {
+    } else if (iTpe != ORNITHOPTER && iTpe != FRIGATE && iTpe != CARRYALL) {
         unit[iNewId].iPlayer = iPlyr;
-        map.cell[iCll].id[MAPID_UNITS] = iNewId;
-    }
-    else
-    {
+    } else {
         // aircraft
         unit[iNewId].iPlayer = iPlyr;
-        map.cell[iCll].id[MAPID_AIR] = iNewId;
     }
 
 
@@ -4172,8 +4171,7 @@ void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType)
 
 int UNIT_FREE_AROUND_MOVE(int iUnit)
 {
-	if (iUnit < 0)
-	{
+	if (iUnit < 0) {
 		logbook("Invalid unit");
 		return -1;
 	}

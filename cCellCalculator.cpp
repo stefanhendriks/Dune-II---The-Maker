@@ -1,4 +1,4 @@
-#include <time.h> 
+#include <time.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -43,11 +43,11 @@ int cCellCalculator::getY(cAbstractStructure *structure) {
 	Return a cell from an X,Y coordinate.
 
 	Remember that coordinates are 1-64 based. While the array in Map (tCell) is 0-till 4096.
-	
+
 	This means that the coordinate 1,1 is NOT the first row, but it is : 0,0. This also means the
 	MAX at the right is MAP_W_MAX, but it is MAP_W_MAX - 1. (in this case not 64, but 63 as it is 0-63 instead
-	of 1-64). 
-	
+	of 1-64).
+
 	This method will not do any fancy tricks to fix the boundaries, instead it will assert its input and output.
 **/
 int cCellCalculator::getCell(int x, int y) {
@@ -66,10 +66,10 @@ int cCellCalculator::getCell(int x, int y) {
 }
 
 double cCellCalculator::distance(int x1, int y1, int x2, int y2) {
-  if (x1 == x2 && y1 == y2) return 1; // when all the same, distance is 1 ... 
+  if (x1 == x2 && y1 == y2) return 1; // when all the same, distance is 1 ...
 
   int A = abs(x2-x1) * abs(x2-x1);
-  int B = abs(y2-y1) * abs(y2-y1);  
+  int B = abs(y2-y1) * abs(y2-y1);
   return sqrt((double)(A+B)); // get C from A and B
 }
 
@@ -87,3 +87,19 @@ double cCellCalculator::distance(int cell1, int cell2) {
 	int y2 = getY(cell2);
 	return ABS_length(x1, y1, x2, y2);
 }
+
+/**
+ * Return map cell; taking the map borders into account.
+ *
+ * @param x
+ * @param y
+ * @return
+ */
+int cCellCalculator::getCellWithMapBorders(int x, int y) {
+	if (x < 1) x = 1;
+	if (y < 1) y = 1;
+	if (x > 63) x = 63;
+	if (y > 63) y = 63;
+	return getCell(x, y);
+}
+
