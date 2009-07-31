@@ -1,4 +1,4 @@
-Readme for Dune 2 The Maker Map Editor, Version 0.9
+Readme for Dune 2 The Maker Map Editor, Version 0.93
 
 This version of the map editor is NOT the final version, however
 it is fully functional and should serve your needs. Please report
@@ -50,12 +50,23 @@ very often and I was too lazy to make key commands for them :P
 
 
 =======================   FIXES   ==========================
+Version 0.93
+
+New:	Map mirror functionality. This allows for easy creation
+	of symmetric maps.
 
 
-Fixed:	Bug in saving: Player start positions were not 
-	calculated from current map width, but default map
-	width (63). This would give problems when saving maps
-	where width != 63.
+Version 0.92
+
+New:	Support for user-choseable filenames
+
+Fixed:	One more save bug: When you use the 'new map' from the
+	menu, and you saved another map before creating the new
+	one, saving the new map would overwrite the other one.
+
+
+Version 0.91
+
 Fixed:	Bug in loading player start positions: X/Y positions
 	were calculated using x=(cell%63) and y=(cell/63).
 	This has been changed to x=(cell%64) and y=(cell/64),
@@ -66,6 +77,13 @@ New:	It is now possible to place Spice Dunes.
 New:	When placing Spice over Dunes or Spice Dunes, Spice 
 	Dunes will be placed instead.
 
+
+Version 0.9
+
+Fixed:	Bug in saving: Player start positions were not 
+	calculated from current map width, but default map
+	width (63). This would give problems when saving maps
+	where width != 63.
 
 ====================   KNOWN ISSUES   ======================
 

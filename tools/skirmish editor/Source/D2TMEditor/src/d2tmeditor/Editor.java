@@ -210,9 +210,11 @@ public class Editor extends javax.swing.JFrame {
         jSeparator6 = new javax.swing.JSeparator();
         jMenuItem14 = new javax.swing.JMenuItem();
         jMenuItem15 = new javax.swing.JMenuItem();
+        jSeparator7 = new javax.swing.JSeparator();
+        jMenuItem16 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("D2TM Map Editor V0.92");
+        setTitle("D2TM Map Editor V0.93");
 
         jLabel1.setText("Title:");
 
@@ -679,6 +681,15 @@ public class Editor extends javax.swing.JFrame {
 
         jMenuItem15.setText("Generate Map from Seed");
         jMenu2.add(jMenuItem15);
+        jMenu2.add(jSeparator7);
+
+        jMenuItem16.setText("Mirror Map");
+        jMenuItem16.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem16ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem16);
 
         jMenuBar1.add(jMenu2);
 
@@ -968,6 +979,10 @@ public class Editor extends javax.swing.JFrame {
         repaint();
     }//GEN-LAST:event_jMenuItem14ActionPerformed
 
+    private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
+        new FlipFrame(mapEditor1.getMap(), mapEditor1).setVisible(true);
+    }//GEN-LAST:event_jMenuItem16ActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -1012,6 +1027,7 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JMenuItem jMenuItem14;
     private javax.swing.JMenuItem jMenuItem15;
+    private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -1037,6 +1053,7 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
+    private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSpinner jSpinner1;
     private d2tmeditor.MapEditor mapEditor1;
     // End of variables declaration//GEN-END:variables
