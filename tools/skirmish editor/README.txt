@@ -1,4 +1,4 @@
-Readme for Dune 2 The Maker Map Editor, Version 0.93
+Readme for Dune 2 The Maker Map Editor, Version 0.935
 
 This version of the map editor is NOT the final version, however
 it is fully functional and should serve your needs. Please report
@@ -50,6 +50,10 @@ very often and I was too lazy to make key commands for them :P
 
 
 =======================   FIXES   ==========================
+Version 0.935
+
+New:	Apply button for Map Mirrorer.
+
 Version 0.93
 
 New:	Map mirror functionality. This allows for easy creation
