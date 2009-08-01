@@ -214,7 +214,7 @@ public class Editor extends javax.swing.JFrame {
         jMenuItem16 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("D2TM Map Editor V0.93");
+        setTitle("D2TM Map Editor V0.935");
 
         jLabel1.setText("Title:");
 
