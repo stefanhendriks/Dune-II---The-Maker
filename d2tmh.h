@@ -24,8 +24,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <string.h>
-#include <iostream.h>
+//#include <string.h>
+//#include <iostream.h>
 
 #include <string>
 #include <iostream>
@@ -82,7 +82,6 @@
 #include "cMentat.h"
 #include "cCellCalculator.h"			    /** math with cells , with handy references to structures and units **/
 #include "ini.h"							// INI loading
-#include "cGame.h"							// game class
 #include "common.h"							// commonly used functions
 #include "cPlayer.h"							// player data
 #include "map.h"							// map data
@@ -97,6 +96,20 @@
 
 #include "keyval.h"
 
+// GUI RELATED
+#include "gui\eBuildType.h"				// enum build types (UNIT/STRUCTURE)
+#include "gui\cBuildingListItem.h"
+#include "gui\cBuildingList.h"
+#include "gui\cBuildingListDrawer.h"
+#include "gui\cBuildingListFactory.h"
+#include "cBuildingListUpgrader.h"
+#include "gui\cSideBar.h"
+#include "gui\cSideBarDrawer.h"
+#include "gui\cSideBarFactory.h"
+
+
+// game
+#include "cGame.h"							// game class
 
 // PROFILER
 #include "stdlib.h"

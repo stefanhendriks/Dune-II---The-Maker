@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -14,7 +14,7 @@
 
 #define DEBUGGING bDoDebug
 
-// MAP ID                        
+// MAP ID
 #define MAPID_UNITS  0
 #define MAPID_STRUCTURES 1
 #define MAPID_AIR   2
@@ -70,17 +70,6 @@
 #define SCENE_FIRE		10		// only one house will prevail...
 #define SCENE_BEGINS	11		// your battle for dune begins.. NOW!
 
-// List ID's corresponding buttons
-#define LIST_NONE		0
-#define LIST_CONSTYARD	1
-#define LIST_INFANTRY	2
-#define LIST_LIGHTFC	3
-#define LIST_HEAVYFC	4
-#define LIST_ORNI		5
-#define LIST_STARPORT	6
-#define LIST_PALACE		7
-#define LIST_MAX		8			// max amount of lists
-
 // Indexes for keeping score
 #define INDEX_KILLS_UNITS   0
 #define INDEX_KILLS_STRUCTURES 1
@@ -125,16 +114,16 @@
 // GAME (MENU) FLAGS: (used when GAME_MENU)
 // Game menu state machine
 
-
+#define HUMAN			0
 // PLAYER/AI stuff
 // 0 = HUMAN			== ALLIES WITH FREMEN WHEN ATREIDES
-// 1 = CPU (Atreides)	
+// 1 = CPU (Atreides)
 // 2 = CPU (Harkonnen)
-// 3 = CPU (Ordos)		
-// 4 = CPU (Sardaukar)	== ALLIES WITH EVERYBODY
+// 3 = CPU (Ordos)
+// 4 = CPU (Sardaukar)	== ALLIES WITH EVERYBODY (EXCEPT PLAYER)
 // 5 = CPU (Fremen)		== ALLIES WITH ATREIDES
 // 6 = WORM
-#define MAX_PLAYERS       7 
+#define MAX_PLAYERS       7
 
 #define AI_WORM			  6
 
@@ -274,10 +263,10 @@
 #define UPGR_MISSILE      32 // dead-hand
 
 // Bullet types
-#define ROCKET_SMALL      0   // small rocket (trooper/troopers) 
+#define ROCKET_SMALL      0   // small rocket (trooper/troopers)
 #define ROCKET_NORMAL     1   // normal rocket (turret/launcher/deviator)
 #define ROCKET_BIG        2   // big rocket (palace, nuclear)
-#define BULLET_SMALL      3   // infantry bullet 
+#define BULLET_SMALL      3   // infantry bullet
 #define BULLET_TRIKE      4   // a trike bullet, looks like infantry but is stronger
 #define BULLET_QUAD       5   // a quad bullet
 #define BULLET_TANK       6   // a normal tank dot
@@ -317,14 +306,14 @@ struct s_UnitP
   BITMAP  *bmp;         // each unit has a reference to his 8 bit bitmap.
   BITMAP  *top;         // top of unit
   BITMAP  *shadow;      // shadow of unit (24 bit)
-  
+
   int    bmp_width;     // width of each unit frame (in pixels).
   int    bmp_height;    // Height of the unit, for each animating frame.
 
   int    bmp_frames;
 
   int    bmp_startpixel; // The X axis starting pixel (i.e. for the harvester)
-  
+
   int    hp;             // Amount of hitpoints at maximum
   int    speed;          // speed (0 being uberly slow, 1000 being super fast).
   int    turnspeed;
@@ -334,16 +323,16 @@ struct s_UnitP
 
   int    bullets;           // type of bullet
   int    max_bullets;       // Maximum of 'bullets' it can fire at a time
-  
-  int    type;              // type of unit, 
+
+  int    type;              // type of unit,
 
   int    sight;             // Sight of a unit (in radius)
   int    range;             // Range of a unit (in radius)
 
-  int    icon;              // icon id  
+  int    icon;              // icon id
 
   int    cost;              // cost/price
-  
+
   bool airborn;             // does this unit fly?
   bool infantry;            // legged unit? (infantry)
   bool free_roam;           // (airborn only) - does it free roam?
@@ -358,7 +347,7 @@ struct s_UnitP
   int credit_capacity;      // max credits capacity
   int harvesting_speed;     // speed rate for harvesting (time)
   int harvesting_amount;    // value rate for harvesting (amount)
-  // house specific rates  
+  // house specific rates
 };
 
 
@@ -370,7 +359,7 @@ struct s_Structures
   BITMAP *shadow;	   // shadow
 
   int bmp_width;
-  int bmp_height;  
+  int bmp_height;
 
   int list;            // list this structure has!
 
@@ -380,12 +369,12 @@ struct s_Structures
 
   int build_time;      // how long it takes for building this thing
 
-  
+
   int    power_drain;       // the power that this building drains...
   int    power_give;        // the power that this building gives...
 
   int sight;
-  
+
   int fadecol;         // Fading color (if needed), -1 is none, > -1 means starting color
   int fademax;         // Max fading color (assuming fadecol < fademax)
 
@@ -408,7 +397,7 @@ struct s_House
 
 struct s_Bullet
 {
-  
+
   BITMAP *bmp;            // a reference to its bitmap. (16 bits here!)
   int deadbmp;        // when the bullet dies, it will use this bmp to show its animation
   int bmp_width;      // how much pixels a bullet is (wide)
@@ -428,7 +417,7 @@ struct sPreviewMap {
      BITMAP *terrain;        // terrain
      int mapdata[MAX_CELLS]; // map data
      int iPlayers;           // players
-     int iStartCell[5];      // starting locations  
+     int iStartCell[5];      // starting locations
      char name[80];          // name
 };
 

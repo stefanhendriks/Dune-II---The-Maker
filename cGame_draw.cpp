@@ -49,9 +49,6 @@ void cGame::draw_message()
 //		alfont_textprintf(temp, game_font, 13,7, makecol(0,0,0), cMessage);
 		alfont_textprintf(temp, game_font, 13,21, makecol(0,0,0), cMessage);
 
-		//alfont_textprintf_aa(temp, game_font, 13,21, makecol(1,1,1), cMessage);
-
-
 		// draw temp
 		draw_trans_sprite(bmp_screen, temp, 1, 42);
 

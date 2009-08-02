@@ -121,6 +121,9 @@ void cTimeManager::handleTimerGlobal() {
 		game.think_mentat();
 		game.think_movie();
 		game.think_message();
+		if (game.sidebar) {
+			game.sidebar->think();
+		}
 
 		// THINKING ONLY WHEN PLAYING / COMBAT
 		if (game.isState(GAME_PLAYING))

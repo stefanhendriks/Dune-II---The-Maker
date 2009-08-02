@@ -1454,47 +1454,6 @@ void cGame::combat_mouse()
 void cGame::think_money()
 {
 	int iDif=abs(player[0].draw_credits - player[0].credits);
-	/*
-
-
-	if (iDif < 1000)
-	{
-		if (player[0].draw_credits > player[0].credits)
-		{
-			player[0].draw_credits --;
-		}
-
-		if (player[0].draw_credits < player[0].credits)
-		{
-			player[0].draw_credits ++;
-		}
-	}
-	else if (iDif > 1000 && iDif < 2000)
-	{
-		if (player[0].draw_credits > player[0].credits)
-		{
-			player[0].draw_credits-=2;
-		}
-
-		if (player[0].draw_credits < player[0].credits)
-		{
-			player[0].draw_credits+=2;
-		}
-	}
-	else
-	{
-		if (player[0].draw_credits > player[0].credits)
-		{
-			player[0].draw_credits-=5;
-		}
-
-		if (player[0].draw_credits < player[0].credits)
-		{
-			player[0].draw_credits+=5;
-		}
-
-	}*/
-
 	if (iDif != 0)
 		iCountSoundMoney++;
 
@@ -1751,6 +1710,7 @@ void cGame::list_new_item(int iListID, int iIcon, int iPrice, int iStructureID, 
 }
 
 void cGame::draw_list() {
+	return;
 	if (game.iActiveList == LIST_NONE) {
 		return;
 	}
@@ -2213,6 +2173,11 @@ void cGame::draw_list() {
 void cGame::draw_sidebarbuttons()
 {
 
+	if (sidebar) {
+		cSideBarDrawer drawer;
+		drawer.drawSideBar(sidebar);
+	}
+	return;
 
     // clear
     BITMAP *bmp_trans=create_bitmap(((BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat)->w,((BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat)->h);
@@ -2307,21 +2272,21 @@ void cGame::draw_sidebarbuttons()
 	else
 	{
 
-		// Draw button:
-	if (iDrawStatus==0)
-    {
-        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_TROOPER].dat, iDrawX, iDrawY);
+			// Draw button:
+		if (iDrawStatus==0)
+		{
+			draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_TROOPER].dat, iDrawX, iDrawY);
 
-        // trans
-        //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
-        fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
+			// trans
+			//draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
+			fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
 
-		//draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_TROOPER_GREY].dat, iDrawX, iDrawY);
-    }
-	else if (iDrawStatus == 1)
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_TROOPER_PRESSED].dat, iDrawX, iDrawY);
-	else
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_TROOPER].dat, iDrawX, iDrawY);
+			//draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_TROOPER_GREY].dat, iDrawX, iDrawY);
+		}
+		else if (iDrawStatus == 1)
+			draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_TROOPER_PRESSED].dat, iDrawX, iDrawY);
+		else
+			draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_TROOPER].dat, iDrawX, iDrawY);
 
 	}
 
@@ -2555,7 +2520,7 @@ void cGame::draw_sidebarbuttons()
 
 void cGame::draw_placeit()
 {
-
+return;
 	// this is only done when bPlaceIt=true
 
 	int iMouseCell = map.mouse_cell();
@@ -2860,7 +2825,7 @@ void cGame::mapdraw()
 
     map.draw_bullets();
 
-    map.draw_structures(2); // draw repair things (HACK HACK!)
+    map.draw_structures(2); // draw layer 2
     map.draw_structures_health();
 	map.draw_units_2nd();
 
@@ -4334,8 +4299,12 @@ void cGame::preparementat(bool bTellHouse)
 	{
         if (state == GAME_BRIEFING)
         {
-        INI_Load_scenario(iHouse, iRegion);
-        INI_LOAD_BRIEFING(iHouse, iRegion, INI_BRIEFING);
+			INI_Load_scenario(iHouse, iRegion);
+			INI_LOAD_BRIEFING(iHouse, iRegion, INI_BRIEFING);
+			if (sidebar != NULL) {
+				delete sidebar;
+			}
+			sidebar = cSideBarFactory::getInstance()->createSideBar(game.iMission, iHouse);
         }
         else if (state == GAME_WINBRIEF)
         {
@@ -5012,6 +4981,30 @@ void GAME_KEYS()
 			} // END HACK
 		}
 	}
+
+	// fast-key's to switch activelists
+	// TODO: check if available.
+	if (key[KEY_F1]) {
+		game.iActiveList = LIST_CONSTYARD;
+	}
+	if (key[KEY_F2]) {
+		game.iActiveList = LIST_INFANTRY;
+	}
+	if (key[KEY_F3]) {
+		game.iActiveList = LIST_LIGHTFC;
+	}
+	if (key[KEY_F4]) {
+		game.iActiveList = LIST_HEAVYFC;
+	}
+	if (key[KEY_F5]) {
+		game.iActiveList = LIST_ORNI;
+	}
+	if (key[KEY_F6]) {
+		game.iActiveList = LIST_PALACE;
+	}
+	if (key[KEY_F7]) {
+		game.iActiveList = LIST_PALACE;
+	}
 }
 
 
@@ -5234,7 +5227,7 @@ void cGame::shutdown() {
 	// Now we are all neatly closed, we exit Allegro and return to OS hell.
 	allegro_exit();
 	logbook("Allegro shut down.");
-	logbook("Thanks for playing!");
+	logbook("Thanks for playing.");
 }
 
 /**

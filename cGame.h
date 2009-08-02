@@ -10,6 +10,9 @@
 
   */
 
+// TODO: remove #define LIST_MAX		8 here
+#define LIST_MAX		8
+
 // TODO: Clean this class up big time.
 
 // List structure
@@ -28,6 +31,8 @@ class cGame
 public:
 
 	std::string game_filename;
+
+	cSideBar * sidebar;
 
 	bool windowed;				// windowed
 	char version[15];			// version number, or name.
