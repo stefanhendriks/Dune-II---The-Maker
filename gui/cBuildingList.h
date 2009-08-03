@@ -37,6 +37,9 @@ class cBuildingList {
 		int getScrollingOffset() { return scrollingOffset; }
 		bool isAvailable() { return available; }
 
+		void scrollUp();
+		void scrollDown();
+
 		// set
 		void setTimer(int value) { TIMER_progress = value; }
 
@@ -48,7 +51,7 @@ class cBuildingList {
 		void setButtonIcon(int iconId) { buttonIconId = iconId; }
 		void setButtonDrawX(int value) { buttonDrawX = value; }
 		void setButtonDrawY(int value) { buttonDrawY = value; }
-		void setScrollingOffset(int value) { scrollingOffset = value; }
+		void setScrollingOffset(int value);
 		void setAvailable(bool value) { available = value; }
 
 	protected:
@@ -63,6 +66,8 @@ class cBuildingList {
 		int buttonDrawY;
 		int scrollingOffset; // the offset for scrolling through the list.
 		bool available;		 // is this list available?
+		int maxItems;		 // how many items have been set in the list?
+
 		// the list of icons
 		cBuildingListItem * items[MAX_ICONS];
 

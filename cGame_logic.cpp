@@ -1711,6 +1711,7 @@ void cGame::list_new_item(int iListID, int iIcon, int iPrice, int iStructureID, 
 
 void cGame::draw_list() {
 	return;
+
 	if (game.iActiveList == LIST_NONE) {
 		return;
 	}
@@ -2804,9 +2805,7 @@ void cGame::gerald()
 
 }
 
-void cGame::mapdraw()
-{
-    // make it ready to show night or something
+void cGame::mapdraw() {
 
 	map.draw_think();
 

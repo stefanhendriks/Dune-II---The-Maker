@@ -43,6 +43,8 @@ class cSideBar {
 		cBuildingList * getList(int listId) { return lists[listId]; }
 		void setList(int listId, cBuildingList *list);
 		int getSelectedListID() { return selectedListID; }
+		bool mouseOverScrollUp();
+		bool mouseOverScrollDown();
 
 		void think();
 	private:
@@ -53,6 +55,7 @@ class cSideBar {
 		// methods
 		void thinkAvailabilityLists();
 		void thinkInteraction();
+		void thinkMouseZScrolling(); // think about mouse wheel scrolling
 };
 
 #endif /* CSIDEBAR_H_ */

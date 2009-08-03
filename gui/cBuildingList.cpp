@@ -62,6 +62,7 @@ void cBuildingList::addItemToList(cBuildingListItem * item) {
 
 	// add
 	items[slot] = item;
+	maxItems++;
 }
 
 /**
@@ -74,12 +75,13 @@ void cBuildingList::removeItemFromList(int position) {
 	assert(position < MAX_ICONS);
 	cBuildingListItem * item = getItem(position);
 	if (item == NULL) {
-//		logbook("WARNING: Tried to remove item from list, but it is already NULL.");
 		// item can be null, in that case do nothing.
 	} else {
 		delete item;
 		items[position] = NULL;
+		maxItems--;
 	}
+
 }
 
 /**
@@ -94,4 +96,34 @@ bool cBuildingList::isOverButton(int x, int y) {
 	int drawX = getButtonDrawX();
 	int drawY = getButtonDrawY();
 	return (x >= drawX && x <= (drawX + 40) && (y >= drawY && y <= (drawY + 40)));
+}
+
+void cBuildingList::setScrollingOffset(int value) {
+
+	if (value > scrollingOffset) {
+		if (value > (maxItems - 5)) value = (maxItems - 5);
+	}
+	else if (value < scrollingOffset) {
+		if (value < 0) value = 0;
+	}
+
+	scrollingOffset = value;
+}
+
+/**
+ * Scroll list up one item
+ */
+void cBuildingList::scrollUp() {
+	logbook("cBuildingList::scrollUp");
+	int offset = getScrollingOffset() - 1;
+	setScrollingOffset(offset);
+}
+
+/**
+ * Scroll list down one item
+ */
+void cBuildingList::scrollDown() {
+	logbook("cBuildingList::scrollDown");
+	int offset = getScrollingOffset() + 1;
+	setScrollingOffset(offset);
 }

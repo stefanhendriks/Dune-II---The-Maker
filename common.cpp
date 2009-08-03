@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -14,12 +14,12 @@
 #include <math.h>
 
 // Keep a logbook
-void logbook(char *txt) 
+void logbook(char *txt)
 {
   FILE *fp;
   fp = fopen("log.txt", "at");
-    
-  if (fp) 
+
+  if (fp)
   {
     fprintf(fp, "%d| %s\n", game.iGameTimer, txt); // print the text into the file
   }
@@ -29,7 +29,7 @@ void logbook(char *txt)
 
 // determine if this cell is not out of boundries
 bool BORDER_POS(int x, int y)
-{	
+{
 	if (x < 1) return false;
     if (x > (game.map_width-1)) return false;
 
@@ -102,7 +102,7 @@ void INSTALL_WORLD()
     }
 
     // Now create the regions (x,y wise)
-    
+
     // FIRST ROW (EASY, SAME Y AXIS)
     REGION_NEW(16 ,  73, 1, -1, PIECE_DUNE_001);
     REGION_NEW(126,  73, 1, -1, PIECE_DUNE_002);
@@ -141,7 +141,7 @@ void INSTALL_WORLD()
   //  game.iHouse = ATREIDES;
     //REGION_SETUP(4, game.iHouse);
 
-    
+
 }
 
 void INSTALL_HOUSES()
@@ -158,7 +158,7 @@ void INSTALL_HOUSES()
   // Harkonnen
   houses[HARKONNEN].swap_color = -1;  // 144
   houses[HARKONNEN].minimap_color = makecol(125,0,0);
-    
+
   // Atreides
   houses[ATREIDES].swap_color  = 160;
   houses[ATREIDES].minimap_color = makecol(24,32,125);
@@ -203,13 +203,18 @@ bool MOUSE_BTN_LEFT()
 bool MOUSE_BTN_RIGHT()
 {
   if (mouse_b & 2)
-      return true;    // yeap    
-  
+      return true;    // yeap
+
   return false;
 }
 
 
-// Did we press the left mouse button?
+/**
+ * Returns true when a single mouse click has been detected. (that is, hold
+ * and released left mouse button).
+ *
+ * @return
+ */
 bool mouse_pressed_left()
 {
   if (MOUSE_BTN_LEFT())
@@ -254,7 +259,7 @@ bool mouse_pressed_right()
  Unit Rules
  *****************************/
 void install_units()
-{  
+{
   // Every unit thinks at 0.1 second. When the unit thinks, it is thinking about the path it
   // is taking, the enemies around him, etc. The speed of how a unit should move is depended on
   // time aswell. Every 0.01 second a unit 'can' move. The movespeed is like this:
@@ -290,11 +295,11 @@ void install_units()
     units[i].harvesting_amount= 0;
     units[i].harvesting_speed = 0;
     units[i].credit_capacity  = 0;
-    
+
     strcpy(units[i].name, "\0");
   }
 
-  // Unit        : CarryAll 
+  // Unit        : CarryAll
   // Description : CarryAll, the flying pickuptruck
   units[CARRYALL].bmp = (BITMAP *)gfxdata[UNIT_CARRYALL].dat;      // pointer to the original 8bit bitmap
   units[CARRYALL].shadow = (BITMAP *)gfxdata[UNIT_CARRYALL_SHADOW].dat;      // pointer to the original 8bit bitmap
@@ -307,7 +312,7 @@ void install_units()
   units[CARRYALL].free_roam=true; // may freely roam the air
   strcpy(units[CARRYALL].name, "Carry-All");
 
-      // Unit        : Ornithopter 
+      // Unit        : Ornithopter
   // Description : Pesty little aircraft shooting bastard
   units[ORNITHOPTER].bmp = (BITMAP *)gfxdata[UNIT_ORNITHOPTER].dat;      // pointer to the original 8bit bitmap
   units[ORNITHOPTER].shadow = (BITMAP *)gfxdata[UNIT_ORNITHOPTER_SHADOW].dat;      // pointer to the original 8bit bitmap
@@ -319,12 +324,12 @@ void install_units()
   units[ORNITHOPTER].bullets = ROCKET_SMALL_ORNI;
   units[ORNITHOPTER].second_shot = true;
   units[ORNITHOPTER].airborn = true;   // is airborn
-  units[ORNITHOPTER].free_roam=true; // may freely roam the air  
+  units[ORNITHOPTER].free_roam=true; // may freely roam the air
   strcpy(units[ORNITHOPTER].name, "Ornithopter");
 
     // Unit        : Devastator
   // Description : Devastator
-  units[DEVASTATOR].bmp = (BITMAP *)gfxdata[UNIT_DEVASTATOR].dat;      // pointer to the original 8bit bitmap  
+  units[DEVASTATOR].bmp = (BITMAP *)gfxdata[UNIT_DEVASTATOR].dat;      // pointer to the original 8bit bitmap
   units[DEVASTATOR].shadow = (BITMAP *)gfxdata[UNIT_DEVASTATOR_SHADOW].dat;      // pointer to the original bitmap shadow
   units[DEVASTATOR].bmp_width  = 19*2;
   units[DEVASTATOR].bmp_startpixel = 0;
@@ -336,9 +341,9 @@ void install_units()
   strcpy(units[DEVASTATOR].name, "Devastator");
 
   // Unit        : Harvester
-  // Description : Harvester 
-  units[HARVESTER].bmp = (BITMAP *)gfxdata[UNIT_HARVESTER].dat;      // pointer to the original 8bit bitmap  
-  units[HARVESTER].shadow = (BITMAP *)gfxdata[UNIT_HARVESTER_SHADOW].dat;      // pointer to the original 8bit bitmap  
+  // Description : Harvester
+  units[HARVESTER].bmp = (BITMAP *)gfxdata[UNIT_HARVESTER].dat;      // pointer to the original 8bit bitmap
+  units[HARVESTER].shadow = (BITMAP *)gfxdata[UNIT_HARVESTER_SHADOW].dat;      // pointer to the original 8bit bitmap
   units[HARVESTER].bmp_width  = 40*2;
   units[HARVESTER].bmp_startpixel = 24;
   units[HARVESTER].bmp_height = 26*2;
@@ -350,9 +355,9 @@ void install_units()
 
   // Unit        : Combattank
   // Description : Combattank
-  units[TANK].bmp = (BITMAP *)gfxdata[UNIT_TANKBASE].dat;      // pointer to the original 8bit bitmap  
-  units[TANK].shadow = (BITMAP *)gfxdata[UNIT_TANKBASE_SHADOW].dat;      // pointer to the original 8bit bitmap  
-  units[TANK].top = (BITMAP *)gfxdata[UNIT_TANKTOP].dat;      // pointer to the original 8bit bitmap  
+  units[TANK].bmp = (BITMAP *)gfxdata[UNIT_TANKBASE].dat;      // pointer to the original 8bit bitmap
+  units[TANK].shadow = (BITMAP *)gfxdata[UNIT_TANKBASE_SHADOW].dat;      // pointer to the original 8bit bitmap
+  units[TANK].top = (BITMAP *)gfxdata[UNIT_TANKTOP].dat;      // pointer to the original 8bit bitmap
   units[TANK].bmp_width  = 16*2;
   units[TANK].bmp_startpixel = 0;
   units[TANK].bmp_height = 16*2;
@@ -364,9 +369,9 @@ void install_units()
 
   // Unit        : Siege Tank
   // Description : Siege tank
-  units[SIEGETANK].bmp = (BITMAP *)gfxdata[UNIT_SIEGEBASE].dat;      // pointer to the original 8bit bitmap  
-  units[SIEGETANK].shadow = (BITMAP *)gfxdata[UNIT_SIEGEBASE_SHADOW].dat;      // pointer to the original 8bit bitmap  
-  units[SIEGETANK].top = (BITMAP *)gfxdata[UNIT_SIEGETOP].dat;      // pointer to the original 8bit bitmap  
+  units[SIEGETANK].bmp = (BITMAP *)gfxdata[UNIT_SIEGEBASE].dat;      // pointer to the original 8bit bitmap
+  units[SIEGETANK].shadow = (BITMAP *)gfxdata[UNIT_SIEGEBASE_SHADOW].dat;      // pointer to the original 8bit bitmap
+  units[SIEGETANK].top = (BITMAP *)gfxdata[UNIT_SIEGETOP].dat;      // pointer to the original 8bit bitmap
   units[SIEGETANK].bmp_width  = 18*2;
   units[SIEGETANK].bmp_startpixel = 1;
   units[SIEGETANK].bmp_height = 18*2;
@@ -377,9 +382,9 @@ void install_units()
   strcpy(units[SIEGETANK].name, "Siege Tank");
 
   // Unit        : MCV
-  // Description : Movable Construction Vehicle  
-  units[MCV].bmp = (BITMAP *)gfxdata[UNIT_MCV].dat;      // pointer to the original 8bit bitmap  
-  units[MCV].shadow = (BITMAP *)gfxdata[UNIT_MCV_SHADOW].dat;      // pointer to the original 8bit bitmap  
+  // Description : Movable Construction Vehicle
+  units[MCV].bmp = (BITMAP *)gfxdata[UNIT_MCV].dat;      // pointer to the original 8bit bitmap
+  units[MCV].shadow = (BITMAP *)gfxdata[UNIT_MCV_SHADOW].dat;      // pointer to the original 8bit bitmap
   units[MCV].bmp_width  = 24*2;
   units[MCV].bmp_startpixel = 0;
   units[MCV].bmp_height = 25*2;
@@ -394,19 +399,19 @@ void install_units()
   units[DEVIATOR].bmp_width  = 16*2;
   units[DEVIATOR].bmp_height = 16*2;
   units[DEVIATOR].bmp_startpixel = 0;
-  units[DEVIATOR].bmp_frames = 1;  
+  units[DEVIATOR].bmp_frames = 1;
   units[DEVIATOR].icon = ICON_UNIT_DEVIATOR;
   units[DEVIATOR].bullets = BULLET_GAS; // our gassy rocket
   strcpy(units[DEVIATOR].name, "Deviator");
 
   // Unit        : Launcher
   // Description : Rocket Launcher
-  units[LAUNCHER].bmp = (BITMAP *)gfxdata[UNIT_LAUNCHER].dat;      // pointer to the original 8bit bitmap  
+  units[LAUNCHER].bmp = (BITMAP *)gfxdata[UNIT_LAUNCHER].dat;      // pointer to the original 8bit bitmap
   units[LAUNCHER].shadow = (BITMAP *)gfxdata[UNIT_LAUNCHER_SHADOW].dat;      // pointer to the original 8bit bitmap
   units[LAUNCHER].bmp_width  = 16*2;
   units[LAUNCHER].bmp_height = 16*2;
   units[LAUNCHER].bmp_startpixel = 0;
-  units[LAUNCHER].bmp_frames = 1;  
+  units[LAUNCHER].bmp_frames = 1;
   units[LAUNCHER].icon = ICON_UNIT_LAUNCHER;
   units[LAUNCHER].second_shot = true;
   //units[LAUNCHER].bullets = ROCKET_NORMAL; // our gassy rocket
@@ -437,7 +442,7 @@ void install_units()
   units[TRIKE].bmp_startpixel = 0;
   units[TRIKE].bmp_frames = 1;
   units[TRIKE].icon = ICON_UNIT_TRIKE;
-  units[TRIKE].bullets = BULLET_TRIKE;   
+  units[TRIKE].bullets = BULLET_TRIKE;
   units[TRIKE].squish=false;
   strcpy(units[TRIKE].name, "Trike");
 
@@ -453,8 +458,8 @@ void install_units()
   units[RAIDER].icon = ICON_UNIT_RAIDER;
   units[RAIDER].bullets = BULLET_TRIKE;
   units[RAIDER].squish=false;
-  
-  
+
+
 
   // Unit        : Frigate
   // Description : Frigate
@@ -464,7 +469,7 @@ void install_units()
   units[FRIGATE].bmp_height = 32*2;
   units[FRIGATE].bmp_startpixel = 0;
   units[FRIGATE].bmp_frames = 2; // we have at max 1 extra frame
-  units[FRIGATE].speed = 2;  
+  units[FRIGATE].speed = 2;
   units[FRIGATE].turnspeed = 40;
   units[FRIGATE].airborn = true;
   units[FRIGATE].squish = false;
@@ -494,7 +499,7 @@ void install_units()
   units[SONICTANK].icon = ICON_UNIT_SONICTANK;
   strcpy(units[SONICTANK].name, "Sonic Tank");
 
- 
+
   // Unit        : Single Soldier
   // Description : 1 soldier
   units[SOLDIER].bmp = (BITMAP *)gfxdata[UNIT_SOLDIER].dat;      // pointer to the original 8bit bitmap
@@ -502,13 +507,13 @@ void install_units()
   units[SOLDIER].bmp_height = 16*2;
   units[SOLDIER].bmp_startpixel = 0;
   units[SOLDIER].bmp_frames = 3; // 2 extra frames
-  units[SOLDIER].infantry=true;  
+  units[SOLDIER].infantry=true;
   units[SOLDIER].bullets  = BULLET_SMALL;
   units[SOLDIER].icon       = ICON_UNIT_SOLDIER;
   units[SOLDIER].squish=false;
   strcpy(units[SOLDIER].name, "Soldier");
-  
-  
+
+
   // Unit        : Infantry
   // Description : 3 soldiers
   units[INFANTRY].bmp = (BITMAP *)gfxdata[UNIT_SOLDIERS].dat;      // pointer to the original 8bit bitmap
@@ -565,7 +570,7 @@ void install_units()
   units[UNIT_FREMEN].infantry = true;
   units[UNIT_FREMEN].squish=false;
 
-  
+
   // Unit        : Saboteur
   // Description : Special infantry unit, moves like trike, deadly as hell, not detectable on radar!
   units[SABOTEUR].bmp = (BITMAP *)gfxdata[UNIT_SABOTEUR].dat;
@@ -582,10 +587,10 @@ void install_units()
   units[SABOTEUR].attack_frequency = 0;
   units[SABOTEUR].turnspeed = 0; // very fast
   strcpy(units[SABOTEUR].name, "Saboteur");
-  units[SABOTEUR].infantry = true;  
+  units[SABOTEUR].infantry = true;
   units[SABOTEUR].icon      = ICON_UNIT_SABOTEUR;
   units[SABOTEUR].squish=false;
-  
+
   // Unit        : Saboteur
   // Description : Special infantry unit, moves like trike, deadly as hell, not detectable on radar!
   units[SANDWORM].speed = 3; // very fast
@@ -593,10 +598,10 @@ void install_units()
   units[SANDWORM].hp = 9999;
   units[SANDWORM].bmp_width = 24*2;
   units[SANDWORM].bmp_height = 24*2;
-  units[SANDWORM].turnspeed = 0; // very fast  
+  units[SANDWORM].turnspeed = 0; // very fast
   units[SANDWORM].sight = 16;
   strcpy(units[SANDWORM].name, "Sandworm");
-  units[SANDWORM].icon      = ICON_UNIT_SANDWORM;  
+  units[SANDWORM].icon      = ICON_UNIT_SANDWORM;
   units[SANDWORM].squish=false;
 
 
@@ -604,15 +609,15 @@ void install_units()
   // Description : <description>
 
 
- 
+
 }
 
 
 /****************
- Install bullets    
+ Install bullets
  ****************/
 void install_bullets()
-{  
+{
   for (int i=0; i < MAX_BULLET_TYPES; i++)
   {
     bullets[i].bmp = NULL; // in case an invalid bitmap; default is a small rocket
@@ -624,7 +629,7 @@ void install_bullets()
     bullets[i].bmp_width = 8*2;
     bullets[i].sound = -1;    // no sound
   }
-  
+
   // huge rocket/missile
   bullets[ROCKET_BIG].bmp = (BITMAP *)gfxdata[BULLET_ROCKET_LARGE].dat;
   bullets[ROCKET_BIG].deadbmp = EXPLOSION_STRUCTURE01;
@@ -714,7 +719,7 @@ void install_bullets()
   bullets[BULLET_TANK].max_frames = 0;
   bullets[BULLET_TANK].sound = SOUND_EXPL_ROCKET;
   bullets[BULLET_TANK].max_deadframes = 1;
-  
+
   // siege tank shot
   bullets[BULLET_SIEGE].bmp     = (BITMAP *)gfxdata[BULLET_DOT_MEDIUM].dat;
   bullets[BULLET_SIEGE].deadbmp = EXPLOSION_BULLET; // not used anyway
@@ -724,8 +729,8 @@ void install_bullets()
   bullets[BULLET_SIEGE].max_frames = 0;
   bullets[BULLET_SIEGE].sound = SOUND_EXPL_ROCKET;
   bullets[BULLET_SIEGE].max_deadframes = 2;
-    
-  // devastator shot 
+
+  // devastator shot
   bullets[BULLET_DEVASTATOR].bmp     = (BITMAP *)gfxdata[BULLET_DOT_LARGE].dat;
   bullets[BULLET_DEVASTATOR].deadbmp = EXPLOSION_ROCKET_SMALL; // not used anyway
   bullets[BULLET_DEVASTATOR].bmp_width = 8;
@@ -735,7 +740,7 @@ void install_bullets()
   bullets[BULLET_DEVASTATOR].sound = SOUND_EXPL_ROCKET;
   bullets[BULLET_DEVASTATOR].max_deadframes = 1;
 
-  // Gas rocket of a deviator 
+  // Gas rocket of a deviator
   bullets[BULLET_GAS].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_NORMAL].dat;
   bullets[BULLET_GAS].deadbmp = EXPLOSION_GAS;
   bullets[BULLET_GAS].bmp_width = 32;
@@ -752,7 +757,7 @@ void install_bullets()
   bullets[BULLET_TURRET].damage = 12;
   bullets[BULLET_TURRET].damage_inf = 12; // infantry is a hard target
   bullets[BULLET_TURRET].max_frames = 0;
-  bullets[BULLET_TURRET].max_deadframes = 1; 
+  bullets[BULLET_TURRET].max_deadframes = 1;
   bullets[BULLET_TURRET].sound = SOUND_GUNTURRET;
 
   // EXEPTION: Shimmer/ Sonic tank
@@ -828,14 +833,14 @@ void install_bullets()
  Structure Rules
  *****************************/
 void install_structures()
-{  
+{
   for (int i = 0; i < MAX_STRUCTURETYPES; i++)
   {
-    structures[i].bmp = (BITMAP *)gfxdata[BUILD_WINDTRAP].dat; // in case an invalid bitmap, we are a windtrap  
-	structures[i].shadow = NULL; // in case an invalid bitmap, we are a windtrap  
+    structures[i].bmp = (BITMAP *)gfxdata[BUILD_WINDTRAP].dat; // in case an invalid bitmap, we are a windtrap
+	structures[i].shadow = NULL; // in case an invalid bitmap, we are a windtrap
     structures[i].sight = 1;
     structures[i].bmp_width = 32*2;
-    structures[i].bmp_height = 32*2;    
+    structures[i].bmp_height = 32*2;
     structures[i].sight = 5;
     structures[i].hp = 1; // low health
 	structures[i].fixhp = -1; // no fixing hp yet
@@ -848,17 +853,17 @@ void install_structures()
     structures[i].build_time = 0;
     structures[i].list = -1; // no list attached
     strcpy(structures[i].name,   "Unknown");
-  } 
+  }
 
   // Single and 4 slabs
-  structures[SLAB1].bmp = (BITMAP *)gfxdata[PLACE_SLAB1].dat; // in case an invalid bitmap, we are a windtrap  
+  structures[SLAB1].bmp = (BITMAP *)gfxdata[PLACE_SLAB1].dat; // in case an invalid bitmap, we are a windtrap
   structures[SLAB1].icon = ICON_STR_1SLAB;
   structures[SLAB1].hp   = 25;            // Not functional in-game, only for building
   structures[SLAB1].bmp_width = 16*2;
   structures[SLAB1].bmp_height = 16*2;
   strcpy(structures[SLAB1].name, "Concrete Slab");
 
-  structures[SLAB4].bmp = (BITMAP *)gfxdata[PLACE_SLAB4].dat; // in case an invalid bitmap, we are a windtrap  
+  structures[SLAB4].bmp = (BITMAP *)gfxdata[PLACE_SLAB4].dat; // in case an invalid bitmap, we are a windtrap
   structures[SLAB4].icon = ICON_STR_4SLAB;
   structures[SLAB4].hp   = 75;            // Not functional in-game, only for building
   structures[SLAB4].bmp_width = 32*2;
@@ -867,7 +872,7 @@ void install_structures()
 
 
   // Concrete Wall
-  structures[WALL].bmp = (BITMAP *)gfxdata[PLACE_WALL].dat; // in case an invalid bitmap, we are a windtrap  
+  structures[WALL].bmp = (BITMAP *)gfxdata[PLACE_WALL].dat; // in case an invalid bitmap, we are a windtrap
   structures[WALL].icon = ICON_STR_WALL;
   structures[WALL].hp   = 75;            // Not functional in-game, only for building
   structures[WALL].bmp_width = 16*2;
@@ -877,7 +882,7 @@ void install_structures()
 
   // Structure    : Windtrap
   // Description  : <none>
-  structures[WINDTRAP].bmp = (BITMAP *)gfxdata[BUILD_WINDTRAP].dat; 
+  structures[WINDTRAP].bmp = (BITMAP *)gfxdata[BUILD_WINDTRAP].dat;
   structures[WINDTRAP].shadow = (BITMAP *)gfxdata[BUILD_WINDTRAP_SHADOW].dat; // shadow
   structures[WINDTRAP].fadecol = 128;
   structures[WINDTRAP].fademax = 134;
@@ -887,8 +892,8 @@ void install_structures()
   // Structure    : Heavy Factory
   // Description  : <none>
   structures[HEAVYFACTORY].bmp_width = 48*2;
-  structures[HEAVYFACTORY].bmp_height = 32*2;    
-  structures[HEAVYFACTORY].bmp = (BITMAP *)gfxdata[BUILD_HEAVYFACTORY].dat; 
+  structures[HEAVYFACTORY].bmp_height = 32*2;
+  structures[HEAVYFACTORY].bmp = (BITMAP *)gfxdata[BUILD_HEAVYFACTORY].dat;
   structures[HEAVYFACTORY].shadow = (BITMAP *)gfxdata[BUILD_HEAVYFACTORY_SHADOW].dat; // shadow
   structures[HEAVYFACTORY].fadecol = -1;
   structures[HEAVYFACTORY].icon = ICON_STR_HEAVYFACTORY;
@@ -897,9 +902,9 @@ void install_structures()
   // Structure    : Hight Tech Factory (for aircraft only)
   // Description  : <none>
   structures[HIGHTECH].bmp_width = 48*2;
-  structures[HIGHTECH].bmp_height = 32*2;    
-  structures[HIGHTECH].bmp = (BITMAP *)gfxdata[BUILD_HIGHTECH].dat; 
-  structures[HIGHTECH].shadow = (BITMAP *)gfxdata[BUILD_HIGHTECH_SHADOW].dat; 
+  structures[HIGHTECH].bmp_height = 32*2;
+  structures[HIGHTECH].bmp = (BITMAP *)gfxdata[BUILD_HIGHTECH].dat;
+  structures[HIGHTECH].shadow = (BITMAP *)gfxdata[BUILD_HIGHTECH_SHADOW].dat;
   structures[HIGHTECH].fadecol = -1;
   structures[HIGHTECH].icon = ICON_STR_HIGHTECH;
   strcpy(structures[HIGHTECH].name, "Hi-Tech");
@@ -907,9 +912,9 @@ void install_structures()
   // Structure    : Repair
   // Description  : <none>
   structures[REPAIR].bmp_width = 48*2;
-  structures[REPAIR].bmp_height = 32*2;    
-  structures[REPAIR].bmp = (BITMAP *)gfxdata[BUILD_REPAIR].dat; 
-  structures[REPAIR].shadow = (BITMAP *)gfxdata[BUILD_REPAIR_SHADOW].dat; 
+  structures[REPAIR].bmp_height = 32*2;
+  structures[REPAIR].bmp = (BITMAP *)gfxdata[BUILD_REPAIR].dat;
+  structures[REPAIR].shadow = (BITMAP *)gfxdata[BUILD_REPAIR_SHADOW].dat;
   structures[REPAIR].fadecol = -1;
   structures[REPAIR].icon = ICON_STR_REPAIR;
   strcpy(structures[REPAIR].name, "Repair Facility");
@@ -918,17 +923,17 @@ void install_structures()
   // Description  : <none>
   structures[PALACE].bmp_width = 48*2;
   structures[PALACE].bmp_height = 48*2;
-  structures[PALACE].bmp = (BITMAP *)gfxdata[BUILD_PALACE].dat;   
-  structures[PALACE].shadow = (BITMAP *)gfxdata[BUILD_PALACE_SHADOW].dat;   
+  structures[PALACE].bmp = (BITMAP *)gfxdata[BUILD_PALACE].dat;
+  structures[PALACE].shadow = (BITMAP *)gfxdata[BUILD_PALACE_SHADOW].dat;
   structures[PALACE].icon = ICON_STR_PALACE;
   strcpy(structures[PALACE].name, "Palace");
-  
+
   // Structure    : Light Factory
   // Description  : <none>
   structures[LIGHTFACTORY].bmp_width = 32*2;
-  structures[LIGHTFACTORY].bmp_height = 32*2;    
-  structures[LIGHTFACTORY].bmp = (BITMAP *)gfxdata[BUILD_LIGHTFACTORY].dat; 
-  structures[LIGHTFACTORY].shadow = (BITMAP *)gfxdata[BUILD_LIGHTFACTORY_SHADOW].dat; 
+  structures[LIGHTFACTORY].bmp_height = 32*2;
+  structures[LIGHTFACTORY].bmp = (BITMAP *)gfxdata[BUILD_LIGHTFACTORY].dat;
+  structures[LIGHTFACTORY].shadow = (BITMAP *)gfxdata[BUILD_LIGHTFACTORY_SHADOW].dat;
   structures[LIGHTFACTORY].fadecol = -1;
   structures[LIGHTFACTORY].icon = ICON_STR_LIGHTFACTORY;
   strcpy(structures[LIGHTFACTORY].name, "Light Factory");
@@ -936,8 +941,8 @@ void install_structures()
   // Structure    : Radar
   // Description  : <none>
   structures[RADAR].bmp_width = 32*2;
-  structures[RADAR].bmp_height = 32*2;    
-  structures[RADAR].bmp = (BITMAP *)gfxdata[BUILD_RADAR].dat; 
+  structures[RADAR].bmp_height = 32*2;
+  structures[RADAR].bmp = (BITMAP *)gfxdata[BUILD_RADAR].dat;
   structures[RADAR].shadow = (BITMAP *)gfxdata[BUILD_RADAR_SHADOW].dat; // shadow
   structures[RADAR].sight = 12;
   structures[RADAR].fadecol = -1;
@@ -947,9 +952,9 @@ void install_structures()
   // Structure    : Barracks
   // Description  : <none>
   structures[BARRACKS].bmp_width = 32*2;
-  structures[BARRACKS].bmp_height = 32*2;    
-  structures[BARRACKS].bmp = (BITMAP *)gfxdata[BUILD_BARRACKS].dat; 
-  structures[BARRACKS].shadow = (BITMAP *)gfxdata[BUILD_BARRACKS_SHADOW].dat; 
+  structures[BARRACKS].bmp_height = 32*2;
+  structures[BARRACKS].bmp = (BITMAP *)gfxdata[BUILD_BARRACKS].dat;
+  structures[BARRACKS].shadow = (BITMAP *)gfxdata[BUILD_BARRACKS_SHADOW].dat;
   structures[BARRACKS].fadecol = -1;
   structures[BARRACKS].icon = ICON_STR_BARRACKS;
   strcpy(structures[BARRACKS].name, "Barracks");
@@ -957,9 +962,9 @@ void install_structures()
   // Structure    : WOR
   // Description  : <none>
   structures[WOR].bmp_width = 32*2;
-  structures[WOR].bmp_height = 32*2;    
-  structures[WOR].bmp = (BITMAP *)gfxdata[BUILD_WOR].dat; 
-  structures[WOR].shadow = (BITMAP *)gfxdata[BUILD_WOR_SHADOW].dat; 
+  structures[WOR].bmp_height = 32*2;
+  structures[WOR].bmp = (BITMAP *)gfxdata[BUILD_WOR].dat;
+  structures[WOR].shadow = (BITMAP *)gfxdata[BUILD_WOR_SHADOW].dat;
   structures[WOR].fadecol = -1;
   structures[WOR].icon = ICON_STR_WOR;
   strcpy(structures[WOR].name, "WOR");
@@ -969,9 +974,9 @@ void install_structures()
   // Structure    : Silo
   // Description  : <none>
   structures[SILO].bmp_width = 32*2;
-  structures[SILO].bmp_height = 32*2;    
-  structures[SILO].bmp = (BITMAP *)gfxdata[BUILD_SILO].dat; 
-  structures[SILO].shadow = (BITMAP *)gfxdata[BUILD_SILO_SHADOW].dat; 
+  structures[SILO].bmp_height = 32*2;
+  structures[SILO].bmp = (BITMAP *)gfxdata[BUILD_SILO].dat;
+  structures[SILO].shadow = (BITMAP *)gfxdata[BUILD_SILO_SHADOW].dat;
   structures[SILO].fadecol = -1;
   structures[SILO].icon = ICON_STR_SILO;
   strcpy(structures[SILO].name, "Spice Storage Silo");
@@ -979,9 +984,9 @@ void install_structures()
   // Structure    : Refinery
   // Description  : <none>
   structures[REFINERY].bmp_width = 48*2;
-  structures[REFINERY].bmp_height = 32*2;    
-  structures[REFINERY].bmp = (BITMAP *)gfxdata[BUILD_REFINERY].dat; 
-  structures[REFINERY].shadow = (BITMAP *)gfxdata[BUILD_REFINERY_SHADOW].dat; 
+  structures[REFINERY].bmp_height = 32*2;
+  structures[REFINERY].bmp = (BITMAP *)gfxdata[BUILD_REFINERY].dat;
+  structures[REFINERY].shadow = (BITMAP *)gfxdata[BUILD_REFINERY_SHADOW].dat;
   structures[REFINERY].fadecol = -1;
   structures[REFINERY].icon = ICON_STR_REFINERY;
   strcpy(structures[REFINERY].name, "Spice Refinery");
@@ -989,9 +994,9 @@ void install_structures()
   // Structure    : Construction Yard
   // Description  : <none>
   structures[CONSTYARD].bmp_width = 32*2;
-  structures[CONSTYARD].bmp_height = 32*2;  
+  structures[CONSTYARD].bmp_height = 32*2;
   structures[CONSTYARD].sight = 4;
-  structures[CONSTYARD].bmp = (BITMAP *)gfxdata[BUILD_CONSTYARD].dat; 
+  structures[CONSTYARD].bmp = (BITMAP *)gfxdata[BUILD_CONSTYARD].dat;
   structures[CONSTYARD].fadecol = -1;
   structures[CONSTYARD].icon = ICON_STR_CONSTYARD;
   strcpy(structures[CONSTYARD].name, "Construction Yard");
@@ -999,43 +1004,43 @@ void install_structures()
   // Structure    : Starport
   // Description  : You can order units from this structure
   structures[STARPORT].bmp_width = 48*2;
-  structures[STARPORT].bmp_height = 48*2;    
-  structures[STARPORT].bmp = (BITMAP *)gfxdata[BUILD_STARPORT].dat; 
-  structures[STARPORT].shadow = (BITMAP *)gfxdata[BUILD_STARPORT_SHADOW].dat; 
-  structures[STARPORT].fadecol = -1;  
+  structures[STARPORT].bmp_height = 48*2;
+  structures[STARPORT].bmp = (BITMAP *)gfxdata[BUILD_STARPORT].dat;
+  structures[STARPORT].shadow = (BITMAP *)gfxdata[BUILD_STARPORT_SHADOW].dat;
+  structures[STARPORT].fadecol = -1;
   structures[STARPORT].icon  = ICON_STR_STARPORT;
   strcpy(structures[STARPORT].name, "Starport");
 
   // Structure    : House of IX
   // Description  : Makes it possible for the player to upgrade its Heavy Factory in order to build their special weapon
   structures[IX].bmp_width = 32*2;
-  structures[IX].bmp_height = 32*2;    
-  structures[IX].bmp = (BITMAP *)gfxdata[BUILD_IX].dat; 
-  structures[IX].shadow = (BITMAP *)gfxdata[BUILD_IX_SHADOW].dat; 
-  structures[IX].fadecol = -1;  
+  structures[IX].bmp_height = 32*2;
+  structures[IX].bmp = (BITMAP *)gfxdata[BUILD_IX].dat;
+  structures[IX].shadow = (BITMAP *)gfxdata[BUILD_IX_SHADOW].dat;
+  structures[IX].fadecol = -1;
   structures[IX].icon  = ICON_STR_IX;
   strcpy(structures[IX].name, "House of IX");
 
   // Structure    : Normal Turret
   // Description  : defence
   structures[TURRET].bmp_width = 16*2;
-  structures[TURRET].bmp_height = 16*2;    
-  structures[TURRET].bmp = (BITMAP *)gfxdata[BUILD_TURRET].dat;   
-  structures[TURRET].shadow = (BITMAP *)gfxdata[BUILD_TURRET_SHADOW].dat;   
-  structures[TURRET].fadecol = -1;  
-  structures[TURRET].icon  = ICON_STR_TURRET;  
-  structures[TURRET].sight = 7;  
+  structures[TURRET].bmp_height = 16*2;
+  structures[TURRET].bmp = (BITMAP *)gfxdata[BUILD_TURRET].dat;
+  structures[TURRET].shadow = (BITMAP *)gfxdata[BUILD_TURRET_SHADOW].dat;
+  structures[TURRET].fadecol = -1;
+  structures[TURRET].icon  = ICON_STR_TURRET;
+  structures[TURRET].sight = 7;
   strcpy(structures[TURRET].name, "Gun Turret");
 
   // Structure    : Rocket Turret
   // Description  : defence
   structures[RTURRET].bmp_width = 16*2;
-  structures[RTURRET].bmp_height = 16*2;    
-  structures[RTURRET].bmp = (BITMAP *)gfxdata[BUILD_RTURRET].dat;   
-  structures[RTURRET].shadow = (BITMAP *)gfxdata[BUILD_RTURRET_SHADOW].dat;   
-  structures[RTURRET].fadecol = -1;  
-  structures[RTURRET].icon  = ICON_STR_RTURRET;  
-  structures[RTURRET].sight = 10;    
+  structures[RTURRET].bmp_height = 16*2;
+  structures[RTURRET].bmp = (BITMAP *)gfxdata[BUILD_RTURRET].dat;
+  structures[RTURRET].shadow = (BITMAP *)gfxdata[BUILD_RTURRET_SHADOW].dat;
+  structures[RTURRET].fadecol = -1;
+  structures[RTURRET].icon  = ICON_STR_RTURRET;
+  structures[RTURRET].sight = 10;
   strcpy(structures[RTURRET].name, "Rocket Turret");
 
   // Structure    : Windtrap
@@ -1051,11 +1056,11 @@ void install_structures()
  // I = How much we have (CURRENT STATE)
  // W = MAX it can have
 float health_bar(float max_w, int i, int w)
-{  
-  float health = 0.0f;  
+{
+  float health = 0.0f;
   float flHP   = i;
   float flMAX  = w;
-  
+
   if (flHP > flMAX) {
       return max_w;
   }
@@ -1072,17 +1077,17 @@ float health_bar(float max_w, int i, int w)
  Unit health-bar calculation, returns amount of pictures
  ******************************/
 float health_unit(int i, float w)
-{  
+{
 
-  float health = 0.0f;    
+  float health = 0.0f;
   float flHP   = unit[i].iHitPoints;
   float flMAX  = units[unit[i].iType].hp;
-  
+
   // amount of pixels (max 16 = 100%)
 
   health = (float)(flHP / flMAX);
 
-  return (health*w);    
+  return (health*w);
 }
 
 
@@ -1091,11 +1096,11 @@ float health_unit(int i, float w)
  Structure health-bar calculation, returns amount of pictures
  ******************************/
 float health_structure(int i, int w)
-{  
-  float health = 0.0f;  
+{
+  float health = 0.0f;
   float flHP   = structure[i]->getHitPoints();
   float flMAX  = structures[structure[i]->getType()].hp;
-  
+
   // amount of pixels (max 16 = 100%)
 
   health = (float)(flHP / flMAX);
@@ -1121,14 +1126,14 @@ int iFindCloseBorderCell(int iCll)
 	sprintf(msg, "WXH = %dx%d", game.map_width, game.map_height);
 	logbook(msg);*/
 
-	// STEP 1: determine starting location of carryall: 
+	// STEP 1: determine starting location of carryall:
 	int iStartCell=-1;
 	int lDistance=9999;
 
 	// i will go around the border to find a good startcell:
 	// first the horizontal lines
 	// then vertical
-	
+
 	int tDistance=9999;
 
 	int cll=-1;
@@ -1142,29 +1147,29 @@ int iFindCloseBorderCell(int iCll)
 		if (tDistance < lDistance)
 		{
 			lDistance = tDistance;
-			
+
 			cll = iCellMake(iX, 0);
-			
+
 			if (map.occupied(cll) == false)
 				iStartCell = cll;
 
-			
+
 		}
-		
+
 		// check when Y = map_height (bottom)
 		tDistance = ABS_length(iX, game.map_height-1, iCllX, iCllY);
 
 		if (tDistance < lDistance)
 		{
-			lDistance = tDistance;			
+			lDistance = tDistance;
 
 			cll = iCellMake(iX, game.map_height-1);
-			
+
 			if (map.occupied(cll) == false)
-				iStartCell = cll;			
+				iStartCell = cll;
 		}
 	}
-	
+
 	// VERTICAL
 	for (int iY=0; iY < game.map_height; iY++)
 	{
@@ -1173,14 +1178,14 @@ int iFindCloseBorderCell(int iCll)
 
 		if (tDistance < lDistance)
 		{
-			lDistance = tDistance;			
+			lDistance = tDistance;
 
 			cll = iCellMake(0, iY);
-			
+
 			if (map.occupied(cll) == false)
-				iStartCell = cll;			
+				iStartCell = cll;
 		}
-		
+
 		// check when XY = map_width (bottom)
 		tDistance = ABS_length(game.map_width-1, iY, iCllX, iCllY);
 
@@ -1188,9 +1193,9 @@ int iFindCloseBorderCell(int iCll)
 		{
 			lDistance = tDistance;
 			cll = iCellMake(game.map_width-1, iY);
-			
+
 			if (map.occupied(cll) == false)
-				iStartCell = cll;			
+				iStartCell = cll;
 		}
 	}
 
@@ -1216,7 +1221,7 @@ int FIND_PRIMARY_BUILDING(int iType, int iPlayer)
 		{
 			if (structure[i]->getType() == iType)
 				if (structure[i]->iFreeAround() > -1) // free!
-				{				
+				{
 					return i; // return this structure
 				}
 		}
@@ -1244,7 +1249,7 @@ int iCellOnScreen(int iCell)
     if ((iCellX >= iMapX && iCellX <= iEndX) && (iCellY >= iMapY && iCellY <= iEndY))
         return 0; // on screen
 
-    
+
     int iCalcX = iMapX + (((game.screen_x-160)/32) / 2);
     int iCalcY = iMapY + (((game.screen_y-42)/32)+1)/2;
 
@@ -1272,7 +1277,7 @@ void play_sound_id(int s, int iOnScreen)
         if (iOnScreen <= 1)
             game.iSoundsPlayed = play_sample((SAMPLE *)gfxaudio[s].dat, 255, 127,1000,0);
         else
-        {            
+        {
             int iVol = 255-((255/32) * iOnScreen);
             if (iVol < 0) iVol=0;
             game.iSoundsPlayed = play_sample((SAMPLE *)gfxaudio[s].dat, iVol, 127,1000,0);
@@ -1314,14 +1319,14 @@ void music_volume(int i)
     else
        set_volume(255, i);
 
-    
+
 }
 
 
 void mp3_play_file(char filename[255])
 {
 
-	
+
   char *data;  // mp3 file in memory
   int len;     // length of file(also the buffer)
   FILE *f = NULL;  // file.mp3
@@ -1329,13 +1334,13 @@ void mp3_play_file(char filename[255])
   len =   (int)file_size(filename);
 
   //allegro_message("Len = %d", len);
-  
+
   data = new char[len];
   f = fopen(filename, "r");
 
   if (f != NULL)
   {
-  fread(data, 1, len, f); 
+  fread(data, 1, len, f);
   fclose(f);
   }
   else
@@ -1348,15 +1353,15 @@ void mp3_play_file(char filename[255])
         almp3_destroy_mp3(mp3_music);
 
        mp3_music=NULL;
-     
+
        return;
 
   }
-  
+
   almp3_destroy_mp3(mp3_music); // stop music
 
-  mp3_music = almp3_create_mp3(data, len); 
-    
+  mp3_music = almp3_create_mp3(data, len);
+
   // play music, use big buffer
   almp3_play_mp3(mp3_music, 32768, 255, 128);
 
@@ -1385,15 +1390,15 @@ void play_music(int iType)
     // PEACE
     // MENU
     // SELECT CONQUEST
-    
+
     game.iMusicType = iType;
 
     int iNumber=0;
-    
+
 // win and lose has 3 music files
     if (iType == 0 || iType == 1)
         iNumber=rnd(3)+1;
-    
+
 // attack has 6 files
     if (iType == 2)
         iNumber=rnd(6)+1;
@@ -1413,10 +1418,10 @@ void play_music(int iType)
         if (game.iHouse == ATREIDES)     iNumber=MIDI_MENTAT_ATR;
         if (game.iHouse == HARKONNEN)     iNumber=MIDI_MENTAT_HAR;
         if (game.iHouse == ORDOS)     iNumber=MIDI_MENTAT_ORD;
-      
+
     }
 
-    
+
 
     // In the end, when mp3, play it:
     if (game.bMp3)
@@ -1443,7 +1448,7 @@ void play_music(int iType)
             sprintf(filename, "mp3/nextconq.mp3");
 
         if (iType == 6)
-        {   
+        {
             if (game.iHouse == ATREIDES)
                 sprintf(filename, "mp3/mentata.mp3");
             if (game.iHouse == HARKONNEN)
@@ -1457,7 +1462,7 @@ void play_music(int iType)
     else
     {
         iNumber--; // correct for most midis
-        
+
         if (iType == 0)
             iNumber = MIDI_WIN01+(iNumber);
 
@@ -1470,7 +1475,7 @@ void play_music(int iType)
         if (iType == 3)
             iNumber = MIDI_BUILDING01+(iNumber);
 
-        // single ones are 'corrected back'... 
+        // single ones are 'corrected back'...
         if (iType == 4)
             iNumber = iNumber+1;
 
@@ -1484,9 +1489,9 @@ void play_music(int iType)
         // play midi file
         play_midi((MIDI *)gfxaudio[iNumber].dat, 0);
 
-    } 
+    }
 
-    
+
 
 }
 
@@ -1506,11 +1511,11 @@ int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstr
 
   if (new_id < 0)
     return -1;  // failed
-  
+
   if (type < 0)
     return -1; // failed
 
-  
+
   bullet[new_id].init();
 
   bullet[new_id].iType = type;
@@ -1519,14 +1524,14 @@ int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstr
   bullet[new_id].iOwnerUnit = ownerunit;
 
   bullet[new_id].iGoalCell = goal_cell;
-    
+
   bullet[new_id].bAlive=true;
   bullet[new_id].iFrame = 0;
 
   bullet[new_id].iOffsetX = 8 + rnd(9);
   bullet[new_id].iOffsetY = 8 + rnd(9);
-  
-  
+
+
   if (ownerunit > -1)
   {
       bullet[new_id].iPlayer = unit[ownerunit].iPlayer;
@@ -1556,7 +1561,7 @@ void Shimmer(int r, int x, int y)
   // r = radius
   // X, Y = position
 
-  /* 
+  /*
     Logic
 
     Each X and Y position will be taken and will be switched with a randomly choosen neighbouring
@@ -1577,7 +1582,7 @@ void Shimmer(int r, int x, int y)
     {
        x1 = (x + (cos(d)*(dr)));
        y1 = (y + (sin(d)*(dr)));
-  
+
        if (x1 < 0) x1=0;
        if (y1 < 0) y1=0;
        if (x1 >= game.screen_x) x1 = game.screen_x-1;
@@ -1603,7 +1608,7 @@ void Shimmer(int r, int x, int y)
        }
 
     }
-  } 
+  }
 
 }
 
@@ -1621,13 +1626,13 @@ void LOAD_SCENE(char file[30])
   sprintf(msg, "LOAD SCENE: %s", filename);
   logbook(msg);
 
-  if (gfxmovie != NULL)  
-  {    
+  if (gfxmovie != NULL)
+  {
     game.iMovieFrame=0;
-    
+
   }
   else
-  {   
+  {
     gfxmovie=NULL;
     game.iMovieFrame=-1;
     logbook("FAILED");
@@ -1639,7 +1644,7 @@ void LOAD_SCENE(char file[30])
 void INIT_PREVIEWS()
 {
     for (int i=0; i < MAX_SKIRMISHMAPS; i++)
-    {	
+    {
         PreviewMap[i].terrain = NULL;
 
 		// clear out name
@@ -1647,9 +1652,9 @@ void INIT_PREVIEWS()
 
         // clear out map data
         memset(PreviewMap[i].mapdata , -1, sizeof(PreviewMap[i].mapdata));
-		
+
         //sprintf(PreviewMap[i].name, "Map %d", i);
-		// 
+		//
         PreviewMap[i].iPlayers=0;
 
         PreviewMap[i].iStartCell[0]=-1;
@@ -1660,7 +1665,7 @@ void INIT_PREVIEWS()
     }
 
 	sprintf(PreviewMap[0].name, "RANDOM MAP");
-	//PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;	
+	//PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
 	PreviewMap[0].terrain = create_bitmap(128,128);
 }
 
@@ -1696,7 +1701,7 @@ void mask_to_color(BITMAP *bmp, int color)
 	//clear_to_color(temp16, makecol(255,0,255));
 
 	//masked_blit(bmp, temp16, 0, 0, 0, 0, bmp->w, bmp->h);
-	
+
 	for (int x=0; x < bmp->w; x++)
 	{
 		for (int y=0; y < bmp->h; y++)
@@ -1708,13 +1713,13 @@ void mask_to_color(BITMAP *bmp, int color)
 				// masked
 				putpixel(bmp, x, y, makecol(255,255,255));
 				//allegro_message("Non pink detected");
-			}			
+			}
 		}
 	}
 
 	//draw_sprite(bmp, temp16, 0, 0);
 	//masked_blit(temp16, bmp, 0, 0, 0, 0, bmp->w, bmp->h);
 	//destroy_bitmap(temp16);
-	
+
 }
 

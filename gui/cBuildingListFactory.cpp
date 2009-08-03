@@ -48,10 +48,16 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 		// add items
 		list->addItemToList(new cBuildingListItem(SLAB1, structures[SLAB1]));
 		if (techlevel >= 4) {
-			list->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4]));
+			//list->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4])); // only available after upgrading
+			list->addItemToList(new cBuildingListItem(WALL, structures[WALL]));
 		}
 
 		list->addItemToList(new cBuildingListItem(WINDTRAP, structures[WINDTRAP]));
+		list->addItemToList(new cBuildingListItem(REFINERY, structures[REFINERY]));
+		list->addItemToList(new cBuildingListItem(LIGHTFACTORY, structures[LIGHTFACTORY]));
+		list->addItemToList(new cBuildingListItem(HEAVYFACTORY, structures[HEAVYFACTORY]));
+		list->addItemToList(new cBuildingListItem(PALACE, structures[PALACE]));
+		list->addItemToList(new cBuildingListItem(WALL, structures[WALL]));
 	}
 
 	// other lists, have 40 pixels more Y , but the X remains the same

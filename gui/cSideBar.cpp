@@ -79,4 +79,72 @@ void cSideBar::thinkInteraction() {
 			}
 		}
 	}
+
+	// scroll buttons interaction
+	thinkMouseZScrolling();
+	// when mouse pressed, a list is selected, and that list is still available
+	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && game.bMousePressedLeft) { // TODO: replace game.bMousePressedLeft with some more mouse handling class as this does not work as expected :(
+		cBuildingList *list = getList(selectedListID);
+		logbook("Mouse button pressed; evaluating scroll buttons.");
+
+		bool mouseOverUp = mouseOverScrollUp();
+		bool mouseOverDown = mouseOverScrollDown();
+		assert(!(mouseOverUp == true && mouseOverDown == true));// can never be both.
+
+		if (mouseOverUp) {
+			logbook("Mouse was over scroll up button.");
+			list->scrollUp();
+			// draw pressed
+			draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_UP_PRESSED].dat, 571, 315);
+		} else if (mouseOverDown) {
+			logbook("Mouse was over scroll down button.");
+			list->scrollDown();
+			// draw pressed
+			draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_DOWN_PRESSED].dat, 623, 315);
+		}
+	}
+
+}
+
+bool cSideBar::mouseOverScrollUp() {
+	if ((mouse_x >= 571 && mouse_y >= 315) && (mouse_x < 584 && mouse_y < 332)) {
+		return true;
+	}
+	return false;
+}
+
+bool cSideBar::mouseOverScrollDown() {
+	if ((mouse_x >= 623 && mouse_y >= 315) && (mouse_x < 636 && mouse_y < 332))	{
+		return true;
+	}
+	return false;
+}
+
+void cSideBar::thinkMouseZScrolling() {
+
+	if (selectedListID < 0) return;
+	if (!getList(selectedListID)->isAvailable()) return;
+
+	cBuildingList *list = getList(selectedListID);
+
+	// MOUSE WHEEL
+	if (mouse_z > game.iMouseZ) {
+
+	   list->scrollUp();
+
+		// draw pressed
+		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_UP_PRESSED].dat, 571, 315);
+
+		game.iMouseZ=mouse_z;
+	}
+
+	if (mouse_z < game.iMouseZ) {
+		// Only allow scrolling when there is an icon to show
+	   list->scrollDown();
+
+		// draw pressed
+		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_DOWN_PRESSED].dat, 623, 315);
+
+		game.iMouseZ=mouse_z;
+	}
 }

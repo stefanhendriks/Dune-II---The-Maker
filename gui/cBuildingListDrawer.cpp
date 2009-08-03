@@ -72,7 +72,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 	int iDrawX=572;
 	int iDrawY=46;
 
-	int end = startId + 4;
+	int end = startId + 5; // max 5 icons are showed at once
+
 	// draw the icons
 	for (int i = startId; i < end; i++) {
 		cBuildingListItem * item = list->getItem(i);
