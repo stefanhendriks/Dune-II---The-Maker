@@ -82,7 +82,7 @@ void cSideBar::thinkInteraction() {
 	// scroll buttons interaction
 	thinkMouseZScrolling();
 	// when mouse pressed, a list is selected, and that list is still available
-	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && game.bMousePressedLeft) { // TODO: replace game.bMousePressedLeft with some more mouse handling class as this does not work as expected :(
+	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && game.bMousePressedLeft) {
 		cBuildingList *list = getList(selectedListID);
 		logbook("Mouse button pressed; evaluating scroll buttons.");
 
