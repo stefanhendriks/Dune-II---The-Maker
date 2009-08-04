@@ -5234,7 +5234,10 @@ void cGame::shutdown() {
 
 	TODO: Will eventually call MultiMediaEngine specific functions
 
-	/return true when succesful
+	return true when succesfull
+
+	Should not be called twice.
+
 */
 bool cGame::setupGame() {
 	game.init(); // Must be first!
@@ -5287,9 +5290,6 @@ bool cGame::setupGame() {
 		return false;
 
 	logbook(allegro_id);
-	yield_timeslice();
-
-	logbook("yield_timeslice()");
 
 	int r = install_timer();
 	if (r > -1) logbook("install_timer()");
