@@ -773,8 +773,7 @@ void cUnit::move_to(int iCll, int iStrucID, int iUnitID)
 }
 
 
-void cUnit::think_guard()
-{
+void cUnit::think_guard() {
 
     if (units[iType].airborn)
     {
@@ -792,10 +791,10 @@ void cUnit::think_guard()
     TIMER_bored++; // we are bored ow yeah
     TIMER_guard++; // scan time
 
-    if (TIMER_guard > 10)
+    if (TIMER_guard > 5)
     {
         // scan area
-        TIMER_guard = 0 - (rnd(25)); // do not scan all at the same time so do it like this
+        TIMER_guard = 0 - (rnd(5)); // do not scan all at the same time so do it like this
 
         poll();
         // scan
@@ -803,10 +802,9 @@ void cUnit::think_guard()
         int iDanger=-1;
 
         // non airborn
-        if (units[iType].airborn == false)
+        if (!units[iType].airborn)
         {
-			if (iType == SANDWORM)
-			{
+			if (iType == SANDWORM) {
 				if (TIMER_wormeat > 0)
 				{
 					TIMER_wormeat--;
@@ -842,7 +840,7 @@ void cUnit::think_guard()
 				}
 
 			}
-			else
+			else // not sandworm
 			{
 
 				for (int i=0; i < MAX_UNITS; i++)
@@ -870,12 +868,15 @@ void cUnit::think_guard()
 
 							// not ours and its visible
 							if (unit[i].iPlayer != iPlayer &&
-								map.iVisible[unit[i].iCell][iPlayer] &&
+								map.iVisible[unit[i].iCell][iPlayer] && // is visible for ai as well?
 								units[unit[i].iType].airborn == units[iType].airborn && bAlly == false)
 							{
 								int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
 
-								if (distance <= units[iType].sight && distance < iDistance)
+								// TODO: perhaps make this configurable, so you can set the 'aggresiveness' of units?
+								int range = units[iType].sight + 3; // do react earlier than already in range.
+
+								if (distance <= range && distance < iDistance)
 								{
 									// ATTACK
 									iDistance = distance;

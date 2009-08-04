@@ -370,34 +370,38 @@ void cBullet::think_move()
 					iDamage += iDam;
 				}
 
-				assert(iDamage > 0);
-				structure[id]->damage(iDamage);
+				// this assertion is false, some bullets (like bullet_gas) do not
+				// any damage.
+//				assert(iDamage > 0);
+				if (iDamage > 0) {
+					structure[id]->damage(iDamage);
 
-				int iChance=15;
+					int iChance=15;
 
-				// structure could be dead here (damage->calls die when dead)
-				if (structure && structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
-					iChance = 45;
+					// structure could be dead here (damage->calls die when dead)
+					if (structure && structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
+						iChance = 45;
 
-				// smoke
-				if (rnd(100) < iChance)
-					PARTICLE_CREATE(draw_x()+(map.scroll_x*32)+16+ (-8 + rnd(16)), draw_y()+(map.scroll_y*32)+16+ (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
-
-
-				// NO HP LEFT, DIE
-				if (structure[id]->getHitPoints() <= 0)
-				{
-					if (iOwnerUnit > -1)
-						if (unit[iOwnerUnit].isValid())
-						{
-							player[unit[iOwnerUnit].iPlayer].iKills[INDEX_KILLS_STRUCTURES]++;  // we killed!
-						}
+					// smoke
+					if (rnd(100) < iChance)
+						PARTICLE_CREATE(draw_x()+(map.scroll_x*32)+16+ (-8 + rnd(16)), draw_y()+(map.scroll_y*32)+16+ (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
 
 
-						structure[id]->die();
+					// NO HP LEFT, DIE
+					if (structure[id]->getHitPoints() <= 0)
+					{
+						if (iOwnerUnit > -1)
+							if (unit[iOwnerUnit].isValid())
+							{
+								player[unit[iOwnerUnit].iPlayer].iKills[INDEX_KILLS_STRUCTURES]++;  // we killed!
+							}
+
+
+							structure[id]->die();
+					}
+
+					bDie=true;
 				}
-
-				bDie=true;
 			}
 
         if (map.cell[iCell].type == TERRAIN_WALL)

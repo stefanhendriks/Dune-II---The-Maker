@@ -44,16 +44,19 @@
 
 #include <alfont.h>
 #include <almp3.h>
-#include "fblend.h"             // fast blending
+
+// Needed by fblend (fast blending techniques (3 - 10 times faster than
+// default Allegro routines)
+#include "fblend.h"
 #include "sse.h"
 #include "mmx.h"
 
 // data file header(s)                          - THIS
 #include "data/gfxdata.h"						// general gfx
-#include "data/gfxaudio.h"                     // audio
-#include "data/gfxinter.h"                  // sidebar/downbar gfx
-#include "data/gfxworld.h"                  // world / regions gfx
-#include "data/gfxmentat.h"                  // mentat gfx
+#include "data/gfxaudio.h"                     	// audio (sounds and music , midi)
+#include "data/gfxinter.h"                  	// sidebar/downbar gfx
+#include "data/gfxworld.h"                  	// world / regions gfx
+#include "data/gfxmentat.h"                  	// mentat gfx
 
 // actual source headers                        - ORDER
 #include "main.h"
