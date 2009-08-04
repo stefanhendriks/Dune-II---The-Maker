@@ -5314,7 +5314,6 @@ bool cGame::setupGame() {
 	game.TIMER_message=0;
 	game.TIMER_shake=0;
 
-#ifdef ALLEGRO_H
 	LOCK_VARIABLE(allegro_timerUnits);
 	LOCK_VARIABLE(allegro_timerGlobal);
 	LOCK_VARIABLE(allegro_timerSecond);
@@ -5327,10 +5326,7 @@ bool cGame::setupGame() {
 	install_int(allegro_timerunits, 100);
 	install_int(allegro_timerglobal, 5);
 	install_int(allegro_timerfps, 1000);
-#else
-	// other lib defines other timers, as long as they eventually call
-	// the TimeManager functions.
-#endif
+
 
 	logbook("Timers installed");
 

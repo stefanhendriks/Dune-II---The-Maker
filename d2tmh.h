@@ -37,21 +37,10 @@
 
 #define IDEAL_FPS	60
 
-#ifdef ALLEGRO_H
-	// note: timer specific declarations are done in timer.h
-
 #ifndef UNIX
 #  define ALFONT_DLL
 #  define ALMP3_DLL
 #endif
-
-#endif
-
-//#if defined(_CRT_SECURE_NO_DEPRECATE) && !defined(_CRT_SECURE_NO_WARNINGS)
-
-#define _CRT_SECURE_NO_WARNINGS
-
-//#endif
 
 #include <alfont.h>
 #include <almp3.h>
