@@ -99,14 +99,8 @@ bool cBuildingList::isOverButton(int x, int y) {
 }
 
 void cBuildingList::setScrollingOffset(int value) {
-
-	if (value > scrollingOffset) {
-		if (value > (maxItems - 5)) value = (maxItems - 5);
-	}
-	else if (value < scrollingOffset) {
-		if (value < 0) value = 0;
-	}
-
+	assert(value > -1);
+	assert(value < MAX_ICONS);
 	scrollingOffset = value;
 }
 
@@ -116,7 +110,9 @@ void cBuildingList::setScrollingOffset(int value) {
 void cBuildingList::scrollUp() {
 	logbook("cBuildingList::scrollUp");
 	int offset = getScrollingOffset() - 1;
-	setScrollingOffset(offset);
+	if (offset > -1) {
+		setScrollingOffset(offset);
+	}
 }
 
 /**
@@ -125,5 +121,8 @@ void cBuildingList::scrollUp() {
 void cBuildingList::scrollDown() {
 	logbook("cBuildingList::scrollDown");
 	int offset = getScrollingOffset() + 1;
-	setScrollingOffset(offset);
+	int max = maxItems - 5;
+	if (offset < max) {
+		setScrollingOffset(offset);
+	}
 }

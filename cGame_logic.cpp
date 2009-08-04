@@ -2796,6 +2796,12 @@ void cGame::gerald()
 
 	draw_sidebarbuttons();
 
+	// sidebar think about reaction on fps basis here:
+	if (sidebar) {
+		sidebar->thinkInteraction();
+	}
+
+
 	draw_list();
 
 	draw_upgrade();

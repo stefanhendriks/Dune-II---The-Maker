@@ -67,23 +67,12 @@ void cTimeManager::handleTimerFPS() {
 		fps = frame_count;
 
 		// 'auto resting'
-		if (fps < IDEAL_FPS)
-		{
+		if (fps < IDEAL_FPS) {
 			if (iRest > 0) iRest-=2;
 			if (iRest < 0) iRest=0;
-
-//			char msg[255];
-//			sprintf(msg, "AUTO-REST: FPS is lower then ideal (=%d), reducing rest value", IDEAL_FPS);
-//			logbook(msg);
-		}
-		else
-		{
+		} else {
 			if (iRest < 500) iRest+=2;
 			if (iRest > 500) iRest=500;
-
-//			char msg[255];
-//			sprintf(msg, "AUTO-REST: FPS is higher then ideal (=%d), increasing rest value", IDEAL_FPS);
-//			logbook(msg);
 		}
 
 
@@ -117,10 +106,12 @@ void cTimeManager::handleTimerGlobal() {
 				game.iFadeAction=0;
 			}
 		}
+
 		game.think_music();
 		game.think_mentat();
 		game.think_movie();
 		game.think_message();
+
 		if (game.sidebar) {
 			game.sidebar->think();
 		}

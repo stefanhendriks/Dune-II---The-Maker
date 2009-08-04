@@ -46,7 +46,8 @@ class cSideBar {
 		bool mouseOverScrollUp();
 		bool mouseOverScrollDown();
 
-		void think();
+		void think();	// timer based
+		void thinkInteraction(); // fps based
 	private:
 		// the lists:
 		cBuildingList * lists[LIST_MAX];
@@ -54,7 +55,6 @@ class cSideBar {
 
 		// methods
 		void thinkAvailabilityLists();
-		void thinkInteraction();
 		void thinkMouseZScrolling(); // think about mouse wheel scrolling
 };
 

@@ -37,10 +37,8 @@ void cSideBar::setList(int listId, cBuildingList* list) {
 void cSideBar::think() {
 	thinkAvailabilityLists();
 	// think about building
-
-	// think about interaction
-	thinkInteraction();
 }
+
 
 /**
  * Think about the availability of lists.
@@ -58,7 +56,8 @@ void cSideBar::thinkAvailabilityLists() {
 }
 
 /**
- * Think about interaction
+ * Think about interaction (fps based)
+ *
  */
 void cSideBar::thinkInteraction() {
 

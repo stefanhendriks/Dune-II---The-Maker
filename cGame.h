@@ -233,7 +233,6 @@ private:
 
 	void draw_message();
 
-
 	// upgrade button drawing and behaviour
 	void draw_upgrade();
 
