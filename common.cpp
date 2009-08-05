@@ -16,15 +16,8 @@
 // Keep a logbook
 void logbook(char *txt)
 {
-  FILE *fp;
-  fp = fopen("log.txt", "at");
-
-  if (fp)
-  {
-    fprintf(fp, "%d| %s\n", game.iGameTimer, txt); // print the text into the file
-  }
-
-  fclose(fp);
+	cLogger *logger = cLogger::getInstance();
+	logger->log(LOG_WARN, COMP_NONE, "", txt, OUTC_NONE);
 }
 
 // determine if this cell is not out of boundries

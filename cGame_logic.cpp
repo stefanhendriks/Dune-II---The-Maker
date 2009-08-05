@@ -5246,6 +5246,8 @@ void cGame::shutdown() {
 
 */
 bool cGame::setupGame() {
+	cLogger *logger = cLogger::getInstance();
+
 	game.init(); // Must be first!
 
 	// Each time we run the game, we clear out the logbook
@@ -5260,22 +5262,17 @@ bool cGame::setupGame() {
 		fclose(fp);
 	}
 
-	logbook("-------------------");
-	logbook("Version information");
-	logbook("-------------------");
-	logbook(game.version);
+	logger->logHeader("Version information");
 	char msg[255];
-	sprintf(msg, "Compiled at %s , %s", __DATE__, __TIME__);
-	logbook(msg);
-
-	if (DEBUGGING) logbook("DEBUG MODE IS ENABLED");
+	sprintf(msg, "Version %s, Compiled at %s , %s", game.version, __DATE__, __TIME__);
+	logger->log(LOG_INFO, COMP_SETUP, "Initializing", msg);
 
 	// init game
-	if (game.windowed)
-		logbook("Windowed mode");
-	else
-		logbook("Fullscreen mode");
-
+	if (game.windowed) {
+		logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Windowed mode");
+	} else {
+		logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Windowed mode");
+	}
 
 
 	mouse_co_x1 = -1;      // coordinates
@@ -5287,15 +5284,15 @@ bool cGame::setupGame() {
 
 
 	// Logbook notification
-	logbook("\n-------");
-	logbook("Allegro");
-	logbook("-------");
+	logger->logHeader("Allegro");
 
 	// ALLEGRO - INIT
-	if (allegro_init() != 0)
+	if (allegro_init() != 0) {
+		logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init failed", allegro_id);
 		return false;
+	}
 
-	logbook(allegro_id);
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init succes", allegro_id);
 
 	int r = install_timer();
 	if (r > -1) logbook("install_timer()");

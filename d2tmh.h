@@ -21,6 +21,7 @@
 #define D2TMH_H
 
 #include <time.h>
+#include <ctime>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -59,7 +60,9 @@
 #include "data/gfxmentat.h"                  	// mentat gfx
 
 // actual source headers                        - ORDER
+#include "enums.h"
 #include "main.h"
+#include "cLog.h"							// logger
 #include "timers.h"							/** declare correct functions at compile time here **/
 #include "cHitpointCalculator.h"			/** math for hitpoints **/
 #include "d2tm_math.h"
