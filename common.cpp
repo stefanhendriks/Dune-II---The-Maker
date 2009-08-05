@@ -17,7 +17,7 @@
 void logbook(char *txt)
 {
 	cLogger *logger = cLogger::getInstance();
-	logger->log(LOG_WARN, COMP_NONE, "", txt, OUTC_NONE);
+	logger->log(LOG_WARN, COMP_NONE, "Default log message (CHANGEME)", txt);
 }
 
 // determine if this cell is not out of boundries
