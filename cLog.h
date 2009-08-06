@@ -5,8 +5,10 @@ class cLogger {
 
 public:
 	void log(eLogLevel level, eLogComponent component, char *event, char *message);
-	void log(eLogLevel level, eLogComponent component, char *event, char *message, eLogOutcome outcome, int playerId);
+	void log(eLogLevel level, eLogComponent component, char *event, char *message, eLogOutcome outcome, int playerId, int houseId);
 	void log(eLogLevel level, eLogComponent component, char *event, char *message, eLogOutcome outcome);
+
+	void logCommentLine(char *txt);
 
 	void logHeader(char *txt);
 
@@ -28,7 +30,11 @@ private:
 	static cLogger *instance;
 
 	std::string getIntegerAsString(int value);
+	std::string getLongAsString(long value);
 
+	long startTime; // start time of logging in miliseconds
+
+	long getTimeInMilisDifference();
 protected:
 	cLogger();
 

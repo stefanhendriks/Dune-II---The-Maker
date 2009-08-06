@@ -21,7 +21,8 @@ enum eLogComponent {
 	COMP_NONE,
 	COMP_INIT,
 	COMP_ALLEGRO,	/** Use for allegro specific calls **/
-	COMP_SETUP
+	COMP_SETUP,
+	COMP_VERSION	/** version specific loggin messages **/
 };
 
 enum eLogOutcome {

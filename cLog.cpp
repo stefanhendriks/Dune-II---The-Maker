@@ -3,6 +3,7 @@
 cLogger *cLogger::instance = NULL;
 
 cLogger::cLogger() {
+	startTime = clock();
 }
 
 cLogger *cLogger::getInstance() {
@@ -59,6 +60,8 @@ std::string cLogger::getLogComponentString(eLogComponent component) {
 			return std::string("INIT");
 		case COMP_ALLEGRO:
 			return std::string("ALLEGRO");
+		case COMP_VERSION:
+			return std::string("VERSION");
 	}
 
 	return std::string("UNIDENTIFIED");
@@ -98,29 +101,31 @@ void cLogger::logHeader(char *txt) {
 	if (length > 79) length = 79;
 	std::string line(length, '-');
 
-	file = fopen("log.txt", "at");
-	if (file) {
-		fprintf(file, "%s\n", line.c_str()); // print the text into the file
-		fprintf(file, "%s\n", txt); // print the text into the file
-		fprintf(file, "%s\n", line.c_str()); // print the text into the file
-		fclose(file);
-	}
+	char *str;
+	strcpy(str,line.c_str());
+
+	logCommentLine(str);
+	logCommentLine(txt);
+	logCommentLine(str);
 }
 
 void cLogger::log(eLogLevel level, eLogComponent component, char *event, char *message) {
-	log(level, component, event, message, OUTC_IGNOREME, -1);
+	log(level, component, event, message, OUTC_IGNOREME, -1, -1);
 }
 
 void cLogger::log(eLogLevel level, eLogComponent component, char *event, char *message, eLogOutcome outcome) {
-	log(level, component, event, message, outcome, -1);
+	log(level, component, event, message, outcome, -1, -1);
 }
 
-//	<time> | <level> | <component> | <event> | <message> | <outcome> | <player>
-void cLogger::log(eLogLevel level, eLogComponent component, char *event, char *message, eLogOutcome outcome, int playerId) {
+//	Timestamp | Level | Component | House (if component requires) | ID (if component requires) | Message | Outcome | Event | Event fields...
+void cLogger::log(eLogLevel level, eLogComponent component, char *event, char *message, eLogOutcome outcome, int playerId, int houseId) {
 	updateTime();
 
+	int diffTime = getTimeInMilisDifference();
+
 	// log line starts with time
-	std::string logline = getCurrentFormattedTime();
+	std::string logline = getLongAsString(diffTime);
+	//= getCurrentFormattedTime();
 
 	logline += "|"; // add first pipe
 
@@ -130,21 +135,26 @@ void cLogger::log(eLogLevel level, eLogComponent component, char *event, char *m
 	logline += sLevel;
 	logline += "|";
 	logline += sComponent;
-	logline += "|";
-	logline += std::string(event);
-	logline += "|";
-	logline += std::string(message);
 
-	if (outcome != OUTC_IGNOREME) {
-		std::string sOutcome = getLogOutcomeString(outcome);
-		logline += "|";
-		logline += sOutcome;
+	if (playerId >= GENERALHOUSE) {
+			logline += "|";
+			logline += getIntegerAsString(houseId);
 	}
-
 	if (playerId >= HUMAN) {
 		logline += "|";
 		logline += getIntegerAsString(playerId);
 	}
+	logline += "|";
+	logline += std::string(message);
+	if (outcome != OUTC_IGNOREME) {
+			std::string sOutcome = getLogOutcomeString(outcome);
+			logline += "|";
+			logline += sOutcome;
+	}
+	logline += "|";
+	logline += std::string(event);
+
+	// TODO: here could come other fields later
 
 	file = fopen("log.txt", "at");
 	if (file) {
@@ -154,7 +164,28 @@ void cLogger::log(eLogLevel level, eLogComponent component, char *event, char *m
 }
 
 std::string cLogger::getIntegerAsString(int value) {
-	char numberChar[10];
+	char numberChar[32];
 	sprintf(numberChar, "%d", value);
 	return std::string(numberChar);
+}
+
+std::string cLogger::getLongAsString(long value) {
+	char numberChar[256];
+	sprintf(numberChar, "%d", value);
+	return std::string(numberChar);
+}
+
+void cLogger::logCommentLine(char *txt) {
+	file = fopen("log.txt", "at");
+	if (file) {
+		fprintf(file, "\\\\%s\n", txt); // print the text into the file
+		fclose(file);
+	}
+}
+
+long cLogger::getTimeInMilisDifference() /* From 1970-01-01T00:00:00 */
+{
+	long time_taken_millis;
+	time_taken_millis = (long)((clock()-startTime)*1E3/CLOCKS_PER_SEC);
+	return time_taken_millis;
 }

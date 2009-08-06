@@ -5254,18 +5254,18 @@ bool cGame::setupGame() {
 	FILE *fp;
 	fp = fopen("log.txt", "wt");
 
-	if (fp)
-	{
-		fprintf(fp, "-------------------\n");
-		fprintf(fp, "DUNE II - The Maker\n");
-		fprintf(fp, "-------------------\n\n"); // print head of logbook
+	// this will empty the log file (create a new one)
+	if (fp)	{
 		fclose(fp);
 	}
+
+	logger->logHeader("Dune II - The Maker");
+	logger->logCommentLine(""); // white space
 
 	logger->logHeader("Version information");
 	char msg[255];
 	sprintf(msg, "Version %s, Compiled at %s , %s", game.version, __DATE__, __TIME__);
-	logger->log(LOG_INFO, COMP_SETUP, "Initializing", msg);
+	logger->log(LOG_INFO, COMP_VERSION, "Initializing", msg);
 
 	// init game
 	if (game.windowed) {
@@ -5288,29 +5288,29 @@ bool cGame::setupGame() {
 
 	// ALLEGRO - INIT
 	if (allegro_init() != 0) {
-		logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init failed", allegro_id);
+		logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_FAILED);
 		return false;
 	}
 
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init succes", allegro_id);
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
 
 	int r = install_timer();
-	if (r > -1) logbook("install_timer()");
+	if (r > -1) {
+		logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_SUCCESS);
+	}
 	else
 	{
 		allegro_message("Failed to install timer");
-		logbook("FAILED");
+		logger->log(LOG_FATAL, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_FAILED);
 		return false;
 	}
 
 	alfont_init();
-	logbook("alfont_init()");
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
 	install_keyboard();
-	logbook("install_keyboard()");
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
 	install_mouse();
-	logbook("install_mouse()");
-
-	logbook("setting up timer functions / locking functions & memory");
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
 	/* set up the interrupt routines... */
 	game.TIMER_money=0;
@@ -5330,8 +5330,7 @@ bool cGame::setupGame() {
 	install_int(allegro_timerglobal, 5);
 	install_int(allegro_timerfps, 1000);
 
-
-	logbook("Timers installed");
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables", "LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
 
 	frame_count = fps = 0;
 
@@ -5342,8 +5341,7 @@ bool cGame::setupGame() {
 	// Set window title
 	set_window_title(title);
 	char window_title[256];
-	sprintf(window_title, "Window title set: [%s]", title);
-	logbook(window_title);
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", window_title, OUTC_SUCCESS);
 
 	set_window_close_button(0);
 
@@ -5358,12 +5356,7 @@ bool cGame::setupGame() {
 	//if (iDepth > 15 && iDepth != 24)
 	//set_color_depth(iDepth);
 
-	if (game.windowed)
-	{
-		// bit depth detection speeds up incredibly in Vista and Windows 7 (also will
-		// cause the aero effect to remain!) However, running with this code somehow
-		// screws up the windtrap drawing , so this has to be figured out before release.
-
+	if (game.windowed) {
 		int 	iDepth = desktop_color_depth();
 
 		// dont switch to 15 bit or lower, or at 24 bit
