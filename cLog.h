@@ -24,6 +24,7 @@ private:
 	std::string getLogOutcomeString(eLogOutcome outcome);
 
 	std::string getCurrentFormattedTime();
+	std::string getLogHouseString(int houseId);
 
 	void updateTime();
 

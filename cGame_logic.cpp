@@ -4151,11 +4151,11 @@ void cGame::setup_skirmish()
 				if (r > -1)
 				{
 					u++;
-					char msg[255];
-					sprintf(msg,"%d wants %d units, got %d", p, aiplayer[p].iUnits, u);
-					logbook(msg);
 				}
 			}
+			char msg[255];
+			sprintf(msg,"Wants %d amount of units; amount created %d", aiplayer[p].iUnits, u);
+			cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, iHouse);
 		}
 
 		// TODO: spawn a few worms
@@ -5212,13 +5212,12 @@ void cGame::run()
 	Shutdown the game
 */
 void cGame::shutdown() {
+	cLogger *logger = cLogger::getInstance();
+	logger->logHeader("SHUTDOWN");
+
 	// Destroy font of Allegro FONT library
 	alfont_destroy_font(game_font);
 	alfont_destroy_font(bene_font);
-
-	logbook("--------");
-	logbook("SHUTDOWN");
-	logbook("--------");
 
 	// Exit the font library (must be first)
 
@@ -5344,11 +5343,9 @@ bool cGame::setupGame() {
 
 	// Set window title
 	set_window_title(title);
-	char window_title[256];
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", window_title, OUTC_SUCCESS);
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", title, OUTC_SUCCESS);
 
 	set_window_close_button(0);
-
 
 	set_color_depth(16);
 
@@ -5361,31 +5358,27 @@ bool cGame::setupGame() {
 	//set_color_depth(iDepth);
 
 	if (game.windowed) {
+		cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windows mode requested.", "Searching for optimal graphics settings");
 		int 	iDepth = desktop_color_depth();
 
 		// dont switch to 15 bit or lower, or at 24 bit
-		if (iDepth > 15 && iDepth != 24)
-		{
-		char msg[255];
-		sprintf(msg,"DESKTOP: Found desktop color depth. Will switch to %d bit.", iDepth);
-		logbook(msg);
-		set_color_depth(iDepth);      // run in the same bit depth as the desktop
-		}
-		else
-		{
-		// default color depth is 16
-		logbook("DESKTOP: No bit depth autodetected. Will switch to default, 16 bit.");
-		set_color_depth(16);
+		if (iDepth > 15 && iDepth != 24) {
+			char msg[255];
+			sprintf(msg,"Desktop color dept is %d.", iDepth);
+			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", msg);
+			set_color_depth(iDepth);      // run in the same bit depth as the desktop
+		} else {
+			// default color depth is 16
+			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", "Could not find color depth, or unsupported color depth found. Will use 16 bit");
+			set_color_depth(16);
 		}
 
 		//GFX_AUTODETECT_WINDOWED
 		int r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
-		if (r > -1)
-		{
-			// Succes
-		}
-		else
-		{
+		if (r > -1) {
+			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (windowed)", "Succesfully created window with graphics mode.", OUTC_SUCCESS);
+		} else {
+			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (windowed)", "Failed to create window with graphics mode. Fallback to fullscreen.", OUTC_FAILED);
 			// GFX_DIRECTX_ACCEL / GFX_AUTODETECT
 #ifdef UNIX
 			r = set_gfx_mode(GFX_XWINDOWS, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
@@ -5393,10 +5386,9 @@ bool cGame::setupGame() {
 			r = set_gfx_mode(GFX_DIRECTX_ACCEL, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
 #endif
 
-			if (r > -1)
-			{
+			if (r > -1)	{
+				logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fallback, fullscreen)", "Fallback succeeded.", OUTC_SUCCESS);
 				game.windowed = false;
-
 				/*
 				FILE *f;
 				f = fopen("settings.d3", "wb");
@@ -5413,71 +5405,68 @@ bool cGame::setupGame() {
 			}
 			else
 			{
-				allegro_message("Failed to set resolution");
+				logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fallback, fullscreen)", "Fallback failed!", OUTC_FAILED);
+				allegro_message("Fatal error:\n\nCould not start game.\n\nGraphics mode (windowed mode & fallback) could not be initialized.");
 				return false;
 			}
 		}
-	}
-	else
-	{
+	} else {
+
+		/**
+		 * Fullscreen mode
+		 */
 
 		int r = set_gfx_mode(GFX_AUTODETECT, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
 
 		// succes
-		if (r > -1)
-		{
-
-		}
-		else
-		{
+		if (r > -1) {
+			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)", "Succesfully initialized graphics mode.", OUTC_SUCCESS);
+		} else {
+			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)", "Succesfully initialized graphics mode.", OUTC_FAILED);
+			allegro_message("Fatal error:\n\nCould not start game.\n\nGraphics mode (fullscreen) could not be initialized.");
 			return false;
 		}
-
 	}
 
 
 	text_mode(-1);
 	alfont_text_mode(-1);
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set mode to -1", OUTC_SUCCESS);
 
-
-	logbook("Loading font data");
-	// loading font
 
 	game_font = alfont_load_font("data/arakeen.fon");
 
-	if (game_font != NULL)
+	if (game_font != NULL) {
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded arakeen.fon", OUTC_SUCCESS);
 		alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
-	else
-	{
-		allegro_message("Failed to load arakeen.fon");
+	} else {
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load arakeen.fon", OUTC_FAILED);
+		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
 		return false;
 	}
 
 
 	bene_font = alfont_load_font("data/benegess.fon");
 
-	if (bene_font != NULL)
+	if (bene_font != NULL) {
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded benegess.fon", OUTC_SUCCESS);
 		alfont_set_font_size(bene_font, 10); // set size
-	else
-	{
-		allegro_message("Failed to load benegess.fon");
+	} else {
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load benegess.fon", OUTC_FAILED);
+		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
 		return false;
 	}
 
-
-
-	if (set_display_switch_mode(SWITCH_BACKGROUND) < 0)
-	{
+	if (set_display_switch_mode(SWITCH_BACKGROUND) < 0)	{
 		set_display_switch_mode(SWITCH_PAUSE);
 		logbook("Display 'switch and pause' mode set");
-	}
-	else
+	} else {
 		logbook("Display 'switch to background' mode set");
+	}
 
 
 
 	// sound
-	logbook("Initializing sound");
 	bool bSucces = false;
 	int voices = 32;
 	while (1) {
@@ -5486,16 +5475,18 @@ bool cGame::setupGame() {
 		}
 
 		reserve_voices(voices, 0);
+		char msg[255];
 		if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) == 0)
 		{
-			char msg[255];
-			sprintf(msg, "Succes with %d reserved voices.", voices);
-			logbook(msg);
+			sprintf(msg, "Success reserving %d voices.", voices);
+			logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
 			MAXVOICES=voices;
 			bSucces=true;
 			break;
 		}
 		else {
+			sprintf(msg, "Failed reserving %d voices. Will try %d.", voices, (voices / 2));
+			logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
 			voices /= 2;
 		}
 	}

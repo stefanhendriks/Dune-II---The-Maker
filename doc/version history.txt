@@ -170,7 +170,59 @@ D2TM is based on:
 
 Dune 2 - "The Battle for Arrakis" by Westwood Studios & Virgin Interactive
 
-TODO:(search all those names who made dune 2!)
+Credits of DUNE II:
+
+Design					Joseph Bostic, Aaron E. Powell
+Programming				Joseph Bostic, Scott K. Bowen
+Graphics / Artwork		Elie Arabian, Aaron E. Powell, Ren Olsen, Judith Peterson, Eric Shults
+Musical Lead and Sound Effect Verification	
+						Paul S. Mudra
+						
+Music					Frank Klepacki, Dwight K. Okahara
+Sound					Frank Klepacki, Dwight K. Okahara
+Cover Art				Lauren Rifkin
+Documentation			Lisa A. Ballan, Lisa Marcinko
+Producer				Brett Sperry
+Director				Aaron E. Powell, Lyle J. Hall
+Project Coordination in UK	
+						Dan Marchant, Peter Hickman
+						
+Writing / Dialogue / Story	Rick Gush, Donna J. Bundy
+
+Quality Assurance	
+						Jesse Clemit, 
+						Matt Collins, 
+						Patrick J. Collins, 
+						Scott J. Duckett, 
+						William F. Foster, 
+						Michael S. Glosecki, 
+						Danny Lewis, 
+						Michael Lightner, 
+						Eugene Martin, 
+						Justin Norr, 
+						Glenn Sperry, 
+						Noah Tool, 
+						Matthew Spall, 
+						John Martin, 
+						Darren Lloyd, 
+						Ken Jordan, 
+						Richard Hewison, 
+						Paul Coppins
+						
+Coordination of Art & Design	
+						Matthew Walker
+						
+Manual Design for UK, Germany, France & Italy	
+						Definition
+						
+Acting / Voiceovers	
+						Donna J. Bundy, Frank Klepacki, Eric Shults, Glenn Sperry, Julie Stainer
+						
+Special Thanks To	
+						David Bishop, Marc Cram, David A. Luehmann
+						
+European Cover Design	
+						Andrew Wright
 
 ==========
 TO-DO LIST

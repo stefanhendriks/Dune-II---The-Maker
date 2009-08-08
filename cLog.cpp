@@ -62,6 +62,12 @@ std::string cLogger::getLogComponentString(eLogComponent component) {
 			return std::string("ALLEGRO");
 		case COMP_VERSION:
 			return std::string("VERSION");
+		case COMP_SKIRMISHSETUP:
+			return std::string("SKIRMISHSETUP");
+		case COMP_ALFONT:
+			return std::string("ALFONT");
+		case COMP_SOUND:
+			return std::string("SOUND");
 	}
 
 	return std::string("UNIDENTIFIED");
@@ -78,6 +84,27 @@ std::string cLogger::getLogOutcomeString(eLogOutcome outcome) {
 	}
 	return std::string("UNIDENTIFIED");
 }
+
+std::string cLogger::getLogHouseString(int houseId) {
+	switch (houseId) {
+		case ATREIDES:
+			return std::string("ATREIDES");
+		case HARKONNEN:
+			return std::string("HARKONNEN");
+		case ORDOS:
+			return std::string("ORDOS");
+		case FREMEN:
+			return std::string("FREMEN");
+		case SARDAUKAR:
+			return std::string("SARDAUKAR");
+		case MERCENARY:
+			return std::string("MERCENARY");
+		default:
+			return std::string("UNKNOWN HOUSE");
+	}
+	return std::string("UNIDENTIFIED");
+}
+
 
 // courtesy from : http://www.codeguru.com/forum/showthread.php?t=477894
 std::string cLogger::getCurrentFormattedTime() {
@@ -138,19 +165,23 @@ void cLogger::log(eLogLevel level, eLogComponent component, char *event, char *m
 
 	if (playerId >= GENERALHOUSE) {
 			logline += "|";
-			logline += getIntegerAsString(houseId);
+			logline += getLogHouseString(houseId);
 	}
+
 	if (playerId >= HUMAN) {
 		logline += "|";
 		logline += getIntegerAsString(playerId);
 	}
+
 	logline += "|";
 	logline += std::string(message);
+
 	if (outcome != OUTC_IGNOREME) {
-			std::string sOutcome = getLogOutcomeString(outcome);
-			logline += "|";
-			logline += sOutcome;
+		std::string sOutcome = getLogOutcomeString(outcome);
+		logline += "|";
+		logline += sOutcome;
 	}
+
 	logline += "|";
 	logline += std::string(event);
 
