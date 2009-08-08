@@ -154,7 +154,7 @@ Amarillion (allegro.cc)
 Jpexs	   (dune 2 seedmap generator)
 Rene	   (for the D2TM skirmish map editor)
 
-People who have tested or have given significant feedback:
+Contributors:
 Guillaume Lavoie
 Dennis Stansert
 Ash
@@ -188,3 +188,22 @@ New features:
 ==========
 CHANGELOG:
 ==========
+FIXED:
+- Instantly upgrade complete bug fixed.
+- Sandorm able to squish infantry when going under infantry.
+- It is no longer possible to select airborn units with box-selecting.
+- animation fixes for structures (WOR/Barracks stopped animating after building unit)
+- animaiton fix for outpost
+- box selecting problem (needed to cover entire unit). Now only the center is required to select a unit.
+
+GAME BALANCING:
+- Harvester has more HP (300->450)
+- Troopers are made less effective
+
+NEW:
+- Dune 2 Seed map generator. Thanks to jpexs for completing the generator and making this possible!
+- "game" switch to load own ini file (ie, use d2tm.exe -game myinifile.ini)
+- 6 new skirmish maps
+
+CHANGED:
+- skirmish maps do not need to be MAP##.ini anymore, they can be named anything
