@@ -55,7 +55,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 			list->addItemToList(new cBuildingListItem(WALL, structures[WALL]));
 		}
 
-		list->addItemToList(new cBuildingListItem(REFINERY, structures[REFINERY]));
+		list->addItemToList(new cBuildingListItem(WINDTRAP, structures[WINDTRAP]));
 	}
 
 	// other lists, have 40 pixels more Y , but the X remains the same
