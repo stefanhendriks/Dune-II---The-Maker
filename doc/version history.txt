@@ -207,3 +207,4 @@ NEW:
 
 CHANGED:
 - skirmish maps do not need to be MAP##.ini anymore, they can be named anything
+- Units are a bit more aggresive in 'defense' mode (for both AI as Human player)
