@@ -15,7 +15,7 @@ cSideBar::cSideBar() {
 cSideBar::~cSideBar() {
 	for (int i = 0; i < LIST_MAX; i++) {
 		if (lists[i] != NULL) {
-			delete lists[i]; // delete
+			delete lists[i]; // delete list
 		}
 	}
 }
@@ -84,23 +84,38 @@ void cSideBar::thinkInteraction() {
 	// when mouse pressed, a list is selected, and that list is still available
 	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && game.bMousePressedLeft) {
 		cBuildingList *list = getList(selectedListID);
-		logbook("Mouse button pressed; evaluating scroll buttons.");
 
 		bool mouseOverUp = mouseOverScrollUp();
 		bool mouseOverDown = mouseOverScrollDown();
 		assert(!(mouseOverUp == true && mouseOverDown == true));// can never be both.
 
 		if (mouseOverUp) {
-			logbook("Mouse was over scroll up button.");
 			list->scrollUp();
 			// draw pressed
 			draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_UP_PRESSED].dat, 571, 315);
 		} else if (mouseOverDown) {
-			logbook("Mouse was over scroll down button.");
 			list->scrollDown();
 			// draw pressed
 			draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_DOWN_PRESSED].dat, 623, 315);
 		}
+	}
+
+	// when mouse pressed, build item if over item
+	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && game.bMousePressedLeft) {
+		cBuildingList *list = getList(selectedListID);
+		if (list != NULL && !list->isBuildingItem()) {
+			cBuildingListDrawer *drawer = new cBuildingListDrawer();
+			cBuildingListItem *item = drawer->isOverItemCoordinates(list, mouse_x,  mouse_y);
+
+			if (item != NULL) {
+				cItemBuilder *builder = cItemBuilder::getInstance();
+
+				logbook("ADDING ITEM TO BUILD...");
+				cItemBuilder::getInstance()->addItemToList(item);
+			}
+			delete drawer;
+		}
+
 	}
 
 }

@@ -15,7 +15,7 @@
 
 class cBuildingList {
 	public:
-		cBuildingList();
+		cBuildingList(int type);
 		~cBuildingList();
 
 		cBuildingListItem * getItem(int position); // return icon from list
@@ -55,6 +55,8 @@ class cBuildingList {
 		void setScrollingOffset(int value);
 		void setAvailable(bool value) { available = value; }
 
+		int getType() { return typeOfList; }
+
 	protected:
 		// nothing
 
@@ -73,6 +75,7 @@ class cBuildingList {
 		cBuildingListItem * items[MAX_ITEMS];
 
 		int getFreeSlot();
+		int typeOfList;
 };
 
 #endif

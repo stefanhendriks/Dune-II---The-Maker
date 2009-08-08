@@ -166,7 +166,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 		}
 
 		// draw rectangle when mouse hovers over icon
-		if (isOverItemCoordinates(mouse_x, mouse_y, iDrawX, iDrawY)) {
+		if (isOverItemCoordinates_Boolean(mouse_x, mouse_y, iDrawX, iDrawY)) {
 			int iColor=makecol(game.fade_select, game.fade_select, game.fade_select);
 
 			if (player[0].house == ATREIDES) {
@@ -233,14 +233,15 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y) {
 
 }
 
-bool cBuildingListDrawer::isOverItemCoordinates(int x, int y, int drawX, int drawY) {
+bool cBuildingListDrawer::isOverItemCoordinates_Boolean(int x, int y, int drawX, int drawY) {
 	if (x >= drawX && x <= (drawX + 64) && y >= drawY && y < (drawY + 48)) {
 		return true;
 	}
 	return false;
 }
 
-bool cBuildingListDrawer::isOverItem(cBuildingList *list, int x, int y) {
+cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *list, int x, int y) {
+	assert(list != NULL);
 	// starting draw coordinates
 	int iDrawX=572;
 	int iDrawY=46;
@@ -252,12 +253,16 @@ bool cBuildingListDrawer::isOverItem(cBuildingList *list, int x, int y) {
 		cBuildingListItem * item = list->getItem(i);
 		if (item == NULL) break;
 
-		if (isOverItemCoordinates(x, y, iDrawX, iDrawY)) {
-			return true;
+		if (isOverItemCoordinates_Boolean(x, y, iDrawX, iDrawY)) {
+			return item;
 		}
 
 		iDrawY+=48;
 	}
 
-	return false;
+	return NULL;
+}
+
+bool cBuildingListDrawer::isOverItem(cBuildingList *list, int x, int y) {
+	return isOverItemCoordinates(list, x, y) != NULL;
 }

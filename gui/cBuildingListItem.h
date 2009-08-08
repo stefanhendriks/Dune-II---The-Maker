@@ -12,10 +12,10 @@ class cBuildingListItem {
 
 public:
 	// constructors
-	cBuildingListItem();
-	cBuildingListItem(int theIcon, int theID, eBuildType theType, int theCost);
-	cBuildingListItem(int theID, s_Structures entry);
-	cBuildingListItem(int theID, s_UnitP entry);
+	cBuildingListItem(cBuildingList* list);
+	cBuildingListItem(int theIcon, int theID, eBuildType theType, int theCost, cBuildingList* list);
+	cBuildingListItem(int theID, s_Structures entry, cBuildingList* list);
+	cBuildingListItem(int theID, s_UnitP entry, cBuildingList* list);
 
 
 	// gettters
@@ -26,6 +26,9 @@ public:
 	int getProgress() { return progress; }
 	bool isBuilding() { return building; }
 	bool isAvailable() { return available; }
+	int getTimesToBuild() { return timesToBuild; }
+
+	bool canPay();
 
 	// setters
 	void setIconId(int value) { icon = value; }
@@ -35,6 +38,9 @@ public:
 	void setProgress(int value) { progress = value; }
 	void setIsBuilding(bool value) { building = value; }
 	void setIsAvailable(bool value) { available = value; }
+	void setTimesToBuild(int value) { timesToBuild = value; }
+
+	cBuildingList *getList() { return myList; }	// returns the list it belongs to
 
 private:
 	int icon;				// the icon ID to draw (from datafile)
@@ -45,6 +51,9 @@ private:
 	bool available;			// available, is set to false when one item is building , the others turn not available
 							// note; this is not the same as not being able to build it.
 	int progress;			// progress building this item
+	int timesToBuild;		// the amount of times to build this item (queueing) (meaning, when building = true, this should be 1...)
+
+	cBuildingList *myList;
 };
 
 #endif

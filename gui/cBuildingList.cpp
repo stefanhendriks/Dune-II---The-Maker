@@ -1,6 +1,6 @@
 #include "..\d2tmh.h"
 
-cBuildingList::cBuildingList() {
+cBuildingList::cBuildingList(int type) {
 	TIMER_progress = 0;
 	lastBuiltId = 0;
 	buttonIconId = 0;	// the button to draw at the left of the list
@@ -10,6 +10,7 @@ cBuildingList::cBuildingList() {
 	available = false;		 // is this list available?
 
 	memset(items, NULL, sizeof(items));
+	typeOfList = type;
 }
 
 cBuildingList::~cBuildingList() {

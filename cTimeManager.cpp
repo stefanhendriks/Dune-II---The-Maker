@@ -143,6 +143,7 @@ void cTimeManager::handleTimerGlobal() {
 				}
 
 				game.think_build();
+				cItemBuilder::getInstance()->think();
 				game.think_upgrade();
 				game.TIMER_money++;
 

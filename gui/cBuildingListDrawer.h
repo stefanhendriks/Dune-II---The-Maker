@@ -17,6 +17,7 @@ public:
 	void drawButton(cBuildingList *list, bool pressed);
 
 	bool isOverItem(cBuildingList *list, int x, int y);
+	cBuildingListItem *isOverItemCoordinates(cBuildingList *list, int x, int y);
 
 private:
 	void drawStructureSize(int structureId, int x, int y);
@@ -24,7 +25,7 @@ private:
 	void drawListWithStructures(cBuildingList *list, int listIDToDraw, int startId);		// used for const yard
 	void drawListWithUnitsOrAbilities(cBuildingList *list, int listIDToDraw, int startId); // used for units or palace / starport
 
-	bool isOverItemCoordinates(int x, int y, int drawX, int drawY);
+	bool isOverItemCoordinates_Boolean(int x, int y, int drawX, int drawY);
 
 	// the list to draw
 	cBuildingList *list;

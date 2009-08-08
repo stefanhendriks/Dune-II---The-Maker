@@ -49,13 +49,13 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 		list->setButtonIcon(BTN_CONST_PRESSED);
 
 		// add items
-		list->addItemToList(new cBuildingListItem(SLAB1, structures[SLAB1]));
+		list->addItemToList(new cBuildingListItem(SLAB1, structures[SLAB1], list));
 		if (techlevel >= 4) {
 			//list->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4])); // only available after upgrading
-			list->addItemToList(new cBuildingListItem(WALL, structures[WALL]));
+			list->addItemToList(new cBuildingListItem(WALL, structures[WALL], list));
 		}
 
-		list->addItemToList(new cBuildingListItem(WINDTRAP, structures[WINDTRAP]));
+		list->addItemToList(new cBuildingListItem(WINDTRAP, structures[WINDTRAP], list));
 	}
 
 	// other lists, have 40 pixels more Y , but the X remains the same
@@ -65,16 +65,16 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 		if (house == ATREIDES) {
 			list->setButtonIcon(BTN_INFANTRY_PRESSED);
 			// add items
-			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER]));
+			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list));
 		} else if (house == HARKONNEN) {
 			list->setButtonIcon(BTN_TROOPER_PRESSED);
 			// add items
-			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER]));
+			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
 		} else if (house == ORDOS) {
 			list->setButtonIcon(BTN_TRPINF_PRESSED);
 			// add items (ordos has both)
-			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER]));
-			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER]));
+			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list));
+			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
 		} else {
 			// do nothing
 		}
@@ -85,15 +85,15 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 		list->setButtonIcon(BTN_LIGHTFC_PRESSED);
 
 		if (house == ATREIDES) {
-			list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE]));
+			list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE], list));
 		} else if (house == ORDOS) {
-			list->addItemToList(new cBuildingListItem(RAIDER, units[RAIDER]));
+			list->addItemToList(new cBuildingListItem(RAIDER, units[RAIDER], list));
 		} else if (house == HARKONNEN) {
-			list->addItemToList(new cBuildingListItem(QUAD, units[QUAD]));
+			list->addItemToList(new cBuildingListItem(QUAD, units[QUAD], list));
 		} else {
-			list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE]));
-			list->addItemToList(new cBuildingListItem(RAIDER, units[RAIDER]));
-			list->addItemToList(new cBuildingListItem(QUAD, units[QUAD]));
+			list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE], list));
+			list->addItemToList(new cBuildingListItem(RAIDER, units[RAIDER], list));
+			list->addItemToList(new cBuildingListItem(QUAD, units[QUAD], list));
 		}
 	}
 
@@ -101,14 +101,15 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 		list->setButtonDrawY(165);
 		list->setButtonIcon(BTN_HEAVYFC_PRESSED);
 
-		list->addItemToList(new cBuildingListItem(TANK, units[TANK]));
-		list->addItemToList(new cBuildingListItem(HARVESTER, units[HARVESTER]));
+		list->addItemToList(new cBuildingListItem(TANK, units[TANK], list));
+		list->addItemToList(new cBuildingListItem(HARVESTER, units[HARVESTER], list));
 	}
 
 	if (listId == LIST_ORNI) {
 		list->setButtonDrawY(205);
 		list->setButtonIcon(BTN_ORNI_PRESSED);
-		list->addItemToList(new cBuildingListItem(CARRYALL, units[CARRYALL]));
+
+		list->addItemToList(new cBuildingListItem(CARRYALL, units[CARRYALL], list));
 	}
 
 	if (listId == LIST_STARPORT) {
@@ -123,10 +124,9 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 		list->setButtonIcon(BTN_PALACE_PRESSED);
 
 		// special weapons
-		list->addItemToList(new cBuildingListItem(MISSILE, units[MISSILE]));
-		list->addItemToList(new cBuildingListItem(UNIT_FREMEN_THREE, units[UNIT_FREMEN_THREE]));
-		list->addItemToList(new cBuildingListItem(SABOTEUR, units[SABOTEUR]));
-
+		list->addItemToList(new cBuildingListItem(MISSILE, units[MISSILE], list));
+		list->addItemToList(new cBuildingListItem(UNIT_FREMEN_THREE, units[UNIT_FREMEN_THREE], list));
+		list->addItemToList(new cBuildingListItem(SABOTEUR, units[SABOTEUR], list));
 	}
 
 }
@@ -139,7 +139,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
  * @return
  */
 cBuildingList * cBuildingListFactory::createList(int listId, int techlevel, int house) {
-	cBuildingList * list = new cBuildingList();
+	cBuildingList * list = new cBuildingList(listId);
 	initializeList(list, listId, techlevel, house);
 	return list;
 }

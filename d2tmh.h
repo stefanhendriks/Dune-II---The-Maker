@@ -92,6 +92,10 @@
 #include "keyval.h"
 
 // GUI RELATED
+
+class cBuildingListItem;
+class cBuildingList;
+
 #include "gui\eBuildType.h"				// enum build types (UNIT/STRUCTURE)
 #include "gui\cBuildingListItem.h"
 #include "gui\cBuildingList.h"
@@ -103,7 +107,7 @@
 #include "gui\cSideBarFactory.h"
 
 // BUILDING LOGIC
-
+#include "cItemBuilder.h"
 
 // game
 #include "cGame.h"							// game class
