@@ -103,7 +103,6 @@
 #include "gui\cSideBarFactory.h"
 
 // BUILDING LOGIC
-#include "gui\cBuildingListItemBuilder.h"
 
 
 // game
