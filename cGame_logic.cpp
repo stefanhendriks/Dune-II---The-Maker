@@ -2173,11 +2173,11 @@ void cGame::draw_list() {
 // Draw sidebar buttons, to switch lists
 void cGame::draw_sidebarbuttons()
 {
-
 	if (sidebar) {
 		cSideBarDrawer drawer;
 		drawer.drawSideBar(sidebar);
 	}
+
 	return;
 
     // clear
@@ -3954,8 +3954,9 @@ void cGame::setup_skirmish()
     alfont_textprintf(bmp_screen, bene_font, 580, 466, makecol(255,255,255), "START");
 
 
-	if (bDoRandomMap)
+	if (bDoRandomMap) {
 		map.randommap();
+	}
 
     // back
     if ((mouse_x >= 0 && mouse_x <= 50) && (mouse_y >= 465 && mouse_y <= 480))
@@ -4038,13 +4039,10 @@ void cGame::setup_skirmish()
             int iHouse=player[p].house;
 
 			// house = 0 , random.
-			if (iHouse==0)
-			{
-				int pl=0;
+			if (iHouse==0) {
 				bool bOk=false;
 
-				while (bOk == false)
-				{
+				while (bOk == false) {
 					if (p > 0)
 						iHouse = rnd(4)+1;
 					else
@@ -4157,10 +4155,16 @@ void cGame::setup_skirmish()
 		}
 
 		// TODO: spawn a few worms
-
 		iHouse=player[0].house;
 		iMission=9; // high tech level
 		state = GAME_PLAYING;
+
+		// construct sidebar
+		if (sidebar != NULL) {
+			delete sidebar;
+		}
+		sidebar = cSideBarFactory::getInstance()->createSideBar(game.iMission, iHouse);
+
 		bFadeOut=true;
 		setup_list();
         play_music(MUSIC_PEACE);
@@ -4329,9 +4333,6 @@ void cGame::preparementat(bool bTellHouse)
 
             INI_LOAD_BRIEFING(iHouse, iRegion, INI_LOSE);
         }
-       // LOAD_BRIEFING(filename);
-
-
     }
 
 	logbook("MENTAT: sentences prepared");
@@ -5145,7 +5146,6 @@ void cGame::runGameState() {
 			if (iMentatSpeak == -1) {
 				preparementat(false);
 			}
-
 			mentat(iHouse);
 			break;
 		case GAME_SETUPSKIRMISH:
