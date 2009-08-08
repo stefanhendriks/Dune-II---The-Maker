@@ -126,3 +126,22 @@ void cBuildingList::scrollDown() {
 		setScrollingOffset(offset);
 	}
 }
+
+/**
+ * Return true if an item is being built in this list.
+ *
+ * @return
+ */
+bool cBuildingList::isBuildingItem() {
+	for (int i = 0 ; i < MAX_ITEMS; i++) {
+		cBuildingListItem *item = getItem(i);
+		// valid pointer
+		if (item) {
+			// get isBuilding
+			if (item->isBuilding()) {
+				return true;
+			}
+		}
+	}
+	return false;
+}

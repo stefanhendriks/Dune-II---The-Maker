@@ -102,6 +102,9 @@
 #include "gui\cSideBarDrawer.h"
 #include "gui\cSideBarFactory.h"
 
+// BUILDING LOGIC
+#include "gui\cBuildingListItemBuilder.h"
+
 
 // game
 #include "cGame.h"							// game class

@@ -1,6 +1,6 @@
-/* Allegro datafile object indexes, produced by grabber v4.0.3 (RC2), MSVC */
-/* Datafile: c:\Projecten\DUNE II - The Maker\Source\data\gfxdata.dat */
-/* Date: Sun Mar 19 10:58:21 2006 */
+/* Allegro datafile object indexes, produced by grabber v4.2.0, MSVC.s */
+/* Datafile: c:\DEV\projects\dune2themaker\data\gfxdata.dat */
+/* Date: Sat Aug 08 13:35:31 2009 */
 /* Do not hand edit! */
 
 #define ATTACK_INDICATOR                 0        /* BMP  */
@@ -154,17 +154,17 @@
 #define UNIT_SIEGEBASE                   148      /* BMP  */
 #define UNIT_SIEGEBASE_SHADOW            149      /* BMP  */
 #define UNIT_SIEGETOP                    150      /* BMP  */
-#define UNIT_SOLDIER                     151      /* BMP  */
-#define UNIT_SOLDIERS                    152      /* BMP  */
-#define UNIT_SONICTANK                   153      /* BMP  */
-#define UNIT_SONICTANK_SHADOW            154      /* BMP  */
-#define UNIT_TANKBASE                    155      /* BMP  */
-#define UNIT_TANKBASE_SHADOW             156      /* BMP  */
-#define UNIT_TANKTOP                     157      /* BMP  */
-#define UNIT_TRIKE                       158      /* BMP  */
-#define UNIT_TRIKE_SHADOW                159      /* BMP  */
-#define UNIT_TROOPER                     160      /* BMP  */
-#define UNIT_TROOPERS                    161      /* BMP  */
-
-
+#define UNIT_SINGLEFREMEN                151      /* BMP  */
+#define UNIT_SOLDIER                     152      /* BMP  */
+#define UNIT_SOLDIERS                    153      /* BMP  */
+#define UNIT_SONICTANK                   154      /* BMP  */
+#define UNIT_SONICTANK_SHADOW            155      /* BMP  */
+#define UNIT_TANKBASE                    156      /* BMP  */
+#define UNIT_TANKBASE_SHADOW             157      /* BMP  */
+#define UNIT_TANKTOP                     158      /* BMP  */
+#define UNIT_TRIKE                       159      /* BMP  */
+#define UNIT_TRIKE_SHADOW                160      /* BMP  */
+#define UNIT_TRIPLEFREMEN                161      /* BMP  */
+#define UNIT_TROOPER                     162      /* BMP  */
+#define UNIT_TROOPERS                    163      /* BMP  */
 

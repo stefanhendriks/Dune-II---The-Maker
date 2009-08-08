@@ -1244,8 +1244,9 @@ int getUnitTypeFromChar(char chunk[35]) {
 	if (caseInsCompare(unitString, "Ornithopter"))	return ORNITHOPTER;
 	if (caseInsCompare(unitString, "Sandworm"))		return SANDWORM;
 	if (caseInsCompare(unitString, "Saboteur"))		return SABOTEUR;
-	if (caseInsCompare(unitString, "MISSILE"))		return UPGR_MISSILE;
-	if (caseInsCompare(unitString, "FREMEN"))		return UNIT_FREMEN;
+	if (caseInsCompare(unitString, "MISSILE"))		return MISSILE;
+	if (caseInsCompare(unitString, "ONEFREMEN"))		return UNIT_FREMEN_ONE;
+	if (caseInsCompare(unitString, "THREEFREMEN"))		return UNIT_FREMEN_THREE;
 
 	char msg[255];
 	sprintf(msg, "getUnitTypeFromChar could not determine what unit type '%s' (original is '%s%') is. Returning -1; this will probably cause problems.", unitString.c_str(), chunk);

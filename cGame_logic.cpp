@@ -4026,20 +4026,12 @@ void cGame::setup_skirmish()
 		}
 
 		// set up players and their units
-		for (int p=0; p < AI_WORM; p++)
-		{
-			// not playing.. do nothing
-			if (aiplayer[p].bPlaying == false)
-				continue;
+		for (int p=0; p < AI_WORM; p++)	{
 
-			// set credits
-			player[p].draw_credits = player[p].credits;
-			player[p].focus_cell = iStartPositions[p];
-
-            int iHouse=player[p].house;
+			int iHouse = player[p].house;
 
 			// house = 0 , random.
-			if (iHouse==0) {
+			if (iHouse==0 && p < 4) { // (all players above 4 are non-playing AI 'sides'
 				bool bOk=false;
 
 				while (bOk == false) {
@@ -4060,8 +4052,20 @@ void cGame::setup_skirmish()
 				}
 			}
 
-			// Set house
-			player[p].set_house(iHouse);
+			if (p == 5) {
+				iHouse = FREMEN;
+			}
+
+		    player[p].set_house(iHouse);
+
+			// not playing.. do nothing
+			if (aiplayer[p].bPlaying == false) {
+				continue;
+			}
+
+			// set credits
+			player[p].draw_credits = player[p].credits;
+			player[p].focus_cell = iStartPositions[p];
 
 			// Set map position
 			if (p == 0) {

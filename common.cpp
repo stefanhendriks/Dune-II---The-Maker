@@ -176,11 +176,8 @@ void INSTALL_HOUSES()
 
   // Corrino (?)
   houses[CORRINO].swap_color   = 136;
-  houses[FREMEN].minimap_color = makecol(192,192,192); // grey
+  houses[CORRINO].minimap_color = makecol(192,192,192); // grey
 
-
-  // TEMP
-  //map.randommap();
 }
 
 
@@ -549,20 +546,33 @@ void install_units()
   units[TROOPERS].infantry = true;
   units[TROOPERS].squish=false;
 
-    // Unit        : Group Trooper
-  // Description : 3 troopers
-  units[UNIT_FREMEN].bmp = (BITMAP *)gfxdata[UNIT_TROOPERS].dat;      // pointer to the original 8bit bitmap
-  units[UNIT_FREMEN].bmp_width  = 16*2;
-  units[UNIT_FREMEN].bmp_height = 16*2;
-  units[UNIT_FREMEN].bmp_startpixel = 0;
-  units[UNIT_FREMEN].bmp_frames = 3; // 2 extra frames
-  strcpy(units[UNIT_FREMEN].name, "Fremen");
-  units[UNIT_FREMEN].icon      = ICON_UNIT_FREMEN;
-  units[UNIT_FREMEN].bullets = ROCKET_SMALL_FREMEN;
-  units[UNIT_FREMEN].second_shot = true;
-  units[UNIT_FREMEN].infantry = true;
-  units[UNIT_FREMEN].squish=false;
+  // Unit        : Fremen
+  // Description : A single fremen
+  units[UNIT_FREMEN_ONE].bmp = (BITMAP *)gfxdata[UNIT_SINGLEFREMEN].dat;      // pointer to the original 8bit bitmap
+  units[UNIT_FREMEN_ONE].bmp_width  = 16*2;
+  units[UNIT_FREMEN_ONE].bmp_height = 16*2;
+  units[UNIT_FREMEN_ONE].bmp_startpixel = 0;
+  units[UNIT_FREMEN_ONE].bmp_frames = 3; // 2 extra frames
+  strcpy(units[UNIT_FREMEN_ONE].name, "Fremen");
+  units[UNIT_FREMEN_ONE].icon      = ICON_SPECIAL_FREMEN;
+  units[UNIT_FREMEN_ONE].bullets = ROCKET_SMALL_FREMEN;
+  units[UNIT_FREMEN_ONE].second_shot = false;
+  units[UNIT_FREMEN_ONE].infantry = true;
+  units[UNIT_FREMEN_ONE].squish=false;
 
+  // Unit        : Fremen
+  // Description : A group of Fremen
+  units[UNIT_FREMEN_THREE].bmp = (BITMAP *)gfxdata[UNIT_TRIPLEFREMEN].dat;      // pointer to the original 8bit bitmap
+  units[UNIT_FREMEN_THREE].bmp_width  = 16*2;
+  units[UNIT_FREMEN_THREE].bmp_height = 16*2;
+  units[UNIT_FREMEN_THREE].bmp_startpixel = 0;
+  units[UNIT_FREMEN_THREE].bmp_frames = 3; // 2 extra frames
+  strcpy(units[UNIT_FREMEN_THREE].name, "Fremen");
+  units[UNIT_FREMEN_THREE].icon      = ICON_SPECIAL_FREMEN;
+  units[UNIT_FREMEN_THREE].bullets = ROCKET_SMALL_FREMEN;
+  units[UNIT_FREMEN_THREE].second_shot = true;
+  units[UNIT_FREMEN_THREE].infantry = true;
+  units[UNIT_FREMEN_THREE].squish=false;
 
   // Unit        : Saboteur
   // Description : Special infantry unit, moves like trike, deadly as hell, not detectable on radar!
@@ -581,8 +591,28 @@ void install_units()
   units[SABOTEUR].turnspeed = 0; // very fast
   strcpy(units[SABOTEUR].name, "Saboteur");
   units[SABOTEUR].infantry = true;
-  units[SABOTEUR].icon      = ICON_UNIT_SABOTEUR;
+  units[SABOTEUR].icon      = ICON_SPECIAL_SABOTEUR;
   units[SABOTEUR].squish=false;
+
+  // Unit        : Death Hand
+  // Description : A missile that destroys a large area. Is actually not a unit at all.
+  units[MISSILE].build_time = 1000;
+  units[MISSILE].bmp_width  = 16*2;
+  units[MISSILE].bmp_height = 16*2;
+  units[MISSILE].bmp_startpixel = 0;
+  units[MISSILE].bmp_frames = 3; // 2 extra frames
+  units[MISSILE].speed = 0; // very fast
+  units[MISSILE].hp = 60;   // quite some health
+  units[MISSILE].cost = 0;
+  units[MISSILE].sight = 3; // immense sight! (sorta scouting guys)
+  units[MISSILE].range = 2;
+  units[MISSILE].attack_frequency = 0;
+  units[MISSILE].turnspeed = 0; // very fast
+  strcpy(units[MISSILE].name, "Death Hand");
+  units[MISSILE].infantry = true;
+  units[MISSILE].icon      = ICON_SPECIAL_MISSILE;
+  units[MISSILE].squish=false;
+
 
   // Unit        : Saboteur
   // Description : Special infantry unit, moves like trike, deadly as hell, not detectable on radar!

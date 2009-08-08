@@ -36,6 +36,7 @@ class cBuildingList {
 		int getButtonDrawY() { return buttonDrawY; }
 		int getScrollingOffset() { return scrollingOffset; }
 		bool isAvailable() { return available; }
+		bool isBuildingItem();
 
 		void scrollUp();
 		void scrollDown();
@@ -69,7 +70,7 @@ class cBuildingList {
 		int maxItems;		 // how many items have been set in the list?
 
 		// the list of icons
-		cBuildingListItem * items[MAX_ICONS];
+		cBuildingListItem * items[MAX_ITEMS];
 
 		int getFreeSlot();
 };

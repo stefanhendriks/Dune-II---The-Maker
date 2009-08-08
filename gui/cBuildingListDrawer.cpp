@@ -74,6 +74,9 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 
 	int end = startId + 5; // max 5 icons are showed at once
 
+	// is building an item in the list?
+	bool isBuildingItemInList = list->isBuildingItem();
+
 	// draw the icons
 	for (int i = startId; i < end; i++) {
 		cBuildingListItem * item = list->getItem(i);
@@ -96,7 +99,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 
 		bool cannotPayIt = item->getBuildCost() > player[HUMAN].credits;
 
-		// when item is being built.
+		// when this item is being built.
 		if (item->isBuilding()) {
 			int iTotalBuildPoints = 0;
 
@@ -135,14 +138,17 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 			}
 		} else {
 
-			// not building
+			// this item is not being built. So we do not draw a progress indicator.
+			// however, it could be that an other item is being built.
 
-			// draw availability or not
-			if (!item->isAvailable() || cannotPayIt) {
+			// draw the item 'unavailable' when:
+			// - is not available (doh)
+			// - we cant pay it
+			// - some other item is being built
+			if (!item->isAvailable() || cannotPayIt || isBuildingItemInList) {
 				set_trans_blender(0,0,0,128);
 				fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
 			}
-
 
 			// draw cross when not able to pay
 			if (cannotPayIt) {

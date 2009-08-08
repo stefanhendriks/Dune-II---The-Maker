@@ -656,7 +656,11 @@ void cUnit::draw()
     start_y = bmp_height * iFrame;
 
     // select proper palette
-    select_palette( player[iPlayer].pal );
+    int index = iPlayer;
+    if (iType == UNIT_FREMEN_ONE || iType == UNIT_FREMEN_THREE) {
+    	index = FREMEN;
+    }
+    select_palette( player[index].pal );
 
     // Selection box x, y position. Depends on unit size
     int iSelX = ux;

@@ -147,6 +147,7 @@
 
 // Lists stuff
 #define MAX_ICONS       30      // max of 30 icons per list
+#define MAX_ITEMS		MAX_ICONS
 //#define MAX_LISTS       25      // max of 25 lists
 
 // #TIMERS
@@ -175,7 +176,7 @@
 #define ATREIDES  2
 #define ORDOS     3
 #define SARDAUKAR 4
-#define FREMEN	  5
+#define FREMEN 	  5
 #define MERCENARY 6
 #define CORRINO   7         // == SARDAUKAR!!!   ---- in this code we use this 'house' for sandworms
 #define SANDHOUSE 9
@@ -252,15 +253,12 @@
 
 // special units
 #define SABOTEUR		  19  // special unit
-#define UNIT_FREMEN       20  // special unit(s) for fremen support
+#define UNIT_FREMEN_ONE       20  // special unit(s) for fremen support
+#define UNIT_FREMEN_THREE       21  // special unit(s) for fremen support
+#define MISSILE			  22  // unit abusal id for missile (death hand)
 
 // Frigate
 #define FRIGATE           29  // air unit (should be last!!)
-
-// UPGRADES AS UNIT TYPES
-#define UPGR_FREMEN		  30 // Use fremen intelligence
-#define UPGR_SANDWORM	  31 // see sandworms on minimap
-#define UPGR_MISSILE      32 // dead-hand
 
 // Bullet types
 #define ROCKET_SMALL      0   // small rocket (trooper/troopers)

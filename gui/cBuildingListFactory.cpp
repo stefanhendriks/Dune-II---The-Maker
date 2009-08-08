@@ -30,6 +30,7 @@ cBuildingListFactory *cBuildingListFactory::getInstance() {
  * @param list
  * @param listId
  * @param techlevel
+ * @param house
  */
 void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int techlevel, int house) {
 	assert(list != NULL);
@@ -39,6 +40,8 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 
 	// X is the same for all list buttons
 	list->setButtonDrawX(513);
+
+	list->setAvailable(true);
 
 	// now set it up
 	if (listId == LIST_CONSTYARD) {
@@ -52,12 +55,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 			list->addItemToList(new cBuildingListItem(WALL, structures[WALL]));
 		}
 
-		list->addItemToList(new cBuildingListItem(WINDTRAP, structures[WINDTRAP]));
 		list->addItemToList(new cBuildingListItem(REFINERY, structures[REFINERY]));
-		list->addItemToList(new cBuildingListItem(LIGHTFACTORY, structures[LIGHTFACTORY]));
-		list->addItemToList(new cBuildingListItem(HEAVYFACTORY, structures[HEAVYFACTORY]));
-		list->addItemToList(new cBuildingListItem(PALACE, structures[PALACE]));
-		list->addItemToList(new cBuildingListItem(WALL, structures[WALL]));
 	}
 
 	// other lists, have 40 pixels more Y , but the X remains the same
@@ -78,34 +76,57 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER]));
 			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER]));
 		} else {
-			logbook("ASSERT FAIL: cBuildingListFactory::initializeList.");
-			assert(false); // we do not support other houses yet.
+			// do nothing
 		}
 	}
 
 	if (listId == LIST_LIGHTFC) {
 		list->setButtonDrawY(125);
 		list->setButtonIcon(BTN_LIGHTFC_PRESSED);
+
+		if (house == ATREIDES) {
+			list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE]));
+		} else if (house == ORDOS) {
+			list->addItemToList(new cBuildingListItem(RAIDER, units[RAIDER]));
+		} else if (house == HARKONNEN) {
+			list->addItemToList(new cBuildingListItem(QUAD, units[QUAD]));
+		} else {
+			list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE]));
+			list->addItemToList(new cBuildingListItem(RAIDER, units[RAIDER]));
+			list->addItemToList(new cBuildingListItem(QUAD, units[QUAD]));
+		}
 	}
 
 	if (listId == LIST_HEAVYFC) {
 		list->setButtonDrawY(165);
 		list->setButtonIcon(BTN_HEAVYFC_PRESSED);
+
+		list->addItemToList(new cBuildingListItem(TANK, units[TANK]));
+		list->addItemToList(new cBuildingListItem(HARVESTER, units[HARVESTER]));
 	}
 
 	if (listId == LIST_ORNI) {
 		list->setButtonDrawY(205);
 		list->setButtonIcon(BTN_ORNI_PRESSED);
+		list->addItemToList(new cBuildingListItem(CARRYALL, units[CARRYALL]));
 	}
 
 	if (listId == LIST_STARPORT) {
 		list->setButtonDrawY(245);
 		list->setButtonIcon(BTN_STARPORT_PRESSED);
+
+		// a lot of units are in this list
 	}
 
 	if (listId == LIST_PALACE) {
 		list->setButtonDrawY(285);
 		list->setButtonIcon(BTN_PALACE_PRESSED);
+
+		// special weapons
+		list->addItemToList(new cBuildingListItem(MISSILE, units[MISSILE]));
+		list->addItemToList(new cBuildingListItem(UNIT_FREMEN_THREE, units[UNIT_FREMEN_THREE]));
+		list->addItemToList(new cBuildingListItem(SABOTEUR, units[SABOTEUR]));
+
 	}
 
 }
