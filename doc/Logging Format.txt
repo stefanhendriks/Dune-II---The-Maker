@@ -1,0 +1,96 @@
+This file contains the current logging format specification, as well as the format change history.
+
+A log is a file in plan text format, consisting of several Entries. Each Entry is represented by one and only one line in the file. Every Entry consists of several Fields, but the number of Fields is NOT the same for every Entry. The different fields are seperated by the '|' character.
+
+The first three fields always hold the same kind of data (counting C-style, starting at 0 not 1):
+FIELD		DATA
+0		Timestamp
+1		Level
+2		Component
+
+Timestamp is the time the entry was added to the log. Time is measured in Milliseconds, counting from program startup.
+Level is the entry 'urgency', how important the entry is. The different Levels are listed later.
+Component is the part of the game the entry belongs to. This will get clearer later, when the different components are listed.
+
+Example:
+7931|INFO|UNIT
+
+The meaning of the next fields depends on the Component, as some components will require a House and ID field, to make clear to what player or unit the Entry belongs to if that information is applicable. After those fields, if they're needed, the Event is specified. The meaning of an Event will be explained later.
+So, depending on the component, the first fields will hold this information:
+
+FIELD		DATA
+0		Timestamp
+1		Level
+2		Component
+3		House
+4		ID
+5		Event
+
+OR:
+
+FIELD		DATA
+0		Timestamp
+1		Level
+2		Component
+3		Event
+
+Example:
+7931|INFO|UNIT|ORDOS|63|MOVE
+OR
+161|INFO|ALLEGRO|Allegro init
+
+To avoid confusion, fields numbered using E+'X' means the field 'X' fields after Event. So field E+0 is the Event field itself, E+1 is the first field after the Event field.
+
+The existence of two fields, Message and Outcome, depend on the Event. Because of their frequent use they're described here rather than in every seperate Event description. However, every Event description will state if it uses these fields.
+
+The Message fields hold a String describing the event shortly in a human-readable way. An example: When reading a file, the message field might contain "Reading file game.ini".
+The Outcome field holds either SUCCES, FAILED, NONE, or UNKNOWN. The meaning of these should be self-explanatory.
+
+After these fields come the Event specific fields, which will be described in the Event descriptions.
+
+
+
+Level Descriptions
+
+The entry Level is an indication of the Entry importancy. This can be used to instruct the game to only log messages with a high enough importancy, or in the viewer to filter entry's according to importancy.
+The different Levels are (from low to high importancy):
+
+INFO
+TRACE
+WARN
+ERROR
+FATAL
+
+
+
+Component Descriptions
+
+The Component describes from what part of the game the entry originates. The different Components are:
+
+Component		Has House	Has ID		Description
+
+UNITS			X		X
+STRUCTURES		X		X
+GAMEINI							Events concerning the game.ini file, the game settings
+SCENARIOINI						Events concerning the scenario ini's, the files about the campaign game
+PARTICLE				
+BULLET					
+AI			X		X
+SIDEBAR			
+MAP
+NONE							Used for the old Log messages, and all entry's using this component should be changed
+INIT		
+ALLEGRO							Use for allegro specific calls
+SETUP	
+VERSION							Version specific log messages
+SKIRMISHSETUP 		X		X		When skirmish game is being set up
+ALFONT							ALFONT library specific Events
+SOUND							Sound related Events
+
+
+
+
+
+
+
+
