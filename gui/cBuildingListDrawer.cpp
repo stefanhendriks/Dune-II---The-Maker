@@ -165,6 +165,20 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 			}
 		}
 
+		if (item->getTimesToBuild() > 0) {
+			// draw number of times to build this thing (queueing)
+			int textX = iDrawX + 41;
+			int textY = iDrawY + 16;
+
+			if (item->getTimesToBuild() < 10) {
+				textX += 10;
+			}
+
+			// draw
+			alfont_textprintf(bmp_screen, game_font, textX + 1,textY + 1, makecol(0,0,0), "%d", item->getTimesToBuild());
+			alfont_textprintf(bmp_screen, game_font, textX,textY, makecol(255,255,255), "%d", item->getTimesToBuild());
+		}
+
 		// draw rectangle when mouse hovers over icon
 		if (isOverItemCoordinates_Boolean(mouse_x, mouse_y, iDrawX, iDrawY)) {
 			int iColor=makecol(game.fade_select, game.fade_select, game.fade_select);

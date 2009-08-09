@@ -59,7 +59,7 @@ int cItemBuilder::getBuildTime(cBuildingList *list, cBuildingListItem *item) {
 }
 
 void cItemBuilder::think() {
-	// go through all the items and increase progress counters... yay
+	// go through all the items and increase progress counters...
 	for (int i = 0; i < MAX_ITEMS; i++) {
 		cBuildingListItem *item = getItem(i);
 		if (item) {
@@ -81,7 +81,7 @@ void cItemBuilder::think() {
 							play_voice(SOUND_VOICE_01_ATR);
 						} else {
 
-							item->setTimesToBuild((item->getTimesToBuild() - 1)); // decrease amount of times to build
+							item->decreaseTimesToBuild(); // decrease amount of times to build
 
 							assert(item->getTimesToBuild() > -1);
 
@@ -90,21 +90,44 @@ void cItemBuilder::think() {
 							// stop building this item when we are done
 							if (item->getTimesToBuild() == 0) {
 								item->setIsBuilding(false);
+								item->setProgress(0); // set back progress
 
 								// now try to find an item that is in the same list. If so, start building it.
 								cBuildingListItem *similarItem = getSimilarListType(item);
+
+								removeItemFromList(item); // remove, not needed to evaluate anymore
 
 								if (similarItem && similarItem->canPay()) {
 									player[0].credits -= similarItem->getBuildCost();
 									similarItem->setIsBuilding(true);
 								}
 
-								removeItemFromList(i); // remove, not needed to evaluate anymore
+							} else {
+								item->setProgress(0); // set back progress
+
+								if (item->canPay()) {
+									item->setIsBuilding(true);
+									player[HUMAN].credits -= item->getBuildCost();
+								} else {
+									// stop building when cannot pay it.
+									item->setIsBuilding(false);
+								}
 							}
 						}
 					}
 
 					timers[i] = 0;
+				}
+			} else {
+				// not building now, but in list.
+				// Build as soon as possible.
+
+				bool anotherItemOfSameListIsBeingBuilt = getSimilarListType(item);
+
+				// only start building this, if no other item is already being built in the same list.
+				if (!anotherItemOfSameListIsBeingBuilt && item->canPay()) {
+					player[HUMAN].credits -= item->getBuildCost();
+					item->setIsBuilding(true);
 				}
 			}
 		}
@@ -141,7 +164,7 @@ void cItemBuilder::removeAllItems() {
  * @param item
  */
 void cItemBuilder::addItemToList(cBuildingListItem * item) {
-	assert(item);
+	assert(item != NULL);
 	int slot = getFreeSlot();
 	if (slot < 0) {
 		assert(false);
@@ -157,7 +180,7 @@ void cItemBuilder::addItemToList(cBuildingListItem * item) {
 	}
 
 	// increase amount
-	item->setTimesToBuild((item->getTimesToBuild() + 1));
+	item->increaseTimesToBuild();
 
 	// add amount of times to build
 	if (!isItemInList(item)) {
@@ -187,6 +210,8 @@ cBuildingListItem *cItemBuilder::getSimilarListType(cBuildingListItem *item) {
 	for (int i = 0; i < MAX_ITEMS; i++) {
 		cBuildingListItem *listItem = getItem(i);
 		if (listItem) {
+			if (listItem == item) continue; // do not check self
+
 			if (item->getList() == listItem->getList()) {
 				return item;
 			}
@@ -197,6 +222,29 @@ cBuildingListItem *cItemBuilder::getSimilarListType(cBuildingListItem *item) {
 
 bool cItemBuilder::isTheFirstListType(cBuildingListItem *item) {
 	return getSimilarListType(item) == NULL;
+}
+
+/**
+ * Remove item from list; finds its index and removes it.
+ * @param item
+ */
+void cItemBuilder::removeItemFromList(cBuildingListItem *item) {
+	if (item == NULL) return;
+
+	int indexToDelete = -1;
+	for (int i = 0; i < MAX_ITEMS; i++) {
+		cBuildingListItem *theItem = getItem(i);
+		if (theItem == item) {
+			indexToDelete = i;
+			break;
+		}
+	}
+
+	if (indexToDelete > -1) {
+		removeItemFromList(indexToDelete);
+	} else {
+		// log statement?
+	}
 }
 
 /**
@@ -211,8 +259,14 @@ void cItemBuilder::removeItemFromList(int position) {
 	if (item == NULL) {
 		// item can be null, in that case do nothing.
 	} else {
-		delete item;
+
+		// DO NOT DELETE HERE, it will delete the instance; that is not what should happen here.
+		// only remove the reference (pointer) to it.
+		//delete item;
+		assert(item->isBuilding() == false);
+//		item->setIsBuilding(false);
 		items[position] = NULL;
+		timers[position] = 0;
 	}
 
 }

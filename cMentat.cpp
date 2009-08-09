@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -46,13 +46,13 @@ void cMentat::prepare(bool bTellHouse, int state, int house, int region) {
 	if (bTellHouse)
 	{
 		if (house == ATREIDES) {
-			INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION);			
+			INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION);
 		} else if (house == HARKONNEN) {
-			INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION);			
+			INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION);
 		} else if (house == ORDOS) {
 			INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION);
 		}
-	} else {   
+	} else {
 		if (state == GAME_BRIEFING) {
 			INI_Load_scenario(house, region);
 			INI_LOAD_BRIEFING(house, region, INI_BRIEFING);
@@ -62,7 +62,7 @@ void cMentat::prepare(bool bTellHouse, int state, int house, int region) {
 			} else {
 				LOAD_SCENE("win02"); // ltank
 			}
-			
+
 			INI_LOAD_BRIEFING(house, region, INI_WIN);
 		} else if (state == GAME_LOSEBRIEF)	{
 			if (rnd(100) < 50) {
@@ -74,7 +74,7 @@ void cMentat::prepare(bool bTellHouse, int state, int house, int region) {
 		}
 	}
 
-	logbook("MENTAT: sentences prepared");
+	logbook("MENTAT: sentences prepared 2");
 	iMentatSentence = -2;	// = sentence to draw and speak with (-1 = not ready, -2 means starting)
 	TIMER_Speaking = 0;		// 0 means, set it up
 }

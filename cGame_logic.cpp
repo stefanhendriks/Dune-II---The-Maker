@@ -4167,6 +4167,7 @@ void cGame::setup_skirmish()
 		if (sidebar != NULL) {
 			delete sidebar;
 		}
+
 		sidebar = cSideBarFactory::getInstance()->createSideBar(game.iMission, iHouse);
 
 		bFadeOut=true;
@@ -4339,7 +4340,7 @@ void cGame::preparementat(bool bTellHouse)
         }
     }
 
-	logbook("MENTAT: sentences prepared");
+	logbook("MENTAT: sentences prepared 1");
 	iMentatSpeak=-2;			// = sentence to draw and speak with (-1 = not ready, -2 means starting)
 	TIMER_mentat_Speaking=0; //	0 means, set it up
 }

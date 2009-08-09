@@ -31,6 +31,8 @@ class cItemBuilder {
 		bool isTheFirstListType(cBuildingListItem *item);
 		cBuildingListItem *getSimilarListType(cBuildingListItem *item);
 
+		void removeItemFromList(cBuildingListItem *item);
+
 		int getFreeSlot();
 
 	private:

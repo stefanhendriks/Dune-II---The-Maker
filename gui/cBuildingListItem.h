@@ -39,6 +39,8 @@ public:
 	void setIsBuilding(bool value) { building = value; }
 	void setIsAvailable(bool value) { available = value; }
 	void setTimesToBuild(int value) { timesToBuild = value; }
+	void increaseTimesToBuild() { timesToBuild++; }
+	void decreaseTimesToBuild() { timesToBuild--; }
 
 	cBuildingList *getList() { return myList; }	// returns the list it belongs to
 

@@ -9,6 +9,7 @@ cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingLis
 	available = true;
 	building = false;
 	myList = list;
+	timesToBuild = 0;
 }
 
 cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *list) {
@@ -20,6 +21,7 @@ cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *li
 	available = true;
 	building = false;
 	myList = list;
+	timesToBuild = 0;
 }
 
 cBuildingListItem::cBuildingListItem(cBuildingList *list) {
@@ -31,6 +33,7 @@ cBuildingListItem::cBuildingListItem(cBuildingList *list) {
 	progress = 0;
 	available = true;
 	myList = list;
+	timesToBuild = 0;
 }
 
 cBuildingListItem::cBuildingListItem(int theIcon, int theID, eBuildType theType, int theCost, cBuildingList *list) {
@@ -42,16 +45,19 @@ cBuildingListItem::cBuildingListItem(int theIcon, int theID, eBuildType theType,
 	progress = 0;
 	available = true;
 	myList = list;
+	timesToBuild = 0;
 }
 
 bool cBuildingListItem::canPay() {
-	int costs;
+	int costs = 0;
 
 	// get the ID
 	if (type == UNIT) {
 		costs = units[ID].cost;
 	} else if (type == STRUCTURE) {
 		costs = structures[ID].cost;
+	} else {
+		costs = 0;
 	}
 
 	if (player[0].credits >= costs) {

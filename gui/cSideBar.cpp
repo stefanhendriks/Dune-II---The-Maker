@@ -101,19 +101,48 @@ void cSideBar::thinkInteraction() {
 	}
 
 	// when mouse pressed, build item if over item
-	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && game.bMousePressedLeft) {
+	if (selectedListID > -1 && getList(selectedListID)->isAvailable()) {
 		cBuildingList *list = getList(selectedListID);
-		if (list != NULL && !list->isBuildingItem()) {
-			cBuildingListDrawer *drawer = new cBuildingListDrawer();
-			cBuildingListItem *item = drawer->isOverItemCoordinates(list, mouse_x,  mouse_y);
+		if (game.bMousePressedLeft) {
+			if (list != NULL) {
+				cBuildingListDrawer *drawer = new cBuildingListDrawer();
+				cBuildingListItem *item = drawer->isOverItemCoordinates(list, mouse_x,  mouse_y);
 
-			if (item != NULL) {
-				cItemBuilder *builder = cItemBuilder::getInstance();
+				if (item != NULL) {
+					cItemBuilder *builder = cItemBuilder::getInstance();
+					builder->addItemToList(item);
+				}
 
-				logbook("ADDING ITEM TO BUILD...");
-				cItemBuilder::getInstance()->addItemToList(item);
+				delete drawer;
 			}
-			delete drawer;
+		}
+
+		if (game.bMousePressedRight) {
+			if (list != NULL) {
+				cBuildingListDrawer *drawer = new cBuildingListDrawer();
+				cBuildingListItem *item = drawer->isOverItemCoordinates(list, mouse_x,  mouse_y);
+
+				if (item != NULL) {
+					if (item->getTimesToBuild() > 0) {
+						item->decreaseTimesToBuild();
+
+						// give money back (and stop building)
+						if (item->getTimesToBuild() == 0) {
+//							cLogger::getInstance()->logCommentLine("times to build is 0 , give money back and stop building.");
+							player[HUMAN].credits += item->getBuildCost();
+							item->setIsBuilding(false);
+							item->setProgress(0);
+							cItemBuilder::getInstance()->removeItemFromList(item);
+						} else {
+							cLogger::getInstance()->logCommentLine("times to build is NOT 0 , Doing nothing.");
+						}
+
+						// else, only the number is decreased (used for queueing)
+					}
+				}
+
+				delete drawer;
+			}
 		}
 
 	}
