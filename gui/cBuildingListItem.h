@@ -27,6 +27,7 @@ public:
 	bool isBuilding() { return building; }
 	bool isAvailable() { return available; }
 	int getTimesToBuild() { return timesToBuild; }
+	int getSlotId() { return slotId; }
 
 	bool canPay();
 
@@ -41,6 +42,7 @@ public:
 	void setTimesToBuild(int value) { timesToBuild = value; }
 	void increaseTimesToBuild() { timesToBuild++; }
 	void decreaseTimesToBuild() { timesToBuild--; }
+	void setSlotId(int value) { slotId = value; }
 
 	cBuildingList *getList() { return myList; }	// returns the list it belongs to
 
@@ -54,6 +56,7 @@ private:
 							// note; this is not the same as not being able to build it.
 	int progress;			// progress building this item
 	int timesToBuild;		// the amount of times to build this item (queueing) (meaning, when building = true, this should be 1...)
+	int slotId;			 	// return index of items[] array (set after adding item to list, default is < 0)
 
 	cBuildingList *myList;
 };

@@ -159,7 +159,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 			}
 
 			// last built id
-			if (list->getLastBuiltId() == i) {
+			if (list->getLastClickedId() == i) {
 				rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), makecol(game.fade_select, game.fade_select, game.fade_select));
 				rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(game.fade_select, game.fade_select, game.fade_select));
 			}

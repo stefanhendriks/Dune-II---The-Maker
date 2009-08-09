@@ -85,24 +85,30 @@ void cItemBuilder::think() {
 
 							assert(item->getTimesToBuild() > -1);
 
-							// construct unit
+							// TODO: construct unit here
+
 
 							// stop building this item when we are done
-							if (item->getTimesToBuild() == 0) {
+							if (item->getTimesToBuild() == 0) {	// no more items to build
+								// stop building (set flags)
 								item->setIsBuilding(false);
 								item->setProgress(0); // set back progress
 
+								// remove this item from the build list (does not delete item, so pointer is still valid)
+								removeItemFromList(item);
+
 								// now try to find an item that is in the same list. If so, start building it.
-								cBuildingListItem *similarItem = getSimilarListType(item);
+								cBuildingListItem *itemInSameList = getSimilarListType(item);
 
-								removeItemFromList(item); // remove, not needed to evaluate anymore
-
-								if (similarItem && similarItem->canPay()) {
-									player[0].credits -= similarItem->getBuildCost();
-									similarItem->setIsBuilding(true);
+								// found item, and is affordable.
+								if (itemInSameList && itemInSameList->canPay()) {
+									player[0].credits -= itemInSameList->getBuildCost();
+									itemInSameList->setIsBuilding(true);
 								}
 
 							} else {
+								// item still needs to be built more times.
+
 								item->setProgress(0); // set back progress
 
 								if (item->canPay()) {
@@ -205,15 +211,16 @@ bool cItemBuilder::isItemInList(cBuildingListItem *item) {
  * @return
  */
 cBuildingListItem *cItemBuilder::getSimilarListType(cBuildingListItem *item) {
-	if (item == NULL) return NULL;
+	assert(item != NULL);
 
+	// get through the build list and find an item that is of the same list.
 	for (int i = 0; i < MAX_ITEMS; i++) {
 		cBuildingListItem *listItem = getItem(i);
 		if (listItem) {
 			if (listItem == item) continue; // do not check self
 
 			if (item->getList() == listItem->getList()) {
-				return item;
+				return listItem;
 			}
 		}
 	}
@@ -255,20 +262,10 @@ void cItemBuilder::removeItemFromList(cBuildingListItem *item) {
 void cItemBuilder::removeItemFromList(int position) {
 	assert(position > -1);
 	assert(position < MAX_ICONS);
-	cBuildingListItem * item = getItem(position);
-	if (item == NULL) {
-		// item can be null, in that case do nothing.
-	} else {
 
-		// DO NOT DELETE HERE, it will delete the instance; that is not what should happen here.
-		// only remove the reference (pointer) to it.
-		//delete item;
-		assert(item->isBuilding() == false);
-//		item->setIsBuilding(false);
-		items[position] = NULL;
-		timers[position] = 0;
-	}
-
+	// remove
+	items[position] = NULL;
+	timers[position] = 0;
 }
 
 cBuildingListItem * cItemBuilder::getItem(int position) {

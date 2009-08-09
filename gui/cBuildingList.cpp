@@ -2,7 +2,7 @@
 
 cBuildingList::cBuildingList(int type) {
 	TIMER_progress = 0;
-	lastBuiltId = 0;
+	lastClickedId = 0;
 	buttonIconId = 0;	// the button to draw at the left of the list
 	buttonDrawX = 0;
 	buttonDrawY = 0;
@@ -15,7 +15,7 @@ cBuildingList::cBuildingList(int type) {
 
 cBuildingList::~cBuildingList() {
 	TIMER_progress = 0;
-	lastBuiltId = 0;
+	lastClickedId = 0;
 	buttonIconId = 0;	// the button to draw at the left of the list
 	buttonDrawX = 0;
 	buttonDrawY = 0;
@@ -63,6 +63,7 @@ void cBuildingList::addItemToList(cBuildingListItem * item) {
 
 	// add
 	items[slot] = item;
+	item->setSlotId(slot);
 	maxItems++;
 }
 

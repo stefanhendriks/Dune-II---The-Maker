@@ -111,6 +111,7 @@ void cSideBar::thinkInteraction() {
 				if (item != NULL) {
 					cItemBuilder *builder = cItemBuilder::getInstance();
 					builder->addItemToList(item);
+					list->setLastClickedId(item->getSlotId());
 				}
 
 				delete drawer;
@@ -128,7 +129,6 @@ void cSideBar::thinkInteraction() {
 
 						// give money back (and stop building)
 						if (item->getTimesToBuild() == 0) {
-//							cLogger::getInstance()->logCommentLine("times to build is 0 , give money back and stop building.");
 							player[HUMAN].credits += item->getBuildCost();
 							item->setIsBuilding(false);
 							item->setProgress(0);
