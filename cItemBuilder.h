@@ -32,6 +32,7 @@ class cItemBuilder {
 		cBuildingListItem *getSimilarListType(cBuildingListItem *item);
 
 		void removeItemFromList(cBuildingListItem *item);
+		bool isASimilarItemBeingBuilt(cBuildingListItem *item);
 
 		int getFreeSlot();
 

@@ -103,6 +103,9 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 
 		list->addItemToList(new cBuildingListItem(TANK, units[TANK], list));
 		list->addItemToList(new cBuildingListItem(HARVESTER, units[HARVESTER], list));
+		list->addItemToList(new cBuildingListItem(SIEGETANK, units[SIEGETANK], list));
+		list->addItemToList(new cBuildingListItem(LAUNCHER, units[LAUNCHER], list));
+		list->addItemToList(new cBuildingListItem(SONICTANK, units[SONICTANK], list));
 	}
 
 	if (listId == LIST_ORNI) {

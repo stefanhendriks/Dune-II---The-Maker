@@ -127,16 +127,16 @@ void cSideBar::thinkInteraction() {
 					if (item->getTimesToBuild() > 0) {
 						item->decreaseTimesToBuild();
 
-						// give money back (and stop building)
 						if (item->getTimesToBuild() == 0) {
-							player[HUMAN].credits += item->getBuildCost();
+							cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
+							// only give money back for item that is being built
+							if (item->isBuilding()) {
+								player[HUMAN].credits += item->getBuildCost();
+							}
 							item->setIsBuilding(false);
 							item->setProgress(0);
 							cItemBuilder::getInstance()->removeItemFromList(item);
-						} else {
-							cLogger::getInstance()->logCommentLine("times to build is NOT 0 , Doing nothing.");
 						}
-
 						// else, only the number is decreased (used for queueing)
 					}
 				}

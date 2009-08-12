@@ -128,7 +128,7 @@ void cItemBuilder::think() {
 				// not building now, but in list.
 				// Build as soon as possible.
 
-				bool anotherItemOfSameListIsBeingBuilt = getSimilarListType(item);
+				bool anotherItemOfSameListIsBeingBuilt = isASimilarItemBeingBuilt(item);
 
 				// only start building this, if no other item is already being built in the same list.
 				if (!anotherItemOfSameListIsBeingBuilt && item->canPay()) {
@@ -136,6 +136,8 @@ void cItemBuilder::think() {
 					item->setIsBuilding(true);
 				}
 			}
+		} else {
+			// item not valid (no pointer)
 		}
 	}
 }
@@ -177,6 +179,7 @@ void cItemBuilder::addItemToList(cBuildingListItem * item) {
 		return;
 	}
 
+	// check if there is a similiar type in the list
 	if (isTheFirstListType(item)) {
 		item->setIsBuilding(true); // build it immediately
 		// pay it
@@ -188,9 +191,12 @@ void cItemBuilder::addItemToList(cBuildingListItem * item) {
 	// increase amount
 	item->increaseTimesToBuild();
 
-	// add amount of times to build
 	if (!isItemInList(item)) {
+		cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Add item to item builder", "item is not in list, adding.");
+		// add to list
 		items[slot] = item;
+	} else {
+		cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Add item to item builder", "item is in list already. Only times to build is updated.");
 	}
 }
 
@@ -225,6 +231,23 @@ cBuildingListItem *cItemBuilder::getSimilarListType(cBuildingListItem *item) {
 		}
 	}
 	return NULL;
+}
+
+bool cItemBuilder::isASimilarItemBeingBuilt(cBuildingListItem *item) {
+	assert(item != NULL);
+
+	// get through the build list and find an item that is of the same list.
+	for (int i = 0; i < MAX_ITEMS; i++) {
+		cBuildingListItem *listItem = getItem(i);
+		if (listItem) {
+			if (listItem == item) continue; // do not check self
+
+			if (item->getList() == listItem->getList()) {
+				if (listItem->isBuilding()) return true;
+			}
+		}
+	}
+	return false;
 }
 
 bool cItemBuilder::isTheFirstListType(cBuildingListItem *item) {

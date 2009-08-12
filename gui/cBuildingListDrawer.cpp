@@ -261,7 +261,7 @@ cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *li
 	int iDrawY=46;
 
 	int startId = list->getScrollingOffset();
-	int end = startId + 4;
+	int end = startId + 5; // 5 icons in the list
 	// draw the icons
 	for (int i = startId; i < end; i++) {
 		cBuildingListItem * item = list->getItem(i);
