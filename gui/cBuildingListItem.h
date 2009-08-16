@@ -12,8 +12,6 @@ class cBuildingListItem {
 
 public:
 	// constructors
-	cBuildingListItem(cBuildingList* list);
-	cBuildingListItem(int theIcon, int theID, eBuildType theType, int theCost, cBuildingList* list);
 	cBuildingListItem(int theID, s_Structures entry, cBuildingList* list);
 	cBuildingListItem(int theID, s_UnitP entry, cBuildingList* list);
 
@@ -31,6 +29,12 @@ public:
 
 	bool canPay();
 
+	float getCreditsPerProgressTime() { return creditsPerProgressTime; }
+
+	float getRefundAmount();
+
+	bool shouldPlaceIt() { return placeIt; }
+
 	// setters
 	void setIconId(int value) { icon = value; }
 	void setBuildId(int value) { ID = value; }
@@ -43,6 +47,8 @@ public:
 	void increaseTimesToBuild() { timesToBuild++; }
 	void decreaseTimesToBuild() { timesToBuild--; }
 	void setSlotId(int value) { slotId = value; }
+	void setPlaceIt(bool value) { placeIt = value; }
+
 
 	cBuildingList *getList() { return myList; }	// returns the list it belongs to
 
@@ -57,6 +63,9 @@ private:
 	int progress;			// progress building this item
 	int timesToBuild;		// the amount of times to build this item (queueing) (meaning, when building = true, this should be 1...)
 	int slotId;			 	// return index of items[] array (set after adding item to list, default is < 0)
+
+	float creditsPerProgressTime; // credits to pay for each progress point. (calculated at creation)
+	bool placeIt;			// when true, this item is ready for placement.
 
 	cBuildingList *myList;
 };

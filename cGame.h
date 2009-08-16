@@ -30,6 +30,8 @@ class cGame
 
 public:
 
+	cGame();
+
 	std::string game_filename;
 
 	cSideBar * sidebar;
@@ -155,7 +157,6 @@ public:
 	// Building stuff, requires a think function
 	void think_build();	// building stuff from lists
 	void think_upgrade(); // upgrading stuff
-	void think_money();	// think about upping/downing money
 
 	void think_starport();
 
@@ -202,6 +203,8 @@ public:
 	bool isState(int thisState);
 	void setState(int thisState);
 
+	CreditsDrawer *getCreditsDrawer() { return creditsDrawer; }
+
 private:
 	void poll();
 	void gerald();		// interface and such, which is called by combat
@@ -218,10 +221,11 @@ private:
 
 	void combat_mouse();
 	void mapdraw();
-	void draw_credits();  // draw money
+	void draw_credits(int creditsToDraw);  // draw money
 	void draw_sidebarbuttons();	// draw the buttons left to the icon bar (and show what is active)
 	void draw_placeit();
 	void draw_order();
+	void do_credits_drawing_and_logic();
 
 	void runGameState();
 	void shakeScreenAndBlitBuffer();
@@ -244,5 +248,6 @@ private:
 	void init_lists();
 	int  list_new_id(int iListID);		// find new entry in this list
 
+	CreditsDrawer *creditsDrawer;
 };
 

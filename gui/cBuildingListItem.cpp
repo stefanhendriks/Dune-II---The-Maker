@@ -10,6 +10,10 @@ cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingLis
 	building = false;
 	myList = list;
 	timesToBuild = 0;
+	if (entry.cost > 0) {
+		creditsPerProgressTime = (float)entry.cost / (float)entry.build_time;
+	}
+	placeIt = false;
 }
 
 cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *list) {
@@ -22,30 +26,10 @@ cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *li
 	building = false;
 	myList = list;
 	timesToBuild = 0;
-}
-
-cBuildingListItem::cBuildingListItem(cBuildingList *list) {
-	ID = -1;
-	cost = 0;
-	icon = -1;
-	type = UNIT;
-	building = false;
-	progress = 0;
-	available = true;
-	myList = list;
-	timesToBuild = 0;
-}
-
-cBuildingListItem::cBuildingListItem(int theIcon, int theID, eBuildType theType, int theCost, cBuildingList *list) {
-	ID = theID;
-	cost = theCost;
-	icon = theIcon;
-	type = theType;
-	building = false;
-	progress = 0;
-	available = true;
-	myList = list;
-	timesToBuild = 0;
+	if (entry.cost > 0) {
+		creditsPerProgressTime = (float)entry.cost / (float)entry.build_time;
+	}
+	placeIt = false;
 }
 
 bool cBuildingListItem::canPay() {
@@ -65,4 +49,13 @@ bool cBuildingListItem::canPay() {
 	}
 
 	return false;
+}
+
+/**
+ * Return the amount of money the player gets back
+ * @return
+ */
+float cBuildingListItem::getRefundAmount() {
+	float fProgress = progress;
+	return (fProgress * creditsPerProgressTime);
 }

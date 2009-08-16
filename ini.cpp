@@ -1695,7 +1695,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
                         if (iP == iHumanID)
                         {
 							player[0].credits = iPl_credits[iP];
-							player[0].draw_credits = 	player[0].credits;
+//							player[0].draw_credits = player[0].credits;
 							player[0].set_house(iPl_house[iP]);
                             player[0].iTeam=0;
                             game.iHouse = iPl_house[iP];
@@ -1855,7 +1855,6 @@ void INI_Load_scenario(int iHouse, int iRegion)
                         if (iP == iHumanID)
                         {
 							player[0].credits = iPl_credits[iP];
-							player[0].draw_credits = 	player[0].credits;
 							player[0].set_house(iPl_house[iP]);
                             player[0].iTeam=0;
                             game.iHouse = iPl_house[iP];

@@ -59,6 +59,9 @@
 #include "data/gfxworld.h"                  	// world / regions gfx
 #include "data/gfxmentat.h"                  	// mentat gfx
 
+// forward declarations
+class CreditsDrawer;
+
 // actual source headers                        - ORDER
 #include "enums.h"
 #include "main.h"
@@ -105,6 +108,8 @@ class cBuildingList;
 #include "gui\cSideBar.h"
 #include "gui\cSideBarDrawer.h"
 #include "gui\cSideBarFactory.h"
+
+#include "gui\CreditsDrawer.h"
 
 // BUILDING LOGIC
 #include "cItemBuilder.h"

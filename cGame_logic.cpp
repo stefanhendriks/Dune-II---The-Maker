@@ -18,6 +18,9 @@
 
 #include "d2tmh.h"
 
+cGame::cGame() {
+	creditsDrawer = NULL;
+}
 
 
 void cGame::init()
@@ -165,12 +168,18 @@ void cGame::init()
 	iMentatOther=0;			// ... animations . (book/ring)
 
     mp3_music=NULL;
+
+    if (creditsDrawer == NULL) {
+    	creditsDrawer = new CreditsDrawer(&player[0]);
+    }
 }
 
 
 // initialize for missions
 void cGame::mission_init()
 {
+
+	game.getCreditsDrawer()->setCredits();
 
 	iCountSoundMoney=0;
     iSoundsPlayed=0;
@@ -1450,154 +1459,7 @@ void cGame::combat_mouse()
 
 }
 
-// get fast to the actual many status
-void cGame::think_money()
-{
-	int iDif=abs(player[0].draw_credits - player[0].credits);
-	if (iDif != 0)
-		iCountSoundMoney++;
 
-	if (iCountSoundMoney > 100)
-	{
-		iCountSoundMoney=0;
-	}
-
-	if (iDif < 500)
-	{
-		if (player[0].draw_credits > player[0].credits)
-		{
-			player[0].draw_credits --;
-
-
-            if (iCountSoundMoney > 3)
-			{
-				play_sound_id(SOUND_CREDITDOWN, -1);
-				iCountSoundMoney=0;
-			}
-		}
-
-		if (player[0].draw_credits < player[0].credits)
-		{
-			player[0].draw_credits ++;
-			if (iCountSoundMoney > 3)
-			{
-				play_sound_id(SOUND_CREDITUP,-1);
-				iCountSoundMoney=0;
-			}
-
-		}
-	}
-	else if (iDif > 500 && iDif < 1500)
-	{
-		if (player[0].draw_credits > player[0].credits)
-		{
-			player[0].draw_credits-=7;
-
-			if (iCountSoundMoney > 3)
-			{
-				play_sound_id(SOUND_CREDITDOWN,-1);
-				iCountSoundMoney=0;
-			}
-
-		}
-
-		if (player[0].draw_credits < player[0].credits)
-		{
-			player[0].draw_credits+=7;
-			if (iCountSoundMoney > 3)
-			{
-				play_sound_id(SOUND_CREDITUP,-1);
-				iCountSoundMoney=0;
-			}
-		}
-	}
-	else
-	{
-
-		if (player[0].draw_credits > player[0].credits)
-		{
-			player[0].draw_credits-=15;
-			if (iCountSoundMoney > 3)
-			{
-				play_sound_id(SOUND_CREDITDOWN,-1);
-				iCountSoundMoney=0;
-			}
-		}
-
-		if (player[0].draw_credits < player[0].credits)
-		{
-
-			player[0].draw_credits+=15;
-			if (iCountSoundMoney > 3)
-			{
-				play_sound_id(SOUND_CREDITUP,-1);
-				iCountSoundMoney=0;
-			}
-		}
-
-	}
-
-}
-
-void cGame::draw_credits()
-{
-// check if credits don't go under zero
-  if (player[0].credits < 0)
-      player[0].credits = 0;
-
-  if (player[0].draw_credits < 0)
-      player[0].draw_credits = 0;
-
-  char credits[7];
-  sprintf(credits, "%d", player[0].draw_credits);
-
-  int offset = 1;
-
-  if (player[0].draw_credits > 0)
-    offset = 4;   // offset
-
-  if (player[0].draw_credits < 10)
-    offset = 5;   // offset
-
-  if (player[0].draw_credits > 99)
-    offset = 3;   // no offset
-
-  if (player[0].draw_credits > 999)
-   offset = 2;   // no offset
-
-  if (player[0].draw_credits > 9999)
-    offset = 1;   // no offset
-
-  if (player[0].draw_credits > 99999)
-    offset = 0;   // no offset
-
-
-  for (int i=0; i < 6; i++)
-  {
-    // the actual position to draw on is:
-    //        screen        -  14 + (6 digits (each 10 pixels due borders))
-    int dx = ((game.screen_x - 122) + ((offset + i) * 20))+2;
-    //rect(bmp_screen, dx, 0, 512, 10, makecol(255,255,255));
-    int nr = CREDITS_NONE;
-
-    if (credits[i] == '1') nr = CREDITS_1;
-    if (credits[i] == '2') nr = CREDITS_2;
-    if (credits[i] == '3') nr = CREDITS_3;
-    if (credits[i] == '4') nr = CREDITS_4;
-    if (credits[i] == '5') nr = CREDITS_5;
-    if (credits[i] == '6') nr = CREDITS_6;
-    if (credits[i] == '7') nr = CREDITS_7;
-    if (credits[i] == '8') nr = CREDITS_8;
-    if (credits[i] == '9') nr = CREDITS_9;
-    if (credits[i] == '0') nr = CREDITS_0;
-
-
-    // draw
-      if (nr != CREDITS_NONE)
-        draw_sprite(bmp_screen, (BITMAP *)gfxdata[nr].dat, dx, 8);
-  }
-
-}
 
 // LIST initialization
 void cGame::init_lists()
@@ -2790,9 +2652,7 @@ void cGame::gerald()
 	rectfill(bmp_screen, 497,442, 499, 442-iHeight, makecol(0,0,255));
 
 	// draw money, etc, etc
-
-
-	draw_credits();
+	do_credits_drawing_and_logic();
 
 	draw_sidebarbuttons();
 
@@ -2809,6 +2669,23 @@ void cGame::gerald()
 	draw_order();
 
 
+}
+
+/**
+ * The think money function does 2 things now:
+ * 1. it is 'animating' to the new money status
+ * 2. when it is at the new status, it makes the appropiate sound
+ * 3. it determines the new status to draw to.
+ *
+ * Things to know:
+ * - player "credits" is the actual credits of the player (the new status we
+ *   always want to go to
+ * - credits_draw is the status we want to go to
+ * - credits_draw_prev is the former status we where. So we know what to draw half-way
+ *   when making transitions.
+ */
+void cGame::do_credits_drawing_and_logic() {
+	getCreditsDrawer()->draw();
 }
 
 void cGame::mapdraw() {
@@ -2912,7 +2789,6 @@ void cGame::combat()
 	gerald();
 
 	draw_message();
-
 
     // think win/lose
     think_winlose();
@@ -4064,7 +3940,6 @@ void cGame::setup_skirmish()
 			}
 
 			// set credits
-			player[p].draw_credits = player[p].credits;
 			player[p].focus_cell = iStartPositions[p];
 
 			// Set map position
@@ -4855,7 +4730,6 @@ void DEBUG_KEYS()
 	if (key[KEY_F4])
 	{
 		player[0].credits = 299999;
-		player[0].draw_credits = 299999;
 	}
 
 	if (key[KEY_F5]) {

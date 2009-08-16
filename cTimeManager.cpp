@@ -112,6 +112,10 @@ void cTimeManager::handleTimerGlobal() {
 		game.think_movie();
 		game.think_message();
 
+		if (game.getCreditsDrawer()) {
+			game.getCreditsDrawer()->think();
+		}
+
 		if (game.sidebar) {
 			game.sidebar->think();
 		}
@@ -147,12 +151,9 @@ void cTimeManager::handleTimerGlobal() {
 				game.think_upgrade();
 				game.TIMER_money++;
 
-				if (game.TIMER_money > 5)
-				{
-					game.think_money();
+				if (game.TIMER_money > 5) {
 					game.TIMER_money=0;
 				}
-
 
 				if (game.TIMER_shake > 0) game.TIMER_shake--;
 
@@ -249,6 +250,7 @@ void cTimeManager::handleTimerUnits() {
 
 				map.think_minimap();
 		}
+
 		timerUnits--;
 	}
 }

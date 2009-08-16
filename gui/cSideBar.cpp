@@ -131,7 +131,8 @@ void cSideBar::thinkInteraction() {
 							cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
 							// only give money back for item that is being built
 							if (item->isBuilding()) {
-								player[HUMAN].credits += item->getBuildCost();
+								// calculate the amount of money back:
+								player[HUMAN].credits += item->getRefundAmount();
 							}
 							item->setIsBuilding(false);
 							item->setProgress(0);

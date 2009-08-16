@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -23,7 +23,6 @@ void cPlayer::init()
 	memset(iPrimaryBuilding, -1, sizeof(iPrimaryBuilding));
 
 	credits=0;
-	draw_credits=credits;
 	max_credits=credits;
 	focus_cell=0;
 
@@ -35,7 +34,7 @@ void cPlayer::init()
     lHarvested=0;
     memset(iKills, 0, sizeof(iKills));			// Kills (0 units, 1 = struc)
     memset(iLost, 0, sizeof(iLost));			// Casualties
- 
+
     TIMER_think=rnd(10);        // timer for thinking itself (calling main routine)
     TIMER_attack=-1;			// -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 
@@ -45,9 +44,9 @@ void cPlayer::init()
 // set house
 void cPlayer::set_house(int iHouse)
 {
-	
+
   house = iHouse;      // use rules of this house
-  
+
   // copy entire palette
   memcpy (pal, general_palette, sizeof(pal));
 
@@ -61,7 +60,7 @@ void cPlayer::set_house(int iHouse)
        s++;
      }
   }
-  
+
 }
 
 bool cPlayer::bEnoughPower()
@@ -79,7 +78,7 @@ bool cPlayer::bEnoughPower()
             }
 		}
 
-        // AI cheats on power   
+        // AI cheats on power
         if (iMyID > 0) {
             // original dune 2 , the AI cheats. Unfortunatly D2TM has to cheat too, else the game will
             // be unplayable.
@@ -96,8 +95,8 @@ bool cPlayer::bEnoughPower()
                 return true;
         }
     }
-       
-    
+
+
     // return false on any other case
     return false;
 }
@@ -139,14 +138,14 @@ int cPlayer::iMoveSpeed(int iTpe)
 		fOriginal = 80;
 
 	if (fOriginal <= 1.0) fOriginal = 1.0f;			// fix it
-	float fSpeed = fOriginal/100;					// devide by 100 (so we get in 0-1 range)		
-	return (int)(units[iTpe].speed*fSpeed);			// * original	
+	float fSpeed = fOriginal/100;					// devide by 100 (so we get in 0-1 range)
+	return (int)(units[iTpe].speed*fSpeed);			// * original
 }
 
 
 // return proper speeds
 int cPlayer::iBuildSpeed(int iSpeed)
-{	
+{
 	// return proper move speed of unit type
 	float fOriginal = 100;
 
@@ -157,13 +156,13 @@ int cPlayer::iBuildSpeed(int iSpeed)
 		fOriginal = 80;
 
 	if (fOriginal <= 1.0) fOriginal = 1.0f;			// fix it
-	float fSpeed = fOriginal/100;					// devide by 100 (so we get in 0-1 range)		
-	return (int)(iSpeed*fSpeed);					// * original	
+	float fSpeed = fOriginal/100;					// devide by 100 (so we get in 0-1 range)
+	return (int)(iSpeed*fSpeed);					// * original
 }
 
 // return proper speeds
 int cPlayer::iHarvestSpeed(int iSpeed)
-{	
+{
     if (DEBUGGING)
         return 0;
 
@@ -177,8 +176,8 @@ int cPlayer::iHarvestSpeed(int iSpeed)
 		fOriginal = 80;
 
 	if (fOriginal <= 1.0) fOriginal = 1.0f;			// fix it
-	float fSpeed = fOriginal/100;					// devide by 100 (so we get in 0-1 range)		
-	return (int)(iSpeed*fSpeed);					// * original	
+	float fSpeed = fOriginal/100;					// devide by 100 (so we get in 0-1 range)
+	return (int)(iSpeed*fSpeed);					// * original
 }
 
 int cPlayer::iDumpSpeed(int iSpeed)
@@ -193,8 +192,8 @@ int cPlayer::iDumpSpeed(int iSpeed)
 		fOriginal = 80;
 
 	if (fOriginal <= 1.0) fOriginal = 1.0f;			// fix it
-	float fSpeed = fOriginal/100;					// devide by 100 (so we get in 0-1 range)		
-	return (int)(iSpeed*fSpeed);					// * original	
+	float fSpeed = fOriginal/100;					// devide by 100 (so we get in 0-1 range)
+	return (int)(iSpeed*fSpeed);					// * original
 }
 
 

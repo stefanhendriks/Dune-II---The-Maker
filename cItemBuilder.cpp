@@ -69,16 +69,29 @@ void cItemBuilder::think() {
 
 				int timerCap = getTimerCap(list, item);
 
+				float priceForTimeUnit = item->getCreditsPerProgressTime();
+
 				// build stuff
 				if (timers[i] >= timerCap) {
 					int buildTime = getBuildTime(list, item);
-					// increase progress
-					item->setProgress((item->getProgress() + 1));
+
+					bool isDoneBuilding = item->getProgress() >= buildTime;
+
+					// Not done building yet , and can pay for progress?
+					if (!isDoneBuilding && !item->shouldPlaceIt() &&
+						player[HUMAN].credits > priceForTimeUnit) {
+						// increase progress
+						item->setProgress((item->getProgress() + 1));
+						// pay
+						player[HUMAN].credits -= priceForTimeUnit;
+					}
+
 
 					// VOICE: construction complete
-					if (item->getProgress() == buildTime) {
-						if (list->getType() == LIST_CONSTYARD) {
+					if (isDoneBuilding) {
+						if (list->getType() == LIST_CONSTYARD && !item->shouldPlaceIt()) {
 							play_voice(SOUND_VOICE_01_ATR);
+							item->setPlaceIt(true);
 						} else {
 
 							item->decreaseTimesToBuild(); // decrease amount of times to build
@@ -102,7 +115,6 @@ void cItemBuilder::think() {
 
 								// found item, and is affordable.
 								if (itemInSameList && itemInSameList->canPay()) {
-									player[0].credits -= itemInSameList->getBuildCost();
 									itemInSameList->setIsBuilding(true);
 								}
 
@@ -113,7 +125,6 @@ void cItemBuilder::think() {
 
 								if (item->canPay()) {
 									item->setIsBuilding(true);
-									player[HUMAN].credits -= item->getBuildCost();
 								} else {
 									// stop building when cannot pay it.
 									item->setIsBuilding(false);
@@ -132,7 +143,6 @@ void cItemBuilder::think() {
 
 				// only start building this, if no other item is already being built in the same list.
 				if (!anotherItemOfSameListIsBeingBuilt && item->canPay()) {
-					player[HUMAN].credits -= item->getBuildCost();
 					item->setIsBuilding(true);
 				}
 			}
@@ -182,10 +192,6 @@ void cItemBuilder::addItemToList(cBuildingListItem * item) {
 	// check if there is a similiar type in the list
 	if (isTheFirstListType(item)) {
 		item->setIsBuilding(true); // build it immediately
-		// pay it
-		if (item->canPay()) {
-			player[0].credits -= item->getBuildCost();
-		}
 	}
 
 	// increase amount
