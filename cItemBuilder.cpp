@@ -113,22 +113,15 @@ void cItemBuilder::think() {
 								// now try to find an item that is in the same list. If so, start building it.
 								cBuildingListItem *itemInSameList = getSimilarListType(item);
 
-								// found item, and is affordable.
-								if (itemInSameList && itemInSameList->canPay()) {
+								// found item
+								if (itemInSameList) {
 									itemInSameList->setIsBuilding(true);
 								}
 
 							} else {
 								// item still needs to be built more times.
-
 								item->setProgress(0); // set back progress
-
-								if (item->canPay()) {
-									item->setIsBuilding(true);
-								} else {
-									// stop building when cannot pay it.
-									item->setIsBuilding(false);
-								}
+								item->setIsBuilding(true);
 							}
 						}
 					}
@@ -142,7 +135,7 @@ void cItemBuilder::think() {
 				bool anotherItemOfSameListIsBeingBuilt = isASimilarItemBeingBuilt(item);
 
 				// only start building this, if no other item is already being built in the same list.
-				if (!anotherItemOfSameListIsBeingBuilt && item->canPay()) {
+				if (!anotherItemOfSameListIsBeingBuilt) {
 					item->setIsBuilding(true);
 				}
 			}

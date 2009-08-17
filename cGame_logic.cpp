@@ -168,16 +168,16 @@ void cGame::init()
 	iMentatOther=0;			// ... animations . (book/ring)
 
     mp3_music=NULL;
-
-    if (creditsDrawer == NULL) {
-    	creditsDrawer = new CreditsDrawer(&player[0]);
-    }
 }
 
 
 // initialize for missions
 void cGame::mission_init()
 {
+
+    if (creditsDrawer == NULL) {
+    	creditsDrawer = new CreditsDrawer(&player[0]);
+    }
 
 	game.getCreditsDrawer()->setCredits();
 
@@ -2652,7 +2652,7 @@ void cGame::gerald()
 	rectfill(bmp_screen, 497,442, 499, 442-iHeight, makecol(0,0,255));
 
 	// draw money, etc, etc
-	do_credits_drawing_and_logic();
+	getCreditsDrawer()->draw();
 
 	draw_sidebarbuttons();
 
@@ -2669,23 +2669,6 @@ void cGame::gerald()
 	draw_order();
 
 
-}
-
-/**
- * The think money function does 2 things now:
- * 1. it is 'animating' to the new money status
- * 2. when it is at the new status, it makes the appropiate sound
- * 3. it determines the new status to draw to.
- *
- * Things to know:
- * - player "credits" is the actual credits of the player (the new status we
- *   always want to go to
- * - credits_draw is the status we want to go to
- * - credits_draw_prev is the former status we where. So we know what to draw half-way
- *   when making transitions.
- */
-void cGame::do_credits_drawing_and_logic() {
-	getCreditsDrawer()->draw();
 }
 
 void cGame::mapdraw() {

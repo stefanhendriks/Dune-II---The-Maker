@@ -51,6 +51,7 @@ private:
 	int soundType;
 	float rollSpeed;
 	int rolled; // how many credits did get rolled over?
+	int soundsMade; // sounds made per time frame
 };
 
 #endif /* CREDITSDRAWER_H_ */

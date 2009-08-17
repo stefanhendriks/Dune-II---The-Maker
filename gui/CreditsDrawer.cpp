@@ -17,6 +17,7 @@ CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) {
 	soundType = -1;
 	rollSpeed = 0.0F;
 	rolled = 0;
+	soundsMade = 0;
 }
 
 CreditsDrawer::~CreditsDrawer() {
@@ -35,12 +36,11 @@ void CreditsDrawer::setCredits(int amount) {
 	memset(offset_direction, 0, sizeof(offset_direction));
 }
 
+// timer based method
 void CreditsDrawer::think() {
 
 	if (hasDrawnCurrentCredits() || initial) {
-		if (soundType != -1 && !initial) {
-
-		}
+		soundsMade = 0;
 
 		memset(offset_credit, 0, sizeof(offset_credit));
 		memset(offset_direction, 0, sizeof(offset_direction));
@@ -48,7 +48,20 @@ void CreditsDrawer::think() {
 		// determine new currentCredits
 		// TODO: make it 'roll' instead of 'jump' to the newest credits?
 		previousCredits = currentCredits;
-		currentCredits = (int)player->credits;
+		int newCurrentCredits = (int)player->credits;
+
+		if (newCurrentCredits != previousCredits) {
+			int diff = newCurrentCredits - previousCredits;
+			// when big difference, slice it up in pieces so we
+			// have a more fluent transition
+			if (diff > 200) {
+				currentCredits = previousCredits + (diff / 8);
+			} else if (diff > 20) {
+				currentCredits = previousCredits + (diff / 4);
+			} else {
+				currentCredits = newCurrentCredits;
+			}
+		}
 
 		// decide what sound to play when done
 		if (currentCredits > previousCredits) {
@@ -99,12 +112,16 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets() {
 				continue; // next
 			}
 
-			if (currentId > previousId) {
-				offset_direction[i] = 1; // UP
-			} else if (currentId < previousId) {
-				offset_direction[i] = 2; // DOWN
-			} else {
-				// same, do nothing as well
+			// UP/DOWN ANIMATION: Is over the entire sum of money, so all 'credits' move the same
+			// way.
+			if (currentCredits > previousCredits) {
+				offset_direction[i] = 1;
+			} else if (previousCredits > currentCredits) {
+				offset_direction[i] = 2;
+			}
+
+			// when the same, do not animate
+			if (currentId == previousId) {
 				offset_direction[i] = 3;
 			}
 
@@ -114,7 +131,9 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets() {
 
 		if (offset_credit[i] > 18.0F) {
 			offset_credit[i] = 18.1F; // so we do not keep matching our IF :)
-			play_sound_id(soundType, -1);
+			if (soundsMade < 7) {
+				play_sound_id(soundType, -1);
+			}
 			// it is fully 'moved'. Now update the array.
 			previous_credits[i] = current_credits[i];
 			previousCredits = atoi(previous_credits);
@@ -234,3 +253,13 @@ void CreditsDrawer::drawPreviousCredits() {
 bool CreditsDrawer::hasDrawnCurrentCredits() {
 	return previousCredits == currentCredits;
 }
+
+
+// UNCOMMENT THIS IF YOU WANT PER CREDIT AN UP/DOWN ANIMATION, move this piece into
+// thinkAboutIndividualCreditOffsets
+//
+//			if (currentId > previousId) {
+//				offset_direction[i] = 1; // UP
+//			} else if (currentId < previousId) {
+//				offset_direction[i] = 2; // DOWN
+//			}
