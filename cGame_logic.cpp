@@ -175,12 +175,6 @@ void cGame::init()
 void cGame::mission_init()
 {
 
-    if (creditsDrawer == NULL) {
-    	creditsDrawer = new CreditsDrawer(&player[0]);
-    }
-
-	game.getCreditsDrawer()->setCredits();
-
 	iCountSoundMoney=0;
     iSoundsPlayed=0;
 
@@ -259,12 +253,11 @@ void cGame::mission_init()
         }
     }
 
-//	for (int i=0; i < MAX_PLAYERS; i++)
-//		player[i].init();
+    if (creditsDrawer == NULL) {
+    	creditsDrawer = new CreditsDrawer(&player[0]);
+    }
 
-	// Units & Structures are already initialized in map.init()
-
-
+    getCreditsDrawer()->setCredits();
 }
 
 
@@ -2652,7 +2645,9 @@ void cGame::gerald()
 	rectfill(bmp_screen, 497,442, 499, 442-iHeight, makecol(0,0,255));
 
 	// draw money, etc, etc
-	getCreditsDrawer()->draw();
+	if (getCreditsDrawer() != NULL) {
+		getCreditsDrawer()->draw();
+	}
 
 	draw_sidebarbuttons();
 
