@@ -1270,133 +1270,77 @@ int getHouseFromChar(char chunk[25])
     return -1;
 }
 
+/**
+ * Taken the region conquered by player, in sequential form (meaning, the 1st region the
+ * player conquers, corresponds with techlevel 1. While the 8th, 9th or 10th region correspond
+ * with techlevel 4.
+ *
+ * This assumes that the player conquers the world in a fixed set of regions.
+ *
+ * TODO: Make this moddable.
+ *
+ * @param iRegion
+ * @return
+ */
+int getTechLevelByRegion(int iRegion) {
+    if(iRegion == 1) return 1;
+    if(iRegion == 2 || iRegion == 3 || iRegion == 4) return 2;
+    if(iRegion == 5 || iRegion == 6 || iRegion == 7) return 3;
+    if(iRegion == 8 || iRegion == 9 || iRegion == 10) return 4;
+    if(iRegion == 11 || iRegion == 12 || iRegion == 13) return 5;
+    if(iRegion == 14 || iRegion == 15 || iRegion == 16) return 6;
+    if(iRegion == 17 || iRegion == 18 || iRegion == 19) return 7;
+    if(iRegion == 20 || iRegion == 21) return 8;
+    return 9;
+}
+
 void INI_Load_scenario(int iHouse, int iRegion)
 {
+    game.bSkirmish = false;
+    game.mission_init();
+    char cHouse[4];
+    memset(cHouse, 0, sizeof (cHouse));
+    if (iHouse == ATREIDES) sprintf(cHouse, "a");
+    if (iHouse == HARKONNEN) sprintf(cHouse, "h");
+    if (iHouse == ORDOS) sprintf(cHouse, "o");
+    if (iHouse == SARDAUKAR) sprintf(cHouse, "s");
+    if (iHouse == MERCENARY) sprintf(cHouse, "m");
+    if (iHouse == FREMEN) sprintf(cHouse, "f");
+    char filename[60];
+    if(iRegion < 10)
+        sprintf(filename, "campaign/maps/scen%s00%d.ini", cHouse, iRegion);
 
-	// Always set to false (TODO: undo this, but this is now for debugging purposes
-	// hot jumping to missions from skirmish mode into scenario mode).
-	game.bSkirmish=false;
+    else
+        sprintf(filename, "campaign/maps/scen%s0%d.ini", cHouse, iRegion);
 
-	// First initialize the map data
-	//map.init();
+    game.iMission = getTechLevelByRegion(iRegion);
 
-	game.mission_init();
+    char msg[256];
+    sprintf(msg, "[SCENARIO] '%s' (Mission %d)", filename, game.iMission);
+    logbook(msg);
+    logbook("[SCENARIO] Opening file");
 
-	// Start assembling file name for loading
-	char cHouse[4];
-	memset(cHouse, 0, sizeof(cHouse));
-
-
-	if (iHouse == ATREIDES) sprintf(cHouse, "a");
-	if (iHouse == HARKONNEN) sprintf(cHouse, "h");
-	if (iHouse == ORDOS) sprintf(cHouse, "o");
-	if (iHouse == SARDAUKAR) sprintf(cHouse, "s");
-	if (iHouse == MERCENARY) sprintf(cHouse, "m");
-	if (iHouse == FREMEN) sprintf(cHouse, "f");
-
-	char filename[60];
-
-	if (iRegion < 10)
-		sprintf(filename, "campaign/maps/scen%s00%d.ini", cHouse, iRegion);
-	else
-		sprintf(filename, "campaign/maps/scen%s0%d.ini", cHouse, iRegion);
-
-
-
-
-	// Done assembling. Now calculate the mission (techlevel) out of the region
-
-    // SEEN FROM HOUSE PERSPECTIVE! (ie, first mission starts just that, 2nd is choosen, and is culumative)
-
-    // MISSION = TECHLEVEL
-    // REGION = SCEN*NR
-
-	// Calculate mission from region:
-	// region 1 = mission 1
-    // region 2, 3, 4 = mission 2
-    // region 5, 6, 7 = mission 3
-    // region 8, 9, 10 = mission 4
-    // region 11,12,13 = mission 5
-    // region 14,15,16 = mission 6
-    // region 17,18,19 = mission 7
-    // region 20,21    = mission 8
-	// region 22 = mission 9
-
-	if (iRegion == 1)
-		game.iMission = 1;
-	else if (iRegion == 2 || iRegion == 3 || iRegion == 4)
-		game.iMission = 2;
-	else if (iRegion == 5 || iRegion == 6 || iRegion == 7)
-		game.iMission = 3;
-	else if (iRegion == 8 || iRegion == 9 || iRegion == 10)
-		game.iMission = 4;
-	else if (iRegion == 11 || iRegion == 12 || iRegion == 13)
-		game.iMission = 5;
-	else if (iRegion == 14 || iRegion == 15 || iRegion == 16)
-		game.iMission = 6;
-	else if (iRegion == 17 || iRegion == 18 || iRegion == 19)
-		game.iMission = 7;
-	else if (iRegion == 20 || iRegion == 21)
-		game.iMission = 8;
-	else if (iRegion == 22)
-		game.iMission = 9;
-
-
-
-	// Open up the file and read data.
-
-	char msg[256];
-	sprintf(msg, "[SCENARIO] '%s' (Mission %d)", filename, game.iMission);
-	logbook(msg);
-
-	logbook("[SCENARIO] Opening file"); // make note on logbook
-	//logbook(filename);
-
-	// Dune 2 scenario loading requires us to remember player data first and later to set up
-	// this is done at the UNITS section, when everything has been preloaded.
-
-	// Array list for spice blooms
-	// Blooms & fields are loaded in memory first (from the MAP section), and after the actual SEED loading (map data)
-	// we can apply these. (since FIELD and BLOOM vars are loaded BEFORE the SEED data)
-	int blooms[30];
-	int fields[30];
-
+    // declare some temp fields while reading the scenario file.
+    int blooms[30], fields[30];
     char value[256];
+    memset(blooms, -1, sizeof (blooms));
+    memset(fields, -1, sizeof (fields));
 
-	memset(blooms, -1, sizeof(blooms));
-	memset(fields, -1, sizeof(fields));
-	//for (int iB=0; iB < 30; iB++)
-	//	blooms[iB]=-1;    // reset array
+    FILE *stream;
+    int section=INI_NONE;
+    int wordtype=WORD_NONE;
+    int iPlayerID = -1;
+    int iHumanID = -1;
+    bool bSetUpPlayers = true;
+    int iPl_credits[MAX_PLAYERS];
+    int iPl_house[MAX_PLAYERS];
+    int iPl_quota[MAX_PLAYERS];
 
-	// Load file
-	FILE *stream;					// file stream
-	int section=INI_NONE;			// section
-	int wordtype=WORD_NONE;			// word
-	int iPlayerID=-1;				// what player are we loading data for?
-	int iHumanID=-1;				// what player ID is the same as our HUMAN (0) id?
-	bool bSetUpPlayers=true;		// may we set up player data when entering the UNITS section?
+    memset(iPl_credits, 0, sizeof (iPl_credits));
+    memset(iPl_house, -1, sizeof (iPl_house));
+    memset(iPl_quota, 0, sizeof (iPl_quota));
 
-
-	// Preloaded player data
-	int iPl_credits[MAX_PLAYERS];
-	int iPl_house[MAX_PLAYERS];
-    int iPl_quota[MAX_PLAYERS]; // get quota
-
-
-	// clear info
-	for (int i=0; i < MAX_PLAYERS; i++)
-	{
-		iPl_credits[i] = 0;
-		iPl_house[i]=-1;
-        iPl_quota[i]=0;
-	}
-
-  ////////////////////////////
-  // START OPENING FILE
-  ////////////////////////////
-
-  if( (stream = fopen( filename, "r+t" )) != NULL )
-  {
+    if( (stream = fopen( filename, "r+t" )) != NULL ) {
     char linefeed[MAX_LINE_LENGTH];
     char lineword[25];
     char linesection[30];
@@ -1415,19 +1359,13 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
       // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
       // character (which is "//", ";" or "#"), or an empty line, then skip it
-      if (linefeed[0] == ';' ||
-          linefeed[0] == '#' ||
-         (linefeed[0] == '/' && linefeed[1] == '/') ||
-          linefeed[0] == '\n' ||
-          linefeed[0] == '\0')
-          continue;   // Skip
+      if (isCommentLine(linefeed))   continue;   // Skip
 
       // Every line is checked for a new section.
-      INI_Section(linefeed,linesection);
+      INI_Section(linefeed, linesection);
 
-      if (linesection[0] != '\0' && strlen(linesection) > 1)
-      {
-        section= SCEN_INI_SectionType(linesection, section);
+      if (linesection[0] != '\0' && strlen(linesection) > 1) {
+        section = SCEN_INI_SectionType(linesection, section);
 
 		// Only original dune 2 scenario's have this section, auto set to true
 		if (section == INI_BASIC)
@@ -1441,12 +1379,12 @@ void INI_Load_scenario(int iHouse, int iRegion)
         }
 
         if (section >= INI_HOUSEATREIDES &&
-            section <= INI_HOUSEMERCENARY)
-        {
+            section <= INI_HOUSEMERCENARY) {
                 iPlayerID++;
 
-		if (iPlayerID > (MAX_PLAYERS-1))
+		if (iPlayerID > (MAX_PLAYERS-1)) {
             iPlayerID = (MAX_PLAYERS-1);
+		}
 
         if (section == INI_HOUSEATREIDES)   iPl_house[iPlayerID] = ATREIDES;
         if (section == INI_HOUSEORDOS)      iPl_house[iPlayerID] = ORDOS;
@@ -1695,10 +1633,10 @@ void INI_Load_scenario(int iHouse, int iRegion)
                         if (iP == iHumanID)
                         {
 							player[0].credits = iPl_credits[iP];
-//							player[0].draw_credits = player[0].credits;
 							player[0].set_house(iPl_house[iP]);
                             player[0].iTeam=0;
                             game.iHouse = iPl_house[iP];
+                            if (game.getCreditsDrawer())  game.getCreditsDrawer()->setCredits();
 
                             if (iPl_quota[iP] > 0)
                                 game.iWinQuota = iPl_quota[iP];
@@ -1859,8 +1797,9 @@ void INI_Load_scenario(int iHouse, int iRegion)
                             player[0].iTeam=0;
                             game.iHouse = iPl_house[iP];
 
-                            if (iPl_quota[iP] > 0)
+                            if (iPl_quota[iP] > 0) {
                                 game.iWinQuota = iPl_quota[iP];
+                            }
 						}
 						else
 						{
@@ -1907,8 +1846,10 @@ void INI_Load_scenario(int iHouse, int iRegion)
 				// clear chunk
 				if (bClearChunk)
 				{
-					for (int ic=0; ic < 25; ic++)
+					for (int ic=0; ic < 25; ic++) {
 						chunk[ic] = '\0';
+					}
+
 					iC=0;
 					bClearChunk=false;
 				}
@@ -1926,6 +1867,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
 				{
 					iPart++;
 
+					// this line is not GENXXX
 						if (bGen == false)
 						{
 							if (iPart == 0)
@@ -2019,14 +1961,10 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
 			if (iController > -1)
             {
-				if (iType < SLAB1)
-				{
+				// anything lower than SLAB1 means a 'normal' structure (TODO: make this less tight coupled)
+				if (iType < SLAB1) {
 					cStructureFactory::getInstance()->createStructure(iCell, iType, iController, 100);
-					//CREATE_STRUCTURE(iCell, iType, iController, 100);
-					//sID = STRUCTURE_CREATE(iCell, iType, -1, iController);
-				}
-				else
-				{
+				} else {
 					if (iType == SLAB1)
                     {
                         map.create_spot(iCell, TERRAIN_SLAB, 0);
@@ -2038,7 +1976,9 @@ void INI_Load_scenario(int iHouse, int iRegion)
 					}
 				}
 			}
-			else logbook("WARNING: Identifying house/controller of structure (typo?)");
+			else {
+				logbook("WARNING: Identifying house/controller of structure (typo?)");
+			}
 		}
         else if (section == INI_REINFORCEMENTS)
         {
@@ -2111,10 +2051,8 @@ void INI_Load_scenario(int iHouse, int iRegion)
                     else if (iPart == 2)
                     {
                         // Homebase is home of that house
-                        if (strcmp(chunk, "Homebase") == 0)
-                        {
+                        if (strcmp(chunk, "Homebase") == 0) {
                             iCell = player[iController].focus_cell;
-							//logbook("HOMEBASE");
                         }
                         else
                         {
@@ -2127,7 +2065,6 @@ void INI_Load_scenario(int iHouse, int iRegion)
                                 if (player[i].house == iHouse && i != iController)
                                 {
                                     iCell = player[i].focus_cell;
-									//logbook("ENEMYBASE");
 									break;
                                 }
 							}
@@ -2141,23 +2078,8 @@ void INI_Load_scenario(int iHouse, int iRegion)
                     }
 					else if (iPart == 3)
 					{
-						// Figure out the cell shit of this GEN
-						char cCell[5];
-						memset(cCell, 0, sizeof(cCell));
-
-						/*
-                        int iCC=0;
-						for (cc=3; cc < iIS; cc++)
-						{
-							cCell[iCC] = linefeed[cc];
-							iCC++;
-						}*/
-
 						int iGenCell = atoi(chunk);
-
 						iTime = iGenCell;
-
-
 						SET_REINFORCEMENT(iCell, iController, iTime, iType);
 						break;
 					}
@@ -2238,14 +2160,9 @@ void INI_Load_scenario(int iHouse, int iRegion)
 
     logbook("[SCENARIO] Done reading");
   }
-
-
-  player[AI_WORM].iTeam=-2; // worm is nobodies friend.
-
-  game.setup_list(); // set up the list
-
-  // smooth
-  map.smooth();
+    player[AI_WORM].iTeam=-2;
+    game.setup_list();
+    map.smooth();
 
   if (player[0].iStructures[CONSTYARD] < 1)
       game.iActiveList=LIST_NONE;

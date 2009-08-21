@@ -25,6 +25,8 @@ cGame::cGame() {
 
 void cGame::init()
 {
+	iMaxVolume = 220;
+
 	screenshot=0;
 	bPlaying=true;
 
@@ -253,7 +255,10 @@ void cGame::mission_init()
         }
     }
 
+    // instantiate the creditDrawer with the appropriate player. Only
+    // possible once game has been initialized and player has been created.
     if (creditsDrawer == NULL) {
+    	assert(&player[0] != NULL);
     	creditsDrawer = new CreditsDrawer(&player[0]);
     }
 
@@ -5498,7 +5503,7 @@ bool cGame::setupGame() {
 	set_palette(general_palette);
 
 	// normal sounds are loud, the music is lower (its background music, so it should not be disturbing)
-	set_volume(255, 150);
+	set_volume(iMaxVolume, 150);
 
 	// A few messages for the player
 	logbook("Installing:  PLAYERS");

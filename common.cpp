@@ -1280,34 +1280,32 @@ int iCellOnScreen(int iCell)
     return ABS_length(iCellX, iCellY, iCalcX, iCalcY);
 }
 
-// play standard sound
-void play_sound_id(int s, int iOnScreen)
+/**
+ * Play sound (s = ID from gfxaudio) with distance into account. iDistance
+ * is the distance outside screen. Meaning <= 1 is ON SCREEN > 1 means distance from screen.
+ *
+ * @param s
+ * @param iDistance
+ */
+void play_sound_id(int s, int iDistance)
 {
-  if (game.bPlaySound)
-  {
-    if (gfxaudio[s].dat != NULL && game.iSoundsPlayed < MAXVOICES)
-    {
-      //play_sample(Data[s].smp, GAME_VOL_SOUND, 128,1000,0);
+	if (!game.bPlaySound) return; // do not play sound when boolean is false.
 
-        /*
-        char msg[255];
-        sprintf(msg, "Playing sound , iOnScreen=%d", iOnScreen);
-        logbook(msg);*/
+	if (gfxaudio[s].dat == NULL) return; // no data file at the specified position in index.
 
+	if (game.iSoundsPlayed < 0) return; // do not play sound when no slot found
+	if (game.iSoundsPlayed >= MAXVOICES) return; // do not play sound when max is reached.
 
-
-        // Determine if sound is on screen or not
-        if (iOnScreen <= 1)
-            game.iSoundsPlayed = play_sample((SAMPLE *)gfxaudio[s].dat, 255, 127,1000,0);
-        else
-        {
-            int iVol = 255-((255/32) * iOnScreen);
-            if (iVol < 0) iVol=0;
-            game.iSoundsPlayed = play_sample((SAMPLE *)gfxaudio[s].dat, iVol, 127,1000,0);
-        }
-
-    }
-  }
+	// Determine if sound is on screen or not
+	if (iDistance <= 1) {
+		game.iSoundsPlayed = play_sample((SAMPLE *)gfxaudio[s].dat, 255, 127,1000,0);
+	} else {
+		// adjust volume from distance
+		int iVol = game.getMaxVolume() - ((game.getMaxVolume() / 32) * iDistance);
+		if (iVol > 0) {
+			game.iSoundsPlayed = play_sample((SAMPLE *)gfxaudio[s].dat, iVol, 127, 1000,0);
+		}
+	}
 }
 
 void play_voice(int iType)

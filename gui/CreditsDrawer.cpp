@@ -8,7 +8,7 @@
 #include "..\d2tmh.h"
 
 CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) {
-	assert(player != NULL);
+	assert(thePlayer != NULL);
 	player = thePlayer;
 	bmp = NULL;
 	memset(offset_credit, 0, sizeof(offset_credit));
@@ -133,6 +133,7 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets() {
 			offset_credit[i] = 18.1F; // so we do not keep matching our IF :)
 			if (soundsMade < 7) {
 				play_sound_id(soundType, -1);
+				soundsMade++;
 			}
 			// it is fully 'moved'. Now update the array.
 			previous_credits[i] = current_credits[i];

@@ -205,6 +205,8 @@ public:
 
 	CreditsDrawer *getCreditsDrawer() { return creditsDrawer; }
 
+	int getMaxVolume() { return iMaxVolume; }
+
 private:
 	void poll();
 	void gerald();		// interface and such, which is called by combat
@@ -249,5 +251,7 @@ private:
 	int  list_new_id(int iListID);		// find new entry in this list
 
 	CreditsDrawer *creditsDrawer;
+
+	int iMaxVolume;
 };
 
