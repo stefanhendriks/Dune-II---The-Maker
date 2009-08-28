@@ -341,6 +341,8 @@ struct s_UnitP
 
   char name[50];            // name of unit
 
+  int structureTypeItLeavesFrom; // the type of structure this unit will 'leave' from when it is built. (ie Quad from Light Factory, etc)
+
   // UNIT : HARVESTER specific types
   int credit_capacity;      // max credits capacity
   int harvesting_speed;     // speed rate for harvesting (time)

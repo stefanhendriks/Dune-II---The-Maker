@@ -49,7 +49,7 @@ void cTimeManager::handleTimerFPS() {
 		{
 			game.paths_created = 0;
 			if (game.iSoundsPlayed > 0) {
-				game.iSoundsPlayed -= (MAXVOICES / 3); // gradually substract
+				game.iSoundsPlayed -= (MAXVOICES / 2); // gradually substract
 			}
 			if (game.iSoundsPlayed < 0) {
 				game.iSoundsPlayed = 0;

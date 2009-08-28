@@ -45,7 +45,7 @@ public:
 	void setIsAvailable(bool value) { available = value; }
 	void setTimesToBuild(int value) { timesToBuild = value; }
 	void increaseTimesToBuild() { timesToBuild++; }
-	void decreaseTimesToBuild() { timesToBuild--; }
+	void decreaseTimesToBuild();
 	void setSlotId(int value) { slotId = value; }
 	void setPlaceIt(bool value) { placeIt = value; }
 

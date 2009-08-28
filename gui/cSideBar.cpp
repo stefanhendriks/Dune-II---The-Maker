@@ -109,9 +109,14 @@ void cSideBar::thinkInteraction() {
 				cBuildingListItem *item = drawer->isOverItemCoordinates(list, mouse_x,  mouse_y);
 
 				if (item != NULL) {
-					cItemBuilder *builder = cItemBuilder::getInstance();
-					builder->addItemToList(item);
-					list->setLastClickedId(item->getSlotId());
+					if (item->shouldPlaceIt() == false) {
+						cItemBuilder *builder = cItemBuilder::getInstance();
+						builder->addItemToList(item);
+						list->setLastClickedId(item->getSlotId());
+					} else {
+						game.bPlaceIt = true;
+
+					}
 				}
 
 				delete drawer;
@@ -126,6 +131,7 @@ void cSideBar::thinkInteraction() {
 				if (item != NULL) {
 					if (item->getTimesToBuild() > 0) {
 						item->decreaseTimesToBuild();
+						item->setPlaceIt(false);
 
 						if (item->getTimesToBuild() == 0) {
 							cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");

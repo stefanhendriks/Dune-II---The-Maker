@@ -2381,8 +2381,8 @@ void cGame::draw_sidebarbuttons()
 
 void cGame::draw_placeit()
 {
-return;
 	// this is only done when bPlaceIt=true
+	if (sidebar == NULL) return;
 
 	int iMouseCell = map.mouse_cell();
 
@@ -2390,10 +2390,8 @@ return;
 		return;
 	}
 
-
-	// Using list LIST_CONSTYARD
-	int iBuilding = iconbuilding[LIST_CONSTYARD];	// what are we building?
-	int iStructureID = iconlist[LIST_CONSTYARD][iBuilding].iStructureID;
+	cBuildingListItem *itemToPlace = sidebar->getList(LIST_CONSTYARD)->getItemToPlace();
+	int iStructureID = itemToPlace->getBuildId();
 	int iWidth = structures[iStructureID].bmp_width/32;
 	int iHeight = structures[iStructureID].bmp_height/32;
 
@@ -2597,6 +2595,14 @@ return;
 				iconbuilding[LIST_CONSTYARD]	= -1;
 				iconprogress[LIST_CONSTYARD]    = -1;
 
+
+				itemToPlace->decreaseTimesToBuild();
+				itemToPlace->setPlaceIt(false);
+				itemToPlace->setIsBuilding(false);
+				itemToPlace->setProgress(0);
+				if (itemToPlace->getTimesToBuild() < 1) {
+					cItemBuilder::getInstance()->removeItemFromList(itemToPlace);
+				}
 			}
 		}
 
@@ -3426,8 +3432,9 @@ void cGame::setup_skirmish()
 		{
 			iSkirmishStartPoints++;
 
-			if (iSkirmishStartPoints > 4)
-				iSkirmishStartPoints=2;
+			if (iSkirmishStartPoints > 4) {
+				iSkirmishStartPoints = 2;
+			}
 
 			bDoRandomMap=true;
 		}
@@ -3436,8 +3443,9 @@ void cGame::setup_skirmish()
 		{
 			iSkirmishStartPoints--;
 
-			if (iSkirmishStartPoints < 2)
-				iSkirmishStartPoints=4;
+			if (iSkirmishStartPoints < 2) {
+				iSkirmishStartPoints = 4;
+			}
 
 			bDoRandomMap=true;
 		}
@@ -3604,7 +3612,7 @@ void cGame::setup_skirmish()
 			else
 				sprintf(cHouse, "Random");
 
-			alfont_textprintf(bmp_screen, bene_font, 74,iDrawY+1, makecol(0,0,0), "%s",cHouse);
+			alfont_textprintf(bmp_screen, bene_font, 74,iDrawY+1, makecol(0,0,0), "%s", cHouse);
 
 //			rect(bmp_screen, 74, (40+(p*22)), 150, (40+(p*22))+16, makecol(255,255,255));
 
@@ -3666,7 +3674,7 @@ void cGame::setup_skirmish()
 			// Credits
 			bHover=false;
 
-			alfont_textprintf(bmp_screen, bene_font, 174,iDrawY+1, makecol(0,0,0), "%d",player[p].credits);
+			alfont_textprintf(bmp_screen, bene_font, 174,iDrawY+1, makecol(0,0,0), "%d", (int)player[p].credits);
 
 			//rect(bmp_screen, 174, iDrawY, 230, iDrawY+16, makecol(255,255,255));
 
@@ -3675,21 +3683,21 @@ void cGame::setup_skirmish()
 
 			if (p == 0)
 			{
-				alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", player[p].credits);
+				alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", (int)player[p].credits);
 			}
 			else
 			{
 				if (aiplayer[p].bPlaying)
-					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", player[p].credits);
+					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", (int)player[p].credits);
 				else
-					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(128,128,128), "%d", player[p].credits);
+					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(128,128,128), "%d", (int)player[p].credits);
 
 			}
 
 			if (bHover)
 			{
 				if (aiplayer[p].bPlaying)
-					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(fade_select,0,0), "%d", player[p].credits);
+					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(fade_select,0,0), "%d", (int)player[p].credits);
 				else
 					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol((fade_select/2),(fade_select/2),(fade_select/2)), "%d", player[p].credits);
 
@@ -3709,7 +3717,7 @@ void cGame::setup_skirmish()
 			}
 
 			// Units
-			bHover=false;
+			bHover = false;
 
 			alfont_textprintf(bmp_screen, bene_font, 269,iDrawY+1, makecol(0,0,0), "%d",aiplayer[p].iUnits);
 
@@ -3755,49 +3763,6 @@ void cGame::setup_skirmish()
 
 			// Team
 			bHover=false;
-			/*
-			alfont_textprintf(bmp_screen, bene_font, 269,iDrawY+1, makecol(0,0,0), "%d",aiplayer[p].iUnits);
-
-			rect(bmp_screen, 329, iDrawY, 350, iDrawY+16, makecol(255,255,255));
-
-			if ((mouse_x >= 269 && mouse_x <= 290) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16)))
-				bHover=true;
-
-			if (p == 0)
-			{
-				alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol(255,255,255), "%d", aiplayer[p].iUnits);
-			}
-			else
-			{
-				if (aiplayer[p].bPlaying)
-					alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol(255,255,255), "%d", aiplayer[p].iUnits);
-				else
-					alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol(128,128,128), "%d", aiplayer[p].iUnits);
-
-			}
-
-			if (bHover)
-			{
-				if (aiplayer[p].bPlaying)
-					alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol(fade_select,0,0), "%d", aiplayer[p].iUnits);
-				else
-					alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol((fade_select/2),(fade_select/2),(fade_select/2)), "%d", aiplayer[p].iUnits);
-
-				if (bMousePressedLeft)
-				{
-					aiplayer[p].iUnits++;
-					if (aiplayer[p].iUnits > 10)
-						aiplayer[p].iUnits = 1;
-				}
-
-				if (bMousePressedRight)
-				{
-					aiplayer[p].iUnits--;
-					if (aiplayer[p].iUnits < 1)
-						aiplayer[p].iUnits = 10;
-				}
-			}
-*/
 		}
 	}
 

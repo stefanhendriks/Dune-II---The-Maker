@@ -1308,6 +1308,7 @@ void play_sound_id(int s, int iDistance)
 	}
 }
 
+
 void play_voice(int iType)
 {
 //	int iTpe = iType;

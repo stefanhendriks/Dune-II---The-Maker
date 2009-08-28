@@ -59,3 +59,7 @@ float cBuildingListItem::getRefundAmount() {
 	float fProgress = progress;
 	return (fProgress * creditsPerProgressTime);
 }
+
+void cBuildingListItem::decreaseTimesToBuild() {
+	timesToBuild--;
+}

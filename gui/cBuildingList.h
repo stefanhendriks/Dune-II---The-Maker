@@ -18,7 +18,8 @@ class cBuildingList {
 		cBuildingList(int type);
 		~cBuildingList();
 
-		cBuildingListItem * getItem(int position); // return icon from list
+		cBuildingListItem * getItem(int position); 	// return building list item in array at position.
+		cBuildingListItem * getItemToPlace();		// return building list item with placeIt = true.
 
 		// add item to the list
 		void addItemToList(cBuildingListItem * item);

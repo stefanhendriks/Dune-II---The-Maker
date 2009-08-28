@@ -35,8 +35,13 @@ int cItemBuilder::getTimerCap(cBuildingList *list, cBuildingListItem *item) {
 	if (player[0].bEnoughPower() == false) {
 		iTimerCap *= 3; // make painful
 	} else {
-		if (list->getType() == LIST_CONSTYARD) {
-			iTimerCap /= (1+(player[0].iStructures[item->getBuildId()]/2));
+		if (list->getType() != LIST_CONSTYARD) {
+			// the given unit will get out of a specific structure. This type
+			// is within the units properties.
+			int structureTypeItLeavesFrom = units[item->getBuildId()].structureTypeItLeavesFrom;
+			if (structureTypeItLeavesFrom > -1) {
+				iTimerCap /= (1+(player[0].iStructures[structureTypeItLeavesFrom]/2));
+			}
 		}
 	}
 
@@ -86,12 +91,16 @@ void cItemBuilder::think() {
 						player[HUMAN].credits -= priceForTimeUnit;
 					}
 
-
-					// VOICE: construction complete
 					if (isDoneBuilding) {
-						if (list->getType() == LIST_CONSTYARD && !item->shouldPlaceIt()) {
-							play_voice(SOUND_VOICE_01_ATR);
-							item->setPlaceIt(true);
+						if (list->getType() == LIST_CONSTYARD) {
+
+							// play voice when placeIt is false
+							if (!item->shouldPlaceIt()) {
+								play_voice(SOUND_VOICE_01_ATR);
+								item->setPlaceIt(true);
+							}
+
+//							item->decreaseTimesToBuild(); // decrease amount of times to build
 						} else {
 
 							item->decreaseTimesToBuild(); // decrease amount of times to build
