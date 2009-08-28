@@ -128,12 +128,14 @@ void cLogger::logHeader(char *txt) {
 	if (length > 79) length = 79;
 	std::string line(length, '-');
 
-	char *str;
-	strcpy(str,line.c_str());
+	char *str = new char[line.length() + 1];
+	strcpy(str, line.c_str());
 
 	logCommentLine(str);
 	logCommentLine(txt);
 	logCommentLine(str);
+
+	delete str;
 }
 
 void cLogger::log(eLogLevel level, eLogComponent component, char *event, char *message) {

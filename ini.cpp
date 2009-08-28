@@ -12,57 +12,11 @@
 
 #include "d2tmh.h"
 
-#include "cIniReader.h"
-
 using namespace std;
-
-cIniReader::cIniReader() {
-
-    // set key / value for sections
-    sectionMap.setValue("UNITS", INI_UNITS);
-    sectionMap.setValue("SKIRMISH", INI_SKIRMISH);
-    sectionMap.setValue("STRUCTURES", INI_STRUCTURES);
-    sectionMap.setValue("REINFORCEMENTS", INI_REINFORCEMENTS);
-    sectionMap.setValue("MAP", INI_MAP);
-    sectionMap.setValue("BASIC", INI_BASIC);
-    sectionMap.setValue("Atreides", INI_HOUSEATREIDES);
-    sectionMap.setValue("Ordos", INI_HOUSEORDOS);
-    sectionMap.setValue("Harkonnen", INI_HOUSEHARKONNEN);
-    sectionMap.setValue("Sardaukar", INI_HOUSESARDAUKAR);
-    sectionMap.setValue("Fremen", INI_HOUSEFREMEN);
-    sectionMap.setValue("Mercenary", INI_HOUSEMERCENARY);
-    // set key / value for ..
-
-}
 
 /*
  Read a line in the INI file and put it into currentLine
 */
-
-void cIniReader::ReadLine(FILE *file) {
-
-  if (file == NULL) {
-      return;
-  }
-  char ch;
-  char result[MAX_LINE_LENGTH];
-  int pos=0;
-
-  memset(result, 0, sizeof(result));
-
-  while ((feof(file) == 0) && ((ch=fgetc(file)) != '\n'))
-  {
-    if (pos < MAX_LINE_LENGTH) {
-        result[pos]=ch;
-        pos++;
-        putchar(ch);
-    } else {
-        break;
-    }
- }
-
-  memcpy(currentLine, result, sizeof(currentLine));
-}
 
 // Reads out an entire sentence and returns it
 void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
@@ -88,16 +42,6 @@ void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
  }
 
 
-}
-
-int cIniReader::getSection() {
-    int result = sectionMap.getValue(""); // - Stefan 02-09, temp hack to keep it compiling
-
-    if (result > -1 && result != currentSection) {
-        return result;
-    }
-
-    return currentSection;
 }
 
 /*********************************************************************************/

@@ -92,8 +92,6 @@ class CreditsDrawer;
 #include "network.h"
 #include "gui.h"
 
-#include "keyval.h"
-
 // GUI RELATED
 
 class cBuildingListItem;
