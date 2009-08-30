@@ -111,7 +111,7 @@
 #define WORD_HARVESTAMOUNT 55   // game.ini (How much a harvester takes every step)
 #define WORD_HARVESTSPEED  56   // game.ini (How many ticks needed per step)
 #define WORD_HARVESTLIMIT  57   // game.ini (Max a harvester can hold)
-
+#define WORD_PRODUCER	88		// game.ini (Producing structure of unit)
 
 //
 #define WORD_HOUSE			60

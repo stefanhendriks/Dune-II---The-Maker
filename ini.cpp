@@ -84,7 +84,6 @@ void INI_Section(char input[MAX_LINE_LENGTH], char section[30])
 
 }
 
-
 // Reads out INPUT and will check for an '=' Everything at the left of the
 // '=' IS a word and will be put in 'word[]'. Use function INI_WordType(char word[25]) to get
 // the correct ID tag.
@@ -116,75 +115,82 @@ void INI_Word(char input[MAX_LINE_LENGTH], char word[25])
    word[word_pos]='\0'; // terminate string
  }
 }
+
+/**
+ * Return true when string "toFind" is in source string. Else return false.
+ *
+ * @param source
+ * @param toFind
+ * @return
+ */
+bool isInString(string source, string toFind) {
+	 string::size_type loc = source.find( toFind , 0 );
+	 if( loc != string::npos ) {
+	   return true;
+	 }
+	 return false; // not found in string
+}
+
+int INI_StructureType(string structureName) {
+
+	if (isInString(structureName, "WINDTRAP"))		return WINDTRAP;
+	if (isInString(structureName, "PALACE"))		return PALACE;
+	if (isInString(structureName, "HEAVYFACTORY"))		return HEAVYFACTORY;
+	if (isInString(structureName, "LIGHTFACTORY"))		return LIGHTFACTORY;
+	if (isInString(structureName, "CONSTYARD"))		return CONSTYARD;
+	if (isInString(structureName, "SILO"))		return SILO;
+	if (isInString(structureName, "HIGHTECH"))		return HIGHTECH;
+	if (isInString(structureName, "IX"))		return IX;
+	if (isInString(structureName, "REPAIR"))		return REPAIR;
+	if (isInString(structureName, "RADAR"))		return RADAR;
+	if (isInString(structureName, "REFINERY"))		return REFINERY;
+	if (isInString(structureName, "WOR"))		return WOR;
+	if (isInString(structureName, "BARRACKS"))		return BARRACKS;
+	if (isInString(structureName, "STARPORT"))		return STARPORT;
+	if (isInString(structureName, "TURRET"))		return TURRET;
+	if (isInString(structureName, "ROCKETTURRET"))		return RTURRET;
+	if (isInString(structureName, "STARPORT"))		return STARPORT;
+	if (isInString(structureName, "SLAB"))		return SLAB1;
+	if (isInString(structureName, "4SLAB"))		return SLAB4;
+	if (isInString(structureName, "WALL"))		return WALL;
+
+	assert(false); // no recognition is fail.
+
+	return 0; // just in case some miracle happened, we need to go on and not crash everything.
+}
+
 // Reads out word[], checks structure type, and returns actual source-id
-int INI_StructureType(char word[45])
-{
-
-  if (strcmp(word, "WINDTRAP") == 0)
-    return WINDTRAP;
-
-  if (strcmp(word, "PALACE") == 0)
-    return PALACE;
-
-  if (strcmp(word, "HEAVYFACTORY") == 0)
-    return HEAVYFACTORY;
-
-  if (strcmp(word, "LIGHTFACTORY") == 0)
-    return LIGHTFACTORY;
-
-  if (strcmp(word, "CONSTYARD") == 0)
-    return CONSTYARD;
-
-  if (strcmp(word, "SILO") == 0)
-    return SILO;
-
-  if (strcmp(word, "HIGHTECH") == 0)
-    return HIGHTECH;
-
-  if (strcmp(word, "IX") == 0)
-    return IX;
-
-  if (strcmp(word, "REPAIR") == 0)
-    return REPAIR;
-
-  if (strcmp(word, "RADAR") == 0)
-    return RADAR;
-
-  if (strcmp(word, "REFINERY") == 0)
-    return REFINERY;
-
-  if (strcmp(word, "WOR") == 0)
-    return WOR;
-
-  if (strcmp(word, "BARRACKS") == 0)
-    return BARRACKS;
-
-  if (strcmp(word, "STARPORT") == 0)
-    return STARPORT;
-
-  if (strcmp(word, "TURRET") == 0)
-    return TURRET;
-
-  if (strcmp(word, "ROCKETTURRET") == 0)
-    return RTURRET;
-
-  // - not really structures -
-  if (strcmp(word, "SLAB") == 0)
-    return SLAB1;
-
-  if (strcmp(word, "4SLAB") == 0)
-    return SLAB4;
-
-  if (strcmp(word, "WALL") == 0)
-    return WALL;
-
-
-  // notify user here
-  alert("ERROR: Could not identify structure type", word, "", "OK", NULL, 13, 0);
-
-
-   return -1;
-
+int INI_StructureType(char word[256]) {
+	string wordAsString(word);
+	return INI_StructureType(wordAsString);
+//	assert(word != NULL);
+//	logbook(word);
+//
+//	if (strstr(word, "WINDTRAP") != NULL)		return WINDTRAP;
+//	if (strstr(word, "PALACE")  != NULL)		return PALACE;
+//	if (strstr(word, "HEAVYFACTORY") != NULL)	return HEAVYFACTORY;
+//	if (strstr(word, "LIGHTFACTORY") != NULL)	return LIGHTFACTORY;
+//	if (strstr(word, "CONSTYARD") != NULL)		return CONSTYARD;
+//	if (strstr(word, "SILO") != NULL)			return SILO;
+//	if (strstr(word, "HIGHTECH") != NULL)		return HIGHTECH;
+//	if (strstr(word, "IX") != NULL)				return IX;
+//	if (strstr(word, "REPAIR")  != NULL)		return REPAIR;
+//	if (strstr(word, "RADAR") != NULL)			return RADAR;
+//	if (strstr(word, "REFINERY") != NULL)		return REFINERY;
+//	if (strstr(word, "WOR") != NULL)			return WOR;
+//	if (strstr(word, "BARRACKS") != NULL)		return BARRACKS;
+//	if (strstr(word, "STARPORT") != NULL)		return STARPORT;
+//	if (strstr(word, "TURRET") != NULL)			return TURRET;
+//	if (strstr(word, "ROCKETTURRET") != NULL)	return RTURRET;
+//
+//	// - not really structures -
+//	if (strstr(word, "SLAB")  != NULL)			return SLAB1;
+//	if (strstr(word, "4SLAB") != NULL)			return SLAB4;
+//	if (strstr(word, "WALL")  != NULL)			return WALL;
+//
+//	assert(false);
+//
+//	return -1;
 }
 
 // Reads out word[], does a string compare and returns type id
@@ -501,16 +507,13 @@ int INI_WordType(char word[25], int section)
     if (strcmp(word, "FreeRoam") == 0)
       return WORD_FREEROAM;
 
+    // what structure type produces this kind of unit?
+    if (strcmp(word, "Producer") == 0)				return WORD_PRODUCER;
+
     // HARVESTER
-    if (strcmp(word, "MaxCredits") == 0)
-      return WORD_HARVESTLIMIT;
-
-    if (strcmp(word, "HarvestSpeed") == 0)
-      return WORD_HARVESTSPEED;
-
-    if (strcmp(word, "HarvestAmount") == 0)
-      return WORD_HARVESTAMOUNT;
-
+    if (strcmp(word, "MaxCredits") == 0)			return WORD_HARVESTLIMIT;
+    if (strcmp(word, "HarvestSpeed") == 0)			return WORD_HARVESTSPEED;
+    if (strcmp(word, "HarvestAmount") == 0)			return WORD_HARVESTAMOUNT;
   }
   else if (section == INI_TEAMS)
   {
@@ -850,67 +853,76 @@ void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256])
  }
 }
 
+int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c) {
+	string resultString(result);
+	return resultString.find_first_of(c, 0);
+}
+
+
+/**
+ * Return the part after the = sign as string.
+ *
+ * @param result
+ * @return
+ */
+string INI_WordValueString(char result[MAX_LINE_LENGTH]) {
+	string resultAsString(result);
+	int isPos = INI_GetPositionOfCharacter(result, '=');
+	int length = resultAsString.size();
+	return resultAsString.substr(isPos+1);
+}
+
+
 // Reads out 'result' and will return the value after the '='. Returns nothing but will put
 // the result in 'value[25]'. Max argument may be 256 characters!
-void INI_WordValueCHAR(char result[MAX_LINE_LENGTH], char value[256])
-{
- int pos=0;
- int is_pos=-1;
+void INI_WordValueCHAR(char result[MAX_LINE_LENGTH], char value[256]) {
+	int pos=0;
+	int is_pos=-1;
 
- // clear out entire string
- memset(value, 0, sizeof(value));
+	// clear out entire string
+	memset(value, 0, sizeof(value));
+	for (int i = 0; i < 256; i++) {
+		value[i] = '\0';
+	}
 
- //for (int i=0; i < MAX_LINE_LENGTH;i++)
-  //value[i] = '\0';
+	while (pos < (MAX_LINE_LENGTH-1))	{
+		if (result[pos] == '=')	{
+			is_pos=pos;
+			break;
+		}
+		pos++;
+	}
 
+	if (is_pos > -1) {
+		// Whenever the IS (=) position is known, we make a number out of 'IS_POS' till the next empty
+		// space.
+		int end_pos=-1;
 
- while (pos < (MAX_LINE_LENGTH-1))
- {
-  if (result[pos] == '=')
-  {
-    is_pos=pos;
-    break;
-  }
-    pos++;
- }
+		while (pos < (MAX_LINE_LENGTH-1)) {
+			if (result[pos] == '\0' || result[pos] == '\n') {
+				end_pos=(pos-1);
+				break;
+			}
+			pos++;
+		}
 
- if (is_pos > -1)
- {
-   // Whenever the IS (=) position is known, we make a number out of 'IS_POS' till the next empty
-   // space.
-   int end_pos=-1;
+		// End position found!
+		if (end_pos > -1) {
+			// We know the END position. We will use that piece of string to read out a number.
 
-  while (pos < (MAX_LINE_LENGTH-1))
-  {
-    if (result[pos] == '\0')
-    {
-      end_pos=pos;
-      break;
-    }
-      pos++;
-  }
-
-  // End position found!
-  if (end_pos > -1)
-  {
-    // We know the END position. We will use that piece of string to read out a number.
-
-    // Copy the part to 'value', Make sure we won't get outside the array of the character.
-    int cp=is_pos+1;
-    int c=0;
-    while (cp < end_pos)
-    {
-      value[c] = result[cp];
-      c++;
-      cp++;
-      if (c > 80)
-        break;
-    }
-  }
-
- }
-
-
+			// Copy the part to 'value', Make sure we won't get outside the array of the character.
+			int cp=is_pos+1;
+			int c=0;
+			while (cp < end_pos) {
+			  value[c] = result[cp];
+			  c++;
+			  cp++;
+			  if (c > 80) {
+				  break;
+			  }
+			}
+		}
+	}
 }
 
 
@@ -1167,7 +1179,7 @@ int getUnitTypeFromChar(char chunk[35]) {
     if (caseInsCompare(unitString, "Tank"))			return TANK;
     if (caseInsCompare(unitString, "COMBATTANK"))	return TANK;
     if (caseInsCompare(unitString, "Siege Tank"))   return SIEGETANK;
-    if (caseInsCompare(unitString, "SIEGETANK"))   return SIEGETANK;
+    if (caseInsCompare(unitString, "SIEGETANK"))   	return SIEGETANK;
     if (caseInsCompare(unitString, "Launcher"))		return LAUNCHER;
     if (caseInsCompare(unitString, "Trooper"))		return TROOPER;
     if (caseInsCompare(unitString, "Troopers"))		return TROOPERS;
@@ -2159,11 +2171,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
 
                   // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
       // character (which is "//", ";" or "#"), or an empty line, then skip it
-      if (linefeed[0] == ';' ||
-          linefeed[0] == '#' ||
-         (linefeed[0] == '/' && linefeed[1] == '/')
-          )
-          continue;   // Skip
+      if (isCommentLine(linefeed))  continue;   // Skip
 
       INI_Section(linefeed,linesection);
 
@@ -2232,14 +2240,8 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
 
 
 // Game.ini loader
-void INI_Install_Game(string filename)
-{
-  /*
-    Goal of this file:
-
-  */
+void INI_Install_Game(string filename) {
   logbook("[GAME.INI] Opening file");
-  // Load properties
 
   FILE *stream;
   int section=INI_GAME;
@@ -2306,11 +2308,9 @@ void INI_Install_Game(string filename)
         }
 
         // New unit type
-        if (section == INI_UNITS)
-        {
+        if (section == INI_UNITS) {
           // check if we found a new [UNIT part!
-          if (strstr(linefeed,"[UNIT:") != NULL)
-          {
+          if (strstr(linefeed,"[UNIT:") != NULL) {
             // Get the name of the unit:
             // [UNIT: <NAME>]
             // 1234567890123...]
@@ -2320,17 +2320,16 @@ void INI_Install_Game(string filename)
               name_unit[nu]='\0';
 
             int c=7, uc=0;
-            while (c < (MAX_LINE_LENGTH-1))
-            {
+            while (c < (MAX_LINE_LENGTH-1)) {
               if (linefeed[c] != ' ' &&
                   linefeed[c] != ']') // skip close bracket
               {
                 name_unit[uc] = linefeed[c];
                 uc++;
                 c++;
-              }
-              else
+              } else {
                 break; // get out
+              }
             }
 
             id = getUnitTypeFromChar(name_unit);
@@ -2376,9 +2375,8 @@ void INI_Install_Game(string filename)
         continue; // next line
       }
 
-         // Check word only when in a section
-      if (section != INI_GAME)
-      {
+      // Check word only when in a section
+      if (section != INI_GAME) {
         INI_Word(linefeed, lineword);
         wordtype = INI_WordType(lineword, section);
 
@@ -2419,6 +2417,15 @@ void INI_Install_Game(string filename)
           if (wordtype == WORD_HARVESTSPEED)           units[id].harvesting_speed  = INI_WordValueINT(linefeed);
           if (wordtype == WORD_HARVESTAMOUNT)          units[id].harvesting_amount = INI_WordValueINT(linefeed);
 
+          if (wordtype == WORD_PRODUCER) {
+        	  char producer[256];
+        	  INI_WordValueCHAR(linefeed, producer);
+        	  string producerString = INI_WordValueString(linefeed);
+        	  // determine structure type from that
+        	  int type = INI_StructureType(producerString);
+//        	  int type = INI_StructureType(producerString.c_str());
+        	  units[id].structureTypeItLeavesFrom = type;
+          }
         }
       }
 
