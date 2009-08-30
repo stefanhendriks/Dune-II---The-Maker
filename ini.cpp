@@ -48,72 +48,50 @@ void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
 // Reads out INPUT , will check for a [ at [0] and then checks till ], it will fill section[]
 // with the chars in between. So : [MAP] -> section = 'MAP'. Use function INI_SectionType(..)
 // to get the correct ID for that.
-void INI_Section(char input[MAX_LINE_LENGTH], char section[30])
-{
+void INI_Section(char input[MAX_LINE_LENGTH], char section[30]) {
 
-  int pos=0;
-  int end_pos=-1;
+	int pos=0;
+	int end_pos=-1;
 
-  // clear out entire string
- for (int i=0; i < 30;i++)
-   section[i] = '\0';
+	memset(section, '\0', sizeof(section));
 
- // check if the first character is a '['
- if (input[0] == '[')
- {
-   pos=1; // Begin at character 1
+	// check if the first character is a '['
+	if (input[0] == '[') {
+		pos=1; // Begin at character 1
 
-   while (pos < (MAX_LINE_LENGTH-1))
-   {
-    if (input[pos] == ']')
-    {
-      end_pos=pos-1;
-      break;
-    }
-    pos++;
-   }
+		// find the ending ]
+		while (pos < (MAX_LINE_LENGTH-1)) {
+			if (input[pos] == ']') {
+			  end_pos=pos-1;
+			  break;
+			}
+			pos++;
+		}
 
- if (end_pos > 1 && end_pos < 29)
- {
-   for (int wc=0; wc < end_pos; wc++)
-     section[wc]=input[wc+1];
-
-   section[end_pos]='\0'; // terminate string
- }
- }
-
+		if (end_pos > 1 && end_pos < 29) {
+			for (int wc=0; wc < end_pos; wc++) {
+				section[wc]=input[wc+1];
+			}
+			section[end_pos]='\0'; // terminate string
+		}
+	}
 }
 
 // Reads out INPUT and will check for an '=' Everything at the left of the
 // '=' IS a word and will be put in 'word[]'. Use function INI_WordType(char word[25]) to get
 // the correct ID tag.
-void INI_Word(char input[MAX_LINE_LENGTH], char word[25])
-{
- int pos=0;
- int word_pos=-1;
+void INI_Word(char input[MAX_LINE_LENGTH], char word[25]) {
+	int word_pos = INI_GetPositionOfCharacter(input, '=');
 
-  // clear out entire string
- for (int i=0; i < 25;i++)
-   word[i] = '\0';
+	memset(word, '\0', sizeof(word));
 
+	if (word_pos > -1 && word_pos < 23) {
+		for (int wc=0; wc < word_pos; wc++) {
+			word[wc]=input[wc];
+		}
 
- while (pos < (MAX_LINE_LENGTH-1))
- {
-  if (input[pos] == '=')
-  {
-    word_pos=pos;
-    break;
-  }
-    pos++;
- }
-
- if (word_pos > -1 && word_pos < 23)
- {
-   for (int wc=0; wc < word_pos; wc++)
-     word[wc]=input[wc];
-
-   word[word_pos]='\0'; // terminate string
- }
+		word[word_pos]='\0'; // terminate string
+	}
 }
 
 /**
@@ -1236,6 +1214,13 @@ int getTechLevelByRegion(int iRegion) {
     return 9;
 }
 
+/**
+ * Returns a string, containing the relative path to the scenario file for
+ * the given house and region id.
+ * @param iHouse
+ * @param iRegion
+ * @return
+ */
 string INI_GetScenarioFileName(int iHouse, int iRegion) {
 	string cHouse;
 
@@ -1263,6 +1248,7 @@ string INI_GetScenarioFileName(int iHouse, int iRegion) {
 void INI_Load_scenario(int iHouse, int iRegion) {
     game.bSkirmish = false;
     game.mission_init();
+
     string filename = INI_GetScenarioFileName(iHouse, iRegion);
 
     game.iMission = getTechLevelByRegion(iRegion);
@@ -1293,61 +1279,56 @@ void INI_Load_scenario(int iHouse, int iRegion) {
     memset(iPl_quota, 0, sizeof (iPl_quota));
 
     if( (stream = fopen( filename.c_str(), "r+t" )) != NULL ) {
-    char linefeed[MAX_LINE_LENGTH];
-    char lineword[25];
-    char linesection[30];
+		char linefeed[MAX_LINE_LENGTH];
+		char lineword[25];
+		char linesection[30];
 
-	for (int iCl=0; iCl < MAX_LINE_LENGTH; iCl++)
-	{
-		linefeed[iCl] = '\0';
-		if (iCl < 25) lineword[iCl] = '\0';
-		if (iCl < 30) linesection[iCl] = '\0';
-	}
+		memset(lineword, '\0', sizeof(lineword));
+		memset(linesection, '\0', sizeof(linesection));
+		memset(linefeed, '\0', sizeof(linefeed));
 
-    // infinite loop baby
-    while( !feof( stream ) )
-    {
-      INI_Sentence(stream, linefeed);
+		// infinite loop baby
+		while( !feof( stream ) ) {
+			INI_Sentence(stream, linefeed);
 
-      // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-      // character (which is "//", ";" or "#"), or an empty line, then skip it
-      if (isCommentLine(linefeed))   continue;   // Skip
+			// Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
+			// character (which is "//", ";" or "#"), or an empty line, then skip it
+			if (isCommentLine(linefeed))   continue;   // Skip
 
-      // Every line is checked for a new section.
-      INI_Section(linefeed, linesection);
+			// Every line is checked for a new section.
+			INI_Section(linefeed, linesection);
 
-      if (linesection[0] != '\0' && strlen(linesection) > 1) {
-        section = SCEN_INI_SectionType(linesection, section);
+			// line is not starting empty and section is found
+			if (linesection[0] != '\0' && strlen(linesection) > 1) {
+				section = SCEN_INI_SectionType(linesection, section);
 
-		// Only original dune 2 scenario's have this section, auto set to true
-		if (section == INI_BASIC)
-        {
-            //logbook("NOTE: found '[BASIC]' section. Meaning this is a DUNE II scenario afterall...");
+			// Only original dune 2 scenario's have this section, auto set to true
+			if (section == INI_BASIC) {
+				//logbook("NOTE: found '[BASIC]' section. Meaning this is a DUNE II scenario afterall...");
 
-			// Read out tactical CELL here... "TODO"
+				// Read out tactical CELL here... "TODO"
 
-            // READ OUT STARTING MOVIE
+				// READ OUT STARTING MOVIE
 
-        }
+			}
 
-        if (section >= INI_HOUSEATREIDES &&
-            section <= INI_HOUSEMERCENARY) {
-                iPlayerID++;
+			if (section >= INI_HOUSEATREIDES &&	section <= INI_HOUSEMERCENARY) {
+				iPlayerID++;
 
-		if (iPlayerID > (MAX_PLAYERS-1)) {
-            iPlayerID = (MAX_PLAYERS-1);
+				if (iPlayerID > (MAX_PLAYERS-1)) {
+					iPlayerID = (MAX_PLAYERS-1);
+				}
+
+				if (section == INI_HOUSEATREIDES)   iPl_house[iPlayerID] = ATREIDES;
+				if (section == INI_HOUSEORDOS)      iPl_house[iPlayerID] = ORDOS;
+				if (section == INI_HOUSEHARKONNEN)  iPl_house[iPlayerID] = HARKONNEN;
+				if (section == INI_HOUSEMERCENARY)  iPl_house[iPlayerID] = MERCENARY;
+				if (section == INI_HOUSEFREMEN)     iPl_house[iPlayerID] = FREMEN;
+				if (section == INI_HOUSESARDAUKAR)  iPl_house[iPlayerID] = SARDAUKAR;
+			}
+			continue; // next line
 		}
 
-        if (section == INI_HOUSEATREIDES)   iPl_house[iPlayerID] = ATREIDES;
-        if (section == INI_HOUSEORDOS)      iPl_house[iPlayerID] = ORDOS;
-        if (section == INI_HOUSEHARKONNEN)  iPl_house[iPlayerID] = HARKONNEN;
-        if (section == INI_HOUSEMERCENARY)  iPl_house[iPlayerID] = MERCENARY;
-        if (section == INI_HOUSEFREMEN)     iPl_house[iPlayerID] = FREMEN;
-        if (section == INI_HOUSESARDAUKAR)  iPl_house[iPlayerID] = SARDAUKAR;
-
-		}
-        continue; // next line
-      }
          // Okay, we found a new section; if its NOT [GAME] then we remember this one!
 		if (section != INI_NONE)
 		{

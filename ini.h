@@ -175,3 +175,4 @@ void INI_PRESCAN_SKIRMISH();
 
 int getHouseFromChar(char chunk[25]);
 int getUnitTypeFromChar(char chunk[25]);
+int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);
