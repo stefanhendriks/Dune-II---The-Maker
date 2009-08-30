@@ -1036,130 +1036,116 @@ bool isCommentLine(char linefeed[MAX_LINE_LENGTH]) {
     return linefeed[0] == ';' || linefeed[0] == '#' || (linefeed[0] == '/' && linefeed[1] == '/') || linefeed[0] == '\n' || linefeed[0] == '\0';
 }
 
+/**
+ * Return the name of the directory to look for by house id.
+ * (ie iHouse == ATREIDES) returns "atreides"
+ * @param iHouse
+ * @return
+ */
+string INI_GetHouseDirectoryName(int iHouse) {
+	if (iHouse == ATREIDES)		return "atreides";
+	if (iHouse == HARKONNEN)	return "harkonnen";
+	if (iHouse == SARDAUKAR)	return "sardaukar";
+	if (iHouse == ORDOS)		return "ordos";
+	if (iHouse == FREMEN)		return "fremen";
+	if (iHouse == MERCENARY)	return "mercenary";
+	return "unknown";
+}
 
-void INI_Load_Regionfile(int iHouse, int iMission)
-{
-	char filename[80];
-	char cHouse[15];
-
+void INI_Load_Regionfile(int iHouse, int iMission) {
+	char filename[256];
     memset(filename, 0, sizeof(filename));
-    memset(cHouse, 0, sizeof(cHouse));
+	sprintf(filename, "campaign/%s/mission%d.ini", INI_GetHouseDirectoryName(iHouse).c_str(), iMission);
 
-	if (iHouse == ATREIDES)	sprintf(cHouse, "atreides");
-	if (iHouse == HARKONNEN)	sprintf(cHouse, "harkonnen");
-	if (iHouse == SARDAUKAR)	sprintf(cHouse, "sardaukar");
-	if (iHouse == ORDOS)	sprintf(cHouse, "ordos");
-	if (iHouse == FREMEN)	sprintf(cHouse, "fremen");
-	if (iHouse == MERCENARY)	sprintf(cHouse, "mercenary");
+	cLogger::getInstance()->log(LOG_INFO, COMP_REGIONINI, "Opening mission file", filename);
 
-	sprintf(filename, "campaign/%s/mission%d.ini", cHouse, iMission);
-
-	char msg[256];
-	sprintf(msg, "[CAMPAIGN] '%s' (Mission %d)", filename, game.iMission);
-	logbook(msg);
-
-
-  ////////////////////////////
-  // START OPENING FILE
-  ////////////////////////////
+	////////////////////////////
+	// START OPENING FILE
+	////////////////////////////
 	FILE *stream;					// file stream
 	int wordtype=WORD_NONE;			// word
 	int iRegionIndex=-1;
     int iRegionNumber=-1;
     int iRegionConquer=-1;
 
-  if( (stream = fopen( filename, "r+t" )) != NULL )
-  {
-	  logbook("[CAMPAIGN] Opening file"); // make note on logbook
+    // open file
+    if( (stream = fopen( filename, "r+t" )) != NULL )  {
 
-    char linefeed[MAX_LINE_LENGTH];
-    char lineword[25];
-    char linesection[30];
+		char linefeed[MAX_LINE_LENGTH];
+		char lineword[25];
+		char linesection[30];
 
-	for (int iCl=0; iCl < MAX_LINE_LENGTH; iCl++)
-	{
-		linefeed[iCl] = '\0';
-		if (iCl < 25) lineword[iCl] = '\0';
-		if (iCl < 30) linesection[iCl] = '\0';
+		memset(lineword, '\0', sizeof(lineword));
+		memset(linesection, '\0', sizeof(linesection));
+
+		while( !feof( stream ) ) {
+			INI_Sentence(stream, linefeed);
+
+			// Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
+			// character (which is "//", ";" or "#"), or an empty line, then skip it
+			if (isCommentLine(linefeed)) {
+			  continue;   // Skip
+			}
+
+			wordtype = WORD_NONE;
+
+			// Every line is checked for a new section.
+			INI_Word(linefeed, lineword);
+			wordtype = INI_WordType(lineword, SEC_REGION);
+
+			if (wordtype == WORD_REGION) {
+			  iRegionNumber=-1;
+			  iRegionConquer=-1;
+			  iRegionNumber = INI_WordValueINT(linefeed)-1;
+			} else if (wordtype == WORD_REGIONCONQUER) {
+			  iRegionNumber=-1;
+			  iRegionConquer=-1;
+			  iRegionIndex++;
+			  iRegionConquer = INI_WordValueINT(linefeed)-1;
+			  game.iRegionConquer[iRegionIndex] = iRegionConquer;
+			}
+
+			if (iRegionIndex > -1 || iRegionNumber > -1) {
+				if (wordtype == WORD_REGIONHOUSE) {
+					char cHouseRegion[256];
+					memset(cHouseRegion, 0, sizeof(cHouseRegion));
+					INI_WordValueCHAR(linefeed, cHouseRegion);
+
+					logbook("Region house");
+					int iH= getHouseFromChar(cHouseRegion);
+
+					if (iRegionNumber > -1) {
+						world[iRegionNumber].iHouse = iH;
+						world[iRegionNumber].iAlpha = 255;
+					}
+
+					if (iRegionConquer > -1) {
+						game.iRegionHouse[iRegionIndex] = iH;
+					}
+
+				}
+
+				if (wordtype == WORD_REGIONTEXT && iRegionConquer > -1 && iRegionIndex > -1) {
+					char cHouseText[256];
+					INI_WordValueSENTENCE(linefeed, cHouseText);
+					sprintf(game.cRegionText[iRegionIndex], "%s", cHouseText);
+				}
+
+				if (wordtype == WORD_REGIONSELECT) {
+					if (iRegionNumber > -1) {
+						world[iRegionNumber].bSelectable = INI_WordValueBOOL(linefeed);
+					}
+				}
+
+			}
+		} // while
+
+	   fclose(stream);
+	   logbook("[CAMPAIGN] Done");
+	   return;
 	}
 
-    // infinite loop baby
-    while( !feof( stream ) )
-    {
-      INI_Sentence(stream, linefeed);
-
-      // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-      // character (which is "//", ";" or "#"), or an empty line, then skip it
-      if (isCommentLine(linefeed))
-          continue;   // Skip
-
-	  wordtype=WORD_NONE;
-
-    // Every line is checked for a new section.
-	  INI_Word(linefeed, lineword);
-	  wordtype = INI_WordType(lineword, SEC_REGION);
-
-	  if (wordtype == WORD_REGION)
-	  {
-          iRegionNumber=-1;
-          iRegionConquer=-1;
-		  iRegionNumber = INI_WordValueINT(linefeed)-1;
-	  }
-
-      else if (wordtype == WORD_REGIONCONQUER)
-	  {
-          iRegionNumber=-1;
-          iRegionConquer=-1;
-		  iRegionIndex++;
-		  iRegionConquer = INI_WordValueINT(linefeed)-1;
-          game.iRegionConquer[iRegionIndex] = iRegionConquer;
-	  }
-
-	  if (iRegionIndex > -1 || iRegionNumber > -1)
-	  {
-		if (wordtype == WORD_REGIONHOUSE)
-		{
-			char cHouseRegion[256];
-			memset(cHouseRegion, 0, sizeof(cHouseRegion));
-			INI_WordValueCHAR(linefeed, cHouseRegion);
-
-			logbook("Region house");
-            int iH= getHouseFromChar(cHouseRegion);
-
-            if (iRegionNumber > -1)
-            {
-                world[iRegionNumber].iHouse = iH;
-                world[iRegionNumber].iAlpha = 255;
-            }
-
-            if (iRegionConquer > -1)
-                game.iRegionHouse[iRegionIndex] = iH;
-
-		}
-
-        if (wordtype == WORD_REGIONTEXT && iRegionConquer > -1 && iRegionIndex > -1)
-        {
-			char cHouseText[256];
-            INI_WordValueSENTENCE(linefeed, cHouseText);
-            sprintf(game.cRegionText[iRegionIndex], "%s", cHouseText);
-        }
-
-        if (wordtype == WORD_REGIONSELECT)
-        {
-            if (iRegionNumber > -1)
-                world[iRegionNumber].bSelectable = INI_WordValueBOOL(linefeed);
-        }
-
-	  }
-	}
-
-   fclose(stream);
-   logbook("[CAMPAIGN] Done"); // make note on logbook
-  }
-  else
-	  logbook("[CAMPAIGN] Error, could not open file"); // make note on logbook
-
-
+	logbook("[CAMPAIGN] Error, could not open file"); // make note on logbook
 }
 
 inline bool caseInsCharCompareN(char a, char b) {
@@ -1250,29 +1236,39 @@ int getTechLevelByRegion(int iRegion) {
     return 9;
 }
 
-void INI_Load_scenario(int iHouse, int iRegion)
-{
+string INI_GetScenarioFileName(int iHouse, int iRegion) {
+	string cHouse;
+
+	// each house has a letter for the scenario file
+	if (iHouse == ATREIDES) 	cHouse = "a";
+	if (iHouse == HARKONNEN) 	cHouse = "h";
+	if (iHouse == ORDOS) 		cHouse = "o";
+	if (iHouse == SARDAUKAR)	cHouse = "s";
+	if (iHouse == MERCENARY)	cHouse = "m";
+	if (iHouse == FREMEN)		cHouse = "f";
+
+	char filename[256];
+	memset(filename, '\0', sizeof(filename));
+
+	if(iRegion < 10) {
+		sprintf(filename, "campaign/maps/scen%s00%d.ini", cHouse.c_str(), iRegion);
+	} else {
+		sprintf(filename, "campaign/maps/scen%s0%d.ini", cHouse.c_str(), iRegion);
+	}
+
+	return string(filename);
+}
+
+
+void INI_Load_scenario(int iHouse, int iRegion) {
     game.bSkirmish = false;
     game.mission_init();
-    char cHouse[4];
-    memset(cHouse, 0, sizeof (cHouse));
-    if (iHouse == ATREIDES) sprintf(cHouse, "a");
-    if (iHouse == HARKONNEN) sprintf(cHouse, "h");
-    if (iHouse == ORDOS) sprintf(cHouse, "o");
-    if (iHouse == SARDAUKAR) sprintf(cHouse, "s");
-    if (iHouse == MERCENARY) sprintf(cHouse, "m");
-    if (iHouse == FREMEN) sprintf(cHouse, "f");
-    char filename[60];
-    if(iRegion < 10)
-        sprintf(filename, "campaign/maps/scen%s00%d.ini", cHouse, iRegion);
-
-    else
-        sprintf(filename, "campaign/maps/scen%s0%d.ini", cHouse, iRegion);
+    string filename = INI_GetScenarioFileName(iHouse, iRegion);
 
     game.iMission = getTechLevelByRegion(iRegion);
 
     char msg[256];
-    sprintf(msg, "[SCENARIO] '%s' (Mission %d)", filename, game.iMission);
+    sprintf(msg, "[SCENARIO] '%s' (Mission %d)", filename.c_str(), game.iMission);
     logbook(msg);
     logbook("[SCENARIO] Opening file");
 
@@ -1296,7 +1292,7 @@ void INI_Load_scenario(int iHouse, int iRegion)
     memset(iPl_house, -1, sizeof (iPl_house));
     memset(iPl_quota, 0, sizeof (iPl_quota));
 
-    if( (stream = fopen( filename, "r+t" )) != NULL ) {
+    if( (stream = fopen( filename.c_str(), "r+t" )) != NULL ) {
     char linefeed[MAX_LINE_LENGTH];
     char lineword[25];
     char linesection[30];

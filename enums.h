@@ -25,7 +25,8 @@ enum eLogComponent {
 	COMP_VERSION,		/** version specific loggin messages **/
 	COMP_SKIRMISHSETUP, /** When skirmish game is being set up **/
 	COMP_ALFONT, 		/** ALFONT library specific **/
-	COMP_SOUND 			/** Sound related **/
+	COMP_SOUND, 		/** Sound related **/
+	COMP_REGIONINI		/** Used for regions **/
 };
 
 enum eLogOutcome {

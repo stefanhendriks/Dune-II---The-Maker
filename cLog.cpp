@@ -68,6 +68,8 @@ std::string cLogger::getLogComponentString(eLogComponent component) {
 			return std::string("ALFONT");
 		case COMP_SOUND:
 			return std::string("SOUND");
+		case COMP_REGIONINI:
+			return std::string("REGIONINI");
 	}
 
 	return std::string("UNIDENTIFIED");
