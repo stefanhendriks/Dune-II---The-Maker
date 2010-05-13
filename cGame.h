@@ -154,10 +154,6 @@ public:
     void winning();       // winning
     void losing();        // losing
 
-	// Building stuff, requires a think function
-	void think_build();	// building stuff from lists
-	void think_upgrade(); // upgrading stuff
-
 	void think_starport();
 
     void think_movie();

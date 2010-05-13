@@ -102,12 +102,14 @@ class cBuildingList;
 #include "gui\cBuildingList.h"
 #include "gui\cBuildingListDrawer.h"
 #include "gui\cBuildingListFactory.h"
+#include "gui\cBuildingListDrawer.h"
 #include "cBuildingListUpgrader.h"
 #include "gui\cSideBar.h"
 #include "gui\cSideBarDrawer.h"
 #include "gui\cSideBarFactory.h"
 
 #include "gui\CreditsDrawer.h"
+#include "gui\cListUpgrade.h"
 
 // BUILDING LOGIC
 #include "cItemBuilder.h"

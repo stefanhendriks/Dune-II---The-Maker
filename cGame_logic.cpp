@@ -23,8 +23,7 @@ cGame::cGame() {
 }
 
 
-void cGame::init()
-{
+void cGame::init() {
 	iMaxVolume = 220;
 
 	screenshot=0;
@@ -172,7 +171,7 @@ void cGame::init()
     mp3_music=NULL;
 }
 
-
+// TODO: Bad smell (duplicate code)
 // initialize for missions
 void cGame::mission_init()
 {
@@ -393,20 +392,20 @@ void cGame::think_movie()
     }
 }
 
+//TODO: move to mentat classes
 void cGame::think_mentat()
 {
 
-	if (TIMER_mentat_Speaking > 0)
+	if (TIMER_mentat_Speaking > 0) {
 		TIMER_mentat_Speaking--;
+	}
 
-	if (TIMER_mentat_Speaking == 0)
-	{
+	if (TIMER_mentat_Speaking == 0)	{
 		// calculate speaking stuff
 
 		iMentatSpeak += 2; // makes 0, 2, etc.
 
-		if (iMentatSpeak > 8)
-		{
+		if (iMentatSpeak > 8) {
 			iMentatSpeak = -2;
 			TIMER_mentat_Speaking=-1;
 			return;
@@ -416,69 +415,60 @@ void cGame::think_mentat()
 		int iLength = strlen(mentat_sentence[iMentatSpeak]);
 		iLength += strlen(mentat_sentence[iMentatSpeak+1]);
 
-		if (iLength < 2)
-		{
+		if (iLength < 2) {
 			iMentatSpeak = -2;
 			TIMER_mentat_Speaking=-1;
 			return;
 		}
 
-
 		TIMER_mentat_Speaking = iLength*12;
 	}
 
-
-	// think wohoo
-	if (TIMER_mentat_Mouth > 0)
-	{
+	if (TIMER_mentat_Mouth > 0) {
 		TIMER_mentat_Mouth--;
-	}
-	else if (TIMER_mentat_Mouth == 0)
-	{
+	} else if (TIMER_mentat_Mouth == 0) {
 
-		if (TIMER_mentat_Speaking > 0)
-		{
+		if (TIMER_mentat_Speaking > 0) {
 			int iOld = iMentatMouth;
 
-			if (iMentatMouth == 0)
-			{
+			if (iMentatMouth == 0) {
 				// when mouth is shut, we wait a bit.
-				if (rnd(100) < 45)
-				{
+				if (rnd(100) < 45) {
 					iMentatMouth += (1 + rnd(4));
-				}
-				else
+				} else {
 					TIMER_mentat_Mouth=3; // wait
+				}
 
 				// correct any frame
-				if (iMentatMouth > 4)
+				if (iMentatMouth > 4) {
 					iMentatMouth-=5;
-			}
-			else
-			{
+				}
+			} else {
 				iMentatMouth += (1 + rnd(4));
 
-				if (iMentatMouth > 4)
+				if (iMentatMouth > 4) {
 					iMentatMouth-=5;
+				}
 			}
 
 			// Test if we did not set the timer, when not, we changed stuff, and we
 			// have to make sure we do not reshow the same animation.. which looks
 			// odd!
-			if (TIMER_mentat_Mouth == 0)
-			{
-				if (iMentatMouth == iOld)
+			if (TIMER_mentat_Mouth == 0) {
+				if (iMentatMouth == iOld) {
 					iMentatMouth++;
+				}
 
 				// correct if nescesary:
-				if (iMentatMouth > 4)
+				if (iMentatMouth > 4) {
 					iMentatMouth-=5;
+				}
 
 				// Done!
 			}
-		}
-		else
+		} else {
 			iMentatMouth=0; // when there is no sentence, do not animate mouth
+		}
 
 		TIMER_mentat_Mouth=-1; // this way we make sure we do not update it too much
 	} // speaking
@@ -524,6 +514,7 @@ void cGame::think_mentat()
 }
 
 // thinking for starport prices
+// TODO: Move to own class
 void cGame::think_starport()
 {
 	if (TIMER_mayorder > -1)
@@ -637,6 +628,7 @@ void cGame::think_starport()
 }
 
 // set up a message
+// TODO: Move to GUI related code
 void cGame::set_message(char msg[266])
 {
 	TIMER_message=0;
@@ -674,6 +666,7 @@ void cGame::think_message()
 
 }
 
+// TODO: Move to music related class (MusicPlayer?)
 void cGame::think_music()
 {
     // all this does is repeating music in the same theme.
@@ -715,7 +708,6 @@ void cGame::think_music()
 
 
 }
-
 
 void cGame::poll()
 {
@@ -792,287 +784,6 @@ void cGame::poll()
 	//selected_structure=-1;
 	hover_structure=-1;
 	hover_unit=-1;
-}
-
-
-void cGame::think_upgrade()
-{
-	// loop through all upgrades and upgrade when needed
-	for (int i=0; i < MAX_STRUCTURETYPES; i++)
-	{
-		// ok, we upgrade
-		if (iUpgradeProgress[i] > -1 && iUpgradeProgressLimit[i] > -1)
-		{
-
-			iUpgradeTIMER[i]++;
-
-			if (iUpgradeTIMER[i] > 35)
-			{
-				iUpgradeProgress[i]++;
-				iUpgradeTIMER[i]=0;
-			}
-
-			if (iUpgradeProgress[i] >= iUpgradeProgressLimit[i])
-			{
-				iStructureUpgrade[i]++;
-				int iLevel = iStructureUpgrade[i];
-
-				// Ok now upgrade the structure
-				if (i == CONSTYARD)
-					if (iLevel == 1)
-					{
-						// 4 slabs
-						//list_new_item(LIST_CONSTYARD, ICON_STR_4SLAB, structures[SLAB4].cost, SLAB4, -1);
-						list_insert_item(LIST_CONSTYARD, ICON_STR_4SLAB, structures[SLAB4].cost, SLAB4, -1, 2);
-					}
-					else if (iLevel == 2)
-					{
-						list_new_item(LIST_CONSTYARD, ICON_STR_RTURRET, structures[RTURRET].cost, RTURRET, -1);
-					}
-
-				if (i == LIGHTFACTORY)
-				{
-					if (iLevel == 1)
-						list_new_item(LIST_LIGHTFC, ICON_UNIT_QUAD, units[QUAD].cost, -1, QUAD);
-
-
-				}
-
-
-                if (i == BARRACKS)
-				{
-                    if (iLevel == 1)
-                    {
-                        if (player[0].house == ATREIDES || player[0].house == ORDOS)
-                        {
-                            list_new_item(LIST_INFANTRY, ICON_UNIT_INFANTRY, units[INFANTRY].cost, -1, INFANTRY);
-
-                            if (player[0].house == ORDOS)
-                                list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPERS, units[TROOPERS].cost, -1, TROOPERS);
-                        }
-
-                    }
-
-                }
-
-                if (i == WOR)
-				{
-                    if (iLevel == 1)
-                    {
-                        if (player[0].house == HARKONNEN || player[0].house == SARDAUKAR || player[0].house == ORDOS)
-                        {
-                            list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPERS, units[TROOPERS].cost, -1, TROOPERS);
-
-                            if (player[0].house == ORDOS)
-                               list_new_item(LIST_INFANTRY, ICON_UNIT_INFANTRY, units[INFANTRY].cost, -1, INFANTRY);
-                        }
-                    }
-
-                }
-
-                if (i == HIGHTECH)
-				{
-                    if (iLevel == 1)
-   						list_new_item(LIST_ORNI, ICON_UNIT_ORNITHOPTER, units[ORNITHOPTER].cost, -1, ORNITHOPTER);
-
-                }
-
-				if (i == HEAVYFACTORY)
-				{
-					if (iLevel == 1)
-						list_new_item(LIST_HEAVYFC, ICON_UNIT_MCV, units[MCV].cost, -1, MCV);
-					if (iLevel == 2)
-						list_new_item(LIST_HEAVYFC, ICON_UNIT_LAUNCHER, units[LAUNCHER].cost, -1, LAUNCHER);
-					if (iLevel == 3)
-						list_new_item(LIST_HEAVYFC, ICON_UNIT_SIEGETANK, units[SIEGETANK].cost, -1, SIEGETANK);
-                    if (iLevel == 4)
-                    {
-                        if (player[0].house == ATREIDES)
-                            list_new_item(LIST_HEAVYFC, ICON_UNIT_SONICTANK, units[SONICTANK].cost, -1, SONICTANK);
-                        if (player[0].house == ORDOS)
-                            list_new_item(LIST_HEAVYFC, ICON_UNIT_DEVIATOR, units[DEVIATOR].cost, -1, DEVIATOR);
-                        if (player[0].house == HARKONNEN)
-                            list_new_item(LIST_HEAVYFC, ICON_UNIT_DEVASTATOR, units[DEVASTATOR].cost, -1, DEVASTATOR);
-
-                    }
-
-
-				}
-
-
-				// reset
-				iUpgradeProgress[i]=-1;
-				iUpgradeProgressLimit[i]=-1;
-			}
-		}
-	}
-
-}
-
-// thinking for building
-void cGame::think_build()
-{
-	// loop through all lists, when a progress is encountered, finish it.
-	for (int i=0; i < LIST_MAX; i++)
-	{
-		// progress encountered
-		if (iconprogress[i] > -1)
-		{
-			int iIconID = iconbuilding[i];
-			int iPrice = iconlist[i][iIconID].iPrice;
-			int iBuildTime = 0;
-
-			if (i == LIST_CONSTYARD)
-				iBuildTime = structures[iconlist[i][iIconID].iStructureID].build_time;
-			else
-				iBuildTime = units[iconlist[i][iIconID].iUnitID].build_time;
-
-			int iTimerCap = 35; // was 35 = ORIGINAL
-
-			if (DEBUGGING)
-				iTimerCap=3;
-
-			// when player has low power, produce twice as slow
-			if (player[0].bEnoughPower() == false)
-				iTimerCap *= 2;
-
-			int iType=-1;
-
-			if (i == LIST_CONSTYARD) iType = CONSTYARD;
-			if (i == LIST_LIGHTFC) iType = LIGHTFACTORY;
-			if (i == LIST_HEAVYFC) iType = HEAVYFACTORY;
-
-			if (i == LIST_INFANTRY) iType = BARRACKS; // todo...	 (WOR for other house)
-
-			if (player[0].house == HARKONNEN ||
-				player[0].house == SARDAUKAR)
-			{
-				if (i == LIST_INFANTRY) iType = WOR; // todo...	 (WOR for other house)
-			}
-
-			if (iconlist[i][iIconID].iUnitID == TROOPER ||
-				iconlist[i][iIconID].iUnitID == TROOPERS)
-				iType = WOR;
-
-			if (i == LIST_ORNI) iType = HIGHTECH;
-			if (i == LIST_STARPORT) iType = STARPORT;
-			if (i == LIST_PALACE) iType = PALACE;
-
-
-			iTimerCap /= (1+(player[0].iStructures[iType]/2));
-
-			iTimerCap = player[0].iBuildSpeed(iTimerCap);
-
-
-			// build stuff
-			if (iconTIMER[i] >= iTimerCap)
-			{
-				if (iconprogress[i] <= iBuildTime)
-				{
-					iconprogress[i]++;
-
-                    // VOICE: construction complete
-                    if (iconprogress[i] == iBuildTime)
-						play_voice(SOUND_VOICE_01_ATR);
-
-				}
-				else
-				{
-					if (i != LIST_NONE && i != LIST_CONSTYARD)
-					{
-
-						// create unit
-						int iStr = player[0].iPrimaryBuilding[iType];
-
-						if (iStr < 0)
-							iStr = FIND_PRIMARY_BUILDING(iType, 0);
-
-						if (iStr > -1)
-                        {
-                            int iOldStr=iStr;
-
-							if (structure[iStr] == NULL ||
-								structure[iStr]->getOwner() != 0) // somehow not ours
-									iStr = FIND_PRIMARY_BUILDING(iType, 0);
-
-                            if (iStr < 0)
-                                iStr=iOldStr;
-                        }
-
-
-						if (iStr > -1)
-                        {
-                            if (structure[iStr])
-                            if (structure[iStr]->iFreeAround() == -1)
-							{
-								// Figure out if there is another structure
-								int iRep = FIND_PRIMARY_BUILDING(iType, 0);
-
-								if (iRep > -1 && iRep != iStr)
-								{
-									iStr=iRep;
-								}
-								else
-								{
-
-								iStr = player[0].iPrimaryBuilding[iType];
-
-								// when nothing found now, it means the structure is the only
-								// one. So, we cannot dump it. Send over a reinforcement
-								int rX = (iCellGiveX(structure[iStr]->getCell()) - 5) + rnd(10);
-								int rY = (iCellGiveY(structure[iStr]->getCell()) - 5) + rnd(10);
-
-								FIX_POS(rX, rY);
-
-								REINFORCE(0, iconlist[i][iIconID].iUnitID, iCellMake(rX, rY), -1);
-
-								iconbuilding[i]=-1;
-								iconprogress[i]=-1;
-
-								if (DEBUGGING)
-									logbook("THINK_BUILD: Unit will be sent over by carryall");
-
-								return;
-								}
-							}
-                        }
-
-						// SET AS PRIMARY  BUILDING
-						if (player[0].iPrimaryBuilding[iType] < 0)
-							player[0].iPrimaryBuilding[iType] = iStr;
-
-						if (iStr < 0)
-						{
-							if (DEBUGGING)
-								logbook("ERROR: Unit cannot be built");
-
-							return; // bad!!
-						}
-
-						int iSpot = structure[iStr]->iFreeAround();
-
-						structure[iStr]->setAnimating(true); // animate
-						int id = UNIT_CREATE(iSpot, iconlist[i][iIconID].iUnitID, 0, true);
-
-                        if (structure[iStr]->getRallyPoint() > -1 && id > -1)
-                            unit[id].move_to(structure[iStr]->getRallyPoint(), -1, -1);
-
-						iconbuilding[i]=-1;
-						iconprogress[i]=-1;
-
-					}
-				}
-
-				iconTIMER[i]=0;
-			}
-			else
-				iconTIMER[i]++;
-
-		}
-	}
-
-
-
 }
 
 // Draw the mouse in combat mode, and do its interactions
@@ -5501,3 +5212,119 @@ bool cGame::isState(int thisState) {
 void cGame::setState(int thisState) {
 	state = thisState;
 }
+
+/**
+ * void cGame::think_upgrade() {
+	// loop through all upgrades and upgrade when needed
+	for (int i=0; i < MAX_STRUCTURETYPES; i++)
+	{
+		// ok, we upgrade
+		if (iUpgradeProgress[i] > -1 && iUpgradeProgressLimit[i] > -1)
+		{
+
+			iUpgradeTIMER[i]++;
+
+			if (iUpgradeTIMER[i] > 35)
+			{
+				iUpgradeProgress[i]++;
+				iUpgradeTIMER[i]=0;
+			}
+
+			if (iUpgradeProgress[i] >= iUpgradeProgressLimit[i])
+			{
+				iStructureUpgrade[i]++;
+				int iLevel = iStructureUpgrade[i];
+
+				// Ok now upgrade the structure
+				if (i == CONSTYARD)
+					if (iLevel == 1)
+					{
+						// 4 slabs
+						//list_new_item(LIST_CONSTYARD, ICON_STR_4SLAB, structures[SLAB4].cost, SLAB4, -1);
+						list_insert_item(LIST_CONSTYARD, ICON_STR_4SLAB, structures[SLAB4].cost, SLAB4, -1, 2);
+					}
+					else if (iLevel == 2)
+					{
+						list_new_item(LIST_CONSTYARD, ICON_STR_RTURRET, structures[RTURRET].cost, RTURRET, -1);
+					}
+
+				if (i == LIGHTFACTORY)
+				{
+					if (iLevel == 1)
+						list_new_item(LIST_LIGHTFC, ICON_UNIT_QUAD, units[QUAD].cost, -1, QUAD);
+
+
+				}
+
+
+                if (i == BARRACKS)
+				{
+                    if (iLevel == 1)
+                    {
+                        if (player[0].house == ATREIDES || player[0].house == ORDOS)
+                        {
+                            list_new_item(LIST_INFANTRY, ICON_UNIT_INFANTRY, units[INFANTRY].cost, -1, INFANTRY);
+
+                            if (player[0].house == ORDOS)
+                                list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPERS, units[TROOPERS].cost, -1, TROOPERS);
+                        }
+
+                    }
+
+                }
+
+                if (i == WOR)
+				{
+                    if (iLevel == 1)
+                    {
+                        if (player[0].house == HARKONNEN || player[0].house == SARDAUKAR || player[0].house == ORDOS)
+                        {
+                            list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPERS, units[TROOPERS].cost, -1, TROOPERS);
+
+                            if (player[0].house == ORDOS)
+                               list_new_item(LIST_INFANTRY, ICON_UNIT_INFANTRY, units[INFANTRY].cost, -1, INFANTRY);
+                        }
+                    }
+
+                }
+
+                if (i == HIGHTECH)
+				{
+                    if (iLevel == 1)
+   						list_new_item(LIST_ORNI, ICON_UNIT_ORNITHOPTER, units[ORNITHOPTER].cost, -1, ORNITHOPTER);
+
+                }
+
+				if (i == HEAVYFACTORY)
+				{
+					if (iLevel == 1)
+						list_new_item(LIST_HEAVYFC, ICON_UNIT_MCV, units[MCV].cost, -1, MCV);
+					if (iLevel == 2)
+						list_new_item(LIST_HEAVYFC, ICON_UNIT_LAUNCHER, units[LAUNCHER].cost, -1, LAUNCHER);
+					if (iLevel == 3)
+						list_new_item(LIST_HEAVYFC, ICON_UNIT_SIEGETANK, units[SIEGETANK].cost, -1, SIEGETANK);
+                    if (iLevel == 4)
+                    {
+                        if (player[0].house == ATREIDES)
+                            list_new_item(LIST_HEAVYFC, ICON_UNIT_SONICTANK, units[SONICTANK].cost, -1, SONICTANK);
+                        if (player[0].house == ORDOS)
+                            list_new_item(LIST_HEAVYFC, ICON_UNIT_DEVIATOR, units[DEVIATOR].cost, -1, DEVIATOR);
+                        if (player[0].house == HARKONNEN)
+                            list_new_item(LIST_HEAVYFC, ICON_UNIT_DEVASTATOR, units[DEVASTATOR].cost, -1, DEVASTATOR);
+
+                    }
+
+
+				}
+
+
+				// reset
+				iUpgradeProgress[i]=-1;
+				iUpgradeProgressLimit[i]=-1;
+			}
+		}
+	}
+
+}
+ *
+ */

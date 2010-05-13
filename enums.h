@@ -45,5 +45,9 @@ enum eLogLevel {
 	LOG_FATAL
 };
 
+enum eUpgradeType {
+	UPGRADE_ONE, UPGRADE_TWO, UPGRADE_THREE
+};
+
 
 #endif /* ENUMS_H_ */

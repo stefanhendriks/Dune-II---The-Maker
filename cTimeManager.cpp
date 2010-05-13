@@ -91,22 +91,16 @@ void cTimeManager::handleTimerFPS() {
 
 void cTimeManager::handleTimerGlobal() {
 	// keep up with time cycles
-	while (timerGlobal > 0)
-	{
-		if (game.iFadeAction == 1)
-		{
+	while (timerGlobal > 0) {
+		if (game.iFadeAction == 1) {
 			game.iAlphaScreen-=2;
-			if (game.iAlphaScreen < 0)
-			{
+			if (game.iAlphaScreen < 0) {
 				game.iAlphaScreen = 0;
 				game.iFadeAction=0;
 			}
-		}
-		else if (game.iFadeAction == 2)
-		{
+		} else if (game.iFadeAction == 2) {
 			game.iAlphaScreen+=2;
-			if (game.iAlphaScreen > 255)
-			{
+			if (game.iAlphaScreen > 255) {
 				game.iAlphaScreen = 255;
 				game.iFadeAction=0;
 			}
@@ -126,34 +120,30 @@ void cTimeManager::handleTimerGlobal() {
 		}
 
 		// THINKING ONLY WHEN PLAYING / COMBAT
-		if (game.isState(GAME_PLAYING))
-		{
+		if (game.isState(GAME_PLAYING)) {
 
 			// structures think
 			for (int i=0; i < MAX_STRUCTURES; i++)
-				if (structure[i])
-				{
+				if (structure[i]) {
 					structure[i]->think();           // think about actions going on
 					structure[i]->think_animation(); // think about animating
 					structure[i]->think_guard();     // think about 'guarding' the area (turrets only)
 				}
 
 				// DO NOT THINK FOR HUMAN PLAYER (== 0)
-				for (int i=0; i < MAX_PLAYERS; i++)
+				for (int i=0; i < MAX_PLAYERS; i++) {
 					aiplayer[i].think();
+				}
 
 				game.TIMER_scroll++;
 
-				if (game.TIMER_scroll > game.iScrollSpeed)
-				{
+				if (game.TIMER_scroll > game.iScrollSpeed) {
 					map.think();
 					game.TIMER_scroll=0;
-
 				}
 
-				game.think_build();
 				cItemBuilder::getInstance()->think();
-				game.think_upgrade();
+				// TODO: upgrades
 				game.TIMER_money++;
 
 				if (game.TIMER_money > 5) {
@@ -161,7 +151,6 @@ void cTimeManager::handleTimerGlobal() {
 				}
 
 				if (game.TIMER_shake > 0) game.TIMER_shake--;
-
 
 
 				// units think (move only)
