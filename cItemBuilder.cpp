@@ -38,7 +38,7 @@ int cItemBuilder::getTimerCap(cBuildingList *list, cBuildingListItem *item) {
 		}
 	}
 
-	cPlayerDifficultySettings *difficultySettings = player[HUMAN].getDifficultySettings();
+	cPlayerDifficultySettings *difficultySettings = player->getDifficultySettings();
 	iTimerCap = difficultySettings->getBuildSpeed(iTimerCap);
 
 	return iTimerCap;
@@ -78,11 +78,11 @@ void cItemBuilder::think() {
 
 					// Not done building yet , and can pay for progress?
 					if (!isDoneBuilding && !item->shouldPlaceIt() &&
-						player[HUMAN].credits > priceForTimeUnit) {
+						player->credits > priceForTimeUnit) {
 						// increase progress
 						item->setProgress((item->getProgress() + 1));
 						// pay
-						player[HUMAN].credits -= priceForTimeUnit;
+						player->credits -= priceForTimeUnit;
 					}
 
 					if (isDoneBuilding) {

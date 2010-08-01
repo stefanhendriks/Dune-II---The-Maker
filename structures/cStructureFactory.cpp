@@ -385,10 +385,6 @@ void cStructureFactory::powerDown(int iStructureType, int iPlayer) {
 	}
 }
 
-
-// Handle logic for upgrades and such (when building placed)
-// Only applies to PLAYER 0 (human), since AI needs special
-// routines
 void upgradeTechTree(int iPlayer, int iStructureType) {
 
 	if (iPlayer != 0) {
