@@ -89,7 +89,7 @@ void cItemBuilder::think() {
 						if (list->getType() == LIST_CONSTYARD) {
 
 							// play voice when placeIt is false
-							if (!item->shouldPlaceIt()) {
+							if (!item->shouldPlaceIt() && (player == &player[HUMAN])) {
 								play_voice(SOUND_VOICE_01_ATR);
 								item->setPlaceIt(true);
 							}
