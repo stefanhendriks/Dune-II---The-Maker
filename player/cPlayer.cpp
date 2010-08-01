@@ -10,30 +10,27 @@
 
   */
 
-#include "d2tmh.h"
-
+#include "..\d2tmh.h"
 
 void cPlayer::init()
 {
 	memcpy(pal, general_palette, sizeof(pal));
 	house = GENERALHOUSE;
 
+	difficultySettings = new cPlayerAtreidesDifficultySettings();
+
 	// Reset structures amount
 	memset(iStructures, 0, sizeof(iStructures));
 	memset(iPrimaryBuilding, -1, sizeof(iPrimaryBuilding));
 
-	credits=0;
-	max_credits=credits;
-	focus_cell=0;
+	credits	=	0;
+	max_credits	=	credits;
+	focus_cell	=	0;
 
 	use_power=0;
 	has_power=0;
 
     iTeam=-1;
-
-    lHarvested=0;
-    memset(iKills, 0, sizeof(iKills));			// Kills (0 units, 1 = struc)
-    memset(iLost, 0, sizeof(iLost));			// Casualties
 
     TIMER_think=rnd(10);        // timer for thinking itself (calling main routine)
     TIMER_attack=-1;			// -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
@@ -113,6 +110,7 @@ bool cPlayer::bEnoughPower()
 	How much is determined here.
 
 **/
+#ifdef IGNOREMEFORNOW
 int cPlayer::iDamage(int iDamage)
 {
 	float fOriginal = 1;
@@ -138,7 +136,7 @@ int cPlayer::iMoveSpeed(int iTpe)
 		fOriginal = 80;
 
 	if (fOriginal <= 1.0) fOriginal = 1.0f;			// fix it
-	float fSpeed = fOriginal/100;					// devide by 100 (so we get in 0-1 range)
+	float fSpeed = fOriginal/100;					// Divide by 100 (so we get in 0-1 range)
 	return (int)(units[iTpe].speed*fSpeed);			// * original
 }
 
@@ -197,4 +195,4 @@ int cPlayer::iDumpSpeed(int iSpeed)
 }
 
 
-
+#endif

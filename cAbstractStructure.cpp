@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -20,18 +20,18 @@ cAbstractStructure::cAbstractStructure() {
     fConcrete=0.0f;
 
     iPlayer=-1;
-    
-    iFrame=-1;    
+
+    iFrame=-1;
 
     bRepair=false;
     iRepairX=0;
     iRepairY=0;
     iRepairAlpha=255;
-    
+
     bAnimate=false;
-    
+
     iRallyPoint=-1;
-    
+
     iBuildFase=-1;
 
     iUnitID=-1;
@@ -43,7 +43,7 @@ cAbstractStructure::cAbstractStructure() {
     TIMER_repair=-1;
     TIMER_repairanimation=-1;
     TIMER_flag=-1;
-    TIMER_fade=-1;     
+    TIMER_fade=-1;
 
     TIMER_damage=0;   // damaging stuff
     TIMER_prebuild=0;
@@ -92,12 +92,12 @@ void cAbstractStructure::die()
 	// remove from array
     structure[iIndex]=NULL;
 
-    // Destroy structure, take stuff in effect for the player    
+    // Destroy structure, take stuff in effect for the player
     player[iPlayer].iStructures[getType()]--; // remove from player building indexes
 
     // fix up power usage
     player[iPlayer].use_power -= structures[getType()].power_drain;
-    
+
     // less power
     player[iPlayer].has_power -= structures[getType()].power_give;
 
@@ -107,9 +107,10 @@ void cAbstractStructure::die()
 	if (getType() == REFINERY)
 		player[iPlayer].max_credits -= 1500;
 
-    
+
     // killed
-    player[iPlayer].iLost[INDEX_KILLS_STRUCTURES]++;
+	// TODO: update statistics
+//    player[iPlayer].iLost[INDEX_KILLS_STRUCTURES]++;
 
     // UnitID > -1, means the unit inside will die too
     if (iUnitID > -1)
@@ -128,27 +129,27 @@ void cAbstractStructure::die()
 
 			map.cell[iCll].type = TERRAIN_ROCK;
 			map.smooth_cell(iCll);
-			
-			PARTICLE_CREATE(iDrawX() + (map.scroll_x*32) + (w*32) + 16, 
+
+			PARTICLE_CREATE(iDrawX() + (map.scroll_x*32) + (w*32) + 16,
 				iDrawY() + (map.scroll_y*32) + (h*32) + 16, OBJECT_BOOM01, -1, -1);
 
 
             for (int i=0; i < 3; i++)
-            {				
+            {
 				map.smudge_increase(SMUDGE_ROCK, iCll);
 
                 // create particle
-                PARTICLE_CREATE(iDrawX() + (map.scroll_x*32) + (w*32) + 16 + (-8 + rnd(16)), 
+                PARTICLE_CREATE(iDrawX() + (map.scroll_x*32) + (w*32) + 16 + (-8 + rnd(16)),
                                 iDrawY() + (map.scroll_y*32) + (h*32) + 16 + (-8 + rnd(16)), EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
 
                 // create smoke
                 if (rnd(100) < 7)
-                    PARTICLE_CREATE(iDrawX() + (map.scroll_x*32) + (w*32) + 16 + (-8 + rnd(16)), 
+                    PARTICLE_CREATE(iDrawX() + (map.scroll_x*32) + (w*32) + 16 + (-8 + rnd(16)),
                                     iDrawY() + (map.scroll_y*32) + (h*32) + 16 + (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
 
                 // create fire
                 if (rnd(100) < 5)
-                    PARTICLE_CREATE(iDrawX() + (map.scroll_x*32) + (w*32) + 16 + (-8 + rnd(16)), 
+                    PARTICLE_CREATE(iDrawX() + (map.scroll_x*32) + (w*32) + 16 + (-8 + rnd(16)),
                                     iDrawY() + (map.scroll_y*32) + (h*32) + 16 + (-8 + rnd(16)), EXPLOSION_FIRE, -1, -1);
 
             }
@@ -180,7 +181,7 @@ void cAbstractStructure::think_prebuild()
             iBuildFase++;
 
             TIMER_prebuild = (240 / iBuildFase);
-        }    
+        }
 }
 
 // Free around structure, return the first cell that is free.
@@ -201,13 +202,13 @@ int cAbstractStructure::iFreeAround()
 	for (int x = iStartX; x < iEndX; x++)
 		for (int y = iStartY; y < iEndY; y++)
 		{
-			iCx=x; 
+			iCx=x;
 			iCy=y;
 
 			FIX_BORDER_POS(iCx, iCy);
-			
+
 			int cll = iCellMake(iCx, iCy);
-			
+
 			if (map.occupied(cll) == false) {
 				return cll;
 			}
@@ -226,15 +227,15 @@ void cAbstractStructure::think_animation() {
 	if (iBuildFase < 10) {
         think_prebuild();
 	}
- 
+
     // Repair blink
     if (bRepair) {
 		TIMER_repairanimation++;
 
 		// when there is still enough
-		if (TIMER_repairanimation > 1 && 
+		if (TIMER_repairanimation > 1 &&
 			player[0].credits > 2) {
-			
+
 			TIMER_repairanimation=0;
 			// decrease alpha (make it fade out)
 			iRepairAlpha -= 7;
@@ -249,14 +250,14 @@ void cAbstractStructure::think_animation() {
 				// raise the repair icon.
 			}
 		}
-     } 
+     }
 }
 
 void cAbstractStructure::think_flag() {
 	if (isAnimating()) return; // do no flag animation when animating
 
 	TIMER_flag++;
-    
+
     if (TIMER_flag > 70) {
         iFrame++;
 
@@ -322,7 +323,7 @@ void cAbstractStructure::setFrame(int frame) {
 
 /**
 	Damage structure by amount of hp. The amount passed to this method
-	must be > 0. When it is < 0, it will be wrapped to > 0 anyway and 
+	must be > 0. When it is < 0, it will be wrapped to > 0 anyway and
 	an error is written in the log.
 
 	When the hitpoints drop below 1, the structure will die. The actual call
@@ -337,7 +338,7 @@ void cAbstractStructure::damage(int hp) {
 	}
 
 	iHitPoints -= damage; // do damage
-	
+
 	// do not die right here; it will cause havoc. Instead do that in the think method.
 }
 
@@ -355,7 +356,7 @@ void cAbstractStructure::setHitPoints(int hp) {
 
 		iHitPoints = maxHp;
 	}
-	
+
 }
 
 void cAbstractStructure::setCell(int cell) {
@@ -380,7 +381,7 @@ void cAbstractStructure::think() {
 	// die when out of hp
 	if (iHitPoints < 1) {
 		die();
-	}	
+	}
 }
 
 void cAbstractStructure::think_repair()
@@ -423,14 +424,14 @@ void cAbstractStructure::draw(int iStage) {
 	// this is done after all the structures have been drawn with stage 1 or lower. Causing
 	// the repair icons to always overlap other structures. This is ugly, the repair icons
 	// should be 'particles' (like smoke etc) instead of being hacked here!
-	
+
 	if (iStage <= 1) {
         int iSourceY = structures[getType()].bmp_height * iFrame;
 		int iDrawPreBuild=-1;
 
-       
+
         // prebuild
-        if (iBuildFase == 1 ||  
+        if (iBuildFase == 1 ||
             iBuildFase == 3 ||
             iBuildFase == 5 ||
             iBuildFase == 7 ||
@@ -448,7 +449,7 @@ void cAbstractStructure::draw(int iStage) {
 			if (iWidth == 3 && iHeight == 2) {
                 iDrawPreBuild = BUILD_PRE_3X2;
 			}
-            
+
 			if (iWidth == 3 && iHeight == 3) {
                 iDrawPreBuild = BUILD_PRE_3X3;
 			}
@@ -461,16 +462,16 @@ void cAbstractStructure::draw(int iStage) {
         if (iDrawPreBuild < 0) {
             // Fix this up, since NEMA now posted a structure which somehow needs transculency
             // and does not work. Sloppy work Stefan! Fixed @ 13-04-2005
-            
+
             BITMAP *temp=create_bitmap_ex(8, structures[getType()].bmp_width, structures[getType()].bmp_height);
             BITMAP *temp_shadow=create_bitmap(structures[getType()].bmp_width, structures[getType()].bmp_height);
 
             // Only for Construction Yard
-            clear(temp);		
+            clear(temp);
 
             clear_to_color(temp_shadow, makecol(255,0,255));
-            blit(structures[getType()].bmp, temp, 0, iSourceY, 0, 0, structures[getType()].bmp_width, structures[getType()].bmp_height);		
-            
+            blit(structures[getType()].bmp, temp, 0, iSourceY, 0, 0, structures[getType()].bmp_width, structures[getType()].bmp_height);
+
             // in case shadow, prepare shadow bitmap in memory
 			if (structures[getType()].shadow) {
                 blit(structures[getType()].shadow, temp_shadow, 0, iSourceY, 0, 0, structures[getType()].bmp_width, structures[getType()].bmp_height);
@@ -478,7 +479,7 @@ void cAbstractStructure::draw(int iStage) {
 
 			// draw normal structure
             draw_sprite(bmp_screen, temp, iDrawX(), iDrawY());
-            
+
             // in case shadow, draw shadow now using fBlend.
             if (structures[getType()].shadow) {
                 //set_trans_blender(0,0,0,128);
@@ -491,8 +492,8 @@ void cAbstractStructure::draw(int iStage) {
             destroy_bitmap(temp_shadow);
         } else {
             // Draw prebuild
-            draw_sprite(bmp_screen, (BITMAP *)gfxdata[iDrawPreBuild].dat, iDrawX(), iDrawY());    
-            
+            draw_sprite(bmp_screen, (BITMAP *)gfxdata[iDrawPreBuild].dat, iDrawX(), iDrawY());
+
             // Draw shadow of the prebuild animation
             if (iDrawPreBuild != BUILD_PRE_CONST)
             {
@@ -500,7 +501,7 @@ void cAbstractStructure::draw(int iStage) {
                 draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[iDrawPreBuild+1].dat, iDrawX(), iDrawY());
             }
         }
-	} 
+	}
 	else if (iStage == 2) {
 		// now draw the repair alpha when repairing
 		if (bRepair) {
@@ -517,7 +518,7 @@ void cAbstractStructure::draw(int iStage) {
 /**
 	return free structure, closest to iCell of type iStructureType
 
-	used to determine 
+	used to determine
 **/
 int STRUCTURE_FREE_TYPE(int iPlyr, int iCll, int iStructureType) {
 	assert(iPlyr > -1);

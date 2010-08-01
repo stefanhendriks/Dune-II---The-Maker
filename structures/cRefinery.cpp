@@ -6,7 +6,7 @@ cRefinery::cRefinery()
 
 
  // other variables (class specific)
- 
+
 }
 
 int cRefinery::getType() {
@@ -35,7 +35,7 @@ void cRefinery::think()
 					iMyID=i;
 					break;
 				}
-            
+
             // when the unit somehow does not go to us anymore, stop animating
             if (unit[iUnitID].isValid() == false)
             {
@@ -49,21 +49,23 @@ void cRefinery::think()
 				iUnitID=-1;
 				setAnimating(false);
 				return;
-			}                
-            
+			}
+
             // the unit id is filled in, that means the unit is IN this structure
             // the TIMER_harvest of the unit will be used to dump the harvest in the
             // refinery
 
             unit[iUnitID].TIMER_harvest++;
-            
-            if (unit[iUnitID].TIMER_harvest > player[getOwner()].iDumpSpeed(10))
+
+            cPlayerDifficultySettings * difficultySettings = player[getOwner()].getDifficultySettings();
+
+            if (unit[iUnitID].TIMER_harvest > difficultySettings->getDumpSpeed(10))
             {
                 unit[iUnitID].TIMER_harvest = 0;
 
                 // dump credits
                 if (unit[iUnitID].iCredits > 0)
-                {                    
+                {
                     int iAmount = 5;
 
                     // cap at max
@@ -79,12 +81,11 @@ void cRefinery::think()
 					if (player[unit[iUnitID].iPlayer].credits < player[unit[iUnitID].iPlayer].max_credits)
                     {
 						player[unit[iUnitID].iPlayer].credits += iAmount;
-                        
-                        // add
-                        player[unit[iUnitID].iPlayer].lHarvested += iAmount;
+
+                        // TODO: update harvested amopunt
                     }
 
-                    unit[iUnitID].iCredits -= iAmount; 
+                    unit[iUnitID].iCredits -= iAmount;
                 }
                 else
                 {
@@ -92,8 +93,8 @@ void cRefinery::think()
 
 					if (iNewCell > -1)
 					{
-						unit[iUnitID].iCell = iNewCell;						
-						
+						unit[iUnitID].iCell = iNewCell;
+
                         // let player know...
 						if (unit[iUnitID].iPlayer==0)
 							play_voice(SOUND_VOICE_02_ATR);
@@ -113,13 +114,13 @@ void cRefinery::think()
                     unit[iUnitID].iCredits = 0;
                     unit[iUnitID].iStructureID = -1;
                     unit[iUnitID].iHitPoints = unit[iUnitID].iTempHitPoints;
-                    unit[iUnitID].iTempHitPoints = -1;                    
+                    unit[iUnitID].iTempHitPoints = -1;
                     unit[iUnitID].iGoalCell = unit[iUnitID].iCell;
 					unit[iUnitID].iPathIndex = -1;
-					
+
 					unit[iUnitID].TIMER_movewait = 0;
 					unit[iUnitID].TIMER_thinkwait = 0;
-                    
+
                     if (DEBUGGING)
                         assert(iUnitID > -1);
 
@@ -134,23 +135,23 @@ void cRefinery::think()
 
 						if (iCarry < 0)
 						{
-							unit[iUnitID].iGoalCell = iHarvestCell;							
+							unit[iUnitID].iGoalCell = iHarvestCell;
 						}
 						else
 						{
 							unit[iUnitID].TIMER_movewait = 100;
-							unit[iUnitID].TIMER_thinkwait = 100;	
+							unit[iUnitID].TIMER_thinkwait = 100;
 						}
 					}
 
 					iUnitID=-1;
                 }
-               
-                
-            }            
-            
-            
-        }   
+
+
+            }
+
+
+        }
 
 	// think like base class
 	cAbstractStructure::think();
@@ -164,9 +165,9 @@ void cRefinery::think_harvester_deploy() {
         iFrame = 1;
 	}
 
-    TIMER_flag++;                
-    
-    if (TIMER_flag > 70) {            
+    TIMER_flag++;
+
+    if (TIMER_flag > 70) {
         TIMER_flag = 0;
 
         iFrame++;
@@ -191,7 +192,7 @@ void cRefinery::think_guard()
 void cRefinery::draw(int iStage) {
 	int oldFrame = getFrame();
 
-    // Refinery has content, then the frame is a bit different    
+    // Refinery has content, then the frame is a bit different
 	if (iUnitID > -1) {
         setFrame(getFrame() + 5);
 	}

@@ -63,8 +63,8 @@ void cSideBar::thinkInteraction() {
 
 	// button interaction
 	for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {
-		cBuildingList *list = getList(i);
 		if (i == selectedListID) continue; // skip selected list for button interaction
+		cBuildingList *list = getList(i);
 
 		if (list->isAvailable() == false) continue; // not available, so no interaction possible
 
@@ -81,6 +81,7 @@ void cSideBar::thinkInteraction() {
 
 	// scroll buttons interaction
 	thinkMouseZScrolling();
+
 	// when mouse pressed, a list is selected, and that list is still available
 	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && game.bMousePressedLeft) {
 		cBuildingList *list = getList(selectedListID);
@@ -115,7 +116,6 @@ void cSideBar::thinkInteraction() {
 						list->setLastClickedId(item->getSlotId());
 					} else {
 						game.bPlaceIt = true;
-
 					}
 				}
 

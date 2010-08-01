@@ -6,7 +6,7 @@
   Contact: stefanhen83@gmail.com
   Website: http://d2tm.duneii.com
 
-  2001 - 2009 (c) code by Stefan Hendriks
+  2001 - 2010 (c) code by Stefan Hendriks
 
   -----------------------------------------
   Initialization of variables
@@ -1729,7 +1729,9 @@ void cGame::draw_sidebarbuttons()
 void cGame::draw_placeit()
 {
 	// this is only done when bPlaceIt=true
-	if (getSideBar() == NULL) return;
+	if (getSideBar() == NULL) {
+		return;
+	}
 
 	int iMouseCell = map.mouse_cell();
 
@@ -1912,12 +1914,12 @@ void cGame::draw_placeit()
 			draw_sprite(temp, (BITMAP *)gfxdata[iTile].dat, iX*32, iY*32);
 		}
 
-		if (bOutOfBorder)
+		if (bOutOfBorder) {
 			clear_to_color(temp, makecol(160,0,0));
+		}
 
 
 		set_trans_blender(0, 0, 0, 64);
-
 
 		draw_trans_sprite(bmp_screen, temp, iDrawX, iDrawY);
 
@@ -1941,7 +1943,6 @@ void cGame::draw_placeit()
 				bPlaceIt=false;
 				iconbuilding[LIST_CONSTYARD]	= -1;
 				iconprogress[LIST_CONSTYARD]    = -1;
-
 
 				itemToPlace->decreaseTimesToBuild();
 				itemToPlace->setPlaceIt(false);
@@ -1968,8 +1969,9 @@ void cGame::gerald()
 {
 	set_palette(player[0].pal);
 
-	if (bPlaceIt)
+	if (bPlaceIt) {
 		draw_placeit();
+	}
 
 	// black out
 	rectfill(bmp_screen, (game.screen_x-160), 0, game.screen_x, game.screen_y-128, makecol(0,0,0));

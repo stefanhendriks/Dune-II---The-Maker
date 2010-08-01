@@ -77,11 +77,11 @@ class CreditsDrawer;
 #include "cUnitFactory.h"					// Responsible for creation of Units
 #include "cUnitUtils.h"						// Responsible for generic operations on units (ie finding a unit, etc)
 #include "cUnitDrawer.h"					// Responsible for drawing units
+
 #include "cMentat.h"
 #include "cCellCalculator.h"			    /** math with cells , with handy references to structures and units **/
 #include "ini.h"							// INI loading
 #include "common.h"							// commonly used functions
-#include "cPlayer.h"							// player data
 #include "map.h"							// map data
 #include "cSeedMap.h"
 #include "cSeedMapGenerator.h"
@@ -91,6 +91,9 @@ class CreditsDrawer;
 #include "ai.h"
 #include "network.h"
 #include "gui.h"
+
+// Player and player related
+#include "player\playerh.h"
 
 // GUI RELATED
 
@@ -145,6 +148,7 @@ class cBuildingList;
 #include "structures/cIx.h"
 
 // TODO: Units
+
 
 // Extern references & variable declarations
 #include "d2tmc.h"

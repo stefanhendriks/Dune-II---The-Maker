@@ -116,7 +116,7 @@ void cUnit::init(int i)
 
 void cUnit::die(bool bBlowUp, bool bSquish) {
     // Animation / Sound
-    player[iPlayer].iLost[INDEX_KILLS_UNITS]++;
+	// TODO: update statistics player
 
     int iDieX=(draw_x() + 16 ) + (map.scroll_x*32);
     int iDieY=(draw_y() + 16 ) + (map.scroll_y*32);
@@ -1242,7 +1242,8 @@ void cUnit::think()
                 bFindRefinery=true;
 
             // when we should harvest...
-            if (TIMER_harvest > (player[iPlayer].iHarvestSpeed(units[iType].harvesting_speed)) &&
+            cPlayerDifficultySettings *difficultySettings = player[iPlayer].getDifficultySettings();
+            if (TIMER_harvest > (difficultySettings->getHarvestSpeed(units[iType].harvesting_speed)) &&
                 iCredits < units[iType].credit_capacity)
             {
                 TIMER_harvest=1;
@@ -1765,8 +1766,11 @@ void cUnit::think_move_air()
 		}
 	}
 
-    if (TIMER_move < (player[iPlayer].iMoveSpeed(iType) + iSlowDown))
+	cPlayerDifficultySettings *difficultySettings = player[iPlayer].getDifficultySettings();
+
+    if (TIMER_move < (difficultySettings->getMoveSpeed(iType) + iSlowDown)) {
         return;
+    }
 
     TIMER_move=0;
 
@@ -2851,9 +2855,10 @@ void cUnit::think_move()
         iSlowDown=0;
 
 
-
-    if (TIMER_move < ((player[iPlayer].iMoveSpeed(iType))+iSlowDown))
+    cPlayerDifficultySettings *difficultySettings = player[iPlayer].getDifficultySettings();
+    if (TIMER_move < ((difficultySettings->getMoveSpeed(iType))+iSlowDown)) {
         return; // get out
+    }
 
     TIMER_move=0; // reset to 0
 

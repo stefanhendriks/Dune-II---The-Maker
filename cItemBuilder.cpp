@@ -45,7 +45,8 @@ int cItemBuilder::getTimerCap(cBuildingList *list, cBuildingListItem *item) {
 		}
 	}
 
-	iTimerCap = player[0].iBuildSpeed(iTimerCap);
+	cPlayerDifficultySettings *difficultySettings = player[HUMAN].getDifficultySettings();
+	iTimerCap = difficultySettings->getBuildSpeed(iTimerCap);
 
 	return iTimerCap;
 }

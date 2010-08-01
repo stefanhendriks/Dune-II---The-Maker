@@ -242,6 +242,8 @@ void cBullet::think_move()
     bool bDie=false;
     bool bDamageRockets=true;
 
+    cPlayerDifficultySettings * difficultySettings = player[iPlayer].getDifficultySettings();
+
     // crash against mountains, etc
     if (iType == BULLET_SMALL ||
         iType == BULLET_TRIKE ||
@@ -259,7 +261,7 @@ void cBullet::think_move()
         if (map.cell[iCell].type == TERRAIN_WALL && iType != BULLET_TURRET) // except for bullet turret that do not hit walls...
         {
             // damage this type of wall...
-			int iDamage = player[iPlayer].iDamage(bullets[iType].damage);
+			int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
 
 			if (iOwnerUnit > -1)
 			{
@@ -304,7 +306,7 @@ void cBullet::think_move()
             }
 
             if (bSkipSelf == false) {
-				int iDamage = player[iPlayer].iDamage(bullets[iType].damage);
+				int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
 
 				// increase damage by experience of unit
 				if (iOwnerUnit > -1) {
@@ -336,7 +338,8 @@ void cBullet::think_move()
 					if (iOwnerUnit > -1)
 						if (unit[iOwnerUnit].isValid())
 						{
-							player[unit[iOwnerUnit].iPlayer].iKills[INDEX_KILLS_STRUCTURES]++;  // we killed!
+							// TODO: update statistics
+//							player[unit[iOwnerUnit].iPlayer].iKills[INDEX_KILLS_STRUCTURES]++;  // we killed!
 						}
 
 						structure[id]->die();
@@ -362,7 +365,7 @@ void cBullet::think_move()
 				// structure hit!
 				int id = map.cell[iCell].id[MAPID_STRUCTURES];
 
-				int iDamage = player[iPlayer].iDamage(bullets[iType].damage);
+				int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
 
 				if (iOwnerUnit > -1)
 				{
@@ -393,7 +396,8 @@ void cBullet::think_move()
 						if (iOwnerUnit > -1)
 							if (unit[iOwnerUnit].isValid())
 							{
-								player[unit[iOwnerUnit].iPlayer].iKills[INDEX_KILLS_STRUCTURES]++;  // we killed!
+								// TODO: update statistics
+//								player[unit[iOwnerUnit].iPlayer].iKills[INDEX_KILLS_STRUCTURES]++;  // we killed!
 							}
 
 
@@ -407,7 +411,7 @@ void cBullet::think_move()
         if (map.cell[iCell].type == TERRAIN_WALL)
         {
             // damage this type of wall...
-			int iDamage = player[iPlayer].iDamage(bullets[iType].damage);
+			int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
 
 			if (iOwnerUnit > -1)
 			{
@@ -450,7 +454,7 @@ void cBullet::think_move()
             // structure hit!
             int id = map.cell[iCell].id[MAPID_WORMS];
 
-            unit[id].iHitPoints -= player[iPlayer].iDamage(bullets[iType].damage);
+            unit[id].iHitPoints -= difficultySettings->getInflictDamage(bullets[iType].damage);
 
             // NO HP LEFT, DIE
             if (unit[id].iHitPoints <= 0)
@@ -469,7 +473,7 @@ void cBullet::think_move()
 
             if (units[unit[id].iType].infantry)
 			{
-				int iDamage = player[iPlayer].iDamage(bullets[iType].damage_inf);
+				int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage_inf);
 
 				if (iOwnerUnit > -1)
 				{
@@ -481,7 +485,7 @@ void cBullet::think_move()
 			}
 			else
 			{
-				int iDamage = player[iPlayer].iDamage(bullets[iType].damage);
+				int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
 
 				if (iOwnerUnit > -1)
 				{
@@ -509,7 +513,8 @@ void cBullet::think_move()
 				   {
                     if (unit[iID].isValid())
                     {
-                        player[unit[iID].iPlayer].iKills[INDEX_KILLS_UNITS]++;  // we killed!
+						// TODO: update statistics
+//                        player[unit[iID].iPlayer].iKills[INDEX_KILLS_UNITS]++;  // we killed!
 
 						if (units[unit[id].iType].infantry)
 							unit[iID].fExperience += 0.25; // 4 kills = 1 star
@@ -563,7 +568,7 @@ void cBullet::think_move()
             if (id != iOwnerUnit)
             {
 
-				int iDamage = player[iPlayer].iDamage(bullets[iType].damage);
+				int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
 
 				if (iOwnerUnit > -1)
 				{
@@ -590,7 +595,8 @@ void cBullet::think_move()
                {
                     if (unit[iID].isValid())
                     {
-                        player[unit[iID].iPlayer].iKills[INDEX_KILLS_UNITS]++;  // we killed!
+						// TODO: update statistics
+//                        player[unit[iID].iPlayer].iKills[INDEX_KILLS_UNITS]++;  // we killed!
                     }
                }
 
@@ -610,7 +616,7 @@ void cBullet::think_move()
         if (bullets[iType].deadbmp > -1)
             PARTICLE_CREATE(draw_x()+(map.scroll_x*32)+16+ (-8 + rnd(16)), draw_y()+(map.scroll_y*32)+16+ (-8 + rnd(16)), bullets[iType].deadbmp, -1, -1);
 
-		int iDamage = player[iPlayer].iDamage(bullets[iType].damage);
+		int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
 
 		if (iOwnerUnit > -1)
 		{
@@ -657,12 +663,7 @@ void cBullet::think_move()
             }
         }
 
-
-
-
-
         bAlive=false;
     }
-
 
 }
