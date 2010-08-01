@@ -1,8 +1,8 @@
-#include "d2tmh.h"
+#include "..\d2tmh.h"
 
 cUnitUtils *cUnitUtils::instance = NULL;
 
-cUnitUtils::cUnitUtils() {	
+cUnitUtils::cUnitUtils() {
 }
 
 

@@ -93,7 +93,7 @@ void CreditsDrawer::think() {
 	}
 }
 
-// this will basically compare 2 credits values, and per offset determine wether
+// this will basically compare 2 credits values, and per offset determine whether
 // it has to go 'up' or 'down'
 void CreditsDrawer::thinkAboutIndividualCreditOffsets() {
 	char current_credits[7];

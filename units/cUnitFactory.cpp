@@ -1,8 +1,8 @@
-#include "d2tmh.h"
+#include "..\d2tmh.h"
 
 cUnitFactory *cUnitFactory::instance = NULL;
 
-cUnitFactory::cUnitFactory() {	
+cUnitFactory::cUnitFactory() {
 }
 
 
@@ -23,8 +23,8 @@ cAbstractUnit *cUnitFactory::createUnit(int type) {
 
 void cUnitFactory::deleteUnit(cAbstractUnit *unit) {
 	// delete memory that was aquired
-    /*if (unit->iType == CONSTYARD) 
-        delete (cConstYard *)unit;    
+    /*if (unit->iType == CONSTYARD)
+        delete (cConstYard *)unit;
     else
         delete unit;*/
 }

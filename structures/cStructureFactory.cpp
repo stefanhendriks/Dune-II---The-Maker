@@ -1,4 +1,4 @@
-#include "d2tmh.h"
+#include "..\d2tmh.h"
 
 cStructureFactory *cStructureFactory::instance = NULL;
 
@@ -14,7 +14,7 @@ cStructureFactory *cStructureFactory::getInstance() {
 }
 
 cAbstractStructure *cStructureFactory::createStructureInstance(int type) {
-	 // Depending on type, create proper derived class. The constructor
+	// Depending on type, create proper derived class. The constructor
     // will take care of the rest
     if (type == CONSTYARD)		return new cConstYard;
     if (type == STARPORT)		return new cStarPort;
@@ -168,14 +168,8 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 		REINFORCE(iPlayer, HARVESTER, iCell+2, iCell+2);
 	}
 
-
     // Use power
 	powerUp(iStructureType, iPlayer);
-
-    // And finally handle upgrades if any...
-	if (iPlayer == 0) {
-		upgradeTechTree(iPlayer, iStructureType);
-	}
 
 	// deletion of objects used
 	delete (cHitpointCalculator *)calc;

@@ -71,12 +71,16 @@ class CreditsDrawer;
 #include "d2tm_math.h"
 #include "cTimeManager.h"
 #include "cAbstractStructure.h"
-#include "cStructureFactory.h"				// Responsible for creation of Structures
+
+#include "structures\cStructureFactory.h"				// Responsible for creation of Structures
+
 #include "cUnit.h"
-#include "cAbstractUnit.h"					// Abstract Unit class (will replace cUnit.h eventually)
-#include "cUnitFactory.h"					// Responsible for creation of Units
-#include "cUnitUtils.h"						// Responsible for generic operations on units (ie finding a unit, etc)
-#include "cUnitDrawer.h"					// Responsible for drawing units
+
+// TODO: Finish up these classes
+#include "units\cAbstractUnit.h"					// Abstract Unit class (will replace cUnit.h eventually)
+#include "units\cUnitFactory.h"				// Responsible for creation of Units
+#include "units\cUnitUtils.h"				// Responsible for generic operations on units (ie finding a unit, etc)
+#include "units\cUnitDrawer.h"				// Responsible for drawing units
 
 #include "cMentat.h"
 #include "cCellCalculator.h"			    /** math with cells , with handy references to structures and units **/
@@ -102,19 +106,20 @@ class CreditsDrawer;
 #include "gui\guih.h"
 
 // UPGRADE LOGIC
-#include "cBuildingListUpgrader.h"
+#include "upgrade\cBuildingListUpgrader.h"
 
 // BUILDING LOGIC
 #include "cItemBuilder.h"
 
-// game
-#include "cGame.h"							// game class
+// GAME
+#include "cGame.h"
 
 // PROFILER
 #include "stdlib.h"
 // PROFILER
 
-// Mentats
+// Mentat
+// TODO: Use this mentat code
 #include "mentat/cOrdosMentat.h"
 #include "mentat/cHarkonnenMentat.h"
 #include "mentat/cAtreidesMentat.h"
