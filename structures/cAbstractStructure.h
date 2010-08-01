@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -15,8 +15,8 @@
 
   Giving a go for true OOP programming, using a base class and derived classes.
   */
-
-
+#ifndef CABSTRACTSTRUCTURE_H_
+#define CABSTRACTSTRUCTURE_H_
 
 class cAbstractStructure {
 
@@ -27,7 +27,7 @@ class cAbstractStructure {
 							// drawing starts)
 
 		int iPlayer;        // owner
-	
+
 		int iRallyPoint;    // rallypoint ...
 
 		bool bAnimate;      // Do its special animation? (unit leaving building, starport
@@ -43,12 +43,12 @@ class cAbstractStructure {
 
 		// Constructor & Destructor:
 		cAbstractStructure(); // default constructor (never used actually!)
-	    
+
 		cAbstractStructure(int iID);
-		~cAbstractStructure();
-	    
-		
-	    
+		virtual ~cAbstractStructure();
+
+
+
 		float fConcrete;     // how much concrete is *not* beneath this building (percentage)?
 							 // meaning, when 0% , it is all concrete. But if 10%, it means 10% of the building
 							 // is not covered.
@@ -74,15 +74,15 @@ class cAbstractStructure {
 		int TIMER_prebuild; // prebuild timer
 
 		// -------------
-	    
 
 
-		// Filled in by derived classes 
+
+		// Filled in by derived classes
 		virtual void draw(int iStage)=0;              // draw
 		virtual void think()=0;           // think
-		virtual void think_animation()=0; // think animation stuff        
+		virtual void think_animation()=0; // think animation stuff
 		virtual void think_guard();       // think guard stuff
-		
+
 		virtual int getType()=0;					  // implementation gives type of structure
 		void think_prebuild();            // prebuild animation
 		void think_repair();              // repair thinking
@@ -94,12 +94,12 @@ class cAbstractStructure {
 		// drawing
 		int iDrawX();
 		int iDrawY();
-	    
+
 		// Functionality
 		int iFreeAround();
 
 		// getters
-		int getWidth() { return iWidth; } 
+		int getWidth() { return iWidth; }
 		int getHeight() { return iHeight; }
 		int getHitPoints() { return iHitPoints; }
 		int getCell() { return iCell; }
@@ -125,3 +125,4 @@ void upgradeTechTree(int iPlayer, int iStructureType);
 int STRUCTURE_FREE_TYPE(int iPlyr, int iCll, int iTpe);
 
 
+#endif

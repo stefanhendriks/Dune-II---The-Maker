@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "d2tmh.h"
+#include "..\d2tmh.h"
 
 cCellCalculator::cCellCalculator() {
 	// do nothing

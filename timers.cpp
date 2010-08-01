@@ -22,7 +22,6 @@
 		allegro_timerUnits++;
 	}
 	END_OF_FUNCTION(allegro_timerunits);
-#else 
-	// Here comes any other lib, eventually the 3 TimerManager functions
-	// should be called to make this thing work
+#else
+	// Theoretically some other library could be used and have timer specific code here...
 #endif
