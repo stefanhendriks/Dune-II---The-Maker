@@ -92,27 +92,17 @@ class CreditsDrawer;
 #include "network.h"
 #include "gui.h"
 
-// Player and player related
+// SIDEBAR
+#include "sidebar\sidebarh.h"
+
+// Player related
 #include "player\playerh.h"
 
-// GUI RELATED
+// GUI
+#include "gui\guih.h"
 
-class cBuildingListItem;
-class cBuildingList;
-
-#include "gui\eBuildType.h"				// enum build types (UNIT/STRUCTURE)
-#include "gui\cBuildingListItem.h"
-#include "gui\cBuildingList.h"
-#include "gui\cBuildingListDrawer.h"
-#include "gui\cBuildingListFactory.h"
-#include "gui\cBuildingListDrawer.h"
+// UPGRADE LOGIC
 #include "cBuildingListUpgrader.h"
-#include "gui\cSideBar.h"
-#include "gui\cSideBarDrawer.h"
-#include "gui\cSideBarFactory.h"
-
-#include "gui\CreditsDrawer.h"
-#include "gui\cListUpgrade.h"
 
 // BUILDING LOGIC
 #include "cItemBuilder.h"
@@ -130,25 +120,9 @@ class cBuildingList;
 #include "mentat/cAtreidesMentat.h"
 
 // Structures
-#include "structures/cConstYard.h"
-#include "structures/cStarPort.h"
-#include "structures/cWindTrap.h"
-#include "structures/cSpiceSilo.h"
-#include "structures/cRefinery.h"
-#include "structures/cOutPost.h"
-#include "structures/cPalace.h"
-#include "structures/cRepairFacility.h"
-#include "structures/cLightFactory.h"
-#include "structures/cHeavyFactory.h"
-#include "structures/cHighTech.h"
-#include "structures/cGunTurret.h"
-#include "structures/cRocketTurret.h"
-#include "structures/cWor.h"
-#include "structures/cBarracks.h"
-#include "structures/cIx.h"
+#include "structures/structuresh.h"
 
 // TODO: Units
-
 
 // Extern references & variable declarations
 #include "d2tmc.h"

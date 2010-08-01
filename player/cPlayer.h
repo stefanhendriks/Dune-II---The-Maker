@@ -42,8 +42,9 @@ class cPlayer {
 		int TIMER_think;        // timer for thinking itself (calling main routine)
 		int TIMER_attack;       // -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 
-
 		cPlayerDifficultySettings *getDifficultySettings() { return difficultySettings; }
+
+		int upgradeLevel[LIST_MAX];
 
 	private:
 		cPlayerDifficultySettings *difficultySettings;

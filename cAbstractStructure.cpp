@@ -86,8 +86,9 @@ void cAbstractStructure::die()
     }
 
     // selected structure
-    if (game.selected_structure == iIndex)
+    if (game.selected_structure == iIndex) {
         game.selected_structure = -1;
+    }
 
 	// remove from array
     structure[iIndex]=NULL;
@@ -113,8 +114,9 @@ void cAbstractStructure::die()
 //    player[iPlayer].iLost[INDEX_KILLS_STRUCTURES]++;
 
     // UnitID > -1, means the unit inside will die too
-    if (iUnitID > -1)
+    if (iUnitID > -1) {
         unit[iUnitID].init(iUnitID); // die here... softly
+    }
 
 	int iCll=iCell;
 	int iCX=iCellGiveX(iCll);
