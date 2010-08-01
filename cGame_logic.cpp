@@ -20,6 +20,7 @@
 
 cGame::cGame() {
 	creditsDrawer = NULL;
+	sidebar = NULL;
 }
 
 
@@ -791,65 +792,68 @@ void cGame::combat_mouse()
 {
     bool bOrderingUnits=false;
 
-	if (bPlaceIt == false && bPlacedIt==false)
-	{
+	if (bPlaceIt == false && bPlacedIt==false) {
 		int mc = map.mouse_cell();
 
-        if (hover_unit > -1)
-            if (unit[hover_unit].iPlayer == 0)
+        if (hover_unit > -1) {
+            if (unit[hover_unit].iPlayer == 0) {
                 mouse_tile = MOUSE_PICK;
+            }
+        }
 
 
+        // Mouse is hovering above a unit
         if (hover_unit > -1)
         {
             // wanting to repair, check if its possible
-            if (key[KEY_R] && player[0].iStructures[REPAIR] > 0)
-            if (unit[hover_unit].iPlayer == 0)
-                if (unit[hover_unit].iHitPoints < units[unit[hover_unit].iType].hp &&
-                    units[unit[hover_unit].iType].infantry == false &&
-                    units[unit[hover_unit].iType].airborn == false)
-                {
+            if (key[KEY_R] && player[0].iStructures[REPAIR] > 0) {
+            	if (unit[hover_unit].iPlayer == HUMAN)
+            		if (unit[hover_unit].iHitPoints < units[unit[hover_unit].iType].hp &&
+            				units[unit[hover_unit].iType].infantry == false &&
+            				units[unit[hover_unit].iType].airborn == false)	{
 
-                    if (bMousePressedLeft)
-                    {
-                        // find closest repair bay to move to
+							if (bMousePressedLeft)
+							{
+								// find closest repair bay to move to
 
-                            int iNewID = STRUCTURE_FREE_TYPE(0, unit[hover_unit].iCell, REPAIR);
+									int iNewID = STRUCTURE_FREE_TYPE(0, unit[hover_unit].iCell, REPAIR);
 
-                            if (iNewID > -1)
-                            {
-                                int iCarry = CARRYALL_TRANSFER(hover_unit, structure[iNewID]->getCell()+2);
+									if (iNewID > -1)
+									{
+										int iCarry = CARRYALL_TRANSFER(hover_unit, structure[iNewID]->getCell()+2);
 
 
-                                if (iCarry > -1)
-                                {
-                                    // yehaw we will be picked up!
-                                    unit[hover_unit].TIMER_movewait = 100;
-                                    unit[hover_unit].TIMER_thinkwait = 100;
-                                }
-                                else
-                                {
-                                    logbook("Order move #5");
-                                    UNIT_ORDER_MOVE(hover_unit, structure[iNewID]->getCell());
-                                }
+										if (iCarry > -1)
+										{
+											// yehaw we will be picked up!
+											unit[hover_unit].TIMER_movewait = 100;
+											unit[hover_unit].TIMER_thinkwait = 100;
+										}
+										else
+										{
+											logbook("Order move #5");
+											UNIT_ORDER_MOVE(hover_unit, structure[iNewID]->getCell());
+										}
 
-                                unit[hover_unit].TIMER_blink  = 5;
-                                unit[hover_unit].iStructureID = iNewID;
-                                unit[hover_unit].iGoalCell = structure[iNewID]->getCell();
+										unit[hover_unit].TIMER_blink  = 5;
+										unit[hover_unit].iStructureID = iNewID;
+										unit[hover_unit].iGoalCell = structure[iNewID]->getCell();
 
-                            }
+									}
 
-                    }
+							}
 
-                    mouse_tile = MOUSE_REPAIR;
-                }
+							mouse_tile = MOUSE_REPAIR;
+						}
+            }
         }
 
-	if (mc > -1)
-	{
-		if (bMousePressedRight)
-			UNIT_deselect_all();
+    // when mouse hovers above a valid cell
+	if (mc > -1) {
 
+		if (bMousePressedRight) {
+			UNIT_deselect_all();
+		}
 
 		// single clicking and moving
 		if (bMousePressedLeft)
@@ -869,82 +873,64 @@ void cGame::combat_mouse()
 
             if (hover_unit > -1 && (mouse_tile == MOUSE_NORMAL || mouse_tile == MOUSE_PICK))
 			{
-				if (unit[hover_unit].iPlayer == 0)
-				{
-                    if (!key[KEY_LSHIFT])
+				if (unit[hover_unit].iPlayer == 0) {
+                    if (!key[KEY_LSHIFT]) {
                         UNIT_deselect_all();
+                    }
 
-				unit[hover_unit].bSelected=true;
+					unit[hover_unit].bSelected=true;
 
-                if (units[unit[hover_unit].iType].infantry == false)
-                    play_sound_id(SOUND_REPORTING, -1);
-                else
-                    play_sound_id(SOUND_YESSIR, -1);
+					if (units[unit[hover_unit].iType].infantry == false) {
+						play_sound_id(SOUND_REPORTING, -1);
+					} else {
+						play_sound_id(SOUND_YESSIR, -1);
+					}
 
 				}
-			}
-			else
-			{
-
+			} else {
                 bool bPlayInf=false;
                 bool bPlayRep=false;
 
-                if (mouse_tile == MOUSE_MOVE)
-                {
-
+                if (mouse_tile == MOUSE_MOVE) {
                     // any selected unit will move
-				for (int i=0; i < MAX_UNITS; i++)
-					if (unit[i].isValid())
-						if (unit[i].iPlayer == 0)
-							if (unit[i].bSelected)
-							{
-								UNIT_ORDER_MOVE(i, mc);
+					for (int i=0; i < MAX_UNITS; i++) {
+						if (unit[i].isValid() && unit[i].iPlayer == HUMAN && unit[i].bSelected) {
+							UNIT_ORDER_MOVE(i, mc);
 
-                                if (units[unit[i].iType].infantry)
-                                    bPlayInf=true;
-                                else
-                                    bPlayRep=true;
+							if (units[unit[i].iType].infantry)
+								bPlayInf=true;
+							else
+								bPlayRep=true;
 
-								bParticle=true;
-							}
-
-
-                }
-                else if (mouse_tile == MOUSE_ATTACK)
-                {
+							bParticle=true;
+						}
+					}
+                } else if (mouse_tile == MOUSE_ATTACK) {
                     // check who or what to attack
+					for (int i=0; i < MAX_UNITS; i++) {
+						if (unit[i].isValid() && unit[i].iPlayer == HUMAN && unit[i].bSelected)	{
+							int iAttackCell=-1;
 
+							if (game.hover_structure < 0 && game.hover_unit < 0)
+								iAttackCell = mc;
 
-                for (int i=0; i < MAX_UNITS; i++)
-					if (unit[i].isValid())
-						if (unit[i].iPlayer == 0)
-							if (unit[i].bSelected)
-							{
-                                int iAttackCell=-1;
+							UNIT_ORDER_ATTACK(i, mc, game.hover_unit, game.hover_structure, iAttackCell);
 
-                                if (game.hover_structure < 0 && game.hover_unit < 0)
-                                    iAttackCell = mc;
+							if (game.hover_unit > -1)
+								unit[game.hover_unit].TIMER_blink = 5;
 
-								UNIT_ORDER_ATTACK(i, mc, game.hover_unit, game.hover_structure, iAttackCell);
+							if (units[unit[i].iType].infantry)
+								bPlayInf=true;
+							else
+								bPlayRep=true;
 
-								if (game.hover_unit > -1)
-									unit[game.hover_unit].TIMER_blink = 5;
-
-                                if (units[unit[i].iType].infantry)
-                                    bPlayInf=true;
-                                else
-                                    bPlayRep=true;
-
-								bParticle=true;
-							}
-
-
+							bParticle=true;
+						}
+					}
                 }
-
 
                 // AUDITIVE FEEDBACK
-                if (bPlayInf || bPlayRep)
-                {
+                if (bPlayInf || bPlayRep) {
                     if (bPlayInf)
                         play_sound_id(SOUND_MOVINGOUT+rnd(2), -1);
 
@@ -952,52 +938,42 @@ void cGame::combat_mouse()
                         play_sound_id(SOUND_ACKNOWLEDGED+rnd(3), -1);
 
                     bOrderingUnits=true;
-
                 }
 
 			}
 
-			if (bParticle)
-                if (mouse_tile == MOUSE_ATTACK)
+			if (bParticle) {
+                if (mouse_tile == MOUSE_ATTACK) {
                     PARTICLE_CREATE(mouse_x + (map.scroll_x*32), mouse_y + (map.scroll_y*32), ATTACK_INDICATOR, -1, -1);
-                    else
+                } else {
                     PARTICLE_CREATE(mouse_x + (map.scroll_x*32), mouse_y + (map.scroll_y*32), MOVE_INDICATOR, -1, -1);
-
-
+                }
+			}
 		}
 	}
 
-	if (MOUSE_BTN_LEFT() )
-        {
-            // When the mouse is pressed, we will check if the first coordinates are filled in
-              // if so, we will update the second coordinates. If the player holds his mouse we
-              // keep updating the second coordinates and create a 'border' (to select units with)
-              // this way.
+	if (MOUSE_BTN_LEFT()) {
+		// When the mouse is pressed, we will check if the first coordinates are filled in
+		// if so, we will update the second coordinates. If the player holds his mouse we
+		// keep updating the second coordinates and create a 'border' (to select units with)
+		// this way.
 
-			  // keep the mouse pressed ;)
-              if (mouse_co_x1 > -1 && mouse_co_y1 > -1 )
-              {
-				  if (abs(mouse_x-mouse_co_x1) > 4 && abs(mouse_y-mouse_co_y1) > 4)
-				  {
-                      mouse_co_x2 = mouse_x;
-                      mouse_co_y2 = mouse_y;
+		// keep the mouse pressed ;)
+		if (mouse_co_x1 > -1 && mouse_co_y1 > -1 ) {
+			if (abs(mouse_x-mouse_co_x1) > 4 && abs(mouse_y-mouse_co_y1) > 4) {
+			  mouse_co_x2 = mouse_x;
+			  mouse_co_y2 = mouse_y;
 
+			  rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2, makecol(game.fade_select, game.fade_select, game.fade_select));
+			}
 
-                      rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2, makecol(game.fade_select, game.fade_select, game.fade_select));
-				  }
-
-                // Note that we have to fix up the coordinates when checking 'within border'
-                // for units (when X2 < X1 for example!)
-              }
-              else if (mc > -1)
-              {
-                 mouse_co_x1 = mouse_x;
-                 mouse_co_y1 = mouse_y;
-
-              }
-        }
-	else
-	{
+			// Note that we have to fix up the coordinates when checking 'within border'
+			// for units (when X2 < X1 for example!)
+		} else if (mc > -1) {
+			mouse_co_x1 = mouse_x;
+			mouse_co_y1 = mouse_y;
+		}
+	} else {
 		 if (mouse_co_x1 > -1 && mouse_co_y1 > -1 &&
                 mouse_co_x2 != mouse_co_x1 && mouse_co_y2 != mouse_co_y1 &&
                 mouse_co_x2 > -1 && mouse_co_y2 > -1)
@@ -1739,361 +1715,21 @@ void cGame::draw_list() {
 
 }
 
-
-
 // Draw sidebar buttons, to switch lists
 void cGame::draw_sidebarbuttons()
 {
-	if (sidebar) {
+	if (getSideBar()) {
 		cSideBarDrawer drawer;
-		drawer.drawSideBar(sidebar);
+		drawer.drawSideBar(getSideBar());
 	}
 
 	return;
-
-    // clear
-    BITMAP *bmp_trans=create_bitmap(((BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat)->w,((BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat)->h);
-    clear_to_color(bmp_trans, makecol(0,0, 0));
-
-    // set blender
-    set_trans_blender(0,0,0,128);
-
-
-	///////////////////////////////////////////////////////////////////////////////////
-	// Construction Yard
-	///////////////////////////////////////////////////////////////////////////////////
-
-	int iDrawStatus=0;		// 0 = grey, 1 = pressed , anything else = draw nothing (meaning, unpressed, active!)
-	int iDrawY=45;			// DrawX = 513,
-	int iDrawX=513;
-
-		// RULE 2: Do we have the nescesary building?
-		if (player[0].iStructures[CONSTYARD] > 0)
-		{
-			// Do a check what the active list is.
-			if (game.iActiveList == LIST_CONSTYARD)
-				iDrawStatus=1;
-			else
-				iDrawStatus=2; // draw the button, colored, but not pressed
-		}
-
-
-
-	// Draw button:
-	if (iDrawStatus==0)
-    {
-	//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_CONST_GREY].dat, iDrawX, iDrawY);
-                // clear
-        // trans
-        //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
-        fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
-
-    }
-	else if (iDrawStatus == 1)
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_CONST_PRESSED].dat, iDrawX, iDrawY);
-
-	// Mouse interaction
-	if (iDrawStatus > 1) // drawn colored, can be pressed
-	if ((mouse_x >= iDrawX && mouse_x <= (iDrawX+52)) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+37))	)
-		if (MOUSE_BTN_LEFT() && bPlaceIt==false)
-        {
-			game.iActiveList = LIST_CONSTYARD;
-            play_sound_id(SOUND_BUTTON,-1);
-        }
-
-
-	///////////////////////////////////////////////////////////////////////////////////
-	// Infantry
-	///////////////////////////////////////////////////////////////////////////////////
-
-	// Next button:
-	iDrawY += 40;
-	iDrawStatus=0;
-
-		// RULE 2: Do we have the nescesary building?
-		if (player[0].iStructures[BARRACKS] > 0 ||
-			player[0].iStructures[WOR] > 0)
-		{
-			// Do a check what the active list is.
-			if (game.iActiveList == LIST_INFANTRY)
-				iDrawStatus=1;
-			else
-				iDrawStatus=2; // draw the button, colored, but not pressed
-		}
-
-	// Exception here for houses, harkonnen draws troopers...
-	// Atreides and Ordos have simple infantry.
-
-	if (player[0].house == ATREIDES || player[0].house == ORDOS)
-	{
-
-	// Draw button:
-	if (iDrawStatus==0)
-    {
-        // clear
-        // trans
-        //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
-        fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
-
-		//draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_INFANTRY_GREY].dat, iDrawX, iDrawY);
-    }
-	else if (iDrawStatus == 1)
-        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat, iDrawX, iDrawY);
-
-	}
-	else
-	{
-
-			// Draw button:
-		if (iDrawStatus==0)
-		{
-			draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_TROOPER].dat, iDrawX, iDrawY);
-
-			// trans
-			//draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
-			fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
-
-			//draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_TROOPER_GREY].dat, iDrawX, iDrawY);
-		}
-		else if (iDrawStatus == 1)
-			draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_TROOPER_PRESSED].dat, iDrawX, iDrawY);
-		else
-			draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_TROOPER].dat, iDrawX, iDrawY);
-
-	}
-
-	// Mouse interaction
-	if (iDrawStatus > 1) // drawn colored, can be pressed
-	if ((mouse_x >= iDrawX && mouse_x <= (iDrawX+52)) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+37))	)
-		if (MOUSE_BTN_LEFT()&& bPlaceIt==false)
-        {
-			game.iActiveList = LIST_INFANTRY;
-            play_sound_id(SOUND_BUTTON,-1);
-
-        }
-
-
-	///////////////////////////////////////////////////////////////////////////////////
-	// Light Factory
-	///////////////////////////////////////////////////////////////////////////////////
-
-	// Next button:
-	iDrawY += 40;
-	iDrawStatus=0;
-
-		// RULE 2: Do we have the nescesary building?
-		if (player[0].iStructures[LIGHTFACTORY] > 0)
-		{
-			// Do a check what the active list is.
-			if (game.iActiveList == LIST_LIGHTFC)
-				iDrawStatus=1;
-			else
-				iDrawStatus=2; // draw the button, colored, but not pressed
-		}
-
-	// Draw button:
-	if (iDrawStatus==0)
-    {
-	//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_LIGHTFC_GREY].dat, iDrawX, iDrawY);
-        // clear
-        // trans
-        //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
-        fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
-
-
-    }
-	else if (iDrawStatus == 1)
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_LIGHTFC_PRESSED].dat, iDrawX, iDrawY);
-
-	// Mouse interaction
-	if (iDrawStatus > 1) // drawn colored, can be pressed
-	if ((mouse_x >= iDrawX && mouse_x <= (iDrawX+52)) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+37))	)
-		if (MOUSE_BTN_LEFT()&& bPlaceIt==false)
-        {
-			game.iActiveList = LIST_LIGHTFC;
-            play_sound_id(SOUND_BUTTON,-1);
-
-        }
-
-	///////////////////////////////////////////////////////////////////////////////////
-	// Heavy Factory
-	///////////////////////////////////////////////////////////////////////////////////
-
-	// Next button:
-	iDrawY += 40;
-	iDrawStatus=0;
-
-		// RULE 2: Do we have the nescesary building?
-		if (player[0].iStructures[HEAVYFACTORY] > 0)
-		{
-			// Do a check what the active list is.
-			if (game.iActiveList == LIST_HEAVYFC)
-				iDrawStatus=1;
-			else
-				iDrawStatus=2; // draw the button, colored, but not pressed
-		}
-
-	// Draw button:
-	if (iDrawStatus==0)
-    {
-	//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_HEAVYFC_GREY].dat, iDrawX, iDrawY);\
-        // clear
-        // trans
-        //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
-        fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
-
-
-    }
-	else if (iDrawStatus == 1)
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_HEAVYFC_PRESSED].dat, iDrawX, iDrawY);
-
-	// Mouse interaction
-	if (iDrawStatus > 1) // drawn colored, can be pressed
-	if ((mouse_x >= iDrawX && mouse_x <= (iDrawX+52)) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+37))	)
-		if (MOUSE_BTN_LEFT()&& bPlaceIt==false)
-        {
-			game.iActiveList = LIST_HEAVYFC;
-            play_sound_id(SOUND_BUTTON,-1);
-        }
-
-	///////////////////////////////////////////////////////////////////////////////////
-	// Ornithopter / Aircraft
-	///////////////////////////////////////////////////////////////////////////////////
-
-	// Next button:
-	iDrawY += 40;
-	iDrawStatus=0;
-
-		// RULE 2: Do we have the nescesary building?
-		if (player[0].iStructures[HIGHTECH] > 0)
-		{
-			// Do a check what the active list is.
-			if (game.iActiveList == LIST_ORNI)
-				iDrawStatus=1;
-			else
-				iDrawStatus=2; // draw the button, colored, but not pressed
-		}
-
-	// Draw button:
-	if (iDrawStatus==0)
-    {
-	//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_ORNI_GREY].dat, iDrawX, iDrawY);
-        // clear
-
-        // trans
-        //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
-        fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
-
-    }
-	else if (iDrawStatus == 1)
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_ORNI_PRESSED].dat, iDrawX, iDrawY);
-
-	// Mouse interaction
-	if (iDrawStatus > 1) // drawn colored, can be pressed
-	if ((mouse_x >= iDrawX && mouse_x <= (iDrawX+52)) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+37))	)
-		if (MOUSE_BTN_LEFT()&& bPlaceIt==false)
-        {
-			game.iActiveList = LIST_ORNI;
-            play_sound_id(SOUND_BUTTON,-1);
-
-        }
-
-	///////////////////////////////////////////////////////////////////////////////////
-	// Starport
-	///////////////////////////////////////////////////////////////////////////////////
-
-	// Next button:
-	iDrawY += 40;
-	iDrawStatus=0;
-
-		// RULE 2: Do we have the nescesary building?
-		if (player[0].iStructures[STARPORT] > 0)
-		{
-			// Do a check what the active list is.
-			if (game.iActiveList == LIST_STARPORT)
-				iDrawStatus=1;
-			else
-				iDrawStatus=2; // draw the button, colored, but not pressed
-		}
-
-	// Draw button:
-	if (iDrawStatus==0)
-    {
-		//draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_STARPORT_GREY].dat, iDrawX, iDrawY);
-        // clear
-        // trans
-        //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
-        fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
-
-
-    }
-	else if (iDrawStatus == 1)
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_STARPORT_PRESSED].dat, iDrawX, iDrawY);
-
-	// Mouse interaction
-	if (iDrawStatus > 1) // drawn colored, can be pressed
-	if ((mouse_x >= iDrawX && mouse_x <= (iDrawX+52)) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+37))	)
-		if (MOUSE_BTN_LEFT()&& bPlaceIt==false)
-        {
-			game.iActiveList = LIST_STARPORT;
-            play_sound_id(SOUND_BUTTON,-1);
-
-        }
-
-
-	///////////////////////////////////////////////////////////////////////////////////
-	// Palace
-	///////////////////////////////////////////////////////////////////////////////////
-
-	// Next button:
-	iDrawY += 40;
-	iDrawStatus=0;
-
-		// RULE 2: Do we have the nescesary building?
-		if (player[0].iStructures[PALACE] > 0)
-		{
-			// Do a check what the active list is.
-			if (game.iActiveList == LIST_PALACE)
-				iDrawStatus=1;
-			else
-				iDrawStatus=2; // draw the button, colored, but not pressed
-		}
-
-	// Draw button:
-	if (iDrawStatus==0)
-    {
-	//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_PALACE_GREY].dat, iDrawX, iDrawY);
-
-        // trans
-        //draw_trans_sprite(bmp_screen, bmp_trans, iDrawX, iDrawY);
-        fblend_trans(bmp_trans, bmp_screen, iDrawX, iDrawY, 128);
-
-
-    }
-	else if (iDrawStatus == 1)
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_PALACE_PRESSED].dat, iDrawX, iDrawY);
-
-	// Mouse interaction
-	if (iDrawStatus > 1) // drawn colored, can be pressed
-	if ((mouse_x >= iDrawX && mouse_x <= (iDrawX+52)) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+37))	)
-		if (MOUSE_BTN_LEFT()&& bPlaceIt==false)
-        {
-			game.iActiveList = LIST_PALACE;
-            play_sound_id(SOUND_BUTTON,-1);
-
-        }
-
-
-        // destroy - phew
-        destroy_bitmap(bmp_trans);
-
-
 }
 
 void cGame::draw_placeit()
 {
 	// this is only done when bPlaceIt=true
-	if (sidebar == NULL) return;
+	if (getSideBar() == NULL) return;
 
 	int iMouseCell = map.mouse_cell();
 
@@ -2101,7 +1737,7 @@ void cGame::draw_placeit()
 		return;
 	}
 
-	cBuildingListItem *itemToPlace = sidebar->getList(LIST_CONSTYARD)->getItemToPlace();
+	cBuildingListItem *itemToPlace = getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
 	int iStructureID = itemToPlace->getBuildId();
 	int iWidth = structures[iStructureID].bmp_width/32;
 	int iHeight = structures[iStructureID].bmp_height/32;
@@ -2374,10 +2010,9 @@ void cGame::gerald()
 	draw_sidebarbuttons();
 
 	// sidebar think about reaction on fps basis here:
-	if (sidebar) {
-		sidebar->thinkInteraction();
+	if (getSideBar()) {
+		getSideBar()->thinkInteraction();
 	}
-
 
 	draw_list();
 
@@ -3698,8 +3333,9 @@ void cGame::setup_skirmish()
 		state = GAME_PLAYING;
 
 		// construct sidebar
-		if (sidebar != NULL) {
+		if (getSideBar() != NULL) {
 			delete sidebar;
+			sidebar = NULL;
 		}
 
 		sidebar = cSideBarFactory::getInstance()->createSideBar(game.iMission, iHouse);
@@ -3849,7 +3485,7 @@ void cGame::preparementat(bool bTellHouse)
         {
 			INI_Load_scenario(iHouse, iRegion);
 			INI_LOAD_BRIEFING(iHouse, iRegion, INI_BRIEFING);
-			if (sidebar != NULL) {
+			if (getSideBar()) {
 				delete sidebar;
 			}
 			sidebar = cSideBarFactory::getInstance()->createSideBar(game.iMission, iHouse);

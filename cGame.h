@@ -34,8 +34,6 @@ public:
 
 	std::string game_filename;
 
-	cSideBar * sidebar;
-
 	bool windowed;				// windowed
 	char version[15];			// version number, or name.
 
@@ -200,6 +198,7 @@ public:
 	void setState(int thisState);
 
 	CreditsDrawer *getCreditsDrawer() { return creditsDrawer; }
+	cSideBar *getSideBar() { return sidebar; }
 
 	int getMaxVolume() { return iMaxVolume; }
 
@@ -247,6 +246,7 @@ private:
 	int  list_new_id(int iListID);		// find new entry in this list
 
 	CreditsDrawer *creditsDrawer;
+	cSideBar * sidebar;
 
 	int iMaxVolume;
 };

@@ -115,8 +115,8 @@ void cTimeManager::handleTimerGlobal() {
 			game.getCreditsDrawer()->think();
 		}
 
-		if (game.sidebar) {
-			game.sidebar->think();
+		if (game.getSideBar()) {
+			game.getSideBar()->think();
 		}
 
 		// THINKING ONLY WHEN PLAYING / COMBAT
