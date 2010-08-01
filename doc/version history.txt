@@ -36,6 +36,12 @@ Features:
   - C&C like controls
   - "point and click" gameplay
   - easy to use interface
+* Shortkeys
+  - hold R (and click accordingly) to repair units and structures
+  - press B to rebuild last built item in selected list
+  - Unit selected: hold CTRL to force attack 
+  - Structure selected: hold CTRL to set rally point
+  	- can be used on anything that has to do with units (repair facility, etc)
 * Double sized and enhanced dune 2 graphics:
   - sharp units/structures
   - real-shadows blending for units
@@ -43,6 +49,7 @@ Features:
   - enhanced shroud
   - drawn graphics resemble size of original dune 2 (so it looks 'big' , yes, but better)  
 * Able to load any dune 2 scenario file
+  - Replay the original Dune 2 campaign
   - spice blooms
   - spice fields (determined in scenario file)
   - structures
@@ -69,8 +76,6 @@ run the program.
 There are good experiences running this game within Wine on Linux. Those who
 do not use Windows, but still want to try out the game, you could give Wine
 a shot.
-
-
 
 ==================================
 BALACING NOTES / UNIT DESCRIPTIONS
@@ -233,19 +238,23 @@ TO-DO LIST
 * Eventually clean up code (source code is available at google code)
 
 New features:
-* Skirmish
-* Multiplayer (<- will be tough, i cannot code networking stuff)
+* Skirmish (<- working on this)
+* Multiplayer
 * Options
 
 ==========
 CHANGELOG:
 ==========
+A lot has changed 'under the hood'. This means that on the surface, you will not notice
+the hard work put into this release. Expectation is that next releases will get more new
+features and less fixes (atleast, that is the way you want to go :)).
+
 FIXED:
 - Instantly upgrade complete bug fixed.
 - Sandorm able to squish infantry when going under infantry.
 - It is no longer possible to select airborn units with box-selecting.
 - animation fixes for structures (WOR/Barracks stopped animating after building unit)
-- animaiton fix for outpost
+- animation fix for outpost
 - box selecting problem (needed to cover entire unit). Now only the center is required to select a unit.
 
 GAME BALANCING:
@@ -255,7 +264,7 @@ GAME BALANCING:
 NEW:
 - Dune 2 Seed map generator. Thanks to jpexs for completing the generator and making this possible!
 - "game" switch to load own ini file (ie, use d2tm.exe -game myinifile.ini)
-- 6 new skirmish maps
+- 8 new skirmish maps
 
 CHANGED:
 - skirmish maps do not need to be MAP##.ini anymore, they can be named anything
