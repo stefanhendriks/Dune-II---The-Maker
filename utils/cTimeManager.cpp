@@ -135,6 +135,13 @@ void cTimeManager::handleTimerGlobal() {
 					aiplayer[i].think();
 				}
 
+				for (int i = 0; i < MAX_PLAYERS; i++) {
+					cItemBuilder *itemBuilder = player[i].getItemBuilder();
+					if (itemBuilder) {
+						itemBuilder->think();
+					}
+				}
+
 				game.TIMER_scroll++;
 
 				if (game.TIMER_scroll > game.iScrollSpeed) {
@@ -142,7 +149,6 @@ void cTimeManager::handleTimerGlobal() {
 					game.TIMER_scroll=0;
 				}
 
-				cItemBuilder::getInstance()->think();
 				// TODO: upgrades
 				game.TIMER_money++;
 
@@ -150,8 +156,9 @@ void cTimeManager::handleTimerGlobal() {
 					game.TIMER_money=0;
 				}
 
-				if (game.TIMER_shake > 0) game.TIMER_shake--;
-
+				if (game.TIMER_shake > 0) {
+					game.TIMER_shake--;
+				}
 
 				// units think (move only)
 				for (int i=0; i < MAX_UNITS; i++) {

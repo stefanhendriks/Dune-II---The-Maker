@@ -141,8 +141,7 @@ void cGame::init() {
 
 	init_lists();
 
-	for (int i=0; i < MAX_PLAYERS; i++)
-    {
+	for (int i=0; i < MAX_PLAYERS; i++) {
 		player[i].init();
         aiplayer[i].init(i);
     }
@@ -1949,7 +1948,7 @@ void cGame::draw_placeit()
 				itemToPlace->setIsBuilding(false);
 				itemToPlace->setProgress(0);
 				if (itemToPlace->getTimesToBuild() < 1) {
-					cItemBuilder::getInstance()->removeItemFromList(itemToPlace);
+					player[HUMAN].getItemBuilder()->removeItemFromList(itemToPlace);
 				}
 			}
 		}
@@ -3330,7 +3329,7 @@ void cGame::setup_skirmish()
 		}
 
 		// TODO: spawn a few worms
-		iHouse=player[0].house;
+		iHouse=player[HUMAN].house;
 		iMission=9; // high tech level
 		state = GAME_PLAYING;
 
@@ -3339,6 +3338,10 @@ void cGame::setup_skirmish()
 			delete sidebar;
 			sidebar = NULL;
 		}
+
+		game.setup_players();
+
+		assert(player[HUMAN].getItemBuilder() != NULL);
 
 		sidebar = cSideBarFactory::getInstance()->createSideBar(game.iMission, iHouse);
 
@@ -4834,6 +4837,7 @@ bool cGame::setupGame() {
 	INSTALL_WORLD();
 
 	game.init();
+	game.setup_players();
 	game.setup_list();
 
 	play_music(MUSIC_MENU);
@@ -4841,6 +4845,18 @@ bool cGame::setupGame() {
 	// all has installed well. Lets rock and role.
 	return true;
 
+}
+
+/**
+ * Set up players
+ */
+void cGame::setup_players() {
+	// make sure each player has an own item builder
+	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
+		cPlayer * thePlayer = &player[i];
+		cItemBuilder * itemBuilder = new cItemBuilder(thePlayer);
+		thePlayer->setItemBuilder(itemBuilder);
+	}
 }
 
 bool cGame::isState(int thisState) {

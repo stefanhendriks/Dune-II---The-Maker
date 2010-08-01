@@ -15,9 +15,10 @@
 class cPlayer {
 
 	public:
+		cPlayer();
+		~cPlayer();
 
 		PALETTE pal;		// each player has its own 256 color scheme (used for coloring units)
-
 
 		void set_house(int iHouse);
 		void init();
@@ -42,13 +43,19 @@ class cPlayer {
 		int TIMER_think;        // timer for thinking itself (calling main routine)
 		int TIMER_attack;       // -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 
-		cPlayerDifficultySettings *getDifficultySettings() { return difficultySettings; }
-
 		int upgradeLevel[LIST_MAX];
+
+		// set
+		void setItemBuilder(cItemBuilder *theItemBuilder);
+
+		// get
+		cPlayerDifficultySettings *getDifficultySettings() { return difficultySettings; }
+		cItemBuilder *getItemBuilder() { return itemBuilder; }
 
 	private:
 		cPlayerDifficultySettings *difficultySettings;
 
+		cItemBuilder * itemBuilder; // each player can build items
 };
 
 #endif

@@ -162,6 +162,7 @@ public:
 	void list_insert_item(int iListID, int iIcon, int iPrice, int iStructureID, int iUnitID, int iPosition);
 	void list_new_item(int iListID, int iIcon, int iPrice, int iStructureID, int iUnitID);
 
+	void setup_players();
 	void setup_list();		// set up all lists at the beginning of any mission (depening on tech level, house, etc)
 	void think_message();
 	void set_message(char msg[255]); // new message

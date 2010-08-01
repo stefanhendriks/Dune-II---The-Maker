@@ -12,6 +12,27 @@
 
 #include "..\d2tmh.h"
 
+cPlayer::cPlayer() {
+	itemBuilder = NULL;
+}
+
+cPlayer::~cPlayer() {
+	if (itemBuilder) {
+		delete itemBuilder;
+	}
+}
+
+void cPlayer::setItemBuilder(cItemBuilder *theItemBuilder) {
+	assert(theItemBuilder);
+
+	// delete old reference
+	if (itemBuilder) {
+		delete itemBuilder;
+	}
+
+	itemBuilder = theItemBuilder;
+}
+
 void cPlayer::init()
 {
 	memcpy(pal, general_palette, sizeof(pal));

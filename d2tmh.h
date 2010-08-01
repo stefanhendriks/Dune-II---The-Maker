@@ -109,6 +109,9 @@ class CreditsDrawer;
 // SIDEBAR
 #include "sidebar\sidebarh.h"
 
+// BUILDING LOGIC
+#include "cItemBuilder.h"
+
 // Player related
 #include "player\playerh.h"
 
@@ -117,9 +120,6 @@ class CreditsDrawer;
 
 // UPGRADE LOGIC
 #include "upgrade\cBuildingListUpgrader.h"
-
-// BUILDING LOGIC
-#include "cItemBuilder.h"
 
 // GAME
 #include "cGame.h"

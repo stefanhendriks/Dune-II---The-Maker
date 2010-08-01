@@ -24,7 +24,7 @@ cSideBarFactory *cSideBarFactory::getInstance() {
 cSideBar * cSideBarFactory::createSideBar(int techlevel, int house) {
 	cLogger *logger = cLogger::getInstance();
 	logger->logCommentLine("createSideBar");
-	cSideBar *sidebar = new cSideBar();
+	cSideBar *sidebar = new cSideBar(&player[HUMAN]);
 
 	// lists are already constructed with default constructor. Now initialize
 	// them according to the techLevel.

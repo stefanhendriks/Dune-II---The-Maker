@@ -7,23 +7,16 @@
 
 #include "d2tmh.h"
 
-cItemBuilder::cItemBuilder() {
+cItemBuilder::cItemBuilder(cPlayer * thePlayer) {
+	assert(thePlayer);
 	removeAllItems();
 	memset(timers, 0, sizeof(timers));
+	player = thePlayer;
 }
 
 cItemBuilder::~cItemBuilder() {
 }
 
-cItemBuilder *cItemBuilder::instance = NULL;
-
-cItemBuilder *cItemBuilder::getInstance() {
-	if (instance == NULL) {
-		instance = new cItemBuilder();
-	}
-
-	return instance;
-}
 int cItemBuilder::getTimerCap(cBuildingList *list, cBuildingListItem *item) {
 	int iTimerCap = 35; // was 35 = ORIGINAL
 
@@ -32,7 +25,7 @@ int cItemBuilder::getTimerCap(cBuildingList *list, cBuildingListItem *item) {
 	}
 
 	// when player has low power, produce twice as slow
-	if (player[0].bEnoughPower() == false) {
+	if (player->bEnoughPower() == false) {
 		iTimerCap *= 3; // make painful
 	} else {
 		if (list->getType() != LIST_CONSTYARD) {
@@ -40,7 +33,7 @@ int cItemBuilder::getTimerCap(cBuildingList *list, cBuildingListItem *item) {
 			// is within the units properties.
 			int structureTypeItLeavesFrom = units[item->getBuildId()].structureTypeItLeavesFrom;
 			if (structureTypeItLeavesFrom > -1) {
-				iTimerCap /= (1+(player[0].iStructures[structureTypeItLeavesFrom]/2));
+				iTimerCap /= (1+(player->iStructures[structureTypeItLeavesFrom]/2));
 			}
 		}
 	}

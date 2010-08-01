@@ -14,6 +14,9 @@
 #ifndef CSIDEBAR_H_
 #define CSIDEBAR_H_
 
+// forward declaration
+class cPlayer;
+
 // List ID's corresponding buttons
 #define LIST_NONE		0
 #define LIST_CONSTYARD	1
@@ -37,7 +40,7 @@
 class cSideBar {
 
 	public:
-		cSideBar();
+		cSideBar(cPlayer *thePlayer);
 		~cSideBar();
 
 		cBuildingList * getList(int listId) { return lists[listId]; }
@@ -48,9 +51,15 @@ class cSideBar {
 
 		void think();	// timer based
 		void thinkInteraction(); // fps based
+
+		// set
+		void setPlayer(cPlayer *thePlayer) { player = thePlayer; }
+
 	private:
 		// the lists:
 		cBuildingList * lists[LIST_MAX];
+		cPlayer * player;
+
 		int selectedListID;
 
 		// methods

@@ -7,9 +7,11 @@
 
 #include "..\d2tmh.h"
 
-cSideBar::cSideBar() {
+cSideBar::cSideBar(cPlayer * thePlayer) {
+	assert(thePlayer);
 	selectedListID = -1; // nothing is selected
 	memset(lists, NULL, sizeof(lists));
+	player = thePlayer;
 }
 
 cSideBar::~cSideBar() {
@@ -44,7 +46,7 @@ void cSideBar::think() {
  * Think about the availability of lists.
  */
 void cSideBar::thinkAvailabilityLists() {
-	if (player[HUMAN].iStructures[CONSTYARD] > 0) {
+	if (player->iStructures[CONSTYARD] > 0) {
 		getList(LIST_CONSTYARD)->setAvailable(true);
 	} else {
 		getList(LIST_CONSTYARD)->setAvailable(false);
@@ -111,8 +113,9 @@ void cSideBar::thinkInteraction() {
 
 				if (item != NULL) {
 					if (item->shouldPlaceIt() == false) {
-						cItemBuilder *builder = cItemBuilder::getInstance();
-						builder->addItemToList(item);
+						cItemBuilder *itemBuilder = player->getItemBuilder();
+						assert(itemBuilder);
+						itemBuilder->addItemToList(item);
 						list->setLastClickedId(item->getSlotId());
 					} else {
 						game.bPlaceIt = true;
@@ -142,7 +145,9 @@ void cSideBar::thinkInteraction() {
 							}
 							item->setIsBuilding(false);
 							item->setProgress(0);
-							cItemBuilder::getInstance()->removeItemFromList(item);
+							cItemBuilder *itemBuilder = player->getItemBuilder();
+							assert(itemBuilder);
+							itemBuilder->removeItemFromList(item);
 						}
 						// else, only the number is decreased (used for queueing)
 					}
