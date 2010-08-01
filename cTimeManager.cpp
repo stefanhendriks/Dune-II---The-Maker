@@ -230,7 +230,6 @@ void cTimeManager::handleTimerUnits() {
 	{
 		if (game.isState(GAME_PLAYING))
 		{
-
 			// units think
 			for (int i=0; i < MAX_UNITS; i++)
 				if (unit[i].isValid())
@@ -253,8 +252,8 @@ void cTimeManager::handleTimerUnits() {
 	This function is called by the game class in the run() function.
 
 	It is important that this function is called first, as it will make sure
-	the situation is set as it should be (since time passed between the first
-	and the next frame), therefor any think() function is relying on the data
+	the situation is set as it should be (since time passed between the previous
+	and the current frame), therefore any think() function is relying on the data
 	that eventually is set by this function.
 */
 void cTimeManager::processTime() {
@@ -275,7 +274,6 @@ void cTimeManager::processTime() {
 void cTimeManager::increaseTimerForFPS() {
 	timerSecond++;
 }
-
 
 void cTimeManager::increaseTimerForUnits() {
 	timerUnits++;
