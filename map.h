@@ -78,6 +78,8 @@ public:
 
 	void set_pos(int x, int y, int cell);
 
+	int getColorForTerrainType(int type);
+
 	// Scrolling
     int scroll_x, scroll_y;            // scrolling (per tile)
 

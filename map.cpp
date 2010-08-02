@@ -478,6 +478,32 @@ void cMap::draw_shroud()
     destroy_bitmap(temp);
 }
 
+int cMap::getColorForTerrainType(int type) {
+
+	switch (type) {
+		case TERRAIN_ROCK:
+			return makecol(80,80,60);
+		case TERRAIN_SPICE:
+			return makecol(186,93,32);
+		case TERRAIN_SPICEHILL:
+			return makecol(180,90,25);
+		case TERRAIN_HILL:
+			return makecol(188, 115, 50);
+		case TERRAIN_MOUNTAIN:
+			return makecol(48, 48, 36);
+		case TERRAIN_SAND:
+			return makecol(194, 125, 60);
+		case TERRAIN_WALL:
+			return makecol(192, 192, 192);
+		case TERRAIN_SLAB:
+			return makecol(80,80,80);
+		case TERRAIN_BLOOM:
+			return makecol(214,145,100);
+		default:
+			return makecol(255, 0, 255);
+	}
+}
+
 void cMap::draw_minimap()
 {
 	int iCll=0;
@@ -499,98 +525,71 @@ void cMap::draw_minimap()
 		if (iVisible[iCll][0])
 		{
             if (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower()) {
-			// change color
-			if (cell[iCll].type == TERRAIN_ROCK)
-				iColor = makecol(80,80,60);
+				// change color
+				iColor = getColorForTerrainType(cell[iCll].type);
 
-			if (cell[iCll].type == TERRAIN_SPICE)
-				iColor = makecol(186,93,32);
+				if (cell[iCll].id[MAPID_STRUCTURES] > -1)
+				{
 
-			if (cell[iCll].type == TERRAIN_SPICEHILL)
-				iColor = makecol(180,90,25); // bit darker
+					int iPlr=structure[cell[iCll].id[MAPID_STRUCTURES]]->getOwner();
+					// get house color from the player of this structure
+					if (iPlr ==0 || (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower())) {
+						if (player[iPlr].getHouse() == ATREIDES) {
+							iColor = makecol(0,0,255);
+						}
+						if (player[iPlr].getHouse() == HARKONNEN) {
+							iColor = makecol(255,0,0);
+						}
+						if (player[iPlr].getHouse() == ORDOS) {
+							iColor = makecol(0,255,0);
+						}
+						if (player[iPlr].getHouse() == SARDAUKAR) {
+							iColor = makecol(255,0,255);
+						}
+					}
+				}
 
-			if (cell[iCll].type == TERRAIN_HILL)
-				iColor = makecol(188, 115, 50);
+				if (cell[iCll].id[MAPID_UNITS] > -1)
+				{
+					int iPlr=unit[cell[iCll].id[MAPID_UNITS]].iPlayer;
+					// get house color from the player of this structure
+					if (iPlr == 0 || (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower())) {
+						if (player[iPlr].getHouse() == ATREIDES) {
+							iColor = makecol(0,0,255);
+						}
+						if (player[iPlr].getHouse() == HARKONNEN) {
+							iColor = makecol(255,0,0);
+						}
+						if (player[iPlr].getHouse() == ORDOS) {
+							iColor = makecol(0,255,0);
+						}
+						if (player[iPlr].getHouse() == SARDAUKAR) {
+							iColor = makecol(255,0,255);
+						}
+					}
+				}
 
-			if (cell[iCll].type == TERRAIN_MOUNTAIN)
-				 iColor = makecol(48, 48, 36);
+				if (cell[iCll].id[MAPID_AIR] > -1)
+				{
+					int iPlr=unit[cell[iCll].id[MAPID_AIR]].iPlayer;
+					int type=unit[cell[iCll].id[MAPID_AIR]].iType;
+					// only show own aircraft
+					if (iPlr == 0) {
+						if (type == CARRYALL) {
+							iColor = makecol(128,128,128);
+						} else if (type == ORNITHOPTER) {
+							// brighter for orni's
+							iColor = makecol(196,196,196);
+						} else {
+							iColor = makecol(255,255,255);
+						}
+					}
+				}
 
-			if (cell[iCll].type == TERRAIN_SAND)
-				iColor = makecol(194, 125, 60);
-
-			if (cell[iCll].type == TERRAIN_WALL)
-				iColor = makecol(192, 192, 192);
-
-			if (cell[iCll].type == TERRAIN_SLAB)
-				iColor = makecol(80,80,80);
-
-			if (cell[iCll].type == TERRAIN_BLOOM)
-				iColor = makecol(214,145,100);
-
+				if (cell[iCll].id[MAPID_WORMS] > -1) {
+					iColor = makecol(game.fade_select,game.fade_select,game.fade_select);
+				}
             }
-
-            if (cell[iCll].id[MAPID_STRUCTURES] > -1)
-			{
-
-				int iPlr=structure[cell[iCll].id[MAPID_STRUCTURES]]->getOwner();
-				// get house color from the player of this structure
-                if (iPlr ==0 || (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower())) {
-					if (player[iPlr].getHouse() == ATREIDES) {
-						iColor = makecol(0,0,255);
-					}
-					if (player[iPlr].getHouse() == HARKONNEN) {
-						iColor = makecol(255,0,0);
-					}
-					if (player[iPlr].getHouse() == ORDOS) {
-						iColor = makecol(0,255,0);
-					}
-					if (player[iPlr].getHouse() == SARDAUKAR) {
-						iColor = makecol(255,0,255);
-					}
-                }
-			}
-
-			if (cell[iCll].id[MAPID_UNITS] > -1)
-			{
-				int iPlr=unit[cell[iCll].id[MAPID_UNITS]].iPlayer;
-				// get house color from the player of this structure
-                if (iPlr == 0 || (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower())) {
-					if (player[iPlr].getHouse() == ATREIDES) {
-						iColor = makecol(0,0,255);
-					}
-					if (player[iPlr].getHouse() == HARKONNEN) {
-						iColor = makecol(255,0,0);
-					}
-					if (player[iPlr].getHouse() == ORDOS) {
-						iColor = makecol(0,255,0);
-					}
-					if (player[iPlr].getHouse() == SARDAUKAR) {
-						iColor = makecol(255,0,255);
-					}
-                }
-			}
-
-			if (cell[iCll].id[MAPID_AIR] > -1)
-			{
-				int iPlr=unit[cell[iCll].id[MAPID_AIR]].iPlayer;
-				int type=unit[cell[iCll].id[MAPID_AIR]].iType;
-				// only show own aircraft
-                if (iPlr == 0) {
-					if (type == CARRYALL) {
-						iColor = makecol(128,128,128);
-					} else if (type == ORNITHOPTER) {
-						// brighter for orni's
-						iColor = makecol(196,196,196);
-					} else {
-						iColor = makecol(255,255,255);
-					}
-                }
-			}
-
-
-            if (cell[iCll].id[MAPID_WORMS] > -1) {
-				iColor = makecol(game.fade_select,game.fade_select,game.fade_select);
-			}
 		}
 
 		// do not show the helper border
