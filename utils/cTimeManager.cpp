@@ -115,8 +115,10 @@ void cTimeManager::handleTimerGlobal() {
 			game.getCreditsDrawer()->think();
 		}
 
-		if (game.getSideBar()) {
-			game.getSideBar()->think();
+		for (int i = HUMAN; i < MAX_PLAYERS; i++) {
+			if (player[i].getSideBar()) {
+				player[i].getSideBar()->think();
+			}
 		}
 
 		// THINKING ONLY WHEN PLAYING / COMBAT

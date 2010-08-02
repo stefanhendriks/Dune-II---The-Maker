@@ -19,8 +19,7 @@ protected:
 public:
 	static cSideBarFactory *getInstance();
 
-	cSideBar *createSideBar(int techlevel, int house);
-
+	cSideBar *createSideBar(cPlayer * player, int techlevel, int house);
 
 private:
 

@@ -20,7 +20,6 @@
 
 cGame::cGame() {
 	creditsDrawer = NULL;
-	sidebar = NULL;
 }
 
 
@@ -1717,9 +1716,9 @@ void cGame::draw_list() {
 // Draw sidebar buttons, to switch lists
 void cGame::draw_sidebarbuttons()
 {
-	if (getSideBar()) {
+	if (player[HUMAN].getSideBar()) {
 		cSideBarDrawer drawer;
-		drawer.drawSideBar(getSideBar());
+		drawer.drawSideBar(player[HUMAN].getSideBar());
 	}
 
 	return;
@@ -1728,7 +1727,7 @@ void cGame::draw_sidebarbuttons()
 void cGame::draw_placeit()
 {
 	// this is only done when bPlaceIt=true
-	if (getSideBar() == NULL) {
+	if (player[HUMAN].getSideBar() == NULL) {
 		return;
 	}
 
@@ -1738,7 +1737,7 @@ void cGame::draw_placeit()
 		return;
 	}
 
-	cBuildingListItem *itemToPlace = getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
+	cBuildingListItem *itemToPlace = player[HUMAN].getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
 	int iStructureID = itemToPlace->getBuildId();
 	int iWidth = structures[iStructureID].bmp_width/32;
 	int iHeight = structures[iStructureID].bmp_height/32;
@@ -2011,8 +2010,9 @@ void cGame::gerald()
 	draw_sidebarbuttons();
 
 	// sidebar think about reaction on fps basis here:
-	if (getSideBar()) {
-		getSideBar()->thinkInteraction();
+	assert(player[HUMAN].getSideBar());
+	if (player[HUMAN].getSideBar()) {
+		player[HUMAN].getSideBar()->thinkInteraction();
 	}
 
 	draw_list();
@@ -3330,20 +3330,11 @@ void cGame::setup_skirmish()
 
 		// TODO: spawn a few worms
 		iHouse=player[HUMAN].house;
-		iMission=9; // high tech level
+		iMission=9; // high tech level (TODO: make this customizable)
 		state = GAME_PLAYING;
 
-		// construct sidebar
-		if (getSideBar() != NULL) {
-			delete sidebar;
-			sidebar = NULL;
-		}
-
 		game.setup_players();
-
 		assert(player[HUMAN].getItemBuilder() != NULL);
-
-		sidebar = cSideBarFactory::getInstance()->createSideBar(game.iMission, iHouse);
 
 		bFadeOut=true;
 		setup_list();
@@ -3488,12 +3479,9 @@ void cGame::preparementat(bool bTellHouse)
 	{
         if (state == GAME_BRIEFING)
         {
+        	game.setup_players();
 			INI_Load_scenario(iHouse, iRegion);
 			INI_LOAD_BRIEFING(iHouse, iRegion, INI_BRIEFING);
-			if (getSideBar()) {
-				delete sidebar;
-			}
-			sidebar = cSideBarFactory::getInstance()->createSideBar(game.iMission, iHouse);
         }
         else if (state == GAME_WINBRIEF)
         {
@@ -4856,6 +4844,12 @@ void cGame::setup_players() {
 		cPlayer * thePlayer = &player[i];
 		cItemBuilder * itemBuilder = new cItemBuilder(thePlayer);
 		thePlayer->setItemBuilder(itemBuilder);
+	}
+
+	// delete 'old' sidebars, and create new ones
+	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
+		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(&player[i], game.iMission, iHouse);
+		player[i].setSideBar(sidebar);
 	}
 }
 

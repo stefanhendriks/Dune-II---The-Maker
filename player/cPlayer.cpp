@@ -22,6 +22,17 @@ cPlayer::~cPlayer() {
 	}
 }
 
+void cPlayer::setSideBar(cSideBar *theSideBar) {
+	assert(theSideBar);
+
+	// delete old reference
+	if (sidebar) {
+		delete sidebar;
+	}
+
+	sidebar = theSideBar;
+}
+
 void cPlayer::setItemBuilder(cItemBuilder *theItemBuilder) {
 	assert(theItemBuilder);
 

@@ -6,7 +6,14 @@
   Contact: stefanhen83@gmail.com
   Website: http://d2tm.duneii.com
 
-  2001 - 2009 (c) code by Stefan Hendriks
+  2001 - 2010 (c) code by Stefan Hendriks
+
+  A player has a sidebar. The sidebar contains lists of items that can be built. These
+  items can be structures/units but also special weapons, etc.
+
+  In order to build items, a player has an itemBuilder.
+
+  A player can upgrade the sidebar lists. Therefore a cBuildingListUpgrader is used.
 
   */
 #ifndef PLAYER_H
@@ -47,15 +54,21 @@ class cPlayer {
 
 		// set
 		void setItemBuilder(cItemBuilder *theItemBuilder);
+		void setSideBar(cSideBar *theSideBar);
 
 		// get
 		cPlayerDifficultySettings *getDifficultySettings() { return difficultySettings; }
 		cItemBuilder *getItemBuilder() { return itemBuilder; }
+		cSideBar *getSideBar() { return sidebar; }
+
+		// delete
+		void deleteSideBar() { if (sidebar) delete sidebar; }
 
 	private:
 		cPlayerDifficultySettings *difficultySettings;
 
 		cItemBuilder * itemBuilder; // each player can build items
+		cSideBar * sidebar;			// each player has a sidebar
 };
 
 #endif

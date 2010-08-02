@@ -38,7 +38,6 @@ void cSideBar::setList(int listId, cBuildingList* list) {
  */
 void cSideBar::think() {
 	thinkAvailabilityLists();
-	// think about building
 }
 
 
