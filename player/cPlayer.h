@@ -14,6 +14,7 @@
   In order to build items, a player has an itemBuilder.
 
   A player can upgrade the sidebar lists. Therefore a cBuildingListUpgrader is used.
+  The state of upgrades is held by a cPlayerUpgradeState object.
 
   */
 #ifndef PLAYER_H
@@ -50,16 +51,20 @@ class cPlayer {
 		int TIMER_think;        // timer for thinking itself (calling main routine)
 		int TIMER_attack;       // -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 
-		int upgradeLevel[LIST_MAX];
+		// upgrade state of lists
+		int listUpgradeLevel[LIST_MAX];
 
 		// set
 		void setItemBuilder(cItemBuilder *theItemBuilder);
 		void setSideBar(cSideBar *theSideBar);
+		void setBuildingListUpgrader(cBuildingListUpgrader *theBuildingListUpgrader);
 
 		// get
+		cBuildingListUpgrader *getBuildingListUpgrader() { return buildingListUpgrader; }
 		cPlayerDifficultySettings *getDifficultySettings() { return difficultySettings; }
 		cItemBuilder *getItemBuilder() { return itemBuilder; }
 		cSideBar *getSideBar() { return sidebar; }
+		int getUpgradeLevel(int listId) { return listUpgradeLevel[listId]; }
 
 		// delete
 		void deleteSideBar() { if (sidebar) delete sidebar; }
@@ -67,8 +72,12 @@ class cPlayer {
 	private:
 		cPlayerDifficultySettings *difficultySettings;
 
+		// these have all state, and need to be recreated for each mission.
+		cSideBar * sidebar;			// each player has a sidebar (lists of what it can build)
 		cItemBuilder * itemBuilder; // each player can build items
-		cSideBar * sidebar;			// each player has a sidebar
+
+		// TODO: cUpgradeBuilder
+		cBuildingListUpgrader * buildingListUpgrader; // modifies list of sidebar
 };
 
 #endif

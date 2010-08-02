@@ -13,7 +13,6 @@
 #define UPGRADE_STAGE_THREE 252		// ie, SIEGE TANK
 #define UPGRADE_STAGE_FOUR 253		// ie, SPECIAL TANK (DEVASTATOR)
 
-
 class cBuildingListUpgrader {
 	public:
 		cBuildingListUpgrader(cBuildingList *theList, int theTypeOfList);

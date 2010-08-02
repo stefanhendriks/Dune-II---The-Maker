@@ -13,6 +13,5 @@ class cBuildingList;
 #include "cSideBar.h"
 #include "cSideBarDrawer.h"
 #include "cSideBarFactory.h"
-#include "cListUpgrade.h"
 
 #endif

@@ -88,7 +88,7 @@ void INSTALL_WORLD()
         world[i].bSelectable=false;
         world[i].iAlpha=0;
         world[i].iHouse=-1;
-        world[i].iTile;
+        world[i].iTile=-1;
         world[i].x=-1;
         world[i].y=-1;
 

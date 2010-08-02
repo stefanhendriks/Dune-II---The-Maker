@@ -44,6 +44,17 @@ void cPlayer::setItemBuilder(cItemBuilder *theItemBuilder) {
 	itemBuilder = theItemBuilder;
 }
 
+void cPlayer::setBuildingListUpgrader(cBuildingListUpgrader *theBuildingListUpgrader) {
+	assert(theBuildingListUpgrader);
+
+	// delete old reference
+	if (buildingListUpgrader) {
+		delete buildingListUpgrader;
+	}
+
+	buildingListUpgrader = theBuildingListUpgrader;
+}
+
 void cPlayer::init()
 {
 	memcpy(pal, general_palette, sizeof(pal));

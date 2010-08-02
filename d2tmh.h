@@ -69,22 +69,22 @@ class CreditsDrawer;
 #include "timers.h"							/** declare correct functions at compile time here **/
 
 // UTILS
-#include "utils\cHitpointCalculator.h"			/** math for hitpoints **/
-#include "utils\d2tm_math.h"
-#include "utils\cTimeManager.h"
+#include "utils/cHitpointCalculator.h"			/** math for hitpoints **/
+#include "utils/d2tm_math.h"
+#include "utils/cTimeManager.h"
 
 // TODO: Finish up these structure classes
-#include "structures\cAbstractStructure.h"
-#include "structures\cStructureFactory.h"				// Responsible for creation of Structures
+#include "structures/cAbstractStructure.h"
+#include "structures/cStructureFactory.h"				// Responsible for creation of Structures
 
 // TODO: Refactor this big-... class into smaller ones (like structures)
 #include "cUnit.h"
 
 // TODO: Finish up these classes
-#include "units\cAbstractUnit.h"					// Abstract Unit class (will replace cUnit.h eventually)
-#include "units\cUnitFactory.h"				// Responsible for creation of Units
-#include "units\cUnitUtils.h"				// Responsible for generic operations on units (ie finding a unit, etc)
-#include "units\cUnitDrawer.h"				// Responsible for drawing units
+#include "units/cAbstractUnit.h"					// Abstract Unit class (will replace cUnit.h eventually)
+#include "units/cUnitFactory.h"				// Responsible for creation of Units
+#include "units/cUnitUtils.h"				// Responsible for generic operations on units (ie finding a unit, etc)
+#include "units/cUnitDrawer.h"				// Responsible for drawing units
 
 // TODO: Refactor this uber mentat class into something smaller
 #include "cMentat.h"
@@ -92,12 +92,12 @@ class CreditsDrawer;
 #include "ini.h"							// INI loading
 
 // TODO: Rethink this, perhaps other global dir is needed
-#include "utils\common.h"					// commonly used functions
+#include "utils/common.h"					// commonly used functions
 #include "map.h"							// map data
 
-#include "utils\cCellCalculator.h"			    /** math with cells , with handy references to structures and units **/
-#include "utils\cSeedMap.h"
-#include "utils\cSeedMapGenerator.h"
+#include "utils/cCellCalculator.h"			    /** math with cells , with handy references to structures and units **/
+#include "utils/cSeedMap.h"
+#include "utils/cSeedMapGenerator.h"
 
 #include "cParticle.h"                       // explosion animations and such
 #include "bullet.h"                         // bullets
@@ -107,19 +107,19 @@ class CreditsDrawer;
 #include "gui.h"
 
 // SIDEBAR
-#include "sidebar\sidebarh.h"
+#include "sidebar/sidebarh.h"
 
 // BUILDING LOGIC
 #include "cItemBuilder.h"
 
+// UPGRADE LOGIC
+#include "upgrade/upgradeh.h"
+
 // Player related
-#include "player\playerh.h"
+#include "player/playerh.h"
 
 // GUI
-#include "gui\guih.h"
-
-// UPGRADE LOGIC
-#include "upgrade\cBuildingListUpgrader.h"
+#include "gui/guih.h"
 
 // GAME
 #include "cGame.h"

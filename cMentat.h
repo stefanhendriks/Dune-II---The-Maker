@@ -50,7 +50,7 @@ public:
 	void prepare(bool bTellHouse, int state, int house, int region);
 
 	cMentat();
-	~cMentat();
+	virtual ~cMentat();
 };
 
 #endif

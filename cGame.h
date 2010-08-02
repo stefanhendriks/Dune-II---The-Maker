@@ -10,9 +10,6 @@
 
   */
 
-// TODO: remove #define LIST_MAX		8 here
-#define LIST_MAX		8
-
 // TODO: Clean this class up big time.
 
 // List structure
