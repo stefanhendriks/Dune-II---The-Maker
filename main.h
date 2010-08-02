@@ -193,7 +193,6 @@
 #define BRAIN_NONE      3
 #define BRAIN_AI_WORM   4
 
-
 #define MAX_UNITTYPES       50
 #define MAX_STRUCTURETYPES  50
 

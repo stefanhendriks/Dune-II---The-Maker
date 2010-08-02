@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -41,8 +41,6 @@ float health_bar(float max_w, int i, int w);
 float health_unit(int i, float w);
 
 int iFindCloseBorderCell(int iCll);
-
-int FIND_PRIMARY_BUILDING(int iType, int iPlayer);
 
 void mp3_play_file(char filename[255]);
 

@@ -1226,39 +1226,13 @@ int iFindCloseBorderCell(int iCll)
 	return iStartCell;
 }
 
-
-// Find a primary building for player...
-int FIND_PRIMARY_BUILDING(int iType, int iPlayer)
-{
-	if (DEBUGGING)
-	{
-	char msg[255];
-	sprintf(msg, "Looking for primary building (type %d, name %s, player %d)", iType, structures[iType].name, iPlayer);
-	logbook(msg);
-	}
-
-	for (int i=0; i < MAX_STRUCTURES; i++)
-	{
-		// valid , and its for this player too
-		if (structure[i] && structure[i]->getOwner() == iPlayer)
-		{
-			if (structure[i]->getType() == iType)
-				if (structure[i]->iFreeAround() > -1) // free!
-				{
-					return i; // return this structure
-				}
-		}
-	}
-
-	return -1;
-}
-
 int iCellOnScreen(int iCell)
 {
     // return 0 when on screen, else the distance..
 
-    if (iCell < 0)
+    if (iCell < 0) {
         return 0; // return its on screen, probably some sound that has nothing to do with the battlefield (money, etc)
+    }
 
     int iCellX=iCellGiveX(iCell);
     int iCellY=iCellGiveY(iCell);

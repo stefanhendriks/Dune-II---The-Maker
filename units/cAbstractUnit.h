@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -13,14 +13,14 @@
 #ifndef CABSTRUNIT
 #define CABSTRUNIT
 
-class cAbstractUnit { 
+class cAbstractUnit {
 
 public:
 	cAbstractUnit();
 
 	virtual void think() = 0;
 	virtual void die() = 0;
-	
+
 	// properties of unit , implemented in concrete sub-class
 	virtual bool isAirborn() = 0; // carry-all/orni
 	virtual bool isUnderground() = 0; // worm

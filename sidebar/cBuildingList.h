@@ -15,7 +15,7 @@
 
 class cBuildingList {
 	public:
-		cBuildingList(int type);
+		cBuildingList(int theId);
 		~cBuildingList();
 
 		cBuildingListItem * getItem(int position); 	// return building list item in array at position.
@@ -45,6 +45,7 @@ class cBuildingList {
 
 		// set
 		void setTimer(int value) { TIMER_progress = value; }
+		void setTypeOfList(int value) { typeOfList = value; }
 
 
 		/**

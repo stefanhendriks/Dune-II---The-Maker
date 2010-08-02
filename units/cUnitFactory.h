@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -23,7 +23,7 @@ protected:
 public:
 
 	static cUnitFactory *getInstance();
-	
+
 	void deleteUnit(cAbstractUnit *unit);
 	cAbstractUnit *createUnit(int type);
 

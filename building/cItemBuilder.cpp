@@ -94,15 +94,22 @@ void cItemBuilder::think() {
 								item->setPlaceIt(true);
 							}
 
-//							item->decreaseTimesToBuild(); // decrease amount of times to build
 						} else {
 
 							item->decreaseTimesToBuild(); // decrease amount of times to build
 
 							assert(item->getTimesToBuild() > -1);
 
-							// TODO: construct unit here
+							int structureTypeOfList = structureUtils.findStructureTypeByTypeOfList(list, item);
+							assert(structureTypeOfList > -1);
+							int primaryBuildingIdOfStructureType = structureUtils.findStructureToDeployUnit(player, structureTypeOfList);
 
+							if (primaryBuildingIdOfStructureType > -1) {
+								int cell = structure[primaryBuildingIdOfStructureType]->iFreeAround();
+								structure[primaryBuildingIdOfStructureType]->setAnimating(true); // animate
+								// TODO: construct unit here
+								UNIT_CREATE(cell, item->getBuildId(), player->getId(), false);
+							}
 
 							// stop building this item when we are done
 							if (item->getTimesToBuild() == 0) {	// no more items to build

@@ -131,6 +131,8 @@ class CreditsDrawer;
 #include "stdlib.h"
 // PROFILER
 
+#include "utils/cStructureUtils.h"
+
 // Mentat
 // TODO: Use this mentat code
 #include "mentat/cOrdosMentat.h"

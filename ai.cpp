@@ -247,8 +247,11 @@ void cAIPlayer::think_building()
             int iStr = player[ID].iPrimaryBuilding[iStrucType];
 
             // no primary building yet, assign one
-            if (iStr < 0)
-                iStr = FIND_PRIMARY_BUILDING(iStrucType, ID);
+            if (iStr < 0) {
+            	// TODO: remove/rewrite! This has nothing to do with primary stuff and such..
+            	iStr = structureUtils.findStructureToDeployUnit( &player[ID], iStrucType);
+//                iStr = FIND_PRIMARY_BUILDING(iStrucType, ID);
+            }
 
             if (iStr > -1)
             {
@@ -256,31 +259,31 @@ void cAIPlayer::think_building()
 
                 if (structure[iStr])
                 {
-                if (structure[iStr]->iFreeAround() -1)
-                {
-                    int iSpot = structure[iStr]->iFreeAround();
-                    player[ID].iPrimaryBuilding[iStrucType] = iStr;
-                    structure[iStr]->setAnimating(true); // animate
-                    iProducedUnit=UNIT_CREATE(iSpot, i, ID, false);
-                }
-                else
-                {
-                    int iNewStr = FIND_PRIMARY_BUILDING(iStrucType, ID);
-
-                    // assign new primary
-                    if (iNewStr != iStr && iNewStr > -1)
-                    {
-                        int iSpot = structure[iNewStr]->iFreeAround();
-                        player[ID].iPrimaryBuilding[iStrucType] = iNewStr;
-                        structure[iNewStr]->setAnimating(true); // animate
-                        iProducedUnit=UNIT_CREATE(iSpot, i, ID, false);
-                    }
+					if (structure[iStr]->iFreeAround() -1)
+					{
+						int iSpot = structure[iStr]->iFreeAround();
+						player[ID].iPrimaryBuilding[iStrucType] = iStr;
+						structure[iStr]->setAnimating(true); // animate
+						iProducedUnit=UNIT_CREATE(iSpot, i, ID, false);
+					}
 					else
 					{
-						// nothing found, deliver the unit as is.
+						int iNewStr = structureUtils.findStructureToDeployUnit( &player[ID], iStrucType);
 
+						// assign new primary
+						if (iNewStr != iStr && iNewStr > -1)
+						{
+							int iSpot = structure[iNewStr]->iFreeAround();
+							player[ID].iPrimaryBuilding[iStrucType] = iNewStr;
+							structure[iNewStr]->setAnimating(true); // animate
+							iProducedUnit=UNIT_CREATE(iSpot, i, ID, false);
+						}
+						else
+						{
+							// nothing found, deliver the unit as is.
+
+						}
 					}
-                }
                 }
                 else
                 {

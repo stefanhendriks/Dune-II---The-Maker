@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -26,7 +26,7 @@ protected:
 public:
 
 	static cUnitDrawer *getInstance();
-	
+
 	void draw(cAbstractUnit *unit);
 
 	// get draw coordinates, taking the abstractUnit as param

@@ -1,6 +1,6 @@
 #include "..\d2tmh.h"
 
-cBuildingList::cBuildingList(int type) {
+cBuildingList::cBuildingList(int theId) {
 	TIMER_progress = 0;
 	lastClickedId = 0;
 	buttonIconId = 0;	// the button to draw at the left of the list
@@ -8,9 +8,8 @@ cBuildingList::cBuildingList(int type) {
 	buttonDrawY = 0;
 	scrollingOffset = 0; 	// the offset for scrolling through the list.
 	available = false;		 // is this list available?
-
 	memset(items, NULL, sizeof(items));
-	typeOfList = type;
+	typeOfList = theId;
 }
 
 cBuildingList::~cBuildingList() {

@@ -20,25 +20,26 @@ int	iRest = 1;	// default rest value
 // Server/Client system
 
 // the ultimate game variable(s)
-cGame          game;
-cAbstractStructure     *structure[MAX_STRUCTURES];
-cUnit          unit[MAX_UNITS];
-cMap           map;
-cPlayer        player[MAX_PLAYERS];             // player is
-cAIPlayer      aiplayer[MAX_PLAYERS];           // related to aiplayer (except nr 0=human)
-cParticle      particle[MAX_PARTICLES];
-cBullet        bullet[MAX_BULLETS];
-cRegion        world[MAX_REGIONS];
-cMentat		   *Mentat;
-cTimeManager   TimeManager;
+cGame          				game;
+cAbstractStructure     	*	structure[MAX_STRUCTURES];
+cUnit          				unit[MAX_UNITS];
+cMap           				map;
+cPlayer        				player[MAX_PLAYERS];             // player is
+cAIPlayer      				aiplayer[MAX_PLAYERS];           // related to aiplayer (except nr 0=human)
+cParticle      				particle[MAX_PARTICLES];
+cBullet        				bullet[MAX_BULLETS];
+cRegion        				world[MAX_REGIONS];
+cMentat		   			*	Mentat;
+cTimeManager   				TimeManager;
+cStructureUtils 			structureUtils;
 
 // Structs
-sPreviewMap     PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory
-s_House         houses[MAX_HOUSES];
-s_Structures    structures[MAX_STRUCTURETYPES];    // structure types
-s_UnitP         units[MAX_UNITTYPES];              // unit types
-s_Bullet        bullets[MAX_BULLET_TYPES];          // bullet slots
-sReinforcement  reinforcements[MAX_REINFORCEMENTS];  // reinforcement slots
+sPreviewMap     			PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory
+s_House         			houses[MAX_HOUSES];
+s_Structures    			structures[MAX_STRUCTURETYPES];    // structure types
+s_UnitP         			units[MAX_UNITTYPES];              // unit types
+s_Bullet        			bullets[MAX_BULLET_TYPES];          // bullet slots
+sReinforcement  			reinforcements[MAX_REINFORCEMENTS];  // reinforcement slots
 
 int MAXVOICES = 8;            // USE THIS FOR DETERMINING VOICES
 

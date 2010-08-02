@@ -38,6 +38,7 @@ extern cBullet        bullet[MAX_BULLETS];
 extern cRegion        world[MAX_REGIONS];
 extern cMentat		  *Mentat;
 extern cTimeManager   TimeManager;
+extern cStructureUtils structureUtils;
 
 extern int MAXVOICES;            // USE THIS FOR DETERMINING VOICES
 

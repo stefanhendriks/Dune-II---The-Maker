@@ -208,5 +208,6 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 cBuildingList * cBuildingListFactory::createList(int listId, int techlevel, int house) {
 	cBuildingList * list = new cBuildingList(listId);
 	initializeList(list, listId, techlevel, house);
+	list->setTypeOfList(listId); // list id == type (see cSideBarFactory)
 	return list;
 }
