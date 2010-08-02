@@ -5,6 +5,9 @@
 
 // houses
 #include "cPlayerAtreidesDifficultySettings.h"
+#include "cPlayerHarkonnenDifficultySettings.h"
+#include "cPlayerOrdosDifficultySettings.h"
+
 
 // statistics
 #include "cPlayerStatistics.h"

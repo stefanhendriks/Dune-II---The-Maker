@@ -1,13 +1,13 @@
-#ifndef CPLAYERATREIDESDIFFICULTYSETTINGS_H_
-#define CPLAYERATREIDESDIFFICULTYSETTINGS_H_
+#ifndef CPLAYERORDOSDIFFICULTYSETTINGS_H_
+#define CPLAYERORDOSDIFFICULTYSETTINGS_H_
 
 #include "cPlayerDifficultySettings.h"
 
-class cPlayerAtreidesDifficultySettings : public cPlayerDifficultySettings {
+class cPlayerOrdosDifficultySettings : public cPlayerDifficultySettings {
 
 public:
-	cPlayerAtreidesDifficultySettings();
-	~cPlayerAtreidesDifficultySettings();
+	cPlayerOrdosDifficultySettings();
+	~cPlayerOrdosDifficultySettings();
 
 	int getMoveSpeed(int iUnitType);	// get move speed of a unit
 

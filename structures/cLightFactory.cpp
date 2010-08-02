@@ -4,7 +4,7 @@
 cLightFactory::cLightFactory()
 {
  // other variables (class specific)
- 
+
 }
 
 int cLightFactory::getType() {
@@ -46,7 +46,7 @@ void cLightFactory::think_animation_unitDeploy() {
 void cLightFactory::think_animation() {
 	cAbstractStructure::think_animation();
 	cAbstractStructure::think_flag();
-	think_animation_unitDeploy();     
+	think_animation_unitDeploy();
 }
 
 void cLightFactory::think_guard()
@@ -55,11 +55,9 @@ void cLightFactory::think_guard()
 }
 
 // Draw function to draw this structure()
-void cLightFactory::draw(int iStage) {   
-    cAbstractStructure::draw(iStage);   
+void cLightFactory::draw(int iStage) {
+    cAbstractStructure::draw(iStage);
 }
 
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
-
-

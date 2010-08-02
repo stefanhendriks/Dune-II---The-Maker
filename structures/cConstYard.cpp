@@ -25,6 +25,6 @@ void cConstYard::think_guard() {
 }
 
 // Draw function to draw this structure()
-void cConstYard::draw(int iStage) {   
+void cConstYard::draw(int iStage) {
   	cAbstractStructure::draw(iStage);
 }

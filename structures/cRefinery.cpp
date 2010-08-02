@@ -205,5 +205,3 @@ void cRefinery::draw(int iStage) {
 
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
-
-

@@ -23,6 +23,70 @@ cBuildingListFactory *cBuildingListFactory::getInstance() {
 	return instance;
 }
 
+//	// Any house, any mission, start with this
+//		list_new_item(LIST_CONSTYARD, ICON_STR_1SLAB, structures[SLAB1].cost, SLAB1, -1);
+//
+//	if (game.iMission >= 4)
+//		list_new_item(LIST_CONSTYARD, ICON_STR_WALL, structures[WALL].cost, WALL, -1);
+//
+//	list_new_item(LIST_CONSTYARD, ICON_STR_WINDTRAP, structures[WINDTRAP].cost, WINDTRAP, -1);
+//
+//
+//	// Barracks
+//	if (game.iMission >= 2)
+//		if (iHouse == ATREIDES || iHouse == ORDOS)
+//		{
+//			list_new_item(LIST_CONSTYARD, ICON_STR_BARRACKS, structures[BARRACKS].cost, BARRACKS, -1);
+//
+//			if (game.iMission >= 5 && game.iHouse == ORDOS)
+//				list_new_item(LIST_CONSTYARD, ICON_STR_WOR, structures[WOR].cost, WOR, -1);
+//		}
+//		else
+//			list_new_item(LIST_CONSTYARD, ICON_STR_WOR, structures[WOR].cost, WOR, -1);
+//
+//
+//	// At start the player does not have other icons to use for building
+//
+//	// STARTING UNIT LISTS
+//
+//	// LIGHT FACTORY
+//	if (iHouse == ATREIDES)
+//		list_new_item(LIST_LIGHTFC, ICON_UNIT_TRIKE, units[TRIKE].cost, -1, TRIKE);
+//	else if (iHouse == ORDOS)
+//		list_new_item(LIST_LIGHTFC, ICON_UNIT_RAIDER, units[RAIDER].cost, -1, RAIDER);
+//	else if (iHouse == HARKONNEN)
+//	{
+//		list_new_item(LIST_LIGHTFC, ICON_UNIT_QUAD, units[QUAD].cost, -1, QUAD);
+//		game.iStructureUpgrade[LIGHTFACTORY]=1;
+//	}
+//
+//	// HEAVY FACTORY
+//	list_new_item(LIST_HEAVYFC, ICON_UNIT_TANK, units[TANK].cost, -1, TANK);
+//	list_new_item(LIST_HEAVYFC, ICON_UNIT_HARVESTER, units[HARVESTER].cost, -1, HARVESTER);
+//
+//	// HITECH
+//	list_new_item(LIST_ORNI, ICON_UNIT_CARRYALL, units[CARRYALL].cost, -1, CARRYALL);
+//
+//
+//	// BARRACKS OR WOR
+//	if (iHouse == HARKONNEN || iHouse == SARDAUKAR)
+//	{
+//		list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPER, units[TROOPER].cost, -1, TROOPER);
+//	}
+//	else
+//	{
+//		list_new_item(LIST_INFANTRY, ICON_UNIT_SOLDIER, units[SOLDIER].cost, -1, SOLDIER);
+//
+//		// ordos gain trooper(s).
+//		if (iHouse == ORDOS && iMission > 5)
+//			list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPER, units[TROOPER].cost, -1, TROOPER);
+//	}
+//
+//
+//	// PALACE
+//
+//
+//	// STARPORT
 
 /**
  * Initialize list according to techlevel. This will also remove all previously set icons.

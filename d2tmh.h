@@ -110,10 +110,13 @@ class CreditsDrawer;
 #include "sidebar/sidebarh.h"
 
 // BUILDING LOGIC
-#include "cItemBuilder.h"
+#include "building/cItemBuilder.h"
 
 // UPGRADE LOGIC
 #include "upgrade/upgradeh.h"
+
+// Structures
+#include "structures/structuresh.h"
 
 // Player related
 #include "player/playerh.h"
@@ -134,8 +137,7 @@ class CreditsDrawer;
 #include "mentat/cHarkonnenMentat.h"
 #include "mentat/cAtreidesMentat.h"
 
-// Structures
-#include "structures/structuresh.h"
+
 
 // TODO: Units
 

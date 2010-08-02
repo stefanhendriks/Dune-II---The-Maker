@@ -22,6 +22,13 @@ cPlayer::~cPlayer() {
 	}
 }
 
+void cPlayer::setId(int theId) {
+	assert(theId >= HUMAN);
+	assert(theId <= MAX_PLAYERS);
+	assert(&player[theId] == this); // check if the reference in the array is the same!
+	id = theId;
+}
+
 void cPlayer::setSideBar(cSideBar *theSideBar) {
 	assert(theSideBar);
 
@@ -44,7 +51,17 @@ void cPlayer::setItemBuilder(cItemBuilder *theItemBuilder) {
 	itemBuilder = theItemBuilder;
 }
 
-void cPlayer::setBuildingListUpgrader(cBuildingListUpdater *theBuildingListUpgrader) {
+void cPlayer::setStructurePlacer(cStructurePlacer * theStructurePlacer) {
+	assert(theStructurePlacer);
+
+	if (structurePlacer) {
+		delete structurePlacer;
+	}
+
+	structurePlacer = theStructurePlacer;
+}
+
+void cPlayer::setBuildingListUpdater(cBuildingListUpdater *theBuildingListUpgrader) {
 	assert(theBuildingListUpgrader);
 
 	// delete old reference
@@ -140,102 +157,3 @@ bool cPlayer::bEnoughPower()
     // return false on any other case
     return false;
 }
-
-
-/**
-	Return the damage done by house type:
-	Atreides == 100% (normal)
-	Harkonnen = stronger
-	Sardaukar = a bit stronger then Harkonnen
-	Fremen == Sardaukar
-	Ordos = weaker
-
-	How much is determined here.
-
-**/
-#ifdef IGNOREMEFORNOW
-int cPlayer::iDamage(int iDamage)
-{
-	float fOriginal = 1;
-
-	if (house == HARKONNEN) fOriginal = 1.2;
-	if (house == SARDAUKAR) fOriginal = 1.25;
-	if (house == ORDOS || house == FREMEN) fOriginal = 0.8;
-
-	float fDamage = iDamage;					// make float for calculation
-	return (int)(fOriginal*fDamage);			// * range , convert back to int and return
-}
-
-// return proper speeds
-int cPlayer::iMoveSpeed(int iTpe)
-{
-	// return proper move speed of unit type
-	float fOriginal = 100;
-
-	if (house == HARKONNEN || house == SARDAUKAR)
-		fOriginal = 120;
-
-	if (house == ORDOS || house == FREMEN)
-		fOriginal = 80;
-
-	if (fOriginal <= 1.0) fOriginal = 1.0f;			// fix it
-	float fSpeed = fOriginal/100;					// Divide by 100 (so we get in 0-1 range)
-	return (int)(units[iTpe].speed*fSpeed);			// * original
-}
-
-
-// return proper speeds
-int cPlayer::iBuildSpeed(int iSpeed)
-{
-	// return proper move speed of unit type
-	float fOriginal = 100;
-
-	if (house == HARKONNEN || house == SARDAUKAR)
-		fOriginal = 120;
-
-	if (house == ORDOS || house == FREMEN)
-		fOriginal = 80;
-
-	if (fOriginal <= 1.0) fOriginal = 1.0f;			// fix it
-	float fSpeed = fOriginal/100;					// devide by 100 (so we get in 0-1 range)
-	return (int)(iSpeed*fSpeed);					// * original
-}
-
-// return proper speeds
-int cPlayer::iHarvestSpeed(int iSpeed)
-{
-    if (DEBUGGING)
-        return 0;
-
-	// return proper move speed of unit type
-	float fOriginal = 100;
-
-	if (house == HARKONNEN || house == SARDAUKAR)
-		fOriginal = 120;
-
-	if (house == ORDOS || house == FREMEN)
-		fOriginal = 80;
-
-	if (fOriginal <= 1.0) fOriginal = 1.0f;			// fix it
-	float fSpeed = fOriginal/100;					// devide by 100 (so we get in 0-1 range)
-	return (int)(iSpeed*fSpeed);					// * original
-}
-
-int cPlayer::iDumpSpeed(int iSpeed)
-{
-	// return proper move speed of unit type
-	float fOriginal = 100;
-
-	if (house == HARKONNEN || house == SARDAUKAR)
-		fOriginal = 120;
-
-	if (house == ORDOS || house == FREMEN)
-		fOriginal = 80;
-
-	if (fOriginal <= 1.0) fOriginal = 1.0f;			// fix it
-	float fSpeed = fOriginal/100;					// devide by 100 (so we get in 0-1 range)
-	return (int)(iSpeed*fSpeed);					// * original
-}
-
-
-#endif

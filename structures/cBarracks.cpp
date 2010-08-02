@@ -29,6 +29,6 @@ void cBarracks::think_guard() {
 }
 
 // Draw function to draw this structure()
-void cBarracks::draw(int iStage) {  
+void cBarracks::draw(int iStage) {
 	cAbstractStructure::draw(iStage);
 }

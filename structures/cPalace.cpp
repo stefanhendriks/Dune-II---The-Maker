@@ -4,7 +4,7 @@
 cPalace::cPalace()
 {
  // other variables (class specific)
- 
+
 }
 
 int cPalace::getType() {
@@ -32,11 +32,9 @@ void cPalace::think_guard()
 }
 
 // Draw function to draw this structure()
-void cPalace::draw(int iStage) {   
+void cPalace::draw(int iStage) {
     cAbstractStructure::draw(iStage);
 }
 
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
-
-

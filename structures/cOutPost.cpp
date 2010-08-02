@@ -57,5 +57,3 @@ cAbstractStructure::draw(iStage);
 
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
-
-

@@ -25,26 +25,26 @@ void cWindTrap::think()
 {
 	// think like base class
 	cAbstractStructure::think();
-     
+
 }
 
 void cWindTrap::think_fade() {
 	TIMER_fade++;
 
     int iTime; // the speed of fading
-    
+
     // depending on fade direction, fade in slower/faster
 	if (bFadeDir) { // go to blue
         iTime = 3;
 	} else { // go to black
         iTime = 4;
 	}
-    
+
     // time passed, we may change fade color
     if (TIMER_fade > iTime) {
         if (bFadeDir) {
             iFade++;
-            
+
 			if (iFade > 254) {
                 bFadeDir=false;
 			}
@@ -77,13 +77,13 @@ void cWindTrap::think_guard() {
 // the difference is within the drawing of the actual building, where lit_windtrap is called.
 // causing the nice blueish effect.
 void cWindTrap::draw(int iStage)
-{   
+{
     // Select proper palette
     select_palette(player[getOwner()].pal);
 
     // iStage <= 1 -> Draw structure
     // iStage >  1 -> Draw structure repair icon (fading)
-        
+
     // Draw structure
 	if (iStage <= 1)
 	{
@@ -94,9 +94,9 @@ void cWindTrap::draw(int iStage)
 		int iSourceY = structures[getType()].bmp_height * iFrame;
 		int iDrawPreBuild=-1;
 
-       
+
         // prebuild
-        if (iBuildFase == 1 ||  
+        if (iBuildFase == 1 ||
             iBuildFase == 3 ||
             iBuildFase == 5 ||
             iBuildFase == 7 ||
@@ -111,10 +111,10 @@ void cWindTrap::draw(int iStage)
 
             if (iWidth == 3 && iHeight == 2)
                 iDrawPreBuild = BUILD_PRE_3X2;
-            
+
             if (iWidth == 3 && iHeight == 3)
                 iDrawPreBuild = BUILD_PRE_3X3;
-           
+
         }
 
         // Draw structure itself
@@ -122,26 +122,26 @@ void cWindTrap::draw(int iStage)
         {
             // Fix this up, since NEMA now posted a structure which somehow needs transculency
             // and does not work. Sloppy work Stefan! Fixed @ 13-04-2005
-            
+
             BITMAP *temp=create_bitmap_ex(8, structures[getType()].bmp_width, structures[getType()].bmp_height);
             BITMAP *temp_shadow=create_bitmap(structures[getType()].bmp_width, structures[getType()].bmp_height);
             BITMAP *wind=create_bitmap(structures[getType()].bmp_width, structures[getType()].bmp_height);
 
             // Only for Construction Yard
-            clear(temp);			
+            clear(temp);
             clear_to_color(wind, makecol(255,0,255));
 
             clear_to_color(temp_shadow, makecol(255,0,255));
-            blit(structures[getType()].bmp, temp, 0, iSourceY, 0, 0, structures[getType()].bmp_width, structures[getType()].bmp_height);		
-            
-            
+            blit(structures[getType()].bmp, temp, 0, iSourceY, 0, 0, structures[getType()].bmp_width, structures[getType()].bmp_height);
+
+
             // in case shadow
             if (structures[getType()].shadow)
                 blit(structures[getType()].shadow, temp_shadow, 0, iSourceY, 0, 0, structures[getType()].bmp_width, structures[getType()].bmp_height);
-            
+
             //draw_sprite(bmp_screen, temp, iDrawX(), iDrawY());
             draw_sprite(wind, temp, 0, 0);
-            
+
             lit_windtrap_color(wind, makecol(0,0,iFade));
 
             draw_sprite(bmp_screen, wind, iDrawX(), iDrawY());
@@ -163,8 +163,8 @@ void cWindTrap::draw(int iStage)
         else
         {
             // Draw prebuild
-            draw_sprite(bmp_screen, (BITMAP *)gfxdata[iDrawPreBuild].dat, iDrawX(), iDrawY());    
-            
+            draw_sprite(bmp_screen, (BITMAP *)gfxdata[iDrawPreBuild].dat, iDrawX(), iDrawY());
+
             // Draw shadow of the prebuild animation
             if (iDrawPreBuild != BUILD_PRE_CONST)
             {
@@ -182,17 +182,15 @@ void cWindTrap::draw(int iStage)
         rectfill(bmp_screen, iDrawX()+18, iDrawY()+45, iDrawX()+78, iDrawY()+50, makecol(0,0,0));
         // now draw health (60 pixels)
         int iW = health_bar(58, unit[iUnitID].iTempHitPoints, units[unit[iUnitID].iType].hp);
-        rectfill(bmp_screen, iDrawX()+19,iDrawY()+46, iDrawX()+19+iW, iDrawY()+49, makecol(0,255,0)); 
+        rectfill(bmp_screen, iDrawX()+19,iDrawY()+46, iDrawX()+19+iW, iDrawY()+49, makecol(0,255,0));
 
     }
-    
+
 } // stage <= 1
     else if (iStage == 2) {
        cAbstractStructure::draw(iStage);
-    }   
+    }
 }
 
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
-
-

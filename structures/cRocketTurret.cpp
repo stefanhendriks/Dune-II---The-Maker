@@ -5,13 +5,13 @@ cRocketTurret::cRocketTurret() {
 
  // other variables (class specific)
  iHeadFacing=FACE_UP;        // (for turrets only) what is this structure facing at?
- iShouldHeadFacing=FACE_UP;  // where should we look face at? 
+ iShouldHeadFacing=FACE_UP;  // where should we look face at?
  iTargetID=-1;           // target id
 
  TIMER_fire=0;
  TIMER_turn=0;
  TIMER_guard=0;         // timed 'area scanning'
- 
+
 }
 
 int cRocketTurret::getType() {
@@ -59,21 +59,21 @@ void cRocketTurret::think()
 
             int d = fDegrees(iCellX, iCellY, iTargetX, iTargetY);
             int f = face_angle(d); // get the angle
-            
+
             // set facing
             iShouldHeadFacing = f;
 
-            
+
             if (iShouldHeadFacing == iHeadFacing || (unit[iTargetID].iType == ORNITHOPTER))
             {
-                
+
                 TIMER_fire++;
 
                 int iDistance=9999;
                 int iSlowDown=250;
 
                 if (getType() == RTURRET)
-                    iSlowDown=450;                
+                    iSlowDown=450;
 
                 if (unit[iTargetID].isValid())
                 {
@@ -85,7 +85,7 @@ void cRocketTurret::think()
                 }
                 else
                     iTargetID=-1;
-                
+
                 if (iTargetID < 0)
                     return;
 
@@ -102,7 +102,7 @@ void cRocketTurret::think()
                         int iShootX=(iDrawX() + 16 ) + (map.scroll_x*32);
                         int iShootY=(iDrawY() + 16 ) + (map.scroll_y*32);
                         int     bmp_head            = convert_angle(iHeadFacing);
-                        
+
                         PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);
 
                     }
@@ -115,14 +115,14 @@ void cRocketTurret::think()
                         bullet[iBull].iHoming = iTargetID;
                         bullet[iBull].TIMER_homing = 200;
 
-                        
+
                     }
 
-                    TIMER_fire=0;                    
-                    
+                    TIMER_fire=0;
+
                 }
 
-               
+
 
             }
             else
@@ -132,26 +132,26 @@ void cRocketTurret::think()
                 int iSlowDown = 200;
 
                 if (TIMER_turn > iSlowDown)
-                {                    
+                {
                     TIMER_turn=0;
 
                     int d = 1;
-                    
-                    int toleft = (iHeadFacing + 8) - iShouldHeadFacing; 
+
+                    int toleft = (iHeadFacing + 8) - iShouldHeadFacing;
                     if (toleft > 7) toleft -= 8;
-                    
-                    
-                    int toright = abs(toleft-8);    
-                    
+
+
+                    int toright = abs(toleft-8);
+
                     if (toright == toleft) d = -1+(rnd(2));
                     if (toleft  > toright) d = 1;
                     if (toright > toleft)  d = -1;
-                    
+
                     iHeadFacing += d;
-                    
+
                     if (iHeadFacing < 0)
                         iHeadFacing = 7;
-                    
+
                     if (iHeadFacing > 7)
                         iHeadFacing = 0;
                 } // turning
@@ -176,7 +176,7 @@ void cRocketTurret::think_guard() {
 
 	// no power = no defense
 	if (player[getOwner()].bEnoughPower() == false) {
-        return; 
+        return;
 	}
 
     TIMER_guard++;
@@ -186,7 +186,7 @@ void cRocketTurret::think_guard() {
         int iCellY = iCellGiveY(getCell());
 
         int iDistance=9999; // closest distance
-        
+
         int iAir=-1;        // aircraft (prioritized!)
         int iWorm=-1;       // worm lowest priority
         int iDanger=-1;     // danger id (unit to attack)
@@ -200,12 +200,12 @@ void cRocketTurret::think_guard() {
             if (unit[i].isValid())
             {
 				bool bAlly=player[getOwner()].iTeam == player[unit[i].iPlayer].iTeam;
-                
+
                 // not ours and its visible
-                if (unit[i].iPlayer != getOwner() && 
-					map.iVisible[unit[i].iCell][getOwner()] && 
+                if (unit[i].iPlayer != getOwner() &&
+					map.iVisible[unit[i].iCell][getOwner()] &&
 					bAlly == false) {
-                     
+
                     int distance = ABS_length(iCellX, iCellY, iCellGiveX(unit[i].iCell), iCellGiveY(unit[i].iCell));
 
 					// when worm or ornithopter is in range, they are not limited to the iDistance (closest
@@ -217,7 +217,7 @@ void cRocketTurret::think_guard() {
                             iWorm=i;
                         }
                     }
-                    
+
 					// when distance < closest range so far, this one is the most dangerous.
 					if (distance <= structures[getType()].sight && distance < iDistance)
                     {
@@ -253,5 +253,3 @@ void cRocketTurret::draw(int iStage) {
 
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
-
-

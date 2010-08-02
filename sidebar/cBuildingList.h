@@ -27,6 +27,7 @@ class cBuildingList {
 
 		bool isOverButton(int x, int y);
 		void removeAllItems();
+		bool isItemInList(cBuildingListItem * item);
 
 		// get
 		bool isUpgrading() { return upgrading; }

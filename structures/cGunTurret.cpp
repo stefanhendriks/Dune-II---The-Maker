@@ -4,7 +4,7 @@
 cGunTurret::cGunTurret() {
  // other variables (class specific)
  iHeadFacing=FACE_UP;        // (for turrets only) what is this structure facing at?
- iShouldHeadFacing=FACE_UP;  // where should we look face at? 
+ iShouldHeadFacing=FACE_UP;  // where should we look face at?
  iTargetID=-1;           // target id
 
  TIMER_fire=0;
@@ -39,9 +39,9 @@ void cGunTurret::think() {
         return;
 	}
 
-    
+
 	if (player[getOwner()].bEnoughPower() == false) {
-        return; 
+        return;
 	}
 
     // turning & shooting
@@ -58,14 +58,14 @@ void cGunTurret::think() {
 
             int d = fDegrees(iCellX, iCellY, iTargetX, iTargetY);
             int f = face_angle(d); // get the angle
-            
+
             // set facing
             iShouldHeadFacing = f;
 
-                   
+
             if (iShouldHeadFacing == iHeadFacing || (unit[iTargetID].iType == ORNITHOPTER))
             {
-                
+
                 TIMER_fire++;
 
                 int iDistance=9999;
@@ -81,7 +81,7 @@ void cGunTurret::think() {
                 }
                 else
                     iTargetID=-1;
-                
+
                 if (iTargetID < 0)
                     return;
 
@@ -98,7 +98,7 @@ void cGunTurret::think() {
                         int iShootX=(iDrawX() + 16 ) + (map.scroll_x*32);
                         int iShootY=(iDrawY() + 16 ) + (map.scroll_y*32);
                         int     bmp_head            = convert_angle(iHeadFacing);
-                        
+
                         PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);
 
                     }
@@ -111,14 +111,14 @@ void cGunTurret::think() {
                         bullet[iBull].iHoming = iTargetID;
                         bullet[iBull].TIMER_homing = 200;
 
-                        
+
                     }
 
-                    TIMER_fire=0;                    
-                    
+                    TIMER_fire=0;
+
                 }
 
-               
+
 
             }
             else
@@ -126,28 +126,28 @@ void cGunTurret::think() {
                 TIMER_turn++;
 
                 int iSlowDown = 125;
-             
+
                 if (TIMER_turn > iSlowDown)
-                {                    
+                {
                     TIMER_turn=0;
 
                     int d = 1;
-                    
-                    int toleft = (iHeadFacing + 8) - iShouldHeadFacing; 
+
+                    int toleft = (iHeadFacing + 8) - iShouldHeadFacing;
                     if (toleft > 7) toleft -= 8;
-                    
-                    
-                    int toright = abs(toleft-8);    
-                    
+
+
+                    int toright = abs(toleft-8);
+
                     if (toright == toleft) d = -1+(rnd(2));
                     if (toleft  > toright) d = 1;
                     if (toright > toleft)  d = -1;
-                    
+
                     iHeadFacing += d;
-                    
+
                     if (iHeadFacing < 0)
                         iHeadFacing = 7;
-                    
+
                     if (iHeadFacing > 7)
                         iHeadFacing = 0;
                 } // turning
@@ -173,7 +173,7 @@ void cGunTurret::think_guard()
  // TURRET CODE HERE
 
     if (player[getOwner()].bEnoughPower() == false)
-        return; 
+        return;
 
     TIMER_guard++;
 
@@ -183,7 +183,7 @@ void cGunTurret::think_guard()
         int iCellY = iCellGiveY(getCell());
 
         int iDistance=9999; // closest distance
-        
+
         int iAir=-1;        // aircraft (prioritized!)
         int iWorm=-1;       // worm lowest priority
         int iDanger=-1;     // danger id (unit to attack)
@@ -201,17 +201,17 @@ void cGunTurret::think_guard()
                 if (player[getOwner()].iTeam == player[unit[i].iPlayer].iTeam)
                     bAlly=true;
 
-				
+
 
                 // not ours and its visible
-                if (unit[i].iPlayer != getOwner() && 
-					map.iVisible[unit[i].iCell][getOwner()] && 
+                if (unit[i].iPlayer != getOwner() &&
+					map.iVisible[unit[i].iCell][getOwner()] &&
 					bAlly == false) {
 
                     if (getType() == TURRET)
                         if (units[unit[i].iType].airborn)
                             continue; // it was airborn, and normal turrets cannot hit this
-                     
+
                     int distance = ABS_length(iCellX, iCellY, iCellGiveX(unit[i].iCell), iCellGiveY(unit[i].iCell));
 
                     if (unit[i].iType == ORNITHOPTER)
@@ -253,7 +253,7 @@ void cGunTurret::think_guard()
 }
 
 // Draw function to draw this structure()
-void cGunTurret::draw(int iStage) {   
+void cGunTurret::draw(int iStage) {
 	// When turret, frame = iHeadFacing
     setFrame(convert_angle(iHeadFacing));
 	cAbstractStructure::draw(iStage);
@@ -261,5 +261,3 @@ void cGunTurret::draw(int iStage) {
 
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
-
-

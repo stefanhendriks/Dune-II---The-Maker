@@ -138,8 +138,6 @@ void cGame::init() {
 
 	map.init();
 
-	init_lists();
-
 	for (int i=0; i < MAX_PLAYERS; i++) {
 		player[i].init();
         aiplayer[i].init(i);
@@ -235,8 +233,6 @@ void cGame::mission_init()
 	memset(iconFrigate, 0, sizeof(iconFrigate)); // what is ordered? (how many of them?)
 
     map.init();
-
-	init_lists();
 
     // clear out players but not entirely
     for (int i=0; i < MAX_PLAYERS; i++)
@@ -516,116 +512,108 @@ void cGame::think_mentat()
 // TODO: Move to own class
 void cGame::think_starport()
 {
-	if (TIMER_mayorder > -1)
-		TIMER_mayorder--;
-
-		if (TIMER_ordered == 0)
-	{
-		// send out a frigate to deliver the package to the starport:
-
-		TIMER_mayorder = 1; // this is being updated by the structure deploying
-
-		// find starport:
-		int iStr = player[0].iPrimaryBuilding[STARPORT];
-
-		// no primary building yet, assign one
-		if (iStr < 0)
-			iStr = FIND_PRIMARY_BUILDING(STARPORT, 0);
-
-		// structure got destroyed or taken over
-		if (iStr > -1)
-			if (structure[iStr] == NULL ||
-				structure[iStr]->getOwner() != 0) // somehow not ours
-				iStr = FIND_PRIMARY_BUILDING(STARPORT, 0); // find new one
-
-		if (iStr > -1)
-		{
-			player[0].iPrimaryBuilding[STARPORT] = iStr; // assign
-			structure[iStr]->setAnimating(true);
-			SPAWN_FRIGATE(0, structure[iStr]->getCell());
-            TIMER_mayorder=10;
-			play_voice(SOUND_VOICE_06_ATR);
-		}
-
-
-		TIMER_ordered = -1; //
-	}
-
-
-	if ( TIMER_ordered > 0)
-	{
-		char msg[255];
-		sprintf(msg, "T-%d before Frigate arrival.", TIMER_ordered);
-		set_message(msg);
-
-		int iSnd=-1;
-
-		if (TIMER_ordered <= 5) {
-			if (player[0].getHouse() == ATREIDES) {
-				iSnd = (SOUND_ATR_S1 + TIMER_ordered)-1;
-			}
-
-			if (player[0].getHouse() == HARKONNEN) {
-				iSnd = (SOUND_HAR_S1 + TIMER_ordered)-1;
-			}
-
-			if (player[0].getHouse() == ORDOS) {
-				iSnd = (SOUND_ORD_S1 + TIMER_ordered)-1;
-			}
-
-			if (iSnd > -1) {
-				play_sound_id(iSnd, -1);
-			}
-		}
-
-		TIMER_ordered--;
-	}
-
-
-	// create list of starport
-	if (TIMER_starport < 0)
-	{
-		// step 1:
-		// clear starport list
-		int i = LIST_STARPORT;
-
-		for (int j=0; j < MAX_ICONS; j++)
-		{
-		iconlist[i][j].iIcon =-1;
-		iconlist[i][j].iPrice=0;
-		iconlist[i][j].iStructureID=-1;
-		iconlist[i][j].iUnitID=-1;
-		}
-
-		// step 2:
-		// create new starport list
-
-	for (i=0; i < MAX_UNITTYPES; i++)
-	{
-		if (i == TRIKE ||
-			i == QUAD ||
-			i == TANK ||
-			i == HARVESTER ||
-			i == LAUNCHER ||
-			i == SIEGETANK ||
-			i == CARRYALL)
-		{
-			int iPrice = units[i].cost;
-
-			iPrice -= (iPrice/4);
-
-			iPrice += (rnd(iPrice));
-
-			// add item, with 'random price'
-			list_new_item(LIST_STARPORT, units[i].icon, iPrice, -1, i);
-		}
-	}
-
-	// seconds to change...
-	TIMER_starport = 15 + rnd(30);
-	}
-	else
-	TIMER_starport--; // decrease second
+//	if (TIMER_mayorder > -1)
+//		TIMER_mayorder--;
+//
+//		if (TIMER_ordered == 0)
+//	{
+//		// send out a frigate to deliver the package to the starport:
+//
+//		TIMER_mayorder = 1; // this is being updated by the structure deploying
+//
+//		// find starport:
+//		int iStr = player[0].iPrimaryBuilding[STARPORT];
+//
+//		// no primary building yet, assign one
+//		if (iStr < 0)
+//			iStr = FIND_PRIMARY_BUILDING(STARPORT, 0);
+//
+//		// structure got destroyed or taken over
+//		if (iStr > -1)
+//			if (structure[iStr] == NULL ||
+//				structure[iStr]->getOwner() != 0) // somehow not ours
+//				iStr = FIND_PRIMARY_BUILDING(STARPORT, 0); // find new one
+//
+//		if (iStr > -1)
+//		{
+//			player[0].iPrimaryBuilding[STARPORT] = iStr; // assign
+//			structure[iStr]->setAnimating(true);
+//			SPAWN_FRIGATE(0, structure[iStr]->getCell());
+//            TIMER_mayorder=10;
+//			play_voice(SOUND_VOICE_06_ATR);
+//		}
+//
+//
+//		TIMER_ordered = -1; //
+//	}
+//
+//
+//	if ( TIMER_ordered > 0)
+//	{
+//		char msg[255];
+//		sprintf(msg, "T-%d before Frigate arrival.", TIMER_ordered);
+//		set_message(msg);
+//
+//		int iSnd=-1;
+//
+//		if (TIMER_ordered <= 5) {
+//			if (player[0].getHouse() == ATREIDES) {
+//				iSnd = (SOUND_ATR_S1 + TIMER_ordered)-1;
+//			}
+//
+//			if (player[0].getHouse() == HARKONNEN) {
+//				iSnd = (SOUND_HAR_S1 + TIMER_ordered)-1;
+//			}
+//
+//			if (player[0].getHouse() == ORDOS) {
+//				iSnd = (SOUND_ORD_S1 + TIMER_ordered)-1;
+//			}
+//
+//			if (iSnd > -1) {
+//				play_sound_id(iSnd, -1);
+//			}
+//		}
+//
+//		TIMER_ordered--;
+//	}
+//
+//
+//	// create list of starport
+//	if (TIMER_starport < 0)
+//	{
+//		// step 1:
+//		// clear starport list
+//		int i = LIST_STARPORT;
+//
+//		// step 2:
+//		// create new starport list
+//
+//	for (i=0; i < MAX_UNITTYPES; i++)
+//	{
+//		if (i == TRIKE ||
+//			i == QUAD ||
+//			i == TANK ||
+//			i == HARVESTER ||
+//			i == LAUNCHER ||
+//			i == SIEGETANK ||
+//			i == CARRYALL)
+//		{
+//			int iPrice = units[i].cost;
+//
+//			iPrice -= (iPrice/4);
+//
+//			iPrice += (rnd(iPrice));
+//
+//			// add item, with 'random price'
+//			list_new_item(LIST_STARPORT, units[i].icon, iPrice, -1, i);
+//		}
+//	}
+//
+//	// seconds to change...
+//	TIMER_starport = 15 + rnd(30);
+//	}
+//	else
+//	TIMER_starport--; // decrease second
 }
 
 // set up a message
@@ -1144,580 +1132,6 @@ void cGame::combat_mouse()
 
 }
 
-
-
-// LIST initialization
-void cGame::init_lists()
-{
-	for (int i=0; i < LIST_MAX; i++)
-	{
-		for (int j=0; j < MAX_ICONS; j++)
-		{
-		iconlist[i][j].iIcon =-1;
-		iconlist[i][j].iPrice=0;
-		iconlist[i][j].iStructureID=-1;
-		iconlist[i][j].iUnitID=-1;
-		}
-	}
-
-	// reset scrolling
-	memset(iconscroll, 0, sizeof(iconscroll));
-
-	// Reset building stuff
-	memset(iconbuilding, -1, sizeof(iconbuilding));
-
-	// reset timers
-	memset(iconTIMER, 0, sizeof(iconTIMER));
-
-	// reset progress
-	memset(iconprogress, -1, sizeof(iconprogress));
-
-    // memset last built
-    memset(iLastBuilt, -1, sizeof(iLastBuilt));
-}
-
-// find new entry in this list
-int  cGame::list_new_id(int iListID)
-{
-	for (int i=0; i < MAX_ICONS; i++)
-		if (iconlist[iListID][i].iIcon < 0)
-			return i;
-
-	return -1;
-
-}
-
-void cGame::list_insert_item(int iListID, int iIcon, int iPrice, int iStructureID, int iUnitID, int iPosition)
-{
-
-// check first if the item does not exist
-	for (int i=0; i < MAX_ICONS; i++)
-	{
-		// same icon exists, check if it has the same properties
-		if (iconlist[iListID][i].iIcon == iIcon)
-		{
-            if (iStructureID > -1)
-                if (iconlist[iListID][i].iStructureID == iStructureID)
-                    return; // its the same
-
-            if (iUnitID > -1)
-                if (iconlist[iListID][i].iUnitID == iUnitID)
-                    return; // the same too
-		}
-
-	}
-
-
-
-
-   int iNext=0;
-   for (int i=(MAX_ICONS-2); i >= iPosition; i--)
-   {
-	   	   iconlist[iListID][(i+1)].iIcon = iconlist[iListID][i].iIcon;
-		   iconlist[iListID][(i+1)].iPrice = iconlist[iListID][i].iPrice;
-		   iconlist[iListID][(i+1)].iStructureID = iconlist[iListID][i].iStructureID;
-		   iconlist[iListID][(i+1)].iUnitID = iconlist[iListID][i].iUnitID;
-
-   }
-
-   int iNewID = iPosition;
-
-   iconlist[iListID][iNewID].iIcon = iIcon;
-   iconlist[iListID][iNewID].iPrice = iPrice;
-   iconlist[iListID][iNewID].iStructureID = iStructureID;
-   iconlist[iListID][iNewID].iUnitID = iUnitID;
-}
-
-// Adds item to new list
-void cGame::list_new_item(int iListID, int iIcon, int iPrice, int iStructureID, int iUnitID)
-{
-	// check first if the item does not exist
-	for (int i=0; i < MAX_ICONS; i++)
-	{
-		// same icon exists, check if it has the same properties
-		if (iconlist[iListID][i].iIcon == iIcon)
-		{
-			if (iconlist[iListID][i].iStructureID == iStructureID)
-				return; // its the same
-
-			if (iconlist[iListID][i].iUnitID == iUnitID)
-				return; // the same too
-		}
-
-	}
-
-	// From here its really something new
-
-	int iNewID=list_new_id(iListID);
-
-	iconlist[iListID][iNewID].iIcon = iIcon;
-	iconlist[iListID][iNewID].iPrice = iPrice;
-	iconlist[iListID][iNewID].iStructureID = iStructureID;
-	iconlist[iListID][iNewID].iUnitID = iUnitID;
-}
-
-void cGame::draw_list() {
-	return;
-
-	if (game.iActiveList == LIST_NONE) {
-		return;
-	}
-
-	int iList=game.iActiveList;
-	int iDrawX=572;
-	int iDrawY=46;
-	int iAmount=0;
-
-	bool bBuilding=false;
-
-	if (iconbuilding[iList] > -1)
-		bBuilding=true;
-
-	bool bUpgrading=false;
-
-	int iType=-1;
-
-	// conversion
-	if (game.iActiveList == LIST_CONSTYARD) iType = CONSTYARD;
-	if (game.iActiveList == LIST_LIGHTFC) iType = LIGHTFACTORY;
-	if (game.iActiveList == LIST_HEAVYFC) iType = HEAVYFACTORY;
-
-	if (game.iActiveList == LIST_INFANTRY) iType = BARRACKS; // todo...	 (WOR for other house)
-
-	if (game.iActiveList == LIST_ORNI) iType = HIGHTECH;
-	if (game.iActiveList == LIST_STARPORT) iType = STARPORT;
-	if (game.iActiveList == LIST_PALACE) iType = PALACE;
-
-	if (iType > -1)
-		if (iUpgradeProgress[iType] > -1)
-			bUpgrading = true;
-
-    if (player[0].iStructures[iType] < 1)
-    {
-        if (iType == BARRACKS)
-        {
-            // hack hack for ordos
-            if (player[0].iStructures[WOR] < 1)
-            {
-                bUpgrading=true; // hack hack, it is not available
-                game.iActiveList = LIST_NONE;
-            }
-        }
-        else
-        {
-            bUpgrading=true; // hack hack, it is not available
-            game.iActiveList = LIST_NONE;
-        }
-    }
-
-
-    if (key[KEY_B] && iLastBuilt[iList] > -1)
-    {
-
-        int iList=game.iActiveList;
-
-        if (iconbuilding[iList] < 0 &&
-			iconprogress[iList] < 0 &&
-			player[0].credits >= iconlist[iList][iLastBuilt[iList]].iPrice &&
-			bUpgrading == false &&
-			bPlaceIt==false) {
-
-            iconbuilding[iList] = iLastBuilt[iList]; // remember this ID of the icon, so we know we build
-            iconprogress[iList] = 0; // start with 0 progress
-
-            // PAY immidiatly
-            player[0].credits -= iconlist[iList][iLastBuilt[iList]].iPrice;
-        }
-
-    }
-
-	int i;
-	// Now draw list stuff
-	for (i=iconscroll[iList]; i < MAX_ICONS; i++)
-	{
-		if (iconlist[iList][i].iIcon > -1)
-		{
-			draw_sprite(bmp_screen, (BITMAP *)gfxinter[iconlist[iList][i].iIcon].dat, iDrawX, iDrawY);
-
-            if (iLastBuilt[iList] == i)
-                rect(bmp_screen, iDrawX, iDrawY, iDrawX+63, iDrawY+47, makecol(game.fade_select, game.fade_select, game.fade_select));
-
-			// CONST YARD draws grid stuff
-			if (iList == LIST_CONSTYARD)
-			{
-				// figure out size
-				int iW=structures[iconlist[iList][i].iStructureID].bmp_width/32;
-				int iH=structures[iconlist[iList][i].iStructureID].bmp_height/32;
-				int iTile = GRID_1X1;
-
-				if (iW == 2 && iH == 2)
-					iTile = GRID_2X2;
-
-				if (iW == 3 && iH == 2)
-					iTile = GRID_3X2;
-
-				if (iW == 3 && iH == 3)
-					iTile = GRID_3X3;
-
-				BITMAP *temp=create_bitmap(19,19);
-				clear_bitmap(temp);
-
-				draw_sprite(temp, (BITMAP *)gfxinter[GRID_0X0].dat, 0, 0);
-
-				//set_trans_blender(0, 0, 0, 192);
-
-				//draw_trans_sprite(bmp_screen, temp, iDrawX+43, iDrawY+20);
-
-                fblend_trans(temp, bmp_screen, iDrawX+43, iDrawY+20, 192);
-
-				set_trans_blender(0, 0, 0, 128);
-
-				draw_sprite(bmp_screen, (BITMAP *)gfxinter[iTile].dat, iDrawX+43, iDrawY+20);
-
-				destroy_bitmap(temp);
-
-			}
-
-			// When building and not the one on the list, simply
-			// black it out.
-			if ((bBuilding != false && iconbuilding[iList] != i) || (bUpgrading))
-			{
-				// draw transculent
-				//draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESSNA].dat, iDrawX, iDrawY);
-                fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 128);
-			}
-
-			bool bAvailable=true;
-
-			// When it is not available
-			if (iconlist[iList][i].iUnitID == TROOPER ||
-				iconlist[iList][i].iUnitID == TROOPERS)
-			{
-				if (player[0].iStructures[WOR] < 1)
-					bAvailable=false;
-			}
-
-			// When it is not available
-			if (iconlist[iList][i].iUnitID == SOLDIER ||
-				iconlist[iList][i].iUnitID == INFANTRY)
-			{
-				if (player[0].iStructures[BARRACKS] < 1)
-					bAvailable=false;
-			}
-
-			// not enough money to buy this, so darken it
-			if (iconlist[iList][i].iUnitID > -1)
-				if (units[iconlist[iList][i].iUnitID].cost > player[0].credits)
-					bAvailable=false;
-
-			// not enough money to buy this, so darken it
-			if (iconlist[iList][i].iStructureID > -1)
-				if (structures[iconlist[iList][i].iStructureID].cost > player[0].credits)
-					bAvailable=false;
-
-			// not available
-			if (bAvailable == false && bBuilding == false)
-			{
-				//set_trans_blender(0,0,0,64);
-				//draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESSNA].dat, iDrawX, iDrawY);
-                fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
-
-				rect(bmp_screen, iDrawX, iDrawY, iDrawX+63, iDrawY+47, makecol(game.fade_select, 0, 0));
-				line(bmp_screen, iDrawX, iDrawY, iDrawX+63, iDrawY+47, makecol(game.fade_select, 0, 0));
-				line(bmp_screen, iDrawX, iDrawY+47, iDrawX+63, iDrawY, makecol(game.fade_select, 0, 0));
-				set_trans_blender(0,0,0,128);
-			}
-
-			if (iList == LIST_STARPORT)
-			{
-				if (iconFrigate[i] > 0)
-				{
-					// this one is reserved
-					//set_trans_blender(0, 0, 0, 64);
-
-					//draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESSNA].dat, iDrawX, iDrawY);
-                    fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
-
-					set_trans_blender(0, 0, 0, 128);
-
-					// draw number
-					alfont_textprintf(bmp_screen, game_font, iDrawX+3,iDrawY+3, makecol(255,255,255), "%d", iconFrigate[i]);
-
-				}
-				else
-				{
-					if (TIMER_ordered > -1 ||
-						TIMER_mayorder > -1)
-					{
-						set_trans_blender(0, 0, 0, 64);
-
-                        fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 128);
-						//draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESSNA].dat, iDrawX, iDrawY);
-
-						set_trans_blender(0, 0, 0, 128);
-
-					}
-
-				}
-
-
-
-			}
-
-
-			// draw progress
-			if (iconbuilding[iList] == i)
-			{
-				// totalprogress:
-				int iTotal = 0;
-
-				if (iList == LIST_CONSTYARD)
-					iTotal = structures[ iconlist[iList][i].iStructureID ].build_time;
-				else if (iList != LIST_STARPORT)
-					iTotal = units[ iconlist[iList][i].iUnitID ].build_time;
-
-				// Now calculate the right frame.
-
-				//float iPiece = iTotal / 17; // = 17 - 1 (of above)
-                float iPiece = iTotal / 31; // = 17 - 1 (of above)
-
-				if (iPiece < 0.1)
-					iPiece = 0.1;
-
-				//int iFrame = iconprogress[iList] / iPiece;
-				//int iFrame = health_bar(17, iconprogress[iList], iTotal);
-                int iFrame = health_bar(31, iconprogress[iList], iTotal);
-
-				if (iFrame > 31)
-					iFrame = 31;
-
-
-				if (iconprogress[iList] < iTotal)
-                {
-                    // draw the other progress stuff
-
-					//draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESS001+iFrame].dat, iDrawX, iDrawY);
-                     fblend_trans((BITMAP *)gfxinter[PROGRESSFIX].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
-                     fblend_trans((BITMAP *)gfxinter[PROGRESS001+iFrame].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
-
-
-                     /*
-                    draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESSFIX].dat, iDrawX+2, iDrawY+2);
-                    draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESS001+iFrame].dat, iDrawX+2, iDrawY+2);*/
-                }
-				else
-				{
-					if (iList == LIST_CONSTYARD)
-						draw_sprite(bmp_screen, (BITMAP *)gfxinter[READY01].dat, iDrawX+3, iDrawY+16);
-					else
-					{
-
-
-					}
-
-
-				}
-
-			}
-
-			// when mouse hovers over it, draw rectangle
-			if ((mouse_x >= iDrawX && mouse_x <= (iDrawX+64)) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+48)) )
-			{
-				int iColor=makecol(fade_select, fade_select, fade_select);
-
-				if (player[0].getHouse() == ATREIDES) {
-					iColor = makecol(0, 0, fade_select);
-				}
-
-				if (player[0].getHouse() == HARKONNEN) {
-					iColor = makecol(fade_select, 0, 0);
-				}
-
-				if (player[0].getHouse() == ORDOS) {
-					iColor = makecol(0, fade_select, 0);
-				}
-
-				rect(bmp_screen, iDrawX, iDrawY, iDrawX+63, iDrawY+47, iColor);
-
-
-				int iID=-1;
-				char msg[255];
-
-				if (iList == LIST_CONSTYARD)
-				{
-					iID = iconlist[iList][i].iStructureID;
-					sprintf(msg, "$%d | %s", structures[iID].cost, structures[iID].name);
-
-				}
-				else
-				{
-					iID = iconlist[iList][i].iUnitID;
-					sprintf(msg, "$%d | %s", iconlist[iList][i].iPrice, units[iID].name);
-				}
-
-				set_message(msg);
-
-				// clicking....
-
-				if (iList != LIST_STARPORT)
-				{
-
-				// LEFT MOUSE BUTTON - NOT BUILDING - NO PROGRESS YET - ENOUGH MONEY
-				if (bMousePressedLeft && iconbuilding[iList] < 0 && iconprogress[iList] < 0 && player[0].credits >= iconlist[iList][i].iPrice && bUpgrading == false && bPlaceIt==false && bAvailable)
-				{
-					iconbuilding[iList] = i; // remember this ID of the icon, so we know we build
-					iconprogress[iList] = 0; // start with 0 progress
-
-                    iLastBuilt[iList]=i;
-
-					// PAY immidiatly
-					player[0].credits -= iconlist[iList][i].iPrice;
-				}
-
-				// RIGHT MOUSE BUTTON - BUIDLING - PROGRESS MADE = RETURN MONEY
-				if (bMousePressedRight && iconbuilding[iList] >= 0 && bUpgrading == false && bPlaceIt==false)
-				{
-					iconbuilding[iList]=-1;
-					iconprogress[iList]=-1;
-
-					// pay back
-					player[0].credits += iconlist[iList][i].iPrice;
-				}
-
-				} // NOT STARPORT
-				else
-				{
-					if (TIMER_ordered == -1 && TIMER_mayorder == -1)
-					{
-					// use price of starport
-					int iPrice = iconlist[iList][i].iPrice;
-
-					// increase
-					if (bMousePressedLeft)
-					{
-						// increase
-						if (player[0].credits > iPrice)
-						{
-							iconFrigate[i]++;
-							player[0].credits -= iPrice;
-						}
-					}
-
-					if (bMousePressedRight)
-					{
-						if (iconFrigate[i] > 0)
-						{
-							iconFrigate[i]--;
-							player[0].credits += iPrice;
-						}
-					}
-					} // something is not being delivered
-				}
-
-
-
-			}
-
-            if (iconbuilding[iList] == i)
-            {
-            int iTotal = 0;
-
-				if (iList == LIST_CONSTYARD)
-					iTotal = structures[ iconlist[iList][i].iStructureID ].build_time;
-				else
-					iTotal = units[ iconlist[iList][i].iUnitID ].build_time;
-
-                // UNDO PLACING, THEN UNDO MONEY
-				if (iconprogress[iList] >= iTotal && iconprogress[iList] > -1)
-				{
-                    if (iList == LIST_CONSTYARD)
-                    {
-                        if (key[KEY_P] && bPlaceIt == false)
-                        {
-                            bPlaceIt=true;
-                        }
-
-					// when mouse hovers over it, draw rectangle
-					if ((mouse_x >= iDrawX && mouse_x <= (iDrawX+64)) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+48)) )
-					{
-						if (bMousePressedLeft && bPlaceIt == false)
-							bPlaceIt=true; // place it
-					}
-
-					// Undo placing, even when NOT on the icon itself
-					if (bMousePressedRight && bPlaceIt == true)
-							bPlaceIt=false; // undo placing
-
-                    }
-				}
-            }
-
-		}
-		else
-			break; // get outta here.
-
-
-
-		iDrawY+=48;
-		iAmount++;
-
-		if (iAmount > 4)
-			break;
-
-}
-
-    // MOUSE WHEEL
-    if (mouse_z > iMouseZ)
-    {
-        if (iconscroll[iList]>0)
-			iconscroll[iList]--;
-
-		// draw pressed
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_UP_PRESSED].dat, 571, 315);
-
-        iMouseZ=mouse_z;
-    }
-
-    if (mouse_z < iMouseZ)
-    {
-    	// Only allow scrolling when there is an icon to show
-		if (iconlist[iList][i+1].iIcon > -1 )
-			iconscroll[iList]++;
-
-		// draw pressed
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_DOWN_PRESSED].dat, 623, 315);
-        iMouseZ=mouse_z;
-    }
-
-	// UP button
-	if ((mouse_x >= 571 && mouse_y >= 315) && (mouse_x < 584 && mouse_y < 332))
-	{
-		if (bMousePressedLeft)
-		{
-		if (iconscroll[iList]>0)
-			iconscroll[iList]--;
-
-		// draw pressed
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_UP_PRESSED].dat, 571, 315);
-		}
-	}
-
-	// DOWN
-	if ((mouse_x >= 623 && mouse_y >= 315) && (mouse_x < 636 && mouse_y < 332))
-	{
-		if (bMousePressedLeft)
-		{
-			// Only allow scrolling when there is an icon to show
-		if (iconlist[iList][i+1].iIcon > -1 )
-			iconscroll[iList]++;
-
-		// draw pressed
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_DOWN_PRESSED].dat, 623, 315);
-		}
-	}
-
-}
-
 // Draw sidebar buttons, to switch lists
 void cGame::draw_sidebarbuttons()
 {
@@ -1942,10 +1356,11 @@ void cGame::draw_placeit()
 
                 play_sound_id(SOUND_PLACE, -1);
 
-				cStructureFactory::getInstance()->createStructure(iMouseCell, iStructureID, 0, iHealthPercent);
+				//cStructureFactory::getInstance()->createStructure(iMouseCell, iStructureID, 0, iHealthPercent);
+
+                player[HUMAN].getStructurePlacer()->placeStructure(iMouseCell, iStructureID, iHealthPercent);
+
 				bPlaceIt=false;
-				iconbuilding[LIST_CONSTYARD]	= -1;
-				iconprogress[LIST_CONSTYARD]    = -1;
 
 				itemToPlace->decreaseTimesToBuild();
 				itemToPlace->setPlaceIt(false);
@@ -2020,12 +1435,7 @@ void cGame::gerald()
 		player[HUMAN].getSideBar()->thinkInteraction();
 	}
 
-	draw_list();
-
-	draw_upgrade();
-
 	draw_order();
-
 
 }
 
@@ -2139,75 +1549,7 @@ void cGame::combat()
 
 }
 
-void cGame::setup_list()
-{
-//	int iHouse = player[0].house;
-
-	// Any house, any mission, start with this
-		list_new_item(LIST_CONSTYARD, ICON_STR_1SLAB, structures[SLAB1].cost, SLAB1, -1);
-
-	if (game.iMission >= 4)
-		list_new_item(LIST_CONSTYARD, ICON_STR_WALL, structures[WALL].cost, WALL, -1);
-
-	list_new_item(LIST_CONSTYARD, ICON_STR_WINDTRAP, structures[WINDTRAP].cost, WINDTRAP, -1);
-
-
-	// Barracks
-	if (game.iMission >= 2)
-		if (iHouse == ATREIDES || iHouse == ORDOS)
-		{
-			list_new_item(LIST_CONSTYARD, ICON_STR_BARRACKS, structures[BARRACKS].cost, BARRACKS, -1);
-
-			if (game.iMission >= 5 && game.iHouse == ORDOS)
-				list_new_item(LIST_CONSTYARD, ICON_STR_WOR, structures[WOR].cost, WOR, -1);
-		}
-		else
-			list_new_item(LIST_CONSTYARD, ICON_STR_WOR, structures[WOR].cost, WOR, -1);
-
-
-	// At start the player does not have other icons to use for building
-
-	// STARTING UNIT LISTS
-
-	// LIGHT FACTORY
-	if (iHouse == ATREIDES)
-		list_new_item(LIST_LIGHTFC, ICON_UNIT_TRIKE, units[TRIKE].cost, -1, TRIKE);
-	else if (iHouse == ORDOS)
-		list_new_item(LIST_LIGHTFC, ICON_UNIT_RAIDER, units[RAIDER].cost, -1, RAIDER);
-	else if (iHouse == HARKONNEN)
-	{
-		list_new_item(LIST_LIGHTFC, ICON_UNIT_QUAD, units[QUAD].cost, -1, QUAD);
-		game.iStructureUpgrade[LIGHTFACTORY]=1;
-	}
-
-	// HEAVY FACTORY
-	list_new_item(LIST_HEAVYFC, ICON_UNIT_TANK, units[TANK].cost, -1, TANK);
-	list_new_item(LIST_HEAVYFC, ICON_UNIT_HARVESTER, units[HARVESTER].cost, -1, HARVESTER);
-
-	// HITECH
-	list_new_item(LIST_ORNI, ICON_UNIT_CARRYALL, units[CARRYALL].cost, -1, CARRYALL);
-
-
-	// BARRACKS OR WOR
-	if (iHouse == HARKONNEN || iHouse == SARDAUKAR)
-	{
-		list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPER, units[TROOPER].cost, -1, TROOPER);
-	}
-	else
-	{
-		list_new_item(LIST_INFANTRY, ICON_UNIT_SOLDIER, units[SOLDIER].cost, -1, SOLDIER);
-
-		// ordos gain trooper(s).
-		if (iHouse == ORDOS && iMission > 5)
-			list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPER, units[TROOPER].cost, -1, TROOPER);
-	}
-
-
-	// PALACE
-
-
-	// STARPORT
-
+void cGame::setup_list() {
 
 }
 
@@ -4855,14 +4197,22 @@ void cGame::setup_players() {
 	// make sure each player has an own item builder
 	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
 		cPlayer * thePlayer = &player[i];
+		thePlayer->setId(i);
+
 		cItemBuilder * itemBuilder = new cItemBuilder(thePlayer);
 		thePlayer->setItemBuilder(itemBuilder);
-	}
 
-	// delete 'old' sidebars, and create new ones
-	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
 		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(&player[i], game.iMission, iHouse);
-		player[i].setSideBar(sidebar);
+		thePlayer->setSideBar(sidebar);
+
+		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(thePlayer);
+		thePlayer->setBuildingListUpdater(buildingListUpdater);
+
+		cStructurePlacer * structurePlacer = new cStructurePlacer(thePlayer);
+		thePlayer->setStructurePlacer(structurePlacer);
+
+		// set tech level
+		thePlayer->setTechLevel(game.iMission);
 	}
 }
 

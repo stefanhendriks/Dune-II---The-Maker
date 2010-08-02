@@ -127,15 +127,6 @@ public:
 	int TIMER_ordered;			// timer for ordering stuff ( -1 = nothing, 0 = delivering, > 0 t-minus)
 	int TIMER_mayorder;			// timer > 0 , then we may not order!
 
-	// List stuff
-	tListIcon iconlist[LIST_MAX][MAX_ICONS];
-	int iconscroll[LIST_MAX];
-	int iconbuilding[LIST_MAX];	// what are we building?
-	int iconTIMER[LIST_MAX];	// timer for building
-	int iconprogress[LIST_MAX];	// progress done on this icon?
-    int iLastBuilt[LIST_MAX];   // last type built per list
-
-
 	// Frigate stuff
 	int iconFrigate[MAX_ICONS]; // what is ordered? (how many of them?)
 
@@ -155,9 +146,6 @@ public:
 
 	bool bPlaceIt;		// placing something? (for structures only)
 	bool bPlacedIt;		// for remembering, for combat_mouse stuff..
-
-	void list_insert_item(int iListID, int iIcon, int iPrice, int iStructureID, int iUnitID, int iPosition);
-	void list_new_item(int iListID, int iIcon, int iPrice, int iStructureID, int iUnitID);
 
 	void setup_players();
 	void setup_list();		// set up all lists at the beginning of any mission (depening on tech level, house, etc)
@@ -236,11 +224,6 @@ private:
 
 	/** game state **/
 	int state;
-
-	// List specific
-	void draw_list();
-	void init_lists();
-	int  list_new_id(int iListID);		// find new entry in this list
 
 	CreditsDrawer *creditsDrawer;
 

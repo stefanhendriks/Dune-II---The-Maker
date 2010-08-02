@@ -8,10 +8,9 @@
 #include "..\d2tmh.h"
 
 cPlayerDifficultySettings::cPlayerDifficultySettings() {
-	// TODO Auto-generated constructor stub
 
 }
 
 cPlayerDifficultySettings::~cPlayerDifficultySettings() {
-	// TODO Auto-generated destructor stub
+
 }

@@ -20,8 +20,8 @@ int cPlayerAtreidesDifficultySettings::getHarvestSpeed(int iSpeed) {
 	return iSpeed;
 }
 
-int cPlayerAtreidesDifficultySettings::getInflictDamage(int iDamageTaken) {
-	return iDamageTaken;
+int cPlayerAtreidesDifficultySettings::getInflictDamage(int iDamageInflicted) {
+	return iDamageInflicted;
 }
 
 int cPlayerAtreidesDifficultySettings::getMoveSpeed(int iUnitType) {

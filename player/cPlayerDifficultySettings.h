@@ -36,7 +36,7 @@ class cPlayerDifficultySettings {
 
 		virtual int getDumpSpeed(int iSpeed) = 0;		// get harvester 'dumping spice in refinery' speed
 
-		virtual int getInflictDamage(int iDamageTaken) = 0;	// get damage taken
+		virtual int getInflictDamage(int iDamageInflicted) = 0;	// get damage inflicted by this house
 
 	protected:
 

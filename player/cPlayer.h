@@ -54,9 +54,11 @@ class cPlayer {
 		// set
 		void setItemBuilder(cItemBuilder *theItemBuilder);
 		void setSideBar(cSideBar *theSideBar);
-		void setBuildingListUpgrader(cBuildingListUpdater *theBuildingListUpgrader);
+		void setBuildingListUpdater(cBuildingListUpdater *theBuildingListUpgrader);
 		void setTechLevel(int theTechLevel) { techLevel = theTechLevel; }
 		void setHouse(int iHouse);
+		void setId(int theId);
+		void setStructurePlacer(cStructurePlacer *theStructurePlacer);
 
 		// get
 		cBuildingListUpdater *getBuildingListUpgrader() { return buildingListUpgrader; }
@@ -66,6 +68,8 @@ class cPlayer {
 		int getUpgradeLevel(int listId) { return listUpgradeLevel[listId]; }
 		int getHouse() { return house; }
 		int getTechLevel() { return techLevel; }
+		int getId() { return id; }
+		cStructurePlacer * getStructurePlacer() { return structurePlacer; }
 
 		// delete
 		void deleteSideBar() { if (sidebar) delete sidebar; }
@@ -78,11 +82,13 @@ class cPlayer {
 		cItemBuilder * itemBuilder; // each player can build items
 
 		// TODO: cUpgradeBuilder
-		cBuildingListUpdater * buildingListUpgrader; // modifies list of sidebar
+		cBuildingListUpdater * buildingListUpgrader; // modifies list of sidebar on upgrades
+
+		cStructurePlacer * structurePlacer;	// used to place structures and handle updates in sidebar accordingly
 
 		int techLevel;		// technology level
-
 		int house;
+		int id;	// this id is the reference to the player array
 };
 
 #endif

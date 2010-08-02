@@ -52,8 +52,29 @@ void cBuildingList::removeAllItems() {
 	}
 }
 
+bool cBuildingList::isItemInList(cBuildingListItem * item) {
+	assert(item);
+	for (int i =0; i < MAX_ICONS; i++) {
+		cBuildingListItem * itemInList = getItem(i);
+
+		// item already in list (same build id)
+		if (itemInList) {
+			if (itemInList->getBuildId() == item->getBuildId()) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 void cBuildingList::addItemToList(cBuildingListItem * item) {
 	assert(item);
+
+	if (isItemInList(item)) {
+		// item is already in list, do not add
+		return;
+	}
+
 	int slot = getFreeSlot();
 	if (slot < 0 ) {
 		logbook("Failed to add icon to cBuildingList.");
@@ -97,7 +118,7 @@ void cBuildingList::removeItemFromList(int position) {
 bool cBuildingList::isOverButton(int x, int y) {
 	int drawX = getButtonDrawX();
 	int drawY = getButtonDrawY();
-	return (x >= drawX && x <= (drawX + 40) && (y >= drawY && y <= (drawY + 40)));
+	return (x >= drawX && x <= (drawX + 51) && (y >= drawY && y <= (drawY + 37)));
 }
 
 void cBuildingList::setScrollingOffset(int value) {

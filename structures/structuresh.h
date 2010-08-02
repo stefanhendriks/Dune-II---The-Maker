@@ -18,4 +18,6 @@
 #include "cBarracks.h"
 #include "cIx.h"
 
+#include "cStructurePlacer.h"
+
 #endif

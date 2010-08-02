@@ -20,7 +20,7 @@ cRepairFacility::~cRepairFacility()
 
 void cRepairFacility::think()
 {
-   
+
     // Repair unit here (if any)
     if (iUnitID > -1)
     {
@@ -53,7 +53,7 @@ void cRepairFacility::think()
                             logbook("Could not find space for this unit");
 
                         // done & restore unit
-                        unit[iUnitID].iStructureID = -1;                            
+                        unit[iUnitID].iStructureID = -1;
 
                         unit[iUnitID].iTempHitPoints = -1;
 
@@ -97,11 +97,9 @@ void cRepairFacility::think_guard()
 }
 
 // Draw function to draw this structure()
-void cRepairFacility::draw(int iStage) {   
-cAbstractStructure::draw(iStage); 
+void cRepairFacility::draw(int iStage) {
+cAbstractStructure::draw(iStage);
 }
 
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
-
-

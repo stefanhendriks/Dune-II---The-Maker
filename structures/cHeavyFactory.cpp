@@ -5,7 +5,7 @@ cHeavyFactory::cHeavyFactory()
 {
 
  // other variables (class specific)
- 
+
 }
 
 
@@ -42,7 +42,7 @@ void cHeavyFactory::think_animation_unitDeploy() {
         }
         else if (iFrame < 1)
             iFrame=1;
-        
+
         iFrame++;
 
         TIMER_flag=0;
@@ -63,11 +63,9 @@ void cHeavyFactory::think_guard()
 }
 
 // Draw function to draw this structure()
-void cHeavyFactory::draw(int iStage) {   
+void cHeavyFactory::draw(int iStage) {
     cAbstractStructure::draw(iStage);
 }
 
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
-
-

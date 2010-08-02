@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -24,9 +24,9 @@ protected:
 public:
 
 	static cStructureFactory *getInstance();
-	
+
 	void deleteStructureInstance(cAbstractStructure *structure);
-	
+
 	cAbstractStructure *createStructureInstance(int type);
 
 	cAbstractStructure *createStructure(int iCell, int iStructureType, int iPlayer, int iPercent);

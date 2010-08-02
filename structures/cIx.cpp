@@ -4,7 +4,7 @@
 cIx::cIx() {
 
  // other variables (class specific)
- 
+
 }
 
 int cIx::getType() {
@@ -27,7 +27,7 @@ void cIx::think()
 // Specific Animation thinking (flag animation OR its deploy animation)
 void cIx::think_animation() {
 	cAbstractStructure::think_animation();
-	cAbstractStructure::think_flag();    
+	cAbstractStructure::think_flag();
 }
 
 void cIx::think_guard()
@@ -36,11 +36,9 @@ void cIx::think_guard()
 }
 
 // Draw function to draw this structure()
-void cIx::draw(int iStage) {   
+void cIx::draw(int iStage) {
 	cAbstractStructure::draw(iStage);
 }
 
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
-
-
