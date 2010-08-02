@@ -1313,11 +1313,13 @@ void play_voice(int iType)
 {
 //	int iTpe = iType;
 
-	if (player[0].house == HARKONNEN)
+	if (player[0].getHouse() == HARKONNEN) {
 		iType++;
+	}
 
-	if (player[0].house == ORDOS)
+	if (player[0].getHouse() == ORDOS) {
 		iType+=2;
+	}
 
 	play_sound_id(iType,-1); // pass -1 as 'onscreen' since its a normal sound
 }

@@ -44,7 +44,7 @@ void cPlayer::setItemBuilder(cItemBuilder *theItemBuilder) {
 	itemBuilder = theItemBuilder;
 }
 
-void cPlayer::setBuildingListUpgrader(cBuildingListUpgrader *theBuildingListUpgrader) {
+void cPlayer::setBuildingListUpgrader(cBuildingListUpdater *theBuildingListUpgrader) {
 	assert(theBuildingListUpgrader);
 
 	// delete old reference
@@ -82,7 +82,7 @@ void cPlayer::init()
 
 
 // set house
-void cPlayer::set_house(int iHouse)
+void cPlayer::setHouse(int iHouse)
 {
 
   house = iHouse;      // use rules of this house

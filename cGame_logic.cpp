@@ -241,10 +241,10 @@ void cGame::mission_init()
     // clear out players but not entirely
     for (int i=0; i < MAX_PLAYERS; i++)
     {
-        int h=player[i].house;
+        int h = player[i].getHouse();
 
         player[i].init();
-        player[i].house = h;
+        player[i].setHouse(h);
 
         aiplayer[i].init(i);
 
@@ -560,20 +560,22 @@ void cGame::think_starport()
 
 		int iSnd=-1;
 
-		if (TIMER_ordered <= 5)
-		{
+		if (TIMER_ordered <= 5) {
+			if (player[0].getHouse() == ATREIDES) {
+				iSnd = (SOUND_ATR_S1 + TIMER_ordered)-1;
+			}
 
-		if (player[0].house == ATREIDES)
-			iSnd = (SOUND_ATR_S1 + TIMER_ordered)-1;
+			if (player[0].getHouse() == HARKONNEN) {
+				iSnd = (SOUND_HAR_S1 + TIMER_ordered)-1;
+			}
 
-		if (player[0].house == HARKONNEN)
-			iSnd = (SOUND_HAR_S1 + TIMER_ordered)-1;
+			if (player[0].getHouse() == ORDOS) {
+				iSnd = (SOUND_ORD_S1 + TIMER_ordered)-1;
+			}
 
-		if (player[0].house == ORDOS)
-			iSnd = (SOUND_ORD_S1 + TIMER_ordered)-1;
-
-		if (iSnd > -1)
-			play_sound_id(iSnd, -1);
+			if (iSnd > -1) {
+				play_sound_id(iSnd, -1);
+			}
 		}
 
 		TIMER_ordered--;
@@ -1523,14 +1525,17 @@ void cGame::draw_list() {
 			{
 				int iColor=makecol(fade_select, fade_select, fade_select);
 
-				if (player[0].house == ATREIDES)
+				if (player[0].getHouse() == ATREIDES) {
 					iColor = makecol(0, 0, fade_select);
+				}
 
-				if (player[0].house == HARKONNEN)
+				if (player[0].getHouse() == HARKONNEN) {
 					iColor = makecol(fade_select, 0, 0);
+				}
 
-				if (player[0].house == ORDOS)
+				if (player[0].getHouse() == ORDOS) {
 					iColor = makecol(0, fade_select, 0);
+				}
 
 				rect(bmp_screen, iDrawX, iDrawY, iDrawX+63, iDrawY+47, iColor);
 
@@ -2948,16 +2953,17 @@ void cGame::setup_skirmish()
 			char cHouse[30];
 			memset(cHouse, 0, sizeof(cHouse));
 
-			if (player[p].house == ATREIDES)
+			if (player[p].getHouse() == ATREIDES) {
 				sprintf(cHouse, "Atreides");
-			else if (player[p].house == HARKONNEN)
+			} else if (player[p].getHouse() == HARKONNEN) {
 				sprintf(cHouse, "Harkonnen");
-			else if (player[p].house == ORDOS)
+			} else if (player[p].getHouse() == ORDOS) {
 				sprintf(cHouse, "Ordos");
-			else if (player[p].house == SARDAUKAR)
+			} else if (player[p].getHouse() == SARDAUKAR) {
 				sprintf(cHouse, "Sardaukar");
-			else
+			} else {
 				sprintf(cHouse, "Random");
+			}
 
 			alfont_textprintf(bmp_screen, bene_font, 74,iDrawY+1, makecol(0,0,0), "%s", cHouse);
 
@@ -2989,31 +2995,35 @@ void cGame::setup_skirmish()
 
 				if (bMousePressedLeft)
 				{
-					player[p].house++;
+					player[p].setHouse((player[p].getHouse()+1));
 					if (p > 0)
 					{
-						if (player[p].house > 4)
-							player[p].house = 0;
+						if (player[p].getHouse() > 4) {
+							player[p].setHouse(0);
+						}
 					}
 					else
 					{
-						if (player[p].house > 3)
-							player[p].house = 0;
+						if (player[p].getHouse() > 3) {
+							player[p].setHouse(0);
+						}
 					}
 				}
 
 				if (bMousePressedRight)
 				{
-					player[p].house--;
+					player[p].setHouse((player[p].getHouse()-1));
 					if (p > 0)
 					{
-						if (player[p].house < 0)
-							player[p].house = 4;
+						if (player[p].getHouse() < 0) {
+							player[p].setHouse(4);
+						}
 					}
 					else
 					{
-						if (player[p].house < 0)
-							player[p].house = 3;
+						if (player[p].getHouse() < 0) {
+							player[p].setHouse(3);
+						}
 					}
 				}
 			}
@@ -3199,7 +3209,7 @@ void cGame::setup_skirmish()
 		// set up players and their units
 		for (int p=0; p < AI_WORM; p++)	{
 
-			int iHouse = player[p].house;
+			int iHouse = player[p].getHouse();
 
 			// house = 0 , random.
 			if (iHouse==0 && p < 4) { // (all players above 4 are non-playing AI 'sides'
@@ -3212,12 +3222,15 @@ void cGame::setup_skirmish()
 						iHouse = rnd(3)+1;
 
 					bool bFound=false;
-					for (int pl=0; pl < AI_WORM; pl++)
-						if (player[pl].house > 0 && player[pl].house == iHouse)
+					for (int pl=0; pl < AI_WORM; pl++) {
+						if (player[pl].getHouse() > 0 && player[pl].getHouse() == iHouse) {
 							bFound=true;
+						}
+					}
 
-					if (!bFound)
+					if (!bFound) {
 						bOk=true;
+					}
 
 
 				}
@@ -3227,7 +3240,7 @@ void cGame::setup_skirmish()
 				iHouse = FREMEN;
 			}
 
-		    player[p].set_house(iHouse);
+		    player[p].setHouse(iHouse);
 
 			// not playing.. do nothing
 			if (aiplayer[p].bPlaying == false) {
@@ -3266,7 +3279,7 @@ void cGame::setup_skirmish()
 				iY+=rnd(9);
 
 				// convert house specific stuff
-				if (player[p].house == ATREIDES) {
+				if (player[p].getHouse() == ATREIDES) {
 					if (iType == DEVASTATOR || iType == DEVIATOR) {
 						iType = SONICTANK;
 					}
@@ -3285,7 +3298,7 @@ void cGame::setup_skirmish()
 				}
 
 				// ordos
-				if (player[p].house == ORDOS)
+				if (player[p].getHouse() == ORDOS)
 				{
 					if (iType == DEVASTATOR || iType == SONICTANK) {
 						iType = DEVIATOR;
@@ -3297,7 +3310,7 @@ void cGame::setup_skirmish()
 				}
 
 				// harkonnen
-				if (player[p].house == HARKONNEN)
+				if (player[p].getHouse() == HARKONNEN)
 				{
 					if (iType == DEVIATOR || iType == SONICTANK) {
 						iType = DEVASTATOR;
@@ -3329,7 +3342,7 @@ void cGame::setup_skirmish()
 		}
 
 		// TODO: spawn a few worms
-		iHouse=player[HUMAN].house;
+		iHouse=player[HUMAN].getHouse();
 		iMission=9; // high tech level (TODO: make this customizable)
 		state = GAME_PLAYING;
 
@@ -3565,7 +3578,7 @@ void cGame::tellhouse()
                 iRegion  = 1;
                 iMentatSpeak=-1; // prepare speaking
 
-                player[0].set_house(iHouse);
+                player[0].setHouse(iHouse);
 
                 // play correct mentat music
                 play_music(MUSIC_BRIEFING);

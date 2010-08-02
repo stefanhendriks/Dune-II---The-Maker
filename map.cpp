@@ -534,12 +534,19 @@ void cMap::draw_minimap()
 
 				int iPlr=structure[cell[iCll].id[MAPID_STRUCTURES]]->getOwner();
 				// get house color from the player of this structure
-                if (iPlr ==0 || (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower()))
-                {
-				if (player[iPlr].house == ATREIDES) iColor = makecol(0,0,255);
-				if (player[iPlr].house == HARKONNEN) iColor = makecol(255,0,0);
-				if (player[iPlr].house == ORDOS) iColor = makecol(0,255,0);
-				if (player[iPlr].house == SARDAUKAR) iColor = makecol(255,0,255);
+                if (iPlr ==0 || (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower())) {
+					if (player[iPlr].getHouse() == ATREIDES) {
+						iColor = makecol(0,0,255);
+					}
+					if (player[iPlr].getHouse() == HARKONNEN) {
+						iColor = makecol(255,0,0);
+					}
+					if (player[iPlr].getHouse() == ORDOS) {
+						iColor = makecol(0,255,0);
+					}
+					if (player[iPlr].getHouse() == SARDAUKAR) {
+						iColor = makecol(255,0,255);
+					}
                 }
 			}
 
@@ -547,12 +554,19 @@ void cMap::draw_minimap()
 			{
 				int iPlr=unit[cell[iCll].id[MAPID_UNITS]].iPlayer;
 				// get house color from the player of this structure
-                if (iPlr == 0 || (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower()))
-                {
-				if (player[iPlr].house == ATREIDES) iColor = makecol(0,0,255);
-				if (player[iPlr].house == HARKONNEN) iColor = makecol(255,0,0);
-				if (player[iPlr].house == ORDOS) iColor = makecol(0,255,0);
-				if (player[iPlr].house == SARDAUKAR) iColor = makecol(255,0,255);
+                if (iPlr == 0 || (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower())) {
+					if (player[iPlr].getHouse() == ATREIDES) {
+						iColor = makecol(0,0,255);
+					}
+					if (player[iPlr].getHouse() == HARKONNEN) {
+						iColor = makecol(255,0,0);
+					}
+					if (player[iPlr].getHouse() == ORDOS) {
+						iColor = makecol(0,255,0);
+					}
+					if (player[iPlr].getHouse() == SARDAUKAR) {
+						iColor = makecol(255,0,255);
+					}
                 }
 			}
 

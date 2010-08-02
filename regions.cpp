@@ -69,7 +69,7 @@ void REGION_DRAW(int i)
         {
             cPlayer temp;                       // temp player
             temp.init();                        // init
-            temp.set_house(world[i].iHouse);    // create pal
+            temp.setHouse(world[i].iHouse);    // create pal
             select_palette(temp.pal);           // retrieve pal
 
 
@@ -106,7 +106,7 @@ void REGION_DRAW(int i)
 		{
 			cPlayer temp;
 	        temp.init();                        // init
-			temp.set_house(game.iHouse);
+			temp.setHouse(game.iHouse);
 			select_palette(temp.pal);           // retrieve pal
 
             // House < 0

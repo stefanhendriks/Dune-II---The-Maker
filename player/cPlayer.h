@@ -28,7 +28,6 @@ class cPlayer {
 
 		PALETTE pal;		// each player has its own 256 color scheme (used for coloring units)
 
-		void set_house(int iHouse);
 		void init();
 
 		int iTeam;
@@ -40,8 +39,6 @@ class cPlayer {
 		float max_credits;	// max credits a player can have (influenced by silo's)
 
 		int focus_cell;		// this is the cell that will be showed in the game centralized upon map loading
-
-		int house;			// house
 
 		int iPrimaryBuilding[MAX_STRUCTURETYPES];	// remember the primary ID (structure id) of each structure type
 		int iStructures[MAX_STRUCTURETYPES]; // remember what is built for each type of structure
@@ -57,14 +54,18 @@ class cPlayer {
 		// set
 		void setItemBuilder(cItemBuilder *theItemBuilder);
 		void setSideBar(cSideBar *theSideBar);
-		void setBuildingListUpgrader(cBuildingListUpgrader *theBuildingListUpgrader);
+		void setBuildingListUpgrader(cBuildingListUpdater *theBuildingListUpgrader);
+		void setTechLevel(int theTechLevel) { techLevel = theTechLevel; }
+		void setHouse(int iHouse);
 
 		// get
-		cBuildingListUpgrader *getBuildingListUpgrader() { return buildingListUpgrader; }
+		cBuildingListUpdater *getBuildingListUpgrader() { return buildingListUpgrader; }
 		cPlayerDifficultySettings *getDifficultySettings() { return difficultySettings; }
 		cItemBuilder *getItemBuilder() { return itemBuilder; }
 		cSideBar *getSideBar() { return sidebar; }
 		int getUpgradeLevel(int listId) { return listUpgradeLevel[listId]; }
+		int getHouse() { return house; }
+		int getTechLevel() { return techLevel; }
 
 		// delete
 		void deleteSideBar() { if (sidebar) delete sidebar; }
@@ -77,7 +78,11 @@ class cPlayer {
 		cItemBuilder * itemBuilder; // each player can build items
 
 		// TODO: cUpgradeBuilder
-		cBuildingListUpgrader * buildingListUpgrader; // modifies list of sidebar
+		cBuildingListUpdater * buildingListUpgrader; // modifies list of sidebar
+
+		int techLevel;		// technology level
+
+		int house;
 };
 
 #endif

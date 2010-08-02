@@ -229,11 +229,12 @@ void cGame::draw_upgrade()
 
 		// Lightfactory upgrading is done only for house Atreides and Ordos
 
-        if (player[0].house == ATREIDES ||
-            player[0].house == ORDOS)
+        if (player[0].getHouse() == ATREIDES ||
+            player[0].getHouse() == ORDOS) {
             iType=BARRACKS;         // Note: ordos uses also wor, so this is also for wor!!
-        else
+        } else {
             iType=WOR;
+        }
 
 		// first upgrade
 		if (iStructureUpgrade[iType] == 0 && iMission >= 2)
@@ -259,7 +260,7 @@ void cGame::draw_upgrade()
     	////////////////////////
 	/// ORNI UPGRADING
 	////////////////////////
-	if (iActiveList == LIST_ORNI && player[0].house != HARKONNEN)
+	if (iActiveList == LIST_ORNI && player[0].getHouse() != HARKONNEN)
 	{
 
 		// Lightfactory upgrading is done only for house Atreides and Ordos
@@ -425,10 +426,10 @@ void cGame::draw_upgrade()
             BITMAP *temp = create_bitmap(157, 28);
             clear_to_color(temp, makecol(255,0,255));
 
-            if (player[0].house == ATREIDES) iColor = makecol(0,0,255);
-            if (player[0].house == HARKONNEN) iColor = makecol(255,0,0);
-            if (player[0].house == ORDOS) iColor = makecol(0,255,0);
-            if (player[0].house == SARDAUKAR) iColor = makecol(255,0,255);
+            if (player[0].getHouse() == ATREIDES) iColor = makecol(0,0,255);
+            if (player[0].getHouse() == HARKONNEN) iColor = makecol(255,0,0);
+            if (player[0].getHouse() == ORDOS) iColor = makecol(0,255,0);
+            if (player[0].getHouse() == SARDAUKAR) iColor = makecol(255,0,255);
 
             rectfill(temp, 0, 0, (157-iDrawXLimit), 30, iColor);
 

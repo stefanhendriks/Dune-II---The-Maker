@@ -862,10 +862,10 @@ void cUnit::think_guard() {
                         if (player[iPlayer].iTeam == player[unit[i].iPlayer].iTeam)
                             bAlly=true;
 
-							if (iPlayer == 0 && player[0].house == ATREIDES)
+							if (iPlayer == 0 && player[0].getHouse() == ATREIDES)
 							{
 								// when the unit player == FREMEN
-								if (player[unit[i].iPlayer].house == FREMEN && iType != SANDWORM)
+								if (player[unit[i].iPlayer].getHouse() == FREMEN && iType != SANDWORM)
 									bAlly=true;
 							}
 
@@ -940,10 +940,10 @@ void cUnit::think_guard() {
                             bAlly=true;
 
 
-							if (iPlayer == 0 && player[0].house == ATREIDES)
+							if (iPlayer == 0 && player[0].getHouse() == ATREIDES)
 							{
 								// when the unit player == FREMEN
-								if (player[unit[i].iPlayer].house == FREMEN && iType != SANDWORM)
+								if (player[unit[i].iPlayer].getHouse() == FREMEN && iType != SANDWORM)
 									bAlly=true;
 							}
 
@@ -1160,10 +1160,10 @@ void cUnit::think()
                             bAlly=true;
 
 
-                        if (iPlayer == 0 && player[0].house == ATREIDES)
+                        if (iPlayer == 0 && player[0].getHouse() == ATREIDES)
                         {
                             // when the unit player == FREMEN
-                            if (player[unit[i].iPlayer].house == FREMEN && iType != SANDWORM)
+                            if (player[unit[i].iPlayer].getHouse() == FREMEN && iType != SANDWORM)
                                 bAlly=true;
                         }
 
@@ -2095,7 +2095,7 @@ void cUnit::LOG(char *txt)
 {
 	// logs unit stuff, but gives unit information
 	char msg[512];
-	sprintf(msg, "[UNIT[%d]: %s - House %d, iCell = %d, iGoal = %d ] '%s'",iID,  units[iType].name, player[iPlayer].house, iCell, iGoalCell, txt);
+	sprintf(msg, "[UNIT[%d]: %s - House %d, iCell = %d, iGoal = %d ] '%s'",iID,  units[iType].name, player[iPlayer].getHouse(), iCell, iGoalCell, txt);
 	logbook(msg);
 }
 
@@ -4166,7 +4166,7 @@ void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType)
 	}
 
 	char msg[255];
-	sprintf(msg, "[%d] Reinforcement: Controller = %d, House %d, Time %d, Type = %d", iIndex, iPlyr, player[iPlyr].house, iTime, iUType);
+	sprintf(msg, "[%d] Reinforcement: Controller = %d, House %d, Time %d, Type = %d", iIndex, iPlyr, player[iPlyr].getHouse(), iTime, iUType);
 	logbook(msg);
 
 	// DEBUG DEBUG

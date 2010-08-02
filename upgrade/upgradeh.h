@@ -1,7 +1,8 @@
 #ifndef UPGRADEH_H_
 #define UPGRADEH_H_
 
-#include "cBuildingListUpgrader.h"
+// this thing can update building lists from a sidebar
+#include "cBuildingListUpdater.h"
 
 #include "cListUpgrade.h"
 

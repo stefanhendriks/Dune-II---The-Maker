@@ -1566,7 +1566,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
                         if (iP == iHumanID)
                         {
 							player[0].credits = iPl_credits[iP];
-							player[0].set_house(iPl_house[iP]);
+							player[0].setHouse(iPl_house[iP]);
                             player[0].iTeam=0;
                             game.iHouse = iPl_house[iP];
                             if (game.getCreditsDrawer())  game.getCreditsDrawer()->setCredits();
@@ -1580,12 +1580,14 @@ void INI_Load_scenario(int iHouse, int iRegion) {
                             player[iRealID].iTeam = 1; // All AI players are on the same team
 
                             // belong to player team
-                            if (iPl_house[iP] == FREMEN)
-                                if (player[0].house == ATREIDES)
+                            if (iPl_house[iP] == FREMEN) {
+                                if (player[0].getHouse() == ATREIDES) {
                                     player[iRealID].iTeam = 0;
+                                }
+                            }
 
 							player[iRealID].credits = iPl_credits[iP];
-							player[iRealID].set_house(iPl_house[iP]);
+							player[iRealID].setHouse(iPl_house[iP]);
 							iRealID++;
 						}
 					}
@@ -1639,7 +1641,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 
 							// Search for a player with this house
 							for (int i=0; i < MAX_PLAYERS; i++)
-								if (player[i].house == iHouse)
+								if (player[i].getHouse() == iHouse)
 								{
 									iController = i; // set controller here.. phew
 									break;
@@ -1648,8 +1650,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 								// HACK HACK : Set up fremen house here
 							if (iHouse == FREMEN)
 							{
-								player[5].set_house(FREMEN); // set up palette
-								player[5].house = FREMEN;
+								player[5].setHouse(FREMEN); // set up palette
 								player[5].credits = 9999; // lots of money for the fremen
 
 								iController = 5;
@@ -1726,7 +1727,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
                         if (iP == iHumanID)
                         {
 							player[0].credits = iPl_credits[iP];
-							player[0].set_house(iPl_house[iP]);
+							player[0].setHouse(iPl_house[iP]);
                             player[0].iTeam=0;
                             game.iHouse = iPl_house[iP];
 
@@ -1740,12 +1741,14 @@ void INI_Load_scenario(int iHouse, int iRegion) {
                             player[iRealID].iTeam = 1; // All AI players are on the same team
 
                             // belong to player team
-                            if (iPl_house[iP] == FREMEN)
-                                if (player[0].house == ATREIDES)
+                            if (iPl_house[iP] == FREMEN) {
+                                if (player[HUMAN].getHouse() == ATREIDES) {
                                     player[iRealID].iTeam = 0;
+                                }
+                            }
 
 							player[iRealID].credits = iPl_credits[iP];
-							player[iRealID].set_house(iPl_house[iP]);
+							player[iRealID].setHouse(iPl_house[iP]);
 							iRealID++;
 						}
 					}
@@ -1813,7 +1816,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 									//char msg[80];
 									//sprintf(msg, "i=%d, ihouse=%d, house=%d", i, iHouse, player[i].house);
 									//logbook(msg);
-									if (player[i].house == iHouse)
+									if (player[i].getHouse() == iHouse)
 									{
 										iController = i; // set controller here.. phew
 										break;
@@ -1850,7 +1853,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 								// Search for a player with this house
 								for (int i=0; i < MAX_PLAYERS; i++)
 								{
-									if (player[i].house == iHouse)
+									if (player[i].getHouse() == iHouse)
 									{
 										iController = i; // set controller here.. phew
 										break;
@@ -1968,7 +1971,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 							// Search for a player with this house
 							for (int i=0; i < MAX_PLAYERS; i++)
 							{
-								if (player[i].house == iHouse)
+								if (player[i].getHouse() == iHouse)
 								{
 									iController = i; // set controller here.. phew
 									break;
@@ -1995,7 +1998,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 							{
                             // Find corresponding house and get controller
                             for (int i=0; i < MAX_PLAYERS; i++)
-                                if (player[i].house == iHouse && i != iController)
+                                if (player[i].getHouse() == iHouse && i != iController)
                                 {
                                     iCell = player[i].focus_cell;
 									break;

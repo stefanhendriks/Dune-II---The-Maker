@@ -183,15 +183,15 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 		if (isOverItemCoordinates_Boolean(mouse_x, mouse_y, iDrawX, iDrawY)) {
 			int iColor=makecol(game.fade_select, game.fade_select, game.fade_select);
 
-			if (player[0].house == ATREIDES) {
+			if (player[0].getHouse() == ATREIDES) {
 				iColor = makecol(0, 0, game.fade_select);
 			}
 
-			if (player[0].house == HARKONNEN) {
+			if (player[0].getHouse() == HARKONNEN) {
 				iColor = makecol(game.fade_select, 0, 0);
 			}
 
-			if (player[0].house == ORDOS) {
+			if (player[0].getHouse() == ORDOS) {
 				iColor = makecol(0, game.fade_select, 0);
 			}
 

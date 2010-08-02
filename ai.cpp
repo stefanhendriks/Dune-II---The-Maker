@@ -80,7 +80,7 @@ void cAIPlayer::BUILD_STRUCTURE(int iStrucType)
 void cAIPlayer::BUILD_UNIT(int iUnitType)
 {
     // Fix up house mixtures
-    if (player[ID].house == HARKONNEN || player[ID].house == SARDAUKAR)
+    if (player[ID].getHouse() == HARKONNEN || player[ID].getHouse() == SARDAUKAR)
     {
         if (iUnitType == INFANTRY) iUnitType = TROOPERS;
         if (iUnitType == SOLDIER) iUnitType = TROOPER;
@@ -94,7 +94,7 @@ void cAIPlayer::BUILD_UNIT(int iUnitType)
         if (iUnitType == SOLDIER) iUnitType = TROOPER;
 	}
 
-    if (player[ID].house == ORDOS)
+    if (player[ID].getHouse() == ORDOS)
     {
         if (iUnitType == TRIKE) iUnitType = RAIDER;
     }
@@ -756,24 +756,27 @@ void cAIPlayer::think_buildarmy()
     int iMission = game.iMission;
 	int iChance = 10;
 
-	if (player[ID].house == HARKONNEN ||
-        player[ID].house == SARDAUKAR)
+	if (player[ID].getHouse() == HARKONNEN ||
+        player[ID].getHouse() == SARDAUKAR)
 	{
-		if (iMission <= 2)
+		if (iMission <= 2) {
 			iChance=50;
-		else
+		} else {
 			iChance=10;
+		}
 	}
 	else
 	{
         // non trooper house(s)
-		if (iMission <= 2)
+		if (iMission <= 2) {
 			iChance=20;
+		}
 	}
 
     // Skirmish override
-    if (game.bSkirmish)
+    if (game.bSkirmish) {
         iChance=10;
+    }
 
     if (iMission > 1 && rnd(100) < iChance)
     {
@@ -865,25 +868,32 @@ void cAIPlayer::think_buildarmy()
 
     }
 
-    if (iMission > 6)
-        if (player[ID].house == ATREIDES)
-            if (player[ID].credits > units[ORNITHOPTER].cost)
-                if (rnd(100) < 15)
-                {
+    if (iMission > 6) {
+        if (player[ID].getHouse() == ATREIDES) {
+            if (player[ID].credits > units[ORNITHOPTER].cost) {
+                if (rnd(100) < 15) {
                     BUILD_UNIT(ORNITHOPTER);
                 }
+            }
+        }
+    }
 
 	if (iMission >= 8 || game.bSkirmish)
     {
         int iSpecial = DEVASTATOR;
 
-        if (player[ID].house == ATREIDES)  iSpecial = SONICTANK;
-        if (player[ID].house == ORDOS)     iSpecial = DEVIATOR;
+        if (player[ID].getHouse() == ATREIDES) {
+        	iSpecial = SONICTANK;
+        }
 
-        if (player[ID].credits > units[iSpecial].cost)
-        {
+        if (player[ID].getHouse() == ORDOS) {
+        	iSpecial = DEVIATOR;
+        }
+
+        if (player[ID].credits > units[iSpecial].cost) {
             BUILD_UNIT(iSpecial);
         }
+
         if (player[ID].credits > units[SIEGETANK].cost)
         {
             // enough to buy launcher , tank
@@ -997,7 +1007,7 @@ void cAIPlayer::think_buildbase()
 			}
 
 			// build wor / barracks
-			if (player[ID].house == ATREIDES)
+			if (player[ID].getHouse() == ATREIDES)
 			{
 				if (player[ID].iStructures[BARRACKS] < 1)
 				{
@@ -1209,7 +1219,7 @@ int AI_RANDOM_UNIT_TARGET(int iPlayer, int iAttackPlayer)
 				if (DEBUGGING)
 				{
 				char msg[255];
-				sprintf(msg, "AI %d (House %d) -> Visible = %d", iPlayer, player[iPlayer].house, map.iVisible[unit[i].iCell][iPlayer]);
+				sprintf(msg, "AI %d (House %d) -> Visible = %d", iPlayer, player[iPlayer].getHouse(), map.iVisible[unit[i].iCell][iPlayer]);
 				logbook(msg);
 				}
 

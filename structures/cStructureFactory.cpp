@@ -394,7 +394,7 @@ void upgradeTechTree(int iPlayer, int iStructureType) {
 
 	logbook("upgrading tech tree");
 
-	int iHouse = player[iPlayer].house;
+	int iHouse = player[iPlayer].getHouse();
 	int iMission = game.iMission; // MISSION IS OK NOW, IS CORRECTLY SET AT LOADING
 
     // Upgrade/update lists
