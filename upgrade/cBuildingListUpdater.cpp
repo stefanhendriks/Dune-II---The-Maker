@@ -18,7 +18,6 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 	int house = player->getHouse();
 	int techLevel = player->getTechLevel();
 
-
 	// do something
 	cLogger::getInstance()->logCommentLine("updateStructureCreated - end");
 }
