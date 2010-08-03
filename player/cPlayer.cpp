@@ -65,11 +65,11 @@ void cPlayer::setBuildingListUpdater(cBuildingListUpdater *theBuildingListUpgrad
 	assert(theBuildingListUpgrader);
 
 	// delete old reference
-	if (buildingListUpgrader) {
-		delete buildingListUpgrader;
+	if (buildingListUpdater) {
+		delete buildingListUpdater;
 	}
 
-	buildingListUpgrader = theBuildingListUpgrader;
+	buildingListUpdater = theBuildingListUpgrader;
 }
 
 void cPlayer::init()

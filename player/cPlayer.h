@@ -61,7 +61,7 @@ class cPlayer {
 		void setStructurePlacer(cStructurePlacer *theStructurePlacer);
 
 		// get
-		cBuildingListUpdater *getBuildingListUpgrader() { return buildingListUpgrader; }
+		cBuildingListUpdater *getBuildingListUpgrader() { return buildingListUpdater; }
 		cPlayerDifficultySettings *getDifficultySettings() { return difficultySettings; }
 		cItemBuilder *getItemBuilder() { return itemBuilder; }
 		cSideBar *getSideBar() { return sidebar; }
@@ -82,7 +82,7 @@ class cPlayer {
 		cItemBuilder * itemBuilder; // each player can build items
 
 		// TODO: cUpgradeBuilder
-		cBuildingListUpdater * buildingListUpgrader; // modifies list of sidebar on upgrades
+		cBuildingListUpdater * buildingListUpdater; // modifies list of sidebar on upgrades
 
 		cStructurePlacer * structurePlacer;	// used to place structures and handle updates in sidebar accordingly
 
