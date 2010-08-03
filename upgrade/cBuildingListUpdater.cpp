@@ -15,10 +15,12 @@ cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer) {
 void cBuildingListUpdater::updateStructureCreated(int structureType) {
 	cLogger::getInstance()->logCommentLine("updateStructureCreated - begin");
 
+	// activate/deactivate any lists if needed
+	cBuildingList *list = player->getSideBar()->getList(LIST_CONSTYARD);
+
 	int house = player->getHouse();
 	int techLevel = player->getTechLevel();
 
-	cBuildingList *list = player->getSideBar()->getList(LIST_CONSTYARD);
 
 	assert(list);
 

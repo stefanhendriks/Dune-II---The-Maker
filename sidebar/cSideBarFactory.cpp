@@ -32,7 +32,7 @@ cSideBar * cSideBarFactory::createSideBar(cPlayer *thePlayer, int techlevel, int
 	// them according to the techLevel.
 	for (int listId = LIST_NONE; listId < LIST_MAX; listId++) {
 		logger->logCommentLine("createList");
-		cBuildingList *list = cBuildingListFactory::getInstance()->createList(listId, techlevel, house);
+		cBuildingList *list = cBuildingListFactory::getInstance()->createList(thePlayer, listId, techlevel, house);
 		sidebar->setList(listId, list);
 	}
 

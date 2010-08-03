@@ -45,15 +45,44 @@ void cSideBar::think() {
  * Think about the availability of lists.
  */
 void cSideBar::thinkAvailabilityLists() {
-	if (player->iStructures[CONSTYARD] > 0) {
-		getList(LIST_CONSTYARD)->setAvailable(true);
-	} else {
-		getList(LIST_CONSTYARD)->setAvailable(false);
+
+	// CONSTYARD LIST
+	cBuildingList * constyardList = player->getSideBar()->getList(LIST_CONSTYARD);
+
+	constyardList->setAvailable(player->iStructures[CONSTYARD] > 0);
+
+	// INFANTRY LIST
+	cBuildingList * infantryList = player->getSideBar()->getList(LIST_INFANTRY);
+
+	if (player->getHouse() == ATREIDES) {
+		infantryList->setAvailable(player->iStructures[BARRACKS] > 0);
+	} else if (player->getHouse() == HARKONNEN) {
+		infantryList->setAvailable(player->iStructures[WOR] > 0);
+	} else if (player->getHouse() == ORDOS) {
+		infantryList->setAvailable(player->iStructures[BARRACKS] > 0 || player->iStructures[WOR] > 0);
+	} else if (player->getHouse() == SARDAUKAR) {
+		infantryList->setAvailable(player->iStructures[WOR] > 0);
 	}
 
-	getList(LIST_INFANTRY)->setAvailable(true);
-	getList(LIST_LIGHTFC)->setAvailable(true);
-	getList(LIST_HEAVYFC)->setAvailable(true);
+	// LIGHTFC LIST
+	cBuildingList * lightfcList = player->getSideBar()->getList(LIST_LIGHTFC);
+	lightfcList->setAvailable(player->iStructures[LIGHTFACTORY] > 0);
+
+	// HEAVYFC LIST
+	cBuildingList * heavyfcList = player->getSideBar()->getList(LIST_HEAVYFC);
+	heavyfcList->setAvailable(player->iStructures[HEAVYFACTORY] > 0);
+
+	// HIGHTECH (ORNI) LIST
+	cBuildingList * orniList = player->getSideBar()->getList(LIST_ORNI);
+	orniList->setAvailable(player->iStructures[HIGHTECH] > 0);
+
+	// PALACE LIST
+	cBuildingList * palaceList = player->getSideBar()->getList(LIST_PALACE);
+	palaceList->setAvailable(player->iStructures[PALACE] > 0);
+
+	// STARPORT LIST
+	cBuildingList * starportList = player->getSideBar()->getList(LIST_STARPORT);
+	starportList->setAvailable(player->iStructures[STARPORT] > 0);
 }
 
 /**

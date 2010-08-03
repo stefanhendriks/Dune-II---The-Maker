@@ -23,30 +23,7 @@ cBuildingListFactory *cBuildingListFactory::getInstance() {
 	return instance;
 }
 
-//	// Any house, any mission, start with this
-//		list_new_item(LIST_CONSTYARD, ICON_STR_1SLAB, structures[SLAB1].cost, SLAB1, -1);
-//
-//	if (game.iMission >= 4)
-//		list_new_item(LIST_CONSTYARD, ICON_STR_WALL, structures[WALL].cost, WALL, -1);
-//
-//	list_new_item(LIST_CONSTYARD, ICON_STR_WINDTRAP, structures[WINDTRAP].cost, WINDTRAP, -1);
-//
-//
-//	// Barracks
-//	if (game.iMission >= 2)
-//		if (iHouse == ATREIDES || iHouse == ORDOS)
-//		{
-//			list_new_item(LIST_CONSTYARD, ICON_STR_BARRACKS, structures[BARRACKS].cost, BARRACKS, -1);
-//
-//			if (game.iMission >= 5 && game.iHouse == ORDOS)
-//				list_new_item(LIST_CONSTYARD, ICON_STR_WOR, structures[WOR].cost, WOR, -1);
-//		}
-//		else
-//			list_new_item(LIST_CONSTYARD, ICON_STR_WOR, structures[WOR].cost, WOR, -1);
-//
-//
-//	// At start the player does not have other icons to use for building
-//
+
 //	// STARTING UNIT LISTS
 //
 //	// LIGHT FACTORY
@@ -60,10 +37,7 @@ cBuildingListFactory *cBuildingListFactory::getInstance() {
 //		game.iStructureUpgrade[LIGHTFACTORY]=1;
 //	}
 //
-//	// HEAVY FACTORY
-//	list_new_item(LIST_HEAVYFC, ICON_UNIT_TANK, units[TANK].cost, -1, TANK);
-//	list_new_item(LIST_HEAVYFC, ICON_UNIT_HARVESTER, units[HARVESTER].cost, -1, HARVESTER);
-//
+
 //	// HITECH
 //	list_new_item(LIST_ORNI, ICON_UNIT_CARRYALL, units[CARRYALL].cost, -1, CARRYALL);
 //
@@ -96,7 +70,7 @@ cBuildingListFactory *cBuildingListFactory::getInstance() {
  * @param techlevel
  * @param house
  */
-void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int techlevel, int house) {
+void cBuildingListFactory::initializeList(cPlayer *player, cBuildingList *list, int listId, int techlevel, int house) {
 	assert(list != NULL);
 
 	// first clear the list
@@ -105,18 +79,35 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 	// X is the same for all list buttons
 	list->setButtonDrawX(513);
 
-	list->setAvailable(true);
+	list->setAvailable(false);
 
 	// now set it up
 	if (listId == LIST_CONSTYARD) {
+
 		list->setButtonDrawY(45);
 		list->setButtonIcon(BTN_CONST_PRESSED);
 
 		// add items
 		list->addItemToList(new cBuildingListItem(SLAB1, structures[SLAB1], list));
+
+		if (techlevel >= 2) {
+			if (house == ATREIDES || house == ORDOS) {
+				list->addItemToList(new cBuildingListItem(BARRACKS, structures[BARRACKS], list));
+			}
+			if (house == HARKONNEN) {
+				list->addItemToList(new cBuildingListItem(WOR, structures[WOR], list));
+			}
+		}
+
 		if (techlevel >= 4) {
 			//list->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4])); // only available after upgrading
 			list->addItemToList(new cBuildingListItem(WALL, structures[WALL], list));
+		}
+
+		if (techlevel >= 5) {
+			if (house == ORDOS) {
+				list->addItemToList(new cBuildingListItem(BARRACKS, structures[WOR], list));
+			}
 		}
 
 		list->addItemToList(new cBuildingListItem(WINDTRAP, structures[WINDTRAP], list));
@@ -136,9 +127,9 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
 		} else if (house == ORDOS) {
 			list->setButtonIcon(BTN_TRPINF_PRESSED);
-			// add items (ordos has both)
-			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list));
-			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
+			// add items , since ordos can have both, it is determined on structure place
+//			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list));
+//			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
 		} else {
 			// do nothing
 		}
@@ -167,9 +158,6 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 
 		list->addItemToList(new cBuildingListItem(TANK, units[TANK], list));
 		list->addItemToList(new cBuildingListItem(HARVESTER, units[HARVESTER], list));
-		list->addItemToList(new cBuildingListItem(SIEGETANK, units[SIEGETANK], list));
-		list->addItemToList(new cBuildingListItem(LAUNCHER, units[LAUNCHER], list));
-		list->addItemToList(new cBuildingListItem(SONICTANK, units[SONICTANK], list));
 	}
 
 	if (listId == LIST_ORNI) {
@@ -191,9 +179,17 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 		list->setButtonIcon(BTN_PALACE_PRESSED);
 
 		// special weapons
-		list->addItemToList(new cBuildingListItem(MISSILE, units[MISSILE], list));
-		list->addItemToList(new cBuildingListItem(UNIT_FREMEN_THREE, units[UNIT_FREMEN_THREE], list));
-		list->addItemToList(new cBuildingListItem(SABOTEUR, units[SABOTEUR], list));
+		switch (house) {
+			case ATREIDES:
+				list->addItemToList(new cBuildingListItem(UNIT_FREMEN_THREE, units[UNIT_FREMEN_THREE], list));
+				break;
+			case HARKONNEN:
+				list->addItemToList(new cBuildingListItem(MISSILE, units[MISSILE], list));
+				break;
+			case ORDOS:
+				list->addItemToList(new cBuildingListItem(SABOTEUR, units[SABOTEUR], list));
+				break;
+		}
 	}
 
 }
@@ -205,9 +201,9 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
  * @param techlevel
  * @return
  */
-cBuildingList * cBuildingListFactory::createList(int listId, int techlevel, int house) {
+cBuildingList * cBuildingListFactory::createList(cPlayer * player, int listId, int techlevel, int house) {
 	cBuildingList * list = new cBuildingList(listId);
-	initializeList(list, listId, techlevel, house);
+	initializeList(player, list, listId, techlevel, house);
 	list->setTypeOfList(listId); // list id == type (see cSideBarFactory)
 	return list;
 }
