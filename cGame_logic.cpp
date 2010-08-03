@@ -4204,6 +4204,9 @@ void cGame::setup_players() {
 		cStructurePlacer * structurePlacer = new cStructurePlacer(thePlayer);
 		thePlayer->setStructurePlacer(structurePlacer);
 
+		cUpgradeBuilder * upgradeBuilder = new cUpgradeBuilder(thePlayer);
+		thePlayer->setUpgradeBuilder(upgradeBuilder);
+
 		// set tech level
 		thePlayer->setTechLevel(game.iMission);
 	}

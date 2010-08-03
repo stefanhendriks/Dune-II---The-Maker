@@ -57,7 +57,10 @@ void cSideBar::thinkUpgradeButton() {
 			bool isUpgradeApplicable = upgradeUtils.isUpgradeApplicableForPlayerAndList(player, selectedListId, techLevel, upgradeLevel );
 
 			if (isUpgradeApplicable && MOUSE_BTN_LEFT()) {
-				// upgrade
+				cListUpgrade * upgrade = upgradeUtils.getListUpgradeForList(selectedListId, techLevel, upgradeLevel);
+				assert(upgrade != NULL);
+				assert(player->getUpgradeBuilder());
+				player->getUpgradeBuilder()->addUpgrade(selectedListId, upgrade);
 			}
 		}
 	}

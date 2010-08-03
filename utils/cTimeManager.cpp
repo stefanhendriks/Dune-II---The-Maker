@@ -142,6 +142,11 @@ void cTimeManager::handleTimerGlobal() {
 					if (itemBuilder) {
 						itemBuilder->think();
 					}
+
+					cUpgradeBuilder * upgradeBuilder = player[i].getUpgradeBuilder();
+					if (upgradeBuilder) {
+						upgradeBuilder->processUpgrades();
+					}
 				}
 
 				game.TIMER_scroll++;
@@ -152,6 +157,8 @@ void cTimeManager::handleTimerGlobal() {
 				}
 
 				// TODO: upgrades
+
+
 				game.TIMER_money++;
 
 				if (game.TIMER_money > 5) {

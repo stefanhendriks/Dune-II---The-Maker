@@ -36,6 +36,21 @@ int cUpgradeUtils::getPriceToUpgradeList(int listTypeId, int techlevel, int curr
 	return -1;
 }
 
+cListUpgrade * cUpgradeUtils::getListUpgradeForList(int listTypeId, int techlevel, int currentUpgradeLevelOfList) {
+	if (listTypeId == LIST_CONSTYARD) {
+		// upgrade for 4SLAB
+		if (techlevel >= 4 && currentUpgradeLevelOfList < 1) {
+			return new cListUpgrade(50, 200, UPGRADE_ONE);
+		}
+		// upgrade for RTURRET
+		if (techlevel >= 6 && currentUpgradeLevelOfList < 2) {
+			return new cListUpgrade(200, 400, UPGRADE_TWO);
+		}
+	}
+
+	return NULL;
+}
+
 bool cUpgradeUtils::isUpgradeApplicableForPlayerAndList(cPlayer *thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList) {
 	assert(thePlayer);
 	assert(listTypeId >= LIST_CONSTYARD);

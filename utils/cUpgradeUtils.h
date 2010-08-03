@@ -23,6 +23,8 @@ class cUpgradeUtils {
 
 		bool isUpgradeApplicableForPlayerAndList(cPlayer *thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList);
 
+		cListUpgrade * getListUpgradeForList(int listTypeId, int techlevel, int currentUpgradeLevelOfList);
+
 	protected:
 
 	private:

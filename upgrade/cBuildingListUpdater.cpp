@@ -140,7 +140,7 @@ void cBuildingListUpdater::updateUpgradeCompleted(cBuildingList *listToUpgrade) 
 	cLogger::getInstance()->logCommentLine("updateUpgradeCompleted - begin");
 
 	int currentLevel = listToUpgrade->getUpgradeLevel();
-	int newLevel = currentLevel++;
+	int newLevel = currentLevel + 1;
 	// up the upgrade level
 	listToUpgrade->setUpgradeLevel(newLevel);
 

@@ -75,5 +75,6 @@ void cUpgradeDrawer::drawUpgradeButton(cPlayer * thePlayer, cBuildingList * theS
 }
 
 void cUpgradeDrawer::drawUpgradeProgress(cPlayer * thePlayer, cBuildingList * theSelectedList) {
-	// TODO
+	// make black / TEMP
+	rectfill(bmp_screen, 29, 0, 187, 29, makecol(0,0,0));
 }

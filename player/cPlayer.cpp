@@ -29,6 +29,18 @@ void cPlayer::setId(int theId) {
 	id = theId;
 }
 
+void cPlayer::setUpgradeBuilder(cUpgradeBuilder *theUpgradeBuilder) {
+	assert(theUpgradeBuilder);
+
+	// delete old reference
+	if (upgradeBuilder) {
+		delete upgradeBuilder;
+	}
+
+	upgradeBuilder = theUpgradeBuilder;
+}
+
+
 void cPlayer::setSideBar(cSideBar *theSideBar) {
 	assert(theSideBar);
 

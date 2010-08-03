@@ -47,6 +47,7 @@ class cBuildingList {
 		void setTimer(int value) { TIMER_progress = value; }
 		void setTypeOfList(int value) { typeOfList = value; }
 		void setUpgradeLevel(int value) { upgradeLevel = value; }
+		void setUpgrading(bool value) { upgrading = value; }
 
 		/**
 		 * Remember, only the pressed version. Unpressed icon versions are not available. They are drawn
@@ -54,7 +55,6 @@ class cBuildingList {
 		 * @param iconId
 		 */
 		void setButtonIcon(int iconId) { buttonIconId = iconId; }
-
 
 		void setButtonDrawX(int value) { buttonDrawX = value; }
 		void setButtonDrawY(int value) { buttonDrawY = value; }

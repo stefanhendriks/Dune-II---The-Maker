@@ -56,6 +56,7 @@ class cPlayer {
 		void setHouse(int iHouse);
 		void setId(int theId);
 		void setStructurePlacer(cStructurePlacer *theStructurePlacer);
+		void setUpgradeBuilder(cUpgradeBuilder *theUpgradeBuilder);
 
 		// get
 		cBuildingListUpdater *getBuildingListUpdater() { return buildingListUpdater; }
@@ -66,6 +67,7 @@ class cPlayer {
 		int getTechLevel() { return techLevel; }
 		int getId() { return id; }
 		cStructurePlacer * getStructurePlacer() { return structurePlacer; }
+		cUpgradeBuilder * getUpgradeBuilder() { return upgradeBuilder; }
 
 		// delete
 		void deleteSideBar() { if (sidebar) delete sidebar; }
@@ -76,8 +78,8 @@ class cPlayer {
 		// these have all state, and need to be recreated for each mission.
 		cSideBar * sidebar;			// each player has a sidebar (lists of what it can build)
 		cItemBuilder * itemBuilder; // each player can build items
+		cUpgradeBuilder * upgradeBuilder; // each player can upgrade lists
 
-		// TODO: cUpgradeBuilder
 		cBuildingListUpdater * buildingListUpdater; // modifies list of sidebar on upgrades
 		cStructurePlacer * structurePlacer;	// used to place structures and handle updates in sidebar accordingly
 

@@ -6,4 +6,6 @@
 
 #include "cListUpgrade.h"
 
+#include "cUpgradeBuilder.h"
+
 #endif

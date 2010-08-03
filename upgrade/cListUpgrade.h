@@ -19,6 +19,18 @@ public:
 	cListUpgrade(int theProgressLimit, int theTotalPrice, eUpgradeType theType);
 	virtual ~cListUpgrade();
 
+	int getTimerProgress() { return TIMER_progress; }
+	int getProgress() { return progress; }
+	int getProgressLimit() { return progressLimit; }
+	int getTotalPrice() { return totalPrice; }
+	float getPricePerTimeUnit() { return pricePerTimeUnit; }
+
+	void setProgress(int value) { progress = value; }
+	void setProgressLimit(int value) { progressLimit = value; }
+	void setTotalPrice(int value) { totalPrice = value; }
+	void setPricePerTimeUnit(float value) { pricePerTimeUnit = value; }
+	void setTimerProgress(int value) { TIMER_progress = value; }
+
 private:
 
 	int TIMER_progress;		// timer to increase progress
