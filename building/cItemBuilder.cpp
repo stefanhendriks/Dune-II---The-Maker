@@ -106,9 +106,14 @@ void cItemBuilder::think() {
 
 							if (primaryBuildingIdOfStructureType > -1) {
 								int cell = structure[primaryBuildingIdOfStructureType]->iFreeAround();
-								structure[primaryBuildingIdOfStructureType]->setAnimating(true); // animate
+								cAbstractStructure * theStructure = structure[primaryBuildingIdOfStructureType];
+								theStructure->setAnimating(true); // animate
 								// TODO: construct unit here
-								UNIT_CREATE(cell, item->getBuildId(), player->getId(), false);
+								int unitId = UNIT_CREATE(cell, item->getBuildId(), player->getId(), false);
+								int rallyPoint = theStructure->getRallyPoint();
+								if (rallyPoint > -1) {
+									unit[unitId].move_to(rallyPoint, -1, -1);
+								}
 							}
 
 							// stop building this item when we are done
