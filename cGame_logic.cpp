@@ -1549,10 +1549,6 @@ void cGame::combat()
 
 }
 
-void cGame::setup_list() {
-
-}
-
 void cGame::draw_mentat(int iType)
 {
 	select_palette( general_palette  );
@@ -2692,7 +2688,6 @@ void cGame::setup_skirmish()
 		assert(player[HUMAN].getItemBuilder() != NULL);
 
 		bFadeOut=true;
-		setup_list();
         play_music(MUSIC_PEACE);
 	}
 
@@ -4181,7 +4176,6 @@ bool cGame::setupGame() {
 
 	game.init();
 	game.setup_players();
-	game.setup_list();
 
 	play_music(MUSIC_MENU);
 

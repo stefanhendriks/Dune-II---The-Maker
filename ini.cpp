@@ -2097,7 +2097,6 @@ void INI_Load_scenario(int iHouse, int iRegion) {
     logbook("[SCENARIO] Done reading");
   }
     player[AI_WORM].iTeam=-2;
-    game.setup_list();
     map.smooth();
 
   if (player[0].iStructures[CONSTYARD] < 1)

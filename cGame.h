@@ -148,7 +148,6 @@ public:
 	bool bPlacedIt;		// for remembering, for combat_mouse stuff..
 
 	void setup_players();
-	void setup_list();		// set up all lists at the beginning of any mission (depening on tech level, house, etc)
 	void think_message();
 	void set_message(char msg[255]); // new message
 
