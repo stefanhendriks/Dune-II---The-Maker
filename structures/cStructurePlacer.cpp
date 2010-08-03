@@ -22,6 +22,6 @@ void cStructurePlacer::placeStructure(int destinationCell, int iStructureTypeId,
 	cStructureFactory::getInstance()->createStructure(destinationCell, iStructureTypeId, player->getId(), healthPercentage);
 
 	// handle update
-	cBuildingListUpdater * buildingListUpdater = player->getBuildingListUpgrader();
+	cBuildingListUpdater * buildingListUpdater = player->getBuildingListUpdater();
 	buildingListUpdater->updateStructureCreated(iStructureTypeId);
 }

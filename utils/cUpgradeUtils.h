@@ -18,6 +18,11 @@ class cUpgradeUtils {
 		int getPriceToUpgradeList(int listTypeId, int techlevel, int currentUpgradeLevelOfList);
 
 		bool canPlayerPayForUpgradeForList(cPlayer *thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList);
+
+		bool isMouseOverUpgradeButton(int mouseX, int mouseY);
+
+		bool isUpgradeApplicableForPlayerAndList(cPlayer *thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList);
+
 	protected:
 
 	private:

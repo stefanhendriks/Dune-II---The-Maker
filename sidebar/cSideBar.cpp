@@ -38,8 +38,30 @@ void cSideBar::setList(int listId, cBuildingList* list) {
  */
 void cSideBar::think() {
 	thinkAvailabilityLists();
+	thinkUpgradeButton();
 }
 
+void cSideBar::thinkUpgradeButton() {
+	cUpgradeUtils upgradeUtils;
+	bool isOverUpgradeButton = upgradeUtils.isMouseOverUpgradeButton(mouse_x, mouse_y);
+
+	if (isOverUpgradeButton ) {
+		int selectedListId = player->getSideBar()->getSelectedListID();
+
+		if (selectedListId > -1) {
+			cBuildingList * list = player->getSideBar()->getList(selectedListId);
+			assert(list);
+			int upgradeLevel = list->getUpgradeLevel();
+			int techLevel = player->getTechLevel();
+
+			bool isUpgradeApplicable = upgradeUtils.isUpgradeApplicableForPlayerAndList(player, selectedListId, techLevel, upgradeLevel );
+
+			if (isUpgradeApplicable && MOUSE_BTN_LEFT()) {
+				// upgrade
+			}
+		}
+	}
+}
 
 /**
  * Think about the availability of lists.

@@ -51,6 +51,7 @@ class cSideBar {
 
 		void think();	// timer based
 		void thinkInteraction(); // fps based
+		void thinkUpgradeButton(); // fps based
 
 		// set
 		void setPlayer(cPlayer *thePlayer) { player = thePlayer; }

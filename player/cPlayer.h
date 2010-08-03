@@ -58,7 +58,7 @@ class cPlayer {
 		void setStructurePlacer(cStructurePlacer *theStructurePlacer);
 
 		// get
-		cBuildingListUpdater *getBuildingListUpgrader() { return buildingListUpdater; }
+		cBuildingListUpdater *getBuildingListUpdater() { return buildingListUpdater; }
 		cPlayerDifficultySettings *getDifficultySettings() { return difficultySettings; }
 		cItemBuilder *getItemBuilder() { return itemBuilder; }
 		cSideBar *getSideBar() { return sidebar; }
@@ -80,6 +80,7 @@ class cPlayer {
 		// TODO: cUpgradeBuilder
 		cBuildingListUpdater * buildingListUpdater; // modifies list of sidebar on upgrades
 		cStructurePlacer * structurePlacer;	// used to place structures and handle updates in sidebar accordingly
+
 
 		int techLevel;		// technology level
 		int house;
