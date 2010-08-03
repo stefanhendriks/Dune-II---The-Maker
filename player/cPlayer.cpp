@@ -80,8 +80,10 @@ void cPlayer::init()
 	difficultySettings = new cPlayerAtreidesDifficultySettings();
 
 	// Reset structures amount
-	memset(iStructures, 0, sizeof(iStructures));
-	memset(iPrimaryBuilding, -1, sizeof(iPrimaryBuilding));
+	for (int i = 0 ; i < MAX_STRUCTURETYPES; i++) {
+		iStructures[i] = 0;
+		iPrimaryBuilding[i] = -1;
+	}
 
 	credits	=	0;
 	max_credits	=	credits;
@@ -99,10 +101,24 @@ void cPlayer::init()
 
 
 // set house
-void cPlayer::setHouse(int iHouse)
-{
-
+void cPlayer::setHouse(int iHouse) {
   house = iHouse;      // use rules of this house
+
+  if (difficultySettings) {
+	  delete difficultySettings;
+  }
+
+  if (iHouse == ATREIDES) {
+	  difficultySettings = new cPlayerAtreidesDifficultySettings();
+  } else if (iHouse == ORDOS) {
+	  difficultySettings = new cPlayerOrdosDifficultySettings();
+  } else if (iHouse == HARKONNEN) {
+	  difficultySettings = new cPlayerHarkonnenDifficultySettings();
+  } else {
+	  // for now default is atreides
+	  // TODO: create for other houses difficultysettings
+	  difficultySettings = new cPlayerAtreidesDifficultySettings();
+  }
 
   // copy entire palette
   memcpy (pal, general_palette, sizeof(pal));
@@ -120,24 +136,15 @@ void cPlayer::setHouse(int iHouse)
 
 }
 
-bool cPlayer::bEnoughPower()
-{
-    if (game.bSkirmish) {
-       if (has_power >= use_power) return true;
+bool cPlayer::bEnoughPower() {
+
+	if (game.bSkirmish) {
+       return has_power >= use_power;
     } else {
-        int iMyID=-1;
-
-		for (int i=0; i < MAX_PLAYERS; i++) {
-            if (&player[i] == this)
-            {
-                iMyID=i;
-                break;
-            }
-		}
-
         // AI cheats on power
-        if (iMyID > 0) {
-            // original dune 2 , the AI cheats. Unfortunatly D2TM has to cheat too, else the game will
+        if (id > 0) {
+            // original dune 2 , the AI cheats.
+        	// Unfortunatly D2TM has to cheat too, else the game will
             // be unplayable.
             if (iStructures[WINDTRAP] > 0) {
                 // always enough power so it seems
@@ -145,11 +152,8 @@ bool cPlayer::bEnoughPower()
 			} else {
                 return false; // not enough power
 			}
-        }
-        else
-        {
-            if (has_power >= use_power)
-                return true;
+        } else {
+            return has_power >= use_power;
         }
     }
 

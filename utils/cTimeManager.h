@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -19,7 +19,7 @@
 class cTimeManager {
 
 private:
-	
+
 	int timerUnits;		/** !!Specificly!! used for units **/
 	int timerSecond;
 	int timerGlobal;
@@ -45,7 +45,7 @@ public:
 	/** This function sets the timers; its an ugly hack but Allegro does not
 		like to directly call the increase.. functions (you need to lock the
 		entire thing which is not what we want. */
-	
+
 	void increaseTimerForUnits();
 	void increaseTimerForFPS();
 	void increaseTimerGlobal();
