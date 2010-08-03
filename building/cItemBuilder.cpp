@@ -86,7 +86,10 @@ void cItemBuilder::think() {
 					}
 
 					if (isDoneBuilding) {
-						if (list->getType() == LIST_CONSTYARD) {
+						bool isAbleToBuildNewOneImmidiately = true;
+						if (item->getBuildType() == STRUCTURE) {
+
+							isAbleToBuildNewOneImmidiately = false;
 
 							// play voice when placeIt is false
 							if (!item->shouldPlaceIt() && (player == &player[HUMAN])) {
@@ -94,7 +97,7 @@ void cItemBuilder::think() {
 								item->setPlaceIt(true);
 							}
 
-						} else {
+						} else if (item->getBuildType() == UNIT){
 
 							item->decreaseTimesToBuild(); // decrease amount of times to build
 
@@ -115,7 +118,14 @@ void cItemBuilder::think() {
 									unit[unitId].move_to(rallyPoint, -1, -1);
 								}
 							}
+						} else if (item->getBuildType() == SPECIAL) {
+							// super weapons and that kind of stuff
 
+							// requires user interaction
+							isAbleToBuildNewOneImmidiately = false;
+						}
+
+						if (isAbleToBuildNewOneImmidiately) {
 							// stop building this item when we are done
 							if (item->getTimesToBuild() == 0) {	// no more items to build
 								// stop building (set flags)
