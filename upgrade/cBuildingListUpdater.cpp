@@ -35,6 +35,11 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 				house == ORDOS ||
 				house == FREMEN) {
 				list->addItemToList(new cBuildingListItem(BARRACKS, structures[BARRACKS], list));
+
+				if (house == ORDOS) {
+					list->addItemToList(new cBuildingListItem(WOR, structures[WOR], list));
+				}
+
 			} else if (
 					house == HARKONNEN ||
 					house == SARDAUKAR ||
