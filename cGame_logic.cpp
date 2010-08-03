@@ -1136,8 +1136,7 @@ void cGame::combat_mouse()
 void cGame::draw_sidebarbuttons()
 {
 	if (player[HUMAN].getSideBar()) {
-		cSideBarDrawer drawer;
-		drawer.drawSideBar(player[HUMAN].getSideBar());
+		sidebarDrawer.drawSideBar(&player[HUMAN]);
 	}
 
 	return;

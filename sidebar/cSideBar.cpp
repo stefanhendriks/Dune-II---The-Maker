@@ -205,8 +205,13 @@ bool cSideBar::mouseOverScrollDown() {
 
 void cSideBar::thinkMouseZScrolling() {
 
-	if (selectedListID < 0) return;
-	if (!getList(selectedListID)->isAvailable()) return;
+	if (selectedListID < 0) {
+		return;
+	}
+
+	if (!getList(selectedListID)->isAvailable()) {
+		return;
+	}
 
 	cBuildingList *list = getList(selectedListID);
 

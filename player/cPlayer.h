@@ -48,9 +48,6 @@ class cPlayer {
 		int TIMER_think;        // timer for thinking itself (calling main routine)
 		int TIMER_attack;       // -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 
-		// upgrade state of lists
-		int listUpgradeLevel[LIST_MAX];
-
 		// set
 		void setItemBuilder(cItemBuilder *theItemBuilder);
 		void setSideBar(cSideBar *theSideBar);
@@ -65,7 +62,6 @@ class cPlayer {
 		cPlayerDifficultySettings *getDifficultySettings() { return difficultySettings; }
 		cItemBuilder *getItemBuilder() { return itemBuilder; }
 		cSideBar *getSideBar() { return sidebar; }
-		int getUpgradeLevel(int listId) { return listUpgradeLevel[listId]; }
 		int getHouse() { return house; }
 		int getTechLevel() { return techLevel; }
 		int getId() { return id; }
@@ -83,7 +79,6 @@ class cPlayer {
 
 		// TODO: cUpgradeBuilder
 		cBuildingListUpdater * buildingListUpdater; // modifies list of sidebar on upgrades
-
 		cStructurePlacer * structurePlacer;	// used to place structures and handle updates in sidebar accordingly
 
 		int techLevel;		// technology level

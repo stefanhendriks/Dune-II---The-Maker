@@ -10,6 +10,7 @@ cBuildingList::cBuildingList(int theId) {
 	available = false;		 // is this list available?
 	memset(items, NULL, sizeof(items));
 	typeOfList = theId;
+	upgradeLevel = 0;
 }
 
 cBuildingList::~cBuildingList() {
@@ -22,6 +23,7 @@ cBuildingList::~cBuildingList() {
 	available = false;		 // is this list available?
 	removeAllItems();
 	memset(items, NULL, sizeof(items));
+	upgradeLevel = 0;
 }
 
 cBuildingListItem * cBuildingList::getItem(int position) {

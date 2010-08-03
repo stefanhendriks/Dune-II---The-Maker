@@ -13,7 +13,11 @@ public:
 	cSideBarDrawer();
 	virtual ~cSideBarDrawer();
 
-	void drawSideBar(cSideBar *sidebar);
+	void drawSideBar(cPlayer * player);
+
+private:
+	cUpgradeDrawer * upgradeDrawer;
+	cBuildingListDrawer * buildingListDrawer;
 };
 
 #endif /* CSIDEBARDRAWER_H_ */

@@ -39,6 +39,7 @@ extern cRegion        world[MAX_REGIONS];
 extern cMentat		  *Mentat;
 extern cTimeManager   TimeManager;
 extern cStructureUtils structureUtils;
+extern cSideBarDrawer  sidebarDrawer;
 
 extern int MAXVOICES;            // USE THIS FOR DETERMINING VOICES
 

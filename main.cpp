@@ -32,6 +32,7 @@ cRegion        				world[MAX_REGIONS];
 cMentat		   			*	Mentat;
 cTimeManager   				TimeManager;
 cStructureUtils 			structureUtils;
+cSideBarDrawer  			sidebarDrawer;
 
 // Structs
 sPreviewMap     			PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory

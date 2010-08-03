@@ -69,9 +69,7 @@ class CreditsDrawer;
 #include "timers.h"							/** declare correct functions at compile time here **/
 
 // UTILS
-#include "utils/cHitpointCalculator.h"			/** math for hitpoints **/
 #include "utils/d2tm_math.h"
-#include "utils/cTimeManager.h"
 
 // TODO: Finish up these structure classes
 #include "structures/cAbstractStructure.h"
@@ -139,7 +137,10 @@ class CreditsDrawer;
 #include "mentat/cHarkonnenMentat.h"
 #include "mentat/cAtreidesMentat.h"
 
-
+// UTILS
+#include "utils/cHitpointCalculator.h"			/** math for hitpoints **/
+#include "utils/cTimeManager.h"
+#include "utils/cUpgradeUtils.h"
 
 // TODO: Units
 

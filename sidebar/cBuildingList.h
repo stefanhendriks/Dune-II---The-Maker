@@ -46,7 +46,7 @@ class cBuildingList {
 		// set
 		void setTimer(int value) { TIMER_progress = value; }
 		void setTypeOfList(int value) { typeOfList = value; }
-
+		void setUpgradeLevel(int value) { upgradeLevel = value; }
 
 		/**
 		 * Remember, only the pressed version. Unpressed icon versions are not available. They are drawn
@@ -63,7 +63,7 @@ class cBuildingList {
 		void setLastClickedId(int value) { lastClickedId = value; }
 
 		int getType() { return typeOfList; }
-
+		int getUpgradeLevel() { return upgradeLevel; }
 	protected:
 		// nothing
 
@@ -83,6 +83,7 @@ class cBuildingList {
 
 		int getFreeSlot();
 		int typeOfList;
+		int upgradeLevel;
 };
 
 #endif

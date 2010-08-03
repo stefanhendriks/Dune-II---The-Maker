@@ -8,34 +8,46 @@
 #include "..\d2tmh.h"
 
 cSideBarDrawer::cSideBarDrawer() {
+	upgradeDrawer = new cUpgradeDrawer();
+	buildingListDrawer = new cBuildingListDrawer();
 }
 
 cSideBarDrawer::~cSideBarDrawer() {
+	delete upgradeDrawer;
+	delete buildingListDrawer;
 }
 
 // draws the sidebar on screen
-void cSideBarDrawer::drawSideBar(cSideBar *sidebar) {
+void cSideBarDrawer::drawSideBar(cPlayer * player) {
 	// draw the sidebar itself (the backgrounds, borders, etc)
 	// TODO: draw sidebar backgrounds here
+	cSideBar *sidebar = player->getSideBar();
 
 	// draw the buildlist icons
-	cBuildingListDrawer buildingListDrawer;
-	int selectedList = sidebar->getSelectedListID();
+	int selectedListId = sidebar->getSelectedListID();
 
 	for (int listId = LIST_CONSTYARD; listId < LIST_MAX; listId++) {
 		cBuildingList *list = sidebar->getList(listId);
-		bool isListIdSelectedList = (selectedList == listId);
-		buildingListDrawer.drawButton(list, isListIdSelectedList);
+		bool isListIdSelectedList = (selectedListId == listId);
+		buildingListDrawer->drawButton(list, isListIdSelectedList);
 	}
 
 	// draw the buildlist itself (take scrolling into account)
-	if (selectedList > -1) {
-		cBuildingList *list = sidebar->getList(selectedList);
-		buildingListDrawer.drawList(list, selectedList, list->getScrollingOffset());
+	cBuildingList *selectedList = NULL;
+
+	if (selectedListId > -1) {
+		selectedList = sidebar->getList(selectedListId);
+		buildingListDrawer->drawList(selectedList, selectedListId, selectedList->getScrollingOffset());
 	}
 
 	// draw the minimap
 	// TODO: draw minimap here
+
+	// draw the upgrade button
+	// TODO: draw the upgrade button here
+	if (selectedListId) {
+		upgradeDrawer->drawUpgradeButtonForSelectedListIfNeeded(player, selectedList);
+	}
 
 	// draw the capacities (max spice/max power)
 	// TODO: draw capacities here
