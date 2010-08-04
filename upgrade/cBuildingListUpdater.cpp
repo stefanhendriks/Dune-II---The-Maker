@@ -53,13 +53,12 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 				list->addItemToList(new cBuildingListItem(WOR, structures[WOR], list));
 		}
 
+		if (techLevel >= 3) {
+			list->addItemToList(new cBuildingListItem(RADAR, structures[RADAR], list));
+		}
+
 		cLogger::getInstance()->logCommentLine("updateStructureCreated - added SILO to list");
 		list->addItemToList(new cBuildingListItem(SILO, structures[SILO], list));
-	}
-
-	if (techLevel >= 3) {
-		cLogger::getInstance()->logCommentLine("updateStructureCreated - added OUTPOST to list");
-		list->addItemToList(new cBuildingListItem(RADAR, structures[RADAR], list));
 	}
 
 
@@ -145,30 +144,17 @@ void cBuildingListUpdater::updateUpgradeCompleted(cBuildingList *listToUpgrade) 
 	listToUpgrade->setUpgradeLevel(newLevel);
 
 	// constyard list upgrades two times
+	char msg[255];
+	sprintf(msg, "currentLevel = %d, newLevel = %d , listId = %d", currentLevel, newLevel, listToUpgrade->getType());
+	cLogger::getInstance()->logCommentLine(msg);
+
 	if (listToUpgrade->getType() == LIST_CONSTYARD) {
-		switch (newLevel) {
-			case 1:
-				listToUpgrade->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4], listToUpgrade));
-			break;
+		if (listToUpgrade->getUpgradeLevel() == 1) {
+			listToUpgrade->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4], listToUpgrade));
+		} else if (listToUpgrade->getUpgradeLevel() == 2) {
+			listToUpgrade->addItemToList(new cBuildingListItem(RTURRET, structures[RTURRET], listToUpgrade));
 		}
 	}
 
 	cLogger::getInstance()->logCommentLine("updateUpgradeCompleted - end");
 }
-
-//void upgradeTechTree(int iPlayer, int iStructureType) {
-//
-//	if (iPlayer != 0) {
-//		logbook("tried to update tech tree for a non-human player");
-//		return;
-//	}
-//
-//	logbook("upgrading tech tree");
-//
-//	int iHouse = player[iPlayer].getHouse();
-//	int iMission = game.iMission; // MISSION IS OK NOW, IS CORRECTLY SET AT LOADING
-//
-//
-//
-
-//}

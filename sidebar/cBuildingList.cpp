@@ -11,6 +11,8 @@ cBuildingList::cBuildingList(int theId) {
 	memset(items, NULL, sizeof(items));
 	typeOfList = theId;
 	upgradeLevel = 0;
+	upgrading = false;
+	maxItems = 0;
 }
 
 cBuildingList::~cBuildingList() {
@@ -24,6 +26,8 @@ cBuildingList::~cBuildingList() {
 	removeAllItems();
 	memset(items, NULL, sizeof(items));
 	upgradeLevel = 0;
+	upgrading = false;
+	maxItems = 0;
 }
 
 cBuildingListItem * cBuildingList::getItem(int position) {
@@ -72,13 +76,14 @@ void cBuildingList::addItemToList(cBuildingListItem * item) {
 	assert(item);
 
 	if (isItemInList(item)) {
+		logbook("Failed to add icon to cBuildingList, item is already in list.");
 		// item is already in list, do not add
 		return;
 	}
 
 	int slot = getFreeSlot();
 	if (slot < 0 ) {
-		logbook("Failed to add icon to cBuildingList.");
+		logbook("Failed to add icon to cBuildingList, no free slot left in list");
 		assert(false);
 		return;
 	}
@@ -86,7 +91,10 @@ void cBuildingList::addItemToList(cBuildingListItem * item) {
 	// add
 	items[slot] = item;
 	item->setSlotId(slot);
-	maxItems++;
+	maxItems = slot;
+	char msg[355];
+	sprintf(msg, "Icon added with id [%d] added to cBuilding list, put in slot[%d], set maxItems to [%d]", item->getBuildId(), slot, maxItems);
+	logbook(msg);
 }
 
 /**
@@ -144,10 +152,19 @@ void cBuildingList::scrollUp() {
  */
 void cBuildingList::scrollDown() {
 	logbook("cBuildingList::scrollDown");
-	int offset = getScrollingOffset() + 1;
-	int max = maxItems - 5;
-	if (offset < max) {
+	int oldOffset = getScrollingOffset();
+	int offset = oldOffset + 1;
+	int max = maxItems - 4;
+
+	char msg[255];
+	sprintf(msg, "old offset is [%d], new offset is [%d], maxItems is [%d] max is [%d].", oldOffset, offset, maxItems, max);
+	logbook(msg);
+
+	if (offset <= max) {
+		logbook("cBuildingList::scrolling down");
 		setScrollingOffset(offset);
+	} else {
+		logbook("cBuildingList::scrolling down not allowed");
 	}
 }
 

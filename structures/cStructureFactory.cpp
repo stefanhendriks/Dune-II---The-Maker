@@ -116,7 +116,13 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 
 	// calculate actual health
 	cHitpointCalculator *calc = new cHitpointCalculator();
-	float fHealth = calc->getByPercent(structures[iStructureType].hp, fPercent);
+	int hp = structures[iStructureType].hp;
+	assert(hp > 0);
+	float fHealth = calc->getByPercent(hp, fPercent);
+
+	char msg2[255];
+	sprintf(msg2, "Structure with id [%d] has [%d] hp , fhealth is [%d]", iStructureType, hp, fHealth);
+	logbook(msg2);
 
 	placeStructure(iCell, iStructureType, iPlayer);
 	clearFogForStructureType(iCell, iStructureType, 2, iPlayer);

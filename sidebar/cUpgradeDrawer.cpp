@@ -21,7 +21,7 @@ bool cUpgradeDrawer::shouldDrawButtonForSelectedList(cPlayer * thePlayer, cBuild
 	int upgradeLevel = theSelectedList->getUpgradeLevel();
 
 	cUpgradeUtils upgradeUtils;
-	return upgradeUtils.canUpgradeList(theSelectedList->getType(),techLevel, upgradeLevel);
+	return upgradeUtils.canUpgradeList(thePlayer, theSelectedList->getType(),techLevel, upgradeLevel);
 }
 
 void cUpgradeDrawer::drawUpgradeButtonForSelectedListIfNeeded(cPlayer * thePlayer, cBuildingList * theSelectedList) {

@@ -1,6 +1,8 @@
 #include "..\d2tmh.h"
 
 cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingList *list) {
+	assert(theID >= 0);
+	assert(list);
 	ID = theID;
 	cost = entry.cost;
 	icon = entry.icon;
@@ -17,6 +19,8 @@ cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingLis
 }
 
 cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *list) {
+	assert(theID >= 0);
+	assert(list);
 	ID = theID;
 	cost = entry.cost;
 	icon = entry.icon;

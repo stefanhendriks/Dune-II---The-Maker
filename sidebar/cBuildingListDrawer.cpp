@@ -95,6 +95,9 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 		// icon id must be set , assert it.
 		assert(item->getIconId() > -1);
 
+		rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(255, 255, 255));
+		line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(255, 255, 255));
+
 		draw_sprite(bmp_screen, (BITMAP *)gfxinter[item->getIconId()].dat, iDrawX, iDrawY);
 
 		bool cannotPayIt = item->getBuildCost() > player[HUMAN].credits;

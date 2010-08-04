@@ -15,20 +15,20 @@ cUpgradeUtils::~cUpgradeUtils() {
 }
 
 
-bool cUpgradeUtils::canUpgradeList(int listTypeId, int techlevel, int currentUpgradeLevelOfList) {
-	int costToUpgrade = getPriceToUpgradeList(listTypeId, techlevel, currentUpgradeLevelOfList);
+bool cUpgradeUtils::canUpgradeList(cPlayer * thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList) {
+	int costToUpgrade = getPriceToUpgradeList(thePlayer, listTypeId, techlevel, currentUpgradeLevelOfList);
 	return costToUpgrade > -1;
 }
 
-int cUpgradeUtils::getPriceToUpgradeList(int listTypeId, int techlevel, int currentUpgradeLevelOfList) {
-
+int cUpgradeUtils::getPriceToUpgradeList(cPlayer * thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList) {
+	assert(thePlayer);
 	if (listTypeId == LIST_CONSTYARD) {
 		// upgrade for 4SLAB
 		if (techlevel >= 4 && currentUpgradeLevelOfList < 1) {
 			return 200;
 		}
-		// upgrade for RTURRET
-		if (techlevel >= 6 && currentUpgradeLevelOfList < 2) {
+		// upgrade for RTURRET (only when having radar)
+		if (techlevel >= 6 && currentUpgradeLevelOfList < 2 && thePlayer->iStructures[RADAR] > 0) {
 			return 400;
 		}
 	}
@@ -36,14 +36,15 @@ int cUpgradeUtils::getPriceToUpgradeList(int listTypeId, int techlevel, int curr
 	return -1;
 }
 
-cListUpgrade * cUpgradeUtils::getListUpgradeForList(int listTypeId, int techlevel, int currentUpgradeLevelOfList) {
+cListUpgrade * cUpgradeUtils::getListUpgradeForList(cPlayer * thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList) {
+
 	if (listTypeId == LIST_CONSTYARD) {
 		// upgrade for 4SLAB
 		if (techlevel >= 4 && currentUpgradeLevelOfList < 1) {
 			return new cListUpgrade(50, 200, UPGRADE_ONE);
 		}
 		// upgrade for RTURRET
-		if (techlevel >= 6 && currentUpgradeLevelOfList < 2) {
+		if (techlevel >= 6 && currentUpgradeLevelOfList < 2 && thePlayer->iStructures[RADAR] > 0) {
 			return new cListUpgrade(200, 400, UPGRADE_TWO);
 		}
 	}
@@ -66,7 +67,7 @@ bool cUpgradeUtils::isUpgradeApplicableForPlayerAndList(cPlayer *thePlayer, int 
 		return false;
 	}
 
-	bool canUpgradeListResult = canUpgradeList(listTypeId, techlevel, currentUpgradeLevelOfList);
+	bool canUpgradeListResult = canUpgradeList(thePlayer, listTypeId, techlevel, currentUpgradeLevelOfList);
 
 	// if we cannot upgrade list, return false
 	if (!canUpgradeListResult) {
@@ -82,7 +83,7 @@ bool cUpgradeUtils::isUpgradeApplicableForPlayerAndList(cPlayer *thePlayer, int 
 bool cUpgradeUtils::canPlayerPayForUpgradeForList(cPlayer *thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList) {
 	assert(thePlayer);
 	int credits = (int)thePlayer->credits;
-	int price = getPriceToUpgradeList(listTypeId, techlevel, currentUpgradeLevelOfList);
+	int price = getPriceToUpgradeList(thePlayer, listTypeId, techlevel, currentUpgradeLevelOfList);
 
 	// it is not available, so we cant pay
 	if (price < 0) {

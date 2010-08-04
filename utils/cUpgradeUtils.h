@@ -13,9 +13,9 @@ class cUpgradeUtils {
 		cUpgradeUtils();
 		~cUpgradeUtils();
 
-		bool canUpgradeList(int listTypeId, int techlevel, int currentUpgradeLevelOfList);
+		bool canUpgradeList(cPlayer * thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList);
 
-		int getPriceToUpgradeList(int listTypeId, int techlevel, int currentUpgradeLevelOfList);
+		int getPriceToUpgradeList(cPlayer * thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList);
 
 		bool canPlayerPayForUpgradeForList(cPlayer *thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList);
 
@@ -23,7 +23,7 @@ class cUpgradeUtils {
 
 		bool isUpgradeApplicableForPlayerAndList(cPlayer *thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList);
 
-		cListUpgrade * getListUpgradeForList(int listTypeId, int techlevel, int currentUpgradeLevelOfList);
+		cListUpgrade * getListUpgradeForList(cPlayer * thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList);
 
 	protected:
 

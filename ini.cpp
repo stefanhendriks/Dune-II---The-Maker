@@ -103,7 +103,7 @@ void INI_Word(char input[MAX_LINE_LENGTH], char word[25]) {
  */
 bool isInString(string source, string toFind) {
 	 string::size_type loc = source.find( toFind , 0 );
-	 if( loc != string::npos ) {
+	 if( loc == 0 ) {
 	   return true;
 	 }
 	 return false; // not found in string
@@ -141,34 +141,6 @@ int INI_StructureType(string structureName) {
 int INI_StructureType(char word[256]) {
 	string wordAsString(word);
 	return INI_StructureType(wordAsString);
-//	assert(word != NULL);
-//	logbook(word);
-//
-//	if (strstr(word, "WINDTRAP") != NULL)		return WINDTRAP;
-//	if (strstr(word, "PALACE")  != NULL)		return PALACE;
-//	if (strstr(word, "HEAVYFACTORY") != NULL)	return HEAVYFACTORY;
-//	if (strstr(word, "LIGHTFACTORY") != NULL)	return LIGHTFACTORY;
-//	if (strstr(word, "CONSTYARD") != NULL)		return CONSTYARD;
-//	if (strstr(word, "SILO") != NULL)			return SILO;
-//	if (strstr(word, "HIGHTECH") != NULL)		return HIGHTECH;
-//	if (strstr(word, "IX") != NULL)				return IX;
-//	if (strstr(word, "REPAIR")  != NULL)		return REPAIR;
-//	if (strstr(word, "RADAR") != NULL)			return RADAR;
-//	if (strstr(word, "REFINERY") != NULL)		return REFINERY;
-//	if (strstr(word, "WOR") != NULL)			return WOR;
-//	if (strstr(word, "BARRACKS") != NULL)		return BARRACKS;
-//	if (strstr(word, "STARPORT") != NULL)		return STARPORT;
-//	if (strstr(word, "TURRET") != NULL)			return TURRET;
-//	if (strstr(word, "ROCKETTURRET") != NULL)	return RTURRET;
-//
-//	// - not really structures -
-//	if (strstr(word, "SLAB")  != NULL)			return SLAB1;
-//	if (strstr(word, "4SLAB") != NULL)			return SLAB4;
-//	if (strstr(word, "WALL")  != NULL)			return WALL;
-//
-//	assert(false);
-//
-//	return -1;
 }
 
 // Reads out word[], does a string compare and returns type id
@@ -2411,7 +2383,9 @@ void INI_Install_Game(string filename) {
       // Structure w0h00
       if (section == INI_STRUCTURES && id > -1)
       {
-          if (wordtype == WORD_HITPOINTS)     structures[id].hp           = INI_WordValueINT(linefeed);
+          if (wordtype == WORD_HITPOINTS)     {
+        	  structures[id].hp           = INI_WordValueINT(linefeed);
+          }
 		  if (wordtype == WORD_FIXHP)         structures[id].fixhp        = INI_WordValueINT(linefeed);
 
           if (wordtype == WORD_POWERDRAIN)    structures[id].power_drain  = INI_WordValueINT(linefeed);
