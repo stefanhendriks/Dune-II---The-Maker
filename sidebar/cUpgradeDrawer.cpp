@@ -75,6 +75,32 @@ void cUpgradeDrawer::drawUpgradeButton(cPlayer * thePlayer, cBuildingList * theS
 }
 
 void cUpgradeDrawer::drawUpgradeProgress(cPlayer * thePlayer, cBuildingList * theSelectedList) {
-	// make black / TEMP
-	rectfill(bmp_screen, 29, 0, 187, 29, makecol(0,0,0));
+	assert(thePlayer);
+	assert(theSelectedList);
+
+	int listId = theSelectedList->getType();
+	cListUpgrade * upgrade = thePlayer->getUpgradeBuilder()->getListUpgrade(listId);
+	assert(upgrade);
+
+	if (upgrade) {
+		int iDrawXLimit = (int)health_bar(157, upgrade->getProgress(), upgrade->getProgressLimit());
+
+		if (iDrawXLimit > -1)
+		{
+			int iColor=makecol(255,255,255);
+			BITMAP *temp = create_bitmap(157, 28);
+			clear_to_color(temp, makecol(255,0,255));
+
+			// TODO: make util function for this (duplicate code!)
+			if (thePlayer->getHouse() == ATREIDES) iColor = makecol(0,0,255);
+			if (thePlayer->getHouse() == HARKONNEN) iColor = makecol(255,0,0);
+			if (thePlayer->getHouse() == ORDOS) iColor = makecol(0,255,0);
+			if (thePlayer->getHouse() == SARDAUKAR) iColor = makecol(255,0,255);
+
+			rectfill(temp, 0, 0, (157-iDrawXLimit), 30, iColor);
+
+			draw_trans_sprite(bmp_screen, temp, 30, 1);
+			destroy_bitmap(temp);
+		}
+	}
 }
