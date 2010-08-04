@@ -39,6 +39,7 @@ class cBuildingList {
 		int getScrollingOffset() { return scrollingOffset; }
 		bool isAvailable() { return available; }
 		bool isBuildingItem();
+		bool hasItemType(int itemTypeId);
 
 		void scrollUp();
 		void scrollDown();

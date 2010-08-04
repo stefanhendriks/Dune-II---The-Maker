@@ -16,7 +16,7 @@
 
 class cListUpgrade {
 public:
-	cListUpgrade(int theProgressLimit, int theTotalPrice, eUpgradeType theType);
+	cListUpgrade(int theProgressLimit, int theTotalPrice, eUpgradeType theType, cBuildingListItem *theItem);
 	virtual ~cListUpgrade();
 
 	int getTimerProgress() { return TIMER_progress; }
@@ -24,12 +24,14 @@ public:
 	int getProgressLimit() { return progressLimit; }
 	int getTotalPrice() { return totalPrice; }
 	float getPricePerTimeUnit() { return pricePerTimeUnit; }
+	cBuildingListItem * getItem() { return item; }
 
 	void setProgress(int value) { progress = value; }
 	void setProgressLimit(int value) { progressLimit = value; }
 	void setTotalPrice(int value) { totalPrice = value; }
 	void setPricePerTimeUnit(float value) { pricePerTimeUnit = value; }
 	void setTimerProgress(int value) { TIMER_progress = value; }
+	void setItem(cBuildingListItem *theItem) { item = theItem; }
 
 private:
 
@@ -41,6 +43,7 @@ private:
 							// be for one time unit (ie, one slice of progress)
 
 	eUpgradeType type;		// type of upgrade
+	cBuildingListItem *item;	// the item that will be added to the list after the upgrade
 };
 
 #endif /* CLISTUPGRADE_H_ */

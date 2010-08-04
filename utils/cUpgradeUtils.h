@@ -13,17 +13,17 @@ class cUpgradeUtils {
 		cUpgradeUtils();
 		~cUpgradeUtils();
 
-		bool canUpgradeList(cPlayer * thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList);
+		bool canUpgradeList(cPlayer * thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList);
 
-		int getPriceToUpgradeList(cPlayer * thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList);
+		int getPriceToUpgradeList(cPlayer * thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList);
 
-		bool canPlayerPayForUpgradeForList(cPlayer *thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList);
+		bool canPlayerPayForUpgradeForList(cPlayer *thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList);
 
 		bool isMouseOverUpgradeButton(int mouseX, int mouseY);
 
-		bool isUpgradeApplicableForPlayerAndList(cPlayer *thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList);
+		bool isUpgradeApplicableForPlayerAndList(cPlayer *thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList);
 
-		cListUpgrade * getListUpgradeForList(cPlayer * thePlayer, int listTypeId, int techlevel, int currentUpgradeLevelOfList);
+		cListUpgrade * getListUpgradeForList(cPlayer * thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList);
 
 	protected:
 

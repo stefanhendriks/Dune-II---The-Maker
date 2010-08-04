@@ -7,12 +7,14 @@
 
 #include "..\d2tmh.h"
 
-cListUpgrade::cListUpgrade(int theProgressLimit, int theTotalPrice, eUpgradeType theType) {
+cListUpgrade::cListUpgrade(int theProgressLimit, int theTotalPrice, eUpgradeType theType, cBuildingListItem *theItem) {
+	assert(theItem);
 	progressLimit = theProgressLimit;
 	totalPrice = theTotalPrice;
 	type = theType;
 	TIMER_progress = 0;
 	progress = 0;
+	item = theItem;
 
 	// check, to prevent divide by zero
 	if (totalPrice > 1 && progressLimit > 1) {
@@ -21,4 +23,8 @@ cListUpgrade::cListUpgrade(int theProgressLimit, int theTotalPrice, eUpgradeType
 }
 
 cListUpgrade::~cListUpgrade() {
+	// delete created item
+	if (item) {
+		delete item;
+	}
 }

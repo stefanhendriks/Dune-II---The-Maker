@@ -52,7 +52,9 @@ void cUpgradeBuilder::processUpgrades() {
 
 				if (upgrade->getProgress() >= upgrade->getProgressLimit()) {
 					cBuildingList *listToUpgrade = player->getSideBar()->getList(i);
-					player->getBuildingListUpdater()->updateUpgradeCompleted(listToUpgrade);
+					listToUpgrade->setUpgradeLevel(listToUpgrade->getUpgradeLevel() + 1);
+					listToUpgrade->addItemToList(upgrade->getItem());
+					upgrade->setItem(NULL); // remove pointer, else item gets cleaned up in destruct of upgrade
 					upgrades[i] = NULL;
 					listToUpgrade->setUpgrading(false);
 					delete upgrade;

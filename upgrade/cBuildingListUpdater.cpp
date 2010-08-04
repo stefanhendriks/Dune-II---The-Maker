@@ -156,5 +156,11 @@ void cBuildingListUpdater::updateUpgradeCompleted(cBuildingList *listToUpgrade) 
 		}
 	}
 
+	if (listToUpgrade->getType() == LIST_LIGHTFC) {
+		if (listToUpgrade->getUpgradeLevel() == 1) {
+			listToUpgrade->addItemToList(new cBuildingListItem(QUAD, units[QUAD], listToUpgrade));
+		}
+	}
+
 	cLogger::getInstance()->logCommentLine("updateUpgradeCompleted - end");
 }

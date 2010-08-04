@@ -59,18 +59,23 @@ void cBuildingList::removeAllItems() {
 
 bool cBuildingList::isItemInList(cBuildingListItem * item) {
 	assert(item);
+	return hasItemType(item->getBuildId());
+}
+
+bool cBuildingList::hasItemType(int itemTypeId) {
+	assert(itemTypeId >= 0);
 	for (int i =0; i < MAX_ICONS; i++) {
 		cBuildingListItem * itemInList = getItem(i);
 
 		// item already in list (same build id)
 		if (itemInList) {
-			if (itemInList->getBuildId() == item->getBuildId()) {
+			if (itemTypeId == itemInList->getBuildId()) {
 				return true;
 			}
 		}
 	}
-	return false;
 }
+
 
 void cBuildingList::addItemToList(cBuildingListItem * item) {
 	assert(item);
