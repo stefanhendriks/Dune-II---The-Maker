@@ -64,6 +64,6 @@ int iCellOnScreen(int iCell);
 
 void mask_to_color(BITMAP *bmp, int color);
 void lit_windtrap_color(BITMAP *bmp, int color);
-
+int getAmountReservedVoicesAndInstallSound();
 
 

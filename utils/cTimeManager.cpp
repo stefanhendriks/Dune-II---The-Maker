@@ -48,13 +48,8 @@ void cTimeManager::handleTimerFPS() {
 		if (game.isState(GAME_PLAYING))
 		{
 			game.paths_created = 0;
-			if (game.iSoundsPlayed > 0) {
-				game.iSoundsPlayed -= (MAXVOICES / 2); // gradually substract
-			}
-			if (game.iSoundsPlayed < 0) {
-				game.iSoundsPlayed = 0;
-			}
-			game.think_starport(); // think about lists for starport
+
+			game.think_starport(); // think about lists for starports
 
 			THINK_REINFORCEMENTS();
 
@@ -106,6 +101,7 @@ void cTimeManager::handleTimerGlobal() {
 			}
 		}
 
+		game.getSoundPlayer()->think();
 		game.think_music();
 		game.think_mentat();
 		game.think_movie();

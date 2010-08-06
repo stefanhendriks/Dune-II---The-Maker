@@ -41,8 +41,6 @@ extern cTimeManager   TimeManager;
 extern cStructureUtils structureUtils;
 extern cSideBarDrawer  sidebarDrawer;
 
-extern int MAXVOICES;            // USE THIS FOR DETERMINING VOICES
-
 // ...
 extern sPreviewMap     PreviewMap[MAX_SKIRMISHMAPS];                   // max of 100 maps in skirmish directory
 extern s_House         houses[MAX_HOUSES];

@@ -97,7 +97,6 @@ public:
 	int TIMER_message;
 
     int iMouseZ;
-    int iSoundsPlayed;
 
     int iMusicVolume;       // volume of the mp3 / midi
 
@@ -186,6 +185,8 @@ public:
 
 	int getMaxVolume() { return iMaxVolume; }
 
+	cSoundPlayer * getSoundPlayer() { return soundPlayer; }
+
 private:
 	void poll();
 	void gerald();		// interface and such, which is called by combat
@@ -227,5 +228,7 @@ private:
 	CreditsDrawer *creditsDrawer;
 
 	int iMaxVolume;
+
+	cSoundPlayer *soundPlayer;
 };
 

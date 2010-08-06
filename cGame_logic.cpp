@@ -58,7 +58,6 @@ void cGame::init() {
 	bMousePressedLeft = bMousePressedRight=false;
 
 	iCountSoundMoney=0;
-    iSoundsPlayed=0;
 
 	TIMER_scroll=0;
 	iScrollSpeed=10;
@@ -174,7 +173,6 @@ void cGame::mission_init()
 {
 
 	iCountSoundMoney=0;
-    iSoundsPlayed=0;
 
     iMusicVolume=128; // volume is 0...
 
@@ -1528,7 +1526,6 @@ void cGame::combat()
     if (iAlphaScreen == 0)
         iFadeAction = 2;
     // -----------------
-
 
 	// DO MAP DRAWING
 	mapdraw();
@@ -3979,36 +3976,22 @@ bool cGame::setupGame() {
 
 
 	// sound
-	bool bSucces = false;
-	int voices = 32;
-	while (1) {
-		if (voices <= 4) {
-			break;
-		}
 
-		reserve_voices(voices, 0);
-		char msg[255];
-		if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) == 0)
-		{
-			sprintf(msg, "Success reserving %d voices.", voices);
-			logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
-			MAXVOICES=voices;
-			bSucces=true;
-			break;
-		}
-		else {
-			sprintf(msg, "Failed reserving %d voices. Will try %d.", voices, (voices / 2));
-			logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
-			voices /= 2;
-		}
-	}
+//	getAmountReservedVoices
+//	if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) == 0) {
+//		sprintf(msg, "Successful installed sound.");
+//		logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
+//	}
+//	else {
+//		sprintf(msg, "Failed installing sound.");
+//		logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
+//	}
+	int maxSounds = getAmountReservedVoicesAndInstallSound();
+	soundPlayer = new cSoundPlayer(maxSounds);
 
-	if (!bSucces) {
-		char msg[255];
-		sprintf(msg, "%s", allegro_error);
-		logbook(msg);
-		logbook("ERROR: Cannot initialize sound card");
-	}
+	memset(msg, 0, sizeof(msg));
+	sprintf(msg, "%d sounds reserved", maxSounds);
+	logbook(msg);
 
 	/***
 	Bitmap Creation

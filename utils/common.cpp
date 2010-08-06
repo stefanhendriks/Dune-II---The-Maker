@@ -1267,21 +1267,17 @@ void play_sound_id(int s, int iDistance)
 
 	if (gfxaudio[s].dat == NULL) return; // no data file at the specified position in index.
 
-	if (game.iSoundsPlayed < 0) return; // do not play sound when no slot found
-	if (game.iSoundsPlayed >= MAXVOICES) return; // do not play sound when max is reached.
-
 	// Determine if sound is on screen or not
 	if (iDistance <= 1) {
-		game.iSoundsPlayed = play_sample((SAMPLE *)gfxaudio[s].dat, 255, 127,1000,0);
+		game.getSoundPlayer()->playSound((SAMPLE *)gfxaudio[s].dat, 127, 255);
 	} else {
 		// adjust volume from distance
 		int iVol = game.getMaxVolume() - ((game.getMaxVolume() / 32) * iDistance);
 		if (iVol > 0) {
-			game.iSoundsPlayed = play_sample((SAMPLE *)gfxaudio[s].dat, iVol, 127, 1000,0);
+			game.getSoundPlayer()->playSound((SAMPLE *)gfxaudio[s].dat, 127, iVol);
 		}
 	}
 }
-
 
 void play_voice(int iType)
 {
@@ -1721,3 +1717,27 @@ void mask_to_color(BITMAP *bmp, int color)
 
 }
 
+int getAmountReservedVoicesAndInstallSound() {
+	int voices = 256;
+	while (1) {
+		if (voices < 4) {
+			// failed!
+			return -1;
+		}
+		reserve_voices(voices, 0);
+		char msg[255];
+		if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) == 0)
+		{
+			sprintf(msg, "Success reserving %d voices.", voices);
+			cLogger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
+			break;
+		}
+		else {
+			sprintf(msg, "Failed reserving %d voices. Will try %d.", voices, (voices / 2));
+			cLogger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
+			voices /= 2;
+		}
+	}
+
+	return voices;
+}

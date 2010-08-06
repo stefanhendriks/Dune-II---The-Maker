@@ -70,6 +70,7 @@ class CreditsDrawer;
 
 // UTILS
 #include "utils/d2tm_math.h"
+#include "utils/cSoundPlayer.h"
 
 // TODO: Finish up these structure classes
 #include "structures/cAbstractStructure.h"

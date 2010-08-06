@@ -42,8 +42,6 @@ s_UnitP         			units[MAX_UNITTYPES];              // unit types
 s_Bullet        			bullets[MAX_BULLET_TYPES];          // bullet slots
 sReinforcement  			reinforcements[MAX_REINFORCEMENTS];  // reinforcement slots
 
-int MAXVOICES = 8;            // USE THIS FOR DETERMINING VOICES
-
 // palette
 PALETTE general_palette;
 
