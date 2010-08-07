@@ -1,20 +1,42 @@
-; D2TM - DEVELOPER GAME PROFILE.
-; 0 MOVESPEED
-; 0 TURNSPEED
-; 0 BUILDTIME
+;   Dune II - The Maker
+;
+;	A remake of
+; 
+;	Dune II - The Battle for Arrakis by Westwood Studios
+;	
+;  
+;	file created at 24/12/02
+;
+;	Author: Stefan Hendriks
+;	Contact: stefanhen83@gmail.com
+;	Website: http://www.fundynamic.nl
+;  	         http://arrakis.dune2k.com
+;
+;	Description:
+;	This file defines the rules of the game. It descibes the strenght of units and
+;   structures. The build speed. The harvest speed. The costs, etc.
+;
+;	Copyright notice:
+;	DUNE 2 is (C) by Westwood Studio's. If you like this game, buy it.
+;
+;	Rules:
+;	";", "#" or "//" is a comment. It cannot be used AFTER a line.
+;	Everything is case sensitive
+;
 
 [UNITS]
 ; ========================================================
 ; Unit types
 ; ========================================================
-; Editable.
 ;
 ; 2 Timers used for units.
 ; 1 Timer for moving; 100 ticks a second timer. 
-; 1 Timer for thinking; 10 ticks a second timer (building speed aswell).
+; 1 Timer for thinking; 10 ticks a second timer (building speed as well).
 ;
-; For assigning speed to a unit, give amount of 'ticks' needed
-; before moving 1 pixel.
+; For assigning speed to a unit, give amount of ticks needed for moving 1 pixel.
+; This means, 0 ticks, is move as fast as possible (fastest). The more ticks
+; the slower the movement.
+;
 ; Same rules go for building, turning, move speed, attack (frequency) speed.
 ;
 ; The higher the number, the slower the units (the more ticks it needs to
@@ -30,8 +52,8 @@
 [UNIT: ORNITHOPTER]
 ; Unit properties
 HitPoints=40
-MoveSpeed=0
-TurnSpeed=0
+MoveSpeed=1
+TurnSpeed=1
 ; Attackfrequency is used a bit differently for ornithopters, they have a
 ; stalled thinking after they have launched their rockets. 
 AttackFrequency=2
@@ -41,7 +63,7 @@ Sight=0
 Range=9
 
 ; Build properties + Sidebar
-BuildTime=0
+BuildTime=40
 Cost=500
 
 ; -----------------
@@ -51,13 +73,13 @@ Cost=500
 ; Unit properties
 HitPoints=999
 MoveSpeed=0
-TurnSpeed=0
+TurnSpeed=2
 AttackFrequency=0
 Sight=0
 Range=0
 
 ; Build properties + Sidebar
-BuildTime=0
+BuildTime=62
 Cost=800
 
 ; -----------------
@@ -66,20 +88,20 @@ Cost=800
 [UNIT: HARVESTER]
 ; Unit properties
 HitPoints=450
-MoveSpeed=0
-TurnSpeed=0
+MoveSpeed=7
+TurnSpeed=5
 AttackFrequency=15
 Sight=3
 Range=3
 
 ; Build properties + Sidebar
-BuildTime=0
+BuildTime=70
 Cost=400
 
 ; Harvester specific properties
 MaxCredits=700
 ; 'ticks' to collect...
-HarvestSpeed=0
+HarvestSpeed=2
 ; ... amount of spice
 HarvestAmount=10
 
@@ -91,14 +113,14 @@ HarvestAmount=10
 [UNIT: LAUNCHER]
 ; Unit properties
 HitPoints=130
-MoveSpeed=0
-TurnSpeed=0
+MoveSpeed=4
+TurnSpeed=4
 AttackFrequency=25
 Sight=9
 Range=8
 
 ; Build properties + Sidebar
-BuildTime=0
+BuildTime=62
 Cost=400
 
 ; -----------------
@@ -106,14 +128,16 @@ Cost=400
 ; -----------------
 [UNIT: DEVIATOR]
 HitPoints=70
-MoveSpeed=0
-TurnSpeed=0
+MoveSpeed=3
+TurnSpeed=3
 AttackFrequency=35
 Sight=8
 Range=8
+# TODO
+#Producer="HEAVYFACTORY"
 
 ; Build properties + Sidebar
-BuildTime=0
+BuildTime=60
 Cost=700
 
 ; -----------------
@@ -122,14 +146,14 @@ Cost=700
 [UNIT: DEVASTATOR]
 ; Unit properties
 HitPoints=800
-MoveSpeed=0
-TurnSpeed=0
+MoveSpeed=9
+TurnSpeed=8
 AttackFrequency=42
 Sight=6
 Range=5
 
 ; Build properties + Sidebar
-BuildTime=0
+BuildTime=112
 Cost=900
 
 ; -----------------
@@ -138,14 +162,14 @@ Cost=900
 [UNIT: SIEGETANK]
 ; Unit properties
 HitPoints=400
-MoveSpeed=0
-TurnSpeed=0
+MoveSpeed=6
+TurnSpeed=6
 AttackFrequency=17
 Sight=6
 Range=5
 
 ; Build properties + Sidebar
-BuildTime=0
+BuildTime=86
 Cost=600
 
 ; -----------------
@@ -154,14 +178,14 @@ Cost=600
 [UNIT: COMBATTANK]
 ; Unit properties
 HitPoints=175
-MoveSpeed=0
-TurnSpeed=0
+MoveSpeed=5
+TurnSpeed=4
 AttackFrequency=8
 Sight=5
 Range=4
 
 ; Build properties + Sidebar
-BuildTime=0
+BuildTime=54
 Cost=300
 
 ; -----------------
@@ -170,14 +194,14 @@ Cost=300
 [UNIT: SONICTANK]
 ; Unit properties
 HitPoints=220
-MoveSpeed=0
-TurnSpeed=0
+MoveSpeed=4
+TurnSpeed=4
 AttackFrequency=18
 Sight=7
 Range=7
 
 ; Build properties + Sidebar
-BuildTime=0
+BuildTime=94
 Cost=600
 
 ; -----------------
@@ -185,12 +209,12 @@ Cost=600
 ; -----------------
 [UNIT: QUAD]
 HitPoints=130
-MoveSpeed=0
-TurnSpeed=0
+MoveSpeed=3
+TurnSpeed=3
 AttackFrequency=12
 Sight=4
 Range=3
-BuildTime=0
+BuildTime=40
 Cost=200
 
 ; -----------------
@@ -198,13 +222,13 @@ Cost=200
 ; -----------------
 [UNIT: TRIKE]
 HitPoints=100
-MoveSpeed=0
+MoveSpeed=2
 TurnSpeed=1
 AttackFrequency=8
 Sight=4
 Range=3
 Cost=150
-BuildTime=0
+BuildTime=28
 
 
 ; -----------------
@@ -214,13 +238,13 @@ BuildTime=0
 ; Unit properties
 HitPoints=40
 MoveSpeed=0
-TurnSpeed=0
+TurnSpeed=1
 AttackFrequency=5
 Sight=5
 Range=2
 
 ; Build properties + Sidebar
-BuildTime=0
+BuildTime=24
 Cost=125
 
 
@@ -232,14 +256,14 @@ Cost=125
 [UNIT: SOLDIER]
 ; Unit properties
 HitPoints=40
-MoveSpeed=0
-TurnSpeed=0
+MoveSpeed=5
+TurnSpeed=1
 AttackFrequency=10
 Sight=2
 Range=1
 
 ; Build properties + Sidebar
-BuildTime=0
+BuildTime=12
 Cost=60
 
 
@@ -250,14 +274,14 @@ Cost=60
 [UNIT: INFANTRY]
 ; Unit properties
 HitPoints=80
-MoveSpeed=0
-TurnSpeed=0
+MoveSpeed=5
+TurnSpeed=1
 AttackFrequency=13
 Sight=3
 Range=2
 
 ; Build properties + Sidebar
-BuildTime=0
+BuildTime=20
 Cost=100
 
 ; -----------------
@@ -266,14 +290,14 @@ Cost=100
 [UNIT: TROOPER]
 ; Unit properties
 HitPoints=60
-MoveSpeed=0
-TurnSpeed=0
+MoveSpeed=6
+TurnSpeed=1
 AttackFrequency=15
 Sight=3
 Range=3
 
 ; Build properties + Sidebar
-BuildTime=0
+BuildTime=28
 Cost=80
 
 ; -----------------
@@ -282,8 +306,8 @@ Cost=80
 [UNIT: TROOPERS]
 ; Unit properties
 HitPoints=100
-MoveSpeed=0
-TurnSpeed=0
+MoveSpeed=6
+TurnSpeed=1
 AttackFrequency=18
 Sight=5
 Range=5
@@ -296,13 +320,13 @@ Cost=175
 ; -----------------
 [UNIT: MCV]
 HitPoints=200
-MoveSpeed=0
-TurnSpeed=0
+MoveSpeed=4
+TurnSpeed=6
 AttackFrequency=0
 Sight=5
 Range=0
 Cost=999
-BuildTime=0
+BuildTime=100
 
 ; -------------------------------------
 ; PALACE SPECIFIC UNITS
@@ -310,20 +334,41 @@ BuildTime=0
 ; NOTE: "Missile" = Dead hand. Is not a real unit
 
 ; -----------------
-; Unit: FREMEN TROOPERS (Atreides palace stuff)
+; Unit: Single fremen (Atreides)
+; the buildtime/cost etc is not used here!
 ; -----------------
-[UNIT: FREMEN]
+[UNIT: ONEFREMEN]
 ; Unit properties
-HitPoints=150
-MoveSpeed=0
-TurnSpeed=0
+HitPoints=120
+MoveSpeed=4
+TurnSpeed=2
 AttackFrequency=16
 Sight=6
 Range=5
 
 ; Build properties + Sidebar
 ; Buildtime = 1000, equals saboteur
-BuildTime=0
+BuildTime=1000
+; costs nothing
+Cost=0
+
+; -----------------
+; Unit: Triple fremen (Atreides)
+; this unit is used in the sidebar! (so the cost and buildtime of this one are
+; used!)
+; -----------------
+[UNIT: THREEFREMEN]
+; Unit properties
+HitPoints=250
+MoveSpeed=4
+TurnSpeed=2
+AttackFrequency=16
+Sight=6
+Range=5
+
+; Build properties + Sidebar
+; Buildtime = 1000, equals saboteur
+BuildTime=1000
 ; costs nothing
 Cost=0
 
@@ -333,7 +378,7 @@ Cost=0
 [UNIT: MISSILE]
 ; Buildtime = 1000, equals saboteur
 ; Missile is a bit longer because its strong
-BuildTime=0
+BuildTime=1300 
 ; costs nothing
 Cost=0
 
@@ -351,7 +396,7 @@ Range=2
   
 ; Build properties + Sidebar
 ; Buildtime = 1000, equals saboteur
-BuildTime=0
+BuildTime=1000
 ; costs nothing
 Cost=0
 
@@ -375,7 +420,7 @@ Cost=0
 Cost=999
 HitPoints=2000
 FixPoints=1
-BuildTime=0
+BuildTime=200
 PowerDrain=80
 PowerGive=0
 
@@ -386,7 +431,7 @@ PowerGive=0
 Cost=300
 HitPoints=500
 FixPoints=3
-BuildTime=0
+BuildTime=34
 PowerDrain=0
 PowerGive=100
 
@@ -397,7 +442,7 @@ PowerGive=100
 Cost=600
 HitPoints=700
 FixPoints=2
-BuildTime=0
+BuildTime=130
 PowerDrain=30
 PowerGive=0
 
@@ -408,7 +453,7 @@ PowerGive=0
 Cost=400
 HitPoints=350
 FixPoints=3
-BuildTime=0
+BuildTime=66
 PowerDrain=20
 PowerGive=0
 
@@ -430,7 +475,7 @@ PowerGive=1
 Cost=150
 HitPoints=250
 FixPoints=5
-BuildTime=0
+BuildTime=28
 PowerDrain=5
 PowerGive=0
 
@@ -441,7 +486,7 @@ PowerGive=0
 Cost=600
 HitPoints=600
 FixPoints=2
-BuildTime=0
+BuildTime=110
 PowerDrain=35
 PowerGive=0
 
@@ -452,7 +497,7 @@ PowerGive=0
 Cost=700
 HitPoints=700
 FixPoints=2
-BuildTime=0
+BuildTime=110
 PowerDrain=60
 PowerGive=0
 
@@ -463,7 +508,7 @@ PowerGive=0
 Cost=700
 HitPoints=250
 FixPoints=5
-BuildTime=0
+BuildTime=60
 PowerDrain=20
 PowerGive=0
 
@@ -474,7 +519,7 @@ PowerGive=0
 Cost=400
 HitPoints=900
 FixPoints=3
-BuildTime=0
+BuildTime=60
 PowerDrain=30
 PowerGive=0
 
@@ -485,7 +530,7 @@ PowerGive=0
 Cost=400
 HitPoints=800
 FixPoints=3
-BuildTime=0
+BuildTime=65
 PowerDrain=30
 PowerGive=0
 
@@ -496,7 +541,7 @@ PowerGive=0
 Cost=400
 HitPoints=500
 FixPoints=3
-BuildTime=0
+BuildTime=94
 PowerDrain=20
 PowerGive=0
 
@@ -507,7 +552,7 @@ PowerGive=0
 Cost=400
 HitPoints=300
 FixPoints=4
-BuildTime=0
+BuildTime=62
 PowerDrain=10
 PowerGive=0
 
@@ -518,7 +563,7 @@ PowerGive=0
 Cost=500
 HitPoints=800
 FixPoints=3
-BuildTime=0
+BuildTime=110
 PowerDrain=50
 PowerGive=0
 
@@ -529,7 +574,7 @@ PowerGive=0
 Cost=150
 HitPoints=400
 FixPoints=2
-BuildTime=0
+BuildTime=54
 PowerDrain=10
 PowerGive=0
 
@@ -540,7 +585,7 @@ PowerGive=0
 Cost=250
 HitPoints=800
 FixPoints=3
-BuildTime=0
+BuildTime=96
 PowerDrain=20
 PowerGive=0
 
@@ -553,20 +598,20 @@ PowerGive=0
 
 [STRUCTURE: SLAB]
 Cost=5
-BuildTime=0
+BuildTime=3
 PowerDrain=0
 PowerGive=0
 
 [STRUCTURE: 4SLAB]
 Cost=20
-BuildTime=0
+BuildTime=10
 PowerDrain=0
 PowerGive=0
 
 ; WALL has hitpoints (FixPoints will not work here)
 [STRUCTURE: WALL]
 Cost=50
-BuildTime=0
+BuildTime=20
 HitPoints=200
 PowerDrain=0
 PowerGive=0
