@@ -165,6 +165,12 @@ int INI_StructureType(char word[256]) {
 // Reads out word[], does a string compare and returns type id
 int INI_WordType(char word[25], int section)
 {
+
+	char msg[255];
+	memset(msg, 0, sizeof(msg));
+	sprintf(msg, "Going to find word-type for [%s]", word);
+	logbook(msg);
+
 	if (section == SEC_REGION)
 	{
 		if (strcmp(word, "Region") == 0)
@@ -578,7 +584,9 @@ int INI_WordType(char word[25], int section)
 
   }
 
-
+  memset(msg, 0, sizeof(msg));
+  sprintf(msg, "Could not find word-type for [%s]", word);
+  logbook(msg);
 
   return WORD_NONE;
 }
@@ -882,7 +890,7 @@ void INI_WordValueCHAR(char result[MAX_LINE_LENGTH], char value[256]) {
 			// Copy the part to 'value', Make sure we won't get outside the array of the character.
 			int cp=is_pos+1;
 			int c=0;
-			while (cp < end_pos) {
+			while (cp <= end_pos) {
 			  value[c] = result[cp];
 			  c++;
 			  cp++;
@@ -1292,100 +1300,106 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 			// line is not starting empty and section is found
 			if (linesection[0] != '\0' && strlen(linesection) > 1) {
 				section = SCEN_INI_SectionType(linesection, section);
+				char msg[255];
+				sprintf(msg, "[SCENARIO] found section '%s', resulting in section id [%d]", linesection, section);
+				logbook(msg);
 
-			// Only original dune 2 scenario's have this section, auto set to true
-			if (section == INI_BASIC) {
-				//logbook("NOTE: found '[BASIC]' section. Meaning this is a DUNE II scenario afterall...");
+				if (section >= INI_HOUSEATREIDES &&	section <= INI_HOUSEMERCENARY) {
+					iPlayerID++;
 
-				// Read out tactical CELL here... "TODO"
+					if (iPlayerID > (MAX_PLAYERS-1)) {
+						iPlayerID = (MAX_PLAYERS-1);
+					}
 
-				// READ OUT STARTING MOVIE
+					if (section == INI_HOUSEATREIDES)   iPl_house[iPlayerID] = ATREIDES;
+					if (section == INI_HOUSEORDOS)      iPl_house[iPlayerID] = ORDOS;
+					if (section == INI_HOUSEHARKONNEN)  iPl_house[iPlayerID] = HARKONNEN;
+					if (section == INI_HOUSEMERCENARY)  iPl_house[iPlayerID] = MERCENARY;
+					if (section == INI_HOUSEFREMEN)     iPl_house[iPlayerID] = FREMEN;
+					if (section == INI_HOUSESARDAUKAR)  iPl_house[iPlayerID] = SARDAUKAR;
 
-			}
-
-			if (section >= INI_HOUSEATREIDES &&	section <= INI_HOUSEMERCENARY) {
-				iPlayerID++;
-
-				if (iPlayerID > (MAX_PLAYERS-1)) {
-					iPlayerID = (MAX_PLAYERS-1);
+					char msg[255];
+					sprintf(msg, "[SCENARIO] Setting house to [%d] for playerId [%d]", iPl_house[iPlayerID], iPlayerID);
+					logbook(msg);
 				}
-
-				if (section == INI_HOUSEATREIDES)   iPl_house[iPlayerID] = ATREIDES;
-				if (section == INI_HOUSEORDOS)      iPl_house[iPlayerID] = ORDOS;
-				if (section == INI_HOUSEHARKONNEN)  iPl_house[iPlayerID] = HARKONNEN;
-				if (section == INI_HOUSEMERCENARY)  iPl_house[iPlayerID] = MERCENARY;
-				if (section == INI_HOUSEFREMEN)     iPl_house[iPlayerID] = FREMEN;
-				if (section == INI_HOUSESARDAUKAR)  iPl_house[iPlayerID] = SARDAUKAR;
+				continue; // next line
 			}
-			continue; // next line
-		}
 
-         // Okay, we found a new section; if its NOT [GAME] then we remember this one!
-		if (section != INI_NONE)
-		{
-			INI_Word(linefeed, lineword);
-			wordtype = INI_WordType(lineword, section);
-		}
-
-        if (section == INI_BASIC)
-        {
-            if (wordtype == WORD_BRIEFPICTURE)
-            {
-                // Load name, and load proper briefingpicture
-                memset(value, 0, sizeof(value));
-
-                string scenefile = INI_WordValueString(linefeed);
-				string scene = INI_SceneFileToScene(scenefile);
-
-                scene = INI_SceneFileToScene(scenefile);
-
-                if (!isInString(scene, "unknown")) {
-                	LOAD_SCENE(scene);
-                }
-            }
-        }
-
-		// Dune 2 house found, load player data
-		if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY)
-		{
-			// link house
-			if (iPlayerID > -1)
+			 // Okay, we found a new section; if its NOT [GAME] then we remember this one!
+			if (section != INI_NONE)
 			{
-				if (wordtype == WORD_BRAIN)
+				INI_Word(linefeed, lineword);
+				wordtype = INI_WordType(lineword, section);
+			}
+
+			if (section == INI_BASIC)
+			{
+				if (wordtype == WORD_BRIEFPICTURE)
 				{
-					char cBrain[256];
-                    memset(cBrain, 0, sizeof(cBrain));
-					INI_WordValueCHAR(linefeed, cBrain);
+					// Load name, and load proper briefingpicture
+					memset(value, 0, sizeof(value));
 
-					// We know the human brain now, this should be player 0...
-					if (strcmp(cBrain, "Human") == 0)
-						iHumanID = iPlayerID;
+					string scenefile = INI_WordValueString(linefeed);
+					string scene = INI_SceneFileToScene(scenefile);
 
+					scene = INI_SceneFileToScene(scenefile);
+
+					if (!isInString(scene, "unknown")) {
+						LOAD_SCENE(scene);
+					}
 				}
 
-				if (wordtype == WORD_CREDITS)
-					iPl_credits[iPlayerID] = INI_WordValueINT(linefeed)-1;
-
-                if (wordtype == WORD_QUOTA)
-                {
-					iPl_quota[iPlayerID] = INI_WordValueINT(linefeed);
-                }
-
-
+				if (wordtype == WORD_FOCUS)
+				{
+					player[0].focus_cell = INI_WordValueINT(linefeed);
+					map.set_pos(-1,-1, player[0].focus_cell);
+				}
 			}
 
-		}
-
-
-        // [BASIC]
-		if (section == INI_BASIC)
-		{
-			if (wordtype == WORD_FOCUS)
+			// Dune 2 house found, load player data
+			if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY)
 			{
-                player[0].focus_cell = INI_WordValueINT(linefeed);
-				map.set_pos(-1,-1, player[0].focus_cell);
+				char msg[255];
+				memset(msg, 0, sizeof(msg));
+				sprintf(msg, "Section is between atreides and mercenary, the playerId is [%d]. WordType is [%d]", iPlayerID, wordtype);
+				logbook(msg);
+				// link house (found, because > -1)
+				if (iPlayerID > -1) {
+					if (wordtype == WORD_BRAIN)
+					{
+						char cBrain[256];
+						memset(cBrain, 0, sizeof(cBrain));
+						INI_WordValueCHAR(linefeed, cBrain);
+
+						char msg[255];
+						memset(msg, 0, sizeof(msg));
+						sprintf(msg, "Brain is [%s]", cBrain);
+						logbook(msg);
+
+						// We know the human brain now, this should be player 0...
+						if (strcmp(cBrain, "Human") == 0) {
+							char msg[255];
+							memset(msg, 0, sizeof(msg));
+							sprintf(msg, "Found human player for id [%d]", iPlayerID);
+							logbook(msg);
+							iHumanID = iPlayerID;
+						} else {
+							logbook("This brain is not human...");
+						}
+
+					} else if (wordtype == WORD_CREDITS) {
+						int credits = INI_WordValueINT(linefeed)-1;
+						char msg[255];
+						memset(msg, 0, sizeof(msg));
+						sprintf(msg, "Set credits for player id [%d] to [%d]", iPlayerID, credits);
+						logbook(msg);
+
+						iPl_credits[iPlayerID] = credits;
+					} else if (wordtype == WORD_QUOTA) {
+						iPl_quota[iPlayerID] = INI_WordValueINT(linefeed);
+					}
+				}
 			}
-		}
 
         if (section == INI_MAP)
 		{
@@ -1521,21 +1535,33 @@ void INI_Load_scenario(int iHouse, int iRegion) {
             // ORIGINAL DUNE 2 MISSION. EVERYBODY IS AGAINST U
 			if (bSetUpPlayers)
 			{
+				logbook("Going to setup players");
                 int iRealID=1;
 
                 for (int iP=0; iP < MAX_PLAYERS; iP++) // till 6 , since player 6 itself is sandworm
                 {
-                    if (iPl_house[iP] > -1)
+                	char msg[255];
+					memset(msg, 0, sizeof(msg));
+					sprintf(msg, "House for id [%d] is [%d] - human id is [%d]", iP, iPl_house[iP], iHumanID);
+					logbook(msg);
+                    if (iPl_house[iP] > -1) {
                         if (iP == iHumanID)
                         {
-							player[0].credits = iPl_credits[iP];
-							player[0].setHouse(iPl_house[iP]);
-                            player[0].iTeam=0;
+                        	char msg[255];
+							memset(msg, 0, sizeof(msg));
+							sprintf(msg, "Setting up human player, credits to [%d]", iPl_credits[iP]);
+							logbook(msg);
+							player[HUMAN].credits = iPl_credits[iP];
+							player[HUMAN].setHouse(iPl_house[iP]);
+                            player[HUMAN].iTeam = 0;
                             game.iHouse = iPl_house[iP];
-                            if (game.getCreditsDrawer())  game.getCreditsDrawer()->setCredits();
+                            if (game.getCreditsDrawer())  {
+                            	game.getCreditsDrawer()->setCredits();
+                            }
 
-                            if (iPl_quota[iP] > 0)
+                            if (iPl_quota[iP] > 0) {
                                 game.iWinQuota = iPl_quota[iP];
+                            }
 						}
 						else
 						{
@@ -1544,7 +1570,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 
                             // belong to player team
                             if (iPl_house[iP] == FREMEN) {
-                                if (player[0].getHouse() == ATREIDES) {
+                                if (player[HUMAN].getHouse() == ATREIDES) {
                                     player[iRealID].iTeam = 0;
                                 }
                             }
@@ -1554,7 +1580,9 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 							iRealID++;
 						}
 					}
-					bSetUpPlayers=false;
+                }
+
+				bSetUpPlayers=false;
             }
 
 			int iPart=-1; /*
