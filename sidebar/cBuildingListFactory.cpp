@@ -126,7 +126,16 @@ void cBuildingListFactory::initializeList(cPlayer *player, cBuildingList *list, 
 		list->setButtonDrawY(245);
 		list->setButtonIcon(BTN_STARPORT_PRESSED);
 
-		// a lot of units are in this list
+		list->addItemToList(new cBuildingListItem(INFANTRY, units[INFANTRY], list));
+		list->addItemToList(new cBuildingListItem(TROOPERS, units[TROOPERS], list));
+		list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE], list));
+		list->addItemToList(new cBuildingListItem(QUAD, units[QUAD], list));
+		list->addItemToList(new cBuildingListItem(TANK, units[TANK], list));
+		list->addItemToList(new cBuildingListItem(MCV, units[MCV], list));
+		list->addItemToList(new cBuildingListItem(HARVESTER, units[HARVESTER], list));
+		list->addItemToList(new cBuildingListItem(LAUNCHER, units[LAUNCHER], list));
+		list->addItemToList(new cBuildingListItem(SIEGETANK, units[SIEGETANK], list));
+		list->addItemToList(new cBuildingListItem(CARRYALL, units[CARRYALL], list));
 	}
 
 	if (listId == LIST_PALACE) {
