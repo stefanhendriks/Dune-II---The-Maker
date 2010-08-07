@@ -1295,71 +1295,59 @@ void play_voice(int iType)
 }
 
 
-bool MIDI_music_playing()
-{
- if (midi_pos > -1)
-   return true;
- else
-   return false;
+bool MIDI_music_playing() {
+	if (midi_pos > -1) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-void music_volume(int i)
-{
-    if (game.bMp3)
-    {
-        if (mp3_music != NULL)
-        almp3_adjust_mp3(mp3_music, i, 127, 1000, false);
-    }
-    else
+void music_volume(int i) {
+    if (game.bMp3) {
+        if (mp3_music != NULL) {
+        	almp3_adjust_mp3(mp3_music, i, 127, 1000, false);
+        }
+    } else {
        set_volume(255, i);
-
-
+    }
 }
 
 
-void mp3_play_file(char filename[255])
-{
+void mp3_play_file(char filename[255]) {
+	char *data;  // mp3 file in memory
+	int len;     // length of file(also the buffer)
+	FILE *f = NULL;  // file.mp3
 
+	len = (int)file_size(filename);
 
-  char *data;  // mp3 file in memory
-  int len;     // length of file(also the buffer)
-  FILE *f = NULL;  // file.mp3
+	data = new char[len];
+	f = fopen(filename, "r");
 
-  len =   (int)file_size(filename);
+	if (f != NULL) {
+		fread(data, 1, len, f);
+		fclose(f);
+	} else {
+		logbook("MP3: Could not find mp3 file for add-on, switching to MIDI mode");
+		allegro_message("Could not find MP3 file, add-on incomplete. Switching to MIDI mode");
+		game.bMp3=false;
 
-  //allegro_message("Len = %d", len);
+		if (mp3_music != NULL) {
+		   almp3_destroy_mp3(mp3_music);
+		}
 
-  data = new char[len];
-  f = fopen(filename, "r");
+		mp3_music = NULL;
+		return;
+	}
 
-  if (f != NULL)
-  {
-  fread(data, 1, len, f);
-  fclose(f);
-  }
-  else
-  {
-       logbook("MP3: Could not find mp3 file for add-on, switching to MIDI mode");
-       allegro_message("Could not find MP3 file, add-on incomplete. Switching to MIDI mode");
-       game.bMp3=false;
+	almp3_destroy_mp3(mp3_music); // stop music
 
-       if (mp3_music != NULL)
-        almp3_destroy_mp3(mp3_music);
+	mp3_music = almp3_create_mp3(data, len);
 
-       mp3_music=NULL;
+	// play music, use big buffer
+	almp3_play_mp3(mp3_music, 32768, 255, 128);
 
-       return;
-
-  }
-
-  almp3_destroy_mp3(mp3_music); // stop music
-
-  mp3_music = almp3_create_mp3(data, len);
-
-  // play music, use big buffer
-  almp3_play_mp3(mp3_music, 32768, 255, 128);
-
-  music_volume(game.iMusicVolume);
+	music_volume(game.iMusicVolume);
 }
 
 
@@ -1606,32 +1594,26 @@ void Shimmer(int r, int x, int y)
 
 }
 
+void LOAD_SCENE(std::string scene) {
+	gfxmovie = NULL;
 
-void LOAD_SCENE(char file[30])
-{
-  gfxmovie = NULL;
+	char filename[128];
+	sprintf(filename, "data/scenes/%s.dat", scene.c_str());
 
-  char filename[128];
-  sprintf(filename, "data/scenes/%s.dat", file);
+	gfxmovie = load_datafile(filename);
 
-  gfxmovie = load_datafile(filename);
-
-  char msg[255];
-  sprintf(msg, "LOAD SCENE: %s", filename);
-  logbook(msg);
-
-  if (gfxmovie != NULL)
-  {
-    game.iMovieFrame=0;
-
-  }
-  else
-  {
-    gfxmovie=NULL;
-    game.iMovieFrame=-1;
-    logbook("FAILED");
-  }
-
+	if (gfxmovie != NULL) {
+		game.iMovieFrame=0;
+		char msg[255];
+		sprintf(msg, "Successful loaded scene [%s]", filename);
+		logbook(msg);
+	} else {
+		gfxmovie=NULL;
+		game.iMovieFrame=-1;
+		char msg[255];
+		sprintf(msg, "Failed to load scene [%s]", filename);
+		logbook(msg);
+	}
 }
 
 // Skirmish map initialization

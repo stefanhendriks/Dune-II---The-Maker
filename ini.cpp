@@ -109,6 +109,25 @@ bool isInString(string source, string toFind) {
 	 return false; // not found in string
 }
 
+string INI_SceneFileToScene(string scenefile) {
+	// wsa / data
+	if (isInString(scenefile, "HARVEST.WSA"))		return "harvest";
+	if (isInString(scenefile, "IX.WSA"))		return "ix";
+	if (isInString(scenefile, "SARDUKAR.WSA"))		return "sardukar";
+	if (isInString(scenefile, "PALACE.WSA"))		return "palace";
+	if (isInString(scenefile, "REPAIR.WSA"))		return "repair";
+	if (isInString(scenefile, "HVYFTRY.WSA"))		return "hvyftry";
+	if (isInString(scenefile, "HEADQRTS.WSA"))		return "headqrts";
+	if (isInString(scenefile, "QUAD.WSA"))		return "quad";
+	if (isInString(scenefile, "LTANK.WSA"))		return "ltank";
+
+	char msg[255];
+	sprintf(msg, "Failed to map dune 2 scenefile [%s] to a d2tm scene file", scenefile.c_str());
+	logbook(msg);
+
+	return "unknown";
+}
+
 int INI_StructureType(string structureName) {
 
 	if (isInString(structureName, "WINDTRAP"))		return WINDTRAP;
@@ -1315,42 +1334,14 @@ void INI_Load_scenario(int iHouse, int iRegion) {
                 // Load name, and load proper briefingpicture
                 memset(value, 0, sizeof(value));
 
-                INI_WordValueCHAR(linefeed, value);
+                string scenefile = INI_WordValueString(linefeed);
+				string scene = INI_SceneFileToScene(scenefile);
 
-                gfxmovie=NULL;
-                game.iMovieFrame=-1;
+                scene = INI_SceneFileToScene(scenefile);
 
-                // wsa / data
-                if (strcmp(value, "HARVEST.WSA") == 0)
-                   LOAD_SCENE("harvest"); // load harvester
-
-                if (strcmp(value, "IX.WSA") == 0)
-                   LOAD_SCENE("ix"); // load harvester
-
-                if (strcmp(value, "SARDUKAR.WSA") == 0)
-                   LOAD_SCENE("sardukar"); // load harvester
-
-                if (strcmp(value, "PALACE.WSA") == 0)
-                   LOAD_SCENE("palace"); // load harvester
-
-                if (strcmp(value, "REPAIR.WSA") == 0)
-                   LOAD_SCENE("repair"); // repair facility
-
-                if (strcmp(value, "HVYFTRY.WSA") == 0)
-                   LOAD_SCENE("hvyftry"); // load heavy factory
-
-                if (strcmp(value, "HEADQRTS.WSA") == 0)
-                   LOAD_SCENE("headqrts"); // radar/headquarters
-
-                if (strcmp(value, "QUAD.WSA") == 0)
-                   LOAD_SCENE("quad"); // quad
-
-                if (strcmp(value, "LTANK.WSA") == 0)
-                   LOAD_SCENE("ltank"); // ltank
-
-
-                //assert(value);
-
+                if (!isInString(scene, "unknown")) {
+                	LOAD_SCENE(scene);
+                }
             }
         }
 
@@ -2369,8 +2360,6 @@ void INI_Install_Game(string filename) {
           if (wordtype == WORD_HARVESTAMOUNT)          units[id].harvesting_amount = INI_WordValueINT(linefeed);
 
           if (wordtype == WORD_PRODUCER) {
-        	  char producer[256];
-        	  INI_WordValueCHAR(linefeed, producer);
         	  string producerString = INI_WordValueString(linefeed);
         	  // determine structure type from that
         	  int type = INI_StructureType(producerString);

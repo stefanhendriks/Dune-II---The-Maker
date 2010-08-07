@@ -44,8 +44,7 @@ int iFindCloseBorderCell(int iCll);
 
 void mp3_play_file(char filename[255]);
 
-void LOAD_SCENE(char file[30]);
-
+void LOAD_SCENE(std::string scene);
 
 void play_sound_id(int s, int iOnScreen);
 bool MIDI_music_playing();

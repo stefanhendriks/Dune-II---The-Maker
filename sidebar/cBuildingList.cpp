@@ -97,9 +97,9 @@ void cBuildingList::addItemToList(cBuildingListItem * item) {
 	items[slot] = item;
 	item->setSlotId(slot);
 	maxItems = slot;
-	char msg[355];
-	sprintf(msg, "Icon added with id [%d] added to cBuilding list, put in slot[%d], set maxItems to [%d]", item->getBuildId(), slot, maxItems);
-	logbook(msg);
+//	char msg[355];
+//	sprintf(msg, "Icon added with id [%d] added to cBuilding list, put in slot[%d], set maxItems to [%d]", item->getBuildId(), slot, maxItems);
+//	logbook(msg);
 }
 
 /**

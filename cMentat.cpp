@@ -12,6 +12,8 @@
 
 #include "d2tmh.h"
 
+using namespace std;
+
 cMentat::cMentat() {
 	iMentatSentence = -1;
 
@@ -58,17 +60,21 @@ void cMentat::prepare(bool bTellHouse, int state, int house, int region) {
 			INI_LOAD_BRIEFING(house, region, INI_BRIEFING);
 		} else if (state == GAME_WINBRIEF) {
 			if (rnd(100) < 50) {
-				LOAD_SCENE("win01"); // ltank
+				string scene = "win01";
+				LOAD_SCENE(scene); // ltank
 			} else {
-				LOAD_SCENE("win02"); // ltank
+				string scene = "win02";
+				LOAD_SCENE(scene); // ltank
 			}
 
 			INI_LOAD_BRIEFING(house, region, INI_WIN);
 		} else if (state == GAME_LOSEBRIEF)	{
 			if (rnd(100) < 50) {
-				LOAD_SCENE("lose01"); // ltank
+				string scene = "lose01";
+				LOAD_SCENE(scene); // ltank
 			} else {
-				LOAD_SCENE("lose02"); // ltank
+				string scene = "lose02";
+				LOAD_SCENE(scene); // ltank
 			}
 			INI_LOAD_BRIEFING(house, region, INI_LOSE);
 		}
