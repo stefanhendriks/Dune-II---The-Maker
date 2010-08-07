@@ -43,14 +43,14 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 					cLogger::getInstance()->logCommentLine("updateStructureCreated - added WOR to list");
 					list->addItemToList(new cBuildingListItem(WOR, structures[WOR], list));
 				}
-
 			} else if (
 					house == HARKONNEN ||
 					house == SARDAUKAR ||
 					house == FREMEN ||
-					house == MERCENARY)
+					house == MERCENARY) {
 				cLogger::getInstance()->logCommentLine("updateStructureCreated - added WOR to list");
 				list->addItemToList(new cBuildingListItem(WOR, structures[WOR], list));
+			}
 		}
 
 		if (techLevel >= 3) {
@@ -104,7 +104,6 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 		}
 	}
 
-
 	///////////////////////////////////
 	// ADJUSTMENTS TO INFANTRY LIST
 	///////////////////////////////////
@@ -114,6 +113,25 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list));
 		} else if (structureType == WOR) {
 			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
+		}
+	}
+
+	///////////////////////////////////
+	// ADJUSTMENTS TO HEAVY FACTORY LIST
+	///////////////////////////////////
+	list = player->getSideBar()->getList(LIST_HEAVYFC);
+
+	// Heavyfactory
+	if (structureType == IX)
+	{
+		if (techLevel >= 7) {
+			if (player->getHouse() == ATREIDES) {
+				list->addItemToList(new cBuildingListItem(SONICTANK, units[SONICTANK], list));
+			} else if (player->getHouse() == HARKONNEN) {
+				list->addItemToList(new cBuildingListItem(DEVASTATOR, units[DEVASTATOR], list));
+			} else if (player->getHouse() == ORDOS) {
+				list->addItemToList(new cBuildingListItem(DEVIATOR, units[DEVIATOR], list));
+			}
 		}
 	}
 

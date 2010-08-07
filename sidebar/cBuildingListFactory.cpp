@@ -23,45 +23,6 @@ cBuildingListFactory *cBuildingListFactory::getInstance() {
 	return instance;
 }
 
-
-//	// STARTING UNIT LISTS
-//
-//	// LIGHT FACTORY
-//	if (iHouse == ATREIDES)
-//		list_new_item(LIST_LIGHTFC, ICON_UNIT_TRIKE, units[TRIKE].cost, -1, TRIKE);
-//	else if (iHouse == ORDOS)
-//		list_new_item(LIST_LIGHTFC, ICON_UNIT_RAIDER, units[RAIDER].cost, -1, RAIDER);
-//	else if (iHouse == HARKONNEN)
-//	{
-//		list_new_item(LIST_LIGHTFC, ICON_UNIT_QUAD, units[QUAD].cost, -1, QUAD);
-//		game.iStructureUpgrade[LIGHTFACTORY]=1;
-//	}
-//
-
-//	// HITECH
-//	list_new_item(LIST_ORNI, ICON_UNIT_CARRYALL, units[CARRYALL].cost, -1, CARRYALL);
-//
-//
-//	// BARRACKS OR WOR
-//	if (iHouse == HARKONNEN || iHouse == SARDAUKAR)
-//	{
-//		list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPER, units[TROOPER].cost, -1, TROOPER);
-//	}
-//	else
-//	{
-//		list_new_item(LIST_INFANTRY, ICON_UNIT_SOLDIER, units[SOLDIER].cost, -1, SOLDIER);
-//
-//		// ordos gain trooper(s).
-//		if (iHouse == ORDOS && iMission > 5)
-//			list_new_item(LIST_INFANTRY, ICON_UNIT_TROOPER, units[TROOPER].cost, -1, TROOPER);
-//	}
-//
-//
-//	// PALACE
-//
-//
-//	// STARPORT
-
 /**
  * Initialize list according to techlevel. This will also remove all previously set icons.
  *
@@ -102,12 +63,6 @@ void cBuildingListFactory::initializeList(cPlayer *player, cBuildingList *list, 
 		if (techlevel >= 4) {
 			//list->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4])); // only available after upgrading
 			list->addItemToList(new cBuildingListItem(WALL, structures[WALL], list));
-		}
-
-		if (techlevel >= 5) {
-			if (house == ORDOS) {
-				list->addItemToList(new cBuildingListItem(BARRACKS, structures[WOR], list));
-			}
 		}
 
 		list->addItemToList(new cBuildingListItem(WINDTRAP, structures[WINDTRAP], list));

@@ -38,10 +38,6 @@ cListUpgrade * cUpgradeUtils::getListUpgradeForList(cPlayer * thePlayer, int lis
 	assert(thePlayer);
 	cBuildingList *list = thePlayer->getSideBar()->getList(listTypeId);
 
-//	char msg[255];
-//	sprintf(msg, "cListUpgrade: listTypeId [%d], techLevel [%d], currentUpgradeLevelOfList [%d]", listTypeId, techLevel, currentUpgradeLevelOfList);
-//	logbook(msg);
-
 	if (listTypeId == LIST_CONSTYARD) {
 		// upgrade for 4SLAB
 		if (techLevel >= 4 && currentUpgradeLevelOfList < 1) {
@@ -49,7 +45,7 @@ cListUpgrade * cUpgradeUtils::getListUpgradeForList(cPlayer * thePlayer, int lis
 		}
 		// upgrade for RTURRET
 		if (techLevel >= 6 && thePlayer->iStructures[RADAR] > 0 && currentUpgradeLevelOfList < 2) {
-			return new cListUpgrade(200, 400, UPGRADE_TWO, new cBuildingListItem(RTURRET, structures[RTURRET], list));
+			return new cListUpgrade(100, 200, UPGRADE_TWO, new cBuildingListItem(RTURRET, structures[RTURRET], list));
 		}
 	}
 
@@ -57,7 +53,42 @@ cListUpgrade * cUpgradeUtils::getListUpgradeForList(cPlayer * thePlayer, int lis
 		if (thePlayer->getHouse() != HARKONNEN) {
 			// upgrade for Quads
 			if (techLevel >= 3 && currentUpgradeLevelOfList < 1) {
-				return new cListUpgrade(100, 300, UPGRADE_ONE, new cBuildingListItem(QUAD, units[QUAD], list));
+				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(QUAD, units[QUAD], list));
+			}
+		}
+	}
+
+	if (listTypeId == LIST_HEAVYFC) {
+		if (thePlayer->getHouse() == HARKONNEN || thePlayer->getHouse() == ATREIDES) {
+			// upgrade to MCV
+			if (techLevel >= 4 && currentUpgradeLevelOfList < 1) {
+				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(MCV, units[MCV], list));
+			}
+			// upgrade to Launcher
+			if (techLevel >= 5 && currentUpgradeLevelOfList < 2) {
+				return new cListUpgrade(100, 200, UPGRADE_TWO, new cBuildingListItem(LAUNCHER, units[LAUNCHER], list));
+			}
+			// upgrade to Siege Tank
+			if (techLevel >= 6 && currentUpgradeLevelOfList < 3) {
+				return new cListUpgrade(100, 200, UPGRADE_THREE, new cBuildingListItem(SIEGETANK, units[SIEGETANK], list));
+			}
+		} else if (thePlayer->getHouse() == ORDOS) {
+			// upgrade to MCV
+			if (techLevel >= 4 && currentUpgradeLevelOfList < 1) {
+				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(MCV, units[MCV], list));
+			}
+			// upgrade to Siege tank
+			if (techLevel >= 7 && currentUpgradeLevelOfList < 2) {
+				return new cListUpgrade(100, 200, UPGRADE_TWO, new cBuildingListItem(SIEGETANK, units[SIEGETANK], list));
+			}
+		}
+	}
+
+	if (listTypeId == LIST_ORNI) {
+		if (thePlayer->getHouse() != HARKONNEN) {
+			// upgrade for Ornithopter
+			if (techLevel >= 7 && currentUpgradeLevelOfList < 1) {
+				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(ORNITHOPTER, units[ORNITHOPTER], list));
 			}
 		}
 	}
