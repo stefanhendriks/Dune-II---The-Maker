@@ -157,7 +157,7 @@ void cSideBar::thinkInteraction() {
 	}
 
 	// when mouse pressed, build item if over item
-	if (selectedListID > -1 && getList(selectedListID)->isAvailable()) {
+	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && getList(selectedListID)->isUpgrading() == false) {
 		cBuildingList *list = getList(selectedListID);
 		if (game.bMousePressedLeft) {
 			if (list != NULL) {

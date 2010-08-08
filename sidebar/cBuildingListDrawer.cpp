@@ -148,17 +148,10 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 			// - is not available (doh)
 			// - we cant pay it
 			// - some other item is being built
-			if (!item->isAvailable() || cannotPayIt || isBuildingItemInList) {
+			// - list is being upgraded, so you cannot build items
+			if (!item->isAvailable() /*|| cannotPayIt*/ || isBuildingItemInList || list->isUpgrading()) {
 				set_trans_blender(0,0,0,128);
 				fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
-			}
-
-			// draw cross when not able to pay
-			if (cannotPayIt) {
-				rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(game.fade_select, 0, 0));
-				line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(game.fade_select, 0, 0));
-				line(bmp_screen, iDrawX, iDrawY+47, iDrawX+63, iDrawY, makecol(game.fade_select, 0, 0));
-				set_trans_blender(0,0,0,128);
 			}
 
 			// last built id
