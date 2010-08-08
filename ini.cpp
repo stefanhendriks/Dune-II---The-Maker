@@ -1890,6 +1890,9 @@ void INI_Load_scenario(int iHouse, int iRegion) {
             {
 				// anything lower than SLAB1 means a 'normal' structure (TODO: make this less tight coupled)
 				if (iType < SLAB1) {
+					if (iType != CONSTYARD) {
+						cStructureFactory::getInstance()->createSlabForStructureType(iCell, iType);
+					}
 					cStructureFactory::getInstance()->createStructure(iCell, iType, iController, 100);
 				} else {
 					if (iType == SLAB1)

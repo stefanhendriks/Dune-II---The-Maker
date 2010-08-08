@@ -37,6 +37,8 @@ public:
 	void clearFogForStructureType(int iCell, cAbstractStructure *str);
 	void clearFogForStructureType(int iCell, int iStructureType, int iSight, int iPlayer);
 
+	void createSlabForStructureType(int iCell, int iStructureType);
+
 	void placeStructure(int iCell, int iStructureType, int iPlayer);
 
 	int getSlabStatus(int iCell, int iStructureType, int iUnitIDToIgnore);
