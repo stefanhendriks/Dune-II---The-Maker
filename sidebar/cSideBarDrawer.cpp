@@ -44,7 +44,6 @@ void cSideBarDrawer::drawSideBar(cPlayer * player) {
 	// TODO: draw minimap here
 
 	// draw the upgrade button
-	// TODO: draw the upgrade button here
 	if (selectedListId) {
 		upgradeDrawer->drawUpgradeButtonForSelectedListIfNeeded(player, selectedList);
 	}

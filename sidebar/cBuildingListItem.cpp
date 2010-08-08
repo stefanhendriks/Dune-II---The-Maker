@@ -32,7 +32,7 @@ cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *li
 	myList = list;
 	timesToBuild = 0;
 	timesOrdered  = 0;
-	if (entry.cost > 0) {
+	if (entry.cost > 0 && entry.build_time > 0) {
 		creditsPerProgressTime = (float)entry.cost / (float)entry.build_time;
 	}
 	placeIt = false;
@@ -63,6 +63,9 @@ bool cBuildingListItem::canPay() {
  */
 float cBuildingListItem::getRefundAmount() {
 	float fProgress = progress;
+	if (fProgress < 1.0F) {
+		return 0.0F;
+	}
 	return (fProgress * creditsPerProgressTime);
 }
 

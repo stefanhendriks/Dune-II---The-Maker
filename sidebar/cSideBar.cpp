@@ -10,7 +10,7 @@
 cSideBar::cSideBar(cPlayer * thePlayer) {
 	assert(thePlayer);
 	selectedListID = -1; // nothing is selected
-	memset(lists, NULL, sizeof(lists));
+	memset(lists, 0, sizeof(lists));
 	player = thePlayer;
 }
 
@@ -72,12 +72,14 @@ void cSideBar::thinkUpgradeButton() {
 void cSideBar::thinkAvailabilityLists() {
 
 	// CONSTYARD LIST
-	cBuildingList * constyardList = player->getSideBar()->getList(LIST_CONSTYARD);
+	cBuildingList * constyardList = getList(LIST_CONSTYARD);
+	assert(constyardList);
+	assert(player);
 
 	constyardList->setAvailable(player->iStructures[CONSTYARD] > 0);
 
 	// INFANTRY LIST
-	cBuildingList * infantryList = player->getSideBar()->getList(LIST_INFANTRY);
+	cBuildingList * infantryList = getList(LIST_INFANTRY);
 
 	if (player->getHouse() == ATREIDES) {
 		infantryList->setAvailable(player->iStructures[BARRACKS] > 0);
@@ -90,23 +92,23 @@ void cSideBar::thinkAvailabilityLists() {
 	}
 
 	// LIGHTFC LIST
-	cBuildingList * lightfcList = player->getSideBar()->getList(LIST_LIGHTFC);
+	cBuildingList * lightfcList = getList(LIST_LIGHTFC);
 	lightfcList->setAvailable(player->iStructures[LIGHTFACTORY] > 0);
 
 	// HEAVYFC LIST
-	cBuildingList * heavyfcList = player->getSideBar()->getList(LIST_HEAVYFC);
+	cBuildingList * heavyfcList = getList(LIST_HEAVYFC);
 	heavyfcList->setAvailable(player->iStructures[HEAVYFACTORY] > 0);
 
 	// HIGHTECH (ORNI) LIST
-	cBuildingList * orniList = player->getSideBar()->getList(LIST_ORNI);
+	cBuildingList * orniList = getList(LIST_ORNI);
 	orniList->setAvailable(player->iStructures[HIGHTECH] > 0);
 
 	// PALACE LIST
-	cBuildingList * palaceList = player->getSideBar()->getList(LIST_PALACE);
+	cBuildingList * palaceList = getList(LIST_PALACE);
 	palaceList->setAvailable(player->iStructures[PALACE] > 0);
 
 	// STARPORT LIST
-	cBuildingList * starportList = player->getSideBar()->getList(LIST_STARPORT);
+	cBuildingList * starportList = getList(LIST_STARPORT);
 	starportList->setAvailable(player->iStructures[STARPORT] > 0);
 }
 
@@ -176,11 +178,13 @@ void cSideBar::thinkInteraction() {
 						}
 					}
 				} else {
-					if (item != NULL) {
-						item->increaseTimesOrdered();
-						// TODO: add to order handle thingy
-						// TODO: substract amount of the order handle thingy
-					}
+//					cOrderProcesser * orderProcesser = player->getOrderProcesser();
+//					assert(orderProcesser);
+//					if (item != NULL && orderProcesser->acceptsOrders()) {
+//						item->increaseTimesOrdered();
+//						orderProcesser->addOrder(item);
+//						player->credits -= item->getBuildCost();
+//					}
 				}
 			}
 		}
@@ -214,13 +218,16 @@ void cSideBar::thinkInteraction() {
 						}
 					}
 				} else {
-					if (item != NULL) {
-						if (item->getTimesOrdered() > 0) {
-							item->decreaseTimesOrdered();
-							// TODO: remove from order handle thingy
-							// TODO: get refund of the order handle thingy
-						}
-					}
+//					cOrderProcesser * orderProcesser = player->getOrderProcesser();
+//					assert(orderProcesser);
+//					if (item != NULL) {
+//						if (item->getTimesOrdered() > 0) {
+//							item->decreaseTimesOrdered();
+//							orderProcesser->removeOrder(item);
+//							// TODO: remove from order handle thingy
+//							// TODO: get refund of the order handle thingy
+//						}
+//					}
 				}
 			}
 		}

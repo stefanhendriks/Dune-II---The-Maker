@@ -54,11 +54,25 @@ void cTimeManager::handleTimerFPS() {
 			THINK_REINFORCEMENTS();
 
 			// starports think per second for deployment (if any)
-			for (int i =0; i < MAX_STRUCTURES; i++)
-				if (structure[i])
-					if (structure[i]->getType() == STARPORT)
+			for (int i =0; i < MAX_STRUCTURES; i++) {
+				if (structure[i]) {
+					if (structure[i]->getType() == STARPORT) {
 						((cStarPort *)structure[i])->think_deploy();
+					}
+				}
+			}
 
+//			for (int i = 0; i < MAX_PLAYERS; i++) {
+//				cPlayer thePlayer = player[i];
+//				if (player[i].getOrderProcesser()) {
+//					char msg[255];
+//					sprintf(msg, "Going to think for order processer, for player id [%d]", i);
+//					logbook(msg);
+//					cOrderProcesser * orderProcesser = thePlayer.getOrderProcesser();
+//					assert(orderProcesser);
+//					orderProcesser->think();
+//				}
+//			}
 
         } // game specific stuff
 
@@ -68,7 +82,7 @@ void cTimeManager::handleTimerFPS() {
 
 		// 'auto resting'
 		if (fps < IDEAL_FPS) {
-			if (iRest > 0) iRest-=2;
+			if (iRest > 0) iRest-=6;
 			if (iRest < 0) iRest=0;
 		} else {
 			if (iRest < 500) iRest+=2;

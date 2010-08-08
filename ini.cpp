@@ -166,10 +166,10 @@ int INI_StructureType(char word[256]) {
 int INI_WordType(char word[25], int section)
 {
 
-	char msg[255];
-	memset(msg, 0, sizeof(msg));
-	sprintf(msg, "Going to find word-type for [%s]", word);
-	logbook(msg);
+//	char msg[255];
+//	memset(msg, 0, sizeof(msg));
+//	sprintf(msg, "Going to find word-type for [%s]", word);
+//	logbook(msg);
 
 	if (section == SEC_REGION)
 	{
@@ -584,9 +584,10 @@ int INI_WordType(char word[25], int section)
 
   }
 
-  memset(msg, 0, sizeof(msg));
-  sprintf(msg, "Could not find word-type for [%s]", word);
-  logbook(msg);
+//  char msg[255];
+//  memset(msg, 0, sizeof(msg));
+//  sprintf(msg, "Could not find word-type for [%s]", word);
+//  logbook(msg);
 
   return WORD_NONE;
 }
@@ -1253,6 +1254,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
     game.iMission = getTechLevelByRegion(iRegion);
 
     char msg[256];
+
     sprintf(msg, "[SCENARIO] '%s' (Mission %d)", filename.c_str(), game.iMission);
     logbook(msg);
     logbook("[SCENARIO] Opening file");

@@ -19,5 +19,6 @@
 #include "cIx.h"
 
 #include "cStructurePlacer.h"
+#include "cOrderProcesser.h"
 
 #endif

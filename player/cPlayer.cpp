@@ -14,11 +14,31 @@
 
 cPlayer::cPlayer() {
 	itemBuilder = NULL;
+//	orderProcesser = NULL;
+	sidebar = NULL;
+	structurePlacer = NULL;
+	upgradeBuilder = NULL;
+	buildingListUpdater = NULL;
 }
 
 cPlayer::~cPlayer() {
 	if (itemBuilder) {
 		delete itemBuilder;
+	}
+//	if (orderProcesser) {
+//		delete orderProcesser;
+//	}
+	if (sidebar) {
+		delete sidebar;
+	}
+	if (structurePlacer) {
+		delete structurePlacer;
+	}
+	if (upgradeBuilder) {
+		delete upgradeBuilder;
+	}
+	if (buildingListUpdater) {
+		delete buildingListUpdater;
 	}
 }
 
@@ -39,7 +59,6 @@ void cPlayer::setUpgradeBuilder(cUpgradeBuilder *theUpgradeBuilder) {
 
 	upgradeBuilder = theUpgradeBuilder;
 }
-
 
 void cPlayer::setSideBar(cSideBar *theSideBar) {
 	assert(theSideBar);
@@ -62,6 +81,16 @@ void cPlayer::setItemBuilder(cItemBuilder *theItemBuilder) {
 
 	itemBuilder = theItemBuilder;
 }
+
+//void cPlayer::setOrderProcesser(cOrderProcesser *theOrderProcesser) {
+//	assert(theOrderProcesser);
+//
+//	if (orderProcesser) {
+//		delete orderProcesser;
+//	}
+//
+//	orderProcesser = theOrderProcesser;
+//}
 
 void cPlayer::setStructurePlacer(cStructurePlacer * theStructurePlacer) {
 	assert(theStructurePlacer);

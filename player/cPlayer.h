@@ -57,6 +57,7 @@ class cPlayer {
 		void setId(int theId);
 		void setStructurePlacer(cStructurePlacer *theStructurePlacer);
 		void setUpgradeBuilder(cUpgradeBuilder *theUpgradeBuilder);
+//		void setOrderProcesser(cOrderProcesser *theOrderProcesser);
 
 		// get
 		cBuildingListUpdater *getBuildingListUpdater() { return buildingListUpdater; }
@@ -68,6 +69,7 @@ class cPlayer {
 		int getId() { return id; }
 		cStructurePlacer * getStructurePlacer() { return structurePlacer; }
 		cUpgradeBuilder * getUpgradeBuilder() { return upgradeBuilder; }
+//		cOrderProcesser * getOrderProcesser() { return orderProcesser; }
 
 		// delete
 		void deleteSideBar() { if (sidebar) delete sidebar; }
@@ -82,7 +84,7 @@ class cPlayer {
 
 		cBuildingListUpdater * buildingListUpdater; // modifies list of sidebar on upgrades
 		cStructurePlacer * structurePlacer;	// used to place structures and handle updates in sidebar accordingly
-
+//		cOrderProcesser * orderProcesser; // process orders for starport
 
 		int techLevel;		// technology level
 		int house;
