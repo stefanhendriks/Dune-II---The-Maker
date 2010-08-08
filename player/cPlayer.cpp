@@ -14,7 +14,7 @@
 
 cPlayer::cPlayer() {
 	itemBuilder = NULL;
-//	orderProcesser = NULL;
+	orderProcesser = NULL;
 	sidebar = NULL;
 	structurePlacer = NULL;
 	upgradeBuilder = NULL;
@@ -25,9 +25,9 @@ cPlayer::~cPlayer() {
 	if (itemBuilder) {
 		delete itemBuilder;
 	}
-//	if (orderProcesser) {
-//		delete orderProcesser;
-//	}
+	if (orderProcesser) {
+		delete orderProcesser;
+	}
 	if (sidebar) {
 		delete sidebar;
 	}
@@ -82,15 +82,16 @@ void cPlayer::setItemBuilder(cItemBuilder *theItemBuilder) {
 	itemBuilder = theItemBuilder;
 }
 
-//void cPlayer::setOrderProcesser(cOrderProcesser *theOrderProcesser) {
-//	assert(theOrderProcesser);
-//
-//	if (orderProcesser) {
-//		delete orderProcesser;
-//	}
-//
-//	orderProcesser = theOrderProcesser;
-//}
+void cPlayer::setOrderProcesser(cOrderProcesser * theOrderProcesser) {
+	assert(theOrderProcesser);
+
+	if (orderProcesser) {
+		delete orderProcesser;
+	}
+
+	logbook("Set order processer");
+	orderProcesser = theOrderProcesser;
+}
 
 void cPlayer::setStructurePlacer(cStructurePlacer * theStructurePlacer) {
 	assert(theStructurePlacer);

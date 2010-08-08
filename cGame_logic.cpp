@@ -4190,8 +4190,8 @@ void cGame::setup_players() {
 		cUpgradeBuilder * upgradeBuilder = new cUpgradeBuilder(thePlayer);
 		thePlayer->setUpgradeBuilder(upgradeBuilder);
 
-//		cOrderProcesser * orderProcesser = new cOrderProcesser(thePlayer);
-//		thePlayer->setOrderProcesser(orderProcesser);
+		cOrderProcesser * orderProcesser = new cOrderProcesser(thePlayer);
+		thePlayer->setOrderProcesser(orderProcesser);
 
 		// set tech level
 		thePlayer->setTechLevel(game.iMission);

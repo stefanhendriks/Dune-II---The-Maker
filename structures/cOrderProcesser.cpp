@@ -32,7 +32,6 @@ bool cOrderProcesser::acceptsOrders() {
 
 // time based (per second)
 void cOrderProcesser::think() {
-	logbook("cOrderProcesser::think - start");
 	if (secondsUntilArrival > 0) {
 		secondsUntilArrival--;
 		if (secondsUntilArrival == 0) {
@@ -41,17 +40,14 @@ void cOrderProcesser::think() {
 		}
 	}
 
-	logbook("cOrderProcesser::think - middle");
 
 	if (secondsUntilNewPricesWillBeCalculated > 0) {
 		secondsUntilNewPricesWillBeCalculated--;
 		// wait
 	} else {
-		logbook("cOrderProcesser::think - going to update prices for starport");
 		updatePricesForStarport();
 		secondsUntilNewPricesWillBeCalculated = 45 + rnd(360);
 	}
-	logbook("cOrderProcesser::think - end");
 }
 
 void cOrderProcesser::updatePricesForStarport() {

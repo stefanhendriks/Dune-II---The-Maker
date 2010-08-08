@@ -62,17 +62,16 @@ void cTimeManager::handleTimerFPS() {
 				}
 			}
 
-//			for (int i = 0; i < MAX_PLAYERS; i++) {
-//				cPlayer thePlayer = player[i];
-//				if (player[i].getOrderProcesser()) {
-//					char msg[255];
-//					sprintf(msg, "Going to think for order processer, for player id [%d]", i);
-//					logbook(msg);
-//					cOrderProcesser * orderProcesser = thePlayer.getOrderProcesser();
-//					assert(orderProcesser);
-//					orderProcesser->think();
-//				}
-//			}
+			for (int i = 0; i < MAX_PLAYERS; i++) {
+				if (player[i].getOrderProcesser()) {
+					char msg[255];
+					sprintf(msg, "Going to think for order processer, for player id [%d]", i);
+					logbook(msg);
+					cOrderProcesser * orderProcesser = player[i].getOrderProcesser();
+					assert(orderProcesser);
+					orderProcesser->think();
+				}
+			}
 
         } // game specific stuff
 
