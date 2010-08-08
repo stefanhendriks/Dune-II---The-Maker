@@ -161,18 +161,23 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 			}
 		}
 
-		if (item->getTimesToBuild() > 0) {
+		int amountToShow = item->getTimesToBuild();
+		if (amountToShow <= 0) {
+			amountToShow = item->getTimesOrdered();
+		}
+
+		if (amountToShow > 0) {
 			// draw number of times to build this thing (queueing)
 			int textX = iDrawX + 41;
 			int textY = iDrawY + 16;
 
-			if (item->getTimesToBuild() < 10) {
+			if (amountToShow < 10) {
 				textX += 10;
 			}
 
 			// draw
-			alfont_textprintf(bmp_screen, game_font, textX + 1,textY + 1, makecol(0,0,0), "%d", item->getTimesToBuild());
-			alfont_textprintf(bmp_screen, game_font, textX,textY, makecol(255,255,255), "%d", item->getTimesToBuild());
+			alfont_textprintf(bmp_screen, game_font, textX + 1,textY + 1, makecol(0,0,0), "%d", amountToShow);
+			alfont_textprintf(bmp_screen, game_font, textX,textY, makecol(255,255,255), "%d", amountToShow);
 		}
 
 		// draw rectangle when mouse hovers over icon

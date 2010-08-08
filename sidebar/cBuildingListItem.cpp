@@ -12,6 +12,7 @@ cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingLis
 	building = false;
 	myList = list;
 	timesToBuild = 0;
+	timesOrdered  = 0;
 	if (entry.cost > 0) {
 		creditsPerProgressTime = (float)entry.cost / (float)entry.build_time;
 	}
@@ -30,6 +31,7 @@ cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *li
 	building = false;
 	myList = list;
 	timesToBuild = 0;
+	timesOrdered  = 0;
 	if (entry.cost > 0) {
 		creditsPerProgressTime = (float)entry.cost / (float)entry.build_time;
 	}

@@ -164,17 +164,24 @@ void cSideBar::thinkInteraction() {
 				cBuildingListDrawer drawer;
 				cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
 
-				if (item != NULL) {
-					if (item->shouldPlaceIt() == false) {
-						cItemBuilder *itemBuilder = player->getItemBuilder();
-						assert(itemBuilder);
-						itemBuilder->addItemToList(item);
-						list->setLastClickedId(item->getSlotId());
-					} else {
-						game.bPlaceIt = true;
+				if (list->getType() != LIST_STARPORT) {
+					if (item != NULL) {
+						if (item->shouldPlaceIt() == false) {
+							cItemBuilder *itemBuilder = player->getItemBuilder();
+							assert(itemBuilder);
+							itemBuilder->addItemToList(item);
+							list->setLastClickedId(item->getSlotId());
+						} else {
+							game.bPlaceIt = true;
+						}
+					}
+				} else {
+					if (item != NULL) {
+						item->increaseTimesOrdered();
+						// TODO: add to order handle thingy
+						// TODO: substract amount of the order handle thingy
 					}
 				}
-
 			}
 		}
 
@@ -183,28 +190,38 @@ void cSideBar::thinkInteraction() {
 				cBuildingListDrawer drawer;
 				cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
 
-				if (item != NULL) {
-					if (item->getTimesToBuild() > 0) {
-						item->decreaseTimesToBuild();
-						item->setPlaceIt(false);
+				// anything but the starport can 'build' things
+				if (list->getType() != LIST_STARPORT) {
+					if (item != NULL) {
+						if (item->getTimesToBuild() > 0) {
+							item->decreaseTimesToBuild();
+							item->setPlaceIt(false);
 
-						if (item->getTimesToBuild() == 0) {
-							cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
-							// only give money back for item that is being built
-							if (item->isBuilding()) {
-								// calculate the amount of money back:
-								player[HUMAN].credits += item->getRefundAmount();
+							if (item->getTimesToBuild() == 0) {
+								cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
+								// only give money back for item that is being built
+								if (item->isBuilding()) {
+									// calculate the amount of money back:
+									player[HUMAN].credits += item->getRefundAmount();
+								}
+								item->setIsBuilding(false);
+								item->setProgress(0);
+								cItemBuilder *itemBuilder = player->getItemBuilder();
+								assert(itemBuilder);
+								itemBuilder->removeItemFromList(item);
 							}
-							item->setIsBuilding(false);
-							item->setProgress(0);
-							cItemBuilder *itemBuilder = player->getItemBuilder();
-							assert(itemBuilder);
-							itemBuilder->removeItemFromList(item);
+							// else, only the number is decreased (used for queueing)
 						}
-						// else, only the number is decreased (used for queueing)
+					}
+				} else {
+					if (item != NULL) {
+						if (item->getTimesOrdered() > 0) {
+							item->decreaseTimesOrdered();
+							// TODO: remove from order handle thingy
+							// TODO: get refund of the order handle thingy
+						}
 					}
 				}
-
 			}
 		}
 

@@ -26,6 +26,7 @@ public:
 	bool isAvailable() { return available; }
 	int getTimesToBuild() { return timesToBuild; }
 	int getSlotId() { return slotId; }
+	int getTimesOrdered() { return timesOrdered; }
 
 	bool canPay();
 
@@ -44,11 +45,13 @@ public:
 	void setIsBuilding(bool value) { building = value; }
 	void setIsAvailable(bool value) { available = value; }
 	void setTimesToBuild(int value) { timesToBuild = value; }
+	void setTimesOrdered(int value) { timesOrdered = value; }
 	void increaseTimesToBuild() { timesToBuild++; }
 	void decreaseTimesToBuild();
+	void increaseTimesOrdered() { timesOrdered++; }
+	void decreaseTimesOrdered() { timesOrdered--; }
 	void setSlotId(int value) { slotId = value; }
 	void setPlaceIt(bool value) { placeIt = value; }
-
 
 	cBuildingList *getList() { return myList; }	// returns the list it belongs to
 
@@ -62,6 +65,7 @@ private:
 							// note; this is not the same as not being able to build it.
 	int progress;			// progress building this item
 	int timesToBuild;		// the amount of times to build this item (queueing) (meaning, when building = true, this should be 1...)
+	int timesOrdered;		// the amount of times this item has been ordered (starport related)
 	int slotId;			 	// return index of items[] array (set after adding item to list, default is < 0)
 
 	float creditsPerProgressTime; // credits to pay for each progress point. (calculated at creation)
