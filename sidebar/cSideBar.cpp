@@ -161,8 +161,8 @@ void cSideBar::thinkInteraction() {
 		cBuildingList *list = getList(selectedListID);
 		if (game.bMousePressedLeft) {
 			if (list != NULL) {
-				cBuildingListDrawer *drawer = new cBuildingListDrawer();
-				cBuildingListItem *item = drawer->isOverItemCoordinates(list, mouse_x,  mouse_y);
+				cBuildingListDrawer drawer;
+				cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
 
 				if (item != NULL) {
 					if (item->shouldPlaceIt() == false) {
@@ -175,14 +175,13 @@ void cSideBar::thinkInteraction() {
 					}
 				}
 
-				delete drawer;
 			}
 		}
 
 		if (game.bMousePressedRight) {
 			if (list != NULL) {
-				cBuildingListDrawer *drawer = new cBuildingListDrawer();
-				cBuildingListItem *item = drawer->isOverItemCoordinates(list, mouse_x,  mouse_y);
+				cBuildingListDrawer drawer;
+				cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
 
 				if (item != NULL) {
 					if (item->getTimesToBuild() > 0) {
@@ -206,7 +205,6 @@ void cSideBar::thinkInteraction() {
 					}
 				}
 
-				delete drawer;
 			}
 		}
 
