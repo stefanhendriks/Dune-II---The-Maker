@@ -37,6 +37,10 @@ void cOrderProcesser::think() {
 		if (secondsUntilArrival == 0) {
 			// TODO: spawn frigate
 			logbook("spawn frigate");
+		} else {
+			char msg[255];
+			sprintf(msg, "T-%d before Frigate arrival.", secondsUntilArrival);
+			game.set_message(msg);
 		}
 	}
 

@@ -54,10 +54,17 @@ void cSideBar::thinkUpgradeButton() {
 			int upgradeLevel = list->getUpgradeLevel();
 			int techLevel = player->getTechLevel();
 
-			bool isUpgradeApplicable = upgradeUtils.isUpgradeApplicableForPlayerAndList(player, selectedListId, techLevel, upgradeLevel );
+
+			cListUpgrade * upgrade = upgradeUtils.getListUpgradeForList(player, selectedListId, techLevel, upgradeLevel);
+			bool isUpgradeApplicable = upgrade != NULL;
+
+			if (upgrade != NULL) {
+				char msg[255];
+				sprintf(msg, "$%d | Upgrade", upgrade->getTotalPrice());
+				game.set_message(msg);
+			}
 
 			if (isUpgradeApplicable && MOUSE_BTN_LEFT()) {
-				cListUpgrade * upgrade = upgradeUtils.getListUpgradeForList(player, selectedListId, techLevel, upgradeLevel);
 				assert(upgrade != NULL);
 				assert(player->getUpgradeBuilder());
 				player->getUpgradeBuilder()->addUpgrade(selectedListId, upgrade);
@@ -161,10 +168,24 @@ void cSideBar::thinkInteraction() {
 	// when mouse pressed, build item if over item
 	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && getList(selectedListID)->isUpgrading() == false) {
 		cBuildingList *list = getList(selectedListID);
+
+		cBuildingListDrawer drawer;
+		cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
+
+		// mouse is over item
+		if (item != NULL) {
+			char msg[255];
+			if (list->getType() != LIST_STARPORT) {
+				sprintf(msg, "$%d | %s", structures[item->getBuildId()].cost, structures[item->getBuildId()].name);
+			} else {
+				sprintf(msg, "$%d | %s", units[item->getBuildId()].cost, units[item->getBuildId()].name);
+			}
+			game.set_message(msg);
+		}
+
 		if (game.bMousePressedLeft) {
 			if (list != NULL) {
-				cBuildingListDrawer drawer;
-				cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
+
 
 				if (list->getType() != LIST_STARPORT) {
 					if (item != NULL) {
@@ -191,8 +212,6 @@ void cSideBar::thinkInteraction() {
 
 		if (game.bMousePressedRight) {
 			if (list != NULL) {
-				cBuildingListDrawer drawer;
-				cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
 
 				// anything but the starport can 'build' things
 				if (list->getType() != LIST_STARPORT) {
