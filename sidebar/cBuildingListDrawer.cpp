@@ -127,7 +127,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 				iFrame = 31;
 			}
 
-
 			if (item->getProgress() < iTotalBuildPoints) {
 				// draw the other progress stuff
 				 fblend_trans((BITMAP *)gfxinter[PROGRESSFIX].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
@@ -140,7 +139,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 				}
 			}
 		} else {
-
 			// this item is not being built. So we do not draw a progress indicator.
 			// however, it could be that an other item is being built.
 
@@ -149,7 +147,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 			// - we cant pay it
 			// - some other item is being built
 			// - list is being upgraded, so you cannot build items
-			if (!item->isAvailable() /*|| cannotPayIt*/ || isBuildingItemInList || list->isUpgrading()) {
+			 /*|| cannotPayIt*/
+			if (!item->isAvailable() || isBuildingItemInList || list->isUpgrading() || !list->isAcceptsOrders()) {
 				set_trans_blender(0,0,0,128);
 				fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
 			}

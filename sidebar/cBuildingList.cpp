@@ -13,6 +13,7 @@ cBuildingList::cBuildingList(int theId) {
 	upgradeLevel = 0;
 	upgrading = false;
 	maxItems = 0;
+	acceptsOrders = true;
 }
 
 cBuildingList::~cBuildingList() {
@@ -28,6 +29,7 @@ cBuildingList::~cBuildingList() {
 	upgradeLevel = 0;
 	upgrading = false;
 	maxItems = 0;
+	acceptsOrders = false;
 }
 
 cBuildingListItem * cBuildingList::getItem(int position) {

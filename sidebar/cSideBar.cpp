@@ -117,6 +117,13 @@ void cSideBar::thinkAvailabilityLists() {
 	// STARPORT LIST
 	cBuildingList * starportList = getList(LIST_STARPORT);
 	starportList->setAvailable(player->iStructures[STARPORT] > 0);
+
+	// when available, check if we accept orders
+	if (starportList->isAvailable()) {
+		cOrderProcesser * orderProcesser = player->getOrderProcesser();
+		bool acceptsOrders = orderProcesser->acceptsOrders();
+		starportList->setAcceptsOrders(acceptsOrders);
+	}
 }
 
 /**
@@ -172,21 +179,25 @@ void cSideBar::thinkInteraction() {
 		cBuildingListDrawer drawer;
 		cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
 
+		cOrderProcesser * orderProcesser = player->getOrderProcesser();
+
 		// mouse is over item
 		if (item != NULL) {
 			char msg[255];
-			if (list->getType() != LIST_STARPORT) {
-				sprintf(msg, "$%d | %s", item->getBuildCost(), structures[item->getBuildId()].name);
+			if (list->isAcceptsOrders()) {
+				if (list->getType() != LIST_STARPORT) {
+					sprintf(msg, "$%d | %s", item->getBuildCost(), structures[item->getBuildId()].name);
+				} else {
+					sprintf(msg, "$%d | %s", item->getBuildCost(), units[item->getBuildId()].name);
+				}
 			} else {
-				sprintf(msg, "$%d | %s", item->getBuildCost(), units[item->getBuildId()].name);
+				sprintf(msg, "Maximum units selected. Please order.");
 			}
 			game.set_message(msg);
 		}
 
 		if (game.bMousePressedLeft) {
 			if (list != NULL) {
-
-
 				if (list->getType() != LIST_STARPORT) {
 					if (item != NULL) {
 						if (item->shouldPlaceIt() == false) {
@@ -199,13 +210,12 @@ void cSideBar::thinkInteraction() {
 						}
 					}
 				} else {
-//					cOrderProcesser * orderProcesser = player->getOrderProcesser();
-//					assert(orderProcesser);
-//					if (item != NULL && orderProcesser->acceptsOrders()) {
-//						item->increaseTimesOrdered();
-//						orderProcesser->addOrder(item);
-//						player->credits -= item->getBuildCost();
-//					}
+					assert(orderProcesser);
+					if (item != NULL && orderProcesser->acceptsOrders()) {
+						item->increaseTimesOrdered();
+						orderProcesser->addOrder(item);
+						player->credits -= item->getBuildCost();
+					}
 				}
 			}
 		}
@@ -237,16 +247,13 @@ void cSideBar::thinkInteraction() {
 						}
 					}
 				} else {
-//					cOrderProcesser * orderProcesser = player->getOrderProcesser();
-//					assert(orderProcesser);
-//					if (item != NULL) {
-//						if (item->getTimesOrdered() > 0) {
-//							item->decreaseTimesOrdered();
-//							orderProcesser->removeOrder(item);
-//							// TODO: remove from order handle thingy
-//							// TODO: get refund of the order handle thingy
-//						}
-//					}
+					assert(orderProcesser);
+					if (item != NULL) {
+						if (item->getTimesOrdered() > 0) {
+							item->decreaseTimesOrdered();
+							orderProcesser->removeOrder(item);
+						}
+					}
 				}
 			}
 		}

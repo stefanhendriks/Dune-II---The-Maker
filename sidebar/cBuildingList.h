@@ -38,6 +38,7 @@ class cBuildingList {
 		int getButtonDrawY() { return buttonDrawY; }
 		int getScrollingOffset() { return scrollingOffset; }
 		bool isAvailable() { return available; }
+		bool isAcceptsOrders() { return acceptsOrders; }
 		bool isBuildingItem();
 		bool hasItemType(int itemTypeId);
 
@@ -62,6 +63,7 @@ class cBuildingList {
 		void setScrollingOffset(int value);
 		void setAvailable(bool value) { available = value; }
 		void setLastClickedId(int value) { lastClickedId = value; }
+		void setAcceptsOrders(bool value) { acceptsOrders = value; }
 
 		int getType() { return typeOfList; }
 		int getUpgradeLevel() { return upgradeLevel; }
@@ -77,6 +79,7 @@ class cBuildingList {
 		int buttonDrawY;
 		int scrollingOffset; // the offset for scrolling through the list.
 		bool available;		 // is this list available?
+		bool acceptsOrders;	 // accepts orders
 		int maxItems;		 // how many items have been set in the list?
 
 		// the list of icons

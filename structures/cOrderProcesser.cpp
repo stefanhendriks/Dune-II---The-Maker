@@ -14,6 +14,7 @@ cOrderProcesser::cOrderProcesser(cPlayer *thePlayer) {
 	frigateSent = false;
 	secondsUntilArrival = -1;
 	secondsUntilNewPricesWillBeCalculated = getRandomizedSecondsToWait();
+	memset(pricePaidForItem, -1, sizeof(pricePaidForItem));
 	removeAllItems();
 	updatePricesForStarport();
 }
@@ -25,9 +26,8 @@ cOrderProcesser::~cOrderProcesser() {
 
 
 bool cOrderProcesser::acceptsOrders() {
-//	int freeSlot = getFreeSlot();
-//	return frigateSent == false && orderPlaced == false && freeSlot > -1;
-	return true;
+	int freeSlot = getFreeSlot();
+	return frigateSent == false && orderPlaced == false && freeSlot > -1;
 }
 
 // time based (per second)
@@ -43,7 +43,6 @@ void cOrderProcesser::think() {
 			game.set_message(msg);
 		}
 	}
-
 
 	if (secondsUntilNewPricesWillBeCalculated > 0) {
 		secondsUntilNewPricesWillBeCalculated--;
@@ -76,6 +75,10 @@ void cOrderProcesser::addOrder(cBuildingListItem *item) {
 	if (freeSlot > -1) {
 		logbook("add order");
 		orderedItems[freeSlot] = item;
+		// store the original paid price, so in case the player decides
+		// to undo an order, he gets the same amount of money back that he paid for
+		// (since the prices can still fluctuate during the order process)
+		pricePaidForItem[freeSlot] = item->getBuildCost();
 	}
 }
 
@@ -113,6 +116,12 @@ void cOrderProcesser::removeItem(int slot) {
 	assert(slot >= 0);
 	assert(slot < MAX_ITEMS_TO_ORDER);
 	orderedItems[slot] = NULL;
+	// give money back to player
+	if (pricePaidForItem[slot] > 0) {
+		player->credits += pricePaidForItem[slot];
+	}
+	// and reset the amount
+	pricePaidForItem[slot] = -1;
 }
 
 void cOrderProcesser::placeOrder() {
