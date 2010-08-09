@@ -241,21 +241,23 @@ New features:
 * Skirmish (<- working on this)
 * Multiplayer
 * Options
+* Save/Load game
 
 ==========
 CHANGELOG:
 ==========
 A lot has changed 'under the hood'. This means that on the surface, you will not notice
 the hard work put into this release. Expectation is that next releases will get more new
-features and less fixes (atleast, that is the way you want to go :)).
+features and less fixes.
 
 FIXED:
-- Instantly upgrade complete bug fixed.
+- Instantly upgrade complete bug fixed. (completely rewritten)
 - Sandorm able to squish infantry when going under infantry.
 - It is no longer possible to select airborn units with box-selecting.
 - animation fixes for structures (WOR/Barracks stopped animating after building unit)
 - animation fix for outpost
 - box selecting problem (needed to cover entire unit). Now only the center is required to select a unit.
+- Bug that would give higher/lower refund when declining order for starport (completely rewritten) 
 
 GAME BALANCING:
 - Harvester has more HP (300->450)
@@ -269,3 +271,6 @@ NEW:
 CHANGED:
 - skirmish maps do not need to be MAP##.ini anymore, they can be named anything
 - Units are a bit more aggresive in 'defense' mode (for both AI as Human player)
+- the way sound is played in the game is rewritten, which allows more sounds to be played
+  at once
+- money gain/drain animation
