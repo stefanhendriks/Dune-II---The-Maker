@@ -17,6 +17,64 @@ cStructureUtils::~cStructureUtils() {
 }
 
 /**
+ * This is almost the same as the findStructureToDeployUnit
+ *
+ * However, whenever the player has not set any primary building. Try to find a structure that has some free cell around it.
+ */
+int cStructureUtils::findStarportToDeployUnit(cPlayer * player) {
+	assert(player);
+	int playerId = player->getId();
+
+	// check primary building first if set
+	int primaryBuildingOfStructureType = player->iPrimaryBuilding[STARPORT];
+
+	if (primaryBuildingOfStructureType > -1) {
+		cAbstractStructure * theStructure = structure[primaryBuildingOfStructureType];
+		if (theStructure && theStructure->iFreeAround() > -1) {
+			return primaryBuildingOfStructureType;
+		}
+	}
+
+	// find a starport that has space around it.
+	int starportId = -1;
+	int firstFoundStarportId = -1;
+	bool foundStarportWithFreeAround = false;
+	for (int i=0; i < MAX_STRUCTURES; i++) {
+		cAbstractStructure * theStructure = structure[i];
+		if (theStructure && theStructure->getOwner() == playerId) {
+			if (theStructure->getType() == STARPORT) {
+				// when no id set, always set one id
+				if (starportId < 0) {
+					starportId = i;
+				}
+
+				if (firstFoundStarportId < 0) {
+					firstFoundStarportId = i;
+				}
+
+				if (theStructure->iFreeAround() > -1) {
+					// when free around structure, override id and break out of loop
+					starportId = i;
+					foundStarportWithFreeAround = true;
+					break;
+				}
+			}
+		}
+	}
+
+	if (!foundStarportWithFreeAround) {
+		if (primaryBuildingOfStructureType > -1) {
+			return primaryBuildingOfStructureType;
+		}
+		if (firstFoundStarportId > -1) {
+			return firstFoundStarportId;
+		}
+	}
+	return starportId;
+
+}
+
+/**
  * Finds a building to deploy a unit from. Returns the structure ID of the found structure.
  *
  * Will use primary building set by player first, before looking for alternatives.
@@ -49,12 +107,8 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureTy
 		cAbstractStructure * theStructure = structure[i];
 		if (theStructure && theStructure->getOwner() == playerId) {
 			if (theStructure->getType() == structureType) {
-				if (structureType != STARPORT) {
-					if (theStructure->iFreeAround() > -1) {
-						return i; // return this structure
-					}
-				} else {
-					return i;
+				if (theStructure->iFreeAround() > -1) {
+					return i; // return this structure
 				}
 			}
 		}

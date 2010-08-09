@@ -14,6 +14,7 @@ class cStructureUtils {
 		~cStructureUtils();
 
 		int findStructureToDeployUnit(cPlayer * player, int structureType);
+		int findStarportToDeployUnit(cPlayer * player);
 		int findStructureTypeByTypeOfList(cBuildingList *list, cBuildingListItem *item);
 
 	protected:

@@ -161,7 +161,7 @@ void cOrderProcesser::sendFrigate() {
 	// of the cell:
 	cStructureUtils structureUtils;
 	cCellCalculator cellCalculator;
-	int structureId = structureUtils.findStructureToDeployUnit(player, STARPORT);
+	int structureId = structureUtils.findStarportToDeployUnit(player);
 
 	if (structureId > -1) {
 		// found structure
@@ -181,6 +181,9 @@ void cOrderProcesser::sendFrigate() {
 			unitIdOfFrigateSent = unitId;
 			frigateSent = true;
 		}
+	} else {
+		// no starport available
+		setOrderHasBeenProcessed();
 	}
 }
 
