@@ -85,10 +85,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 			break; // stop. List became empty.
 		}
 
-		if (shouldDrawStructureSize) {
-			drawStructureSize(item->getBuildId(), iDrawX, iDrawY);
-		}
-
 		int iDrawXEnd = iDrawX + 63;
 		int iDrawYEnd = iDrawY + 47;
 
@@ -99,6 +95,10 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 		line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(255, 255, 255));
 
 		draw_sprite(bmp_screen, (BITMAP *)gfxinter[item->getIconId()].dat, iDrawX, iDrawY);
+
+		if (shouldDrawStructureSize) {
+			drawStructureSize(item->getBuildId(), iDrawX, iDrawY);
+		}
 
 		bool cannotPayIt = item->getBuildCost() > player[HUMAN].credits;
 
