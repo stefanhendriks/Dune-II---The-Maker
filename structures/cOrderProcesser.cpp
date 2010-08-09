@@ -13,7 +13,7 @@ cOrderProcesser::cOrderProcesser(cPlayer *thePlayer) {
 	orderPlaced = false;
 	frigateSent = false;
 	secondsUntilArrival = -1;
-	secondsUntilNewPricesWillBeCalculated = 45 + rnd(360);
+	secondsUntilNewPricesWillBeCalculated = getRandomizedSecondsToWait();
 	removeAllItems();
 	updatePricesForStarport();
 }
@@ -47,27 +47,27 @@ void cOrderProcesser::think() {
 
 	if (secondsUntilNewPricesWillBeCalculated > 0) {
 		secondsUntilNewPricesWillBeCalculated--;
-		// wait
 	} else {
 		updatePricesForStarport();
-		secondsUntilNewPricesWillBeCalculated = 45 + rnd(360);
+		secondsUntilNewPricesWillBeCalculated = getRandomizedSecondsToWait();
 	}
 }
 
 void cOrderProcesser::updatePricesForStarport() {
-	logbook("updatePricesForStarport");
-//	cBuildingList * list = player->getSideBar()->getList(LIST_STARPORT);
-//	assert(list);
-//	for (int i = 0; i < MAX_ICONS; i++) {
-//		cBuildingListItem * item = list->getItem(i);
-//		if (item) {
-//			int id = item->getBuildId();
-//			int originalPrice = structures[id].cost;
-//			int slice = originalPrice / 2;
-//			int newPrice = (originalPrice - slice) + (rnd(slice * 2));
-//			item->setBuildCost(newPrice);
-//		}
-//	}
+	logbook("updatePricesForStarport - start");
+	cBuildingList * list = player->getSideBar()->getList(LIST_STARPORT);
+	assert(list);
+	for (int i = 0; i < MAX_ICONS; i++) {
+		cBuildingListItem * item = list->getItem(i);
+		if (item) {
+			int id = item->getBuildId();
+			int originalPrice = units[id].cost;
+			int slice = originalPrice / 2;
+			int newPrice = (originalPrice - slice) + (rnd(slice * 2));
+			item->setBuildCost(newPrice);
+		}
+	}
+	logbook("updatePricesForStarport - end");
 }
 
 void cOrderProcesser::addOrder(cBuildingListItem *item) {
@@ -119,4 +119,8 @@ void cOrderProcesser::placeOrder() {
 	orderPlaced = true;
 	frigateSent = false;
 	secondsUntilArrival = 10; // wait 10 seconds
+}
+
+int cOrderProcesser::getRandomizedSecondsToWait() {
+	return (45 + rnd(360));
 }

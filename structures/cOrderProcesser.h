@@ -31,6 +31,7 @@ class cOrderProcesser {
 		void removeItem(int slot);
 		int getFreeSlot();
 		int getSlotForItem(cBuildingListItem * item);
+		int getRandomizedSecondsToWait();
 
 	private:
 		cBuildingListItem * orderedItems[MAX_ITEMS_TO_ORDER];

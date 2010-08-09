@@ -176,9 +176,9 @@ void cSideBar::thinkInteraction() {
 		if (item != NULL) {
 			char msg[255];
 			if (list->getType() != LIST_STARPORT) {
-				sprintf(msg, "$%d | %s", structures[item->getBuildId()].cost, structures[item->getBuildId()].name);
+				sprintf(msg, "$%d | %s", item->getBuildCost(), structures[item->getBuildId()].name);
 			} else {
-				sprintf(msg, "$%d | %s", units[item->getBuildId()].cost, units[item->getBuildId()].name);
+				sprintf(msg, "$%d | %s", item->getBuildCost(), units[item->getBuildId()].name);
 			}
 			game.set_message(msg);
 		}
