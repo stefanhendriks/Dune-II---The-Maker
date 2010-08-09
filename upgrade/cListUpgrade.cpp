@@ -28,3 +28,13 @@ cListUpgrade::~cListUpgrade() {
 		delete item;
 	}
 }
+
+int cListUpgrade::getProgressAsPercentage() {
+	if (progressLimit > 0) {
+		if (progress == 0) {
+			return 0;
+		}
+		return (int)health_bar(100, progress, progressLimit);
+	}
+	return 100;
+}

@@ -59,8 +59,15 @@ void cSideBar::thinkUpgradeButton() {
 			bool isUpgradeApplicable = upgrade != NULL;
 
 			if (upgrade != NULL) {
+				bool isUpgrading = player->getUpgradeBuilder()->isUpgrading(selectedListId);
 				char msg[255];
-				sprintf(msg, "$%d | Upgrade", upgrade->getTotalPrice());
+				if (!isUpgrading) {
+					sprintf(msg, "$%d | Upgrade", upgrade->getTotalPrice());
+				} else {
+					cListUpgrade * upgradeInProgress = player->getUpgradeBuilder()->getListUpgrade(selectedListId);
+					assert(upgradeInProgress);
+					sprintf(msg, "Upgrade completed at %d percent",upgradeInProgress->getProgressAsPercentage());
+				}
 				game.set_message(msg);
 			}
 

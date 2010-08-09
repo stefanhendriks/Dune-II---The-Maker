@@ -25,6 +25,7 @@ public:
 	int getTotalPrice() { return totalPrice; }
 	float getPricePerTimeUnit() { return pricePerTimeUnit; }
 	cBuildingListItem * getItem() { return item; }
+	int getProgressAsPercentage();
 
 	void setProgress(int value) { progress = value; }
 	void setProgressLimit(int value) { progressLimit = value; }
