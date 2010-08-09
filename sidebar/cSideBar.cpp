@@ -240,7 +240,6 @@ void cSideBar::thinkInteraction() {
 
 		if (game.bMousePressedRight) {
 			if (list != NULL) {
-
 				// anything but the starport can 'build' things
 				if (list->getType() != LIST_STARPORT) {
 					if (item != NULL) {
@@ -272,6 +271,10 @@ void cSideBar::thinkInteraction() {
 							orderProcesser->removeOrder(item);
 						}
 					}
+				}
+
+				if (item == NULL) {
+					game.bPlaceIt = false;
 				}
 			}
 		}
