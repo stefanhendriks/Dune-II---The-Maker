@@ -57,8 +57,6 @@ void cGame::init() {
 
 	bMousePressedLeft = bMousePressedRight=false;
 
-	iCountSoundMoney=0;
-
 	TIMER_scroll=0;
 	iScrollSpeed=10;
 
@@ -73,8 +71,6 @@ void cGame::init() {
 
     state = GAME_MENU;
     //state=GAME_REGION;
-
-    TIMER_money=0;
 
     iWinQuota=-1;              // > 0 means, get this to win the mission, else, destroy all!
 
@@ -169,10 +165,7 @@ void cGame::init() {
 
 // TODO: Bad smell (duplicate code)
 // initialize for missions
-void cGame::mission_init()
-{
-
-	iCountSoundMoney=0;
+void cGame::mission_init() {
 
     iMusicVolume=128; // volume is 0...
 
@@ -180,8 +173,6 @@ void cGame::mission_init()
 	hover_structure=-1;
 	hover_unit=-1;
     iMouseZ=mouse_z;
-
-    TIMER_money=0;
 
     iWinQuota=-1;              // > 0 means, get this to win the mission, else, destroy all!
 
@@ -504,114 +495,6 @@ void cGame::think_mentat()
 		iMentatOther = rnd(5);
 	}
 
-}
-
-// thinking for starport prices
-// TODO: Move to own class
-void cGame::think_starport()
-{
-//	if (TIMER_mayorder > -1)
-//		TIMER_mayorder--;
-//
-//		if (TIMER_ordered == 0)
-//	{
-//		// send out a frigate to deliver the package to the starport:
-//
-//		TIMER_mayorder = 1; // this is being updated by the structure deploying
-//
-//		// find starport:
-//		int iStr = player[0].iPrimaryBuilding[STARPORT];
-//
-//		// no primary building yet, assign one
-//		if (iStr < 0)
-//			iStr = FIND_PRIMARY_BUILDING(STARPORT, 0);
-//
-//		// structure got destroyed or taken over
-//		if (iStr > -1)
-//			if (structure[iStr] == NULL ||
-//				structure[iStr]->getOwner() != 0) // somehow not ours
-//				iStr = FIND_PRIMARY_BUILDING(STARPORT, 0); // find new one
-//
-//		if (iStr > -1)
-//		{
-//			player[0].iPrimaryBuilding[STARPORT] = iStr; // assign
-//			structure[iStr]->setAnimating(true);
-//			SPAWN_FRIGATE(0, structure[iStr]->getCell());
-//            TIMER_mayorder=10;
-//			play_voice(SOUND_VOICE_06_ATR);
-//		}
-//
-//
-//		TIMER_ordered = -1; //
-//	}
-//
-//
-//	if ( TIMER_ordered > 0)
-//	{
-//		char msg[255];
-//		sprintf(msg, "T-%d before Frigate arrival.", TIMER_ordered);
-//		set_message(msg);
-//
-//		int iSnd=-1;
-//
-//		if (TIMER_ordered <= 5) {
-//			if (player[0].getHouse() == ATREIDES) {
-//				iSnd = (SOUND_ATR_S1 + TIMER_ordered)-1;
-//			}
-//
-//			if (player[0].getHouse() == HARKONNEN) {
-//				iSnd = (SOUND_HAR_S1 + TIMER_ordered)-1;
-//			}
-//
-//			if (player[0].getHouse() == ORDOS) {
-//				iSnd = (SOUND_ORD_S1 + TIMER_ordered)-1;
-//			}
-//
-//			if (iSnd > -1) {
-//				play_sound_id(iSnd, -1);
-//			}
-//		}
-//
-//		TIMER_ordered--;
-//	}
-//
-//
-//	// create list of starport
-//	if (TIMER_starport < 0)
-//	{
-//		// step 1:
-//		// clear starport list
-//		int i = LIST_STARPORT;
-//
-//		// step 2:
-//		// create new starport list
-//
-//	for (i=0; i < MAX_UNITTYPES; i++)
-//	{
-//		if (i == TRIKE ||
-//			i == QUAD ||
-//			i == TANK ||
-//			i == HARVESTER ||
-//			i == LAUNCHER ||
-//			i == SIEGETANK ||
-//			i == CARRYALL)
-//		{
-//			int iPrice = units[i].cost;
-//
-//			iPrice -= (iPrice/4);
-//
-//			iPrice += (rnd(iPrice));
-//
-//			// add item, with 'random price'
-//			list_new_item(LIST_STARPORT, units[i].icon, iPrice, -1, i);
-//		}
-//	}
-//
-//	// seconds to change...
-//	TIMER_starport = 15 + rnd(30);
-//	}
-//	else
-//	TIMER_starport--; // decrease second
 }
 
 // set up a message
@@ -3825,7 +3708,6 @@ bool cGame::setupGame() {
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
 	/* set up the interrupt routines... */
-	game.TIMER_money=0;
 	game.TIMER_message=0;
 	game.TIMER_shake=0;
 

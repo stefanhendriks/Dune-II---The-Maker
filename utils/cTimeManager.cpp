@@ -49,8 +49,6 @@ void cTimeManager::handleTimerFPS() {
 		{
 			game.paths_created = 0;
 
-			game.think_starport(); // think about lists for starports
-
 			THINK_REINFORCEMENTS();
 
 			// starports think per second for deployment (if any)
@@ -160,15 +158,6 @@ void cTimeManager::handleTimerGlobal() {
 				if (game.TIMER_scroll > game.iScrollSpeed) {
 					map.think();
 					game.TIMER_scroll=0;
-				}
-
-				// TODO: upgrades
-
-
-				game.TIMER_money++;
-
-				if (game.TIMER_money > 5) {
-					game.TIMER_money=0;
 				}
 
 				if (game.TIMER_shake > 0) {

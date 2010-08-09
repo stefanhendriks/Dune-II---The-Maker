@@ -109,9 +109,6 @@ public:
     int shake_y;
     int TIMER_shake;
 
-    int TIMER_money;
-    int iCountSoundMoney;
-
     int iMusicType;
 
 	// Scrolling around map, timer based
@@ -138,8 +135,6 @@ public:
     void think_winlose(); // think about winning/losing mission
     void winning();       // winning
     void losing();        // losing
-
-	void think_starport();
 
     void think_movie();
 
