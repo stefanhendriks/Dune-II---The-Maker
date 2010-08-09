@@ -153,6 +153,17 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 				fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
 			}
 
+			if (list->getType() == LIST_STARPORT) {
+				if (cannotPayIt) {
+					set_trans_blender(0,0,0,128);
+					fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
+					rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(game.fade_select, 0, 0));
+					line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(game.fade_select, 0, 0));
+					line(bmp_screen, iDrawX, iDrawY+47, iDrawX+63, iDrawY, makecol(game.fade_select, 0, 0));
+					set_trans_blender(0,0,0,128);
+				}
+			}
+
 			// last built id
 			if (list->getLastClickedId() == i) {
 				rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), makecol(game.fade_select, game.fade_select, game.fade_select));
