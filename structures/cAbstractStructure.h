@@ -26,8 +26,6 @@ class cAbstractStructure {
 		int iCell;          // What cell it is (most upper left part of structure where
 							// drawing starts)
 
-		int iPlayer;        // owner
-
 		int iRallyPoint;    // rallypoint ...
 
 		bool bAnimate;      // Do its special animation? (unit leaving building, starport
@@ -39,6 +37,7 @@ class cAbstractStructure {
 
 		int iFrame;          // Frame for animation (flag and other)
 
+		int iPlayer;        // owner
     public:
 
 		// Constructor & Destructor:

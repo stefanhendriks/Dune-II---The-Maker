@@ -35,6 +35,8 @@ public:
 	double distance(int x1, int y1, int x2, int y2);
 	double distance(int cell1, int cell2);
 
+	int findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell);
+
 };
 
 #endif

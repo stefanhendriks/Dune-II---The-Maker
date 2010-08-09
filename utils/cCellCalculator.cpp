@@ -9,6 +9,79 @@ cCellCalculator::cCellCalculator() {
 	// do nothing
 }
 
+int cCellCalculator::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell) {
+	// Cell x and y coordinates
+	int iCllX = getX(destinationCell);
+	int iCllY = getY(destinationCell);
+
+	// STEP 1: determine starting
+	int iStartCell=-1;
+	int lDistance=9999;
+
+	int tDistance=9999;
+	int cll=-1;
+
+	// HORIZONTAL cells
+	for (int iX=0; iX < game.map_width; iX++) {
+		// check when Y = 0 (top)
+		tDistance = distance(iX, 0, iCllX, iCllY);
+
+		if (tDistance < lDistance) {
+			lDistance = tDistance;
+
+			cll = getCell(iX, 0);
+
+			if (map.occupied(cll) == false) {
+				iStartCell = cll;
+			}
+		}
+
+		// check when Y = map_height (bottom)
+		tDistance = distance(iX, game.map_height-1, iCllX, iCllY);
+
+		if (tDistance < lDistance) {
+			lDistance = tDistance;
+
+			cll = getCell(iX, game.map_height-1);
+
+			if (map.occupied(cll) == false) {
+				iStartCell = cll;
+			}
+		}
+	}
+
+	// VERTICAL cells
+	for (int iY=0; iY < game.map_height; iY++)
+	{
+		// check when X = 0 (left)
+		tDistance = distance(0, iY, iCllX, iCllY);
+
+		if (tDistance < lDistance) {
+			lDistance = tDistance;
+
+			cll = getCell(0, iY);
+
+			if (map.occupied(cll) == false) {
+				iStartCell = cll;
+			}
+		}
+
+		// check when XY = map_width (bottom)
+		tDistance = distance(game.map_width-1, iY, iCllX, iCllY);
+
+		if (tDistance < lDistance) {
+			lDistance = tDistance;
+			cll = getCell(game.map_width-1, iY);
+
+			if (map.occupied(cll) == false) {
+				iStartCell = cll;
+			}
+		}
+	}
+
+	return iStartCell;
+}
+
 /**
 	The X coordinate is found by finding out how many 'rows' (the Y) are there, then
 	the remaining of that value is the X.

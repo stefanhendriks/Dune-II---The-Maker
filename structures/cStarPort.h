@@ -5,11 +5,16 @@ class cStarPort : public cAbstractStructure
 private:
 	void think_deployment();
 
+	bool frigateDroppedPackage;
+
+    // TIMERs
+    int TIMER_deploy;
+
 public:
     cStarPort();
     ~cStarPort();
-  
-    // overloaded functions    
+
+    // overloaded functions
     void think();
     void think_animation();
     void think_deploy();            // starport uses this to deploy unit
@@ -19,7 +24,8 @@ public:
 
 	int getType();
 
-    // TIMERs
-    int TIMER_deploy;
+	bool isFrigatePackageDropped() { return frigateDroppedPackage; }
+	void setFrigateDroppedPackage (bool value) { frigateDroppedPackage = value; }
+
 };
 

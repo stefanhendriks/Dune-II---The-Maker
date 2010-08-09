@@ -1644,7 +1644,7 @@ void cUnit::think_move_air()
 
                     structure[iStrucId]->setFrame(4); // show package on this structure
 					structure[iStrucId]->setAnimating(true); // keep animating
-                    ((cStarPort *)structure[iStrucId])->TIMER_deploy = 3; // 1 second, just pick something
+                    ((cStarPort *)structure[iStrucId])->setFrigateDroppedPackage(true);
 				}
 
 				return; // override for frigates

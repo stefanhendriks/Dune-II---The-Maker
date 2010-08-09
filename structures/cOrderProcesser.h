@@ -26,6 +26,16 @@ class cOrderProcesser {
 		void removeOrder(cBuildingListItem *item);
 		void placeOrder();
 
+		bool isOrderPlaced() { return orderPlaced; }
+		bool isFrigateSent() { return frigateSent; }
+		bool hasOrderedAnything();
+		bool hasFreeSlot() { return getFreeSlot() >= 0;	}
+		cBuildingListItem * getItemToDeploy();
+		void markOrderAsDeployed(cBuildingListItem * item);
+		void setOrderHasBeenProcessed();
+
+		void sendFrigate();
+
 	protected:
 		void removeAllItems();
 		void removeItem(int slot);
@@ -43,6 +53,7 @@ class cOrderProcesser {
 
 		// sent frigate to deliver order
 		bool frigateSent;
+		int unitIdOfFrigateSent;
 
 		// when above zero, this will be substracted by one (by the think function).
 		int secondsUntilArrival;

@@ -10,11 +10,13 @@
 cSideBarDrawer::cSideBarDrawer() {
 	upgradeDrawer = new cUpgradeDrawer();
 	buildingListDrawer = new cBuildingListDrawer();
+	orderDrawer = new cOrderDrawer();
 }
 
 cSideBarDrawer::~cSideBarDrawer() {
 	delete upgradeDrawer;
 	delete buildingListDrawer;
+	delete orderDrawer;
 }
 
 // draws the sidebar on screen
@@ -44,8 +46,13 @@ void cSideBarDrawer::drawSideBar(cPlayer * player) {
 	// TODO: draw minimap here
 
 	// draw the upgrade button
-	if (selectedListId) {
+	if (selectedListId > -1) {
 		upgradeDrawer->drawUpgradeButtonForSelectedListIfNeeded(player, selectedList);
+	}
+
+	// draw the order button
+	if (selectedListId == LIST_STARPORT) {
+		orderDrawer->drawOrderButton(player);
 	}
 
 	// draw the capacities (max spice/max power)

@@ -190,10 +190,14 @@ void cSideBar::thinkInteraction() {
 				} else {
 					sprintf(msg, "$%d | %s", item->getBuildCost(), units[item->getBuildId()].name);
 				}
+				game.set_message(msg);
 			} else {
-				sprintf(msg, "Maximum units selected. Please order.");
+				if (orderProcesser->hasFreeSlot()) {
+					sprintf(msg, "Maximum amount of units ordered. Place order.");
+					game.set_message(msg);
+				}
 			}
-			game.set_message(msg);
+
 		}
 
 		if (game.bMousePressedLeft) {
@@ -210,11 +214,23 @@ void cSideBar::thinkInteraction() {
 						}
 					}
 				} else {
+					// list is starport
 					assert(orderProcesser);
+
+					// handle order button interaction
+					if (orderProcesser->hasOrderedAnything()) {
+						cOrderDrawer orderDrawer;
+						if (orderDrawer.isMouseOverOrderButton(mouse_x, mouse_y)) {
+							orderProcesser->placeOrder();
+						}
+					}
+
 					if (item != NULL && orderProcesser->acceptsOrders()) {
-						item->increaseTimesOrdered();
-						orderProcesser->addOrder(item);
-						player->credits -= item->getBuildCost();
+						if (player->credits >= item->getBuildCost()) {
+							item->increaseTimesOrdered();
+							orderProcesser->addOrder(item);
+							player->credits -= item->getBuildCost();
+						}
 					}
 				}
 			}

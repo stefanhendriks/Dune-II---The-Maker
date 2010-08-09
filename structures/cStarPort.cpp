@@ -3,9 +3,9 @@
 // Constructor
 cStarPort::cStarPort()
 {
-
  // other variables (class specific)
- TIMER_deploy = 1;
+ TIMER_deploy = 0;
+ frigateDroppedPackage = false;
 }
 
 int cStarPort::getType() {
@@ -27,8 +27,7 @@ void cStarPort::think()
 // think about units deployment animation
 void cStarPort::think_deployment() {
 	if (!isAnimating()) return; // do nothing when not animating
-
-	if (TIMER_deploy < 0) {
+	if (!frigateDroppedPackage) {
 		if (iFrame < 0) {
             iFrame = 1;
 		}
@@ -59,84 +58,43 @@ void cStarPort::think_animation() {
 // TODO: Reimplement deployment functionality
 void cStarPort::think_deploy()
 {
-//    logbook("think deploy");
-//    if (TIMER_deploy > -1)
-//	{
-//		TIMER_deploy--;
-//        logbook("timer deploy was > -1");
-//
-//		if (TIMER_deploy == 0)
-//		{
-//            logbook("timer deploy == 0");
-//			bool bDeployed=false;
-//
-//            // deploy stuff
-//            for (int i=0; i < MAX_ICONS; i++)
-//            {
-//                if (game.iconFrigate[i] > 0)
-//                {
-//                    int iID = game.iconlist[LIST_STARPORT][i].iUnitID;
-//
-//                    // find free space
-//                    int iNewCell = iFreeAround();
-//
-//					if (iNewCell > -1)
-//					{
-//						int id = UNIT_CREATE(iNewCell, iID, 0, true);
-//
-//						if (getRallyPoint() > -1) {
-//                            unit[id].move_to(getRallyPoint(), -1, -1);
-//						}
-//
-//						bDeployed=true;
-//						game.iconFrigate[i]--;
-//						play_voice(SOUND_VOICE_05_ATR); // unit deployed
-//						break;
-//					}
-//					else
-//					{
-//
-//						// when nothing found now, it means the structure is the only
-//						// one. So, we cannot dump it. Send over a reinforcement
-//						int rX = (iCellGiveX(getCell()) - 5) + rnd(10);
-//						int rY = (iCellGiveY(getCell()) - 5) + rnd(10);
-//
-//                        if (getRallyPoint() > -1)
-//                        {
-//                         //   unit[id].move_to(iRallyPoint, -1, -1);
-//                          rX = (iCellGiveX(getRallyPoint()) - 2) + rnd(4);
-//                          rY = (iCellGiveY(getRallyPoint()) - 2) + rnd(4);
-//						}
-//
-//						FIX_BORDER_POS(rX, rY);
-//
-//						REINFORCE(0, iID, iCellMake(rX, rY), iCellMake(rX, rY));
-//
-//						bDeployed=true;
-//						game.iconFrigate[i]--;
-//						break;
-//					}
-//			}
-//		}
-//
-//
-//
-//            if (bDeployed)
-//            {
-//                logbook("Deployed a unit?");
-//                TIMER_deploy=2;
-//                game.TIMER_mayorder = 2;
-//            }
-//            else
-//            {
-//                // its empty, so we are done
-//                iFrame=0;
-//                setAnimating(false);
-//                TIMER_deploy=-1;
-//                game.TIMER_mayorder=-1;
-//            }
-//		} // deploy a unit
-//	}
+	if (frigateDroppedPackage) {
+		  logbook("think deploy");
+		  TIMER_deploy--;
+		  if (TIMER_deploy < 0) {
+			  TIMER_deploy = 1;
+			  // deploy unit
+			  cOrderProcesser * orderProcesser = player[iPlayer].getOrderProcesser();
+			  cBuildingListItem * item = orderProcesser->getItemToDeploy();
+			  if (item) {
+				  cStructureUtils structureUtils;
+				  int cellToDeployTo = iFreeAround();
+				  orderProcesser->markOrderAsDeployed(item);
+				  item->decreaseTimesOrdered();
+
+				  if (cellToDeployTo >= 0) {
+					  int id = UNIT_CREATE(cellToDeployTo, item->getBuildId(), iPlayer, true);
+					  if (getRallyPoint() > -1) {
+						  unit[id].move_to(getRallyPoint(), -1, -1);
+					  }
+					  play_voice(SOUND_VOICE_05_ATR); // unit deployed
+				  } else {
+					  // could not find cell to deploy to, reinforce it
+					  cCellCalculator cellCalculator;
+					  if (getRallyPoint() > -1) {
+						  cellToDeployTo = getRallyPoint();
+					  }
+					  int cellAtBorderOfMap = cellCalculator.findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
+					  REINFORCE(0, item->getBuildId(), cellToDeployTo, cellAtBorderOfMap);
+				  }
+			  } else {
+				  // item is null, no more items to deploy.
+				  setAnimating(false);
+				  orderProcesser->setOrderHasBeenProcessed();
+				  frigateDroppedPackage = false;
+			  }
+		  }
+	}
 }
 
 void cStarPort::think_guard() {
