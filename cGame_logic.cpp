@@ -115,22 +115,6 @@ void cGame::init() {
     TIMER_movie=0;
     iMovieFrame=-1;
 
-
-	// TODO:
-	// Initialize units/structures/reinforcements, etc.
-	TIMER_starport=-2;
-	TIMER_ordered=-1;			// timer for ordering stuff ( -1 = nothing, 0 = delivering, > 0 t-minus)
-	TIMER_mayorder=1;			// may not order...
-
-	// Initialize upgrades
-	memset(iStructureUpgrade, 0, sizeof(iStructureUpgrade));
-	memset(iUpgradeTIMER, 0, sizeof(iUpgradeTIMER)); // reset timer
-	memset(iUpgradeProgress, -1, sizeof(iUpgradeProgress)); // upgrade progress
-	memset(iUpgradeProgressLimit, -1, sizeof(iUpgradeProgressLimit)); // upgrade progress
-
-
-	memset(iconFrigate, 0, sizeof(iconFrigate)); // what is ordered? (how many of them?)
-
 	map.init();
 
 	for (int i=0; i < MAX_PLAYERS; i++) {
@@ -204,22 +188,6 @@ void cGame::mission_init() {
     TIMER_movie=0;
     iMovieFrame=-1;
 
-
-	// TODO:
-	// Initialize units/structures/reinforcements, etc.
-
-
-	TIMER_starport=-2;
-	TIMER_ordered=-1;			// timer for ordering stuff ( -1 = nothing, 0 = delivering, > 0 t-minus)
-	TIMER_mayorder=1;			// may not order...
-
-	// Initialize upgrades
-	memset(iStructureUpgrade, 0, sizeof(iStructureUpgrade));
-	memset(iUpgradeTIMER, 0, sizeof(iUpgradeTIMER)); // reset timer
-	memset(iUpgradeProgress, -1, sizeof(iUpgradeProgress)); // upgrade progress
-	memset(iUpgradeProgressLimit, -1, sizeof(iUpgradeProgressLimit)); // upgrade progress
-
-	memset(iconFrigate, 0, sizeof(iconFrigate)); // what is ordered? (how many of them?)
 
     map.init();
 
@@ -1314,8 +1282,6 @@ void cGame::gerald()
 	if (player[HUMAN].getSideBar()) {
 		player[HUMAN].getSideBar()->thinkInteraction();
 	}
-
-	draw_order();
 
 }
 

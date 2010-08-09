@@ -1640,8 +1640,6 @@ void cUnit::think_move_air()
 					iGoalCell = iFindCloseBorderCell(iCell);
 					iTransferType = TRANSFER_DIE;
 
-                    game.TIMER_mayorder=2;
-
                     structure[iStrucId]->setFrame(4); // show package on this structure
 					structure[iStrucId]->setAnimating(true); // keep animating
                     ((cStarPort *)structure[iStrucId])->setFrigateDroppedPackage(true);

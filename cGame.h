@@ -118,21 +118,7 @@ public:
     // Condition to win the mission:
     int iWinQuota;              // > 0 means, get this to win the mission, else, destroy all!
 
-	// Starport stuff
-	int TIMER_starport;			// timer for refreshing list
-	int TIMER_ordered;			// timer for ordering stuff ( -1 = nothing, 0 = delivering, > 0 t-minus)
-	int TIMER_mayorder;			// timer > 0 , then we may not order!
-
-	// Frigate stuff
-	int iconFrigate[MAX_ICONS]; // what is ordered? (how many of them?)
-
-	// Upgrade stuff
-	int iStructureUpgrade[MAX_STRUCTURETYPES];
-	int iUpgradeTIMER[MAX_STRUCTURETYPES];
-	int iUpgradeProgress[MAX_STRUCTURETYPES];
-	int iUpgradeProgressLimit[MAX_STRUCTURETYPES]; // set limit for upgrade
-
-    void think_winlose(); // think about winning/losing mission
+    void think_winlose();
     void winning();       // winning
     void losing();        // losing
 
