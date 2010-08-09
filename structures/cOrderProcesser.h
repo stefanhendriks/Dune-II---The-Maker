@@ -25,6 +25,7 @@ class cOrderProcesser {
 		bool acceptsOrders();	// able to accept orders?
 		void removeOrder(cBuildingListItem *item);
 		void placeOrder();
+		void playTMinusSound(int seconds);
 
 		bool isOrderPlaced() { return orderPlaced; }
 		bool isFrigateSent() { return frigateSent; }

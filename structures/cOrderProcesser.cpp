@@ -55,12 +55,44 @@ bool cOrderProcesser::acceptsOrders() {
 	return result;
 }
 
+void cOrderProcesser::playTMinusSound(int seconds) {
+	int soundIdToPlay = -1;
+
+	if (seconds == 0) {
+		if (player->getHouse() == ATREIDES) {
+			soundIdToPlay = SOUND_VOICE_06_ATR;
+		} else if (player->getHouse() == HARKONNEN) {
+			soundIdToPlay = SOUND_VOICE_06_HAR;
+		} else if (player->getHouse() == ORDOS) {
+			soundIdToPlay = SOUND_VOICE_06_ORD;
+		}
+	} else {
+		if (player->getHouse() == ATREIDES) {
+			soundIdToPlay = (SOUND_ATR_S1 + (seconds - 1));
+		} else if (player->getHouse() == HARKONNEN) {
+			soundIdToPlay = (SOUND_HAR_S1 + (seconds - 1));
+		} else if (player->getHouse() == ORDOS) {
+			soundIdToPlay = (SOUND_ORD_S1 + (seconds - 1));
+		}
+	}
+
+	if (soundIdToPlay > -1) {
+		play_sound_id(soundIdToPlay, -1);
+	}
+}
+
+
 // time based (per second)
 void cOrderProcesser::think() {
 	if (secondsUntilArrival > 0) {
 		secondsUntilArrival--;
 		char msg[255];
 		sprintf(msg, "T-%d before Frigate arrival.", secondsUntilArrival);
+
+		if (secondsUntilArrival <= 5 && player->getId() == HUMAN) {
+			playTMinusSound(secondsUntilArrival);
+		}
+
 		if (secondsUntilArrival == 0) {
 			sendFrigate();
 			game.set_message("Frigate is arriving...");
