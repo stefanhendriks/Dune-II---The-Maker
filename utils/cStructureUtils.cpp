@@ -49,8 +49,12 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureTy
 		cAbstractStructure * theStructure = structure[i];
 		if (theStructure && theStructure->getOwner() == playerId) {
 			if (theStructure->getType() == structureType) {
-				if (theStructure->iFreeAround() > -1) {
-					return i; // return this structure
+				if (structureType != STARPORT) {
+					if (theStructure->iFreeAround() > -1) {
+						return i; // return this structure
+					}
+				} else {
+					return i;
 				}
 			}
 		}

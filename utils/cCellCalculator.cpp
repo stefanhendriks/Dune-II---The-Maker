@@ -10,6 +10,7 @@ cCellCalculator::cCellCalculator() {
 }
 
 int cCellCalculator::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell) {
+	assert(destinationCell > -1);
 	// Cell x and y coordinates
 	int iCllX = getX(destinationCell);
 	int iCllY = getY(destinationCell);

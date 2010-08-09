@@ -26,7 +26,10 @@ void cStarPort::think()
 
 // think about units deployment animation
 void cStarPort::think_deployment() {
-	if (!isAnimating()) return; // do nothing when not animating
+	if (!isAnimating()) {
+		return; // do nothing when not animating
+	}
+
 	if (!frigateDroppedPackage) {
 		if (iFrame < 0) {
             iFrame = 1;
@@ -43,6 +46,7 @@ void cStarPort::think_deployment() {
 			}
         }
 	} else {
+		// show frame with the package
         iFrame = 4;
 	}
 }
@@ -54,12 +58,10 @@ void cStarPort::think_animation() {
 	think_deployment();
 }
 
-// called every second, to deploy a unit
-// TODO: Reimplement deployment functionality
+// FPS based thing function (every second called)
 void cStarPort::think_deploy()
 {
 	if (frigateDroppedPackage) {
-		  logbook("think deploy");
 		  TIMER_deploy--;
 		  if (TIMER_deploy < 0) {
 			  TIMER_deploy = 1;
@@ -71,21 +73,28 @@ void cStarPort::think_deploy()
 				  int cellToDeployTo = iFreeAround();
 				  orderProcesser->markOrderAsDeployed(item);
 				  item->decreaseTimesOrdered();
+				  int rallyPoint = getRallyPoint();
 
 				  if (cellToDeployTo >= 0) {
 					  int id = UNIT_CREATE(cellToDeployTo, item->getBuildId(), iPlayer, true);
-					  if (getRallyPoint() > -1) {
-						  unit[id].move_to(getRallyPoint(), -1, -1);
+					  if (rallyPoint > -1) {
+						  unit[id].move_to(rallyPoint, -1, -1);
 					  }
 					  play_voice(SOUND_VOICE_05_ATR); // unit deployed
 				  } else {
 					  // could not find cell to deploy to, reinforce it
 					  cCellCalculator cellCalculator;
-					  if (getRallyPoint() > -1) {
-						  cellToDeployTo = getRallyPoint();
+					  if (rallyPoint > -1) {
+						  cellToDeployTo = rallyPoint;
+					  }
+
+					  if (cellToDeployTo < 0) {
+						  // in this case, the structure has nothing around it free, but nor a rally point is set
+						  // assume that the cell to drop is the location of the structure itself
+						  cellToDeployTo = getCell();
 					  }
 					  int cellAtBorderOfMap = cellCalculator.findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
-					  REINFORCE(0, item->getBuildId(), cellToDeployTo, cellAtBorderOfMap);
+					  REINFORCE(iPlayer, item->getBuildId(), cellToDeployTo, cellAtBorderOfMap);
 				  }
 			  } else {
 				  // item is null, no more items to deploy.

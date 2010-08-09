@@ -191,13 +191,7 @@ void cSideBar::thinkInteraction() {
 					sprintf(msg, "$%d | %s", item->getBuildCost(), units[item->getBuildId()].name);
 				}
 				game.set_message(msg);
-			} else {
-				if (orderProcesser->hasFreeSlot()) {
-					sprintf(msg, "Maximum amount of units ordered. Place order.");
-					game.set_message(msg);
-				}
 			}
-
 		}
 
 		if (game.bMousePressedLeft) {
@@ -218,7 +212,8 @@ void cSideBar::thinkInteraction() {
 					assert(orderProcesser);
 
 					// handle order button interaction
-					if (orderProcesser->hasOrderedAnything()) {
+					if (orderProcesser->hasOrderedAnything() &&
+						orderProcesser->isOrderPlaced() == false) {
 						cOrderDrawer orderDrawer;
 						if (orderDrawer.isMouseOverOrderButton(mouse_x, mouse_y)) {
 							orderProcesser->placeOrder();
@@ -264,7 +259,7 @@ void cSideBar::thinkInteraction() {
 					}
 				} else {
 					assert(orderProcesser);
-					if (item != NULL) {
+					if (item != NULL && orderProcesser->isOrderPlaced() == false) {
 						if (item->getTimesOrdered() > 0) {
 							item->decreaseTimesOrdered();
 							orderProcesser->removeOrder(item);

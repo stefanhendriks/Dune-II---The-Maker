@@ -35,7 +35,9 @@ cBuildingListItem * cOrderProcesser::getItemToDeploy() {
 }
 
 bool cOrderProcesser::hasOrderedAnything() {
-	return getFreeSlot() > 0;
+	// the id is either > 0 (meaning slot 0 is taken, or more)
+	// or the id is lower than 0, (meaning, all slots are taken)
+	return getFreeSlot() > 0 || getFreeSlot() < 0;
 }
 
 void cOrderProcesser::markOrderAsDeployed(cBuildingListItem * item) {

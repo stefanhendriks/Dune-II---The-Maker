@@ -393,6 +393,7 @@ void cStructureFactory::powerDown(int iStructureType, int iPlayer) {
 
 
 void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType) {
+	assert(iCell > -1);
 	cCellCalculator calculator;
 	int height = structures[iStructureType].bmp_height / 32;
 	int width = structures[iStructureType].bmp_width / 32;
