@@ -274,3 +274,4 @@ CHANGED:
 - the way sound is played in the game is rewritten, which allows more sounds to be played
   at once
 - money gain/drain animation
+- AI gets slabs underneath buildings in the original dune2 missions

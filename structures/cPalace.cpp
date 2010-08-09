@@ -22,6 +22,10 @@ void cPalace::think()
 }
 
 void cPalace::think_animation() {
+	// a palace does not animate, so when set, set it back to false
+	if (isAnimating()) {
+		setAnimating(false);
+	}
 	cAbstractStructure::think_animation();
 	cAbstractStructure::think_flag();
 }
