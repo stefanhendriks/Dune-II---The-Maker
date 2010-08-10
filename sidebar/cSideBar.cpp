@@ -34,47 +34,47 @@ void cSideBar::setList(int listId, cBuildingList* list) {
 }
 
 /**
- * Thinking for sidebar
+ * Thinking for sidebar - timer based
  */
 void cSideBar::think() {
 	thinkAvailabilityLists();
-	thinkUpgradeButton();
 }
 
 void cSideBar::thinkUpgradeButton() {
 	cUpgradeUtils upgradeUtils;
 	bool isOverUpgradeButton = upgradeUtils.isMouseOverUpgradeButton(mouse_x, mouse_y);
 
-	if (isOverUpgradeButton ) {
+	if (isOverUpgradeButton) {
 		int selectedListId = player->getSideBar()->getSelectedListID();
 
 		if (selectedListId > -1) {
 			cBuildingList * list = player->getSideBar()->getList(selectedListId);
 			assert(list);
-			int upgradeLevel = list->getUpgradeLevel();
-			int techLevel = player->getTechLevel();
+			if (list->isBuildingItem() == false) {
+				int upgradeLevel = list->getUpgradeLevel();
+				int techLevel = player->getTechLevel();
 
+				cListUpgrade * upgrade = upgradeUtils.getListUpgradeForList(player, selectedListId, techLevel, upgradeLevel);
+				bool isUpgradeApplicable = upgrade != NULL;
 
-			cListUpgrade * upgrade = upgradeUtils.getListUpgradeForList(player, selectedListId, techLevel, upgradeLevel);
-			bool isUpgradeApplicable = upgrade != NULL;
-
-			if (upgrade != NULL) {
-				bool isUpgrading = player->getUpgradeBuilder()->isUpgrading(selectedListId);
-				char msg[255];
-				if (!isUpgrading) {
-					sprintf(msg, "$%d | Upgrade", upgrade->getTotalPrice());
-				} else {
-					cListUpgrade * upgradeInProgress = player->getUpgradeBuilder()->getListUpgrade(selectedListId);
-					assert(upgradeInProgress);
-					sprintf(msg, "Upgrade completed at %d percent",upgradeInProgress->getProgressAsPercentage());
+				if (upgrade != NULL) {
+					bool isUpgrading = player->getUpgradeBuilder()->isUpgrading(selectedListId);
+					char msg[255];
+					if (!isUpgrading) {
+						sprintf(msg, "$%d | Upgrade", upgrade->getTotalPrice());
+					} else {
+						cListUpgrade * upgradeInProgress = player->getUpgradeBuilder()->getListUpgrade(selectedListId);
+						assert(upgradeInProgress);
+						sprintf(msg, "Upgrade completed at %d percent",upgradeInProgress->getProgressAsPercentage());
+					}
+					game.set_message(msg);
 				}
-				game.set_message(msg);
-			}
 
-			if (isUpgradeApplicable && MOUSE_BTN_LEFT()) {
-				assert(upgrade != NULL);
-				assert(player->getUpgradeBuilder());
-				player->getUpgradeBuilder()->addUpgrade(selectedListId, upgrade);
+				if (isUpgradeApplicable && MOUSE_BTN_LEFT()) {
+					assert(upgrade != NULL);
+					assert(player->getUpgradeBuilder());
+					player->getUpgradeBuilder()->addUpgrade(selectedListId, upgrade);
+				}
 			}
 		}
 	}
@@ -138,6 +138,7 @@ void cSideBar::thinkAvailabilityLists() {
  *
  */
 void cSideBar::thinkInteraction() {
+	thinkUpgradeButton();
 
 	// button interaction
 	for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {

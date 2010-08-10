@@ -47,8 +47,9 @@ void cUpgradeDrawer::drawUpgradeButton(cPlayer * thePlayer, cBuildingList * theS
 
 	cUpgradeUtils upgradeUtils;
 	bool canPayForUpgrade = upgradeUtils.canPlayerPayForUpgradeForList(thePlayer, theSelectedList->getType(), techLevel, upgradeLevel);
+	bool isBuildingItem = theSelectedList->isBuildingItem();
 
-	if (canPayForUpgrade) {
+	if (canPayForUpgrade && !isBuildingItem) {
 		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_UPGRADE].dat, 29, 0);
 	} else {
 		// draw a dark version
