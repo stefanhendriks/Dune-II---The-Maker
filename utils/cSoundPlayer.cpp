@@ -13,12 +13,16 @@ cSoundPlayer::cSoundPlayer(int maxVoices) {
 }
 
 cSoundPlayer::~cSoundPlayer() {
-	for (int i = 0; i < maximumVoices; i++) {
-		destroySound(i, true);
+	if (maximumVoices > -1) {
+		for (int i = 0; i < maximumVoices; i++) {
+			destroySound(i, true);
+		}
 	}
 }
 
 void cSoundPlayer::think() {
+	if (maximumVoices < 0) return;
+
 	for(int i = 0;i < maximumVoices; i++) {
 
 		int pos;
@@ -40,6 +44,7 @@ void cSoundPlayer::think() {
 }
 
 void cSoundPlayer::destroySound(int voice, bool force) {
+	if (maximumVoices < 0) return;
 	if (voice < 0) return;
 	if (voices[voice] < 0) return;
 
@@ -59,6 +64,8 @@ void cSoundPlayer::destroySound(int voice, bool force) {
 
 
 void cSoundPlayer::playSound(SAMPLE *sample, int pan, int vol) {
+	if (maximumVoices < 0) return;
+
 	assert(sample);
 	if (vol < 0) return;
 	assert(pan >= 0 && pan < 256);

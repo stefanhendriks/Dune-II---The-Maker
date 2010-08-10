@@ -12,18 +12,8 @@
 
 // TODO: Clean this class up big time.
 
-// List structure
-struct tListIcon
-{
-	int iIcon;
-	int iStructureID;		// any id attached
-	int iUnitID;			// any id attached
-	int iPrice;				// price of this thing
-};
 
-
-class cGame
-{
+class cGame {
 
 public:
 
@@ -86,8 +76,6 @@ public:
 
 	int fade_select;        // fade color when selected
     bool bFadeSelectDir;    // fade select direction
-
-	int iActiveList;		// what list is active to view? (refering to ID of list)
 
 	int paths_created;
 

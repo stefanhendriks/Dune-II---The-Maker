@@ -2094,9 +2094,6 @@ void INI_Load_scenario(int iHouse, int iRegion) {
   }
     player[AI_WORM].iTeam=-2;
     map.smooth();
-
-  if (player[0].iStructures[CONSTYARD] < 1)
-      game.iActiveList=LIST_NONE;
 }
 
 void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
