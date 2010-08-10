@@ -5,7 +5,7 @@
  *      Author: Stefan
  */
 
-#include "..\d2tmh.h"
+#include "../d2tmh.h"
 
 cStructureUtils::cStructureUtils() {
 	// TODO Auto-generated constructor stub

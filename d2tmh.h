@@ -92,7 +92,9 @@ class CreditsDrawer;
 
 // TODO: Rethink this, perhaps other global dir is needed
 #include "utils/common.h"					// commonly used functions
-#include "map.h"							// map data
+
+// MAP
+#include "map/maph.h"							// map data
 
 #include "utils/cCellCalculator.h"			    /** math with cells , with handy references to structures and units **/
 #include "utils/cSeedMap.h"

@@ -10,7 +10,7 @@
 
   */
 
-#include "..\d2tmh.h"
+#include "../d2tmh.h"
 #include <math.h>
 
 // Keep a logbook

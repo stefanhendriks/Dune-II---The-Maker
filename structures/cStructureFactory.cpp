@@ -1,4 +1,4 @@
-#include "..\d2tmh.h"
+#include "../d2tmh.h"
 
 cStructureFactory *cStructureFactory::instance = NULL;
 

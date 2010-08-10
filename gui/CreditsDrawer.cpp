@@ -5,7 +5,7 @@
  *      Author: Stefan
  */
 
-#include "..\d2tmh.h"
+#include "../d2tmh.h"
 
 CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) {
 	assert(thePlayer != NULL);
