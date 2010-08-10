@@ -76,6 +76,7 @@ bool cBuildingList::hasItemType(int itemTypeId) {
 			}
 		}
 	}
+	return false;
 }
 
 

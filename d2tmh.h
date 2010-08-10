@@ -93,6 +93,9 @@ class CreditsDrawer;
 // TODO: Rethink this, perhaps other global dir is needed
 #include "utils/common.h"					// commonly used functions
 
+// MANAGER
+#include "managers/managerh.h"
+
 // MAP
 #include "map/maph.h"							// map data
 
