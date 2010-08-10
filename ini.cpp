@@ -1557,8 +1557,9 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 							player[HUMAN].setHouse(iPl_house[iP]);
                             player[HUMAN].iTeam = 0;
                             game.iHouse = iPl_house[iP];
-                            if (game.getCreditsDrawer())  {
-                            	game.getCreditsDrawer()->setCredits();
+                            assert(drawManager);
+                            if (drawManager->getCreditsDrawer())  {
+                            	drawManager->getCreditsDrawer()->setCredits();
                             }
 
                             if (iPl_quota[iP] > 0) {

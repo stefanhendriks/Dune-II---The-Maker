@@ -9,5 +9,6 @@
 #define MANAGERH_H_
 
 #include "cDrawManager.h"
+#include "cInteractionManager.h"
 
 #endif /* MANAGERH_H_ */

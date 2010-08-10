@@ -337,19 +337,10 @@ void cGame::gerald()
 	iHeight=health_bar(79, player[0].credits, player[0].max_credits);
 	rectfill(bmp_screen, 497,442, 499, 442-iHeight, makecol(0,0,255));
 
-	// draw money, etc, etc
-	if (getCreditsDrawer() != NULL) {
-		getCreditsDrawer()->draw();
-	}
-
-	draw_sidebarbuttons();
-
-	// sidebar think about reaction on fps basis here:
-	assert(player[HUMAN].getSideBar());
-	if (player[HUMAN].getSideBar()) {
-		player[HUMAN].getSideBar()->thinkInteraction();
-	}
-
+	assert(drawManager);
+	drawManager->draw();
+	assert(interactionManager);
+	interactionManager->interact();
 }
 
 void cGame::mapdraw() {
@@ -428,16 +419,6 @@ void cGame::winning()
         // FADE OUT
         FADE_OUT();
     }
-}
-
-// Draw sidebar buttons, to switch lists
-void cGame::draw_sidebarbuttons()
-{
-	if (player[HUMAN].getSideBar()) {
-		sidebarDrawer.drawSideBar(&player[HUMAN]);
-	}
-
-	return;
 }
 
 // Draw the mouse in combat mode, and do its interactions

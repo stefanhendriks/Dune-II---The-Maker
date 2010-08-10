@@ -150,8 +150,6 @@ public:
 	bool isState(int thisState);
 	void setState(int thisState);
 
-	CreditsDrawer *getCreditsDrawer() { return creditsDrawer; }
-
 	int getMaxVolume() { return iMaxVolume; }
 
 	cSoundPlayer * getSoundPlayer() { return soundPlayer; }
@@ -172,8 +170,6 @@ private:
 
 	void combat_mouse();
 	void mapdraw();
-	void draw_credits(int creditsToDraw);  // draw money
-	void draw_sidebarbuttons();	// draw the buttons left to the icon bar (and show what is active)
 	void draw_placeit();
 	void draw_order();
 	void do_credits_drawing_and_logic();
@@ -194,9 +190,7 @@ private:
 	/** game state **/
 	int state;
 
-	CreditsDrawer *creditsDrawer;
-
-	int iMaxVolume;
+		int iMaxVolume;
 
 	cSoundPlayer *soundPlayer;
 };

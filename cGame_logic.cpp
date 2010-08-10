@@ -19,7 +19,7 @@
 #include "d2tmh.h"
 
 cGame::cGame() {
-	creditsDrawer = NULL;
+
 }
 
 
@@ -204,12 +204,9 @@ void cGame::mission_init() {
 
     // instantiate the creditDrawer with the appropriate player. Only
     // possible once game has been initialized and player has been created.
-    if (creditsDrawer == NULL) {
-    	assert(&player[0] != NULL);
-    	creditsDrawer = new CreditsDrawer(&player[0]);
-    }
-
-    getCreditsDrawer()->setCredits();
+    assert(drawManager);
+    assert(drawManager->getCreditsDrawer());
+    drawManager->getCreditsDrawer()->setCredits();
 }
 
 
@@ -3224,6 +3221,8 @@ bool cGame::setupGame() {
 	logbook("Installing:  WORLD");
 	INSTALL_WORLD();
 
+	drawManager = new cDrawManager(&player[HUMAN]);
+
 	game.init();
 	game.setup_players();
 
@@ -3238,6 +3237,10 @@ bool cGame::setupGame() {
  * Set up players
  */
 void cGame::setup_players() {
+	if (interactionManager) {
+		delete interactionManager;
+	}
+
 	// make sure each player has an own item builder
 	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
 		cPlayer * thePlayer = &player[i];
@@ -3264,6 +3267,8 @@ void cGame::setup_players() {
 		// set tech level
 		thePlayer->setTechLevel(game.iMission);
 	}
+
+	interactionManager = new cInteractionManager(&player[HUMAN]);
 }
 
 bool cGame::isState(int thisState) {

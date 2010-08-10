@@ -115,8 +115,10 @@ void cTimeManager::handleTimerGlobal() {
 		game.think_movie();
 		game.think_message();
 
-		if (game.getCreditsDrawer()) {
-			game.getCreditsDrawer()->think();
+		if (drawManager) {
+			if (drawManager->getCreditsDrawer()) {
+				drawManager->getCreditsDrawer()->think();
+			}
 		}
 
 		for (int i = HUMAN; i < MAX_PLAYERS; i++) {

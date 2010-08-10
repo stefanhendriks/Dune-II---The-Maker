@@ -29,10 +29,11 @@ cAIPlayer      				aiplayer[MAX_PLAYERS];           // related to aiplayer (exce
 cParticle      				particle[MAX_PARTICLES];
 cBullet        				bullet[MAX_BULLETS];
 cRegion        				world[MAX_REGIONS];
-cMentat		   			*	Mentat;
+cMentat		   			*	Mentat = NULL;
 cTimeManager   				TimeManager;
 cStructureUtils 			structureUtils;
-cSideBarDrawer  			sidebarDrawer;
+cDrawManager   			*	drawManager = NULL;
+cInteractionManager *interactionManager = NULL;
 
 // Structs
 sPreviewMap     			PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory

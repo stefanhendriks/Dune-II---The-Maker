@@ -16,9 +16,8 @@ public:
 	void drawSideBar(cPlayer * player);
 
 private:
-	cUpgradeDrawer * upgradeDrawer;
 	cBuildingListDrawer * buildingListDrawer;
-	cOrderDrawer * orderDrawer;
+
 };
 
 #endif /* CSIDEBARDRAWER_H_ */

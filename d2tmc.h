@@ -39,7 +39,8 @@ extern cRegion        world[MAX_REGIONS];
 extern cMentat		  *Mentat;
 extern cTimeManager   TimeManager;
 extern cStructureUtils structureUtils;
-extern cSideBarDrawer  sidebarDrawer;
+extern cDrawManager   *drawManager;
+extern cInteractionManager *interactionManager;
 
 // ...
 extern sPreviewMap     PreviewMap[MAX_SKIRMISHMAPS];                   // max of 100 maps in skirmish directory
