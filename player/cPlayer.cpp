@@ -89,7 +89,6 @@ void cPlayer::setOrderProcesser(cOrderProcesser * theOrderProcesser) {
 		delete orderProcesser;
 	}
 
-	logbook("Set order processer");
 	orderProcesser = theOrderProcesser;
 }
 
