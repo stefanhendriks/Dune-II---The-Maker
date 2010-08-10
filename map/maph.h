@@ -8,7 +8,12 @@
 #ifndef MAPH_H_
 #define MAPH_H_
 
-#include "cCell.h";
+// forward declaration
+class cPlayer;
+
+#include "cCell.h"
 #include "cMap.h"
+
+#include "cMapDrawer.h"
 
 #endif /* MAPH_H_ */

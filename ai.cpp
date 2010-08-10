@@ -489,10 +489,8 @@ void cAIPlayer::think()
     think_attack();
 }
 
-void cAIPlayer::think_repair()
-{
-    if (TIMER_repair > 0)
-    {
+void cAIPlayer::think_repair() {
+    if (TIMER_repair > 0) {
         TIMER_repair--;
         return;
     }
@@ -504,39 +502,34 @@ void cAIPlayer::think_repair()
     if (player[ID].iStructures[REPAIR] > 0 && player[ID].credits > 250)
     {
         // yes, we can repair
-        for (int i=0; i < MAX_UNITS; i++)
-            if (unit[i].isValid())
-                if (unit[i].iPlayer == ID)
+        for (int i=0; i < MAX_UNITS; i++) {
+            if (unit[i].isValid()) {
+                if (unit[i].iPlayer == ID) {
                     if (unit[i].iHitPoints < units[unit[i].iType].hp)
                     {
                         // head off to repair
-                         int iNewID = STRUCTURE_FREE_TYPE(ID, unit[i].iCell, REPAIR);
+                    	cStructureUtils structureUtils;
+                    	int iNewID = structureUtils.findClosestStructureTypeToCell(unit[i].iCell, REPAIR, &player[ID]);
 
-                         if (iNewID > -1)
-                         {
-                             int iCarry = CARRYALL_TRANSFER(i, structure[iNewID]->getCell()+2);
+						if (iNewID > -1) {
+							int iCarry = CARRYALL_TRANSFER(i, structure[iNewID]->getCell() + 2);
 
+							if (iCarry > -1) {
+								// yehaw we will be picked up!
+								unit[i].TIMER_movewait = 100;
+								unit[i].TIMER_thinkwait = 100;
+							} else {
+								UNIT_ORDER_MOVE(i, structure[iNewID]->getCell());
+							}
 
-                             if (iCarry > -1)
-                             {
-                                 // yehaw we will be picked up!
-                                 unit[i].TIMER_movewait = 100;
-                                 unit[i].TIMER_thinkwait = 100;
-                             }
-                             else
-                             {
-                                 logbook("Order move #3");
-                                 UNIT_ORDER_MOVE(i, structure[iNewID]->getCell());
-                             }
-
-                             unit[i].iStructureID = iNewID;
-                             unit[i].iGoalCell = structure[iNewID]->getCell();
-                         }
-
+							unit[i].iStructureID = iNewID;
+							unit[i].iGoalCell = structure[iNewID]->getCell();
+						}
                     }
-
+                }
+            }
+        } // FOR
     }
-
     // check if any structures where breaking down due decay
 }
 

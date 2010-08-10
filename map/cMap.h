@@ -14,6 +14,8 @@ class cMap
 {
 public:
 
+	cMap();
+
     void init();
     void smooth();
     void draw();
@@ -76,7 +78,6 @@ public:
     bool iVisible[MAX_CELLS][MAX_PLAYERS];      // visibility for <player>
 
     private:
-
 
 };
 

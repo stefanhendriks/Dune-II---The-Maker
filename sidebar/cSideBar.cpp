@@ -193,10 +193,14 @@ void cSideBar::thinkInteraction() {
 		if (item != NULL) {
 			char msg[255];
 			if (list->isAcceptsOrders()) {
-				if (list->getType() != LIST_STARPORT) {
+				if (list->getType() == LIST_CONSTYARD) {
 					sprintf(msg, "$%d | %s", item->getBuildCost(), structures[item->getBuildId()].name);
 				} else {
-					sprintf(msg, "$%d | %s", item->getBuildCost(), units[item->getBuildId()].name);
+					if (item->getBuildCost() > 0) {
+						sprintf(msg, "$%d | %s", item->getBuildCost(), units[item->getBuildId()].name);
+					} else {
+						sprintf(msg, "%s", units[item->getBuildId()].name);
+					}
 				}
 				game.set_message(msg);
 			}

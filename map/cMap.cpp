@@ -6,7 +6,7 @@
   Contact: stefanhen83@gmail.com
   Website: http://d2tm.duneii.com
 
-  2001 - 2009 (c) code by Stefan Hendriks
+  2001 - 2010 (c) code by Stefan Hendriks
 
   */
 
@@ -15,11 +15,17 @@
 
 #define WATCH_PLAYER 0
 
+cMap::cMap() {
+
+}
+
 void cMap::init()
 {
     INIT_REINFORCEMENT();
 
-	// remember, dune 2 has 64x64 maps, but they use 62x62!
+    // the original dune 2 uses 62x62 tiles of the 64x64 available. Leaving a 'border' in the map which is used
+    // to let units enter the map (reinforcements), etc.
+    // set scrollX and Y at minimum of 1 so we do not start at the border itself (0,0)
 	scroll_x=scroll_y=1;
 
     // clear out all cells
@@ -36,9 +42,9 @@ void cMap::init()
         // clear out the ID stuff
         memset(cell[c].id, -1, sizeof(cell[c].id));
 
-
-		for (int i=0; i < MAX_PLAYERS; i++)
+		for (int i=0; i < MAX_PLAYERS; i++) {
 			iVisible[c][i] = false;
+		}
     }
 
     // set visibility
@@ -183,6 +189,7 @@ bool cMap::occupied(int iCll, int iUnitID)
     return bResult;
 }
 
+// HUH? WHat is this doing here? (TODO: move to structure Drawing thing)
 void cMap::draw_structures_health()
 {
     int iDrawHealthStructure = game.hover_structure;
@@ -2432,55 +2439,48 @@ void cMap::smooth_cell(int c)
       cell[c].tile--;
 
     }
-
-
-
 }
 
-void cMap::draw_think()
-{
-   if (mouse_co_x1 > -1 &&
-        mouse_co_y1 > -1)
-        return;
+void cMap::draw_think() {
+	// busy with selecting box, so do not think (about scrolling, etc)
+	if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
+		return;
+	}
 
-	//if (game.bPlaceIt)
-		//return; // do not scroll when placing
+	// determine the width and height in cells
+	// this way we know the size of the viewport
 
-    int iEndX=scroll_x + ((game.screen_x-160)/32); // width of sidebar is 160
-    int iEndY=scroll_y + ((game.screen_y-42)/32)+1;  // height of upper bar is 42
+	int iEndX = scroll_x + ((game.screen_x - 160) / 32); // width of sidebar is 160
+	int iEndY = scroll_y + ((game.screen_y - 42) / 32) + 1; // height of upper bar is 42
 
-    // thinking for map (scrolling that is)
-    if (mouse_x <= 1 || key[KEY_LEFT])
-        if (scroll_x > 1)
-        {
-            //scroll_x --;
-            mouse_tile = MOUSE_LEFT;
-        }
+	// thinking for map (scrolling that is)
+	if (mouse_x <= 1 || key[KEY_LEFT]) {
+		if (scroll_x > 1) {
+			//scroll_x --;
+			mouse_tile = MOUSE_LEFT;
+		}
+	}
 
+	if (mouse_y <= 1 || key[KEY_UP]) {
+		if (scroll_y > 1) {
+			//scroll_y --;
+			mouse_tile = MOUSE_UP;
+		}
+	}
 
-    if (mouse_y <= 1 || key[KEY_UP])
-        if (scroll_y > 1)
-        {
-            //scroll_y --;
-            mouse_tile = MOUSE_UP;
-        }
+	if (mouse_x >= (game.screen_x - 2) || key[KEY_RIGHT]) {
+		if ((iEndX) < (game.map_width - 1)) {
+			// scroll_x ++;
+			mouse_tile = MOUSE_RIGHT;
+		}
+	}
 
-
-    if (mouse_x >= (game.screen_x-2) || key[KEY_RIGHT])
-        if ((iEndX) < (game.map_width-1))
-        {
-           // scroll_x ++;
-            mouse_tile = MOUSE_RIGHT;
-        }
-
-    if (mouse_y >= (game.screen_y-2) || key[KEY_DOWN])
-        if ((iEndY) < (game.map_height-1))
-        {
-         //   scroll_y ++;
-            mouse_tile = MOUSE_DOWN;
-        }
-
-
+	if (mouse_y >= (game.screen_y - 2) || key[KEY_DOWN]) {
+		if ((iEndY) < (game.map_height - 1)) {
+			//   scroll_y ++;
+			mouse_tile = MOUSE_DOWN;
+		}
+	}
 }
 
 void cMap::think()
@@ -2532,8 +2532,6 @@ void cMap::think()
 
 
 }
-
-
 
 int cMap::mouse_draw_x()
 {

@@ -8,6 +8,8 @@
 #ifndef MANAGERH_H_
 #define MANAGERH_H_
 
+class cPlayer;
+
 #include "cDrawManager.h"
 #include "cInteractionManager.h"
 

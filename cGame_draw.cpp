@@ -437,50 +437,44 @@ void cGame::combat_mouse()
 
 
         // Mouse is hovering above a unit
-        if (hover_unit > -1)
-        {
+        if (hover_unit > -1) {
             // wanting to repair, check if its possible
             if (key[KEY_R] && player[0].iStructures[REPAIR] > 0) {
-            	if (unit[hover_unit].iPlayer == HUMAN)
+            	if (unit[hover_unit].iPlayer == HUMAN) {
             		if (unit[hover_unit].iHitPoints < units[unit[hover_unit].iType].hp &&
             				units[unit[hover_unit].iType].infantry == false &&
             				units[unit[hover_unit].iType].airborn == false)	{
 
-							if (bMousePressedLeft)
-							{
-								// find closest repair bay to move to
+						if (bMousePressedLeft) {
+							// find closest repair bay to move to
 
-									int iNewID = STRUCTURE_FREE_TYPE(0, unit[hover_unit].iCell, REPAIR);
+							cStructureUtils structureUtils;
+							int	iNewID = structureUtils.findClosestStructureTypeToCell(unit[hover_unit].iCell, REPAIR, &player[HUMAN]);
 
-									if (iNewID > -1)
-									{
-										int iCarry = CARRYALL_TRANSFER(hover_unit, structure[iNewID]->getCell()+2);
+							if (iNewID > -1) {
+								int iCarry = CARRYALL_TRANSFER(hover_unit, structure[iNewID]->getCell() + 2);
 
+								if (iCarry > -1) {
+									// yehaw we will be picked up!
+									unit[hover_unit].TIMER_movewait = 100;
+									unit[hover_unit].TIMER_thinkwait = 100;
+								} else {
+									logbook("Order move #5");
+									UNIT_ORDER_MOVE(hover_unit, structure[iNewID]->getCell());
+								}
 
-										if (iCarry > -1)
-										{
-											// yehaw we will be picked up!
-											unit[hover_unit].TIMER_movewait = 100;
-											unit[hover_unit].TIMER_thinkwait = 100;
-										}
-										else
-										{
-											logbook("Order move #5");
-											UNIT_ORDER_MOVE(hover_unit, structure[iNewID]->getCell());
-										}
-
-										unit[hover_unit].TIMER_blink  = 5;
-										unit[hover_unit].iStructureID = iNewID;
-										unit[hover_unit].iGoalCell = structure[iNewID]->getCell();
-
-									}
-
+								unit[hover_unit].TIMER_blink = 5;
+								unit[hover_unit].iStructureID = iNewID;
+								unit[hover_unit].iGoalCell = structure[iNewID]->getCell();
 							}
 
-							mouse_tile = MOUSE_REPAIR;
 						}
+
+						mouse_tile = MOUSE_REPAIR;
+					}
+            	}
             }
-        }
+	} // IF (HOVER UNIT)
 
     // when mouse hovers above a valid cell
 	if (mc > -1) {

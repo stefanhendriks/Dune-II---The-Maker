@@ -8,12 +8,9 @@
 #include "../d2tmh.h"
 
 cStructureUtils::cStructureUtils() {
-	// TODO Auto-generated constructor stub
-
 }
 
 cStructureUtils::~cStructureUtils() {
-	// TODO Auto-generated destructor stub
 }
 
 /**
@@ -157,4 +154,38 @@ int cStructureUtils::findStructureTypeByTypeOfList(cBuildingList *list, cBuildin
 			return -1;
 	}
 	return -1;
+}
+
+int cStructureUtils::findClosestStructureTypeToCell(int cell, int structureType, cPlayer * player) {
+	assert(player);
+	assert(structureType > -1);
+	assert(cell >= 0 || cell < MAX_CELLS);
+
+	// We need cell calculation, so get a calculator:
+	cCellCalculator cellCalculator;
+
+	int foundStructureId=-1;		// found structure id
+	long shortestDistance=9999; // max distance to search in
+
+	int playerId = player->getId();
+
+	for (int i=0; i < MAX_STRUCTURES; i++) {
+		if (structure[i]) {												// exists (pointer)
+			if (structure[i]->getOwner() == playerId) {     			// same player
+				if (structure[i]->getType() == structureType) {   		// type equals parameter
+					if (structure[i]->iUnitID < 0) {    				// no other unit is heading to this structure
+						long distance = cellCalculator.distance(cell, structure[i]->getCell());
+
+						// if distance is lower than last found distance, it is the closest for now.
+						if (distance < shortestDistance) {
+							foundStructureId=i;
+							shortestDistance=distance;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return foundStructureId;
 }

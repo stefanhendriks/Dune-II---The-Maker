@@ -1286,7 +1286,11 @@ void cUnit::think()
             {
                 iFrame=0;
 
-                int iTheID = STRUCTURE_FREE_TYPE(iPlayer, iCell, REFINERY);
+                cStructureUtils structureUtils;
+                char msg[255];
+                sprintf(msg, "Going to look for a refinery, playerId [%d], cell [%d]", iPlayer, iCell);
+                logbook(msg);
+                int	iTheID = structureUtils.findClosestStructureTypeToCell(iCell, REFINERY, &player[iPlayer]);
 
                 if (iTheID < 0)
                 {
@@ -2663,7 +2667,8 @@ void cUnit::think_move()
         if (structure[iStructureID]->iUnitID > -1)
         {
             // already occupied, find alternative
-            int iNewID = STRUCTURE_FREE_TYPE(iPlayer, iCell, structure[iStructureID]->getType());
+            cStructureUtils structureUtils;
+            int	iNewID = structureUtils.findClosestStructureTypeToCell(iCell, structure[iStructureID]->getType(), &player[iPlayer]);
 
             if (iNewID > -1 && iNewID != iStructureID)
             {

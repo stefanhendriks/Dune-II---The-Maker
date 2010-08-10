@@ -120,8 +120,4 @@ class cAbstractStructure {
 		void damage(int hp); // damage structure for x amount of hp
 };
 
-void upgradeTechTree(int iPlayer, int iStructureType);
-int STRUCTURE_FREE_TYPE(int iPlyr, int iCll, int iTpe);
-
-
 #endif

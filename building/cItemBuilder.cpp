@@ -26,7 +26,7 @@ int cItemBuilder::getTimerCap(cBuildingList *list, cBuildingListItem *item) {
 
 	// when player has low power, produce twice as slow
 	if (player->bEnoughPower() == false) {
-		iTimerCap *= 3; // make painful
+		iTimerCap *= 6; // make painful
 	} else {
 		if (list->getType() != LIST_CONSTYARD) {
 			// the given unit will get out of a specific structure. This type

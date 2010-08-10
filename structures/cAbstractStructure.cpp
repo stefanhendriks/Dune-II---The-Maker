@@ -505,6 +505,7 @@ void cAbstractStructure::draw(int iStage) {
         }
 	}
 	else if (iStage == 2) {
+		// TODO: create particles for this
 		// now draw the repair alpha when repairing
 		if (bRepair) {
 			if (iRepairAlpha > -1) {
@@ -515,55 +516,4 @@ void cAbstractStructure::draw(int iStage) {
 			}
 		}
 	}
-}
-
-/**
-	return free structure, closest to iCell of type iStructureType
-
-	used to determine
-**/
-int STRUCTURE_FREE_TYPE(int iPlyr, int iCll, int iStructureType) {
-	assert(iPlyr > -1);
-	assert(iPlyr < MAX_PLAYERS);
-	assert(iStructureType > -1);
-
-	if (iPlyr < 0) {
-        return -1;
-	}
-
-	if (iCll < 0 || iCll >= MAX_CELLS) {
-        return -1;
-	}
-
-	// We need cell calculation, so get a calculator:
-	cCellCalculator *calc = new cCellCalculator();
-
-    int iTheID=-1;		// found structure id
-    long distance=9999; // max distance to search in
-
-	for (int i=0; i < MAX_STRUCTURES; i++) {
-		if (structure[i]) {								// exists (pointer)
-			if (structure[i]->getOwner() == iPlyr) {     // same player
-				if (structure[i]->getType() == iStructureType) {   // type equals parameter
-                    if (structure[i]->iUnitID < 0) {    // no other unit is heading to this structure
-                        long d = calc->distance(iCll, structure[i]->getCell());
-							//ABS_length(iX, iY, iCellGiveX(structure[i]->getCell()), iCellGiveY(structure[i]->getCell()));
-						//ABS_length(iX, iY, iCellGiveX(structure[i]->getCell()), iCellGiveY(structure[i]->getCell()));
-
-						// if distance is lower than last found distance, it is the closest for now.
-                        if (d < distance) {
-                            iTheID=i;
-                            distance=d;
-                        }
-                    }
-				}
-			}
-		}
-	}
-
-	// done using calculator, remove it now
-	delete calc;
-
-    // eventually return value
-    return iTheID;
 }
