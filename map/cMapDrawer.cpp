@@ -69,9 +69,9 @@ void cMapDrawer::drawTerrain() {
 
 	int iPl = player->getId();
 
-	char msg[255];
-	sprintf(msg, "Drawing from %d, %d to %d, %d", camera->getX(), camera->getY(), camera->getEndX(), camera->getEndY());
-	logbook(msg);
+//	char msg[255];
+//	sprintf(msg, "Drawing from %d, %d to %d, %d", camera->getX(), camera->getY(), camera->getEndX(), camera->getEndY());
+//	logbook(msg);
 
 	// draw vertical rows..
 	for (int iStartX = camera->getX(); iStartX < camera->getEndX(); iStartX++) {
