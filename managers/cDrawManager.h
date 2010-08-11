@@ -28,10 +28,10 @@ class cDrawManager {
 		cOrderDrawer * orderDrawer;
 		cUpgradeDrawer * upgradeDrawer;
 		cMapDrawer * mapDrawer;
+		cParticleDrawer * particleDrawer;
 
 		// TODO: structureDrawer
 		// TODO: unitDrawer
-		// TODO: particleDrawer
 		// TODO: bullet/projectile drawer
 
 		cPlayer * player;

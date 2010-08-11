@@ -22,34 +22,8 @@ cMapDrawer::~cMapDrawer() {
 	camera = NULL;
 }
 
-// draw function, called by the drawManager
-void cMapDrawer::draw() {
-	drawTerrain();
-
-	map->draw();
-
-	// Only draw units/structures, etc, when we do NOT press D
-	if (!key[KEY_D] || !key[KEY_TAB])
-	{
-		map->draw_structures(0);
-	}
-
-	// draw layer 1 (beneath units, on top of terrain
-	map->draw_particles(1);
-
-	map->draw_units();
-
-	map->draw_bullets();
-
-	map->draw_structures(2); // draw layer 2
-	map->draw_structures_health();
-	map->draw_units_2nd();
-
-	map->draw_particles(0);
-
+void cMapDrawer::drawShroud() {
 	map->draw_shroud();
-
-	map->draw_minimap();
 }
 
 void cMapDrawer::drawTerrain() {

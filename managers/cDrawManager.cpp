@@ -8,6 +8,7 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) {
 	upgradeDrawer = new cUpgradeDrawer();
 	orderDrawer = new cOrderDrawer();
 	mapDrawer = new cMapDrawer(&map, thePlayer, mapCamera);
+	particleDrawer = new cParticleDrawer();
 }
 
 cDrawManager::~cDrawManager() {
@@ -21,7 +22,32 @@ cDrawManager::~cDrawManager() {
 
 void cDrawManager::draw() {
 	// MAP
-	drawMap();
+	assert(mapDrawer);
+	map.draw_think();
+	mapDrawer->drawTerrain();
+
+	// Only draw units/structures, etc, when we do NOT press D
+	if (!key[KEY_D] || !key[KEY_TAB])
+	{
+		map.draw_structures(0);
+	}
+
+	// draw layer 1 (beneath units, on top of terrain
+	particleDrawer->drawLowerLayer();
+
+	map.draw_units();
+
+	map.draw_bullets();
+
+	map.draw_structures(2); // draw layer 2
+	map.draw_structures_health();
+	map.draw_units_2nd();
+
+	particleDrawer->drawHigherLayer();
+
+	map.draw_minimap();
+
+	mapDrawer->drawShroud();
 
 	// GUI
 	drawSidebar();
@@ -33,13 +59,6 @@ void cDrawManager::draw() {
 	// STRUCTURES
 
 	// UNITS
-}
-
-void cDrawManager::drawMap() {
-	assert(mapDrawer);
-	map.draw_think();
-
-	mapDrawer->draw();
 }
 
 void cDrawManager::drawCredits() {

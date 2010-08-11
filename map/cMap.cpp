@@ -752,9 +752,7 @@ void cMap::draw_bullets()
 
 void cMap::draw_particles(int layer)
 {
-    for (int i=0; i < MAX_PARTICLES; i++)
-        if (particle[i].isValid() && particle[i].layer == layer )
-            particle[i].draw();
+
 }
 
 
@@ -1471,6 +1469,7 @@ void cMap::draw_units()
 
 }
 
+// draw airborn units
 void cMap::draw_units_2nd()
 {
     set_trans_blender(0, 0, 0, 160);
@@ -1500,7 +1499,7 @@ void cMap::draw_units_2nd()
 
     }
 
-        // draw all units
+	// draw all units
     for (int i=0; i < MAX_UNITS; i++)
     {
         if (unit[i].isValid())
@@ -1522,8 +1521,6 @@ void cMap::draw_units_2nd()
     }
 
     set_trans_blender(0, 0, 0, 128);
-
-
 }
 
 int cMap::mouse_cell()
@@ -2323,6 +2320,8 @@ void cMap::smooth_cell(int c)
     }
 }
 
+
+// TODO: move this somewhere to a mouse related class
 void cMap::draw_think() {
 	// busy with selecting box, so do not think (about scrolling, etc)
 	if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {

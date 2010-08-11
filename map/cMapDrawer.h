@@ -13,12 +13,11 @@ class cMapDrawer {
 		cMapDrawer(cMap * theMap, cPlayer * thePlayer, cMapCamera * theCamera);
 		~cMapDrawer();
 
-		// draw everything related to the map for the player given in the constructor
-		void draw();
+		void drawTerrain();
+		void drawShroud();
 
 	protected:
 
-		void drawTerrain();
 
 	private:
 		cMap * map;
