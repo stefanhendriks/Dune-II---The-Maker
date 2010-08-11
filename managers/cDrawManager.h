@@ -19,12 +19,21 @@ class cDrawManager {
 		void drawUpgradeButton();
 		void drawOrderButton();
 		void drawCredits();
+		void drawMap();
+		void drawStructurePlacing();
 
 	private:
 		cSideBarDrawer * sidebarDrawer;
 		CreditsDrawer * creditsDrawer;
 		cOrderDrawer * orderDrawer;
 		cUpgradeDrawer * upgradeDrawer;
+		cMapDrawer * mapDrawer;
+
+		// TODO: structureDrawer
+		// TODO: unitDrawer
+		// TODO: particleDrawer
+		// TODO: bullet/projectile drawer
+
 		cPlayer * player;
 };
 

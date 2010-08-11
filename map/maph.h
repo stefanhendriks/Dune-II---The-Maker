@@ -14,6 +14,7 @@ class cPlayer;
 #include "cCell.h"
 #include "cMap.h"
 
+#include "cMapCamera.h"
 #include "cMapDrawer.h"
 
 #endif /* MAPH_H_ */

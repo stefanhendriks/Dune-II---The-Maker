@@ -300,77 +300,11 @@ void cGame::draw_placeit()
 // Interaction and drawing of / with the interface
 void cGame::gerald()
 {
-	set_palette(player[0].pal);
 
-	if (bPlaceIt) {
-		draw_placeit();
-	}
-
-	// black out
-	rectfill(bmp_screen, (game.screen_x-160), 0, game.screen_x, game.screen_y-128, makecol(0,0,0));
-
-    // upper bar
-    rectfill(bmp_screen, 0, 0, game.screen_x, 42, makecol(0,0,0));
-
-    if (iHouse == ATREIDES)
-        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_ATR].dat, 0, 0); // draw interface skeleton
-    else if (iHouse == HARKONNEN)
-        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_HAR].dat, 0, 0); // draw interface skeleton
-    else if (iHouse == ORDOS)
-        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_ORD].dat, 0, 0); // draw interface skeleton
-//	else
-  //      draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD].dat, 0, 0); // draw interface skeleton (THIS IS BAD IF THIS IS SHOWN)
-
-	// Draw the bars
-	int iHeight=79 - health_bar(79, player[0].use_power,player[0].has_power);
-
-    int step = (255/79);
-    int r = 255-(iHeight*step);
-    int g = iHeight*step;
-
-    if (g > 255)
-        g = 255;
-    if (r < 0) r= 0;
-
-	rectfill(bmp_screen, 488,442, 490, 442-iHeight, makecol(r,g,0));
-
-	iHeight=health_bar(79, player[0].credits, player[0].max_credits);
-	rectfill(bmp_screen, 497,442, 499, 442-iHeight, makecol(0,0,255));
-
-	assert(drawManager);
-	drawManager->draw();
-	assert(interactionManager);
-	interactionManager->interact();
 }
 
 void cGame::mapdraw() {
 
-	map.draw_think();
-
-	map.draw();
-
-	// Only draw units/structures, etc, when we do NOT press D
-	if (!key[KEY_D] || !key[KEY_TAB])
-	{
-	    map.draw_structures(0);
-	}
-
-    // draw layer 1 (beneath units, on top of terrain
-    map.draw_particles(1);
-
-	map.draw_units();
-
-    map.draw_bullets();
-
-    map.draw_structures(2); // draw layer 2
-    map.draw_structures_health();
-	map.draw_units_2nd();
-
-	map.draw_particles(0);
-
-	map.draw_shroud();
-
-	map.draw_minimap();
 }
 
 void cGame::losing()

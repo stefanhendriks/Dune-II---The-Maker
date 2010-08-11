@@ -9,14 +9,19 @@
 #define CSIDEBARDRAWER_H_
 
 class cSideBarDrawer {
-public:
-	cSideBarDrawer();
-	virtual ~cSideBarDrawer();
+	public:
+		cSideBarDrawer();
+		virtual ~cSideBarDrawer();
 
-	void drawSideBar(cPlayer * player);
+		void drawSideBar(cPlayer * player);
 
-private:
-	cBuildingListDrawer * buildingListDrawer;
+	protected:
+		void drawHouseGui(cPlayer * thePlayer);
+		void drawBuildingLists();
+		void drawCapacities();
+
+	private:
+		cBuildingListDrawer * buildingListDrawer;
 
 };
 

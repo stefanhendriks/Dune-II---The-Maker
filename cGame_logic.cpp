@@ -19,7 +19,6 @@
 #include "d2tmh.h"
 
 cGame::cGame() {
-
 }
 
 
@@ -632,12 +631,17 @@ void cGame::combat()
         iFadeAction = 2;
     // -----------------
 
-	// DO MAP DRAWING
+    // TODO: remove
 	mapdraw();
 
 	bPlacedIt = bPlaceIt;
 
-	// DO INTERFACE DRAWING
+	assert(drawManager);
+	drawManager->draw();
+	assert(interactionManager);
+	interactionManager->interact();
+
+	// TODO: REMOVE
 	gerald();
 
 	draw_message();
@@ -3221,6 +3225,7 @@ bool cGame::setupGame() {
 	logbook("Installing:  WORLD");
 	INSTALL_WORLD();
 
+	mapCamera = new cMapCamera();
 	drawManager = new cDrawManager(&player[HUMAN]);
 
 	game.init();

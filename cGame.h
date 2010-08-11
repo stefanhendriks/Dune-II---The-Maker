@@ -154,6 +154,8 @@ public:
 
 	cSoundPlayer * getSoundPlayer() { return soundPlayer; }
 
+	void draw_placeit();
+
 private:
 	void poll();
 	void gerald();		// interface and such, which is called by combat
@@ -170,7 +172,6 @@ private:
 
 	void combat_mouse();
 	void mapdraw();
-	void draw_placeit();
 	void draw_order();
 	void do_credits_drawing_and_logic();
 

@@ -645,6 +645,7 @@ void cMap::draw_minimap()
 		if (scroll_y >= (62-iHeight))
 			scroll_y = (62-iHeight);
 
+		mapCamera->jumpTo(scroll_x, scroll_y);
 	}
 
 
@@ -727,126 +728,6 @@ void cMap::think_minimap()
 
 void cMap::draw()
 {
-    // draw only what is visible
-
-    // Scrolling:
-    // - is X,Y position of map, not smoothed!
-    // - all we need is the end of the 'to be drawn area' , which is:
-    //   WIDTH OF SCREEN / 32
-
-
-    int iEndX=scroll_x + ((game.screen_x-160)/32); // width of sidebar is 160
-    int iEndY=scroll_y + ((game.screen_y-42)/32)+1;  // height of upper bar is 42
-
-    int iDrawX=0;
-    int iDrawY=42;
-
-    int cll=-1;
-
-	int iPl = WATCH_PLAYER;
-
-    for (int iStartX=scroll_x; iStartX < iEndX; iStartX++)
-    {
-        iDrawY=42;
-
-
-
-        // new row
-        for (int iStartY=scroll_y; iStartY < iEndY; iStartY++)
-        {
-            cll = iCellMake(iStartX, iStartY);
-
-			if (iStartX==0 || iStartY == 0 || iStartX==63 || iStartY == 63)
-			{
-				cell[cll].type = TERRAIN_MOUNTAIN;
-				cell[cll].tile = 0;
-			}
-
-            if (iVisible[cll][iPl] == false)
-            {
-                iDrawY+=32;
-                continue; // do not draw this one
-            }
-
-            // Draw cell
-//            blit((BITMAP *)gfxdata[cell[cll].type].dat, bmp_screen,
-  //               cell[cll].tile * 32, 0, iDrawX, iDrawY, 32, 32);
-
-            blit((BITMAP *)gfxdata[cell[cll].type].dat, bmp_screen,
-                 cell[cll].tile * 32, 0, iDrawX, iDrawY, 32, 32);
-
-
-            // draw smudge if nescesary
-            if (cell[cll].smudgetype > -1 && cell[cll].smudgetile > -1)
-            {
-                /*
-                masked_blit((BITMAP *)gfxdata[SMUDGE].dat, bmp_screen,
-                 cell[cll].smudgetile * 32, cell[cll].smudgetype * 32, iDrawX, iDrawY, 32, 32);*/
-
-                masked_blit((BITMAP *)gfxdata[SMUDGE].dat, bmp_screen,
-                 cell[cll].smudgetile * 32, cell[cll].smudgetype * 32, iDrawX, iDrawY, 32, 32);
-
-            }
-
-			if (DEBUGGING)
-			{
-				if (map.mouse_cell() > -1)
-				{
-					int mc = map.mouse_cell();
-					if (iCellGiveX(mc) == iStartX && iCellGiveY(mc) == iStartY)
-						rectfill(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, makecol(64,64,64));
-
-				}
-
-				rect(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, makecol(128,128,128));
-			}
-
-            if (game.selected_structure > -1)
-            {
-                // show draw a target on this cell so we know this is the rally point.
-                if (structure[game.selected_structure]->getRallyPoint() > -1)
-                    if (structure[game.selected_structure]->getRallyPoint() == cll)
-                    {
-                        // draw this thing ...
-                        set_trans_blender(0,0,0,128);
-                        draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_MOVE].dat, iDrawX, iDrawY);
-                    }
-            }
-
-
-			if (key[KEY_D] && key[KEY_TAB])
-			{
-				int iClr=makecol(255,0,0);
-
-				bool bDraw=false;
-
-				if (cell[cll].passable == false)
-					bDraw=true;
-
-				if (map.cell[cll].id[MAPID_STRUCTURES] > -1)
-				{
-					iClr=makecol(0,255,0);
-		            bDraw=true;
-				}
-
-			    if (map.cell[cll].id[MAPID_UNITS] > -1)
-				{
-					iClr=makecol(0,0,255);
-				    bDraw=true;
-				}
-
-				if (bDraw)
-				{
-					//draw_sprite(bmp_screen, (BITMAP *)gfxdata[PLACE_BAD].dat, iDrawX, iDrawY);
-					rectfill(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, iClr);
-				}
-
-			}
-
-            iDrawY+=32;
-        }
-        iDrawX+=32;
-    }
 
 }
 
@@ -940,6 +821,7 @@ void cMap::set_pos(int x, int y, int cell)
     if (scroll_x < 1) scroll_x = 1;
     if (scroll_y < 1) scroll_y = 1;
 
+    mapCamera->jumpTo(scroll_x, scroll_y);
 }
 
 
@@ -2483,54 +2365,8 @@ void cMap::draw_think() {
 	}
 }
 
-void cMap::think()
-{
-    if (mouse_co_x1 > -1 &&
-        mouse_co_y1 > -1)
-        return;
-
-	//if (game.bPlaceIt)
-		//return; // do not scroll when placing
-
-    int iEndX=scroll_x + ((game.screen_x-160)/32); // width of sidebar is 160
-    int iEndY=scroll_y + ((game.screen_y-42)/32)+1;  // height of upper bar is 42
-
-    // thinking for map (scrolling that is)
-    if (mouse_x <= 1 || key[KEY_LEFT])
-        if (scroll_x > 1)
-        {
-            scroll_x --;
-            mouse_tile = MOUSE_LEFT;
-
-        }
-
-
-    if (mouse_y <= 1 || key[KEY_UP])
-        if (scroll_y > 1)
-        {
-            scroll_y --;
-            mouse_tile = MOUSE_UP;
-
-        }
-
-
-    if (mouse_x >= (game.screen_x-2) || key[KEY_RIGHT])
-        if ((iEndX) < (game.map_width-1))
-        {
-            scroll_x ++;
-            mouse_tile = MOUSE_RIGHT;
-
-        }
-
-    if (mouse_y >= (game.screen_y-2) || key[KEY_DOWN])
-        if ((iEndY) < (game.map_height-1))
-        {
-            scroll_y ++;
-            mouse_tile = MOUSE_DOWN;
-
-        }
-
-
+void cMap::think() {
+	mapCamera->thinkInteraction();
 }
 
 int cMap::mouse_draw_x()

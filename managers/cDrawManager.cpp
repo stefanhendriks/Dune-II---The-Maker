@@ -7,6 +7,7 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) {
 	sidebarDrawer = new cSideBarDrawer();
 	upgradeDrawer = new cUpgradeDrawer();
 	orderDrawer = new cOrderDrawer();
+	mapDrawer = new cMapDrawer(&map, thePlayer, mapCamera);
 }
 
 cDrawManager::~cDrawManager() {
@@ -14,17 +15,35 @@ cDrawManager::~cDrawManager() {
 	delete upgradeDrawer;
 	delete orderDrawer;
 	delete creditsDrawer;
+	delete mapDrawer;
 	player = NULL;
 }
 
 void cDrawManager::draw() {
+	// MAP
+	drawMap();
+
+	// GUI
 	drawSidebar();
+	drawStructurePlacing();
 	drawCredits();
 	drawUpgradeButton();
 	drawOrderButton();
+
+	// STRUCTURES
+
+	// UNITS
+}
+
+void cDrawManager::drawMap() {
+	assert(mapDrawer);
+	map.draw_think();
+
+	mapDrawer->draw();
 }
 
 void cDrawManager::drawCredits() {
+	assert(creditsDrawer);
 	creditsDrawer->draw();
 }
 
@@ -45,5 +64,11 @@ void cDrawManager::drawUpgradeButton() {
 	if (selectedListId > -1) {
 		cBuildingList * selectedList = player->getSideBar()->getList(selectedListId);
 		upgradeDrawer->drawUpgradeButtonForSelectedListIfNeeded(player, selectedList);
+	}
+}
+
+void cDrawManager::drawStructurePlacing() {
+	if (game.bPlaceIt) {
+		game.draw_placeit();
 	}
 }
