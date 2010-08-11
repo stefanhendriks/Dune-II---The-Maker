@@ -113,11 +113,14 @@ void cTimeManager::handleTimerGlobal() {
 		game.think_music();
 		game.think_mentat();
 		game.think_movie();
-		game.think_message();
+
 
 		if (drawManager) {
 			if (drawManager->getCreditsDrawer()) {
 				drawManager->getCreditsDrawer()->think();
+			}
+			if (drawManager->getMessageDrawer()) {
+				drawManager->getMessageDrawer()->think();
 			}
 		}
 

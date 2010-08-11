@@ -76,9 +76,6 @@ void cGame::init() {
 
 	selected_structure=-1;
 
-	memset(cMessage, 0 , sizeof(cMessage));
-	iMessageAlpha=-1;
-
 	// mentat
 	memset(mentat_sentence, 0, sizeof(mentat_sentence));
 
@@ -100,8 +97,6 @@ void cGame::init() {
     iRegion=1;          // what region ? (calumative, from player perspective, NOT the actual region number)
 	iMission=0;         // calculated by mission loading (region -> mission calculation)
 	iHouse=-1;			// what house is selected for playing?
-
-	TIMER_message=0;
 
     shake_x=0;
     shake_y=0;
@@ -159,9 +154,6 @@ void cGame::mission_init() {
 
 	selected_structure=-1;
 
-	memset(cMessage, 0 , sizeof(cMessage));
-	iMessageAlpha=-1;
-
 	// mentat
 	memset(mentat_sentence, 0, sizeof(mentat_sentence));
 
@@ -173,8 +165,6 @@ void cGame::mission_init() {
 	fade_select=255;
 
     bFadeSelectDir=true;    // fade select direction
-
-	TIMER_message=0;
 
     shake_x=0;
     shake_y=0;
@@ -457,47 +447,6 @@ void cGame::think_mentat()
 
 }
 
-// set up a message
-// TODO: Move to GUI related code
-void cGame::set_message(char msg[266])
-{
-	TIMER_message=0;
-	memset(cMessage, 0, sizeof(cMessage));
-	sprintf(cMessage, "%s", msg);
-}
-
-// make sure messages fade in/out
-void cGame::think_message()
-{
-    int iLimit=250;
-
-    if (game.isState(GAME_REGION)) {
-        iLimit=600;
-    }
-
-	if (cMessage[0] != '\0')
-	{
-		TIMER_message++;
-		if (TIMER_message > iLimit)
-		{
-			memset(cMessage, 0, sizeof(cMessage));
-		}
-
-		iMessageAlpha+=3;
-		if (iMessageAlpha > 254)
-			iMessageAlpha = 255;
-	}
-	else
-	{
-		iMessageAlpha-=6;
-		if (iMessageAlpha < 0)
-			iMessageAlpha=-1;
-
-		TIMER_message=0;
-	}
-
-}
-
 // TODO: Move to music related class (MusicPlayer?)
 void cGame::think_music()
 {
@@ -637,8 +586,6 @@ void cGame::combat()
 	drawManager->draw();
 	assert(interactionManager);
 	interactionManager->interact();
-
-	draw_message();
 
     // think win/lose
     think_winlose();
@@ -2079,7 +2026,7 @@ void cGame::region()
         {
             REGION_SETUP(iMission, iHouse);
             iRegionScene++;
-            set_message("3 Houses have come to Dune.");
+            drawManager->getMessageDrawer()->setMessage("3 Houses have come to Dune.");
             iRegionSceneAlpha=-5;
         }
         else if (iRegionScene == 1)
@@ -2087,9 +2034,10 @@ void cGame::region()
             // draw the
             set_trans_blender(0,0,0,iRegionSceneAlpha);
             draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GAME_DUNE].dat, 0, 12);
+            char * cMessage = drawManager->getMessageDrawer()->getMessage();
             if (cMessage[0] == '\0' && iRegionSceneAlpha >= 255)
             {
-                set_message("To take control of the land.");
+            	drawManager->getMessageDrawer()->setMessage("To take control of the land.");
                 iRegionScene++;
                 iRegionSceneAlpha=-5;
             }
@@ -2099,10 +2047,10 @@ void cGame::region()
             draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GAME_DUNE].dat, 0, 12);
             set_trans_blender(0,0,0,iRegionSceneAlpha);
             draw_trans_sprite(bmp_screen, (BITMAP *)gfxworld[WORLD_DUNE].dat, 16, 73);
-
+            char * cMessage = drawManager->getMessageDrawer()->getMessage();
             if (cMessage[0] == '\0' && iRegionSceneAlpha >= 255)
             {
-                set_message("That has become divided.");
+            	drawManager->getMessageDrawer()->setMessage("That has become divided.");
                 iRegionScene++;
                 iRegionSceneAlpha=-5;
             }
@@ -2161,6 +2109,7 @@ void cGame::region()
     }
 
 
+    char * cMessage = drawManager->getMessageDrawer()->getMessage();
     if (iRegionState == 2)
     {
         // draw dune first
@@ -2172,6 +2121,7 @@ void cGame::region()
             REGION_DRAW(i);
 
         // Animate here (so add regions that are conquered)
+        char * cMessage = drawManager->getMessageDrawer()->getMessage();
 
         bool bDone=true;
         for (int i=0; i < MAX_REGIONS; i++)
@@ -2195,8 +2145,9 @@ void cGame::region()
                         world[iRegNr].iHouse = iRegionHouse[i];
                         world[iRegNr].iAlpha = 1;
 
-                        if (cRegionText[i][0] != '\0')
-                            set_message(cRegionText[i]);
+                        if (cRegionText[i][0] != '\0') {
+                        	drawManager->getMessageDrawer()->setMessage(cRegionText[i]);
+                        }
 
                         bDone=false;
                         break;
@@ -2234,7 +2185,7 @@ void cGame::region()
         if (bDone && cMessage[0] == '\0')
         {
             iRegionState++;
-			set_message("Select your next region.");
+            drawManager->getMessageDrawer()->setMessage("Select your next region.");
          //   allegro_message("done2");
         }
     }
@@ -2325,22 +2276,23 @@ void cGame::region()
     }
 
     // draw message
-    if (iMessageAlpha > -1)
-	{
-		set_trans_blender(0,0,0,iMessageAlpha);
-		BITMAP *temp = create_bitmap(480,30);
-		clear_bitmap(temp);
-		rectfill(temp, 0,0,480,40, makecol(255,0,255));
-		//draw_sprite(temp, (BITMAP *)gfxinter[BMP_MESSAGEBAR].dat, 0,0);
-
-		// draw message
-		alfont_textprintf(temp, game_font, 13,18, makecol(0,0,0), cMessage);
-
-		// draw temp
-		draw_trans_sprite(bmp_screen, temp, 73, 358);
-
-		destroy_bitmap(temp);
-	}
+    // TODO: Use own message drawer here or something, with other coordinates
+//    if (iMessageAlpha > -1)
+//	{
+//		set_trans_blender(0,0,0,iMessageAlpha);
+//		BITMAP *temp = create_bitmap(480,30);
+//		clear_bitmap(temp);
+//		rectfill(temp, 0,0,480,40, makecol(255,0,255));
+//		//draw_sprite(temp, (BITMAP *)gfxinter[BMP_MESSAGEBAR].dat, 0,0);
+//
+//		// draw message
+//		alfont_textprintf(temp, game_font, 13,18, makecol(0,0,0), cMessage);
+//
+//		// draw temp
+//		draw_trans_sprite(bmp_screen, temp, 73, 358);
+//
+//		destroy_bitmap(temp);
+//	}
 
 
     // mouse
@@ -2898,7 +2850,6 @@ bool cGame::setupGame() {
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
 	/* set up the interrupt routines... */
-	game.TIMER_message=0;
 	game.TIMER_shake=0;
 
 	LOCK_VARIABLE(allegro_timerUnits);

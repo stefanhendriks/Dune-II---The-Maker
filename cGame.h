@@ -79,11 +79,6 @@ public:
 
 	int paths_created;
 
-	// MESSAGING / HELPER
-	char cMessage[255];
-	int iMessageAlpha;
-	int TIMER_message;
-
     int iMouseZ;
 
     int iMusicVolume;       // volume of the mp3 / midi
@@ -117,7 +112,6 @@ public:
 
 	void setup_players();
 	void think_message();
-	void set_message(char msg[255]); // new message
 
     void think_music();
 

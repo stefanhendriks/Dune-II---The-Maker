@@ -19,4 +19,6 @@
 
 #include "cUnitDrawer.h"
 
+#include "cMessageDrawer.h"
+
 #endif /* DRAWERSH_H_ */

@@ -37,24 +37,6 @@ void cGame::draw_movie(int iType)
 // draw the message
 void cGame::draw_message()
 {
-	if (iMessageAlpha > -1)
-	{
-		set_trans_blender(0,0,0,iMessageAlpha);
-		BITMAP *temp = create_bitmap(480,30);
-		clear_bitmap(temp);
-		rectfill(temp, 0,0,480,40, makecol(255,0,255));
-		draw_sprite(temp, (BITMAP *)gfxinter[BMP_MESSAGEBAR].dat, 0,0);
-
-		// draw message
-//		alfont_textprintf(temp, game_font, 13,7, makecol(0,0,0), cMessage);
-		alfont_textprintf(temp, game_font, 13,21, makecol(0,0,0), cMessage);
-
-		// draw temp
-		draw_trans_sprite(bmp_screen, temp, 1, 42);
-
-		destroy_bitmap(temp);
-	}
-
 
 }
 

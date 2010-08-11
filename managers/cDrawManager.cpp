@@ -9,6 +9,7 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) {
 	orderDrawer = new cOrderDrawer();
 	mapDrawer = new cMapDrawer(&map, thePlayer, mapCamera);
 	particleDrawer = new cParticleDrawer();
+	messageDrawer = new cMessageDrawer();
 }
 
 cDrawManager::~cDrawManager() {
@@ -17,6 +18,8 @@ cDrawManager::~cDrawManager() {
 	delete orderDrawer;
 	delete creditsDrawer;
 	delete mapDrawer;
+	delete particleDrawer;
+	delete messageDrawer;
 	player = NULL;
 }
 
@@ -56,9 +59,8 @@ void cDrawManager::draw() {
 	drawUpgradeButton();
 	drawOrderButton();
 
-	// STRUCTURES
-
-	// UNITS
+	// THE MESSAGE
+	drawMessage();
 }
 
 void cDrawManager::drawCredits() {
@@ -90,4 +92,9 @@ void cDrawManager::drawStructurePlacing() {
 	if (game.bPlaceIt) {
 		game.draw_placeit();
 	}
+}
+
+void cDrawManager::drawMessage() {
+	assert(messageDrawer);
+	messageDrawer->draw();
 }

@@ -13,6 +13,7 @@ class cDrawManager {
 		void draw();
 
 		CreditsDrawer *getCreditsDrawer() { return creditsDrawer; }
+		cMessageDrawer *getMessageDrawer() { return messageDrawer; }
 
 	protected:
 		void drawSidebar();
@@ -21,6 +22,7 @@ class cDrawManager {
 		void drawCredits();
 		void drawMap();
 		void drawStructurePlacing();
+		void drawMessage();
 
 	private:
 		cSideBarDrawer * sidebarDrawer;
@@ -29,6 +31,7 @@ class cDrawManager {
 		cUpgradeDrawer * upgradeDrawer;
 		cMapDrawer * mapDrawer;
 		cParticleDrawer * particleDrawer;
+		cMessageDrawer * messageDrawer;
 
 		// TODO: structureDrawer
 		// TODO: unitDrawer
