@@ -158,7 +158,6 @@ public:
 
 private:
 	void poll();
-	void gerald();		// interface and such, which is called by combat
 	void combat();		// the combat part (main) of the game
 
 	void draw_mentat(int iType); // draw mentat type
@@ -171,7 +170,6 @@ private:
 	void region();		// region selection
 
 	void combat_mouse();
-	void mapdraw();
 	void draw_order();
 	void do_credits_drawing_and_logic();
 

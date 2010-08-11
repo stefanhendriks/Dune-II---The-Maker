@@ -631,18 +631,12 @@ void cGame::combat()
         iFadeAction = 2;
     // -----------------
 
-    // TODO: remove
-	mapdraw();
-
 	bPlacedIt = bPlaceIt;
 
 	assert(drawManager);
 	drawManager->draw();
 	assert(interactionManager);
 	interactionManager->interact();
-
-	// TODO: REMOVE
-	gerald();
 
 	draw_message();
 

@@ -10,8 +10,6 @@
 
 class cPlayer;
 
-#include "cParticleDrawer.h"
-
 #include "cDrawManager.h"
 #include "cInteractionManager.h"
 

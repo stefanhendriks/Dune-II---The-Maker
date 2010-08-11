@@ -58,7 +58,6 @@ void cGame::draw_message()
 
 }
 
-
 void cGame::draw_placeit()
 {
 	// this is only done when bPlaceIt=true
@@ -294,16 +293,6 @@ void cGame::draw_placeit()
 
 	//rect(bmp_screen, iDrawX, iDrawY, iDrawX+(iWidth*32), iDrawY+(iHeight*32), makecol(255,255,255));
 
-
-}
-
-// Interaction and drawing of / with the interface
-void cGame::gerald()
-{
-
-}
-
-void cGame::mapdraw() {
 
 }
 

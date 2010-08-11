@@ -83,7 +83,6 @@ class CreditsDrawer;
 #include "units/cAbstractUnit.h"					// Abstract Unit class (will replace cUnit.h eventually)
 #include "units/cUnitFactory.h"				// Responsible for creation of Units
 #include "units/cUnitUtils.h"				// Responsible for generic operations on units (ie finding a unit, etc)
-#include "units/cUnitDrawer.h"				// Responsible for drawing units
 
 // TODO: Refactor this uber mentat class into something smaller
 #include "cMentat.h"
@@ -131,6 +130,9 @@ class CreditsDrawer;
 // PROFILER
 #include "stdlib.h"
 // PROFILER
+
+// DRAWERS
+#include "drawers/drawersh.h"
 
 // MANAGER
 #include "managers/managerh.h"
