@@ -1,9 +1,5 @@
 @echo off
-
-REM Edit the line beneath to go to your dune2themaker project directory
-cd \dev\projects\dune2themaker\
-
-REM Now execute creation of binary.
+cd c:\projects\workspace\dune2themaker\
 cls 
 echo.
 echo Prepare binary package (./bin) of D2TM. 
@@ -57,3 +53,4 @@ copy game.ini bin
 echo 13. Copy txt files
 copy *.txt bin
 echo Done.
+pause

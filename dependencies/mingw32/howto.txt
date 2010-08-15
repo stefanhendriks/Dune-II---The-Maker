@@ -3,6 +3,6 @@ HOWTO: Compile D2TM under MinGW32
 1. Get MinGW32, install it.
    See: http://www.mingw.org/wiki/HOWTO_Install_the_MinGW_GCC_Compiler_Suite
 
-2. unpack the 3rdpartyincl.zip into your MinGW/include dir
+2. unpack include.zip (in ./include) into your MinGW/include dir
 
-3. copy the .a files in this directory into your MinGW/lib dir.
+3. unpack lib.zip (in ./bin) into your MinGW/lib dir
