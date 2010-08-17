@@ -13,6 +13,19 @@ cStructureUtils::cStructureUtils() {
 cStructureUtils::~cStructureUtils() {
 }
 
+int cStructureUtils::getHeightOfStructureTypeInCells(int structureType) {
+	assert(structureType >= 0);
+	assert(structureType < MAX_STRUCTURETYPES);
+	return structures[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
+}
+
+int cStructureUtils::getWidthOfStructureTypeInCells(int structureType) {
+	assert(structureType >= 0);
+	assert(structureType < MAX_STRUCTURETYPES);
+	return structures[structureType].bmp_height / TILESIZE_WIDTH_PIXELS;
+}
+
+
 /**
  * This is almost the same as the findStructureToDeployUnit
  *

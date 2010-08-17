@@ -56,9 +56,6 @@ void cGame::init() {
 
 	bMousePressedLeft = bMousePressedRight=false;
 
-	TIMER_scroll=0;
-	iScrollSpeed=10;
-
 	mouse_left=mouse_right=false;
 
     iMusicVolume=128; // volume is 0...

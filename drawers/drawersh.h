@@ -21,4 +21,8 @@
 
 #include "cMessageDrawer.h"
 
+#include "cPlaceItDrawer.h"
+
+#include "cMapDrawer.h"
+
 #endif /* DRAWERSH_H_ */

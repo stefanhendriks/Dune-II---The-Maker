@@ -158,11 +158,12 @@ void cTimeManager::handleTimerGlobal() {
 					}
 				}
 
-				game.TIMER_scroll++;
 
-				if (game.TIMER_scroll > game.iScrollSpeed) {
-					map.think();
-					game.TIMER_scroll=0;
+				map.increaseScrollTimer();
+
+				if (map.isTimeToScroll()) {
+					map.thinkInteraction();
+					map.resetScrollTimer();
 				}
 
 				if (game.TIMER_shake > 0) {

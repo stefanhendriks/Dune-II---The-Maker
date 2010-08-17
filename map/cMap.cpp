@@ -16,7 +16,8 @@
 #define WATCH_PLAYER 0
 
 cMap::cMap() {
-
+	TIMER_scroll=0;
+	iScrollSpeed=10;
 }
 
 void cMap::init()
@@ -80,6 +81,9 @@ void cMap::init()
 	for (int i=0; i < MAX_UNITS; i++) {
 		unit[i].init(i);
 	}
+
+	TIMER_scroll=0;
+	iScrollSpeed=10;
 
 }
 
@@ -2364,7 +2368,7 @@ void cMap::draw_think() {
 	}
 }
 
-void cMap::think() {
+void cMap::thinkInteraction() {
 	mapCamera->thinkInteraction();
 }
 

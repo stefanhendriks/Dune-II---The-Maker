@@ -18,6 +18,8 @@ class cStructureUtils {
 		int findStructureTypeByTypeOfList(cBuildingList *list, cBuildingListItem *item);
 		int findClosestStructureTypeToCell(int cell, int structureType, cPlayer * player);
 
+		int getHeightOfStructureTypeInCells(int structureType);
+		int getWidthOfStructureTypeInCells(int structureType);
 	protected:
 
 	private:

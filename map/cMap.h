@@ -51,7 +51,7 @@ public:
 	int  mouse_draw_y();
 
     void randommap();
-    void think();
+    void thinkInteraction();
 	void draw_think();
     void create_field(int type, int cell, int size);
     void clear_all();
@@ -77,7 +77,15 @@ public:
 
     bool iVisible[MAX_CELLS][MAX_PLAYERS];      // visibility for <player>
 
+    void increaseScrollTimer() { TIMER_scroll++; }
+    void resetScrollTimer() { TIMER_scroll=0; }
+    bool isTimeToScroll() { return (TIMER_scroll > iScrollSpeed); }
+
     private:
+
+    	// Scrolling around map, timer based
+    	int TIMER_scroll;
+    	int iScrollSpeed;
 
 };
 

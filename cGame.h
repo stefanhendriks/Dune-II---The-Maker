@@ -94,10 +94,6 @@ public:
 
     int iMusicType;
 
-	// Scrolling around map, timer based
-	int TIMER_scroll;
-	int iScrollSpeed;
-
     // Condition to win the mission:
     int iWinQuota;              // > 0 means, get this to win the mission, else, destroy all!
 
@@ -174,16 +170,10 @@ private:
 
     void draw_movie(int iType);  // draw movie sequence
 
-
-	void draw_message();
-
-	// upgrade button drawing and behaviour
-	void draw_upgrade();
-
 	/** game state **/
 	int state;
 
-		int iMaxVolume;
+	int iMaxVolume;
 
 	cSoundPlayer *soundPlayer;
 };
