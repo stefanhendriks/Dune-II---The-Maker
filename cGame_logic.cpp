@@ -515,30 +515,31 @@ void cGame::poll()
 
         if (mouse_tile == MOUSE_MOVE)
         {
-			if (map.iVisible[mc][0])
-			{
+			if (map.isVisible(HUMAN, mc)) {
 
-            if (map.cell[mc].id[MAPID_UNITS] > -1)
-            {
-                int id = map.cell[mc].id[MAPID_UNITS];
+				if (map.cell[mc].id[MAPID_UNITS] > -1)
+				{
+					int id = map.cell[mc].id[MAPID_UNITS];
 
-                if (unit[id].iPlayer > 0)
-                    mouse_tile = MOUSE_ATTACK;
-            }
+					if (unit[id].iPlayer > 0)
+						mouse_tile = MOUSE_ATTACK;
+				}
 
-            if (map.cell[mc].id[MAPID_STRUCTURES] > -1)
-            {
-                int id = map.cell[mc].id[MAPID_STRUCTURES];
+				if (map.cell[mc].id[MAPID_STRUCTURES] > -1)
+				{
+					int id = map.cell[mc].id[MAPID_STRUCTURES];
 
-                if (structure[id]->getOwner() > 0)
-                    mouse_tile = MOUSE_ATTACK;
-            }
+					if (structure[id]->getOwner() > 0)
+						mouse_tile = MOUSE_ATTACK;
+				}
 
-            if (key[KEY_LCONTROL])
-                mouse_tile = MOUSE_ATTACK;
+				if (key[KEY_LCONTROL]) {
+					mouse_tile = MOUSE_ATTACK;
+				}
 
-            if (key[KEY_ALT])
-                mouse_tile = MOUSE_MOVE;
+				if (key[KEY_ALT]) {
+					mouse_tile = MOUSE_MOVE;
+				}
 
 			} // visible
         }

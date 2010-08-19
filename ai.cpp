@@ -1215,11 +1215,11 @@ int AI_RANDOM_UNIT_TARGET(int iPlayer, int iAttackPlayer)
 				if (DEBUGGING)
 				{
 				char msg[255];
-				sprintf(msg, "AI %d (House %d) -> Visible = %d", iPlayer, player[iPlayer].getHouse(), map.iVisible[unit[i].iCell][iPlayer]);
+				sprintf(msg, "AI %d (House %d) -> Visible = %d", iPlayer, player[iPlayer].getHouse(), map.isVisible(iPlayer, unit[i].iCell));
 				logbook(msg);
 				}
 
-				if (map.iVisible[unit[i].iCell][iPlayer] || game.bSkirmish)
+				if (map.isVisible(iPlayer, unit[i].iCell) || game.bSkirmish)
 				{
 					iTargets[iT] = i;
 					iT++;
@@ -1251,7 +1251,7 @@ int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer)
     for (int i=0; i < MAX_STRUCTURES; i++)
         if (structure[i])
             if (structure[i]->getOwner() == iAttackPlayer)
-				if (map.iVisible[structure[i]->getCell()][iPlayer] ||
+				if (map.isVisible(iPlayer, structure[i]->getCell()) ||
 					game.bSkirmish)
 				{
 					iTargets[iT] = i;

@@ -205,7 +205,7 @@ void cGunTurret::think_guard()
 
                 // not ours and its visible
                 if (unit[i].iPlayer != getOwner() &&
-					map.iVisible[unit[i].iCell][getOwner()] &&
+					map.isVisible(getOwner(), unit[i].iCell) &&
 					bAlly == false) {
 
                     if (getType() == TURRET)

@@ -74,15 +74,15 @@ public:
 
     void remove_id(int iIndex, int iIDType);    // removes ID of IDtype (unit/structure), etc
 
-    bool isVisible(int player, int cell) { return iVisible[cell, player]; }
-
-    bool iVisible[MAX_CELLS][MAX_PLAYERS];      // visibility for <player>
+    bool isVisible(int player, int cell);
 
     void increaseScrollTimer() { TIMER_scroll++; }
     void resetScrollTimer() { TIMER_scroll=0; }
     bool isTimeToScroll() { return (TIMER_scroll > iScrollSpeed); }
 
     private:
+
+    	bool iVisible[MAX_CELLS][MAX_PLAYERS];      // visibility for <player>
 
     	// Scrolling around map, timer based
     	int TIMER_scroll;

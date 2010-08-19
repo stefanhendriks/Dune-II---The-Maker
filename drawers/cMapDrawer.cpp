@@ -45,7 +45,7 @@ void cMapDrawer::drawShroud() {
 
 			if (DEBUGGING)
 			{
-				if (map->iVisible[cll][iPl])
+				if (map->isVisible(iPl, cll))
 				{
 					// do nothing
 				}
@@ -59,7 +59,7 @@ void cMapDrawer::drawShroud() {
 			{
 
 
-			if (map->iVisible[cll][iPl])
+			if (map->isVisible(iPl, cll))
 			{
 			// Visible stuff, now check for not visible stuff. When found, assign the proper border
 			// of shroud to it.
@@ -73,29 +73,33 @@ void cMapDrawer::drawShroud() {
 
 			if (above > -1)
 			{
-				if (map->iVisible[above][iPl])
+				if (map->isVisible(iPl, above)) {
 					a = false;  // visible
+				}
 			}
 			else a = false;
 
 			if (under > -1)
 			{
-				if (map->iVisible[under][iPl])
+				if (map->isVisible(iPl, under)) {
 					u = false;  // visible
+				}
 			}
 			else u = false;
 
 			if (left > -1)
 			{
-				if (map->iVisible[left][iPl])
+				if (map->isVisible(iPl, left)) {
 					l = false;  // visible
+				}
 			}
 			else l = false;
 
 			if (right > -1)
 			{
-				if (map->iVisible[right][iPl])
+				if (map->isVisible(iPl, right)) {
 					r = false;  // visible
+				}
 			}
 			else r = false;
 				/*
@@ -230,7 +234,7 @@ void cMapDrawer::drawTerrain() {
 		for (int iStartY=camera->getY(); iStartY < camera->getEndY(); iStartY++) {
 			iCell = iCellMake(iStartX, iStartY);
 
-			if (map->iVisible[iCell][iPl] == false) {
+			if (map->isVisible(iPl, iCell) == false) {
 				iDrawY+=TILESIZE_HEIGHT_PIXELS;
 				continue; // do not draw this one
 			}

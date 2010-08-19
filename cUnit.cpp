@@ -872,7 +872,7 @@ void cUnit::think_guard() {
 
 							// not ours and its visible
 							if (unit[i].iPlayer != iPlayer &&
-								map.iVisible[unit[i].iCell][iPlayer] && // is visible for ai as well?
+								map.isVisible(iPlayer, unit[i].iCell) && // is visible for ai as well?
 								units[unit[i].iType].airborn == units[iType].airborn && bAlly == false)
 							{
 								int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
@@ -950,7 +950,7 @@ void cUnit::think_guard() {
 
 							// not ours and its visible
 							if (structure[i]->getOwner() != iPlayer &&
-								map.iVisible[structure[i]->getCell()][iPlayer] &&
+								map.isVisible(iPlayer, structure[i]->getCell()) &&
 								bAlly == false)	{
 								int distance = ABS_length(iCellX, iCellY, iCellGiveX(structure[i]->getCell()),
 															iCellGiveY(structure[i]->getCell()));
@@ -1169,7 +1169,8 @@ void cUnit::think()
 
 
 							// not ours and its visible
-							if (unit[i].iPlayer != iPlayer && map.iVisible[unit[i].iCell][iPlayer] &&
+							if (unit[i].iPlayer != iPlayer &&
+								map.isVisible(iPlayer, unit[i].iCell) &&
 								units[unit[i].iType].airborn == false && bAlly == false)
 							{
 								int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
@@ -3447,25 +3448,27 @@ int CREATE_PATH(int iID, int iPathCountUnits)
                                     good = true; // its infantry we want to run over, so don't be bothered!
 
                             //good=false; // it is not good, other unit blocks
-						}
-						else
+						} else {
 							good= true;
+						}
                     }
 
 
                     // is not visible, always good (since we dont know yet if its blocked!)
-                    if (map.iVisible[cll][controller] == false)
+                    if (map.isVisible(controller, cll) == false) {
                         good=true;
-                    else
-                    {
+                    } else {
                         // walls stop us
-                        if (map.cell[cll].type == TERRAIN_WALL)
+                        if (map.cell[cll].type == TERRAIN_WALL) {
                             good = false;
+                        }
 
                         // When we are infantry, we move through mountains. However, normal units do not
-                        if (units[unit[iID].iType].infantry == false)
-                            if (map.cell[cll].type == TERRAIN_MOUNTAIN)
+                        if (units[unit[iID].iType].infantry == false) {
+                            if (map.cell[cll].type == TERRAIN_MOUNTAIN) {
                                 good=false;
+                            }
+                        }
                     }
              }
              else if (is_worm)
