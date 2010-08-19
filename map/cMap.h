@@ -19,7 +19,6 @@ public:
     void init();
     void smooth();
     void draw();
-    void draw_shroud();
 	void draw_structures(int iStage);
 	void draw_particles(int layer);
     void draw_bullets();
@@ -74,6 +73,8 @@ public:
     tCell cell[MAX_CELLS];
 
     void remove_id(int iIndex, int iIDType);    // removes ID of IDtype (unit/structure), etc
+
+    bool isVisible(int player, int cell) { return iVisible[cell, player]; }
 
     bool iVisible[MAX_CELLS][MAX_PLAYERS];      // visibility for <player>
 
