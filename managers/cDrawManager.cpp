@@ -10,6 +10,7 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) {
 	mapDrawer = new cMapDrawer(&map, thePlayer, mapCamera);
 	particleDrawer = new cParticleDrawer();
 	messageDrawer = new cMessageDrawer();
+	placeitDrawer = new cPlaceItDrawer();
 }
 
 cDrawManager::~cDrawManager() {
@@ -20,6 +21,7 @@ cDrawManager::~cDrawManager() {
 	delete mapDrawer;
 	delete particleDrawer;
 	delete messageDrawer;
+	delete placeitDrawer;
 	player = NULL;
 }
 
@@ -90,7 +92,11 @@ void cDrawManager::drawUpgradeButton() {
 
 void cDrawManager::drawStructurePlacing() {
 	if (game.bPlaceIt) {
-		game.draw_placeit();
+		// TODO: fix the placeItDrawer, it crashes the game now!
+		//cBuildingListItem *itemToPlace = player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
+//		if (itemToPlace) {
+//			placeitDrawer->draw(itemToPlace);
+//		}
 	}
 }
 

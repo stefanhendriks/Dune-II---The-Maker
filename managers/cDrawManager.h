@@ -32,6 +32,7 @@ class cDrawManager {
 		cMapDrawer * mapDrawer;
 		cParticleDrawer * particleDrawer;
 		cMessageDrawer * messageDrawer;
+		cPlaceItDrawer *placeitDrawer;
 
 		// TODO: structureDrawer
 		// TODO: unitDrawer
