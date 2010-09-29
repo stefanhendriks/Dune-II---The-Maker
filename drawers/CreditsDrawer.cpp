@@ -18,6 +18,8 @@ CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) {
 	rollSpeed = 0.0F;
 	rolled = 0;
 	soundsMade = 0;
+	currentCredits = 0;
+	previousCredits = 0;
 }
 
 CreditsDrawer::~CreditsDrawer() {
@@ -96,8 +98,10 @@ void CreditsDrawer::think() {
 // this will basically compare 2 credits values, and per offset determine whether
 // it has to go 'up' or 'down'
 void CreditsDrawer::thinkAboutIndividualCreditOffsets() {
-	char current_credits[7];
-	char previous_credits[7];
+	char current_credits[9];
+	char previous_credits[9];
+	memset(current_credits, 0, sizeof(current_credits));
+	memset(previous_credits, 0, sizeof(previous_credits));
 	sprintf(current_credits, "%d", currentCredits);
 	sprintf(previous_credits, "%d", previousCredits);
 
@@ -192,7 +196,8 @@ int CreditsDrawer::getCreditDrawId(char c) {
 void CreditsDrawer::drawCurrentCredits() {
 	if (currentCredits < 0) currentCredits = 0;
 
-	char credits[7];
+	char credits[9];
+	memset(credits, 0, sizeof(credits));
 	sprintf(credits, "%d", currentCredits);
 
 	int offset = getXDrawingOffset(currentCredits);
@@ -224,7 +229,8 @@ void CreditsDrawer::drawCurrentCredits() {
 void CreditsDrawer::drawPreviousCredits() {
 	if (previousCredits < 0) previousCredits = 0;
 
-	char credits[7];
+	char credits[9];
+	memset(credits, 0, sizeof(credits));
 	sprintf(credits, "%d", previousCredits);
 
 	int offset = getXDrawingOffset(previousCredits);
