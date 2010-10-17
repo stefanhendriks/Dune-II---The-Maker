@@ -553,11 +553,6 @@ void cMap::think_minimap()
 
 }
 
-void cMap::draw()
-{
-
-}
-
 void cMap::draw_bullets()
 {
 

@@ -93,10 +93,11 @@ void cDrawManager::drawUpgradeButton() {
 void cDrawManager::drawStructurePlacing() {
 	if (game.bPlaceIt) {
 		// TODO: fix the placeItDrawer, it crashes the game now!
-		//cBuildingListItem *itemToPlace = player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
-//		if (itemToPlace) {
-//			placeitDrawer->draw(itemToPlace);
-//		}
+		cBuildingListItem *itemToPlace = player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
+		if (itemToPlace) {
+			assert(placeitDrawer);
+			placeitDrawer->draw(itemToPlace);
+		}
 	}
 }
 
