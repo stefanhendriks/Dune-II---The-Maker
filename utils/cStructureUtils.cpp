@@ -22,7 +22,7 @@ int cStructureUtils::getHeightOfStructureTypeInCells(int structureType) {
 int cStructureUtils::getWidthOfStructureTypeInCells(int structureType) {
 	assert(structureType >= 0);
 	assert(structureType < MAX_STRUCTURETYPES);
-	return structures[structureType].bmp_height / TILESIZE_WIDTH_PIXELS;
+	return structures[structureType].bmp_width / TILESIZE_WIDTH_PIXELS;
 }
 
 
