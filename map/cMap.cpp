@@ -312,6 +312,7 @@ void cMap::draw_structures(int iStage)
 
 }
 
+// get color for terrain type (for minimap)
 int cMap::getColorForTerrainType(int type) {
 
 	switch (type) {
@@ -347,18 +348,15 @@ void cMap::draw_minimap()
 
 	int iColor=makecol(0,0,0);
 
- for (int x=0; x < (game.map_width); x++)
- {
+	for (int x=0; x < (game.map_width); x++) {
 
 	 iDrawY=351; // reset every time ;)
-	 for (int y=0; y < (game.map_height); y++)
-	 {
+	 for (int y=0; y < (game.map_height); y++) {
 		iColor=makecol(0,0,0);
 		iCll=iCellMake(x,y);
 
-		if (iVisible[iCll][0])
-		{
-            if (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower()) {
+		if (iVisible[iCll][0]) {
+			if (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower()) {
 				// change color
 				iColor = getColorForTerrainType(cell[iCll].type);
 
@@ -423,7 +421,7 @@ void cMap::draw_minimap()
 				if (cell[iCll].id[MAPID_WORMS] > -1) {
 					iColor = makecol(game.fade_select,game.fade_select,game.fade_select);
 				}
-            }
+			}
 		}
 
 		// do not show the helper border
@@ -443,7 +441,7 @@ void cMap::draw_minimap()
 	 }
 
 	 iDrawX+=1;
- }
+	}
 
  // Draw the magic rectangle (viewport)
  int iWidth=((game.screen_x-160)/32);
