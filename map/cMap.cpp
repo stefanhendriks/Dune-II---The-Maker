@@ -543,6 +543,7 @@ void cMap::think_minimap()
 
 }
 
+// TODO: move this to a bulletDrawer (remove here!)
 void cMap::draw_bullets()
 {
 
@@ -560,14 +561,6 @@ void cMap::draw_bullets()
   }
 
 }
-
-
-void cMap::draw_particles(int layer)
-{
-
-}
-
-
 
 void cMap::clear_all()
 {

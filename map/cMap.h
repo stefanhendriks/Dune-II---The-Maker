@@ -20,7 +20,6 @@ public:
     void smooth();
     void draw();
 	void draw_structures(int iStage);
-	void draw_particles(int layer);
     void draw_bullets();
 
     void think_minimap();
