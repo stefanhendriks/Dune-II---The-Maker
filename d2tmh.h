@@ -149,6 +149,7 @@ class CreditsDrawer;
 #include "utils/cHitpointCalculator.h"			/** math for hitpoints **/
 #include "utils/cTimeManager.h"
 #include "utils/cUpgradeUtils.h"
+#include "utils/cMapUtils.h"
 
 // TODO: Units
 

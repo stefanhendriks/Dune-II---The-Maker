@@ -74,11 +74,11 @@ public:
 
     void remove_id(int iIndex, int iIDType);    // removes ID of IDtype (unit/structure), etc
 
-    bool isVisible(int player, int cell);
-
     void increaseScrollTimer() { TIMER_scroll++; }
     void resetScrollTimer() { TIMER_scroll=0; }
     bool isTimeToScroll() { return (TIMER_scroll > iScrollSpeed); }
+
+    bool isVisible(int iCell, int iPlayer) { return iVisible[iCell][iPlayer]; }
 
     private:
 

@@ -515,7 +515,7 @@ void cGame::poll()
 
         if (mouse_tile == MOUSE_MOVE)
         {
-			if (map.isVisible(HUMAN, mc)) {
+			if (mapUtils->isCellVisibleForPlayerId(HUMAN, mc)) {
 
 				if (map.cell[mc].id[MAPID_UNITS] > -1)
 				{
@@ -3170,6 +3170,8 @@ bool cGame::setupGame() {
 
 	mapCamera = new cMapCamera();
 	drawManager = new cDrawManager(&player[HUMAN]);
+
+	mapUtils = new cMapUtils(&map);
 
 	game.init();
 	game.setup_players();

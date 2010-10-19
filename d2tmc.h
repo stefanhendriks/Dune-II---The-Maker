@@ -32,6 +32,7 @@ extern cAbstractStructure     *structure[MAX_STRUCTURES];
 extern cUnit          unit[MAX_UNITS];
 extern cMap           map;
 extern cMapCamera	  *mapCamera;
+extern cMapUtils	  *mapUtils;
 extern cPlayer        player[MAX_PLAYERS];
 extern cAIPlayer      aiplayer[MAX_PLAYERS];           // related to aiplayer (except nr 0=human)
 extern cParticle      particle[MAX_PARTICLES];

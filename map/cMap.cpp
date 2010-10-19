@@ -20,14 +20,6 @@ cMap::cMap() {
 	iScrollSpeed=10;
 }
 
-bool cMap::isVisible(int player, int cell) {
-	assert(player >= HUMAN);
-	assert(player < MAX_PLAYERS);
-	assert(cell >= 0);
-	assert(cell < MAX_CELLS);
-	return iVisible[cell][player];
-}
-
 void cMap::init()
 {
     INIT_REINFORCEMENT();

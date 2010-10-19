@@ -44,14 +44,14 @@ void cMapDrawer::drawShroud() {
 			cll = iCellMake(iStartX, iStartY);
 
 			if (DEBUGGING) {
-				if (map->isVisible(iPl, cll)) {
+				if (mapUtils->isCellVisibleForPlayerId(iPl, cll)) {
 					// do nothing
 				} else {
 					rectfill(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, makecol(0,0,0));
 				}
 
 			} else {
-				if (map->isVisible(iPl, cll)) {
+				if (mapUtils->isCellVisibleForPlayerId(iPl, cll)) {
 					// Visible stuff, now check for not visible stuff. When found, assign the proper border
 					// of shroud to it.
 					int above = CELL_ABOVE(cll);
@@ -63,7 +63,7 @@ void cMapDrawer::drawShroud() {
 					a=u=l=r=true;
 
 					if (above > -1)	{
-						if (map->isVisible(iPl, above)) {
+						if (mapUtils->isCellVisibleForPlayerId(iPl, above)) {
 							a = false;  // visible
 						}
 					} else {
@@ -71,7 +71,7 @@ void cMapDrawer::drawShroud() {
 					}
 
 					if (under > -1) {
-						if (map->isVisible(iPl, under)) {
+						if (mapUtils->isCellVisibleForPlayerId(iPl, under)) {
 							u = false;  // visible
 						}
 					} else {
@@ -79,7 +79,7 @@ void cMapDrawer::drawShroud() {
 					}
 
 					if (left > -1) {
-						if (map->isVisible(iPl, left)) {
+						if (mapUtils->isCellVisibleForPlayerId(iPl, left)) {
 							l = false;  // visible
 						}
 					} else {
@@ -87,7 +87,7 @@ void cMapDrawer::drawShroud() {
 					}
 
 					if (right > -1) {
-						if (map->isVisible(iPl, right)) {
+						if (mapUtils->isCellVisibleForPlayerId(iPl, right)) {
 							r = false;  // visible
 						}
 					} else {
@@ -204,7 +204,7 @@ void cMapDrawer::drawTerrain() {
 		for (int iStartY=camera->getY(); iStartY < camera->getEndY(); iStartY++) {
 			iCell = iCellMake(iStartX, iStartY);
 
-			if (map->isVisible(iPl, iCell) == false) {
+			if (mapUtils->isCellVisibleForPlayerId(iPl, iCell) == false) {
 				iDrawY+=TILESIZE_HEIGHT_PIXELS;
 				continue; // do not draw this one
 			}

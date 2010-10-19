@@ -872,7 +872,7 @@ void cUnit::think_guard() {
 
 							// not ours and its visible
 							if (unit[i].iPlayer != iPlayer &&
-								map.isVisible(iPlayer, unit[i].iCell) && // is visible for ai as well?
+									mapUtils->isCellVisibleForPlayerId(iPlayer, unit[i].iCell) && // is visible for ai as well?
 								units[unit[i].iType].airborn == units[iType].airborn && bAlly == false)
 							{
 								int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
@@ -950,7 +950,7 @@ void cUnit::think_guard() {
 
 							// not ours and its visible
 							if (structure[i]->getOwner() != iPlayer &&
-								map.isVisible(iPlayer, structure[i]->getCell()) &&
+								mapUtils->isCellVisibleForPlayerId(iPlayer, structure[i]->getCell()) &&
 								bAlly == false)	{
 								int distance = ABS_length(iCellX, iCellY, iCellGiveX(structure[i]->getCell()),
 															iCellGiveY(structure[i]->getCell()));
@@ -1170,7 +1170,7 @@ void cUnit::think()
 
 							// not ours and its visible
 							if (unit[i].iPlayer != iPlayer &&
-								map.isVisible(iPlayer, unit[i].iCell) &&
+								mapUtils->isCellVisibleForPlayerId(iPlayer, unit[i].iCell) &&
 								units[unit[i].iType].airborn == false && bAlly == false)
 							{
 								int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
@@ -3455,7 +3455,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
 
 
                     // is not visible, always good (since we dont know yet if its blocked!)
-                    if (map.isVisible(controller, cll) == false) {
+                    if (mapUtils->isCellVisibleForPlayerId(controller, cll) == false) {
                         good=true;
                     } else {
                         // walls stop us
