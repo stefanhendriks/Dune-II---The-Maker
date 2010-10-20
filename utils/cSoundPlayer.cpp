@@ -62,6 +62,9 @@ void cSoundPlayer::destroySound(int voice, bool force) {
 	}
 }
 
+void cSoundPlayer::playSound(int sampleId, int pan, int vol) {
+	playSound((SAMPLE *)gfxaudio[sampleId].dat, pan, vol);
+}
 
 void cSoundPlayer::playSound(SAMPLE *sample, int pan, int vol) {
 	if (maximumVoices < 0) return;

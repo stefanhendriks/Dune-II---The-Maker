@@ -24,11 +24,6 @@ void cMap::init()
 {
     INIT_REINFORCEMENT();
 
-    // the original dune 2 uses 62x62 tiles of the 64x64 available. Leaving a 'border' in the map which is used
-    // to let units enter the map (reinforcements), etc.
-    // set scrollX and Y at minimum of 1 so we do not start at the border itself (0,0)
-	scroll_x=scroll_y=1;
-
     // clear out all cells
     for (int c=0; c < MAX_CELLS; c++)
     {
@@ -51,13 +46,6 @@ void cMap::init()
     // set visibility
 
     //memset(iVisible, MAP_FOG, sizeof(iVisible));
-
-    iStaticFrame = STAT14;               //
-    iStatus = -1;                       // 0 = show minimap , -1 = no minimap
-                                        // (static animation, of going down)
-                                        // 1 = static animation 'getting up'...
-
-    iTrans = 0;
 
     for (int i=0; i < MAX_STRUCTURES; i++)
     {
@@ -304,243 +292,29 @@ void cMap::draw_structures(int iStage)
 
 }
 
-// get color for terrain type (for minimap)
-int cMap::getColorForTerrainType(int type) {
-
-	switch (type) {
-		case TERRAIN_ROCK:
-			return makecol(80,80,60);
-		case TERRAIN_SPICE:
-			return makecol(186,93,32);
-		case TERRAIN_SPICEHILL:
-			return makecol(180,90,25);
-		case TERRAIN_HILL:
-			return makecol(188, 115, 50);
-		case TERRAIN_MOUNTAIN:
-			return makecol(48, 48, 36);
-		case TERRAIN_SAND:
-			return makecol(194, 125, 60);
-		case TERRAIN_WALL:
-			return makecol(192, 192, 192);
-		case TERRAIN_SLAB:
-			return makecol(80,80,80);
-		case TERRAIN_BLOOM:
-			return makecol(214,145,100);
-		default:
-			return makecol(255, 0, 255);
-	}
-}
-
-void cMap::draw_minimap()
-{
-	int iCll=0;
-
-	int iDrawX=511;
-	int iDrawY=351;
-
-	int iColor=makecol(0,0,0);
-
-	for (int x=0; x < (game.map_width); x++) {
-
-	 iDrawY=351; // reset every time ;)
-	 for (int y=0; y < (game.map_height); y++) {
-		iColor=makecol(0,0,0);
-		iCll=iCellMake(x,y);
-
-		if (iVisible[iCll][0]) {
-			if (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower()) {
-				// change color
-				iColor = getColorForTerrainType(cell[iCll].type);
-
-				if (cell[iCll].id[MAPID_STRUCTURES] > -1)
-				{
-
-					int iPlr=structure[cell[iCll].id[MAPID_STRUCTURES]]->getOwner();
-					// get house color from the player of this structure
-					if (iPlr ==0 || (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower())) {
-						if (player[iPlr].getHouse() == ATREIDES) {
-							iColor = makecol(0,0,255);
-						}
-						if (player[iPlr].getHouse() == HARKONNEN) {
-							iColor = makecol(255,0,0);
-						}
-						if (player[iPlr].getHouse() == ORDOS) {
-							iColor = makecol(0,255,0);
-						}
-						if (player[iPlr].getHouse() == SARDAUKAR) {
-							iColor = makecol(255,0,255);
-						}
-					}
-				}
-
-				if (cell[iCll].id[MAPID_UNITS] > -1)
-				{
-					int iPlr=unit[cell[iCll].id[MAPID_UNITS]].iPlayer;
-					// get house color from the player of this structure
-					if (iPlr == 0 || (player[0].iStructures[RADAR] > 0 && player[0].bEnoughPower())) {
-						if (player[iPlr].getHouse() == ATREIDES) {
-							iColor = makecol(0,0,255);
-						}
-						if (player[iPlr].getHouse() == HARKONNEN) {
-							iColor = makecol(255,0,0);
-						}
-						if (player[iPlr].getHouse() == ORDOS) {
-							iColor = makecol(0,255,0);
-						}
-						if (player[iPlr].getHouse() == SARDAUKAR) {
-							iColor = makecol(255,0,255);
-						}
-					}
-				}
-
-				if (cell[iCll].id[MAPID_AIR] > -1)
-				{
-					int iPlr=unit[cell[iCll].id[MAPID_AIR]].iPlayer;
-					int type=unit[cell[iCll].id[MAPID_AIR]].iType;
-					// only show own aircraft
-					if (iPlr == 0) {
-						if (type == CARRYALL) {
-							iColor = makecol(128,128,128);
-						} else if (type == ORNITHOPTER) {
-							// brighter for orni's
-							iColor = makecol(196,196,196);
-						} else {
-							iColor = makecol(255,255,255);
-						}
-					}
-				}
-
-				if (cell[iCll].id[MAPID_WORMS] > -1) {
-					iColor = makecol(game.fade_select,game.fade_select,game.fade_select);
-				}
-			}
-		}
-
-		// do not show the helper border
-		if (x == 0 || y == 0)
-			iColor = makecol(0,0,0);
-
-		if (x == 63 || y == 63)
-			iColor = makecol(0,0,0);
-
-		// double sized 'pixels'.
-		putpixel(bmp_screen, iDrawX+x, iDrawY+y, iColor);
-		putpixel(bmp_screen, iDrawX+x+1, iDrawY+y, iColor);
-		putpixel(bmp_screen, iDrawX+x+1, iDrawY+y+1, iColor);
-		putpixel(bmp_screen, iDrawX+x, iDrawY+y+1, iColor);
-
-		iDrawY+=1;
-	 }
-
-	 iDrawX+=1;
-	}
-
- // Draw the magic rectangle (viewport)
- int iWidth=((game.screen_x-160)/32);
- int iHeight=((game.screen_y-42)/32)+1;
-
- iWidth--;
- iHeight--;
-
- rect(bmp_screen, 511+(scroll_x*2), 351+(scroll_y*2), ((511+(scroll_x*2))+iWidth*2)+1, (351+(scroll_y*2)+iHeight*2)+1, makecol(255,255,255));
-
- // Mouse reaction
- if (mouse_x >= 511 && mouse_y >= 351)
- {
-	if (MOUSE_BTN_LEFT() && mouse_co_x1 < 0 && mouse_co_y1 < 0)
-	{
-		// change scroll positions and such :)
-		scroll_x = (((mouse_x-(iWidth)) - 511) / 2);
-		scroll_y = (((mouse_y-(iHeight)) - 351) / 2);
-
-		if (scroll_x < 1)
-			scroll_x = 1;
-		if (scroll_y < 1)
-			scroll_y = 1;
-		if (scroll_x >= (62-iWidth))
-			scroll_x = (62-iWidth);
-		if (scroll_y >= (62-iHeight))
-			scroll_y = (62-iHeight);
-
-		mapCamera->jumpTo(scroll_x, scroll_y);
-	}
-
-
- }
-
- if (player[0].iStructures[RADAR] > 0 &&
-     player[0].bEnoughPower())
- {
-     if (iStatus < 0)
-     {
-         play_sound_id(SOUND_RADAR,-1);
-         play_voice(SOUND_VOICE_03_ATR);
-     }
-
-     iStatus = 0;
-
- }
- else
- {
-     if (iStatus > -1)
-         play_voice(SOUND_VOICE_04_ATR);
-
-     iStatus = -1;
- }
-
- // Draw static info
- if (iStatus < 0)
- {
-
-     draw_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, 511, 350);
-
- }
- else
- {
-
-
-     if (iStaticFrame < STAT10)
-         iTrans = 255 - health_bar(192, (STAT12-iStaticFrame), 12);
-     else
-         iTrans=255;
-
-     if (iStaticFrame != STAT01)
-     {
-         set_trans_blender(0,0,0,iTrans);
-
-         draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, 511, 350);
-         // reset the trans blender
-         set_trans_blender(0,0,0,128);
-     }
-
- }
-
+void cMap::draw_minimap() {
 
 }
 
 // do the static info thinking
-void cMap::think_minimap()
-{
- // Draw static info
- if (iStatus < 0)
- {
+void cMap::think_minimap() {
+	// Draw static info
+	cMiniMapDrawer * miniMapDrawer = drawManager->getMiniMapDrawer();
+	int iStatus = miniMapDrawer->getStatus();
+	int currentStaticFrame = miniMapDrawer->getStaticFrame();
+	if (iStatus < 0) {
+//		draw_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, 511, 350);
 
-     draw_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, 511, 350);
-
-     if (iStaticFrame < STAT21)
-         iStaticFrame++;
- }
- else
- {
-
-
-     // transparancy is calculated actulaly
-     if (iStaticFrame > STAT01)
-         iStaticFrame--;
-
- }
-
-
+		if (currentStaticFrame < STAT21) {
+			currentStaticFrame++;
+		}
+	} else {
+		// transparancy is calculated actulaly
+		if (currentStaticFrame > STAT01) {
+			currentStaticFrame--;
+		}
+	}
+	miniMapDrawer->setStaticFrame(currentStaticFrame);
 }
 
 // TODO: move this to a bulletDrawer (remove here!)
@@ -559,7 +333,6 @@ void cMap::draw_bullets()
           bullet[i].draw();
     }
   }
-
 }
 
 void cMap::clear_all()
@@ -567,66 +340,6 @@ void cMap::clear_all()
     for (int c=0; c < MAX_CELLS; c++)
         iVisible[c][0] = true;
 }
-
-// The given CELL
-// or the X, Y
-// give the 'center' of this window. This is the 'focus cell'
-void cMap::set_pos(int x, int y, int cell)
-{
-    int px, py;
-    px = py = -1;
-
-    // Get our variables straight
-    if (cell > -1)
-    {
-        px = iCellGiveX(cell);
-        py = iCellGiveY(cell);
-    }
-    else
-    {
-        if (x > -1 && y > -1)
-        {
-            px = x;
-            py = y;
-        }
-        else
-            return;
-
-    }
-
-    // determine the half of our screen
-
-    // Whole...
-    int iX = ((game.screen_x-160)/32);
-    int iY = ((game.screen_y-42)/32)+1;
-
-    // Half ...
-    int iHalfX = iX/2;
-    int iHalfY = iY/2;
-
-    scroll_x = (px-iHalfX);
-    scroll_y = (py-iHalfY);
-
-    int iEndX=scroll_x + ((game.screen_x-160)/32);
-    int iEndY=scroll_y + ((game.screen_y-42)/32)+1;
-
-	// 10/01 - HACK HACK : Correct the Y position
-	iEndY++;
-
-     // make sure the X,Y position is NOT set 'out of the borders'
-    if (iEndX >= (game.map_width-2))
-        scroll_x = game.map_width-(iX+1);
-
-    if (iEndY >= ( game.map_height-2))
-        scroll_y = game.map_height-(iY+1);
-
-    // in case its a tiny map
-    if (scroll_x < 1) scroll_x = 1;
-    if (scroll_y < 1) scroll_y = 1;
-
-    mapCamera->jumpTo(scroll_x, scroll_y);
-}
-
 
 void cMap::clear_spot(int c, int size, int player)
 {
@@ -652,8 +365,8 @@ void cMap::clear_spot(int c, int size, int player)
       int x = cx, y = cy;
 
       // when scrolling, compensate
-      x -= scroll_x;
-      y -= scroll_y;
+      x -= mapCamera->getX();
+      y -= mapCamera->getY();
 
       // convert to pixels (*32)
       x *= TILE_SIZE_PIXELS;
@@ -688,11 +401,11 @@ void cMap::clear_spot(int c, int size, int player)
 
        cell_y  = y;
 	   cell_y -= 42;
-	   cell_y += (scroll_y*32);
+	   cell_y += (mapCamera->getY()*32);
 	   cell_y = cell_y/32;
 
 	   cell_x  = x;
-	   cell_x += (scroll_x*32);
+	   cell_x += (mapCamera->getX()*32);
        cell_x  = cell_x/32;
 
 
@@ -1345,8 +1058,8 @@ int cMap::mouse_cell()
     int iMouseX = mouse_x/32;
     int iMouseY = (mouse_y-42)/32;
 
-    iMouseX += scroll_x;
-    iMouseY += scroll_y;
+    iMouseX += mapCamera->getX();
+    iMouseY += mapCamera->getY();
 
     return iCellMake(iMouseX, iMouseY);
 }
@@ -2136,34 +1849,30 @@ void cMap::draw_think() {
 	// determine the width and height in cells
 	// this way we know the size of the viewport
 
-	int iEndX = scroll_x + ((game.screen_x - 160) / 32); // width of sidebar is 160
-	int iEndY = scroll_y + ((game.screen_y - 42) / 32) + 1; // height of upper bar is 42
+	int iEndX = mapCamera->getX() + ((game.screen_x - 160) / 32); // width of sidebar is 160
+	int iEndY = mapCamera->getY() + ((game.screen_y - 42) / 32) + 1; // height of upper bar is 42
 
 	// thinking for map (scrolling that is)
 	if (mouse_x <= 1 || key[KEY_LEFT]) {
-		if (scroll_x > 1) {
-			//scroll_x --;
+		if (mapCamera->getX() > 1) {
 			mouse_tile = MOUSE_LEFT;
 		}
 	}
 
 	if (mouse_y <= 1 || key[KEY_UP]) {
-		if (scroll_y > 1) {
-			//scroll_y --;
+		if (mapCamera->getY() > 1) {
 			mouse_tile = MOUSE_UP;
 		}
 	}
 
 	if (mouse_x >= (game.screen_x - 2) || key[KEY_RIGHT]) {
 		if ((iEndX) < (game.map_width - 1)) {
-			// scroll_x ++;
 			mouse_tile = MOUSE_RIGHT;
 		}
 	}
 
 	if (mouse_y >= (game.screen_y - 2) || key[KEY_DOWN]) {
 		if ((iEndY) < (game.map_height - 1)) {
-			//   scroll_y ++;
 			mouse_tile = MOUSE_DOWN;
 		}
 	}
@@ -2176,7 +1885,7 @@ void cMap::thinkInteraction() {
 int cMap::mouse_draw_x()
 {
 	if (mouse_cell() > -1)
-  return ( (( iCellGiveX(mouse_cell()) * 32 ) - (map.scroll_x*32)));
+  return ( (( iCellGiveX(mouse_cell()) * 32 ) - (mapCamera->getX()*32)));
 	else
 		return -1;
 }
@@ -2184,7 +1893,7 @@ int cMap::mouse_draw_x()
 int cMap::mouse_draw_y()
 {
 	if (mouse_cell() > -1)
-  return (( (( iCellGiveY(mouse_cell()) * 32 ) - (map.scroll_y*32)))+42);
+  return (( (( iCellGiveY(mouse_cell()) * 32 ) - (mapCamera->getY()*32)))+42);
 	else
 		return -1;
 }

@@ -8,6 +8,7 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) {
 	upgradeDrawer = new cUpgradeDrawer();
 	orderDrawer = new cOrderDrawer();
 	mapDrawer = new cMapDrawer(&map, thePlayer, mapCamera);
+	miniMapDrawer = new cMiniMapDrawer(&map, thePlayer, mapCamera);
 	particleDrawer = new cParticleDrawer();
 	messageDrawer = new cMessageDrawer();
 	placeitDrawer = new cPlaceItDrawer();
@@ -19,6 +20,7 @@ cDrawManager::~cDrawManager() {
 	delete orderDrawer;
 	delete creditsDrawer;
 	delete mapDrawer;
+	delete miniMapDrawer;
 	delete particleDrawer;
 	delete messageDrawer;
 	delete placeitDrawer;
@@ -53,6 +55,7 @@ void cDrawManager::draw() {
 	map.draw_minimap();
 
 	mapDrawer->drawShroud();
+	miniMapDrawer->draw();
 
 	// GUI
 	drawSidebar();

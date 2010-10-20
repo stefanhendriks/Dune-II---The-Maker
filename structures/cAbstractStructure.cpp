@@ -57,13 +57,13 @@ cAbstractStructure::~cAbstractStructure()
 // X drawing position
 int cAbstractStructure::iDrawX()
 {
-  return ( (( iCellGiveX(iCell) * 32 ) - (map.scroll_x*32)));
+  return ( (( iCellGiveX(iCell) * 32 ) - (mapCamera->getX()*32)));
 }
 
 // Y drawing position
 int cAbstractStructure::iDrawY()
 {
-  return (( (( iCellGiveY(iCell) * 32 ) - (map.scroll_y*32)))+42);
+  return (( (( iCellGiveY(iCell) * 32 ) - (mapCamera->getY()*32)))+42);
 }
 
 
@@ -132,8 +132,8 @@ void cAbstractStructure::die()
 			map.cell[iCll].type = TERRAIN_ROCK;
 			map.smooth_cell(iCll);
 
-			PARTICLE_CREATE(iDrawX() + (map.scroll_x*32) + (w*32) + 16,
-				iDrawY() + (map.scroll_y*32) + (h*32) + 16, OBJECT_BOOM01, -1, -1);
+			PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16,
+				iDrawY() + (mapCamera->getY()*32) + (h*32) + 16, OBJECT_BOOM01, -1, -1);
 
 
             for (int i=0; i < 3; i++)
@@ -141,18 +141,18 @@ void cAbstractStructure::die()
 				map.smudge_increase(SMUDGE_ROCK, iCll);
 
                 // create particle
-                PARTICLE_CREATE(iDrawX() + (map.scroll_x*32) + (w*32) + 16 + (-8 + rnd(16)),
-                                iDrawY() + (map.scroll_y*32) + (h*32) + 16 + (-8 + rnd(16)), EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
+                PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16 + (-8 + rnd(16)),
+                                iDrawY() + (mapCamera->getY()*32) + (h*32) + 16 + (-8 + rnd(16)), EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
 
                 // create smoke
                 if (rnd(100) < 7)
-                    PARTICLE_CREATE(iDrawX() + (map.scroll_x*32) + (w*32) + 16 + (-8 + rnd(16)),
-                                    iDrawY() + (map.scroll_y*32) + (h*32) + 16 + (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
+                    PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16 + (-8 + rnd(16)),
+                                    iDrawY() + (mapCamera->getY()*32) + (h*32) + 16 + (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
 
                 // create fire
                 if (rnd(100) < 5)
-                    PARTICLE_CREATE(iDrawX() + (map.scroll_x*32) + (w*32) + 16 + (-8 + rnd(16)),
-                                    iDrawY() + (map.scroll_y*32) + (h*32) + 16 + (-8 + rnd(16)), EXPLOSION_FIRE, -1, -1);
+                    PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16 + (-8 + rnd(16)),
+                                    iDrawY() + (mapCamera->getY()*32) + (h*32) + 16 + (-8 + rnd(16)), EXPLOSION_FIRE, -1, -1);
 
             }
         }

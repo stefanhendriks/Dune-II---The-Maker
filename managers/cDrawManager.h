@@ -14,6 +14,7 @@ class cDrawManager {
 
 		CreditsDrawer *getCreditsDrawer() { return creditsDrawer; }
 		cMessageDrawer *getMessageDrawer() { return messageDrawer; }
+		cMiniMapDrawer *getMiniMapDrawer() { return miniMapDrawer; }
 
 	protected:
 		void drawSidebar();
@@ -30,6 +31,7 @@ class cDrawManager {
 		cOrderDrawer * orderDrawer;
 		cUpgradeDrawer * upgradeDrawer;
 		cMapDrawer * mapDrawer;
+		cMiniMapDrawer * miniMapDrawer;
 		cParticleDrawer * particleDrawer;
 		cMessageDrawer * messageDrawer;
 		cPlaceItDrawer *placeitDrawer;

@@ -95,8 +95,8 @@ void cGunTurret::think() {
                         iBullet = ROCKET_RTURRET;
                     else
                     {
-                        int iShootX=(iDrawX() + 16 ) + (map.scroll_x*32);
-                        int iShootY=(iDrawY() + 16 ) + (map.scroll_y*32);
+                        int iShootX=(iDrawX() + 16 ) + (mapCamera->getX()*32);
+                        int iShootY=(iDrawY() + 16 ) + (mapCamera->getY()*32);
                         int     bmp_head            = convert_angle(iHeadFacing);
 
                         PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);

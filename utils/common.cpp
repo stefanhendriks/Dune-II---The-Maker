@@ -1153,8 +1153,8 @@ int iCellOnScreen(int iCell)
     int iCellX=iCellGiveX(iCell);
     int iCellY=iCellGiveY(iCell);
 
-    int iMapX = map.scroll_x;
-    int iMapY = map.scroll_y;
+    int iMapX = mapCamera->getX();
+    int iMapY = mapCamera->getY();
 
     int iEndX=iMapX + ((game.screen_x-160)/32); // width of sidebar is 160
     int iEndY=iMapY + ((game.screen_y-42)/32)+1;  // height of upper bar is 42
@@ -1185,12 +1185,12 @@ void play_sound_id(int s, int iDistance)
 
 	// Determine if sound is on screen or not
 	if (iDistance <= 1) {
-		game.getSoundPlayer()->playSound((SAMPLE *)gfxaudio[s].dat, 127, 255);
+		game.getSoundPlayer()->playSound(s, 127, 255);
 	} else {
 		// adjust volume from distance
 		int iVol = game.getMaxVolume() - ((game.getMaxVolume() / 32) * iDistance);
 		if (iVol > 0) {
-			game.getSoundPlayer()->playSound((SAMPLE *)gfxaudio[s].dat, 127, iVol);
+			game.getSoundPlayer()->playSound(s, 127, iVol);
 		}
 	}
 }

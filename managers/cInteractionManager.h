@@ -24,6 +24,7 @@ class cInteractionManager {
 
 	private:
 		cSideBar * sidebar;
+		cMiniMapDrawer * miniMapDrawer;
 
 };
 

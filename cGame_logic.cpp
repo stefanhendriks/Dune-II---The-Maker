@@ -1634,7 +1634,7 @@ void cGame::setup_skirmish()
 
 			// Set map position
 			if (p == 0) {
-				map.set_pos(-1, -1, player[p].focus_cell);
+				mapCamera->centerAndJumpViewPortToCell(player[p].focus_cell);
 			}
 
 			// create constyard
@@ -2489,14 +2489,14 @@ void GAME_KEYS()
 	{
 		// Center on focus cell
 		if (key[KEY_H]) {
-			map.set_pos(-1,-1, player[0].focus_cell);
+			mapCamera->centerAndJumpViewPortToCell(player[HUMAN].focus_cell);
 		}
 
 		// Center on the selected structure
 		if (key[KEY_C]) {
 			if (game.selected_structure > -1) {
 				if (structure[game.selected_structure]) {
-					map.set_pos(-1,-1, structure[game.selected_structure]->getCell());
+					mapCamera->centerAndJumpViewPortToCell(structure[game.selected_structure]->getCell());
 				}
 			}
 		}

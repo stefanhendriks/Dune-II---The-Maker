@@ -24,5 +24,7 @@
 #include "cPlaceItDrawer.h"
 
 #include "cMapDrawer.h"
+#include "cMiniMapDrawer.h"
+
 
 #endif /* DRAWERSH_H_ */

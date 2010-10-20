@@ -39,14 +39,20 @@ class cMapCamera {
 		int getEndX() { return x + viewportWidth; }
 		int getEndY() { return y + viewportHeight; }
 
+		int getViewportWidth() { return viewportWidth; }
+		int getViewportHeight() { return viewportHeight; }
+
 		void thinkInteraction();
+
+		void centerAndJumpViewPortToCell(int cell);
 
 	protected:
 
 
 	private:
 		// the width and height of the viewport
-		// calculated at the constructor
+		// calculated at the constructor. The viewport width and height is
+		// in cells (not in pixels).
 		int viewportWidth;
 		int viewportHeight;
 

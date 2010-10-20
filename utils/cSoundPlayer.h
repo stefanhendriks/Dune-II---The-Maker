@@ -19,6 +19,7 @@ class cSoundPlayer {
 		~cSoundPlayer();
 
 		void playSound(SAMPLE *sample, int pan, int vol);
+		void playSound(int sampleId, int pan, int vol);
 
 		// think about voices, clear voices, etc.
 		void think();

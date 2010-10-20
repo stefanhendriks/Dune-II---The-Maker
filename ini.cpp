@@ -1354,7 +1354,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 				if (wordtype == WORD_FOCUS)
 				{
 					player[0].focus_cell = INI_WordValueINT(linefeed);
-					map.set_pos(-1,-1, player[0].focus_cell);
+					mapCamera->centerAndJumpViewPortToCell(player[0].focus_cell);
 				}
 			}
 

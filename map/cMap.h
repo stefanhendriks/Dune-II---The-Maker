@@ -55,19 +55,7 @@ public:
     void clear_all();
     void clear_spot(int c, int size, int player);
 
-	void set_pos(int x, int y, int cell);
-
 	int getColorForTerrainType(int type);
-
-	// Scrolling
-    int scroll_x, scroll_y;            // scrolling (per tile)
-
-    // static animation
-    int iStaticFrame;
-    int iStatus;                        // 0 = show minimap , -1 = no minimap (static animation, of going down)
-                                        // 1 = static animation 'getting up'...
-    int iTrans;                         // trasparancy...
-
 
     tCell cell[MAX_CELLS];
 

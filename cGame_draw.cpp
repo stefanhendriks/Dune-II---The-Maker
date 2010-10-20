@@ -233,9 +233,9 @@ void cGame::combat_mouse()
 
 			if (bParticle) {
                 if (mouse_tile == MOUSE_ATTACK) {
-                    PARTICLE_CREATE(mouse_x + (map.scroll_x*32), mouse_y + (map.scroll_y*32), ATTACK_INDICATOR, -1, -1);
+                    PARTICLE_CREATE(mouse_x + (mapCamera->getX()*32), mouse_y + (mapCamera->getY()*32), ATTACK_INDICATOR, -1, -1);
                 } else {
-                    PARTICLE_CREATE(mouse_x + (map.scroll_x*32), mouse_y + (map.scroll_y*32), MOVE_INDICATOR, -1, -1);
+                    PARTICLE_CREATE(mouse_x + (mapCamera->getX()*32), mouse_y + (mapCamera->getY()*32), MOVE_INDICATOR, -1, -1);
                 }
 			}
 		}

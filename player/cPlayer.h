@@ -71,11 +71,13 @@ class cPlayer {
 		cUpgradeBuilder * getUpgradeBuilder() { return upgradeBuilder; }
 		cOrderProcesser * getOrderProcesser() { return orderProcesser; }
 
+		int getAmountOfStructuresForType(int structureType);
+
 		// delete
 		void deleteSideBar() { if (sidebar) delete sidebar; }
 
 	private:
-		cPlayerDifficultySettings *difficultySettings;
+		cPlayerDifficultySettings *difficultySettings; // TODO: in the end this should be redundant.. perhaps remove it now/soon anyway?
 
 		// these have all state, and need to be recreated for each mission.
 		cSideBar * sidebar;			// each player has a sidebar (lists of what it can build)

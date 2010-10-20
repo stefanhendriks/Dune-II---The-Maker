@@ -150,6 +150,7 @@ class CreditsDrawer;
 #include "utils/cTimeManager.h"
 #include "utils/cUpgradeUtils.h"
 #include "utils/cMapUtils.h"
+#include "utils/cPlayerUtils.h"
 
 // TODO: Units
 

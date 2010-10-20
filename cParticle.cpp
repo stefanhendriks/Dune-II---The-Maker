@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -10,16 +10,16 @@
 
   ---------------------------------------------------
   Particle = every effect in the game:
- 
+
  - smoke pufs
  - move indicator
  etc.
- 
+
  most stuff = hardcoded
 
  Nice thing is, every particle = related with the bitmap id. Each bitmap can behave differently;
  by adding code to the 'think' function.
- 
+
  TODO: make main class and sub-classes?
 */
 
@@ -44,7 +44,7 @@ void cParticle::init()
     y=0;        // x and y position to draw (absolute numbers)
     iFrame=0;         // frame
     iType=0;          // type
-    
+
     layer=0;        // default layer = 0 (on top)
 
     iHousePal=-1;      // when specified, use this palette for drawing (and its an 8 bit picture then!)
@@ -58,20 +58,20 @@ void cParticle::init()
 
 // valid
 bool cParticle::isValid()
-{    
+{
     return bAlive;
 }
 
 // absolute pixel position
 int cParticle::draw_x()
 {
-    return (x - (map.scroll_x*32));
+    return (x - (mapCamera->getX()*32));
 }
 
 // absolute pixel position
 int cParticle::draw_y()
 {
-    return (y - (map.scroll_y*32));
+    return (y - (mapCamera->getY()*32));
 }
 
 // draw
@@ -90,7 +90,7 @@ void cParticle::draw()
     /*
     if (iType == OBJECT_WORMTRAIL)
     {
-        Shimmer((16/(iFrame+1)), dx, dy);        
+        Shimmer((16/(iFrame+1)), dx, dy);
     }*/
 
 
@@ -109,7 +109,7 @@ void cParticle::draw()
         select_palette(  player[iHousePal].pal  );
         blit((BITMAP *)gfxdata[iType].dat, temp, (iWidth*iFrame), 0, 0, 0, iWidth, iHeight);
     }
-     
+
 	if (iAlpha > -1)
 	{
 		set_trans_blender(0,0,0,iAlpha);
@@ -117,7 +117,7 @@ void cParticle::draw()
 		if (iType != OBJECT_BOOM01 && iType != OBJECT_BOOM02 && iType != OBJECT_BOOM03)
         {
 			draw_trans_sprite(bmp_screen, temp, dx-(iWidth/2), dy-(iHeight/2));
-            
+
 			if (iType == EXPLOSION_ROCKET || iType == EXPLOSION_ROCKET_SMALL)
             {
                 fblend_add((BITMAP *)gfxdata[OBJECT_BOOM03].dat, bmp_screen,  dx-(64), dy-(64), (iAlpha/2));
@@ -143,7 +143,7 @@ void cParticle::think()
     if (iType == PARTYPE_SMOKE)
     {
 
-    
+
         return;
     }*/
 
@@ -191,7 +191,7 @@ void cParticle::think()
         {
             iFrame++;
             TIMER_frame=100+rnd(100);
-            
+
             if (iFrame > 5)
                 bAlive=false;
 
@@ -232,7 +232,7 @@ void cParticle::think()
         {
          iFrame++;
 
-         
+
          if (iFrame > 2)
          {
             iFrame=2;
@@ -258,7 +258,7 @@ void cParticle::think()
         {
             iAlpha-=20;
             TIMER_frame=5;
-                       
+
             if (iFrame < 1 && iAlpha < 220)
                 iFrame++;
 
@@ -311,14 +311,14 @@ void cParticle::think()
         if (TIMER_frame < 0)
         {
             TIMER_frame=10;
-            if (rnd(100) < 10 && iAlpha > 192)                
+            if (rnd(100) < 10 && iAlpha > 192)
                 iAlpha--;
 
             if (TIMER_dead > 0)
             {
                 if (iAlpha < 255)
                     iAlpha+=2;
-               
+
             }
             else
             {
@@ -417,14 +417,14 @@ void cParticle::think()
     }
 
     if (iType == OBJECT_WORMTRAIL)
-    {         
+    {
         TIMER_frame--;
 
         if (TIMER_frame < 0)
         {
             if (iFrame <= 3)
                 TIMER_frame=100;
-            else 
+            else
                 TIMER_frame=20;
 
             iFrame++;
@@ -450,13 +450,13 @@ void cParticle::think()
     {
         TIMER_frame--;
 
-		
+
 
         if (TIMER_frame < 0)
         {
             if (iFrame <= 3)
                 TIMER_frame=28;
-            else 
+            else
 				TIMER_frame=10;
 
             iFrame++;
@@ -485,7 +485,7 @@ void cParticle::think()
                 bAlive=false;
 
         }
-        
+
     }
 
     if (iType == EXPLOSION_SQUISH01 ||
@@ -498,11 +498,11 @@ void cParticle::think()
         {
            if (iAlpha > 5)
                iAlpha-=5;
-           else               
+           else
                bAlive=false;
 
            TIMER_frame=50;
-        }        
+        }
     }
 
     if (iType == OBJECT_TANKSHOOT || iType == OBJECT_SIEGESHOOT)
@@ -540,7 +540,7 @@ void cParticle::think()
 
             iFrame++;
 
-            
+
 
             if (iFrame > 2)
                 iFrame=0;
@@ -593,13 +593,13 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
     particle[iNewId].iType = iType;
 
      // depending on type, set TIMER_dead & FRAME & FRAME TIME
-    
+
     particle[iNewId].iFrame = 0;
     particle[iNewId].TIMER_dead = 0;
     particle[iNewId].TIMER_frame = 10;
-    
+
     particle[iNewId].iHousePal = iHouse;
-    
+
 	particle[iNewId].iAlpha = -1;
 
     particle[iNewId].bAlive = true;
@@ -639,7 +639,7 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
     if (iType == TRACK_DIA || iType == TRACK_HOR || iType == TRACK_VER || iType == TRACK_DIA2)
     {
         particle[iNewId].iAlpha=128;
-        particle[iNewId].TIMER_dead=2000;   
+        particle[iNewId].TIMER_dead=2000;
         particle[iNewId].layer=1; // other layer
     }
 
@@ -653,7 +653,7 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
     // bullets of tanks explode
     if (iType == EXPLOSION_BULLET)
     {
-        
+
     }
 
     // trike exploding
@@ -661,7 +661,7 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
     {
         particle[iNewId].iAlpha=255;
         particle[iNewId].TIMER_dead=750+rnd(500);
-        particle[iNewId].iAlpha = rnd(255);   
+        particle[iNewId].iAlpha = rnd(255);
     }
 
     // tanks exploding
@@ -672,10 +672,10 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
         iType == EXPLOSION_GAS ||
         iType == OBJECT_WORMEAT)
     {
-		
-		if (iType != EXPLOSION_STRUCTURE01 && iType != EXPLOSION_STRUCTURE02)			
+
+		if (iType != EXPLOSION_STRUCTURE01 && iType != EXPLOSION_STRUCTURE02)
 			PARTICLE_CREATE(x, y, OBJECT_BOOM02, -1, 0);
-        
+
 		particle[iNewId].iAlpha=255;
         particle[iNewId].iWidth=48;
         particle[iNewId].iHeight=48;
@@ -687,7 +687,7 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
         particle[iNewId].iAlpha=96;
         particle[iNewId].iWidth=48;
         particle[iNewId].iHeight=48;
-		
+
 		particle[iNewId].layer=1; // other layer
     }
 

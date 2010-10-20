@@ -41,13 +41,13 @@ void cBullet::init()
 
 int cBullet::draw_x()
 {
-return ( (( iCellGiveX(iCell) * 32 ) - (map.scroll_x*32)) + iOffsetX);
+return ( (( iCellGiveX(iCell) * 32 ) - (mapCamera->getX()*32)) + iOffsetX);
 }
 
 
 int cBullet::draw_y()
 {
-return ( (( iCellGiveY(iCell) * 32 ) - (map.scroll_y*32)) + iOffsetY)+42;
+return ( (( iCellGiveY(iCell) * 32 ) - (mapCamera->getY()*32)) + iOffsetY)+42;
 }
 
 // draw the bullet
@@ -151,7 +151,7 @@ void cBullet::think()
 
 
         if (bCreatePuf)
-            PARTICLE_CREATE(draw_x()+(map.scroll_x*32)+16 , draw_y()+(map.scroll_y*32)+16, BULLET_PUF, -1, -1);
+            PARTICLE_CREATE(draw_x()+(mapCamera->getX()*32)+16 , draw_y()+(mapCamera->getY()*32)+16, BULLET_PUF, -1, -1);
 
         TIMER_frame = 0;
 
@@ -329,7 +329,7 @@ void cBullet::think_move()
 					iChance = 30;
 
 				if (rnd(100) < iChance)
-					PARTICLE_CREATE(draw_x()+(map.scroll_x*32)+16+ (-8 + rnd(16)), draw_y()+(map.scroll_y*32)+16+ (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
+					PARTICLE_CREATE(draw_x()+(mapCamera->getX()*32)+16+ (-8 + rnd(16)), draw_y()+(mapCamera->getY()*32)+16+ (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
 
 
 				// NO HP LEFT, DIE
@@ -387,7 +387,7 @@ void cBullet::think_move()
 
 					// smoke
 					if (rnd(100) < iChance)
-						PARTICLE_CREATE(draw_x()+(map.scroll_x*32)+16+ (-8 + rnd(16)), draw_y()+(map.scroll_y*32)+16+ (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
+						PARTICLE_CREATE(draw_x()+(mapCamera->getX()*32)+16+ (-8 + rnd(16)), draw_y()+(mapCamera->getY()*32)+16+ (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
 
 
 					// NO HP LEFT, DIE
@@ -614,7 +614,7 @@ void cBullet::think_move()
             play_sound_id(SOUND_GAS, iCellOnScreen(iCell));
 
         if (bullets[iType].deadbmp > -1)
-            PARTICLE_CREATE(draw_x()+(map.scroll_x*32)+16+ (-8 + rnd(16)), draw_y()+(map.scroll_y*32)+16+ (-8 + rnd(16)), bullets[iType].deadbmp, -1, -1);
+            PARTICLE_CREATE(draw_x()+(mapCamera->getX()*32)+16+ (-8 + rnd(16)), draw_y()+(mapCamera->getY()*32)+16+ (-8 + rnd(16)), bullets[iType].deadbmp, -1, -1);
 
 		int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
 

@@ -202,3 +202,9 @@ bool cPlayer::bEnoughPower() {
     // return false on any other case
     return false;
 }
+
+int cPlayer::getAmountOfStructuresForType(int structureType) {
+	assert(structureType >= 0);
+	assert(structureType <= RTURRET);
+	return iStructures[structureType];
+}

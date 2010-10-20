@@ -24,6 +24,43 @@ cMapCamera::cMapCamera() {
 cMapCamera::~cMapCamera() {
 }
 
+void cMapCamera::centerAndJumpViewPortToCell(int cell) {
+	cCellCalculator cellCalculator;
+
+	int cellX = cellCalculator.getX(cell);
+	int cellY = cellCalculator.getY(cell);
+
+	// determine the half of our screen
+	int width = mapCamera->getViewportWidth();
+	int height = mapCamera->getViewportHeight();
+
+	// Half ...
+	int iHalfX = width/2;
+	int iHalfY = height/2;
+
+	// determine the new X and Y position
+	int newViewPortX = cellX - iHalfX;
+	int newViewPortY = cellY - iHalfY;
+
+	// now make sure the bottom right does not reach outside the map borders.
+	// first jump to the new coordinates
+	jumpTo(newViewPortX, newViewPortY);
+
+	int diffX = getEndX() - (game.map_width - 2);
+	int diffY = getEndY() - (game.map_height - 2);
+
+	// when > 0 then it has overlapped, and should be substracted to the original X
+	if (diffX > 0) {
+		newViewPortX -= diffX;
+	}
+
+	if (diffY > 0) {
+		newViewPortY -= diffY;
+	}
+
+	// now the final 'jump' to the correct positions
+	jumpTo(newViewPortX, newViewPortY);
+}
 
 void cMapCamera::think() {
 	if (targetX != x || targetY != y) {
@@ -55,8 +92,7 @@ void cMapCamera::thinkInteraction() {
 
 	// thinking for map (scrolling that is)
 	if (mouse_x <= 1 || key[KEY_LEFT]) {
-		if (map.scroll_x > 1) {
-			map.scroll_x --;
+		if (x > 1) {
 			x--;
 			mouse_tile = MOUSE_LEFT;
 		}
@@ -64,8 +100,7 @@ void cMapCamera::thinkInteraction() {
 
 
 	if (mouse_y <= 1 || key[KEY_UP]) {
-		if (map.scroll_y > 1) {
-			map.scroll_y --;
+		if (y > 1) {
 			y--;
 			mouse_tile = MOUSE_UP;
 
@@ -75,7 +110,6 @@ void cMapCamera::thinkInteraction() {
 
 	if (mouse_x >= (game.screen_x-2) || key[KEY_RIGHT]) {
 		if ((getEndX()) < (game.map_width-1)) {
-			map.scroll_x ++;
 			x++;
 			mouse_tile = MOUSE_RIGHT;
 		}
@@ -83,7 +117,6 @@ void cMapCamera::thinkInteraction() {
 
 	if (mouse_y >= (game.screen_y-2) || key[KEY_DOWN]) {
 		if ((getEndY()) < (game.map_height-1)) {
-			map.scroll_y ++;
 			y++;
 			mouse_tile = MOUSE_DOWN;
 		}

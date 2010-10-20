@@ -118,8 +118,8 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
     // Animation / Sound
 	// TODO: update statistics player
 
-    int iDieX=(draw_x() + 16 ) + (map.scroll_x*32);
-    int iDieY=(draw_y() + 16 ) + (map.scroll_y*32);
+    int iDieX=(draw_x() + 16 ) + (mapCamera->getX()*32);
+    int iDieY=(draw_y() + 16 ) + (mapCamera->getY()*32);
 
     // when harveter, check if there are any friends , if not, then deliver one
     if (iType == HARVESTER &&
@@ -287,7 +287,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 							iChance = 30;
 
 						if (rnd(100) < iChance)
-							PARTICLE_CREATE(draw_x()+(map.scroll_x*32)+16+ (-8 + rnd(16)), draw_y()+(map.scroll_y*32)+16+ (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
+							PARTICLE_CREATE(draw_x()+(mapCamera->getX()*32)+16+ (-8 + rnd(16)), draw_y()+(mapCamera->getY()*32)+16+ (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
 
 						}
 					}
@@ -429,12 +429,12 @@ bool cUnit::isValid()
 
 int cUnit::draw_x()
 {
-  return ( (( iCellX * 32 ) - (map.scroll_x*32)) + iOffsetX);
+  return ( (( iCellX * 32 ) - (mapCamera->getX()*32)) + iOffsetX);
 }
 
 int cUnit::draw_y()
 {
-  return ( (( iCellY * 32 ) - (map.scroll_y*32)) + iOffsetY) + 42; // 42 = the options bar height
+  return ( (( iCellY * 32 ) - (mapCamera->getY()*32)) + iOffsetY) + 42; // 42 = the options bar height
 }
 
 void cUnit::draw_spice()
@@ -573,8 +573,8 @@ void cUnit::draw_path()
 	if (iPath[0] < 0)
 		return;
 
-	int iPrevX  = ( (( iCellGiveX(iPath[0]) * 32 ) - (map.scroll_x*32)));
-	int iPrevY  = ( (( iCellGiveY(iPath[0]) * 32 ) - (map.scroll_y*32))) + 42;
+	int iPrevX  = ( (( iCellGiveX(iPath[0]) * 32 ) - (mapCamera->getX()*32)));
+	int iPrevY  = ( (( iCellGiveY(iPath[0]) * 32 ) - (mapCamera->getY()*32))) + 42;
 
 	iPrevX+=16;
 	iPrevY+=16;
@@ -583,8 +583,8 @@ void cUnit::draw_path()
 	{
 		if (iPath[i] > -1)
 		{
-			int iDx = ( (( iCellGiveX(iPath[i]) * 32 ) - (map.scroll_x*32)));
-			int iDy = ( (( iCellGiveY(iPath[i]) * 32 ) - (map.scroll_y*32))) + 42;
+			int iDx = ( (( iCellGiveX(iPath[i]) * 32 ) - (mapCamera->getX()*32)));
+			int iDy = ( (( iCellGiveY(iPath[i]) * 32 ) - (mapCamera->getY()*32))) + 42;
 
 			iDx+=16;
 			iDy+=16;
@@ -1494,8 +1494,8 @@ void cUnit::think_move_air()
 								iGoalCell = iBringTarget;
 
 
-                                int iDieX=(draw_x() + 16 ) + (map.scroll_x*32);
-                                int iDieY=(draw_y() + 16 ) + (map.scroll_y*32);
+                                int iDieX=(draw_x() + 16 ) + (mapCamera->getX()*32);
+                                int iDieY=(draw_y() + 16 ) + (mapCamera->getY()*32);
                                 PARTICLE_CREATE(iDieX, iDieY, OBJECT_CARRYPUFF, -1, -1);
 
 								LOG("Pick up unit");
@@ -1595,8 +1595,8 @@ void cUnit::think_move_air()
 							}
 
 
-                                int iDieX=(draw_x() + 16 ) + (map.scroll_x*32);
-                                int iDieY=(draw_y() + 16 ) + (map.scroll_y*32);
+                                int iDieX=(draw_x() + 16 ) + (mapCamera->getX()*32);
+                                int iDieY=(draw_y() + 16 ) + (mapCamera->getY()*32);
                                 PARTICLE_CREATE(iDieX, iDieY, OBJECT_CARRYPUFF, -1, -1);
 
 						}
@@ -1747,8 +1747,8 @@ void cUnit::think_move_air()
                 {
                     if (map.cell[iCell].type == TERRAIN_SAND || map.cell[iCell].type == TERRAIN_SPICE || map.cell[iCell].type == TERRAIN_HILL || map.cell[iCell].type == TERRAIN_SPICEHILL)
                     {
-                        int iDieX=(draw_x() + 16 ) + (map.scroll_x*32);
-                        int iDieY=(draw_y() + 16 ) + (map.scroll_y*32);
+                        int iDieX=(draw_x() + 16 ) + (mapCamera->getX()*32);
+                        int iDieY=(draw_y() + 16 ) + (mapCamera->getY()*32);
                         PARTICLE_CREATE(iDieX, iDieY, OBJECT_CARRYPUFF, -1, -1);
                     }
                 }
@@ -1928,8 +1928,8 @@ void cUnit::shoot(int iShootCell)
 
 
     // do timer stuff
-    int iShootX=(draw_x() + 16 ) + (map.scroll_x*32);
-    int iShootY=(draw_y() + 16 ) + (map.scroll_y*32);
+    int iShootX=(draw_x() + 16 ) + (mapCamera->getX()*32);
+    int iShootY=(draw_y() + 16 ) + (mapCamera->getY()*32);
     int     bmp_head            = convert_angle(iHeadFacing);
 
     if (iType == TANK)
@@ -2083,8 +2083,8 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
 
                 iHitPoints = units[iType].hp;
 
-                int iDieX=(draw_x() + 16 ) + (map.scroll_x*32);
-                int iDieY=(draw_y() + 16 ) + (map.scroll_y*32);
+                int iDieX=(draw_x() + 16 ) + (mapCamera->getX()*32);
+                int iDieY=(draw_y() + 16 ) + (mapCamera->getY()*32);
 
                 PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF01, iPlayer, -1);
                 play_sound_id(SOUND_DIE01+rnd(5),iCellOnScreen(iCell));
@@ -2116,8 +2116,8 @@ void cUnit::think_attack()
             {
                 // eat
                 unit[iAttackUnit].die(false, false);
-                int iParX=(draw_x() + 16 ) + (map.scroll_x*32);
-                int iParY=(draw_y() + 16 ) + (map.scroll_y*32);
+                int iParX=(draw_x() + 16 ) + (mapCamera->getX()*32);
+                int iParY=(draw_y() + 16 ) + (mapCamera->getY()*32);
 
                 PARTICLE_CREATE(iParX, iParY, OBJECT_WORMEAT, -1, -1);
                 play_sound_id(SOUND_WORM, iCellOnScreen(iCell));
@@ -2882,8 +2882,8 @@ void cUnit::think_move()
         if ((iOffX == 8 || iOffX == 16 || iOffX == 24 || iOffX == 32) ||
             (iOffY == 8 || iOffY == 16 || iOffY == 24 || iOffY == 32))
         {
-            int iParX=(draw_x() + 16 ) + (map.scroll_x*32);
-            int iParY=(draw_y() + 16 ) + (map.scroll_y*32);
+            int iParX=(draw_x() + 16 ) + (mapCamera->getX()*32);
+            int iParY=(draw_y() + 16 ) + (mapCamera->getY()*32);
 
             PARTICLE_CREATE(iParX, iParY, OBJECT_WORMTRAIL, -1, -1);
         }
@@ -2893,8 +2893,8 @@ void cUnit::think_move()
     // 100% on cell.
     if (iOffsetX == 0 && iOffsetY == 0)
     {
-        int iParX=(draw_x() + 16 ) + (map.scroll_x*32);
-        int iParY=(draw_y() + 16 ) + (map.scroll_y*32);
+        int iParX=(draw_x() + 16 ) + (mapCamera->getX()*32);
+        int iParY=(draw_y() + 16 ) + (mapCamera->getY()*32);
 
 
         // add particle tracks

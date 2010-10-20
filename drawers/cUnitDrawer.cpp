@@ -24,7 +24,7 @@ void cUnitDrawer::draw(cAbstractUnit *unit) {
 int cUnitDrawer::getDrawX(cAbstractUnit *unit) {
 	int iCellX = unit->getCellX();
 	int iOffsetX = unit->getOffsetX();
-	return ( (( iCellX * 32 ) - (map.scroll_x*32)) + iOffsetX);
+	return ( (( iCellX * 32 ) - (mapCamera->getX()*32)) + iOffsetX);
 }
 
 /**
@@ -33,5 +33,5 @@ int cUnitDrawer::getDrawX(cAbstractUnit *unit) {
 int cUnitDrawer::getDrawY(cAbstractUnit *unit) {
 	int iCellY = unit->getCellY();
 	int iOffsetY = unit->getOffsetY();
-	return ( (( iCellY * 32 ) - (map.scroll_y*32)) + iOffsetY) + 42; // 42 = the options bar height
+	return ( (( iCellY * 32 ) - (mapCamera->getY()*32)) + iOffsetY) + 42; // 42 = the options bar height
 }
