@@ -22,11 +22,11 @@ class cMiniMapDrawer {
 		int getStatus() { return iStatus; }
 		void setStatus(int value) { iStatus = value; }
 
+		void drawStaticFrame();
 
 	protected:
 		void drawTerrain();
 		void drawViewPortRectangle();
-		void drawStaticFrame();
 		void drawUnitsAndStructures();
 
 		int getRGBColorForHouse(int houseId);

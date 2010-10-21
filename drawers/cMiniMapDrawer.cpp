@@ -219,14 +219,11 @@ void cMiniMapDrawer::draw() {
 
 	drawViewPortRectangle();
 
-	return;
-
 	if (hasRadarAndEnoughPower) {
 		if (iStatus < 0) {
 			play_sound_id(SOUND_RADAR, -1);
 			play_voice(SOUND_VOICE_03_ATR);
 		}
-
 		iStatus = 0;
 	} else {
 		if (iStatus > -1) {
@@ -241,27 +238,23 @@ void cMiniMapDrawer::draw() {
 
 void cMiniMapDrawer::drawStaticFrame() {
 	// Draw static info
-	 if (iStatus < 0)
-	 {
+	 if (iStatus < 0) {
 		 draw_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, 511, 350);
-	 }
-	 else
-	 {
+	 } else {
 		 if (iStaticFrame < STAT10) {
 			 iTrans = 255 - health_bar(192, (STAT12-iStaticFrame), 12);
 		 } else {
-			 iTrans=255;
-
-			 if (iStaticFrame != STAT01)
-			 {
-				 set_trans_blender(0,0,0,iTrans);
-
-				 draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, 511, 350);
-				 // reset the trans blender
-				 set_trans_blender(0,0,0,128);
-			 }
+			 iTrans = 255;
 		 }
 
+		 if (iStaticFrame != STAT01)
+		 {
+			 set_trans_blender(0,0,0,iTrans);
+
+			 draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, 511, 350);
+			 // reset the trans blender
+			 set_trans_blender(0,0,0,128);
+		 }
 	 }
 }
 

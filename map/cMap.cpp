@@ -303,7 +303,7 @@ void cMap::think_minimap() {
 	int iStatus = miniMapDrawer->getStatus();
 	int currentStaticFrame = miniMapDrawer->getStaticFrame();
 	if (iStatus < 0) {
-//		draw_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, 511, 350);
+		miniMapDrawer->drawStaticFrame();
 
 		if (currentStaticFrame < STAT21) {
 			currentStaticFrame++;
