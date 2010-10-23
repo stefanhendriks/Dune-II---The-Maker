@@ -30,7 +30,6 @@ public:
 
 	void soft();
 
-	void draw_minimap();
 	void draw_units_2nd();
 	void draw_units();
 
