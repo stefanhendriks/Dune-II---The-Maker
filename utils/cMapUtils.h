@@ -16,6 +16,8 @@ class cMapUtils {
 		bool isCellVisible(cPlayer *thePlayer, int iCell);
 		bool isCellVisibleForPlayerId(int playerId, int iCell);
 
+		void clearAllCells();
+
 	protected:
 
 	private:

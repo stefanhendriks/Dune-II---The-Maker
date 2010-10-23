@@ -19,7 +19,6 @@ public:
     void init();
     void smooth();
     void draw();
-	void draw_structures(int iStage);
     void draw_bullets();
 
     void think_minimap();
@@ -67,7 +66,10 @@ public:
 
     bool isVisible(int iCell, int iPlayer) { return iVisible[iCell][iPlayer]; }
 
-    private:
+    void setVisible(int iCell, int iPlayer, bool flag) { iVisible[iCell][iPlayer] = flag; }
+
+	private:
+
 
     	bool iVisible[MAX_CELLS][MAX_PLAYERS];      // visibility for <player>
 

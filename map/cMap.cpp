@@ -25,26 +25,8 @@ void cMap::init()
     INIT_REINFORCEMENT();
 
     // clear out all cells
-    for (int c=0; c < MAX_CELLS; c++)
-    {
-        cell[c].credits = cell[c].health = 0;
-        cell[c].passable = true;
-        cell[c].tile = 0;
-        cell[c].type = TERRAIN_SAND;    // refers to gfxdata!
-
-        cell[c].smudgetile = -1;
-        cell[c].smudgetype = -1;
-
-        // clear out the ID stuff
-        memset(cell[c].id, -1, sizeof(cell[c].id));
-
-		for (int i=0; i < MAX_PLAYERS; i++) {
-			iVisible[c][i] = false;
-		}
-    }
-
-    // set visibility
-    //memset(iVisible, MAP_FOG, sizeof(iVisible));
+    cMapUtils * mapUtils = new cMapUtils(this);
+    mapUtils->clearAllCells();
 
     cStructureFactory::getInstance()->clearAllStructures();
 
@@ -63,10 +45,10 @@ void cMap::init()
 	TIMER_scroll=0;
 	iScrollSpeed=10;
 
+	delete mapUtils;
 }
 
-void cMap::smudge_increase(int iType, int iCell)
-{
+void cMap::smudge_increase(int iType, int iCell) {
     if (cell[iCell].smudgetype < 0)
         cell[iCell].smudgetype = iType;
 
@@ -211,78 +193,6 @@ void cMap::draw_structures_health()
         rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(255, 255, 255));
 
     }
-
-}
-
-void cMap::draw_structures(int iStage)
-{
-    // draw all structures
-    for (int i=0; i < MAX_STRUCTURES; i++)
-    {
-        if (structure[i])
-        {
-            // put this thing on the map
-            for (int w=0; w < structure[i]->getWidth(); w++)
-                for (int h=0; h < structure[i]->getHeight(); h++)
-                {
-                    int cll = iCellMake((iCellGiveX(structure[i]->getCell())+w),
-                        (iCellGiveY(structure[i]->getCell())+h));
-
-                    cell[cll].id[MAPID_STRUCTURES] = i;
-                }
-
-            if (((structure[i]->iDrawX()+structures[structure[i]->getType()].bmp_width) > 0 && structure[i]->iDrawX() < game.screen_x) &&
-                ((structure[i]->iDrawY()+structures[structure[i]->getType()].bmp_height) > 0 && structure[i]->iDrawY() < game.screen_y))
-            {
-                // draw
-                structure[i]->draw(iStage);
-
-				if (player[0].iPrimaryBuilding[structure[i]->getType()] == i)
-				{
-					alfont_textprintf(bmp_screen, game_font, structure[i]->iDrawX()-1, structure[i]->iDrawY()-1, makecol(0,0,0), "P");
-					alfont_textprintf(bmp_screen, game_font, structure[i]->iDrawX(), structure[i]->iDrawY(), makecol(255,255,255), "P");
-				}
-
-
-                // When mouse hovers over this structure
-                if (((mouse_x >= structure[i]->iDrawX() && mouse_x <= (structure[i]->iDrawX() + structures[structure[i]->getType()].bmp_width))) &&
-                    ((mouse_y >= structure[i]->iDrawY() && mouse_y <= (structure[i]->iDrawY() + structures[structure[i]->getType()].bmp_height))))
-                {
-                    // draw some cool id of it
-					if (key[KEY_D] && key[KEY_TAB])
-                    {
-						alfont_textprintf(bmp_screen, game_font, structure[i]->iDrawX(),structure[i]->iDrawY(), makecol(255,255,255), "%d", i);
-                        alfont_textprintf(bmp_screen, game_font, structure[i]->iDrawX(),structure[i]->iDrawY()-16, makecol(255,255,255), "%s", structures[structure[i]->getType()].name);
-                    }
-
-
-					game.hover_structure=i;
-                }
-
-                if (i == game.selected_structure)
-                {
-                    // draw rectangle around it fading, like dune 2
-                    int draw_x = structure[i]->iDrawX();
-                    int draw_y = structure[i]->iDrawY();
-                    int width_x = structures[structure[i]->getType()].bmp_width-1;
-                    int height_y = structures[structure[i]->getType()].bmp_height-1;
-
-                    rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(game.fade_select, game.fade_select, game.fade_select));
-                }
-
-
-            }
-
-        }
-
-    }
-
-
-	rectfill(bmp_screen, (game.screen_x-160), 0, game.screen_x, game.screen_y, makecol(0,0,0));
-
-}
-
-void cMap::draw_minimap() {
 
 }
 

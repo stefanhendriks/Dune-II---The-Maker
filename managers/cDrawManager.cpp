@@ -12,6 +12,7 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) {
 	particleDrawer = new cParticleDrawer();
 	messageDrawer = new cMessageDrawer();
 	placeitDrawer = new cPlaceItDrawer();
+	structureDrawer = new cStructureDrawer();
 }
 
 cDrawManager::~cDrawManager() {
@@ -24,6 +25,7 @@ cDrawManager::~cDrawManager() {
 	delete particleDrawer;
 	delete messageDrawer;
 	delete placeitDrawer;
+	delete structureDrawer;
 	player = NULL;
 }
 
@@ -34,9 +36,10 @@ void cDrawManager::draw() {
 	mapDrawer->drawTerrain();
 
 	// Only draw units/structures, etc, when we do NOT press D
+	// TODO: this should be something like : if (keyboard->isDebuggingStructures())
 	if (!key[KEY_D] || !key[KEY_TAB])
 	{
-		map.draw_structures(0);
+		structureDrawer->drawStructuresFirstLayer();
 	}
 
 	// draw layer 1 (beneath units, on top of terrain
@@ -46,14 +49,11 @@ void cDrawManager::draw() {
 
 	map.draw_bullets();
 
-	map.draw_structures(2); // draw layer 2
+	structureDrawer->drawStructuresSecondLayer();
 	map.draw_structures_health();
 	map.draw_units_2nd();
 
 	particleDrawer->drawHigherLayer();
-
-	map.draw_minimap();
-
 	mapDrawer->drawShroud();
 	miniMapDrawer->draw();
 

@@ -26,5 +26,6 @@
 #include "cMapDrawer.h"
 #include "cMiniMapDrawer.h"
 
+#include "cStructureDrawer.h"
 
 #endif /* DRAWERSH_H_ */

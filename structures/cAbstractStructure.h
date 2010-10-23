@@ -31,6 +31,8 @@ class cAbstractStructure {
 		bool bAnimate;      // Do its special animation? (unit leaving building, starport
 							// dropping something, etc)
 
+		int id;				// the id within the structures[] array
+
 	protected:
 		int iWidth;			// width in cells (set by factory)
 		int iHeight;		// height in cells (set by factory)
@@ -41,9 +43,8 @@ class cAbstractStructure {
     public:
 
 		// Constructor & Destructor:
-		cAbstractStructure(); // default constructor (never used actually!)
+		cAbstractStructure(); // default constructor
 
-		cAbstractStructure(int iID);
 		virtual ~cAbstractStructure();
 
 
@@ -105,6 +106,7 @@ class cAbstractStructure {
 		int getOwner() { return iPlayer; } // return the player id who owns this structure
 		int getRallyPoint() { return iRallyPoint; }
 		int getFrame() { return iFrame; }
+		int getStructureId() { return id; }
 
 		bool isAnimating() { return bAnimate; }
 
@@ -116,6 +118,7 @@ class cAbstractStructure {
 		void setRallyPoint(int cell); // set rally point of structure
 		void setAnimating(bool value); // set animation on / off
 		void setFrame(int frame);
+		void setStructureId(int theId) { id = theId; }
 
 		void damage(int hp); // damage structure for x amount of hp
 };

@@ -202,3 +202,47 @@ int cStructureUtils::findClosestStructureTypeToCell(int cell, int structureType,
 
 	return foundStructureId;
 }
+
+void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructure * theStructure) {
+	assert(theStructure);
+
+	cCellCalculator cellCalculator;
+	int cellOfStructure = theStructure->getCell();
+
+	assert(cellOfStructure > -1);
+
+	for (int w = 0; w < theStructure->getWidth(); w++) {
+		for (int h = 0; h < theStructure->getHeight(); h++)
+		{
+
+			int xOfStructureCell = cellCalculator.getX(cellOfStructure);
+			int yOfStructureCell = cellCalculator.getY(cellOfStructure);
+
+			int iCell =cellCalculator.getCell(xOfStructureCell + w, yOfStructureCell + h);
+
+			map.cell[iCell].id[dimensionId] = theStructure->getStructureId();
+		}
+	}
+}
+
+int cStructureUtils::getStructureWidthInPixels(int structureType) {
+	assert(structureType >= 0);
+	assert(structureType < MAX_STRUCTURETYPES);
+	return structures[structureType].bmp_width;
+}
+
+int cStructureUtils::getStructureHeightInPixels(int structureType) {
+	assert(structureType >= 0);
+	assert(structureType < MAX_STRUCTURETYPES);
+	return structures[structureType].bmp_height;
+}
+
+int cStructureUtils::getStructureWidthInPixels(cAbstractStructure * theStructure) {
+	assert(theStructure);
+	return getStructureHeightInPixels(theStructure->getType());
+}
+
+int cStructureUtils::getStructureHeightInPixels(cAbstractStructure * theStructure) {
+	assert(theStructure);
+	return getStructureWidthInPixels(theStructure->getType());
+}

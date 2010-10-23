@@ -151,6 +151,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
     str->fConcrete = (1 - fPercent);
 	str->setHitPoints((int)fHealth);
     str->setFrame(rnd(1)); // random start frame (flag)
+    str->setStructureId(iNewId);
 
     // fix up power usage
     player[iPlayer].use_power += structures[iStructureType].power_drain;

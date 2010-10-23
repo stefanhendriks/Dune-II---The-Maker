@@ -35,8 +35,8 @@ class cDrawManager {
 		cParticleDrawer * particleDrawer;
 		cMessageDrawer * messageDrawer;
 		cPlaceItDrawer *placeitDrawer;
+		cStructureDrawer * structureDrawer;
 
-		// TODO: structureDrawer
 		// TODO: unitDrawer
 		// TODO: bullet/projectile drawer
 
