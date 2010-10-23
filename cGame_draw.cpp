@@ -409,8 +409,9 @@ void cGame::combat_mouse()
             }// MOUSE PRESSED
         }
 
-		if (bMousePressedLeft && bOrderingUnits == false)
+		if (bMousePressedLeft && bOrderingUnits == false && !key[KEY_R]) {
 			game.selected_structure = game.hover_structure;
+		}
 
 	}
 
