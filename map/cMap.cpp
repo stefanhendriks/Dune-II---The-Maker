@@ -1004,28 +1004,34 @@ void cMap::smooth_spot(int c)
     int left  = CELL_LEFT(c);
     int right = CELL_RIGHT(c);
 
-    if (above > -1)
+    if (above > -1) {
         smooth_cell(above);
+    }
 
-    if (under > -1)
+    if (under > -1) {
         smooth_cell(under);
+    }
 
-    if (left > -1)
+    if (left > -1) {
         smooth_cell(left);
+    }
 
-    if (right > -1)
+    if (right > -1) {
         smooth_cell(right);
+    }
 
-    if (c > -1)
+    if (c > -1) {
         smooth_cell(c);
+    }
 }
 
 // smooths out ROCK/SAND/SPICE/HILL/SPICEHILL stuff
 void cMap::smooth()
 {
     // loop through all cells and smooth
-    for (int c=0; c < MAX_CELLS; c++)
+    for (int c=0; c < MAX_CELLS; c++) {
         smooth_cell(c);
+    }
 
 }
 
