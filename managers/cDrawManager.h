@@ -24,6 +24,7 @@ class cDrawManager {
 		void drawMap();
 		void drawStructurePlacing();
 		void drawMessage();
+                void drawMouse();
 
 	private:
 		cSideBarDrawer * sidebarDrawer;
@@ -36,6 +37,7 @@ class cDrawManager {
 		cMessageDrawer * messageDrawer;
 		cPlaceItDrawer *placeitDrawer;
 		cStructureDrawer * structureDrawer;
+                cMouseDrawer * mouseDrawer;
 
 		// TODO: unitDrawer
 		// TODO: bullet/projectile drawer

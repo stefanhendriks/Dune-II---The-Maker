@@ -13,6 +13,7 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) {
 	messageDrawer = new cMessageDrawer();
 	placeitDrawer = new cPlaceItDrawer();
 	structureDrawer = new cStructureDrawer();
+        mouseDrawer = new cMouseDrawer();
 }
 
 cDrawManager::~cDrawManager() {
@@ -26,6 +27,7 @@ cDrawManager::~cDrawManager() {
 	delete messageDrawer;
 	delete placeitDrawer;
 	delete structureDrawer;
+        delete mouseDrawer;
 	player = NULL;
 }
 
@@ -66,6 +68,9 @@ void cDrawManager::draw() {
 
 	// THE MESSAGE
 	drawMessage();
+
+        // MOUSE
+        drawMouse();
 }
 
 void cDrawManager::drawCredits() {
@@ -107,4 +112,9 @@ void cDrawManager::drawStructurePlacing() {
 void cDrawManager::drawMessage() {
 	assert(messageDrawer);
 	messageDrawer->draw();
+}
+
+void cDrawManager::drawMouse() {
+	assert(mouseDrawer);
+	mouseDrawer->draw();
 }

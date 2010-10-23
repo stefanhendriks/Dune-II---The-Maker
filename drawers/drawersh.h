@@ -28,4 +28,6 @@
 
 #include "cStructureDrawer.h"
 
+#include "cMouseDrawer.h"
+
 #endif /* DRAWERSH_H_ */
