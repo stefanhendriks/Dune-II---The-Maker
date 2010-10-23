@@ -10,6 +10,7 @@
 
 // forward declaration
 class cPlayer;
+class cCellCalculator;
 
 #include "cCell.h"
 #include "cMap.h"

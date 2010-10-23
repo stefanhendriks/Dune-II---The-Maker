@@ -16,7 +16,9 @@
 class cCellCalculator {
 
 public:
-	cCellCalculator();
+	cCellCalculator(cMap * theMap);
+	cCellCalculator(int theHeight, int theWidth);
+	~cCellCalculator();
 
 	// get X / Y from cell
 	int getX(int cell);
@@ -37,6 +39,9 @@ public:
 
 	int findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell);
 
+	private:
+
+		int height, width;
 };
 
 #endif

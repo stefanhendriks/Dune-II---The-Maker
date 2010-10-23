@@ -19,16 +19,16 @@ cMapCamera::cMapCamera() {
 	char msg[255];
 	sprintf(msg, "Camera initialized. Viewport width is [%d], height [%d]. Position [%d,%d]", viewportWidth, viewportHeight, getX(), getY());
 	logbook(msg);
+	cellCalculator = new cCellCalculator(&map);
 }
 
 cMapCamera::~cMapCamera() {
+	delete cellCalculator;
 }
 
 void cMapCamera::centerAndJumpViewPortToCell(int cell) {
-	cCellCalculator cellCalculator;
-
-	int cellX = cellCalculator.getX(cell);
-	int cellY = cellCalculator.getY(cell);
+	int cellX = cellCalculator->getX(cell);
+	int cellY = cellCalculator->getY(cell);
 
 	// determine the half of our screen
 	int width = mapCamera->getViewportWidth();

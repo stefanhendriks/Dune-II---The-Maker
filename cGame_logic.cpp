@@ -1537,7 +1537,7 @@ void cGame::setup_skirmish()
         alfont_textprintf(bmp_screen, bene_font, 580, 466, makecol(255,0,0), "START");
 
 
-    cCellCalculator *cellCalculator = new cCellCalculator();
+    cCellCalculator *cellCalculator = new cCellCalculator(&map);
     // START
 	if ((mouse_x >= 580 && mouse_x <= 640) && (mouse_y >= 465 && mouse_y <= 480) && bMousePressedLeft && iSkirmishMap > -1)
 	{

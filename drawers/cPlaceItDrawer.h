@@ -21,6 +21,7 @@ class cPlaceItDrawer {
 
 	private:
 
+		cCellCalculator * cellCalculator;
 };
 
 #endif /* CPLACEITDRAWER_H_ */

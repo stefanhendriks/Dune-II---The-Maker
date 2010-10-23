@@ -8,9 +8,11 @@
 #include "../d2tmh.h"
 
 cStructureUtils::cStructureUtils() {
+	cellCalculator = new cCellCalculator(&map);
 }
 
 cStructureUtils::~cStructureUtils() {
+	delete cellCalculator;
 }
 
 int cStructureUtils::getHeightOfStructureTypeInCells(int structureType) {
@@ -174,9 +176,6 @@ int cStructureUtils::findClosestStructureTypeToCell(int cell, int structureType,
 	assert(structureType > -1);
 	assert(cell >= 0 || cell < MAX_CELLS);
 
-	// We need cell calculation, so get a calculator:
-	cCellCalculator cellCalculator;
-
 	int foundStructureId=-1;		// found structure id
 	long shortestDistance=9999; // max distance to search in
 
@@ -187,7 +186,7 @@ int cStructureUtils::findClosestStructureTypeToCell(int cell, int structureType,
 			if (structure[i]->getOwner() == playerId) {     			// same player
 				if (structure[i]->getType() == structureType) {   		// type equals parameter
 					if (structure[i]->iUnitID < 0) {    				// no other unit is heading to this structure
-						long distance = cellCalculator.distance(cell, structure[i]->getCell());
+						long distance = cellCalculator->distance(cell, structure[i]->getCell());
 
 						// if distance is lower than last found distance, it is the closest for now.
 						if (distance < shortestDistance) {
@@ -206,7 +205,6 @@ int cStructureUtils::findClosestStructureTypeToCell(int cell, int structureType,
 void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructure * theStructure) {
 	assert(theStructure);
 
-	cCellCalculator cellCalculator;
 	int cellOfStructure = theStructure->getCell();
 
 	assert(cellOfStructure > -1);
@@ -215,10 +213,10 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
 		for (int h = 0; h < theStructure->getHeight(); h++)
 		{
 
-			int xOfStructureCell = cellCalculator.getX(cellOfStructure);
-			int yOfStructureCell = cellCalculator.getY(cellOfStructure);
+			int xOfStructureCell = cellCalculator->getX(cellOfStructure);
+			int yOfStructureCell = cellCalculator->getY(cellOfStructure);
 
-			int iCell =cellCalculator.getCell(xOfStructureCell + w, yOfStructureCell + h);
+			int iCell =cellCalculator->getCell(xOfStructureCell + w, yOfStructureCell + h);
 
 			map.cell[iCell].id[dimensionId] = theStructure->getStructureId();
 		}

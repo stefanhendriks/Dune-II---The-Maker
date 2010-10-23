@@ -23,7 +23,7 @@ class cMapDrawer {
 		cMap * map;
 		cPlayer * player;
 		cMapCamera * camera;
-
+		cCellCalculator * cellCalculator;
 };
 
 #endif /* CMAPDRAWER_H_ */

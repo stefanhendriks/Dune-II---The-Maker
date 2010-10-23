@@ -63,6 +63,8 @@ class cMapCamera {
 
 		// timer used, when
 		int TIMER_move;
+
+		cCellCalculator * cellCalculator;
 };
 
 #endif /* CMAPCAMERA_H_ */

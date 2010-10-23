@@ -62,6 +62,8 @@ class cOrderProcesser {
 		// this is randomly set to 60 or more seconds. After the time runs out, new prices
 		// will be set in the LIST_STARPORT
 		int secondsUntilNewPricesWillBeCalculated;
+
+		cCellCalculator * cellCalculator;
 };
 
 #endif /* CORDERPROCESSER_H_ */

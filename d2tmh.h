@@ -100,6 +100,7 @@ class CreditsDrawer;
 #include "utils/cSeedMap.h"
 #include "utils/cSeedMapGenerator.h"
 
+
 #include "cParticle.h"                       // explosion animations and such
 #include "bullet.h"                         // bullets
 #include "regions.h"

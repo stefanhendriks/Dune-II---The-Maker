@@ -5,8 +5,23 @@
 
 #include "../d2tmh.h"
 
-cCellCalculator::cCellCalculator() {
-	// do nothing
+cCellCalculator::cCellCalculator(cMap *theMap) {
+	assert(theMap);
+	// TODO USE MAP CLASS (NOT YET DONE, AND USE GET/SET)use get/set
+	//width = theMap->width;
+	//height = theMap->height;
+
+	// REMOVE THIS LATER:
+	width = game.map_width;
+	height = game.map_height;
+}
+
+cCellCalculator::cCellCalculator(int theHeight, int theWidth) {
+	height = theHeight;
+	width = theWidth;
+}
+
+cCellCalculator::~cCellCalculator() {
 }
 
 int cCellCalculator::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell) {
@@ -170,10 +185,14 @@ double cCellCalculator::distance(int cell1, int cell2) {
  * @return
  */
 int cCellCalculator::getCellWithMapBorders(int x, int y) {
+	int maxHeight = (height-1);
+	int maxWidth = (width-1);
+
 	if (x < 1) x = 1;
 	if (y < 1) y = 1;
-	if (x > 63) x = 63;
-	if (y > 63) y = 63;
+	if (x > maxWidth) x = maxWidth;
+	if (y > maxHeight) y = maxHeight;
+
 	return getCell(x, y);
 }
 

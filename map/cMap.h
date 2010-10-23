@@ -76,6 +76,8 @@ public:
     	int TIMER_scroll;
     	int iScrollSpeed;
 
+    	// sizes of the map
+    	int height, width;
 };
 
 

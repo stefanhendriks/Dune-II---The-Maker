@@ -1138,8 +1138,10 @@ float health_structure(int i, int w)
 // return a border cell, close to iCll
 int iFindCloseBorderCell(int iCll)
 {
-	cCellCalculator calculator;
-	return calculator.findCloseMapBorderCellRelativelyToDestinationCel(iCll);
+	cCellCalculator * calculator = new cCellCalculator(&map);
+	int result = calculator->findCloseMapBorderCellRelativelyToDestinationCel(iCll);
+	delete calculator;
+	return result;
 }
 
 int iCellOnScreen(int iCell)

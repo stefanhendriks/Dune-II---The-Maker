@@ -13,13 +13,18 @@
 #ifndef STRUCTURE_FACTORY
 #define STRUCTURE_FACTORY
 
+// forward declaration
+class cCellCalculator;
+
 class cStructureFactory {
 
 private:
 	static cStructureFactory *instance;
+	cCellCalculator * cellCalculator;
 
 protected:
 	cStructureFactory();
+	~cStructureFactory();
 
 public:
 

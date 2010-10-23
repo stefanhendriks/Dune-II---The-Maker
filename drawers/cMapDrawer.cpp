@@ -14,12 +14,15 @@ cMapDrawer::cMapDrawer(cMap * theMap, cPlayer * thePlayer, cMapCamera * theCamer
 	map = theMap;
 	player = thePlayer;
 	camera = theCamera;
+	cellCalculator = new cCellCalculator(map);
 }
 
 cMapDrawer::~cMapDrawer() {
 	map = NULL;
 	player = NULL;
 	camera = NULL;
+	delete cellCalculator;
+	cellCalculator = NULL;
 }
 
 void cMapDrawer::drawShroud() {
@@ -183,8 +186,6 @@ void cMapDrawer::drawTerrain() {
 	// - all we need is the end of the 'to be drawn area' , which is:
 	//   WIDTH OF SCREEN / 32
 
-	cCellCalculator cellCalculator;
-
 	int iDrawX=0;
 	int iDrawY=42;
 
@@ -223,7 +224,7 @@ void cMapDrawer::drawTerrain() {
 				if (map->mouse_cell() > -1)
 				{
 					int mc = map->mouse_cell();
-					if (cellCalculator.getX(mc) == iStartX && cellCalculator.getY(mc) == iStartY)
+					if (cellCalculator->getX(mc) == iStartX && cellCalculator->getY(mc) == iStartY)
 						rectfill(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, makecol(64,64,64));
 
 				}

@@ -8,9 +8,11 @@
 #include "../d2tmh.h"
 
 cPlaceItDrawer::cPlaceItDrawer() {
+	cellCalculator = new cCellCalculator(&map);
 }
 
 cPlaceItDrawer::~cPlaceItDrawer() {
+	delete cellCalculator;
 }
 
 void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace) {
@@ -37,7 +39,6 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	if (cell < 0) return;
 
 	cStructureUtils structureUtils;
-	cCellCalculator cellCalculator;
 	int structureId = itemToPlace->getBuildId();
 	assert(structureId > -1);
 
@@ -59,8 +60,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 #define SCANWIDTH	1
 
-	int iCellX = cellCalculator.getX(cell);
-	int iCellY = cellCalculator.getY(cell);
+	int iCellX = cellCalculator->getX(cell);
+	int iCellY = cellCalculator->getY(cell);
 
 	// check
 	int iStartX = iCellX-SCANWIDTH;
