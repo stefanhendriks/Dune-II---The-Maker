@@ -44,19 +44,9 @@ void cMap::init()
     }
 
     // set visibility
-
     //memset(iVisible, MAP_FOG, sizeof(iVisible));
 
-    for (int i=0; i < MAX_STRUCTURES; i++)
-    {
-        // clear out all structures
-        if (structure[i]) {
-			cStructureFactory::getInstance()->deleteStructureInstance(structure[i]);
-        }
-
-        // clear pointer
-        structure[i] = NULL;
-    }
+    cStructureFactory::getInstance()->clearAllStructures();
 
 	for (int i=0; i < MAX_BULLETS; i++) {
 		bullet[i].init();

@@ -34,6 +34,8 @@ public:
 
 	int getFreeSlot();
 
+	void clearAllStructures();
+
 	void clearFogForStructureType(int iCell, cAbstractStructure *str);
 	void clearFogForStructureType(int iCell, int iStructureType, int iSight, int iPlayer);
 

@@ -411,5 +411,14 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
 	}
 }
 
+void cStructureFactory::clearAllStructures() {
+	for (int i=0; i < MAX_STRUCTURES; i++) {
+		// clear out all structures
+		if (structure[i]) {
+			cStructureFactory::getInstance()->deleteStructureInstance(structure[i]);
+		}
 
-
+		// clear pointer
+		structure[i] = NULL;
+	}
+}
