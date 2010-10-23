@@ -396,7 +396,7 @@ void cGame::combat_mouse()
             if (structure[game.hover_structure]->getOwner() == 0 &&
                 structure[game.hover_structure]->getHitPoints() < structures[structure[game.hover_structure]->getType()].hp)
             {
-                if (bMousePressedLeft )
+                if (bMousePressedLeft)
                 {
 
                     if (structure[game.hover_structure]->bRepair==false)
@@ -411,6 +411,17 @@ void cGame::combat_mouse()
 
 		if (bMousePressedLeft && bOrderingUnits == false && !key[KEY_R]) {
 			game.selected_structure = game.hover_structure;
+
+			// select list that belongs to structure when it is ours
+			cAbstractStructure * theSelectedStructure = structure[game.selected_structure];
+			if (theSelectedStructure->getOwner() == HUMAN) {
+				int typeOfStructure = theSelectedStructure->getType();
+				cListUtils listUtils;
+				int listId = listUtils.findListTypeByStructureType(typeOfStructure);
+				if (listId != LIST_NONE) {
+					player[HUMAN].getSideBar()->setSelectedListId(listId);
+				}
+			}
 		}
 
 	}

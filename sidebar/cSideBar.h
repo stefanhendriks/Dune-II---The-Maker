@@ -55,6 +55,7 @@ class cSideBar {
 
 		// set
 		void setPlayer(cPlayer *thePlayer) { player = thePlayer; }
+		void setSelectedListId(int value) { selectedListID = value; }
 
 	private:
 		// the lists:

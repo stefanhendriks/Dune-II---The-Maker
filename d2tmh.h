@@ -151,6 +151,7 @@ class CreditsDrawer;
 #include "utils/cUpgradeUtils.h"
 #include "utils/cMapUtils.h"
 #include "utils/cPlayerUtils.h"
+#include "utils/cListUtils.h"
 
 // TODO: Units
 
