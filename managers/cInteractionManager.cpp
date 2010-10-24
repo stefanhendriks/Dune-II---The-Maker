@@ -22,6 +22,10 @@ void cInteractionManager::interact() {
 	interactWithSidebar();
 }
 
+void cInteractionManager::interactWithKeyboard(){
+    keyboardManager.interact();
+}
+
 void cInteractionManager::interactWithSidebar() {
 	sidebar->thinkInteraction();
 	miniMapDrawer->interact();

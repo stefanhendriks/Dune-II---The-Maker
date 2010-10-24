@@ -147,6 +147,10 @@ public:
 	void draw_placeit();
 	void combat_mouse();
 
+        int getGroupNumberFromKeyboard();
+        void destroyAllUnits(bool);
+        void destroyAllStructures(bool);
+
 private:
 	void poll();
 	void combat();		// the combat part (main) of the game
@@ -166,7 +170,6 @@ private:
 	void runGameState();
 	void shakeScreenAndBlitBuffer();
 	void handleTimeSlicing();
-	void handleKeys();
 
     void draw_movie(int iType);  // draw movie sequence
 
