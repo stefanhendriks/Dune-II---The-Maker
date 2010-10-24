@@ -8,7 +8,6 @@
 #ifndef CCELL_H_
 #define CCELL_H_
 
-
 struct tCell
 {
     int credits;        // harvesting
