@@ -69,8 +69,12 @@ void cDrawManager::draw() {
 	// THE MESSAGE
 	drawMessage();
 
-        // MOUSE
-        drawMouse();
+	// DO COMBAT MOUSE (TODO: remove this eventually, as it updates state and that is not what
+	// this class should be doing)
+	game.combat_mouse();
+
+	// MOUSE
+	drawMouse();
 }
 
 void cDrawManager::drawCredits() {

@@ -99,7 +99,8 @@ void cGame::combat_mouse()
 
         // Mouse is hovering above a unit
         if (hover_unit > -1) {
-            // wanting to repair, check if its possible
+
+        	// wanting to repair UNITS, check if its possible
             if (key[KEY_R] && player[0].iStructures[REPAIR] > 0) {
             	if (unit[hover_unit].iPlayer == HUMAN) {
             		if (unit[hover_unit].iHitPoints < units[unit[hover_unit].iType].hp &&
@@ -391,7 +392,7 @@ void cGame::combat_mouse()
 		}
 
         // REPAIR
-        if (key[KEY_R] && bOrderingUnits==false)
+        if (key[KEY_R] && !bOrderingUnits)
         {
             if (structure[game.hover_structure]->getOwner() == 0 &&
                 structure[game.hover_structure]->getHitPoints() < structures[structure[game.hover_structure]->getType()].hp)

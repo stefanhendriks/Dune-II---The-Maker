@@ -145,6 +145,7 @@ public:
 	cSoundPlayer * getSoundPlayer() { return soundPlayer; }
 
 	void draw_placeit();
+	void combat_mouse();
 
 private:
 	void poll();
@@ -159,7 +160,6 @@ private:
 	void menu();		// main menu
 	void region();		// region selection
 
-	void combat_mouse();
 	void draw_order();
 	void do_credits_drawing_and_logic();
 

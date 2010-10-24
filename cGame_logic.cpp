@@ -587,10 +587,6 @@ void cGame::combat()
 
     // think win/lose
     think_winlose();
-
-	// DO COMBAT MOUSE
-	combat_mouse();
-
 }
 
 void cGame::draw_mentat(int iType)
