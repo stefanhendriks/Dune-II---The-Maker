@@ -54,10 +54,6 @@ void cGame::init() {
 
     iSkirmishMap=-1;
 
-	bMousePressedLeft = bMousePressedRight=false;
-
-	mouse_left=mouse_right=false;
-
     iMusicVolume=128; // volume is 0...
 
 	paths_created=0;
@@ -489,6 +485,8 @@ void cGame::think_music()
 
 void cGame::poll()
 {
+	cMouse::getInstance()->updateState();
+
     if (iMouseZ > 10 || iMouseZ < -10)
     {
         iMouseZ=0;
@@ -565,10 +563,9 @@ void cGame::poll()
 	hover_unit=-1;
 }
 
-void cGame::combat()
-{
+void cGame::combat() {
 
-    if (iFadeAction == 1) // fading out
+	if (iFadeAction == 1) // fading out
     {
         draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
         return;
@@ -577,7 +574,6 @@ void cGame::combat()
     if (iAlphaScreen == 0)
         iFadeAction = 2;
     // -----------------
-
 	bPlacedIt = bPlaceIt;
 
 	assert(drawManager);
@@ -2580,6 +2576,7 @@ bool cGame::setupGame() {
 	install_keyboard();
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
 	install_mouse();
+	assert(cMouse::getInstance());
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
 	/* set up the interrupt routines... */

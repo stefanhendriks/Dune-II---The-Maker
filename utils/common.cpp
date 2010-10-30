@@ -181,21 +181,13 @@ void INSTALL_HOUSES()
 }
 
 
-bool MOUSE_BTN_LEFT()
-{
-  if (mouse_b & 1)
-    return true; // return true, no check for 'already pressed'
-
-  return false;
+bool MOUSE_BTN_LEFT() {
+	return cMouse::getInstance()->isLeftButtonPressed();
 }
 
 // Did we press the right mouse button? (instant)
-bool MOUSE_BTN_RIGHT()
-{
-  if (mouse_b & 2)
-      return true;    // yeap
-
-  return false;
+bool MOUSE_BTN_RIGHT() {
+	return cMouse::getInstance()->isRightButtonPressed();
 }
 
 
@@ -207,43 +199,13 @@ bool MOUSE_BTN_RIGHT()
  */
 bool mouse_pressed_left()
 {
-  if (MOUSE_BTN_LEFT())
-  {
-    // not yet pressed
-    if (game.mouse_left == false)
-    {
-      // we pressed this just for once
-      game.mouse_left=true;
-      return true;    // yeap
-    }
-  }
-  else
-  {
-    game.mouse_left=false;
-    return false;   // no way
-  }
-
-  return false;
+	return cMouse::getInstance()->isLeftButtonClicked();
 }
 
 // Did we press the right mouse button?
 bool mouse_pressed_right()
 {
-  if (MOUSE_BTN_RIGHT())
-  {
-    if (game.mouse_right == false)
-    {
-      game.mouse_right = true;
-      return true;    // yeap
-    }
-  }
-  else
-  {
-    game.mouse_right = false;
-    return false;   // no way
-  }
-
-  return false;
+	return cMouse::getInstance()->isRightButtonClicked();
 }
 /*****************************
  Unit Rules

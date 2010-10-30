@@ -155,6 +155,9 @@ class CreditsDrawer;
 #include "utils/cPlayerUtils.h"
 #include "utils/cListUtils.h"
 
+// CONTROLS (mouse/keyboard)
+#include "controls/controlsh.h"
+
 // TODO: Units
 
 // Extern references & variable declarations

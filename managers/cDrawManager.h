@@ -37,9 +37,10 @@ class cDrawManager {
 		cMessageDrawer * messageDrawer;
 		cPlaceItDrawer *placeitDrawer;
 		cStructureDrawer * structureDrawer;
-                cMouseDrawer * mouseDrawer;
+		cMouseDrawer * mouseDrawer;
 
 		// TODO: unitDrawer
+
 		// TODO: bullet/projectile drawer
 
 		cPlayer * player;

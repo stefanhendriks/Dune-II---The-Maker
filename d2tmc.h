@@ -86,7 +86,7 @@ extern int mouse_status;     // status of the mouse (see main.h)
 extern int mouse_co_x1;      // coordinates
 extern int mouse_co_y1;      // of
 extern int mouse_co_x2;      // the
-extern int mouse_co_y2;      // mouse border
+extern int mouse_co_y2;      // mouse border (box selecting)
 
 #endif
 
