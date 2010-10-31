@@ -2452,12 +2452,12 @@ void cGame::run()
 	set_trans_blender(0, 0, 0, 128);
 
 	while (bPlaying) {
-		poll();
 		TimeManager.processTime();
+		poll();
 		handleTimeSlicing();
-                runGameState();
-                assert(interactionManager);
-                interactionManager->interactWithKeyboard();
+		runGameState();
+		assert(interactionManager);
+		interactionManager->interactWithKeyboard();
 		shakeScreenAndBlitBuffer();
 		frame_count++;
 	}
