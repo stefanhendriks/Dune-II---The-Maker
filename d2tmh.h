@@ -74,6 +74,7 @@ class CreditsDrawer;
 #include "utils/cSoundPlayer.h"
 
 // TODO: Finish up these structure classes
+class cPlayer;
 #include "structures/cAbstractStructure.h"
 #include "structures/cStructureFactory.h"				// Responsible for creation of Structures
 
@@ -154,6 +155,7 @@ class CreditsDrawer;
 #include "utils/cMapUtils.h"
 #include "utils/cPlayerUtils.h"
 #include "utils/cListUtils.h"
+#include "utils/cMouseUtils.h"
 
 // CONTROLS (mouse/keyboard)
 #include "controls/controlsh.h"

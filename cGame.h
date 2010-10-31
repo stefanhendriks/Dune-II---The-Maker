@@ -68,7 +68,6 @@ public:
 	int iHouse;			// what house is selected for playing?
 
 	int selected_structure;
-	int hover_structure;
 	int hover_unit;
 
 	int fade_select;        // fade color when selected

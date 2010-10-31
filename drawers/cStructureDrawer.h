@@ -23,6 +23,7 @@ class cStructureDrawer {
 	protected:
 		void drawStructureHealthBar(int iStructure);
 		void drawStructuresForLayer(int layer);
+		void drawRectangeOfStructure(cAbstractStructure * theStructure, int color);
 
 	private:
 

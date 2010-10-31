@@ -29,7 +29,6 @@ class cMiniMapDrawer {
 		void drawViewPortRectangle();
 		void drawUnitsAndStructures();
 
-		int getRGBColorForHouse(int houseId);
 		int getRGBColorForTerrainType(int terrainType);
 
 		void drawDot(int x, int y, int color);

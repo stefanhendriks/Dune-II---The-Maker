@@ -190,6 +190,22 @@ void cPlayer::setHouse(int iHouse) {
      }
   }
 
+  minimapColor = getRGBColorForHouse(house);
+}
+
+int cPlayer::getRGBColorForHouse(int houseId) {
+	switch(houseId) {
+		case ATREIDES:
+			return makecol(0, 0, 255);
+		case HARKONNEN:
+			return makecol(255, 0, 0);
+		case ORDOS:
+			return makecol(0, 255, 0);
+		case SARDAUKAR:
+			return makecol(255, 0, 255);
+		default:
+			return makecol(100, 255, 100);
+	}
 }
 
 bool cPlayer::bEnoughPower() {

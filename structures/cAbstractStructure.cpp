@@ -66,6 +66,11 @@ int cAbstractStructure::iDrawY()
   return (( (( iCellGiveY(iCell) * 32 ) - (mapCamera->getY()*32)))+42);
 }
 
+cPlayer * cAbstractStructure::getPlayer() {
+	assert(iPlayer >= HUMAN);
+	assert(iPlayer < MAX_PLAYERS);
+	return &player[iPlayer];
+}
 
 // this structure dies
 void cAbstractStructure::die()

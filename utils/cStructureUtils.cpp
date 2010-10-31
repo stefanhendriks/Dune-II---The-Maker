@@ -244,3 +244,28 @@ int cStructureUtils::getStructureHeightInPixels(cAbstractStructure * theStructur
 	assert(theStructure);
 	return getStructureWidthInPixels(theStructure->getType());
 }
+
+bool cStructureUtils::isStructureOnScreen(cAbstractStructure *structure) {
+	assert(structure);
+	int drawX = structure->iDrawX();
+	int drawY = structure->iDrawY();
+	int width = getStructureWidthInPixels(structure);
+	int height = getStructureHeightInPixels(structure);
+
+	return ((drawX + width) > 0 && drawX < game.screen_x) && ( (drawY + height) > 0 && drawY < game.screen_y);
+}
+
+bool cStructureUtils::isMouseOverStructure(cMouse *mouse, cAbstractStructure *structure) {
+	assert(structure);
+	assert(mouse);
+
+	int drawX = structure->iDrawX();
+	int drawY = structure->iDrawY();
+	int width = getStructureWidthInPixels(structure);
+	int height = getStructureHeightInPixels(structure);
+
+	cMouseUtils * mouseUtils = new cMouseUtils(mouse);
+	bool result = mouseUtils->isMouseOverRectangle(drawX, drawY, width, height);
+	delete mouseUtils;
+	return result;
+}

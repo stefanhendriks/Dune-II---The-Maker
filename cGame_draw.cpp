@@ -85,10 +85,11 @@ void cGame::winning()
 // Draw the mouse in combat mode, and do its interactions
 void cGame::combat_mouse()
 {
+	cGameControlsContext *context = player[HUMAN].getGameControlsContext();
     bool bOrderingUnits=false;
 
 	if (bPlaceIt == false && bPlacedIt==false) {
-		int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
+		int mc = context->getMouseCell();
 
         if (hover_unit > -1) {
             if (unit[hover_unit].iPlayer == 0) {
@@ -201,18 +202,21 @@ void cGame::combat_mouse()
 						if (unit[i].isValid() && unit[i].iPlayer == HUMAN && unit[i].bSelected)	{
 							int iAttackCell=-1;
 
-							if (game.hover_structure < 0 && game.hover_unit < 0)
+							if (!context->isMouseOverStructure() < 0 && game.hover_unit < 0) {
 								iAttackCell = mc;
+							}
 
-							UNIT_ORDER_ATTACK(i, mc, game.hover_unit, game.hover_structure, iAttackCell);
+							UNIT_ORDER_ATTACK(i, mc, game.hover_unit, context->getIdOfStructureWhereMouseHovers(), iAttackCell);
 
-							if (game.hover_unit > -1)
+							if (game.hover_unit > -1) {
 								unit[game.hover_unit].TIMER_blink = 5;
+							}
 
-							if (units[unit[i].iType].infantry)
+							if (units[unit[i].iType].infantry) {
 								bPlayInf=true;
-							else
+							} else {
 								bPlayRep=true;
+							}
 
 							bParticle=true;
 						}
@@ -368,15 +372,15 @@ void cGame::combat_mouse()
 
 	} // NOT PLACING STUFF
 
-	if (bOrderingUnits)
+	if (bOrderingUnits) {
 		game.selected_structure = -1;
+	}
 
-    	// MAKE PRIMARY
-	if (game.hover_structure > -1)
+	if (context->isMouseOverStructure())
 	{
 		if (key[KEY_P])
 		{
-			int iStr=game.hover_structure;
+			int iStr=context->getIdOfStructureWhereMouseHovers();
 
 			if (structure[iStr]->getOwner() == 0)
 			{
@@ -394,16 +398,19 @@ void cGame::combat_mouse()
         // REPAIR
         if (key[KEY_R] && !bOrderingUnits)
         {
-            if (structure[game.hover_structure]->getOwner() == 0 &&
-                structure[game.hover_structure]->getHitPoints() < structures[structure[game.hover_structure]->getType()].hp)
+        	int structureId = context->getIdOfStructureWhereMouseHovers();
+
+            if (structure[structureId]->getOwner() == 0 &&
+                structure[structureId]->getHitPoints() < structures[structure[structureId]->getType()].hp)
             {
                 if (cMouse::getInstance()->isLeftButtonClicked())
                 {
 
-                    if (structure[game.hover_structure]->bRepair==false)
-                        structure[game.hover_structure]->bRepair=true;
-                    else
-                        structure[game.hover_structure]->bRepair=false;
+                    if (structure[structureId]->bRepair==false) {
+                        structure[structureId]->bRepair=true;
+                    } else {
+                        structure[structureId]->bRepair=false;
+                    }
                 }
 
                 mouse_tile = MOUSE_REPAIR;
@@ -411,7 +418,7 @@ void cGame::combat_mouse()
         }
 
 		if (cMouse::getInstance()->isLeftButtonClicked() && bOrderingUnits == false && !key[KEY_R]) {
-			game.selected_structure = game.hover_structure;
+			game.selected_structure = context->getIdOfStructureWhereMouseHovers();
 
 			// select list that belongs to structure when it is ours
 			cAbstractStructure * theSelectedStructure = structure[game.selected_structure];

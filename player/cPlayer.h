@@ -72,13 +72,18 @@ class cPlayer {
 		cUpgradeBuilder * getUpgradeBuilder() { return upgradeBuilder; }
 		cOrderProcesser * getOrderProcesser() { return orderProcesser; }
 		cGameControlsContext * getGameControlsContext() { return gameControlsContext; }
+		int getMinimapColor() { return minimapColor; }
 
 		int getAmountOfStructuresForType(int structureType);
 
 		// delete
 		void deleteSideBar() { if (sidebar) delete sidebar; }
 
+
+
 	private:
+		int getRGBColorForHouse(int houseId);
+
 		// TODO: in the end this should be redundant.. perhaps remove it now/soon anyway?
 		// TODO: redundant? OBSELETE. Since we're getting more properties for units and thereby
 		// can/should create units specific for houses.
@@ -97,6 +102,7 @@ class cPlayer {
 
 		int techLevel;		// technology level
 		int house;
+		int minimapColor;			// color of this team on minimap;
 		int id;	// this id is the reference to the player array
 };
 

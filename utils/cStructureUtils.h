@@ -29,6 +29,9 @@ class cStructureUtils {
 
 		void putStructureOnDimension(int dimensionId, cAbstractStructure * theStructure);
 
+		bool isStructureOnScreen(cAbstractStructure *structure);
+		bool isMouseOverStructure(cMouse *mouse, cAbstractStructure *structure);
+
 	protected:
 
 	private:

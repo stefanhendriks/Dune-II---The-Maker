@@ -94,19 +94,19 @@ void cMiniMapDrawer::drawUnitsAndStructures() {
 			if (map->isVisible(iCll, player->getId())) {
 				if (map->cell[iCll].id[MAPID_STRUCTURES] > -1) {
 					int	iPlr = structure[map->cell[iCll].id[MAPID_STRUCTURES]]->getOwner();
-					iColor = getRGBColorForHouse(player[iPlr].getHouse());
+					iColor = player[iPlr].getMinimapColor();
 					drawADot = true;
 				}
 
 				if (map->cell[iCll].id[MAPID_UNITS] > -1) {
 					int iPlr = unit[map->cell[iCll].id[MAPID_UNITS]].iPlayer;
-					iColor = getRGBColorForHouse(player[iPlr].getHouse());
+					iColor = player[iPlr].getMinimapColor();
 					drawADot = true;
 				}
 
 				if (map->cell[iCll].id[MAPID_AIR] > -1) {
 					int iPlr = unit[map->cell[iCll].id[MAPID_AIR]].iPlayer;
-					iColor = getRGBColorForHouse(player[iPlr].getHouse());
+					iColor = player[iPlr].getMinimapColor();
 					drawADot = true;
 				}
 
@@ -140,20 +140,7 @@ void cMiniMapDrawer::drawUnitsAndStructures() {
 	delete mapUtils;
 }
 
-int cMiniMapDrawer::getRGBColorForHouse(int houseId) {
-	switch(houseId) {
-		case ATREIDES:
-			return makecol(0, 0, 255);
-		case HARKONNEN:
-			return makecol(255, 0, 0);
-		case ORDOS:
-			return makecol(0, 255, 0);
-		case SARDAUKAR:
-			return makecol(255, 0, 255);
-		default:
-			return makecol(100, 255, 100);
-	}
-}
+
 
 int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
 	// get color for terrain type (for minimap)

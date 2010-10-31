@@ -156,12 +156,11 @@ bool cMap::occupied(int iCll, int iUnitID)
 // HUH? WHat is this doing here? (TODO: move to structure Drawing thing)
 void cMap::draw_structures_health()
 {
-    int iDrawHealthStructure = game.hover_structure;
-
+	cGameControlsContext *context = player[HUMAN].getGameControlsContext();
     // DRAW HEALTH
-    if (iDrawHealthStructure > -1)
+    if (context->isMouseOverStructure())
     {
-        int i = iDrawHealthStructure;
+        int i = context->getIdOfStructureWhereMouseHovers();
 
         // Draw structure health
         int draw_x = structure[i]->iDrawX()-1;

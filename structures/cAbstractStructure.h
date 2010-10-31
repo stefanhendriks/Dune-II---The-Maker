@@ -99,6 +99,7 @@ class cAbstractStructure {
 		int iFreeAround();
 
 		// getters
+		cPlayer * getPlayer();
 		int getWidth() { return iWidth; }
 		int getHeight() { return iHeight; }
 		int getHitPoints() { return iHitPoints; }

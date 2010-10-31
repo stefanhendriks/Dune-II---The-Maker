@@ -65,7 +65,21 @@ void cGameControlsContext::determineToolTip() {
 }
 
 void cGameControlsContext::determineHoveringOverStructureId() {
+	cStructureUtils structureUtils;
 
+	mouseHoveringOverStructureId = -1;
+
+	for (int i=0; i < MAX_STRUCTURES; i++) {
+		cAbstractStructure * theStructure = structure[i];
+
+		if (theStructure) {
+			if (structureUtils.isStructureOnScreen(theStructure)) {
+				if (structureUtils.isMouseOverStructure(mouse, theStructure)) {
+					mouseHoveringOverStructureId = i;
+				}
+			}
+		}
+	}
 }
 
 void cGameControlsContext::determineHoveringOverUnitId() {
