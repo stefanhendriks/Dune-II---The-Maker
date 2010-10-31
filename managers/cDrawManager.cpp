@@ -13,7 +13,7 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) {
 	messageDrawer = new cMessageDrawer();
 	placeitDrawer = new cPlaceItDrawer();
 	structureDrawer = new cStructureDrawer();
-        mouseDrawer = new cMouseDrawer();
+	mouseDrawer = new cMouseDrawer(thePlayer, cMouse::getInstance());
 }
 
 cDrawManager::~cDrawManager() {
@@ -27,7 +27,7 @@ cDrawManager::~cDrawManager() {
 	delete messageDrawer;
 	delete placeitDrawer;
 	delete structureDrawer;
-        delete mouseDrawer;
+	delete mouseDrawer;
 	player = NULL;
 }
 
@@ -121,4 +121,8 @@ void cDrawManager::drawMessage() {
 void cDrawManager::drawMouse() {
 	assert(mouseDrawer);
 	mouseDrawer->draw();
+	cGameControlsContext *context = player->getGameControlsContext();
+	if (context->shouldDrawToolTip()) {
+		mouseDrawer->drawToolTip();
+	}
 }

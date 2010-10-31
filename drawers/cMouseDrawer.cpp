@@ -1,43 +1,72 @@
-/* 
+/*
  * File:   cMouseDrawer.cpp
  * Author: el.anormal
- * 
+ *
  * Created Oct 23, 2010
  */
 
 #include "../d2tmh.h"
 
-cMouseDrawer::cMouseDrawer() {
+cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cMouse *theMouse) {
+	assert(thePlayer);
+	assert(theMouse);
+	player = thePlayer;
+	mouse = theMouse;
+	mouseToolTip = new cMouseToolTip(player, mouse);
 }
 
 cMouseDrawer::cMouseDrawer(const cMouseDrawer& orig) {
 }
 
 cMouseDrawer::~cMouseDrawer() {
+	player = NULL;
+	mouse = NULL;
+	delete mouseToolTip;
 }
 
 void cMouseDrawer::draw() {
-    if (mouse_tile == MOUSE_DOWN){
-        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y-16);
+	int x = mouse->getX();
+	int y = mouse->getY();
+
+	if (mouse_tile == MOUSE_DOWN){
+		y-=16;
+//        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y-16);
     }
     else if (mouse_tile == MOUSE_RIGHT){
-        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y);
+    	x-=16;
+//        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y);
     }
     else if (mouse_tile == MOUSE_MOVE || mouse_tile == MOUSE_RALLY){
-        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
+    	x-=16;
+    	y-=16;
+//        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
     }
     else if (mouse_tile == MOUSE_ATTACK){
-        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
+    	x-=16;
+    	y-=16;
+//        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
     }
     else if (mouse_tile == MOUSE_REPAIR){
-        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
+    	x-=16;
+    	y-=16;
+//    	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
     }
     else if (mouse_tile == MOUSE_PICK){
-        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
+    	x-=16;
+    	y-=16;
+//        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
     }
     else{
-        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+//        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
     }
+
+	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, x, y);
+}
+
+void cMouseDrawer::drawToolTip() {
+	int x = mouse->getX() + 32;
+	int y = mouse->getY() + 32;
+	rectfill(bmp_screen, x, y, (x+ 100), (y+100), makecol(255,255,255));
 }
 
 

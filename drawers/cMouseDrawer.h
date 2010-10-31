@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   cMouseDrawer.h
  * Author: el.anormal
  *
@@ -9,13 +9,19 @@
 #define	CMOUSEDRAWER_H
 
 class cMouseDrawer {
-public:
-    cMouseDrawer();
-    cMouseDrawer(const cMouseDrawer& orig);
-    virtual ~cMouseDrawer();
-    void draw();
-private:
+	public:
+		cMouseDrawer(cPlayer *thePlayer, cMouse *theMouse);
+		cMouseDrawer(const cMouseDrawer& orig);
+		virtual ~cMouseDrawer();
 
+		void draw();
+
+		void drawToolTip();
+
+	private:
+		cMouseToolTip * mouseToolTip;
+		cMouse *mouse;
+		cPlayer *player;
 };
 
 #endif	/* CMOUSEDRAWER_H */

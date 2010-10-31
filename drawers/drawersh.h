@@ -8,6 +8,9 @@
 #ifndef DRAWERSH_H_
 #define DRAWERSH_H_
 
+// forward declr.
+class cMouse;
+
 #include "cParticleDrawer.h"
 #include "CreditsDrawer.h"
 

@@ -31,6 +31,9 @@ class cGameControlsContext {
 		bool isMouseOnSidebar() { return mouseCell == -3; }
 		bool isMouseOnTopBar() { return mouseCell == -1; }
 		bool isMouseOnMiniMap() { return mouseCell == -2; }
+		bool isMouseOnBattleField() { return mouseCell > -1; }
+
+		bool shouldDrawToolTip() { return drawToolTip; }
 
 	protected:
 		void determineMouseCell();
@@ -38,6 +41,8 @@ class cGameControlsContext {
 	private:
 		int mouseHoveringOverStructureId;
 		int mouseHoveringOverUnitId;
+
+		bool drawToolTip;
 
 		// on what cell is the mouse hovering
 		int mouseCell;

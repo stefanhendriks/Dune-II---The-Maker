@@ -13,6 +13,7 @@ cGameControlsContext::cGameControlsContext(cPlayer * thePlayer) {
 	mouse = cMouse::getInstance();
 	mouseCell = -99;
 	cellCalculator = new cCellCalculator(&map);
+	drawToolTip = false;
 }
 
 cGameControlsContext::~cGameControlsContext() {
@@ -24,6 +25,10 @@ cGameControlsContext::~cGameControlsContext() {
 
 void cGameControlsContext::updateState() {
 	determineMouseCell();
+	drawToolTip = false;
+	if (key[KEY_T] && isMouseOnBattleField()) {
+		drawToolTip = true;
+	}
 }
 
 void cGameControlsContext::determineMouseCell() {
