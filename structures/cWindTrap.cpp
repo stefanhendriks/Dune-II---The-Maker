@@ -194,3 +194,9 @@ void cWindTrap::draw(int iStage)
 
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
+
+int cWindTrap::powerOut() {
+	cHitpointCalculator hitpointCalculator;
+	float percentage = ((float)getHitPoints() / (float)structures[WINDTRAP].hp);
+	return hitpointCalculator.getByPercent(structures[WINDTRAP].power_give, percentage);
+}

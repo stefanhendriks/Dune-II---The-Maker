@@ -142,7 +142,7 @@ void cPlayer::init()
 	}
 
 	credits	=	0;
-	max_credits	=	credits;
+	max_credits	= 1000;
 	focus_cell	=	0;
 
 	use_power=0;

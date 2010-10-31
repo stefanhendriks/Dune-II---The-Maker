@@ -11,6 +11,8 @@
 // forward declr.
 class cMouse;
 
+#include "cTextDrawer.h"
+
 #include "cParticleDrawer.h"
 #include "CreditsDrawer.h"
 

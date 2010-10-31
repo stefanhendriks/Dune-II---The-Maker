@@ -237,12 +237,12 @@ int cStructureUtils::getStructureHeightInPixels(int structureType) {
 
 int cStructureUtils::getStructureWidthInPixels(cAbstractStructure * theStructure) {
 	assert(theStructure);
-	return getStructureHeightInPixels(theStructure->getType());
+	return getStructureWidthInPixels(theStructure->getType());
 }
 
 int cStructureUtils::getStructureHeightInPixels(cAbstractStructure * theStructure) {
 	assert(theStructure);
-	return getStructureWidthInPixels(theStructure->getType());
+	return getStructureHeightInPixels(theStructure->getType());
 }
 
 bool cStructureUtils::isStructureOnScreen(cAbstractStructure *structure) {

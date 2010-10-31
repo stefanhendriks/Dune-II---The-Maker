@@ -2708,6 +2708,17 @@ bool cGame::setupGame() {
 		return false;
 	}
 
+	small_font = alfont_load_font("data/small.ttf");
+
+	if (small_font != NULL) {
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded small.ttf", OUTC_SUCCESS);
+		alfont_set_font_size(small_font, 10); // set size
+	} else {
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load small.ttf", OUTC_FAILED);
+		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
+		return false;
+	}
+
 	if (set_display_switch_mode(SWITCH_BACKGROUND) < 0)	{
 		set_display_switch_mode(SWITCH_PAUSE);
 		logbook("Display 'switch and pause' mode set");

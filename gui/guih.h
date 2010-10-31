@@ -6,4 +6,6 @@ class cMouse;
 
 #include "cMouseToolTip.h"
 
+#include "Shape.h"
+
 #endif

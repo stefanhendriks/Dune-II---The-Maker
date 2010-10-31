@@ -1,5 +1,5 @@
 @echo off
-cd c:\projects\workspace\dune2themaker\
+cd D:\DEV\projects\dune2themaker\
 cls 
 echo.
 echo Prepare binary package (./bin) of D2TM. 
@@ -33,6 +33,7 @@ mkdir bin\data\scenes
 echo 6. Copying data files
 copy data\*.dat bin\data
 copy data\*.fon bin\data
+copy data\*.ttf bin\data
 echo 7. Copying scenes
 copy data\scenes\*.* bin\data\scenes
 echo 8. Create save game directories

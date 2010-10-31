@@ -2044,8 +2044,9 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 	for (int iP=0; iP < MAX_PLAYERS; iP++)
 	{
        		// minimum of 1000 credits storage per level
-			if (player[iP].max_credits < 1000)
+			if (player[iP].max_credits < 1000) {
 				player[iP].max_credits = 1000;
+			}
 
 
 	}

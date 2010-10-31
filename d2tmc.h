@@ -61,6 +61,7 @@ extern PALETTE general_palette;
 // GAME FONT
 extern ALFONT_FONT *game_font;
 extern ALFONT_FONT *bene_font;
+extern ALFONT_FONT *small_font;
 
 // DATAFILES
 extern DATAFILE *gfxdata;
