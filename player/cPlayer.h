@@ -58,6 +58,7 @@ class cPlayer {
 		void setStructurePlacer(cStructurePlacer *theStructurePlacer);
 		void setUpgradeBuilder(cUpgradeBuilder *theUpgradeBuilder);
 		void setOrderProcesser(cOrderProcesser *theOrderProcesser);
+		void setGameControlsContext(cGameControlsContext *theGameControlsContext);
 
 		// get
 		cBuildingListUpdater *getBuildingListUpdater() { return buildingListUpdater; }
@@ -70,6 +71,7 @@ class cPlayer {
 		cStructurePlacer * getStructurePlacer() { return structurePlacer; }
 		cUpgradeBuilder * getUpgradeBuilder() { return upgradeBuilder; }
 		cOrderProcesser * getOrderProcesser() { return orderProcesser; }
+		cGameControlsContext * getGameControlsContext() { return gameControlsContext; }
 
 		int getAmountOfStructuresForType(int structureType);
 
@@ -77,7 +79,10 @@ class cPlayer {
 		void deleteSideBar() { if (sidebar) delete sidebar; }
 
 	private:
-		cPlayerDifficultySettings *difficultySettings; // TODO: in the end this should be redundant.. perhaps remove it now/soon anyway?
+		// TODO: in the end this should be redundant.. perhaps remove it now/soon anyway?
+		// TODO: redundant? OBSELETE. Since we're getting more properties for units and thereby
+		// can/should create units specific for houses.
+		cPlayerDifficultySettings *difficultySettings;
 
 		// these have all state, and need to be recreated for each mission.
 		cSideBar * sidebar;			// each player has a sidebar (lists of what it can build)
@@ -87,6 +92,8 @@ class cPlayer {
 		cBuildingListUpdater * buildingListUpdater; // modifies list of sidebar on upgrades
 		cStructurePlacer * structurePlacer;	// used to place structures and handle updates in sidebar accordingly
 		cOrderProcesser * orderProcesser; // process orders for starport
+
+		cGameControlsContext * gameControlsContext;
 
 		int techLevel;		// technology level
 		int house;

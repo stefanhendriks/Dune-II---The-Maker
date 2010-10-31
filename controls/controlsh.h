@@ -11,4 +11,7 @@
 #include "cMouse.h"
 #include "cKeyboard.h"
 
+// context of controls per frame
+#include "cGameControlsContext.h"
+
 #endif /* CONTROLSH_H_ */

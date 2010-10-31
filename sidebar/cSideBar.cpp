@@ -162,7 +162,7 @@ void cSideBar::thinkInteraction() {
 	thinkMouseZScrolling();
 
 	// when mouse pressed, a list is selected, and that list is still available
-	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && game.bMousePressedLeft) {
+	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && cMouse::getInstance()->isLeftButtonClicked()) {
 		cBuildingList *list = getList(selectedListID);
 
 		bool mouseOverUp = mouseOverScrollUp();
@@ -206,7 +206,7 @@ void cSideBar::thinkInteraction() {
 			}
 		}
 
-		if (game.bMousePressedLeft) {
+		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			if (list != NULL) {
 				if (list->getType() != LIST_STARPORT) {
 					if (item != NULL) {
@@ -243,7 +243,7 @@ void cSideBar::thinkInteraction() {
 			}
 		}
 
-		if (game.bMousePressedRight) {
+		if (cMouse::getInstance()->isRightButtonClicked()) {
 			if (list != NULL) {
 				// anything but the starport can 'build' things
 				if (list->getType() != LIST_STARPORT) {

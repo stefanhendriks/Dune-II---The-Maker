@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   cKeyboardManager.cpp
  * Author: el.anormal
- * 
+ *
  * Created Oct 23, 2010
  */
 
@@ -61,8 +61,8 @@ void cKeyboardManager::interact() {
     if (DEBUGGING) {
 
         if (key[KEY_F4]) {
-            if (map.mouse_cell() > -1) {
-                map.clear_spot(map.mouse_cell(), 3, 0);
+            if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
+                map.clear_spot(player[HUMAN].getGameControlsContext()->getMouseCell(), 3, 0);
             }
         }
     }
@@ -99,7 +99,7 @@ void cKeyboardManager::DEBUG_KEYS() {
     }
     //DESTROY UNIT OR BUILDING
     if (key[KEY_F4] && key[KEY_LSHIFT]) {
-        int mc = map.mouse_cell();
+        int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
         if (mc > -1) {
             if (map.cell[mc].id[MAPID_UNITS] > -1) {
                 int id = map.cell[mc].id[MAPID_UNITS];

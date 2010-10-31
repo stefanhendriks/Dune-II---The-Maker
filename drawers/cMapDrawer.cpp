@@ -221,9 +221,9 @@ void cMapDrawer::drawTerrain() {
 
 			if (DEBUGGING)
 			{
-				if (map->mouse_cell() > -1)
+				if (player->getGameControlsContext()->getMouseCell() > -1)
 				{
-					int mc = map->mouse_cell();
+					int mc = player->getGameControlsContext()->getMouseCell();
 					if (cellCalculator->getX(mc) == iStartX && cellCalculator->getY(mc) == iStartY)
 						rectfill(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, makecol(64,64,64));
 

@@ -1,6 +1,9 @@
 #ifndef PLAYERH_H_
 #define PLAYERH_H_
 
+// forward declr.
+class cGameControlsContext;
+
 #include "cPlayerDifficultySettings.h"
 
 // houses

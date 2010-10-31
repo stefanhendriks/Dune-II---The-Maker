@@ -40,7 +40,7 @@ void cGame::losing()
 
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
-    if (bMousePressedLeft)
+    if (cMouse::getInstance()->isLeftButtonClicked())
     {
         // OMG, MENTAT IS NOT HAPPY
         state = GAME_LOSEBRIEF;
@@ -64,7 +64,7 @@ void cGame::winning()
 
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
-    if (bMousePressedLeft)
+    if (cMouse::getInstance()->isLeftButtonClicked())
     {
         // SELECT YOUR NEXT CONQUEST
         state = GAME_WINBRIEF;
@@ -88,7 +88,7 @@ void cGame::combat_mouse()
     bool bOrderingUnits=false;
 
 	if (bPlaceIt == false && bPlacedIt==false) {
-		int mc = map.mouse_cell();
+		int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
 
         if (hover_unit > -1) {
             if (unit[hover_unit].iPlayer == 0) {
@@ -107,7 +107,7 @@ void cGame::combat_mouse()
             				units[unit[hover_unit].iType].infantry == false &&
             				units[unit[hover_unit].iType].airborn == false)	{
 
-						if (bMousePressedLeft) {
+						if (cMouse::getInstance()->isLeftButtonClicked()) {
 							// find closest repair bay to move to
 
 							cStructureUtils structureUtils;
@@ -141,12 +141,12 @@ void cGame::combat_mouse()
     // when mouse hovers above a valid cell
 	if (mc > -1) {
 
-		if (bMousePressedRight) {
+		if (cMouse::getInstance()->isRightButtonClicked()) {
 			UNIT_deselect_all();
 		}
 
 		// single clicking and moving
-		if (bMousePressedLeft)
+		if (cMouse::getInstance()->isLeftButtonClicked())
 		{
 			bool bParticle=false;
 
@@ -397,7 +397,7 @@ void cGame::combat_mouse()
             if (structure[game.hover_structure]->getOwner() == 0 &&
                 structure[game.hover_structure]->getHitPoints() < structures[structure[game.hover_structure]->getType()].hp)
             {
-                if (bMousePressedLeft)
+                if (cMouse::getInstance()->isLeftButtonClicked())
                 {
 
                     if (structure[game.hover_structure]->bRepair==false)
@@ -410,7 +410,7 @@ void cGame::combat_mouse()
             }// MOUSE PRESSED
         }
 
-		if (bMousePressedLeft && bOrderingUnits == false && !key[KEY_R]) {
+		if (cMouse::getInstance()->isLeftButtonClicked() && bOrderingUnits == false && !key[KEY_R]) {
 			game.selected_structure = game.hover_structure;
 
 			// select list that belongs to structure when it is ours

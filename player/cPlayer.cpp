@@ -19,6 +19,7 @@ cPlayer::cPlayer() {
 	structurePlacer = NULL;
 	upgradeBuilder = NULL;
 	buildingListUpdater = NULL;
+	gameControlsContext = NULL;
 }
 
 cPlayer::~cPlayer() {
@@ -39,6 +40,9 @@ cPlayer::~cPlayer() {
 	}
 	if (buildingListUpdater) {
 		delete buildingListUpdater;
+	}
+	if (gameControlsContext) {
+		delete gameControlsContext;
 	}
 }
 
@@ -111,6 +115,17 @@ void cPlayer::setBuildingListUpdater(cBuildingListUpdater *theBuildingListUpgrad
 	}
 
 	buildingListUpdater = theBuildingListUpgrader;
+}
+
+void cPlayer::setGameControlsContext(cGameControlsContext *theGameControlsContext) {
+	assert(theGameControlsContext);
+
+	// delete old reference
+	if (gameControlsContext) {
+		delete gameControlsContext;
+	}
+
+	gameControlsContext = theGameControlsContext;
 }
 
 void cPlayer::init()

@@ -24,7 +24,7 @@ void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace) {
 		return;
 	}
 
-	int iMouseCell = map.mouse_cell();
+	int iMouseCell = player[HUMAN].getGameControlsContext()->getMouseCell();
 
 	if (iMouseCell < 0) {
 		return;
@@ -167,7 +167,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	destroy_bitmap(temp);
 
 	// clicked mouse button
-	if (game.bMousePressedLeft) {
+	if (cMouse::getInstance()->isLeftButtonClicked()) {
 		if (bMayPlace && bOutOfBorder == false)	{
 			int iHealthPercent =  50; // the minimum is 50% (with no slabs)
 

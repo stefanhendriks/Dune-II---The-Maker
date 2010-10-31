@@ -868,7 +868,7 @@ void cMap::draw_units()
 
     }
 
-    int mc = map.mouse_cell();
+    int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
     if (mc > -1)
     {
         if (map.cell[mc].id[MAPID_UNITS] > -1)
@@ -939,29 +939,6 @@ void cMap::draw_units_2nd()
     }
 
     set_trans_blender(0, 0, 0, 128);
-}
-
-int cMap::mouse_cell()
-{
-    // Determine where the mouse is, devide by 32
-    if (mouse_y < 42)
-        return -1; // at this cool bar (upbar)
-
-    if (mouse_x > (game.screen_x - 128))
-        if (mouse_y > (game.screen_y - 128))
-            return -2 ; // on minimap
-
-	if (mouse_x > (game.screen_x - 160))
-		return -3 ; // on sidebar
-
-
-    int iMouseX = mouse_x/32;
-    int iMouseY = (mouse_y-42)/32;
-
-    iMouseX += mapCamera->getX();
-    iMouseY += mapCamera->getY();
-
-    return iCellMake(iMouseX, iMouseY);
 }
 
 // Create a TYPE of terrain with TILE (when specified)
@@ -1790,16 +1767,16 @@ void cMap::thinkInteraction() {
 
 int cMap::mouse_draw_x()
 {
-	if (mouse_cell() > -1)
-  return ( (( iCellGiveX(mouse_cell()) * 32 ) - (mapCamera->getX()*32)));
+	if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1)
+  return ( (( iCellGiveX(player[HUMAN].getGameControlsContext()->getMouseCell()) * 32 ) - (mapCamera->getX()*32)));
 	else
 		return -1;
 }
 
 int cMap::mouse_draw_y()
 {
-	if (mouse_cell() > -1)
-  return (( (( iCellGiveY(mouse_cell()) * 32 ) - (mapCamera->getY()*32)))+42);
+	if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1)
+  return (( (( iCellGiveY(player[HUMAN].getGameControlsContext()->getMouseCell()) * 32 ) - (mapCamera->getY()*32)))+42);
 	else
 		return -1;
 }
