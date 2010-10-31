@@ -25,10 +25,9 @@ cGameControlsContext::~cGameControlsContext() {
 
 void cGameControlsContext::updateState() {
 	determineMouseCell();
-	drawToolTip = false;
-	if (key[KEY_T] && isMouseOnBattleField()) {
-		drawToolTip = true;
-	}
+	determineToolTip();
+	determineHoveringOverStructureId();
+	determineHoveringOverUnitId();
 }
 
 void cGameControlsContext::determineMouseCell() {
@@ -56,4 +55,19 @@ void cGameControlsContext::determineMouseCell() {
 	iMouseY += mapCamera->getY();
 
 	mouseCell = cellCalculator->getCell(iMouseX, iMouseY);
+}
+
+void cGameControlsContext::determineToolTip() {
+	drawToolTip = false;
+	if (key[KEY_T] && isMouseOnBattleField()) {
+		drawToolTip = true;
+	}
+}
+
+void cGameControlsContext::determineHoveringOverStructureId() {
+
+}
+
+void cGameControlsContext::determineHoveringOverUnitId() {
+
 }

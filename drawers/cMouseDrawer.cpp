@@ -28,36 +28,30 @@ void cMouseDrawer::draw() {
 	int x = mouse->getX();
 	int y = mouse->getY();
 
+	// adjust coordinates of drawing according to the specific mouse sprite/tile
 	if (mouse_tile == MOUSE_DOWN){
 		y-=16;
-//        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y-16);
     }
     else if (mouse_tile == MOUSE_RIGHT){
     	x-=16;
-//        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y);
     }
     else if (mouse_tile == MOUSE_MOVE || mouse_tile == MOUSE_RALLY){
     	x-=16;
     	y-=16;
-//        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
     }
     else if (mouse_tile == MOUSE_ATTACK){
     	x-=16;
     	y-=16;
-//        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
     }
     else if (mouse_tile == MOUSE_REPAIR){
     	x-=16;
     	y-=16;
-//    	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
     }
     else if (mouse_tile == MOUSE_PICK){
     	x-=16;
     	y-=16;
-//        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
     }
     else{
-//        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
     }
 
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, x, y);

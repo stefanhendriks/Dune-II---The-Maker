@@ -26,7 +26,11 @@ class cGameControlsContext {
 
 		int getIdOfStructureWhereMouseHovers() { return mouseHoveringOverStructureId; }
 		int getIdOfUnitWhereMouseHovers() { return mouseHoveringOverUnitId; }
+
 		int getMouseCell() { return  mouseCell; }
+
+		bool isMouseOverStructure() { return mouseHoveringOverStructureId > -1; }
+		bool isMouseOverUnit() { return mouseHoveringOverUnitId > -1; }
 
 		bool isMouseOnSidebar() { return mouseCell == -3; }
 		bool isMouseOnTopBar() { return mouseCell == -1; }
@@ -37,6 +41,9 @@ class cGameControlsContext {
 
 	protected:
 		void determineMouseCell();
+		void determineToolTip();
+		void determineHoveringOverStructureId();
+		void determineHoveringOverUnitId();
 
 	private:
 		int mouseHoveringOverStructureId;
