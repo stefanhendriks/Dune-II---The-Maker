@@ -76,8 +76,6 @@ public:
 
 	int paths_created;
 
-    int iMouseZ;
-
     int iMusicVolume;       // volume of the mp3 / midi
 
     // Movie playback (scene's from datafile)

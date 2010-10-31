@@ -27,7 +27,6 @@ void cGameControlsContext::updateState() {
 }
 
 void cGameControlsContext::determineMouseCell() {
-
 	if (mouse->getY() < 42) {
 		mouseCell = -1; // at the top bar or higher, so no mouse cell id.
 		return;

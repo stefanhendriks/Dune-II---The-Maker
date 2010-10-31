@@ -46,6 +46,7 @@ class cGameControlsContext {
 		cPlayer * player;
 		cMouse * mouse;
 		cCellCalculator * cellCalculator;
+
 };
 
 #endif /* CGAMECONTROLSCONTEXT_H_ */

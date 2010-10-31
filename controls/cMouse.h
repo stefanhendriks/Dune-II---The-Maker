@@ -26,6 +26,9 @@ public:
 	bool isLeftButtonClicked() { return leftButtonClicked; }
 	bool isRightButtonClicked() { return rightButtonClicked; }
 
+	bool isMouseScrolledUp() { return mouseScrolledUp; }
+	bool isMouseScrolledDown() { return mouseScrolledDown; }
+
 	int getX() { return x; }
 	int getY() { return y; }
 	int getZ() { return z; }
@@ -46,9 +49,13 @@ private:
 	bool leftButtonPressedInPreviousFrame;
 	bool rightButtonPressedInPreviousFrame;
 
+	bool mouseScrolledUp;
+	bool mouseScrolledDown;
+
 	static cMouse *instance;
 
 	int x, y, z;	// z = scroll wheel value
+	int zValuePreviousFrame;
 };
 
 #endif /* CMOUSE_H_ */

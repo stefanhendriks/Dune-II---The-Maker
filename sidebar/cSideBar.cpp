@@ -313,25 +313,23 @@ void cSideBar::thinkMouseZScrolling() {
 	}
 
 	cBuildingList *list = getList(selectedListID);
+	cMouse *mouse = cMouse::getInstance();
 
 	// MOUSE WHEEL
-	if (mouse_z > game.iMouseZ) {
+	if (mouse->isMouseScrolledUp()) {
 
 	   list->scrollUp();
 
 		// draw pressed
 		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_UP_PRESSED].dat, 571, 315);
 
-		game.iMouseZ=mouse_z;
 	}
 
-	if (mouse_z < game.iMouseZ) {
+	if (mouse->isMouseScrolledDown()) {
 		// Only allow scrolling when there is an icon to show
 	   list->scrollDown();
 
 		// draw pressed
 		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_DOWN_PRESSED].dat, 623, 315);
-
-		game.iMouseZ=mouse_z;
 	}
 }

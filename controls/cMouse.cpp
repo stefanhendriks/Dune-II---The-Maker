@@ -17,6 +17,9 @@ cMouse::cMouse() {
 	rightButtonPressedInPreviousFrame=false;
 	leftButtonClicked=false;
 	rightButtonClicked=false;
+	mouseScrolledUp=false;
+	mouseScrolledDown=false;
+	zValuePreviousFrame = mouse_z;
 }
 
 cMouse::~cMouse() {
@@ -46,6 +49,18 @@ void cMouse::updateState() {
 	// counted as a click)
 	leftButtonClicked = (leftButtonPressedInPreviousFrame == true && leftButtonPressed == false);
 	rightButtonClicked = (rightButtonPressedInPreviousFrame == true && rightButtonPressed == false);
+
+	mouseScrolledUp = mouseScrolledDown = false;
+
+	if (z > zValuePreviousFrame) {
+		mouseScrolledUp = true;
+	}
+
+	if (z < zValuePreviousFrame) {
+		mouseScrolledDown = true;
+	}
+
+	zValuePreviousFrame = z;
 
 	// cap mouse z
 	if (z > 10 || z < -10) {

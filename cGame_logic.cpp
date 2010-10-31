@@ -59,7 +59,6 @@ void cGame::init() {
 	paths_created=0;
 	hover_structure=-1;
 	hover_unit=-1;
-    iMouseZ=mouse_z;
 
     state = GAME_MENU;
     //state=GAME_REGION;
@@ -141,7 +140,6 @@ void cGame::mission_init() {
 	paths_created=0;
 	hover_structure=-1;
 	hover_unit=-1;
-    iMouseZ=mouse_z;
 
     iWinQuota=-1;              // > 0 means, get this to win the mission, else, destroy all!
 
@@ -488,12 +486,6 @@ void cGame::poll()
 	cMouse::getInstance()->updateState();
 	cGameControlsContext * context = player[HUMAN].getGameControlsContext();
 	context->updateState();
-
-    if (iMouseZ > 10 || iMouseZ < -10)
-    {
-        iMouseZ=0;
-        position_mouse_z(0);
-    }
 
     clear(bmp_screen);
 	mouse_tile = MOUSE_NORMAL;
