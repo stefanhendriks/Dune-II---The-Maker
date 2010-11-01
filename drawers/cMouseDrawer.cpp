@@ -63,11 +63,45 @@ void cMouseDrawer::drawToolTip() {
 
 	cGameControlsContext * context = player->getGameControlsContext();
 
+	if (context->isMouseOverStructure()) {
+		cTextWriter * textWriter = new cTextWriter((x + 2), (y + 2), small_font, 12);
+
+		cAbstractStructure * theStructure = context->getStructurePointerWhereMouseHovers();
+
+		drawToolTipBackground();
+		drawToolTipGeneralInformation(theStructure, textWriter);
+
+//		// depending on structure type give more info
+		if (theStructure->getType() == WINDTRAP) {
+			cWindTrap * windTrap = dynamic_cast<cWindTrap*>(theStructure);
+			drawToolTipWindTrapInformation(windTrap, textWriter);
+		}
+//
+//		if (theStructure->getType() == SILO || theStructure->getType() == REFINERY) {
+//			textY += 14;
+//			int maxSpice = player->max_credits;
+//			int currentSpice =  player->credits;
+//			textDrawer.drawTextWithTwoIntegers(textX, textY, "Spice usage : %d/%d", currentSpice, maxSpice);
+//		}
+	}
+}
+
+
+void cMouseDrawer::drawToolTipBackground() {
+	int x = mouse->getX() + 32;
+	int y = mouse->getY() + 32;
+
+	cGameControlsContext * context = player->getGameControlsContext();
+
 	int width, height;
 	width=height=0;
+
 	if (context->isMouseOverStructure()) {
 		width=130;
 		height=70;
+	} else {
+		// do not draw
+		return;
 	}
 
 	// correct drawing position so it does not fall off screen.
@@ -81,44 +115,30 @@ void cMouseDrawer::drawToolTip() {
 	}
 
 //	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 128);
+	rect(bmp_screen, x, y, x+(width-1), y + (height-1), makecol(255,255,255));
+	fblend_rect_trans(bmp_screen, x + 4, y + 4, width, height, makecol(0,0,0), 128);
 	fblend_rect_trans(bmp_screen, x, y, width, height, player->getMinimapColor(), 128);
-
-	if (context->isMouseOverStructure()) {
-		int structureId = context->getIdOfStructureWhereMouseHovers();
-		cAbstractStructure * theStructure = structure[structureId];
-		s_Structures structureType = structures[theStructure->getType()];
-
-		cTextDrawer textDrawer;
-		int textX = x + 2;
-		int textY = y + 8;
-		textDrawer.drawText(textX, textY, structureType.name);
-
-		textY += 14;
-		int currentHp = theStructure->getHitPoints();
-		int maxHp = structureType.hp;
-		textDrawer.drawTextWithTwoIntegers(textX, textY, "Hitpoints : %d/%d", currentHp, maxHp);
-
-		// depending on structure type give more info
-		if (theStructure->getType() == WINDTRAP) {
-			textY += 14;
-			int powerOut = player->has_power;
-			int powerUse =  player->use_power;
-			textDrawer.drawTextWithTwoIntegers(textX, textY, "Total usage   : %d/%d", powerUse, powerOut);
-
-			textY += 14;
-			cWindTrap * windTrap = dynamic_cast<cWindTrap*>(theStructure);
-			powerOut = windTrap->powerOut();
-			int maxOut = structureType.power_give;
-			textDrawer.drawTextWithTwoIntegers(textX, textY, "Windtrap outage: %d/%d", powerOut, maxOut);
-		}
-
-		if (theStructure->getType() == SILO || theStructure->getType() == REFINERY) {
-			textY += 14;
-			int maxSpice = player->max_credits;
-			int currentSpice =  player->credits;
-			textDrawer.drawTextWithTwoIntegers(textX, textY, "Spice usage : %d/%d", currentSpice, maxSpice);
-		}
-	}
 }
 
 
+void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure * theStructure, cTextWriter *textWriter) {
+	assert(theStructure);
+	assert(textWriter);
+	s_Structures structureType = theStructure->getS_StructuresType();
+	textWriter->write(structureType.name, makecol(255, 255, 0));
+	textWriter->writeWithTwoIntegers("Hitpoints : %d/%d", theStructure->getHitPoints(), theStructure->getMaxHP());
+	textWriter->writeWithOneInteger("%d%% protected", (100-theStructure->getPercentageNotPaved()));
+}
+
+void cMouseDrawer::drawToolTipWindTrapInformation(cWindTrap * theWindTrap, cTextWriter *textWriter) {
+	assert(theWindTrap);
+	assert(textWriter);
+	int powerOut = theWindTrap->getPlayer()->has_power;
+	int powerUse = theWindTrap->getPlayer()->use_power;
+	textWriter->writeWithTwoIntegers("Total usage   : %d/%d", powerUse, powerOut);
+	textWriter->writeWithTwoIntegers("Windtrap outage: %d/%d", theWindTrap->getPowerOut(), theWindTrap->getMaxPowerOut());
+}
+
+void cMouseDrawer::drawToolTipSiloInformation(cSpiceSilo * theSpiceSilo, cTextWriter *textWriter) {
+
+}

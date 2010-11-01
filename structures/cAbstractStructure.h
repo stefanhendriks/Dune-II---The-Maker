@@ -100,6 +100,12 @@ class cAbstractStructure {
 
 		// getters
 		cPlayer * getPlayer();
+
+		// convenience get method, which should eventually only be used in rare cases as all properties should be
+		// TODO: copied from this struct to this class, so each structure can change the properties without
+		// changing the entire game rules.
+		s_Structures getS_StructuresType();
+
 		int getWidth() { return iWidth; }
 		int getHeight() { return iHeight; }
 		int getHitPoints() { return iHitPoints; }
@@ -108,6 +114,10 @@ class cAbstractStructure {
 		int getRallyPoint() { return iRallyPoint; }
 		int getFrame() { return iFrame; }
 		int getStructureId() { return id; }
+		int getMaxHP();
+		int getSight();
+		int getRange();
+		int getPercentageNotPaved();
 
 		bool isAnimating() { return bAnimate; }
 

@@ -24,6 +24,7 @@ public:
     void draw(int iStage);
 	int getType();
 
-	int powerOut();
+	int getPowerOut();
+	int getMaxPowerOut();
 };
 

@@ -18,6 +18,12 @@ class cMouseDrawer {
 
 		void drawToolTip();
 
+	protected:
+		void drawToolTipBackground();
+		void drawToolTipGeneralInformation(cAbstractStructure * theStructure, cTextWriter *textWriter);
+		void drawToolTipWindTrapInformation(cWindTrap * theWindTrap, cTextWriter *textWriter);
+		void drawToolTipSiloInformation(cSpiceSilo * theSpiceSilo, cTextWriter *textWriter);
+
 	private:
 		cMouseToolTip * mouseToolTip;
 		cMouse *mouse;

@@ -72,6 +72,22 @@ cPlayer * cAbstractStructure::getPlayer() {
 	return &player[iPlayer];
 }
 
+int cAbstractStructure::getMaxHP() {
+	int type = getType();
+	return structures[type].hp;
+}
+
+int cAbstractStructure::getSight() {
+	int type = getType();
+	return structures[type].sight;
+}
+
+int cAbstractStructure::getRange() {
+	int type = getType();
+	return structures[type].sight;
+}
+
+
 // this structure dies
 void cAbstractStructure::die()
 {
@@ -521,4 +537,12 @@ void cAbstractStructure::draw(int iStage) {
 			}
 		}
 	}
+}
+
+s_Structures cAbstractStructure::getS_StructuresType() {
+	return structures[getType()];
+}
+
+int cAbstractStructure::getPercentageNotPaved() {
+	return fConcrete * 100;
 }

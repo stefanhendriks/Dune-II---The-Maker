@@ -39,6 +39,8 @@ class cGameControlsContext {
 
 		bool shouldDrawToolTip() { return drawToolTip; }
 
+		cAbstractStructure * getStructurePointerWhereMouseHovers();
+
 	protected:
 		void determineMouseCell();
 		void determineToolTip();
