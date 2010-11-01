@@ -24,6 +24,11 @@ class cMouseDrawer {
 		void drawToolTipWindTrapInformation(cWindTrap * theWindTrap, cTextWriter *textWriter);
 		void drawToolTipSiloInformation(cSpiceSilo * theSpiceSilo, cTextWriter *textWriter);
 
+		int getDrawXToolTip(int width);
+		int getDrawYToolTip(int height);
+		int getWidthToolTip();
+		int getHeightToolTip();
+
 	private:
 		cMouseToolTip * mouseToolTip;
 		cMouse *mouse;

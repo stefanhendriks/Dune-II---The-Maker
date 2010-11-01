@@ -1149,7 +1149,12 @@ void play_sound_id(int s, int iDistance)
 
 	// Determine if sound is on screen or not
 	if (iDistance <= 1) {
-		game.getSoundPlayer()->playSound(s, 127, 255);
+		int volume = 255;
+		// credits up/down sound has lower volume
+		if (s == SOUND_CREDITUP || s == SOUND_CREDITDOWN) {
+			volume = 128;
+		}
+		game.getSoundPlayer()->playSound(s, 127, volume);
 	} else {
 		// adjust volume from distance
 		int iVol = game.getMaxVolume() - ((game.getMaxVolume() / 32) * iDistance);

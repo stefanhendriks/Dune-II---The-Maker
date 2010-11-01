@@ -57,9 +57,58 @@ void cMouseDrawer::draw() {
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, x, y);
 }
 
-void cMouseDrawer::drawToolTip() {
+int cMouseDrawer::getDrawXToolTip(int width) {
 	int x = mouse->getX() + 32;
+
+	// correct drawing position so it does not fall off screen.
+	int diffX = (x + width) - game.screen_x;
+	if (diffX > 0) {
+		x-= diffX;
+	}
+	return x;
+}
+
+int cMouseDrawer::getDrawYToolTip(int height) {
 	int y = mouse->getY() + 32;
+
+	// correct drawing position so it does not fall off screen.
+	int diffY = (y + height) - game.screen_y;
+	if (diffY > 0) {
+		y -= diffY;
+	}
+	return y;
+}
+
+int cMouseDrawer::getWidthToolTip() {
+	cGameControlsContext * context = player->getGameControlsContext();
+
+	if (context->isMouseOverStructure()) {
+		return 130;
+	}
+
+	return 0;
+}
+
+int cMouseDrawer::getHeightToolTip() {
+	cGameControlsContext * context = player->getGameControlsContext();
+
+	if (context->isMouseOverStructure()) {
+		return 70;
+	}
+
+	return 0;
+}
+
+void cMouseDrawer::drawToolTip() {
+	int height = getHeightToolTip();
+	int width = getWidthToolTip();
+
+	if (height <= 0|| width <= 0) {
+		return;
+	}
+
+	int x = getDrawXToolTip(width);
+	int y = getDrawYToolTip(height);
 
 	cGameControlsContext * context = player->getGameControlsContext();
 
@@ -86,11 +135,7 @@ void cMouseDrawer::drawToolTip() {
 	}
 }
 
-
 void cMouseDrawer::drawToolTipBackground() {
-	int x = mouse->getX() + 32;
-	int y = mouse->getY() + 32;
-
 	cGameControlsContext * context = player->getGameControlsContext();
 
 	int width, height;
@@ -104,15 +149,8 @@ void cMouseDrawer::drawToolTipBackground() {
 		return;
 	}
 
-	// correct drawing position so it does not fall off screen.
-	int diffX = (x + width) - game.screen_x;
-	int diffY = (y + height) - game.screen_y;
-	if (diffX > 0) {
-		x-= diffX;
-	}
-	if (diffY > 0) {
-		y -= diffY;
-	}
+	int x = getDrawXToolTip(width);
+	int y = getDrawYToolTip(height);
 
 //	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 128);
 	rect(bmp_screen, x, y, x+(width-1), y + (height-1), makecol(255,255,255));
