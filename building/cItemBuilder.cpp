@@ -97,7 +97,7 @@ void cItemBuilder::think() {
 								item->setPlaceIt(true);
 							}
 
-						} else if (item->getBuildType() == UNIT){
+						} else if (item->getBuildType() == UNIT) {
 
 							item->decreaseTimesToBuild(); // decrease amount of times to build
 

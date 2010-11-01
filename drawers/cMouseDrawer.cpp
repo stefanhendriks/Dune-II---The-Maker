@@ -93,7 +93,25 @@ int cMouseDrawer::getHeightToolTip() {
 	cGameControlsContext * context = player->getGameControlsContext();
 
 	if (context->isMouseOverStructure()) {
-		return 70;
+		cAbstractStructure * theStructure = context->getStructurePointerWhereMouseHovers();
+
+		int height = 50;
+		switch (theStructure->getType()) {
+			case WINDTRAP:
+				height = 78;
+				break;
+			case REFINERY:
+				height = 62;
+				break;
+			case SILO:
+				height = 62;
+				break;
+			default:
+				height = 50;
+				break;
+		}
+
+		return height;
 	}
 
 	return 0;
@@ -121,62 +139,82 @@ void cMouseDrawer::drawToolTip() {
 		drawToolTipGeneralInformation(theStructure, textWriter);
 
 //		// depending on structure type give more info
-		if (theStructure->getType() == WINDTRAP) {
+		int structureType = theStructure->getType();
+		if (structureType == WINDTRAP) {
 			cWindTrap * windTrap = dynamic_cast<cWindTrap*>(theStructure);
 			drawToolTipWindTrapInformation(windTrap, textWriter);
+		} else if (structureType == SILO || structureType == REFINERY) {
+			drawToolTipSiloInformation(theStructure, textWriter);
 		}
-//
-//		if (theStructure->getType() == SILO || theStructure->getType() == REFINERY) {
-//			textY += 14;
-//			int maxSpice = player->max_credits;
-//			int currentSpice =  player->credits;
-//			textDrawer.drawTextWithTwoIntegers(textX, textY, "Spice usage : %d/%d", currentSpice, maxSpice);
-//		}
 	}
 }
 
 void cMouseDrawer::drawToolTipBackground() {
 	cGameControlsContext * context = player->getGameControlsContext();
 
-	int width, height;
-	width=height=0;
-
-	if (context->isMouseOverStructure()) {
-		width=130;
-		height=70;
-	} else {
-		// do not draw
-		return;
-	}
+	int width = getWidthToolTip();
+	int height = getHeightToolTip();
 
 	int x = getDrawXToolTip(width);
 	int y = getDrawYToolTip(height);
 
 //	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 128);
 	rect(bmp_screen, x, y, x+(width-1), y + (height-1), makecol(255,255,255));
-	fblend_rect_trans(bmp_screen, x + 4, y + 4, width, height, makecol(0,0,0), 128);
 	fblend_rect_trans(bmp_screen, x, y, width, height, player->getMinimapColor(), 128);
+	int shadowX = x + width;
+	int shadowY = y + height;
+	fblend_rect_trans(bmp_screen, x + 4, shadowY, (width - 4), 4, makecol(0,0,0), 128);
+	fblend_rect_trans(bmp_screen, shadowX, y + 4, 4, height, makecol(0,0,0), 128);
 }
-
 
 void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure * theStructure, cTextWriter *textWriter) {
 	assert(theStructure);
 	assert(textWriter);
 	s_Structures structureType = theStructure->getS_StructuresType();
-	textWriter->write(structureType.name, makecol(255, 255, 0));
+
+	char description[255];
+	if (theStructure->isPrimary()) {
+		sprintf(description, "%s (PRIMARY)", structureType.name);
+	} else {
+		sprintf(description, "%s", structureType.name);
+	}
+	textWriter->write(description, makecol(255, 255, 0));
 	textWriter->writeWithTwoIntegers("Hitpoints : %d/%d", theStructure->getHitPoints(), theStructure->getMaxHP());
-	textWriter->writeWithOneInteger("%d%% protected", (100-theStructure->getPercentageNotPaved()));
+	textWriter->writeWithOneInteger("Armor : %d", theStructure->getArmor());
+	textWriter->writeWithOneInteger("Protected : %d%%", (100-theStructure->getPercentageNotPaved()));
 }
 
 void cMouseDrawer::drawToolTipWindTrapInformation(cWindTrap * theWindTrap, cTextWriter *textWriter) {
 	assert(theWindTrap);
 	assert(textWriter);
-	int powerOut = theWindTrap->getPlayer()->has_power;
-	int powerUse = theWindTrap->getPlayer()->use_power;
-	textWriter->writeWithTwoIntegers("Total usage   : %d/%d", powerUse, powerOut);
-	textWriter->writeWithTwoIntegers("Windtrap outage: %d/%d", theWindTrap->getPowerOut(), theWindTrap->getMaxPowerOut());
+	if (theWindTrap->getOwner() == HUMAN) {
+		int powerOut = theWindTrap->getPlayer()->has_power;
+		int powerUse = theWindTrap->getPlayer()->use_power;
+
+		if (powerUse < powerOut) {
+			textWriter->writeWithTwoIntegers("Total usage : %d/%d (OK)", powerUse, powerOut);
+		} else {
+			textWriter->writeWithTwoIntegers("Total usage : %d/%d (LOW)", powerUse, powerOut);
+		}
+		textWriter->writeWithTwoIntegers("Windtrap outage : %d/%d", theWindTrap->getPowerOut(), theWindTrap->getMaxPowerOut());
+	} else {
+		textWriter->write("Total usage : Unknown");
+		textWriter->write("Windtrap outage : Unknown");
+	}
 }
 
-void cMouseDrawer::drawToolTipSiloInformation(cSpiceSilo * theSpiceSilo, cTextWriter *textWriter) {
+void cMouseDrawer::drawToolTipSiloInformation(cAbstractStructure * theStructure, cTextWriter *textWriter) {
+	assert(theStructure);
+	assert(textWriter);
 
+	// TODO / IDEA --> Perhaps some 'spy on enemy intel' upgrade should be available for
+	// house Ordos, so you can actually check on the enemy spice etc.
+	if (theStructure->getOwner() == HUMAN) {
+		cPlayer *thePlayer = theStructure->getPlayer();
+		int maxSpice = thePlayer->max_credits;
+		int currentSpice =  thePlayer->credits;
+		textWriter->writeWithTwoIntegers("Spice usage : %d/%d", currentSpice, maxSpice);
+	} else {
+		textWriter->write("Spice usage : Unknown");
+	}
 }

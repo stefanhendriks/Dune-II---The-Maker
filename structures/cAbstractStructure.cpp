@@ -17,6 +17,8 @@ cAbstractStructure::cAbstractStructure() {
     iHitPoints=-1;      // default = no hitpoints
     iCell=-1;
 
+    armor = 1;
+
     fConcrete=0.0f;
 
     iPlayer=-1;
@@ -296,22 +298,21 @@ void cAbstractStructure::think_flag() {
 void cAbstractStructure::think_damage()
 {
     TIMER_damage--;
+    if (TIMER_damage < 0) {
+        TIMER_damage = rnd(500)+250;
 
-    if (TIMER_damage < 0)
-    {
-        TIMER_damage = rnd(1000)+100;
-
-        // damage done is 5 to building, but using percentage
-        float fDamage = fConcrete * 5;
-
-        if (iHitPoints > (structures[getType()].hp / 2))
-            iHitPoints -= (int)fDamage;
+        // chance based (so it does not decay all the time)
+        if (rnd(100) < getPercentageNotPaved()) {
+			if (iHitPoints > (structures[getType()].hp / 2)) {
+				iHitPoints -= 1;
+			}
+        }
 
         // AI reacting to this damage
-		if (iPlayer != 0 && player[iPlayer].credits > 50) {
+        // TODO: remove here
+		if (iPlayer != HUMAN && player[iPlayer].credits > 50) {
 			if (iHitPoints < ((structures[getType()].hp / 4)*3)) { // lower than 75%
                 bRepair=true;
-				logbook("AI auto repair on decay");
 			}
 		}
     }
@@ -411,22 +412,25 @@ void cAbstractStructure::think_repair()
 {
     // REPAIRING
     if (bRepair) {
-		if (player[iPlayer].credits > 1)
+		if (player[iPlayer].credits > 1.0f) {
 			TIMER_repair++;
 
-		if (TIMER_repair > 7)
-		{
-			TIMER_repair=0;
-			iHitPoints += structures[getType()].fixhp;
-			player[iPlayer].credits--;
-		}
+			if (TIMER_repair > 7)
+			{
+				TIMER_repair=0;
+				iHitPoints += structures[getType()].fixhp;
+				player[iPlayer].credits--;
+				if (player[iPlayer].credits < 0.0f) {
+					player[iPlayer].credits = 0.0f;
+				}
+			}
 
-		// done repairing
-		if (iHitPoints >= structures[getType()].hp) {
-			iHitPoints = structures[getType()].hp;
-			bRepair=false;
+			// done repairing
+			if (iHitPoints >= getMaxHP()) {
+				iHitPoints = getMaxHP();
+				bRepair=false;
+			}
 		}
-
 		assert(iHitPoints <= structures[getType()].hp);
 	}
 }
@@ -545,4 +549,9 @@ s_Structures cAbstractStructure::getS_StructuresType() {
 
 int cAbstractStructure::getPercentageNotPaved() {
 	return fConcrete * 100;
+}
+
+bool cAbstractStructure::isPrimary() {
+	cPlayer * thePlayer = getPlayer();
+	return thePlayer->iPrimaryBuilding[getType()] == id;
 }

@@ -21,6 +21,8 @@
 class cAbstractStructure {
 
 	private:
+		int armor;			// armor
+
 		int iHitPoints;     // HitPoints this structure has
 
 		int iCell;          // What cell it is (most upper left part of structure where
@@ -106,6 +108,7 @@ class cAbstractStructure {
 		// changing the entire game rules.
 		s_Structures getS_StructuresType();
 
+		int getArmor() { return armor; }
 		int getWidth() { return iWidth; }
 		int getHeight() { return iHeight; }
 		int getHitPoints() { return iHitPoints; }
@@ -120,6 +123,7 @@ class cAbstractStructure {
 		int getPercentageNotPaved();
 
 		bool isAnimating() { return bAnimate; }
+		bool isPrimary();
 
 		void setHeight(int height);
 		void setWidth(int width);

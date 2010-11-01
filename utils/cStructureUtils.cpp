@@ -114,19 +114,25 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureTy
 		}
 	}
 
+	int structureIdFound = -1;
 	// check other structures now
 	for (int i=0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
 		if (theStructure && theStructure->getOwner() == playerId) {
 			if (theStructure->getType() == structureType) {
 				if (theStructure->iFreeAround() > -1) {
-					return i; // return this structure
+					structureIdFound = i; // return this structure
 				}
 			}
 		}
 	}
 
-	return -1;
+	// assign as primary building
+	if (structureIdFound > -1) {
+		player->iPrimaryBuilding[structureType] = structureIdFound;
+	}
+
+	return structureIdFound;
 }
 
 /**
