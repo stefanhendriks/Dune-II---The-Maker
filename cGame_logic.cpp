@@ -79,7 +79,7 @@ void cGame::init() {
 	mouse_tile = MOUSE_NORMAL;
 
 	memset(version, 0, sizeof(version));
-	sprintf(version, "0.4.3");
+	sprintf(version, "0.4.4");
 
 	fade_select=255;
 

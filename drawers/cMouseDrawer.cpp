@@ -80,7 +80,8 @@ void cMouseDrawer::drawToolTip() {
 		y -= diffY;
 	}
 
-	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 128);
+//	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 128);
+	fblend_rect_trans(bmp_screen, x, y, width, height, player->getMinimapColor(), 128);
 
 	if (context->isMouseOverStructure()) {
 		int structureId = context->getIdOfStructureWhereMouseHovers();
