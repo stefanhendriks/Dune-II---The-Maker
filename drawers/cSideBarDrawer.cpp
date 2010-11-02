@@ -20,7 +20,7 @@ void cSideBarDrawer::drawHouseGui(cPlayer * thePlayer) {
 	set_palette(thePlayer->pal);
 
 	// black out
-	rectfill(bmp_screen, (game.screen_x-160), 0, game.screen_x, game.screen_y-128, makecol(0,0,0));
+	rectfill(bmp_screen, (game.screen_x-160), 0, game.screen_x, game.screen_y, makecol(0,0,0));
 
     // upper bar
     rectfill(bmp_screen, 0, 0, game.screen_x, 42, makecol(0,0,0));

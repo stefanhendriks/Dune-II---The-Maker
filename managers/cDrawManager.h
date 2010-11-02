@@ -16,6 +16,9 @@ class cDrawManager {
 		cMessageDrawer *getMessageDrawer() { return messageDrawer; }
 		cMiniMapDrawer *getMiniMapDrawer() { return miniMapDrawer; }
 
+		int getDrawXForCell(int cell);
+		int getDrawYForCell(int cell);
+
 	protected:
 		void drawSidebar();
 		void drawUpgradeButton();
@@ -24,7 +27,8 @@ class cDrawManager {
 		void drawMap();
 		void drawStructurePlacing();
 		void drawMessage();
-                void drawMouse();
+		void drawMouse();
+		void drawRallyPoint();
 
 	private:
 		cSideBarDrawer * sidebarDrawer;

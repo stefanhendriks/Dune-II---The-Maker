@@ -59,6 +59,8 @@ void cDrawManager::draw() {
 	mapDrawer->drawShroud();
 	miniMapDrawer->draw();
 
+	drawRallyPoint();
+
 	// GUI
 	drawSidebar();
 	drawStructurePlacing();
@@ -80,6 +82,38 @@ void cDrawManager::draw() {
 void cDrawManager::drawCredits() {
 	assert(creditsDrawer);
 	creditsDrawer->draw();
+}
+
+void cDrawManager::drawRallyPoint() {
+	if (game.selected_structure > -1) {
+		cAbstractStructure * theStructure = structure[game.selected_structure];
+		int rallyPointCell = theStructure->getRallyPoint();
+
+		// show draw a target on this cell so we know this is the rally point.
+		if (rallyPointCell > -1) {
+			// draw this thing ...
+			set_trans_blender(0,0,0,128);
+			draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_MOVE].dat, getDrawXForCell(rallyPointCell), getDrawYForCell(rallyPointCell));
+
+			int startX = theStructure->iDrawX() + (theStructure->getS_StructuresType().bmp_width / 2);
+			int startY = theStructure->iDrawY() + (theStructure->getS_StructuresType().bmp_height / 2);
+
+			int endX = getDrawXForCell(rallyPointCell) + 16;
+			int endY = getDrawYForCell(rallyPointCell) + 16;
+
+			line(bmp_screen, startX, startY, endX, endY, player[HUMAN].getMinimapColor());
+		}
+	}
+}
+
+int cDrawManager::getDrawXForCell(int cell) {
+	int cellX = iCellGiveX(cell);
+	return (cellX * 32) - (mapCamera->getX() * 32);
+}
+
+int cDrawManager::getDrawYForCell(int cell) {
+	int cellY = iCellGiveY(cell);
+	return (cellY * 32) - (mapCamera->getY() * 32) +42; // + 42 is the top bar (options/upgrade/credits)
 }
 
 void cDrawManager::drawOrderButton() {

@@ -232,19 +232,6 @@ void cMapDrawer::drawTerrain() {
 				rect(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, makecol(128,128,128));
 			}
 
-			if (game.selected_structure > -1)
-			{
-				// show draw a target on this cell so we know this is the rally point.
-				if (structure[game.selected_structure]->getRallyPoint() > -1)
-					if (structure[game.selected_structure]->getRallyPoint() == iCell)
-					{
-						// draw this thing ...
-						set_trans_blender(0,0,0,128);
-						draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_MOVE].dat, iDrawX, iDrawY);
-					}
-			}
-
-
 			if (key[KEY_D] && key[KEY_TAB])
 			{
 				int iClr=makecol(255,0,0);

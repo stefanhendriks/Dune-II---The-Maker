@@ -36,7 +36,6 @@ public:
     void smudge_increase(int iType, int iCell);
     void draw_structures_health();
 
-
     void smooth_cell(int c);
     void smooth_spot(int c);
     void create_spot(int c, int type, int tile);
