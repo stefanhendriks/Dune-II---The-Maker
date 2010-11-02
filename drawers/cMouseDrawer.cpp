@@ -158,9 +158,37 @@ void cMouseDrawer::drawToolTipBackground() {
 	int x = getDrawXToolTip(width);
 	int y = getDrawYToolTip(height);
 
+	int color = player->getMinimapColor();
+
+	if (context->isMouseOverStructure()) {
+		cAbstractStructure * theStructure = context->getStructurePointerWhereMouseHovers();
+
+		color = theStructure->getPlayer()->getMinimapColor();
+
+		// TODO: Think about this, it does not really look nice to me, rather see house color
+//		// make grey when not our own
+//		if (theStructure->getPlayer()->getId() != player->getId()) {
+//			red = 64;
+//			green = 64;
+//			blue = 64;
+//		}
+	}
+
+	int red = getr(color);
+	int green = getg(color);
+	int blue = getb(color);
+
+	// tone down a bit
+	cSimpleCalculator simpleCalculator;
+	red = simpleCalculator.substract(red, 64, 0);
+	green = simpleCalculator.substract(green, 64, 0);
+	blue = simpleCalculator.substract(blue, 64, 0);
+
+	color = makecol(red, green, blue);
+
 //	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 128);
 	rect(bmp_screen, x, y, x+(width-1), y + (height-1), makecol(255,255,255));
-	fblend_rect_trans(bmp_screen, x, y, width, height, player->getMinimapColor(), 128);
+	fblend_rect_trans(bmp_screen, x, y, width, height, color, 128);
 	int shadowX = x + width;
 	int shadowY = y + height;
 	fblend_rect_trans(bmp_screen, x + 4, shadowY, (width - 4), 4, makecol(0,0,0), 128);

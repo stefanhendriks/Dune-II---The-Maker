@@ -100,7 +100,7 @@ class cPlayer;
 #include "utils/cCellCalculator.h"			    /** math with cells , with handy references to structures and units **/
 #include "utils/cSeedMap.h"
 #include "utils/cSeedMapGenerator.h"
-
+#include "utils/cSimpleCalculator.h"
 
 #include "cParticle.h"                       // explosion animations and such
 #include "bullet.h"                         // bullets
