@@ -106,6 +106,12 @@ int cMouseDrawer::getHeightToolTip() {
 			case SILO:
 				height = 62;
 				break;
+			case TURRET:
+				height = 78;
+				break;
+			case RTURRET:
+				height = 78;
+				break;
 			default:
 				height = 50;
 				break;
@@ -145,6 +151,8 @@ void cMouseDrawer::drawToolTip() {
 			drawToolTipWindTrapInformation(windTrap, textWriter);
 		} else if (structureType == SILO || structureType == REFINERY) {
 			drawToolTipSiloInformation(theStructure, textWriter);
+		} else if (structureType == TURRET || structureType == RTURRET) {
+			drawToolTipTurretInformation(theStructure, textWriter);
 		}
 	}
 }
@@ -193,6 +201,18 @@ void cMouseDrawer::drawToolTipBackground() {
 	int shadowY = y + height;
 	fblend_rect_trans(bmp_screen, x + 4, shadowY, (width - 4), 4, makecol(0,0,0), 128);
 	fblend_rect_trans(bmp_screen, shadowX, y + 4, 4, height, makecol(0,0,0), 128);
+}
+
+void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure * theStructure, cTextWriter *textWriter) {
+	assert(theStructure);
+	assert(textWriter);
+	if (theStructure->getPlayer()->getId() == player->getId()) {
+		textWriter->writeWithOneInteger("Sight : %d", theStructure->getSight());
+		textWriter->writeWithOneInteger("Range : %d", theStructure->getRange());
+	} else {
+		textWriter->write("Sight : Unknown");
+		textWriter->write("Range : Unknown");
+	}
 }
 
 void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure * theStructure, cTextWriter *textWriter) {

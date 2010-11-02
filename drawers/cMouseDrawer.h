@@ -23,6 +23,7 @@ class cMouseDrawer {
 		void drawToolTipGeneralInformation(cAbstractStructure * theStructure, cTextWriter *textWriter);
 		void drawToolTipWindTrapInformation(cWindTrap * theWindTrap, cTextWriter *textWriter);
 		void drawToolTipSiloInformation(cAbstractStructure * theStructure, cTextWriter *textWriter);
+		void drawToolTipTurretInformation(cAbstractStructure * theStructure, cTextWriter *textWriter);
 
 		int getDrawXToolTip(int width);
 		int getDrawYToolTip(int height);
