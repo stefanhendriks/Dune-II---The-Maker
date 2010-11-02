@@ -18,7 +18,6 @@ public:
 
     void init();
     void smooth();
-    void draw();
     void draw_bullets();
 
     void think_minimap();
@@ -51,8 +50,6 @@ public:
     void create_field(int type, int cell, int size);
     void clear_all();
     void clear_spot(int c, int size, int player);
-
-	int getColorForTerrainType(int type);
 
     tCell cell[MAX_CELLS];
 
