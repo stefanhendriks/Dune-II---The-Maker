@@ -69,16 +69,12 @@ void cSideBarDrawer::drawSideBar(cPlayer * player) {
 
 	drawHouseGui(player);
 	drawBuildingLists();
-
-	// draw the minimap
-	// TODO: draw minimap here
-
 	drawCapacities();
 }
 
 void cSideBarDrawer::drawCapacities() {
 	// Draw the bars
-	int iHeight=79 - health_bar(79, player[0].use_power,player[0].has_power);
+	int iHeight = 79 - health_bar(79, player[0].use_power,player[0].has_power);
 
 	int step = (255/79);
 	int r = 255-(iHeight*step);

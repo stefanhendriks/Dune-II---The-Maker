@@ -193,15 +193,23 @@ void cSideBar::thinkInteraction() {
 		if (item != NULL) {
 			char msg[255];
 			if (list->isAcceptsOrders()) {
+				// build time is in global time units , using a timer cap of 35 * 5 miliseconds = 175 miliseconds
+				int buildTimeInMs = item->getTotalBuildTime() * 175;
+				// now we have in miliseconds, we know the amount of seconds too.
+				int seconds = buildTimeInMs / 1000;
+
 				if (list->getType() == LIST_CONSTYARD) {
-					sprintf(msg, "$%d | %s", item->getBuildCost(), structures[item->getBuildId()].name);
+					s_Structures structureType = structures[item->getBuildId()];
+					sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
 				} else {
+					s_UnitP unitType = units[item->getBuildId()];
 					if (item->getBuildCost() > 0) {
-						sprintf(msg, "$%d | %s", item->getBuildCost(), units[item->getBuildId()].name);
+						sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), units[item->getBuildId()].name, seconds);
 					} else {
 						sprintf(msg, "%s", units[item->getBuildId()].name);
 					}
 				}
+
 				drawManager->getMessageDrawer()->setMessage(msg);
 			}
 		}

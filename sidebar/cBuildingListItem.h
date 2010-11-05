@@ -17,6 +17,7 @@ public:
 
 
 	// gettters
+	int getTotalBuildTime() { return totalBuildTime; }
 	int getIconId() { return icon; }
 	int getBuildId() { return ID; }
 	eBuildType getBuildType() { return type; }
@@ -70,6 +71,8 @@ private:
 
 	float creditsPerProgressTime; // credits to pay for each progress point. (calculated at creation)
 	bool placeIt;			// when true, this item is ready for placement.
+
+	int totalBuildTime;		// total time it takes to build.
 
 	cBuildingList *myList;
 };

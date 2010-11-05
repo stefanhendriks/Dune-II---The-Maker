@@ -197,8 +197,8 @@ void cWindTrap::draw(int iStage)
 
 int cWindTrap::getPowerOut() {
 	cHitpointCalculator hitpointCalculator;
-	float percentage = ((float)getHitPoints() / (float)structures[WINDTRAP].hp);
-	return hitpointCalculator.getByPercent(structures[WINDTRAP].power_give, percentage);
+	float percentage = ((float)getHitPoints() / (float)structures[getType()].hp);
+	return hitpointCalculator.getByPercent(structures[getType()].power_give, percentage);
 }
 
 int cWindTrap::getMaxPowerOut() {

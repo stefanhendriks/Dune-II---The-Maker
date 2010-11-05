@@ -83,7 +83,7 @@ int cMouseDrawer::getWidthToolTip() {
 	cGameControlsContext * context = player->getGameControlsContext();
 
 	if (context->isMouseOverStructure()) {
-		return 130;
+		return 150;
 	}
 
 	return 0;
@@ -101,10 +101,10 @@ int cMouseDrawer::getHeightToolTip() {
 				height = 78;
 				break;
 			case REFINERY:
-				height = 62;
+				height = 78;
 				break;
 			case SILO:
-				height = 62;
+				height = 78;
 				break;
 			case TURRET:
 				height = 78;
@@ -258,10 +258,24 @@ void cMouseDrawer::drawToolTipSiloInformation(cAbstractStructure * theStructure,
 	// TODO / IDEA --> Perhaps some 'spy on enemy intel' upgrade should be available for
 	// house Ordos, so you can actually check on the enemy spice etc.
 	if (theStructure->getOwner() == HUMAN) {
+		int spiceCapacityOfStructure = 0;
+		if (theStructure->getType() == REFINERY) {
+			cRefinery * refinery = dynamic_cast<cRefinery*>(theStructure);
+			spiceCapacityOfStructure = refinery->getSpiceSiloCapacity();
+		} else if (theStructure->getType() == SILO) {
+			cSpiceSilo * spiceSilo = dynamic_cast<cSpiceSilo*>(theStructure);
+			spiceCapacityOfStructure = spiceSilo->getSpiceSiloCapacity();
+		}
+
 		cPlayer *thePlayer = theStructure->getPlayer();
 		int maxSpice = thePlayer->max_credits;
 		int currentSpice =  thePlayer->credits;
-		textWriter->writeWithTwoIntegers("Spice usage : %d/%d", currentSpice, maxSpice);
+		if (currentSpice <= maxSpice) {
+			textWriter->writeWithTwoIntegers("Total usage : %d/%d (OK)", currentSpice, maxSpice);
+		} else {
+			textWriter->writeWithTwoIntegers("Total usage : %d/%d (NOK)", currentSpice, maxSpice);
+		}
+		textWriter->writeWithTwoIntegers("Silo capacity : %d/%d", spiceCapacityOfStructure, 1000);
 	} else {
 		textWriter->write("Spice usage : Unknown");
 	}

@@ -556,11 +556,13 @@ void cGame::poll()
 	hover_unit=-1;
 
 	// update power
+	// update total spice capacity
 	for (int p = 0; p < MAX_PLAYERS; p++) {
 		cPlayer * thePlayer = &player[p];
 		thePlayer->use_power = structureUtils.getTotalPowerUsageForPlayer(thePlayer);
 		thePlayer->has_power = structureUtils.getTotalPowerOutForPlayer(thePlayer);
-		// animate radar properly...
+		// update spice capacity
+		thePlayer->max_credits = structureUtils.getTotalSpiceCapacityForPlayer(thePlayer);
 	}
 }
 
@@ -2592,9 +2594,9 @@ bool cGame::setupGame() {
 	LOCK_FUNCTION(allegro_timerfps);
 
 	// Install timers
-	install_int(allegro_timerunits, 100);
-	install_int(allegro_timerglobal, 5);
-	install_int(allegro_timerfps, 1000);
+	install_int(allegro_timerunits, 100); // 100 miliseconds
+	install_int(allegro_timerglobal, 5); // 5 miliseconds
+	install_int(allegro_timerfps, 1000); // 1000 miliseconds (seconds)
 
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables", "LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
 

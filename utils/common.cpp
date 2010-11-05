@@ -1042,6 +1042,7 @@ void install_structures()
  // W = MAX it can have
 float health_bar(float max_w, int i, int w)
 {
+
   float health = 0.0f;
   float flHP   = i;
   float flMAX  = w;

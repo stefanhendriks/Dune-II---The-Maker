@@ -6,6 +6,7 @@ cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingLis
 	ID = theID;
 	cost = entry.cost;
 	icon = entry.icon;
+	totalBuildTime = entry.build_time;
 	type = STRUCTURE;
 	progress = 0;
 	available = true;
@@ -25,6 +26,7 @@ cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *li
 	ID = theID;
 	cost = entry.cost;
 	icon = entry.icon;
+	totalBuildTime = entry.build_time;
 	type = UNIT;
 	progress = 0;
 	available = true;

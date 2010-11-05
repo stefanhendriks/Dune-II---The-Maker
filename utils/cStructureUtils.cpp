@@ -286,11 +286,36 @@ int cStructureUtils::getTotalPowerUsageForPlayer(cPlayer * player) {
 			if (theStructure->getPlayer()->getId() == player->getId()) {
 				int powerUsageOfStructure = theStructure->getPowerUsage();
 				totalPowerUsage += powerUsageOfStructure;
+			} else if (theStructure->getType() == CONSTYARD) {
+				totalPowerUsage += 4;
 			}
 		}
 	}
 
 	return totalPowerUsage;
+}
+
+int cStructureUtils::getTotalSpiceCapacityForPlayer(cPlayer * player) {
+	int totalCapacity = 0;
+	for (int i = 0; i < MAX_STRUCTURES; i++) {
+		cAbstractStructure * theStructure = structure[i];
+		if (theStructure) {
+			if (theStructure->getPlayer()->getId() == player->getId()) {
+				int capacity = 0;
+				if (theStructure->getType() == SILO) {
+					cSpiceSilo * spiceSilo = dynamic_cast<cSpiceSilo*>(theStructure);
+					capacity = spiceSilo->getSpiceSiloCapacity();
+				} else if (theStructure->getType() == REFINERY) {
+					cRefinery * refinery = dynamic_cast<cRefinery*>(theStructure);
+					capacity = refinery->getSpiceSiloCapacity();
+				} else if (theStructure->getType() == CONSTYARD) {
+					capacity = 5;
+				}
+				totalCapacity += capacity;
+			}
+		}
+	}
+	return totalCapacity;
 }
 
 int cStructureUtils::getTotalPowerOutForPlayer(cPlayer * player) {
@@ -304,6 +329,8 @@ int cStructureUtils::getTotalPowerOutForPlayer(cPlayer * player) {
 					cWindTrap * windTrap = dynamic_cast<cWindTrap*>(theStructure);
 					int powerOutOfStructure = windTrap->getPowerOut();
 					totalPowerOut += powerOutOfStructure;
+				} else if (theStructure->getType() == CONSTYARD) {
+					totalPowerOut += 5;
 				}
 			}
 		}

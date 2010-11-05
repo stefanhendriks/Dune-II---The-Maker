@@ -3,13 +3,13 @@
 class cSpiceSilo : public cAbstractStructure
 {
 private:
-   
+
 
 public:
     cSpiceSilo();
     ~cSpiceSilo();
-  
-    // overloaded functions    
+
+    // overloaded functions
     void think();
     void think_animation();
     void think_guard();
@@ -17,5 +17,7 @@ public:
     void draw(int iStage);
 
 	int getType();
+
+	int getSpiceSiloCapacity();
 };
 

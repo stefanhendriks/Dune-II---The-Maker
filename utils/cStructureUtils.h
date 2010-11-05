@@ -34,7 +34,7 @@ class cStructureUtils {
 
 		int getTotalPowerOutForPlayer(cPlayer * player);
 		int getTotalPowerUsageForPlayer(cPlayer * player);
-
+		int getTotalSpiceCapacityForPlayer(cPlayer * player);
 	protected:
 
 	private:

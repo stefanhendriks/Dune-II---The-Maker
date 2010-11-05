@@ -40,5 +40,9 @@ void cSpiceSilo::draw(int iStage) {
 	cAbstractStructure::draw(iStage);
 }
 
-
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
+int cSpiceSilo::getSpiceSiloCapacity() {
+	cHitpointCalculator hitpointCalculator;
+	float percentage = ((float)getHitPoints() / (float)structures[getType()].hp);
+	return hitpointCalculator.getByPercent(1000, percentage);
+}
