@@ -32,6 +32,9 @@ class cStructureUtils {
 		bool isStructureOnScreen(cAbstractStructure *structure);
 		bool isMouseOverStructure(cMouse *mouse, cAbstractStructure *structure);
 
+		int getTotalPowerOutForPlayer(cPlayer * player);
+		int getTotalPowerUsageForPlayer(cPlayer * player);
+
 	protected:
 
 	private:

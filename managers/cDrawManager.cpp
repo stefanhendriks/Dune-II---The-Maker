@@ -57,12 +57,13 @@ void cDrawManager::draw() {
 
 	particleDrawer->drawHigherLayer();
 	mapDrawer->drawShroud();
-	miniMapDrawer->draw();
 
 	drawRallyPoint();
 
 	// GUI
 	drawSidebar();
+	miniMapDrawer->draw();
+
 	drawStructurePlacing();
 	drawCredits();
 	drawUpgradeButton();

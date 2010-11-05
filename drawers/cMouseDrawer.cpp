@@ -239,7 +239,7 @@ void cMouseDrawer::drawToolTipWindTrapInformation(cWindTrap * theWindTrap, cText
 		int powerOut = theWindTrap->getPlayer()->has_power;
 		int powerUse = theWindTrap->getPlayer()->use_power;
 
-		if (powerUse < powerOut) {
+		if (powerUse <= powerOut) {
 			textWriter->writeWithTwoIntegers("Total usage : %d/%d (OK)", powerUse, powerOut);
 		} else {
 			textWriter->writeWithTwoIntegers("Total usage : %d/%d (LOW)", powerUse, powerOut);

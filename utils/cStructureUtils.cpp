@@ -275,3 +275,38 @@ bool cStructureUtils::isMouseOverStructure(cMouse *mouse, cAbstractStructure *st
 	delete mouseUtils;
 	return result;
 }
+
+int cStructureUtils::getTotalPowerUsageForPlayer(cPlayer * player) {
+	assert(player);
+	int totalPowerUsage = 0;
+
+	for (int i = 0; i < MAX_STRUCTURES; i++) {
+		cAbstractStructure * theStructure = structure[i];
+		if (theStructure) {
+			if (theStructure->getPlayer()->getId() == player->getId()) {
+				int powerUsageOfStructure = theStructure->getPowerUsage();
+				totalPowerUsage += powerUsageOfStructure;
+			}
+		}
+	}
+
+	return totalPowerUsage;
+}
+
+int cStructureUtils::getTotalPowerOutForPlayer(cPlayer * player) {
+	assert(player);
+	int totalPowerOut = 0;
+	for (int i = 0; i < MAX_STRUCTURES; i++) {
+		cAbstractStructure * theStructure = structure[i];
+		if (theStructure) {
+			if (theStructure->getPlayer()->getId() == player->getId()) {
+				if (theStructure->getType() == WINDTRAP) {
+					cWindTrap * windTrap = dynamic_cast<cWindTrap*>(theStructure);
+					int powerOutOfStructure = windTrap->getPowerOut();
+					totalPowerOut += powerOutOfStructure;
+				}
+			}
+		}
+	}
+	return totalPowerOut;
+}

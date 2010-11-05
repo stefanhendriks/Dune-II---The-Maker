@@ -121,6 +121,7 @@ class cAbstractStructure {
 		int getSight();
 		int getRange();
 		int getPercentageNotPaved();
+		int getPowerUsage();
 
 		bool isAnimating() { return bAnimate; }
 		bool isPrimary();

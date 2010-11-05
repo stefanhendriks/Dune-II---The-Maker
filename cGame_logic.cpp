@@ -492,17 +492,21 @@ void cGame::poll()
 	int mc = context->getMouseCell();
 	if (mc > -1) {
 
-	for (int i=0; i < MAX_UNITS; i++)
-		if (unit[i].isValid())
-			if (unit[i].iPlayer == 0)
-				if (unit[i].bSelected) {
-					mouse_tile = MOUSE_MOVE;
-                    break;
-                }
-
+		// check if any unit is 'selected'
+		for (int i=0; i < MAX_UNITS; i++) {
+			if (unit[i].isValid()) {
+				if (unit[i].iPlayer == 0) {
+					if (unit[i].bSelected) {
+						mouse_tile = MOUSE_MOVE;
+						break;
+					}
+				}
+			}
+		}
 
         if (mouse_tile == MOUSE_MOVE)
         {
+        	// change to attack cursor if hovering over enemy unit
 			if (mapUtils->isCellVisibleForPlayerId(HUMAN, mc)) {
 
 				if (map.cell[mc].id[MAPID_UNITS] > -1)
@@ -550,6 +554,14 @@ void cGame::poll()
 
 	//selected_structure=-1;
 	hover_unit=-1;
+
+	// update power
+	for (int p = 0; p < MAX_PLAYERS; p++) {
+		cPlayer * thePlayer = &player[p];
+		thePlayer->use_power = structureUtils.getTotalPowerUsageForPlayer(thePlayer);
+		thePlayer->has_power = structureUtils.getTotalPowerOutForPlayer(thePlayer);
+		// animate radar properly...
+	}
 }
 
 void cGame::combat() {

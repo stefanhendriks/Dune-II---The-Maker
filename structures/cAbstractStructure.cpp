@@ -555,3 +555,9 @@ bool cAbstractStructure::isPrimary() {
 	cPlayer * thePlayer = getPlayer();
 	return thePlayer->iPrimaryBuilding[getType()] == id;
 }
+
+int cAbstractStructure::getPowerUsage() {
+	int type = getType();
+	s_Structures structure = getS_StructuresType();
+	return structure.power_drain;
+}
