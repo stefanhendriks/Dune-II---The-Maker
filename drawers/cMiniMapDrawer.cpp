@@ -34,7 +34,7 @@ void cMiniMapDrawer::drawViewPortRectangle() {
 
 	 iWidth--;
 	 iHeight--;
-	 rect(bmp_screen, getDrawStartX()+(mapCamera->getX()*2), getDrawStartY()+(mapCamera->getY()*2), ((511+(mapCamera->getX()*2))+iWidth*2)+1, (351+(mapCamera->getY()*2)+iHeight*2)+1, makecol(255,255,255));
+	 rect(bmp_screen, getDrawStartX()+(mapCamera->getX()*2), getDrawStartY()+(mapCamera->getY()*2), ((getDrawStartX()+(mapCamera->getX()*2))+iWidth*2)+1, (getDrawStartY()+(mapCamera->getY()*2)+iHeight*2)+1, makecol(255,255,255));
 }
 
 int cMiniMapDrawer::getDrawStartX() {
