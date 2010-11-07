@@ -18,18 +18,18 @@
 
 // units
 // TODO: Refactor this big-... class into smaller ones (like structures)
-#include "../cUnit.h"
+#include "units/cUnit.h"
 
 // TODO: Finish up these classes
-#include "../units/cAbstractUnit.h"					// Abstract Unit class (will replace cUnit.h eventually)
-#include "../units/cUnitFactory.h"				// Responsible for creation of Units
-#include "../units/cUnitUtils.h"				// Responsible for generic operations on units (ie finding a unit, etc)
+#include "units/cAbstractUnit.h"					// Abstract Unit class (will replace cUnit.h eventually)
+#include "units/cUnitFactory.h"				// Responsible for creation of Units
+#include "units/cUnitUtils.h"				// Responsible for generic operations on units (ie finding a unit, etc)
 
 // particles (explosion types, etc)
-#include "../cParticle.h"                       // explosion animations and such
+#include "particles/cParticle.h"                       // explosion animations and such
 
 // bullet/projectiles
-#include "../bullet.h"                         // bullets
+#include "projectiles/bullet.h"                         // bullets
 
 // regions drawn
 #include "../regions.h"
