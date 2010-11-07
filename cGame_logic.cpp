@@ -28,8 +28,6 @@ void cGame::init() {
 	screenshot=0;
 	bPlaying=true;
 
-    iGameTimer=0;
-
     bSkirmish=false;
 	iSkirmishStartPoints=2;
 

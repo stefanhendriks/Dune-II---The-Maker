@@ -6,7 +6,7 @@
   Contact: stefanhen83@gmail.com
   Website: http://d2tm.duneii.com
 
-  2001 - 2009 (c) code by Stefan Hendriks
+  2001 - 2010 (c) code by Stefan Hendriks
 
   */
 
@@ -23,8 +23,6 @@ public:
 
 	bool windowed;				// windowed
 	char version[15];			// version number, or name.
-
-    int iGameTimer;             // game timer
 
     // Alpha (for fading in/out)
     int iAlphaScreen;           // 255 = opaque , anything else
@@ -157,9 +155,6 @@ private:
 	void mentat(int iType);		// mentat talking
 	void menu();		// main menu
 	void region();		// region selection
-
-	void draw_order();
-	void do_credits_drawing_and_logic();
 
 	void runGameState();
 	void shakeScreenAndBlitBuffer();
