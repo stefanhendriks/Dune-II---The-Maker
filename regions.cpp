@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -10,7 +10,7 @@
 
   */
 
-#include "d2tmh.h"
+#include "include/d2tmh.h"
 
 void REGION_SETUP(int iMission, int iHouse)
 {
@@ -74,26 +74,26 @@ void REGION_DRAW(int i)
 
 
             // alpha is lower then 255
-            if (world[i].iAlpha < 255)                
+            if (world[i].iAlpha < 255)
             {
                 world[i].iAlpha += 7;
-                
+
                 if (game.iRegionState <= 2)
                     if (MOUSE_BTN_LEFT())
                         world[i].iAlpha += 25;
             }
 
             // When alpha is 255 or higher, do not use trans_sprite, which is useless
-            
+
             if (world[i].iAlpha >= 255)
-            {	
-                draw_sprite(bmp_screen, (BITMAP *)gfxworld[world[i].iTile].dat, world[i].x, world[i].y);            
+            {
+                draw_sprite(bmp_screen, (BITMAP *)gfxworld[world[i].iTile].dat, world[i].x, world[i].y);
             }
             else
             {
                 // Draw region with trans_sprite, the trick is that we have to convert it to 16 bit first.
 
-                set_trans_blender(0,0,0, world[i].iAlpha);				// set blender            
+                set_trans_blender(0,0,0, world[i].iAlpha);				// set blender
                 BITMAP *tempregion=create_bitmap(256, 256);				// 16 bit bmp
                 clear_to_color(tempregion, makecol(255,0,255));			// clear
                 draw_sprite(tempregion,(BITMAP *)gfxworld[world[i].iTile].dat, 0, 0); // copy
@@ -151,13 +151,13 @@ int REGION_OVER()
    BITMAP *tempreg=create_bitmap_ex(8, 640,480); // 8 bit bitmap
    select_palette( general_palette); // default palette
    clear(tempreg); // clear bitmap
-   
+
    draw_sprite(tempreg, (BITMAP *)gfxworld[WORLD_DUNE_CLICK].dat, 16, 73);
 
    int c = getpixel(tempreg, mouse_x, mouse_y);
 
    //alfont_textprintf(bmp_screen, bene_font, 17,17, makecol(0,0,0), "region %d", c-1);
-	
+
    iRegion=c-1;
    destroy_bitmap(tempreg);
    return iRegion;

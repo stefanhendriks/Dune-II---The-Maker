@@ -19,7 +19,8 @@
 #include <string.h>
 #include <math.h>
 
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
+
 
 // Is the cell valid?
 bool bCellValid(int c)

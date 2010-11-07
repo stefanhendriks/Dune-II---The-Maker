@@ -5,7 +5,7 @@
  * Created Oct 23, 2010
  */
 
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
 
 cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cMouse *theMouse) {
 	assert(thePlayer);

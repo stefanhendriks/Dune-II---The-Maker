@@ -10,7 +10,8 @@
 
   */
 
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
+
 
 cPlayer::cPlayer() {
 	itemBuilder = NULL;

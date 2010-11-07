@@ -4,7 +4,7 @@
  *  Created on: 31-okt-2010
  *      Author: Stefan
  */
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
 
 cMouseUtils::cMouseUtils() {
 	mouse = cMouse::getInstance();

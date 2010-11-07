@@ -1,4 +1,4 @@
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
 
 cSeedMap::cSeedMap() {
 	memset(map, TERRAIN_SAND, sizeof(map));

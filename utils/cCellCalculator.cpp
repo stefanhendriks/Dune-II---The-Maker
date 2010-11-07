@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
 
 cCellCalculator::cCellCalculator(cMap *theMap) {
 	assert(theMap);
@@ -119,14 +119,14 @@ int cCellCalculator::getY(int cell) {
 	return (cell / MAP_W_MAX);
 }
 
-// get X / Y from structure
-int cCellCalculator::getX(cAbstractStructure *structure) {
-	return getX(structure->getCell());
-}
-
-int cCellCalculator::getY(cAbstractStructure *structure) {
-	return getY(structure->getCell());
-}
+//// get X / Y from structure
+//int cCellCalculator::getX(cAbstractStructure *structure) {
+//	return getX(structure->getCell());
+//}
+//
+//int cCellCalculator::getY(cAbstractStructure *structure) {
+//	return getY(structure->getCell());
+//}
 
 /**
 	Return a cell from an X,Y coordinate.
@@ -134,8 +134,8 @@ int cCellCalculator::getY(cAbstractStructure *structure) {
 	Remember that coordinates are 1-64 based. While the array in Map (tCell) is 0-till 4096.
 
 	This means that the coordinate 1,1 is NOT the first row, but it is : 0,0. This also means the
-	MAX at the right is MAP_W_MAX, but it is MAP_W_MAX - 1. (in this case not 64, but 63 as it is 0-63 instead
-	of 1-64).
+	MAX at the right is *not* MAP_W_MAX, but it is MAP_W_MAX - 1.
+	(it is 0-63 instead of 1-64).
 
 	This method will not do any fancy tricks to fix the boundaries, instead it will assert its input and output.
 **/

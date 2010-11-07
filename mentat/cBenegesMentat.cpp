@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -10,10 +10,10 @@
 
   */
 
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
 
 cBenegesMentat::cBenegesMentat() {
-	
+
 }
 
 cBenegesMentat::~cBenegesMentat() {
@@ -24,7 +24,7 @@ cBenegesMentat::~cBenegesMentat() {
 void cBenegesMentat::draw_mouth() {
 	MMEngine->drawSprite((BITMAP *)gfxmentat[BEN_MOUTH01+ getMentatMouth()].dat, bmp_screen, 112, 272);
 }
-    
+
 void cBenegesMentat::draw_eyes() {
 	MMEngine->drawSprite((BITMAP *)gfxmentat[BEN_EYES01+ getMentatEyes()].dat, bmp_screen, 128, 240);
 }

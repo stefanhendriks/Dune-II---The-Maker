@@ -1,4 +1,5 @@
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
+
 
 cTimeManager::cTimeManager() {
 	timerUnits = 0;

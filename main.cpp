@@ -6,11 +6,11 @@
   Contact: stefanhen83@gmail.com
   Website: http://d2tm.duneii.com
 
-  2001 - 2009 (c) code by Stefan Hendriks
+  2001 - 2010 (c) code by Stefan Hendriks
 
   */
 
-#include "d2tmh.h"
+#include "include/d2tmh.h"
 
 using namespace std;
 

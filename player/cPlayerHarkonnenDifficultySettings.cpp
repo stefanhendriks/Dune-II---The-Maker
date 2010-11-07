@@ -1,4 +1,4 @@
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
 
 cPlayerHarkonnenDifficultySettings::cPlayerHarkonnenDifficultySettings() {
 

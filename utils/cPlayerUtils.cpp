@@ -5,7 +5,8 @@
  *      Author: Stefan
  */
 
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
+
 
 cPlayerUtils::cPlayerUtils() {
 	player = NULL;

@@ -24,10 +24,6 @@ public:
 	int getX(int cell);
 	int getY(int cell);
 
-	// get X / Y from structure
-	int getX(cAbstractStructure *structure);
-	int getY(cAbstractStructure *structure);
-
 	int getCellWithMapBorders(int x, int y);
 
 	// get cell from X, Y

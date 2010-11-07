@@ -5,7 +5,7 @@
  *      Author: Stefan
  */
 
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
 
 cItemBuilder::cItemBuilder(cPlayer * thePlayer) {
 	assert(thePlayer);

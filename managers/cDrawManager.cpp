@@ -1,4 +1,4 @@
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
 
 cDrawManager::cDrawManager(cPlayer * thePlayer) {
 	assert(thePlayer);
@@ -161,3 +161,13 @@ void cDrawManager::drawMouse() {
 		mouseDrawer->drawToolTip();
 	}
 }
+
+//int points[] =
+//{
+//    0,0,
+//    100,100,
+//    540,100,
+//    640,0
+//};
+//
+//spline(bmp_screen, points, makecol(255,255,255));//will draw a nice loopy curve

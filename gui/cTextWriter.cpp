@@ -5,7 +5,7 @@
  *      Author: Stefan
  */
 
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
 
 cTextWriter::cTextWriter(int x, int y, ALFONT_FONT *theFont, int theFontSize) {
 	assert(theFont);

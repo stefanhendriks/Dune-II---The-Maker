@@ -5,7 +5,7 @@
  *      Author: Stefan
  */
 
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
 
 cInteractionManager::cInteractionManager(cPlayer * thePlayer) {
 	assert(thePlayer);

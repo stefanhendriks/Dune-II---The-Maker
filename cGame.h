@@ -141,9 +141,9 @@ public:
 	void draw_placeit();
 	void combat_mouse();
 
-        int getGroupNumberFromKeyboard();
-        void destroyAllUnits(bool);
-        void destroyAllStructures(bool);
+	int getGroupNumberFromKeyboard();
+	void destroyAllUnits(bool);
+	void destroyAllStructures(bool);
 
 private:
 	void poll();

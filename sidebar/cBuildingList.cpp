@@ -1,4 +1,4 @@
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
 
 cBuildingList::cBuildingList(int theId) {
 	TIMER_progress = 0;

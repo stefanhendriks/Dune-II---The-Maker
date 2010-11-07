@@ -5,7 +5,7 @@
  *      Author: Stefan
  */
 
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
 
 cSoundPlayer::cSoundPlayer(int maxVoices) {
 	maximumVoices = maxVoices;

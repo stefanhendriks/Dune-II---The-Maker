@@ -1,4 +1,4 @@
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
 
 cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingList *list) {
 	assert(theID >= 0);

@@ -10,7 +10,8 @@
 
   */
 
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
+
 #include <math.h>
 
 #define WATCH_PLAYER 0

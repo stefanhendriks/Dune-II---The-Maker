@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -10,7 +10,7 @@
 
   */
 
-#include "../d2tmh.h"
+#include "../include/d2tmh.h"
 
 cHarkonnenMentat::cHarkonnenMentat() {
 
