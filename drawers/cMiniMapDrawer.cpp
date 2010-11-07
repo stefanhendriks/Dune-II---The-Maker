@@ -34,18 +34,27 @@ void cMiniMapDrawer::drawViewPortRectangle() {
 
 	 iWidth--;
 	 iHeight--;
-	 rect(bmp_screen, 511+(mapCamera->getX()*2), 351+(mapCamera->getY()*2), ((511+(mapCamera->getX()*2))+iWidth*2)+1, (351+(mapCamera->getY()*2)+iHeight*2)+1, makecol(255,255,255));
+	 rect(bmp_screen, getDrawStartX()+(mapCamera->getX()*2), getDrawStartY()+(mapCamera->getY()*2), ((511+(mapCamera->getX()*2))+iWidth*2)+1, (351+(mapCamera->getY()*2)+iHeight*2)+1, makecol(255,255,255));
+}
+
+int cMiniMapDrawer::getDrawStartX() {
+	return game.screen_x - 129;
+}
+
+int cMiniMapDrawer::getDrawStartY() {
+	return game.screen_y - 129;
 }
 
 void cMiniMapDrawer::drawTerrain() {
-	int iDrawX=511;
-	int iDrawY=351;
+	// startX = MAX_SCREEN_X - 129
+	int iDrawX=getDrawStartX();
+	int iDrawY=getDrawStartY();
 
 	int iColor=makecol(0,0,0);
 
 	for (int x = 0; x < (game.map_width); x++) {
 
-		iDrawY = 351; // reset Y coordinate for drawing for each column
+		iDrawY = getDrawStartY(); // reset Y coordinate for drawing for each column
 
 		for (int y = 0; y < (game.map_height); y++) {
 			iColor = makecol(0, 0, 0);
@@ -76,15 +85,15 @@ void cMiniMapDrawer::drawTerrain() {
 }
 
 void cMiniMapDrawer::drawUnitsAndStructures() {
-	int iDrawX=511;
-	int iDrawY=351;
+	int iDrawX=getDrawStartX();
+	int iDrawY=getDrawStartY();
 
 	int iColor=makecol(0,0,0);
 	cMapUtils * mapUtils = new cMapUtils(map);
 
 	for (int x = 0; x < (game.map_width); x++) {
 
-		iDrawY = 351; // reset Y coordinate for drawing for each column
+		iDrawY = getDrawStartY(); // reset Y coordinate for drawing for each column
 
 		for (int y = 0; y < (game.map_height); y++) {
 			iColor = makecol(0, 0, 0);
@@ -173,11 +182,11 @@ void cMiniMapDrawer::interact() {
 	 int iHeight=((game.screen_y-42)/32)+1;
 
 	// interact with mouse
-	if (mouse_x >= 511 && mouse_y >= 351) {
+	if (mouse_x >= getDrawStartX() && mouse_y >= getDrawStartY()) {
 		if (MOUSE_BTN_LEFT() && mouse_co_x1 < 0 && mouse_co_y1 < 0) {
 			// change scroll positions and such :)
-			int newX = (((mouse_x-(iWidth)) - 511) / 2);
-			int newY = (((mouse_y-(iHeight)) - 351) / 2);
+			int newX = (((mouse_x-(iWidth)) - getDrawStartX()) / 2);
+			int newY = (((mouse_y-(iHeight)) - getDrawStartY()) / 2);
 
 			if (newX < 1) newX = 1;
 			if (newY < 1) newY = 1;
@@ -226,7 +235,7 @@ void cMiniMapDrawer::draw() {
 void cMiniMapDrawer::drawStaticFrame() {
 	// Draw static info
 	 if (iStatus < 0) {
-		 draw_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, 511, 350);
+		 draw_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, getDrawStartX(), getDrawStartY());
 	 } else {
 		 if (iStaticFrame < STAT10) {
 			 iTrans = 255 - health_bar(192, (STAT12-iStaticFrame), 12);
@@ -238,7 +247,7 @@ void cMiniMapDrawer::drawStaticFrame() {
 		 {
 			 set_trans_blender(0,0,0,iTrans);
 
-			 draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, 511, 350);
+			 draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, getDrawStartX(), getDrawStartY());
 			 // reset the trans blender
 			 set_trans_blender(0,0,0,128);
 		 }

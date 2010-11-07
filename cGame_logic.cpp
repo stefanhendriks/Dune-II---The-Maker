@@ -45,8 +45,8 @@ void cGame::init() {
 
 	windowed = true;
 
-	screen_x = 640;
-    screen_y = 480;
+	screen_x = 800;
+    screen_y = 600;
 
     bPlaySound = true;
 
