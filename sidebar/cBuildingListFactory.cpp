@@ -23,6 +23,15 @@ cBuildingListFactory *cBuildingListFactory::getInstance() {
 	return instance;
 }
 
+int cBuildingListFactory::getButtonDrawX() {
+	return game.screen_x - 127;
+}
+
+int cBuildingListFactory::getButtonDrawYStart() {
+	return 45;
+}
+
+
 /**
  * Initialize list according to techlevel. This will also remove all previously set icons.
  *
@@ -38,15 +47,15 @@ void cBuildingListFactory::initializeList(cPlayer *player, cBuildingList *list, 
 	list->removeAllItems();
 
 	// X is the same for all list buttons
-	list->setButtonDrawX(513);
+	list->setButtonDrawX(getButtonDrawX());
 
 	list->setAvailable(false);
 
 	// now set it up
 	if (listId == LIST_CONSTYARD) {
-
 		list->setButtonDrawY(45);
-		list->setButtonIcon(BTN_CONST_PRESSED);
+		list->setButtonIconIdPressed(BTN_CONST_PRESSED);
+		list->setButtonIconIdUnpressed(BTN_CONST_UNPRESSED);
 
 		// add items
 		list->addItemToList(new cBuildingListItem(SLAB1, structures[SLAB1], list));
@@ -73,15 +82,18 @@ void cBuildingListFactory::initializeList(cPlayer *player, cBuildingList *list, 
 	if (listId == LIST_INFANTRY) {
 		list->setButtonDrawY(85);
 		if (house == ATREIDES) {
-			list->setButtonIcon(BTN_INFANTRY_PRESSED);
+			list->setButtonIconIdPressed(BTN_INFANTRY_PRESSED);
+			list->setButtonIconIdUnpressed(BTN_INFANTRY_UNPRESSED);
 			// add items
 			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list));
 		} else if (house == HARKONNEN) {
-			list->setButtonIcon(BTN_TROOPER_PRESSED);
+			list->setButtonIconIdPressed(BTN_TROOPER_PRESSED);
+			list->setButtonIconIdUnpressed(BTN_TROOPER_UNPRESSED);
 			// add items
 			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
 		} else if (house == ORDOS) {
-			list->setButtonIcon(BTN_TRPINF_PRESSED);
+			list->setButtonIconIdPressed(BTN_TRPINF_PRESSED);
+			list->setButtonIconIdUnpressed(BTN_TRPINF_UNPRESSED);
 			// add items , since ordos can have both, it is determined on structure place
 //			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list));
 //			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
@@ -92,7 +104,8 @@ void cBuildingListFactory::initializeList(cPlayer *player, cBuildingList *list, 
 
 	if (listId == LIST_LIGHTFC) {
 		list->setButtonDrawY(125);
-		list->setButtonIcon(BTN_LIGHTFC_PRESSED);
+		list->setButtonIconIdPressed(BTN_LIGHTFC_PRESSED);
+		list->setButtonIconIdUnpressed(BTN_LIGHTFC_UNPRESSED);
 
 		if (house == ATREIDES) {
 			list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE], list));
@@ -109,7 +122,8 @@ void cBuildingListFactory::initializeList(cPlayer *player, cBuildingList *list, 
 
 	if (listId == LIST_HEAVYFC) {
 		list->setButtonDrawY(165);
-		list->setButtonIcon(BTN_HEAVYFC_PRESSED);
+		list->setButtonIconIdPressed(BTN_HEAVYFC_PRESSED);
+		list->setButtonIconIdUnpressed(BTN_HEAVYFC_UNPRESSED);
 
 		list->addItemToList(new cBuildingListItem(TANK, units[TANK], list));
 		list->addItemToList(new cBuildingListItem(HARVESTER, units[HARVESTER], list));
@@ -117,14 +131,16 @@ void cBuildingListFactory::initializeList(cPlayer *player, cBuildingList *list, 
 
 	if (listId == LIST_ORNI) {
 		list->setButtonDrawY(205);
-		list->setButtonIcon(BTN_ORNI_PRESSED);
+		list->setButtonIconIdPressed(BTN_ORNI_PRESSED);
+		list->setButtonIconIdUnpressed(BTN_ORNI_UNPRESSED);
 
 		list->addItemToList(new cBuildingListItem(CARRYALL, units[CARRYALL], list));
 	}
 
 	if (listId == LIST_STARPORT) {
 		list->setButtonDrawY(245);
-		list->setButtonIcon(BTN_STARPORT_PRESSED);
+		list->setButtonIconIdPressed(BTN_STARPORT_PRESSED);
+		list->setButtonIconIdUnpressed(BTN_STARPORT_UNPRESSED);
 
 		list->addItemToList(new cBuildingListItem(INFANTRY, units[INFANTRY], list));
 		list->addItemToList(new cBuildingListItem(TROOPERS, units[TROOPERS], list));
@@ -140,7 +156,8 @@ void cBuildingListFactory::initializeList(cPlayer *player, cBuildingList *list, 
 
 	if (listId == LIST_PALACE) {
 		list->setButtonDrawY(285);
-		list->setButtonIcon(BTN_PALACE_PRESSED);
+		list->setButtonIconIdPressed(BTN_PALACE_PRESSED);
+		list->setButtonIconIdUnpressed(BTN_PALACE_UNPRESSED);
 
 		// special weapons
 		switch (house) {

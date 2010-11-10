@@ -27,15 +27,17 @@ void cSideBarDrawer::drawHouseGui(cPlayer * thePlayer) {
 
     int iHouse = thePlayer->getHouse();
 
-    if (iHouse == ATREIDES)
-        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_ATR].dat, 0, 0);
-    else if (iHouse == HARKONNEN)
-        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_HAR].dat, 0, 0);
-    else if (iHouse == ORDOS)
-        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_ORD].dat, 0, 0);
-    else {
-    	assert(false);
-    }
+    draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_800X600].dat, 0, 0);
+
+//    if (iHouse == ATREIDES)
+//        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_ATR].dat, 0, 0);
+//    else if (iHouse == HARKONNEN)
+//        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_HAR].dat, 0, 0);
+//    else if (iHouse == ORDOS)
+//        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_ORD].dat, 0, 0);
+//    else {
+//    	assert(false);
+//    }
 //	else
   //      draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD].dat, 0, 0); // draw interface skeleton (THIS IS BAD IF THIS IS SHOWN)
 
@@ -69,7 +71,7 @@ void cSideBarDrawer::drawSideBar(cPlayer * player) {
 
 	drawHouseGui(player);
 	drawBuildingLists();
-	drawCapacities();
+//	drawCapacities();
 }
 
 void cSideBarDrawer::drawCapacities() {

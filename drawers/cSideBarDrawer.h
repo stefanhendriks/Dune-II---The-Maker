@@ -15,6 +15,8 @@ class cSideBarDrawer {
 
 		void drawSideBar(cPlayer * player);
 
+		cBuildingListDrawer * getBuildingListDrawer() { return buildingListDrawer; }
+
 	protected:
 		void drawHouseGui(cPlayer * thePlayer);
 		void drawBuildingLists();

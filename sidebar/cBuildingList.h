@@ -33,7 +33,8 @@ class cBuildingList {
 		bool isUpgrading() { return upgrading; }
 		int getTimer() { return TIMER_progress; }
 		int getLastClickedId() { return lastClickedId; }
-		int getButtonIconId() { return buttonIconId; }
+		int getButtonIconIdPressed() { return buttonIconIdPressed; }
+		int getButtonIconIdUnpressed() { return buttonIconIdUnpressed; }
 		int getButtonDrawX() { return buttonDrawX; }
 		int getButtonDrawY() { return buttonDrawY; }
 		int getScrollingOffset() { return scrollingOffset; }
@@ -51,12 +52,8 @@ class cBuildingList {
 		void setUpgradeLevel(int value) { upgradeLevel = value; }
 		void setUpgrading(bool value) { upgrading = value; }
 
-		/**
-		 * Remember, only the pressed version. Unpressed icon versions are not available. They are drawn
-		 * within the HERALD_XXX overall GUI picture.
-		 * @param iconId
-		 */
-		void setButtonIcon(int iconId) { buttonIconId = iconId; }
+		void setButtonIconIdPressed(int iconId) { buttonIconIdPressed = iconId; }
+		void setButtonIconIdUnpressed(int iconId) { buttonIconIdUnpressed = iconId; }
 
 		void setButtonDrawX(int value) { buttonDrawX = value; }
 		void setButtonDrawY(int value) { buttonDrawY = value; }
@@ -74,7 +71,8 @@ class cBuildingList {
 		int TIMER_progress;	// timer for upping progress
 		bool upgrading;		// upgrading this field of technology?
 		int lastClickedId;	// last clicked item id
-		int buttonIconId;	// the button to draw at the left of the list
+		int buttonIconIdPressed;	// the button to draw at the left of the list when pressed (selected)
+		int buttonIconIdUnpressed;	// the button to draw at the left of the list when unpressed
 		int buttonDrawX;
 		int buttonDrawY;
 		int scrollingOffset; // the offset for scrolling through the list.

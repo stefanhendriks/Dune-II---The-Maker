@@ -13,6 +13,8 @@ class cMouse;
 
 #include "cTextDrawer.h"
 
+#include "cMessageBarDrawer.h"
+
 #include "cParticleDrawer.h"
 #include "CreditsDrawer.h"
 

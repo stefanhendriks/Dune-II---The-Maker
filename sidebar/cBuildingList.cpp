@@ -3,7 +3,7 @@
 cBuildingList::cBuildingList(int theId) {
 	TIMER_progress = 0;
 	lastClickedId = 0;
-	buttonIconId = 0;	// the button to draw at the left of the list
+	buttonIconIdPressed = 0;	// the button to draw at the left of the list
 	buttonDrawX = 0;
 	buttonDrawY = 0;
 	scrollingOffset = 0; 	// the offset for scrolling through the list.
@@ -19,7 +19,7 @@ cBuildingList::cBuildingList(int theId) {
 cBuildingList::~cBuildingList() {
 	TIMER_progress = 0;
 	lastClickedId = 0;
-	buttonIconId = 0;	// the button to draw at the left of the list
+	buttonIconIdPressed = 0;	// the button to draw at the left of the list
 	buttonDrawX = 0;
 	buttonDrawY = 0;
 	scrollingOffset = 0; 	// the offset for scrolling through the list.

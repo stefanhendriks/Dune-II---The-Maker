@@ -40,26 +40,38 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 
 	int x = list->getButtonDrawX();
 	int y = list->getButtonDrawY();
-	int id = list->getButtonIconId();
+	int id = list->getButtonIconIdUnpressed();
 	bool available = list->isAvailable();
+
+	if (pressed) {
+		id = list->getButtonIconIdPressed();
+	}
 
 	assert(id > -1);
 
+	int width = ((BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat)->w;
+	int height = ((BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat)->h;
+
     // clear
-    BITMAP *bmp_trans=create_bitmap(((BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat)->w,((BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat)->h);
-    clear_to_color(bmp_trans, makecol(0,0, 0));
+	draw_sprite(bmp_screen, (BITMAP *)gfxinter[list->getButtonIconIdUnpressed()].dat, x, y);		// draw pressed button version (unpressed == default in gui)
 
     // set blender
     set_trans_blender(0,0,0,128);
-	if (pressed) {
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[id].dat, x, y);		// draw pressed button version (unpressed == default in gui)
-	}
+	draw_sprite(bmp_screen, (BITMAP *)gfxinter[id].dat, x, y);		// draw pressed button version (unpressed == default in gui)
 
     if (!available) {
-		fblend_trans(bmp_trans, bmp_screen, x, y, 128);				// make dark
+    	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 96);
     }
 
-    destroy_bitmap(bmp_trans);
+}
+
+
+int cBuildingListDrawer::getDrawX() {
+	return game.screen_x - 68;
+}
+
+int cBuildingListDrawer::getDrawY() {
+	return 46;
 }
 
 
@@ -70,8 +82,8 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
  */
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int startId, bool shouldDrawStructureSize) {
 	// starting draw coordinates
-	int iDrawX=572;
-	int iDrawY=46;
+	int iDrawX=getDrawX();
+	int iDrawY=getDrawY();
 
 	int end = startId + 5; // max 5 icons are showed at once
 
@@ -269,12 +281,13 @@ bool cBuildingListDrawer::isOverItemCoordinates_Boolean(int x, int y, int drawX,
 cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *list, int x, int y) {
 	assert(list != NULL);
 	// starting draw coordinates
-	int iDrawX=572;
-	int iDrawY=46;
+
+	int iDrawX=drawManager->getSidebarDrawer()->getBuildingListDrawer()->getDrawX();
+	int iDrawY=drawManager->getSidebarDrawer()->getBuildingListDrawer()->getDrawY();
 
 	int startId = list->getScrollingOffset();
 	int end = startId + 5; // 5 icons in the list
-	// draw the icons
+
 	for (int i = startId; i < end; i++) {
 		cBuildingListItem * item = list->getItem(i);
 		if (item == NULL) break;

@@ -19,6 +19,10 @@ public:
 	bool isOverItem(cBuildingList *list, int x, int y);
 	cBuildingListItem *isOverItemCoordinates(cBuildingList *list, int x, int y);
 
+protected:
+	int getDrawX();
+	int getDrawY();
+
 private:
 	void drawStructureSize(int structureId, int x, int y);
 	void drawList(cBuildingList *list, int listIDToDraw, int startId, bool shouldDrawStructureSize);

@@ -11,9 +11,15 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) {
 	miniMapDrawer = new cMiniMapDrawer(&map, thePlayer, mapCamera);
 	particleDrawer = new cParticleDrawer();
 	messageDrawer = new cMessageDrawer();
+	messageBarDrawer = new cMessageBarDrawer();
 	placeitDrawer = new cPlaceItDrawer();
 	structureDrawer = new cStructureDrawer();
 	mouseDrawer = new cMouseDrawer(thePlayer, cMouse::getInstance());
+
+	cMessageBar * messageBar = messageBarDrawer->getMessageBar();
+	messageBar->setX(200);
+	messageBar->setY(200);
+	messageBar->setWidth(game.screen_x - 160);
 }
 
 cDrawManager::~cDrawManager() {
@@ -151,6 +157,7 @@ void cDrawManager::drawStructurePlacing() {
 void cDrawManager::drawMessage() {
 	assert(messageDrawer);
 	messageDrawer->draw();
+//	messageBarDrawer->drawMessageBar();
 }
 
 void cDrawManager::drawMouse() {
