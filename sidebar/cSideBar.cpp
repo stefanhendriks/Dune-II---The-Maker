@@ -162,21 +162,24 @@ void cSideBar::thinkInteraction() {
 	thinkMouseZScrolling();
 
 	// when mouse pressed, a list is selected, and that list is still available
-	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && cMouse::getInstance()->isLeftButtonClicked()) {
+	if (selectedListID > -1 && getList(selectedListID)->isAvailable()) {
 		cBuildingList *list = getList(selectedListID);
 
-		bool mouseOverUp = mouseOverScrollUp();
-		bool mouseOverDown = mouseOverScrollDown();
+		cSideBarDrawer * sidebarDrawer = new cSideBarDrawer();
+
+		bool mouseOverUp = sidebarDrawer->isMouseOverScrollUp();
+		bool mouseOverDown = sidebarDrawer->isMouseOverScrollDown();
 		assert(!(mouseOverUp == true && mouseOverDown == true));// can never be both.
 
+		cMouse * mouse = cMouse::getInstance();
 		if (mouseOverUp) {
-			list->scrollUp();
-			// draw pressed
-			draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_UP_PRESSED].dat, 571, 315);
+			if (mouse->isLeftButtonClicked()) {
+				list->scrollUp();
+			}
 		} else if (mouseOverDown) {
-			list->scrollDown();
-			// draw pressed
-			draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_DOWN_PRESSED].dat, 623, 315);
+			if (mouse->isLeftButtonClicked()) {
+				list->scrollDown();
+			}
 		}
 	}
 
@@ -296,20 +299,6 @@ void cSideBar::thinkInteraction() {
 
 }
 
-bool cSideBar::mouseOverScrollUp() {
-	if ((mouse_x >= 571 && mouse_y >= 315) && (mouse_x < 584 && mouse_y < 332)) {
-		return true;
-	}
-	return false;
-}
-
-bool cSideBar::mouseOverScrollDown() {
-	if ((mouse_x >= 623 && mouse_y >= 315) && (mouse_x < 636 && mouse_y < 332))	{
-		return true;
-	}
-	return false;
-}
-
 void cSideBar::thinkMouseZScrolling() {
 
 	if (selectedListID < 0) {
@@ -323,21 +312,15 @@ void cSideBar::thinkMouseZScrolling() {
 	cBuildingList *list = getList(selectedListID);
 	cMouse *mouse = cMouse::getInstance();
 
+
 	// MOUSE WHEEL
 	if (mouse->isMouseScrolledUp()) {
-
 	   list->scrollUp();
-
-		// draw pressed
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_UP_PRESSED].dat, 571, 315);
-
 	}
 
-	if (mouse->isMouseScrolledDown()) {
-		// Only allow scrolling when there is an icon to show
-	   list->scrollDown();
 
-		// draw pressed
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_DOWN_PRESSED].dat, 623, 315);
+
+	if (mouse->isMouseScrolledDown()) {
+	   list->scrollDown();
 	}
 }

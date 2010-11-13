@@ -46,8 +46,6 @@ class cSideBar {
 		cBuildingList * getList(int listId) { return lists[listId]; }
 		void setList(int listId, cBuildingList *list);
 		int getSelectedListID() { return selectedListID; }
-		bool mouseOverScrollUp();
-		bool mouseOverScrollDown();
 
 		void think();	// timer based
 		void thinkInteraction(); // fps based
@@ -58,6 +56,7 @@ class cSideBar {
 		void setSelectedListId(int value) { selectedListID = value; }
 
 	private:
+
 		// the lists:
 		cBuildingList * lists[LIST_MAX];
 		cPlayer * player;

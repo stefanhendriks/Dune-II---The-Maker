@@ -72,6 +72,7 @@ void cSideBarDrawer::drawSideBar(cPlayer * player) {
 	drawHouseGui(player);
 	drawBuildingLists();
 //	drawCapacities();
+	drawScrollButtons();
 }
 
 void cSideBarDrawer::drawCapacities() {
@@ -96,4 +97,84 @@ void cSideBarDrawer::drawCapacities() {
 	// spice/credits bar
 	iHeight=health_bar(79, player[0].credits, player[0].max_credits);
 	rectfill(bmp_screen, 497,442, 499, 442-iHeight, makecol(0,0,255));
+}
+
+void cSideBarDrawer::drawScrollButtons() {
+	int buttonUpX = game.screen_x - 68;
+	int buttonUpY = game.screen_y - 310;
+
+	cMouse * mouse = cMouse::getInstance();
+
+	bool leftScrollButtonPressed=false;
+	bool rightScrollButtonPressed=false;
+
+	if (mouse->isMouseScrolledUp()) {
+		leftScrollButtonPressed = true;
+	}
+	if (mouse->isMouseScrolledDown()) {
+		rightScrollButtonPressed = true;
+	}
+
+	cSideBar *sidebar = player->getSideBar();
+
+	// when mouse pressed, a list is selected, and that list is still available
+	int selectedListID = sidebar->getSelectedListID();
+	if (selectedListID > -1 && sidebar->getList(selectedListID)->isAvailable()) {
+		cBuildingList *list = sidebar->getList(selectedListID);
+
+		bool mouseOverUp = isMouseOverScrollUp();
+		bool mouseOverDown = isMouseOverScrollDown();
+		assert(!(mouseOverUp == true && mouseOverDown == true));// can never be both.
+
+		cMouse * mouse = cMouse::getInstance();
+		if (mouseOverUp) {
+			leftScrollButtonPressed = mouse->isLeftButtonPressed();
+		} else if (mouseOverDown) {
+			rightScrollButtonPressed = mouse->isLeftButtonPressed();
+		}
+	}
+
+	if (leftScrollButtonPressed) {
+		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_SCROLL_UP_PRESSED].dat, buttonUpX, buttonUpY);
+	} else {
+		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_SCROLL_UP_UNPRESSED].dat, buttonUpX, buttonUpY);
+	}
+
+	buttonUpX = game.screen_x - 34;
+
+	if (rightScrollButtonPressed) {
+		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_SCROLL_DOWN_PRESSED].dat, buttonUpX, buttonUpY);
+	} else {
+		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_SCROLL_DOWN_UNPRESSED].dat, buttonUpX, buttonUpY);
+	}
+
+
+}
+
+
+int cSideBarDrawer::getScrollButtonUpX() {
+	return game.screen_x - 68;
+}
+
+int cSideBarDrawer::getScrollButtonDownX() {
+	return game.screen_x - 34;
+}
+
+int cSideBarDrawer::getScrollButtonY() {
+	return game.screen_y - 310;
+}
+
+bool cSideBarDrawer::isOverScrollButton(int buttonX, int buttonY) {
+	if ((mouse_x >= buttonX && mouse_y >= buttonY) && (mouse_x < (buttonX + 30) && mouse_y < (buttonY + 30))) {
+			return true;
+	}
+	return false;
+}
+
+bool cSideBarDrawer::isMouseOverScrollUp() {
+	return isOverScrollButton(getScrollButtonUpX(), getScrollButtonY());
+}
+
+bool cSideBarDrawer::isMouseOverScrollDown() {
+	return isOverScrollButton(getScrollButtonDownX(), getScrollButtonY());
 }
