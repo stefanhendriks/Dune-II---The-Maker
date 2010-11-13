@@ -63,6 +63,9 @@ public:
 
     void setVisible(int iCell, int iPlayer, bool flag) { iVisible[iCell][iPlayer] = flag; }
 
+    cCellCalculator * getCellCalculator() { return cellCalculator; }
+    void resetCellCalculator();
+
 	private:
 
 
@@ -74,6 +77,8 @@ public:
 
     	// sizes of the map
     	int height, width;
+
+    	cCellCalculator * cellCalculator;
 };
 
 

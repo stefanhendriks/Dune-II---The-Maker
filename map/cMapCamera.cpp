@@ -27,6 +27,10 @@ cMapCamera::~cMapCamera() {
 }
 
 void cMapCamera::centerAndJumpViewPortToCell(int cell) {
+	// fix any boundaries
+	if (cell < 0) cell = 0;
+	if (cell >= MAX_CELLS) cell = (MAX_CELLS-1);
+
 	int cellX = cellCalculator->getX(cell);
 	int cellY = cellCalculator->getY(cell);
 
@@ -46,8 +50,8 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell) {
 	// first jump to the new coordinates
 	jumpTo(newViewPortX, newViewPortY);
 
-	int diffX = getEndX() - (game.map_width - 2);
-	int diffY = getEndY() - (game.map_height - 2);
+	int diffX = getEndX() - (game.map_width - 1);
+	int diffY = getEndY() - (game.map_height - 1);
 
 	// when > 0 then it has overlapped, and should be substracted to the original X
 	if (diffX > 0) {
@@ -56,6 +60,14 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell) {
 
 	if (diffY > 0) {
 		newViewPortY -= diffY;
+	}
+
+	if (newViewPortX < 1) {
+		newViewPortX = 1;
+	}
+
+	if (newViewPortY < 1) {
+		newViewPortY = 1;
 	}
 
 	// now the final 'jump' to the correct positions

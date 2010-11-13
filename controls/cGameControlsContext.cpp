@@ -7,6 +7,8 @@
 
 #include "../include/d2tmh.h"
 
+#define MOUSECELL_MINIMAP -2
+
 cGameControlsContext::cGameControlsContext(cPlayer * thePlayer) {
 	assert(thePlayer);
 	player = thePlayer;
@@ -38,7 +40,7 @@ void cGameControlsContext::determineMouseCell() {
 
 	if (mouse->getX() > (game.screen_x - 128)) {
 		if (mouse->getY() > (game.screen_y - 128)) {
-			mouseCell = -2 ; // on minimap
+			mouseCell = MOUSECELL_MINIMAP ; // on minimap
 			return;
 		}
 	}
@@ -91,4 +93,29 @@ cAbstractStructure * cGameControlsContext::getStructurePointerWhereMouseHovers()
 		return NULL;
 	}
 	return structure[mouseHoveringOverStructureId];
+}
+
+int cGameControlsContext::getMouseCellFromMiniMap() {
+	// is not on minimap
+	if (getMouseCell() != MOUSECELL_MINIMAP) {
+		return -1;
+	}
+
+	int drawStartX = drawManager->getMiniMapDrawer()->getDrawStartX();
+	int drawStartY = drawManager->getMiniMapDrawer()->getDrawStartY();
+
+	// the minimap is 128x128 pixels at the bottom right of the screen.
+	int mouseMiniMapX = mouse_x - drawStartX;
+	int mouseMiniMapY = mouse_y - drawStartY;
+
+	// However, every dot is (due the 64x64 map) 2 pixels wide.
+	mouseMiniMapX /= 2;
+	mouseMiniMapY /= 2;
+
+	// the mouse is the center of the screen, so substract half of the viewport coordinates
+	int newX = mouseMiniMapX;/* - centerOfViewPortWidth;*/
+	int newY = mouseMiniMapY;/* - centerOfViewPortHeight;*/
+
+	cCellCalculator * cellCalculator = map.getCellCalculator();
+	return cellCalculator->getCellWithMapBorders(newX, newY);
 }

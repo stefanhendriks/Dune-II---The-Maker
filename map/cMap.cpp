@@ -19,11 +19,20 @@
 cMap::cMap() {
 	TIMER_scroll=0;
 	iScrollSpeed=10;
+	cellCalculator = NULL;
+}
+
+void cMap::resetCellCalculator() {
+	if (cellCalculator) {
+		delete cellCalculator;
+	}
+	cellCalculator = new cCellCalculator(this);
 }
 
 void cMap::init()
 {
     INIT_REINFORCEMENT();
+    resetCellCalculator();
 
     // clear out all cells
     cMapUtils * mapUtils = new cMapUtils(this);

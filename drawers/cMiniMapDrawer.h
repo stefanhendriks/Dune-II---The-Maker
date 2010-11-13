@@ -24,10 +24,10 @@ class cMiniMapDrawer {
 
 		void drawStaticFrame();
 
-	protected:
-
 		int getDrawStartX();
 		int getDrawStartY();
+
+	protected:
 
 		void drawTerrain();
 		void drawViewPortRectangle();

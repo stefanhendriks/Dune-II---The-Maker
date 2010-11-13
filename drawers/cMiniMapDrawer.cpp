@@ -178,23 +178,17 @@ int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
 }
 
 void cMiniMapDrawer::interact() {
-	 int iWidth=((game.screen_x-160)/32);
-	 int iHeight=((game.screen_y-42)/32)+1;
+	int iWidth = mapCamera->getViewportWidth();
+	int iHeight = mapCamera->getViewportHeight();
 
 	// interact with mouse
 	if (mouse_x >= getDrawStartX() && mouse_y >= getDrawStartY()) {
+		// pressed the mouse and not boxing anything..
 		if (MOUSE_BTN_LEFT() && mouse_co_x1 < 0 && mouse_co_y1 < 0) {
-			// change scroll positions and such :)
-			int newX = (((mouse_x-(iWidth)) - getDrawStartX()) / 2);
-			int newY = (((mouse_y-(iHeight)) - getDrawStartY()) / 2);
 
-			if (newX < 1) newX = 1;
-			if (newY < 1) newY = 1;
-
-			if (newX >= (62-iWidth)) newX = (62-iWidth);
-			if (newY >= (62-iHeight)) newY = (62-iHeight);
-
-			mapCamera->jumpTo(newX, newY);
+			cGameControlsContext * context = player[HUMAN].getGameControlsContext();
+			int mouseCellOnMiniMap = context->getMouseCellFromMiniMap();
+			mapCamera->centerAndJumpViewPortToCell(mouseCellOnMiniMap);
 		}
 	}
 }

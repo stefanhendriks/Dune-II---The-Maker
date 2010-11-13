@@ -28,6 +28,7 @@ class cGameControlsContext {
 		int getIdOfUnitWhereMouseHovers() { return mouseHoveringOverUnitId; }
 
 		int getMouseCell() { return  mouseCell; }
+		int getMouseCellFromMiniMap();
 
 		bool isMouseOverStructure() { return mouseHoveringOverStructureId > -1; }
 		bool isMouseOverUnit() { return mouseHoveringOverUnitId > -1; }
