@@ -194,6 +194,42 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
     destroy_bitmap(wind);
 }
 
+void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure * structure) {
+	assert(structure);
+	assert(structure->getType() == TURRET || structure->getType() == RTURRET);
+
+	int iHeadFacing = -1;
+	if (structure->getType() == TURRET) {
+		cGunTurret * gunTurret = dynamic_cast<cGunTurret *>(structure);
+		iHeadFacing = gunTurret->getHeadFacing();
+	} else if (structure->getType() == RTURRET) {
+		cRocketTurret * rocketTurret = dynamic_cast<cRocketTurret *>(structure);
+		iHeadFacing = rocketTurret->getHeadFacing();
+	}
+	assert(iHeadFacing > -1);
+
+	structure->setFrame(convert_angle(iHeadFacing));
+
+	drawStructureAnimation(structure);
+}
+
+void cStructureDrawer::drawStructureAnimationRefinery(cAbstractStructure * structure) {
+	assert(structure);
+	assert(structure->getType() == REFINERY);
+
+	int oldFrame = structure->getFrame();
+
+	// Refinery has content, then the frame is a bit different
+	if (structure->hasUnitWithin()) {
+		structure->setFrame(structure->getFrame() + 5);
+	}
+
+	drawStructureAnimation(structure);
+
+	// restore iFrame again
+	structure->setFrame(oldFrame);
+}
+
 void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int layer) {
 	assert(structure);
 
@@ -222,6 +258,10 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
         	if (structure->getType() == WINDTRAP) {
         		// draw windtrap
         		drawStructureAnimationWindTrap(structure);
+        	} else if (structure->getType() == TURRET || structure->getType() == RTURRET) {
+        		drawStructureAnimationTurret(structure);
+        	} else if (structure->getType() == REFINERY) {
+        		drawStructureAnimationRefinery(structure);
         	} else {
         		drawStructureAnimation(structure);
         	}

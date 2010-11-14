@@ -23,6 +23,6 @@ public:
     void draw(int iStage);
 
 	int getType();
-
+	int getHeadFacing() { return iHeadFacing; }
 };
 

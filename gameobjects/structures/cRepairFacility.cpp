@@ -96,10 +96,4 @@ void cRepairFacility::think_guard()
 
 }
 
-// Draw function to draw this structure()
-void cRepairFacility::draw(int iStage) {
-cAbstractStructure::draw(iStage);
-}
-
-
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
