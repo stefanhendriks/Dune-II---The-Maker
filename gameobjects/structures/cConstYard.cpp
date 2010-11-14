@@ -23,8 +23,3 @@ void cConstYard::think_animation() {
 void cConstYard::think_guard() {
  // do nothing
 }
-
-// Draw function to draw this structure()
-void cConstYard::draw(int iStage) {
-  	cAbstractStructure::draw(iStage);
-}

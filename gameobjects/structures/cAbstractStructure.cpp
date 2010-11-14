@@ -448,13 +448,6 @@ void cAbstractStructure::think_repair()
 	}
 }
 
-/**
-	Basic drawing, used for every structure. When not animating that is.
-**/
-void cAbstractStructure::draw(int iStage) {
-
-}
-
 s_Structures cAbstractStructure::getS_StructuresType() {
 	return structures[getType()];
 }
@@ -469,7 +462,6 @@ bool cAbstractStructure::isPrimary() {
 }
 
 int cAbstractStructure::getPowerUsage() {
-	int type = getType();
 	s_Structures structure = getS_StructuresType();
 	return structure.power_drain;
 }

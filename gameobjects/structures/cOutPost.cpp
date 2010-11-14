@@ -50,10 +50,4 @@ void cOutPost::think_guard()
 
 }
 
-// Draw function to draw this structure()
-void cOutPost::draw(int iStage) {
-cAbstractStructure::draw(iStage);
-}
-
-
 /*  STRUCTURE SPECIFIC FUNCTIONS  */

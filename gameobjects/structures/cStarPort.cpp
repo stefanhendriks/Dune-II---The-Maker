@@ -111,10 +111,4 @@ void cStarPort::think_guard() {
     return; // starport has no guard function
 }
 
-// Draw function to draw this structure()
-void cStarPort::draw(int iStage) {
- cAbstractStructure::draw(iStage);
-}
-
-
 /*  STRUCTURE SPECIFIC FUNCTIONS  */

@@ -62,10 +62,4 @@ void cHeavyFactory::think_guard()
 
 }
 
-// Draw function to draw this structure()
-void cHeavyFactory::draw(int iStage) {
-    cAbstractStructure::draw(iStage);
-}
-
-
 /*  STRUCTURE SPECIFIC FUNCTIONS  */

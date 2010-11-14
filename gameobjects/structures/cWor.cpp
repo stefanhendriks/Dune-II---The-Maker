@@ -37,12 +37,6 @@ void cWor::think_guard()
 
 }
 
-// Draw function to draw this structure()
-void cWor::draw(int iStage) {
-   cAbstractStructure::draw(iStage);
-}
-
-
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 
 

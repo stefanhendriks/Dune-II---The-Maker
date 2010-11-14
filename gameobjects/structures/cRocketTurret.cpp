@@ -243,13 +243,4 @@ void cRocketTurret::think_guard() {
     }
 }
 
-// Draw function to draw this structure()
-void cRocketTurret::draw(int iStage) {
-	// When turret, frame = iHeadFacing
-    setFrame(convert_angle(iHeadFacing));
-
-    cAbstractStructure::draw(iStage);
-}
-
-
 /*  STRUCTURE SPECIFIC FUNCTIONS  */

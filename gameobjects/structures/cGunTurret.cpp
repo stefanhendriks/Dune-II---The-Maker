@@ -253,12 +253,4 @@ void cGunTurret::think_guard()
     }
 }
 
-// Draw function to draw this structure()
-void cGunTurret::draw(int iStage) {
-	// When turret, frame = iHeadFacing
-    setFrame(convert_angle(iHeadFacing));
-	cAbstractStructure::draw(iStage);
-}
-
-
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
