@@ -188,22 +188,6 @@ void cRefinery::think_guard()
 
 }
 
-// Draw function to draw this structure()
-void cRefinery::draw(int iStage) {
-	int oldFrame = getFrame();
-
-    // Refinery has content, then the frame is a bit different
-	if (iUnitID > -1) {
-        setFrame(getFrame() + 5);
-	}
-
-	cAbstractStructure::draw(iStage);
-
-	// restore iFrame again
-	setFrame(oldFrame);
-}
-
-
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cRefinery::getSpiceSiloCapacity() {
 	cHitpointCalculator hitpointCalculator;

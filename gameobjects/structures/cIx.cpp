@@ -35,10 +35,4 @@ void cIx::think_guard()
 
 }
 
-// Draw function to draw this structure()
-void cIx::draw(int iStage) {
-	cAbstractStructure::draw(iStage);
-}
-
-
 /*  STRUCTURE SPECIFIC FUNCTIONS  */

@@ -35,11 +35,6 @@ void cSpiceSilo::think_guard()
 
 }
 
-// Draw function to draw this structure()
-void cSpiceSilo::draw(int iStage) {
-	cAbstractStructure::draw(iStage);
-}
-
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cSpiceSilo::getSpiceSiloCapacity() {
 	cHitpointCalculator hitpointCalculator;

@@ -60,10 +60,4 @@ void cHighTech::think_guard()
 
 }
 
-// Draw function to draw this structure()
-void cHighTech::draw(int iStage) {
-	cAbstractStructure::draw(iStage);
-}
-
-
 /*  STRUCTURE SPECIFIC FUNCTIONS  */

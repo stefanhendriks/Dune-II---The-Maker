@@ -27,8 +27,3 @@ void cBarracks::think_animation() {
 void cBarracks::think_guard() {
  // do nothing
 }
-
-// Draw function to draw this structure()
-void cBarracks::draw(int iStage) {
-	cAbstractStructure::draw(iStage);
-}

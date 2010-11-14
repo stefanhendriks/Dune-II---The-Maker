@@ -81,7 +81,6 @@ class cAbstractStructure {
 
 
 		// Filled in by derived classes
-		virtual void draw(int iStage)=0;              // draw
 		virtual void think()=0;           // think
 		virtual void think_animation()=0; // think animation stuff
 		virtual void think_guard();       // think guard stuff
@@ -133,6 +132,7 @@ class cAbstractStructure {
 		bool isAnimating() { return bAnimate; }
 		bool isPrimary();
 		bool isRepairing() { return bRepair; }
+		bool hasUnitWithin() { return iUnitID > -1; }
 
 
 		void setHeight(int height);
