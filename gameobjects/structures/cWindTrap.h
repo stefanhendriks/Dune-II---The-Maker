@@ -26,5 +26,7 @@ public:
 
 	int getPowerOut();
 	int getMaxPowerOut();
+
+	int getFade() { return iFade; }
 };
 

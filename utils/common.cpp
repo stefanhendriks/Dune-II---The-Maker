@@ -1543,9 +1543,9 @@ void memory_putpixel(BITMAP *bmp, int x, int y, int color)
 **/
 void lit_windtrap_color(BITMAP *bmp, int iColor)
 {
-	for (int x=0; x < bmp->w; x++)
+	for (int x = 0; x < bmp->w; x++)
 	{
-		for (int y=0; y < bmp->h; y++)
+		for (int y = 0; y < bmp->h; y++)
 		{
             // masked
 			if (getpixel(bmp, x, y) == makecol(40,40,182)) {

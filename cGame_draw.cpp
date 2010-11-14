@@ -404,10 +404,10 @@ void cGame::combat_mouse()
                 if (cMouse::getInstance()->isLeftButtonClicked())
                 {
 
-                    if (structure[structureId]->bRepair==false) {
-                        structure[structureId]->bRepair=true;
+                    if (!structure[structureId]->isRepairing()) {
+                        structure[structureId]->setRepairing(true);
                     } else {
-                        structure[structureId]->bRepair=false;
+                        structure[structureId]->setRepairing(false);
                     }
                 }
 

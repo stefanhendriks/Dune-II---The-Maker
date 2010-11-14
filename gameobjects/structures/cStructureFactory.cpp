@@ -150,7 +150,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
     // Now set it up for location & player
     str->setCell(iCell);
     str->setOwner(iPlayer);
-    str->iBuildFase = 1; // prebuild
+    str->setBuildingFase(1); // prebuild
     str->TIMER_prebuild = 250; // prebuild timer
     str->TIMER_damage = rnd(1000)+100;
     str->fConcrete = (1 - fPercent);

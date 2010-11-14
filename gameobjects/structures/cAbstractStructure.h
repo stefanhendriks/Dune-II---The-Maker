@@ -39,9 +39,18 @@ class cAbstractStructure {
 		int iWidth;			// width in cells (set by factory)
 		int iHeight;		// height in cells (set by factory)
 
-		int iFrame;          // Frame for animation (flag and other)
+		int iFrame;         // Frame for animation (flag and other)
 
 		int iPlayer;        // owner
+
+		int iBuildFase;		// Building animation fases
+
+		// Repairing stuff
+		bool bRepair;       // repairing? (using timer + gives animation)
+		int iRepairY;		// raising repair thingy
+		int iRepairX;		// repair X position (changes everytime?)
+		int iRepairAlpha;	// repair alpha
+
     public:
 
 		// Constructor & Destructor:
@@ -55,16 +64,8 @@ class cAbstractStructure {
 							 // meaning, when 0% , it is all concrete. But if 10%, it means 10% of the building
 							 // is not covered.
 
-		// Repairing stuff
-		bool bRepair;       // repairing? (using timer + gives animation)
-		int iRepairY;		// raising repair thingy
-		int iRepairX;		// repair X position (changes everytime?)
-		int iRepairAlpha;	// repair alpha
-
 		int iUnitID;        // >-1 means ID to unit
 
-		// Building animation
-		int iBuildFase;
 
 		// TIMERS that all structures use
 		int TIMER_repair;   // repairing timer
@@ -101,12 +102,14 @@ class cAbstractStructure {
 		int iFreeAround();
 
 		// getters
-		cPlayer * getPlayer();
 
 		// convenience get method, which should eventually only be used in rare cases as all properties should be
 		// TODO: copied from this struct to this class, so each structure can change the properties without
 		// changing the entire game rules.
 		s_Structures getS_StructuresType();
+		cPlayer * getPlayer();
+		BITMAP * getBitmap();
+		BITMAP * getShadowBitmap();
 
 		int getArmor() { return armor; }
 		int getWidth() { return iWidth; }
@@ -122,9 +125,15 @@ class cAbstractStructure {
 		int getRange();
 		int getPercentageNotPaved();
 		int getPowerUsage();
+		int getBuildingFase() { return iBuildFase; }
+		int getRepairX() { return iRepairX; }
+		int getRepairY() { return iRepairY; }
+		int getRepairAlpha() { return iRepairAlpha; }
 
 		bool isAnimating() { return bAnimate; }
 		bool isPrimary();
+		bool isRepairing() { return bRepair; }
+
 
 		void setHeight(int height);
 		void setWidth(int width);
@@ -135,6 +144,9 @@ class cAbstractStructure {
 		void setAnimating(bool value); // set animation on / off
 		void setFrame(int frame);
 		void setStructureId(int theId) { id = theId; }
+		void setBuildingFase(int value) { iBuildFase = value; }
+		void setRepairing(bool value) { bRepair = value; }
+		void setRepairAlpha(int value) { iRepairAlpha = value; }
 
 		void damage(int hp); // damage structure for x amount of hp
 };
