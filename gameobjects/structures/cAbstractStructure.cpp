@@ -69,6 +69,16 @@ int cAbstractStructure::iDrawY()
   return (( (( iCellGiveY(iCell) * 32 ) - (mapCamera->getY()*32)))+42);
 }
 
+BITMAP * cAbstractStructure::getBitmap() {
+	s_Structures structureType = getS_StructuresType();
+	return structureType.bmp;
+}
+
+BITMAP * cAbstractStructure::getShadowBitmap() {
+	s_Structures structureType = getS_StructuresType();
+	return structureType.shadow;
+}
+
 cPlayer * cAbstractStructure::getPlayer() {
 	assert(iPlayer >= HUMAN);
 	assert(iPlayer < MAX_PLAYERS);
@@ -126,16 +136,13 @@ void cAbstractStructure::die()
     // less power
     player[iPlayer].has_power -= structures[getType()].power_give;
 
-	if (getType() == SILO)
+	if (getType() == SILO) {
 		player[iPlayer].max_credits -= 1000;
+	}
 
-	if (getType() == REFINERY)
+	if (getType() == REFINERY) {
 		player[iPlayer].max_credits -= 1500;
-
-
-    // killed
-	// TODO: update statistics
-//    player[iPlayer].iLost[INDEX_KILLS_STRUCTURES]++;
+	}
 
     // UnitID > -1, means the unit inside will die too
     if (iUnitID > -1) {
@@ -189,10 +196,10 @@ void cAbstractStructure::die()
     map.remove_id(iIndex, MAPID_STRUCTURES);
 
     // screen shaking
-    game.TIMER_shake=(iWidth*iHeight)*20;
+    game.TIMER_shake = (iWidth * iHeight) * 20;
 
     // eventually die
-    delete this;
+    cStructureFactory::getInstance()->deleteStructureInstance(this);
 }
 
 
@@ -321,13 +328,13 @@ void cAbstractStructure::think_damage()
 
 void cAbstractStructure::setWidth(int width) {
 	assert(width > 0);
-	assert(width < 10);
+	assert(width < 4);
 	iWidth = width;
 }
 
 void cAbstractStructure::setHeight(int height) {
 	assert(height > 0);
-	assert(height < 10);
+	assert(height < 4);
 	iHeight = height;
 }
 
@@ -364,9 +371,12 @@ void cAbstractStructure::damage(int hp) {
 
 	iHitPoints -= damage; // do damage
 
-	// do not die right here; it will cause havoc. Instead do that in the think method.
+	// do not die here, that is not the responsibility of this method to determine
 }
 
+/**
+ * Set HP of structure, caps it at its maximum.
+ */
 void cAbstractStructure::setHitPoints(int hp) {
 	iHitPoints = hp;
 	int maxHp = structures[getType()].hp;
@@ -397,7 +407,9 @@ void cAbstractStructure::setOwner(int player) {
 **/
 void cAbstractStructure::think() {
 	// AI
-    if (iPlayer > 0) aiplayer[iPlayer].think_repair_structure(this);
+    if (iPlayer > 0) {
+    	aiplayer[iPlayer].think_repair_structure(this);
+    }
 
     // Other
     think_damage();
@@ -441,107 +453,6 @@ void cAbstractStructure::think_repair()
 **/
 void cAbstractStructure::draw(int iStage) {
 
-	// always select proper palette (of owner)
-    select_palette(player[getOwner()].pal);
-
-	// when stage is <= 1 the building is just being placed. The prebuild
-	// animation should be be drawn or, the normal drawing is shown (ie the
-	// structure is not in action, like deploying harvester etc).
-
-	// when stage == 2, it means only to draw the repair animation above the structure
-	// this is done after all the structures have been drawn with stage 1 or lower. Causing
-	// the repair icons to always overlap other structures. This is ugly, the repair icons
-	// should be 'particles' (like smoke etc) instead of being hacked here!
-
-	if (iStage <= 1) {
-        int iSourceY = structures[getType()].bmp_height * iFrame;
-		int iDrawPreBuild=-1;
-
-
-        // prebuild
-        if (iBuildFase == 1 ||
-            iBuildFase == 3 ||
-            iBuildFase == 5 ||
-            iBuildFase == 7 ||
-            iBuildFase == 9) {
-
-            // determine what kind of prebuild picture should be used.
-			if (iWidth == 1 && iHeight == 1) {
-				iDrawPreBuild = BUILD_PRE_1X1;
-			}
-
-			if (iWidth == 2 && iHeight == 2) {
-                iDrawPreBuild = BUILD_PRE_2X2;
-			}
-
-			if (iWidth == 3 && iHeight == 2) {
-                iDrawPreBuild = BUILD_PRE_3X2;
-			}
-
-			if (iWidth == 3 && iHeight == 3) {
-                iDrawPreBuild = BUILD_PRE_3X3;
-			}
-        }
-
-        // if no prebuild picture is selected, than we should draw the building
-		// itself. The reason why the above if uses only buildfase 1, 3, 5, 7 and 9 means
-		// that it will cause the switching between pre-build/building state as if the
-		// building is being 'readied' after placement.
-        if (iDrawPreBuild < 0) {
-            // Fix this up, since NEMA now posted a structure which somehow needs transculency
-            // and does not work. Sloppy work Stefan! Fixed @ 13-04-2005
-
-            BITMAP *temp=create_bitmap_ex(8, structures[getType()].bmp_width, structures[getType()].bmp_height);
-            BITMAP *temp_shadow=create_bitmap(structures[getType()].bmp_width, structures[getType()].bmp_height);
-
-            // Only for Construction Yard
-            clear(temp);
-
-            clear_to_color(temp_shadow, makecol(255,0,255));
-            blit(structures[getType()].bmp, temp, 0, iSourceY, 0, 0, structures[getType()].bmp_width, structures[getType()].bmp_height);
-
-            // in case shadow, prepare shadow bitmap in memory
-			if (structures[getType()].shadow) {
-                blit(structures[getType()].shadow, temp_shadow, 0, iSourceY, 0, 0, structures[getType()].bmp_width, structures[getType()].bmp_height);
-			}
-
-			// draw normal structure
-            draw_sprite(bmp_screen, temp, iDrawX(), iDrawY());
-
-            // in case shadow, draw shadow now using fBlend.
-            if (structures[getType()].shadow) {
-                //set_trans_blender(0,0,0,128);
-                fblend_trans(temp_shadow, bmp_screen, iDrawX(), iDrawY(), 128);
-                //draw_trans_sprite(bmp_screen, temp_shadow, iDrawX(), iDrawY());
-            }
-
-			// destroy used bitmaps
-            destroy_bitmap(temp);
-            destroy_bitmap(temp_shadow);
-        } else {
-            // Draw prebuild
-            draw_sprite(bmp_screen, (BITMAP *)gfxdata[iDrawPreBuild].dat, iDrawX(), iDrawY());
-
-            // Draw shadow of the prebuild animation
-            if (iDrawPreBuild != BUILD_PRE_CONST)
-            {
-                set_trans_blender(0,0,0,128);
-                draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[iDrawPreBuild+1].dat, iDrawX(), iDrawY());
-            }
-        }
-	}
-	else if (iStage == 2) {
-		// TODO: create particles for this
-		// now draw the repair alpha when repairing
-		if (bRepair) {
-			if (iRepairAlpha > -1) {
-				set_trans_blender(0, 0, 0, iRepairAlpha);
-				draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_REPAIR].dat, iDrawX()+iRepairX, iDrawY() + iRepairY);
-			} else {
-				iRepairAlpha = rnd(255);
-			}
-		}
-	}
 }
 
 s_Structures cAbstractStructure::getS_StructuresType() {
