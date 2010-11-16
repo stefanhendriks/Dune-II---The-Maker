@@ -258,8 +258,7 @@ void cTimeManager::handleTimerUnits() {
 					if (unit[i].iAction == ACTION_ATTACK)
 						unit[i].think_attack();
 				}
-
-				map.think_minimap();
+			map.think_minimap();
 		}
 
 		timerUnits--;
