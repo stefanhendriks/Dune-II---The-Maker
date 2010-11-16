@@ -995,7 +995,7 @@ void INI_Load_seed(int seed) {
 			char c = seedMap->getCellTypeCharacter(mapX, mapY);
 			int type = seedMap->getCellType(mapX, mapY);
 			int iCell = iCellMake(mapX, mapY);
-			map.create_spot(iCell, type, 0);
+			mapEditor.createCell(iCell, type, 0);
 		}
 	}
 	logbook("Seedmap converted into D2TM map.");
@@ -1900,12 +1900,12 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 				} else {
 					if (iType == SLAB1)
                     {
-                        map.create_spot(iCell, TERRAIN_SLAB, 0);
+                        mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
                         //map.cell[iCell].tile = SLAB;
                     }
 					if (iType == WALL)
 					{
-					    map.create_spot(iCell, TERRAIN_WALL, 0);
+						mapEditor.createCell(iCell, TERRAIN_WALL, 0);
 					}
 				}
 			}
@@ -2051,7 +2051,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 
 	}
 
-    map.smooth();
+    mapEditor.smoothMap();
 
     // now add the spice blooms! :)
     for (int iB=0; iB < 30; iB++)
@@ -2068,7 +2068,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
               logbook(msg);
 			  }
 
-			  map.create_spot(blooms[iB], TERRAIN_BLOOM, 0);
+			  mapEditor.createCell(blooms[iB], TERRAIN_BLOOM, 0);
 
           }
       }
@@ -2087,7 +2087,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
               sprintf(msg, "[SCENARIO] Placing spice FIELD at cell : %d", fields[iB]);
               logbook(msg);
 			  }
-		  	  map.create_field(TERRAIN_SPICE, fields[iB], 25+(rnd(50)));
+		  	  mapEditor.createField(fields[iB], TERRAIN_SPICE, 25+(rnd(50)));
 		  }
 
 	}
@@ -2095,7 +2095,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
     logbook("[SCENARIO] Done reading");
   }
     player[AI_WORM].iTeam=-2;
-    map.smooth();
+    mapEditor.smoothMap();
 }
 
 void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)

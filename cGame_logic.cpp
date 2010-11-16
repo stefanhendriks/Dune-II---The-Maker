@@ -1511,7 +1511,7 @@ void cGame::setup_skirmish()
 
 
 	if (bDoRandomMap) {
-		map.randommap();
+		randomMapGenerator.generateRandomMap();
 	}
 
     // back
@@ -1553,10 +1553,10 @@ void cGame::setup_skirmish()
         {
             for (int c=0; c < MAX_CELLS; c++)
             {
-                map.create_spot(c, PreviewMap[iSkirmishMap].mapdata[c], 0);
+                mapEditor.createCell(c, PreviewMap[iSkirmishMap].mapdata[c], 0);
             }
 
-            map.smooth();
+            mapEditor.smoothMap();
         }
 
 		int iShuffles=3;

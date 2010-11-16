@@ -36,19 +36,14 @@ public:
     void smudge_increase(int iType, int iCell);
     void draw_structures_health();
 
-    void smooth_cell(int c);
-    void smooth_spot(int c);
-    void create_spot(int c, int type, int tile);
     int  mouse_cell();
 
 	// Drawing
 	int  mouse_draw_x();
 	int  mouse_draw_y();
 
-    void randommap();
     void thinkInteraction();
 	void draw_think();
-    void create_field(int type, int cell, int size);
     void clear_all();
     void clear_spot(int c, int size, int player);
 
@@ -82,7 +77,6 @@ public:
     	int height, width;
 
     	cCellCalculator * cellCalculator;
-    	cRandomMapGenerator * randomMapGenerator;
 };
 
 

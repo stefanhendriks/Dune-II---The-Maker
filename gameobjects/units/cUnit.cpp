@@ -200,7 +200,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
         if (iType == HARVESTER)
         {
             game.TIMER_shake=25;
-            map.create_field(TERRAIN_SPICE, iCell, ((iCredits+1)/7));
+            mapEditor.createField(iCell, TERRAIN_SPICE, ((iCredits+1)/7));
         }
 
         if (iType == ORNITHOPTER)
@@ -247,9 +247,9 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                     if (map.cell[cll].health < 0)
                     {
                         // remove wall, turn into smudge:
-                        map.create_spot(cll, TERRAIN_ROCK, 0);
+                        mapEditor.createCell(cll, TERRAIN_ROCK, 0);
 
-                        map.smooth_spot(cll);
+                        mapEditor.smoothAroundCell(cll);
 
                         map.smudge_increase(SMUDGE_WALL, cll);
                     }
@@ -1115,9 +1115,9 @@ void cUnit::think()
 		&& units[iType].airborn == false)
 	{
 		// change type of terrain to sand
-		map.create_spot(iCell, TERRAIN_SAND, 0);
+		mapEditor.createCell(iCell, TERRAIN_SAND, 0);
 
-		map.create_field(TERRAIN_SPICE, iCell, 25+(rnd(50)));
+		mapEditor.createField(iCell, TERRAIN_SPICE, 25+(rnd(50)));
 
 		// kill unit
 		map.remove_id(iID, MAPID_UNITS);
@@ -1277,7 +1277,7 @@ void cUnit::think()
 
                     move_to(UNIT_find_harvest_spot(iID), -1, -1);
 
-                    map.smooth_spot(iCell);
+                    mapEditor.smoothAroundCell(iCell);
                 }
             }
 
