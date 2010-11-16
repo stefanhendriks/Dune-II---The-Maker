@@ -576,14 +576,12 @@ void cGame::combat() {
 
     if (iAlphaScreen == 0)
         iFadeAction = 2;
-	
     // -----------------
 	bPlacedIt = bPlaceIt;
 
 	assert(drawManager);
 	drawManager->draw();
 	assert(interactionManager);
-	
 	interactionManager->interact();
 
     // think win/lose
@@ -1467,7 +1465,7 @@ void cGame::setup_skirmish()
 
 
 	if (bDoRandomMap) {
-		map.randommap();
+		randomMapGenerator.generateRandomMap();
 	}
 
     // back
@@ -1509,10 +1507,10 @@ void cGame::setup_skirmish()
         {
             for (int c=0; c < MAX_CELLS; c++)
             {
-                map.create_spot(c, PreviewMap[iSkirmishMap].mapdata[c], 0);
+                mapEditor.createCell(c, PreviewMap[iSkirmishMap].mapdata[c], 0);
             }
 
-            map.smooth();
+            mapEditor.smoothMap();
         }
 
 		int iShuffles=3;
@@ -1932,7 +1930,7 @@ void cGame::tellhouse()
 // select your next conquest
 void cGame::region()
 {
-    // FADING
+        // FADING
 
 	int mouse_tile = MOUSE_NORMAL;
 
@@ -2731,7 +2729,9 @@ bool cGame::setupGame() {
 		logbook("ERROR: Could not create bitmap: bmp_throttle");
 		return false;
 	}
-	logbook("Memory bitmap created: bmp_throttle");
+	else {
+		logbook("Memory bitmap created: bmp_throttle");
+	}
 
 	bmp_winlose = create_bitmap(game.screen_x, game.screen_y);
 
@@ -2741,7 +2741,9 @@ bool cGame::setupGame() {
 		logbook("ERROR: Could not create bitmap: bmp_winlose");
 		return false;
 	}
-	logbook("Memory bitmap created: bmp_winlose");
+	else {
+		logbook("Memory bitmap created: bmp_winlose");
+	}
 
 	bmp_fadeout = create_bitmap(game.screen_x, game.screen_y);
 
@@ -2751,7 +2753,9 @@ bool cGame::setupGame() {
 		logbook("ERROR: Could not create bitmap: bmp_fadeout");
 		return false;
 	}
-	logbook("Memory bitmap created: bmp_fadeout");
+	else {
+		logbook("Memory bitmap created: bmp_fadeout");
+	}
 
 	/*** End of Bitmap Creation ***/
 	set_color_conversion(COLORCONV_MOST);
