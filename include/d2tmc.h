@@ -31,6 +31,8 @@ extern cGame		  game;
 extern cAbstractStructure     *structure[MAX_STRUCTURES];
 extern cUnit          unit[MAX_UNITS];
 extern cMap           map;
+extern cMapEditor	  mapEditor;
+extern cRandomMapGenerator randomMapGenerator;
 extern cMapCamera	  *mapCamera;
 extern cMapUtils	  *mapUtils;
 extern cPlayer        player[MAX_PLAYERS];
@@ -77,7 +79,6 @@ extern BITMAP *bmp_screen;
 extern BITMAP *bmp_fadeout;
 extern BITMAP *bmp_throttle;
 extern BITMAP *bmp_winlose;
-
 
 // VARIABLES
 extern int fps, frame_count;

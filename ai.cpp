@@ -347,7 +347,7 @@ void cAIPlayer::think_harvester()
 	if (map.cell[iCll].type == TERRAIN_SAND)
 	{
 		// create bloom
-		map.create_spot(iCll, TERRAIN_BLOOM, 0);
+		mapEditor.createCell(iCll, TERRAIN_BLOOM, 0);
 	}
 
  }

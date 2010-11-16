@@ -198,7 +198,7 @@ void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlaye
 	player[iPlayer].iStructures[iStructureType]++;
 
 	if (iStructureType == SLAB1) {
-		map.create_spot(iCell, TERRAIN_SLAB, 0);
+		mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
 		return; // done
 	}
 
@@ -206,25 +206,25 @@ void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlaye
 
 		if (map.occupied(iCell) == false) {
 			if (map.cell[iCell].type == TERRAIN_ROCK) {
-                map.create_spot(iCell, TERRAIN_SLAB, 0);
+				mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
 			}
 		}
 
 		if (map.occupied(iCell+1) == false) {
 			if (map.cell[iCell+1].type == TERRAIN_ROCK) {
-                map.create_spot(iCell+1, TERRAIN_SLAB, 0);
+				mapEditor.createCell(iCell+1, TERRAIN_SLAB, 0);
 			}
 		}
 
 		if (map.occupied(iCell+MAP_W_MAX) == false) {
 			if (map.cell[iCell+MAP_W_MAX].type == TERRAIN_ROCK) {
-                map.create_spot(iCell+MAP_W_MAX, TERRAIN_SLAB, 0);
+				mapEditor.createCell(iCell+MAP_W_MAX, TERRAIN_SLAB, 0);
 			}
 		}
 
 		if (map.occupied(iCell+MAP_W_MAX+1) == false) {
 			if (map.cell[iCell+MAP_W_MAX+1].type == TERRAIN_ROCK) {
-                map.create_spot(iCell+MAP_W_MAX+1, TERRAIN_SLAB, 0);
+				mapEditor.createCell(iCell+MAP_W_MAX+1, TERRAIN_SLAB, 0);
 			}
 		}
 
@@ -232,9 +232,9 @@ void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlaye
     }
 
     if (iStructureType == WALL) {
-		map.create_spot(iCell, TERRAIN_WALL, 0);
+    	mapEditor.createCell(iCell, TERRAIN_WALL, 0);
 		// change surrounding walls here
-        map.smooth_spot(iCell);
+        mapEditor.smoothAroundCell(iCell);
 		return;
     }
 
@@ -412,7 +412,7 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
 	for (int x = cellX; x < endCellX; x++) {
 		for (int y = cellY; y < endCellY; y++) {
 			int cell = cellCalculator->getCell(x, y);
-			map.create_spot(cell, TERRAIN_SLAB, 0);
+			mapEditor.createCell(cell, TERRAIN_SLAB, 0);
 		}
 	}
 }
