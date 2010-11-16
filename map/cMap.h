@@ -15,6 +15,7 @@ class cMap
 public:
 
 	cMap();
+	~cMap();
 
     void init();
     void smooth();
@@ -66,8 +67,10 @@ public:
     cCellCalculator * getCellCalculator() { return cellCalculator; }
     void resetCellCalculator();
 
-	private:
+    int getHeight() { return height; }
+    int getWidth() { return width; }
 
+	private:
 
     	bool iVisible[MAX_CELLS][MAX_PLAYERS];      // visibility for <player>
 
@@ -79,6 +82,7 @@ public:
     	int height, width;
 
     	cCellCalculator * cellCalculator;
+    	cRandomMapGenerator * randomMapGenerator;
 };
 
 

@@ -13,6 +13,7 @@ class cPlayer;
 class cCellCalculator;
 
 #include "cCell.h"
+#include "cRandomMapGenerator.h"
 #include "cMap.h"
 
 #include "cMapCamera.h"
