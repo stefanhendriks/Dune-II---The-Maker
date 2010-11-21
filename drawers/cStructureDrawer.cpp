@@ -21,6 +21,18 @@ void cStructureDrawer::drawStructuresSecondLayer() {
 	drawStructuresForLayer(2);
 }
 
+void cStructureDrawer::drawStructuresHealthBars() {
+
+	cGameControlsContext * context = player[HUMAN].getGameControlsContext();
+
+    // DRAW HEALTH
+    if (context->isMouseOverStructure())
+    {
+        int i = context->getIdOfStructureWhereMouseHovers();
+        drawStructureHealthBar(i);
+    }
+}
+
 void cStructureDrawer::drawRectangeOfStructure(cAbstractStructure * theStructure, int color) {
 	assert(theStructure);
 	int drawX = getDrawXForStructure(theStructure->getCell());
@@ -320,4 +332,43 @@ void cStructureDrawer::drawStructuresForLayer(int layer) {
 	}
 
 	rectfill(bmp_screen, (game.screen_x-160), 0, game.screen_x, game.screen_y, makecol(0,0,0));
+}
+
+void cStructureDrawer::drawStructureHealthBar(int iStructure) {
+
+	cAbstractStructure * theStructure = structure[iStructure];
+
+	// Draw structure health
+	int draw_x = getDrawXForStructure(theStructure->getCell()) - 1;
+	int draw_y = getDrawYForStructure(theStructure->getCell()) - 5;
+
+	int widthBmp = theStructure->getS_StructuresType().bmp_width;
+	int width_x = widthBmp - 1;
+
+	int height_y = 4;
+
+	if (draw_y < 30) {
+		draw_y = 30;
+	}
+
+	int w = health_structure(iStructure, widthBmp);
+
+	int step = (255/widthBmp);
+	int r = 255-(w*step);
+	int g = w*step;
+
+	if (g > 255)
+		g = 255;
+	if (r < 0) r= 0;
+
+
+	// shadow
+   // rectfill(bmp_screen, draw_x+2, draw_y+2, draw_x + width_x + 2, draw_y + height_y + 2, makecol(0,0,0));
+
+	// bar itself
+	rectfill(bmp_screen, draw_x, draw_y, draw_x + width_x+1, draw_y + height_y+1, makecol(0,0,0));
+	rectfill(bmp_screen, draw_x, draw_y, draw_x + (w-1), draw_y + height_y, makecol(r,g,32));
+
+	// bar around it
+	rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(255, 255, 255));
 }
