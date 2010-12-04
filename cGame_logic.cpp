@@ -46,10 +46,10 @@ void cGame::init() {
     memset(cRegionText, 0, sizeof(cRegionText));
     //int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
 
-	
 
-	screen_x = 800;
-    screen_y = 600;
+
+	screen_x = 1024;
+	screen_y = 768;
 
 
     iSkirmishMap=-1;
@@ -79,7 +79,7 @@ void cGame::init() {
 	mouse_tile = MOUSE_NORMAL;
 
 	memset(version, 0, sizeof(version));
-	sprintf(version, "0.4.4");
+	sprintf(version, "0.4.5");
 
 	fade_select=255;
 
@@ -880,7 +880,7 @@ void cGame::menu()
 
 	int logoX = (game.screen_x / 2) - (logoWidth / 2);
 	int logoY = (logoHeight/10);
-	
+
 	draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_D2TM].dat,  logoX, logoY);
 
 	int mainMenuFrameX = 257;
@@ -892,7 +892,7 @@ void cGame::menu()
 	// assume 640x480 resolution, and logoX/logoY are already taking care of > resolutions
 	mainMenuFrameX += logoX;
 	mainMenuFrameY += logoY;
-	
+
     GUI_DRAW_FRAME(mainMenuFrameX, mainMenuFrameY, mainMenuWidth,mainMenuHeight);
 
 	// Buttons:
