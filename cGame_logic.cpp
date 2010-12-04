@@ -45,8 +45,8 @@ void cGame::init() {
 
 	windowed = true;
 
-	screen_x = 800;
-    screen_y = 600;
+	screen_x = 1024;
+	screen_y = 768;
 
     bPlaySound = true;
 
@@ -77,7 +77,7 @@ void cGame::init() {
 	mouse_tile = MOUSE_NORMAL;
 
 	memset(version, 0, sizeof(version));
-	sprintf(version, "0.4.4");
+	sprintf(version, "0.4.5");
 
 	fade_select=255;
 
