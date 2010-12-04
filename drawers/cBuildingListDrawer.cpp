@@ -9,6 +9,12 @@
 
 
 cBuildingListDrawer::cBuildingListDrawer() {
+	maximumItemsToDraw = 5;
+	// room = screen_y - (top bar + bottom part)
+	// example: 600 - (40 + 278)
+	// and divide by 48 height
+	int height = game.screen_y - (40 + 278);
+	maximumItemsToDraw = (height / 48); // (-1?)
 }
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int startId) {
@@ -85,7 +91,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 	int iDrawX=getDrawX();
 	int iDrawY=getDrawY();
 
-	int end = startId + 5; // max 5 icons are showed at once
+	int end = startId + maximumItemsToDraw; // max 5 icons are showed at once
 
 	// is building an item in the list?
 	bool isBuildingItemInList = list->isBuildingItem();
@@ -226,8 +232,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 		iDrawY+=48;
 	}
 
-
-
 }
 
 /**
@@ -286,7 +290,7 @@ cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *li
 	int iDrawY=drawManager->getSidebarDrawer()->getBuildingListDrawer()->getDrawY();
 
 	int startId = list->getScrollingOffset();
-	int end = startId + 5; // 5 icons in the list
+	int end = startId + maximumItemsToDraw; // 5 icons in the list
 
 	for (int i = startId; i < end; i++) {
 		cBuildingListItem * item = list->getItem(i);

@@ -9,10 +9,44 @@
 
 cSideBarDrawer::cSideBarDrawer() {
 	buildingListDrawer = new cBuildingListDrawer();
+	candybar = NULL;
+	optionsBar = NULL;
+	sidebarColor = makecol(214, 149, 20);
 }
 
 cSideBarDrawer::~cSideBarDrawer() {
 	delete buildingListDrawer;
+	if (candybar) {
+		destroy_bitmap(candybar);
+	}
+	if (optionsBar) {
+		destroy_bitmap(optionsBar);
+	}
+}
+
+void cSideBarDrawer::drawCandybar() {
+	if (candybar == NULL) {
+		// startpos = 40
+		// end pos = height - 156
+		// height = start pos - end pos
+		int heightInPixels = (game.screen_y - 156) - 40;
+		candybar = create_bitmap_ex(8, 24, heightInPixels);
+		clear_to_color(candybar, makecol(0, 0, 0));
+
+		// ball first
+	    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BALL].dat, 0, 0); // height of ball = 25
+	    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_TOP].dat, 0, 26); // height of top = 10
+	    // now draw pieces untill the end (height of piece is 23 pixels)
+	    for (int y = 36; y < (heightInPixels + 23); y += 24) {
+		    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_PIECE].dat, 0, y);
+	    }
+	    // draw bottom
+	    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, heightInPixels-10); // height of top = 10
+	}
+
+	int drawX = game.screen_x - 158;
+	int drawY = 40;
+	draw_sprite(bmp_screen, candybar, drawX, drawY);
 }
 
 void cSideBarDrawer::drawHouseGui(cPlayer * thePlayer) {
@@ -25,23 +59,18 @@ void cSideBarDrawer::drawHouseGui(cPlayer * thePlayer) {
     // upper bar
     rectfill(bmp_screen, 0, 0, game.screen_x, 42, makecol(0,0,0));
 
-    int iHouse = thePlayer->getHouse();
+    //draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_800X600].dat, 0, 0);
+    drawCandybar();
 
-    draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_800X600].dat, 0, 0);
+    // draw the list background of the icons
+    drawIconsListBackground();
 
-//    if (iHouse == ATREIDES)
-//        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_ATR].dat, 0, 0);
-//    else if (iHouse == HARKONNEN)
-//        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_HAR].dat, 0, 0);
-//    else if (iHouse == ORDOS)
-//        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_ORD].dat, 0, 0);
-//    else {
-//    	assert(false);
-//    }
-//	else
-  //      draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD].dat, 0, 0); // draw interface skeleton (THIS IS BAD IF THIS IS SHOWN)
+    // minimap at bottom right
+    drawMinimap();
 
-    // TODO: support fremen, mercenary and sardaukar
+    // draw options bar (todo: move to own options drawer and delegate in drawManager)
+    drawOptionsBar();
+
 }
 
 void cSideBarDrawer::drawBuildingLists() {
@@ -177,4 +206,36 @@ bool cSideBarDrawer::isMouseOverScrollUp() {
 
 bool cSideBarDrawer::isMouseOverScrollDown() {
 	return isOverScrollButton(getScrollButtonDownX(), getScrollButtonY());
+}
+
+void cSideBarDrawer::drawMinimap() {
+	BITMAP * sprite = (BITMAP *)gfxinter[BMP_GERALD_MINIMAP_BOTTOMRIGHT].dat;
+	int drawX = game.screen_x - sprite->w;
+	int drawY = game.screen_y - sprite->h;
+	draw_sprite(bmp_screen, sprite, drawX, drawY);
+}
+
+void cSideBarDrawer::drawOptionsBar() {
+	if (optionsBar == NULL) {
+		optionsBar = create_bitmap(game.screen_x, 40);
+		clear_to_color(optionsBar, sidebarColor);
+
+		// credits
+		draw_sprite(optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOPBAR_CREDITS].dat, (game.screen_x - 240), 0);
+
+		for (int w = 0; w < (game.screen_x + 800); w += 789) {
+			draw_sprite(optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOP_BAR].dat, w, 31);
+		}
+
+	}
+	draw_sprite(bmp_screen, optionsBar, 0, 0);
+}
+
+void cSideBarDrawer::drawIconsListBackground() {
+	// black out
+	rectfill(bmp_screen, (game.screen_x-130), 40, game.screen_x, (game.screen_y - 160), sidebarColor);
+	vline(bmp_screen, game.screen_x-132, 44, game.screen_y - 276, makecol(255, 198, 93));
+	vline(bmp_screen, game.screen_x-131, 44, game.screen_y - 276, makecol(60, 36, 0));
+	vline(bmp_screen, game.screen_x-130, 44, game.screen_y - 276, makecol(255, 210, 125));
+	vline(bmp_screen, game.screen_x-129, 44, game.screen_y - 276, makecol(255, 190, 76));
 }
