@@ -18,10 +18,19 @@ class cTextDrawer {
 		void drawText(int x, int y, char * msg);
 		void drawText(int x, int y, char * msg, int color);
 
+		void drawTextCentered(char * msg, int y);
+		void drawTextCentered(char * msg, int y, int color);
+
+		void drawTextBottomRight(char * msg);
+		void drawTextBottomLeft(char * msg);
+
+		void setApplyShaddow(bool value) { applyShadow = value; }
+
 	protected:
 
 	private:
 		ALFONT_FONT *font;
+		bool applyShadow;
 
 };
 

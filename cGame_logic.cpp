@@ -833,8 +833,9 @@ void cGame::mentat(int iType)
 	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
-    if (bFadeOut)
+    if (bFadeOut) {
         FADE_OUT();
+    }
 
 }
 
@@ -848,8 +849,9 @@ void cGame::menu()
         return;
     }
 
-    if (iAlphaScreen == 0)
+    if (iAlphaScreen == 0) {
         iFadeAction = 2;
+    }
     // -----------------
 
     bool bFadeOut=false;
@@ -869,8 +871,11 @@ void cGame::menu()
 		}
 	}
 
-	// draw menu
-	draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_D2TM].dat,  0, 0);
+    cTextDrawer * textDrawer = new cTextDrawer(bene_font);
+
+	// draw main menu title (picture is 640x480)
+	cAllegroDrawer allegroDrawer;
+	allegroDrawer.drawSpriteCenteredRelativelyVertical(bmp_screen, (BITMAP *)gfxinter[BMP_D2TM].dat, 0.3);
     GUI_DRAW_FRAME(257, 319, 130,143);
 
 	// Buttons:
@@ -1037,35 +1042,30 @@ void cGame::menu()
     else
         alfont_textprintf(bmp_screen, bene_font, 290, 0, makecol(255,255,255), "CREDITS");
 
-	// version
-    //alfont_textprintf(bmp_screen, bene_font, 621,467, makecol(64,64,64), "%s", version);
-	//alfont_textprintf(bmp_screen, bene_font, 620,466, makecol(255,255,255), "%s", version);
 
-    // version (demo)
-    alfont_textprintf(bmp_screen, bene_font, 581,467, makecol(64,64,64), "%s", version);
-	alfont_textprintf(bmp_screen, bene_font, 580,466, makecol(255,255,255), "%s", version);
+    // draw version
+	textDrawer->drawTextBottomRight(version);
 
 	// mp3 addon?
-	if (bMp3)
-    {
-        alfont_textprintf(bmp_screen, bene_font, 1,467, makecol(64,64,64), "MP3");
-		alfont_textprintf(bmp_screen, bene_font, 0,466, makecol(255,255,255), "MP3");
-    }
-	else
-    {
-        alfont_textprintf(bmp_screen, bene_font, 1,467, makecol(64,64,64), "MIDI");
-		alfont_textprintf(bmp_screen, bene_font, 0,466, makecol(255,255,255), "MIDI");
+	if (bMp3) {
+		textDrawer->drawTextBottomLeft("Music: MP3 ADD-ON");
+    } else {
+		textDrawer->drawTextBottomLeft("Music: MIDI");
     }
 
    	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
 
-	if (key[KEY_ESC])
-		bPlaying=false;
+	delete textDrawer;
 
-    if (bFadeOut)
+	if (key[KEY_ESC]) {
+		bPlaying=false;
+	}
+
+    if (bFadeOut) {
         game.FADE_OUT();
+    }
 
 }
 
