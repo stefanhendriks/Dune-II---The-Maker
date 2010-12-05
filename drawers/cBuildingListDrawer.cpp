@@ -156,13 +156,9 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 
 			if (item->getProgress() < iTotalBuildPoints) {
 				// draw the other progress stuff
-//				 fblend_trans((BITMAP *)gfxinter[PROGRESSFIX].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
-//				 fblend_trans((BITMAP *)gfxinter[PROGRESS001+iFrame].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
 				set_trans_blender(0, 0, 0, 128);
 				draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESSFIX].dat, iDrawX+2, iDrawY+2);
 				draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESS001+iFrame].dat, iDrawX+2, iDrawY+2);
-//				 fblend_trans((BITMAP *)gfxinter[PROGRESSFIX].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
-//				 fblend_trans((BITMAP *)gfxinter[PROGRESS001+iFrame].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
 
 			} else {
 				// draw 'ready' text when done building.
