@@ -838,8 +838,9 @@ void cGame::mentat(int iType)
 	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
-    if (bFadeOut)
+    if (bFadeOut) {
         FADE_OUT();
+    }
 
 }
 
@@ -853,8 +854,9 @@ void cGame::menu()
         return;
     }
 
-    if (iAlphaScreen == 0)
+    if (iAlphaScreen == 0) {
         iFadeAction = 2;
+    }
     // -----------------
 
     bool bFadeOut=false;
@@ -874,7 +876,13 @@ void cGame::menu()
 		}
 	}
 
-	// draw menu
+    cTextDrawer * textDrawer = new cTextDrawer(bene_font);
+
+	// draw main menu title (picture is 640x480)
+//	cAllegroDrawer allegroDrawer;
+//	allegroDrawer.drawSpriteCenteredRelativelyVertical(bmp_screen, (BITMAP *)gfxinter[BMP_D2TM].dat, 0.3);
+//    GUI_DRAW_FRAME(257, 319, 130,143);
+//	// draw menu
 	int logoWidth = ((BITMAP*)gfxinter[BMP_D2TM].dat)->w;
 	int logoHeight = ((BITMAP*)gfxinter[BMP_D2TM].dat)->h;
 
@@ -992,34 +1000,36 @@ void cGame::menu()
 	int creditsX = (screen_x / 2) - (alfont_text_length(bene_font, "CREDITS") / 2);
 	GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(creditsX, 1, "CREDITS", makecol(64, 64, 64));
 
-    // version
-	int versionX = game.screen_x - 60;
-	int versionY = game.screen_y - 14;
-	char versionText[20];
-	sprintf(versionText, "%s", version);
-	GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(versionX, versionY, versionText, makecol(255, 0, 0));
+
+    // draw version
+	textDrawer->drawTextBottomRight(version);
+//    // version
+//	int versionX = game.screen_x - 60;
+//	int versionY = game.screen_y - 14;
+//	char versionText[20];
+//	sprintf(versionText, "%s", version);
+//	GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(versionX, versionY, versionText, makecol(255, 0, 0));
 
 	// mp3 addon?
-	if (bMp3)
-    {
-        alfont_textprintf(bmp_screen, bene_font, 1, versionY+1, makecol(64,64,64), "MP3");
-		alfont_textprintf(bmp_screen, bene_font, 0, versionY, makecol(255,255,255), "MP3");
-    }
-	else
-    {
-        alfont_textprintf(bmp_screen, bene_font, 1, versionY+1, makecol(64,64,64), "MIDI");
-		alfont_textprintf(bmp_screen, bene_font, 0, versionY, makecol(255,255,255), "MIDI");
+	if (bMp3) {
+		textDrawer->drawTextBottomLeft("Music: MP3 ADD-ON");
+    } else {
+		textDrawer->drawTextBottomLeft("Music: MIDI");
     }
 
    	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
 
-	if (key[KEY_ESC])
-		bPlaying=false;
+	delete textDrawer;
 
-    if (bFadeOut)
+	if (key[KEY_ESC]) {
+		bPlaying=false;
+	}
+
+    if (bFadeOut) {
         game.FADE_OUT();
+    }
 
 }
 
