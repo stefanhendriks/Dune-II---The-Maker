@@ -1084,7 +1084,7 @@ void cGame::setup_skirmish()
 
     bool bFadeOut=false;
 
-    draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_GAME_DUNE].dat, 0, 350);
+    draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_GAME_DUNE].dat, 0, (game.screen_y * 0.72));
 
 	for (int dy=0; dy < game.screen_y; dy+=2) {
 		line(bmp_screen, 0, dy, 640, dy, makecol(0,0,0));
@@ -1112,37 +1112,42 @@ void cGame::setup_skirmish()
 	int iStartingPoints=0;
 
 	// draw preview map (if any)
-	if (iSkirmishMap > -1)
-	{
-		if (iSkirmishMap > 0)
-		{
-			if (PreviewMap[iSkirmishMap].name[0] != '\0')
-				if (PreviewMap[iSkirmishMap].terrain)
-					draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, 640-129, 27);
+	if (iSkirmishMap > -1) {
+		if (iSkirmishMap > 0) {
+			if (PreviewMap[iSkirmishMap].name[0] != '\0') {
+				if (PreviewMap[iSkirmishMap].terrain) {
+					draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, game.screen_x-129, 27);
+				}
 
-		for (int s=0; s < 5; s++)
-			if (PreviewMap[iSkirmishMap].iStartCell[s] > -1)
-				iStartingPoints++;
-		}
-		else
-		{
-			iStartingPoints = iSkirmishStartPoints;
-
-			// when mouse is hovering, draw it, else do not
-			if ((mouse_x >= (640-129) && mouse_x < 640) && (mouse_y >= 27 && mouse_y < 160))
-			{
-				if (PreviewMap[iSkirmishMap].name[0] != '\0')
-					if (PreviewMap[iSkirmishMap].terrain)
-						draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, 640-129, 27);
+				for (int s=0; s < 5; s++) {
+					if (PreviewMap[iSkirmishMap].iStartCell[s] > -1) {
+						iStartingPoints++;
+					}
+				}
 			}
 			else
 			{
-				if (PreviewMap[iSkirmishMap].name[0] != '\0')
-					if (PreviewMap[iSkirmishMap].terrain)
-						draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat, 640-129, 27);
+				iStartingPoints = iSkirmishStartPoints;
+
+				// when mouse is hovering, draw it, else do not
+				if ((mouse_x >= (game.screen_x-129) && mouse_x < game.screen_x) && (mouse_y >= 27 && mouse_y < 160))
+				{
+					if (PreviewMap[iSkirmishMap].name[0] != '\0') {
+						if (PreviewMap[iSkirmishMap].terrain) {
+							draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, game.screen_x-129, 27);
+						}
+					}
+				}
+				else
+				{
+					if (PreviewMap[iSkirmishMap].name[0] != '\0') {
+						if (PreviewMap[iSkirmishMap].terrain) {
+							draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat, game.screen_x-129, 27);
+						}
+					}
+				}
 			}
 		}
-
 	}
 
 	alfont_textprintf(bmp_screen, bene_font, 366, 27, makecol(0,0,0),"Startpoints: %d", iStartingPoints);
@@ -1249,15 +1254,17 @@ void cGame::setup_skirmish()
 				{
 					iSkirmishMap=i;
 
-					if (i == 0)
+					if (i == 0) {
 						bDoRandomMap=true;
+					}
 				}
 
 
 			}
 
-			if (i==iSkirmishMap)
+			if (i==iSkirmishMap) {
 				iColor=makecol(255,0, 0);
+			}
 
 			alfont_textprintf(bmp_screen, bene_font, 368,iDrawY+3, makecol(0,0,0), PreviewMap[i].name);
 			alfont_textprintf(bmp_screen, bene_font, 368,iDrawY+2, iColor, PreviewMap[i].name);
@@ -1436,15 +1443,17 @@ void cGame::setup_skirmish()
 				if (cMouse::getInstance()->isLeftButtonClicked())
 				{
 					player[p].credits += 500;
-					if (player[p].credits > 10000)
+					if (player[p].credits > 10000) {
 						player[p].credits = 1000;
+					}
 				}
 
 				if (cMouse::getInstance()->isRightButtonClicked())
 				{
 					player[p].credits -= 500;
-					if (player[p].credits < 1000)
+					if (player[p].credits < 1000) {
 						player[p].credits = 10000;
+					}
 				}
 			}
 
@@ -1481,15 +1490,17 @@ void cGame::setup_skirmish()
 				if (cMouse::getInstance()->isLeftButtonClicked())
 				{
 					aiplayer[p].iUnits++;
-					if (aiplayer[p].iUnits > 10)
+					if (aiplayer[p].iUnits > 10) {
 						aiplayer[p].iUnits = 1;
+					}
 				}
 
 				if (cMouse::getInstance()->isRightButtonClicked())
 				{
 					aiplayer[p].iUnits--;
-					if (aiplayer[p].iUnits < 1)
+					if (aiplayer[p].iUnits < 1) {
 						aiplayer[p].iUnits = 10;
+					}
 				}
 			}
 
@@ -1544,18 +1555,17 @@ void cGame::setup_skirmish()
 		{
 			iStartPositions[s] = PreviewMap[iSkirmishMap].iStartCell[s];
 
-			if (PreviewMap[iSkirmishMap].iStartCell[s] > -1)
+			if (PreviewMap[iSkirmishMap].iStartCell[s] > -1) {
 				iMax=s;
+			}
 		}
 
         // REGENERATE MAP DATA FROM INFO
         if (iSkirmishMap > -1)
         {
-            for (int c=0; c < MAX_CELLS; c++)
-            {
+            for (int c=0; c < MAX_CELLS; c++) {
                 mapEditor.createCell(c, PreviewMap[iSkirmishMap].mapdata[c], 0);
             }
-
             mapEditor.smoothMap();
         }
 
@@ -1741,8 +1751,7 @@ void cGame::setup_skirmish()
 }
 
 // select house
-void cGame::house()
-{
+void cGame::house() {
     // FADING STUFF
     if (iFadeAction == 1) // fading out
     {

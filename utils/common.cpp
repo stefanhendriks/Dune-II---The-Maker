@@ -1514,7 +1514,7 @@ void INIT_PREVIEWS()
         memset(PreviewMap[i].name , 0, sizeof(PreviewMap[i].name));
 
         // clear out map data
-        memset(PreviewMap[i].mapdata , -1, sizeof(PreviewMap[i].mapdata));
+        memset(PreviewMap[i].mapdata, TERRAIN_SAND, sizeof(PreviewMap[i].mapdata));
 
         //sprintf(PreviewMap[i].name, "Map %d", i);
 		//
