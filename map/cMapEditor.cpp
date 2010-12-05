@@ -164,6 +164,7 @@ int cMapEditor::getWallTerrainIndex(bool up, bool down, bool left, bool right) {
 	// accompanied WALL (all sides WALL too)
 	if (l == true && a == true && r == true && u == true) value = 9; // not so lonely WALL
 
+	value--;
 	return value;
 }
 
