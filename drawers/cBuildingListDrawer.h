@@ -34,6 +34,7 @@ private:
 	// the list to draw
 	cBuildingList *list;
 	int maximumItemsToDraw;
+	int maxListYCoordinate;
 
 };
 
