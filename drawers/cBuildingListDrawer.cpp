@@ -15,6 +15,8 @@ cBuildingListDrawer::cBuildingListDrawer() {
 	// and divide by 48 height
 	int height = game.screen_y - (40 + 278);
 	maximumItemsToDraw = (height / 48); // (-1?)
+
+	maxListYCoordinate = (game.screen_y - 315);
 }
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int startId) {
@@ -91,6 +93,12 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 	int iDrawX=getDrawX();
 	int iDrawY=getDrawY();
 
+	int maxYClip = maxListYCoordinate;
+	int minYClip = 45;
+	int minXClip = game.screen_x - 69;
+	int maxXClip = game.screen_x;
+	set_clip_rect(bmp_screen, minXClip, minYClip, maxXClip, maxYClip);
+
 	int end = startId + maximumItemsToDraw; // max 5 icons are showed at once
 
 	// is building an item in the list?
@@ -148,8 +156,13 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 
 			if (item->getProgress() < iTotalBuildPoints) {
 				// draw the other progress stuff
-				 fblend_trans((BITMAP *)gfxinter[PROGRESSFIX].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
-				 fblend_trans((BITMAP *)gfxinter[PROGRESS001+iFrame].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
+//				 fblend_trans((BITMAP *)gfxinter[PROGRESSFIX].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
+//				 fblend_trans((BITMAP *)gfxinter[PROGRESS001+iFrame].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
+				set_trans_blender(0, 0, 0, 128);
+				draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESSFIX].dat, iDrawX+2, iDrawY+2);
+				draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESS001+iFrame].dat, iDrawX+2, iDrawY+2);
+//				 fblend_trans((BITMAP *)gfxinter[PROGRESSFIX].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
+//				 fblend_trans((BITMAP *)gfxinter[PROGRESS001+iFrame].dat, bmp_screen, iDrawX+2, iDrawY+2, 128);
 
 			} else {
 				// draw 'ready' text when done building.
@@ -232,6 +245,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 		iDrawY+=48;
 	}
 
+	set_clip_rect(bmp_screen, 0, 0, game.screen_x, game.screen_y);
 }
 
 /**
@@ -262,20 +276,24 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y) {
 
 	BITMAP *temp=create_bitmap(19,19);
 	clear_bitmap(temp);
+	set_trans_blender(0, 0, 0, 192);
+
+	draw_trans_sprite(temp, bmp_screen, x + 43, y + 20);
 
 	draw_sprite(temp, (BITMAP *)gfxinter[GRID_0X0].dat, 0, 0);
 
-	fblend_trans(temp, bmp_screen, x+43, y+20, 192);
+	draw_trans_sprite(bmp_screen, temp, x + 43, y + 20);
 
-	set_trans_blender(0, 0, 0, 128);
-
-	draw_sprite(bmp_screen, (BITMAP *)gfxinter[iTile].dat, x+43, y+20);
+	draw_sprite(bmp_screen, (BITMAP *)gfxinter[iTile].dat, x + 43, y + 20);
 
 	destroy_bitmap(temp);
 
 }
 
 bool cBuildingListDrawer::isOverItemCoordinates_Boolean(int x, int y, int drawX, int drawY) {
+	if (y > maxListYCoordinate) {
+		return false;
+	}
 	if (x >= drawX && x <= (drawX + 64) && y >= drawY && y < (drawY + 48)) {
 		return true;
 	}

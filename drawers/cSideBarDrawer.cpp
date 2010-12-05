@@ -232,10 +232,36 @@ void cSideBarDrawer::drawOptionsBar() {
 }
 
 void cSideBarDrawer::drawIconsListBackground() {
-	// black out
+	// fill
 	rectfill(bmp_screen, (game.screen_x-130), 40, game.screen_x, (game.screen_y - 160), sidebarColor);
-	vline(bmp_screen, game.screen_x-132, 44, game.screen_y - 276, makecol(255, 198, 93));
-	vline(bmp_screen, game.screen_x-131, 44, game.screen_y - 276, makecol(60, 36, 0));
-	vline(bmp_screen, game.screen_x-130, 44, game.screen_y - 276, makecol(255, 210, 125));
-	vline(bmp_screen, game.screen_x-129, 44, game.screen_y - 276, makecol(255, 190, 76));
+
+	int heightInPixels = (game.screen_y - 315) - 45;
+	BITMAP * backgroundList = create_bitmap_ex(8, 66, heightInPixels);
+
+	// left 'lines'
+	vline(bmp_screen, game.screen_x-132, 40, game.screen_y - 276, makecol(255, 198, 93));
+	vline(bmp_screen, game.screen_x-131, 40, game.screen_y - 276, makecol(60, 36, 0));
+	vline(bmp_screen, game.screen_x-130, 40, game.screen_y - 276, makecol(255, 210, 125));
+	vline(bmp_screen, game.screen_x-129, 40, game.screen_y - 276, makecol(255, 190, 76));
+
+	// the list pieces
+	draw_sprite(backgroundList, (BITMAP *)gfxinter[BMP_GERALD_LIST_TOP].dat, 0, 45); // 2 high
+
+	for (int w = 0; w < heightInPixels; w += 84) { // pieces are 84 pixels high
+		draw_sprite(backgroundList, (BITMAP *)gfxinter[BMP_GERALD_LIST_PIECE].dat, 0, w);
+	}
+
+	draw_sprite(backgroundList, (BITMAP *)gfxinter[BMP_GERALD_LIST_BOTTOM].dat, 0, (heightInPixels - 2));
+
+	int x = game.screen_x - 69;
+	draw_sprite(bmp_screen, backgroundList, x, 45);
+
+	// at the right lines
+	vline(bmp_screen, game.screen_x-1, 44, game.screen_y - 276, makecol(153, 105, 0));
+	vline(bmp_screen, game.screen_x-2, 44, game.screen_y - 276, makecol(182, 125, 12));
+	vline(bmp_screen, game.screen_x-3, 44, game.screen_y - 276, makecol(202, 141, 16));
+
+	destroy_bitmap(backgroundList);
+
+	draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_SIDEBAR_PIECE].dat, (game.screen_x - 130), 42);
 }
