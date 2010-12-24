@@ -19,6 +19,8 @@
 #include "include/d2tmh.h"
 
 cGame::cGame() {
+	screen_x = 1920;
+	screen_y = 1080;
 	windowed = false;
     bPlaySound = true;
     bPlayMusic = true;
@@ -45,12 +47,6 @@ void cGame::init() {
     memset(iRegionHouse, -1, sizeof(iRegionHouse));
     memset(cRegionText, 0, sizeof(cRegionText));
     //int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
-
-
-
-	screen_x = 1024;
-	screen_y = 768;
-
 
     iSkirmishMap=-1;
 
@@ -2497,7 +2493,7 @@ bool cGame::setupGame() {
 	if (game.windowed) {
 		logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Windowed mode");
 	} else {
-		logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Windowed mode");
+		logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Fullscreen mode");
 	}
 
 
@@ -2596,7 +2592,13 @@ bool cGame::setupGame() {
 		}
 
 		//GFX_AUTODETECT_WINDOWED
-		int r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+		int r = 0;
+
+#ifdef UNIX
+		r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+#else
+		r = set_gfx_mode(GFX_DIRECTX_ACCEL, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+#endif
 		if (r > -1) {
 			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (windowed)", "Succesfully created window with graphics mode.", OUTC_SUCCESS);
 		} else {
@@ -2611,19 +2613,6 @@ bool cGame::setupGame() {
 			if (r > -1)	{
 				logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fallback, fullscreen)", "Fallback succeeded.", OUTC_SUCCESS);
 				game.windowed = false;
-				/*
-				FILE *f;
-				f = fopen("settings.d3", "wb");
-
-				fwrite(&game.play_music , sizeof(bool)    ,1 , f);
-				fwrite(&game.play_sound , sizeof(bool)    ,1 , f);
-				fwrite(&game.fade , sizeof(bool)    ,1 , f);
-				fwrite(&game.windowed , sizeof(bool)    ,1 , f);
-				fwrite(&game.screen_x , sizeof(int)    ,1 , f);
-				fwrite(&game.screen_y , sizeof(int)    ,1 , f);
-				fclose(f);
-				logbook("Could not enter windowed-mode; settings.d3 adjusted"); */
-
 			}
 			else
 			{
@@ -2637,10 +2626,12 @@ bool cGame::setupGame() {
 		 * Fullscreen mode
 		 */
 
-		int r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+		// find best possible resolution
+		cBestScreenResolutionFinder bestScreenResolutionFinder;
+        bool result = bestScreenResolutionFinder.acquireBestScreenResolutionFullScreen();
 
 		// succes
-		if (r > -1) {
+		if (result) {
 			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)", "Succesfully initialized graphics mode.", OUTC_SUCCESS);
 		} else {
 			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)", "Succesfully initialized graphics mode.", OUTC_FAILED);
@@ -2648,7 +2639,6 @@ bool cGame::setupGame() {
 			return false;
 		}
 	}
-
 
 	text_mode(-1);
 	alfont_text_mode(-1);
