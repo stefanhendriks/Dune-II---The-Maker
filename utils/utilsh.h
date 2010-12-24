@@ -12,6 +12,9 @@
 #include "common.h"					// commonly used functions
 #include "../ini.h"							// INI loading
 
+#include "cScreenResolution.h"
+#include "cBestScreenResolutionFinder.h"
+
 #include "cCellCalculator.h"			    /** math with cells , with handy references to structures and units **/
 #include "cSeedMap.h"
 #include "cSeedMapGenerator.h"
