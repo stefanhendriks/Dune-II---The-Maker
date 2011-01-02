@@ -17,7 +17,18 @@ class cScreenResolution {
 		int getWidth() { return width; }
 		int getHeight() { return height; }
 
+		bool isTested() { return tested; }
+		bool isUsable() { return usable; }
+
+		void setTested(bool value) { tested = value; }
+		void setUsable(bool value) { usable = value; }
+
+		void printLog();
+
 	private:
 		int width, height;
+
+		bool usable; // can this resolution be used?
+		bool tested;
 };
 #endif /* CSCREENRESOLUTION_H_ */
