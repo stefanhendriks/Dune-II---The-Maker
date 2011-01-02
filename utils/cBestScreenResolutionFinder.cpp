@@ -11,35 +11,51 @@
  *
  */
 cBestScreenResolutionFinder::cBestScreenResolutionFinder() {
+	memset(screenResolutions, 0, sizeof(screenResolutions));
+
+	// order is from 'biggest' to smallest best resolution
 	screenResolutions[0] = new cScreenResolution(1920, 1080);
-	screenResolutions[1] = new cScreenResolution(1600, 900);
-	screenResolutions[2] = new cScreenResolution(1280, 1024);
-	screenResolutions[3] = new cScreenResolution(1027, 768);
-	screenResolutions[4] = new cScreenResolution(800, 600);
+	screenResolutions[1] = new cScreenResolution(1600, 1050);
+	screenResolutions[2] = new cScreenResolution(1600, 900);
+	screenResolutions[3] = new cScreenResolution(1280, 1024);
+	screenResolutions[4] = new cScreenResolution(1280, 800);
+	screenResolutions[5] = new cScreenResolution(1027, 768);
+	screenResolutions[6] = new cScreenResolution(800, 600);
 }
 
 cBestScreenResolutionFinder::~cBestScreenResolutionFinder() {
-	for (int i = 0; i < 5; i ++) {
+	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i ++) {
 		delete screenResolutions[i];
 		screenResolutions[i] = NULL;
 	}
 }
 
+void cBestScreenResolutionFinder::checkResolutions() {
+	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i++) {
+		cScreenResolution * screenResolution = screenResolutions[i];
+		if (screenResolution) {
+			int screen_x = screenResolution->getWidth();
+			int screen_y = screenResolution->getHeight();
+			int r = set_gfx_mode(GFX_AUTODETECT, screen_x, screen_y, screen_x, screen_y);
+			screenResolution->setTested(true);
+			screenResolution->setUsable((r > -1));
+			screenResolution->printLog();
+		}
+	}
+}
 
 bool cBestScreenResolutionFinder::aquireBestScreenResolutionFullScreen() {
-	for (int i = 0; i < 5; i++) {
-		game.screen_x = screenResolutions[i]->getWidth();
-		game.screen_y = screenResolutions[i]->getHeight();
-		int r = set_gfx_mode(GFX_AUTODETECT, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
-		char msg[255];
-		sprintf(msg, "Trying to aquire screen resolution %d X %d", game.screen_x, game.screen_y);
-		logbook(msg);
-		if (r > -1) {
-			logbook("Succes");
-			// success
-			return true;
+	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i++) {
+		cScreenResolution * screenResolution = screenResolutions[i];
+		if (screenResolution->isTested()) {
+			if (screenResolution->isUsable()) {
+				game.screen_x = screenResolution->getWidth();
+				game.screen_y = screenResolution->getHeight();
+				set_gfx_mode(GFX_AUTODETECT, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+				return true;
+			}
 		}
-		logbook("Failed");
 	}
 	return false;
 }
+

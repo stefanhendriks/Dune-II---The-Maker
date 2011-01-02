@@ -2682,6 +2682,7 @@ bool cGame::setupGame() {
 
 		// find best possible resolution
 		cBestScreenResolutionFinder bestScreenResolutionFinder;
+		bestScreenResolutionFinder.checkResolutions();
 		bestScreenResolutionFinder.aquireBestScreenResolutionFullScreen();
 
 		// succes

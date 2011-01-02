@@ -8,6 +8,8 @@
 #ifndef CBESTSCREENRESOLUTIONFINDER_H_
 #define CBESTSCREENRESOLUTIONFINDER_H_
 
+#define MAX_SCREENRESOLUTIONS 10
+
 class cBestScreenResolutionFinder {
 	public:
 		cBestScreenResolutionFinder();
@@ -15,8 +17,10 @@ class cBestScreenResolutionFinder {
 
 		bool aquireBestScreenResolutionFullScreen();
 
+		void checkResolutions();
+
 	private:
-		cScreenResolution * screenResolutions[5];
+		cScreenResolution * screenResolutions[MAX_SCREENRESOLUTIONS];
 };
 
 #endif /* CBESTSCREENRESOLUTIONFINDER_H_ */
