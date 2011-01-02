@@ -17,10 +17,12 @@ class cBestScreenResolutionFinder {
 
 		bool acquireBestScreenResolutionFullScreen();
 
+		void checkResolutions();
+
 	private:
         void addScreenResolution(int width, int height);
         void init();
-		cScreenResolution * screenResolutions[15];
+		cScreenResolution * screenResolutions[MAX_SCREEN_RESOLUTIONS];
 		int resolutionIndex;
 };
 

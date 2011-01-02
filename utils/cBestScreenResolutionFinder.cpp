@@ -32,29 +32,37 @@ cBestScreenResolutionFinder::~cBestScreenResolutionFinder() {
 }
 
 void cBestScreenResolutionFinder::init() {
-    for (int i = 0; i < MAX_SCREEN_RESOLUTIONS; i ++) {
-        screenResolutions[i] = NULL;
+    memset(screenResolutions, 0, sizeof(screenResolutions));
+}
+
+
+void cBestScreenResolutionFinder::checkResolutions() {
+    for (int i = 0; i < MAX_SCREEN_RESOLUTIONS; i++) {
+        cScreenResolution * screenResolution = screenResolutions[i];
+        if (screenResolution) {
+            int screen_x = screenResolution->getWidth();
+            int screen_y = screenResolution->getHeight();
+            int r = set_gfx_mode(GFX_AUTODETECT, screen_x, screen_y, screen_x, screen_y);
+            screenResolution->setTested(true);
+            screenResolution->setUsable((r > -1));
+            screenResolution->printLog();
+        }
     }
 }
 
 bool cBestScreenResolutionFinder::acquireBestScreenResolutionFullScreen() {
-	for (int i = 0; i < MAX_SCREEN_RESOLUTIONS; i++) {
-	    if (screenResolutions[i] == NULL) continue;
-
-		game.screen_x = screenResolutions[i]->getWidth();
-		game.screen_y = screenResolutions[i]->getHeight();
-		int r = set_gfx_mode(GFX_AUTODETECT, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
-		char msg[255];
-		sprintf(msg, "Trying to acquire screen resolution %d X %d", game.screen_x, game.screen_y);
-		logbook(msg);
-		if (r > -1) {
-			logbook("Succes");
-			// success
-			return true;
-		}
-		logbook("Failed");
-	}
-	return false;
+    for (int i = 0; i < MAX_SCREEN_RESOLUTIONS; i++) {
+        cScreenResolution * screenResolution = screenResolutions[i];
+        if (screenResolution->isTested()) {
+            if (screenResolution->isUsable()) {
+                game.screen_x = screenResolution->getWidth();
+                game.screen_y = screenResolution->getHeight();
+                set_gfx_mode(GFX_AUTODETECT, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 void cBestScreenResolutionFinder::addScreenResolution(int width, int height) {
