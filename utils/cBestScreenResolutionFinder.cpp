@@ -19,8 +19,9 @@ cBestScreenResolutionFinder::cBestScreenResolutionFinder() {
 	screenResolutions[2] = new cScreenResolution(1600, 900);
 	screenResolutions[3] = new cScreenResolution(1280, 1024);
 	screenResolutions[4] = new cScreenResolution(1280, 800);
-	screenResolutions[5] = new cScreenResolution(1027, 768);
-	screenResolutions[6] = new cScreenResolution(800, 600);
+	screenResolutions[5] = new cScreenResolution(1366, 768);
+	screenResolutions[6] = new cScreenResolution(1027, 768);
+	screenResolutions[7] = new cScreenResolution(800, 600);
 }
 
 cBestScreenResolutionFinder::~cBestScreenResolutionFinder() {
