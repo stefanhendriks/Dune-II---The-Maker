@@ -6,7 +6,7 @@
   Contact: stefanhen83@gmail.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2010 (c) code by Stefan Hendriks
+  2001 - 2011 (c) code by Stefan Hendriks
 
   A player has a sidebar. The sidebar contains lists of items that can be built. These
   items can be structures/units but also special weapons, etc.
