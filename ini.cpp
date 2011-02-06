@@ -17,6 +17,14 @@ using namespace std;
 /*
  Read a line in the INI file and put it into currentLine
 */
+inline bool caseInsCharCompareN(char a, char b) {
+   return(toupper(a) == toupper(b));
+}
+
+bool caseInsCompare(const string& s1, const string& s2) {
+   return((s1.size( ) == s2.size( )) &&
+          equal(s1.begin( ), s1.end( ), s2.begin( ), caseInsCharCompareN));
+}
 
 // Reads out an entire sentence and returns it
 void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
@@ -583,6 +591,13 @@ int INI_WordType(char word[25], int section)
         return WORD_DUMPSPEED;
 
   }
+  else if (section == INI_SETTINGS)
+  {
+	  if (strcmp(word, "FullScreen") == 0)   return WORD_FULLSCREEN;
+	  if (strcmp(word, "ScreenWidth") == 0)  return WORD_SCREENWIDTH;
+	  if (strcmp(word, "ScreenHeight") == 0) return WORD_SCREENHEIGHT;
+	  if (strcmp(word, "MP3Music") == 0)	 return WORD_MP3MUSIC;
+  }
 
 //  char msg[255];
 //  memset(msg, 0, sizeof(msg));
@@ -652,6 +667,9 @@ int GAME_INI_SectionType(char section[30], int last)
 
 // if (strcmp(section, "BULLETS") == 0)
 //   return INI_BULLETS;
+
+ if (strcmp(section, "SETTINGS") == 0)
+    return INI_SETTINGS;
 
  if (strcmp(section, "UNITS") == 0)
    return INI_UNITS;
@@ -913,10 +931,7 @@ bool INI_WordValueBOOL(char result[MAX_LINE_LENGTH])
   INI_WordValueCHAR(result, val);
 
   // When its TRUE , return true
-  if (strcmp(val, "TRUE") == 0) return true;
-  if (strstr(val, "TRUE") != NULL) return true;
-
-  return false;
+  return caseInsCompare(val, "true");
 }
 // return ID of structure
 int getStructureTypeFromChar(char *structure)
@@ -1124,16 +1139,6 @@ void INI_Load_Regionfile(int iHouse, int iMission) {
 	}
 
 	logbook("[CAMPAIGN] Error, could not open file"); // make note on logbook
-}
-
-inline bool caseInsCharCompareN(char a, char b) {
-   return(toupper(a) == toupper(b));
-}
-
-
-bool caseInsCompare(const string& s1, const string& s2) {
-   return((s1.size( ) == s2.size( )) &&
-          equal(s1.begin( ), s1.end( ), s2.begin( ), caseInsCharCompareN));
 }
 
 // SCENxxxx.ini loader (for both DUNE II as for DUNE II - The Maker)
@@ -2231,8 +2236,7 @@ void INI_Install_Game(string filename) {
   sprintf(msg, "Opening game settings from : %s", filename.c_str());
   logbook(msg);
 
-  if( (stream = fopen( filename.c_str(), "r+t" )) != NULL )
-  {
+  if( (stream = fopen( filename.c_str(), "r+t" )) != NULL ) {
     char linefeed[MAX_LINE_LENGTH];
     char lineword[25];
     char linesection[30];
@@ -2268,6 +2272,7 @@ void INI_Install_Game(string filename) {
           // Show in log file we entered a new section
           if (section == INI_UNITS)       logbook("[GAME.INI] -> [UNITS]");
           if (section == INI_STRUCTURES)  logbook("[GAME.INI] -> [STRUCTURES]");
+          if (section == INI_SETTINGS)    logbook("[GAME.INI] -> [SETTINGS]");
         }
 
         if (section == INI_TEAMS)
@@ -2417,11 +2422,26 @@ void INI_Install_Game(string filename) {
 
       }
 
-    }
-
+      if (section == INI_SETTINGS) {
+		  switch (wordtype) {
+			  case WORD_FULLSCREEN:
+				  game.windowed = (INI_WordValueBOOL(linefeed) == false);
+				  break;
+			  case WORD_SCREENWIDTH:
+				  game.ini_screen_width=INI_WordValueINT(linefeed);
+				  break;
+			  case WORD_SCREENHEIGHT:
+				  game.ini_screen_height=INI_WordValueINT(linefeed);
+				  break;
+			  case WORD_MP3MUSIC:
+				  game.bMp3 = INI_WordValueBOOL(linefeed);
+				  break;
+		  }
+	  }
+    } // while
 
     fclose(stream);
-  }
+  } // if
 
 logbook("[GAME.INI] Done");
 }

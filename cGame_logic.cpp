@@ -4,9 +4,9 @@
 
   Author : Stefan Hendriks
   Contact: stefanhen83@gmail.com
-  Website: http://d2tm.duneii.com
+  Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2010 (c) code by Stefan Hendriks
+  2001 - 2011 (c) code by Stefan Hendriks
 
   -----------------------------------------
   Initialization of variables
@@ -19,8 +19,13 @@
 #include "include/d2tmh.h"
 
 cGame::cGame() {
-	screen_x = 1920;
-	screen_y = 1080;
+	screen_x = 800;
+	screen_y = 600;
+	windowed = false;
+	// default INI screen width and height is not loaded
+	// if not loaded, we will try automatic setup
+	ini_screen_width=-1;
+	ini_screen_height=-1;
 }
 
 
@@ -45,9 +50,8 @@ void cGame::init() {
     memset(cRegionText, 0, sizeof(cRegionText));
     //int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
 
-	windowed = false;
-
     bPlaySound = true;
+	bMp3 = false;
 
     iSkirmishMap=-1;
 
@@ -76,7 +80,7 @@ void cGame::init() {
 	mouse_tile = MOUSE_NORMAL;
 
 	memset(version, 0, sizeof(version));
-	sprintf(version, "0.4.5");
+	sprintf(version, "0.4.6");
 
 	fade_select=255;
 
@@ -103,15 +107,12 @@ void cGame::init() {
     }
 
 	// Units & Structures are already initialized in map.init()
+	if (game.bMp3) {
+	  almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
+	}
 
-    //if (mp3_music != NULL)
-	  //almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
 	// Load properties
 	INI_Install_Game(game_filename);
-
-	if (mp3_music != NULL) {
-        almp3_destroy_mp3(mp3_music);
-	}
 
 	iMentatSpeak=-1;			// = sentence to draw and speak with (-1 = not ready)
 
@@ -2514,12 +2515,27 @@ void cGame::shutdown() {
 	logbook("Thanks for playing.");
 }
 
+bool cGame::isResolutionInGameINIFoundAndSet() {
+    return game.ini_screen_height != -1 && game.ini_screen_width != -1;
+}
+
+
 /**
 	Setup the game
 
 	Should not be called twice.
 
 */
+
+void cGame::setScreenResolutionFromGameIniSettings()
+{
+    game.screen_x = game.ini_screen_width;
+    game.screen_y = game.ini_screen_height;
+    char msg[255];
+    sprintf(msg, "Setting up %dx%d resolution from ini file.", game.ini_screen_width, game.ini_screen_height);
+    cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution in windowed mode.", msg);
+}
+
 bool cGame::setupGame() {
 	cLogger *logger = cLogger::getInstance();
 
@@ -2624,12 +2640,8 @@ bool cGame::setupGame() {
 	// but is already set up. Perhaps even offer it in the options screen? So the user
 	// can specify how much CPU this game may use?
 
-
-	//if (iDepth > 15 && iDepth != 24)
-	//set_color_depth(iDepth);
-
 	if (game.windowed) {
-		cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windows mode requested.", "Searching for optimal graphics settings");
+		cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "Searching for optimal graphics settings");
 		int 	iDepth = desktop_color_depth();
 
 		// dont switch to 15 bit or lower, or at 24 bit
@@ -2644,24 +2656,31 @@ bool cGame::setupGame() {
 			set_color_depth(16);
 		}
 
+		if (isResolutionInGameINIFoundAndSet()) {
+			setScreenResolutionFromGameIniSettings();
+		}
+
 		//GFX_AUTODETECT_WINDOWED
 		int r = 0;
+		#ifdef UNIX
+				r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+		#else
+				r = set_gfx_mode(GFX_DIRECTX_WIN, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+		#endif
 
-#ifdef UNIX
-		r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
-#else
-		r = set_gfx_mode(GFX_DIRECTX_ACCEL, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
-#endif
+		char msg[255];
+		sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d.", game.screen_x, game.screen_y);
+
 		if (r > -1) {
-			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (windowed)", "Succesfully created window with graphics mode.", OUTC_SUCCESS);
+			logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Succesfully created window with graphics mode.", OUTC_SUCCESS);
 		} else {
-			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (windowed)", "Failed to create window with graphics mode. Fallback to fullscreen.", OUTC_FAILED);
+			logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Failed to create window with graphics mode. Fallback to fullscreen.", OUTC_FAILED);
 			// GFX_DIRECTX_ACCEL / GFX_AUTODETECT
-#ifdef UNIX
-			r = set_gfx_mode(GFX_XWINDOWS, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
-#else
-			r = set_gfx_mode(GFX_DIRECTX_ACCEL, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
-#endif
+			#ifdef UNIX
+						r = set_gfx_mode(GFX_XWINDOWS, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+			#else
+						r = set_gfx_mode(GFX_DIRECTX_ACCEL, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+			#endif
 
 			if (r > -1)	{
 				logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fallback, fullscreen)", "Fallback succeeded.", OUTC_SUCCESS);
@@ -2676,27 +2695,35 @@ bool cGame::setupGame() {
 		}
 	} else {
 
-		/**
-		 * Fullscreen mode
-		 */
+		bool resolutionIsSetProperly = false;
+		if (isResolutionInGameINIFoundAndSet()) {
+			setScreenResolutionFromGameIniSettings();
+			r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+			char msg[255];
+			sprintf(msg,"Setting up %dx%d resolution from ini file.", game.ini_screen_width, game.ini_screen_height);
+			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
+			resolutionIsSetProperly = (r > -1);
+		}
+
 
 		// find best possible resolution
-		cBestScreenResolutionFinder bestScreenResolutionFinder;
-		bestScreenResolutionFinder.checkResolutions();
-		bestScreenResolutionFinder.aquireBestScreenResolutionFullScreen();
+		if (!resolutionIsSetProperly) {
+			cBestScreenResolutionFinder bestScreenResolutionFinder;
+			bestScreenResolutionFinder.checkResolutions();
+			bestScreenResolutionFinder.aquireBestScreenResolutionFullScreen();
+		}
+
 
 		// succes
 		if (r > -1) {
 			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)", "Succesfully initialized graphics mode.", OUTC_SUCCESS);
 		} else {
-			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)", "Succesfully initialized graphics mode.", OUTC_FAILED);
+			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)", "Failed to initializ graphics mode.", OUTC_FAILED);
 			allegro_message("Fatal error:\n\nCould not start game.\n\nGraphics mode (fullscreen) could not be initialized.");
 			return false;
 		}
 	}
 
-
-	text_mode(-1);
 	alfont_text_mode(-1);
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set mode to -1", OUTC_SUCCESS);
 
@@ -2867,23 +2894,11 @@ bool cGame::setupGame() {
 
 	gfxmovie = NULL; // nothing loaded at start. This is done when loading a mission briefing.
 
-	DATAFILE *mp3music = load_datafile("data/mp3mus.dat");
-
-	if (mp3music == NULL) {
-		logbook("MP3MUS.DAT not found, using MIDI to play music");
-		game.bMp3=false;
-	} else {
-		logbook("MP3MUS.DAT found, using mp3 files to play music");
-		// Immidiatly load menu music
-		game.bMp3=true;
-	}
-
 	// randomize timer
 	unsigned int t = (unsigned int) time(0);
 	char seedtxt[80];
 	sprintf(seedtxt, "Seed is %d", t);
 	logbook(seedtxt);
-
 	srand(t);
 
 	game.bPlaying = true;
