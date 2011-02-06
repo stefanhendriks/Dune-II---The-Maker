@@ -49,6 +49,7 @@
 #define INI_WIN         31
 #define INI_LOSE        32
 #define INI_DESCRIPTION 33
+#define INI_SETTINGS    34
 
 #define SEC_REGION		198
 
@@ -156,6 +157,14 @@
 
 #define WORD_MAPNAME        86
 #define WORD_STARTCELL      87
+
+// SETTINGS SPECIFIC
+
+#define WORD_FULLSCREEN	    90			// fullscreen settings in game.ini
+#define WORD_SCREENWIDTH	91			// horizontal screen resolution in game.ini
+#define WORD_SCREENHEIGHT	92			// vertical screen resolution in game.ini
+
+#define WORD_MP3MUSIC		93			// MP3Music settings in game.ini
 
 #define MAX_LINE_LENGTH     256
 

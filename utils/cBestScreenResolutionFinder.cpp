@@ -38,28 +38,30 @@ void cBestScreenResolutionFinder::init() {
 
 
 void cBestScreenResolutionFinder::checkResolutions() {
-    for (int i = 0; i < MAX_SCREEN_RESOLUTIONS; i++) {
-        cScreenResolution * screenResolution = screenResolutions[i];
-        if (screenResolution) {
-            int screen_x = screenResolution->getWidth();
-            int screen_y = screenResolution->getHeight();
-            int r = set_gfx_mode(GFX_AUTODETECT, screen_x, screen_y, screen_x, screen_y);
-            screenResolution->setTested(true);
-            screenResolution->setUsable((r > -1));
-            screenResolution->printLog();
-        }
-    }
+	for (int i = 0; i < MAX_SCREEN_RESOLUTIONS; i++) {
+		cScreenResolution * screenResolution = screenResolutions[i];
+		if (screenResolution) {
+			int screen_x = screenResolution->getWidth();
+			int screen_y = screenResolution->getHeight();
+			int r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, screen_x, screen_y, screen_x, screen_y);
+			screenResolution->setTested(true);
+			screenResolution->setUsable((r > -1));
+			screenResolution->printLog();
+		}
+	}
 }
 
 bool cBestScreenResolutionFinder::acquireBestScreenResolutionFullScreen() {
     for (int i = 0; i < MAX_SCREEN_RESOLUTIONS; i++) {
         cScreenResolution * screenResolution = screenResolutions[i];
-        if (screenResolution->isTested()) {
-            if (screenResolution->isUsable()) {
-                game.screen_x = screenResolution->getWidth();
-                game.screen_y = screenResolution->getHeight();
-                set_gfx_mode(GFX_AUTODETECT, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
-                return true;
+        if (screenResolution) {
+            if (screenResolution->isTested()) {
+                if (screenResolution->isUsable()) {
+                    game.screen_x = screenResolution->getWidth();
+                    game.screen_y = screenResolution->getHeight();
+                    set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+                    return true;
+                }
             }
         }
     }

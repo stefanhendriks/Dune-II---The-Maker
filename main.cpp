@@ -124,13 +124,18 @@ int handleArguments(int argc, char *argv[]) {
 int main(int argc, char **argv) {
 	game.game_filename = "game.ini";
 
-	if (handleArguments(argc, argv) > 0) {
-		return 0;
-	}
+    if (handleArguments(argc, argv) > 0) {
+        return 0;
+    }
 
 	game.init();
 
-	if (game.setupGame()) {
+    // HACKish way to let program argument overrule game.ini resolution settings!
+    if (handleArguments(argc, argv) > 0) {
+        return 0;
+    }
+
+    if (game.setupGame()) {
 		game.run();
 	}
 
