@@ -44,6 +44,8 @@ public:
     // resolution of the game
 	int screen_x;
 	int screen_y;
+    int ini_screen_width;
+    int ini_screen_height;
 
     bool bPlaySound;            // play sound?
     bool bPlayMusic;            // play any music?
@@ -160,8 +162,10 @@ private:
 	void runGameState();
 	void shakeScreenAndBlitBuffer();
 	void handleTimeSlicing();
-
     void draw_movie(int iType);  // draw movie sequence
+
+    bool isResolutionInGameINIFoundAndSet();
+    void setScreenResolutionFromGameIniSettings();
 
 	/** game state **/
 	int state;
