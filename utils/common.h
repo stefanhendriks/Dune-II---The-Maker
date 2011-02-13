@@ -49,7 +49,7 @@ void LOAD_SCENE(std::string scene);
 void play_sound_id(int s, int iOnScreen);
 bool MIDI_music_playing();
 void play_voice(int iType);
-void music_volume(int i);
+void setMusicVolume(int i);
 
 void play_music(int iType);
 void Shimmer(int r, int x, int y);

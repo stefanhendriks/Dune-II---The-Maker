@@ -22,8 +22,6 @@ cGame::cGame() {
 	screen_x = 800;
 	screen_y = 600;
 	windowed = false;
-	// default INI screen width and height is not loaded
-	// if not loaded, we will try automatic setup
 	ini_screen_width=-1;
 	ini_screen_height=-1;
 }
@@ -61,7 +59,6 @@ void cGame::init() {
 	hover_unit=-1;
 
     state = GAME_MENU;
-    //state=GAME_REGION;
 
     iWinQuota=-1;              // > 0 means, get this to win the mission, else, destroy all!
 

@@ -14,6 +14,18 @@
 
 #include <math.h>
 
+namespace
+{
+    const int PAN_CENTER = 128;
+}
+namespace
+{
+    const int VOLUME_MAX = 255;
+}
+namespace
+{
+    const int BUFFER_SIZE = 32768;
+}
 // Keep a logbook
 void logbook(char *txt)
 {
@@ -124,7 +136,7 @@ void INSTALL_WORLD()
 
     // FOURTH ROW
     REGION_NEW(16,  237, 1, -1, PIECE_DUNE_020);
-    REGION_NEW(62,  255, 1, -1, PIECE_DUNE_021);
+    REGION_NEW(62, VOLUME_MAX, 1, -1, PIECE_DUNE_021);
     REGION_NEW(134,  245, 1, -1, PIECE_DUNE_022);
     REGION_NEW(282,  257, 1, -1, PIECE_DUNE_023);
     REGION_NEW(360,  253, 1, -1, PIECE_DUNE_024);
@@ -146,8 +158,8 @@ void INSTALL_HOUSES()
 
 
   // General / Default / No House
-  houses[GENERALHOUSE].swap_color   = 128;
-  houses[GENERALHOUSE].minimap_color = makecol(128,128,128);
+  houses[GENERALHOUSE].swap_color   = PAN_CENTER;
+  houses[GENERALHOUSE].minimap_color = makecol(PAN_CENTER, PAN_CENTER, PAN_CENTER);
 
   // Harkonnen
   houses[HARKONNEN].swap_color = -1;  // 144
@@ -870,7 +882,7 @@ void install_structures()
   // Description  : <none>
   structures[WINDTRAP].bmp = (BITMAP *)gfxdata[BUILD_WINDTRAP].dat;
   structures[WINDTRAP].shadow = (BITMAP *)gfxdata[BUILD_WINDTRAP_SHADOW].dat; // shadow
-  structures[WINDTRAP].fadecol = 128;
+  structures[WINDTRAP].fadecol = PAN_CENTER;
   structures[WINDTRAP].fademax = 134;
   structures[WINDTRAP].icon  = ICON_STR_WINDTRAP;
   strcpy(structures[WINDTRAP].name, "Windtrap");
@@ -1151,10 +1163,10 @@ void play_sound_id(int s, int iDistance)
 
 	// Determine if sound is on screen or not
 	if (iDistance <= 1) {
-		int volume = 255;
+		int volume = VOLUME_MAX;
 		// credits up/down sound has lower volume
 		if (s == SOUND_CREDITUP || s == SOUND_CREDITDOWN) {
-			volume = 128;
+			volume = PAN_CENTER;
 		}
 		game.getSoundPlayer()->playSound(s, 127, volume);
 	} else {
@@ -1190,18 +1202,18 @@ bool MIDI_music_playing() {
 	}
 }
 
-void music_volume(int i) {
+void setMusicVolume(int i) {
     if (game.bMp3) {
         if (mp3_music != NULL) {
         	almp3_adjust_mp3(mp3_music, i, 127, 1000, false);
         }
     } else {
-       set_volume(255, i);
+       set_volume(VOLUME_MAX, i);
     }
 }
 
 
-void mp3_play_file(char filename[255]) {
+void mp3_play_file(char filename[VOLUME_MAX]) {
 	char *data;  // mp3 file in memory
 	int len;     // length of file(also the buffer)
 	FILE *f = NULL;  // file.mp3
@@ -1232,65 +1244,32 @@ void mp3_play_file(char filename[255]) {
 	mp3_music = almp3_create_mp3(data, len);
 
 	// play music, use big buffer
-	almp3_play_mp3(mp3_music, 32768, 255, 128);
+	almp3_play_mp3(mp3_music, BUFFER_SIZE, VOLUME_MAX, PAN_CENTER);
 
-	music_volume(game.iMusicVolume);
+	setMusicVolume(game.iMusicVolume);
 }
 
-
-
-
 // play type of music
-void play_music(int iType)
-{
-    // Types of music:
-    /*
-#define MUSIC_WIN           0
-#define MUSIC_LOSE          1
-#define MUSIC_ATTACK        2
-#define MUSIC_PEACE         3
-#define MUSIC_MENU          4
-#define MUSIC_CONQUEST      5
-#define MUSIC_BRIEFING      6*/
-
-    // WIN
-    // LOSE
-    // ATTACK
-    // PEACE
-    // MENU
-    // SELECT CONQUEST
-
+void play_music(int iType) {
     game.iMusicType = iType;
 
     int iNumber=0;
 
-// win and lose has 3 music files
-    if (iType == 0 || iType == 1)
+    if (iType == MUSIC_WIN || iType == MUSIC_LOSE) {
         iNumber=rnd(3)+1;
-
-// attack has 6 files
-    if (iType == 2)
+    } else if (iType == MUSIC_ATTACK) {
         iNumber=rnd(6)+1;
-
-// peace has 9 files
-    if (iType == 3)
+    } else if (iType == MUSIC_PEACE) {
         iNumber=rnd(9)+1;
-
-    if (iType == 4)
+    } else if (iType == MUSIC_MENU) {
         iNumber=MIDI_MENU;
-
-    if (iType == 5)
-        iNumber=MIDI_SCENARIO;
-
-    if (iType == 6)
-    {
-        if (game.iHouse == ATREIDES)     iNumber=MIDI_MENTAT_ATR;
-        if (game.iHouse == HARKONNEN)     iNumber=MIDI_MENTAT_HAR;
-        if (game.iHouse == ORDOS)     iNumber=MIDI_MENTAT_ORD;
-
+    } else if (iType == MUSIC_CONQUEST) {
+    	iNumber=MIDI_SCENARIO;
+    } else if (iType == MUSIC_BRIEFING) {
+        if (game.iHouse == ATREIDES)     	iNumber=MIDI_MENTAT_ATR;
+        if (game.iHouse == HARKONNEN)     	iNumber=MIDI_MENTAT_HAR;
+        if (game.iHouse == ORDOS)     		iNumber=MIDI_MENTAT_ORD;
     }
-
-
 
     // In the end, when mp3, play it:
     if (game.bMp3)
@@ -1298,70 +1277,47 @@ void play_music(int iType)
         char filename[50];
         memset(filename, 0, sizeof(filename));
 
-        if (iType == 0)
+        if (iType == MUSIC_WIN) {
             sprintf(filename, "mp3/win%d.mp3", iNumber);
-
-        if (iType == 1)
+        } else if (iType == MUSIC_LOSE) {
             sprintf(filename, "mp3/lose%d.mp3", iNumber);
-
-        if (iType == 2)
-            sprintf(filename, "mp3/attack%d.mp3", iNumber);
-
-        if (iType == 3)
+        } else if (iType == MUSIC_ATTACK) {
+        	sprintf(filename, "mp3/attack%d.mp3", iNumber);
+        } else if (iType == MUSIC_PEACE) {
             sprintf(filename, "mp3/peace%d.mp3", iNumber);
-
-		if (iType == 4)
+        } else if (iType == MUSIC_MENU) {
             sprintf(filename, "mp3/menu.mp3");
-
-        if (iType == 5)
+        } else if (iType == MUSIC_CONQUEST) {
             sprintf(filename, "mp3/nextconq.mp3");
-
-        if (iType == 6)
-        {
-            if (game.iHouse == ATREIDES)
-                sprintf(filename, "mp3/mentata.mp3");
-            if (game.iHouse == HARKONNEN)
-                sprintf(filename, "mp3/mentath.mp3");
-            if (game.iHouse == ORDOS)
-                sprintf(filename, "mp3/mentato.mp3");
+        } else if (iType == MUSIC_BRIEFING) {
+            if (game.iHouse == ATREIDES)	sprintf(filename, "mp3/mentata.mp3");
+            if (game.iHouse == HARKONNEN)	sprintf(filename, "mp3/mentath.mp3");
+            if (game.iHouse == ORDOS)		sprintf(filename, "mp3/mentato.mp3");
         }
 
         mp3_play_file(filename);
-    }
-    else
-    {
-        iNumber--; // correct for most midis
+    } else {
+        iNumber--; // make 0 based
 
-        if (iType == 0)
+        if (iType == MUSIC_WIN) {
             iNumber = MIDI_WIN01+(iNumber);
-
-        if (iType == 1)
+        } else if (iType == MUSIC_LOSE) {
             iNumber = MIDI_LOSE01+(iNumber);
-
-        if (iType == 2)
+        } else if (iType == MUSIC_ATTACK) {
             iNumber = MIDI_ATTACK01+(iNumber);
-
-        if (iType == 3)
+        } else if (iType == MUSIC_PEACE) {
             iNumber = MIDI_BUILDING01+(iNumber);
-
+        } else if (iType == MUSIC_MENU) {
         // single ones are 'corrected back'...
-        if (iType == 4)
             iNumber = iNumber+1;
-
-        if (iType == 5)
+        } else if (iType == MUSIC_CONQUEST) {
             iNumber = iNumber+1;
-
-        if (iType == 6)
+        } else if (iType == MUSIC_BRIEFING) {
             iNumber = iNumber+1;
-
-
+        }
         // play midi file
         play_midi((MIDI *)gfxaudio[iNumber].dat, 0);
-
     }
-
-
-
 }
 
 /******************************
@@ -1484,20 +1440,20 @@ void Shimmer(int r, int x, int y)
 void LOAD_SCENE(std::string scene) {
 	gfxmovie = NULL;
 
-	char filename[128];
+	char filename[PAN_CENTER];
 	sprintf(filename, "data/scenes/%s.dat", scene.c_str());
 
 	gfxmovie = load_datafile(filename);
 
 	if (gfxmovie != NULL) {
 		game.iMovieFrame=0;
-		char msg[255];
+		char msg[VOLUME_MAX];
 		sprintf(msg, "Successful loaded scene [%s]", filename);
 		logbook(msg);
 	} else {
 		gfxmovie=NULL;
 		game.iMovieFrame=-1;
-		char msg[255];
+		char msg[VOLUME_MAX];
 		sprintf(msg, "Failed to load scene [%s]", filename);
 		logbook(msg);
 	}
@@ -1529,7 +1485,7 @@ void INIT_PREVIEWS()
 
 	sprintf(PreviewMap[0].name, "RANDOM MAP");
 	//PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
-	PreviewMap[0].terrain = create_bitmap(128,128);
+	PreviewMap[0].terrain = create_bitmap(PAN_CENTER, PAN_CENTER);
 }
 
 // 8 bit memory putpixel
@@ -1574,7 +1530,7 @@ void mask_to_color(BITMAP *bmp, int color)
 			if (c != makecol(0,0,0))
 			{
 				// masked
-				putpixel(bmp, x, y, makecol(255,255,255));
+				putpixel(bmp, x, y, makecol(VOLUME_MAX, VOLUME_MAX, VOLUME_MAX));
 				//allegro_message("Non pink detected");
 			}
 		}
@@ -1594,7 +1550,7 @@ int getAmountReservedVoicesAndInstallSound() {
 			return -1;
 		}
 		reserve_voices(voices, 0);
-		char msg[255];
+		char msg[VOLUME_MAX];
 		if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) == 0)
 		{
 			sprintf(msg, "Success reserving %d voices.", voices);
