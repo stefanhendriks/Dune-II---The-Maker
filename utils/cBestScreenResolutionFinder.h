@@ -21,6 +21,10 @@ class cBestScreenResolutionFinder {
 
 	private:
 		cScreenResolution * screenResolutions[MAX_SCREENRESOLUTIONS];
+		bool isGfxModeListSet(GFX_MODE_LIST *mode_list);
+		void detectScreenResolutionsByTestingThemOut();
+		void setMatchingScreenResolutionsToTestedAndUsable(GFX_MODE_LIST * modeList);
+		cScreenResolution * findMatchingScreenResolution(int width, int height);
 };
 
 #endif /* CBESTSCREENRESOLUTIONFINDER_H_ */
