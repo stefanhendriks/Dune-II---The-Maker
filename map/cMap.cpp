@@ -329,7 +329,7 @@ void cMap::clear_spot(int c, int size, int player)
 
                     if (game.iMusicType == MUSIC_PEACE)
                     {
-                        play_music(MUSIC_ATTACK);
+                        playMusicByType(MUSIC_ATTACK);
 
                         // warning... bla bla
                         if (unit[id].iType == SANDWORM)
