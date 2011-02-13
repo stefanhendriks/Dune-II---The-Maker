@@ -64,7 +64,6 @@ void cGame::init() {
 	hover_unit=-1;
 
     state = GAME_MENU;
-    //state=GAME_REGION;
 
     iWinQuota=-1;              // > 0 means, get this to win the mission, else, destroy all!
 
