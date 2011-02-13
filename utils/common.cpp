@@ -1244,7 +1244,8 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 	mp3_music = almp3_create_mp3(data, len);
 
 	// play music, use big buffer
-	almp3_play_mp3(mp3_music, BUFFER_SIZE, VOLUME_MAX, PAN_CENTER);
+	int result = almp3_play_mp3(mp3_music, BUFFER_SIZE, VOLUME_MAX, PAN_CENTER);
+	assert(result == ALMP3_OK);
 
 	setMusicVolume(game.iMusicVolume);
 }
