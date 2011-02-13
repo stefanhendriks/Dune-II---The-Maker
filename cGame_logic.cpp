@@ -263,7 +263,7 @@ void cGame::think_winlose()
 
 		play_voice(SOUND_VOICE_07_ATR);
 
-        play_music(MUSIC_WIN);
+        playMusicByType(MUSIC_WIN);
 
         // copy over
         blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
@@ -282,7 +282,7 @@ void cGame::think_winlose()
 
 		play_voice(SOUND_VOICE_08_ATR);
 
-        play_music(MUSIC_LOSE);
+        playMusicByType(MUSIC_LOSE);
 
         // copy over
         blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
@@ -452,7 +452,7 @@ void cGame::think_music()
                 if (iMusicType == MUSIC_ATTACK)
                     iMusicType = MUSIC_PEACE; // set back to peace
 
-                play_music(iMusicType);
+                playMusicByType(iMusicType);
             }
         }
     }
@@ -467,7 +467,7 @@ void cGame::think_music()
             if (iMusicType == MUSIC_ATTACK)
                 iMusicType = MUSIC_PEACE; // set back to peace
 
-            play_music(iMusicType); //
+            playMusicByType(iMusicType); //
         }
     }
 
@@ -762,7 +762,7 @@ void cGame::mentat(int iType)
 
                 bFadeOut=true;
 
-                play_music(MUSIC_PEACE);
+                playMusicByType(MUSIC_PEACE);
                 }
                 else if (state == GAME_WINBRIEF)
                 {
@@ -770,7 +770,7 @@ void cGame::mentat(int iType)
 					if (bSkirmish)
 					{
 						state = GAME_SETUPSKIRMISH;
-						play_music(MUSIC_MENU);
+						playMusicByType(MUSIC_MENU);
 					}
 					else
 					{
@@ -781,7 +781,7 @@ void cGame::mentat(int iType)
 					drawManager->getMessageDrawer()->initRegionPosition();
 
                     // PLAY THE MUSIC
-                    play_music(MUSIC_CONQUEST);
+                    playMusicByType(MUSIC_CONQUEST);
 					}
 
 					// PREPARE NEW MENTAT BABBLE
@@ -795,7 +795,7 @@ void cGame::mentat(int iType)
 					if (bSkirmish)
 					{
 						state = GAME_SETUPSKIRMISH;
-						play_music(MUSIC_MENU);
+						playMusicByType(MUSIC_MENU);
 					}
 					else
 					{
@@ -808,12 +808,12 @@ void cGame::mentat(int iType)
 							drawManager->getMessageDrawer()->initRegionPosition();
 
 							// PLAY THE MUSIC
-							play_music(MUSIC_CONQUEST);
+							playMusicByType(MUSIC_CONQUEST);
 						}
 						else
 						{
 							state = GAME_BRIEFING;
-							play_music(MUSIC_BRIEFING);
+							playMusicByType(MUSIC_BRIEFING);
 						}
 
 					}
@@ -1680,7 +1680,7 @@ void cGame::setup_skirmish()
 		assert(player[HUMAN].getItemBuilder() != NULL);
 
 		bFadeOut=true;
-        play_music(MUSIC_PEACE);
+        playMusicByType(MUSIC_PEACE);
 	}
 
 	// delete cell calculator
@@ -1909,7 +1909,7 @@ void cGame::tellhouse()
                 player[0].setHouse(iHouse);
 
                 // play correct mentat music
-                play_music(MUSIC_BRIEFING);
+                playMusicByType(MUSIC_BRIEFING);
                 bFadeOut=true;
 
             }
@@ -2198,7 +2198,7 @@ void cGame::region()
 		//sprintf(msg, "Mission = %d", game.iMission);
 		//allegro_message(msg);
 
-		play_music(MUSIC_BRIEFING);
+		playMusicByType(MUSIC_BRIEFING);
 
 		//allegro_message(msg);
 
@@ -2890,7 +2890,7 @@ bool cGame::setupGame() {
 	game.init();
 	game.setup_players();
 
-	play_music(MUSIC_MENU);
+	playMusicByType(MUSIC_MENU);
 
 	// all has installed well. Lets rock and role.
 	return true;

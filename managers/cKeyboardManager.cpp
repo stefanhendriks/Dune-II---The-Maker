@@ -76,7 +76,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.iRegion = 22;
         game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
-        play_music(MUSIC_BRIEFING);
+        playMusicByType(MUSIC_BRIEFING);
         game.iMentatSpeak = -1;
     }
     // WIN MISSION
@@ -123,7 +123,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.iRegion = 6;
         game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
-        play_music(MUSIC_BRIEFING);
+        playMusicByType(MUSIC_BRIEFING);
         game.iMentatSpeak = -1;
     }
     //JUMP TO MISSION 4
@@ -133,7 +133,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.iRegion = 10;
         game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
-        play_music(MUSIC_BRIEFING);
+        playMusicByType(MUSIC_BRIEFING);
         game.iMentatSpeak = -1;
     }
     //JUMP TO MISSION 5
@@ -143,7 +143,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.iRegion = 13;
         game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
-        play_music(MUSIC_BRIEFING);
+        playMusicByType(MUSIC_BRIEFING);
         game.iMentatSpeak = -1;
     }
 }

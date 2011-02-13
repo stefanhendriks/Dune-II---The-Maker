@@ -51,7 +51,7 @@ bool MIDI_music_playing();
 void play_voice(int iType);
 void setMusicVolume(int i);
 
-void play_music(int iType);
+void playMusicByType(int iType);
 void Shimmer(int r, int x, int y);
 int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstruc);
 
