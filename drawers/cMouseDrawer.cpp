@@ -188,9 +188,9 @@ void cMouseDrawer::drawToolTipBackground() {
 
 	// tone down a bit
 	cSimpleCalculator simpleCalculator;
-	red = simpleCalculator.substract(red, 64, 0);
-	green = simpleCalculator.substract(green, 64, 0);
-	blue = simpleCalculator.substract(blue, 64, 0);
+	red = simpleCalculator.substractWithFloor(red, 64, 0);
+	green = simpleCalculator.substractWithFloor(green, 64, 0);
+	blue = simpleCalculator.substractWithFloor(blue, 64, 0);
 
 	color = makecol(red, green, blue);
 
