@@ -12,7 +12,7 @@ class cSimpleCalculator {
 	public:
 		cSimpleCalculator();
 		~cSimpleCalculator();
-		int substract(int original, int amountToSubstract, int bottomLimit);
+		int substractWithFloor(int original, int amountToSubstract, int bottomLimit);
 
 	protected:
 
