@@ -21,7 +21,9 @@
 cGame::cGame() {
 	screen_x = 800;
 	screen_y = 600;
-	windowed = false;
+	windowed = true;
+	// default INI screen width and height is not loaded
+	// if not loaded, we will try automatic setup
 	ini_screen_width=-1;
 	ini_screen_height=-1;
 }
@@ -2517,15 +2519,7 @@ bool cGame::isResolutionInGameINIFoundAndSet() {
 }
 
 
-/**
-	Setup the game
-
-	Should not be called twice.
-
-*/
-
-void cGame::setScreenResolutionFromGameIniSettings()
-{
+void cGame::setScreenResolutionFromGameIniSettings() {
     game.screen_x = game.ini_screen_width;
     game.screen_y = game.ini_screen_height;
     char msg[255];
@@ -2639,16 +2633,14 @@ bool cGame::setupGame() {
 
 	if (game.windowed) {
 		cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "Searching for optimal graphics settings");
-		int 	iDepth = desktop_color_depth();
+		int iDepth = desktop_color_depth();
 
-		// dont switch to 15 bit or lower, or at 24 bit
 		if (iDepth > 15 && iDepth != 24) {
 			char msg[255];
 			sprintf(msg,"Desktop color dept is %d.", iDepth);
 			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", msg);
 			set_color_depth(iDepth);      // run in the same bit depth as the desktop
 		} else {
-			// default color depth is 16
 			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", "Could not find color depth, or unsupported color depth found. Will use 16 bit");
 			set_color_depth(16);
 		}

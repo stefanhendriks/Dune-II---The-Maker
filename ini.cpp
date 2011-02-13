@@ -599,11 +599,6 @@ int INI_WordType(char word[25], int section)
 	  if (strcmp(word, "MP3Music") == 0)	 return WORD_MP3MUSIC;
   }
 
-//  char msg[255];
-//  memset(msg, 0, sizeof(msg));
-//  sprintf(msg, "Could not find word-type for [%s]", word);
-//  logbook(msg);
-
   return WORD_NONE;
 }
 
@@ -2209,9 +2204,8 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
         }
 
 
+    	fclose(stream);
     }
-
-    fclose(stream);
 
     logbook("[BRIEFING] File opened");
 

@@ -9,6 +9,7 @@ Source Profiler -- Copyright (C) 1995, 1996, 1997, 1998 - Harald Hoyer
 
 //#include "hwlib.h"
 #include "hwprof.h"
+#if WIN32
 //#include "str.h"
 #pragma warning (disable : 4201) // C4201 nonstandard extension used : nameless struct/union
 #include <windows.h>
@@ -355,4 +356,4 @@ void CHWProfile::dumpprint(int Hide)const
 
 
 
-
+#endif

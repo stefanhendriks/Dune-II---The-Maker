@@ -1,3 +1,4 @@
+#if defined WIN32
 
 
 #pragma once
@@ -151,4 +152,4 @@ cType _ReturnProfile(cType x)
 #endif
 
 
-
+#endif
