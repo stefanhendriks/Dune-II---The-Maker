@@ -2623,8 +2623,6 @@ bool cGame::setupGame() {
 	set_window_title(title);
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", title, OUTC_SUCCESS);
 
-	set_window_close_button(0);
-
 	set_color_depth(16);
 
 	// TODO: read/write rest value so it does not have to 'fine-tune'
@@ -2664,6 +2662,9 @@ bool cGame::setupGame() {
 			logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Succesfully created window with graphics mode.", OUTC_SUCCESS);
 		} else {
 			logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Failed to create window with graphics mode. Fallback to fullscreen.", OUTC_FAILED);
+
+			set_color_depth(16);
+
 			// GFX_DIRECTX_ACCEL / GFX_AUTODETECT
 			#ifdef UNIX
 						r = set_gfx_mode(GFX_XWINDOWS, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
