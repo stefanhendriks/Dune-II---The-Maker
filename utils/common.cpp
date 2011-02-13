@@ -1254,7 +1254,7 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 }
 
 // play type of music
-void play_music(int iType) {
+void playMusicByType(int iType) {
     if (!game.bPlayMusic) return;
 
     game.iMusicType = iType;

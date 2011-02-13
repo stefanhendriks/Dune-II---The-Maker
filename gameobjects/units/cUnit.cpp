@@ -907,7 +907,7 @@ void cUnit::think_guard() {
 
 			if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0)
 			{
-				play_music(MUSIC_ATTACK);
+				playMusicByType(MUSIC_ATTACK);
 
 				// warning... bla bla
 				if (unit[iDanger].iType == SANDWORM)
@@ -973,7 +973,7 @@ void cUnit::think_guard() {
 
 				if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0)
 				{
-					play_music(MUSIC_ATTACK);
+					playMusicByType(MUSIC_ATTACK);
 				}
 
 			}
