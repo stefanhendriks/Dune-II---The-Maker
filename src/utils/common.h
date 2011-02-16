@@ -10,7 +10,7 @@
 
   */
 
-void logbook(char *txt);
+void logbook(const char *txt);
 
 bool BORDER_POS(int x, int y);
 void FIX_BORDER_POS(int &x, int &y);

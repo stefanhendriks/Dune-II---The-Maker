@@ -21,50 +21,50 @@ cTextDrawer::~cTextDrawer() {
 	font = NULL;
 }
 
-void cTextDrawer::drawTextWithTwoIntegers(int x, int y, char * msg, int var1, int var2) {
+void cTextDrawer::drawTextWithTwoIntegers(int x, int y, const char * msg, int var1, int var2) {
 	if (applyShadow) {
 		alfont_textprintf(bmp_screen, font, x + 1,y + 1, makecol(0,0,0), msg, var1, var2);
 	}
 	alfont_textprintf(bmp_screen, font, x,y, makecol(255,255,255), msg, var1, var2);
 }
 
-void cTextDrawer::drawTextWithOneInteger(int x, int y, char * msg, int var) {
+void cTextDrawer::drawTextWithOneInteger(int x, int y, const char * msg, int var) {
 	if (applyShadow) {
 		alfont_textprintf(bmp_screen, font, x + 1,y + 1, makecol(0,0,0), msg, var);
 	}
 	alfont_textprintf(bmp_screen, font, x,y, makecol(255,255,255), msg, var);
 }
 
-void cTextDrawer::drawText(int x, int y, char * msg, int color) {
+void cTextDrawer::drawText(int x, int y, const char * msg, int color) {
 	if (applyShadow) {
 		alfont_textprintf(bmp_screen, font, x + 1,y + 1, makecol(0,0,0), msg);
 	}
 	alfont_textprintf(bmp_screen, font, x,y, color, msg);
 }
 
-void cTextDrawer::drawText(int x, int y, char * msg) {
+void cTextDrawer::drawText(int x, int y, const char * msg) {
 	drawText(x, y, msg, makecol(255,255,255));
 }
 
-void cTextDrawer::drawTextCentered(char *msg, int y) {
+void cTextDrawer::drawTextCentered(const char *msg, int y) {
 	drawTextCentered(msg, y, makecol(255, 255, 255));
 }
 
-void cTextDrawer::drawTextCentered(char * msg, int y, int color) {
+void cTextDrawer::drawTextCentered(const char * msg, int y, int color) {
 	int lenghtInPixels = alfont_text_length(font, msg);
 	int half = lenghtInPixels / 2;
 	int xPos = (game.screen_x / 2) - half;
 	drawText(xPos, y, msg, color);
 }
 
-void cTextDrawer::drawTextBottomRight(char * msg) {
+void cTextDrawer::drawTextBottomRight(const char * msg) {
 	int lenghtInPixels = alfont_text_length(font, msg);
 	int x = game.screen_x - lenghtInPixels;
 	int y = game.screen_y - alfont_text_height(font);
 	drawText(x, y, msg);
 }
 
-void cTextDrawer::drawTextBottomLeft(char * msg) {
+void cTextDrawer::drawTextBottomLeft(const char * msg) {
 	int y = game.screen_y - alfont_text_height(font);
 	drawText(0, y, msg);
 }

@@ -24,22 +24,22 @@ cTextWriter::~cTextWriter() {
 	delete textDrawer;
 }
 
-void cTextWriter::write(char * msg) {
+void cTextWriter::write(const char * msg) {
 	textDrawer->drawText(drawX, drawY, msg);
 	updateDrawY();
 }
 
-void cTextWriter::write(char * msg, int color) {
+void cTextWriter::write(const char * msg, int color) {
 	textDrawer->drawText(drawX, drawY, msg, color);
 	updateDrawY();
 }
 
-void cTextWriter::writeWithOneInteger(char * msg, int value1) {
+void cTextWriter::writeWithOneInteger(const char * msg, int value1) {
 	textDrawer->drawTextWithOneInteger(drawX, drawY, msg, value1);
 	updateDrawY();
 }
 
-void cTextWriter::writeWithTwoIntegers(char * msg, int value1, int value2) {
+void cTextWriter::writeWithTwoIntegers(const char * msg, int value1, int value2) {
 	textDrawer->drawTextWithTwoIntegers(drawX, drawY, msg, value1, value2);
 	updateDrawY();
 }

@@ -27,7 +27,7 @@ namespace
     const int BUFFER_SIZE = 32768;
 }
 // Keep a logbook
-void logbook(char *txt)
+void logbook(const char *txt)
 {
 	cLogger *logger = cLogger::getInstance();
 	logger->log(LOG_WARN, COMP_NONE, "Default log message (CHANGEME)", txt);

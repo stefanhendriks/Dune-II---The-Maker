@@ -54,7 +54,7 @@ void cMessageDrawer::think() {
 	}
 }
 
-void cMessageDrawer::setMessage(char msg[255]) {
+void cMessageDrawer::setMessage(const char msg[255]) {
 	TIMER_message=0;
 	memset(cMessage, 0, sizeof(cMessage));
 	sprintf(cMessage, "%s", msg);

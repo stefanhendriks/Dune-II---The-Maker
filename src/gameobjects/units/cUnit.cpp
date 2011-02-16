@@ -628,6 +628,7 @@ void cUnit::draw()
 
 
     if (iType == SANDWORM) {
+
         Shimmer(20, ux+16, uy+16);
 		return;
     }
@@ -2094,7 +2095,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
     }
 
 }
-void cUnit::LOG(char *txt)
+void cUnit::LOG(const char *txt)
 {
 	// logs unit stuff, but gives unit information
 	char msg[512];
@@ -3355,6 +3356,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
 
         cx = iCellGiveX(iCell);
         cy = iCellGiveY(iCell);
+
 
         // starting position is cx-1 and cy-1
         sx = cx - 1;

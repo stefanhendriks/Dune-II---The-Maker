@@ -13,16 +13,16 @@ class cTextDrawer {
 		cTextDrawer();
 		cTextDrawer(ALFONT_FONT *theFont);
 		~cTextDrawer();
-		void drawTextWithOneInteger(int x, int y, char * msg, int var);
-		void drawTextWithTwoIntegers(int x, int y, char * msg, int var1, int var2);
-		void drawText(int x, int y, char * msg);
-		void drawText(int x, int y, char * msg, int color);
+		void drawTextWithOneInteger(int x, int y, const char * msg, int var);
+		void drawTextWithTwoIntegers(int x, int y, const char * msg, int var1, int var2);
+		void drawText(int x, int y, const char * msg);
+		void drawText(int x, int y, const char * msg, int color);
 
-		void drawTextCentered(char * msg, int y);
-		void drawTextCentered(char * msg, int y, int color);
+		void drawTextCentered(const char * msg, int y);
+		void drawTextCentered(const char * msg, int y, int color);
 
-		void drawTextBottomRight(char * msg);
-		void drawTextBottomLeft(char * msg);
+		void drawTextBottomRight(const char * msg);
+		void drawTextBottomLeft(const char * msg);
 
 		void setApplyShaddow(bool value) { applyShadow = value; }
 

@@ -16,10 +16,10 @@ class cTextWriter {
 		cTextWriter(int x, int y, ALFONT_FONT *theFont, int theFontSize);
 		~cTextWriter();
 
-		void write(char *msg);
-		void write(char *msg, int color);
-		void writeWithOneInteger(char * msg, int value1);
-		void writeWithTwoIntegers(char * msg, int value1, int value2);
+		void write(const char *msg);
+		void write(const char *msg, int color);
+		void writeWithOneInteger(const char * msg, int value1);
+		void writeWithTwoIntegers(const char * msg, int value1, int value2);
 
 	protected:
 		void updateDrawY();

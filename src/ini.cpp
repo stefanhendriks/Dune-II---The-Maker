@@ -1169,7 +1169,7 @@ int getUnitTypeFromChar(char chunk[35]) {
 	if (caseInsCompare(unitString, "THREEFREMEN"))		return UNIT_FREMEN_THREE;
 
 	char msg[255];
-	sprintf(msg, "getUnitTypeFromChar could not determine what unit type '%s' (original is '%s%') is. Returning -1; this will probably cause problems.", unitString.c_str(), chunk);
+	sprintf(msg, "getUnitTypeFromChar could not determine what unit type '%s' (original is '%s') is. Returning -1; this will probably cause problems.", unitString.c_str(), chunk);
 	logbook(msg);
 	return -1;
 }
@@ -2111,6 +2111,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
     FILE *stream;
 
     char path[50];
+
 
 
     // clear mentat

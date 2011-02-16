@@ -126,7 +126,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	float fHealth = calc->getByPercent(hp, fPercent);
 
 	char msg2[255];
-	sprintf(msg2, "Structure with id [%d] has [%d] hp , fhealth is [%d]", iStructureType, hp, fHealth);
+	sprintf(msg2, "Structure with id [%d] has [%d] hp , fhealth is [%.2f]", iStructureType, hp, fHealth);
 	logbook(msg2);
 
 	placeStructure(iCell, iStructureType, iPlayer);
