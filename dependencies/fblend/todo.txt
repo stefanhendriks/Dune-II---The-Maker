@@ -1,0 +1,21 @@
+
+Todo:
+-----
+
+
+FBlend 0.6:
+- Add 32 bit alpha blend code (RGBA8 -> 16 bit, and RGBA8 -> RGB8)
+- Add draw_lit_sprite equivalent (rect trans + masked color)
+? Add fliped and mirrored trans drawing.
++ Multiply blender
++ Finish asm code for sub blender
+
+
+
+
+Legend:
+  + For sure
+  - Undecided
+  ? Maybe not
+
+
