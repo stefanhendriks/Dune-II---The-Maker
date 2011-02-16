@@ -38,8 +38,9 @@ I know, a LOT of code is still not compliant with the curly braces rules.
 INDENTING:
 ----------
 If your code needs to indent more then 2 or 3 times, it could be wise to create tiny
-functions to handle pieces of code to reduce indenting: 
-- the less indenting, the less mistakes you will make. 
+functions to handle pieces of code to reduce indenting.
+
+Indenting should be done using TABS (not spaces)
 
 
 FOR/ETC
@@ -79,6 +80,9 @@ BUT: doThis
 
 In the function doThis, you can always see if something applies. So keep the information
 practical.
+
+Keep functions small, keep the function names simple. If you need to have a long function
+name it might imply you do too much in a function. Try to split it up into two functions.
 
 
 STRUCTS
