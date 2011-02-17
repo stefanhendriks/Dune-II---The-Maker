@@ -1,0 +1,91 @@
+Changes
+-------
+
+ v1.9.2
+  - Updated FreeType lib to v2.1.4
+
+ v1.9.1
+  - Fixed a nasty bug introduced on the transparent antialiased mode
+
+ v1.9.0
+  - Improved a 25-30% the drawing speed of all modes thanks to Doug Eleveld
+  - Improved a 50% the drawing speed of antialiased transparent
+    thanks to a tip of Doug Eleveld
+  - Updated FreeType lib to v2.1.3, which brings better quality font
+    rendering, mostly in antialised mode
+
+
+ v1.8.2
+  - Fixed some calls to malloc(0) when a character didn't have an image
+    attached (for example, usually the space character)
+  - Added _ex versions of textout that take the background parameter directly
+
+ v1.8.1
+  - Henrik Schmidt found a bug in the antialiased opaque rendered giving
+    non accurate results, now fixed
+
+ v1.8.0
+  - Henrik Schmidt found a bug, that alfont_is_scalable_font() and
+    alfont_is_fixed_font() returned 1 on true instead of TRUE
+  - Henrik Schmidt found another bug related with the fonts showing
+    very very far from the top point, fixed too
+  - Had to change the size change system, now it will only accept heights
+  - Made the height more accurate to the given parameters (the resulting
+    font of height x was usually bigger than asked)
+  - Improved the fixed font handling and loading of bitmap fonts without
+    antialiasing (now it shouldn't have errors or memory leaks when using
+    old fonts like PDF)
+  - Added functions to modify the character spacing
+  - Changed the version scheme, now it uses x.y.z being 'x' used for big
+    changes, 'y' used for normal changes and 'z' for small changes like
+    bugfixes
+
+ v1.7
+  - Changed the license from LGPL to the FreeType Project License (a lot
+    less restrictive)
+  - Added options to create the lib as a DLL, please read the README.txt
+    file again for further instructions. Deleted the ML and MT models in
+    MSVC, since this lib needs Allegro and Allegro is only built in MD
+    mode.
+  - Added some more compability with fixed sized fonts and some functions
+    to manage them like alfont_get_available_fixed_sizes() and more (check
+    the docs)
+
+ v1.6
+  - Awesome speed increase (even a 1700% in some cases!!!)
+
+ v1.5
+  - Updated FreeType lib to v2.0.9
+  - Added a check in alfont_set_font_size() to not reload the glyphs
+    if the font is already with the desired size and alfont_get_width()
+    and alfont_get_font_height() as suggested by Marcin Jakubowski
+  - Added a simple cache system so the load and resize of fonts work a
+    whole lot faster
+  - Added an example inside the examples directory (example1)
+
+ v1.4
+  - Updated FreeType lib to v2.0.8
+  - Changed the makefiles to make it compatible with gcc 3.0.x
+
+ v1.3
+  - Fixed a big bug that generated some random crashes when loading
+    a font from memory
+  - Added define ALFONT_ERROR and changed the return value of the
+    alfont_set_font_size() function
+  - Fixed a little typo in the typedef in the header
+  - Updated FreeType lib to v2.0.6
+
+ v1.2
+  - Updated FreeType lib to v2.0.5 (that fixed some bugs)
+  - Fixed some little typos on the documentation
+  - Removed the old alfont_init() and changed the function from
+    alfont_init_unusing_atexit() to alfont_init()
+
+ v1.1
+  - Made it compatible with Allegro Unicode
+  - Fixed a bug in alfont_load_font_from_memory()
+  - Added BIG optimizations to the code
+  - Added alfont_init_unusing_atexit() function
+
+ v1.0
+  - First public release

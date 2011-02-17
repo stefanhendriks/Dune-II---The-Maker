@@ -1,0 +1,214 @@
+
+                          AllegroFont v1.9.2
+                         ====================
+
+               AllegroFont (c) 2001 - 2003 Javier Gonzalez
+
+              FreeType project Copyright (c) 1996-2000 by
+            David Turner, Robert Wilhelm, and Werner Lemberg
+
+
+
+
+#include <std_disclaimer.h>
+
+
+   "I do not accept responsibility for any effects, adverse or otherwise, 
+    that this code may have on you, your computer, your sanity, your dog, 
+    and anything else that you can think of. Use it at your own risk."
+
+
+
+See README.txt for a general introduction, copyright details, and 
+information about how to install AllegroFont.
+
+
+
+Using AllegroFont
+----------------
+
+   To be able to use AllegroFont with your program, you just need (once
+   compiled the library) to link the generated lib with your program
+   (remember that since this lib relies on allegro, you need to add
+   alfont *before* alleg) and include the header "alfont.h", available in
+   the lib and include directories respectively. 
+
+
+Reference
+---------
+
+   First please note parameters are marked between ' ' markers.
+
+
+   int alfont_init(void);
+      Initializes AllegroFont. Remember to call alfont_exit() when you
+      are done with it! Nobody will do it automatically for you.
+
+     return values:
+      ALFONT_OK on success.
+      Other value ( != 0 ) on error.
+
+
+   void alfont_exit(void);
+      Deinitializes AllegroFont and its resources (fonts included).
+      It is important to call it before you exit.
+
+
+   ALFONT_FONT *alfont_load_font(const char *filepathname);
+      Loads a font from a the following formats (thanks to FreeType 2):
+          TrueType fonts (and collections)
+          Type 1 fonts
+          CID-keyed Type 1 fonts
+          CFF fonts
+          OpenType fonts (both TrueType and CFF variants)
+          SFNT-based bitmap fonts
+          X11 PCF fonts
+          Windows FNT fonts
+     Note the scalable fonts by default get loaded with a size of 8 pixels
+     height.
+     Use alfont_set_font_size() to change the font size.
+
+     return values:
+      NULL if there ocurred an error.
+      Other value ( != NULL ) otherwise.
+
+
+   ALFONT_FONT *alfont_load_font_from_mem(const char *data, int data_len);
+      Same as alfont_load_font only that instead of loading it from a file
+      it loads it directly from memory. The lib will create its own copy
+      of this buffer, so you are free to decallocate it once this function
+      has been called.
+
+
+   void alfont_destroy_font(ALFONT_FONT *f);
+      Destroys the font. Note this function check if the 'f' pointer is
+      pointing to NULL, so for example this:
+         ALFONT_FONT *f = NULL;
+         alfont_destroy_font(f);
+      won't crash the program.
+
+
+   int alfont_set_font_size(ALFONT_FONT *f, int h);
+      Since AllegroFont can use scalable fonts (for example TrueType)
+      this sets the size of the font. This should also work with multiple
+      fixed sized fonts.
+      Note changing the size of a font makes it to "reload" the internal
+      glyphs of it, which is *slow*, so if you want to use many sizes
+      of the same font very regularly, better create several instances
+      of it.
+
+     return values:
+      ALFONT_ERROR if there ocurred an error (for example if the font is not scalable).
+      ALFONT_OK otherwise.
+
+
+   int alfont_get_font_height(ALFONT_FONT *f);
+     Returns the selected font height.
+
+
+   int alfont_is_scalable_font(ALFONT_FONT *f);
+   int alfont_is_fixed_font(ALFONT_FONT *f);
+     Return TRUE or FALSE, dependant on if the font is fixed (there is
+     a range of sizes where to choose from) or scalable (any size can be
+     used, well, or almost)
+
+
+   const ALFONT_FIXED_SIZE *alfont_get_available_fixed_sizes(ALFONT_FONT *f);
+     Returns an array with the available fixed heights, being the last item
+     this array -1.
+     In case of calling this function for a scalable font you will get an
+     array of just one element, being it -1
+     If you have doubts on how to access the information because pointers
+     scare you, you just have to do:
+
+       const int *my_font_sizes;
+       my_font_sizes = alfont_get_available_fixed_sizes(my_font);
+       /* first size */
+       int first_h = my_font_sizes[0];
+       /* second */
+       int second_h = my_font_sizes[1];
+
+     and so until my_font_sizes[x] is -1
+
+
+   int alfont_get_nof_available_fixed_sizes(ALFONT_FONT *f);
+     Returns the number of available fixed sizes, or -1 if a scalable font
+     is passed.
+
+
+   int alfont_get_char_extra_spacing(ALFONT_FONT *f);
+     Returns the character extra spacing, this is, an int number
+     that will be added to the space between characters, being the
+     min of it '0'.
+
+
+   void alfont_set_char_extra_spacing(ALFONT_FONT *f, int spacing);
+     Sets the character extra spacing, this is, an int number
+     that will be added to the space between characters, being the
+     min of it '0'.
+
+
+   For these functions:
+
+     int alfont_text_mode(int mode);
+
+     void alfont_textout_aa(BITMAP *bmp, ALFONT_FONT *f, const char *s, int x, int y, int color);
+     void alfont_textout(BITMAP *bmp, ALFONT_FONT *f, const char *s, int x, int y, int color);
+     void alfont_textout_aa_ex(BITMAP *bmp, ALFONT_FONT *f, const char *s, int x, int y, int color, int backg);
+     void alfont_textout_ex(BITMAP *bmp, ALFONT_FONT *f, const char *s, int x, int y, int color, int backg);
+
+     void alfont_textout_centre_aa(BITMAP *bmp, ALFONT_FONT *f, const char *s, int x, int y, int color);
+     void alfont_textout_centre(BITMAP *bmp, ALFONT_FONT *f, const char *s, int x, int y, int color);
+     void alfont_textout_centre_aa_ex(BITMAP *bmp, ALFONT_FONT *f, const char *s, int x, int y, int color, int backg);
+     void alfont_textout_centre_ex(BITMAP *bmp, ALFONT_FONT *f, const char *s, int x, int y, int color, int backg);
+
+     void alfont_textout_right_aa(BITMAP *bmp, ALFONT_FONT *f, const char *s, int x, int y, int color);
+     void alfont_textout_right(BITMAP *bmp, ALFONT_FONT *f, const char *s, int x, int y, int color);
+     void alfont_textout_right_aa_ex(BITMAP *bmp, ALFONT_FONT *f, const char *s, int x, int y, int color, int backg);
+     void alfont_textout_right_ex(BITMAP *bmp, ALFONT_FONT *f, const char *s, int x, int y, int color, int backg);
+
+     void alfont_textprintf(BITMAP *bmp, ALFONT_FONT *f, int x, int y, int color, const char *format, ...);
+     void alfont_textprintf_aa(BITMAP *bmp, ALFONT_FONT *f, int x, int y, int color, const char *format, ...);
+     void alfont_textprintf_ex(BITMAP *bmp, ALFONT_FONT *f, int x, int y, int color, int backg, const char *format, ...);
+     void alfont_textprintf_aa_ex(BITMAP *bmp, ALFONT_FONT *f, int x, int y, int color, int backg, const char *format, ...);
+
+     void alfont_textprintf_centre(BITMAP *bmp, ALFONT_FONT *f, int x, int y, int color, const char *format, ...);
+     void alfont_textprintf_centre_aa(BITMAP *bmp, ALFONT_FONT *f, int x, int y, int color, const char *format, ...);
+     void alfont_textprintf_centre_ex(BITMAP *bmp, ALFONT_FONT *f, int x, int y, int color, int backg, const char *format, ...);
+     void alfont_textprintf_centre_aa_ex(BITMAP *bmp, ALFONT_FONT *f, int x, int y, int color, int backg, const char *format, ...);
+
+     void alfont_textprintf_right(BITMAP *bmp, ALFONT_FONT *f, int x, int y, int color, const char *format, ...);
+     void alfont_textprintf_right_aa(BITMAP *bmp, ALFONT_FONT *f, int x, int y, int color, const char *format, ...);
+     void alfont_textprintf_right_ex(BITMAP *bmp, ALFONT_FONT *f, int x, int y, int color, int backg, const char *format, ...);
+     void alfont_textprintf_right_aa_ex(BITMAP *bmp, ALFONT_FONT *f, int x, int y, int color, int backg, const char *format, ...);
+
+     int alfont_text_height(ALFONT_FONT *f);
+     int alfont_text_length(ALFONT_FONT *f, const char *str);
+
+     See allegro ones. The only difference is the suffix "_aa" that means
+     antialiased. Bear in mind antialiased operations are a lot slower than
+     monochrome ones. Also some old font formats, like PCF do not support
+     antialiasing.
+     Notice also the "_ex" suffix that adds a 'backg' parameter, which is the
+     background color, avoiding that way the use of alfont_textmode().
+
+     In fact, the speed from faster to slower are (being 100% the speed
+     of the fatest one):
+
+     Bliting over screen:
+       Monochrome, transparent textmode   (100%)
+       Monochrome, opaque textmode        (63%)
+       Antialiased, opaque textmode       (53%)
+       Antialiased, transparent textmode  (6%)
+
+     Blitting over memory bitmap:
+       Monochrome, transparent textmode   (91%)
+       Monochrome, opaque textmode        (50%)
+       Antialiased, opaque textmode       (47%)
+       Antialiased, transparent textmode  (20%)
+
+     being the Antialiased opaque mode a lot faster than the Antialiased
+     transparent mode (since this last one uses allegro blenders). That's
+     also the reason of why this last one works A LOT better over memory
+     bitmaps (implies read operations).
+

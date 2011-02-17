@@ -1,0 +1,5 @@
+Authors
+-------
+
+Javier Gonzalez - Made the main API
+Doug Eleveld - Made many speed improvements to the library
