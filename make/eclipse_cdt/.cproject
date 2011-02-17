@@ -46,7 +46,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="seedgen|dependencies|bin|seedgen/SEED_PROTOS.H|seedgen/RAND.C|seedgen/MAIN.C|Default|Debug|tools|cMouse.h|cMouse.cpp|mentat/cOrdosMentat.h|mentat/cOrdosMentat.cpp|mentat/cHarkonnenMentat.h|mentat/cHarkonnenMentat.cpp|mentat/cBenegesMentat.h|mentat/cBenegesMentat.cpp|mentat/cAtreidesMentat.h|mentat/cAtreidesMentat.cpp|cMMEAllegro.h|cMMEAllegro.cpp|cEventManager.h|cEventManager.cpp|hwprof.h|hwprof.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="dune2themaker|seedgen|dependencies|bin|seedgen/SEED_PROTOS.H|seedgen/RAND.C|seedgen/MAIN.C|Default|Debug|tools|cMouse.h|cMouse.cpp|mentat/cOrdosMentat.h|mentat/cOrdosMentat.cpp|mentat/cHarkonnenMentat.h|mentat/cHarkonnenMentat.cpp|mentat/cBenegesMentat.h|mentat/cBenegesMentat.cpp|mentat/cAtreidesMentat.h|mentat/cAtreidesMentat.cpp|cMMEAllegro.h|cMMEAllegro.cpp|cEventManager.h|cEventManager.cpp|hwprof.h|hwprof.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -766,7 +766,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="seedgen|dependencies|bin|seedgen/SEED_PROTOS.H|seedgen/RAND.C|seedgen/MAIN.C|Default|Debug|mentat/cBenegesMentat.cpp|tools|hwprof.h|hwprof.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="dune2themaker|seedgen|dependencies|bin|seedgen/SEED_PROTOS.H|seedgen/RAND.C|seedgen/MAIN.C|Default|Debug|mentat/cBenegesMentat.cpp|tools|hwprof.h|hwprof.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
