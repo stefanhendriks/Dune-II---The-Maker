@@ -20,22 +20,22 @@ mkdir bin\campaign\maps
 mkdir bin\campaign\maps\seed
 mkdir bin\campaign\briefings
 echo 4. Copying campaign files
-copy skeleton\campaign\atreides\*.* bin\campaign\atreides
-copy skeleton\campaign\ordos\*.* bin\campaign\ordos
-copy skeleton\campaign\harkonnen\*.* bin\campaign\harkonnen
-copy skeleton\campaign\maps\*.* bin\campaign\maps
-copy skeleton\campaign\maps\seed\*.* bin\campaign\maps\seed
-copy skeleton\campaign\briefings\*.* bin\campaign\briefings
-copy skeleton\campaign\info.txt bin\campaign\info.txt
+copy resources\campaign\atreides\*.* bin\campaign\atreides
+copy resources\campaign\ordos\*.* bin\campaign\ordos
+copy resources\campaign\harkonnen\*.* bin\campaign\harkonnen
+copy resources\campaign\maps\*.* bin\campaign\maps
+copy resources\campaign\maps\seed\*.* bin\campaign\maps\seed
+copy resources\campaign\briefings\*.* bin\campaign\briefings
+copy resources\campaign\info.txt bin\campaign\info.txt
 echo 5. Creating new data directory
 mkdir bin\data
 mkdir bin\data\scenes
 echo 6. Copying data files
-copy skeleton\data\*.dat bin\data
-copy skeleton\data\*.fon bin\data
-copy skeleton\data\*.ttf bin\data
+copy resources\data\*.dat bin\data
+copy resources\data\*.fon bin\data
+copy resources\data\*.ttf bin\data
 echo 7. Copying scenes
-copy skeleton\data\scenes\*.* bin\data\scenes
+copy resources\data\scenes\*.* bin\data\scenes
 echo 8. Create save game directories
 mkdir bin\save
 mkdir bin\save\atreides
@@ -44,14 +44,14 @@ mkdir bin\save\ordos
 mkdir bin\save\skirmish
 echo 9. Create skirmish directory
 mkdir bin\skirmish
-copy skeleton\skirmish\*.ini bin\skirmish
+copy resources\skirmish\*.ini bin\skirmish
 echo 10. Copying dll files
-copy skeleton\dll\mingw32\*.* bin
+copy resources\dll\mingw32\*.* bin
 echo 11. Copy executable from %1
 copy Default\*.exe bin
 echo 12. Copy game rules file (game.ini)
-copy skeleton\game.ini bin
+copy resources\game.ini bin
 echo 13. Copy txt files
-copy skeleton\*.txt bin
+copy resources\*.txt bin
 echo Done.
 pause

@@ -13,10 +13,16 @@
 // DATA HEADER FILES
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-#include "../data/gfxdata.h"					// general gfx
-#include "../data/gfxaudio.h"                   // audio (sounds and music , midi)
-#include "../data/gfxinter.h"                  	// sidebar/downbar gfx
-#include "../data/gfxworld.h"                  	// world / regions gfx
-#include "../data/gfxmentat.h"                  // mentat gfx
+
+// general gfx
+#include "data/gfxdata.h"
+// audio (sounds and midi music)
+#include "data/gfxaudio.h"
+// sidebar/downbar gfx
+#include "data/gfxinter.h"
+// world / regions gfx
+#include "data/gfxworld.h"
+// mentat gfx
+#include "data/gfxmentat.h"
 
 #endif /* DATA_H_ */
