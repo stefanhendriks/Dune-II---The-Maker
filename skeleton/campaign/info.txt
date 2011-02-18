@@ -1,6 +1,0 @@
-in this file each house has a campaign, in a sub-directory.
-
-Every directory contains INI instruction files, which will 
-be 'executed' after finishing that mission.
-
-MISSION1.INI will be executed after MISSION 1 in the game is finished.
