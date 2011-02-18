@@ -1,0 +1,3 @@
+This is a WIP version. This means it is unstable and should be only used for testing purposes.
+WIP versions use a DEVELOPER PROFILE for game rules. This means the player (and AI) can build
+exceptionally fast. The costs remain the same.
