@@ -60,7 +60,7 @@ void cGame::init() {
 	paths_created=0;
 	hover_unit=-1;
 
-    state = GAME_MENU;
+    state = INMENU;
 
     iWinQuota=-1;              // > 0 means, get this to win the mission, else, destroy all!
 
@@ -257,7 +257,7 @@ void cGame::think_winlose()
     // On succes...
     if (bSucces)
     {
-        state = GAME_WINNING;
+        state = WINNING;
 
         shake_x=0;
         shake_y=0;
@@ -276,7 +276,7 @@ void cGame::think_winlose()
 
     if (bFailed)
     {
-        state = GAME_LOSING;
+        state = LOSING;
 
         shake_x=0;
         shake_y=0;
@@ -745,7 +745,7 @@ void cGame::mentat(int iType)
             {
                 // head back to choose house
                 iMentatSpeak=-1; // prepare speaking
-                //state = GAME_HOUSE;
+                //state = HOUSE;
             }
 
         // YES/PROCEED
@@ -753,10 +753,10 @@ void cGame::mentat(int iType)
         if ((mouse_x > 446 && mouse_x < 619) && (mouse_y >423 && mouse_y < 468))
             if (cMouse::getInstance()->isLeftButtonClicked())
             {
-                if (isState(GAME_BRIEFING))
+                if (isState(BRIEFING))
                 {
                 // proceed, play mission
-                state = GAME_PLAYING;
+                state = PLAYING;
 
                 // CENTER MOUSE
                 position_mouse(320, 240);
@@ -765,18 +765,18 @@ void cGame::mentat(int iType)
 
                 playMusicByType(MUSIC_PEACE);
                 }
-                else if (state == GAME_WINBRIEF)
+                else if (state == WINBRIEF)
                 {
                 //
 					if (bSkirmish)
 					{
-						state = GAME_SETUPSKIRMISH;
+						state = SETUPSKIRMISH;
 						playMusicByType(MUSIC_MENU);
 					}
 					else
 					{
 
-                    state = GAME_REGION;
+                    state = REGION;
                     REGION_SETUP(game.iMission, game.iHouse);
 
 
@@ -789,19 +789,19 @@ void cGame::mentat(int iType)
 
                     bFadeOut=true;
                 }
-                else if (state == GAME_LOSEBRIEF)
+                else if (state == LOSEBRIEF)
                 {
                 //
 					if (bSkirmish)
 					{
-						state = GAME_SETUPSKIRMISH;
+						state = SETUPSKIRMISH;
 						playMusicByType(MUSIC_MENU);
 					}
 					else
 					{
 						if (game.iMission > 1)
 						{
-							state = GAME_REGION;
+							state = REGION;
 
 							game.iMission--; // we did not win
 							REGION_SETUP(game.iMission, game.iHouse);
@@ -811,7 +811,7 @@ void cGame::mentat(int iType)
 						}
 						else
 						{
-							state = GAME_BRIEFING;
+							state = BRIEFING;
 							playMusicByType(MUSIC_BRIEFING);
 						}
 
@@ -888,7 +888,7 @@ void cGame::menu()
 
 		if (cMouse::getInstance()->isLeftButtonClicked())
         {
-			state = GAME_HOUSE; // select house
+			state = HOUSE; // select house
             bFadeOut=true;
         }
 
@@ -910,7 +910,7 @@ void cGame::menu()
 
         if (cMouse::getInstance()->isLeftButtonClicked())
         {
-            game.state = GAME_SETUPSKIRMISH;
+            game.state = SETUPSKIRMISH;
             bFadeOut=true;
             INI_PRESCAN_SKIRMISH();
 
@@ -942,7 +942,7 @@ void cGame::menu()
 
         if (cMouse::getInstance()->isLeftButtonClicked())
         {
-            //game.state = GAME_SETUPSKIRMISH;
+            //game.state = SETUPSKIRMISH;
             bFadeOut=true;
 
 			// check if the game can be server or client
@@ -967,7 +967,7 @@ void cGame::menu()
 
         if (cMouse::getInstance()->isLeftButtonClicked())
         {
-//            game.state = GAME_SETUPSKIRMISH;
+//            game.state = SETUPSKIRMISH;
             bFadeOut=true;
         }
 
@@ -989,7 +989,7 @@ void cGame::menu()
 
         if (cMouse::getInstance()->isLeftButtonClicked())
         {
-//            game.state = GAME_SETUPSKIRMISH;
+//            game.state = SETUPSKIRMISH;
             bFadeOut=true;
         }
 
@@ -1532,7 +1532,7 @@ void cGame::setup_skirmish()
         if (cMouse::getInstance()->isLeftButtonClicked())
         {
             bFadeOut=true;
-            state = GAME_MENU;
+            state = INMENU;
         }
     }
 
@@ -1728,7 +1728,7 @@ void cGame::setup_skirmish()
 		// TODO: spawn a few worms
 		iHouse=player[HUMAN].getHouse();
 		iMission=9; // high tech level (TODO: make this customizable)
-		state = GAME_PLAYING;
+		state = PLAYING;
 
 		game.setup_players();
 		assert(player[HUMAN].getItemBuilder() != NULL);
@@ -1785,7 +1785,7 @@ void cGame::house() {
 
             LOAD_SCENE("platr"); // load planet of atreides
 
-			state = GAME_TELLHOUSE;
+			state = TELLHOUSE;
             iMentatSpeak=-1;
             bFadeOut=true;
         }
@@ -1806,7 +1806,7 @@ void cGame::house() {
 
             LOAD_SCENE("plord"); // load planet of ordos
 
-			state = GAME_TELLHOUSE;
+			state = TELLHOUSE;
             iMentatSpeak=-1;
             bFadeOut=true;
 		}
@@ -1827,7 +1827,7 @@ void cGame::house() {
 
             LOAD_SCENE("plhar"); // load planet of harkonnen
 
-			state = GAME_TELLHOUSE;
+			state = TELLHOUSE;
             iMentatSpeak=-1;
             bFadeOut=true;
 		}
@@ -1872,13 +1872,13 @@ void cGame::preparementat(bool bTellHouse)
 	}
 	else
 	{
-        if (state == GAME_BRIEFING)
+        if (state == BRIEFING)
         {
         	game.setup_players();
 			INI_Load_scenario(iHouse, iRegion);
 			INI_LOAD_BRIEFING(iHouse, iRegion, INI_BRIEFING);
         }
-        else if (state == GAME_WINBRIEF)
+        else if (state == WINBRIEF)
         {
             if (rnd(100) < 50)
                 LOAD_SCENE("win01"); // ltank
@@ -1887,7 +1887,7 @@ void cGame::preparementat(bool bTellHouse)
 
             INI_LOAD_BRIEFING(iHouse, iRegion, INI_WIN);
         }
-        else if (state == GAME_LOSEBRIEF)
+        else if (state == LOSEBRIEF)
         {
             if (rnd(100) < 50)
                 LOAD_SCENE("lose01"); // ltank
@@ -1945,7 +1945,7 @@ void cGame::tellhouse()
             {
                 // head back to choose house
                 iHouse=-1;
-                state = GAME_HOUSE;
+                state = HOUSE;
                 bFadeOut=true;
             }
 
@@ -1955,7 +1955,7 @@ void cGame::tellhouse()
             if (cMouse::getInstance()->isLeftButtonClicked())
             {
                 // yes!
-                state = GAME_BRIEFING; // briefing
+                state = BRIEFING; // briefing
                 iMission = 1;
                 iRegion  = 1;
                 iMentatSpeak=-1; // prepare speaking
@@ -2005,7 +2005,7 @@ void cGame::region()
     // 1. Show current conquered regions
     // 2. Show next progress + story (in message bar)
     // 3. Click next region
-    // 4. Set up region and go to GAME_BRIEFING, which will do the rest...-> fade out
+    // 4. Set up region and go to BRIEFING, which will do the rest...-> fade out
 
     select_palette(player[0].pal);
 
@@ -2242,7 +2242,7 @@ void cGame::region()
 
         game.mission_init();
 		game.iRegionState=0;
-        game.state = GAME_BRIEFING;
+        game.state = BRIEFING;
 		game.iRegion = iNewReg;
 		game.iMission++;						// FINALLY ADD MISSION NUMBER...
         //    iRegion++;
@@ -2419,43 +2419,43 @@ void cGame::shakeScreenAndBlitBuffer() {
 
 void cGame::runGameState() {
 	switch (state) {
-		case GAME_PLAYING:
+		case PLAYING:
 			combat();
 			break;
-		case GAME_BRIEFING:
+		case BRIEFING:
 			if (iMentatSpeak == -1) {
 				preparementat(false);
 			}
 			mentat(iHouse);
 			break;
-		case GAME_SETUPSKIRMISH:
+		case SETUPSKIRMISH:
 			setup_skirmish();
 			break;
-		case GAME_MENU:
+		case INMENU:
 			menu();
 			break;
-		case GAME_REGION:
+		case REGION:
 			region();
 			break;
-		case GAME_HOUSE:
+		case HOUSE:
 			house();
 			break;
-		case GAME_TELLHOUSE:
+		case TELLHOUSE:
 			tellhouse();
 			break;
-		case GAME_WINNING:
+		case WINNING:
 			winning();
 			break;
-		case GAME_LOSING:
+		case LOSING:
 			losing();
 			break;
-		case GAME_WINBRIEF:
+		case WINBRIEF:
 			if (iMentatSpeak == -1) {
 				preparementat(false);
 			}
 			mentat(iHouse);
 			break;
-		case GAME_LOSEBRIEF:
+		case LOSEBRIEF:
 			if (iMentatSpeak == -1) {
 				preparementat(false);
 			}
@@ -2893,7 +2893,7 @@ bool cGame::setupGame() {
 
 	game.bPlaying = true;
 	game.screenshot = 0;
-	game.state = -1;
+	game.state = INITIAL;
 
 	// Mentat class pointer set at null
 	Mentat = NULL;
@@ -2977,10 +2977,10 @@ void cGame::setup_players() {
 	interactionManager = new cInteractionManager(&player[HUMAN]);
 }
 
-bool cGame::isState(int thisState) {
-	return (state == thisState);
+bool cGame::isState(GameState theState) {
+	return (state == theState);
 }
 
-void cGame::setState(int thisState) {
-	state = thisState;
+void cGame::setState(GameState theState) {
+	state = theState;
 }

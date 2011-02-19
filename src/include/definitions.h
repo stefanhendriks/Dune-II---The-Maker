@@ -89,24 +89,6 @@
 #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
 //#define HOUSE_SLOTS       10      // amount of House 'types'
 
-// Game states (state machine)
-#define GAME_OVER         0      // game over
-#define GAME_MENU         1      // in a menu
-#define GAME_PLAYING      2      // playing the actual game
-#define GAME_BRIEFING     3      // doing some briefing
-#define GAME_EDITING      4      // running the editor
-#define GAME_OPTIONS	  5		 // options menu
-#define GAME_REGION		  6		 // select a region
-#define GAME_HOUSE		  8		 // pick a house
-#define GAME_INTRO	      9
-#define GAME_TELLHOUSE	 10		 // tell about the house
-#define GAME_WINNING     11      // when winning, do some cool animation
-#define GAME_WINBRIEF    12      // mentat chatter when won the mission
-#define GAME_LOSEBRIEF   13      // briefing when losing
-#define GAME_LOSING      14      // when  losing, do something cool
-#define GAME_SKIRMISH    15      // playing a skirmish mission!
-#define GAME_SETUPSKIRMISH 16    // set up a skirmish game
-
 // FOR OPTIONS:
 
 // GAME (MENU) FLAGS: (used when GAME_MENU)

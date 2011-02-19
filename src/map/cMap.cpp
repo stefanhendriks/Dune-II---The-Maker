@@ -297,20 +297,7 @@ void cMap::clear_spot(int c, int size, int player)
 
 
 	   //draw the cells
-
-
-
-	   /*
-	   if (game.state == GAME_PLAYING)
-	   {
-	   char msg[255];
-	   sprintf(msg, "X %d, Y %d -> CX %d, CY = %d", x, y, cell_x, cell_y);
-	   logbook(msg);
-	   }*/
-
        int cl = iCellMake(cell_x, cell_y);
-
-
 
        if (iVisible[cl][player] == false)
        {

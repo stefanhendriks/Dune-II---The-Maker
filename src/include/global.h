@@ -8,7 +8,6 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
-// actual source headers                        - ORDER
 #include "enums.h"
 #include "../utils/cLog.h"							// logger
 #include "../timers.h"							/** declare correct functions at compile time here **/

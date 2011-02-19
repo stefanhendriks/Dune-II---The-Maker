@@ -46,7 +46,7 @@ void cTimeManager::handleTimerFPS() {
 	{
 		gameTime++;
 
-		if (game.isState(GAME_PLAYING))
+		if (game.isState(PLAYING))
 		{
 			game.paths_created = 0;
 
@@ -132,7 +132,7 @@ void cTimeManager::handleTimerGlobal() {
 		}
 
 		// THINKING ONLY WHEN PLAYING / COMBAT
-		if (game.isState(GAME_PLAYING)) {
+		if (game.isState(PLAYING)) {
 
 			// structures think
 			for (int i=0; i < MAX_STRUCTURES; i++)
@@ -219,7 +219,7 @@ void cTimeManager::handleTimerGlobal() {
 
 		}
 
-		if (game.isState(GAME_WINNING))
+		if (game.isState(WINNING))
 		{
 
 		}
@@ -246,7 +246,7 @@ void cTimeManager::handleTimerUnits() {
 
 	while (timerUnits > 0)
 	{
-		if (game.isState(GAME_PLAYING))
+		if (game.isState(PLAYING))
 		{
 			// units think
 			for (int i=0; i < MAX_UNITS; i++)
