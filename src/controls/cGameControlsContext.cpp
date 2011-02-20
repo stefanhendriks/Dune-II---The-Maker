@@ -38,14 +38,14 @@ void cGameControlsContext::determineMouseCell() {
 		return;
 	}
 
-	if (mouse->getX() > (game.screen_x - 128)) {
-		if (mouse->getY() > (game.screen_y - 128)) {
+	if (mouse->getX() > (game.getScreenResolution()->getWidth() - 128)) {
+		if (mouse->getY() > (game.getScreenResolution()->getHeight() - 128)) {
 			mouseCell = MOUSECELL_MINIMAP ; // on minimap
 			return;
 		}
 	}
 
-	if (mouse->getX() > (game.screen_x - 160)) {
+	if (mouse->getX() > (game.getScreenResolution()->getWidth() - 160)) {
 		mouseCell = -3 ; // on sidebar
 		return;
 	}

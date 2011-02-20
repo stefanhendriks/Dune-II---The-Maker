@@ -14,6 +14,13 @@ cScreenResolution::cScreenResolution(int theWidth, int theHeight) {
 	usable = false;
 }
 
+cScreenResolution::cScreenResolution() {
+	tested = false;
+	usable = false;
+	width = -1;
+	height = -1;
+}
+
 cScreenResolution::~cScreenResolution() {
 }
 

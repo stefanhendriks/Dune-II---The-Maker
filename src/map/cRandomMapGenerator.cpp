@@ -100,7 +100,7 @@ void cRandomMapGenerator::generateRandomMap() {
 
 		  // blit on screen
 		  rectfill(bmp_screen, 216, 225, 216+iProgress, 257, makecol(255,0,0));
-		  blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+		  blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 
 	  }
 
@@ -108,7 +108,7 @@ void cRandomMapGenerator::generateRandomMap() {
 	  if (key[KEY_F11])
 	  {
 		  char filename[25];
-		  sprintf(filename, "%dx%d_%d.bmp", game.screen_x, game.screen_y, game.screenshot);
+		  sprintf(filename, "%dx%d_%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
 		  save_bmp(filename, bmp_screen, general_palette);
 		  game.screenshot++;
 	  }
@@ -120,20 +120,20 @@ void cRandomMapGenerator::generateRandomMap() {
 
 	// blit on screen
 	rectfill(bmp_screen, 216, 225, 216+iProgress, 257, makecol(255,0,0));
-	blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+	blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 
 	mapEditor.removeSingleRockSpots();
 
 
 	// blit on screen
 	rectfill(bmp_screen, 216, 225, 216+iProgress, 257, makecol(255,0,0));
-	blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+	blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 
 	mapEditor.removeSingleRockSpots();
 
 	// blit on screen
 	rectfill(bmp_screen, 216, 225, 216+iProgress, 257, makecol(255,0,0));
-	blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+	blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 
 	while (a_spice > 0)
 	{
@@ -142,7 +142,7 @@ void cRandomMapGenerator::generateRandomMap() {
 	  a_spice--;
 	  // blit on screen
 	  rectfill(bmp_screen, 216, 225, 216+iProgress, 257, makecol(255,0,0));
-	  blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+	  blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 
 	}
 
@@ -154,7 +154,7 @@ void cRandomMapGenerator::generateRandomMap() {
 	  iProgress+=10;
 	  // blit on screen
 	  rectfill(bmp_screen, 216, 225, 216+iProgress, 257, makecol(255,0,0));
-	  blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+	  blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 	}
 
 	// end of map creation
@@ -164,7 +164,7 @@ void cRandomMapGenerator::generateRandomMap() {
 	// blit on screen
 	iProgress+=25;
 	rectfill(bmp_screen, 216, 225, 216+iProgress, 257, makecol(255,0,0));
-	blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+	blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 
 	clear_to_color(PreviewMap[0].terrain, makecol(0,0,0));
 
@@ -211,5 +211,5 @@ void cRandomMapGenerator::generateRandomMap() {
 	// blit on screen
 	iProgress=211;
 	rectfill(bmp_screen, 216, 225, 216+iProgress, 257, makecol(255,0,0));
-	blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+	blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 }

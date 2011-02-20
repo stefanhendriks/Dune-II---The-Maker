@@ -13,11 +13,11 @@ cBuildingListDrawer::cBuildingListDrawer() {
 	// room = screen_y - (top bar + bottom part)
 	// example: 600 - (40 + 278)
 	// and divide by 48 height
-	int height = game.screen_y - (40 + 278);
+	int height = game.getScreenResolution()->getHeight() - (40 + 278);
 
 	maximumItemsToDraw = (height / ICON_HEIGHT); // (-1?)
 
-	maxListYCoordinate = (game.screen_y - 315);
+	maxListYCoordinate = (game.getScreenResolution()->getHeight() - 315);
 }
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int startId) {
@@ -76,7 +76,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 
 
 int cBuildingListDrawer::getDrawX() {
-	return game.screen_x - 68;
+	return game.getScreenResolution()->getWidth() - 68;
 }
 
 int cBuildingListDrawer::getDrawY() {
@@ -96,8 +96,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 
 	int maxYClip = maxListYCoordinate;
 	int minYClip = 45;
-	int minXClip = game.screen_x - 69;
-	int maxXClip = game.screen_x;
+	int minXClip = game.getScreenResolution()->getWidth() - 69;
+	int maxXClip = game.getScreenResolution()->getWidth();
 	set_clip_rect(bmp_screen, minXClip, minYClip, maxXClip, maxYClip);
 
 	int end = startId + maximumItemsToDraw; // max 5 icons are showed at once
@@ -242,7 +242,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 		iDrawY+= ICON_HEIGHT;
 	}
 
-	set_clip_rect(bmp_screen, 0, 0, game.screen_x, game.screen_y);
+	set_clip_rect(bmp_screen, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 }
 
 /**

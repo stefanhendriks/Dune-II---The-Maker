@@ -10,8 +10,8 @@
 cMapCamera::cMapCamera() {
 	int widthOfSidebar = 160;
 	int heightOfOptions = 42;
-	viewportWidth=((game.screen_x-widthOfSidebar)/TILESIZE_WIDTH_PIXELS);
-	viewportHeight=((game.screen_y-heightOfOptions)/TILESIZE_HEIGHT_PIXELS)+1;
+	viewportWidth=((game.getScreenResolution()->getWidth() - widthOfSidebar) / TILESIZE_WIDTH_PIXELS);
+	viewportHeight=((game.getScreenResolution()->getHeight() - heightOfOptions) / TILESIZE_HEIGHT_PIXELS)+1;
 	x=y=1;
 	targetX=targetY=1;
 	TIMER_move=0;
@@ -120,14 +120,14 @@ void cMapCamera::thinkInteraction() {
 	}
 
 
-	if (mouse_x >= (game.screen_x-2) || key[KEY_RIGHT]) {
+	if (mouse_x >= (game.getScreenResolution()->getWidth()-2) || key[KEY_RIGHT]) {
 		if ((getEndX()) < (game.map_width-1)) {
 			x++;
 			mouse_tile = MOUSE_RIGHT;
 		}
 	}
 
-	if (mouse_y >= (game.screen_y-2) || key[KEY_DOWN]) {
+	if (mouse_y >= (game.getScreenResolution()->getHeight()-2) || key[KEY_DOWN]) {
 		if ((getEndY()) < (game.map_height-1)) {
 			y++;
 			mouse_tile = MOUSE_DOWN;

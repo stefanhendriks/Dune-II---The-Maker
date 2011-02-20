@@ -19,7 +19,7 @@ cGameDrawer::cGameDrawer(cPlayer * thePlayer) {
 	cMessageBar * messageBar = messageBarDrawer->getMessageBar();
 	messageBar->setX(200);
 	messageBar->setY(200);
-	messageBar->setWidth(game.screen_x - 160);
+	messageBar->setWidth(game.getScreenResolution()->getWidth() - 160);
 }
 
 cGameDrawer::~cGameDrawer() {

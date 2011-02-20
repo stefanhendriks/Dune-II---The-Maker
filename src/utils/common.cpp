@@ -1136,15 +1136,15 @@ int iCellOnScreen(int iCell)
     int iMapX = mapCamera->getX();
     int iMapY = mapCamera->getY();
 
-    int iEndX=iMapX + ((game.screen_x-160)/32); // width of sidebar is 160
-    int iEndY=iMapY + ((game.screen_y-42)/32)+1;  // height of upper bar is 42
+    int iEndX=iMapX + ((game.getScreenResolution()->getWidth()-160)/32); // width of sidebar is 160
+    int iEndY=iMapY + ((game.getScreenResolution()->getHeight()-42)/32)+1;  // height of upper bar is 42
 
     if ((iCellX >= iMapX && iCellX <= iEndX) && (iCellY >= iMapY && iCellY <= iEndY))
         return 0; // on screen
 
 
-    int iCalcX = iMapX + (((game.screen_x-160)/32) / 2);
-    int iCalcY = iMapY + (((game.screen_y-42)/32)+1)/2;
+    int iCalcX = iMapX + (((game.getScreenResolution()->getWidth()-160)/32) / 2);
+    int iCalcY = iMapY + (((game.getScreenResolution()->getHeight()-42)/32)+1)/2;
 
     // Calc from midst of screen till the cell x,y
     return ABS_length(iCellX, iCellY, iCalcX, iCalcY);
@@ -1413,8 +1413,8 @@ void Shimmer(int r, int x, int y)
 
        if (x1 < 0) x1=0;
        if (y1 < 0) y1=0;
-       if (x1 >= game.screen_x) x1 = game.screen_x-1;
-       if (y1 >= game.screen_y) y1 = game.screen_y-1;
+       if (x1 >= game.getScreenResolution()->getWidth()) x1 = game.getScreenResolution()->getWidth()-1;
+       if (y1 >= game.getScreenResolution()->getHeight()) y1 = game.getScreenResolution()->getHeight()-1;
 
        gp = getpixel(bmp_screen, x1,y1); // use this inline function to speed up things.
        // Now choose random spot to 'switch' with.
@@ -1423,8 +1423,8 @@ void Shimmer(int r, int x, int y)
 
        if (nx < 0) nx=0;
        if (ny < 0) ny=0;
-       if (nx >= game.screen_x) nx=game.screen_x-1;
-       if (ny >= game.screen_y) ny=game.screen_y-1;
+       if (nx >= game.getScreenResolution()->getHeight()) nx = game.getScreenResolution()->getHeight() - 1;
+       if (ny >= game.getScreenResolution()->getHeight()) ny= game.getScreenResolution()->getHeight()-1;
 
        tc = getpixel(bmp_screen, nx,ny);
 

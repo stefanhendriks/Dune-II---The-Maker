@@ -25,7 +25,7 @@ void cAllegroDrawer::drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP* 
 	int xPos = getCenteredXPosForBitmap(src);
 
 	// we want to know the 'center' first. This is done in the percentage
-	int wantedYPos = ((float)game.screen_y * percentage);
+	int wantedYPos = ((float)game.getScreenResolution()->getHeight() * percentage);
 
 	// we need to know the height of the src
 	int height = src->h;
@@ -53,12 +53,12 @@ int cAllegroDrawer::getCenteredXPosForBitmap(BITMAP *bmp) {
 	assert(bmp);
 	int width = bmp->w;
 	int halfOfWidth = width / 2;
-	return (game.screen_x / 2) - halfOfWidth;
+	return (game.getScreenResolution()->getWidth() / 2) - halfOfWidth;
 }
 
 int cAllegroDrawer::getCenteredYPosForBitmap(BITMAP *bmp) {
 	assert(bmp);
 	int height = bmp->h;
 	int halfOfHeight = height / 2;
-	return (game.screen_y / 2) - halfOfHeight;
+	return (game.getScreenResolution()->getHeight() / 2) - halfOfHeight;
 }

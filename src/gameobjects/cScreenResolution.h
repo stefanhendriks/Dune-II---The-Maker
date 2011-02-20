@@ -12,6 +12,7 @@ class cScreenResolution {
 
 	public:
 		cScreenResolution(int theWidth, int theHeight);
+		cScreenResolution();
 		~cScreenResolution();
 
 		int getWidth() { return width; }
@@ -22,6 +23,9 @@ class cScreenResolution {
 
 		void setTested(bool value) { tested = value; }
 		void setUsable(bool value) { usable = value; }
+
+		void setWidth(int value) { width = value; }
+		void setHeight(int value) { height = value; }
 
 		void printLog();
 

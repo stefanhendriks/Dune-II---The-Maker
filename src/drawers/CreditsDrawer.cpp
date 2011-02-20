@@ -162,7 +162,7 @@ void CreditsDrawer::draw() {
 	drawPreviousCredits();
 
 	// draw bmp on screen
-	draw_sprite(bmp_screen, bmp, game.screen_x - 120, 8);
+	draw_sprite(bmp_screen, bmp, game.getScreenResolution()->getWidth() - 120, 8);
 //	draw_sprite(bmp_screen, bmp, mouse_x - 120, mouse_y - 8);
 }
 

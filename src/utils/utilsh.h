@@ -8,11 +8,9 @@
 #ifndef UTILSH_H_
 #define UTILSH_H_
 
-// TODO: Rethink this, perhaps other global dir is needed
 #include "common.h"					// commonly used functions
 #include "../ini.h"							// INI loading
 
-#include "cScreenResolution.h"
 #include "cBestScreenResolutionFinder.h"
 
 #include "cCellCalculator.h"			    /** math with cells , with handy references to structures and units **/

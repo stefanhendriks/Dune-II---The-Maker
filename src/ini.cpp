@@ -2418,15 +2418,28 @@ void INI_Install_Game(string filename) {
       }
 
       if (section == INI_SETTINGS) {
+    	  cScreenResolution * screenResolution = NULL;
 		  switch (wordtype) {
 			  case WORD_FULLSCREEN:
 				  game.windowed = (INI_WordValueBOOL(linefeed) == false);
 				  break;
 			  case WORD_SCREENWIDTH:
-				  game.ini_screen_width=INI_WordValueINT(linefeed);
+				  int width = INI_WordValueINT(linefeed);
+				  screenResolution = game.getScreenResolutionFromIni();
+				  if (screenResolution == NULL) {
+					  screenResolution = new cScreenResolution();
+					  game.setScreenResolutionFromIni(screenResolution);
+				  }
+				  screenResolution->setWidth(width);
 				  break;
 			  case WORD_SCREENHEIGHT:
-				  game.ini_screen_height=INI_WordValueINT(linefeed);
+				  int height = INI_WordValueINT(linefeed);
+				  screenResolution = game.getScreenResolutionFromIni();
+				  if (screenResolution == NULL) {
+					  screenResolution = new cScreenResolution();
+					  game.setScreenResolutionFromIni(screenResolution);
+				  }
+				  screenResolution->setHeight(height);
 				  break;
 			  case WORD_MP3MUSIC:
 				  game.bMp3 = INI_WordValueBOOL(linefeed);

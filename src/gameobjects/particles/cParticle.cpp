@@ -80,10 +80,10 @@ void cParticle::draw()
     int dx = draw_x();
     int dy = draw_y();
 
-    if (dx < 0 || dx > game.screen_x)
+    if (dx < 0 || dx > game.getScreenResolution()->getWidth())
         return;
 
-    if (dy < 0 || dy > game.screen_y)
+    if (dy < 0 || dy > game.getScreenResolution()->getHeight())
         return;
 
     /*

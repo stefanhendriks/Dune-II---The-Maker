@@ -56,10 +56,10 @@ void cBullet::draw()
     int x = draw_x();
     int y = draw_y();
 
-    if (x < 0 || x > game.screen_x)
+    if (x < 0 || x > game.getScreenResolution()->getWidth())
         return;
 
-    if (y < 0 || y > game.screen_y)
+    if (y < 0 || y > game.getScreenResolution()->getHeight())
         return;
 
 

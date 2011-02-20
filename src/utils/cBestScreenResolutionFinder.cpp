@@ -130,16 +130,15 @@ bool cBestScreenResolutionFinder::aquireBestScreenResolutionFullScreen() {
 		if (screenResolution) {
 			if (screenResolution->isTested()) {
 				if (screenResolution->isUsable()) {
-					game.screen_x = screenResolution->getWidth();
-					game.screen_y = screenResolution->getHeight();
+					game.setScreenResolution(screenResolution);
 					int r;
 #ifdef UNIX
-					r = set_gfx_mode(GFX_AUTODETECT, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+					r = set_gfx_mode(GFX_AUTODETECT, screenResolution->getWidth(), screenResolution->getHeight(), screenResolution->getWidth(), game.screen_y);
 #else
-					r = set_gfx_mode(GFX_DIRECTX_ACCEL, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+					r = set_gfx_mode(GFX_DIRECTX_ACCEL, screenResolution->getWidth(), screenResolution->getHeight(), screenResolution->getWidth(), screenResolution->getHeight());
 #endif
 					char msg[255];
-					sprintf(msg, "setting up full screen mode with resolution %dx%d, result code: %d", game.screen_x, game.screen_y, r);
+					sprintf(msg, "setting up full screen mode with resolution %dx%d, result code: %d", screenResolution->getWidth(), screenResolution->getHeight(), r);
 					logbook(msg);
 					return (r == 0); // return true only if r==0
 				}

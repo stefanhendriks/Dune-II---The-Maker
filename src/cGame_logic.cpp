@@ -22,19 +22,17 @@
 #include "movie/cMovieDrawer.h"
 
 cGame::cGame() {
-	screen_x = 800;
-	screen_y = 600;
-	windowed = true;
-	// default INI screen width and height is not loaded
-	// if not loaded, we will try automatic setup
-	ini_screen_width = -1;
-	ini_screen_height = -1;
+	screenResolution = new cScreenResolution(800, 600);
+	screenResolutionFromIni = NULL;
 	moviePlayer = NULL;
+	windowed = true;
 }
 
 cGame::~cGame() {
 	if (moviePlayer) delete moviePlayer;
 	if (soundPlayer) delete soundPlayer;
+	if (screenResolution) delete screenResolution;
+	if (screenResolutionFromIni) delete screenResolutionFromIni;
 }
 
 void cGame::init() {
@@ -245,7 +243,7 @@ void cGame::think_winlose() {
 		playMusicByType(MUSIC_WIN);
 
 		// copy over
-		blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
+		blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 
 		draw_sprite(bmp_winlose, (BITMAP *) gfxinter[BMP_WINNING].dat, 77, 182);
 	} else if (!humanPlayerAlive) {
@@ -260,7 +258,7 @@ void cGame::think_winlose() {
 		playMusicByType(MUSIC_LOSE);
 
 		// copy over
-		blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
+		blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 
 		draw_sprite(bmp_winlose, (BITMAP *) gfxinter[BMP_LOSING].dat, 77, 182);
 
@@ -773,13 +771,11 @@ void cGame::menu() {
 	bool bFadeOut = false;
 
 	if (DEBUGGING) {
-
-		for (int x = 0; x < game.screen_x; x += 60) {
-			for (int y = 0; y < game.screen_y; y += 20) {
+		for (int x = 0; x < game.getScreenResolution()->getWidth(); x += 60) {
+			for (int y = 0; y < game.getScreenResolution()->getHeight(); y += 20) {
 				rect(bmp_screen, x, y, x + 50, y + 10, makecol(64, 64, 64));
 				putpixel(bmp_screen, x, y, makecol(255, 255, 255));
-				alfont_textprintf(bmp_screen, bene_font, x, y, makecol(32, 32,
-						32), "Debug");
+				alfont_textprintf(bmp_screen, bene_font, x, y, makecol(32, 32, 32), "Debug");
 			}
 
 		}
@@ -997,9 +993,9 @@ void cGame::setup_skirmish() {
 	bool bFadeOut = false;
 
 	draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0,
-			(game.screen_y * 0.72));
+			(game.getScreenResolution()->getHeight() * 0.72));
 
-	for (int dy = 0; dy < game.screen_y; dy += 2) {
+	for (int dy = 0; dy < game.getScreenResolution()->getHeight(); dy += 2) {
 		line(bmp_screen, 0, dy, 640, dy, makecol(0, 0, 0));
 	}
 
@@ -1032,7 +1028,7 @@ void cGame::setup_skirmish() {
 			if (PreviewMap[iSkirmishMap].name[0] != '\0') {
 				if (PreviewMap[iSkirmishMap].terrain) {
 					draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain,
-							game.screen_x - 129, 27);
+							game.getScreenResolution()->getWidth() - 129, 27);
 				}
 
 				for (int s = 0; s < 5; s++) {
@@ -1044,13 +1040,13 @@ void cGame::setup_skirmish() {
 				iStartingPoints = iSkirmishStartPoints;
 
 				// when mouse is hovering, draw it, else do not
-				if ((mouse_x >= (game.screen_x - 129) && mouse_x
-						< game.screen_x) && (mouse_y >= 27 && mouse_y < 160)) {
+				if ((mouse_x >= (game.screenResolution->getWidth() - 129) && mouse_x
+						< game.screenResolution->getWidth()) && (mouse_y >= 27 && mouse_y < 160)) {
 					if (PreviewMap[iSkirmishMap].name[0] != '\0') {
 						if (PreviewMap[iSkirmishMap].terrain) {
 							draw_sprite(bmp_screen,
 									PreviewMap[iSkirmishMap].terrain,
-									game.screen_x - 129, 27);
+									game.screenResolution->getWidth() - 129, 27);
 						}
 					}
 				} else {
@@ -1058,7 +1054,7 @@ void cGame::setup_skirmish() {
 						if (PreviewMap[iSkirmishMap].terrain) {
 							draw_sprite(bmp_screen,
 									(BITMAP *) gfxinter[BMP_UNKNOWNMAP].dat,
-									game.screen_x - 129, 27);
+									game.getScreenResolution()->getWidth() - 129, 27);
 						}
 					}
 				}
@@ -2259,18 +2255,18 @@ void cGame::shakeScreenAndBlitBuffer() {
 		shake_y = -abs(offset / 2) + rnd(offset);
 
 		blit(bmp_screen, bmp_throttle, 0, 0, 0 + shake_x, 0 + shake_y,
-				screen_x, screen_y);
-		blit(bmp_throttle, screen, 0, 0, 0, 0, screen_x, screen_y);
+				game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
+		blit(bmp_throttle, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 	} else {
 		// when fading
 		if (iAlphaScreen == 255)
-			blit(bmp_screen, screen, 0, 0, 0, 0, screen_x, screen_y);
+			blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 		else {
-			BITMAP *temp = create_bitmap(game.screen_x, game.screen_y);
+			BITMAP *temp = create_bitmap(game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 			assert(temp != NULL);
 			clear(temp);
 			fblend_trans(bmp_screen, temp, 0, 0, iAlphaScreen);
-			blit(temp, screen, 0, 0, 0, 0, screen_x, screen_y);
+			blit(temp, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 			destroy_bitmap(temp);
 		}
 
@@ -2372,17 +2368,16 @@ void cGame::shutdown() {
 }
 
 bool cGame::isResolutionInGameINIFoundAndSet() {
-	return game.ini_screen_height != -1 && game.ini_screen_width != -1;
+	cScreenResolution * resolution = getScreenResolutionFromIni();
+	return (resolution && resolution->getWidth() > -1 && resolution->getHeight() > -1);
 }
 
 void cGame::setScreenResolutionFromGameIniSettings() {
-	game.screen_x = game.ini_screen_width;
-	game.screen_y = game.ini_screen_height;
+	cScreenResolution * screenResolutionFromIni = getScreenResolutionFromIni();
+	setScreenResolution(screenResolutionFromIni);
 	char msg[255];
-	sprintf(msg, "Setting up %dx%d resolution from ini file.",
-			game.ini_screen_width, game.ini_screen_height);
-	cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO,
-			"Custom resolution in windowed mode.", msg);
+	sprintf(msg, "Setting up %dx%d resolution from ini file.", screenResolutionFromIni->getWidth(), screenResolutionFromIni->getHeight());
+	cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution in windowed mode.", msg);
 }
 
 bool cGame::setupGame() {
@@ -2517,21 +2512,18 @@ bool cGame::setupGame() {
 		//GFX_AUTODETECT_WINDOWED
 		int r = 0;
 #ifdef UNIX
-		r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+		r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 #else
-		r = set_gfx_mode(GFX_DIRECTX_WIN, game.screen_x, game.screen_y,
-				game.screen_x, game.screen_y);
+		r = set_gfx_mode(GFX_DIRECTX_WIN, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 #endif
 
 		char msg[255];
-		sprintf(
-				msg,
-				"Initializing graphics mode (windowed) with resolution %d by %d.",
-				game.screen_x, game.screen_y);
+		sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d.",
+				getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 
 		if (r > -1) {
 			logger->log(LOG_INFO, COMP_ALLEGRO, msg,
-					"Succesfully created window with graphics mode.",
+					"Successfully created window with graphics mode.",
 					OUTC_SUCCESS);
 		} else {
 			logger->log(
@@ -2545,10 +2537,9 @@ bool cGame::setupGame() {
 
 			// GFX_DIRECTX_ACCEL / GFX_AUTODETECT
 #ifdef UNIX
-			r = set_gfx_mode(GFX_XWINDOWS, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+			r = set_gfx_mode(GFX_XWINDOWS, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 #else
-			r = set_gfx_mode(GFX_DIRECTX_ACCEL, game.screen_x, game.screen_y,
-					game.screen_x, game.screen_y);
+			r = set_gfx_mode(GFX_DIRECTX_ACCEL, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 #endif
 
 			if (r > -1) {
@@ -2570,13 +2561,15 @@ bool cGame::setupGame() {
 		bool resolutionIsSetProperly = false;
 		if (isResolutionInGameINIFoundAndSet()) {
 			setScreenResolutionFromGameIniSettings();
-			r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, game.screen_x,
-					game.screen_y, game.screen_x, game.screen_y);
+			r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 			char msg[255];
+
 			sprintf(msg, "Setting up %dx%d resolution from ini file.",
-					game.ini_screen_width, game.ini_screen_height);
+					getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
+
 			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO,
 					"Custom resolution from ini file.", msg);
+
 			resolutionIsSetProperly = (r > -1);
 		}
 
@@ -2673,7 +2666,7 @@ bool cGame::setupGame() {
 	 Bitmap Creation
 	 ***/
 
-	bmp_screen = create_bitmap(game.screen_x, game.screen_y);
+	bmp_screen = create_bitmap(getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 
 	if (bmp_screen == NULL) {
 		allegro_message("Failed to create a memory bitmap");
@@ -2684,7 +2677,7 @@ bool cGame::setupGame() {
 		clear(bmp_screen);
 	}
 
-	bmp_throttle = create_bitmap(game.screen_x, game.screen_y);
+	bmp_throttle = create_bitmap(getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 
 	if (bmp_throttle == NULL) {
 		allegro_message("Failed to create a memory bitmap");
@@ -2694,7 +2687,7 @@ bool cGame::setupGame() {
 		logbook("Memory bitmap created: bmp_throttle");
 	}
 
-	bmp_winlose = create_bitmap(game.screen_x, game.screen_y);
+	bmp_winlose = create_bitmap(getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 
 	if (bmp_winlose == NULL) {
 		allegro_message("Failed to create a memory bitmap");
@@ -2704,7 +2697,7 @@ bool cGame::setupGame() {
 		logbook("Memory bitmap created: bmp_winlose");
 	}
 
-	bmp_fadeout = create_bitmap(game.screen_x, game.screen_y);
+	bmp_fadeout = create_bitmap(getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 
 	if (bmp_fadeout == NULL) {
 		allegro_message("Failed to create a memory bitmap");

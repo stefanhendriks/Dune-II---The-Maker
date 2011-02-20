@@ -198,9 +198,9 @@ void cMap::draw_bullets()
     if (bullet[i].bAlive)
     {
       if (bullet[i].draw_x() > -32 &&
-          bullet[i].draw_x() < game.screen_x &&
+          bullet[i].draw_x() < game.getScreenResolution()->getWidth() &&
           bullet[i].draw_y() > -32 &&
-          bullet[i].draw_y() < game.screen_y)
+          bullet[i].draw_y() < game.getScreenResolution()->getHeight())
           bullet[i].draw();
     }
   }
@@ -394,8 +394,8 @@ void cMap::draw_units()
             int drawx = unit[i].draw_x();
             int drawy = unit[i].draw_y();
 
-            if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.screen_x-160)) &&
-                ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.screen_y))
+            if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.getScreenResolution()->getWidth()-160)) &&
+                ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.getScreenResolution()->getHeight()))
             {
                 // draw
                 unit[i].draw();
@@ -424,8 +424,8 @@ void cMap::draw_units()
 
 			//line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(255,255,255));
 
-            if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.screen_x-160)) &&
-                ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.screen_y))
+            if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.getScreenResolution()->getWidth()-160)) &&
+                ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.getScreenResolution()->getHeight()))
             {
 
                 // draw
@@ -460,8 +460,8 @@ void cMap::draw_units()
 
 			//line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(255,255,255));
 
-            if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.screen_x-160)) &&
-                ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.screen_y))
+            if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.getScreenResolution()->getWidth()-160)) &&
+                ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.getScreenResolution()->getHeight()))
             {
 
                 // draw
@@ -533,8 +533,8 @@ void cMap::draw_units_2nd()
         if (unit[i].isValid())
         {
 
-            if (((unit[i].draw_x()+units[unit[i].iType].bmp_width) > 0 && unit[i].draw_x() < game.screen_x) &&
-                ((unit[i].draw_y()+units[unit[i].iType].bmp_height) > 0 && unit[i].draw_y() < game.screen_y))
+            if (((unit[i].draw_x()+units[unit[i].iType].bmp_width) > 0 && unit[i].draw_x() < game.getScreenResolution()->getWidth()) &&
+                ((unit[i].draw_y()+units[unit[i].iType].bmp_height) > 0 && unit[i].draw_y() < game.getScreenResolution()->getHeight()))
             {
                 // Draw aircraft here
                 if (unit[i].iType == CARRYALL ||
@@ -561,8 +561,8 @@ void cMap::draw_think() {
 	// determine the width and height in cells
 	// this way we know the size of the viewport
 
-	int iEndX = mapCamera->getX() + ((game.screen_x - 160) / 32); // width of sidebar is 160
-	int iEndY = mapCamera->getY() + ((game.screen_y - 42) / 32) + 1; // height of upper bar is 42
+	int iEndX = mapCamera->getX() + ((game.getScreenResolution()->getWidth() - 160) / 32); // width of sidebar is 160
+	int iEndY = mapCamera->getY() + ((game.getScreenResolution()->getHeight() - 42) / 32) + 1; // height of upper bar is 42
 
 	// thinking for map (scrolling that is)
 	if (mouse_x <= 1 || key[KEY_LEFT]) {
@@ -577,13 +577,13 @@ void cMap::draw_think() {
 		}
 	}
 
-	if (mouse_x >= (game.screen_x - 2) || key[KEY_RIGHT]) {
+	if (mouse_x >= (game.getScreenResolution()->getWidth() - 2) || key[KEY_RIGHT]) {
 		if ((iEndX) < (game.map_width - 1)) {
 			mouse_tile = MOUSE_RIGHT;
 		}
 	}
 
-	if (mouse_y >= (game.screen_y - 2) || key[KEY_DOWN]) {
+	if (mouse_y >= (game.getScreenResolution()->getHeight() - 2) || key[KEY_DOWN]) {
 		if ((iEndY) < (game.map_height - 1)) {
 			mouse_tile = MOUSE_DOWN;
 		}

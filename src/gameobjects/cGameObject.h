@@ -29,7 +29,7 @@ class cGameObject {
 		int x;
 		int y;
 
-		int frame; // the frame to draw
+		int drawFrame;
 };
 
 #endif /* CGAMEOBJECT_H_ */

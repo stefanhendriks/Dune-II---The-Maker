@@ -24,7 +24,7 @@ cBuildingListFactory *cBuildingListFactory::getInstance() {
 }
 
 int cBuildingListFactory::getButtonDrawX() {
-	return game.screen_x - 127;
+	return game.getScreenResolution()->getWidth() - 127;
 }
 
 int cBuildingListFactory::getButtonDrawYStart() {

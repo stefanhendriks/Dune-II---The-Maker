@@ -29,10 +29,6 @@ public:
     int iRegionConquer[MAX_REGIONS];
     int iRegionHouse[MAX_REGIONS];
     char cRegionText[MAX_REGIONS][255];
-    int screen_x;
-    int screen_y;
-    int ini_screen_width;
-    int ini_screen_height;
     bool bPlaySound;
     bool bMp3;
     bool bPlaying;
@@ -103,12 +99,28 @@ public:
 		moviePlayer = value;
 	}
 
+	cScreenResolution *getScreenResolution() {
+		return screenResolution;
+	}
+
+	void setScreenResolution(cScreenResolution * newScreenResolution) {
+		screenResolution = newScreenResolution;
+	}
+
+	cScreenResolution *getScreenResolutionFromIni() {
+		return screenResolutionFromIni;
+	}
+
+	void setScreenResolutionFromIni(cScreenResolution * newScreenResolution) {
+		screenResolutionFromIni = newScreenResolution;
+	}
 
     void draw_placeit();
     void combat_mouse();
     int getGroupNumberFromKeyboard();
     void destroyAllUnits(bool);
     void destroyAllStructures(bool);
+
 private:
     void poll();
     void combat();
@@ -131,6 +143,9 @@ private:
     bool playerHasMetQuota(int iPlayerId);
 
     GameState state;
+
+    cScreenResolution * screenResolution;
+    cScreenResolution * screenResolutionFromIni;
 
 	int iMaxVolume;
 

@@ -29,8 +29,8 @@ cMiniMapDrawer::~cMiniMapDrawer() {
 
 void cMiniMapDrawer::drawViewPortRectangle() {
 	 // Draw the magic rectangle (viewport)
-	 int iWidth=((game.screen_x-160)/32);
-	 int iHeight=((game.screen_y-42)/32)+1;
+	 int iWidth=((game.getScreenResolution()->getWidth()-160)/32);
+	 int iHeight=((game.getScreenResolution()->getWidth()-42)/32)+1;
 
 	 iWidth--;
 	 iHeight--;
@@ -38,11 +38,11 @@ void cMiniMapDrawer::drawViewPortRectangle() {
 }
 
 int cMiniMapDrawer::getDrawStartX() {
-	return game.screen_x - 129;
+	return game.getScreenResolution()->getWidth() - 129;
 }
 
 int cMiniMapDrawer::getDrawStartY() {
-	return game.screen_y - 129;
+	return game.getScreenResolution()->getHeight() - 129;
 }
 
 void cMiniMapDrawer::drawTerrain() {
