@@ -11,8 +11,6 @@
 // forward declr.
 class cMouse;
 
-#include "cAllegroDrawer.h"
-
 #include "cTextDrawer.h"
 
 #include "cMessageBarDrawer.h"
