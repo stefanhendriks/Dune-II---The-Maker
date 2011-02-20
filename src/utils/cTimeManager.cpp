@@ -116,12 +116,12 @@ void cTimeManager::handleTimerGlobal() {
 		game.think_movie();
 
 
-		if (drawManager) {
-			if (drawManager->getCreditsDrawer()) {
-				drawManager->getCreditsDrawer()->think();
+		if (gameDrawer) {
+			if (gameDrawer->getCreditsDrawer()) {
+				gameDrawer->getCreditsDrawer()->think();
 			}
-			if (drawManager->getMessageDrawer()) {
-				drawManager->getMessageDrawer()->think();
+			if (gameDrawer->getMessageDrawer()) {
+				gameDrawer->getMessageDrawer()->think();
 			}
 		}
 

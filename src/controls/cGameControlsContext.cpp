@@ -101,8 +101,8 @@ int cGameControlsContext::getMouseCellFromMiniMap() {
 		return -1;
 	}
 
-	int drawStartX = drawManager->getMiniMapDrawer()->getDrawStartX();
-	int drawStartY = drawManager->getMiniMapDrawer()->getDrawStartY();
+	int drawStartX = gameDrawer->getMiniMapDrawer()->getDrawStartX();
+	int drawStartY = gameDrawer->getMiniMapDrawer()->getDrawStartY();
 
 	// the minimap is 128x128 pixels at the bottom right of the screen.
 	int mouseMiniMapX = mouse_x - drawStartX;

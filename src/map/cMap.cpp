@@ -170,7 +170,7 @@ bool cMap::occupied(int iCll, int iUnitID)
 // do the static info thinking
 void cMap::think_minimap() {
 	// Draw static info
-	cMiniMapDrawer * miniMapDrawer = drawManager->getMiniMapDrawer();
+	cMiniMapDrawer * miniMapDrawer = gameDrawer->getMiniMapDrawer();
 	int iStatus = miniMapDrawer->getStatus();
 	int currentStaticFrame = miniMapDrawer->getStaticFrame();
 	if (iStatus < 0) {

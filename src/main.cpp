@@ -36,7 +36,7 @@ cRegion        				world[MAX_REGIONS];
 cMentat		   			*	Mentat = NULL;
 cTimeManager   				TimeManager;
 cStructureUtils 			structureUtils;
-cGameDrawer   			*	drawManager = NULL;
+cGameDrawer   			*	gameDrawer = NULL;
 cInteractionManager 	*	interactionManager = NULL;
 
 // Structs

@@ -300,8 +300,8 @@ cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *li
 	assert(list != NULL);
 	// starting draw coordinates
 
-	int iDrawX=drawManager->getSidebarDrawer()->getBuildingListDrawer()->getDrawX();
-	int iDrawY=drawManager->getSidebarDrawer()->getBuildingListDrawer()->getDrawY();
+	int iDrawX=gameDrawer->getSidebarDrawer()->getBuildingListDrawer()->getDrawX();
+	int iDrawY=gameDrawer->getSidebarDrawer()->getBuildingListDrawer()->getDrawY();
 
 	int startId = list->getScrollingOffset();
 	int end = startId + maximumItemsToDraw; // 5 icons in the list

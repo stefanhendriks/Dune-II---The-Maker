@@ -10,7 +10,7 @@
 cInteractionManager::cInteractionManager(cPlayer * thePlayer) {
 	assert(thePlayer);
 	sidebar = thePlayer->getSideBar();
-	miniMapDrawer = drawManager->getMiniMapDrawer();
+	miniMapDrawer = gameDrawer->getMiniMapDrawer();
 }
 
 cInteractionManager::~cInteractionManager() {

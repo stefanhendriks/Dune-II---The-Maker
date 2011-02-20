@@ -175,9 +175,9 @@ void cGame::mission_init() {
 
 	// instantiate the creditDrawer with the appropriate player. Only
 	// possible once game has been initialized and player has been created.
-	assert(drawManager);
-	assert(drawManager->getCreditsDrawer());
-	drawManager->getCreditsDrawer()->setCredits();
+	assert(gameDrawer);
+	assert(gameDrawer->getCreditsDrawer());
+	gameDrawer->getCreditsDrawer()->setCredits();
 }
 
 bool cGame::playerHasAnyStructures(int iPlayerId) {
@@ -528,8 +528,8 @@ void cGame::combat() {
 	// -----------------
 	bPlacedIt = bPlaceIt;
 
-	assert(drawManager);
-	drawManager->draw();
+	assert(gameDrawer);
+	gameDrawer->draw();
 	assert(interactionManager);
 	interactionManager->interact();
 
@@ -1907,7 +1907,7 @@ void cGame::region() {
 		if (iRegionScene == 0) {
 			REGION_SETUP(iMission, iHouse);
 			iRegionScene++;
-			drawManager->getMessageDrawer()->setMessage(
+			gameDrawer->getMessageDrawer()->setMessage(
 					"3 Houses have come to Dune.");
 			iRegionSceneAlpha = -5;
 		} else if (iRegionScene == 1) {
@@ -1915,9 +1915,9 @@ void cGame::region() {
 			set_trans_blender(0, 0, 0, iRegionSceneAlpha);
 			draw_trans_sprite(bmp_screen,
 					(BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0, 12);
-			char * cMessage = drawManager->getMessageDrawer()->getMessage();
+			char * cMessage = gameDrawer->getMessageDrawer()->getMessage();
 			if (cMessage[0] == '\0' && iRegionSceneAlpha >= 255) {
-				drawManager->getMessageDrawer()->setMessage(
+				gameDrawer->getMessageDrawer()->setMessage(
 						"To take control of the land.");
 				iRegionScene++;
 				iRegionSceneAlpha = -5;
@@ -1928,9 +1928,9 @@ void cGame::region() {
 			set_trans_blender(0, 0, 0, iRegionSceneAlpha);
 			draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat,
 					16, 73);
-			char * cMessage = drawManager->getMessageDrawer()->getMessage();
+			char * cMessage = gameDrawer->getMessageDrawer()->getMessage();
 			if (cMessage[0] == '\0' && iRegionSceneAlpha >= 255) {
-				drawManager->getMessageDrawer()->setMessage(
+				gameDrawer->getMessageDrawer()->setMessage(
 						"That has become divided.");
 				iRegionScene++;
 				iRegionSceneAlpha = -5;
@@ -1984,7 +1984,7 @@ void cGame::region() {
 				(480) - 64);
 	}
 
-	char * cMessage = drawManager->getMessageDrawer()->getMessage();
+	char * cMessage = gameDrawer->getMessageDrawer()->getMessage();
 	if (iRegionState == 2) {
 		// draw dune first
 		draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
@@ -1996,7 +1996,7 @@ void cGame::region() {
 			REGION_DRAW(i);
 
 		// Animate here (so add regions that are conquered)
-		char * cMessage = drawManager->getMessageDrawer()->getMessage();
+		char * cMessage = gameDrawer->getMessageDrawer()->getMessage();
 
 		bool bDone = true;
 		for (int i = 0; i < MAX_REGIONS; i++) {
@@ -2016,7 +2016,7 @@ void cGame::region() {
 							world[iRegNr].iAlpha = 1;
 
 							if (cRegionText[i][0] != '\0') {
-								drawManager->getMessageDrawer()->setMessage(
+								gameDrawer->getMessageDrawer()->setMessage(
 										cRegionText[i]);
 							}
 
@@ -2048,7 +2048,7 @@ void cGame::region() {
 
 		if (bDone && cMessage[0] == '\0') {
 			iRegionState++;
-			drawManager->getMessageDrawer()->setMessage(
+			gameDrawer->getMessageDrawer()->setMessage(
 					"Select your next region.");
 			//   allegro_message("done2");
 		}
@@ -2824,7 +2824,7 @@ bool cGame::setupGame() {
 	INSTALL_WORLD();
 
 	mapCamera = new cMapCamera();
-	drawManager = new cGameDrawer(&player[HUMAN]);
+	gameDrawer = new cGameDrawer(&player[HUMAN]);
 
 	mapUtils = new cMapUtils(&map);
 

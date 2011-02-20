@@ -68,7 +68,7 @@ void cSideBarDrawer::drawHouseGui(cPlayer * thePlayer) {
     // minimap at bottom right
     drawMinimap();
 
-    // draw options bar (todo: move to own options drawer and delegate in drawManager)
+    // draw options bar (todo: move to own options drawer and delegate in gameDrawer)
     drawOptionsBar();
 
 }
