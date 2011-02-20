@@ -1,6 +1,6 @@
 #include "../include/d2tmh.h"
 
-cDrawManager::cDrawManager(cPlayer * thePlayer) {
+cGameDrawer::cGameDrawer(cPlayer * thePlayer) {
 	assert(thePlayer);
 	player = thePlayer;
 	creditsDrawer = new CreditsDrawer(thePlayer);
@@ -22,7 +22,7 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) {
 	messageBar->setWidth(game.screen_x - 160);
 }
 
-cDrawManager::~cDrawManager() {
+cGameDrawer::~cGameDrawer() {
 	delete sidebarDrawer;
 	delete upgradeDrawer;
 	delete orderDrawer;
@@ -37,7 +37,7 @@ cDrawManager::~cDrawManager() {
 	player = NULL;
 }
 
-void cDrawManager::draw() {
+void cGameDrawer::draw() {
 	// MAP
 	assert(mapDrawer);
 	map.draw_think();
@@ -87,12 +87,12 @@ void cDrawManager::draw() {
 	drawMouse();
 }
 
-void cDrawManager::drawCredits() {
+void cGameDrawer::drawCredits() {
 	assert(creditsDrawer);
 	creditsDrawer->draw();
 }
 
-void cDrawManager::drawRallyPoint() {
+void cGameDrawer::drawRallyPoint() {
 	if (game.selected_structure > -1) {
 		cAbstractStructure * theStructure = structure[game.selected_structure];
 		int rallyPointCell = theStructure->getRallyPoint();
@@ -114,28 +114,28 @@ void cDrawManager::drawRallyPoint() {
 	}
 }
 
-int cDrawManager::getDrawXForCell(int cell) {
+int cGameDrawer::getDrawXForCell(int cell) {
 	int cellX = iCellGiveX(cell);
 	return (cellX * 32) - (mapCamera->getX() * 32);
 }
 
-int cDrawManager::getDrawYForCell(int cell) {
+int cGameDrawer::getDrawYForCell(int cell) {
 	int cellY = iCellGiveY(cell);
 	return (cellY * 32) - (mapCamera->getY() * 32) +42; // + 42 is the top bar (options/upgrade/credits)
 }
 
-void cDrawManager::drawOrderButton() {
+void cGameDrawer::drawOrderButton() {
 	// draw the order button
 	if (player->getSideBar()->getSelectedListID() == LIST_STARPORT) {
 		orderDrawer->drawOrderButton(player);
 	}
 }
 
-void cDrawManager::drawSidebar() {
+void cGameDrawer::drawSidebar() {
 	sidebarDrawer->drawSideBar(player);
 }
 
-void cDrawManager::drawUpgradeButton() {
+void cGameDrawer::drawUpgradeButton() {
 	// draw the upgrade button
 	int selectedListId = player->getSideBar()->getSelectedListID();
 	if (selectedListId > -1) {
@@ -144,7 +144,7 @@ void cDrawManager::drawUpgradeButton() {
 	}
 }
 
-void cDrawManager::drawStructurePlacing() {
+void cGameDrawer::drawStructurePlacing() {
 	if (game.bPlaceIt) {
 		// TODO: fix the placeItDrawer, it crashes the game now!
 		cBuildingListItem *itemToPlace = player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
@@ -155,13 +155,13 @@ void cDrawManager::drawStructurePlacing() {
 	}
 }
 
-void cDrawManager::drawMessage() {
+void cGameDrawer::drawMessage() {
 	assert(messageDrawer);
 	messageDrawer->draw();
 //	messageBarDrawer->drawMessageBar();
 }
 
-void cDrawManager::drawMouse() {
+void cGameDrawer::drawMouse() {
 	assert(mouseDrawer);
 	mouseDrawer->draw();
 	cGameControlsContext *context = player->getGameControlsContext();

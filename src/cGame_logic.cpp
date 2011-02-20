@@ -2824,7 +2824,7 @@ bool cGame::setupGame() {
 	INSTALL_WORLD();
 
 	mapCamera = new cMapCamera();
-	drawManager = new cDrawManager(&player[HUMAN]);
+	drawManager = new cGameDrawer(&player[HUMAN]);
 
 	mapUtils = new cMapUtils(&map);
 

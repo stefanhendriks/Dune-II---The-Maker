@@ -1,14 +1,14 @@
 /**
 	Class responsible for all drawing
 */
-#ifndef CDRAWMANAGER_H_
-#define CDRAWMANAGER_H_
+#ifndef CGAMEDRAWER_H_
+#define CGAMEDRAWER_H_
 
-class cDrawManager {
+class cGameDrawer {
 
 	public:
-		cDrawManager(cPlayer * thePlayer);
-		~cDrawManager();
+		cGameDrawer(cPlayer * thePlayer);
+		~cGameDrawer();
 
 		void draw();
 
