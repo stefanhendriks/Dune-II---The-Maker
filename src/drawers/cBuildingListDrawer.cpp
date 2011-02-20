@@ -14,7 +14,8 @@ cBuildingListDrawer::cBuildingListDrawer() {
 	// example: 600 - (40 + 278)
 	// and divide by 48 height
 	int height = game.screen_y - (40 + 278);
-	maximumItemsToDraw = (height / 48); // (-1?)
+
+	maximumItemsToDraw = (height / ICON_HEIGHT); // (-1?)
 
 	maxListYCoordinate = (game.screen_y - 315);
 }
@@ -238,7 +239,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 			rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, iColor);
 		}
 
-		iDrawY+=48;
+		iDrawY+= ICON_HEIGHT;
 	}
 
 	set_clip_rect(bmp_screen, 0, 0, game.screen_x, game.screen_y);
@@ -290,7 +291,7 @@ bool cBuildingListDrawer::isOverItemCoordinates_Boolean(int x, int y, int drawX,
 	if (y > maxListYCoordinate) {
 		return false;
 	}
-	if (x >= drawX && x <= (drawX + 64) && y >= drawY && y < (drawY + 48)) {
+	if (x >= drawX && x <= (drawX + 64) && y >= drawY && y < (drawY + ICON_HEIGHT)) {
 		return true;
 	}
 	return false;
@@ -314,7 +315,7 @@ cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *li
 			return item;
 		}
 
-		iDrawY+=48;
+		iDrawY+= ICON_HEIGHT;
 	}
 
 	return NULL;

@@ -33,10 +33,13 @@ class cMouse;
 #include "cPlaceItDrawer.h"
 
 #include "cMapDrawer.h"
+
 #include "cMiniMapDrawer.h"
 
 #include "cStructureDrawer.h"
 
 #include "cMouseDrawer.h"
+
+#include "cGameDrawer.h"
 
 #endif /* DRAWERSH_H_ */

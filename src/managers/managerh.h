@@ -10,7 +10,6 @@
 
 class cPlayer;
 
-#include "cGameDrawer.h"
 #include "cKeyboardManager.h"
 #include "cInteractionManager.h"
 

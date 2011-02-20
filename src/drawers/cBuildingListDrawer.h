@@ -30,6 +30,7 @@ private:
 	void drawListWithUnitsOrAbilities(cBuildingList *list, int listIDToDraw, int startId); // used for units or palace / starport
 
 	bool isOverItemCoordinates_Boolean(int x, int y, int drawX, int drawY);
+    static const int ICON_HEIGHT = 48;
 
 	// the list to draw
 	cBuildingList *list;
