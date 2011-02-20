@@ -1,10 +1,3 @@
-/*
- * cAllegroDrawer.h
- *
- *  Created on: 5 dec. 2010
- *      Author: Stefan
- */
-
 #ifndef CALLEGRODRAWER_H_
 #define CALLEGRODRAWER_H_
 
