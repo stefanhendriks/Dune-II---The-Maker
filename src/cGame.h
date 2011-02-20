@@ -10,14 +10,12 @@
 
   */
 
-// TODO: Clean this class up big time.
-
-
 class cGame {
 
 public:
 
 	cGame();
+	~cGame();
 
 	std::string game_filename;
 
@@ -56,8 +54,6 @@ public:
     bool bFadeSelectDir;
     int paths_created;
     int iMusicVolume;
-    int TIMER_movie;
-    int iMovieFrame;
     int shake_x;
     int shake_y;
     int TIMER_shake;
@@ -66,7 +62,6 @@ public:
     void think_winlose();
     void winning();
     void losing();
-    void think_movie();
     bool bPlaceIt;
     bool bPlacedIt;
     void setup_players();
@@ -91,15 +86,23 @@ public:
     void shutdown();
     bool isState(GameState theState);
     void setState(GameState theState);
-    int getMaxVolume()
-    {
-        return iMaxVolume;
-    }
 
-    cSoundPlayer *getSoundPlayer()
-    {
-        return soundPlayer;
-    }
+    int getMaxVolume() {
+		return iMaxVolume;
+	}
+
+	cSoundPlayer *getSoundPlayer() {
+		return soundPlayer;
+	}
+
+	cMoviePlayer *getMoviePlayer() {
+		return moviePlayer;
+	}
+
+	void setMoviePlayer(cMoviePlayer * value) {
+		moviePlayer = value;
+	}
+
 
     void draw_placeit();
     void combat_mouse();
@@ -119,7 +122,6 @@ private:
     void runGameState();
     void shakeScreenAndBlitBuffer();
     void handleTimeSlicing();
-    void draw_movie(int iType);
     bool isResolutionInGameINIFoundAndSet();
     void setScreenResolutionFromGameIniSettings();
 
@@ -133,5 +135,7 @@ private:
 	int iMaxVolume;
 
 	cSoundPlayer *soundPlayer;
+	cMoviePlayer *moviePlayer;
+
 };
 

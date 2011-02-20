@@ -62,7 +62,6 @@ DATAFILE *gfxaudio;		// audio
 DATAFILE *gfxinter;		// interface graphics
 DATAFILE *gfxworld;		// world/pieces graphics
 DATAFILE *gfxmentat;	// mentat graphics
-DATAFILE *gfxmovie;     // movie to be played (= scene = data file)
 
 // FONT stuff
 ALFONT_FONT *game_font; 	// arrakeen.fon

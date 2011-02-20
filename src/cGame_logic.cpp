@@ -18,6 +18,9 @@
 
 #include "include/d2tmh.h"
 
+#include "movie/cMoviePlayer.h"
+#include "movie/cMovieDrawer.h"
+
 cGame::cGame() {
 	screen_x = 800;
 	screen_y = 600;
@@ -26,6 +29,12 @@ cGame::cGame() {
 	// if not loaded, we will try automatic setup
 	ini_screen_width = -1;
 	ini_screen_height = -1;
+	moviePlayer = NULL;
+}
+
+cGame::~cGame() {
+	if (moviePlayer) delete moviePlayer;
+	if (soundPlayer) delete soundPlayer;
 }
 
 void cGame::init() {
@@ -93,9 +102,6 @@ void cGame::init() {
 
 	iMusicType = MUSIC_MENU;
 
-	TIMER_movie = 0;
-	iMovieFrame = -1;
-
 	map.init();
 
 	for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -153,9 +159,6 @@ void cGame::mission_init() {
 	shake_x = 0;
 	shake_y = 0;
 	TIMER_shake = 0;
-
-	TIMER_movie = 0;
-	iMovieFrame = -1;
 
 	map.init();
 
@@ -261,23 +264,6 @@ void cGame::think_winlose() {
 
 		draw_sprite(bmp_winlose, (BITMAP *) gfxinter[BMP_LOSING].dat, 77, 182);
 
-	}
-}
-
-// MOVIE: Play frames
-void cGame::think_movie() {
-	if (gfxmovie != NULL) {
-		TIMER_movie++;
-
-		if (TIMER_movie > 20) {
-			iMovieFrame++;
-
-			if (gfxmovie[iMovieFrame].type == DAT_END
-					|| gfxmovie[iMovieFrame].type != DAT_BITMAP) {
-				iMovieFrame = 0;
-			}
-			TIMER_movie = 0;
-		}
 	}
 }
 
@@ -541,7 +527,9 @@ void cGame::draw_mentat(int iType) {
 	select_palette(general_palette);
 
 	// movie
-	draw_movie(iType);
+	cMovieDrawer * movieDrawer = new cMovieDrawer(moviePlayer, bmp_screen);
+	movieDrawer->drawIfPlaying(256, 120);
+	delete movieDrawer;
 
 	// draw proper background
 	if (iType == ATREIDES)
@@ -2679,6 +2667,7 @@ bool cGame::setupGame() {
 				"Failed installing sound.", OUTC_FAILED);
 	}
 	soundPlayer = new cSoundPlayer(maxSounds);
+	moviePlayer = NULL;
 
 	/***
 	 Bitmap Creation
@@ -2783,8 +2772,6 @@ bool cGame::setupGame() {
 	} else {
 		logbook("Datafile hooked: gfxmentat.dat");
 	}
-
-	gfxmovie = NULL; // nothing loaded at start. This is done when loading a mission briefing.
 
 	// randomize timer
 	unsigned int t = (unsigned int) time(0);

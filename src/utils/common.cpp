@@ -14,6 +14,8 @@
 
 #include <math.h>
 
+#include "../movie/cMoviePlayer.h"
+
 namespace
 {
     const int PAN_CENTER = 128;
@@ -1439,24 +1441,29 @@ void Shimmer(int r, int x, int y)
 }
 
 void LOAD_SCENE(std::string scene) {
-	gfxmovie = NULL;
+	DATAFILE * gfxmovie = NULL;
 
 	char filename[PAN_CENTER];
 	sprintf(filename, "data/scenes/%s.dat", scene.c_str());
 
 	gfxmovie = load_datafile(filename);
 
+	cMoviePlayer * moviePlayer = game.getMoviePlayer();
+
 	if (gfxmovie != NULL) {
-		game.iMovieFrame=0;
-		char msg[VOLUME_MAX];
-		sprintf(msg, "Successful loaded scene [%s]", filename);
-		logbook(msg);
+		if (moviePlayer) {
+			game.setMoviePlayer(NULL);
+			delete moviePlayer;
+		}
+		moviePlayer = new cMoviePlayer(gfxmovie);
+		moviePlayer->setPlaying(true);
+		moviePlayer->setFrame(0);
+		game.setMoviePlayer(moviePlayer);
 	} else {
-		gfxmovie=NULL;
-		game.iMovieFrame=-1;
-		char msg[VOLUME_MAX];
-		sprintf(msg, "Failed to load scene [%s]", filename);
-		logbook(msg);
+		if (moviePlayer) {
+			game.setMoviePlayer(NULL);
+			delete moviePlayer;
+		}
 	}
 }
 
