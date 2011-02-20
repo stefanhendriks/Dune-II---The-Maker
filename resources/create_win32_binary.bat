@@ -1,5 +1,5 @@
 @echo off
-cd ..
+cd %D2TM_HOME%
 cls 
 echo.
 echo Prepare binary package (./bin) of D2TM. 
