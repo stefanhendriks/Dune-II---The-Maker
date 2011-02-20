@@ -1,13 +1,16 @@
-/*
- * cAllegroDrawer.cpp
- *
- *  Created on: 5 dec. 2010
- *      Author: Stefan
- */
+#include <assert.h>
 
-#include "../include/d2tmh.h"
+#include "allegroh.h"
+
+#include "../gameobjects/cScreenResolution.h"
+
+#include "cAllegroDrawer.h"
 
 cAllegroDrawer::cAllegroDrawer() {
+}
+
+cAllegroDrawer::cAllegroDrawer(cScreenResolution * theScreenResolution) {
+	screenResolution = theScreenResolution;
 }
 
 cAllegroDrawer::~cAllegroDrawer() {
@@ -25,7 +28,7 @@ void cAllegroDrawer::drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP* 
 	int xPos = getCenteredXPosForBitmap(src);
 
 	// we want to know the 'center' first. This is done in the percentage
-	int wantedYPos = ((float)game.getScreenResolution()->getHeight() * percentage);
+	int wantedYPos = ((float)screenResolution->getHeight() * percentage);
 
 	// we need to know the height of the src
 	int height = src->h;
@@ -53,12 +56,12 @@ int cAllegroDrawer::getCenteredXPosForBitmap(BITMAP *bmp) {
 	assert(bmp);
 	int width = bmp->w;
 	int halfOfWidth = width / 2;
-	return (game.getScreenResolution()->getWidth() / 2) - halfOfWidth;
+	return (screenResolution->getWidth() / 2) - halfOfWidth;
 }
 
 int cAllegroDrawer::getCenteredYPosForBitmap(BITMAP *bmp) {
 	assert(bmp);
 	int height = bmp->h;
 	int halfOfHeight = height / 2;
-	return (game.getScreenResolution()->getHeight() / 2) - halfOfHeight;
+	return (screenResolution->getHeight() / 2) - halfOfHeight;
 }

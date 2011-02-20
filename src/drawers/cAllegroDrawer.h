@@ -10,6 +10,7 @@
 
 class cAllegroDrawer {
 	public:
+		cAllegroDrawer(cScreenResolution * theScreenResolution);
 		cAllegroDrawer();
 		virtual ~cAllegroDrawer();
 
@@ -22,6 +23,9 @@ class cAllegroDrawer {
 	protected:
 		int getCenteredXPosForBitmap(BITMAP *bmp);
 		int getCenteredYPosForBitmap(BITMAP *bmp);
+
+	private:
+		cScreenResolution * screenResolution;
 };
 
 #endif /* CALLEGRODRAWER_H_ */

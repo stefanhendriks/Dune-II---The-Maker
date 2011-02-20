@@ -784,9 +784,9 @@ void cGame::menu() {
 	cTextDrawer * textDrawer = new cTextDrawer(bene_font);
 
 	// draw main menu title (picture is 640x480)
-	cAllegroDrawer allegroDrawer;
-	allegroDrawer.drawSpriteCenteredRelativelyVertical(bmp_screen,
-			(BITMAP *) gfxinter[BMP_D2TM].dat, 0.3);
+	cAllegroDrawer * allegroDrawer = new cAllegroDrawer(getScreenResolution());
+	allegroDrawer->drawSpriteCenteredRelativelyVertical(bmp_screen, (BITMAP *) gfxinter[BMP_D2TM].dat, 0.3);
+	delete allegroDrawer;
 	GUI_DRAW_FRAME(257, 319, 130, 143);
 
 	// Buttons:
