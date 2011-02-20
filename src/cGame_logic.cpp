@@ -213,11 +213,11 @@ bool cGame::playerHasMetQuota(int iPlayerId)
 }
 
 void cGame::think_winlose() {
-	bool bMissionAccomplished = false;
-	bool isPlayerAlive = playerHasAnyStructures(HUMAN) || playerHasAnyGroundUnits(HUMAN);
+	bool missionAccomplished = false;
+	bool humanPlayerAlive = playerHasAnyStructures(HUMAN) || playerHasAnyGroundUnits(HUMAN);
 
     if (isWinQuotaSet()) {
-		bMissionAccomplished = playerHasMetQuota(HUMAN);
+		missionAccomplished = playerHasMetQuota(HUMAN);
 	} else {
 		bool isAnyAIPlayerAlive = false;
 		for (int i = (HUMAN + 1); i < AI_WORM; i++ ) {
@@ -227,10 +227,10 @@ void cGame::think_winlose() {
 			}
 		}
 
-		bMissionAccomplished = !isAnyAIPlayerAlive;
+		missionAccomplished = !isAnyAIPlayerAlive;
 	}
 
-    if (bMissionAccomplished) {
+    if (missionAccomplished) {
 		setState(WINNING);
 
 		shake_x = 0;
@@ -245,7 +245,7 @@ void cGame::think_winlose() {
 		blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
 
 		draw_sprite(bmp_winlose, (BITMAP *) gfxinter[BMP_WINNING].dat, 77, 182);
-	} else if (!isPlayerAlive) {
+	} else if (!humanPlayerAlive) {
 		state = LOSING;
 
 		shake_x = 0;
