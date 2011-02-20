@@ -413,15 +413,18 @@ if (bSquish)
 
 bool cUnit::isValid()
 {
-    if (iPlayer <0)
+    if (iPlayer < HUMAN) {
         return false;
+    }
 
     // no hitpoints and not in a structure
-    if (iHitPoints < 0  && iTempHitPoints < 0)
+    if (iHitPoints < 0  && iTempHitPoints < 0) {
         return false;
+    }
 
-    if (iCell < 0 || iCell >= MAX_CELLS)
+    if (iCell < 0 || iCell >= MAX_CELLS) {
         return false;
+    }
 
     return true;
 }

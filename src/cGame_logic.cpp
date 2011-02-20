@@ -63,7 +63,6 @@ void cGame::init() {
 
 	iWinQuota = -1; // > 0 means, get this to win the mission, else, destroy all!
 
-
 	selected_structure = -1;
 
 	// mentat
@@ -181,66 +180,58 @@ void cGame::mission_init() {
 	drawManager->getCreditsDrawer()->setCredits();
 }
 
-void cGame::think_winlose() {
-	bool bSucces = false;
-	bool bFailed = true;
+bool cGame::playerHasAnyStructures(int iPlayerId) {
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+		if (structure[i]) {
+			if (structure[i]->getOwner() == iPlayerId) {
+				return true;
+			}
+		}
+	}
+    return false;
+}
 
-	// determine if player is still alive
-	for (int i = 0; i < MAX_STRUCTURES; i++)
-		if (structure[i])
-			if (structure[i]->getOwner() == 0) {
-				bFailed = false; // no, we are not failing just yet
+bool cGame::playerHasAnyGroundUnits(int iPlayerId) {
+	for (int i = 0; i < MAX_UNITS; i++) {
+		int type = unit[i].iType;
+		if (unit[i].isValid() &&
+			unit[i].iPlayer == iPlayerId &&
+			!units[type].airborn) {
+			return true;
+		}
+	}
+    return false;
+}
+
+bool cGame::isWinQuotaSet() {
+    return iWinQuota > 0;
+}
+
+bool cGame::playerHasMetQuota(int iPlayerId)
+{
+    return player[iPlayerId].credits >= iWinQuota;
+}
+
+void cGame::think_winlose() {
+	bool bMissionAccomplished = false;
+	bool isPlayerAlive = playerHasAnyStructures(HUMAN) || playerHasAnyGroundUnits(HUMAN);
+
+    if (isWinQuotaSet()) {
+		bMissionAccomplished = playerHasMetQuota(HUMAN);
+	} else {
+		bool isAnyAIPlayerAlive = false;
+		for (int i = (HUMAN + 1); i < AI_WORM; i++ ) {
+			if (playerHasAnyStructures(i) || playerHasAnyGroundUnits(i)) {
+				isAnyAIPlayerAlive = true;
 				break;
 			}
-
-	// determine if any unit is found
-	if (bFailed) {
-		// check if any unit is ours, if not, we have a problem (airborn does not count)
-		for (int i = 0; i < MAX_UNITS; i++)
-			if (unit[i].isValid())
-				if (unit[i].iPlayer == 0) {
-					bFailed = false;
-					break;
-				}
-	}
-
-	// win by money quota
-	if (iWinQuota > 0) {
-		if (player[0].credits >= iWinQuota) {
-			// won!
-			bSucces = true;
-		}
-	} else {
-		// determine if any player (except sandworm) is dead
-		bool bAllDead = true;
-		for (int i = 0; i < MAX_STRUCTURES; i++)
-			if (structure[i])
-				if (structure[i]->getOwner() > 0 && structure[i]->getOwner()
-						!= AI_WORM) {
-					bAllDead = false;
-					break;
-				}
-
-		if (bAllDead) {
-			// check units now
-			for (int i = 0; i < MAX_UNITS; i++)
-				if (unit[i].isValid())
-					if (unit[i].iPlayer > 0 && unit[i].iPlayer != AI_WORM)
-						if (units[unit[i].iType].airborn == false) {
-							bAllDead = false;
-							break;
-						}
-
 		}
 
-		if (bAllDead)
-			bSucces = true;
-
+		bMissionAccomplished = !isAnyAIPlayerAlive;
 	}
 
-	// On succes...
-	if (bSucces) {
-		state = WINNING;
+    if (bMissionAccomplished) {
+		setState(WINNING);
 
 		shake_x = 0;
 		shake_y = 0;
@@ -254,10 +245,7 @@ void cGame::think_winlose() {
 		blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
 
 		draw_sprite(bmp_winlose, (BITMAP *) gfxinter[BMP_WINNING].dat, 77, 182);
-
-	}
-
-	if (bFailed) {
+	} else if (!isPlayerAlive) {
 		state = LOSING;
 
 		shake_x = 0;
@@ -673,7 +661,6 @@ void cGame::mentat(int iType) {
 	bool bFadeOut = false;
 
 	// draw speaking animation, and text, etc
-
 	if (iType > -1)
 		draw_mentat(iType); // draw houses
 
@@ -2851,15 +2838,11 @@ bool cGame::setupGame() {
 
 }
 
-/**
- * Set up players
- */
 void cGame::setup_players() {
 	if (interactionManager) {
 		delete interactionManager;
 	}
 
-	// make sure each player has an own item builder
 	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
 		cPlayer * thePlayer = &player[i];
 		thePlayer->setId(i);
@@ -2867,12 +2850,10 @@ void cGame::setup_players() {
 		cItemBuilder * itemBuilder = new cItemBuilder(thePlayer);
 		thePlayer->setItemBuilder(itemBuilder);
 
-		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(
-				&player[i], game.iMission, iHouse);
+		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(&player[i], game.iMission, iHouse);
 		thePlayer->setSideBar(sidebar);
 
-		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(
-				thePlayer);
+		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(thePlayer);
 		thePlayer->setBuildingListUpdater(buildingListUpdater);
 
 		cStructurePlacer * structurePlacer = new cStructurePlacer(thePlayer);
@@ -2884,11 +2865,9 @@ void cGame::setup_players() {
 		cOrderProcesser * orderProcesser = new cOrderProcesser(thePlayer);
 		thePlayer->setOrderProcesser(orderProcesser);
 
-		cGameControlsContext * gameControlsContext = new cGameControlsContext(
-				thePlayer);
+		cGameControlsContext * gameControlsContext = new cGameControlsContext(thePlayer);
 		thePlayer->setGameControlsContext(gameControlsContext);
 
-		// set tech level
 		thePlayer->setTechLevel(game.iMission);
 	}
 

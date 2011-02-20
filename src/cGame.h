@@ -123,6 +123,11 @@ private:
     bool isResolutionInGameINIFoundAndSet();
     void setScreenResolutionFromGameIniSettings();
 
+    bool playerHasAnyStructures(int iPlayerId);
+    bool playerHasAnyGroundUnits(int iPlayerId);
+    bool isWinQuotaSet();
+    bool playerHasMetQuota(int iPlayerId);
+
     GameState state;
 
 	int iMaxVolume;
