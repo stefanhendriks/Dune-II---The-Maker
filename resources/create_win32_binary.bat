@@ -1,4 +1,5 @@
 @echo off
+IF "%D2TM_HOME%"=="" goto D2TM_HOME_NOT_SET
 cd %D2TM_HOME%
 cls 
 echo.
@@ -53,5 +54,20 @@ echo 12. Copy game rules file (game.ini)
 copy resources\game.ini bin
 echo 13. Copy txt files
 copy resources\*.txt bin
+goto FINISHED_SUCCESS
+
+:D2TM_HOME_NOT_SET
+echo.
+echo ERROR
+echo You must define an environmental variable D2TM_HOME and point it to your dune2themaker repository main dir, ie c:\projects\dune2themaker\
+goto FINISHED_NOTSUCCESS
+
+:FINISHED_NOTSUCCESS
+echo Finished with errors.
+goto END
+
+:FINISHED_SUCCESS
 echo Done.
+
+:END
 pause
