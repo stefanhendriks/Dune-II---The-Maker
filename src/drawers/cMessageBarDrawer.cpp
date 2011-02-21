@@ -1,10 +1,3 @@
-/*
- * cMessageBarDrawer.cpp
- *
- *  Created on: 9-nov-2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
 cMessageBarDrawer::cMessageBarDrawer(cMessageBar * theMessageBar) {

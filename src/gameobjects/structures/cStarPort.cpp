@@ -83,7 +83,7 @@ void cStarPort::think_deploy()
 					  play_voice(SOUND_VOICE_05_ATR); // unit deployed
 				  } else {
 					  // could not find cell to deploy to, reinforce it
-					  cCellCalculator * cellCalculator = new cCellCalculator(&map);
+					  cCellCalculator * cellCalculator = new cCellCalculator(map);
 					  if (rallyPoint > -1) {
 						  cellToDeployTo = rallyPoint;
 					  }

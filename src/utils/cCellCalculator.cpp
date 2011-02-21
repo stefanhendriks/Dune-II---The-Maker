@@ -7,18 +7,8 @@
 
 cCellCalculator::cCellCalculator(cMap *theMap) {
 	assert(theMap);
-	// TODO USE MAP CLASS (NOT YET DONE, AND USE GET/SET)use get/set
-	//width = theMap->width;
-	//height = theMap->height;
-
-	// REMOVE THIS LATER:
-	width = game.map_width;
-	height = game.map_height;
-}
-
-cCellCalculator::cCellCalculator(int theHeight, int theWidth) {
-	height = theHeight;
-	width = theWidth;
+	width = theMap->getWidth();
+	height = theMap->getHeight();
 }
 
 cCellCalculator::~cCellCalculator() {
@@ -38,7 +28,7 @@ int cCellCalculator::findCloseMapBorderCellRelativelyToDestinationCel(int destin
 	int cll=-1;
 
 	// HORIZONTAL cells
-	for (int iX=0; iX < game.map_width; iX++) {
+	for (int iX=0; iX < width; iX++) {
 		// check when Y = 0 (top)
 		tDistance = distance(iX, 0, iCllX, iCllY);
 
@@ -47,27 +37,27 @@ int cCellCalculator::findCloseMapBorderCellRelativelyToDestinationCel(int destin
 
 			cll = getCell(iX, 0);
 
-			if (map.occupied(cll) == false) {
+			if (map->occupied(cll) == false) {
 				iStartCell = cll;
 			}
 		}
 
 		// check when Y = map_height (bottom)
-		tDistance = distance(iX, game.map_height-1, iCllX, iCllY);
+		tDistance = distance(iX, map->getHeight()-1, iCllX, iCllY);
 
 		if (tDistance < lDistance) {
 			lDistance = tDistance;
 
-			cll = getCell(iX, game.map_height-1);
+			cll = getCell(iX, map->getHeight()-1);
 
-			if (map.occupied(cll) == false) {
+			if (map->occupied(cll) == false) {
 				iStartCell = cll;
 			}
 		}
 	}
 
 	// VERTICAL cells
-	for (int iY=0; iY < game.map_height; iY++)
+	for (int iY=0; iY < map->getHeight(); iY++)
 	{
 		// check when X = 0 (left)
 		tDistance = distance(0, iY, iCllX, iCllY);
@@ -77,19 +67,19 @@ int cCellCalculator::findCloseMapBorderCellRelativelyToDestinationCel(int destin
 
 			cll = getCell(0, iY);
 
-			if (map.occupied(cll) == false) {
+			if (map->occupied(cll) == false) {
 				iStartCell = cll;
 			}
 		}
 
 		// check when XY = map_width (bottom)
-		tDistance = distance(game.map_width-1, iY, iCllX, iCllY);
+		tDistance = distance(width-1, iY, iCllX, iCllY);
 
 		if (tDistance < lDistance) {
 			lDistance = tDistance;
-			cll = getCell(game.map_width-1, iY);
+			cll = getCell(width-1, iY);
 
-			if (map.occupied(cll) == false) {
+			if (map->occupied(cll) == false) {
 				iStartCell = cll;
 			}
 		}

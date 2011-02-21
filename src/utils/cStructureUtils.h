@@ -38,7 +38,6 @@ class cStructureUtils {
 	protected:
 
 	private:
-		cCellCalculator * cellCalculator;
 
 };
 

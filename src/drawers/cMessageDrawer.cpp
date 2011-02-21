@@ -1,10 +1,3 @@
-/*
- * cMessageDrawer.cpp
- *
- *  Created on: 11-aug-2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
 cMessageDrawer::cMessageDrawer() {

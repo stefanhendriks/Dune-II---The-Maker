@@ -26,10 +26,7 @@ class cInteractionManager {
 
 	private:
 		cSideBar * sidebar;
-		cMiniMapDrawer * miniMapDrawer;
 		cKeyboardManager keyboardManager;
-
-
 };
 
 #endif /* CINTERACTIONMANAGER_H_ */

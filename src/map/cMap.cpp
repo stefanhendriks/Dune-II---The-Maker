@@ -16,27 +16,19 @@
 
 #define WATCH_PLAYER 0
 
-cMap::cMap() {
+cMap::cMap(int theWidth, int theHeight) {
+	logbook("Creating new cMap");
+	width = theWidth;
+	height = theHeight;
 	TIMER_scroll=0;
 	iScrollSpeed=10;
-	cellCalculator = NULL;
+	init();
 }
 
 cMap::~cMap() {
-	if (cellCalculator) delete cellCalculator;
 }
 
-void cMap::resetCellCalculator() {
-	if (cellCalculator) {
-		delete cellCalculator;
-	}
-	cellCalculator = new cCellCalculator(this);
-}
-
-void cMap::init()
-{
-    INIT_REINFORCEMENT();
-    resetCellCalculator();
+void cMap::init() {
 
     // clear out all cells
     cMapUtils * mapUtils = new cMapUtils(this);
@@ -96,8 +88,8 @@ bool cMap::occupiedByType(int iCell) {
 	assert(iCell > -1);
 	assert(iCell < MAX_CELLS);
 
-	if (map.cell[iCell].type == TERRAIN_WALL) return true;
-	if (map.cell[iCell].type == TERRAIN_MOUNTAIN) return true;
+	if (map->cell[iCell].type == TERRAIN_WALL) return true;
+	if (map->cell[iCell].type == TERRAIN_MOUNTAIN) return true;
 
 	return false;
 }
@@ -107,7 +99,7 @@ bool cMap::occupiedInDimension(int iCll, int dimension) {
 	assert(iCll < MAX_CELLS);
 	assert(dimension > -1);
 	assert(dimension < MAPID_MAX);
-	return map.cell[iCll].id[dimension] > -1;
+	return map->cell[iCll].id[dimension] > -1;
 }
 
 /**
@@ -135,18 +127,18 @@ bool cMap::occupied(int iCll, int iUnitID)
     if (iCll < 0 || iUnitID < 0)
         return true;
 
-    if (map.cell[iCll].id[MAPID_UNITS] > -1 &&
-		map.cell[iCll].id[MAPID_UNITS] != iUnitID)
+    if (map->cell[iCll].id[MAPID_UNITS] > -1 &&
+		map->cell[iCll].id[MAPID_UNITS] != iUnitID)
         bResult=true;
 
     // TODO: when unit wants to enter a structure...
 
-    if (map.cell[iCll].id[MAPID_STRUCTURES] > -1 )
+    if (map->cell[iCll].id[MAPID_STRUCTURES] > -1 )
 	{
 		// we are on top of a structure we do NOT want to enter...
 		if (unit[iUnitID].iStructureID > -1)
 		{
-			if (map.cell[iCll].id[MAPID_STRUCTURES] != unit[iUnitID].iStructureID)
+			if (map->cell[iCll].id[MAPID_STRUCTURES] != unit[iUnitID].iStructureID)
 			bResult=true;
 		}
 		else
@@ -154,12 +146,12 @@ bool cMap::occupied(int iCll, int iUnitID)
 	}
 
     // walls block as do mountains
-    if (map.cell[iCll].type == TERRAIN_WALL)
+    if (map->cell[iCll].type == TERRAIN_WALL)
         bResult=true;
 
     // mountains only block infantry
     if (units[unit[iUnitID].iType].infantry == false)
-        if (map.cell[iCll].type == TERRAIN_MOUNTAIN)
+        if (map->cell[iCll].type == TERRAIN_MOUNTAIN)
            bResult=true;
 
 
@@ -224,7 +216,7 @@ void cMap::clear_spot(int c, int size, int player)
   if (cx < 0 || cy < 0)
       return;
 
-  map.iVisible[c][player]=true;
+  map->iVisible[c][player]=true;
 
 #define TILE_SIZE_PIXELS 32
 
@@ -341,72 +333,38 @@ void cMap::clear_spot(int c, int size, int player)
 
 // Each index is a mapdata field holding indexes of the map layout
 //
-void cMap::remove_id(int iIndex, int iIDType)
-{
-    // Search through the entire map and remove it
-    // Using X,Y stuff, since we do not want to have unnescesary slow-downs
-    // when using small maps... and going through a 512x512 map
-
-	/*
-
-	int x, y, cll;
-    x = y = cll = 0;
-
-
-
-    for (x=0; x < game.map_width; x++)
-        for (y=0; y < game.map_height; y++)
-        {
-            cll = iCellMake(x,y);
-            if (cell[cll].id[iIDType] == iIndex)
-			{
-                cell[cll].id[iIDType] = -1; // remove it
-			}
-        }*/
-
-	for (int iCell=0; iCell < MAX_CELLS; iCell++)
-		if (cell[iCell].id[iIDType] == iIndex)
-		{
-			// remove
+void cMap::remove_id(int iIndex, int iIDType) {
+	for (int iCell = 0; iCell < MAX_CELLS; iCell++) {
+		if (cell[iCell].id[iIDType] == iIndex) {
 			cell[iCell].id[iIDType] = -1;
 		}
-
-
-
+	}
 }
 
-void cMap::draw_units()
-{
+void cMap::draw_units() {
     set_trans_blender(0, 0, 0, 160);
 
     // draw all worms first
-    for (int i=0; i < MAX_UNITS; i++)
-    {
-        if (unit[i].isValid())
-        {
-			// DEBUG MODE: DRAW PATHS
-			if (DEBUGGING)
+    for (int i = 0; i < MAX_UNITS; i++) {
+		if (unit[i].isValid()) {
+			if (DEBUGGING) {
 				unit[i].draw_path();
+			}
 
-            if (unit[i].iType == SANDWORM)
-            {
+			if (unit[i].iType == SANDWORM) {
 
-            int drawx = unit[i].draw_x();
-            int drawy = unit[i].draw_y();
+				int drawx = unit[i].draw_x();
+				int drawy = unit[i].draw_y();
 
-            if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.getScreenResolution()->getWidth()-160)) &&
-                ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.getScreenResolution()->getHeight()))
-            {
-                // draw
-                unit[i].draw();
-            }
-            }
+				if (((drawx + units[unit[i].iType].bmp_width) > 0 && drawx < (game.getScreenResolution()->getWidth() - 160)) && ((drawy
+						+ units[unit[i].iType].bmp_height) > 42 && drawy < game.getScreenResolution()->getHeight())) {
+					unit[i].draw();
+				}
+			}
+		}
+	}
 
-        }
-
-    }
-
-    // draw all units
+    // draw other units (except worm and air units)
     for (int i=0; i < MAX_UNITS; i++)
     {
         if (unit[i].isValid())
@@ -422,27 +380,22 @@ void cMap::draw_units()
             int drawx = unit[i].draw_x();
             int drawy = unit[i].draw_y();
 
-			//line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(255,255,255));
-
             if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.getScreenResolution()->getWidth()-160)) &&
                 ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.getScreenResolution()->getHeight()))
             {
-
                 // draw
                 unit[i].draw();
 
 				//line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(0,255,255));
 
-				if (key[KEY_D] && key[KEY_TAB])
+				if (key[KEY_D] && key[KEY_TAB]) {
 					alfont_textprintf(bmp_screen, game_font, unit[i].draw_x(),unit[i].draw_y(), makecol(255,255,255), "%d", i);
-
+				}
             }
-
         }
-
     }
 
-    // draw all units
+    // draw all units (air units only)
     for (int i=0; i < MAX_UNITS; i++)
     {
         if (unit[i].isValid())
@@ -479,22 +432,17 @@ void cMap::draw_units()
     }
 
     int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
-    if (mc > -1)
-    {
-        if (map.cell[mc].id[MAPID_UNITS] > -1)
-        {
-            int iUnitId = map.cell[mc].id[MAPID_UNITS];
+    if (mc > -1) {
+		if (map->cell[mc].id[MAPID_UNITS] > -1) {
+			int iUnitId = map->cell[mc].id[MAPID_UNITS];
 
-            if (unit[iUnitId].iTempHitPoints < 0)
-                game.hover_unit = iUnitId;
-        }
-        else if (map.cell[mc].id[MAPID_WORMS] > -1)
-        {
-            int iUnitId = map.cell[mc].id[MAPID_WORMS];
-            game.hover_unit = iUnitId;
-        }
-    }
-
+			if (unit[iUnitId].iTempHitPoints < 0)
+				game.hover_unit = iUnitId;
+		} else if (map->cell[mc].id[MAPID_WORMS] > -1) {
+			int iUnitId = map->cell[mc].id[MAPID_WORMS];
+			game.hover_unit = iUnitId;
+		}
+	}
 }
 
 // draw airborn units
@@ -578,13 +526,13 @@ void cMap::draw_think() {
 	}
 
 	if (mouse_x >= (game.getScreenResolution()->getWidth() - 2) || key[KEY_RIGHT]) {
-		if ((iEndX) < (game.map_width - 1)) {
+		if ((iEndX) < (map->getWidth() - 1)) {
 			mouse_tile = MOUSE_RIGHT;
 		}
 	}
 
 	if (mouse_y >= (game.getScreenResolution()->getHeight() - 2) || key[KEY_DOWN]) {
-		if ((iEndY) < (game.map_height - 1)) {
+		if ((iEndY) < (map->getHeight() - 1)) {
 			mouse_tile = MOUSE_DOWN;
 		}
 	}

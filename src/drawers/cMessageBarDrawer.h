@@ -1,10 +1,3 @@
-/*
- * cMessageBarDrawer.h
- *
- *  Created on: 9-nov-2010
- *      Author: Stefan
- */
-
 #ifndef CMESSAGEBARDRAWER_H_
 #define CMESSAGEBARDRAWER_H_
 

@@ -17,7 +17,6 @@ class cCellCalculator {
 
 public:
 	cCellCalculator(cMap * theMap);
-	cCellCalculator(int theHeight, int theWidth);
 	~cCellCalculator();
 
 	// get X / Y from cell

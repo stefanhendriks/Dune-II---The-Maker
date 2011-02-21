@@ -1,14 +1,15 @@
 #include "../include/d2tmh.h"
 
 cGameDrawer::cGameDrawer(cPlayer * thePlayer) {
+	logbook("cGameDrawer constructor");
 	assert(thePlayer);
 	player = thePlayer;
 	creditsDrawer = new CreditsDrawer(thePlayer);
 	sidebarDrawer = new cSideBarDrawer();
 	upgradeDrawer = new cUpgradeDrawer();
 	orderDrawer = new cOrderDrawer();
-	mapDrawer = new cMapDrawer(&map, thePlayer, mapCamera);
-	miniMapDrawer = new cMiniMapDrawer(&map, thePlayer, mapCamera);
+	mapDrawer = new cMapDrawer(map, thePlayer, mapCamera);
+	miniMapDrawer = new cMiniMapDrawer(map, thePlayer, mapCamera);
 	particleDrawer = new cParticleDrawer();
 	messageDrawer = new cMessageDrawer();
 	messageBarDrawer = new cMessageBarDrawer();
@@ -20,6 +21,7 @@ cGameDrawer::cGameDrawer(cPlayer * thePlayer) {
 	messageBar->setX(200);
 	messageBar->setY(200);
 	messageBar->setWidth(game.getScreenResolution()->getWidth() - 160);
+	logbook("cGameDrawer constructor finished");
 }
 
 cGameDrawer::~cGameDrawer() {
@@ -40,7 +42,7 @@ cGameDrawer::~cGameDrawer() {
 void cGameDrawer::draw() {
 	// MAP
 	assert(mapDrawer);
-	map.draw_think();
+	map->draw_think();
 	mapDrawer->drawTerrain();
 
 	// Only draw units/structures, etc, when we do NOT press D
@@ -53,14 +55,14 @@ void cGameDrawer::draw() {
 	// draw layer 1 (beneath units, on top of terrain
 	particleDrawer->drawLowerLayer();
 
-	map.draw_units();
+	map->draw_units();
 
-	map.draw_bullets();
+	map->draw_bullets();
 
 	structureDrawer->drawStructuresSecondLayer();
 	structureDrawer->drawStructuresHealthBars();
 
-	map.draw_units_2nd();
+	map->draw_units_2nd();
 
 	particleDrawer->drawHigherLayer();
 	mapDrawer->drawShroud();

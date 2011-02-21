@@ -23,11 +23,10 @@ CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) {
 }
 
 CreditsDrawer::~CreditsDrawer() {
-	// TODO Auto-generated destructor stub
 }
 
 void CreditsDrawer::setCredits() {
-	setCredits((int)player->credits);
+	setCredits((int)(player->credits));
 }
 
 void CreditsDrawer::setCredits(int amount) {

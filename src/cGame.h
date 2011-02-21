@@ -39,8 +39,6 @@ public:
     void init();
     void mission_init();
     void run();
-    int map_width;
-    int map_height;
     int iRegion;
     int iMission;
     int iHouse;

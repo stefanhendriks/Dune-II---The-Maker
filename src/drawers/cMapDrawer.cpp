@@ -1,10 +1,3 @@
-/*
- * cMapDrawer.cpp
- *
- *  Created on: 10-aug-2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
 
@@ -15,15 +8,12 @@ cMapDrawer::cMapDrawer(cMap * theMap, cPlayer * thePlayer, cMapCamera * theCamer
 	map = theMap;
 	player = thePlayer;
 	camera = theCamera;
-	cellCalculator = new cCellCalculator(map);
 }
 
 cMapDrawer::~cMapDrawer() {
 	map = NULL;
 	player = NULL;
 	camera = NULL;
-	delete cellCalculator;
-	cellCalculator = NULL;
 }
 
 void cMapDrawer::drawShroud() {
@@ -222,6 +212,7 @@ void cMapDrawer::drawTerrain() {
 
 			if (DEBUGGING)
 			{
+				cCellCalculator * cellCalculator = new cCellCalculator(map);
 				if (player->getGameControlsContext()->getMouseCell() > -1)
 				{
 					int mc = player->getGameControlsContext()->getMouseCell();
@@ -229,6 +220,7 @@ void cMapDrawer::drawTerrain() {
 						rectfill(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, makecol(64,64,64));
 
 				}
+				delete cellCalculator;
 
 				rect(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, makecol(128,128,128));
 			}

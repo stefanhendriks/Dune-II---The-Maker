@@ -28,13 +28,25 @@ cGame::cGame() {
 	screenResolutionFromIni = NULL;
 	moviePlayer = NULL;
 	windowed = true;
+	mapUtils = NULL;
+	map = NULL;
+	mapCamera = NULL;
+	gameDrawer = NULL;
 }
 
 cGame::~cGame() {
-	if (moviePlayer) delete moviePlayer;
-	if (soundPlayer) delete soundPlayer;
-	if (screenResolution) delete screenResolution;
-	if (screenResolutionFromIni) delete screenResolutionFromIni;
+	if (moviePlayer) {
+		delete moviePlayer;
+	}
+	if (soundPlayer)
+		delete soundPlayer;
+	if (screenResolution)
+		delete screenResolution;
+	if (screenResolutionFromIni)
+		delete screenResolutionFromIni;
+	if (gameDrawer) {
+		delete gameDrawer;
+	}
 }
 
 void cGame::init() {
@@ -80,9 +92,6 @@ void cGame::init() {
 	bPlaceIt = false; // we do not place
 	bPlacedIt = false;
 
-	map_width = 64;
-	map_height = 64;
-
 	mouse_tile = MOUSE_NORMAL;
 
 	memset(version, 0, sizeof(version));
@@ -102,7 +111,11 @@ void cGame::init() {
 
 	iMusicType = MUSIC_MENU;
 
-	map.init();
+	INIT_REINFORCEMENT();
+
+	if (map != NULL) {
+		map->init();
+	}
 
 	for (int i = 0; i < MAX_PLAYERS; i++) {
 		player[i].init();
@@ -135,6 +148,14 @@ void cGame::init() {
 // initialize for missions
 void cGame::mission_init() {
 
+	if (mapUtils) {
+		delete mapUtils;
+	}
+
+	if (map) {
+		delete map;
+	}
+
 	iMusicVolume = 128; // volume is 0...
 
 	paths_created = 0;
@@ -160,7 +181,7 @@ void cGame::mission_init() {
 	shake_y = 0;
 	TIMER_shake = 0;
 
-	map.init();
+	INIT_REINFORCEMENT();
 
 	// clear out players but not entirely
 	for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -175,55 +196,46 @@ void cGame::mission_init() {
 			player[i].credits = 2500;
 		}
 	}
-
-	// instantiate the creditDrawer with the appropriate player. Only
-	// possible once game has been initialized and player has been created.
-	assert(gameDrawer);
-	assert(gameDrawer->getCreditsDrawer());
-	gameDrawer->getCreditsDrawer()->setCredits();
 }
 
 bool cGame::playerHasAnyStructures(int iPlayerId) {
-    for (int i = 0; i < MAX_STRUCTURES; i++) {
+	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		if (structure[i]) {
 			if (structure[i]->getOwner() == iPlayerId) {
 				return true;
 			}
 		}
 	}
-    return false;
+	return false;
 }
 
 bool cGame::playerHasAnyGroundUnits(int iPlayerId) {
 	for (int i = 0; i < MAX_UNITS; i++) {
 		int type = unit[i].iType;
-		if (unit[i].isValid() &&
-			unit[i].iPlayer == iPlayerId &&
-			!units[type].airborn) {
+		if (unit[i].isValid() && unit[i].iPlayer == iPlayerId && !units[type].airborn) {
 			return true;
 		}
 	}
-    return false;
+	return false;
 }
 
 bool cGame::isWinQuotaSet() {
-    return iWinQuota > 0;
+	return iWinQuota > 0;
 }
 
-bool cGame::playerHasMetQuota(int iPlayerId)
-{
-    return player[iPlayerId].credits >= iWinQuota;
+bool cGame::playerHasMetQuota(int iPlayerId) {
+	return player[iPlayerId].credits >= iWinQuota;
 }
 
 void cGame::think_winlose() {
 	bool missionAccomplished = false;
 	bool humanPlayerAlive = playerHasAnyStructures(HUMAN) || playerHasAnyGroundUnits(HUMAN);
 
-    if (isWinQuotaSet()) {
+	if (isWinQuotaSet()) {
 		missionAccomplished = playerHasMetQuota(HUMAN);
 	} else {
 		bool isAnyAIPlayerAlive = false;
-		for (int i = (HUMAN + 1); i < AI_WORM; i++ ) {
+		for (int i = (HUMAN + 1); i < AI_WORM; i++) {
 			if (playerHasAnyStructures(i) || playerHasAnyGroundUnits(i)) {
 				isAnyAIPlayerAlive = true;
 				break;
@@ -233,7 +245,7 @@ void cGame::think_winlose() {
 		missionAccomplished = !isAnyAIPlayerAlive;
 	}
 
-    if (missionAccomplished) {
+	if (missionAccomplished) {
 		setState(WINNING);
 
 		shake_x = 0;
@@ -445,15 +457,15 @@ void cGame::poll() {
 			// change to attack cursor if hovering over enemy unit
 			if (mapUtils->isCellVisibleForPlayerId(HUMAN, mc)) {
 
-				if (map.cell[mc].id[MAPID_UNITS] > -1) {
-					int id = map.cell[mc].id[MAPID_UNITS];
+				if (map->cell[mc].id[MAPID_UNITS] > -1) {
+					int id = map->cell[mc].id[MAPID_UNITS];
 
 					if (unit[id].iPlayer > 0)
 						mouse_tile = MOUSE_ATTACK;
 				}
 
-				if (map.cell[mc].id[MAPID_STRUCTURES] > -1) {
-					int id = map.cell[mc].id[MAPID_STRUCTURES];
+				if (map->cell[mc].id[MAPID_STRUCTURES] > -1) {
+					int id = map->cell[mc].id[MAPID_STRUCTURES];
 
 					if (structure[id]->getOwner() > 0)
 						mouse_tile = MOUSE_ATTACK;
@@ -491,13 +503,10 @@ void cGame::poll() {
 	// update total spice capacity
 	for (int p = 0; p < MAX_PLAYERS; p++) {
 		cPlayer * thePlayer = &player[p];
-		thePlayer->use_power = structureUtils.getTotalPowerUsageForPlayer(
-				thePlayer);
-		thePlayer->has_power = structureUtils.getTotalPowerOutForPlayer(
-				thePlayer);
+		thePlayer->use_power = structureUtils.getTotalPowerUsageForPlayer(thePlayer);
+		thePlayer->has_power = structureUtils.getTotalPowerOutForPlayer(thePlayer);
 		// update spice capacity
-		thePlayer->max_credits = structureUtils.getTotalSpiceCapacityForPlayer(
-				thePlayer);
+		thePlayer->max_credits = structureUtils.getTotalSpiceCapacityForPlayer(thePlayer);
 	}
 }
 
@@ -566,32 +575,24 @@ void cGame::MENTAT_draw_eyes(int iMentat) {
 
 	// now draw eyes
 	if (iMentat < 0)
-		draw_sprite(bmp_screen,
-				(BITMAP *) gfxmentat[BEN_EYES01 + iMentatEyes].dat, iDrawX,
-				iDrawY);
+		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[BEN_EYES01 + iMentatEyes].dat, iDrawX, iDrawY);
 
 	if (iMentat == HARKONNEN) {
 		iDrawX = 64;
 		iDrawY = 256;
-		draw_sprite(bmp_screen,
-				(BITMAP *) gfxmentat[HAR_EYES01 + iMentatEyes].dat, iDrawX,
-				iDrawY);
+		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[HAR_EYES01 + iMentatEyes].dat, iDrawX, iDrawY);
 	}
 
 	if (iMentat == ATREIDES) {
 		iDrawX = 80;
 		iDrawY = 241;
-		draw_sprite(bmp_screen,
-				(BITMAP *) gfxmentat[ATR_EYES01 + iMentatEyes].dat, iDrawX,
-				iDrawY);
+		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[ATR_EYES01 + iMentatEyes].dat, iDrawX, iDrawY);
 	}
 
 	if (iMentat == ORDOS) {
 		iDrawX = 32;
 		iDrawY = 240;
-		draw_sprite(bmp_screen,
-				(BITMAP *) gfxmentat[ORD_EYES01 + iMentatEyes].dat, iDrawX,
-				iDrawY);
+		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[ORD_EYES01 + iMentatEyes].dat, iDrawX, iDrawY);
 	}
 
 }
@@ -603,16 +604,12 @@ void cGame::MENTAT_draw_mouth(int iMentat) {
 
 	// now draw speaking and such
 	if (iMentat < 0)
-		draw_sprite(bmp_screen,
-				(BITMAP *) gfxmentat[BEN_MOUTH01 + iMentatMouth].dat, iDrawX,
-				iDrawY);
+		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[BEN_MOUTH01 + iMentatMouth].dat, iDrawX, iDrawY);
 
 	if (iMentat == HARKONNEN) {
 		iDrawX = 64;
 		iDrawY = 288;
-		draw_sprite(bmp_screen,
-				(BITMAP *) gfxmentat[HAR_MOUTH01 + iMentatMouth].dat, iDrawX,
-				iDrawY);
+		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[HAR_MOUTH01 + iMentatMouth].dat, iDrawX, iDrawY);
 	}
 
 	// 31, 270
@@ -620,17 +617,13 @@ void cGame::MENTAT_draw_mouth(int iMentat) {
 	if (iMentat == ATREIDES) {
 		iDrawX = 80;
 		iDrawY = 273;
-		draw_sprite(bmp_screen,
-				(BITMAP *) gfxmentat[ATR_MOUTH01 + iMentatMouth].dat, iDrawX,
-				iDrawY);
+		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[ATR_MOUTH01 + iMentatMouth].dat, iDrawX, iDrawY);
 	}
 
 	if (iMentat == ORDOS) {
 		iDrawX = 31;
 		iDrawY = 270;
-		draw_sprite(bmp_screen,
-				(BITMAP *) gfxmentat[ORD_MOUTH01 + iMentatMouth].dat, iDrawX,
-				iDrawY);
+		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[ORD_MOUTH01 + iMentatMouth].dat, iDrawX, iDrawY);
 	}
 }
 
@@ -657,14 +650,10 @@ void cGame::mentat(int iType) {
 
 	// draw text
 	if (iMentatSpeak >= 0) {
-		alfont_textprintf(bmp_screen, bene_font, 17, 17, makecol(0, 0, 0),
-				"%s", mentat_sentence[iMentatSpeak]);
-		alfont_textprintf(bmp_screen, bene_font, 16, 16,
-				makecol(255, 255, 255), "%s", mentat_sentence[iMentatSpeak]);
-		alfont_textprintf(bmp_screen, bene_font, 17, 33, makecol(0, 0, 0),
-				"%s", mentat_sentence[iMentatSpeak + 1]);
-		alfont_textprintf(bmp_screen, bene_font, 16, 32,
-				makecol(255, 255, 255), "%s", mentat_sentence[iMentatSpeak + 1]);
+		alfont_textprintf(bmp_screen, bene_font, 17, 17, makecol(0, 0, 0), "%s", mentat_sentence[iMentatSpeak]);
+		alfont_textprintf(bmp_screen, bene_font, 16, 16, makecol(255, 255, 255), "%s", mentat_sentence[iMentatSpeak]);
+		alfont_textprintf(bmp_screen, bene_font, 17, 33, makecol(0, 0, 0), "%s", mentat_sentence[iMentatSpeak + 1]);
+		alfont_textprintf(bmp_screen, bene_font, 16, 32, makecol(255, 255, 255), "%s", mentat_sentence[iMentatSpeak + 1]);
 	}
 
 	// mentat mouth
@@ -676,8 +665,7 @@ void cGame::mentat(int iType) {
 		// NO
 		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[BTN_REPEAT].dat, 293, 423);
 
-		if ((mouse_x > 293 && mouse_x < 446)
-				&& (mouse_y > 423 && mouse_y < 468))
+		if ((mouse_x > 293 && mouse_x < 446) && (mouse_y > 423 && mouse_y < 468))
 			if (cMouse::getInstance()->isLeftButtonClicked()) {
 				// head back to choose house
 				iMentatSpeak = -1; // prepare speaking
@@ -686,8 +674,7 @@ void cGame::mentat(int iType) {
 
 		// YES/PROCEED
 		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[BTN_PROCEED].dat, 466, 423);
-		if ((mouse_x > 446 && mouse_x < 619)
-				&& (mouse_y > 423 && mouse_y < 468))
+		if ((mouse_x > 446 && mouse_x < 619) && (mouse_y > 423 && mouse_y < 468))
 			if (cMouse::getInstance()->isLeftButtonClicked()) {
 				if (isState(BRIEFING)) {
 					// proceed, play mission
@@ -747,8 +734,7 @@ void cGame::mentat(int iType) {
 	}
 
 	// MOUSE
-	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x,
-			mouse_y);
+	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
 	if (bFadeOut) {
 		FADE_OUT();
@@ -794,12 +780,9 @@ void cGame::menu() {
 	// Buttons:
 
 	// PLAY
-	if ((mouse_x >= 246 && mouse_x <= 373)
-			&& (mouse_y >= 323 && mouse_y <= 340)) {
-		alfont_textprintf(bmp_screen, bene_font, 261, 324, makecol(0, 0, 0),
-				"Campaign");
-		alfont_textprintf(bmp_screen, bene_font, 261, 323, makecol(255, 0, 0),
-				"Campaign");
+	if ((mouse_x >= 246 && mouse_x <= 373) && (mouse_y >= 323 && mouse_y <= 340)) {
+		alfont_textprintf(bmp_screen, bene_font, 261, 324, makecol(0, 0, 0), "Campaign");
+		alfont_textprintf(bmp_screen, bene_font, 261, 323, makecol(255, 0, 0), "Campaign");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			state = HOUSE; // select house
@@ -807,20 +790,15 @@ void cGame::menu() {
 		}
 
 	} else {
-		alfont_textprintf(bmp_screen, bene_font, 261, 324, makecol(0, 0, 0),
-				"Campaign");
-		alfont_textprintf(bmp_screen, bene_font, 261, 323, makecol(255, 255,
-				255), "Campaign");
+		alfont_textprintf(bmp_screen, bene_font, 261, 324, makecol(0, 0, 0), "Campaign");
+		alfont_textprintf(bmp_screen, bene_font, 261, 323, makecol(255, 255, 255), "Campaign");
 
 	}
 
 	// SKIRMISH
-	if ((mouse_x >= 246 && mouse_x <= 373)
-			&& (mouse_y >= 344 && mouse_y <= 362)) {
-		alfont_textprintf(bmp_screen, bene_font, 261, 344, makecol(0, 0, 0),
-				"Skirmish");
-		alfont_textprintf(bmp_screen, bene_font, 261, 343, makecol(255, 0, 0),
-				"Skirmish");
+	if ((mouse_x >= 246 && mouse_x <= 373) && (mouse_y >= 344 && mouse_y <= 362)) {
+		alfont_textprintf(bmp_screen, bene_font, 261, 344, makecol(0, 0, 0), "Skirmish");
+		alfont_textprintf(bmp_screen, bene_font, 261, 343, makecol(255, 0, 0), "Skirmish");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			game.state = SETUPSKIRMISH;
@@ -837,20 +815,15 @@ void cGame::menu() {
 
 		//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[D2TM_LOAD].dat, 303, 369);
 	} else {
-		alfont_textprintf(bmp_screen, bene_font, 261, 344, makecol(0, 0, 0),
-				"Skirmish");
-		alfont_textprintf(bmp_screen, bene_font, 261, 343, makecol(255, 255,
-				255), "Skirmish");
+		alfont_textprintf(bmp_screen, bene_font, 261, 344, makecol(0, 0, 0), "Skirmish");
+		alfont_textprintf(bmp_screen, bene_font, 261, 343, makecol(255, 255, 255), "Skirmish");
 
 	}
 
 	// LOAD
-	if ((mouse_x >= 246 && mouse_x <= 373)
-			&& (mouse_y >= 364 && mouse_y <= 382)) {
-		alfont_textprintf(bmp_screen, bene_font, 261, 364, makecol(0, 0, 0),
-				"Multiplayer");
-		alfont_textprintf(bmp_screen, bene_font, 261, 363, makecol(255, 0, 0),
-				"Multiplayer");
+	if ((mouse_x >= 246 && mouse_x <= 373) && (mouse_y >= 364 && mouse_y <= 382)) {
+		alfont_textprintf(bmp_screen, bene_font, 261, 364, makecol(0, 0, 0), "Multiplayer");
+		alfont_textprintf(bmp_screen, bene_font, 261, 363, makecol(255, 0, 0), "Multiplayer");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			//game.state = SETUPSKIRMISH;
@@ -862,20 +835,15 @@ void cGame::menu() {
 
 		//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[D2TM_LOAD].dat, 303, 369);
 	} else {
-		alfont_textprintf(bmp_screen, bene_font, 261, 364, makecol(0, 0, 0),
-				"Multiplayer");
-		alfont_textprintf(bmp_screen, bene_font, 261, 363, makecol(255, 255,
-				255), "Multiplayer");
+		alfont_textprintf(bmp_screen, bene_font, 261, 364, makecol(0, 0, 0), "Multiplayer");
+		alfont_textprintf(bmp_screen, bene_font, 261, 363, makecol(255, 255, 255), "Multiplayer");
 
 	}
 
 	// OPTIONS
-	if ((mouse_x >= 246 && mouse_x <= 373)
-			&& (mouse_y >= 384 && mouse_y <= 402)) {
-		alfont_textprintf(bmp_screen, bene_font, 261, 384, makecol(0, 0, 0),
-				"Load");
-		alfont_textprintf(bmp_screen, bene_font, 261, 383, makecol(255, 0, 0),
-				"Load");
+	if ((mouse_x >= 246 && mouse_x <= 373) && (mouse_y >= 384 && mouse_y <= 402)) {
+		alfont_textprintf(bmp_screen, bene_font, 261, 384, makecol(0, 0, 0), "Load");
+		alfont_textprintf(bmp_screen, bene_font, 261, 383, makecol(255, 0, 0), "Load");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			//            game.state = SETUPSKIRMISH;
@@ -884,19 +852,14 @@ void cGame::menu() {
 
 		//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[D2TM_LOAD].dat, 303, 369);
 	} else {
-		alfont_textprintf(bmp_screen, bene_font, 261, 384, makecol(0, 0, 0),
-				"Load");
-		alfont_textprintf(bmp_screen, bene_font, 261, 383, makecol(255, 255,
-				255), "Load");
+		alfont_textprintf(bmp_screen, bene_font, 261, 384, makecol(0, 0, 0), "Load");
+		alfont_textprintf(bmp_screen, bene_font, 261, 383, makecol(255, 255, 255), "Load");
 	}
 
 	// HALL OF FAME
-	if ((mouse_x >= 246 && mouse_x <= 373)
-			&& (mouse_y >= 404 && mouse_y <= 422)) {
-		alfont_textprintf(bmp_screen, bene_font, 261, 404, makecol(0, 0, 0),
-				"Options");
-		alfont_textprintf(bmp_screen, bene_font, 261, 403, makecol(255, 0, 0),
-				"Options");
+	if ((mouse_x >= 246 && mouse_x <= 373) && (mouse_y >= 404 && mouse_y <= 422)) {
+		alfont_textprintf(bmp_screen, bene_font, 261, 404, makecol(0, 0, 0), "Options");
+		alfont_textprintf(bmp_screen, bene_font, 261, 403, makecol(255, 0, 0), "Options");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			//            game.state = SETUPSKIRMISH;
@@ -905,54 +868,39 @@ void cGame::menu() {
 
 		//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[D2TM_LOAD].dat, 303, 369);
 	} else {
-		alfont_textprintf(bmp_screen, bene_font, 261, 404, makecol(0, 0, 0),
-				"Options");
-		alfont_textprintf(bmp_screen, bene_font, 261, 403, makecol(255, 255,
-				255), "Options");
+		alfont_textprintf(bmp_screen, bene_font, 261, 404, makecol(0, 0, 0), "Options");
+		alfont_textprintf(bmp_screen, bene_font, 261, 403, makecol(255, 255, 255), "Options");
 	}
 
 	// EXIT
-	if ((mouse_x >= 246 && mouse_x <= 373)
-			&& (mouse_y >= 424 && mouse_y <= 442)) {
+	if ((mouse_x >= 246 && mouse_x <= 373) && (mouse_y >= 424 && mouse_y <= 442)) {
 
-		alfont_textprintf(bmp_screen, bene_font, 261, 424, makecol(0, 0, 0),
-				"Hall of Fame");
-		alfont_textprintf(bmp_screen, bene_font, 261, 423, makecol(255, 0, 0),
-				"Hall of Fame");
+		alfont_textprintf(bmp_screen, bene_font, 261, 424, makecol(0, 0, 0), "Hall of Fame");
+		alfont_textprintf(bmp_screen, bene_font, 261, 423, makecol(255, 0, 0), "Hall of Fame");
 	} else {
-		alfont_textprintf(bmp_screen, bene_font, 261, 424, makecol(0, 0, 0),
-				"Hall of Fame");
-		alfont_textprintf(bmp_screen, bene_font, 261, 423, makecol(255, 255,
-				255), "Hall of Fame");
+		alfont_textprintf(bmp_screen, bene_font, 261, 424, makecol(0, 0, 0), "Hall of Fame");
+		alfont_textprintf(bmp_screen, bene_font, 261, 423, makecol(255, 255, 255), "Hall of Fame");
 	}
 
 	// EXIT
-	if ((mouse_x >= 246 && mouse_x <= 373)
-			&& (mouse_y >= 444 && mouse_y <= 462)) {
-		alfont_textprintf(bmp_screen, bene_font, 261, 444, makecol(0, 0, 0),
-				"Exit");
-		alfont_textprintf(bmp_screen, bene_font, 261, 443, makecol(255, 0, 0),
-				"Exit");
+	if ((mouse_x >= 246 && mouse_x <= 373) && (mouse_y >= 444 && mouse_y <= 462)) {
+		alfont_textprintf(bmp_screen, bene_font, 261, 444, makecol(0, 0, 0), "Exit");
+		alfont_textprintf(bmp_screen, bene_font, 261, 443, makecol(255, 0, 0), "Exit");
 
 		// quit
 		if (cMouse::getInstance()->isLeftButtonClicked())
 			game.bPlaying = false;
 	} else {
-		alfont_textprintf(bmp_screen, bene_font, 261, 444, makecol(0, 0, 0),
-				"Exit");
-		alfont_textprintf(bmp_screen, bene_font, 261, 443, makecol(255, 255,
-				255), "Exit");
+		alfont_textprintf(bmp_screen, bene_font, 261, 444, makecol(0, 0, 0), "Exit");
+		alfont_textprintf(bmp_screen, bene_font, 261, 443, makecol(255, 255, 255), "Exit");
 	}
 
-	alfont_textprintf(bmp_screen, bene_font, 291, 1, makecol(64, 64, 64),
-			"CREDITS");
+	alfont_textprintf(bmp_screen, bene_font, 291, 1, makecol(64, 64, 64), "CREDITS");
 
 	if (mouse_y < 24)
-		alfont_textprintf(bmp_screen, bene_font, 290, 0, makecol(255, 0, 0),
-				"CREDITS");
+		alfont_textprintf(bmp_screen, bene_font, 290, 0, makecol(255, 0, 0), "CREDITS");
 	else
-		alfont_textprintf(bmp_screen, bene_font, 290, 0,
-				makecol(255, 255, 255), "CREDITS");
+		alfont_textprintf(bmp_screen, bene_font, 290, 0, makecol(255, 255, 255), "CREDITS");
 
 	// draw version
 	textDrawer->drawTextBottomRight(version);
@@ -965,8 +913,7 @@ void cGame::menu() {
 	}
 
 	// MOUSE
-	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x,
-			mouse_y);
+	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
 	delete textDrawer;
 
@@ -994,8 +941,7 @@ void cGame::setup_skirmish() {
 
 	bool bFadeOut = false;
 
-	draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0,
-			(game.getScreenResolution()->getHeight() * 0.72));
+	draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0, (game.getScreenResolution()->getHeight() * 0.72));
 
 	for (int dy = 0; dy < game.getScreenResolution()->getHeight(); dy += 2) {
 		line(bmp_screen, 0, dy, 640, dy, makecol(0, 0, 0));
@@ -1005,10 +951,8 @@ void cGame::setup_skirmish() {
 	GUI_DRAW_FRAME(-1, -1, 642, 21);
 
 	// title name
-	alfont_textprintf(bmp_screen, bene_font, 280, 3, makecol(0, 0, 0),
-			"Skirmish");
-	alfont_textprintf(bmp_screen, bene_font, 280, 2, makecol(255, 0, 0),
-			"Skirmish");
+	alfont_textprintf(bmp_screen, bene_font, 280, 3, makecol(0, 0, 0), "Skirmish");
+	alfont_textprintf(bmp_screen, bene_font, 280, 2, makecol(255, 0, 0), "Skirmish");
 
 	// box at the right
 	GUI_DRAW_FRAME(364, 21, 276, 443);
@@ -1029,8 +973,7 @@ void cGame::setup_skirmish() {
 		if (iSkirmishMap > 0) {
 			if (PreviewMap[iSkirmishMap].name[0] != '\0') {
 				if (PreviewMap[iSkirmishMap].terrain) {
-					draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain,
-							game.getScreenResolution()->getWidth() - 129, 27);
+					draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, game.getScreenResolution()->getWidth() - 129, 27);
 				}
 
 				for (int s = 0; s < 5; s++) {
@@ -1042,21 +985,16 @@ void cGame::setup_skirmish() {
 				iStartingPoints = iSkirmishStartPoints;
 
 				// when mouse is hovering, draw it, else do not
-				if ((mouse_x >= (game.screenResolution->getWidth() - 129) && mouse_x
-						< game.screenResolution->getWidth()) && (mouse_y >= 27 && mouse_y < 160)) {
+				if ((mouse_x >= (game.screenResolution->getWidth() - 129) && mouse_x < game.screenResolution->getWidth()) && (mouse_y >= 27 && mouse_y < 160)) {
 					if (PreviewMap[iSkirmishMap].name[0] != '\0') {
 						if (PreviewMap[iSkirmishMap].terrain) {
-							draw_sprite(bmp_screen,
-									PreviewMap[iSkirmishMap].terrain,
-									game.screenResolution->getWidth() - 129, 27);
+							draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, game.screenResolution->getWidth() - 129, 27);
 						}
 					}
 				} else {
 					if (PreviewMap[iSkirmishMap].name[0] != '\0') {
 						if (PreviewMap[iSkirmishMap].terrain) {
-							draw_sprite(bmp_screen,
-									(BITMAP *) gfxinter[BMP_UNKNOWNMAP].dat,
-									game.getScreenResolution()->getWidth() - 129, 27);
+							draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_UNKNOWNMAP].dat, game.getScreenResolution()->getWidth() - 129, 27);
 						}
 					}
 				}
@@ -1064,19 +1002,14 @@ void cGame::setup_skirmish() {
 		}
 	}
 
-	alfont_textprintf(bmp_screen, bene_font, 366, 27, makecol(0, 0, 0),
-			"Startpoints: %d", iStartingPoints);
-	alfont_textprintf(bmp_screen, bene_font, 366, 26, makecol(255, 255, 255),
-			"Startpoints: %d", iStartingPoints);
+	alfont_textprintf(bmp_screen, bene_font, 366, 27, makecol(0, 0, 0), "Startpoints: %d", iStartingPoints);
+	alfont_textprintf(bmp_screen, bene_font, 366, 26, makecol(255, 255, 255), "Startpoints: %d", iStartingPoints);
 
 	bool bDoRandomMap = false;
 
-	if ((mouse_x >= 366 && mouse_x <= (640 - 130)) && (mouse_y >= 27 && mouse_y
-			<= 43)) {
-		alfont_textprintf(bmp_screen, bene_font, 366, 27, makecol(0, 0, 0),
-				"Startpoints: %d", iStartingPoints);
-		alfont_textprintf(bmp_screen, bene_font, 366, 26, makecol(255, 0, 0),
-				"Startpoints: %d", iStartingPoints);
+	if ((mouse_x >= 366 && mouse_x <= (640 - 130)) && (mouse_y >= 27 && mouse_y <= 43)) {
+		alfont_textprintf(bmp_screen, bene_font, 366, 27, makecol(0, 0, 0), "Startpoints: %d", iStartingPoints);
+		alfont_textprintf(bmp_screen, bene_font, 366, 26, makecol(255, 0, 0), "Startpoints: %d", iStartingPoints);
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			iSkirmishStartPoints++;
@@ -1105,8 +1038,7 @@ void cGame::setup_skirmish() {
 	//rectfill(bmp_screen, 367, 159, 637, 159+17, makecol(186,190,149));
 	//rect(bmp_screen, 367,159, 637, 159+17,makecol(255,255,255));
 
-	alfont_textprintf(bmp_screen, bene_font, 447, 160, makecol(0, 0, 0),
-			"Map List");
+	alfont_textprintf(bmp_screen, bene_font, 447, 160, makecol(0, 0, 0), "Map List");
 
 	int const iHeightPixels = 17;
 
@@ -1116,8 +1048,7 @@ void cGame::setup_skirmish() {
 	int iColor = makecol(255, 255, 255);
 
 	// scroll barr
-	if ((mouse_x >= (iEndX + 1) && mouse_x <= 637) && (mouse_y >= 159 + 1
-			&& mouse_y <= 477)) {
+	if ((mouse_x >= (iEndX + 1) && mouse_x <= 637) && (mouse_y >= 159 + 1 && mouse_y <= 477)) {
 		// hovers
 		rectfill(bmp_screen, iEndX + 1, 159, 637, 460, makecol(128, 128, 128));
 		rect(bmp_screen, iEndX + 1, 159, 637, 460, makecol(64, 64, 64));
@@ -1171,10 +1102,8 @@ void cGame::setup_skirmish() {
 				iColor = makecol(255, 0, 0);
 			}
 
-			alfont_textprintf(bmp_screen, bene_font, 368, iDrawY + 3, makecol(
-					0, 0, 0), PreviewMap[i].name);
-			alfont_textprintf(bmp_screen, bene_font, 368, iDrawY + 2, iColor,
-					PreviewMap[i].name);
+			alfont_textprintf(bmp_screen, bene_font, 368, iDrawY + 3, makecol(0, 0, 0), PreviewMap[i].name);
+			alfont_textprintf(bmp_screen, bene_font, 368, iDrawY + 2, iColor, PreviewMap[i].name);
 		}
 	}
 
@@ -1188,10 +1117,8 @@ void cGame::setup_skirmish() {
 	// bottom bar
 	rectfill(bmp_screen, 0, 464, 640, 480, makecol(32, 32, 32));
 
-	alfont_textprintf(bmp_screen, bene_font, 4, 26, makecol(0, 0, 0),
-			"Player      House      Credits       Units    Team");
-	alfont_textprintf(bmp_screen, bene_font, 4, 25, makecol(255, 255, 255),
-			"Player      House      Credits       Units    Team");
+	alfont_textprintf(bmp_screen, bene_font, 4, 26, makecol(0, 0, 0), "Player      House      Credits       Units    Team");
+	alfont_textprintf(bmp_screen, bene_font, 4, 25, makecol(255, 255, 255), "Player      House      Credits       Units    Team");
 
 	bool bHover = false;
 
@@ -1201,22 +1128,15 @@ void cGame::setup_skirmish() {
 		if (p < iStartingPoints) {
 			// player playing or not
 			if (p == 0) {
-				alfont_textprintf(bmp_screen, bene_font, 4, iDrawY + 1,
-						makecol(0, 0, 0), "Human");
-				alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, makecol(
-						255, 255, 255), "Human");
+				alfont_textprintf(bmp_screen, bene_font, 4, iDrawY + 1, makecol(0, 0, 0), "Human");
+				alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, makecol(255, 255, 255), "Human");
 			} else {
-				alfont_textprintf(bmp_screen, bene_font, 4, iDrawY + 1,
-						makecol(0, 0, 0), "  CPU");
-				if ((mouse_x >= 4 && mouse_x <= 73) && (mouse_y >= iDrawY
-						&& mouse_y <= (iDrawY + 16))) {
+				alfont_textprintf(bmp_screen, bene_font, 4, iDrawY + 1, makecol(0, 0, 0), "  CPU");
+				if ((mouse_x >= 4 && mouse_x <= 73) && (mouse_y >= iDrawY && mouse_y <= (iDrawY + 16))) {
 					if (aiplayer[p].bPlaying)
-						alfont_textprintf(bmp_screen, bene_font, 4, iDrawY,
-								makecol(fade_select, 0, 0), "  CPU");
+						alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, makecol(fade_select, 0, 0), "  CPU");
 					else
-						alfont_textprintf(bmp_screen, bene_font, 4, iDrawY,
-								makecol((fade_select / 2), (fade_select / 2),
-										(fade_select / 2)), "  CPU");
+						alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, makecol((fade_select / 2), (fade_select / 2), (fade_select / 2)), "  CPU");
 
 					if (cMouse::getInstance()->isLeftButtonClicked() && p > 1) {
 						if (aiplayer[p].bPlaying)
@@ -1227,11 +1147,9 @@ void cGame::setup_skirmish() {
 					}
 				} else {
 					if (aiplayer[p].bPlaying)
-						alfont_textprintf(bmp_screen, bene_font, 4, iDrawY,
-								makecol(255, 255, 255), "  CPU");
+						alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, makecol(255, 255, 255), "  CPU");
 					else
-						alfont_textprintf(bmp_screen, bene_font, 4, iDrawY,
-								makecol(128, 128, 128), "  CPU");
+						alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, makecol(128, 128, 128), "  CPU");
 				}
 
 			}
@@ -1253,36 +1171,28 @@ void cGame::setup_skirmish() {
 				sprintf(cHouse, "Random");
 			}
 
-			alfont_textprintf(bmp_screen, bene_font, 74, iDrawY + 1, makecol(0,
-					0, 0), "%s", cHouse);
+			alfont_textprintf(bmp_screen, bene_font, 74, iDrawY + 1, makecol(0, 0, 0), "%s", cHouse);
 
 			//			rect(bmp_screen, 74, (40+(p*22)), 150, (40+(p*22))+16, makecol(255,255,255));
 
-			if ((mouse_x >= 74 && mouse_x <= 150) && (mouse_y >= iDrawY
-					&& mouse_y <= (iDrawY + 16)))
+			if ((mouse_x >= 74 && mouse_x <= 150) && (mouse_y >= iDrawY && mouse_y <= (iDrawY + 16)))
 				bHover = true;
 
 			if (p == 0) {
-				alfont_textprintf(bmp_screen, bene_font, 74, iDrawY, makecol(
-						255, 255, 255), "%s", cHouse);
+				alfont_textprintf(bmp_screen, bene_font, 74, iDrawY, makecol(255, 255, 255), "%s", cHouse);
 			} else {
 				if (aiplayer[p].bPlaying)
-					alfont_textprintf(bmp_screen, bene_font, 74, iDrawY,
-							makecol(255, 255, 255), "%s", cHouse);
+					alfont_textprintf(bmp_screen, bene_font, 74, iDrawY, makecol(255, 255, 255), "%s", cHouse);
 				else
-					alfont_textprintf(bmp_screen, bene_font, 74, iDrawY,
-							makecol(128, 128, 128), "%s", cHouse);
+					alfont_textprintf(bmp_screen, bene_font, 74, iDrawY, makecol(128, 128, 128), "%s", cHouse);
 
 			}
 
 			if (bHover) {
 				if (aiplayer[p].bPlaying)
-					alfont_textprintf(bmp_screen, bene_font, 74, iDrawY,
-							makecol(fade_select, 0, 0), "%s", cHouse);
+					alfont_textprintf(bmp_screen, bene_font, 74, iDrawY, makecol(fade_select, 0, 0), "%s", cHouse);
 				else
-					alfont_textprintf(bmp_screen, bene_font, 74, iDrawY,
-							makecol((fade_select / 2), (fade_select / 2),
-									(fade_select / 2)), "%s", cHouse);
+					alfont_textprintf(bmp_screen, bene_font, 74, iDrawY, makecol((fade_select / 2), (fade_select / 2), (fade_select / 2)), "%s", cHouse);
 
 				if (cMouse::getInstance()->isLeftButtonClicked()) {
 					player[p].setHouse((player[p].getHouse() + 1));
@@ -1314,39 +1224,28 @@ void cGame::setup_skirmish() {
 			// Credits
 			bHover = false;
 
-			alfont_textprintf(bmp_screen, bene_font, 174, iDrawY + 1, makecol(
-					0, 0, 0), "%d", (int) player[p].credits);
+			alfont_textprintf(bmp_screen, bene_font, 174, iDrawY + 1, makecol(0, 0, 0), "%d", (int) player[p].credits);
 
 			//rect(bmp_screen, 174, iDrawY, 230, iDrawY+16, makecol(255,255,255));
 
-			if ((mouse_x >= 174 && mouse_x <= 230) && (mouse_y >= iDrawY
-					&& mouse_y <= (iDrawY + 16)))
+			if ((mouse_x >= 174 && mouse_x <= 230) && (mouse_y >= iDrawY && mouse_y <= (iDrawY + 16)))
 				bHover = true;
 
 			if (p == 0) {
-				alfont_textprintf(bmp_screen, bene_font, 174, iDrawY, makecol(
-						255, 255, 255), "%d", (int) player[p].credits);
+				alfont_textprintf(bmp_screen, bene_font, 174, iDrawY, makecol(255, 255, 255), "%d", (int) player[p].credits);
 			} else {
 				if (aiplayer[p].bPlaying)
-					alfont_textprintf(bmp_screen, bene_font, 174, iDrawY,
-							makecol(255, 255, 255), "%d",
-							(int) player[p].credits);
+					alfont_textprintf(bmp_screen, bene_font, 174, iDrawY, makecol(255, 255, 255), "%d", (int) player[p].credits);
 				else
-					alfont_textprintf(bmp_screen, bene_font, 174, iDrawY,
-							makecol(128, 128, 128), "%d",
-							(int) player[p].credits);
+					alfont_textprintf(bmp_screen, bene_font, 174, iDrawY, makecol(128, 128, 128), "%d", (int) player[p].credits);
 
 			}
 
 			if (bHover) {
 				if (aiplayer[p].bPlaying)
-					alfont_textprintf(bmp_screen, bene_font, 174, iDrawY,
-							makecol(fade_select, 0, 0), "%d",
-							(int) player[p].credits);
+					alfont_textprintf(bmp_screen, bene_font, 174, iDrawY, makecol(fade_select, 0, 0), "%d", (int) player[p].credits);
 				else
-					alfont_textprintf(bmp_screen, bene_font, 174, iDrawY,
-							makecol((fade_select / 2), (fade_select / 2),
-									(fade_select / 2)), "%d", player[p].credits);
+					alfont_textprintf(bmp_screen, bene_font, 174, iDrawY, makecol((fade_select / 2), (fade_select / 2), (fade_select / 2)), "%d", player[p].credits);
 
 				if (cMouse::getInstance()->isLeftButtonClicked()) {
 					player[p].credits += 500;
@@ -1366,37 +1265,28 @@ void cGame::setup_skirmish() {
 			// Units
 			bHover = false;
 
-			alfont_textprintf(bmp_screen, bene_font, 269, iDrawY + 1, makecol(
-					0, 0, 0), "%d", aiplayer[p].iUnits);
+			alfont_textprintf(bmp_screen, bene_font, 269, iDrawY + 1, makecol(0, 0, 0), "%d", aiplayer[p].iUnits);
 
 			//rect(bmp_screen, 269, iDrawY, 290, iDrawY+16, makecol(255,255,255));
 
-			if ((mouse_x >= 269 && mouse_x <= 290) && (mouse_y >= iDrawY
-					&& mouse_y <= (iDrawY + 16)))
+			if ((mouse_x >= 269 && mouse_x <= 290) && (mouse_y >= iDrawY && mouse_y <= (iDrawY + 16)))
 				bHover = true;
 
 			if (p == 0) {
-				alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(
-						255, 255, 255), "%d", aiplayer[p].iUnits);
+				alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(255, 255, 255), "%d", aiplayer[p].iUnits);
 			} else {
 				if (aiplayer[p].bPlaying)
-					alfont_textprintf(bmp_screen, bene_font, 269, iDrawY,
-							makecol(255, 255, 255), "%d", aiplayer[p].iUnits);
+					alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(255, 255, 255), "%d", aiplayer[p].iUnits);
 				else
-					alfont_textprintf(bmp_screen, bene_font, 269, iDrawY,
-							makecol(128, 128, 128), "%d", aiplayer[p].iUnits);
+					alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(128, 128, 128), "%d", aiplayer[p].iUnits);
 
 			}
 
 			if (bHover) {
 				if (aiplayer[p].bPlaying)
-					alfont_textprintf(bmp_screen, bene_font, 269, iDrawY,
-							makecol(fade_select, 0, 0), "%d",
-							aiplayer[p].iUnits);
+					alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(fade_select, 0, 0), "%d", aiplayer[p].iUnits);
 				else
-					alfont_textprintf(bmp_screen, bene_font, 269, iDrawY,
-							makecol((fade_select / 2), (fade_select / 2),
-									(fade_select / 2)), "%d",
+					alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol((fade_select / 2), (fade_select / 2), (fade_select / 2)), "%d",
 							aiplayer[p].iUnits);
 
 				if (cMouse::getInstance()->isLeftButtonClicked()) {
@@ -1423,14 +1313,11 @@ void cGame::setup_skirmish() {
 
 	// back
 	alfont_textprintf(bmp_screen, bene_font, 0, 467, makecol(0, 0, 0), " BACK");
-	alfont_textprintf(bmp_screen, bene_font, 0, 466, makecol(255, 255, 255),
-			" BACK");
+	alfont_textprintf(bmp_screen, bene_font, 0, 466, makecol(255, 255, 255), " BACK");
 
 	// start
-	alfont_textprintf(bmp_screen, bene_font, 580, 467, makecol(0, 0, 0),
-			"START");
-	alfont_textprintf(bmp_screen, bene_font, 580, 466, makecol(255, 255, 255),
-			"START");
+	alfont_textprintf(bmp_screen, bene_font, 580, 467, makecol(0, 0, 0), "START");
+	alfont_textprintf(bmp_screen, bene_font, 580, 466, makecol(255, 255, 255), "START");
 
 	if (bDoRandomMap) {
 		randomMapGenerator.generateRandomMap();
@@ -1438,8 +1325,7 @@ void cGame::setup_skirmish() {
 
 	// back
 	if ((mouse_x >= 0 && mouse_x <= 50) && (mouse_y >= 465 && mouse_y <= 480)) {
-		alfont_textprintf(bmp_screen, bene_font, 0, 466, makecol(255, 0, 0),
-				" BACK");
+		alfont_textprintf(bmp_screen, bene_font, 0, 466, makecol(255, 0, 0), " BACK");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			bFadeOut = true;
@@ -1447,17 +1333,12 @@ void cGame::setup_skirmish() {
 		}
 	}
 
-	if ((mouse_x >= 580 && mouse_x <= 640)
-			&& (mouse_y >= 465 && mouse_y <= 480))
-		alfont_textprintf(bmp_screen, bene_font, 580, 466, makecol(255, 0, 0),
-				"START");
+	if ((mouse_x >= 580 && mouse_x <= 640) && (mouse_y >= 465 && mouse_y <= 480))
+		alfont_textprintf(bmp_screen, bene_font, 580, 466, makecol(255, 0, 0), "START");
 
-	cCellCalculator *cellCalculator = new cCellCalculator(&map);
+	cCellCalculator *cellCalculator = new cCellCalculator(map);
 	// START
-	if ((mouse_x >= 580 && mouse_x <= 640)
-			&& (mouse_y >= 465 && mouse_y <= 480)
-			&& cMouse::getInstance()->isLeftButtonClicked() && iSkirmishMap
-			> -1) {
+	if ((mouse_x >= 580 && mouse_x <= 640) && (mouse_y >= 465 && mouse_y <= 480) && cMouse::getInstance()->isLeftButtonClicked() && iSkirmishMap > -1) {
 		// Starting skirmish mode
 		bSkirmish = true;
 
@@ -1517,8 +1398,7 @@ void cGame::setup_skirmish() {
 
 					bool bFound = false;
 					for (int pl = 0; pl < AI_WORM; pl++) {
-						if (player[pl].getHouse() > 0 && player[pl].getHouse()
-								== iHouse) {
+						if (player[pl].getHouse() > 0 && player[pl].getHouse() == iHouse) {
 							bFound = true;
 						}
 					}
@@ -1550,9 +1430,7 @@ void cGame::setup_skirmish() {
 			}
 
 			// create constyard
-			cAbstractStructure *s =
-					cStructureFactory::getInstance()->createStructure(
-							player[p].focus_cell, CONSTYARD, p);
+			cAbstractStructure *s = cStructureFactory::getInstance()->createStructure(player[p].focus_cell, CONSTYARD, p);
 
 			// when failure, create mcv instead
 			if (s == NULL) {
@@ -1629,10 +1507,8 @@ void cGame::setup_skirmish() {
 				}
 			}
 			char msg[255];
-			sprintf(msg, "Wants %d amount of units; amount created %d",
-					aiplayer[p].iUnits, u);
-			cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP,
-					"Creating units", msg, OUTC_NONE, p, iHouse);
+			sprintf(msg, "Wants %d amount of units; amount created %d", aiplayer[p].iUnits, u);
+			cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, iHouse);
 		}
 
 		// TODO: spawn a few worms
@@ -1651,8 +1527,7 @@ void cGame::setup_skirmish() {
 	delete cellCalculator;
 
 	// MOUSE
-	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x,
-			mouse_y);
+	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
 	if (bFadeOut) {
 		game.FADE_OUT();
@@ -1681,8 +1556,7 @@ void cGame::house() {
 	// HOUSES
 
 	// ATREIDES
-	if ((mouse_y >= 168 && mouse_y <= 267)
-			&& (mouse_x >= 116 && mouse_x <= 207)) {
+	if ((mouse_y >= 168 && mouse_y <= 267) && (mouse_x >= 116 && mouse_x <= 207)) {
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			iHouse = ATREIDES;
 
@@ -1700,8 +1574,7 @@ void cGame::house() {
 	}
 
 	// ORDOS
-	if ((mouse_y >= 168 && mouse_y <= 267)
-			&& (mouse_x >= 271 && mouse_x <= 360)) {
+	if ((mouse_y >= 168 && mouse_y <= 267) && (mouse_x >= 271 && mouse_x <= 360)) {
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			iHouse = ORDOS;
 
@@ -1719,8 +1592,7 @@ void cGame::house() {
 	}
 
 	// ORDOS
-	if ((mouse_y >= 168 && mouse_y <= 267)
-			&& (mouse_x >= 418 && mouse_x <= 506)) {
+	if ((mouse_y >= 168 && mouse_y <= 267) && (mouse_x >= 418 && mouse_x <= 506)) {
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			iHouse = HARKONNEN;
 
@@ -1738,8 +1610,7 @@ void cGame::house() {
 	}
 
 	// MOUSE
-	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x,
-			mouse_y);
+	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
 	if (bFadeOut)
 		game.FADE_OUT();
@@ -1753,31 +1624,36 @@ void cGame::preparementat(bool bTellHouse) {
 	if (bTellHouse) {
 		if (iHouse == ATREIDES) {
 			INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION);
-			//LOAD_BRIEFING("atreides.txt");
 		} else if (iHouse == HARKONNEN) {
 			INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION);
-			//LOAD_BRIEFING("harkonnen.txt");
 		} else if (iHouse == ORDOS) {
 			INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION);
-			//LOAD_BRIEFING("ordos.txt");
 		}
 	} else {
 		if (isState(BRIEFING)) {
 			game.setup_players();
-			INI_Load_scenario(iHouse, iRegion);
+
+			mapCamera = new cMapCamera();
+
+        	INI_Load_scenario(iHouse, iRegion);
+
+        	gameDrawer = new cGameDrawer(&player[HUMAN]);
+			assert(gameDrawer->getCreditsDrawer());
+			gameDrawer->getCreditsDrawer()->setCredits();
+
 			INI_LOAD_BRIEFING(iHouse, iRegion, INI_BRIEFING);
 		} else if (isState(WINBRIEF)) {
 			if (rnd(100) < 50) {
-				LOAD_SCENE("win01"); // ltank
+				LOAD_SCENE("win01");
 			} else {
-				LOAD_SCENE("win02"); // ltank
+				LOAD_SCENE("win02");
 			}
 			INI_LOAD_BRIEFING(iHouse, iRegion, INI_WIN);
 		} else if (isState(LOSEBRIEF)) {
 			if (rnd(100) < 50) {
-				LOAD_SCENE("lose01"); // ltank
+				LOAD_SCENE("lose01");
 			} else {
-				LOAD_SCENE("lose02"); // ltank
+				LOAD_SCENE("lose02");
 			}
 			INI_LOAD_BRIEFING(iHouse, iRegion, INI_LOSE);
 		}
@@ -1829,7 +1705,7 @@ void cGame::tellhouse() {
 
 		// YES
 		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[BTN_YES].dat, 466, 423);
-		if ( (mouse_x > 446 && mouse_x < 619) && (mouse_y > 423 && mouse_y < 468)) {
+		if ((mouse_x > 446 && mouse_x < 619) && (mouse_y > 423 && mouse_y < 468)) {
 			if (cMouse::getInstance()->isLeftButtonClicked()) {
 				// yes!
 				setState(BRIEFING);
@@ -1893,55 +1769,47 @@ void cGame::region() {
 		if (iRegionScene == 0) {
 			REGION_SETUP(iMission, iHouse);
 			iRegionScene++;
-			gameDrawer->getMessageDrawer()->setMessage(
-					"3 Houses have come to Dune.");
+			gameDrawer->getMessageDrawer()->setMessage("3 Houses have come to Dune.");
 			iRegionSceneAlpha = -5;
 		} else if (iRegionScene == 1) {
 			// draw the
 			set_trans_blender(0, 0, 0, iRegionSceneAlpha);
-			draw_trans_sprite(bmp_screen,
-					(BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0, 12);
+			draw_trans_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0, 12);
 			char * cMessage = gameDrawer->getMessageDrawer()->getMessage();
 			if (cMessage[0] == '\0' && iRegionSceneAlpha >= 255) {
-				gameDrawer->getMessageDrawer()->setMessage(
-						"To take control of the land.");
+				gameDrawer->getMessageDrawer()->setMessage("To take control of the land.");
 				iRegionScene++;
 				iRegionSceneAlpha = -5;
 			}
 		} else if (iRegionScene == 2) {
-			draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0,
-					12);
+			draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0, 12);
 			set_trans_blender(0, 0, 0, iRegionSceneAlpha);
-			draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat,
-					16, 73);
+			draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
 			char * cMessage = gameDrawer->getMessageDrawer()->getMessage();
 			if (cMessage[0] == '\0' && iRegionSceneAlpha >= 255) {
-				gameDrawer->getMessageDrawer()->setMessage(
-						"That has become divided.");
+				gameDrawer->getMessageDrawer()->setMessage("That has become divided.");
 				iRegionScene++;
 				iRegionSceneAlpha = -5;
 			}
 		} else if (iRegionScene == 3) {
 			draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
 			set_trans_blender(0, 0, 0, iRegionSceneAlpha);
-			draw_trans_sprite(bmp_screen,
-					(BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
+			draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
 
 			if (iRegionSceneAlpha >= 255) {
 				iRegionScene = 4;
 				iRegionState++;
 			}
 
-		} else if (iRegionScene > 3)
+		} else if (iRegionScene > 3) {
 			iRegionState++;
+		}
 
 		if (iRegionSceneAlpha < 255) {
 			iRegionSceneAlpha += 5;
 		}
 
-		// when  mission is 1, do the '3 houses has come to dune, blah blah story)
-
-		//iRegionState++;
+		// when mission is 1, do the '3 houses has come to dune intro
 	}
 
 	// Draw
@@ -1966,16 +1834,14 @@ void cGame::region() {
 		draw_sprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, 0, 0);
 		draw_sprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, (640) - 64, 0);
 		draw_sprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, 0, (480) - 64);
-		draw_sprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, (640) - 64,
-				(480) - 64);
+		draw_sprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, (640) - 64, (480) - 64);
 	}
 
 	char * cMessage = gameDrawer->getMessageDrawer()->getMessage();
 	if (iRegionState == 2) {
 		// draw dune first
 		draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
-		draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat,
-				16, 73);
+		draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
 
 		// draw here stuff
 		for (int i = 0; i < 27; i++)
@@ -1994,16 +1860,14 @@ void cGame::region() {
 					// when the region is NOT this house, turn it into this house
 					if (world[iRegNr].iHouse != iRegionHouse[i]) {
 
-						if ((cRegionText[i][0] != '\0' && cMessage[0] == '\0')
-								|| (cRegionText[i][0] == '\0')) {
+						if ((cRegionText[i][0] != '\0' && cMessage[0] == '\0') || (cRegionText[i][0] == '\0')) {
 
 							// set this up
 							world[iRegNr].iHouse = iRegionHouse[i];
 							world[iRegNr].iAlpha = 1;
 
 							if (cRegionText[i][0] != '\0') {
-								gameDrawer->getMessageDrawer()->setMessage(
-										cRegionText[i]);
+								gameDrawer->getMessageDrawer()->setMessage(cRegionText[i]);
 							}
 
 							bDone = false;
@@ -2012,7 +1876,6 @@ void cGame::region() {
 						} else {
 							bDone = false;
 							break;
-
 						}
 					} else {
 						// house = ok
@@ -2034,16 +1897,14 @@ void cGame::region() {
 
 		if (bDone && cMessage[0] == '\0') {
 			iRegionState++;
-			gameDrawer->getMessageDrawer()->setMessage(
-					"Select your next region.");
+			gameDrawer->getMessageDrawer()->setMessage("Select your next region.");
 			//   allegro_message("done2");
 		}
 	} else if (iRegionState == 3) {
 
 		// draw dune first
 		draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
-		draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat,
-				16, 73);
+		draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
 
 		// draw here stuff
 		for (int i = 0; i < 27; i++)
@@ -2063,12 +1924,15 @@ void cGame::region() {
 		if (cMouse::getInstance()->isLeftButtonClicked() && bClickable) {
 			// selected....
 			int iReg = 0;
-			for (int ir = 0; ir < MAX_REGIONS; ir++)
-				if (world[ir].bSelectable)
-					if (ir != r)
+			for (int ir = 0; ir < MAX_REGIONS; ir++) {
+				if (world[ir].bSelectable) {
+					if (ir != r) {
 						iReg++;
-					else
+					} else {
 						break;
+					}
+				}
+			}
 
 			// calculate region stuff, and add it up
 			int iNewReg = 0;
@@ -2131,39 +1995,18 @@ void cGame::region() {
 
 	}
 
-	// draw message
-	// TODO: Use own message drawer here or something, with other coordinates
-	//    if (iMessageAlpha > -1)
-	//	{
-	//		set_trans_blender(0,0,0,iMessageAlpha);
-	//		BITMAP *temp = create_bitmap(480,30);
-	//		clear_bitmap(temp);
-	//		rectfill(temp, 0,0,480,40, makecol(255,0,255));
-	//		//draw_sprite(temp, (BITMAP *)gfxinter[BMP_MESSAGEBAR].dat, 0,0);
-	//
-	//		// draw message
-	//		alfont_textprintf(temp, game_font, 13,18, makecol(0,0,0), cMessage);
-	//
-	//		// draw temp
-	//		draw_trans_sprite(bmp_screen, temp, 73, 358);
-	//
-	//		destroy_bitmap(temp);
-	//	}
-
-
 	// mouse
-	if (mouse_tile == MOUSE_ATTACK)
-		draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x
-				- 16, mouse_y - 16);
-	else
-		draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x,
-				mouse_y);
+	if (mouse_tile == MOUSE_ATTACK) {
+		draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x - 16, mouse_y - 16);
+	} else {
+		draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+	}
 
-	if (bFadeOut)
+	if (bFadeOut) {
 		FADE_OUT();
+	}
 
 	vsync();
-
 }
 
 void cGame::destroyAllUnits(bool bHumanPlayer) {
@@ -2256,8 +2099,7 @@ void cGame::shakeScreenAndBlitBuffer() {
 		shake_x = -abs(offset / 2) + rnd(offset);
 		shake_y = -abs(offset / 2) + rnd(offset);
 
-		blit(bmp_screen, bmp_throttle, 0, 0, 0 + shake_x, 0 + shake_y,
-				game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
+		blit(bmp_screen, bmp_throttle, 0, 0, 0 + shake_x, 0 + shake_y, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 		blit(bmp_throttle, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 	} else {
 		// when fading
@@ -2275,50 +2117,51 @@ void cGame::shakeScreenAndBlitBuffer() {
 	}
 }
 
+// TODO: Refactor to Factory Pattern, and delegate the behaviour to own classes
 void cGame::runGameState() {
 	switch (state) {
-	case PLAYING:
-		combat();
-		break;
-	case BRIEFING:
-		if (iMentatSpeak == -1) {
-			preparementat(false);
-		}
-		mentat(iHouse);
-		break;
-	case SETUPSKIRMISH:
-		setup_skirmish();
-		break;
-	case INMENU:
-		menu();
-		break;
-	case REGION:
-		region();
-		break;
-	case HOUSE:
-		house();
-		break;
-	case TELLHOUSE:
-		tellhouse();
-		break;
-	case WINNING:
-		winning();
-		break;
-	case LOSING:
-		losing();
-		break;
-	case WINBRIEF:
-		if (iMentatSpeak == -1) {
-			preparementat(false);
-		}
-		mentat(iHouse);
-		break;
-	case LOSEBRIEF:
-		if (iMentatSpeak == -1) {
-			preparementat(false);
-		}
-		mentat(iHouse);
-		break;
+		case PLAYING:
+			combat();
+			break;
+		case BRIEFING:
+			if (iMentatSpeak == -1) {
+				preparementat(false);
+			}
+			mentat(iHouse);
+			break;
+		case SETUPSKIRMISH:
+			setup_skirmish();
+			break;
+		case INMENU:
+			menu();
+			break;
+		case REGION:
+			region();
+			break;
+		case HOUSE:
+			house();
+			break;
+		case TELLHOUSE:
+			tellhouse();
+			break;
+		case WINNING:
+			winning();
+			break;
+		case LOSING:
+			losing();
+			break;
+		case WINBRIEF:
+			if (iMentatSpeak == -1) {
+				preparementat(false);
+			}
+			mentat(iHouse);
+			break;
+		case LOSEBRIEF:
+			if (iMentatSpeak == -1) {
+				preparementat(false);
+			}
+			mentat(iHouse);
+			break;
 	}
 }
 
@@ -2385,6 +2228,7 @@ void cGame::setScreenResolutionFromGameIniSettings() {
 bool cGame::setupGame() {
 	cLogger *logger = cLogger::getInstance();
 
+	// TODO: remove? something seriously is wrong with the initialization of the game
 	game.init(); // Must be first!
 
 	// Each time we run the game, we clear out the logbook
@@ -2401,8 +2245,7 @@ bool cGame::setupGame() {
 
 	logger->logHeader("Version information");
 	char msg[255];
-	sprintf(msg, "Version %s, Compiled at %s , %s", game.version, __DATE__,
-			__TIME__);
+	sprintf(msg, "Version %s, Compiled at %s , %s", game.version, __DATE__, __TIME__);
 	logger->log(LOG_INFO, COMP_VERSION, "Initializing", msg);
 
 	// init game
@@ -2417,43 +2260,33 @@ bool cGame::setupGame() {
 	mouse_co_x2 = -1; // the
 	mouse_co_y2 = -1; // mouse border
 
-	// TODO: load eventual game settings (resolution, etc)
-
-
 	// Logbook notification
 	logger->logHeader("Allegro");
 
 	// ALLEGRO - INIT
 	if (allegro_init() != 0) {
-		logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init", allegro_id,
-				OUTC_FAILED);
+		logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_FAILED);
 		return false;
 	}
 
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id,
-			OUTC_SUCCESS);
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
 
 	int r = install_timer();
 	if (r > -1) {
-		logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing timer functions",
-				"install_timer()", OUTC_SUCCESS);
+		logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_SUCCESS);
 	} else {
 		allegro_message("Failed to install timer");
-		logger->log(LOG_FATAL, COMP_ALLEGRO, "Initializing timer functions",
-				"install_timer()", OUTC_FAILED);
+		logger->log(LOG_FATAL, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_FAILED);
 		return false;
 	}
 
 	alfont_init();
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()",
-			OUTC_SUCCESS);
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
 	install_keyboard();
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard",
-			"install_keyboard()", OUTC_SUCCESS);
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
 	install_mouse();
 	assert(cMouse::getInstance());
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse",
-			"install_mouse()", OUTC_SUCCESS);
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
 	/* set up the interrupt routines... */
 	game.TIMER_shake = 0;
@@ -2467,20 +2300,17 @@ bool cGame::setupGame() {
 	install_int(allegro_timerglobal, 5); // 5 miliseconds
 	install_int(allegro_timerfps, 1000); // 1000 miliseconds (seconds)
 
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables",
-			"LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables", "LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
 
 	frame_count = fps = 0;
 
 	// set window title
 	char title[128];
-	sprintf(title, "Dune II - The Maker [%s] - (by Stefan Hendriks)",
-			game.version);
+	sprintf(title, "Dune II - The Maker [%s] - (by Stefan Hendriks)", game.version);
 
 	// Set window title
 	set_window_title(title);
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", title,
-			OUTC_SUCCESS);
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", title, OUTC_SUCCESS);
 
 	set_color_depth(16);
 
@@ -2489,20 +2319,16 @@ bool cGame::setupGame() {
 	// can specify how much CPU this game may use?
 
 	if (game.windowed) {
-		cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO,
-				"Windowed mode requested.",
-				"Searching for optimal graphics settings");
+		cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "Searching for optimal graphics settings");
 		int iDepth = desktop_color_depth();
 
 		if (iDepth > 15 && iDepth != 24) {
 			char msg[255];
 			sprintf(msg, "Desktop color dept is %d.", iDepth);
-			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO,
-					"Analyzing desktop color depth.", msg);
+			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", msg);
 			set_color_depth(iDepth); // run in the same bit depth as the desktop
 		} else {
-			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO,
-					"Analyzing desktop color depth.",
+			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.",
 					"Could not find color depth, or unsupported color depth found. Will use 16 bit");
 			set_color_depth(16);
 		}
@@ -2516,24 +2342,17 @@ bool cGame::setupGame() {
 #ifdef UNIX
 		r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 #else
-		r = set_gfx_mode(GFX_DIRECTX_WIN, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
+		r = set_gfx_mode(GFX_DIRECTX_WIN, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(),
+				getScreenResolution()->getHeight());
 #endif
 
 		char msg[255];
-		sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d.",
-				getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
+		sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d.", getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 
 		if (r > -1) {
-			logger->log(LOG_INFO, COMP_ALLEGRO, msg,
-					"Successfully created window with graphics mode.",
-					OUTC_SUCCESS);
+			logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Successfully created window with graphics mode.", OUTC_SUCCESS);
 		} else {
-			logger->log(
-					LOG_INFO,
-					COMP_ALLEGRO,
-					msg,
-					"Failed to create window with graphics mode. Fallback to fullscreen.",
-					OUTC_FAILED);
+			logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Failed to create window with graphics mode. Fallback to fullscreen.", OUTC_FAILED);
 
 			set_color_depth(16);
 
@@ -2541,20 +2360,16 @@ bool cGame::setupGame() {
 #ifdef UNIX
 			r = set_gfx_mode(GFX_XWINDOWS, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 #else
-			r = set_gfx_mode(GFX_DIRECTX_ACCEL, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
+			r = set_gfx_mode(GFX_DIRECTX_ACCEL, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(),
+					getScreenResolution()->getHeight());
 #endif
 
 			if (r > -1) {
-				logger->log(LOG_INFO, COMP_ALLEGRO,
-						"Initializing graphics mode (fallback, fullscreen)",
-						"Fallback succeeded.", OUTC_SUCCESS);
+				logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fallback, fullscreen)", "Fallback succeeded.", OUTC_SUCCESS);
 				game.windowed = false;
 			} else {
-				logger->log(LOG_INFO, COMP_ALLEGRO,
-						"Initializing graphics mode (fallback, fullscreen)",
-						"Fallback failed!", OUTC_FAILED);
-				allegro_message(
-						"Fatal error:\n\nCould not start game.\n\nGraphics mode (windowed mode & fallback) could not be initialized.");
+				logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fallback, fullscreen)", "Fallback failed!", OUTC_FAILED);
+				allegro_message("Fatal error:\n\nCould not start game.\n\nGraphics mode (windowed mode & fallback) could not be initialized.");
 				return false;
 			}
 		}
@@ -2563,14 +2378,13 @@ bool cGame::setupGame() {
 		bool resolutionIsSetProperly = false;
 		if (isResolutionInGameINIFoundAndSet()) {
 			setScreenResolutionFromGameIniSettings();
-			r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
+			r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(),
+					getScreenResolution()->getHeight());
 			char msg[255];
 
-			sprintf(msg, "Setting up %dx%d resolution from ini file.",
-					getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
+			sprintf(msg, "Setting up %dx%d resolution from ini file.", getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 
-			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO,
-					"Custom resolution from ini file.", msg);
+			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
 
 			resolutionIsSetProperly = (r > -1);
 		}
@@ -2584,62 +2398,47 @@ bool cGame::setupGame() {
 
 		// succes
 		if (r > -1) {
-			logger->log(LOG_INFO, COMP_ALLEGRO,
-					"Initializing graphics mode (fullscreen)",
-					"Succesfully initialized graphics mode.", OUTC_SUCCESS);
+			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)", "Succesfully initialized graphics mode.", OUTC_SUCCESS);
 		} else {
-			logger->log(LOG_INFO, COMP_ALLEGRO,
-					"Initializing graphics mode (fullscreen)",
-					"Failed to initializ graphics mode.", OUTC_FAILED);
-			allegro_message(
-					"Fatal error:\n\nCould not start game.\n\nGraphics mode (fullscreen) could not be initialized.");
+			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)", "Failed to initializ graphics mode.", OUTC_FAILED);
+			allegro_message("Fatal error:\n\nCould not start game.\n\nGraphics mode (fullscreen) could not be initialized.");
 			return false;
 		}
 	}
 
 	alfont_text_mode(-1);
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set mode to -1",
-			OUTC_SUCCESS);
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set mode to -1", OUTC_SUCCESS);
 
 	game_font = alfont_load_font("data/arakeen.fon");
 
 	if (game_font != NULL) {
-		logger->log(LOG_INFO, COMP_ALFONT, "Loading font",
-				"loaded arakeen.fon", OUTC_SUCCESS);
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded arakeen.fon", OUTC_SUCCESS);
 		alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
 	} else {
-		logger->log(LOG_INFO, COMP_ALFONT, "Loading font",
-				"failed to load arakeen.fon", OUTC_FAILED);
-		allegro_message(
-				"Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load arakeen.fon", OUTC_FAILED);
+		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
 		return false;
 	}
 
 	bene_font = alfont_load_font("data/benegess.fon");
 
 	if (bene_font != NULL) {
-		logger->log(LOG_INFO, COMP_ALFONT, "Loading font",
-				"loaded benegess.fon", OUTC_SUCCESS);
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded benegess.fon", OUTC_SUCCESS);
 		alfont_set_font_size(bene_font, 10); // set size
 	} else {
-		logger->log(LOG_INFO, COMP_ALFONT, "Loading font",
-				"failed to load benegess.fon", OUTC_FAILED);
-		allegro_message(
-				"Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load benegess.fon", OUTC_FAILED);
+		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
 		return false;
 	}
 
 	small_font = alfont_load_font("data/small.ttf");
 
 	if (small_font != NULL) {
-		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded small.ttf",
-				OUTC_SUCCESS);
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded small.ttf", OUTC_SUCCESS);
 		alfont_set_font_size(small_font, 10); // set size
 	} else {
-		logger->log(LOG_INFO, COMP_ALFONT, "Loading font",
-				"failed to load small.ttf", OUTC_FAILED);
-		allegro_message(
-				"Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load small.ttf", OUTC_FAILED);
+		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
 		return false;
 	}
 
@@ -2654,12 +2453,10 @@ bool cGame::setupGame() {
 	memset(msg, 0, sizeof(msg));
 
 	if (maxSounds > -1) {
-		sprintf(msg, "Successful installed sound. %d voices reserved",
-				maxSounds);
+		sprintf(msg, "Successful installed sound. %d voices reserved", maxSounds);
 		logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
 	} else {
-		logger->log(LOG_INFO, COMP_SOUND, "Initialization",
-				"Failed installing sound.", OUTC_FAILED);
+		logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
 	}
 	soundPlayer = new cSoundPlayer(maxSounds);
 	moviePlayer = NULL;
@@ -2732,8 +2529,7 @@ bool cGame::setupGame() {
 		return false;
 	} else {
 		logbook("Datafile hooked: gfxdata.dat");
-		memcpy(general_palette, gfxdata[PALETTE_D2TM].dat,
-				sizeof general_palette);
+		memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
 	}
 
 	gfxaudio = load_datafile("data/gfxaudio.dat");
@@ -2805,11 +2601,6 @@ bool cGame::setupGame() {
 	logbook("Installing:  WORLD");
 	INSTALL_WORLD();
 
-	mapCamera = new cMapCamera();
-	gameDrawer = new cGameDrawer(&player[HUMAN]);
-
-	mapUtils = new cMapUtils(&map);
-
 	game.init();
 	game.setup_players();
 
@@ -2821,6 +2612,7 @@ bool cGame::setupGame() {
 }
 
 void cGame::setup_players() {
+	logbook("BEGIN: setup_players");
 	if (interactionManager) {
 		delete interactionManager;
 	}
@@ -2854,6 +2646,7 @@ void cGame::setup_players() {
 	}
 
 	interactionManager = new cInteractionManager(&player[HUMAN]);
+	logbook("END: setup_players");
 }
 
 bool cGame::isState(GameState theState) {

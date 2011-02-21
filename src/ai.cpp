@@ -336,7 +336,7 @@ void cAIPlayer::think_harvester()
  int iBlooms=-1;
 
  for (int c=0; c < MAX_CELLS; c++)
-	 if (map.cell[c].type == TERRAIN_BLOOM)
+	 if (map->cell[c].type == TERRAIN_BLOOM)
 		 iBlooms++;
 
  // When no blooms are detected, we must 'spawn' one
@@ -344,7 +344,7 @@ void cAIPlayer::think_harvester()
  {
 	int iCll = rnd(MAX_CELLS);
 
-	if (map.cell[iCll].type == TERRAIN_SAND)
+	if (map->cell[iCll].type == TERRAIN_SAND)
 	{
 		// create bloom
 		mapEditor.createCell(iCll, TERRAIN_BLOOM, 0);
@@ -1126,10 +1126,10 @@ void cAIPlayer::think_worm()
                     {
                         int iMoveTo = rnd(MAX_CELLS);
 
-                        if (map.cell[iMoveTo].type == TERRAIN_SAND ||
-                            map.cell[iMoveTo].type == TERRAIN_HILL ||
-                            map.cell[iMoveTo].type == TERRAIN_SPICE ||
-                            map.cell[iMoveTo].type == TERRAIN_SPICEHILL)
+                        if (map->cell[iMoveTo].type == TERRAIN_SAND ||
+                            map->cell[iMoveTo].type == TERRAIN_HILL ||
+                            map->cell[iMoveTo].type == TERRAIN_SPICE ||
+                            map->cell[iMoveTo].type == TERRAIN_SPICEHILL)
                         {
                             logbook("Order move #4");
                             UNIT_ORDER_MOVE(i, iMoveTo);

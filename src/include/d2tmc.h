@@ -30,7 +30,7 @@ extern int		iRest;	// rest value
 extern cGame		  game;
 extern cAbstractStructure     *structure[MAX_STRUCTURES];
 extern cUnit          unit[MAX_UNITS];
-extern cMap           map;
+extern cMap           * map;
 extern cMapEditor	  mapEditor;
 extern cRandomMapGenerator randomMapGenerator;
 extern cMapCamera	  *mapCamera;

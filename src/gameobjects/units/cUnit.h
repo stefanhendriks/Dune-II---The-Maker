@@ -1,4 +1,4 @@
-/* 
+/*
 
   Dune II - The Maker
 
@@ -10,7 +10,7 @@
 
   */
 
-// Define TRANSFER stuff for reinforcements	
+// Define TRANSFER stuff for reinforcements
 #define TRANSFER_NONE	-1				// nothing to transfer
 #define TRANSFER_NEW_STAY	0			// bring a new unit, and let the carryall stay
 #define TRANSFER_NEW_LEAVE	2			// bring a new unit, and let the carryall go back (and die)
@@ -33,16 +33,16 @@ struct sReinforcement
 
 class cUnit
 {
-public:
+	public:
 
 	float fExperience;	// experience gained by unit
 
     int iID;
 
-    int iCell;          // cell of unit    
-   
+    int iCell;          // cell of unit
+
     int iType;          // type of unit
-    
+
     // Use char, max groups = 5, we do not need even an int! (byte is enough!)
     char iGroup;         // belongs to group...
 
@@ -53,7 +53,7 @@ public:
 
     // Movement
     int iNextCell;      // where to move to (next cell)
-    int iGoalCell;      // the goal cell (goal of path)    
+    int iGoalCell;      // the goal cell (goal of path)
     int iCellX;         // my cell x
     int iCellY;         // my cell y
     float iOffsetX;       // X offset
@@ -61,7 +61,7 @@ public:
     int iPath[MAX_PATH_SIZE];    // path of unit
     int iPathIndex;     // where are we?
     int iPathFails;     // failed...
-    bool bCalculateNewPath; // calculate new path?	
+    bool bCalculateNewPath; // calculate new path?
 
     // carryall stuff
 	bool bCarryMe;		// carry this unit when moving it around?
@@ -77,7 +77,7 @@ public:
     // Action its doing:
     int iAction;        // ACTION_MOVE; ACTION_GUARD; ACTION_CHASE;
 
-    // Action given code 
+    // Action given code
     int iUnitID;        // Unit ID to attack/pickup, etc
     int iStructureID;   // structure ID to attack/bring to (refinery)
 
@@ -93,7 +93,7 @@ public:
 	int iBringTarget;	// Where to bring the carried unit (when iUnitID > -1)
 	int iNewUnitType;	// new unit that will be brought, will be this type
 	bool bPickedUp;		// picked up the unit?
-	
+
     // Drawing
     int iBodyFacing;    // Body of tanks facing
     int iHeadFacing;    // Head of tanks facing
@@ -103,7 +103,7 @@ public:
 
     // selected
     bool bSelected;     // selected or not?
-	
+
 	float fExpDamage();	// experience damage by bullet (extra damage that is)
 
     // ------------
@@ -138,7 +138,7 @@ public:
     int is_nextcell(); // what is the next cell to move to
 
     void move_to(int iCll, int iStrucID, int iUnitID);
-	
+
 	// carryall-functions:
 	void carryall_order(int iuID, int iTransfer, int iBring, int iTpe);
 
@@ -160,7 +160,7 @@ public:
 
     int TIMER_attack;   // when to shoot?
 
-    int TIMER_wormeat;  // when do we eat? (when worm)     
+    int TIMER_wormeat;  // when do we eat? (when worm)
 };
 
 

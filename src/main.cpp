@@ -23,7 +23,7 @@ int	iRest = 1;	// default rest value
 cGame          				game;
 cAbstractStructure     	*	structure[MAX_STRUCTURES];
 cUnit          				unit[MAX_UNITS];
-cMap           				map;
+cMap           			*	map;
 cMapEditor	  				mapEditor;
 cRandomMapGenerator 		randomMapGenerator;
 cMapCamera				*	mapCamera;
@@ -108,9 +108,6 @@ int handleArguments(int argc, char *argv[]) {
 }
 
 
-/**
-	Entry point of the game
-*/
 int main(int argc, char **argv) {
 	game.game_filename = "game.ini";
 

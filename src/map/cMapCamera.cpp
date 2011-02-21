@@ -1,10 +1,3 @@
-/*
- * cMapCamera.cpp
- *
- *  Created on: 10-aug-2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
 cMapCamera::cMapCamera() {
@@ -19,11 +12,9 @@ cMapCamera::cMapCamera() {
 	char msg[255];
 	sprintf(msg, "Camera initialized. Viewport width is [%d], height [%d]. Position [%d,%d]", viewportWidth, viewportHeight, getX(), getY());
 	logbook(msg);
-	cellCalculator = new cCellCalculator(&map);
 }
 
 cMapCamera::~cMapCamera() {
-	delete cellCalculator;
 }
 
 void cMapCamera::centerAndJumpViewPortToCell(int cell) {
@@ -31,8 +22,12 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell) {
 	if (cell < 0) cell = 0;
 	if (cell >= MAX_CELLS) cell = (MAX_CELLS-1);
 
+	cCellCalculator * cellCalculator = new cCellCalculator(map);
+
 	int cellX = cellCalculator->getX(cell);
 	int cellY = cellCalculator->getY(cell);
+
+	delete cellCalculator;
 
 	// determine the half of our screen
 	int width = mapCamera->getViewportWidth();
@@ -50,8 +45,8 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell) {
 	// first jump to the new coordinates
 	jumpTo(newViewPortX, newViewPortY);
 
-	int diffX = getEndX() - (game.map_width - 1);
-	int diffY = getEndY() - (game.map_height - 1);
+	int diffX = getEndX() - (map->getWidth() - 1);
+	int diffY = getEndY() - (map->getHeight() - 1);
 
 	// when > 0 then it has overlapped, and should be substracted to the original X
 	if (diffX > 0) {
@@ -121,14 +116,14 @@ void cMapCamera::thinkInteraction() {
 
 
 	if (mouse_x >= (game.getScreenResolution()->getWidth()-2) || key[KEY_RIGHT]) {
-		if ((getEndX()) < (game.map_width-1)) {
+		if ((getEndX()) < (map->getWidth()-1)) {
 			x++;
 			mouse_tile = MOUSE_RIGHT;
 		}
 	}
 
 	if (mouse_y >= (game.getScreenResolution()->getHeight()-2) || key[KEY_DOWN]) {
-		if ((getEndY()) < (game.map_height-1)) {
+		if ((getEndY()) < (map->getHeight()-1)) {
 			y++;
 			mouse_tile = MOUSE_DOWN;
 		}

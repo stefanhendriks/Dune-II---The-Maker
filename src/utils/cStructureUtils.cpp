@@ -9,11 +9,9 @@
 
 
 cStructureUtils::cStructureUtils() {
-	cellCalculator = new cCellCalculator(&map);
 }
 
 cStructureUtils::~cStructureUtils() {
-	delete cellCalculator;
 }
 
 int cStructureUtils::getHeightOfStructureTypeInCells(int structureType) {
@@ -188,6 +186,7 @@ int cStructureUtils::findClosestStructureTypeToCell(int cell, int structureType,
 
 	int playerId = player->getId();
 
+	cCellCalculator * cellCalculator = new cCellCalculator(map);
 	for (int i=0; i < MAX_STRUCTURES; i++) {
 		if (structure[i]) {												// exists (pointer)
 			if (structure[i]->getOwner() == playerId) {     			// same player
@@ -206,6 +205,7 @@ int cStructureUtils::findClosestStructureTypeToCell(int cell, int structureType,
 		}
 	}
 
+	delete cellCalculator;
 	return foundStructureId;
 }
 
@@ -216,18 +216,18 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
 
 	assert(cellOfStructure > -1);
 
+	cCellCalculator * cellCalculator = new cCellCalculator(map);
 	for (int w = 0; w < theStructure->getWidth(); w++) {
-		for (int h = 0; h < theStructure->getHeight(); h++)
-		{
-
+		for (int h = 0; h < theStructure->getHeight(); h++) {
 			int xOfStructureCell = cellCalculator->getX(cellOfStructure);
 			int yOfStructureCell = cellCalculator->getY(cellOfStructure);
 
-			int iCell =cellCalculator->getCell(xOfStructureCell + w, yOfStructureCell + h);
+			int iCell = cellCalculator->getCell(xOfStructureCell + w, yOfStructureCell + h);
 
-			map.cell[iCell].id[dimensionId] = theStructure->getStructureId();
+			map->cell[iCell].id[dimensionId] = theStructure->getStructureId();
 		}
 	}
+	delete cellCalculator;
 }
 
 int cStructureUtils::getStructureWidthInPixels(int structureType) {

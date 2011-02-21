@@ -39,10 +39,10 @@ void logbook(const char *txt)
 bool BORDER_POS(int x, int y)
 {
 	if (x < 1) return false;
-    if (x > (game.map_width-1)) return false;
+    if (x > (map->getWidth()-1)) return false;
 
     if (y < 1) return false;
-    if (y > (game.map_height-1)) return false;
+    if (y > (map->getHeight()-1)) return false;
 
 	return true; // the fix-border-pos function did not change/correct the positions! yay
 }
@@ -55,14 +55,14 @@ void FIX_BORDER_POS(int &x, int &y)
     if (x)
     {
         if (x < 1) x = 1;
-        if (x > (game.map_width-1)) x = (game.map_width-1);
+        if (x > (map->getWidth()-1)) x = (map->getWidth()-1);
     }
 
     // filled in
     if (y)
     {
         if (y < 1) y = 1;
-        if (y > (game.map_height-1)) y = (game.map_height-1);
+        if (y > (map->getHeight()-1)) y = (map->getHeight()-1);
     }
 }
 
@@ -73,14 +73,14 @@ void FIX_POS(int &x, int &y)
     if (x)
     {
         if (x < 0) x = 0;
-        if (x > game.map_width) x = game.map_width;
+        if (x > map->getWidth()) x = map->getWidth();
     }
 
     // filled in
     if (y)
     {
         if (y < 0) y = 0;
-        if (y > game.map_height) y = game.map_height;
+        if (y > map->getHeight()) y = map->getHeight();
     }
 }
 
@@ -1116,7 +1116,7 @@ float health_structure(int i, int w)
 // return a border cell, close to iCll
 int iFindCloseBorderCell(int iCll)
 {
-	cCellCalculator * calculator = new cCellCalculator(&map);
+	cCellCalculator * calculator = new cCellCalculator(map);
 	int result = calculator->findCloseMapBorderCellRelativelyToDestinationCel(iCll);
 	delete calculator;
 	return result;
@@ -1254,6 +1254,7 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 
 // play type of music
 void playMusicByType(int iType) {
+	logbook("BEGIN: playMusicByType");
     game.iMusicType = iType;
 
     int iNumber=0;
@@ -1321,6 +1322,7 @@ void playMusicByType(int iType) {
         // play midi file
         play_midi((MIDI *)gfxaudio[iNumber].dat, 0);
     }
+	logbook("END: playMusicByType");
 }
 
 /******************************
@@ -1364,14 +1366,14 @@ int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstr
   {
       bullet[new_id].iPlayer = unit[ownerunit].iPlayer;
       // create spot
-      map.clear_spot(cell, 3, unit[ownerunit].iPlayer);
+      map->clear_spot(cell, 3, unit[ownerunit].iPlayer);
 
   }
 
   if (ownerstruc > -1)
   {
       bullet[new_id].iPlayer = structure[ownerstruc]->getOwner();
-      map.clear_spot(cell, 3, structure[ownerstruc]->getOwner());
+      map->clear_spot(cell, 3, structure[ownerstruc]->getOwner());
   }
 
 
@@ -1505,49 +1507,30 @@ void memory_putpixel(BITMAP *bmp, int x, int y, int color)
 /**
 	BMP must be 16 bit.
 **/
-void lit_windtrap_color(BITMAP *bmp, int iColor)
-{
-	for (int x = 0; x < bmp->w; x++)
-	{
-		for (int y = 0; y < bmp->h; y++)
-		{
-            // masked
-			if (getpixel(bmp, x, y) == makecol(40,40,182)) {
-                //_putpixel16(bmp, x, y, iColor);
+void lit_windtrap_color(BITMAP *bmp, int iColor) {
+	for (int x = 0; x < bmp->w; x++) {
+		for (int y = 0; y < bmp->h; y++) {
+			// masked
+			if (getpixel(bmp, x, y) == makecol(40, 40, 182)) {
+				//_putpixel16(bmp, x, y, iColor);
 				putpixel(bmp, x, y, iColor);
 			}
 		}
 	}
 }
 
-void mask_to_color(BITMAP *bmp, int color)
-{
-	//BITMAP *temp16;
-	//temp16=create_bitmap(bmp->w, bmp->h);
-
-	//clear_to_color(temp16, makecol(255,0,255));
-
-	//masked_blit(bmp, temp16, 0, 0, 0, 0, bmp->w, bmp->h);
-
-	for (int x=0; x < bmp->w; x++)
-	{
-		for (int y=0; y < bmp->h; y++)
-		{
+void mask_to_color(BITMAP *bmp, int color) {
+	for (int x = 0; x < bmp->w; x++) {
+		for (int y = 0; y < bmp->h; y++) {
 			int c = getpixel(bmp, x, y);
 
-			if (c != makecol(0,0,0))
-			{
+			if (c != makecol(0, 0, 0)) {
 				// masked
 				putpixel(bmp, x, y, makecol(VOLUME_MAX, VOLUME_MAX, VOLUME_MAX));
 				//allegro_message("Non pink detected");
 			}
 		}
 	}
-
-	//draw_sprite(bmp, temp16, 0, 0);
-	//masked_blit(temp16, bmp, 0, 0, 0, 0, bmp->w, bmp->h);
-	//destroy_bitmap(temp16);
-
 }
 
 int getAmountReservedVoicesAndInstallSound() {

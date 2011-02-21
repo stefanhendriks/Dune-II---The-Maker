@@ -1,10 +1,3 @@
-/*
- * cMapDrawer.h
- *
- *  Created on: 10-aug-2010
- *      Author: Stefan
- */
-
 #ifndef CMAPDRAWER_H_
 #define CMAPDRAWER_H_
 
@@ -23,7 +16,6 @@ class cMapDrawer {
 		cMap * map;
 		cPlayer * player;
 		cMapCamera * camera;
-		cCellCalculator * cellCalculator;
 };
 
 #endif /* CMAPDRAWER_H_ */

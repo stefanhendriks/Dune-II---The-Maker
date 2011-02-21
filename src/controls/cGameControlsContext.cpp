@@ -14,14 +14,12 @@ cGameControlsContext::cGameControlsContext(cPlayer * thePlayer) {
 	player = thePlayer;
 	mouse = cMouse::getInstance();
 	mouseCell = -99;
-	cellCalculator = new cCellCalculator(&map);
 	drawToolTip = false;
 }
 
 cGameControlsContext::~cGameControlsContext() {
 	player = NULL;
 	mouse = NULL;
-	delete cellCalculator;
 }
 
 
@@ -50,13 +48,20 @@ void cGameControlsContext::determineMouseCell() {
 		return;
 	}
 
+	if (map == NULL || mapCamera == NULL) {
+		mouseCell = -1;
+		return;
+	}
+
 	int iMouseX = mouse->getX() / 32;
 	int iMouseY = (mouse->getY() - 42) / 32;
 
 	iMouseX += mapCamera->getX();
 	iMouseY += mapCamera->getY();
 
+	cCellCalculator * cellCalculator = new cCellCalculator(map);
 	mouseCell = cellCalculator->getCell(iMouseX, iMouseY);
+	delete cellCalculator;
 }
 
 void cGameControlsContext::determineToolTip() {
@@ -85,6 +90,7 @@ void cGameControlsContext::determineHoveringOverStructureId() {
 }
 
 void cGameControlsContext::determineHoveringOverUnitId() {
+	//TODO:implementation of determineHoveringOverUnitId
 	mouseHoveringOverUnitId=-1;
 }
 
@@ -116,6 +122,12 @@ int cGameControlsContext::getMouseCellFromMiniMap() {
 	int newX = mouseMiniMapX;/* - centerOfViewPortWidth;*/
 	int newY = mouseMiniMapY;/* - centerOfViewPortHeight;*/
 
-	cCellCalculator * cellCalculator = map.getCellCalculator();
-	return cellCalculator->getCellWithMapBorders(newX, newY);
+	if (map) {
+		cCellCalculator * cellCalculator = new cCellCalculator(map);
+		int result = cellCalculator->getCellWithMapBorders(newX, newY);
+		delete cellCalculator;
+		return result;
+	} else {
+		return -1;
+	}
 }

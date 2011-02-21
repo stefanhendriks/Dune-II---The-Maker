@@ -1246,6 +1246,7 @@ string INI_GetScenarioFileName(int iHouse, int iRegion) {
 
 
 void INI_Load_scenario(int iHouse, int iRegion) {
+	logbook("BEGIN: [INI_Load_scenario]");
     game.bSkirmish = false;
     game.mission_init();
 
@@ -1255,9 +1256,9 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 
     char msg[256];
 
-    sprintf(msg, "[SCENARIO] '%s' (Mission %d)", filename.c_str(), game.iMission);
+    sprintf(msg, "[INI_Load_scenario] '%s' (Mission %d)", filename.c_str(), game.iMission);
     logbook(msg);
-    logbook("[SCENARIO] Opening file");
+    logbook("[INI_Load_scenario] Opening file");
 
     // declare some temp fields while reading the scenario file.
     int blooms[30], fields[30];
@@ -1274,6 +1275,8 @@ void INI_Load_scenario(int iHouse, int iRegion) {
     int iPl_credits[MAX_PLAYERS];
     int iPl_house[MAX_PLAYERS];
     int iPl_quota[MAX_PLAYERS];
+
+    int playerCellToFocus = -1;
 
     memset(iPl_credits, 0, sizeof (iPl_credits));
     memset(iPl_house, -1, sizeof (iPl_house));
@@ -1303,7 +1306,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 			if (linesection[0] != '\0' && strlen(linesection) > 1) {
 				section = SCEN_INI_SectionType(linesection, section);
 				char msg[255];
-				sprintf(msg, "[SCENARIO] found section '%s', resulting in section id [%d]", linesection, section);
+				sprintf(msg, "[INI_Load_scenario] found section '%s', resulting in section id [%d]", linesection, section);
 				logbook(msg);
 
 				if (section >= INI_HOUSEATREIDES &&	section <= INI_HOUSEMERCENARY) {
@@ -1321,7 +1324,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 					if (section == INI_HOUSESARDAUKAR)  iPl_house[iPlayerID] = SARDAUKAR;
 
 					char msg[255];
-					sprintf(msg, "[SCENARIO] Setting house to [%d] for playerId [%d]", iPl_house[iPlayerID], iPlayerID);
+					sprintf(msg, "[INI_Load_scenario] Setting house to [%d] for playerId [%d]", iPl_house[iPlayerID], iPlayerID);
 					logbook(msg);
 				}
 				continue; // next line
@@ -1336,6 +1339,9 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 
 			if (section == INI_BASIC)
 			{
+				char msg[255];
+				sprintf(msg, "[INI_Load_scenario] wordtype [%d]", wordtype);
+				logbook(msg);
 				if (wordtype == WORD_BRIEFPICTURE)
 				{
 					// Load name, and load proper briefingpicture
@@ -1354,7 +1360,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 				if (wordtype == WORD_FOCUS)
 				{
 					player[0].focus_cell = INI_WordValueINT(linefeed);
-					mapCamera->centerAndJumpViewPortToCell(player[0].focus_cell);
+					playerCellToFocus = player[0].focus_cell;
 				}
 			}
 
@@ -1405,8 +1411,9 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 
         if (section == INI_MAP)
 		{
-			game.map_height = 64;
-			game.map_width = 64;
+        	map = new cMap(64, 64);
+        	mapUtils = new cMapUtils(map);
+        	mapCamera->centerAndJumpViewPortToCell(playerCellToFocus);
 
 			// original dune 2 maps have 64x64 maps
             if (wordtype == WORD_MAPSEED)
@@ -1557,11 +1564,6 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 							player[HUMAN].setHouse(iPl_house[iP]);
                             player[HUMAN].iTeam = 0;
                             game.iHouse = iPl_house[iP];
-                            assert(gameDrawer);
-                            if (gameDrawer->getCreditsDrawer())  {
-                            	gameDrawer->getCreditsDrawer()->setCredits();
-                            }
-
                             if (iPl_quota[iP] > 0) {
                                 game.iWinQuota = iPl_quota[iP];
                             }
@@ -2076,20 +2078,16 @@ void INI_Load_scenario(int iHouse, int iRegion) {
      // At this point, show list of unit types
 
 	// now add the fields
-    for (int iB=0; iB < 30; iB++)
-    {
-          // when
-          if (fields[iB] > -1)
-          {
-			  if (DEBUGGING)
-			  {
-			  char msg[256];
-              sprintf(msg, "[SCENARIO] Placing spice FIELD at cell : %d", fields[iB]);
-              logbook(msg);
-			  }
-		  	  mapEditor.createField(fields[iB], TERRAIN_SPICE, 25+(rnd(50)));
-		  }
-
+    for (int iB = 0; iB < 30; iB++) {
+		// when
+		if (fields[iB] > -1) {
+			if (DEBUGGING) {
+				char msg[256];
+				sprintf(msg, "[SCENARIO] Placing spice FIELD at cell : %d", fields[iB]);
+				logbook(msg);
+			}
+			mapEditor.createField(fields[iB], TERRAIN_SPICE, 25 + (rnd(50)));
+		}
 	}
 
     logbook("[SCENARIO] Done reading");
@@ -2475,12 +2473,12 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
 
 
     // first clear it all out
-	for (int x=0; x < game.map_width; x++) {
-	  for (int y = 0; y < game.map_height; y++) {
+	for (int x=0; x < map->getWidth(); x++) {
+	  for (int y = 0; y < map->getHeight(); y++) {
 		  int cll = iCellMake(x, y);
 		  PreviewMap[iNew].mapdata[cll]=TERRAIN_SAND;
 	  }
-}
+	}
 
 	// Load file
 

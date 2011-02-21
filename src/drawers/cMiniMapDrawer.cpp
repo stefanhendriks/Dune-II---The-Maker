@@ -1,10 +1,3 @@
-/*
- * cMiniMapDrawer.cpp
- *
- *  Created on: 20-okt-2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
 cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera * theMapCamera) {
@@ -52,11 +45,11 @@ void cMiniMapDrawer::drawTerrain() {
 
 	int iColor=makecol(0,0,0);
 
-	for (int x = 0; x < (game.map_width); x++) {
+	for (int x = 0; x < (map->getWidth()); x++) {
 
 		iDrawY = getDrawStartY(); // reset Y coordinate for drawing for each column
 
-		for (int y = 0; y < (game.map_height); y++) {
+		for (int y = 0; y < (map->getHeight()); y++) {
 			iColor = makecol(0, 0, 0);
 			int iCll = iCellMake(x, y);
 
@@ -91,11 +84,11 @@ void cMiniMapDrawer::drawUnitsAndStructures() {
 	int iColor=makecol(0,0,0);
 	cMapUtils * mapUtils = new cMapUtils(map);
 
-	for (int x = 0; x < (game.map_width); x++) {
+	for (int x = 0; x < map->getWidth(); x++) {
 
 		iDrawY = getDrawStartY(); // reset Y coordinate for drawing for each column
 
-		for (int y = 0; y < (game.map_height); y++) {
+		for (int y = 0; y < map->getHeight(); y++) {
 			iColor = makecol(0, 0, 0);
 			int iCll = iCellMake(x, y);
 			bool drawADot = false;

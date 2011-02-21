@@ -20,7 +20,6 @@ class cStructureFactory {
 
 private:
 	static cStructureFactory *instance;
-	cCellCalculator * cellCalculator;
 
 protected:
 	cStructureFactory();

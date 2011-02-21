@@ -163,11 +163,11 @@ void cTimeManager::handleTimerGlobal() {
 				}
 
 
-				map.increaseScrollTimer();
+				map->increaseScrollTimer();
 
-				if (map.isTimeToScroll()) {
-					map.thinkInteraction();
-					map.resetScrollTimer();
+				if (map->isTimeToScroll()) {
+					map->thinkInteraction();
+					map->resetScrollTimer();
 				}
 
 				if (game.TIMER_shake > 0) {
@@ -261,7 +261,7 @@ void cTimeManager::handleTimerUnits() {
 					if (unit[i].iAction == ACTION_ATTACK)
 						unit[i].think_attack();
 				}
-			map.think_minimap();
+			map->think_minimap();
 		}
 
 		timerUnits--;

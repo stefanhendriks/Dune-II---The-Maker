@@ -61,15 +61,17 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure * struc
 
 int cStructureDrawer::getDrawYForStructure(int cell) {
 	assert(structure);
-	cCellCalculator * cellCalculator = map.getCellCalculator();
+	cCellCalculator * cellCalculator = new cCellCalculator(map);
 	int y = cellCalculator->getY(cell);
+	delete cellCalculator;
 	return (y * TILESIZE_HEIGHT_PIXELS) - (mapCamera->getY() * TILESIZE_HEIGHT_PIXELS) + 42;
 }
 
 int cStructureDrawer::getDrawXForStructure(int cell) {
 	assert(structure);
-	cCellCalculator * cellCalculator = map.getCellCalculator();
+	cCellCalculator * cellCalculator = new cCellCalculator(map);
 	int x = cellCalculator->getX(cell);
+	delete cellCalculator;
 	return (x * TILESIZE_WIDTH_PIXELS) - (mapCamera->getX() * TILESIZE_WIDTH_PIXELS);
 }
 

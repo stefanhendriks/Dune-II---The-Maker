@@ -160,7 +160,7 @@ void cAbstractStructure::die()
         {
 			iCll=iCellMake(iCX+w, iCY+h);
 
-			map.cell[iCll].type = TERRAIN_ROCK;
+			map->cell[iCll].type = TERRAIN_ROCK;
 			mapEditor.smoothAroundCell(iCll);
 
 			PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16,
@@ -169,7 +169,7 @@ void cAbstractStructure::die()
 
             for (int i=0; i < 3; i++)
             {
-				map.smudge_increase(SMUDGE_ROCK, iCll);
+				map->smudge_increase(SMUDGE_ROCK, iCll);
 
                 // create particle
                 PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16 + (-8 + rnd(16)),
@@ -193,7 +193,7 @@ void cAbstractStructure::die()
     play_sound_id(SOUND_CRUMBLE01 + rnd(2), iCellOnScreen(iCell));
 
     // remove from the playground
-    map.remove_id(iIndex, MAPID_STRUCTURES);
+    map->remove_id(iIndex, MAPID_STRUCTURES);
 
     // screen shaking
     game.TIMER_shake = (iWidth * iHeight) * 20;
@@ -242,7 +242,7 @@ int cAbstractStructure::iFreeAround()
 
 			int cll = iCellMake(iCx, iCy);
 
-			if (map.occupied(cll) == false) {
+			if (map->occupied(cll) == false) {
 				return cll;
 			}
 		}

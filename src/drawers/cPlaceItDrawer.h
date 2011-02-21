@@ -20,8 +20,6 @@ class cPlaceItDrawer {
 		void drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int cell);
 
 	private:
-
-		cCellCalculator * cellCalculator;
 };
 
 #endif /* CPLACEITDRAWER_H_ */
