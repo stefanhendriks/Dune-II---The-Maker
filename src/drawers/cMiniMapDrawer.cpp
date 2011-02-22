@@ -54,7 +54,7 @@ void cMiniMapDrawer::drawTerrain() {
 			int iCll = iCellMake(x, y);
 
 			if (map->isVisible(iCll, player->getId())) {
-				iColor = getRGBColorForTerrainType(map->cell[iCll].type);
+				iColor = getRGBColorForTerrainType(map->cell[iCll].terrainTypeGfxDataIndex);
 			}
 
 			// TODO: make flexible map borders
@@ -94,25 +94,25 @@ void cMiniMapDrawer::drawUnitsAndStructures() {
 			bool drawADot = false;
 
 			if (map->isVisible(iCll, player->getId())) {
-				if (map->cell[iCll].id[MAPID_STRUCTURES] > -1) {
-					int	iPlr = structure[map->cell[iCll].id[MAPID_STRUCTURES]]->getOwner();
+				if (map->cell[iCll].gameObjectId[MAPID_STRUCTURES] > -1) {
+					int	iPlr = structure[map->cell[iCll].gameObjectId[MAPID_STRUCTURES]]->getOwner();
 					iColor = player[iPlr].getMinimapColor();
 					drawADot = true;
 				}
 
-				if (map->cell[iCll].id[MAPID_UNITS] > -1) {
-					int iPlr = unit[map->cell[iCll].id[MAPID_UNITS]].iPlayer;
+				if (map->cell[iCll].gameObjectId[MAPID_UNITS] > -1) {
+					int iPlr = unit[map->cell[iCll].gameObjectId[MAPID_UNITS]].iPlayer;
 					iColor = player[iPlr].getMinimapColor();
 					drawADot = true;
 				}
 
-				if (map->cell[iCll].id[MAPID_AIR] > -1) {
-					int iPlr = unit[map->cell[iCll].id[MAPID_AIR]].iPlayer;
+				if (map->cell[iCll].gameObjectId[MAPID_AIR] > -1) {
+					int iPlr = unit[map->cell[iCll].gameObjectId[MAPID_AIR]].iPlayer;
 					iColor = player[iPlr].getMinimapColor();
 					drawADot = true;
 				}
 
-				if (map->cell[iCll].id[MAPID_WORMS] > -1) {
+				if (map->cell[iCll].gameObjectId[MAPID_WORMS] > -1) {
 					iColor = makecol(game.fade_select, game.fade_select, game.fade_select);
 					drawADot = true;
 				}

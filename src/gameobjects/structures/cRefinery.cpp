@@ -126,7 +126,7 @@ void cRefinery::think()
                     if (DEBUGGING)
                         assert(iUnitID > -1);
 
-                    map->cell[unit[iUnitID].iCell].id[MAPID_UNITS] = iUnitID;
+                    map->cell[unit[iUnitID].iCell].gameObjectId[MAPID_UNITS] = iUnitID;
 
 					// perhaps we can find a carryall to help us out
 					int iHarvestCell = UNIT_find_harvest_spot(iUnitID);

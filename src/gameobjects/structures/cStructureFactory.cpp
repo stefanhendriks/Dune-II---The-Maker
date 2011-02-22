@@ -203,25 +203,25 @@ void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlaye
     if (iStructureType == SLAB4)   {
 
 		if (map->occupied(iCell) == false) {
-			if (map->cell[iCell].type == TERRAIN_ROCK) {
+			if (map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_ROCK) {
 				mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
 			}
 		}
 
 		if (map->occupied(iCell+1) == false) {
-			if (map->cell[iCell+1].type == TERRAIN_ROCK) {
+			if (map->cell[iCell+1].terrainTypeGfxDataIndex == TERRAIN_ROCK) {
 				mapEditor.createCell(iCell+1, TERRAIN_SLAB, 0);
 			}
 		}
 
 		if (map->occupied(iCell+MAP_W_MAX) == false) {
-			if (map->cell[iCell+MAP_W_MAX].type == TERRAIN_ROCK) {
+			if (map->cell[iCell+MAP_W_MAX].terrainTypeGfxDataIndex == TERRAIN_ROCK) {
 				mapEditor.createCell(iCell+MAP_W_MAX, TERRAIN_SLAB, 0);
 			}
 		}
 
 		if (map->occupied(iCell+MAP_W_MAX+1) == false) {
-			if (map->cell[iCell+MAP_W_MAX+1].type == TERRAIN_ROCK) {
+			if (map->cell[iCell+MAP_W_MAX+1].terrainTypeGfxDataIndex == TERRAIN_ROCK) {
 				mapEditor.createCell(iCell+MAP_W_MAX+1, TERRAIN_SLAB, 0);
 			}
 		}
@@ -313,25 +313,25 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDT
             int cll=iCellMake(cx+x, cy+y); // <-- some evil global thing that calculates the cell...
 
 			// check if terrain allows it.
-            if (map->cell[cll].type != TERRAIN_ROCK &&
-                map->cell[cll].type != TERRAIN_SLAB) {
+            if (map->cell[cll].terrainTypeGfxDataIndex != TERRAIN_ROCK &&
+                map->cell[cll].terrainTypeGfxDataIndex != TERRAIN_SLAB) {
 				logbook("getSlabStatus will return -2, reason: terrain is not rock or slab.");
                 return -2; // cannot place on sand
             }
 
 			// another structure found on this location, return -2 meaning "blocked"
-            if (map->cell[cll].id[MAPID_STRUCTURES] > -1) {
+            if (map->cell[cll].gameObjectId[MAPID_STRUCTURES] > -1) {
 				logbook("getSlabStatus will return -2, reason: another structure found on one of the cells");
                 return -2;
             }
 
 			// unit found on location where structure wants to be placed. Check if
 			// it may be ignored, if not, return -2.
-            if (map->cell[cll].id[MAPID_UNITS] > -1)
+            if (map->cell[cll].gameObjectId[MAPID_UNITS] > -1)
             {
                 if (iUnitIDToIgnore > -1)
                 {
-                    if (map->cell[cll].id[MAPID_UNITS] == iUnitIDToIgnore) {
+                    if (map->cell[cll].gameObjectId[MAPID_UNITS] == iUnitIDToIgnore) {
                         // ok; this may be ignored.
 					} else {
 						// not the unit to be ignored.
@@ -346,7 +346,7 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDT
             }
 
             // now check if the 'terrain' type is 'slab'. If that is true, increase value of found slabs.
-			if (map->cell[cll].type == TERRAIN_SLAB) {
+			if (map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_SLAB) {
                 slabs++;
 			}
         }

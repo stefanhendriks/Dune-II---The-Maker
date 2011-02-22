@@ -37,16 +37,16 @@ bool cMapUtils::isCellVisible(cPlayer *thePlayer, int iCell) {
 
 void cMapUtils::clearAllCells() {
 	for (int c=0; c < MAX_CELLS; c++) {
-		map->cell[c].credits = map->cell[c].health = 0;
+		map->cell[c].spiceInCredits = map->cell[c].hitpoints = 0;
 		map->cell[c].passable = true;
-		map->cell[c].tile = 0;
-		map->cell[c].type = TERRAIN_SAND;    // refers to gfxdata!
+		map->cell[c].tileIndexToDraw = 0;
+		map->cell[c].terrainTypeGfxDataIndex = TERRAIN_SAND;    // refers to gfxdata!
 
-		map->cell[c].smudgetile = -1;
-		map->cell[c].smudgetype = -1;
+		map->cell[c].smudgeTileToDraw = -1;
+		map->cell[c].smudgeTerrainTypeGfxDataIndex = -1;
 
 		// clear out the ID stuff
-		memset(map->cell[c].id, -1, sizeof(map->cell[c].id));
+		memset(map->cell[c].gameObjectId, -1, sizeof(map->cell[c].gameObjectId));
 
 		for (int i = 0; i < MAX_PLAYERS; i++) {
 			map->setVisible(c, i, false);

@@ -237,12 +237,12 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                 if (cll == iCell)
                     continue; // do not do own cell
 
-                if (map->cell[cll].type == TERRAIN_WALL)
+                if (map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_WALL)
                 {
                     // damage this type of wall...
-                    map->cell[cll].health -= 150;
+                    map->cell[cll].hitpoints -= 150;
 
-                    if (map->cell[cll].health < 0)
+                    if (map->cell[cll].hitpoints < 0)
                     {
                         // remove wall, turn into smudge:
                         mapEditor.createCell(cll, TERRAIN_ROCK, 0);
@@ -254,9 +254,9 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                 }
 
                 // damage surrounding units
-                if (map->cell[cll].id[MAPID_UNITS] > -1)
+                if (map->cell[cll].gameObjectId[MAPID_UNITS] > -1)
                 {
-                    int id = map->cell[cll].id[MAPID_UNITS];
+                    int id = map->cell[cll].gameObjectId[MAPID_UNITS];
 
                     if (unit[id].iHitPoints > 0)
                     {
@@ -269,10 +269,10 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                     } // only die when the unit is going to die
                 }
 
-                if (map->cell[cll].id[MAPID_STRUCTURES] > -1)
+                if (map->cell[cll].gameObjectId[MAPID_STRUCTURES] > -1)
                 {
                     // structure hit!
-                    int id = map->cell[cll].id[MAPID_STRUCTURES];
+                    int id = map->cell[cll].gameObjectId[MAPID_STRUCTURES];
 
                     if (structure[id]->getHitPoints() > 0) {
 
@@ -290,29 +290,29 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 						}
 					}
 
-					if (map->cell[cll].type == TERRAIN_ROCK)
+					if (map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_ROCK)
 					{
-						if (map->cell[cll].type != TERRAIN_WALL)
-							map->cell[cll].health -= 30;
+						if (map->cell[cll].terrainTypeGfxDataIndex != TERRAIN_WALL)
+							map->cell[cll].hitpoints -= 30;
 
-						if (map->cell[cll].health < -25)
+						if (map->cell[cll].hitpoints < -25)
 						{
 							map->smudge_increase(SMUDGE_ROCK, cll);
-							map->cell[cll].health += rnd(25);
+							map->cell[cll].hitpoints += rnd(25);
 						}
 					}
-					else if (map->cell[cll].type == TERRAIN_SAND ||
-						map->cell[cll].type == TERRAIN_HILL ||
-						map->cell[cll].type == TERRAIN_SPICE ||
-						map->cell[cll].type == TERRAIN_SPICEHILL)
+					else if (map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_SAND ||
+						map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_HILL ||
+						map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_SPICE ||
+						map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_SPICEHILL)
 					{
-						if (map->cell[cll].type != TERRAIN_WALL)
-							map->cell[cll].health -= 30;
+						if (map->cell[cll].terrainTypeGfxDataIndex != TERRAIN_WALL)
+							map->cell[cll].hitpoints -= 30;
 
-						if (map->cell[cll].health < -25)
+						if (map->cell[cll].hitpoints < -25)
 						{
 							map->smudge_increase(SMUDGE_SAND, cll);
-							map->cell[cll].health += rnd(25);
+							map->cell[cll].hitpoints += rnd(25);
 						}
 					}
 			 }
@@ -822,10 +822,10 @@ void cUnit::think_guard() {
 						if (unit[i].iPlayer != iPlayer &&
 							units[unit[i].iType].airborn == false)
 						{
-							if (map->cell[unit[i].iCell].type == TERRAIN_SAND ||
-								map->cell[unit[i].iCell].type == TERRAIN_HILL ||
-								map->cell[unit[i].iCell].type == TERRAIN_SPICE ||
-								map->cell[unit[i].iCell].type == TERRAIN_SPICEHILL)
+							if (map->cell[unit[i].iCell].terrainTypeGfxDataIndex == TERRAIN_SAND ||
+								map->cell[unit[i].iCell].terrainTypeGfxDataIndex == TERRAIN_HILL ||
+								map->cell[unit[i].iCell].terrainTypeGfxDataIndex == TERRAIN_SPICE ||
+								map->cell[unit[i].iCell].terrainTypeGfxDataIndex == TERRAIN_SPICEHILL)
 							{
 								int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
 
@@ -1110,7 +1110,7 @@ void cUnit::think()
         return;
 
 	// when any unit is on a spice bloom, you got a problem, you die!
-	if (map->cell[iCell].type == TERRAIN_BLOOM
+	if (map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_BLOOM
 		&& units[iType].airborn == false)
 	{
 		// change type of terrain to sand
@@ -1215,8 +1215,8 @@ void cUnit::think()
         if (iCell == iGoalCell)
         {
             // when on spice, harvest
-            if (map->cell[iCell].type == TERRAIN_SPICE ||
-                map->cell[iCell].type == TERRAIN_SPICEHILL)
+            if (map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_SPICE ||
+                map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_SPICEHILL)
             {
                 // do timer stuff
                 if (iCredits < units[iType].credit_capacity)
@@ -1254,20 +1254,20 @@ void cUnit::think()
                     iFrame = 1;
 
                 iCredits += units[iType].harvesting_amount;
-                map->cell[iCell].credits -= units[iType].harvesting_amount;
+                map->cell[iCell].spiceInCredits -= units[iType].harvesting_amount;
 
                 // turn into sand/spice (when spicehill)
-                if (map->cell[iCell].credits <= 0)
+                if (map->cell[iCell].spiceInCredits <= 0)
                 {
-                    if (map->cell[iCell].type == TERRAIN_SPICEHILL)
+                    if (map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_SPICEHILL)
                     {
-                        map->cell[iCell].type = TERRAIN_SPICE;
-                        map->cell[iCell].credits += rnd(100);
+                        map->cell[iCell].terrainTypeGfxDataIndex = TERRAIN_SPICE;
+                        map->cell[iCell].spiceInCredits += rnd(100);
                     }
                     else
                     {
-                        map->cell[iCell].type = TERRAIN_SAND;
-                        map->cell[iCell].tile = 0;
+                        map->cell[iCell].terrainTypeGfxDataIndex = TERRAIN_SAND;
+                        map->cell[iCell].tileIndexToDraw = 0;
                     }
 
                     // create new path to this thingy
@@ -1337,8 +1337,8 @@ void cUnit::think()
 		// we wanted to enter this structure, so do it immidiatly (else we just seem to
 		// drive over the structure, which looks odd!
 		if (iStructureID > -1 &&
-			map->cell[iCell].id[MAPID_STRUCTURES] == iStructureID &&
-			map->cell[iCell].id[MAPID_STRUCTURES] > -1)
+			map->cell[iCell].gameObjectId[MAPID_STRUCTURES] == iStructureID &&
+			map->cell[iCell].gameObjectId[MAPID_STRUCTURES] > -1)
 		{
 
 			// when this structure is not occupied
@@ -1364,8 +1364,8 @@ void cUnit::think()
     	// we wanted to enter this structure, so do it immidiatly (else we just seem to
 		// drive over the structure, which looks odd!
 		if (iStructureID > -1 &&
-			map->cell[iCell].id[MAPID_STRUCTURES] == iStructureID &&
-			map->cell[iCell].id[MAPID_STRUCTURES] > -1)
+			map->cell[iCell].gameObjectId[MAPID_STRUCTURES] == iStructureID &&
+			map->cell[iCell].gameObjectId[MAPID_STRUCTURES] > -1)
 		{
 
 			// when this structure is not occupied
@@ -1487,7 +1487,7 @@ void cUnit::think_move_air()
 								unit[iUnitID].iHitPoints = -1;
 
 								// remove unit from map id
-								map->cell[iCell].id[MAPID_UNITS] = -1;
+								map->cell[iCell].gameObjectId[MAPID_UNITS] = -1;
 
 								// we got it yeah! now go
 								iGoalCell = iBringTarget;
@@ -1542,7 +1542,7 @@ void cUnit::think_move_air()
 							// dump it here
 							unit[iUnitID].iCell = iCell;
 							unit[iUnitID].iGoalCell = iCell;
-							map->cell[iCell].id[MAPID_UNITS] = iUnitID;
+							map->cell[iCell].gameObjectId[MAPID_UNITS] = iUnitID;
 							unit[iUnitID].iHitPoints = unit[iUnitID].iTempHitPoints;
 							unit[iUnitID].iTempHitPoints = -1;
 							unit[iUnitID].TIMER_movewait = 0;
@@ -1637,7 +1637,7 @@ void cUnit::think_move_air()
 			if (iType == FRIGATE)
 			{
 
-				int iStrucId = map->cell[iCell].id[MAPID_STRUCTURES];
+				int iStrucId = map->cell[iCell].gameObjectId[MAPID_STRUCTURES];
 
 				if (iStrucId > -1)
 				{
@@ -1661,7 +1661,7 @@ void cUnit::think_move_air()
                 {
 				    int id=	UNIT_CREATE(iCell, iNewUnitType, iPlayer, true);
 
-                    map->cell[iCell].id[MAPID_UNITS] = id;
+                    map->cell[iCell].gameObjectId[MAPID_UNITS] = id;
 
                     // when it is a TRANSFER_NEW_LEAVE , and AI, we auto-assign team number here
                     // - Normally done in AI.CPP, though from here it is out of our hands.
@@ -1744,7 +1744,7 @@ void cUnit::think_move_air()
             {
                 if (rnd(100) < 5)
                 {
-                    if (map->cell[iCell].type == TERRAIN_SAND || map->cell[iCell].type == TERRAIN_SPICE || map->cell[iCell].type == TERRAIN_HILL || map->cell[iCell].type == TERRAIN_SPICEHILL)
+                    if (map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_SAND || map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_SPICE || map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_HILL || map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_SPICEHILL)
                     {
                         int iDieX=(draw_x() + 16 ) + (mapCamera->getX()*32);
                         int iDieY=(draw_y() + 16 ) + (mapCamera->getY()*32);
@@ -1797,7 +1797,7 @@ void cUnit::think_move_air()
     if (iOffsetX > 31)
     {
         iOffsetX -= 32;
-        map->cell[iCell].id[MAPID_AIR] = -1;
+        map->cell[iCell].gameObjectId[MAPID_AIR] = -1;
         iCell++;
         update_me=true;
     }
@@ -1806,7 +1806,7 @@ void cUnit::think_move_air()
     if (iOffsetX < -31)
     {
         iOffsetX += 32;
-        map->cell[iCell].id[MAPID_AIR] = -1;
+        map->cell[iCell].gameObjectId[MAPID_AIR] = -1;
         iCell--;
         update_me=true;
     }
@@ -1815,7 +1815,7 @@ void cUnit::think_move_air()
     if (iOffsetY < -31)
     {
         iOffsetY += 32;
-        map->cell[iCell].id[MAPID_AIR] = -1;
+        map->cell[iCell].gameObjectId[MAPID_AIR] = -1;
         iCell -= MAP_W_MAX;
         update_me=true;
     }
@@ -1824,7 +1824,7 @@ void cUnit::think_move_air()
     if (iOffsetY > 31)
     {
         iOffsetY -= 32;
-        map->cell[iCell].id[MAPID_AIR] = -1;
+        map->cell[iCell].gameObjectId[MAPID_AIR] = -1;
         iCell += MAP_W_MAX;
         update_me=true;
     }
@@ -1845,7 +1845,7 @@ void cUnit::think_move_air()
             if (iCell < 0) iCell = 0;
         }
 
-        map->cell[iCell].id[MAPID_AIR] = iID;
+        map->cell[iCell].gameObjectId[MAPID_AIR] = iID;
 
         poll();
     }
@@ -2128,10 +2128,10 @@ void cUnit::think_attack()
             }
             else
             {
-                if (map->cell[unit[iAttackUnit].iCell].type != TERRAIN_SAND &&
-                    map->cell[unit[iAttackUnit].iCell].type != TERRAIN_HILL &&
-                    map->cell[unit[iAttackUnit].iCell].type != TERRAIN_SPICE &&
-                    map->cell[unit[iAttackUnit].iCell].type != TERRAIN_SPICEHILL)
+                if (map->cell[unit[iAttackUnit].iCell].terrainTypeGfxDataIndex != TERRAIN_SAND &&
+                    map->cell[unit[iAttackUnit].iCell].terrainTypeGfxDataIndex != TERRAIN_HILL &&
+                    map->cell[unit[iAttackUnit].iCell].terrainTypeGfxDataIndex != TERRAIN_SPICE &&
+                    map->cell[unit[iAttackUnit].iCell].terrainTypeGfxDataIndex != TERRAIN_SPICEHILL)
                 {
 
                    iAction = ACTION_GUARD;
@@ -2205,13 +2205,13 @@ void cUnit::think_attack()
 
     if (iAttackCell > -1)
     {
-        if (map->cell[iAttackCell].type == TERRAIN_BLOOM)
+        if (map->cell[iAttackCell].terrainTypeGfxDataIndex == TERRAIN_BLOOM)
         {
             // this is ok
         }
         else
         {
-			if (map->cell[iAttackCell].health < 0)
+			if (map->cell[iAttackCell].hitpoints < 0)
 			{
             // it is destroyed
             iAttackCell=-1;
@@ -2419,7 +2419,7 @@ void cUnit::think_move()
 		if (iType != SANDWORM)
 			if (units[iType].airborn == false)
                 if (iHitPoints > -1)
-                    assert(map->cell[iCell].id[MAPID_UNITS] == iID);
+                    assert(map->cell[iCell].gameObjectId[MAPID_UNITS] == iID);
 
 
     /*
@@ -2513,8 +2513,8 @@ void cUnit::think_move()
                     logbook("Reason: Could not find path (goal unreachable)");
 
                     // Check why, is our goal cell occupied?
-                    int uID =  map->cell[iGoalCell].id[MAPID_UNITS];
-                    int sID =  map->cell[iGoalCell].id[MAPID_STRUCTURES];
+                    int uID =  map->cell[iGoalCell].gameObjectId[MAPID_UNITS];
+                    int sID =  map->cell[iGoalCell].gameObjectId[MAPID_STRUCTURES];
 
                     // Other unit is on goal cell, do something about it.
 
@@ -2632,11 +2632,11 @@ void cUnit::think_move()
     // check
     bool bOccupied=false;
 
-    if (map->cell[iNextCell].id[MAPID_UNITS] > -1 &&
-        map->cell[iNextCell].id[MAPID_UNITS] != iID)
+    if (map->cell[iNextCell].gameObjectId[MAPID_UNITS] > -1 &&
+        map->cell[iNextCell].gameObjectId[MAPID_UNITS] != iID)
     {
         // get it
-        int iUID = map->cell[iNextCell].id[MAPID_UNITS];
+        int iUID = map->cell[iNextCell].gameObjectId[MAPID_UNITS];
 
         bOccupied=true;
         // when enemy infantry
@@ -2651,17 +2651,17 @@ void cUnit::think_move()
 
     // structure is NOT matching our structure ID, then its blocking us
     if (iStructureID > -1 &&
-        map->cell[iNextCell].id[MAPID_STRUCTURES] != iStructureID &&
-        map->cell[iNextCell].id[MAPID_STRUCTURES] > -1)
+        map->cell[iNextCell].gameObjectId[MAPID_STRUCTURES] != iStructureID &&
+        map->cell[iNextCell].gameObjectId[MAPID_STRUCTURES] > -1)
         bOccupied=true;
 
 
-    if (iStructureID < 0 && map->cell[iNextCell].id[MAPID_STRUCTURES] > -1)
+    if (iStructureID < 0 && map->cell[iNextCell].gameObjectId[MAPID_STRUCTURES] > -1)
     {
         bOccupied = true;
     }
 
-    if (iStructureID > -1 && map->cell[iNextCell].id[MAPID_STRUCTURES] == iStructureID)
+    if (iStructureID > -1 && map->cell[iNextCell].gameObjectId[MAPID_STRUCTURES] == iStructureID)
     {
         // we may enter, only if its empty
         if (structure[iStructureID]->iUnitID > -1)
@@ -2686,10 +2686,10 @@ void cUnit::think_move()
 
     // When not infantry:
     if (units[iType].infantry == false)
-        if (map->cell[iNextCell].type == TERRAIN_MOUNTAIN)
+        if (map->cell[iNextCell].terrainTypeGfxDataIndex == TERRAIN_MOUNTAIN)
             bOccupied=true;
 
-    if (map->cell[iNextCell].type == TERRAIN_WALL)
+    if (map->cell[iNextCell].terrainTypeGfxDataIndex == TERRAIN_WALL)
             bOccupied=true;
 
     if (iType == SANDWORM)
@@ -2710,7 +2710,7 @@ void cUnit::think_move()
             iPathIndex=-1;
             return;
         }
-        else if (map->cell[iNextCell].id[MAPID_STRUCTURES] > -1)
+        else if (map->cell[iNextCell].gameObjectId[MAPID_STRUCTURES] > -1)
         {
             // new path, structure obstructs the path (only when it has been built AFTER
             // we created our path)
@@ -2723,7 +2723,7 @@ void cUnit::think_move()
         {
             // From here, a unit is standing in our way. First check if this unit will
             // move. If so, we wait until it has moved.
-            int uID =  map->cell[iNextCell].id[MAPID_UNITS];
+            int uID =  map->cell[iNextCell].gameObjectId[MAPID_UNITS];
 
             // Wait when the obstacle is moving, perhaps it will clear our way
             if (unit[uID].TIMER_movewait <= 0 && unit[uID].iGoalCell != unit[uID].iCell)
@@ -2770,8 +2770,8 @@ void cUnit::think_move()
 		// we wanted to enter this structure, so do it immidiatly (else we just seem to
 		// drive over the structure, which looks odd!
 		if (iStructureID > -1 &&
-			map->cell[iNextCell].id[MAPID_STRUCTURES] == iStructureID &&
-			map->cell[iNextCell].id[MAPID_STRUCTURES] > -1)
+			map->cell[iNextCell].gameObjectId[MAPID_STRUCTURES] == iStructureID &&
+			map->cell[iNextCell].gameObjectId[MAPID_STRUCTURES] > -1)
 		{
 
 			// when this structure is not occupied
@@ -2838,23 +2838,23 @@ void cUnit::think_move()
     int iSlowDown=1;
 
     // Influenced by the terrain type
-    if (map->cell[iCell].type == TERRAIN_SAND)
+    if (map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_SAND)
         iSlowDown=2;
 
     // mountain is very slow
-    if (map->cell[iCell].type == TERRAIN_MOUNTAIN)
+    if (map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_MOUNTAIN)
         iSlowDown=5;
 
-    if (map->cell[iCell].type == TERRAIN_HILL)
+    if (map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_HILL)
         iSlowDown=3;
 
-    if (map->cell[iCell].type == TERRAIN_SPICEHILL)
+    if (map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_SPICEHILL)
         iSlowDown=3;
 
-    if (map->cell[iCell].type == TERRAIN_ROCK)
+    if (map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_ROCK)
         iSlowDown=1;
 
-    if (map->cell[iCell].type == TERRAIN_SLAB)
+    if (map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_SLAB)
         iSlowDown=0;
 
 
@@ -2869,10 +2869,10 @@ void cUnit::think_move()
 
     // from here on, set the map id, so no other unit can take its place
     if (iType != SANDWORM)
-        map->cell[iNextCell].id[MAPID_UNITS] = iID;
+        map->cell[iNextCell].gameObjectId[MAPID_UNITS] = iID;
     else
     {
-        map->cell[iNextCell].id[MAPID_WORMS] = iID;
+        map->cell[iNextCell].gameObjectId[MAPID_WORMS] = iID;
 
 
         // when sandworm, add particle stuff
@@ -2898,10 +2898,10 @@ void cUnit::think_move()
 
         // add particle tracks
 
-        if (map->cell[iCell].type != TERRAIN_ROCK &&
-            map->cell[iCell].type != TERRAIN_MOUNTAIN &&
-            map->cell[iCell].type != TERRAIN_WALL &&
-            map->cell[iCell].type != TERRAIN_SLAB &&
+        if (map->cell[iCell].terrainTypeGfxDataIndex != TERRAIN_ROCK &&
+            map->cell[iCell].terrainTypeGfxDataIndex != TERRAIN_MOUNTAIN &&
+            map->cell[iCell].terrainTypeGfxDataIndex != TERRAIN_WALL &&
+            map->cell[iCell].terrainTypeGfxDataIndex != TERRAIN_SLAB &&
             units[iType].infantry == false && iType != SANDWORM)
         {
 
@@ -2979,9 +2979,9 @@ void cUnit::think_move()
 
         // movement to cell complete
         if (iType == SANDWORM)
-            map->cell[iCell].id[MAPID_WORMS] = -1;
+            map->cell[iCell].gameObjectId[MAPID_WORMS] = -1;
         else
-            map->cell[iCell].id[MAPID_UNITS] = -1;
+            map->cell[iCell].gameObjectId[MAPID_UNITS] = -1;
 
 
         /*
@@ -3057,7 +3057,7 @@ void cUnit::think_move()
             {
                 // structure id match!
 				if (iStructureID > -1)
-                if (iStructureID == map->cell[iCell].id[MAPID_STRUCTURES])
+                if (iStructureID == map->cell[iCell].gameObjectId[MAPID_STRUCTURES])
                 {
 					logbook("Enter structure");
                     // when this structure is not occupied
@@ -3131,16 +3131,16 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
 	}
 
 	// check if unit already exists on location
-	if (map->cell[iCll].id[mapIdIndex] > -1) {
+	if (map->cell[iCll].gameObjectId[mapIdIndex] > -1) {
 		return -1; // cannot place unit
 	}
 
     // check if placed on invalid terrain type
     if (iTpe == SANDWORM) {
-        if (map->cell[iCll].type != TERRAIN_SAND &&
-            map->cell[iCll].type != TERRAIN_SPICE &&
-            map->cell[iCll].type != TERRAIN_HILL &&
-            map->cell[iCll].type != TERRAIN_SPICEHILL) {
+        if (map->cell[iCll].terrainTypeGfxDataIndex != TERRAIN_SAND &&
+            map->cell[iCll].terrainTypeGfxDataIndex != TERRAIN_SPICE &&
+            map->cell[iCll].terrainTypeGfxDataIndex != TERRAIN_HILL &&
+            map->cell[iCll].terrainTypeGfxDataIndex != TERRAIN_SPICEHILL) {
             return -1;
         }
     }
@@ -3148,7 +3148,7 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
 
     // not airborn, and not infantry, may not be placed on walls and mountains.
     if (!units[iTpe].infantry && !units[iTpe].airborn) {
-		if (map->cell[iCll].type == TERRAIN_MOUNTAIN || map->cell[iCll].type == TERRAIN_WALL) {
+		if (map->cell[iCll].terrainTypeGfxDataIndex == TERRAIN_MOUNTAIN || map->cell[iCll].terrainTypeGfxDataIndex == TERRAIN_WALL) {
 			return -1;
 		}
     }
@@ -3199,11 +3199,11 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
 
     unit[iNewId].iPlayer = iPlayer;
     // Put on map too!:
-    map->cell[iCll].id[mapIdIndex] = iNewId;
+    map->cell[iCll].gameObjectId[mapIdIndex] = iNewId;
 
     if (iTpe == SANDWORM) {
         // sandworms are controlled by the last player
-        map->cell[iCll].id[MAPID_WORMS] = iNewId;
+        map->cell[iCll].gameObjectId[MAPID_WORMS] = iNewId;
     } else if (iTpe != ORNITHOPTER && iTpe != FRIGATE && iTpe != CARRYALL) {
         unit[iNewId].iPlayer = iPlyr;
     } else {
@@ -3340,7 +3340,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
         if (unit[iID].iStructureID > -1 || unit[iID].iAttackStructure > -1)
         {
             if (unit[iID].iStructureID > -1)
-            if (map->cell[iCell].id[MAPID_STRUCTURES] == unit[iID].iStructureID)
+            if (map->cell[iCell].gameObjectId[MAPID_STRUCTURES] == unit[iID].iStructureID)
             {
                 valid=false;
                 succes=true;
@@ -3349,7 +3349,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
             }
 
             if (unit[iID].iAttackStructure > -1)
-            if (map->cell[iCell].id[MAPID_STRUCTURES] == unit[iID].iAttackStructure)
+            if (map->cell[iCell].gameObjectId[MAPID_STRUCTURES] == unit[iID].iAttackStructure)
             {
                 valid=false;
                 succes=true;
@@ -3410,40 +3410,40 @@ int CREATE_PATH(int iID, int iPathCountUnits)
                     // 1 -> Occupation by unit/structures
                     // 2 -> Occupation by terrain (but only when it is visible, since we do not want to have an
                     //      advantage or some unknowingly super intelligence by units for unknown territories!)
-                    if (map->cell[cll].id[MAPID_UNITS] == -1 && map->cell[cll].id[MAPID_STRUCTURES] == -1)
+                    if (map->cell[cll].gameObjectId[MAPID_UNITS] == -1 && map->cell[cll].gameObjectId[MAPID_STRUCTURES] == -1)
                     {
                         // there is nothing on this cell, that is good
                         good=true;
                     }
 
-                    if (map->cell[cll].id[MAPID_STRUCTURES] > -1)
+                    if (map->cell[cll].gameObjectId[MAPID_STRUCTURES] > -1)
                     {
                         // when the cell is a structure, and it is the structure we want to attack, it is good
 
 
                         if (unit[iID].iAttackStructure > -1)
-                            if (map->cell[cll].id[MAPID_STRUCTURES] == unit[iID].iAttackStructure)
+                            if (map->cell[cll].gameObjectId[MAPID_STRUCTURES] == unit[iID].iAttackStructure)
                             good=true;
 
                         if (unit[iID].iStructureID > -1)
-                            if (map->cell[cll].id[MAPID_STRUCTURES] == unit[iID].iStructureID)
+                            if (map->cell[cll].gameObjectId[MAPID_STRUCTURES] == unit[iID].iStructureID)
                             good=true;
 
                     }
 
 					// blocked by other then our own unit
-					if (map->cell[cll].id[MAPID_UNITS] > -1)
+					if (map->cell[cll].gameObjectId[MAPID_UNITS] > -1)
                     {
                         // occupied by a unit
-                        if (map->cell[cll].id[MAPID_UNITS] != iID)
+                        if (map->cell[cll].gameObjectId[MAPID_UNITS] != iID)
 						{
-                            int iUID = map->cell[cll].id[MAPID_UNITS];
+                            int iUID = map->cell[cll].gameObjectId[MAPID_UNITS];
 
 							if (iPathCountUnits!=0)
 								   if (iPathCountUnits <= 0)
 								   {
-									   if (map->cell[cll].id[MAPID_UNITS] != -1 &&
-										   map->cell[cll].id[MAPID_UNITS] != iID) // occupied by a unit
+									   if (map->cell[cll].gameObjectId[MAPID_UNITS] != -1 &&
+										   map->cell[cll].gameObjectId[MAPID_UNITS] != iID) // occupied by a unit
 										   good=false;
 								   }
 
@@ -3465,13 +3465,13 @@ int CREATE_PATH(int iID, int iPathCountUnits)
                         good=true;
                     } else {
                         // walls stop us
-                        if (map->cell[cll].type == TERRAIN_WALL) {
+                        if (map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_WALL) {
                             good = false;
                         }
 
                         // When we are infantry, we move through mountains. However, normal units do not
                         if (units[unit[iID].iType].infantry == false) {
-                            if (map->cell[cll].type == TERRAIN_MOUNTAIN) {
+                            if (map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_MOUNTAIN) {
                                 good=false;
                             }
                         }
@@ -3480,10 +3480,10 @@ int CREATE_PATH(int iID, int iPathCountUnits)
              else if (is_worm)
              {
                  // when not on sand, on spice or on sandhill, it is BAD
-                 if (map->cell[cll].type == TERRAIN_SAND ||
-                     map->cell[cll].type == TERRAIN_SPICE ||
-                     map->cell[cll].type == TERRAIN_HILL ||
-                     map->cell[cll].type == TERRAIN_SPICEHILL)
+                 if (map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_SAND ||
+                     map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_SPICE ||
+                     map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_HILL ||
+                     map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_SPICEHILL)
                  {
                      good=true;
                  }
@@ -3759,17 +3759,17 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID)
 
                 float dDistance2 = ABS_length(iSX, iSY, ix, iy);
 
-                if ( (map->cell[cll].id[MAPID_STRUCTURES] < 0) &&
-                     (map->cell[cll].id[MAPID_UNITS] < 0))
+                if ( (map->cell[cll].gameObjectId[MAPID_STRUCTURES] < 0) &&
+                     (map->cell[cll].gameObjectId[MAPID_UNITS] < 0))
                 {
                     // depending on unit type, do not choose walls (or mountains)
                     if (units[unit[iID].iType].infantry)
                     {
-                        if (map->cell[cll].type == TERRAIN_MOUNTAIN)
+                        if (map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_MOUNTAIN)
                             continue; // do not use this one
                     }
 
-                    if (map->cell[cll].type == TERRAIN_WALL)
+                    if (map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_WALL)
                             continue; // do not use this one
 
                     if (dDistance2 < dDistance)
@@ -3817,7 +3817,7 @@ int CLOSE_SPICE_BLOOM(int iCell)
 	cy = iCellGiveY(iCell);
 
 	for (int i=0; i < MAX_CELLS; i++)
-		if (map->cell[i].type == TERRAIN_BLOOM)
+		if (map->cell[i].terrainTypeGfxDataIndex == TERRAIN_BLOOM)
 		{
 			int d = ABS_length(cx, cy, iCellGiveX(i), iCellGiveY(i));
 
@@ -3838,7 +3838,7 @@ int CLOSE_SPICE_BLOOM(int iCell)
 	int iT=0;
 
 	for (int i=0; i < MAX_CELLS; i++)
-		if (map->cell[i].type == TERRAIN_BLOOM)
+		if (map->cell[i].terrainTypeGfxDataIndex == TERRAIN_BLOOM)
 		{
 			iTargets[iT] = i;
 			iT++;
@@ -3866,7 +3866,7 @@ int UNIT_find_harvest_spot(int id)
 
 
   for (int i=0; i < (MAX_CELLS); i++)
-    if (map->cell[i].credits > 0 && i != unit[id].iCell)
+    if (map->cell[i].spiceInCredits > 0 && i != unit[id].iCell)
     {
       // check if its not out of reach
       int dx = iCellGiveX(i);
@@ -3886,7 +3886,7 @@ int UNIT_find_harvest_spot(int id)
       if (dy >= (game.map_height-1))
         continue;*/
 
-      if (map->cell[i].id[MAPID_UNITS] > -1)
+      if (map->cell[i].gameObjectId[MAPID_UNITS] > -1)
         continue;
 
       if (map->occupied(i, id))
@@ -3894,7 +3894,7 @@ int UNIT_find_harvest_spot(int id)
 
       int d = ABS_length(cx, cy, iCellGiveX(i), iCellGiveY(i));
 
-	  if (map->cell[i].type == TERRAIN_SPICE)
+	  if (map->cell[i].terrainTypeGfxDataIndex == TERRAIN_SPICE)
 	  {
 		  if (d < TargetSpiceDistance)
 		  {
@@ -3902,7 +3902,7 @@ int UNIT_find_harvest_spot(int id)
 			  TargetSpiceDistance=d; // update distance
 		  }
 	  }
-	  else if (map->cell[i].type == TERRAIN_SPICEHILL)
+	  else if (map->cell[i].terrainTypeGfxDataIndex == TERRAIN_SPICEHILL)
 	  {
 		  if (d < TargetSpiceHillDistance)
 		  {

@@ -457,15 +457,15 @@ void cGame::poll() {
 			// change to attack cursor if hovering over enemy unit
 			if (mapUtils->isCellVisibleForPlayerId(HUMAN, mc)) {
 
-				if (map->cell[mc].id[MAPID_UNITS] > -1) {
-					int id = map->cell[mc].id[MAPID_UNITS];
+				if (map->cell[mc].gameObjectId[MAPID_UNITS] > -1) {
+					int id = map->cell[mc].gameObjectId[MAPID_UNITS];
 
 					if (unit[id].iPlayer > 0)
 						mouse_tile = MOUSE_ATTACK;
 				}
 
-				if (map->cell[mc].id[MAPID_STRUCTURES] > -1) {
-					int id = map->cell[mc].id[MAPID_STRUCTURES];
+				if (map->cell[mc].gameObjectId[MAPID_STRUCTURES] > -1) {
+					int id = map->cell[mc].gameObjectId[MAPID_STRUCTURES];
 
 					if (structure[id]->getOwner() > 0)
 						mouse_tile = MOUSE_ATTACK;

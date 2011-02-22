@@ -224,7 +224,7 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
 
 			int iCell = cellCalculator->getCell(xOfStructureCell + w, yOfStructureCell + h);
 
-			map->cell[iCell].id[dimensionId] = theStructure->getStructureId();
+			map->cell[iCell].gameObjectId[dimensionId] = theStructure->getStructureId();
 		}
 	}
 	delete cellCalculator;

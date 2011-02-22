@@ -201,12 +201,12 @@ void cMapDrawer::drawTerrain() {
 				continue; // do not draw this one
 			}
 
-			blit((BITMAP *)gfxdata[map->cell[iCell].type].dat, bmp_screen, map->cell[iCell].tile * 32, 0, iDrawX, iDrawY, 32, 32);
+			blit((BITMAP *)gfxdata[map->cell[iCell].terrainTypeGfxDataIndex].dat, bmp_screen, map->cell[iCell].tileIndexToDraw * 32, 0, iDrawX, iDrawY, 32, 32);
 
 			// draw smudge if nescesary
-			if (map->cell[iCell].smudgetype > -1 && map->cell[iCell].smudgetile > -1) {
+			if (map->cell[iCell].smudgeTerrainTypeGfxDataIndex > -1 && map->cell[iCell].smudgeTileToDraw > -1) {
 				masked_blit((BITMAP *)gfxdata[SMUDGE].dat, bmp_screen,
-						map->cell[iCell].smudgetile * 32, map->cell[iCell].smudgetype * 32, iDrawX, iDrawY, 32, 32);
+						map->cell[iCell].smudgeTileToDraw * 32, map->cell[iCell].smudgeTerrainTypeGfxDataIndex * 32, iDrawX, iDrawY, 32, 32);
 
 			}
 
@@ -234,13 +234,13 @@ void cMapDrawer::drawTerrain() {
 				if (map->cell[iCell].passable == false)
 					bDraw=true;
 
-				if (map->cell[iCell].id[MAPID_STRUCTURES] > -1)
+				if (map->cell[iCell].gameObjectId[MAPID_STRUCTURES] > -1)
 				{
 					iClr=makecol(0,255,0);
 					bDraw=true;
 				}
 
-				if (map->cell[iCell].id[MAPID_UNITS] > -1)
+				if (map->cell[iCell].gameObjectId[MAPID_UNITS] > -1)
 				{
 					iClr=makecol(0,0,255);
 					bDraw=true;

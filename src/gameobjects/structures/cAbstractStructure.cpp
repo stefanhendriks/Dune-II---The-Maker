@@ -160,7 +160,7 @@ void cAbstractStructure::die()
         {
 			iCll=iCellMake(iCX+w, iCY+h);
 
-			map->cell[iCll].type = TERRAIN_ROCK;
+			map->cell[iCll].terrainTypeGfxDataIndex = TERRAIN_ROCK;
 			mapEditor.smoothAroundCell(iCll);
 
 			PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16,

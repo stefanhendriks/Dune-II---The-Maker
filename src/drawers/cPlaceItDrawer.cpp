@@ -81,9 +81,9 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 		for (int iY=iStartY; iY < iEndY; iY++)
 		{
 			int iCll=iCellMake(iX, iY);
-			if (map->cell[iCll].id[MAPID_STRUCTURES] > -1)
+			if (map->cell[iCll].gameObjectId[MAPID_STRUCTURES] > -1)
 			{
-				int iID = map->cell[iCll].id[MAPID_STRUCTURES];
+				int iID = map->cell[iCll].gameObjectId[MAPID_STRUCTURES];
 
 				if (structure[iID]->getOwner() == 0) {
 					bOutOfBorder=false; // connection!
@@ -92,8 +92,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 				}
 			}
 
-			if (map->cell[iCll].type == TERRAIN_WALL ||
-				map->cell[iCll].type == TERRAIN_SLAB) {
+			if (map->cell[iCll].terrainTypeGfxDataIndex == TERRAIN_WALL ||
+				map->cell[iCll].terrainTypeGfxDataIndex == TERRAIN_SLAB) {
 				bOutOfBorder=false;
 				// TODO: here we should actually find out if the slab is ours or not??
 			}
@@ -125,17 +125,17 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 			if (map->cell[iCll].passable == false)
 				iTile = PLACE_BAD;
 
-			if (map->cell[iCll].type != TERRAIN_ROCK)
+			if (map->cell[iCll].terrainTypeGfxDataIndex != TERRAIN_ROCK)
 				iTile = PLACE_BAD;
 
-			if (map->cell[iCll].type == TERRAIN_SLAB)
+			if (map->cell[iCll].terrainTypeGfxDataIndex == TERRAIN_SLAB)
 				iTile = PLACE_GOOD;
 
 			// occupied by units or structures
-			if (map->cell[iCll].id[MAPID_STRUCTURES] > -1)
+			if (map->cell[iCll].gameObjectId[MAPID_STRUCTURES] > -1)
 				iTile = PLACE_BAD;
 
-			int unitIdOnMap = map->cell[iCll].id[MAPID_UNITS];
+			int unitIdOnMap = map->cell[iCll].gameObjectId[MAPID_UNITS];
 			if (unitIdOnMap > -1) {
 				if (!unit[unitIdOnMap].bPickedUp) // only when not picked up, take this in (fixes carryall carrying this unit bug)
 					iTile = PLACE_BAD;

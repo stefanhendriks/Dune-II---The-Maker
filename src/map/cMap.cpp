@@ -55,26 +55,26 @@ void cMap::init() {
 }
 
 void cMap::smudge_increase(int iType, int iCell) {
-    if (cell[iCell].smudgetype < 0)
-        cell[iCell].smudgetype = iType;
+    if (cell[iCell].smudgeTerrainTypeGfxDataIndex < 0)
+        cell[iCell].smudgeTerrainTypeGfxDataIndex = iType;
 
-    if (cell[iCell].smudgetype == SMUDGE_WALL)
-        cell[iCell].smudgetile = 0;
+    if (cell[iCell].smudgeTerrainTypeGfxDataIndex == SMUDGE_WALL)
+        cell[iCell].smudgeTileToDraw = 0;
 
-    if (cell[iCell].smudgetype == SMUDGE_ROCK)
+    if (cell[iCell].smudgeTerrainTypeGfxDataIndex == SMUDGE_ROCK)
     {
-        if (cell[iCell].smudgetile < 0)
-            cell[iCell].smudgetile = rnd(2);
-        else if (cell[iCell].smudgetile + 2 < 6)
-            cell[iCell].smudgetile += 2;
+        if (cell[iCell].smudgeTileToDraw < 0)
+            cell[iCell].smudgeTileToDraw = rnd(2);
+        else if (cell[iCell].smudgeTileToDraw + 2 < 6)
+            cell[iCell].smudgeTileToDraw += 2;
     }
 
-    if (cell[iCell].smudgetype == SMUDGE_SAND)
+    if (cell[iCell].smudgeTerrainTypeGfxDataIndex == SMUDGE_SAND)
     {
-        if (cell[iCell].smudgetile < 0)
-            cell[iCell].smudgetile = rnd(2);
-        else if (cell[iCell].smudgetile + 2 < 6)
-            cell[iCell].smudgetile += 2;
+        if (cell[iCell].smudgeTileToDraw < 0)
+            cell[iCell].smudgeTileToDraw = rnd(2);
+        else if (cell[iCell].smudgeTileToDraw + 2 < 6)
+            cell[iCell].smudgeTileToDraw += 2;
     }
 }
 
@@ -88,8 +88,8 @@ bool cMap::occupiedByType(int iCell) {
 	assert(iCell > -1);
 	assert(iCell < MAX_CELLS);
 
-	if (map->cell[iCell].type == TERRAIN_WALL) return true;
-	if (map->cell[iCell].type == TERRAIN_MOUNTAIN) return true;
+	if (map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_WALL) return true;
+	if (map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_MOUNTAIN) return true;
 
 	return false;
 }
@@ -99,7 +99,7 @@ bool cMap::occupiedInDimension(int iCll, int dimension) {
 	assert(iCll < MAX_CELLS);
 	assert(dimension > -1);
 	assert(dimension < MAPID_MAX);
-	return map->cell[iCll].id[dimension] > -1;
+	return map->cell[iCll].gameObjectId[dimension] > -1;
 }
 
 /**
@@ -127,18 +127,18 @@ bool cMap::occupied(int iCll, int iUnitID)
     if (iCll < 0 || iUnitID < 0)
         return true;
 
-    if (map->cell[iCll].id[MAPID_UNITS] > -1 &&
-		map->cell[iCll].id[MAPID_UNITS] != iUnitID)
+    if (map->cell[iCll].gameObjectId[MAPID_UNITS] > -1 &&
+		map->cell[iCll].gameObjectId[MAPID_UNITS] != iUnitID)
         bResult=true;
 
     // TODO: when unit wants to enter a structure...
 
-    if (map->cell[iCll].id[MAPID_STRUCTURES] > -1 )
+    if (map->cell[iCll].gameObjectId[MAPID_STRUCTURES] > -1 )
 	{
 		// we are on top of a structure we do NOT want to enter...
 		if (unit[iUnitID].iStructureID > -1)
 		{
-			if (map->cell[iCll].id[MAPID_STRUCTURES] != unit[iUnitID].iStructureID)
+			if (map->cell[iCll].gameObjectId[MAPID_STRUCTURES] != unit[iUnitID].iStructureID)
 			bResult=true;
 		}
 		else
@@ -146,12 +146,12 @@ bool cMap::occupied(int iCll, int iUnitID)
 	}
 
     // walls block as do mountains
-    if (map->cell[iCll].type == TERRAIN_WALL)
+    if (map->cell[iCll].terrainTypeGfxDataIndex == TERRAIN_WALL)
         bResult=true;
 
     // mountains only block infantry
     if (units[unit[iUnitID].iType].infantry == false)
-        if (map->cell[iCll].type == TERRAIN_MOUNTAIN)
+        if (map->cell[iCll].terrainTypeGfxDataIndex == TERRAIN_MOUNTAIN)
            bResult=true;
 
 
@@ -298,9 +298,9 @@ void cMap::clear_spot(int c, int size, int player)
            // human unit detected enemy, now be scared and play some neat music
        if (player == 0)
        {
-            if (cell[cl].id[MAPID_UNITS] > -1)
+            if (cell[cl].gameObjectId[MAPID_UNITS] > -1)
             {
-                int id = cell[cl].id[MAPID_UNITS];
+                int id = cell[cl].gameObjectId[MAPID_UNITS];
 
                 if (unit[id].iPlayer != 0) // NOT friend
                 {
@@ -335,8 +335,8 @@ void cMap::clear_spot(int c, int size, int player)
 //
 void cMap::remove_id(int iIndex, int iIDType) {
 	for (int iCell = 0; iCell < MAX_CELLS; iCell++) {
-		if (cell[iCell].id[iIDType] == iIndex) {
-			cell[iCell].id[iIDType] = -1;
+		if (cell[iCell].gameObjectId[iIDType] == iIndex) {
+			cell[iCell].gameObjectId[iIDType] = -1;
 		}
 	}
 }
@@ -433,13 +433,13 @@ void cMap::draw_units() {
 
     int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
     if (mc > -1) {
-		if (map->cell[mc].id[MAPID_UNITS] > -1) {
-			int iUnitId = map->cell[mc].id[MAPID_UNITS];
+		if (map->cell[mc].gameObjectId[MAPID_UNITS] > -1) {
+			int iUnitId = map->cell[mc].gameObjectId[MAPID_UNITS];
 
 			if (unit[iUnitId].iTempHitPoints < 0)
 				game.hover_unit = iUnitId;
-		} else if (map->cell[mc].id[MAPID_WORMS] > -1) {
-			int iUnitId = map->cell[mc].id[MAPID_WORMS];
+		} else if (map->cell[mc].gameObjectId[MAPID_WORMS] > -1) {
+			int iUnitId = map->cell[mc].gameObjectId[MAPID_WORMS];
 			game.hover_unit = iUnitId;
 		}
 	}
