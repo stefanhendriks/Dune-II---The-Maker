@@ -15,12 +15,12 @@ class cMapEditor {
 		cMapEditor();
 		virtual ~cMapEditor();
 
-		void smoothCell(int cell);		// smooth a specific cell
-		void smoothMap();				// smooth the entire map
-		void smoothAroundCell(int cell);	// smooth cells above, under, left and right given cell
-		void removeSingleRockSpots();		// when single rock cells have less than 3 neighbors, remove them
+		void smoothCell(int cell);
+		void smoothMap();
+		void smoothCellsAroundCell(int cell);
+		void makeRockCellsSandCellWhenRockCellHasLessThanThreeNeighbouringRockCells();
 
-		void createField(int cell, int terraintType, int size); // create a field on the map
+		void createField(int cell, int terraintType, int size);
 		void createCell(int cell, int terrainType, int tile);
 
 		bool isSpecificTerrainType(int cell, int terrainType);

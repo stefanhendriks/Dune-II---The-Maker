@@ -247,7 +247,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                         // remove wall, turn into smudge:
                         mapEditor.createCell(cll, TERRAIN_ROCK, 0);
 
-                        mapEditor.smoothAroundCell(cll);
+                        mapEditor.smoothCellsAroundCell(cll);
 
                         map->smudge_increase(SMUDGE_WALL, cll);
                     }
@@ -1276,7 +1276,7 @@ void cUnit::think()
 
                     move_to(UNIT_find_harvest_spot(iID), -1, -1);
 
-                    mapEditor.smoothAroundCell(iCell);
+                    mapEditor.smoothCellsAroundCell(iCell);
                 }
             }
 

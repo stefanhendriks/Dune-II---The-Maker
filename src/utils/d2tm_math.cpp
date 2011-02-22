@@ -306,13 +306,10 @@ int CELL_LEFT(int c)
 }
 
 // Right
-int CELL_RIGHT(int c)
-{
+int CELL_RIGHT(int c) {
   int x = iCellGiveX(c);
-  //int y = iCellGiveY(c);
 
-  if (x+1 < MAP_W_MAX)
-  {
+  if (x+1 < MAP_W_MAX) {
 	    if (c+1 < MAX_CELLS) // make sure we don't overdo it
 			return c+1;
 

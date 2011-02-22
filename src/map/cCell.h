@@ -5,10 +5,10 @@
  *      Author: Stefan
  */
 
-#ifndef CCELL_H_
-#define CCELL_H_
+#ifndef CMAPCELL_H_
+#define CMAPCELL_H_
 
-class tCell {
+class cMapCell {
 	public:
 		int spiceInCredits;
 		int terrainTypeGfxDataIndex;

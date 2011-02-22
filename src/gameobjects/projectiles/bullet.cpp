@@ -276,7 +276,7 @@ void cBullet::think_move()
             {
                 // remove wall, turn into smudge:
                 mapEditor.createCell(iCell, TERRAIN_ROCK, 0);
-                mapEditor.smoothAroundCell(iCell);
+                mapEditor.smoothCellsAroundCell(iCell);
                 map->smudge_increase(SMUDGE_WALL, iCell);
 
             }
@@ -425,7 +425,7 @@ void cBullet::think_move()
             {
                 // remove wall, turn into smudge:
             	mapEditor.createCell(iCell, TERRAIN_ROCK, 0);
-                mapEditor.smoothAroundCell(iCell);
+                mapEditor.smoothCellsAroundCell(iCell);
                 map->smudge_increase(SMUDGE_WALL, iCell);
 
             }
@@ -644,7 +644,7 @@ void cBullet::think_move()
 				iType != BULLET_SHIMMER)
 			{
 				map->cell[iCell].terrainTypeGfxDataIndex = TERRAIN_ROCK;
-				mapEditor.smoothAroundCell(iCell);
+				mapEditor.smoothCellsAroundCell(iCell);
 			}
 		}
         else if (map->cell[iCell].terrainTypeGfxDataIndex == TERRAIN_SAND ||

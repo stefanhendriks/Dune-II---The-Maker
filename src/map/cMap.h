@@ -45,7 +45,7 @@ class cMap {
 		void clear_all();
 		void clear_spot(int c, int size, int player);
 
-		tCell cell[MAX_CELLS];
+		cMapCell cell[MAX_CELLS];
 
 		void remove_id(int iIndex, int iIDType); // removes ID of IDtype (unit/structure), etc
 

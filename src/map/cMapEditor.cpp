@@ -397,7 +397,7 @@ void cMapEditor::smoothCell(int cell) {
 	map->cell[cell].tileIndexToDraw = tile;
 }
 
-void cMapEditor::smoothAroundCell(int cell) {
+void cMapEditor::smoothCellsAroundCell(int cell) {
     int above = CELL_ABOVE(cell);
     int under = CELL_UNDER(cell);
     int left  = CELL_LEFT(cell);
@@ -410,7 +410,7 @@ void cMapEditor::smoothAroundCell(int cell) {
     if (cell > -1)	smoothCell(cell);
 }
 
-void cMapEditor::removeSingleRockSpots() {
+void cMapEditor::makeRockCellsSandCellWhenRockCellHasLessThanThreeNeighbouringRockCells() {
 	// soft out rocky spots!
 	int startX = 1;
 	int startY = 1;

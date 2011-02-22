@@ -232,7 +232,7 @@ void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlaye
     if (iStructureType == WALL) {
     	mapEditor.createCell(iCell, TERRAIN_WALL, 0);
 		// change surrounding walls here
-        mapEditor.smoothAroundCell(iCell);
+        mapEditor.smoothCellsAroundCell(iCell);
 		return;
     }
 

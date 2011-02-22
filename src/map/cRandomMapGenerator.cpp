@@ -119,7 +119,7 @@ void cRandomMapGenerator::generateRandomMap() {
 	delete cellCalculator;
 
 	// soft out rock a bit
-	mapEditor.removeSingleRockSpots();
+	mapEditor.makeRockCellsSandCellWhenRockCellHasLessThanThreeNeighbouringRockCells();
 
 	// blit on screen
 	rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
@@ -127,7 +127,7 @@ void cRandomMapGenerator::generateRandomMap() {
 			game.getScreenResolution()->getWidth(),
 			game.getScreenResolution()->getHeight());
 
-	mapEditor.removeSingleRockSpots();
+	mapEditor.makeRockCellsSandCellWhenRockCellHasLessThanThreeNeighbouringRockCells();
 
 	// blit on screen
 	rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
@@ -135,7 +135,7 @@ void cRandomMapGenerator::generateRandomMap() {
 			game.getScreenResolution()->getWidth(),
 			game.getScreenResolution()->getHeight());
 
-	mapEditor.removeSingleRockSpots();
+	mapEditor.makeRockCellsSandCellWhenRockCellHasLessThanThreeNeighbouringRockCells();
 
 	// blit on screen
 	rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
