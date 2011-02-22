@@ -3,11 +3,11 @@
 cMapCamera::cMapCamera() {
 	int widthOfSidebar = 160;
 	int heightOfOptions = 42;
-	viewportWidth=((game.getScreenResolution()->getWidth() - widthOfSidebar) / TILESIZE_WIDTH_PIXELS);
-	viewportHeight=((game.getScreenResolution()->getHeight() - heightOfOptions) / TILESIZE_HEIGHT_PIXELS)+1;
-	x=y=1;
-	targetX=targetY=1;
-	TIMER_move=0;
+	viewportWidth = ((game.getScreenResolution()->getWidth() - widthOfSidebar) / TILESIZE_WIDTH_PIXELS);
+	viewportHeight = ((game.getScreenResolution()->getHeight() - heightOfOptions) / TILESIZE_HEIGHT_PIXELS) + 1;
+	x = y = 1;
+	targetX = targetY = 1;
+	TIMER_move = 0;
 
 	char msg[255];
 	sprintf(msg, "Camera initialized. Viewport width is [%d], height [%d]. Position [%d,%d]", viewportWidth, viewportHeight, getX(), getY());
@@ -19,8 +19,12 @@ cMapCamera::~cMapCamera() {
 
 void cMapCamera::centerAndJumpViewPortToCell(int cell) {
 	// fix any boundaries
-	if (cell < 0) cell = 0;
-	if (cell >= MAX_CELLS) cell = (MAX_CELLS-1);
+	if (cell < 0) {
+		cell = 0;
+	}
+	if (cell >= MAX_CELLS) {
+		cell = (MAX_CELLS - 1);
+	}
 
 	cCellCalculator * cellCalculator = new cCellCalculator(map);
 
@@ -34,8 +38,8 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell) {
 	int height = mapCamera->getViewportHeight();
 
 	// Half ...
-	int iHalfX = width/2;
-	int iHalfY = height/2;
+	int iHalfX = width / 2;
+	int iHalfY = height / 2;
 
 	// determine the new X and Y position
 	int newViewPortX = cellX - iHalfX;
@@ -91,41 +95,64 @@ void cMapCamera::moveTo(int theX, int theY) {
 	targetY = theY;
 }
 
+bool cMapCamera::isMouseSelectingBoxUsed() {
+	return mouse_co_x1 > -1 && mouse_co_y1 > -1;
+}
+
+bool cMapCamera::shouldScrollLeft() {
+	return mouse_x <= 1 || key[KEY_LEFT];
+}
+
+bool cMapCamera::shouldScrollUp() {
+	return mouse_y <= 1 || key[KEY_UP];
+}
+
+bool cMapCamera::shouldScrollRight() {
+	return mouse_x >= (game.getScreenResolution()->getWidth() - 2) || key[KEY_RIGHT];
+}
+
+bool cMapCamera::shouldScrollDown() {
+	return mouse_y >= (game.getScreenResolution()->getHeight() - 2) || key[KEY_DOWN];
+}
+
+bool cMapCamera::canScrollLeft() {
+	return x > 1;
+}
+
+bool cMapCamera::canScrollUp() {
+	return y > 1;
+}
+
+bool cMapCamera::canScrollDown() {
+	return (getEndY()) < (map->getHeight() - 1);
+}
+
+bool cMapCamera::canScrollRight() {
+	return (getEndX()) < (map->getWidth() - 1);
+}
 
 void cMapCamera::thinkInteraction() {
-   if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
+	if (isMouseSelectingBoxUsed()) {
 		return;
-   }
-
-	// thinking for map (scrolling that is)
-	if (mouse_x <= 1 || key[KEY_LEFT]) {
-		if (x > 1) {
-			x--;
-			mouse_tile = MOUSE_LEFT;
-		}
 	}
 
-
-	if (mouse_y <= 1 || key[KEY_UP]) {
-		if (y > 1) {
-			y--;
-			mouse_tile = MOUSE_UP;
-
-		}
+	if (shouldScrollLeft() && canScrollLeft()) {
+		x--;
+		mouse_tile = MOUSE_LEFT;
 	}
 
-
-	if (mouse_x >= (game.getScreenResolution()->getWidth()-2) || key[KEY_RIGHT]) {
-		if ((getEndX()) < (map->getWidth()-1)) {
-			x++;
-			mouse_tile = MOUSE_RIGHT;
-		}
+	if (shouldScrollUp() && canScrollUp()) {
+		y--;
+		mouse_tile = MOUSE_UP;
 	}
 
-	if (mouse_y >= (game.getScreenResolution()->getHeight()-2) || key[KEY_DOWN]) {
-		if ((getEndY()) < (map->getHeight()-1)) {
-			y++;
-			mouse_tile = MOUSE_DOWN;
-		}
+	if (shouldScrollRight() && canScrollRight()) {
+		x++;
+		mouse_tile = MOUSE_RIGHT;
+	}
+
+	if (shouldScrollDown() && canScrollDown()) {
+		y++;
+		mouse_tile = MOUSE_DOWN;
 	}
 }

@@ -28,19 +28,35 @@ class cMapCamera {
 
 		void think();
 
-		void jumpTo(int	theX, int theY);
+		void jumpTo(int theX, int theY);
 		void moveTo(int theX, int theY);
 
-		int getX() { return x; }
-		int getY() { return y; }
-		int getTargetX() { return targetX; }
-		int getTargetY() { return targetY; }
+		int getX() {
+			return x;
+		}
+		int getY() {
+			return y;
+		}
+		int getTargetX() {
+			return targetX;
+		}
+		int getTargetY() {
+			return targetY;
+		}
 
-		int getEndX() { return x + viewportWidth; }
-		int getEndY() { return y + viewportHeight; }
+		int getEndX() {
+			return x + viewportWidth;
+		}
+		int getEndY() {
+			return y + viewportHeight;
+		}
 
-		int getViewportWidth() { return viewportWidth; }
-		int getViewportHeight() { return viewportHeight; }
+		int getViewportWidth() {
+			return viewportWidth;
+		}
+		int getViewportHeight() {
+			return viewportHeight;
+		}
 
 		void thinkInteraction();
 
@@ -48,21 +64,24 @@ class cMapCamera {
 
 	protected:
 
-
 	private:
-		// the width and height of the viewport
-		// calculated at the constructor. The viewport width and height is
-		// in cells (not in pixels).
 		int viewportWidth;
 		int viewportHeight;
-
-		// the X,Y position (top left corner of the viewport)
-		// the targetX and targetY are leading.
 		int x, targetX;
 		int y, targetY;
-
-		// timer used, when
 		int TIMER_move;
+
+		bool canScrollRight();
+		bool canScrollLeft();
+		bool canScrollUp();
+		bool canScrollDown();
+
+		bool isMouseSelectingBoxUsed();
+
+		bool shouldScrollLeft();
+		bool shouldScrollRight();
+		bool shouldScrollDown();
+		bool shouldScrollUp();
 };
 
 #endif /* CMAPCAMERA_H_ */
