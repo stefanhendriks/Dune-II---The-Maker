@@ -1,6 +1,6 @@
 #include <assert.h>
 
-#include "allegroh.h"
+#include "../include/allegroh.h"
 
 #include "../gameobjects/cScreenResolution.h"
 

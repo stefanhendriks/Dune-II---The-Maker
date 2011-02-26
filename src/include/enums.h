@@ -49,6 +49,6 @@ enum eUpgradeType {
 	UPGRADE_ONE, UPGRADE_TWO, UPGRADE_THREE
 };
 
-#include <GameState.h>
+#include "GameState.h"
 
 #endif /* ENUMS_H_ */

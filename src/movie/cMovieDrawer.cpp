@@ -5,7 +5,7 @@
  *      Author: Stefan
  */
 
-#include "allegroh.h"
+#include "../include/allegroh.h"
 
 #include "cMoviePlayer.h"
 #include "cMovieDrawer.h"
