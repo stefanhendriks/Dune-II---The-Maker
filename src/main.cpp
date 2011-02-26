@@ -90,23 +90,30 @@ int frame_count, fps;  // fps and such
 	volatile int allegro_timerUnits = 0;
 #endif
 
+bool argumentsGiven(int & argc) {
+	return argc > 1;
+}
+
+bool isGameFlag(string command) {
+	return command.compare("-game") == 0;
+}
+
 int handleArguments(int argc, char *argv[]) {
 
-	if (argc > 1) {
+	if (argumentsGiven(argc)) {
 		for (int i = 1; i < argc; i++) {
-			string command = argv[i];
-			if (command.compare("-game") == 0) {
+			string flag = argv[i];
+			if (isGameFlag(flag)) {
 				if ((i + 1) < argc) {
 					i++;
 					game.game_filename = string(argv[i]);
 				}
 			}
 		}
-	} // arguments passed
+	}
 
 	return 0;
 }
-
 
 int main(int argc, char **argv) {
 	game.game_filename = "game.ini";

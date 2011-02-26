@@ -2447,7 +2447,11 @@ void INI_Install_Game(string filename) {
     } // while
 
     fclose(stream);
-  } // if
+  } else {
+	  char msg[255];
+	  sprintf(msg, "Could not open file [%s]. Failed to load game rules.", filename.c_str());
+	  logbook(msg);
+  }
 
 logbook("[GAME.INI] Done");
 }
