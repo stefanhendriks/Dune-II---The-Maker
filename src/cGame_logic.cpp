@@ -1635,9 +1635,9 @@ void cGame::preparementat(bool bTellHouse) {
 
 			mapCamera = new cMapCamera();
 
-        	INI_Load_scenario(iHouse, iRegion);
+			INI_Load_scenario(iHouse, iRegion);
 
-        	gameDrawer = new cGameDrawer(&player[HUMAN]);
+			gameDrawer = new cGameDrawer(&player[HUMAN]);
 			assert(gameDrawer->getCreditsDrawer());
 			gameDrawer->getCreditsDrawer()->setCredits();
 

@@ -21,13 +21,14 @@ cMiniMapDrawer::~cMiniMapDrawer() {
 }
 
 void cMiniMapDrawer::drawViewPortRectangle() {
-	 // Draw the magic rectangle (viewport)
-	 int iWidth=((game.getScreenResolution()->getWidth()-160)/32);
-	 int iHeight=((game.getScreenResolution()->getWidth()-42)/32)+1;
+	// Draw the magic rectangle (viewport)
+	int iWidth = ((game.getScreenResolution()->getWidth() - 160) / 32);
+	int iHeight = ((game.getScreenResolution()->getWidth() - 42) / 32) + 1;
 
-	 iWidth--;
-	 iHeight--;
-	 rect(bmp_screen, getDrawStartX()+(mapCamera->getX()*2), getDrawStartY()+(mapCamera->getY()*2), ((getDrawStartX()+(mapCamera->getX()*2))+iWidth*2)+1, (getDrawStartY()+(mapCamera->getY()*2)+iHeight*2)+1, makecol(255,255,255));
+	iWidth--;
+	iHeight--;
+	rect(bmp_screen, getDrawStartX() + (mapCamera->getX() * 2), getDrawStartY() + (mapCamera->getY() * 2), ((getDrawStartX() + (mapCamera->getX() * 2)) + iWidth
+			* 2) + 1, (getDrawStartY() + (mapCamera->getY() * 2) + iHeight * 2) + 1, makecol(255, 255, 255));
 }
 
 int cMiniMapDrawer::getDrawStartX() {
@@ -40,10 +41,10 @@ int cMiniMapDrawer::getDrawStartY() {
 
 void cMiniMapDrawer::drawTerrain() {
 	// startX = MAX_SCREEN_X - 129
-	int iDrawX=getDrawStartX();
-	int iDrawY=getDrawStartY();
+	int iDrawX = getDrawStartX();
+	int iDrawY = getDrawStartY();
 
-	int iColor=makecol(0,0,0);
+	int iColor = makecol(0, 0, 0);
 
 	for (int x = 0; x < (map->getWidth()); x++) {
 
@@ -78,10 +79,10 @@ void cMiniMapDrawer::drawTerrain() {
 }
 
 void cMiniMapDrawer::drawUnitsAndStructures() {
-	int iDrawX=getDrawStartX();
-	int iDrawY=getDrawStartY();
+	int iDrawX = getDrawStartX();
+	int iDrawY = getDrawStartY();
 
-	int iColor=makecol(0,0,0);
+	int iColor = makecol(0, 0, 0);
 	cMapUtils * mapUtils = new cMapUtils(map);
 
 	for (int x = 0; x < map->getWidth(); x++) {
@@ -95,7 +96,7 @@ void cMiniMapDrawer::drawUnitsAndStructures() {
 
 			if (map->isVisible(iCll, player->getId())) {
 				if (map->cell[iCll].gameObjectId[MAPID_STRUCTURES] > -1) {
-					int	iPlr = structure[map->cell[iCll].gameObjectId[MAPID_STRUCTURES]]->getOwner();
+					int iPlr = structure[map->cell[iCll].gameObjectId[MAPID_STRUCTURES]]->getOwner();
 					iColor = player[iPlr].getMinimapColor();
 					drawADot = true;
 				}
@@ -142,17 +143,15 @@ void cMiniMapDrawer::drawUnitsAndStructures() {
 	delete mapUtils;
 }
 
-
-
 int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
 	// get color for terrain type (for minimap)
 	switch (terrainType) {
 		case TERRAIN_ROCK:
-			return makecol(80,80,60);
+			return makecol(80, 80, 60);
 		case TERRAIN_SPICE:
-			return makecol(186,93,32);
+			return makecol(186, 93, 32);
 		case TERRAIN_SPICEHILL:
-			return makecol(180,90,25);
+			return makecol(180, 90, 25);
 		case TERRAIN_HILL:
 			return makecol(188, 115, 50);
 		case TERRAIN_MOUNTAIN:
@@ -162,9 +161,9 @@ int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
 		case TERRAIN_WALL:
 			return makecol(192, 192, 192);
 		case TERRAIN_SLAB:
-			return makecol(80,80,80);
+			return makecol(80, 80, 80);
 		case TERRAIN_BLOOM:
-			return makecol(214,145,100);
+			return makecol(214, 145, 100);
 		default:
 			return makecol(255, 0, 255);
 	}
@@ -194,7 +193,6 @@ void cMiniMapDrawer::draw() {
 
 	bool hasRadarAndEnoughPower = (playerUtils.getAmountOfStructuresForStructureTypeForPlayer(player, RADAR) > 0) && player->bEnoughPower();
 
-
 	if (hasRadarAndEnoughPower) {
 		drawTerrain();
 		drawUnitsAndStructures();
@@ -221,24 +219,23 @@ void cMiniMapDrawer::draw() {
 
 void cMiniMapDrawer::drawStaticFrame() {
 	// Draw static info
-	 if (iStatus < 0) {
-		 draw_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, getDrawStartX(), getDrawStartY());
-	 } else {
-		 if (iStaticFrame < STAT10) {
-			 iTrans = 255 - health_bar(192, (STAT12-iStaticFrame), 12);
-		 } else {
-			 iTrans = 255;
-		 }
+	if (iStatus < 0) {
+		draw_sprite(bmp_screen, (BITMAP *) gfxinter[iStaticFrame].dat, getDrawStartX(), getDrawStartY());
+	} else {
+		if (iStaticFrame < STAT10) {
+			iTrans = 255 - health_bar(192, (STAT12 - iStaticFrame), 12);
+		} else {
+			iTrans = 255;
+		}
 
-		 if (iStaticFrame != STAT01)
-		 {
-			 set_trans_blender(0,0,0,iTrans);
+		if (iStaticFrame != STAT01) {
+			set_trans_blender(0, 0, 0, iTrans);
 
-			 draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, getDrawStartX(), getDrawStartY());
-			 // reset the trans blender
-			 set_trans_blender(0,0,0,128);
-		 }
-	 }
+			draw_trans_sprite(bmp_screen, (BITMAP *) gfxinter[iStaticFrame].dat, getDrawStartX(), getDrawStartY());
+			// reset the trans blender
+			set_trans_blender(0, 0, 0, 128);
+		}
+	}
 }
 
 void cMiniMapDrawer::drawDot(int x, int y, int color) {

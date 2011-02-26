@@ -22,7 +22,6 @@ cGameControlsContext::~cGameControlsContext() {
 	mouse = NULL;
 }
 
-
 void cGameControlsContext::updateState() {
 	determineMouseCell();
 	determineToolTip();
@@ -38,13 +37,13 @@ void cGameControlsContext::determineMouseCell() {
 
 	if (mouse->getX() > (game.getScreenResolution()->getWidth() - 128)) {
 		if (mouse->getY() > (game.getScreenResolution()->getHeight() - 128)) {
-			mouseCell = MOUSECELL_MINIMAP ; // on minimap
+			mouseCell = MOUSECELL_MINIMAP; // on minimap
 			return;
 		}
 	}
 
 	if (mouse->getX() > (game.getScreenResolution()->getWidth() - 160)) {
-		mouseCell = -3 ; // on sidebar
+		mouseCell = -3; // on sidebar
 		return;
 	}
 
@@ -76,7 +75,7 @@ void cGameControlsContext::determineHoveringOverStructureId() {
 
 	mouseHoveringOverStructureId = -1;
 
-	for (int i=0; i < MAX_STRUCTURES; i++) {
+	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
 
 		if (theStructure) {
@@ -91,7 +90,7 @@ void cGameControlsContext::determineHoveringOverStructureId() {
 
 void cGameControlsContext::determineHoveringOverUnitId() {
 	//TODO:implementation of determineHoveringOverUnitId
-	mouseHoveringOverUnitId=-1;
+	mouseHoveringOverUnitId = -1;
 }
 
 cAbstractStructure * cGameControlsContext::getStructurePointerWhereMouseHovers() {

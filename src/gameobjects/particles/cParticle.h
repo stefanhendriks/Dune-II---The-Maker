@@ -1,54 +1,52 @@
 /* 
 
-  Dune II - The Maker
+ Dune II - The Maker
 
-  Author : Stefan Hendriks
-  Contact: stefanhen83@gmail.com
-  Website: http://dune2themaker.fundynamic.com
+ Author : Stefan Hendriks
+ Contact: stefanhen83@gmail.com
+ Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2009 (c) code by Stefan Hendriks
+ 2001 - 2011 (c) code by Stefan Hendriks
 
-  */
+ */
 
 // - see in .cpp file what it is
 
 //
 
-class cParticle
-{
-public:
+class cParticle {
+	public:
 
-    // used or not:
-    bool bAlive;        // alive
+		// used or not:
+		bool bAlive; // alive
 
-    // Drawing effects
-    long x, y;			// x and y position to draw (absolute numbers)
-    int iFrame;         // frame
-    int iType;          // type
-	int iAlpha;			// alpha
+		// Drawing effects
+		long x, y; // x and y position to draw (absolute numbers)
+		int iFrame; // frame
+		int iType; // type
+		int iAlpha; // alpha
 
-    int iWidth;         // width of frame
-    int iHeight;        // height of frame
-    
-    // TIMERS
-    int TIMER_frame;    // frame animation timers (when < 0, next frame, etc)
-                        // when TIMER_dead < 0, the last frame lets this thing die
+		int iWidth; // width of frame
+		int iHeight; // height of frame
 
-    int TIMER_dead;     // when > -1, this timer will determine when the thing dies
+		// TIMERS
+		int TIMER_frame; // frame animation timers (when < 0, next frame, etc)
+		// when TIMER_dead < 0, the last frame lets this thing die
 
-    int layer;          // when to draw
-    
-    int iHousePal;      // when specified, use this palette for drawing (and its an 8 bit picture then!)
+		int TIMER_dead; // when > -1, this timer will determine when the thing dies
 
-    // ---------
-    int draw_x();
-    int draw_y();
-    void draw();
-    bool isValid();        
-    void init();
-    void think();       // particles do some sort of thinking , really! :)
+		int layer; // when to draw
+
+		int iHousePal; // when specified, use this palette for drawing (and its an 8 bit picture then!)
+
+		// ---------
+		int draw_x();
+		int draw_y();
+		void draw();
+		bool isValid();
+		void init();
+		void think(); // particles do some sort of thinking , really! :)
 };
 
 void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame);
-
 

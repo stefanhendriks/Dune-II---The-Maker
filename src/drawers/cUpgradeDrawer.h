@@ -19,7 +19,6 @@ class cUpgradeDrawer {
 		void drawUpgradeButton(cPlayer * thePlayer, cBuildingList * theSelectedList);
 		void drawUpgradeProgress(cPlayer * thePlayer, cBuildingList * theSelectedList);
 
-
 	protected:
 
 	private:

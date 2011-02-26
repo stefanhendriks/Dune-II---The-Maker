@@ -3,41 +3,41 @@
 
 class cLogger {
 
-public:
-	void log(eLogLevel level, eLogComponent component, const char *event, const char *message);
-	void log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome, int playerId, int houseId);
-	void log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome);
+	public:
+		void log(eLogLevel level, eLogComponent component, const char *event, const char *message);
+		void log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome, int playerId, int houseId);
+		void log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome);
 
-	void logCommentLine(const char *txt);
+		void logCommentLine(const char *txt);
 
-	void logHeader(const char *txt);
+		void logHeader(const char *txt);
 
-	static cLogger *getInstance();
+		static cLogger *getInstance();
 
-private:
-	FILE *file;
+	private:
+		FILE *file;
 
-	time_t current_time;
+		time_t current_time;
 
-	std::string getLogLevelString(eLogLevel level);
-	std::string getLogComponentString(eLogComponent component);
-	std::string getLogOutcomeString(eLogOutcome outcome);
+		std::string getLogLevelString(eLogLevel level);
+		std::string getLogComponentString(eLogComponent component);
+		std::string getLogOutcomeString(eLogOutcome outcome);
 
-	std::string getCurrentFormattedTime();
-	std::string getLogHouseString(int houseId);
+		std::string getCurrentFormattedTime();
+		std::string getLogHouseString(int houseId);
 
-	void updateTime();
+		void updateTime();
 
-	static cLogger *instance;
+		static cLogger *instance;
 
-	std::string getIntegerAsString(int value);
-	std::string getLongAsString(long value);
+		std::string getIntegerAsString(int value);
+		std::string getLongAsString(long value);
 
-	long startTime; // start time of logging in miliseconds
+		long startTime; // start time of logging in miliseconds
 
-	long getTimeInMilisDifference();
-protected:
-	cLogger();
+		long getTimeInMilisDifference();
+	protected:
+		cLogger();
 
 };
 

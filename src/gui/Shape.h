@@ -14,15 +14,31 @@ class Shape {
 		Shape();
 		~Shape();
 
-		void setX(int value) { x = value; }
-		void setY(int value) { y = value; }
-		void setHeight(int value) { height = value; }
-		void setWidth(int value) { width = value; }
+		void setX(int value) {
+			x = value;
+		}
+		void setY(int value) {
+			y = value;
+		}
+		void setHeight(int value) {
+			height = value;
+		}
+		void setWidth(int value) {
+			width = value;
+		}
 
-		int getX() { return x; }
-		int getY() { return y; }
-		int getHeight() { return height; }
-		int getWidth() { return width; }
+		int getX() {
+			return x;
+		}
+		int getY() {
+			return y;
+		}
+		int getHeight() {
+			return height;
+		}
+		int getWidth() {
+			return width;
+		}
 
 	protected:
 

@@ -3,11 +3,11 @@
 cBuildingList::cBuildingList(int theId) {
 	TIMER_progress = 0;
 	lastClickedId = 0;
-	buttonIconIdPressed = 0;	// the button to draw at the left of the list
+	buttonIconIdPressed = 0; // the button to draw at the left of the list
 	buttonDrawX = 0;
 	buttonDrawY = 0;
-	scrollingOffset = 0; 	// the offset for scrolling through the list.
-	available = false;		 // is this list available?
+	scrollingOffset = 0; // the offset for scrolling through the list.
+	available = false; // is this list available?
 	memset(items, NULL, sizeof(items));
 	typeOfList = theId;
 	upgradeLevel = 0;
@@ -19,11 +19,11 @@ cBuildingList::cBuildingList(int theId) {
 cBuildingList::~cBuildingList() {
 	TIMER_progress = 0;
 	lastClickedId = 0;
-	buttonIconIdPressed = 0;	// the button to draw at the left of the list
+	buttonIconIdPressed = 0; // the button to draw at the left of the list
 	buttonDrawX = 0;
 	buttonDrawY = 0;
-	scrollingOffset = 0; 	// the offset for scrolling through the list.
-	available = false;		 // is this list available?
+	scrollingOffset = 0; // the offset for scrolling through the list.
+	available = false; // is this list available?
 	removeAllItems();
 	memset(items, NULL, sizeof(items));
 	upgradeLevel = 0;
@@ -54,7 +54,7 @@ int cBuildingList::getFreeSlot() {
 }
 
 void cBuildingList::removeAllItems() {
-	for (int i =0 ; i < MAX_ICONS; i++) {
+	for (int i = 0; i < MAX_ICONS; i++) {
 		removeItemFromList(i);
 	}
 }
@@ -66,7 +66,7 @@ bool cBuildingList::isItemInList(cBuildingListItem * item) {
 
 bool cBuildingList::hasItemType(int itemTypeId) {
 	assert(itemTypeId >= 0);
-	for (int i =0; i < MAX_ICONS; i++) {
+	for (int i = 0; i < MAX_ICONS; i++) {
 		cBuildingListItem * itemInList = getItem(i);
 
 		// item already in list (same build id)
@@ -79,7 +79,6 @@ bool cBuildingList::hasItemType(int itemTypeId) {
 	return false;
 }
 
-
 void cBuildingList::addItemToList(cBuildingListItem * item) {
 	assert(item);
 
@@ -90,7 +89,7 @@ void cBuildingList::addItemToList(cBuildingListItem * item) {
 	}
 
 	int slot = getFreeSlot();
-	if (slot < 0 ) {
+	if (slot < 0) {
 		logbook("Failed to add icon to cBuildingList, no free slot left in list");
 		assert(false);
 		return;
@@ -100,9 +99,9 @@ void cBuildingList::addItemToList(cBuildingListItem * item) {
 	items[slot] = item;
 	item->setSlotId(slot);
 	maxItems = slot;
-//	char msg[355];
-//	sprintf(msg, "Icon added with id [%d] added to cBuilding list, put in slot[%d], set maxItems to [%d]", item->getBuildId(), slot, maxItems);
-//	logbook(msg);
+	//	char msg[355];
+	//	sprintf(msg, "Icon added with id [%d] added to cBuilding list, put in slot[%d], set maxItems to [%d]", item->getBuildId(), slot, maxItems);
+	//	logbook(msg);
 }
 
 /**
@@ -182,7 +181,7 @@ void cBuildingList::scrollDown() {
  * @return
  */
 bool cBuildingList::isBuildingItem() {
-	for (int i = 0 ; i < MAX_ITEMS; i++) {
+	for (int i = 0; i < MAX_ITEMS; i++) {
 		cBuildingListItem *item = getItem(i);
 		// valid pointer
 		if (item) {
@@ -196,7 +195,7 @@ bool cBuildingList::isBuildingItem() {
 }
 
 cBuildingListItem * cBuildingList::getItemToPlace() {
-	for (int i = 0 ; i < MAX_ITEMS; i++) {
+	for (int i = 0; i < MAX_ITEMS; i++) {
 		cBuildingListItem *item = getItem(i);
 		// valid pointer
 		if (item) {

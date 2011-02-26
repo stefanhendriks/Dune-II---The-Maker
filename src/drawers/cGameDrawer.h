@@ -1,6 +1,6 @@
 /**
-	Class responsible for all drawing
-*/
+ Class responsible for all drawing
+ */
 #ifndef CGAMEDRAWER_H_
 #define CGAMEDRAWER_H_
 
@@ -12,11 +12,21 @@ class cGameDrawer {
 
 		void draw();
 
-		CreditsDrawer *getCreditsDrawer() { return creditsDrawer; }
-		cMessageDrawer *getMessageDrawer() { return messageDrawer; }
-		cMessageBarDrawer *getMessageBarDrawer() { return messageBarDrawer; }
-		cMiniMapDrawer *getMiniMapDrawer() { return miniMapDrawer; }
-		cSideBarDrawer *getSidebarDrawer() { return sidebarDrawer; }
+		CreditsDrawer *getCreditsDrawer() {
+			return creditsDrawer;
+		}
+		cMessageDrawer *getMessageDrawer() {
+			return messageDrawer;
+		}
+		cMessageBarDrawer *getMessageBarDrawer() {
+			return messageBarDrawer;
+		}
+		cMiniMapDrawer *getMiniMapDrawer() {
+			return miniMapDrawer;
+		}
+		cSideBarDrawer *getSidebarDrawer() {
+			return sidebarDrawer;
+		}
 
 		int getDrawXForCell(int cell);
 		int getDrawYForCell(int cell);

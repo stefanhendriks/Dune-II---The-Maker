@@ -17,11 +17,19 @@ class cGameObject {
 		cGameObject();
 		~cGameObject();
 
-		void setX(int value) { x = value; }
-		void setY(int value) { y = value; }
+		void setX(int value) {
+			x = value;
+		}
+		void setY(int value) {
+			y = value;
+		}
 
-		int getX() { return x; }
-		int getY() { return y; }
+		int getX() {
+			return x;
+		}
+		int getY() {
+			return y;
+		}
 
 	protected:
 

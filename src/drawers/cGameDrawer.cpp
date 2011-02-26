@@ -47,8 +47,7 @@ void cGameDrawer::draw() {
 
 	// Only draw units/structures, etc, when we do NOT press D
 	// TODO: this should be something like : if (keyboard->isDebuggingStructures())
-	if (!key[KEY_D] || !key[KEY_TAB])
-	{
+	if (!key[KEY_D] || !key[KEY_TAB]) {
 		structureDrawer->drawStructuresFirstLayer();
 	}
 
@@ -102,8 +101,8 @@ void cGameDrawer::drawRallyPoint() {
 		// show draw a target on this cell so we know this is the rally point.
 		if (rallyPointCell > -1) {
 			// draw this thing ...
-			set_trans_blender(0,0,0,128);
-			draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_MOVE].dat, getDrawXForCell(rallyPointCell), getDrawYForCell(rallyPointCell));
+			set_trans_blender(0, 0, 0, 128);
+			draw_trans_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_MOVE].dat, getDrawXForCell(rallyPointCell), getDrawYForCell(rallyPointCell));
 
 			int startX = theStructure->iDrawX() + (theStructure->getS_StructuresType().bmp_width / 2);
 			int startY = theStructure->iDrawY() + (theStructure->getS_StructuresType().bmp_height / 2);
@@ -123,7 +122,7 @@ int cGameDrawer::getDrawXForCell(int cell) {
 
 int cGameDrawer::getDrawYForCell(int cell) {
 	int cellY = iCellGiveY(cell);
-	return (cellY * 32) - (mapCamera->getY() * 32) +42; // + 42 is the top bar (options/upgrade/credits)
+	return (cellY * 32) - (mapCamera->getY() * 32) + 42; // + 42 is the top bar (options/upgrade/credits)
 }
 
 void cGameDrawer::drawOrderButton() {
@@ -160,7 +159,7 @@ void cGameDrawer::drawStructurePlacing() {
 void cGameDrawer::drawMessage() {
 	assert(messageDrawer);
 	messageDrawer->draw();
-//	messageBarDrawer->drawMessageBar();
+	//	messageBarDrawer->drawMessageBar();
 }
 
 void cGameDrawer::drawMouse() {

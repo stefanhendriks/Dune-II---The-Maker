@@ -15,7 +15,9 @@ class cSideBarDrawer {
 
 		void drawSideBar(cPlayer * player);
 
-		cBuildingListDrawer * getBuildingListDrawer() { return buildingListDrawer; }
+		cBuildingListDrawer * getBuildingListDrawer() {
+			return buildingListDrawer;
+		}
 
 		bool isMouseOverScrollUp();
 		bool isMouseOverScrollDown();

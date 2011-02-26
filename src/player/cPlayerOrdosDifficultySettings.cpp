@@ -1,6 +1,5 @@
 #include "../include/d2tmh.h"
 
-
 cPlayerOrdosDifficultySettings::cPlayerOrdosDifficultySettings() {
 
 }
@@ -26,7 +25,6 @@ int cPlayerOrdosDifficultySettings::getInflictDamage(int iDamageInflicted) {
 }
 
 int cPlayerOrdosDifficultySettings::getMoveSpeed(int iUnitType) {
-	return (int)(units[iUnitType].speed);
+	return (int) (units[iUnitType].speed);
 }
-
 

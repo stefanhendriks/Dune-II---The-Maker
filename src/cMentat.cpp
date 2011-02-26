@@ -1,14 +1,14 @@
 /*
 
-  Dune II - The Maker
+ Dune II - The Maker
 
-  Author : Stefan Hendriks
-  Contact: stefanhen83@gmail.com
-  Website: http://dune2themaker.fundynamic.com
+ Author : Stefan Hendriks
+ Contact: stefanhen83@gmail.com
+ Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2009 (c) code by Stefan Hendriks
+ 2001 - 2011 (c) code by Stefan Hendriks
 
-  */
+ */
 
 #include "include/d2tmh.h"
 
@@ -45,8 +45,7 @@ cMentat::~cMentat() {
 }
 
 void cMentat::prepare(bool bTellHouse, int state, int house, int region) {
-	if (bTellHouse)
-	{
+	if (bTellHouse) {
 		if (house == ATREIDES) {
 			INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION);
 		} else if (house == HARKONNEN) {
@@ -68,7 +67,7 @@ void cMentat::prepare(bool bTellHouse, int state, int house, int region) {
 			}
 
 			INI_LOAD_BRIEFING(house, region, INI_WIN);
-		} else if (state == LOSEBRIEF)	{
+		} else if (state == LOSEBRIEF) {
 			if (rnd(100) < 50) {
 				string scene = "lose01";
 				LOAD_SCENE(scene); // ltank
@@ -81,6 +80,6 @@ void cMentat::prepare(bool bTellHouse, int state, int house, int region) {
 	}
 
 	logbook("MENTAT: sentences prepared 2");
-	iMentatSentence = -2;	// = sentence to draw and speak with (-1 = not ready, -2 means starting)
-	TIMER_Speaking = 0;		// 0 means, set it up
+	iMentatSentence = -2; // = sentence to draw and speak with (-1 = not ready, -2 means starting)
+	TIMER_Speaking = 0; // 0 means, set it up
 }

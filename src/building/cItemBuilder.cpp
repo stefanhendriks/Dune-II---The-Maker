@@ -33,7 +33,7 @@ int cItemBuilder::getTimerCap(cBuildingList *list, cBuildingListItem *item) {
 			// is within the units properties.
 			int structureTypeItLeavesFrom = units[item->getBuildId()].structureTypeItLeavesFrom;
 			if (structureTypeItLeavesFrom > -1) {
-				iTimerCap /= (1+(player->iStructures[structureTypeItLeavesFrom]/2));
+				iTimerCap /= (1 + (player->iStructures[structureTypeItLeavesFrom] / 2));
 			}
 		}
 	}
@@ -77,8 +77,7 @@ void cItemBuilder::think() {
 					bool isDoneBuilding = item->getProgress() >= buildTime;
 
 					// Not done building yet , and can pay for progress?
-					if (!isDoneBuilding && !item->shouldPlaceIt() &&
-						player->credits > priceForTimeUnit) {
+					if (!isDoneBuilding && !item->shouldPlaceIt() && player->credits > priceForTimeUnit) {
 						// increase progress
 						item->setProgress((item->getProgress() + 1));
 						// pay
@@ -127,7 +126,7 @@ void cItemBuilder::think() {
 
 						if (isAbleToBuildNewOneImmidiately) {
 							// stop building this item when we are done
-							if (item->getTimesToBuild() == 0) {	// no more items to build
+							if (item->getTimesToBuild() == 0) { // no more items to build
 								// stop building (set flags)
 								item->setIsBuilding(false);
 								item->setProgress(0); // set back progress
@@ -186,7 +185,7 @@ int cItemBuilder::getFreeSlot() {
 }
 
 void cItemBuilder::removeAllItems() {
-	for (int i =0 ; i < MAX_ITEMS; i++) {
+	for (int i = 0; i < MAX_ITEMS; i++) {
 		removeItemFromList(i);
 	}
 }
@@ -247,7 +246,8 @@ cBuildingListItem *cItemBuilder::getSimilarListType(cBuildingListItem *item) {
 	for (int i = 0; i < MAX_ITEMS; i++) {
 		cBuildingListItem *listItem = getItem(i);
 		if (listItem) {
-			if (listItem == item) continue; // do not check self
+			if (listItem == item)
+				continue; // do not check self
 
 			if (item->getList() == listItem->getList()) {
 				return listItem;
@@ -264,10 +264,12 @@ bool cItemBuilder::isASimilarItemBeingBuilt(cBuildingListItem *item) {
 	for (int i = 0; i < MAX_ITEMS; i++) {
 		cBuildingListItem *listItem = getItem(i);
 		if (listItem) {
-			if (listItem == item) continue; // do not check self
+			if (listItem == item)
+				continue; // do not check self
 
 			if (item->getList() == listItem->getList()) {
-				if (listItem->isBuilding()) return true;
+				if (listItem->isBuilding())
+					return true;
 			}
 		}
 	}
@@ -283,7 +285,8 @@ bool cItemBuilder::isTheFirstListType(cBuildingListItem *item) {
  * @param item
  */
 void cItemBuilder::removeItemFromList(cBuildingListItem *item) {
-	if (item == NULL) return;
+	if (item == NULL)
+		return;
 
 	int indexToDelete = -1;
 	for (int i = 0; i < MAX_ITEMS; i++) {

@@ -19,8 +19,7 @@ void cRandomMapGenerator::generateRandomMap() {
 
 	// <> is MAP_WIDTH+MAP_HEIGHT / <a number>
 
-	int a_spice = rnd((game.iSkirmishStartPoints * 2))
-			+ (game.iSkirmishStartPoints * 2);
+	int a_spice = rnd((game.iSkirmishStartPoints * 2)) + (game.iSkirmishStartPoints * 2);
 	int a_rock = 6 + rnd(game.iSkirmishStartPoints);
 	int a_hill = 2 + rnd(8);
 
@@ -55,16 +54,13 @@ void cRandomMapGenerator::generateRandomMap() {
 	// draw
 
 	while (a_rock > 0) {
-		int iCll = cellCalculator->getCellWithMapBorders(4 + rnd(map->getWidth()
-				- 8), 4 + rnd(map->getHeight() - 8));
+		int iCll = cellCalculator->getCellWithMapBorders(4 + rnd(map->getWidth() - 8), 4 + rnd(map->getHeight() - 8));
 
 		bool bOk = true;
 		if (iSpot < 6) {
 			for (int s = 0; s < 6; s++) {
 				if (iSpotRock[s] > -1) {
-					if (ABS_length(iCellGiveX(iCll), iCellGiveY(iCll),
-							iCellGiveX(iSpotRock[s]), iCellGiveY(iSpotRock[s]))
-							< iDistance) {
+					if (ABS_length(iCellGiveX(iCll), iCellGiveY(iCll), iCellGiveX(iSpotRock[s]), iCellGiveY(iSpotRock[s])) < iDistance) {
 						bOk = false;
 					} else {
 						iFails++;
@@ -96,20 +92,15 @@ void cRandomMapGenerator::generateRandomMap() {
 			a_rock--;
 
 			// blit on screen
-			rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255,
-					0, 0));
-			blit(bmp_screen, screen, 0, 0, 0, 0,
-					game.getScreenResolution()->getWidth(),
-					game.getScreenResolution()->getHeight());
+			rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
+			blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 
 		}
 
 		// take screenshot
 		if (key[KEY_F11]) {
 			char filename[25];
-			sprintf(filename, "%dx%d_%d.bmp",
-					game.getScreenResolution()->getWidth(),
-					game.getScreenResolution()->getHeight(), game.screenshot);
+			sprintf(filename, "%dx%d_%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
 			save_bmp(filename, bmp_screen, general_palette);
 			game.screenshot++;
 		}
@@ -123,25 +114,19 @@ void cRandomMapGenerator::generateRandomMap() {
 
 	// blit on screen
 	rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
-	blit(bmp_screen, screen, 0, 0, 0, 0,
-			game.getScreenResolution()->getWidth(),
-			game.getScreenResolution()->getHeight());
+	blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 
 	mapEditor.makeRockCellsSandCellWhenRockCellHasLessThanThreeNeighbouringRockCells();
 
 	// blit on screen
 	rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
-	blit(bmp_screen, screen, 0, 0, 0, 0,
-			game.getScreenResolution()->getWidth(),
-			game.getScreenResolution()->getHeight());
+	blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 
 	mapEditor.makeRockCellsSandCellWhenRockCellHasLessThanThreeNeighbouringRockCells();
 
 	// blit on screen
 	rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
-	blit(bmp_screen, screen, 0, 0, 0, 0,
-			game.getScreenResolution()->getWidth(),
-			game.getScreenResolution()->getHeight());
+	blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 
 	while (a_spice > 0) {
 		int iCll = iCellMake(rnd(map->getWidth()), rnd(map->getHeight()));
@@ -149,9 +134,7 @@ void cRandomMapGenerator::generateRandomMap() {
 		a_spice--;
 		// blit on screen
 		rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
-		blit(bmp_screen, screen, 0, 0, 0, 0,
-				game.getScreenResolution()->getWidth(),
-				game.getScreenResolution()->getHeight());
+		blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 
 	}
 
@@ -162,9 +145,7 @@ void cRandomMapGenerator::generateRandomMap() {
 		iProgress += 10;
 		// blit on screen
 		rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
-		blit(bmp_screen, screen, 0, 0, 0, 0,
-				game.getScreenResolution()->getWidth(),
-				game.getScreenResolution()->getHeight());
+		blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 	}
 
 	// end of map creation
@@ -174,9 +155,7 @@ void cRandomMapGenerator::generateRandomMap() {
 	// blit on screen
 	iProgress += 25;
 	rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
-	blit(bmp_screen, screen, 0, 0, 0, 0,
-			game.getScreenResolution()->getWidth(),
-			game.getScreenResolution()->getHeight());
+	blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 
 	clear_to_color(PreviewMap[0].terrain, makecol(0, 0, 0));
 
@@ -185,8 +164,7 @@ void cRandomMapGenerator::generateRandomMap() {
 		for (int y = 0; y < 64; y++) {
 
 			if (iProgress < 210 && rnd(100) < 3) {
-				rectfill(screen, 216, 225, 216 + iProgress, 257, makecol(255,
-						0, 0));
+				rectfill(screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
 			}
 
 			int cll = iCellMake(x, y);
@@ -225,7 +203,5 @@ void cRandomMapGenerator::generateRandomMap() {
 	// blit on screen
 	iProgress = 211;
 	rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
-	blit(bmp_screen, screen, 0, 0, 0, 0,
-			game.getScreenResolution()->getWidth(),
-			game.getScreenResolution()->getHeight());
+	blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
 }

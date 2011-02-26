@@ -1,23 +1,22 @@
 // Structure class
 
-class cRepairFacility : public cAbstractStructure
-{
-private:
-    
-    int TIMER_repairunit;
+class cRepairFacility : public cAbstractStructure {
+	private:
 
-public:
-    cRepairFacility();
-    ~cRepairFacility();
-  
-    // overloaded functions    
-    void think();
-    void think_animation();
-    void think_guard();
+		int TIMER_repairunit;
 
-    void draw(int iStage);
+	public:
+		cRepairFacility();
+		~cRepairFacility();
 
-	int getType();
+		// overloaded functions
+		void think();
+		void think_animation();
+		void think_guard();
+
+		void draw(int iStage);
+
+		int getType();
 
 };
 

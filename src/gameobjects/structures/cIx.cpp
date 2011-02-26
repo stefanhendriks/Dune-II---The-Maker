@@ -3,7 +3,7 @@
 // Constructor
 cIx::cIx() {
 
- // other variables (class specific)
+	// other variables (class specific)
 
 }
 
@@ -11,14 +11,11 @@ int cIx::getType() {
 	return IX;
 }
 
-cIx::~cIx()
-{
+cIx::~cIx() {
 
 }
 
-
-void cIx::think()
-{
+void cIx::think() {
 
 	// last but not least, think like our abstraction
 	cAbstractStructure::think();
@@ -30,8 +27,7 @@ void cIx::think_animation() {
 	cAbstractStructure::think_flag();
 }
 
-void cIx::think_guard()
-{
+void cIx::think_guard() {
 
 }
 

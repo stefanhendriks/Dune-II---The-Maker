@@ -10,52 +10,70 @@
 
 class cMouse {
 
-public:
-	cMouse();
+	public:
+		cMouse();
 
-	static cMouse *getInstance();
+		static cMouse *getInstance();
 
-	void updateState(); // updates state from Allegro
+		void updateState(); // updates state from Allegro
 
-	// these functions return true when the mouse button is being hold down
-	bool isLeftButtonPressed() { return leftButtonPressed; }
-	bool isRightButtonPressed() { return rightButtonPressed; }
+		// these functions return true when the mouse button is being hold down
+		bool isLeftButtonPressed() {
+			return leftButtonPressed;
+		}
+		bool isRightButtonPressed() {
+			return rightButtonPressed;
+		}
 
-	// these functions return true when the mouse button was pressed in the previous
-	// frame, but released in the current (which is counted as a 'click')
-	bool isLeftButtonClicked() { return leftButtonClicked; }
-	bool isRightButtonClicked() { return rightButtonClicked; }
+		// these functions return true when the mouse button was pressed in the previous
+		// frame, but released in the current (which is counted as a 'click')
+		bool isLeftButtonClicked() {
+			return leftButtonClicked;
+		}
+		bool isRightButtonClicked() {
+			return rightButtonClicked;
+		}
 
-	bool isMouseScrolledUp() { return mouseScrolledUp; }
-	bool isMouseScrolledDown() { return mouseScrolledDown; }
+		bool isMouseScrolledUp() {
+			return mouseScrolledUp;
+		}
+		bool isMouseScrolledDown() {
+			return mouseScrolledDown;
+		}
 
-	int getX() { return x; }
-	int getY() { return y; }
-	int getZ() { return z; }
+		int getX() {
+			return x;
+		}
+		int getY() {
+			return y;
+		}
+		int getZ() {
+			return z;
+		}
 
-	void positionMouseCursor(int x, int y);
+		void positionMouseCursor(int x, int y);
 
-protected:
-	~cMouse();
+	protected:
+		~cMouse();
 
-private:
+	private:
 
-	bool leftButtonPressed;
-	bool rightButtonPressed;
+		bool leftButtonPressed;
+		bool rightButtonPressed;
 
-	bool leftButtonClicked;
-	bool rightButtonClicked;
+		bool leftButtonClicked;
+		bool rightButtonClicked;
 
-	bool leftButtonPressedInPreviousFrame;
-	bool rightButtonPressedInPreviousFrame;
+		bool leftButtonPressedInPreviousFrame;
+		bool rightButtonPressedInPreviousFrame;
 
-	bool mouseScrolledUp;
-	bool mouseScrolledDown;
+		bool mouseScrolledUp;
+		bool mouseScrolledDown;
 
-	static cMouse *instance;
+		static cMouse *instance;
 
-	int x, y, z;	// z = scroll wheel value
-	int zValuePreviousFrame;
+		int x, y, z; // z = scroll wheel value
+		int zValuePreviousFrame;
 };
 
 #endif /* CMOUSE_H_ */

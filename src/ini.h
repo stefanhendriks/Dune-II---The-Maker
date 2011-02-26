@@ -1,14 +1,14 @@
 /*
 
-  Dune II - The Maker
+ Dune II - The Maker
 
-  Author : Stefan Hendriks
-  Contact: stefanhen83@gmail.com
-  Website: http://dune2themaker.fundynamic.com
+ Author : Stefan Hendriks
+ Contact: stefanhen83@gmail.com
+ Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2009 (c) code by Stefan Hendriks
+ 2001 - 2011 (c) code by Stefan Hendriks
 
-  */
+ */
 
 // Sections
 #define INI_NONE       -1
@@ -113,7 +113,6 @@
 #define WORD_HARVESTSPEED  56   // game.ini (How many ticks needed per step)
 #define WORD_HARVESTLIMIT  57   // game.ini (Max a harvester can hold)
 #define WORD_PRODUCER	88		// game.ini (Producing structure of unit)
-
 //
 #define WORD_HOUSE			60
 #define WORD_FOCUS			61
@@ -129,11 +128,8 @@
 #define WORD_TEAM			65
 #define WORD_SKILL			66
 #define WORD_FIXHP			67	// fix hp
-
 #define WORD_POWERDRAIN			68	// power
 #define WORD_POWERGIVE			69	// power
-
-
 
 // HOUSE SPECIFIC
 #define WORD_FIREPOWER		70
@@ -144,7 +140,6 @@
 #define WORD_BUILDSPEED		75
 //#define WORD_HARVESTSPEED	76
 #define WORD_DUMPSPEED		77
-
 
 // REGION SPECIFIC
 #define WORD_REGION			80
@@ -163,9 +158,7 @@
 #define WORD_FULLSCREEN	    90			// fullscreen settings in game.ini
 #define WORD_SCREENWIDTH	91			// horizontal screen resolution in game.ini
 #define WORD_SCREENHEIGHT	92			// vertical screen resolution in game.ini
-
 #define WORD_MP3MUSIC		93			// MP3Music settings in game.ini
-
 #define MAX_LINE_LENGTH     256
 
 // Scenario loading

@@ -7,7 +7,6 @@
 
 #include "../include/d2tmh.h"
 
-
 cBuildingListDrawer::cBuildingListDrawer() {
 	maximumItemsToDraw = 5;
 	// room = screen_y - (top bar + bottom part)
@@ -58,22 +57,21 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 
 	assert(id > -1);
 
-	int width = ((BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat)->w;
-	int height = ((BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat)->h;
+	int width = ((BITMAP *) gfxinter[BTN_INFANTRY_PRESSED].dat)->w;
+	int height = ((BITMAP *) gfxinter[BTN_INFANTRY_PRESSED].dat)->h;
 
-    // clear
-	draw_sprite(bmp_screen, (BITMAP *)gfxinter[list->getButtonIconIdUnpressed()].dat, x, y);		// draw pressed button version (unpressed == default in gui)
+	// clear
+	draw_sprite(bmp_screen, (BITMAP *) gfxinter[list->getButtonIconIdUnpressed()].dat, x, y); // draw pressed button version (unpressed == default in gui)
 
-    // set blender
-    set_trans_blender(0,0,0,128);
-	draw_sprite(bmp_screen, (BITMAP *)gfxinter[id].dat, x, y);		// draw pressed button version (unpressed == default in gui)
+	// set blender
+	set_trans_blender(0, 0, 0, 128);
+	draw_sprite(bmp_screen, (BITMAP *) gfxinter[id].dat, x, y); // draw pressed button version (unpressed == default in gui)
 
-    if (!available) {
-    	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 96);
-    }
+	if (!available) {
+		fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0, 0, 0), 96);
+	}
 
 }
-
 
 int cBuildingListDrawer::getDrawX() {
 	return game.getScreenResolution()->getWidth() - 68;
@@ -83,7 +81,6 @@ int cBuildingListDrawer::getDrawY() {
 	return 46;
 }
 
-
 /**
  * Draw the list, start from startId, until the max icons in the list to be drawn.
  *
@@ -91,8 +88,8 @@ int cBuildingListDrawer::getDrawY() {
  */
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int startId, bool shouldDrawStructureSize) {
 	// starting draw coordinates
-	int iDrawX=getDrawX();
-	int iDrawY=getDrawY();
+	int iDrawX = getDrawX();
+	int iDrawY = getDrawY();
 
 	int maxYClip = maxListYCoordinate;
 	int minYClip = 45;
@@ -122,7 +119,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 		rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(255, 255, 255));
 		line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(255, 255, 255));
 
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[item->getIconId()].dat, iDrawX, iDrawY);
+		draw_sprite(bmp_screen, (BITMAP *) gfxinter[item->getIconId()].dat, iDrawX, iDrawY);
 
 		if (shouldDrawStructureSize) {
 			drawStructureSize(item->getBuildId(), iDrawX, iDrawY);
@@ -137,8 +134,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 			// get the total build time
 			if (listIDToDraw == LIST_CONSTYARD) {
 				iTotalBuildPoints = structures[item->getBuildId()].build_time;
-			}
-			else if (listIDToDraw != LIST_STARPORT) {
+			} else if (listIDToDraw != LIST_STARPORT) {
 				iTotalBuildPoints = units[item->getBuildId()].build_time;
 			}
 
@@ -158,13 +154,13 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 			if (item->getProgress() < iTotalBuildPoints) {
 				// draw the other progress stuff
 				set_trans_blender(0, 0, 0, 128);
-				draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESSFIX].dat, iDrawX+2, iDrawY+2);
-				draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESS001+iFrame].dat, iDrawX+2, iDrawY+2);
+				draw_trans_sprite(bmp_screen, (BITMAP *) gfxinter[PROGRESSFIX].dat, iDrawX + 2, iDrawY + 2);
+				draw_trans_sprite(bmp_screen, (BITMAP *) gfxinter[PROGRESS001 + iFrame].dat, iDrawX + 2, iDrawY + 2);
 
 			} else {
 				// draw 'ready' text when done building.
 				if (listIDToDraw == LIST_CONSTYARD) {
-					draw_sprite(bmp_screen, (BITMAP *)gfxinter[READY01].dat, iDrawX+3, iDrawY+16);
+					draw_sprite(bmp_screen, (BITMAP *) gfxinter[READY01].dat, iDrawX + 3, iDrawY + 16);
 				}
 			}
 		} else {
@@ -176,20 +172,20 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 			// - we cant pay it
 			// - some other item is being built
 			// - list is being upgraded, so you cannot build items
-			 /*|| cannotPayIt*/
+			/*|| cannotPayIt*/
 			if (!item->isAvailable() || isBuildingItemInList || list->isUpgrading() || !list->isAcceptsOrders()) {
-				set_trans_blender(0,0,0,128);
-				fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
+				set_trans_blender(0, 0, 0, 128);
+				fblend_trans((BITMAP *) gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
 			}
 
 			if (list->getType() == LIST_STARPORT) {
 				if (cannotPayIt) {
-					set_trans_blender(0,0,0,128);
-					fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
+					set_trans_blender(0, 0, 0, 128);
+					fblend_trans((BITMAP *) gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
 					rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(game.fade_select, 0, 0));
 					line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(game.fade_select, 0, 0));
-					line(bmp_screen, iDrawX, iDrawY+47, iDrawX+63, iDrawY, makecol(game.fade_select, 0, 0));
-					set_trans_blender(0,0,0,128);
+					line(bmp_screen, iDrawX, iDrawY + 47, iDrawX + 63, iDrawY, makecol(game.fade_select, 0, 0));
+					set_trans_blender(0, 0, 0, 128);
 				}
 			}
 
@@ -215,13 +211,13 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 			}
 
 			// draw
-			alfont_textprintf(bmp_screen, game_font, textX + 1,textY + 1, makecol(0,0,0), "%d", amountToShow);
-			alfont_textprintf(bmp_screen, game_font, textX,textY, makecol(255,255,255), "%d", amountToShow);
+			alfont_textprintf(bmp_screen, game_font, textX + 1, textY + 1, makecol(0, 0, 0), "%d", amountToShow);
+			alfont_textprintf(bmp_screen, game_font, textX, textY, makecol(255, 255, 255), "%d", amountToShow);
 		}
 
 		// draw rectangle when mouse hovers over icon
 		if (isOverItemCoordinates_Boolean(mouse_x, mouse_y, iDrawX, iDrawY)) {
-			int iColor=makecol(game.fade_select, game.fade_select, game.fade_select);
+			int iColor = makecol(game.fade_select, game.fade_select, game.fade_select);
 
 			if (player[0].getHouse() == ATREIDES) {
 				iColor = makecol(0, 0, game.fade_select);
@@ -239,7 +235,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 			rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, iColor);
 		}
 
-		iDrawY+= ICON_HEIGHT;
+		iDrawY += ICON_HEIGHT;
 	}
 
 	set_clip_rect(bmp_screen, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
@@ -255,8 +251,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
  */
 void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y) {
 	// figure out size
-	int iW=structures[structureId].bmp_width/32;
-	int iH=structures[structureId].bmp_height/32;
+	int iW = structures[structureId].bmp_width / 32;
+	int iH = structures[structureId].bmp_height / 32;
 	int iTile = GRID_1X1;
 
 	if (iW == 2 && iH == 2) {
@@ -271,17 +267,17 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y) {
 		iTile = GRID_3X3;
 	}
 
-	BITMAP *temp=create_bitmap(19,19);
+	BITMAP *temp = create_bitmap(19, 19);
 	clear_bitmap(temp);
 	set_trans_blender(0, 0, 0, 192);
 
 	draw_trans_sprite(temp, bmp_screen, x + 43, y + 20);
 
-	draw_sprite(temp, (BITMAP *)gfxinter[GRID_0X0].dat, 0, 0);
+	draw_sprite(temp, (BITMAP *) gfxinter[GRID_0X0].dat, 0, 0);
 
 	draw_trans_sprite(bmp_screen, temp, x + 43, y + 20);
 
-	draw_sprite(bmp_screen, (BITMAP *)gfxinter[iTile].dat, x + 43, y + 20);
+	draw_sprite(bmp_screen, (BITMAP *) gfxinter[iTile].dat, x + 43, y + 20);
 
 	destroy_bitmap(temp);
 
@@ -301,21 +297,22 @@ cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *li
 	assert(list != NULL);
 	// starting draw coordinates
 
-	int iDrawX=gameDrawer->getSidebarDrawer()->getBuildingListDrawer()->getDrawX();
-	int iDrawY=gameDrawer->getSidebarDrawer()->getBuildingListDrawer()->getDrawY();
+	int iDrawX = gameDrawer->getSidebarDrawer()->getBuildingListDrawer()->getDrawX();
+	int iDrawY = gameDrawer->getSidebarDrawer()->getBuildingListDrawer()->getDrawY();
 
 	int startId = list->getScrollingOffset();
 	int end = startId + maximumItemsToDraw; // 5 icons in the list
 
 	for (int i = startId; i < end; i++) {
 		cBuildingListItem * item = list->getItem(i);
-		if (item == NULL) break;
+		if (item == NULL)
+			break;
 
 		if (isOverItemCoordinates_Boolean(x, y, iDrawX, iDrawY)) {
 			return item;
 		}
 
-		iDrawY+= ICON_HEIGHT;
+		iDrawY += ICON_HEIGHT;
 	}
 
 	return NULL;

@@ -1,18 +1,17 @@
 // Structure class
 
-class cConstYard : public cAbstractStructure
-{
-public:
-    cConstYard();
-    ~cConstYard();
-  
-    // overloaded functions    
-    void think();
-    void think_animation();
-    void think_guard();
+class cConstYard : public cAbstractStructure {
+	public:
+		cConstYard();
+		~cConstYard();
 
-    void draw(int iStage);
+		// overloaded functions
+		void think();
+		void think_animation();
+		void think_guard();
 
-	int getType();
+		void draw(int iStage);
+
+		int getType();
 };
 

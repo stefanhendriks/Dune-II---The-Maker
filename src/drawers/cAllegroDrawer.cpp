@@ -28,7 +28,7 @@ void cAllegroDrawer::drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP* 
 	int xPos = getCenteredXPosForBitmap(src);
 
 	// we want to know the 'center' first. This is done in the percentage
-	int wantedYPos = ((float)screenResolution->getHeight() * percentage);
+	int wantedYPos = ((float) screenResolution->getHeight() * percentage);
 
 	// we need to know the height of the src
 	int height = src->h;
@@ -36,7 +36,6 @@ void cAllegroDrawer::drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP* 
 	int yPos = wantedYPos - halfOfHeight;
 	draw_sprite(dest, src, xPos, yPos);
 }
-
 
 void cAllegroDrawer::drawCenteredSpriteHorizontal(BITMAP *dest, BITMAP *src, int y) {
 	assert(src);

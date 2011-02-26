@@ -22,7 +22,6 @@ bool cMapUtils::isCellVisibleForPlayerId(int playerId, int iCell) {
 	return isCellVisible(&player[playerId], iCell);
 }
 
-
 bool cMapUtils::isCellVisible(cPlayer *thePlayer, int iCell) {
 	assert(iCell >= 0);
 	assert(iCell < MAX_CELLS);
@@ -36,11 +35,11 @@ bool cMapUtils::isCellVisible(cPlayer *thePlayer, int iCell) {
 }
 
 void cMapUtils::clearAllCells() {
-	for (int c=0; c < MAX_CELLS; c++) {
+	for (int c = 0; c < MAX_CELLS; c++) {
 		map->cell[c].spiceInCredits = map->cell[c].hitpoints = 0;
 		map->cell[c].passable = true;
 		map->cell[c].tileIndexToDraw = 0;
-		map->cell[c].terrainTypeGfxDataIndex = TERRAIN_SAND;    // refers to gfxdata!
+		map->cell[c].terrainTypeGfxDataIndex = TERRAIN_SAND; // refers to gfxdata!
 
 		map->cell[c].smudgeTileToDraw = -1;
 		map->cell[c].smudgeTerrainTypeGfxDataIndex = -1;

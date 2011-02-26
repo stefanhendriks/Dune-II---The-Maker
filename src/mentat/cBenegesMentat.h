@@ -1,25 +1,25 @@
 /* 
 
-  Dune II - The Maker
+ Dune II - The Maker
 
-  Author : Stefan Hendriks
-  Contact: stefan@dune2k.com / stefanhen83@planet.nl
-  Website: http://dune2themaker.fundynamic.com
+ Author : Stefan Hendriks
+ Contact: stefan@dune2k.com / stefanhen83@planet.nl
+ Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2006 (c) code by Stefan Hendriks
+ 2001 - 2006 (c) code by Stefan Hendriks
 
-  */
+ */
 
 class cBenegesMentat : public cMentat {
-private:	
-	void draw_mouth();
-	void draw_eyes();
-	void draw_other();
+	private:
+		void draw_mouth();
+		void draw_eyes();
+		void draw_other();
 
-public:
-	cBenegesMentat();
-	~cBenegesMentat();
-	
-	void draw();
+	public:
+		cBenegesMentat();
+		~cBenegesMentat();
+
+		void draw();
 };
 

@@ -1,14 +1,14 @@
 /*
 
-  Dune II - The Maker
+ Dune II - The Maker
 
-  Author : Stefan Hendriks
-  Contact: stefanhen83@gmail.com
-  Website: http://dune2themaker.fundynamic.com
+ Author : Stefan Hendriks
+ Contact: stefanhen83@gmail.com
+ Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2009 (c) code by Stefan Hendriks
+ 2001 - 2011 (c) code by Stefan Hendriks
 
-  */
+ */
 
 #include "../include/d2tmh.h"
 
@@ -19,7 +19,6 @@ cAtreidesMentat::cAtreidesMentat() {
 cAtreidesMentat::~cAtreidesMentat() {
 
 }
-
 
 void cAtreidesMentat::draw_mouth() {
 

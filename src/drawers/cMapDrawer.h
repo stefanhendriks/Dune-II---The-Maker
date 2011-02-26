@@ -11,7 +11,6 @@ class cMapDrawer {
 
 	protected:
 
-
 	private:
 		cMap * map;
 		cPlayer * player;

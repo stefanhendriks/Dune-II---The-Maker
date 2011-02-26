@@ -1,24 +1,24 @@
 /*
 
-  Dune II - The Maker
+ Dune II - The Maker
 
-  Author : Stefan Hendriks
-  Contact: stefanhen83@gmail.com
-  Website: http://dune2themaker.fundynamic.com
+ Author : Stefan Hendriks
+ Contact: stefanhen83@gmail.com
+ Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2009 (c) code by Stefan Hendriks
+ 2001 - 2011 (c) code by Stefan Hendriks
 
-  */
+ */
 
 #ifndef HITPOINT_CALCULATOR
 #define HITPOINT_CALCULATOR
 
 class cHitpointCalculator {
 
-public:
-	cHitpointCalculator();
+	public:
+		cHitpointCalculator();
 
-	float getByPercent(float fMax, float fPercent);
+		float getByPercent(float fMax, float fPercent);
 
 };
 

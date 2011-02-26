@@ -7,7 +7,6 @@
 
 #include "../include/d2tmh.h"
 
-
 cStructureUtils::cStructureUtils() {
 }
 
@@ -25,7 +24,6 @@ int cStructureUtils::getWidthOfStructureTypeInCells(int structureType) {
 	assert(structureType < MAX_STRUCTURETYPES);
 	return structures[structureType].bmp_width / TILESIZE_WIDTH_PIXELS;
 }
-
 
 /**
  * This is almost the same as the findStructureToDeployUnit
@@ -50,7 +48,7 @@ int cStructureUtils::findStarportToDeployUnit(cPlayer * player) {
 	int starportId = -1;
 	int firstFoundStarportId = -1;
 	bool foundStarportWithFreeAround = false;
-	for (int i=0; i < MAX_STRUCTURES; i++) {
+	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
 		if (theStructure && theStructure->getOwner() == playerId) {
 			if (theStructure->getType() == STARPORT) {
@@ -115,7 +113,7 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureTy
 
 	int structureIdFound = -1;
 	// check other structures now
-	for (int i=0; i < MAX_STRUCTURES; i++) {
+	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
 		if (theStructure && theStructure->getOwner() == playerId) {
 			if (theStructure->getType() == structureType) {
@@ -181,23 +179,23 @@ int cStructureUtils::findClosestStructureTypeToCell(int cell, int structureType,
 	assert(structureType > -1);
 	assert(cell >= 0 || cell < MAX_CELLS);
 
-	int foundStructureId=-1;		// found structure id
-	long shortestDistance=9999; // max distance to search in
+	int foundStructureId = -1; // found structure id
+	long shortestDistance = 9999; // max distance to search in
 
 	int playerId = player->getId();
 
 	cCellCalculator * cellCalculator = new cCellCalculator(map);
-	for (int i=0; i < MAX_STRUCTURES; i++) {
-		if (structure[i]) {												// exists (pointer)
-			if (structure[i]->getOwner() == playerId) {     			// same player
-				if (structure[i]->getType() == structureType) {   		// type equals parameter
-					if (structure[i]->iUnitID < 0) {    				// no other unit is heading to this structure
+	for (int i = 0; i < MAX_STRUCTURES; i++) {
+		if (structure[i]) { // exists (pointer)
+			if (structure[i]->getOwner() == playerId) { // same player
+				if (structure[i]->getType() == structureType) { // type equals parameter
+					if (structure[i]->iUnitID < 0) { // no other unit is heading to this structure
 						long distance = cellCalculator->distance(cell, structure[i]->getCell());
 
 						// if distance is lower than last found distance, it is the closest for now.
 						if (distance < shortestDistance) {
-							foundStructureId=i;
-							shortestDistance=distance;
+							foundStructureId = i;
+							shortestDistance = distance;
 						}
 					}
 				}
@@ -259,7 +257,7 @@ bool cStructureUtils::isStructureOnScreen(cAbstractStructure *structure) {
 	int width = getStructureWidthInPixels(structure);
 	int height = getStructureHeightInPixels(structure);
 
-	return ((drawX + width) > 0 && drawX < game.getScreenResolution()->getWidth()) && ( (drawY + height) > 0 && drawY < game.getScreenResolution()->getHeight());
+	return ((drawX + width) > 0 && drawX < game.getScreenResolution()->getWidth()) && ((drawY + height) > 0 && drawY < game.getScreenResolution()->getHeight());
 }
 
 bool cStructureUtils::isMouseOverStructure(cMouse *mouse, cAbstractStructure *structure) {
@@ -304,10 +302,10 @@ int cStructureUtils::getTotalSpiceCapacityForPlayer(cPlayer * player) {
 			if (theStructure->getPlayer()->getId() == player->getId()) {
 				int capacity = 0;
 				if (theStructure->getType() == SILO) {
-					cSpiceSilo * spiceSilo = dynamic_cast<cSpiceSilo*>(theStructure);
+					cSpiceSilo * spiceSilo = dynamic_cast<cSpiceSilo*> (theStructure);
 					capacity = spiceSilo->getSpiceSiloCapacity();
 				} else if (theStructure->getType() == REFINERY) {
-					cRefinery * refinery = dynamic_cast<cRefinery*>(theStructure);
+					cRefinery * refinery = dynamic_cast<cRefinery*> (theStructure);
 					capacity = refinery->getSpiceSiloCapacity();
 				} else if (theStructure->getType() == CONSTYARD) {
 					capacity = 5;
@@ -327,7 +325,7 @@ int cStructureUtils::getTotalPowerOutForPlayer(cPlayer * player) {
 		if (theStructure) {
 			if (theStructure->getPlayer()->getId() == player->getId()) {
 				if (theStructure->getType() == WINDTRAP) {
-					cWindTrap * windTrap = dynamic_cast<cWindTrap*>(theStructure);
+					cWindTrap * windTrap = dynamic_cast<cWindTrap*> (theStructure);
 					int powerOutOfStructure = windTrap->getPowerOut();
 					totalPowerOut += powerOutOfStructure;
 				} else if (theStructure->getType() == CONSTYARD) {

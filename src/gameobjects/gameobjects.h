@@ -15,7 +15,6 @@
 
 // MAP
 #include "../map/maph.h"							// map data
-
 #include "structures/structuresh.h"
 
 // units
@@ -26,13 +25,10 @@
 #include "units/cAbstractUnit.h"					// Abstract Unit class (will replace cUnit.h eventually)
 #include "units/cUnitFactory.h"				// Responsible for creation of Units
 #include "units/cUnitUtils.h"				// Responsible for generic operations on units (ie finding a unit, etc)
-
 // particles (explosion types, etc)
 #include "particles/cParticle.h"                       // explosion animations and such
-
 // bullet/projectiles
 #include "projectiles/bullet.h"                         // bullets
-
 // regions drawn
 #include "../regions.h"
 
@@ -47,6 +43,5 @@
 #include "../mentat/cOrdosMentat.h"
 #include "../mentat/cHarkonnenMentat.h"
 #include "../mentat/cAtreidesMentat.h"
-
 
 #endif /* GAMEOBJECTS_H_ */

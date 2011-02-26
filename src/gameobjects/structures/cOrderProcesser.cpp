@@ -80,7 +80,6 @@ void cOrderProcesser::playTMinusSound(int seconds) {
 	}
 }
 
-
 // time based (per second)
 void cOrderProcesser::think() {
 	if (secondsUntilArrival > 0) {

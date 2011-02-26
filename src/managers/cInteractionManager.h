@@ -9,7 +9,6 @@
  *
  */
 
-
 #ifndef CINTERACTIONMANAGER_H_
 #define CINTERACTIONMANAGER_H_
 
@@ -19,7 +18,7 @@ class cInteractionManager {
 		~cInteractionManager();
 
 		void interact();
-                void interactWithKeyboard();
+		void interactWithKeyboard();
 
 	protected:
 		void interactWithSidebar();

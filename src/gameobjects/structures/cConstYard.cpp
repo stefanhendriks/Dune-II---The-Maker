@@ -21,5 +21,5 @@ void cConstYard::think_animation() {
 }
 
 void cConstYard::think_guard() {
- // do nothing
+	// do nothing
 }

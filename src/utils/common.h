@@ -1,14 +1,14 @@
 /*
 
-  Dune II - The Maker
+ Dune II - The Maker
 
-  Author : Stefan Hendriks
-  Contact: stefanhen83@gmail.com
-  Website: http://dune2themaker.fundynamic.com
+ Author : Stefan Hendriks
+ Contact: stefanhen83@gmail.com
+ Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2009 (c) code by Stefan Hendriks
+ 2001 - 2011 (c) code by Stefan Hendriks
 
-  */
+ */
 
 void logbook(const char *txt);
 
@@ -29,12 +29,9 @@ void INSTALL_WORLD();
 
 void INIT_PREVIEWS();
 
-
 void install_structures();
 void install_units();
 void install_bullets();
-
-
 
 float health_structure(int i, int w);
 float health_bar(float max_w, int i, int w);
@@ -55,7 +52,6 @@ void playMusicByType(int iType);
 void Shimmer(int r, int x, int y);
 int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstruc);
 
-
 // Creation of units / structures / bullets / reinforcements, etc
 void CREATE_STRUCTURE(int iCell, int iType, int iPlayer, int iPercent);
 
@@ -64,5 +60,4 @@ int iCellOnScreen(int iCell);
 void mask_to_color(BITMAP *bmp, int color);
 void lit_windtrap_color(BITMAP *bmp, int color);
 int getAmountReservedVoicesAndInstallSound();
-
 

@@ -26,37 +26,34 @@ cBestScreenResolutionFinder::cBestScreenResolutionFinder() {
 }
 
 cBestScreenResolutionFinder::~cBestScreenResolutionFinder() {
-	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i ++) {
-		if (screenResolutions[i])
-		{
+	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i++) {
+		if (screenResolutions[i]) {
 			delete screenResolutions[i];
 			screenResolutions[i] = NULL;
 		}
 	}
 }
 
-bool cBestScreenResolutionFinder::isGfxModeListSet(GFX_MODE_LIST *mode_list)
-{
-    return mode_list != NULL;
+bool cBestScreenResolutionFinder::isGfxModeListSet(GFX_MODE_LIST *mode_list) {
+	return mode_list != NULL;
 }
-
 
 void cBestScreenResolutionFinder::checkResolutions() {
 
 	/*
-	Note from Peter Gaal:
-	This code is untested on UNIX platfrom - GFX_XWINDOWS_FULLSCREEN
-	should be the right constant to detect available video modes on UNIX
-	system. The code is tested on Windows system with GFX_DIRECTX_ACCEL and
-	GFX_DIRECTX constants and it works.
-	This part of code uses get_gfx_mode_list function, which returns
-	available video modes on system. GFX_DIRECTX_ACCEL, GFX_DIRECTX
-	are the good constants as a parameter, don't use GFX_AUTODETECT,
-	GFX_SAFE or other "magic" driver constants, otherwise function
-	will return NULL. The algorithm matches all screen modes against
-	the list in screenResolutions (using 16 bpp mode only) and in case
-	of match will set up setTested and setUsable flags.
-	*/
+	 Note from Peter Gaal:
+	 This code is untested on UNIX platfrom - GFX_XWINDOWS_FULLSCREEN
+	 should be the right constant to detect available video modes on UNIX
+	 system. The code is tested on Windows system with GFX_DIRECTX_ACCEL and
+	 GFX_DIRECTX constants and it works.
+	 This part of code uses get_gfx_mode_list function, which returns
+	 available video modes on system. GFX_DIRECTX_ACCEL, GFX_DIRECTX
+	 are the good constants as a parameter, don't use GFX_AUTODETECT,
+	 GFX_SAFE or other "magic" driver constants, otherwise function
+	 will return NULL. The algorithm matches all screen modes against
+	 the list in screenResolutions (using 16 bpp mode only) and in case
+	 of match will set up setTested and setUsable flags.
+	 */
 
 	GFX_MODE_LIST * modeList = NULL;
 
@@ -83,7 +80,7 @@ void cBestScreenResolutionFinder::setMatchingScreenResolutionsToTestedAndUsable(
 	GFX_MODE * modes = modeList->mode;
 	assert(modes);
 
-	for (int iMode=0; iMode < modeList->num_modes; iMode++) {
+	for (int iMode = 0; iMode < modeList->num_modes; iMode++) {
 		GFX_MODE mode = modes[iMode];
 
 		// we match only 16 bit color depth modes, as we use 16bpp in fullscreen mode
@@ -98,7 +95,7 @@ void cBestScreenResolutionFinder::setMatchingScreenResolutionsToTestedAndUsable(
 }
 
 cScreenResolution * cBestScreenResolutionFinder::findMatchingScreenResolution(int width, int height) {
-	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i ++) {
+	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i++) {
 		cScreenResolution * screenResolution = screenResolutions[i];
 		if (screenResolution) {
 			if (screenResolution->getWidth() == width && screenResolution->getHeight() == height) {
@@ -110,8 +107,7 @@ cScreenResolution * cBestScreenResolutionFinder::findMatchingScreenResolution(in
 }
 
 void cBestScreenResolutionFinder::detectScreenResolutionsByTestingThemOut() {
-	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i++)
-	{
+	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i++) {
 		cScreenResolution * screenResolution = screenResolutions[i];
 		if (screenResolution) {
 			int screen_x = screenResolution->getWidth();
@@ -135,10 +131,12 @@ bool cBestScreenResolutionFinder::aquireBestScreenResolutionFullScreen() {
 #ifdef UNIX
 					r = set_gfx_mode(GFX_AUTODETECT, screenResolution->getWidth(), screenResolution->getHeight(), screenResolution->getWidth(), game.screen_y);
 #else
-					r = set_gfx_mode(GFX_DIRECTX_ACCEL, screenResolution->getWidth(), screenResolution->getHeight(), screenResolution->getWidth(), screenResolution->getHeight());
+					r = set_gfx_mode(GFX_DIRECTX_ACCEL, screenResolution->getWidth(), screenResolution->getHeight(), screenResolution->getWidth(),
+							screenResolution->getHeight());
 #endif
 					char msg[255];
-					sprintf(msg, "setting up full screen mode with resolution %dx%d, result code: %d", screenResolution->getWidth(), screenResolution->getHeight(), r);
+					sprintf(msg, "setting up full screen mode with resolution %dx%d, result code: %d", screenResolution->getWidth(), screenResolution->getHeight(),
+							r);
 					logbook(msg);
 					return (r == 0); // return true only if r==0
 				}

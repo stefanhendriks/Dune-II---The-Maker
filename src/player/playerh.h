@@ -11,7 +11,6 @@ class cGameControlsContext;
 #include "cPlayerHarkonnenDifficultySettings.h"
 #include "cPlayerOrdosDifficultySettings.h"
 
-
 // statistics
 #include "cPlayerStatistics.h"
 

@@ -25,27 +25,27 @@ void cMessageBarDrawer::drawMessageBar() {
 
 	int totalWidth = 11 + messageBar->getWidth() + 11;
 
-	set_trans_blender(0,0,0,alpha);
+	set_trans_blender(0, 0, 0, alpha);
 	BITMAP *temp = create_bitmap(totalWidth, 30);
 	clear_bitmap(temp);
 
-	rectfill(temp, 0,0, totalWidth , 40, makecol(255,0,255));
+	rectfill(temp, 0, 0, totalWidth, 40, makecol(255, 0, 255));
 
 	// first draw the left part (11 pixels wide)
-	draw_sprite(temp, (BITMAP *)gfxinter[MESSAGE_LEFT].dat, 0,0);
+	draw_sprite(temp, (BITMAP *) gfxinter[MESSAGE_LEFT].dat, 0, 0);
 
 	// draw now parts of the bars to the right
 	for (int i = 11; i < totalWidth; i += 55) {
-		draw_sprite(temp, (BITMAP *)gfxinter[MESSAGE_MIDDLE].dat, i,0);
+		draw_sprite(temp, (BITMAP *) gfxinter[MESSAGE_MIDDLE].dat, i, 0);
 	}
 
 	// draw rectangle for the last part
-	int drawXOfRightPart = (totalWidth-11);
-	rectfill(temp, drawXOfRightPart, 0, totalWidth , 40, makecol(255,0,255));
-	draw_sprite(temp, (BITMAP *)gfxinter[MESSAGE_RIGHT].dat, drawXOfRightPart,0);
+	int drawXOfRightPart = (totalWidth - 11);
+	rectfill(temp, drawXOfRightPart, 0, totalWidth, 40, makecol(255, 0, 255));
+	draw_sprite(temp, (BITMAP *) gfxinter[MESSAGE_RIGHT].dat, drawXOfRightPart, 0);
 
 	// draw message
-//	alfont_textprintf(temp, game_font, 13,21, makecol(0,0,0), cMessage);
+	//	alfont_textprintf(temp, game_font, 13,21, makecol(0,0,0), cMessage);
 
 	// draw temp
 	draw_trans_sprite(bmp_screen, temp, x, y);

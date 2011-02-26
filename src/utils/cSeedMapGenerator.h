@@ -1,9 +1,8 @@
 #ifndef SEEDMAP_GENERATOR
 #define SEEDMAP_GENERATOR
 
-struct cell
-{
-   short w, a, b;
+struct cell {
+		short w, a, b;
 };
 
 #define SMG_SAND      0
@@ -29,48 +28,48 @@ struct cell
 
 class cSeedMapGenerator {
 
-private:
+	private:
 
-	unsigned long seed;
+		unsigned long seed;
 
-	short random();	// create random number
+		short random(); // create random number
 
-	/* these is array used to find corresponding points */
-	/*
-	      A·B·C    00··20··40
-	      ·····    ··········
-	      D·E·F    02··22··42
-	      ·····    ··········
-	      G·H·I    04··24··44
-	*/
-	static short offsets2[SMG_OFFSET2_SIZE];
-	static short offsets[21];
-	static bool canAddSpiceTo[10];
-	static signed char spicemap[256];
-	static signed char spicemap2[256];
+		/* these is array used to find corresponding points */
+		/*
+		 A·B·C    00··20··40
+		 ·····    ··········
+		 D·E·F    02··22··42
+		 ·····    ··········
+		 G·H·I    04··24··44
+		 */
+		static short offsets2[SMG_OFFSET2_SIZE];
+		static short offsets[21];
+		static bool canAddSpiceTo[10];
+		static signed char spicemap[256];
+		static signed char spicemap2[256];
 
-	char   matrix[16*17+1];
-	struct cell map[65][64];
-	short  compact[64][64];
+		char matrix[16 * 17 + 1];
+		struct cell map[65][64];
+		short compact[64][64];
 
-	// methods needed to generate seedmap
-	void convertMap (struct cell map[64][64], short *iconmap);
-	void addSpice(struct cell map[64][64]);
-	void scanRegions (struct cell map[64][64]);
-	void createRegions (struct cell map[64][64]);
-	void balanceMap (struct cell map[64][64]);
-	void spreadMatrix (struct cell map[64][64]);
-	void copyMatrix (char *matrix, struct cell map[65][64]);
-	void createMatrix (char *matrix);
-	void addNoise1 (char *matrix);
-	void addNoise2 (char *matrix);
-	void addSpiceAt(struct cell map[64][64],short x,short y);
+		// methods needed to generate seedmap
+		void convertMap(struct cell map[64][64], short *iconmap);
+		void addSpice(struct cell map[64][64]);
+		void scanRegions(struct cell map[64][64]);
+		void createRegions(struct cell map[64][64]);
+		void balanceMap(struct cell map[64][64]);
+		void spreadMatrix(struct cell map[64][64]);
+		void copyMatrix(char *matrix, struct cell map[65][64]);
+		void createMatrix(char *matrix);
+		void addNoise1(char *matrix);
+		void addNoise2(char *matrix);
+		void addSpiceAt(struct cell map[64][64], short x, short y);
 
-public:
-	cSeedMapGenerator();
-	cSeedMapGenerator(unsigned long value);
+	public:
+		cSeedMapGenerator();
+		cSeedMapGenerator(unsigned long value);
 
-	cSeedMap *generateSeedMap();
+		cSeedMap *generateSeedMap();
 };
 
 #endif

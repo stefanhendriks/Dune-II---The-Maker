@@ -17,10 +17,7 @@ cMoviePlayer::~cMoviePlayer() {
 }
 
 bool cMoviePlayer::isAtTheEndOfMovie() {
-	return data &&
-		   frame > -1 &&
-		   (data[frame].type == DAT_END ||
-			data[frame].type != DAT_BITMAP);
+	return data && frame > -1 && (data[frame].type == DAT_END || data[frame].type != DAT_BITMAP);
 }
 
 bool cMoviePlayer::shouldPlayMovie() {
@@ -46,5 +43,5 @@ BITMAP * cMoviePlayer::getFrameToDraw() {
 	if (data == NULL) {
 		return NULL;
 	}
-	return (BITMAP *)data[frame].dat;
+	return (BITMAP *) data[frame].dat;
 }

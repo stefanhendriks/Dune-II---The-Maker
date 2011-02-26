@@ -1,8 +1,8 @@
 #include "../../include/d2tmh.h"
 
 /**
-	Constructor
-**/
+ Constructor
+ **/
 cAbstractUnit::cAbstractUnit() {
 	bSelected = false;
 	fExperience = 0.0f;
@@ -12,7 +12,6 @@ cAbstractUnit::cAbstractUnit() {
 	iOffsetY = 0;
 }
 
-
-void cAbstractUnit::think () {
+void cAbstractUnit::think() {
 
 }

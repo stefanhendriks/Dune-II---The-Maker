@@ -1,17 +1,16 @@
 /*
 
-  Dune II - The Maker
+ Dune II - The Maker
 
-  Author : Stefan Hendriks
-  Contact: stefanhen83@gmail.com
-  Website: http://dune2themaker.fundynamic.com
+ Author : Stefan Hendriks
+ Contact: stefanhen83@gmail.com
+ Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2009 (c) code by Stefan Hendriks
+ 2001 - 2011 (c) code by Stefan Hendriks
 
-  */
+ */
 
 #include "../include/d2tmh.h"
-
 
 cPlayer::cPlayer() {
 	itemBuilder = NULL;
@@ -129,73 +128,71 @@ void cPlayer::setGameControlsContext(cGameControlsContext *theGameControlsContex
 	gameControlsContext = theGameControlsContext;
 }
 
-void cPlayer::init()
-{
+void cPlayer::init() {
 	memcpy(pal, general_palette, sizeof(pal));
 	house = GENERALHOUSE;
 
 	difficultySettings = new cPlayerAtreidesDifficultySettings();
 
 	// Reset structures amount
-	for (int i = 0 ; i < MAX_STRUCTURETYPES; i++) {
+	for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
 		iStructures[i] = 0;
 		iPrimaryBuilding[i] = -1;
 	}
 
-	credits	=	0;
-	max_credits	= 1000;
-	focus_cell	=	0;
+	credits = 0;
+	max_credits = 1000;
+	focus_cell = 0;
 
-	use_power=0;
-	has_power=0;
+	use_power = 0;
+	has_power = 0;
 
-    iTeam=-1;
+	iTeam = -1;
 
-    TIMER_think=rnd(10);        // timer for thinking itself (calling main routine)
-    TIMER_attack=-1;			// -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
+	TIMER_think = rnd(10); // timer for thinking itself (calling main routine)
+	TIMER_attack = -1; // -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 
 }
-
 
 // set house
 void cPlayer::setHouse(int iHouse) {
-  house = iHouse;      // use rules of this house
+	house = iHouse; // use rules of this house
 
-  if (difficultySettings) {
-	  delete difficultySettings;
-  }
+	if (difficultySettings) {
+		delete difficultySettings;
+	}
 
-  if (iHouse == ATREIDES) {
-	  difficultySettings = new cPlayerAtreidesDifficultySettings();
-  } else if (iHouse == ORDOS) {
-	  difficultySettings = new cPlayerOrdosDifficultySettings();
-  } else if (iHouse == HARKONNEN) {
-	  difficultySettings = new cPlayerHarkonnenDifficultySettings();
-  } else {
-	  // for now default is atreides
-	  // TODO: create for other houses difficultysettings
-	  difficultySettings = new cPlayerAtreidesDifficultySettings();
-  }
+	if (iHouse == ATREIDES) {
+		difficultySettings = new cPlayerAtreidesDifficultySettings();
+	} else if (iHouse == ORDOS) {
+		difficultySettings = new cPlayerOrdosDifficultySettings();
+	} else if (iHouse == HARKONNEN) {
+		difficultySettings = new cPlayerHarkonnenDifficultySettings();
+	} else {
+		// for now default is atreides
+		// TODO: create for other houses difficultysettings
+		difficultySettings = new cPlayerAtreidesDifficultySettings();
+	}
 
-  // copy entire palette
-  memcpy (pal, general_palette, sizeof(pal));
+	// copy entire palette
+	memcpy(pal, general_palette, sizeof(pal));
 
-  // now set the different colors based uppon house
-  if (houses[house].swap_color > -1) {
-    int start = houses[house].swap_color;
-    int s=144;                // original position (harkonnen)
-    for (int j = start; j < (start+7);j++) {
-      // swap everything from S with J
-       pal[s] = pal[j];
-       s++;
-     }
-  }
+	// now set the different colors based uppon house
+	if (houses[house].swap_color > -1) {
+		int start = houses[house].swap_color;
+		int s = 144; // original position (harkonnen)
+		for (int j = start; j < (start + 7); j++) {
+			// swap everything from S with J
+			pal[s] = pal[j];
+			s++;
+		}
+	}
 
-  minimapColor = getRGBColorForHouse(house);
+	minimapColor = getRGBColorForHouse(house);
 }
 
 int cPlayer::getRGBColorForHouse(int houseId) {
-	switch(houseId) {
+	switch (houseId) {
 		case ATREIDES:
 			return makecol(0, 0, 255);
 		case HARKONNEN:
@@ -212,27 +209,26 @@ int cPlayer::getRGBColorForHouse(int houseId) {
 bool cPlayer::bEnoughPower() {
 
 	if (game.bSkirmish) {
-       return has_power >= use_power;
-    } else {
-        // AI cheats on power
-        if (id > 0) {
-            // original dune 2 , the AI cheats.
-        	// Unfortunatly D2TM has to cheat too, else the game will
-            // be unplayable.
-            if (iStructures[WINDTRAP] > 0) {
-                // always enough power so it seems
-                return true;
+		return has_power >= use_power;
+	} else {
+		// AI cheats on power
+		if (id > 0) {
+			// original dune 2 , the AI cheats.
+			// Unfortunatly D2TM has to cheat too, else the game will
+			// be unplayable.
+			if (iStructures[WINDTRAP] > 0) {
+				// always enough power so it seems
+				return true;
 			} else {
-                return false; // not enough power
+				return false; // not enough power
 			}
-        } else {
-            return has_power >= use_power;
-        }
-    }
+		} else {
+			return has_power >= use_power;
+		}
+	}
 
-
-    // return false on any other case
-    return false;
+	// return false on any other case
+	return false;
 }
 
 int cPlayer::getAmountOfStructuresForType(int structureType) {

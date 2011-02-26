@@ -34,7 +34,7 @@ int cListUpgrade::getProgressAsPercentage() {
 		if (progress == 0) {
 			return 0;
 		}
-		return (int)health_bar(100, progress, progressLimit);
+		return (int) health_bar(100, progress, progressLimit);
 	}
 	return 100;
 }

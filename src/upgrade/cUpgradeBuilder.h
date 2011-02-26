@@ -20,7 +20,9 @@ class cUpgradeBuilder {
 
 		void addUpgrade(int listId, cListUpgrade * listUpgrade);
 
-		cListUpgrade * getListUpgrade(int listId) { return upgrades[listId]; }
+		cListUpgrade * getListUpgrade(int listId) {
+			return upgrades[listId];
+		}
 
 		void processUpgrades(); // timer based method that processes upgrades
 

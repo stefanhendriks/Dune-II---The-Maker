@@ -6,10 +6,16 @@ class cMoviePlayer {
 		cMoviePlayer(DATAFILE *movie);
 		~cMoviePlayer();
 
-		void setPlaying(bool value) { playing = value; }
-		bool isPlaying() { return playing; }
+		void setPlaying(bool value) {
+			playing = value;
+		}
+		bool isPlaying() {
+			return playing;
+		}
 
-		void setFrame(int value) { frame = value; }
+		void setFrame(int value) {
+			frame = value;
+		}
 
 		void think();
 		BITMAP * getFrameToDraw();
@@ -21,8 +27,8 @@ class cMoviePlayer {
 		bool playing;
 		int frame;
 		DATAFILE *data;
-    bool shouldPlayMovie();
-    bool isAtTheEndOfMovie();
+		bool shouldPlayMovie();
+		bool isAtTheEndOfMovie();
 };
 
 #endif

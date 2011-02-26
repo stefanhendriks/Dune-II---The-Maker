@@ -1,72 +1,68 @@
 /*
 
-  Dune II - The Maker
+ Dune II - The Maker
 
-  Author : Stefan Hendriks
-  Contact: stefanhen83@gmail.com
-  Website: http://dune2themaker.fundynamic.com
+ Author : Stefan Hendriks
+ Contact: stefanhen83@gmail.com
+ Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2009 (c) code by Stefan Hendriks
+ 2001 - 2011 (c) code by Stefan Hendriks
 
-  */
+ */
 
 #include "../../include/d2tmh.h"
 
-
 // "default" Constructor
 cAbstractStructure::cAbstractStructure() {
-    iHitPoints=-1;      // default = no hitpoints
-    iCell=-1;
+	iHitPoints = -1; // default = no hitpoints
+	iCell = -1;
 
-    armor = 1;
+	armor = 1;
 
-    fConcrete=0.0f;
+	fConcrete = 0.0f;
 
-    iPlayer=-1;
+	iPlayer = -1;
 
-    iFrame=-1;
+	iFrame = -1;
 
-    bRepair=false;
-    iRepairX=0;
-    iRepairY=0;
-    iRepairAlpha=255;
+	bRepair = false;
+	iRepairX = 0;
+	iRepairY = 0;
+	iRepairAlpha = 255;
 
-    bAnimate=false;
+	bAnimate = false;
 
-    iRallyPoint=-1;
+	iRallyPoint = -1;
 
-    iBuildFase=-1;
+	iBuildFase = -1;
 
-    iUnitID=-1;
+	iUnitID = -1;
 
-    iWidth=-1;
-    iHeight=-1;
+	iWidth = -1;
+	iHeight = -1;
 
-    // TIMERS
-    TIMER_repair=-1;
-    TIMER_repairanimation=-1;
-    TIMER_flag=-1;
-    TIMER_fade=-1;
+	// TIMERS
+	TIMER_repair = -1;
+	TIMER_repairanimation = -1;
+	TIMER_flag = -1;
+	TIMER_fade = -1;
 
-    TIMER_damage=0;   // damaging stuff
-    TIMER_prebuild=0;
+	TIMER_damage = 0; // damaging stuff
+	TIMER_prebuild = 0;
 }
 
-cAbstractStructure::~cAbstractStructure()
-{
-    // destructor
+cAbstractStructure::~cAbstractStructure() {
+	// destructor
 }
 
 // X drawing position
-int cAbstractStructure::iDrawX()
-{
-  return ( (( iCellGiveX(iCell) * 32 ) - (mapCamera->getX()*32)));
+int cAbstractStructure::iDrawX() {
+	return (((iCellGiveX(iCell) * 32) - (mapCamera->getX() * 32)));
 }
 
 // Y drawing position
-int cAbstractStructure::iDrawY()
-{
-  return (( (( iCellGiveY(iCell) * 32 ) - (mapCamera->getY()*32)))+42);
+int cAbstractStructure::iDrawY() {
+	return ((((iCellGiveY(iCell) * 32) - (mapCamera->getY() * 32))) + 42);
 }
 
 BITMAP * cAbstractStructure::getBitmap() {
@@ -100,41 +96,38 @@ int cAbstractStructure::getRange() {
 	return structures[type].sight;
 }
 
-
 // this structure dies
-void cAbstractStructure::die()
-{
-    // find myself and set to zero
-    int iIndex=-1;
-	for (int i=0; i < MAX_STRUCTURES; i++) {
-        if (structure[i] == this)
-        {
-            iIndex=i;
-            break;
-        }
+void cAbstractStructure::die() {
+	// find myself and set to zero
+	int iIndex = -1;
+	for (int i = 0; i < MAX_STRUCTURES; i++) {
+		if (structure[i] == this) {
+			iIndex = i;
+			break;
+		}
 	}
 
-    if (iIndex < 0) {
-        logbook("cAbstractStructure(): Could not die");
-        return;
-    }
+	if (iIndex < 0) {
+		logbook("cAbstractStructure(): Could not die");
+		return;
+	}
 
-    // selected structure
-    if (game.selected_structure == iIndex) {
-        game.selected_structure = -1;
-    }
+	// selected structure
+	if (game.selected_structure == iIndex) {
+		game.selected_structure = -1;
+	}
 
 	// remove from array
-    structure[iIndex]=NULL;
+	structure[iIndex] = NULL;
 
-    // Destroy structure, take stuff in effect for the player
-    player[iPlayer].iStructures[getType()]--; // remove from player building indexes
+	// Destroy structure, take stuff in effect for the player
+	player[iPlayer].iStructures[getType()]--; // remove from player building indexes
 
-    // fix up power usage
-    player[iPlayer].use_power -= structures[getType()].power_drain;
+	// fix up power usage
+	player[iPlayer].use_power -= structures[getType()].power_drain;
 
-    // less power
-    player[iPlayer].has_power -= structures[getType()].power_give;
+	// less power
+	player[iPlayer].has_power -= structures[getType()].power_give;
 
 	if (getType() == SILO) {
 		player[iPlayer].max_credits -= 1000;
@@ -144,82 +137,73 @@ void cAbstractStructure::die()
 		player[iPlayer].max_credits -= 1500;
 	}
 
-    // UnitID > -1, means the unit inside will die too
-    if (iUnitID > -1) {
-        unit[iUnitID].init(iUnitID); // die here... softly
-    }
+	// UnitID > -1, means the unit inside will die too
+	if (iUnitID > -1) {
+		unit[iUnitID].init(iUnitID); // die here... softly
+	}
 
-	int iCll=iCell;
-	int iCX=iCellGiveX(iCll);
-	int iCY=iCellGiveY(iCll);
+	int iCll = iCell;
+	int iCX = iCellGiveX(iCll);
+	int iCY = iCellGiveY(iCll);
 
-    // create destroy particles
-    for (int w=0; w < iWidth; w++)
-    {
-        for (int h=0; h < iHeight; h++)
-        {
-			iCll=iCellMake(iCX+w, iCY+h);
+	// create destroy particles
+	for (int w = 0; w < iWidth; w++) {
+		for (int h = 0; h < iHeight; h++) {
+			iCll = iCellMake(iCX + w, iCY + h);
 
 			map->cell[iCll].terrainTypeGfxDataIndex = TERRAIN_ROCK;
 			mapEditor.smoothCellsAroundCell(iCll);
 
-			PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16,
-				iDrawY() + (mapCamera->getY()*32) + (h*32) + 16, OBJECT_BOOM01, -1, -1);
+			PARTICLE_CREATE(iDrawX() + (mapCamera->getX() * 32) + (w * 32) + 16, iDrawY() + (mapCamera->getY() * 32) + (h * 32) + 16, OBJECT_BOOM01, -1, -1);
 
-
-            for (int i=0; i < 3; i++)
-            {
+			for (int i = 0; i < 3; i++) {
 				map->smudge_increase(SMUDGE_ROCK, iCll);
 
-                // create particle
-                PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16 + (-8 + rnd(16)),
-                                iDrawY() + (mapCamera->getY()*32) + (h*32) + 16 + (-8 + rnd(16)), EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
+				// create particle
+				PARTICLE_CREATE(iDrawX() + (mapCamera->getX() * 32) + (w * 32) + 16 + (-8 + rnd(16)), iDrawY() + (mapCamera->getY() * 32) + (h * 32) + 16 + (-8
+						+ rnd(16)), EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
 
-                // create smoke
-                if (rnd(100) < 7)
-                    PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16 + (-8 + rnd(16)),
-                                    iDrawY() + (mapCamera->getY()*32) + (h*32) + 16 + (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
+				// create smoke
+				if (rnd(100) < 7)
+					PARTICLE_CREATE(iDrawX() + (mapCamera->getX() * 32) + (w * 32) + 16 + (-8 + rnd(16)), iDrawY() + (mapCamera->getY() * 32) + (h * 32) + 16 + (-8
+							+ rnd(16)), OBJECT_SMOKE, -1, -1);
 
-                // create fire
-                if (rnd(100) < 5)
-                    PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16 + (-8 + rnd(16)),
-                                    iDrawY() + (mapCamera->getY()*32) + (h*32) + 16 + (-8 + rnd(16)), EXPLOSION_FIRE, -1, -1);
+				// create fire
+				if (rnd(100) < 5)
+					PARTICLE_CREATE(iDrawX() + (mapCamera->getX() * 32) + (w * 32) + 16 + (-8 + rnd(16)), iDrawY() + (mapCamera->getY() * 32) + (h * 32) + 16 + (-8
+							+ rnd(16)), EXPLOSION_FIRE, -1, -1);
 
-            }
-        }
-    }
+			}
+		}
+	}
 
-    // play sound
-    play_sound_id(SOUND_CRUMBLE01 + rnd(2), iCellOnScreen(iCell));
+	// play sound
+	play_sound_id(SOUND_CRUMBLE01 + rnd(2), iCellOnScreen(iCell));
 
-    // remove from the playground
-    map->remove_id(iIndex, MAPID_STRUCTURES);
+	// remove from the playground
+	map->remove_id(iIndex, MAPID_STRUCTURES);
 
-    // screen shaking
-    game.TIMER_shake = (iWidth * iHeight) * 20;
+	// screen shaking
+	game.TIMER_shake = (iWidth * iHeight) * 20;
 
-    // eventually die
-    cStructureFactory::getInstance()->deleteStructureInstance(this);
+	// eventually die
+	cStructureFactory::getInstance()->deleteStructureInstance(this);
 }
 
+void cAbstractStructure::think_prebuild() {
+	// not yet done prebuilding
+	// Buildfase 1, 3, 5, 7, 9 are all 'prebuilds'
+	TIMER_prebuild--;
 
-void cAbstractStructure::think_prebuild()
-{
-        // not yet done prebuilding
-        // Buildfase 1, 3, 5, 7, 9 are all 'prebuilds'
-        TIMER_prebuild--;
+	if (TIMER_prebuild < 0) {
+		iBuildFase++;
 
-        if (TIMER_prebuild < 0)
-        {
-            iBuildFase++;
-
-            TIMER_prebuild = (240 / iBuildFase);
-        }
+		TIMER_prebuild = (240 / iBuildFase);
+	}
 }
 
 // Free around structure, return the first cell that is free.
-int cAbstractStructure::iFreeAround()
-{
+int cAbstractStructure::iFreeAround() {
 	int iStartX = iCellGiveX(iCell);
 	int iStartY = iCellGiveY(iCell);
 
@@ -229,14 +213,13 @@ int cAbstractStructure::iFreeAround()
 	iStartX--;
 	iStartY--;
 
-	int iCx=0;
-	int iCy=0;
+	int iCx = 0;
+	int iCy = 0;
 
 	for (int x = iStartX; x < iEndX; x++)
-		for (int y = iStartY; y < iEndY; y++)
-		{
-			iCx=x;
-			iCy=y;
+		for (int y = iStartY; y < iEndY; y++) {
+			iCx = x;
+			iCy = y;
 
 			FIX_BORDER_POS(iCx, iCy);
 
@@ -251,25 +234,24 @@ int cAbstractStructure::iFreeAround()
 }
 
 void cAbstractStructure::think_guard() {
- // filled in by derived class
+	// filled in by derived class
 }
 
 // This method thinks about basic animation
 void cAbstractStructure::think_animation() {
-// show (common) prebuild animation
+	// show (common) prebuild animation
 	if (iBuildFase < 10) {
-        think_prebuild();
+		think_prebuild();
 	}
 
-    // Repair blink
-    if (bRepair) {
+	// Repair blink
+	if (bRepair) {
 		TIMER_repairanimation++;
 
 		// when there is still enough
-		if (TIMER_repairanimation > 1 &&
-			player[0].credits > 2) {
+		if (TIMER_repairanimation > 1 && player[0].credits > 2) {
 
-			TIMER_repairanimation=0;
+			TIMER_repairanimation = 0;
 			// decrease alpha (make it fade out)
 			iRepairAlpha -= 7;
 
@@ -283,47 +265,47 @@ void cAbstractStructure::think_animation() {
 				// raise the repair icon.
 			}
 		}
-     }
+	}
 }
 
 void cAbstractStructure::think_flag() {
-	if (isAnimating()) return; // do no flag animation when animating
+	if (isAnimating())
+		return; // do no flag animation when animating
 
 	TIMER_flag++;
 
-    if (TIMER_flag > 70) {
-        iFrame++;
+	if (TIMER_flag > 70) {
+		iFrame++;
 
 		// switch between 0 and 1.
 		if (iFrame > 1) {
-            iFrame=0;
+			iFrame = 0;
 		}
 
-        TIMER_flag=0;
-    }
+		TIMER_flag = 0;
+	}
 }
 
-void cAbstractStructure::think_damage()
-{
-    TIMER_damage--;
-    if (TIMER_damage < 0) {
-        TIMER_damage = rnd(500)+250;
+void cAbstractStructure::think_damage() {
+	TIMER_damage--;
+	if (TIMER_damage < 0) {
+		TIMER_damage = rnd(500) + 250;
 
-        // chance based (so it does not decay all the time)
-        if (rnd(100) < getPercentageNotPaved()) {
+		// chance based (so it does not decay all the time)
+		if (rnd(100) < getPercentageNotPaved()) {
 			if (iHitPoints > (structures[getType()].hp / 2)) {
 				iHitPoints -= 1;
 			}
-        }
+		}
 
-        // AI reacting to this damage
-        // TODO: remove here
+		// AI reacting to this damage
+		// TODO: remove here
 		if (iPlayer != HUMAN && player[iPlayer].credits > 50) {
-			if (iHitPoints < ((structures[getType()].hp / 4)*3)) { // lower than 75%
-                bRepair=true;
+			if (iHitPoints < ((structures[getType()].hp / 4) * 3)) { // lower than 75%
+				bRepair = true;
 			}
 		}
-    }
+	}
 }
 
 void cAbstractStructure::setWidth(int width) {
@@ -352,16 +334,15 @@ void cAbstractStructure::setFrame(int frame) {
 	iFrame = frame;
 }
 
-
 /**
-	Damage structure by amount of hp. The amount passed to this method
-	must be > 0. When it is < 0, it will be wrapped to > 0 anyway and
-	an error is written in the log.
+ Damage structure by amount of hp. The amount passed to this method
+ must be > 0. When it is < 0, it will be wrapped to > 0 anyway and
+ an error is written in the log.
 
-	When the hitpoints drop below 1, the structure will die. The actual call
-	to the die method will be done by the abstract think function. So it is
-	still safe to refer to this structure even if it is declared dead (ie hp < 1).
-**/
+ When the hitpoints drop below 1, the structure will die. The actual call
+ to the die method will be done by the abstract think function. So it is
+ still safe to refer to this structure even if it is declared dead (ie hp < 1).
+ **/
 void cAbstractStructure::damage(int hp) {
 	int damage = hp;
 	if (damage < 0) {
@@ -403,17 +384,17 @@ void cAbstractStructure::setOwner(int player) {
 }
 
 /**
-	Think actions like any other structure would have.
-**/
+ Think actions like any other structure would have.
+ **/
 void cAbstractStructure::think() {
 	// AI
-    if (iPlayer > 0) {
-    	aiplayer[iPlayer].think_repair_structure(this);
-    }
+	if (iPlayer > 0) {
+		aiplayer[iPlayer].think_repair_structure(this);
+	}
 
-    // Other
-    think_damage();
-    think_repair();
+	// Other
+	think_damage();
+	think_repair();
 
 	// die when out of hp
 	if (iHitPoints < 1) {
@@ -421,16 +402,14 @@ void cAbstractStructure::think() {
 	}
 }
 
-void cAbstractStructure::think_repair()
-{
-    // REPAIRING
-    if (bRepair) {
+void cAbstractStructure::think_repair() {
+	// REPAIRING
+	if (bRepair) {
 		if (player[iPlayer].credits > 1.0f) {
 			TIMER_repair++;
 
-			if (TIMER_repair > 7)
-			{
-				TIMER_repair=0;
+			if (TIMER_repair > 7) {
+				TIMER_repair = 0;
 				iHitPoints += structures[getType()].fixhp;
 				player[iPlayer].credits--;
 				if (player[iPlayer].credits < 0.0f) {
@@ -441,7 +420,7 @@ void cAbstractStructure::think_repair()
 			// done repairing
 			if (iHitPoints >= getMaxHP()) {
 				iHitPoints = getMaxHP();
-				bRepair=false;
+				bRepair = false;
 			}
 		}
 		assert(iHitPoints <= structures[getType()].hp);

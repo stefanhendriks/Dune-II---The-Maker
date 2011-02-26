@@ -31,7 +31,6 @@ int cBuildingListFactory::getButtonDrawYStart() {
 	return 45;
 }
 
-
 /**
  * Initialize list according to techlevel. This will also remove all previously set icons.
  *
@@ -95,8 +94,8 @@ void cBuildingListFactory::initializeList(cPlayer *player, cBuildingList *list, 
 			list->setButtonIconIdPressed(BTN_TRPINF_PRESSED);
 			list->setButtonIconIdUnpressed(BTN_TRPINF_UNPRESSED);
 			// add items , since ordos can have both, it is determined on structure place
-//			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list));
-//			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
+			//			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list));
+			//			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
 		} else {
 			// do nothing
 		}

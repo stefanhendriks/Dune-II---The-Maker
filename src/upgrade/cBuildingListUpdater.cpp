@@ -33,9 +33,7 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 			cLogger::getInstance()->logCommentLine("updateStructureCreated - added LIGHTFACTORY to list");
 			list->addItemToList(new cBuildingListItem(LIGHTFACTORY, structures[LIGHTFACTORY], list));
 
-			if (house == ATREIDES ||
-				house == ORDOS ||
-				house == FREMEN) {
+			if (house == ATREIDES || house == ORDOS || house == FREMEN) {
 				cLogger::getInstance()->logCommentLine("updateStructureCreated - added BARRACKS to list");
 				list->addItemToList(new cBuildingListItem(BARRACKS, structures[BARRACKS], list));
 
@@ -43,11 +41,7 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 					cLogger::getInstance()->logCommentLine("updateStructureCreated - added WOR to list");
 					list->addItemToList(new cBuildingListItem(WOR, structures[WOR], list));
 				}
-			} else if (
-					house == HARKONNEN ||
-					house == SARDAUKAR ||
-					house == FREMEN ||
-					house == MERCENARY) {
+			} else if (house == HARKONNEN || house == SARDAUKAR || house == FREMEN || house == MERCENARY) {
 				cLogger::getInstance()->logCommentLine("updateStructureCreated - added WOR to list");
 				list->addItemToList(new cBuildingListItem(WOR, structures[WOR], list));
 			}
@@ -61,7 +55,6 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 		list->addItemToList(new cBuildingListItem(SILO, structures[SILO], list));
 	}
 
-
 	if (structureType == RADAR) {
 		if (techLevel >= 5) {
 			cLogger::getInstance()->logCommentLine("updateStructureCreated - added TURRET to list");
@@ -74,14 +67,13 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 		}
 	}
 
-	if (structureType == LIGHTFACTORY)
-	{
-		if (techLevel >=4) {
+	if (structureType == LIGHTFACTORY) {
+		if (techLevel >= 4) {
 			cLogger::getInstance()->logCommentLine("updateStructureCreated - added HEAVYFACTORY to list");
 			list->addItemToList(new cBuildingListItem(HEAVYFACTORY, structures[HEAVYFACTORY], list));
 		}
 
-		if (techLevel >=5) {
+		if (techLevel >= 5) {
 			cLogger::getInstance()->logCommentLine("updateStructureCreated - added HIGHTECH to list");
 			cLogger::getInstance()->logCommentLine("updateStructureCreated - added REPAIR to list");
 			list->addItemToList(new cBuildingListItem(HIGHTECH, structures[HIGHTECH], list));
@@ -96,8 +88,7 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 	}
 
 	// Heavyfactory
-	if (structureType == HEAVYFACTORY)
-	{
+	if (structureType == HEAVYFACTORY) {
 		if (techLevel >= 7) {
 			cLogger::getInstance()->logCommentLine("updateStructureCreated - added IX to list");
 			list->addItemToList(new cBuildingListItem(IX, structures[IX], list));
@@ -122,8 +113,7 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 	list = player->getSideBar()->getList(LIST_HEAVYFC);
 
 	// Heavyfactory
-	if (structureType == IX)
-	{
+	if (structureType == IX) {
 		if (techLevel >= 7) {
 			if (player->getHouse() == ATREIDES) {
 				list->addItemToList(new cBuildingListItem(SONICTANK, units[SONICTANK], list));
@@ -147,7 +137,6 @@ void cBuildingListUpdater::updateStructureDestroyed(int structureType) {
 
 	cLogger::getInstance()->logCommentLine("updateStructureDestroyed - end");
 }
-
 
 /**
  * this method will update any list given, with phase given.

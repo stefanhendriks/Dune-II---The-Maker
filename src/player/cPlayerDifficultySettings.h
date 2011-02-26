@@ -28,15 +28,15 @@ class cPlayerDifficultySettings {
 		cPlayerDifficultySettings();
 		virtual ~cPlayerDifficultySettings() = 0;
 
-		virtual int getMoveSpeed(int iUnitType) = 0;	// get move speed of a unit
+		virtual int getMoveSpeed(int iUnitType) = 0; // get move speed of a unit
 
-		virtual int getBuildSpeed(int iSpeed) = 0;		// get build speed
+		virtual int getBuildSpeed(int iSpeed) = 0; // get build speed
 
-		virtual int getHarvestSpeed(int iSpeed) = 0;	// get harvesting speed
+		virtual int getHarvestSpeed(int iSpeed) = 0; // get harvesting speed
 
-		virtual int getDumpSpeed(int iSpeed) = 0;		// get harvester 'dumping spice in refinery' speed
+		virtual int getDumpSpeed(int iSpeed) = 0; // get harvester 'dumping spice in refinery' speed
 
-		virtual int getInflictDamage(int iDamageInflicted) = 0;	// get damage inflicted by this house
+		virtual int getInflictDamage(int iDamageInflicted) = 0; // get damage inflicted by this house
 
 	protected:
 

@@ -1,8 +1,8 @@
 #include "include/d2tmh.h"
 
 /**
-	Timers lib specific implementations
-**/
+ Timers lib specific implementations
+ **/
 
 #ifdef ALLEGRO_H
 	/** FPS timer **/
@@ -23,5 +23,5 @@
 	}
 	END_OF_FUNCTION(allegro_timerunits);
 #else
-	// Theoretically some other library could be used and have timer specific code here...
+// Theoretically some other library could be used and have timer specific code here...
 #endif

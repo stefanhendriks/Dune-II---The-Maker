@@ -15,17 +15,33 @@ class cScreenResolution {
 		cScreenResolution();
 		~cScreenResolution();
 
-		int getWidth() { return width; }
-		int getHeight() { return height; }
+		int getWidth() {
+			return width;
+		}
+		int getHeight() {
+			return height;
+		}
 
-		bool isTested() { return tested; }
-		bool isUsable() { return usable; }
+		bool isTested() {
+			return tested;
+		}
+		bool isUsable() {
+			return usable;
+		}
 
-		void setTested(bool value) { tested = value; }
-		void setUsable(bool value) { usable = value; }
+		void setTested(bool value) {
+			tested = value;
+		}
+		void setUsable(bool value) {
+			usable = value;
+		}
 
-		void setWidth(int value) { width = value; }
-		void setHeight(int value) { height = value; }
+		void setWidth(int value) {
+			width = value;
+		}
+		void setHeight(int value) {
+			height = value;
+		}
 
 		void printLog();
 

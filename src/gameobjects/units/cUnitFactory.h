@@ -1,31 +1,31 @@
 /*
 
-  Dune II - The Maker
+ Dune II - The Maker
 
-  Author : Stefan Hendriks
-  Contact: stefanhen83@gmail.com
-  Website: http://dune2themaker.fundynamic.com
+ Author : Stefan Hendriks
+ Contact: stefanhen83@gmail.com
+ Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2009 (c) code by Stefan Hendriks
+ 2001 - 2011 (c) code by Stefan Hendriks
 
-  */
+ */
 
 #ifndef UNIT_FACTORY
 #define UNIT_FACTORY
 class cUnitFactory {
 
-private:
-	static cUnitFactory *instance;
+	private:
+		static cUnitFactory *instance;
 
-protected:
-	cUnitFactory();
+	protected:
+		cUnitFactory();
 
-public:
+	public:
 
-	static cUnitFactory *getInstance();
+		static cUnitFactory *getInstance();
 
-	void deleteUnit(cAbstractUnit *unit);
-	cAbstractUnit *createUnit(int type);
+		void deleteUnit(cAbstractUnit *unit);
+		cAbstractUnit *createUnit(int type);
 
 };
 

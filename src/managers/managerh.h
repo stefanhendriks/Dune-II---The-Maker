@@ -13,5 +13,4 @@ class cPlayer;
 #include "cKeyboardManager.h"
 #include "cInteractionManager.h"
 
-
 #endif /* MANAGERH_H_ */

@@ -10,17 +10,17 @@
 cTextWriter::cTextWriter(int x, int y, ALFONT_FONT *theFont, int theFontSize) {
 	assert(theFont);
 	assert(theFontSize > 0);
-	originalX=x;
-	drawX=x;
-	originalY=y;
-	drawY=y;
+	originalX = x;
+	drawX = x;
+	originalY = y;
+	drawY = y;
 	font = theFont;
 	fontSize = theFontSize;
 	textDrawer = new cTextDrawer();
 }
 
 cTextWriter::~cTextWriter() {
-	font=NULL;
+	font = NULL;
 	delete textDrawer;
 }
 

@@ -34,16 +34,17 @@ void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace) {
 
 void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int cell) {
 	assert(itemToPlace);
-	if (cell < 0) return;
+	if (cell < 0)
+		return;
 
 	cStructureUtils structureUtils;
 	int structureId = itemToPlace->getBuildId();
 	assert(structureId > -1);
 
-	bool bOutOfBorder=true;
-	bool bMayPlace=true;
+	bool bOutOfBorder = true;
+	bool bMayPlace = true;
 
-	int iTile = PLACE_ROCK;	// rocky placement = ok, but bad for power
+	int iTile = PLACE_ROCK; // rocky placement = ok, but bad for power
 
 	BITMAP *temp;
 	temp = create_bitmap(structures[structureId].bmp_width, structures[structureId].bmp_height);
@@ -54,7 +55,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 	int iTotalBlocks = width * height;
 
-	int iTotalRocks=0.0f;
+	int iTotalRocks = 0.0f;
 
 #define SCANWIDTH	1
 
@@ -66,8 +67,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	delete cellCalculator;
 
 	// check
-	int iStartX = iCellX-SCANWIDTH;
-	int iStartY = iCellY-SCANWIDTH;
+	int iStartX = iCellX - SCANWIDTH;
+	int iStartY = iCellY - SCANWIDTH;
 
 	int iEndX = iCellX + SCANWIDTH + width;
 	int iEndY = iCellY + SCANWIDTH + height;
@@ -77,50 +78,45 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	FIX_POS(iEndX, iEndY);
 
 	// Determine if the structure may be placed or not (true/false)
-	for (int iX=iStartX; iX < iEndX; iX++) {
-		for (int iY=iStartY; iY < iEndY; iY++)
-		{
-			int iCll=iCellMake(iX, iY);
-			if (map->cell[iCll].gameObjectId[MAPID_STRUCTURES] > -1)
-			{
+	for (int iX = iStartX; iX < iEndX; iX++) {
+		for (int iY = iStartY; iY < iEndY; iY++) {
+			int iCll = iCellMake(iX, iY);
+			if (map->cell[iCll].gameObjectId[MAPID_STRUCTURES] > -1) {
 				int iID = map->cell[iCll].gameObjectId[MAPID_STRUCTURES];
 
 				if (structure[iID]->getOwner() == 0) {
-					bOutOfBorder=false; // connection!
+					bOutOfBorder = false; // connection!
 				} else {
-					bMayPlace=false;
+					bMayPlace = false;
 				}
 			}
 
-			if (map->cell[iCll].terrainTypeGfxDataIndex == TERRAIN_WALL ||
-				map->cell[iCll].terrainTypeGfxDataIndex == TERRAIN_SLAB) {
-				bOutOfBorder=false;
+			if (map->cell[iCll].terrainTypeGfxDataIndex == TERRAIN_WALL || map->cell[iCll].terrainTypeGfxDataIndex == TERRAIN_SLAB) {
+				bOutOfBorder = false;
 				// TODO: here we should actually find out if the slab is ours or not??
 			}
 		}
 	}
 
 	if (bOutOfBorder) {
-		bMayPlace=false;
+		bMayPlace = false;
 	}
 
 	int iDrawX = map->mouse_draw_x();
 	int iDrawY = map->mouse_draw_y();
 
 	// Draw over it the mask for good/bad placing (decorates temp bitmap)
-	for (int iX=0; iX < width; iX++) {
-		for (int iY=0; iY < height; iY++)
-		{
+	for (int iX = 0; iX < width; iX++) {
+		for (int iY = 0; iY < height; iY++) {
 			iTile = PLACE_ROCK;
 
-			if ((iCellX+iX > 62) || (iCellY + iY > 62))
-			{
-				bOutOfBorder=true;
-				bMayPlace=false;
+			if ((iCellX + iX > 62) || (iCellY + iY > 62)) {
+				bOutOfBorder = true;
+				bMayPlace = false;
 				break;
 			}
 
-			int iCll=iCellMake((iCellX+iX), (iCellY+ iY));
+			int iCll = iCellMake((iCellX + iX), (iCellY + iY));
 
 			if (map->cell[iCll].passable == false)
 				iTile = PLACE_BAD;
@@ -143,18 +139,18 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 			// DRAWING & RULER
 			if (iTile == PLACE_BAD && structureId != SLAB4)
-				bMayPlace=false;
+				bMayPlace = false;
 
 			// Count this as GOOD stuff
 			if (iTile == PLACE_GOOD)
 				iTotalRocks++;
 
 			// Draw bad gfx on spot
-			draw_sprite(temp, (BITMAP *)gfxdata[iTile].dat, iX*32, iY*32);
+			draw_sprite(temp, (BITMAP *) gfxdata[iTile].dat, iX * 32, iY * 32);
 		}
 
 		if (bOutOfBorder) {
-			clear_to_color(temp, makecol(160,0,0));
+			clear_to_color(temp, makecol(160, 0, 0));
 		}
 	}
 
@@ -170,8 +166,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 	// clicked mouse button
 	if (cMouse::getInstance()->isLeftButtonClicked()) {
-		if (bMayPlace && bOutOfBorder == false)	{
-			int iHealthPercent =  50; // the minimum is 50% (with no slabs)
+		if (bMayPlace && bOutOfBorder == false) {
+			int iHealthPercent = 50; // the minimum is 50% (with no slabs)
 
 			if (iTotalRocks > 0) {
 				iHealthPercent += health_bar(50, iTotalRocks, iTotalBlocks);
@@ -183,7 +179,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 			player[HUMAN].getStructurePlacer()->placeStructure(cell, structureId, iHealthPercent);
 
-			game.bPlaceIt=false;
+			game.bPlaceIt = false;
 
 			itemToPlace->decreaseTimesToBuild();
 			itemToPlace->setPlaceIt(false);
@@ -210,22 +206,21 @@ void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int c
 	int iDrawY = map->mouse_draw_y();
 
 	if (structureId == SLAB1) {
-		draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[PLACE_SLAB1].dat, iDrawX, iDrawY);
+		draw_trans_sprite(bmp_screen, (BITMAP *) gfxdata[PLACE_SLAB1].dat, iDrawX, iDrawY);
 	} else if (structureId == SLAB4) {
-		draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[PLACE_SLAB4].dat, iDrawX, iDrawY);
+		draw_trans_sprite(bmp_screen, (BITMAP *) gfxdata[PLACE_SLAB4].dat, iDrawX, iDrawY);
 	} else if (structureId == WALL) {
-		draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[PLACE_WALL].dat, iDrawX, iDrawY);
+		draw_trans_sprite(bmp_screen, (BITMAP *) gfxdata[PLACE_WALL].dat, iDrawX, iDrawY);
 	} else {
 		BITMAP *temp;
 		temp = create_bitmap(structures[structureId].bmp_width, structures[structureId].bmp_height);
 		clear_bitmap(temp);
 
-		blit(structures[structureId].bmp, temp, 0,0, 0,0, structures[structureId].bmp_width, structures[structureId].bmp_height);
+		blit(structures[structureId].bmp, temp, 0, 0, 0, 0, structures[structureId].bmp_width, structures[structureId].bmp_height);
 
 		draw_trans_sprite(bmp_screen, temp, iDrawX, iDrawY);
 
 		destroy_bitmap(temp);
 	}
-
 
 }

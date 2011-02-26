@@ -8,7 +8,9 @@ class cMessageBarDrawer {
 		~cMessageBarDrawer();
 
 		void drawMessageBar();
-		cMessageBar * getMessageBar() { return messageBar; }
+		cMessageBar * getMessageBar() {
+			return messageBar;
+		}
 
 	protected:
 

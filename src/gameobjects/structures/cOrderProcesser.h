@@ -21,18 +21,24 @@ class cOrderProcesser {
 		cOrderProcesser(cPlayer * thePlayer);
 		~cOrderProcesser();
 
-		void think();	// time based (per second)
+		void think(); // time based (per second)
 		void updatePricesForStarport();
 		void addOrder(cBuildingListItem *item);
-		bool acceptsOrders();	// able to accept orders?
+		bool acceptsOrders(); // able to accept orders?
 		void removeOrder(cBuildingListItem *item);
 		void placeOrder();
 		void playTMinusSound(int seconds);
 
-		bool isOrderPlaced() { return orderPlaced; }
-		bool isFrigateSent() { return frigateSent; }
+		bool isOrderPlaced() {
+			return orderPlaced;
+		}
+		bool isFrigateSent() {
+			return frigateSent;
+		}
 		bool hasOrderedAnything();
-		bool hasFreeSlot() { return getFreeSlot() >= 0;	}
+		bool hasFreeSlot() {
+			return getFreeSlot() >= 0;
+		}
 		cBuildingListItem * getItemToDeploy();
 		void markOrderAsDeployed(cBuildingListItem * item);
 		void setOrderHasBeenProcessed();

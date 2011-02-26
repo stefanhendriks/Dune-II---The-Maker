@@ -26,12 +26,24 @@ char cSeedMap::getCellTypeCharacter(int x, int y) {
 	int type = getCellType(x, y);
 
 	switch (type) {
-		case TERRAIN_SAND: return '.'; break;
-		case TERRAIN_HILL: return 'H'; break;
-		case TERRAIN_SPICE: return '-'; break;
-		case TERRAIN_SPICEHILL: return '+'; break;
-		case TERRAIN_ROCK: return '%'; break;
-		case TERRAIN_MOUNTAIN: return 'R'; break;
+		case TERRAIN_SAND:
+			return '.';
+			break;
+		case TERRAIN_HILL:
+			return 'H';
+			break;
+		case TERRAIN_SPICE:
+			return '-';
+			break;
+		case TERRAIN_SPICEHILL:
+			return '+';
+			break;
+		case TERRAIN_ROCK:
+			return '%';
+			break;
+		case TERRAIN_MOUNTAIN:
+			return 'R';
+			break;
 	}
 
 	return 'X'; // error

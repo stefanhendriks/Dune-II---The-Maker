@@ -16,17 +16,37 @@ class cMessageBar {
 		cMessageBar(int theX, int theY, int theWidth);
 		~cMessageBar();
 
-		void setX(int value) { x = value; }
-		void setY(int value) { y = value; }
-		void setMessage(std::string * value) { message = value; }
-		void setAlpha(int value) { alpha = value; }
-		void setWidth(int value) { width = value; }
+		void setX(int value) {
+			x = value;
+		}
+		void setY(int value) {
+			y = value;
+		}
+		void setMessage(std::string * value) {
+			message = value;
+		}
+		void setAlpha(int value) {
+			alpha = value;
+		}
+		void setWidth(int value) {
+			width = value;
+		}
 
-		int getX() { return x; }
-		int getAlpha() { return alpha; }
-		int getY() { return y; }
-		int getWidth() { return width; }
-		std::string * getMessage() { return message; }
+		int getX() {
+			return x;
+		}
+		int getAlpha() {
+			return alpha;
+		}
+		int getY() {
+			return y;
+		}
+		int getWidth() {
+			return width;
+		}
+		std::string * getMessage() {
+			return message;
+		}
 
 	protected:
 

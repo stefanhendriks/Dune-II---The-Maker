@@ -65,7 +65,7 @@ void cSideBar::thinkUpgradeButton() {
 					} else {
 						cListUpgrade * upgradeInProgress = player->getUpgradeBuilder()->getListUpgrade(selectedListId);
 						assert(upgradeInProgress);
-						sprintf(msg, "Upgrade completed at %d percent",upgradeInProgress->getProgressAsPercentage());
+						sprintf(msg, "Upgrade completed at %d percent", upgradeInProgress->getProgressAsPercentage());
 					}
 					gameDrawer->getMessageDrawer()->setMessage(msg);
 				}
@@ -142,17 +142,19 @@ void cSideBar::thinkInteraction() {
 
 	// button interaction
 	for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {
-		if (i == selectedListID) continue; // skip selected list for button interaction
+		if (i == selectedListID)
+			continue; // skip selected list for button interaction
 		cBuildingList *list = getList(i);
 
-		if (list->isAvailable() == false) continue; // not available, so no interaction possible
+		if (list->isAvailable() == false)
+			continue; // not available, so no interaction possible
 
 		// interaction is possible.
 		if (list->isOverButton(mouse_x, mouse_y)) {
 			if (MOUSE_BTN_LEFT()) {
 				// clicked on it. Set focus on this one
 				selectedListID = i;
-	            play_sound_id(SOUND_BUTTON,-1); // click sound
+				play_sound_id(SOUND_BUTTON, -1); // click sound
 				break;
 			}
 		}
@@ -188,7 +190,7 @@ void cSideBar::thinkInteraction() {
 		cBuildingList *list = getList(selectedListID);
 
 		cBuildingListDrawer drawer;
-		cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
+		cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x, mouse_y);
 
 		cOrderProcesser * orderProcesser = player->getOrderProcesser();
 
@@ -203,7 +205,8 @@ void cSideBar::thinkInteraction() {
 
 				if (list->getType() == LIST_CONSTYARD) {
 					s_Structures structureType = structures[item->getBuildId()];
-					sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
+					sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain),
+							seconds);
 				} else {
 					s_UnitP unitType = units[item->getBuildId()];
 					if (item->getBuildCost() > 0) {
@@ -235,8 +238,7 @@ void cSideBar::thinkInteraction() {
 					assert(orderProcesser);
 
 					// handle order button interaction
-					if (orderProcesser->hasOrderedAnything() &&
-						orderProcesser->isOrderPlaced() == false) {
+					if (orderProcesser->hasOrderedAnything() && orderProcesser->isOrderPlaced() == false) {
 						cOrderDrawer orderDrawer;
 						if (orderDrawer.isMouseOverOrderButton(mouse_x, mouse_y)) {
 							orderProcesser->placeOrder();
@@ -312,15 +314,12 @@ void cSideBar::thinkMouseZScrolling() {
 	cBuildingList *list = getList(selectedListID);
 	cMouse *mouse = cMouse::getInstance();
 
-
 	// MOUSE WHEEL
 	if (mouse->isMouseScrolledUp()) {
-	   list->scrollUp();
+		list->scrollUp();
 	}
 
-
-
 	if (mouse->isMouseScrolledDown()) {
-	   list->scrollDown();
+		list->scrollDown();
 	}
 }

@@ -1,11 +1,9 @@
 #include "../../include/d2tmh.h"
 
 // Constructor
-cRefinery::cRefinery()
-{
+cRefinery::cRefinery() {
 
-
- // other variables (class specific)
+	// other variables (class specific)
 
 }
 
@@ -13,147 +11,124 @@ int cRefinery::getType() {
 	return REFINERY;
 }
 
-cRefinery::~cRefinery()
-{
+cRefinery::~cRefinery() {
 
 }
-
 
 /*  OVERLOADED FUNCTIONS  */
 
 // Specific Construction Yard thinking
-void cRefinery::think()
-{
+void cRefinery::think() {
 
-     // When a refinery, and expecting a unit
-     if (iUnitID > -1)
-        {
-			int iMyID=-1;
-			for (int i=0; i < MAX_STRUCTURES; i++)
-				if (structure[i] == this)
-				{
-					iMyID=i;
-					break;
-				}
-
-            // when the unit somehow does not go to us anymore, stop animating
-            if (unit[iUnitID].isValid() == false)
-            {
-                iUnitID=-1;
-				setAnimating(false);
-                return;
-            }
-
-			if (unit[iUnitID].iStructureID != iMyID)
-			{
-				iUnitID=-1;
-				setAnimating(false);
-				return;
+	// When a refinery, and expecting a unit
+	if (iUnitID > -1) {
+		int iMyID = -1;
+		for (int i = 0; i < MAX_STRUCTURES; i++)
+			if (structure[i] == this) {
+				iMyID = i;
+				break;
 			}
 
-            // the unit id is filled in, that means the unit is IN this structure
-            // the TIMER_harvest of the unit will be used to dump the harvest in the
-            // refinery
+		// when the unit somehow does not go to us anymore, stop animating
+		if (unit[iUnitID].isValid() == false) {
+			iUnitID = -1;
+			setAnimating(false);
+			return;
+		}
 
-            unit[iUnitID].TIMER_harvest++;
+		if (unit[iUnitID].iStructureID != iMyID) {
+			iUnitID = -1;
+			setAnimating(false);
+			return;
+		}
 
-            cPlayerDifficultySettings * difficultySettings = player[getOwner()].getDifficultySettings();
+		// the unit id is filled in, that means the unit is IN this structure
+		// the TIMER_harvest of the unit will be used to dump the harvest in the
+		// refinery
 
-            if (unit[iUnitID].TIMER_harvest > difficultySettings->getDumpSpeed(10))
-            {
-                unit[iUnitID].TIMER_harvest = 0;
+		unit[iUnitID].TIMER_harvest++;
 
-                // dump credits
-                if (unit[iUnitID].iCredits > 0)
-                {
-                    int iAmount = 5;
+		cPlayerDifficultySettings * difficultySettings = player[getOwner()].getDifficultySettings();
 
-                    // cap at max
-                    if (unit[iUnitID].iCredits > units[unit[iUnitID].iType].credit_capacity)
-                        unit[iUnitID].iCredits = units[unit[iUnitID].iType].credit_capacity;
+		if (unit[iUnitID].TIMER_harvest > difficultySettings->getDumpSpeed(10)) {
+			unit[iUnitID].TIMER_harvest = 0;
 
+			// dump credits
+			if (unit[iUnitID].iCredits > 0) {
+				int iAmount = 5;
 
-                    if ((unit[iUnitID].iCredits - iAmount) < 0)
-                    {
-                        iAmount = unit[iUnitID].iCredits;
-                    }
+				// cap at max
+				if (unit[iUnitID].iCredits > units[unit[iUnitID].iType].credit_capacity)
+					unit[iUnitID].iCredits = units[unit[iUnitID].iType].credit_capacity;
 
-					if (player[unit[iUnitID].iPlayer].credits < player[unit[iUnitID].iPlayer].max_credits)
-                    {
-						player[unit[iUnitID].iPlayer].credits += iAmount;
+				if ((unit[iUnitID].iCredits - iAmount) < 0) {
+					iAmount = unit[iUnitID].iCredits;
+				}
 
-                        // TODO: update harvested amopunt
-                    }
+				if (player[unit[iUnitID].iPlayer].credits < player[unit[iUnitID].iPlayer].max_credits) {
+					player[unit[iUnitID].iPlayer].credits += iAmount;
 
-                    unit[iUnitID].iCredits -= iAmount;
-                    unit[iUnitID].iOffsetX = 0;
-                    unit[iUnitID].iOffsetY = 0;
-                }
-                else
-                {
-					int iNewCell = iFreeAround();
+					// TODO: update harvested amopunt
+				}
 
-					if (iNewCell > -1)
-					{
-						unit[iUnitID].iCell = iNewCell;
+				unit[iUnitID].iCredits -= iAmount;
+				unit[iUnitID].iOffsetX = 0;
+				unit[iUnitID].iOffsetY = 0;
+			} else {
+				int iNewCell = iFreeAround();
 
-                        // let player know...
-						if (unit[iUnitID].iPlayer==0)
-							play_voice(SOUND_VOICE_02_ATR);
+				if (iNewCell > -1) {
+					unit[iUnitID].iCell = iNewCell;
 
-						// place back on map now
-						//map.cell[iCell].id[MAPID_UNITS] = iUnitID;
+					// let player know...
+					if (unit[iUnitID].iPlayer == 0)
+						play_voice(SOUND_VOICE_02_ATR);
+
+					// place back on map now
+					//map.cell[iCell].id[MAPID_UNITS] = iUnitID;
+				} else {
+					logbook("Could not find space for this unit");
+
+					// TODO: make carryall pick this up
+					return;
+				}
+
+				// done & restore unit
+				unit[iUnitID].iCredits = 0;
+				unit[iUnitID].iStructureID = -1;
+				unit[iUnitID].iHitPoints = unit[iUnitID].iTempHitPoints;
+				unit[iUnitID].iTempHitPoints = -1;
+				unit[iUnitID].iGoalCell = unit[iUnitID].iCell;
+				unit[iUnitID].iPathIndex = -1;
+
+				unit[iUnitID].TIMER_movewait = 0;
+				unit[iUnitID].TIMER_thinkwait = 0;
+
+				if (DEBUGGING)
+					assert(iUnitID > -1);
+
+				map->cell[unit[iUnitID].iCell].gameObjectId[MAPID_UNITS] = iUnitID;
+
+				// perhaps we can find a carryall to help us out
+				int iHarvestCell = UNIT_find_harvest_spot(iUnitID);
+
+				if (iHarvestCell) {
+					int iCarry = CARRYALL_TRANSFER(iUnitID, iHarvestCell);
+
+					if (iCarry < 0) {
+						unit[iUnitID].iGoalCell = iHarvestCell;
+					} else {
+						unit[iUnitID].TIMER_movewait = 100;
+						unit[iUnitID].TIMER_thinkwait = 100;
 					}
-					else
-					{
-						logbook("Could not find space for this unit");
+				}
 
-						// TODO: make carryall pick this up
-						return;
-					}
+				iUnitID = -1;
+			}
 
-                    // done & restore unit
-                    unit[iUnitID].iCredits = 0;
-                    unit[iUnitID].iStructureID = -1;
-                    unit[iUnitID].iHitPoints = unit[iUnitID].iTempHitPoints;
-                    unit[iUnitID].iTempHitPoints = -1;
-                    unit[iUnitID].iGoalCell = unit[iUnitID].iCell;
-					unit[iUnitID].iPathIndex = -1;
+		}
 
-					unit[iUnitID].TIMER_movewait = 0;
-					unit[iUnitID].TIMER_thinkwait = 0;
-
-                    if (DEBUGGING)
-                        assert(iUnitID > -1);
-
-                    map->cell[unit[iUnitID].iCell].gameObjectId[MAPID_UNITS] = iUnitID;
-
-					// perhaps we can find a carryall to help us out
-					int iHarvestCell = UNIT_find_harvest_spot(iUnitID);
-
-					if (iHarvestCell)
-					{
-						int iCarry = CARRYALL_TRANSFER(iUnitID, iHarvestCell);
-
-						if (iCarry < 0)
-						{
-							unit[iUnitID].iGoalCell = iHarvestCell;
-						}
-						else
-						{
-							unit[iUnitID].TIMER_movewait = 100;
-							unit[iUnitID].TIMER_thinkwait = 100;
-						}
-					}
-
-					iUnitID=-1;
-                }
-
-
-            }
-
-
-        }
+	}
 
 	// think like base class
 	cAbstractStructure::think();
@@ -161,18 +136,19 @@ void cRefinery::think()
 }
 
 void cRefinery::think_harvester_deploy() {
-	if (!isAnimating()) return; // do nothing when not animating
-    // harvester stuff
-	if (iFrame < 0)  {
-        iFrame = 1;
+	if (!isAnimating())
+		return; // do nothing when not animating
+	// harvester stuff
+	if (iFrame < 0) {
+		iFrame = 1;
 	}
 
-    TIMER_flag++;
+	TIMER_flag++;
 
-    if (TIMER_flag > 70) {
-        TIMER_flag = 0;
+	if (TIMER_flag > 70) {
+		TIMER_flag = 0;
 
-        iFrame++;
+		iFrame++;
 		if (iFrame > 4) {
 			iFrame = 1;
 		}
@@ -185,14 +161,13 @@ void cRefinery::think_animation() {
 	think_harvester_deploy();
 }
 
-void cRefinery::think_guard()
-{
+void cRefinery::think_guard() {
 
 }
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cRefinery::getSpiceSiloCapacity() {
 	cHitpointCalculator hitpointCalculator;
-	float percentage = ((float)getHitPoints() / (float)structures[getType()].hp);
+	float percentage = ((float) getHitPoints() / (float) structures[getType()].hp);
 	return hitpointCalculator.getByPercent(1000, percentage);
 }

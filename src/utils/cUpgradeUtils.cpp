@@ -7,14 +7,12 @@
 
 #include "../include/d2tmh.h"
 
-
 cUpgradeUtils::cUpgradeUtils() {
 
 }
 
 cUpgradeUtils::~cUpgradeUtils() {
 }
-
 
 bool cUpgradeUtils::canUpgradeList(cPlayer * thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
 	int costToUpgrade = getPriceToUpgradeList(thePlayer, listTypeId, techLevel, currentUpgradeLevelOfList);
@@ -157,7 +155,7 @@ bool cUpgradeUtils::isUpgradeApplicableForPlayerAndList(cPlayer *thePlayer, int 
 
 bool cUpgradeUtils::canPlayerPayForUpgradeForList(cPlayer *thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
 	assert(thePlayer);
-	int credits = (int)thePlayer->credits;
+	int credits = (int) thePlayer->credits;
 	int price = getPriceToUpgradeList(thePlayer, listTypeId, techLevel, currentUpgradeLevelOfList);
 
 	// it is not available, so we cant pay
@@ -170,7 +168,7 @@ bool cUpgradeUtils::canPlayerPayForUpgradeForList(cPlayer *thePlayer, int listTy
 
 bool cUpgradeUtils::isMouseOverUpgradeButton(int mouseX, int mouseY) {
 	// determine if mouse is over the button..
-	if (  (mouseX > 29 && mouseX < 187) && (mouseY > 2 && mouseY < 31)) {
+	if ((mouseX > 29 && mouseX < 187) && (mouseY > 2 && mouseY < 31)) {
 		return true;
 	}
 	return false;

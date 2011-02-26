@@ -24,7 +24,9 @@ class cTextDrawer {
 		void drawTextBottomRight(const char * msg);
 		void drawTextBottomLeft(const char * msg);
 
-		void setApplyShaddow(bool value) { applyShadow = value; }
+		void setApplyShaddow(bool value) {
+			applyShadow = value;
+		}
 
 	protected:
 

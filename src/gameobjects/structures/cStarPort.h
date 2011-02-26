@@ -1,31 +1,34 @@
 // Structure class
 
-class cStarPort : public cAbstractStructure
-{
-private:
-	void think_deployment();
+class cStarPort : public cAbstractStructure {
+	private:
+		void think_deployment();
 
-	bool frigateDroppedPackage;
+		bool frigateDroppedPackage;
 
-    // TIMERs
-    int TIMER_deploy;
+		// TIMERs
+		int TIMER_deploy;
 
-public:
-    cStarPort();
-    ~cStarPort();
+	public:
+		cStarPort();
+		~cStarPort();
 
-    // overloaded functions
-    void think();
-    void think_animation();
-    void think_deploy();            // starport uses this to deploy unit
-    void think_guard();
+		// overloaded functions
+		void think();
+		void think_animation();
+		void think_deploy(); // starport uses this to deploy unit
+		void think_guard();
 
-    void draw(int iStage);
+		void draw(int iStage);
 
-	int getType();
+		int getType();
 
-	bool isFrigatePackageDropped() { return frigateDroppedPackage; }
-	void setFrigateDroppedPackage (bool value) { frigateDroppedPackage = value; }
+		bool isFrigatePackageDropped() {
+			return frigateDroppedPackage;
+		}
+		void setFrigateDroppedPackage(bool value) {
+			frigateDroppedPackage = value;
+		}
 
 };
 

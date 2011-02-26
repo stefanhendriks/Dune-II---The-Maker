@@ -24,21 +24,41 @@ class cGameControlsContext {
 
 		void updateState();
 
-		int getIdOfStructureWhereMouseHovers() { return mouseHoveringOverStructureId; }
-		int getIdOfUnitWhereMouseHovers() { return mouseHoveringOverUnitId; }
+		int getIdOfStructureWhereMouseHovers() {
+			return mouseHoveringOverStructureId;
+		}
+		int getIdOfUnitWhereMouseHovers() {
+			return mouseHoveringOverUnitId;
+		}
 
-		int getMouseCell() { return  mouseCell; }
+		int getMouseCell() {
+			return mouseCell;
+		}
 		int getMouseCellFromMiniMap();
 
-		bool isMouseOverStructure() { return mouseHoveringOverStructureId > -1; }
-		bool isMouseOverUnit() { return mouseHoveringOverUnitId > -1; }
+		bool isMouseOverStructure() {
+			return mouseHoveringOverStructureId > -1;
+		}
+		bool isMouseOverUnit() {
+			return mouseHoveringOverUnitId > -1;
+		}
 
-		bool isMouseOnSidebar() { return mouseCell == -3; }
-		bool isMouseOnTopBar() { return mouseCell == -1; }
-		bool isMouseOnMiniMap() { return mouseCell == -2; }
-		bool isMouseOnBattleField() { return mouseCell > -1; }
+		bool isMouseOnSidebar() {
+			return mouseCell == -3;
+		}
+		bool isMouseOnTopBar() {
+			return mouseCell == -1;
+		}
+		bool isMouseOnMiniMap() {
+			return mouseCell == -2;
+		}
+		bool isMouseOnBattleField() {
+			return mouseCell > -1;
+		}
 
-		bool shouldDrawToolTip() { return drawToolTip; }
+		bool shouldDrawToolTip() {
+			return drawToolTip;
+		}
 
 		cAbstractStructure * getStructurePointerWhereMouseHovers();
 

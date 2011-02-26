@@ -10,18 +10,18 @@
 
 class cSideBarFactory {
 
-private:
-	static cSideBarFactory *instance;
+	private:
+		static cSideBarFactory *instance;
 
-protected:
-	cSideBarFactory();
+	protected:
+		cSideBarFactory();
 
-public:
-	static cSideBarFactory *getInstance();
+	public:
+		static cSideBarFactory *getInstance();
 
-	cSideBar *createSideBar(cPlayer * player, int techlevel, int house);
+		cSideBar *createSideBar(cPlayer * player, int techlevel, int house);
 
-private:
+	private:
 
 };
 #endif /* CSIDEBARFACTORY_H_ */

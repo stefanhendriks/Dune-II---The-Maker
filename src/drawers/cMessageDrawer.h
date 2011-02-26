@@ -13,7 +13,9 @@ class cMessageDrawer {
 		void init();
 
 		void setMessage(const char msg[255]); // set a new message
-		char * getMessage() { return &cMessage[0]; }
+		char * getMessage() {
+			return &cMessage[0];
+		}
 
 	protected:
 

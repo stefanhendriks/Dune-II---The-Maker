@@ -29,32 +29,26 @@ void cMouseDrawer::draw() {
 	int y = mouse->getY();
 
 	// adjust coordinates of drawing according to the specific mouse sprite/tile
-	if (mouse_tile == MOUSE_DOWN){
-		y-=16;
-    }
-    else if (mouse_tile == MOUSE_RIGHT){
-    	x-=16;
-    }
-    else if (mouse_tile == MOUSE_MOVE || mouse_tile == MOUSE_RALLY){
-    	x-=16;
-    	y-=16;
-    }
-    else if (mouse_tile == MOUSE_ATTACK){
-    	x-=16;
-    	y-=16;
-    }
-    else if (mouse_tile == MOUSE_REPAIR){
-    	x-=16;
-    	y-=16;
-    }
-    else if (mouse_tile == MOUSE_PICK){
-    	x-=16;
-    	y-=16;
-    }
-    else{
-    }
+	if (mouse_tile == MOUSE_DOWN) {
+		y -= 16;
+	} else if (mouse_tile == MOUSE_RIGHT) {
+		x -= 16;
+	} else if (mouse_tile == MOUSE_MOVE || mouse_tile == MOUSE_RALLY) {
+		x -= 16;
+		y -= 16;
+	} else if (mouse_tile == MOUSE_ATTACK) {
+		x -= 16;
+		y -= 16;
+	} else if (mouse_tile == MOUSE_REPAIR) {
+		x -= 16;
+		y -= 16;
+	} else if (mouse_tile == MOUSE_PICK) {
+		x -= 16;
+		y -= 16;
+	} else {
+	}
 
-	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, x, y);
+	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, x, y);
 }
 
 int cMouseDrawer::getDrawXToolTip(int width) {
@@ -63,7 +57,7 @@ int cMouseDrawer::getDrawXToolTip(int width) {
 	// correct drawing position so it does not fall off screen.
 	int diffX = (x + width) - game.getScreenResolution()->getWidth();
 	if (diffX > 0) {
-		x-= diffX;
+		x -= diffX;
 	}
 	return x;
 }
@@ -127,7 +121,7 @@ void cMouseDrawer::drawToolTip() {
 	int height = getHeightToolTip();
 	int width = getWidthToolTip();
 
-	if (height <= 0|| width <= 0) {
+	if (height <= 0 || width <= 0) {
 		return;
 	}
 
@@ -144,10 +138,10 @@ void cMouseDrawer::drawToolTip() {
 		drawToolTipBackground();
 		drawToolTipGeneralInformation(theStructure, textWriter);
 
-//		// depending on structure type give more info
+		//		// depending on structure type give more info
 		int structureType = theStructure->getType();
 		if (structureType == WINDTRAP) {
-			cWindTrap * windTrap = dynamic_cast<cWindTrap*>(theStructure);
+			cWindTrap * windTrap = dynamic_cast<cWindTrap*> (theStructure);
 			drawToolTipWindTrapInformation(windTrap, textWriter);
 		} else if (structureType == SILO || structureType == REFINERY) {
 			drawToolTipSiloInformation(theStructure, textWriter);
@@ -174,12 +168,12 @@ void cMouseDrawer::drawToolTipBackground() {
 		color = theStructure->getPlayer()->getMinimapColor();
 
 		// TODO: Think about this, it does not really look nice to me, rather see house color
-//		// make grey when not our own
-//		if (theStructure->getPlayer()->getId() != player->getId()) {
-//			red = 64;
-//			green = 64;
-//			blue = 64;
-//		}
+		//		// make grey when not our own
+		//		if (theStructure->getPlayer()->getId() != player->getId()) {
+		//			red = 64;
+		//			green = 64;
+		//			blue = 64;
+		//		}
 	}
 
 	int red = getr(color);
@@ -194,13 +188,13 @@ void cMouseDrawer::drawToolTipBackground() {
 
 	color = makecol(red, green, blue);
 
-//	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 128);
-	rect(bmp_screen, x, y, x+(width-1), y + (height-1), makecol(255,255,255));
+	//	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 128);
+	rect(bmp_screen, x, y, x + (width - 1), y + (height - 1), makecol(255, 255, 255));
 	fblend_rect_trans(bmp_screen, x, y, width, height, color, 128);
 	int shadowX = x + width;
 	int shadowY = y + height;
-	fblend_rect_trans(bmp_screen, x + 4, shadowY, (width - 4), 4, makecol(0,0,0), 128);
-	fblend_rect_trans(bmp_screen, shadowX, y + 4, 4, height, makecol(0,0,0), 128);
+	fblend_rect_trans(bmp_screen, x + 4, shadowY, (width - 4), 4, makecol(0, 0, 0), 128);
+	fblend_rect_trans(bmp_screen, shadowX, y + 4, 4, height, makecol(0, 0, 0), 128);
 }
 
 void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure * theStructure, cTextWriter *textWriter) {
@@ -229,7 +223,7 @@ void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure * theStructu
 	textWriter->write(description, makecol(255, 255, 0));
 	textWriter->writeWithTwoIntegers("Hitpoints : %d/%d", theStructure->getHitPoints(), theStructure->getMaxHP());
 	textWriter->writeWithOneInteger("Armor : %d", theStructure->getArmor());
-	textWriter->writeWithOneInteger("Protected : %d%%", (100-theStructure->getPercentageNotPaved()));
+	textWriter->writeWithOneInteger("Protected : %d%%", (100 - theStructure->getPercentageNotPaved()));
 }
 
 void cMouseDrawer::drawToolTipWindTrapInformation(cWindTrap * theWindTrap, cTextWriter *textWriter) {
@@ -260,16 +254,16 @@ void cMouseDrawer::drawToolTipSiloInformation(cAbstractStructure * theStructure,
 	if (theStructure->getOwner() == HUMAN) {
 		int spiceCapacityOfStructure = 0;
 		if (theStructure->getType() == REFINERY) {
-			cRefinery * refinery = dynamic_cast<cRefinery*>(theStructure);
+			cRefinery * refinery = dynamic_cast<cRefinery*> (theStructure);
 			spiceCapacityOfStructure = refinery->getSpiceSiloCapacity();
 		} else if (theStructure->getType() == SILO) {
-			cSpiceSilo * spiceSilo = dynamic_cast<cSpiceSilo*>(theStructure);
+			cSpiceSilo * spiceSilo = dynamic_cast<cSpiceSilo*> (theStructure);
 			spiceCapacityOfStructure = spiceSilo->getSpiceSiloCapacity();
 		}
 
 		cPlayer *thePlayer = theStructure->getPlayer();
 		int maxSpice = thePlayer->max_credits;
-		int currentSpice =  thePlayer->credits;
+		int currentSpice = thePlayer->credits;
 		if (currentSpice <= maxSpice) {
 			textWriter->writeWithTwoIntegers("Total usage : %d/%d (OK)", currentSpice, maxSpice);
 		} else {

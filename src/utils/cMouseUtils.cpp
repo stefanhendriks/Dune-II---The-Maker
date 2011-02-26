@@ -19,6 +19,5 @@ cMouseUtils::~cMouseUtils() {
 }
 
 bool cMouseUtils::isMouseOverRectangle(int x, int y, int width, int height) {
-	return (mouse->getX() >= x && mouse->getX() <= (x + width)) &&
-			(mouse->getY() >= y && mouse->getY() <= (y + height));
+	return (mouse->getX() >= x && mouse->getX() <= (x + width)) && (mouse->getY() >= y && mouse->getY() <= (y + height));
 }

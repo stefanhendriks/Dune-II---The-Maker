@@ -26,7 +26,7 @@ CreditsDrawer::~CreditsDrawer() {
 }
 
 void CreditsDrawer::setCredits() {
-	setCredits((int)(player->credits));
+	setCredits((int) (player->credits));
 }
 
 void CreditsDrawer::setCredits(int amount) {
@@ -49,7 +49,7 @@ void CreditsDrawer::think() {
 		// determine new currentCredits
 		// TODO: make it 'roll' instead of 'jump' to the newest credits?
 		previousCredits = currentCredits;
-		int newCurrentCredits = (int)player->credits;
+		int newCurrentCredits = (int) player->credits;
 
 		if (newCurrentCredits != previousCredits) {
 			int diff = newCurrentCredits - previousCredits;
@@ -67,7 +67,7 @@ void CreditsDrawer::think() {
 		// decide what sound to play when done
 		if (currentCredits > previousCredits) {
 			soundType = SOUND_CREDITUP;
-		} else if (currentCredits < previousCredits){
+		} else if (currentCredits < previousCredits) {
 			soundType = SOUND_CREDITDOWN;
 		} else {
 			soundType = -1;
@@ -162,38 +162,55 @@ void CreditsDrawer::draw() {
 
 	// draw bmp on screen
 	draw_sprite(bmp_screen, bmp, game.getScreenResolution()->getWidth() - 120, 8);
-//	draw_sprite(bmp_screen, bmp, mouse_x - 120, mouse_y - 8);
+	//	draw_sprite(bmp_screen, bmp, mouse_x - 120, mouse_y - 8);
 }
 
 int CreditsDrawer::getXDrawingOffset(int amount) {
 	int offset = 1;
-	if (amount > 0)		offset = 4;
-	if (amount < 10)	offset =  5;
-	if (amount > 99)	offset =  3;
-	if (amount > 999)	offset =  2;
-	if (amount > 9999) 	offset =  1;
-	if (amount > 99999) offset =  0;
+	if (amount > 0)
+		offset = 4;
+	if (amount < 10)
+		offset = 5;
+	if (amount > 99)
+		offset = 3;
+	if (amount > 999)
+		offset = 2;
+	if (amount > 9999)
+		offset = 1;
+	if (amount > 99999)
+		offset = 0;
 	return offset;
 }
 
 int CreditsDrawer::getCreditDrawId(char c) {
-	if (c == '0') return CREDITS_0;
-	if (c == '1') return CREDITS_1;
-	if (c == '2') return CREDITS_2;
-	if (c == '3') return CREDITS_3;
-	if (c == '4') return CREDITS_4;
-	if (c == '5') return CREDITS_5;
-	if (c == '6') return CREDITS_6;
-	if (c == '7') return CREDITS_7;
-	if (c == '8') return CREDITS_8;
-	if (c == '9') return CREDITS_9;
+	if (c == '0')
+		return CREDITS_0;
+	if (c == '1')
+		return CREDITS_1;
+	if (c == '2')
+		return CREDITS_2;
+	if (c == '3')
+		return CREDITS_3;
+	if (c == '4')
+		return CREDITS_4;
+	if (c == '5')
+		return CREDITS_5;
+	if (c == '6')
+		return CREDITS_6;
+	if (c == '7')
+		return CREDITS_7;
+	if (c == '8')
+		return CREDITS_8;
+	if (c == '9')
+		return CREDITS_9;
 	return CREDITS_NONE;
 }
 
 // current credits are either drawn from 'above' or from below. (depending on direction)
 // the offset pushes them more up or down.
 void CreditsDrawer::drawCurrentCredits() {
-	if (currentCredits < 0) currentCredits = 0;
+	if (currentCredits < 0)
+		currentCredits = 0;
 
 	char credits[9];
 	memset(credits, 0, sizeof(credits));
@@ -201,7 +218,7 @@ void CreditsDrawer::drawCurrentCredits() {
 
 	int offset = getXDrawingOffset(currentCredits);
 
-	for (int i=0; i < 6; i++) {
+	for (int i = 0; i < 6; i++) {
 		// the actual position to draw on is: ((game.screen_x - 120) +
 		//        screen        -  14 + (6 digits (each 20 pixels due borders))
 		int dx = ((offset + i) * 20);
@@ -210,15 +227,15 @@ void CreditsDrawer::drawCurrentCredits() {
 		// the Y is per credit direction
 		if (offset_direction[i] == 1) {
 			// up, means it comes from 'below' and the offset_credit is the 'coming up' part.
-			dy = 20 - (int)offset_credit[i];
+			dy = 20 - (int) offset_credit[i];
 		} else if (offset_direction[i] == 2) {
-			dy = -20 + (int)offset_credit[i];
+			dy = -20 + (int) offset_credit[i];
 		}
 
 		int nr = getCreditDrawId(credits[i]);
 
 		if (nr != CREDITS_NONE) {
-			draw_sprite(bmp, (BITMAP *)gfxdata[nr].dat, dx, dy);
+			draw_sprite(bmp, (BITMAP *) gfxdata[nr].dat, dx, dy);
 		}
 	}
 }
@@ -226,7 +243,8 @@ void CreditsDrawer::drawCurrentCredits() {
 // current credits are either drawn from 'above' or from below. (depending on direction)
 // the offset pushes them more up or down.
 void CreditsDrawer::drawPreviousCredits() {
-	if (previousCredits < 0) previousCredits = 0;
+	if (previousCredits < 0)
+		previousCredits = 0;
 
 	char credits[9];
 	memset(credits, 0, sizeof(credits));
@@ -234,7 +252,7 @@ void CreditsDrawer::drawPreviousCredits() {
 
 	int offset = getXDrawingOffset(previousCredits);
 
-	for (int i=0; i < 6; i++) {
+	for (int i = 0; i < 6; i++) {
 		// the actual position to draw on is: ((game.screen_x - 120) +
 		//        screen        -  14 + (6 digits (each 20 pixels due borders))
 		int dx = ((offset + i) * 20);
@@ -243,14 +261,14 @@ void CreditsDrawer::drawPreviousCredits() {
 		// the Y is per credit direction
 		if (offset_direction[i] == 1) {
 			// up, means it comes from 'below' and the offset_credit is the 'coming up' part.
-			dy = (int)offset_credit[i] * -1;
+			dy = (int) offset_credit[i] * -1;
 		} else if (offset_direction[i] == 2) {
-			dy = (int)offset_credit[i];
+			dy = (int) offset_credit[i];
 		}
 		int nr = getCreditDrawId(credits[i]);
 
 		if (nr != CREDITS_NONE) {
-			draw_sprite(bmp, (BITMAP *)gfxdata[nr].dat, dx, dy);
+			draw_sprite(bmp, (BITMAP *) gfxdata[nr].dat, dx, dy);
 		}
 	}
 }
@@ -259,7 +277,6 @@ void CreditsDrawer::drawPreviousCredits() {
 bool CreditsDrawer::hasDrawnCurrentCredits() {
 	return previousCredits == currentCredits;
 }
-
 
 // UNCOMMENT THIS IF YOU WANT PER CREDIT AN UP/DOWN ANIMATION, move this piece into
 // thinkAboutIndividualCreditOffsets

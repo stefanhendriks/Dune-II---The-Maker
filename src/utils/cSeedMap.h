@@ -8,15 +8,15 @@
  */
 class cSeedMap {
 
-private:
-	int map[MAP_W_MAX][MAP_H_MAX];
+	private:
+		int map[MAP_W_MAX][MAP_H_MAX];
 
-public:
-	cSeedMap();
+	public:
+		cSeedMap();
 
-	void setCellType(int x, int y, int type);
-	int getCellType(int x, int y);
-	char getCellTypeCharacter(int x, int y);
+		void setCellType(int x, int y, int type);
+		int getCellType(int x, int y);
+		char getCellTypeCharacter(int x, int y);
 
 };
 

@@ -25,5 +25,5 @@ void cBarracks::think_animation() {
 }
 
 void cBarracks::think_guard() {
- // do nothing
+	// do nothing
 }

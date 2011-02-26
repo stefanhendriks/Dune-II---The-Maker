@@ -40,7 +40,9 @@ class cItemBuilder {
 
 		int getFreeSlot();
 
-		void setPlayer(cPlayer * thePlayer) { player = thePlayer; }
+		void setPlayer(cPlayer * thePlayer) {
+			player = thePlayer;
+		}
 
 	private:
 		cBuildingListItem *items[MAX_ITEMS];

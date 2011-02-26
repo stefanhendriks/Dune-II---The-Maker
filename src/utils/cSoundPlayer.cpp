@@ -21,32 +21,35 @@ cSoundPlayer::~cSoundPlayer() {
 }
 
 void cSoundPlayer::think() {
-	if (maximumVoices < 0) return;
+	if (maximumVoices < 0)
+		return;
 
-	for(int i = 0;i < maximumVoices; i++) {
+	for (int i = 0; i < maximumVoices; i++) {
 
 		int pos;
 		int voice = voices[i];
 
 		//if it contains a voice get its position
-		if(voice != -1) {
+		if (voice != -1) {
 			pos = voice_get_position(voice);
 		} else {
 			pos = -2;
 		}
 
 		//if it is at the end then release it
-		if(pos == -1)
-		{
+		if (pos == -1) {
 			destroySound(voice, true);
 		}
 	}
 }
 
 void cSoundPlayer::destroySound(int voice, bool force) {
-	if (maximumVoices < 0) return;
-	if (voice < 0) return;
-	if (voices[voice] < 0) return;
+	if (maximumVoices < 0)
+		return;
+	if (voice < 0)
+		return;
+	if (voices[voice] < 0)
+		return;
 
 	if (force) {
 		deallocate_voice(voices[voice]);
@@ -63,14 +66,16 @@ void cSoundPlayer::destroySound(int voice, bool force) {
 }
 
 void cSoundPlayer::playSound(int sampleId, int pan, int vol) {
-	playSound((SAMPLE *)gfxaudio[sampleId].dat, pan, vol);
+	playSound((SAMPLE *) gfxaudio[sampleId].dat, pan, vol);
 }
 
 void cSoundPlayer::playSound(SAMPLE *sample, int pan, int vol) {
-	if (maximumVoices < 0) return;
+	if (maximumVoices < 0)
+		return;
 
 	assert(sample);
-	if (vol < 0) return;
+	if (vol < 0)
+		return;
 	assert(pan >= 0 && pan < 256);
 	assert(vol > 0 && vol <= 256);
 
@@ -78,7 +83,7 @@ void cSoundPlayer::playSound(SAMPLE *sample, int pan, int vol) {
 	int voice = allocate_voice(sample);
 
 	if (voice != -1) {
-		voice_set_playmode(voice,0);
+		voice_set_playmode(voice, 0);
 		voice_set_volume(voice, vol);
 		voice_set_pan(voice, pan);
 		voice_start(voice);

@@ -1,29 +1,30 @@
 // Structure class
 
-class cRocketTurret : public cAbstractStructure
-{
-private:    
-   int iHeadFacing;        // (for turrets only) what is this structure facing at?
-   int iShouldHeadFacing;  // where should we look face at?
-   int iTargetID;           // target id
+class cRocketTurret : public cAbstractStructure {
+	private:
+		int iHeadFacing; // (for turrets only) what is this structure facing at?
+		int iShouldHeadFacing; // where should we look face at?
+		int iTargetID; // target id
 
-   int TIMER_fire;
-   int TIMER_turn;
-   int TIMER_guard;         // timed 'area scanning'
+		int TIMER_fire;
+		int TIMER_turn;
+		int TIMER_guard; // timed 'area scanning'
 
-public:
-    cRocketTurret();
-    ~cRocketTurret();
-  
-    // overloaded functions    
-    void think();
-    void think_animation();
-    void think_guard();
+	public:
+		cRocketTurret();
+		~cRocketTurret();
 
-    void draw(int iStage);
+		// overloaded functions
+		void think();
+		void think_animation();
+		void think_guard();
 
-	int getType();
-	int getHeadFacing() { return iHeadFacing; }
+		void draw(int iStage);
+
+		int getType();
+		int getHeadFacing() {
+			return iHeadFacing;
+		}
 
 };
 

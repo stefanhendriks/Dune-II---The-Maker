@@ -10,7 +10,7 @@
 cTextDrawer::cTextDrawer(ALFONT_FONT *theFont) {
 	assert(theFont);
 	font = theFont;
-	applyShadow=true;
+	applyShadow = true;
 }
 
 cTextDrawer::cTextDrawer() {
@@ -23,27 +23,27 @@ cTextDrawer::~cTextDrawer() {
 
 void cTextDrawer::drawTextWithTwoIntegers(int x, int y, const char * msg, int var1, int var2) {
 	if (applyShadow) {
-		alfont_textprintf(bmp_screen, font, x + 1,y + 1, makecol(0,0,0), msg, var1, var2);
+		alfont_textprintf(bmp_screen, font, x + 1, y + 1, makecol(0, 0, 0), msg, var1, var2);
 	}
-	alfont_textprintf(bmp_screen, font, x,y, makecol(255,255,255), msg, var1, var2);
+	alfont_textprintf(bmp_screen, font, x, y, makecol(255, 255, 255), msg, var1, var2);
 }
 
 void cTextDrawer::drawTextWithOneInteger(int x, int y, const char * msg, int var) {
 	if (applyShadow) {
-		alfont_textprintf(bmp_screen, font, x + 1,y + 1, makecol(0,0,0), msg, var);
+		alfont_textprintf(bmp_screen, font, x + 1, y + 1, makecol(0, 0, 0), msg, var);
 	}
-	alfont_textprintf(bmp_screen, font, x,y, makecol(255,255,255), msg, var);
+	alfont_textprintf(bmp_screen, font, x, y, makecol(255, 255, 255), msg, var);
 }
 
 void cTextDrawer::drawText(int x, int y, const char * msg, int color) {
 	if (applyShadow) {
-		alfont_textprintf(bmp_screen, font, x + 1,y + 1, makecol(0,0,0), msg);
+		alfont_textprintf(bmp_screen, font, x + 1, y + 1, makecol(0, 0, 0), msg);
 	}
-	alfont_textprintf(bmp_screen, font, x,y, color, msg);
+	alfont_textprintf(bmp_screen, font, x, y, color, msg);
 }
 
 void cTextDrawer::drawText(int x, int y, const char * msg) {
-	drawText(x, y, msg, makecol(255,255,255));
+	drawText(x, y, msg, makecol(255, 255, 255));
 }
 
 void cTextDrawer::drawTextCentered(const char *msg, int y) {

@@ -27,7 +27,6 @@ class cPlayer;
 #define LIST_STARPORT	6
 #define LIST_PALACE		7
 #define LIST_MAX		8			// max amount of lists
-
 /**
  * Basically a container:
  * - building lists
@@ -43,17 +42,25 @@ class cSideBar {
 		cSideBar(cPlayer *thePlayer);
 		~cSideBar();
 
-		cBuildingList * getList(int listId) { return lists[listId]; }
+		cBuildingList * getList(int listId) {
+			return lists[listId];
+		}
 		void setList(int listId, cBuildingList *list);
-		int getSelectedListID() { return selectedListID; }
+		int getSelectedListID() {
+			return selectedListID;
+		}
 
-		void think();	// timer based
+		void think(); // timer based
 		void thinkInteraction(); // fps based
 		void thinkUpgradeButton(); // fps based
 
 		// set
-		void setPlayer(cPlayer *thePlayer) { player = thePlayer; }
-		void setSelectedListId(int value) { selectedListID = value; }
+		void setPlayer(cPlayer *thePlayer) {
+			player = thePlayer;
+		}
+		void setSelectedListId(int value) {
+			selectedListID = value;
+		}
 
 	private:
 

@@ -10,15 +10,15 @@
 cMouse *cMouse::instance = NULL;
 
 cMouse::cMouse() {
-	x=y=z=0;
-	leftButtonPressed=false;
-	rightButtonPressed=false;
-	leftButtonPressedInPreviousFrame=false;
-	rightButtonPressedInPreviousFrame=false;
-	leftButtonClicked=false;
-	rightButtonClicked=false;
-	mouseScrolledUp=false;
-	mouseScrolledDown=false;
+	x = y = z = 0;
+	leftButtonPressed = false;
+	rightButtonPressed = false;
+	leftButtonPressedInPreviousFrame = false;
+	rightButtonPressedInPreviousFrame = false;
+	leftButtonClicked = false;
+	rightButtonClicked = false;
+	mouseScrolledUp = false;
+	mouseScrolledDown = false;
 	zValuePreviousFrame = mouse_z;
 }
 

@@ -20,8 +20,8 @@ void cInteractionManager::interact() {
 	interactWithSidebar();
 }
 
-void cInteractionManager::interactWithKeyboard(){
-    keyboardManager.interact();
+void cInteractionManager::interactWithKeyboard() {
+	keyboardManager.interact();
 }
 
 void cInteractionManager::interactWithSidebar() {

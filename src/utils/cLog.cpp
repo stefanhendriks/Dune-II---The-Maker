@@ -35,7 +35,7 @@ std::string cLogger::getLogLevelString(eLogLevel level) {
 }
 
 std::string cLogger::getLogComponentString(eLogComponent component) {
-	switch(component) {
+	switch (component) {
 		case COMP_UNITS:
 			return std::string("UNITS");
 		case COMP_STRUCTURES:
@@ -109,7 +109,6 @@ std::string cLogger::getLogHouseString(int houseId) {
 	return std::string("UNIDENTIFIED");
 }
 
-
 // courtesy from : http://www.codeguru.com/forum/showthread.php?t=477894
 std::string cLogger::getCurrentFormattedTime() {
 	struct tm* ts;
@@ -124,12 +123,13 @@ std::string cLogger::getCurrentFormattedTime() {
 }
 
 void cLogger::updateTime() {
-	current_time = time (NULL);
+	current_time = time(NULL);
 }
 
 void cLogger::logHeader(const char *txt) {
 	int length = strlen(txt);
-	if (length > 79) length = 79;
+	if (length > 79)
+		length = 79;
 	std::string line(length, '-');
 
 	char *str = new char[line.length() + 1];
@@ -170,8 +170,8 @@ void cLogger::log(eLogLevel level, eLogComponent component, const char *event, c
 	logline += sComponent;
 
 	if (playerId >= GENERALHOUSE) {
-			logline += "|";
-			logline += getLogHouseString(houseId);
+		logline += "|";
+		logline += getLogHouseString(houseId);
 	}
 
 	if (playerId >= HUMAN) {
@@ -223,6 +223,6 @@ void cLogger::logCommentLine(const char *txt) {
 long cLogger::getTimeInMilisDifference() /* From 1970-01-01T00:00:00 */
 {
 	long time_taken_millis;
-	time_taken_millis = (long)((clock()-startTime)*1E3/CLOCKS_PER_SEC);
+	time_taken_millis = (long) ((clock() - startTime) * 1E3 / CLOCKS_PER_SEC);
 	return time_taken_millis;
 }
