@@ -22,13 +22,17 @@ cMiniMapDrawer::~cMiniMapDrawer() {
 
 void cMiniMapDrawer::drawViewPortRectangle() {
 	// Draw the magic rectangle (viewport)
-	int iWidth = ((game.getScreenResolution()->getWidth() - 160) / 32);
-	int iHeight = ((game.getScreenResolution()->getWidth() - 42) / 32) + 1;
+	int iWidth = mapCamera->getViewportWidth();
+	int iHeight = mapCamera->getViewportHeight();
 
 	iWidth--;
 	iHeight--;
-	rect(bmp_screen, getDrawStartX() + (mapCamera->getX() * 2), getDrawStartY() + (mapCamera->getY() * 2), ((getDrawStartX() + (mapCamera->getX() * 2)) + iWidth
-			* 2) + 1, (getDrawStartY() + (mapCamera->getY() * 2) + iHeight * 2) + 1, makecol(255, 255, 255));
+	int x = getDrawStartX();
+	int y = getDrawStartY();
+	rect(bmp_screen,
+		x + (mapCamera->getX() * 2), y + (mapCamera->getY() * 2),
+		((x + (mapCamera->getX() * 2)) + iWidth * 2) + 1,
+		(y + (mapCamera->getY() * 2) + iHeight * 2) + 1, makecol(255, 255, 255));
 }
 
 int cMiniMapDrawer::getDrawStartX() {
@@ -170,9 +174,6 @@ int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
 }
 
 void cMiniMapDrawer::interact() {
-	int iWidth = mapCamera->getViewportWidth();
-	int iHeight = mapCamera->getViewportHeight();
-
 	// interact with mouse
 	if (mouse_x >= getDrawStartX() && mouse_y >= getDrawStartY()) {
 		// pressed the mouse and not boxing anything..
