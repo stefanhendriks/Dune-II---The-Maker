@@ -397,21 +397,22 @@ void cGame::think_mentat() {
 
 // TODO: Move to music related class (MusicPlayer?)
 void cGame::think_music() {
-	// all this does is repeating music in the same theme.
-
-	if (iMusicType < 0)
+	if (iMusicType < 0) {
 		return;
+	}
+	if (!bPlaySound) {
+		return;
+	}
 
 	// When mp3 mode
 	if (bMp3) {
-
 		if (mp3_music != NULL) {
 			int s = almp3_poll_mp3(mp3_music);
 
 			if (s == ALMP3_POLL_PLAYJUSTFINISHED || s == ALMP3_POLL_NOTPLAYING) {
-				if (iMusicType == MUSIC_ATTACK)
+				if (iMusicType == MUSIC_ATTACK) {
 					iMusicType = MUSIC_PEACE; // set back to peace
-
+				}
 				playMusicByType(iMusicType);
 			}
 		}
@@ -434,6 +435,7 @@ void cGame::think_music() {
 void cGame::poll() {
 	cMouse::getInstance()->updateState();
 	cGameControlsContext * context = player[HUMAN].getGameControlsContext();
+	assert(context);
 	context->updateState();
 
 	clear(bmp_screen);
@@ -513,22 +515,24 @@ void cGame::poll() {
 }
 
 void cGame::combat() {
-
 	if (iFadeAction == 1) // fading out
 	{
+		logbook("cGame:combat - fade action = 1[END]");
 		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
 		return;
 	}
 
-	if (iAlphaScreen == 0)
+	if (iAlphaScreen == 0) {
 		iFadeAction = 2;
+	}
+
 	// -----------------
 	bPlacedIt = bPlaceIt;
 
 	assert(gameDrawer);
 	gameDrawer->draw();
 	assert(interactionManager);
-	interactionManager->interact();
+	interactionManager->interactWithMouse();
 
 	// think win/lose
 	think_winlose();
@@ -746,9 +750,7 @@ void cGame::mentat(int iType) {
 
 // draw menu
 void cGame::menu() {
-	// FADING STUFF
-	if (iFadeAction == 1) // fading out
-	{
+	if (iFadeAction == 1) {
 		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
 		return;
 	}
@@ -756,20 +758,8 @@ void cGame::menu() {
 	if (iAlphaScreen == 0) {
 		iFadeAction = 2;
 	}
-	// -----------------
 
 	bool bFadeOut = false;
-
-	if (DEBUGGING) {
-		for (int x = 0; x < game.getScreenResolution()->getWidth(); x += 60) {
-			for (int y = 0; y < game.getScreenResolution()->getHeight(); y += 20) {
-				rect(bmp_screen, x, y, x + 50, y + 10, makecol(64, 64, 64));
-				putpixel(bmp_screen, x, y, makecol(255, 255, 255));
-				alfont_textprintf(bmp_screen, bene_font, x, y, makecol(32, 32, 32), "Debug");
-			}
-
-		}
-	}
 
 	cTextDrawer * textDrawer = new cTextDrawer(bene_font);
 
@@ -787,7 +777,7 @@ void cGame::menu() {
 		alfont_textprintf(bmp_screen, bene_font, 261, 323, makecol(255, 0, 0), "Campaign");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
-			state = HOUSE; // select house
+			state = SELECTHOUSE;
 			bFadeOut = true;
 		}
 
@@ -828,7 +818,6 @@ void cGame::menu() {
 		alfont_textprintf(bmp_screen, bene_font, 261, 363, makecol(255, 0, 0), "Multiplayer");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
-			//game.state = SETUPSKIRMISH;
 			bFadeOut = true;
 
 			// check if the game can be server or client
@@ -848,7 +837,6 @@ void cGame::menu() {
 		alfont_textprintf(bmp_screen, bene_font, 261, 383, makecol(255, 0, 0), "Load");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
-			//            game.state = SETUPSKIRMISH;
 			bFadeOut = true;
 		}
 
@@ -864,7 +852,6 @@ void cGame::menu() {
 		alfont_textprintf(bmp_screen, bene_font, 261, 403, makecol(255, 0, 0), "Options");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
-			//            game.state = SETUPSKIRMISH;
 			bFadeOut = true;
 		}
 
@@ -874,9 +861,7 @@ void cGame::menu() {
 		alfont_textprintf(bmp_screen, bene_font, 261, 403, makecol(255, 255, 255), "Options");
 	}
 
-	// EXIT
 	if ((mouse_x >= 246 && mouse_x <= 373) && (mouse_y >= 424 && mouse_y <= 442)) {
-
 		alfont_textprintf(bmp_screen, bene_font, 261, 424, makecol(0, 0, 0), "Hall of Fame");
 		alfont_textprintf(bmp_screen, bene_font, 261, 423, makecol(255, 0, 0), "Hall of Fame");
 	} else {
@@ -884,14 +869,14 @@ void cGame::menu() {
 		alfont_textprintf(bmp_screen, bene_font, 261, 423, makecol(255, 255, 255), "Hall of Fame");
 	}
 
-	// EXIT
 	if ((mouse_x >= 246 && mouse_x <= 373) && (mouse_y >= 444 && mouse_y <= 462)) {
 		alfont_textprintf(bmp_screen, bene_font, 261, 444, makecol(0, 0, 0), "Exit");
 		alfont_textprintf(bmp_screen, bene_font, 261, 443, makecol(255, 0, 0), "Exit");
 
 		// quit
-		if (cMouse::getInstance()->isLeftButtonClicked())
+		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			game.bPlaying = false;
+		}
 	} else {
 		alfont_textprintf(bmp_screen, bene_font, 261, 444, makecol(0, 0, 0), "Exit");
 		alfont_textprintf(bmp_screen, bene_font, 261, 443, makecol(255, 255, 255), "Exit");
@@ -899,10 +884,11 @@ void cGame::menu() {
 
 	alfont_textprintf(bmp_screen, bene_font, 291, 1, makecol(64, 64, 64), "CREDITS");
 
-	if (mouse_y < 24)
+	if (mouse_y < 24) {
 		alfont_textprintf(bmp_screen, bene_font, 290, 0, makecol(255, 0, 0), "CREDITS");
-	else
+	} else {
 		alfont_textprintf(bmp_screen, bene_font, 290, 0, makecol(255, 255, 255), "CREDITS");
+	}
 
 	// draw version
 	textDrawer->drawTextBottomRight(version);
@@ -1518,7 +1504,8 @@ void cGame::setup_skirmish() {
 		iMission = 9; // high tech level (TODO: make this customizable)
 		state = PLAYING;
 
-		game.setup_players();
+		cGameFactory::getInstance()->createNewDependenciesForGame(state);
+		//game.setup_players();
 		assert(player[HUMAN].getItemBuilder() != NULL);
 
 		bFadeOut = true;
@@ -1635,9 +1622,11 @@ void cGame::preparementat(bool bIntroduceHouseBriefing) {
 		}
 	} else {
 		if (isState(BRIEFING)) {
-			cGameFactory::getInstance()->createNewDependenciesForGame();
+			cGameFactory::getInstance()->createNewDependenciesForGame(BRIEFING);
 
 			INI_Load_scenario(iHouse, iRegion);
+
+			cGameFactory::getInstance()->createInteractionManagerForHumanPlayer(PLAYING);
 
 			if (gameDrawer) {
 				delete gameDrawer;
@@ -1705,7 +1694,7 @@ void cGame::tellhouse() {
 			if (cMouse::getInstance()->isLeftButtonClicked()) {
 				// head back to choose house
 				iHouse = -1;
-				setState(HOUSE);
+				setState(SELECTHOUSE);
 				bFadeOut = true;
 			}
 		}
@@ -2145,7 +2134,7 @@ void cGame::runGameState() {
 		case REGION:
 			region();
 			break;
-		case HOUSE:
+		case SELECTHOUSE:
 			house();
 			break;
 		case TELLHOUSE:
@@ -2609,52 +2598,14 @@ bool cGame::setupGame() {
 	INSTALL_WORLD();
 
 	game.init();
-	game.setup_players();
+	cGameFactory::getInstance()->createGameControlsContextsForPlayers();
+	cGameFactory::getInstance()->createInteractionManagerForHumanPlayer(INMENU);
 
 	playMusicByType(MUSIC_MENU);
 
 	// all has installed well. Lets rock and role.
 	return true;
 
-}
-
-void cGame::setup_players() {
-	logbook("BEGIN: setup_players");
-	if (interactionManager) {
-		delete interactionManager;
-		interactionManager = NULL;
-	}
-
-	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
-		cPlayer * thePlayer = &player[i];
-		thePlayer->setId(i);
-
-		cItemBuilder * itemBuilder = new cItemBuilder(thePlayer);
-		thePlayer->setItemBuilder(itemBuilder);
-
-		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(&player[i], game.iMission, iHouse);
-		thePlayer->setSideBar(sidebar);
-
-		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(thePlayer);
-		thePlayer->setBuildingListUpdater(buildingListUpdater);
-
-		cStructurePlacer * structurePlacer = new cStructurePlacer(thePlayer);
-		thePlayer->setStructurePlacer(structurePlacer);
-
-		cUpgradeBuilder * upgradeBuilder = new cUpgradeBuilder(thePlayer);
-		thePlayer->setUpgradeBuilder(upgradeBuilder);
-
-		cOrderProcesser * orderProcesser = new cOrderProcesser(thePlayer);
-		thePlayer->setOrderProcesser(orderProcesser);
-
-		cGameControlsContext * gameControlsContext = new cGameControlsContext(thePlayer);
-		thePlayer->setGameControlsContext(gameControlsContext);
-
-		thePlayer->setTechLevel(game.iMission);
-	}
-
-	interactionManager = new cInteractionManager(&player[HUMAN]);
-	logbook("END: setup_players");
 }
 
 bool cGame::isState(GameState theState) {

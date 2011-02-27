@@ -110,7 +110,10 @@ void cTimeManager::handleTimerGlobal() {
 			}
 		}
 
-		game.getSoundPlayer()->think();
+		cSoundPlayer * soundPlayer = game.getSoundPlayer();
+		if (soundPlayer) {
+			soundPlayer->think();
+		}
 		game.think_music();
 		game.think_mentat();
 		cMoviePlayer * moviePlayer = game.getMoviePlayer();
@@ -198,20 +201,13 @@ void cTimeManager::handleTimerGlobal() {
 					particle[i].think();
 			}
 
-			/*
-			 BEGIN_PROF("Players think");
-			 for (i=0; i < MAX_PLAYERS; i++)
-			 player[i].think(i);
-			 END_PROF();
-
-			 } // game playing
-			 */
-
 			// when not drawing the options, the game does all it needs to do
 			// bullets think
-			for (int i = 0; i < MAX_BULLETS; i++)
-				if (bullet[i].bAlive)
+			for (int i = 0; i < MAX_BULLETS; i++) {
+				if (bullet[i].bAlive) {
 					bullet[i].think();
+				}
+			}
 
 		}
 
@@ -238,16 +234,20 @@ void cTimeManager::handleTimerUnits() {
 
 	while (timerUnits > 0) {
 		if (game.isState(PLAYING)) {
-			// units think
-			for (int i = 0; i < MAX_UNITS; i++)
-				if (unit[i].isValid()) {
-					unit[i].think();
+			if (map) {
+				// units think
+				for (int i = 0; i < MAX_UNITS; i++) {
+					if (unit[i].isValid()) {
+						unit[i].think();
 
-					// Think attack style
-					if (unit[i].iAction == ACTION_ATTACK)
-						unit[i].think_attack();
+						// Think attack style
+						if (unit[i].iAction == ACTION_ATTACK) {
+							unit[i].think_attack();
+						}
+					}
 				}
-			map->think_minimap();
+				map->think_minimap();
+			}
 		}
 
 		timerUnits--;

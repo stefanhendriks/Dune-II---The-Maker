@@ -12,5 +12,7 @@ class cPlayer;
 
 #include "cKeyboardManager.h"
 #include "cInteractionManager.h"
+#include "cMenuInteractionManager.h"
+#include "cCombatInteractionManager.h"
 
 #endif /* MANAGERH_H_ */

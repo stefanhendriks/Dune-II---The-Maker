@@ -2446,7 +2446,6 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan) {
 						if (PreviewMap[iNew].terrain == NULL) {
 							PreviewMap[iNew].terrain = create_bitmap(128, 128);
 							clear(PreviewMap[iNew].terrain);
-							//clear_to_color(PreviewMap[iNew].terrain, makecol(255,255,255));
 						}
 						continue; // skip
 					}

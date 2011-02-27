@@ -58,8 +58,7 @@ class cGame {
 		void losing();
 		bool bPlaceIt;
 		bool bPlacedIt;
-		void setup_players();
-		void think_message();
+
 		void think_music();
 		char mentat_sentence[10][255];
 		int TIMER_mentat_Speaking;

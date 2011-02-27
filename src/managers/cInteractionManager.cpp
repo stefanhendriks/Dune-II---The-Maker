@@ -9,25 +9,15 @@
 
 cInteractionManager::cInteractionManager(cPlayer * thePlayer) {
 	assert(thePlayer);
-	sidebar = thePlayer->getSideBar();
+	player = thePlayer;
 }
 
 cInteractionManager::~cInteractionManager() {
-	sidebar = NULL;
 }
 
-void cInteractionManager::interact() {
-	interactWithSidebar();
+void cInteractionManager::interactWithMouse() {
 }
 
 void cInteractionManager::interactWithKeyboard() {
 	keyboardManager.interact();
-}
-
-void cInteractionManager::interactWithSidebar() {
-	sidebar->thinkInteraction();
-	cMiniMapDrawer * miniMapDrawer = gameDrawer->getMiniMapDrawer();
-	if (miniMapDrawer) {
-		miniMapDrawer->interact();
-	}
 }

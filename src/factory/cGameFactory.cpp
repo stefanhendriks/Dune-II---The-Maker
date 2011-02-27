@@ -27,6 +27,8 @@ cGameFactory::~cGameFactory() {
 }
 
 void cGameFactory::createDependenciesForPlayers() {
+	logbook("cGameFactory:createDependenciesForPlayers [BEGIN]");
+
 	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
 		cPlayer * thePlayer = &player[i];
 		thePlayer->setId(i);
@@ -49,22 +51,55 @@ void cGameFactory::createDependenciesForPlayers() {
 		cOrderProcesser * orderProcesser = new cOrderProcesser(thePlayer);
 		thePlayer->setOrderProcesser(orderProcesser);
 
-		cGameControlsContext * gameControlsContext = new cGameControlsContext(thePlayer);
-		thePlayer->setGameControlsContext(gameControlsContext);
-
 		thePlayer->setTechLevel(game.iMission);
 	}
+	logbook("cGameFactory:createDependenciesForPlayers [END]");
+
 }
 
-void cGameFactory::createNewDependenciesForGame() {
+void cGameFactory::createGameControlsContextsForPlayers() {
+	logbook("cGameFactory:createGameControlsContextsForPlayers [BEGIN]");
+
+	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
+		cPlayer * thePlayer = &player[i];
+		thePlayer->setId(i);
+
+		cGameControlsContext * gameControlsContext = new cGameControlsContext(thePlayer);
+		thePlayer->setGameControlsContext(gameControlsContext);
+	}
+
+	logbook("cGameFactory:createGameControlsContextsForPlayers [END]");
+}
+
+void cGameFactory::createInteractionManagerForHumanPlayer(GameState state) {
+	logbook("cGameFactory:createInteractionManagerForHumanPlayer [BEGIN]");
 	if (interactionManager) {
 		delete interactionManager;
 		interactionManager = NULL;
 	}
+	cPlayer * thePlayer = &player[HUMAN];
+	switch (state) {
+		case INMENU:
+			interactionManager = new cMenuInteractionManager(thePlayer);
+			break;
+		case PLAYING:
+			interactionManager = new cCombatInteractionManager(thePlayer);
+			break;
+		case BRIEFING:
+			interactionManager = new cMenuInteractionManager(thePlayer);
+			break;
+		default:
+			interactionManager = NULL;
+	}
+	assert(interactionManager);
+	logbook("cGameFactory:createInteractionManagerForHumanPlayer [END]");
+}
 
-	createDependenciesForPlayers();
-
-	interactionManager = new cInteractionManager(&player[HUMAN]);
+void cGameFactory::createNewDependenciesForGame(GameState state) {
+	logbook("cGameFactory:createNewDependenciesForGame [BEGIN]");
+	createInteractionManagerForHumanPlayer(state);
+    createDependenciesForPlayers();
+	createGameControlsContextsForPlayers();
 
 	if (mapUtils) {
 		delete mapUtils;
@@ -84,6 +119,7 @@ void cGameFactory::createNewDependenciesForGame() {
 	mapCamera = new cMapCamera();
 	map = new cMap(64, 64);
 	mapUtils = new cMapUtils(map);
+	logbook("cGameFactory:createNewDependenciesForGame [END]");
 }
 
 cGameFactory * cGameFactory::getInstance() {

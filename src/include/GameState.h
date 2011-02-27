@@ -10,7 +10,7 @@ enum GameState {
 	EDITING,	// running the editor
 	OPTIONS,	// options menu
 	REGION,		// select a region
-	HOUSE=8,	// pick a house
+	SELECTHOUSE=8,	// pick a house
 	INTRO,		// playing intro
 	TELLHOUSE,	// tell about the house
 	WINNING,	// when winning, do some cool animation

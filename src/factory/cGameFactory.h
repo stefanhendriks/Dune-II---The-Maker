@@ -7,7 +7,9 @@ class cGameFactory {
 
 		static cGameFactory *getInstance();
 
-		void createNewDependenciesForGame();
+		void createNewDependenciesForGame(GameState state);
+		void createGameControlsContextsForPlayers();
+	    void createInteractionManagerForHumanPlayer(GameState state);
 
 	protected:
 		~cGameFactory();

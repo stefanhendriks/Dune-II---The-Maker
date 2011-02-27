@@ -1204,9 +1204,12 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 // play type of music
 void playMusicByType(int iType) {
 	if (!game.bPlaySound) {
+		char msg[255];
+		sprintf(msg, "playMusicByType for music type [%d], does nothing because bPlaySound flag is set to [false]", iType);
+		logbook(msg);
 		return;
 	}
-	logbook("BEGIN: playMusicByType");
+	logbook("playMusicByType [BEGIN]");
 	game.iMusicType = iType;
 
 
@@ -1280,7 +1283,7 @@ void playMusicByType(int iType) {
 		// play midi file
 		play_midi((MIDI *) gfxaudio[iNumber].dat, 0);
 	}
-	logbook("END: playMusicByType");
+	logbook("playMusicByType [END]");
 }
 
 /******************************

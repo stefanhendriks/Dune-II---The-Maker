@@ -40,7 +40,6 @@ cGameDrawer::~cGameDrawer() {
 }
 
 void cGameDrawer::draw() {
-	// MAP
 	assert(mapDrawer);
 	map->draw_think();
 	mapDrawer->drawTerrain();
