@@ -88,6 +88,9 @@ void cGameFactory::createInteractionManagerForHumanPlayer(GameState state) {
 		case BRIEFING:
 			interactionManager = new cMenuInteractionManager(thePlayer);
 			break;
+		case SETUPSKIRMISH:
+			interactionManager = new cMenuInteractionManager(thePlayer);
+			break;
 		default:
 			interactionManager = NULL;
 	}
@@ -95,9 +98,18 @@ void cGameFactory::createInteractionManagerForHumanPlayer(GameState state) {
 	logbook("cGameFactory:createInteractionManagerForHumanPlayer [END]");
 }
 
+void cGameFactory::createNewGameDrawerAndSetCreditsForHuman() {
+	if (gameDrawer) {
+		delete gameDrawer;
+		gameDrawer = NULL;
+	}
+
+	gameDrawer = new cGameDrawer(&player[HUMAN]);
+	gameDrawer->getCreditsDrawer()->setCreditsOfPlayer();
+}
+
 void cGameFactory::createNewDependenciesForGame(GameState state) {
 	logbook("cGameFactory:createNewDependenciesForGame [BEGIN]");
-	createInteractionManagerForHumanPlayer(state);
     createDependenciesForPlayers();
 	createGameControlsContextsForPlayers();
 
@@ -119,6 +131,10 @@ void cGameFactory::createNewDependenciesForGame(GameState state) {
 	mapCamera = new cMapCamera();
 	map = new cMap(64, 64);
 	mapUtils = new cMapUtils(map);
+
+	createNewGameDrawerAndSetCreditsForHuman();
+	createInteractionManagerForHumanPlayer(state);
+
 	logbook("cGameFactory:createNewDependenciesForGame [END]");
 }
 

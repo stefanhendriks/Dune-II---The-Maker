@@ -26,6 +26,7 @@ void cCombatInteractionManager::interactWithKeyboard() {
 }
 
 void cCombatInteractionManager::interactWithSidebar() {
+	assert(sidebar);
 	sidebar->thinkInteraction();
 	cMiniMapDrawer * miniMapDrawer = gameDrawer->getMiniMapDrawer();
 	assert(miniMapDrawer);

@@ -2386,102 +2386,88 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan) {
 			iNew = i;
 			break;
 		}
-
 	}
 
 	if (iNew < 0) {
+		logbook("Could not find index for a map. Maximum exceeded.");
 		return;
 	}
 
-	// first clear it all out
-	for (int x = 0; x < map->getWidth(); x++) {
-		for (int y = 0; y < map->getHeight(); y++) {
-			int cll = iCellMake(x, y);
-			PreviewMap[iNew].mapdata[cll] = TERRAIN_SAND;
-		}
+	// clear terrain data
+	for (int c = 0; c < MAX_CELLS; c++) {
+		PreviewMap[iNew].terrainType[c] = TERRAIN_SAND;
 	}
 
 	// Load file
-
-	FILE *stream; // file stream
-	int section = INI_NONE; // section
-	int wordtype = WORD_NONE; // word
+	FILE *stream;
+	int currentSection = INI_NONE;
+	int wordtype = WORD_NONE;
 
 	int iYLine = 0;
-	int iStart = 0;
+	int startCellCounter = 0;
+
+	for (int i = 0; i < 5; i++) {
+		PreviewMap[iNew].iStartCell[i] = -1;
+	}
 
 	if ((stream = fopen(filename, "r+t")) != NULL) {
 		char linefeed[MAX_LINE_LENGTH];
 		char lineword[25];
 		char linesection[30];
 
-		for (int iCl = 0; iCl < MAX_LINE_LENGTH; iCl++) {
-			linefeed[iCl] = '\0';
-			if (iCl < 25)
-				lineword[iCl] = '\0';
-			if (iCl < 30)
-				linesection[iCl] = '\0';
-		}
+		memset(linefeed, '\0', sizeof(linefeed));
+		memset(lineword, '\0', sizeof(lineword));
+		memset(linesection, '\0', sizeof(linesection));
 
-		// infinite loop baby
 		while (!feof(stream)) {
 			INI_Sentence(stream, linefeed);
 
-			// Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-			// character (which is "//", ";" or "#"), or an empty line, then skip it
 			if (isCommentLine(linefeed)) {
-				continue; // Skip
+				continue;
 			}
 
 			// Every line is checked for a new section.
 			INI_Section(linefeed, linesection);
 
 			if (linesection[0] != '\0' && strlen(linesection) > 1) {
-				int iOld = section;
-				section = INI_SectionType(linesection, section);
+				int previousSection = currentSection;
+				currentSection = INI_SectionType(linesection, currentSection);
 
-				// section found
-				if (iOld != section) {
-					if (section == INI_MAP) {
+				if (previousSection != currentSection) { // new section found
+
+					if (currentSection == INI_MAP) {
 						if (PreviewMap[iNew].terrain == NULL) {
 							PreviewMap[iNew].terrain = create_bitmap(128, 128);
 							clear(PreviewMap[iNew].terrain);
 						}
 						continue; // skip
 					}
+
 				}
 			}
 
-			// Okay, we found a new section; if its NOT [GAME] then we remember this one!
-
-			if (section != INI_NONE) {
+			if (currentSection != INI_NONE) {
 				INI_Word(linefeed, lineword);
-				wordtype = INI_WordType(lineword, section);
+				wordtype = INI_WordType(lineword, currentSection);
 			} else {
 				continue;
 			}
 
-			if (section == INI_SKIRMISH) {
+			if (currentSection == INI_SKIRMISH) {
 				if (wordtype == WORD_MAPNAME) {
 					INI_WordValueSENTENCE(linefeed, PreviewMap[iNew].name);
-					//logbook(PreviewMap[iNew].name);
 				}
 
 				if (wordtype == WORD_STARTCELL) {
-					if (iStart == 0) {
-						for (int i = 0; i < 5; i++)
-							PreviewMap[iNew].iStartCell[i] = -1;
-					}
-
 					// start locations
-					if (iStart < 5) {
-						PreviewMap[iNew].iStartCell[iStart] = INI_WordValueINT(linefeed);
-						iStart++;
+					if (startCellCounter < 5) {
+						PreviewMap[iNew].iStartCell[startCellCounter] = INI_WordValueINT(linefeed);
+						startCellCounter++;
 					}
 				}
 			}
 
-			if (section == INI_MAP) {
+			if (currentSection == INI_MAP) {
 				int iLength = strlen(linefeed);
 
 				// END!
@@ -2530,22 +2516,22 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan) {
 
 					if (iCll > -1) {
 						if (iColor == makecol(194, 125, 60)) {
-							PreviewMap[iNew].mapdata[iCll] = TERRAIN_SAND;
+							PreviewMap[iNew].terrainType[iCll] = TERRAIN_SAND;
 						} else if (iColor == makecol(80, 80, 60)) {
-							PreviewMap[iNew].mapdata[iCll] = TERRAIN_ROCK;
+							PreviewMap[iNew].terrainType[iCll] = TERRAIN_ROCK;
 						} else if (iColor == makecol(48, 48, 36)) {
-							PreviewMap[iNew].mapdata[iCll] = TERRAIN_MOUNTAIN;
+							PreviewMap[iNew].terrainType[iCll] = TERRAIN_MOUNTAIN;
 						} else if (iColor == makecol(180, 90, 25)) {
-							PreviewMap[iNew].mapdata[iCll] = TERRAIN_SPICEHILL;
+							PreviewMap[iNew].terrainType[iCll] = TERRAIN_SPICEHILL;
 						} else if (iColor == makecol(186, 93, 32)) {
-							PreviewMap[iNew].mapdata[iCll] = TERRAIN_SPICE;
+							PreviewMap[iNew].terrainType[iCll] = TERRAIN_SPICE;
 						} else if (iColor == makecol(188, 115, 50)) {
-							PreviewMap[iNew].mapdata[iCll] = TERRAIN_HILL;
+							PreviewMap[iNew].terrainType[iCll] = TERRAIN_HILL;
 						} else {
 							char msg[255];
 							sprintf(msg, "iniLoader::skirmish() - Could not determine terrain type for char \"%c\", falling back to SAND", letter[0]);
 							logbook(msg);
-							PreviewMap[iNew].mapdata[iCll] = TERRAIN_SAND;
+							PreviewMap[iNew].terrainType[iCll] = TERRAIN_SAND;
 							iColor = makecol(255, 255, 255);
 						}
 					}
@@ -2575,8 +2561,11 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan) {
 		}
 		fclose(stream);
 
-	} // file exists
-
+	} else {
+		char msg[255];
+		sprintf(msg, "INI_LOAD_SKIRMISH : Could not open file [%s]", filename);
+		logbook(msg);
+	}
 }
 
 /*
@@ -2586,12 +2575,14 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan) {
  - read [SKIRMISH] data (name of map, startcells, etc)
  - create preview of map in BITMAP (minimap preview)
  */
-void INI_PRESCAN_SKIRMISH() {
-	// scans for all ini files
+void INI_LOAD_MAPS_INTO_PREVIEWMAP_OBJECTS() {
+	logbook("INI_PRESCAN_SKIRMISH [BEGIN]");
+
 	INIT_PREVIEWS(); // clear all of them
 
+
 	struct al_ffblk file;
-	if (!al_findfirst("skirmish/*", &file, FA_ARCH)) {
+	if (!al_findfirst("skirmish/*.ini", &file, FA_ARCH)) {
 		do {
 			char msg[1024];
 			char fullname[1024];
@@ -2604,6 +2595,7 @@ void INI_PRESCAN_SKIRMISH() {
 		logbook("No skirmish maps found in skirmish directory.");
 	}
 	al_findclose(&file);
+	logbook("INI_PRESCAN_SKIRMISH [END]");
 
 }
 

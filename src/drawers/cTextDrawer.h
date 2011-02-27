@@ -28,11 +28,16 @@ class cTextDrawer {
 			applyShadow = value;
 		}
 
+		void setTextColor(int value) {
+			textColor = value;
+		}
+
 	protected:
 
 	private:
 		ALFONT_FONT *font;
 		bool applyShadow;
+		int textColor;
 
 };
 

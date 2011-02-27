@@ -90,12 +90,12 @@ void cTimeManager::handleTimerFPS() {
 
 		timerSecond--; // done!
 	}
-
 }
 
 void cTimeManager::handleTimerGlobal() {
 	// keep up with time cycles
 	while (timerGlobal > 0) {
+
 		if (game.iFadeAction == 1) {
 			game.iAlphaScreen -= 2;
 			if (game.iAlphaScreen < 0) {
@@ -231,7 +231,6 @@ void cTimeManager::handleTimerGlobal() {
 }
 
 void cTimeManager::handleTimerUnits() {
-
 	while (timerUnits > 0) {
 		if (game.isState(PLAYING)) {
 			if (map) {

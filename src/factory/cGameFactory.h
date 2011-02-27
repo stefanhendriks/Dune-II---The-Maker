@@ -10,6 +10,7 @@ class cGameFactory {
 		void createNewDependenciesForGame(GameState state);
 		void createGameControlsContextsForPlayers();
 	    void createInteractionManagerForHumanPlayer(GameState state);
+	    void createNewGameDrawerAndSetCreditsForHuman();
 
 	protected:
 		~cGameFactory();

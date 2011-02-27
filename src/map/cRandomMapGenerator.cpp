@@ -182,7 +182,7 @@ void cRandomMapGenerator::generateRandomMap() {
 			if (map->cell[cll].terrainTypeGfxDataIndex == TERRAIN_HILL)
 				iColor = makecol(188, 115, 50);
 
-			PreviewMap[0].mapdata[cll] = map->cell[cll].terrainTypeGfxDataIndex;
+			PreviewMap[0].terrainType[cll] = map->cell[cll].terrainTypeGfxDataIndex;
 
 			for (int s = 0; s < 4; s++) {
 				if (PreviewMap[0].iStartCell[s] > -1) {

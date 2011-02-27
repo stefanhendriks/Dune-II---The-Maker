@@ -161,14 +161,17 @@ void cMap::think_minimap() {
 	// Draw static info
 	cMiniMapDrawer * miniMapDrawer = gameDrawer->getMiniMapDrawer();
 	assert(miniMapDrawer);
+
 	int iStatus = miniMapDrawer->getStatus();
 	int currentStaticFrame = miniMapDrawer->getStaticFrame();
+
 	if (iStatus < 0) {
 		miniMapDrawer->drawStaticFrame();
 
 		if (currentStaticFrame < STAT21) {
 			currentStaticFrame++;
 		}
+
 	} else {
 		// transparancy is calculated actulaly
 		if (currentStaticFrame > STAT01) {

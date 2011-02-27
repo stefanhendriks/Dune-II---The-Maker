@@ -8,7 +8,9 @@ class cTextDrawer;
 #include "cTextWriter.h"
 #include "cMouseToolTip.h"
 
-#include "Shape.h"
+#include "cGuiShape.h"
+#include "cGuiButton.h"
+
 #include "cMessageBar.h"
 
 #endif

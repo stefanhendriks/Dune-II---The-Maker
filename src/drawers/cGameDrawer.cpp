@@ -40,8 +40,10 @@ cGameDrawer::~cGameDrawer() {
 }
 
 void cGameDrawer::draw() {
-	assert(mapDrawer);
+	assert(map);
 	map->draw_think();
+
+	assert(mapDrawer);
 	mapDrawer->drawTerrain();
 
 	// Only draw units/structures, etc, when we do NOT press D

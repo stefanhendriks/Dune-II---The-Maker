@@ -1429,6 +1429,7 @@ void LOAD_SCENE(std::string scene) {
 
 // Skirmish map initialization
 void INIT_PREVIEWS() {
+	logbook("INIT_PREVIEWS [BEGIN]");
 	for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
 		PreviewMap[i].terrain = NULL;
 
@@ -1436,10 +1437,10 @@ void INIT_PREVIEWS() {
 		memset(PreviewMap[i].name, 0, sizeof(PreviewMap[i].name));
 
 		// clear out map data
-		memset(PreviewMap[i].mapdata, TERRAIN_SAND, sizeof(PreviewMap[i].mapdata));
+		for (int c = 0; c < MAX_CELLS; c++) {
+			PreviewMap[i].terrainType[c] = TERRAIN_SAND;
+		}
 
-		//sprintf(PreviewMap[i].name, "Map %d", i);
-		//
 		PreviewMap[i].iPlayers = 0;
 
 		PreviewMap[i].iStartCell[0] = -1;
@@ -1450,8 +1451,8 @@ void INIT_PREVIEWS() {
 	}
 
 	sprintf(PreviewMap[0].name, "RANDOM MAP");
-	//PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
-	PreviewMap[0].terrain = create_bitmap(PAN_CENTER, PAN_CENTER);
+	PreviewMap[0].terrain = create_bitmap(128, 128);
+	logbook("INIT_PREVIEWS [END]");
 }
 
 // 8 bit memory putpixel

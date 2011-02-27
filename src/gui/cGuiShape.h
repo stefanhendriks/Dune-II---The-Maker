@@ -5,14 +5,15 @@
  *      Author: Stefan
  */
 
-#ifndef SHAPE_H_
-#define SHAPE_H_
+#ifndef GUISHAPE_H_
+#define GUISHAPE_H_
 
-class Shape {
+class cGuiShape {
 	public:
-		Shape(int theX, int theY, int theHeight, int theWidth);
-		Shape();
-		~Shape();
+		cGuiShape();
+		cGuiShape(int theX, int theY, int theHeight, int theWidth);
+
+		~cGuiShape();
 
 		void setX(int value) {
 			x = value;
@@ -39,6 +40,8 @@ class Shape {
 		int getWidth() {
 			return width;
 		}
+
+		bool isMouseOverShape();
 
 	protected:
 

@@ -40,4 +40,6 @@ class cMouse;
 
 #include "cGameDrawer.h"
 
+#include "cGuiDrawer.h"
+
 #endif /* DRAWERSH_H_ */

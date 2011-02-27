@@ -226,19 +226,32 @@ bool cGame::playerHasMetQuota(int iPlayerId) {
 }
 
 void cGame::think_winlose() {
+	logbook("think_winlose [BEGIN]");
 	bool missionAccomplished = false;
 	bool humanPlayerAlive = playerHasAnyStructures(HUMAN) || playerHasAnyGroundUnits(HUMAN);
 
 	if (isWinQuotaSet()) {
 		missionAccomplished = playerHasMetQuota(HUMAN);
+
+		if (missionAccomplished) {
+			char msg[255];
+			sprintf(msg, "win quota is set to %d, is met by human player", iWinQuota);
+			logbook(msg);
+		}
+
 	} else {
 		bool isAnyAIPlayerAlive = false;
+
 		for (int i = (HUMAN + 1); i < AI_WORM; i++) {
-			if (playerHasAnyStructures(i) || playerHasAnyGroundUnits(i)) {
-				isAnyAIPlayerAlive = true;
+			isAnyAIPlayerAlive = playerHasAnyStructures(i) || playerHasAnyGroundUnits(i);
+			char msg[255];
+			sprintf(msg, "is player with id %d alive? -> %d", i, isAnyAIPlayerAlive);
+			logbook(msg);
+			if (isAnyAIPlayerAlive) {
 				break;
 			}
 		}
+
 
 		missionAccomplished = !isAnyAIPlayerAlive;
 	}
@@ -275,6 +288,7 @@ void cGame::think_winlose() {
 		draw_sprite(bmp_winlose, (BITMAP *) gfxinter[BMP_LOSING].dat, 77, 182);
 
 	}
+	logbook("think_winlose [END]");
 }
 
 //TODO: move to mentat classes
@@ -524,7 +538,6 @@ void cGame::combat() {
 	assert(interactionManager);
 	interactionManager->interactWithMouse();
 
-	// think win/lose
 	think_winlose();
 }
 
@@ -686,6 +699,7 @@ void cGame::mentat(int iType) {
 					if (bSkirmish) {
 						state = SETUPSKIRMISH;
 						playMusicByType(MUSIC_MENU);
+						bSkirmish = false;
 					} else {
 
 						state = NEXTCONQUEST;
@@ -700,10 +714,10 @@ void cGame::mentat(int iType) {
 
 					bFadeOut = true;
 				} else if (isState(LOSEBRIEF)) {
-					//
 					if (bSkirmish) {
 						state = SETUPSKIRMISH;
 						playMusicByType(MUSIC_MENU);
+						bSkirmish = false;
 					} else {
 						if (game.iMission > 1) {
 							state = NEXTCONQUEST;
@@ -785,10 +799,12 @@ void cGame::menu() {
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			game.state = SETUPSKIRMISH;
 			bFadeOut = true;
-			INI_PRESCAN_SKIRMISH();
+			INI_LOAD_MAPS_INTO_PREVIEWMAP_OBJECTS();
 
 			game.mission_init();
+			cGameFactory::getInstance()->createNewDependenciesForGame(SETUPSKIRMISH);
 
+			// initialize players skirmish style
 			for (int p = 0; p < AI_WORM; p++) {
 				player[p].credits = 2500;
 				player[p].iTeam = p;
@@ -933,26 +949,26 @@ void cGame::setup_skirmish() {
 
 	bool bFadeOut = false;
 
-	draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0, (game.getScreenResolution()->getHeight() * 0.72));
+	int screenWidth = game.getScreenResolution()->getWidth();
+	int screenHeight = game.getScreenResolution()->getHeight();
 
-	for (int dy = 0; dy < game.getScreenResolution()->getHeight(); dy += 2) {
-		line(bmp_screen, 0, dy, 640, dy, makecol(0, 0, 0));
-	}
+	draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, (screenWidth - 640), (screenHeight * 0.72));
 
 	// title box
-	GUI_DRAW_FRAME(-1, -1, 642, 21);
+	GUI_DRAW_FRAME(-1, -1, screenWidth + 2, 21);
 
-	// title name
-	alfont_textprintf(bmp_screen, bene_font, 280, 3, makecol(0, 0, 0), "Skirmish");
-	alfont_textprintf(bmp_screen, bene_font, 280, 2, makecol(255, 0, 0), "Skirmish");
+	cTextDrawer * textDrawer = new cTextDrawer(bene_font);
+	textDrawer->drawTextCentered("Skirmish", 2);
+
 
 	// box at the right
-	GUI_DRAW_FRAME(364, 21, 276, 443);
+	int mapBoxX = (screenWidth - 276);
+	int mapBoxHeight = (screenHeight) - 37;
+	GUI_DRAW_FRAME(mapBoxX, 21, 276, screenHeight);
 
 	// draw box for map data
-	GUI_DRAW_FRAME(510, 26, 129, 129);
-	//rectfill(bmp_screen, 640-130, 26, 640-1, 26+129, makecol(186,190,149));
-	//rect(bmp_screen, 640-130, 26, 640-1, 26+129, makecol(227,229,211));
+	int previewMapX = (screenWidth - 130);
+	GUI_DRAW_FRAME(previewMapX, 26, 129, 129);
 
 	// rectangle for map list
 	rectfill(bmp_screen, 366, (26 + 128) + 4, 638, 461, makecol(32, 32, 32));
@@ -961,41 +977,38 @@ void cGame::setup_skirmish() {
 	int iStartingPoints = 0;
 
 	// draw preview map (if any)
-	if (iSkirmishMap > -1) {
-		if (iSkirmishMap > 0) {
-			if (PreviewMap[iSkirmishMap].name[0] != '\0') {
-				if (PreviewMap[iSkirmishMap].terrain) {
-					draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, game.getScreenResolution()->getWidth() - 129, 27);
-				}
+	if (iSkirmishMap > 0) {
+		if (PreviewMap[iSkirmishMap].name[0] != '\0') {
+			if (PreviewMap[iSkirmishMap].terrain) {
+				draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, game.getScreenResolution()->getWidth() - 129, 27);
+			}
 
-				for (int s = 0; s < 5; s++) {
-					if (PreviewMap[iSkirmishMap].iStartCell[s] > -1) {
-						iStartingPoints++;
+			for (int s = 0; s < 5; s++) {
+				if (PreviewMap[iSkirmishMap].iStartCell[s] > -1) {
+					iStartingPoints++;
+				}
+			}
+		} else {
+			iStartingPoints = iSkirmishStartPoints;
+
+			// when mouse is hovering, draw it, else do not
+			if ((mouse_x >= (game.screenResolution->getWidth() - 129) && mouse_x < game.screenResolution->getWidth()) && (mouse_y >= 27 && mouse_y < 160)) {
+				if (PreviewMap[iSkirmishMap].name[0] != '\0') {
+					if (PreviewMap[iSkirmishMap].terrain) {
+						draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, game.screenResolution->getWidth() - 129, 27);
 					}
 				}
 			} else {
-				iStartingPoints = iSkirmishStartPoints;
-
-				// when mouse is hovering, draw it, else do not
-				if ((mouse_x >= (game.screenResolution->getWidth() - 129) && mouse_x < game.screenResolution->getWidth()) && (mouse_y >= 27 && mouse_y < 160)) {
-					if (PreviewMap[iSkirmishMap].name[0] != '\0') {
-						if (PreviewMap[iSkirmishMap].terrain) {
-							draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, game.screenResolution->getWidth() - 129, 27);
-						}
-					}
-				} else {
-					if (PreviewMap[iSkirmishMap].name[0] != '\0') {
-						if (PreviewMap[iSkirmishMap].terrain) {
-							draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_UNKNOWNMAP].dat, game.getScreenResolution()->getWidth() - 129, 27);
-						}
+				if (PreviewMap[iSkirmishMap].name[0] != '\0') {
+					if (PreviewMap[iSkirmishMap].terrain) {
+						draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_UNKNOWNMAP].dat, game.getScreenResolution()->getWidth() - 129, 27);
 					}
 				}
 			}
 		}
 	}
 
-	alfont_textprintf(bmp_screen, bene_font, 366, 27, makecol(0, 0, 0), "Startpoints: %d", iStartingPoints);
-	alfont_textprintf(bmp_screen, bene_font, 366, 26, makecol(255, 255, 255), "Startpoints: %d", iStartingPoints);
+	textDrawer->drawTextWithOneInteger(366, 27, "Startpoints: %d", iStartingPoints);
 
 	bool bDoRandomMap = false;
 
@@ -1105,9 +1118,6 @@ void cGame::setup_skirmish() {
 	// player list
 	rectfill(bmp_screen, 0, 39, 363, 122, makecol(32, 32, 32));
 	line(bmp_screen, 0, 123, 363, 123, makecol(255, 255, 255));
-
-	// bottom bar
-	rectfill(bmp_screen, 0, 464, 640, 480, makecol(32, 32, 32));
 
 	alfont_textprintf(bmp_screen, bene_font, 4, 26, makecol(0, 0, 0), "Player      House      Credits       Units    Team");
 	alfont_textprintf(bmp_screen, bene_font, 4, 25, makecol(255, 255, 255), "Player      House      Credits       Units    Team");
@@ -1301,23 +1311,24 @@ void cGame::setup_skirmish() {
 		}
 	}
 
-	GUI_DRAW_FRAME(-1, 465, 642, 21);
+	// bottom bar
+	GUI_DRAW_FRAME(0, (screenHeight - 21), screenWidth + 2, 21);
 
 	// back
-	alfont_textprintf(bmp_screen, bene_font, 0, 467, makecol(0, 0, 0), " BACK");
-	alfont_textprintf(bmp_screen, bene_font, 0, 466, makecol(255, 255, 255), " BACK");
+	textDrawer->drawTextBottomLeft("BACK");
 
 	// start
-	alfont_textprintf(bmp_screen, bene_font, 580, 467, makecol(0, 0, 0), "START");
-	alfont_textprintf(bmp_screen, bene_font, 580, 466, makecol(255, 255, 255), "START");
+	textDrawer->drawTextBottomRight("START");
 
 	if (bDoRandomMap) {
 		randomMapGenerator.generateRandomMap();
 	}
 
 	// back
-	if ((mouse_x >= 0 && mouse_x <= 50) && (mouse_y >= 465 && mouse_y <= 480)) {
-		alfont_textprintf(bmp_screen, bene_font, 0, 466, makecol(255, 0, 0), " BACK");
+	if ((mouse_x >= 0 && mouse_x <= 50) && (mouse_y >= (screenHeight - 21) && mouse_y <= screenHeight)) {
+		textDrawer->setTextColor(makecol(255, 0, 0));
+		textDrawer->drawTextBottomLeft("BACK");
+		textDrawer->setTextColor(makecol(255, 255, 255));
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			bFadeOut = true;
@@ -1325,13 +1336,17 @@ void cGame::setup_skirmish() {
 		}
 	}
 
-	if ((mouse_x >= 580 && mouse_x <= 640) && (mouse_y >= 465 && mouse_y <= 480))
-		alfont_textprintf(bmp_screen, bene_font, 580, 466, makecol(255, 0, 0), "START");
+	bool isMouseOverStart = (mouse_x >= (screenWidth - 60) && mouse_x <= screenWidth) && (mouse_y >= (screenHeight - 21) && mouse_y <= screenHeight);
+	if (isMouseOverStart) {
+		textDrawer->setTextColor(makecol(255, 0, 0));
+		textDrawer->drawTextBottomRight("START");
+		textDrawer->setTextColor(makecol(255, 255, 255));
+	}
 
-	cCellCalculator *cellCalculator = new cCellCalculator(map);
+
 	// START
-	if ((mouse_x >= 580 && mouse_x <= 640) && (mouse_y >= 465 && mouse_y <= 480) && cMouse::getInstance()->isLeftButtonClicked() && iSkirmishMap > -1) {
-		// Starting skirmish mode
+	if (bSkirmish == false && isMouseOverStart && cMouse::getInstance()->isLeftButtonClicked() && iSkirmishMap > -1) {
+		cCellCalculator *cellCalculator = new cCellCalculator(map);
 		bSkirmish = true;
 
 		/* set up starting positions */
@@ -1339,7 +1354,6 @@ void cGame::setup_skirmish() {
 		int iMax = 0;
 		for (int s = 0; s < 5; s++) {
 			iStartPositions[s] = PreviewMap[iSkirmishMap].iStartCell[s];
-
 			if (PreviewMap[iSkirmishMap].iStartCell[s] > -1) {
 				iMax = s;
 			}
@@ -1347,9 +1361,15 @@ void cGame::setup_skirmish() {
 
 		// REGENERATE MAP DATA FROM INFO
 		if (iSkirmishMap > -1) {
-			for (int c = 0; c < MAX_CELLS; c++) {
-				mapEditor.createCell(c, PreviewMap[iSkirmishMap].mapdata[c], 0);
+			char msg[255];
+			sprintf(msg, "Selected skirmish map with id %d ", iSkirmishMap);
+			logbook(msg);
+			logbook("Creating skirmish map in map class [BEGIN]");
+			for (int cell = 0; cell < MAX_CELLS; cell++) {
+				int terrainType = PreviewMap[iSkirmishMap].terrainType[cell];
+				mapEditor.createCell(cell, terrainType, 0);
 			}
+			logbook("Creating skirmish map in map class [END]");
 			mapEditor.smoothMap();
 		}
 
@@ -1360,9 +1380,9 @@ void cGame::setup_skirmish() {
 			int two = rnd(iMax);
 
 			if (one == two) {
-				if (rnd(100) < 25)
+				if (rnd(100) < 25) {
 					iShuffles--;
-
+				}
 				continue;
 			}
 
@@ -1509,15 +1529,17 @@ void cGame::setup_skirmish() {
 		state = PLAYING;
 
 		cGameFactory::getInstance()->createNewDependenciesForGame(state);
-		//game.setup_players();
+
 		assert(player[HUMAN].getItemBuilder() != NULL);
 
 		bFadeOut = true;
 		playMusicByType(MUSIC_PEACE);
+		logbook("Done setting up skirmish game.");
+		delete cellCalculator;
 	}
 
 	// delete cell calculator
-	delete cellCalculator;
+	delete textDrawer;
 
 	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *) gfxdata[cMouse::getInstance()->getMouseTile()].dat, mouse_x, mouse_y);
@@ -1623,14 +1645,7 @@ void cGame::preparementat(bool bIntroduceHouseBriefing) {
 			INI_Load_scenario(iHouse, iRegion);
 
 			cGameFactory::getInstance()->createInteractionManagerForHumanPlayer(PLAYING);
-
-			if (gameDrawer) {
-				delete gameDrawer;
-				gameDrawer = NULL;
-			}
-
-			gameDrawer = new cGameDrawer(&player[HUMAN]);
-			gameDrawer->getCreditsDrawer()->setCreditsOfPlayer();
+			cGameFactory::getInstance()->createNewGameDrawerAndSetCreditsForHuman();
 
 			INI_LOAD_BRIEFING(iHouse, iRegion, INI_BRIEFING);
 
