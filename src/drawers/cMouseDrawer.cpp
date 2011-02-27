@@ -27,6 +27,7 @@ cMouseDrawer::~cMouseDrawer() {
 void cMouseDrawer::draw() {
 	int x = mouse->getX();
 	int y = mouse->getY();
+	int mouse_tile = mouse->getMouseTile();
 
 	// adjust coordinates of drawing according to the specific mouse sprite/tile
 	if (mouse_tile == MOUSE_DOWN) {
@@ -46,6 +47,7 @@ void cMouseDrawer::draw() {
 		x -= 16;
 		y -= 16;
 	} else {
+
 	}
 
 	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, x, y);

@@ -20,6 +20,7 @@ cMouse::cMouse() {
 	mouseScrolledUp = false;
 	mouseScrolledDown = false;
 	zValuePreviousFrame = mouse_z;
+	tile = MOUSE_NORMAL;
 }
 
 cMouse::~cMouse() {

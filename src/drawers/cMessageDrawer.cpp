@@ -17,7 +17,7 @@ void cMessageDrawer::init() {
 void cMessageDrawer::think() {
 	int iLimit = 250;
 
-	if (game.isState(REGION)) {
+	if (game.isState(NEXTCONQUEST)) {
 		iLimit = 600;
 	}
 

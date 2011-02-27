@@ -42,10 +42,12 @@ void cGame::losing() {
 	}
 }
 
-// winning animation
 void cGame::winning() {
 	blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 
+
+	cMouseDrawer * mouseDrawer = gameDrawer->getMouseDrawer();
+	mouseDrawer->draw();
 	draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
 	if (cMouse::getInstance()->isLeftButtonClicked()) {
@@ -74,7 +76,7 @@ void cGame::combat_mouse() {
 
 		if (hover_unit > -1) {
 			if (unit[hover_unit].iPlayer == 0) {
-				mouse_tile = MOUSE_PICK;
+				cMouse::getInstance()->setMouseTile(MOUSE_PICK);
 			}
 		}
 
@@ -112,7 +114,7 @@ void cGame::combat_mouse() {
 
 						}
 
-						mouse_tile = MOUSE_REPAIR;
+						cMouse::getInstance()->setMouseTile(MOUSE_REPAIR);
 					}
 				}
 			}
@@ -129,7 +131,7 @@ void cGame::combat_mouse() {
 			if (cMouse::getInstance()->isLeftButtonClicked()) {
 				bool bParticle = false;
 
-				if (mouse_tile == MOUSE_RALLY) {
+				if (cMouse::getInstance()->getMouseTile() == MOUSE_RALLY) {
 					int id = game.selected_structure;
 					if (id > -1)
 						if (structure[id]->getOwner() == 0) {
@@ -138,7 +140,7 @@ void cGame::combat_mouse() {
 						}
 				}
 
-				if (hover_unit > -1 && (mouse_tile == MOUSE_NORMAL || mouse_tile == MOUSE_PICK)) {
+				if (hover_unit > -1 && (cMouse::getInstance()->getMouseTile() == MOUSE_NORMAL || cMouse::getInstance()->getMouseTile() == MOUSE_PICK)) {
 					if (unit[hover_unit].iPlayer == 0) {
 						if (!key[KEY_LSHIFT]) {
 							UNIT_deselect_all();
@@ -157,7 +159,7 @@ void cGame::combat_mouse() {
 					bool bPlayInf = false;
 					bool bPlayRep = false;
 
-					if (mouse_tile == MOUSE_MOVE) {
+					if (cMouse::getInstance()->getMouseTile() == MOUSE_MOVE) {
 						// any selected unit will move
 						for (int i = 0; i < MAX_UNITS; i++) {
 							if (unit[i].isValid() && unit[i].iPlayer == HUMAN && unit[i].bSelected) {
@@ -171,7 +173,7 @@ void cGame::combat_mouse() {
 								bParticle = true;
 							}
 						}
-					} else if (mouse_tile == MOUSE_ATTACK) {
+					} else if (cMouse::getInstance()->getMouseTile() == MOUSE_ATTACK) {
 						// check who or what to attack
 						for (int i = 0; i < MAX_UNITS; i++) {
 							if (unit[i].isValid() && unit[i].iPlayer == HUMAN && unit[i].bSelected) {
@@ -212,7 +214,7 @@ void cGame::combat_mouse() {
 				}
 
 				if (bParticle) {
-					if (mouse_tile == MOUSE_ATTACK) {
+					if (cMouse::getInstance()->getMouseTile() == MOUSE_ATTACK) {
 						PARTICLE_CREATE(mouse_x + (mapCamera->getX() * 32), mouse_y + (mapCamera->getY() * 32), ATTACK_INDICATOR, -1, -1);
 					} else {
 						PARTICLE_CREATE(mouse_x + (mapCamera->getX() * 32), mouse_y + (mapCamera->getY() * 32), MOVE_INDICATOR, -1, -1);
@@ -360,7 +362,7 @@ void cGame::combat_mouse() {
 					}
 				}
 
-				mouse_tile = MOUSE_REPAIR;
+				cMouse::getInstance()->setMouseTile(MOUSE_REPAIR);
 			}// MOUSE PRESSED
 		}
 

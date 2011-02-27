@@ -78,7 +78,6 @@ int mouse_co_x2; // the
 int mouse_co_y2; // mouse border
 
 int mouse_status; // status of the mouse (see main.h)
-int mouse_tile; // mouse picture in gfxdata
 
 // Timers
 int frame_count, fps; // fps and such

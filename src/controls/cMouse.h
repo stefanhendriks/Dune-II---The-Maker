@@ -51,6 +51,14 @@ class cMouse {
 			return z;
 		}
 
+		void setMouseTile(int value) {
+			tile = value;
+		}
+
+		int getMouseTile() {
+			return tile;
+		}
+
 		void positionMouseCursor(int x, int y);
 
 	protected:
@@ -74,6 +82,8 @@ class cMouse {
 
 		int x, y, z; // z = scroll wheel value
 		int zValuePreviousFrame;
+
+		int tile;
 };
 
 #endif /* CMOUSE_H_ */

@@ -79,7 +79,7 @@ void cGameFactory::createInteractionManagerForHumanPlayer(GameState state) {
 	}
 	cPlayer * thePlayer = &player[HUMAN];
 	switch (state) {
-		case INMENU:
+		case MAINMENU:
 			interactionManager = new cMenuInteractionManager(thePlayer);
 			break;
 		case PLAYING:

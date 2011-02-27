@@ -3,16 +3,16 @@
 
 enum GameState {
 	INITIAL=-1,	// initial state
-	OVER=0,		// game over
-	INMENU,		// in a menu
+	GAMEOVER=0,
+	MAINMENU,	// in a menu
 	PLAYING,	// playing the actual game
-	BRIEFING,	// doing some briefing
-	EDITING,	// running the editor
-	OPTIONS,	// options menu
-	REGION,		// select a region
+	BRIEFING,
+	EDITING,
+	OPTIONS,
+	NEXTCONQUEST,
 	SELECTHOUSE=8,	// pick a house
 	INTRO,		// playing intro
-	TELLHOUSE,	// tell about the house
+	HOUSEINTRODUCTION,
 	WINNING,	// when winning, do some cool animation
 	WINBRIEF,	// mentat chatter when won the mission
 	LOSEBRIEF,	// briefing when losing

@@ -27,6 +27,9 @@ class cGameDrawer {
 		cSideBarDrawer *getSidebarDrawer() {
 			return sidebarDrawer;
 		}
+		cMouseDrawer *getMouseDrawer() {
+			return mouseDrawer;
+		}
 
 		int getDrawXForCell(int cell);
 		int getDrawYForCell(int cell);

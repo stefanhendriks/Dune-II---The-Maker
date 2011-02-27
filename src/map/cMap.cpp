@@ -463,31 +463,33 @@ void cMap::draw_think() {
 	// determine the width and height in cells
 	// this way we know the size of the viewport
 
-	int iEndX = mapCamera->getX() + ((game.getScreenResolution()->getWidth() - 160) / 32); // width of sidebar is 160
-	int iEndY = mapCamera->getY() + ((game.getScreenResolution()->getHeight() - 42) / 32) + 1; // height of upper bar is 42
+	int iEndX = mapCamera->getX() + mapCamera->getViewportWidth();
+	int iEndY = mapCamera->getY() + mapCamera->getViewportHeight();
+
+	cMouse * mouse = cMouse::getInstance();
 
 	// thinking for map (scrolling that is)
 	if (mouse_x <= 1 || key[KEY_LEFT]) {
 		if (mapCamera->getX() > 1) {
-			mouse_tile = MOUSE_LEFT;
+			mouse->setMouseTile(MOUSE_LEFT);
 		}
 	}
 
 	if (mouse_y <= 1 || key[KEY_UP]) {
 		if (mapCamera->getY() > 1) {
-			mouse_tile = MOUSE_UP;
+			mouse->setMouseTile(MOUSE_UP);
 		}
 	}
 
 	if (mouse_x >= (game.getScreenResolution()->getWidth() - 2) || key[KEY_RIGHT]) {
 		if ((iEndX) < (map->getWidth() - 1)) {
-			mouse_tile = MOUSE_RIGHT;
+			mouse->setMouseTile(MOUSE_RIGHT);
 		}
 	}
 
 	if (mouse_y >= (game.getScreenResolution()->getHeight() - 2) || key[KEY_DOWN]) {
 		if ((iEndY) < (map->getHeight() - 1)) {
-			mouse_tile = MOUSE_DOWN;
+			mouse->setMouseTile(MOUSE_DOWN);
 		}
 	}
 }

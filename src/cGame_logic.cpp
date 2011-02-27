@@ -90,7 +90,7 @@ void cGame::init() {
 	paths_created = 0;
 	hover_unit = -1;
 
-	state = INMENU;
+	state = MAINMENU;
 
 	iWinQuota = -1; // > 0 means, get this to win the mission, else, destroy all!
 
@@ -101,8 +101,6 @@ void cGame::init() {
 
 	bPlaceIt = false; // we do not place
 	bPlacedIt = false;
-
-	mouse_tile = MOUSE_NORMAL;
 
 	memset(version, 0, sizeof(version));
 	sprintf(version, "0.4.6");
@@ -172,8 +170,6 @@ void cGame::mission_init() {
 
 	bPlaceIt = false; // we do not place
 	bPlacedIt = false;
-
-	mouse_tile = MOUSE_NORMAL;
 
 	fade_select = 255;
 
@@ -439,7 +435,7 @@ void cGame::poll() {
 	context->updateState();
 
 	clear(bmp_screen);
-	mouse_tile = MOUSE_NORMAL;
+	cMouse::getInstance()->setMouseTile(MOUSE_NORMAL);
 
 	// change this when selecting stuff
 	int mc = context->getMouseCell();
@@ -450,14 +446,14 @@ void cGame::poll() {
 			if (unit[i].isValid()) {
 				if (unit[i].iPlayer == 0) {
 					if (unit[i].bSelected) {
-						mouse_tile = MOUSE_MOVE;
+						cMouse::getInstance()->setMouseTile(MOUSE_MOVE);
 						break;
 					}
 				}
 			}
 		}
 
-		if (mouse_tile == MOUSE_MOVE) {
+		if (cMouse::getInstance()->getMouseTile() == MOUSE_MOVE) {
 			// change to attack cursor if hovering over enemy unit
 			if (mapUtils->isCellVisibleForPlayerId(HUMAN, mc)) {
 
@@ -465,36 +461,38 @@ void cGame::poll() {
 					int id = map->cell[mc].gameObjectId[MAPID_UNITS];
 
 					if (unit[id].iPlayer > 0)
-						mouse_tile = MOUSE_ATTACK;
+						cMouse::getInstance()->setMouseTile(MOUSE_ATTACK);
 				}
 
 				if (map->cell[mc].gameObjectId[MAPID_STRUCTURES] > -1) {
 					int id = map->cell[mc].gameObjectId[MAPID_STRUCTURES];
 
-					if (structure[id]->getOwner() > 0)
-						mouse_tile = MOUSE_ATTACK;
+					if (structure[id]->getOwner() > 0) {
+						cMouse::getInstance()->setMouseTile(MOUSE_ATTACK);
+					}
 				}
 
 				if (key[KEY_LCONTROL]) {
-					mouse_tile = MOUSE_ATTACK;
+					cMouse::getInstance()->setMouseTile(MOUSE_ATTACK);
 				}
 
 				if (key[KEY_ALT]) {
-					mouse_tile = MOUSE_MOVE;
+					cMouse::getInstance()->setMouseTile(MOUSE_MOVE);
 				}
 
 			} // visible
 		}
 	}
 
-	if (mouse_tile == MOUSE_NORMAL) {
+	if (cMouse::getInstance()->getMouseTile() == MOUSE_NORMAL) {
 		// when selecting a structure
 		if (game.selected_structure > -1) {
 			int id = game.selected_structure;
-			if (structure[id]->getOwner() == 0)
-				if (key[KEY_LCONTROL])
-					mouse_tile = MOUSE_RALLY;
-
+			if (structure[id]->getOwner() == 0) {
+				if (key[KEY_LCONTROL]) {
+					cMouse::getInstance()->setMouseTile(MOUSE_RALLY);
+				}
+			}
 		}
 	}
 
@@ -698,7 +696,7 @@ void cGame::mentat(int iType) {
 						playMusicByType(MUSIC_MENU);
 					} else {
 
-						state = REGION;
+						state = NEXTCONQUEST;
 						REGION_SETUP(game.iMission, game.iHouse);
 
 						// PLAY THE MUSIC
@@ -716,7 +714,7 @@ void cGame::mentat(int iType) {
 						playMusicByType(MUSIC_MENU);
 					} else {
 						if (game.iMission > 1) {
-							state = REGION;
+							state = NEXTCONQUEST;
 
 							game.iMission--; // we did not win
 							REGION_SETUP(game.iMission, game.iHouse);
@@ -740,7 +738,7 @@ void cGame::mentat(int iType) {
 	}
 
 	// MOUSE
-	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+	draw_sprite(bmp_screen, (BITMAP *) gfxdata[cMouse::getInstance()->getMouseTile()].dat, mouse_x, mouse_y);
 
 	if (bFadeOut) {
 		FADE_OUT();
@@ -901,7 +899,7 @@ void cGame::menu() {
 	}
 
 	// MOUSE
-	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+	draw_sprite(bmp_screen, (BITMAP *) gfxdata[cMouse::getInstance()->getMouseTile()].dat, mouse_x, mouse_y);
 
 	delete textDrawer;
 
@@ -1317,7 +1315,7 @@ void cGame::setup_skirmish() {
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			bFadeOut = true;
-			state = INMENU;
+			state = MAINMENU;
 		}
 	}
 
@@ -1516,7 +1514,7 @@ void cGame::setup_skirmish() {
 	delete cellCalculator;
 
 	// MOUSE
-	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+	draw_sprite(bmp_screen, (BITMAP *) gfxdata[cMouse::getInstance()->getMouseTile()].dat, mouse_x, mouse_y);
 
 	if (bFadeOut) {
 		game.FADE_OUT();
@@ -1556,7 +1554,7 @@ void cGame::house() {
 
 			LOAD_SCENE("platr"); // load planet of atreides
 
-			setState(TELLHOUSE);
+			setState(HOUSEINTRODUCTION);
 			iMentatSpeak = -1;
 			bFadeOut = true;
 		}
@@ -1574,7 +1572,7 @@ void cGame::house() {
 
 			LOAD_SCENE("plord"); // load planet of ordos
 
-			setState(TELLHOUSE);
+			setState(HOUSEINTRODUCTION);
 			iMentatSpeak = -1;
 			bFadeOut = true;
 		}
@@ -1592,14 +1590,14 @@ void cGame::house() {
 
 			LOAD_SCENE("plhar"); // load planet of harkonnen
 
-			setState(TELLHOUSE);
+			setState(HOUSEINTRODUCTION);
 			iMentatSpeak = -1;
 			bFadeOut = true;
 		}
 	}
 
 	// MOUSE
-	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+	draw_sprite(bmp_screen, (BITMAP *) gfxdata[cMouse::getInstance()->getMouseTile()].dat, mouse_x, mouse_y);
 
 	if (bFadeOut)
 		game.FADE_OUT();
@@ -1719,7 +1717,7 @@ void cGame::tellhouse() {
 	}
 
 	// draw mouse
-	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+	draw_sprite(bmp_screen, (BITMAP *) gfxdata[cMouse::getInstance()->getMouseTile()].dat, mouse_x, mouse_y);
 
 	if (bFadeOut) {
 		FADE_OUT();
@@ -2128,16 +2126,16 @@ void cGame::runGameState() {
 		case SETUPSKIRMISH:
 			setup_skirmish();
 			break;
-		case INMENU:
+		case MAINMENU:
 			menu();
 			break;
-		case REGION:
+		case NEXTCONQUEST:
 			region();
 			break;
 		case SELECTHOUSE:
 			house();
 			break;
-		case TELLHOUSE:
+		case HOUSEINTRODUCTION:
 			tellhouse();
 			break;
 		case WINNING:
@@ -2576,7 +2574,6 @@ bool cGame::setupGame() {
 
 	// Mouse stuff
 	mouse_status = MOUSE_STATE_NORMAL;
-	mouse_tile = 0;
 
 	set_palette(general_palette);
 
@@ -2599,7 +2596,7 @@ bool cGame::setupGame() {
 
 	game.init();
 	cGameFactory::getInstance()->createGameControlsContextsForPlayers();
-	cGameFactory::getInstance()->createInteractionManagerForHumanPlayer(INMENU);
+	cGameFactory::getInstance()->createInteractionManagerForHumanPlayer(MAINMENU);
 
 	playMusicByType(MUSIC_MENU);
 

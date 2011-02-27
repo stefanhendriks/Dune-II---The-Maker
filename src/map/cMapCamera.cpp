@@ -138,21 +138,21 @@ void cMapCamera::thinkInteraction() {
 
 	if (shouldScrollLeft() && canScrollLeft()) {
 		x--;
-		mouse_tile = MOUSE_LEFT;
+		cMouse::getInstance()->setMouseTile(MOUSE_LEFT);
 	}
 
 	if (shouldScrollUp() && canScrollUp()) {
 		y--;
-		mouse_tile = MOUSE_UP;
+		cMouse::getInstance()->setMouseTile(MOUSE_UP);
 	}
 
 	if (shouldScrollRight() && canScrollRight()) {
 		x++;
-		mouse_tile = MOUSE_RIGHT;
+		cMouse::getInstance()->setMouseTile(MOUSE_RIGHT);
 	}
 
 	if (shouldScrollDown() && canScrollDown()) {
 		y++;
-		mouse_tile = MOUSE_DOWN;
+		cMouse::getInstance()->setMouseTile(MOUSE_DOWN);
 	}
 }
