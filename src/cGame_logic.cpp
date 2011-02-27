@@ -1617,17 +1617,19 @@ void cGame::house() {
 
 }
 
-void cGame::preparementat(bool bTellHouse) {
+void cGame::preparementat(bool bIntroduceHouseBriefing) {
 	// clear first
 	memset(mentat_sentence, 0, sizeof(mentat_sentence));
 
-	if (bTellHouse) {
+	if (bIntroduceHouseBriefing) {
 		if (iHouse == ATREIDES) {
 			INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION);
 		} else if (iHouse == HARKONNEN) {
 			INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION);
 		} else if (iHouse == ORDOS) {
 			INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION);
+		} else {
+			assert(false); // no support for other houses yet
 		}
 	} else {
 		if (isState(BRIEFING)) {
