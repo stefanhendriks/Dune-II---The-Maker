@@ -2362,7 +2362,7 @@ void INI_Install_Game(string filename) {
 						screenResolution->setHeight(height);
 						break;
 					case WORD_MP3MUSIC:
-						game.bMp3 = INI_WordValueBOOL(linefeed);
+						game.mp3MusicEnabled = INI_WordValueBOOL(linefeed);
 						break;
 				}
 			}

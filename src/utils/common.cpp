@@ -1109,7 +1109,7 @@ int iCellOnScreen(int iCell) {
  * @param iDistance
  */
 void play_sound_id(int s, int iDistance) {
-	if (!game.bPlaySound)
+	if (!game.soundEnabled)
 		return; // do not play sound when boolean is false.
 
 	if (gfxaudio[s].dat == NULL)
@@ -1155,7 +1155,7 @@ bool MIDI_music_playing() {
 }
 
 void setMusicVolume(int i) {
-	if (game.bMp3) {
+	if (game.mp3MusicEnabled) {
 		if (mp3_music != NULL) {
 			almp3_adjust_mp3(mp3_music, i, 127, 1000, false);
 		}
@@ -1180,7 +1180,7 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 	} else {
 		logbook("MP3: Could not find mp3 file for add-on, switching to MIDI mode");
 		allegro_message("Could not find MP3 file, add-on incomplete. Switching to MIDI mode");
-		game.bMp3 = false;
+		game.mp3MusicEnabled = false;
 
 		if (mp3_music != NULL) {
 			almp3_destroy_mp3(mp3_music);
@@ -1203,9 +1203,9 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 
 // play type of music
 void playMusicByType(int iType) {
-	if (!game.bPlaySound) {
+	if (!game.soundEnabled) {
 		char msg[255];
-		sprintf(msg, "playMusicByType for music type [%d], does nothing because bPlaySound flag is set to [false]", iType);
+		sprintf(msg, "playMusicByType for music type [%d], does nothing because bSoundEnabled flag is set to [false]", iType);
 		logbook(msg);
 		return;
 	}
@@ -1235,7 +1235,7 @@ void playMusicByType(int iType) {
 	}
 
 	// In the end, when mp3, play it:
-	if (game.bMp3) {
+	if (game.mp3MusicEnabled) {
 		char filename[50];
 		memset(filename, 0, sizeof(filename));
 

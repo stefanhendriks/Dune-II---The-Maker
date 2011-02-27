@@ -28,7 +28,7 @@ void cKeyboardManager::interact() {
 		GAME_KEYS();
 
 		if (key[KEY_ESC]) {
-			game.bPlaying = false;
+			game.playing = false;
 		}
 
 		// take screenshot

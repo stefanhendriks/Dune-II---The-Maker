@@ -63,7 +63,7 @@ void cGame::init() {
 	iMaxVolume = 220;
 
 	screenshot = 0;
-	bPlaying = true;
+	playing = true;
 
 	bSkirmish = false;
 	iSkirmishStartPoints = 2;
@@ -80,8 +80,8 @@ void cGame::init() {
 	memset(cRegionText, 0, sizeof(cRegionText));
 	//int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
 
-	bPlaySound = false;
-	bMp3 = false;
+	soundEnabled = false;
+	mp3MusicEnabled = false;
 
 	iSkirmishMap = -1;
 
@@ -131,7 +131,7 @@ void cGame::init() {
 	}
 
 	// Units & Structures are already initialized in map.init()
-	if (game.bMp3) {
+	if (game.mp3MusicEnabled) {
 		almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
 	}
 
@@ -396,12 +396,12 @@ void cGame::think_music() {
 	if (iMusicType < 0) {
 		return;
 	}
-	if (!bPlaySound) {
+	if (!soundEnabled) {
 		return;
 	}
 
 	// When mp3 mode
-	if (bMp3) {
+	if (mp3MusicEnabled) {
 		if (mp3_music != NULL) {
 			int s = almp3_poll_mp3(mp3_music);
 
@@ -513,14 +513,14 @@ void cGame::poll() {
 }
 
 void cGame::combat() {
-	if (iFadeAction == 1) // fading out
+	if (isFadingOut()) // fading out
 	{
 		logbook("cGame:combat - fade action = 1[END]");
 		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
 		return;
 	}
 
-	if (iAlphaScreen == 0) {
+	if (isDoneFadingOut()) {
 		iFadeAction = 2;
 	}
 
@@ -633,13 +633,13 @@ void cGame::MENTAT_draw_mouth(int iMentat) {
 
 // draw mentat
 void cGame::mentat(int iType) {
-	if (iFadeAction == 1) // fading out
+	if (isFadingOut()) // fading out
 	{
 		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
 		return;
 	}
 
-	if (iAlphaScreen == 0)
+	if (isDoneFadingOut())
 		iFadeAction = 2;
 	// -----------------
 
@@ -748,12 +748,12 @@ void cGame::mentat(int iType) {
 
 // draw menu
 void cGame::menu() {
-	if (iFadeAction == 1) {
+	if (isFadingOut()) {
 		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
 		return;
 	}
 
-	if (iAlphaScreen == 0) {
+	if (isDoneFadingOut()) {
 		iFadeAction = 2;
 	}
 
@@ -873,7 +873,7 @@ void cGame::menu() {
 
 		// quit
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
-			game.bPlaying = false;
+			game.playing = false;
 		}
 	} else {
 		alfont_textprintf(bmp_screen, bene_font, 261, 444, makecol(0, 0, 0), "Exit");
@@ -892,7 +892,7 @@ void cGame::menu() {
 	textDrawer->drawTextBottomRight(version);
 
 	// mp3 addon?
-	if (bMp3) {
+	if (mp3MusicEnabled) {
 		textDrawer->drawTextBottomLeft("Music: MP3 ADD-ON");
 	} else {
 		textDrawer->drawTextBottomLeft("Music: MIDI");
@@ -904,7 +904,7 @@ void cGame::menu() {
 	delete textDrawer;
 
 	if (key[KEY_ESC]) {
-		bPlaying = false;
+		playing = false;
 	}
 
 	if (bFadeOut) {
@@ -913,16 +913,26 @@ void cGame::menu() {
 
 }
 
+bool cGame::isFadingOut() {
+	return iFadeAction == 1;
+}
+
+bool cGame::isDoneFadingOut()
+{
+    return iAlphaScreen == 0;
+}
+
 void cGame::setup_skirmish() {
 	// FADING STUFF
-	if (iFadeAction == 1) // fading out
+	if (isFadingOut()) // fading out
 	{
 		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
 		return;
 	}
 
-	if (iAlphaScreen == 0)
+	if (isDoneFadingOut()) {
 		iFadeAction = 2;
+	}
 	// -----------------
 
 	bool bFadeOut = false;
@@ -1524,13 +1534,13 @@ void cGame::setup_skirmish() {
 // select house
 void cGame::house() {
 	// FADING STUFF
-	if (iFadeAction == 1) // fading out
+	if (isFadingOut()) // fading out
 	{
 		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
 		return;
 	}
 
-	if (iAlphaScreen == 0)
+	if (isDoneFadingOut())
 		iFadeAction = 2;
 	// -----------------
 
@@ -1660,12 +1670,12 @@ void cGame::preparementat(bool bIntroduceHouseBriefing) {
 
 void cGame::tellhouse() {
 	// FADING
-	if (iFadeAction == 1) {
+	if (isFadingOut()) {
 		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
 		return;
 	}
 
-	if (iAlphaScreen == 0) {
+	if (isDoneFadingOut()) {
 		iFadeAction = 2;
 	}
 
@@ -1730,13 +1740,13 @@ void cGame::region() {
 
 	int mouse_tile = MOUSE_NORMAL;
 
-	if (iFadeAction == 1) // fading out
+	if (isFadingOut()) // fading out
 	{
 		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
 		return;
 	}
 
-	if (iAlphaScreen == 0)
+	if (isDoneFadingOut())
 		iFadeAction = 2;
 	// -----------------
 
@@ -2165,7 +2175,7 @@ void cGame::runGameState() {
 void cGame::run() {
 	set_trans_blender(0, 0, 0, 128);
 
-	while (bPlaying) {
+	while (playing) {
 		TimeManager.processTime();
 		poll();
 		handleTimeSlicing();
@@ -2565,7 +2575,7 @@ bool cGame::setupGame() {
 	logbook(seedtxt);
 	srand(t);
 
-	game.bPlaying = true;
+	game.playing = true;
 	game.screenshot = 0;
 	game.state = INITIAL;
 

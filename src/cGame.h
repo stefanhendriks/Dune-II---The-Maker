@@ -21,45 +21,56 @@ class cGame {
 
 		bool windowed;
 		char version[15];
+
+		// -- fade in/out animation
 		int iAlphaScreen;
 		int iFadeAction;
+
+		// select your next conquest vars -- begin
 		int iRegionState;
 		int iRegionScene;
 		int iRegionSceneAlpha;
 		int iRegionConquer[MAX_REGIONS];
 		int iRegionHouse[MAX_REGIONS];
 		char cRegionText[MAX_REGIONS][255];
-		bool bPlaySound;
-		bool bMp3;
-		bool bPlaying;
-		bool bSkirmish;
-		int iSkirmishMap;
-		int screenshot;
-		int iSkirmishStartPoints;
-		void init();
-		void mission_init();
-		void run();
 		int iRegion;
-		int iMission;
-		int iHouse;
-		int selected_structure;
-		int hover_unit;
+		// select your next conquest vars -- end
+
+		// used for the fading/color transitioning when selecting things (units/things from item list)
 		int fade_select;
 		bool bFadeSelectDir;
-		int paths_created;
+
+		bool soundEnabled;
+		bool mp3MusicEnabled;
+		bool playing;
 		int iMusicVolume;
+
+		// skirmish - start
+		bool bSkirmish;
+		int iSkirmishStartPoints;
+		int iSkirmishMap;
+		// skirmish - end
+
+		int screenshot;
+
+		int iMission;
+		int iHouse;
+
+		// combat - start
+		int selected_structure;
+		int hover_unit;
+		int paths_created;
 		int shake_x;
 		int shake_y;
 		int TIMER_shake;
-		int iMusicType;
-		int iWinQuota;
-		void think_winlose();
-		void winning();
-		void losing();
 		bool bPlaceIt;
 		bool bPlacedIt;
+		int iWinQuota;
+		int iMusicType;
+		// combat - end
 
-		void think_music();
+
+		// mentat - begin
 		char mentat_sentence[10][255];
 		int TIMER_mentat_Speaking;
 		int iMentatSpeak;
@@ -69,16 +80,47 @@ class cGame {
 		int TIMER_mentat_Mouth;
 		int TIMER_mentat_Eyes;
 		int TIMER_mentat_Other;
+		// mentat - end
+
+		/// functions
+
+		// think functions
+		void think_winlose();
+		void think_music();
+		void think_mentat();
+
+		// state functions
+		void winning();
+		void losing();
+		void shutdown();
+		void combat_mouse();
+
+		// init functions
+		bool setupGame();
+		void init();
+		void mission_init();
+
+		// main run function
+		void run();
+
+		// mentat functions
 		void MENTAT_draw_mouth(int iMentat);
 		void MENTAT_draw_eyes(int iMentat);
 		void MENTAT_draw_other(int iMentat);
-		void think_mentat();
 		void FADE_OUT();
 		void preparementat(bool bTellHouse);
-		bool setupGame();
-		void shutdown();
+
 		bool isState(GameState theState);
 		void setState(GameState theState);
+
+		// misc
+		int getGroupNumberFromKeyboard();
+
+		void destroyAllUnits(bool);
+		void destroyAllStructures(bool);
+
+
+		// get / set
 
 		int getMaxVolume() {
 			return iMaxVolume;
@@ -112,25 +154,28 @@ class cGame {
 			screenResolutionFromIni = newScreenResolution;
 		}
 
-		void draw_placeit();
-		void combat_mouse();
-		int getGroupNumberFromKeyboard();
-		void destroyAllUnits(bool);
-		void destroyAllStructures(bool);
-
 	private:
+
+		// poll
 		void poll();
+
+		void handleTimeSlicing();
+
+		// state functions
+		void menu();
 		void combat();
-		void draw_mentat(int iType);
-		void setup_skirmish();
+		void mentat(int iType);
+		void region();
 		void house();
 		void tellhouse();
-		void mentat(int iType);
-		void menu();
-		void region();
 		void runGameState();
+
+		// init functions
+		void setup_skirmish();
+
+		// draw functions
+		void draw_mentat(int iType);
 		void shakeScreenAndBlitBuffer();
-		void handleTimeSlicing();
 		bool isResolutionInGameINIFoundAndSet();
 		void setScreenResolutionFromGameIniSettings();
 
@@ -139,6 +184,11 @@ class cGame {
 		bool isWinQuotaSet();
 		bool playerHasMetQuota(int iPlayerId);
 
+		bool isFadingOut();
+		bool isDoneFadingOut();
+
+
+		// variables
 		GameState state;
 
 		cScreenResolution * screenResolution;
