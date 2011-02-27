@@ -85,6 +85,10 @@ std::string cLogger::getLogOutcomeString(eLogOutcome outcome) {
 			return std::string("FAILED");
 		case OUTC_NONE:
 			return std::string("NONE");
+		case OUTC_IGNOREME:
+			return std::string("IGNOREME");
+		case OUTC_UNKNOWN:
+			return std::string("UNKNOWN");
 	}
 	return std::string("UNIDENTIFIED");
 }

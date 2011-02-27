@@ -20,6 +20,10 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#ifndef CGAMECONTROLSCONTEXT_H_
+class cGameControlsContext;
+#endif
+
 class cPlayer {
 
 	public:

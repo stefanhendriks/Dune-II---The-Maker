@@ -8,12 +8,16 @@
 #ifndef CBUILDINGLISTITEM
 #define CBUILDINGLISTITEM
 
+#ifndef CBUILDINGLIST
+class cBuildingList;
+#endif
+
 class cBuildingListItem {
 
 	public:
 		// constructors
-		cBuildingListItem(int theID, s_Structures entry, cBuildingList* list);
-		cBuildingListItem(int theID, s_UnitP entry, cBuildingList* list);
+		cBuildingListItem(int theID, s_Structures entry, cBuildingList * list);
+		cBuildingListItem(int theID, s_UnitP entry, cBuildingList * list);
 
 		// gettters
 		int getTotalBuildTime() {

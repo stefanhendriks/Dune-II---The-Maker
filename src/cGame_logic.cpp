@@ -18,6 +18,8 @@
 
 #include "include/d2tmh.h"
 
+#include "factory/cGameFactory.h"
+
 #include "movie/cMoviePlayer.h"
 #include "movie/cMovieDrawer.h"
 
@@ -1633,26 +1635,7 @@ void cGame::preparementat(bool bIntroduceHouseBriefing) {
 		}
 	} else {
 		if (isState(BRIEFING)) {
-			game.setup_players();
-
-			if (mapUtils) {
-				delete mapUtils;
-				mapUtils = NULL;
-			}
-
-			if (map) {
-				delete map;
-				map = NULL;
-			}
-
-			if (mapCamera) {
-				delete mapCamera;
-				mapCamera = NULL;
-			}
-
-			mapCamera = new cMapCamera();
-			map = new cMap(64, 64);
-			mapUtils = new cMapUtils(map);
+			cGameFactory::getInstance()->createNewDependenciesForGame();
 
 			INI_Load_scenario(iHouse, iRegion);
 
@@ -2639,6 +2622,7 @@ void cGame::setup_players() {
 	logbook("BEGIN: setup_players");
 	if (interactionManager) {
 		delete interactionManager;
+		interactionManager = NULL;
 	}
 
 	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
