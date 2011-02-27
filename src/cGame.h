@@ -155,9 +155,10 @@ class cGame {
 		}
 
 	private:
+		bool isBusyFadingOut();
 
 		// poll
-		void poll();
+		void updateState();
 
 		void handleTimeSlicing();
 
@@ -165,12 +166,10 @@ class cGame {
 		void menu();
 		void combat();
 		void mentat(int iType);
-		void region();
-		void house();
+		void selectNextConquest();
+		void selectHouse();
 		void tellhouse();
 		void runGameState();
-
-		// init functions
 		void setup_skirmish();
 
 		// draw functions

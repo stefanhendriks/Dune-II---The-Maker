@@ -428,7 +428,7 @@ void cGame::think_music() {
 
 }
 
-void cGame::poll() {
+void cGame::updateState() {
 	cMouse::getInstance()->updateState();
 	cGameControlsContext * context = player[HUMAN].getGameControlsContext();
 	assert(context);
@@ -513,18 +513,10 @@ void cGame::poll() {
 }
 
 void cGame::combat() {
-	if (isFadingOut()) // fading out
-	{
-		logbook("cGame:combat - fade action = 1[END]");
-		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
+	if (isBusyFadingOut()) {
 		return;
 	}
 
-	if (isDoneFadingOut()) {
-		iFadeAction = 2;
-	}
-
-	// -----------------
 	bPlacedIt = bPlaceIt;
 
 	assert(gameDrawer);
@@ -922,18 +914,22 @@ bool cGame::isDoneFadingOut()
     return iAlphaScreen == 0;
 }
 
-void cGame::setup_skirmish() {
-	// FADING STUFF
-	if (isFadingOut()) // fading out
-	{
+bool cGame::isBusyFadingOut() {
+	if (isFadingOut()) {
 		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
-		return;
+		return true;
 	}
 
 	if (isDoneFadingOut()) {
 		iFadeAction = 2;
 	}
-	// -----------------
+	return false;
+}
+
+void cGame::setup_skirmish() {
+	if (isBusyFadingOut()) {
+		return;
+	}
 
 	bool bFadeOut = false;
 
@@ -1531,18 +1527,10 @@ void cGame::setup_skirmish() {
 	}
 }
 
-// select house
-void cGame::house() {
-	// FADING STUFF
-	if (isFadingOut()) // fading out
-	{
-		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
+void cGame::selectHouse() {
+	if (isBusyFadingOut()) {
 		return;
 	}
-
-	if (isDoneFadingOut())
-		iFadeAction = 2;
-	// -----------------
 
 	bool bFadeOut = false;
 
@@ -1669,14 +1657,8 @@ void cGame::preparementat(bool bIntroduceHouseBriefing) {
 }
 
 void cGame::tellhouse() {
-	// FADING
-	if (isFadingOut()) {
-		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
+	if (isBusyFadingOut()) {
 		return;
-	}
-
-	if (isDoneFadingOut()) {
-		iFadeAction = 2;
 	}
 
 	bool bFadeOut = false;
@@ -1735,20 +1717,12 @@ void cGame::tellhouse() {
 }
 
 // select your next conquest
-void cGame::region() {
-	// FADING
-
-	int mouse_tile = MOUSE_NORMAL;
-
-	if (isFadingOut()) // fading out
-	{
-		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
+void cGame::selectNextConquest() {
+	if (isBusyFadingOut()) {
 		return;
 	}
 
-	if (isDoneFadingOut())
-		iFadeAction = 2;
-	// -----------------
+	int mouse_tile = MOUSE_NORMAL;
 
 	bool bFadeOut = false;
 
@@ -2140,10 +2114,10 @@ void cGame::runGameState() {
 			menu();
 			break;
 		case NEXTCONQUEST:
-			region();
+			selectNextConquest();
 			break;
 		case SELECTHOUSE:
-			house();
+			selectHouse();
 			break;
 		case HOUSEINTRODUCTION:
 			tellhouse();
@@ -2177,7 +2151,7 @@ void cGame::run() {
 
 	while (playing) {
 		TimeManager.processTime();
-		poll();
+		updateState();
 		handleTimeSlicing();
 		runGameState();
 		assert(interactionManager);
