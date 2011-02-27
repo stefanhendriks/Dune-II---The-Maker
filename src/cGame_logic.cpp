@@ -37,15 +37,23 @@ cGame::cGame() {
 cGame::~cGame() {
 	if (moviePlayer) {
 		delete moviePlayer;
+		moviePlayer = NULL;
 	}
-	if (soundPlayer)
+	if (soundPlayer) {
 		delete soundPlayer;
-	if (screenResolution)
+		soundPlayer = NULL;
+	}
+	if (screenResolution) {
 		delete screenResolution;
-	if (screenResolutionFromIni)
+		screenResolution = NULL;
+	}
+	if (screenResolutionFromIni) {
 		delete screenResolutionFromIni;
+		screenResolutionFromIni = NULL;
+	}
 	if (gameDrawer) {
 		delete gameDrawer;
+		gameDrawer = NULL;
 	}
 }
 
@@ -70,7 +78,7 @@ void cGame::init() {
 	memset(cRegionText, 0, sizeof(cRegionText));
 	//int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
 
-	bPlaySound = true;
+	bPlaySound = false;
 	bMp3 = false;
 
 	iSkirmishMap = -1;
@@ -147,14 +155,6 @@ void cGame::init() {
 // TODO: Bad smell (duplicate code)
 // initialize for missions
 void cGame::mission_init() {
-
-	if (mapUtils) {
-		delete mapUtils;
-	}
-
-	if (map) {
-		delete map;
-	}
 
 	iMusicVolume = 128; // volume is 0...
 
@@ -1633,15 +1633,37 @@ void cGame::preparementat(bool bTellHouse) {
 		if (isState(BRIEFING)) {
 			game.setup_players();
 
+			if (mapUtils) {
+				delete mapUtils;
+				mapUtils = NULL;
+			}
+
+			if (map) {
+				delete map;
+				map = NULL;
+			}
+
+			if (mapCamera) {
+				delete mapCamera;
+				mapCamera = NULL;
+			}
+
 			mapCamera = new cMapCamera();
+			map = new cMap(64, 64);
+			mapUtils = new cMapUtils(map);
 
 			INI_Load_scenario(iHouse, iRegion);
 
+			if (gameDrawer) {
+				delete gameDrawer;
+				gameDrawer = NULL;
+			}
+
 			gameDrawer = new cGameDrawer(&player[HUMAN]);
-			assert(gameDrawer->getCreditsDrawer());
-			gameDrawer->getCreditsDrawer()->setCredits();
+			gameDrawer->getCreditsDrawer()->setCreditsOfPlayer();
 
 			INI_LOAD_BRIEFING(iHouse, iRegion, INI_BRIEFING);
+
 		} else if (isState(WINBRIEF)) {
 			if (rnd(100) < 50) {
 				LOAD_SCENE("win01");

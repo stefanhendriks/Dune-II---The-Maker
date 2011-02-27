@@ -19,7 +19,7 @@ class CreditsDrawer {
 
 		void draw();
 		void setCredits(int amount);
-		void setCredits();
+		void setCreditsOfPlayer();
 
 		BITMAP *getBitmap() {
 			return bmp;

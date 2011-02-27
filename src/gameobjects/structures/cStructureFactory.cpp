@@ -332,8 +332,11 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDT
 			}
 
 			// another structure found on this location, return -2 meaning "blocked"
-			if (map->cell[cll].gameObjectId[MAPID_STRUCTURES] > -1) {
-				logbook("getSlabStatus will return -2, reason: another structure found on one of the cells");
+			int structureId = map->cell[cll].gameObjectId[MAPID_STRUCTURES];
+			if (structureId > -1) {
+				char msg[255];
+				sprintf(msg, "getSlabStatus will return -2, reason: another structure found on one of the cells with id [%d]", structureId);
+				logbook(msg);
 				return -2;
 			}
 

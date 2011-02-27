@@ -25,7 +25,7 @@ CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) {
 CreditsDrawer::~CreditsDrawer() {
 }
 
-void CreditsDrawer::setCredits() {
+void CreditsDrawer::setCreditsOfPlayer() {
 	setCredits((int) (player->credits));
 }
 

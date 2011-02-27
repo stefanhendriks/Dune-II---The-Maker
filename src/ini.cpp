@@ -765,7 +765,7 @@ int INI_WordValueINT(char result[MAX_LINE_LENGTH]) {
 		// nothing here, so we return NULL at the end
 	}
 
-	return NULL; // No value, return NULL
+	return -1;
 }
 
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]) {
@@ -1434,8 +1434,6 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 			}
 
 			if (section == INI_MAP) {
-				map = new cMap(64, 64);
-				mapUtils = new cMapUtils(map);
 				mapCamera->centerAndJumpViewPortToCell(playerCellToFocus);
 
 				// original dune 2 maps have 64x64 maps

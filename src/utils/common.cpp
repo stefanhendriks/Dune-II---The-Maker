@@ -1203,8 +1203,12 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 
 // play type of music
 void playMusicByType(int iType) {
+	if (!game.bPlaySound) {
+		return;
+	}
 	logbook("BEGIN: playMusicByType");
 	game.iMusicType = iType;
+
 
 	int iNumber = 0;
 
