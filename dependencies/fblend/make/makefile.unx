@@ -4,7 +4,6 @@ COMPILER = unix
 UNIX_TOOLS := 1
 
 include make/makefile.lst
-include make/makefile.tst
 
 #-------------------------------#
 # --- Compiler optimizations ---#
@@ -42,8 +41,12 @@ EXAMPLES = $(addsuffix .exe, $(basename $(addprefix $(EXAMPLE_DIR)/, $(EXAMP_SOU
 # pw - hack
 UNIX_LINK_LIB = `allegro-config --libs`
 
+SRC_DIR_U = $(SRC_DIR)
+LIB_DIR_U = $(LIB_DIR)
+
 ASM_DEPENDENCE = $(addprefix $(SRC_DIR_U)/x86/, $(ASM_DEPEND))
 
+include make/makefile.tst
 
 lib: $(LIB_PATH)
 examples: $(EXAMPLES)
