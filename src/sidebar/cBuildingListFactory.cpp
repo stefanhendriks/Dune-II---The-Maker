@@ -98,6 +98,9 @@ void cBuildingListFactory::initializeList(cPlayer *player, cBuildingList *list, 
 			//			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
 		} else {
 			// do nothing
+			char msg[255];
+			sprintf(msg, "ERROR: Initializing list_infantry for unknown house. House is [%d]", house);
+			logbook(msg);
 		}
 	}
 
@@ -182,6 +185,7 @@ void cBuildingListFactory::initializeList(cPlayer *player, cBuildingList *list, 
  * @return
  */
 cBuildingList * cBuildingListFactory::createList(cPlayer * player, int listId, int techlevel, int house) {
+	assert(house > -1);
 	cBuildingList * list = new cBuildingList(listId);
 	initializeList(player, list, listId, techlevel, house);
 	list->setTypeOfList(listId); // list id == type (see cSideBarFactory)

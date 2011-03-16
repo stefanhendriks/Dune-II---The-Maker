@@ -16,6 +16,7 @@ cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cMouse *theMouse) {
 }
 
 cMouseDrawer::cMouseDrawer(const cMouseDrawer& orig) {
+	delete mouseToolTip;
 }
 
 cMouseDrawer::~cMouseDrawer() {

@@ -36,7 +36,7 @@ void cGameFactory::createDependenciesForPlayers() {
 		cItemBuilder * itemBuilder = new cItemBuilder(thePlayer);
 		thePlayer->setItemBuilder(itemBuilder);
 
-		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(&player[i], game.iMission, game.iHouse);
+		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer, game.iMission);
 		thePlayer->setSideBar(sidebar);
 
 		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(thePlayer);
@@ -54,7 +54,6 @@ void cGameFactory::createDependenciesForPlayers() {
 		thePlayer->setTechLevel(game.iMission);
 	}
 	logbook("cGameFactory:createDependenciesForPlayers [END]");
-
 }
 
 void cGameFactory::createGameControlsContextsForPlayers() {
@@ -89,7 +88,8 @@ void cGameFactory::createInteractionManagerForHumanPlayer(GameState state) {
 			interactionManager = new cMenuInteractionManager(thePlayer);
 			break;
 		case SETUPSKIRMISH:
-			interactionManager = new cMenuInteractionManager(thePlayer);
+			// FIXME: this feels odd
+			interactionManager = new cCombatInteractionManager(thePlayer);
 			break;
 		default:
 			interactionManager = NULL;
@@ -108,34 +108,57 @@ void cGameFactory::createNewGameDrawerAndSetCreditsForHuman() {
 	gameDrawer->getCreditsDrawer()->setCreditsOfPlayer();
 }
 
-void cGameFactory::createNewDependenciesForGame(GameState state) {
-	logbook("cGameFactory:createNewDependenciesForGame [BEGIN]");
-    createDependenciesForPlayers();
-	createGameControlsContextsForPlayers();
-
-	if (mapUtils) {
+void cGameFactory::createMapClasses()
+{
+    if (mapUtils) {
 		delete mapUtils;
 		mapUtils = NULL;
 	}
-
-	if (map) {
+    if (map) {
 		delete map;
 		map = NULL;
 	}
-
-	if (mapCamera) {
+    if (mapCamera) {
 		delete mapCamera;
 		mapCamera = NULL;
 	}
+    mapCamera = new cMapCamera();
+    map = new cMap(64, 64);
+    mapUtils = new cMapUtils(map);
+}
 
-	mapCamera = new cMapCamera();
-	map = new cMap(64, 64);
-	mapUtils = new cMapUtils(map);
+void cGameFactory::createMapClassAndNewDependenciesForGame(GameState state) {
+	logbook("cGameFactory:createMapClassAndNewDependenciesForGame [BEGIN]");
+    createMapClasses();
+    createNewDependenciesForGame(state);
+	logbook("cGameFactory:createMapClassAndNewDependenciesForGame [END]");
+}
+
+void cGameFactory::createNewDependenciesForGame(GameState state) {
+	logbook("cGameFactory:createNewDependenciesForGame [BEGIN]");
+
+	createDependenciesForPlayers();
+	createGameControlsContextsForPlayers();
 
 	createNewGameDrawerAndSetCreditsForHuman();
 	createInteractionManagerForHumanPlayer(state);
 
 	logbook("cGameFactory:createNewDependenciesForGame [END]");
+}
+
+void cGameFactory::destroyAll() {
+	delete map;
+	delete mapCamera;
+	delete mapUtils;
+
+	delete gameDrawer;
+
+	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
+		cPlayer * thePlayer = &player[i];
+		delete thePlayer;
+	}
+
+	delete interactionManager;
 }
 
 cGameFactory * cGameFactory::getInstance() {

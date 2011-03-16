@@ -24,7 +24,7 @@ class cSideBarDrawer {
 
 	protected:
 		void drawHouseGui(cPlayer * thePlayer);
-		void drawBuildingLists();
+		void drawBuildingLists(cPlayer * thePlayer);
 		void drawCapacities();
 		void drawScrollButtons();
 

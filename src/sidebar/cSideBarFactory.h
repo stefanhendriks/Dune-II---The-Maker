@@ -19,7 +19,7 @@ class cSideBarFactory {
 	public:
 		static cSideBarFactory *getInstance();
 
-		cSideBar *createSideBar(cPlayer * player, int techlevel, int house);
+		cSideBar *createSideBar(cPlayer * player, int techlevel);
 
 	private:
 

@@ -33,7 +33,6 @@ void cOrderDrawer::drawOrderPlaced(cPlayer * thePlayer) {
 	// trans
 	fblend_trans(bmp_trans, bmp_screen, 29, 0, 128);
 
-	// destroy - phew
 	destroy_bitmap(bmp_trans);
 }
 

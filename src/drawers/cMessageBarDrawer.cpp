@@ -3,16 +3,14 @@
 cMessageBarDrawer::cMessageBarDrawer(cMessageBar * theMessageBar) {
 	assert(theMessageBar);
 	messageBar = theMessageBar;
-	constructedMessageBar = false;
 }
 
 cMessageBarDrawer::cMessageBarDrawer() {
 	messageBar = new cMessageBar(0, 0, 0);
-	constructedMessageBar = true;
 }
 
 cMessageBarDrawer::~cMessageBarDrawer() {
-	if (constructedMessageBar) {
+	if (messageBar) {
 		delete messageBar;
 	}
 	messageBar = NULL;

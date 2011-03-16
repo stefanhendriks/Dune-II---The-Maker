@@ -23,6 +23,11 @@ CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) {
 }
 
 CreditsDrawer::~CreditsDrawer() {
+	player = NULL;
+	if (bmp) {
+		destroy_bitmap(bmp);
+		bmp = NULL;
+	}
 }
 
 void CreditsDrawer::setCreditsOfPlayer() {

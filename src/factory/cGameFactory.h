@@ -7,17 +7,24 @@ class cGameFactory {
 
 		static cGameFactory *getInstance();
 
+		void createMapClassAndNewDependenciesForGame(GameState state);
 		void createNewDependenciesForGame(GameState state);
+
 		void createGameControlsContextsForPlayers();
-	    void createInteractionManagerForHumanPlayer(GameState state);
-	    void createNewGameDrawerAndSetCreditsForHuman();
+		void createInteractionManagerForHumanPlayer(GameState state);
+		void createNewGameDrawerAndSetCreditsForHuman();
+
+		void destroyAll();
 
 	protected:
 		~cGameFactory();
-		void createDependenciesForPlayers();
 
 	private:
 		static cGameFactory *instance;
+
+		void createMapClasses();
+		void createDependenciesForPlayers();
+
 };
 
 #endif /* CGAMEFACTORY_H_ */

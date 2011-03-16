@@ -55,6 +55,12 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 		id = list->getButtonIconIdPressed();
 	}
 
+	if (id < 0) {
+		char msg[255];
+		sprintf(msg, "Id is %d for list. Defaulting to id 1", id);
+		logbook(msg);
+		id = 1;
+	}
 	assert(id > -1);
 
 	int width = ((BITMAP *) gfxinter[BTN_INFANTRY_PRESSED].dat)->w;

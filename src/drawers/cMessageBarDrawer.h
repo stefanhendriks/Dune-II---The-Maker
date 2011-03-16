@@ -16,7 +16,6 @@ class cMessageBarDrawer {
 
 	private:
 		cMessageBar * messageBar;
-		bool constructedMessageBar;
 };
 
 #endif /* CMESSAGEBARDRAWER_H_ */

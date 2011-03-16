@@ -111,7 +111,7 @@ void cGame::init() {
 
 	iRegion = 1; // what region ? (calumative, from player perspective, NOT the actual region number)
 	iMission = 0; // calculated by mission loading (region -> mission calculation)
-	iHouse = -1; // what house is selected for playing?
+	iHouse = HARKONNEN;
 
 	shake_x = 0;
 	shake_y = 0;
@@ -186,7 +186,7 @@ void cGame::mission_init() {
 		int h = player[i].getHouse();
 
 		player[i].init();
-		player[i].setHouse(h);
+		player[i].setHouse(h); // wtf?
 
 		aiplayer[i].init(i);
 
@@ -802,7 +802,7 @@ void cGame::menu() {
 			INI_LOAD_MAPS_INTO_PREVIEWMAP_OBJECTS();
 
 			game.mission_init();
-			cGameFactory::getInstance()->createNewDependenciesForGame(SETUPSKIRMISH);
+			cGameFactory::getInstance()->createMapClassAndNewDependenciesForGame(SETUPSKIRMISH);
 
 			// initialize players skirmish style
 			for (int p = 0; p < AI_WORM; p++) {
@@ -1349,6 +1349,47 @@ void cGame::setup_skirmish() {
 		cCellCalculator *cellCalculator = new cCellCalculator(map);
 		bSkirmish = true;
 
+		iMission = 9; // high tech level (TODO: make this customizable)
+
+		// set houses
+		for (int p = 0; p < AI_WORM; p++) {
+			int iHouse = player[p].getHouse();
+
+			// house = 0 , random.
+			if (iHouse == 0 && p < 4) { // (all players above 4 are non-playing AI 'sides'
+				bool bOk = false;
+
+				while (bOk == false) {
+					if (p > 0) {
+						iHouse = rnd(4) + 1;
+					} else {
+						iHouse = rnd(3) + 1;
+					}
+
+					bool bFound = false;
+					for (int pl = 0; pl < AI_WORM; pl++) {
+						if (player[pl].getHouse() > 0 && player[pl].getHouse() == iHouse) {
+							bFound = true;
+						}
+					}
+
+					if (!bFound) {
+						bOk = true;
+					}
+
+				}
+			}
+
+			if (p == 5) {
+				iHouse = FREMEN;
+			}
+
+			player[p].setHouse(iHouse);
+		}
+
+		state = PLAYING;
+		cGameFactory::getInstance()->createNewDependenciesForGame(PLAYING);
+
 		/* set up starting positions */
 		int iStartPositions[5];
 		int iMax = 0;
@@ -1393,38 +1434,11 @@ void cGame::setup_skirmish() {
 			iShuffles--;
 		}
 
-		// set up players and their units
+
+
+		// set up units and structures for players
 		for (int p = 0; p < AI_WORM; p++) {
-
 			int iHouse = player[p].getHouse();
-
-			// house = 0 , random.
-			if (iHouse == 0 && p < 4) { // (all players above 4 are non-playing AI 'sides'
-				bool bOk = false;
-
-				while (bOk == false) {
-					if (p > 0)
-						iHouse = rnd(4) + 1;
-					else
-						iHouse = rnd(3) + 1;
-
-					bool bFound = false;
-					for (int pl = 0; pl < AI_WORM; pl++) {
-						if (player[pl].getHouse() > 0 && player[pl].getHouse() == iHouse) {
-							bFound = true;
-						}
-					}
-
-					if (!bFound) {
-						bOk = true;
-					}
-
-				}
-			}
-
-			if (p == 5) {
-				iHouse = FREMEN;
-			}
 
 			player[p].setHouse(iHouse);
 
@@ -1525,12 +1539,7 @@ void cGame::setup_skirmish() {
 
 		// TODO: spawn a few worms
 		iHouse = player[HUMAN].getHouse();
-		iMission = 9; // high tech level (TODO: make this customizable)
-		state = PLAYING;
 
-		cGameFactory::getInstance()->createNewDependenciesForGame(state);
-
-		assert(player[HUMAN].getItemBuilder() != NULL);
 
 		bFadeOut = true;
 		playMusicByType(MUSIC_PEACE);
@@ -1640,7 +1649,7 @@ void cGame::preparementat(bool bIntroduceHouseBriefing) {
 		}
 	} else {
 		if (isState(BRIEFING)) {
-			cGameFactory::getInstance()->createNewDependenciesForGame(BRIEFING);
+			cGameFactory::getInstance()->createMapClassAndNewDependenciesForGame(BRIEFING);
 
 			INI_Load_scenario(iHouse, iRegion);
 
@@ -1692,23 +1701,21 @@ void cGame::tellhouse() {
 	// draw buttons
 
 	if (TIMER_mentat_Speaking < 0) {
-		// NO
+		// BUTTON: NO
 		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[BTN_NO].dat, 293, 423);
 
 		if ((mouse_x > 293 && mouse_x < 446) && (mouse_y > 423 && mouse_y < 468)) {
 			if (cMouse::getInstance()->isLeftButtonClicked()) {
-				// head back to choose house
 				iHouse = -1;
 				setState(SELECTHOUSE);
 				bFadeOut = true;
 			}
 		}
 
-		// YES
+		// BUTTON: YES
 		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[BTN_YES].dat, 466, 423);
 		if ((mouse_x > 446 && mouse_x < 619) && (mouse_y > 423 && mouse_y < 468)) {
 			if (cMouse::getInstance()->isLeftButtonClicked()) {
-				// yes!
 				setState(BRIEFING);
 				iMission = 1;
 				iRegion = 1;
@@ -2183,6 +2190,8 @@ void cGame::shutdown() {
 	cLogger *logger = cLogger::getInstance();
 	logger->logHeader("SHUTDOWN");
 
+	cGameFactory::getInstance()->destroyAll();
+
 	// Destroy font of Allegro FONT library
 	alfont_destroy_font(game_font);
 	alfont_destroy_font(bene_font);
@@ -2193,13 +2202,13 @@ void cGame::shutdown() {
 	logbook("Allegro FONT library shut down.");
 
 	if (mp3_music != NULL) {
-		almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
+		almp3_stop_autopoll_mp3(mp3_music);
 		almp3_destroy_mp3(mp3_music);
 	}
 
 	logbook("Allegro MP3 library shut down.");
 
-	// Now we are all neatly closed, we exit Allegro and return to OS hell.
+	// Now we are all neatly closed, we exit Allegro and return to the OS
 	allegro_exit();
 	logbook("Allegro shut down.");
 	logbook("Thanks for playing.");

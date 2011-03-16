@@ -1,10 +1,3 @@
-/*
- * cSideBarDrawer.cpp
- *
- *  Created on: Aug 2, 2009
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
 cSideBarDrawer::cSideBarDrawer() {
@@ -15,12 +8,17 @@ cSideBarDrawer::cSideBarDrawer() {
 }
 
 cSideBarDrawer::~cSideBarDrawer() {
-	delete buildingListDrawer;
 	if (candybar) {
 		destroy_bitmap(candybar);
+		candybar = NULL;
 	}
 	if (optionsBar) {
 		destroy_bitmap(optionsBar);
+		optionsBar = NULL;
+	}
+	if (buildingListDrawer) {
+		delete buildingListDrawer;
+		buildingListDrawer = NULL;
 	}
 }
 
@@ -60,13 +58,10 @@ void cSideBarDrawer::drawHouseGui(cPlayer * thePlayer) {
 	// upper bar
 	rectfill(bmp_screen, 0, 0, game.getScreenResolution()->getWidth(), 42, makecol(0, 0, 0));
 
-	//draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_800X600].dat, 0, 0);
 	drawCandybar();
 
-	// draw the list background of the icons
 	drawIconsListBackground();
 
-	// minimap at bottom right
 	drawMinimap();
 
 	// draw options bar (todo: move to own options drawer and delegate in gameDrawer)
@@ -74,11 +69,9 @@ void cSideBarDrawer::drawHouseGui(cPlayer * thePlayer) {
 
 }
 
-void cSideBarDrawer::drawBuildingLists() {
-	// draw the sidebar itself (the backgrounds, borders, etc)
+void cSideBarDrawer::drawBuildingLists(cPlayer * player) {
 	cSideBar *sidebar = player->getSideBar();
 
-	// draw the buildlist icons
 	int selectedListId = sidebar->getSelectedListID();
 
 	for (int listId = LIST_CONSTYARD; listId < LIST_MAX; listId++) {
@@ -96,12 +89,10 @@ void cSideBarDrawer::drawBuildingLists() {
 	}
 }
 
-// draws the sidebar on screen
 void cSideBarDrawer::drawSideBar(cPlayer * player) {
-
 	drawHouseGui(player);
-	drawBuildingLists();
-	//	drawCapacities();
+	drawBuildingLists(player);
+	//drawCapacities();
 	drawScrollButtons();
 }
 
@@ -129,32 +120,27 @@ void cSideBarDrawer::drawCapacities() {
 	rectfill(bmp_screen, 497, 442, 499, 442 - iHeight, makecol(0, 0, 255));
 }
 
+// FIXME: Clean this function, it's confusing. Why is the left/right button
+// pressed when the mouse is only hovering over it?
+// also: right/left and up/down are related, but it is unclear and confusing here
 void cSideBarDrawer::drawScrollButtons() {
 	int buttonUpX = game.getScreenResolution()->getWidth() - 68;
 	int buttonUpY = game.getScreenResolution()->getHeight() - 310;
 
 	cMouse * mouse = cMouse::getInstance();
 
-	bool leftScrollButtonPressed = false;
-	bool rightScrollButtonPressed = false;
+	bool leftScrollButtonPressed = mouse->isMouseScrolledUp();
+	bool rightScrollButtonPressed = mouse->isMouseScrolledDown();
 
-	if (mouse->isMouseScrolledUp()) {
-		leftScrollButtonPressed = true;
-	}
-	if (mouse->isMouseScrolledDown()) {
-		rightScrollButtonPressed = true;
-	}
 
 	cSideBar *sidebar = player->getSideBar();
 
 	// when mouse pressed, a list is selected, and that list is still available
 	int selectedListID = sidebar->getSelectedListID();
 	if (selectedListID > -1 && sidebar->getList(selectedListID)->isAvailable()) {
-		cBuildingList *list = sidebar->getList(selectedListID);
-
 		bool mouseOverUp = isMouseOverScrollUp();
 		bool mouseOverDown = isMouseOverScrollDown();
-		assert(!(mouseOverUp == true && mouseOverDown == true));// can never be both.
+		assert(!(mouseOverUp == true && mouseOverDown == true)); // can never be both.
 
 		cMouse * mouse = cMouse::getInstance();
 		if (mouseOverUp) {

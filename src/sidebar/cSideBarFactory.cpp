@@ -21,9 +21,11 @@ cSideBarFactory *cSideBarFactory::getInstance() {
 }
 
 // construct a cSideBar
-cSideBar * cSideBarFactory::createSideBar(cPlayer *thePlayer, int techlevel, int house) {
+cSideBar * cSideBarFactory::createSideBar(cPlayer *thePlayer, int techlevel) {
 	assert(thePlayer);
 	cLogger *logger = cLogger::getInstance();
+
+	int house = thePlayer->getHouse();
 
 	cSideBar *sidebar = new cSideBar(thePlayer);
 

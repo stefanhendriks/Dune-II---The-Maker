@@ -26,16 +26,27 @@ cGameDrawer::cGameDrawer(cPlayer * thePlayer) {
 
 cGameDrawer::~cGameDrawer() {
 	delete sidebarDrawer;
+	sidebarDrawer = NULL;
 	delete upgradeDrawer;
+	upgradeDrawer = NULL;
 	delete orderDrawer;
+	orderDrawer = NULL;
 	delete creditsDrawer;
+	creditsDrawer = NULL;
 	delete mapDrawer;
+	mapDrawer = NULL;
 	delete miniMapDrawer;
+	miniMapDrawer = NULL;
 	delete particleDrawer;
+	particleDrawer = NULL;
 	delete messageDrawer;
+	messageBarDrawer = NULL;
 	delete placeitDrawer;
+	placeitDrawer = NULL;
 	delete structureDrawer;
+	structureDrawer = NULL;
 	delete mouseDrawer;
+	mouseDrawer = NULL;
 	player = NULL;
 }
 
