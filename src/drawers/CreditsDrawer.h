@@ -14,6 +14,7 @@ class CreditsDrawer {
 	public:
 		CreditsDrawer(cPlayer *thePlayer);
 		virtual ~CreditsDrawer();
+		void destroy();
 
 		void think(); // set animation counters and such, time based. Also make sound when needed.
 

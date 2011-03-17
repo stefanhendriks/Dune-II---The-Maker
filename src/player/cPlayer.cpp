@@ -23,6 +23,7 @@ cPlayer::cPlayer() {
 }
 
 cPlayer::~cPlayer() {
+	logbook("cPlayer : destructor [BEGIN]");
 	if (itemBuilder) {
 		delete itemBuilder;
 	}
@@ -44,6 +45,7 @@ cPlayer::~cPlayer() {
 	if (gameControlsContext) {
 		delete gameControlsContext;
 	}
+	logbook("cPlayer : destructor [END]");
 }
 
 void cPlayer::setId(int theId) {

@@ -147,9 +147,12 @@ void cGameFactory::createNewDependenciesForGame(GameState state) {
 }
 
 void cGameFactory::destroyAll() {
+	logbook("cGameFactory:destroyAll [BEGIN]");
 	delete map;
 	delete mapCamera;
 	delete mapUtils;
+
+	gameDrawer->destroy();
 
 	delete gameDrawer;
 
@@ -159,6 +162,13 @@ void cGameFactory::destroyAll() {
 	}
 
 	delete interactionManager;
+
+	destroy_bitmap(bmp_fadeout);
+	destroy_bitmap(bmp_screen);
+	destroy_bitmap(bmp_throttle);
+	destroy_bitmap(bmp_winlose);
+
+	logbook("cGameFactory:destroyAll [END]");
 }
 
 cGameFactory * cGameFactory::getInstance() {

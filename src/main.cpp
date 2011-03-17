@@ -23,7 +23,7 @@ int iRest = 1; // default rest value
 cGame game;
 cAbstractStructure * structure[MAX_STRUCTURES];
 cUnit unit[MAX_UNITS];
-cMap * map;
+cMap * map = NULL;
 cMapEditor mapEditor;
 cRandomMapGenerator randomMapGenerator;
 cMapCamera * mapCamera;

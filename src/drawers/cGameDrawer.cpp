@@ -25,6 +25,7 @@ cGameDrawer::cGameDrawer(cPlayer * thePlayer) {
 }
 
 cGameDrawer::~cGameDrawer() {
+	logbook("cGameDrawer : destructor [BEGIN]");
 	delete sidebarDrawer;
 	sidebarDrawer = NULL;
 	delete upgradeDrawer;
@@ -48,6 +49,12 @@ cGameDrawer::~cGameDrawer() {
 	delete mouseDrawer;
 	mouseDrawer = NULL;
 	player = NULL;
+	logbook("cGameDrawer : destructor [END]");
+}
+
+void cGameDrawer::destroy() {
+	sidebarDrawer->destroy();
+	creditsDrawer->destroy();
 }
 
 void cGameDrawer::draw() {

@@ -8,6 +8,10 @@ cSideBarDrawer::cSideBarDrawer() {
 }
 
 cSideBarDrawer::~cSideBarDrawer() {
+
+}
+
+void cSideBarDrawer::destroy() {
 	if (candybar) {
 		destroy_bitmap(candybar);
 		candybar = NULL;

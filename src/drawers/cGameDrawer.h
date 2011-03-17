@@ -11,6 +11,7 @@ class cGameDrawer {
 		~cGameDrawer();
 
 		void draw();
+		void destroy();
 
 		CreditsDrawer *getCreditsDrawer() {
 			return creditsDrawer;

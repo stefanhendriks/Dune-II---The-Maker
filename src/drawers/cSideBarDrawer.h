@@ -12,6 +12,7 @@ class cSideBarDrawer {
 	public:
 		cSideBarDrawer();
 		virtual ~cSideBarDrawer();
+		void destroy();
 
 		void drawSideBar(cPlayer * player);
 
