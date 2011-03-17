@@ -46,5 +46,5 @@ bool GUI_DRAW_FRAME(int x1, int y1, int width, int height) {
 		return true;
 	}
 
-	return false; // not hovering on it
+	return false;
 }

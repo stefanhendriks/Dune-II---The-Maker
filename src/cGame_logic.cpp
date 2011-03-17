@@ -1008,13 +1008,14 @@ void cGame::setup_skirmish() {
 		}
 	}
 
-	textDrawer->drawTextWithOneInteger(366, 27, "Startpoints: %d", iStartingPoints);
+	int startpointsX = (screenWidth - 274);
+	textDrawer->drawTextWithOneInteger(startpointsX, 27, "Startpoints: %d", iStartingPoints);
 
 	bool bDoRandomMap = false;
 
-	if ((mouse_x >= 366 && mouse_x <= (640 - 130)) && (mouse_y >= 27 && mouse_y <= 43)) {
-		alfont_textprintf(bmp_screen, bene_font, 366, 27, makecol(0, 0, 0), "Startpoints: %d", iStartingPoints);
-		alfont_textprintf(bmp_screen, bene_font, 366, 26, makecol(255, 0, 0), "Startpoints: %d", iStartingPoints);
+	if ((mouse_x >= startpointsX && mouse_x <= (screenWidth - 130)) && (mouse_y >= 27 && mouse_y <= 43)) {
+		alfont_textprintf(bmp_screen, bene_font, startpointsX, 27, makecol(0, 0, 0), "Startpoints: %d", iStartingPoints);
+		alfont_textprintf(bmp_screen, bene_font, startpointsX, 26, makecol(255, 0, 0), "Startpoints: %d", iStartingPoints);
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			iSkirmishStartPoints++;
@@ -1038,18 +1039,16 @@ void cGame::setup_skirmish() {
 	}
 
 	// TITLE: Map list
-	GUI_DRAW_FRAME_PRESSED(367, 159, 254, 17);
+	int iDrawY = -1;
+	int iDrawX = screenWidth - 273;
 
-	//rectfill(bmp_screen, 367, 159, 637, 159+17, makecol(186,190,149));
-	//rect(bmp_screen, 367,159, 637, 159+17,makecol(255,255,255));
+	GUI_DRAW_FRAME_PRESSED(iDrawX, 159, 254, 17);
 
 	alfont_textprintf(bmp_screen, bene_font, 447, 160, makecol(0, 0, 0), "Map List");
 
 	int const iHeightPixels = 17;
 
-	int iDrawY = -1;
-	int iDrawX = 367;
-	int iEndX = 637 - 16;
+	int iEndX = (screenWidth-3) - 16;
 	int iColor = makecol(255, 255, 255);
 
 	// scroll barr
@@ -1062,6 +1061,7 @@ void cGame::setup_skirmish() {
 		rect(bmp_screen, iEndX + 1, 159, 637, 460, makecol(64, 64, 64));
 	}
 
+
 	// for every map that we read , draw here
 	for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
 		if (PreviewMap[i].name[0] != '\0') {
@@ -1070,27 +1070,11 @@ void cGame::setup_skirmish() {
 			iDrawY = 159 + (i * iHeightPixels) + i + iHeightPixels; // skip 1 bar because the 1st = 'random map'
 
 			bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, 254, iHeightPixels);
-
-			//if ((mouse_x >= iDrawX && mouse_x <= iEndX) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+iHeightPixels)))
-			//	bHover=true;
-
-			if (bHover == false) {
-				//rectfill(bmp_screen, 367, iDrawY, iEndX,iDrawY+iHeightPixels, makecol(186,190,149));
-				//rect(bmp_screen, 367, iDrawY, iEndX,iDrawY+iHeightPixels, makecol(255,255,255));
-			} else {
-				//rectfill(bmp_screen, 367, iDrawY-1, iEndX,iDrawY+iHeightPixels, makecol(128,128,128));
-				//rect(bmp_screen, 367, iDrawY-1, iEndX,iDrawY+iHeightPixels,makecol(186,190,149));
-				GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, 254, iHeightPixels);
-			}
-
-			// dark sides
-			//	line(bmp_screen, 367, iDrawY+iHeightPixels, iEndX,iDrawY+iHeightPixels, makecol(128,128,128));
-			//	line(bmp_screen, iEndX, iDrawY, iEndX,iDrawY+iHeightPixels, makecol(128,128,128));
-
 			iColor = makecol(255, 255, 255);
 
 			if (bHover) {
-				// Mouse reaction
+				GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, 254, iHeightPixels);
+
 				iColor = makecol(255, 207, 41);
 
 				if (cMouse::getInstance()->isLeftButtonClicked()) {
@@ -1100,7 +1084,6 @@ void cGame::setup_skirmish() {
 						bDoRandomMap = true;
 					}
 				}
-
 			}
 
 			if (i == iSkirmishMap) {
@@ -1124,7 +1107,7 @@ void cGame::setup_skirmish() {
 
 	bool bHover = false;
 
-	// draw players who will be playing ;)
+	// draw players who will be playing
 	for (int p = 0; p < (AI_WORM - 1); p++) {
 		int iDrawY = 40 + (p * 22);
 		if (p < iStartingPoints) {
