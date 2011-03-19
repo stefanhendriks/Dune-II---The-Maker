@@ -15,4 +15,6 @@ cMouseToolTip::cMouseToolTip(cPlayer *thePlayer, cMouse *theMouse) {
 }
 
 cMouseToolTip::~cMouseToolTip() {
+	mouse = NULL;
+	player = NULL;
 }

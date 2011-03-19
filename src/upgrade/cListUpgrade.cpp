@@ -23,10 +23,8 @@ cListUpgrade::cListUpgrade(int theProgressLimit, int theTotalPrice, eUpgradeType
 }
 
 cListUpgrade::~cListUpgrade() {
-	// delete created item
-	if (item) {
-		delete item;
-	}
+	delete item;
+	item = NULL;
 }
 
 int cListUpgrade::getProgressAsPercentage() {

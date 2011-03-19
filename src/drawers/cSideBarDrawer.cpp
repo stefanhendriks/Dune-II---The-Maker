@@ -16,14 +16,14 @@ void cSideBarDrawer::destroy() {
 		destroy_bitmap(candybar);
 		candybar = NULL;
 	}
+
 	if (optionsBar) {
 		destroy_bitmap(optionsBar);
 		optionsBar = NULL;
 	}
-	if (buildingListDrawer) {
-		delete buildingListDrawer;
-		buildingListDrawer = NULL;
-	}
+
+	delete buildingListDrawer;
+	buildingListDrawer = NULL;
 }
 
 void cSideBarDrawer::drawCandybar() {

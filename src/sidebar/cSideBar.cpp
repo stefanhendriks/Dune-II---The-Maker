@@ -18,6 +18,7 @@ cSideBar::~cSideBar() {
 	for (int i = 0; i < LIST_MAX; i++) {
 		if (lists[i] != NULL) {
 			delete lists[i]; // delete list
+			lists[i] = NULL;
 		}
 	}
 }
@@ -28,6 +29,7 @@ void cSideBar::setList(int listId, cBuildingList* list) {
 	if (lists[listId]) {
 		logbook("WARNING: Setting list, while list already set. Deleting old entry before assigning new.");
 		delete lists[listId];
+		lists[listId] = NULL;
 	}
 
 	lists[listId] = list;

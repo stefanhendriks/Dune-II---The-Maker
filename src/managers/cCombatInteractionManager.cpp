@@ -16,9 +16,7 @@ cCombatInteractionManager::~cCombatInteractionManager() {
 }
 
 void cCombatInteractionManager::interactWithMouse() {
-	logbook("cCombatInteractionManager:interact [BEGIN]");
 	interactWithSidebar();
-	logbook("cCombatInteractionManager:interact [END]");
 }
 
 void cCombatInteractionManager::interactWithKeyboard() {

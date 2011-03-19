@@ -21,6 +21,8 @@ class cTextWriter {
 		void writeWithOneInteger(const char * msg, int value1);
 		void writeWithTwoIntegers(const char * msg, int value1, int value2);
 
+		void setTextColor(int value);
+
 	protected:
 		void updateDrawY();
 

@@ -10,6 +10,8 @@
 #ifndef D2TMH_H
 #define D2TMH_H
 
+//#include "../memoryleakfinder/debug_new.h"
+
 #include "system.h"
 #include "allegroh.h"
 #include "data.h"

@@ -119,6 +119,7 @@ void cBuildingList::removeItemFromList(int position) {
 		// item can be null, in that case do nothing.
 	} else {
 		delete item;
+		item = NULL;
 		items[position] = NULL;
 		maxItems--;
 	}

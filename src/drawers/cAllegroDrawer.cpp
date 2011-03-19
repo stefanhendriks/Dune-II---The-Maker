@@ -14,6 +14,7 @@ cAllegroDrawer::cAllegroDrawer(cScreenResolution * theScreenResolution) {
 }
 
 cAllegroDrawer::~cAllegroDrawer() {
+	screenResolution = NULL;
 }
 
 void cAllegroDrawer::drawCenteredSprite(BITMAP *dest, BITMAP *src) {

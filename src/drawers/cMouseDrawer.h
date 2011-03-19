@@ -11,7 +11,6 @@
 class cMouseDrawer {
 	public:
 		cMouseDrawer(cPlayer *thePlayer, cMouse *theMouse);
-		cMouseDrawer(const cMouseDrawer& orig);
 		virtual ~cMouseDrawer();
 
 		void draw();

@@ -187,6 +187,7 @@ void cAbstractStructure::die() {
 	game.TIMER_shake = (iWidth * iHeight) * 20;
 
 	// eventually die
+	// TODO: Can this really be happening? Deleting yourself?
 	cStructureFactory::getInstance()->deleteStructureInstance(this);
 }
 

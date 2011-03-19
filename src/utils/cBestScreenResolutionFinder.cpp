@@ -27,10 +27,8 @@ cBestScreenResolutionFinder::cBestScreenResolutionFinder() {
 
 cBestScreenResolutionFinder::~cBestScreenResolutionFinder() {
 	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i++) {
-		if (screenResolutions[i]) {
-			delete screenResolutions[i];
-			screenResolutions[i] = NULL;
-		}
+		delete screenResolutions[i];
+		screenResolutions[i] = NULL;
 	}
 }
 

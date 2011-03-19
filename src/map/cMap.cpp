@@ -26,8 +26,6 @@ cMap::cMap(int theWidth, int theHeight) {
 }
 
 cMap::~cMap() {
-	logbook("cMap : destructor [BEGIN]");
-	logbook("cMap : destructor [END]");
 }
 
 void cMap::init() {

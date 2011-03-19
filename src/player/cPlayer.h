@@ -106,10 +106,9 @@ class cPlayer {
 
 		int getAmountOfStructuresForType(int structureType);
 
-		// delete
 		void deleteSideBar() {
-			if (sidebar)
-				delete sidebar;
+			delete sidebar;
+			sidebar = NULL;
 		}
 
 	private:

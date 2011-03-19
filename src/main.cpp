@@ -27,7 +27,7 @@ cMap * map = NULL;
 cMapEditor mapEditor;
 cRandomMapGenerator randomMapGenerator;
 cMapCamera * mapCamera;
-cMapUtils * mapUtils;
+cMapUtils * mapUtils = NULL;
 cPlayer player[MAX_PLAYERS]; // player is
 cAIPlayer aiplayer[MAX_PLAYERS]; // related to aiplayer (except nr 0=human)
 cParticle particle[MAX_PARTICLES];

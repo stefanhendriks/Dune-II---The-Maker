@@ -13,11 +13,12 @@ cSoundPlayer::cSoundPlayer(int maxVoices) {
 }
 
 cSoundPlayer::~cSoundPlayer() {
-	if (maximumVoices > -1) {
-		for (int i = 0; i < maximumVoices; i++) {
-			destroySound(i, true);
-		}
-	}
+	// this might upset Allegro here FIXME: move to another place before destructor is called
+//	if (maximumVoices > -1) {
+//		for (int i = 0; i < maximumVoices; i++) {
+//			destroySound(i, true);
+//		}
+//	}
 }
 
 void cSoundPlayer::think() {
@@ -44,12 +45,15 @@ void cSoundPlayer::think() {
 }
 
 void cSoundPlayer::destroySound(int voice, bool force) {
-	if (maximumVoices < 0)
+	if (maximumVoices < 0) {
 		return;
-	if (voice < 0)
+	}
+	if (voice < 0) {
 		return;
-	if (voices[voice] < 0)
+	}
+	if (voices[voice] < 0) {
 		return;
+	}
 
 	if (force) {
 		deallocate_voice(voices[voice]);

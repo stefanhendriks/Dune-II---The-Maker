@@ -136,14 +136,14 @@ void cLogger::logHeader(const char *txt) {
 		length = 79;
 	std::string line(length, '-');
 
-	char *str = new char[line.length() + 1];
-	strcpy(str, line.c_str());
+	char * str = new char[line.length() + 1];
+	sprintf(str, "%s", line.c_str());
 
 	logCommentLine(str);
 	logCommentLine(txt);
 	logCommentLine(str);
 
-	delete str;
+	delete [] str;
 }
 
 void cLogger::log(eLogLevel level, eLogComponent component, const char *event, const char *message) {

@@ -23,28 +23,23 @@ cPlayer::cPlayer() {
 }
 
 cPlayer::~cPlayer() {
-	logbook("cPlayer : destructor [BEGIN]");
-	if (itemBuilder) {
-		delete itemBuilder;
-	}
-	if (orderProcesser) {
-		delete orderProcesser;
-	}
-	if (sidebar) {
-		delete sidebar;
-	}
-	if (structurePlacer) {
-		delete structurePlacer;
-	}
-	if (upgradeBuilder) {
-		delete upgradeBuilder;
-	}
-	if (buildingListUpdater) {
-		delete buildingListUpdater;
-	}
-	if (gameControlsContext) {
-		delete gameControlsContext;
-	}
+	char msg[255];
+	sprintf(msg, "cPlayer : destructor with id [%d] - [BEGIN]", id);
+	logbook(msg);
+	delete itemBuilder;
+	itemBuilder = NULL;
+	delete orderProcesser;
+	orderProcesser = NULL;
+	delete sidebar;
+	sidebar = NULL;
+	delete structurePlacer;
+	structurePlacer = NULL;
+	delete upgradeBuilder;
+	upgradeBuilder = NULL;
+	delete buildingListUpdater;
+	buildingListUpdater = NULL;
+	delete gameControlsContext;
+	gameControlsContext = NULL;
 	logbook("cPlayer : destructor [END]");
 }
 
@@ -58,75 +53,49 @@ void cPlayer::setId(int theId) {
 void cPlayer::setUpgradeBuilder(cUpgradeBuilder *theUpgradeBuilder) {
 	assert(theUpgradeBuilder);
 
-	// delete old reference
-	if (upgradeBuilder) {
-		delete upgradeBuilder;
-	}
-
+	delete upgradeBuilder;
 	upgradeBuilder = theUpgradeBuilder;
 }
 
 void cPlayer::setSideBar(cSideBar *theSideBar) {
 	assert(theSideBar);
 
-	// delete old reference
-	if (sidebar) {
-		delete sidebar;
-	}
-
+	delete sidebar;
 	sidebar = theSideBar;
 }
 
 void cPlayer::setItemBuilder(cItemBuilder *theItemBuilder) {
 	assert(theItemBuilder);
 
-	// delete old reference
-	if (itemBuilder) {
-		delete itemBuilder;
-	}
-
+	delete itemBuilder;
 	itemBuilder = theItemBuilder;
 }
 
 void cPlayer::setOrderProcesser(cOrderProcesser * theOrderProcesser) {
 	assert(theOrderProcesser);
 
-	if (orderProcesser) {
-		delete orderProcesser;
-	}
-
+	delete orderProcesser;
 	orderProcesser = theOrderProcesser;
 }
 
 void cPlayer::setStructurePlacer(cStructurePlacer * theStructurePlacer) {
 	assert(theStructurePlacer);
 
-	if (structurePlacer) {
-		delete structurePlacer;
-	}
-
+	delete structurePlacer;
 	structurePlacer = theStructurePlacer;
 }
 
 void cPlayer::setBuildingListUpdater(cBuildingListUpdater *theBuildingListUpgrader) {
 	assert(theBuildingListUpgrader);
 
-	// delete old reference
-	if (buildingListUpdater) {
-		delete buildingListUpdater;
-	}
-
+	delete buildingListUpdater;
 	buildingListUpdater = theBuildingListUpgrader;
 }
 
 void cPlayer::setGameControlsContext(cGameControlsContext *theGameControlsContext) {
 	assert(theGameControlsContext);
 
-	// delete old reference
-	if (gameControlsContext) {
-		delete gameControlsContext;
-	}
-
+	delete gameControlsContext;
 	gameControlsContext = theGameControlsContext;
 }
 
@@ -134,6 +103,7 @@ void cPlayer::init() {
 	memcpy(pal, general_palette, sizeof(pal));
 	house = GENERALHOUSE;
 
+	delete difficultySettings;
 	difficultySettings = new cPlayerAtreidesDifficultySettings();
 
 	// Reset structures amount
@@ -154,15 +124,14 @@ void cPlayer::init() {
 	TIMER_think = rnd(10); // timer for thinking itself (calling main routine)
 	TIMER_attack = -1; // -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 
+	id = -1;
 }
 
 // set house
 void cPlayer::setHouse(int iHouse) {
 	house = iHouse; // use rules of this house
 
-	if (difficultySettings) {
-		delete difficultySettings;
-	}
+	delete difficultySettings;
 
 	if (iHouse == ATREIDES) {
 		difficultySettings = new cPlayerAtreidesDifficultySettings();

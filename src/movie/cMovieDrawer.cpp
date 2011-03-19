@@ -17,6 +17,7 @@ cMovieDrawer::cMovieDrawer(cMoviePlayer * playerToDraw, BITMAP * bitmap) {
 
 cMovieDrawer::~cMovieDrawer() {
 	player = NULL;
+	destinationBitmap = NULL;
 }
 
 void cMovieDrawer::drawIfPlaying(int x, int y) {

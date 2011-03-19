@@ -15,14 +15,11 @@ cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cMouse *theMouse) {
 	mouseToolTip = new cMouseToolTip(player, mouse);
 }
 
-cMouseDrawer::cMouseDrawer(const cMouseDrawer& orig) {
-	delete mouseToolTip;
-}
-
 cMouseDrawer::~cMouseDrawer() {
 	player = NULL;
 	mouse = NULL;
 	delete mouseToolTip;
+	mouseToolTip = NULL;
 }
 
 void cMouseDrawer::draw() {
@@ -141,7 +138,7 @@ void cMouseDrawer::drawToolTip() {
 		drawToolTipBackground();
 		drawToolTipGeneralInformation(theStructure, textWriter);
 
-		//		// depending on structure type give more info
+		// depending on structure type give more info
 		int structureType = theStructure->getType();
 		if (structureType == WINDTRAP) {
 			cWindTrap * windTrap = dynamic_cast<cWindTrap*> (theStructure);
@@ -151,6 +148,8 @@ void cMouseDrawer::drawToolTip() {
 		} else if (structureType == TURRET || structureType == RTURRET) {
 			drawToolTipTurretInformation(theStructure, textWriter);
 		}
+
+		delete textWriter;
 	}
 }
 

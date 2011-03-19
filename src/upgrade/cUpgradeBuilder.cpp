@@ -58,8 +58,8 @@ void cUpgradeBuilder::processUpgrades() {
 					upgrades[i] = NULL;
 					listToUpgrade->setUpgrading(false);
 					delete upgrade;
+					upgrade = NULL;
 				}
-
 			}
 		}
 	}

@@ -22,6 +22,11 @@ cTextWriter::cTextWriter(int x, int y, ALFONT_FONT *theFont, int theFontSize) {
 cTextWriter::~cTextWriter() {
 	font = NULL;
 	delete textDrawer;
+	textDrawer = NULL;
+}
+
+void cTextWriter::setTextColor(int value) {
+	textDrawer->setTextColor(value);
 }
 
 void cTextWriter::write(const char * msg) {

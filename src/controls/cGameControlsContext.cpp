@@ -61,6 +61,7 @@ void cGameControlsContext::determineMouseCell() {
 	cCellCalculator * cellCalculator = new cCellCalculator(map);
 	mouseCell = cellCalculator->getCell(iMouseX, iMouseY);
 	delete cellCalculator;
+	cellCalculator = NULL;
 }
 
 void cGameControlsContext::determineToolTip() {

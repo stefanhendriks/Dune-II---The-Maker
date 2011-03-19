@@ -8,12 +8,6 @@
 
  2001 - 2011 (c) code by Stefan Hendriks
 
- -----------------------------------------
- Initialization of variables
- Game logic
- Think functions
- -----------------------------------------
-
  */
 
 #include "include/d2tmh.h"
@@ -37,26 +31,14 @@ cGame::cGame() {
 }
 
 cGame::~cGame() {
-	if (moviePlayer) {
-		delete moviePlayer;
-		moviePlayer = NULL;
-	}
-	if (soundPlayer) {
-		delete soundPlayer;
-		soundPlayer = NULL;
-	}
-	if (screenResolution) {
-		delete screenResolution;
-		screenResolution = NULL;
-	}
-	if (screenResolutionFromIni) {
-		delete screenResolutionFromIni;
-		screenResolutionFromIni = NULL;
-	}
-	if (gameDrawer) {
-		delete gameDrawer;
-		gameDrawer = NULL;
-	}
+	delete moviePlayer;
+	moviePlayer = NULL;
+	delete soundPlayer;
+	soundPlayer = NULL;
+	delete screenResolution;
+	screenResolution = NULL;
+	delete screenResolutionFromIni;
+	screenResolutionFromIni = NULL;
 }
 
 void cGame::init() {
@@ -226,7 +208,6 @@ bool cGame::playerHasMetQuota(int iPlayerId) {
 }
 
 void cGame::think_winlose() {
-	logbook("think_winlose [BEGIN]");
 	bool missionAccomplished = false;
 	bool humanPlayerAlive = playerHasAnyStructures(HUMAN) || playerHasAnyGroundUnits(HUMAN);
 
@@ -288,7 +269,6 @@ void cGame::think_winlose() {
 		draw_sprite(bmp_winlose, (BITMAP *) gfxinter[BMP_LOSING].dat, 77, 182);
 
 	}
-	logbook("think_winlose [END]");
 }
 
 //TODO: move to mentat classes
@@ -910,6 +890,7 @@ void cGame::menu() {
 	draw_sprite(bmp_screen, (BITMAP *) gfxdata[cMouse::getInstance()->getMouseTile()].dat, mouse_x, mouse_y);
 
 	delete textDrawer;
+	textDrawer = NULL;
 
 	if (key[KEY_ESC]) {
 		playing = false;
@@ -1528,10 +1509,12 @@ void cGame::setup_skirmish() {
 		playMusicByType(MUSIC_PEACE);
 		logbook("Done setting up skirmish game.");
 		delete cellCalculator;
+		cellCalculator = NULL;
 	}
 
 	// delete cell calculator
 	delete textDrawer;
+	textDrawer = NULL;
 
 	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *) gfxdata[cMouse::getInstance()->getMouseTile()].dat, mouse_x, mouse_y);
@@ -1748,6 +1731,7 @@ void cGame::selectNextConquest() {
 
 	// tell the story
 	if (iRegionState == 1) {
+		logbook("iRegionState == 1 [BEGIN]");
 		// depending on the mission, we tell the story
 		if (iRegionScene == 0) {
 			REGION_SETUP(iMission, iHouse);
@@ -1792,6 +1776,7 @@ void cGame::selectNextConquest() {
 			iRegionSceneAlpha += 5;
 		}
 
+		logbook("iRegionState == 1 [END]");
 		// when mission is 1, do the '3 houses has come to dune intro
 	}
 
@@ -1822,6 +1807,7 @@ void cGame::selectNextConquest() {
 
 	char * cMessage = gameDrawer->getMessageDrawer()->getMessage();
 	if (iRegionState == 2) {
+		logbook("iRegionState == 2 [BEGIN]");
 		// draw dune first
 		draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
 		draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
@@ -1883,8 +1869,9 @@ void cGame::selectNextConquest() {
 			gameDrawer->getMessageDrawer()->setMessage("Select your next region.");
 			//   allegro_message("done2");
 		}
+		logbook("iRegionState == 2 [END]");
 	} else if (iRegionState == 3) {
-
+		logbook("iRegionState == 3 [BEGIN]");
 		// draw dune first
 		draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
 		draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
@@ -1974,6 +1961,7 @@ void cGame::selectNextConquest() {
 			// region 20,21    = mission 8
 			// region 22 = mission 9
 
+			logbook("iRegionState == 3 [END]");
 		}
 
 	}
@@ -2211,19 +2199,20 @@ void cGame::setScreenResolutionFromGameIniSettings() {
 }
 
 bool cGame::setupGame() {
+	// this will empty the log file (create a new one)
+	FILE *fp;
+	fp = fopen("log.txt", "wt");
+
+	if (fp) {
+		fclose(fp);
+	}
+
 	cLogger *logger = cLogger::getInstance();
 
 	// TODO: remove? something seriously is wrong with the initialization of the game
 	game.init(); // Must be first!
 
 	// Each time we run the game, we clear out the logbook
-	FILE *fp;
-	fp = fopen("log.txt", "wt");
-
-	// this will empty the log file (create a new one)
-	if (fp) {
-		fclose(fp);
-	}
 
 	logger->logHeader("Dune II - The Maker");
 	logger->logCommentLine(""); // white space

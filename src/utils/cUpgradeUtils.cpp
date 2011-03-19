@@ -27,6 +27,7 @@ int cUpgradeUtils::getPriceToUpgradeList(cPlayer * thePlayer, int listTypeId, in
 	if (upgrade) {
 		int totalPrice = upgrade->getTotalPrice();
 		delete upgrade; // delete, as it was temporarily created
+		upgrade = NULL;
 		return totalPrice;
 	}
 

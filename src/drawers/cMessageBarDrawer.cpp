@@ -10,9 +10,7 @@ cMessageBarDrawer::cMessageBarDrawer() {
 }
 
 cMessageBarDrawer::~cMessageBarDrawer() {
-	if (messageBar) {
-		delete messageBar;
-	}
+	delete messageBar;
 	messageBar = NULL;
 }
 

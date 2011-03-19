@@ -1411,10 +1411,8 @@ void LOAD_SCENE(std::string scene) {
 	cMoviePlayer * moviePlayer = game.getMoviePlayer();
 
 	if (gfxmovie != NULL) {
-		if (moviePlayer) {
-			game.setMoviePlayer(NULL);
-			delete moviePlayer;
-		}
+		game.setMoviePlayer(NULL);
+		delete moviePlayer;
 		moviePlayer = new cMoviePlayer(gfxmovie);
 		moviePlayer->setPlaying(true);
 		moviePlayer->setFrame(0);

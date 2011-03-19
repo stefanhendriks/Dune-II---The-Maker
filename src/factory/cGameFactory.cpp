@@ -72,10 +72,9 @@ void cGameFactory::createGameControlsContextsForPlayers() {
 
 void cGameFactory::createInteractionManagerForHumanPlayer(GameState state) {
 	logbook("cGameFactory:createInteractionManagerForHumanPlayer [BEGIN]");
-	if (interactionManager) {
-		delete interactionManager;
-		interactionManager = NULL;
-	}
+	delete interactionManager;
+	interactionManager = NULL;
+
 	cPlayer * thePlayer = &player[HUMAN];
 	switch (state) {
 		case MAINMENU:
@@ -99,29 +98,27 @@ void cGameFactory::createInteractionManagerForHumanPlayer(GameState state) {
 }
 
 void cGameFactory::createNewGameDrawerAndSetCreditsForHuman() {
+	logbook("cGameFactory:createNewGameDrawerAndSetCreditsForHuman [BEGIN]");
 	if (gameDrawer) {
+		gameDrawer->destroy();
 		delete gameDrawer;
 		gameDrawer = NULL;
 	}
 
 	gameDrawer = new cGameDrawer(&player[HUMAN]);
 	gameDrawer->getCreditsDrawer()->setCreditsOfPlayer();
+	logbook("cGameFactory:createNewGameDrawerAndSetCreditsForHuman [END]");
 }
 
 void cGameFactory::createMapClasses()
 {
-    if (mapUtils) {
-		delete mapUtils;
-		mapUtils = NULL;
-	}
-    if (map) {
-		delete map;
-		map = NULL;
-	}
-    if (mapCamera) {
-		delete mapCamera;
-		mapCamera = NULL;
-	}
+	delete mapUtils;
+	mapUtils = NULL;
+	delete map;
+	map = NULL;
+	delete mapCamera;
+	mapCamera = NULL;
+
     mapCamera = new cMapCamera();
     map = new cMap(64, 64);
     mapUtils = new cMapUtils(map);
@@ -148,20 +145,26 @@ void cGameFactory::createNewDependenciesForGame(GameState state) {
 
 void cGameFactory::destroyAll() {
 	logbook("cGameFactory:destroyAll [BEGIN]");
-	delete map;
-	delete mapCamera;
 	delete mapUtils;
+	mapUtils = NULL;
+	delete map;
+	map = NULL;
+	delete mapCamera;
+	mapCamera = NULL;
 
 	gameDrawer->destroy();
 
 	delete gameDrawer;
+	gameDrawer = NULL;
 
-	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
-		cPlayer * thePlayer = &player[i];
-		delete thePlayer;
-	}
+//	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
+//		cPlayer * thePlayer = &player[i];
+//		delete thePlayer;
+//		thePlayer = NULL;
+//	}
 
 	delete interactionManager;
+	interactionManager = NULL;
 
 	destroy_bitmap(bmp_fadeout);
 	destroy_bitmap(bmp_screen);
