@@ -90,8 +90,8 @@ class cGame {
 		void think_mentat();
 
 		// state functions
-		void winning();
-		void losing();
+		void winningState();
+		void losingState();
 		void shutdown();
 		void combat_mouse();
 
@@ -163,14 +163,14 @@ class cGame {
 		void handleTimeSlicing();
 
 		// state functions
-		void menu();
-		void combat();
-		void drawMentat(int iType);
-		void selectNextConquest();
-		void selectHouse();
+		void menuState();
+		void playingState();
+		void briefingState(int iType);
+		void selectNextConquestState();
+		void selectHouseState();
 		void selecthouseState();
 		void runGameState();
-		void setup_skirmish();
+		void setupSkirmishState();
 
 		// draw functions
 		void drawHousesToSelect(int iType);

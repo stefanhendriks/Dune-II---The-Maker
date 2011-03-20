@@ -511,7 +511,7 @@ void cGame::updateState() {
 	}
 }
 
-void cGame::combat() {
+void cGame::playingState() {
 	if (isBusyFadingOut()) {
 		return;
 	}
@@ -619,7 +619,7 @@ void cGame::MENTAT_draw_mouth(int iMentat) {
 	}
 }
 
-void cGame::drawMentat(int iType) {
+void cGame::briefingState(int iType) {
 	if (isBusyFadingOut()) {
 		return;
 	}
@@ -730,7 +730,7 @@ void cGame::drawMentat(int iType) {
 }
 
 // draw menu
-void cGame::menu() {
+void cGame::menuState() {
 	if (isFadingOut()) {
 		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
 		return;
@@ -920,7 +920,7 @@ bool cGame::isBusyFadingOut() {
 	return false;
 }
 
-void cGame::setup_skirmish() {
+void cGame::setupSkirmishState() {
 	if (isBusyFadingOut()) {
 		return;
 	}
@@ -1521,7 +1521,7 @@ void cGame::setup_skirmish() {
 	}
 }
 
-void cGame::selectHouse() {
+void cGame::selectHouseState() {
 	if (isBusyFadingOut()) {
 		return;
 	}
@@ -1654,7 +1654,7 @@ void cGame::selecthouseState() {
 	if (iMentatSpeak == -1) {
 		preparementat(true); // prepare for house telling
 	} else if (iMentatSpeak > -1) {
-		drawMentat(-1); // speak dammit!
+		briefingState(-1); // speak dammit!
 	} else if (iMentatSpeak == -2) {
 		// do you wish to , bla bla?
 	}
@@ -1699,7 +1699,7 @@ void cGame::selecthouseState() {
 }
 
 // select your next conquest
-void cGame::selectNextConquest() {
+void cGame::selectNextConquestState() {
 	if (isBusyFadingOut()) {
 		return;
 	}
@@ -2086,46 +2086,46 @@ void cGame::shakeScreenAndBlitBuffer() {
 void cGame::runGameState() {
 	switch (state) {
 		case PLAYING:
-			combat();
+			playingState();
 			break;
 		case BRIEFING:
 			if (iMentatSpeak == -1) {
 				preparementat(false);
 			}
-			drawMentat(iHouse);
+			briefingState(iHouse);
 			break;
 		case SETUPSKIRMISH:
-			setup_skirmish();
+			setupSkirmishState();
 			break;
 		case MAINMENU:
-			menu();
+			menuState();
 			break;
 		case NEXTCONQUEST:
-			selectNextConquest();
+			selectNextConquestState();
 			break;
 		case SELECTHOUSE:
-			selectHouse();
+			selectHouseState();
 			break;
 		case HOUSEINTRODUCTION:
 			selecthouseState();
 			break;
 		case WINNING:
-			winning();
+			winningState();
 			break;
 		case LOSING:
-			losing();
+			losingState();
 			break;
 		case WINBRIEF:
 			if (iMentatSpeak == -1) {
 				preparementat(false);
 			}
-			drawMentat(iHouse);
+			briefingState(iHouse);
 			break;
 		case LOSEBRIEF:
 			if (iMentatSpeak == -1) {
 				preparementat(false);
 			}
-			drawMentat(iHouse);
+			briefingState(iHouse);
 			break;
 	}
 }

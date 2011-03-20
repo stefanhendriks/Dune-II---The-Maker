@@ -21,7 +21,7 @@ void cGame::FADE_OUT() {
 	draw_sprite(bmp_fadeout, bmp_screen, 0, 0);
 }
 
-void cGame::losing() {
+void cGame::losingState() {
 	blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 
 	draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
@@ -42,7 +42,7 @@ void cGame::losing() {
 	}
 }
 
-void cGame::winning() {
+void cGame::winningState() {
 	blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 
 
