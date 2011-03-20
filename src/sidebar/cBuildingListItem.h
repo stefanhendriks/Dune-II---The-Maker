@@ -18,6 +18,7 @@ class cBuildingListItem {
 		// constructors
 		cBuildingListItem(int theID, s_Structures entry, cBuildingList * list);
 		cBuildingListItem(int theID, s_UnitP entry, cBuildingList * list);
+		~cBuildingListItem();
 
 		// gettters
 		int getTotalBuildTime() {

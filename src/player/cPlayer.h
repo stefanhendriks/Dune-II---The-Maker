@@ -65,7 +65,12 @@ class cPlayer {
 		void setUpgradeBuilder(cUpgradeBuilder *theUpgradeBuilder);
 		void setOrderProcesser(cOrderProcesser *theOrderProcesser);
 		void setGameControlsContext(cGameControlsContext *theGameControlsContext);
-
+		void setCredits(float value) {
+			credits = value;
+		}
+		void setTeam(int value) {
+			iTeam = value;
+		}
 		// get
 		cBuildingListUpdater *getBuildingListUpdater() {
 			return buildingListUpdater;
@@ -130,10 +135,10 @@ class cPlayer {
 
 		cGameControlsContext * gameControlsContext;
 
+		int id; // this id is the reference to the player array
 		int techLevel; // technology level
 		int house;
 		int minimapColor; // color of this team on minimap;
-		int id; // this id is the reference to the player array
 };
 
 #endif

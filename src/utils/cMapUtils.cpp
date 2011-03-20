@@ -19,7 +19,14 @@ cMapUtils::~cMapUtils() {
 bool cMapUtils::isCellVisibleForPlayerId(int playerId, int iCell) {
 	assert(playerId >= HUMAN);
 	assert(playerId < MAX_PLAYERS);
-	return isCellVisible(&player[playerId], iCell);
+	cPlayer * thePlayer = &player[playerId];
+	int id = thePlayer->getId();
+	if (id < HUMAN) {
+		char msg[255];
+		sprintf(msg, "ID from player is [%d], iCell [%d], playerId is [%d]", id, iCell, playerId);
+		logbook(msg);
+	}
+	return isCellVisible(thePlayer, iCell);
 }
 
 bool cMapUtils::isCellVisible(cPlayer *thePlayer, int iCell) {

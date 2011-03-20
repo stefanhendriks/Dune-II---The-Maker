@@ -20,6 +20,10 @@ cPlayer::cPlayer() {
 	upgradeBuilder = NULL;
 	buildingListUpdater = NULL;
 	gameControlsContext = NULL;
+	id = -99;
+	minimapColor = 0;
+	house = GENERALHOUSE;
+	techLevel = 0;
 }
 
 cPlayer::~cPlayer() {

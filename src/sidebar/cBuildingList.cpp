@@ -9,7 +9,9 @@ cBuildingList::cBuildingList(int theId) {
 	buttonDrawY = 0;
 	scrollingOffset = 0; // the offset for scrolling through the list.
 	available = false; // is this list available?
-	memset(items, NULL, sizeof(items));
+	for (int i = 0; i < MAX_ITEMS; i++) {
+		items[i] = NULL;
+	}
 	typeOfList = theId;
 	upgradeLevel = 0;
 	upgrading = false;
@@ -27,7 +29,9 @@ cBuildingList::~cBuildingList() {
 	scrollingOffset = 0; // the offset for scrolling through the list.
 	available = false; // is this list available?
 	removeAllItems();
-	memset(items, NULL, sizeof(items));
+	for (int i = 0; i < MAX_ITEMS; i++) {
+		items[i] = NULL;
+	}
 	upgradeLevel = 0;
 	upgrading = false;
 	maxItems = 0;
@@ -36,7 +40,7 @@ cBuildingList::~cBuildingList() {
 
 cBuildingListItem * cBuildingList::getItem(int position) {
 	assert(position > -1);
-	assert(position < MAX_ICONS);
+	assert(position < MAX_ITEMS);
 	return items[position];
 }
 
@@ -46,7 +50,7 @@ cBuildingListItem * cBuildingList::getItem(int position) {
  * @return
  */
 int cBuildingList::getFreeSlot() {
-	for (int i = 0; i < MAX_ICONS; i++) {
+	for (int i = 0; i < MAX_ITEMS; i++) {
 		if (items[i] == NULL) {
 			return i; // return free slot
 		}
@@ -56,7 +60,7 @@ int cBuildingList::getFreeSlot() {
 }
 
 void cBuildingList::removeAllItems() {
-	for (int i = 0; i < MAX_ICONS; i++) {
+	for (int i = 0; i < MAX_ITEMS; i++) {
 		removeItemFromList(i);
 	}
 }
@@ -68,7 +72,7 @@ bool cBuildingList::isItemInList(cBuildingListItem * item) {
 
 bool cBuildingList::hasItemType(int itemTypeId) {
 	assert(itemTypeId >= 0);
-	for (int i = 0; i < MAX_ICONS; i++) {
+	for (int i = 0; i < MAX_ITEMS; i++) {
 		cBuildingListItem * itemInList = getItem(i);
 
 		// item already in list (same build id)
@@ -113,7 +117,7 @@ void cBuildingList::addItemToList(cBuildingListItem * item) {
  */
 void cBuildingList::removeItemFromList(int position) {
 	assert(position > -1);
-	assert(position < MAX_ICONS);
+	assert(position < MAX_ITEMS);
 	cBuildingListItem * item = getItem(position);
 	if (item == NULL) {
 		// item can be null, in that case do nothing.
@@ -123,7 +127,6 @@ void cBuildingList::removeItemFromList(int position) {
 		items[position] = NULL;
 		maxItems--;
 	}
-
 }
 
 /**
@@ -142,7 +145,7 @@ bool cBuildingList::isOverButton(int x, int y) {
 
 void cBuildingList::setScrollingOffset(int value) {
 	assert(value > -1);
-	assert(value < MAX_ICONS);
+	assert(value < MAX_ITEMS);
 	scrollingOffset = value;
 }
 

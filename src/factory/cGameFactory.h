@@ -14,6 +14,8 @@ class cGameFactory {
 		void createInteractionManagerForHumanPlayer(GameState state);
 		void createNewGameDrawerAndSetCreditsForHuman();
 
+		void createMapClasses();
+
 		void destroyAll();
 
 	protected:
@@ -22,7 +24,6 @@ class cGameFactory {
 	private:
 		static cGameFactory *instance;
 
-		void createMapClasses();
 		void createDependenciesForPlayers();
 
 };

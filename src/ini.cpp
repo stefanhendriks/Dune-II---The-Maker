@@ -1292,9 +1292,9 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 	FILE *stream;
 	int section = INI_NONE;
 	int wordtype = WORD_NONE;
-	int iPlayerID = -1;
-	int iHumanID = -1;
-	bool bSetUpPlayers = true;
+	int iPlayerIDScenario = -1;
+	int iHumanIDScenario = -1;
+	bool shouldInitializePlayersWhenReadingUnitsForTheFirstTime = true;
 	int iPl_credits[MAX_PLAYERS];
 	int iPl_house[MAX_PLAYERS];
 	int iPl_quota[MAX_PLAYERS];
@@ -1334,27 +1334,27 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 				logbook(msg);
 
 				if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
-					iPlayerID++;
+					iPlayerIDScenario++;
 
-					if (iPlayerID > (MAX_PLAYERS - 1)) {
-						iPlayerID = (MAX_PLAYERS - 1);
+					if (iPlayerIDScenario > (MAX_PLAYERS - 1)) {
+						iPlayerIDScenario = (MAX_PLAYERS - 1);
 					}
 
 					if (section == INI_HOUSEATREIDES)
-						iPl_house[iPlayerID] = ATREIDES;
+						iPl_house[iPlayerIDScenario] = ATREIDES;
 					if (section == INI_HOUSEORDOS)
-						iPl_house[iPlayerID] = ORDOS;
+						iPl_house[iPlayerIDScenario] = ORDOS;
 					if (section == INI_HOUSEHARKONNEN)
-						iPl_house[iPlayerID] = HARKONNEN;
+						iPl_house[iPlayerIDScenario] = HARKONNEN;
 					if (section == INI_HOUSEMERCENARY)
-						iPl_house[iPlayerID] = MERCENARY;
+						iPl_house[iPlayerIDScenario] = MERCENARY;
 					if (section == INI_HOUSEFREMEN)
-						iPl_house[iPlayerID] = FREMEN;
+						iPl_house[iPlayerIDScenario] = FREMEN;
 					if (section == INI_HOUSESARDAUKAR)
-						iPl_house[iPlayerID] = SARDAUKAR;
+						iPl_house[iPlayerIDScenario] = SARDAUKAR;
 
 					char msg[255];
-					sprintf(msg, "[INI_Load_scenario] Setting house to [%d] for playerId [%d]", iPl_house[iPlayerID], iPlayerID);
+					sprintf(msg, "[INI_Load_scenario] Setting house to [%d] for playerIdScenario [%d]", iPl_house[iPlayerIDScenario], iPlayerIDScenario);
 					logbook(msg);
 				}
 				continue; // next line
@@ -1394,10 +1394,10 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 			if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
 				char msg[255];
 				memset(msg, 0, sizeof(msg));
-				sprintf(msg, "Section is between atreides and mercenary, the playerId is [%d]. WordType is [%d]", iPlayerID, wordtype);
+				sprintf(msg, "Section is between atreides and mercenary, the playerId is [%d]. WordType is [%d]", iPlayerIDScenario, wordtype);
 				logbook(msg);
 				// link house (found, because > -1)
-				if (iPlayerID > -1) {
+				if (iPlayerIDScenario > -1) {
 					if (wordtype == WORD_BRAIN) {
 						char cBrain[256];
 						memset(cBrain, 0, sizeof(cBrain));
@@ -1408,27 +1408,24 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 						sprintf(msg, "Brain is [%s]", cBrain);
 						logbook(msg);
 
-						// We know the human brain now, this should be player 0...
 						if (strcmp(cBrain, "Human") == 0) {
 							char msg[255];
 							memset(msg, 0, sizeof(msg));
-							sprintf(msg, "Found human player for id [%d]", iPlayerID);
+							sprintf(msg, "playerIdScenario with id [%d] is human player", iPlayerIDScenario);
 							logbook(msg);
-							iHumanID = iPlayerID;
-						} else {
-							logbook("This brain is not human...");
+							iHumanIDScenario = iPlayerIDScenario;
 						}
 
 					} else if (wordtype == WORD_CREDITS) {
 						int credits = INI_WordValueINT(linefeed) - 1;
 						char msg[255];
 						memset(msg, 0, sizeof(msg));
-						sprintf(msg, "Set credits for player id [%d] to [%d]", iPlayerID, credits);
+						sprintf(msg, "Set credits for player id [%d] to [%d]", iPlayerIDScenario, credits);
 						logbook(msg);
 
-						iPl_credits[iPlayerID] = credits;
+						iPl_credits[iPlayerIDScenario] = credits;
 					} else if (wordtype == WORD_QUOTA) {
-						iPl_quota[iPlayerID] = INI_WordValueINT(linefeed);
+						iPl_quota[iPlayerIDScenario] = INI_WordValueINT(linefeed);
 					}
 				}
 			}
@@ -1548,48 +1545,59 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 			} else if (section == INI_UNITS) {
 
 				// ORIGINAL DUNE 2 MISSION. EVERYBODY IS AGAINST U
-				if (bSetUpPlayers) {
+				if (shouldInitializePlayersWhenReadingUnitsForTheFirstTime) {
 					logbook("Going to setup players");
-					int iRealID = 1;
+					int iPlayerIdCPU = 1;
 
-					for (int iP = 0; iP < MAX_PLAYERS; iP++) // till 6 , since player 6 itself is sandworm
-					{
+					for (int index = 0; index < MAX_PLAYERS; index++) {
 						char msg[255];
 						memset(msg, 0, sizeof(msg));
-						sprintf(msg, "House for id [%d] is [%d] - human id is [%d]", iP, iPl_house[iP], iHumanID);
+						sprintf(msg, "House for index [%d] is [%d]", index, iPl_house[index]);
 						logbook(msg);
-						if (iPl_house[iP] > -1) {
-							if (iP == iHumanID) {
+
+						if (iPl_house[index] > -1) { // house found in INI file and set in array (> -1)
+							if (index == iHumanIDScenario) { // when human player
+								cPlayer * thePlayer = &player[HUMAN];
+								thePlayer->setCredits(iPl_credits[index]);
+								thePlayer->setHouse(iPl_house[index]);
+								thePlayer->setTeam(0);
+
+								game.iHouse = iPl_house[index];
+								if (iPl_quota[index] > 0) {
+									game.iWinQuota = iPl_quota[index];
+								}
+
 								char msg[255];
 								memset(msg, 0, sizeof(msg));
-								sprintf(msg, "Setting up human player, credits to [%d]", iPl_credits[iP]);
+								sprintf(msg, "index equals humanIdScenario (=[%d]). Setting up human player, credits to [%d]. cPlayer->getId() returns [%d]", iHumanIDScenario, iPl_credits[index], thePlayer->getId());
 								logbook(msg);
-								player[HUMAN].credits = iPl_credits[iP];
-								player[HUMAN].setHouse(iPl_house[iP]);
-								player[HUMAN].iTeam = 0;
-								game.iHouse = iPl_house[iP];
-								if (iPl_quota[iP] > 0) {
-									game.iWinQuota = iPl_quota[iP];
-								}
+
 							} else {
 								// CPU player
-								player[iRealID].iTeam = 1; // All AI players are on the same team
+								assert(iPlayerIdCPU < MAX_PLAYERS);
+								cPlayer * thePlayer = &player[iPlayerIdCPU];
+								char msg[255];
+								sprintf(msg, "index is CPU player, iPlayerIdCPU is [%d]. cPlayer->getId() returns [%d]", iPlayerIdCPU, thePlayer->getId());
+								logbook(msg);
+								thePlayer->setTeam(1);  // All AI players are on the same team
 
-								// belong to player team
-								if (iPl_house[iP] == FREMEN) {
+								// Except FREMEN, they team up with HUMAN
+								if (iPl_house[index] == FREMEN) {
 									if (player[HUMAN].getHouse() == ATREIDES) {
-										player[iRealID].iTeam = 0;
+										thePlayer->setTeam(0);
 									}
 								}
 
-								player[iRealID].credits = iPl_credits[iP];
-								player[iRealID].setHouse(iPl_house[iP]);
-								iRealID++;
+								thePlayer->setCredits(iPl_credits[index]);
+								thePlayer->setHouse(iPl_house[index]);
+								iPlayerIdCPU++;
 							}
+						} else {
+							logbook("index has no house set.");
 						}
 					}
 
-					bSetUpPlayers = false;
+					shouldInitializePlayersWhenReadingUnitsForTheFirstTime = false;
 				}
 
 				int iPart = -1; /*
@@ -1695,13 +1703,13 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 				// In case some funny-face of Westwood did first the structures section, we still set up players then...
 				// har har har..
 				// ORIGINAL DUNE 2 MISSION. EVERYBODY IS AGAINST U
-				if (bSetUpPlayers) {
+				if (shouldInitializePlayersWhenReadingUnitsForTheFirstTime) {
 					int iRealID = 1;
 
 					for (int iP = 0; iP < MAX_PLAYERS; iP++) // till 6 , since player 6 itself is sandworm
 					{
 						if (iPl_house[iP] > -1)
-							if (iP == iHumanID) {
+							if (iP == iHumanIDScenario) {
 								player[0].credits = iPl_credits[iP];
 								player[0].setHouse(iPl_house[iP]);
 								player[0].iTeam = 0;
@@ -1726,7 +1734,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 								iRealID++;
 							}
 					}
-					bSetUpPlayers = false;
+					shouldInitializePlayersWhenReadingUnitsForTheFirstTime = false;
 				}
 
 				int iPart = -1; /*

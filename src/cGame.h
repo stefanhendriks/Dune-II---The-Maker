@@ -165,15 +165,15 @@ class cGame {
 		// state functions
 		void menu();
 		void combat();
-		void mentat(int iType);
+		void drawMentat(int iType);
 		void selectNextConquest();
 		void selectHouse();
-		void tellhouse();
+		void selecthouseState();
 		void runGameState();
 		void setup_skirmish();
 
 		// draw functions
-		void draw_mentat(int iType);
+		void drawHousesToSelect(int iType);
 		void shakeScreenAndBlitBuffer();
 		bool isResolutionInGameINIFoundAndSet();
 		void setScreenResolutionFromGameIniSettings();

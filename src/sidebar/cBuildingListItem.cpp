@@ -40,6 +40,12 @@ cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *li
 	placeIt = false;
 }
 
+cBuildingListItem::~cBuildingListItem() {
+	icon = -1;
+	ID = -1;
+	available = false;
+}
+
 bool cBuildingListItem::canPay() {
 	int costs = 0;
 

@@ -165,16 +165,21 @@ void cGame::mission_init() {
 
 	// clear out players but not entirely
 	for (int i = 0; i < MAX_PLAYERS; i++) {
+		// remember house
 		int h = player[i].getHouse();
 
 		player[i].init();
-		player[i].setHouse(h); // wtf?
+
+		// set house again (wtf)
+		player[i].setHouse(h);
 
 		aiplayer[i].init(i);
 
 		if (bSkirmish) {
 			player[i].credits = 2500;
 		}
+
+//		player[i].setId(i);
 	}
 }
 
@@ -521,7 +526,7 @@ void cGame::combat() {
 	think_winlose();
 }
 
-void cGame::draw_mentat(int iType) {
+void cGame::drawHousesToSelect(int house) {
 	select_palette(general_palette);
 
 	// movie
@@ -530,11 +535,11 @@ void cGame::draw_mentat(int iType) {
 	delete movieDrawer;
 
 	// draw proper background
-	if (iType == ATREIDES)
+	if (house == ATREIDES)
 		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[MENTATA].dat, 0, 0);
-	else if (iType == HARKONNEN)
+	else if (house == HARKONNEN)
 		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[MENTATH].dat, 0, 0);
-	else if (iType == ORDOS)
+	else if (house == ORDOS)
 		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[MENTATO].dat, 0, 0);
 	else // bene
 	{
@@ -554,8 +559,6 @@ void cGame::draw_mentat(int iType) {
 		}
 
 	// SPEAKING ANIMATIONS IS DONE IN MENTAT()
-
-
 }
 
 void cGame::MENTAT_draw_eyes(int iMentat) {
@@ -616,23 +619,17 @@ void cGame::MENTAT_draw_mouth(int iMentat) {
 	}
 }
 
-// draw mentat
-void cGame::mentat(int iType) {
-	if (isFadingOut()) // fading out
-	{
-		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
+void cGame::drawMentat(int iType) {
+	if (isBusyFadingOut()) {
 		return;
 	}
-
-	if (isDoneFadingOut())
-		iFadeAction = 2;
-	// -----------------
 
 	bool bFadeOut = false;
 
 	// draw speaking animation, and text, etc
-	if (iType > -1)
-		draw_mentat(iType); // draw houses
+	if (iType > -1) {
+		drawHousesToSelect(iType); // draw houses
+	}
 
 	MENTAT_draw_mouth(iType);
 	MENTAT_draw_eyes(iType);
@@ -667,7 +664,7 @@ void cGame::mentat(int iType) {
 			if (cMouse::getInstance()->isLeftButtonClicked()) {
 				if (isState(BRIEFING)) {
 					// proceed, play mission
-					state = PLAYING;
+					setState(PLAYING);
 
 					// CENTER MOUSE
 					position_mouse(320, 240);
@@ -1615,15 +1612,13 @@ void cGame::preparementat(bool bIntroduceHouseBriefing) {
 		}
 	} else {
 		if (isState(BRIEFING)) {
-			cGameFactory::getInstance()->createMapClassAndNewDependenciesForGame(BRIEFING);
+			cGameFactory::getInstance()->createMapClasses();
 
 			INI_Load_scenario(iHouse, iRegion);
 
-			cGameFactory::getInstance()->createInteractionManagerForHumanPlayer(PLAYING);
-			cGameFactory::getInstance()->createNewGameDrawerAndSetCreditsForHuman();
+			cGameFactory::getInstance()->createNewDependenciesForGame(PLAYING);
 
 			INI_LOAD_BRIEFING(iHouse, iRegion, INI_BRIEFING);
-
 		} else if (isState(WINBRIEF)) {
 			if (rnd(100) < 50) {
 				LOAD_SCENE("win01");
@@ -1646,26 +1641,25 @@ void cGame::preparementat(bool bIntroduceHouseBriefing) {
 	TIMER_mentat_Speaking = 0; //	0 means, set it up
 }
 
-void cGame::tellhouse() {
+void cGame::selecthouseState() {
 	if (isBusyFadingOut()) {
 		return;
 	}
 
 	bool bFadeOut = false;
 
-	draw_mentat(-1); // draw benegesserit
+	drawHousesToSelect(-1);
 
 	// -1 means prepare
 	if (iMentatSpeak == -1) {
 		preparementat(true); // prepare for house telling
 	} else if (iMentatSpeak > -1) {
-		mentat(-1); // speak dammit!
+		drawMentat(-1); // speak dammit!
 	} else if (iMentatSpeak == -2) {
 		// do you wish to , bla bla?
 	}
 
-	// draw buttons
-
+	// Draw YES/NO button (do you wish to play with house ?)
 	if (TIMER_mentat_Speaking < 0) {
 		// BUTTON: NO
 		draw_sprite(bmp_screen, (BITMAP *) gfxmentat[BTN_NO].dat, 293, 423);
@@ -2098,7 +2092,7 @@ void cGame::runGameState() {
 			if (iMentatSpeak == -1) {
 				preparementat(false);
 			}
-			mentat(iHouse);
+			drawMentat(iHouse);
 			break;
 		case SETUPSKIRMISH:
 			setup_skirmish();
@@ -2113,7 +2107,7 @@ void cGame::runGameState() {
 			selectHouse();
 			break;
 		case HOUSEINTRODUCTION:
-			tellhouse();
+			selecthouseState();
 			break;
 		case WINNING:
 			winning();
@@ -2125,13 +2119,13 @@ void cGame::runGameState() {
 			if (iMentatSpeak == -1) {
 				preparementat(false);
 			}
-			mentat(iHouse);
+			drawMentat(iHouse);
 			break;
 		case LOSEBRIEF:
 			if (iMentatSpeak == -1) {
 				preparementat(false);
 			}
-			mentat(iHouse);
+			drawMentat(iHouse);
 			break;
 	}
 }
