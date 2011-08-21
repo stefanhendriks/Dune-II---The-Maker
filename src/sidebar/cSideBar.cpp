@@ -144,8 +144,9 @@ void cSideBar::thinkInteraction() {
 
 	// button interaction
 	for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {
-		if (i == selectedListID)
+		if (i == selectedListID) {
 			continue; // skip selected list for button interaction
+		}
 		cBuildingList *list = getList(i);
 
 		if (list->isAvailable() == false)
