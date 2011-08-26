@@ -14,6 +14,13 @@ class cGuiDrawer {
 		virtual ~cGuiDrawer();
 
 		void drawShape(cGuiShape * shapeToDraw);
+
+	protected:
+		void drawRectangle(cRectangle * rect);
+
+	private:
+		void drawGuiShape(cGuiShape * shape);
+		void drawButton(cGuiButton * guiButton);
 };
 
 #endif /* CGUIDRAWER_H_ */

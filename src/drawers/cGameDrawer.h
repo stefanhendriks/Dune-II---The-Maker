@@ -31,6 +31,9 @@ class cGameDrawer {
 		cMouseDrawer *getMouseDrawer() {
 			return mouseDrawer;
 		}
+		cGuiDrawer * getGuiDrawer() {
+			return guiDrawer;
+		}
 
 		int getDrawXForCell(int cell);
 		int getDrawYForCell(int cell);

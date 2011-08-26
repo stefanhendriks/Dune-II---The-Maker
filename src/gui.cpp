@@ -2,18 +2,6 @@
 
 #include "include/d2tmh.h"
 
-void GUI_INIT() {
-
-}
-
-void GUI_DRAW() {
-
-}
-
-void GUI_POLL() {
-
-}
-
 bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height) {
 	// fill it up
 	rectfill(bmp_screen, x1, y1, x1 + width, y1 + height, makecol(176, 176, 196));

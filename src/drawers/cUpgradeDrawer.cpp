@@ -7,11 +7,18 @@
 
 #include "../include/d2tmh.h"
 
+#include <string>
+
+using namespace std;
+
 cUpgradeDrawer::cUpgradeDrawer() {
+	cGuiShapeFactory * factory = new cGuiShapeFactory();
+	BITMAP * bitmap = (BITMAP *) gfxinter[BTN_UPGRADE].dat;
+	upgradeButton = factory->createButtonWithBitmap(29, 0, bitmap, string("upgrade"));
 }
 
 cUpgradeDrawer::~cUpgradeDrawer() {
-
+	delete upgradeButton;
 }
 
 bool cUpgradeDrawer::shouldDrawButtonForSelectedList(cPlayer * thePlayer, cBuildingList * theSelectedList) {
@@ -51,7 +58,8 @@ void cUpgradeDrawer::drawUpgradeButton(cPlayer * thePlayer, cBuildingList * theS
 	bool isBuildingItem = theSelectedList->isBuildingItem();
 
 	if (canPayForUpgrade && !isBuildingItem) {
-		draw_sprite(bmp_screen, (BITMAP *) gfxinter[BTN_UPGRADE].dat, 29, 0);
+		gameDrawer->getGuiDrawer()->drawShape(upgradeButton);
+		//draw_sprite(bmp_screen, (BITMAP *) gfxinter[BTN_UPGRADE].dat, 29, 0);
 	} else {
 		// draw a dark version
 		// TODO: optimize this, by making a dark version once and then re-draw that one, instead of constructing

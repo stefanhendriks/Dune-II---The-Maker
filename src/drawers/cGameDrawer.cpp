@@ -109,11 +109,16 @@ void cGameDrawer::draw() {
 	game.combat_mouse();
 
 	// Draw gui things for now
-	cRectangle * rect = new cRectangle(100, 100, 200, 200);
-	cGuiButton * button = new cGuiButton(rect, string("Test"));
-	guiDrawer->drawShape(button);
-	delete rect;
-	delete button;
+	// Example code how to use gui Drawer for now
+	// TODO: make it easier to draw entire gui menu's, screens, windows, instead of
+	// seperate components
+//	cRectangle * rect = new cRectangle(100, 100, 200, 200);
+//	cGuiShapeFactory * factory = new cGuiShapeFactory();
+//	cGuiButton * button = factory->createGrayButton(rect, string("Test"));
+//	guiDrawer->drawShape(button);
+//	delete rect;
+//	delete button;
+//	delete factory;
 
 	// MOUSE
 	drawMouse();

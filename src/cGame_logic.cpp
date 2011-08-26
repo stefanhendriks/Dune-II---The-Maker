@@ -748,7 +748,11 @@ void cGame::menuState() {
 	cAllegroDrawer * allegroDrawer = new cAllegroDrawer(getScreenResolution());
 	allegroDrawer->drawSpriteCenteredRelativelyVertical(bmp_screen, (BITMAP *) gfxinter[BMP_D2TM].dat, 0.3);
 	delete allegroDrawer;
-	GUI_DRAW_FRAME(257, 319, 130, 143);
+
+	cGuiShape * shape = new cGuiShape(257, 319, 130, 143);
+	cGuiDrawer * guiDrawer = gameDrawer->getGuiDrawer();
+	guiDrawer->drawShape(shape);
+	delete shape;
 
 	// Buttons:
 
@@ -765,7 +769,6 @@ void cGame::menuState() {
 	} else {
 		alfont_textprintf(bmp_screen, bene_font, 261, 324, makecol(0, 0, 0), "Campaign");
 		alfont_textprintf(bmp_screen, bene_font, 261, 323, makecol(255, 255, 255), "Campaign");
-
 	}
 
 	// SKIRMISH
@@ -2562,7 +2565,8 @@ bool cGame::setupGame() {
 
 	game.init();
 	cGameFactory::getInstance()->createGameControlsContextsForPlayers();
-	cGameFactory::getInstance()->createInteractionManagerForHumanPlayer(MAINMENU);
+	//cGameFactory::getInstance()->createInteractionManagerForHumanPlayer(MAINMENU);
+	cGameFactory::getInstance()->createMapClassAndNewDependenciesForGame(MAINMENU);
 
 	playMusicByType(MUSIC_MENU);
 

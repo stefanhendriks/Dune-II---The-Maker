@@ -13,4 +13,6 @@ class cTextDrawer;
 
 #include "cMessageBar.h"
 
+#include "cGuiShapeFactory.h"
+
 #endif

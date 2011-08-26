@@ -11,6 +11,7 @@ cGuiShape::cGuiShape(cRectangle * rect) {
 	assert(rect);
 	rectangle = rect;
 	rectangleOwner = false;
+	setColors(makecol(32, 32, 32), makecol(255,255,255), makecol(128,128,128));
 }
 
 cGuiShape::cGuiShape(int x, int y, int width, int height) {
@@ -18,6 +19,7 @@ cGuiShape::cGuiShape(int x, int y, int width, int height) {
 	int y2 = (y + height);
 	rectangle = new cRectangle(x, y, x2, y2);
 	rectangleOwner = true;
+	setColors(makecol(32, 32, 32), makecol(255,255,255), makecol(128,128,128));
 }
 
 
@@ -36,4 +38,10 @@ cGuiShape::~cGuiShape() {
 bool cGuiShape::isMouseOverShape() {
 	cMouse * mouse = cMouse::getInstance();
 	return mouse->isOverRectangle(rectangle);
+}
+
+void cGuiShape::setColors(int darkBorder, int lightBorder, int inner) {
+	darkBorderColor = darkBorder;
+	lightBorderColor = lightBorder;
+	innerColor = inner;
 }
