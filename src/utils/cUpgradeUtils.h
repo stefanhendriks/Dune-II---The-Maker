@@ -28,7 +28,8 @@ class cUpgradeUtils {
 	protected:
 
 	private:
-
+		cRectangle * rectangle;
+		cGuiShape * upgradeButtonGuiShape;
 };
 
 #endif /* CUPGRADEUTILS_H_ */

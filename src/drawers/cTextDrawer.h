@@ -35,10 +35,9 @@ class cTextDrawer {
 	protected:
 
 	private:
-		ALFONT_FONT *font;
 		bool applyShadow;
 		int textColor;
-
+		ALFONT_FONT * font;
 };
 
 #endif /* TEXTDRAWER_H_ */

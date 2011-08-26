@@ -8,16 +8,21 @@
 #include "../include/d2tmh.h"
 
 cGuiDrawer::cGuiDrawer() {
-
 }
 
 cGuiDrawer::~cGuiDrawer() {
 }
 
 void cGuiDrawer::drawShape(cGuiShape * shapeToDraw) {
-	int x = shapeToDraw->getX();
-	int y = shapeToDraw->getY();
-	int width = shapeToDraw->getWidth();
-	int height = shapeToDraw->getHeight();
-	GUI_DRAW_FRAME(x, y, width, height);
+	cRectangle * rect = shapeToDraw->getRectangle();
+	int x = rect->getStartX();
+	int y = rect->getStartY();
+	int width = rect->getWidth();
+	int height = rect->getHeight();
+
+	if (shapeToDraw->isMouseOverShape()) {
+		GUI_DRAW_FRAME_PRESSED(x, y, width, height);
+	} else {
+		GUI_DRAW_FRAME(x, y, width, height);
+	}
 }

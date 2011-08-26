@@ -459,7 +459,8 @@ void cMap::draw_units_2nd() {
 // TODO: move this somewhere to a mouse related class
 void cMap::draw_think() {
 	// busy with selecting box, so do not think (about scrolling, etc)
-	if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
+	cMouse * mouse = cMouse::getInstance();
+	if (mouse->isMouseDraggingRectangle()) {
 		return;
 	}
 
@@ -469,7 +470,6 @@ void cMap::draw_think() {
 	int iEndX = mapCamera->getX() + mapCamera->getViewportWidth();
 	int iEndY = mapCamera->getY() + mapCamera->getViewportHeight();
 
-	cMouse * mouse = cMouse::getInstance();
 
 	// thinking for map (scrolling that is)
 	if (mouse_x <= 1 || key[KEY_LEFT]) {

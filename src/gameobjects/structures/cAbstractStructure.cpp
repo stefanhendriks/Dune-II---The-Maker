@@ -49,10 +49,14 @@ cAbstractStructure::cAbstractStructure() {
 
 	TIMER_damage = 0; // damaging stuff
 	TIMER_prebuild = 0;
+
+	rectangle = new cRectangle();
 }
 
 cAbstractStructure::~cAbstractStructure() {
 	// destructor
+	delete rectangle;
+	rectangle = NULL;
 }
 
 // X drawing position
@@ -444,4 +448,24 @@ bool cAbstractStructure::isPrimary() {
 int cAbstractStructure::getPowerUsage() {
 	s_Structures structure = getS_StructuresType();
 	return structure.power_drain;
+}
+
+cRectangle * cAbstractStructure::getRectangle() {
+	int drawX = iDrawX();
+	int drawY = iDrawY();
+	int width = getWidthInPixels();
+	int height = getHeightInPixels();
+	rectangle->setStartX(drawX);
+	rectangle->setStartY(drawY);
+	rectangle->setEndX((drawX + width));
+	rectangle->setEndY((drawY + height));
+	return rectangle;
+}
+
+int cAbstractStructure::getWidthInPixels() {
+	return structures[getType()].bmp_width;
+}
+
+int cAbstractStructure::getHeightInPixels() {
+	return structures[getType()].bmp_height;
 }

@@ -1,5 +1,9 @@
 #include "../include/d2tmh.h"
 
+#include <string.h>
+
+using namespace std;
+
 cGameDrawer::cGameDrawer(cPlayer * thePlayer) {
 	logbook("cGameDrawer constructor");
 	assert(thePlayer);
@@ -16,6 +20,7 @@ cGameDrawer::cGameDrawer(cPlayer * thePlayer) {
 	placeitDrawer = new cPlaceItDrawer();
 	structureDrawer = new cStructureDrawer();
 	mouseDrawer = new cMouseDrawer(thePlayer, cMouse::getInstance());
+	guiDrawer = new cGuiDrawer();
 
 	cMessageBar * messageBar = messageBarDrawer->getMessageBar();
 	messageBar->setX(200);
@@ -102,6 +107,13 @@ void cGameDrawer::draw() {
 	// DO COMBAT MOUSE (TODO: remove this eventually, as it updates state and that is not what
 	// this class should be doing)
 	game.combat_mouse();
+
+	// Draw gui things for now
+	cRectangle * rect = new cRectangle(100, 100, 200, 200);
+	cGuiButton * button = new cGuiButton(rect, string("Test"));
+	guiDrawer->drawShape(button);
+	delete rect;
+	delete button;
 
 	// MOUSE
 	drawMouse();

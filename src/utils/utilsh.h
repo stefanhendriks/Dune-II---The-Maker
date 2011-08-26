@@ -25,6 +25,5 @@
 #include "cMapUtils.h"
 #include "cPlayerUtils.h"
 #include "cListUtils.h"
-#include "cMouseUtils.h"
 
 #endif /* UTILSH_H_ */

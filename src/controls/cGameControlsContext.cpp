@@ -29,6 +29,17 @@ void cGameControlsContext::updateState() {
 	determineHoveringOverUnitId();
 }
 
+cRectangle * cGameControlsContext::getMouseLastDraggedSelectionRectangle() {
+	return mouse->getLastCreatedRectangle();
+}
+
+/**
+ * Note this function is also taking into account that the mouse is on the battle field!
+ */
+bool cGameControlsContext::isMouseDraggingSelectionRectangle() {
+	return mouse->isMouseDraggingRectangle() && isMouseOnBattleField();
+}
+
 void cGameControlsContext::determineMouseCell() {
 	if (mouse->getY() < 42) {
 		mouseCell = -1; // at the top bar or higher, so no mouse cell id.
@@ -81,8 +92,10 @@ void cGameControlsContext::determineHoveringOverStructureId() {
 
 		if (theStructure) {
 			if (structureUtils.isStructureOnScreen(theStructure)) {
-				if (structureUtils.isMouseOverStructure(mouse, theStructure)) {
+				cRectangle * rectangle = theStructure->getRectangle();
+				if (mouse->isOverRectangle(rectangle)) {
 					mouseHoveringOverStructureId = i;
+					break;
 				}
 			}
 		}

@@ -59,6 +59,7 @@ class cGameDrawer {
 		cPlaceItDrawer *placeitDrawer;
 		cStructureDrawer * structureDrawer;
 		cMouseDrawer * mouseDrawer;
+		cGuiDrawer * guiDrawer;
 
 		// TODO: unitDrawer
 

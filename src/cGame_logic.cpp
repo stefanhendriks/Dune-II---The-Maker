@@ -230,9 +230,9 @@ void cGame::think_winlose() {
 
 		for (int i = (HUMAN + 1); i < AI_WORM; i++) {
 			isAnyAIPlayerAlive = playerHasAnyStructures(i) || playerHasAnyGroundUnits(i);
-			char msg[255];
-			sprintf(msg, "is player with id %d alive? -> %d", i, isAnyAIPlayerAlive);
-			logbook(msg);
+//			char msg[255];
+//			sprintf(msg, "is player with id %d alive? -> %d", i, isAnyAIPlayerAlive);
+//			logbook(msg);
 			if (isAnyAIPlayerAlive) {
 				break;
 			}
@@ -2223,11 +2223,6 @@ bool cGame::setupGame() {
 		logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Fullscreen mode");
 	}
 
-	mouse_co_x1 = -1; // coordinates
-	mouse_co_y1 = -1; // of
-	mouse_co_x2 = -1; // the
-	mouse_co_y2 = -1; // mouse border
-
 	// Logbook notification
 	logger->logHeader("Allegro");
 
@@ -2545,9 +2540,6 @@ bool cGame::setupGame() {
 
 	// Mentat class pointer set at null
 	Mentat = NULL;
-
-	// Mouse stuff
-	mouse_status = MOUSE_STATE_NORMAL;
 
 	set_palette(general_palette);
 

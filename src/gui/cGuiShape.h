@@ -10,43 +10,23 @@
 
 class cGuiShape {
 	public:
-		cGuiShape();
-		cGuiShape(int theX, int theY, int theHeight, int theWidth);
+		cGuiShape(cRectangle * rect);
+		cGuiShape(int x, int y, int width, int height);
 
 		~cGuiShape();
 
-		void setX(int value) {
-			x = value;
-		}
-		void setY(int value) {
-			y = value;
-		}
-		void setHeight(int value) {
-			height = value;
-		}
-		void setWidth(int value) {
-			width = value;
-		}
+		void setX(int value) { rectangle->setStartX(value); 	}
+		void setY(int value) { rectangle->setStartY(value);		}
 
-		int getX() {
-			return x;
-		}
-		int getY() {
-			return y;
-		}
-		int getHeight() {
-			return height;
-		}
-		int getWidth() {
-			return width;
-		}
+		cRectangle * getRectangle() { return rectangle; }
 
 		bool isMouseOverShape();
 
 	protected:
 
 	private:
-		int x, y, height, width;
+		cRectangle * rectangle;
+		bool rectangleOwner;
 };
 
 #endif /* SHAPE_H_ */

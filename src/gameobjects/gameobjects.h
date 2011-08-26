@@ -8,6 +8,7 @@
 #ifndef GAMEOBJECTS_H2_
 #define GAMEOBJECTS_H2_
 
+#include "cRectangle.h"
 #include "cScreenResolution.h"
 
 // GAME

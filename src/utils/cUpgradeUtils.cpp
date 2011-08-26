@@ -8,10 +8,15 @@
 #include "../include/d2tmh.h"
 
 cUpgradeUtils::cUpgradeUtils() {
-
+	rectangle = new cRectangle(29, 2, 187, 31);
+	upgradeButtonGuiShape = new cGuiShape(rectangle);
 }
 
 cUpgradeUtils::~cUpgradeUtils() {
+	delete upgradeButtonGuiShape;
+	delete rectangle;
+	upgradeButtonGuiShape = NULL;
+	rectangle = NULL;
 }
 
 bool cUpgradeUtils::canUpgradeList(cPlayer * thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
@@ -168,9 +173,5 @@ bool cUpgradeUtils::canPlayerPayForUpgradeForList(cPlayer *thePlayer, int listTy
 }
 
 bool cUpgradeUtils::isMouseOverUpgradeButton(int mouseX, int mouseY) {
-	// determine if mouse is over the button..
-	if ((mouseX > 29 && mouseX < 187) && (mouseY > 2 && mouseY < 31)) {
-		return true;
-	}
-	return false;
+	return upgradeButtonGuiShape->isMouseOverShape();
 }

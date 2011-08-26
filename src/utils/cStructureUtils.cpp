@@ -228,34 +228,12 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
 	delete cellCalculator;
 }
 
-int cStructureUtils::getStructureWidthInPixels(int structureType) {
-	assert(structureType >= 0);
-	assert(structureType < MAX_STRUCTURETYPES);
-	return structures[structureType].bmp_width;
-}
-
-int cStructureUtils::getStructureHeightInPixels(int structureType) {
-	assert(structureType >= 0);
-	assert(structureType < MAX_STRUCTURETYPES);
-	return structures[structureType].bmp_height;
-}
-
-int cStructureUtils::getStructureWidthInPixels(cAbstractStructure * theStructure) {
-	assert(theStructure);
-	return getStructureWidthInPixels(theStructure->getType());
-}
-
-int cStructureUtils::getStructureHeightInPixels(cAbstractStructure * theStructure) {
-	assert(theStructure);
-	return getStructureHeightInPixels(theStructure->getType());
-}
-
 bool cStructureUtils::isStructureOnScreen(cAbstractStructure *structure) {
 	assert(structure);
 	int drawX = structure->iDrawX();
 	int drawY = structure->iDrawY();
-	int width = getStructureWidthInPixels(structure);
-	int height = getStructureHeightInPixels(structure);
+	int width = structure->getWidthInPixels();
+	int height = structure->getHeightInPixels();
 
 	return ((drawX + width) > 0 && drawX < game.getScreenResolution()->getWidth()) && ((drawY + height) > 0 && drawY < game.getScreenResolution()->getHeight());
 }
@@ -264,15 +242,8 @@ bool cStructureUtils::isMouseOverStructure(cMouse *mouse, cAbstractStructure *st
 	assert(structure);
 	assert(mouse);
 
-	int drawX = structure->iDrawX();
-	int drawY = structure->iDrawY();
-	int width = getStructureWidthInPixels(structure);
-	int height = getStructureHeightInPixels(structure);
-
-	cMouseUtils * mouseUtils = new cMouseUtils(mouse);
-	bool result = mouseUtils->isMouseOverRectangle(drawX, drawY, width, height);
-	delete mouseUtils;
-	return result;
+	cRectangle * rectangle = structure->getRectangle();
+	return mouse->isOverRectangle(rectangle);
 }
 
 int cStructureUtils::getTotalPowerUsageForPlayer(cPlayer * player) {

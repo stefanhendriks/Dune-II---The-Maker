@@ -34,7 +34,10 @@ class cGameControlsContext {
 		int getMouseCell() {
 			return mouseCell;
 		}
+
 		int getMouseCellFromMiniMap();
+		bool isMouseDraggingSelectionRectangle();
+		cRectangle * getMouseLastDraggedSelectionRectangle();
 
 		bool isMouseOverStructure() {
 			return mouseHoveringOverStructureId > -1;

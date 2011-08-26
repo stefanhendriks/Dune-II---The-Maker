@@ -15,75 +15,55 @@ class cMouse {
 
 		static cMouse *getInstance();
 
-		void updateState(); // updates state from Allegro
+		void updateState();
 
-		// these functions return true when the mouse button is being hold down
-		bool isLeftButtonPressed() {
-			return leftButtonPressed;
-		}
-		bool isRightButtonPressed() {
-			return rightButtonPressed;
-		}
+		bool isLeftButtonPressed() { return leftButtonPressed; }
+		bool isRightButtonPressed() { return rightButtonPressed;  }
 
-		// these functions return true when the mouse button was pressed in the previous
-		// frame, but released in the current (which is counted as a 'click')
-		bool isLeftButtonClicked() {
-			return leftButtonClicked;
-		}
-		bool isRightButtonClicked() {
-			return rightButtonClicked;
-		}
+		bool isLeftButtonClicked()  { return leftButtonClicked; }
+		bool isRightButtonClicked() { return rightButtonClicked; }
 
-		bool isMouseScrolledUp() {
-			return mouseScrolledUp;
-		}
-		bool isMouseScrolledDown() {
-			return mouseScrolledDown;
-		}
+		bool isMouseScrolledUp() { return mouseScrolledUp; }
+		bool isMouseScrolledDown() { return mouseScrolledDown;  }
 
-		int getX() {
-			return x;
-		}
-		int getY() {
-			return y;
-		}
-		int getZ() {
-			return z;
-		}
+		bool isMouseDraggingRectangle() { return mouseDraggingRectangle; }
 
-		void setMouseTile(int value) {
-			tile = value;
-		}
+		bool isOverRectangle(cRectangle * rect);
+		bool isOverRectangleUsingWidthAndHeight(int rectX, int rectY, int width, int height);
+		bool isOverRectangleUsingCoordinates(int rectX, int rectY, int rectEndX, int rectEndY);
 
-		int getMouseTile() {
-			return tile;
-		}
+		int getX() { return x; }
+		int getY() { return y; }
+		int getZ() { return z; }
+
+		void setMouseTile(int value) { tile = value; }
+		int getMouseTile() { return tile; }
 
 		void positionMouseCursor(int x, int y);
+		cRectangle *getLastCreatedRectangle() {  return &lastCreatedRectangle;  }
+		cRectangle *getCurrentDrawingRectangle() { return &currentRectangle; }
 
-	protected:
-		~cMouse();
+protected:
+	~cMouse();
 
-	private:
 
-		bool leftButtonPressed;
-		bool rightButtonPressed;
-
-		bool leftButtonClicked;
-		bool rightButtonClicked;
-
-		bool leftButtonPressedInPreviousFrame;
-		bool rightButtonPressedInPreviousFrame;
-
-		bool mouseScrolledUp;
-		bool mouseScrolledDown;
-
-		static cMouse *instance;
-
-		int x, y, z; // z = scroll wheel value
-		int zValuePreviousFrame;
-
-		int tile;
+private:
+    bool leftButtonPressed;
+    bool rightButtonPressed;
+    bool leftButtonClicked;
+    bool rightButtonClicked;
+    bool leftButtonPressedInPreviousFrame;
+    bool rightButtonPressedInPreviousFrame;
+    bool mouseScrolledUp;
+    bool mouseScrolledDown;
+    bool mouseDraggingRectangle;
+    static cMouse *instance;
+    int x, y, z;
+    int zValuePreviousFrame;
+    int tile;
+    cRectangle currentRectangle;
+    cRectangle lastCreatedRectangle;
+    void doRectangleLogic();
 };
 
 #endif /* CMOUSE_H_ */

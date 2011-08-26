@@ -176,9 +176,8 @@ int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
 void cMiniMapDrawer::interact() {
 	// interact with mouse
 	if (mouse_x >= getDrawStartX() && mouse_y >= getDrawStartY()) {
-		// pressed the mouse and not boxing anything..
-		if (MOUSE_BTN_LEFT() && mouse_co_x1 < 0 && mouse_co_y1 < 0) {
-
+		cMouse * mouse = cMouse::getInstance();
+		if (mouse->isLeftButtonPressed()) {
 			cGameControlsContext * context = player[HUMAN].getGameControlsContext();
 			int mouseCellOnMiniMap = context->getMouseCellFromMiniMap();
 			mapCamera->centerAndJumpViewPortToCell(mouseCellOnMiniMap);

@@ -4,8 +4,7 @@
 class cGuiButton : public cGuiShape{
 
 	public:
-		cGuiButton();
-		cGuiButton(int theX, int theY, int theWidth, int theHeight, std::string theLabel);
+		cGuiButton(cRectangle * rect, std::string theLabel);
 		virtual ~cGuiButton();
 
 		std::string * getLabel() {

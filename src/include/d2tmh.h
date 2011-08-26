@@ -23,13 +23,13 @@
 
 #include "gameobjects.h"
 #include "gamelogic.h"
-#include "utils.h"
 
 // Player related
 #include "../player/playerh.h"
 #include "../ai.h"
 
 #include "gui.h"
+#include "utils.h"
 #include "drawers.h"
 #include "managers.h"
 

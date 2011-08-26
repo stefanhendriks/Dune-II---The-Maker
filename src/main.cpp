@@ -71,14 +71,6 @@ ALFONT_FONT *small_font; // small font.
 // MP3 STUFF
 ALMP3_MP3 *mp3_music; // pointer to mp3 music
 
-// Mouse information
-int mouse_co_x1; // coordinates
-int mouse_co_y1; // of
-int mouse_co_x2; // the
-int mouse_co_y2; // mouse border
-
-int mouse_status; // status of the mouse (see main.h)
-
 // Timers
 int frame_count, fps; // fps and such
 

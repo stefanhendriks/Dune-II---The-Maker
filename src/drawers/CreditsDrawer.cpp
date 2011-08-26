@@ -7,6 +7,8 @@
 
 #include "../include/d2tmh.h"
 
+#include "math.h"
+
 CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) {
 	assert(thePlayer != NULL);
 	player = thePlayer;
@@ -16,10 +18,9 @@ CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) {
 	initial = true;
 	soundType = -1;
 	rollSpeed = 0.0F;
-	rolled = 0;
 	soundsMade = 0;
-	currentCredits = 0;
-	previousCredits = 0;
+	newCreditsToDraw = 0;
+	previousDrawnCredits = 0;
 }
 
 CreditsDrawer::~CreditsDrawer() {
@@ -40,103 +41,136 @@ void CreditsDrawer::setCreditsOfPlayer() {
 
 void CreditsDrawer::setCredits(int amount) {
 	initial = true;
-	previousCredits = amount;
-	currentCredits = amount;
+	previousDrawnCredits = amount;
+	newCreditsToDraw = amount;
+	previousCreditsRolledTo = amount;
 	memset(offset_credit, 0, sizeof(offset_credit));
 	memset(offset_direction, 0, sizeof(offset_direction));
 }
 
+void CreditsDrawer::initState() {
+	soundsMade = 0;
+
+	memset(offset_credit, 0, sizeof(offset_credit));
+	memset(offset_direction, 0, sizeof(offset_direction));
+
+	// determine new currentCredits
+	previousDrawnCredits = newCreditsToDraw;
+}
+
+int CreditsDrawer::getNewCreditsToDraw() {
+	int creditsOfPlayer = (int) player->credits;
+
+	if (creditsOfPlayer == previousDrawnCredits) {
+		return previousDrawnCredits;
+	}
+
+	// credits of player differ from the last known (drawn) credits
+	int diff = creditsOfPlayer - previousDrawnCredits;
+
+	// when big difference, slice it up in pieces so we
+	// have a more fluent transition
+
+	if (diff > 200) {
+		return previousDrawnCredits + (diff / 8);
+	} else if (diff > 20) {
+		return previousDrawnCredits + (diff / 4);
+	}
+	return creditsOfPlayer;
+}
+
+int CreditsDrawer::getSoundType() {
+	if (newCreditsToDraw > previousDrawnCredits) {
+		return SOUND_CREDITUP;
+	} else if (newCreditsToDraw < previousDrawnCredits) {
+		return SOUND_CREDITDOWN;
+	}
+	return -1;
+}
+
+void CreditsDrawer::slowdownRollSpeed() {
+	if (rollSpeed > 0.0F) {
+		rollSpeed -= 0.005;
+	}
+	if (rollSpeed < 0.0F) {
+		rollSpeed = 0.0F;
+	}
+}
+
+void CreditsDrawer::speedUpRollSpeed() {
+	if (rollSpeed < 3.0F) {
+		rollSpeed += 0.005;
+	}
+	if (rollSpeed > 3.0F) {
+		rollSpeed = 3.0F;
+	}
+}
+
 // timer based method
 void CreditsDrawer::think() {
-
 	if (hasDrawnCurrentCredits() || initial) {
-		soundsMade = 0;
+		initState();
 
-		memset(offset_credit, 0, sizeof(offset_credit));
-		memset(offset_direction, 0, sizeof(offset_direction));
-
-		// determine new currentCredits
-		// TODO: make it 'roll' instead of 'jump' to the newest credits?
-		previousCredits = currentCredits;
-		int newCurrentCredits = (int) player->credits;
-
-		if (newCurrentCredits != previousCredits) {
-			int diff = newCurrentCredits - previousCredits;
-			// when big difference, slice it up in pieces so we
-			// have a more fluent transition
-			if (diff > 200) {
-				currentCredits = previousCredits + (diff / 8);
-			} else if (diff > 20) {
-				currentCredits = previousCredits + (diff / 4);
-			} else {
-				currentCredits = newCurrentCredits;
-			}
+		int creditsOfPlayer = (int) player->credits;
+		newCreditsToDraw = getNewCreditsToDraw();
+		if (newCreditsToDraw == creditsOfPlayer) {
+			previousCreditsRolledTo = creditsOfPlayer;
 		}
-
-		// decide what sound to play when done
-		if (currentCredits > previousCredits) {
-			soundType = SOUND_CREDITUP;
-		} else if (currentCredits < previousCredits) {
-			soundType = SOUND_CREDITDOWN;
-		} else {
-			soundType = -1;
-		}
+		soundType = getSoundType();
+		initial = false;
+		slowdownRollSpeed();
+	} else {
+		int thinkRollingSpeed = 0;
 
 		TIMER_money++;
-		if (TIMER_money > 20) {
-			if (rollSpeed > 0.0F) {
-				rollSpeed -= 0.005;
-			}
-			if (rollSpeed < 0.0F) {
-				rollSpeed = 0.0F;
-				TIMER_money = 0;
-			}
+		if (TIMER_money > thinkRollingSpeed) {
+			TIMER_money = 0;
+			speedUpRollSpeed();
 		}
 
-		initial = false;
-	} else {
-		TIMER_money = 0;
-		if (rollSpeed < 3.0F) {
-			rollSpeed += 0.005;
-		}
 		thinkAboutIndividualCreditOffsets();
 	}
+
+
 }
 
 // this will basically compare 2 credits values, and per offset determine whether
 // it has to go 'up' or 'down'
+int CreditsDrawer::getScrollingDirectionForOffset() {
+    if(newCreditsToDraw > previousDrawnCredits) {
+        return SCROLLING_DIRECTION_UP;
+    }
+    return SCROLLING_DIRECTION_DOWN;
+}
+
+bool CreditsDrawer::isOffsetDirectionSet(int id) {
+	return offset_direction[id] != 0;
+}
+
 void CreditsDrawer::thinkAboutIndividualCreditOffsets() {
-	char current_credits[9];
-	char previous_credits[9];
-	memset(current_credits, 0, sizeof(current_credits));
-	memset(previous_credits, 0, sizeof(previous_credits));
-	sprintf(current_credits, "%d", currentCredits);
-	sprintf(previous_credits, "%d", previousCredits);
+	char newCreditsAsChar[9];
+	char previousDrawnCreditsAsChar[9];
+	memset(newCreditsAsChar, 0, sizeof(newCreditsAsChar));
+	memset(previousDrawnCreditsAsChar, 0, sizeof(previousDrawnCreditsAsChar));
+	sprintf(newCreditsAsChar, "%d", newCreditsToDraw);
+	sprintf(previousDrawnCreditsAsChar, "%d", previousDrawnCredits);
 
 	for (int i = 0; i < 6; i++) {
-		int currentId = getCreditDrawId(current_credits[i]);
-		int previousId = getCreditDrawId(previous_credits[i]);
+		int newCreditDrawId = getCreditDrawIdByChar(newCreditsAsChar[i]);
+		int previousCreditDrawId = getCreditDrawIdByChar(previousDrawnCreditsAsChar[i]);
 
-		if (offset_direction[i] == 0) {
-			if (currentId == CREDITS_NONE || previousId == CREDITS_NONE) {
+		if (!isOffsetDirectionSet(i)) {
+			if (newCreditDrawId == CREDITS_NONE || previousCreditDrawId == CREDITS_NONE) {
 				// either of the 2 is unidentifiable. Do nothing
-				offset_direction[i] = 3;
+				offset_direction[i] = SCROLLING_DIRECTION_NONE;
 				continue; // next
 			}
 
-			// UP/DOWN ANIMATION: Is over the entire sum of money, so all 'credits' move the same
-			// way.
-			if (currentCredits > previousCredits) {
-				offset_direction[i] = 1;
-			} else if (previousCredits > currentCredits) {
-				offset_direction[i] = 2;
-			}
+			offset_direction[i] = getScrollingDirectionForOffset();
 
-			// when the same, do not animate
-			if (currentId == previousId) {
-				offset_direction[i] = 3;
+			if (newCreditDrawId == previousCreditDrawId) {
+				offset_direction[i] = SCROLLING_DIRECTION_NONE;
 			}
-
 		}
 
 		// always 'add' here, the draw routine knows how to handle this for up/down movement.
@@ -148,50 +182,40 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets() {
 				soundsMade++;
 			}
 			// it is fully 'moved'. Now update the array.
-			previous_credits[i] = current_credits[i];
-			previousCredits = atoi(previous_credits);
+			previousDrawnCreditsAsChar[i] = newCreditsAsChar[i];
+			previousDrawnCredits = atoi(previousDrawnCreditsAsChar);
 		} else {
 			offset_credit[i] += 1.0F * rollSpeed;
 		}
 	}
 }
 
-/**
- * Create bitmap to draw credits
- */
 void CreditsDrawer::draw() {
 	if (bmp == NULL) {
 		bmp = create_bitmap(120, 17);
 	}
 	clear_bitmap(bmp);
-	clear_to_color(bmp, makecol(255, 0, 255)); // transparency
+	clear_to_color(bmp, makecol(255, 0, 255));
 
 	drawCurrentCredits();
 	drawPreviousCredits();
 
-	// draw bmp on screen
 	draw_sprite(bmp_screen, bmp, game.getScreenResolution()->getWidth() - 120, 8);
-	//	draw_sprite(bmp_screen, bmp, mouse_x - 120, mouse_y - 8);
 }
 
 int CreditsDrawer::getXDrawingOffset(int amount) {
 	int offset = 1;
-	if (amount > 0)
-		offset = 4;
-	if (amount < 10)
-		offset = 5;
-	if (amount > 99)
-		offset = 3;
-	if (amount > 999)
-		offset = 2;
-	if (amount > 9999)
-		offset = 1;
-	if (amount > 99999)
-		offset = 0;
+	// TODO: make it return values, instead of iffing though everything.
+	if (amount > 0)		offset = 4;
+	if (amount < 10) 	offset = 5;
+	if (amount > 99) 	offset = 3;
+	if (amount > 999) 	offset = 2;
+	if (amount > 9999) 	offset = 1;
+	if (amount > 99999) offset = 0;
 	return offset;
 }
 
-int CreditsDrawer::getCreditDrawId(char c) {
+int CreditsDrawer::getCreditDrawIdByChar(char c) {
 	if (c == '0')
 		return CREDITS_0;
 	if (c == '1')
@@ -218,14 +242,14 @@ int CreditsDrawer::getCreditDrawId(char c) {
 // current credits are either drawn from 'above' or from below. (depending on direction)
 // the offset pushes them more up or down.
 void CreditsDrawer::drawCurrentCredits() {
-	if (currentCredits < 0)
-		currentCredits = 0;
+	if (newCreditsToDraw < 0)
+		newCreditsToDraw = 0;
 
 	char credits[9];
 	memset(credits, 0, sizeof(credits));
-	sprintf(credits, "%d", currentCredits);
+	sprintf(credits, "%d", newCreditsToDraw);
 
-	int offset = getXDrawingOffset(currentCredits);
+	int offset = getXDrawingOffset(newCreditsToDraw);
 
 	for (int i = 0; i < 6; i++) {
 		// the actual position to draw on is: ((game.screen_x - 120) +
@@ -241,7 +265,7 @@ void CreditsDrawer::drawCurrentCredits() {
 			dy = -20 + (int) offset_credit[i];
 		}
 
-		int nr = getCreditDrawId(credits[i]);
+		int nr = getCreditDrawIdByChar(credits[i]);
 
 		if (nr != CREDITS_NONE) {
 			draw_sprite(bmp, (BITMAP *) gfxdata[nr].dat, dx, dy);
@@ -252,14 +276,14 @@ void CreditsDrawer::drawCurrentCredits() {
 // current credits are either drawn from 'above' or from below. (depending on direction)
 // the offset pushes them more up or down.
 void CreditsDrawer::drawPreviousCredits() {
-	if (previousCredits < 0)
-		previousCredits = 0;
+	if (previousDrawnCredits < 0)
+		previousDrawnCredits = 0;
 
 	char credits[9];
 	memset(credits, 0, sizeof(credits));
-	sprintf(credits, "%d", previousCredits);
+	sprintf(credits, "%d", previousDrawnCredits);
 
-	int offset = getXDrawingOffset(previousCredits);
+	int offset = getXDrawingOffset(previousDrawnCredits);
 
 	for (int i = 0; i < 6; i++) {
 		// the actual position to draw on is: ((game.screen_x - 120) +
@@ -274,7 +298,7 @@ void CreditsDrawer::drawPreviousCredits() {
 		} else if (offset_direction[i] == 2) {
 			dy = (int) offset_credit[i];
 		}
-		int nr = getCreditDrawId(credits[i]);
+		int nr = getCreditDrawIdByChar(credits[i]);
 
 		if (nr != CREDITS_NONE) {
 			draw_sprite(bmp, (BITMAP *) gfxdata[nr].dat, dx, dy);
@@ -284,7 +308,7 @@ void CreditsDrawer::drawPreviousCredits() {
 
 // the think method will gradually update the currentCredits array so that it is 'the same'
 bool CreditsDrawer::hasDrawnCurrentCredits() {
-	return previousCredits == currentCredits;
+	return previousDrawnCredits == newCreditsToDraw;
 }
 
 // UNCOMMENT THIS IF YOU WANT PER CREDIT AN UP/DOWN ANIMATION, move this piece into

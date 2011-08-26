@@ -16,6 +16,8 @@ cTextDrawer::cTextDrawer(ALFONT_FONT *theFont) {
 
 cTextDrawer::cTextDrawer() {
 	font = small_font;
+	applyShadow = true;
+	textColor = makecol(255, 255, 255);
 }
 
 cTextDrawer::~cTextDrawer() {

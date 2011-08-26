@@ -217,6 +217,7 @@ void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure * theStructu
 	s_Structures structureType = theStructure->getS_StructuresType();
 
 	char description[255];
+	memset(description, 0, sizeof(description));
 	if (theStructure->isPrimary()) {
 		sprintf(description, "%s (PRIMARY)", structureType.name);
 	} else {

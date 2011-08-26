@@ -9,6 +9,9 @@
 #define CREDITSDRAWER_H_
 
 // the credits drawer takes state of a player, and draws the credits accordingly
+#define SCROLLING_DIRECTION_UP 1
+#define SCROLLING_DIRECTION_DOWN 2
+#define SCROLLING_DIRECTION_NONE 3
 
 class CreditsDrawer {
 	public:
@@ -16,45 +19,48 @@ class CreditsDrawer {
 		virtual ~CreditsDrawer();
 		void destroy();
 
-		void think(); // set animation counters and such, time based. Also make sound when needed.
+		void think();
+    void draw();
+    void setCredits(int amount);
+    void setCreditsOfPlayer();
+    BITMAP *getBitmap()
+    {
+        return bmp;
+    }
 
-		void draw();
-		void setCredits(int amount);
-		void setCreditsOfPlayer();
+private:
+    cPlayer *player;
+    BITMAP *bmp;
+    void thinkAboutIndividualCreditOffsets();
+    void drawCurrentCredits();
+    void drawPreviousCredits();
+    int getCreditDrawIdByChar(char c);
+    int getXDrawingOffset(int amount);
+    bool CreditsDrawer::isOffsetDirectionSet(int id);
+    void initState();
+    int CreditsDrawer::getNewCreditsToDraw();
+    int CreditsDrawer::getSoundType();
+    bool hasDrawnCurrentCredits();
+    int getScrollingDirectionForOffset();
+    void CreditsDrawer::slowdownRollSpeed();
+    void CreditsDrawer::speedUpRollSpeed();
 
-		BITMAP *getBitmap() {
-			return bmp;
-		}
+    int TIMER_money;
+    float rollingSpeed;
 
-	private:
-		cPlayer *player; // state
-		BITMAP *bmp; // a bitmap being drawn on
+    int newCreditsToDraw;
+    int previousDrawnCredits;
+    float previousCreditsRolledTo;
 
-		void thinkAboutIndividualCreditOffsets();
-		void drawCurrentCredits();
-		void drawPreviousCredits();
-		int getCreditDrawId(char c);
-		int getXDrawingOffset(int amount);
+    float offset_credit[7];
+    int offset_direction[7];
 
-		int TIMER_money; // timer needed to do logic
+    bool initial;
 
-		float rollingSpeed; // the 'rolling speed' of the credits. Need to be sped up when just starting
-		// to withdrawn money.
+    int soundType;
+    float rollSpeed;
 
-		int currentCredits; // current credits we want to draw
-		int previousCredits; // previous credits we wanted to draw
-
-		// the offset of the current 'credit' being drawn (the Y offset)
-		float offset_credit[7];
-		int offset_direction[7]; // direction (0 = not yet determined / finished, 1 = UP, 2 = DOWN , 3 = DO NOTHING
-
-		bool hasDrawnCurrentCredits(); // returns true whenever the new state has been finalized.
-
-		bool initial;
-		int soundType;
-		float rollSpeed;
-		int rolled; // how many credits did get rolled over?
-		int soundsMade; // sounds made per time frame
+    int soundsMade;
 };
 
 #endif /* CREDITSDRAWER_H_ */

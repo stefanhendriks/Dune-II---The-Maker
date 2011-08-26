@@ -76,8 +76,6 @@ class cMapCamera {
 		bool canScrollUp();
 		bool canScrollDown();
 
-		bool isMouseSelectingBoxUsed();
-
 		bool shouldScrollLeft();
 		bool shouldScrollRight();
 		bool shouldScrollDown();

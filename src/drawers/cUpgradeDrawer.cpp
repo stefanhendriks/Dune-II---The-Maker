@@ -85,7 +85,7 @@ void cUpgradeDrawer::drawUpgradeProgress(cPlayer * thePlayer, cBuildingList * th
 	assert(upgrade);
 
 	if (upgrade) {
-		int iDrawXLimit = (int) health_bar(157, upgrade->getProgress(), upgrade->getProgressLimit());
+		int iDrawXLimit = (int) 157 - health_bar(157, upgrade->getProgress(), upgrade->getProgressLimit());
 
 		if (iDrawXLimit > -1) {
 			int iColor = makecol(255, 255, 255);

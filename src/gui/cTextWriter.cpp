@@ -7,7 +7,7 @@
 
 #include "../include/d2tmh.h"
 
-cTextWriter::cTextWriter(int x, int y, ALFONT_FONT *theFont, int theFontSize) {
+cTextWriter::cTextWriter(int x, int y, ALFONT_FONT * theFont, int theFontSize) {
 	assert(theFont);
 	assert(theFontSize > 0);
 	originalX = x;

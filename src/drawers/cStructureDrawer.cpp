@@ -77,10 +77,8 @@ int cStructureDrawer::getDrawXForStructure(int cell) {
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
 	assert(structure);
 
-	cStructureUtils structureUtils;
-
-	int widthInPixels = structureUtils.getStructureWidthInPixels(structure);
-	int heightInPixels = structureUtils.getStructureHeightInPixels(structure);
+	int widthInPixels = structure->getWidthInPixels();
+	int heightInPixels = structure->getHeightInPixels();
 
 	// structures are animated within the same source bitmap. The Y coordinates determine
 	// what frame is being drawn. So multiply the height of the structure size times frame
@@ -154,10 +152,8 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
 
 	assert(structure);
 
-	cStructureUtils structureUtils;
-
-	int widthInPixels = structureUtils.getStructureWidthInPixels(structure);
-	int heightInPixels = structureUtils.getStructureHeightInPixels(structure);
+	int widthInPixels = structure->getWidthInPixels();
+	int heightInPixels = structure->getHeightInPixels();
 
 	int drawX = getDrawXForStructure(structure->getCell());
 	int drawY = getDrawYForStructure(structure->getCell());

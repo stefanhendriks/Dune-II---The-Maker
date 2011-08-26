@@ -38,8 +38,8 @@ class cMouse;
 
 #include "cMouseDrawer.h"
 
-#include "cGameDrawer.h"
-
 #include "cGuiDrawer.h"
+
+#include "cGameDrawer.h"
 
 #endif /* DRAWERSH_H_ */

@@ -1,13 +1,11 @@
 #include <sstream>
 #include <string>
 
+#include "../gameobjects/cRectangle.h"
 #include "cGuiShape.h"
 #include "cGuiButton.h"
 
-cGuiButton::cGuiButton() {
-}
-
-cGuiButton::cGuiButton(int theX, int theY, int theWidth, int theHeight, std::string theLabel) : cGuiShape(theX, theY, theWidth, theHeight) {
+cGuiButton::cGuiButton(cRectangle * rect, std::string theLabel) : cGuiShape(rect) {
 }
 
 cGuiButton::~cGuiButton() {

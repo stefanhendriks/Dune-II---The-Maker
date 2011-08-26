@@ -7,27 +7,33 @@
 
 #include "../include/d2tmh.h"
 
-cGuiShape::cGuiShape() {
-	cGuiShape(0, 0, 100, 100);
+cGuiShape::cGuiShape(cRectangle * rect) {
+	assert(rect);
+	rectangle = rect;
+	rectangleOwner = false;
 }
+
+cGuiShape::cGuiShape(int x, int y, int width, int height) {
+	int x2 = (x + width);
+	int y2 = (y + height);
+	rectangle = new cRectangle(x, y, x2, y2);
+	rectangleOwner = true;
+}
+
 
 cGuiShape::~cGuiShape() {
-}
-
-cGuiShape::cGuiShape(int theX, int theY, int theHeight, int theWidth) {
-	x = theX;
-	y = theY;
-	height = theHeight;
-	width = theWidth;
+	// this boolean holds if we (this class) created an instance, and thus is responsible
+	// for deleting it. In other cases, the cRectangle is created outside this class
+	// and the responsibility to delete it lays also outside this class!
+	if (rectangleOwner) {
+		if (rectangle) {
+			delete rectangle;
+		}
+		rectangle = NULL;
+	}
 }
 
 bool cGuiShape::isMouseOverShape() {
 	cMouse * mouse = cMouse::getInstance();
-	int mouseX = mouse->getX();
-	int mouseY = mouse->getY();
-
-	return (
-			(mouseX >= x && mouseX <= (x + width)) &&
-			(mouseY >= y && mouseY <= (y + height))
-			);
+	return mouse->isOverRectangle(rectangle);
 }

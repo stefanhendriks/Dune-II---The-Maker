@@ -95,10 +95,6 @@ void cMapCamera::moveTo(int theX, int theY) {
 	targetY = theY;
 }
 
-bool cMapCamera::isMouseSelectingBoxUsed() {
-	return mouse_co_x1 > -1 && mouse_co_y1 > -1;
-}
-
 bool cMapCamera::shouldScrollLeft() {
 	return mouse_x <= 1 || key[KEY_LEFT];
 }
@@ -132,27 +128,28 @@ bool cMapCamera::canScrollRight() {
 }
 
 void cMapCamera::thinkInteraction() {
-	if (isMouseSelectingBoxUsed()) {
+	cMouse * mouse = cMouse::getInstance();
+	if (mouse->isMouseDraggingRectangle()) {
 		return;
 	}
 
 	if (shouldScrollLeft() && canScrollLeft()) {
 		x--;
-		cMouse::getInstance()->setMouseTile(MOUSE_LEFT);
+		mouse->setMouseTile(MOUSE_LEFT);
 	}
 
 	if (shouldScrollUp() && canScrollUp()) {
 		y--;
-		cMouse::getInstance()->setMouseTile(MOUSE_UP);
+		mouse->setMouseTile(MOUSE_UP);
 	}
 
 	if (shouldScrollRight() && canScrollRight()) {
 		x++;
-		cMouse::getInstance()->setMouseTile(MOUSE_RIGHT);
+		mouse->setMouseTile(MOUSE_RIGHT);
 	}
 
 	if (shouldScrollDown() && canScrollDown()) {
 		y++;
-		cMouse::getInstance()->setMouseTile(MOUSE_DOWN);
+		mouse->setMouseTile(MOUSE_DOWN);
 	}
 }
