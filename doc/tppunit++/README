@@ -1,0 +1,102 @@
+tpunit++
+========
+A highly portable, simple C++ xUnit library contained in
+a single header. Documentation and downloads are available
+at http://github.com/tpounds/tpunitpp.
+
+tpunit++ is licensed under the MIT License.
+(http://www.opensource.org/licenses/mit-license.php)
+
+Installation
+============
+Add tpunit++.hpp anywhere to your C++ compiler's include path,
+add test cases and compile together with tpunit++main.cpp or
+a custom user-defined main method.
+
+Tested Compilers
+================
+tpunit++ has been tested on several compiler vendors and releases, however,
+I have not exhaustively tested it against everything out there.  That said,
+I do not forsee any complications getting this library to work with any
+compiler supporting basic C++ features and a minimal libc implementation.
+If you do happen to run into problems on a compiler I have not tested against,
+please create a ticket on the issue tracker so it can be fixed.
+
+Some compilers have issues using the fully qualified class with namespace
+syntax (e.g. ns::class). Try the 'using' directive to workaround the issue.
+
+e.g.  using namesapce tpunit;
+      using tpunit::TestFixture;
+
+The primary issue preventing tpunit++ from working with a compiler is a
+lack of member function template specialization. This feature is required
+to support tpunit++'s registration methods (e.g. After, Before, Test). In
+general, tpunit++ should work with any compiler supporting this capability.
+
+Additionally, some linkers do not work with file names that contain non-
+alphanumeric characters (e.g. tpunit++main.cpp). Try renaming these files
+to include only alphanumeric characters or configure the compiler to emit
+object files that do not include illegal characters.
+
+|-----------------|----------------------------|--------|
+| version         | flags                      | status |
+|-----------------|----------------------------|--------|
+| GCC (http://gcc.gnu.org)                              |
+|-------------------------------------------------------|
+| 2.95.3          | <default>, -fno-exceptions | works  |
+| 3.0.4           | <default>, -fno-exceptions | works  |
+| 3.1.1           | <default>, -fno-exceptions | works  |
+| 3.2.3           | <default>, -fno-exceptions | works  |
+| 3.3.6           | <default>, -fno-exceptions | works  |
+| 3.4.6           | <default>, -fno-exceptions | works  |
+| 4.0.4           | <default>, -fno-exceptions | works  |
+| 4.1.2           | <default>, -fno-exceptions | works  |
+| 4.2.4           | <default>, -fno-exceptions | works  |
+| 4.3.5           | <default>, -fno-exceptions | works  |
+| 4.4.5           | <default>, -fno-exceptions | works  |
+| 4.5.1           | <default>, -fno-exceptions | works  |
+|-----------------|----------------------------|--------|
+| MSVC++ (http://www.microsoft.com)                     |
+|-------------------------------------------------------|
+| 6.0             | <default>, /EHsc           | works  |
+| .NET 2002 (7.0) | <default>, /EHsc           | works  |
+| .NET 2003 (7.1) | <default>, /EHsc           | works  |
+| 2005 (8.0)      | <default>, /EHsc           | works  |
+| 2008 (9.0)      | <default>, /EHsc           | works  |
+| 2010 (10.0)     | <default>, /EHsc           | works  |
+|-----------------|----------------------------|--------|
+| Borland C++ (http://www.borland.com)                  |
+|-------------------------------------------------------|
+| 5.5             | <default>                  | works  |
+|-------------------------------------------------------|
+| Open Watcom (http://www.openwatcom.org)               |
+|-------------------------------------------------------|
+| 1.0             | <default>                  | broken |
+| 1.1             | <default>                  | broken |
+| 1.2             | <default>                  | broken |
+| 1.3             | <default>                  | broken |
+| 1.4             | <default>                  | works  |
+| 1.5             | <default>                  | works  |
+| 1.6             | <default>                  | works  |
+| 1.7             | <default>                  | works  |
+| 1.8             | <default>                  | works  |
+| 1.9             | <default>                  | works  |
+|-------------------------------------------------------|
+| Clang (http://clang.llvm.org/)                        |
+|-------------------------------------------------------|
+| 2.6             | <default>, -fno-exceptions | works  |
+| 2.7             | <default>, -fno-exceptions | works  |
+| 2.8             | <default>, -fno-exceptions | works  |
+| 2.9             | <default>, -fno-exceptions | works  |
+|-------------------------------------------------------|
+| Digital Mars C++ (http://www.digitalmars.com/)        |
+|-------------------------------------------------------|
+| 7.7B1n          | <default>, -Ae             | broken |
+| 8.1B5n          | <default>, -Ae             | broken |
+| 8.20n           | <default>, -Ae             | broken |
+| 8.28.5n         | <default>, -Ae             | broken |
+| 8.29.21n        | <default>, -Ae             | works  |
+| 8.30.11n        | <default>, -Ae             | works  |
+| 8.40.2n         | <default>, -Ae             | works  |
+| 8.52.5n         | <default>, -Ae             | works  |
+|-------------------------------------------------------|
