@@ -14,7 +14,7 @@ cParticleDrawer::cParticleDrawer() {
 cParticleDrawer::~cParticleDrawer() {
 }
 
-void cParticleDrawer::drawLowerLayer() {
+void cParticleDrawer::drawLayerBeneathUnits() {
 	drawLayer(1);
 }
 

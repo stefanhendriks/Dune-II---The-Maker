@@ -30,3 +30,7 @@ void cRectangle::setCoordinates(cRectangle * otherRectangle) {
 		endY = otherRectangle->getEndY();
 	}
 }
+
+bool cRectangle::isCoordinateWithinRectangle(int x, int y) {
+	return ((x >= getLowestX() && x <= getHighestX()) && (y >= getLowestY() && y <= getHighestY()));
+}

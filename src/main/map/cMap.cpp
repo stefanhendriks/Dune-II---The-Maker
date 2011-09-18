@@ -413,8 +413,7 @@ void cMap::draw_units() {
 	}
 }
 
-// draw airborn units
-void cMap::draw_units_2nd() {
+void cMap::drawAirborneUnitsAndHealthBarAndExperienceOfSelectedUnits() {
 	set_trans_blender(0, 0, 0, 160);
 
 	// draw unit power

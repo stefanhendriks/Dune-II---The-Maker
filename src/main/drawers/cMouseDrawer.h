@@ -24,6 +24,9 @@ class cMouseDrawer {
 		void drawToolTipSiloInformation(cAbstractStructure * theStructure, cTextWriter *textWriter);
 		void drawToolTipTurretInformation(cAbstractStructure * theStructure, cTextWriter *textWriter);
 
+		void drawMouseTile();
+		void drawMouseRectangle();
+
 		int getDrawXToolTip(int width);
 		int getDrawYToolTip(int height);
 		int getWidthToolTip();
@@ -33,6 +36,7 @@ class cMouseDrawer {
 		cMouseToolTip * mouseToolTip;
 		cMouse *mouse;
 		cPlayer *player;
+		cGameControlsContext * context;
 };
 
 #endif	/* CMOUSEDRAWER_H */

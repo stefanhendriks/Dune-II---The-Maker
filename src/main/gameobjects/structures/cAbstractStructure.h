@@ -114,12 +114,26 @@ class cAbstractStructure {
 		int getHitPoints() {
 			return iHitPoints;
 		}
+
+		bool isDamaged() {
+			return iHitPoints < getMaxHP();
+		}
+
+		bool isDestroyed() {
+			return iHitPoints < 0;
+		}
+
 		int getCell() {
 			return iCell;
 		}
 		int getOwner() {
 			return iPlayer;
 		} // return the player id who owns this structure
+
+		bool isOwnerHuman() {
+			return iPlayer == 0;
+		}
+
 		int getRallyPoint() {
 			return iRallyPoint;
 		}

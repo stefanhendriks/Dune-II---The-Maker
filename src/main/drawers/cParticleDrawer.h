@@ -13,7 +13,7 @@ class cParticleDrawer {
 		cParticleDrawer();
 		~cParticleDrawer();
 
-		void drawLowerLayer();
+		void drawLayerBeneathUnits();
 		void drawHigherLayer();
 
 	protected:

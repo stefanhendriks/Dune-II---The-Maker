@@ -487,7 +487,7 @@ void cGame::updateState() {
 		// when selecting a structure
 		if (game.selected_structure > -1) {
 			int id = game.selected_structure;
-			if (structure[id]->getOwner() == 0) {
+			if (structure[id]->isOwnerHuman()) {
 				if (key[KEY_LCONTROL]) {
 					cMouse::getInstance()->setMouseTile(MOUSE_RALLY);
 				}
@@ -2000,11 +2000,11 @@ void cGame::destroyAllUnits(bool bHumanPlayer) {
 	}
 }
 
-void cGame::destroyAllStructures(bool bHumanPlayer) {
-	if (bHumanPlayer) {
+void cGame::destroyAllStructures(bool forHumanPlayer) {
+	if (forHumanPlayer) {
 		for (int i = 0; i < MAX_STRUCTURES; i++) {
 			if (structure[i]) {
-				if (structure[i]->getOwner() == 0) {
+				if (structure[i]->isOwnerHuman()) {
 					structure[i]->die();
 				}
 			}

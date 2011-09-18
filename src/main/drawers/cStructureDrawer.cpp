@@ -85,18 +85,9 @@ void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
 	int iSourceY = heightInPixels * structure->getFrame();
 
 	BITMAP *temp = create_bitmap_ex(8, widthInPixels, heightInPixels);
-	BITMAP *temp_shadow = create_bitmap(widthInPixels, heightInPixels);
-
 	clear(temp);
 
-	clear_to_color(temp_shadow, makecol(255, 0, 255));
-
 	blit(structure->getBitmap(), temp, 0, iSourceY, 0, 0, widthInPixels, heightInPixels);
-
-	// in case shadow, prepare shadow bitmap in memory
-	if (structure->getShadowBitmap()) {
-		blit(structure->getShadowBitmap(), temp_shadow, 0, iSourceY, 0, 0, widthInPixels, heightInPixels);
-	}
 
 	int drawX = getDrawXForStructure(structure->getCell());
 	int drawY = getDrawYForStructure(structure->getCell());
@@ -104,14 +95,19 @@ void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
 	// draw normal structure
 	draw_sprite(bmp_screen, temp, drawX, drawY);
 
-	// in case shadow, draw shadow now using fBlend.
 	if (structure->getShadowBitmap()) {
+		BITMAP *temp_shadow = create_bitmap(widthInPixels, heightInPixels);
+		clear_to_color(temp_shadow, makecol(255, 0, 255));
+		blit(structure->getShadowBitmap(), temp_shadow, 0, iSourceY, 0, 0, widthInPixels, heightInPixels);
 		fblend_trans(temp_shadow, bmp_screen, drawX, drawY, 128);
+		destroy_bitmap(temp_shadow);
 	}
 
-	// destroy used bitmaps
 	destroy_bitmap(temp);
-	destroy_bitmap(temp_shadow);
+}
+
+bool cStructureDrawer::isUneven(int value) {
+	return (value % 2) == 1;
 }
 
 int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure * structure) {
@@ -120,8 +116,7 @@ int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure * struc
 	int height = structure->getHeight();
 	int width = structure->getWidth();
 
-	// prebuild
-	if (iBuildFase == 1 || iBuildFase == 3 || iBuildFase == 5 || iBuildFase == 7 || iBuildFase == 9) {
+	if (isUneven(iBuildFase)) {
 
 		// determine what kind of prebuild picture should be used.
 		if (width == 1 && height == 1) {
@@ -237,8 +232,6 @@ void cStructureDrawer::drawStructureAnimationRefinery(cAbstractStructure * struc
 void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int layer) {
 	assert(structure);
 
-	cStructureUtils structureUtils;
-
 	// always select proper palette (of owner)
 	select_palette(player[structure->getOwner()].pal);
 
@@ -246,7 +239,7 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
 	// animation should be be drawn or, the normal drawing is shown (ie the
 	// structure is not in action, like deploying harvester etc).
 
-	// when stage == 2, it means only to draw the repair animation above the structure
+	// when layer == 2, it means only to draw the repair animation above the structure
 	// this is done after all the structures have been drawn with stage 1 or lower. Causing
 	// the repair icons to always overlap other structures. This is ugly, the repair icons
 	// should be 'particles' (like smoke etc) instead of being hacked here!
@@ -260,7 +253,6 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
 		// building is being 'readied' after placement.
 		if (iDrawPreBuild < 0) {
 			if (structure->getType() == WINDTRAP) {
-				// draw windtrap
 				drawStructureAnimationWindTrap(structure);
 			} else if (structure->getType() == TURRET || structure->getType() == RTURRET) {
 				drawStructureAnimationTurret(structure);
@@ -291,7 +283,6 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
 }
 
 void cStructureDrawer::drawStructuresForLayer(int layer) {
-	// draw all structures
 	cStructureUtils structureUtils;
 
 	for (int i = 0; i < MAX_STRUCTURES; i++) {

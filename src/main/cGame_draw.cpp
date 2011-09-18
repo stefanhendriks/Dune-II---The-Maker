@@ -136,7 +136,7 @@ void cGame::combat_mouse() {
 				if (cMouse::getInstance()->getMouseTile() == MOUSE_RALLY) {
 					int id = game.selected_structure;
 					if (id > -1)
-						if (structure[id]->getOwner() == 0) {
+						if (structure[id]->isOwnerHuman()) {
 							structure[id]->setRallyPoint(mc);
 							bParticle = true;
 						}
@@ -226,17 +226,9 @@ void cGame::combat_mouse() {
 		}
 
 		if (context->isMouseOnBattleField()) {
-			if (mouse->isMouseDraggingRectangle()) {
-				cRectangle * rectangle = mouse->getCurrentDrawingRectangle();
-				rect(bmp_screen, rectangle->getStartX(), rectangle->getStartY(), rectangle->getEndX(), rectangle->getEndY(), makecol(game.fade_select, game.fade_select, game.fade_select));
-			} else {
+			if (!mouse->isMouseDraggingRectangle()) {
 				cRectangle * rectangle = mouse->getLastCreatedRectangle();
 				if (rectangle->hasValidCoordinates()) {
-					int min_x = rectangle->getLowestX();
-					int min_y = rectangle->getLowestY();
-					int max_x = rectangle->getHighestX();
-					int max_y = rectangle->getHighestY();
-
 					UNIT_deselect_all();
 
 					bool bPlayRep = false;
@@ -254,10 +246,10 @@ void cGame::combat_mouse() {
 								}
 
 								// now check X and Y coordinates (center of unit now)
-								if (((unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) >= min_x && (unit[i].draw_x() + units[unit[i].iType].bmp_width / 2)
-										<= max_x) && (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2 >= min_y && (unit[i].draw_y()
-										+ units[unit[i].iType].bmp_height / 2) <= max_y)) {
-									// It is in the borders, select it
+								int unitXAtCenter = unit[i].draw_x() + units[unit[i].iType].bmp_width / 2;
+								int unitYAtCenter = unit[i].draw_y() + units[unit[i].iType].bmp_height / 2;
+
+								if (rectangle->isCoordinateWithinRectangle(unitXAtCenter, unitYAtCenter)) {
 									unit[i].bSelected = true;
 
 									if (units[unit[i].iType].infantry) {
@@ -290,6 +282,12 @@ void cGame::combat_mouse() {
 			rectangle->resetCoordinates();
 			}
 		} // is mouse on battle field
+		else {
+			if (!mouse->isMouseDraggingRectangle()) {
+				cRectangle * rectangle = mouse->getLastCreatedRectangle();
+				rectangle->resetCoordinates();
+			}
+		}
 	}
 
 	if (bOrderingUnits) {
@@ -300,10 +298,14 @@ void cGame::combat_mouse() {
 		if (key[KEY_P]) {
 			int iStr = context->getIdOfStructureWhereMouseHovers();
 
-			if (structure[iStr]->getOwner() == 0) {
-				if (structure[iStr]->getType() == LIGHTFACTORY || structure[iStr]->getType() == HEAVYFACTORY || structure[iStr]->getType() == HIGHTECH
-						|| structure[iStr]->getType() == STARPORT || structure[iStr]->getType() == WOR || structure[iStr]->getType() == BARRACKS
-						|| structure[iStr]->getType() == REPAIR)
+			if (structure[iStr]->isOwnerHuman()) {
+				if (structure[iStr]->getType() == LIGHTFACTORY ||
+					structure[iStr]->getType() == HEAVYFACTORY ||
+					structure[iStr]->getType() == HIGHTECH ||
+					structure[iStr]->getType() == STARPORT ||
+					structure[iStr]->getType() == WOR ||
+					structure[iStr]->getType() == BARRACKS ||
+					structure[iStr]->getType() == REPAIR)
 					player[0].iPrimaryBuilding[structure[iStr]->getType()] = iStr;
 			}
 		}
@@ -312,7 +314,7 @@ void cGame::combat_mouse() {
 		if (key[KEY_R] && !bOrderingUnits) {
 			int structureId = context->getIdOfStructureWhereMouseHovers();
 
-			if (structure[structureId]->getOwner() == 0 && structure[structureId]->getHitPoints() < structures[structure[structureId]->getType()].hp) {
+			if (structure[structureId]->isOwnerHuman() && structure[structureId]->isDamaged()) {
 				if (cMouse::getInstance()->isLeftButtonClicked()) {
 
 					if (!structure[structureId]->isRepairing()) {
@@ -323,7 +325,7 @@ void cGame::combat_mouse() {
 				}
 
 				cMouse::getInstance()->setMouseTile(MOUSE_REPAIR);
-			}// MOUSE PRESSED
+			}
 		}
 
 		if (cMouse::getInstance()->isLeftButtonClicked() && bOrderingUnits == false && !key[KEY_R]) {

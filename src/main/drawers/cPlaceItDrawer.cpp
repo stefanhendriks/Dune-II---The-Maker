@@ -84,7 +84,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 			if (map->cell[iCll].gameObjectId[MAPID_STRUCTURES] > -1) {
 				int iID = map->cell[iCll].gameObjectId[MAPID_STRUCTURES];
 
-				if (structure[iID]->getOwner() == 0) {
+				if (structure[iID]->isOwnerHuman()) {
 					bOutOfBorder = false; // connection!
 				} else {
 					bMayPlace = false;

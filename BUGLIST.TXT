@@ -1,0 +1,31 @@
+Buglist
+=======
+
+Priority		Status		Description
+------------------------------------------------------------------------------------------------
+MEDIUM			TODO		Units are allowed to move acros invisible map borders
+MEDIUM			TODO		Unit to be repaired in repair bay is not shown as being repaired
+MEDIUM			TODO		Unit will not go to rally point after being repaired
+MEDIUM			TODO		AI Rocket Turrets do not fire to enemy Carry-alls
+MEDIUM			TODO		Infantry on rocks cannot shoot to other infantry, due rocks blocking fire.
+
+Featurelist
+===========
+
+Priority		Status		Description
+------------------------------------------------------------------------------------------------
+TBD				TODO		Center around selected unit(s) when pressing key C.
+
+
+Improvement list
+================
+Priority		Status		Description
+------------------------------------------------------------------------------------------------
+HIGH			TODO		Units should be refactored
+HIGH			TODO		Compile time should be reduced to seconds, instead of minutes.
+	
+
+
+DONE
+====
+HIGH			DONE		Minimap in combination with rectangle selection box loses selection of current selected units

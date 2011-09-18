@@ -38,7 +38,7 @@ class cStructureDrawer {
 		void drawStructureForLayer(cAbstractStructure * structure, int layer);
 
 	private:
-
+		bool isUneven(int value);
 };
 
 #endif /* CSTRUCTUREDRAWER_H_ */

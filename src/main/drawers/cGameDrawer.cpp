@@ -76,7 +76,7 @@ void cGameDrawer::draw() {
 	}
 
 	// draw layer 1 (beneath units, on top of terrain
-	particleDrawer->drawLowerLayer();
+	particleDrawer->drawLayerBeneathUnits();
 
 	map->draw_units();
 
@@ -85,7 +85,7 @@ void cGameDrawer::draw() {
 	structureDrawer->drawStructuresSecondLayer();
 	structureDrawer->drawStructuresHealthBars();
 
-	map->draw_units_2nd();
+	map->drawAirborneUnitsAndHealthBarAndExperienceOfSelectedUnits();
 
 	particleDrawer->drawHigherLayer();
 	mapDrawer->drawShroud();

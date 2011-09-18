@@ -31,6 +31,8 @@ class cRectangle {
 		void resetCoordinates() { startX = startY = endX = endY = -1; }
 		void setCoordinates(cRectangle * otherRectangle);
 
+		bool isCoordinateWithinRectangle(int x, int y);
+
 	protected:
 
 	private:

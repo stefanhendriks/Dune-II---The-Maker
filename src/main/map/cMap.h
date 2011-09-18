@@ -29,7 +29,7 @@ class cMap {
 
 		void soft();
 
-		void draw_units_2nd();
+		void drawAirborneUnitsAndHealthBarAndExperienceOfSelectedUnits();
 		void draw_units();
 
 		void smudge_increase(int iType, int iCell);

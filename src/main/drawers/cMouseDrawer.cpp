@@ -11,6 +11,8 @@ cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cMouse *theMouse) {
 	assert(thePlayer);
 	assert(theMouse);
 	player = thePlayer;
+	context = thePlayer->getGameControlsContext();
+	assert(context);
 	mouse = theMouse;
 	mouseToolTip = new cMouseToolTip(player, mouse);
 }
@@ -23,6 +25,20 @@ cMouseDrawer::~cMouseDrawer() {
 }
 
 void cMouseDrawer::draw() {
+	drawMouseTile();
+	drawMouseRectangle();
+}
+
+void cMouseDrawer::drawMouseRectangle() {
+	if (context->isMouseOnBattleField()) {
+		if (mouse->isMouseDraggingRectangle()) {
+			cRectangle * rectangle = mouse->getCurrentDrawingRectangle();
+			rect(bmp_screen, rectangle->getStartX(), rectangle->getStartY(), rectangle->getEndX(), rectangle->getEndY(), makecol(game.fade_select, game.fade_select, game.fade_select));
+		}
+	}
+}
+
+void cMouseDrawer::drawMouseTile() {
 	int x = mouse->getX();
 	int y = mouse->getY();
 	int mouse_tile = mouse->getMouseTile();
@@ -44,8 +60,6 @@ void cMouseDrawer::draw() {
 	} else if (mouse_tile == MOUSE_PICK) {
 		x -= 16;
 		y -= 16;
-	} else {
-
 	}
 
 	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, x, y);

@@ -40,7 +40,6 @@ cMouse *cMouse::getInstance() {
 void cMouse::doRectangleLogic() {
 
     if(leftButtonPressed){
-
         if(currentRectangle.getStartX() < 0 || currentRectangle.getStartY() < 0){
             currentRectangle.setStartX(x);
             currentRectangle.setStartY(y);
@@ -52,9 +51,8 @@ void cMouse::doRectangleLogic() {
             }
         }
 
-    }
-    else{
-        if(currentRectangle.hasValidCoordinates()){
+    } else {
+        if(currentRectangle.hasValidCoordinates()) {
             lastCreatedRectangle.setCoordinates(&currentRectangle);
             mouseDraggingRectangle = false;
         }
@@ -108,13 +106,7 @@ bool cMouse::isOverRectangle(cRectangle * rect) {
 	if (!rect) {
 		return false;
 	}
-
-	int rectX = rect->getLowestX();
-	int rectY = rect->getLowestY();
-	int rectEndX = rect->getHighestX();
-	int rectEndY = rect->getHighestY();
-
-	return isOverRectangleUsingCoordinates(rectX, rectY, rectEndX, rectEndY);
+	return (rect->isCoordinateWithinRectangle(x,y));
 }
 
 
