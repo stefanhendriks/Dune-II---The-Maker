@@ -258,6 +258,8 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
 				drawStructureAnimationTurret(structure);
 			} else if (structure->getType() == REFINERY) {
 				drawStructureAnimationRefinery(structure);
+			} else if (structure->getType() == REPAIR) {
+				drawRepairFacility((cRepairFacility *) structure);
 			} else {
 				drawStructureAnimation(structure);
 			}
@@ -281,6 +283,33 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
 		}
 	}
 }
+
+void cStructureDrawer::drawRepairFacility(cRepairFacility * repairFacility) {
+	drawStructureAnimation(repairFacility);
+	if (repairFacility->hasUnitWithin()) {
+		int repairingUnitId = repairFacility->iUnitID;
+		s_UnitP unitDefinition = units[unit[repairingUnitId].iType];
+		int drawX = getDrawXForStructure(repairFacility->getCell());
+		int drawY = getDrawYForStructure(repairFacility->getCell());
+		// icon has a width of 64 (half is 32)
+		// icon has a height of 48 (half is 24)
+		// center icon on structure (of 3x2, which is 96 pixels X 64 pixels)
+		// center of structure is 48,32. Meaning icon should start at 16, 8 to be at center from
+		// drawX and drawY
+		drawX += 16;
+		drawY += 8;
+		draw_sprite(bmp_screen, (BITMAP *) gfxinter[unitDefinition.icon].dat, drawX, drawY);
+
+		// draw progress of repairing
+		cUnit theUnit = unit[repairingUnitId];
+		// TODO: refactor so hitpoints are always one value, and something different will be used
+		// to determine if in structure. This is just wrong.
+		int iWidth = health_bar(60, theUnit.iTempHitPoints, unitDefinition.hp);
+		rectfill(bmp_screen, drawX + 1 , drawY + 40, drawX + 62, drawY + 46, makecol(0, 0, 0)); // black border
+		rectfill(bmp_screen, drawX + 2 , drawY + 41, drawX + 2 + iWidth, drawY + 45, makecol(0, 255, 0)); // actual health bar
+	}
+}
+
 
 void cStructureDrawer::drawStructuresForLayer(int layer) {
 	cStructureUtils structureUtils;

@@ -1015,55 +1015,33 @@ void install_structures() {
 // MAX_W = pixels maxed
 // I = How much we have (CURRENT STATE)
 // W = MAX it can have
-float health_bar(float max_w, int i, int w) {
+float health_bar(float maxOnNewScale, int scoreOnCurrentScale, int maxOnCurrentScale) {
 
-	float health = 0.0f;
-	float flHP = i;
-	float flMAX = w;
+	float relative = 0.0f;
+	float flHP = scoreOnCurrentScale;
+	float flMAX = maxOnCurrentScale;
 
 	if (flHP > flMAX) {
-		return max_w;
+		return maxOnNewScale;
 	}
 
-	// amount of pixels (max_w = 100%)
+	relative = (float) (flHP / flMAX);
 
-	health = (float) (flHP / flMAX);
-
-	return (health * max_w);
+	return (relative * maxOnNewScale);
 }
 
 /******************************
  Unit health-bar calculation, returns amount of pictures
  ******************************/
 float health_unit(int i, float w) {
-
-	float health = 0.0f;
-	float flHP = unit[i].iHitPoints;
-	float flMAX = units[unit[i].iType].hp;
-
-	// amount of pixels (max 16 = 100%)
-
-	health = (float) (flHP / flMAX);
-
-	return (health * w);
+	return health_bar(w, unit[i].iHitPoints, units[unit[i].iType].hp);
 }
 
 /******************************
  Structure health-bar calculation, returns amount of pictures
  ******************************/
 float health_structure(int i, int w) {
-	float health = 0.0f;
-	float flHP = structure[i]->getHitPoints();
-	float flMAX = structures[structure[i]->getType()].hp;
-
-	// amount of pixels (max 16 = 100%)
-
-	health = (float) (flHP / flMAX);
-
-	if (health > 1.0)
-		health = 1.0;
-
-	return (health * w);
+	return health_bar(w, structure[i]->getHitPoints(), structures[structure[i]->getType()].hp);
 }
 
 // return a border cell, close to iCll

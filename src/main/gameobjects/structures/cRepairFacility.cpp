@@ -18,9 +18,10 @@ cRepairFacility::~cRepairFacility() {
 void cRepairFacility::think() {
 
 	// Repair unit here (if any)
-	if (iUnitID > -1) {
+	if (hasUnitWithin()) {
 		// must repair...
-		if (unit[iUnitID].iTempHitPoints < units[unit[iUnitID].iType].hp) {
+		s_UnitP unitDefinition = units[unit[iUnitID].iType];
+		if (unit[iUnitID].iTempHitPoints < unitDefinition.hp) {
 			TIMER_repairunit++;
 
 			if (TIMER_repairunit > 15) {
@@ -30,8 +31,8 @@ void cRepairFacility::think() {
 					unit[iUnitID].iTempHitPoints += 3;
 					player[getOwner()].credits--;
 
-					if (unit[iUnitID].iTempHitPoints >= units[unit[iUnitID].iType].hp) {
-						unit[iUnitID].iHitPoints = units[unit[iUnitID].iType].hp;
+					if (unit[iUnitID].iTempHitPoints >= unitDefinition.hp) {
+						unit[iUnitID].iHitPoints = unitDefinition.hp;
 
 						// dump unit, get rid of it
 						int iNewCell = iFreeAround();

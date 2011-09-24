@@ -33,6 +33,7 @@ class cStructureDrawer {
 		void drawStructureAnimationWindTrap(cAbstractStructure * structure);
 		void drawStructureAnimationRefinery(cAbstractStructure * structure);
 		void drawStructureAnimationTurret(cAbstractStructure * structure);
+		void drawRepairFacility(cRepairFacility * repairFacility);
 
 		int determinePreBuildAnimationIndex(cAbstractStructure * structure);
 		void drawStructureForLayer(cAbstractStructure * structure, int layer);
