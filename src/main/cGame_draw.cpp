@@ -70,6 +70,7 @@ void cGame::winningState() {
 void cGame::combat_mouse() {
 	cGameControlsContext *context = player[HUMAN].getGameControlsContext();
 	cMouse * mouse = cMouse::getInstance();
+	int hover_unit = context->getIdOfUnitWhereMouseHovers();
 
 	bool bOrderingUnits = false;
 
@@ -177,20 +178,26 @@ void cGame::combat_mouse() {
 						}
 					} else if (mouse->getMouseTile() == MOUSE_ATTACK) {
 						// check who or what to attack
+						int iAttackCell = -1;
+
+						bool isOverUnit = context->isMouseOverUnit();
+
+						// When not attacking a unit or structure (because not hovering), this means a force attack was issued.
+						if (!context->isMouseOverStructure() && !isOverUnit) {
+							iAttackCell = context->getMouseCell();
+						}
+
+						// for all units of the human, that where selected...
 						for (int i = 0; i < MAX_UNITS; i++) {
 							if (unit[i].isValid() && unit[i].iPlayer == HUMAN && unit[i].bSelected) {
-								int iAttackCell = -1;
+								UNIT_ORDER_ATTACK(i, context->getMouseCell(), context->getIdOfUnitWhereMouseHovers(), context->getIdOfStructureWhereMouseHovers(), iAttackCell);
 
-								if (!context->isMouseOverStructure() < 0 && game.hover_unit < 0) {
-									iAttackCell = mc;
+								// blink unit
+								if (isOverUnit) {
+									unit[context->getIdOfUnitWhereMouseHovers()].TIMER_blink = 5;
 								}
 
-								UNIT_ORDER_ATTACK(i, mc, game.hover_unit, context->getIdOfStructureWhereMouseHovers(), iAttackCell);
-
-								if (game.hover_unit > -1) {
-									unit[game.hover_unit].TIMER_blink = 5;
-								}
-
+								// play sound stuff
 								if (units[unit[i].iType].infantry) {
 									bPlayInf = true;
 								} else {

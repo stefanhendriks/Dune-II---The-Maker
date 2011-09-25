@@ -58,7 +58,6 @@ class cGame {
 
 		// combat - start
 		int selected_structure;
-		int hover_unit;
 		int paths_created;
 		int shake_x;
 		int shake_y;

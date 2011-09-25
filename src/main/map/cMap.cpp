@@ -398,32 +398,21 @@ void cMap::draw_units() {
 		}
 
 	}
-
-	int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
-	if (mc > -1) {
-		if (map->cell[mc].gameObjectId[MAPID_UNITS] > -1) {
-			int iUnitId = map->cell[mc].gameObjectId[MAPID_UNITS];
-
-			if (unit[iUnitId].iTempHitPoints < 0)
-				game.hover_unit = iUnitId;
-		} else if (map->cell[mc].gameObjectId[MAPID_WORMS] > -1) {
-			int iUnitId = map->cell[mc].gameObjectId[MAPID_WORMS];
-			game.hover_unit = iUnitId;
-		}
-	}
 }
 
 void cMap::drawAirborneUnitsAndHealthBarAndExperienceOfSelectedUnits() {
 	set_trans_blender(0, 0, 0, 160);
 
+	cGameControlsContext * context = player[HUMAN].getGameControlsContext();
+
 	// draw unit power
-	if (game.hover_unit > -1) {
-		if (unit[game.hover_unit].iType == HARVESTER)
-			unit[game.hover_unit].draw_spice();
+	if (context->isMouseOverUnit()) {
+		int id = context->getIdOfUnitWhereMouseHovers();
+		if (unit[id].iType == HARVESTER)
+			unit[id].draw_spice();
 
-		unit[game.hover_unit].draw_health();
-		unit[game.hover_unit].draw_experience();
-
+		unit[id].draw_health();
+		unit[id].draw_experience();
 	}
 
 	// draw health of units

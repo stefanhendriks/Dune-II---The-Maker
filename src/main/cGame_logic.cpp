@@ -70,7 +70,6 @@ void cGame::init() {
 	iMusicVolume = 128; // volume is 0...
 
 	paths_created = 0;
-	hover_unit = -1;
 
 	state = MAINMENU;
 
@@ -141,7 +140,6 @@ void cGame::mission_init() {
 	iMusicVolume = 128; // volume is 0...
 
 	paths_created = 0;
-	hover_unit = -1;
 
 	iWinQuota = -1; // > 0 means, get this to win the mission, else, destroy all!
 
@@ -496,9 +494,6 @@ void cGame::updateState() {
 	}
 
 	bPlacedIt = false;
-
-	//selected_structure=-1;
-	hover_unit = -1;
 
 	// update power
 	// update total spice capacity
