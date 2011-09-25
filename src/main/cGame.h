@@ -89,12 +89,6 @@ class cGame {
 		void think_music();
 		void think_mentat();
 
-		// state functions
-		void winningState();
-		void losingState();
-		void shutdown();
-		void combat_mouse();
-
 		// init functions
 		bool setupGame();
 		void init();
@@ -107,11 +101,12 @@ class cGame {
 		void MENTAT_draw_mouth(int iMentat);
 		void MENTAT_draw_eyes(int iMentat);
 		void MENTAT_draw_other(int iMentat);
-		void FADE_OUT();
 		void preparementat(bool bTellHouse);
 
 		bool isState(GameState theState);
 		void setState(GameState theState);
+		void FADE_OUT();
+		void switchStateTo(GameState state);
 
 		// misc
 		int getGroupNumberFromKeyboard();
@@ -154,6 +149,11 @@ class cGame {
 			screenResolutionFromIni = newScreenResolution;
 		}
 
+		void shutdown();
+
+		// TODO: split it up in a draw and logic
+		void combat_mouse();
+
 	private:
 		bool isBusyFadingOut();
 
@@ -171,6 +171,8 @@ class cGame {
 		void selecthouseState();
 		void runGameState();
 		void setupSkirmishState();
+		void winningState();
+		void losingState();
 
 		// draw functions
 		void drawHousesToSelect(int iType);
@@ -185,9 +187,6 @@ class cGame {
 
 		bool isFadingOut();
 		bool isDoneFadingOut();
-
-		// state changing
-		void switchStateTo(GameState state);
 
 		// variables
 		GameState state;

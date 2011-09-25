@@ -103,8 +103,21 @@ void cGameControlsContext::determineHoveringOverStructureId() {
 }
 
 void cGameControlsContext::determineHoveringOverUnitId() {
-	//TODO:implementation of determineHoveringOverUnitId
 	mouseHoveringOverUnitId = -1;
+	if (isMouseOnBattleField()) {
+		cMapCell cell = map->cell[mouseCell];
+		if (cell.gameObjectId[MAPID_UNITS] > -1) {
+			int iUnitId = cell.gameObjectId[MAPID_UNITS];
+
+			// TODO: this really makes no sense, but it works now.
+			if (unit[iUnitId].iTempHitPoints < 0) { // is not being repaired or in structure
+				mouseHoveringOverUnitId = iUnitId;
+			}
+		} else if (cell.gameObjectId[MAPID_WORMS] > -1) {
+			int iUnitId = cell.gameObjectId[MAPID_WORMS];
+			mouseHoveringOverUnitId = iUnitId;
+		}
+	}
 }
 
 cAbstractStructure * cGameControlsContext::getStructurePointerWhereMouseHovers() {
