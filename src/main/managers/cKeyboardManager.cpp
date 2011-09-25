@@ -21,7 +21,6 @@ cKeyboardManager::~cKeyboardManager() {
  TAB + key = debug action
  */
 void cKeyboardManager::interact() {
-
 	if (key[KEY_TAB]) {
 		DEBUG_KEYS();
 	} else {
@@ -152,37 +151,15 @@ void cKeyboardManager::GAME_KEYS() {
 	int iGroup = game.getGroupNumberFromKeyboard();
 
 	// WHEN PRESSED CTRL, MEANING, ADD....
-	if (key[KEY_LCONTROL]) {
-		// UNIT GROUPING
-		if (iGroup > 0) {
-
-			// First: Any unit that is already this group number, but NOT selected, must be removed
-			for (int i = 0; i < MAX_UNITS; i++) {
-				// TODO: This can be done smaller.
-				if (unit[i].isValid()) {
-					if (unit[i].iPlayer == 0) {
-						if (unit[i].iGroup == iGroup) {
-							if (unit[i].bSelected == false) {
-								unit[i].iGroup = -1;
-							}
-						}
-					}
-				}
-			}
-
-			// now add
-			for (int i = 0; i < MAX_UNITS; i++) {
-				if (unit[i].isValid()) {
-					if (unit[i].iPlayer == 0) {
-						if (unit[i].bSelected) {
-							unit[i].iGroup = iGroup;
-						}
-					}
+	if (key[KEY_LCONTROL] && iGroup > 0) {
+		for (int i = 0; i < MAX_UNITS; i++) {
+			if (unit[i].isValid() && unit[i].iPlayer == HUMAN) {
+				if (unit[i].bSelected) {
+					unit[i].iGroup = iGroup;
 				}
 			}
 		}
-
-	}// HOLDING CTRL -> create group
+	} // HOLDING CTRL -> create group
 	else {
 		// Center on focus cell
 		if (key[KEY_H]) {
