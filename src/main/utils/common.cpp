@@ -1301,13 +1301,13 @@ int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstr
 	if (ownerunit > -1) {
 		bullet[new_id].iPlayer = unit[ownerunit].iPlayer;
 		// create spot
-		map->clear_spot(cell, 3, unit[ownerunit].iPlayer);
+		map->makeCircleVisibleForPlayerOfSpecificSize(cell, 3, unit[ownerunit].iPlayer);
 
 	}
 
 	if (ownerstruc > -1) {
 		bullet[new_id].iPlayer = structure[ownerstruc]->getOwner();
-		map->clear_spot(cell, 3, structure[ownerstruc]->getOwner());
+		map->makeCircleVisibleForPlayerOfSpecificSize(cell, 3, structure[ownerstruc]->getOwner());
 	}
 
 	// play sound (when we have one)

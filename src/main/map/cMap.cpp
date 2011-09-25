@@ -194,12 +194,13 @@ void cMap::draw_bullets() {
 	}
 }
 
-void cMap::clear_all() {
-	for (int c = 0; c < MAX_CELLS; c++)
-		iVisible[c][0] = true;
+void cMap::makeAllCellsVisible() {
+	for (int c = 0; c < MAX_CELLS; c++) {
+		iVisible[c][HUMAN] = true;
+	}
 }
 
-void cMap::clear_spot(int c, int size, int player) {
+void cMap::makeCircleVisibleForPlayerOfSpecificSize(int c, int size, int player) {
 	// Get the x and y and make a circle around it of 16xR, then calculate of every step the cell and
 	// clear it
 
@@ -207,8 +208,9 @@ void cMap::clear_spot(int c, int size, int player) {
 	int cy = iCellGiveY(c); /*cell[c].y(c);*/
 
 	// fail
-	if (cx < 0 || cy < 0)
+	if (cx < 0 || cy < 0) {
 		return;
+	}
 
 	map->iVisible[c][player] = true;
 
@@ -305,8 +307,6 @@ void cMap::clear_spot(int c, int size, int player) {
 				}
 
 			} // make visible
-
-
 		}
 	}
 

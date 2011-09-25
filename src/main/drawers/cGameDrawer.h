@@ -13,12 +13,14 @@ class cGameDrawer {
 		void draw();
 		void destroy();
 
+		void setMessage(const char msg[255]) {
+			messageBarDrawer->setMessage(msg);
+		}
+
 		CreditsDrawer *getCreditsDrawer() {
 			return creditsDrawer;
 		}
-		cMessageDrawer *getMessageDrawer() {
-			return messageDrawer;
-		}
+
 		cMessageBarDrawer *getMessageBarDrawer() {
 			return messageBarDrawer;
 		}
@@ -57,7 +59,6 @@ class cGameDrawer {
 		cMapDrawer * mapDrawer;
 		cMiniMapDrawer * miniMapDrawer;
 		cParticleDrawer * particleDrawer;
-		cMessageDrawer * messageDrawer;
 		cMessageBarDrawer * messageBarDrawer;
 		cPlaceItDrawer *placeitDrawer;
 		cStructureDrawer * structureDrawer;

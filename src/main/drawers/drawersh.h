@@ -26,8 +26,6 @@ class cMouse;
 
 #include "cUnitDrawer.h"
 
-#include "cMessageDrawer.h"
-
 #include "cPlaceItDrawer.h"
 
 #include "cMapDrawer.h"

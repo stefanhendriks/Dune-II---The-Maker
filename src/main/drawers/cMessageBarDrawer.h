@@ -8,9 +8,14 @@ class cMessageBarDrawer {
 		~cMessageBarDrawer();
 
 		void drawMessageBar();
+
 		cMessageBar * getMessageBar() {
 			return messageBar;
 		}
+
+		void think();
+
+		void setMessage(const char msg[255]);
 
 	protected:
 

@@ -1690,15 +1690,15 @@ void cGame::selectNextConquestState() {
 		if (iRegionScene == 0) {
 			REGION_SETUP(iMission, iHouse);
 			iRegionScene++;
-			gameDrawer->getMessageDrawer()->setMessage("3 Houses have come to Dune.");
+			gameDrawer->setMessage("3 Houses have come to Dune.");
 			iRegionSceneAlpha = -5;
 		} else if (iRegionScene == 1) {
 			// draw the
 			set_trans_blender(0, 0, 0, iRegionSceneAlpha);
 			draw_trans_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0, 12);
-			char * cMessage = gameDrawer->getMessageDrawer()->getMessage();
-			if (cMessage[0] == '\0' && iRegionSceneAlpha >= 255) {
-				gameDrawer->getMessageDrawer()->setMessage("To take control of the land.");
+			bool isMessageSet = gameDrawer->getMessageBarDrawer()->getMessageBar()->isMessageSet();
+			if (!isMessageSet && iRegionSceneAlpha >= 255) {
+				gameDrawer->setMessage("To take control of the land.");
 				iRegionScene++;
 				iRegionSceneAlpha = -5;
 			}
@@ -1706,9 +1706,9 @@ void cGame::selectNextConquestState() {
 			draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0, 12);
 			set_trans_blender(0, 0, 0, iRegionSceneAlpha);
 			draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
-			char * cMessage = gameDrawer->getMessageDrawer()->getMessage();
-			if (cMessage[0] == '\0' && iRegionSceneAlpha >= 255) {
-				gameDrawer->getMessageDrawer()->setMessage("That has become divided.");
+			bool isMessageSet = gameDrawer->getMessageBarDrawer()->getMessageBar()->isMessageSet();
+			if (!isMessageSet && iRegionSceneAlpha >= 255) {
+				gameDrawer->setMessage("That has become divided.");
 				iRegionScene++;
 				iRegionSceneAlpha = -5;
 			}
@@ -1759,7 +1759,6 @@ void cGame::selectNextConquestState() {
 		draw_sprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, (640) - 64, (480) - 64);
 	}
 
-	char * cMessage = gameDrawer->getMessageDrawer()->getMessage();
 	if (iRegionState == 2) {
 		logbook("iRegionState == 2 [BEGIN]");
 		// draw dune first
@@ -1771,7 +1770,7 @@ void cGame::selectNextConquestState() {
 			REGION_DRAW(i);
 
 		// Animate here (so add regions that are conquered)
-		char * cMessage = gameDrawer->getMessageDrawer()->getMessage();
+		bool isMessageSet = gameDrawer->getMessageBarDrawer()->getMessageBar()->isMessageSet();
 
 		bool bDone = true;
 		for (int i = 0; i < MAX_REGIONS; i++) {
@@ -1783,14 +1782,14 @@ void cGame::selectNextConquestState() {
 					// when the region is NOT this house, turn it into this house
 					if (world[iRegNr].iHouse != iRegionHouse[i]) {
 
-						if ((cRegionText[i][0] != '\0' && cMessage[0] == '\0') || (cRegionText[i][0] == '\0')) {
+						if ((cRegionText[i][0] != '\0' && !isMessageSet) || (cRegionText[i][0] == '\0')) {
 
 							// set this up
 							world[iRegNr].iHouse = iRegionHouse[i];
 							world[iRegNr].iAlpha = 1;
 
 							if (cRegionText[i][0] != '\0') {
-								gameDrawer->getMessageDrawer()->setMessage(cRegionText[i]);
+								gameDrawer->setMessage(cRegionText[i]);
 							}
 
 							bDone = false;
@@ -1818,9 +1817,9 @@ void cGame::selectNextConquestState() {
 			}
 		}
 
-		if (bDone && cMessage[0] == '\0') {
+		if (bDone && !isMessageSet) {
 			iRegionState++;
-			gameDrawer->getMessageDrawer()->setMessage("Select your next region.");
+			gameDrawer->setMessage("Select your next region.");
 			//   allegro_message("done2");
 		}
 		logbook("iRegionState == 2 [END]");

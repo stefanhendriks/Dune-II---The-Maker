@@ -42,8 +42,8 @@ class cMap {
 
 		void thinkInteraction();
 		void draw_think();
-		void clear_all();
-		void clear_spot(int c, int size, int player);
+		void makeAllCellsVisible();
+		void makeCircleVisibleForPlayerOfSpecificSize(int c, int size, int player);
 
 		cMapCell cell[MAX_CELLS];
 

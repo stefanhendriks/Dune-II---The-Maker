@@ -15,7 +15,6 @@ cGameDrawer::cGameDrawer(cPlayer * thePlayer) {
 	mapDrawer = new cMapDrawer(map, thePlayer, mapCamera);
 	miniMapDrawer = new cMiniMapDrawer(map, thePlayer, mapCamera);
 	particleDrawer = new cParticleDrawer();
-	messageDrawer = new cMessageDrawer();
 	messageBarDrawer = new cMessageBarDrawer();
 	placeitDrawer = new cPlaceItDrawer();
 	structureDrawer = new cStructureDrawer();
@@ -23,9 +22,9 @@ cGameDrawer::cGameDrawer(cPlayer * thePlayer) {
 	guiDrawer = new cGuiDrawer();
 
 	cMessageBar * messageBar = messageBarDrawer->getMessageBar();
-	messageBar->setX(200);
-	messageBar->setY(200);
-	messageBar->setWidth(game.getScreenResolution()->getWidth() - 160);
+	messageBar->setX(0);
+	messageBar->setY(42);
+	messageBar->setWidth(game.getScreenResolution()->getWidth() - 182);
 	logbook("cGameDrawer constructor finished");
 }
 
@@ -45,8 +44,6 @@ cGameDrawer::~cGameDrawer() {
 	miniMapDrawer = NULL;
 	delete particleDrawer;
 	particleDrawer = NULL;
-	delete messageDrawer;
-	messageBarDrawer = NULL;
 	delete placeitDrawer;
 	placeitDrawer = NULL;
 	delete structureDrawer;
@@ -193,9 +190,7 @@ void cGameDrawer::drawStructurePlacing() {
 }
 
 void cGameDrawer::drawMessage() {
-	assert(messageDrawer);
-	messageDrawer->draw();
-	//	messageBarDrawer->drawMessageBar();
+	messageBarDrawer->drawMessageBar();
 }
 
 void cGameDrawer::drawMouse() {

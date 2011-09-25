@@ -11,8 +11,10 @@ cMessageBar::cMessageBar(int theX, int theY, int theWidth) {
 	y = theY;
 	width = theWidth;
 	alpha = 255;
+	resetTimerMessage();
 }
 
 cMessageBar::~cMessageBar() {
 }
+
 

@@ -69,7 +69,7 @@ void cSideBar::thinkUpgradeButton() {
 						assert(upgradeInProgress);
 						sprintf(msg, "Upgrade completed at %d percent", upgradeInProgress->getProgressAsPercentage());
 					}
-					gameDrawer->getMessageDrawer()->setMessage(msg);
+					gameDrawer->getMessageBarDrawer()->setMessage(msg);
 				}
 
 				if (isUpgradeApplicable && MOUSE_BTN_LEFT()) {
@@ -219,7 +219,7 @@ void cSideBar::thinkInteraction() {
 					}
 				}
 
-				gameDrawer->getMessageDrawer()->setMessage(msg);
+				gameDrawer->setMessage(msg);
 			}
 		}
 

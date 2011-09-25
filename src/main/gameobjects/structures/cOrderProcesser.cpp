@@ -91,12 +91,11 @@ void cOrderProcesser::think() {
 			playTMinusSound(secondsUntilArrival);
 		}
 
-		cMessageDrawer * messageDrawer = gameDrawer->getMessageDrawer();
 		if (secondsUntilArrival == 0) {
 			sendFrigate();
-			messageDrawer->setMessage("Frigate is arriving...");
+			gameDrawer->setMessage("Frigate is arriving...");
 		} else {
-			messageDrawer->setMessage(msg);
+			gameDrawer->setMessage(msg);
 		}
 	}
 

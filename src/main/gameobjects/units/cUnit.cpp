@@ -1336,7 +1336,7 @@ void cUnit::think_move_air() {
 							unit[iUnitID].iBodyShouldFace = iBodyShouldFace;
 
 							// clear spot
-							map->clear_spot(iCell, units[unit[iUnitID].iType].sight, iPlayer);
+							map->makeCircleVisibleForPlayerOfSpecificSize(iCell, units[unit[iUnitID].iType].sight, iPlayer);
 
 							int iuID = iUnitID;
 
@@ -2587,7 +2587,7 @@ void cUnit::think_move() {
 
 			}
 
-			map->clear_spot(iCell, units[iType].sight, iPlayer);
+			map->makeCircleVisibleForPlayerOfSpecificSize(iCell, units[iType].sight, iPlayer);
 
 			// The goal did change probably, or something else forces us to reconsider
 			if (bCalculateNewPath) {
@@ -2754,7 +2754,7 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
 	}
 
 	unit[iNewId].poll();
-	map->clear_spot(iCll, units[iTpe].sight, iPlyr);
+	map->makeCircleVisibleForPlayerOfSpecificSize(iCll, units[iTpe].sight, iPlyr);
 
 	return iNewId;
 }

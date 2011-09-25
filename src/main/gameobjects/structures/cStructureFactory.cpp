@@ -280,7 +280,7 @@ void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, 
 
 	for (int x = iCellX; x < iCellXMax; x++) {
 		for (int y = iCellY; y < iCellYMax; y++) {
-			map->clear_spot(iCellMake(x, y), iSight, iPlayer);
+			map->makeCircleVisibleForPlayerOfSpecificSize(iCellMake(x, y), iSight, iPlayer);
 		}
 	}
 }

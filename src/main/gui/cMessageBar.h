@@ -22,12 +22,35 @@ class cMessageBar {
 		void setY(int value) {
 			y = value;
 		}
-		void setMessage(std::string * value) {
-			message = value;
+
+		void clearMessage() {
+			memset(cMessage, 0, sizeof(cMessage));
 		}
+
+		void setMessage(const char msg[255]) {
+			resetTimerMessage();
+			clearMessage();
+			sprintf(cMessage, "%s", msg);
+		}
+
 		void setAlpha(int value) {
 			alpha = value;
 		}
+
+		void incrementAlpha() {
+			alpha += 3;
+			if (alpha > 254) {
+				alpha = 254;
+			}
+		}
+
+		void decreaseAlpha() {
+			alpha -= 6;
+			if (alpha < 0) {
+				alpha = 0;
+			}
+		}
+
 		void setWidth(int value) {
 			width = value;
 		}
@@ -44,8 +67,25 @@ class cMessageBar {
 		int getWidth() {
 			return width;
 		}
-		std::string * getMessage() {
-			return message;
+
+		char * getMessage() {
+			return &cMessage[0];
+		}
+
+		bool isMessageSet() {
+			return cMessage[0] != '\0';
+		}
+
+		void incrementTimerMessage() {
+			TIMER_message++;
+		}
+
+		void resetTimerMessage() {
+			TIMER_message = 0;
+		}
+
+		int getTimerMessage() {
+			return TIMER_message;
 		}
 
 	protected:
@@ -55,8 +95,9 @@ class cMessageBar {
 		int width;
 		int x;
 		int y;
-		std::string * message;
 
+		char cMessage[255];
+		int TIMER_message;
 };
 
 #endif /* CMESSAGEBAR_H_ */

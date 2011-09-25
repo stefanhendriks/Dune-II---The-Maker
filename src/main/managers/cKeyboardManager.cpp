@@ -16,10 +16,10 @@ cKeyboardManager::cKeyboardManager(const cKeyboardManager& orig) {
 cKeyboardManager::~cKeyboardManager() {
 }
 
-/**
- Handle keyboard keys.
- TAB + key = debug action
- */
+bool cKeyboardManager::mustTakeScreenshot() {
+	return (key[KEY_F11]);
+}
+
 void cKeyboardManager::interact() {
 	if (key[KEY_TAB]) {
 		DEBUG_KEYS();
@@ -30,8 +30,7 @@ void cKeyboardManager::interact() {
 			game.playing = false;
 		}
 
-		// take screenshot
-		if (key[KEY_F11]) {
+		if (mustTakeScreenshot()) {
 			char filename[25];
 
 			if (game.screenshot < 10) {
@@ -57,16 +56,16 @@ void cKeyboardManager::interact() {
 
 	/* Handle here keys that are only active when debugging */
 	if (DEBUGGING) {
-
 		if (key[KEY_F4]) {
 			if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
-				map->clear_spot(player[HUMAN].getGameControlsContext()->getMouseCell(), 3, 0);
+				map->makeCircleVisibleForPlayerOfSpecificSize(player[HUMAN].getGameControlsContext()->getMouseCell(), 3, 0);
 			}
 		}
 	}
 }
 
 void cKeyboardManager::DEBUG_KEYS() {
+
 	//JUMP TO MISSION 9
 	if (key[KEY_F1] && game.iHouse > 0) {
 		game.mission_init();
@@ -77,24 +76,28 @@ void cKeyboardManager::DEBUG_KEYS() {
 		playMusicByType(MUSIC_BRIEFING);
 		game.iMentatSpeak = -1;
 	}
+
 	// WIN MISSION
 	if (key[KEY_F2]) {
-		if (game.iWinQuota > -1)
+		if (game.iWinQuota > -1) {
 			player[0].credits = game.iWinQuota + 1;
-		else {
+		} else {
 			game.destroyAllStructures(false);
 			game.destroyAllUnits(false);
 		}
 	}
+
 	// LOSE MISSION
 	if (key[KEY_F3]) {
 		game.destroyAllStructures(true);
 		game.destroyAllUnits(true);
 	}
+
 	// GIVE 299999 CREDITS TO PLAYER
 	if (key[KEY_F4] && !key[KEY_LSHIFT]) {
 		player[0].credits = 299999;
 	}
+
 	//DESTROY UNIT OR BUILDING
 	if (key[KEY_F4] && key[KEY_LSHIFT]) {
 		int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
@@ -110,10 +113,12 @@ void cKeyboardManager::DEBUG_KEYS() {
 			}
 		}
 	}
+
 	// REVEAL  MAP
 	if (key[KEY_F5]) {
-		map->clear_all();
+		map->makeAllCellsVisible();
 	}
+
 	//JUMP TO MISSION 3
 	if (key[KEY_F6] && game.iHouse > 0) {
 		game.mission_init();
@@ -124,6 +129,7 @@ void cKeyboardManager::DEBUG_KEYS() {
 		playMusicByType(MUSIC_BRIEFING);
 		game.iMentatSpeak = -1;
 	}
+
 	//JUMP TO MISSION 4
 	if (key[KEY_F7] && game.iHouse > 0) {
 		game.mission_init();
@@ -134,6 +140,7 @@ void cKeyboardManager::DEBUG_KEYS() {
 		playMusicByType(MUSIC_BRIEFING);
 		game.iMentatSpeak = -1;
 	}
+
 	//JUMP TO MISSION 5
 	if (key[KEY_F8] && game.iHouse > 0) {
 		game.mission_init();
@@ -146,7 +153,6 @@ void cKeyboardManager::DEBUG_KEYS() {
 	}
 }
 
-// WHen holding CTRL
 void cKeyboardManager::GAME_KEYS() {
 	int iGroup = game.getGroupNumberFromKeyboard();
 

@@ -126,8 +126,9 @@ void cTimeManager::handleTimerGlobal() {
 			if (gameDrawer->getCreditsDrawer()) {
 				gameDrawer->getCreditsDrawer()->think();
 			}
-			if (gameDrawer->getMessageDrawer()) {
-				gameDrawer->getMessageDrawer()->think();
+
+			if (gameDrawer->getMessageBarDrawer()) {
+				gameDrawer->getMessageBarDrawer()->think();
 			}
 		}
 
