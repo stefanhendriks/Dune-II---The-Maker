@@ -269,7 +269,7 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
 	} else if (layer == 2) {
 		// TODO: REMOVE THIS CODE AND create particles for this
 		// now draw the repair alpha when repairing
-		if (structure->isRepairing()) {
+		if (structure->isBeingRepaired()) {
 			if (structure->getRepairAlpha() > -1) {
 				set_trans_blender(0, 0, 0, structure->getRepairAlpha());
 				int drawX = getDrawXForStructure(structure->getCell());

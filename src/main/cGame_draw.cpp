@@ -317,7 +317,7 @@ void cGame::combat_mouse() {
 			if (structure[structureId]->isOwnerHuman() && structure[structureId]->isDamaged()) {
 				if (cMouse::getInstance()->isLeftButtonClicked()) {
 
-					if (!structure[structureId]->isRepairing()) {
+					if (!structure[structureId]->isBeingRepaired()) {
 						structure[structureId]->setRepairing(true);
 					} else {
 						structure[structureId]->setRepairing(false);

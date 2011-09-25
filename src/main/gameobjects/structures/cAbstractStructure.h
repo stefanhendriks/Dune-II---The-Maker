@@ -165,7 +165,7 @@ class cAbstractStructure {
 			return bAnimate;
 		}
 		bool isPrimary();
-		bool isRepairing() {
+		bool isBeingRepaired() {
 			return bRepair;
 		}
 		bool hasUnitWithin() {
