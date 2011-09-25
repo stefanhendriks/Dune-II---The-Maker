@@ -62,7 +62,7 @@ void cGame::init() {
 	memset(cRegionText, 0, sizeof(cRegionText));
 	//int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
 
-	soundEnabled = false;
+	soundEnabled = true;
 	mp3MusicEnabled = false;
 
 	iSkirmishMap = -1;
@@ -512,10 +512,6 @@ void cGame::updateState() {
 }
 
 void cGame::playingState() {
-	if (isBusyFadingOut()) {
-		return;
-	}
-
 	bPlacedIt = bPlaceIt;
 
 	assert(gameDrawer);
@@ -620,10 +616,6 @@ void cGame::MENTAT_draw_mouth(int iMentat) {
 }
 
 void cGame::briefingState(int iType) {
-	if (isBusyFadingOut()) {
-		return;
-	}
-
 	bool bFadeOut = false;
 
 	// draw speaking animation, and text, etc
@@ -729,19 +721,13 @@ void cGame::briefingState(int iType) {
 
 }
 
+void cGame::switchStateTo(GameState stateToSwitchTo) {
+	setState(stateToSwitchTo);
+	game.FADE_OUT();
+}
+
 // draw menu
 void cGame::menuState() {
-	if (isFadingOut()) {
-		draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
-		return;
-	}
-
-	if (isDoneFadingOut()) {
-		iFadeAction = 2;
-	}
-
-	bool bFadeOut = false;
-
 	cTextDrawer * textDrawer = new cTextDrawer(bene_font);
 
 	// draw main menu title (picture is 640x480)
@@ -762,8 +748,7 @@ void cGame::menuState() {
 		alfont_textprintf(bmp_screen, bene_font, 261, 323, makecol(255, 0, 0), "Campaign");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
-			state = SELECTHOUSE;
-			bFadeOut = true;
+			switchStateTo(SELECTHOUSE);
 		}
 
 	} else {
@@ -777,8 +762,7 @@ void cGame::menuState() {
 		alfont_textprintf(bmp_screen, bene_font, 261, 343, makecol(255, 0, 0), "Skirmish");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
-			game.state = SETUPSKIRMISH;
-			bFadeOut = true;
+			switchStateTo(SETUPSKIRMISH);
 			INI_LOAD_MAPS_INTO_PREVIEWMAP_OBJECTS();
 
 			game.mission_init();
@@ -804,13 +788,8 @@ void cGame::menuState() {
 		alfont_textprintf(bmp_screen, bene_font, 261, 363, makecol(255, 0, 0), "Multiplayer");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
-			bFadeOut = true;
-
-			// check if the game can be server or client
-			//bCanBeServerOrClient();
+			switchStateTo(MAINMENU);
 		}
-
-		//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[D2TM_LOAD].dat, 303, 369);
 	} else {
 		alfont_textprintf(bmp_screen, bene_font, 261, 364, makecol(0, 0, 0), "Multiplayer");
 		alfont_textprintf(bmp_screen, bene_font, 261, 363, makecol(255, 255, 255), "Multiplayer");
@@ -823,7 +802,7 @@ void cGame::menuState() {
 		alfont_textprintf(bmp_screen, bene_font, 261, 383, makecol(255, 0, 0), "Load");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
-			bFadeOut = true;
+			switchStateTo(MAINMENU);
 		}
 
 		//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[D2TM_LOAD].dat, 303, 369);
@@ -838,7 +817,7 @@ void cGame::menuState() {
 		alfont_textprintf(bmp_screen, bene_font, 261, 403, makecol(255, 0, 0), "Options");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
-			bFadeOut = true;
+			switchStateTo(MAINMENU);
 		}
 
 		//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[D2TM_LOAD].dat, 303, 369);
@@ -859,7 +838,6 @@ void cGame::menuState() {
 		alfont_textprintf(bmp_screen, bene_font, 261, 444, makecol(0, 0, 0), "Exit");
 		alfont_textprintf(bmp_screen, bene_font, 261, 443, makecol(255, 0, 0), "Exit");
 
-		// quit
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			game.playing = false;
 		}
@@ -895,11 +873,6 @@ void cGame::menuState() {
 	if (key[KEY_ESC]) {
 		playing = false;
 	}
-
-	if (bFadeOut) {
-		game.FADE_OUT();
-	}
-
 }
 
 bool cGame::isFadingOut() {
@@ -924,10 +897,6 @@ bool cGame::isBusyFadingOut() {
 }
 
 void cGame::setupSkirmishState() {
-	if (isBusyFadingOut()) {
-		return;
-	}
-
 	bool bFadeOut = false;
 
 	int screenWidth = game.getScreenResolution()->getWidth();
@@ -1525,10 +1494,6 @@ void cGame::setupSkirmishState() {
 }
 
 void cGame::selectHouseState() {
-	if (isBusyFadingOut()) {
-		return;
-	}
-
 	bool bFadeOut = false;
 
 	// draw menu
@@ -1645,10 +1610,6 @@ void cGame::preparementat(bool bIntroduceHouseBriefing) {
 }
 
 void cGame::selecthouseState() {
-	if (isBusyFadingOut()) {
-		return;
-	}
-
 	bool bFadeOut = false;
 
 	drawHousesToSelect(-1);
@@ -1703,10 +1664,6 @@ void cGame::selecthouseState() {
 
 // select your next conquest
 void cGame::selectNextConquestState() {
-	if (isBusyFadingOut()) {
-		return;
-	}
-
 	int mouse_tile = MOUSE_NORMAL;
 
 	bool bFadeOut = false;
@@ -2087,6 +2044,9 @@ void cGame::shakeScreenAndBlitBuffer() {
 
 // TODO: Refactor to Factory Pattern, and delegate the behaviour to own classes
 void cGame::runGameState() {
+	if (isBusyFadingOut()) {
+		return;
+	}
 	switch (state) {
 		case PLAYING:
 			playingState();

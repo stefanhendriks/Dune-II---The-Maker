@@ -186,6 +186,8 @@ class cGame {
 		bool isFadingOut();
 		bool isDoneFadingOut();
 
+		// state changing
+		void switchStateTo(GameState state);
 
 		// variables
 		GameState state;
