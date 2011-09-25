@@ -8,13 +8,26 @@ MEDIUM			TODO		Unit to be repaired in repair bay is not shown as being repaired
 MEDIUM			TODO		Unit will not go to rally point after being repaired
 MEDIUM			TODO		AI Rocket Turrets do not fire to enemy Carry-alls
 MEDIUM			TODO		Infantry on rocks cannot shoot to other infantry, due rocks blocking fire.
+TBD			TODO		Path finding should be much smarter, only doing full search when blocked (safe CPU)
+TBD			TODO		Units only shoot top left of structure when attacking structure
+TBD			TODO		Force attack is broken
+TBD			TODO		Center graphics in all resolutions
+TBD			TODO		Fix GUI main menu
+TBD			TODO		Fix skirmish menu
+TBD			TODO		When playing second skirmish game, AI does not seem to attack? Nor do your own
+					units auto-fire enemy units. Only when attacked, they will attack back
+TBD			TODO		Harvester wants to attack when under fire.
+
 
 Featurelist
 ===========
 
 Priority		Status		Description
 ------------------------------------------------------------------------------------------------
-TBD				TODO		Center around selected unit(s) when pressing key C.
+TBD			TODO		Center around selected unit(s) when pressing key C.
+TBD			TODO		Bigger maps (256x256 or even 512x512?)
+TBD			TODO		Add options menu
+
 
 
 Improvement list
