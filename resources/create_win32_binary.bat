@@ -50,6 +50,7 @@ echo 10. Copying dll files
 copy resources\dll\mingw32\*.* bin
 echo 11. Copy executable from %1
 copy src\main\Default\*.exe bin
+copy src\main\Debug\*.exe bin
 echo 12. Copy game rules file (game.ini)
 copy resources\game.ini bin
 echo 13. Copy txt files
