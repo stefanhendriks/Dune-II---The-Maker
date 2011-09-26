@@ -23,7 +23,10 @@ cGame::cGame() {
 	screenResolution = new cScreenResolution(800, 600);
 	screenResolutionFromIni = NULL;
 	moviePlayer = NULL;
+	soundPlayer = NULL;
 	windowed = true;
+	state = MAINMENU;
+	iMaxVolume = 255;
 	mapUtils = NULL;
 	map = NULL;
 	mapCamera = NULL;
@@ -2295,9 +2298,12 @@ bool cGame::setupGame() {
 		}
 	} else {
 
-		bool resolutionIsSetProperly = false;
+		bool shouldFindBestScreenResolution = true;
 		if (isResolutionInGameINIFoundAndSet()) {
+			logbook("Resolution is set in INI file.");
+
 			setScreenResolutionFromGameIniSettings();
+
 			r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(),
 					getScreenResolution()->getHeight());
 			char msg[255];
@@ -2306,23 +2312,19 @@ bool cGame::setupGame() {
 
 			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
 
-			resolutionIsSetProperly = (r > -1);
+			if ((r > -1)) { // on success
+				shouldFindBestScreenResolution = false;
+			}
 		}
 
 		// find best possible resolution
-		if (!resolutionIsSetProperly) {
+		if (shouldFindBestScreenResolution) {
 			cBestScreenResolutionFinder bestScreenResolutionFinder;
 			bestScreenResolutionFinder.checkResolutions();
-			bestScreenResolutionFinder.aquireBestScreenResolutionFullScreen();
-		}
-
-		// succes
-		if (r > -1) {
-			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)", "Succesfully initialized graphics mode.", OUTC_SUCCESS);
-		} else {
-			logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)", "Failed to initializ graphics mode.", OUTC_FAILED);
-			allegro_message("Fatal error:\n\nCould not start game.\n\nGraphics mode (fullscreen) could not be initialized.");
-			return false;
+			cScreenResolution * aquiredScreenResolution = bestScreenResolutionFinder.aquireBestScreenResolutionFullScreen();
+			if (aquiredScreenResolution) {
+				setScreenResolution(aquiredScreenResolution);
+			}
 		}
 	}
 
@@ -2378,6 +2380,7 @@ bool cGame::setupGame() {
 	} else {
 		logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
 	}
+
 	soundPlayer = new cSoundPlayer(maxSounds);
 	moviePlayer = NULL;
 
@@ -2385,7 +2388,17 @@ bool cGame::setupGame() {
 	 Bitmap Creation
 	 ***/
 
-	bmp_screen = create_bitmap(getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
+	cScreenResolution * currentScreenResolution = getScreenResolution();
+	assert(currentScreenResolution);
+
+	int width = currentScreenResolution->getWidth();
+	int height = currentScreenResolution->getHeight();
+
+	memset(msg, 0, sizeof(msg));
+	sprintf(msg, "Creating bitmaps with resolution of %dx%d.", width, height);
+	logbook(msg);
+
+	bmp_screen = create_bitmap(width, height);
 
 	if (bmp_screen == NULL) {
 		allegro_message("Failed to create a memory bitmap");
@@ -2396,7 +2409,7 @@ bool cGame::setupGame() {
 		clear(bmp_screen);
 	}
 
-	bmp_throttle = create_bitmap(getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
+	bmp_throttle = create_bitmap(width, height);
 
 	if (bmp_throttle == NULL) {
 		allegro_message("Failed to create a memory bitmap");
@@ -2406,7 +2419,7 @@ bool cGame::setupGame() {
 		logbook("Memory bitmap created: bmp_throttle");
 	}
 
-	bmp_winlose = create_bitmap(getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
+	bmp_winlose = create_bitmap(width, height);
 
 	if (bmp_winlose == NULL) {
 		allegro_message("Failed to create a memory bitmap");
@@ -2416,7 +2429,7 @@ bool cGame::setupGame() {
 		logbook("Memory bitmap created: bmp_winlose");
 	}
 
-	bmp_fadeout = create_bitmap(getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
+	bmp_fadeout = create_bitmap(width, height);
 
 	if (bmp_fadeout == NULL) {
 		allegro_message("Failed to create a memory bitmap");

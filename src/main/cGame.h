@@ -132,12 +132,19 @@ class cGame {
 			moviePlayer = value;
 		}
 
-		cScreenResolution *getScreenResolution() {
+		cScreenResolution * getScreenResolution() {
 			return screenResolution;
 		}
 
 		void setScreenResolution(cScreenResolution * newScreenResolution) {
-			screenResolution = newScreenResolution;
+			if (screenResolution) {
+				delete screenResolution;
+			}
+			if (newScreenResolution) {
+				screenResolution = newScreenResolution;
+			} else {
+				screenResolution = NULL;
+			}
 		}
 
 		cScreenResolution *getScreenResolutionFromIni() {

@@ -15,7 +15,7 @@ class cBestScreenResolutionFinder {
 		cBestScreenResolutionFinder();
 		virtual ~cBestScreenResolutionFinder();
 
-		bool aquireBestScreenResolutionFullScreen();
+		cScreenResolution * aquireBestScreenResolutionFullScreen();
 
 		void checkResolutions();
 

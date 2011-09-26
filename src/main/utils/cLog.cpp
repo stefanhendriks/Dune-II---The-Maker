@@ -202,6 +202,7 @@ void cLogger::log(eLogLevel level, eLogComponent component, const char *event, c
 		fprintf(file, "%s\n", logline.c_str()); // print the text into the file
 		fclose(file);
 	}
+	file = NULL;
 }
 
 std::string cLogger::getIntegerAsString(int value) {
@@ -222,6 +223,7 @@ void cLogger::logCommentLine(const char *txt) {
 		fprintf(file, "\\\\%s\n", txt); // print the text into the file
 		fclose(file);
 	}
+	file = NULL;
 }
 
 long cLogger::getTimeInMilisDifference() /* From 1970-01-01T00:00:00 */
