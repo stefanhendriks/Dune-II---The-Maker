@@ -21,6 +21,7 @@ class cGame {
 
 		bool windowed;
 		char version[15];
+		char revision[15];
 
 		// -- fade in/out animation
 		int iAlphaScreen;

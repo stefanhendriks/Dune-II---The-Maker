@@ -178,3 +178,5 @@ void INI_LOAD_MAPS_INTO_PREVIEWMAP_OBJECTS();
 int getHouseFromChar(char chunk[25]);
 int getUnitTypeFromChar(char chunk[25]);
 int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c);
+
+void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH]);

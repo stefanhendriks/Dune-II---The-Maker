@@ -32,7 +32,11 @@ class cTextDrawer {
 			textColor = value;
 		}
 
+		int getYCoordinateForBottomRight();
+		int getXCoordinateForBottomRight(const char * msg);
+
 	protected:
+		int getLenghtInPixelsForChar(const char * msg);
 
 	private:
 		bool applyShadow;

@@ -31,6 +31,9 @@ cGame::cGame() {
 	map = NULL;
 	mapCamera = NULL;
 	gameDrawer = NULL;
+	memset(revision, 0, sizeof(revision));
+	memset(version, 0, sizeof(version));
+	sprintf(version, "0.4.6");
 }
 
 cGame::~cGame() {
@@ -63,7 +66,6 @@ void cGame::init() {
 	memset(iRegionConquer, -1, sizeof(iRegionConquer));
 	memset(iRegionHouse, -1, sizeof(iRegionHouse));
 	memset(cRegionText, 0, sizeof(cRegionText));
-	//int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
 
 	soundEnabled = true;
 	mp3MusicEnabled = false;
@@ -85,9 +87,6 @@ void cGame::init() {
 
 	bPlaceIt = false; // we do not place
 	bPlacedIt = false;
-
-	memset(version, 0, sizeof(version));
-	sprintf(version, "0.4.6");
 
 	fade_select = 255;
 
@@ -134,6 +133,14 @@ void cGame::init() {
 	iMentatOther = 0; // ... animations . (book/ring)
 
 	mp3_music = NULL;
+
+	// if revision.txt exists
+	FILE *stream;
+	if ((stream = fopen("revision.txt", "r+t")) != NULL) {
+		char linefeed[MAX_LINE_LENGTH];
+		INI_Sentence(stream, linefeed);
+		sprintf(game.revision, "%s", linefeed);
+	}
 }
 
 // TODO: Bad smell (duplicate code)
@@ -853,7 +860,14 @@ void cGame::menuState() {
 	}
 
 	// draw version
-	textDrawer->drawTextBottomRight(version);
+	char versionText[80];
+	memset(versionText, 0, sizeof(versionText));
+	if (revision[0] != '\0') {
+		sprintf(versionText, "%s - revision %s", version, revision);
+	} else {
+		sprintf(versionText, "%s", version);
+	}
+	textDrawer->drawTextBottomRight(versionText);
 
 	// mp3 addon?
 	if (mp3MusicEnabled) {

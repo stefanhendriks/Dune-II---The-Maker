@@ -55,6 +55,14 @@ echo 12. Copy game rules file (game.ini)
 copy resources\game.ini bin
 echo 13. Copy txt files
 copy resources\*.txt bin
+echo.
+echo Going to determine revision and copy that into bin
+echo.
+cd %D2TM_HOME%
+svnversion > bin\revision.txt
+echo.
+echo Done
+
 goto FINISHED_SUCCESS
 
 :D2TM_HOME_NOT_SET
