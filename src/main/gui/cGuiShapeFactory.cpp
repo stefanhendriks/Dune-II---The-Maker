@@ -30,3 +30,10 @@ cGuiButton * cGuiShapeFactory::createButtonWithBitmap(int x, int y, BITMAP * bmp
 	button->setBitmap(bmp);
 	return button;
 }
+
+cMainMenuDialog * cGuiShapeFactory::createMainMenuDialog(cRectangle * rect) {
+	assert(rect);
+	cMainMenuDialog * mainMenuDialog = new cMainMenuDialog(rect);
+	//mainMenuDialog->setNewCampaignButton()
+	return mainMenuDialog;
+}

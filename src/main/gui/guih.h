@@ -11,6 +11,8 @@ class cTextDrawer;
 #include "cGuiShape.h"
 #include "cGuiButton.h"
 
+#include "cMainMenuDialog.h"
+
 #include "cMessageBar.h"
 
 #include "cGuiShapeFactory.h"

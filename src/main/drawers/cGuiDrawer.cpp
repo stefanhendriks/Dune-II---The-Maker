@@ -58,11 +58,34 @@ void cGuiDrawer::drawButton(cGuiButton * guiButton) {
 		if (guiButton->isMouseOverShape()) {
 			if (mouse->isRightButtonPressed()) {
 				GUI_DRAW_FRAME_PRESSED(x, y, width, height);
+				return;
 			}
 		}
 
-		drawGuiShape(guiButton);
+		drawButtonUnpressed(guiButton);
 	}
+}
+
+void cGuiDrawer::drawButtonPressed(cGuiButton * guiButton) {
+
+}
+
+void cGuiDrawer::drawButtonUnpressed(cGuiButton * guiButton) {
+	cRectangle * rct = guiButton->getRectangle();
+
+	// fill it up
+	rectfill(bmp_screen, rct->getLowestX(), rct->getLowestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getInnerColor());
+
+	// rect
+	rect(bmp_screen, rct->getLowestX(), rct->getLowestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getLightBorderColor());
+
+	// lines to darken the right sides
+	line(bmp_screen, rct->getHighestX(), rct->getLowestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getDarkBorderColor());
+	line(bmp_screen, rct->getLowestX(), rct->getHighestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getDarkBorderColor());
+}
+
+void cGuiDrawer::drawBackground(cGuiButton * guiButton) {
+
 }
 
 void cGuiDrawer::drawShape(cGuiShape * shapeToDraw) {

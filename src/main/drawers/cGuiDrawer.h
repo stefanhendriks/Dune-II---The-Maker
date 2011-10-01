@@ -20,7 +20,13 @@ class cGuiDrawer {
 
 	private:
 		void drawGuiShape(cGuiShape * shape);
+
+		// Button drawing
 		void drawButton(cGuiButton * guiButton);
+		void drawButtonUnpressed(cGuiButton * guiButton);
+		void drawButtonPressed(cGuiButton * guiButton);
+		void drawBackground(cGuiButton * guiButton);
+
 };
 
 #endif /* CGUIDRAWER_H_ */

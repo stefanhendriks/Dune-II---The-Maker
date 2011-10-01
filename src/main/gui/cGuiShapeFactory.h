@@ -18,6 +18,8 @@ class cGuiShapeFactory {
 
 		cGuiButton * createGrayButton(cRectangle * rect, std::string theLabel);
 
+		cMainMenuDialog * createMainMenuDialog(cRectangle * rect);
+
 	protected:
 
 	private:
