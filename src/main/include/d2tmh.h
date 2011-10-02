@@ -19,8 +19,6 @@
 #include "structs.h"
 #include "global.h"
 
-#include "../movie/cMoviePlayer.h"
-
 #include "gameobjects.h"
 #include "gamelogic.h"
 

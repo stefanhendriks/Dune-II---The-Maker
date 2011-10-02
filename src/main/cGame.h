@@ -17,6 +17,8 @@
 
 #include "gameobjects/cScreenResolution.h"
 
+#include "include/GameState.h"
+
 class cGame {
 
 	public:
