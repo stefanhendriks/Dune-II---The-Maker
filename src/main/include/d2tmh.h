@@ -7,10 +7,10 @@
 
 // this file is the uber header file. Responsible for including all proper header files in the
 // right order
+// TODO: this should actually dissapear so that all the dependencies are included at their appropiate places
+// this way it introduces some global 'dependency state' somehow, which is a bad thing.
 #ifndef D2TMH_H
 #define D2TMH_H
-
-//#include "../memoryleakfinder/debug_new.h"
 
 #include "system.h"
 #include "allegroh.h"

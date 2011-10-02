@@ -13,6 +13,5 @@
 #include "../timers.h"							/** declare correct functions at compile time here **/
 
 #include "../utils/d2tm_math.h"
-#include "../utils/cSoundPlayer.h"
 
 #endif /* GLOBAL_H_ */

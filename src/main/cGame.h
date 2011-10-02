@@ -9,6 +9,12 @@
  2001 - 2011 (c) code by Stefan Hendriks
 
  */
+#ifndef GAME_H_H
+#define GAME_H_H
+
+#include "utils/cSoundPlayer.h"
+
+
 
 class cGame {
 
@@ -208,3 +214,4 @@ class cGame {
 
 };
 
+#endif
