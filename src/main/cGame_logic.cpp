@@ -14,7 +14,6 @@
 
 #include "factory/cGameFactory.h"
 
-#include "movie/cMoviePlayer.h"
 #include "movie/cMovieDrawer.h"
 
 #include "drawers/cAllegroDrawer.h"

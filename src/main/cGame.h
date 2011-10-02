@@ -12,9 +12,8 @@
 #ifndef GAME_H_H
 #define GAME_H_H
 
+#include "movie/cMoviePlayer.h"
 #include "utils/cSoundPlayer.h"
-
-
 
 class cGame {
 
