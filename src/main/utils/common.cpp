@@ -1378,6 +1378,15 @@ void Shimmer(int r, int x, int y) {
 
 }
 
+void createNewMoviePlayerAndSetInGame(DATAFILE * gfxmovie, cMoviePlayer * moviePlayer) {
+	game.setMoviePlayer(NULL);
+	delete moviePlayer;
+	moviePlayer = new cMoviePlayer(gfxmovie);
+	moviePlayer->setPlaying(true);
+	moviePlayer->setFrame(0);
+	game.setMoviePlayer(moviePlayer);
+}
+
 void LOAD_SCENE(std::string scene) {
 	DATAFILE * gfxmovie = NULL;
 
@@ -1389,12 +1398,7 @@ void LOAD_SCENE(std::string scene) {
 	cMoviePlayer * moviePlayer = game.getMoviePlayer();
 
 	if (gfxmovie != NULL) {
-		game.setMoviePlayer(NULL);
-		delete moviePlayer;
-		moviePlayer = new cMoviePlayer(gfxmovie);
-		moviePlayer->setPlaying(true);
-		moviePlayer->setFrame(0);
-		game.setMoviePlayer(moviePlayer);
+		createNewMoviePlayerAndSetInGame(gfxmovie, moviePlayer);
 	} else {
 		if (moviePlayer) {
 			game.setMoviePlayer(NULL);
