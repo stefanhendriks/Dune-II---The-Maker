@@ -7,10 +7,13 @@
 
 #include "../include/d2tmh.h"
 
-cRandomMapGenerator::cRandomMapGenerator() {
+cRandomMapGenerator::cRandomMapGenerator(cMap * theMap) {
+	assert(theMap);
+	map = theMap;
 }
 
 cRandomMapGenerator::~cRandomMapGenerator() {
+	map = NULL;
 }
 
 void cRandomMapGenerator::generateRandomMap() {

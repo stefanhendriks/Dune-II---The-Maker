@@ -1266,7 +1266,9 @@ void cGame::setupSkirmishState() {
 	textDrawer->drawTextBottomRight("START");
 
 	if (bDoRandomMap) {
-		randomMapGenerator.generateRandomMap();
+		cRandomMapGenerator * randomMapGenerator = new cRandomMapGenerator(map);
+		randomMapGenerator->generateRandomMap();
+		delete randomMapGenerator;
 	}
 
 	// back

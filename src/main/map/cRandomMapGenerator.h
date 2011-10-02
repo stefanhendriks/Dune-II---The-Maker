@@ -10,12 +10,13 @@
 
 class cRandomMapGenerator {
 	public:
-		cRandomMapGenerator();
+		cRandomMapGenerator(cMap * theMap);
 		virtual ~cRandomMapGenerator();
 
 		void generateRandomMap();
 
 	private:
+		cMap * map;
 
 };
 

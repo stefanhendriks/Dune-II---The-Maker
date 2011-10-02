@@ -17,15 +17,12 @@ using namespace std;
 bool bDoDebug = false;
 int iRest = 1; // default rest value
 
-// Server/Client system
-
 // the ultimate game variable(s)
 cGame game;
 cAbstractStructure * structure[MAX_STRUCTURES];
 cUnit unit[MAX_UNITS];
 cMap * map = NULL;
 cMapEditor mapEditor;
-cRandomMapGenerator randomMapGenerator;
 cMapCamera * mapCamera;
 cMapUtils * mapUtils = NULL;
 cPlayer player[MAX_PLAYERS]; // player is
