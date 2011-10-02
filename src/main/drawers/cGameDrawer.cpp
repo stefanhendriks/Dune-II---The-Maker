@@ -109,12 +109,10 @@ void cGameDrawer::draw() {
 	// Example code how to use gui Drawer for now
 	// TODO: make it easier to draw entire gui menu's, screens, windows, instead of
 	// seperate components
-//	cRectangle * rect = new cRectangle(100, 100, 200, 200);
-//	cGuiShapeFactory * factory = new cGuiShapeFactory();
-//	cGuiButton * button = factory->createGrayButton(rect, string("Test"));
-//	guiDrawer->drawShape(button);
-//	delete rect;
-//	delete button;
+//	cGuiShapeFactory * factory = new cGuiShapeFactory(game.getScreenResolution());
+//	cMainMenuDialog * mainMenuDialog = factory->createMainMenuDialog();
+//	guiDrawer->drawShape(mainMenuDialog);
+//	delete mainMenuDialog;
 //	delete factory;
 
 	// MOUSE

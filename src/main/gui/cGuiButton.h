@@ -14,13 +14,16 @@ class cGuiButton : public cGuiShape {
 
 		BITMAP * getBitmap() { return bitmap; }
 		void setBitmap(BITMAP * value) { bitmap = value; }
+		void setHasBorders(bool value) { hasBorders = value; }
 
 		bool shouldDrawPressedWhenMouseHovers() { return drawPressedWhenMouseHovers; }
+		bool shouldDrawBorders() { return hasBorders; }
 		void setDrawPressedWhenMouseHovers(bool value) { drawPressedWhenMouseHovers = value; }
 
 	private:
 		std::string * label;
 		bool drawPressedWhenMouseHovers;
+		bool hasBorders;
 		BITMAP * bitmap;
 };
 

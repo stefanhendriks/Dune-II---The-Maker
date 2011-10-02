@@ -11,10 +11,13 @@ cGuiButton::cGuiButton(cRectangle * rect, std::string theLabel) : cGuiShape(rect
 	drawPressedWhenMouseHovers = false;
 	bitmap = NULL;
 	label = &theLabel;
+	hasBorders = true;
 }
 
 cGuiButton::cGuiButton(int x, int y, int width, int height, std::string theLabel) : cGuiShape(x, y, width, height){
 	label = &theLabel;
+	hasBorders = true;
+	drawPressedWhenMouseHovers = false;
 }
 
 cGuiButton::~cGuiButton() {

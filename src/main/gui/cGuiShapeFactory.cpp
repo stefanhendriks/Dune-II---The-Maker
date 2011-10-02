@@ -9,7 +9,12 @@
 
 #include <string>
 
-cGuiShapeFactory::cGuiShapeFactory() {
+cGuiShapeFactory::cGuiShapeFactory(cScreenResolution * theScreenResolution) {
+	assert(theScreenResolution);
+	defaultGreyColorInner  = makecol(176, 176, 196);
+	defaultGreyColorLighterBorder = makecol(252, 252, 252);
+	defaultGreyColorDarkerBorder = makecol(84, 84, 120);
+	screenResolution = theScreenResolution;
 }
 
 cGuiShapeFactory::~cGuiShapeFactory() {
@@ -17,10 +22,7 @@ cGuiShapeFactory::~cGuiShapeFactory() {
 
 cGuiButton * cGuiShapeFactory::createGrayButton(cRectangle * rect, std::string theLabel) {
 	cGuiButton * button = new cGuiButton(rect, theLabel);
-	int inner = makecol(176, 176, 196);
-	int lightColor = makecol(252, 252, 252);
-	int darkColor = makecol(84, 84, 120);
-	button->setColors(darkColor, lightColor, inner);
+	button->setColors(defaultGreyColorDarkerBorder, defaultGreyColorLighterBorder, defaultGreyColorInner);
 	return button;
 }
 
@@ -31,9 +33,23 @@ cGuiButton * cGuiShapeFactory::createButtonWithBitmap(int x, int y, BITMAP * bmp
 	return button;
 }
 
-cMainMenuDialog * cGuiShapeFactory::createMainMenuDialog(cRectangle * rect) {
-	assert(rect);
+cMainMenuDialog * cGuiShapeFactory::createMainMenuDialog() {
+	int startY = screenResolution->getHeight() * 0.6F;
+	int centerOfX = screenResolution->getWidth() / 2;
+	int halfOfSizeMainMenu = 65; // total width = 130 pixels
+	int startX = centerOfX - halfOfSizeMainMenu;
+	int endX = centerOfX + halfOfSizeMainMenu;
+	int endY = startY + 142; // 142 pixels height
+
+	cRectangle * rect = new cRectangle();
+	rect->setStartX(startX);
+	rect->setStartY(startY);
+	rect->setEndX(endX);
+	rect->setEndY(endY);
+
 	cMainMenuDialog * mainMenuDialog = new cMainMenuDialog(rect);
+	mainMenuDialog->setColors(defaultGreyColorDarkerBorder, defaultGreyColorLighterBorder, defaultGreyColorInner);
+
 	//mainMenuDialog->setNewCampaignButton()
 	return mainMenuDialog;
 }

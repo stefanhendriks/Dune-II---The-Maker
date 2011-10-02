@@ -26,6 +26,8 @@ class cGuiDrawer {
 		void drawButtonUnpressed(cGuiButton * guiButton);
 		void drawButtonPressed(cGuiButton * guiButton);
 		void drawBackground(cGuiButton * guiButton);
+		void drawLighterBorder(cGuiButton * guiButton);
+		void drawDarkerBorder(cGuiButton * guiButton);
 
 };
 

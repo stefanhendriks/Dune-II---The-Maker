@@ -45,19 +45,17 @@ void cGuiDrawer::drawButton(cGuiButton * guiButton) {
 		draw_sprite(bmp_screen, bitmap, x, y);
 		return;
 	} else {
-		int width = rect->getWidth();
-		int height = rect->getHeight();
 
 		if (guiButton->shouldDrawPressedWhenMouseHovers()) {
 			if (guiButton->isMouseOverShape()) {
-				GUI_DRAW_FRAME_PRESSED(x, y, width, height);
+				drawButtonPressed(guiButton);
 				return;
 			}
 		}
 
 		if (guiButton->isMouseOverShape()) {
 			if (mouse->isRightButtonPressed()) {
-				GUI_DRAW_FRAME_PRESSED(x, y, width, height);
+				drawButtonPressed(guiButton);
 				return;
 			}
 		}
@@ -68,24 +66,41 @@ void cGuiDrawer::drawButton(cGuiButton * guiButton) {
 
 void cGuiDrawer::drawButtonPressed(cGuiButton * guiButton) {
 
+	drawBackground(guiButton);
+	if (guiButton->shouldDrawBorders()) {
+		drawDarkerBorder(guiButton);
+
+		cRectangle * rct = guiButton->getRectangle();
+		line(bmp_screen, rct->getHighestX(), rct->getLowestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getLightBorderColor());
+		line(bmp_screen, rct->getLowestX(), rct->getHighestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getLightBorderColor());
+	}
+}
+
+void cGuiDrawer::drawLighterBorder(cGuiButton * guiButton) {
+	cRectangle * rct = guiButton->getRectangle();
+	rect(bmp_screen, rct->getLowestX(), rct->getLowestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getLightBorderColor());
+}
+
+void cGuiDrawer::drawDarkerBorder(cGuiButton * guiButton) {
+	cRectangle * rct = guiButton->getRectangle();
+	rect(bmp_screen, rct->getLowestX(), rct->getLowestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getDarkBorderColor());
 }
 
 void cGuiDrawer::drawButtonUnpressed(cGuiButton * guiButton) {
-	cRectangle * rct = guiButton->getRectangle();
 
-	// fill it up
-	rectfill(bmp_screen, rct->getLowestX(), rct->getLowestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getInnerColor());
+	drawBackground(guiButton);
+	if (guiButton->shouldDrawBorders()) {
+		drawLighterBorder(guiButton);
 
-	// rect
-	rect(bmp_screen, rct->getLowestX(), rct->getLowestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getLightBorderColor());
-
-	// lines to darken the right sides
-	line(bmp_screen, rct->getHighestX(), rct->getLowestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getDarkBorderColor());
-	line(bmp_screen, rct->getLowestX(), rct->getHighestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getDarkBorderColor());
+		cRectangle * rct = guiButton->getRectangle();
+		line(bmp_screen, rct->getHighestX(), rct->getLowestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getDarkBorderColor());
+		line(bmp_screen, rct->getLowestX(), rct->getHighestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getDarkBorderColor());
+	}
 }
 
 void cGuiDrawer::drawBackground(cGuiButton * guiButton) {
-
+	cRectangle * rct = guiButton->getRectangle();
+	rectfill(bmp_screen, rct->getLowestX(), rct->getLowestY(), rct->getHighestX(), rct->getHighestY(), guiButton->getInnerColor());
 }
 
 void cGuiDrawer::drawShape(cGuiShape * shapeToDraw) {
@@ -93,6 +108,11 @@ void cGuiDrawer::drawShape(cGuiShape * shapeToDraw) {
 	if (guiButton) {
 		drawButton(guiButton);
 		return;
+	}
+
+	cMainMenuDialog * mainMenuDialog = dynamic_cast<cMainMenuDialog*> (shapeToDraw);
+	if (mainMenuDialog) {
+
 	}
 
 	// default drawing of shape
