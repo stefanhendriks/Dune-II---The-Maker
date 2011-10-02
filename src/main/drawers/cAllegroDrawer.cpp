@@ -2,8 +2,6 @@
 
 #include "../include/allegroh.h"
 
-#include "../gameobjects/cScreenResolution.h"
-
 #include "cAllegroDrawer.h"
 
 cAllegroDrawer::cAllegroDrawer() {

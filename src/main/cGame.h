@@ -15,6 +15,8 @@
 #include "movie/cMoviePlayer.h"
 #include "utils/cSoundPlayer.h"
 
+#include "gameobjects/cScreenResolution.h"
+
 class cGame {
 
 	public:

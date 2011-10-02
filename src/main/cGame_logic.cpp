@@ -15,7 +15,6 @@
 #include "factory/cGameFactory.h"
 
 #include "movie/cMovieDrawer.h"
-
 #include "drawers/cAllegroDrawer.h"
 
 cGame::cGame() {

@@ -10,6 +10,8 @@
 
 #define MAX_SCREENRESOLUTIONS 10
 
+#include "../gameobjects/cScreenResolution.h"
+
 class cBestScreenResolutionFinder {
 	public:
 		cBestScreenResolutionFinder();

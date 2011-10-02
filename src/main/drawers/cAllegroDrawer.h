@@ -1,6 +1,8 @@
 #ifndef CALLEGRODRAWER_H_
 #define CALLEGRODRAWER_H_
 
+#include "../gameobjects/cScreenResolution.h"
+
 class cAllegroDrawer {
 	public:
 		cAllegroDrawer(cScreenResolution * theScreenResolution);

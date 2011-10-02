@@ -9,7 +9,6 @@
 #define GAMEOBJECTS_H2_
 
 #include "cRectangle.h"
-#include "cScreenResolution.h"
 
 // GAME
 #include "../cGame.h"
