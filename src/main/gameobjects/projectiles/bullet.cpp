@@ -62,7 +62,6 @@ void cBullet::draw() {
 	x2 = iCellGiveX(iGoalCell);
 	y2 = iCellGiveY(iGoalCell);
 
-	int a = bullet_face_angle(fDegrees(x1, y1, x2, y2));
 	int fa = bullet_face_angle(fDegrees(x1, y1, x2, y2));
 	int ba = bullet_correct_angle(fa);
 
@@ -154,12 +153,9 @@ void cBullet::think_move() {
 	int iCellX = iCellGiveX(iCell);
 	int iCellY = iCellGiveY(iCell);
 
-	int iSlowDown = 0;
-
 	// use this when picking something up
 
 	// step 1 : look to the correct direction
-	int d = fDegrees(iCellX, iCellY, cx, cy);
 	float angle = fRadians(iCellX, iCellY, cx, cy);
 
 	// now do some thing to make
@@ -275,7 +271,6 @@ void cBullet::think_move() {
 					iDamage = iDamage + iDam;
 				}
 
-				int oldHp = structure[id]->getHitPoints();
 				assert(iDamage > -1); // as long not giving health it is fine. (0 too!)
 				structure[id]->damage(iDamage);
 
@@ -283,12 +278,13 @@ void cBullet::think_move() {
 				// think of the deviator missiles.
 				//assert(oldHp >= structure[id]->getHitPoints()); // damage should be done
 
-				int iChance = 10;
+				int changeThatSmokeParticleShouldBeCreated = 10;
 
-				if (structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
-					iChance = 30;
+				if (structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2)) {
+					changeThatSmokeParticleShouldBeCreated = 30;
+				}
 
-				if (rnd(100) < iChance)
+				if (rnd(100) < changeThatSmokeParticleShouldBeCreated)
 					PARTICLE_CREATE(draw_x() + (mapCamera->getX() * 32) + 16 + (-8 + rnd(16)), draw_y() + (mapCamera->getY() * 32) + 16 + (-8 + rnd(16)),
 							OBJECT_SMOKE, -1, -1);
 

@@ -912,7 +912,7 @@ void cGame::setupSkirmishState() {
 	int screenWidth = game.getScreenResolution()->getWidth();
 	int screenHeight = game.getScreenResolution()->getHeight();
 
-	draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, (screenWidth - 640), (screenHeight * 0.72));
+	draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, (screenWidth - 640), (int)(screenHeight * 0.72));
 
 	// title box
 	GUI_DRAW_FRAME(-1, -1, screenWidth + 2, 21);
@@ -923,7 +923,6 @@ void cGame::setupSkirmishState() {
 
 	// box at the right
 	int mapBoxX = (screenWidth - 276);
-	int mapBoxHeight = (screenHeight) - 37;
 	GUI_DRAW_FRAME(mapBoxX, 21, 276, screenHeight);
 
 	// draw box for map data
@@ -2100,6 +2099,16 @@ void cGame::runGameState() {
 				preparementat(false);
 			}
 			briefingState(iHouse);
+			break;
+		case GAMEOVER:
+			break;
+		case INITIAL:
+			break;
+		case INTRO:
+			break;
+		case MISSIONSCORE:
+			break;
+		case OPTIONS:
 			break;
 	}
 }

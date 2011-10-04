@@ -593,7 +593,7 @@ void install_units() {
 void install_bullets() {
 	for (int i = 0; i < MAX_BULLET_TYPES; i++) {
 		bullets[i].bmp = NULL; // in case an invalid bitmap; default is a small rocket
-		bullets[i].deadbmp = NULL; // in case an invalid bitmap; default is a small rocket
+		bullets[i].deadbmp = -1; // in case an invalid bitmap; default is a small rocket
 		bullets[i].damage = 0; // damage to vehicles
 		bullets[i].damage_inf = 0; // damage to infantry
 		bullets[i].max_frames = 1; // 1 frame animation

@@ -832,7 +832,6 @@ int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c) {
 string INI_WordValueString(char result[MAX_LINE_LENGTH]) {
 	string resultAsString(result);
 	int isPos = INI_GetPositionOfCharacter(result, '=');
-	int length = resultAsString.size();
 	return resultAsString.substr(isPos + 1);
 }
 
@@ -971,7 +970,6 @@ void INI_Load_seed(int seed) {
 
 	for (int mapY = 0; mapY < 64; mapY++) {
 		for (int mapX = 0; mapX < 64; mapX++) {
-			char c = seedMap->getCellTypeCharacter(mapX, mapY);
 			int type = seedMap->getCellType(mapX, mapY);
 			int iCell = iCellMake(mapX, mapY);
 			mapEditor.createCell(iCell, type, 0);
@@ -1453,7 +1451,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 					char word[10];
 					memset(word, 0, sizeof(word)); // clear string
 
-					for (iStringID; iStringID < MAX_LINE_LENGTH; iStringID++) {
+					for (; iStringID < MAX_LINE_LENGTH; iStringID++) {
 						// until we encounter a "," ...
 
 						char letter[1];
@@ -1504,7 +1502,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 					char word[10];
 					memset(word, 0, sizeof(word)); // clear string
 
-					for (iStringID; iStringID < MAX_LINE_LENGTH; iStringID++) {
+					for (; iStringID < MAX_LINE_LENGTH; iStringID++) {
 						// until we encounter a "," ...
 
 						char letter[1];

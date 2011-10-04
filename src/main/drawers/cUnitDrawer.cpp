@@ -14,8 +14,8 @@ cUnitDrawer *cUnitDrawer::getInstance() {
 }
 
 void cUnitDrawer::draw(cAbstractUnit *unit) {
-	int drawX = getDrawX(unit);
-	int drawY = getDrawY(unit);
+//	int drawX = getDrawX(unit);
+//	int drawY = getDrawY(unit);
 }
 
 /**
