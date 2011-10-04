@@ -11,10 +11,10 @@
 #ifndef CMESSAGEBAR_H_
 #define CMESSAGEBAR_H_
 
-class cMessageBar {
+class MessageBar {
 	public:
-		cMessageBar(int theX, int theY, int theWidth);
-		~cMessageBar();
+		MessageBar(int theX, int theY, int theWidth);
+		~MessageBar();
 
 		void setX(int value) {
 			x = value;

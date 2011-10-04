@@ -21,7 +21,7 @@ cGameDrawer::cGameDrawer(cPlayer * thePlayer) {
 	mouseDrawer = new cMouseDrawer(thePlayer, cMouse::getInstance());
 	guiDrawer = new cGuiDrawer();
 
-	cMessageBar * messageBar = messageBarDrawer->getMessageBar();
+	MessageBar * messageBar = messageBarDrawer->getMessageBar();
 	messageBar->setX(0);
 	messageBar->setY(42);
 	messageBar->setWidth(game.getScreenResolution()->getWidth() - 182);

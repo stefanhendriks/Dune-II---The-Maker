@@ -3,13 +3,13 @@
 
 class cMessageBarDrawer {
 	public:
-		cMessageBarDrawer(cMessageBar * theMessageBar);
+		cMessageBarDrawer(MessageBar * theMessageBar);
 		cMessageBarDrawer();
 		~cMessageBarDrawer();
 
 		void drawMessageBar();
 
-		cMessageBar * getMessageBar() {
+		MessageBar * getMessageBar() {
 			return messageBar;
 		}
 
@@ -20,7 +20,7 @@ class cMessageBarDrawer {
 	protected:
 
 	private:
-		cMessageBar * messageBar;
+		MessageBar * messageBar;
 };
 
 #endif /* CMESSAGEBARDRAWER_H_ */

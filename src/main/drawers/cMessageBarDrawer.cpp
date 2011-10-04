@@ -1,12 +1,12 @@
 #include "../include/d2tmh.h"
 
-cMessageBarDrawer::cMessageBarDrawer(cMessageBar * theMessageBar) {
+cMessageBarDrawer::cMessageBarDrawer(MessageBar * theMessageBar) {
 	assert(theMessageBar);
 	messageBar = theMessageBar;
 }
 
 cMessageBarDrawer::cMessageBarDrawer() {
-	messageBar = new cMessageBar(0, 0, 0);
+	messageBar = new MessageBar(0, 0, 0);
 }
 
 cMessageBarDrawer::~cMessageBarDrawer() {

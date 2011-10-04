@@ -23,7 +23,7 @@ class cTextDrawer;
 // Windows
 #include "windows/GuiWindow.h"
 
-#include "cMessageBar.h"
+#include "MessageBar.h"
 
 
 #endif
