@@ -22,7 +22,7 @@ class cUpgradeDrawer {
 	protected:
 
 	private:
-		cGuiButton * upgradeButton;
+		GuiButton * upgradeButton;
 };
 
 #endif /* CUPGRADEDRAWER_H_ */

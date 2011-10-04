@@ -13,21 +13,21 @@ class cGuiDrawer {
 		cGuiDrawer();
 		virtual ~cGuiDrawer();
 
-		void drawShape(cGuiShape * shapeToDraw);
+		void drawShape(GuiShape * shapeToDraw);
 
 	protected:
 		void drawRectangle(cRectangle * rect);
 
 	private:
-		void drawGuiShape(cGuiShape * shape);
+		void drawGuiShape(GuiShape * shape);
 
 		// Button drawing
-		void drawButton(cGuiButton * guiButton);
-		void drawButtonUnpressed(cGuiButton * guiButton);
-		void drawButtonPressed(cGuiButton * guiButton);
-		void drawBackground(cGuiButton * guiButton);
-		void drawLighterBorder(cGuiButton * guiButton);
-		void drawDarkerBorder(cGuiButton * guiButton);
+		void drawButton(GuiButton * guiButton);
+		void drawButtonUnpressed(GuiButton * guiButton);
+		void drawButtonPressed(GuiButton * guiButton);
+		void drawBackground(GuiButton * guiButton);
+		void drawLighterBorder(GuiButton * guiButton);
+		void drawDarkerBorder(GuiButton * guiButton);
 
 };
 

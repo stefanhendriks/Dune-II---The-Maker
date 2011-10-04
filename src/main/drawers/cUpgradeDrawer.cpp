@@ -12,9 +12,10 @@
 using namespace std;
 
 cUpgradeDrawer::cUpgradeDrawer() {
-	cGuiShapeFactory * factory = new cGuiShapeFactory(game.getScreenResolution());
+	GuiShapeFactory * factory = new GuiShapeFactory(game.getScreenResolution());
 	BITMAP * bitmap = (BITMAP *) gfxinter[BTN_UPGRADE].dat;
 	upgradeButton = factory->createButtonWithBitmap(29, 0, bitmap, string("upgrade"));
+	delete factory;
 }
 
 cUpgradeDrawer::~cUpgradeDrawer() {

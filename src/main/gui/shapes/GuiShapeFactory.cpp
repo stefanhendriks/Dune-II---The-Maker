@@ -1,6 +1,6 @@
 #include "../../include/d2tmh.h"
 
-cGuiShapeFactory::cGuiShapeFactory(cScreenResolution * theScreenResolution) {
+GuiShapeFactory::GuiShapeFactory(cScreenResolution * theScreenResolution) {
 	assert(theScreenResolution);
 	defaultGreyColorInner  = makecol(176, 176, 196);
 	defaultGreyColorLighterBorder = makecol(252, 252, 252);
@@ -8,23 +8,23 @@ cGuiShapeFactory::cGuiShapeFactory(cScreenResolution * theScreenResolution) {
 	screenResolution = theScreenResolution;
 }
 
-cGuiShapeFactory::~cGuiShapeFactory() {
+GuiShapeFactory::~GuiShapeFactory() {
 }
 
-cGuiButton * cGuiShapeFactory::createGrayButton(cRectangle * rect, std::string theLabel) {
-	cGuiButton * button = new cGuiButton(rect, theLabel);
+GuiButton * GuiShapeFactory::createGrayButton(cRectangle * rect, std::string theLabel) {
+	GuiButton * button = new GuiButton(rect, theLabel);
 	button->setColors(defaultGreyColorDarkerBorder, defaultGreyColorLighterBorder, defaultGreyColorInner);
 	return button;
 }
 
-cGuiButton * cGuiShapeFactory::createButtonWithBitmap(int x, int y, BITMAP * bmp, std::string theLabel) {
+GuiButton * GuiShapeFactory::createButtonWithBitmap(int x, int y, BITMAP * bmp, std::string theLabel) {
 	assert(bmp);
-	cGuiButton * button = new cGuiButton(x, y, bmp->w, bmp->h, theLabel);
+	GuiButton * button = new GuiButton(x, y, bmp->w, bmp->h, theLabel);
 	button->setBitmap(bmp);
 	return button;
 }
 
-cMainMenuDialog * cGuiShapeFactory::createMainMenuDialog() {
+MainMenuDialog * GuiShapeFactory::createMainMenuDialog() {
 	int startY = screenResolution->getHeight() * 0.6F;
 	int centerOfX = screenResolution->getWidth() / 2;
 	int halfOfSizeMainMenu = 65; // total width = 130 pixels
@@ -38,7 +38,7 @@ cMainMenuDialog * cGuiShapeFactory::createMainMenuDialog() {
 	rect->setEndX(endX);
 	rect->setEndY(endY);
 
-	cMainMenuDialog * mainMenuDialog = new cMainMenuDialog(rect);
+	MainMenuDialog * mainMenuDialog = new MainMenuDialog(rect);
 	mainMenuDialog->setColors(defaultGreyColorDarkerBorder, defaultGreyColorLighterBorder, defaultGreyColorInner);
 
 	//mainMenuDialog->setNewCampaignButton()

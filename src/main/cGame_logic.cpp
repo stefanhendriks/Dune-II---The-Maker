@@ -65,7 +65,7 @@ void cGame::init() {
 	memset(iRegionHouse, -1, sizeof(iRegionHouse));
 	memset(cRegionText, 0, sizeof(cRegionText));
 
-	soundEnabled = true;
+	soundEnabled = false;
 	mp3MusicEnabled = false;
 
 	iSkirmishMap = -1;
@@ -738,7 +738,7 @@ void cGame::menuState() {
 	allegroDrawer->drawSpriteCenteredRelativelyVertical(bmp_screen, (BITMAP *) gfxinter[BMP_D2TM].dat, 0.3);
 	delete allegroDrawer;
 
-	cGuiShape * shape = new cGuiShape(257, 319, 130, 143);
+	GuiShape * shape = new GuiShape(257, 319, 130, 143);
 	cGuiDrawer * guiDrawer = gameDrawer->getGuiDrawer();
 	guiDrawer->drawShape(shape);
 	delete shape;

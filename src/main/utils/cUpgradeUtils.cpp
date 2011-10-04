@@ -9,7 +9,7 @@
 
 cUpgradeUtils::cUpgradeUtils() {
 	rectangle = new cRectangle(29, 2, 187, 31);
-	upgradeButtonGuiShape = new cGuiShape(rectangle);
+	upgradeButtonGuiShape = new GuiShape(rectangle);
 }
 
 cUpgradeUtils::~cUpgradeUtils() {

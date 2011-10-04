@@ -6,7 +6,7 @@
  */
 #include "../../include/d2tmh.h"
 
-cMainMenuDialog::cMainMenuDialog(cRectangle * rect) : cGuiShape(rect) {
+MainMenuDialog::MainMenuDialog(cRectangle * rect) : GuiShape(rect) {
 	newCampaignButton = NULL;
 	newSkirmishButton = NULL;
 	newMultiplayerButton = NULL;
@@ -16,7 +16,7 @@ cMainMenuDialog::cMainMenuDialog(cRectangle * rect) : cGuiShape(rect) {
 	exitGameButton = NULL;
 }
 
-cMainMenuDialog::~cMainMenuDialog() {
+MainMenuDialog::~MainMenuDialog() {
 	delete newCampaignButton;
 	delete newSkirmishButton;
 	delete newMultiplayerButton;

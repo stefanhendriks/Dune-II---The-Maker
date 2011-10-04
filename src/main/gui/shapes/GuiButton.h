@@ -9,14 +9,14 @@
 #include <string>
 
 #include "../../gameobjects/cRectangle.h"
-#include "cGuiShape.h"
+#include "GuiShape.h"
 
-class cGuiButton : public cGuiShape {
+class GuiButton : public GuiShape {
 
 	public:
-		cGuiButton(cRectangle * rect, std::string theLabel);
-		cGuiButton(int x, int y, int width, int height, std::string theLabel);
-		virtual ~cGuiButton();
+		GuiButton(cRectangle * rect, std::string theLabel);
+		GuiButton(int x, int y, int width, int height, std::string theLabel);
+		virtual ~GuiButton();
 
 		std::string * getLabel() {
 			return label;

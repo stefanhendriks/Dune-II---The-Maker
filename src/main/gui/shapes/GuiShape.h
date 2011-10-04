@@ -9,13 +9,15 @@
 #ifndef GUISHAPE_H_
 #define GUISHAPE_H_
 
-class cGuiShape {
+#include "../GuiElement.h"
+
+class GuiShape : public GuiElement {
 
 	public:
-		cGuiShape(cRectangle * rect);
-		cGuiShape(int x, int y, int width, int height);
+		GuiShape(cRectangle * rect);
+		GuiShape(int x, int y, int width, int height);
 
-		virtual ~cGuiShape();
+		virtual ~GuiShape();
 
 		void setX(int value) { rectangle->setStartX(value); 	}
 		void setY(int value) { rectangle->setStartY(value);		}

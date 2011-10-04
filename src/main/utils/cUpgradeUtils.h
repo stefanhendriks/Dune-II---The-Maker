@@ -29,7 +29,7 @@ class cUpgradeUtils {
 
 	private:
 		cRectangle * rectangle;
-		cGuiShape * upgradeButtonGuiShape;
+		GuiShape * upgradeButtonGuiShape;
 };
 
 #endif /* CUPGRADEUTILS_H_ */

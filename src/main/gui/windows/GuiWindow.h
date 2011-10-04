@@ -1,5 +1,5 @@
 /*
- * cGuiWindow.h
+ * GuiWindow.h
  *
  *  Created on: 4 okt. 2011
  *      Author: Stefan
@@ -9,7 +9,7 @@
  * A gui window is not the same as a dialog or a shape. It functions as a container for shapes and dialogs. Like, the main menu
  * is a gui window. A gui window has a one on one relation with a state.
  *
- * Most obvious windows:
+ * Concrete implementations of windows:
  * - main menu window
  * - select next conquest window
  * - mentat window
@@ -24,13 +24,31 @@
 #ifndef CGUIWINDOW_H_
 #define CGUIWINDOW_H_
 
-class cGuiWindow {
+#include <assert.h>
+#include <cstddef>
+
+#include "../GuiElement.h"
+#include "../GuiDelegate.h"
+
+class GuiWindow : public GuiElement {
 
 	public:
-		cGuiWindow();
-		virtual ~cGuiWindow();
+		GuiWindow(GuiDelegate * guiDelegate) {
+			assert(guiDelegate);
+			delegate = guiDelegate;
+		}
+
+		~GuiWindow() {
+			delegate = NULL;
+		}
+
+		// called each frame, delegates its behavior to the given concrete cGuiWindowDelegate class.
+		void interact() {
+			delegate->interact(this);
+		}
 
 	private:
+		GuiDelegate * delegate;
 
 };
 

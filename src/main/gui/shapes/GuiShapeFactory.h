@@ -7,17 +7,17 @@
 
 #include <string>
 
-class cGuiShapeFactory {
+class GuiShapeFactory {
 
 	public:
-		cGuiShapeFactory(cScreenResolution * theScreenResolution);
-		~cGuiShapeFactory();
+		GuiShapeFactory(cScreenResolution * theScreenResolution);
+		~GuiShapeFactory();
 
-		cGuiButton * createButtonWithBitmap(int x, int y, BITMAP * bmp, std::string theLabel);
+		GuiButton * createButtonWithBitmap(int x, int y, BITMAP * bmp, std::string theLabel);
 
-		cGuiButton * createGrayButton(cRectangle * rect, std::string theLabel);
+		GuiButton * createGrayButton(cRectangle * rect, std::string theLabel);
 
-		cMainMenuDialog * createMainMenuDialog();
+		MainMenuDialog * createMainMenuDialog();
 
 	protected:
 

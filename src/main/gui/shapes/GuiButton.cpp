@@ -1,21 +1,21 @@
 #include "allegro.h"
 
-#include "cGuiButton.h"
+#include "GuiButton.h"
 
-cGuiButton::cGuiButton(cRectangle * rect, std::string theLabel) : cGuiShape(rect) {
+GuiButton::GuiButton(cRectangle * rect, std::string theLabel) : GuiShape(rect) {
 	drawPressedWhenMouseHovers = false;
 	bitmap = NULL;
 	label = &theLabel;
 	hasBorders = true;
 }
 
-cGuiButton::cGuiButton(int x, int y, int width, int height, std::string theLabel) : cGuiShape(x, y, width, height){
+GuiButton::GuiButton(int x, int y, int width, int height, std::string theLabel) : GuiShape(x, y, width, height){
 	label = &theLabel;
 	hasBorders = true;
 	drawPressedWhenMouseHovers = false;
 }
 
-cGuiButton::~cGuiButton() {
+GuiButton::~GuiButton() {
 	drawPressedWhenMouseHovers = false;
 	bitmap = NULL;
 }
