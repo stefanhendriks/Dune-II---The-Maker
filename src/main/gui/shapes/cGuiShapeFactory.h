@@ -1,12 +1,11 @@
-/*
- * cGuiShapeFactory.h
+/**
+ * This factory is responsible for creating gui shapes or their children (button, etc).
  *
- *  Created on: 26-aug-2011
- *      Author: Stefan
  */
-
 #ifndef CGUISHAPEFACTORY_H_
 #define CGUISHAPEFACTORY_H_
+
+#include <string>
 
 class cGuiShapeFactory {
 

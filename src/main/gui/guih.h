@@ -8,13 +8,18 @@ class cTextDrawer;
 #include "cTextWriter.h"
 #include "cMouseToolTip.h"
 
-#include "cGuiShape.h"
-#include "cGuiButton.h"
+#include "shapes/cGuiShape.h"
+#include "shapes/cGuiButton.h"
 
-#include "cMainMenuDialog.h"
+
+#include "dialogs/cMainMenuDialog.h"
+
+#include "shapes/cGuiShapeFactory.h"
+
+
+#include "windows/cGuiWindow.h"
 
 #include "cMessageBar.h"
 
-#include "cGuiShapeFactory.h"
 
 #endif

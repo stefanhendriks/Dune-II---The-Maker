@@ -1,5 +1,15 @@
+/**
+ * A button is a gui shape (rectangle), with a label.
+ *
+ */
 #ifndef CGUIBUTTON_H_
 #define CGUIBUTTON_H_
+
+#include <sstream>
+#include <string>
+
+#include "../../gameobjects/cRectangle.h"
+#include "cGuiShape.h"
 
 class cGuiButton : public cGuiShape {
 

@@ -8,6 +8,8 @@
 #ifndef CMAINMENUDIALOG_H_
 #define CMAINMENUDIALOG_H_
 
+#include "../shapes/cGuiShape.h"
+
 class cMainMenuDialog  : public cGuiShape {
 	public:
 		cMainMenuDialog(cRectangle * rect);

@@ -1,10 +1,11 @@
-/*
- * Rectangle.h
+/**
+ * A gui shape represents a thing, a shape for better naming, in the gui. In this world those shapes are mostly rectangular and
+ * therefore a cGuiShape uses a rectangle to represents its position and its size.
  *
- *  Created on: 31-okt-2010
- *      Author: Stefan
+ * Using this as a base class a cGuiButton and even a dialog can extend from this. Often gui elements within dune 2 have very
+ * simple border (in order to draw).
+ *
  */
-
 #ifndef GUISHAPE_H_
 #define GUISHAPE_H_
 

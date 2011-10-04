@@ -1,13 +1,4 @@
-/*
- * cGuiShapeFactory.cpp
- *
- *  Created on: 26-aug-2011
- *      Author: Stefan
- */
-
-#include "../include/d2tmh.h"
-
-#include <string>
+#include "../../include/d2tmh.h"
 
 cGuiShapeFactory::cGuiShapeFactory(cScreenResolution * theScreenResolution) {
 	assert(theScreenResolution);

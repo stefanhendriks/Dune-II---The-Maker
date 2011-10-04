@@ -4,7 +4,7 @@
  *  Created on: 1-okt-2011
  *      Author: Stefan
  */
-#include "../include/d2tmh.h"
+#include "../../include/d2tmh.h"
 
 cMainMenuDialog::cMainMenuDialog(cRectangle * rect) : cGuiShape(rect) {
 	newCampaignButton = NULL;
