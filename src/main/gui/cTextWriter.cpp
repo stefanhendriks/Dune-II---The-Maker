@@ -16,7 +16,7 @@ cTextWriter::cTextWriter(int x, int y, ALFONT_FONT * theFont, int theFontSize) {
 	drawY = y;
 	font = theFont;
 	fontSize = theFontSize;
-	textDrawer = new cTextDrawer();
+	textDrawer = new TextDrawer();
 }
 
 cTextWriter::~cTextWriter() {

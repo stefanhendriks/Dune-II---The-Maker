@@ -105,7 +105,7 @@ void cGameFactory::createNewGameDrawerAndSetCreditsForHuman() {
 		gameDrawer = NULL;
 	}
 
-	gameDrawer = new cGameDrawer(&player[HUMAN]);
+	gameDrawer = new GameDrawer(&player[HUMAN]);
 	gameDrawer->getCreditsDrawer()->setCreditsOfPlayer();
 	logbook("cGameFactory:createNewGameDrawerAndSetCreditsForHuman [END]");
 }

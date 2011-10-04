@@ -15,7 +15,7 @@
 #include "factory/cGameFactory.h"
 
 #include "movie/cMovieDrawer.h"
-#include "drawers/cAllegroDrawer.h"
+#include "drawers/AllegroDrawer.h"
 
 cGame::cGame() {
 	screenResolution = new cScreenResolution(800, 600);
@@ -731,15 +731,15 @@ void cGame::switchStateTo(GameState stateToSwitchTo) {
 
 // draw menu
 void cGame::menuState() {
-	cTextDrawer * textDrawer = new cTextDrawer(bene_font);
+	TextDrawer * textDrawer = new TextDrawer(bene_font);
 
 	// draw main menu title (picture is 640x480)
-	cAllegroDrawer * allegroDrawer = new cAllegroDrawer(getScreenResolution());
+	AllegroDrawer * allegroDrawer = new AllegroDrawer(getScreenResolution());
 	allegroDrawer->drawSpriteCenteredRelativelyVertical(bmp_screen, (BITMAP *) gfxinter[BMP_D2TM].dat, 0.3);
 	delete allegroDrawer;
 
 	GuiShape * shape = new GuiShape(257, 319, 130, 143);
-	cGuiDrawer * guiDrawer = gameDrawer->getGuiDrawer();
+	GuiDrawer * guiDrawer = gameDrawer->getGuiDrawer();
 	guiDrawer->drawShape(shape);
 	delete shape;
 
@@ -917,7 +917,7 @@ void cGame::setupSkirmishState() {
 	// title box
 	GUI_DRAW_FRAME(-1, -1, screenWidth + 2, 21);
 
-	cTextDrawer * textDrawer = new cTextDrawer(bene_font);
+	TextDrawer * textDrawer = new TextDrawer(bene_font);
 	textDrawer->drawTextCentered("Skirmish", 2);
 
 

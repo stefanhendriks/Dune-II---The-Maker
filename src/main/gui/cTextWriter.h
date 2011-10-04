@@ -27,7 +27,7 @@ class cTextWriter {
 		void updateDrawY();
 
 	private:
-		cTextDrawer *textDrawer;
+		TextDrawer *textDrawer;
 		ALFONT_FONT *font;
 		int fontSize;
 		int originalX;

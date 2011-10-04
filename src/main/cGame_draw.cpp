@@ -46,7 +46,7 @@ void cGame::winningState() {
 	blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 
 
-	cMouseDrawer * mouseDrawer = gameDrawer->getMouseDrawer();
+	MouseDrawer * mouseDrawer = gameDrawer->getMouseDrawer();
 	mouseDrawer->draw();
 	draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 

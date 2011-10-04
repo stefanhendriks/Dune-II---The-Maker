@@ -11,33 +11,33 @@
 // forward declr.
 class cMouse;
 
-#include "cTextDrawer.h"
+#include "TextDrawer.h"
 
-#include "cMessageBarDrawer.h"
+#include "MessageBarDrawer.h"
 
-#include "cParticleDrawer.h"
+#include "ParticleDrawer.h"
 #include "CreditsDrawer.h"
 
-#include "cBuildingListDrawer.h"
-#include "cUpgradeDrawer.h"
-#include "cOrderDrawer.h"
+#include "BuildingListDrawer.h"
+#include "UpgradeDrawer.h"
+#include "OrderDrawer.h"
 
-#include "cSideBarDrawer.h"
+#include "SideBarDrawer.h"
 
-#include "cUnitDrawer.h"
+#include "UnitDrawer.h"
 
-#include "cPlaceItDrawer.h"
+#include "PlaceItDrawer.h"
 
-#include "cMapDrawer.h"
+#include "MapDrawer.h"
 
-#include "cMiniMapDrawer.h"
+#include "MiniMapDrawer.h"
 
-#include "cStructureDrawer.h"
+#include "StructureDrawer.h"
 
-#include "cMouseDrawer.h"
+#include "MouseDrawer.h"
 
-#include "cGuiDrawer.h"
+#include "GuiDrawer.h"
 
-#include "cGameDrawer.h"
+#include "GameDrawer.h"
 
 #endif /* DRAWERSH_H_ */

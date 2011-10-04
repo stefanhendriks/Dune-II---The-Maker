@@ -3,7 +3,7 @@
 
 // forward declr.
 class cMouse;
-class cTextDrawer;
+class TextDrawer;
 
 #include "cTextWriter.h"
 #include "cMouseToolTip.h"

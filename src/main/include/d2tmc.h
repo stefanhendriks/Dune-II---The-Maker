@@ -42,7 +42,7 @@ extern cRegion        world[MAX_REGIONS];
 extern cMentat		  *Mentat;
 extern cTimeManager   TimeManager;
 extern cStructureUtils structureUtils;
-extern cGameDrawer   * gameDrawer;
+extern GameDrawer   * gameDrawer;
 extern cInteractionManager *interactionManager;
 
 // ...

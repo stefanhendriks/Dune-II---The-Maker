@@ -170,7 +170,7 @@ void cSideBar::thinkInteraction() {
 	if (selectedListID > -1 && getList(selectedListID)->isAvailable()) {
 		cBuildingList *list = getList(selectedListID);
 
-		cSideBarDrawer * sidebarDrawer = new cSideBarDrawer();
+		SideBarDrawer * sidebarDrawer = new SideBarDrawer();
 
 		bool mouseOverUp = sidebarDrawer->isMouseOverScrollUp();
 		bool mouseOverDown = sidebarDrawer->isMouseOverScrollDown();
@@ -192,7 +192,7 @@ void cSideBar::thinkInteraction() {
 	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && getList(selectedListID)->isUpgrading() == false) {
 		cBuildingList *list = getList(selectedListID);
 
-		cBuildingListDrawer drawer;
+		BuildingListDrawer drawer;
 		cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x, mouse_y);
 
 		cOrderProcesser * orderProcesser = player->getOrderProcesser();
@@ -242,7 +242,7 @@ void cSideBar::thinkInteraction() {
 
 					// handle order button interaction
 					if (orderProcesser->hasOrderedAnything() && orderProcesser->isOrderPlaced() == false) {
-						cOrderDrawer orderDrawer;
+						OrderDrawer orderDrawer;
 						if (orderDrawer.isMouseOverOrderButton(mouse_x, mouse_y)) {
 							orderProcesser->placeOrder();
 						}
