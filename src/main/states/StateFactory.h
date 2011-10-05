@@ -6,6 +6,8 @@
 class StateFactory {
 	public:
 		// TODO: add functions to create a state
+		StateFactory();
+		~StateFactory();
 
 	protected:
 

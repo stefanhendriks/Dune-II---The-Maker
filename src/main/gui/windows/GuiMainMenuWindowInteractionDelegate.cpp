@@ -5,7 +5,7 @@
  *      Author: Stefan
  */
 
-#include "GuiMainMenuWindowDelegate.h"
+#include "GuiMainMenuWindowInteractionDelegate.h"
 
 GuiMainMenuWindowInteractionDelegate::GuiMainMenuWindowInteractionDelegate() {
 	// TODO Auto-generated constructor stub

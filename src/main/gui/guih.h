@@ -9,7 +9,7 @@ class TextDrawer;
 #include "MouseToolTip.h"
 
 // Delegates
-#include "GuiDelegate.h"
+#include "GuiInteractionDelegate.h"
 
 // Shapes
 #include "shapes/GuiShape.h"
