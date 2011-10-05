@@ -7,11 +7,11 @@
 
 #include "GuiMainMenuWindowDelegate.h"
 
-GuiMainMenuWindowDelegate::GuiMainMenuWindowDelegate() {
+GuiMainMenuWindowInteractionDelegate::GuiMainMenuWindowInteractionDelegate() {
 	// TODO Auto-generated constructor stub
 
 }
 
-GuiMainMenuWindowDelegate::~GuiMainMenuWindowDelegate() {
+GuiMainMenuWindowInteractionDelegate::~GuiMainMenuWindowInteractionDelegate() {
 	// TODO Auto-generated destructor stub
 }
