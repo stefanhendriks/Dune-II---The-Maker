@@ -8,10 +8,10 @@
 #ifndef CMOUSETOOLTIP_H_
 #define CMOUSETOOLTIP_H_
 
-class cMouseToolTip {
+class MouseToolTip {
 	public:
-		cMouseToolTip(cPlayer *thePlayer, cMouse *theMouse);
-		~cMouseToolTip();
+		MouseToolTip(cPlayer *thePlayer, cMouse *theMouse);
+		~MouseToolTip();
 
 	protected:
 

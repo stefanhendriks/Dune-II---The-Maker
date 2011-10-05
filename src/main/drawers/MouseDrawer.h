@@ -12,10 +12,10 @@ class MouseDrawer {
 
 	protected:
 		void drawToolTipBackground();
-		void drawToolTipGeneralInformation(cAbstractStructure * theStructure, cTextWriter *textWriter);
-		void drawToolTipWindTrapInformation(cWindTrap * theWindTrap, cTextWriter *textWriter);
-		void drawToolTipSiloInformation(cAbstractStructure * theStructure, cTextWriter *textWriter);
-		void drawToolTipTurretInformation(cAbstractStructure * theStructure, cTextWriter *textWriter);
+		void drawToolTipGeneralInformation(cAbstractStructure * theStructure, TextWriter *textWriter);
+		void drawToolTipWindTrapInformation(cWindTrap * theWindTrap, TextWriter *textWriter);
+		void drawToolTipSiloInformation(cAbstractStructure * theStructure, TextWriter *textWriter);
+		void drawToolTipTurretInformation(cAbstractStructure * theStructure, TextWriter *textWriter);
 
 		void drawMouseTile();
 		void drawMouseRectangle();
@@ -26,7 +26,7 @@ class MouseDrawer {
 		int getHeightToolTip();
 
 	private:
-		cMouseToolTip * mouseToolTip;
+		MouseToolTip * mouseToolTip;
 		cMouse *mouse;
 		cPlayer *player;
 		cGameControlsContext * context;

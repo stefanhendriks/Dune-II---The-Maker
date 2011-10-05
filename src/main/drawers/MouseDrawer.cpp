@@ -7,7 +7,7 @@ MouseDrawer::MouseDrawer(cPlayer *thePlayer, cMouse *theMouse) {
 	context = thePlayer->getGameControlsContext();
 	assert(context);
 	mouse = theMouse;
-	mouseToolTip = new cMouseToolTip(player, mouse);
+	mouseToolTip = new MouseToolTip(player, mouse);
 }
 
 MouseDrawer::~MouseDrawer() {
@@ -138,7 +138,7 @@ void MouseDrawer::drawToolTip() {
 	cGameControlsContext * context = player->getGameControlsContext();
 
 	if (context->isMouseOverStructure()) {
-		cTextWriter * textWriter = new cTextWriter((x + 2), (y + 2), small_font, 12);
+		TextWriter * textWriter = new TextWriter((x + 2), (y + 2), small_font, 12);
 
 		cAbstractStructure * theStructure = context->getStructurePointerWhereMouseHovers();
 
@@ -206,7 +206,7 @@ void MouseDrawer::drawToolTipBackground() {
 	fblend_rect_trans(bmp_screen, shadowX, y + 4, 4, height, makecol(0, 0, 0), 128);
 }
 
-void MouseDrawer::drawToolTipTurretInformation(cAbstractStructure * theStructure, cTextWriter *textWriter) {
+void MouseDrawer::drawToolTipTurretInformation(cAbstractStructure * theStructure, TextWriter *textWriter) {
 	assert(theStructure);
 	assert(textWriter);
 	if (theStructure->getPlayer()->getId() == player->getId()) {
@@ -218,7 +218,7 @@ void MouseDrawer::drawToolTipTurretInformation(cAbstractStructure * theStructure
 	}
 }
 
-void MouseDrawer::drawToolTipGeneralInformation(cAbstractStructure * theStructure, cTextWriter *textWriter) {
+void MouseDrawer::drawToolTipGeneralInformation(cAbstractStructure * theStructure, TextWriter *textWriter) {
 	assert(theStructure);
 	assert(textWriter);
 	s_Structures structureType = theStructure->getS_StructuresType();
@@ -236,7 +236,7 @@ void MouseDrawer::drawToolTipGeneralInformation(cAbstractStructure * theStructur
 	textWriter->writeWithOneInteger("Protected : %d%%", (100 - theStructure->getPercentageNotPaved()));
 }
 
-void MouseDrawer::drawToolTipWindTrapInformation(cWindTrap * theWindTrap, cTextWriter *textWriter) {
+void MouseDrawer::drawToolTipWindTrapInformation(cWindTrap * theWindTrap, TextWriter *textWriter) {
 	assert(theWindTrap);
 	assert(textWriter);
 	if (theWindTrap->getOwner() == HUMAN) {
@@ -255,7 +255,7 @@ void MouseDrawer::drawToolTipWindTrapInformation(cWindTrap * theWindTrap, cTextW
 	}
 }
 
-void MouseDrawer::drawToolTipSiloInformation(cAbstractStructure * theStructure, cTextWriter *textWriter) {
+void MouseDrawer::drawToolTipSiloInformation(cAbstractStructure * theStructure, TextWriter *textWriter) {
 	assert(theStructure);
 	assert(textWriter);
 

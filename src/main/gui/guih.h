@@ -5,8 +5,8 @@
 class cMouse;
 class TextDrawer;
 
-#include "cTextWriter.h"
-#include "cMouseToolTip.h"
+#include "TextWriter.h"
+#include "MouseToolTip.h"
 
 // Delegates
 #include "GuiDelegate.h"

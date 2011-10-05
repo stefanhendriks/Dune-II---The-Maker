@@ -11,10 +11,10 @@
 // a text writer has state, meaning with every command to 'write' something, it knows where to draw it
 // every new command it will start on a new line.
 
-class cTextWriter {
+class TextWriter {
 	public:
-		cTextWriter(int x, int y, ALFONT_FONT *theFont, int theFontSize);
-		~cTextWriter();
+		TextWriter(int x, int y, ALFONT_FONT *theFont, int theFontSize);
+		~TextWriter();
 
 		void write(const char *msg);
 		void write(const char *msg, int color);

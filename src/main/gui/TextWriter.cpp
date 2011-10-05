@@ -7,7 +7,7 @@
 
 #include "../include/d2tmh.h"
 
-cTextWriter::cTextWriter(int x, int y, ALFONT_FONT * theFont, int theFontSize) {
+TextWriter::TextWriter(int x, int y, ALFONT_FONT * theFont, int theFontSize) {
 	assert(theFont);
 	assert(theFontSize > 0);
 	originalX = x;
@@ -19,36 +19,36 @@ cTextWriter::cTextWriter(int x, int y, ALFONT_FONT * theFont, int theFontSize) {
 	textDrawer = new TextDrawer();
 }
 
-cTextWriter::~cTextWriter() {
+TextWriter::~TextWriter() {
 	font = NULL;
 	delete textDrawer;
 	textDrawer = NULL;
 }
 
-void cTextWriter::setTextColor(int value) {
+void TextWriter::setTextColor(int value) {
 	textDrawer->setTextColor(value);
 }
 
-void cTextWriter::write(const char * msg) {
+void TextWriter::write(const char * msg) {
 	textDrawer->drawText(drawX, drawY, msg);
 	updateDrawY();
 }
 
-void cTextWriter::write(const char * msg, int color) {
+void TextWriter::write(const char * msg, int color) {
 	textDrawer->drawText(drawX, drawY, msg, color);
 	updateDrawY();
 }
 
-void cTextWriter::writeWithOneInteger(const char * msg, int value1) {
+void TextWriter::writeWithOneInteger(const char * msg, int value1) {
 	textDrawer->drawTextWithOneInteger(drawX, drawY, msg, value1);
 	updateDrawY();
 }
 
-void cTextWriter::writeWithTwoIntegers(const char * msg, int value1, int value2) {
+void TextWriter::writeWithTwoIntegers(const char * msg, int value1, int value2) {
 	textDrawer->drawTextWithTwoIntegers(drawX, drawY, msg, value1, value2);
 	updateDrawY();
 }
 
-void cTextWriter::updateDrawY() {
+void TextWriter::updateDrawY() {
 	drawY += fontSize;
 }
