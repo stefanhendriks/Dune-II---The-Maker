@@ -9,11 +9,11 @@
 #define CGUIMAINMENUWINDOW_H_
 
 #include "GuiWindow.h"
-#include "GuiMainMenuWindowDelegate.h"
+#include "GuiMainMenuWindowInteractionDelegate.h"
 
 class GuiMainMenuWindow : public GuiWindow {
 	public:
-		GuiMainMenuWindow(GuiMainMenuWindowDelegate * mainMenuWindowDelegate);
+		GuiMainMenuWindow(GuiMainMenuWindowInteractionDelegate * mainMenuWindowDelegate);
 		~GuiMainMenuWindow();
 
 	private:

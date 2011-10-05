@@ -1,6 +1,6 @@
 #include "GuiMainMenuWindow.h"
 
-GuiMainMenuWindow::GuiMainMenuWindow(GuiMainMenuWindowDelegate * mainMenuWindowDelegate) : GuiWindow((GuiDelegate *)mainMenuWindowDelegate) {
+GuiMainMenuWindow::GuiMainMenuWindow(GuiMainMenuWindowInteractionDelegate * mainMenuWindowDelegate) : GuiWindow((GuiInteractionDelegate *)mainMenuWindowDelegate) {
 }
 
 GuiMainMenuWindow::~GuiMainMenuWindow() {

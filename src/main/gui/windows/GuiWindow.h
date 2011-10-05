@@ -28,27 +28,27 @@
 #include <cstddef>
 
 #include "../GuiElement.h"
-#include "../GuiDelegate.h"
+#include "../GuiInteractionDelegate.h"
 
 class GuiWindow : public GuiElement {
 
 	public:
-		GuiWindow(GuiDelegate * guiDelegate) {
-			assert(guiDelegate);
-			delegate = guiDelegate;
+		GuiWindow(GuiInteractionDelegate * guiInteractionDelegate) {
+			assert(guiInteractionDelegate);
+			interactionDelegate = guiInteractionDelegate;
 		}
 
 		~GuiWindow() {
-			delegate = NULL;
+			interactionDelegate = NULL;
 		}
 
 		// called each frame, delegates its behavior to the given concrete cGuiWindowDelegate class.
 		void interact() {
-			delegate->interact(this);
+			interactionDelegate->interact(this);
 		}
 
 	private:
-		GuiDelegate * delegate;
+		GuiInteractionDelegate * interactionDelegate;
 
 };
 
