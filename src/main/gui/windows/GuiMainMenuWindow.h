@@ -11,12 +11,23 @@
 #include "GuiWindow.h"
 #include "GuiMainMenuWindowInteractionDelegate.h"
 
+#include "../dialogs/MainMenuDialog.h"
+
 class GuiMainMenuWindow : public GuiWindow {
 	public:
 		GuiMainMenuWindow(GuiMainMenuWindowInteractionDelegate * mainMenuWindowDelegate);
 		~GuiMainMenuWindow();
 
+		void draw();
+
+		void setMainMenuDialog(MainMenuDialog * dialog) {
+			assert(dialog);
+			assert(mainMenuDialog == NULL);
+			mainMenuDialog = dialog;
+		}
+
 	private:
+		MainMenuDialog * mainMenuDialog;
 
 };
 

@@ -36,8 +36,6 @@ class cMouse;
 
 #include "MouseDrawer.h"
 
-#include "GuiDrawer.h"
-
 #include "GameDrawer.h"
 
 #endif /* DRAWERSH_H_ */

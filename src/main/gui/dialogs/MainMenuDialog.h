@@ -9,6 +9,7 @@
 #define CMAINMENUDIALOG_H_
 
 #include "../shapes/GuiShape.h"
+#include "../shapes/GuiButton.h"
 
 class MainMenuDialog  : public GuiShape {
 	public:

@@ -10,6 +10,7 @@
 #define GUISHAPE_H_
 
 #include "../GuiElement.h"
+#include "../../gameobjects/cRectangle.h"
 
 class GuiShape : public GuiElement {
 
@@ -18,6 +19,8 @@ class GuiShape : public GuiElement {
 		GuiShape(int x, int y, int width, int height);
 
 		virtual ~GuiShape();
+
+		void draw();
 
 		void setX(int value) { rectangle->setStartX(value); 	}
 		void setY(int value) { rectangle->setStartY(value);		}
@@ -33,9 +36,9 @@ class GuiShape : public GuiElement {
 		int getInnerColor() { return innerColor; }
 
 	protected:
+		cRectangle * rectangle;
 
 	private:
-		cRectangle * rectangle;
 		bool rectangleOwner;
 		int darkBorderColor;
 		int lightBorderColor;

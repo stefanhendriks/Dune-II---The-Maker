@@ -5,6 +5,10 @@
 #define GUIELEMENT_H_
 
 class GuiElement {
+	public:
+	~GuiElement() {};
+
+	void draw() {};
 };
 
 #endif /* GUIELEMENT_H_ */

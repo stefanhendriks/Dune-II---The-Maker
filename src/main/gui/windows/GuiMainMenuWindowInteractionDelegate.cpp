@@ -1,5 +1,5 @@
 /*
- * GuiMainMenuWindowDelegate.cpp
+ * GuiMainMenuWindowInteractionDelegate.cpp
  *
  *  Created on: 4 okt. 2011
  *      Author: Stefan

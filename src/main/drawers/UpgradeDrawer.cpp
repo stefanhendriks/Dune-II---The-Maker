@@ -59,8 +59,7 @@ void UpgradeDrawer::drawUpgradeButton(cPlayer * thePlayer, cBuildingList * theSe
 	bool isBuildingItem = theSelectedList->isBuildingItem();
 
 	if (canPayForUpgrade && !isBuildingItem) {
-		gameDrawer->getGuiDrawer()->drawShape(upgradeButton);
-		//draw_sprite(bmp_screen, (BITMAP *) gfxinter[BTN_UPGRADE].dat, 29, 0);
+		upgradeButton->draw();
 	} else {
 		// draw a dark version
 		// TODO: optimize this, by making a dark version once and then re-draw that one, instead of constructing

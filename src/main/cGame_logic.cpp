@@ -739,8 +739,7 @@ void cGame::menuState() {
 	delete allegroDrawer;
 
 	GuiShape * shape = new GuiShape(257, 319, 130, 143);
-	GuiDrawer * guiDrawer = gameDrawer->getGuiDrawer();
-	guiDrawer->drawShape(shape);
+	shape->draw();
 	delete shape;
 
 	// Buttons:

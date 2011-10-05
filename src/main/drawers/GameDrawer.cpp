@@ -19,7 +19,6 @@ GameDrawer::GameDrawer(cPlayer * thePlayer) {
 	placeitDrawer = new PlaceItDrawer();
 	structureDrawer = new StructureDrawer();
 	mouseDrawer = new MouseDrawer(thePlayer, cMouse::getInstance());
-	guiDrawer = new GuiDrawer();
 
 	MessageBar * messageBar = messageBarDrawer->getMessageBar();
 	messageBar->setX(0);

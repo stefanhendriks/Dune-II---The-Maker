@@ -38,3 +38,21 @@ void GuiShape::setColors(int darkBorder, int lightBorder, int inner) {
 	lightBorderColor = lightBorder;
 	innerColor = inner;
 }
+
+void GuiShape::draw() {
+	int x = rectangle->getStartX();
+	int y = rectangle->getStartY();
+	int width = rectangle->getWidth();
+	int height = rectangle->getHeight();
+
+	int lightColor = getLightBorderColor();
+	int darkColor = getDarkBorderColor();
+	int inner = getInnerColor();
+
+	rectfill(bmp_screen, x, y, x + width, y + height, inner);
+	rect(bmp_screen, x, y, x + width, y + height, lightColor);
+
+	// lines to darken the right sides
+	line(bmp_screen, x + width, y, x + width, y + height, darkColor);
+	line(bmp_screen, x, y + height, x + width, y + height, darkColor);
+}

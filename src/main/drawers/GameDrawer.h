@@ -33,9 +33,6 @@ class GameDrawer {
 		MouseDrawer *getMouseDrawer() {
 			return mouseDrawer;
 		}
-		GuiDrawer * getGuiDrawer() {
-			return guiDrawer;
-		}
 
 		int getDrawXForCell(int cell);
 		int getDrawYForCell(int cell);
@@ -63,7 +60,6 @@ class GameDrawer {
 		PlaceItDrawer *placeitDrawer;
 		StructureDrawer * structureDrawer;
 		MouseDrawer * mouseDrawer;
-		GuiDrawer * guiDrawer;
 
 		// TODO: unitDrawer
 
