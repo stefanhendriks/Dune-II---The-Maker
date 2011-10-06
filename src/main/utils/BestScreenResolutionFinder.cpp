@@ -1,16 +1,6 @@
-/*
- * cBestScreenResolutionFinder.cpp
- *
- *  Created on: 24 dec. 2010
- *      Author: Stefan
- */
+#include "BestScreenResolutionFinder.h"
 
-#include "../include/d2tmh.h"
-
-/**
- *
- */
-cBestScreenResolutionFinder::cBestScreenResolutionFinder() {
+BestScreenResolutionFinder::BestScreenResolutionFinder() {
 	memset(screenResolutions, 0, sizeof(screenResolutions));
 
 	// order is from 'biggest' to smallest best resolution
@@ -25,18 +15,18 @@ cBestScreenResolutionFinder::cBestScreenResolutionFinder() {
 	screenResolutions[8] = new ScreenResolution(800, 600);
 }
 
-cBestScreenResolutionFinder::~cBestScreenResolutionFinder() {
+BestScreenResolutionFinder::~BestScreenResolutionFinder() {
 	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i++) {
 		delete screenResolutions[i];
 		screenResolutions[i] = NULL;
 	}
 }
 
-bool cBestScreenResolutionFinder::isGfxModeListSet(GFX_MODE_LIST *mode_list) {
+bool BestScreenResolutionFinder::isGfxModeListSet(GFX_MODE_LIST *mode_list) {
 	return mode_list != NULL;
 }
 
-void cBestScreenResolutionFinder::checkResolutions() {
+void BestScreenResolutionFinder::checkResolutions() {
 
 	/*
 	 Note from Peter Gaal:
@@ -71,7 +61,7 @@ void cBestScreenResolutionFinder::checkResolutions() {
 	destroy_gfx_mode_list(modeList);
 }
 
-void cBestScreenResolutionFinder::setMatchingScreenResolutionsToTestedAndUsable(GFX_MODE_LIST * modeList) {
+void BestScreenResolutionFinder::setMatchingScreenResolutionsToTestedAndUsable(GFX_MODE_LIST * modeList) {
 	logbook("setMatchingScreenResolutionsToTestedAndUsable");
 	assert(modeList);
 
@@ -92,7 +82,7 @@ void cBestScreenResolutionFinder::setMatchingScreenResolutionsToTestedAndUsable(
 	}
 }
 
-ScreenResolution * cBestScreenResolutionFinder::findMatchingScreenResolution(int width, int height) {
+ScreenResolution * BestScreenResolutionFinder::findMatchingScreenResolution(int width, int height) {
 	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i++) {
 		ScreenResolution * screenResolution = screenResolutions[i];
 		if (screenResolution) {
@@ -104,7 +94,7 @@ ScreenResolution * cBestScreenResolutionFinder::findMatchingScreenResolution(int
 	return NULL;
 }
 
-void cBestScreenResolutionFinder::detectScreenResolutionsByTestingThemOut() {
+void BestScreenResolutionFinder::detectScreenResolutionsByTestingThemOut() {
 	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i++) {
 		ScreenResolution * screenResolution = screenResolutions[i];
 		if (screenResolution) {
@@ -118,7 +108,7 @@ void cBestScreenResolutionFinder::detectScreenResolutionsByTestingThemOut() {
 	}
 }
 
-ScreenResolution * cBestScreenResolutionFinder::aquireBestScreenResolutionFullScreen() {
+ScreenResolution * BestScreenResolutionFinder::aquireBestScreenResolutionFullScreen() {
 	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i++) {
 		ScreenResolution * screenResolution = screenResolutions[i];
 		if (screenResolution) {

@@ -1,17 +1,8 @@
-/*
- * utilsh.h
- *
- *  Created on: 7-nov-2010
- *      Author: Stefan
- */
-
 #ifndef UTILSH_H_
 #define UTILSH_H_
 
 #include "common.h"					// commonly used functions
 #include "../ini.h"							// INI loading
-
-#include "cBestScreenResolutionFinder.h"
 
 #include "cCellCalculator.h"			    /** math with cells , with handy references to structures and units **/
 #include "cSeedMap.h"

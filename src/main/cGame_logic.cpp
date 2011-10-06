@@ -17,6 +17,8 @@
 #include "movie/cMovieDrawer.h"
 #include "drawers/AllegroDrawer.h"
 
+#include "utils/BestScreenResolutionFinder.h"
+
 cGame::cGame() {
 	screenResolution = new ScreenResolution(800, 600);
 	screenResolutionFromIni = NULL;
@@ -2357,7 +2359,7 @@ bool cGame::setupGame() {
 
 		// find best possible resolution
 		if (shouldFindBestScreenResolution) {
-			cBestScreenResolutionFinder bestScreenResolutionFinder;
+			BestScreenResolutionFinder bestScreenResolutionFinder;
 			bestScreenResolutionFinder.checkResolutions();
 			ScreenResolution * aquiredScreenResolution = bestScreenResolutionFinder.aquireBestScreenResolutionFullScreen();
 			if (aquiredScreenResolution) {

@@ -1,21 +1,19 @@
-/*
- * cBestScreenResolutionFinder.h
- *
- *  Created on: 24 dec. 2010
- *      Author: Stefan
- */
-
 #ifndef CBESTSCREENRESOLUTIONFINDER_H_
 #define CBESTSCREENRESOLUTIONFINDER_H_
 
 #define MAX_SCREENRESOLUTIONS 10
 
+#include <sstream>
+#include <string>
+
+#include "allegro.h"
+#include "../utils/common.h"
 #include "../gameobjects/ScreenResolution.h"
 
-class cBestScreenResolutionFinder {
+class BestScreenResolutionFinder {
 	public:
-		cBestScreenResolutionFinder();
-		virtual ~cBestScreenResolutionFinder();
+		BestScreenResolutionFinder();
+		virtual ~BestScreenResolutionFinder();
 
 		ScreenResolution * aquireBestScreenResolutionFullScreen();
 

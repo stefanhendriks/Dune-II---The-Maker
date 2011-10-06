@@ -1,10 +1,3 @@
-/*
- * cMouseToolTip.h
- *
- *  Created on: 31-okt-2010
- *      Author: Stefan
- */
-
 #ifndef CMOUSETOOLTIP_H_
 #define CMOUSETOOLTIP_H_
 
