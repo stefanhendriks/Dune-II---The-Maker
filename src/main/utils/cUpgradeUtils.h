@@ -28,7 +28,7 @@ class cUpgradeUtils {
 	protected:
 
 	private:
-		cRectangle * rectangle;
+		Rectangle * rectangle;
 		GuiShape * upgradeButtonGuiShape;
 };
 

@@ -29,7 +29,7 @@ void cGameControlsContext::updateState() {
 	determineHoveringOverUnitId();
 }
 
-cRectangle * cGameControlsContext::getMouseLastDraggedSelectionRectangle() {
+Rectangle * cGameControlsContext::getMouseLastDraggedSelectionRectangle() {
 	return mouse->getLastCreatedRectangle();
 }
 
@@ -92,7 +92,7 @@ void cGameControlsContext::determineHoveringOverStructureId() {
 
 		if (theStructure) {
 			if (structureUtils.isStructureOnScreen(theStructure)) {
-				cRectangle * rectangle = theStructure->getRectangle();
+				Rectangle * rectangle = theStructure->getRectangle();
 				if (mouse->isOverRectangle(rectangle)) {
 					mouseHoveringOverStructureId = i;
 					break;

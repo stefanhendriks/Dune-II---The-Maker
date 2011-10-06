@@ -10,12 +10,12 @@
 #define GUISHAPE_H_
 
 #include "../GuiElement.h"
-#include "../../gameobjects/cRectangle.h"
+#include "../../gameobjects/Rectangle.h"
 
 class GuiShape : public GuiElement {
 
 	public:
-		GuiShape(cRectangle * rect);
+		GuiShape(Rectangle * rect);
 		GuiShape(int x, int y, int width, int height);
 
 		virtual ~GuiShape();
@@ -25,7 +25,7 @@ class GuiShape : public GuiElement {
 		void setX(int value) { rectangle->setStartX(value); 	}
 		void setY(int value) { rectangle->setStartY(value);		}
 
-		cRectangle * getRectangle() { return rectangle; }
+		Rectangle * getRectangle() { return rectangle; }
 
 		bool isMouseOverShape();
 
@@ -36,7 +36,7 @@ class GuiShape : public GuiElement {
 		int getInnerColor() { return innerColor; }
 
 	protected:
-		cRectangle * rectangle;
+		Rectangle * rectangle;
 
 	private:
 		bool rectangleOwner;

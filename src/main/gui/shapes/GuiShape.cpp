@@ -1,6 +1,6 @@
 #include "../../include/d2tmh.h"
 
-GuiShape::GuiShape(cRectangle * rect) {
+GuiShape::GuiShape(Rectangle * rect) {
 	assert(rect);
 	rectangle = rect;
 	rectangleOwner = false;
@@ -10,7 +10,7 @@ GuiShape::GuiShape(cRectangle * rect) {
 GuiShape::GuiShape(int x, int y, int width, int height) {
 	int x2 = (x + width);
 	int y2 = (y + height);
-	rectangle = new cRectangle(x, y, x2, y2);
+	rectangle = new Rectangle(x, y, x2, y2);
 	rectangleOwner = true;
 	setColors(makecol(32, 32, 32), makecol(255,255,255), makecol(128,128,128));
 }

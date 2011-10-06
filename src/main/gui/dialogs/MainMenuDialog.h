@@ -13,7 +13,7 @@
 
 class MainMenuDialog  : public GuiShape {
 	public:
-		MainMenuDialog(cRectangle * rect);
+		MainMenuDialog(Rectangle * rect);
 		~MainMenuDialog();
 
 		void setNewCampaignButton(GuiButton * button ) { newCampaignButton = button; }

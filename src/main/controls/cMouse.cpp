@@ -102,7 +102,7 @@ bool cMouse::isOverRectangleUsingCoordinates(int rectX, int rectY, int rectEndX,
 	return (x >= rectX && x <= rectEndX) && (y >= rectY && y <= rectEndY);
 }
 
-bool cMouse::isOverRectangle(cRectangle * rect) {
+bool cMouse::isOverRectangle(Rectangle * rect) {
 	if (!rect) {
 		return false;
 	}

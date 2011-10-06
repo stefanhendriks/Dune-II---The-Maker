@@ -1,12 +1,12 @@
 #ifndef CRECTANGLE_H_
 #define CRECTANGLE_H_
 
-class cRectangle {
+class Rectangle {
 	public:
 
-		cRectangle();
-		cRectangle(int startX, int startY, int endX, int endY);
-		~cRectangle();
+		Rectangle();
+		Rectangle(int startX, int startY, int endX, int endY);
+		~Rectangle();
 
 		void setStartX(int value) { startX = value; }
 		void setStartY(int value) { startY = value; }
@@ -29,7 +29,7 @@ class cRectangle {
 
 		bool hasValidCoordinates() { return startX > -1 && startY > -1 && endX > -1 && endY > -1; }
 		void resetCoordinates() { startX = startY = endX = endY = -1; }
-		void setCoordinates(cRectangle * otherRectangle);
+		void setCoordinates(Rectangle * otherRectangle);
 
 		bool isCoordinateWithinRectangle(int x, int y);
 

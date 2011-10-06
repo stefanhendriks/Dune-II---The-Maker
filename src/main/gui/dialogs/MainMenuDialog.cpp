@@ -6,7 +6,7 @@
  */
 #include "../../include/d2tmh.h"
 
-MainMenuDialog::MainMenuDialog(cRectangle * rect) : GuiShape(rect) {
+MainMenuDialog::MainMenuDialog(Rectangle * rect) : GuiShape(rect) {
 	newCampaignButton = NULL;
 	newSkirmishButton = NULL;
 	newMultiplayerButton = NULL;

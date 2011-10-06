@@ -28,7 +28,7 @@
 // TODO: constructor/destructor
 
 // init
-void cParticle::init() {
+void Particle::init() {
 	// used or not:
 	bAlive = false; // alive
 
@@ -54,22 +54,22 @@ void cParticle::init() {
 }
 
 // valid
-bool cParticle::isValid() {
+bool Particle::isValid() {
 	return bAlive;
 }
 
 // absolute pixel position
-int cParticle::draw_x() {
+int Particle::draw_x() {
 	return (x - (mapCamera->getX() * 32));
 }
 
 // absolute pixel position
-int cParticle::draw_y() {
+int Particle::draw_y() {
 	return (y - (mapCamera->getY() * 32));
 }
 
 // draw
-void cParticle::draw() {
+void Particle::draw() {
 
 	int dx = draw_x();
 	int dy = draw_y();
@@ -122,7 +122,7 @@ void cParticle::draw() {
 }
 
 // think
-void cParticle::think() {/*
+void Particle::think() {/*
  if (iType == PARTYPE_SMOKE)
  {
 

@@ -234,7 +234,7 @@ void cGame::combat_mouse() {
 
 		if (context->isMouseOnBattleField()) {
 			if (!mouse->isMouseDraggingRectangle()) {
-				cRectangle * rectangle = mouse->getLastCreatedRectangle();
+				Rectangle * rectangle = mouse->getLastCreatedRectangle();
 				if (rectangle->hasValidCoordinates()) {
 					UNIT_deselect_all();
 
@@ -291,7 +291,7 @@ void cGame::combat_mouse() {
 		} // is mouse on battle field
 		else {
 			if (!mouse->isMouseDraggingRectangle()) {
-				cRectangle * rectangle = mouse->getLastCreatedRectangle();
+				Rectangle * rectangle = mouse->getLastCreatedRectangle();
 				rectangle->resetCoordinates();
 			}
 		}

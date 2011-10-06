@@ -13,7 +13,7 @@
 #include "../../include/d2tmh.h"
 
 #include <math.h>
-void cBullet::init() {
+void Projectile::init() {
 	bAlive = false; // alive or not?, when dying, a particle is created
 
 	iCell = -1; // cell of bullet
@@ -37,16 +37,16 @@ void cBullet::init() {
 
 }
 
-int cBullet::draw_x() {
+int Projectile::draw_x() {
 	return (((iCellGiveX(iCell) * 32) - (mapCamera->getX() * 32)) + iOffsetX);
 }
 
-int cBullet::draw_y() {
+int Projectile::draw_y() {
 	return (((iCellGiveY(iCell) * 32) - (mapCamera->getY() * 32)) + iOffsetY) + 42;
 }
 
 // draw the bullet
-void cBullet::draw() {
+void Projectile::draw() {
 	int x = draw_x();
 	int y = draw_y();
 
@@ -94,7 +94,7 @@ void cBullet::draw() {
 	return;
 }
 
-void cBullet::think() {
+void Projectile::think() {
 
 	// frame animation first
 	TIMER_frame++;
@@ -146,7 +146,7 @@ void cBullet::think() {
 	think_move();
 }
 
-void cBullet::think_move() {
+void Projectile::think_move() {
 	// now move
 	int cx = iCellGiveX(iGoalCell);
 	int cy = iCellGiveY(iGoalCell);

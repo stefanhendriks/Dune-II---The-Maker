@@ -242,7 +242,7 @@ bool cStructureUtils::isMouseOverStructure(cMouse *mouse, cAbstractStructure *st
 	assert(structure);
 	assert(mouse);
 
-	cRectangle * rectangle = structure->getRectangle();
+	Rectangle * rectangle = structure->getRectangle();
 	return mouse->isOverRectangle(rectangle);
 }
 

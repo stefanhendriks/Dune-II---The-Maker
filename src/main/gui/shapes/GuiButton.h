@@ -10,13 +10,13 @@
 
 #include "allegro.h"
 
-#include "../../gameobjects/cRectangle.h"
+#include "../../gameobjects/Rectangle.h"
 #include "GuiShape.h"
 
 class GuiButton : public GuiShape {
 
 	public:
-		GuiButton(cRectangle * rect, std::string theLabel);
+		GuiButton(Rectangle * rect, std::string theLabel);
 		GuiButton(int x, int y, int width, int height, std::string theLabel);
 		~GuiButton();
 

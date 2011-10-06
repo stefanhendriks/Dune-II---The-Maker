@@ -2,7 +2,7 @@
 
 extern BITMAP *bmp_screen;
 
-GuiButton::GuiButton(cRectangle * rect, std::string theLabel) : GuiShape(rect) {
+GuiButton::GuiButton(Rectangle * rect, std::string theLabel) : GuiShape(rect) {
 	drawPressedWhenMouseHovers = false;
 	bitmap = NULL;
 	label = &theLabel;

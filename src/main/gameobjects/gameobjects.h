@@ -8,7 +8,7 @@
 #ifndef GAMEOBJECTS_H2_
 #define GAMEOBJECTS_H2_
 
-#include "cRectangle.h"
+#include "Rectangle.h"
 
 // GAME
 #include "../cGame.h"
@@ -25,11 +25,11 @@
 #include "units/cAbstractUnit.h"					// Abstract Unit class (will replace cUnit.h eventually)
 #include "units/cUnitFactory.h"				// Responsible for creation of Units
 #include "units/cUnitUtils.h"				// Responsible for generic operations on units (ie finding a unit, etc)
-// particles (explosion types, etc)
-#include "particles/cParticle.h"                       // explosion animations and such
-// bullet/projectiles
-#include "projectiles/bullet.h"                         // bullets
-// regions drawn
+
+#include "particles/Particle.h"
+
+#include "projectiles/Projectile.h"
+
 #include "../regions.h"
 
 // CONTROLS (mouse/keyboard)

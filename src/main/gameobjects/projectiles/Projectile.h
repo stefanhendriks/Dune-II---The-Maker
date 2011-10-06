@@ -10,7 +10,7 @@
 
  */
 
-class cBullet {
+class Projectile {
 
 	public:
 

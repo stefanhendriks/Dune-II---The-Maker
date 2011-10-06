@@ -28,7 +28,7 @@ class cMouse {
 
 		bool isMouseDraggingRectangle() { return mouseDraggingRectangle; }
 
-		bool isOverRectangle(cRectangle * rect);
+		bool isOverRectangle(Rectangle * rect);
 		bool isOverRectangleUsingWidthAndHeight(int rectX, int rectY, int width, int height);
 		bool isOverRectangleUsingCoordinates(int rectX, int rectY, int rectEndX, int rectEndY);
 
@@ -40,8 +40,8 @@ class cMouse {
 		int getMouseTile() { return tile; }
 
 		void positionMouseCursor(int x, int y);
-		cRectangle *getLastCreatedRectangle() {  return &lastCreatedRectangle;  }
-		cRectangle *getCurrentDrawingRectangle() { return &currentRectangle; }
+		Rectangle *getLastCreatedRectangle() {  return &lastCreatedRectangle;  }
+		Rectangle *getCurrentDrawingRectangle() { return &currentRectangle; }
 
 protected:
 	~cMouse();
@@ -61,8 +61,8 @@ private:
     int x, y, z;
     int zValuePreviousFrame;
     int tile;
-    cRectangle currentRectangle;
-    cRectangle lastCreatedRectangle;
+    Rectangle currentRectangle;
+    Rectangle lastCreatedRectangle;
     void doRectangleLogic();
 };
 

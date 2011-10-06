@@ -28,7 +28,7 @@ class cAbstractStructure {
 
 		int id;
 
-		cRectangle * rectangle;
+		Rectangle * rectangle;
 
 	protected:
 		int iWidth; // width in cells (set by factory)
@@ -195,7 +195,7 @@ class cAbstractStructure {
 
 		void damage(int hp); // damage structure for x amount of hp
 
-		cRectangle * getRectangle();
+		Rectangle * getRectangle();
 
 		int getWidthInPixels();
 		int getHeightInPixels();

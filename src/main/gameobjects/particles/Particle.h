@@ -1,4 +1,4 @@
-/* 
+/*
 
  Dune II - The Maker
 
@@ -10,11 +10,7 @@
 
  */
 
-// - see in .cpp file what it is
-
-//
-
-class cParticle {
+class Particle {
 	public:
 
 		// used or not:

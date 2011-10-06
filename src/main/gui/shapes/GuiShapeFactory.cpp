@@ -11,7 +11,7 @@ GuiShapeFactory::GuiShapeFactory(cScreenResolution * theScreenResolution) {
 GuiShapeFactory::~GuiShapeFactory() {
 }
 
-GuiButton * GuiShapeFactory::createGrayButton(cRectangle * rect, std::string theLabel) {
+GuiButton * GuiShapeFactory::createGrayButton(Rectangle * rect, std::string theLabel) {
 	GuiButton * button = new GuiButton(rect, theLabel);
 	button->setColors(defaultGreyColorDarkerBorder, defaultGreyColorLighterBorder, defaultGreyColorInner);
 	return button;
@@ -32,7 +32,7 @@ MainMenuDialog * GuiShapeFactory::createMainMenuDialog() {
 	int endX = centerOfX + halfOfSizeMainMenu;
 	int endY = startY + 142; // 142 pixels height
 
-	cRectangle * rect = new cRectangle();
+	Rectangle * rect = new Rectangle();
 	rect->setStartX(startX);
 	rect->setStartY(startY);
 	rect->setEndX(endX);

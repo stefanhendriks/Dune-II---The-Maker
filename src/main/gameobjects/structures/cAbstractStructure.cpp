@@ -50,7 +50,7 @@ cAbstractStructure::cAbstractStructure() {
 	TIMER_damage = 0; // damaging stuff
 	TIMER_prebuild = 0;
 
-	rectangle = new cRectangle();
+	rectangle = new Rectangle();
 }
 
 cAbstractStructure::~cAbstractStructure() {
@@ -450,7 +450,7 @@ int cAbstractStructure::getPowerUsage() {
 	return structure.power_drain;
 }
 
-cRectangle * cAbstractStructure::getRectangle() {
+Rectangle * cAbstractStructure::getRectangle() {
 	int drawX = iDrawX();
 	int drawY = iDrawY();
 	int width = getWidthInPixels();

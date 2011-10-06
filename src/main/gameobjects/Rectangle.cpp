@@ -1,28 +1,21 @@
-/*
- * cRectangle.cpp
- *
- *  Created on: 22-aug-2011
- *      Author: Stefan
- */
+#include "Rectangle.h"
 
-#include "cRectangle.h"
-
-cRectangle::cRectangle() {
+Rectangle::Rectangle() {
 	startX = startY = endX = endY = -1;
 }
 
-cRectangle::cRectangle(int startX, int startY, int endX, int endY) {
+Rectangle::Rectangle(int startX, int startY, int endX, int endY) {
 	setStartX(startX);
 	setStartY(startY);
 	setEndX(endX);
 	setEndY(endY);
 }
 
-cRectangle::~cRectangle() {
+Rectangle::~Rectangle() {
 	startX = startY = endX = endY = -1;
 }
 
-void cRectangle::setCoordinates(cRectangle * otherRectangle) {
+void Rectangle::setCoordinates(Rectangle * otherRectangle) {
 	if (otherRectangle) {
 		startX = otherRectangle->getStartX();
 		startY = otherRectangle->getStartY();
@@ -31,6 +24,6 @@ void cRectangle::setCoordinates(cRectangle * otherRectangle) {
 	}
 }
 
-bool cRectangle::isCoordinateWithinRectangle(int x, int y) {
+bool Rectangle::isCoordinateWithinRectangle(int x, int y) {
 	return ((x >= getLowestX() && x <= getHighestX()) && (y >= getLowestY() && y <= getHighestY()));
 }

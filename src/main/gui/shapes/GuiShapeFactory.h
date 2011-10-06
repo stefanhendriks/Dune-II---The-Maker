@@ -15,7 +15,7 @@ class GuiShapeFactory {
 
 		GuiButton * createButtonWithBitmap(int x, int y, BITMAP * bmp, std::string theLabel);
 
-		GuiButton * createGrayButton(cRectangle * rect, std::string theLabel);
+		GuiButton * createGrayButton(Rectangle * rect, std::string theLabel);
 
 		MainMenuDialog * createMainMenuDialog();
 
