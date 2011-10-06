@@ -10,7 +10,7 @@
 class GuiShapeFactory {
 
 	public:
-		GuiShapeFactory(cScreenResolution * theScreenResolution);
+		GuiShapeFactory(ScreenResolution * theScreenResolution);
 		~GuiShapeFactory();
 
 		GuiButton * createButtonWithBitmap(int x, int y, BITMAP * bmp, std::string theLabel);
@@ -25,7 +25,7 @@ class GuiShapeFactory {
 		int defaultGreyColorInner;
 		int defaultGreyColorLighterBorder;
 		int defaultGreyColorDarkerBorder;
-		cScreenResolution * screenResolution;
+		ScreenResolution * screenResolution;
 };
 
 #endif /* CGUISHAPEFACTORY_H_ */

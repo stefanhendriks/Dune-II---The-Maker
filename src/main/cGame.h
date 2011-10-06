@@ -15,7 +15,7 @@
 #include "movie/cMoviePlayer.h"
 #include "utils/cSoundPlayer.h"
 
-#include "gameobjects/cScreenResolution.h"
+#include "gameobjects/ScreenResolution.h"
 
 #include "include/GameState.h"
 
@@ -142,11 +142,11 @@ class cGame {
 			moviePlayer = value;
 		}
 
-		cScreenResolution * getScreenResolution() {
+		ScreenResolution * getScreenResolution() {
 			return screenResolution;
 		}
 
-		void setScreenResolution(cScreenResolution * newScreenResolution) {
+		void setScreenResolution(ScreenResolution * newScreenResolution) {
 			if (screenResolution) {
 				delete screenResolution;
 			}
@@ -157,11 +157,11 @@ class cGame {
 			}
 		}
 
-		cScreenResolution *getScreenResolutionFromIni() {
+		ScreenResolution *getScreenResolutionFromIni() {
 			return screenResolutionFromIni;
 		}
 
-		void setScreenResolutionFromIni(cScreenResolution * newScreenResolution) {
+		void setScreenResolutionFromIni(ScreenResolution * newScreenResolution) {
 			screenResolutionFromIni = newScreenResolution;
 		}
 
@@ -207,8 +207,8 @@ class cGame {
 		// variables
 		GameState state;
 
-		cScreenResolution * screenResolution;
-		cScreenResolution * screenResolutionFromIni;
+		ScreenResolution * screenResolution;
+		ScreenResolution * screenResolutionFromIni;
 
 		int iMaxVolume;
 

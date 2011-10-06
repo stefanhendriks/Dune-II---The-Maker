@@ -1,19 +1,12 @@
-/*
- * cScreenResolution.h
- *
- *  Created on: 24 dec. 2010
- *      Author: Stefan
- */
-
 #ifndef CSCREENRESOLUTION_H_
 #define CSCREENRESOLUTION_H_
 
-class cScreenResolution {
+class ScreenResolution {
 
 	public:
-		cScreenResolution(int theWidth, int theHeight);
-		cScreenResolution();
-		~cScreenResolution();
+		ScreenResolution(int theWidth, int theHeight);
+		ScreenResolution();
+		~ScreenResolution();
 
 		int getWidth() {
 			return width;
@@ -26,14 +19,14 @@ class cScreenResolution {
 			return tested;
 		}
 		bool isUsable() {
-			return usable;
+			return canBeUsed;
 		}
 
 		void setTested(bool value) {
 			tested = value;
 		}
 		void setUsable(bool value) {
-			usable = value;
+			canBeUsed = value;
 		}
 
 		void setWidth(int value) {
@@ -48,7 +41,7 @@ class cScreenResolution {
 	private:
 		int width, height;
 
-		bool usable; // can this resolution be used?
+		bool canBeUsed;
 		bool tested;
 };
 #endif /* CSCREENRESOLUTION_H_ */

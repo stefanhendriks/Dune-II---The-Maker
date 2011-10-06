@@ -18,7 +18,7 @@
 #include "drawers/AllegroDrawer.h"
 
 cGame::cGame() {
-	screenResolution = new cScreenResolution(800, 600);
+	screenResolution = new ScreenResolution(800, 600);
 	screenResolutionFromIni = NULL;
 	moviePlayer = NULL;
 	soundPlayer = NULL;
@@ -2162,12 +2162,12 @@ void cGame::shutdown() {
 }
 
 bool cGame::isResolutionInGameINIFoundAndSet() {
-	cScreenResolution * resolution = getScreenResolutionFromIni();
+	ScreenResolution * resolution = getScreenResolutionFromIni();
 	return (resolution && resolution->getWidth() > -1 && resolution->getHeight() > -1);
 }
 
 void cGame::setScreenResolutionFromGameIniSettings() {
-	cScreenResolution * screenResolutionFromIni = getScreenResolutionFromIni();
+	ScreenResolution * screenResolutionFromIni = getScreenResolutionFromIni();
 	setScreenResolution(screenResolutionFromIni);
 	char msg[255];
 	sprintf(msg, "Setting up %dx%d resolution from ini file.", screenResolutionFromIni->getWidth(), screenResolutionFromIni->getHeight());
@@ -2343,7 +2343,7 @@ bool cGame::setupGame() {
 		if (shouldFindBestScreenResolution) {
 			cBestScreenResolutionFinder bestScreenResolutionFinder;
 			bestScreenResolutionFinder.checkResolutions();
-			cScreenResolution * aquiredScreenResolution = bestScreenResolutionFinder.aquireBestScreenResolutionFullScreen();
+			ScreenResolution * aquiredScreenResolution = bestScreenResolutionFinder.aquireBestScreenResolutionFullScreen();
 			if (aquiredScreenResolution) {
 				setScreenResolution(aquiredScreenResolution);
 			}
@@ -2410,7 +2410,7 @@ bool cGame::setupGame() {
 	 Bitmap Creation
 	 ***/
 
-	cScreenResolution * currentScreenResolution = getScreenResolution();
+	ScreenResolution * currentScreenResolution = getScreenResolution();
 	assert(currentScreenResolution);
 
 	int width = currentScreenResolution->getWidth();

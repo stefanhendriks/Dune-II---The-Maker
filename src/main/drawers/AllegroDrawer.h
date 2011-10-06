@@ -1,11 +1,11 @@
 #ifndef CALLEGRODRAWER_H_
 #define CALLEGRODRAWER_H_
 
-#include "../gameobjects/cScreenResolution.h"
+#include "../gameobjects/ScreenResolution.h"
 
 class AllegroDrawer {
 	public:
-		AllegroDrawer(cScreenResolution * theScreenResolution);
+		AllegroDrawer(ScreenResolution * theScreenResolution);
 		AllegroDrawer();
 		virtual ~AllegroDrawer();
 
@@ -20,7 +20,7 @@ class AllegroDrawer {
 		int getCenteredYPosForBitmap(BITMAP *bmp);
 
 	private:
-		cScreenResolution * screenResolution;
+		ScreenResolution * screenResolution;
 };
 
 #endif /* CALLEGRODRAWER_H_ */

@@ -14,15 +14,15 @@ cBestScreenResolutionFinder::cBestScreenResolutionFinder() {
 	memset(screenResolutions, 0, sizeof(screenResolutions));
 
 	// order is from 'biggest' to smallest best resolution
-	screenResolutions[0] = new cScreenResolution(1920, 1200);
-	screenResolutions[1] = new cScreenResolution(1920, 1080);
-	screenResolutions[2] = new cScreenResolution(1600, 1050);
-	screenResolutions[3] = new cScreenResolution(1600, 900);
-	screenResolutions[4] = new cScreenResolution(1366, 768);
-	screenResolutions[5] = new cScreenResolution(1280, 1024);
-	screenResolutions[6] = new cScreenResolution(1280, 800);
-	screenResolutions[7] = new cScreenResolution(1027, 768);
-	screenResolutions[8] = new cScreenResolution(800, 600);
+	screenResolutions[0] = new ScreenResolution(1920, 1200);
+	screenResolutions[1] = new ScreenResolution(1920, 1080);
+	screenResolutions[2] = new ScreenResolution(1600, 1050);
+	screenResolutions[3] = new ScreenResolution(1600, 900);
+	screenResolutions[4] = new ScreenResolution(1366, 768);
+	screenResolutions[5] = new ScreenResolution(1280, 1024);
+	screenResolutions[6] = new ScreenResolution(1280, 800);
+	screenResolutions[7] = new ScreenResolution(1027, 768);
+	screenResolutions[8] = new ScreenResolution(800, 600);
 }
 
 cBestScreenResolutionFinder::~cBestScreenResolutionFinder() {
@@ -83,7 +83,7 @@ void cBestScreenResolutionFinder::setMatchingScreenResolutionsToTestedAndUsable(
 
 		// we match only 16 bit color depth modes, as we use 16bpp in fullscreen mode
 		if (mode.bpp == 16) {
-			cScreenResolution * screenResolution = findMatchingScreenResolution(mode.width, mode.height);
+			ScreenResolution * screenResolution = findMatchingScreenResolution(mode.width, mode.height);
 			if (screenResolution) {
 				screenResolution->setUsable(true);
 				screenResolution->setTested(true);
@@ -92,9 +92,9 @@ void cBestScreenResolutionFinder::setMatchingScreenResolutionsToTestedAndUsable(
 	}
 }
 
-cScreenResolution * cBestScreenResolutionFinder::findMatchingScreenResolution(int width, int height) {
+ScreenResolution * cBestScreenResolutionFinder::findMatchingScreenResolution(int width, int height) {
 	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i++) {
-		cScreenResolution * screenResolution = screenResolutions[i];
+		ScreenResolution * screenResolution = screenResolutions[i];
 		if (screenResolution) {
 			if (screenResolution->getWidth() == width && screenResolution->getHeight() == height) {
 				return screenResolution;
@@ -106,7 +106,7 @@ cScreenResolution * cBestScreenResolutionFinder::findMatchingScreenResolution(in
 
 void cBestScreenResolutionFinder::detectScreenResolutionsByTestingThemOut() {
 	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i++) {
-		cScreenResolution * screenResolution = screenResolutions[i];
+		ScreenResolution * screenResolution = screenResolutions[i];
 		if (screenResolution) {
 			int screen_x = screenResolution->getWidth();
 			int screen_y = screenResolution->getHeight();
@@ -118,9 +118,9 @@ void cBestScreenResolutionFinder::detectScreenResolutionsByTestingThemOut() {
 	}
 }
 
-cScreenResolution * cBestScreenResolutionFinder::aquireBestScreenResolutionFullScreen() {
+ScreenResolution * cBestScreenResolutionFinder::aquireBestScreenResolutionFullScreen() {
 	for (int i = 0; i < MAX_SCREENRESOLUTIONS; i++) {
-		cScreenResolution * screenResolution = screenResolutions[i];
+		ScreenResolution * screenResolution = screenResolutions[i];
 		if (screenResolution) {
 			if (screenResolution->isTested()) {
 				if (screenResolution->isUsable()) {
@@ -135,7 +135,7 @@ cScreenResolution * cBestScreenResolutionFinder::aquireBestScreenResolutionFullS
 					sprintf(msg, "setting up full screen mode with resolution %dx%d, result code: %d", screenResolution->getWidth(), screenResolution->getHeight(), r);
 					logbook(msg);
 					if (r > -1) {
-						return new cScreenResolution(screenResolution->getWidth(), screenResolution->getHeight());
+						return new ScreenResolution(screenResolution->getWidth(), screenResolution->getHeight());
 					}
 				}
 			}

@@ -7,7 +7,7 @@
 AllegroDrawer::AllegroDrawer() {
 }
 
-AllegroDrawer::AllegroDrawer(cScreenResolution * theScreenResolution) {
+AllegroDrawer::AllegroDrawer(ScreenResolution * theScreenResolution) {
 	screenResolution = theScreenResolution;
 }
 

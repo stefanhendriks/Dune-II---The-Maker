@@ -1,6 +1,6 @@
 #include "../../include/d2tmh.h"
 
-GuiShapeFactory::GuiShapeFactory(cScreenResolution * theScreenResolution) {
+GuiShapeFactory::GuiShapeFactory(ScreenResolution * theScreenResolution) {
 	assert(theScreenResolution);
 	defaultGreyColorInner  = makecol(176, 176, 196);
 	defaultGreyColorLighterBorder = makecol(252, 252, 252);

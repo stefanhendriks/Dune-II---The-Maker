@@ -1,21 +1,14 @@
-/*
- * cGameObject.h
- *
- *  Created on: 7-nov-2010
- *      Author: Stefan
- */
-
 // a game object is the most super class of all game objects
 // it has the bare bones that all other objects (structures, units, bullets, etc) use.
 
 #ifndef CGAMEOBJECT_H_
 #define CGAMEOBJECT_H_
 
-class cGameObject {
+class GameObject {
 
 	public:
-		cGameObject();
-		~cGameObject();
+		GameObject();
+		~GameObject();
 
 		void setX(int value) {
 			x = value;

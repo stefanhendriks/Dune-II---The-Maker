@@ -2344,7 +2344,7 @@ void INI_Install_Game(string filename) {
 			}
 
 			if (section == INI_SETTINGS) {
-				cScreenResolution * screenResolution = NULL;
+				ScreenResolution * screenResolution = NULL;
 				switch (wordtype) {
 					case WORD_FULLSCREEN:
 						game.windowed = (INI_WordValueBOOL(linefeed) == false);
@@ -2353,7 +2353,7 @@ void INI_Install_Game(string filename) {
 						int width = INI_WordValueINT(linefeed);
 						screenResolution = game.getScreenResolutionFromIni();
 						if (screenResolution == NULL) {
-							screenResolution = new cScreenResolution();
+							screenResolution = new ScreenResolution();
 							game.setScreenResolutionFromIni(screenResolution);
 						}
 						screenResolution->setWidth(width);
@@ -2362,7 +2362,7 @@ void INI_Install_Game(string filename) {
 						int height = INI_WordValueINT(linefeed);
 						screenResolution = game.getScreenResolutionFromIni();
 						if (screenResolution == NULL) {
-							screenResolution = new cScreenResolution();
+							screenResolution = new ScreenResolution();
 							game.setScreenResolutionFromIni(screenResolution);
 						}
 						screenResolution->setHeight(height);
