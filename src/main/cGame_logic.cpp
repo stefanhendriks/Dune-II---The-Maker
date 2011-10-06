@@ -914,19 +914,24 @@ void cGame::setupSkirmishState() {
 	draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, (screenWidth - 640), (int)(screenHeight * 0.72));
 
 	// title box
-	GUI_DRAW_FRAME(-1, -1, screenWidth + 2, 21);
+	GuiShape * guiShape = new GuiShape(-1, -1, screenWidth + 2, 21);
+	guiShape->draw();
+	delete guiShape;
 
 	TextDrawer * textDrawer = new TextDrawer(bene_font);
 	textDrawer->drawTextCentered("Skirmish", 2);
 
-
 	// box at the right
 	int mapBoxX = (screenWidth - 276);
-	GUI_DRAW_FRAME(mapBoxX, 21, 276, screenHeight);
+	guiShape = new GuiShape(mapBoxX, 21, 276, screenHeight);
+	guiShape->draw();
+	delete guiShape;
 
 	// draw box for map data
 	int previewMapX = (screenWidth - 130);
-	GUI_DRAW_FRAME(previewMapX, 26, 129, 129);
+	guiShape = new GuiShape(previewMapX, 26, 129, 129);
+	guiShape->draw();
+	delete guiShape;
 
 	// rectangle for map list
 	rectfill(bmp_screen, 366, (26 + 128) + 4, 638, 461, makecol(32, 32, 32));
@@ -1000,7 +1005,10 @@ void cGame::setupSkirmishState() {
 	int iDrawY = -1;
 	int iDrawX = screenWidth - 273;
 
-	GUI_DRAW_FRAME_PRESSED(iDrawX, 159, 254, 17);
+	guiShape = new GuiShape(iDrawX, 159, 254, 17);
+	//guiShape->setPressed(true);
+	guiShape->draw();
+	delete guiShape;
 
 	alfont_textprintf(bmp_screen, bene_font, 447, 160, makecol(0, 0, 0), "Map List");
 
@@ -1027,11 +1035,17 @@ void cGame::setupSkirmishState() {
 
 			iDrawY = 159 + (i * iHeightPixels) + i + iHeightPixels; // skip 1 bar because the 1st = 'random map'
 
-			bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, 254, iHeightPixels);
+			guiShape = new GuiShape(iDrawX, iDrawY, 254, iHeightPixels);
+			bHover = guiShape->isMouseOverShape();
+			delete guiShape;
+
 			iColor = makecol(255, 255, 255);
 
 			if (bHover) {
-				GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, 254, iHeightPixels);
+				guiShape = new GuiShape(iDrawX, iDrawY, 254, iHeightPixels);
+				//guiShape->setPressed(true);
+				guiShape->draw();
+				delete guiShape;
 
 				iColor = makecol(255, 207, 41);
 
@@ -1253,7 +1267,9 @@ void cGame::setupSkirmishState() {
 	}
 
 	// bottom bar
-	GUI_DRAW_FRAME(0, (screenHeight - 21), screenWidth + 2, 21);
+	guiShape = new GuiShape(0, (screenHeight - 21), screenWidth + 2, 21);
+	guiShape->draw();
+	delete guiShape;
 
 	// back
 	textDrawer->drawTextBottomLeft("BACK");

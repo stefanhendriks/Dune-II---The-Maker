@@ -10,6 +10,5 @@
 
 // GUI
 #include "../gui/guih.h"
-#include "../gui.h"
 
 #endif /* GUI_H_ */
