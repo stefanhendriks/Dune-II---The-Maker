@@ -28,7 +28,7 @@ void cGame::losingState() {
 
 	if (cMouse::getInstance()->isLeftButtonClicked()) {
 		// OMG, MENTAT IS NOT HAPPY
-		state = LOSEBRIEF;
+		gameStateEnum = LOSEBRIEF;
 
 		if (bSkirmish) {
 			game.mission_init();
@@ -52,7 +52,7 @@ void cGame::winningState() {
 
 	if (cMouse::getInstance()->isLeftButtonClicked()) {
 		// SELECT YOUR NEXT CONQUEST
-		state = WINBRIEF;
+		gameStateEnum = WINBRIEF;
 
 		if (bSkirmish) {
 			game.mission_init();

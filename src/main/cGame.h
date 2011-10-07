@@ -18,6 +18,7 @@
 #include "gameobjects/ScreenResolution.h"
 
 #include "include/GameState.h"
+#include "states/State.h"
 
 class cGame {
 
@@ -205,7 +206,8 @@ class cGame {
 		bool isDoneFadingOut();
 
 		// variables
-		GameState state;
+		GameState gameStateEnum;
+		State state;
 
 		ScreenResolution * screenResolution;
 		ScreenResolution * screenResolutionFromIni;

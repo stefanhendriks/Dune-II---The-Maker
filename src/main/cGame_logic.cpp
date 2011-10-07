@@ -25,12 +25,13 @@ cGame::cGame() {
 	moviePlayer = NULL;
 	soundPlayer = NULL;
 	windowed = true;
-	state = MAINMENU;
+	gameStateEnum = MAINMENU;
 	iMaxVolume = 255;
 	mapUtils = NULL;
 	map = NULL;
 	mapCamera = NULL;
 	gameDrawer = NULL;
+	state = NULL;
 	memset(revision, 0, sizeof(revision));
 	memset(version, 0, sizeof(version));
 	sprintf(version, "0.4.6");
@@ -76,7 +77,7 @@ void cGame::init() {
 
 	paths_created = 0;
 
-	state = MAINMENU;
+	gameStateEnum = MAINMENU;
 
 	iWinQuota = -1; // > 0 means, get this to win the mission, else, destroy all!
 
@@ -263,7 +264,7 @@ void cGame::think_winlose() {
 
 		draw_sprite(bmp_winlose, (BITMAP *) gfxinter[BMP_WINNING].dat, 77, 182);
 	} else if (!humanPlayerAlive) {
-		state = LOSING;
+		gameStateEnum = LOSING;
 
 		shake_x = 0;
 		shake_y = 0;
@@ -668,12 +669,12 @@ void cGame::briefingState(int iType) {
 					playMusicByType(MUSIC_PEACE);
 				} else if (isState(WINBRIEF)) {
 					if (bSkirmish) {
-						state = SETUPSKIRMISH;
+						gameStateEnum = SETUPSKIRMISH;
 						playMusicByType(MUSIC_MENU);
 						bSkirmish = false;
 					} else {
 
-						state = NEXTCONQUEST;
+						gameStateEnum = NEXTCONQUEST;
 						REGION_SETUP(game.iMission, game.iHouse);
 
 						// PLAY THE MUSIC
@@ -686,12 +687,12 @@ void cGame::briefingState(int iType) {
 					bFadeOut = true;
 				} else if (isState(LOSEBRIEF)) {
 					if (bSkirmish) {
-						state = SETUPSKIRMISH;
+						gameStateEnum = SETUPSKIRMISH;
 						playMusicByType(MUSIC_MENU);
 						bSkirmish = false;
 					} else {
 						if (game.iMission > 1) {
-							state = NEXTCONQUEST;
+							gameStateEnum = NEXTCONQUEST;
 
 							game.iMission--; // we did not win
 							REGION_SETUP(game.iMission, game.iHouse);
@@ -699,7 +700,7 @@ void cGame::briefingState(int iType) {
 							// PLAY THE MUSIC
 							playMusicByType(MUSIC_CONQUEST);
 						} else {
-							state = BRIEFING;
+							gameStateEnum = BRIEFING;
 							playMusicByType(MUSIC_BRIEFING);
 						}
 
@@ -1291,7 +1292,7 @@ void cGame::setupSkirmishState() {
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			bFadeOut = true;
-			state = MAINMENU;
+			gameStateEnum = MAINMENU;
 		}
 	}
 
@@ -1346,7 +1347,7 @@ void cGame::setupSkirmishState() {
 			player[p].setHouse(iHouse);
 		}
 
-		state = PLAYING;
+		gameStateEnum = PLAYING;
 		cGameFactory::getInstance()->createNewDependenciesForGame(PLAYING);
 
 		/* set up starting positions */
@@ -1912,7 +1913,7 @@ void cGame::selectNextConquestState() {
 
 			game.mission_init();
 			game.iRegionState = 0;
-			game.state = BRIEFING;
+			game.gameStateEnum = BRIEFING;
 			game.iRegion = iNewReg;
 			game.iMission++; // FINALLY ADD MISSION NUMBER...
 			//    iRegion++;
@@ -2072,7 +2073,7 @@ void cGame::runGameState() {
 	if (isBusyFadingOut()) {
 		return;
 	}
-	switch (state) {
+	switch (gameStateEnum) {
 		case PLAYING:
 			playingState();
 			break;
@@ -2544,7 +2545,7 @@ bool cGame::setupGame() {
 
 	game.playing = true;
 	game.screenshot = 0;
-	game.state = INITIAL;
+	game.gameStateEnum = INITIAL;
 
 	// Mentat class pointer set at null
 	Mentat = NULL;
@@ -2581,9 +2582,9 @@ bool cGame::setupGame() {
 }
 
 bool cGame::isState(GameState theState) {
-	return (state == theState);
+	return (gameStateEnum == theState);
 }
 
 void cGame::setState(GameState theState) {
-	state = theState;
+	gameStateEnum = theState;
 }
