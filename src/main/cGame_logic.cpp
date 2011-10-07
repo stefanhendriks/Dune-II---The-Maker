@@ -67,7 +67,7 @@ void cGame::init() {
 	memset(iRegionHouse, -1, sizeof(iRegionHouse));
 	memset(cRegionText, 0, sizeof(cRegionText));
 
-	soundEnabled = false;
+	soundEnabled = true;
 	mp3MusicEnabled = false;
 
 	iSkirmishMap = -1;
@@ -238,9 +238,6 @@ void cGame::think_winlose() {
 
 		for (int i = (HUMAN + 1); i < AI_WORM; i++) {
 			isAnyAIPlayerAlive = playerHasAnyStructures(i) || playerHasAnyGroundUnits(i);
-//			char msg[255];
-//			sprintf(msg, "is player with id %d alive? -> %d", i, isAnyAIPlayerAlive);
-//			logbook(msg);
 			if (isAnyAIPlayerAlive) {
 				break;
 			}
@@ -752,7 +749,8 @@ void cGame::menuState() {
 		alfont_textprintf(bmp_screen, bene_font, 261, 323, makecol(255, 0, 0), "Campaign");
 
 		if (cMouse::getInstance()->isLeftButtonClicked()) {
-			switchStateTo(SELECTHOUSE);
+			//switchStateTo(SELECTHOUSE);
+			switchStateTo(MAINMENU);
 		}
 
 	} else {
