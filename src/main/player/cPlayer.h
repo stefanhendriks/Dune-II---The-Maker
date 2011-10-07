@@ -24,6 +24,20 @@
 class cGameControlsContext;
 #endif
 
+#include "allegro.h"
+
+#include "cPlayerDifficultySettings.h"
+
+#include "../include/definitions.h"
+
+#include "../building/cItemBuilder.h"
+#include "../sidebar/cSideBar.h"
+#include "../upgrade/cBuildingListUpdater.h"
+#include "../upgrade/cUpgradeBuilder.h"
+
+#include "../gameobjects/structures/cStructurePlacer.h"
+#include "../gameobjects/structures/cOrderProcesser.h"
+
 class cPlayer {
 
 	public:

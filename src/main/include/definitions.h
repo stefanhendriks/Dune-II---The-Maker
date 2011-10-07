@@ -10,8 +10,6 @@
 
 #define DEBUGGING bDoDebug
 
-#define IDEAL_FPS	60
-
 // MAP ID
 #define MAPID_UNITS  0
 #define MAPID_STRUCTURES 1

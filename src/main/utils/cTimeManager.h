@@ -15,6 +15,7 @@
  */
 
 #ifndef CTIMEMANAGER_H
+#define CTIMEMANAGER_H
 
 class cTimeManager {
 

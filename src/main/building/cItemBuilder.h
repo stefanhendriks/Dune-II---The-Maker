@@ -13,8 +13,13 @@
 #ifndef CITEMBUILDER_H_
 #define CITEMBUILDER_H_
 
+#include "../include/definitions.h"
+#include "../sidebar/cBuildingListItem.h"
+
+
 // forward declaration
 class cPlayer;
+
 
 class cItemBuilder {
 

@@ -1,12 +1,10 @@
-/*
- * cBuildingListUpgrader.h
- *
- *  Created on: Aug 1, 2009
- *      Author: Stefan
- */
-
 #ifndef CBUILDINGLISTUPDATER_H_
 #define CBUILDINGLISTUPDATER_H_
+
+#include "../sidebar/cBuildingList.h"
+#include "../sidebar/cSideBar.h"
+
+// FIXME: / TODO: CYCLIC DEPENDENCY WITH PLAYER CLASS!!
 
 class cBuildingListUpdater {
 	public:

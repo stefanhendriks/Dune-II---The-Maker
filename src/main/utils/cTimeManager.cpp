@@ -44,6 +44,12 @@ void cTimeManager::handleTimerFPS() {
 	while (timerSecond > 0) {
 		gameTime++;
 
+		// TODO: this should now call some state specific concrete implementation. Don't use if-statements
+		// here! Either:
+		// - delegate back to the state who called you, with specific functions for per second/tenth/hundred a second
+		// - have for each state a seperate TimeManager, extending from the AbstractTimeManager which would be this
+		//   class and execute that.
+
 		if (game.isState(PLAYING)) {
 			game.paths_created = 0;
 
@@ -72,18 +78,10 @@ void cTimeManager::handleTimerFPS() {
 		// Frame Per Second counter
 		fps = frame_count;
 
-		// 'auto resting'
-		if (fps < IDEAL_FPS) {
-			if (iRest > 0)
-				iRest -= 6;
-			if (iRest < 0)
-				iRest = 0;
-		} else {
-			if (iRest < 500)
-				iRest += 2;
-			if (iRest > 500)
-				iRest = 500;
-		}
+		// RESTMANAGER
+		// TODO: / refactor the restManager into the state class, and let an abstractState class handle basic
+		// time handling. Then, offer methods to put own state specific logic in there. RestManager is something used
+		// by all states anyway!
 
 		// log the status
 		frame_count = 0;

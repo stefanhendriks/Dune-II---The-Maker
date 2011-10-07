@@ -24,7 +24,6 @@ void timer_fps();
 
 // Process 'extern' stuff, so we can access our classes
 extern bool		bDoDebug;
-extern int		iRest;	// rest value
 
 // game
 extern cGame		  game;

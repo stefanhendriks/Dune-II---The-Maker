@@ -12,6 +12,9 @@
 class cBuildingList;
 #endif
 
+#include "eBuildType.h"
+#include "../include/structs.h"
+
 class cBuildingListItem {
 
 	public:

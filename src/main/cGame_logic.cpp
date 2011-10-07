@@ -2023,11 +2023,6 @@ int cGame::getGroupNumberFromKeyboard() {
 	return 0;
 }
 
-void cGame::handleTimeSlicing() {
-	if (iRest > 0) {
-		rest(iRest);
-	}
-}
 
 void cGame::shakeScreenAndBlitBuffer() {
 	if (TIMER_shake == 0) {
@@ -2138,7 +2133,6 @@ void cGame::run() {
 	while (playing) {
 		TimeManager.processTime();
 		updateState();
-		handleTimeSlicing();
 		runGameState();
 		assert(interactionManager);
 		interactionManager->interactWithKeyboard();

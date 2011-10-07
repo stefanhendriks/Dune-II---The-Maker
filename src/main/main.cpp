@@ -15,7 +15,6 @@
 using namespace std;
 
 bool bDoDebug = false;
-int iRest = 1; // default rest value
 
 // the ultimate game variable(s)
 cGame game;

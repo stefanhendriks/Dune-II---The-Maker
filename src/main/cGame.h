@@ -171,6 +171,8 @@ class cGame {
 		// TODO: split it up in a draw and logic
 		void combat_mouse();
 
+		State * getState() { return state; }
+
 	private:
 		bool isBusyFadingOut();
 
@@ -207,7 +209,7 @@ class cGame {
 
 		// variables
 		GameState gameStateEnum;
-		State state;
+		State * state;
 
 		ScreenResolution * screenResolution;
 		ScreenResolution * screenResolutionFromIni;

@@ -11,6 +11,8 @@
 #ifndef CUPGRADEBUILDER_H_
 #define CUPGRADEBUILDER_H_
 
+#include "cListUpgrade.h"
+
 class cUpgradeBuilder {
 	public:
 		cUpgradeBuilder(cPlayer * thePlayer);

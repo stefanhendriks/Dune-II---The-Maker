@@ -15,22 +15,59 @@
 
 #include "../gui/windows/GuiWindow.h"
 
+#include "../managers/RestManager.h"
+#include "../managers/cInteractionManager.h"
+#include "../utils/cTimeManager.h" // <-- oh oh, this already points out something is wrong
+
+#define IDEAL_FPS	60
+
 class State {
 	public:
-		State(GuiWindow * theGuiWindow) {
-			assert(theGuiWindow);
-			guiWindow = theGuiWindow;
+		State() {
+			guiWindow = NULL;
+			timeManager = NULL;
+			interactionManager = NULL;
+			restManager = new RestManager(IDEAL_FPS);
 		}
 
 		~State() {
-			guiWindow = NULL;
+			delete guiWindow;
+			delete timeManager;
+			delete restManager;
+			delete interactionManager;
 		}
+
+		void updateState() {} ; // concrete state objects implement this function
+
+		void run() {
+			assert(guiWindow);
+			timeManager->processTime();
+			updateState();
+			restManager->giveCpuSomeSlackIfNeeded();
+
+			// interactionManager->interactWithKeyboard();
+			// OR: interact with everything, or move to updateState ? (updateState does mouse related updating stuff)
+
+			// shakeScreenAndBlitBuffer();
+			// blit the screen (screenBlitter?) either shaky or not, depending
+			// on action on battlefield.
+			//
+		};
+
+		void setGuiWindow(GuiWindow * value) { guiWindow = value; }
 
 	protected:
 
 	private:
 		GuiWindow * guiWindow;
-		// TODO: own time manager
+
+		RestManager * restManager;
+
+		cTimeManager * timeManager;
+
+		// interact with stuff (mouse/keyboard)
+		cInteractionManager * interactionManager;
+
 };
 
 #endif /* STATE_H_ */

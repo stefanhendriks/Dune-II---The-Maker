@@ -14,6 +14,8 @@
 #ifndef CLISTUPGRADE_H_
 #define CLISTUPGRADE_H_
 
+#include "../include/enums.h"
+
 class cListUpgrade {
 	public:
 		cListUpgrade(int theProgressLimit, int theTotalPrice, eUpgradeType theType, cBuildingListItem *theItem);
