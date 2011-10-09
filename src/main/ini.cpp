@@ -1017,7 +1017,7 @@ void INI_Load_Regionfile(int iHouse, int iMission) {
 	memset(filename, 0, sizeof(filename));
 	sprintf(filename, "campaign/%s/mission%d.ini", INI_GetHouseDirectoryName(iHouse).c_str(), iMission);
 
-	cLogger::getInstance()->log(LOG_INFO, COMP_REGIONINI, "Opening mission file", filename);
+	Logger::getInstance()->log(LOG_INFO, COMP_REGIONINI, "Opening mission file", filename);
 
 	////////////////////////////
 	// START OPENING FILE

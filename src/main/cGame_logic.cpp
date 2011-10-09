@@ -1494,7 +1494,7 @@ void cGame::setupSkirmishState() {
 			}
 			char msg[255];
 			sprintf(msg, "Wants %d amount of units; amount created %d", aiplayer[p].iUnits, u);
-			cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, iHouse);
+			Logger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, iHouse);
 		}
 
 		// TODO: spawn a few worms
@@ -2145,7 +2145,7 @@ void cGame::run() {
  Shutdown the game
  */
 void cGame::shutdown() {
-	cLogger *logger = cLogger::getInstance();
+	Logger *logger = Logger::getInstance();
 	logger->logHeader("SHUTDOWN");
 
 	cGameFactory::getInstance()->destroyAll();
@@ -2182,7 +2182,7 @@ void cGame::setScreenResolutionFromGameIniSettings() {
 	setScreenResolution(screenResolutionFromIni);
 	char msg[255];
 	sprintf(msg, "Setting up %dx%d resolution from ini file.", screenResolutionFromIni->getWidth(), screenResolutionFromIni->getHeight());
-	cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution in windowed mode.", msg);
+	Logger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution in windowed mode.", msg);
 }
 
 bool cGame::setupGame() {
@@ -2194,7 +2194,7 @@ bool cGame::setupGame() {
 		fclose(fp);
 	}
 
-	cLogger *logger = cLogger::getInstance();
+	Logger *logger = Logger::getInstance();
 
 	// TODO: remove? something seriously is wrong with the initialization of the game
 	game.init(); // Must be first!
@@ -2275,16 +2275,16 @@ bool cGame::setupGame() {
 	// can specify how much CPU this game may use?
 
 	if (game.windowed) {
-		cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "Searching for optimal graphics settings");
+		Logger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "Searching for optimal graphics settings");
 		int iDepth = desktop_color_depth();
 
 		if (iDepth > 15 && iDepth != 24) {
 			char msg[255];
 			sprintf(msg, "Desktop color dept is %d.", iDepth);
-			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", msg);
+			Logger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", msg);
 			set_color_depth(iDepth); // run in the same bit depth as the desktop
 		} else {
-			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.",
+			Logger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.",
 					"Could not find color depth, or unsupported color depth found. Will use 16 bit");
 			set_color_depth(16);
 		}
@@ -2343,7 +2343,7 @@ bool cGame::setupGame() {
 
 			sprintf(msg, "Setting up %dx%d resolution from ini file.", getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 
-			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
+			Logger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
 
 			if ((r > -1)) { // on success
 				shouldFindBestScreenResolution = false;

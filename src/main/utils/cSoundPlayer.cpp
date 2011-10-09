@@ -1,13 +1,4 @@
-/*
- * cSoundPlayer.cpp
- *
- *  Created on: 6-aug-2010
- *      Author: Stefan
- */
-
 #include "cSoundPlayer.h"
-
-#include "../utils/cLog.h"
 
 cSoundPlayer::cSoundPlayer(int maximumVoices, int digiVolume, int midiVolume) {
 	assert(digiVolume <= SOUNDPLAYER_MAX_VOLUME);

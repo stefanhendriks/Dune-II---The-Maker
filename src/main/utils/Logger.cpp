@@ -2,21 +2,21 @@
 
 #include <sstream>
 
-cLogger *cLogger::instance = NULL;
+Logger *Logger::instance = NULL;
 
-cLogger::cLogger() {
+Logger::Logger() {
 	startTime = clock();
 }
 
-cLogger *cLogger::getInstance() {
+Logger *Logger::getInstance() {
 	if (instance == NULL) {
-		instance = new cLogger();
+		instance = new Logger();
 	}
 
 	return instance;
 }
 
-std::string cLogger::getLogLevelString(eLogLevel level) {
+std::string Logger::getLogLevelString(eLogLevel level) {
 	// LOG_TRACE, LOG_WARN, LOG_ERROR, LOG_FATAL
 	switch (level) {
 		case LOG_FATAL:
@@ -34,7 +34,7 @@ std::string cLogger::getLogLevelString(eLogLevel level) {
 	return std::string("UNIDENTIFIED");
 }
 
-std::string cLogger::getLogComponentString(eLogComponent component) {
+std::string Logger::getLogComponentString(eLogComponent component) {
 	switch (component) {
 		case COMP_UNITS:
 			return std::string("UNITS");
@@ -77,7 +77,7 @@ std::string cLogger::getLogComponentString(eLogComponent component) {
 	return std::string("UNIDENTIFIED");
 }
 
-std::string cLogger::getLogOutcomeString(eLogOutcome outcome) {
+std::string Logger::getLogOutcomeString(eLogOutcome outcome) {
 	switch (outcome) {
 		case OUTC_SUCCESS:
 			return std::string("SUCCESS");
@@ -93,7 +93,7 @@ std::string cLogger::getLogOutcomeString(eLogOutcome outcome) {
 	return std::string("UNIDENTIFIED");
 }
 
-std::string cLogger::getLogHouseString(int houseId) {
+std::string Logger::getLogHouseString(int houseId) {
 	switch (houseId) {
 		case ATREIDES:
 			return std::string("ATREIDES");
@@ -114,7 +114,7 @@ std::string cLogger::getLogHouseString(int houseId) {
 }
 
 // courtesy from : http://www.codeguru.com/forum/showthread.php?t=477894
-std::string cLogger::getCurrentFormattedTime() {
+std::string Logger::getCurrentFormattedTime() {
 	struct tm* ts;
 	char szBuffer[80];
 
@@ -126,11 +126,11 @@ std::string cLogger::getCurrentFormattedTime() {
 	return szBuffer;
 }
 
-void cLogger::updateTime() {
+void Logger::updateTime() {
 	current_time = time(NULL);
 }
 
-void cLogger::logHeader(const char *txt) {
+void Logger::logHeader(const char *txt) {
 	int length = strlen(txt);
 	if (length > 79)
 		length = 79;
@@ -146,16 +146,16 @@ void cLogger::logHeader(const char *txt) {
 	delete [] str;
 }
 
-void cLogger::log(eLogLevel level, eLogComponent component, const char *event, const char *message) {
+void Logger::log(eLogLevel level, eLogComponent component, const char *event, const char *message) {
 	log(level, component, event, message, OUTC_IGNOREME, -1, -1);
 }
 
-void cLogger::log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome) {
+void Logger::log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome) {
 	log(level, component, event, message, outcome, -1, -1);
 }
 
 //	Timestamp | Level | Component | House (if component requires) | ID (if component requires) | Message | Outcome | Event | Event fields...
-void cLogger::log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome, int playerId, int houseId) {
+void Logger::log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome, int playerId, int houseId) {
 	updateTime();
 
 	int diffTime = getTimeInMilisDifference();
@@ -205,19 +205,19 @@ void cLogger::log(eLogLevel level, eLogComponent component, const char *event, c
 	file = NULL;
 }
 
-std::string cLogger::getIntegerAsString(int value) {
+std::string Logger::getIntegerAsString(int value) {
 	std::ostringstream oss;
 	oss << std::dec << value;
 	return oss.str();
 }
 
-std::string cLogger::getLongAsString(long value) {
+std::string Logger::getLongAsString(long value) {
 	std::ostringstream oss;
 	oss << std::dec << value;
 	return oss.str();
 }
 
-void cLogger::debug(const char * txt) {
+void Logger::debug(const char * txt) {
 	file = fopen("log.txt", "at");
 	if (file) {
 		fprintf(file, "[DEBUG] - %s\n", txt); // print the text into the file
@@ -226,7 +226,7 @@ void cLogger::debug(const char * txt) {
 	file = NULL;
 }
 
-void cLogger::logCommentLine(const char *txt) {
+void Logger::logCommentLine(const char *txt) {
 	file = fopen("log.txt", "at");
 	if (file) {
 		fprintf(file, "\\\\%s\n", txt); // print the text into the file
@@ -235,7 +235,7 @@ void cLogger::logCommentLine(const char *txt) {
 	file = NULL;
 }
 
-long cLogger::getTimeInMilisDifference() /* From 1970-01-01T00:00:00 */
+long Logger::getTimeInMilisDifference() /* From 1970-01-01T00:00:00 */
 {
 	long time_taken_millis;
 	time_taken_millis = (long) ((clock() - startTime) * 1E3 / CLOCKS_PER_SEC);

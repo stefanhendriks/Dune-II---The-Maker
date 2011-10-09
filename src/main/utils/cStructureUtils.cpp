@@ -143,7 +143,7 @@ int cStructureUtils::findStructureTypeByTypeOfList(cBuildingList *list, cBuildin
 	int listTypeId = list->getType();
 	char msg[255];
 	sprintf(msg, "going to find list with listTypeId [%d]", listTypeId);
-	cLogger::getInstance()->logCommentLine(msg);
+	Logger::getInstance()->logCommentLine(msg);
 	switch (listTypeId) {
 		case LIST_CONSTYARD:
 			// a unit, and then built from a constyard list

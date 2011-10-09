@@ -27,7 +27,7 @@ namespace {
 }
 // Keep a logbook
 void logbook(const char *txt) {
-	cLogger *logger = cLogger::getInstance();
+	Logger *logger = Logger::getInstance();
 	logger->log(LOG_WARN, COMP_NONE, "Default log message (CHANGEME)", txt);
 }
 
@@ -1477,11 +1477,11 @@ int getAmountReservedVoicesAndInstallSound() {
 		char msg[VOLUME_MAX];
 		if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) == 0) {
 			sprintf(msg, "Success reserving %d voices.", voices);
-			cLogger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
+			Logger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
 			break;
 		} else {
 			sprintf(msg, "Failed reserving %d voices. Will try %d.", voices, (voices / 2));
-			cLogger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
+			Logger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
 			voices /= 2;
 		}
 	}

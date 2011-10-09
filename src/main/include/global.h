@@ -9,7 +9,7 @@
 #define GLOBAL_H_
 
 #include "enums.h"
-#include "../utils/cLog.h"							// logger
+#include "../utils/Logger.h"
 #include "../timers.h"							/** declare correct functions at compile time here **/
 
 #include "../utils/d2tm_math.h"

@@ -3,7 +3,7 @@
 
 #include "../include/enums.h"
 
-class cLogger {
+class Logger {
 
 	public:
 		void log(eLogLevel level, eLogComponent component, const char *event, const char *message);
@@ -16,7 +16,7 @@ class cLogger {
 
 		void logHeader(const char *txt);
 
-		static cLogger *getInstance();
+		static Logger *getInstance();
 
 	private:
 		FILE *file;
@@ -32,7 +32,7 @@ class cLogger {
 
 		void updateTime();
 
-		static cLogger *instance;
+		static Logger *instance;
 
 		std::string getIntegerAsString(int value);
 		std::string getLongAsString(long value);
@@ -41,7 +41,7 @@ class cLogger {
 
 		long getTimeInMilisDifference();
 	protected:
-		cLogger();
+		Logger();
 
 };
 

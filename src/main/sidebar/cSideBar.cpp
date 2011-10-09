@@ -269,7 +269,7 @@ void cSideBar::thinkInteraction() {
 							item->setPlaceIt(false);
 
 							if (item->getTimesToBuild() == 0) {
-								cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
+								Logger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
 								// only give money back for item that is being built
 								if (item->isBuilding()) {
 									// calculate the amount of money back:
