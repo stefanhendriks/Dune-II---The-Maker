@@ -1162,6 +1162,7 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 		}
 
 		mp3_music = NULL;
+		delete[] data;
 		return;
 	}
 
