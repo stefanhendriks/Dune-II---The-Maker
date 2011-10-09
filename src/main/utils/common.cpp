@@ -1090,9 +1090,6 @@ void play_sound_id(int s, int iDistance) {
 	if (!game.soundEnabled)
 		return; // do not play sound when boolean is false.
 
-	if (gfxaudio[s].dat == NULL)
-		return; // no data file at the specified position in index.
-
 	// Determine if sound is on screen or not
 	if (iDistance <= 1) {
 		int volume = VOLUME_MAX;
@@ -1259,7 +1256,7 @@ void playMusicByType(int iType) {
 			iNumber = iNumber + 1;
 		}
 		// play midi file
-		play_midi((MIDI *) gfxaudio[iNumber].dat, 0);
+		game.getSoundPlayer()->playMidi(iNumber);
 	}
 	logbook("playMusicByType [END]");
 }

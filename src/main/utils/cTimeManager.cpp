@@ -43,6 +43,12 @@ void cTimeManager::capTimers() {
 void cTimeManager::handleTimerFPS() {
 	while (timerSecond > 0) {
 		gameTime++;
+		char msg[255];
+		int availableVoices = game.getSoundPlayer()->getAvailableVoices();
+		int maxVoices = game.getSoundPlayer()->getMaxVoices();
+		int leftVoices = maxVoices - (maxVoices - availableVoices);
+		sprintf(msg, "Second passed; voices available [%d], while maximum is [%d]. (voices left to play : [%d])", availableVoices, maxVoices, leftVoices);
+		cLogger::getInstance()->debug(msg);
 
 		// TODO: this should now call some state specific concrete implementation. Don't use if-statements
 		// here! Either:

@@ -65,7 +65,6 @@ extern ALFONT_FONT *small_font;
 
 // DATAFILES
 extern DATAFILE *gfxdata;
-extern DATAFILE *gfxaudio;
 extern DATAFILE *gfxinter;
 extern DATAFILE *gfxworld;
 extern DATAFILE *gfxmentat;

@@ -217,6 +217,15 @@ std::string cLogger::getLongAsString(long value) {
 	return oss.str();
 }
 
+void cLogger::debug(const char * txt) {
+	file = fopen("log.txt", "at");
+	if (file) {
+		fprintf(file, "[DEBUG] - %s\n", txt); // print the text into the file
+		fclose(file);
+	}
+	file = NULL;
+}
+
 void cLogger::logCommentLine(const char *txt) {
 	file = fopen("log.txt", "at");
 	if (file) {

@@ -2414,7 +2414,7 @@ bool cGame::setupGame() {
 		logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
 	}
 
-	soundPlayer = new cSoundPlayer(maxSounds);
+	soundPlayer = NULL;
 	moviePlayer = NULL;
 
 	/***
@@ -2498,13 +2498,15 @@ bool cGame::setupGame() {
 		memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
 	}
 
-	gfxaudio = load_datafile("data/gfxaudio.dat");
+	DATAFILE * gfxaudio = load_datafile("data/gfxaudio.dat");
 	if (gfxaudio == NULL) {
 		logbook("ERROR: Could not hook/load datafile: gfxaudio.dat");
 		return false;
 	} else {
 		logbook("Datafile hooked: gfxaudio.dat");
 	}
+	soundPlayer = new cSoundPlayer(maxSounds, iMaxVolume, 150);
+	soundPlayer->setDatafile(gfxaudio);
 
 	gfxinter = load_datafile("data/gfxinter.dat");
 	if (gfxinter == NULL) {

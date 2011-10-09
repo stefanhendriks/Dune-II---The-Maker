@@ -1,6 +1,8 @@
 #ifndef D2TM_CLOG_H_
 #define D2TM_CLOG_H_
 
+#include "../include/enums.h"
+
 class cLogger {
 
 	public:
@@ -9,6 +11,8 @@ class cLogger {
 		void log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome);
 
 		void logCommentLine(const char *txt);
+
+		void debug(const char *txt);
 
 		void logHeader(const char *txt);
 

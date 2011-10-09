@@ -54,7 +54,6 @@ BITMAP *bmp_fadeout;
 
 // datafile(s)
 DATAFILE *gfxdata; // graphics (terrain, units, structures)
-DATAFILE *gfxaudio; // audio
 DATAFILE *gfxinter; // interface graphics
 DATAFILE *gfxworld; // world/pieces graphics
 DATAFILE *gfxmentat; // mentat graphics
