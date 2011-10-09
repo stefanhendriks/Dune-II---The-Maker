@@ -74,7 +74,7 @@ void cMapEditor::createField(int cell, int terrainType, int size) {
 	int iOrgY = y;
 
 	for (int i = 0; i < size; i++) {
-		int c = cellCalculator->getCellWithMapBorders(x, y);
+		int c = cellCalculator->getCellTakingMapBordersIntoAccount(x, y);
 
 		iDist = ABS_length(x, y, iOrgX, iOrgY);
 

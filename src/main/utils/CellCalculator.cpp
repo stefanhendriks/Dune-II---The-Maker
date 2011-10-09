@@ -10,7 +10,7 @@ CellCalculator::CellCalculator(cMap *map) {
 CellCalculator::~CellCalculator() {
 }
 
-int CellCalculator::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell) {
+int CellCalculator::findCloseMapBorderCellRelativelyToDestinationCell(int destinationCell) {
 	assert(destinationCell > -1);
 	// Cell x and y coordinates
 	int iCllX = getX(destinationCell);
@@ -163,14 +163,7 @@ double CellCalculator::distance(int cell1, int cell2) {
 	return ABS_length(x1, y1, x2, y2);
 }
 
-/**
- * Return map cell; taking the map borders into account.
- *
- * @param x
- * @param y
- * @return
- */
-int CellCalculator::getCellWithMapBorders(int x, int y) {
+int CellCalculator::getCellTakingMapBordersIntoAccount(int x, int y) {
 	int maxHeight = (map->getHeight() - 1);
 	int maxWidth = (map->getWidth()- 1);
 

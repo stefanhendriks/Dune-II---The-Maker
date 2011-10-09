@@ -52,7 +52,7 @@ void cRandomMapGenerator::generateRandomMap() {
 	// draw
 
 	while (a_rock > 0) {
-		int iCll = cellCalculator->getCellWithMapBorders(4 + rnd(map->getWidth() - 8), 4 + rnd(map->getHeight() - 8));
+		int iCll = cellCalculator->getCellTakingMapBordersIntoAccount(4 + rnd(map->getWidth() - 8), 4 + rnd(map->getHeight() - 8));
 
 		bool bOk = true;
 		if (iSpot < 6) {

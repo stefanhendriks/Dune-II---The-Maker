@@ -32,21 +32,6 @@ void logbook(const char *txt) {
 	logger->log(LOG_WARN, COMP_NONE, "Default log message (CHANGEME)", txt);
 }
 
-// determine if this cell is not out of boundries
-bool BORDER_POS(int x, int y) {
-	if (x < 1)
-		return false;
-	if (x > (map->getWidth() - 1))
-		return false;
-
-	if (y < 1)
-		return false;
-	if (y > (map->getHeight() - 1))
-		return false;
-
-	return true; // the fix-border-pos function did not change/correct the positions! yay
-}
-
 // fixes the positions according to the PLAYABLE size of the map (for unit
 // dumping, etc)
 void FIX_BORDER_POS(int &x, int &y) {
@@ -1048,7 +1033,7 @@ float health_structure(int i, int w) {
 // return a border cell, close to iCll
 int iFindCloseBorderCell(int iCll) {
 	CellCalculator * calculator = new CellCalculator(map);
-	int result = calculator->findCloseMapBorderCellRelativelyToDestinationCel(iCll);
+	int result = calculator->findCloseMapBorderCellRelativelyToDestinationCell(iCll);
 	delete calculator;
 	return result;
 }

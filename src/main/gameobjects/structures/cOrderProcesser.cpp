@@ -200,7 +200,7 @@ void cOrderProcesser::sendFrigate() {
 		int destinationCell = structure[structureId]->getCell();
 
 		CellCalculator * cellCalculator = new CellCalculator(map);
-		int iStartCell = cellCalculator->findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
+		int iStartCell = cellCalculator->findCloseMapBorderCellRelativelyToDestinationCell(destinationCell);
 		delete cellCalculator;
 
 		if (iStartCell < 0) {

@@ -74,8 +74,17 @@ class cMap {
 		int getHeight() {
 			return height;
 		}
+
 		int getWidth() {
 			return width;
+		}
+
+		int getHeightMinusBorder() {
+			return (height - 1);
+		}
+
+		int getWidthMinusBorder() {
+			return (width - 1);
 		}
 
 	private:

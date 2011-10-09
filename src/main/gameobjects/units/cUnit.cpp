@@ -1242,7 +1242,11 @@ void cUnit::think_move_air() {
 	// same cell (no goal specified or something)
 	if (iNextCell == iCell) {
 
-		bool bBordered = BORDER_POS(iCellGiveX(iCell), iCellGiveY(iCell));
+		cMapUtils * mapUtils = new cMapUtils(map);
+
+		bool isWithinMapBoundaries = mapUtils->isCellWithinMapBorders(iCell);
+
+		delete mapUtils;
 
 		// reinforcement stuff happens here...
 
@@ -1318,7 +1322,7 @@ void cUnit::think_move_air() {
 					if (iCell == iBringTarget) {
 
 						// check if its valid for this unit...
-						if (map->occupied(iCell, iUnitID) == false && bBordered) {
+						if (map->occupied(iCell, iUnitID) == false && isWithinMapBoundaries) {
 							// dump it here
 							unit[iUnitID].iCell = iCell;
 							unit[iUnitID].iGoalCell = iCell;
@@ -1419,7 +1423,7 @@ void cUnit::think_move_air() {
 			}
 
 			// first check if this cell is clear
-			if (map->occupied(iCell, iID) == false && bBordered) {
+			if (map->occupied(iCell, iID) == false && isWithinMapBoundaries) {
 				// drop unit
 				if (iNewUnitType > -1) {
 					int id = UNIT_CREATE(iCell, iNewUnitType, iPlayer, true);
@@ -3327,8 +3331,11 @@ int UNIT_find_harvest_spot(int id) {
 			int dy = iCellGiveY(i);
 
 			// skip bordered ones
-			if (BORDER_POS(dx, dy) == false)
+			cMapUtils * mapUtils = new cMapUtils(map);
+			if (!mapUtils->isWithinMapBorders(dx, dy)) {
 				continue;
+			}
+			delete mapUtils;
 
 			/*
 			 if (dx <= 1) continue;

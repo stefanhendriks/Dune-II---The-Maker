@@ -145,7 +145,7 @@ int cGameControlsContext::getMouseCellFromMiniMap() {
 
 	if (map) {
 		CellCalculator * cellCalculator = new CellCalculator(map);
-		int result = cellCalculator->getCellWithMapBorders(newX, newY);
+		int result = cellCalculator->getCellTakingMapBordersIntoAccount(newX, newY);
 		delete cellCalculator;
 		return result;
 	} else {

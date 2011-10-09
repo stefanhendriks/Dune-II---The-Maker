@@ -10,10 +10,27 @@
 cMapUtils::cMapUtils(cMap *theMap) {
 	assert(theMap);
 	map = theMap;
+	cellCalculator = new CellCalculator(map);
 }
 
 cMapUtils::~cMapUtils() {
 	map = NULL;
+	delete cellCalculator;
+}
+
+bool cMapUtils::isCellWithinMapBorders(int cell) {
+	int x = cellCalculator->getX(cell);
+	int y = cellCalculator->getY(cell);
+	return isWithinMapBorders(x, y);
+
+}
+
+bool cMapUtils::isWithinMapBorders(int x, int y) {
+	if (x < 1) return false;
+	if (x > map->getWidthMinusBorder()) return false;
+	if (y < 1) return false;
+	if (y > map->getHeightMinusBorder()) return false;
+	return true;
 }
 
 bool cMapUtils::isCellVisibleForPlayerId(int playerId, int iCell) {

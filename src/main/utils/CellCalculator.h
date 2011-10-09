@@ -35,7 +35,7 @@ class CellCalculator {
 		int getX(int cell);
 		int getY(int cell);
 
-		int getCellWithMapBorders(int x, int y);
+		int getCellTakingMapBordersIntoAccount(int x, int y);
 
 		// get cell from X, Y
 		int getCell(int x, int y);
@@ -44,7 +44,7 @@ class CellCalculator {
 		double distance(int x1, int y1, int x2, int y2);
 		double distance(int cell1, int cell2);
 
-		int findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell);
+		int findCloseMapBorderCellRelativelyToDestinationCell(int destinationCell);
 
 	private:
 		cMap * map;

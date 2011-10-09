@@ -1487,7 +1487,7 @@ void cGame::setupSkirmishState() {
 					}
 				}
 
-				int cell = cellCalculator->getCellWithMapBorders(iX, iY);
+				int cell = cellCalculator->getCellTakingMapBordersIntoAccount(iX, iY);
 				int r = UNIT_CREATE(cell, iType, p, true);
 				if (r > -1) {
 					u++;
