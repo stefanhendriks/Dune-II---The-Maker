@@ -1,11 +1,6 @@
-/*
- * cRandomMapGenerator.cpp
- *
- *  Created on: 16 nov. 2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
+
+#include "../utils/CellCalculator.h"
 
 cRandomMapGenerator::cRandomMapGenerator(cMap * theMap) {
 	assert(theMap);
@@ -52,7 +47,7 @@ void cRandomMapGenerator::generateRandomMap() {
 	// y = 180
 	draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GENERATING].dat, 160, 180);
 
-	cCellCalculator * cellCalculator = new cCellCalculator(map);
+	CellCalculator * cellCalculator = new CellCalculator(map);
 
 	// draw
 

@@ -18,6 +18,7 @@
 #include "drawers/AllegroDrawer.h"
 
 #include "utils/BestScreenResolutionFinder.h"
+#include "utils/CellCalculator.h"
 
 cGame::cGame() {
 	screenResolution = new ScreenResolution(800, 600);
@@ -1306,7 +1307,7 @@ void cGame::setupSkirmishState() {
 
 	// START
 	if (bSkirmish == false && isMouseOverStart && cMouse::getInstance()->isLeftButtonClicked() && iSkirmishMap > -1) {
-		cCellCalculator *cellCalculator = new cCellCalculator(map);
+		CellCalculator *cellCalculator = new CellCalculator(map);
 		bSkirmish = true;
 
 		iMission = 9; // high tech level (TODO: make this customizable)

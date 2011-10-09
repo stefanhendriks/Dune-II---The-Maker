@@ -8,18 +8,17 @@
 
  2001 - 2011 (c) code by Stefan Hendriks
 
- Purpose of this file:
-
- math.cpp should deliver all mathematical functions needed in the game.
-
-
  */
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
-#include "../include/d2tmh.h"
+#include "../include/definitions.h"
+#include "common.h"
+#include "d2tm_math.h"
+
+extern bool	bDoDebug; // TODO: refactor this away
 
 // Is the cell valid?
 bool bCellValid(int c) {

@@ -1,20 +1,16 @@
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
+#include "CellCalculator.h"
 
-#include "../include/d2tmh.h"
+#include "d2tm_math.h"
 
-cCellCalculator::cCellCalculator(cMap *theMap) {
-	assert(theMap);
-	width = theMap->getWidth();
-	height = theMap->getHeight();
+CellCalculator::CellCalculator(cMap *map) {
+	assert(map);
+	this->map = map;
 }
 
-cCellCalculator::~cCellCalculator() {
+CellCalculator::~CellCalculator() {
 }
 
-int cCellCalculator::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell) {
+int CellCalculator::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell) {
 	assert(destinationCell > -1);
 	// Cell x and y coordinates
 	int iCllX = getX(destinationCell);
@@ -28,7 +24,7 @@ int cCellCalculator::findCloseMapBorderCellRelativelyToDestinationCel(int destin
 	int cll = -1;
 
 	// HORIZONTAL cells
-	for (int iX = 0; iX < width; iX++) {
+	for (int iX = 0; iX < map->getWidth(); iX++) {
 		// check when Y = 0 (top)
 		tDistance = distance(iX, 0, iCllX, iCllY);
 
@@ -43,7 +39,8 @@ int cCellCalculator::findCloseMapBorderCellRelativelyToDestinationCel(int destin
 		}
 
 		// check when Y = map_height (bottom)
-		tDistance = distance(iX, map->getHeight() - 1, iCllX, iCllY);
+		int height = map->getHeight() - 1;
+		tDistance = distance(iX, height, iCllX, iCllY);
 
 		if (tDistance < lDistance) {
 			lDistance = tDistance;
@@ -72,11 +69,11 @@ int cCellCalculator::findCloseMapBorderCellRelativelyToDestinationCel(int destin
 		}
 
 		// check when XY = map_width (bottom)
-		tDistance = distance(width - 1, iY, iCllX, iCllY);
+		tDistance = distance(map->getWidth() - 1, iY, iCllX, iCllY);
 
 		if (tDistance < lDistance) {
 			lDistance = tDistance;
-			cll = getCell(width - 1, iY);
+			cll = getCell(map->getWidth() - 1, iY);
 
 			if (map->occupied(cll) == false) {
 				iStartCell = cll;
@@ -91,7 +88,7 @@ int cCellCalculator::findCloseMapBorderCellRelativelyToDestinationCel(int destin
  The X coordinate is found by finding out how many 'rows' (the Y) are there, then
  the remaining of that value is the X.
  **/
-int cCellCalculator::getX(int cell) {
+int CellCalculator::getX(int cell) {
 	assert(cell > -1);
 	assert(cell < MAX_CELLS);
 	int org = (cell - ((cell / MAP_W_MAX) * MAP_W_MAX));
@@ -104,7 +101,7 @@ int cCellCalculator::getX(int cell) {
 /**
  The Y coordinate is found by finding as many MAP_W_MAX can fit in the given cell
  **/
-int cCellCalculator::getY(int cell) {
+int CellCalculator::getY(int cell) {
 	return (cell / MAP_W_MAX);
 }
 
@@ -128,7 +125,7 @@ int cCellCalculator::getY(int cell) {
 
  This method will not do any fancy tricks to fix the boundaries, instead it will assert its input and output.
  **/
-int cCellCalculator::getCell(int x, int y) {
+int CellCalculator::getCell(int x, int y) {
 	assert(x > -1);
 	assert(x < MAP_W_MAX); // should never be higher!
 	assert(y > -1);
@@ -143,7 +140,7 @@ int cCellCalculator::getCell(int x, int y) {
 	return cell;
 }
 
-double cCellCalculator::distance(int x1, int y1, int x2, int y2) {
+double CellCalculator::distance(int x1, int y1, int x2, int y2) {
 	if (x1 == x2 && y1 == y2)
 		return 1; // when all the same, distance is 1 ...
 
@@ -157,7 +154,7 @@ double cCellCalculator::distance(int x1, int y1, int x2, int y2) {
  and runs the normal distance method to get the distance.
 
  **/
-double cCellCalculator::distance(int cell1, int cell2) {
+double CellCalculator::distance(int cell1, int cell2) {
 	int x1 = getX(cell1);
 	int y1 = getY(cell1);
 
@@ -173,18 +170,14 @@ double cCellCalculator::distance(int cell1, int cell2) {
  * @param y
  * @return
  */
-int cCellCalculator::getCellWithMapBorders(int x, int y) {
-	int maxHeight = (height - 1);
-	int maxWidth = (width - 1);
+int CellCalculator::getCellWithMapBorders(int x, int y) {
+	int maxHeight = (map->getHeight() - 1);
+	int maxWidth = (map->getWidth()- 1);
 
-	if (x < 1)
-		x = 1;
-	if (y < 1)
-		y = 1;
-	if (x > maxWidth)
-		x = maxWidth;
-	if (y > maxHeight)
-		y = maxHeight;
+	if (x < 1) x = 1;
+	if (y < 1) y = 1;
+	if (x > maxWidth) x = maxWidth;
+	if (y > maxHeight) y = maxHeight;
 
 	return getCell(x, y);
 }

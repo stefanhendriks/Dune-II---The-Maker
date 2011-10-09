@@ -1,5 +1,7 @@
 #include "../include/d2tmh.h"
 
+#include "../utils/CellCalculator.h"
+
 MapDrawer::MapDrawer(cMap * theMap, cPlayer * thePlayer, cMapCamera * theCamera) {
 	assert(theMap);
 	assert(thePlayer);
@@ -206,7 +208,7 @@ void MapDrawer::drawTerrain() {
 			}
 
 			if (DEBUGGING) {
-				cCellCalculator * cellCalculator = new cCellCalculator(map);
+				CellCalculator * cellCalculator = new CellCalculator(map);
 				if (player->getGameControlsContext()->getMouseCell() > -1) {
 					int mc = player->getGameControlsContext()->getMouseCell();
 					if (cellCalculator->getX(mc) == iStartX && cellCalculator->getY(mc) == iStartY)

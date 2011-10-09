@@ -6,6 +6,8 @@
  */
 #include "../../include/d2tmh.h"
 
+#include "../../utils/CellCalculator.h"
+
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer) {
 	assert(thePlayer);
 	player = thePlayer;
@@ -197,7 +199,7 @@ void cOrderProcesser::sendFrigate() {
 		structure[structureId]->setAnimating(true);
 		int destinationCell = structure[structureId]->getCell();
 
-		cCellCalculator * cellCalculator = new cCellCalculator(map);
+		CellCalculator * cellCalculator = new CellCalculator(map);
 		int iStartCell = cellCalculator->findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
 		delete cellCalculator;
 

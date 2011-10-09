@@ -1,5 +1,7 @@
 #include "../../include/d2tmh.h"
 
+#include "../../utils/CellCalculator.h"
+
 // Constructor
 cStarPort::cStarPort() {
 	// other variables (class specific)
@@ -79,7 +81,7 @@ void cStarPort::think_deploy() {
 					play_voice(SOUND_VOICE_05_ATR); // unit deployed
 				} else {
 					// could not find cell to deploy to, reinforce it
-					cCellCalculator * cellCalculator = new cCellCalculator(map);
+					CellCalculator * cellCalculator = new CellCalculator(map);
 					if (rallyPoint > -1) {
 						cellToDeployTo = rallyPoint;
 					}

@@ -1,11 +1,6 @@
-/*
- * cMapEditor.cpp
- *
- *  Created on: 16 nov. 2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
+
+#include "../utils/CellCalculator.h"
 
 cMapEditor::cMapEditor() {
 
@@ -52,7 +47,7 @@ void cMapEditor::createField(int cell, int terrainType, int size) {
 	assert(terrainType >= TERRAIN_BLOOM);
 	assert(terrainType <= TERRAIN_WALL);
 
-	cCellCalculator * cellCalculator = new cCellCalculator(map);
+	CellCalculator * cellCalculator = new CellCalculator(map);
 
 	int x = cellCalculator->getX(cell);
 	int y = cellCalculator->getY(cell);
@@ -453,7 +448,7 @@ void cMapEditor::makeRockCellsSandCellWhenRockCellHasLessThanThreeNeighbouringRo
 	int startY = 1;
 	int endX = map->getWidth() - 1;
 	int endY = map->getHeight() - 1;
-	cCellCalculator * cellCalculator = new cCellCalculator(map);
+	CellCalculator * cellCalculator = new CellCalculator(map);
 
 	for (int x = startX; x < endX; x++) {
 		for (int y = startY; y < endY; y++) {

@@ -1,5 +1,7 @@
 #include "../include/d2tmh.h"
 
+#include "../utils/CellCalculator.h"
+
 cMapCamera::cMapCamera() {
 	int widthOfSidebar = 160;
 	int heightOfOptions = 42;
@@ -26,7 +28,7 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell) {
 		cell = (MAX_CELLS - 1);
 	}
 
-	cCellCalculator * cellCalculator = new cCellCalculator(map);
+	CellCalculator * cellCalculator = new CellCalculator(map);
 
 	int cellX = cellCalculator->getX(cell);
 	int cellY = cellCalculator->getY(cell);

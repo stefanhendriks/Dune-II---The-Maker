@@ -1,11 +1,6 @@
-/*
- * cGameControlsContext.cpp
- *
- *  Created on: 31-okt-2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
+
+#include "../utils/CellCalculator.h"
 
 #define MOUSECELL_MINIMAP -2
 
@@ -69,7 +64,7 @@ void cGameControlsContext::determineMouseCell() {
 	iMouseX += mapCamera->getX();
 	iMouseY += mapCamera->getY();
 
-	cCellCalculator * cellCalculator = new cCellCalculator(map);
+	CellCalculator * cellCalculator = new CellCalculator(map);
 	mouseCell = cellCalculator->getCell(iMouseX, iMouseY);
 	delete cellCalculator;
 	cellCalculator = NULL;
@@ -149,7 +144,7 @@ int cGameControlsContext::getMouseCellFromMiniMap() {
 	int newY = mouseMiniMapY;/* - centerOfViewPortHeight;*/
 
 	if (map) {
-		cCellCalculator * cellCalculator = new cCellCalculator(map);
+		CellCalculator * cellCalculator = new CellCalculator(map);
 		int result = cellCalculator->getCellWithMapBorders(newX, newY);
 		delete cellCalculator;
 		return result;

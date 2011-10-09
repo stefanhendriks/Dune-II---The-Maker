@@ -7,6 +7,8 @@
 
 #include "../include/d2tmh.h"
 
+#include "../utils/CellCalculator.h"
+
 StructureDrawer::StructureDrawer() {
 }
 
@@ -60,7 +62,7 @@ void StructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure * struct
 
 int StructureDrawer::getDrawYForStructure(int cell) {
 	assert(structure);
-	cCellCalculator * cellCalculator = new cCellCalculator(map);
+	CellCalculator * cellCalculator = new CellCalculator(map);
 	int y = cellCalculator->getY(cell);
 	delete cellCalculator;
 	return (y * TILESIZE_HEIGHT_PIXELS) - (mapCamera->getY() * TILESIZE_HEIGHT_PIXELS) + 42;
@@ -68,7 +70,7 @@ int StructureDrawer::getDrawYForStructure(int cell) {
 
 int StructureDrawer::getDrawXForStructure(int cell) {
 	assert(structure);
-	cCellCalculator * cellCalculator = new cCellCalculator(map);
+	CellCalculator * cellCalculator = new CellCalculator(map);
 	int x = cellCalculator->getX(cell);
 	delete cellCalculator;
 	return (x * TILESIZE_WIDTH_PIXELS) - (mapCamera->getX() * TILESIZE_WIDTH_PIXELS);

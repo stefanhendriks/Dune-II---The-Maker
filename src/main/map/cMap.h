@@ -9,6 +9,10 @@
  2001 - 2011 (c) code by Stefan Hendriks
 
  */
+#ifndef CMAP_H
+#define CMAP_H
+
+#include "cMapCell.h"
 
 class cMap {
 	public:
@@ -87,3 +91,4 @@ class cMap {
 
 };
 
+#endif

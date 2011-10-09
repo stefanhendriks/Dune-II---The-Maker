@@ -1,5 +1,7 @@
 #include "../include/d2tmh.h"
 
+#include "../utils/CellCalculator.h"
+
 PlaceItDrawer::PlaceItDrawer() {
 }
 
@@ -52,7 +54,7 @@ void PlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, 
 
 #define SCANWIDTH	1
 
-	cCellCalculator * cellCalculator = new cCellCalculator(map);
+	CellCalculator * cellCalculator = new CellCalculator(map);
 
 	int iCellX = cellCalculator->getX(cell);
 	int iCellY = cellCalculator->getY(cell);

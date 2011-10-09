@@ -1,11 +1,6 @@
-/*
- * cStructureUtils.cpp
- *
- *  Created on: 2-aug-2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
+
+#include "CellCalculator.h"
 
 cStructureUtils::cStructureUtils() {
 }
@@ -184,7 +179,7 @@ int cStructureUtils::findClosestStructureTypeToCell(int cell, int structureType,
 
 	int playerId = player->getId();
 
-	cCellCalculator * cellCalculator = new cCellCalculator(map);
+	CellCalculator * cellCalculator = new CellCalculator(map);
 	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		if (structure[i]) { // exists (pointer)
 			if (structure[i]->getOwner() == playerId) { // same player
@@ -214,7 +209,7 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
 
 	assert(cellOfStructure > -1);
 
-	cCellCalculator * cellCalculator = new cCellCalculator(map);
+	CellCalculator * cellCalculator = new CellCalculator(map);
 	for (int w = 0; w < theStructure->getWidth(); w++) {
 		for (int h = 0; h < theStructure->getHeight(); h++) {
 			int xOfStructureCell = cellCalculator->getX(cellOfStructure);

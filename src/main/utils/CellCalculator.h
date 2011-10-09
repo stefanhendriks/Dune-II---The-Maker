@@ -13,11 +13,23 @@
 #ifndef CELL_CALCULATOR
 #define CELL_CALCULATOR
 
-class cCellCalculator {
+#include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+
+#include <assert.h>
+
+#include "../include/definitions.h"
+
+#include "../map/cMap.h"
+
+class CellCalculator {
 
 	public:
-		cCellCalculator(cMap * theMap);
-		~cCellCalculator();
+		CellCalculator(cMap * map);
+		~CellCalculator();
 
 		// get X / Y from cell
 		int getX(int cell);
@@ -35,8 +47,7 @@ class cCellCalculator {
 		int findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell);
 
 	private:
-
-		int height, width;
+		cMap * map;
 };
 
 #endif

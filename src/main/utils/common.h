@@ -10,6 +10,12 @@
 
  */
 
+#include <cstring>
+#include <string>
+#include <iostream>
+
+#include "allegro.h"
+
 void logbook(const char *txt);
 
 bool BORDER_POS(int x, int y);

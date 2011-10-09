@@ -13,9 +13,6 @@
 #ifndef STRUCTURE_FACTORY
 #define STRUCTURE_FACTORY
 
-// forward declaration
-class cCellCalculator;
-
 class cStructureFactory {
 
 	private:

@@ -1,5 +1,7 @@
 #include "../../include/d2tmh.h"
 
+#include "../../utils/CellCalculator.h"
+
 cStructureFactory *cStructureFactory::instance = NULL;
 
 cStructureFactory::cStructureFactory() {
@@ -412,7 +414,7 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
 	int height = structures[iStructureType].bmp_height / 32;
 	int width = structures[iStructureType].bmp_width / 32;
 
-	cCellCalculator * cellCalculator = new cCellCalculator(map);
+	CellCalculator * cellCalculator = new CellCalculator(map);
 	int cellX = cellCalculator->getX(iCell);
 	int cellY = cellCalculator->getY(iCell);
 

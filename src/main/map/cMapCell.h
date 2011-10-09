@@ -1,10 +1,3 @@
-/*
- * cCell.h
- *
- *  Created on: 10-aug-2010
- *      Author: Stefan
- */
-
 #ifndef CMAPCELL_H_
 #define CMAPCELL_H_
 

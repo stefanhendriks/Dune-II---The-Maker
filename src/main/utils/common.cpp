@@ -15,6 +15,7 @@
 #include <math.h>
 
 #include "../movie/cMoviePlayer.h"
+#include "CellCalculator.h"
 
 namespace {
 	const int PAN_CENTER = 128;
@@ -1046,7 +1047,7 @@ float health_structure(int i, int w) {
 
 // return a border cell, close to iCll
 int iFindCloseBorderCell(int iCll) {
-	cCellCalculator * calculator = new cCellCalculator(map);
+	CellCalculator * calculator = new CellCalculator(map);
 	int result = calculator->findCloseMapBorderCellRelativelyToDestinationCel(iCll);
 	delete calculator;
 	return result;
