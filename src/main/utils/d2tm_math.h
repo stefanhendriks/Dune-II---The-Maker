@@ -1,4 +1,4 @@
-/* 
+/*
 
  Dune II - The Maker
 
@@ -12,7 +12,7 @@
 
 int iCellGiveX(int c);
 int iCellGiveY(int c);
-int iCellMake(int x, int y);
+int createCellWithoutMapBorders(int x, int y);
 
 // Angle stuff for unit facing
 float fDegrees(int x1, int y1, int x2, int y2);

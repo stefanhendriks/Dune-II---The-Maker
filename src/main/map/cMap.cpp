@@ -278,7 +278,7 @@ void cMap::makeCircleVisibleForPlayerOfSpecificSize(int c, int size, int player)
 			FIX_POS(cell_x, cell_y);
 
 			//draw the cells
-			int cl = iCellMake(cell_x, cell_y);
+			int cl = createCellWithoutMapBorders(cell_x, cell_y);
 
 			if (iVisible[cl][player] == false) {
 

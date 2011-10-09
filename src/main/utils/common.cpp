@@ -32,26 +32,6 @@ void logbook(const char *txt) {
 	logger->log(LOG_WARN, COMP_NONE, "Default log message (CHANGEME)", txt);
 }
 
-// fixes the positions according to the PLAYABLE size of the map (for unit
-// dumping, etc)
-void FIX_BORDER_POS(int &x, int &y) {
-	// filled in
-	if (x) {
-		if (x < 1)
-			x = 1;
-		if (x > (map->getWidth() - 1))
-			x = (map->getWidth() - 1);
-	}
-
-	// filled in
-	if (y) {
-		if (y < 1)
-			y = 1;
-		if (y > (map->getHeight() - 1))
-			y = (map->getHeight() - 1);
-	}
-}
-
 // Will make sure the X and Y don't get out of their boundries
 void FIX_POS(int &x, int &y) {
 	// filled in

@@ -87,6 +87,10 @@ class cMap {
 			return (width - 1);
 		}
 
+		int getMaxCells() {
+			return height * width;
+		}
+
 	private:
 
 		bool iVisible[MAX_CELLS][MAX_PLAYERS]; // visibility for <player>

@@ -1151,16 +1151,16 @@ int cAIPlayer::iPlaceStructureCell(int iType) {
 
 				for (int sx = iStartX; sx < iEndX; sx++) {
 					for (int sy = iStartY; sy < iEndY; sy++) {
-						int r = cStructureFactory::getInstance()->getSlabStatus(iCellMake(sx, sy), iType, -1);
+						int r = cStructureFactory::getInstance()->getSlabStatus(createCellWithoutMapBorders(sx, sy), iType, -1);
 
 						if (r > -2) {
 							if (iType != TURRET && iType != RTURRET) {
 								// for turrets, the most far counts
 								bGood = true;
-								iGoodCells[iGoodCellID] = iCellMake(sx, sy);
+								iGoodCells[iGoodCellID] = createCellWithoutMapBorders(sx, sy);
 								iGoodCellID++;
 
-								return iCellMake(sx, sy);
+								return createCellWithoutMapBorders(sx, sy);
 							} else {
 								bGood = true;
 
@@ -1168,9 +1168,9 @@ int cAIPlayer::iPlaceStructureCell(int iType) {
 
 								if ((iDist > iDistance) || (iDist == iDistance)) {
 									iDistance = iDist;
-									iGoodCells[iGoodCellID] = iCellMake(sx, sy);
+									iGoodCells[iGoodCellID] = createCellWithoutMapBorders(sx, sy);
 									iGoodCellID++;
-									return iCellMake(sx, sy);
+									return createCellWithoutMapBorders(sx, sy);
 								}
 							}
 						}

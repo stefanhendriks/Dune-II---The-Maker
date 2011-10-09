@@ -56,7 +56,7 @@ void MiniMapDrawer::drawTerrain() {
 
 		for (int y = 0; y < (map->getHeight()); y++) {
 			iColor = makecol(0, 0, 0);
-			int iCll = iCellMake(x, y);
+			int iCll = createCellWithoutMapBorders(x, y);
 
 			if (map->isVisible(iCll, player->getId())) {
 				iColor = getRGBColorForTerrainType(map->cell[iCll].terrainTypeGfxDataIndex);
@@ -95,7 +95,7 @@ void MiniMapDrawer::drawUnitsAndStructures() {
 
 		for (int y = 0; y < map->getHeight(); y++) {
 			iColor = makecol(0, 0, 0);
-			int iCll = iCellMake(x, y);
+			int iCll = createCellWithoutMapBorders(x, y);
 			bool drawADot = false;
 
 			if (map->isVisible(iCll, player->getId())) {

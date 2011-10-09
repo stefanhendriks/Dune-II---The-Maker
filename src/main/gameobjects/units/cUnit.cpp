@@ -207,7 +207,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 						play_sound_id(SOUND_TANKDIE + rnd(2), iCellOnScreen(iCell));
 
 					// calculate cell and damage stuff around this
-					int cll = iCellMake((iCellX - 1) + cx, (iCellY - 1) + cy);
+					int cll = createCellWithoutMapBorders((iCellX - 1) + cx, (iCellY - 1) + cy);
 
 					if (cll == iCell)
 						continue; // do not do own cell
@@ -1386,9 +1386,8 @@ void cUnit::think_move_air() {
 							poll();
 							int rx = (iCellX - 2) + rnd(5);
 							int ry = (iCellY - 2) + rnd(5);
-							FIX_BORDER_POS(rx, ry);
 
-							iGoalCell = iCellMake(rx, ry);
+							iGoalCell = mapUtils->createCell(rx, ry);
 
 							iBringTarget = iGoalCell;
 							return;
@@ -1462,9 +1461,8 @@ void cUnit::think_move_air() {
 				poll();
 				int rx = (iCellX - 2) + rnd(5);
 				int ry = (iCellY - 2) + rnd(5);
-				FIX_BORDER_POS(rx, ry);
 
-				iGoalCell = iCellMake(rx, ry);
+				iGoalCell = mapUtils->createCell(rx, ry);
 				return;
 			}
 
@@ -1474,7 +1472,7 @@ void cUnit::think_move_air() {
 		int rx = rnd(map->getWidth());
 		int ry = rnd(map->getHeight());
 
-		iGoalCell = iCellMake(rx, ry);
+		iGoalCell = createCellWithoutMapBorders(rx, ry);
 		return;
 	}
 
@@ -1665,45 +1663,13 @@ void cUnit::shoot(int iShootCell) {
 	int iShootY = (draw_y() + 16) + (mapCamera->getY() * 32);
 	int bmp_head = convert_angle(iHeadFacing);
 
-	if (iType == TANK)
+	if (iType == TANK) {
 		PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);
-	else if (iType == SIEGETANK)
+	} else if (iType == SIEGETANK) {
 		PARTICLE_CREATE(iShootX, iShootY, OBJECT_SIEGESHOOT, -1, bmp_head);
-	/*
-	 // determine facing: depending on that, start at correct cell (neighbouring cell)
-	 int iCx = iCellGiveX(iCell);
-	 int iCy = iCellGiveY(iCell);
+	}
 
-	 if (iType == TANK ||
-	 iType == SIEGETANK ||
-	 iType == SONICTANK ||
-	 iType == DEVASTATOR)
-	 {
-
-	 int iFacing = iHeadFacing;
-
-	 if (iFacing == FACE_UP ||
-	 iFacing == FACE_UPLEFT ||
-	 iFacing == FACE_UPRIGHT)
-	 iCy--;
-
-	 if (iFacing == FACE_DOWN ||
-	 iFacing == FACE_DOWNLEFT ||
-	 iFacing == FACE_DOWNRIGHT)
-	 iCy++;
-
-	 if (iFacing == FACE_LEFT ||
-	 iFacing == FACE_UPLEFT ||
-	 iFacing == FACE_DOWNLEFT)
-	 iCx--;
-
-	 if (iFacing == FACE_RIGHT ||
-	 iFacing == FACE_UPRIGHT ||
-	 iFacing == FACE_DOWNRIGHT)
-	 iCx++;
-	 }
-
-	 int iSc = iCellMake(iCx, iCy);*/
+	int iSc = iCellMake(iCx, iCy);
 
 	create_bullet(units[iType].bullets, iCell, iShootCell, iID, -1);
 
@@ -1951,7 +1917,7 @@ void cUnit::think_attack() {
 						dy -= (dif);
 						dy += rnd(dif * 2);
 
-						iGc = iCellMake(dx, dy);
+						iGc = createCellWithoutMapBorders(dx, dy);
 					}
 				}
 
@@ -2055,7 +2021,7 @@ void cUnit::think_attack() {
 							iAttackUnit = -1;
 							iAttackStructure = -1;
 							iAction = ACTION_MOVE;
-							iGoalCell = iCellMake(rx, ry);
+							iGoalCell = createCellWithoutMapBorders(rx, ry);
 						}
 					}
 
@@ -2898,14 +2864,11 @@ int CREATE_PATH(int iID, int iPathCountUnits) {
 		ex = cx + 1;
 		ey = cy + 1;
 
-		// boundries
-		FIX_BORDER_POS(sx, sy);
-		FIX_BORDER_POS(ex, ey);
+		sx = mapUtils->checkAndFixXCoordinate(sx);
+		sy = mapUtils->checkAndFixYCoordinate(sy);
 
-		if (ex <= cx)
-			logbook("CX = EX");
-		if (ey <= cy)
-			logbook("CY = EY");
+		ex = mapUtils->checkAndFixXCoordinate(ex);
+		ey = mapUtils->checkAndFixYCoordinate(ey);
 
 		cost = 999999999;
 		the_cll = -1;
@@ -2919,7 +2882,7 @@ int CREATE_PATH(int iID, int iPathCountUnits) {
 			// circle around cell Y wise
 			for (cy = sy; cy <= ey; cy++) {
 				// only check the 'cell' that is NOT the current cell.
-				int cll = iCellMake(cx, cy);
+				int cll = createCellWithoutMapBorders(cx, cy);
 
 				// DO NOT CHECK SELF
 				if (cll == iCell)
@@ -3048,7 +3011,6 @@ int CREATE_PATH(int iID, int iPathCountUnits) {
 
 			// bail out
 			if (bail_out) {
-				//logbook("BAIL");
 				break;
 			}
 
@@ -3223,15 +3185,16 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID) {
 		iEndX = iCellGiveX(iCll) + iSize;
 		iEndY = iCellGiveY(iCll) + iSize;
 
-		// Fix boundries
-		FIX_BORDER_POS(iStartX, iStartY);
-		FIX_BORDER_POS(iEndX, iEndY);
+		iStartX = mapUtils->checkAndFixXCoordinate(iStartX);
+		iEndX = mapUtils->checkAndFixXCoordinate(iEndX);
+		iStartY = mapUtils->checkAndFixYCoordinate(iStartY);
+		iEndY = mapUtils->checkAndFixYCoordinate(iEndY);
 
 		// search
 		for (int iSX = iStartX; iSX < iEndX; iSX++)
 			for (int iSY = iStartY; iSY < iEndY; iSY++) {
 				// find an empty cell
-				int cll = iCellMake(iSX, iSY);
+				int cll = createCellWithoutMapBorders(iSX, iSY);
 
 				float dDistance2 = ABS_length(iSX, iSY, ix, iy);
 
@@ -3274,7 +3237,7 @@ int CLOSE_SPICE_BLOOM(int iCell) {
 
 		if (iCell < 0) {
 			iDistance = 9999;
-			iCell = iCellMake(32, 32);
+			iCell = createCellWithoutMapBorders(32, 32);
 		}
 
 		int cx, cy;
@@ -3402,7 +3365,7 @@ void SPAWN_FRIGATE(int iPlr, int iCll) {
 	iX++;
 	iY++;
 
-	iCell = iCellMake(iX, iY);
+	iCell = createCellWithoutMapBorders(iX, iY);
 
 	// step 1
 	int iStartCell = iFindCloseBorderCell(iCell);
@@ -3632,7 +3595,7 @@ int UNIT_FREE_AROUND_MOVE(int iUnit) {
 
 	for (int x = iStartX; x < iEndX; x++)
 		for (int y = iStartY; y < iEndY; y++) {
-			int cll = iCellMake(x, y);
+			int cll = createCellWithoutMapBorders(x, y);
 
 			if (map->occupied(cll) == false) {
 				iClls[iC] = cll;

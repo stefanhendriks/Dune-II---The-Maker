@@ -75,7 +75,7 @@ void PlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, 
 	// Determine if the structure may be placed or not (true/false)
 	for (int iX = iStartX; iX < iEndX; iX++) {
 		for (int iY = iStartY; iY < iEndY; iY++) {
-			int iCll = iCellMake(iX, iY);
+			int iCll = createCellWithoutMapBorders(iX, iY);
 			if (map->cell[iCll].gameObjectId[MAPID_STRUCTURES] > -1) {
 				int iID = map->cell[iCll].gameObjectId[MAPID_STRUCTURES];
 
@@ -111,7 +111,7 @@ void PlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, 
 				break;
 			}
 
-			int iCll = iCellMake((iCellX + iX), (iCellY + iY));
+			int iCll = createCellWithoutMapBorders((iCellX + iX), (iCellY + iY));
 
 			if (map->cell[iCll].passable == false)
 				iTile = PLACE_BAD;

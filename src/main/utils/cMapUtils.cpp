@@ -18,6 +18,37 @@ cMapUtils::~cMapUtils() {
 	delete cellCalculator;
 }
 
+int cMapUtils::checkAndFixXCoordinate(int originalX) {
+	if (originalX < 1) return 1;
+	if (originalX > map->getWidthMinusBorder()) return map->getWidthMinusBorder();
+	return originalX;
+}
+
+int cMapUtils::checkAndFixYCoordinate(int originalY) {
+	if (originalY < 1) return 1;
+	if (originalY > map->getHeightMinusBorder()) return map->getHeightMinusBorder();
+	return originalY;
+}
+
+int cMapUtils::createCellWithoutTakingMapBordersIntoAccount(int x, int y) {
+	if (x < 0) x = 0;
+	if (y < 0) y = 0;
+
+	int c = (y * map->getWidth()) + x;
+
+	if (c >= map->getMaxCells()) {
+		c = (map->getMaxCells() - 1);
+	}
+
+	return c;
+}
+
+int cMapUtils::createCell(int x, int y) {
+	int correctedX = checkAndFixXCoordinate(x);
+	int correctedY = checkAndFixYCoordinate(y);
+	return (correctedY * map->getWidth()) + correctedX;
+}
+
 bool cMapUtils::isCellWithinMapBorders(int cell) {
 	int x = cellCalculator->getX(cell);
 	int y = cellCalculator->getY(cell);

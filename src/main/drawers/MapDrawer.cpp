@@ -36,7 +36,7 @@ void MapDrawer::drawShroud() {
 
 		// new row
 		for (int iStartY = camera->getY(); iStartY < camera->getEndY(); iStartY++) {
-			cll = iCellMake(iStartX, iStartY);
+			cll = createCellWithoutMapBorders(iStartX, iStartY);
 
 			if (DEBUGGING) {
 				if (mapUtils->isCellVisibleForPlayerId(iPl, cll)) {
@@ -191,7 +191,7 @@ void MapDrawer::drawTerrain() {
 
 		// new row
 		for (int iStartY = camera->getY(); iStartY < camera->getEndY(); iStartY++) {
-			iCell = iCellMake(iStartX, iStartY);
+			iCell = createCellWithoutMapBorders(iStartX, iStartY);
 
 			if (mapUtils->isCellVisibleForPlayerId(iPl, iCell) == false) {
 				iDrawY += TILESIZE_HEIGHT_PIXELS;

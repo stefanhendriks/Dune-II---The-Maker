@@ -52,8 +52,9 @@ int iCellGiveY(int c) {
 	return (c / MAP_W_MAX);
 }
 
+
 // make cell number out of X and Y value
-int iCellMake(int x, int y) {
+int createCellWithoutMapBorders(int x, int y) {
 	if (x < 0)
 		x = 0;
 	if (y < 0)

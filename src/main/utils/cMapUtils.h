@@ -13,6 +13,12 @@ class cMapUtils {
 		bool isCellWithinMapBorders(int cell);
 		bool isWithinMapBorders(int x, int y);
 
+		int checkAndFixXCoordinate(int originalX);
+		int checkAndFixYCoordinate(int originalY);
+
+		int createCellWithoutTakingMapBordersIntoAccount(int x, int y);
+		int createCell(int x, int y);
+
 		void clearAllCells();
 
 	protected:

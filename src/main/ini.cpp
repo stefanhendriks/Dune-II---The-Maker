@@ -971,7 +971,7 @@ void INI_Load_seed(int seed) {
 	for (int mapY = 0; mapY < 64; mapY++) {
 		for (int mapX = 0; mapX < 64; mapX++) {
 			int type = seedMap->getCellType(mapX, mapY);
-			int iCell = iCellMake(mapX, mapY);
+			int iCell = createCellWithoutMapBorders(mapX, mapY);
 			mapEditor.createCell(iCell, type, 0);
 		}
 	}
@@ -1470,7 +1470,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 							int iCellY = (original_dune2_cell / 64);
 
 							// Now recalculate it
-							d2tm_cell = iCellMake(iCellX, iCellY);
+							d2tm_cell = createCellWithoutMapBorders(iCellX, iCellY);
 							blooms[iBloomID] = d2tm_cell;
 							memset(word, 0, sizeof(word)); // clear string
 
@@ -1521,7 +1521,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 							int iCellY = (original_dune2_cell / 64);
 
 							// Now recalculate it
-							d2tm_cell = iCellMake(iCellX, iCellY);
+							d2tm_cell = createCellWithoutMapBorders(iCellX, iCellY);
 							fields[iFieldID] = d2tm_cell;
 							memset(word, 0, sizeof(word)); // clear string
 
@@ -2486,7 +2486,7 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan) {
 					letter[0] = '\0';
 					letter[0] = linefeed[iX];
 
-					int iCll = iCellMake((iX + 1), (iYLine + 1));
+					int iCll = createCellWithoutMapBorders((iX + 1), (iYLine + 1));
 
 					int iColor = makecol(194, 125, 60);
 

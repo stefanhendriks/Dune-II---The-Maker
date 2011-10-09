@@ -155,7 +155,7 @@ void cTimeManager::handleTimerGlobal() {
 
 			// DO NOT THINK FOR HUMAN PLAYER (== 0)
 			for (int i = 0; i < MAX_PLAYERS; i++) {
-				aiplayer[i].think();
+				//aiplayer[i].think();
 			}
 
 			for (int i = 0; i < MAX_PLAYERS; i++) {

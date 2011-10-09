@@ -2,6 +2,7 @@
 #define CMAPCELL_H_
 
 class cMapCell {
+
 	public:
 		int spiceInCredits;
 		int terrainTypeGfxDataIndex;

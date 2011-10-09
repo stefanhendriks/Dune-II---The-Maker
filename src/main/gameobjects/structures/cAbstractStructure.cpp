@@ -153,7 +153,7 @@ void cAbstractStructure::die() {
 	// create destroy particles
 	for (int w = 0; w < iWidth; w++) {
 		for (int h = 0; h < iHeight; h++) {
-			iCll = iCellMake(iCX + w, iCY + h);
+			iCll = createCellWithoutMapBorders(iCX + w, iCY + h);
 
 			map->cell[iCll].terrainTypeGfxDataIndex = TERRAIN_ROCK;
 			mapEditor.smoothCellsAroundCell(iCll);
@@ -209,6 +209,8 @@ void cAbstractStructure::think_prebuild() {
 
 // Free around structure, return the first cell that is free.
 int cAbstractStructure::iFreeAround() {
+	cMapUtils * mapUtils = new cMapUtils(map);
+
 	int iStartX = iCellGiveX(iCell);
 	int iStartY = iCellGiveY(iCell);
 
@@ -218,23 +220,18 @@ int cAbstractStructure::iFreeAround() {
 	iStartX--;
 	iStartY--;
 
-	int iCx = 0;
-	int iCy = 0;
-
-	for (int x = iStartX; x < iEndX; x++)
+	for (int x = iStartX; x < iEndX; x++) {
 		for (int y = iStartY; y < iEndY; y++) {
-			iCx = x;
-			iCy = y;
-
-			FIX_BORDER_POS(iCx, iCy);
-
-			int cll = iCellMake(iCx, iCy);
+			int cll = mapUtils->createCell(x, y);
 
 			if (map->occupied(cll) == false) {
+				delete mapUtils;
 				return cll;
 			}
 		}
+	}
 
+	delete mapUtils;
 	return -1; // fail
 }
 
