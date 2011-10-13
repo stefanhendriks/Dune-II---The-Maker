@@ -1669,8 +1669,6 @@ void cUnit::shoot(int iShootCell) {
 		PARTICLE_CREATE(iShootX, iShootY, OBJECT_SIEGESHOOT, -1, bmp_head);
 	}
 
-	int iSc = iCellMake(iCx, iCy);
-
 	create_bullet(units[iType].bullets, iCell, iShootCell, iID, -1);
 
 }
