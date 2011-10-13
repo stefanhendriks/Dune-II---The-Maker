@@ -1,10 +1,3 @@
-/*
- * cMainMenuDialog.h
- *
- *  Created on: 1-okt-2011
- *      Author: Stefan
- */
-
 #ifndef CMAINMENUDIALOG_H_
 #define CMAINMENUDIALOG_H_
 
@@ -23,6 +16,10 @@ class MainMenuDialog  : public GuiShape {
 		void setOptionsButton(GuiButton * button ) { optionsButton = button; }
 		void setHallOfFameButton(GuiButton * button ) { hallfOfFameButton = button; }
 		void setExitGameButton(GuiButton * button ) { exitGameButton = button; }
+
+		// TODO: getters
+
+		// TODO: draw methods (like in GuiShape classes)
 
 	protected:
 

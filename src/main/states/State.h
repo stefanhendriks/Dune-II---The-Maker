@@ -27,7 +27,7 @@ class State {
 			guiWindow = NULL;
 			timeManager = NULL;
 			interactionManager = NULL;
-			restManager = new RestManager(IDEAL_FPS);
+			restManager = NULL;
 		}
 
 		~State() {
@@ -54,7 +54,10 @@ class State {
 			//
 		};
 
-		void setGuiWindow(GuiWindow * value) { guiWindow = value; }
+		void setGuiWindow(GuiWindow * guiWindow) { this->guiWindow = guiWindow; }
+		void setTimeManager(cTimeManager * timeManager) { this->timeManager = timeManager; }
+		void setRestManager(RestManager * restManager) { this->restManager = restManager; }
+		void setInteractionManager(cInteractionManager * interactionManager) { this->interactionManager = interactionManager; }
 
 	protected:
 

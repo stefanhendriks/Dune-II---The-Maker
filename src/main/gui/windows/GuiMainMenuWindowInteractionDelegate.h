@@ -6,10 +6,14 @@
 #ifndef GUIMAINMENUWINDOWINTERACTIONDELEGATE_H_
 #define GUIMAINMENUWINDOWINTERACTIONDELEGATE_H_
 
-class GuiMainMenuWindowInteractionDelegate {
+#include "../GuiInteractionDelegate.h"
+
+class GuiMainMenuWindowInteractionDelegate : public GuiInteractionDelegate {
 	public:
 		GuiMainMenuWindowInteractionDelegate();
-		virtual ~GuiMainMenuWindowInteractionDelegate();
+		~GuiMainMenuWindowInteractionDelegate();
+
+		void interact(GuiElement * GuiElementCallingDelegate);
 };
 
 #endif /* GUIMAINMENUWINDOWINTERACTIONDELEGATE_H_ */

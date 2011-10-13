@@ -7,6 +7,11 @@
 
 #include <string>
 
+#include "../../gameobjects/ScreenResolution.h"
+
+#include "../GuiColors.h"
+#include "GuiButton.h"
+
 class GuiShapeFactory {
 
 	public:
@@ -22,9 +27,7 @@ class GuiShapeFactory {
 	protected:
 
 	private:
-		int defaultGreyColorInner;
-		int defaultGreyColorLighterBorder;
-		int defaultGreyColorDarkerBorder;
+		GuiColors guiColors;
 		ScreenResolution * screenResolution;
 };
 

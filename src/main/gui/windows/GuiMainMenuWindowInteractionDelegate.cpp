@@ -1,17 +1,15 @@
-/*
- * GuiMainMenuWindowInteractionDelegate.cpp
- *
- *  Created on: 4 okt. 2011
- *      Author: Stefan
- */
-
 #include "GuiMainMenuWindowInteractionDelegate.h"
 
-GuiMainMenuWindowInteractionDelegate::GuiMainMenuWindowInteractionDelegate() {
-	// TODO Auto-generated constructor stub
+GuiMainMenuWindowInteractionDelegate::GuiMainMenuWindowInteractionDelegate(){
 
 }
 
 GuiMainMenuWindowInteractionDelegate::~GuiMainMenuWindowInteractionDelegate() {
-	// TODO Auto-generated destructor stub
+}
+
+void GuiMainMenuWindowInteractionDelegate::interact(GuiElement * GuiElementCallingDelegate) {
+	// do something, check the elements, etc.
+	// 1. Cast calling element to GuiMainMenuWindow
+	// 2. read information from its objects (read state)
+	// 3. Interact upon that information (update state)
 }

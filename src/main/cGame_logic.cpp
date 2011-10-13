@@ -69,7 +69,7 @@ void cGame::init() {
 	memset(iRegionHouse, -1, sizeof(iRegionHouse));
 	memset(cRegionText, 0, sizeof(cRegionText));
 
-	soundEnabled = true;
+	soundEnabled = false;
 	mp3MusicEnabled = false;
 
 	iSkirmishMap = -1;
