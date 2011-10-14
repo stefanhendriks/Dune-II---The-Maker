@@ -525,8 +525,6 @@ void cGame::playingState() {
 
 	assert(gameDrawer);
 	gameDrawer->draw();
-	assert(interactionManager);
-	interactionManager->interactWithMouse();
 
 	think_winlose();
 }
@@ -2136,15 +2134,16 @@ void cGame::runGameState() {
 void cGame::run() {
 	set_trans_blender(0, 0, 0, 128);
 
-	while (playing) {
-		TimeManager.processTime();
-		updateState();
-		runGameState();
-		assert(interactionManager);
-		interactionManager->interactWithKeyboard();
-		shakeScreenAndBlitBuffer();
-		frame_count++;
+	while (!stateRunner->shouldQuitGame()) {
+		stateRunner->runState();
+		//frame_count++;
 	}
+//		TimeManager.processTime();
+//		updateState();
+//		runGameState();
+//		shakeScreenAndBlitBuffer();
+
+//	}
 }
 
 /**
@@ -2573,7 +2572,6 @@ bool cGame::setupGame() {
 
 	game.init();
 	cGameFactory::getInstance()->createGameControlsContextsForPlayers();
-	//cGameFactory::getInstance()->createInteractionManagerForHumanPlayer(MAINMENU);
 	cGameFactory::getInstance()->createMapClassAndNewDependenciesForGame(MAINMENU);
 
 	playMusicByType(MUSIC_MENU);

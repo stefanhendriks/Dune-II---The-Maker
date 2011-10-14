@@ -42,7 +42,6 @@ extern cMentat		  *Mentat;
 extern cTimeManager   TimeManager;
 extern cStructureUtils structureUtils;
 extern GameDrawer   * gameDrawer;
-extern cInteractionManager *interactionManager;
 
 // ...
 extern sPreviewMap     PreviewMap[MAX_SKIRMISHMAPS];                   // max of 100 maps in skirmish directory

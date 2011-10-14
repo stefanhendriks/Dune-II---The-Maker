@@ -19,10 +19,10 @@
 #include "../managers/cInteractionManager.h"
 #include "../utils/cTimeManager.h" // <-- oh oh, this already points out something is wrong
 
+#define IDEAL_FPS	60
+
 // forward declaration (cannot include here, causing cyclic dependency, compile errors)
 class StateRunner;
-
-#define IDEAL_FPS	60
 
 class State {
 	public:
@@ -31,6 +31,7 @@ class State {
 			timeManager = NULL;
 			interactionManager = NULL;
 			restManager = NULL;
+			quitGame = false;
 		}
 
 		~State() {
@@ -40,7 +41,9 @@ class State {
 			delete interactionManager;
 		}
 
-		void updateState(StateRunner * stateRunner) {} ; // concrete state objects implement this function
+		void updateState(StateRunner * stateRunner) {
+
+		} ; // concrete state objects implement this function
 
 		void run(StateRunner * stateRunner) {
 			assert(guiWindow);
@@ -53,8 +56,10 @@ class State {
 			// interactionManager->interactWithKeyboard();
 			// OR: interact with everything, or move to updateState ? (updateState does mouse related updating stuff)
 
-			interactionManager->interactWithKeyboard();
-			interactionManager->interactWithMouse();
+			// TODO: interaction with keyboard needs to be thought out, for now add ESQ to quit game
+			if (key[KEY_ESC]) {
+				flagToQuitGame();
+			}
 
 			// shakeScreenAndBlitBuffer();
 			// blit the screen (screenBlitter?) either shaky or not, depending
@@ -82,6 +87,9 @@ class State {
 			this->interactionManager = interactionManager;
 		}
 
+		bool shouldQuitGame() { return quitGame; }
+		void flagToQuitGame() { quitGame = true; }
+
 	protected:
 
 	private:
@@ -93,6 +101,8 @@ class State {
 
 		// interact with stuff (mouse/keyboard)
 		cInteractionManager * interactionManager;
+
+		bool quitGame;
 
 };
 

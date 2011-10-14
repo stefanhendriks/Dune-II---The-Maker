@@ -13,8 +13,6 @@
 //#include "../controls/cMouse.h"
 //#include "../controls/cGameControlsContext.h"
 //
-//#include "../managers/cInteractionManager.h"
-//
 //#include "../cGame.h"
 #include "cGameFactory.h"
 
@@ -70,30 +68,10 @@ void cGameFactory::createGameControlsContextsForPlayers() {
 	logbook("cGameFactory:createGameControlsContextsForPlayers [END]");
 }
 
+
+// TODO: BECOMES OBSELETE, can be removed
 void cGameFactory::createInteractionManagerForHumanPlayer(GameState state) {
 	logbook("cGameFactory:createInteractionManagerForHumanPlayer [BEGIN]");
-	delete interactionManager;
-	interactionManager = NULL;
-
-	cPlayer * thePlayer = &player[HUMAN];
-	switch (state) {
-		case MAINMENU:
-			interactionManager = new cMenuInteractionManager(thePlayer);
-			break;
-		case PLAYING:
-			interactionManager = new cCombatInteractionManager(thePlayer);
-			break;
-		case BRIEFING:
-			interactionManager = new cMenuInteractionManager(thePlayer);
-			break;
-		case SETUPSKIRMISH:
-			// FIXME: this feels odd
-			interactionManager = new cCombatInteractionManager(thePlayer);
-			break;
-		default:
-			interactionManager = NULL;
-	}
-	assert(interactionManager);
 	logbook("cGameFactory:createInteractionManagerForHumanPlayer [END]");
 }
 
@@ -162,9 +140,6 @@ void cGameFactory::destroyAll() {
 //		delete thePlayer;
 //		thePlayer = NULL;
 //	}
-
-	delete interactionManager;
-	interactionManager = NULL;
 
 	destroy_bitmap(bmp_fadeout);
 	destroy_bitmap(bmp_screen);

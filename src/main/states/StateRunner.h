@@ -4,7 +4,6 @@
 #include <assert.h>
 #include <cstddef>
 
-#include "State.h"
 #include "StateBuilder.h"
 #include "../include/GameState.h"
 
@@ -28,13 +27,16 @@ class StateRunner {
 
 		void transitionToState(GameState gameState);
 
+		bool shouldQuitGame() {
+			return runningState->shouldQuitGame();
+		}
+
 	protected:
 
 	private:
 		State * runningState;
 
 		StateBuilder * stateBuilder;
-
 };
 
 #endif /* STATERUNNER_H_ */

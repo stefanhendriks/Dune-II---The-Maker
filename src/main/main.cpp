@@ -33,7 +33,6 @@ cMentat * Mentat = NULL;
 cTimeManager TimeManager;
 cStructureUtils structureUtils;
 GameDrawer * gameDrawer = NULL;
-cInteractionManager * interactionManager = NULL;
 
 // Structs
 sPreviewMap PreviewMap[MAX_SKIRMISHMAPS]; // max of 100 maps in skirmish directory
