@@ -10,9 +10,9 @@
 
 class StateRunner {
 	public:
-		StateRunner(StateBuilder * stateBuilder, GameState initialGameState) {
-			assert(stateBuilder);
-			this->stateBuilder = stateBuilder;
+		StateRunner(ScreenResolution * screenResolution, GameState initialGameState) {
+			assert(screenResolution);
+			this->stateBuilder = new StateBuilder(screenResolution);
 			this->runningState = stateBuilder->buildState(initialGameState);
 		}
 

@@ -6,19 +6,15 @@
 #include "../managers/RestManager.h"
 #include "../utils/cTimeManager.h"
 
-StateBuilder::StateBuilder(ScreenResolution * screenResolution, cPlayer * player) {
+StateBuilder::StateBuilder(ScreenResolution * screenResolution) {
 	assert(screenResolution);
-	assert(player);
 	this->screenResolution = screenResolution;
-	this->player = player;
-
 	this->guiWindowBuilder = new GuiWindowBuilder(screenResolution);
 }
 
 StateBuilder::~StateBuilder() {
 	delete guiWindowBuilder;
 	screenResolution = NULL; // note: do not delete screenResolution, as this class is not its owner
-	player = NULL; // note: do not delete player, as this class is not its owner
 }
 
 
@@ -37,8 +33,8 @@ State * StateBuilder::buildNewMainMenuState() {
 	GuiMainMenuWindow * mainMenuWindow = guiWindowBuilder->buildMainMenuWindow();
 	mainMenuState->setGuiWindow(mainMenuWindow);
 
-	cInteractionManager * interactionManager = new cCombatInteractionManager(player);
-	mainMenuState->setInteractionManager(interactionManager);
+//	cInteractionManager * interactionManager = new cCombatInteractionManager(player);
+//	mainMenuState->setInteractionManager(interactionManager);
 
 	RestManager * restManager = new RestManager(IDEAL_FPS);
 	mainMenuState->setRestManager(restManager);

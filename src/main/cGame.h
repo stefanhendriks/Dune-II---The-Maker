@@ -18,7 +18,9 @@
 #include "gameobjects/ScreenResolution.h"
 
 #include "include/GameState.h"
+
 #include "states/State.h"
+#include "states/StateRunner.h"
 
 class cGame {
 
@@ -216,8 +218,9 @@ class cGame {
 
 		int iMaxVolume;
 
-		cSoundPlayer *soundPlayer;
-		cMoviePlayer *moviePlayer;
+		cSoundPlayer * soundPlayer;
+		cMoviePlayer * moviePlayer;
+		StateRunner * stateRunner;
 
 };
 

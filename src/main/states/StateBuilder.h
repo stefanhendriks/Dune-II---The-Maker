@@ -12,7 +12,7 @@
 
 class StateBuilder {
 	public:
-		StateBuilder(ScreenResolution * screenResolution, cPlayer * player);
+		StateBuilder(ScreenResolution * screenResolution);
 		~StateBuilder();
 
 		State * buildState(GameState gameState);
@@ -25,8 +25,6 @@ class StateBuilder {
 		GuiWindowBuilder * guiWindowBuilder;
 
 		ScreenResolution * screenResolution;
-
-		cPlayer * player;
 };
 
 #endif

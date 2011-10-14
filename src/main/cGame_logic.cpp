@@ -20,6 +20,8 @@
 #include "utils/BestScreenResolutionFinder.h"
 #include "utils/CellCalculator.h"
 
+
+
 cGame::cGame() {
 	screenResolution = new ScreenResolution(800, 600);
 	screenResolutionFromIni = NULL;
@@ -36,6 +38,7 @@ cGame::cGame() {
 	memset(revision, 0, sizeof(revision));
 	memset(version, 0, sizeof(version));
 	sprintf(version, "0.4.6");
+	stateRunner = NULL;
 }
 
 cGame::~cGame() {
@@ -47,6 +50,8 @@ cGame::~cGame() {
 	screenResolution = NULL;
 	delete screenResolutionFromIni;
 	screenResolutionFromIni = NULL;
+	delete stateRunner;
+	stateRunner = NULL;
 }
 
 void cGame::init() {
@@ -2572,6 +2577,8 @@ bool cGame::setupGame() {
 	cGameFactory::getInstance()->createMapClassAndNewDependenciesForGame(MAINMENU);
 
 	playMusicByType(MUSIC_MENU);
+
+	stateRunner = new StateRunner(screenResolution, MAINMENU);
 
 	// all has installed well. Lets rock and role.
 	return true;
