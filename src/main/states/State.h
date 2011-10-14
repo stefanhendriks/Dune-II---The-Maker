@@ -19,6 +19,9 @@
 #include "../managers/cInteractionManager.h"
 #include "../utils/cTimeManager.h" // <-- oh oh, this already points out something is wrong
 
+// forward declaration (cannot include here, causing cyclic dependency, compile errors)
+class StateRunner;
+
 #define IDEAL_FPS	60
 
 class State {
@@ -37,27 +40,47 @@ class State {
 			delete interactionManager;
 		}
 
-		void updateState() {} ; // concrete state objects implement this function
+		void updateState(StateRunner * stateRunner) {} ; // concrete state objects implement this function
 
-		void run() {
+		void run(StateRunner * stateRunner) {
 			assert(guiWindow);
 			timeManager->processTime();
-			updateState();
 			restManager->giveCpuSomeSlackIfNeeded();
+			updateState(stateRunner);
+			guiWindow->interact();
+			guiWindow->draw();
 
 			// interactionManager->interactWithKeyboard();
 			// OR: interact with everything, or move to updateState ? (updateState does mouse related updating stuff)
+
+			interactionManager->interactWithKeyboard();
+			interactionManager->interactWithMouse();
 
 			// shakeScreenAndBlitBuffer();
 			// blit the screen (screenBlitter?) either shaky or not, depending
 			// on action on battlefield.
 			//
-		};
+		}
 
-		void setGuiWindow(GuiWindow * guiWindow) { assert(guiWindow); this->guiWindow = guiWindow; }
-		void setTimeManager(cTimeManager * timeManager) { assert(timeManager); this->timeManager = timeManager; }
-		void setRestManager(RestManager * restManager) { assert(restManager); this->restManager = restManager; }
-		void setInteractionManager(cInteractionManager * interactionManager) { assert(interactionManager); this->interactionManager = interactionManager; }
+		void setGuiWindow(GuiWindow * guiWindow) {
+			assert(guiWindow);
+			this->guiWindow = guiWindow;
+		}
+
+		void setTimeManager(cTimeManager * timeManager) {
+			assert(timeManager);
+			this->timeManager = timeManager;
+		}
+
+		void setRestManager(RestManager * restManager) {
+			assert(restManager);
+			this->restManager = restManager;
+		}
+
+		void setInteractionManager(cInteractionManager * interactionManager) {
+			assert(interactionManager);
+			this->interactionManager = interactionManager;
+		}
 
 	protected:
 
