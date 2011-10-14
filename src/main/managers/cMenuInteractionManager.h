@@ -1,12 +1,8 @@
-/*
- * cMenuInteractionManager.h
- *
- *  Created on: 27 feb. 2011
- *      Author: Stefan
- */
-
 #ifndef CMENUINTERACTIONMANAGER_H_
 #define CMENUINTERACTIONMANAGER_H_
+
+#include "../player/cPlayer.h"
+#include "cInteractionManager.h"
 
 class cMenuInteractionManager : public cInteractionManager {
 	public:

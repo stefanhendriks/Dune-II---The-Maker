@@ -2,10 +2,11 @@
 #define GUIWINDOWBUILDER_H_
 
 #include "GuiMainMenuWindow.h"
+#include "../dialogs/DialogBuilder.h"
 
 class GuiWindowBuilder {
 	public:
-		GuiWindowBuilder();
+		GuiWindowBuilder(ScreenResolution * screenResolution);
 		~GuiWindowBuilder();
 
 		GuiMainMenuWindow * buildMainMenuWindow();
@@ -13,6 +14,9 @@ class GuiWindowBuilder {
 	protected:
 
 	private:
+		ScreenResolution * screenResolution;
+
+		DialogBuilder * dialogBuilder;
 
 };
 

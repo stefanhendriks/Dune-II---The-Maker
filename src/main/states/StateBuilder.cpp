@@ -1,12 +1,24 @@
 #include <assert.h>
 
 #include "StateBuilder.h"
+#include "../managers/cInteractionManager.h"
+#include "../managers/cCombatInteractionManager.h"
+#include "../managers/RestManager.h"
+#include "../utils/cTimeManager.h"
 
-StateBuilder::StateBuilder() {
-//TODO: inject dependencies (builders)
+StateBuilder::StateBuilder(ScreenResolution * screenResolution, cPlayer * player) {
+	assert(screenResolution);
+	assert(player);
+	this->screenResolution = screenResolution;
+	this->player = player;
+
+	this->guiWindowBuilder = new GuiWindowBuilder(screenResolution);
 }
 
 StateBuilder::~StateBuilder() {
+	delete guiWindowBuilder;
+	screenResolution = NULL; // note: do not delete screenResolution, as this class is not its owner
+	player = NULL; // note: do not delete player, as this class is not its owner
 }
 
 
@@ -22,8 +34,17 @@ State * StateBuilder::buildState(GameState gameState) {
 State * StateBuilder::buildNewMainMenuState() {
 	State * mainMenuState = new State();
 
-	// TODO:
-	// set stuff in the main menu, which need to be built by their own builders as well...
+	GuiMainMenuWindow * mainMenuWindow = guiWindowBuilder->buildMainMenuWindow();
+	mainMenuState->setGuiWindow(mainMenuWindow);
+
+	cInteractionManager * interactionManager = new cCombatInteractionManager(player);
+	mainMenuState->setInteractionManager(interactionManager);
+
+	RestManager * restManager = new RestManager(IDEAL_FPS);
+	mainMenuState->setRestManager(restManager);
+
+	cTimeManager * timeManager = new cTimeManager();
+	mainMenuState->setTimeManager(timeManager);
 
 	return mainMenuState;
 }

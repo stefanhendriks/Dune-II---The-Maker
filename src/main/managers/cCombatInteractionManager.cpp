@@ -1,10 +1,3 @@
-/*
- * cCombatInteractionManager.cpp
- *
- *  Created on: 27 feb. 2011
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
 cCombatInteractionManager::cCombatInteractionManager(cPlayer * thePlayer) : cInteractionManager(thePlayer) {

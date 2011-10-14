@@ -1,12 +1,8 @@
-/*
- * cCombatInteractionManager.h
- *
- *  Created on: 27 feb. 2011
- *      Author: Stefan
- */
-
 #ifndef CCOMBATINTERACTIONMANAGER_H_
 #define CCOMBATINTERACTIONMANAGER_H_
+
+#include "../player/cPlayer.h"
+#include "cInteractionManager.h"
 
 class cCombatInteractionManager : public cInteractionManager {
 	public:

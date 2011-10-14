@@ -1,11 +1,12 @@
 #include "DialogBuilder.h"
 
 DialogBuilder::DialogBuilder(ScreenResolution * screenResolution) {
+	assert(screenResolution);
 	this->screenResolution = screenResolution;
 }
 
 DialogBuilder::~DialogBuilder() {
-	screenResolution = NULL;
+	screenResolution = NULL; // note: do not delete screenResolution, as this class is not its owner
 }
 
 MainMenuDialog * DialogBuilder::buildMainMenuDialog() {

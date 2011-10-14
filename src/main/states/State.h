@@ -54,10 +54,10 @@ class State {
 			//
 		};
 
-		void setGuiWindow(GuiWindow * guiWindow) { this->guiWindow = guiWindow; }
-		void setTimeManager(cTimeManager * timeManager) { this->timeManager = timeManager; }
-		void setRestManager(RestManager * restManager) { this->restManager = restManager; }
-		void setInteractionManager(cInteractionManager * interactionManager) { this->interactionManager = interactionManager; }
+		void setGuiWindow(GuiWindow * guiWindow) { assert(guiWindow); this->guiWindow = guiWindow; }
+		void setTimeManager(cTimeManager * timeManager) { assert(timeManager); this->timeManager = timeManager; }
+		void setRestManager(RestManager * restManager) { assert(restManager); this->restManager = restManager; }
+		void setInteractionManager(cInteractionManager * interactionManager) { assert(interactionManager); this->interactionManager = interactionManager; }
 
 	protected:
 
