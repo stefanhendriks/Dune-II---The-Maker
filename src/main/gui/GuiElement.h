@@ -6,9 +6,8 @@
 
 class GuiElement {
 	public:
-	~GuiElement() {};
-
-	void draw() {};
+		virtual ~GuiElement() = 0;
+		virtual void draw() = 0;
 };
 
 #endif /* GUIELEMENT_H_ */

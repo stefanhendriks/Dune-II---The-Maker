@@ -18,6 +18,7 @@
 #include "../managers/RestManager.h"
 #include "../managers/cInteractionManager.h"
 #include "../utils/cTimeManager.h" // <-- oh oh, this already points out something is wrong
+#include "../utils/Logger.h"
 
 #define IDEAL_FPS	60
 
@@ -39,6 +40,7 @@ class State {
 			delete timeManager;
 			delete restManager;
 			delete interactionManager;
+			Logger::getInstance()->debug("destructor State");
 		}
 
 		void updateState(StateRunner * stateRunner) {

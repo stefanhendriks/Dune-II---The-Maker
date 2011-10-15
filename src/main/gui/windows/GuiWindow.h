@@ -38,17 +38,14 @@ class GuiWindow : public GuiElement {
 			interactionDelegate = guiInteractionDelegate;
 		}
 
-		~GuiWindow() {
-			delete interactionDelegate;
-		}
+		virtual ~GuiWindow() = 0;
+
+		virtual void draw() = 0;
 
 		// called each frame, delegates its behavior to the given concrete cGuiWindowDelegate class.
 		void interact() {
 			interactionDelegate->interact(this);
 		}
-
-		// overwrite to do actual drawing
-		void draw() {};
 
 	private:
 		GuiInteractionDelegate * interactionDelegate;

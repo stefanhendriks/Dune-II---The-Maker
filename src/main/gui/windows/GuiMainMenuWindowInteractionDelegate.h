@@ -13,7 +13,7 @@ class GuiMainMenuWindowInteractionDelegate : public GuiInteractionDelegate {
 		GuiMainMenuWindowInteractionDelegate();
 		~GuiMainMenuWindowInteractionDelegate();
 
-		void interact(GuiElement * GuiElementCallingDelegate);
+		void interact(GuiElement * guiElementCallingDelegate);
 };
 
 #endif /* GUIMAINMENUWINDOWINTERACTIONDELEGATE_H_ */

@@ -13,10 +13,10 @@
 class GuiInteractionDelegate {
 	public:
 		GuiInteractionDelegate() {};
-		~GuiInteractionDelegate() {};
+		virtual ~GuiInteractionDelegate() = 0;
 
 		// this function must be implemented by each concrete delegate class
-		void interact(GuiElement * GuiElementCallingDelegate) { };
+		virtual void interact(GuiElement * guiElementCallingDelegate) = 0;
 };
 
 #endif /* GUIDELEGATE_H_ */

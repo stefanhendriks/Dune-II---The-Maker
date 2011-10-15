@@ -2576,7 +2576,7 @@ bool cGame::setupGame() {
 
 	playMusicByType(MUSIC_MENU);
 
-	stateRunner = new StateRunner(screenResolution, MAINMENU);
+	stateRunner = new StateRunner(screenResolution, bmp_screen, MAINMENU);
 
 	// all has installed well. Lets rock and role.
 	return true;
