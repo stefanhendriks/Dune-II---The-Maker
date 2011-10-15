@@ -1,12 +1,8 @@
 #ifndef D2TM_CLOG_H_
 #define D2TM_CLOG_H_
 
-//#include <stdlib.h>
 #include <stdio.h>
-
-//#include <cstring>
 #include <string>
-//#include <iostream>
 
 #include "../include/enums.h"
 
