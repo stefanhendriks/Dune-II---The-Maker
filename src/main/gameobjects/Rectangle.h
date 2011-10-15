@@ -1,11 +1,15 @@
 #ifndef CRECTANGLE_H_
 #define CRECTANGLE_H_
 
+#include <assert.h>
+
 class Rectangle {
 	public:
 
 		Rectangle();
 		Rectangle(int startX, int startY, int endX, int endY);
+		Rectangle(Rectangle * other);
+
 		~Rectangle();
 
 		void setStartX(int value) { startX = value; }

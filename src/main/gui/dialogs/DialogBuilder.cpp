@@ -17,15 +17,24 @@ MainMenuDialog * DialogBuilder::buildMainMenuDialog() {
 	int endX = centerOfX + halfOfSizeMainMenu;
 	int endY = startY + 142; // 142 pixels height
 
-	Rectangle * rect = new Rectangle();
-	rect->setStartX(startX);
-	rect->setStartY(startY);
-	rect->setEndX(endX);
-	rect->setEndY(endY);
+	Rectangle * dialogRectangle = new Rectangle();
+	dialogRectangle->setStartX(startX);
+	dialogRectangle->setStartY(startY);
+	dialogRectangle->setEndX(endX);
+	dialogRectangle->setEndY(endY);
 
-	MainMenuDialog * mainMenuDialog = new MainMenuDialog(rect);
+	MainMenuDialog * mainMenuDialog = new MainMenuDialog(dialogRectangle);
 	mainMenuDialog->setColors(guiColors.getMenuDarkBorderColor(), guiColors.getMenuLightBorderColor(), guiColors.getMenuGreyColor());
 
 	//mainMenuDialog->setNewCampaignButton()
+	Rectangle * buttonRectangle = new Rectangle(dialogRectangle);
+	buttonRectangle->setStartX(dialogRectangle->getStartX() + 1);
+	buttonRectangle->setStartY(dialogRectangle->getStartY() + 1);
+	buttonRectangle->setEndX(dialogRectangle->getEndX() - 1);
+	buttonRectangle->setEndY(dialogRectangle->getEndY() - 1);
+
+	GuiButton * button = new GuiButton(buttonRectangle, "Campaign");
+	mainMenuDialog->setNewCampaignButton(button);
+
 	return mainMenuDialog;
 }

@@ -20,6 +20,7 @@ class MainMenuDialog  : public GuiShape {
 		// TODO: getters
 
 		// TODO: draw methods (like in GuiShape classes)
+		void draw();
 
 	protected:
 

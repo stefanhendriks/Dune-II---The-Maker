@@ -11,6 +11,15 @@ Rectangle::Rectangle(int startX, int startY, int endX, int endY) {
 	setEndY(endY);
 }
 
+// copy constructor
+Rectangle::Rectangle(Rectangle * other) {
+	assert(other);
+	this->startX = other->getStartX();
+	this->startY = other->getStartY();
+	this->endX = other->getEndX();
+	this->endY = other->getEndY();
+}
+
 Rectangle::~Rectangle() {
 	startX = startY = endX = endY = -1;
 }

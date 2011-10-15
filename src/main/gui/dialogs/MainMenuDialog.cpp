@@ -25,3 +25,8 @@ MainMenuDialog::~MainMenuDialog() {
 	delete hallfOfFameButton;
 	delete exitGameButton;
 }
+
+void MainMenuDialog::draw() {
+	GuiShape::draw();
+	newCampaignButton->draw();
+}
