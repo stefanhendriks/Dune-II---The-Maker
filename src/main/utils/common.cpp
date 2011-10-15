@@ -153,12 +153,12 @@ void INSTALL_HOUSES() {
 }
 
 bool MOUSE_BTN_LEFT() {
-	return cMouse::getInstance()->isLeftButtonPressed();
+	return Mouse::getInstance()->isLeftButtonPressed();
 }
 
 // Did we press the right mouse button? (instant)
 bool MOUSE_BTN_RIGHT() {
-	return cMouse::getInstance()->isRightButtonPressed();
+	return Mouse::getInstance()->isRightButtonPressed();
 }
 
 /**
@@ -168,12 +168,12 @@ bool MOUSE_BTN_RIGHT() {
  * @return
  */
 bool mouse_pressed_left() {
-	return cMouse::getInstance()->isLeftButtonClicked();
+	return Mouse::getInstance()->isLeftButtonClicked();
 }
 
 // Did we press the right mouse button?
 bool mouse_pressed_right() {
-	return cMouse::getInstance()->isRightButtonClicked();
+	return Mouse::getInstance()->isRightButtonClicked();
 }
 /*****************************
  Unit Rules

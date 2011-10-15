@@ -10,7 +10,7 @@ GuiShapeFactory::~GuiShapeFactory() {
 
 GuiButton * GuiShapeFactory::createGrayButton(Rectangle * rect, std::string theLabel) {
 	GuiButton * button = new GuiButton(rect, theLabel);
-	button->setColors(guiColors.getMenuDarkBorderColor(), guiColors.getMenuLightBorderColor(), guiColors.getMenuGreyColor());
+	button->setColors(guiColors.getMenuDarkBorder(), guiColors.getMenuLightBorder(), guiColors.getMenuGrey());
 	return button;
 }
 

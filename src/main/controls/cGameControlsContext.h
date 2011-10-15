@@ -82,7 +82,7 @@ class cGameControlsContext {
 
 		// context belongs to specific player
 		cPlayer * player;
-		cMouse * mouse;
+		Mouse * mouse;
 
 };
 

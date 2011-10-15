@@ -1,6 +1,6 @@
 #include "../include/d2tmh.h"
 
-MouseDrawer::MouseDrawer(cPlayer *thePlayer, cMouse *theMouse) {
+MouseDrawer::MouseDrawer(cPlayer *thePlayer, Mouse *theMouse) {
 	assert(thePlayer);
 	assert(theMouse);
 	player = thePlayer;

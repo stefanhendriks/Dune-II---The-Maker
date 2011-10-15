@@ -30,7 +30,7 @@ class cStructureUtils {
 		void putStructureOnDimension(int dimensionId, cAbstractStructure * theStructure);
 
 		bool isStructureOnScreen(cAbstractStructure *structure);
-		bool isMouseOverStructure(cMouse *mouse, cAbstractStructure *structure);
+		bool isMouseOverStructure(Mouse *mouse, cAbstractStructure *structure);
 
 		int getTotalPowerOutForPlayer(cPlayer * player);
 		int getTotalPowerUsageForPlayer(cPlayer * player);

@@ -9,7 +9,7 @@
 #define DRAWERSH_H_
 
 // forward declr.
-class cMouse;
+class Mouse;
 
 #include "TextDrawer.h"
 

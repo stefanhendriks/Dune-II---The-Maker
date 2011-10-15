@@ -130,7 +130,7 @@ bool cMapCamera::canScrollRight() {
 }
 
 void cMapCamera::thinkInteraction() {
-	cMouse * mouse = cMouse::getInstance();
+	Mouse * mouse = Mouse::getInstance();
 	if (mouse->isMouseDraggingRectangle()) {
 		return;
 	}

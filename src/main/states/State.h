@@ -19,6 +19,7 @@
 #include "../managers/cInteractionManager.h"
 #include "../utils/cTimeManager.h" // <-- oh oh, this already points out something is wrong
 #include "../utils/Logger.h"
+#include "../controls/Mouse.h"
 
 #define IDEAL_FPS	60
 
@@ -33,6 +34,7 @@ class State {
 			interactionManager = NULL;
 			restManager = NULL;
 			quitGame = false;
+			mouse = NULL;
 		}
 
 		~State() {
@@ -51,7 +53,10 @@ class State {
 			assert(guiWindow);
 			timeManager->processTime();
 			restManager->giveCpuSomeSlackIfNeeded();
+			mouse->updateState();
+
 			updateState(stateRunner);
+
 			guiWindow->interact();
 			guiWindow->draw();
 
@@ -89,6 +94,11 @@ class State {
 			this->interactionManager = interactionManager;
 		}
 
+		void setMouse(Mouse * mouse) {
+			assert(mouse);
+			this->mouse = mouse;
+		}
+
 		bool shouldQuitGame() { return quitGame; }
 		void flagToQuitGame() { quitGame = true; }
 
@@ -103,6 +113,8 @@ class State {
 
 		// interact with stuff (mouse/keyboard)
 		cInteractionManager * interactionManager;
+
+		Mouse * mouse;
 
 		bool quitGame;
 

@@ -131,7 +131,7 @@ void SideBarDrawer::drawScrollButtons() {
 	int buttonUpX = game.getScreenResolution()->getWidth() - 68;
 	int buttonUpY = game.getScreenResolution()->getHeight() - 310;
 
-	cMouse * mouse = cMouse::getInstance();
+	Mouse * mouse = Mouse::getInstance();
 
 	bool leftScrollButtonPressed = mouse->isMouseScrolledUp();
 	bool rightScrollButtonPressed = mouse->isMouseScrolledDown();
@@ -146,7 +146,7 @@ void SideBarDrawer::drawScrollButtons() {
 		bool mouseOverDown = isMouseOverScrollDown();
 		assert(!(mouseOverUp == true && mouseOverDown == true)); // can never be both.
 
-		cMouse * mouse = cMouse::getInstance();
+		Mouse * mouse = Mouse::getInstance();
 		if (mouseOverUp) {
 			leftScrollButtonPressed = mouse->isLeftButtonPressed();
 		} else if (mouseOverDown) {

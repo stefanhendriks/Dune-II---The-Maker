@@ -7,7 +7,7 @@
 cGameControlsContext::cGameControlsContext(cPlayer * thePlayer) {
 	assert(thePlayer);
 	player = thePlayer;
-	mouse = cMouse::getInstance();
+	mouse = Mouse::getInstance();
 	mouseCell = -99;
 	drawToolTip = false;
 }

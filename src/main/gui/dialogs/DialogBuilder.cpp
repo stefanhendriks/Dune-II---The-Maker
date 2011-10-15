@@ -24,7 +24,7 @@ MainMenuDialog * DialogBuilder::buildMainMenuDialog() {
 	dialogRectangle->setEndY(endY);
 
 	MainMenuDialog * mainMenuDialog = new MainMenuDialog(dialogRectangle);
-	mainMenuDialog->setColors(guiColors.getMenuDarkBorderColor(), guiColors.getMenuLightBorderColor(), guiColors.getMenuGreyColor());
+	mainMenuDialog->setColors(guiColors.getMenuDarkBorder(), guiColors.getMenuLightBorder(), guiColors.getMenuGrey());
 
 	//mainMenuDialog->setNewCampaignButton()
 	Rectangle * buttonRectangle = new Rectangle(dialogRectangle);

@@ -1,19 +1,14 @@
-/*
- * cMouse.h
- *
- *  Created on: 24-okt-2010
- *      Author: Stefan
- */
-
 #ifndef CMOUSE_H_
 #define CMOUSE_H_
 
-class cMouse {
+#include "../gameobjects/Rectangle.h"
+
+class Mouse {
 
 	public:
-		cMouse();
+		Mouse();
 
-		static cMouse *getInstance();
+		static Mouse *getInstance();
 
 		void updateState();
 
@@ -44,7 +39,7 @@ class cMouse {
 		Rectangle *getCurrentDrawingRectangle() { return &currentRectangle; }
 
 protected:
-	~cMouse();
+	~Mouse();
 
 
 private:
@@ -57,7 +52,7 @@ private:
     bool mouseScrolledUp;
     bool mouseScrolledDown;
     bool mouseDraggingRectangle;
-    static cMouse *instance;
+    static Mouse *instance;
     int x, y, z;
     int zValuePreviousFrame;
     int tile;

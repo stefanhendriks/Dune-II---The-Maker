@@ -2,7 +2,7 @@
 #define GUIH_H_
 
 // forward declr.
-class cMouse;
+class Mouse;
 class TextDrawer;
 
 #include "TextWriter.h"

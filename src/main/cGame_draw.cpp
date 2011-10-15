@@ -26,7 +26,7 @@ void cGame::losingState() {
 
 	draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
-	if (cMouse::getInstance()->isLeftButtonClicked()) {
+	if (Mouse::getInstance()->isLeftButtonClicked()) {
 		// OMG, MENTAT IS NOT HAPPY
 		gameStateEnum = LOSEBRIEF;
 
@@ -50,7 +50,7 @@ void cGame::winningState() {
 	mouseDrawer->draw();
 	draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
-	if (cMouse::getInstance()->isLeftButtonClicked()) {
+	if (Mouse::getInstance()->isLeftButtonClicked()) {
 		// SELECT YOUR NEXT CONQUEST
 		gameStateEnum = WINBRIEF;
 
@@ -69,7 +69,7 @@ void cGame::winningState() {
 // Draw the mouse in combat mode, and do its interactions
 void cGame::combat_mouse() {
 	cGameControlsContext *context = player[HUMAN].getGameControlsContext();
-	cMouse * mouse = cMouse::getInstance();
+	Mouse * mouse = Mouse::getInstance();
 	int hover_unit = context->getIdOfUnitWhereMouseHovers();
 
 	bool bOrderingUnits = false;
@@ -79,7 +79,7 @@ void cGame::combat_mouse() {
 
 		if (hover_unit > -1) {
 			if (unit[hover_unit].iPlayer == 0) {
-				cMouse::getInstance()->setMouseTile(MOUSE_PICK);
+				Mouse::getInstance()->setMouseTile(MOUSE_PICK);
 			}
 		}
 
@@ -134,7 +134,7 @@ void cGame::combat_mouse() {
 			if (mouse->isLeftButtonClicked()) {
 				bool bParticle = false;
 
-				if (cMouse::getInstance()->getMouseTile() == MOUSE_RALLY) {
+				if (Mouse::getInstance()->getMouseTile() == MOUSE_RALLY) {
 					int id = game.selected_structure;
 					if (id > -1)
 						if (structure[id]->isOwnerHuman()) {
@@ -143,7 +143,7 @@ void cGame::combat_mouse() {
 						}
 				}
 
-				if (hover_unit > -1 && (cMouse::getInstance()->getMouseTile() == MOUSE_NORMAL || cMouse::getInstance()->getMouseTile() == MOUSE_PICK)) {
+				if (hover_unit > -1 && (Mouse::getInstance()->getMouseTile() == MOUSE_NORMAL || Mouse::getInstance()->getMouseTile() == MOUSE_PICK)) {
 					if (unit[hover_unit].iPlayer == 0) {
 						if (!key[KEY_LSHIFT]) {
 							UNIT_deselect_all();
@@ -322,7 +322,7 @@ void cGame::combat_mouse() {
 			int structureId = context->getIdOfStructureWhereMouseHovers();
 
 			if (structure[structureId]->isOwnerHuman() && structure[structureId]->isDamaged()) {
-				if (cMouse::getInstance()->isLeftButtonClicked()) {
+				if (Mouse::getInstance()->isLeftButtonClicked()) {
 
 					if (!structure[structureId]->isBeingRepaired()) {
 						structure[structureId]->setRepairing(true);
@@ -331,11 +331,11 @@ void cGame::combat_mouse() {
 					}
 				}
 
-				cMouse::getInstance()->setMouseTile(MOUSE_REPAIR);
+				Mouse::getInstance()->setMouseTile(MOUSE_REPAIR);
 			}
 		}
 
-		if (cMouse::getInstance()->isLeftButtonClicked() && bOrderingUnits == false && !key[KEY_R]) {
+		if (Mouse::getInstance()->isLeftButtonClicked() && bOrderingUnits == false && !key[KEY_R]) {
 			game.selected_structure = context->getIdOfStructureWhereMouseHovers();
 
 			// select list that belongs to structure when it is ours

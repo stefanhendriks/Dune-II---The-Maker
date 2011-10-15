@@ -7,9 +7,9 @@
 
 #include "../include/d2tmh.h"
 
-cMouse *cMouse::instance = NULL;
+Mouse *Mouse::instance = NULL;
 
-cMouse::cMouse() {
+Mouse::Mouse() {
 	x = y = z = 0;
 	leftButtonPressed = false;
 	rightButtonPressed = false;
@@ -26,18 +26,18 @@ cMouse::cMouse() {
 	lastCreatedRectangle.resetCoordinates();
 }
 
-cMouse::~cMouse() {
+Mouse::~Mouse() {
 }
 
-cMouse *cMouse::getInstance() {
+Mouse *Mouse::getInstance() {
 	if (instance == NULL) {
-		instance = new cMouse();
+		instance = new Mouse();
 	}
 
 	return instance;
 }
 
-void cMouse::doRectangleLogic() {
+void Mouse::doRectangleLogic() {
 
     if(leftButtonPressed){
         if(currentRectangle.getStartX() < 0 || currentRectangle.getStartY() < 0){
@@ -61,7 +61,7 @@ void cMouse::doRectangleLogic() {
 
 }
 
-void cMouse::updateState() {
+void Mouse::updateState() {
 	x = mouse_x;
 	y = mouse_y;
 	z = mouse_z;
@@ -94,15 +94,15 @@ void cMouse::updateState() {
 	doRectangleLogic();
 }
 
-bool cMouse::isOverRectangleUsingWidthAndHeight(int rectX, int rectY, int width, int height) {
+bool Mouse::isOverRectangleUsingWidthAndHeight(int rectX, int rectY, int width, int height) {
 	return isOverRectangleUsingCoordinates(rectX, rectY, (rectX + width), (rectY + height));
 }
 
-bool cMouse::isOverRectangleUsingCoordinates(int rectX, int rectY, int rectEndX, int rectEndY) {
+bool Mouse::isOverRectangleUsingCoordinates(int rectX, int rectY, int rectEndX, int rectEndY) {
 	return (x >= rectX && x <= rectEndX) && (y >= rectY && y <= rectEndY);
 }
 
-bool cMouse::isOverRectangle(Rectangle * rect) {
+bool Mouse::isOverRectangle(Rectangle * rect) {
 	if (!rect) {
 		return false;
 	}
@@ -110,7 +110,7 @@ bool cMouse::isOverRectangle(Rectangle * rect) {
 }
 
 
-void cMouse::positionMouseCursor(int x, int y) {
+void Mouse::positionMouseCursor(int x, int y) {
 	position_mouse(x, y);
 }
 

@@ -10,8 +10,12 @@
 
 #include "allegro.h"
 
+#include "../../drawers/TextDrawer.h"
+
 #include "../../gameobjects/Rectangle.h"
 #include "GuiShape.h"
+#include "../GuiColors.h"
+
 
 class GuiButton : public GuiShape {
 
@@ -22,7 +26,7 @@ class GuiButton : public GuiShape {
 
 		void draw();
 
-		std::string * getLabel() {
+		std::string getLabel() {
 			return label;
 		}
 
@@ -37,7 +41,8 @@ class GuiButton : public GuiShape {
 		bool isPressed() { return pressed; }
 
 	private:
-		std::string * label;
+		GuiColors guiColors;
+		std::string label;
 		bool drawPressedWhenMouseHovers;
 		bool hasBorders;
 		bool pressed;
@@ -46,8 +51,14 @@ class GuiButton : public GuiShape {
 		void drawBackground();
 		void drawLighterBorder();
 		void drawDarkerBorder();
+
 		void drawButtonUnpressed();
 		void drawButtonPressed();
+		void drawButtonHovered();
+
+		void drawLabel(int color);
+
+		TextDrawer * textDrawer;
 };
 
 #endif /* CGUIBUTTON_H_ */

@@ -447,7 +447,7 @@ void cMap::drawAirborneUnitsAndHealthBarAndExperienceOfSelectedUnits() {
 // TODO: move this somewhere to a mouse related class
 void cMap::draw_think() {
 	// busy with selecting box, so do not think (about scrolling, etc)
-	cMouse * mouse = cMouse::getInstance();
+	Mouse * mouse = Mouse::getInstance();
 	if (mouse->isMouseDraggingRectangle()) {
 		return;
 	}

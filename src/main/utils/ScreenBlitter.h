@@ -4,9 +4,11 @@
 #include <assert.h>
 #include <cstddef>
 
-#include "../gameobjects/ScreenResolution.h"
-
 #include "allegro.h"
+extern DATAFILE * gfxdata; // temporarily!
+
+#include "../gameobjects/ScreenResolution.h"
+#include "../controls/Mouse.h"
 
 class ScreenBlitter {
 	public:
@@ -20,14 +22,19 @@ class ScreenBlitter {
 			screenResolution = NULL;
 		}
 
-		void blitScreen();
+		void blitScreenBufferToScreen();
+
+		void blitMouseToScreenBuffer();
+
+		void clearBuffer() {
+			clear(bufferScreen);
+		}
 
 	protected:
 
 	private:
 		ScreenResolution * screenResolution;
 
-		// TODO: use the BITMAP * bmp_screen, double buffer within this class.
 		BITMAP * bufferScreen;
 };
 

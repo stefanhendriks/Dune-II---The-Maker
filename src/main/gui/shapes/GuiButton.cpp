@@ -1,25 +1,35 @@
 #include "GuiButton.h"
 
-extern BITMAP *bmp_screen;
+#include "../../utils/Logger.h"
+
+extern ALFONT_FONT * bene_font;
+extern BITMAP * bmp_screen;
 
 GuiButton::GuiButton(Rectangle * rect, std::string theLabel) : GuiShape(rect) {
+	assert(rect);
 	drawPressedWhenMouseHovers = false;
 	bitmap = NULL;
-	label = &theLabel;
+	label = theLabel;
 	hasBorders = true;
 	pressed = false;
+	textDrawer = new TextDrawer(bene_font);
+	textDrawer->setApplyShaddow(true);
 }
 
 GuiButton::GuiButton(int x, int y, int width, int height, std::string theLabel) : GuiShape(x, y, width, height){
-	label = &theLabel;
+	label = theLabel;
 	hasBorders = true;
 	drawPressedWhenMouseHovers = false;
 	pressed = false;
+	bitmap = NULL;
+	textDrawer = new TextDrawer(bene_font);
+	textDrawer->setApplyShaddow(true);
 }
 
 GuiButton::~GuiButton() {
 	drawPressedWhenMouseHovers = false;
 	bitmap = NULL;
+	delete textDrawer;
 }
 
 void GuiButton::draw() {
@@ -36,7 +46,22 @@ void GuiButton::draw() {
 		return;
 	}
 
+	if (isMouseOverShape()) {
+		drawButtonHovered();
+		return;
+	}
+
 	drawButtonUnpressed();
+}
+
+void GuiButton::drawButtonHovered() {
+	drawButtonUnpressed();
+	drawLabel(guiColors.getMenuYellow());
+}
+
+void GuiButton::drawLabel(int color) {
+	textDrawer->setTextColor(color);
+	textDrawer->drawText(rectangle->getLowestX() + 1, rectangle->getLowestY() + 1, label.c_str());
 }
 
 void GuiButton::drawBackground() {
@@ -59,6 +84,8 @@ void GuiButton::drawButtonUnpressed() {
 		line(bmp_screen, rectangle->getHighestX(), rectangle->getLowestY(), rectangle->getHighestX(), rectangle->getHighestY(), getDarkBorderColor());
 		line(bmp_screen, rectangle->getLowestX(), rectangle->getHighestY(), rectangle->getHighestX(), rectangle->getHighestY(), getDarkBorderColor());
 	}
+
+	drawLabel(guiColors.getWhite());
 }
 
 void GuiButton::drawButtonPressed() {
@@ -69,4 +96,6 @@ void GuiButton::drawButtonPressed() {
 		line(bmp_screen, rectangle->getHighestX(), rectangle->getLowestY(), rectangle->getHighestX(), rectangle->getHighestY(), getLightBorderColor());
 		line(bmp_screen, rectangle->getLowestX(), rectangle->getHighestY(), rectangle->getHighestX(), rectangle->getHighestY(), getLightBorderColor());
 	}
+
+	drawLabel(guiColors.getMenuDarkBorder());
 }

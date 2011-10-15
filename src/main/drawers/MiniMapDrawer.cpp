@@ -176,7 +176,7 @@ int MiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
 void MiniMapDrawer::interact() {
 	// interact with mouse
 	if (mouse_x >= getDrawStartX() && mouse_y >= getDrawStartY()) {
-		cMouse * mouse = cMouse::getInstance();
+		Mouse * mouse = Mouse::getInstance();
 		if (mouse->isLeftButtonPressed()) {
 			cGameControlsContext * context = player[HUMAN].getGameControlsContext();
 			int mouseCellOnMiniMap = context->getMouseCellFromMiniMap();

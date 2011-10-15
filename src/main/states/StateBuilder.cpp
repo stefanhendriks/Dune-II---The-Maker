@@ -5,6 +5,7 @@
 #include "../managers/cCombatInteractionManager.h"
 #include "../managers/RestManager.h"
 #include "../utils/cTimeManager.h"
+#include "../controls/Mouse.h"
 
 StateBuilder::StateBuilder(ScreenResolution * screenResolution) {
 	assert(screenResolution);
@@ -41,6 +42,8 @@ State * StateBuilder::buildNewMainMenuState() {
 
 	cTimeManager * timeManager = new cTimeManager();
 	mainMenuState->setTimeManager(timeManager);
+
+	mainMenuState->setMouse(Mouse::getInstance());
 
 	return mainMenuState;
 }

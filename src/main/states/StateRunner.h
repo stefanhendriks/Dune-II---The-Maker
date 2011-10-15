@@ -27,8 +27,10 @@ class StateRunner {
 
 		void runState() {
 			assert(runningState);
+			screenBlitter->clearBuffer();
 			runningState->run(this);
-			screenBlitter->blitScreen();
+			screenBlitter->blitMouseToScreenBuffer(); // <-- TEMPORARILY!?
+			screenBlitter->blitScreenBufferToScreen();
 		}
 
 		void transitionToState(GameState gameState);

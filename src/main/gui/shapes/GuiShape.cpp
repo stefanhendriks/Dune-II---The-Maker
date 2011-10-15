@@ -29,7 +29,7 @@ GuiShape::~GuiShape() {
 }
 
 bool GuiShape::isMouseOverShape() {
-	cMouse * mouse = cMouse::getInstance();
+	Mouse * mouse = Mouse::getInstance();
 	return mouse->isOverRectangle(rectangle);
 }
 

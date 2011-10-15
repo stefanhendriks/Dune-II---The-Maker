@@ -176,7 +176,7 @@ void cSideBar::thinkInteraction() {
 		bool mouseOverDown = sidebarDrawer->isMouseOverScrollDown();
 		assert(!(mouseOverUp == true && mouseOverDown == true));// can never be both.
 
-		cMouse * mouse = cMouse::getInstance();
+		Mouse * mouse = Mouse::getInstance();
 		if (mouseOverUp) {
 			if (mouse->isLeftButtonClicked()) {
 				list->scrollUp();
@@ -223,7 +223,7 @@ void cSideBar::thinkInteraction() {
 			}
 		}
 
-		if (cMouse::getInstance()->isLeftButtonClicked()) {
+		if (Mouse::getInstance()->isLeftButtonClicked()) {
 			if (list != NULL) {
 				if (list->getType() != LIST_STARPORT) {
 					if (item != NULL) {
@@ -259,7 +259,7 @@ void cSideBar::thinkInteraction() {
 			}
 		}
 
-		if (cMouse::getInstance()->isRightButtonClicked()) {
+		if (Mouse::getInstance()->isRightButtonClicked()) {
 			if (list != NULL) {
 				// anything but the starport can 'build' things
 				if (list->getType() != LIST_STARPORT) {
@@ -315,7 +315,7 @@ void cSideBar::thinkMouseZScrolling() {
 	}
 
 	cBuildingList *list = getList(selectedListID);
-	cMouse *mouse = cMouse::getInstance();
+	Mouse *mouse = Mouse::getInstance();
 
 	// MOUSE WHEEL
 	if (mouse->isMouseScrolledUp()) {

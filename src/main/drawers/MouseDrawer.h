@@ -3,7 +3,7 @@
 
 class MouseDrawer {
 	public:
-		MouseDrawer(cPlayer *thePlayer, cMouse *theMouse);
+		MouseDrawer(cPlayer *thePlayer, Mouse *theMouse);
 		virtual ~MouseDrawer();
 
 		void draw();
@@ -27,7 +27,7 @@ class MouseDrawer {
 
 	private:
 		MouseToolTip * mouseToolTip;
-		cMouse *mouse;
+		Mouse *mouse;
 		cPlayer *player;
 		cGameControlsContext * context;
 };

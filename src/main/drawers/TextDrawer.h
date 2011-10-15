@@ -1,12 +1,7 @@
-/*
- * TextDrawer.h
- *
- *  Created on: 31-okt-2010
- *      Author: Stefan
- */
-
 #ifndef TEXTDRAWER_H_
 #define TEXTDRAWER_H_
+
+#include <alfont.h>
 
 class TextDrawer {
 	public:
