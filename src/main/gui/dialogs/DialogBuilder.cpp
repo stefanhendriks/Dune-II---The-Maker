@@ -34,6 +34,8 @@ MainMenuDialog * DialogBuilder::buildMainMenuDialog() {
 	buttonRectangle->setEndY(dialogRectangle->getEndY() - 1);
 
 	GuiButton * button = new GuiButton(buttonRectangle, "Campaign");
+	button->adjustHeightOfButtonToFontHeight();
+	button->setHasBorders(false);
 	mainMenuDialog->setNewCampaignButton(button);
 
 	return mainMenuDialog;

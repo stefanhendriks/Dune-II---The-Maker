@@ -11,6 +11,7 @@
 
 #include "../GuiElement.h"
 #include "../../gameobjects/Rectangle.h"
+#include "../GuiColors.h"
 
 class GuiShape : public GuiElement {
 
@@ -39,6 +40,7 @@ class GuiShape : public GuiElement {
 		Rectangle * rectangle;
 
 	private:
+		GuiColors guiColors;
 		bool rectangleOwner;
 		int darkBorderColor;
 		int lightBorderColor;

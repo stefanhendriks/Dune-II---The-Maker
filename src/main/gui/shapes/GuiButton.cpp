@@ -99,3 +99,10 @@ void GuiButton::drawButtonPressed() {
 
 	drawLabel(guiColors.getMenuDarkBorder());
 }
+
+void GuiButton::adjustHeightOfButtonToFontHeight() {
+	int lowestY = rectangle->getLowestY();
+	int highestY = lowestY + textDrawer->getHeightInPixelsForFont() + 1;
+	rectangle->setStartY(lowestY);
+	rectangle->setEndY(highestY);
+}

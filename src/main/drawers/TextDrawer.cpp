@@ -72,6 +72,10 @@ int TextDrawer::getXCoordinateForBottomRight(const char * msg) {
 	return game.getScreenResolution()->getWidth() - getLenghtInPixelsForChar(msg);
 }
 
+int TextDrawer::getHeightInPixelsForFont() {
+	return alfont_text_height(font);
+}
+
 int TextDrawer::getLenghtInPixelsForChar(const char * msg) {
 	return alfont_text_length(font, msg);
 }

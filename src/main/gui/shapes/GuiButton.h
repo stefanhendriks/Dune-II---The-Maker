@@ -40,6 +40,8 @@ class GuiButton : public GuiShape {
 		void setDrawPressedWhenMouseHovers(bool value) { drawPressedWhenMouseHovers = value; }
 		bool isPressed() { return pressed; }
 
+		void adjustHeightOfButtonToFontHeight();
+
 	private:
 		GuiColors guiColors;
 		std::string label;

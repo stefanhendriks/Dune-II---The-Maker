@@ -4,7 +4,7 @@ GuiShape::GuiShape(Rectangle * rect) {
 	assert(rect);
 	rectangle = rect;
 	rectangleOwner = false;
-	setColors(makecol(32, 32, 32), makecol(255,255,255), makecol(128,128,128));
+	setColors(guiColors.getMenuDarkBorder(), guiColors.getMenuLightBorder(), guiColors.getMenuGrey());
 }
 
 GuiShape::GuiShape(int x, int y, int width, int height) {
@@ -12,7 +12,7 @@ GuiShape::GuiShape(int x, int y, int width, int height) {
 	int y2 = (y + height);
 	rectangle = new Rectangle(x, y, x2, y2);
 	rectangleOwner = true;
-	setColors(makecol(32, 32, 32), makecol(255,255,255), makecol(128,128,128));
+	setColors(guiColors.getMenuDarkBorder(), guiColors.getMenuLightBorder(), guiColors.getMenuGrey());
 }
 
 

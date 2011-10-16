@@ -30,8 +30,10 @@ class TextDrawer {
 		int getYCoordinateForBottomRight();
 		int getXCoordinateForBottomRight(const char * msg);
 
-	protected:
+		int getHeightInPixelsForFont();
 		int getLenghtInPixelsForChar(const char * msg);
+
+	protected:
 
 	private:
 		bool applyShadow;
