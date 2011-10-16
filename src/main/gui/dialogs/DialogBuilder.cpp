@@ -33,10 +33,18 @@ MainMenuDialog * DialogBuilder::buildMainMenuDialog() {
 	buttonRectangle->setEndX(dialogRectangle->getEndX() - 1);
 	buttonRectangle->setEndY(dialogRectangle->getEndY() - 1);
 
-	GuiButton * button = new GuiButton(buttonRectangle, "Campaign");
-	button->adjustHeightOfButtonToFontHeight();
-	button->setHasBorders(false);
-	mainMenuDialog->setNewCampaignButton(button);
+	GuiButton * campaignButton = new GuiButton(buttonRectangle, "New Campaign");
+	campaignButton->adjustHeightOfButtonToFontHeight();
+	campaignButton->setHasBorders(false);
+	mainMenuDialog->setNewCampaignButton(campaignButton);
+
+	GuiButton * skirmishButton = new GuiButton(campaignButton, "Skirmish Game");
+	skirmishButton->moveButtonDownExactlyOneButtonHeight();
+	mainMenuDialog->setSkirmishButton(skirmishButton);
+
+	GuiButton * multiplayerButton = new GuiButton(skirmishButton, "Multiplayer");
+	multiplayerButton->moveButtonDownExactlyOneButtonHeight();
+	mainMenuDialog->setMultiplayerButton(multiplayerButton);
 
 	return mainMenuDialog;
 }

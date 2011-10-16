@@ -29,4 +29,6 @@ MainMenuDialog::~MainMenuDialog() {
 void MainMenuDialog::draw() {
 	GuiShape::draw();
 	newCampaignButton->draw();
+	newSkirmishButton->draw();
+	newMultiplayerButton->draw();
 }

@@ -16,6 +16,19 @@ GuiButton::GuiButton(Rectangle * rect, std::string theLabel) : GuiShape(rect) {
 	textDrawer->setApplyShaddow(true);
 }
 
+GuiButton::GuiButton(GuiButton * other, std::string theLabel) : GuiShape(new Rectangle(other->getRectangle())) {
+	assert(other);
+	this->setBitmap(other->getBitmap());
+	this->setColors(other->getDarkBorderColor(), other->getLightBorderColor(), other->getInnerColor());
+	this->setDrawPressedWhenMouseHovers(other->shouldDrawPressedWhenMouseHovers());
+	this->setHasBorders(other->shouldDrawBorders());
+	rectangle = new Rectangle(other->getRectangle());
+	label = theLabel;
+	pressed = false;
+	textDrawer = new TextDrawer(bene_font);
+	textDrawer->setApplyShaddow(true);
+}
+
 GuiButton::GuiButton(int x, int y, int width, int height, std::string theLabel) : GuiShape(x, y, width, height){
 	label = theLabel;
 	hasBorders = true;
@@ -56,7 +69,7 @@ void GuiButton::draw() {
 
 void GuiButton::drawButtonHovered() {
 	drawButtonUnpressed();
-	drawLabel(guiColors.getMenuYellow());
+	drawLabel(guiColors.getRed());
 }
 
 void GuiButton::drawLabel(int color) {
@@ -98,6 +111,11 @@ void GuiButton::drawButtonPressed() {
 	}
 
 	drawLabel(guiColors.getMenuDarkBorder());
+}
+
+void GuiButton::moveButtonDownExactlyOneButtonHeight() {
+	rectangle->setStartY(rectangle->getLowestY() + textDrawer->getHeightInPixelsForFont() + 2);
+	rectangle->setEndY(rectangle->getHighestY() + textDrawer->getHeightInPixelsForFont() + 2);
 }
 
 void GuiButton::adjustHeightOfButtonToFontHeight() {

@@ -22,6 +22,7 @@ class GuiButton : public GuiShape {
 	public:
 		GuiButton(Rectangle * rect, std::string theLabel);
 		GuiButton(int x, int y, int width, int height, std::string theLabel);
+		GuiButton(GuiButton * other, std::string theLabel);
 		~GuiButton();
 
 		void draw();
@@ -41,6 +42,9 @@ class GuiButton : public GuiShape {
 		bool isPressed() { return pressed; }
 
 		void adjustHeightOfButtonToFontHeight();
+		void moveButtonDownExactlyOneButtonHeight();
+
+		TextDrawer * getTextDrawer() { return textDrawer; }
 
 	private:
 		GuiColors guiColors;
