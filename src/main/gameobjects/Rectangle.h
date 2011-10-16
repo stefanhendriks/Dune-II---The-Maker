@@ -37,6 +37,9 @@ class Rectangle {
 
 		bool isCoordinateWithinRectangle(int x, int y);
 
+		void setHeight(int height);
+		void setWidth(int width);
+
 	protected:
 
 	private:

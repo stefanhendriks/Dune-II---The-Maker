@@ -14,13 +14,15 @@ class MainMenuDialog  : public GuiShape {
 		void setMultiplayerButton(GuiButton * button ) { newMultiplayerButton = button; }
 		void setLoadGameButton(GuiButton * button ) { loadGameButton = button; }
 		void setOptionsButton(GuiButton * button ) { optionsButton = button; }
-		void setHallOfFameButton(GuiButton * button ) { hallfOfFameButton = button; }
+		void setHallOfFameButton(GuiButton * button ) { hallOfFameButton = button; }
 		void setExitGameButton(GuiButton * button ) { exitGameButton = button; }
 
 		// TODO: getters
 
 		// TODO: draw methods (like in GuiShape classes)
 		void draw();
+
+		void recalculateHeight();
 
 	protected:
 
@@ -30,7 +32,7 @@ class MainMenuDialog  : public GuiShape {
 		GuiButton * newMultiplayerButton;
 		GuiButton * loadGameButton;
 		GuiButton * optionsButton;
-		GuiButton * hallfOfFameButton;
+		GuiButton * hallOfFameButton;
 		GuiButton * exitGameButton;
 };
 

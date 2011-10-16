@@ -7,6 +7,7 @@ extern BITMAP * bmp_screen;
 
 GuiButton::GuiButton(Rectangle * rect, std::string theLabel) : GuiShape(rect) {
 	assert(rect);
+	enabled = true;
 	drawPressedWhenMouseHovers = false;
 	bitmap = NULL;
 	label = theLabel;
@@ -23,6 +24,7 @@ GuiButton::GuiButton(GuiButton * other, std::string theLabel) : GuiShape(new Rec
 	this->setDrawPressedWhenMouseHovers(other->shouldDrawPressedWhenMouseHovers());
 	this->setHasBorders(other->shouldDrawBorders());
 	rectangle = new Rectangle(other->getRectangle());
+	this->enabled = other->isEnabled();
 	label = theLabel;
 	pressed = false;
 	textDrawer = new TextDrawer(bene_font);
@@ -34,6 +36,7 @@ GuiButton::GuiButton(int x, int y, int width, int height, std::string theLabel) 
 	hasBorders = true;
 	drawPressedWhenMouseHovers = false;
 	pressed = false;
+	enabled = true;
 	bitmap = NULL;
 	textDrawer = new TextDrawer(bene_font);
 	textDrawer->setApplyShaddow(true);
@@ -48,6 +51,11 @@ GuiButton::~GuiButton() {
 void GuiButton::draw() {
 	int x = rectangle->getStartX();
 	int y = rectangle->getStartY();
+
+	if (!isEnabled()) {
+		drawDisabled();
+		return;
+	}
 
 	if (bitmap) {
 		draw_sprite(bmp_screen, bitmap, x, y);
@@ -65,6 +73,22 @@ void GuiButton::draw() {
 	}
 
 	drawButtonUnpressed();
+}
+
+void GuiButton::drawDisabled() {
+	if (bitmap) {
+		set_trans_blender(0, 0, 0, 128);
+		//rectfill(bmp_screen, rectangle->getStartX(), rectangle->getStartY(), rectangle->getEndX(), rectangle->getEndY(), guiColors.getBlack());
+		drawBackground();
+		// this is not giving us expected results, look at the UpgradeDrawer, line 67
+		draw_trans_sprite(bmp_screen, bitmap, rectangle->getStartX(), rectangle->getStartY());
+		return;
+	}
+
+	drawBackground();
+	textDrawer->setShadowColor(guiColors.getWhite());
+	drawLabel(guiColors.getDarkGrey());
+	textDrawer->setShadowColor(guiColors.getBlack());
 }
 
 void GuiButton::drawButtonHovered() {
@@ -114,8 +138,14 @@ void GuiButton::drawButtonPressed() {
 }
 
 void GuiButton::moveButtonDownExactlyOneButtonHeight() {
-	rectangle->setStartY(rectangle->getLowestY() + textDrawer->getHeightInPixelsForFont() + 2);
-	rectangle->setEndY(rectangle->getHighestY() + textDrawer->getHeightInPixelsForFont() + 2);
+	int height = 0;
+	if (bitmap) {
+		height = bitmap->h;
+	} else {
+		height = textDrawer->getHeightInPixelsForFont() + 2;
+	}
+	rectangle->setStartY(rectangle->getLowestY() + height);
+	rectangle->setEndY(rectangle->getHighestY() + height);
 }
 
 void GuiButton::adjustHeightOfButtonToFontHeight() {

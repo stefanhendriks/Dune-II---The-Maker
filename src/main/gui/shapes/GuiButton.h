@@ -40,6 +40,8 @@ class GuiButton : public GuiShape {
 		bool shouldDrawBorders() { return hasBorders; }
 		void setDrawPressedWhenMouseHovers(bool value) { drawPressedWhenMouseHovers = value; }
 		bool isPressed() { return pressed; }
+		bool isEnabled() { return enabled; }
+		void setEnabled(bool enabled) { this->enabled = enabled; }
 
 		void adjustHeightOfButtonToFontHeight();
 		void moveButtonDownExactlyOneButtonHeight();
@@ -52,6 +54,7 @@ class GuiButton : public GuiShape {
 		bool drawPressedWhenMouseHovers;
 		bool hasBorders;
 		bool pressed;
+		bool enabled;
 		BITMAP * bitmap;
 
 		void drawBackground();
@@ -61,6 +64,7 @@ class GuiButton : public GuiShape {
 		void drawButtonUnpressed();
 		void drawButtonPressed();
 		void drawButtonHovered();
+		void drawDisabled();
 
 		void drawLabel(int color);
 

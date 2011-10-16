@@ -1,9 +1,3 @@
-/*
- * cMainMenuDialog.cpp
- *
- *  Created on: 1-okt-2011
- *      Author: Stefan
- */
 #include "../../include/d2tmh.h"
 
 MainMenuDialog::MainMenuDialog(Rectangle * rect) : GuiShape(rect) {
@@ -12,7 +6,7 @@ MainMenuDialog::MainMenuDialog(Rectangle * rect) : GuiShape(rect) {
 	newMultiplayerButton = NULL;
 	loadGameButton = NULL;
 	optionsButton = NULL;
-	hallfOfFameButton = NULL;
+	hallOfFameButton = NULL;
 	exitGameButton = NULL;
 }
 
@@ -22,7 +16,7 @@ MainMenuDialog::~MainMenuDialog() {
 	delete newMultiplayerButton;
 	delete loadGameButton;
 	delete optionsButton;
-	delete hallfOfFameButton;
+	delete hallOfFameButton;
 	delete exitGameButton;
 }
 
@@ -31,4 +25,21 @@ void MainMenuDialog::draw() {
 	newCampaignButton->draw();
 	newSkirmishButton->draw();
 	newMultiplayerButton->draw();
+	loadGameButton->draw();
+	optionsButton->draw();
+	hallOfFameButton->draw();
+	exitGameButton->draw();
+}
+
+void MainMenuDialog::recalculateHeight() {
+	// height is basically the height of all buttons + 2 pixels
+	int height = newCampaignButton->getRectangle()->getHeight();
+	height += newSkirmishButton->getRectangle()->getHeight();
+	height += newMultiplayerButton->getRectangle()->getHeight();
+	height += loadGameButton->getRectangle()->getHeight();
+	height += optionsButton->getRectangle()->getHeight();
+	height += hallOfFameButton->getRectangle()->getHeight();
+	height += exitGameButton->getRectangle()->getHeight();
+	height += 2;
+	rectangle->setHeight(height);
 }

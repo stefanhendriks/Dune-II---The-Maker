@@ -36,3 +36,17 @@ void Rectangle::setCoordinates(Rectangle * otherRectangle) {
 bool Rectangle::isCoordinateWithinRectangle(int x, int y) {
 	return ((x >= getLowestX() && x <= getHighestX()) && (y >= getLowestY() && y <= getHighestY()));
 }
+
+void Rectangle::setHeight(int height) {
+	int newStartY = getLowestY();
+	int newEndY = newStartY + height;
+	startY = newStartY;
+	endY = newEndY;
+}
+
+void Rectangle::setWidth(int width) {
+	int newStartX = getLowestX();
+	int newEndX = newStartX + width;
+	startX = newStartX;
+	endX = newEndX;
+}

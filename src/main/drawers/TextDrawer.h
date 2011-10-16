@@ -3,6 +3,8 @@
 
 #include <alfont.h>
 
+#include "../gui/GuiColors.h"
+
 class TextDrawer {
 	public:
 		TextDrawer();
@@ -27,6 +29,10 @@ class TextDrawer {
 			textColor = value;
 		}
 
+		void setShadowColor(int value) {
+			shadowColor = value;
+		}
+
 		int getYCoordinateForBottomRight();
 		int getXCoordinateForBottomRight(const char * msg);
 
@@ -36,8 +42,12 @@ class TextDrawer {
 	protected:
 
 	private:
+		GuiColors guiColors;
 		bool applyShadow;
+
 		int textColor;
+		int shadowColor;
+
 		ALFONT_FONT * font;
 };
 

@@ -11,13 +11,15 @@ TextDrawer::TextDrawer(ALFONT_FONT *theFont) {
 	assert(theFont);
 	font = theFont;
 	applyShadow = true;
-	textColor = makecol(255, 255, 255);
+	textColor = guiColors.getWhite();
+	shadowColor = guiColors.getBlack();
 }
 
 TextDrawer::TextDrawer() {
 	font = small_font;
 	applyShadow = true;
-	textColor = makecol(255, 255, 255);
+	textColor = guiColors.getWhite();
+	shadowColor = guiColors.getBlack();
 }
 
 TextDrawer::~TextDrawer() {
@@ -26,21 +28,21 @@ TextDrawer::~TextDrawer() {
 
 void TextDrawer::drawTextWithTwoIntegers(int x, int y, const char * msg, int var1, int var2) {
 	if (applyShadow) {
-		alfont_textprintf(bmp_screen, font, x + 1, y + 1, makecol(0, 0, 0), msg, var1, var2);
+		alfont_textprintf(bmp_screen, font, x + 1, y + 1, shadowColor, msg, var1, var2);
 	}
 	alfont_textprintf(bmp_screen, font, x, y, textColor, msg, var1, var2);
 }
 
 void TextDrawer::drawTextWithOneInteger(int x, int y, const char * msg, int var) {
 	if (applyShadow) {
-		alfont_textprintf(bmp_screen, font, x + 1, y + 1, makecol(0, 0, 0), msg, var);
+		alfont_textprintf(bmp_screen, font, x + 1, y + 1, shadowColor, msg, var);
 	}
 	alfont_textprintf(bmp_screen, font, x, y, textColor, msg, var);
 }
 
 void TextDrawer::drawText(int x, int y, const char * msg, int color) {
 	if (applyShadow) {
-		alfont_textprintf(bmp_screen, font, x + 1, y + 1, makecol(0, 0, 0), msg);
+		alfont_textprintf(bmp_screen, font, x + 1, y + 1, shadowColor, msg);
 	}
 	alfont_textprintf(bmp_screen, font, x, y, color, msg);
 }

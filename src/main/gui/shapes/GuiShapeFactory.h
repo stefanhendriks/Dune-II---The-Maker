@@ -22,8 +22,6 @@ class GuiShapeFactory {
 
 		GuiButton * createGrayButton(Rectangle * rect, std::string theLabel);
 
-		MainMenuDialog * createMainMenuDialog();
-
 	protected:
 
 	private:

@@ -20,7 +20,3 @@ GuiButton * GuiShapeFactory::createButtonWithBitmap(int x, int y, BITMAP * bmp, 
 	button->setBitmap(bmp);
 	return button;
 }
-
-MainMenuDialog * GuiShapeFactory::createMainMenuDialog() {
-
-}
