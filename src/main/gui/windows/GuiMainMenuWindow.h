@@ -26,6 +26,10 @@ class GuiMainMenuWindow : public GuiWindow {
 			mainMenuDialog = dialog;
 		}
 
+		MainMenuDialog * getMainMenuDialog() {
+			return this->mainMenuDialog;
+		}
+
 	private:
 		MainMenuDialog * mainMenuDialog;
 

@@ -2577,6 +2577,13 @@ bool cGame::setupGame() {
 	playMusicByType(MUSIC_MENU);
 
 	stateRunner = new StateRunner(screenResolution, bmp_screen, MAINMENU);
+	RestManager * restManager = new RestManager(IDEAL_FPS);
+	stateRunner->setRestManager(restManager);
+
+	cTimeManager * timeManager = new cTimeManager();
+	stateRunner->setTimeManager(timeManager);
+
+	stateRunner->setMouse(Mouse::getInstance());
 
 	// all has installed well. Lets rock and role.
 	return true;

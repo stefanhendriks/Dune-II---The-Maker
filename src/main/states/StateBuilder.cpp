@@ -37,14 +37,6 @@ State * StateBuilder::buildNewMainMenuState() {
 //	cInteractionManager * interactionManager = new cCombatInteractionManager(player);
 //	mainMenuState->setInteractionManager(interactionManager);
 
-	RestManager * restManager = new RestManager(IDEAL_FPS);
-	mainMenuState->setRestManager(restManager);
-
-	cTimeManager * timeManager = new cTimeManager();
-	mainMenuState->setTimeManager(timeManager);
-
-	mainMenuState->setMouse(Mouse::getInstance());
-
 	return mainMenuState;
 }
 
