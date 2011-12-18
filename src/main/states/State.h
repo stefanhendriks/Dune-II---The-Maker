@@ -13,14 +13,6 @@
 #include <assert.h>
 #include <cstddef>
 
-#include "../gui/windows/GuiWindow.h"
-
-#include "../managers/RestManager.h"
-#include "../managers/cInteractionManager.h"
-#include "../utils/cTimeManager.h" // <-- oh oh, this already points out something is wrong
-#include "../utils/Logger.h"
-#include "../controls/Mouse.h"
-
 #define IDEAL_FPS	60
 
 // forward declaration (cannot include here, causing cyclic dependency, compile errors)
@@ -29,42 +21,16 @@ class StateRunner;
 class State {
 	public:
 		State() {
-			guiWindow = NULL;
-			interactionManager = NULL;
 			quitGame = false;
 		}
 
-		~State() {
-			delete guiWindow;
-			delete interactionManager;
-			Logger::getInstance()->debug("destructor State");
+		virtual ~State() {
+			quitGame = false;
 		}
 
-		void draw() {
-			guiWindow->draw();
-		}
-
-		void manageTime() {
-
-		}
-
-		void updateState(StateRunner * stateRunner) {
-			guiWindow->interact();
-			if (key[KEY_ESC]) {
-				flagToQuitGame();
-			}
-
-		}
-
-		void setGuiWindow(GuiWindow * guiWindow) {
-			assert(guiWindow);
-			this->guiWindow = guiWindow;
-		}
-
-		void setInteractionManager(cInteractionManager * interactionManager) {
-			assert(interactionManager);
-			this->interactionManager = interactionManager;
-		}
+		virtual void draw() = 0;
+		virtual void manageTime() = 0;
+		virtual void updateState(StateRunner * stateRunner) = 0;
 
 		bool shouldQuitGame() { return quitGame; }
 		void flagToQuitGame() { quitGame = true; }
@@ -72,12 +38,9 @@ class State {
 	protected:
 
 	private:
-		GuiWindow * guiWindow;
-
-		// interact with stuff (mouse/keyboard)
-		cInteractionManager * interactionManager;
 
 		bool quitGame;
+
 
 };
 

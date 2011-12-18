@@ -2,6 +2,7 @@
 #define STATEBUILDER_H_
 
 #include "State.h"
+#include "MainMenuState.h"
 
 #include "../player/cPlayer.h"
 
@@ -20,7 +21,7 @@ class StateBuilder {
 	protected:
 
 	private:
-		State * buildNewMainMenuState();
+		MainMenuState * buildNewMainMenuState();
 
 		GuiWindowBuilder * guiWindowBuilder;
 

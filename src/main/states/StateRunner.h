@@ -6,6 +6,8 @@
 
 #include "allegro.h"
 
+#include "../utils/cTimeManager.h"
+#include "../managers/RestManager.h"
 #include "../utils/ScreenBlitter.h"
 #include "StateBuilder.h"
 #include "../include/GameState.h"

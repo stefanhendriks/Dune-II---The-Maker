@@ -28,8 +28,8 @@ State * StateBuilder::buildState(GameState gameState) {
 	}
 }
 
-State * StateBuilder::buildNewMainMenuState() {
-	State * mainMenuState = new State();
+MainMenuState * StateBuilder::buildNewMainMenuState() {
+	MainMenuState * mainMenuState = new MainMenuState();
 
 	GuiMainMenuWindow * mainMenuWindow = guiWindowBuilder->buildMainMenuWindow();
 	mainMenuState->setGuiWindow(mainMenuWindow);
