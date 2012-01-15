@@ -1,1 +1,6 @@
-This is a test to test out git again. Yay!
+git add <FILE>
+ for the commit
+git commit -m "message"
+ for actually committing it (not to remote server)
+git push
+ for actually pushing it to the server (ie github), need to give passphrase
