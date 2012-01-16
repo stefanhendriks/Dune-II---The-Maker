@@ -10,16 +10,21 @@ using namespace std;
 // 
 // Game Of Life: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
 
-void printOutputRemainAliveForNeighbourCount(int neighbours) {
+void evaluateGameOfLifeRulesWithNeighbourCount(int neighbours) {
 	GameRules gamerules;
-	bool result = gamerules.shouldRemainAlive(neighbours);
-	cout << "With " << neighbours << " shouldRemainAlive returns " << result << endl;
+	cout << "Evaluating rules with [" << neighbours << "] neighbours -- Start" << endl;
+	cout << "With " << neighbours << " shouldRemainAlive returns " << gamerules.shouldRemainAlive(neighbours) << endl;
+	cout << "With " << neighbours << " shouldRevive returns " << gamerules.shouldRevive(neighbours) << endl;
+	cout << "With " << neighbours << " shouldDie returns " << gamerules.shouldDie(neighbours) << endl;
+	cout << "DONE Evaluating rules with [" << neighbours << "] neighbours" << endl;
 }
 
 int main(int argc, char **argv) {
 	cout << "Conway's Game Of Life" << endl;
-	printOutputRemainAliveForNeighbourCount(2);
-	printOutputRemainAliveForNeighbourCount(3);
-	printOutputRemainAliveForNeighbourCount(4);
+	evaluateGameOfLifeRulesWithNeighbourCount(1);
+	evaluateGameOfLifeRulesWithNeighbourCount(2);
+	evaluateGameOfLifeRulesWithNeighbourCount(3);
+	evaluateGameOfLifeRulesWithNeighbourCount(4);
+	evaluateGameOfLifeRulesWithNeighbourCount(5);
 	return 0;
 }
