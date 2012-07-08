@@ -37,8 +37,8 @@ void cBenegesMentat::draw() {
 	select_palette(general_palette);
 	//	game.draw_movie(BENEGES);
 	draw_sprite(bmp_screen, (BITMAP *) gfxmentat[MENTATM].dat, 0, 0);
-	int mouse_tile = cMouse::getInstance()->getMouseTile();
-	draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+//	int mouse_tile = cMouse::getInstance()->getMouseTile();
+	//draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 	//	if (isWaitingForAnAnswer()) {
 	//		Mentat->buttonPress(true);
 	//	}

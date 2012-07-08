@@ -1,5 +1,7 @@
 #include "cSoundPlayer.h"
 
+#include "assert.h"
+
 cSoundPlayer::cSoundPlayer(int maximumVoices, int digiVolume, int midiVolume) {
 	assert(digiVolume <= SOUNDPLAYER_MAX_VOLUME);
 	assert(midiVolume <= SOUNDPLAYER_MAX_VOLUME);
@@ -10,7 +12,7 @@ cSoundPlayer::cSoundPlayer(int maximumVoices, int digiVolume, int midiVolume) {
 	this->midiVolume = midiVolume;
 	this->datafile = NULL;
 	this->voices.resize(maximumVoices);
-	for (int i = 0; i < voices.size(); i++) {
+	for (int i = 0; i < (int) voices.size(); i++) {
 		voices[i] = -1;
 	}
 }

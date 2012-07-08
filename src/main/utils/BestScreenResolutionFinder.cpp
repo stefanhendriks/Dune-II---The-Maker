@@ -1,5 +1,7 @@
 #include "BestScreenResolutionFinder.h"
 
+#include "assert.h" 
+
 BestScreenResolutionFinder::BestScreenResolutionFinder() {
 	memset(screenResolutions, 0, sizeof(screenResolutions));
 

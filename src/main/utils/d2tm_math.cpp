@@ -18,6 +18,8 @@
 #include "common.h"
 #include "d2tm_math.h"
 
+#include "assert.h" 
+
 extern bool	bDoDebug; // TODO: refactor this away
 
 // Is the cell valid?
