@@ -55,20 +55,20 @@ cGame::~cGame() {
 void cGame::init() {
 	gameStateEnum = MAINMENU;
 
-	INIT_REINFORCEMENT();
-
-	if (map != NULL) {
-		map->init();
-	}
-
-	for (int i = 0; i < MAX_PLAYERS; i++) {
-		player[i].init();
-	}
-
-	// Load properties
-	INI_Install_Game(game_filename);
-
-	mp3_music = NULL;
+// 	INIT_REINFORCEMENT();
+// 
+// 	if (map != NULL) {
+// 		map->init();
+// 	}
+// 
+// 	for (int i = 0; i < MAX_PLAYERS; i++) {
+// 		player[i].init();
+// 	}
+// 
+// 	// Load properties
+// 	INI_Install_Game(game_filename);
+// 
+// 	mp3_music = NULL;
 
 	// if revision.txt exists
 	FILE *stream;
@@ -84,17 +84,9 @@ void cGame::init() {
  */
 void cGame::run() {
 	set_trans_blender(0, 0, 0, 128);
-
 	while (!state->shouldQuitGame()) {
 		state->run();
-		//frame_count++;
 	}
-//		TimeManager.processTime();
-//		updateState();
-//		runGameState();
-//		shakeScreenAndBlitBuffer();
-
-//	}
 }
 
 /**
@@ -103,15 +95,21 @@ void cGame::run() {
 void cGame::shutdown() {
 	Logger *logger = Logger::getInstance();
 	logger->logHeader("SHUTDOWN");
+	logger->debug("Starting shutdown");
 
-	cGameFactory::getInstance()->destroyAll();
+	destroy_bitmap(bmp_fadeout);
+	destroy_bitmap(bmp_screen);
+	destroy_bitmap(bmp_throttle);
+	destroy_bitmap(bmp_winlose);
+	logger->debug("Destroyed bitmaps");
 
 	// Destroy font of Allegro FONT library
-	alfont_destroy_font(game_font);
-	alfont_destroy_font(bene_font);
+	// this somehow seems to crash!
+// 	if (game_font != NULL) alfont_destroy_font(game_font);
+// 	if (bene_font != NULL) alfont_destroy_font(bene_font);
+	logger->debug("Destroyed fonts");
 
 	// Exit the font library (must be first)
-
 	alfont_exit();
 	logbook("Allegro FONT library shut down.");
 

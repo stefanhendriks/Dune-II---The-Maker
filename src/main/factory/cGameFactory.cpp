@@ -141,10 +141,6 @@ void cGameFactory::destroyAll() {
 //		thePlayer = NULL;
 //	}
 
-	destroy_bitmap(bmp_fadeout);
-	destroy_bitmap(bmp_screen);
-	destroy_bitmap(bmp_throttle);
-	destroy_bitmap(bmp_winlose);
 
 	logbook("cGameFactory:destroyAll [END]");
 }
