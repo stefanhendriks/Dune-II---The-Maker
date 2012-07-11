@@ -38,7 +38,6 @@ extern Particle      particle[MAX_PARTICLES];
 extern Projectile        bullet[MAX_BULLETS];
 extern cRegion        world[MAX_REGIONS];
 extern cMentat		  *Mentat;
-extern cTimeManager   TimeManager;
 extern cStructureUtils structureUtils;
 extern GameDrawer   * gameDrawer;
 

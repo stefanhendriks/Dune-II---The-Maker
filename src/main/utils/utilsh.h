@@ -10,7 +10,6 @@
 #include "cStructureUtils.h"
 
 #include "cHitpointCalculator.h"			/** math for hitpoints **/
-#include "cTimeManager.h"
 #include "cUpgradeUtils.h"
 #include "cMapUtils.h"
 #include "cPlayerUtils.h"

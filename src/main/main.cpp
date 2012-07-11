@@ -29,7 +29,6 @@ Particle particle[MAX_PARTICLES];
 Projectile bullet[MAX_BULLETS];
 cRegion world[MAX_REGIONS];
 cMentat * Mentat = NULL;
-cTimeManager TimeManager;
 cStructureUtils structureUtils;
 GameDrawer * gameDrawer = NULL;
 
