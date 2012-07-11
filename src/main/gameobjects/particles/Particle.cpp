@@ -74,10 +74,10 @@ void Particle::draw() {
 	int dx = draw_x();
 	int dy = draw_y();
 
-	if (dx < 0 || dx > game.getScreenResolution()->getWidth())
+	if (dx < 0 || dx > /* game.getScreenResolution()->getWidth() */ 800 )
 		return;
 
-	if (dy < 0 || dy > game.getScreenResolution()->getHeight())
+	if (dy < 0 || dy > /* game.getScreenResolution()->getHeight */ 600 )
 		return;
 
 	/*

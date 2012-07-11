@@ -58,7 +58,7 @@ void TextDrawer::drawTextCentered(const char *msg, int y) {
 void TextDrawer::drawTextCentered(const char * msg, int y, int color) {
 	int lenghtInPixels = getLenghtInPixelsForChar(msg);
 	int half = lenghtInPixels / 2;
-	int xPos = (game.getScreenResolution()->getWidth() / 2) - half;
+	int xPos = (/* game.getScreenResolution()->getWidth() */ 800  / 2) - half;
 	drawText(xPos, y, msg, color);
 }
 
@@ -71,7 +71,7 @@ void TextDrawer::drawTextBottomRight(const char * msg) {
 }
 
 int TextDrawer::getXCoordinateForBottomRight(const char * msg) {
-	return game.getScreenResolution()->getWidth() - getLenghtInPixelsForChar(msg);
+	return /* game.getScreenResolution()->getWidth() */ 800  - getLenghtInPixelsForChar(msg);
 }
 
 int TextDrawer::getHeightInPixelsForFont() {
@@ -83,10 +83,10 @@ int TextDrawer::getLenghtInPixelsForChar(const char * msg) {
 }
 
 int TextDrawer::getYCoordinateForBottomRight() {
-	return game.getScreenResolution()->getHeight() - alfont_text_height(font);
+	return /* game.getScreenResolution()->getHeight */ 600  - alfont_text_height(font);
 }
 
 void TextDrawer::drawTextBottomLeft(const char * msg) {
-	int y = game.getScreenResolution()->getHeight() - alfont_text_height(font);
+	int y = /* game.getScreenResolution()->getHeight */ 600  - alfont_text_height(font);
 	drawText(0, y, msg);
 }

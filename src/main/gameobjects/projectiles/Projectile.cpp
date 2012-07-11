@@ -50,10 +50,10 @@ void Projectile::draw() {
 	int x = draw_x();
 	int y = draw_y();
 
-	if (x < 0 || x > game.getScreenResolution()->getWidth())
+	if (x < 0 || x > /* game.getScreenResolution()->getWidth() */ 800 )
 		return;
 
-	if (y < 0 || y > game.getScreenResolution()->getHeight())
+	if (y < 0 || y > /* game.getScreenResolution()->getHeight */ 600 )
 		return;
 
 	int x1, y1, x2, y2;

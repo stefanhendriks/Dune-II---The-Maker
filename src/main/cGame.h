@@ -12,9 +12,6 @@
 #ifndef GAME_H_H
 #define GAME_H_H
 
-#include "movie/cMoviePlayer.h"
-#include "utils/cSoundPlayer.h"
-
 #include "gameobjects/ScreenResolution.h"
 
 #include "include/GameState.h"
@@ -41,56 +38,16 @@ class cGame {
 		// main run function
 		void run();
 
-		// get / set
-		cSoundPlayer *getSoundPlayer() {
-			return soundPlayer;
-		}
-
-		cMoviePlayer *getMoviePlayer() {
-			return moviePlayer;
-		}
-
-		void setMoviePlayer(cMoviePlayer * value) {
-			moviePlayer = value;
-		}
-
-		ScreenResolution * getScreenResolution() {
-			return screenResolution;
-		}
-
-		void setScreenResolution(ScreenResolution * newScreenResolution) {
-			if (screenResolution) {
-				delete screenResolution;
-			}
-			if (newScreenResolution) {
-				screenResolution = newScreenResolution;
-			} else {
-				screenResolution = NULL;
-			}
-		}
-
-		ScreenResolution *getScreenResolutionFromIni() {
-			return screenResolutionFromIni;
-		}
-
-		void setScreenResolutionFromIni(ScreenResolution * newScreenResolution) {
-			screenResolutionFromIni = newScreenResolution;
-		}
-
 		void shutdown();
 
 		State * getState() { return state; }
 
 	private:
+
 		// variables
 		GameState gameStateEnum;
 		State * state;
-
 		ScreenResolution * screenResolution;
-		ScreenResolution * screenResolutionFromIni;
-
-		cSoundPlayer * soundPlayer;
-		cMoviePlayer * moviePlayer;
 
 };
 

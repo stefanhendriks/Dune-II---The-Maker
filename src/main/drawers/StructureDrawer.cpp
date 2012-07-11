@@ -344,7 +344,7 @@ void StructureDrawer::drawStructuresForLayer(int layer) {
 
 	}
 
-	rectfill(bmp_screen, (game.getScreenResolution()->getWidth() - 160), 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(),
+	rectfill(bmp_screen, (/* game.getScreenResolution()->getWidth() */ 800  - 160), 0, /* game.getScreenResolution()->getWidth() */ 800 , /* game.getScreenResolution()->getHeight */ 600 ,
 			makecol(0, 0, 0));
 }
 

@@ -187,8 +187,8 @@ void cMap::draw_bullets() {
 	// Loop through all units, check if they should be drawn, and if so, draw them
 	for (int i = 0; i < MAX_BULLETS; i++) {
 		if (bullet[i].bAlive) {
-			if (bullet[i].draw_x() > -32 && bullet[i].draw_x() < game.getScreenResolution()->getWidth() && bullet[i].draw_y() > -32 && bullet[i].draw_y()
-					< game.getScreenResolution()->getHeight())
+			if (bullet[i].draw_x() > -32 && bullet[i].draw_x() < /* game.getScreenResolution()->getWidth() */ 800  && bullet[i].draw_y() > -32 && bullet[i].draw_y()
+					< /* game.getScreenResolution()->getHeight */ 600 )
 				bullet[i].draw();
 		}
 	}
@@ -337,8 +337,8 @@ void cMap::draw_units() {
 				int drawx = unit[i].draw_x();
 				int drawy = unit[i].draw_y();
 
-				if (((drawx + units[unit[i].iType].bmp_width) > 0 && drawx < (game.getScreenResolution()->getWidth() - 160)) && ((drawy
-						+ units[unit[i].iType].bmp_height) > 42 && drawy < game.getScreenResolution()->getHeight())) {
+				if (((drawx + units[unit[i].iType].bmp_width) > 0 && drawx < (/* game.getScreenResolution()->getWidth() */ 800  - 160)) && ((drawy
+						+ units[unit[i].iType].bmp_height) > 42 && drawy < /* game.getScreenResolution()->getHeight */ 600 )) {
 					unit[i].draw();
 				}
 			}
@@ -356,8 +356,8 @@ void cMap::draw_units() {
 			int drawx = unit[i].draw_x();
 			int drawy = unit[i].draw_y();
 
-			if (((drawx + units[unit[i].iType].bmp_width) > 0 && drawx < (game.getScreenResolution()->getWidth() - 160)) && ((drawy
-					+ units[unit[i].iType].bmp_height) > 42 && drawy < game.getScreenResolution()->getHeight())) {
+			if (((drawx + units[unit[i].iType].bmp_width) > 0 && drawx < (/* game.getScreenResolution()->getWidth() */ 800  - 160)) && ((drawy
+					+ units[unit[i].iType].bmp_height) > 42 && drawy < /* game.getScreenResolution()->getHeight */ 600 )) {
 				// draw
 				unit[i].draw();
 
@@ -382,8 +382,8 @@ void cMap::draw_units() {
 
 			//line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(255,255,255));
 
-			if (((drawx + units[unit[i].iType].bmp_width) > 0 && drawx < (game.getScreenResolution()->getWidth() - 160)) && ((drawy
-					+ units[unit[i].iType].bmp_height) > 42 && drawy < game.getScreenResolution()->getHeight())) {
+			if (((drawx + units[unit[i].iType].bmp_width) > 0 && drawx < (/* game.getScreenResolution()->getWidth() */ 800  - 160)) && ((drawy
+					+ units[unit[i].iType].bmp_height) > 42 && drawy < /* game.getScreenResolution()->getHeight */ 600 )) {
 
 				// draw
 				unit[i].draw();
@@ -430,8 +430,8 @@ void cMap::drawAirborneUnitsAndHealthBarAndExperienceOfSelectedUnits() {
 	for (int i = 0; i < MAX_UNITS; i++) {
 		if (unit[i].isValid()) {
 
-			if (((unit[i].draw_x() + units[unit[i].iType].bmp_width) > 0 && unit[i].draw_x() < game.getScreenResolution()->getWidth()) && ((unit[i].draw_y()
-					+ units[unit[i].iType].bmp_height) > 0 && unit[i].draw_y() < game.getScreenResolution()->getHeight())) {
+			if (((unit[i].draw_x() + units[unit[i].iType].bmp_width) > 0 && unit[i].draw_x() < /* game.getScreenResolution()->getWidth() */ 800 ) && ((unit[i].draw_y()
+					+ units[unit[i].iType].bmp_height) > 0 && unit[i].draw_y() < /* game.getScreenResolution()->getHeight */ 600 )) {
 				// Draw aircraft here
 				if (unit[i].iType == CARRYALL || unit[i].iType == ORNITHOPTER || unit[i].iType == FRIGATE) {
 					unit[i].draw();
@@ -472,13 +472,13 @@ void cMap::draw_think() {
 		}
 	}
 
-	if (mouse_x >= (game.getScreenResolution()->getWidth() - 2) || key[KEY_RIGHT]) {
+	if (mouse_x >= (/* game.getScreenResolution()->getWidth() */ 800  - 2) || key[KEY_RIGHT]) {
 		if ((iEndX) < (map->getWidth() - 1)) {
 			mouse->setMouseTile(MOUSE_RIGHT);
 		}
 	}
 
-	if (mouse_y >= (game.getScreenResolution()->getHeight() - 2) || key[KEY_DOWN]) {
+	if (mouse_y >= (/* game.getScreenResolution()->getHeight */ 600  - 2) || key[KEY_DOWN]) {
 		if ((iEndY) < (map->getHeight() - 1)) {
 			mouse->setMouseTile(MOUSE_DOWN);
 		}

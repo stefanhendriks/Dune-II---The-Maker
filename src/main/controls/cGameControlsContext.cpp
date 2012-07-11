@@ -41,17 +41,17 @@ void cGameControlsContext::determineMouseCell() {
 		return;
 	}
 
-	if (mouse->getX() > (game.getScreenResolution()->getWidth() - 128)) {
-		if (mouse->getY() > (game.getScreenResolution()->getHeight() - 128)) {
-			mouseCell = MOUSECELL_MINIMAP; // on minimap
-			return;
-		}
-	}
-
-	if (mouse->getX() > (game.getScreenResolution()->getWidth() - 160)) {
-		mouseCell = -3; // on sidebar
-		return;
-	}
+// 	if (mouse->getX() > (/* game.getScreenResolution()->getWidth() */ 800  - 128)) {
+// 		if (mouse->getY() > (/* game.getScreenResolution()->getHeight */ 600  - 128)) {
+// 			mouseCell = MOUSECELL_MINIMAP; // on minimap
+// 			return;
+// 		}
+// 	}
+// 
+// 	if (mouse->getX() > (/* game.getScreenResolution()->getWidth() */ 800  - 160)) {
+// 		mouseCell = -3; // on sidebar
+// 		return;
+// 	}
 
 	if (map == NULL || mapCamera == NULL) {
 		mouseCell = -1;

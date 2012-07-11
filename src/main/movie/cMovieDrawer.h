@@ -1,6 +1,8 @@
 #ifndef CMOVIEDRAWER_H_
 #define CMOVIEDRAWER_H_
 
+#include "cMoviePlayer.h"
+
 class cMovieDrawer {
 	public:
 		cMovieDrawer(cMoviePlayer * playerToDraw, BITMAP * bitmap);

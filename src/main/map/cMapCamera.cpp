@@ -5,8 +5,8 @@
 cMapCamera::cMapCamera() {
 	int widthOfSidebar = 160;
 	int heightOfOptions = 42;
-	viewportWidth = ((game.getScreenResolution()->getWidth() - widthOfSidebar) / TILESIZE_WIDTH_PIXELS);
-	viewportHeight = ((game.getScreenResolution()->getHeight() - heightOfOptions) / TILESIZE_HEIGHT_PIXELS) + 1;
+	viewportWidth = ((/* game.getScreenResolution()->getWidth() */ 800  - widthOfSidebar) / TILESIZE_WIDTH_PIXELS);
+	viewportHeight = ((/* game.getScreenResolution()->getHeight */ 600  - heightOfOptions) / TILESIZE_HEIGHT_PIXELS) + 1;
 	x = y = 1;
 	targetX = targetY = 1;
 	TIMER_move = 0;
@@ -106,11 +106,11 @@ bool cMapCamera::shouldScrollUp() {
 }
 
 bool cMapCamera::shouldScrollRight() {
-	return mouse_x >= (game.getScreenResolution()->getWidth() - 2) || key[KEY_RIGHT];
+	return mouse_x >= (/* game.getScreenResolution()->getWidth() */ 800  - 2) || key[KEY_RIGHT];
 }
 
 bool cMapCamera::shouldScrollDown() {
-	return mouse_y >= (game.getScreenResolution()->getHeight() - 2) || key[KEY_DOWN];
+	return mouse_y >= (/* game.getScreenResolution()->getHeight */ 600  - 2) || key[KEY_DOWN];
 }
 
 bool cMapCamera::canScrollLeft() {

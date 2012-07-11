@@ -36,11 +36,13 @@ void MiniMapDrawer::drawViewPortRectangle() {
 }
 
 int MiniMapDrawer::getDrawStartX() {
-	return game.getScreenResolution()->getWidth() - 129;
+	/*return /* game.getScreenResolution()->getWidth()  800  - 129;*/
+	return 0;
 }
 
 int MiniMapDrawer::getDrawStartY() {
-	return game.getScreenResolution()->getHeight() - 129;
+	/*return /* game.getScreenResolution()->getHeight  600  - 129;*/
+	return 0;
 }
 
 void MiniMapDrawer::drawTerrain() {

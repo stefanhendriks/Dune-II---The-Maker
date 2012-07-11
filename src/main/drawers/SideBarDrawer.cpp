@@ -31,7 +31,7 @@ void SideBarDrawer::drawCandybar() {
 		// startpos = 40
 		// end pos = height - 156
 		// height = start pos - end pos
-		int heightInPixels = (game.getScreenResolution()->getHeight() - 156) - 40;
+		int heightInPixels = (/* game.getScreenResolution()->getHeight 600 */600 - 156) - 40;
 		candybar = create_bitmap_ex(8, 24, heightInPixels);
 		clear_to_color(candybar, makecol(0, 0, 0));
 
@@ -46,7 +46,7 @@ void SideBarDrawer::drawCandybar() {
 		draw_sprite(candybar, (BITMAP *) gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, heightInPixels - 10); // height of top = 10
 	}
 
-	int drawX = game.getScreenResolution()->getWidth() - 158;
+	int drawX = /*/* game.getScreenResolution()->getWidth()  800  */ 800 - 158;
 	int drawY = 40;
 	draw_sprite(bmp_screen, candybar, drawX, drawY);
 }
@@ -55,12 +55,14 @@ void SideBarDrawer::drawHouseGui(cPlayer * thePlayer) {
 	assert(thePlayer);
 	set_palette(thePlayer->pal);
 
+	int width = /*/* game.getScreenResolution()->getWidth()  800 */ 800;
+	int height = /*/* game.getScreenResolution()->getHeight  600 */ 600;
+
 	// black out
-	rectfill(bmp_screen, (game.getScreenResolution()->getWidth() - 160), 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(),
-			makecol(0, 0, 0));
+	rectfill(bmp_screen, (width - 160), 0, width, height, makecol(0, 0, 0));
 
 	// upper bar
-	rectfill(bmp_screen, 0, 0, game.getScreenResolution()->getWidth(), 42, makecol(0, 0, 0));
+	rectfill(bmp_screen, 0, 0, width, 42, makecol(0, 0, 0));
 
 	drawCandybar();
 
@@ -128,8 +130,8 @@ void SideBarDrawer::drawCapacities() {
 // pressed when the mouse is only hovering over it?
 // also: right/left and up/down are related, but it is unclear and confusing here
 void SideBarDrawer::drawScrollButtons() {
-	int buttonUpX = game.getScreenResolution()->getWidth() - 68;
-	int buttonUpY = game.getScreenResolution()->getHeight() - 310;
+	int buttonUpX = /*/* game.getScreenResolution()->getWidth()  800 */800 - 68;
+	int buttonUpY = /*/* game.getScreenResolution()->getHeight  600 */600 - 310;
 
 	Mouse * mouse = Mouse::getInstance();
 
@@ -160,7 +162,7 @@ void SideBarDrawer::drawScrollButtons() {
 		draw_sprite(bmp_screen, (BITMAP *) gfxinter[BTN_SCROLL_UP_UNPRESSED].dat, buttonUpX, buttonUpY);
 	}
 
-	buttonUpX = game.getScreenResolution()->getWidth() - 34;
+	buttonUpX = /*/* game.getScreenResolution()->getWidth()  800 */800 - 34;
 
 	if (rightScrollButtonPressed) {
 		draw_sprite(bmp_screen, (BITMAP *) gfxinter[BTN_SCROLL_DOWN_PRESSED].dat, buttonUpX, buttonUpY);
@@ -171,15 +173,15 @@ void SideBarDrawer::drawScrollButtons() {
 }
 
 int SideBarDrawer::getScrollButtonUpX() {
-	return game.getScreenResolution()->getWidth() - 68;
+	return /*/* game.getScreenResolution()->getWidth()  800 */800 - 68;
 }
 
 int SideBarDrawer::getScrollButtonDownX() {
-	return game.getScreenResolution()->getWidth() - 34;
+	return /*/* game.getScreenResolution()->getWidth()  800 */800 - 34;
 }
 
 int SideBarDrawer::getScrollButtonY() {
-	return game.getScreenResolution()->getHeight() - 310;
+	return/* /* game.getScreenResolution()->getHeight  600 */600 - 310;
 }
 
 bool SideBarDrawer::isOverScrollButton(int buttonX, int buttonY) {
@@ -199,20 +201,20 @@ bool SideBarDrawer::isMouseOverScrollDown() {
 
 void SideBarDrawer::drawMinimap() {
 	BITMAP * sprite = (BITMAP *) gfxinter[BMP_GERALD_MINIMAP_BOTTOMRIGHT].dat;
-	int drawX = game.getScreenResolution()->getWidth() - sprite->w;
-	int drawY = game.getScreenResolution()->getHeight() - sprite->h;
+	int drawX = /*/* game.getScreenResolution()->getWidth() */800 - sprite->w;
+	int drawY = /*/* game.getScreenResolution()->getHeight  */600 - sprite->h;
 	draw_sprite(bmp_screen, sprite, drawX, drawY);
 }
 
 void SideBarDrawer::drawOptionsBar() {
 	if (optionsBar == NULL) {
-		optionsBar = create_bitmap(game.getScreenResolution()->getWidth(), 40);
+		optionsBar = create_bitmap(/* game.getScreenResolution()->getWidth() */800, 40);
 		clear_to_color(optionsBar, sidebarColor);
 
 		// credits
-		draw_sprite(optionsBar, (BITMAP *) gfxinter[BMP_GERALD_TOPBAR_CREDITS].dat, (game.getScreenResolution()->getWidth() - 240), 0);
+		draw_sprite(optionsBar, (BITMAP *) gfxinter[BMP_GERALD_TOPBAR_CREDITS].dat, (/* game.getScreenResolution()->getWidth() */800 - 240), 0);
 
-		for (int w = 0; w < (game.getScreenResolution()->getWidth() + 800); w += 789) {
+		for (int w = 0; w < (/* game.getScreenResolution()->getWidth() */800 + 800); w += 789) {
 			draw_sprite(optionsBar, (BITMAP *) gfxinter[BMP_GERALD_TOP_BAR].dat, w, 31);
 		}
 
@@ -221,18 +223,19 @@ void SideBarDrawer::drawOptionsBar() {
 }
 
 void SideBarDrawer::drawIconsListBackground() {
+	int width = /*/* game.getScreenResolution()->getWidth() */ 800;
+	int height = /*/* game.getScreenResolution()->getHeight */ 600;
 	// fill
-	rectfill(bmp_screen, (game.getScreenResolution()->getWidth() - 130), 40, game.getScreenResolution()->getWidth(),
-			(game.getScreenResolution()->getHeight() - 160), sidebarColor);
+	rectfill(bmp_screen, (width - 130), 40, width, (height - 160), sidebarColor);
 
-	int heightInPixels = (game.getScreenResolution()->getHeight() - 315) - 45;
+	int heightInPixels = (height - 315) - 45;
 	BITMAP * backgroundList = create_bitmap_ex(8, 66, heightInPixels);
 
 	// left 'lines'
-	vline(bmp_screen, game.getScreenResolution()->getWidth() - 132, 40, game.getScreenResolution()->getHeight() - 276, makecol(255, 198, 93));
-	vline(bmp_screen, game.getScreenResolution()->getWidth() - 131, 40, game.getScreenResolution()->getHeight() - 276, makecol(60, 36, 0));
-	vline(bmp_screen, game.getScreenResolution()->getWidth() - 130, 40, game.getScreenResolution()->getHeight() - 276, makecol(255, 210, 125));
-	vline(bmp_screen, game.getScreenResolution()->getWidth() - 129, 40, game.getScreenResolution()->getHeight() - 276, makecol(255, 190, 76));
+	vline(bmp_screen, width - 132, 40, height - 276, makecol(255, 198, 93));
+	vline(bmp_screen, width - 131, 40, height - 276, makecol(60, 36, 0));
+	vline(bmp_screen, width - 130, 40, height - 276, makecol(255, 210, 125));
+	vline(bmp_screen, width - 129, 40, height - 276, makecol(255, 190, 76));
 
 	// the list pieces
 	draw_sprite(backgroundList, (BITMAP *) gfxinter[BMP_GERALD_LIST_TOP].dat, 0, 45); // 2 high
@@ -243,15 +246,15 @@ void SideBarDrawer::drawIconsListBackground() {
 
 	draw_sprite(backgroundList, (BITMAP *) gfxinter[BMP_GERALD_LIST_BOTTOM].dat, 0, (heightInPixels - 2));
 
-	int x = game.getScreenResolution()->getWidth() - 69;
+	int x = /*/* game.getScreenResolution()->getWidth()  800 */800 - 69;
 	draw_sprite(bmp_screen, backgroundList, x, 45);
 
 	// at the right lines
-	vline(bmp_screen, game.getScreenResolution()->getWidth() - 1, 44, game.getScreenResolution()->getHeight() - 276, makecol(153, 105, 0));
-	vline(bmp_screen, game.getScreenResolution()->getWidth() - 2, 44, game.getScreenResolution()->getHeight() - 276, makecol(182, 125, 12));
-	vline(bmp_screen, game.getScreenResolution()->getWidth() - 3, 44, game.getScreenResolution()->getHeight() - 276, makecol(202, 141, 16));
+	vline(bmp_screen, width - 1, 44, height - 276, makecol(153, 105, 0));
+	vline(bmp_screen, width - 2, 44, height - 276, makecol(182, 125, 12));
+	vline(bmp_screen, width - 3, 44, height - 276, makecol(202, 141, 16));
 
 	destroy_bitmap(backgroundList);
 
-	draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GERALD_SIDEBAR_PIECE].dat, (game.getScreenResolution()->getWidth() - 130), 42);
+	draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GERALD_SIDEBAR_PIECE].dat, (width - 130), 42);
 }

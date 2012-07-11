@@ -230,7 +230,7 @@ bool cStructureUtils::isStructureOnScreen(cAbstractStructure *structure) {
 	int width = structure->getWidthInPixels();
 	int height = structure->getHeightInPixels();
 
-	return ((drawX + width) > 0 && drawX < game.getScreenResolution()->getWidth()) && ((drawY + height) > 0 && drawY < game.getScreenResolution()->getHeight());
+	return ((drawX + width) > 0 && drawX < /* game.getScreenResolution()->getWidth() */ 800 ) && ((drawY + height) > 0 && drawY < /* game.getScreenResolution()->getHeight */ 600 );
 }
 
 bool cStructureUtils::isMouseOverStructure(Mouse *mouse, cAbstractStructure *structure) {

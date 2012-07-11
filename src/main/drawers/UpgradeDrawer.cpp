@@ -12,7 +12,7 @@
 using namespace std;
 
 UpgradeDrawer::UpgradeDrawer() {
-	GuiShapeFactory * factory = new GuiShapeFactory(game.getScreenResolution());
+	GuiShapeFactory * factory = new GuiShapeFactory(/*game.getScreenResolution()*/NULL);
 	BITMAP * bitmap = (BITMAP *) gfxinter[BTN_UPGRADE].dat;
 	upgradeButton = factory->createButtonWithBitmap(29, 0, bitmap, "upgrade");
 	delete factory;

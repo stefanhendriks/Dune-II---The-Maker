@@ -34,13 +34,13 @@ void cKeyboardManager::interact() {
 // 			char filename[25];
 // 
 // 			if (game.screenshot < 10) {
-// 				sprintf(filename, "%dx%d_000%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
+// 				sprintf(filename, "%dx%d_000%d.bmp", /* game.getScreenResolution()->getWidth() */ 800 , /* game.getScreenResolution()->getHeight */ 600 , game.screenshot);
 // 			} else if (game.screenshot < 100) {
-// 				sprintf(filename, "%dx%d_00%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
+// 				sprintf(filename, "%dx%d_00%d.bmp", /* game.getScreenResolution()->getWidth() */ 800 , /* game.getScreenResolution()->getHeight */ 600 , game.screenshot);
 // 			} else if (game.screenshot < 1000) {
-// 				sprintf(filename, "%dx%d_0%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
+// 				sprintf(filename, "%dx%d_0%d.bmp", /* game.getScreenResolution()->getWidth() */ 800 , /* game.getScreenResolution()->getHeight */ 600 , game.screenshot);
 // 			} else {
-// 				sprintf(filename, "%dx%d_%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
+// 				sprintf(filename, "%dx%d_%d.bmp", /* game.getScreenResolution()->getWidth() */ 800 , /* game.getScreenResolution()->getHeight */ 600 , game.screenshot);
 // 			}
 // 
 // 			save_bmp(filename, bmp_screen, general_palette);

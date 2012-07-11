@@ -23,10 +23,6 @@
 #include "states/MainMenuState.h"
 
 cGame::cGame() {
-	screenResolution = new ScreenResolution(800, 600);
-	screenResolutionFromIni = NULL;
-	moviePlayer = NULL;
-	soundPlayer = NULL;
 	windowed = true;
 	gameStateEnum = MAINMENU;
 	mapUtils = NULL;
@@ -40,14 +36,8 @@ cGame::cGame() {
 }
 
 cGame::~cGame() {
-	delete moviePlayer;
-	moviePlayer = NULL;
-	delete soundPlayer;
-	soundPlayer = NULL;
 	delete screenResolution;
 	screenResolution = NULL;
-	delete screenResolutionFromIni;
-	screenResolutionFromIni = NULL;
 	delete state;
 	state = NULL;
 }
@@ -216,6 +206,8 @@ bool cGame::setupGame() {
 	// TODO: read/write rest value so it does not have to 'fine-tune'
 	// but is already set up. Perhaps even offer it in the options screen? So the user
 	// can specify how much CPU this game may use?
+	ScreenResolution * screenResolution = new ScreenResolution(800, 600);
+
 
 	if (game.windowed) {
 		Logger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "Searching for optimal graphics settings");
@@ -237,12 +229,11 @@ bool cGame::setupGame() {
 #ifdef UNIX
 		r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 #else
-		r = set_gfx_mode(GFX_DIRECTX_WIN, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(),
-				getScreenResolution()->getHeight());
+		r = set_gfx_mode(GFX_DIRECTX_WIN, screenResolution->getWidth(), screenResolution->getHeight(), screenResolution->getWidth(), screenResolution->getHeight());
 #endif
 
 		char msg[255];
-		sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d.", getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
+		sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d.", screenResolution->getWidth(), screenResolution->getHeight());
 
 		if (r > -1) {
 			logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Successfully created window with graphics mode.", OUTC_SUCCESS);
@@ -255,8 +246,7 @@ bool cGame::setupGame() {
 #ifdef UNIX
 			r = set_gfx_mode(GFX_XWINDOWS, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
 #else
-			r = set_gfx_mode(GFX_DIRECTX_ACCEL, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(),
-					getScreenResolution()->getHeight());
+			r = set_gfx_mode(GFX_DIRECTX_ACCEL, screenResolution->getWidth(), screenResolution->getHeight(), screenResolution->getWidth(), screenResolution->getHeight());
 #endif
 
 			if (r > -1) {
@@ -295,7 +285,7 @@ bool cGame::setupGame() {
 			bestScreenResolutionFinder.checkResolutions();
 			ScreenResolution * aquiredScreenResolution = bestScreenResolutionFinder.aquireBestScreenResolutionFullScreen();
 			if (aquiredScreenResolution) {
-				setScreenResolution(aquiredScreenResolution);
+				screenResolution = aquiredScreenResolution;
 			}
 		}
 	}
@@ -353,18 +343,12 @@ bool cGame::setupGame() {
 		logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
 	}
 
-	soundPlayer = NULL;
-	moviePlayer = NULL;
-
 	/***
 	 Bitmap Creation
 	 ***/
 
-	ScreenResolution * currentScreenResolution = getScreenResolution();
-	assert(currentScreenResolution);
-
-	int width = currentScreenResolution->getWidth();
-	int height = currentScreenResolution->getHeight();
+	int width = screenResolution->getWidth();
+	int height = screenResolution->getHeight();
 
 	memset(msg, 0, sizeof(msg));
 	sprintf(msg, "Creating bitmaps with resolution of %dx%d.", width, height);
@@ -444,8 +428,9 @@ bool cGame::setupGame() {
 	} else {
 		logbook("Datafile hooked: gfxaudio.dat");
 	}
-	soundPlayer = new cSoundPlayer(maxSounds, 255, 150);
-	soundPlayer->setDatafile(gfxaudio);
+
+// 	soundPlayer = new cSoundPlayer(maxSounds, 255, 150);
+// 	soundPlayer->setDatafile(gfxaudio);
 
 	gfxinter = load_datafile("data/gfxinter.dat");
 	if (gfxinter == NULL) {

@@ -1031,15 +1031,15 @@ int iCellOnScreen(int iCell) {
 	int iMapX = mapCamera->getX();
 	int iMapY = mapCamera->getY();
 
-	int iEndX = iMapX + ((game.getScreenResolution()->getWidth() - 160) / 32); // width of sidebar is 160
-	int iEndY = iMapY + ((game.getScreenResolution()->getHeight() - 42) / 32) + 1; // height of upper bar is 42
+	int iEndX = iMapX + ((/* game.getScreenResolution()->getWidth() */ 800  - 160) / 32); // width of sidebar is 160
+	int iEndY = iMapY + ((/* game.getScreenResolution()->getHeight */ 600  - 42) / 32) + 1; // height of upper bar is 42
 
 	if ((iCellX >= iMapX && iCellX <= iEndX) && (iCellY >= iMapY && iCellY <= iEndY))
 		return 0; // on screen
 
 
-	int iCalcX = iMapX + (((game.getScreenResolution()->getWidth() - 160) / 32) / 2);
-	int iCalcY = iMapY + (((game.getScreenResolution()->getHeight() - 42) / 32) + 1) / 2;
+	int iCalcX = iMapX + (((/* game.getScreenResolution()->getWidth() */ 800  - 160) / 32) / 2);
+	int iCalcY = iMapY + (((/* game.getScreenResolution()->getHeight */ 600  - 42) / 32) + 1) / 2;
 
 	// Calc from midst of screen till the cell x,y
 	return ABS_length(iCellX, iCellY, iCalcX, iCalcY);
@@ -1308,10 +1308,10 @@ void Shimmer(int r, int x, int y) {
 				x1 = 0;
 			if (y1 < 0)
 				y1 = 0;
-			if (x1 >= game.getScreenResolution()->getWidth())
-				x1 = game.getScreenResolution()->getWidth() - 1;
-			if (y1 >= game.getScreenResolution()->getHeight())
-				y1 = game.getScreenResolution()->getHeight() - 1;
+			if (x1 >= /* game.getScreenResolution()->getWidth() */ 800 )
+				x1 = /* game.getScreenResolution()->getWidth() */ 800  - 1;
+			if (y1 >= /* game.getScreenResolution()->getHeight */ 600 )
+				y1 = /* game.getScreenResolution()->getHeight */ 600  - 1;
 
 			gp = getpixel(bmp_screen, x1, y1); // use this inline function to speed up things.
 			// Now choose random spot to 'switch' with.
@@ -1322,10 +1322,10 @@ void Shimmer(int r, int x, int y) {
 				nx = 0;
 			if (ny < 0)
 				ny = 0;
-			if (nx >= game.getScreenResolution()->getHeight())
-				nx = game.getScreenResolution()->getHeight() - 1;
-			if (ny >= game.getScreenResolution()->getHeight())
-				ny = game.getScreenResolution()->getHeight() - 1;
+			if (nx >= /* game.getScreenResolution()->getHeight */ 600 )
+				nx = /* game.getScreenResolution()->getHeight */ 600  - 1;
+			if (ny >= /* game.getScreenResolution()->getHeight */ 600 )
+				ny = /* game.getScreenResolution()->getHeight */ 600  - 1;
 
 			tc = getpixel(bmp_screen, nx, ny);
 
@@ -1340,14 +1340,14 @@ void Shimmer(int r, int x, int y) {
 
 }
 
-void createNewMoviePlayerAndSetInGame(DATAFILE * gfxmovie, cMoviePlayer * moviePlayer) {
-	game.setMoviePlayer(NULL);
-	delete moviePlayer;
-	moviePlayer = new cMoviePlayer(gfxmovie);
-	moviePlayer->setPlaying(true);
-	moviePlayer->setFrame(0);
-	game.setMoviePlayer(moviePlayer);
-}
+// void createNewMoviePlayerAndSetInGame(DATAFILE * gfxmovie, cMoviePlayer * moviePlayer) {
+// 	game.setMoviePlayer(NULL);
+// 	delete moviePlayer;
+// 	moviePlayer = new cMoviePlayer(gfxmovie);
+// 	moviePlayer->setPlaying(true);
+// 	moviePlayer->setFrame(0);
+// 	game.setMoviePlayer(moviePlayer);
+// }
 
 void LOAD_SCENE(std::string scene) {
 	DATAFILE * gfxmovie = NULL;
@@ -1357,16 +1357,16 @@ void LOAD_SCENE(std::string scene) {
 
 	gfxmovie = load_datafile(filename);
 
-	cMoviePlayer * moviePlayer = game.getMoviePlayer();
-
-	if (gfxmovie != NULL) {
-		createNewMoviePlayerAndSetInGame(gfxmovie, moviePlayer);
-	} else {
-		if (moviePlayer) {
-			game.setMoviePlayer(NULL);
-			delete moviePlayer;
-		}
-	}
+// 	cMoviePlayer * moviePlayer = game.getMoviePlayer();
+// 
+// 	if (gfxmovie != NULL) {
+// 		/*createNewMoviePlayerAndSetInGame(gfxmovie, moviePlayer);*/
+// 	} else {
+// 		if (moviePlayer) {
+// 			game.setMoviePlayer(NULL);
+// 			delete moviePlayer;
+// 		}
+// 	}
 }
 
 // Skirmish map initialization

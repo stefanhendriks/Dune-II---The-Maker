@@ -20,10 +20,10 @@ GameDrawer::GameDrawer(cPlayer * thePlayer) {
 	structureDrawer = new StructureDrawer();
 	mouseDrawer = new MouseDrawer(thePlayer, Mouse::getInstance());
 
-	MessageBar * messageBar = messageBarDrawer->getMessageBar();
-	messageBar->setX(0);
-	messageBar->setY(42);
-	messageBar->setWidth(game.getScreenResolution()->getWidth() - 182);
+// 	MessageBar * messageBar = messageBarDrawer->getMessageBar();
+// 	messageBar->setX(0);
+// 	messageBar->setY(42);
+// 	messageBar->setWidth(/* game.getScreenResolution()->getWidth() */ 800  - 182);
 	logbook("cGameDrawer constructor finished");
 }
 

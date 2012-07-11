@@ -33,18 +33,18 @@ ScreenResolution * Screen::getScreenResolution() {
 		shake_x = -abs(offset / 2) + rnd(offset);
 		shake_y = -abs(offset / 2) + rnd(offset);
 
-		blit(bmp_screen, bmp_throttle, 0, 0, 0 + shake_x, 0 + shake_y, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
-		blit(bmp_throttle, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
+		blit(bmp_screen, bmp_throttle, 0, 0, 0 + shake_x, 0 + shake_y, /* game.getScreenResolution()->getWidth()  800 , /* game.getScreenResolution()->getHeight 600 );
+		blit(bmp_throttle, screen, 0, 0, 0, 0, /* game.getScreenResolution()->getWidth() 800 , /* game.getScreenResolution()->getHeight  600 );
 	} else {
 		// when fading
 		if (iAlphaScreen == 255)
-			blit(bmp_screen, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
+			blit(bmp_screen, screen, 0, 0, 0, 0, /* game.getScreenResolution()->getWidth() 800 , /* game.getScreenResolution()->getHeight 600 );
 		else {
-			BITMAP *temp = create_bitmap(game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
+			BITMAP *temp = create_bitmap(/* game.getScreenResolution()->getWidth()  800 , /* game.getScreenResolution()->getHeight  600 );
 			assert(temp != NULL);
 			clear(temp);
 			fblend_trans(bmp_screen, temp, 0, 0, iAlphaScreen);
-			blit(temp, screen, 0, 0, 0, 0, game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight());
+			blit(temp, screen, 0, 0, 0, 0, /* game.getScreenResolution()->getWidth() 800 , /* game.getScreenResolution()->getHeight 600 );
 			destroy_bitmap(temp);
 		}
 

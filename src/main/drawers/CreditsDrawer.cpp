@@ -200,7 +200,7 @@ void CreditsDrawer::draw() {
 	drawCurrentCredits();
 	drawPreviousCredits();
 
-	draw_sprite(bmp_screen, bmp, game.getScreenResolution()->getWidth() - 120, 8);
+	/*draw_sprite(bmp_screen, bmp, /* game.getScreenResolution()->getWidth()  800  - 120, 8);*/
 }
 
 int CreditsDrawer::getXDrawingOffset(int amount) {
