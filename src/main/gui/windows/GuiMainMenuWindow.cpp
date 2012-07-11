@@ -12,6 +12,5 @@ GuiMainMenuWindow::~GuiMainMenuWindow() {
 }
 
 void GuiMainMenuWindow::draw() {
-	//Logger::getInstance()->debug("Yay we are drawing GuiMainMenuWindow");
 	mainMenuDialog->draw();
 }

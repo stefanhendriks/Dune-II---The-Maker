@@ -1,5 +1,5 @@
-#ifndef SCREENBLITTER_H_
-#define SCREENBLITTER_H_
+#ifndef SCREEN_H_
+#define SCREEN_H_
 
 #include <assert.h>
 #include <cstddef>
@@ -10,32 +10,32 @@ extern DATAFILE * gfxdata; // temporarily!
 #include "../gameobjects/ScreenResolution.h"
 #include "../controls/Mouse.h"
 
-class ScreenBlitter {
+class Screen {
 	public:
-		ScreenBlitter(ScreenResolution * screenResolution, BITMAP * bufferScreen) {
+		Screen(ScreenResolution * screenResolution, BITMAP * bufferScreen) {
 			assert(screenResolution);
 			this->screenResolution = screenResolution;
-			this->bufferScreen = bufferScreen;
+			this->buffer = bufferScreen;
 		}
 
-		~ScreenBlitter() {
+		~Screen() {
 			screenResolution = NULL;
 		}
 
 		void blitScreenBufferToScreen();
 
-		void blitMouseToScreenBuffer();
-
 		void clearBuffer() {
-			clear(bufferScreen);
+			clear(buffer);
 		}
 
-	protected:
+		BITMAP * getBuffer();
+		ScreenResolution * getScreenResolution();
+protected:
 
 	private:
 		ScreenResolution * screenResolution;
 
-		BITMAP * bufferScreen;
+		BITMAP * buffer;
 };
 
 #endif /* SCREENBLITTER_H_ */

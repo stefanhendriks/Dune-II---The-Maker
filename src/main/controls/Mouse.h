@@ -38,6 +38,8 @@ class Mouse {
 		Rectangle *getLastCreatedRectangle() {  return &lastCreatedRectangle;  }
 		Rectangle *getCurrentDrawingRectangle() { return &currentRectangle; }
 
+		void draw(BITMAP * screen);
+
 protected:
 	~Mouse();
 

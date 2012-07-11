@@ -1,12 +1,15 @@
-#include "ScreenBlitter.h"
+#include "Screen.h"
 
-void ScreenBlitter::blitScreenBufferToScreen() {
-	blit(bufferScreen, screen, 0, 0, 0, 0, screenResolution->getWidth(), screenResolution->getHeight());
+void Screen::blitScreenBufferToScreen() {
+	blit(buffer, screen, 0, 0, 0, 0, screenResolution->getWidth(), screenResolution->getHeight());
 }
 
-void ScreenBlitter::blitMouseToScreenBuffer() {
-	Mouse * mouse = Mouse::getInstance();
-	draw_sprite(bufferScreen, (BITMAP *) gfxdata[mouse->getMouseTile()].dat, mouse->getX(), mouse->getY());
+BITMAP * Screen::getBuffer() {
+	return this->buffer;
+}
+
+ScreenResolution * Screen::getScreenResolution() {
+	return this->screenResolution;
 }
 
 /**

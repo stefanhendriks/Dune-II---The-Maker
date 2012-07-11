@@ -8,28 +8,29 @@
 
 #include "../utils/cTimeManager.h"
 #include "../managers/RestManager.h"
-#include "../utils/ScreenBlitter.h"
+#include "../domain/Screen.h"
 #include "StateBuilder.h"
 #include "../include/GameState.h"
 
 class StateRunner {
+
 	public:
-		StateRunner(ScreenResolution * screenResolution, BITMAP * bufferScreen, GameState initialGameState) {
-			assert(screenResolution);
-			this->stateBuilder = new StateBuilder(screenResolution);
-			this->screenBlitter = new ScreenBlitter(screenResolution, bufferScreen);
+		StateRunner(Screen * screen, GameState initialGameState) {
+			assert(screen);
+			this->stateBuilder = new StateBuilder(screen->getScreenResolution());
 			this->runningState = stateBuilder->buildState(initialGameState);
+			this->screen = screen;
 		}
 
 		~StateRunner() {
 			delete runningState;
 			delete stateBuilder;
-			delete screenBlitter;
+			delete screen;
 		}
 
 		void runState() {
 			assert(runningState);
-			screenBlitter->clearBuffer();
+			screen->clearBuffer();
 
 			// update time manager state, give CPU slack, update mouse state.
 			timeManager->processTime();
@@ -40,8 +41,9 @@ class StateRunner {
 			runningState->updateState(this);
 			runningState->draw();
 
-			screenBlitter->blitMouseToScreenBuffer(); // <-- TEMPORARILY!?
-			screenBlitter->blitScreenBufferToScreen();
+			Mouse * mouse = Mouse::getInstance();
+			mouse->draw(screen->getBuffer());
+			screen->blitScreenBufferToScreen();
 		}
 
 		void transitionToState(GameState gameState);
@@ -71,16 +73,13 @@ class StateRunner {
 
 		StateBuilder * stateBuilder;
 
-		ScreenBlitter * screenBlitter;
+		Screen * screen;
 
 		RestManager * restManager;
 
 		cTimeManager * timeManager;
 
 		Mouse * mouse;
-
-
-
 };
 
 #endif /* STATERUNNER_H_ */

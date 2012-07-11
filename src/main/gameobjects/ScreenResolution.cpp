@@ -18,7 +18,6 @@ ScreenResolution::~ScreenResolution() {
 }
 
 void ScreenResolution::printLog() {
-	//cLogger::getInstance()->log
 	char msg[255];
 	sprintf(msg, "cBestScreenResolutionFinder:: width = %d, height = %d, tested = %d, usable = %d", width, height, tested, canBeUsed);
 	logbook(msg);

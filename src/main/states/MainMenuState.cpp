@@ -1,7 +1,7 @@
 #include "MainMenuState.h"
 
 void MainMenuState::draw() {
-	guiWindow->draw();
+		
 }
 
 void MainMenuState::updateState(StateRunner * stateRunner) {

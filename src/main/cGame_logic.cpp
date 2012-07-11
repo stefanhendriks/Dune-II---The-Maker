@@ -2576,7 +2576,8 @@ bool cGame::setupGame() {
 
 	playMusicByType(MUSIC_MENU);
 
-	stateRunner = new StateRunner(screenResolution, bmp_screen, MAINMENU);
+	Screen * screen = new Screen(screenResolution, bmp_screen);
+	stateRunner = new StateRunner(screen, MAINMENU);
 	RestManager * restManager = new RestManager(IDEAL_FPS);
 	stateRunner->setRestManager(restManager);
 
