@@ -8,7 +8,7 @@
 extern DATAFILE * gfxdata; // temporarily!
 
 #include "../gameobjects/ScreenResolution.h"
-#include "../controls/Mouse.h"
+#include "../domain/Mouse.h"
 
 class Screen {
 	public:

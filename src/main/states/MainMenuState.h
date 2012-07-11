@@ -16,30 +16,17 @@ class StateRunner;
 
 class MainMenuState : public State {
 	public:
-		MainMenuState() {
+		MainMenuState(Screen * screen, Mouse * mouse) : State(screen, mouse) {
 			guiWindow = NULL;
 			interactionManager = NULL;
 		}
 
 		~MainMenuState() {
-			delete guiWindow;
-			delete interactionManager;
-			Logger::getInstance()->debug("destructor State");
+			Logger::getInstance()->debug("Destroying main menu state");
 		}
 
 		void draw();
-		void manageTime();
-		void updateState(StateRunner * stateRunner);
-
-		void setGuiWindow(GuiWindow * guiWindow) {
-			assert(guiWindow);
-			this->guiWindow = guiWindow;
-		}
-
-		void setInteractionManager(cInteractionManager * interactionManager) {
-			assert(interactionManager);
-			this->interactionManager = interactionManager;
-		}
+		void update();
 
 	protected:
 
@@ -48,6 +35,7 @@ class MainMenuState : public State {
 
 		// interact with stuff (mouse/keyboard)
 		cInteractionManager * interactionManager;
+
 
 };
 

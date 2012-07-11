@@ -1,18 +1,15 @@
 #include "MainMenuState.h"
 
 void MainMenuState::draw() {
-		
+	mouse->draw(screen->getBuffer());
 }
 
-void MainMenuState::updateState(StateRunner * stateRunner) {
-	guiWindow->interact();
+void MainMenuState::update() {
+	mouse->updateState();
+
 	if (key[KEY_ESC]) {
 		this->flagToQuitGame();
 	}
-}
-
-void MainMenuState::manageTime() {
-
 }
 
 

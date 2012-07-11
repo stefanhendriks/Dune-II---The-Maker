@@ -20,7 +20,6 @@
 #include "include/GameState.h"
 
 #include "states/State.h"
-#include "states/StateRunner.h"
 
 class cGame {
 
@@ -220,7 +219,6 @@ class cGame {
 
 		cSoundPlayer * soundPlayer;
 		cMoviePlayer * moviePlayer;
-		StateRunner * stateRunner;
 
 };
 

@@ -68,12 +68,9 @@ ALMP3_MP3 *mp3_music; // pointer to mp3 music
 // Timers
 int frame_count, fps; // fps and such
 
-/** Allegro specific timer creation starts here **/
-#ifdef ALLEGRO_H
 volatile int allegro_timerSecond = 0;
 volatile int allegro_timerGlobal = 0;
 volatile int allegro_timerUnits = 0;
-#endif
 
 bool argumentsGiven(int & argc) {
 	return argc > 1;

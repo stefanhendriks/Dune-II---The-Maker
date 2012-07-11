@@ -33,13 +33,7 @@ class StateRunner {
 			screen->clearBuffer();
 
 			// update time manager state, give CPU slack, update mouse state.
-			timeManager->processTime();
-			restManager->giveCpuSomeSlackIfNeeded();
-			mouse->updateState();
 
-			runningState->manageTime();
-			runningState->updateState(this);
-			runningState->draw();
 
 			Mouse * mouse = Mouse::getInstance();
 			mouse->draw(screen->getBuffer());

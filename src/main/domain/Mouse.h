@@ -1,6 +1,7 @@
 #ifndef CMOUSE_H_
 #define CMOUSE_H_
 
+#include <allegro.h>
 #include "../gameobjects/Rectangle.h"
 
 class Mouse {

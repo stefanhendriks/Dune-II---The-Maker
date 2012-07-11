@@ -20,7 +20,7 @@
 #include "utils/BestScreenResolutionFinder.h"
 #include "utils/CellCalculator.h"
 
-
+#include "states/MainMenuState.h"
 
 cGame::cGame() {
 	screenResolution = new ScreenResolution(800, 600);
@@ -38,7 +38,6 @@ cGame::cGame() {
 	memset(revision, 0, sizeof(revision));
 	memset(version, 0, sizeof(version));
 	sprintf(version, "0.4.6");
-	stateRunner = NULL;
 }
 
 cGame::~cGame() {
@@ -50,8 +49,8 @@ cGame::~cGame() {
 	screenResolution = NULL;
 	delete screenResolutionFromIni;
 	screenResolutionFromIni = NULL;
-	delete stateRunner;
-	stateRunner = NULL;
+	delete state;
+	state = NULL;
 }
 
 void cGame::init() {
@@ -2134,8 +2133,8 @@ void cGame::runGameState() {
 void cGame::run() {
 	set_trans_blender(0, 0, 0, 128);
 
-	while (!stateRunner->shouldQuitGame()) {
-		stateRunner->runState();
+	while (!state->shouldQuitGame()) {
+		state->run();
 		//frame_count++;
 	}
 //		TimeManager.processTime();
@@ -2252,9 +2251,13 @@ bool cGame::setupGame() {
 	/* set up the interrupt routines... */
 	game.TIMER_shake = 0;
 
-	LOCK_VARIABLE(allegro_timerUnits);LOCK_VARIABLE(allegro_timerGlobal);LOCK_VARIABLE(allegro_timerSecond);
+	LOCK_VARIABLE(allegro_timerUnits);
+	LOCK_VARIABLE(allegro_timerGlobal);
+	LOCK_VARIABLE(allegro_timerSecond);
 
-	LOCK_FUNCTION(allegro_timerunits);LOCK_FUNCTION(allegro_timerglobal);LOCK_FUNCTION(allegro_timerfps);
+	LOCK_FUNCTION(allegro_timerunits);
+	LOCK_FUNCTION(allegro_timerglobal);
+	LOCK_FUNCTION(allegro_timerfps);
 
 	// Install timers
 	install_int(allegro_timerunits, 100); // 100 miliseconds
@@ -2577,14 +2580,7 @@ bool cGame::setupGame() {
 	playMusicByType(MUSIC_MENU);
 
 	Screen * screen = new Screen(screenResolution, bmp_screen);
-	stateRunner = new StateRunner(screen, MAINMENU);
-	RestManager * restManager = new RestManager(IDEAL_FPS);
-	stateRunner->setRestManager(restManager);
-
-	cTimeManager * timeManager = new cTimeManager();
-	stateRunner->setTimeManager(timeManager);
-
-	stateRunner->setMouse(Mouse::getInstance());
+	state = new MainMenuState(screen, Mouse::getInstance());
 
 	// all has installed well. Lets rock and role.
 	return true;

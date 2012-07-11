@@ -268,18 +268,12 @@ void cTimeManager::handleTimerUnits() {
  that eventually is set by this function.
  */
 void cTimeManager::processTime() {
-#ifdef ALLEGRO_H
 	syncFromAllegroTimers();
-#endif
-
 	capTimers();
 	handleTimerFPS();
 	handleTimerUnits();
 	handleTimerGlobal();
-
-#ifdef ALLEGRO_H
 	syncAllegroTimers();
-#endif
 }
 
 void cTimeManager::increaseTimerForFPS() {
