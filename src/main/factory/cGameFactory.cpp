@@ -34,7 +34,7 @@ void cGameFactory::createDependenciesForPlayers() {
 		cItemBuilder * itemBuilder = new cItemBuilder(thePlayer);
 		thePlayer->setItemBuilder(itemBuilder);
 
-		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer, game.iMission);
+		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer, 9);
 		thePlayer->setSideBar(sidebar);
 
 		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(thePlayer);
@@ -49,7 +49,7 @@ void cGameFactory::createDependenciesForPlayers() {
 		cOrderProcesser * orderProcesser = new cOrderProcesser(thePlayer);
 		thePlayer->setOrderProcesser(orderProcesser);
 
-		thePlayer->setTechLevel(game.iMission);
+		thePlayer->setTechLevel(9);
 	}
 	logbook("cGameFactory:createDependenciesForPlayers [END]");
 }

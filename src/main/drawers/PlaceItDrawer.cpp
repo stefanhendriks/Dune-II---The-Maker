@@ -174,7 +174,7 @@ void PlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, 
 
 			player[HUMAN].getStructurePlacer()->placeStructure(cell, structureId, iHealthPercent);
 
-			game.bPlaceIt = false;
+			/*game.bPlaceIt = false;*/
 
 			itemToPlace->decreaseTimesToBuild();
 			itemToPlace->setPlaceIt(false);

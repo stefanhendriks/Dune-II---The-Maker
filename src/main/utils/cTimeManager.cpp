@@ -41,62 +41,63 @@ void cTimeManager::capTimers() {
 }
 
 void cTimeManager::handleTimerFPS() {
-	while (timerSecond > 0) {
-		gameTime++;
-		char msg[255];
-		int availableVoices = game.getSoundPlayer()->getAvailableVoices();
-		int maxVoices = game.getSoundPlayer()->getMaxVoices();
-		int leftVoices = maxVoices - (maxVoices - availableVoices);
-		sprintf(msg, "Second passed; voices available [%d], while maximum is [%d]. (voices left to play : [%d])", availableVoices, maxVoices, leftVoices);
-		Logger::getInstance()->debug(msg);
-
-		// TODO: this should now call some state specific concrete implementation. Don't use if-statements
-		// here! Either:
-		// - delegate back to the state who called you, with specific functions for per second/tenth/hundred a second
-		// - have for each state a seperate TimeManager, extending from the AbstractTimeManager which would be this
-		//   class and execute that.
-
-		if (game.isState(PLAYING)) {
-			game.paths_created = 0;
-
-			THINK_REINFORCEMENTS();
-
-			// starports think per second for deployment (if any)
-			for (int i = 0; i < MAX_STRUCTURES; i++) {
-				if (structure[i]) {
-					if (structure[i]->getType() == STARPORT) {
-						((cStarPort *) structure[i])->think_deploy();
-					}
-				}
-			}
-
-			for (int i = 0; i < MAX_PLAYERS; i++) {
-				if (player[i].getOrderProcesser()) {
-					cOrderProcesser * orderProcesser = player[i].getOrderProcesser();
-					assert(orderProcesser);
-					orderProcesser->think();
-				}
-			}
-
-		} // game specific stuff
-
-
-		// Frame Per Second counter
-		fps = frame_count;
-
-		// RESTMANAGER
-		// TODO: / refactor the restManager into the state class, and let an abstractState class handle basic
-		// time handling. Then, offer methods to put own state specific logic in there. RestManager is something used
-		// by all states anyway!
-
-		// log the status
-		frame_count = 0;
-
-		timerSecond--; // done!
-	}
+// 	while (timerSecond > 0) {
+// 		gameTime++;
+// 		char msg[255];
+// 		int availableVoices = game.getSoundPlayer()->getAvailableVoices();
+// 		int maxVoices = game.getSoundPlayer()->getMaxVoices();
+// 		int leftVoices = maxVoices - (maxVoices - availableVoices);
+// 		sprintf(msg, "Second passed; voices available [%d], while maximum is [%d]. (voices left to play : [%d])", availableVoices, maxVoices, leftVoices);
+// 		Logger::getInstance()->debug(msg);
+// 
+// 		// TODO: this should now call some state specific concrete implementation. Don't use if-statements
+// 		// here! Either:
+// 		// - delegate back to the state who called you, with specific functions for per second/tenth/hundred a second
+// 		// - have for each state a seperate TimeManager, extending from the AbstractTimeManager which would be this
+// 		//   class and execute that.
+// 
+// 		if (game.isState(PLAYING)) {
+// 			game.paths_created = 0;
+// 
+// 			THINK_REINFORCEMENTS();
+// 
+// 			// starports think per second for deployment (if any)
+// 			for (int i = 0; i < MAX_STRUCTURES; i++) {
+// 				if (structure[i]) {
+// 					if (structure[i]->getType() == STARPORT) {
+// 						((cStarPort *) structure[i])->think_deploy();
+// 					}
+// 				}
+// 			}
+// 
+// 			for (int i = 0; i < MAX_PLAYERS; i++) {
+// 				if (player[i].getOrderProcesser()) {
+// 					cOrderProcesser * orderProcesser = player[i].getOrderProcesser();
+// 					assert(orderProcesser);
+// 					orderProcesser->think();
+// 				}
+// 			}
+// 
+// 		} // game specific stuff
+// 
+// 
+// 		// Frame Per Second counter
+// 		fps = frame_count;
+// 
+// 		// RESTMANAGER
+// 		// TODO: / refactor the restManager into the state class, and let an abstractState class handle basic
+// 		// time handling. Then, offer methods to put own state specific logic in there. RestManager is something used
+// 		// by all states anyway!
+// 
+// 		// log the status
+// 		frame_count = 0;
+// 
+// 		timerSecond--; // done!
+// 	}
 }
 
 void cTimeManager::handleTimerGlobal() {
+	/*
 	// keep up with time cycles
 	while (timerGlobal > 0) {
 
@@ -223,40 +224,40 @@ void cTimeManager::handleTimerGlobal() {
 
 		// Fading of selected stuff
 		if (game.bFadeSelectDir) {
-			game.fade_select++;
-			if (game.fade_select > 254)
+			255++;
+			if (255 > 254)
 				game.bFadeSelectDir = false;
 		} else {
-			game.fade_select--;
-			if (game.fade_select < 32)
+			255--;
+			if (255 < 32)
 				game.bFadeSelectDir = true;
 		}
 
 		timerGlobal--;
-	}
+	} */
 }
 
 void cTimeManager::handleTimerUnits() {
-	while (timerUnits > 0) {
-		if (game.isState(PLAYING)) {
-			if (map) {
-				// units think
-				for (int i = 0; i < MAX_UNITS; i++) {
-					if (unit[i].isValid()) {
-						unit[i].think();
-
-						// Think attack style
-						if (unit[i].iAction == ACTION_ATTACK) {
-							unit[i].think_attack();
-						}
-					}
-				}
-				map->think_minimap();
-			}
-		}
-
-		timerUnits--;
-	}
+// 	while (timerUnits > 0) {
+// 		if (game.isState(PLAYING)) {
+// 			if (map) {
+// 				// units think
+// 				for (int i = 0; i < MAX_UNITS; i++) {
+// 					if (unit[i].isValid()) {
+// 						unit[i].think();
+// 
+// 						// Think attack style
+// 						if (unit[i].iAction == ACTION_ATTACK) {
+// 							unit[i].think_attack();
+// 						}
+// 					}
+// 				}
+// 				map->think_minimap();
+// 			}
+// 		}
+// 
+// 		timerUnits--;
+// 	}
 }
 
 /**

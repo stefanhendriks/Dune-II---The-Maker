@@ -21,51 +21,51 @@ bool cKeyboardManager::mustTakeScreenshot() {
 }
 
 void cKeyboardManager::interact() {
-	if (key[KEY_TAB]) {
-		DEBUG_KEYS();
-	} else {
-		GAME_KEYS();
-
-		if (key[KEY_ESC]) {
-			game.playing = false;
-		}
-
-		if (mustTakeScreenshot()) {
-			char filename[25];
-
-			if (game.screenshot < 10) {
-				sprintf(filename, "%dx%d_000%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
-			} else if (game.screenshot < 100) {
-				sprintf(filename, "%dx%d_00%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
-			} else if (game.screenshot < 1000) {
-				sprintf(filename, "%dx%d_0%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
-			} else {
-				sprintf(filename, "%dx%d_%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
-			}
-
-			save_bmp(filename, bmp_screen, general_palette);
-
-			game.screenshot++;
-		}
-
-	}
-
-	if (key[KEY_F]) {
-		alfont_textprintf(bmp_screen, game_font, 0, 44, makecol(255, 255, 255), "FPS: %d", fps);
-	}
-
-	/* Handle here keys that are only active when debugging */
-	if (DEBUGGING) {
-		if (key[KEY_F4]) {
-			if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
-				map->makeCircleVisibleForPlayerOfSpecificSize(player[HUMAN].getGameControlsContext()->getMouseCell(), 3, 0);
-			}
-		}
-	}
+// 	if (key[KEY_TAB]) {
+// 		DEBUG_KEYS();
+// 	} else {
+// 		GAME_KEYS();
+// 
+// 		if (key[KEY_ESC]) {
+// 			game.playing = false;
+// 		}
+// 
+// 		if (mustTakeScreenshot()) {
+// 			char filename[25];
+// 
+// 			if (game.screenshot < 10) {
+// 				sprintf(filename, "%dx%d_000%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
+// 			} else if (game.screenshot < 100) {
+// 				sprintf(filename, "%dx%d_00%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
+// 			} else if (game.screenshot < 1000) {
+// 				sprintf(filename, "%dx%d_0%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
+// 			} else {
+// 				sprintf(filename, "%dx%d_%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
+// 			}
+// 
+// 			save_bmp(filename, bmp_screen, general_palette);
+// 
+// 			game.screenshot++;
+// 		}
+// 
+// 	}
+// 
+// 	if (key[KEY_F]) {
+// 		alfont_textprintf(bmp_screen, game_font, 0, 44, makecol(255, 255, 255), "FPS: %d", fps);
+// 	}
+// 
+// 	/* Handle here keys that are only active when debugging */
+// 	if (DEBUGGING) {
+// 		if (key[KEY_F4]) {
+// 			if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
+// 				map->makeCircleVisibleForPlayerOfSpecificSize(player[HUMAN].getGameControlsContext()->getMouseCell(), 3, 0);
+// 			}
+// 		}
+// 	}
 }
 
 void cKeyboardManager::DEBUG_KEYS() {
-
+	/*
 	//JUMP TO MISSION 9
 	if (key[KEY_F1] && game.iHouse > 0) {
 		game.mission_init();
@@ -150,10 +150,11 @@ void cKeyboardManager::DEBUG_KEYS() {
 		game.setState(BRIEFING);
 		playMusicByType(MUSIC_BRIEFING);
 		game.iMentatSpeak = -1;
-	}
+	} */
 }
 
 void cKeyboardManager::GAME_KEYS() {
+	/*
 	int iGroup = game.getGroupNumberFromKeyboard();
 
 	// WHEN PRESSED CTRL, MEANING, ADD....
@@ -226,6 +227,6 @@ void cKeyboardManager::GAME_KEYS() {
 				}
 			} // END HACK
 		}
-	}
+	} */
 }
 

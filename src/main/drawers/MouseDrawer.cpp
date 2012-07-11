@@ -26,7 +26,7 @@ void MouseDrawer::drawMouseRectangle() {
 	if (context->isMouseOnBattleField()) {
 		if (mouse->isMouseDraggingRectangle()) {
 			Rectangle * rectangle = mouse->getCurrentDrawingRectangle();
-			rect(bmp_screen, rectangle->getStartX(), rectangle->getStartY(), rectangle->getEndX(), rectangle->getEndY(), makecol(game.fade_select, game.fade_select, game.fade_select));
+			rect(bmp_screen, rectangle->getStartX(), rectangle->getStartY(), rectangle->getEndX(), rectangle->getEndY(), makecol(255, 255, 255));
 		}
 	}
 }

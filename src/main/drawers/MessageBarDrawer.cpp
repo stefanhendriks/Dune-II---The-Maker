@@ -19,24 +19,24 @@ void MessageBarDrawer::setMessage(const char msg[255]) {
 }
 
 void MessageBarDrawer::think() {
-	int iLimit = 250;
+	//int iLimit = 250;
 
-	if (game.isState(NEXTCONQUEST)) {
-		iLimit = 600;
-	}
+	//if (game.isState(NEXTCONQUEST)) {
+	//	iLimit = 600;
+	//}
 
-	if (messageBar->isMessageSet()) {
-		messageBar->incrementTimerMessage();
+	//if (messageBar->isMessageSet()) {
+	//	messageBar->incrementTimerMessage();
 
-		if (messageBar->getTimerMessage() > iLimit) {
-			messageBar->clearMessage();
-		}
+	//	if (messageBar->getTimerMessage() > iLimit) {
+	//		messageBar->clearMessage();
+	//	}
 
-		messageBar->incrementAlpha();
-	} else {
-		messageBar->decreaseAlpha();
-		messageBar->resetTimerMessage();
-	}
+	//	messageBar->incrementAlpha();
+	//} else {
+	//	messageBar->decreaseAlpha();
+	//	messageBar->resetTimerMessage();
+	//}
 }
 
 

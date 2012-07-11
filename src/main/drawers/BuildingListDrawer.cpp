@@ -188,17 +188,17 @@ void BuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int sta
 				if (cannotPayIt) {
 					set_trans_blender(0, 0, 0, 128);
 					fblend_trans((BITMAP *) gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
-					rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(game.fade_select, 0, 0));
-					line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(game.fade_select, 0, 0));
-					line(bmp_screen, iDrawX, iDrawY + 47, iDrawX + 63, iDrawY, makecol(game.fade_select, 0, 0));
+					rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(255, 0, 0));
+					line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(255 ,0, 0));
+					line(bmp_screen, iDrawX, iDrawY + 47, iDrawX + 63, iDrawY, makecol(255, 0, 0));
 					set_trans_blender(0, 0, 0, 128);
 				}
 			}
 
 			// last built id
 			if (list->getLastClickedId() == i) {
-				rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), makecol(game.fade_select, game.fade_select, game.fade_select));
-				rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(game.fade_select, game.fade_select, game.fade_select));
+				rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), makecol(255, 255, 255));
+				rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(255, 255, 255));
 			}
 		}
 
@@ -223,18 +223,18 @@ void BuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int sta
 
 		// draw rectangle when mouse hovers over icon
 		if (isOverItemCoordinates_Boolean(mouse_x, mouse_y, iDrawX, iDrawY)) {
-			int iColor = makecol(game.fade_select, game.fade_select, game.fade_select);
+			int iColor = makecol(255, 255, 255);
 
 			if (player[0].getHouse() == ATREIDES) {
-				iColor = makecol(0, 0, game.fade_select);
+				iColor = makecol(0, 0, 255);
 			}
 
 			if (player[0].getHouse() == HARKONNEN) {
-				iColor = makecol(game.fade_select, 0, 0);
+				iColor = makecol(255, 0, 0);
 			}
 
 			if (player[0].getHouse() == ORDOS) {
-				iColor = makecol(0, game.fade_select, 0);
+				iColor = makecol(0, 255, 0);
 			}
 
 			rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), iColor);

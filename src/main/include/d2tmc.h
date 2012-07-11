@@ -34,7 +34,6 @@ extern cMapEditor	  mapEditor;
 extern cMapCamera	  *mapCamera;
 extern cMapUtils	  *mapUtils;
 extern cPlayer        player[MAX_PLAYERS];
-extern cAIPlayer      aiplayer[MAX_PLAYERS];           // related to aiplayer (except nr 0=human)
 extern Particle      particle[MAX_PARTICLES];
 extern Projectile        bullet[MAX_BULLETS];
 extern cRegion        world[MAX_REGIONS];

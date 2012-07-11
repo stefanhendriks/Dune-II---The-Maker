@@ -1013,97 +1013,97 @@ string INI_GetHouseDirectoryName(int iHouse) {
 }
 
 void INI_Load_Regionfile(int iHouse, int iMission) {
-	char filename[256];
-	memset(filename, 0, sizeof(filename));
-	sprintf(filename, "campaign/%s/mission%d.ini", INI_GetHouseDirectoryName(iHouse).c_str(), iMission);
-
-	Logger::getInstance()->log(LOG_INFO, COMP_REGIONINI, "Opening mission file", filename);
-
-	////////////////////////////
-	// START OPENING FILE
-	////////////////////////////
-	FILE *stream; // file stream
-	int wordtype = WORD_NONE; // word
-	int iRegionIndex = -1;
-	int iRegionNumber = -1;
-	int iRegionConquer = -1;
-
-	// open file
-	if ((stream = fopen(filename, "r+t")) != NULL) {
-
-		char linefeed[MAX_LINE_LENGTH];
-		char lineword[25];
-		char linesection[30];
-
-		memset(lineword, '\0', sizeof(lineword));
-		memset(linesection, '\0', sizeof(linesection));
-
-		while (!feof(stream)) {
-			INI_Sentence(stream, linefeed);
-
-			// Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-			// character (which is "//", ";" or "#"), or an empty line, then skip it
-			if (isCommentLine(linefeed)) {
-				continue; // Skip
-			}
-
-			wordtype = WORD_NONE;
-
-			// Every line is checked for a new section.
-			INI_Word(linefeed, lineword);
-			wordtype = INI_WordType(lineword, SEC_REGION);
-
-			if (wordtype == WORD_REGION) {
-				iRegionNumber = -1;
-				iRegionConquer = -1;
-				iRegionNumber = INI_WordValueINT(linefeed) - 1;
-			} else if (wordtype == WORD_REGIONCONQUER) {
-				iRegionNumber = -1;
-				iRegionConquer = -1;
-				iRegionIndex++;
-				iRegionConquer = INI_WordValueINT(linefeed) - 1;
-				game.iRegionConquer[iRegionIndex] = iRegionConquer;
-			}
-
-			if (iRegionIndex > -1 || iRegionNumber > -1) {
-				if (wordtype == WORD_REGIONHOUSE) {
-					char cHouseRegion[256];
-					memset(cHouseRegion, 0, sizeof(cHouseRegion));
-					INI_WordValueCHAR(linefeed, cHouseRegion);
-
-					logbook("Region house");
-					int iH = getHouseFromChar(cHouseRegion);
-
-					if (iRegionNumber > -1) {
-						world[iRegionNumber].iHouse = iH;
-						world[iRegionNumber].iAlpha = 255;
-					}
-
-					if (iRegionConquer > -1) {
-						game.iRegionHouse[iRegionIndex] = iH;
-					}
-
-				}
-
-				if (wordtype == WORD_REGIONTEXT && iRegionConquer > -1 && iRegionIndex > -1) {
-					char cHouseText[256];
-					INI_WordValueSENTENCE(linefeed, cHouseText);
-					sprintf(game.cRegionText[iRegionIndex], "%s", cHouseText);
-				}
-
-				if (wordtype == WORD_REGIONSELECT) {
-					if (iRegionNumber > -1) {
-						world[iRegionNumber].bSelectable = INI_WordValueBOOL(linefeed);
-					}
-				}
-
-			}
-		} // while
-
-		fclose(stream);
-		logbook("[CAMPAIGN] Done");
-		return;
-	}
+// 	char filename[256];
+// 	memset(filename, 0, sizeof(filename));
+// 	sprintf(filename, "campaign/%s/mission%d.ini", INI_GetHouseDirectoryName(iHouse).c_str(), iMission);
+// 
+// 	Logger::getInstance()->log(LOG_INFO, COMP_REGIONINI, "Opening mission file", filename);
+// 
+// 	////////////////////////////
+// 	// START OPENING FILE
+// 	////////////////////////////
+// 	FILE *stream; // file stream
+// 	int wordtype = WORD_NONE; // word
+// 	int iRegionIndex = -1;
+// 	int iRegionNumber = -1;
+// 	int iRegionConquer = -1;
+// 
+// 	// open file
+// 	if ((stream = fopen(filename, "r+t")) != NULL) {
+// 
+// 		char linefeed[MAX_LINE_LENGTH];
+// 		char lineword[25];
+// 		char linesection[30];
+// 
+// 		memset(lineword, '\0', sizeof(lineword));
+// 		memset(linesection, '\0', sizeof(linesection));
+// 
+// 		while (!feof(stream)) {
+// 			INI_Sentence(stream, linefeed);
+// 
+// 			// Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
+// 			// character (which is "//", ";" or "#"), or an empty line, then skip it
+// 			if (isCommentLine(linefeed)) {
+// 				continue; // Skip
+// 			}
+// 
+// 			wordtype = WORD_NONE;
+// 
+// 			// Every line is checked for a new section.
+// 			INI_Word(linefeed, lineword);
+// 			wordtype = INI_WordType(lineword, SEC_REGION);
+// 
+// 			if (wordtype == WORD_REGION) {
+// 				iRegionNumber = -1;
+// 				iRegionConquer = -1;
+// 				iRegionNumber = INI_WordValueINT(linefeed) - 1;
+// 			} else if (wordtype == WORD_REGIONCONQUER) {
+// 				iRegionNumber = -1;
+// 				iRegionConquer = -1;
+// 				iRegionIndex++;
+// 				iRegionConquer = INI_WordValueINT(linefeed) - 1;
+// 				game.iRegionConquer[iRegionIndex] = iRegionConquer;
+// 			}
+// 
+// 			if (iRegionIndex > -1 || iRegionNumber > -1) {
+// 				if (wordtype == WORD_REGIONHOUSE) {
+// 					char cHouseRegion[256];
+// 					memset(cHouseRegion, 0, sizeof(cHouseRegion));
+// 					INI_WordValueCHAR(linefeed, cHouseRegion);
+// 
+// 					logbook("Region house");
+// 					int iH = getHouseFromChar(cHouseRegion);
+// 
+// 					if (iRegionNumber > -1) {
+// 						world[iRegionNumber].iHouse = iH;
+// 						world[iRegionNumber].iAlpha = 255;
+// 					}
+// 
+// 					if (iRegionConquer > -1) {
+// 						game.iRegionHouse[iRegionIndex] = iH;
+// 					}
+// 
+// 				}
+// 
+// 				if (wordtype == WORD_REGIONTEXT && iRegionConquer > -1 && iRegionIndex > -1) {
+// 					char cHouseText[256];
+// 					INI_WordValueSENTENCE(linefeed, cHouseText);
+// 					sprintf(game.cRegionText[iRegionIndex], "%s", cHouseText);
+// 				}
+// 
+// 				if (wordtype == WORD_REGIONSELECT) {
+// 					if (iRegionNumber > -1) {
+// 						world[iRegionNumber].bSelectable = INI_WordValueBOOL(linefeed);
+// 					}
+// 				}
+// 
+// 			}
+// 		} // while
+// 
+// 		fclose(stream);
+// 		logbook("[CAMPAIGN] Done");
+// 		return;
+// 	}
 
 	logbook("[CAMPAIGN] Error, could not open file"); // make note on logbook
 }
@@ -1268,16 +1268,16 @@ string INI_GetScenarioFileName(int iHouse, int iRegion) {
 
 void INI_Load_scenario(int iHouse, int iRegion) {
 	logbook("BEGIN: [INI_Load_scenario]");
-	game.bSkirmish = false;
-	game.mission_init();
+// 	game.bSkirmish = false;
+// 	game.mission_init();
 
 	string filename = INI_GetScenarioFileName(iHouse, iRegion);
 
-	game.iMission = getTechLevelByRegion(iRegion);
+// 	game.iMission = getTechLevelByRegion(iRegion);
 
 	char msg[256];
 
-	sprintf(msg, "[INI_Load_scenario] '%s' (Mission %d)", filename.c_str(), game.iMission);
+	sprintf(msg, "[INI_Load_scenario] '%s' (Mission %d)", filename.c_str(), 999);
 	logbook(msg);
 	logbook("[INI_Load_scenario] Opening file");
 
@@ -1560,10 +1560,10 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 								thePlayer->setHouse(iPl_house[index]);
 								thePlayer->setTeam(0);
 
-								game.iHouse = iPl_house[index];
-								if (iPl_quota[index] > 0) {
-									game.iWinQuota = iPl_quota[index];
-								}
+// 								game.iHouse = iPl_house[index];
+// 								if (iPl_quota[index] > 0) {
+// 									game.iWinQuota = iPl_quota[index];
+// 								}
 
 								char msg[255];
 								memset(msg, 0, sizeof(msg));
@@ -1711,11 +1711,11 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 								player[0].credits = iPl_credits[iP];
 								player[0].setHouse(iPl_house[iP]);
 								player[0].iTeam = 0;
-								game.iHouse = iPl_house[iP];
-
-								if (iPl_quota[iP] > 0) {
-									game.iWinQuota = iPl_quota[iP];
-								}
+// 								game.iHouse = iPl_house[iP];
+// 
+// 								if (iPl_quota[iP] > 0) {
+// 									game.iWinQuota = iPl_quota[iP];
+// 								}
 							} else {
 								// CPU player
 								player[iRealID].iTeam = 1; // All AI players are on the same team
@@ -2026,362 +2026,362 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 }
 
 void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind) {
-	logbook("[BRIEFING] Opening file");
+	//logbook("[BRIEFING] Opening file");
 
-	char filename[80];
+	//char filename[80];
 
-	if (iHouse == ATREIDES)
-		sprintf(filename, "mentata.ini");
-	if (iHouse == ORDOS)
-		sprintf(filename, "mentato.ini");
-	if (iHouse == HARKONNEN)
-		sprintf(filename, "mentath.ini");
+	//if (iHouse == ATREIDES)
+	//	sprintf(filename, "mentata.ini");
+	//if (iHouse == ORDOS)
+	//	sprintf(filename, "mentato.ini");
+	//if (iHouse == HARKONNEN)
+	//	sprintf(filename, "mentath.ini");
 
-	FILE *stream;
+	//FILE *stream;
 
-	char path[50];
+	//char path[50];
 
-	// clear mentat
-	memset(game.mentat_sentence, 0, sizeof(game.mentat_sentence));
+	//// clear mentat
+	//memset(game.mentat_sentence, 0, sizeof(game.mentat_sentence));
 
-	sprintf(path, "campaign/briefings/%s", filename);
+	//sprintf(path, "campaign/briefings/%s", filename);
 
-	logbook(path);
+	//logbook(path);
 
-	if (DEBUGGING) {
-		char msg[255];
-		sprintf(msg, "Going to find SCEN ID #%d and SectionID %d", iScenarioFind, iSectionFind);
-		logbook(msg);
-	}
+	//if (DEBUGGING) {
+	//	char msg[255];
+	//	sprintf(msg, "Going to find SCEN ID #%d and SectionID %d", iScenarioFind, iSectionFind);
+	//	logbook(msg);
+	//}
 
-	int iScenario = 0;
-	int iSection = 0;
-	int iLine = 0; // max 8 lines
-
-
-	if ((stream = fopen(path, "r+t")) != NULL) {
-
-		char linefeed[MAX_LINE_LENGTH];
-		char lineword[25];
-		char linesection[30];
-
-		while (!feof(stream)) {
-			INI_Sentence(stream, linefeed);
-
-			// Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-			// character (which is "//", ";" or "#"), or an empty line, then skip it
-			if (isCommentLine(linefeed))
-				continue; // Skip
-
-			INI_Section(linefeed, linesection);
-
-			if (linesection[0] != '\0' && strlen(linesection) > 1) {
-				// until we found the right sections/parts, keep searching
-				iSection = INI_SectionType(linesection, iSection);
-			}
-
-			if (iSection == INI_SCEN) {
-				INI_Word(linefeed, lineword);
-				int wordtype = INI_WordType(lineword, iSection);
-
-				if (wordtype == WORD_NUMBER) {
-					iScenario = INI_WordValueINT(linefeed);
-					continue;
-				}
-			}
-
-			if (iScenario == iScenarioFind) {
-				if (iSection == iSectionFind) {
-					INI_Word(linefeed, lineword);
-
-					int wordtype = INI_WordType(lineword, iSection);
-
-					if (wordtype == WORD_REGIONTEXT) {
-						char cHouseText[256];
-						INI_WordValueSENTENCE(linefeed, cHouseText);
-
-						// this is not a comment, add this....
-						sprintf(game.mentat_sentence[iLine], "%s", cHouseText);
-						// logbook(game.mentat_sentence[iLine]);
-						iLine++;
-
-						if (iLine > 9)
-							break;
-					}
-
-				}
-
-			}
-
-			/*
+	//int iScenario = 0;
+	//int iSection = 0;
+	//int iLine = 0; // max 8 lines
 
 
-			 */
+	//if ((stream = fopen(path, "r+t")) != NULL) {
 
-		}
+	//	char linefeed[MAX_LINE_LENGTH];
+	//	char lineword[25];
+	//	char linesection[30];
 
-		fclose(stream);
-	}
+	//	while (!feof(stream)) {
+	//		INI_Sentence(stream, linefeed);
 
-	logbook("[BRIEFING] File opened");
+	//		// Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
+	//		// character (which is "//", ";" or "#"), or an empty line, then skip it
+	//		if (isCommentLine(linefeed))
+	//			continue; // Skip
+
+	//		INI_Section(linefeed, linesection);
+
+	//		if (linesection[0] != '\0' && strlen(linesection) > 1) {
+	//			// until we found the right sections/parts, keep searching
+	//			iSection = INI_SectionType(linesection, iSection);
+	//		}
+
+	//		if (iSection == INI_SCEN) {
+	//			INI_Word(linefeed, lineword);
+	//			int wordtype = INI_WordType(lineword, iSection);
+
+	//			if (wordtype == WORD_NUMBER) {
+	//				iScenario = INI_WordValueINT(linefeed);
+	//				continue;
+	//			}
+	//		}
+
+	//		if (iScenario == iScenarioFind) {
+	//			if (iSection == iSectionFind) {
+	//				INI_Word(linefeed, lineword);
+
+	//				int wordtype = INI_WordType(lineword, iSection);
+
+	//				if (wordtype == WORD_REGIONTEXT) {
+	//					char cHouseText[256];
+	//					INI_WordValueSENTENCE(linefeed, cHouseText);
+
+	//					// this is not a comment, add this....
+	//					sprintf(game.mentat_sentence[iLine], "%s", cHouseText);
+	//					// logbook(game.mentat_sentence[iLine]);
+	//					iLine++;
+
+	//					if (iLine > 9)
+	//						break;
+	//				}
+
+	//			}
+
+	//		}
+
+	//		/*
+
+
+	//		 */
+
+	//	}
+
+	//	fclose(stream);
+	//}
+
+	//logbook("[BRIEFING] File opened");
 
 }
 
 // Game.ini loader
 void INI_Install_Game(string filename) {
-	logbook("[GAME.INI] Opening file");
+	//logbook("[GAME.INI] Opening file");
 
-	FILE *stream;
-	int section = INI_GAME;
-	int wordtype = WORD_NONE;
-	int id = -1;
+	//FILE *stream;
+	//int section = INI_GAME;
+	//int wordtype = WORD_NONE;
+	//int id = -1;
 
-	int side_r, side_b, side_g;
-	int team_r, team_g, team_b; // rgb colors for a team
-	side_r = side_g = side_b = -1;
-	team_r = team_g = team_b = -1;
+	//int side_r, side_b, side_g;
+	//int team_r, team_g, team_b; // rgb colors for a team
+	//side_r = side_g = side_b = -1;
+	//team_r = team_g = team_b = -1;
 
-	char msg[255];
-	sprintf(msg, "Opening game settings from : %s", filename.c_str());
-	logbook(msg);
+	//char msg[255];
+	//sprintf(msg, "Opening game settings from : %s", filename.c_str());
+	//logbook(msg);
 
-	if ((stream = fopen(filename.c_str(), "r+t")) != NULL) {
-		char linefeed[MAX_LINE_LENGTH];
-		char lineword[25];
-		char linesection[30];
+	//if ((stream = fopen(filename.c_str(), "r+t")) != NULL) {
+	//	char linefeed[MAX_LINE_LENGTH];
+	//	char lineword[25];
+	//	char linesection[30];
 
-		// infinite loop baby
-		while (!feof(stream)) {
-			INI_Sentence(stream, linefeed);
+	//	// infinite loop baby
+	//	while (!feof(stream)) {
+	//		INI_Sentence(stream, linefeed);
 
-			// Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-			// character (which is "//", ";" or "#"), or an empty line, then skip it
-			if (isCommentLine(linefeed))
-				continue; // Skip
+	//		// Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
+	//		// character (which is "//", ";" or "#"), or an empty line, then skip it
+	//		if (isCommentLine(linefeed))
+	//			continue; // Skip
 
-			wordtype = WORD_NONE;
+	//		wordtype = WORD_NONE;
 
-			// Every line is checked for a new section.
-			INI_Section(linefeed, linesection);
+	//		// Every line is checked for a new section.
+	//		INI_Section(linefeed, linesection);
 
-			if (linesection[0] != '\0' && strlen(linesection) > 1) {
-				int last = section;
+	//		if (linesection[0] != '\0' && strlen(linesection) > 1) {
+	//			int last = section;
 
-				// determine section
-				section = GAME_INI_SectionType(linesection, section);
+	//			// determine section
+	//			section = GAME_INI_SectionType(linesection, section);
 
-				// When we changed section and its a section with adding ID's. We should reset
-				// the ID var
-				if (last != section) {
-					id = -1;
+	//			// When we changed section and its a section with adding ID's. We should reset
+	//			// the ID var
+	//			if (last != section) {
+	//				id = -1;
 
-					// Show in log file we entered a new section
-					if (section == INI_UNITS)
-						logbook("[GAME.INI] -> [UNITS]");
-					if (section == INI_STRUCTURES)
-						logbook("[GAME.INI] -> [STRUCTURES]");
-					if (section == INI_SETTINGS)
-						logbook("[GAME.INI] -> [SETTINGS]");
-				}
+	//				// Show in log file we entered a new section
+	//				if (section == INI_UNITS)
+	//					logbook("[GAME.INI] -> [UNITS]");
+	//				if (section == INI_STRUCTURES)
+	//					logbook("[GAME.INI] -> [STRUCTURES]");
+	//				if (section == INI_SETTINGS)
+	//					logbook("[GAME.INI] -> [SETTINGS]");
+	//			}
 
-				if (section == INI_TEAMS) {
-					// check if we found a new [TEAM part!
-					if (strstr(linefeed, "[TEAM:") != NULL) {
-						id++; // New ID
-						team_r = team_g = team_b = -1; // new team colors
-						if (id > MAX_HOUSES)
-							id--;
-					}
-				}
+	//			if (section == INI_TEAMS) {
+	//				// check if we found a new [TEAM part!
+	//				if (strstr(linefeed, "[TEAM:") != NULL) {
+	//					id++; // New ID
+	//					team_r = team_g = team_b = -1; // new team colors
+	//					if (id > MAX_HOUSES)
+	//						id--;
+	//				}
+	//			}
 
-				// New unit type
-				if (section == INI_UNITS) {
-					// check if we found a new [UNIT part!
-					if (strstr(linefeed, "[UNIT:") != NULL) {
-						// Get the name of the unit:
-						// [UNIT: <NAME>]
-						// 1234567890123...]
-						char name_unit[35];
+	//			// New unit type
+	//			if (section == INI_UNITS) {
+	//				// check if we found a new [UNIT part!
+	//				if (strstr(linefeed, "[UNIT:") != NULL) {
+	//					// Get the name of the unit:
+	//					// [UNIT: <NAME>]
+	//					// 1234567890123...]
+	//					char name_unit[35];
 
-						for (int nu = 0; nu < 35; nu++)
-							name_unit[nu] = '\0';
+	//					for (int nu = 0; nu < 35; nu++)
+	//						name_unit[nu] = '\0';
 
-						int c = 7, uc = 0;
-						while (c < (MAX_LINE_LENGTH - 1)) {
-							if (linefeed[c] != ' ' && linefeed[c] != ']') // skip close bracket
-							{
-								name_unit[uc] = linefeed[c];
-								uc++;
-								c++;
-							} else {
-								break; // get out
-							}
-						}
+	//					int c = 7, uc = 0;
+	//					while (c < (MAX_LINE_LENGTH - 1)) {
+	//						if (linefeed[c] != ' ' && linefeed[c] != ']') // skip close bracket
+	//						{
+	//							name_unit[uc] = linefeed[c];
+	//							uc++;
+	//							c++;
+	//						} else {
+	//							break; // get out
+	//						}
+	//					}
 
-						id = getUnitTypeFromChar(name_unit);
-						if (id >= MAX_UNITTYPES)
-							id--;
+	//					id = getUnitTypeFromChar(name_unit);
+	//					if (id >= MAX_UNITTYPES)
+	//						id--;
 
-					} // found a new unit type
-				}
+	//				} // found a new unit type
+	//			}
 
-				// New structure type
-				if (section == INI_STRUCTURES) {
-					// check if we found a new [STRUCTURE: part!
-					if (strstr(linefeed, "[STRUCTURE:") != NULL) {
-						// Get the name of the unit:
-						// [STRUCTURE: <NAME>]
-						// 123456789012345678]
-						char name_structure[45];
+	//			// New structure type
+	//			if (section == INI_STRUCTURES) {
+	//				// check if we found a new [STRUCTURE: part!
+	//				if (strstr(linefeed, "[STRUCTURE:") != NULL) {
+	//					// Get the name of the unit:
+	//					// [STRUCTURE: <NAME>]
+	//					// 123456789012345678]
+	//					char name_structure[45];
 
-						for (int nu = 0; nu < 45; nu++)
-							name_structure[nu] = '\0';
+	//					for (int nu = 0; nu < 45; nu++)
+	//						name_structure[nu] = '\0';
 
-						int c = 12, uc = 0;
-						while (c < (MAX_LINE_LENGTH - 1)) {
-							if (linefeed[c] != ' ' && linefeed[c] != ']') // skip close bracket
-							{
-								name_structure[uc] = linefeed[c];
-								uc++;
-								c++;
-							} else
-								break; // get out
-						}
+	//					int c = 12, uc = 0;
+	//					while (c < (MAX_LINE_LENGTH - 1)) {
+	//						if (linefeed[c] != ' ' && linefeed[c] != ']') // skip close bracket
+	//						{
+	//							name_structure[uc] = linefeed[c];
+	//							uc++;
+	//							c++;
+	//						} else
+	//							break; // get out
+	//					}
 
-						id = INI_StructureType(name_structure);
-						if (id >= MAX_STRUCTURETYPES)
-							id--;
+	//					id = INI_StructureType(name_structure);
+	//					if (id >= MAX_STRUCTURETYPES)
+	//						id--;
 
-					} // found a new unit type
-				}
+	//				} // found a new unit type
+	//			}
 
-				continue; // next line
-			}
+	//			continue; // next line
+	//		}
 
-			// Check word only when in a section
-			if (section != INI_GAME) {
-				INI_Word(linefeed, lineword);
-				wordtype = INI_WordType(lineword, section);
+	//		// Check word only when in a section
+	//		if (section != INI_GAME) {
+	//			INI_Word(linefeed, lineword);
+	//			wordtype = INI_WordType(lineword, section);
 
-				/**** [UNITS] ****/
-				// Valid ID
-				if (section == INI_UNITS && id > -1) {
-					// Unit properties
-					if (wordtype == WORD_HITPOINTS)
-						units[id].hp = INI_WordValueINT(linefeed);
+	//			/**** [UNITS] ****/
+	//			// Valid ID
+	//			if (section == INI_UNITS && id > -1) {
+	//				// Unit properties
+	//				if (wordtype == WORD_HITPOINTS)
+	//					units[id].hp = INI_WordValueINT(linefeed);
 
-					if (wordtype == WORD_COST)
-						units[id].cost = INI_WordValueINT(linefeed);
+	//				if (wordtype == WORD_COST)
+	//					units[id].cost = INI_WordValueINT(linefeed);
 
-					if (wordtype == WORD_MOVESPEED)
-						units[id].speed = INI_WordValueINT(linefeed);
-					if (wordtype == WORD_TURNSPEED)
-						units[id].turnspeed = INI_WordValueINT(linefeed);
-					if (wordtype == WORD_ATTACKFREQ)
-						units[id].attack_frequency = INI_WordValueINT(linefeed);
+	//				if (wordtype == WORD_MOVESPEED)
+	//					units[id].speed = INI_WordValueINT(linefeed);
+	//				if (wordtype == WORD_TURNSPEED)
+	//					units[id].turnspeed = INI_WordValueINT(linefeed);
+	//				if (wordtype == WORD_ATTACKFREQ)
+	//					units[id].attack_frequency = INI_WordValueINT(linefeed);
 
-					if (wordtype == WORD_SIGHT)
-						units[id].sight = INI_WordValueINT(linefeed);
+	//				if (wordtype == WORD_SIGHT)
+	//					units[id].sight = INI_WordValueINT(linefeed);
 
-					if (wordtype == WORD_RANGE)
-						units[id].range = INI_WordValueINT(linefeed);
-					if (wordtype == WORD_BUILDTIME)
-						units[id].build_time = INI_WordValueINT(linefeed);
+	//				if (wordtype == WORD_RANGE)
+	//					units[id].range = INI_WordValueINT(linefeed);
+	//				if (wordtype == WORD_BUILDTIME)
+	//					units[id].build_time = INI_WordValueINT(linefeed);
 
-					// Unit description
-					if (wordtype == WORD_DESCRIPTION) {
-						char n[256];
-						INI_WordValueCHAR(linefeed, n);
-						sprintf(units[id].name, "%s", n);
-					}
+	//				// Unit description
+	//				if (wordtype == WORD_DESCRIPTION) {
+	//					char n[256];
+	//					INI_WordValueCHAR(linefeed, n);
+	//					sprintf(units[id].name, "%s", n);
+	//				}
 
-					// Booleans
-					if (wordtype == WORD_SECONDSHOT)
-						units[id].second_shot = INI_WordValueBOOL(linefeed);
-					if (wordtype == WORD_ISINFANTRY)
-						units[id].infantry = INI_WordValueBOOL(linefeed);
-					if (wordtype == WORD_FREEROAM)
-						units[id].free_roam = INI_WordValueBOOL(linefeed);
-					if (wordtype == WORD_ISAIRBORN)
-						units[id].airborn = INI_WordValueBOOL(linefeed);
+	//				// Booleans
+	//				if (wordtype == WORD_SECONDSHOT)
+	//					units[id].second_shot = INI_WordValueBOOL(linefeed);
+	//				if (wordtype == WORD_ISINFANTRY)
+	//					units[id].infantry = INI_WordValueBOOL(linefeed);
+	//				if (wordtype == WORD_FREEROAM)
+	//					units[id].free_roam = INI_WordValueBOOL(linefeed);
+	//				if (wordtype == WORD_ISAIRBORN)
+	//					units[id].airborn = INI_WordValueBOOL(linefeed);
 
-					// Harvester specific properties.
-					if (wordtype == WORD_HARVESTLIMIT)
-						units[id].credit_capacity = INI_WordValueINT(linefeed);
-					if (wordtype == WORD_HARVESTSPEED)
-						units[id].harvesting_speed = INI_WordValueINT(linefeed);
-					if (wordtype == WORD_HARVESTAMOUNT)
-						units[id].harvesting_amount = INI_WordValueINT(linefeed);
+	//				// Harvester specific properties.
+	//				if (wordtype == WORD_HARVESTLIMIT)
+	//					units[id].credit_capacity = INI_WordValueINT(linefeed);
+	//				if (wordtype == WORD_HARVESTSPEED)
+	//					units[id].harvesting_speed = INI_WordValueINT(linefeed);
+	//				if (wordtype == WORD_HARVESTAMOUNT)
+	//					units[id].harvesting_amount = INI_WordValueINT(linefeed);
 
-					if (wordtype == WORD_PRODUCER) {
-						string producerString = INI_WordValueString(linefeed);
-						// determine structure type from that
-						int type = INI_StructureType(producerString);
-						//        	  int type = INI_StructureType(producerString.c_str());
-						units[id].structureTypeItLeavesFrom = type;
-					}
-				}
-			}
+	//				if (wordtype == WORD_PRODUCER) {
+	//					string producerString = INI_WordValueString(linefeed);
+	//					// determine structure type from that
+	//					int type = INI_StructureType(producerString);
+	//					//        	  int type = INI_StructureType(producerString.c_str());
+	//					units[id].structureTypeItLeavesFrom = type;
+	//				}
+	//			}
+	//		}
 
-			// Structure w0h00
-			if (section == INI_STRUCTURES && id > -1) {
-				if (wordtype == WORD_HITPOINTS) {
-					structures[id].hp = INI_WordValueINT(linefeed);
-				}
-				if (wordtype == WORD_FIXHP)
-					structures[id].fixhp = INI_WordValueINT(linefeed);
+	//		// Structure w0h00
+	//		if (section == INI_STRUCTURES && id > -1) {
+	//			if (wordtype == WORD_HITPOINTS) {
+	//				structures[id].hp = INI_WordValueINT(linefeed);
+	//			}
+	//			if (wordtype == WORD_FIXHP)
+	//				structures[id].fixhp = INI_WordValueINT(linefeed);
 
-				if (wordtype == WORD_POWERDRAIN)
-					structures[id].power_drain = INI_WordValueINT(linefeed);
-				if (wordtype == WORD_POWERGIVE)
-					structures[id].power_give = INI_WordValueINT(linefeed);
+	//			if (wordtype == WORD_POWERDRAIN)
+	//				structures[id].power_drain = INI_WordValueINT(linefeed);
+	//			if (wordtype == WORD_POWERGIVE)
+	//				structures[id].power_give = INI_WordValueINT(linefeed);
 
-				if (wordtype == WORD_COST)
-					structures[id].cost = INI_WordValueINT(linefeed);
-				if (wordtype == WORD_BUILDTIME)
-					structures[id].build_time = INI_WordValueINT(linefeed);
+	//			if (wordtype == WORD_COST)
+	//				structures[id].cost = INI_WordValueINT(linefeed);
+	//			if (wordtype == WORD_BUILDTIME)
+	//				structures[id].build_time = INI_WordValueINT(linefeed);
 
-			}
+	//		}
 
-			if (section == INI_SETTINGS) {
-				int width, height;
-				width = height = 0;
-				ScreenResolution * screenResolution = NULL;
-				switch (wordtype) {
-					case WORD_FULLSCREEN:
-						game.windowed = (INI_WordValueBOOL(linefeed) == false);
-						break;
-					case WORD_SCREENWIDTH:
-						width = INI_WordValueINT(linefeed);
-						screenResolution = game.getScreenResolutionFromIni();
-						if (screenResolution == NULL) {
-							screenResolution = new ScreenResolution();
-							game.setScreenResolutionFromIni(screenResolution);
-						}
-						screenResolution->setWidth(width);
-						break;
-					case WORD_SCREENHEIGHT:
-						height = INI_WordValueINT(linefeed);
-						screenResolution = game.getScreenResolutionFromIni();
-						if (screenResolution == NULL) {
-							screenResolution = new ScreenResolution();
-							game.setScreenResolutionFromIni(screenResolution);
-						}
-						screenResolution->setHeight(height);
-						break;
-					case WORD_MP3MUSIC:
-						game.mp3MusicEnabled = INI_WordValueBOOL(linefeed);
-						break;
-				}
-			}
-		} // while
+	//		if (section == INI_SETTINGS) {
+	//			int width, height;
+	//			width = height = 0;
+	//			ScreenResolution * screenResolution = NULL;
+	//			switch (wordtype) {
+	//				case WORD_FULLSCREEN:
+	//					game.windowed = (INI_WordValueBOOL(linefeed) == false);
+	//					break;
+	//				case WORD_SCREENWIDTH:
+	//					width = INI_WordValueINT(linefeed);
+	//					screenResolution = game.getScreenResolutionFromIni();
+	//					if (screenResolution == NULL) {
+	//						screenResolution = new ScreenResolution();
+	//						game.setScreenResolutionFromIni(screenResolution);
+	//					}
+	//					screenResolution->setWidth(width);
+	//					break;
+	//				case WORD_SCREENHEIGHT:
+	//					height = INI_WordValueINT(linefeed);
+	//					screenResolution = game.getScreenResolutionFromIni();
+	//					if (screenResolution == NULL) {
+	//						screenResolution = new ScreenResolution();
+	//						game.setScreenResolutionFromIni(screenResolution);
+	//					}
+	//					screenResolution->setHeight(height);
+	//					break;
+	//				case WORD_MP3MUSIC:
+	//					game.mp3MusicEnabled = INI_WordValueBOOL(linefeed);
+	//					break;
+	//			}
+	//		}
+	//	} // while
 
-		fclose(stream);
-	} else {
-		char msg[255];
-		sprintf(msg, "Could not open file [%s]. Failed to load game rules.", filename.c_str());
-		logbook(msg);
-	}
+	//	fclose(stream);
+	//} else {
+	//	char msg[255];
+	//	sprintf(msg, "Could not open file [%s]. Failed to load game rules.", filename.c_str());
+	//	logbook(msg);
+	//}
 
 	logbook("[GAME.INI] Done");
 }

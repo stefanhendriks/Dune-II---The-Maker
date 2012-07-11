@@ -116,11 +116,11 @@ void cAbstractStructure::die() {
 		return;
 	}
 
-	// selected structure
-	if (game.selected_structure == iIndex) {
-		game.selected_structure = -1;
+	// deselected structure when dead
+	/*if (game.selected_structure == iIndex) {
+	game.selected_structure = -1;
 	}
-
+	*/
 	// remove from array
 	structure[iIndex] = NULL;
 
@@ -187,8 +187,9 @@ void cAbstractStructure::die() {
 	// remove from the playground
 	map->remove_id(iIndex, MAPID_STRUCTURES);
 
-	// screen shaking
-	game.TIMER_shake = (iWidth * iHeight) * 20;
+	// screen shaking based on size of structure
+	/*
+	game.TIMER_shake = (iWidth * iHeight) * 20;*/
 
 	// eventually die
 	// TODO: Can this really be happening? Deleting yourself?
@@ -389,11 +390,6 @@ void cAbstractStructure::setOwner(int player) {
  Think actions like any other structure would have.
  **/
 void cAbstractStructure::think() {
-	// AI
-	if (iPlayer > 0) {
-		aiplayer[iPlayer].think_repair_structure(this);
-	}
-
 	// Other
 	think_damage();
 	think_repair();

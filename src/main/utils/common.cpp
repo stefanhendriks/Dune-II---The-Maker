@@ -1053,9 +1053,7 @@ int iCellOnScreen(int iCell) {
  * @param iDistance
  */
 void play_sound_id(int s, int iDistance) {
-	if (!game.soundEnabled)
-		return; // do not play sound when boolean is false.
-
+	/*
 	// Determine if sound is on screen or not
 	if (iDistance <= 1) {
 		int volume = VOLUME_MAX;
@@ -1070,7 +1068,7 @@ void play_sound_id(int s, int iDistance) {
 		if (iVol > 0) {
 			game.getSoundPlayer()->playSound(s, 127, iVol);
 		}
-	}
+	}*/
 }
 
 void play_voice(int iType) {
@@ -1096,13 +1094,13 @@ bool MIDI_music_playing() {
 }
 
 void setMusicVolume(int i) {
-	if (game.mp3MusicEnabled) {
-		if (mp3_music != NULL) {
-			almp3_adjust_mp3(mp3_music, i, 127, 1000, false);
-		}
-	} else {
-		set_volume(VOLUME_MAX, i);
-	}
+// 	if (game.mp3MusicEnabled) {
+// 		if (mp3_music != NULL) {
+// 			almp3_adjust_mp3(mp3_music, i, 127, 1000, false);
+// 		}
+// 	} else {
+// 		set_volume(VOLUME_MAX, i);
+// 	}
 }
 
 void mp3_play_file(char filename[VOLUME_MAX]) {
@@ -1121,7 +1119,7 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 	} else {
 		logbook("MP3: Could not find mp3 file for add-on, switching to MIDI mode");
 		allegro_message("Could not find MP3 file, add-on incomplete. Switching to MIDI mode");
-		game.mp3MusicEnabled = false;
+// 		game.mp3MusicEnabled = false;
 
 		if (mp3_music != NULL) {
 			almp3_destroy_mp3(mp3_music);
@@ -1140,92 +1138,92 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 	int result = almp3_play_mp3(mp3_music, BUFFER_SIZE, VOLUME_MAX, PAN_CENTER);
 	assert(result == ALMP3_OK);
 
-	setMusicVolume(game.iMusicVolume);
+/*	setMusicVolume(game.iMusicVolume);*/
 }
 
 // play type of music
 void playMusicByType(int iType) {
-	if (!game.soundEnabled) {
-		char msg[255];
-		sprintf(msg, "playMusicByType for music type [%d], does nothing because bSoundEnabled flag is set to [false]", iType);
-		logbook(msg);
-		return;
-	}
-	logbook("playMusicByType [BEGIN]");
-	game.iMusicType = iType;
-
-
-	int iNumber = 0;
-
-	if (iType == MUSIC_WIN || iType == MUSIC_LOSE) {
-		iNumber = rnd(3) + 1;
-	} else if (iType == MUSIC_ATTACK) {
-		iNumber = rnd(6) + 1;
-	} else if (iType == MUSIC_PEACE) {
-		iNumber = rnd(9) + 1;
-	} else if (iType == MUSIC_MENU) {
-		iNumber = MIDI_MENU;
-	} else if (iType == MUSIC_CONQUEST) {
-		iNumber = MIDI_SCENARIO;
-	} else if (iType == MUSIC_BRIEFING) {
-		if (game.iHouse == ATREIDES)
-			iNumber = MIDI_MENTAT_ATR;
-		if (game.iHouse == HARKONNEN)
-			iNumber = MIDI_MENTAT_HAR;
-		if (game.iHouse == ORDOS)
-			iNumber = MIDI_MENTAT_ORD;
-	}
-
-	// In the end, when mp3, play it:
-	if (game.mp3MusicEnabled) {
-		char filename[50];
-		memset(filename, 0, sizeof(filename));
-
-		if (iType == MUSIC_WIN) {
-			sprintf(filename, "mp3/win%d.mp3", iNumber);
-		} else if (iType == MUSIC_LOSE) {
-			sprintf(filename, "mp3/lose%d.mp3", iNumber);
-		} else if (iType == MUSIC_ATTACK) {
-			sprintf(filename, "mp3/attack%d.mp3", iNumber);
-		} else if (iType == MUSIC_PEACE) {
-			sprintf(filename, "mp3/peace%d.mp3", iNumber);
-		} else if (iType == MUSIC_MENU) {
-			sprintf(filename, "mp3/menu.mp3");
-		} else if (iType == MUSIC_CONQUEST) {
-			sprintf(filename, "mp3/nextconq.mp3");
-		} else if (iType == MUSIC_BRIEFING) {
-			if (game.iHouse == ATREIDES)
-				sprintf(filename, "mp3/mentata.mp3");
-			if (game.iHouse == HARKONNEN)
-				sprintf(filename, "mp3/mentath.mp3");
-			if (game.iHouse == ORDOS)
-				sprintf(filename, "mp3/mentato.mp3");
-		}
-
-		mp3_play_file(filename);
-	} else {
-		iNumber--; // make 0 based
-
-		if (iType == MUSIC_WIN) {
-			iNumber = MIDI_WIN01 + (iNumber);
-		} else if (iType == MUSIC_LOSE) {
-			iNumber = MIDI_LOSE01 + (iNumber);
-		} else if (iType == MUSIC_ATTACK) {
-			iNumber = MIDI_ATTACK01 + (iNumber);
-		} else if (iType == MUSIC_PEACE) {
-			iNumber = MIDI_BUILDING01 + (iNumber);
-		} else if (iType == MUSIC_MENU) {
-			// single ones are 'corrected back'...
-			iNumber = iNumber + 1;
-		} else if (iType == MUSIC_CONQUEST) {
-			iNumber = iNumber + 1;
-		} else if (iType == MUSIC_BRIEFING) {
-			iNumber = iNumber + 1;
-		}
-		// play midi file
-		game.getSoundPlayer()->playMidi(iNumber);
-	}
-	logbook("playMusicByType [END]");
+// 	if (!game.soundEnabled) {
+// 		char msg[255];
+// 		sprintf(msg, "playMusicByType for music type [%d], does nothing because bSoundEnabled flag is set to [false]", iType);
+// 		logbook(msg);
+// 		return;
+// 	}
+// 	logbook("playMusicByType [BEGIN]");
+// 	game.iMusicType = iType;
+// 
+// 
+// 	int iNumber = 0;
+// 
+// 	if (iType == MUSIC_WIN || iType == MUSIC_LOSE) {
+// 		iNumber = rnd(3) + 1;
+// 	} else if (iType == MUSIC_ATTACK) {
+// 		iNumber = rnd(6) + 1;
+// 	} else if (iType == MUSIC_PEACE) {
+// 		iNumber = rnd(9) + 1;
+// 	} else if (iType == MUSIC_MENU) {
+// 		iNumber = MIDI_MENU;
+// 	} else if (iType == MUSIC_CONQUEST) {
+// 		iNumber = MIDI_SCENARIO;
+// 	} else if (iType == MUSIC_BRIEFING) {
+// 		if (game.iHouse == ATREIDES)
+// 			iNumber = MIDI_MENTAT_ATR;
+// 		if (game.iHouse == HARKONNEN)
+// 			iNumber = MIDI_MENTAT_HAR;
+// 		if (game.iHouse == ORDOS)
+// 			iNumber = MIDI_MENTAT_ORD;
+// 	}
+// 
+// 	// In the end, when mp3, play it:
+// 	if (game.mp3MusicEnabled) {
+// 		char filename[50];
+// 		memset(filename, 0, sizeof(filename));
+// 
+// 		if (iType == MUSIC_WIN) {
+// 			sprintf(filename, "mp3/win%d.mp3", iNumber);
+// 		} else if (iType == MUSIC_LOSE) {
+// 			sprintf(filename, "mp3/lose%d.mp3", iNumber);
+// 		} else if (iType == MUSIC_ATTACK) {
+// 			sprintf(filename, "mp3/attack%d.mp3", iNumber);
+// 		} else if (iType == MUSIC_PEACE) {
+// 			sprintf(filename, "mp3/peace%d.mp3", iNumber);
+// 		} else if (iType == MUSIC_MENU) {
+// 			sprintf(filename, "mp3/menu.mp3");
+// 		} else if (iType == MUSIC_CONQUEST) {
+// 			sprintf(filename, "mp3/nextconq.mp3");
+// 		} else if (iType == MUSIC_BRIEFING) {
+// 			if (game.iHouse == ATREIDES)
+// 				sprintf(filename, "mp3/mentata.mp3");
+// 			if (game.iHouse == HARKONNEN)
+// 				sprintf(filename, "mp3/mentath.mp3");
+// 			if (game.iHouse == ORDOS)
+// 				sprintf(filename, "mp3/mentato.mp3");
+// 		}
+// 
+// 		mp3_play_file(filename);
+// 	} else {
+// 		iNumber--; // make 0 based
+// 
+// 		if (iType == MUSIC_WIN) {
+// 			iNumber = MIDI_WIN01 + (iNumber);
+// 		} else if (iType == MUSIC_LOSE) {
+// 			iNumber = MIDI_LOSE01 + (iNumber);
+// 		} else if (iType == MUSIC_ATTACK) {
+// 			iNumber = MIDI_ATTACK01 + (iNumber);
+// 		} else if (iType == MUSIC_PEACE) {
+// 			iNumber = MIDI_BUILDING01 + (iNumber);
+// 		} else if (iType == MUSIC_MENU) {
+// 			// single ones are 'corrected back'...
+// 			iNumber = iNumber + 1;
+// 		} else if (iType == MUSIC_CONQUEST) {
+// 			iNumber = iNumber + 1;
+// 		} else if (iType == MUSIC_BRIEFING) {
+// 			iNumber = iNumber + 1;
+// 		}
+// 		// play midi file
+// 		game.getSoundPlayer()->playMidi(iNumber);
+// 	}
+// 	logbook("playMusicByType [END]");
 }
 
 /******************************

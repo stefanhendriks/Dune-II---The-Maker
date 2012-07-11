@@ -386,8 +386,7 @@ void Projectile::think_move() {
 
 			mapEditor.createField(iCell, TERRAIN_SPICE, 50 + (rnd(75)));
 
-			// kill unit
-			game.TIMER_shake = 20;
+			
 
 		}
 

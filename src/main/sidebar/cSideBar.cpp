@@ -233,7 +233,7 @@ void cSideBar::thinkInteraction() {
 							itemBuilder->addItemToList(item);
 							list->setLastClickedId(item->getSlotId());
 						} else {
-							game.bPlaceIt = true;
+							/*game.bPlaceIt = true;*/
 						}
 					}
 				} else {
@@ -295,7 +295,7 @@ void cSideBar::thinkInteraction() {
 				}
 
 				if (item == NULL) {
-					game.bPlaceIt = false;
+					/*game.bPlaceIt = false;*/
 				}
 			}
 		}

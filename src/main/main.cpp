@@ -24,8 +24,7 @@ cMap * map = NULL;
 cMapEditor mapEditor;
 cMapCamera * mapCamera;
 cMapUtils * mapUtils = NULL;
-cPlayer player[MAX_PLAYERS]; // player is
-cAIPlayer aiplayer[MAX_PLAYERS]; // related to aiplayer (except nr 0=human)
+cPlayer player[MAX_PLAYERS];
 Particle particle[MAX_PARTICLES];
 Projectile bullet[MAX_BULLETS];
 cRegion world[MAX_REGIONS];

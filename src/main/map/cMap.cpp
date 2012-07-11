@@ -292,15 +292,15 @@ void cMap::makeCircleVisibleForPlayerOfSpecificSize(int c, int size, int player)
 						{
 							// when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
 
-							if (game.iMusicType == MUSIC_PEACE) {
-								playMusicByType(MUSIC_ATTACK);
-
-								// warning... bla bla
-								if (unit[id].iType == SANDWORM)
-									play_voice(SOUND_VOICE_10_ATR); // omg a sandworm, RUN!
-								else
-									play_voice(SOUND_VOICE_09_ATR); // enemy unit
-							}
+// 							if (game.iMusicType == MUSIC_PEACE) {
+// 								playMusicByType(MUSIC_ATTACK);
+// 
+// 								// warning... bla bla
+// 								if (unit[id].iType == SANDWORM)
+// 									play_voice(SOUND_VOICE_10_ATR); // omg a sandworm, RUN!
+// 								else
+// 									play_voice(SOUND_VOICE_09_ATR); // enemy unit
+// 							}
 
 						}
 					}

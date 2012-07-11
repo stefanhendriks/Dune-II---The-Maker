@@ -179,7 +179,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 				PARTICLE_CREATE(iDieX, iDieY - 24, OBJECT_SMOKE, -1, -1);
 
 			if (iType == HARVESTER) {
-				game.TIMER_shake = 25;
+				/*game.TIMER_shake = 25;*/
 				mapEditor.createField(iCell, TERRAIN_SPICE, ((iCredits + 1) / 7));
 			}
 
@@ -794,15 +794,15 @@ void cUnit::think_guard() {
 
 			UNIT_ORDER_ATTACK(iID, unit[iDanger].iCell, iDanger, -1, -1);
 
-			if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0) {
-				playMusicByType(MUSIC_ATTACK);
-
-				// warning... bla bla
-				if (unit[iDanger].iType == SANDWORM)
-					play_voice(SOUND_VOICE_10_ATR); // wormsign
-				else
-					play_voice(SOUND_VOICE_09_ATR); // enemy unit approaching
-			}
+// 			if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0) {
+// 				playMusicByType(MUSIC_ATTACK);
+// 
+// 				// warning... bla bla
+// 				if (unit[iDanger].iType == SANDWORM)
+// 					play_voice(SOUND_VOICE_10_ATR); // wormsign
+// 				else
+// 					play_voice(SOUND_VOICE_09_ATR); // enemy unit approaching
+// 			}
 			return;
 		} else {
 			// NOT SANDWORM AND NOT HUMAN PLAYER
@@ -845,10 +845,10 @@ void cUnit::think_guard() {
 
 			if (iDanger > -1) {
 				UNIT_ORDER_ATTACK(iID, structure[iDanger]->getCell(), -1, iDanger, -1);
-
-				if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0) {
-					playMusicByType(MUSIC_ATTACK);
-				}
+// 
+// 				if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0) {
+// 					playMusicByType(MUSIC_ATTACK);
+// 				}
 
 			}
 		}
@@ -982,7 +982,7 @@ void cUnit::think() {
 		map->remove_id(iID, MAPID_UNITS);
 
 		die(true, false);
-		game.TIMER_shake = 20;
+		/*game.TIMER_shake = 20;*/
 		return;
 	}
 
@@ -2753,10 +2753,10 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
 int CREATE_PATH(int iID, int iPathCountUnits) {
 
 	// Too many paths where created , so we wait a little.
-	if (game.paths_created > 40) {
-		unit[iID].TIMER_movewait = (50 + rnd(50));
-		return -3;
-	}
+// 	if (game.paths_created > 40) {
+// 		unit[iID].TIMER_movewait = (50 + rnd(50));
+// 		return -3;
+// 	}
 
 	int iCell = unit[iID].iCell; // current cell
 
@@ -2794,7 +2794,7 @@ int CREATE_PATH(int iID, int iPathCountUnits) {
 	int goal_cell = unit[iID].iGoalCell;
 	int controller = unit[iID].iPlayer;
 
-	game.paths_created++;
+	/*game.paths_created++;*/
 	memset(temp_map, -1, sizeof(temp_map));
 
 	/*

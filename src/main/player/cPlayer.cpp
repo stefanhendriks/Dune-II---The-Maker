@@ -183,24 +183,24 @@ int cPlayer::getRGBColorForHouse(int houseId) {
 
 bool cPlayer::bEnoughPower() {
 
-	if (game.bSkirmish) {
-		return has_power >= use_power;
-	} else {
-		// AI cheats on power
-		if (id > 0) {
-			// original dune 2 , the AI cheats.
-			// Unfortunatly D2TM has to cheat too, else the game will
-			// be unplayable.
-			if (iStructures[WINDTRAP] > 0) {
-				// always enough power so it seems
-				return true;
-			} else {
-				return false; // not enough power
-			}
-		} else {
-			return has_power >= use_power;
-		}
-	}
+// 	if (game.bSkirmish) {
+// 		return has_power >= use_power;
+// 	} else {
+// 		// AI cheats on power
+// 		if (id > 0) {
+// 			// original dune 2 , the AI cheats.
+// 			// Unfortunatly D2TM has to cheat too, else the game will
+// 			// be unplayable.
+// 			if (iStructures[WINDTRAP] > 0) {
+// 				// always enough power so it seems
+// 				return true;
+// 			} else {
+// 				return false; // not enough power
+// 			}
+// 		} else {
+// 			return has_power >= use_power;
+// 		}
+// 	}
 
 	// return false on any other case
 	return false;

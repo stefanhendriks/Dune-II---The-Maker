@@ -118,7 +118,7 @@ void MiniMapDrawer::drawUnitsAndStructures() {
 				}
 
 				if (map->cell[iCll].gameObjectId[MAPID_WORMS] > -1) {
-					iColor = makecol(game.fade_select, game.fade_select, game.fade_select);
+					iColor = makecol(255, 255, 255);
 					drawADot = true;
 				}
 			}

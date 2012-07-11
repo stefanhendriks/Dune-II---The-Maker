@@ -334,9 +334,10 @@ void StructureDrawer::drawStructuresForLayer(int layer) {
 					drawRectangeOfStructure(theStructure, color);
 				}
 
-				if (i == game.selected_structure) {
-					drawRectangeOfStructure(theStructure, makecol(game.fade_select, game.fade_select, game.fade_select));
-				}
+				// when selected structure, draw rectangle around it so we know it is selected... (TODO: push this into the structure itself)
+				/*if (i == game.selected_structure) {
+					drawRectangeOfStructure(theStructure, makecol(255, 255, 255));
+				}*/
 			}
 
 		}

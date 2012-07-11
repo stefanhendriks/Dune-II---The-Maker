@@ -59,63 +59,63 @@ void GameDrawer::destroy() {
 }
 
 void GameDrawer::draw() {
-	assert(map);
-	map->draw_think();
-
-	assert(mapDrawer);
-	mapDrawer->drawTerrain();
-
-	// Only draw units/structures, etc, when we do NOT press D
-	// TODO: this should be something like : if (keyboard->isDebuggingStructures())
-	if (!key[KEY_D] || !key[KEY_TAB]) {
-		structureDrawer->drawStructuresFirstLayer();
-	}
-
-	// draw layer 1 (beneath units, on top of terrain
-	particleDrawer->drawLayerBeneathUnits();
-
-	map->draw_units();
-
-	map->draw_bullets();
-
-	structureDrawer->drawStructuresSecondLayer();
-	structureDrawer->drawStructuresHealthBars();
-
-	map->drawAirborneUnitsAndHealthBarAndExperienceOfSelectedUnits();
-
-	particleDrawer->drawHigherLayer();
-	mapDrawer->drawShroud();
-
-	drawRallyPoint();
-
-	// GUI
-	drawSidebar();
-	miniMapDrawer->draw();
-
-	drawStructurePlacing();
-	drawCredits();
-	drawUpgradeButton();
-	drawOrderButton();
-
-	// THE MESSAGE
-	drawMessage();
-
-	// DO COMBAT MOUSE (TODO: remove this eventually, as it updates state and that is not what
-	// this class should be doing)
-	game.combat_mouse();
-
-	// Draw gui things for now
-	// Example code how to use gui Drawer for now
-	// TODO: make it easier to draw entire gui menu's, screens, windows, instead of
-	// seperate components
-//	cGuiShapeFactory * factory = new cGuiShapeFactory(game.getScreenResolution());
-//	cMainMenuDialog * mainMenuDialog = factory->createMainMenuDialog();
-//	guiDrawer->drawShape(mainMenuDialog);
-//	delete mainMenuDialog;
-//	delete factory;
-
-	// MOUSE
-	drawMouse();
+//	assert(map);
+//	map->draw_think();
+//
+//	assert(mapDrawer);
+//	mapDrawer->drawTerrain();
+//
+//	// Only draw units/structures, etc, when we do NOT press D
+//	// TODO: this should be something like : if (keyboard->isDebuggingStructures())
+//	if (!key[KEY_D] || !key[KEY_TAB]) {
+//		structureDrawer->drawStructuresFirstLayer();
+//	}
+//
+//	// draw layer 1 (beneath units, on top of terrain
+//	particleDrawer->drawLayerBeneathUnits();
+//
+//	map->draw_units();
+//
+//	map->draw_bullets();
+//
+//	structureDrawer->drawStructuresSecondLayer();
+//	structureDrawer->drawStructuresHealthBars();
+//
+//	map->drawAirborneUnitsAndHealthBarAndExperienceOfSelectedUnits();
+//
+//	particleDrawer->drawHigherLayer();
+//	mapDrawer->drawShroud();
+//
+//	drawRallyPoint();
+//
+//	// GUI
+//	drawSidebar();
+//	miniMapDrawer->draw();
+//
+//	drawStructurePlacing();
+//	drawCredits();
+//	drawUpgradeButton();
+//	drawOrderButton();
+//
+//	// THE MESSAGE
+//	drawMessage();
+//
+//	// DO COMBAT MOUSE (TODO: remove this eventually, as it updates state and that is not what
+//	// this class should be doing)
+//	game.combat_mouse();
+//
+//	// Draw gui things for now
+//	// Example code how to use gui Drawer for now
+//	// TODO: make it easier to draw entire gui menu's, screens, windows, instead of
+//	// seperate components
+////	cGuiShapeFactory * factory = new cGuiShapeFactory(game.getScreenResolution());
+////	cMainMenuDialog * mainMenuDialog = factory->createMainMenuDialog();
+////	guiDrawer->drawShape(mainMenuDialog);
+////	delete mainMenuDialog;
+////	delete factory;
+//
+//	// MOUSE
+//	drawMouse();
 }
 
 void GameDrawer::drawCredits() {
@@ -124,25 +124,25 @@ void GameDrawer::drawCredits() {
 }
 
 void GameDrawer::drawRallyPoint() {
-	if (game.selected_structure > -1) {
-		cAbstractStructure * theStructure = structure[game.selected_structure];
-		int rallyPointCell = theStructure->getRallyPoint();
+	//if (game.selected_structure > -1) {
+	//	cAbstractStructure * theStructure = structure[game.selected_structure];
+	//	int rallyPointCell = theStructure->getRallyPoint();
 
-		// show draw a target on this cell so we know this is the rally point.
-		if (rallyPointCell > -1) {
-			// draw this thing ...
-			set_trans_blender(0, 0, 0, 128);
-			draw_trans_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_MOVE].dat, getDrawXForCell(rallyPointCell), getDrawYForCell(rallyPointCell));
+	//	// show draw a target on this cell so we know this is the rally point.
+	//	if (rallyPointCell > -1) {
+	//		// draw this thing ...
+	//		set_trans_blender(0, 0, 0, 128);
+	//		draw_trans_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_MOVE].dat, getDrawXForCell(rallyPointCell), getDrawYForCell(rallyPointCell));
 
-			int startX = theStructure->iDrawX() + (theStructure->getS_StructuresType().bmp_width / 2);
-			int startY = theStructure->iDrawY() + (theStructure->getS_StructuresType().bmp_height / 2);
+	//		int startX = theStructure->iDrawX() + (theStructure->getS_StructuresType().bmp_width / 2);
+	//		int startY = theStructure->iDrawY() + (theStructure->getS_StructuresType().bmp_height / 2);
 
-			int endX = getDrawXForCell(rallyPointCell) + 16;
-			int endY = getDrawYForCell(rallyPointCell) + 16;
+	//		int endX = getDrawXForCell(rallyPointCell) + 16;
+	//		int endY = getDrawYForCell(rallyPointCell) + 16;
 
-			line(bmp_screen, startX, startY, endX, endY, player[HUMAN].getMinimapColor());
-		}
-	}
+	//		line(bmp_screen, startX, startY, endX, endY, player[HUMAN].getMinimapColor());
+	//	}
+	//}
 }
 
 int GameDrawer::getDrawXForCell(int cell) {
@@ -176,14 +176,14 @@ void GameDrawer::drawUpgradeButton() {
 }
 
 void GameDrawer::drawStructurePlacing() {
-	if (game.bPlaceIt) {
-		// TODO: fix the placeItDrawer, it crashes the game now!
-		cBuildingListItem *itemToPlace = player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
-		if (itemToPlace) {
-			assert(placeitDrawer);
-			placeitDrawer->draw(itemToPlace);
-		}
-	}
+	//if (game.bPlaceIt) {
+	//	// TODO: fix the placeItDrawer, it crashes the game now!
+	//	cBuildingListItem *itemToPlace = player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
+	//	if (itemToPlace) {
+	//		assert(placeitDrawer);
+	//		placeitDrawer->draw(itemToPlace);
+	//	}
+	//}
 }
 
 void GameDrawer::drawMessage() {
