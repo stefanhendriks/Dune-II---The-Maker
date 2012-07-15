@@ -49,7 +49,7 @@ class State {
 		void processTime() {
 			this->gameticks = allegro_timerUnits;
 			this->seconds = allegro_timerSecond;
-		
+
 			// TODO: do stuff with time here (see TimerManager)
 			allegro_timerUnits = this->gameticks;
 			allegro_timerSecond = this->seconds;

@@ -6,11 +6,14 @@
  Contact: stefanhen83@gmail.com
  Website: http://dune2themaker.fundynamic.com
 
- 2001 - 2011 (c) code by Stefan Hendriks
+ 2001 - 2012 (c) code by Stefan Hendriks
 
  */
 
+#include <string.h>
+
 #include "include/d2tmh.h"
+
 
 #include "factory/cGameFactory.h"
 
@@ -22,6 +25,11 @@
 
 #include "states/MainMenuState.h"
 
+#include "utils/FileReader.h"
+#include "utils/StringUtils.h"
+
+using namespace std;
+
 cGame::cGame() {
 	windowed = true;
 	gameStateEnum = MAINMENU;
@@ -30,7 +38,7 @@ cGame::cGame() {
 	mapCamera = NULL;
 	gameDrawer = NULL;
 	state = NULL;
-	memset(revision, 0, sizeof(revision));
+	revision = 0;
 	memset(version, 0, sizeof(version));
 	sprintf(version, "0.4.6");
 }
@@ -45,27 +53,10 @@ cGame::~cGame() {
 void cGame::init() {
 	gameStateEnum = MAINMENU;
 
-// 	INIT_REINFORCEMENT();
-// 
-// 	if (map != NULL) {
-// 		map->init();
-// 	}
-// 
-// 	for (int i = 0; i < MAX_PLAYERS; i++) {
-// 		player[i].init();
-// 	}
-// 
-// 	// Load properties
-// 	INI_Install_Game(game_filename);
-// 
-// 	mp3_music = NULL;
-
-	// if revision.txt exists
-	FILE *stream;
-	if ((stream = fopen("revision.txt", "r+t")) != NULL) {
-		char linefeed[MAX_LINE_LENGTH];
-		INI_Sentence(stream, linefeed);
-		sprintf(game.revision, "%s", linefeed);
+	FileReader * fileReader = new FileReader("revision.txt");
+	if (fileReader->hasNext()) {
+		string firstLine = fileReader->getLine();
+		revision = StringUtils::getNumberFromString(firstLine);
 	}
 }
 

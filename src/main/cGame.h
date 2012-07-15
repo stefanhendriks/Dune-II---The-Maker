@@ -29,7 +29,7 @@ class cGame {
 
 		bool windowed;
 		char version[15];
-		char revision[15];
+		int revision;
 
 		// init functions
 		bool setupGame();
