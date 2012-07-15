@@ -22,6 +22,8 @@ class Logger {
 
 		static Logger *getInstance();
 
+		void renew();
+
 	private:
 		FILE *file;
 

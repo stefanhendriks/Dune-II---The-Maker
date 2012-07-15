@@ -1,4 +1,6 @@
-#include "../include/d2tmh.h"
+#include "Logger.h"
+
+#include "../include/system.h"
 
 #include <sstream>
 
@@ -14,6 +16,15 @@ Logger *Logger::getInstance() {
 	}
 
 	return instance;
+}
+
+void Logger::renew() {
+	FILE *fp;
+	fp = fopen("log.txt", "wt");
+
+	if (fp) {
+		fclose(fp);
+	}
 }
 
 std::string Logger::getLogLevelString(eLogLevel level) {
@@ -94,22 +105,22 @@ std::string Logger::getLogOutcomeString(eLogOutcome outcome) {
 }
 
 std::string Logger::getLogHouseString(int houseId) {
-	switch (houseId) {
-		case ATREIDES:
-			return std::string("ATREIDES");
-		case HARKONNEN:
-			return std::string("HARKONNEN");
-		case ORDOS:
-			return std::string("ORDOS");
-		case FREMEN:
-			return std::string("FREMEN");
-		case SARDAUKAR:
-			return std::string("SARDAUKAR");
-		case MERCENARY:
-			return std::string("MERCENARY");
-		default:
-			return std::string("UNKNOWN HOUSE");
-	}
+// 	switch (houseId) {
+// 		case ATREIDES:
+// 			return std::string("ATREIDES");
+// 		case HARKONNEN:
+// 			return std::string("HARKONNEN");
+// 		case ORDOS:
+// 			return std::string("ORDOS");
+// 		case FREMEN:
+// 			return std::string("FREMEN");
+// 		case SARDAUKAR:
+// 			return std::string("SARDAUKAR");
+// 		case MERCENARY:
+// 			return std::string("MERCENARY");
+// 		default:
+// 			return std::string("UNKNOWN HOUSE");
+// 	}
 	return std::string("UNIDENTIFIED");
 }
 
@@ -173,15 +184,15 @@ void Logger::log(eLogLevel level, eLogComponent component, const char *event, co
 	logline += "|";
 	logline += sComponent;
 
-	if (playerId >= GENERALHOUSE) {
-		logline += "|";
-		logline += getLogHouseString(houseId);
-	}
-
-	if (playerId >= HUMAN) {
-		logline += "|";
-		logline += getIntegerAsString(playerId);
-	}
+// 	if (playerId >= GENERALHOUSE) {
+// 		logline += "|";
+// 		logline += getLogHouseString(houseId);
+// 	}
+// 
+// 	if (playerId >= HUMAN) {
+// 		logline += "|";
+// 		logline += getIntegerAsString(playerId);
+// 	}
 
 	logline += "|";
 	logline += std::string(message);

@@ -6,19 +6,12 @@
 
 #include "State.h"
 
-#include "../managers/cInteractionManager.h"
-#include "../gui/windows/GuiWindow.h"
-
 #include "../utils/Logger.h"
-
-// forward declaration (cannot include here, causing cyclic dependency, compile errors)
-class StateRunner;
 
 class MainMenuState : public State {
 	public:
 		MainMenuState(Screen * screen, Mouse * mouse) : State(screen, mouse) {
-			guiWindow = NULL;
-			interactionManager = NULL;
+		
 		}
 
 		~MainMenuState() {
@@ -31,11 +24,7 @@ class MainMenuState : public State {
 	protected:
 
 	private:
-		GuiWindow * guiWindow;
-
-		// interact with stuff (mouse/keyboard)
-		cInteractionManager * interactionManager;
-
+		
 
 };
 

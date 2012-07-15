@@ -1,4 +1,6 @@
-#include "../include/d2tmh.h"
+#include "ScreenResolution.h"
+
+#include "stdio.h"
 
 ScreenResolution::ScreenResolution(int theWidth, int theHeight) {
 	width = theWidth;
@@ -18,7 +20,8 @@ ScreenResolution::~ScreenResolution() {
 }
 
 void ScreenResolution::printLog() {
-	char msg[255];
-	sprintf(msg, "cBestScreenResolutionFinder:: width = %d, height = %d, tested = %d, usable = %d", width, height, tested, canBeUsed);
-	logbook(msg);
+// 	char msg[255];
+// 	sprintf(msg, "cBestScreenResolutionFinder:: width = %d, height = %d, tested = %d, usable = %d", width, height, tested, canBeUsed);
+// 	Logger::
+// 	logger->debug(;
 }

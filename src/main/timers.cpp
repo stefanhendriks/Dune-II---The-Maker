@@ -1,4 +1,5 @@
-#include "include/d2tmh.h"
+#include "include/allegroh.h"
+#include "timers.h"
 
 /**
  Timers lib specific implementations

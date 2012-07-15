@@ -26,28 +26,28 @@ void timer_fps();
 extern bool		bDoDebug;
 
 // game
-extern cGame		  game;
-extern cAbstractStructure     *structure[MAX_STRUCTURES];
-extern cUnit          unit[MAX_UNITS];
-extern cMap           * map;
-extern cMapEditor	  mapEditor;
-extern cMapCamera	  *mapCamera;
-extern cMapUtils	  *mapUtils;
-extern cPlayer        player[MAX_PLAYERS];
-extern Particle      particle[MAX_PARTICLES];
-extern Projectile        bullet[MAX_BULLETS];
-extern cRegion        world[MAX_REGIONS];
-extern cMentat		  *Mentat;
-extern cStructureUtils structureUtils;
-extern GameDrawer   * gameDrawer;
+// cGame		  game;
+cAbstractStructure     *structure[MAX_STRUCTURES];
+cUnit          unit[MAX_UNITS];
+cMap           * map;
+cMapEditor	  mapEditor;
+cMapCamera	  *mapCamera;
+cMapUtils	  *mapUtils;
+cPlayer        player[MAX_PLAYERS];
+Particle      particle[MAX_PARTICLES];
+Projectile        bullet[MAX_BULLETS];
+cRegion        world[MAX_REGIONS];
+cMentat		  *Mentat;
+cStructureUtils structureUtils;
+GameDrawer   * gameDrawer;
 
 // ...
-extern sPreviewMap     PreviewMap[MAX_SKIRMISHMAPS];                   // max of 100 maps in skirmish directory
-extern s_House         houses[MAX_HOUSES];
-extern s_Structures    structures[MAX_STRUCTURETYPES];    // structure types
-extern s_UnitP         units[MAX_UNITTYPES];              // unit types
-extern s_Bullet        bullets[MAX_BULLET_TYPES];          // bullet slots
-extern sReinforcement  reinforcements[MAX_REINFORCEMENTS];  // reinforcement slots
+sPreviewMap     PreviewMap[MAX_SKIRMISHMAPS];                   // max of 100 maps in skirmish directory
+s_House         houses[MAX_HOUSES];
+s_Structures    structures[MAX_STRUCTURETYPES];    // structure types
+s_UnitP         units[MAX_UNITTYPES];              // unit types
+s_Bullet        bullets[MAX_BULLET_TYPES];          // bullet slots
+sReinforcement  reinforcements[MAX_REINFORCEMENTS];  // reinforcement slots
 
 // MP3 Music support
 extern ALMP3_MP3 *mp3_music;

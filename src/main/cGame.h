@@ -12,20 +12,23 @@
 #ifndef GAME_H_H
 #define GAME_H_H
 
+#include <string>
+
 #include "gameobjects/ScreenResolution.h"
 
 #include "include/GameState.h"
 
 #include "states/State.h"
 
+
 class cGame {
 
 	public:
 
-		cGame();
+		cGame(State * state);
 		~cGame();
 
-		std::string game_filename;
+		std::string rules;
 
 		bool windowed;
 		char version[15];
@@ -41,6 +44,10 @@ class cGame {
 		void shutdown();
 
 		State * getState() { return state; }
+
+		void setGameRules(std::string filename) {
+			this->rules = filename;
+		}
 
 	private:
 
