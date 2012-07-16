@@ -87,15 +87,15 @@ int handleArguments(int argc, char *argv[], cGame * game) {
 }
 
 int main(int argc, char **argv) {
+	Version * version = new Version(0,4,6);
+
 	Logger * logger = Logger::getInstance();
 	logger->renew();
 
 	logger->logHeader("Dune II - The Maker");
 	logger->logCommentLine(""); // white space
 	logger->logHeader("Version information");
-// 	char msg[255];
-// 	sprintf(msg, "Version %s, Compiled at %s , %s", game->getVersion(), __DATE__, __TIME__);
-// 	logger->log(LOG_INFO, COMP_VERSION, "Initializing", msg);
+ 	logger->log(LOG_INFO, COMP_VERSION, "Initializing", version->asString().c_str());
 
 // 	if (windowed) {
 // 		logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Windowed mode");
@@ -412,7 +412,7 @@ int main(int argc, char **argv) {
 	Mouse * mouse = new Mouse((BITMAP *) gfxdata[MOUSE_NORMAL].dat);
 	Screen * screen = new Screen(screenResolution, bmp_screen);
 	State * state = new MainMenuState(screen, mouse);
-	cGame * game = new cGame(state);
+	cGame * game = new cGame(state, version);
 
 	if (handleArguments(argc, argv, game) > 0) {
 		return 0;

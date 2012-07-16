@@ -14,6 +14,8 @@
 
 #include <string>
 
+#include "domain/Version.h"
+
 #include "gameobjects/ScreenResolution.h"
 
 #include "include/GameState.h"
@@ -25,13 +27,14 @@ class cGame {
 
 	public:
 																																																																																																																																										
-		cGame(State * state);
+		cGame(State * state, Version * version);
 		~cGame();
 
 		std::string rules;
 
 		bool windowed;
-		char version[15];
+
+		Version * version;
 		int revision;
 
 		// init functions

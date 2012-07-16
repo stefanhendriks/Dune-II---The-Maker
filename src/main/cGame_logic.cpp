@@ -23,13 +23,12 @@
 
 using namespace std;
 
-cGame::cGame(State * state) {
+cGame::cGame(State * state, Version * version) {
+	this->state = state;
+	this->version = version;
 	windowed = true;
 	gameStateEnum = MAINMENU;
-	this->state = state;
 	revision = 0;
-	memset(version, 0, sizeof(version));
-	sprintf(version, "0.4.6");
 }
 
 cGame::~cGame() {
@@ -37,6 +36,8 @@ cGame::~cGame() {
 	screenResolution = NULL;
 	delete state;
 	state = NULL;
+	delete version;
+	version = NULL;
 }
 
 void cGame::init() {
