@@ -104,5 +104,5 @@ void Mouse::positionMouseCursor(int x, int y) {
 }
 
 void Mouse::draw(BITMAP * screen) {
-	/*draw_sprite(screen, (BITMAP *) gfxdata[getMouseTile()].dat, getX(), getY());*/
+	draw_sprite(screen, mouseBitmap, getX(), getY());
 }
