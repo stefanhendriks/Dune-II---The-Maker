@@ -260,6 +260,38 @@ bool loadDataFiles( Logger * logger )
 	return true;
 }
 
+bool initAllegro( Logger * logger ) 
+{
+	if (allegro_init() != 0) {
+		logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_FAILED);
+		return false;
+	}
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
+	return true;
+}
+
+void initControls( Logger * logger ) {
+	install_keyboard();
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
+	install_mouse();
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
+}
+
+void initFontLibrary( Logger * logger ) {
+	alfont_init();
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
+	alfont_text_mode(-1);
+}
+
+void initDisplaySwitchMode( Logger * logger ) {
+	if (set_display_switch_mode(SWITCH_BACKGROUND) < 0) {
+		set_display_switch_mode(SWITCH_PAUSE);
+		logger->debug("Display 'switch and pause' mode set");
+	} else {
+		logger->debug("Display 'switch to background' mode set");
+	}
+}
+
 
 int main(int argc, char **argv) {
 	Version * version = new Version(0,4,6);
@@ -274,20 +306,13 @@ int main(int argc, char **argv) {
 
 	logger->logHeader("Allegro");
 
-	if (allegro_init() != 0) {
-		logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_FAILED);
-		return false;
+	if (!initAllegro(logger)) {
+		return 1;
 	}
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
 
-
-	alfont_init();
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
-	install_keyboard();
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
-	install_mouse();
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
-
+	initFontLibrary(logger);
+	initControls(logger);
+	
 	if (initTimers(logger, 5, 1000) < 0) {
 		logger->debug("Failed to initialize timers.");
 		return 1;
@@ -302,19 +327,14 @@ int main(int argc, char **argv) {
 		
 	ScreenResolution * screenResolution = initializeGraphicsMode(logger);
 
-	alfont_text_mode(-1);
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set mode to -1", OUTC_SUCCESS);
 
 	if (!loadFonts(logger)) {
 		return 1;
 	}
 	
-	if (set_display_switch_mode(SWITCH_BACKGROUND) < 0) {
-		set_display_switch_mode(SWITCH_PAUSE);
-		logger->debug("Display 'switch and pause' mode set");
-	} else {
-		logger->debug("Display 'switch to background' mode set");
-	}
+	initDisplaySwitchMode(logger);
+
 
 	int maxSounds = getAmountReservedVoicesAndInstallSound();
 
@@ -346,21 +366,10 @@ int main(int argc, char **argv) {
 	// setup mouse speed
 	set_mouse_speed(-1, -1);
 
-	logger->debug("MOUSE: Mouse speed set");
-
-	logger->debug("\n----");
-	logger->debug("GAME ");
-	logger->debug("----");
-
-	/*** Data files ***/
-
-	// load datafiles
 	if (!loadDataFiles(logger)) {
 		return 1;
 	}
-
-
-	// randomize timer
+	
 	randomizeTimer(logger);
 
 	set_palette(general_palette);
