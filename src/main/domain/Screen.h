@@ -6,10 +6,8 @@
 #include <cstddef>
 
 #include "allegro.h"
-extern DATAFILE * gfxdata; // temporarily!
-
-#include "../gameobjects/ScreenResolution.h"
-#include "../domain/Mouse.h"
+#include "ScreenResolution.h"
+#include "Bitmap.h"
 
 class Screen {
 	public:
@@ -17,6 +15,7 @@ class Screen {
 			assert(screenResolution);
 			this->screenResolution = screenResolution;
 			this->buffer = bufferScreen;
+			this->bitmap = new Bitmap(bufferScreen);
 		}
 
 		~Screen() {
@@ -29,7 +28,14 @@ class Screen {
 			clear(buffer);
 		}
 
-		BITMAP * getBuffer();
+		BITMAP * Screen::getBuffer() {
+			return this->buffer;
+		}
+		
+		Bitmap * getBitmap() {
+			return this->bitmap;
+		}
+
 		ScreenResolution * getScreenResolution();
 protected:
 
@@ -37,6 +43,7 @@ protected:
 		ScreenResolution * screenResolution;
 
 		BITMAP * buffer;
+		Bitmap * bitmap;
 };
 
 #endif /* SCREENBLITTER_H_ */

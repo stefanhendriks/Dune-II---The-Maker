@@ -81,7 +81,7 @@ void cGame::shutdown() {
 	logger->debug("Destroyed fonts");
 
 	// Exit the font library (must be first)
-// 	alfont_exit();
+ 	alfont_exit();
 	logger->debug("Allegro FONT library shut down.");
 
 // 	if (mp3_music != NULL) {

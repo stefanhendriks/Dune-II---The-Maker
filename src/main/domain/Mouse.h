@@ -2,13 +2,13 @@
 #ifndef CMOUSE_H_
 #define CMOUSE_H_
 
-#include <allegro.h>
-#include "../gameobjects/Rectangle.h"
+#include "Rectangle.h"
+#include "Bitmap.h"
 
 class Mouse {
 
 	public:
-		Mouse(BITMAP * mouseBitmap);
+		Mouse(Bitmap * mouseBitmap);
 		~Mouse();
 
 		void updateState();
@@ -39,7 +39,7 @@ class Mouse {
 		Rectangle *getLastCreatedRectangle() {  return &lastCreatedRectangle;  }
 		Rectangle *getCurrentDrawingRectangle() { return &currentRectangle; }
 
-		void draw(BITMAP * screen);
+		void draw(Bitmap  * screen);
 
 private:
     bool leftButtonPressed;
@@ -60,7 +60,7 @@ private:
     
 	void doRectangleLogic();
 
-	BITMAP * mouseBitmap;
+	Bitmap * mouseBitmap;
 };
 
 #endif /* CMOUSE_H_ */

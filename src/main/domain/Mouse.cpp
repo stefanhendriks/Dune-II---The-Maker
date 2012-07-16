@@ -4,7 +4,7 @@
 
 Mouse *Mouse::instance = NULL;
 
-Mouse::Mouse(BITMAP * mouseBitmap) {
+Mouse::Mouse(Bitmap * mouseBitmap) {
 	this->mouseBitmap = mouseBitmap;
 	x = y = z = 0;
 	leftButtonPressed = false;
@@ -103,6 +103,6 @@ void Mouse::positionMouseCursor(int x, int y) {
 	position_mouse(x, y);
 }
 
-void Mouse::draw(BITMAP * screen) {
-	draw_sprite(screen, mouseBitmap, getX(), getY());
+void Mouse::draw(Bitmap * screen) {
+	this->mouseBitmap->draw(screen, getX(), getY());
 }

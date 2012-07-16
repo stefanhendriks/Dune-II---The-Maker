@@ -388,7 +388,7 @@ int main(int argc, char **argv) {
 	}
 
 	
-	Mouse * mouse = new Mouse((BITMAP *) gfxdata[MOUSE_NORMAL].dat);
+	Mouse * mouse = new Mouse(new Bitmap((BITMAP *) gfxdata[MOUSE_NORMAL].dat));
 	Screen * screen = new Screen(screenResolution, bmp_screen);
 	State * state = new MainMenuState(screen, mouse);
 	cGame * game = new cGame(state, version);

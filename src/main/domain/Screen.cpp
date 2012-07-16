@@ -4,10 +4,6 @@ void Screen::blitScreenBufferToScreen() {
 	blit(buffer, screen, 0, 0, 0, 0, screenResolution->getWidth(), screenResolution->getHeight());
 }
 
-BITMAP * Screen::getBuffer() {
-	return this->buffer;
-}
-
 ScreenResolution * Screen::getScreenResolution() {
 	return this->screenResolution;
 }

@@ -35,6 +35,14 @@ class Rectangle {
 		bool hasValidCoordinates() { return startX > -1 && startY > -1 && endX > -1 && endY > -1; }
 		void resetCoordinates() { startX = startY = endX = endY = -1; }
 		void setCoordinates(Rectangle * otherRectangle);
+		
+		void setCoordinates(int startX, int startY, int w, int h) {
+			resetCoordinates();
+			this->startX = startX;
+			this->startY = startY;
+			setHeight(h);
+			setWidth(w);
+		}
 
 		bool isCoordinateWithinRectangle(int x, int y);
 

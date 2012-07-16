@@ -16,7 +16,7 @@
 
 #include "domain/Version.h"
 
-#include "gameobjects/ScreenResolution.h"
+#include "domain/ScreenResolution.h"
 
 #include "include/GameState.h"
 

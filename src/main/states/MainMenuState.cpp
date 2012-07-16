@@ -1,7 +1,7 @@
 #include "MainMenuState.h"
 
 void MainMenuState::draw() {
-	mouse->draw(screen->getBuffer());
+	mouse->draw(screen->getBitmap());
 }
 
 void MainMenuState::update() {
