@@ -88,8 +88,7 @@ int handleArguments(int argc, char *argv[], cGame * game) {
 	return 0;
 }
 
-int initTimers(Logger * logger, long gameTimerInMiliseconds, long perSecondTimerInMiliseconds) 
-{
+int initTimers(Logger * logger, long gameTimerInMiliseconds, long perSecondTimerInMiliseconds) {
 	int r = install_timer();
 	if (r > -1) {
 		logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_SUCCESS);
@@ -102,8 +101,8 @@ int initTimers(Logger * logger, long gameTimerInMiliseconds, long perSecondTimer
 	LOCK_VARIABLE(timerGameTimer);
 	LOCK_VARIABLE(timerPerSecond);
 
-	LOCK_FUNCTION(timerGameTimer);
-	LOCK_FUNCTION(timerPerSecond);
+	LOCK_FUNCTION(timerGameTimerFunction);
+	LOCK_FUNCTION(timerPerSecondFunction);
 
 	// Install timers
 	install_int(timerGameTimerFunction, gameTimerInMiliseconds);
@@ -140,6 +139,7 @@ ScreenResolution * initializeGraphicsMode(Logger * logger) {
 	if (r > -1) {
 		logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Successfully created window with graphics mode.", OUTC_SUCCESS);
 	}
+	// TODO: what if this fails?
 	return screenResolution;
 }
 
