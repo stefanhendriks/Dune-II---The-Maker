@@ -174,6 +174,92 @@ void randomizeTimer( Logger * logger ) {
 	srand(t);
 }
 
+bool loadFonts( Logger * logger ) 
+{
+	game_font = alfont_load_font("data/arakeen.fon");
+
+	if (game_font != NULL) {
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded arakeen.fon", OUTC_SUCCESS);
+		alfont_set_font_size(game_font, 8); // default font size is 8
+	} else {
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load arakeen.fon", OUTC_FAILED);
+		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
+		return false;
+	}
+
+	bene_font = alfont_load_font("data/benegess.fon");
+
+	if (bene_font != NULL) {
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded benegess.fon", OUTC_SUCCESS);
+		alfont_set_font_size(bene_font, 10); // set size
+	} else {
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load benegess.fon", OUTC_FAILED);
+		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
+		return false;
+	}
+
+	small_font = alfont_load_font("data/small.ttf");
+
+	if (small_font != NULL) {
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded small.ttf", OUTC_SUCCESS);
+		alfont_set_font_size(small_font, 10); // set size
+	} else {
+		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load small.ttf", OUTC_FAILED);
+		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
+		return false;
+	}
+	return true;
+
+}
+
+bool loadDataFiles( Logger * logger ) 
+{
+	gfxdata = load_datafile("data/gfxdata.dat");
+	if (gfxdata == NULL) {
+		logger->debug("ERROR: Could not hook/load datafile: gfxdata.dat");
+		return false;
+	} else {
+		logger->debug("Datafile hooked: gfxdata.dat");
+		memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
+	}
+
+	DATAFILE * gfxaudio = load_datafile("data/gfxaudio.dat");
+	if (gfxaudio == NULL) {
+		logger->debug("ERROR: Could not hook/load datafile: gfxaudio.dat");
+		return false;
+	} else {
+		logger->debug("Datafile hooked: gfxaudio.dat");
+	}
+
+	// 	soundPlayer = new cSoundPlayer(maxSounds, 255, 150);
+	// 	soundPlayer->setDatafile(gfxaudio);
+
+	gfxinter = load_datafile("data/gfxinter.dat");
+	if (gfxinter == NULL) {
+		logger->debug("ERROR: Could not hook/load datafile: gfxinter.dat");
+		return false;
+	} else {
+		logger->debug("Datafile hooked: gfxinter.dat");
+	}
+
+	gfxworld = load_datafile("data/gfxworld.dat");
+	if (gfxworld == NULL) {
+		logger->debug("ERROR: Could not hook/load datafile: gfxworld.dat");
+		return false;
+	} else {
+		logger->debug("Datafile hooked: gfxworld.dat");
+	}
+
+	gfxmentat = load_datafile("data/gfxmentat.dat");
+	if (gfxworld == NULL) {
+		logger->debug("ERROR: Could not hook/load datafile: gfxmentat.dat");
+		return false;
+	} else {
+		logger->debug("Datafile hooked: gfxmentat.dat");
+	}
+	return true;
+}
+
 
 int main(int argc, char **argv) {
 	Version * version = new Version(0,4,6);
@@ -219,39 +305,10 @@ int main(int argc, char **argv) {
 	alfont_text_mode(-1);
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set mode to -1", OUTC_SUCCESS);
 
-// 	game_font = alfont_load_font("data/arakeen.fon");
-// 
-// 	if (game_font != NULL) {
-// 		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded arakeen.fon", OUTC_SUCCESS);
-// 		alfont_set_font_size(game_font, GAME_FONTSIZE); // set size
-// 	} else {
-// 		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load arakeen.fon", OUTC_FAILED);
-// 		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load arakeen.fon");
-// 		return false;
-// 	}
-// 
-// 	bene_font = alfont_load_font("data/benegess.fon");
-// 
-// 	if (bene_font != NULL) {
-// 		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded benegess.fon", OUTC_SUCCESS);
-// 		alfont_set_font_size(bene_font, 10); // set size
-// 	} else {
-// 		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load benegess.fon", OUTC_FAILED);
-// 		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load benegess.fon");
-// 		return false;
-// 	}
-// 
-// 	small_font = alfont_load_font("data/small.ttf");
-// 
-// 	if (small_font != NULL) {
-// 		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded small.ttf", OUTC_SUCCESS);
-// 		alfont_set_font_size(small_font, 10); // set size
-// 	} else {
-// 		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "failed to load small.ttf", OUTC_FAILED);
-// 		allegro_message("Fatal error:\n\nCould not start game.\n\nFailed to load small.ttf");
-// 		return false;
-// 	}
-
+	if (!loadFonts(logger)) {
+		return 1;
+	}
+	
 	if (set_display_switch_mode(SWITCH_BACKGROUND) < 0) {
 		set_display_switch_mode(SWITCH_PAUSE);
 		logger->debug("Display 'switch and pause' mode set");
@@ -298,49 +355,10 @@ int main(int argc, char **argv) {
 	/*** Data files ***/
 
 	// load datafiles
-	gfxdata = load_datafile("data/gfxdata.dat");
-	if (gfxdata == NULL) {
-		logger->debug("ERROR: Could not hook/load datafile: gfxdata.dat");
-		return false;
-	} else {
-		logger->debug("Datafile hooked: gfxdata.dat");
-		memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
+	if (!loadDataFiles(logger)) {
+		return 1;
 	}
 
-	DATAFILE * gfxaudio = load_datafile("data/gfxaudio.dat");
-	if (gfxaudio == NULL) {
-		logger->debug("ERROR: Could not hook/load datafile: gfxaudio.dat");
-		return false;
-	} else {
-		logger->debug("Datafile hooked: gfxaudio.dat");
-	}
-
-// 	soundPlayer = new cSoundPlayer(maxSounds, 255, 150);
-// 	soundPlayer->setDatafile(gfxaudio);
-
-	gfxinter = load_datafile("data/gfxinter.dat");
-	if (gfxinter == NULL) {
-		logger->debug("ERROR: Could not hook/load datafile: gfxinter.dat");
-		return false;
-	} else {
-		logger->debug("Datafile hooked: gfxinter.dat");
-	}
-
-	gfxworld = load_datafile("data/gfxworld.dat");
-	if (gfxworld == NULL) {
-		logger->debug("ERROR: Could not hook/load datafile: gfxworld.dat");
-		return false;
-	} else {
-		logger->debug("Datafile hooked: gfxworld.dat");
-	}
-
-	gfxmentat = load_datafile("data/gfxmentat.dat");
-	if (gfxworld == NULL) {
-		logger->debug("ERROR: Could not hook/load datafile: gfxmentat.dat");
-		return false;
-	} else {
-		logger->debug("Datafile hooked: gfxmentat.dat");
-	}
 
 	// randomize timer
 	randomizeTimer(logger);
