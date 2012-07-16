@@ -1,3 +1,4 @@
+#pragma once
 #ifndef MAIN_MENU_STATE_H_
 #define MAIN_MENU_STATE_H_
 

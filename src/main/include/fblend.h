@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************
  * FBlend Library,
  *  Copyright (c) Robert J Ohannessian, 2001

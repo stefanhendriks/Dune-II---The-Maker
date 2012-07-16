@@ -10,6 +10,9 @@
 
  */
 
+#define _CRT_SECURE_NO_DEPRECATE
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <string>
 
 
@@ -97,13 +100,6 @@ int main(int argc, char **argv) {
 	logger->logHeader("Version information");
  	logger->log(LOG_INFO, COMP_VERSION, "Initializing", version->asString().c_str());
 
-// 	if (windowed) {
-// 		logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Windowed mode");
-// 	} else {
-// 		logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Fullscreen mode");
-// 	}
-
-	// logger->debug notification
 	logger->logHeader("Allegro");
 
 	// ALLEGRO - INIT

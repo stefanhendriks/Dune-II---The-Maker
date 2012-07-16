@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CMOUSE_H_
 #define CMOUSE_H_
 

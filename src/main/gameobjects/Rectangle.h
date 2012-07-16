@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CRECTANGLE_H_
 #define CRECTANGLE_H_
 

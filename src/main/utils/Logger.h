@@ -1,3 +1,4 @@
+#pragma once
 #ifndef D2TM_CLOG_H_
 #define D2TM_CLOG_H_
 

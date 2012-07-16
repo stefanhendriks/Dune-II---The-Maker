@@ -1,3 +1,4 @@
+#pragma once
 /**
  * Abstract State class. Each state has at the bare minimum a window (gui) to draw, and some functions to update
  * the state. These update functions are time and non-time related. The state runner is responsible for calling

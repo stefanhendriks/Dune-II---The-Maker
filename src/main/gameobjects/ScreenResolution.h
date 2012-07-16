@@ -1,3 +1,4 @@
+#pragma once
 #ifndef CSCREENRESOLUTION_H_
 #define CSCREENRESOLUTION_H_
 
