@@ -21,9 +21,6 @@
 
 #define IDEAL_FPS	60
 
-// forward declaration (cannot include here, causing cyclic dependency, compile errors)
-class StateRunner;
-
 class State {
 	public:
 		State(Screen * screen, Mouse * mouse) {
@@ -40,20 +37,20 @@ class State {
 
 		void run() {
 			screen->clearBuffer();
-			rest(10); // give cpu slack (TODO: make this more smart, like the RestManager did it)
-			processTime(); // handle time passed since last frame (updates state by time)
-			update(); // <-- implemented by all states (actually process updates in state)
-			draw();	  // <-- implemented by all states (draw state)
+			rest(10);		// give cpu slack (TODO: make this more smart, like the RestManager did it)
+			processTime();	// perhaps this can be merged with...
+			update();		// ... this function
+			draw();			// <-- implemented by all states (draw state)
 			screen->blitScreenBufferToScreen();
 		}
 
 		void processTime() {
-			this->gameticks = allegro_timerUnits;
-			this->seconds = allegro_timerSecond;
+			this->gameticks = timerGameTimer;
+			this->seconds = timerPerSecond;
 
 			// TODO: do stuff with time here (see TimerManager)
-			allegro_timerUnits = this->gameticks;
-			allegro_timerSecond = this->seconds;
+			timerGameTimer = this->gameticks;
+			timerPerSecond = this->seconds;
 		};
 		
 		virtual void update() = 0;

@@ -56,9 +56,8 @@ ALMP3_MP3 *mp3_music; // pointer to mp3 music
 // Timers
 int frame_count, fps; // fps and such
 
-volatile int allegro_timerSecond = 0;
-volatile int allegro_timerGlobal = 0;
-volatile int allegro_timerUnits = 0;
+volatile int timerPerSecond = 0;
+volatile int timerGameTimer = 0;
 
 bool argumentsGiven(int & argc) {
 	return argc > 1;
@@ -126,19 +125,15 @@ int main(int argc, char **argv) {
 	install_mouse();
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
+	LOCK_VARIABLE(timerGameTimer);
+	LOCK_VARIABLE(timerPerSecond);
 
-	LOCK_VARIABLE(allegro_timerUnits);
-	LOCK_VARIABLE(allegro_timerGlobal);
-	LOCK_VARIABLE(allegro_timerSecond);
-
-	LOCK_FUNCTION(allegro_timerunits);
-	LOCK_FUNCTION(allegro_timerglobal);
-	LOCK_FUNCTION(allegro_timerfps);
+	LOCK_FUNCTION(timerGameTimer);
+	LOCK_FUNCTION(timerPerSecond);
 
 	// Install timers
-	install_int(allegro_timerunits, 100); // 100 miliseconds
-	install_int(allegro_timerglobal, 5); // 5 miliseconds
-	install_int(allegro_timerfps, 1000); // 1000 miliseconds (seconds)
+	install_int(timerGameTimerFunction, 5);
+	install_int(timerPerSecondFunction, 1000);
 
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables", "LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
 

@@ -6,16 +6,15 @@
  Contact: stefanhen83@gmail.com
  Website: http://dune2themaker.fundynamic.com
 
- 2001 - 2011 (c) code by Stefan Hendriks
+ 2001 - 2012 (c) code by Stefan Hendriks
 
  */
-
+#pragma once
 #ifndef TIMERS_H
-	void allegro_timerfps(); /** FPS timer **/
-	void allegro_timerglobal(); /** Global timer **/
-	void allegro_timerunits(); /** Unit timer **/
+#define TIMERS_H
+	void timerPerSecondFunction(); /** FPS timer **/
+	void timerGameTimerFunction(); /** Game timer **/
 
-	extern volatile int allegro_timerSecond;
-	extern volatile int allegro_timerGlobal;
-	extern volatile int allegro_timerUnits;
+	extern volatile int timerPerSecond;
+	extern volatile int timerGameTimer;
 #endif
