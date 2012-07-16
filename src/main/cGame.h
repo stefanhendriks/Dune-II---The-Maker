@@ -29,19 +29,7 @@ class cGame {
 																																																																																																																																										
 		cGame(State * state, Version * version);
 		~cGame();
-
-		std::string rules;
-
-		bool windowed;
-
-		Version * version;
-		int revision;
-
-		// init functions
-		bool setupGame();
-		void init();
-
-		// main run function
+		
 		void run();
 
 		void shutdown();
@@ -54,11 +42,13 @@ class cGame {
 
 	private:
 
-		// variables
 		GameState gameStateEnum;
 		State * state;
 		ScreenResolution * screenResolution;
 
+		std::string rules;
+		bool windowed;
+		Version * version;
 };
 
 #endif

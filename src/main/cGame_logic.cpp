@@ -28,7 +28,6 @@ cGame::cGame(State * state, Version * version) {
 	this->version = version;
 	windowed = true;
 	gameStateEnum = MAINMENU;
-	revision = 0;
 }
 
 cGame::~cGame() {
@@ -38,16 +37,6 @@ cGame::~cGame() {
 	state = NULL;
 	delete version;
 	version = NULL;
-}
-
-void cGame::init() {
-	gameStateEnum = MAINMENU;
-
-	FileReader * fileReader = new FileReader("revision.txt");
-	if (fileReader->hasNext()) {
-		string firstLine = fileReader->getLine();
-		revision = StringUtils::getNumberFromString(firstLine);
-	}
 }
 
 /**
@@ -95,15 +84,4 @@ void cGame::shutdown() {
 	allegro_exit();
 	logger->debug("Allegro shut down.");
 	logger->debug("Thanks for playing.");
-}
-
-bool cGame::setupGame() {
-
-	init();
-
-	
-
-	// all has installed well. Lets rock and role.
-	return true;
-
 }

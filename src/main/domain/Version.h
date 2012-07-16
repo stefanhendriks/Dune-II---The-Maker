@@ -7,15 +7,16 @@
 
 class Version {
 	public:
-		Version(int major, int minor, int patch) {
+		Version(int major, int minor, int patch, int revision) {
 			this->major = major;
 			this->minor = minor;
 			this->patch = patch;
+			this->revision = revision;
 		}
 
 	std::string asString() {
 		char version[255];
-		sprintf(version, "Version %d.%d.%d", major, minor, patch);
+		sprintf(version, "Version %d.%d.%d - revision %d", major, minor, patch, revision);
 		return std::string(version);
 	}
 
@@ -23,5 +24,6 @@ class Version {
 		int major;
 		int minor;
 		int patch;
+		int revision;
 };
 #endif

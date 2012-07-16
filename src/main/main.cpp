@@ -19,6 +19,8 @@
 #include "domain/Mouse.h"
 
 #include "utils/Logger.h"
+#include "utils/StringUtils.h"
+#include "utils/FileReader.h"
 
 #include "states/MainMenuState.h"
 #include "cGame.h"
@@ -292,9 +294,22 @@ void initDisplaySwitchMode( Logger * logger ) {
 	}
 }
 
+int getRevisionNumberFromFile() 
+{
+	FileReader * fileReader = new FileReader("revision.txt");
+	int revision = 0;
+	if (fileReader->hasNext()) {
+		string firstLine = fileReader->getLine();
+		revision = StringUtils::getNumberFromString(firstLine);
+	}
+	delete fileReader;
+	return revision;
+}
+
 
 int main(int argc, char **argv) {
-	Version * version = new Version(0,4,6);
+	int revision = getRevisionNumberFromFile();
+	Version * version = new Version(0,4,6, revision);
 
 	Logger * logger = Logger::getInstance();
 	logger->renew();
@@ -387,7 +402,6 @@ int main(int argc, char **argv) {
 		clear(bmp_screen);
 	}
 
-	
 	Mouse * mouse = new Mouse(new Bitmap((BITMAP *) gfxdata[MOUSE_NORMAL].dat));
 	Screen * screen = new Screen(screenResolution, bmp_screen);
 	State * state = new MainMenuState(screen, mouse);
@@ -397,11 +411,7 @@ int main(int argc, char **argv) {
 		return 0;
 	}
 
-
-	if (game->setupGame()) {
-		game->run();
-	}
-
+	game->run();
 	game->shutdown();
 	
 	delete game;
