@@ -88,42 +88,16 @@ int handleArguments(int argc, char *argv[], cGame * game) {
 	return 0;
 }
 
-int main(int argc, char **argv) {
-	Version * version = new Version(0,4,6);
-
-	Logger * logger = Logger::getInstance();
-	logger->renew();
-
-	logger->logHeader("Dune II - The Maker");
-	logger->logCommentLine(""); // white space
-	logger->logHeader("Version information");
- 	logger->log(LOG_INFO, COMP_VERSION, "Initializing", version->asString().c_str());
-
-	logger->logHeader("Allegro");
-
-	// ALLEGRO - INIT
-	if (allegro_init() != 0) {
-		logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_FAILED);
-		return false;
-	}
-
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
-
+int initTimers(Logger * logger, long gameTimerInMiliseconds, long perSecondTimerInMiliseconds) 
+{
 	int r = install_timer();
 	if (r > -1) {
 		logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_SUCCESS);
 	} else {
 		allegro_message("Failed to install timer");
 		logger->log(LOG_FATAL, COMP_ALLEGRO, "Initializing timer functions", "install_timer()", OUTC_FAILED);
-		return false;
+		return r;
 	}
-
-	alfont_init();
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
-	install_keyboard();
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
-	install_mouse();
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
 	LOCK_VARIABLE(timerGameTimer);
 	LOCK_VARIABLE(timerPerSecond);
@@ -132,106 +106,115 @@ int main(int argc, char **argv) {
 	LOCK_FUNCTION(timerPerSecond);
 
 	// Install timers
-	install_int(timerGameTimerFunction, 5);
-	install_int(timerPerSecondFunction, 1000);
+	install_int(timerGameTimerFunction, gameTimerInMiliseconds);
+	install_int(timerPerSecondFunction, perSecondTimerInMiliseconds);
 
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables", "LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
 
-/*	frame_count = fps = 0;*/
+	return 0;
+}
+
+int getIdealColorDepth(Logger * logger) {
+	int iDepth = desktop_color_depth();
+	char msg[255];
+	
+	if (iDepth > 15 && iDepth != 24) {
+		sprintf(msg, "Desktop color dept is %d.", iDepth);
+	} else {
+		sprintf(msg, "Could not find color depth, or unsupported color depth found. Will use 16 bit");
+		iDepth = 16;
+	}
+	logger->log(LOG_INFO, COMP_SETUP, "Finding ideal color depth for windowed mode", msg, OUTC_NONE);
+	return iDepth;
+}
+
+ScreenResolution * initializeGraphicsMode(Logger * logger) {
+	ScreenResolution * screenResolution = new ScreenResolution(800, 600);
+	set_color_depth(getIdealColorDepth(logger));
+
+	int r = 0;
+	r = set_gfx_mode(GFX_DIRECTX_WIN, screenResolution->getWidth(), screenResolution->getHeight(), screenResolution->getWidth(), screenResolution->getHeight());
+	char msg[255];
+	sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d.", screenResolution->getWidth(), screenResolution->getHeight());
+
+	if (r > -1) {
+		logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Successfully created window with graphics mode.", OUTC_SUCCESS);
+	}
+	return screenResolution;
+}
+
+int getAmountReservedVoicesAndInstallSound() {
+	int voices = 256;
+	while (1) {
+		if (voices < 4) {
+			// failed!
+			return -1;
+		}
+		reserve_voices(voices, 0);
+		char msg[255];
+		if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) == 0) {
+			sprintf(msg, "Success reserving %d voices.", voices);
+			Logger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
+			break;
+		} else {
+			sprintf(msg, "Failed reserving %d voices. Will try %d.", voices, (voices / 2));
+			Logger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
+			voices /= 2;
+		}
+	}
+
+	return voices;
+}
+
+void randomizeTimer( Logger * logger ) {
+	unsigned int t = (unsigned int) time(0);
+	char seedtxt[80];
+	sprintf(seedtxt, "Seed is %d", t);
+	logger->debug(seedtxt);
+	srand(t);
+}
+
+
+int main(int argc, char **argv) {
+	Version * version = new Version(0,4,6);
+
+	Logger * logger = Logger::getInstance();
+	logger->renew();
+
+	logger->logHeader("Dune II - The Maker");
+	logger->logCommentLine("");
+	logger->logHeader("Version information");
+ 	logger->log(LOG_INFO, COMP_VERSION, "Initializing", version->asString().c_str());
+
+	logger->logHeader("Allegro");
+
+	if (allegro_init() != 0) {
+		logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_FAILED);
+		return false;
+	}
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
+
+
+	alfont_init();
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing ALFONT", "alfont_init()", OUTC_SUCCESS);
+	install_keyboard();
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
+	install_mouse();
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
+
+	if (initTimers(logger, 5, 1000) < 0) {
+		logger->debug("Failed to initialize timers.");
+		return 1;
+	}
 
 // 	set window title
 // 	char title[128];
 // 	sprintf(title, "Dune II - The Maker [%s] - (by Stefan Hendriks)", game->getVersion());
 // 	set_window_title(title);
 // 	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", title, OUTC_SUCCESS);
-
 	set_window_title("Dune II - The Maker - By Stefan Hendriks");
-	set_color_depth(16);
-
-	ScreenResolution * screenResolution = new ScreenResolution(800, 600);
-
-
-// 	if (windowed) {
-		logger->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "Searching for optimal graphics settings");
-		int iDepth = desktop_color_depth();
-
-		if (iDepth > 15 && iDepth != 24) {
-			char msg[255];
-			sprintf(msg, "Desktop color dept is %d.", iDepth);
-			logger->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", msg);
-			set_color_depth(iDepth); // run in the same bit depth as the desktop
-		} else {
-			logger->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.",
-					"Could not find color depth, or unsupported color depth found. Will use 16 bit");
-			set_color_depth(16);
-		}
-
-		//GFX_AUTODETECT_WINDOWED
-		r = 0;
-#ifdef UNIX
-		r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
-#else
-		r = set_gfx_mode(GFX_DIRECTX_WIN, screenResolution->getWidth(), screenResolution->getHeight(), screenResolution->getWidth(), screenResolution->getHeight());
-#endif
-
-		char msg[255];
-		sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d.", screenResolution->getWidth(), screenResolution->getHeight());
-
-		if (r > -1) {
-			logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Successfully created window with graphics mode.", OUTC_SUCCESS);
-		} else {
-			logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Failed to create window with graphics mode. Fallback to fullscreen.", OUTC_FAILED);
-
-			set_color_depth(16);
-
-			// GFX_DIRECTX_ACCEL / GFX_AUTODETECT
-#ifdef UNIX
-			r = set_gfx_mode(GFX_XWINDOWS, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
-#else
-			r = set_gfx_mode(GFX_DIRECTX_ACCEL, screenResolution->getWidth(), screenResolution->getHeight(), screenResolution->getWidth(), screenResolution->getHeight());
-#endif
-
-			if (r > -1) {
-				logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fallback, fullscreen)", "Fallback succeeded.", OUTC_SUCCESS);
-				/*windowed = false;*/
-				return false;
-			} else {
-				logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fallback, fullscreen)", "Fallback failed!", OUTC_FAILED);
-				allegro_message("Fatal error:\n\nCould not start game.\n\nGraphics mode (windowed mode & fallback) could not be initialized.");
-				return false;
-			}
-		}
-// 	} else {
-// 
-// 		//bool shouldFindBestScreenResolution = true;
-// 		//if (isResolutionInGameINIFoundAndSet()) {
-// 		//	logger->debug("Resolution is set in INI file.");
-// 
-// 		//	setScreenResolutionFromGameIniSettings();
-// 
-// 		//	r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, getScreenResolution()->getWidth(), getScreenResolution()->getHeight(), getScreenResolution()->getWidth(),
-// 		//			getScreenResolution()->getHeight());
-// 		//	char msg[255];
-// 
-// 		//	sprintf(msg, "Setting up %dx%d resolution from ini file.", getScreenResolution()->getWidth(), getScreenResolution()->getHeight());
-// 
-// 		//	logger->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
-// 
-// 		//	if ((r > -1)) { // on success
-// 		//		shouldFindBestScreenResolution = false;
-// 		//	}
-// 		//}
-// 
-// 		// find best possible resolution
-// 		if (true) {
-// 			BestScreenResolutionFinder bestScreenResolutionFinder;
-// 			bestScreenResolutionFinder.checkResolutions();
-// 			ScreenResolution * aquiredScreenResolution = bestScreenResolutionFinder.aquireBestScreenResolutionFullScreen();
-// 			if (aquiredScreenResolution) {
-// 				screenResolution = aquiredScreenResolution;
-// 			}
-// 		}
-// 	}
+		
+	ScreenResolution * screenResolution = initializeGraphicsMode(logger);
 
 	alfont_text_mode(-1);
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set mode to -1", OUTC_SUCCESS);
@@ -276,30 +259,30 @@ int main(int argc, char **argv) {
 		logger->debug("Display 'switch to background' mode set");
 	}
 
-// 	int maxSounds = getAmountReservedVoicesAndInstallSound();
-// 	memset(msg, 0, sizeof(msg));
-// 
-// 	if (maxSounds > -1) {
-// 		sprintf(msg, "Successful installed sound. %d voices reserved", maxSounds);
-// 		logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
-// 	} else {
-// 		logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
-// 	}
+	int maxSounds = getAmountReservedVoicesAndInstallSound();
+
+	if (maxSounds > -1) {
+		char msg[255];
+		sprintf(msg, "Successful installed sound. %d voices reserved", maxSounds);
+		logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
+	} else {
+		logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
+	}
 
 	/***
 	 Bitmap Creation
 	 ***/
+	set_color_conversion(COLORCONV_MOST);
 
 	int width = screenResolution->getWidth();
 	int height = screenResolution->getHeight();
-
+	char msg[255];
 	memset(msg, 0, sizeof(msg));
 	sprintf(msg, "Creating bitmaps with resolution of %dx%d.", width, height);
 	logger->debug(msg);
 
 
 	/*** End of Bitmap Creation ***/
-	set_color_conversion(COLORCONV_MOST);
 
 	logger->debug("Color conversion method set");
 
@@ -360,34 +343,12 @@ int main(int argc, char **argv) {
 	}
 
 	// randomize timer
-	unsigned int t = (unsigned int) time(0);
-	char seedtxt[80];
-	sprintf(seedtxt, "Seed is %d", t);
-	logger->debug(seedtxt);
-	srand(t);
-
-	// Mentat class pointer set at null
+	randomizeTimer(logger);
 
 	set_palette(general_palette);
 
-	// normal sounds are loud, the music is lower (its background music, so it should not be disturbing)
 	set_volume(255, 150);
-
-	// A few messages for the player
-// 	logger->debug("Installing:  PLAYERS");
-// 	INSTALL_PLAYERS();
-// 	logger->debug("Installing:  HOUSES");
-// 	INSTALL_HOUSES();
-// 	logger->debug("Installing:  STRUCTURES");
-// 	install_structures();
-// 	logger->debug("Installing:  BULLET TYPES");
-// 	install_bullets();
-// 	logger->debug("Installing:  UNITS");
-// 	install_units();
-// 	logger->debug("Installing:  WORLD");
-// 	INSTALL_WORLD();
-
-
+	
 	bmp_screen = create_bitmap(width, height);
 
 	if (bmp_screen == NULL) {
