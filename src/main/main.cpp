@@ -128,7 +128,6 @@ int main(int argc, char **argv) {
 	install_keyboard();
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
 	install_mouse();
-	Mouse::getInstance();
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
 
@@ -410,8 +409,9 @@ int main(int argc, char **argv) {
 	}
 
 	
+	Mouse * mouse = new Mouse((BITMAP *) gfxdata[MOUSE_NORMAL].dat);
 	Screen * screen = new Screen(screenResolution, bmp_screen);
-	State * state = new MainMenuState(screen, Mouse::getInstance());
+	State * state = new MainMenuState(screen, mouse);
 	cGame * game = new cGame(state);
 
 	if (handleArguments(argc, argv, game) > 0) {
@@ -424,7 +424,11 @@ int main(int argc, char **argv) {
 	}
 
 	game->shutdown();
+	
 	delete game;
+	delete mouse;
+	delete screen;
+	delete state;
 
 	return 0;
 }

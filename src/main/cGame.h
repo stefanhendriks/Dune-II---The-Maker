@@ -24,7 +24,7 @@
 class cGame {
 
 	public:
-
+																																																																																																																																										
 		cGame(State * state);
 		~cGame();
 

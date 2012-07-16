@@ -4,7 +4,8 @@
 
 Mouse *Mouse::instance = NULL;
 
-Mouse::Mouse() {
+Mouse::Mouse(BITMAP * mouseBitmap) {
+	this->mouseBitmap = mouseBitmap;
 	x = y = z = 0;
 	leftButtonPressed = false;
 	rightButtonPressed = false;
@@ -22,14 +23,7 @@ Mouse::Mouse() {
 }
 
 Mouse::~Mouse() {
-}
-
-Mouse *Mouse::getInstance() {
-	if (instance == NULL) {
-		instance = new Mouse();
-	}
-
-	return instance;
+	mouseBitmap = NULL;
 }
 
 void Mouse::doRectangleLogic() {

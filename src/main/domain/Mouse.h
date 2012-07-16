@@ -7,9 +7,8 @@
 class Mouse {
 
 	public:
-		Mouse();
-
-		static Mouse *getInstance();
+		Mouse(BITMAP * mouseBitmap);
+		~Mouse();
 
 		void updateState();
 
@@ -41,10 +40,6 @@ class Mouse {
 
 		void draw(BITMAP * screen);
 
-protected:
-	~Mouse();
-
-
 private:
     bool leftButtonPressed;
     bool rightButtonPressed;
@@ -61,7 +56,10 @@ private:
     int tile;
     Rectangle currentRectangle;
     Rectangle lastCreatedRectangle;
-    void doRectangleLogic();
+    
+	void doRectangleLogic();
+
+	BITMAP * mouseBitmap;
 };
 
 #endif /* CMOUSE_H_ */
