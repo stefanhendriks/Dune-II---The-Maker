@@ -48,9 +48,9 @@ DATAFILE *gfxworld; // world/pieces graphics
 DATAFILE *gfxmentat; // mentat graphics
 
 // FONT stuff
-ALFONT_FONT *game_font; // arrakeen.fon
-ALFONT_FONT *bene_font; // benegesserit font.
-ALFONT_FONT *small_font; // small font.
+ALFONT_FONT *game_font = NULL; // arrakeen.fon
+ALFONT_FONT *bene_font = NULL; // benegesserit font.
+ALFONT_FONT *small_font = NULL; // small font.
 
 // MP3 STUFF
 ALMP3_MP3 *mp3_music; // pointer to mp3 music
@@ -414,11 +414,48 @@ int main(int argc, char **argv) {
 	set_trans_blender(0, 0, 0, 128); // reset blending state for allegro
 	game->run();
 	game->shutdown();
-	
-	delete game;
-	delete mouse;
+
+	delete version;
+	delete screenResolution;
 	delete screen;
+	delete mouse;
 	delete state;
+	delete game;
+
+	// shut down library
+	logger->logHeader("SHUTDOWN");
+	logger->debug("Starting shutdown");
+	/*destroy_bitmap(bmp_fadeout);*/
+	destroy_bitmap(bmp_screen);
+	/*destroy_bitmap(bmp_throttle);*/
+	/*destroy_bitmap(bmp_winlose);*/
+
+	logger->debug("Destroyed bitmaps");
+	if (small_font != NULL) {
+		logger->debug("Destroyed font - small");
+		alfont_destroy_font(small_font);
+	}
+	if (bene_font != NULL) {
+		logger->debug("Destroyed font - bene");
+		alfont_destroy_font(bene_font);
+	}
+	if (game_font != NULL) {
+		logger->debug("Destroyed font - game");
+		alfont_destroy_font(game_font);
+	}
+	logger->debug("Destroyed fonts");
+
+	alfont_exit();
+
+	// 	if (mp3_music != NULL) {
+	// 		almp3_stop_autopoll_mp3(mp3_music);
+	// 		almp3_destroy_mp3(mp3_music);
+	// 	}
+
+	// Now we are all neatly closed, we exit Allegro and return to the OS
+	allegro_exit();
+	logger->debug("Allegro shut down.");
+	logger->debug("Thanks for playing.");
 
 	return 0;
 }

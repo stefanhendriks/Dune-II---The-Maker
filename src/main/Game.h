@@ -44,7 +44,6 @@ class Game {
 
 		GameState gameStateEnum;
 		State * state;
-		ScreenResolution * screenResolution;
 
 		std::string rules;
 		bool windowed;

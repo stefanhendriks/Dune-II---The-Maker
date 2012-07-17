@@ -23,13 +23,13 @@
     <ClCompile Include="utils\Logger.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cGame.h" />
     <ClInclude Include="domain\Bitmap.h" />
     <ClInclude Include="domain\Mouse.h" />
     <ClInclude Include="domain\Screen.h" />
     <ClInclude Include="domain\Version.h" />
     <ClInclude Include="domain\Rectangle.h" />
     <ClInclude Include="domain\ScreenResolution.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="include\allegroh.h" />
     <ClInclude Include="include\data\gfxaudio.h" />
     <ClInclude Include="include\data\gfxdata.h" />
@@ -78,7 +78,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)..\..\bin</OutDir>
+    <OutDir>$(D2TM_HOME)\bin</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
