@@ -11,11 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cGame_logic.cpp" />
     <ClCompile Include="domain\Mouse.cpp" />
     <ClCompile Include="domain\Screen.cpp" />
     <ClCompile Include="domain\Rectangle.cpp" />
     <ClCompile Include="domain\ScreenResolution.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="states\MainMenuState.cpp" />
     <ClCompile Include="timers.cpp" />
@@ -78,6 +78,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)..\..\bin</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

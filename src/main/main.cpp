@@ -23,7 +23,7 @@
 #include "utils/FileReader.h"
 
 #include "states/MainMenuState.h"
-#include "cGame.h"
+#include "Game.h"
 
 #include "include/data/gfxdata.h"
 #include "include/allegroh.h"
@@ -73,7 +73,7 @@ bool hasValueForFlag( int i, int argc ) {
 	return (i + 1) < argc;
 }
 
-int handleArguments(int argc, char *argv[], cGame * game) {
+int handleArguments(int argc, char *argv[], Game * game) {
 
 	if (!argumentsGiven(argc)) return 0;
 
@@ -405,12 +405,13 @@ int main(int argc, char **argv) {
 	Mouse * mouse = new Mouse(new Bitmap((BITMAP *) gfxdata[MOUSE_NORMAL].dat));
 	Screen * screen = new Screen(screenResolution, bmp_screen);
 	State * state = new MainMenuState(screen, mouse);
-	cGame * game = new cGame(state, version);
+	Game * game = new Game(state, version);
 
 	if (handleArguments(argc, argv, game) > 0) {
 		return 0;
 	}
 
+	set_trans_blender(0, 0, 0, 128); // reset blending state for allegro
 	game->run();
 	game->shutdown();
 	

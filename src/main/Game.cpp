@@ -12,7 +12,7 @@
 
 #include <string.h>
 
-#include "cGame.h"
+#include "Game.h"
 
 #include "states/MainMenuState.h"
 
@@ -23,14 +23,14 @@
 
 using namespace std;
 
-cGame::cGame(State * state, Version * version) {
+Game::Game(State * state, Version * version) {
 	this->state = state;
 	this->version = version;
 	windowed = true;
 	gameStateEnum = MAINMENU;
 }
 
-cGame::~cGame() {
+Game::~Game() {
 	delete screenResolution;
 	screenResolution = NULL;
 	delete state;
@@ -42,7 +42,7 @@ cGame::~cGame() {
 /**
  Main game loop
  */
-void cGame::run() {
+void Game::run() {
 	set_trans_blender(0, 0, 0, 128);
 	while (!state->shouldQuitGame()) {
 		state->run();
@@ -52,7 +52,7 @@ void cGame::run() {
 /**
  Shutdown the game
  */
-void cGame::shutdown() {
+void Game::shutdown() {
 	Logger *logger = Logger::getInstance();
 	logger->logHeader("SHUTDOWN");
 	logger->debug("Starting shutdown");
