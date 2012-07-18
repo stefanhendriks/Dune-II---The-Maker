@@ -16,6 +16,7 @@
     <ClCompile Include="domain\Screen.cpp" />
     <ClCompile Include="domain\Rectangle.cpp" />
     <ClCompile Include="domain\ScreenResolution.cpp" />
+    <ClCompile Include="domain\Viewport.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="states\MainMenuState.cpp" />
@@ -32,6 +33,7 @@
     <ClInclude Include="domain\Version.h" />
     <ClInclude Include="domain\Rectangle.h" />
     <ClInclude Include="domain\ScreenResolution.h" />
+    <ClInclude Include="domain\Viewport.h" />
     <ClInclude Include="exceptions\exceptions.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="include\allegroh.h" />

@@ -16,6 +16,19 @@ class Bitmap {
 				throw NullArgumentException;
 			}
 			this->bitmap = bitmap;
+			this->destroyBitmap = false;
+		}
+
+		Bitmap(int width, int height) {
+			this->bitmap = create_bitmap(width, height);
+			this->destroyBitmap = true;
+		}
+
+		~Bitmap() {
+			if (destroyBitmap) {
+				destroy_bitmap(this->bitmap);
+				this->bitmap = NULL;
+			}
 		}
 
 		int getHeight() {
@@ -42,6 +55,7 @@ class Bitmap {
 
 	private:
 		BITMAP * bitmap;
+		bool destroyBitmap;
 
 };
 
