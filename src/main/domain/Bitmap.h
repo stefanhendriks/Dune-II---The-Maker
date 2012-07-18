@@ -12,12 +12,12 @@
 class Bitmap {
 
 	public:
+		Bitmap(BITMAP * bitmap, bool destroyBitmap) {
+			init(bitmap, destroyBitmap);
+		}
+
 		Bitmap(BITMAP * bitmap) {
-			if (bitmap == NULL) {
-				throw NullArgumentException;
-			}
-			this->bitmap = bitmap;
-			this->destroyBitmap = false;
+			init(bitmap, false);
 		}
 
 		Bitmap(int width, int height) {
@@ -55,6 +55,15 @@ class Bitmap {
 
 		BITMAP * getBITMAP() {
 			return this->bitmap;
+		}
+
+	protected:
+		// using an init method, so we can re-use in two constructors
+		// also see: http://stackoverflow.com/questions/308276/c-call-constructor-from-constructor
+		void init(BITMAP * bitmap, bool destroyBitmap) {
+			if (bitmap == NULL) throw NullArgumentException;
+			this->bitmap = bitmap;
+			this->destroyBitmap = destroyBitmap;
 		}
 
 	private:

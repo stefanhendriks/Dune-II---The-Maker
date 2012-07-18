@@ -22,6 +22,12 @@ class Map {
 			return mapBitmap;
 		}
 
+		Bitmap * getBitmapPiece(int x, int y, int width, int height) {
+			BITMAP * parent = mapBitmap->getBITMAP();
+			BITMAP * subBitmap = create_sub_bitmap(parent, x, y, width, height);
+			return new Bitmap(subBitmap, true);
+		}
+
 	private:
 		Bitmap * mapBitmap;
 

@@ -3,11 +3,14 @@
 #define VIEWPORT_H
 
 #include "Screen.h"
+#include "Map.h"
 
 class Viewport {
 
 	public:
-		Viewport(int width, int height) {
+		Viewport(int width, int height, Map * map) {
+			if (map == NULL) throw NullArgumentException;
+			this->map = map;
 			this->width = width;
 			this->height = height;
 			this->bitmap = new Bitmap(width, height);
@@ -19,6 +22,7 @@ class Viewport {
 		int width, height;
 
 		Bitmap * bitmap;
+		Map * map;
 };
 
 #endif

@@ -7,10 +7,13 @@ void Viewport::draw(Screen * screen, int x, int y) {
 	// z-ordering (z is already known in entity)
 
 	// draw it on bitmap (buffer)
+	Bitmap * mapBitmapPiece = map->getBitmapPiece(x, y, x + this->width, y + this->height);
+	
+	this->bitmap->draw(mapBitmapPiece, x, y);
 	
 	// draw bitmap (buffer) on screen
 	screen->draw(this->bitmap, x, y);
 
-	screen->drawRectangle(x, y, width, height, Colors::White);
-	/*this->bitmap->draw(screen->getBitmap(), x, y);*/
+	// clean up memory
+	delete mapBitmapPiece;
 }
