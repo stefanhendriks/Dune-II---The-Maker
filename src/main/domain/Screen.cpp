@@ -8,13 +8,13 @@ ScreenResolution * Screen::getScreenResolution() {
 	return this->screenResolution;
 }
 
-void Screen::draw(Bitmap * bitmap, int x, int y) {
-	this->bitmap->draw(bitmap, x, y);
+void Screen::draw(Bitmap * bitmap, Vector2D &vector) {
+	this->bitmap->draw(bitmap, vector.getX(), vector.getY());
 }
 
-void Screen::drawRectangle(int x, int y, int width, int height, Color color) {
+void Screen::drawRectangle(Vector2D &vector, int width, int height, Color color) {
 	BITMAP * bmp = this->bitmap->getBITMAP();
-	rect(bmp, x, y, x + width, y + height, color.makeColor());
+	rect(bmp, vector.getX(), vector.getY(), vector.getX() + width, vector.getY() + height, color.makeColor());
 }
 
 /**

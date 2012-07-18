@@ -8,6 +8,7 @@
 #include "allegro.h"
 #include "ScreenResolution.h"
 
+#include "Vector2D.h"
 #include "Bitmap.h"
 #include "Color.h"
 
@@ -40,9 +41,9 @@ class Screen {
 
 		ScreenResolution * getScreenResolution();
 		
-		void draw(Bitmap * bitmap, int x, int y);
+		void draw(Bitmap * bitmap, Vector2D &vector);
 
-		void drawRectangle(int x, int y, int width, int height, Color color);
+		void drawRectangle(Vector2D &vector, int width, int height, Color color);
 
 protected:
 

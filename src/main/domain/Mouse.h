@@ -2,6 +2,7 @@
 #ifndef CMOUSE_H_
 #define CMOUSE_H_
 
+#include "Vector2D.h"
 #include "Rectangle.h"
 #include "Bitmap.h"
 
@@ -31,6 +32,12 @@ class Mouse {
 		int getX() { return x; }
 		int getY() { return y; }
 		int getZ() { return z; }
+
+		Vector2D getVector2D() {
+			Vector2D v;
+			v.set(x, y);
+			return v;
+		}
 
 		void setMouseTile(int value) { tile = value; }
 		int getMouseTile() { return tile; }

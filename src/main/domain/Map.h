@@ -5,6 +5,7 @@
 #include "../exceptions/exceptions.h"
 
 #include "Screen.h"
+#include "Vector2D.h"
 
 class Map {
 
@@ -22,9 +23,9 @@ class Map {
 			return mapBitmap;
 		}
 
-		Bitmap * getBitmapPiece(int x, int y, int width, int height) {
+		Bitmap * getBitmapPiece(Vector2D &vector, int width, int height) {
 			BITMAP * parent = mapBitmap->getBITMAP();
-			BITMAP * subBitmap = create_sub_bitmap(parent, x, y, width, height);
+			BITMAP * subBitmap = create_sub_bitmap(parent, vector.getX(), vector.getY(), width, height);
 			return new Bitmap(subBitmap, true);
 		}
 

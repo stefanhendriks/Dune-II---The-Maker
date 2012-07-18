@@ -2,8 +2,8 @@
 
 void PlayingState::draw() {
 	//screen->draw(map->getBitmap(), 0, 0);
-	viewPort->draw(screen, viewPortX, viewPortY);
-	screen->draw(mouse->getBitmap(), mouse->getX(), mouse->getY());
+	viewPort->draw(screen, viewPortVector);
+	screen->draw(mouse->getBitmap(), mouse->getVector2D());
 }
 
 void PlayingState::update() {
@@ -24,8 +24,10 @@ void PlayingState::update() {
 // 		viewPortY++;
 // 	}
 
-	viewPortX = mouse->getX() - (viewPort->getWidth() / 2);
-	viewPortY = mouse->getY() - (viewPort->getHeight() / 2);
+	viewPortVector.set(mouse->getVector2D());
+// 	
+// 	viewPortX = mouse->getX() - (viewPort->getWidth() / 2);
+// 	viewPortY = mouse->getY() - (viewPort->getHeight() / 2);
 
 
 	if (key[KEY_ESC]) {

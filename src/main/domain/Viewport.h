@@ -2,6 +2,7 @@
 #ifndef VIEWPORT_H
 #define VIEWPORT_H
 
+#include "Vector2D.h"
 #include "Screen.h"
 #include "Map.h"
 
@@ -16,7 +17,7 @@ class Viewport {
 			this->bitmap = new Bitmap(width, height);
 		}
 	
-		void draw(Screen * screen, int x, int y);
+		void draw(Screen * screen, Vector2D &vector);
 
 		int getWidth() { return width; }
 		int getHeight() { return height; }
