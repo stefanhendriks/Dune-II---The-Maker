@@ -6,12 +6,20 @@
 
 using namespace std;
 
-class NullArgumentException: public exception {
-	
-	virtual const char* what() const throw() {
-		return "Argument may not be NULL.";
-	}
+// use nameless namespace so we can use the Exceptions defined here
+// across multiple files. Avoids LNK2005 linking error.
+// See also:
+// http://stackoverflow.com/questions/10046485/error-lnk2005-already-defined
+namespace {
 
-} NullArgumentException;
+	class NullArgumentException: public exception {
+	
+		virtual const char* what() const throw() {
+			return "Argument may not be NULL.";
+		}
+
+	} NullArgumentException;
+
+}
 
 #endif

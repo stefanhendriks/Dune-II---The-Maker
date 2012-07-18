@@ -4,12 +4,17 @@
 
 #include "../include/allegro.h"
 
+#include "../exceptions/exceptions.h"
+
 #include "Rectangle.h"
 
 class Bitmap {
 
 	public:
 		Bitmap(BITMAP * bitmap) {
+			if (bitmap == NULL) {
+				throw NullArgumentException;
+			}
 			this->bitmap = bitmap;
 		}
 

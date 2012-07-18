@@ -35,6 +35,7 @@ echo 6. Copying data files
 copy resources\data\*.dat bin\data
 copy resources\data\*.fon bin\data
 copy resources\data\*.ttf bin\data
+copy resources\data\*.bmp bin\data
 echo 7. Copying scenes
 copy resources\data\scenes\*.* bin\data\scenes
 echo 8. Create save game directories

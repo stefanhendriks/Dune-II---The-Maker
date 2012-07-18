@@ -416,12 +416,15 @@ int main(int argc, char **argv) {
 			return 0;
 		}
 
-		Map * map = new Map(NULL);
+		BITMAP * mapBitmap = load_bmp("data\\map.bmp", general_palette);  // TODO: create constructor in Bitmap with filename, that throws CannotFindFileException when result is NULL
+		Map * map = new Map(new Bitmap(mapBitmap));
 
 		set_trans_blender(0, 0, 0, 128); // reset blending state for allegro
 		game->run();
 
 		game->shutdown();
+
+		destroy_bitmap(mapBitmap);
 
 		delete version;
 		delete screenResolution;
