@@ -3,7 +3,9 @@
 #define MAP_H
 
 #include "../exceptions/exceptions.h"
-	
+
+#include "Screen.h"
+
 class Map {
 
 	public:
@@ -14,9 +16,9 @@ class Map {
 			this->mapBitmap = mapBitmap;
 		}
 		
-		~Map();
+		~Map() { };
 
-		void draw();
+		void draw(Screen * screen);
 	
 	private:
 		Bitmap * mapBitmap;

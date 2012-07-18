@@ -7,13 +7,18 @@
 
 #include "State.h"
 
+#include "../domain/Map.h"
+
 #include "../utils/Logger.h"
 
 class PlayingState : public State {
 
 	public:
-		PlayingState(Screen * screen, Mouse * mouse) : State(screen, mouse) {
-			// 
+		PlayingState(Screen * screen, Mouse * mouse, Map * map) : State(screen, mouse) {
+			if (map == NULL) {
+				throw NullArgumentException;
+			}
+			this->map = map; 
 		}
 
 		~PlayingState() {
@@ -25,7 +30,7 @@ class PlayingState : public State {
 	protected:
 
 	private:
-
+		Map * map;
 
 };
 

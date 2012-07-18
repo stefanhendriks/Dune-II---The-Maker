@@ -409,15 +409,17 @@ int main(int argc, char **argv) {
 	try {
 		Mouse * mouse = new Mouse(new Bitmap((BITMAP *) gfxdata[MOUSE_NORMAL].dat));
 		Screen * screen = new Screen(screenResolution, bmp_screen);
-		State * state = new PlayingState(screen, mouse);
+
+		BITMAP * mapBitmap = load_bmp("data\\map.bmp", general_palette);  // TODO: create constructor in Bitmap with filename, that throws CannotFindFileException when result is NULL
+		Map * map = new Map(new Bitmap(mapBitmap));
+
+		State * state = new PlayingState(screen, mouse, map);
 		Game * game = new Game(state, version);
 
 		if (handleArguments(argc, argv, game) > 0) {
 			return 0;
 		}
 
-		BITMAP * mapBitmap = load_bmp("data\\map.bmp", general_palette);  // TODO: create constructor in Bitmap with filename, that throws CannotFindFileException when result is NULL
-		Map * map = new Map(new Bitmap(mapBitmap));
 
 		set_trans_blender(0, 0, 0, 128); // reset blending state for allegro
 		game->run();

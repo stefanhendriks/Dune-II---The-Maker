@@ -1,9 +1,7 @@
 #include "PlayingState.h"
 
 void PlayingState::draw() {
-
-	// draw map
-
+	map->draw(screen);
 	mouse->draw(screen->getBitmap());
 }
 

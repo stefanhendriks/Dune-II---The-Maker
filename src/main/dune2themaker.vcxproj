@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="domain\Map.cpp" />
     <ClCompile Include="domain\Mouse.cpp" />
     <ClCompile Include="domain\Screen.cpp" />
     <ClCompile Include="domain\Rectangle.cpp" />
