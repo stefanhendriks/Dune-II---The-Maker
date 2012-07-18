@@ -20,6 +20,7 @@ class PlayingState : public State {
 			if (viewPort == NULL) throw NullArgumentException;
 			this->map = map;
 			this->viewPort = viewPort;
+			this->viewPortY = this->viewPortX = 0;
 		}
 
 		~PlayingState() {
@@ -33,6 +34,7 @@ class PlayingState : public State {
 	private:
 		Map * map;
 		Viewport * viewPort;
+		int viewPortX, viewPortY;
 
 };
 

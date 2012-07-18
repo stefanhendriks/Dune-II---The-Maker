@@ -53,6 +53,10 @@ class Bitmap {
 			draw_sprite(dest, src, x, y);
 		}
 
+		void clear(Color color) {
+			clear_to_color(this->bitmap, color.makeColor());
+		}
+
 		BITMAP * getBITMAP() {
 			return this->bitmap;
 		}

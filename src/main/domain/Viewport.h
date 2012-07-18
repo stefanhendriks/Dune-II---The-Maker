@@ -18,6 +18,9 @@ class Viewport {
 	
 		void draw(Screen * screen, int x, int y);
 
+		int getWidth() { return width; }
+		int getHeight() { return height; }
+
 	private:
 		int width, height;
 
