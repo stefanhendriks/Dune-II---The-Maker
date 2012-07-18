@@ -17,7 +17,7 @@ class Viewport {
 			this->bitmap = new Bitmap(width, height);
 		}
 	
-		void draw(Screen * screen, Vector2D &vector);
+		void draw(Screen * screen, Vector2D &drawingVector, Vector2D &viewingVector);
 
 		int getWidth() { return width; }
 		int getHeight() { return height; }
@@ -28,5 +28,7 @@ class Viewport {
 		Bitmap * bitmap;
 		Map * map;
 };
+
+
 
 #endif

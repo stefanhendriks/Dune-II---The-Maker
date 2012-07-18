@@ -1,6 +1,6 @@
 #include "Viewport.h"
 
-void Viewport::draw(Screen * screen, Vector2D &vector) {
+void Viewport::draw(Screen * screen, Vector2D &drawingVector, Vector2D &viewingVector) {
 	this->bitmap->clear(Colors::Black); // probably not needed?
 
 	// determine what to draw on screen
@@ -8,12 +8,12 @@ void Viewport::draw(Screen * screen, Vector2D &vector) {
 	// z-ordering (z is already known in entity)
 
 	// draw it on bitmap (buffer)
-	Bitmap * mapBitmapPiece = map->getBitmapPiece(vector, vector.getX() + this->width, vector.getY() + this->height);
+	Bitmap * mapBitmapPiece = map->getBitmapPiece(viewingVector, viewingVector.getX() + this->width, viewingVector.getY() + this->height);
 	
 	this->bitmap->draw(mapBitmapPiece, 0, 0);
 	
 	// draw bitmap (buffer) on screen
-	screen->draw(this->bitmap, vector);
+	screen->draw(this->bitmap, drawingVector);
 
 	// clean up memory
 	delete mapBitmapPiece;

@@ -29,6 +29,10 @@ class Map {
 			return new Bitmap(subBitmap, true);
 		}
 
+		Rectangle getRectangle() {
+			return mapBitmap->getRectangle(0, 0);
+		}
+
 	private:
 		Bitmap * mapBitmap;
 

@@ -33,7 +33,8 @@ class PlayingState : public State {
 	private:
 		Map * map;
 		Viewport * viewPort;
-		Vector2D viewPortVector;
+		Vector2D viewPortDrawLocation;
+		Vector2D viewPortCamera;
 
 };
 

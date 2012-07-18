@@ -43,7 +43,10 @@ class Bitmap {
 
 		Rectangle getRectangle(int x, int y) {
 			Rectangle r;
-			r.setCoordinates(x, y, getWidth(), getHeight());
+			r.setStartX(x);
+			r.setStartY(y);
+			r.setEndX(x + getWidth());
+			r.setEndY(y + getHeight());
 			return r;
 		}
 
