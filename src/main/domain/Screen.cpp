@@ -12,6 +12,11 @@ void Screen::draw(Bitmap * bitmap, int x, int y) {
 	this->bitmap->draw(bitmap, x, y);
 }
 
+void Screen::drawRectangle(int x, int y, int width, int height, Color color) {
+	BITMAP * bmp = this->bitmap->getBITMAP();
+	rect(bmp, x, y, x + width, y + height, color.makeColor());
+}
+
 /**
  * if (TIMER_shake == 0) {
 		TIMER_shake = -1;

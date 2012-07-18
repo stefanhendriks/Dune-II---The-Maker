@@ -2,6 +2,7 @@
 
 void PlayingState::draw() {
 	screen->draw(map->getBitmap(), 0, 0);
+	viewPort->draw(screen, 0, 0);
 	screen->draw(mouse->getBitmap(), mouse->getX(), mouse->getY());
 }
 

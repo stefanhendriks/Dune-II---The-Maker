@@ -8,17 +8,18 @@
 #include "State.h"
 
 #include "../domain/Map.h"
+#include "../domain/Viewport.h"
 
 #include "../utils/Logger.h"
 
 class PlayingState : public State {
 
 	public:
-		PlayingState(Screen * screen, Mouse * mouse, Map * map) : State(screen, mouse) {
-			if (map == NULL) {
-				throw NullArgumentException;
-			}
-			this->map = map; 
+		PlayingState(Screen * screen, Mouse * mouse, Map * map, Viewport * viewPort) : State(screen, mouse) {
+			if (map == NULL) throw NullArgumentException;
+			if (viewPort == NULL) throw NullArgumentException;
+			this->map = map;
+			this->viewPort = viewPort;
 		}
 
 		~PlayingState() {
@@ -31,6 +32,7 @@ class PlayingState : public State {
 
 	private:
 		Map * map;
+		Viewport * viewPort;
 
 };
 

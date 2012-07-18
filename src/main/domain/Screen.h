@@ -7,7 +7,9 @@
 
 #include "allegro.h"
 #include "ScreenResolution.h"
+
 #include "Bitmap.h"
+#include "Color.h"
 
 class Screen {
 	public:
@@ -39,6 +41,8 @@ class Screen {
 		ScreenResolution * getScreenResolution();
 		
 		void draw(Bitmap * bitmap, int x, int y);
+
+		void drawRectangle(int x, int y, int width, int height, Color color);
 
 protected:
 

@@ -27,6 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="domain\Bitmap.h" />
+    <ClInclude Include="domain\Color.h" />
     <ClInclude Include="domain\Map.h" />
     <ClInclude Include="domain\Mouse.h" />
     <ClInclude Include="domain\Screen.h" />

@@ -7,6 +7,7 @@
 #include "../exceptions/exceptions.h"
 
 #include "Rectangle.h"
+#include "Color.h"
 
 class Bitmap {
 
@@ -21,6 +22,7 @@ class Bitmap {
 
 		Bitmap(int width, int height) {
 			this->bitmap = create_bitmap(width, height);
+			clear_to_color(this->bitmap, Colors::Black.makeColor());
 			this->destroyBitmap = true;
 		}
 

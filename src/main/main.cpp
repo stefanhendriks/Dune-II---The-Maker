@@ -17,6 +17,7 @@
 
 
 #include "domain/Mouse.h"
+#include "domain/Viewport.h"
 #include "domain/Map.h"
 
 #include "utils/Logger.h"
@@ -413,7 +414,9 @@ int main(int argc, char **argv) {
 		BITMAP * mapBitmap = load_bmp("data\\map.bmp", general_palette);  // TODO: create constructor in Bitmap with filename, that throws CannotFindFileException when result is NULL
 		Map * map = new Map(new Bitmap(mapBitmap));
 
-		State * state = new PlayingState(screen, mouse, map);
+		Viewport * viewPort = new Viewport(200, 200);
+		
+		State * state = new PlayingState(screen, mouse, map, viewPort);
 		Game * game = new Game(state, version);
 
 		if (handleArguments(argc, argv, game) > 0) {
