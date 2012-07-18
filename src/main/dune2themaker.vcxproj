@@ -25,11 +25,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="domain\Bitmap.h" />
+    <ClInclude Include="domain\Map.h" />
     <ClInclude Include="domain\Mouse.h" />
     <ClInclude Include="domain\Screen.h" />
     <ClInclude Include="domain\Version.h" />
     <ClInclude Include="domain\Rectangle.h" />
     <ClInclude Include="domain\ScreenResolution.h" />
+    <ClInclude Include="exceptions\exceptions.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="include\allegroh.h" />
     <ClInclude Include="include\data\gfxaudio.h" />

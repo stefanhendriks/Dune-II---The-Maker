@@ -12,7 +12,6 @@ void PlayingState::update() {
 
 	// manipuleer camera/map
 
-
 	if (key[KEY_ESC]) {
 		this->flagToQuitGame();
 	}

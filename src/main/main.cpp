@@ -17,6 +17,7 @@
 
 
 #include "domain/Mouse.h"
+#include "domain/Map.h"
 
 #include "utils/Logger.h"
 #include "utils/StringUtils.h"
@@ -403,27 +404,37 @@ int main(int argc, char **argv) {
 		clear(bmp_screen);
 	}
 
-	Mouse * mouse = new Mouse(new Bitmap((BITMAP *) gfxdata[MOUSE_NORMAL].dat));
-	Screen * screen = new Screen(screenResolution, bmp_screen);
-	State * state = new PlayingState(screen, mouse);
-	Game * game = new Game(state, version);
-
-	if (handleArguments(argc, argv, game) > 0) {
-		return 0;
-	}
-
-	set_trans_blender(0, 0, 0, 128); // reset blending state for allegro
-	game->run();
 	
-	game->shutdown();
 
-	delete version;
-	delete screenResolution;
-	delete screen;
-	delete mouse;
-	delete state;
-	delete game;
+	try {
+		Mouse * mouse = new Mouse(new Bitmap((BITMAP *) gfxdata[MOUSE_NORMAL].dat));
+		Screen * screen = new Screen(screenResolution, bmp_screen);
+		State * state = new PlayingState(screen, mouse);
+		Game * game = new Game(state, version);
 
+		if (handleArguments(argc, argv, game) > 0) {
+			return 0;
+		}
+
+		Map * map = new Map(NULL);
+
+		set_trans_blender(0, 0, 0, 128); // reset blending state for allegro
+		game->run();
+
+		game->shutdown();
+
+		delete version;
+		delete screenResolution;
+		delete screen;
+		delete mouse;
+		delete state;
+		delete game;
+	} catch (exception &e) {
+		logger->debug("Some exception occurred");
+		logger->debug(e.what());
+		allegro_message(e.what());
+	}
+	
 	// shut down library
 	logger->logHeader("SHUTDOWN");
 	logger->debug("Starting shutdown");
