@@ -39,7 +39,9 @@ class Mouse {
 		Rectangle *getLastCreatedRectangle() {  return &lastCreatedRectangle;  }
 		Rectangle *getCurrentDrawingRectangle() { return &currentRectangle; }
 
-		void draw(Bitmap  * screen);
+		Bitmap * getBitmap() {
+			return mouseBitmap;
+		}
 
 private:
     bool leftButtonPressed;

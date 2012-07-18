@@ -9,5 +9,7 @@ void Viewport::draw(Screen * screen, int x, int y) {
 	// draw it on bitmap (buffer)
 	
 	// draw bitmap (buffer) on screen
-	this->bitmap->draw(screen->getBitmap(), x, y);
+	screen->draw(this->bitmap, x, y);
+
+	/*this->bitmap->draw(screen->getBitmap(), x, y);*/
 }

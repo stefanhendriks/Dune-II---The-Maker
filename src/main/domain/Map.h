@@ -17,9 +17,11 @@ class Map {
 		}
 		
 		~Map() { };
-
-		void draw(Screen * screen);
 	
+		Bitmap * getBitmap() {
+			return mapBitmap;
+		}
+
 	private:
 		Bitmap * mapBitmap;
 

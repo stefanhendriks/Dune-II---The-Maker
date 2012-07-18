@@ -45,8 +45,10 @@ class Bitmap {
 			return r;
 		}
 
-		void draw(Bitmap * dest, int x, int y) {
-			draw_sprite(dest->getBITMAP(), this->getBITMAP(), x, y);
+		void draw(Bitmap * sprite, int x, int y) {
+			BITMAP * dest = this->getBITMAP();
+			BITMAP * src = sprite->getBITMAP();
+			draw_sprite(dest, src, x, y);
 		}
 
 		BITMAP * getBITMAP() {

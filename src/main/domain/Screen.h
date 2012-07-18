@@ -37,6 +37,9 @@ class Screen {
 		}
 
 		ScreenResolution * getScreenResolution();
+		
+		void draw(Bitmap * bitmap, int x, int y);
+
 protected:
 
 	private:

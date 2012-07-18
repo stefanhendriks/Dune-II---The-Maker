@@ -8,6 +8,10 @@ ScreenResolution * Screen::getScreenResolution() {
 	return this->screenResolution;
 }
 
+void Screen::draw(Bitmap * bitmap, int x, int y) {
+	this->bitmap->draw(bitmap, x, y);
+}
+
 /**
  * if (TIMER_shake == 0) {
 		TIMER_shake = -1;

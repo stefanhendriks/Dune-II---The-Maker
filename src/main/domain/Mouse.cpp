@@ -103,6 +103,3 @@ void Mouse::positionMouseCursor(int x, int y) {
 	position_mouse(x, y);
 }
 
-void Mouse::draw(Bitmap * screen) {
-	this->mouseBitmap->draw(screen, getX(), getY());
-}
