@@ -23,6 +23,7 @@
 #include "utils/FileReader.h"
 
 #include "states/MainMenuState.h"
+#include "states/PlayingState.h"
 #include "Game.h"
 
 #include "include/data/gfxdata.h"
@@ -404,7 +405,7 @@ int main(int argc, char **argv) {
 
 	Mouse * mouse = new Mouse(new Bitmap((BITMAP *) gfxdata[MOUSE_NORMAL].dat));
 	Screen * screen = new Screen(screenResolution, bmp_screen);
-	State * state = new MainMenuState(screen, mouse);
+	State * state = new PlayingState(screen, mouse);
 	Game * game = new Game(state, version);
 
 	if (handleArguments(argc, argv, game) > 0) {
@@ -413,6 +414,7 @@ int main(int argc, char **argv) {
 
 	set_trans_blender(0, 0, 0, 128); // reset blending state for allegro
 	game->run();
+	
 	game->shutdown();
 
 	delete version;

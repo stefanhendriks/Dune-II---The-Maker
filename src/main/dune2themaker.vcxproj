@@ -18,6 +18,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="states\MainMenuState.cpp" />
+    <ClCompile Include="states\PlayingState.cpp" />
     <ClCompile Include="timers.cpp" />
     <ClCompile Include="utils\FileReader.cpp" />
     <ClCompile Include="utils\Logger.cpp" />
@@ -44,6 +45,7 @@
     <ClInclude Include="include\sse.h" />
     <ClInclude Include="include\system.h" />
     <ClInclude Include="states\MainMenuState.h" />
+    <ClInclude Include="states\PlayingState.h" />
     <ClInclude Include="states\State.h" />
     <ClInclude Include="timers.h" />
     <ClInclude Include="utils\FileReader.h" />
