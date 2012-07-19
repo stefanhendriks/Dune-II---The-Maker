@@ -217,14 +217,6 @@ bool loadFonts( Logger * logger )
 
 }
 
-Data * loadDataFile(const char * filename) {
-	DATAFILE * datafile = load_datafile(filename);
-	if (datafile == NULL) {
-		throw CannotLoadDataException;
-	} 
-	return new Data(datafile);
-}
-
 bool loadDataFiles( Logger * logger ) 
 {
 
@@ -408,7 +400,7 @@ int main(int argc, char **argv) {
 	
 
 	try {
-		Data * data = loadDataFile("data//gfxdata.dat");
+		Data * data = new Data("data//gfxdata.dat");
 		Mouse * mouse = new Mouse(data->getBitmap(MOUSE_NORMAL));
 		Screen * screen = new Screen(screenResolution, bmp_screen);
 
