@@ -37,7 +37,7 @@ class State {
 
 		void run() {
 			screen->clearBuffer();
-			rest(10);		// give cpu slack (TODO: make this more smart, like the RestManager did it)
+			//rest(10);		// give cpu slack (TODO: make this more smart, like the RestManager did it)
 			processTime();	// perhaps this can be merged with...
 			update();		// ... this function
 			draw();			// <-- implemented by all states (draw state)

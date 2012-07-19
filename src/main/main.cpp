@@ -15,7 +15,6 @@
 
 #include <string>
 
-
 #include "domain/Mouse.h"
 #include "domain/Viewport.h"
 #include "domain/Map.h"
@@ -31,6 +30,8 @@
 #include "include/data/gfxdata.h"
 #include "include/allegroh.h"
 
+#include "domain/Data.h"
+
 using namespace std;
 
 bool bDoDebug = false;
@@ -45,7 +46,6 @@ BITMAP *bmp_screen;
 // BITMAP *bmp_fadeout;
 
 // datafile(s)
-DATAFILE *gfxdata; // graphics (terrain, units, structures)
 DATAFILE *gfxinter; // interface graphics
 DATAFILE *gfxworld; // world/pieces graphics
 DATAFILE *gfxmentat; // mentat graphics
@@ -217,16 +217,16 @@ bool loadFonts( Logger * logger )
 
 }
 
+Data * loadDataFile(const char * filename) {
+	DATAFILE * datafile = load_datafile(filename);
+	if (datafile == NULL) {
+		throw CannotLoadDataException;
+	} 
+	return new Data(datafile);
+}
+
 bool loadDataFiles( Logger * logger ) 
 {
-	gfxdata = load_datafile("data/gfxdata.dat");
-	if (gfxdata == NULL) {
-		logger->debug("ERROR: Could not hook/load datafile: gfxdata.dat");
-		return false;
-	} else {
-		logger->debug("Datafile hooked: gfxdata.dat");
-		memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
-	}
 
 	DATAFILE * gfxaudio = load_datafile("data/gfxaudio.dat");
 	if (gfxaudio == NULL) {
@@ -408,7 +408,8 @@ int main(int argc, char **argv) {
 	
 
 	try {
-		Mouse * mouse = new Mouse(new Bitmap((BITMAP *) gfxdata[MOUSE_NORMAL].dat));
+		Data * data = loadDataFile("data//gfxdata.dat");
+		Mouse * mouse = new Mouse(data->getBitmap(MOUSE_NORMAL));
 		Screen * screen = new Screen(screenResolution, bmp_screen);
 
 		BITMAP * mapBitmap = load_bmp("data\\map.bmp", general_palette);  // TODO: create constructor in Bitmap with filename, that throws CannotFindFileException when result is NULL
@@ -422,8 +423,7 @@ int main(int argc, char **argv) {
 		if (handleArguments(argc, argv, game) > 0) {
 			return 0;
 		}
-
-
+		
 		set_trans_blender(0, 0, 0, 128); // reset blending state for allegro
 		game->run();
 
@@ -431,6 +431,7 @@ int main(int argc, char **argv) {
 
 		destroy_bitmap(mapBitmap);
 
+		delete data;
 		delete version;
 		delete screenResolution;
 		delete screen;

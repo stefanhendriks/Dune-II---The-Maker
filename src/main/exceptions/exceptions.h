@@ -20,6 +20,13 @@ namespace {
 
 	} NullArgumentException;
 
+
+	class CannotLoadDataException: public exception {
+
+		virtual const char * what() const throw() {
+			return "Failed to load data.";
+		}
+	} CannotLoadDataException;
 }
 
 #endif

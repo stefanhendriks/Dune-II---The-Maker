@@ -1,14 +1,12 @@
 #include "PlayingState.h"
 
 void PlayingState::draw() {
-	//screen->draw(map->getBitmap(), 0, 0);
 	viewPort->draw(screen, viewPortDrawLocation, viewPortCamera);
 	screen->draw(mouse->getBitmap(), mouse->getVector2D());
 }
 
 void PlayingState::update() {
 	mouse->updateState();
-
 
 	// manipuleer camera/map
 	if (key[KEY_LEFT])	viewPortCamera.substractX(1);
