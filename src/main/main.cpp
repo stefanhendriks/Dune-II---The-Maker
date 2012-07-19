@@ -404,14 +404,14 @@ int main(int argc, char **argv) {
 		Mouse * mouse = new Mouse(data->getBitmap(MOUSE_NORMAL));
 		Screen * screen = new Screen(screenResolution, bmp_screen);
 
-		BITMAP * mapBitmap = load_bmp("data\\map.bmp", general_palette);  // TODO: create constructor in Bitmap with filename, that throws CannotFindFileException when result is NULL
-		Map * map = new Map(new Bitmap(mapBitmap));
+		Bitmap * mapBitmap = new Bitmap("data\\map.bmp");
+		Map * map = new Map(mapBitmap);
 
 		Viewport * viewPort = new Viewport(300, 300, map);
 		
 		State * state = new PlayingState(screen, mouse, map, viewPort);
 		Game * game = new Game(state, version);
-
+		
 		if (handleArguments(argc, argv, game) > 0) {
 			return 0;
 		}
@@ -421,8 +421,7 @@ int main(int argc, char **argv) {
 
 		game->shutdown();
 
-		destroy_bitmap(mapBitmap);
-
+		delete mapBitmap;
 		delete data;
 		delete version;
 		delete screenResolution;

@@ -17,16 +17,14 @@ class Map {
 			this->mapBitmap = mapBitmap;
 		}
 		
-		~Map() { };
+		~Map() { /* do not delete mapBitmap, as it is not its owner */ };
 	
 		Bitmap * getBitmap() {
 			return mapBitmap;
 		}
 
-		Bitmap * getBitmapPiece(Vector2D &vector, int width, int height) {
-			BITMAP * parent = mapBitmap->getBITMAP();
-			BITMAP * subBitmap = create_sub_bitmap(parent, vector.getX(), vector.getY(), width, height);
-			return new Bitmap(subBitmap, true);
+		Bitmap * getSubBitmap(Vector2D &vector, int width, int height) {
+			return this->mapBitmap->getSubBitmap(vector, width, height);
 		}
 
 		Rectangle getRectangle() {

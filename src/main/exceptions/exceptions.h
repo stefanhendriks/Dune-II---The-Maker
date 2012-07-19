@@ -27,6 +27,14 @@ namespace {
 			return "Failed to load data.";
 		}
 	} CannotLoadDataException;
+
+	class CannotLoadBitmapException: public exception {
+
+		virtual const char * what() const throw() {
+			return "Failed to load bitmap.";
+		}
+	} CannotLoadBitmapException;
+
 }
 
 #endif

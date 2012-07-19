@@ -20,17 +20,29 @@ class Bitmap {
 			init(bitmap, false);
 		}
 
+		Bitmap(const char * filename) {
+			BITMAP * bmp = load_bitmap(filename, NULL);
+			if (bmp == NULL) throw CannotLoadBitmapException;
+			init(bmp, true);
+		}
+
 		Bitmap(int width, int height) {
 			this->bitmap = create_bitmap(width, height);
 			clear_to_color(this->bitmap, Colors::Black.makeColor());
-			this->destroyBitmap = true;
+			this->destroyBitmapInDestructor = true;
 		}
 
 		~Bitmap() {
-			if (destroyBitmap) {
+			if (destroyBitmapInDestructor) {
 				destroy_bitmap(this->bitmap);
 				this->bitmap = NULL;
 			}
+		}
+
+		Bitmap * getSubBitmap(Vector2D &vector, int width, int height) {
+			BITMAP * parent = this->getBITMAP();
+			BITMAP * subBitmap = create_sub_bitmap(parent, vector.getX(), vector.getY(), width, height);
+			return new Bitmap(subBitmap, true);
 		}
 
 		int getHeight() {
@@ -67,15 +79,15 @@ class Bitmap {
 	protected:
 		// using an init method, so we can re-use in two constructors
 		// also see: http://stackoverflow.com/questions/308276/c-call-constructor-from-constructor
-		void init(BITMAP * bitmap, bool destroyBitmap) {
+		void init(BITMAP * bitmap, bool destroyBitmapInDestructor) {
 			if (bitmap == NULL) throw NullArgumentException;
 			this->bitmap = bitmap;
-			this->destroyBitmap = destroyBitmap;
+			this->destroyBitmapInDestructor = destroyBitmapInDestructor;
 		}
 
 	private:
 		BITMAP * bitmap;
-		bool destroyBitmap;
+		bool destroyBitmapInDestructor;
 
 };
 

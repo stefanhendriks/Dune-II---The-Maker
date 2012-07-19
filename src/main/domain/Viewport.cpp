@@ -8,7 +8,7 @@ void Viewport::draw(Screen * screen, Vector2D &drawingVector, Vector2D &viewingV
 	// z-ordering (z is already known in entity)
 
 	// draw it on bitmap (buffer)
-	Bitmap * mapBitmapPiece = map->getBitmapPiece(viewingVector, viewingVector.getX() + this->width, viewingVector.getY() + this->height);
+	Bitmap * mapBitmapPiece = map->getSubBitmap(viewingVector, viewingVector.getX() + this->width, viewingVector.getY() + this->height);
 	
 	this->bitmap->draw(mapBitmapPiece, 0, 0);
 	
