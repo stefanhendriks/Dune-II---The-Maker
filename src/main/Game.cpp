@@ -14,12 +14,12 @@
 
 #include "Game.h"
 
-#include "states/MainMenuState.h"
+#include "game/states/MainMenuState.h"
 
-#include "utils/FileReader.h"
-#include "utils/StringUtils.h"
+#include "infrastructure/FileReader.h"
+#include "infrastructure/StringUtils.h"
 
-#include "include/allegroh.h"
+#include "infrastructure/include/allegroh.h"
 
 using namespace std;
 
@@ -27,7 +27,6 @@ Game::Game(State * state, Version * version) {
 	this->state = state;
 	this->version = version;
 	windowed = true;
-	gameStateEnum = MAINMENU;
 }
 
 Game::~Game() {

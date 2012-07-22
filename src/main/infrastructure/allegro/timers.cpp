@@ -1,4 +1,4 @@
-#include "include/allegroh.h"
+#include "../include/allegroh.h"
 #include "timers.h"
 
 void timerPerSecondFunction() {

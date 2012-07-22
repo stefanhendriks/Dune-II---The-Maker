@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string>
 
-#include "../include/enums.h"
+#include "include/enums.h"
 
 
 class Logger {

@@ -7,10 +7,10 @@
 
 #include "State.h"
 
-#include "../domain/Map.h"
-#include "../domain/Viewport.h"
+#include "../Map.h"
+#include "../Viewport.h"
 
-#include "../utils/Logger.h"
+#include "../../infrastructure/Logger.h"
 
 class PlayingState : public State {
 

@@ -15,28 +15,29 @@
 
 #include <string>
 
-#include "domain/Mouse.h"
-#include "domain/Viewport.h"
-#include "domain/Bitmap.h"
-#include "domain/Theme.h"
-#include "domain/Map.h"
+#include "infrastructure/Logger.h"
+#include "infrastructure/StringUtils.h"
+#include "infrastructure/FileReader.h"
 
-#include "utils/Logger.h"
-#include "utils/StringUtils.h"
-#include "utils/FileReader.h"
+#include "infrastructure/allegro/Mouse.h"
+#include "infrastructure/allegro/Bitmap.h"
+#include "infrastructure/allegro/Data.h"
 
-#include "states/MainMenuState.h"
-#include "states/PlayingState.h"
+#include "infrastructure/include/data/gfxdata.h"
+#include "infrastructure/include/allegroh.h"
+
+#include "game/Viewport.h"
+#include "game/Theme.h"
+#include "game/Map.h"
+
+#include "game/states/MainMenuState.h"
+#include "game/states/PlayingState.h"
 #include "Game.h"
-
-#include "include/data/gfxdata.h"
-#include "include/allegroh.h"
-
-#include "domain/Data.h"
 
 using namespace std;
 
-bool bDoDebug = false;
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
 
 // palette
 PALETTE general_palette;
@@ -134,20 +135,18 @@ int getIdealColorDepth(Logger * logger) {
 	return iDepth;
 }
 
-ScreenResolution * initializeGraphicsMode(Logger * logger) {
-	ScreenResolution * screenResolution = new ScreenResolution(800, 600);
+void initializeGraphicsMode(Logger * logger) {
 	set_color_depth(getIdealColorDepth(logger));
 
 	int r = 0;
-	r = set_gfx_mode(GFX_DIRECTX_WIN, screenResolution->getWidth(), screenResolution->getHeight(), screenResolution->getWidth(), screenResolution->getHeight());
+	r = set_gfx_mode(GFX_DIRECTX_WIN, SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
 	char msg[255];
-	sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d.", screenResolution->getWidth(), screenResolution->getHeight());
+	sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d.", SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	if (r > -1) {
 		logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Successfully created window with graphics mode.", OUTC_SUCCESS);
 	}
 	// TODO: what if this fails?
-	return screenResolution;
 }
 
 int getAmountReservedVoicesAndInstallSound() {
@@ -337,7 +336,7 @@ int main(int argc, char **argv) {
 // 	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", title, OUTC_SUCCESS);
 	set_window_title("Dune II - The Maker - By Stefan Hendriks");
 		
-	ScreenResolution * screenResolution = initializeGraphicsMode(logger);
+	initializeGraphicsMode(logger);
 
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set mode to -1", OUTC_SUCCESS);
 
@@ -363,8 +362,8 @@ int main(int argc, char **argv) {
 	 ***/
 	set_color_conversion(COLORCONV_MOST);
 
-	int width = screenResolution->getWidth();
-	int height = screenResolution->getHeight();
+	int width = SCREEN_WIDTH;
+	int height = SCREEN_HEIGHT;
 	char msg[255];
 	memset(msg, 0, sizeof(msg));
 	sprintf(msg, "Creating bitmaps with resolution of %dx%d.", width, height);
@@ -404,7 +403,7 @@ int main(int argc, char **argv) {
 	try {
 		Data * data = new Data("data//gfxdata.dat");
 		Mouse * mouse = new Mouse(data->getBitmap(MOUSE_NORMAL));
-		Screen * screen = new Screen(screenResolution, bmp_screen);
+		Screen * screen = new Screen(SCREEN_WIDTH, SCREEN_HEIGHT, bmp_screen);
 
 		Theme * theme = new Theme(data->getBitmap(TERRAIN_ROCK));
 		// data structure terrain
@@ -412,7 +411,7 @@ int main(int argc, char **argv) {
 		Map * map = new Map(64, 64, theme);
 		map->getBitmap()->draw(data->getBitmap(TERRAIN_SAND), 100, 100);
 
-		Viewport * viewPort = new Viewport(screenResolution->getWidth() - 100, screenResolution->getHeight() - 80, map);
+		Viewport * viewPort = new Viewport(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 80, map);
 		
 		PlayingState * state = new PlayingState(screen, mouse, map, viewPort);
 		state->setViewportDrawLocation(0, 80);
@@ -430,7 +429,6 @@ int main(int argc, char **argv) {
 		delete theme;
 		delete data;
 		delete version;
-		delete screenResolution;
 		delete screen;
 		delete mouse;
 		delete state;

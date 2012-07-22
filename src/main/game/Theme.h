@@ -2,10 +2,10 @@
 #ifndef THEME_H
 #define THEME_H
 
-#include "../exceptions/exceptions.h"
+#include "../infrastructure/exceptions.h"
 
-#include "Vector2D.h"
-#include "Bitmap.h"
+#include "../infrastructure/math/Vector2D.h"
+#include "../infrastructure/allegro/Bitmap.h"
 
 const int TILE_HEIGHT = 32;
 const int TILE_WIDTH = 32;

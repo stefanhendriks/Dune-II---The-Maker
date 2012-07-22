@@ -4,9 +4,8 @@
 
 #include "../include/allegro.h"
 
-#include "../exceptions/exceptions.h"
+#include "../exceptions.h"
 
-#include "Rectangle.h"
 #include "Color.h"
 
 class Bitmap {
@@ -51,15 +50,6 @@ class Bitmap {
 
 		int getWidth() {
 			return this->bitmap->w;
-		}
-
-		Rectangle getRectangle(int x, int y) {
-			Rectangle r;
-			r.setStartX(x);
-			r.setStartY(y);
-			r.setEndX(x + getWidth());
-			r.setEndY(y + getHeight());
-			return r;
 		}
 
 		void draw(Bitmap * sprite, int x, int y) {

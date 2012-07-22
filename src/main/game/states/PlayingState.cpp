@@ -13,7 +13,8 @@ void PlayingState::update() {
 	if (key[KEY_RIGHT])	viewPortCamera.addX(1);
 	if (key[KEY_UP]) viewPortCamera.substractY(1);
 	if (key[KEY_DOWN]) viewPortCamera.addY(1);
-	viewPortCamera.clip(map->getRectangle());
+	viewPortCamera.clip(0, 0, map->getWidth(), map->getHeight());
+
 
 /*	viewPortDrawLocation.set(mouse->getVector2D());*/
 // 	

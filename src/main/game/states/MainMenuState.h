@@ -7,7 +7,7 @@
 
 #include "State.h"
 
-#include "../utils/Logger.h"
+#include "../../infrastructure/Logger.h"
 
 class MainMenuState : public State {
 	public:

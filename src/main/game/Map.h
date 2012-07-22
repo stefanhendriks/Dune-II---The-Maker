@@ -2,10 +2,10 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "../exceptions/exceptions.h"
+#include "../infrastructure/exceptions.h"
 
-#include "Screen.h"
-#include "Vector2D.h"
+#include "../infrastructure/allegro/Screen.h"
+#include "../infrastructure/math/Vector2D.h"
 
 #include "Theme.h"
 
@@ -14,6 +14,8 @@ class Map {
 	public:
 		Map(int width, int height, Theme * theme) {
 			mapBitmap = new Bitmap(width * theme->getTileWidth(), height * theme->getTileHeight());
+			this->height = height;
+			this->width = width;
 		}
 
 		Map(int width, int height, Bitmap * fillWithThisBitmap) {
@@ -26,6 +28,8 @@ class Map {
 					mapBitmap->draw(fillWithThisBitmap, (x * fillWithThisBitmap->getWidth()), (y * fillWithThisBitmap->getHeight()));
 				}
 			}
+			this->height = height;
+			this->width = width;
 		}
 		
 		~Map() { /* do not delete mapBitmap, as it is not its owner */ };
@@ -42,12 +46,12 @@ class Map {
 			this->mapBitmap->draw(bitmap, x, y);
 		}
 
-		Rectangle getRectangle() {
-			return mapBitmap->getRectangle(0, 0);
-		}
+		int getWidth() { return this->width; }
+		int getHeight() { return this->height; }
 
 	private:
 		Bitmap * mapBitmap;
+		int height, width;
 
 };
 

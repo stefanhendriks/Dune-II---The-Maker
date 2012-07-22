@@ -2,8 +2,8 @@
 #ifndef VIEWPORT_H
 #define VIEWPORT_H
 
-#include "Vector2D.h"
-#include "Screen.h"
+#include "../infrastructure/math/Vector2D.h"
+#include "../infrastructure/allegro/Screen.h"
 #include "Map.h"
 
 class Viewport {

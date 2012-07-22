@@ -14,14 +14,9 @@
 
 #include <string>
 
-#include "domain/Version.h"
+#include "game/Version.h"
 
-#include "domain/ScreenResolution.h"
-
-#include "include/GameState.h"
-
-#include "states/State.h"
-
+#include "game/states/State.h"
 
 class Game {
 
@@ -42,7 +37,6 @@ class Game {
 
 	private:
 
-		GameState gameStateEnum;
 		State * state;
 
 		std::string rules;

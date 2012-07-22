@@ -2,7 +2,7 @@
 #ifndef DATA_H
 #define DATA_H
 
-#include "../exceptions/exceptions.h"
+#include "../exceptions.h"
 #include "Bitmap.h"
 
 #include "../include/allegroh.h"

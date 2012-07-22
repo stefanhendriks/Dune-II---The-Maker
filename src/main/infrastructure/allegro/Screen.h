@@ -6,23 +6,21 @@
 #include <cstddef>
 
 #include "allegro.h"
-#include "ScreenResolution.h"
 
-#include "Vector2D.h"
-#include "Bitmap.h"
-#include "Color.h"
+#include "../math/Vector2D.h"
+#include "../allegro/Bitmap.h"
+#include "../allegro/Color.h"
 
 class Screen {
 	public:
-		Screen(ScreenResolution * screenResolution, BITMAP * bufferScreen) {
-			assert(screenResolution);
-			this->screenResolution = screenResolution;
+		Screen(int width, int height, BITMAP * bufferScreen) {
+			this->width = width;
+			this->height = height;
 			this->buffer = bufferScreen;
 			this->bitmap = new Bitmap(bufferScreen);
 		}
 
 		~Screen() {
-			screenResolution = NULL;
 		}
 
 		void blitScreenBufferToScreen();
@@ -39,8 +37,6 @@ class Screen {
 			return this->bitmap;
 		}
 
-		ScreenResolution * getScreenResolution();
-		
 		void draw(Bitmap * bitmap, Vector2D &vector);
 
 		void drawRectangle(Vector2D &vector, int width, int height, Color color);
@@ -48,7 +44,7 @@ class Screen {
 protected:
 
 	private:
-		ScreenResolution * screenResolution;
+		int width, height;
 
 		BITMAP * buffer;
 		Bitmap * bitmap;

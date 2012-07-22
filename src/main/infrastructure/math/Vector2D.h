@@ -3,8 +3,7 @@
 #define VECTOR_2D_H
 
 #include <stdio.h>
-#include "../utils/Logger.h"
-#include "Rectangle.h"
+#include "../Logger.h"
 
 class Vector2D {
 
@@ -55,14 +54,6 @@ class Vector2D {
 		void clip(int minX, int minY, int maxX, int maxY) {
 			clipX(minX, maxX);
 			clipY(minY, maxY);
-		}
-
-		void clip(Rectangle &rectangle) {
-			int highestX = rectangle.getHighestX();
-			int highestY = rectangle.getHighestY();
-			int lowestX = rectangle.getLowestX();
-			int lowestY = rectangle.getLowestY();
-			clip(lowestX, lowestY, highestX, highestY);
 		}
 
 		int getX() { 

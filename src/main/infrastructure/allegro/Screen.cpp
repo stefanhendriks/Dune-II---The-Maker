@@ -1,11 +1,7 @@
 #include "Screen.h"
 
 void Screen::blitScreenBufferToScreen() {
-	blit(buffer, screen, 0, 0, 0, 0, screenResolution->getWidth(), screenResolution->getHeight());
-}
-
-ScreenResolution * Screen::getScreenResolution() {
-	return this->screenResolution;
+	blit(buffer, screen, 0, 0, 0, 0, width, height);
 }
 
 void Screen::draw(Bitmap * bitmap, Vector2D &vector) {

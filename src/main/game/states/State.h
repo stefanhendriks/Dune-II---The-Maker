@@ -14,10 +14,10 @@
 #include <assert.h>
 #include <cstddef>
 
-#include "../domain/Mouse.h"
-#include "../domain/Screen.h"
+#include "../../infrastructure/allegro/Mouse.h"
+#include "../../infrastructure/allegro/Screen.h"
 
-#include "../timers.h"
+#include "../../infrastructure/allegro/timers.h"
 
 #define IDEAL_FPS	60
 
