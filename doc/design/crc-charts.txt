@@ -1,0 +1,33 @@
+CRC
+    The class name
+    Its Super and Sub classes (if applicable)
+    The responsibilities of the class.
+    The names of other classes with which the class will collaborate to fulfill its responsibilities.
+    Author
+=====================================================================================================
+
+Game:
+=====
+
+Map
+	responsible for: manages the size of the world, which tiles are in it and handles updates of tiles
+	collaborates with: Theme
+
+Cell
+	responsible for: holding cell specific data
+
+Theme
+	responsible for: Allows easy access to the appearance of tiles for all related *terrain* types (grass, rock, spice, walls).  
+	collaborates with: Bitmap
+
+Camera
+	responsible for: Determines which part of the map is viewed by the player
+	collaborates with: Map
+
+UI:
+===
+
+Viewport
+	responsible for: Drawing what the camera sees
+	collaborates with: Camera
+
