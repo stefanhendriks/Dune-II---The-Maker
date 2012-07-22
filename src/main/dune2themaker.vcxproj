@@ -32,6 +32,7 @@
     <ClInclude Include="domain\Map.h" />
     <ClInclude Include="domain\Mouse.h" />
     <ClInclude Include="domain\Screen.h" />
+    <ClInclude Include="domain\Theme.h" />
     <ClInclude Include="domain\Vector2D.h" />
     <ClInclude Include="domain\Version.h" />
     <ClInclude Include="domain\Rectangle.h" />
@@ -59,6 +60,9 @@
     <ClInclude Include="utils\FileReader.h" />
     <ClInclude Include="utils\Logger.h" />
     <ClInclude Include="utils\StringUtils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="todo.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <Keyword>Win32Proj</Keyword>

@@ -17,6 +17,8 @@
 
 #include "domain/Mouse.h"
 #include "domain/Viewport.h"
+#include "domain/Bitmap.h"
+#include "domain/Theme.h"
 #include "domain/Map.h"
 
 #include "utils/Logger.h"
@@ -404,12 +406,16 @@ int main(int argc, char **argv) {
 		Mouse * mouse = new Mouse(data->getBitmap(MOUSE_NORMAL));
 		Screen * screen = new Screen(screenResolution, bmp_screen);
 
-		Bitmap * mapBitmap = new Bitmap("data\\map.bmp");
-		Map * map = new Map(mapBitmap);
+		Theme * theme = new Theme(data->getBitmap(TERRAIN_ROCK));
+		// data structure terrain
+		// draw map bitmap with data structure and theme
+		Map * map = new Map(64, 64, theme);
+		map->getBitmap()->draw(data->getBitmap(TERRAIN_SAND), 100, 100);
 
-		Viewport * viewPort = new Viewport(300, 300, map);
+		Viewport * viewPort = new Viewport(screenResolution->getWidth() - 100, screenResolution->getHeight() - 80, map);
 		
-		State * state = new PlayingState(screen, mouse, map, viewPort);
+		PlayingState * state = new PlayingState(screen, mouse, map, viewPort);
+		state->setViewportDrawLocation(0, 80);
 		Game * game = new Game(state, version);
 		
 		if (handleArguments(argc, argv, game) > 0) {
@@ -421,7 +427,7 @@ int main(int argc, char **argv) {
 
 		game->shutdown();
 
-		delete mapBitmap;
+		delete theme;
 		delete data;
 		delete version;
 		delete screenResolution;

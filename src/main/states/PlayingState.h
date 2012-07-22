@@ -25,6 +25,10 @@ class PlayingState : public State {
 		~PlayingState() {
 		}
 
+		void setViewportDrawLocation(int x, int y) {
+			viewPortDrawLocation.set(x, y);
+		}
+
 		void draw();
 		void update();
 

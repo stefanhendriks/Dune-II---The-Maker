@@ -7,14 +7,25 @@
 #include "Screen.h"
 #include "Vector2D.h"
 
+#include "Theme.h"
+
 class Map {
 
 	public:
-		Map(Bitmap * mapBitmap) {
-			if (mapBitmap == NULL) {
-				throw NullArgumentException;
+		Map(int width, int height, Theme * theme) {
+			mapBitmap = new Bitmap(width * theme->getTileWidth(), height * theme->getTileHeight());
+		}
+
+		Map(int width, int height, Bitmap * fillWithThisBitmap) {
+			if (fillWithThisBitmap == NULL) throw NullArgumentException;
+			mapBitmap = new Bitmap(width, height);
+			int drawHorizontallyAmountOfTimes = (width / fillWithThisBitmap->getWidth()) + 1;
+			int drawVerticallyAmountOfTimes = (height / fillWithThisBitmap->getHeight()) + 1;
+			for (int x = 0; x < drawHorizontallyAmountOfTimes; x++) {
+				for (int y = 0; y < drawVerticallyAmountOfTimes; y++) {
+					mapBitmap->draw(fillWithThisBitmap, (x * fillWithThisBitmap->getWidth()), (y * fillWithThisBitmap->getHeight()));
+				}
 			}
-			this->mapBitmap = mapBitmap;
 		}
 		
 		~Map() { /* do not delete mapBitmap, as it is not its owner */ };
@@ -25,6 +36,10 @@ class Map {
 
 		Bitmap * getSubBitmap(Vector2D &vector, int width, int height) {
 			return this->mapBitmap->getSubBitmap(vector, width, height);
+		}
+
+		void draw(Bitmap * bitmap, int x, int y) {
+			this->mapBitmap->draw(bitmap, x, y);
 		}
 
 		Rectangle getRectangle() {

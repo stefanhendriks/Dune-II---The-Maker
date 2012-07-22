@@ -15,7 +15,7 @@ void PlayingState::update() {
 	if (key[KEY_DOWN]) viewPortCamera.addY(1);
 	viewPortCamera.clip(map->getRectangle());
 
-	viewPortDrawLocation.set(mouse->getVector2D());
+/*	viewPortDrawLocation.set(mouse->getVector2D());*/
 // 	
 // 	viewPortX = mouse->getX() - (viewPort->getWidth() / 2);
 // 	viewPortY = mouse->getY() - (viewPort->getHeight() / 2);
