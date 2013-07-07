@@ -3,7 +3,7 @@ CFLAGS=-L$(LIB) -I$(INCLUDE) -c -Wall
 INCLUDE=/usr/local/opt/sdl/include/SDL
 LIB=/usr/local/opt/sdl/lib
 LDFLAGS=-lSDLmain -lSDL -framework Cocoa
-SOURCES=d2tm.cpp
+SOURCES=d2tm.cpp game.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=d2tm
 
