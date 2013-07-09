@@ -1,16 +1,22 @@
+#include <iostream>
+
 #include "SDL.h"
 #include "game.h"
+#include "CSurface.h"
+
+using namespace std;
 
 Game::Game() {
   playing=true;
   screen=NULL;
+  tileset=NULL;
 }
 
 int Game::execute() {
   init();
-  
+
   SDL_Event event;
-  
+
   while(playing) {
     while(SDL_PollEvent(&event)) {
       onEvent(&event);
@@ -32,6 +38,12 @@ int Game::init() {
      return false;
   }
 
+  tileset = CSurface::loadBMP("rock-new2.bmp");
+
+  if (tileset == NULL) {
+    cout << "Failed to read rock-new2.bmp" << endl;
+  }
+
   return true;
 }
 
@@ -42,12 +54,16 @@ void Game::onEvent(SDL_Event* event) {
 }
 
 void Game::render() {
+  CSurface::draw(tileset, screen, 0, 0);
+  SDL_Flip(screen);
 }
 
 void Game::updateState() {
 }
 
 int Game::cleanup() {
+  SDL_FreeSurface(screen);
+  SDL_FreeSurface(tileset);
   SDL_Quit();
   return 0;
 }
