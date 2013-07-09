@@ -1,6 +1,7 @@
-git add <FILE>
- for the commit
-git commit -m "message"
- for actually committing it (not to remote server)
-git push
- for actually pushing it to the server (ie github), need to give passphrase
+Dune II - The Maker
+===================
+
+This is a clone of Dune 2 - The Building of a Dynasty.
+
+Latest binary can be found at http://dune2themaker.fundynamic.com , the latest source is definately not matching with the latest WIP due an attempt to rewrite.
+
