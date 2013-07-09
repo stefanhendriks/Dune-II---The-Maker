@@ -55,6 +55,7 @@ void Game::onEvent(SDL_Event* event) {
 
 void Game::render() {
   CSurface::draw(tileset, screen, 0, 0);
+  CSurface::draw(tileset, screen, 0, 0, 32, 32, 100, 100);
   SDL_Flip(screen);
 }
 
