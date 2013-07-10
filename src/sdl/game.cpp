@@ -34,7 +34,8 @@ int Game::init() {
     return false;
   }
 
-  if((screen = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE | SDL_DOUBLEBUF)) == NULL) {
+  screen = SDL_SetVideoMode(800, 600, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+  if(screen == NULL) {
      return false;
   }
 
@@ -55,7 +56,7 @@ void Game::onEvent(SDL_Event* event) {
 
 void Game::render() {
   CSurface::draw(tileset, screen, 0, 0);
-  CSurface::draw(tileset, screen, 0, 0, 32, 32, 100, 100);
+  CSurface::drawTile(tileset, screen, 0, 0, 100, 100);
   SDL_Flip(screen);
 }
 

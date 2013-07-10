@@ -1,6 +1,8 @@
 #include "SDL.h"
 #include "CSurface.h"
 
+const int TILE_SIZE = 32; // squared
+
 CSurface::CSurface() {
 }
 
@@ -45,4 +47,9 @@ void CSurface::draw(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, i
   srcRect.w = width;
 
   SDL_BlitSurface(src, &srcRect, dest, &destRect);
+}
+
+void CSurface::drawTile(SDL_Surface* tileset, SDL_Surface* dest, int src_x, int src_y, int dest_x, int dest_y) {
+  if (tileset == NULL || dest == NULL) return;
+  CSurface::draw(tileset, dest, src_x * TILE_SIZE, src_y * TILE_SIZE, TILE_SIZE, TILE_SIZE, dest_x, dest_y);
 }
