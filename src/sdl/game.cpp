@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "SDL.h"
+#include "map.h"
 #include "game.h"
 #include "CSurface.h"
 
@@ -55,8 +56,8 @@ void Game::onEvent(SDL_Event* event) {
 }
 
 void Game::render() {
-  CSurface::draw(tileset, screen, 0, 0);
-  CSurface::drawTile(tileset, screen, 0, 0, 100, 100);
+  //CSurface::drawTile(tileset, screen, 0, 96, 32);
+  map.draw(tileset, screen);
   SDL_Flip(screen);
 }
 

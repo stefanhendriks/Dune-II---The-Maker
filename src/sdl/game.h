@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "map.h"
+
 class Game {
 
   public:
@@ -18,6 +20,7 @@ class Game {
       bool playing;
       SDL_Surface *screen;
       SDL_Surface *tileset;
+      Map map;
 };
 
 #endif
