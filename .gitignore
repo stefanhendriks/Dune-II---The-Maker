@@ -4,3 +4,5 @@
 
 src/sdl/*.o
 **/*.o
+src/sdl/d2tm
+src/sdl/makefile
