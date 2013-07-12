@@ -1,5 +1,0 @@
-libsdl1.2-dev
-cmake-curses-gui
-g++
-liballegro4.2-dev
-libxft-dev
