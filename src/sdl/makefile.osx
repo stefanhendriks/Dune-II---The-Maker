@@ -1,16 +1,14 @@
 CC=g++
-CFLAGS=-L$(LIB) -I$(INCLUDE) -c -Wall
-INCLUDE=/usr/local/opt/sdl/include/SDL
-LIB=/usr/local/opt/sdl/lib
-LDFLAGS=-lSDLmain -lSDL -framework Cocoa
+CFLAGS=`sdl-config --cflags` -c -Wall
+LDFLAGS=`sdl-config --cflags --libs` -framework Cocoa
 SOURCES=d2tm.cpp map.cpp game.cpp CSurface.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=d2tm
 
 all: $(SOURCES) $(EXECUTABLE)
-	
-$(EXECUTABLE): $(OBJECTS) 
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@
