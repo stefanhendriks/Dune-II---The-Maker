@@ -26,8 +26,8 @@ void Map::draw(SDL_Surface* tileset, SDL_Surface* screen) {
 
   for (int x = 0; x < max_cells_width_on_screen; x++) {
     for (int y = 0; y < max_cells_height_on_screen; y++) {
-      int cellIndex = (y * MAP_MAX_WIDTH) + x;
-
+      int cellIndex = Cell::getCellIndex(x, y);
+      
       Cell c = cells[cellIndex];
 
       CSurface::drawTile(tileset, screen, c.tile, x * 32, y * 32);

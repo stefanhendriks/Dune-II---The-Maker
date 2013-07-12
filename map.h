@@ -5,8 +5,11 @@ const int MAP_MAX_SIZE = 65536; // 256X256 map
 const int MAP_MAX_WIDTH = 256;
 const int MAP_MAX_HEIGHT = 256;
 
-struct Cell {
-  int tile; // tile to draw (one-dimension array)
+class Cell {
+  public:
+    int tile; // tile to draw (one-dimension array)
+
+    static int getCellIndex(int x, int y) { return (y * MAP_MAX_WIDTH) + x; }
 };
 
 class Map {
