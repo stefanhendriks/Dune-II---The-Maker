@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "SDL.h"
+#include "SDL/SDL.h"
 #include "map.h"
 #include "game.h"
 #include "CSurface.h"

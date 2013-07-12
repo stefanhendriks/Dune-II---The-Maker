@@ -1,4 +1,4 @@
-#include "SDL.h"
+#include "SDL/SDL.h"
 #include "CSurface.h"
 #include "map.h"
 

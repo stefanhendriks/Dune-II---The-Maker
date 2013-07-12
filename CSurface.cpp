@@ -1,4 +1,4 @@
-#include "SDL.h"
+#include "SDL/SDL.h"
 #include "CSurface.h"
 
 const int TILE_SIZE = 32; // squared
