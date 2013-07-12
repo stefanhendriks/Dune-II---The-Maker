@@ -2,7 +2,7 @@
 ~
 .exe
 
-src/sdl/*.swp
-src/sdl/*.o
-src/sdl/d2tm
-src/sdl/makefile
+*.swp
+*.o
+d2tm
+makefile
