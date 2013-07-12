@@ -3,7 +3,10 @@
 #include "map.h"
 
 Map::Map() {
-  for (int i = 0; i < 100; i++) {
+  max_width = MAP_MAX_WIDTH;
+  max_height = MAP_MAX_HEIGHT;
+
+  for (int i = 0; i < MAP_MAX_SIZE; i++) {
     cells[i].tile = 0;
   }
 
@@ -11,13 +14,19 @@ Map::Map() {
   cells[40].tile = 1;
 }
 
+void Map::setBoundaries(int max_width, int max_height) {
+  this->max_width = max_width;
+  this->max_height = max_height;
+}
+
 void Map::draw(SDL_Surface* tileset, SDL_Surface* screen) {
 
-  int max_map_width = 10;
+  int max_cells_width_on_screen = screen->w / 32;
+  int max_cells_height_on_screen = screen->h / 32;
 
-  for (int x = 0; x < 10; x++) {
-    for (int y = 0; y < 10; y++) {
-      int cellIndex = (y * max_map_width) + x;
+  for (int x = 0; x < max_cells_width_on_screen; x++) {
+    for (int y = 0; y < max_cells_height_on_screen; y++) {
+      int cellIndex = (y * MAP_MAX_WIDTH) + x;
 
       Cell c = cells[cellIndex];
 
