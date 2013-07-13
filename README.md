@@ -13,7 +13,7 @@ Dependencies:
 
 After you check out this project, copy the appropiate makefile (with the extension matching your OS) as 'makefile'. After that hit make.
 
-Example, OSX && Brewfor Mac OS X:
+Example, OSX && [homebrew](http://mxcl.github.io/homebrew/):
 ======================
 - Install XCode CLI tools
 - Using brew, install dependencies: `brew install SDL && brew install sdl_image`
