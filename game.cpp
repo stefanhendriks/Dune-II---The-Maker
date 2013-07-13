@@ -40,7 +40,7 @@ int Game::init() {
      return false;
   }
 
-  tileset = CSurface::loadBMP("rock-new2.bmp");
+  tileset = CSurface::load("tileset.png");
 
   if (tileset == NULL) {
     cout << "Failed to read rock-new2.bmp" << endl;

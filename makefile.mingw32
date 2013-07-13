@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-I/c/MinGW/include/SDL/ -c -Wall
-LDFLAGS=-L/c/MinGW/lib -lmingw32 -lSDLmain -lSDL
+LDFLAGS=-L/c/MinGW/lib -lmingw32 -lSDLmain -lSDL -lSDL_image 
 SOURCES=d2tm.cpp map.cpp game.cpp CSurface.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=d2tm

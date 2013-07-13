@@ -1,4 +1,5 @@
 #include "SDL/SDL.h"
+#include "SDL_image.h"
 #include "CSurface.h"
 
 const int TILE_SIZE = 32; // squared
@@ -6,11 +7,11 @@ const int TILE_SIZE = 32; // squared
 CSurface::CSurface() {
 }
 
-SDL_Surface* CSurface::loadBMP(char* File) {
+SDL_Surface* CSurface::load(char* File) {
     SDL_Surface* temp = NULL;
     SDL_Surface* result = NULL;
 
-    if((temp = SDL_LoadBMP(File)) == NULL) {
+    if((temp = IMG_Load(File)) == NULL) {
             return NULL;
         }
 
