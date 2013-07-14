@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=`sdl-config --cflags` -c -Wall
 LDFLAGS=`sdl-config --cflags --libs` -lSDL_image -framework Cocoa
-SOURCES=d2tm.cpp map.cpp game.cpp CSurface.cpp
+SOURCES=d2tm.cpp map.cpp game.cpp CSurface.cpp random.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=d2tm
 
