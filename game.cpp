@@ -11,6 +11,7 @@ Game::Game() {
   playing=true;
   screen=NULL;
   tileset=NULL;
+  map_camera=NULL;
 }
 
 int Game::execute() {
@@ -43,8 +44,10 @@ int Game::init() {
   tileset = CSurface::load("tileset.png");
 
   if (tileset == NULL) {
-    cout << "Failed to read rock-new2.bmp" << endl;
+    cout << "Failed to read tileset data" << endl;
   }
+
+  map_camera = new MapCamera(0, 0, screen);
 
   return true;
 }
@@ -57,7 +60,7 @@ void Game::onEvent(SDL_Event* event) {
 
 void Game::render() {
   //CSurface::drawTile(tileset, screen, 0, 96, 32);
-  map.draw(tileset, screen);
+  map.draw(tileset, screen, map_camera);
   SDL_Flip(screen);
 }
 
@@ -65,6 +68,7 @@ void Game::updateState() {
 }
 
 int Game::cleanup() {
+  delete map_camera;
   SDL_FreeSurface(screen);
   SDL_FreeSurface(tileset);
   SDL_Quit();

@@ -20,6 +20,7 @@ class Game {
       bool playing;
       SDL_Surface *screen;
       SDL_Surface *tileset;
+      MapCamera *map_camera;
       Map map;
 };
 
