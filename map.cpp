@@ -1,13 +1,14 @@
 #include "SDL/SDL.h"
 #include "CSurface.h"
 #include "map.h"
+#include "random.h"
 
 Map::Map() {
   max_width = MAP_MAX_WIDTH;
   max_height = MAP_MAX_HEIGHT;
 
   for (int i = 0; i < MAP_MAX_SIZE; i++) {
-    cells[i].tile = 0;
+    cells[i].tile = (flipCoin() ? 0 : 64);
   }
 
   // test if this really works
