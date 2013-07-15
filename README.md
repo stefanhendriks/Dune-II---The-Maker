@@ -1,7 +1,16 @@
 Dune II - The Maker
 ===================
+A.k.a. D2TM. Is a [Dune 2](http://en.wikipedia.org/wiki/Dune_II) clone. At this moment the most known/stable version is [DEMO4 and DEMO 3.5](http://dune2themaker.fundynamic.com/?page_id=11) which are very old and using
+Allegro & other libs. I am proud of that project, but it is time to rewrite it and build a game mostly focussing on skirmish
+and networking gaming.
 
-This is a rewrite attempt, using SDL.
+This branch is an attempt to rewrite the game from scratch using SDL as game library. 
+
+I do this purely for fun, and try to keep it multi-platform. I test it often on Mac OSX and Ubuntu. I sometimes test it
+on Windows (MinGW32 and MSYS). 
+
+At this moment there is nothing built enough to call this a game, see the list "TODO" below what needs to be done. (list
+will continue to grow).
 
 Compiling
 =========
@@ -14,15 +23,14 @@ Dependencies:
 After you check out this project, copy the appropiate makefile (with the extension matching your OS) as 'makefile'. After that hit make.
 
 Example, OSX && [homebrew](http://mxcl.github.io/homebrew/):
-======================
+------------------------------------------------------------
 - Install XCode CLI tools
 - Using brew, install dependencies: `brew install SDL && brew install sdl_image`
 - Then: `cp makefile.osx makefile`
 - `make`
 
-
 Example, Ubuntu (inspired by [Lazy Foo](http://lazyfoo.net/SDL_tutorials/lesson01/linux/))
-===============
+------------------------------------------------------------------------------------------
 - Fetch SDL and its dependencies with apt-get (`apt-get install libsdl1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev`)
 - `cp makefile.ubuntu makefile`
 - `make`
