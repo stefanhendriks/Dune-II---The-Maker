@@ -1,6 +1,10 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include <iostream>
+
+using namespace std;
+
 const int MAP_MAX_SIZE = 65536; // 256X256 map
 const int MAP_MAX_WIDTH = 256;
 const int MAP_MAX_HEIGHT = 256;
@@ -8,9 +12,6 @@ const int MAP_MAX_HEIGHT = 256;
 class Cell {
   public:
     int tile; // tile to draw (one-dimension array)
-
-    static int getCellIndex(int x, int y) { return (y * MAP_MAX_WIDTH) + x; }
-
 };
 
 class Map {
@@ -20,7 +21,28 @@ class Map {
 
 	   void setBoundaries(int max_width, int max_height);
 
-     Cell getCell(int index) { return cells[index]; }
+     Cell getCell(int x, int y) {
+       if (x < 0) {
+         cerr << "Map::getCell x[" << x << "] got out of bounds, fixing." << endl;
+         x = 0;
+       }
+       if (x >= MAP_MAX_WIDTH) {
+         cerr << "Map::getCell x[" << x << "] got out of bounds, fixing." << endl;
+         x = (MAP_MAX_WIDTH - 1); // 0 based so substract! (0 till 255):
+       }
+
+       if (y < 0) {
+         cerr << "Map::getCell y[" << y << "] got out of bounds, fixing." << endl;
+         y = 0;
+       }
+       if (y >= MAP_MAX_HEIGHT) {
+         cerr << "Map::getCell y[" << y << "] got out of bounds, fixing." << endl;
+         y = (MAP_MAX_HEIGHT - 1); // 0 based so substract! (0 till 255):
+       }
+
+       int cell = (y * MAP_MAX_WIDTH) + x;
+       return cells[cell];
+     }
 
      int getMaxWidth() { return max_width; }
      int getMaxHeight() { return max_height; }
@@ -47,7 +69,6 @@ class MapCamera {
     void moveDown() { if (y < max_y()) y++; }
     void moveLeft() { if (x > 0) x--; }
     void moveRight() { if (y < max_x()) x++; }
-
 
     void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
 

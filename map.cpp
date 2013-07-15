@@ -10,7 +10,6 @@ Map::Map() {
   for (int i = 0; i < MAP_MAX_SIZE; i++) {
     cells[i].tile = (flipCoin() ? 0 : 64);
   }
-
 }
 
 void Map::setBoundaries(int max_width, int max_height) {
@@ -30,17 +29,22 @@ MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map) {
 }
 
 void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
-  for (int x = getX(); x < getWidth(); x++) {
-    for (int y = getY(); y < getHeight(); y++) {
-      int cellIndex = Cell::getCellIndex(x, y);
+  int startX = this->x;
+  int startY = this->y;
+  int endX = startX + getWidth();
+  int endY = startY + getHeight();
 
-      Cell c = map->getCell(cellIndex);
+  for (int dx = startX; dx < endX; dx++) {
+    for (int dy = startY; dy < endY; dy++) {
+      Cell c = map->getCell(dx, dy);
 
       int mouse_x, mouse_y;
       SDL_GetMouseState(&mouse_x, &mouse_y);
 
-      int drawX = x * 32;
-      int drawY = y * 32;
+      // weird: have to compensate for the coordinates above. Drawing should be done separately 
+      // from coordinates of map.
+      int drawX = (dx - startX) * 32;
+      int drawY = (dy - startY) * 32;
 
       CSurface::drawTile(tileset, screen, c.tile, drawX, drawY);
 

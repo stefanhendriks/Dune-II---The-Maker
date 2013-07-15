@@ -47,6 +47,7 @@ int Game::init() {
     cout << "Failed to read tileset data" << endl;
   }
 
+  map.setBoundaries(64,64);
   map_camera = new MapCamera(0, 0, screen, &map);
 
   return true;
@@ -55,11 +56,23 @@ int Game::init() {
 void Game::onEvent(SDL_Event* event) {
   if(event->type == SDL_QUIT) {
     playing = false;
+  } 
+
+  //If a key was pressed
+  if(event->type == SDL_KEYDOWN) {
+    switch( event->key.keysym.sym ) {
+     case SDLK_UP: map_camera->moveUp(); break;
+     case SDLK_DOWN: map_camera->moveDown(); break;
+     case SDLK_LEFT: map_camera->moveLeft(); break;
+     case SDLK_RIGHT: map_camera->moveRight(); break;
+     case SDLK_q: playing = false;
+     default: break;
+    }
   }
+
 }
 
 void Game::render() {
-  //CSurface::drawTile(tileset, screen, 0, 96, 32);
   map_camera->draw(&map, tileset, screen);
   SDL_Flip(screen);
 }

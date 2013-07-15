@@ -37,7 +37,10 @@ Example, Ubuntu (inspired by [Lazy Foo](http://lazyfoo.net/SDL_tutorials/lesson0
 
 TODO: ((as a player I) should be able to...)
 ============================================
-- move the camera around
+- move the camera around (working)
+ - make keyboard keys repeat
+ - mouse borders
+ - hold mouse key?
 - see units (draw them)
 - select one unit
 - select multiple units
@@ -58,3 +61,12 @@ TODO: ((as a player I) should be able to...)
 - receive reinforcements from time to time
 - mine spice with a harvester
 - get my units transported much faster by a carry-all
+
+
+
+Controls
+========
+Thus far the following controls work:
+
+Press `q` to quit anytime.
+Press movement keys to move around.
