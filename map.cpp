@@ -20,41 +20,41 @@ void Map::setBoundaries(int max_width, int max_height) {
   this->max_height = max_height;
 }
 
-void Map::draw(SDL_Surface* tileset, SDL_Surface* screen, MapCamera * map_camera) {
+//=============================================================================
+//
+MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map) {
+  this->x = x;
+  this->y = y;
+  this->max_cells_width_on_screen = screen->w / 32;
+  this->max_cells_height_on_screen = screen->h / 32;
+  this->map_y_boundary = map->getMaxHeight();
+  this->map_x_boundary = map->getMaxWidth();
+}
 
-  for (int x = map_camera->getX(); x < map_camera->getWidth(); x++) {
-    for (int y = map_camera->getY(); y < map_camera->getHeight(); y++) {
+void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
+  for (int x = getX(); x < getWidth(); x++) {
+    for (int y = getY(); y < getHeight(); y++) {
       int cellIndex = Cell::getCellIndex(x, y);
-      
-      Cell c = cells[cellIndex];
 
-		int mouse_x, mouse_y;
-		SDL_GetMouseState(&mouse_x, &mouse_y);
+      Cell c = map->getCell(cellIndex); //cells[cellIndex];
 
-		int drawX = x * 32;
-		int drawY = y * 32;
+      int mouse_x, mouse_y;
+      SDL_GetMouseState(&mouse_x, &mouse_y);
+
+      int drawX = x * 32;
+      int drawY = y * 32;
 
       CSurface::drawTile(tileset, screen, c.tile, drawX, drawY);
 
-		if ((mouse_x >= drawX && mouse_x <= (drawX + 32)) && (mouse_y >= drawY && mouse_y <= (drawY + 32))) {
-		 SDL_Rect rect;
-		 rect.w = 32;
-		 rect.h = 32;
-		 rect.x = drawX;
-		 rect.y = drawY;		 
-		 SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format , 0 , 0 , 20 ) );	
-		}
+      if ((mouse_x >= drawX && mouse_x <= (drawX + 32)) && (mouse_y >= drawY && mouse_y <= (drawY + 32))) {
+	      SDL_Rect rect;
+	      rect.w = 32;
+	      rect.h = 32;
+	      rect.x = drawX;
+	      rect.y = drawY;
+	      SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format , 0 , 0 , 20 ) );
+      }
     }
   }
-
-}
-
-//=============================================================================
-//
-MapCamera::MapCamera(int x, int y, SDL_Surface * screen) {
-	this->x = x;
-	this->y = y;
-   this->max_cells_width_on_screen = screen->w / 32;
-   this->max_cells_height_on_screen = screen->h / 32;
 }
 

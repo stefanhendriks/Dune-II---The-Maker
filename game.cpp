@@ -47,7 +47,7 @@ int Game::init() {
     cout << "Failed to read tileset data" << endl;
   }
 
-  map_camera = new MapCamera(0, 0, screen);
+  map_camera = new MapCamera(0, 0, screen, &map);
 
   return true;
 }
@@ -60,7 +60,7 @@ void Game::onEvent(SDL_Event* event) {
 
 void Game::render() {
   //CSurface::drawTile(tileset, screen, 0, 96, 32);
-  map.draw(tileset, screen, map_camera);
+  map_camera->draw(&map, tileset, screen);
   SDL_Flip(screen);
 }
 
