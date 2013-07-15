@@ -11,8 +11,6 @@ Map::Map() {
     cells[i].tile = (flipCoin() ? 0 : 64);
   }
 
-  // test if this really works
-  cells[10].tile = 64;
 }
 
 void Map::setBoundaries(int max_width, int max_height) {
@@ -36,7 +34,7 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
     for (int y = getY(); y < getHeight(); y++) {
       int cellIndex = Cell::getCellIndex(x, y);
 
-      Cell c = map->getCell(cellIndex); //cells[cellIndex];
+      Cell c = map->getCell(cellIndex);
 
       int mouse_x, mouse_y;
       SDL_GetMouseState(&mouse_x, &mouse_y);
