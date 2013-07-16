@@ -36,10 +36,8 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
   int offsetX = (this->x % 32);
   int offsetY = (this->y % 32);
 
-  //int startX = this->x;
-  //int startY = this->y;
-  int endX = startX + getWidth();
-  int endY = startY + getHeight();
+  int endX = startX + (getWidth() + 1);
+  int endY = startY + (getHeight() + 1);
 
   for (int dx = startX; dx < endX; dx++) {
     for (int dy = startY; dy < endY; dy++) {

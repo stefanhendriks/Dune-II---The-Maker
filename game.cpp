@@ -36,7 +36,9 @@ int Game::init() {
     return false;
   }
 
+  
   screen = SDL_SetVideoMode(800, 600, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+  //screen = SDL_SetVideoMode(800, 600, 32, SDL_FULLSCREEN | SDL_DOUBLEBUF);
   if(screen == NULL) {
      return false;
   }
