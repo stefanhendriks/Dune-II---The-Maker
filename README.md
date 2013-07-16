@@ -38,9 +38,10 @@ Example, Ubuntu (inspired by [Lazy Foo](http://lazyfoo.net/SDL_tutorials/lesson0
 TODO: ((as a player I) should be able to...)
 ============================================
 - move the camera around (working)
+ - pixel perfect scrolling instead oc cell by cell
  - make keyboard keys repeat
  - mouse borders
- - hold mouse key?
+ - hold mouse key (hold middle/right mouse button and by moving away from the center determine which side to scroll to)
 - see units (draw them)
 - select one unit
 - select multiple units
