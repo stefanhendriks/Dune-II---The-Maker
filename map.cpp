@@ -11,6 +11,7 @@ Map::Map() {
   for (int i = 0; i < MAP_MAX_SIZE; i++) {
     cells[i].tile = (flipCoin() ? 0 : 64);
   }
+
 }
 
 void Map::setBoundaries(int max_width, int max_height) {
@@ -27,6 +28,7 @@ MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map) {
   this->max_cells_height_on_screen = ceil(screen->h / 32);
   this->map_y_boundary = map->getMaxHeight();
   this->map_x_boundary = map->getMaxWidth();
+  this->scroll_speed = 8;
 }
 
 void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {

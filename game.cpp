@@ -71,12 +71,10 @@ void Game::render() {
 }
 
 void Game::updateState() {
-  for (int scrollSpeed = 0; scrollSpeed < 4; scrollSpeed++) {
-    if (keyboard.isUpPressed()) map_camera->moveUp();
-    if (keyboard.isDownPressed()) map_camera->moveDown();
-    if (keyboard.isLeftPressed()) map_camera->moveLeft();
-    if (keyboard.isRightPressed()) map_camera->moveRight();
-  }
+  if (keyboard.isUpPressed()) map_camera->moveUp();
+  if (keyboard.isDownPressed()) map_camera->moveDown();
+  if (keyboard.isLeftPressed()) map_camera->moveLeft();
+  if (keyboard.isRightPressed()) map_camera->moveRight();
   
   if (keyboard.isQPressed()) playing = false;
 }
