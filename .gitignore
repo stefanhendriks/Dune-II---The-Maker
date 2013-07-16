@@ -1,3 +1,7 @@
 .[oa]
 ~
-.exe
+*.exe
+*.swp
+*.o
+d2tm
+makefile

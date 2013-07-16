@@ -1,6 +1,0 @@
-How to get the documentation:
------------------------------
-
-Get the package FBlend Docs at the FBlend web site.
-
-
