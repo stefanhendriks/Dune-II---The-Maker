@@ -65,10 +65,10 @@ class MapCamera {
 		int getWidth() { return max_cells_width_on_screen; }
 		int getHeight() { return max_cells_height_on_screen; }
 
-    void moveUp() { if (y > 0) y--; }
-    void moveDown() { if (y < max_y()) y++; }
-    void moveLeft() { if (x > 0) x--; }
-    void moveRight() { if (y < max_x()) x++; }
+    void moveUp() { if (y > 0) y -= 2; }
+    void moveDown() { if (y < max_y()) y += 2; }
+    void moveLeft() { if (x > 0) x-= 2; }
+    void moveRight() { if (y < max_x()) x+= 2; }
 
     void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
 

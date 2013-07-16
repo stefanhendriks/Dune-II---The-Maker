@@ -20,7 +20,7 @@ void Map::setBoundaries(int max_width, int max_height) {
 //=============================================================================
 //
 MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map) {
-  this->x = x;
+  this->x = x; // pixel size, relative to map (starts at 0,0)
   this->y = y;
   this->max_cells_width_on_screen = screen->w / 32;
   this->max_cells_height_on_screen = screen->h / 32;
@@ -29,8 +29,15 @@ MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map) {
 }
 
 void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
-  int startX = this->x;
-  int startY = this->y;
+  // determine x and y from map data.
+  int startX = (this->x / 32);
+  int startY = (this->y / 32);
+
+  int offsetX = (this->x % 32);
+  int offsetY = (this->y % 32);
+
+  //int startX = this->x;
+  //int startY = this->y;
   int endX = startX + getWidth();
   int endY = startY + getHeight();
 
@@ -45,6 +52,9 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
       // from coordinates of map.
       int drawX = (dx - startX) * 32;
       int drawY = (dy - startY) * 32;
+
+      drawX -= offsetX;
+      drawY -= offsetY;
 
       CSurface::drawTile(tileset, screen, c.tile, drawX, drawY);
 
