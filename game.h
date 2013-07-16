@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "map.h"
+#include "keyboard.h"
 
 class Game {
 
@@ -22,6 +23,7 @@ class Game {
       SDL_Surface *tileset;
       MapCamera *map_camera;
       Map map;
+      Keyboard keyboard;
 };
 
 #endif

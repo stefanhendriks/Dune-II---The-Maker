@@ -47,7 +47,7 @@ int Game::init() {
     cout << "Failed to read tileset data" << endl;
   }
 
-  map.setBoundaries(64,64);
+  map.setBoundaries(128,128);
   map_camera = new MapCamera(0, 0, screen, &map);
 
   return true;
@@ -58,26 +58,23 @@ void Game::onEvent(SDL_Event* event) {
     playing = false;
   } 
 
-  //If a key was pressed
-  if(event->type == SDL_KEYDOWN) {
-    switch( event->key.keysym.sym ) {
-     case SDLK_UP: map_camera->moveUp(); break;
-     case SDLK_DOWN: map_camera->moveDown(); break;
-     case SDLK_LEFT: map_camera->moveLeft(); break;
-     case SDLK_RIGHT: map_camera->moveRight(); break;
-     case SDLK_q: playing = false;
-     default: break;
-    }
-  }
+  keyboard.onEvent(event);
 
 }
 
 void Game::render() {
+  SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
   map_camera->draw(&map, tileset, screen);
   SDL_Flip(screen);
 }
 
 void Game::updateState() {
+  if (keyboard.isUpPressed()) map_camera->moveUp();
+  if (keyboard.isDownPressed()) map_camera->moveDown();
+  if (keyboard.isLeftPressed()) map_camera->moveLeft();
+  if (keyboard.isRightPressed()) map_camera->moveRight();
+  
+  if (keyboard.isQPressed()) playing = false;
 }
 
 int Game::cleanup() {
