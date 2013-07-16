@@ -2,6 +2,7 @@
 #include "CSurface.h"
 #include "map.h"
 #include "random.h"
+#include <math.h>       /* ceil */
 
 Map::Map() {
   max_width = MAP_MAX_WIDTH;
@@ -22,8 +23,8 @@ void Map::setBoundaries(int max_width, int max_height) {
 MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map) {
   this->x = x; // pixel size, relative to map (starts at 0,0)
   this->y = y;
-  this->max_cells_width_on_screen = screen->w / 32;
-  this->max_cells_height_on_screen = screen->h / 32;
+  this->max_cells_width_on_screen = ceil(screen->w / 32);
+  this->max_cells_height_on_screen = ceil(screen->h / 32);
   this->map_y_boundary = map->getMaxHeight();
   this->map_x_boundary = map->getMaxWidth();
 }
