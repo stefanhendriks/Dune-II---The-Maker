@@ -37,11 +37,16 @@ Example, Ubuntu (inspired by [Lazy Foo](http://lazyfoo.net/SDL_tutorials/lesson0
 
 TODO: ((as a player I) should be able to...)
 ============================================
-- move the camera around (working)
- - pixel perfect scrolling instead oc cell by cell
- - make keyboard keys repeat
- - mouse borders
- - hold mouse key (hold middle/right mouse button and by moving away from the center determine which side to scroll to)
+<del>
+  <ul>
+    <li>move the camera around</li>
+    <li>pixel perfect scrolling instead of cell by cell</li>
+  </ul>
+</del>
+
+- scroll by holding arrow keys instead of having to press/release all the time.
+- scroll by 'hitting mouse' on screen borders
+- scroll by holding mouse key and move from that position
 - see units (draw them)
 - select one unit
 - select multiple units
