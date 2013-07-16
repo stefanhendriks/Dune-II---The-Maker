@@ -41,10 +41,10 @@ TODO: ((as a player I) should be able to...)
   <ul>
     <li>move the camera around</li>
     <li>pixel perfect scrolling instead of cell by cell</li>
+    <li>scroll by holding arrow keys instead of having to press/release all the time</li>
   </ul>
 </del>
 
-- scroll by holding arrow keys instead of having to press/release all the time.
 - scroll by 'hitting mouse' on screen borders
 - scroll by holding mouse key and move from that position
 - see units (draw them)
