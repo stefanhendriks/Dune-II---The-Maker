@@ -36,7 +36,7 @@ int Game::init() {
     return false;
   }
 
-  
+
   screen = SDL_SetVideoMode(800, 600, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
   //screen = SDL_SetVideoMode(800, 600, 32, SDL_FULLSCREEN | SDL_DOUBLEBUF);
   if(screen == NULL) {
@@ -58,7 +58,7 @@ int Game::init() {
 void Game::onEvent(SDL_Event* event) {
   if(event->type == SDL_QUIT) {
     playing = false;
-  } 
+  }
 
   keyboard.onEvent(event);
 
@@ -75,8 +75,16 @@ void Game::updateState() {
   if (keyboard.isDownPressed()) map_camera->moveDown();
   if (keyboard.isLeftPressed()) map_camera->moveLeft();
   if (keyboard.isRightPressed()) map_camera->moveRight();
-  
+
   if (keyboard.isQPressed()) playing = false;
+
+  int mouse_x, mouse_y;
+  SDL_GetMouseState(&mouse_x, &mouse_y);
+
+  if (mouse_x <= 1) map_camera->moveLeft();
+  if (mouse_x >= (screen->w - 1)) map_camera->moveRight();
+  if (mouse_y <= 1) map_camera->moveUp();
+  if (mouse_y >= (screen->h - 1)) map_camera->moveDown();
 }
 
 int Game::cleanup() {
