@@ -42,11 +42,11 @@ TODO: ((as a player I) should be able to...)
     <li>move the camera around</li>
     <li>pixel perfect scrolling instead of cell by cell</li>
     <li>scroll by holding arrow keys instead of having to press/release all the time</li>
+    <li>scroll by 'hitting mouse' on screen borders</li>
   </ul>
 </del>
 
-- scroll by 'hitting mouse' on screen borders
-- scroll by holding mouse key and move from that position
+- see everything move in a certain pace (timed) at all time , regardless of my fps
 - see units (draw them)
 - select one unit
 - select multiple units
@@ -67,7 +67,7 @@ TODO: ((as a player I) should be able to...)
 - receive reinforcements from time to time
 - mine spice with a harvester
 - get my units transported much faster by a carry-all
-
+- scroll by holding mouse key and move from that position
 
 
 Controls
