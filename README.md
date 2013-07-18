@@ -46,7 +46,7 @@ TODO: ((as a player I) should be able to...)
   </ul>
 </del>
 
-- see everything move in a certain pace (timed) at all time , regardless of my fps
+- see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - see units (draw them)
 - select one unit
 - select multiple units
