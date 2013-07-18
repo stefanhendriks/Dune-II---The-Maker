@@ -9,8 +9,7 @@ This branch is an attempt to rewrite the game from scratch using SDL as game lib
 I do this purely for fun, and try to keep it multi-platform. I test it often on Mac OSX and Ubuntu. I sometimes test it
 on Windows (MinGW32 and MSYS). 
 
-At this moment there is nothing built enough to call this a game, see the list "TODO" below what needs to be done. (list
-will continue to grow).
+At this moment there is nothing built enough to call this a game, see the [TODO list](#todo-as-a-player-i-should-be-able-to) below what needs to be done. 
 
 Compiling
 =========
