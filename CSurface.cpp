@@ -7,11 +7,11 @@ const int TILE_SIZE = 32; // squared
 CSurface::CSurface() {
 }
 
-SDL_Surface* CSurface::load(char* File) {
+SDL_Surface* CSurface::load(std::string File) {
     SDL_Surface* temp = NULL;
     SDL_Surface* result = NULL;
 
-    if((temp = IMG_Load(File)) == NULL) {
+    if((temp = IMG_Load(File.c_str())) == NULL) {
             return NULL;
         }
 

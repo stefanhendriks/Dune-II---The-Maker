@@ -1,12 +1,14 @@
 #ifndef CSURFACE_H
 #define CSURFACE_H
 
+#include <string>
+
 class CSurface {
 
     public:
       CSurface();
 
-      static SDL_Surface* load(char *file);
+      static SDL_Surface* load(std::string file);
 
       static void draw(SDL_Surface* src, SDL_Surface* dest, int dest_x, int dest_y);
       static void draw(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, int width, int height, int dest_x, int dest_y);
