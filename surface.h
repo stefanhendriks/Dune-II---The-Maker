@@ -1,12 +1,12 @@
-#ifndef CSURFACE_H
-#define CSURFACE_H
+#ifndef Surface_H
+#define Surface_H
 
 #include <string>
 
-class CSurface {
+class Surface {
 
     public:
-      CSurface();
+      Surface();
 
       static SDL_Surface* load(std::string file);
 

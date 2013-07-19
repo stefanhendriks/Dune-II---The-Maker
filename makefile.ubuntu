@@ -1,13 +1,13 @@
 CC=g++
 CFLAGS=`sdl-config --cflags` -c -Wall
-LDFLAGS=`sdl-config --cflags --libs` -lSDL_image 
-SOURCES=d2tm.cpp map.cpp game.cpp CSurface.cpp random.cpp keyboard.cpp
+LDFLAGS=`sdl-config --cflags --libs` -lSDL_image
+SOURCES=d2tm.cpp map.cpp game.cpp surface.cpp random.cpp keyboard.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=d2tm
 
 all: $(SOURCES) $(EXECUTABLE)
-	
-$(EXECUTABLE): $(OBJECTS) 
+
+$(EXECUTABLE): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
 
 .cpp.o:

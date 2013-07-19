@@ -1,13 +1,13 @@
 #include "SDL/SDL.h"
 #include "SDL_image.h"
-#include "CSurface.h"
+#include "surface.h"
 
 const int TILE_SIZE = 32; // squared
 
-CSurface::CSurface() {
+Surface::Surface() {
 }
 
-SDL_Surface* CSurface::load(std::string File) {
+SDL_Surface* Surface::load(std::string File) {
     SDL_Surface* temp = NULL;
     SDL_Surface* result = NULL;
 
@@ -21,7 +21,7 @@ SDL_Surface* CSurface::load(std::string File) {
     return result;
 }
 
-void CSurface::draw(SDL_Surface* src, SDL_Surface* dest, int dest_x, int dest_y) {
+void Surface::draw(SDL_Surface* src, SDL_Surface* dest, int dest_x, int dest_y) {
   if (src == NULL || dest == NULL) return;
 
   SDL_Rect destRect;
@@ -32,7 +32,7 @@ void CSurface::draw(SDL_Surface* src, SDL_Surface* dest, int dest_x, int dest_y)
   SDL_BlitSurface(src, NULL, dest, &destRect);
 }
 
-void CSurface::draw(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, int width, int height, int dest_x, int dest_y) {
+void Surface::draw(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, int width, int height, int dest_x, int dest_y) {
   if (src == NULL || dest == NULL) return;
 
   SDL_Rect destRect;
@@ -50,12 +50,12 @@ void CSurface::draw(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, i
   SDL_BlitSurface(src, &srcRect, dest, &destRect);
 }
 
-void CSurface::drawTile(SDL_Surface* tileset, SDL_Surface* dest, int src_x, int src_y, int dest_x, int dest_y) {
+void Surface::drawTile(SDL_Surface* tileset, SDL_Surface* dest, int src_x, int src_y, int dest_x, int dest_y) {
   if (tileset == NULL || dest == NULL) return;
-  CSurface::draw(tileset, dest, src_x * TILE_SIZE, src_y * TILE_SIZE, TILE_SIZE, TILE_SIZE, dest_x, dest_y);
+  Surface::draw(tileset, dest, src_x * TILE_SIZE, src_y * TILE_SIZE, TILE_SIZE, TILE_SIZE, dest_x, dest_y);
 }
 
-void CSurface::drawTile(SDL_Surface* tileset, SDL_Surface* dest, int tileIndex, int dest_x, int dest_y) {
+void Surface::drawTile(SDL_Surface* tileset, SDL_Surface* dest, int tileIndex, int dest_x, int dest_y) {
   if (tileset == NULL || dest == NULL) return;
   int tiles_width = tileset->w / TILE_SIZE;
   int tiles_height = tileset->h / TILE_SIZE;
@@ -63,5 +63,5 @@ void CSurface::drawTile(SDL_Surface* tileset, SDL_Surface* dest, int tileIndex, 
   int tileset_y = (tileIndex / tiles_width);
   int tileset_x = tileIndex - (tileset_y * tiles_height);
 
-  CSurface::drawTile(tileset, dest, tileset_x, tileset_y, dest_x, dest_y);
+  Surface::drawTile(tileset, dest, tileset_x, tileset_y, dest_x, dest_y);
 }

@@ -3,7 +3,7 @@
 #include "SDL/SDL.h"
 #include "map.h"
 #include "game.h"
-#include "CSurface.h"
+#include "surface.h"
 
 using namespace std;
 
@@ -43,7 +43,7 @@ int Game::init() {
      return false;
   }
 
-  tileset = CSurface::load("tileset.png");
+  tileset = Surface::load("tileset.png");
 
   if (tileset == NULL) {
     cout << "Failed to read tileset data" << endl;

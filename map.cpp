@@ -1,5 +1,5 @@
 #include "SDL/SDL.h"
-#include "CSurface.h"
+#include "surface.h"
 #include "map.h"
 #include "random.h"
 #include <math.h>       /* ceil */
@@ -57,7 +57,7 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
       drawX -= offsetX;
       drawY -= offsetY;
 
-      CSurface::drawTile(tileset, screen, c.tile, drawX, drawY);
+      Surface::drawTile(tileset, screen, c.tile, drawX, drawY);
 
       if ((mouse_x >= drawX && mouse_x <= (drawX + 32)) && (mouse_y >= drawY && mouse_y <= (drawY + 32))) {
 	      SDL_Rect rect;
