@@ -45,8 +45,8 @@ TODO: ((as a player I) should be able to...)
   </ul>
 </del>
 
-- see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - see units (draw them)
+- see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - select one unit
 - select multiple units
 - order a unit to move to a position
@@ -74,4 +74,4 @@ Controls
 Thus far the following controls work:
 
 Press `q` to quit anytime.
-Press movement keys to move around.
+Move camera around with arrow keys or with mouse hitting borders of screen.

@@ -12,6 +12,8 @@ class Surface {
 
       static void draw(SDL_Surface* src, SDL_Surface* dest, int dest_x, int dest_y);
       static void draw(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, int width, int height, int dest_x, int dest_y);
+      static void draw(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, int width, int height, int dest_x, int dest_y, Uint32 alpha);
+      static void drawTrans(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, int width, int height, int dest_x, int dest_y);
 
       static void drawTile(SDL_Surface* tileset, SDL_Surface* dest, int src_x, int src_y, int dest_x, int dest_y);
       

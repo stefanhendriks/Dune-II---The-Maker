@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "SDL/SDL.h"
+#include "SDL_image.h"
 #include "map.h"
 #include "game.h"
 #include "surface.h"
@@ -12,6 +13,7 @@ Game::Game() {
   screen=NULL;
   tileset=NULL;
   map_camera=NULL;
+  unit=NULL;
 }
 
 int Game::execute() {
@@ -37,10 +39,17 @@ int Game::init() {
   }
 
 
-  screen = SDL_SetVideoMode(800, 600, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+  screen = SDL_SetVideoMode(800, 600, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
   //screen = SDL_SetVideoMode(800, 600, 32, SDL_FULLSCREEN | SDL_DOUBLEBUF);
   if(screen == NULL) {
      return false;
+  }
+
+  int flags = IMG_INIT_JPG | IMG_INIT_PNG;
+  int initted=IMG_Init(flags);
+  if( initted & flags != flags) {
+    cout<<"could not init SDL_Image" << endl;
+    cout<<"Reason: " << IMG_GetError() << endl;
   }
 
   tileset = Surface::load("tileset.png");
@@ -51,6 +60,9 @@ int Game::init() {
 
   map.setBoundaries(128,128);
   map_camera = new MapCamera(0, 0, screen, &map);
+
+
+  unit = new Unit(Surface::load("quad.bmp"));
 
   return true;
 }
@@ -67,6 +79,10 @@ void Game::onEvent(SDL_Event* event) {
 void Game::render() {
   SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
   map_camera->draw(&map, tileset, screen);
+
+ // todo draw with camera
+  unit->draw(screen);
+
   SDL_Flip(screen);
 }
 

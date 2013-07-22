@@ -3,6 +3,7 @@
 
 #include "map.h"
 #include "keyboard.h"
+#include "unit.h"
 
 class Game {
 
@@ -24,6 +25,8 @@ class Game {
       MapCamera *map_camera;
       Map map;
       Keyboard keyboard;
+
+      Unit *unit;
 };
 
 #endif
