@@ -4,7 +4,7 @@ A.k.a. D2TM. Is a [Dune 2](http://en.wikipedia.org/wiki/Dune_II) clone. At this 
 Allegro & other libs. I am proud of that project, but it is time to rewrite it and build a game mostly focussing on skirmish
 and networking gaming.
 
-This branch is an attempt to rewrite the game from scratch using SDL as game library. 
+This is an attempt to rewrite the game from scratch using [SDL](http://www.libsdl.org/). If you are looking for the source code of the 'current' D2TM ([with demo binaries](http://dune2themaker.fundynamic.com/downloads/)), then you can find it [here](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/d2tm_allegro)
 
 I do this purely for fun, and try to keep it multi-platform. I test it often on Mac OSX and Ubuntu. I sometimes test it
 on Windows (MinGW32 and MSYS). 
