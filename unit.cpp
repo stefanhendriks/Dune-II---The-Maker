@@ -11,6 +11,5 @@ Unit::Unit(SDL_Surface* tileset) {
 
 void Unit::draw(SDL_Surface* screen) {
   int src_x = this->body_facing * this->tile_width;
-
-  Surface::drawTrans(tileset, screen, src_x, 0, this->tile_width, this->tile_height, 0, 0);
+  Surface::draw(tileset, screen, src_x, 0, this->tile_width, this->tile_height, 0, 0);
 }

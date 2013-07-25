@@ -48,21 +48,23 @@ int Game::init() {
   int flags = IMG_INIT_JPG | IMG_INIT_PNG;
   int initted=IMG_Init(flags);
   if( initted & flags != flags) {
-    cout<<"could not init SDL_Image" << endl;
-    cout<<"Reason: " << IMG_GetError() << endl;
+    cout << "could not init SDL_Image" << endl;
+    cout << "Reason: " << IMG_GetError() << endl;
+    return false;
   }
 
   tileset = Surface::load("tileset.png");
 
   if (tileset == NULL) {
     cout << "Failed to read tileset data" << endl;
+    return false;
   }
 
   map.setBoundaries(128,128);
   map_camera = new MapCamera(0, 0, screen, &map);
 
 
-  unit = new Unit(Surface::load("quad.bmp"));
+  unit = new Unit(Surface::load("quad.bmp", 255, 0, 255));
 
   return true;
 }

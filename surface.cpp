@@ -10,11 +10,11 @@ const int TILE_SIZE = 32; // squared
 Surface::Surface() {
 }
 
-SDL_Surface* Surface::load(std::string File) {
+SDL_Surface* Surface::load(std::string file) {
   SDL_Surface* temp = NULL;
   SDL_Surface* result = NULL;
 
-  if((temp = IMG_Load(File.c_str())) == NULL) {
+  if((temp = IMG_Load(file.c_str())) == NULL) {
     return NULL;
   }
 
@@ -23,6 +23,13 @@ SDL_Surface* Surface::load(std::string File) {
 
   return result;
 }
+
+SDL_Surface* Surface::load(std::string file, int r, int g, int b) {
+  SDL_Surface* surf = load(file);
+  SDL_SetColorKey(surf, SDL_SRCCOLORKEY, SDL_MapRGB(surf->format, r, g, b) );
+  return surf;
+}
+
 
 void Surface::draw(SDL_Surface* src, SDL_Surface* dest, int dest_x, int dest_y) {
   if (src == NULL || dest == NULL) return;
@@ -33,32 +40,6 @@ void Surface::draw(SDL_Surface* src, SDL_Surface* dest, int dest_x, int dest_y) 
   destRect.y = dest_y;
 
   SDL_BlitSurface(src, NULL, dest, &destRect);
-}
-
-
-void Surface::drawTrans(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, int width, int height, int dest_x, int dest_y) {
-  if (src == NULL || dest == NULL) return;
-
-  SDL_Rect destRect;
-
-  destRect.x = dest_x;
-  destRect.y = dest_y;
-
-  SDL_Rect srcRect;
-
-  srcRect.x = src_x;
-  srcRect.y = src_y;
-  srcRect.h = height;
-  srcRect.w = width;
-
-  int r = 255, g = 0, b = 255;
-  int result = SDL_SetColorKey(src, SDL_SRCCOLORKEY, SDL_MapRGB(src->format, r, g, b) );
-
-  if (result != 0) {
-    cout << "Error setting SDL Color key" << endl;
-  }
-
-  SDL_BlitSurface(src, &srcRect, dest, &destRect);
 }
 
 // draw transparent surface (note: this is not the same as using a color key)
