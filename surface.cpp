@@ -71,6 +71,9 @@ void Surface::draw(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, in
   SDL_SetAlpha(src, alphaFlag, alpha);
 
   SDL_BlitSurface(src, &srcRect, dest, &destRect);
+
+  // reset Alpha
+  SDL_SetAlpha(src, 0, alpha);
 }
 
 void Surface::draw(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, int width, int height, int dest_x, int dest_y) {

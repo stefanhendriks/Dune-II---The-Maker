@@ -27,7 +27,8 @@ class Unit {
 
     int tile_width; // the width is tileset width / 8
     int tile_height; // the height is tileset height / 2 (expecting shadow as second row)
-    
+
+    int shadow_alpha; // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
 
 };
 
