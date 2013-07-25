@@ -19,18 +19,22 @@ class Unit {
   public:
     Unit(SDL_Surface* tileset);
 
-    void draw(SDL_Surface* screen);
+    void draw(SDL_Surface* screen, int x, int y);
+
+    int getX() { return x; }
+    int getY() { return y; }
 
   private:
     SDL_Surface* tileset;
-    int body_facing; // facing, 8 directions. Clock-wise. ie: 0 (up), 1 (up-right), 2 (right), etc;
+    int body_facing;  // facing, 8 directions. Clock-wise. ie: 0 (up), 1 (up-right), 2 (right), etc;
 
-    int tile_width; // the width is tileset width / 8
-    int tile_height; // the height is tileset height / 2 (expecting shadow as second row)
+    int tile_width;   // the width is tileset width / 8
+    int tile_height;  // the height is tileset height / 2 (expecting shadow as second row)
 
     int shadow_alpha; // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
 
-};
+    int x, y;         // coordinates relative to top/left of map (in pixels)
 
+};
 
 #endif

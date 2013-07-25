@@ -83,7 +83,7 @@ void Game::render() {
   map_camera->draw(&map, tileset, screen);
 
  // todo draw with camera
-  unit->draw(screen);
+  map_camera->draw(unit, screen);
 
   SDL_Flip(screen);
 }

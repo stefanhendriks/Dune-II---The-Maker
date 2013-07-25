@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include "unit.h"
+
 using namespace std;
 
 const int MAP_MAX_SIZE = 65536; // 256X256 map
@@ -71,6 +73,7 @@ class MapCamera {
     void moveRight() { for (int i = 0; i < scroll_speed; i++) { if (x < max_x()) x+= 1; } }
 
     void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
+    void draw(Unit* unit, SDL_Surface* screen);
 
 	private:
 		int x, y;

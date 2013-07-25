@@ -31,6 +31,15 @@ MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map) {
   this->scroll_speed = 8;
 }
 
+void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
+
+  // translate x , y into screen coordinates
+  int draw_x = unit->getX() - this->x;
+  int draw_y = unit->getY() - this->y;
+
+  unit->draw(screen, draw_x, draw_y);
+}
+
 void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
   // determine x and y from map data.
   int startX = (this->x / 32);
@@ -49,7 +58,7 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
       int mouse_x, mouse_y;
       SDL_GetMouseState(&mouse_x, &mouse_y);
 
-      // weird: have to compensate for the coordinates above. Drawing should be done separately 
+      // weird: have to compensate for the coordinates above. Drawing should be done separately
       // from coordinates of map.
       int drawX = (dx - startX) * 32;
       int drawY = (dy - startY) * 32;
