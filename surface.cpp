@@ -3,6 +3,8 @@
 #include "SDL_image.h"
 #include "surface.h"
 
+#include "random.h"
+
 using namespace std;
 
 const int TILE_SIZE = 32; // squared
@@ -35,6 +37,11 @@ SDL_Surface* Surface::load8bit(std::string file) {
   }
 
   SDL_SetColorKey(result, SDL_SRCCOLORKEY, SDL_MapRGB(result->format, 0, 0, 0) );
+
+  int house = rnd(6);
+  int paletteIndex = 144 + (16 * house);
+
+  SDL_SetColors(result, &result->format->palette->colors[paletteIndex], 144, 8);
 
   // downside is here, no palette conversion is done and thus we have not converted it yet
   // to the display format, causing SDL to do this for us on every blit. Which is slow.
