@@ -17,8 +17,8 @@ const int FACINGS = 8;          // used to calculate width of each 'tile' for a 
 class Unit {
 
   public:
-    Unit(SDL_Surface* tileset);
-    Unit(SDL_Surface* tileset, int x, int y);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y);
 
     void draw(SDL_Surface* screen, int x, int y);
 
@@ -27,6 +27,7 @@ class Unit {
 
   private:
     SDL_Surface* tileset;
+    SDL_Surface* shadowset;
     int body_facing;  // facing, 8 directions. Clock-wise. ie: 0 (up), 1 (up-right), 2 (right), etc;
 
     int tile_width;   // the width is tileset width / 8
@@ -36,7 +37,9 @@ class Unit {
 
     int x, y;         // coordinates relative to top/left of map (in pixels)
 
-    void init(SDL_Surface* tileset, int x, int y);
+    int anim_frame;   // animation frames are 'rows' in the tileset
+
+    void init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y);
 
 };
 

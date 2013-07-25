@@ -6,23 +6,24 @@
 
 using namespace std;
 
-Unit::Unit(SDL_Surface* tileset) {
-  init(tileset, 128 + rnd(256), 128 + rnd(256));
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset) {
+  init(tileset, shadowset, 128 + rnd(256), 128 + rnd(256));
 }
 
-Unit::Unit(SDL_Surface* tileset, int x, int y) {
-  init(tileset, x, y);
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
+  init(tileset, shadowset, x, y);
 }
 
 void Unit::draw(SDL_Surface* screen, int x, int y) {
   int src_x = this->body_facing * this->tile_width;
-  int src_y = this->tile_height * 1;
-  Surface::draw(tileset, screen, src_x, 0, this->tile_width, this->tile_height, x, y);
-  Surface::draw(tileset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y, this->shadow_alpha);
+  int src_y = this->tile_height * this->anim_frame;
+  Surface::draw(tileset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y);
+  Surface::draw(shadowset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y, this->shadow_alpha);
 }
 
-void Unit::init(SDL_Surface* tileset, int x, int y) {
+void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
   this->tileset = tileset;
+  this->shadowset = shadowset;
   this->body_facing = rnd(FACINGS);
   this->tile_width = tileset->w / FACINGS;
   // check if our assumption (width==height) is true for this tileset, and if not warn the user.
@@ -35,4 +36,5 @@ void Unit::init(SDL_Surface* tileset, int x, int y) {
   this->shadow_alpha = 128;
   this->x = x;
   this->y = y;
+  this->anim_frame = 0;
 }

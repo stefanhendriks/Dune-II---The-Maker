@@ -15,6 +15,7 @@ SDL_Surface* Surface::load(std::string file) {
   SDL_Surface* result = NULL;
 
   if((temp = IMG_Load(file.c_str())) == NULL) {
+    cerr << "Unable to load file " << file.c_str() << endl;
     return NULL;
   }
 
@@ -23,6 +24,25 @@ SDL_Surface* Surface::load(std::string file) {
 
   return result;
 }
+
+
+SDL_Surface* Surface::load8bit(std::string file) {
+  SDL_Surface* result = NULL;
+
+  if((result = IMG_Load(file.c_str())) == NULL) {
+    cerr << "(8 bit) Unable to load file " << file.c_str() << endl;
+    return NULL;
+  }
+
+  SDL_SetColorKey(result, SDL_SRCCOLORKEY, SDL_MapRGB(result->format, 0, 0, 0) );
+
+  // downside is here, no palette conversion is done and thus we have not converted it yet
+  // to the display format, causing SDL to do this for us on every blit. Which is slow.
+  // TODO: do palette conversion on load
+
+  return result;
+}
+
 
 SDL_Surface* Surface::load(std::string file, int r, int g, int b) {
   SDL_Surface* surf = load(file);

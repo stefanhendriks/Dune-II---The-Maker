@@ -39,9 +39,7 @@ int Game::init() {
     return false;
   }
 
-
   screen = SDL_SetVideoMode(800, 600, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
-  //screen = SDL_SetVideoMode(800, 600, 32, SDL_FULLSCREEN | SDL_DOUBLEBUF);
   if(screen == NULL) {
      return false;
   }
@@ -65,8 +63,10 @@ int Game::init() {
   map_camera = new MapCamera(0, 0, screen, &map);
 
 
-  unit = new Unit(Surface::load("quad.bmp", 255, 0, 255));
-  devastator = new Unit(Surface::load("devastator.bmp", 255, 0, 255), 128, 128);
+  // TODO: do palette conversion on init of game, so we can grap memory copies of correct house colors there.
+  // (ie, old D2TM does palette manipulation on the fly all the time)
+  unit = new Unit(Surface::load8bit("graphics/Unit_Quad.bmp"), Surface::load("graphics/Unit_Quad_s.bmp", 255, 0, 255));
+  devastator = new Unit(Surface::load8bit("graphics/Unit_Devastator.bmp"), Surface::load("graphics/Unit_Devastator_s.bmp", 255, 0, 255), 128, 128);
 
   return true;
 }
