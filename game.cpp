@@ -14,6 +14,7 @@ Game::Game() {
   tileset=NULL;
   map_camera=NULL;
   unit=NULL;
+  devastator=NULL;
 }
 
 int Game::execute() {
@@ -65,6 +66,7 @@ int Game::init() {
 
 
   unit = new Unit(Surface::load("quad.bmp", 255, 0, 255));
+  devastator = new Unit(Surface::load("devastator.bmp", 255, 0, 255), 128, 128);
 
   return true;
 }
@@ -84,6 +86,7 @@ void Game::render() {
 
  // todo draw with camera
   map_camera->draw(unit, screen);
+  map_camera->draw(devastator, screen);
 
   SDL_Flip(screen);
 }

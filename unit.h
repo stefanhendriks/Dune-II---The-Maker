@@ -18,6 +18,7 @@ class Unit {
 
   public:
     Unit(SDL_Surface* tileset);
+    Unit(SDL_Surface* tileset, int x, int y);
 
     void draw(SDL_Surface* screen, int x, int y);
 
@@ -34,6 +35,8 @@ class Unit {
     int shadow_alpha; // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
 
     int x, y;         // coordinates relative to top/left of map (in pixels)
+
+    void init(SDL_Surface* tileset, int x, int y);
 
 };
 

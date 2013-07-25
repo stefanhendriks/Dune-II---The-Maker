@@ -27,6 +27,7 @@ class Game {
       Keyboard keyboard;
 
       Unit *unit;
+      Unit *devastator;
 };
 
 #endif
