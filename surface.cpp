@@ -59,9 +59,6 @@ void Surface::drawTrans(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_
   }
 
   SDL_BlitSurface(src, &srcRect, dest, &destRect);
-
-  // disable colorkey again
-  SDL_SetColorKey(src, 0, 0);
 }
 
 // draw transparent surface (note: this is not the same as using a color key)
