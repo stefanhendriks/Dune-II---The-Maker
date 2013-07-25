@@ -1,12 +1,16 @@
 #include "unit.h"
 #include "surface.h"
-////
+#include "random.h"
+
 Unit::Unit(SDL_Surface* tileset) {
   this->tileset = tileset;
+  this->body_facing = rnd(FACINGS);
+  this->tile_width = tileset->w / FACINGS;
+  this->tile_height = 32; // for now assumption. Need to think how to deal with shadow + top facings
 }
 
 void Unit::draw(SDL_Surface* screen) {
-  //Surface::draw(tileset, screen, 0, 0, 32, 32, 0, 0, SDL_ALPHA_OPAQUE);
-  //
-  Surface::drawTrans(tileset, screen, 0, 0, 32, 32, 0, 0);
+  int src_x = this->body_facing * this->tile_width;
+
+  Surface::drawTrans(tileset, screen, src_x, 0, this->tile_width, this->tile_height, 0, 0);
 }
