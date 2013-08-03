@@ -57,8 +57,11 @@ const int HOUSE_FREMEN =  3;
 const int HOUSE_MERCENARY =  5;
 
 
+
 const int UNIT_QUAD = 0;
 const int UNIT_DEVASTATOR = 1;
+const int MAX_UNIT_TYPES = 16;
+
 
 class UnitRepository {
 
@@ -71,8 +74,8 @@ class UnitRepository {
     Unit* create(int unitType, int house, int x, int y);
 
    private:
-      SDL_Surface* quad;
-      SDL_Surface* quad_shadow;
+      SDL_Surface* unit_animation[MAX_UNIT_TYPES];
+      SDL_Surface* unit_shadow[MAX_UNIT_TYPES];
 };
 
 #endif

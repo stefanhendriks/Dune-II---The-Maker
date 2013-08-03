@@ -51,23 +51,33 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
 //////////////////////////////////////////
 
 UnitRepository::UnitRepository() {
-  quad = Surface::load8bit("graphics/Unit_Quad.bmp");
+  for (int i = 0; i < MAX_UNIT_TYPES; i++) {
+    unit_animation[i] = NULL;
+    unit_shadow[i] = NULL;
+  }
 
-  quad_shadow = Surface::load("graphics/Unit_Quad_s.bmp", 255, 0, 255);
+  unit_animation[UNIT_QUAD] = Surface::load8bit("graphics/Unit_Quad.bmp");
+  unit_shadow[UNIT_QUAD] = Surface::load("graphics/Unit_Quad_s.bmp", 255, 0, 255);
+
+  unit_animation[UNIT_DEVASTATOR] = Surface::load8bit("graphics/Unit_Devastator.bmp");
+  unit_shadow[UNIT_DEVASTATOR] = Surface::load("graphics/Unit_Devastator_s.bmp", 255, 0, 255);
+
 }
 
 UnitRepository::~UnitRepository() {
-  SDL_FreeSurface(quad);
-  SDL_FreeSurface(quad_shadow);
+  for (int i = 0; i < MAX_UNIT_TYPES; i++) {
+    SDL_FreeSurface(unit_animation[i]);
+    SDL_FreeSurface(unit_shadow[i]);
+  }
 }
 
 Unit* UnitRepository::create(int unitType, int house, int x, int y) {
-  SDL_Surface* copy = Surface::copy(quad);
+  SDL_Surface* copy = Surface::copy(unit_animation[unitType]);
   int paletteIndexUsedForColoring = 144;
   int paletteIndex = paletteIndexUsedForColoring + (16 * house);
   SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], paletteIndexUsedForColoring, 8);
 
-  SDL_Surface* shadow_copy = Surface::copy(quad_shadow);
+  SDL_Surface* shadow_copy = Surface::copy(unit_shadow[unitType]);
   Unit* unit = new Unit(copy, shadow_copy);
   return unit;
 }
