@@ -27,6 +27,27 @@ SDL_Surface* Surface::load(std::string file) {
   return result;
 }
 
+// creates a new sdl surface, based on the source
+SDL_Surface* Surface::copy(SDL_Surface *source) {
+  int width = source->w;
+  int height = source->h;
+  Uint8 bits = source->format->BitsPerPixel;
+  cout << "Source bits is " << bits << endl;
+
+  SDL_Surface* copy = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_HWPALETTE, width, height, bits,
+                                  NULL, NULL, NULL, NULL);
+  if(copy == NULL) {
+    cerr << "Failed to create a copy of surface; " << SDL_GetError() << endl;
+    return NULL;
+  }
+
+  //SDL_SetColorKey(copy, SDL_SRCCOLORKEY, source->format->colorkey);
+
+  SDL_FillRect(copy, NULL, SDL_MapRGB(copy->format, 255, 255, 255));
+  //Surface::draw(source, copy, 0, 0);
+
+  return copy;
+}
 
 SDL_Surface* Surface::load8bit(std::string file) {
   SDL_Surface* result = NULL;
@@ -38,10 +59,6 @@ SDL_Surface* Surface::load8bit(std::string file) {
 
   SDL_SetColorKey(result, SDL_SRCCOLORKEY, SDL_MapRGB(result->format, 0, 0, 0) );
 
-  int house = rnd(6);
-  int paletteIndex = 144 + (16 * house);
-
-  SDL_SetColors(result, &result->format->palette->colors[paletteIndex], 144, 8);
 
   // downside is here, no palette conversion is done and thus we have not converted it yet
   // to the display format, causing SDL to do this for us on every blit. Which is slow.

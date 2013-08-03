@@ -28,6 +28,7 @@ class Game {
 
       Unit *unit;
       Unit *devastator;
+      UnitRepository *unitRepository;
 };
 
 #endif

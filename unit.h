@@ -19,6 +19,7 @@ class Unit {
   public:
     Unit(SDL_Surface* tileset, SDL_Surface* shadowset);
     Unit(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y);
+    ~Unit();
 
     void draw(SDL_Surface* screen, int x, int y);
 
@@ -41,6 +42,33 @@ class Unit {
 
     void init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y);
 
+};
+
+
+// TEMPORARILY HOUSES ARE DEFINED HERE, BY A LACK OF BETTER PLACE (TODO: REFACTOR)
+// note, these house numbers are based on the palette indices. As index 144 is harkonnen
+// colors and the formula to actually copy the correct colors is based from 144 + house nr
+// we just use this as a convenience.
+const int HOUSE_HARKONNEN = 0;
+const int HOUSE_ATTREIDES = 1;
+
+
+const int UNIT_QUAD = 0;
+const int UNIT_DEVASTATOR = 1;
+
+class UnitRepository {
+
+  public:
+    UnitRepository();
+    ~UnitRepository();
+
+    void destroy();
+
+    Unit* create(int unitType, int house, int x, int y);
+
+   private:
+      SDL_Surface* quad;
+      SDL_Surface* quad_shadow;
 };
 
 #endif

@@ -12,6 +12,9 @@ class Surface {
       static SDL_Surface* load(std::string file, int r, int g, int b);
       static SDL_Surface* load8bit(std::string file);
 
+      // creates a new SDL_Surface, copying its properties and contents
+      static SDL_Surface* copy(SDL_Surface *source);
+
       static void draw(SDL_Surface* src, SDL_Surface* dest, int dest_x, int dest_y);
       static void draw(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, int width, int height, int dest_x, int dest_y);
       static void draw(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, int width, int height, int dest_x, int dest_y, Uint32 alpha);

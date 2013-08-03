@@ -62,11 +62,14 @@ int Game::init() {
   map.setBoundaries(128,128);
   map_camera = new MapCamera(0, 0, screen, &map);
 
+  unitRepository = new UnitRepository();
 
   // TODO: do palette conversion on init of game, so we can grap memory copies of correct house colors there.
   // (ie, old D2TM does palette manipulation on the fly all the time)
   unit = new Unit(Surface::load8bit("graphics/Unit_Quad.bmp"), Surface::load("graphics/Unit_Quad_s.bmp", 255, 0, 255));
-  devastator = new Unit(Surface::load8bit("graphics/Unit_Devastator.bmp"), Surface::load("graphics/Unit_Devastator_s.bmp", 255, 0, 255), 128, 128);
+  //devastator = new Unit(Surface::load8bit("graphics/Unit_Devastator.bmp"), Surface::load("graphics/Unit_Devastator_s.bmp", 255, 0, 255), 128, 128);
+  unit = unitRepository->create(UNIT_QUAD, HOUSE_HARKONNEN, 0, 0);
+  devastator = unitRepository->create(UNIT_QUAD, HOUSE_HARKONNEN, 128, 128);
 
   return true;
 }
@@ -110,6 +113,9 @@ void Game::updateState() {
 
 int Game::cleanup() {
   delete map_camera;
+  delete unitRepository;
+  delete unit;
+  delete devastator;
   SDL_FreeSurface(screen);
   SDL_FreeSurface(tileset);
   SDL_Quit();
