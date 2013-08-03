@@ -23,7 +23,7 @@ void Unit::draw(SDL_Surface* screen, int x, int y) {
   int src_x = this->body_facing * this->tile_width;
   int src_y = this->tile_height * this->anim_frame;
   Surface::draw(tileset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y);
-//Surface::draw(shadowset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y, this->shadow_alpha);
+  Surface::draw(shadowset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y, this->shadow_alpha);
 }
 
 void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
@@ -66,7 +66,8 @@ Unit* UnitRepository::create(int unitType, int house, int x, int y) {
   int paletteIndexUsedForColoring = 144;
   int paletteIndex = paletteIndexUsedForColoring + (16 * house);
   SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], paletteIndexUsedForColoring, 8);
-  
-  Unit* unit = new Unit(copy, NULL);
+
+  SDL_Surface* shadow_copy = Surface::copy(quad_shadow);
+  Unit* unit = new Unit(copy, shadow_copy);
   return unit;
 }

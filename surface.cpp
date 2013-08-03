@@ -32,10 +32,8 @@ SDL_Surface* Surface::copy(SDL_Surface *source) {
   int width = source->w;
   int height = source->h;
   int bits = source->format->BitsPerPixel;
-  cout << "Source bits is " << bits << endl;
 
-  SDL_Surface* copy = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_HWPALETTE, width, height, bits,
-                                  NULL, NULL, NULL, NULL);
+  SDL_Surface* copy = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_HWPALETTE, width, height, bits, NULL, NULL, NULL, NULL);
   if(copy == NULL) {
     cerr << "Failed to create a copy of surface; " << SDL_GetError() << endl;
     return NULL;
@@ -43,6 +41,8 @@ SDL_Surface* Surface::copy(SDL_Surface *source) {
 
   if (bits == 8) {
     SDL_SetColors(copy, source->format->palette->colors, 0, 256);
+  } else {
+    SDL_FillRect(copy, NULL, SDL_MapRGB(copy->format, 255, 0, 255));
   }
 
   SDL_SetColorKey(copy, SDL_SRCCOLORKEY, source->format->colorkey);
