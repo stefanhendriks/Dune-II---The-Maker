@@ -45,16 +45,13 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
 }
 
 
-
 //////////////////////////////////////////
 // Unit Repository
 //
+//////////////////////////////////////////
 
 UnitRepository::UnitRepository() {
-  int house = rnd(6);
-  int paletteIndex = 144 + (16 * house);
   quad = Surface::load8bit("graphics/Unit_Quad.bmp");
-  SDL_SetColors(quad, &quad->format->palette->colors[paletteIndex], 144, 8);
 
   quad_shadow = Surface::load("graphics/Unit_Quad_s.bmp", 255, 0, 255);
 }
@@ -65,8 +62,11 @@ UnitRepository::~UnitRepository() {
 }
 
 Unit* UnitRepository::create(int unitType, int house, int x, int y) {
-  SDL_Surface* src = quad;
-  //SDL_Surface* src = Surface::copy(quad);
-  Unit* unit = new Unit(src, NULL);
+  SDL_Surface* copy = Surface::copy(quad);
+  int paletteIndexUsedForColoring = 144;
+  int paletteIndex = paletteIndexUsedForColoring + (16 * house);
+  SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], paletteIndexUsedForColoring, 8);
+  
+  Unit* unit = new Unit(copy, NULL);
   return unit;
 }

@@ -31,7 +31,7 @@ SDL_Surface* Surface::load(std::string file) {
 SDL_Surface* Surface::copy(SDL_Surface *source) {
   int width = source->w;
   int height = source->h;
-  Uint8 bits = source->format->BitsPerPixel;
+  int bits = source->format->BitsPerPixel;
   cout << "Source bits is " << bits << endl;
 
   SDL_Surface* copy = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_HWPALETTE, width, height, bits,
@@ -41,10 +41,13 @@ SDL_Surface* Surface::copy(SDL_Surface *source) {
     return NULL;
   }
 
-  //SDL_SetColorKey(copy, SDL_SRCCOLORKEY, source->format->colorkey);
+  if (bits == 8) {
+    SDL_SetColors(copy, source->format->palette->colors, 0, 256);
+  }
 
-  SDL_FillRect(copy, NULL, SDL_MapRGB(copy->format, 255, 255, 255));
-  //Surface::draw(source, copy, 0, 0);
+  SDL_SetColorKey(copy, SDL_SRCCOLORKEY, source->format->colorkey);
+
+  Surface::draw(source, copy, 0, 0);
 
   return copy;
 }

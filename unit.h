@@ -50,7 +50,11 @@ class Unit {
 // colors and the formula to actually copy the correct colors is based from 144 + house nr
 // we just use this as a convenience.
 const int HOUSE_HARKONNEN = 0;
-const int HOUSE_ATTREIDES = 1;
+const int HOUSE_ATREIDES =  1;
+const int HOUSE_ORDOS =  2;
+const int HOUSE_SARDAUKAR =  4;
+const int HOUSE_FREMEN =  3;
+const int HOUSE_MERCENARY =  5;
 
 
 const int UNIT_QUAD = 0;
