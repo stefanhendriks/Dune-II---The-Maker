@@ -23,8 +23,8 @@ class Unit {
 
     void draw(SDL_Surface* screen, int x, int y);
 
-    int getX() { return x; }
-    int getY() { return y; }
+    int getDrawX() { return x + offset_x; }
+    int getDrawY() { return y + offset_y; }
 
   private:
     SDL_Surface* tileset;
@@ -39,6 +39,8 @@ class Unit {
     int x, y;         // coordinates relative to top/left of map (in pixels)
 
     int anim_frame;   // animation frames are 'rows' in the tileset
+
+    int offset_x, offset_y; // the offset from the tile respective up-left corner
 
     void init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y);
 

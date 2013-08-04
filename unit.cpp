@@ -22,6 +22,7 @@ Unit::~Unit() {
 void Unit::draw(SDL_Surface* screen, int x, int y) {
   int src_x = this->body_facing * this->tile_width;
   int src_y = this->tile_height * this->anim_frame;
+
   Surface::draw(tileset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y);
   Surface::draw(shadowset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y, this->shadow_alpha);
 }
@@ -54,6 +55,10 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
   this->x = x;
   this->y = y;
   this->anim_frame = 0;
+
+  // every pixel short/too much of the perfect tile size will be spread evenly 
+  this->offset_x = (TILE_SIZE - this->tile_width) / 2;
+  this->offset_y = (TILE_SIZE - this->tile_height) / 2;
 }
 
 
@@ -92,6 +97,6 @@ Unit* UnitRepository::create(int unitType, int house, int x, int y) {
   SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], paletteIndexUsedForColoring, 8);
 
   SDL_Surface* shadow_copy = Surface::copy(unit_shadow[unitType]);
-  Unit* unit = new Unit(copy, shadow_copy);
+  Unit* unit = new Unit(copy, shadow_copy, x, y);
   return unit;
 }

@@ -34,8 +34,8 @@ MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map) {
 void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
 
   // translate x , y into screen coordinates
-  int draw_x = unit->getX() - this->x;
-  int draw_y = unit->getY() - this->y;
+  int draw_x = unit->getDrawX() - this->x;
+  int draw_y = unit->getDrawY() - this->y;
 
   unit->draw(screen, draw_x, draw_y);
 }

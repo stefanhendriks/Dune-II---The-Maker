@@ -7,8 +7,6 @@
 
 using namespace std;
 
-const int TILE_SIZE = 32; // squared
-
 Surface::Surface() {
 }
 
