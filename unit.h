@@ -59,7 +59,8 @@ const int HOUSE_MERCENARY =  5;
 
 
 const int UNIT_QUAD = 0;
-const int UNIT_DEVASTATOR = 1;
+const int UNIT_TRIKE = 1;
+const int UNIT_DEVASTATOR = 2;
 const int MAX_UNIT_TYPES = 16;
 
 

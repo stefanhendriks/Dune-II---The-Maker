@@ -33,11 +33,23 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
   this->tile_width = tileset->w / FACINGS;
   // check if our assumption (width==height) is true for this tileset, and if not warn the user.
   if (tileset->h % this->tile_width > 0) {
-    cerr << "WARNING: Tileset must have tiles with same height as width, assuming thats the case.";
-    cerr << "(Tile width is " << this->tile_width << "(Will divide " << tileset->h << " with " << this->tile_width << " makes " << (tileset->h / this->tile_width) << ") which would be ok if height where " << (tileset->h / this->tile_width) * this->tile_width << ")";
+    cerr << "WARNING: This tileset does not meet the requirement : tile height must equal width." << endl << endl;
+    cerr << "Based on 8 sides of a unit, the calculated width of a tile on this tileset is " << this->tile_width << ". The general assumption is that the height of a tile must equal width. " << endl;
+    cerr << "However the height of this tileset (" << tileset->h << ") was not one or more multiplications of " << this->tile_width << ". Its dimensions are " << tileset->h << "x" << tileset->w << ".";
     cerr << endl;
+
+    // if it is less height than wide, we
+    if (tileset->h < this->tile_width) {
+      cerr << "Because the height of the tileset (" << tileset->h << ") is *lower* than the width of a calculated tile(=" << this->tile_width << ") (and therefor has no animations). We assume the height of the tileset of " << tileset->h << "." << endl;
+      this->tile_height = tileset->h;
+    } else {
+      cerr << "Since the height of the tileset (" << tileset->h << ") is *greater* than the width of a calculated tile(=" << this->tile_width <<") (which means there could be animations) we assume the height equals the calculated width of " << this->tile_width << "." << endl;
+      this->tile_height = this->tile_width;
+    }
+    cerr << endl;
+  } else {
+    this->tile_height = this->tile_width;
   }
-  this->tile_height = this->tile_width;
   this->shadow_alpha = 128;
   this->x = x;
   this->y = y;
@@ -62,6 +74,8 @@ UnitRepository::UnitRepository() {
   unit_animation[UNIT_DEVASTATOR] = Surface::load8bit("graphics/Unit_Devastator.bmp");
   unit_shadow[UNIT_DEVASTATOR] = Surface::load("graphics/Unit_Devastator_s.bmp", 255, 0, 255);
 
+  unit_animation[UNIT_TRIKE] = Surface::load8bit("graphics/Unit_Trike.bmp");
+  unit_shadow[UNIT_TRIKE] = Surface::load("graphics/Unit_Trike_s.bmp", 255, 0, 255);
 }
 
 UnitRepository::~UnitRepository() {
