@@ -42,13 +42,13 @@ TODO: ((as a player I) should be able to...)
     <li>pixel perfect scrolling instead of cell by cell</li>
     <li>scroll by holding arrow keys instead of having to press/release all the time</li>
     <li>scroll by 'hitting mouse' on screen borders</li>
-  </ul>
+    <li>see units (draw them)</li>
+    <li>see units drawn in center when bigger than 32x32 pixels</li>
+    <li>see a shadow of a unit</li>
+    <li>see units of my own color (palette trickery)</li>
+</ul>
 </del>
 
-- see units (draw them)
-- see units drawn in center when bigger than 32x32 pixels
-- see a shadow of a unit
-- see units of my own color (palette trickery)
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - select one unit
 - select multiple units
