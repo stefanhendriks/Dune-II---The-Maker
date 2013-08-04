@@ -56,7 +56,7 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
   this->y = y;
   this->anim_frame = 0;
 
-  // every pixel short/too much of the perfect tile size will be spread evenly 
+  // every pixel short/too much of the perfect tile size will be spread evenly
   this->offset_x = (TILE_SIZE - this->tile_width) / 2;
   this->offset_y = (TILE_SIZE - this->tile_height) / 2;
 }
