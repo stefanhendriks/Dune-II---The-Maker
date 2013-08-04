@@ -23,8 +23,8 @@ void Unit::draw(SDL_Surface* screen, int x, int y) {
   int src_x = this->body_facing * this->tile_width;
   int src_y = this->tile_height * this->anim_frame;
 
-  Surface::draw(tileset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y);
   Surface::draw(shadowset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y, this->shadow_alpha);
+  Surface::draw(tileset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y);
 }
 
 void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
@@ -78,6 +78,9 @@ UnitRepository::UnitRepository() {
 
   unit_animation[UNIT_DEVASTATOR] = Surface::load8bit("graphics/Unit_Devastator.bmp");
   unit_shadow[UNIT_DEVASTATOR] = Surface::load("graphics/Unit_Devastator_s.bmp", 255, 0, 255);
+
+  unit_animation[UNIT_FRIGATE] = Surface::load8bit("graphics/Unit_Frigate.bmp");
+  unit_shadow[UNIT_FRIGATE] = Surface::load("graphics/Unit_Frigate_s.bmp", 255, 0, 255);
 
   unit_animation[UNIT_CARRYALL] = Surface::load8bit("graphics/Unit_Carryall.bmp");
   unit_shadow[UNIT_CARRYALL] = Surface::load("graphics/Unit_Carryall_s.bmp", 255, 0, 255);
