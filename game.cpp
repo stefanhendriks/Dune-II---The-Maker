@@ -64,7 +64,7 @@ int Game::init() {
 
   unitRepository = new UnitRepository();
 
-  unit = unitRepository->create(UNIT_DEVASTATOR, HOUSE_SARDAUKAR, 0, 0);
+  unit = unitRepository->create(UNIT_CARRYALL, HOUSE_SARDAUKAR, 64, 64);
   devastator = unitRepository->create(UNIT_TRIKE, HOUSE_MERCENARY, 128, 128);
 
   return true;
