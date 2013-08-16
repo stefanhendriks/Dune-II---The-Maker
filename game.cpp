@@ -2,6 +2,7 @@
 
 #include "SDL/SDL.h"
 #include "SDL_image.h"
+#include "SDL_gfxPrimitives.h"
 #include "map.h"
 #include "game.h"
 #include "surface.h"
@@ -87,6 +88,11 @@ void Game::render() {
  // todo draw with camera
   map_camera->draw(unit, screen);
   map_camera->draw(devastator, screen);
+
+  int mouse_x, mouse_y;
+  SDL_GetMouseState(&mouse_x, &mouse_y);
+  
+  rectangleRGBA(screen, 10, 10, mouse_x, mouse_y, 255, 255, 255, 255);
 
   SDL_Flip(screen);
 }
