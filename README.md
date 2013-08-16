@@ -50,7 +50,8 @@ TODO: ((as a player I) should be able to...)
 </ul>
 </del>
 
-- select multiple units
+- draw a rectangle by holding left mouse button
+- select multiple units by dragging rectangle over units and releasing left mouse button
 - order a unit to move to a position
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - order a unit to attack a position
