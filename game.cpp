@@ -136,10 +136,11 @@ void Game::updateState() {
     int rectY = map_camera->worldCoordinateY(mouse.getRectY());
     int endX = map_camera->worldCoordinateX(mouse.x());
     int endY = map_camera->worldCoordinateY(mouse.y());
-    // TOFIX: Danger: what if mouse x, y are < than rect x, y?
 
     if (endX < rectX) swap(endX, rectX);
     if (endY < rectY) swap(endY, rectY);
+
+    // bug: when user 'clicks' it deselects always now... 
 
     unit->unselect();
     devastator->unselect();
