@@ -89,7 +89,10 @@ void Game::render() {
   map_camera->draw(unit, screen);
   map_camera->draw(devastator, screen);
 
-  rectangleRGBA(screen, 10, 10, mouse.x(), mouse.y(), 255, 255, 255, 255);
+  if (mouse.left_button_held()) {
+    rectangleRGBA(screen, mouse.getRectX(), mouse.getRectY(), mouse.x(), mouse.y(), 255, 255, 255, 255);
+  }
+
 
   SDL_Flip(screen);
 }
@@ -111,13 +114,13 @@ void Game::updateState() {
   if (mouse.y() >= (screen->h - 1)) map_camera->moveDown();
 
   if (isInRect(devastator->getDrawX(), devastator->getDrawY(), devastator->width(), devastator->height())) {
-    if(mouse.left_button_pressed()) {
+    if(mouse.left_button_pressed() && !mouse.left_button_held()) {
       devastator->select();
     }
   }
 
   if (isInRect(unit->getDrawX(), unit->getDrawY(), unit->width(), unit->height())) {
-    if(mouse.left_button_pressed()) {
+    if(mouse.left_button_pressed() && !mouse.left_button_held()) {
       unit->select();
     }
   }
@@ -125,6 +128,26 @@ void Game::updateState() {
   if(mouse.right_button_pressed()) {
     devastator->unselect();
     unit->unselect();
+  }
+
+
+  if (mouse.left_button_no_more_held()) {
+    int rectX = map_camera->worldCoordinateX(mouse.getRectX());
+    int rectY = map_camera->worldCoordinateY(mouse.getRectY());
+    int endX = map_camera->worldCoordinateX(mouse.x());
+    int endY = map_camera->worldCoordinateY(mouse.y());
+    // TOFIX: Danger: what if mouse x, y are < than rect x, y?
+
+    unit->unselect();
+    devastator->unselect();
+
+    if (isUnitInRect(devastator, rectX, rectY, endX, endY)) {
+        devastator->select();
+    }
+
+    if (isUnitInRect(unit, rectX, rectY, endX, endY)) {
+        unit->select();
+    }
   }
 
 }
@@ -140,6 +163,12 @@ int Game::cleanup() {
   return 0;
 }
 
+bool Game::isUnitInRect(Unit* unit, int x, int y, int end_x, int end_y) {
+  // this checks the up-left position of a unit: TODO: do rectangle intersection
+  int unit_x = unit->getDrawX();
+  int unit_y = unit->getDrawY();
+  return (unit_x >= x && unit_x < end_x) && (unit_y >= y && unit_y < end_y);
+}
 
 bool Game::isInRect(int x, int y, int width, int height) {
   int mouse_x = mouse.x();

@@ -76,7 +76,7 @@ class MapCamera {
     void draw(Unit* unit, SDL_Surface* screen);
 
 
-    int worldCoorindateX(int x) { return this->x + x; };
+    int worldCoordinateX(int x) { return this->x + x; };
     int worldCoordinateY(int y) { return this->y + y; };
 
 	private:
