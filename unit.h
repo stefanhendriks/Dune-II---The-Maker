@@ -30,6 +30,7 @@ class Unit {
     int height() { return tile_width; }
 
     void select() { selected = true; }
+    void unselect() { selected = false; }
 
   private:
     SDL_Surface* tileset;

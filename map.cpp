@@ -37,6 +37,7 @@ void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
   int draw_x = unit->getDrawX() - this->x;
   int draw_y = unit->getDrawY() - this->y;
 
+  // REFACTOR:
   if (isInRect(draw_x, draw_y, unit->width(), unit->height())) {
     SDL_Rect rect;
     rect.w = unit->width();
@@ -48,6 +49,12 @@ void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
     if(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1)) {
       unit->select();
     }
+  }
+
+  // REFACTOR: (dafuq?)
+  if(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(3)) {
+    // C&C way deselecting!
+    unit->unselect();
   }
 
   // TODO: if not on screen, do not draw
