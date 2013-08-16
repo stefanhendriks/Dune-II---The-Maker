@@ -29,6 +29,7 @@ int Game::execute() {
 
     updateState();
     render();
+    // SDL rest?
   }
 
   return cleanup();
@@ -65,7 +66,7 @@ int Game::init() {
   unitRepository = new UnitRepository();
 
   unit = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64);
-  devastator = unitRepository->create(UNIT_TRIKE, HOUSE_MERCENARY, 128, 128);
+  devastator = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 128, 128);
 
   return true;
 }
