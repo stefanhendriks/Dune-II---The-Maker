@@ -18,13 +18,14 @@ This project has makefiles for Windows (mingw32), Linux (ubuntu) and Mac OSX.
 Dependencies:
 - SDL
 - SDL Image
+- SDL Gfx
 
 After you check out this project, copy the appropiate makefile (with the extension matching your OS) as 'makefile'. After that hit make.
 
 Example, OSX && [homebrew](http://mxcl.github.io/homebrew/):
 ------------------------------------------------------------
 - Install XCode CLI tools
-- Using brew, install dependencies: `brew install SDL && brew install sdl_image`
+- Using brew, install dependencies: `brew install SDL sdl_image sdl_gfx`
 - Then: `cp makefile.osx makefile`
 - `make`
 
