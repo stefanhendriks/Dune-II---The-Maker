@@ -138,6 +138,9 @@ void Game::updateState() {
     int endY = map_camera->worldCoordinateY(mouse.y());
     // TOFIX: Danger: what if mouse x, y are < than rect x, y?
 
+    if (endX < rectX) swap(endX, rectX);
+    if (endY < rectY) swap(endY, rectY);
+
     unit->unselect();
     devastator->unselect();
 
