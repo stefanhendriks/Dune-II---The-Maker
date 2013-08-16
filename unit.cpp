@@ -25,13 +25,14 @@ void Unit::draw(SDL_Surface* screen, int x, int y) {
 
   Surface::draw(shadowset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y, this->shadow_alpha);
   Surface::draw(tileset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y);
-  
-  if (selected) Surface::draw(selected_bitmap, screen, x, y);
+
+  if (selected)
+      Surface::draw(selected_bitmap, screen, x, y);
 }
 
 void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
   this->selected = false;
-  this->selected_bitmap = Surface::load8bit("graphics/selected.bmp");
+  this->selected_bitmap = Surface::load("graphics/selected.bmp", 0, 0, 0);
   this->tileset = tileset;
   this->shadowset = shadowset;
   this->body_facing = rnd(FACINGS);
