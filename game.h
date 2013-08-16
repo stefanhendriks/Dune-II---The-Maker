@@ -19,7 +19,6 @@ class Game {
       void updateState();
       void render();
       int cleanup();
-
       bool playing;
       SDL_Surface *screen;
       SDL_Surface *tileset;
@@ -28,9 +27,14 @@ class Game {
       Keyboard keyboard;
       Mouse mouse;
 
+      // THIS WILL BE A LIST/ARRAY/VECTOR OF SOME SORT SOME DAY
       Unit *unit;
       Unit *devastator;
+      // END
+
       UnitRepository *unitRepository;
+
+      bool isInRect(int x, int y, int width, int height);
 };
 
 #endif

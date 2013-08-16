@@ -13,3 +13,4 @@ void Mouse::update_state() {
   _left_button_pressed = SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1);
   _right_button_pressed = SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(3);
 }
+

@@ -38,35 +38,10 @@ void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
   int draw_x = unit->getDrawX() - this->x;
   int draw_y = unit->getDrawY() - this->y;
 
-  // REFACTOR:
-  if (isInRect(draw_x, draw_y, unit->width(), unit->height())) {
-    SDL_Rect rect;
-    rect.w = unit->width();
-    rect.h = unit->height();
-    rect.x = draw_x;
-    rect.y = draw_y;
-    SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format , 128 , 128 , 128 ) );
-
-    if(mouse->left_button_pressed()) {
-      unit->select();
-    }
-  }
-
-  // REFACTOR: (dafuq?)
-  if(mouse->right_button_pressed()) {
-    // C&C way deselecting!
-    unit->unselect();
-  }
-
   // TODO: if not on screen, do not draw
   unit->draw(screen, draw_x, draw_y);
 }
 
-bool MapCamera::isInRect(int x, int y, int width, int height) {
-  int mouse_x = mouse->x();
-  int mouse_y = mouse->y();
-  return (mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y < (y + height));
-}
 
 void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
   // determine x and y from map data.

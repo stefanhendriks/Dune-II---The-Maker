@@ -76,7 +76,9 @@ class MapCamera {
     void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
     void draw(Unit* unit, SDL_Surface* screen);
 
-    bool isInRect(int x, int y, int width, int height);
+
+    int worldCoorindateX(int x) { return this->x + x; };
+    int worldCoordinateY(int y) { return this->y + y; };
 
 	private:
     Mouse *mouse;

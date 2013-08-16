@@ -109,6 +109,24 @@ void Game::updateState() {
   if (mouse.x() >= (screen->w - 1)) map_camera->moveRight();
   if (mouse.y() <= 1) map_camera->moveUp();
   if (mouse.y() >= (screen->h - 1)) map_camera->moveDown();
+
+  if (isInRect(devastator->getDrawX(), devastator->getDrawY(), devastator->width(), devastator->height())) {
+    if(mouse.left_button_pressed()) {
+      devastator->select();
+    }
+  }
+
+  if (isInRect(unit->getDrawX(), unit->getDrawY(), unit->width(), unit->height())) {
+    if(mouse.left_button_pressed()) {
+      unit->select();
+    }
+  }
+
+  if(mouse.right_button_pressed()) {
+    devastator->unselect();
+    unit->unselect();
+  }
+
 }
 
 int Game::cleanup() {
@@ -123,3 +141,8 @@ int Game::cleanup() {
 }
 
 
+bool Game::isInRect(int x, int y, int width, int height) {
+  int mouse_x = mouse.x();
+  int mouse_y = mouse.y();
+  return (mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y < (y + height));
+}
