@@ -49,10 +49,10 @@ TODO: ((as a player I) should be able to...)
 </ul>
 </del>
 
-- see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - select one unit
 - select multiple units
 - order a unit to move to a position
+- see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - order a unit to attack a position
 - explore the terrain by clearing a Fog of War
 - enjoy the terrain smoothened (smoothing algorithm)
