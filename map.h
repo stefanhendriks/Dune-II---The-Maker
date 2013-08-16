@@ -75,6 +75,8 @@ class MapCamera {
     void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
     void draw(Unit* unit, SDL_Surface* screen);
 
+    bool isInRect(int x, int y, int width, int height);
+
 	private:
 		int x, y;
 		int max_cells_width_on_screen;

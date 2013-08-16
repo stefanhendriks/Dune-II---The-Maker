@@ -46,10 +46,10 @@ TODO: ((as a player I) should be able to...)
     <li>see units drawn in center when bigger than 32x32 pixels</li>
     <li>see a shadow of a unit</li>
     <li>see units of my own color (palette trickery)</li>
+    <li>select one unit</li>
 </ul>
 </del>
 
-- select one unit
 - select multiple units
 - order a unit to move to a position
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))

@@ -26,13 +26,20 @@ class Unit {
     int getDrawX() { return x + offset_x; }
     int getDrawY() { return y + offset_y; }
 
+    int width() { return tile_height; }
+    int height() { return tile_width; }
+
+    void select() { selected = true; }
+    void unselect() { selected = false; }
+
   private:
     SDL_Surface* tileset;
     SDL_Surface* shadowset;
+    SDL_Surface* selected_bitmap;
     int body_facing;  // facing, 8 directions. Clock-wise. ie: 0 (up), 1 (up-right), 2 (right), etc;
 
     int tile_width;   // the width is tileset width / 8
-    int tile_height;  // the height is tileset height / 2 (expecting shadow as second row)
+    int tile_height;
 
     int shadow_alpha; // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
 
@@ -44,6 +51,7 @@ class Unit {
 
     void init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y);
 
+    bool selected;
 };
 
 
