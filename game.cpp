@@ -62,7 +62,7 @@ int Game::init() {
   }
 
   map.setBoundaries(128,128);
-  map_camera = new MapCamera(0, 0, screen, &map);
+  map_camera = new MapCamera(0, 0, screen, &map, &mouse);
 
   unitRepository = new UnitRepository();
 
@@ -89,10 +89,7 @@ void Game::render() {
   map_camera->draw(unit, screen);
   map_camera->draw(devastator, screen);
 
-  int mouse_x, mouse_y;
-  SDL_GetMouseState(&mouse_x, &mouse_y);
-  
-  rectangleRGBA(screen, 10, 10, mouse_x, mouse_y, 255, 255, 255, 255);
+  rectangleRGBA(screen, 10, 10, mouse.x(), mouse.y(), 255, 255, 255, 255);
 
   SDL_Flip(screen);
 }
@@ -106,13 +103,12 @@ void Game::updateState() {
 
   if (keyboard.isQPressed()) playing = false;
 
-  int mouse_x, mouse_y;
-  SDL_GetMouseState(&mouse_x, &mouse_y);
+  mouse.update_state();
 
-  if (mouse_x <= 1) map_camera->moveLeft();
-  if (mouse_x >= (screen->w - 1)) map_camera->moveRight();
-  if (mouse_y <= 1) map_camera->moveUp();
-  if (mouse_y >= (screen->h - 1)) map_camera->moveDown();
+  if (mouse.x() <= 1) map_camera->moveLeft();
+  if (mouse.x() >= (screen->w - 1)) map_camera->moveRight();
+  if (mouse.y() <= 1) map_camera->moveUp();
+  if (mouse.y() >= (screen->h - 1)) map_camera->moveDown();
 }
 
 int Game::cleanup() {

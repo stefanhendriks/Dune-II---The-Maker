@@ -3,6 +3,7 @@
 
 #include "map.h"
 #include "keyboard.h"
+#include "mouse.h"
 #include "unit.h"
 
 class Game {
@@ -25,6 +26,7 @@ class Game {
       MapCamera *map_camera;
       Map map;
       Keyboard keyboard;
+      Mouse mouse;
 
       Unit *unit;
       Unit *devastator;

@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "unit.h"
+#include "mouse.h"
 
 using namespace std;
 
@@ -59,7 +60,7 @@ class Map {
 class MapCamera {
 
 	public:
-		MapCamera(int x, int y, SDL_Surface* screen, Map* map);
+		MapCamera(int x, int y, SDL_Surface* screen, Map* map, Mouse *mouse);
 
 		int getX() { return x; }
 		int getY() { return y; }
@@ -78,13 +79,13 @@ class MapCamera {
     bool isInRect(int x, int y, int width, int height);
 
 	private:
+    Mouse *mouse;
 		int x, y;
 		int max_cells_width_on_screen;
 		int max_cells_height_on_screen;
     int map_y_boundary;
     int map_x_boundary;
     int scroll_speed;
-
 
     int max_y() { return (map_y_boundary - max_cells_height_on_screen) * 32; }
     int max_x() { return (map_x_boundary - max_cells_width_on_screen) * 32; }

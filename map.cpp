@@ -21,7 +21,7 @@ void Map::setBoundaries(int max_width, int max_height) {
 
 //=============================================================================
 //
-MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map) {
+MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map, Mouse* mouse) {
   this->x = x; // pixel size, relative to map (starts at 0,0)
   this->y = y;
   this->max_cells_width_on_screen = ceil(screen->w / 32);
@@ -29,6 +29,7 @@ MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map) {
   this->map_y_boundary = map->getMaxHeight();
   this->map_x_boundary = map->getMaxWidth();
   this->scroll_speed = 8;
+  this->mouse = mouse;
 }
 
 void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
@@ -46,13 +47,13 @@ void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
     rect.y = draw_y;
     SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format , 128 , 128 , 128 ) );
 
-    if(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1)) {
+    if(mouse->left_button_pressed()) {
       unit->select();
     }
   }
 
   // REFACTOR: (dafuq?)
-  if(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(3)) {
+  if(mouse->right_button_pressed()) {
     // C&C way deselecting!
     unit->unselect();
   }
@@ -62,8 +63,8 @@ void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
 }
 
 bool MapCamera::isInRect(int x, int y, int width, int height) {
-  int mouse_x, mouse_y;
-  SDL_GetMouseState(&mouse_x, &mouse_y);
+  int mouse_x = mouse->x();
+  int mouse_y = mouse->y();
   return (mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y < (y + height));
 }
 
