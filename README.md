@@ -36,35 +36,40 @@ Example, Ubuntu (inspired by [Lazy Foo](http://lazyfoo.net/SDL_tutorials/lesson0
 
 TODO: ((as a player I) should be able to...)
 ============================================
-- [ ] move the camera around
-- [ ] Pixel perfect scrolling instead of cell by cell
-- [ ] Scroll by holding arrow keys instead of having to press/release all the time
-- [ ] scroll by 'hitting mouse' on screen borders
-- [ ] see units (draw them)
-- [ ] see units drawn in center when bigger than 32x32 pixels
-- [ ] see a shadow of a unit
-- [ ] see units of my own color (palette trickery)
-- [ ] see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
-- [ ] select one unit
-- [ ] select multiple units
-- [ ] order a unit to move to a position
-- [ ] order a unit to attack a position
-- [ ] explore the terrain by clearing a Fog of War
-- [ ] enjoy the terrain smoothened (smoothing algorithm)
-- [ ] see structures (draw them)
-- [ ] select my structure
-- [ ] build another structure from a Construction Yard
-- [ ] build infantry from a Barracks
-- [ ] build troopers from a WOR
-- [ ] build light vehicles from a Light Factory
-- [ ] build heavy vehicles from a Heavy Factory
-- [ ] build air units from a High-Tech
-- [ ] upgrade my structures to gain access to other units
-- [ ] upgrade my units (??)
-- [ ] receive reinforcements from time to time
-- [ ] mine spice with a harvester
-- [ ] get my units transported much faster by a carry-all
-- [ ] scroll by holding mouse key and move from that position
+<del>
+  <ul>
+    <li>move the camera around</li>
+    <li>pixel perfect scrolling instead of cell by cell</li>
+    <li>scroll by holding arrow keys instead of having to press/release all the time</li>
+    <li>scroll by 'hitting mouse' on screen borders</li>
+    <li>see units (draw them)</li>
+    <li>see units drawn in center when bigger than 32x32 pixels</li>
+    <li>see a shadow of a unit</li>
+    <li>see units of my own color (palette trickery)</li>
+</ul>
+</del>
+
+- see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
+- select one unit
+- select multiple units
+- order a unit to move to a position
+- order a unit to attack a position
+- explore the terrain by clearing a Fog of War
+- enjoy the terrain smoothened (smoothing algorithm)
+- see structures (draw them)
+- select my structure
+- build another structure from a Construction Yard
+- build infantry from a Barracks
+- build troopers from a WOR
+- build light vehicles from a Light Factory
+- build heavy vehicles from a Heavy Factory
+- build air units from a High-Tech
+- upgrade my structures to gain access to other units
+- upgrade my units (??)
+- receive reinforcements from time to time
+- mine spice with a harvester
+- get my units transported much faster by a carry-all
+- scroll by holding mouse key and move from that position
 
 
 Controls
