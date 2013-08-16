@@ -37,35 +37,10 @@ void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
   int draw_x = unit->getDrawX() - this->x;
   int draw_y = unit->getDrawY() - this->y;
 
-  // REFACTOR:
-  if (isInRect(draw_x, draw_y, unit->width(), unit->height())) {
-    SDL_Rect rect;
-    rect.w = unit->width();
-    rect.h = unit->height();
-    rect.x = draw_x;
-    rect.y = draw_y;
-    SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format , 128 , 128 , 128 ) );
-
-    if(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1)) {
-      unit->select();
-    }
-  }
-
-  // REFACTOR: (dafuq?)
-  if(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(3)) {
-    // C&C way deselecting!
-    unit->unselect();
-  }
-
   // TODO: if not on screen, do not draw
   unit->draw(screen, draw_x, draw_y);
 }
 
-bool MapCamera::isInRect(int x, int y, int width, int height) {
-  int mouse_x, mouse_y;
-  SDL_GetMouseState(&mouse_x, &mouse_y);
-  return (mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y < (y + height));
-}
 
 void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
   // determine x and y from map data.
@@ -81,10 +56,6 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
   for (int dx = startX; dx < endX; dx++) {
     for (int dy = startY; dy < endY; dy++) {
       Cell c = map->getCell(dx, dy);
-
-      int mouse_x, mouse_y;
-      SDL_GetMouseState(&mouse_x, &mouse_y);
-
       // weird: have to compensate for the coordinates above. Drawing should be done separately
       // from coordinates of map.
       int drawX = (dx - startX) * 32;
@@ -94,15 +65,6 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
       drawY -= offsetY;
 
       Surface::drawTile(tileset, screen, c.tile, drawX, drawY);
-
-      if ((mouse_x >= drawX && mouse_x <= (drawX + 32)) && (mouse_y >= drawY && mouse_y <= (drawY + 32))) {
-	      SDL_Rect rect;
-	      rect.w = 32;
-	      rect.h = 32;
-	      rect.x = drawX;
-	      rect.y = drawY;
-	      SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format , 0 , 0 , 20 ) );
-      }
     }
   }
 }
