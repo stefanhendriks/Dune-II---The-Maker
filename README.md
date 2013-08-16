@@ -36,7 +36,7 @@ Example, Ubuntu (inspired by [Lazy Foo](http://lazyfoo.net/SDL_tutorials/lesson0
 
 TODO: ((as a player I) should be able to...)
 ============================================
- - [ ] move the camera around
+- [ ] move the camera around
 - [ ] Pixel perfect scrolling instead of cell by cell
 - [ ] Scroll by holding arrow keys instead of having to press/release all the time
 - [ ] scroll by 'hitting mouse' on screen borders
