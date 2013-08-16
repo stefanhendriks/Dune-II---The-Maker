@@ -44,6 +44,10 @@ void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
     rect.x = draw_x;
     rect.y = draw_y;
     SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format , 128 , 128 , 128 ) );
+
+    if(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1)) {
+      unit->select();
+    }
   }
 
   // TODO: if not on screen, do not draw

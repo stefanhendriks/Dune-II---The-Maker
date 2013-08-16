@@ -29,10 +29,12 @@ class Unit {
     int width() { return tile_height; }
     int height() { return tile_width; }
 
+    void select() { selected = true; }
 
   private:
     SDL_Surface* tileset;
     SDL_Surface* shadowset;
+    SDL_Surface* selected_bitmap;
     int body_facing;  // facing, 8 directions. Clock-wise. ie: 0 (up), 1 (up-right), 2 (right), etc;
 
     int tile_width;   // the width is tileset width / 8
@@ -48,6 +50,7 @@ class Unit {
 
     void init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y);
 
+    bool selected;
 };
 
 
