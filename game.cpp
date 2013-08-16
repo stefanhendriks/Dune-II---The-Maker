@@ -92,6 +92,7 @@ void Game::render() {
 }
 
 void Game::updateState() {
+  SDL_PumpEvents();
   if (keyboard.isUpPressed()) map_camera->moveUp();
   if (keyboard.isDownPressed()) map_camera->moveDown();
   if (keyboard.isLeftPressed()) map_camera->moveLeft();
