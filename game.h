@@ -3,6 +3,7 @@
 
 #include "map.h"
 #include "keyboard.h"
+#include "mouse.h"
 #include "unit.h"
 
 class Game {
@@ -18,17 +19,23 @@ class Game {
       void updateState();
       void render();
       int cleanup();
-
       bool playing;
       SDL_Surface *screen;
       SDL_Surface *tileset;
       MapCamera *map_camera;
       Map map;
       Keyboard keyboard;
+      Mouse mouse;
 
+      // THIS WILL BE A LIST/ARRAY/VECTOR OF SOME SORT SOME DAY
       Unit *unit;
       Unit *devastator;
+      // END
+
       UnitRepository *unitRepository;
+
+      bool isInRect(int x, int y, int width, int height);
+      bool isUnitInRect(Unit* unit, int x, int y, int width, int height);
 };
 
 #endif

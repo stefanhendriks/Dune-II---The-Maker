@@ -18,13 +18,14 @@ This project has makefiles for Windows (mingw32), Linux (ubuntu) and Mac OSX.
 Dependencies:
 - SDL
 - SDL Image
+- SDL Gfx
 
 After you check out this project, copy the appropiate makefile (with the extension matching your OS) as 'makefile'. After that hit make.
 
 Example, OSX && [homebrew](http://mxcl.github.io/homebrew/):
 ------------------------------------------------------------
 - Install XCode CLI tools
-- Using brew, install dependencies: `brew install SDL && brew install sdl_image`
+- Using brew, install dependencies: `brew install SDL sdl_image sdl_gfx`
 - Then: `cp makefile.osx makefile`
 - `make`
 
@@ -47,10 +48,10 @@ TODO: ((as a player I) should be able to...)
     <li>see a shadow of a unit</li>
     <li>see units of my own color (palette trickery)</li>
     <li>select one unit</li>
+    <li>draw a rectangle by holding left mouse button</li>
 </ul>
 </del>
 
-- draw a rectangle by holding left mouse button
 - select multiple units by dragging rectangle over units and releasing left mouse button
 - order a unit to move to a position
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))

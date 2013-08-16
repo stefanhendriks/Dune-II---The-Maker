@@ -75,7 +75,9 @@ class MapCamera {
     void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
     void draw(Unit* unit, SDL_Surface* screen);
 
-    bool isInRect(int x, int y, int width, int height);
+
+    int worldCoordinateX(int x) { return this->x + x; };
+    int worldCoordinateY(int y) { return this->y + y; };
 
 	private:
 		int x, y;
@@ -84,7 +86,6 @@ class MapCamera {
     int map_y_boundary;
     int map_x_boundary;
     int scroll_speed;
-
 
     int max_y() { return (map_y_boundary - max_cells_height_on_screen) * 32; }
     int max_x() { return (map_x_boundary - max_cells_width_on_screen) * 32; }
