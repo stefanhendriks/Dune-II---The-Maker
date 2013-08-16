@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include "unit.h"
-#include "mouse.h"
 
 using namespace std;
 
@@ -60,7 +59,7 @@ class Map {
 class MapCamera {
 
 	public:
-		MapCamera(int x, int y, SDL_Surface* screen, Map* map, Mouse *mouse);
+		MapCamera(int x, int y, SDL_Surface* screen, Map* map);
 
 		int getX() { return x; }
 		int getY() { return y; }
@@ -81,7 +80,6 @@ class MapCamera {
     int worldCoordinateY(int y) { return this->y + y; };
 
 	private:
-    Mouse *mouse;
 		int x, y;
 		int max_cells_width_on_screen;
 		int max_cells_height_on_screen;

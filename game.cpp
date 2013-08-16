@@ -62,7 +62,7 @@ int Game::init() {
   }
 
   map.setBoundaries(128,128);
-  map_camera = new MapCamera(0, 0, screen, &map, &mouse);
+  map_camera = new MapCamera(0, 0, screen, &map);
 
   unitRepository = new UnitRepository();
 

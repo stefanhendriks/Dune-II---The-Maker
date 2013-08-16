@@ -21,7 +21,7 @@ void Map::setBoundaries(int max_width, int max_height) {
 
 //=============================================================================
 //
-MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map, Mouse* mouse) {
+MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map) {
   this->x = x; // pixel size, relative to map (starts at 0,0)
   this->y = y;
   this->max_cells_width_on_screen = ceil(screen->w / 32);
@@ -29,7 +29,6 @@ MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map, Mouse* mouse) 
   this->map_y_boundary = map->getMaxHeight();
   this->map_x_boundary = map->getMaxWidth();
   this->scroll_speed = 8;
-  this->mouse = mouse;
 }
 
 void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
