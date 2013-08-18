@@ -24,7 +24,10 @@ class Mouse {
 
   private:
     bool _left_button_pressed, _right_button_pressed;
-    bool _left_button_held, _left_button_no_more_held;
+    bool _left_button_was_pressed;
+    bool _left_button_held, _left_button_no_more_held, _left_button_was_held;
+
+    bool started_dragging() { return !_left_button_was_pressed && _left_button_pressed; }
 
     int _x, _y;
     int rect_x, rect_y;

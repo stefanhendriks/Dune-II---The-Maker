@@ -130,7 +130,6 @@ void Game::updateState() {
     unit->unselect();
   }
 
-
   if (mouse.left_button_no_more_held()) {
     int rectX = map_camera->worldCoordinateX(mouse.getRectX());
     int rectY = map_camera->worldCoordinateY(mouse.getRectY());
