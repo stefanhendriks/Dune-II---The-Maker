@@ -9,7 +9,17 @@ This is an attempt to rewrite the game from scratch using [SDL](http://www.libsd
 I do this purely for fun, and try to keep it multi-platform. I test it often on Mac OSX and Ubuntu. I sometimes test it
 on Windows (MinGW32 and MSYS). 
 
-At this moment there is nothing built enough to call this a game, see the [TODO list](#todo-as-a-player-i-should-be-able-to) below what needs to be done. 
+Current State
+-------------
+If you want to know what is possible with the current version, see the [DONE features list](#done).
+If you want to know what still has to be done, (you might want to contribute?), see the [TODO list](#todo) below what needs to be done. 
+
+There is no binary available, instead you need to [compile it yourself](#compiling).
+
+Contributing
+------------
+Check the [TODO list](#todo). Create (or checkout) a feature branch. Code. And once you're finished
+submit it as a pull request.
 
 Compiling
 =========
@@ -35,24 +45,11 @@ Example, Ubuntu (inspired by [Lazy Foo](http://lazyfoo.net/SDL_tutorials/lesson0
 - `cp makefile.ubuntu makefile`
 - `make`
 
-TODO: ((as a player I) should be able to...)
-============================================
-<del>
-  <ul>
-    <li>move the camera around</li>
-    <li>pixel perfect scrolling instead of cell by cell</li>
-    <li>scroll by holding arrow keys instead of having to press/release all the time</li>
-    <li>scroll by 'hitting mouse' on screen borders</li>
-    <li>see units (draw them)</li>
-    <li>see units drawn in center when bigger than 32x32 pixels</li>
-    <li>see a shadow of a unit</li>
-    <li>see units of my own color (palette trickery)</li>
-    <li>select one unit</li>
-    <li>draw a rectangle by holding left mouse button</li>
-    <li>select multiple units by dragging rectangle over units and releasing left mouse button</li>
-  </ul>
-</del>
+As a player I should be able to...
+==================================
 
+TODO
+----
 - order a unit to move to a position
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - order a unit to attack a position
@@ -73,6 +70,24 @@ TODO: ((as a player I) should be able to...)
 - get my units transported much faster by a carry-all
 - scroll by holding mouse key and move from that position
 
+
+DONE
+----
+<del>
+  <ul>
+    <li>move the camera around</li>
+    <li>pixel perfect scrolling instead of cell by cell</li>
+    <li>scroll by holding arrow keys instead of having to press/release all the time</li>
+    <li>scroll by 'hitting mouse' on screen borders</li>
+    <li>see units (draw them)</li>
+    <li>see units drawn in center when bigger than 32x32 pixels</li>
+    <li>see a shadow of a unit</li>
+    <li>see units of my own color (palette trickery)</li>
+    <li>select one unit</li>
+    <li>draw a rectangle by holding left mouse button</li>
+    <li>select multiple units by dragging rectangle over units and releasing left mouse button</li>
+  </ul>
+</del>
 
 Controls
 ========
