@@ -1,4 +1,5 @@
 #include "mouse.h"
+#include "surface.h"
 
 Mouse::Mouse() {
   _left_button_pressed = false;
@@ -7,6 +8,11 @@ Mouse::Mouse() {
   _left_button_no_more_held = false;
   _x = 0;
   _y = 0;
+  pointer = NULL;
+}
+
+void Mouse::init() {
+  pointer = Surface::load("graphics/MS_Pointer.bmp");
 }
 
 void Mouse::update_state() {
@@ -25,3 +31,6 @@ void Mouse::update_state() {
   _left_button_no_more_held = (was_left_button_held && !_left_button_pressed);
 }
 
+void Mouse::draw(SDL_Surface* screen) {
+  Surface::draw(pointer, screen, _x, _y);
+}

@@ -7,6 +7,7 @@ class Mouse {
 
   public:
     Mouse();
+    void init();
 
     void update_state();
 
@@ -22,7 +23,10 @@ class Mouse {
     int getRectX() { return rect_x; }
     int getRectY() { return rect_y; }
 
+    void draw(SDL_Surface* screen);
+
   private:
+    SDL_Surface* pointer;
     bool _left_button_pressed, _right_button_pressed;
     bool _left_button_held, _left_button_no_more_held;
 
