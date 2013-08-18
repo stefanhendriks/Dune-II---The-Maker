@@ -46,9 +46,6 @@ int Game::init() {
      return false;
   }
 
-  SDL_ShowCursor(0);
-  mouse.init();
-
   int flags = IMG_INIT_JPG | IMG_INIT_PNG;
   int initted=IMG_Init(flags);
   if( initted & flags != flags) {
@@ -63,6 +60,9 @@ int Game::init() {
     cout << "Failed to read tileset data" << endl;
     return false;
   }
+
+  SDL_ShowCursor(0);
+  mouse.init();
 
   map.setBoundaries(128,128);
   map_camera = new MapCamera(0, 0, screen, &map);
