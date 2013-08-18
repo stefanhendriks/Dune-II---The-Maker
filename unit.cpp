@@ -26,8 +26,10 @@ void Unit::draw(SDL_Surface* screen, int x, int y) {
   Surface::draw(shadowset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y, this->shadow_alpha);
   Surface::draw(tileset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y);
 
-  if (selected)
-      Surface::draw(selected_bitmap, screen, x, y);
+  if (selected) Surface::draw(selected_bitmap, screen, x, y);
+  if (move_to_x != x || move_to_y != y) {
+   lineRGBA(screen, x + 16, y + 16, move_to_x, move_to_y, 255, 0, 255, 255);
+  }
 }
 
 void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
@@ -59,13 +61,13 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
   this->shadow_alpha = 128;
   this->x = x;
   this->y = y;
+  this->move_to_x = x;
+  this->move_to_y = y;
   this->anim_frame = 0;
 
   // every pixel short/too much of the perfect tile size will be spread evenly
   this->offset_x = (TILE_SIZE - this->tile_width) / 2;
   this->offset_y = (TILE_SIZE - this->tile_height) / 2;
-
-
 }
 
 

@@ -160,6 +160,13 @@ void Game::updateState() {
         unit->select();
       }
     }
+  } else if (mouse.is_ordering_to_move()) {
+
+    if (mouse.left_button_pressed()) {
+      if (unit->is_selected()) {
+        unit->move_to(mouse.x(), mouse.y());
+      }
+    }
   }
 }
 
