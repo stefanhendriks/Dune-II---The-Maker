@@ -133,8 +133,7 @@ void Game::updateState() {
     unit->unselect();
   }
 
-
-  if (mouse.left_button_no_more_held()) {
+  if (mouse.dragged_rectangle()) {
     int rectX = map_camera->worldCoordinateX(mouse.getRectX());
     int rectY = map_camera->worldCoordinateY(mouse.getRectY());
     int endX = map_camera->worldCoordinateX(mouse.x());
@@ -142,8 +141,6 @@ void Game::updateState() {
 
     if (endX < rectX) swap(endX, rectX);
     if (endY < rectY) swap(endY, rectY);
-
-    // bug: when user 'clicks' it deselects always now... 
 
     unit->unselect();
     devastator->unselect();
