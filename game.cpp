@@ -91,10 +91,6 @@ void Game::render() {
   map_camera->draw(unit, screen);
   map_camera->draw(devastator, screen);
 
-  if (mouse.left_button_held()) {
-    rectangleRGBA(screen, mouse.getRectX(), mouse.getRectY(), mouse.x(), mouse.y(), 255, 255, 255, 255);
-  }
-
   mouse.draw(screen);
 
   SDL_Flip(screen);

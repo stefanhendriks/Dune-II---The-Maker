@@ -38,5 +38,9 @@ void Mouse::update_state() {
 }
 
 void Mouse::draw(SDL_Surface* screen) {
+  if (mouse.left_button_held()) {
+    rectangleRGBA(screen, mouse.getRectX(), mouse.getRectY(), mouse.x(), mouse.y(), 255, 255, 255, 255);
+  }
+
   Surface::draw(pointer, screen, _x, _y);
 }
