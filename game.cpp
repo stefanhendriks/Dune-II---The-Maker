@@ -3,6 +3,7 @@
 #include "SDL/SDL.h"
 #include "SDL_image.h"
 #include "SDL_gfxPrimitives.h"
+#include "point.h"
 #include "map.h"
 #include "game.h"
 #include "surface.h"
