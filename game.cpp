@@ -46,7 +46,7 @@ int Game::init() {
      return false;
   }
 
-  SDL_ShowCursor(0); 
+  SDL_ShowCursor(0);
   mouse.init();
 
   int flags = IMG_INIT_JPG | IMG_INIT_PNG;
@@ -85,9 +85,8 @@ void Game::onEvent(SDL_Event* event) {
 
 void Game::render() {
   SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-  map_camera->draw(&map, tileset, screen);
 
- // todo draw with camera
+  map_camera->draw(&map, tileset, screen);
   map_camera->draw(unit, screen);
   map_camera->draw(devastator, screen);
 
@@ -114,6 +113,7 @@ void Game::updateState() {
 
   if (isInRect(devastator->getDrawX(), devastator->getDrawY(), devastator->width(), devastator->height())) {
     if(mouse.left_button_pressed() && !mouse.left_button_held()) {
+      mouse.state_order_move();
       unit->unselect();
       devastator->unselect();
       devastator->select();
@@ -122,6 +122,7 @@ void Game::updateState() {
 
   if (isInRect(unit->getDrawX(), unit->getDrawY(), unit->width(), unit->height())) {
     if(mouse.left_button_pressed() && !mouse.left_button_held()) {
+      mouse.state_order_move();
       unit->unselect();
       devastator->unselect();
       unit->select();
@@ -129,6 +130,7 @@ void Game::updateState() {
   }
 
   if(mouse.right_button_pressed()) {
+    mouse.state_pointing();
     devastator->unselect();
     unit->unselect();
   }
@@ -142,15 +144,19 @@ void Game::updateState() {
     if (endX < rectX) swap(endX, rectX);
     if (endY < rectY) swap(endY, rectY);
 
+    mouse.state_pointing();
+
     unit->unselect();
     devastator->unselect();
 
     if (isUnitInRect(devastator, rectX, rectY, endX, endY)) {
-        devastator->select();
+      mouse.state_order_move();
+      devastator->select();
     }
 
     if (isUnitInRect(unit, rectX, rectY, endX, endY)) {
-        unit->select();
+      mouse.state_order_move();
+      unit->select();
     }
   }
 
