@@ -118,12 +118,16 @@ void Game::updateState() {
 
   if (isInRect(devastator->getDrawX(), devastator->getDrawY(), devastator->width(), devastator->height())) {
     if(mouse.left_button_pressed() && !mouse.left_button_held()) {
+      unit->unselect();
+      devastator->unselect();
       devastator->select();
     }
   }
 
   if (isInRect(unit->getDrawX(), unit->getDrawY(), unit->width(), unit->height())) {
     if(mouse.left_button_pressed() && !mouse.left_button_held()) {
+      unit->unselect();
+      devastator->unselect();
       unit->select();
     }
   }
