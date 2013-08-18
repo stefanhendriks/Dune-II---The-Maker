@@ -139,8 +139,6 @@ void Game::updateState() {
     if (endX < rectX) swap(endX, rectX);
     if (endY < rectY) swap(endY, rectY);
 
-    // bug: when user 'clicks' it deselects always now... 
-
     unit->unselect();
     devastator->unselect();
 
