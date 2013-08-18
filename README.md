@@ -47,6 +47,7 @@ Example, Ubuntu (inspired by [Lazy Foo](http://lazyfoo.net/SDL_tutorials/lesson0
 
 As a player I should be able to...
 ==================================
+Features need to be written in such a way that it is obvious what the benefit is for the player.
 
 TODO
 ----
@@ -95,3 +96,7 @@ Thus far the following controls work:
 
 Press `q` to quit anytime.
 Move camera around with arrow keys or with mouse hitting borders of screen.
+
+Right mouse click deselects all unit.
+Left mouse click selects a unit.
+Hold left mouse button and drag a rectangle over units to select them.
