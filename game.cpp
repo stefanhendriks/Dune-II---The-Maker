@@ -46,6 +46,8 @@ int Game::init() {
      return false;
   }
 
+  SDL_ShowCursor(0); 
+
   int flags = IMG_INIT_JPG | IMG_INIT_PNG;
   int initted=IMG_Init(flags);
   if( initted & flags != flags) {
@@ -78,7 +80,6 @@ void Game::onEvent(SDL_Event* event) {
   }
 
   keyboard.onEvent(event);
-
 }
 
 void Game::render() {
@@ -92,7 +93,6 @@ void Game::render() {
   if (mouse.left_button_held()) {
     rectangleRGBA(screen, mouse.getRectX(), mouse.getRectY(), mouse.x(), mouse.y(), 255, 255, 255, 255);
   }
-
 
   SDL_Flip(screen);
 }
