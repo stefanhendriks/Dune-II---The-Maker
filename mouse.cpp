@@ -7,6 +7,7 @@ Mouse::Mouse() {
   _left_button_no_more_held = false;
   _left_button_was_held = false;
   _left_button_was_pressed = false;
+  _dragged_rectangle = false;
   _x = 0;
   _y = 0;
 }
@@ -26,5 +27,7 @@ void Mouse::update_state() {
 
   _left_button_held = (_left_button_was_pressed && _left_button_pressed);
   _left_button_no_more_held = (_left_button_was_held && !_left_button_pressed);
+
+  _dragged_rectangle = left_button_no_more_held() && dragging_rectangle();
 }
 
