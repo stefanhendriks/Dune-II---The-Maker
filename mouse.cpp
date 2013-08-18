@@ -41,11 +41,9 @@ void Mouse::update_state() {
 }
 
 void Mouse::draw(SDL_Surface* screen) {
-  if (left_button_held()) {
-    rectangleRGBA(screen, rect_x, rect_y, _x, _y, 255, 255, 255, 255);
-  }
-
   if (state == MOUSE_POINTING) {
+    if (left_button_held()) rectangleRGBA(screen, rect_x, rect_y, _x, _y, 255, 255, 255, 255);
+
     Surface::draw(pointer, screen, _x, _y);
   } else if (state == MOUSE_ORDER_MOVE) {
     // substract 16 , because the 'hot spot (click spot) of the mouse is always up left.' The move bitmap

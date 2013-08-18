@@ -27,6 +27,8 @@ class Mouse {
     void state_pointing() { state = MOUSE_POINTING; }
     void state_order_move() { state = MOUSE_ORDER_MOVE; }
 
+    bool is_pointing() { return state == MOUSE_POINTING; }
+
     int x() { return _x; }
     int y() { return _y; }
 
