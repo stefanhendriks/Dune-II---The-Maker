@@ -58,6 +58,7 @@ TODO
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - order a unit to attack a position
 - explore the terrain by clearing a Fog of War
+- sandworms should only be able to travel through sand, dunes and spice, and be blocked by rock/mountains
 - enjoy the terrain smoothened (smoothing algorithm)
 - see structures (draw them)
 - select my structure
