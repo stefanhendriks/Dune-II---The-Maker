@@ -81,6 +81,7 @@ void Game::onEvent(SDL_Event* event) {
     playing = false;
   }
 
+  mouse.onEvent(event);
   keyboard.onEvent(event);
 }
 

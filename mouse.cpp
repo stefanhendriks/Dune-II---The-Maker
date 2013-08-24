@@ -21,8 +21,14 @@ void Mouse::init() {
   pointer_move = Surface::load("graphics/MS_Move.bmp");
 }
 
+void Mouse::onEvent(SDL_Event* event) {
+  if (event->type == SDL_MOUSEMOTION) {
+    _x = event->motion.x;
+    _y = event->motion.y;
+  }
+}
+
 void Mouse::update_state() {
-  SDL_GetMouseState(&_x, &_y);
   _left_button_was_pressed = _left_button_pressed;
   _left_button_was_held = _left_button_held;
 

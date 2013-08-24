@@ -13,6 +13,8 @@ class Mouse {
     Mouse();
     void init();
 
+    void onEvent(SDL_Event* event);
+
     void update_state();
 
     bool left_button_pressed() { return _left_button_pressed; };
