@@ -1,16 +1,17 @@
+#include <iostream>
+
 #include "mouse.h"
 #include "surface.h"
 
+using namespace std;
+
 Mouse::Mouse() {
-  _left_button_pressed = false;
-  _right_button_pressed = false;
-  _left_button_held = false;
-  _left_button_no_more_held = false;
-  _left_button_was_held = false;
-  _left_button_was_pressed = false;
-  _dragged_rectangle = false;
+  _left_button_clicked = false;
+  _right_button_clicked = false;
   _x = 0;
   _y = 0;
+  rect_x = -1;
+  rect_y = -1;
   state = MOUSE_POINTING;
   pointer = NULL;
   pointer_move = NULL;
@@ -25,30 +26,51 @@ void Mouse::onEvent(SDL_Event* event) {
   if (event->type == SDL_MOUSEMOTION) {
     _x = event->motion.x;
     _y = event->motion.y;
+  } else {
+
+    if (event->button.button == SDL_BUTTON_LEFT) {
+      if (event->type == SDL_MOUSEBUTTONDOWN) {
+
+        cout << "pressed!" << endl;
+        rect_x = event->button.x;
+        rect_y = event->button.y;
+
+      } else if (event->type == SDL_MOUSEBUTTONUP) {
+        SDL_Event clickEvent;
+        MouseClickedStruct *s;
+
+        s = new MouseClickedStruct;
+        s->x = event->button.x;
+        s->y = event->button.y;
+
+        clickEvent.type = SDL_USEREVENT;
+        clickEvent.user.code = MOUSE_CLICKED;
+        clickEvent.user.data1 = s;
+        clickEvent.user.data2 = NULL;
+
+        SDL_PushEvent(&clickEvent);
+
+        cout << "released!" << endl;
+        rect_x = -1;
+        rect_y = -1;
+      }
+    }
+
+    if (event->button.button == SDL_BUTTON_RIGHT) {
+      if (event->type == SDL_MOUSEBUTTONDOWN) {
+      }
+    }
+
   }
+
 }
 
 void Mouse::update_state() {
-  _left_button_was_pressed = _left_button_pressed;
-  _left_button_was_held = _left_button_held;
-
-  _left_button_pressed = SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1);
-  _right_button_pressed = SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(3);
-
-  if (started_dragging()) {
-   rect_x = _x;
-   rect_y = _y;
-  }
-
-  _left_button_held = (_left_button_was_pressed && _left_button_pressed);
-  _left_button_no_more_held = (_left_button_was_held && !_left_button_pressed);
-
-  _dragged_rectangle = left_button_no_more_held() && dragging_rectangle();
 }
 
 void Mouse::draw(SDL_Surface* screen) {
   if (state == MOUSE_POINTING) {
-    if (left_button_held()) rectangleRGBA(screen, rect_x, rect_y, _x, _y, 255, 255, 255, 255);
+    //rectangleRGBA(screen, rect_x, rect_y, _x, _y, 255, 255, 255, 255);
 
     Surface::draw(pointer, screen, _x, _y);
   } else if (state == MOUSE_ORDER_MOVE) {

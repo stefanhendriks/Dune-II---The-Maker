@@ -7,6 +7,13 @@
 const int MOUSE_POINTING = 0;
 const int MOUSE_ORDER_MOVE = 1;
 
+#define MOUSE_CLICKED 1000
+
+typedef struct {
+  int x;
+  int y;
+} MouseClickedStruct;
+
 class Mouse {
 
   public:
@@ -17,13 +24,9 @@ class Mouse {
 
     void update_state();
 
-    bool left_button_pressed() { return _left_button_pressed; };
-    bool right_button_pressed() { return _right_button_pressed; };
+    bool left_button_clicked() { return _left_button_clicked; }
+    bool right_button_clicked() { return _right_button_clicked; }
 
-    bool left_button_held() { return _left_button_held; };
-    bool left_button_no_more_held() { return _left_button_no_more_held; }
-
-    bool dragged_rectangle() { return _dragged_rectangle; }
     bool dragging_rectangle() { return (abs(_x - rect_x) > 3) && (abs(_y - rect_y) > 3); }
 
     void state_pointing() { state = MOUSE_POINTING; }
@@ -44,13 +47,7 @@ class Mouse {
   private:
     SDL_Surface* pointer;
     SDL_Surface* pointer_move;
-    bool _left_button_pressed, _right_button_pressed;
-    bool _left_button_was_pressed;
-    bool _left_button_held, _left_button_no_more_held, _left_button_was_held;
-
-    bool _dragged_rectangle;
-
-    bool started_dragging() { return !_left_button_was_pressed && _left_button_pressed; }
+    bool _left_button_clicked, _right_button_clicked;
 
     int state;
 
