@@ -7,7 +7,8 @@
 const int MOUSE_POINTING = 0;
 const int MOUSE_ORDER_MOVE = 1;
 
-#define MOUSE_CLICKED 1000
+#define D2TM_MOUSE_CLICKED 1024
+#define D2TM_DESELECT      1025
 
 typedef struct {
   int x;

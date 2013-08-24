@@ -85,30 +85,39 @@ void Game::onEvent(SDL_Event* event) {
   keyboard.onEvent(event);
 
   if (event->type == SDL_USEREVENT) {
-    if (event->user.code == MOUSE_CLICKED) {
-      cout << "User  catched! of code " << event->user.code << endl;
-
+    if (event->user.code == D2TM_MOUSE_CLICKED) {
       MouseClickedStruct *s = static_cast<MouseClickedStruct*>(event->user.data1);
-      cout << "x is " << s->x << " and y is " << s->y << endl;
 
       int mx = map_camera->worldCoordinateX(s->x);
       int my = map_camera->worldCoordinateY(s->y);
+
+      delete s;
+
       if (mouse.is_pointing()) {
+
         if (isInRect(mx, my, devastator->getDrawX(), devastator->getDrawY(), devastator->width(), devastator->height())) {
-        //  mouse.state_order_move();
+          mouse.state_order_move();
           unit->unselect();
           devastator->unselect();
           devastator->select();
         }
-      }
-      delete s;
 
+        if (isInRect(mx, my, unit->getDrawX(), unit->getDrawY(), unit->width(), unit->height())) {
+          mouse.state_order_move();
+          unit->unselect();
+          devastator->unselect();
+          unit->select();
+        }
+      }
+
+    } else if (event->user.code == D2TM_DESELECT) {
+      mouse.state_pointing();
+      devastator->unselect();
+      unit->unselect();
     }
 
   }
 
-  // handle own events
-  //
 }
 
 void Game::render() {
@@ -140,29 +149,9 @@ void Game::updateState() {
   if (keyboard.isQPressed()) playing = false;
 
   //if(mouse.right_button_pressed()) {
-    //mouse.state_pointing();
-    //devastator->unselect();
-    //unit->unselect();
   //}
 
   //if (mouse.is_pointing()) {
-    //if (isInRect(devastator->getDrawX(), devastator->getDrawY(), devastator->width(), devastator->height())) {
-      //if(mouse.left_button_clicked()) {
-        //mouse.state_order_move();
-        //unit->unselect();
-        //devastator->unselect();
-        //devastator->select();
-      //}
-    //}
-
-    //if (isInRect(unit->getDrawX(), unit->getDrawY(), unit->width(), unit->height())) {
-      //if(mouse.left_button_clicked()){
-        //mouse.state_order_move();
-        //unit->unselect();
-        //devastator->unselect();
-        //unit->select();
-      //}
-    //}
 
     //if (mouse.dragged_rectangle()) {
       //int rectX = map_camera->worldCoordinateX(mouse.getRectX());

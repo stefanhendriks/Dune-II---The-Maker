@@ -31,7 +31,6 @@ void Mouse::onEvent(SDL_Event* event) {
     if (event->button.button == SDL_BUTTON_LEFT) {
       if (event->type == SDL_MOUSEBUTTONDOWN) {
 
-        cout << "pressed!" << endl;
         rect_x = event->button.x;
         rect_y = event->button.y;
 
@@ -44,13 +43,12 @@ void Mouse::onEvent(SDL_Event* event) {
         s->y = event->button.y;
 
         clickEvent.type = SDL_USEREVENT;
-        clickEvent.user.code = MOUSE_CLICKED;
+        clickEvent.user.code = D2TM_MOUSE_CLICKED;
         clickEvent.user.data1 = s;
         clickEvent.user.data2 = NULL;
 
         SDL_PushEvent(&clickEvent);
 
-        cout << "released!" << endl;
         rect_x = -1;
         rect_y = -1;
       }
@@ -58,7 +56,18 @@ void Mouse::onEvent(SDL_Event* event) {
 
     if (event->button.button == SDL_BUTTON_RIGHT) {
       if (event->type == SDL_MOUSEBUTTONDOWN) {
+
+      } else if (event->type == SDL_MOUSEBUTTONUP) {
+        SDL_Event clickEvent;
+
+        clickEvent.type = SDL_USEREVENT;
+        clickEvent.user.code = D2TM_DESELECT;
+        clickEvent.user.data1 = NULL;
+        clickEvent.user.data2 = NULL;
+
+        SDL_PushEvent(&clickEvent);
       }
+
     }
 
   }
