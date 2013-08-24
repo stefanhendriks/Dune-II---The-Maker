@@ -43,7 +43,7 @@ void Mouse::onEvent(SDL_Event* event) {
 
         if (dragging_rectangle()) {
           SDL_Event clickEvent;
-          MouseDraggedRectStruct *s;
+          D2TMBoxSelectStruct *s;
 
           int start_x = rect_x;
           int start_y = rect_y;
@@ -53,7 +53,7 @@ void Mouse::onEvent(SDL_Event* event) {
           if (end_x < start_x) swap(end_x, start_x);
           if (end_y < start_y) swap(end_y, start_y);
 
-          s = new MouseDraggedRectStruct;
+          s = new D2TMBoxSelectStruct;
           s->start_x = start_y;
           s->start_y = start_y;
           s->end_x = end_x;
@@ -68,9 +68,9 @@ void Mouse::onEvent(SDL_Event* event) {
 
         } else {
           SDL_Event clickEvent;
-          MouseClickedStruct *s;
+          D2TMSelectStruct *s;
 
-          s = new MouseClickedStruct;
+          s = new D2TMSelectStruct;
           s->x = event->button.x;
           s->y = event->button.y;
 
@@ -104,9 +104,6 @@ void Mouse::onEvent(SDL_Event* event) {
 
   }
 
-}
-
-void Mouse::update_state() {
 }
 
 void Mouse::draw(SDL_Surface* screen) {

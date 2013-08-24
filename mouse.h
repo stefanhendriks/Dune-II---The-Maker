@@ -14,7 +14,7 @@ const int MOUSE_ORDER_MOVE = 1;
 typedef struct {
   int x;
   int y;
-} MouseClickedStruct;
+} D2TMSelectStruct;
 
 
 typedef struct {
@@ -22,7 +22,7 @@ typedef struct {
   int start_y;
   int end_x;
   int end_y;
-} MouseDraggedRectStruct;
+} D2TMBoxSelectStruct;
 
 class Mouse {
 
@@ -32,11 +32,8 @@ class Mouse {
 
     void onEvent(SDL_Event* event);
 
-    void update_state();
-
     bool left_button_clicked() { return _left_button_clicked; }
     bool right_button_clicked() { return _right_button_clicked; }
-
 
     void state_pointing() { state = MOUSE_POINTING; }
     void state_order_move() { state = MOUSE_ORDER_MOVE; }

@@ -86,7 +86,7 @@ void Game::onEvent(SDL_Event* event) {
 
   if (event->type == SDL_USEREVENT) {
     if (event->user.code == D2TM_SELECT) {
-      MouseClickedStruct *s = static_cast<MouseClickedStruct*>(event->user.data1);
+      D2TMSelectStruct *s = static_cast<D2TMSelectStruct*>(event->user.data1);
 
       int mx = map_camera->worldCoordinateX(s->x);
       int my = map_camera->worldCoordinateY(s->y);
@@ -115,7 +115,7 @@ void Game::onEvent(SDL_Event* event) {
       devastator->unselect();
       unit->unselect();
     } else if (event->user.code == D2TM_BOX_SELECT) {
-      MouseDraggedRectStruct *s = static_cast<MouseDraggedRectStruct*>(event->user.data1);
+      D2TMBoxSelectStruct *s = static_cast<D2TMBoxSelectStruct*>(event->user.data1);
 
       int rectX = map_camera->worldCoordinateX(s->start_x);
       int rectY = map_camera->worldCoordinateY(s->start_y);
@@ -160,7 +160,6 @@ void Game::render() {
 
 void Game::updateState() {
   SDL_PumpEvents();
-  mouse.update_state();
 
   if (keyboard.isUpPressed()) map_camera->moveUp();
   if (keyboard.isDownPressed()) map_camera->moveDown();
