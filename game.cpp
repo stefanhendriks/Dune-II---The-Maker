@@ -85,7 +85,7 @@ void Game::onEvent(SDL_Event* event) {
   keyboard.onEvent(event);
 
   if (event->type == SDL_USEREVENT) {
-    if (event->user.code == D2TM_MOUSE_CLICKED) {
+    if (event->user.code == D2TM_SELECT) {
       MouseClickedStruct *s = static_cast<MouseClickedStruct*>(event->user.data1);
 
       int mx = map_camera->worldCoordinateX(s->x);
@@ -114,6 +114,32 @@ void Game::onEvent(SDL_Event* event) {
       mouse.state_pointing();
       devastator->unselect();
       unit->unselect();
+    } else if (event->user.code == D2TM_BOX_SELECT) {
+      MouseDraggedRectStruct *s = static_cast<MouseDraggedRectStruct*>(event->user.data1);
+
+      int rectX = map_camera->worldCoordinateX(s->start_x);
+      int rectY = map_camera->worldCoordinateY(s->start_y);
+      int endX = map_camera->worldCoordinateX(s->end_x);
+      int endY = map_camera->worldCoordinateY(s->end_y);
+
+      delete s;
+
+      if (mouse.is_pointing()) {
+        mouse.state_pointing();
+
+        unit->unselect();
+        devastator->unselect();
+
+        if (isUnitInRect(devastator, rectX, rectY, endX, endY)) {
+          mouse.state_order_move();
+          devastator->select();
+        }
+
+        if (isUnitInRect(unit, rectX, rectY, endX, endY)) {
+          mouse.state_order_move();
+          unit->select();
+        }
+      }
     }
 
   }
@@ -148,35 +174,6 @@ void Game::updateState() {
 
   if (keyboard.isQPressed()) playing = false;
 
-  //if(mouse.right_button_pressed()) {
-  //}
-
-  //if (mouse.is_pointing()) {
-
-    //if (mouse.dragged_rectangle()) {
-      //int rectX = map_camera->worldCoordinateX(mouse.getRectX());
-      //int rectY = map_camera->worldCoordinateY(mouse.getRectY());
-      //int endX = map_camera->worldCoordinateX(mouse.x());
-      //int endY = map_camera->worldCoordinateY(mouse.y());
-
-      //if (endX < rectX) swap(endX, rectX);
-      //if (endY < rectY) swap(endY, rectY);
-
-      //mouse.state_pointing();
-
-      //unit->unselect();
-      //devastator->unselect();
-
-      //if (isUnitInRect(devastator, rectX, rectY, endX, endY)) {
-        //mouse.state_order_move();
-        //devastator->select();
-      //}
-
-      //if (isUnitInRect(unit, rectX, rectY, endX, endY)) {
-        //mouse.state_order_move();
-        //unit->select();
-      //}
-    //}
   //} else if (mouse.is_ordering_to_move()) {
 
     //if (mouse.left_button_pressed()) {

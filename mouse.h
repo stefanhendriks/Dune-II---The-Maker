@@ -7,13 +7,22 @@
 const int MOUSE_POINTING = 0;
 const int MOUSE_ORDER_MOVE = 1;
 
-#define D2TM_MOUSE_CLICKED 1024
-#define D2TM_DESELECT      1025
+#define D2TM_SELECT          1024
+#define D2TM_DESELECT        1025
+#define D2TM_BOX_SELECT      1026
 
 typedef struct {
   int x;
   int y;
 } MouseClickedStruct;
+
+
+typedef struct {
+  int start_x;
+  int start_y;
+  int end_x;
+  int end_y;
+} MouseDraggedRectStruct;
 
 class Mouse {
 
@@ -28,7 +37,6 @@ class Mouse {
     bool left_button_clicked() { return _left_button_clicked; }
     bool right_button_clicked() { return _right_button_clicked; }
 
-    bool dragging_rectangle() { return (abs(_x - rect_x) > 3) && (abs(_y - rect_y) > 3); }
 
     void state_pointing() { state = MOUSE_POINTING; }
     void state_order_move() { state = MOUSE_ORDER_MOVE; }
@@ -49,6 +57,8 @@ class Mouse {
     SDL_Surface* pointer;
     SDL_Surface* pointer_move;
     bool _left_button_clicked, _right_button_clicked;
+
+    bool dragging_rectangle();
 
     int state;
 

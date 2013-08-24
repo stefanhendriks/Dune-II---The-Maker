@@ -22,6 +22,11 @@ void Mouse::init() {
   pointer_move = Surface::load("graphics/MS_Move.bmp");
 }
 
+bool Mouse::dragging_rectangle() {
+  if (rect_x == -1 || rect_y == -1) return false;
+  return (abs(_x - rect_x) > 3) && (abs(_y - rect_y) > 3);
+}
+
 void Mouse::onEvent(SDL_Event* event) {
   if (event->type == SDL_MOUSEMOTION) {
     _x = event->motion.x;
@@ -35,20 +40,47 @@ void Mouse::onEvent(SDL_Event* event) {
         rect_y = event->button.y;
 
       } else if (event->type == SDL_MOUSEBUTTONUP) {
-        SDL_Event clickEvent;
-        MouseClickedStruct *s;
 
-        s = new MouseClickedStruct;
-        s->x = event->button.x;
-        s->y = event->button.y;
+        if (dragging_rectangle()) {
+          SDL_Event clickEvent;
+          MouseDraggedRectStruct *s;
 
-        clickEvent.type = SDL_USEREVENT;
-        clickEvent.user.code = D2TM_MOUSE_CLICKED;
-        clickEvent.user.data1 = s;
-        clickEvent.user.data2 = NULL;
+          int start_x = rect_x;
+          int start_y = rect_y;
+          int end_x = event->button.x;
+          int end_y = event->button.y;
 
-        SDL_PushEvent(&clickEvent);
+          if (end_x < start_x) swap(end_x, start_x);
+          if (end_y < start_y) swap(end_y, start_y);
 
+          s = new MouseDraggedRectStruct;
+          s->start_x = start_y;
+          s->start_y = start_y;
+          s->end_x = end_x;
+          s->end_y = end_y;
+
+          clickEvent.type = SDL_USEREVENT;
+          clickEvent.user.code = D2TM_BOX_SELECT;
+          clickEvent.user.data1 = s;
+          clickEvent.user.data2 = NULL;
+
+          SDL_PushEvent(&clickEvent);
+
+        } else {
+          SDL_Event clickEvent;
+          MouseClickedStruct *s;
+
+          s = new MouseClickedStruct;
+          s->x = event->button.x;
+          s->y = event->button.y;
+
+          clickEvent.type = SDL_USEREVENT;
+          clickEvent.user.code = D2TM_SELECT;
+          clickEvent.user.data1 = s;
+          clickEvent.user.data2 = NULL;
+
+          SDL_PushEvent(&clickEvent);
+        }
         rect_x = -1;
         rect_y = -1;
       }
@@ -79,7 +111,7 @@ void Mouse::update_state() {
 
 void Mouse::draw(SDL_Surface* screen) {
   if (state == MOUSE_POINTING) {
-    //rectangleRGBA(screen, rect_x, rect_y, _x, _y, 255, 255, 255, 255);
+    if (dragging_rectangle()) rectangleRGBA(screen, rect_x, rect_y, _x, _y, 255, 255, 255, 255);
 
     Surface::draw(pointer, screen, _x, _y);
   } else if (state == MOUSE_ORDER_MOVE) {
