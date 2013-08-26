@@ -26,6 +26,7 @@ int Game::execute() {
   SDL_Event event;
 
   while(playing) {
+    SDL_PumpEvents();
     while(SDL_PollEvent(&event)) {
       onEvent(&event);
     }
@@ -162,10 +163,6 @@ void Game::render() {
 }
 
 void Game::updateState() {
-  SDL_PumpEvents();
-
-  if (keyboard.isQPressed()) playing = false;
-
   //} else if (mouse.is_ordering_to_move()) {
 
     //if (mouse.left_button_pressed()) {
