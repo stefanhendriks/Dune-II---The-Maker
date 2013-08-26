@@ -61,6 +61,8 @@ class MapCamera {
 	public:
 		MapCamera(int x, int y, SDL_Surface* screen, Map* map);
 
+    void onEvent(SDL_Event* event);
+
 		int getX() { return x; }
 		int getY() { return y; }
 

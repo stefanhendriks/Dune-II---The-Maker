@@ -6,6 +6,7 @@
 #define D2TM_SELECT          1024
 #define D2TM_DESELECT        1025
 #define D2TM_BOX_SELECT      1026
+#define D2TM_MOVE_CAMERA     1027
 
 typedef struct {
   int start_x;
@@ -19,6 +20,15 @@ typedef struct {
   int y;
 } D2TMSelectStruct;
 
+// camera directions
+const int D2TM_CAMERA_MOVE_UP = 1;
+const int D2TM_CAMERA_MOVE_DOWN = 2;
+const int D2TM_CAMERA_MOVE_LEFT = 3;
+const int D2TM_CAMERA_MOVE_RIGHT = 4;
+
+typedef struct {
+  int direction;
+} D2TMMoveCameraStruct;
 
 class EventFactory {
 
@@ -26,6 +36,7 @@ class EventFactory {
     void pushBoxSelectEvent(int startX, int startY, int endX, int endY);
     void pushSelectEvent(int x, int y);
     void pushDeselectEvent() { push_event(D2TM_DESELECT); }
+    void pushMoveCameraEvent(int direction);
 
   private:
 

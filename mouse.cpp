@@ -30,15 +30,15 @@ bool Mouse::dragging_rectangle() {
 
 void Mouse::onEvent(SDL_Event* event, SDL_Surface* screen) {
   EventFactory eventFactory;
-  
+
   if (event->type == SDL_MOUSEMOTION) {
     _x = event->motion.x;
     _y = event->motion.y;
 
-    //if (_x <= 1) map_camera->moveLeft();
-    //if (_x >= (screen->w - 1)) map_camera->moveRight();
-    //if (_y <= 1) map_camera->moveUp();
-    //if (_y >= (screen->h - 1)) map_camera->moveDown();
+    if (_x <= 1) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_MOVE_LEFT);
+    if (_x >= (screen->w - 1)) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_MOVE_RIGHT);
+    if (_y <= 1) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_MOVE_UP);
+    if (_y >= (screen->h - 1)) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_MOVE_DOWN);
 
   } else {
 

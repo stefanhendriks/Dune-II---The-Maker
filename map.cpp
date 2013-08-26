@@ -2,6 +2,8 @@
 #include "surface.h"
 #include "map.h"
 #include "random.h"
+#include "eventfactory.h"
+
 #include <math.h>       /* ceil */
 
 Map::Map() {
@@ -41,6 +43,24 @@ void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
   unit->draw(screen, draw_x, draw_y);
 }
 
+void MapCamera::onEvent(SDL_Event* event) {
+  if (event->type == SDL_USEREVENT) {
+    if (event->user.code == D2TM_MOVE_CAMERA) {
+      D2TMMoveCameraStruct *s = static_cast<D2TMMoveCameraStruct*>(event->user.data1);
+
+      int direction = s->direction;
+
+      switch (direction) {
+        case D2TM_CAMERA_MOVE_LEFT: moveLeft(); break;
+        case D2TM_CAMERA_MOVE_RIGHT: moveRight(); break;
+        case D2TM_CAMERA_MOVE_UP: moveUp(); break;
+        case D2TM_CAMERA_MOVE_DOWN: moveDown(); break;
+        default:
+          cout << "ERROR: received invalid direction to move camera to, direction is " << direction << endl;
+      }
+    }
+  }
+}
 
 void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
   // determine x and y from map data.

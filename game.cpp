@@ -85,6 +85,8 @@ void Game::onEvent(SDL_Event* event) {
   mouse.onEvent(event, screen);
   keyboard.onEvent(event);
 
+  map_camera->onEvent(event);
+
   if (event->type == SDL_USEREVENT) {
     if (event->user.code == D2TM_SELECT) {
       D2TMSelectStruct *s = static_cast<D2TMSelectStruct*>(event->user.data1);
@@ -167,10 +169,6 @@ void Game::updateState() {
   if (keyboard.isLeftPressed()) map_camera->moveLeft();
   if (keyboard.isRightPressed()) map_camera->moveRight();
 
-  if (mouse.x() <= 1) map_camera->moveLeft();
-  if (mouse.x() >= (screen->w - 1)) map_camera->moveRight();
-  if (mouse.y() <= 1) map_camera->moveUp();
-  if (mouse.y() >= (screen->h - 1)) map_camera->moveDown();
 
   if (keyboard.isQPressed()) playing = false;
 
