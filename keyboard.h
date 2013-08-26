@@ -2,6 +2,7 @@
 #define KEYBOARD_H
 
 #include "SDL/SDL.h"
+#include "eventfactory.h"
 
 class Keyboard {
 
@@ -10,15 +11,11 @@ class Keyboard {
 
     void onEvent(SDL_Event* event);
 
-    bool isUpPressed() { return upPressed; }
-    bool isDownPressed() { return downPressed; }
-    bool isLeftPressed() { return leftPressed; }
-    bool isRightPressed() { return rightPressed; }
     bool isQPressed() { return qPressed; }
 
   private:
-    bool upPressed, downPressed, leftPressed, rightPressed, qPressed;
-
+    bool qPressed;
+    EventFactory eventFactory;
 };
 
 #endif

@@ -35,6 +35,7 @@ class Game {
       UnitRepository *unitRepository;
 
       bool isInRect(int x, int y, int width, int height);
+      bool isInRect(int mouse_x, int mouse_y, int x, int y, int width, int height);
       bool isUnitInRect(Unit* unit, int x, int y, int width, int height);
 };
 

@@ -2,6 +2,7 @@
 #define UNIT_H
 
 #include "SDL/SDL.h"
+#include "SDL_gfxPrimitives.h"
 
 const int FACING_UP = 0;
 const int FACING_UP_RIGHT = 1;
@@ -29,8 +30,11 @@ class Unit {
     int width() { return tile_height; }
     int height() { return tile_width; }
 
+    void move_to(int x, int y) { this->move_to_x = x; this->move_to_y = y; }
+
     void select() { selected = true; }
     void unselect() { selected = false; }
+    bool is_selected() { return selected; }
 
   private:
     SDL_Surface* tileset;
@@ -52,6 +56,8 @@ class Unit {
     void init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y);
 
     bool selected;
+
+    int move_to_x, move_to_y; // world coordinates of where to move to
 };
 
 

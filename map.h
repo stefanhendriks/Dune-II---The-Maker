@@ -61,6 +61,8 @@ class MapCamera {
 	public:
 		MapCamera(int x, int y, SDL_Surface* screen, Map* map);
 
+    void onEvent(SDL_Event* event);
+
 		int getX() { return x; }
 		int getY() { return y; }
 
@@ -74,7 +76,6 @@ class MapCamera {
 
     void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
     void draw(Unit* unit, SDL_Surface* screen);
-
 
     int worldCoordinateX(int x) { return this->x + x; };
     int worldCoordinateY(int y) { return this->y + y; };

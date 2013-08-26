@@ -3,9 +3,11 @@
 #include "SDL/SDL.h"
 #include "SDL_image.h"
 #include "SDL_gfxPrimitives.h"
+#include "point.h"
 #include "map.h"
 #include "game.h"
 #include "surface.h"
+#include "eventfactory.h"
 
 using namespace std;
 
@@ -24,6 +26,7 @@ int Game::execute() {
   SDL_Event event;
 
   while(playing) {
+    SDL_PumpEvents();
     while(SDL_PollEvent(&event)) {
       onEvent(&event);
     }
@@ -61,6 +64,9 @@ int Game::init() {
     return false;
   }
 
+  SDL_ShowCursor(0);
+  mouse.init();
+
   map.setBoundaries(128,128);
   map_camera = new MapCamera(0, 0, screen, &map);
 
@@ -77,80 +83,94 @@ void Game::onEvent(SDL_Event* event) {
     playing = false;
   }
 
+  mouse.onEvent(event, screen);
   keyboard.onEvent(event);
+
+  map_camera->onEvent(event);
+
+  if (event->type == SDL_USEREVENT) {
+    if (event->user.code == D2TM_SELECT) {
+      D2TMSelectStruct *s = static_cast<D2TMSelectStruct*>(event->user.data1);
+
+      int mx = map_camera->worldCoordinateX(s->x);
+      int my = map_camera->worldCoordinateY(s->y);
+
+      delete s;
+
+      if (mouse.is_pointing()) {
+
+        if (isInRect(mx, my, devastator->getDrawX(), devastator->getDrawY(), devastator->width(), devastator->height())) {
+          mouse.state_order_move();
+          unit->unselect();
+          devastator->unselect();
+          devastator->select();
+        }
+
+        if (isInRect(mx, my, unit->getDrawX(), unit->getDrawY(), unit->width(), unit->height())) {
+          mouse.state_order_move();
+          unit->unselect();
+          devastator->unselect();
+          unit->select();
+        }
+      }
+
+    } else if (event->user.code == D2TM_DESELECT) {
+      mouse.state_pointing();
+      devastator->unselect();
+      unit->unselect();
+    } else if (event->user.code == D2TM_BOX_SELECT) {
+      D2TMBoxSelectStruct *s = static_cast<D2TMBoxSelectStruct*>(event->user.data1);
+
+      int rectX = map_camera->worldCoordinateX(s->start_x);
+      int rectY = map_camera->worldCoordinateY(s->start_y);
+      int endX = map_camera->worldCoordinateX(s->end_x);
+      int endY = map_camera->worldCoordinateY(s->end_y);
+
+      delete s;
+
+      if (mouse.is_pointing()) {
+        mouse.state_pointing();
+
+        unit->unselect();
+        devastator->unselect();
+
+        if (isUnitInRect(devastator, rectX, rectY, endX, endY)) {
+          mouse.state_order_move();
+          devastator->select();
+        }
+
+        if (isUnitInRect(unit, rectX, rectY, endX, endY)) {
+          mouse.state_order_move();
+          unit->select();
+        }
+      }
+    }
+
+  }
 
 }
 
 void Game::render() {
   SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-  map_camera->draw(&map, tileset, screen);
 
- // todo draw with camera
+  map_camera->draw(&map, tileset, screen);
   map_camera->draw(unit, screen);
   map_camera->draw(devastator, screen);
 
-  if (mouse.left_button_held()) {
-    rectangleRGBA(screen, mouse.getRectX(), mouse.getRectY(), mouse.x(), mouse.y(), 255, 255, 255, 255);
-  }
-
+  mouse.draw(screen);
 
   SDL_Flip(screen);
 }
 
 void Game::updateState() {
-  SDL_PumpEvents();
-  if (keyboard.isUpPressed()) map_camera->moveUp();
-  if (keyboard.isDownPressed()) map_camera->moveDown();
-  if (keyboard.isLeftPressed()) map_camera->moveLeft();
-  if (keyboard.isRightPressed()) map_camera->moveRight();
+  //} else if (mouse.is_ordering_to_move()) {
 
-  if (keyboard.isQPressed()) playing = false;
-
-  mouse.update_state();
-
-  if (mouse.x() <= 1) map_camera->moveLeft();
-  if (mouse.x() >= (screen->w - 1)) map_camera->moveRight();
-  if (mouse.y() <= 1) map_camera->moveUp();
-  if (mouse.y() >= (screen->h - 1)) map_camera->moveDown();
-
-  if (isInRect(devastator->getDrawX(), devastator->getDrawY(), devastator->width(), devastator->height())) {
-    if(mouse.left_button_pressed() && !mouse.left_button_held()) {
-      devastator->select();
-    }
-  }
-
-  if (isInRect(unit->getDrawX(), unit->getDrawY(), unit->width(), unit->height())) {
-    if(mouse.left_button_pressed() && !mouse.left_button_held()) {
-      unit->select();
-    }
-  }
-
-  if(mouse.right_button_pressed()) {
-    devastator->unselect();
-    unit->unselect();
-  }
-
-  if (mouse.dragged_rectangle()) {
-    int rectX = map_camera->worldCoordinateX(mouse.getRectX());
-    int rectY = map_camera->worldCoordinateY(mouse.getRectY());
-    int endX = map_camera->worldCoordinateX(mouse.x());
-    int endY = map_camera->worldCoordinateY(mouse.y());
-
-    if (endX < rectX) swap(endX, rectX);
-    if (endY < rectY) swap(endY, rectY);
-
-    unit->unselect();
-    devastator->unselect();
-
-    if (isUnitInRect(devastator, rectX, rectY, endX, endY)) {
-        devastator->select();
-    }
-
-    if (isUnitInRect(unit, rectX, rectY, endX, endY)) {
-        unit->select();
-    }
-  }
-
+    //if (mouse.left_button_pressed()) {
+      //if (unit->is_selected()) {
+        //unit->move_to(mouse.x(), mouse.y());
+      //}
+    //}
+  //}
 }
 
 int Game::cleanup() {
@@ -174,5 +194,9 @@ bool Game::isUnitInRect(Unit* unit, int x, int y, int end_x, int end_y) {
 bool Game::isInRect(int x, int y, int width, int height) {
   int mouse_x = mouse.x();
   int mouse_y = mouse.y();
+  return (mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y < (y + height));
+}
+
+bool Game::isInRect(int mouse_x, int mouse_y, int x, int y, int width, int height) {
   return (mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y < (y + height));
 }
