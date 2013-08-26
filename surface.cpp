@@ -22,6 +22,8 @@ SDL_Surface* Surface::load(std::string file) {
   result = SDL_DisplayFormat(temp);
   SDL_FreeSurface(temp);
 
+  SDL_SetColorKey(result, SDL_SRCCOLORKEY, SDL_MapRGB(result->format, 255, 0, 255) );
+
   return result;
 }
 
