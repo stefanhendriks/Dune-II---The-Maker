@@ -64,14 +64,7 @@ void Mouse::onEvent(SDL_Event* event, SDL_Surface* screen) {
       if (event->type == SDL_MOUSEBUTTONDOWN) {
 
       } else if (event->type == SDL_MOUSEBUTTONUP) {
-        SDL_Event clickEvent;
-
-        clickEvent.type = SDL_USEREVENT;
-        clickEvent.user.code = D2TM_DESELECT;
-        clickEvent.user.data1 = NULL;
-        clickEvent.user.data2 = NULL;
-
-        SDL_PushEvent(&clickEvent);
+        eventFactory.pushDeselectEvent();
       }
 
     }

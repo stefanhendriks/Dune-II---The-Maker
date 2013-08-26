@@ -25,6 +25,7 @@ class EventFactory {
   public:
     void pushBoxSelectEvent(int startX, int startY, int endX, int endY);
     void pushSelectEvent(int x, int y);
+    void pushDeselectEvent() { push_event(D2TM_DESELECT); }
 
   private:
 
@@ -43,6 +44,10 @@ class EventFactory {
 
     bool push_event(int code, void* data1) {
       return push_event(code, data1, NULL);
+    }
+
+    bool push_event(int code) {
+      return push_event(code, NULL, NULL);
     }
 
 };
