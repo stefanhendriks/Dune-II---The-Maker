@@ -2,6 +2,7 @@
 
 #include "mouse.h"
 #include "surface.h"
+#include "eventfactory.h"
 
 using namespace std;
 
@@ -27,10 +28,18 @@ bool Mouse::dragging_rectangle() {
   return (abs(_x - rect_x) > 3) && (abs(_y - rect_y) > 3);
 }
 
-void Mouse::onEvent(SDL_Event* event) {
+void Mouse::onEvent(SDL_Event* event, SDL_Surface* screen) {
+  EventFactory eventFactory;
+  
   if (event->type == SDL_MOUSEMOTION) {
     _x = event->motion.x;
     _y = event->motion.y;
+
+    //if (_x <= 1) map_camera->moveLeft();
+    //if (_x >= (screen->w - 1)) map_camera->moveRight();
+    //if (_y <= 1) map_camera->moveUp();
+    //if (_y >= (screen->h - 1)) map_camera->moveDown();
+
   } else {
 
     if (event->button.button == SDL_BUTTON_LEFT) {
@@ -42,44 +51,9 @@ void Mouse::onEvent(SDL_Event* event) {
       } else if (event->type == SDL_MOUSEBUTTONUP) {
 
         if (dragging_rectangle()) {
-          SDL_Event clickEvent;
-          D2TMBoxSelectStruct *s;
-
-          int start_x = rect_x;
-          int start_y = rect_y;
-          int end_x = event->button.x;
-          int end_y = event->button.y;
-
-          if (end_x < start_x) swap(end_x, start_x);
-          if (end_y < start_y) swap(end_y, start_y);
-
-          s = new D2TMBoxSelectStruct;
-          s->start_x = start_y;
-          s->start_y = start_y;
-          s->end_x = end_x;
-          s->end_y = end_y;
-
-          clickEvent.type = SDL_USEREVENT;
-          clickEvent.user.code = D2TM_BOX_SELECT;
-          clickEvent.user.data1 = s;
-          clickEvent.user.data2 = NULL;
-
-          SDL_PushEvent(&clickEvent);
-
+          eventFactory.pushBoxSelectEvent(rect_x, rect_y, event->button.x, event->button.y);
         } else {
-          SDL_Event clickEvent;
-          D2TMSelectStruct *s;
-
-          s = new D2TMSelectStruct;
-          s->x = event->button.x;
-          s->y = event->button.y;
-
-          clickEvent.type = SDL_USEREVENT;
-          clickEvent.user.code = D2TM_SELECT;
-          clickEvent.user.data1 = s;
-          clickEvent.user.data2 = NULL;
-
-          SDL_PushEvent(&clickEvent);
+          eventFactory.pushSelectEvent(event->button.x, event->button.y);
         }
         rect_x = -1;
         rect_y = -1;

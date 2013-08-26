@@ -7,6 +7,7 @@
 #include "map.h"
 #include "game.h"
 #include "surface.h"
+#include "eventfactory.h"
 
 using namespace std;
 
@@ -81,7 +82,7 @@ void Game::onEvent(SDL_Event* event) {
     playing = false;
   }
 
-  mouse.onEvent(event);
+  mouse.onEvent(event, screen);
   keyboard.onEvent(event);
 
   if (event->type == SDL_USEREVENT) {

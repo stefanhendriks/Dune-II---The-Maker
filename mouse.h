@@ -7,22 +7,7 @@
 const int MOUSE_POINTING = 0;
 const int MOUSE_ORDER_MOVE = 1;
 
-#define D2TM_SELECT          1024
-#define D2TM_DESELECT        1025
-#define D2TM_BOX_SELECT      1026
 
-typedef struct {
-  int x;
-  int y;
-} D2TMSelectStruct;
-
-
-typedef struct {
-  int start_x;
-  int start_y;
-  int end_x;
-  int end_y;
-} D2TMBoxSelectStruct;
 
 class Mouse {
 
@@ -30,7 +15,7 @@ class Mouse {
     Mouse();
     void init();
 
-    void onEvent(SDL_Event* event);
+    void onEvent(SDL_Event* event, SDL_Surface* screen);
 
     bool left_button_clicked() { return _left_button_clicked; }
     bool right_button_clicked() { return _right_button_clicked; }
