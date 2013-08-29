@@ -63,12 +63,6 @@ class MapCamera {
 
     void onEvent(SDL_Event* event);
 
-		int getX() { return x; }
-		int getY() { return y; }
-
-		int getWidth() { return max_cells_width_on_screen; }
-		int getHeight() { return max_cells_height_on_screen; }
-
     void moveUp() { for (int i = 0; i < scroll_speed; i++) { if (y > 0) y -= 1; } }
     void moveDown() { for (int i = 0; i < scroll_speed; i++) { if (y < max_y()) y += 1; } }
     void moveLeft() { for (int i = 0; i < scroll_speed; i++) { if (x > 0) x-= 1; } }
@@ -87,6 +81,9 @@ class MapCamera {
     int map_y_boundary;
     int map_x_boundary;
     int scroll_speed;
+
+		int getWidth() { return max_cells_width_on_screen; }
+		int getHeight() { return max_cells_height_on_screen; }
 
     int max_y() { return (map_y_boundary - max_cells_height_on_screen) * 32; }
     int max_x() { return (map_x_boundary - max_cells_width_on_screen) * 32; }
