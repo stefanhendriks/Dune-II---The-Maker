@@ -56,12 +56,17 @@ class Map {
 
 };
 
+const float CAMERA_VELOCITY_ACCELERATION = 0.25f;
+const float CAMERA_MAX_VELOCITY = 2.5f;
+
 class MapCamera {
 
 	public:
 		MapCamera(int x, int y, SDL_Surface* screen, Map* map);
 
     void onEvent(SDL_Event* event);
+
+    void updateState();
 
     void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
     void draw(Unit* unit, SDL_Surface* screen);
@@ -77,13 +82,19 @@ class MapCamera {
     int map_x_boundary;
     int scroll_speed;
 
+    float move_x_velocity;
+    float move_y_velocity;
+
 		int getWidth() { return max_cells_width_on_screen; }
 		int getHeight() { return max_cells_height_on_screen; }
 
-    void moveUp() { for (int i = 0; i < scroll_speed; i++) { if (y > 0) y -= 1; } }
-    void moveDown() { for (int i = 0; i < scroll_speed; i++) { if (y < max_y()) y += 1; } }
-    void moveLeft() { for (int i = 0; i < scroll_speed; i++) { if (x > 0) x-= 1; } }
-    void moveRight() { for (int i = 0; i < scroll_speed; i++) { if (x < max_x()) x+= 1; } }
+    void makeSureCoordinatesDoNotExceedMapLimits();
+
+    void moveUp() { move_y_velocity -= CAMERA_VELOCITY_ACCELERATION; }
+    void moveDown() { move_y_velocity += CAMERA_VELOCITY_ACCELERATION; }
+    void moveLeft() { move_x_velocity -= CAMERA_VELOCITY_ACCELERATION; }
+    void moveRight() { move_x_velocity += CAMERA_VELOCITY_ACCELERATION; }
+    void stopMoving() { move_x_velocity = move_y_velocity = 0.0F; }
 
     int max_y() { return (map_y_boundary - max_cells_height_on_screen) * 32; }
     int max_x() { return (map_x_boundary - max_cells_width_on_screen) * 32; }

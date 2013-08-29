@@ -25,6 +25,7 @@ const int D2TM_CAMERA_MOVE_UP = 1;
 const int D2TM_CAMERA_MOVE_DOWN = 2;
 const int D2TM_CAMERA_MOVE_LEFT = 3;
 const int D2TM_CAMERA_MOVE_RIGHT = 4;
+const int D2TM_CAMERA_STOP_MOVING = 5;
 
 typedef struct {
   int direction;

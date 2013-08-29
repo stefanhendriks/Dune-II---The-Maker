@@ -39,6 +39,7 @@ void Mouse::onEvent(SDL_Event* event, SDL_Surface* screen) {
     if (_x >= (screen->w - 1)) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_MOVE_RIGHT);
     if (_y <= 1) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_MOVE_UP);
     if (_y >= (screen->h - 1)) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_MOVE_DOWN);
+    if ((_x > 1 && _x < (screen->w - 1)) && (_y > 1 && _y < (screen->h -1))) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_STOP_MOVING);
 
   } else {
 
