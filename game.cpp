@@ -65,7 +65,7 @@ int Game::init() {
   }
 
   SDL_ShowCursor(0);
-  mouse.init();
+  mouse.init(screen);
 
   map.setBoundaries(128,128);
   map_camera = new MapCamera(0, 0, screen, &map);
@@ -83,7 +83,7 @@ void Game::onEvent(SDL_Event* event) {
     playing = false;
   }
 
-  mouse.onEvent(event, screen);
+  mouse.onEvent(event);
   keyboard.onEvent(event);
 
   map_camera->onEvent(event);

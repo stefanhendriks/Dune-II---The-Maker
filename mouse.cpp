@@ -19,9 +19,10 @@ Mouse::Mouse() {
   emit_event=false;
 }
 
-void Mouse::init() {
-  pointer = Surface::load("graphics/MS_Pointer.bmp");
-  pointer_move = Surface::load("graphics/MS_Move.bmp");
+void Mouse::init(SDL_Surface* screen) {
+  this->pointer = Surface::load("graphics/MS_Pointer.bmp");
+  this->pointer_move = Surface::load("graphics/MS_Move.bmp");
+  this->screen = screen;
 }
 
 bool Mouse::dragging_rectangle() {
@@ -30,12 +31,11 @@ bool Mouse::dragging_rectangle() {
 }
 
 
-void Mouse::onEvent(SDL_Event* event, SDL_Surface* screen) {
+void Mouse::onEvent(SDL_Event* event) {
   if (event->type != SDL_MOUSEMOTION && event->type != SDL_MOUSEBUTTONDOWN && event->type != SDL_MOUSEBUTTONUP) return;
 
   if (event->type == SDL_MOUSEMOTION) {
     emit_event = true;
-    //bool mouse_was_on_screen = is_mouse_on_screen(screen);
 
     _x = event->motion.x;
     _y = event->motion.y;
@@ -44,8 +44,6 @@ void Mouse::onEvent(SDL_Event* event, SDL_Surface* screen) {
     right = (_x >= (screen->w - 1));
     up = (_y <= 1);
     down = (_y >= (screen->h - 1));
-
-    //if (!mouse_was_on_screen && is_mouse_on_screen(screen)) eventFactory.pushMoveCameraEvent(0,0);
 
   } else {
 

@@ -15,9 +15,9 @@ class Mouse {
 
   public:
     Mouse();
-    void init();
+    void init(SDL_Surface* screen);
 
-    void onEvent(SDL_Event* event, SDL_Surface* screen);
+    void onEvent(SDL_Event* event);
 
     bool left_button_clicked() { return _left_button_clicked; }
     bool right_button_clicked() { return _right_button_clicked; }
@@ -42,6 +42,7 @@ class Mouse {
   private:
     SDL_Surface* pointer;
     SDL_Surface* pointer_move;
+    SDL_Surface* screen;
     EventFactory eventFactory;
 
     bool _left_button_clicked, _right_button_clicked;
