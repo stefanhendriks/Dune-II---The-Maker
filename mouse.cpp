@@ -28,10 +28,14 @@ bool Mouse::dragging_rectangle() {
   return (abs(_x - rect_x) > 3) && (abs(_y - rect_y) > 3);
 }
 
+
+
 void Mouse::onEvent(SDL_Event* event, SDL_Surface* screen) {
   EventFactory eventFactory;
 
   if (event->type == SDL_MOUSEMOTION) {
+    bool mouse_was_on_screen = is_mouse_on_screen(screen);
+
     _x = event->motion.x;
     _y = event->motion.y;
 
@@ -39,7 +43,7 @@ void Mouse::onEvent(SDL_Event* event, SDL_Surface* screen) {
     if (_x >= (screen->w - 1)) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_MOVE_RIGHT);
     if (_y <= 1) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_MOVE_UP);
     if (_y >= (screen->h - 1)) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_MOVE_DOWN);
-    if ((_x > 1 && _x < (screen->w - 1)) && (_y > 1 && _y < (screen->h -1))) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_STOP_MOVING);
+    if (!mouse_was_on_screen && is_mouse_on_screen(screen)) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_STOP_MOVING);
 
   } else {
 

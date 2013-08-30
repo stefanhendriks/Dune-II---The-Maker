@@ -46,6 +46,9 @@ class Mouse {
 
     int _x, _y;
     int rect_x, rect_y;
+
+    bool is_mouse_on_screen(SDL_Surface* screen) { return (_x > 1 && _x < (screen->w - 1)) && (_y > 1 && _y < (screen->h -1)); }
+
 };
 
 #endif
