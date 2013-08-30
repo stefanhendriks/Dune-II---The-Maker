@@ -31,6 +31,7 @@ bool Mouse::dragging_rectangle() {
 }
 
 
+// Attention: sometimes we emit new events here , sometimes we wait for updateState to do that.
 void Mouse::onEvent(SDL_Event* event) {
   if (event->type != SDL_MOUSEMOTION && event->type != SDL_MOUSEBUTTONDOWN && event->type != SDL_MOUSEBUTTONUP) return;
 
@@ -49,10 +50,8 @@ void Mouse::onEvent(SDL_Event* event) {
 
     if (event->button.button == SDL_BUTTON_LEFT) {
       if (event->type == SDL_MOUSEBUTTONDOWN) {
-
         rect_x = event->button.x;
         rect_y = event->button.y;
-
       } else if (event->type == SDL_MOUSEBUTTONUP) {
 
         if (dragging_rectangle()) {
@@ -66,12 +65,9 @@ void Mouse::onEvent(SDL_Event* event) {
     }
 
     if (event->button.button == SDL_BUTTON_RIGHT) {
-      if (event->type == SDL_MOUSEBUTTONDOWN) {
-
-      } else if (event->type == SDL_MOUSEBUTTONUP) {
+      if (event->type == SDL_MOUSEBUTTONUP) {
         eventFactory.pushDeselectEvent();
       }
-
     }
 
   }
