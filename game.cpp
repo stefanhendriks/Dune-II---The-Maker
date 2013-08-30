@@ -163,6 +163,7 @@ void Game::render() {
 }
 
 void Game::updateState() {
+  keyboard.updateState();
   map_camera->updateState();
   //} else if (mouse.is_ordering_to_move()) {
 

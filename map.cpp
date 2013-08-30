@@ -64,21 +64,13 @@ void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
 
 void MapCamera::onEvent(SDL_Event* event) {
   if (event->type == SDL_USEREVENT) {
+
     if (event->user.code == D2TM_MOVE_CAMERA) {
       D2TMMoveCameraStruct *s = static_cast<D2TMMoveCameraStruct*>(event->user.data1);
-
-      int direction = s->direction;
-
-      switch (direction) {
-        case D2TM_CAMERA_MOVE_LEFT: moveLeft(); break;
-        case D2TM_CAMERA_MOVE_RIGHT: moveRight(); break;
-        case D2TM_CAMERA_MOVE_UP: moveUp(); break;
-        case D2TM_CAMERA_MOVE_DOWN: moveDown(); break;
-        case D2TM_CAMERA_STOP_MOVING: stopMoving(); break;
-        default:
-          cout << "ERROR: received invalid direction to move camera to, direction is " << direction << endl;
-      }
+      move_x_velocity = s->vec_x;
+      move_y_velocity = s->vec_y;
     }
+
   }
 }
 

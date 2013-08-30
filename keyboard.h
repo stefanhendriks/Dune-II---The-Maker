@@ -13,9 +13,15 @@ class Keyboard {
 
     bool isQPressed() { return qPressed; }
 
+    void updateState();
+
   private:
     bool qPressed;
+    bool up, down, left, right;
+    bool emit_event;
+
     EventFactory eventFactory;
+
 };
 
 #endif

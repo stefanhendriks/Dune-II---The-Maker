@@ -26,8 +26,9 @@ void EventFactory::pushSelectEvent(int x, int y) {
   push_event(D2TM_SELECT, s);
 }
 
-void EventFactory::pushMoveCameraEvent(int direction) {
+void EventFactory::pushMoveCameraEvent(float vec_x, float vec_y) {
   D2TMMoveCameraStruct *s = new D2TMMoveCameraStruct;
-  s->direction = direction;
+  s->vec_x = vec_x;
+  s->vec_y = vec_y;
   push_event(D2TM_MOVE_CAMERA, s);
 }
