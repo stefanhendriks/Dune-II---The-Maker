@@ -4,6 +4,8 @@
 #include "SDL/SDL.h"
 #include "SDL_gfxPrimitives.h"
 
+#include "eventfactory.h"
+
 const int MOUSE_POINTING = 0;
 const int MOUSE_ORDER_MOVE = 1;
 
@@ -35,9 +37,13 @@ class Mouse {
 
     void draw(SDL_Surface* screen);
 
+    void updateState();
+
   private:
     SDL_Surface* pointer;
     SDL_Surface* pointer_move;
+    EventFactory eventFactory;
+
     bool _left_button_clicked, _right_button_clicked;
 
     bool dragging_rectangle();
@@ -49,6 +55,7 @@ class Mouse {
 
     bool is_mouse_on_screen(SDL_Surface* screen) { return (_x > 1 && _x < (screen->w - 1)) && (_y > 1 && _y < (screen->h -1)); }
 
+    bool up,down,left,right,emit_event;
 };
 
 #endif

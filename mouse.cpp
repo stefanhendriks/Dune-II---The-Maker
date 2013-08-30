@@ -2,7 +2,6 @@
 
 #include "mouse.h"
 #include "surface.h"
-#include "eventfactory.h"
 
 using namespace std;
 
@@ -16,6 +15,8 @@ Mouse::Mouse() {
   state = MOUSE_POINTING;
   pointer = NULL;
   pointer_move = NULL;
+  up=down=right=left=false;
+  emit_event=false;
 }
 
 void Mouse::init() {
@@ -30,19 +31,21 @@ bool Mouse::dragging_rectangle() {
 
 
 void Mouse::onEvent(SDL_Event* event, SDL_Surface* screen) {
-  EventFactory eventFactory;
+  if (event->type != SDL_MOUSEMOTION && event->type != SDL_MOUSEBUTTONDOWN && event->type != SDL_MOUSEBUTTONUP) return;
 
   if (event->type == SDL_MOUSEMOTION) {
-    bool mouse_was_on_screen = is_mouse_on_screen(screen);
+    emit_event = true;
+    //bool mouse_was_on_screen = is_mouse_on_screen(screen);
 
     _x = event->motion.x;
     _y = event->motion.y;
 
-    if (_x <= 1) eventFactory.pushMoveCameraEvent(-1, 0);
-    if (_x >= (screen->w - 1)) eventFactory.pushMoveCameraEvent(1, 0);
-    if (_y <= 1) eventFactory.pushMoveCameraEvent(0, -1);
-    if (_y >= (screen->h - 1)) eventFactory.pushMoveCameraEvent(0, 1);
-    if (!mouse_was_on_screen && is_mouse_on_screen(screen)) eventFactory.pushMoveCameraEvent(0,0);
+    left = (_x <= 1);
+    right = (_x >= (screen->w - 1));
+    up = (_y <= 1);
+    down = (_y >= (screen->h - 1));
+
+    //if (!mouse_was_on_screen && is_mouse_on_screen(screen)) eventFactory.pushMoveCameraEvent(0,0);
 
   } else {
 
@@ -75,6 +78,21 @@ void Mouse::onEvent(SDL_Event* event, SDL_Surface* screen) {
 
   }
 
+}
+
+void Mouse::updateState() {
+  if (!emit_event) return;
+
+  float vec_x = 0, vec_y = 0;
+
+  if (up) vec_y -= 1;
+  if (down) vec_y += 1;
+  if (left) vec_x -= 1;
+  if (right) vec_x += 1;
+
+  eventFactory.pushMoveCameraEvent(vec_x, vec_y);
+
+  emit_event = false;
 }
 
 void Mouse::draw(SDL_Surface* screen) {
