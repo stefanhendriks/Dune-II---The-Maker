@@ -31,6 +31,25 @@ MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map) {
   this->map_y_boundary = map->getMaxHeight();
   this->map_x_boundary = map->getMaxWidth();
   this->scroll_speed = 8;
+  this->move_x_velocity = 0.0F;
+  this->move_y_velocity = 0.0F;
+}
+
+void MapCamera::updateState() {
+  if (move_x_velocity > CAMERA_MAX_VELOCITY) move_x_velocity = CAMERA_MAX_VELOCITY;
+  if (move_y_velocity > CAMERA_MAX_VELOCITY) move_y_velocity = CAMERA_MAX_VELOCITY;
+
+  x += (move_x_velocity * scroll_speed);
+  y += (move_y_velocity * scroll_speed);
+
+  makeSureCoordinatesDoNotExceedMapLimits();
+}
+
+void MapCamera::makeSureCoordinatesDoNotExceedMapLimits() {
+  if (y < 0) y = 0;
+  if (y > max_y()) y = max_y();
+  if (x < 0) x = 0;
+  if (x > max_x()) x = max_x();
 }
 
 void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
@@ -39,36 +58,29 @@ void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
   int draw_x = unit->getDrawX() - this->x;
   int draw_y = unit->getDrawY() - this->y;
 
-  // TODO: if not on screen, do not draw
+  // TODO: if not visible on camera , do not draw
   unit->draw(screen, draw_x, draw_y);
 }
 
 void MapCamera::onEvent(SDL_Event* event) {
   if (event->type == SDL_USEREVENT) {
+
     if (event->user.code == D2TM_MOVE_CAMERA) {
       D2TMMoveCameraStruct *s = static_cast<D2TMMoveCameraStruct*>(event->user.data1);
-
-      int direction = s->direction;
-
-      switch (direction) {
-        case D2TM_CAMERA_MOVE_LEFT: moveLeft(); break;
-        case D2TM_CAMERA_MOVE_RIGHT: moveRight(); break;
-        case D2TM_CAMERA_MOVE_UP: moveUp(); break;
-        case D2TM_CAMERA_MOVE_DOWN: moveDown(); break;
-        default:
-          cout << "ERROR: received invalid direction to move camera to, direction is " << direction << endl;
-      }
+      move_x_velocity = s->vec_x;
+      move_y_velocity = s->vec_y;
     }
+
   }
 }
 
 void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
   // determine x and y from map data.
-  int startX = (this->x / 32);
-  int startY = (this->y / 32);
+  int startX = (this->x / TILE_SIZE);
+  int startY = (this->y / TILE_SIZE);
 
-  int offsetX = (this->x % 32);
-  int offsetY = (this->y % 32);
+  int offsetX = (this->x % TILE_SIZE);
+  int offsetY = (this->y % TILE_SIZE);
 
   int endX = startX + (getWidth() + 1);
   int endY = startY + (getHeight() + 1);
@@ -78,8 +90,8 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
       Cell c = map->getCell(dx, dy);
       // weird: have to compensate for the coordinates above. Drawing should be done separately
       // from coordinates of map.
-      int drawX = (dx - startX) * 32;
-      int drawY = (dy - startY) * 32;
+      int drawX = (dx - startX) * TILE_SIZE;
+      int drawY = (dy - startY) * TILE_SIZE;
 
       drawX -= offsetX;
       drawY -= offsetY;
