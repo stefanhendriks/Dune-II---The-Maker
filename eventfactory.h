@@ -28,17 +28,19 @@ const int D2TM_CAMERA_MOVE_RIGHT = 4;
 const int D2TM_CAMERA_STOP_MOVING = 5;
 
 typedef struct {
-  float vec_x;
-  float vec_y;
+  int vec_x;
+  int vec_y;
 } D2TMMoveCameraStruct;
 
 class EventFactory {
 
   public:
+    EventFactory();
+
     void pushBoxSelectEvent(int startX, int startY, int endX, int endY);
     void pushSelectEvent(int x, int y);
     void pushDeselectEvent() { push_event(D2TM_DESELECT); }
-    void pushMoveCameraEvent(float vec_x, float vec_y);
+    void pushMoveCameraEvent(int vec_x, int vec_y);
     void pushQuitEvent() { push_sdl_event(SDL_QUIT, 0, NULL, NULL); }
 
   private:
@@ -68,6 +70,7 @@ class EventFactory {
       return push_event(code, NULL, NULL);
     }
 
+    D2TMMoveCameraStruct last_sent_camera_movement;
 };
 
 
