@@ -2,7 +2,6 @@
 
 #include "mouse.h"
 #include "surface.h"
-#include "eventfactory.h"
 
 using namespace std;
 
@@ -16,11 +15,14 @@ Mouse::Mouse() {
   state = MOUSE_POINTING;
   pointer = NULL;
   pointer_move = NULL;
+  up=down=right=left=false;
+  emit_event=false;
 }
 
-void Mouse::init() {
-  pointer = Surface::load("graphics/MS_Pointer.bmp");
-  pointer_move = Surface::load("graphics/MS_Move.bmp");
+void Mouse::init(SDL_Surface* screen) {
+  this->pointer = Surface::load("graphics/MS_Pointer.bmp");
+  this->pointer_move = Surface::load("graphics/MS_Move.bmp");
+  this->screen = screen;
 }
 
 bool Mouse::dragging_rectangle() {
@@ -28,26 +30,28 @@ bool Mouse::dragging_rectangle() {
   return (abs(_x - rect_x) > 3) && (abs(_y - rect_y) > 3);
 }
 
-void Mouse::onEvent(SDL_Event* event, SDL_Surface* screen) {
-  EventFactory eventFactory;
+
+// Attention: sometimes we emit new events here , sometimes we wait for updateState to do that.
+void Mouse::onEvent(SDL_Event* event) {
+  if (event->type != SDL_MOUSEMOTION && event->type != SDL_MOUSEBUTTONDOWN && event->type != SDL_MOUSEBUTTONUP) return;
 
   if (event->type == SDL_MOUSEMOTION) {
+    emit_event = true;
+
     _x = event->motion.x;
     _y = event->motion.y;
 
-    if (_x <= 1) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_MOVE_LEFT);
-    if (_x >= (screen->w - 1)) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_MOVE_RIGHT);
-    if (_y <= 1) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_MOVE_UP);
-    if (_y >= (screen->h - 1)) eventFactory.pushMoveCameraEvent(D2TM_CAMERA_MOVE_DOWN);
+    left = (_x <= 1);
+    right = (_x >= (screen->w - 1));
+    up = (_y <= 1);
+    down = (_y >= (screen->h - 1));
 
   } else {
 
     if (event->button.button == SDL_BUTTON_LEFT) {
       if (event->type == SDL_MOUSEBUTTONDOWN) {
-
         rect_x = event->button.x;
         rect_y = event->button.y;
-
       } else if (event->type == SDL_MOUSEBUTTONUP) {
 
         if (dragging_rectangle()) {
@@ -61,16 +65,28 @@ void Mouse::onEvent(SDL_Event* event, SDL_Surface* screen) {
     }
 
     if (event->button.button == SDL_BUTTON_RIGHT) {
-      if (event->type == SDL_MOUSEBUTTONDOWN) {
-
-      } else if (event->type == SDL_MOUSEBUTTONUP) {
+      if (event->type == SDL_MOUSEBUTTONUP) {
         eventFactory.pushDeselectEvent();
       }
-
     }
 
   }
 
+}
+
+void Mouse::updateState() {
+  if (!emit_event) return;
+
+  float vec_x = 0, vec_y = 0;
+
+  if (up) vec_y -= 1;
+  if (down) vec_y += 1;
+  if (left) vec_x -= 1;
+  if (right) vec_x += 1;
+
+  eventFactory.pushMoveCameraEvent(vec_x, vec_y);
+
+  emit_event = false;
 }
 
 void Mouse::draw(SDL_Surface* screen) {
