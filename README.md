@@ -52,7 +52,11 @@ Features need to be written in such a way that it is obvious what the benefit is
 TODO
 ----
 - order a unit to move to a position
- - (ground) register order command and show where to move to
+<del>
+  <ul>
+    <li>(ground) register order command and show where to move to</li>
+  </ul>
+</del>
  - (ground) unit can move to adjecent tile
  - (ground) unit moves tile-by-tile to ordered position
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
