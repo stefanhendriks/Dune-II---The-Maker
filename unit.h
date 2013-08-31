@@ -32,7 +32,7 @@ class Unit {
     int width() { return tile_height; }
     int height() { return tile_width; }
 
-    void move_to(int x, int y) { this->move_to_x = x; this->move_to_y = y; }
+    void move_to(int world_x, int world_y) { this->move_to_x = world_x; this->move_to_y = world_y; }
 
     void select() { selected = true; }
     void unselect() { selected = false; }

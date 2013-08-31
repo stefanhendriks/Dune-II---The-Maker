@@ -30,8 +30,11 @@ void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
   Surface::draw(tileset, screen, src_x, src_y, this->tile_width, this->tile_height, draw_x, draw_y);
 
   if (selected) Surface::draw(selected_bitmap, screen, draw_x, draw_y);
-  if (move_to_x != draw_x || move_to_y != draw_y) {
-   lineRGBA(screen, draw_x + 16, draw_y + 16, move_to_x, move_to_y, 255, 0, 255, 255);
+
+  if (move_to_x != x || move_to_y != y) {
+    int draw_move_to_x = map_camera->screenCoordinateX(move_to_x);
+    int draw_move_to_y = map_camera->screenCoordinateY(move_to_y);
+   lineRGBA(screen, draw_x + 16, draw_y + 16, draw_move_to_x, draw_move_to_y, 255, 0, 255, 255);
   }
 }
 

@@ -9,10 +9,10 @@ EventFactory::EventFactory() {
   last_sent_camera_movement.vec_y = 0;
 }
 
-void EventFactory::pushMoveUnitEvent(int x, int y) {
+void EventFactory::pushMoveUnitEvent(int screen_x, int screen_y) {
   D2TMMoveUnitStruct *s = new D2TMMoveUnitStruct;
-  s->x = x;
-  s->y = y;
+  s->screen_x = screen_x;
+  s->screen_y = screen_y;
   push_event(D2TM_MOVE_UNIT, s);
 }
 

@@ -34,7 +34,7 @@ typedef struct {
 } D2TMMoveCameraStruct;
 
 typedef struct {
-  int x, y;
+  int screen_x, screen_y;
 } D2TMMoveUnitStruct;
 
 class EventFactory {
@@ -46,7 +46,7 @@ class EventFactory {
     void pushSelectEvent(int x, int y);
     void pushDeselectEvent() { push_event(D2TM_DESELECT); }
     void pushMoveCameraEvent(int vec_x, int vec_y);
-    void pushMoveUnitEvent(int x, int y);
+    void pushMoveUnitEvent(int screen_x, int screen_y);
     void pushQuitEvent() { push_sdl_event(SDL_QUIT, 0, NULL, NULL); }
 
   private:
