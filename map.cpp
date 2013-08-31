@@ -3,6 +3,7 @@
 #include "map.h"
 #include "random.h"
 #include "eventfactory.h"
+#include "unit.h"
 
 #include <math.h>       /* ceil */
 
@@ -53,13 +54,8 @@ void MapCamera::makeSureCoordinatesDoNotExceedMapLimits() {
 }
 
 void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
-
-  // translate x , y into screen coordinates
-  int draw_x = unit->getDrawX() - this->x;
-  int draw_y = unit->getDrawY() - this->y;
-
   // TODO: if not visible on camera , do not draw
-  unit->draw(screen, draw_x, draw_y);
+  unit->draw(screen, this);
 }
 
 void MapCamera::onEvent(SDL_Event* event) {

@@ -19,16 +19,19 @@ Unit::~Unit() {
   SDL_FreeSurface(shadowset);
 }
 
-void Unit::draw(SDL_Surface* screen, int x, int y) {
+void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
+  int draw_x = map_camera->screenCoordinateX(getDrawX());
+  int draw_y = map_camera->screenCoordinateY(getDrawY());
+
   int src_x = this->body_facing * this->tile_width;
   int src_y = this->tile_height * this->anim_frame;
 
-  Surface::draw(shadowset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y, this->shadow_alpha);
-  Surface::draw(tileset, screen, src_x, src_y, this->tile_width, this->tile_height, x, y);
+  Surface::draw(shadowset, screen, src_x, src_y, this->tile_width, this->tile_height, draw_x, draw_y, this->shadow_alpha);
+  Surface::draw(tileset, screen, src_x, src_y, this->tile_width, this->tile_height, draw_x, draw_y);
 
-  if (selected) Surface::draw(selected_bitmap, screen, x, y);
-  if (move_to_x != x || move_to_y != y) {
-   lineRGBA(screen, x + 16, y + 16, move_to_x, move_to_y, 255, 0, 255, 255);
+  if (selected) Surface::draw(selected_bitmap, screen, draw_x, draw_y);
+  if (move_to_x != draw_x || move_to_y != draw_y) {
+   lineRGBA(screen, draw_x + 16, draw_y + 16, move_to_x, move_to_y, 255, 0, 255, 255);
   }
 }
 

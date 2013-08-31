@@ -4,6 +4,8 @@
 #include "SDL/SDL.h"
 #include "SDL_gfxPrimitives.h"
 
+#include "map.h"
+
 const int FACING_UP = 0;
 const int FACING_UP_RIGHT = 1;
 const int FACING_RIGHT = 2;
@@ -22,7 +24,7 @@ class Unit {
     Unit(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y);
     ~Unit();
 
-    void draw(SDL_Surface* screen, int x, int y);
+    void draw(SDL_Surface* screen, MapCamera* map_camera);
 
     int getDrawX() { return x + offset_x; }
     int getDrawY() { return y + offset_y; }

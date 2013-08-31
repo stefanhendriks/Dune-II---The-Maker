@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "unit.h"
+class Unit;
 
 using namespace std;
 
@@ -71,6 +71,8 @@ class MapCamera {
     void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
     void draw(Unit* unit, SDL_Surface* screen);
 
+    int screenCoordinateX(int world_x) { return world_x - this->x; }
+    int screenCoordinateY(int world_y) { return world_y - this->y; }
     int worldCoordinateX(int x) { return this->x + x; };
     int worldCoordinateY(int y) { return this->y + y; };
 
