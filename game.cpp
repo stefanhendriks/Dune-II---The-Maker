@@ -144,6 +144,10 @@ void Game::onEvent(SDL_Event* event) {
           unit->select();
         }
       }
+    } else if (event->user.code == D2TM_MOVE_UNIT) {
+      D2TMMoveUnitStruct *s = static_cast<D2TMMoveUnitStruct*>(event->user.data1);
+      if (unit->is_selected()) unit->move_to(s->x, s->y);
+      if (devastator->is_selected()) devastator->move_to(s->x, s->y);
     }
 
   }

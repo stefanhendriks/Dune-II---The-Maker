@@ -9,8 +9,14 @@ EventFactory::EventFactory() {
   last_sent_camera_movement.vec_y = 0;
 }
 
-void EventFactory::pushBoxSelectEvent(int startX, int startY, int endX, int endY) {
+void EventFactory::pushMoveUnitEvent(int x, int y) {
+  D2TMMoveUnitStruct *s = new D2TMMoveUnitStruct;
+  s->x = x;
+  s->y = y;
+  push_event(D2TM_MOVE_UNIT, s);
+}
 
+void EventFactory::pushBoxSelectEvent(int startX, int startY, int endX, int endY) {
   if (endX < startX) swap(endX, startX);
   if (endY < startY) swap(endY, startY);
 
@@ -32,7 +38,6 @@ void EventFactory::pushSelectEvent(int x, int y) {
 }
 
 void EventFactory::pushMoveCameraEvent(int vec_x, int vec_y) {
-
   if (vec_x == last_sent_camera_movement.vec_x && vec_y == last_sent_camera_movement.vec_y) {
     return;
   }

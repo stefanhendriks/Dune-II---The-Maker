@@ -7,6 +7,7 @@
 #define D2TM_DESELECT        1025
 #define D2TM_BOX_SELECT      1026
 #define D2TM_MOVE_CAMERA     1027
+#define D2TM_MOVE_UNIT       1028
 
 typedef struct {
   int start_x;
@@ -32,6 +33,10 @@ typedef struct {
   int vec_y;
 } D2TMMoveCameraStruct;
 
+typedef struct {
+  int x, y;
+} D2TMMoveUnitStruct;
+
 class EventFactory {
 
   public:
@@ -41,6 +46,7 @@ class EventFactory {
     void pushSelectEvent(int x, int y);
     void pushDeselectEvent() { push_event(D2TM_DESELECT); }
     void pushMoveCameraEvent(int vec_x, int vec_y);
+    void pushMoveUnitEvent(int x, int y);
     void pushQuitEvent() { push_sdl_event(SDL_QUIT, 0, NULL, NULL); }
 
   private:

@@ -49,18 +49,24 @@ void Mouse::onEvent(SDL_Event* event) {
   } else {
 
     if (event->button.button == SDL_BUTTON_LEFT) {
-      if (event->type == SDL_MOUSEBUTTONDOWN) {
-        rect_x = event->button.x;
-        rect_y = event->button.y;
-      } else if (event->type == SDL_MOUSEBUTTONUP) {
+      if (is_pointing()) {
+        if (event->type == SDL_MOUSEBUTTONDOWN) {
+          rect_x = event->button.x;
+          rect_y = event->button.y;
+        } else if (event->type == SDL_MOUSEBUTTONUP) {
 
-        if (dragging_rectangle()) {
-          eventFactory.pushBoxSelectEvent(rect_x, rect_y, event->button.x, event->button.y);
-        } else {
-          eventFactory.pushSelectEvent(event->button.x, event->button.y);
+          if (dragging_rectangle()) {
+            eventFactory.pushBoxSelectEvent(rect_x, rect_y, event->button.x, event->button.y);
+          } else {
+            eventFactory.pushSelectEvent(event->button.x, event->button.y);
+          }
+          rect_x = -1;
+          rect_y = -1;
         }
-        rect_x = -1;
-        rect_y = -1;
+      } else if (is_ordering_to_move()) {
+        if (event->type == SDL_MOUSEBUTTONUP) {
+          eventFactory.pushMoveUnitEvent(event->button.x, event->button.y);
+        }
       }
     }
 
