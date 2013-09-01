@@ -36,7 +36,7 @@ class Game {
 
       bool isInRect(int x, int y, int width, int height);
       bool isInRect(int mouse_x, int mouse_y, int x, int y, int width, int height);
-      bool isUnitInRect(Unit* unit, int x, int y, int width, int height);
+      bool isUnitInRect(Unit* unit, Point start, Point end);
 };
 
 #endif

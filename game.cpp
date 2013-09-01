@@ -124,10 +124,6 @@ void Game::onEvent(SDL_Event* event) {
 
       Point start = map_camera->toWorldCoordinates(s->start);
       Point end = map_camera->toWorldCoordinates(s->end);
-      int rectX = start.x;
-      int rectY = start.y;
-      int endX = end.x;
-      int endY = end.y;
 
       delete s;
 
@@ -137,12 +133,12 @@ void Game::onEvent(SDL_Event* event) {
         unit->unselect();
         devastator->unselect();
 
-        if (isUnitInRect(devastator, rectX, rectY, endX, endY)) {
+        if (isUnitInRect(devastator, start, end)) {
           mouse.state_order_move();
           devastator->select();
         }
 
-        if (isUnitInRect(unit, rectX, rectY, endX, endY)) {
+        if (isUnitInRect(unit, start, end)) {
           mouse.state_order_move();
           unit->select();
         }
@@ -177,14 +173,6 @@ void Game::updateState() {
   keyboard.updateState();
   mouse.updateState();
   map_camera->updateState();
-  //} else if (mouse.is_ordering_to_move()) {
-
-    //if (mouse.left_button_pressed()) {
-      //if (unit->is_selected()) {
-        //unit->move_to(mouse.x(), mouse.y());
-      //}
-    //}
-  //}
 }
 
 int Game::cleanup() {
@@ -198,11 +186,11 @@ int Game::cleanup() {
   return 0;
 }
 
-bool Game::isUnitInRect(Unit* unit, int x, int y, int end_x, int end_y) {
+bool Game::isUnitInRect(Unit* unit, Point start, Point end) {
   // this checks the up-left position of a unit: TODO: do rectangle intersection
   int unit_x = unit->getDrawX();
   int unit_y = unit->getDrawY();
-  return (unit_x >= x && unit_x < end_x) && (unit_y >= y && unit_y < end_y);
+  return (unit_x >= start.x && unit_x < end.x) && (unit_y >= start.y && unit_y < end.y);
 }
 
 bool Game::isInRect(int x, int y, int width, int height) {
