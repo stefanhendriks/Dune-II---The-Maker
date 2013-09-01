@@ -29,8 +29,7 @@ const int D2TM_CAMERA_MOVE_RIGHT = 4;
 const int D2TM_CAMERA_STOP_MOVING = 5;
 
 typedef struct {
-  int vec_x;
-  int vec_y;
+  Point vector;
 } D2TMMoveCameraStruct;
 
 typedef struct {
@@ -76,7 +75,7 @@ class EventFactory {
       return push_event(code, NULL, NULL);
     }
 
-    D2TMMoveCameraStruct last_sent_camera_movement;
+    Point last_sent_camera_vector;
 };
 
 

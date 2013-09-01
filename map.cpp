@@ -63,8 +63,8 @@ void MapCamera::onEvent(SDL_Event* event) {
 
     if (event->user.code == D2TM_MOVE_CAMERA) {
       D2TMMoveCameraStruct *s = static_cast<D2TMMoveCameraStruct*>(event->user.data1);
-      move_x_velocity = s->vec_x;
-      move_y_velocity = s->vec_y;
+      move_x_velocity = s->vector.x;
+      move_y_velocity = s->vector.y;
     }
 
   }

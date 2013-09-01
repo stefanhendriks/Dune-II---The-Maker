@@ -5,8 +5,6 @@
 using namespace std;
 
 EventFactory::EventFactory() {
-  last_sent_camera_movement.vec_x = 0;
-  last_sent_camera_movement.vec_y = 0;
 }
 
 void EventFactory::pushMoveUnitEvent(int screen_x, int screen_y) {
@@ -36,15 +34,14 @@ void EventFactory::pushSelectEvent(int x, int y) {
 }
 
 void EventFactory::pushMoveCameraEvent(int vec_x, int vec_y) {
-  if (vec_x == last_sent_camera_movement.vec_x && vec_y == last_sent_camera_movement.vec_y) {
+  Point move_vector = Point(vec_x, vec_y);
+  if (move_vector == last_sent_camera_vector) {
     return;
   }
 
   D2TMMoveCameraStruct *s = new D2TMMoveCameraStruct;
-  s->vec_x = vec_x;
-  s->vec_y = vec_y;
+  s->vector = move_vector;
   push_event(D2TM_MOVE_CAMERA, s);
 
-  last_sent_camera_movement.vec_x = vec_x;
-  last_sent_camera_movement.vec_y = vec_y;
+  last_sent_camera_vector = move_vector;
 }
