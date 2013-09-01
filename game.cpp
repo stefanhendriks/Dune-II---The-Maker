@@ -121,7 +121,6 @@ void Game::onEvent(SDL_Event* event) {
 
       Rectangle rectangle = map_camera->toWorldCoordinates(s->rectangle);
 
-
       if (mouse.is_pointing()) {
         mouse.state_pointing();
 
@@ -170,6 +169,7 @@ void Game::updateState() {
   keyboard.updateState();
   mouse.updateState();
   map_camera->updateState();
+  unit->updateState();
 }
 
 int Game::cleanup() {

@@ -72,13 +72,20 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
   }
   this->size = Point(tile_width, tile_height);
   this->shadow_alpha = 128;
-  this->position.x = x;
-  this->position.y = y;
+  this->position = Point(x,y);
+  this->next_move_position = this->position;
   this->anim_frame = 0;
 
   // every pixel short/too much of the perfect tile size will be spread evenly
   this->offset_x = (TILE_SIZE - tile_width) / 2;
   this->offset_y = (TILE_SIZE - tile_height) / 2;
+}
+
+void Unit::updateState() {
+  if (position.x < next_move_position.x) position.x++;
+  if (position.x > next_move_position.x) position.x--;
+  if (position.y < next_move_position.y) position.y++;
+  if (position.y > next_move_position.y) position.y--;
 }
 
 

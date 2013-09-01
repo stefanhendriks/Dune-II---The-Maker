@@ -27,7 +27,9 @@ class Unit {
 
     void draw(SDL_Surface* screen, MapCamera* map_camera);
 
-    void order_move(Point target) { this->target = target; }
+    void updateState();
+
+    void order_move(Point target) { this->target = target; this->next_move_position = target; }
 
     void select() { selected = true; }
     void unselect() { selected = false; }
@@ -62,7 +64,9 @@ class Unit {
 
     bool selected;
 
-    Point target;
+    Point target;     // target of interest (move/attack, etc)
+
+    Point next_move_position;
 
     int getDrawX() { return position.x + offset_x; }
     int getDrawY() { return position.y + offset_y; }
