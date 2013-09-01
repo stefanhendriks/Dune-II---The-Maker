@@ -149,8 +149,10 @@ void Game::onEvent(SDL_Event* event) {
       int world_x = map_camera->worldCoordinateX(s->screen_x);
       int world_y = map_camera->worldCoordinateY(s->screen_y);
 
-      if (unit->is_selected()) unit->move_to(world_x, world_y);
-      if (devastator->is_selected()) devastator->move_to(world_x, world_y);
+      Point p(world_x, world_y);
+
+      if (unit->is_selected()) unit->move_to(p);
+      if (devastator->is_selected()) devastator->move_to(p);
     }
 
   }

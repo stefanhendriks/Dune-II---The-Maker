@@ -4,6 +4,7 @@
 #include "SDL/SDL.h"
 #include "SDL_gfxPrimitives.h"
 
+#include "point.h"
 #include "map.h"
 
 const int FACING_UP = 0;
@@ -26,13 +27,13 @@ class Unit {
 
     void draw(SDL_Surface* screen, MapCamera* map_camera);
 
-    int getDrawX() { return x + offset_x; }
-    int getDrawY() { return y + offset_y; }
+    int getDrawX() { return position.x + offset_x; }
+    int getDrawY() { return position.y + offset_y; }
 
     int width() { return tile_height; }
     int height() { return tile_width; }
 
-    void move_to(int world_x, int world_y) { this->move_to_x = world_x; this->move_to_y = world_y; }
+    void move_to(Point target) { this->target = target; }
 
     void select() { selected = true; }
     void unselect() { selected = false; }
@@ -49,7 +50,7 @@ class Unit {
 
     int shadow_alpha; // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
 
-    int x, y;         // coordinates relative to top/left of map (in pixels)
+    Point position;   // coordinates relative to top/left of map (in pixels)
 
     int anim_frame;   // animation frames are 'rows' in the tileset
 
@@ -59,7 +60,7 @@ class Unit {
 
     bool selected;
 
-    int move_to_x, move_to_y; // world coordinates of where to move to
+    Point target;
 };
 
 

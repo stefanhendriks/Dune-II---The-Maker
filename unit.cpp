@@ -31,10 +31,10 @@ void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
 
   if (selected) Surface::draw(selected_bitmap, screen, draw_x, draw_y);
 
-  if (move_to_x != x || move_to_y != y) {
-    int draw_move_to_x = map_camera->screenCoordinateX(move_to_x);
-    int draw_move_to_y = map_camera->screenCoordinateY(move_to_y);
-   lineRGBA(screen, draw_x + 16, draw_y + 16, draw_move_to_x, draw_move_to_y, 255, 0, 255, 255);
+  if (target != position) {
+    int draw_move_to_x = map_camera->screenCoordinateX(target.x);
+    int draw_move_to_y = map_camera->screenCoordinateY(target.y);
+    lineRGBA(screen, draw_x + 16, draw_y + 16, draw_move_to_x, draw_move_to_y, 255, 0, 255, 255);
   }
 }
 
@@ -65,10 +65,8 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
     this->tile_height = this->tile_width;
   }
   this->shadow_alpha = 128;
-  this->x = x;
-  this->y = y;
-  this->move_to_x = x;
-  this->move_to_y = y;
+  this->position.x = x;
+  this->position.y = y;
   this->anim_frame = 0;
 
   // every pixel short/too much of the perfect tile size will be spread evenly
