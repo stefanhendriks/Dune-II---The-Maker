@@ -169,7 +169,9 @@ void Game::updateState() {
   keyboard.updateState();
   mouse.updateState();
   map_camera->updateState();
+
   unit->updateState();
+  devastator->updateState();
 }
 
 int Game::cleanup() {

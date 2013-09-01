@@ -4,7 +4,9 @@
 #include "SDL/SDL.h"
 #include "SDL_gfxPrimitives.h"
 
+#include "random.h"
 #include "rectangle.h"
+#include "surface.h"
 #include "map.h"
 
 const int FACING_UP = 0;
@@ -29,7 +31,16 @@ class Unit {
 
     void updateState();
 
-    void order_move(Point target) { this->target = target; this->next_move_position = target; }
+    void order_move(Point target) {
+      this->target = target;
+
+      switch (rnd(4)) {
+        case 0: moveDown(); break;
+        case 1: moveLeft(); break;
+        case 2: moveRight(); break;
+        case 3: moveUp(); break;
+      }
+    }
 
     void select() { selected = true; }
     void unselect() { selected = false; }
@@ -67,6 +78,11 @@ class Unit {
     Point target;     // target of interest (move/attack, etc)
 
     Point next_move_position;
+
+    void moveUp() { this->next_move_position = this->next_move_position + Point(0, -TILE_SIZE); }
+    void moveDown() { this->next_move_position = this->next_move_position + Point(0, TILE_SIZE); }
+    void moveLeft() { this->next_move_position = this->next_move_position + Point(-TILE_SIZE, 0); }
+    void moveRight() { this->next_move_position = this->next_move_position + Point(TILE_SIZE, 0); }
 
     int getDrawX() { return position.x + offset_x; }
     int getDrawY() { return position.y + offset_y; }
