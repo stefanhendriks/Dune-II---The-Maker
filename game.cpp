@@ -92,8 +92,10 @@ void Game::onEvent(SDL_Event* event) {
     if (event->user.code == D2TM_SELECT) {
       D2TMSelectStruct *s = static_cast<D2TMSelectStruct*>(event->user.data1);
 
-      int mx = map_camera->worldCoordinateX(s->x);
-      int my = map_camera->worldCoordinateY(s->y);
+      Point p(s->x, s->y);
+      p = map_camera->toWorldCoordinates(p);
+      int mx = p.x;
+      int my = p.y;
 
       delete s;
 

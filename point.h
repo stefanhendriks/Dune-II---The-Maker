@@ -6,7 +6,7 @@ class Point {
     Point() { x=0; y=0; }
     Point(int x, int y) { this->x = x; this->y = y; }
     Point(const Point* other) { this->x = other->x; this->y = other->y; }
-    Point(Point &other) { this->x = other.x; this->y = other.y; }
+    Point(const Point &other) { this->x = other.x; this->y = other.y; }
 
     int x, y;
 
