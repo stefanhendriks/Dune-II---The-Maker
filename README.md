@@ -7,12 +7,12 @@ and networking gaming.
 This is an attempt to rewrite the game from scratch using [SDL 1.2](http://www.libsdl.org/). If you are looking for the source code of the 'current' D2TM ([with demo binaries](http://dune2themaker.fundynamic.com/downloads/)), then you can find it [here](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/d2tm_allegro)
 
 I do this purely for fun, and try to keep it multi-platform. I test it often on Mac OSX and Ubuntu. I sometimes test it
-on Windows (MinGW32 and MSYS). 
+on Windows (MinGW32 and MSYS).
 
 Current State
 -------------
 If you want to know what is possible with the current version, see the [DONE features list](#done).
-If you want to know what still has to be done, (you might want to contribute?), see the [TODO list](#todo) below what needs to be done. 
+If you want to know what still has to be done, (you might want to contribute?), see the [TODO list](#todo) below what needs to be done.
 
 There is no binary available, instead you need to [compile it yourself](#compiling).
 
@@ -58,6 +58,8 @@ TODO
   </ul>
 </del>
  - (ground) unit can move to adjecent tile
+ - (ground (no-tank)) unit should face adjecent tile it will move to
+ - (ground (tank)) unit should face final destination with barrel
  - (ground) unit moves tile-by-tile to ordered position
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - order a unit to attack a position
