@@ -23,11 +23,14 @@ void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
   int draw_x = map_camera->screenCoordinateX(getDrawX());
   int draw_y = map_camera->screenCoordinateY(getDrawY());
 
-  int src_x = this->body_facing * this->tile_width;
-  int src_y = this->tile_height * this->anim_frame;
+  int tile_width = size.x;
+  int tile_height = size.y;
 
-  Surface::draw(shadowset, screen, src_x, src_y, this->tile_width, this->tile_height, draw_x, draw_y, this->shadow_alpha);
-  Surface::draw(tileset, screen, src_x, src_y, this->tile_width, this->tile_height, draw_x, draw_y);
+  int src_x = this->body_facing * tile_width;
+  int src_y = tile_height * this->anim_frame;
+
+  Surface::draw(shadowset, screen, src_x, src_y, tile_width, tile_height, draw_x, draw_y, this->shadow_alpha);
+  Surface::draw(tileset, screen, src_x, src_y, tile_width, tile_height, draw_x, draw_y);
 
   if (selected) Surface::draw(selected_bitmap, screen, draw_x, draw_y);
 
@@ -44,34 +47,38 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
   this->tileset = tileset;
   this->shadowset = shadowset;
   this->body_facing = rnd(FACINGS);
-  this->tile_width = tileset->w / FACINGS;
+
+  int tile_height = 0, tile_width = 0;
+  tile_width = tileset->w / FACINGS;
+
   // check if our assumption (width==height) is true for this tileset, and if not warn the user.
-  if (tileset->h % this->tile_width > 0) {
+  if (tileset->h % tile_width > 0) {
     cerr << "WARNING: This tileset does not meet the requirement : tile height must equal width." << endl << endl;
-    cerr << "Based on 8 sides of a unit, the calculated width of a tile on this tileset is " << this->tile_width << ". The general assumption is that the height of a tile must equal width. " << endl;
-    cerr << "However the height of this tileset (" << tileset->h << ") was not one or more multiplications of " << this->tile_width << ". Its dimensions are " << tileset->h << "x" << tileset->w << ".";
+    cerr << "Based on 8 sides of a unit, the calculated width of a tile on this tileset is " << tile_width << ". The general assumption is that the height of a tile must equal width. " << endl;
+    cerr << "However the height of this tileset (" << tileset->h << ") was not one or more multiplications of " << tile_width << ". Its dimensions are " << tileset->h << "x" << tileset->w << ".";
     cerr << endl;
 
     // if it is less height than wide, we
-    if (tileset->h < this->tile_width) {
-      cerr << "Because the height of the tileset (" << tileset->h << ") is *lower* than the width of a calculated tile(=" << this->tile_width << ") (and therefor has no animations). We assume the height of the tileset of " << tileset->h << "." << endl;
-      this->tile_height = tileset->h;
+    if (tileset->h < tile_width) {
+      cerr << "Because the height of the tileset (" << tileset->h << ") is *lower* than the width of a calculated tile(=" << tile_width << ") (and therefor has no animations). We assume the height of the tileset of " << tileset->h << "." << endl;
+      tile_height = tileset->h;
     } else {
-      cerr << "Since the height of the tileset (" << tileset->h << ") is *greater* than the width of a calculated tile(=" << this->tile_width <<") (which means there could be animations) we assume the height equals the calculated width of " << this->tile_width << "." << endl;
-      this->tile_height = this->tile_width;
+      cerr << "Since the height of the tileset (" << tileset->h << ") is *greater* than the width of a calculated tile(=" << tile_width <<") (which means there could be animations) we assume the height equals the calculated width of " << tile_width << "." << endl;
+      tile_height = tile_width;
     }
     cerr << endl;
   } else {
-    this->tile_height = this->tile_width;
+    tile_height = tile_width;
   }
+  this->size = Point(tile_width, tile_height);
   this->shadow_alpha = 128;
   this->position.x = x;
   this->position.y = y;
   this->anim_frame = 0;
 
   // every pixel short/too much of the perfect tile size will be spread evenly
-  this->offset_x = (TILE_SIZE - this->tile_width) / 2;
-  this->offset_y = (TILE_SIZE - this->tile_height) / 2;
+  this->offset_x = (TILE_SIZE - tile_width) / 2;
+  this->offset_y = (TILE_SIZE - tile_height) / 2;
 }
 
 

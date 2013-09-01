@@ -93,21 +93,19 @@ void Game::onEvent(SDL_Event* event) {
       D2TMSelectStruct *s = static_cast<D2TMSelectStruct*>(event->user.data1);
 
       Point p = map_camera->toWorldCoordinates(s->screen_position);
-      int mx = p.x;
-      int my = p.y;
 
       delete s;
 
       if (mouse.is_pointing()) {
 
-        if (isInRect(mx, my, devastator->getDrawX(), devastator->getDrawY(), devastator->width(), devastator->height())) {
+        if (devastator->is_point_within(p)) {
           mouse.state_order_move();
           unit->unselect();
           devastator->unselect();
           devastator->select();
         }
 
-        if (isInRect(mx, my, unit->getDrawX(), unit->getDrawY(), unit->width(), unit->height())) {
+        if (unit->is_point_within(p)) {
           mouse.state_order_move();
           unit->unselect();
           devastator->unselect();
@@ -183,13 +181,6 @@ int Game::cleanup() {
   SDL_FreeSurface(tileset);
   SDL_Quit();
   return 0;
-}
-
-bool Game::isUnitInRect(Unit* unit, Point start, Point end) {
-  // this checks the up-left position of a unit: TODO: do rectangle intersection
-  int unit_x = unit->getDrawX();
-  int unit_y = unit->getDrawY();
-  return (unit_x >= start.x && unit_x < end.x) && (unit_y >= start.y && unit_y < end.y);
 }
 
 bool Game::isInRect(int x, int y, int width, int height) {

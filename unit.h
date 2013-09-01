@@ -30,17 +30,19 @@ class Unit {
     int getDrawX() { return position.x + offset_x; }
     int getDrawY() { return position.y + offset_y; }
 
-    int width() { return tile_height; }
-    int height() { return tile_width; }
-
     void move_to(Point target) { this->target = target; }
 
     void select() { selected = true; }
     void unselect() { selected = false; }
     bool is_selected() { return selected; }
 
+    bool is_point_within(const Point& point) {
+      Rectangle current_area = Rectangle(position, (position + size));
+      return current_area.is_point_within(point);
+    }
+
     bool is_within(const Rectangle& rectangle) {
-      return rectangle.is_within(position);
+      return rectangle.is_point_within(position);
     }
 
   private:
@@ -49,8 +51,7 @@ class Unit {
     SDL_Surface* selected_bitmap;
     int body_facing;  // facing, 8 directions. Clock-wise. ie: 0 (up), 1 (up-right), 2 (right), etc;
 
-    int tile_width;   // the width is tileset width / 8
-    int tile_height;
+    Point size;
 
     int shadow_alpha; // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
 

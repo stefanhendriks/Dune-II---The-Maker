@@ -24,4 +24,17 @@ inline bool operator> (const Point& lhs, const Point& rhs){return  operator< (rh
 inline bool operator<=(const Point& lhs, const Point& rhs){return !operator> (lhs,rhs);}
 inline bool operator>=(const Point& lhs, const Point& rhs){return !operator< (lhs,rhs);}
 
+inline Point operator+(const Point& lhs, const Point& rhs) {
+  Point result = lhs;
+  result.x += rhs.x;
+  result.y += rhs.y;
+  return result;
+}
+
+inline Point operator-(const Point& lhs, const Point& rhs) {
+  Point result = lhs;
+  result.x -= rhs.x;
+  result.y -= rhs.y;
+  return result;
+}
 #endif
