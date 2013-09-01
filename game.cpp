@@ -122,10 +122,12 @@ void Game::onEvent(SDL_Event* event) {
     } else if (event->user.code == D2TM_BOX_SELECT) {
       D2TMBoxSelectStruct *s = static_cast<D2TMBoxSelectStruct*>(event->user.data1);
 
-      int rectX = map_camera->worldCoordinateX(s->start_x);
-      int rectY = map_camera->worldCoordinateY(s->start_y);
-      int endX = map_camera->worldCoordinateX(s->end_x);
-      int endY = map_camera->worldCoordinateY(s->end_y);
+      Point start = map_camera->toWorldCoordinates(s->start);
+      Point end = map_camera->toWorldCoordinates(s->end);
+      int rectX = start.x;
+      int rectY = start.y;
+      int endX = end.x;
+      int endY = end.y;
 
       delete s;
 
@@ -151,6 +153,8 @@ void Game::onEvent(SDL_Event* event) {
 
       if (unit->is_selected()) unit->move_to(p);
       if (devastator->is_selected()) devastator->move_to(p);
+
+      delete s;
     }
 
   }

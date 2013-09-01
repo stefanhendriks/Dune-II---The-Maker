@@ -11,10 +11,8 @@
 #define D2TM_MOVE_UNIT       1028
 
 typedef struct {
-  int start_x;
-  int start_y;
-  int end_x;
-  int end_y;
+  Point start;
+  Point end;
 } D2TMBoxSelectStruct;
 
 typedef struct {
