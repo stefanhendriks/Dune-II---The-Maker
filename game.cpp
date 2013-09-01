@@ -144,8 +144,8 @@ void Game::onEvent(SDL_Event* event) {
       D2TMMoveUnitStruct *s = static_cast<D2TMMoveUnitStruct*>(event->user.data1);
       Point p = map_camera->toWorldCoordinates(s->screen_position);
 
-      if (unit->is_selected()) unit->move_to(p);
-      if (devastator->is_selected()) devastator->move_to(p);
+      if (unit->is_selected()) unit->order_move(p);
+      if (devastator->is_selected()) devastator->order_move(p);
 
       delete s;
     }

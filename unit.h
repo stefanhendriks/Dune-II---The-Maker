@@ -27,7 +27,7 @@ class Unit {
 
     void draw(SDL_Surface* screen, MapCamera* map_camera);
 
-    void move_to(Point target) { this->target = target; }
+    void order_move(Point target) { this->target = target; }
 
     void select() { selected = true; }
     void unselect() { selected = false; }
