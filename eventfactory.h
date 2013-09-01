@@ -2,6 +2,7 @@
 #define EVENT_FACTORY
 
 #include "SDL/SDL.h"
+#include "point.h"
 
 #define D2TM_SELECT          1024
 #define D2TM_DESELECT        1025
@@ -17,8 +18,7 @@ typedef struct {
 } D2TMBoxSelectStruct;
 
 typedef struct {
-  int x;
-  int y;
+  Point screen_position;
 } D2TMSelectStruct;
 
 // camera directions

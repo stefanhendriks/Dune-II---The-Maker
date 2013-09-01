@@ -31,9 +31,7 @@ void EventFactory::pushBoxSelectEvent(int startX, int startY, int endX, int endY
 
 void EventFactory::pushSelectEvent(int x, int y) {
   D2TMSelectStruct *s = new D2TMSelectStruct;
-  s->x = x;
-  s->y = y;
-
+  s->screen_position = Point(x,y);
   push_event(D2TM_SELECT, s);
 }
 
