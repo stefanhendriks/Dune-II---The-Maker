@@ -94,8 +94,6 @@ void Game::onEvent(SDL_Event* event) {
 
       Point p = map_camera->toWorldCoordinates(s->screen_position);
 
-      delete s;
-
       if (mouse.is_pointing()) {
 
         if (devastator->is_point_within(p)) {
@@ -113,6 +111,7 @@ void Game::onEvent(SDL_Event* event) {
         }
       }
 
+      delete s;
     } else if (event->user.code == D2TM_DESELECT) {
       mouse.state_pointing();
       devastator->unselect();
@@ -122,7 +121,6 @@ void Game::onEvent(SDL_Event* event) {
 
       Rectangle rectangle = map_camera->toWorldCoordinates(s->rectangle);
 
-      delete s;
 
       if (mouse.is_pointing()) {
         mouse.state_pointing();
@@ -140,6 +138,8 @@ void Game::onEvent(SDL_Event* event) {
           unit->select();
         }
       }
+
+      delete s;
     } else if (event->user.code == D2TM_MOVE_UNIT) {
       D2TMMoveUnitStruct *s = static_cast<D2TMMoveUnitStruct*>(event->user.data1);
       Point p = map_camera->toWorldCoordinates(s->screen_position);
