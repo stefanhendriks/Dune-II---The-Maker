@@ -9,8 +9,7 @@ EventFactory::EventFactory() {
 
 void EventFactory::pushMoveUnitEvent(int screen_x, int screen_y) {
   D2TMMoveUnitStruct *s = new D2TMMoveUnitStruct;
-  s->screen_x = screen_x;
-  s->screen_y = screen_y;
+  s->screen_position = Point(screen_x, screen_y);
   push_event(D2TM_MOVE_UNIT, s);
 }
 

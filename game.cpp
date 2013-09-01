@@ -147,10 +147,7 @@ void Game::onEvent(SDL_Event* event) {
       }
     } else if (event->user.code == D2TM_MOVE_UNIT) {
       D2TMMoveUnitStruct *s = static_cast<D2TMMoveUnitStruct*>(event->user.data1);
-      int world_x = map_camera->worldCoordinateX(s->screen_x);
-      int world_y = map_camera->worldCoordinateY(s->screen_y);
-
-      Point p(world_x, world_y);
+      Point p = map_camera->toWorldCoordinates(s->screen_position);
 
       if (unit->is_selected()) unit->move_to(p);
       if (devastator->is_selected()) devastator->move_to(p);

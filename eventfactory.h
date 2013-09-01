@@ -33,7 +33,7 @@ typedef struct {
 } D2TMMoveCameraStruct;
 
 typedef struct {
-  int screen_x, screen_y;
+  Point screen_position;
 } D2TMMoveUnitStruct;
 
 class EventFactory {
