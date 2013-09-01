@@ -73,6 +73,7 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
   this->size = Point(tile_width, tile_height);
   this->shadow_alpha = 128;
   this->position = Point(x,y);
+  this->target = this->position;
   this->next_move_position = this->position;
   this->anim_frame = 0;
 
