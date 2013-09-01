@@ -59,6 +59,7 @@ TODO
     <li>(ground) unit moves tile-by-tile to ordered position</li>
   </ul>
 </del>
+ - unit should face direction it should move to, before it moves to that direction
  - (ground) unit should not be able to occupy tile of another same unit
  - (ground (no-tank)) unit should face adjecent tile it will move to
  - (ground (tank)) unit should face final destination with barrel
