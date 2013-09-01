@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "point.h"
+#include "rectangle.h"
 
 class Unit;
 
@@ -98,6 +98,13 @@ class MapCamera {
       int world_x = worldCoordinateX(point_with_screen_coords.x);
       int world_y = worldCoordinateY(point_with_screen_coords.y);
       Point result(world_x, world_y);
+      return result;
+    }
+
+    Rectangle toWorldCoordinates(const Rectangle& rect_with_screen_points) {
+      Point start = toWorldCoordinates(rect_with_screen_points.start);
+      Point end = toWorldCoordinates(rect_with_screen_points.end);
+      Rectangle result(start, end);
       return result;
     }
 

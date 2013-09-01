@@ -4,7 +4,7 @@
 #include "SDL/SDL.h"
 #include "SDL_gfxPrimitives.h"
 
-#include "point.h"
+#include "rectangle.h"
 #include "map.h"
 
 const int FACING_UP = 0;
@@ -38,6 +38,10 @@ class Unit {
     void select() { selected = true; }
     void unselect() { selected = false; }
     bool is_selected() { return selected; }
+
+    bool is_within(const Rectangle& rectangle) {
+      return rectangle.is_within(position);
+    }
 
   private:
     SDL_Surface* tileset;

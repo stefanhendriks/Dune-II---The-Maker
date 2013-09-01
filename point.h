@@ -9,7 +9,6 @@ class Point {
     Point(const Point &other) { this->x = other.x; this->y = other.y; }
 
     int x, y;
-
 };
 
 inline bool operator==(const Point& lhs, const Point& rhs){

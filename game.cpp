@@ -122,8 +122,7 @@ void Game::onEvent(SDL_Event* event) {
     } else if (event->user.code == D2TM_BOX_SELECT) {
       D2TMBoxSelectStruct *s = static_cast<D2TMBoxSelectStruct*>(event->user.data1);
 
-      Point start = map_camera->toWorldCoordinates(s->start);
-      Point end = map_camera->toWorldCoordinates(s->end);
+      Rectangle rectangle = map_camera->toWorldCoordinates(s->rectangle);
 
       delete s;
 
@@ -133,12 +132,12 @@ void Game::onEvent(SDL_Event* event) {
         unit->unselect();
         devastator->unselect();
 
-        if (isUnitInRect(devastator, start, end)) {
+        if (devastator->is_within(rectangle)) {
           mouse.state_order_move();
           devastator->select();
         }
 
-        if (isUnitInRect(unit, start, end)) {
+        if (unit->is_within(rectangle)) {
           mouse.state_order_move();
           unit->select();
         }

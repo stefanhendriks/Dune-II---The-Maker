@@ -18,8 +18,7 @@ void EventFactory::pushBoxSelectEvent(int startX, int startY, int endX, int endY
   if (endY < startY) swap(endY, startY);
 
   D2TMBoxSelectStruct *s = new D2TMBoxSelectStruct;
-  s->start = Point(startX, startY);
-  s->end = Point(endX, endY);
+  s->rectangle = Rectangle(Point(startX, startY), Point(endX, endY));
 
   push_event(D2TM_BOX_SELECT, s);
 }

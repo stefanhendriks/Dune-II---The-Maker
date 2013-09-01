@@ -2,7 +2,7 @@
 #define EVENT_FACTORY
 
 #include "SDL/SDL.h"
-#include "point.h"
+#include "rectangle.h"
 
 #define D2TM_SELECT          1024
 #define D2TM_DESELECT        1025
@@ -11,8 +11,7 @@
 #define D2TM_MOVE_UNIT       1028
 
 typedef struct {
-  Point start;
-  Point end;
+  Rectangle rectangle;
 } D2TMBoxSelectStruct;
 
 typedef struct {
