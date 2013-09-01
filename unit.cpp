@@ -83,6 +83,16 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
 }
 
 void Unit::updateState() {
+
+  // think about movement
+  if (position == next_move_position && target != position) {
+    if (target.x < position.x) moveLeft();
+    if (target.x > position.x) moveRight();
+    if (target.y < position.y) moveUp();
+    if (target.y > position.y) moveDown();
+  }
+
+  // execute movement
   if (position.x < next_move_position.x) position.x++;
   if (position.x > next_move_position.x) position.x--;
   if (position.y < next_move_position.y) position.y++;

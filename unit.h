@@ -32,14 +32,10 @@ class Unit {
     void updateState();
 
     void order_move(Point target) {
-      this->target = target;
-
-      switch (rnd(4)) {
-        case 0: moveDown(); break;
-        case 1: moveLeft(); break;
-        case 2: moveRight(); break;
-        case 3: moveUp(); break;
-      }
+      // snap coordinates
+      int y = (target.y / TILE_SIZE) * TILE_SIZE;
+      int x = (target.x / TILE_SIZE) * TILE_SIZE;
+      this->target = Point(x,y);
     }
 
     void select() { selected = true; }

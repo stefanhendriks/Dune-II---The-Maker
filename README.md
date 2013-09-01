@@ -56,11 +56,12 @@ TODO
   <ul>
     <li>(ground) register order command and show where to move to</li>
     <li>(ground) unit can move to adjecent tileground</li>
+    <li>(ground) unit moves tile-by-tile to ordered position</li>
   </ul>
 </del>
+ - (ground) unit should not be able to occupy tile of another same unit
  - (ground (no-tank)) unit should face adjecent tile it will move to
  - (ground (tank)) unit should face final destination with barrel
- - (ground) unit moves tile-by-tile to ordered position
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - order a unit to attack a position
 - explore the terrain by clearing a Fog of War
