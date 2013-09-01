@@ -3,12 +3,26 @@
 
 class Point {
   public:
-    Point(int x, int y);
+    Point() { x=0; y=0; }
+    Point(int x, int y) { this->x = x; this->y = y; }
+    Point(const Point* other) { this->x = other->x; this->y = other->y; }
+    Point(Point &other) { this->x = other.x; this->y = other.y; }
 
-    int x() { return _x; }
+    int x, y;
 
-  private:
-    int _x, _y;
 };
+
+inline bool operator==(const Point& lhs, const Point& rhs){
+  return (lhs.x == rhs.x && lhs.y == rhs.y);
+}
+inline bool operator!=(const Point& lhs, const Point& rhs){return !operator==(lhs,rhs);}
+
+inline bool operator< (const Point& lhs, const Point& rhs){
+  return (lhs.x < rhs.x || lhs.y < rhs.y);
+}
+
+inline bool operator> (const Point& lhs, const Point& rhs){return  operator< (rhs,lhs);}
+inline bool operator<=(const Point& lhs, const Point& rhs){return !operator> (lhs,rhs);}
+inline bool operator>=(const Point& lhs, const Point& rhs){return !operator< (lhs,rhs);}
 
 #endif
