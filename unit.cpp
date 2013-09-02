@@ -104,27 +104,30 @@ int Unit::desired_facing() {
   return body_facing;
 }
 
+void Unit::turn_body() {
+  int desired = desired_facing();
+
+  int turning_left = (body_facing + FACINGS) - desired;
+  if (turning_left > (FACINGS - 1)) turning_left -= FACINGS;
+  int turning_right = abs(turning_left - FACINGS);
+
+  if (turning_right < turning_left) {
+    body_facing++;
+  } else if (turning_left < turning_right) {
+    body_facing--;
+  } else {
+    flipCoin() ? body_facing-- : body_facing++;
+  }
+
+  // wrap around
+  if (body_facing < 0) body_facing += FACINGS;
+  if (body_facing > 7) body_facing -= FACINGS;
+}
+
 void Unit::updateState() {
 
   if (should_turn_body()) {
-    int desired = desired_facing();
-
-    int turning_left = (body_facing + FACINGS) - desired;
-    if (turning_left > (FACINGS - 1)) turning_left -= FACINGS;
-    int turning_right = abs(turning_left - FACINGS);
-
-    if (turning_right < turning_left) {
-      body_facing++;
-    } else if (turning_left < turning_right) {
-      body_facing--;
-    } else {
-      flipCoin() ? body_facing-- : body_facing++;
-    }
-
-    // wrap around
-    if (body_facing < 0) body_facing += FACINGS;
-    if (body_facing > 7) body_facing -= FACINGS;
-
+    turn_body();
     return;
   }
 

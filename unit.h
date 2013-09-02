@@ -87,6 +87,8 @@ class Unit {
       return desired_body_facing != body_facing;
     }
 
+    void turn_body();
+
     void moveUp() { updateMovePosition(Point(0, -TILE_SIZE)); }
     void moveDown() { updateMovePosition(Point(0, TILE_SIZE)); }
     void moveLeft() { updateMovePosition(Point(-TILE_SIZE, 0)); }
