@@ -57,9 +57,9 @@ TODO
     <li>(ground) register order command and show where to move to</li>
     <li>(ground) unit can move to adjecent tileground</li>
     <li>(ground) unit moves tile-by-tile to ordered position</li>
+    <li>unit should face direction it should move to, before it moves to that direction</li>
   </ul>
 </del>
- - unit should face direction it should move to, before it moves to that direction
  - (ground) unit should not be able to occupy tile of another same unit
  - (ground (no-tank)) unit should face adjecent tile it will move to
  - (ground (tank)) unit should face final destination with barrel
