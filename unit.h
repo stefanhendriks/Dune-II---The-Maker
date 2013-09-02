@@ -9,14 +9,14 @@
 #include "surface.h"
 #include "map.h"
 
-const int FACING_UP = 0;
+const int FACING_RIGHT = 0;
 const int FACING_UP_RIGHT = 1;
-const int FACING_RIGHT = 2;
-const int FACING_RIGHT_DOWN = 3;
-const int FACING_DOWN = 4;
+const int FACING_UP = 2;
+const int FACING_LEFT_UP = 3;
+const int FACING_LEFT = 4;
 const int FACING_DOWN_LEFT = 5;
-const int FACING_LEFT = 6;
-const int FACING_LEFT_UP = 7;
+const int FACING_DOWN = 6;
+const int FACING_RIGHT_DOWN = 7;
 
 const int FACINGS = 8;          // used to calculate width of each 'tile' for a unit given a tilset
 
@@ -56,6 +56,7 @@ class Unit {
     SDL_Surface* shadowset;
     SDL_Surface* selected_bitmap;
     int body_facing;  // facing, 8 directions. Clock-wise. ie: 0 (up), 1 (up-right), 2 (right), etc;
+    int desired_body_facing;
 
     Point size;
 
@@ -75,10 +76,21 @@ class Unit {
 
     Point next_move_position;
 
-    void moveUp() { this->next_move_position = this->next_move_position + Point(0, -TILE_SIZE); }
-    void moveDown() { this->next_move_position = this->next_move_position + Point(0, TILE_SIZE); }
-    void moveLeft() { this->next_move_position = this->next_move_position + Point(-TILE_SIZE, 0); }
-    void moveRight() { this->next_move_position = this->next_move_position + Point(TILE_SIZE, 0); }
+    int desired_facing();
+
+    void updateMovePosition(Point p) {
+      this->next_move_position = this->next_move_position + p;
+      this->desired_body_facing = desired_facing();
+    }
+
+    bool should_turn_body() {
+      return desired_body_facing != body_facing;
+    }
+
+    void moveUp() { updateMovePosition(Point(0, -TILE_SIZE)); }
+    void moveDown() { updateMovePosition(Point(0, TILE_SIZE)); }
+    void moveLeft() { updateMovePosition(Point(-TILE_SIZE, 0)); }
+    void moveRight() { updateMovePosition(Point(TILE_SIZE, 0)); }
 
     int getDrawX() { return position.x + offset_x; }
     int getDrawY() { return position.y + offset_y; }

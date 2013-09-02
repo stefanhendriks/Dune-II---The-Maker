@@ -47,6 +47,7 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
   this->tileset = tileset;
   this->shadowset = shadowset;
   this->body_facing = rnd(FACINGS);
+  this->desired_body_facing = this->body_facing;
 
   int tile_height = 0, tile_width = 0;
   tile_width = tileset->w / FACINGS;
@@ -82,7 +83,50 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
   this->offset_y = (TILE_SIZE - tile_height) / 2;
 }
 
+int Unit::desired_facing() {
+  if (position == next_move_position) return body_facing;
+
+  int nx = next_move_position.x;
+  int ny = next_move_position.y;
+  int x = position.x;
+  int y = position.y;
+
+  if (nx > x && ny == y) return FACING_RIGHT;
+  if (nx < x && ny == y) return FACING_LEFT;
+  if (nx == x && ny > y) return FACING_DOWN;
+  if (nx == x && ny < y) return FACING_UP;
+
+  if (nx > x && ny > y) return FACING_RIGHT_DOWN;
+  if (nx < x && ny > y) return FACING_DOWN_LEFT;
+  if (nx > x && ny < y) return FACING_UP_RIGHT;
+  if (nx < x && ny < y) return FACING_LEFT_UP;
+
+  return body_facing;
+}
+
 void Unit::updateState() {
+
+  if (should_turn_body()) {
+    int desired = desired_facing();
+
+    int turning_left = (body_facing + FACINGS) - desired;
+    if (turning_left > (FACINGS - 1)) turning_left -= FACINGS;
+    int turning_right = abs(turning_left - FACINGS);
+
+    if (turning_right < turning_left) {
+      body_facing++;
+    } else if (turning_left < turning_right) {
+      body_facing--;
+    } else {
+      flipCoin() ? body_facing-- : body_facing++;
+    }
+
+    // wrap around
+    if (body_facing < 0) body_facing += FACINGS;
+    if (body_facing > 7) body_facing -= FACINGS;
+
+    return;
+  }
 
   // think about movement
   if (position == next_move_position && target != position) {
