@@ -70,7 +70,7 @@ int Game::init() {
   map.setBoundaries(128,128);
   map_camera = new MapCamera(0, 0, screen, &map);
 
-  unitRepository = new UnitRepository();
+  unitRepository = new UnitRepository(&map);
 
   unit = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64);
   devastator = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 128, 128);
@@ -92,21 +92,18 @@ void Game::onEvent(SDL_Event* event) {
     if (event->user.code == D2TM_SELECT) {
       D2TMSelectStruct *s = static_cast<D2TMSelectStruct*>(event->user.data1);
 
-      int mx = map_camera->worldCoordinateX(s->x);
-      int my = map_camera->worldCoordinateY(s->y);
-
-      delete s;
+      Point p = map_camera->toWorldCoordinates(s->screen_position);
 
       if (mouse.is_pointing()) {
 
-        if (isInRect(mx, my, devastator->getDrawX(), devastator->getDrawY(), devastator->width(), devastator->height())) {
+        if (devastator->is_point_within(p)) {
           mouse.state_order_move();
           unit->unselect();
           devastator->unselect();
           devastator->select();
         }
 
-        if (isInRect(mx, my, unit->getDrawX(), unit->getDrawY(), unit->width(), unit->height())) {
+        if (unit->is_point_within(p)) {
           mouse.state_order_move();
           unit->unselect();
           devastator->unselect();
@@ -114,6 +111,7 @@ void Game::onEvent(SDL_Event* event) {
         }
       }
 
+      delete s;
     } else if (event->user.code == D2TM_DESELECT) {
       mouse.state_pointing();
       devastator->unselect();
@@ -121,12 +119,7 @@ void Game::onEvent(SDL_Event* event) {
     } else if (event->user.code == D2TM_BOX_SELECT) {
       D2TMBoxSelectStruct *s = static_cast<D2TMBoxSelectStruct*>(event->user.data1);
 
-      int rectX = map_camera->worldCoordinateX(s->start_x);
-      int rectY = map_camera->worldCoordinateY(s->start_y);
-      int endX = map_camera->worldCoordinateX(s->end_x);
-      int endY = map_camera->worldCoordinateY(s->end_y);
-
-      delete s;
+      Rectangle rectangle = map_camera->toWorldCoordinates(s->rectangle);
 
       if (mouse.is_pointing()) {
         mouse.state_pointing();
@@ -134,16 +127,26 @@ void Game::onEvent(SDL_Event* event) {
         unit->unselect();
         devastator->unselect();
 
-        if (isUnitInRect(devastator, rectX, rectY, endX, endY)) {
+        if (devastator->is_within(rectangle)) {
           mouse.state_order_move();
           devastator->select();
         }
 
-        if (isUnitInRect(unit, rectX, rectY, endX, endY)) {
+        if (unit->is_within(rectangle)) {
           mouse.state_order_move();
           unit->select();
         }
       }
+
+      delete s;
+    } else if (event->user.code == D2TM_MOVE_UNIT) {
+      D2TMMoveUnitStruct *s = static_cast<D2TMMoveUnitStruct*>(event->user.data1);
+      Point p = map_camera->toWorldCoordinates(s->screen_position);
+
+      if (unit->is_selected()) unit->order_move(p);
+      if (devastator->is_selected()) devastator->order_move(p);
+
+      delete s;
     }
 
   }
@@ -166,14 +169,9 @@ void Game::updateState() {
   keyboard.updateState();
   mouse.updateState();
   map_camera->updateState();
-  //} else if (mouse.is_ordering_to_move()) {
 
-    //if (mouse.left_button_pressed()) {
-      //if (unit->is_selected()) {
-        //unit->move_to(mouse.x(), mouse.y());
-      //}
-    //}
-  //}
+  unit->updateState();
+  devastator->updateState();
 }
 
 int Game::cleanup() {
@@ -187,19 +185,3 @@ int Game::cleanup() {
   return 0;
 }
 
-bool Game::isUnitInRect(Unit* unit, int x, int y, int end_x, int end_y) {
-  // this checks the up-left position of a unit: TODO: do rectangle intersection
-  int unit_x = unit->getDrawX();
-  int unit_y = unit->getDrawY();
-  return (unit_x >= x && unit_x < end_x) && (unit_y >= y && unit_y < end_y);
-}
-
-bool Game::isInRect(int x, int y, int width, int height) {
-  int mouse_x = mouse.x();
-  int mouse_y = mouse.y();
-  return (mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y < (y + height));
-}
-
-bool Game::isInRect(int mouse_x, int mouse_y, int x, int y, int width, int height) {
-  return (mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y < (y + height));
-}

@@ -7,12 +7,12 @@ and networking gaming.
 This is an attempt to rewrite the game from scratch using [SDL 1.2](http://www.libsdl.org/). If you are looking for the source code of the 'current' D2TM ([with demo binaries](http://dune2themaker.fundynamic.com/downloads/)), then you can find it [here](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/d2tm_allegro)
 
 I do this purely for fun, and try to keep it multi-platform. I test it often on Mac OSX and Ubuntu. I sometimes test it
-on Windows (MinGW32 and MSYS). 
+on Windows (MinGW32 and MSYS).
 
 Current State
 -------------
 If you want to know what is possible with the current version, see the [DONE features list](#done).
-If you want to know what still has to be done, (you might want to contribute?), see the [TODO list](#todo) below what needs to be done. 
+If you want to know what still has to be done, (you might want to contribute?), see the [TODO list](#todo) below what needs to be done.
 
 There is no binary available, instead you need to [compile it yourself](#compiling).
 
@@ -52,12 +52,18 @@ Features need to be written in such a way that it is obvious what the benefit is
 TODO
 ----
 - order a unit to move to a position
- - (ground) register order command and show where to move to
- - (ground) unit can move to adjecent tile
- - (ground) unit moves tile-by-tile to ordered position
+<del>
+  <ul>
+    <li>(ground) register order command and show where to move to</li>
+    <li>(ground) unit can move to adjecent tileground</li>
+    <li>(ground) unit moves tile-by-tile to ordered position</li>
+    <li>unit should face direction it should move to, before it moves to that direction</li>
+    <li>(ground) unit should not be able to occupy tile of another same type of (terrain) unit</li>
+  </ul>
+</del>
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - order a unit to attack a position
-- explore the terrain by clearing a Fog of War
+- explore the terrain by clearing a Shroud
 - sandworms should only be able to travel through sand, dunes and spice, and be blocked by rock/mountains
 - enjoy the terrain smoothened (smoothing algorithm)
 - see structures (draw them)
@@ -67,6 +73,8 @@ TODO
 - build troopers from a WOR
 - build light vehicles from a Light Factory
 - build heavy vehicles from a Heavy Factory
+ - build tanks
+  - tanks should be able to face their body to the adjecent cell and face their barrel to the target
 - build air units from a High-Tech
 - upgrade my structures to gain access to other units
 - upgrade my units (??)
@@ -74,6 +82,27 @@ TODO
 - mine spice with a harvester
 - get my units transported much faster by a carry-all
 - scroll by holding mouse key and move from that position
+- when a unit is bored, it should turn around randomly
+
+*Unit types*
+- Soldier
+- Infantry (Perhaps we want to do this the C&C way.)
+- Trooper
+- Troopers (Perhaps we want to do this the C&C way.)
+- Trike
+- Raider Trike
+- Quad
+- Tank
+- Siege Tank
+- Rocket Launcher
+- Deviator
+- Devastator
+- Sonic Tank
+- Cary-all
+- Ornithopter
+- Frigate
+- Saboteur
+- Fremen (C&C style?)
 
 
 DONE
