@@ -185,12 +185,3 @@ int Game::cleanup() {
   return 0;
 }
 
-bool Game::isInRect(int x, int y, int width, int height) {
-  int mouse_x = mouse.x();
-  int mouse_y = mouse.y();
-  return (mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y < (y + height));
-}
-
-bool Game::isInRect(int mouse_x, int mouse_y, int x, int y, int width, int height) {
-  return (mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y < (y + height));
-}
