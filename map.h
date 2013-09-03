@@ -88,24 +88,10 @@ class MapCamera {
     void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
     void draw(Unit* unit, SDL_Surface* screen);
 
-    Point toScreenCoordinates(Point* point_with_world_coords) {
-      int screen_x = screenCoordinateX(point_with_world_coords->x);
-      int screen_y = screenCoordinateY(point_with_world_coords->y);
-      Point result(screen_x, screen_y);
-      return result;
-    }
-
     Point toScreenCoordindates(const Point& point_with_world_coords) {
       int screen_x = screenCoordinateX(point_with_world_coords.x);
       int screen_y = screenCoordinateY(point_with_world_coords.y);
       Point result(screen_x, screen_y);
-      return result;
-    }
-
-    Point toWorldCoordinates(Point* point_with_screen_coords) {
-      int world_x = worldCoordinateX(point_with_screen_coords->x);
-      int world_y = worldCoordinateY(point_with_screen_coords->y);
-      Point result(world_x, world_y);
       return result;
     }
 
