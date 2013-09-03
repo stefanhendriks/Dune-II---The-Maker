@@ -51,16 +51,6 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
-- order a unit to move to a position
-<del>
-  <ul>
-    <li>(ground) register order command and show where to move to</li>
-    <li>(ground) unit can move to adjecent tileground</li>
-    <li>(ground) unit moves tile-by-tile to ordered position</li>
-    <li>unit should face direction it should move to, before it moves to that direction</li>
-    <li>(ground) unit should not be able to occupy tile of another same type of (terrain) unit</li>
-  </ul>
-</del>
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - order a unit to attack a position
 - explore the terrain by clearing a Shroud
@@ -120,6 +110,7 @@ DONE
     <li>select one unit</li>
     <li>draw a rectangle by holding left mouse button</li>
     <li>select multiple units by dragging rectangle over units and releasing left mouse button</li>
+    <li>order a unit to move to a position</li>
   </ul>
 </del>
 
