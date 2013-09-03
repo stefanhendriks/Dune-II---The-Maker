@@ -60,8 +60,7 @@ TODO
     <li>unit should face direction it should move to, before it moves to that direction</li>
   </ul>
 </del>
- - (ground) unit should not be able to occupy tile of another same unit
- - (ground (no-tank)) unit should face adjecent tile it will move to
+ - (ground) unit should not be able to occupy tile of another same type of (terrain) unit
  - (ground (tank)) unit should face final destination with barrel
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - order a unit to attack a position
