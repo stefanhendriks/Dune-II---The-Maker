@@ -61,10 +61,9 @@ TODO
     <li>(ground) unit should not be able to occupy tile of another same type of (terrain) unit</li>
   </ul>
 </del>
- - (ground (tank)) unit should face final destination with barrel
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - order a unit to attack a position
-- explore the terrain by clearing a Fog of War
+- explore the terrain by clearing a Shroud
 - sandworms should only be able to travel through sand, dunes and spice, and be blocked by rock/mountains
 - enjoy the terrain smoothened (smoothing algorithm)
 - see structures (draw them)
@@ -74,6 +73,8 @@ TODO
 - build troopers from a WOR
 - build light vehicles from a Light Factory
 - build heavy vehicles from a Heavy Factory
+ - build tanks
+  - tanks should be able to face their body to the adjecent cell and face their barrel to the target
 - build air units from a High-Tech
 - upgrade my structures to gain access to other units
 - upgrade my units (??)
@@ -82,6 +83,27 @@ TODO
 - get my units transported much faster by a carry-all
 - scroll by holding mouse key and move from that position
 - when a unit is bored, it should turn around randomly
+
+*Unit types*
+- Soldier
+- Infantry (Perhaps we want to do this the C&C way.)
+- Trooper
+- Troopers (Perhaps we want to do this the C&C way.)
+- Trike
+- Raider Trike
+- Quad
+- Tank
+- Siege Tank
+- Rocket Launcher
+- Deviator
+- Devastator
+- Sonic Tank
+- Cary-all
+- Ornithopter
+- Frigate
+- Saboteur
+- Fremen (C&C style?)
+
 
 DONE
 ----
