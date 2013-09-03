@@ -9,6 +9,7 @@ This is an attempt to rewrite the game from scratch using [SDL 1.2](http://www.l
 I do this purely for fun, and try to keep it multi-platform. I test it often on Mac OSX and Ubuntu. I sometimes test it
 on Windows (MinGW32 and MSYS).
 
+
 Current State
 -------------
 If you want to know what is possible with the current version, see the [DONE features list](#done).
