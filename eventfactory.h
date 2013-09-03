@@ -2,22 +2,20 @@
 #define EVENT_FACTORY
 
 #include "SDL/SDL.h"
+#include "rectangle.h"
 
 #define D2TM_SELECT          1024
 #define D2TM_DESELECT        1025
 #define D2TM_BOX_SELECT      1026
 #define D2TM_MOVE_CAMERA     1027
+#define D2TM_MOVE_UNIT       1028
 
 typedef struct {
-  int start_x;
-  int start_y;
-  int end_x;
-  int end_y;
+  Rectangle rectangle;
 } D2TMBoxSelectStruct;
 
 typedef struct {
-  int x;
-  int y;
+  Point screen_position;
 } D2TMSelectStruct;
 
 // camera directions
@@ -28,9 +26,12 @@ const int D2TM_CAMERA_MOVE_RIGHT = 4;
 const int D2TM_CAMERA_STOP_MOVING = 5;
 
 typedef struct {
-  int vec_x;
-  int vec_y;
+  Point vector;
 } D2TMMoveCameraStruct;
+
+typedef struct {
+  Point screen_position;
+} D2TMMoveUnitStruct;
 
 class EventFactory {
 
@@ -41,6 +42,7 @@ class EventFactory {
     void pushSelectEvent(int x, int y);
     void pushDeselectEvent() { push_event(D2TM_DESELECT); }
     void pushMoveCameraEvent(int vec_x, int vec_y);
+    void pushMoveUnitEvent(int screen_x, int screen_y);
     void pushQuitEvent() { push_sdl_event(SDL_QUIT, 0, NULL, NULL); }
 
   private:
@@ -70,7 +72,7 @@ class EventFactory {
       return push_event(code, NULL, NULL);
     }
 
-    D2TMMoveCameraStruct last_sent_camera_movement;
+    Point last_sent_camera_vector;
 };
 
 

@@ -4,60 +4,111 @@
 #include "SDL/SDL.h"
 #include "SDL_gfxPrimitives.h"
 
-const int FACING_UP = 0;
+#include "random.h"
+#include "rectangle.h"
+#include "surface.h"
+#include "map.h"
+
+const int FACING_RIGHT = 0;
 const int FACING_UP_RIGHT = 1;
-const int FACING_RIGHT = 2;
-const int FACING_RIGHT_DOWN = 3;
-const int FACING_DOWN = 4;
+const int FACING_UP = 2;
+const int FACING_LEFT_UP = 3;
+const int FACING_LEFT = 4;
 const int FACING_DOWN_LEFT = 5;
-const int FACING_LEFT = 6;
-const int FACING_LEFT_UP = 7;
+const int FACING_DOWN = 6;
+const int FACING_RIGHT_DOWN = 7;
 
 const int FACINGS = 8;          // used to calculate width of each 'tile' for a unit given a tilset
 
 class Unit {
 
   public:
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset);
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y);
     ~Unit();
 
-    void draw(SDL_Surface* screen, int x, int y);
+    void draw(SDL_Surface* screen, MapCamera* map_camera);
 
-    int getDrawX() { return x + offset_x; }
-    int getDrawY() { return y + offset_y; }
+    void updateState();
 
-    int width() { return tile_height; }
-    int height() { return tile_width; }
-
-    void move_to(int x, int y) { this->move_to_x = x; this->move_to_y = y; }
+    void order_move(Point target) {
+      // snap coordinates
+      int y = (target.y / TILE_SIZE) * TILE_SIZE;
+      int x = (target.x / TILE_SIZE) * TILE_SIZE;
+      this->target = Point(x,y);
+    }
 
     void select() { selected = true; }
     void unselect() { selected = false; }
     bool is_selected() { return selected; }
+
+    bool is_point_within(const Point& point) {
+      Rectangle current_area = Rectangle(position, (position + size));
+      return current_area.is_point_within(point);
+    }
+
+    bool is_within(const Rectangle& rectangle) {
+      return rectangle.is_point_within(position);
+    }
 
   private:
     SDL_Surface* tileset;
     SDL_Surface* shadowset;
     SDL_Surface* selected_bitmap;
     int body_facing;  // facing, 8 directions. Clock-wise. ie: 0 (up), 1 (up-right), 2 (right), etc;
+    int desired_body_facing;
 
-    int tile_width;   // the width is tileset width / 8
-    int tile_height;
+    Point size;
 
     int shadow_alpha; // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
-
-    int x, y;         // coordinates relative to top/left of map (in pixels)
 
     int anim_frame;   // animation frames are 'rows' in the tileset
 
     int offset_x, offset_y; // the offset from the tile respective up-left corner
 
-    void init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y);
+    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int x, int y);
 
     bool selected;
 
-    int move_to_x, move_to_y; // world coordinates of where to move to
+    Point target;     // target of interest (move/attack, etc)
+    Point position;   // coordinates relative to top/left of map (in pixels)
+    Point next_move_position;
+    Point prev_position;
+
+
+    int desired_facing();
+
+    void updateMovePosition(Point p) {
+      this->next_move_position = this->next_move_position + p;
+      this->desired_body_facing = desired_facing();
+    }
+
+    bool is_moving() {
+      return position != next_move_position;
+    }
+
+    bool has_target() {
+      return position != target;
+    }
+
+    bool should_turn_body() {
+      return desired_body_facing != body_facing;
+    }
+
+    Map* map;
+
+    void turn_body();
+
+    void moveUp() { updateMovePosition(Point(0, -TILE_SIZE)); }
+    void moveDown() { updateMovePosition(Point(0, TILE_SIZE)); }
+    void moveLeft() { updateMovePosition(Point(-TILE_SIZE, 0)); }
+    void moveRight() { updateMovePosition(Point(TILE_SIZE, 0)); }
+    void stopMoving() {
+      this->next_move_position = position;
+    }
+
+    int getDrawX() { return position.x + offset_x; }
+    int getDrawY() { return position.y + offset_y; }
 };
 
 
@@ -85,7 +136,7 @@ const int MAX_UNIT_TYPES = 16;
 class UnitRepository {
 
   public:
-    UnitRepository();
+    UnitRepository(Map *map);
     ~UnitRepository();
 
     void destroy();
@@ -95,6 +146,7 @@ class UnitRepository {
    private:
       SDL_Surface* unit_animation[MAX_UNIT_TYPES];
       SDL_Surface* unit_shadow[MAX_UNIT_TYPES];
+      Map* map;
 };
 
 #endif

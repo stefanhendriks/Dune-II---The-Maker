@@ -3,8 +3,6 @@
 
 #include <string>
 
-const int TILE_SIZE = 32; // squared
-
 class Surface {
 
     public:

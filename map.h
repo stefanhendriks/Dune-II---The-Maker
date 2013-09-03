@@ -3,7 +3,9 @@
 
 #include <iostream>
 
-#include "unit.h"
+#include "rectangle.h"
+
+class Unit;
 
 using namespace std;
 
@@ -11,48 +13,63 @@ const int MAP_MAX_SIZE = 65536; // 256X256 map
 const int MAP_MAX_WIDTH = 256;
 const int MAP_MAX_HEIGHT = 256;
 
+const int TILE_SIZE = 32; // squared
+
 class Cell {
   public:
     int tile; // tile to draw (one-dimension array)
+    bool occupied;
 };
 
 class Map {
 
-   public:
-     Map();
+  public:
+    Map();
 
-	   void setBoundaries(int max_width, int max_height);
+    void setBoundaries(int max_width, int max_height);
 
-     Cell getCell(int x, int y) {
-       if (x < 0) {
-         cerr << "Map::getCell x[" << x << "] got out of bounds, fixing." << endl;
-         x = 0;
-       }
-       if (x >= MAP_MAX_WIDTH) {
-         cerr << "Map::getCell x[" << x << "] got out of bounds, fixing." << endl;
-         x = (MAP_MAX_WIDTH - 1); // 0 based so substract! (0 till 255):
-       }
+    Cell* getCell(int x, int y) {
+      if (x < 0) {
+        cerr << "Map::getCell x[" << x << "] got out of bounds, fixing." << endl;
+        x = 0;
+      }
 
-       if (y < 0) {
-         cerr << "Map::getCell y[" << y << "] got out of bounds, fixing." << endl;
-         y = 0;
-       }
-       if (y >= MAP_MAX_HEIGHT) {
-         cerr << "Map::getCell y[" << y << "] got out of bounds, fixing." << endl;
-         y = (MAP_MAX_HEIGHT - 1); // 0 based so substract! (0 till 255):
-       }
+      if (x >= MAP_MAX_WIDTH) {
+        cerr << "Map::getCell x[" << x << "] got out of bounds, fixing." << endl;
+        x = (MAP_MAX_WIDTH - 1); // 0 based so substract! (0 till 255):
+      }
 
-       int cell = (y * MAP_MAX_WIDTH) + x;
-       return cells[cell];
-     }
+      if (y < 0) {
+        cerr << "Map::getCell y[" << y << "] got out of bounds, fixing." << endl;
+        y = 0;
+      }
 
-     int getMaxWidth() { return max_width; }
-     int getMaxHeight() { return max_height; }
+      if (y >= MAP_MAX_HEIGHT) {
+        cerr << "Map::getCell y[" << y << "] got out of bounds, fixing." << endl;
+        y = (MAP_MAX_HEIGHT - 1); // 0 based so substract! (0 till 255):
+      }
 
-   private:
+      int cell = (y * MAP_MAX_WIDTH) + x;
+      return &cells[cell];
+    }
+
+    void occupyCell(int x, int y) {
+      getCell(x, y)->occupied = true;
+    }
+
+    void unOccupyCell(int x, int y) {
+      getCell(x, y)->occupied = false;
+    }
+
+    int getMaxWidth() { return max_width; }
+    int getMaxHeight() { return max_height; }
+
+    bool is_occupied(Point p);
+
+  private:
     Cell cells[MAP_MAX_SIZE];
-	  int max_width;
-	  int max_height;
+    int max_width;
+    int max_height;
 
 };
 
@@ -71,6 +88,30 @@ class MapCamera {
     void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
     void draw(Unit* unit, SDL_Surface* screen);
 
+    Point toScreenCoordindates(const Point& point_with_world_coords) {
+      int screen_x = screenCoordinateX(point_with_world_coords.x);
+      int screen_y = screenCoordinateY(point_with_world_coords.y);
+      Point result(screen_x, screen_y);
+      return result;
+    }
+
+    Point toWorldCoordinates(const Point& point_with_screen_coords) {
+      int world_x = worldCoordinateX(point_with_screen_coords.x);
+      int world_y = worldCoordinateY(point_with_screen_coords.y);
+      Point result(world_x, world_y);
+      return result;
+    }
+
+    Rectangle toWorldCoordinates(const Rectangle& rect_with_screen_points) {
+      Point start = toWorldCoordinates(rect_with_screen_points.start);
+      Point end = toWorldCoordinates(rect_with_screen_points.end);
+      Rectangle result(start, end);
+      return result;
+    }
+
+    // todo: REMOVE THESE FROM PUBLIC
+    int screenCoordinateX(int world_x) { return world_x - this->x; }
+    int screenCoordinateY(int world_y) { return world_y - this->y; }
     int worldCoordinateX(int x) { return this->x + x; };
     int worldCoordinateY(int y) { return this->y + y; };
 
@@ -84,6 +125,7 @@ class MapCamera {
 
     float move_x_velocity;
     float move_y_velocity;
+
 
 		int getWidth() { return max_cells_width_on_screen; }
 		int getHeight() { return max_cells_height_on_screen; }

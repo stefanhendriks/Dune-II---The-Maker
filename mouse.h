@@ -10,7 +10,6 @@ const int MOUSE_POINTING = 0;
 const int MOUSE_ORDER_MOVE = 1;
 
 
-
 class Mouse {
 
   public:

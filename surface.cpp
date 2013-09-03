@@ -7,6 +7,8 @@
 
 using namespace std;
 
+const int TILE_SIZE = 32; // OH DANG another one
+
 Surface::Surface() {
 }
 
