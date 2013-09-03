@@ -23,8 +23,8 @@ const int FACINGS = 8;          // used to calculate width of each 'tile' for a 
 class Unit {
 
   public:
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset);
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y);
     ~Unit();
 
     void draw(SDL_Surface* screen, MapCamera* map_camera);
@@ -68,7 +68,7 @@ class Unit {
 
     int offset_x, offset_y; // the offset from the tile respective up-left corner
 
-    void init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y);
+    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int x, int y);
 
     bool selected;
 
@@ -87,12 +87,17 @@ class Unit {
       return desired_body_facing != body_facing;
     }
 
+    Map* map;
+
     void turn_body();
 
     void moveUp() { updateMovePosition(Point(0, -TILE_SIZE)); }
     void moveDown() { updateMovePosition(Point(0, TILE_SIZE)); }
     void moveLeft() { updateMovePosition(Point(-TILE_SIZE, 0)); }
     void moveRight() { updateMovePosition(Point(TILE_SIZE, 0)); }
+    void stopMoving() {
+      this->next_move_position = position;
+    }
 
     int getDrawX() { return position.x + offset_x; }
     int getDrawY() { return position.y + offset_y; }
@@ -123,7 +128,7 @@ const int MAX_UNIT_TYPES = 16;
 class UnitRepository {
 
   public:
-    UnitRepository();
+    UnitRepository(Map *map);
     ~UnitRepository();
 
     void destroy();
@@ -133,6 +138,7 @@ class UnitRepository {
    private:
       SDL_Surface* unit_animation[MAX_UNIT_TYPES];
       SDL_Surface* unit_shadow[MAX_UNIT_TYPES];
+      Map* map;
 };
 
 #endif

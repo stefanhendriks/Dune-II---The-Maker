@@ -70,7 +70,7 @@ int Game::init() {
   map.setBoundaries(128,128);
   map_camera = new MapCamera(0, 0, screen, &map);
 
-  unitRepository = new UnitRepository();
+  unitRepository = new UnitRepository(&map);
 
   unit = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64);
   devastator = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 128, 128);

@@ -13,6 +13,7 @@ Map::Map() {
 
   for (int i = 0; i < MAP_MAX_SIZE; i++) {
     cells[i].tile = (flipCoin() ? 0 : 64);
+    cells[i].occupied = false;
   }
 
 }
@@ -21,6 +22,14 @@ void Map::setBoundaries(int max_width, int max_height) {
   this->max_width = max_width;
   this->max_height = max_height;
 }
+
+bool Map::is_occupied(Point p) {
+  int map_x = p.x / TILE_SIZE;
+  int map_y = p.y / TILE_SIZE;
+  Cell* c = getCell(map_x, map_y);
+  return c->occupied;
+}
+
 
 //=============================================================================
 //
@@ -83,7 +92,7 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
 
   for (int dx = startX; dx < endX; dx++) {
     for (int dy = startY; dy < endY; dy++) {
-      Cell c = map->getCell(dx, dy);
+      Cell* c = map->getCell(dx, dy);
       // weird: have to compensate for the coordinates above. Drawing should be done separately
       // from coordinates of map.
       int drawX = (dx - startX) * TILE_SIZE;
@@ -92,7 +101,7 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
       drawX -= offsetX;
       drawY -= offsetY;
 
-      Surface::drawTile(tileset, screen, c.tile, drawX, drawY);
+      Surface::drawTile(tileset, screen, c->tile, drawX, drawY);
     }
   }
 }

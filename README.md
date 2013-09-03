@@ -81,7 +81,7 @@ TODO
 - mine spice with a harvester
 - get my units transported much faster by a carry-all
 - scroll by holding mouse key and move from that position
-
+- when a unit is bored, it should turn around randomly
 
 DONE
 ----

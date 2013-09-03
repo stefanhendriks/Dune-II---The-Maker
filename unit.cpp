@@ -6,12 +6,12 @@
 
 using namespace std;
 
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset) {
-  init(tileset, shadowset, 128 + rnd(256), 128 + rnd(256));
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map) {
+  init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256));
 }
 
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
-  init(tileset, shadowset, x, y);
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y) {
+  init(tileset, shadowset, map, x, y);
 }
 
 Unit::~Unit() {
@@ -41,13 +41,15 @@ void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
   }
 }
 
-void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, int x, int y) {
+void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y) {
   this->selected = false;
   this->selected_bitmap = Surface::load("graphics/selected.bmp", 255, 0, 255);
   this->tileset = tileset;
   this->shadowset = shadowset;
   this->body_facing = rnd(FACINGS);
   this->desired_body_facing = this->body_facing;
+  this->map=map;
+  this->map->occupyCell(x, y);
 
   int tile_height = 0, tile_width = 0;
   tile_width = tileset->w / FACINGS;
@@ -137,6 +139,11 @@ void Unit::updateState() {
     if (target.x > position.x) moveRight();
     if (target.y < position.y) moveUp();
     if (target.y > position.y) moveDown();
+
+    // check if we can move to this
+    if (map->is_occupied(next_move_position)) {
+      stopMoving();
+    }
   }
 
   // execute movement
@@ -152,7 +159,9 @@ void Unit::updateState() {
 //
 //////////////////////////////////////////
 
-UnitRepository::UnitRepository() {
+UnitRepository::UnitRepository(Map* map) {
+  this->map = map;
+
   for (int i = 0; i < MAX_UNIT_TYPES; i++) {
     unit_animation[i] = NULL;
     unit_shadow[i] = NULL;
@@ -188,6 +197,6 @@ Unit* UnitRepository::create(int unitType, int house, int x, int y) {
   SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], paletteIndexUsedForColoring, 8);
 
   SDL_Surface* shadow_copy = Surface::copy(unit_shadow[unitType]);
-  Unit* unit = new Unit(copy, shadow_copy, x, y);
+  Unit* unit = new Unit(copy, shadow_copy, map, x, y);
   return unit;
 }
