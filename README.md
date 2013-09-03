@@ -58,9 +58,9 @@ TODO
     <li>(ground) unit can move to adjecent tileground</li>
     <li>(ground) unit moves tile-by-tile to ordered position</li>
     <li>unit should face direction it should move to, before it moves to that direction</li>
+    <li>(ground) unit should not be able to occupy tile of another same type of (terrain) unit</li>
   </ul>
 </del>
- - (ground) unit should not be able to occupy tile of another same type of (terrain) unit
  - (ground (tank)) unit should face final destination with barrel
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - order a unit to attack a position
