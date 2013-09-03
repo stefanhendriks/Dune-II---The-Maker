@@ -78,6 +78,7 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, i
   this->position = Point(x,y);
   this->target = this->position;
   this->next_move_position = this->position;
+  this->prev_position = this->position;
   this->anim_frame = 0;
 
   // every pixel short/too much of the perfect tile size will be spread evenly
@@ -134,16 +135,31 @@ void Unit::updateState() {
   }
 
   // think about movement
-  if (position == next_move_position && target != position) {
-    if (target.x < position.x) moveLeft();
-    if (target.x > position.x) moveRight();
-    if (target.y < position.y) moveUp();
-    if (target.y > position.y) moveDown();
-
-    // check if we can move to this
-    if (map->is_occupied(next_move_position)) {
-      stopMoving();
+  if (!is_moving()) {
+    if (prev_position != position) {
+      map->unOccupyCell(prev_position.x / TILE_SIZE, prev_position.y / TILE_SIZE);
     }
+
+    if (has_target()) {
+      // determine what the next adjecent tile should be
+      if (target.x < position.x) moveLeft();
+      if (target.x > position.x) moveRight();
+      if (target.y < position.y) moveUp();
+      if (target.y > position.y) moveDown();
+
+      // check if we can move to this
+      if (map->is_occupied(next_move_position)) {
+        stopMoving();
+      } else {
+        // we can move to this tile, claim it
+        map->occupyCell(next_move_position.x / TILE_SIZE, next_move_position.y / TILE_SIZE);
+        prev_position = position;
+      }
+
+    } else {
+      prev_position = position;
+    }
+
   }
 
   // execute movement

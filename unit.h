@@ -62,8 +62,6 @@ class Unit {
 
     int shadow_alpha; // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
 
-    Point position;   // coordinates relative to top/left of map (in pixels)
-
     int anim_frame;   // animation frames are 'rows' in the tileset
 
     int offset_x, offset_y; // the offset from the tile respective up-left corner
@@ -73,14 +71,24 @@ class Unit {
     bool selected;
 
     Point target;     // target of interest (move/attack, etc)
-
+    Point position;   // coordinates relative to top/left of map (in pixels)
     Point next_move_position;
+    Point prev_position;
+
 
     int desired_facing();
 
     void updateMovePosition(Point p) {
       this->next_move_position = this->next_move_position + p;
       this->desired_body_facing = desired_facing();
+    }
+
+    bool is_moving() {
+      return position != next_move_position;
+    }
+
+    bool has_target() {
+      return position != target;
     }
 
     bool should_turn_body() {

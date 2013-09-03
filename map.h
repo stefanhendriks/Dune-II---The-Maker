@@ -57,6 +57,10 @@ class Map {
       getCell(x, y)->occupied = true;
     }
 
+    void unOccupyCell(int x, int y) {
+      getCell(x, y)->occupied = false;
+    }
+
     int getMaxWidth() { return max_width; }
     int getMaxHeight() { return max_height; }
 
