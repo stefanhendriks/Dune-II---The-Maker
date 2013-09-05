@@ -14,6 +14,7 @@ Map::Map() {
   for (int i = 0; i < MAP_MAX_SIZE; i++) {
     cells[i].tile = (flipCoin() ? 0 : 64);
     cells[i].occupied = false;
+    cells[i].isShrouded = flipCoin();
   }
 
 }
@@ -102,6 +103,33 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
       drawY -= offsetY;
 
       Surface::drawTile(tileset, screen, c->tile, drawX, drawY);
+    }
+  }
+}
+
+void MapCamera::drawShroud(Map* map, SDL_Surface* screen) {
+  // determine x and y from map data.
+  int startX = (this->x / TILE_SIZE);
+  int startY = (this->y / TILE_SIZE);
+
+  int offsetX = (this->x % TILE_SIZE);
+  int offsetY = (this->y % TILE_SIZE);
+
+  int endX = startX + (getWidth() + 1);
+  int endY = startY + (getHeight() + 1);
+
+  for (int dx = startX; dx < endX; dx++) {
+    for (int dy = startY; dy < endY; dy++) {
+      Cell* c = map->getCell(dx, dy);
+      if (c->isShrouded) {
+        int drawX = (dx - startX) * TILE_SIZE;
+        int drawY = (dy - startY) * TILE_SIZE;
+
+        drawX -= offsetX;
+        drawY -= offsetY;
+
+        boxRGBA(screen, drawX, drawY, drawX + TILE_SIZE, drawY + TILE_SIZE, 0, 0, 0, 255);
+      }
     }
   }
 }

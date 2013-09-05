@@ -159,6 +159,7 @@ void Game::render() {
   map_camera->draw(&map, tileset, screen);
   map_camera->draw(unit, screen);
   map_camera->draw(devastator, screen);
+  map_camera->drawShroud(&map, screen);
 
   mouse.draw(screen);
 
