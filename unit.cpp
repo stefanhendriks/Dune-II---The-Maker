@@ -50,6 +50,7 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, i
   this->desired_body_facing = this->body_facing;
   this->map=map;
   this->map->occupyCell(x, y);
+  this->map->removeShroud(x / TILE_SIZE, y / TILE_SIZE);
 
   int tile_height = 0, tile_width = 0;
   tile_width = tileset->w / FACINGS;
