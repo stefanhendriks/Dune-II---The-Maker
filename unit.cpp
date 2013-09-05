@@ -138,6 +138,7 @@ void Unit::updateState() {
   if (!is_moving()) {
     if (prev_position != position) {
       map->unOccupyCell(prev_position.x / TILE_SIZE, prev_position.y / TILE_SIZE);
+      map->removeShroud(position.x / TILE_SIZE, position.y / TILE_SIZE);
     }
 
     if (has_target()) {

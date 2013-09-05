@@ -14,7 +14,7 @@ Map::Map() {
   for (int i = 0; i < MAP_MAX_SIZE; i++) {
     cells[i].tile = (flipCoin() ? 0 : 64);
     cells[i].occupied = false;
-    cells[i].isShrouded = flipCoin();
+    cells[i].isShrouded = true;
   }
 
 }

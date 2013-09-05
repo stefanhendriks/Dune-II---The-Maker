@@ -62,6 +62,10 @@ class Map {
       getCell(x, y)->occupied = false;
     }
 
+    void removeShroud(int x, int y) {
+      getCell(x, y)->isShrouded = false;
+    }
+
     int getMaxWidth() { return max_width; }
     int getMaxHeight() { return max_height; }
 
