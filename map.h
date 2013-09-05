@@ -15,6 +15,8 @@ const int MAP_MAX_HEIGHT = 256;
 
 const int TILE_SIZE = 32; // squared
 
+const int UNIT_VIEW_RANGE = 5;
+
 class Cell {
   public:
     int tile; // tile to draw (one-dimension array)
@@ -63,7 +65,13 @@ class Map {
     }
 
     void removeShroud(int x, int y) {
-      getCell(x, y)->isShrouded = false;
+      for (int cell_x = max(x - UNIT_VIEW_RANGE, 0); cell_x <= min(x + UNIT_VIEW_RANGE, getMaxWidth() -1); cell_x++) {
+        for (int cell_y = max(y - UNIT_VIEW_RANGE, 0); cell_y <= min(y + UNIT_VIEW_RANGE, getMaxHeight() -1); cell_y++) {
+          if (abs(cell_x - x) + abs(cell_y - y) <= UNIT_VIEW_RANGE) {
+            getCell(cell_x, cell_y)->isShrouded = false;
+          }
+        }
+      }
     }
 
     int getMaxWidth() { return max_width; }
