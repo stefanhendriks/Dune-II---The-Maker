@@ -66,7 +66,7 @@ class Map {
     void removeShroud(int x, int y, int range) {
       for (int cell_x = max(x - range, 0); cell_x <= min(x + range, getMaxWidth() -1); cell_x++) {
         for (int cell_y = max(y - range, 0); cell_y <= min(y + range, getMaxHeight() -1); cell_y++) {
-          if (pow(cell_x - x, 2) + pow(cell_y - y, 2) <= pow(range, 2)) {
+          if (pow(cell_x - x, 2) + pow(cell_y - y, 2) <= pow(range, 2) + 1) {
             getCell(cell_x, cell_y)->isShrouded = false;
           }
         }
