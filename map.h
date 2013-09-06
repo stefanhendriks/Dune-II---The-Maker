@@ -16,11 +16,13 @@ const int MAP_MAX_HEIGHT = 256;
 
 const int TILE_SIZE = 32; // squared
 
+
 class Cell {
   public:
     int tile; // tile to draw (one-dimension array)
     bool occupied;
     bool shrouded;
+    int x, y;
 };
 
 class Map {
@@ -165,5 +167,7 @@ class MapCamera {
 
     int max_y() { return (map_y_boundary - max_cells_height_on_screen) * 32; }
     int max_x() { return (map_x_boundary - max_cells_width_on_screen) * 32; }
+
+    int determineShroudEdge(Map* map, Cell* c);
 };
 #endif

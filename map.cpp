@@ -11,10 +11,15 @@ Map::Map() {
   max_width = MAP_MAX_WIDTH;
   max_height = MAP_MAX_HEIGHT;
 
-  for (int i = 0; i < MAP_MAX_SIZE; i++) {
-    cells[i].tile = (flipCoin() ? 0 : 64);
-    cells[i].occupied = false;
-    cells[i].shrouded = true;
+  for (int x = 0; x < MAP_MAX_WIDTH; x++) {
+    for (int y = 0; y < MAP_MAX_HEIGHT; y++) {
+      int i = (y * MAP_MAX_WIDTH) + x;
+      cells[i].x = x;
+      cells[i].y = y;
+      cells[i].tile = (flipCoin() ? 0 : 64);
+      cells[i].occupied = false;
+      cells[i].shrouded = true;
+    }
   }
 
 }
@@ -125,36 +130,39 @@ void MapCamera::drawShroud(Map* map, SDL_Surface* shroud_edges, SDL_Surface* shr
       int drawY = (dy - startY) * TILE_SIZE;
       drawX -= offsetX;
       drawY -= offsetY;
-      if (c->shrouded) {
-        boxRGBA(screen, drawX, drawY, drawX + TILE_SIZE, drawY + TILE_SIZE, 0, 0, 0, 255);
-      } else {
-        bool cell_up = map->getCell(dx, dy-1)->shrouded;
-        bool cell_down = map->getCell(dx, dy+1)->shrouded;
-        bool cell_left = map->getCell(dx-1, dy)->shrouded;
-        bool cell_right = map->getCell(dx+1, dy)->shrouded;
+      int tile = determineShroudEdge(map, c);
 
-        int tile = 0;
-        if (cell_up && !cell_down && !cell_left && !cell_right) tile = 2;
-        if (!cell_up && cell_down && !cell_left && !cell_right) tile = 6;
-        if (!cell_up && !cell_down && cell_left && !cell_right) tile = 8;
-        if (!cell_up && !cell_down && !cell_left && cell_right) tile = 4;
-
-        if (cell_up && !cell_down && cell_left && !cell_right) tile = 1;
-        if (cell_up && !cell_down && !cell_left && cell_right) tile = 3;
-        if (!cell_up && cell_down && cell_left && !cell_right) tile = 7;
-        if (!cell_up && cell_down && !cell_left && cell_right) tile = 5;
-
-        if (cell_up && !cell_down && cell_left && cell_right) tile = 10;
-        if (cell_up && cell_down && cell_left && !cell_right) tile = 9;
-        if (cell_up && cell_down && !cell_left && cell_right) tile = 11;
-        if (!cell_up && cell_down && cell_left && cell_right) tile = 12;
-
-        if (tile > 0) {
-          Surface::drawIndexedTile(shroud_edges_shadow, screen, tile, drawX, drawY, 128);
-          Surface::drawIndexedTile(shroud_edges, screen, tile, drawX, drawY);
-        }
+      if (tile > -1) {
+        Surface::drawIndexedTile(shroud_edges_shadow, screen, tile, drawX, drawY, 128);
+        Surface::drawIndexedTile(shroud_edges, screen, tile, drawX, drawY);
       }
+
     }
   }
 }
 
+int MapCamera::determineShroudEdge(Map* map, Cell* c) {
+  if (c->shrouded) return 0;
+
+  bool cell_up = map->getCell(c->x, c->y-1)->shrouded;
+  bool cell_down = map->getCell(c->x, c->y+1)->shrouded;
+  bool cell_left = map->getCell(c->x-1, c->y)->shrouded;
+  bool cell_right = map->getCell(c->x+1, c->y)->shrouded;
+
+  // Its harder then you think to make static consts for these 'magic values'.
+  if (!cell_up && !cell_down && !cell_left && !cell_right)  return -1;
+  if ( cell_up && !cell_down &&  cell_left && !cell_right)  return 1;
+  if ( cell_up && !cell_down && !cell_left && !cell_right)  return 2;
+  if ( cell_up && !cell_down && !cell_left &&  cell_right)  return 3;
+  if (!cell_up && !cell_down && !cell_left &&  cell_right)  return 4;
+  if (!cell_up &&  cell_down && !cell_left &&  cell_right)  return 5;
+  if (!cell_up &&  cell_down && !cell_left && !cell_right)  return 6;
+  if (!cell_up &&  cell_down &&  cell_left && !cell_right)  return 7;
+  if (!cell_up && !cell_down &&  cell_left && !cell_right)  return 8;
+  if ( cell_up &&  cell_down &&  cell_left && !cell_right)  return 9;
+  if ( cell_up && !cell_down &&  cell_left &&  cell_right)  return 10;
+  if ( cell_up &&  cell_down && !cell_left &&  cell_right)  return 11;
+  if (!cell_up &&  cell_down &&  cell_left &&  cell_right)  return 12;
+
+  return -1;
+}
