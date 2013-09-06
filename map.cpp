@@ -107,7 +107,7 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
   }
 }
 
-void MapCamera::drawShroud(Map* map, SDL_Surface* screen) {
+void MapCamera::drawShroud(Map* map, SDL_Surface* shroud_edges, SDL_Surface* screen) {
   // determine x and y from map data.
   int startX = (this->x / TILE_SIZE);
   int startY = (this->y / TILE_SIZE);
@@ -121,14 +121,35 @@ void MapCamera::drawShroud(Map* map, SDL_Surface* screen) {
   for (int dx = startX; dx < endX; dx++) {
     for (int dy = startY; dy < endY; dy++) {
       Cell* c = map->getCell(dx, dy);
+      int drawX = (dx - startX) * TILE_SIZE;
+      int drawY = (dy - startY) * TILE_SIZE;
+      drawX -= offsetX;
+      drawY -= offsetY;
       if (c->shrouded) {
-        int drawX = (dx - startX) * TILE_SIZE;
-        int drawY = (dy - startY) * TILE_SIZE;
-
-        drawX -= offsetX;
-        drawY -= offsetY;
-
         boxRGBA(screen, drawX, drawY, drawX + TILE_SIZE, drawY + TILE_SIZE, 0, 0, 0, 255);
+      } else {
+        bool cell_up = map->getCell(dx, dy-1)->shrouded;
+        bool cell_down = map->getCell(dx, dy+1)->shrouded;
+        bool cell_left = map->getCell(dx-1, dy)->shrouded;
+        bool cell_right = map->getCell(dx+1, dy)->shrouded;
+
+        int tile = 0;
+        if (cell_up && !cell_down && !cell_left && !cell_right) tile = 2;
+        if (!cell_up && cell_down && !cell_left && !cell_right) tile = 6;
+        if (!cell_up && !cell_down && cell_left && !cell_right) tile = 8;
+        if (!cell_up && !cell_down && !cell_left && cell_right) tile = 4;
+
+        if (cell_up && !cell_down && cell_left && !cell_right) tile = 1;
+        if (cell_up && !cell_down && !cell_left && cell_right) tile = 3;
+        if (!cell_up && cell_down && cell_left && !cell_right) tile = 7;
+        if (!cell_up && cell_down && !cell_left && cell_right) tile = 5;
+
+        if (cell_up && !cell_down && cell_left && cell_right) tile = 10;
+        if (cell_up && cell_down && cell_left && !cell_right) tile = 9;
+        if (cell_up && cell_down && !cell_left && cell_right) tile = 11;
+        if (!cell_up && cell_down && cell_left && cell_right) tile = 12;
+
+        if (tile > 0) Surface::drawTile(shroud_edges, screen, tile, drawX, drawY);
       }
     }
   }

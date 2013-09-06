@@ -65,6 +65,7 @@ TODO
   </ul>
 </del>
  - Shroud drawing should be smoothened (ie, nice rounded corners). Preferably with also some shadow-like-border (as in original D2TM).
+ - map camera should not be able to see the '1 tile border' on the map. (so it starts at 1,1 instead of 0,0). This fixes various errors (with shroud and other stuff)
 - (as a player I) should have enemies to defeat
  - enemy units should not be visible when shrouded
  - enemy units should not be selectable

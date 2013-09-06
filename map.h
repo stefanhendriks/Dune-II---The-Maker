@@ -111,7 +111,7 @@ class MapCamera {
 
     void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
     void draw(Unit* unit, SDL_Surface* screen);
-    void drawShroud(Map* map, SDL_Surface* screen);
+    void drawShroud(Map* map, SDL_Surface* shroud_edges, SDL_Surface* screen);
 
     Point toScreenCoordindates(const Point& point_with_world_coords) {
       int screen_x = screenCoordinateX(point_with_world_coords.x);

@@ -60,10 +60,17 @@ int Game::init() {
     return false;
   }
 
-  tileset = Surface::load("tileset.png");
+  tileset = Surface::load("graphics/tileset.png");
 
   if (tileset == NULL) {
-    cout << "Failed to read tileset data" << endl;
+    cout << "Failed to read graphics/tileset.png data" << endl;
+    return false;
+  }
+
+  shroud_edges = Surface::load("graphics/shroud_edges.bmp");
+
+  if (shroud_edges == NULL) {
+    cout << "Failed to read graphics/shroud_edges.bmp data" << endl;
     return false;
   }
 
@@ -162,7 +169,7 @@ void Game::render() {
   map_camera->draw(&map, tileset, screen);
   map_camera->draw(unit, screen);
   map_camera->draw(devastator, screen);
-  map_camera->drawShroud(&map, screen);
+  map_camera->drawShroud(&map, shroud_edges, screen);
 
   mouse.draw(screen);
 
