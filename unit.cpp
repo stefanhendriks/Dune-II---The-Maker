@@ -6,6 +6,8 @@
 
 using namespace std;
 
+const int UNIT_VIEW_RANGE = 5;
+
 Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map) {
   init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256));
 }
@@ -50,7 +52,7 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, i
   this->desired_body_facing = this->body_facing;
   this->map=map;
   this->map->occupyCell(x / TILE_SIZE, y / TILE_SIZE);
-  this->map->removeShroud(x / TILE_SIZE, y / TILE_SIZE);
+  this->map->removeShroud(x / TILE_SIZE, y / TILE_SIZE, UNIT_VIEW_RANGE);
 
   int tile_height = 0, tile_width = 0;
   tile_width = tileset->w / FACINGS;
@@ -139,7 +141,7 @@ void Unit::updateState() {
   if (!is_moving()) {
     if (prev_position != position) {
       map->unOccupyCell(prev_position.x / TILE_SIZE, prev_position.y / TILE_SIZE);
-      map->removeShroud(position.x / TILE_SIZE, position.y / TILE_SIZE);
+      map->removeShroud(position.x / TILE_SIZE, position.y / TILE_SIZE, UNIT_VIEW_RANGE);
     }
 
     if (has_target()) {
