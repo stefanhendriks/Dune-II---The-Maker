@@ -49,9 +49,13 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, i
   this->body_facing = rnd(FACINGS);
   this->desired_body_facing = this->body_facing;
   this->view_range = viewRange;
+  this->position = Point(x,y);
+  this->target = this->position;
+  this->next_move_position = this->position;
+  this->prev_position = this->position;
   this->map=map;
-  this->map->occupyCell(x / TILE_SIZE, y / TILE_SIZE);
-  this->map->removeShroud(x / TILE_SIZE, y / TILE_SIZE, this->view_range);
+  this->map->occupyCell(this->position);
+  this->map->removeShroud(this->position, this->view_range);
 
   int tile_height = 0, tile_width = 0;
   tile_width = tileset->w / FACINGS;
@@ -77,10 +81,6 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, i
   }
   this->size = Point(tile_width, tile_height);
   this->shadow_alpha = 128;
-  this->position = Point(x,y);
-  this->target = this->position;
-  this->next_move_position = this->position;
-  this->prev_position = this->position;
   this->anim_frame = 0;
 
   // every pixel short/too much of the perfect tile size will be spread evenly
@@ -139,8 +139,8 @@ void Unit::updateState() {
   // think about movement
   if (!is_moving()) {
     if (prev_position != position) {
-      map->unOccupyCell(prev_position.x / TILE_SIZE, prev_position.y / TILE_SIZE);
-      map->removeShroud(position.x / TILE_SIZE, position.y / TILE_SIZE, this->view_range);
+      map->unOccupyCell(prev_position);
+      map->removeShroud(position, this->view_range);
     }
 
     if (has_target()) {
@@ -155,7 +155,7 @@ void Unit::updateState() {
         stopMoving();
       } else {
         // we can move to this tile, claim it
-        map->occupyCell(next_move_position.x / TILE_SIZE, next_move_position.y / TILE_SIZE);
+        map->occupyCell(next_move_position);
         prev_position = position;
       }
 

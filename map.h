@@ -30,6 +30,10 @@ class Map {
 
     void setBoundaries(int max_width, int max_height);
 
+    Cell* getCell(Point map_point) {
+      return getCell(map_point.x, map_point.y);
+    }
+
     Cell* getCell(int x, int y) {
       if (x < 0) {
         cerr << "Map::getCell x[" << x << "] got out of bounds, fixing." << endl;
@@ -55,15 +59,18 @@ class Map {
       return &cells[cell];
     }
 
-    void occupyCell(int x, int y) {
-      getCell(x, y)->occupied = true;
+    void occupyCell(const Point& world_point) {
+      getCell(toMapPoint(world_point))->occupied = true;
     }
 
-    void unOccupyCell(int x, int y) {
-      getCell(x, y)->occupied = false;
+    void unOccupyCell(const Point& world_point) {
+      getCell(toMapPoint(world_point))->occupied = false;
     }
 
-    void removeShroud(int x, int y, int range) {
+    void removeShroud(Point world_point, int range) {
+      Point mapPoint = toMapPoint(world_point);
+      int x = mapPoint.x;
+      int y = mapPoint.y;
       for (int cell_x = max(x - range, 0); cell_x <= min(x + range, getMaxWidth() -1); cell_x++) {
         for (int cell_y = max(y - range, 0); cell_y <= min(y + range, getMaxHeight() -1); cell_y++) {
           if (pow(cell_x - x, 2) + pow(cell_y - y, 2) <= pow(range, 2) + 1) {
@@ -77,6 +84,11 @@ class Map {
     int getMaxHeight() { return max_height; }
 
     bool is_occupied(Point p);
+
+    Point toMapPoint(const Point& world_point) {
+      Point result(world_point.x / TILE_SIZE, world_point.y / TILE_SIZE);
+      return result;
+    }
 
   private:
     Cell cells[MAP_MAX_SIZE];
