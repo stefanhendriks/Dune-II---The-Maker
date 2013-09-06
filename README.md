@@ -42,7 +42,12 @@ Example, OSX && [homebrew](http://mxcl.github.io/homebrew/):
 
 Example, Ubuntu (inspired by [Lazy Foo](http://lazyfoo.net/SDL_tutorials/lesson01/linux/))
 ------------------------------------------------------------------------------------------
-- Fetch SDL and its dependencies with apt-get (`apt-get install libsdl1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev`)
+- Fetch g++ and its dependencies with apt-get:
+
+        apt-get install g++
+- Fetch SDL and its dependencies with apt-get:
+
+        apt-get install libsdl1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsdl-gfx1.2-dev
 - `cp makefile.ubuntu makefile`
 - `make`
 
