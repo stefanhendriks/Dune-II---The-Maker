@@ -14,7 +14,7 @@ Map::Map() {
   for (int i = 0; i < MAP_MAX_SIZE; i++) {
     cells[i].tile = (flipCoin() ? 0 : 64);
     cells[i].occupied = false;
-    cells[i].isShrouded = true;
+    cells[i].shrouded = true;
   }
 
 }
@@ -121,7 +121,7 @@ void MapCamera::drawShroud(Map* map, SDL_Surface* screen) {
   for (int dx = startX; dx < endX; dx++) {
     for (int dy = startY; dy < endY; dy++) {
       Cell* c = map->getCell(dx, dy);
-      if (c->isShrouded) {
+      if (c->shrouded) {
         int drawX = (dx - startX) * TILE_SIZE;
         int drawY = (dy - startY) * TILE_SIZE;
 
