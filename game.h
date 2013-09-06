@@ -23,6 +23,7 @@ class Game {
       SDL_Surface* screen;
       SDL_Surface* tileset;
       SDL_Surface* shroud_edges;
+      SDL_Surface* shroud_edges_shadow;
       MapCamera* map_camera;
       Map map;
       Keyboard keyboard;

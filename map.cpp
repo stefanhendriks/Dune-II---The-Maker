@@ -102,12 +102,12 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
       drawX -= offsetX;
       drawY -= offsetY;
 
-      Surface::drawTile(tileset, screen, c->tile, drawX, drawY);
+      Surface::drawIndexedTile(tileset, screen, c->tile, drawX, drawY);
     }
   }
 }
 
-void MapCamera::drawShroud(Map* map, SDL_Surface* shroud_edges, SDL_Surface* screen) {
+void MapCamera::drawShroud(Map* map, SDL_Surface* shroud_edges, SDL_Surface* shroud_edges_shadow, SDL_Surface* screen) {
   // determine x and y from map data.
   int startX = (this->x / TILE_SIZE);
   int startY = (this->y / TILE_SIZE);
@@ -149,7 +149,10 @@ void MapCamera::drawShroud(Map* map, SDL_Surface* shroud_edges, SDL_Surface* scr
         if (cell_up && cell_down && !cell_left && cell_right) tile = 11;
         if (!cell_up && cell_down && cell_left && cell_right) tile = 12;
 
-        if (tile > 0) Surface::drawTile(shroud_edges, screen, tile, drawX, drawY);
+        if (tile > 0) {
+          Surface::drawIndexedTile(shroud_edges_shadow, screen, tile, drawX, drawY, 128);
+          Surface::drawIndexedTile(shroud_edges, screen, tile, drawX, drawY);
+        }
       }
     }
   }

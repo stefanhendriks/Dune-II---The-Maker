@@ -74,6 +74,13 @@ int Game::init() {
     return false;
   }
 
+  shroud_edges_shadow = Surface::load("graphics/shroud_edges_shadow.bmp");
+
+  if (shroud_edges_shadow == NULL) {
+    cout << "Failed to read graphics/shroud_edges_shadow.bmp data" << endl;
+    return false;
+  }
+
   SDL_ShowCursor(0);
   mouse.init(screen);
 
@@ -169,7 +176,7 @@ void Game::render() {
   map_camera->draw(&map, tileset, screen);
   map_camera->draw(unit, screen);
   map_camera->draw(devastator, screen);
-  map_camera->drawShroud(&map, shroud_edges, screen);
+  map_camera->drawShroud(&map, shroud_edges, shroud_edges_shadow, screen);
 
   mouse.draw(screen);
 
