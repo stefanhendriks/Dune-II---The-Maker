@@ -56,6 +56,7 @@ TODO
  - Units are able to clear shroud (in a circular pattern)
  - Units can have different 'sight' (ie reveal more shroud)
  - Shroud drawing should be smoothened (ie, nice rounded corners). Preferably with also some shadow-like-border (as in original D2TM).
+ - (as a player I) should not be able to see enemy units covered by shroud
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
 - order a unit to attack a position
 - sandworms should only be able to travel through sand, dunes and spice, and be blocked by rock/mountains
