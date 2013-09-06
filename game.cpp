@@ -21,7 +21,10 @@ Game::Game() {
 }
 
 int Game::execute() {
-  init();
+  if (!init()) {
+    cerr << "Errors occured when starting the game. Stopping." << endl;
+    return 1;
+  }
 
   SDL_Event event;
 
