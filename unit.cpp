@@ -6,14 +6,12 @@
 
 using namespace std;
 
-const int UNIT_VIEW_RANGE = 5;
-
 Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map) {
-  init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256));
+  init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256), 1 + rnd(5));
 }
 
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y) {
-  init(tileset, shadowset, map, x, y);
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y, int viewRange) {
+  init(tileset, shadowset, map, x, y, viewRange);
 }
 
 Unit::~Unit() {
@@ -43,16 +41,17 @@ void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
   }
 }
 
-void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y) {
+void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y, int viewRange) {
   this->selected = false;
   this->selected_bitmap = Surface::load("graphics/selected.bmp", 255, 0, 255);
   this->tileset = tileset;
   this->shadowset = shadowset;
   this->body_facing = rnd(FACINGS);
   this->desired_body_facing = this->body_facing;
+  this->view_range = viewRange;
   this->map=map;
   this->map->occupyCell(x / TILE_SIZE, y / TILE_SIZE);
-  this->map->removeShroud(x / TILE_SIZE, y / TILE_SIZE, UNIT_VIEW_RANGE);
+  this->map->removeShroud(x / TILE_SIZE, y / TILE_SIZE, this->view_range);
 
   int tile_height = 0, tile_width = 0;
   tile_width = tileset->w / FACINGS;
@@ -141,7 +140,7 @@ void Unit::updateState() {
   if (!is_moving()) {
     if (prev_position != position) {
       map->unOccupyCell(prev_position.x / TILE_SIZE, prev_position.y / TILE_SIZE);
-      map->removeShroud(position.x / TILE_SIZE, position.y / TILE_SIZE, UNIT_VIEW_RANGE);
+      map->removeShroud(position.x / TILE_SIZE, position.y / TILE_SIZE, this->view_range);
     }
 
     if (has_target()) {
@@ -210,13 +209,13 @@ UnitRepository::~UnitRepository() {
   }
 }
 
-Unit* UnitRepository::create(int unitType, int house, int x, int y) {
+Unit* UnitRepository::create(int unitType, int house, int x, int y, int viewRange) {
   SDL_Surface* copy = Surface::copy(unit_animation[unitType]);
   int paletteIndexUsedForColoring = 144;
   int paletteIndex = paletteIndexUsedForColoring + (16 * house);
   SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], paletteIndexUsedForColoring, 8);
 
   SDL_Surface* shadow_copy = Surface::copy(unit_shadow[unitType]);
-  Unit* unit = new Unit(copy, shadow_copy, map, x, y);
+  Unit* unit = new Unit(copy, shadow_copy, map, x, y, viewRange);
   return unit;
 }
