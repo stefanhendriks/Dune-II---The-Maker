@@ -24,6 +24,7 @@ const int TERRAIN_TYPE_MOUNTAIN =  4;
 const int TERRAIN_TYPE_SPICEHILL = 5;
 const int TERRAIN_TYPE_SLAB     =  6;
 
+
 class Cell {
   public:
     int tile; // tile to draw (one-dimension array)
@@ -107,7 +108,7 @@ class Map {
 
     void determineCellTile(Cell* c);
     void determineCellTileForMap();
-
+    int determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool cell_right);
 };
 
 const float CAMERA_VELOCITY_ACCELERATION = 0.25f;

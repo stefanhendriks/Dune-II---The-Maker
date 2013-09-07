@@ -45,33 +45,32 @@ void Map::determineCellTile(Cell* c) {
   bool cell_left = getCell(c->x-1, c->y)->terrain_type == c->terrain_type;
   bool cell_right = getCell(c->x+1, c->y)->terrain_type == c->terrain_type;
 
-  int index = 0;
-  if (cell_up && cell_down && cell_left && cell_right) index = 0;
-  if (!cell_up && !cell_down && !cell_left && !cell_right) index = 9;
-  if (cell_up && cell_down && !cell_left && cell_right) index = 1;
-  if (cell_up && cell_down && cell_left && !cell_right) index = 2;
+  int index = determineTerrainTile(cell_up, cell_down, cell_left, cell_right);
 
-  if (!cell_up && cell_down && cell_left && !cell_right) index = 7;
-  if (!cell_up && cell_down && !cell_left && cell_right) index = 5;
-  if (cell_up && !cell_down && cell_left && !cell_right) index = 6;
-  if (cell_up && !cell_down && !cell_left && cell_right) index = 8;
+  if (index > -1) {
+    int TILES_IN_ROW_ON_TERRAIN_SURFACE = 17;
+    c->tile = (c->terrain_type * TILES_IN_ROW_ON_TERRAIN_SURFACE) + index;
+  }
+}
 
-  if (!cell_up && !cell_down && cell_left && !cell_right) index = 11;
-  if (!cell_up && !cell_down && !cell_left && cell_right) index = 12;
-
-  if (cell_up && !cell_down && !cell_left && !cell_right) index = 13;
-  if (!cell_up && cell_down && !cell_left && !cell_right) index = 14;
-
-  if (!cell_up && !cell_down && cell_left && cell_right) index = 10;
-  if (cell_up && cell_down && !cell_left && !cell_right) index = 15;
-
-  if (cell_up && !cell_down && cell_left && cell_right) index = 4;
-  if (!cell_up && cell_down && cell_left && cell_right) index = 3;
-
-  int TERRAIN_FACES = 17;
-  int t = (c->terrain_type * TERRAIN_FACES) + index;
-  //cout << "terrain type = " << c->terrain_type << ", index is << " << index << " t = " << t << endl;
-  c->tile = t;
+int Map::determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool cell_right) {
+  if ( cell_up &&  cell_down &&  cell_left &&  cell_right) return 0;
+  if ( cell_up &&  cell_down && !cell_left &&  cell_right) return 1;
+  if ( cell_up &&  cell_down &&  cell_left && !cell_right) return 2;
+  if (!cell_up &&  cell_down &&  cell_left &&  cell_right) return 3;
+  if ( cell_up && !cell_down &&  cell_left &&  cell_right) return 4;
+  if (!cell_up &&  cell_down && !cell_left &&  cell_right) return 5;
+  if ( cell_up && !cell_down &&  cell_left && !cell_right) return 6;
+  if (!cell_up &&  cell_down &&  cell_left && !cell_right) return 7;
+  if ( cell_up && !cell_down && !cell_left &&  cell_right) return 8;
+  if (!cell_up && !cell_down && !cell_left && !cell_right) return 9;
+  if (!cell_up && !cell_down &&  cell_left &&  cell_right) return 10;
+  if (!cell_up && !cell_down &&  cell_left && !cell_right) return 11;
+  if (!cell_up && !cell_down && !cell_left &&  cell_right) return 12;
+  if ( cell_up && !cell_down && !cell_left && !cell_right) return 13;
+  if (!cell_up &&  cell_down && !cell_left && !cell_right) return 14;
+  if ( cell_up &&  cell_down && !cell_left && !cell_right) return 15;
+  return -1;
 }
 
 void Map::setBoundaries(int max_width, int max_height) {
