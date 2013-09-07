@@ -58,30 +58,52 @@ Features need to be written in such a way that it is obvious what the benefit is
 TODO
 ----
 - have enemies to defeat
- - enemy units should not be visible when shrouded
- - enemy units should not be selectable
- - only show health bar when mouse hovers over enemy unit
+  - enemy units should not be visible when shrouded
+  - enemy units should not be selectable
+  - only show health bar when mouse hovers over enemy unit
 - see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
-- order a unit to attack a position
+- destroy units so i can win the game destroying my enemy's units
+- destroy structures so i can win the game destroying my enemy's structures
+- order a unit to attack another unit in order to destroy it
+- order a unit to attack a structure in order to destroy it
+- order a unit to attack a tile so I can destroy a wall or something else (ie, a sandworm perhaps)
 - sandworms should only be able to travel through sand, dunes and spice, and be blocked by rock/mountains
+- move (my) units appropriately
+  - sandworms should only be able to travel through sand, dunes and spice, and be blocked by rock/mountains
+  - vehicles should be blocked by structures, other vehicles, and mountains
+  - heavy vehicles should be able to move over infantry (fatal for the infantry).
+  - air units should not be blocked by anything
+  - infantry should be blocked by other infantry, units, and structures
+- use my infantry to take over enemy structures
+  - the more damaged the structure is, the more chance of taking over
+  - (fatal for the infantry, but chance of capture)
+- fear the sandworm
+  - sandworm eats units on sand/dunes/spice
+  - sandworm can get 'full' and dissapear (? or wander around messing with your mind?)
+- send my vehicles to a repair bay in order to get the patched up and use them fully again.
+- send my harvester back to the refinery in order to get the credits earlier
 - enjoy the terrain smoothened (smoothing algorithm)
 - see structures (draw them)
 - select my structure
 - build another structure from a Construction Yard
+- place built structures
 - build infantry from a Barracks
 - build troopers from a WOR
 - build light vehicles from a Light Factory
 - build heavy vehicles from a Heavy Factory
  - build tanks
-  - tanks should be able to face their body to the adjecent cell and face their barrel to the target
+  - tanks should be able to face their body to the adjecent cell and face their barrel to the target (as should turrets)
 - build air units from a High-Tech
 - upgrade my structures to gain access to other units
 - upgrade my units (??)
 - receive reinforcements from time to time
 - mine spice with a harvester
+- deploy an MCV
 - get my units transported much faster by a carry-all
 - scroll by holding mouse key and move from that position
 - when a unit is bored, it should turn around randomly
+- when a unit is on guard, it should target enemies within range, as should turrets
+
 
 *Unit types*
 - Soldier
@@ -92,17 +114,39 @@ TODO
 - Raider Trike
 - Quad
 - Tank
+- Harvester
+- MCV
 - Siege Tank
 - Rocket Launcher
 - Deviator
 - Devastator
 - Sonic Tank
-- Cary-all
+- Carryall
 - Ornithopter
 - Frigate
 - Saboteur
 - Fremen (C&C style?)
 
+Structures
+
+- Concrete 1x1
+- Concrete 4x4
+- Wall
+- Windtrap
+- Refinery
+- Silos
+- Radar Outpost
+- Barracks
+- WOR
+- Light Factory
+- Heavy Factory
+- Hi-Tech Factory
+- Gun Turret
+- Rocket Turret
+- Repair Facility
+- Starport
+- House of IX
+- Palace
 
 DONE
 ----
