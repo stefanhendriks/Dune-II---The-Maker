@@ -57,16 +57,7 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
-- explore the terrain by clearing a Shroud
-<del>
-  <ul>
-    <li>Units are able to clear shroud (in a circular pattern)</li>
-    <li>Units can have different 'sight' (ie reveal more shroud)</li>
-    <li>Shroud drawing should be smoothened (ie, nice rounded corners). Preferably with also some shadow-like-border (as in original D2TM).</li>
-  </ul>
-</del>
- - map camera should not be able to see the '1 tile border' on the map. (so it starts at 1,1 instead of 0,0). This fixes various errors (with shroud and other stuff)
-- (as a player I) should have enemies to defeat
+- have enemies to defeat
  - enemy units should not be visible when shrouded
  - enemy units should not be selectable
  - only show health bar when mouse hovers over enemy unit
@@ -129,6 +120,7 @@ DONE
     <li>draw a rectangle by holding left mouse button</li>
     <li>select multiple units by dragging rectangle over units and releasing left mouse button</li>
     <li>order a unit to move to a position</li>
+    <li>explore the terrain by clearing a shroud</li>
   </ul>
 </del>
 
