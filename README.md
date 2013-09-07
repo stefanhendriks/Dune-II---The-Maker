@@ -58,6 +58,12 @@ Features need to be written in such a way that it is obvious what the benefit is
 TODO
 ----
 - enjoy the terrain smoothened (smoothing algorithm)
+  - rock must smooth when neighbouring cells are sand, spice, spicehill, sand hills
+  - spice must smooth when neighbouring cells are sand or rock
+  - spicehill must smooth when neighbouring cells are spice (not sand, it should not be allowed to have a spicehill->sand transition)
+  - hill must smooth when neighbouring cells are sand (hills should not be allowed to have a hill->rock/spice transition)
+  - mountain must smooth when neighbouring cells are rock or slab (mountain should not be allowed to have a mountain->sand/spice/hill/spicehill transition)
+  - slab does not smooth, but behaves like 'rock'
 - play on a randomized map
 - see structures (draw them)
 - select my structure
