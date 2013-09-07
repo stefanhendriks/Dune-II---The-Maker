@@ -16,10 +16,18 @@ const int MAP_MAX_HEIGHT = 256;
 
 const int TILE_SIZE = 32; // squared
 
+const int TERRAIN_TYPE_SAND     =  0;
+const int TERRAIN_TYPE_HILL     =  1;
+const int TERRAIN_TYPE_ROCK     =  2;
+const int TERRAIN_TYPE_SPICE    =  3;
+const int TERRAIN_TYPE_MOUNTAIN =  4;
+const int TERRAIN_TYPE_SPICEHILL = 5;
+const int TERRAIN_TYPE_SLAB     =  6;
 
 class Cell {
   public:
     int tile; // tile to draw (one-dimension array)
+    int terrain_type; // terrain type (sand, rock, etc)
     bool occupied;
     bool shrouded;
     int x, y;
@@ -96,6 +104,9 @@ class Map {
     Cell cells[MAP_MAX_SIZE];
     int max_width;
     int max_height;
+
+    void determineCellTile(Cell* c);
+    void determineCellTileForMap();
 
 };
 

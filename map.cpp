@@ -8,8 +8,8 @@
 #include <math.h>       /* ceil */
 
 Map::Map() {
-  max_width = MAP_MAX_WIDTH;
-  max_height = MAP_MAX_HEIGHT;
+  max_width = MAP_MAX_WIDTH - 1;
+  max_height = MAP_MAX_HEIGHT - 1;
 
   for (int x = 0; x < MAP_MAX_WIDTH; x++) {
     for (int y = 0; y < MAP_MAX_HEIGHT; y++) {
@@ -18,16 +18,60 @@ Map::Map() {
       cells[i].y = y;
 
       if (x == 0 || y == 0 || x >= max_width || y >= max_height) {
-        cells[i].tile = 17;
+        cells[i].terrain_type = TERRAIN_TYPE_ROCK;
+        cells[i].tile = -1;
       } else {
-        cells[i].tile = (flipCoin() ? 0 : 34);
+        cells[i].terrain_type = (flipCoin() ? TERRAIN_TYPE_SAND : TERRAIN_TYPE_ROCK);
       }
       cells[i].occupied = false;
       cells[i].shrouded = true;
-
     }
   }
 
+  determineCellTileForMap();
+}
+
+void Map::determineCellTileForMap() {
+  for (int x = 1; x < getMaxHeight(); x++) {
+    for (int y = 1; y < getMaxWidth(); y++) {
+       determineCellTile(getCell(x, y));
+    }
+  }
+}
+
+void Map::determineCellTile(Cell* c) {
+  bool cell_up = getCell(c->x, c->y-1)->terrain_type == c->terrain_type;
+  bool cell_down = getCell(c->x, c->y+1)->terrain_type == c->terrain_type;
+  bool cell_left = getCell(c->x-1, c->y)->terrain_type == c->terrain_type;
+  bool cell_right = getCell(c->x+1, c->y)->terrain_type == c->terrain_type;
+
+  int index = 0;
+  if (cell_up && cell_down && cell_left && cell_right) index = 0;
+  if (!cell_up && !cell_down && !cell_left && !cell_right) index = 9;
+  if (cell_up && cell_down && !cell_left && cell_right) index = 1;
+  if (cell_up && cell_down && cell_left && !cell_right) index = 2;
+
+  if (!cell_up && cell_down && cell_left && !cell_right) index = 7;
+  if (!cell_up && cell_down && !cell_left && cell_right) index = 5;
+  if (cell_up && !cell_down && cell_left && !cell_right) index = 6;
+  if (cell_up && !cell_down && !cell_left && cell_right) index = 8;
+
+  if (!cell_up && !cell_down && cell_left && !cell_right) index = 11;
+  if (!cell_up && !cell_down && !cell_left && cell_right) index = 12;
+
+  if (cell_up && !cell_down && !cell_left && !cell_right) index = 13;
+  if (!cell_up && cell_down && !cell_left && !cell_right) index = 14;
+
+  if (!cell_up && !cell_down && cell_left && cell_right) index = 10;
+  if (cell_up && cell_down && !cell_left && !cell_right) index = 15;
+
+  if (cell_up && !cell_down && cell_left && cell_right) index = 4;
+  if (!cell_up && cell_down && cell_left && cell_right) index = 3;
+
+  int TERRAIN_FACES = 17;
+  int t = (c->terrain_type * TERRAIN_FACES) + index;
+  //cout << "terrain type = " << c->terrain_type << ", index is << " << index << " t = " << t << endl;
+  c->tile = t;
 }
 
 void Map::setBoundaries(int max_width, int max_height) {
