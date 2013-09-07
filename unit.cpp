@@ -7,11 +7,11 @@
 using namespace std;
 
 Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map) {
-  init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256));
+  init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256), 1 + rnd(5));
 }
 
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y) {
-  init(tileset, shadowset, map, x, y);
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y, int viewRange) {
+  init(tileset, shadowset, map, x, y, viewRange);
 }
 
 Unit::~Unit() {
@@ -41,15 +41,21 @@ void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
   }
 }
 
-void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y) {
+void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y, int viewRange) {
   this->selected = false;
   this->selected_bitmap = Surface::load("graphics/selected.bmp", 255, 0, 255);
   this->tileset = tileset;
   this->shadowset = shadowset;
   this->body_facing = rnd(FACINGS);
   this->desired_body_facing = this->body_facing;
+  this->view_range = viewRange;
+  this->position = Point(x,y);
+  this->target = this->position;
+  this->next_move_position = this->position;
+  this->prev_position = this->position;
   this->map=map;
-  this->map->occupyCell(x / TILE_SIZE, y / TILE_SIZE);
+  this->map->occupyCell(this->position);
+  this->map->removeShroud(this->position, this->view_range);
 
   int tile_height = 0, tile_width = 0;
   tile_width = tileset->w / FACINGS;
@@ -75,10 +81,6 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, i
   }
   this->size = Point(tile_width, tile_height);
   this->shadow_alpha = 128;
-  this->position = Point(x,y);
-  this->target = this->position;
-  this->next_move_position = this->position;
-  this->prev_position = this->position;
   this->anim_frame = 0;
 
   // every pixel short/too much of the perfect tile size will be spread evenly
@@ -137,7 +139,8 @@ void Unit::updateState() {
   // think about movement
   if (!is_moving()) {
     if (prev_position != position) {
-      map->unOccupyCell(prev_position.x / TILE_SIZE, prev_position.y / TILE_SIZE);
+      map->unOccupyCell(prev_position);
+      map->removeShroud(position, this->view_range);
     }
 
     if (has_target()) {
@@ -152,7 +155,7 @@ void Unit::updateState() {
         stopMoving();
       } else {
         // we can move to this tile, claim it
-        map->occupyCell(next_move_position.x / TILE_SIZE, next_move_position.y / TILE_SIZE);
+        map->occupyCell(next_move_position);
         prev_position = position;
       }
 
@@ -206,13 +209,13 @@ UnitRepository::~UnitRepository() {
   }
 }
 
-Unit* UnitRepository::create(int unitType, int house, int x, int y) {
+Unit* UnitRepository::create(int unitType, int house, int x, int y, int viewRange) {
   SDL_Surface* copy = Surface::copy(unit_animation[unitType]);
   int paletteIndexUsedForColoring = 144;
   int paletteIndex = paletteIndexUsedForColoring + (16 * house);
   SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], paletteIndexUsedForColoring, 8);
 
   SDL_Surface* shadow_copy = Surface::copy(unit_shadow[unitType]);
-  Unit* unit = new Unit(copy, shadow_copy, map, x, y);
+  Unit* unit = new Unit(copy, shadow_copy, map, x, y, viewRange);
   return unit;
 }

@@ -11,9 +11,21 @@ Map::Map() {
   max_width = MAP_MAX_WIDTH;
   max_height = MAP_MAX_HEIGHT;
 
-  for (int i = 0; i < MAP_MAX_SIZE; i++) {
-    cells[i].tile = (flipCoin() ? 0 : 64);
-    cells[i].occupied = false;
+  for (int x = 0; x < MAP_MAX_WIDTH; x++) {
+    for (int y = 0; y < MAP_MAX_HEIGHT; y++) {
+      int i = (y * MAP_MAX_WIDTH) + x;
+      cells[i].x = x;
+      cells[i].y = y;
+
+      if (x == 0 || y == 0 || x >= max_width || y >= max_height) {
+        cells[i].tile = 64;
+      } else {
+        cells[i].tile = (flipCoin() ? 0 : 64);
+      }
+      cells[i].occupied = false;
+      cells[i].shrouded = true;
+
+    }
   }
 
 }
@@ -56,9 +68,9 @@ void MapCamera::updateState() {
 }
 
 void MapCamera::makeSureCoordinatesDoNotExceedMapLimits() {
-  if (y < 0) y = 0;
+  if (y < min_y()) y = min_y();
   if (y > max_y()) y = max_y();
-  if (x < 0) x = 0;
+  if (x < min_x()) x = min_x();
   if (x > max_x()) x = max_x();
 }
 
@@ -101,8 +113,62 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
       drawX -= offsetX;
       drawY -= offsetY;
 
-      Surface::drawTile(tileset, screen, c->tile, drawX, drawY);
+      Surface::drawIndexedTile(tileset, screen, c->tile, drawX, drawY);
     }
   }
 }
 
+void MapCamera::drawShroud(Map* map, SDL_Surface* shroud_edges, SDL_Surface* shroud_edges_shadow, SDL_Surface* screen) {
+  // determine x and y from map data.
+  int startX = (this->x / TILE_SIZE);
+  int startY = (this->y / TILE_SIZE);
+
+  int offsetX = (this->x % TILE_SIZE);
+  int offsetY = (this->y % TILE_SIZE);
+
+  int endX = startX + (getWidth() + 1);
+  int endY = startY + (getHeight() + 1);
+
+  for (int dx = startX; dx < endX; dx++) {
+    for (int dy = startY; dy < endY; dy++) {
+      Cell* c = map->getCell(dx, dy);
+      int drawX = (dx - startX) * TILE_SIZE;
+      int drawY = (dy - startY) * TILE_SIZE;
+      drawX -= offsetX;
+      drawY -= offsetY;
+      int tile = determineShroudEdge(map, c);
+
+      if (tile > -1) {
+        Surface::drawIndexedTile(shroud_edges_shadow, screen, tile, drawX, drawY, 128);
+        Surface::drawIndexedTile(shroud_edges, screen, tile, drawX, drawY);
+      }
+
+    }
+  }
+}
+
+int MapCamera::determineShroudEdge(Map* map, Cell* c) {
+  if (c->shrouded) return 0;
+
+  bool cell_up = map->getCell(c->x, c->y-1)->shrouded;
+  bool cell_down = map->getCell(c->x, c->y+1)->shrouded;
+  bool cell_left = map->getCell(c->x-1, c->y)->shrouded;
+  bool cell_right = map->getCell(c->x+1, c->y)->shrouded;
+
+  // Its harder then you think to make static consts for these 'magic values'.
+  if (!cell_up && !cell_down && !cell_left && !cell_right)  return -1;
+  if ( cell_up && !cell_down &&  cell_left && !cell_right)  return 1;
+  if ( cell_up && !cell_down && !cell_left && !cell_right)  return 2;
+  if ( cell_up && !cell_down && !cell_left &&  cell_right)  return 3;
+  if (!cell_up && !cell_down && !cell_left &&  cell_right)  return 4;
+  if (!cell_up &&  cell_down && !cell_left &&  cell_right)  return 5;
+  if (!cell_up &&  cell_down && !cell_left && !cell_right)  return 6;
+  if (!cell_up &&  cell_down &&  cell_left && !cell_right)  return 7;
+  if (!cell_up && !cell_down &&  cell_left && !cell_right)  return 8;
+  if ( cell_up &&  cell_down &&  cell_left && !cell_right)  return 9;
+  if ( cell_up && !cell_down &&  cell_left &&  cell_right)  return 10;
+  if ( cell_up &&  cell_down && !cell_left &&  cell_right)  return 11;
+  if (!cell_up &&  cell_down &&  cell_left &&  cell_right)  return 12;
+
+  return -1;
+}

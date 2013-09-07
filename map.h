@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "rectangle.h"
+#include <math.h>
 
 class Unit;
 
@@ -15,10 +16,13 @@ const int MAP_MAX_HEIGHT = 256;
 
 const int TILE_SIZE = 32; // squared
 
+
 class Cell {
   public:
     int tile; // tile to draw (one-dimension array)
     bool occupied;
+    bool shrouded;
+    int x, y;
 };
 
 class Map {
@@ -27,6 +31,10 @@ class Map {
     Map();
 
     void setBoundaries(int max_width, int max_height);
+
+    Cell* getCell(Point map_point) {
+      return getCell(map_point.x, map_point.y);
+    }
 
     Cell* getCell(int x, int y) {
       if (x < 0) {
@@ -53,18 +61,36 @@ class Map {
       return &cells[cell];
     }
 
-    void occupyCell(int x, int y) {
-      getCell(x, y)->occupied = true;
+    void occupyCell(const Point& world_point) {
+      getCell(toMapPoint(world_point))->occupied = true;
     }
 
-    void unOccupyCell(int x, int y) {
-      getCell(x, y)->occupied = false;
+    void unOccupyCell(const Point& world_point) {
+      getCell(toMapPoint(world_point))->occupied = false;
+    }
+
+    void removeShroud(Point world_point, int range) {
+      Point mapPoint = toMapPoint(world_point);
+      int x = mapPoint.x;
+      int y = mapPoint.y;
+      for (int cell_x = max(x - range, 0); cell_x <= min(x + range, getMaxWidth() -1); cell_x++) {
+        for (int cell_y = max(y - range, 0); cell_y <= min(y + range, getMaxHeight() -1); cell_y++) {
+          if (pow(cell_x - x, 2) + pow(cell_y - y, 2) <= pow(range, 2) + 1) {
+            getCell(cell_x, cell_y)->shrouded = false;
+          }
+        }
+      }
     }
 
     int getMaxWidth() { return max_width; }
     int getMaxHeight() { return max_height; }
 
     bool is_occupied(Point p);
+
+    Point toMapPoint(const Point& world_point) {
+      Point result(world_point.x / TILE_SIZE, world_point.y / TILE_SIZE);
+      return result;
+    }
 
   private:
     Cell cells[MAP_MAX_SIZE];
@@ -87,6 +113,7 @@ class MapCamera {
 
     void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
     void draw(Unit* unit, SDL_Surface* screen);
+    void drawShroud(Map* map, SDL_Surface* shroud_edges, SDL_Surface* shroud_edges_shadow, SDL_Surface* screen);
 
     Point toScreenCoordindates(const Point& point_with_world_coords) {
       int screen_x = screenCoordinateX(point_with_world_coords.x);
@@ -126,7 +153,6 @@ class MapCamera {
     float move_x_velocity;
     float move_y_velocity;
 
-
 		int getWidth() { return max_cells_width_on_screen; }
 		int getHeight() { return max_cells_height_on_screen; }
 
@@ -138,7 +164,11 @@ class MapCamera {
     void moveRight() { move_x_velocity += CAMERA_VELOCITY_ACCELERATION; }
     void stopMoving() { move_x_velocity = move_y_velocity = 0.0F; }
 
-    int max_y() { return (map_y_boundary - max_cells_height_on_screen) * 32; }
-    int max_x() { return (map_x_boundary - max_cells_width_on_screen) * 32; }
+    int min_x() { return TILE_SIZE; }
+    int min_y() { return TILE_SIZE; }
+    int max_y() { return ((map_y_boundary - max_cells_height_on_screen) * TILE_SIZE) - 1; }
+    int max_x() { return ((map_x_boundary - max_cells_width_on_screen) * TILE_SIZE) - 1; }
+
+    int determineShroudEdge(Map* map, Cell* c);
 };
 #endif

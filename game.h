@@ -20,16 +20,18 @@ class Game {
       void render();
       int cleanup();
       bool playing;
-      SDL_Surface *screen;
-      SDL_Surface *tileset;
-      MapCamera *map_camera;
+      SDL_Surface* screen;
+      SDL_Surface* tileset;
+      SDL_Surface* shroud_edges;
+      SDL_Surface* shroud_edges_shadow;
+      MapCamera* map_camera;
       Map map;
       Keyboard keyboard;
       Mouse mouse;
 
       // THIS WILL BE A LIST/ARRAY/VECTOR OF SOME SORT SOME DAY
-      Unit *unit;
-      Unit *devastator;
+      Unit* unit;
+      Unit* devastator;
       // END
 
       UnitRepository *unitRepository;
