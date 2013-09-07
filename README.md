@@ -58,13 +58,22 @@ Features need to be written in such a way that it is obvious what the benefit is
 TODO
 ----
 - enjoy the terrain smoothened (smoothing algorithm)
-  - rock must smooth when neighbouring cells are sand, spice, spicehill, sand hills
+  <del>
+    <ul>
+      <li>rock must smooth when neighbouring cells are sand, spice, spicehill, sand hills</li>
+    </ul>
+  </del>
+  - rock should not smooth when neighbouring cells are mountain or slab
   - spice must smooth when neighbouring cells are sand or rock
-  - spicehill must smooth when neighbouring cells are spice (not sand, it should not be allowed to have a spicehill->sand transition)
-  - hill must smooth when neighbouring cells are sand (hills should not be allowed to have a hill->rock/spice transition)
-  - mountain must smooth when neighbouring cells are rock or slab (mountain should not be allowed to have a mountain->sand/spice/hill/spicehill transition)
-  - slab does not smooth, but behaves like 'rock'
+  - spicehill must *only* smooth when neighbouring cells are spice
+  - hill must *only* smooth when neighbouring cells are sand
+  - mountain must *only* smooth when neighbouring cells are rock or slab
 - play on a randomized map
+- defend myself with walls
+  - draw walls
+  - walls should obstruct terrain units of all kinds
+  - walls smoothing
+  - terrain smoothing adjustments with walls
 - see structures (draw them)
 - select my structure
 - have enemies to defeat
