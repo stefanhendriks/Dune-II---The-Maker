@@ -18,9 +18,9 @@ Map::Map() {
       cells[i].y = y;
 
       if (x == 0 || y == 0 || x >= max_width || y >= max_height) {
-        cells[i].tile = 64;
+        cells[i].tile = 17;
       } else {
-        cells[i].tile = (flipCoin() ? 0 : 64);
+        cells[i].tile = (flipCoin() ? 0 : 34);
       }
       cells[i].occupied = false;
       cells[i].shrouded = true;
@@ -105,8 +105,7 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
   for (int dx = startX; dx < endX; dx++) {
     for (int dy = startY; dy < endY; dy++) {
       Cell* c = map->getCell(dx, dy);
-      // weird: have to compensate for the coordinates above. Drawing should be done separately
-      // from coordinates of map.
+
       int drawX = (dx - startX) * TILE_SIZE;
       int drawY = (dy - startY) * TILE_SIZE;
 

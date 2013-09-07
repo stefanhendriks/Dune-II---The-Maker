@@ -21,7 +21,7 @@ class Game {
       int cleanup();
       bool playing;
       SDL_Surface* screen;
-      SDL_Surface* tileset;
+      SDL_Surface* terrain;
       SDL_Surface* shroud_edges;
       SDL_Surface* shroud_edges_shadow;
       MapCamera* map_camera;
