@@ -21,7 +21,10 @@ Game::Game() {
 }
 
 int Game::execute() {
-  init();
+  if (!init()) {
+    cerr << "Errors occured when starting the game. Stopping." << endl;
+    return 1;
+  }
 
   SDL_Event event;
 
@@ -57,10 +60,24 @@ int Game::init() {
     return false;
   }
 
-  tileset = Surface::load("tileset.png");
+  tileset = Surface::load("graphics/tileset.png");
 
   if (tileset == NULL) {
-    cout << "Failed to read tileset data" << endl;
+    cout << "Failed to read graphics/tileset.png data" << endl;
+    return false;
+  }
+
+  shroud_edges = Surface::load("graphics/shroud_edges.bmp");
+
+  if (shroud_edges == NULL) {
+    cout << "Failed to read graphics/shroud_edges.bmp data" << endl;
+    return false;
+  }
+
+  shroud_edges_shadow = Surface::load("graphics/shroud_edges_shadow.bmp");
+
+  if (shroud_edges_shadow == NULL) {
+    cout << "Failed to read graphics/shroud_edges_shadow.bmp data" << endl;
     return false;
   }
 
@@ -72,8 +89,8 @@ int Game::init() {
 
   unitRepository = new UnitRepository(&map);
 
-  unit = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64);
-  devastator = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 128, 128);
+  unit = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 5);
+  devastator = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 128, 128, 3);
 
   return true;
 }
@@ -159,6 +176,7 @@ void Game::render() {
   map_camera->draw(&map, tileset, screen);
   map_camera->draw(unit, screen);
   map_camera->draw(devastator, screen);
+  map_camera->drawShroud(&map, shroud_edges, shroud_edges_shadow, screen);
 
   mouse.draw(screen);
 

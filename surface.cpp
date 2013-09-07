@@ -143,12 +143,32 @@ void Surface::draw(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, in
   SDL_BlitSurface(src, &srcRect, dest, &destRect);
 }
 
+void Surface::drawTile(SDL_Surface* tileset, SDL_Surface* dest, int src_x, int src_y, int dest_x, int dest_y, Uint32 alpha) {
+  if (tileset == NULL || dest == NULL) return;
+  Surface::draw(tileset, dest, src_x * TILE_SIZE, src_y * TILE_SIZE, TILE_SIZE, TILE_SIZE, dest_x, dest_y, alpha);
+}
+
 void Surface::drawTile(SDL_Surface* tileset, SDL_Surface* dest, int src_x, int src_y, int dest_x, int dest_y) {
   if (tileset == NULL || dest == NULL) return;
   Surface::draw(tileset, dest, src_x * TILE_SIZE, src_y * TILE_SIZE, TILE_SIZE, TILE_SIZE, dest_x, dest_y);
 }
 
-void Surface::drawTile(SDL_Surface* tileset, SDL_Surface* dest, int tileIndex, int dest_x, int dest_y) {
+void Surface::drawIndexedTile(SDL_Surface* tileset, SDL_Surface* dest, int tileIndex, int dest_x, int dest_y, Uint32 alpha) {
+  if (tileset == NULL || dest == NULL) return;
+  int tiles_width = tileset->w / TILE_SIZE;
+  int tiles_height = tileset->h / TILE_SIZE;
+
+  int tileset_y = (tileIndex / tiles_width);
+  int tileset_x = tileIndex - (tileset_y * tiles_height);
+
+  if (alpha < 255) {
+    Surface::drawTile(tileset, dest, tileset_x, tileset_y, dest_x, dest_y, alpha);
+  } else {
+    Surface::drawTile(tileset, dest, tileset_x, tileset_y, dest_x, dest_y);
+  }
+}
+
+void Surface::drawIndexedTile(SDL_Surface* tileset, SDL_Surface* dest, int tileIndex, int dest_x, int dest_y) {
   if (tileset == NULL || dest == NULL) return;
   int tiles_width = tileset->w / TILE_SIZE;
   int tiles_height = tileset->h / TILE_SIZE;

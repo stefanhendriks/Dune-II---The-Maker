@@ -24,7 +24,7 @@ class Unit {
 
   public:
     Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map);
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y, int viewRange);
     ~Unit();
 
     void draw(SDL_Surface* screen, MapCamera* map_camera);
@@ -66,7 +66,9 @@ class Unit {
 
     int offset_x, offset_y; // the offset from the tile respective up-left corner
 
-    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int x, int y);
+    int view_range;
+
+    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int x, int y, int viewRange);
 
     bool selected;
 
@@ -141,7 +143,7 @@ class UnitRepository {
 
     void destroy();
 
-    Unit* create(int unitType, int house, int x, int y);
+    Unit* create(int unitType, int house, int x, int y, int viewRange);
 
    private:
       SDL_Surface* unit_animation[MAX_UNIT_TYPES];
