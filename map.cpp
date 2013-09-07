@@ -16,9 +16,15 @@ Map::Map() {
       int i = (y * MAP_MAX_WIDTH) + x;
       cells[i].x = x;
       cells[i].y = y;
-      cells[i].tile = (flipCoin() ? 0 : 64);
+
+      if (x == 0 || y == 0 || x >= max_width || y >= max_height) {
+        cells[i].tile = 64;
+      } else {
+        cells[i].tile = (flipCoin() ? 0 : 64);
+      }
       cells[i].occupied = false;
       cells[i].shrouded = true;
+
     }
   }
 
@@ -62,9 +68,9 @@ void MapCamera::updateState() {
 }
 
 void MapCamera::makeSureCoordinatesDoNotExceedMapLimits() {
-  if (y < 0) y = 0;
+  if (y < min_y()) y = min_y();
   if (y > max_y()) y = max_y();
-  if (x < 0) x = 0;
+  if (x < min_x()) x = min_x();
   if (x > max_x()) x = max_x();
 }
 

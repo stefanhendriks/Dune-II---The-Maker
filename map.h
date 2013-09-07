@@ -153,7 +153,6 @@ class MapCamera {
     float move_x_velocity;
     float move_y_velocity;
 
-
 		int getWidth() { return max_cells_width_on_screen; }
 		int getHeight() { return max_cells_height_on_screen; }
 
@@ -165,8 +164,10 @@ class MapCamera {
     void moveRight() { move_x_velocity += CAMERA_VELOCITY_ACCELERATION; }
     void stopMoving() { move_x_velocity = move_y_velocity = 0.0F; }
 
-    int max_y() { return (map_y_boundary - max_cells_height_on_screen) * 32; }
-    int max_x() { return (map_x_boundary - max_cells_width_on_screen) * 32; }
+    int min_x() { return TILE_SIZE; }
+    int min_y() { return TILE_SIZE; }
+    int max_y() { return ((map_y_boundary - max_cells_height_on_screen) * TILE_SIZE) - 1; }
+    int max_x() { return ((map_x_boundary - max_cells_width_on_screen) * TILE_SIZE) - 1; }
 
     int determineShroudEdge(Map* map, Cell* c);
 };
