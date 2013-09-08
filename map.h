@@ -32,6 +32,23 @@ class Cell {
     bool occupied;
     bool shrouded;
     int x, y;
+
+    // considers "this" as center opposed to other cell. (ego-centric)
+    bool shouldSmoothWithTerrainType(Cell* other) {
+      if (this->terrain_type == TERRAIN_TYPE_ROCK) {
+        return other->terrain_type != TERRAIN_TYPE_MOUNTAIN && 
+               other->terrain_type != TERRAIN_TYPE_ROCK &&
+               other->terrain_type != TERRAIN_TYPE_SLAB;
+      }
+      if (this->terrain_type == TERRAIN_TYPE_MOUNTAIN) {
+        return other->terrain_type != TERRAIN_TYPE_MOUNTAIN;
+      }
+      if (this->terrain_type == TERRAIN_TYPE_SLAB) {
+        return other->terrain_type != TERRAIN_TYPE_MOUNTAIN &&
+               other->terrain_type != TERRAIN_TYPE_ROCK;
+      }
+      return other->terrain_type != this->terrain_type;
+    }
 };
 
 class Map {

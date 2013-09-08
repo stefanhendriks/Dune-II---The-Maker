@@ -21,10 +21,19 @@ Map::Map() {
         cells[i].terrain_type = TERRAIN_TYPE_ROCK;
         cells[i].tile = -1;
       } else {
-        cells[i].terrain_type = (flipCoin() ? TERRAIN_TYPE_SAND : TERRAIN_TYPE_ROCK);
+        //cells[i].terrain_type = (flipCoin() ? TERRAIN_TYPE_MOUNTAIN : TERRAIN_TYPE_ROCK);
+        if (rnd(100) < 30) {
+          cells[i].terrain_type = TERRAIN_TYPE_SAND;
+        } else {
+          cells[i].terrain_type = TERRAIN_TYPE_ROCK;
+          if (rnd(100) < 30) {
+            cells[i].terrain_type = TERRAIN_TYPE_SLAB;
+          }
+        }
+        //cells[i].terrain_type = (flipCoin() ? TERRAIN_TYPE_SAND : TERRAIN_TYPE_ROCK);
       }
       cells[i].occupied = false;
-      cells[i].shrouded = true;
+      cells[i].shrouded = false;
     }
   }
 
@@ -40,10 +49,10 @@ void Map::determineCellTileForMap() {
 }
 
 void Map::determineCellTile(Cell* c) {
-  bool cell_up = getCell(c->x, c->y-1)->terrain_type == c->terrain_type;
-  bool cell_down = getCell(c->x, c->y+1)->terrain_type == c->terrain_type;
-  bool cell_left = getCell(c->x-1, c->y)->terrain_type == c->terrain_type;
-  bool cell_right = getCell(c->x+1, c->y)->terrain_type == c->terrain_type;
+  bool cell_up = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y-1));
+  bool cell_down = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y+1));
+  bool cell_left = !c->shouldSmoothWithTerrainType(getCell(c->x-1, c->y));
+  bool cell_right = !c->shouldSmoothWithTerrainType(getCell(c->x+1, c->y));
 
   int index = determineTerrainTile(cell_up, cell_down, cell_left, cell_right);
 

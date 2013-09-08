@@ -61,9 +61,9 @@ TODO
   <del>
     <ul>
       <li>rock must smooth when neighbouring cells are sand, spice, spicehill, sand hills</li>
+      <li>rock should not smooth when neighbouring cells are mountain or slab</li>
     </ul>
   </del>
-  - rock should not smooth when neighbouring cells are mountain or slab
   - spice must smooth when neighbouring cells are sand or rock
   - spicehill must *only* smooth when neighbouring cells are spice
   - hill must *only* smooth when neighbouring cells are sand
