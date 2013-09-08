@@ -3,7 +3,11 @@
 
 #include <iostream>
 
+#include "SDL/SDL.h"
+
+#include "surface.h"
 #include "rectangle.h"
+
 #include <math.h>
 
 class Unit;

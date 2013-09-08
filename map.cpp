@@ -1,6 +1,5 @@
-#include "SDL/SDL.h"
-#include "surface.h"
 #include "map.h"
+#include "maploader.h"
 #include "random.h"
 #include "eventfactory.h"
 #include "unit.h"
@@ -27,6 +26,8 @@ Map::Map() {
       cells[i].shrouded = false;
     }
   }
+
+  MapLoader::load("maps/4PL_Mountains.ini", this);
 
   determineCellTileForMap();
 }
