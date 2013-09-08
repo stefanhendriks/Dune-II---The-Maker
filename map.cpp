@@ -22,12 +22,15 @@ Map::Map() {
         cells[i].tile = -1;
       } else {
         //cells[i].terrain_type = (flipCoin() ? TERRAIN_TYPE_MOUNTAIN : TERRAIN_TYPE_ROCK);
-        if (rnd(100) < 30) {
+        if (rnd(100) < 60) {
           cells[i].terrain_type = TERRAIN_TYPE_SAND;
+          if (rnd(100) < 25) {
+            cells[i].terrain_type = TERRAIN_TYPE_SPICE;
+          }
         } else {
           cells[i].terrain_type = TERRAIN_TYPE_ROCK;
-          if (rnd(100) < 30) {
-            cells[i].terrain_type = TERRAIN_TYPE_SLAB;
+          if (rnd(100) < 15) {
+            cells[i].terrain_type = TERRAIN_TYPE_MOUNTAIN;
           }
         }
         //cells[i].terrain_type = (flipCoin() ? TERRAIN_TYPE_SAND : TERRAIN_TYPE_ROCK);
