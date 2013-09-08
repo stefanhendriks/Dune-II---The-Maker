@@ -30,6 +30,7 @@ const int TERRAIN_TYPE_MOUNTAIN =  4;
 const int TERRAIN_TYPE_SPICEHILL = 5;
 const int TERRAIN_TYPE_SLAB     =  6;
 
+const int TILES_IN_ROW_ON_TERRAIN_SURFACE = 17;
 
 class Cell {
   public:
@@ -60,7 +61,6 @@ class Cell {
       if (this->terrain_type == TERRAIN_TYPE_SPICEHILL) {
         return other->terrain_type != TERRAIN_TYPE_SPICEHILL;
       }
-
       return other->terrain_type != this->terrain_type;
     }
 };
@@ -77,26 +77,8 @@ class Map {
     }
 
     Cell* getCell(int x, int y) {
-      if (x < 0) {
-        cerr << "Map::getCell x[" << x << "] got out of bounds, fixing." << endl;
-        x = 0;
-      }
-
-      if (x >= MAP_MAX_WIDTH) {
-        cerr << "Map::getCell x[" << x << "] got out of bounds, fixing." << endl;
-        x = (MAP_MAX_WIDTH - 1); // 0 based so substract! (0 till 255):
-      }
-
-      if (y < 0) {
-        cerr << "Map::getCell y[" << y << "] got out of bounds, fixing." << endl;
-        y = 0;
-      }
-
-      if (y >= MAP_MAX_HEIGHT) {
-        cerr << "Map::getCell y[" << y << "] got out of bounds, fixing." << endl;
-        y = (MAP_MAX_HEIGHT - 1); // 0 based so substract! (0 till 255):
-      }
-
+      x = min(max(x, 0), (MAP_MAX_WIDTH-1));
+      y = min(max(y, 0), (MAP_MAX_HEIGHT-1));
       int cell = (y * MAP_MAX_WIDTH) + x;
       return &cells[cell];
     }
@@ -124,6 +106,8 @@ class Map {
 
     int getMaxWidth() { return max_width; }
     int getMaxHeight() { return max_height; }
+    void setMaxWidth(int width) { max_width = width + 2; }
+    void setMaxHeight(int height) { max_height = height + 2; }
 
     bool is_occupied(Point p);
 

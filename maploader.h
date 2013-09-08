@@ -9,7 +9,8 @@
 const int SUCCESS = 0;
 const int ERROR_FILE_NOT_FOUND = 1;
 const int ERROR_DIMENSIONS_INVALID = 2;
-const int SUCCESS_WITH_WARNINGS = 3;
+const int ERROR_FILE_MISSING_DATA = 3;
+const int SUCCESS_WITH_WARNINGS = 4;
 
 class MapLoader {
 

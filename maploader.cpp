@@ -1,12 +1,38 @@
 #include <sstream>
 #include <iomanip>
 #include <string>
+#include <vector>
 
 #include "maploader.h"
 
 #include "INIReader.h"
 
 using namespace std;
+
+// Borrowed from: http://stackoverflow.com/questions/890164/how-can-i-split-a-string-by-a-delimiter-into-an-array
+vector<string> explode(const string& str, const char& ch) {
+    string next;
+    vector<string> result;
+
+    // For each character in the string
+    for (string::const_iterator it = str.begin(); it != str.end(); it++) {
+        // If we've hit the terminal character
+        if (*it == ch) {
+            // If we have some characters accumulated
+            if (!next.empty()) {
+                // Add them to the result vector
+                result.push_back(next);
+                next.clear();
+            }
+        } else {
+            // Accumulate the next character into the sequence
+            next += *it;
+        }
+    }
+    if (!next.empty())
+        result.push_back(next);
+    return result;
+}
 
 int MapLoader::load(std::string file, Map* map) {
   INIReader reader(file);
@@ -17,7 +43,7 @@ int MapLoader::load(std::string file, Map* map) {
   }
 
   string title = reader.Get("SKIRMISH", "title", "Unknown map title.");
-  cerr << "[MAPLOADER] ERROR: Loading map with title " << title << endl;
+  cout << "[MAPLOADER] INFO: Loading map with title " << title << endl;
 
   int width = reader.GetInteger("SKIRMISH", "width", -1);
   int height = reader.GetInteger("SKIRMISH", "height", -1);
@@ -27,33 +53,44 @@ int MapLoader::load(std::string file, Map* map) {
     return ERROR_DIMENSIONS_INVALID;
   }
 
+  map->setMaxWidth(width);
+  map->setMaxHeight(height);
+
+  string data = reader.Get("SKIRMISH", "data", "ERROR");
+  if (data.at(0) == 'E') {
+    cerr << "[MAPLOADER] ERROR: Expected to have a multi-line value for key 'data', but no data found." << endl;
+    return ERROR_FILE_MISSING_DATA;
+  }
+
+  std::vector<std::string> result = explode(data, '\n');
+
   int warnings = 0;
 
   for (int y = 0; y < height; y++) {
-    string key = makeIntKeyWithLeadingZero((y + 1));
-    string value = reader.Get("DATA", key, "!!!UNKNOWN DATA!!!");
-
-    if (value.at(0) == '!') {
-      cerr << "[MAPLOADER] WARNING ("<< warnings << "): Expected to have data for key " << key << " but none was found." << endl;
-      warnings++;
-      continue;
+    if (y > (int)result.size()) {
+      cerr << "[MAPLOADER] WARNING ("<< warnings++ << "): Wanted to read data at line " << y << ", but there is no data. Map incomplete!?" << endl;
+      break;
     }
+
+    string value = result[y];
 
     for (int x = 0; x < width; x++) {
 
       if (x >= (int)value.length()) {
-        cerr << "[MAPLOADER] WARNING (" << warnings << "): While parsing line (key=" << key << ") " << value << ":" << endl;
+        cerr << "[MAPLOADER] WARNING (" << warnings << "): While parsing line " << value << ":" << endl;
         cerr << "[MAPLOADER] WARNING (" << warnings << "): Line was expected to have width " << width << " but is actually " << value.length() << ". Either width/height property is wrong in [SKIRMISH] section or [DATA] has wrong amount of data in this line." << endl;
         warnings++;
         continue;
       }
+
       int terrain_type = charToTerrainType(value.at(x));
+      Cell* cell = map->getCell(x + 1, y + 1); // compensate for invisible border
       if (terrain_type < 0) {
-        cerr << "[MAPLOADER] WARNING (" << warnings << "): Could not interpet character at line with key " << key << ", at position " << x << ", falling back at sand terrain." << endl;
+        cerr << "[MAPLOADER] WARNING (" << warnings << "): Could not interpet character at line, at position " << x << ", falling back at sand terrain." << endl;
         warnings++;
-        map->getCell(x, y)->terrain_type = TERRAIN_TYPE_SAND;
+        cell->terrain_type = TERRAIN_TYPE_SAND;
       } else {
-        map->getCell(x, y)->terrain_type = terrain_type;
+        cell->terrain_type = terrain_type;
       }
     }
   }

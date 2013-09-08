@@ -15,15 +15,10 @@ Map::Map() {
       int i = (y * MAP_MAX_WIDTH) + x;
       cells[i].x = x;
       cells[i].y = y;
-
-      if (x == 0 || y == 0 || x >= max_width || y >= max_height) {
-        cells[i].terrain_type = TERRAIN_TYPE_ROCK;
-        cells[i].tile = -1;
-      } else {
-        cells[i].terrain_type = TERRAIN_TYPE_SAND;
-      }
+      cells[i].terrain_type = TERRAIN_TYPE_ROCK;
+      cells[i].tile = TILES_IN_ROW_ON_TERRAIN_SURFACE * cells[i].terrain_type;
       cells[i].occupied = false;
-      cells[i].shrouded = false;
+      cells[i].shrouded = true;
     }
   }
 
@@ -33,8 +28,8 @@ Map::Map() {
 }
 
 void Map::determineCellTileForMap() {
-  for (int x = 1; x < getMaxHeight(); x++) {
-    for (int y = 1; y < getMaxWidth(); y++) {
+  for (int x = 0; x < getMaxHeight(); x++) {
+    for (int y = 0; y < getMaxWidth(); y++) {
        determineCellTile(getCell(x, y));
     }
   }
@@ -49,7 +44,6 @@ void Map::determineCellTile(Cell* c) {
   int index = determineTerrainTile(cell_up, cell_down, cell_left, cell_right);
 
   if (index > -1) {
-    int TILES_IN_ROW_ON_TERRAIN_SURFACE = 17;
     c->tile = (c->terrain_type * TILES_IN_ROW_ON_TERRAIN_SURFACE) + index;
   }
 }
