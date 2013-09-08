@@ -57,6 +57,7 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
+- modify the properties of units/structures by modifying a rules.ini file
 - defend myself with walls
   - draw walls
   - walls should obstruct terrain units of all kinds
