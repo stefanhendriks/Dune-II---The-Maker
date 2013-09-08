@@ -8,36 +8,43 @@
 
 using namespace std;
 
-void MapLoader::load(std::string file, Map* map) {
+int MapLoader::load(std::string file, Map* map) {
   INIReader reader(file);
 
   if (reader.ParseError() < 0) {
-    cerr << "Failed to load INI file: " << file << endl;
-    return;
+    cerr << "[MAPLOADER] ERROR: Failed to load INI file: " << file << endl;
+    return ERROR_FILE_NOT_FOUND;
   }
 
   string title = reader.Get("SKIRMISH", "title", "Unknown map title.");
-  cout << "Loading map with title " << title << endl;
+  cerr << "[MAPLOADER] ERROR: Loading map with title " << title << endl;
 
-  int width = reader.GetInteger("SKIRMISH", "width", map->getMaxWidth());
-  int height = reader.GetInteger("SKIRMISH", "height", map->getMaxHeight());
+  int width = reader.GetInteger("SKIRMISH", "width", -1);
+  int height = reader.GetInteger("SKIRMISH", "height", -1);
 
-  cout << "Dimensions are " << width << "x" << height << "." << endl;
+  if (width < MAP_MIN_WIDTH || height < MAP_MIN_HEIGHT) {
+    cerr << "[MAPLOADER] ERROR: Given dimensions " << width << "x" << height << " are below minimum of " << MAP_MIN_WIDTH << "x" << MAP_MAX_WIDTH << "." << endl;
+    return ERROR_DIMENSIONS_INVALID;
+  }
+
+  int warnings = 0;
 
   for (int y = 0; y < height; y++) {
     string key = makeIntKeyWithLeadingZero((y + 1));
     string value = reader.Get("DATA", key, "!!!UNKNOWN DATA!!!");
 
     if (value.at(0) == '!') {
-      cerr << "ERROR: Expected to have data for key " << key << " but none was found." << endl;
+      cerr << "[MAPLOADER] WARNING ("<< warnings << "): Expected to have data for key " << key << " but none was found." << endl;
+      warnings++;
       continue;
     }
 
     for (int x = 0; x < width; x++) {
 
       if (x >= value.length()) {
-        cerr << "ERROR: While parsing line (key=" << key << ") " << value << ":" << endl;
-        cerr << "Line was expected to have width " << width << " but is actually " << value.length() << ". Either width/height property is wrong in [SKIRMISH] section or [DATA] has wrong amount of data in this line." << endl;
+        cerr << "[MAPLOADER] WARNING (" << warnings << "): While parsing line (key=" << key << ") " << value << ":" << endl;
+        cerr << "[MAPLOADER] WARNING (" << warnings << "): Line was expected to have width " << width << " but is actually " << value.length() << ". Either width/height property is wrong in [SKIRMISH] section or [DATA] has wrong amount of data in this line." << endl;
+        warnings++;
         continue;
       }
 
@@ -51,6 +58,11 @@ void MapLoader::load(std::string file, Map* map) {
     }
   }
 
+  cout << "[MAPLOADER] Done reading file with " << warnings << " warnings." << endl;
+
+  if (warnings > 0) return SUCCESS_WITH_WARNINGS;
+
+  return SUCCESS;
 }
 
 

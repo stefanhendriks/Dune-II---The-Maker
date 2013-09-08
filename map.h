@@ -17,6 +17,8 @@ using namespace std;
 const int MAP_MAX_SIZE = 65536; // 256X256 map
 const int MAP_MAX_WIDTH = 256;
 const int MAP_MAX_HEIGHT = 256;
+const int MAP_MIN_WIDTH = 32;
+const int MAP_MIN_HEIGHT = 32;
 
 const int TILE_SIZE = 32; // squared
 
