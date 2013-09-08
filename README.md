@@ -57,6 +57,13 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
+- defend myself with walls
+  - draw walls
+  - walls should obstruct terrain units of all kinds
+  - walls smoothing
+  - terrain smoothing adjustments with walls
+- see structures (draw them)
+- select my structure
 - have enemies to defeat
   - enemy units should not be visible when shrouded
   - enemy units should not be selectable
@@ -82,9 +89,6 @@ TODO
   - sandworm can get 'full' and dissapear (? or wander around messing with your mind?)
 - send my vehicles to a repair bay in order to get the patched up and use them fully again.
 - send my harvester back to the refinery in order to get the credits earlier
-- enjoy the terrain smoothened (smoothing algorithm)
-- see structures (draw them)
-- select my structure
 - build another structure from a Construction Yard
 - place built structures
 - build infantry from a Barracks
@@ -103,7 +107,7 @@ TODO
 - scroll by holding mouse key and move from that position
 - when a unit is bored, it should turn around randomly
 - when a unit is on guard, it should target enemies within range, as should turrets
-
+- play on a randomized map
 
 *Unit types*
 - Soldier
@@ -127,7 +131,7 @@ TODO
 - Saboteur
 - Fremen (C&C style?)
 
-Structures
+*Structures*
 
 - Concrete 1x1
 - Concrete 4x4
@@ -165,6 +169,8 @@ DONE
     <li>select multiple units by dragging rectangle over units and releasing left mouse button</li>
     <li>order a unit to move to a position</li>
     <li>explore the terrain by clearing a shroud</li>
+    <li>enjoy the terrain smoothened (smoothing algorithm)</li>
+    <li>load a map from file</li>
   </ul>
 </del>
 

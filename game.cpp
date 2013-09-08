@@ -14,7 +14,7 @@ using namespace std;
 Game::Game() {
   playing=true;
   screen=NULL;
-  tileset=NULL;
+  terrain=NULL;
   map_camera=NULL;
   unit=NULL;
   devastator=NULL;
@@ -60,10 +60,10 @@ int Game::init() {
     return false;
   }
 
-  tileset = Surface::load("graphics/tileset.png");
+  terrain = Surface::load("graphics/terrain.png");
 
-  if (tileset == NULL) {
-    cout << "Failed to read graphics/tileset.png data" << endl;
+  if (terrain == NULL) {
+    cout << "Failed to read graphics/terrain.png data" << endl;
     return false;
   }
 
@@ -173,7 +173,7 @@ void Game::onEvent(SDL_Event* event) {
 void Game::render() {
   SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 
-  map_camera->draw(&map, tileset, screen);
+  map_camera->draw(&map, terrain, screen);
   map_camera->draw(unit, screen);
   map_camera->draw(devastator, screen);
   map_camera->drawShroud(&map, shroud_edges, shroud_edges_shadow, screen);
@@ -198,7 +198,9 @@ int Game::cleanup() {
   delete unit;
   delete devastator;
   SDL_FreeSurface(screen);
-  SDL_FreeSurface(tileset);
+  SDL_FreeSurface(terrain);
+  SDL_FreeSurface(shroud_edges);
+  SDL_FreeSurface(shroud_edges_shadow);
   SDL_Quit();
   return 0;
 }
