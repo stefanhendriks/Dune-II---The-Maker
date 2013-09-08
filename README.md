@@ -57,18 +57,6 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
-- enjoy the terrain smoothened (smoothing algorithm)
-  <del>
-    <ul>
-      <li>rock must smooth when neighbouring cells are sand, spice, spicehill, sand hills</li>
-      <li>rock should not smooth when neighbouring cells are mountain or slab</li>
-    </ul>
-  </del>
-  - spice must smooth when neighbouring cells are sand or rock
-  - spicehill must *only* smooth when neighbouring cells are spice
-  - hill must *only* smooth when neighbouring cells are sand
-  - mountain must *only* smooth when neighbouring cells are rock or slab
-- play on a randomized map
 - defend myself with walls
   - draw walls
   - walls should obstruct terrain units of all kinds
@@ -119,6 +107,7 @@ TODO
 - scroll by holding mouse key and move from that position
 - when a unit is bored, it should turn around randomly
 - when a unit is on guard, it should target enemies within range, as should turrets
+- play on a randomized map
 
 *Unit types*
 - Soldier
@@ -180,6 +169,8 @@ DONE
     <li>select multiple units by dragging rectangle over units and releasing left mouse button</li>
     <li>order a unit to move to a position</li>
     <li>explore the terrain by clearing a shroud</li>
+    <li>enjoy the terrain smoothened (smoothing algorithm)</li>
+    <li>load a map from file</li>
   </ul>
 </del>
 
