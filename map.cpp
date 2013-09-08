@@ -1,6 +1,5 @@
-#include "SDL/SDL.h"
-#include "surface.h"
 #include "map.h"
+#include "maploader.h"
 #include "random.h"
 #include "eventfactory.h"
 #include "unit.h"
@@ -8,26 +7,65 @@
 #include <math.h>       /* ceil */
 
 Map::Map() {
-  max_width = MAP_MAX_WIDTH;
-  max_height = MAP_MAX_HEIGHT;
+  max_width = MAP_MAX_WIDTH - 1;
+  max_height = MAP_MAX_HEIGHT - 1;
 
   for (int x = 0; x < MAP_MAX_WIDTH; x++) {
     for (int y = 0; y < MAP_MAX_HEIGHT; y++) {
       int i = (y * MAP_MAX_WIDTH) + x;
       cells[i].x = x;
       cells[i].y = y;
-
-      if (x == 0 || y == 0 || x >= max_width || y >= max_height) {
-        cells[i].tile = 64;
-      } else {
-        cells[i].tile = (flipCoin() ? 0 : 64);
-      }
+      cells[i].terrain_type = TERRAIN_TYPE_ROCK;
+      cells[i].tile = TILES_IN_ROW_ON_TERRAIN_SURFACE * cells[i].terrain_type;
       cells[i].occupied = false;
       cells[i].shrouded = true;
-
     }
   }
 
+  MapLoader::load("maps/4PL_Mountains.ini", this);
+
+  determineCellTileForMap();
+}
+
+void Map::determineCellTileForMap() {
+  for (int x = 0; x < getMaxHeight(); x++) {
+    for (int y = 0; y < getMaxWidth(); y++) {
+       determineCellTile(getCell(x, y));
+    }
+  }
+}
+
+void Map::determineCellTile(Cell* c) {
+  bool cell_up = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y-1));
+  bool cell_down = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y+1));
+  bool cell_left = !c->shouldSmoothWithTerrainType(getCell(c->x-1, c->y));
+  bool cell_right = !c->shouldSmoothWithTerrainType(getCell(c->x+1, c->y));
+
+  int index = determineTerrainTile(cell_up, cell_down, cell_left, cell_right);
+
+  if (index > -1) {
+    c->tile = (c->terrain_type * TILES_IN_ROW_ON_TERRAIN_SURFACE) + index;
+  }
+}
+
+int Map::determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool cell_right) {
+  if ( cell_up &&  cell_down &&  cell_left &&  cell_right) return 0;
+  if ( cell_up &&  cell_down && !cell_left &&  cell_right) return 1;
+  if ( cell_up &&  cell_down &&  cell_left && !cell_right) return 2;
+  if (!cell_up &&  cell_down &&  cell_left &&  cell_right) return 3;
+  if ( cell_up && !cell_down &&  cell_left &&  cell_right) return 4;
+  if (!cell_up &&  cell_down && !cell_left &&  cell_right) return 5;
+  if ( cell_up && !cell_down &&  cell_left && !cell_right) return 6;
+  if (!cell_up &&  cell_down &&  cell_left && !cell_right) return 7;
+  if ( cell_up && !cell_down && !cell_left &&  cell_right) return 8;
+  if (!cell_up && !cell_down && !cell_left && !cell_right) return 9;
+  if (!cell_up && !cell_down &&  cell_left &&  cell_right) return 10;
+  if (!cell_up && !cell_down &&  cell_left && !cell_right) return 11;
+  if (!cell_up && !cell_down && !cell_left &&  cell_right) return 12;
+  if ( cell_up && !cell_down && !cell_left && !cell_right) return 13;
+  if (!cell_up &&  cell_down && !cell_left && !cell_right) return 14;
+  if ( cell_up &&  cell_down && !cell_left && !cell_right) return 15;
+  return -1;
 }
 
 void Map::setBoundaries(int max_width, int max_height) {
@@ -105,8 +143,7 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
   for (int dx = startX; dx < endX; dx++) {
     for (int dy = startY; dy < endY; dy++) {
       Cell* c = map->getCell(dx, dy);
-      // weird: have to compensate for the coordinates above. Drawing should be done separately
-      // from coordinates of map.
+
       int drawX = (dx - startX) * TILE_SIZE;
       int drawY = (dy - startY) * TILE_SIZE;
 
