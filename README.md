@@ -57,7 +57,20 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
+- have my ground wheeled/tank vehicles be blocked by structures, other vehicles, and mountains
+- have infantry
+  - with a maximum of 5 on one cell
+  - can be moved seperately (like C&C)
+  - can move on mountains
+  - should be blocked by other infantry, only when other cell is full
+  - should be blocked by units
+  - can be squished by heavy units
 - modify the properties of units/structures by modifying a rules.ini file
+- move vehicles around larger obstacles (like bases, mountains, etc) (path-finding on 'really-need-it-basis')
+- move (my) units appropriately
+  - sandworms should only be able to travel through sand, dunes and spice, and be blocked by rock/mountains
+  - heavy vehicles should be able to move over infantry (fatal for the infantry).
+  - air units should not be blocked by anything
 - defend myself with walls
   - draw walls
   - walls should obstruct terrain units of all kinds
@@ -65,6 +78,9 @@ TODO
   - terrain smoothing adjustments with walls
 - see structures (draw them)
 - select my structure
+- use my infantry to take over enemy structures
+  - the more damaged the structure is, the more chance of taking over
+  - (fatal for the infantry, but chance of capture)
 - have enemies to defeat
   - enemy units should not be visible when shrouded
   - enemy units should not be selectable
@@ -76,15 +92,6 @@ TODO
 - order a unit to attack a structure in order to destroy it
 - order a unit to attack a tile so I can destroy a wall or something else (ie, a sandworm perhaps)
 - sandworms should only be able to travel through sand, dunes and spice, and be blocked by rock/mountains
-- move (my) units appropriately
-  - sandworms should only be able to travel through sand, dunes and spice, and be blocked by rock/mountains
-  - vehicles should be blocked by structures, other vehicles, and mountains
-  - heavy vehicles should be able to move over infantry (fatal for the infantry).
-  - air units should not be blocked by anything
-  - infantry should be blocked by other infantry, units, and structures
-- use my infantry to take over enemy structures
-  - the more damaged the structure is, the more chance of taking over
-  - (fatal for the infantry, but chance of capture)
 - fear the sandworm
   - sandworm eats units on sand/dunes/spice
   - sandworm can get 'full' and dissapear (? or wander around messing with your mind?)
