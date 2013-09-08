@@ -7,6 +7,16 @@
 #include <math.h>       /* ceil */
 
 Map::Map() {
+  init();
+}
+
+void Map::load(string file) {
+  init();
+  MapLoader::load(file, this);
+  determineCellTileForMap();
+}
+
+void Map::init() {
   max_width = MAP_MAX_WIDTH - 1;
   max_height = MAP_MAX_HEIGHT - 1;
 
@@ -21,10 +31,6 @@ Map::Map() {
       cells[i].shrouded = true;
     }
   }
-
-  MapLoader::load("maps/4PL_Mountains.ini", this);
-
-  determineCellTileForMap();
 }
 
 void Map::determineCellTileForMap() {
@@ -86,6 +92,7 @@ bool Map::is_occupied(Point p) {
 MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map) {
   this->x = x; // pixel size, relative to map (starts at 0,0)
   this->y = y;
+  this->map = map;
   this->max_cells_width_on_screen = ceil(screen->w / 32);
   this->max_cells_height_on_screen = ceil(screen->h / 32);
   this->map_y_boundary = map->getMaxHeight();
@@ -124,6 +131,11 @@ void MapCamera::onEvent(SDL_Event* event) {
       D2TMMoveCameraStruct *s = static_cast<D2TMMoveCameraStruct*>(event->user.data1);
       move_x_velocity = s->vector.x;
       move_y_velocity = s->vector.y;
+      delete s;
+    } else if (event->user.code == D2TM_MAP_BOUNDARIES_CHANGED) {
+      cout << "MAP BOUNDARIES CHANGED EVENT!  " << endl;
+      this->map_y_boundary = map->getMaxHeight();
+      this->map_x_boundary = map->getMaxWidth();
     }
 
   }

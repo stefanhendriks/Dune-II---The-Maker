@@ -7,6 +7,7 @@
 
 #include "surface.h"
 #include "rectangle.h"
+#include "eventfactory.h"
 
 #include <math.h>
 
@@ -72,6 +73,8 @@ class Map {
 
     void setBoundaries(int max_width, int max_height);
 
+    void load(string file);
+
     Cell* getCell(Point map_point) {
       return getCell(map_point.x, map_point.y);
     }
@@ -110,6 +113,7 @@ class Map {
     void setMaxBoundaries(Point boundaries) {
       max_width = boundaries.x + 2;
       max_height = boundaries.y + 2;
+      eventFactory.pushMapBoundariesChanged();
     }
 
     bool is_occupied(Point p);
@@ -121,9 +125,11 @@ class Map {
 
   private:
     Cell cells[MAP_MAX_SIZE];
+    EventFactory eventFactory;
     int max_width;
     int max_height;
 
+    void init();
     void determineCellTile(Cell* c);
     void determineCellTileForMap();
     int determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool cell_right);
@@ -183,6 +189,8 @@ class MapCamera {
     float move_x_velocity;
     float move_y_velocity;
 
+    Map* map;
+
 		int getWidth() { return max_cells_width_on_screen; }
 		int getHeight() { return max_cells_height_on_screen; }
 
@@ -196,8 +204,8 @@ class MapCamera {
 
     int min_x() { return TILE_SIZE; }
     int min_y() { return TILE_SIZE; }
-    int max_y() { return ((map_y_boundary - max_cells_height_on_screen) * TILE_SIZE) - 1; }
-    int max_x() { return ((map_x_boundary - max_cells_width_on_screen) * TILE_SIZE) - 1; }
+    int max_y() { return (((map_y_boundary - max_cells_height_on_screen) - (1 + 2)) * TILE_SIZE); }
+    int max_x() { return (((map_x_boundary - max_cells_width_on_screen) - (1 + 2)) * TILE_SIZE); }
 
     int determineShroudEdge(Map* map, Cell* c);
 };

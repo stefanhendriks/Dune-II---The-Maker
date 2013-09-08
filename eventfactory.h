@@ -4,11 +4,19 @@
 #include "SDL/SDL.h"
 #include "rectangle.h"
 
-#define D2TM_SELECT          1024
-#define D2TM_DESELECT        1025
-#define D2TM_BOX_SELECT      1026
-#define D2TM_MOVE_CAMERA     1027
-#define D2TM_MOVE_UNIT       1028
+const int D2TM_SELECT                 =  1024;
+const int D2TM_DESELECT               =  1025;
+const int D2TM_BOX_SELECT             =  1026;
+const int D2TM_MOVE_CAMERA            =  1027;
+const int D2TM_MOVE_UNIT              =  1028;
+const int D2TM_MAP_BOUNDARIES_CHANGED =  1029;
+
+// camera directions
+const int D2TM_CAMERA_MOVE_UP = 1;
+const int D2TM_CAMERA_MOVE_DOWN = 2;
+const int D2TM_CAMERA_MOVE_LEFT = 3;
+const int D2TM_CAMERA_MOVE_RIGHT = 4;
+const int D2TM_CAMERA_STOP_MOVING = 5;
 
 typedef struct {
   Rectangle rectangle;
@@ -17,13 +25,6 @@ typedef struct {
 typedef struct {
   Point screen_position;
 } D2TMSelectStruct;
-
-// camera directions
-const int D2TM_CAMERA_MOVE_UP = 1;
-const int D2TM_CAMERA_MOVE_DOWN = 2;
-const int D2TM_CAMERA_MOVE_LEFT = 3;
-const int D2TM_CAMERA_MOVE_RIGHT = 4;
-const int D2TM_CAMERA_STOP_MOVING = 5;
 
 typedef struct {
   Point vector;
@@ -43,6 +44,7 @@ class EventFactory {
     void pushDeselectEvent() { push_event(D2TM_DESELECT); }
     void pushMoveCameraEvent(int vec_x, int vec_y);
     void pushMoveUnitEvent(int screen_x, int screen_y);
+    void pushMapBoundariesChanged() { push_event(D2TM_MAP_BOUNDARIES_CHANGED); }
     void pushQuitEvent() { push_sdl_event(SDL_QUIT, 0, NULL, NULL); }
 
   private:

@@ -84,9 +84,8 @@ int Game::init() {
   SDL_ShowCursor(0);
   mouse.init(screen);
 
-  map.setBoundaries(128,128);
   map_camera = new MapCamera(0, 0, screen, &map);
-
+  map.load("maps/4PL_Mountains.ini");
   unitRepository = new UnitRepository(&map);
 
   unit = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 5);
