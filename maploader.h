@@ -3,7 +3,6 @@
 
 #include <string>
 
-#include "rectangle.h"
 #include "map.h"
 
 const int SUCCESS = 0;

@@ -106,8 +106,11 @@ class Map {
 
     int getMaxWidth() { return max_width; }
     int getMaxHeight() { return max_height; }
-    void setMaxWidth(int width) { max_width = width + 2; }
-    void setMaxHeight(int height) { max_height = height + 2; }
+
+    void setMaxBoundaries(Point boundaries) {
+      max_width = boundaries.x + 2;
+      max_height = boundaries.y + 2;
+    }
 
     bool is_occupied(Point p);
 
