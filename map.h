@@ -52,7 +52,11 @@ class Cell {
                other->terrain_type != TERRAIN_TYPE_ROCK;
       }
       if (this->terrain_type == TERRAIN_TYPE_SPICE) {
-        return other->terrain_type != TERRAIN_TYPE_SPICE;
+        return other->terrain_type != TERRAIN_TYPE_SPICE &&
+               other->terrain_type != TERRAIN_TYPE_SPICEHILL;
+      }
+      if (this->terrain_type == TERRAIN_TYPE_SPICEHILL) {
+        return other->terrain_type != TERRAIN_TYPE_SPICEHILL;
       }
 
       return other->terrain_type != this->terrain_type;

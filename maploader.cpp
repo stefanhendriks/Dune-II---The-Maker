@@ -47,6 +47,7 @@ void MapLoader::load(std::string file, Map* map) {
       if (c == ')') map->getCell(x, y)->terrain_type = TERRAIN_TYPE_SAND;
       if (c == '-') map->getCell(x, y)->terrain_type = TERRAIN_TYPE_SPICE;
       if (c == '+') map->getCell(x, y)->terrain_type = TERRAIN_TYPE_SPICEHILL;
+      if (c == 'h') map->getCell(x, y)->terrain_type = TERRAIN_TYPE_HILL;
     }
   }
 
