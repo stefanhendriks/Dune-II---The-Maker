@@ -41,7 +41,7 @@ int MapLoader::load(std::string file, Map* map) {
 
     for (int x = 0; x < width; x++) {
 
-      if (x >= value.length()) {
+      if (x >= (int)value.length()) {
         cerr << "[MAPLOADER] WARNING (" << warnings << "): While parsing line (key=" << key << ") " << value << ":" << endl;
         cerr << "[MAPLOADER] WARNING (" << warnings << "): Line was expected to have width " << width << " but is actually " << value.length() << ". Either width/height property is wrong in [SKIRMISH] section or [DATA] has wrong amount of data in this line." << endl;
         warnings++;
