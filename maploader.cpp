@@ -47,14 +47,14 @@ int MapLoader::load(std::string file, Map* map) {
         warnings++;
         continue;
       }
-
-      char c = value.at(x);
-      if (c == 'R') map->getCell(x, y)->terrain_type = TERRAIN_TYPE_MOUNTAIN;
-      if (c == '^') map->getCell(x, y)->terrain_type = TERRAIN_TYPE_ROCK;
-      if (c == ')') map->getCell(x, y)->terrain_type = TERRAIN_TYPE_SAND;
-      if (c == '-') map->getCell(x, y)->terrain_type = TERRAIN_TYPE_SPICE;
-      if (c == '+') map->getCell(x, y)->terrain_type = TERRAIN_TYPE_SPICEHILL;
-      if (c == 'h') map->getCell(x, y)->terrain_type = TERRAIN_TYPE_HILL;
+      int terrain_type = charToTerrainType(value.at(x));
+      if (terrain_type < 0) {
+        cerr << "[MAPLOADER] WARNING (" << warnings << "): Could not interpet character at line with key " << key << ", at position " << x << ", falling back at sand terrain." << endl;
+        warnings++;
+        map->getCell(x, y)->terrain_type = TERRAIN_TYPE_SAND;
+      } else {
+        map->getCell(x, y)->terrain_type = terrain_type;
+      }
     }
   }
 
@@ -65,6 +65,16 @@ int MapLoader::load(std::string file, Map* map) {
   return SUCCESS;
 }
 
+int MapLoader::charToTerrainType(char c) {
+  if (c == 'R') return TERRAIN_TYPE_MOUNTAIN;
+  if (c == '^') return TERRAIN_TYPE_ROCK;
+  if (c == ')') return TERRAIN_TYPE_SAND;
+  if (c == '-') return TERRAIN_TYPE_SPICE;
+  if (c == '+') return TERRAIN_TYPE_SPICEHILL;
+  if (c == 'h') return TERRAIN_TYPE_HILL;
+  cerr << "[MAPLOADER] WARNING: Unable to map character " << c << " to a terrain type. Known chars are R^)-+h" << endl;
+  return -1;
+}
 
 string MapLoader::makeIntKeyWithLeadingZero(int n) {
   stringstream ss;
