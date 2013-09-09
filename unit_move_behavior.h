@@ -24,4 +24,17 @@ class GroundUnitMovementBehavior: public UnitMoveBehavior {
     Map* map;
 };
 
+class AirUnitMovementBehavior: public UnitMoveBehavior {
+
+  public:
+    AirUnitMovementBehavior();
+    ~AirUnitMovementBehavior();
+    bool canMoveTo(Point p);
+
+  private:
+    Map* map;
+};
+
+
+
 #endif

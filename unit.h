@@ -24,8 +24,8 @@ const int FACINGS = 8;          // used to calculate width of each 'tile' for a 
 class Unit {
 
   public:
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map);
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y, int viewRange);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange);
     ~Unit();
 
     void draw(SDL_Surface* screen, MapCamera* map_camera);
@@ -81,7 +81,7 @@ class Unit {
 
     int desired_facing();
 
-    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int x, int y, int viewRange);
+    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int x, int y, int viewRange, UnitMoveBehavior* move_behavior);
 
     void updateMovePosition(Point p) {
       this->next_move_position = this->next_move_position + p;

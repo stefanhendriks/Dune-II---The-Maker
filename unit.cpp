@@ -1,17 +1,14 @@
 #include <iostream>
-
 #include "unit.h"
-#include "surface.h"
-#include "random.h"
 
 using namespace std;
 
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map) {
-  init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256), 1 + rnd(5));
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior) {
+  init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256), 1 + rnd(5), move_behavior);
 }
 
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y, int viewRange) {
-  init(tileset, shadowset, map, x, y, viewRange);
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange) {
+  init(tileset, shadowset, map, x, y, viewRange, move_behavior);
 }
 
 Unit::~Unit() {
@@ -42,7 +39,7 @@ void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
   }
 }
 
-void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y, int viewRange) {
+void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y, int viewRange, UnitMoveBehavior* move_behavior) {
   this->selected = false;
   this->selected_bitmap = Surface::load("graphics/selected.bmp", 255, 0, 255);
   this->tileset = tileset;
@@ -57,7 +54,7 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, i
   this->map=map;
   this->map->occupyCell(this->position);
   this->map->removeShroud(this->position, this->view_range);
-  this->move_behavior = new GroundUnitMovementBehavior(this->map);
+  this->move_behavior = move_behavior;
 
   int tile_height = 0, tile_width = 0;
   tile_width = tileset->w / FACINGS;
@@ -153,7 +150,7 @@ void Unit::updateState() {
       if (target.y > position.y) moveDown();
 
       // check if we can move to this
-      if (move_behavior->canMoveTo(next_move_position)) {
+      if (!move_behavior->canMoveTo(next_move_position)) {
         stopMoving();
       } else {
         // we can move to this tile, claim it
@@ -217,6 +214,13 @@ Unit* UnitRepository::create(int unitType, int house, int x, int y, int viewRang
   SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], paletteIndexUsedForColoring, 8);
 
   SDL_Surface* shadow_copy = Surface::copy(unit_shadow[unitType]);
-  Unit* unit = new Unit(copy, shadow_copy, map, x, y, viewRange);
+  UnitMoveBehavior *move_behavior = NULL;
+  if (unitType == UNIT_FRIGATE) {
+    cout << "unit is a frigate!" << endl;
+    move_behavior = new AirUnitMovementBehavior();
+  } else {
+    move_behavior = new GroundUnitMovementBehavior(map);
+  }
+  Unit* unit = new Unit(copy, shadow_copy, map, move_behavior, x, y, viewRange);
   return unit;
 }
