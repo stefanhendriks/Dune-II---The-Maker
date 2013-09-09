@@ -57,7 +57,8 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
-- have my ground wheeled/tank vehicles be blocked by structures, other vehicles, and mountains
+- have air units not being blocked by anything
+- have air units always be drawn over ground units
 - have infantry
   - with a maximum of 5 on one cell
   - can be moved seperately (like C&C)
@@ -77,6 +78,7 @@ TODO
   - walls smoothing
   - terrain smoothing adjustments with walls
 - see structures (draw them)
+- have my ground wheeled/tank vehicles be blocked by structures
 - select my structure
 - use my infantry to take over enemy structures
   - the more damaged the structure is, the more chance of taking over
@@ -179,6 +181,7 @@ DONE
     <li>explore the terrain by clearing a shroud</li>
     <li>enjoy the terrain smoothened (smoothing algorithm)</li>
     <li>load a map from file</li>
+    <li>have my ground wheeled/tank vehicles be blocked by other vehicles, and mountains</li>
   </ul>
 </del>
 
