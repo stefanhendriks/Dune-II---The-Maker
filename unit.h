@@ -8,6 +8,7 @@
 #include "rectangle.h"
 #include "surface.h"
 #include "map.h"
+#include "unit_move_behavior.h"
 
 const int FACING_RIGHT = 0;
 const int FACING_UP_RIGHT = 1;
@@ -23,8 +24,8 @@ const int FACINGS = 8;          // used to calculate width of each 'tile' for a 
 class Unit {
 
   public:
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map);
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y, int viewRange);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange);
     ~Unit();
 
     void draw(SDL_Surface* screen, MapCamera* map_camera);
@@ -68,8 +69,6 @@ class Unit {
 
     int view_range;
 
-    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int x, int y, int viewRange);
-
     bool selected;
 
     Point target;     // target of interest (move/attack, etc)
@@ -77,8 +76,12 @@ class Unit {
     Point next_move_position;
     Point prev_position;
 
+    Map* map;
+    UnitMoveBehavior* move_behavior;
 
     int desired_facing();
+
+    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int x, int y, int viewRange, UnitMoveBehavior* move_behavior);
 
     void updateMovePosition(Point p) {
       this->next_move_position = this->next_move_position + p;
@@ -97,16 +100,13 @@ class Unit {
       return desired_body_facing != body_facing;
     }
 
-    bool canMoveTo(Point p);
-
-    Map* map;
-
     void turn_body();
 
     void moveUp() { updateMovePosition(Point(0, -TILE_SIZE)); }
     void moveDown() { updateMovePosition(Point(0, TILE_SIZE)); }
     void moveLeft() { updateMovePosition(Point(-TILE_SIZE, 0)); }
     void moveRight() { updateMovePosition(Point(TILE_SIZE, 0)); }
+
     void stopMoving() {
       this->next_move_position = position;
     }
