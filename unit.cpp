@@ -17,6 +17,7 @@ Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y,
 Unit::~Unit() {
   SDL_FreeSurface(tileset);
   SDL_FreeSurface(shadowset);
+  delete move_behavior;
 }
 
 void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
@@ -56,6 +57,7 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, i
   this->map=map;
   this->map->occupyCell(this->position);
   this->map->removeShroud(this->position, this->view_range);
+  this->move_behavior = new GroundUnitMovementBehavior(this->map);
 
   int tile_height = 0, tile_width = 0;
   tile_width = tileset->w / FACINGS;
@@ -151,7 +153,7 @@ void Unit::updateState() {
       if (target.y > position.y) moveDown();
 
       // check if we can move to this
-      if (canMoveTo(next_move_position)) {
+      if (move_behavior->canMoveTo(next_move_position)) {
         stopMoving();
       } else {
         // we can move to this tile, claim it
@@ -170,13 +172,6 @@ void Unit::updateState() {
   if (position.x > next_move_position.x) position.x--;
   if (position.y < next_move_position.y) position.y++;
   if (position.y > next_move_position.y) position.y--;
-}
-
-bool Unit::canMoveTo(Point p) {
-  if (map->is_occupied(p)) return false;
-
-  Point map_point = map->toMapPoint(p);
-  return map->getCell(map_point)->terrain_type == TERRAIN_TYPE_MOUNTAIN;
 }
 
 //////////////////////////////////////////

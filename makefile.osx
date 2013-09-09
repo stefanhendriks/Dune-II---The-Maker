@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=`sdl-config --cflags` -c -Wall
 LDFLAGS=`sdl-config --cflags --libs` -lSDL_image -lSDL_gfx -framework Cocoa
-SOURCES=d2tm.cpp point.cpp map.cpp game.cpp surface.cpp random.cpp keyboard.cpp mouse.cpp unit.cpp eventfactory.cpp maploader.cpp ini.c INIReader.cpp
+SOURCES=d2tm.cpp point.cpp map.cpp game.cpp surface.cpp random.cpp keyboard.cpp mouse.cpp unit.cpp eventfactory.cpp maploader.cpp ini.c INIReader.cpp unit_move_behavior.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=d2tm
 
