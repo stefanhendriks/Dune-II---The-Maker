@@ -151,7 +151,7 @@ void Unit::updateState() {
       if (target.y > position.y) moveDown();
 
       // check if we can move to this
-      if (map->is_occupied(next_move_position)) {
+      if (canMoveTo(next_move_position)) {
         stopMoving();
       } else {
         // we can move to this tile, claim it
@@ -172,6 +172,12 @@ void Unit::updateState() {
   if (position.y > next_move_position.y) position.y--;
 }
 
+bool Unit::canMoveTo(Point p) {
+  if (map->is_occupied(p)) return false;
+
+  Point map_point = map->toMapPoint(p);
+  return map->getCell(map_point)->terrain_type == TERRAIN_TYPE_MOUNTAIN;
+}
 
 //////////////////////////////////////////
 // Unit Repository

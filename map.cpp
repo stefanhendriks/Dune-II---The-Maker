@@ -133,7 +133,6 @@ void MapCamera::onEvent(SDL_Event* event) {
       move_y_velocity = s->vector.y;
       delete s;
     } else if (event->user.code == D2TM_MAP_BOUNDARIES_CHANGED) {
-      cout << "MAP BOUNDARIES CHANGED EVENT!  " << endl;
       this->map_y_boundary = map->getMaxHeight();
       this->map_x_boundary = map->getMaxWidth();
     }

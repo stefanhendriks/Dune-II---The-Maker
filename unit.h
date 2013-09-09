@@ -97,6 +97,8 @@ class Unit {
       return desired_body_facing != body_facing;
     }
 
+    bool canMoveTo(Point p);
+
     Map* map;
 
     void turn_body();
