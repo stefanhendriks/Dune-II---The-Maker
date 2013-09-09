@@ -57,7 +57,7 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
-- have air units not being blocked by anything
+- have air units not be blocked by any units
 - have air units always be drawn over ground units
 - have infantry
   - with a maximum of 5 on one cell
@@ -182,6 +182,7 @@ DONE
     <li>enjoy the terrain smoothened (smoothing algorithm)</li>
     <li>load a map from file</li>
     <li>have my ground wheeled/tank vehicles be blocked by other vehicles, and mountains</li>
+    <li>have air units not being blocked by any terrain type</li>
   </ul>
 </del>
 
