@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <vector>
 #include "map.h"
 #include "keyboard.h"
 #include "mouse.h"
@@ -19,6 +20,7 @@ class Game {
       void updateState();
       void render();
       int cleanup();
+      void deselectAllUnits();
       bool playing;
       SDL_Surface* screen;
       SDL_Surface* terrain;
@@ -29,11 +31,7 @@ class Game {
       Keyboard keyboard;
       Mouse mouse;
 
-      // THIS WILL BE A LIST/ARRAY/VECTOR OF SOME SORT SOME DAY
-      Unit* unit;
-      Unit* devastator;
-      Unit* trike;
-      // END
+      std::vector<Unit*> units;
 
       UnitRepository *unitRepository;
 };

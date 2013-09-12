@@ -16,9 +16,6 @@ Game::Game() {
   screen=NULL;
   terrain=NULL;
   map_camera=NULL;
-  unit=NULL;
-  devastator=NULL;
-  trike=NULL;
 }
 
 int Game::execute() {
@@ -89,9 +86,14 @@ int Game::init() {
   map.load("maps/4PL_Mountains.ini");
   unitRepository = new UnitRepository(&map);
 
-  unit = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 5);
-  devastator = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 256, 256, 3);
-  trike = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 448, 448, 3);
+  Unit* frigate = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 5);
+  units.push_back(frigate);
+
+  Unit* trike1 = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 256, 256, 3);
+  units.push_back(trike1);
+
+  Unit* trike2 = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 448, 448, 3);
+  units.push_back(trike2);
 
   return true;
 }
@@ -113,38 +115,25 @@ void Game::onEvent(SDL_Event* event) {
       Point p = map_camera->toWorldCoordinates(s->screen_position);
 
       if (mouse.is_pointing()) {
-
-        if (devastator->is_point_within(p)) {
-          mouse.state_order_move();
-          unit->unselect();
-          devastator->unselect();
-          trike->unselect();
-          devastator->select();
+        Unit* selected_unit = NULL;
+        for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
+          if ((*it)->is_point_within(p)) {
+            selected_unit = *it;
+            break;
+          }
         }
 
-        if (unit->is_point_within(p)) {
+        if (selected_unit != NULL) {
+          deselectAllUnits();
+          selected_unit->select();
           mouse.state_order_move();
-          unit->unselect();
-          devastator->unselect();
-          trike->unselect();
-          unit->select();
-        }
-
-        if (trike->is_point_within(p)) {
-          mouse.state_order_move();
-          unit->unselect();
-          devastator->unselect();
-          trike->unselect();
-          trike->select();
         }
       }
 
       delete s;
     } else if (event->user.code == D2TM_DESELECT) {
       mouse.state_pointing();
-      devastator->unselect();
-      unit->unselect();
-      trike->unselect();
+      deselectAllUnits();
     } else if (event->user.code == D2TM_BOX_SELECT) {
       D2TMBoxSelectStruct *s = static_cast<D2TMBoxSelectStruct*>(event->user.data1);
 
@@ -153,23 +142,12 @@ void Game::onEvent(SDL_Event* event) {
       if (mouse.is_pointing()) {
         mouse.state_pointing();
 
-        unit->unselect();
-        devastator->unselect();
-        trike->unselect();
-
-        if (devastator->is_within(rectangle)) {
-          mouse.state_order_move();
-          devastator->select();
-        }
-
-        if (unit->is_within(rectangle)) {
-          mouse.state_order_move();
-          unit->select();
-        }
-
-        if (trike->is_within(rectangle)) {
-          mouse.state_order_move();
-          trike->select();
+        deselectAllUnits();
+        for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
+          if ((*it)->is_within(rectangle)) {
+            (*it)->select();
+            mouse.state_order_move();
+          }
         }
       }
 
@@ -178,9 +156,11 @@ void Game::onEvent(SDL_Event* event) {
       D2TMMoveUnitStruct *s = static_cast<D2TMMoveUnitStruct*>(event->user.data1);
       Point p = map_camera->toWorldCoordinates(s->screen_position);
 
-      if (unit->is_selected()) unit->order_move(p);
-      if (devastator->is_selected()) devastator->order_move(p);
-      if (trike->is_selected()) trike->order_move(p);
+      for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
+        if ((*it)->is_selected()) {
+          (*it)->order_move(p);
+        }
+      }
 
       delete s;
     }
@@ -193,9 +173,9 @@ void Game::render() {
   SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 
   map_camera->draw(&map, terrain, screen);
-  map_camera->draw(unit, screen);
-  map_camera->draw(devastator, screen);
-  map_camera->draw(trike, screen);
+  for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
+    map_camera->draw(*it, screen);
+  }
   map_camera->drawShroud(&map, shroud_edges, shroud_edges_shadow, screen);
 
   mouse.draw(screen);
@@ -208,22 +188,29 @@ void Game::updateState() {
   mouse.updateState();
   map_camera->updateState();
 
-  unit->updateState();
-  devastator->updateState();
-  trike->updateState();
+  for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
+    (*it)->updateState();
+  }
 }
 
 int Game::cleanup() {
   delete map_camera;
   delete unitRepository;
-  delete unit;
-  delete devastator;
-  delete trike;
+  for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
+    delete *it;
+  }
+  units.clear();
   SDL_FreeSurface(screen);
   SDL_FreeSurface(terrain);
   SDL_FreeSurface(shroud_edges);
   SDL_FreeSurface(shroud_edges_shadow);
   SDL_Quit();
   return 0;
+}
+
+void Game::deselectAllUnits() {
+  for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
+    (*it)->unselect();
+  }
 }
 
