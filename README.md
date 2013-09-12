@@ -183,6 +183,7 @@ DONE
     <li>load a map from file</li>
     <li>have my ground wheeled/tank vehicles be blocked by other vehicles, and mountains</li>
     <li>have air units not being blocked by any terrain type</li>
+    <li>have an arbitrary number of units</li>
   </ul>
 </del>
 
