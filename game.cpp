@@ -18,6 +18,7 @@ Game::Game() {
   map_camera=NULL;
   unit=NULL;
   devastator=NULL;
+  trike=NULL;
 }
 
 int Game::execute() {
@@ -90,6 +91,7 @@ int Game::init() {
 
   unit = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 5);
   devastator = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 256, 256, 3);
+  trike = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 448, 448, 3);
 
   return true;
 }
@@ -116,6 +118,7 @@ void Game::onEvent(SDL_Event* event) {
           mouse.state_order_move();
           unit->unselect();
           devastator->unselect();
+          trike->unselect();
           devastator->select();
         }
 
@@ -123,7 +126,16 @@ void Game::onEvent(SDL_Event* event) {
           mouse.state_order_move();
           unit->unselect();
           devastator->unselect();
+          trike->unselect();
           unit->select();
+        }
+
+        if (trike->is_point_within(p)) {
+          mouse.state_order_move();
+          unit->unselect();
+          devastator->unselect();
+          trike->unselect();
+          trike->select();
         }
       }
 
@@ -132,6 +144,7 @@ void Game::onEvent(SDL_Event* event) {
       mouse.state_pointing();
       devastator->unselect();
       unit->unselect();
+      trike->unselect();
     } else if (event->user.code == D2TM_BOX_SELECT) {
       D2TMBoxSelectStruct *s = static_cast<D2TMBoxSelectStruct*>(event->user.data1);
 
@@ -142,6 +155,7 @@ void Game::onEvent(SDL_Event* event) {
 
         unit->unselect();
         devastator->unselect();
+        trike->unselect();
 
         if (devastator->is_within(rectangle)) {
           mouse.state_order_move();
@@ -152,6 +166,11 @@ void Game::onEvent(SDL_Event* event) {
           mouse.state_order_move();
           unit->select();
         }
+
+        if (trike->is_within(rectangle)) {
+          mouse.state_order_move();
+          trike->select();
+        }
       }
 
       delete s;
@@ -161,6 +180,7 @@ void Game::onEvent(SDL_Event* event) {
 
       if (unit->is_selected()) unit->order_move(p);
       if (devastator->is_selected()) devastator->order_move(p);
+      if (trike->is_selected()) trike->order_move(p);
 
       delete s;
     }
@@ -175,6 +195,7 @@ void Game::render() {
   map_camera->draw(&map, terrain, screen);
   map_camera->draw(unit, screen);
   map_camera->draw(devastator, screen);
+  map_camera->draw(trike, screen);
   map_camera->drawShroud(&map, shroud_edges, shroud_edges_shadow, screen);
 
   mouse.draw(screen);
@@ -189,6 +210,7 @@ void Game::updateState() {
 
   unit->updateState();
   devastator->updateState();
+  trike->updateState();
 }
 
 int Game::cleanup() {
@@ -196,6 +218,7 @@ int Game::cleanup() {
   delete unitRepository;
   delete unit;
   delete devastator;
+  delete trike;
   SDL_FreeSurface(screen);
   SDL_FreeSurface(terrain);
   SDL_FreeSurface(shroud_edges);

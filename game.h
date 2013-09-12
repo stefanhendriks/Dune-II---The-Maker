@@ -32,6 +32,7 @@ class Game {
       // THIS WILL BE A LIST/ARRAY/VECTOR OF SOME SORT SOME DAY
       Unit* unit;
       Unit* devastator;
+      Unit* trike;
       // END
 
       UnitRepository *unitRepository;
