@@ -86,15 +86,21 @@ int Game::init() {
   map.load("maps/4PL_Mountains.ini");
   unitRepository = new UnitRepository(&map);
 
-  units.push_back(unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 10, SUBCELL_CENTER));
-  units.push_back(unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 256, 256, 3, SUBCELL_CENTER));
+  units.push_back(unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 3, 3, 10, SUBCELL_CENTER));
+  units.push_back(unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 8, 8, 3, SUBCELL_CENTER));
 
   // soldiers
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 448, 448, 3, SUBCELL_CENTER));
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 448, 448, 3, SUBCELL_UPLEFT));
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 448, 448, 3, SUBCELL_UPRIGHT));
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 448, 448, 3, SUBCELL_DOWNLEFT));
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 448, 448, 3, SUBCELL_DOWNRIGHT));
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_CENTER));
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_UPLEFT));
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_UPRIGHT));
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_DOWNLEFT));
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_DOWNRIGHT));
+
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_CENTER));
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_UPLEFT));
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_UPRIGHT));
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_DOWNLEFT));
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_DOWNRIGHT));
 
   return true;
 }
