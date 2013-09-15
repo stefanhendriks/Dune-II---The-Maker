@@ -86,7 +86,7 @@ int Game::init() {
   map.load("maps/4PL_Mountains.ini");
   unitRepository = new UnitRepository(&map);
 
-  Unit* frigate = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 5);
+  Unit* frigate = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 10);
   units.push_back(frigate);
 
   Unit* trike1 = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 256, 256, 3);
