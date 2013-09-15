@@ -60,6 +60,8 @@ class Unit {
 
     bool selected;
 
+    bool is_infantry;
+
     Map* map;
     UnitMoveBehavior* move_behavior;
 

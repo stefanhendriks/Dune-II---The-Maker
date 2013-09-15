@@ -123,22 +123,25 @@ void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
   }
 }
 
-void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y, int viewRange, UnitMoveBehavior* move_behavior) {
+void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int world_x, int world_y, int viewRange, UnitMoveBehavior* move_behavior) {
   this->selected = false;
+  this->is_infantry = false;
   this->selected_bitmap = Surface::load("graphics/selected.bmp", 255, 0, 255);
   this->tileset = tileset;
   this->shadowset = shadowset;
   this->body_facing = rnd(FACINGS);
   this->desired_body_facing = this->body_facing;
   this->view_range = viewRange;
-  this->position = Point(x,y);
+  this->position = Point(world_x, world_y);
   this->target = this->position;
   this->next_move_position = this->position;
   this->prev_position = this->position;
-  this->map=map;
+  this->map = map;
   this->move_behavior = move_behavior;
   this->move_behavior->occupyCell(this->position);
   this->map->removeShroud(this->position, this->view_range);
+  this->shadow_alpha = 128;
+  this->anim_frame = 0;
 
   int tile_height = 0, tile_width = 0;
   tile_width = tileset->w / FACINGS;
@@ -163,8 +166,6 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, i
     tile_height = tile_width;
   }
   this->size = Point(tile_width, tile_height);
-  this->shadow_alpha = 128;
-  this->anim_frame = 0;
 
   // every pixel short/too much of the perfect tile size will be spread evenly
   this->offset_x = (TILE_SIZE - tile_width) / 2;
