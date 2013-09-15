@@ -17,6 +17,92 @@ Unit::~Unit() {
   delete move_behavior;
 }
 
+void Unit::select() {
+  selected = true;
+}
+
+void Unit::unselect() {
+  selected = false;
+}
+
+bool Unit::is_selected() {
+  return selected;
+}
+
+bool Unit::is_within(const Rectangle& rectangle) {
+  return rectangle.is_point_within(position);
+}
+
+bool Unit::is_on_air_layer() {
+  return isOnLayer(MAP_LAYER_AIR);
+}
+
+bool Unit::is_on_ground_layer() {
+  return isOnLayer(MAP_LAYER_GROUND);
+}
+
+bool Unit::is_point_within(const Point& point) {
+  Rectangle current_area = Rectangle(position, (position + size));
+  return current_area.is_point_within(point);
+}
+
+void Unit::moveUp() {
+  updateMovePosition(Point(0, -TILE_SIZE));
+}
+
+void Unit::moveDown() {
+  updateMovePosition(Point(0, TILE_SIZE));
+}
+
+void Unit::moveLeft() {
+  updateMovePosition(Point(-TILE_SIZE, 0));
+}
+
+void Unit::moveRight() {
+  updateMovePosition(Point(TILE_SIZE, 0));
+}
+
+void Unit::updateMovePosition(Point p) {
+  this->next_move_position = this->next_move_position + p;
+  this->desired_body_facing = desired_facing();
+}
+
+bool Unit::is_moving() {
+  return position != next_move_position;
+}
+
+bool Unit::has_target() {
+  return position != target;
+}
+
+bool Unit::should_turn_body() {
+  return desired_body_facing != body_facing;
+}
+
+void Unit::stopMoving() {
+  this->next_move_position = position;
+}
+
+
+int Unit::getDrawX() {
+  return position.x + offset_x;
+}
+
+int Unit::getDrawY() {
+  return position.y + offset_y;
+}
+
+bool Unit::isOnLayer(short layer) {
+  return this->move_behavior->is_layer(layer);
+}
+
+void Unit::order_move(Point target) {
+  // snap coordinates
+  int y = (target.y / TILE_SIZE) * TILE_SIZE;
+  int x = (target.x / TILE_SIZE) * TILE_SIZE;
+  this->target = Point(x,y);
+}
+
 void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
   int draw_x = map_camera->screenCoordinateX(getDrawX());
   int draw_y = map_camera->screenCoordinateY(getDrawY());
