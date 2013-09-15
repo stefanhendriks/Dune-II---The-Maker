@@ -52,7 +52,7 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, i
   this->next_move_position = this->position;
   this->prev_position = this->position;
   this->map=map;
-  this->map->occupyCell(this->position);
+  this->map->occupyCell(this->position, MAP_LAYER_GROUND);
   this->map->removeShroud(this->position, this->view_range);
   this->move_behavior = move_behavior;
 
@@ -138,7 +138,7 @@ void Unit::updateState() {
   // think about movement
   if (!is_moving()) {
     if (prev_position != position) {
-      map->unOccupyCell(prev_position);
+      map->unOccupyCell(prev_position, MAP_LAYER_GROUND);
       map->removeShroud(position, this->view_range);
     }
 
@@ -154,7 +154,7 @@ void Unit::updateState() {
         stopMoving();
       } else {
         // we can move to this tile, claim it
-        map->occupyCell(next_move_position);
+        map->occupyCell(next_move_position, MAP_LAYER_GROUND);
         prev_position = position;
       }
 

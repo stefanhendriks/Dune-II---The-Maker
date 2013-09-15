@@ -33,11 +33,16 @@ const int TERRAIN_TYPE_SLAB     =  6;
 
 const int TILES_IN_ROW_ON_TERRAIN_SURFACE = 17;
 
+
+const int MAP_LAYER_GROUND = 0;
+const int MAP_LAYER_AIR = 1;
+const int MAP_MAX_LAYERS = 2;
+
 class Cell {
   public:
     int tile; // tile to draw (one-dimension array)
     int terrain_type; // terrain type (sand, rock, etc)
-    bool occupied;
+    bool occupied[MAP_MAX_LAYERS];
     bool shrouded;
     int x, y;
 
@@ -86,12 +91,12 @@ class Map {
       return &cells[cell];
     }
 
-    void occupyCell(const Point& world_point) {
-      getCell(toMapPoint(world_point))->occupied = true;
+    void occupyCell(const Point& world_point, short layer) {
+      getCell(toMapPoint(world_point))->occupied[layer] = true;
     }
 
-    void unOccupyCell(const Point& world_point) {
-      getCell(toMapPoint(world_point))->occupied = false;
+    void unOccupyCell(const Point& world_point, short layer) {
+      getCell(toMapPoint(world_point))->occupied[layer] = false;
     }
 
     void removeShroud(Point world_point, int range) {
@@ -116,7 +121,7 @@ class Map {
       eventFactory.pushMapBoundariesChanged();
     }
 
-    bool is_occupied(Point p);
+    bool is_occupied(Point p, short layer);
 
     Point toMapPoint(const Point& world_point) {
       Point result(world_point.x / TILE_SIZE, world_point.y / TILE_SIZE);

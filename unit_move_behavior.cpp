@@ -19,7 +19,7 @@ GroundUnitMovementBehavior::~GroundUnitMovementBehavior() {
 }
 
 bool GroundUnitMovementBehavior::canMoveTo(Point p) {
-  if (map->is_occupied(p)) return false;
+  if (map->is_occupied(p, MAP_LAYER_GROUND)) return false;
 
   Point map_point = map->toMapPoint(p);
   int terrain_type = map->getCell(map_point)->terrain_type;
