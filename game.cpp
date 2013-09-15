@@ -86,14 +86,15 @@ int Game::init() {
   map.load("maps/4PL_Mountains.ini");
   unitRepository = new UnitRepository(&map);
 
-  Unit* frigate = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 10);
-  units.push_back(frigate);
+  units.push_back(unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 10));
+  units.push_back(unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 256, 256, 3));
 
-  Unit* trike1 = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 256, 256, 3);
-  units.push_back(trike1);
-
-  Unit* trike2 = unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 448, 448, 3);
-  units.push_back(trike2);
+  // soldiers
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 448, 448, 3)); // this is sub-cell 3
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 440, 440, 3)); // this is sub-cell 1 (up left), -8, -8
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 456, 440, 3)); // this is sub-cell 2 (up right), +8, -8
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 440, 456, 3)); // this is sub-cell 4 (down left), -8, + 8
+  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 456, 456, 3)); // this is sub-cell 5 (down right), +8, + 8
 
   return true;
 }
