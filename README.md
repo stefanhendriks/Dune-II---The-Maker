@@ -58,8 +58,16 @@ Features need to be written in such a way that it is obvious what the benefit is
 TODO
 ----
 - have foot-men (soldiers, infantry, trooper, troopers, fremen, all are alike)
-  - with a maximum of 5 on one cell
-  - can be moved seperately (like C&C)
+<del>
+  <ul>
+    <li>draw soldier (as a single celled unit)</li>
+  </ul>
+</del>
+  - draw two soldiers on cell
+  - draw five soldiers on cell
+  - unit can be moved between cells, respecting sub-cell
+  - when sub-cell is taken, then unit will take other cell
+  - when all sub-cells are taken, the infantry considers the cell occupied
   - can move on mountains
   - should be blocked by other infantry, only when other cell is full
   - should be blocked by units
