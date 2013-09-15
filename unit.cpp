@@ -307,10 +307,6 @@ Unit* UnitRepository::create(int unitType, int house, int x, int y, int viewRang
   } else {
     move_behavior = new GroundUnitMovementBehavior(map);
   }
-  SDL_Surface* shadow_copy = NULL;
-  SDL_Surface* shadow_original = unit_shadow[unitType];
-  if (shadow_original) {
-    shadow_copy = Surface::copy(shadow_original);
-  }
+  SDL_Surface* shadow_copy = Surface::copy(unit_shadow[unitType]);
   return new Unit(copy, shadow_copy, map, move_behavior, x, y, viewRange);
 }

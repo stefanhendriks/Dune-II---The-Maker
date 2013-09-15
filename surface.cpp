@@ -31,6 +31,8 @@ SDL_Surface* Surface::load(std::string file) {
 
 // creates a new sdl surface, based on the source
 SDL_Surface* Surface::copy(SDL_Surface *source) {
+  if (source == NULL) return NULL;
+
   int width = source->w;
   int height = source->h;
   int bits = source->format->BitsPerPixel;
