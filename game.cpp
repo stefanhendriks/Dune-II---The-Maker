@@ -175,11 +175,11 @@ void Game::render() {
   map_camera->draw(&map, terrain, screen);
 
   for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
-    if ((*it)->is_on_air_layer()) map_camera->draw(*it, screen);
+    if ((*it)->is_on_ground_layer()) map_camera->draw(*it, screen);
   }
 
   for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
-    if ((*it)->is_on_ground_layer()) map_camera->draw(*it, screen);
+    if ((*it)->is_on_air_layer()) map_camera->draw(*it, screen);
   }
 
   map_camera->drawShroud(&map, shroud_edges, shroud_edges_shadow, screen);
