@@ -283,6 +283,9 @@ UnitRepository::UnitRepository(Map* map) {
 
   unit_animation[UNIT_TRIKE] = Surface::load8bit("graphics/Unit_Trike.bmp");
   unit_shadow[UNIT_TRIKE] = Surface::load("graphics/Unit_Trike_s.bmp", 255, 0, 255);
+
+  unit_animation[UNIT_SOLDIER] = Surface::load8bit("graphics/Unit_Soldier.bmp");
+  unit_shadow[UNIT_SOLDIER] = NULL;
 }
 
 UnitRepository::~UnitRepository() {
@@ -298,14 +301,16 @@ Unit* UnitRepository::create(int unitType, int house, int x, int y, int viewRang
   int paletteIndex = paletteIndexUsedForColoring + (16 * house);
   SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], paletteIndexUsedForColoring, 8);
 
-  SDL_Surface* shadow_copy = Surface::copy(unit_shadow[unitType]);
   UnitMoveBehavior *move_behavior = NULL;
   if (unitType == UNIT_FRIGATE) {
-    cout << "unit is a frigate!" << endl;
     move_behavior = new AirUnitMovementBehavior(map);
   } else {
     move_behavior = new GroundUnitMovementBehavior(map);
   }
-  Unit* unit = new Unit(copy, shadow_copy, map, move_behavior, x, y, viewRange);
-  return unit;
+  SDL_Surface* shadow_copy = NULL;
+  SDL_Surface* shadow_original = unit_shadow[unitType];
+  if (shadow_original) {
+    shadow_copy = Surface::copy(shadow_original);
+  }
+  return new Unit(copy, shadow_copy, map, move_behavior, x, y, viewRange);
 }

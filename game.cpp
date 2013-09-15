@@ -92,7 +92,7 @@ int Game::init() {
   Unit* trike1 = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 256, 256, 3);
   units.push_back(trike1);
 
-  Unit* trike2 = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 448, 448, 3);
+  Unit* trike2 = unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 448, 448, 3);
   units.push_back(trike2);
 
   return true;

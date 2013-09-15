@@ -102,6 +102,7 @@ const int UNIT_TRIKE = 1;
 const int UNIT_DEVASTATOR = 2;
 const int UNIT_CARRYALL = 3;
 const int UNIT_FRIGATE = 4;
+const int UNIT_SOLDIER = 5;
 const int MAX_UNIT_TYPES = 16;
 
 
