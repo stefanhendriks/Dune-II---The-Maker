@@ -14,7 +14,6 @@ Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehav
 Unit::~Unit() {
   SDL_FreeSurface(tileset);
   SDL_FreeSurface(shadowset);
-  delete move_behavior;
 }
 
 void Unit::select() {
@@ -286,6 +285,10 @@ UnitRepository::UnitRepository(Map* map) {
 
   unit_animation[UNIT_SOLDIER] = Surface::load8bit("graphics/Unit_Soldier.bmp");
   unit_shadow[UNIT_SOLDIER] = NULL;
+
+
+  air_unit_move_behavior    = new AirUnitMovementBehavior(map);
+  ground_unit_move_behavior = new GroundUnitMovementBehavior(map);
 }
 
 UnitRepository::~UnitRepository() {
@@ -293,6 +296,9 @@ UnitRepository::~UnitRepository() {
     SDL_FreeSurface(unit_animation[i]);
     SDL_FreeSurface(unit_shadow[i]);
   }
+
+  delete air_unit_move_behavior;
+  delete ground_unit_move_behavior;
 }
 
 Unit* UnitRepository::create(int unitType, int house, int x, int y, int viewRange) {
@@ -303,9 +309,9 @@ Unit* UnitRepository::create(int unitType, int house, int x, int y, int viewRang
 
   UnitMoveBehavior *move_behavior = NULL;
   if (unitType == UNIT_FRIGATE) {
-    move_behavior = new AirUnitMovementBehavior(map);
+    move_behavior = air_unit_move_behavior;
   } else {
-    move_behavior = new GroundUnitMovementBehavior(map);
+    move_behavior = ground_unit_move_behavior;
   }
   SDL_Surface* shadow_copy = Surface::copy(unit_shadow[unitType]);
   return new Unit(copy, shadow_copy, map, move_behavior, x, y, viewRange);

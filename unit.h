@@ -120,6 +120,10 @@ class UnitRepository {
       SDL_Surface* unit_animation[MAX_UNIT_TYPES];
       SDL_Surface* unit_shadow[MAX_UNIT_TYPES];
       Map* map;
+
+      // several unit behaviors
+      AirUnitMovementBehavior*    air_unit_move_behavior;
+      GroundUnitMovementBehavior* ground_unit_move_behavior;
 };
 
 #endif
