@@ -18,6 +18,14 @@ GroundUnitMovementBehavior::~GroundUnitMovementBehavior() {
   this->map = NULL; // we are not the owner, so don't delete it.
 }
 
+void GroundUnitMovementBehavior::occupyCell(Point p) {
+  map->occupyCell(p, MAP_LAYER_GROUND);
+}
+
+void GroundUnitMovementBehavior::unOccupyCell(Point p) {
+  map->unOccupyCell(p, MAP_LAYER_GROUND);
+}
+
 bool GroundUnitMovementBehavior::canMoveTo(Point p) {
   if (map->is_occupied(p, MAP_LAYER_GROUND)) return false;
 
@@ -27,13 +35,23 @@ bool GroundUnitMovementBehavior::canMoveTo(Point p) {
 }
 
 //// Air unit movement
-AirUnitMovementBehavior::AirUnitMovementBehavior() {
+AirUnitMovementBehavior::AirUnitMovementBehavior(Map* map) {
+  this->map = map;
 }
 
 AirUnitMovementBehavior::~AirUnitMovementBehavior() {
+  this->map = NULL;
 }
 
 bool AirUnitMovementBehavior::canMoveTo(Point p) {
   return true;
+}
+
+void AirUnitMovementBehavior::occupyCell(Point p) {
+  map->occupyCell(p, MAP_LAYER_AIR);
+}
+
+void AirUnitMovementBehavior::unOccupyCell(Point p) {
+  map->unOccupyCell(p, MAP_LAYER_AIR);
 }
 
