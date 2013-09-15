@@ -131,8 +131,9 @@ class UnitRepository {
       Map* map;
 
       // several unit behaviors
-      AirUnitMovementBehavior*    air_unit_move_behavior;
-      GroundUnitMovementBehavior* ground_unit_move_behavior;
+      AirUnitMoveBehavior*    air_unit_move_behavior;
+      GroundUnitMoveBehavior* ground_unit_move_behavior;
+      FootUnitMoveBehavior*   foot_unit_move_behavior;
 };
 
 #endif

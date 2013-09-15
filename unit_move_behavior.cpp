@@ -22,14 +22,14 @@ void UnitMoveBehavior::unOccupyCell(Point p) {
 }
 
 
-//// Ground unit movement
-GroundUnitMovementBehavior::GroundUnitMovementBehavior(Map* map) : UnitMoveBehavior(map, MAP_LAYER_GROUND) {
+//// Ground unit Move
+GroundUnitMoveBehavior::GroundUnitMoveBehavior(Map* map) : UnitMoveBehavior(map, MAP_LAYER_GROUND) {
 }
 
-GroundUnitMovementBehavior::~GroundUnitMovementBehavior() {
+GroundUnitMoveBehavior::~GroundUnitMoveBehavior() {
 }
 
-bool GroundUnitMovementBehavior::canMoveTo(Point p) {
+bool GroundUnitMoveBehavior::canMoveTo(Point p) {
   if (map->is_occupied(p, MAP_LAYER_GROUND)) return false;
 
   Point map_point = map->toMapPoint(p);
@@ -37,14 +37,26 @@ bool GroundUnitMovementBehavior::canMoveTo(Point p) {
   return terrain_type != TERRAIN_TYPE_MOUNTAIN;
 }
 
-//// Air unit movement
-AirUnitMovementBehavior::AirUnitMovementBehavior(Map* map) : UnitMoveBehavior(map, MAP_LAYER_AIR) {
+//// Air unit Move
+AirUnitMoveBehavior::AirUnitMoveBehavior(Map* map) : UnitMoveBehavior(map, MAP_LAYER_AIR) {
 }
 
-AirUnitMovementBehavior::~AirUnitMovementBehavior() {
+AirUnitMoveBehavior::~AirUnitMoveBehavior() {
 }
 
-bool AirUnitMovementBehavior::canMoveTo(Point p) {
+bool AirUnitMoveBehavior::canMoveTo(Point p) {
   return true;
 }
+
+//// unit Move on foot
+FootUnitMoveBehavior::FootUnitMoveBehavior(Map* map) : UnitMoveBehavior(map, MAP_LAYER_GROUND) {
+}
+
+FootUnitMoveBehavior::~FootUnitMoveBehavior() {
+}
+
+bool FootUnitMoveBehavior::canMoveTo(Point p) {
+  return true;
+}
+
 

@@ -116,11 +116,11 @@ void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
 
   if (selected) Surface::draw(selected_bitmap, screen, draw_x, draw_y);
 
-  if (target != position) {
-    int draw_move_to_x = map_camera->screenCoordinateX(target.x);
-    int draw_move_to_y = map_camera->screenCoordinateY(target.y);
-    lineRGBA(screen, draw_x + 16, draw_y + 16, draw_move_to_x, draw_move_to_y, 255, 0, 255, 255);
-  }
+  //if (target != position) {
+    //int draw_move_to_x = map_camera->screenCoordinateX(target.x);
+    //int draw_move_to_y = map_camera->screenCoordinateY(target.y);
+    //lineRGBA(screen, draw_x + 16, draw_y + 16, draw_move_to_x, draw_move_to_y, 255, 0, 255, 255);
+  //}
 }
 
 void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int world_x, int world_y, int view_range, UnitMoveBehavior* move_behavior, int sub_cell) {
@@ -294,9 +294,9 @@ UnitRepository::UnitRepository(Map* map) {
   unit_animation[UNIT_SOLDIER] = Surface::load8bit("graphics/Unit_Soldier.bmp");
   unit_shadow[UNIT_SOLDIER] = NULL;
 
-
-  air_unit_move_behavior    = new AirUnitMovementBehavior(map);
-  ground_unit_move_behavior = new GroundUnitMovementBehavior(map);
+  air_unit_move_behavior    = new AirUnitMoveBehavior(map);
+  ground_unit_move_behavior = new GroundUnitMoveBehavior(map);
+  foot_unit_move_behavior   = new FootUnitMoveBehavior(map);
 }
 
 UnitRepository::~UnitRepository() {
@@ -307,6 +307,7 @@ UnitRepository::~UnitRepository() {
 
   delete air_unit_move_behavior;
   delete ground_unit_move_behavior;
+  delete foot_unit_move_behavior;
 }
 
 Unit* UnitRepository::create(int unitType, int house, int x, int y, int view_range, int sub_cell) {
@@ -318,6 +319,8 @@ Unit* UnitRepository::create(int unitType, int house, int x, int y, int view_ran
   UnitMoveBehavior *move_behavior = NULL;
   if (unitType == UNIT_FRIGATE) {
     move_behavior = air_unit_move_behavior;
+  } else if (unitType == UNIT_SOLDIER) {
+    move_behavior = foot_unit_move_behavior;
   } else {
     move_behavior = ground_unit_move_behavior;
   }

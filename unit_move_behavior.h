@@ -32,26 +32,34 @@ class UnitMoveBehavior {
 
 };
 
-class GroundUnitMovementBehavior: public UnitMoveBehavior {
+class GroundUnitMoveBehavior: public UnitMoveBehavior {
 
   public:
-    GroundUnitMovementBehavior(Map* map);
-    ~GroundUnitMovementBehavior();
+    GroundUnitMoveBehavior(Map* map);
+    ~GroundUnitMoveBehavior();
     bool canMoveTo(Point p);
 
   private:
 };
 
-class AirUnitMovementBehavior: public UnitMoveBehavior {
+class AirUnitMoveBehavior: public UnitMoveBehavior {
 
   public:
-    AirUnitMovementBehavior(Map* map);
-    ~AirUnitMovementBehavior();
+    AirUnitMoveBehavior(Map* map);
+    ~AirUnitMoveBehavior();
     bool canMoveTo(Point p);
 
   private:
 };
 
+class FootUnitMoveBehavior: public UnitMoveBehavior {
+
+  public:
+    FootUnitMoveBehavior(Map* map);
+    ~FootUnitMoveBehavior();
+    bool canMoveTo(Point p);
+
+};
 
 
 #endif
