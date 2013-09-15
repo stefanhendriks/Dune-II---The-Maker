@@ -57,7 +57,7 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
-- have infantry
+- have foot-men (soldiers, infantry, trooper, troopers, fremen, all are alike)
   - with a maximum of 5 on one cell
   - can be moved seperately (like C&C)
   - can move on mountains
