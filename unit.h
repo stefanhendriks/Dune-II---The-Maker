@@ -52,6 +52,15 @@ class Unit {
       return rectangle.is_point_within(position);
     }
 
+    bool is_on_air_layer() {
+      return move_behavior->is_layer(MAP_LAYER_AIR);
+
+    }
+
+    bool is_on_ground_layer() {
+      return move_behavior->is_layer(MAP_LAYER_GROUND);
+    }
+
   private:
     SDL_Surface* tileset;
     SDL_Surface* shadowset;
@@ -83,6 +92,11 @@ class Unit {
 
     void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int x, int y, int viewRange, UnitMoveBehavior* move_behavior);
 
+    void moveUp() { updateMovePosition(Point(0, -TILE_SIZE)); }
+    void moveDown() { updateMovePosition(Point(0, TILE_SIZE)); }
+    void moveLeft() { updateMovePosition(Point(-TILE_SIZE, 0)); }
+    void moveRight() { updateMovePosition(Point(TILE_SIZE, 0)); }
+
     void updateMovePosition(Point p) {
       this->next_move_position = this->next_move_position + p;
       this->desired_body_facing = desired_facing();
@@ -101,11 +115,6 @@ class Unit {
     }
 
     void turn_body();
-
-    void moveUp() { updateMovePosition(Point(0, -TILE_SIZE)); }
-    void moveDown() { updateMovePosition(Point(0, TILE_SIZE)); }
-    void moveLeft() { updateMovePosition(Point(-TILE_SIZE, 0)); }
-    void moveRight() { updateMovePosition(Point(TILE_SIZE, 0)); }
 
     void stopMoving() {
       this->next_move_position = position;
