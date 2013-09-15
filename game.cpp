@@ -86,7 +86,7 @@ int Game::init() {
   map.load("maps/4PL_Mountains.ini");
   unitRepository = new UnitRepository(&map);
 
-  Unit* frigate = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 5);
+  Unit* frigate = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 10);
   units.push_back(frigate);
 
   Unit* trike1 = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 256, 256, 3);
@@ -173,9 +173,15 @@ void Game::render() {
   SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 
   map_camera->draw(&map, terrain, screen);
+
   for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
-    map_camera->draw(*it, screen);
+    if ((*it)->is_on_ground_layer()) map_camera->draw(*it, screen);
   }
+
+  for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
+    if ((*it)->is_on_air_layer()) map_camera->draw(*it, screen);
+  }
+
   map_camera->drawShroud(&map, shroud_edges, shroud_edges_shadow, screen);
 
   mouse.draw(screen);
