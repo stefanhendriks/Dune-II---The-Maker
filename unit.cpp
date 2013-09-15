@@ -4,11 +4,11 @@
 using namespace std;
 
 Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior) {
-  init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256), 1 + rnd(5), move_behavior);
+  init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256), 1 + rnd(5), move_behavior, SUBCELL_CENTER);
 }
 
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange) {
-  init(tileset, shadowset, map, x, y, viewRange, move_behavior);
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int view_range, int sub_cell) {
+  init(tileset, shadowset, map, x, y, view_range, move_behavior, sub_cell);
 }
 
 Unit::~Unit() {
@@ -83,11 +83,11 @@ void Unit::stopMoving() {
 }
 
 int Unit::getDrawX() {
-  return position.x + offset_x;
+  return position.x + offset_x + sub_position.x;
 }
 
 int Unit::getDrawY() {
-  return position.y + offset_y;
+  return position.y + offset_y + sub_position.y;
 }
 
 bool Unit::isOnLayer(short layer) {
@@ -123,7 +123,7 @@ void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
   }
 }
 
-void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int world_x, int world_y, int viewRange, UnitMoveBehavior* move_behavior) {
+void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int world_x, int world_y, int view_range, UnitMoveBehavior* move_behavior, int sub_cell) {
   this->selected = false;
   this->is_infantry = false;
   this->selected_bitmap = Surface::load("graphics/selected.bmp", 255, 0, 255);
@@ -131,7 +131,7 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int worl
   this->shadowset = shadowset;
   this->body_facing = rnd(FACINGS);
   this->desired_body_facing = this->body_facing;
-  this->view_range = viewRange;
+  this->view_range = view_range;
   this->position = Point(world_x, world_y);
   this->target = this->position;
   this->next_move_position = this->position;
@@ -142,6 +142,13 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int worl
   this->map->removeShroud(this->position, this->view_range);
   this->shadow_alpha = 128;
   this->anim_frame = 0;
+  switch (sub_cell) {
+    case SUBCELL_UPLEFT:    this->sub_position = Point(-8, -8); break;
+    case SUBCELL_UPRIGHT:   this->sub_position = Point(8, -8);  break;
+    case SUBCELL_DOWNLEFT:  this->sub_position = Point(-8, 8);  break;
+    case SUBCELL_DOWNRIGHT: this->sub_position = Point(8, 8);   break;
+    default: this->sub_position = Point(0,0); break;
+  }
 
   int tile_height = 0, tile_width = 0;
   tile_width = tileset->w / FACINGS;
@@ -302,7 +309,7 @@ UnitRepository::~UnitRepository() {
   delete ground_unit_move_behavior;
 }
 
-Unit* UnitRepository::create(int unitType, int house, int x, int y, int viewRange) {
+Unit* UnitRepository::create(int unitType, int house, int x, int y, int view_range, int sub_cell) {
   SDL_Surface* copy = Surface::copy(unit_animation[unitType]);
   int paletteIndexUsedForColoring = 144;
   int paletteIndex = paletteIndexUsedForColoring + (16 * house);
@@ -315,5 +322,5 @@ Unit* UnitRepository::create(int unitType, int house, int x, int y, int viewRang
     move_behavior = ground_unit_move_behavior;
   }
   SDL_Surface* shadow_copy = Surface::copy(unit_shadow[unitType]);
-  return new Unit(copy, shadow_copy, map, move_behavior, x, y, viewRange);
+  return new Unit(copy, shadow_copy, map, move_behavior, x, y, view_range, sub_cell);
 }

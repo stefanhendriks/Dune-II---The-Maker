@@ -20,11 +20,17 @@ const int FACING_DOWN = 6;
 const int FACING_RIGHT_DOWN = 7;
 const int FACINGS = 8;          // used to calculate width of each 'tile' for a unit given a tilset
 
+const int SUBCELL_UPLEFT = 1;
+const int SUBCELL_UPRIGHT = 2;
+const int SUBCELL_CENTER = 3;
+const int SUBCELL_DOWNLEFT = 4;
+const int SUBCELL_DOWNRIGHT = 5;
+
 class Unit {
 
   public:
     Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior);
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int view_range, int sub_cell);
     ~Unit();
 
     void draw(SDL_Surface* screen, MapCamera* map_camera);
@@ -47,6 +53,7 @@ class Unit {
 
     Point target;           // target of interest (move/attack, etc)
     Point position;         // coordinates relative to top/left of map (in pixels)
+    Point sub_position;     // sub positioning on same cell
     Point next_move_position;
     Point prev_position;
     Point size;
@@ -65,7 +72,7 @@ class Unit {
     Map* map;
     UnitMoveBehavior* move_behavior;
 
-    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int x, int y, int viewRange, UnitMoveBehavior* move_behavior);
+    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int x, int y, int view_range, UnitMoveBehavior* move_behavior, int sub_cell);
 
     void moveUp();
     void moveDown();
@@ -116,7 +123,7 @@ class UnitRepository {
 
     void destroy();
 
-    Unit* create(int unitType, int house, int x, int y, int viewRange);
+    Unit* create(int unitType, int house, int x, int y, int view_range, int sub_cell);
 
    private:
       SDL_Surface* unit_animation[MAX_UNIT_TYPES];
