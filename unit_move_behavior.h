@@ -7,11 +7,19 @@
 class UnitMoveBehavior {
 
   public:
-    UnitMoveBehavior();
+    UnitMoveBehavior(Map* map, short layer);
     ~UnitMoveBehavior();
     virtual bool canMoveTo(Point p) = 0;
-    virtual void occupyCell(Point p) = 0;
-    virtual void unOccupyCell(Point p) = 0;
+
+    void occupyCell(Point p);
+    void unOccupyCell(Point p);
+
+    bool is_layer(short layer) { return this->layer == layer; }
+  private:
+    short layer;
+
+  protected:
+    Map* map;
 
 };
 
@@ -21,12 +29,8 @@ class GroundUnitMovementBehavior: public UnitMoveBehavior {
     GroundUnitMovementBehavior(Map* map);
     ~GroundUnitMovementBehavior();
     bool canMoveTo(Point p);
-    void occupyCell(Point p);
-    void unOccupyCell(Point p);
 
   private:
-    Map* map;
-    Unit* unit;
 };
 
 class AirUnitMovementBehavior: public UnitMoveBehavior {
@@ -35,11 +39,8 @@ class AirUnitMovementBehavior: public UnitMoveBehavior {
     AirUnitMovementBehavior(Map* map);
     ~AirUnitMovementBehavior();
     bool canMoveTo(Point p);
-    void occupyCell(Point p);
-    void unOccupyCell(Point p);
 
   private:
-    Map* map;
 };
 
 

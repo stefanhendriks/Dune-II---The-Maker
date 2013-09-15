@@ -3,27 +3,30 @@
 
 using namespace std;
 
-UnitMoveBehavior::UnitMoveBehavior() {
-}
-
-UnitMoveBehavior::~UnitMoveBehavior() {
-}
-
-//// Ground unit movement
-GroundUnitMovementBehavior::GroundUnitMovementBehavior(Map* map) {
+UnitMoveBehavior::UnitMoveBehavior(Map* map, short layer) {
+  this->layer = layer;
   this->map = map;
 }
 
+UnitMoveBehavior::~UnitMoveBehavior() {
+  this->map = NULL;
+  this->layer = 0;
+}
+
+void UnitMoveBehavior::occupyCell(Point p) {
+  map->occupyCell(p, layer);
+}
+
+void UnitMoveBehavior::unOccupyCell(Point p) {
+  map->unOccupyCell(p, layer);
+}
+
+
+//// Ground unit movement
+GroundUnitMovementBehavior::GroundUnitMovementBehavior(Map* map) : UnitMoveBehavior(map, MAP_LAYER_GROUND) {
+}
+
 GroundUnitMovementBehavior::~GroundUnitMovementBehavior() {
-  this->map = NULL; // we are not the owner, so don't delete it.
-}
-
-void GroundUnitMovementBehavior::occupyCell(Point p) {
-  map->occupyCell(p, MAP_LAYER_GROUND);
-}
-
-void GroundUnitMovementBehavior::unOccupyCell(Point p) {
-  map->unOccupyCell(p, MAP_LAYER_GROUND);
 }
 
 bool GroundUnitMovementBehavior::canMoveTo(Point p) {
@@ -35,23 +38,13 @@ bool GroundUnitMovementBehavior::canMoveTo(Point p) {
 }
 
 //// Air unit movement
-AirUnitMovementBehavior::AirUnitMovementBehavior(Map* map) {
-  this->map = map;
+AirUnitMovementBehavior::AirUnitMovementBehavior(Map* map) : UnitMoveBehavior(map, MAP_LAYER_AIR) {
 }
 
 AirUnitMovementBehavior::~AirUnitMovementBehavior() {
-  this->map = NULL;
 }
 
 bool AirUnitMovementBehavior::canMoveTo(Point p) {
   return true;
-}
-
-void AirUnitMovementBehavior::occupyCell(Point p) {
-  map->occupyCell(p, MAP_LAYER_AIR);
-}
-
-void AirUnitMovementBehavior::unOccupyCell(Point p) {
-  map->unOccupyCell(p, MAP_LAYER_AIR);
 }
 

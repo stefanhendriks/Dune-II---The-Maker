@@ -57,7 +57,6 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
-- have air units always be drawn over ground units
 - have infantry
   - with a maximum of 5 on one cell
   - can be moved seperately (like C&C)
@@ -184,6 +183,7 @@ DONE
     <li>have air units not being blocked by any terrain type</li>
     <li>have an arbitrary number of units</li>
     <li>have air units not be blocked by any units</li>
+    <li>have air units always be drawn over ground units</li>
   </ul>
 </del>
 
