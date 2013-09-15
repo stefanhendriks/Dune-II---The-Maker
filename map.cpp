@@ -27,7 +27,8 @@ void Map::init() {
       cells[i].y = y;
       cells[i].terrain_type = TERRAIN_TYPE_ROCK;
       cells[i].tile = TILES_IN_ROW_ON_TERRAIN_SURFACE * cells[i].terrain_type;
-      cells[i].occupied = false;
+      cells[i].occupied[MAP_LAYER_GROUND] = false;
+      cells[i].occupied[MAP_LAYER_AIR] = false;
       cells[i].shrouded = true;
     }
   }
@@ -79,11 +80,11 @@ void Map::setBoundaries(int max_width, int max_height) {
   this->max_height = max_height;
 }
 
-bool Map::is_occupied(Point p) {
+bool Map::is_occupied(Point p, short layer) {
   int map_x = p.x / TILE_SIZE;
   int map_y = p.y / TILE_SIZE;
   Cell* c = getCell(map_x, map_y);
-  return c->occupied;
+  return c->occupied[layer];
 }
 
 

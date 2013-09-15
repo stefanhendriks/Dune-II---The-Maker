@@ -52,9 +52,9 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, i
   this->next_move_position = this->position;
   this->prev_position = this->position;
   this->map=map;
-  this->map->occupyCell(this->position);
-  this->map->removeShroud(this->position, this->view_range);
   this->move_behavior = move_behavior;
+  this->move_behavior->occupyCell(this->position);
+  this->map->removeShroud(this->position, this->view_range);
 
   int tile_height = 0, tile_width = 0;
   tile_width = tileset->w / FACINGS;
@@ -138,7 +138,7 @@ void Unit::updateState() {
   // think about movement
   if (!is_moving()) {
     if (prev_position != position) {
-      map->unOccupyCell(prev_position);
+      move_behavior->unOccupyCell(prev_position);
       map->removeShroud(position, this->view_range);
     }
 
@@ -154,7 +154,7 @@ void Unit::updateState() {
         stopMoving();
       } else {
         // we can move to this tile, claim it
-        map->occupyCell(next_move_position);
+        move_behavior->occupyCell(next_move_position);
         prev_position = position;
       }
 
@@ -217,7 +217,7 @@ Unit* UnitRepository::create(int unitType, int house, int x, int y, int viewRang
   UnitMoveBehavior *move_behavior = NULL;
   if (unitType == UNIT_FRIGATE) {
     cout << "unit is a frigate!" << endl;
-    move_behavior = new AirUnitMovementBehavior();
+    move_behavior = new AirUnitMovementBehavior(map);
   } else {
     move_behavior = new GroundUnitMovementBehavior(map);
   }
