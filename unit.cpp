@@ -83,7 +83,6 @@ void Unit::stopMoving() {
   this->next_move_position = position;
 }
 
-
 int Unit::getDrawX() {
   return position.x + offset_x;
 }
