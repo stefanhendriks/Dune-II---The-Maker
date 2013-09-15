@@ -65,6 +65,7 @@ TODO
 </del>
   - draw two soldiers on cell
   - draw five soldiers on cell
+  - animate moving of unit
   - unit can be moved between cells, respecting sub-cell
   - when sub-cell is taken, then unit will take other cell
   - when all sub-cells are taken, the infantry considers the cell occupied
