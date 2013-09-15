@@ -72,14 +72,14 @@ class Unit {
     void turn_body();
     void updateMovePosition(Point p);
 
+    int  desired_facing();
     bool is_moving();
     bool has_target();
     bool should_turn_body();
     void stopMoving();
 
-    int getDrawX();
-    int getDrawY();
-    int desired_facing();
+    int  getDrawX();
+    int  getDrawY();
 
     bool isOnLayer(short layer);
 };
