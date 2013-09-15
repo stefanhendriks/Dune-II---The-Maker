@@ -61,18 +61,18 @@ TODO
 <del>
   <ul>
     <li>draw soldier (as a single celled unit)</li>
+    <li>draw five soldiers on cell</li>
+    <li>can move on mountains</li>
   </ul>
 </del>
-  - draw two soldiers on cell
-  - draw five soldiers on cell
-  - animate moving of unit
-  - unit can be moved between cells, respecting sub-cell
-  - when sub-cell is taken, then unit will take other cell
-  - when all sub-cells are taken, the infantry considers the cell occupied
-  - can move on mountains
-  - should be blocked by other infantry, only when other cell is full
-  - should be blocked by units
+  - make it possible to select a single soldier on a cell occupied by multiple soldiers
+  - when sub-cell is taken, then unit will take other sub-cell if available
+  - when all sub-cells are taken, the cell is occupied
+  - when not all sub-cells are taken, the cell is not occupied
+  - should be blocked by ground/wheeled units
+  - units from a different house may not occupy the same cell
   - can be squished by heavy units
+  - animate moving of unit
 - modify the properties of units/structures by modifying a rules.ini file
 - move vehicles around larger obstacles (like bases, mountains, etc) (path-finding on 'really-need-it-basis')
 - move (my) units appropriately
