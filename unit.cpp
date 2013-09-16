@@ -119,6 +119,9 @@ void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
   if (selected) Surface::draw(selected_bitmap, screen, draw_x, draw_y);
 
   if (DEV_DRAWTARGETLINE) {
+    int draw_x = map_camera->screenCoordinateX(position.x);
+    int draw_y = map_camera->screenCoordinateY(position.y);
+
     if (target != position) {
       int draw_move_to_x = map_camera->screenCoordinateX(target.x);
       int draw_move_to_y = map_camera->screenCoordinateY(target.y);
@@ -131,8 +134,6 @@ void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
       lineRGBA(screen, draw_x, draw_y, draw_move_to_x, draw_move_to_y, 0, 255, 0, 255);
     }
 
-    int draw_x = map_camera->screenCoordinateX(position.x);
-    int draw_y = map_camera->screenCoordinateY(position.y);
     rectangleRGBA(screen, draw_x, draw_y, draw_x + 1, draw_y + 1, 255, 255, 255, 255);
   }
 
@@ -348,9 +349,9 @@ Unit* UnitRepository::create(int unitType, int house, int x, int y, int view_ran
   int unit_width = tile_width;
   int unit_height = tile_height;
 
-  //if (unitType == UNIT_SOLDIER) {
-    //unit_width = unit_height = 8;
-  //}
+  if (unitType == UNIT_SOLDIER) {
+    unit_width = unit_height = 8;
+  }
 
   return new Unit(copy, shadow_copy, map, move_behavior, (x * TILE_SIZE) + (TILE_SIZE / 2), (y * TILE_SIZE) + (TILE_SIZE / 2), view_range, sub_cell, Point(tile_width, tile_height), Point(unit_width, unit_height));
 }
