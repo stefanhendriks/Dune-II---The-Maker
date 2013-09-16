@@ -10,6 +10,8 @@
 #include "map.h"
 #include "unit_move_behavior.h"
 
+#define DEV_DRAWTARGETLINE true
+
 const int FACING_RIGHT = 0;
 const int FACING_UP_RIGHT = 1;
 const int FACING_UP = 2;
@@ -30,7 +32,7 @@ class Unit {
 
   public:
     Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior);
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int view_range, int sub_cell);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int world_x, int world_y, int view_range, int sub_cell, Point tile_size, Point unit_size);
     ~Unit();
 
     void draw(SDL_Surface* screen, MapCamera* map_camera);
@@ -55,7 +57,8 @@ class Unit {
     Point position;         // coordinates relative to top/left of map (in pixels)
     Point next_move_position;
     Point prev_position;
-    Point size;
+    Point tile_size;
+    Point unit_size;
 
     int shadow_alpha;       // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
     int anim_frame;         // animation frames are 'rows' in the tileset
@@ -71,7 +74,7 @@ class Unit {
     Map* map;
     UnitMoveBehavior* move_behavior;
 
-    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int x, int y, int view_range, UnitMoveBehavior* move_behavior, int sub_cell);
+    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int world_x, int world_y, int view_range, UnitMoveBehavior* move_behavior, int sub_cell, Point tile_size, Point unit_size);
 
     void moveUp();
     void moveDown();
