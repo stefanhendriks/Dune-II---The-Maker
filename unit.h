@@ -53,7 +53,6 @@ class Unit {
 
     Point target;           // target of interest (move/attack, etc)
     Point position;         // coordinates relative to top/left of map (in pixels)
-    Point sub_position;     // sub positioning on same cell
     Point next_move_position;
     Point prev_position;
     Point size;

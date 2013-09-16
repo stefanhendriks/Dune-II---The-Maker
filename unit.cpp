@@ -83,11 +83,11 @@ void Unit::stopMoving() {
 }
 
 int Unit::getDrawX() {
-  return position.x + offset_x + sub_position.x;
+  return position.x + offset_x;
 }
 
 int Unit::getDrawY() {
-  return position.y + offset_y + sub_position.y;
+  return position.y + offset_y;
 }
 
 bool Unit::isOnLayer(short layer) {
@@ -133,9 +133,6 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int worl
   this->desired_body_facing = this->body_facing;
   this->view_range = view_range;
   this->position = Point(world_x, world_y);
-  this->target = this->position;
-  this->next_move_position = this->position;
-  this->prev_position = this->position;
   this->map = map;
   this->move_behavior = move_behavior;
   this->move_behavior->occupyCell(this->position);
@@ -143,12 +140,16 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int worl
   this->shadow_alpha = 128;
   this->anim_frame = 0;
   switch (sub_cell) {
-    case SUBCELL_UPLEFT:    this->sub_position = Point(-8, -8); break;
-    case SUBCELL_UPRIGHT:   this->sub_position = Point(8, -8);  break;
-    case SUBCELL_DOWNLEFT:  this->sub_position = Point(-8, 8);  break;
-    case SUBCELL_DOWNRIGHT: this->sub_position = Point(8, 8);   break;
-    default: this->sub_position = Point(0,0); break;
+    case SUBCELL_UPLEFT:    this->position = this->position + Point(-8, -8); break;
+    case SUBCELL_UPRIGHT:   this->position = this->position + Point(8, -8);  break;
+    case SUBCELL_DOWNLEFT:  this->position = this->position + Point(-8, 8);  break;
+    case SUBCELL_DOWNRIGHT: this->position = this->position + Point(8, 8);   break;
+    default: break;
   }
+
+  this->next_move_position = this->position;
+  this->prev_position = this->position;
+  this->target = this->position;
 
   int tile_height = 0, tile_width = 0;
   tile_width = tileset->w / FACINGS;
