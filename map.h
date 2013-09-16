@@ -11,6 +11,8 @@
 
 #include <math.h>
 
+#define DEV_DRAWGRID true
+
 class Unit;
 
 using namespace std;

@@ -163,6 +163,7 @@ void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
       drawY -= offsetY;
 
       Surface::drawIndexedTile(tileset, screen, c->tile, drawX, drawY);
+      if (DEV_DRAWGRID) rectangleRGBA(screen, drawX, drawY, drawX+32, drawY+32, 127, 127, 127, 255);
     }
   }
 }
