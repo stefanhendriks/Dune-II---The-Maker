@@ -116,7 +116,10 @@ void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
   Surface::draw(shadowset, screen, src_x, src_y, tile_width, tile_height, draw_x, draw_y, this->shadow_alpha);
   Surface::draw(tileset, screen, src_x, src_y, tile_width, tile_height, draw_x, draw_y);
 
-  if (selected) Surface::draw(selected_bitmap, screen, draw_x, draw_y);
+  if (selected) {
+    // todo: draw it ourselves, with lines so it is super flexible
+    Surface::draw(selected_bitmap, screen, draw_x, draw_y);
+  }
 
   if (DEV_DRAWTARGETLINE) {
     int draw_x = map_camera->screenCoordinateX(position.x);
@@ -171,7 +174,8 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int worl
   this->tile_size = tile_size;
   this->unit_size = unit_size;
 
-  // every pixel short/too much of the perfect tile size will be spread evenly
+  // make sure the position becomes the center, do this by calculating half of width/height and set it as offset
+  // so it will be substracted later when drawing (in the getDrawX() and getDrawY() methods)
   this->offset_x = -(tile_size.x / 2);
   this->offset_y = -(tile_size.y / 2);
 }
