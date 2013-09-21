@@ -98,9 +98,9 @@ bool Unit::isOnLayer(short layer) {
 
 void Unit::order_move(Point target) {
   // snap coordinates
-  //int y = (target.y / TILE_SIZE) * TILE_SIZE;
-  //int x = (target.x / TILE_SIZE) * TILE_SIZE;
-  this->target = Point(target);
+  int y = ((target.y / TILE_SIZE) * TILE_SIZE) + (TILE_SIZE / 2);
+  int x = ((target.x / TILE_SIZE) * TILE_SIZE) + (TILE_SIZE / 2);
+  this->target = Point(x, y);
 }
 
 void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
