@@ -97,10 +97,14 @@ bool Unit::isOnLayer(short layer) {
 }
 
 void Unit::order_move(Point target) {
-  // snap coordinates
+  // snap coordinates to center of cell
   int y = ((target.y / TILE_SIZE) * TILE_SIZE) + (TILE_SIZE / 2);
   int x = ((target.x / TILE_SIZE) * TILE_SIZE) + (TILE_SIZE / 2);
+
   this->target = Point(x, y);
+  
+  // then apply the same offset if given
+  this->target = this->target + this->sub_position;
 }
 
 void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
@@ -160,13 +164,15 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int worl
   this->map->removeShroud(this->position, this->view_range);
   this->shadow_alpha = 128;
   this->anim_frame = 0;
+  this->sub_position = Point(0,0);
   switch (sub_cell) {
-    case SUBCELL_UPLEFT:    this->position = this->position + Point(-8, -8); break;
-    case SUBCELL_UPRIGHT:   this->position = this->position + Point(8, -8);  break;
-    case SUBCELL_DOWNLEFT:  this->position = this->position + Point(-8, 8);  break;
-    case SUBCELL_DOWNRIGHT: this->position = this->position + Point(8, 8);   break;
+    case SUBCELL_UPLEFT:    this->sub_position = Point(-8, -8); break;
+    case SUBCELL_UPRIGHT:   this->sub_position = Point(8, -8);  break;
+    case SUBCELL_DOWNLEFT:  this->sub_position = Point(-8, 8);  break;
+    case SUBCELL_DOWNRIGHT: this->sub_position = Point(8, 8);   break;
     default: break;
   }
+  this->position = this->position + this->sub_position;
 
   this->next_move_position = this->position;
   this->prev_position = this->position;
