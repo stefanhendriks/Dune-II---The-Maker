@@ -1,5 +1,7 @@
 #include <iostream>
 #include "unit.h"
+#include "vector2d.h"
+
 
 using namespace std;
 
@@ -265,30 +267,17 @@ void Unit::updateState() {
   }
 
   if (has_target()) {
-    float delta_x = (next_move_position.x - position.x);
-    float delta_y = (next_move_position.y - position.y);
-    float A = fabs(delta_x) * fabs(delta_x);
-    float B = fabs(delta_y) * fabs(delta_y);
-    float distance = sqrt(A+B); // A2 + B2 = C2 :)
+    Vector2D vector = Vector2D(position, next_move_position);
+    Vector2D normalized = vector.normalize();
 
-    float angle = (atan2(delta_y, delta_x));
-
-    // now do some thing to make
+    float distance = vector.length();
     float speed = 2.0F;
     if (distance < speed) speed = distance;
 
-    float xInc = (speed * cos(angle));
-    float yInc = (speed * sin(angle));
-    //cout << "increasing x,y with " << xInc << "," << yInc << ". current position is " << position.x << "," << position.y << " - going to " << next_move_position.x << endl;
-    position.x = position.x + xInc;
-    position.y = position.y + yInc;
+    position.x = position.x + (normalized.x * speed);
+    position.y = position.y + (normalized.y * speed);
   }
 
-  // execute movement
-  //if (position.x < next_move_position.x) position.x++;
-  //if (position.x > next_move_position.x) position.x--;
-  //if (position.y < next_move_position.y) position.y++;
-  //if (position.y > next_move_position.y) position.y--;
 }
 
 //////////////////////////////////////////

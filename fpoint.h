@@ -1,6 +1,7 @@
 #ifndef FPOINT
 #define FPOINT
 
+#include <math.h>
 #include "point.h"
 
 const float FLOAT_COMPARISON_THRESHOLD = 0.001F;
