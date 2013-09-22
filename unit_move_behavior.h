@@ -8,7 +8,7 @@ class UnitMoveBehavior {
 
   public:
     UnitMoveBehavior(Map* map, short layer);
-    ~UnitMoveBehavior();
+    virtual ~UnitMoveBehavior();
     virtual bool canMoveTo(Point p) = 0;
 
     void occupyCell(Point p);
