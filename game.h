@@ -6,6 +6,7 @@
 #include "keyboard.h"
 #include "mouse.h"
 #include "unit.h"
+#include <memory>
 
 class Game {
 
@@ -26,14 +27,14 @@ class Game {
       SDL_Surface* terrain;
       SDL_Surface* shroud_edges;
       SDL_Surface* shroud_edges_shadow;
-      MapCamera* map_camera;
+      std::unique_ptr<MapCamera> map_camera;
       Map map;
       Keyboard keyboard;
       Mouse mouse;
 
-      std::vector<Unit*> units;
+      std::vector<std::unique_ptr<Unit> > units; //possibly should be shared_ptr
 
-      UnitRepository *unitRepository;
+      std::unique_ptr<UnitRepository> unitRepository;
 };
 
 #endif

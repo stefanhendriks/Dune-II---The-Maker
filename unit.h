@@ -2,7 +2,7 @@
 #define UNIT_H
 
 #include "SDL/SDL.h"
-#include "SDL_gfxPrimitives.h"
+#include <SDL/SDL_gfxPrimitives.h>
 
 #include "random.h"
 #include "rectangle.h"

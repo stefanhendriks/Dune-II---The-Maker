@@ -1,6 +1,6 @@
 #include <iostream>
 #include "SDL/SDL.h"
-#include "SDL_image.h"
+#include <SDL/SDL_image.h>
 #include "surface.h"
 
 #include "random.h"
