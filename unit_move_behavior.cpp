@@ -9,8 +9,8 @@ UnitMoveBehavior::UnitMoveBehavior(Map* map, short layer) {
 }
 
 UnitMoveBehavior::~UnitMoveBehavior() {
+  // do not delete, class does not own them
   this->map = NULL;
-  this->layer = 0;
 }
 
 void UnitMoveBehavior::occupyCell(Point p) {
