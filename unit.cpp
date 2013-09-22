@@ -14,7 +14,6 @@ Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehav
 Unit::~Unit() {
   SDL_FreeSurface(tileset);
   SDL_FreeSurface(shadowset);
-  delete move_behavior;
 }
 
 void Unit::select() {
@@ -137,7 +136,7 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, i
   this->next_move_position = this->position;
   this->prev_position = this->position;
   this->map=map;
-  this->move_behavior = move_behavior;
+  this->move_behavior.reset(move_behavior);
   this->move_behavior->occupyCell(this->position);
   this->map->removeShroud(this->position, this->view_range);
 
