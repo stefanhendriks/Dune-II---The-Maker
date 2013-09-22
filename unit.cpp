@@ -1,7 +1,5 @@
 #include <iostream>
 #include "unit.h"
-#include "vector2d.h"
-
 
 using namespace std;
 
@@ -107,6 +105,7 @@ void Unit::order_move(Point target) {
 
   // then apply the same offset if given
   this->target = this->target + this->sub_position;
+
 }
 
 void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
@@ -258,6 +257,11 @@ void Unit::updateState() {
         // we can move to this tile, claim it
         move_behavior->occupyCell(Point(next_move_position.x, next_move_position.y));
         prev_position = position;
+
+        // TODO!??! - determine sub-cell / position for infantry if applicable?
+
+        // calculate the direction once
+        this->next_move_direction = Vector2D(position, next_move_position).normalize();
       }
 
     } else {
@@ -268,14 +272,13 @@ void Unit::updateState() {
 
   if (has_target()) {
     Vector2D vector = Vector2D(position, next_move_position);
-    Vector2D normalized = vector.normalize();
 
     float distance = vector.length();
     float speed = 2.0F;
     if (distance < speed) speed = distance;
 
-    position.x = position.x + (normalized.x * speed);
-    position.y = position.y + (normalized.y * speed);
+    position.x = position.x + (next_move_direction.x * speed);
+    position.y = position.y + (next_move_direction.y * speed);
   }
 
 }

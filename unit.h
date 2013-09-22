@@ -4,6 +4,7 @@
 #include "SDL/SDL.h"
 #include "SDL_gfxPrimitives.h"
 
+#include "vector2d.h"
 #include "random.h"
 #include "rectangle.h"
 #include "surface.h"
@@ -55,10 +56,11 @@ class Unit {
     SDL_Surface* shadowset;
     SDL_Surface* selected_bitmap;
 
-    FPoint target;           // target of interest (move/attack, etc)
-    FPoint position;         // coordinates relative to top/left of map (in pixels)
-    FPoint sub_position;     //
+    FPoint target;            // target of interest (move/attack, etc)
+    FPoint position;          // coordinates relative to top/left of map (in pixels)
+    FPoint sub_position;
     FPoint next_move_position;
+    Vector2D next_move_direction;
     FPoint prev_position;
 
     Point tile_size;

@@ -1,6 +1,10 @@
 #include "vector2d.h"
 #include <math.h>
 
+Vector2D::Vector2D() {
+  this->x = this->y = 0.0F;
+}
+
 Vector2D::Vector2D(const FPoint &from, const FPoint &to) {
   this->x = to.x - from.x;
   this->y = to.y - from.y;
@@ -22,5 +26,5 @@ Vector2D Vector2D::normalize() {
     return Vector2D(x / length, y / length);
   }
 
-  return Vector2D(0.0F, 0.0F);
+  return Vector2D();
 }
