@@ -10,6 +10,8 @@
 #include "map.h"
 #include "unit_move_behavior.h"
 
+#include "fpoint.h"
+
 #define DEV_DRAWTARGETLINE true
 
 const int FACING_RIGHT = 0;
@@ -53,11 +55,12 @@ class Unit {
     SDL_Surface* shadowset;
     SDL_Surface* selected_bitmap;
 
-    Point target;           // target of interest (move/attack, etc)
-    Point position;         // coordinates relative to top/left of map (in pixels)
-    Point sub_position;     //
-    Point next_move_position;
-    Point prev_position;
+    FPoint target;           // target of interest (move/attack, etc)
+    FPoint position;         // coordinates relative to top/left of map (in pixels)
+    FPoint sub_position;     //
+    FPoint next_move_position;
+    FPoint prev_position;
+
     Point tile_size;
     Point unit_size;
 

@@ -29,7 +29,7 @@ bool Unit::is_selected() {
 }
 
 bool Unit::is_within(const Rectangle& rectangle) {
-  return rectangle.is_point_within(position);
+  return rectangle.is_point_within(Point(position.x, position.y));
 }
 
 bool Unit::is_on_air_layer() {
@@ -41,8 +41,8 @@ bool Unit::is_on_ground_layer() {
 }
 
 bool Unit::is_point_within(const Point& point) {
-  Point start_of_click_area = position - Point(unit_size.x, unit_size.y);
-  Rectangle current_area = Rectangle(start_of_click_area, (position + unit_size));
+  Point start_of_click_area = Point(position.x, position.y) - Point(unit_size.x, unit_size.y);
+  Rectangle current_area = Rectangle(start_of_click_area, (Point(position.x, position.y) + unit_size));
   return current_area.is_point_within(point);
 }
 
@@ -102,7 +102,7 @@ void Unit::order_move(Point target) {
   int x = ((target.x / TILE_SIZE) * TILE_SIZE) + (TILE_SIZE / 2);
 
   this->target = Point(x, y);
-  
+
   // then apply the same offset if given
   this->target = this->target + this->sub_position;
 }
@@ -160,8 +160,6 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int worl
   this->position = Point(world_x, world_y);
   this->map = map;
   this->move_behavior = move_behavior;
-  this->move_behavior->occupyCell(this->position);
-  this->map->removeShroud(this->position, this->view_range);
   this->shadow_alpha = 128;
   this->anim_frame = 0;
   this->sub_position = Point(0,0);
@@ -173,6 +171,9 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int worl
     default: break;
   }
   this->position = this->position + this->sub_position;
+
+  this->move_behavior->occupyCell(Point(this->position.x, this->position.y));
+  this->map->removeShroud(Point(this->position.x, this->position.y), this->view_range);
 
   this->next_move_position = this->position;
   this->prev_position = this->position;
@@ -237,8 +238,8 @@ void Unit::updateState() {
   // think about movement
   if (!is_moving()) {
     if (prev_position != position) {
-      move_behavior->unOccupyCell(prev_position);
-      map->removeShroud(position, this->view_range);
+      move_behavior->unOccupyCell(Point(prev_position.x, prev_position.y));
+      map->removeShroud(Point(position.x, position.y), this->view_range);
     }
 
     if (has_target()) {
@@ -249,11 +250,11 @@ void Unit::updateState() {
       if (target.y > position.y) moveDown();
 
       // check if we can move to this
-      if (!move_behavior->canMoveTo(next_move_position)) {
+      if (!move_behavior->canMoveTo(Point(next_move_position.x, next_move_position.y))) {
         stopMoving();
       } else {
         // we can move to this tile, claim it
-        move_behavior->occupyCell(next_move_position);
+        move_behavior->occupyCell(Point(next_move_position.x, next_move_position.y));
         prev_position = position;
       }
 
@@ -263,11 +264,31 @@ void Unit::updateState() {
 
   }
 
+  if (has_target()) {
+    float delta_x = (next_move_position.x - position.x);
+    float delta_y = (next_move_position.y - position.y);
+    float A = fabs(delta_x) * fabs(delta_x);
+    float B = fabs(delta_y) * fabs(delta_y);
+    float distance = sqrt(A+B); // A2 + B2 = C2 :)
+
+    float angle = (atan2(delta_y, delta_x));
+
+    // now do some thing to make
+    float speed = 2.0F;
+    if (distance < speed) speed = distance;
+
+    float xInc = (speed * cos(angle));
+    float yInc = (speed * sin(angle));
+    //cout << "increasing x,y with " << xInc << "," << yInc << ". current position is " << position.x << "," << position.y << " - going to " << next_move_position.x << endl;
+    position.x = position.x + xInc;
+    position.y = position.y + yInc;
+  }
+
   // execute movement
-  if (position.x < next_move_position.x) position.x++;
-  if (position.x > next_move_position.x) position.x--;
-  if (position.y < next_move_position.y) position.y++;
-  if (position.y > next_move_position.y) position.y--;
+  //if (position.x < next_move_position.x) position.x++;
+  //if (position.x > next_move_position.x) position.x--;
+  //if (position.y < next_move_position.y) position.y++;
+  //if (position.y > next_move_position.y) position.y--;
 }
 
 //////////////////////////////////////////
