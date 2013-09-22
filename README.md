@@ -64,9 +64,10 @@ TODO
     <li>draw five soldiers on cell</li>
     <li>can move on mountains</li>
     <li>make it possible to select a single soldier on a cell occupied by multiple soldiers</li>
+    <li>normal units should still be able to move to other cells</li>
   </ul>
 </del>
-  - units should be able to move to other cells
+  - unit taking sub-cell (soldier) should be able to move to destination, and remain on sub-cell
   - when sub-cell is taken, then unit will take other sub-cell if available
   - when all sub-cells are taken, the cell is occupied
   - when not all sub-cells are taken, the cell is not occupied
