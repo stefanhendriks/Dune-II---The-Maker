@@ -5,8 +5,8 @@ using namespace std;
 
 Keyboard::Keyboard():
     qPressed(false),
-    emit_event(false),
-    up(false), down(false), left(false), right(false)
+    up(false), down(false), left(false), right(false),
+    emit_event(false)
 {
 
 }

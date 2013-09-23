@@ -55,7 +55,7 @@ int Game::init() {
 
   int flags = IMG_INIT_JPG | IMG_INIT_PNG;
   int initted=IMG_Init(flags);
-  if( initted & flags != flags) {
+  if( (initted & flags) != flags) {
     cout << "could not init SDL_Image" << endl;
     cout << "Reason: " << IMG_GetError() << endl;
     return false;
