@@ -2,7 +2,7 @@
 #define MOUSE_H
 
 #include "SDL/SDL.h"
-#include "SDL_gfxPrimitives.h"
+#include <SDL/SDL_gfxPrimitives.h>
 
 #include "eventfactory.h"
 

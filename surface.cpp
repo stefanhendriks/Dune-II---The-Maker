@@ -1,6 +1,6 @@
 #include <iostream>
 #include "SDL/SDL.h"
-#include "SDL_image.h"
+#include <SDL/SDL_image.h>
 #include "surface.h"
 
 #include "random.h"
@@ -35,7 +35,7 @@ SDL_Surface* Surface::copy(SDL_Surface *source) {
   int height = source->h;
   int bits = source->format->BitsPerPixel;
 
-  SDL_Surface* copy = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_HWPALETTE, width, height, bits, NULL, NULL, NULL, NULL);
+  SDL_Surface* copy = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_HWPALETTE, width, height, bits, 0, 0, 0, 0);
   if(copy == NULL) {
     cerr << "Failed to create a copy of surface; " << SDL_GetError() << endl;
     return NULL;
@@ -143,18 +143,30 @@ void Surface::draw(SDL_Surface* src, SDL_Surface* dest, int src_x, int src_y, in
   SDL_BlitSurface(src, &srcRect, dest, &destRect);
 }
 
+void Surface::drawTile(SDL_Surface* tileset, SDL_Surface* dest, int src_x, int src_y, int dest_x, int dest_y, Uint32 alpha) {
+  if (tileset == NULL || dest == NULL) return;
+  Surface::draw(tileset, dest, src_x * TILE_SIZE, src_y * TILE_SIZE, TILE_SIZE, TILE_SIZE, dest_x, dest_y, alpha);
+}
+
 void Surface::drawTile(SDL_Surface* tileset, SDL_Surface* dest, int src_x, int src_y, int dest_x, int dest_y) {
   if (tileset == NULL || dest == NULL) return;
   Surface::draw(tileset, dest, src_x * TILE_SIZE, src_y * TILE_SIZE, TILE_SIZE, TILE_SIZE, dest_x, dest_y);
 }
 
-void Surface::drawTile(SDL_Surface* tileset, SDL_Surface* dest, int tileIndex, int dest_x, int dest_y) {
+void Surface::drawIndexedTile(SDL_Surface* tileset, SDL_Surface* dest, int tileIndex, int dest_x, int dest_y, Uint32 alpha) {
   if (tileset == NULL || dest == NULL) return;
   int tiles_width = tileset->w / TILE_SIZE;
-  int tiles_height = tileset->h / TILE_SIZE;
 
   int tileset_y = (tileIndex / tiles_width);
-  int tileset_x = tileIndex - (tileset_y * tiles_height);
+  int tileset_x = (tileIndex - (tileset_y * tiles_width));
 
-  Surface::drawTile(tileset, dest, tileset_x, tileset_y, dest_x, dest_y);
+  if (alpha < 255) {
+    Surface::drawTile(tileset, dest, tileset_x, tileset_y, dest_x, dest_y, alpha);
+  } else {
+    Surface::drawTile(tileset, dest, tileset_x, tileset_y, dest_x, dest_y);
+  }
+}
+
+void Surface::drawIndexedTile(SDL_Surface* tileset, SDL_Surface* dest, int tileIndex, int dest_x, int dest_y) {
+  drawIndexedTile(tileset, dest, tileIndex, dest_x, dest_y, 255);
 }

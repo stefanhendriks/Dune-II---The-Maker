@@ -3,10 +3,12 @@
 
 using namespace std;
 
-Keyboard::Keyboard() {
-  qPressed = false;
-  emit_event = false;
-  up=down=left=right=false;
+Keyboard::Keyboard():
+    qPressed(false),
+    up(false), down(false), left(false), right(false),
+    emit_event(false)
+{
+
 }
 
 void Keyboard::onEvent(SDL_Event* event) {

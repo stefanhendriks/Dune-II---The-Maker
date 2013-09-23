@@ -3,7 +3,13 @@
 
 #include <iostream>
 
+#include "SDL/SDL.h"
+
+#include "surface.h"
 #include "rectangle.h"
+#include "eventfactory.h"
+
+#include <math.h>
 
 class Unit;
 
@@ -12,13 +18,57 @@ using namespace std;
 const int MAP_MAX_SIZE = 65536; // 256X256 map
 const int MAP_MAX_WIDTH = 256;
 const int MAP_MAX_HEIGHT = 256;
+const int MAP_MIN_WIDTH = 32;
+const int MAP_MIN_HEIGHT = 32;
 
 const int TILE_SIZE = 32; // squared
+
+const int TERRAIN_TYPE_SAND     =  0;
+const int TERRAIN_TYPE_HILL     =  1;
+const int TERRAIN_TYPE_ROCK     =  2;
+const int TERRAIN_TYPE_SPICE    =  3;
+const int TERRAIN_TYPE_MOUNTAIN =  4;
+const int TERRAIN_TYPE_SPICEHILL = 5;
+const int TERRAIN_TYPE_SLAB     =  6;
+
+const int TILES_IN_ROW_ON_TERRAIN_SURFACE = 17;
+
+
+const int MAP_LAYER_GROUND = 0;
+const int MAP_LAYER_AIR = 1;
+const int MAP_MAX_LAYERS = 2;
 
 class Cell {
   public:
     int tile; // tile to draw (one-dimension array)
-    bool occupied;
+    int terrain_type; // terrain type (sand, rock, etc)
+    bool occupied[MAP_MAX_LAYERS];
+    bool shrouded;
+    int x, y;
+
+    // considers "this" as center opposed to other cell. (ego-centric)
+    bool shouldSmoothWithTerrainType(Cell* other) {
+      if (this->terrain_type == TERRAIN_TYPE_ROCK) {
+        return other->terrain_type != TERRAIN_TYPE_MOUNTAIN &&
+               other->terrain_type != TERRAIN_TYPE_ROCK &&
+               other->terrain_type != TERRAIN_TYPE_SLAB;
+      }
+      if (this->terrain_type == TERRAIN_TYPE_MOUNTAIN) {
+        return other->terrain_type != TERRAIN_TYPE_MOUNTAIN;
+      }
+      if (this->terrain_type == TERRAIN_TYPE_SLAB) {
+        return other->terrain_type != TERRAIN_TYPE_MOUNTAIN &&
+               other->terrain_type != TERRAIN_TYPE_ROCK;
+      }
+      if (this->terrain_type == TERRAIN_TYPE_SPICE) {
+        return other->terrain_type != TERRAIN_TYPE_SPICE &&
+               other->terrain_type != TERRAIN_TYPE_SPICEHILL;
+      }
+      if (this->terrain_type == TERRAIN_TYPE_SPICEHILL) {
+        return other->terrain_type != TERRAIN_TYPE_SPICEHILL;
+      }
+      return other->terrain_type != this->terrain_type;
+    }
 };
 
 class Map {
@@ -28,49 +78,66 @@ class Map {
 
     void setBoundaries(int max_width, int max_height);
 
+    void load(string file);
+
+    Cell* getCell(Point map_point) {
+      return getCell(map_point.x, map_point.y);
+    }
+
     Cell* getCell(int x, int y) {
-      if (x < 0) {
-        cerr << "Map::getCell x[" << x << "] got out of bounds, fixing." << endl;
-        x = 0;
-      }
-
-      if (x >= MAP_MAX_WIDTH) {
-        cerr << "Map::getCell x[" << x << "] got out of bounds, fixing." << endl;
-        x = (MAP_MAX_WIDTH - 1); // 0 based so substract! (0 till 255):
-      }
-
-      if (y < 0) {
-        cerr << "Map::getCell y[" << y << "] got out of bounds, fixing." << endl;
-        y = 0;
-      }
-
-      if (y >= MAP_MAX_HEIGHT) {
-        cerr << "Map::getCell y[" << y << "] got out of bounds, fixing." << endl;
-        y = (MAP_MAX_HEIGHT - 1); // 0 based so substract! (0 till 255):
-      }
-
+      x = min(max(x, 0), (MAP_MAX_WIDTH-1));
+      y = min(max(y, 0), (MAP_MAX_HEIGHT-1));
       int cell = (y * MAP_MAX_WIDTH) + x;
       return &cells[cell];
     }
 
-    void occupyCell(int x, int y) {
-      getCell(x, y)->occupied = true;
+    void occupyCell(const Point& world_point, short layer) {
+      getCell(toMapPoint(world_point))->occupied[layer] = true;
     }
 
-    void unOccupyCell(int x, int y) {
-      getCell(x, y)->occupied = false;
+    void unOccupyCell(const Point& world_point, short layer) {
+      getCell(toMapPoint(world_point))->occupied[layer] = false;
+    }
+
+    void removeShroud(Point world_point, int range) {
+      Point mapPoint = toMapPoint(world_point);
+      int x = mapPoint.x;
+      int y = mapPoint.y;
+      for (int cell_x = max(x - range, 0); cell_x <= min(x + range, getMaxWidth() -1); cell_x++) {
+        for (int cell_y = max(y - range, 0); cell_y <= min(y + range, getMaxHeight() -1); cell_y++) {
+          if (pow(cell_x - x, 2) + pow(cell_y - y, 2) <= pow(range, 2) + 1) {
+            getCell(cell_x, cell_y)->shrouded = false;
+          }
+        }
+      }
     }
 
     int getMaxWidth() { return max_width; }
     int getMaxHeight() { return max_height; }
 
-    bool is_occupied(Point p);
+    void setMaxBoundaries(Point boundaries) {
+      max_width = boundaries.x + 2;
+      max_height = boundaries.y + 2;
+      eventFactory.pushMapBoundariesChanged();
+    }
+
+    bool is_occupied(Point p, short layer);
+
+    Point toMapPoint(const Point& world_point) {
+      Point result(world_point.x / TILE_SIZE, world_point.y / TILE_SIZE);
+      return result;
+    }
 
   private:
     Cell cells[MAP_MAX_SIZE];
+    EventFactory eventFactory;
     int max_width;
     int max_height;
 
+    void init();
+    void determineCellTile(Cell* c);
+    void determineCellTileForMap();
+    int determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool cell_right);
 };
 
 const float CAMERA_VELOCITY_ACCELERATION = 0.25f;
@@ -87,6 +154,7 @@ class MapCamera {
 
     void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
     void draw(Unit* unit, SDL_Surface* screen);
+    void drawShroud(Map* map, SDL_Surface* shroud_edges, SDL_Surface* shroud_edges_shadow, SDL_Surface* screen);
 
     Point toScreenCoordindates(const Point& point_with_world_coords) {
       int screen_x = screenCoordinateX(point_with_world_coords.x);
@@ -126,6 +194,7 @@ class MapCamera {
     float move_x_velocity;
     float move_y_velocity;
 
+    Map* map;
 
 		int getWidth() { return max_cells_width_on_screen; }
 		int getHeight() { return max_cells_height_on_screen; }
@@ -138,7 +207,11 @@ class MapCamera {
     void moveRight() { move_x_velocity += CAMERA_VELOCITY_ACCELERATION; }
     void stopMoving() { move_x_velocity = move_y_velocity = 0.0F; }
 
-    int max_y() { return (map_y_boundary - max_cells_height_on_screen) * 32; }
-    int max_x() { return (map_x_boundary - max_cells_width_on_screen) * 32; }
+    int min_x() { return TILE_SIZE; }
+    int min_y() { return TILE_SIZE; }
+    int max_y() { return (((map_y_boundary - max_cells_height_on_screen) - (1 + 2)) * TILE_SIZE); }
+    int max_x() { return (((map_x_boundary - max_cells_width_on_screen) - (1 + 2)) * TILE_SIZE); }
+
+    int determineShroudEdge(Map* map, Cell* c);
 };
 #endif

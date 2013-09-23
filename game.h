@@ -1,10 +1,12 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <vector>
 #include "map.h"
 #include "keyboard.h"
 #include "mouse.h"
 #include "unit.h"
+#include <memory>
 
 class Game {
 
@@ -19,20 +21,20 @@ class Game {
       void updateState();
       void render();
       int cleanup();
+      void deselectAllUnits();
       bool playing;
-      SDL_Surface *screen;
-      SDL_Surface *tileset;
-      MapCamera *map_camera;
+      SDL_Surface* screen;
+      SDL_Surface* terrain;
+      SDL_Surface* shroud_edges;
+      SDL_Surface* shroud_edges_shadow;
+      std::unique_ptr<MapCamera> map_camera;
       Map map;
       Keyboard keyboard;
       Mouse mouse;
 
-      // THIS WILL BE A LIST/ARRAY/VECTOR OF SOME SORT SOME DAY
-      Unit *unit;
-      Unit *devastator;
-      // END
+      std::vector<std::unique_ptr<Unit> > units; //possibly should be shared_ptr
 
-      UnitRepository *unitRepository;
+      std::unique_ptr<UnitRepository> unitRepository;
 };
 
 #endif

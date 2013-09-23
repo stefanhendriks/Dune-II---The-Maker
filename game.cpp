@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include "SDL/SDL.h"
-#include "SDL_image.h"
-#include "SDL_gfxPrimitives.h"
+#include <SDL/SDL_image.h>
+#include <SDL/SDL_gfxPrimitives.h>
 #include "point.h"
 #include "map.h"
 #include "game.h"
@@ -11,17 +11,21 @@
 
 using namespace std;
 
-Game::Game() {
-  playing=true;
-  screen=NULL;
-  tileset=NULL;
-  map_camera=NULL;
-  unit=NULL;
-  devastator=NULL;
+Game::Game():
+    playing(true),
+    screen(NULL),
+    terrain(NULL),
+    map_camera(nullptr),
+    unitRepository(nullptr)
+{
+
 }
 
 int Game::execute() {
-  init();
+  if (!init()) {
+    cerr << "Errors occured when starting the game. Stopping." << endl;
+    return 1;
+  }
 
   SDL_Event event;
 
@@ -51,29 +55,48 @@ int Game::init() {
 
   int flags = IMG_INIT_JPG | IMG_INIT_PNG;
   int initted=IMG_Init(flags);
-  if( initted & flags != flags) {
+  if( (initted & flags) != flags) {
     cout << "could not init SDL_Image" << endl;
     cout << "Reason: " << IMG_GetError() << endl;
     return false;
   }
 
-  tileset = Surface::load("tileset.png");
+  terrain = Surface::load("graphics/terrain.png");
 
-  if (tileset == NULL) {
-    cout << "Failed to read tileset data" << endl;
+  if (terrain == NULL) {
+    cout << "Failed to read graphics/terrain.png data" << endl;
+    return false;
+  }
+
+  shroud_edges = Surface::load("graphics/shroud_edges.bmp");
+
+  if (shroud_edges == NULL) {
+    cout << "Failed to read graphics/shroud_edges.bmp data" << endl;
+    return false;
+  }
+
+  shroud_edges_shadow = Surface::load("graphics/shroud_edges_shadow.bmp");
+
+  if (shroud_edges_shadow == NULL) {
+    cout << "Failed to read graphics/shroud_edges_shadow.bmp data" << endl;
     return false;
   }
 
   SDL_ShowCursor(0);
   mouse.init(screen);
 
-  map.setBoundaries(128,128);
-  map_camera = new MapCamera(0, 0, screen, &map);
+  map_camera.reset(new MapCamera(0, 0, screen, &map));
+  map.load("maps/4PL_Mountains.ini");
+  unitRepository.reset(new UnitRepository(&map));
 
-  unitRepository = new UnitRepository(&map);
+  Unit* frigate = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 10);
+  units.emplace_back(frigate);
 
-  unit = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64);
-  devastator = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 128, 128);
+  Unit* trike1 = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 256, 256, 3);
+  units.emplace_back(trike1);
+
+  Unit* trike2 = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 448, 448, 3);
+  units.emplace_back(trike2);
 
   return true;
 }
@@ -90,63 +113,52 @@ void Game::onEvent(SDL_Event* event) {
 
   if (event->type == SDL_USEREVENT) {
     if (event->user.code == D2TM_SELECT) {
-      D2TMSelectStruct *s = static_cast<D2TMSelectStruct*>(event->user.data1);
+      std::unique_ptr<D2TMSelectStruct> s(static_cast<D2TMSelectStruct*>(event->user.data1));
 
       Point p = map_camera->toWorldCoordinates(s->screen_position);
 
       if (mouse.is_pointing()) {
+        Unit* selected_unit = NULL;
+        for (auto& unit : units){
+            if (unit->is_point_within(p)){
+                selected_unit = unit.get();
+                break;
+            }
 
-        if (devastator->is_point_within(p)) {
-          mouse.state_order_move();
-          unit->unselect();
-          devastator->unselect();
-          devastator->select();
         }
-
-        if (unit->is_point_within(p)) {
+        if (selected_unit != NULL) {
+          deselectAllUnits();
+          selected_unit->select();
           mouse.state_order_move();
-          unit->unselect();
-          devastator->unselect();
-          unit->select();
         }
-      }
-
-      delete s;
+      }      
     } else if (event->user.code == D2TM_DESELECT) {
       mouse.state_pointing();
-      devastator->unselect();
-      unit->unselect();
+      deselectAllUnits();
     } else if (event->user.code == D2TM_BOX_SELECT) {
-      D2TMBoxSelectStruct *s = static_cast<D2TMBoxSelectStruct*>(event->user.data1);
+      std::unique_ptr<D2TMBoxSelectStruct> s(static_cast<D2TMBoxSelectStruct*>(event->user.data1));
 
       Rectangle rectangle = map_camera->toWorldCoordinates(s->rectangle);
 
       if (mouse.is_pointing()) {
         mouse.state_pointing();
 
-        unit->unselect();
-        devastator->unselect();
-
-        if (devastator->is_within(rectangle)) {
-          mouse.state_order_move();
-          devastator->select();
+        deselectAllUnits();
+        for (auto& unit : units){
+            if (unit->is_within(rectangle)){
+                unit->select();
+                mouse.state_order_move();
+            }
         }
-
-        if (unit->is_within(rectangle)) {
-          mouse.state_order_move();
-          unit->select();
-        }
-      }
-
-      delete s;
+      }      
     } else if (event->user.code == D2TM_MOVE_UNIT) {
-      D2TMMoveUnitStruct *s = static_cast<D2TMMoveUnitStruct*>(event->user.data1);
+      std::unique_ptr<D2TMMoveUnitStruct> s(static_cast<D2TMMoveUnitStruct*>(event->user.data1));
       Point p = map_camera->toWorldCoordinates(s->screen_position);
 
-      if (unit->is_selected()) unit->order_move(p);
-      if (devastator->is_selected()) devastator->order_move(p);
-
-      delete s;
+      for (auto& unit : units){
+          if (unit->is_selected())
+              unit->order_move(p);
+      }
     }
 
   }
@@ -156,9 +168,16 @@ void Game::onEvent(SDL_Event* event) {
 void Game::render() {
   SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
 
-  map_camera->draw(&map, tileset, screen);
-  map_camera->draw(unit, screen);
-  map_camera->draw(devastator, screen);
+  map_camera->draw(&map, terrain, screen);
+
+  for (auto& unit : units){
+      if (unit->is_on_ground_layer()) map_camera->draw(unit.get(), screen);
+  }
+  for (auto& unit : units){
+      if (unit->is_on_air_layer()) map_camera->draw(unit.get(), screen);
+  }
+
+  map_camera->drawShroud(&map, shroud_edges, shroud_edges_shadow, screen);
 
   mouse.draw(screen);
 
@@ -170,18 +189,24 @@ void Game::updateState() {
   mouse.updateState();
   map_camera->updateState();
 
-  unit->updateState();
-  devastator->updateState();
+  for (auto& unit: units){
+      unit->updateState();
+  }
 }
 
 int Game::cleanup() {
-  delete map_camera;
-  delete unitRepository;
-  delete unit;
-  delete devastator;
+
+  units.clear();
   SDL_FreeSurface(screen);
-  SDL_FreeSurface(tileset);
+  SDL_FreeSurface(terrain);
+  SDL_FreeSurface(shroud_edges);
+  SDL_FreeSurface(shroud_edges_shadow);
   SDL_Quit();
   return 0;
+}
+
+void Game::deselectAllUnits() {
+    for (auto& unit : units)
+        unit->unselect();
 }
 

@@ -57,29 +57,65 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
-- see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
-- order a unit to attack a position
-- explore the terrain by clearing a Shroud
-- sandworms should only be able to travel through sand, dunes and spice, and be blocked by rock/mountains
-- enjoy the terrain smoothened (smoothing algorithm)
+- have infantry
+  - with a maximum of 5 on one cell
+  - can be moved seperately (like C&C)
+  - can move on mountains
+  - should be blocked by other infantry, only when other cell is full
+  - should be blocked by units
+  - can be squished by heavy units
+- modify the properties of units/structures by modifying a rules.ini file
+- move vehicles around larger obstacles (like bases, mountains, etc) (path-finding on 'really-need-it-basis')
+- move (my) units appropriately
+  - sandworms should only be able to travel through sand, dunes and spice, and be blocked by rock/mountains
+  - heavy vehicles should be able to move over infantry (fatal for the infantry).
+  - air units should not be blocked by anything
+- defend myself with walls
+  - draw walls
+  - walls should obstruct terrain units of all kinds
+  - walls smoothing
+  - terrain smoothing adjustments with walls
 - see structures (draw them)
+- have my ground wheeled/tank vehicles be blocked by structures
 - select my structure
+- use my infantry to take over enemy structures
+  - the more damaged the structure is, the more chance of taking over
+  - (fatal for the infantry, but chance of capture)
+- have enemies to defeat
+  - enemy units should not be visible when shrouded
+  - enemy units should not be selectable
+  - only show health bar when mouse hovers over enemy unit
+- see everything move in a certain pace (timed) at all time , regardless of my fps ([this post is helpful](http://gameprogrammingtutorials.blogspot.nl/2010/01/sdl-tutorial-series-part-5-dealing-with.html))
+- destroy units so i can win the game destroying my enemy's units
+- destroy structures so i can win the game destroying my enemy's structures
+- order a unit to attack another unit in order to destroy it
+- order a unit to attack a structure in order to destroy it
+- order a unit to attack a tile so I can destroy a wall or something else (ie, a sandworm perhaps)
+- sandworms should only be able to travel through sand, dunes and spice, and be blocked by rock/mountains
+- fear the sandworm
+  - sandworm eats units on sand/dunes/spice
+  - sandworm can get 'full' and dissapear (? or wander around messing with your mind?)
+- send my vehicles to a repair bay in order to get the patched up and use them fully again.
+- send my harvester back to the refinery in order to get the credits earlier
 - build another structure from a Construction Yard
+- place built structures
 - build infantry from a Barracks
 - build troopers from a WOR
 - build light vehicles from a Light Factory
 - build heavy vehicles from a Heavy Factory
  - build tanks
-  - tanks should be able to face their body to the adjecent cell and face their barrel to the target
+  - tanks should be able to face their body to the adjecent cell and face their barrel to the target (as should turrets)
 - build air units from a High-Tech
 - upgrade my structures to gain access to other units
 - upgrade my units (??)
 - receive reinforcements from time to time
 - mine spice with a harvester
+- deploy an MCV
 - get my units transported much faster by a carry-all
 - scroll by holding mouse key and move from that position
 - when a unit is bored, it should turn around randomly
-- when an enemy unit is in range, units should attack without being instructed
+- when a unit is on guard, it should target enemies within range, as should turrets
+- play on a randomized map
 - harvesters should harvest without being instructed
  - when a harvester is first deployed, it head for the nearest spice field that the player can see
  - when a harvester is deployed, it keeps using the same spice field unless instructed otherwise
@@ -109,17 +145,39 @@ TODO
 - Raider Trike
 - Quad
 - Tank
+- Harvester
+- MCV
 - Siege Tank
 - Rocket Launcher
 - Deviator
 - Devastator
 - Sonic Tank
-- Cary-all
+- Carryall
 - Ornithopter
 - Frigate
 - Saboteur
 - Fremen (C&C style?)
 
+*Structures*
+
+- Concrete 1x1
+- Concrete 4x4
+- Wall
+- Windtrap
+- Refinery
+- Silos
+- Radar Outpost
+- Barracks
+- WOR
+- Light Factory
+- Heavy Factory
+- Hi-Tech Factory
+- Gun Turret
+- Rocket Turret
+- Repair Facility
+- Starport
+- House of IX
+- Palace
 
 DONE
 ----
@@ -137,6 +195,14 @@ DONE
     <li>draw a rectangle by holding left mouse button</li>
     <li>select multiple units by dragging rectangle over units and releasing left mouse button</li>
     <li>order a unit to move to a position</li>
+    <li>explore the terrain by clearing a shroud</li>
+    <li>enjoy the terrain smoothened (smoothing algorithm)</li>
+    <li>load a map from file</li>
+    <li>have my ground wheeled/tank vehicles be blocked by other vehicles, and mountains</li>
+    <li>have air units not being blocked by any terrain type</li>
+    <li>have an arbitrary number of units</li>
+    <li>have air units not be blocked by any units</li>
+    <li>have air units always be drawn over ground units</li>
   </ul>
 </del>
 

@@ -1,22 +1,104 @@
 #include <iostream>
-
 #include "unit.h"
-#include "surface.h"
-#include "random.h"
 
 using namespace std;
 
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map) {
-  init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256));
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior) {
+  init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256), 1 + rnd(5), move_behavior);
 }
 
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y) {
-  init(tileset, shadowset, map, x, y);
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange) {
+  init(tileset, shadowset, map, x, y, viewRange, move_behavior);
 }
 
 Unit::~Unit() {
   SDL_FreeSurface(tileset);
   SDL_FreeSurface(shadowset);
+}
+
+void Unit::select() {
+  selected = true;
+}
+
+void Unit::unselect() {
+  selected = false;
+}
+
+bool Unit::is_selected() {
+  return selected;
+}
+
+bool Unit::is_within(const Rectangle& rectangle) {
+  return rectangle.is_point_within(position);
+}
+
+bool Unit::is_on_air_layer() {
+  return isOnLayer(MAP_LAYER_AIR);
+}
+
+bool Unit::is_on_ground_layer() {
+  return isOnLayer(MAP_LAYER_GROUND);
+}
+
+bool Unit::is_point_within(const Point& point) {
+  Rectangle current_area = Rectangle(position, (position + size));
+  return current_area.is_point_within(point);
+}
+
+void Unit::moveUp() {
+  updateMovePosition(Point(0, -TILE_SIZE));
+}
+
+void Unit::moveDown() {
+  updateMovePosition(Point(0, TILE_SIZE));
+}
+
+void Unit::moveLeft() {
+  updateMovePosition(Point(-TILE_SIZE, 0));
+}
+
+void Unit::moveRight() {
+  updateMovePosition(Point(TILE_SIZE, 0));
+}
+
+void Unit::updateMovePosition(Point p) {
+  this->next_move_position = this->next_move_position + p;
+  this->desired_body_facing = desired_facing();
+}
+
+bool Unit::is_moving() {
+  return position != next_move_position;
+}
+
+bool Unit::has_target() {
+  return position != target;
+}
+
+bool Unit::should_turn_body() {
+  return desired_body_facing != body_facing;
+}
+
+void Unit::stopMoving() {
+  this->next_move_position = position;
+}
+
+int Unit::getDrawX() {
+  return position.x + offset_x;
+}
+
+int Unit::getDrawY() {
+  return position.y + offset_y;
+}
+
+bool Unit::isOnLayer(short layer) {
+  return this->move_behavior->is_layer(layer);
+}
+
+void Unit::order_move(Point target) {
+  // snap coordinates
+  int y = (target.y / TILE_SIZE) * TILE_SIZE;
+  int x = (target.x / TILE_SIZE) * TILE_SIZE;
+  this->target = Point(x,y);
 }
 
 void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
@@ -41,15 +123,22 @@ void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
   }
 }
 
-void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y) {
+void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, int y, int viewRange, UnitMoveBehavior* move_behavior) {
   this->selected = false;
   this->selected_bitmap = Surface::load("graphics/selected.bmp", 255, 0, 255);
   this->tileset = tileset;
   this->shadowset = shadowset;
   this->body_facing = rnd(FACINGS);
   this->desired_body_facing = this->body_facing;
+  this->view_range = viewRange;
+  this->position = Point(x,y);
+  this->target = this->position;
+  this->next_move_position = this->position;
+  this->prev_position = this->position;
   this->map=map;
-  this->map->occupyCell(x / TILE_SIZE, y / TILE_SIZE);
+  this->move_behavior.reset(move_behavior);
+  this->move_behavior->occupyCell(this->position);
+  this->map->removeShroud(this->position, this->view_range);
 
   int tile_height = 0, tile_width = 0;
   tile_width = tileset->w / FACINGS;
@@ -75,10 +164,6 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int x, i
   }
   this->size = Point(tile_width, tile_height);
   this->shadow_alpha = 128;
-  this->position = Point(x,y);
-  this->target = this->position;
-  this->next_move_position = this->position;
-  this->prev_position = this->position;
   this->anim_frame = 0;
 
   // every pixel short/too much of the perfect tile size will be spread evenly
@@ -137,7 +222,8 @@ void Unit::updateState() {
   // think about movement
   if (!is_moving()) {
     if (prev_position != position) {
-      map->unOccupyCell(prev_position.x / TILE_SIZE, prev_position.y / TILE_SIZE);
+      move_behavior->unOccupyCell(prev_position);
+      map->removeShroud(position, this->view_range);
     }
 
     if (has_target()) {
@@ -148,11 +234,11 @@ void Unit::updateState() {
       if (target.y > position.y) moveDown();
 
       // check if we can move to this
-      if (map->is_occupied(next_move_position)) {
+      if (!move_behavior->canMoveTo(next_move_position)) {
         stopMoving();
       } else {
         // we can move to this tile, claim it
-        map->occupyCell(next_move_position.x / TILE_SIZE, next_move_position.y / TILE_SIZE);
+        move_behavior->occupyCell(next_move_position);
         prev_position = position;
       }
 
@@ -168,7 +254,6 @@ void Unit::updateState() {
   if (position.y < next_move_position.y) position.y++;
   if (position.y > next_move_position.y) position.y--;
 }
-
 
 //////////////////////////////////////////
 // Unit Repository
@@ -206,13 +291,20 @@ UnitRepository::~UnitRepository() {
   }
 }
 
-Unit* UnitRepository::create(int unitType, int house, int x, int y) {
+Unit* UnitRepository::create(int unitType, int house, int x, int y, int viewRange) {
   SDL_Surface* copy = Surface::copy(unit_animation[unitType]);
   int paletteIndexUsedForColoring = 144;
   int paletteIndex = paletteIndexUsedForColoring + (16 * house);
   SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], paletteIndexUsedForColoring, 8);
 
   SDL_Surface* shadow_copy = Surface::copy(unit_shadow[unitType]);
-  Unit* unit = new Unit(copy, shadow_copy, map, x, y);
+  UnitMoveBehavior *move_behavior = NULL;
+  if (unitType == UNIT_FRIGATE) {
+    cout << "unit is a frigate!" << endl;
+    move_behavior = new AirUnitMovementBehavior(map);
+  } else {
+    move_behavior = new GroundUnitMovementBehavior(map);
+  }
+  Unit* unit = new Unit(copy, shadow_copy, map, move_behavior, x, y, viewRange);
   return unit;
 }
