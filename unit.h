@@ -2,13 +2,14 @@
 #define UNIT_H
 
 #include "SDL/SDL.h"
-#include "SDL_gfxPrimitives.h"
+#include <SDL/SDL_gfxPrimitives.h>
 
 #include "random.h"
 #include "rectangle.h"
 #include "surface.h"
 #include "map.h"
 #include "unit_move_behavior.h"
+#include <memory>
 
 const int FACING_RIGHT = 0;
 const int FACING_UP_RIGHT = 1;
@@ -61,7 +62,7 @@ class Unit {
     bool selected;
 
     Map* map;
-    UnitMoveBehavior* move_behavior;
+    std::unique_ptr<UnitMoveBehavior> move_behavior;
 
     void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int x, int y, int viewRange, UnitMoveBehavior* move_behavior);
 

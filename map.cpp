@@ -4,6 +4,7 @@
 #include "eventfactory.h"
 #include "unit.h"
 
+#include <memory> //std::unique_ptr
 #include <math.h>       /* ceil */
 
 Map::Map() {
@@ -129,10 +130,9 @@ void MapCamera::onEvent(SDL_Event* event) {
   if (event->type == SDL_USEREVENT) {
 
     if (event->user.code == D2TM_MOVE_CAMERA) {
-      D2TMMoveCameraStruct *s = static_cast<D2TMMoveCameraStruct*>(event->user.data1);
+      std::unique_ptr<D2TMMoveCameraStruct> s(static_cast<D2TMMoveCameraStruct*>(event->user.data1));
       move_x_velocity = s->vector.x;
       move_y_velocity = s->vector.y;
-      delete s;
     } else if (event->user.code == D2TM_MAP_BOUNDARIES_CHANGED) {
       this->map_y_boundary = map->getMaxHeight();
       this->map_x_boundary = map->getMaxWidth();
