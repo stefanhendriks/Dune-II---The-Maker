@@ -39,7 +39,7 @@ class Unit {
 
   public:
     Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior);
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange, House theSide);
     ~Unit();
 
     void draw(SDL_Surface* screen, MapCamera* map_camera);
@@ -65,6 +65,8 @@ class Unit {
     Point next_move_position;
     Point prev_position;
     Point size;
+
+    House side; //which side the unit fights for
 
     int shadow_alpha;       // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
     int anim_frame;         // animation frames are 'rows' in the tileset

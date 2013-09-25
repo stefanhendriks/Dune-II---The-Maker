@@ -3,11 +3,15 @@
 
 using namespace std;
 
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior) {
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior):
+    side(House::Mercenary) //so it does not remain uninit
+{
   init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256), 1 + rnd(5), move_behavior);
 }
 
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange) {
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange, House theSide):
+    side(theSide)
+{
   init(tileset, shadowset, map, x, y, viewRange, move_behavior);
 }
 
@@ -305,6 +309,6 @@ Unit* UnitRepository::create(int unitType, House house, int x, int y, int viewRa
   } else {
     move_behavior = new GroundUnitMovementBehavior(map);
   }
-  Unit* unit = new Unit(copy, shadow_copy, map, move_behavior, x, y, viewRange);
+  Unit* unit = new Unit(copy, shadow_copy, map, move_behavior, x, y, viewRange, house);
   return unit;
 }
