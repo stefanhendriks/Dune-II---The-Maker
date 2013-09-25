@@ -1,6 +1,6 @@
 #include <iostream>
 #include "SDL/SDL.h"
-#include "SDL_image.h"
+#include <SDL/SDL_image.h>
 #include "surface.h"
 
 #include "random.h"
@@ -37,7 +37,7 @@ SDL_Surface* Surface::copy(SDL_Surface *source) {
   int height = source->h;
   int bits = source->format->BitsPerPixel;
 
-  SDL_Surface* copy = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_HWPALETTE, width, height, bits, NULL, NULL, NULL, NULL);
+  SDL_Surface* copy = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_HWPALETTE, width, height, bits, 0, 0, 0, 0);
   if(copy == NULL) {
     cerr << "Failed to create a copy of surface; " << SDL_GetError() << endl;
     return NULL;

@@ -127,6 +127,25 @@ TODO
 - when a unit is bored, it should turn around randomly
 - when a unit is on guard, it should target enemies within range, as should turrets
 - play on a randomized map
+- harvesters should harvest without being instructed
+ - when a harvester is first deployed, it head for the nearest spice field that the player can see
+ - when a harvester is deployed, it keeps using the same spice field unless instructed otherwise
+ - when a harvester discovers a spice field is empty, it will head for the nearest field. 
+   - ... but if the harvester has spice, it will return first. (?)
+ - the user can find out how much spice a harvester contains
+ - when nonempty, a harvester when destroyed spills its spice
+ - when full, the harvester will return to the nearest refinery, using a carryall if available
+ - if the refinery is busy, the harvester will move to another one if it is nearby, otherwise it will wait (?)
+ - harvesters will harvest parts of the field with a higher value, because there are no graphics for thick spice/sand boundary.
+ - harvesters entering a refinery will deposit credits
+ - spice will be distributed across a player's refineries and silos
+ - spice will be lost if there is insufficient storage
+- User can select all units of the same type on the screen
+- User can select all units of the same type on the battlefield
+- Play using only:
+ - The keyboard, or
+ - The mouse
+  - specifically, single-clicking the LMB (touch)
 
 *Unit types*
 - Soldier

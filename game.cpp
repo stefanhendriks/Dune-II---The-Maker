@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include "SDL/SDL.h"
-#include "SDL_image.h"
-#include "SDL_gfxPrimitives.h"
+#include <SDL/SDL_image.h>
+#include <SDL/SDL_gfxPrimitives.h>
 #include "point.h"
 #include "map.h"
 #include "game.h"
@@ -11,11 +11,14 @@
 
 using namespace std;
 
-Game::Game() {
-  playing=true;
-  screen=NULL;
-  terrain=NULL;
-  map_camera=NULL;
+Game::Game():
+    playing(true),
+    screen(NULL),
+    terrain(NULL),
+    map_camera(nullptr),
+    unitRepository(nullptr)
+{
+
 }
 
 int Game::execute() {
@@ -52,7 +55,7 @@ int Game::init() {
 
   int flags = IMG_INIT_JPG | IMG_INIT_PNG;
   int initted=IMG_Init(flags);
-  if( initted & flags != flags) {
+  if( (initted & flags) != flags) {
     cout << "could not init SDL_Image" << endl;
     cout << "Reason: " << IMG_GetError() << endl;
     return false;
@@ -82,25 +85,25 @@ int Game::init() {
   SDL_ShowCursor(0);
   mouse.init(screen);
 
-  map_camera = new MapCamera(0, 0, screen, &map);
+  map_camera.reset(new MapCamera(0, 0, screen, &map));
   map.load("maps/4PL_Mountains.ini");
-  unitRepository = new UnitRepository(&map);
+  unitRepository.reset(new UnitRepository(&map));
 
-  units.push_back(unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 3, 3, 10, SUBCELL_CENTER));
-  units.push_back(unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 8, 8, 3, SUBCELL_CENTER));
+  units.emplace_back(unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 3, 3, 10, SUBCELL_CENTER));
+  units.emplace_back(unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 8, 8, 3, SUBCELL_CENTER));
 
   // soldiers
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_CENTER));
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_UPLEFT));
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_UPRIGHT));
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_DOWNLEFT));
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_DOWNRIGHT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_CENTER));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_UPLEFT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_UPRIGHT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_DOWNLEFT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_DOWNRIGHT));
 
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_CENTER));
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_UPLEFT));
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_UPRIGHT));
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_DOWNLEFT));
-  units.push_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_DOWNRIGHT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_CENTER));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_UPLEFT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_UPRIGHT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_DOWNLEFT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_DOWNRIGHT));
 
   return true;
 }
@@ -117,32 +120,30 @@ void Game::onEvent(SDL_Event* event) {
 
   if (event->type == SDL_USEREVENT) {
     if (event->user.code == D2TM_SELECT) {
-      D2TMSelectStruct *s = static_cast<D2TMSelectStruct*>(event->user.data1);
+      std::unique_ptr<D2TMSelectStruct> s(static_cast<D2TMSelectStruct*>(event->user.data1));
 
       Point p = map_camera->toWorldCoordinates(s->screen_position);
 
       if (mouse.is_pointing()) {
         Unit* selected_unit = NULL;
-        for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
-          if ((*it)->is_point_within(p)) {
-            selected_unit = *it;
-            break;
-          }
-        }
+        for (auto& unit : units){
+            if (unit->is_point_within(p)){
+                selected_unit = unit.get();
+                break;
+            }
 
+        }
         if (selected_unit != NULL) {
           deselectAllUnits();
           selected_unit->select();
           mouse.state_order_move();
         }
       }
-
-      delete s;
     } else if (event->user.code == D2TM_DESELECT) {
       mouse.state_pointing();
       deselectAllUnits();
     } else if (event->user.code == D2TM_BOX_SELECT) {
-      D2TMBoxSelectStruct *s = static_cast<D2TMBoxSelectStruct*>(event->user.data1);
+      std::unique_ptr<D2TMBoxSelectStruct> s(static_cast<D2TMBoxSelectStruct*>(event->user.data1));
 
       Rectangle rectangle = map_camera->toWorldCoordinates(s->rectangle);
 
@@ -150,26 +151,21 @@ void Game::onEvent(SDL_Event* event) {
         mouse.state_pointing();
 
         deselectAllUnits();
-        for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
-          if ((*it)->is_within(rectangle)) {
-            (*it)->select();
-            mouse.state_order_move();
-          }
+        for (auto& unit : units){
+            if (unit->is_within(rectangle)){
+                unit->select();
+                mouse.state_order_move();
+            }
         }
       }
-
-      delete s;
     } else if (event->user.code == D2TM_MOVE_UNIT) {
-      D2TMMoveUnitStruct *s = static_cast<D2TMMoveUnitStruct*>(event->user.data1);
+      std::unique_ptr<D2TMMoveUnitStruct> s(static_cast<D2TMMoveUnitStruct*>(event->user.data1));
       Point p = map_camera->toWorldCoordinates(s->screen_position);
 
-      for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
-        if ((*it)->is_selected()) {
-          (*it)->order_move(p);
-        }
+      for (auto& unit : units){
+          if (unit->is_selected())
+              unit->order_move(p);
       }
-
-      delete s;
     }
 
   }
@@ -181,12 +177,11 @@ void Game::render() {
 
   map_camera->draw(&map, terrain, screen);
 
-  for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
-    if ((*it)->is_on_ground_layer()) map_camera->draw(*it, screen);
+  for (auto& unit : units){
+      if (unit->is_on_ground_layer()) map_camera->draw(unit.get(), screen);
   }
-
-  for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
-    if ((*it)->is_on_air_layer()) map_camera->draw(*it, screen);
+  for (auto& unit : units){
+      if (unit->is_on_air_layer()) map_camera->draw(unit.get(), screen);
   }
 
   map_camera->drawShroud(&map, shroud_edges, shroud_edges_shadow, screen);
@@ -201,17 +196,13 @@ void Game::updateState() {
   mouse.updateState();
   map_camera->updateState();
 
-  for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
-    (*it)->updateState();
+  for (auto& unit: units){
+      unit->updateState();
   }
 }
 
 int Game::cleanup() {
-  delete map_camera;
-  delete unitRepository;
-  for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
-    delete *it;
-  }
+
   units.clear();
   SDL_FreeSurface(screen);
   SDL_FreeSurface(terrain);
@@ -222,8 +213,7 @@ int Game::cleanup() {
 }
 
 void Game::deselectAllUnits() {
-  for (vector<Unit*>::iterator it = units.begin(); it != units.end(); ++it) {
-    (*it)->unselect();
-  }
+    for (auto& unit : units)
+        unit->unselect();
 }
 

@@ -2,7 +2,7 @@
 #define UNIT_H
 
 #include "SDL/SDL.h"
-#include "SDL_gfxPrimitives.h"
+#include <SDL/SDL_gfxPrimitives.h>
 
 #include "vector2d.h"
 #include "random.h"
@@ -10,6 +10,7 @@
 #include "surface.h"
 #include "map.h"
 #include "unit_move_behavior.h"
+#include <memory>
 
 #include "fpoint.h"
 
@@ -78,7 +79,7 @@ class Unit {
     bool is_infantry;
 
     Map* map;
-    UnitMoveBehavior* move_behavior;
+    std::unique_ptr<UnitMoveBehavior> move_behavior;
 
     void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int world_x, int world_y, int view_range, UnitMoveBehavior* move_behavior, int sub_cell, Point tile_size, Point unit_size);
 

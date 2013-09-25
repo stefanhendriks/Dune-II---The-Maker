@@ -5,18 +5,17 @@
 
 using namespace std;
 
-Mouse::Mouse() {
-  _left_button_clicked = false;
-  _right_button_clicked = false;
-  _x = 0;
-  _y = 0;
-  rect_x = -1;
-  rect_y = -1;
-  state = MOUSE_POINTING;
-  pointer = NULL;
-  pointer_move = NULL;
-  up=down=right=left=false;
-  emit_event=false;
+Mouse::Mouse():
+    pointer(NULL),
+    pointer_move(NULL),
+    _left_button_clicked(false),
+    _right_button_clicked(false),
+    state(MOUSE_POINTING),
+    _x(0),_y(0),
+    rect_x(-1), rect_y(-1),
+    up(false), down(false), left(false), right(false),
+    emit_event(false)
+{
 }
 
 void Mouse::init(SDL_Surface* screen) {

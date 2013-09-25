@@ -160,7 +160,35 @@ void Unit::init(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, int worl
   this->view_range = view_range;
   this->position = Point(world_x, world_y);
   this->map = map;
-  this->move_behavior = move_behavior;
+  this->target = this->position;
+  this->next_move_position = this->position;
+  this->prev_position = this->position;
+  this->map=map;
+  this->move_behavior.reset(move_behavior);
+
+  int tile_height = 0, tile_width = 0;
+  tile_width = tileset->w / FACINGS;
+
+  // check if our assumption (width==height) is true for this tileset, and if not warn the user.
+  if (tileset->h % tile_width > 0) {
+    cerr << "WARNING: This tileset does not meet the requirement : tile height must equal width." << endl << endl;
+    cerr << "Based on 8 sides of a unit, the calculated width of a tile on this tileset is " << tile_width << ". The general assumption is that the height of a tile must equal width. " << endl;
+    cerr << "However the height of this tileset (" << tileset->h << ") was not one or more multiplications of " << tile_width << ". Its dimensions are " << tileset->h << "x" << tileset->w << ".";
+    cerr << endl;
+
+    // if it is less height than wide, we
+    if (tileset->h < tile_width) {
+      cerr << "Because the height of the tileset (" << tileset->h << ") is *lower* than the width of a calculated tile(=" << tile_width << ") (and therefor has no animations). We assume the height of the tileset of " << tileset->h << "." << endl;
+      tile_height = tileset->h;
+    } else {
+      cerr << "Since the height of the tileset (" << tileset->h << ") is *greater* than the width of a calculated tile(=" << tile_width <<") (which means there could be animations) we assume the height equals the calculated width of " << tile_width << "." << endl;
+      tile_height = tile_width;
+    }
+    cerr << endl;
+  } else {
+    tile_height = tile_width;
+  }
+  this->unit_size = Point(tile_width, tile_height);
   this->shadow_alpha = 128;
   this->anim_frame = 0;
   this->sub_position = Point(0,0);
