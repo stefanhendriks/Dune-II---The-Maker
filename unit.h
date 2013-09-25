@@ -21,6 +21,20 @@ const int FACING_DOWN = 6;
 const int FACING_RIGHT_DOWN = 7;
 const int FACINGS = 8;          // used to calculate width of each 'tile' for a unit given a tilset
 
+// TEMPORARILY HOUSES ARE DEFINED HERE, BY A LACK OF BETTER PLACE (TODO: REFACTOR)
+// note, these house numbers are based on the palette indices. As index 144 is harkonnen
+// colors and the formula to actually copy the correct colors is based from 144 + house nr
+// we just use this as a convenience.
+enum class House
+{
+    Harkonnen = 0,
+    Atreides = 1,
+    Ordos = 2,
+    Fremen = 3,
+    Sardaukar = 4,
+    Mercenary = 5
+};
+
 class Unit {
 
   public:
@@ -86,18 +100,6 @@ class Unit {
 };
 
 
-// TEMPORARILY HOUSES ARE DEFINED HERE, BY A LACK OF BETTER PLACE (TODO: REFACTOR)
-// note, these house numbers are based on the palette indices. As index 144 is harkonnen
-// colors and the formula to actually copy the correct colors is based from 144 + house nr
-// we just use this as a convenience.
-const int HOUSE_HARKONNEN = 0;
-const int HOUSE_ATREIDES =  1;
-const int HOUSE_ORDOS =  2;
-const int HOUSE_SARDAUKAR =  4;
-const int HOUSE_FREMEN =  3;
-const int HOUSE_MERCENARY =  5;
-
-
 const int UNIT_QUAD = 0;
 const int UNIT_TRIKE = 1;
 const int UNIT_DEVASTATOR = 2;
@@ -114,7 +116,7 @@ class UnitRepository {
 
     void destroy();
 
-    Unit* create(int unitType, int house, int x, int y, int viewRange);
+    Unit* create(int unitType, House house, int x, int y, int viewRange);
 
    private:
       SDL_Surface* unit_animation[MAX_UNIT_TYPES];

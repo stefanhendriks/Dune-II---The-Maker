@@ -291,10 +291,10 @@ UnitRepository::~UnitRepository() {
   }
 }
 
-Unit* UnitRepository::create(int unitType, int house, int x, int y, int viewRange) {
+Unit* UnitRepository::create(int unitType, House house, int x, int y, int viewRange) {
   SDL_Surface* copy = Surface::copy(unit_animation[unitType]);
   int paletteIndexUsedForColoring = 144;
-  int paletteIndex = paletteIndexUsedForColoring + (16 * house);
+  int paletteIndex = paletteIndexUsedForColoring + (16 * static_cast<int>(house));
   SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], paletteIndexUsedForColoring, 8);
 
   SDL_Surface* shadow_copy = Surface::copy(unit_shadow[unitType]);

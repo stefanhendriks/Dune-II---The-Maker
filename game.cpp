@@ -89,13 +89,13 @@ int Game::init() {
   map.load("maps/4PL_Mountains.ini");
   unitRepository.reset(new UnitRepository(&map));
 
-  Unit* frigate = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 10);
+  Unit* frigate = unitRepository->create(UNIT_FRIGATE, House::Sardaukar, 64, 64, 10);
   units.emplace_back(frigate);
 
-  Unit* trike1 = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 256, 256, 3);
+  Unit* trike1 = unitRepository->create(UNIT_TRIKE, House::Atreides, 256, 256, 3);
   units.emplace_back(trike1);
 
-  Unit* trike2 = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 448, 448, 3);
+  Unit* trike2 = unitRepository->create(UNIT_TRIKE, House::Atreides, 448, 448, 3);
   units.emplace_back(trike2);
 
   return true;
