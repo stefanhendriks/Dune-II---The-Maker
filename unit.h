@@ -10,7 +10,6 @@
 #include "map.h"
 #include "unit_move_behavior.h"
 #include <memory>
-#include "houses.h"
 #include "player.h"
 
 const int FACING_RIGHT = 0;
@@ -34,6 +33,8 @@ class Unit {
     void updateState();
 
     void order_move(Point target);
+
+    const Player& getOwner() const;
 
     void select();
     void unselect();

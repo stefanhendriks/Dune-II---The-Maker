@@ -105,6 +105,11 @@ void Unit::order_move(Point target) {
   this->target = Point(x,y);
 }
 
+const Player &Unit::getOwner() const
+{
+    return *owner;
+}
+
 void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
   int draw_x = map_camera->screenCoordinateX(getDrawX());
   int draw_y = map_camera->screenCoordinateY(getDrawY());

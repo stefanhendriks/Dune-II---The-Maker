@@ -216,3 +216,12 @@ void Game::deselectAllUnits() {
         unit->unselect();
 }
 
+bool Game::playerHasUnits(const Player &player) const
+{
+    for (const auto& unit : units){
+        if (unit->getOwner()==player)
+            return true; //unit belonging to player found
+    }
+    return false;
+}
+

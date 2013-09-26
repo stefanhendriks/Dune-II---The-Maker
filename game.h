@@ -37,6 +37,8 @@ class Game {
       std::vector<std::unique_ptr<Unit> > units; //possibly should be shared_ptr
 
       std::unique_ptr<UnitRepository> unitRepository;
+
+      bool playerHasUnits(const Player& player) const;
 };
 
 #endif

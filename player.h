@@ -10,6 +10,9 @@ public:
 
     int getColor();
 
+    bool operator==(const Player& other) const;
+    bool operator!=(const Player& other) const;
+
 
 private:
     int id;
