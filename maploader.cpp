@@ -75,45 +75,40 @@ int MapLoader::load(std::string file, Map* map) {
 
     for (int x = 0; x < width; x++) {
 
-      if (x >= (int)value.length()) {
-        cerr << "[MAPLOADER] WARNING (" << warnings << "): While parsing line " << value << ":" << endl;
-        cerr << "[MAPLOADER] WARNING (" << warnings << "): Line was expected to have width " << width << " but is actually " << value.length() << ". Either width/height property is wrong in [SKIRMISH] section or [DATA] has wrong amount of data in this line." << endl;
-        warnings++;
-        continue;
-      }
+        if (x >= (int)value.length()) {
+            cerr << "[MAPLOADER] WARNING (" << warnings << "): While parsing line " << value << ":" << endl;
+            cerr << "[MAPLOADER] WARNING (" << warnings << "): Line was expected to have width " << width << " but is actually " << value.length() << ". Either width/height property is wrong in [SKIRMISH] section or [DATA] has wrong amount of data in this line." << endl;
+            warnings++;
+            continue;
+        }
 
-      int terrain_type = charToTerrainType(value.at(x));
-      Cell* cell = map->getCell(x + 1, y + 1); // compensate for invisible border
-      if (terrain_type < 0) {
-        cerr << "[MAPLOADER] WARNING (" << warnings << "): Could not interpet character at line, at position " << x << ", falling back at sand terrain." << endl;
-        warnings++;
-        cell->terrain_type = TERRAIN_TYPE_SAND;
-      } else {
-        cell->terrain_type = terrain_type;
-      }
+        Terrain terrain_type = charToTerrainType(value.at(x));
+        Cell* cell = map->getCell(x + 1, y + 1); // compensate for invisible border
+        cell->terrainType = terrain_type;
+
     }
   }
 
-  cout << "[MAPLOADER] Done reading file with " << warnings << " warnings." << endl;
+  std::cout << "[MAPLOADER] Done reading file with " << warnings << " warnings." << std::endl;
 
   if (warnings > 0) return SUCCESS_WITH_WARNINGS;
 
   return SUCCESS;
 }
 
-int MapLoader::charToTerrainType(char c) {
-  if (c == 'R') return TERRAIN_TYPE_MOUNTAIN;
-  if (c == '^') return TERRAIN_TYPE_ROCK;
-  if (c == ')') return TERRAIN_TYPE_SAND;
-  if (c == '-') return TERRAIN_TYPE_SPICE;
-  if (c == '+') return TERRAIN_TYPE_SPICEHILL;
-  if (c == 'h') return TERRAIN_TYPE_HILL;
-  cerr << "[MAPLOADER] WARNING: Unable to map character " << c << " to a terrain type. Known chars are R^)-+h" << endl;
-  return -1;
+Terrain MapLoader::charToTerrainType(char c) {
+    if (c == 'R') return Terrain::Mountain;
+    if (c == '^') return Terrain::Rock;
+    if (c == ')') return Terrain::Sand;
+    if (c == '-') return Terrain::Spice;
+    if (c == '+') return Terrain::Spicehill;
+    if (c == 'h') return Terrain::Hill;
+    std::cerr << "[MAPLOADER] WARNING: Unable to map character " << c << " to a terrain type. Known chars are R^)-+h" << std::endl;
+    return Terrain::Sand; //returns Sand as default - alternative error handling possible
 }
 
 string MapLoader::makeIntKeyWithLeadingZero(int n) {
-  stringstream ss;
-  ss << setw(3) << setfill('0') << n;
-  return ss.str();
+    stringstream ss;
+    ss << setw(3) << setfill('0') << n;
+    return ss.str();
 }

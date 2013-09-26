@@ -18,7 +18,7 @@ class MapLoader {
 
   private:
     static string makeIntKeyWithLeadingZero(int n);
-    static int charToTerrainType(char c);
+    static Terrain charToTerrainType(char c);
 
 };
 

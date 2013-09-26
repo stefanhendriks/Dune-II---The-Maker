@@ -20,7 +20,7 @@ Map::Map(sf::Texture &terrain) :
       int i = (y * MAP_MAX_WIDTH) + x;
       cells[i].x = x;
       cells[i].y = y;
-      cells[i].setTerrain(terrain, TERRAIN_TYPE_ROCK, 0);
+      cells[i].setTerrain(terrain, Terrain::Rock, 0);
       //cells[i].occupied[MAP_LAYER_GROUND] = false;
       //cells[i].occupied[MAP_LAYER_AIR] = false;
       //cells[i].shrouded = true;
@@ -36,7 +36,7 @@ void Map::load(std::string file) {
       int i = (y * MAP_MAX_WIDTH) + x;
       cells[i].x = x;
       cells[i].y = y;
-      cells[i].setTerrain(terrain, cells[i].terrain_type, 17*cells[i].terrain_type);
+      cells[i].setTerrain(terrain, cells[i].terrainType, 17*static_cast<int>(cells[i].terrainType));
       //cells[i].occupied[MAP_LAYER_GROUND] = false;
       //cells[i].occupied[MAP_LAYER_AIR] = false;
       //cells[i].shrouded = true;

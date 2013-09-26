@@ -25,14 +25,6 @@ const int MAP_MAX_HEIGHT = 256;
 const int MAP_MIN_WIDTH = 32;
 const int MAP_MIN_HEIGHT = 32;
 
-const int TERRAIN_TYPE_SAND     =  0;
-const int TERRAIN_TYPE_HILL     =  1;
-const int TERRAIN_TYPE_ROCK     =  2;
-const int TERRAIN_TYPE_SPICE    =  3;
-const int TERRAIN_TYPE_MOUNTAIN =  4;
-const int TERRAIN_TYPE_SPICEHILL = 5;
-const int TERRAIN_TYPE_SLAB     =  6;
-
 const int MAP_LAYER_GROUND = 0;
 const int MAP_LAYER_AIR = 1;
 const int MAP_MAX_LAYERS = 2;
