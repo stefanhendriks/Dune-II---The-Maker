@@ -57,6 +57,14 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
+- using SFML
+  - draw empty window
+  - draw map
+  - draw map using camera
+  - draw units
+  - draw mouse cursor
+  - use custom events
+
 - have foot-men (soldiers, infantry, trooper, troopers, fremen, all are alike)
 <del>
   <ul>
@@ -130,7 +138,7 @@ TODO
 - harvesters should harvest without being instructed
  - when a harvester is first deployed, it head for the nearest spice field that the player can see
  - when a harvester is deployed, it keeps using the same spice field unless instructed otherwise
- - when a harvester discovers a spice field is empty, it will head for the nearest field. 
+ - when a harvester discovers a spice field is empty, it will head for the nearest field.
    - ... but if the harvester has spice, it will return first. (?)
  - the user can find out how much spice a harvester contains
  - when nonempty, a harvester when destroyed spills its spice
