@@ -7,7 +7,8 @@
 //#include "rectangle.h"
 //#include "eventfactory.h"
 
-#include <math.h>
+#include <cmath>
+#include "cell.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -23,8 +24,6 @@ const int MAP_MAX_HEIGHT = 256;
 const int MAP_MIN_WIDTH = 32;
 const int MAP_MIN_HEIGHT = 32;
 
-const int TILE_SIZE = 32; // squared
-
 const int TERRAIN_TYPE_SAND     =  0;
 const int TERRAIN_TYPE_HILL     =  1;
 const int TERRAIN_TYPE_ROCK     =  2;
@@ -33,45 +32,10 @@ const int TERRAIN_TYPE_MOUNTAIN =  4;
 const int TERRAIN_TYPE_SPICEHILL = 5;
 const int TERRAIN_TYPE_SLAB     =  6;
 
-const int TILES_IN_ROW_ON_TERRAIN_SURFACE = 17;
-
-
 const int MAP_LAYER_GROUND = 0;
 const int MAP_LAYER_AIR = 1;
 const int MAP_MAX_LAYERS = 2;
 
-class Cell : public sf::Drawable {
-  public:
-
-    Cell() {}
-
-    void setTerrain(sf::Image& terrain, int terrain_type, int tile) {
-      this->terrain_type = terrain_type;
-      this->tile = tile;
-
-      int y = TILES_IN_ROW_ON_TERRAIN_SURFACE * terrain_type;
-      int x = TILE_SIZE * tile;
-      sf::IntRect rect = sf::IntRect(x, y, x + TILE_SIZE, y + TILE_SIZE);
-      texture.loadFromImage(terrain, rect);
-      sprite.setTexture(texture);
-    }
-
-    int tile; // tile to draw (one-dimension array)
-
-    int terrain_type; // terrain type (sand, rock, etc)
-    //bool occupied[MAP_MAX_LAYERS];
-    //bool shrouded;
-    int x, y;
-
-    sf::Texture texture;
-
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
-      target.draw(sprite);
-    }
-
-    sf::Sprite sprite;
-
-};
 
  //// considers "this" as center opposed to other cell. (ego-centric)
     //bool shouldSmoothWithTerrainType(Cell* other) {

@@ -5,15 +5,17 @@
 
 Game::Game():
     playing(true),
-    screen(sf::VideoMode(800, 600), "Dune 2 - The Maker")
+    screen(sf::VideoMode(800, 600), "Dune 2 - The Maker"),
+    map(nullptr)
     //map_camera(nullptr),
     //unitRepository(nullptr)
 {
+    screen.setFramerateLimit(60); //comment out for fps benchmarks
 
+    init();
 }
 
 int Game::execute() {
-  sf::Event event;
 
   while(playing) {
     sf::Event event;
