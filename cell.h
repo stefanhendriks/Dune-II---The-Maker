@@ -19,7 +19,7 @@ public:
 
         int y = TILES_IN_ROW_ON_TERRAIN_SURFACE * terrain_type;
         int x = TILE_SIZE * tile;
-        sf::IntRect rect = sf::IntRect(x, y, x + TILE_SIZE, y + TILE_SIZE);
+        sf::IntRect rect(y, x, TILE_SIZE, TILE_SIZE);
 
         sprite.setTexture(terrain);
         sprite.setTextureRect(rect);
