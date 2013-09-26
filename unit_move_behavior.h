@@ -4,6 +4,15 @@
 #include "point.h"
 #include "map.h"
 
+/*
+ * Move behavior classes are simply classes with a single responsibility for a unit.
+ * This makes it possible to assemble a unit with different behaviorable classes.
+ *
+ * Do note, these classes do not have state about the unit as they are instantiated
+ * only once and used by all kinds of units.
+ *
+ */
+
 class UnitMoveBehavior {
 
   public:
@@ -23,26 +32,34 @@ class UnitMoveBehavior {
 
 };
 
-class GroundUnitMovementBehavior: public UnitMoveBehavior {
+class GroundUnitMoveBehavior: public UnitMoveBehavior {
 
   public:
-    GroundUnitMovementBehavior(Map* map);
-    ~GroundUnitMovementBehavior();
+    GroundUnitMoveBehavior(Map* map);
+    ~GroundUnitMoveBehavior();
     bool canMoveTo(Point p);
 
   private:
 };
 
-class AirUnitMovementBehavior: public UnitMoveBehavior {
+class AirUnitMoveBehavior: public UnitMoveBehavior {
 
   public:
-    AirUnitMovementBehavior(Map* map);
-    ~AirUnitMovementBehavior();
+    AirUnitMoveBehavior(Map* map);
+    ~AirUnitMoveBehavior();
     bool canMoveTo(Point p);
 
   private:
 };
 
+class FootUnitMoveBehavior: public UnitMoveBehavior {
+
+  public:
+    FootUnitMoveBehavior(Map* map);
+    ~FootUnitMoveBehavior();
+    bool canMoveTo(Point p);
+
+};
 
 
 #endif

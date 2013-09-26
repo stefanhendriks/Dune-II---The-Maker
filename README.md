@@ -57,13 +57,24 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
-- have infantry
-  - with a maximum of 5 on one cell
-  - can be moved seperately (like C&C)
-  - can move on mountains
-  - should be blocked by other infantry, only when other cell is full
-  - should be blocked by units
+- have foot-men (soldiers, infantry, trooper, troopers, fremen, all are alike)
+<del>
+  <ul>
+    <li>draw soldier (as a single celled unit)</li>
+    <li>draw five soldiers on cell</li>
+    <li>can move on mountains</li>
+    <li>make it possible to select a single soldier on a cell occupied by multiple soldiers</li>
+    <li>normal units should still be able to move to other cells</li>
+  </ul>
+</del>
+  - unit taking sub-cell (soldier) should be able to move to destination, and remain on sub-cell
+  - when sub-cell is taken, then unit will take other sub-cell if available
+  - when all sub-cells are taken, the cell is occupied
+  - when not all sub-cells are taken, the cell is not occupied
+  - should be blocked by ground/wheeled units
+  - units from a different house may not occupy the same cell
   - can be squished by heavy units
+  - animate moving of unit
 - modify the properties of units/structures by modifying a rules.ini file
 - move vehicles around larger obstacles (like bases, mountains, etc) (path-finding on 'really-need-it-basis')
 - move (my) units appropriately

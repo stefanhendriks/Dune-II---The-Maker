@@ -89,14 +89,21 @@ int Game::init() {
   map.load("maps/4PL_Mountains.ini");
   unitRepository.reset(new UnitRepository(&map));
 
-  Unit* frigate = unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 64, 64, 10);
-  units.emplace_back(frigate);
+  units.emplace_back(unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 3, 3, 10, SUBCELL_CENTER));
+  units.emplace_back(unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 8, 8, 3, SUBCELL_CENTER));
 
-  Unit* trike1 = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 256, 256, 3);
-  units.emplace_back(trike1);
+  // soldiers
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_CENTER));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_UPLEFT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_UPRIGHT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_DOWNLEFT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_DOWNRIGHT));
 
-  Unit* trike2 = unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 448, 448, 3);
-  units.emplace_back(trike2);
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_CENTER));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_UPLEFT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_UPRIGHT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_DOWNLEFT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_DOWNRIGHT));
 
   return true;
 }
@@ -131,7 +138,7 @@ void Game::onEvent(SDL_Event* event) {
           selected_unit->select();
           mouse.state_order_move();
         }
-      }      
+      }
     } else if (event->user.code == D2TM_DESELECT) {
       mouse.state_pointing();
       deselectAllUnits();
@@ -150,7 +157,7 @@ void Game::onEvent(SDL_Event* event) {
                 mouse.state_order_move();
             }
         }
-      }      
+      }
     } else if (event->user.code == D2TM_MOVE_UNIT) {
       std::unique_ptr<D2TMMoveUnitStruct> s(static_cast<D2TMMoveUnitStruct*>(event->user.data1));
       Point p = map_camera->toWorldCoordinates(s->screen_position);
