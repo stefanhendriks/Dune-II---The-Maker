@@ -10,6 +10,8 @@
 #include "map.h"
 #include "unit_move_behavior.h"
 #include <memory>
+#include "houses.h"
+#include "player.h"
 
 const int FACING_RIGHT = 0;
 const int FACING_UP_RIGHT = 1;
@@ -21,25 +23,11 @@ const int FACING_DOWN = 6;
 const int FACING_RIGHT_DOWN = 7;
 const int FACINGS = 8;          // used to calculate width of each 'tile' for a unit given a tilset
 
-// TEMPORARILY HOUSES ARE DEFINED HERE, BY A LACK OF BETTER PLACE (TODO: REFACTOR)
-// note, these house numbers are based on the palette indices. As index 144 is harkonnen
-// colors and the formula to actually copy the correct colors is based from 144 + house nr
-// we just use this as a convenience.
-enum class House
-{
-    Harkonnen = 0,
-    Atreides = 1,
-    Ordos = 2,
-    Fremen = 3,
-    Sardaukar = 4,
-    Mercenary = 5
-};
-
 class Unit {
 
   public:
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior);
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange, House theSide);
+    //Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange, Player& thePlayer);
     ~Unit();
 
     void draw(SDL_Surface* screen, MapCamera* map_camera);
@@ -66,7 +54,7 @@ class Unit {
     Point prev_position;
     Point size;
 
-    House side; //which side the unit fights for
+    Player* owner; //player who owns the unit
 
     int shadow_alpha;       // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
     int anim_frame;         // animation frames are 'rows' in the tileset
@@ -118,7 +106,7 @@ class UnitRepository {
 
     void destroy();
 
-    Unit* create(int unitType, House house, int x, int y, int viewRange);
+    Unit* create(int unitType, Player &owner, int x, int y, int viewRange);
 
    private:
       SDL_Surface* unit_animation[MAX_UNIT_TYPES];
