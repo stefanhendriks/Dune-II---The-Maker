@@ -64,7 +64,7 @@ const int MAP_MAX_LAYERS = 2;
 class Map : public sf::Drawable {
 
   public:
-    Map(sf::Image& terrain);
+    Map(sf::Texture& terrain);
 
     void setBoundaries(int max_width, int max_height);
 
@@ -130,7 +130,7 @@ class Map : public sf::Drawable {
     //EventFactory eventFactory;
     int max_width;
     int max_height;
-    sf::Image& terrain;
+    sf::Texture& terrain;
 
     void determineCellTile(Cell* c);
     void determineCellTileForMap();

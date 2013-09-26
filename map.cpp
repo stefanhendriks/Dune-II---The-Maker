@@ -5,9 +5,9 @@
 //#include "unit.h"
 
 #include <memory> //std::unique_ptr
-#include <math.h>       /* ceil */
+#include <cmath>       /* ceil */
 
-Map::Map(sf::Image& terrain) :
+Map::Map(sf::Texture &terrain) :
   terrain(terrain)
 {
   max_width = MAP_MAX_WIDTH - 1;

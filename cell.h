@@ -10,7 +10,7 @@ public:
 
     Cell() {}
 
-    void setTerrain(sf::Image& terrain, int terrain_type, int tile) {
+    void setTerrain(sf::Texture& terrain, int terrain_type, int tile) {
         this->terrain_type = terrain_type;
         this->tile = tile;
 
@@ -20,8 +20,9 @@ public:
         int y = TILES_IN_ROW_ON_TERRAIN_SURFACE * terrain_type;
         int x = TILE_SIZE * tile;
         sf::IntRect rect = sf::IntRect(x, y, x + TILE_SIZE, y + TILE_SIZE);
-        texture.loadFromImage(terrain, rect);
-        sprite.setTexture(texture);
+
+        sprite.setTexture(terrain);
+        sprite.setTextureRect(rect);
         sprite.setPosition((this->x)*TILE_SIZE,(this->y)*TILE_SIZE);
     }
 
