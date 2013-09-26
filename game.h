@@ -2,7 +2,7 @@
 #define GAME_H
 
 //#include <vector>
-//#include "map.h"
+#include "map.h"
 //#include "keyboard.h"
 //#include "mouse.h"
 //#include "unit.h"
@@ -26,11 +26,11 @@ class Game {
       //void deselectAllUnits();
       bool playing;
       sf::RenderWindow screen;
-      //SDL_Surface* terrain;
-      //SDL_Surface* shroud_edges;
-      //SDL_Surface* shroud_edges_shadow;
+      sf::Image terrain;
+      //SDL_Surface shroud_edges;
+      //SDL_Surface shroud_edges_shadow;
       //std::unique_ptr<MapCamera> map_camera;
-      //Map map;
+      std::unique_ptr<Map> map;
       //Keyboard keyboard;
       //Mouse mouse;
 

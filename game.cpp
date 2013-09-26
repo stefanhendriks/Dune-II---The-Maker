@@ -6,7 +6,6 @@
 Game::Game():
     playing(true),
     screen(sf::VideoMode(800, 600), "Dune 2 - The Maker")
-    //terrain(NULL),
     //map_camera(nullptr),
     //unitRepository(nullptr)
 {
@@ -30,12 +29,11 @@ int Game::execute() {
 }
 
 int Game::init() {
-  //terrain = Surface::load("graphics/terrain.png");
-
-  //if (terrain == NULL) {
-    //cout << "Failed to read graphics/terrain.png data" << endl;
-    //return false;
-  //}
+  if (!terrain.loadFromFile("graphics/terrain.png")) {
+    std::cout << "Failed to read graphics/terrain.png data" << std::endl;
+    return false;
+  }
+  map.reset(new Map(terrain));
 
   //shroud_edges = Surface::load("graphics/shroud_edges.bmp");
 
@@ -147,8 +145,7 @@ void Game::onEvent(sf::Event event) {
 
 void Game::render() {
   screen.clear();
-
-  //SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+  screen.draw(*map);
 
   //map_camera->draw(&map, terrain, screen);
 
