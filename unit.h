@@ -79,7 +79,7 @@ class Unit {
     bool is_infantry;
 
     Map* map;
-    std::unique_ptr<UnitMoveBehavior> move_behavior;
+    std::shared_ptr<UnitMoveBehavior> move_behavior;
 
     void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int world_x, int world_y, int view_range, UnitMoveBehavior* move_behavior, int sub_cell, Point tile_size, Point unit_size);
 

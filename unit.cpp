@@ -315,7 +315,6 @@ void Unit::updateState() {
 // Unit Repository
 //
 //////////////////////////////////////////
-
 UnitRepository::UnitRepository(Map* map) {
   this->map = map;
 
@@ -352,10 +351,6 @@ UnitRepository::~UnitRepository() {
     SDL_FreeSurface(unit_animation[i]);
     SDL_FreeSurface(unit_shadow[i]);
   }
-
-  delete air_unit_move_behavior;
-  delete ground_unit_move_behavior;
-  delete foot_unit_move_behavior;
 }
 
 Unit* UnitRepository::create(int unitType, int house, int x, int y, int view_range, int sub_cell) {
