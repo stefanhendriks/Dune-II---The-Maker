@@ -36,6 +36,7 @@ int Game::init() {
     return false;
   }
   map.reset(new Map(terrain));
+  map->load("maps/4PL_Mountains.ini");
 
   //shroud_edges = Surface::load("graphics/shroud_edges.bmp");
 

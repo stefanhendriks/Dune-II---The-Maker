@@ -53,7 +53,7 @@ int MapLoader::load(std::string file, Map* map) {
     return ERROR_DIMENSIONS_INVALID;
   }
 
-  map->setMaxBoundaries(Point(width, height));
+  //map->setMaxBoundaries(Point(width, height));
 
   string data = reader.Get("SKIRMISH", "data", "ERROR");
   if (data.at(0) == 'E') {

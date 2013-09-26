@@ -9,6 +9,7 @@
 
 #include <cmath>
 #include "cell.h"
+#include <array>
 
 #include <SFML/Graphics.hpp>
 
@@ -37,30 +38,6 @@ const int MAP_LAYER_AIR = 1;
 const int MAP_MAX_LAYERS = 2;
 
 
- //// considers "this" as center opposed to other cell. (ego-centric)
-    //bool shouldSmoothWithTerrainType(Cell* other) {
-      //if (this->terrain_type == TERRAIN_TYPE_ROCK) {
-        //return other->terrain_type != TERRAIN_TYPE_MOUNTAIN &&
-               //other->terrain_type != TERRAIN_TYPE_ROCK &&
-               //other->terrain_type != TERRAIN_TYPE_SLAB;
-      //}
-      //if (this->terrain_type == TERRAIN_TYPE_MOUNTAIN) {
-        //return other->terrain_type != TERRAIN_TYPE_MOUNTAIN;
-      //}
-      //if (this->terrain_type == TERRAIN_TYPE_SLAB) {
-        //return other->terrain_type != TERRAIN_TYPE_MOUNTAIN &&
-               //other->terrain_type != TERRAIN_TYPE_ROCK;
-      //}
-      //if (this->terrain_type == TERRAIN_TYPE_SPICE) {
-        //return other->terrain_type != TERRAIN_TYPE_SPICE &&
-               //other->terrain_type != TERRAIN_TYPE_SPICEHILL;
-      //}
-      //if (this->terrain_type == TERRAIN_TYPE_SPICEHILL) {
-        //return other->terrain_type != TERRAIN_TYPE_SPICEHILL;
-      //}
-      //return other->terrain_type != this->terrain_type;
-    //}
-
 class Map : public sf::Drawable {
 
   public:
@@ -75,16 +52,15 @@ class Map : public sf::Drawable {
     //}
 
     Cell* getCell(int x, int y) {
-      x = min(max(x, 0), (MAP_MAX_WIDTH-1));
-      y = min(max(y, 0), (MAP_MAX_HEIGHT-1));
+      x = std::min(std::max(x, 0), (MAP_MAX_WIDTH-1));
+      y = std::min(std::max(y, 0), (MAP_MAX_HEIGHT-1));
       int cell = (y * MAP_MAX_WIDTH) + x;
       return &cells[cell];
     }
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
-      for (auto& cell : cells){
-          target.draw(cell);
-      }
+      for (auto& cell : cells)
+          target.draw(cell);      
     }
 
 
@@ -126,7 +102,7 @@ class Map : public sf::Drawable {
     //}
 
   private:
-    Cell cells[MAP_MAX_SIZE];
+    std::array<Cell, MAP_MAX_SIZE> cells; //why not vector? -Koji
     //EventFactory eventFactory;
     int max_width;
     int max_height;
