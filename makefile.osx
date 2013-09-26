@@ -1,7 +1,7 @@
 CC=clang++
 CFLAGS=-c -Wall -std=c++11 -stdlib=libc++
 LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system  -lc++ -lstdc++
-SOURCES=sfml.cpp
+SOURCES=sfml.cpp ini.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=d2tm
 
