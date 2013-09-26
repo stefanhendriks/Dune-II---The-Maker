@@ -3,11 +3,9 @@
 
 using namespace std;
 
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior) {
-  init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256), 1 + rnd(5), move_behavior, SUBCELL_CENTER, Point(TILE_SIZE, TILE_SIZE), Point(TILE_SIZE, TILE_SIZE));
-}
-
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int world_x, int world_y, int view_range, int sub_cell, Point tile_size, Point unit_size) {
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int world_x, int world_y, int view_range, int sub_cell, Point tile_size, Point unit_size, Player &thePlayer) :
+  owner(&thePlayer)
+{
   init(tileset, shadowset, map, world_x, world_y, view_range, move_behavior, sub_cell, tile_size, unit_size);
 }
 
@@ -106,6 +104,11 @@ void Unit::order_move(Point target) {
   // then apply the same offset if given
   this->target = this->target + this->sub_position;
 
+}
+
+const Player &Unit::getOwner() const
+{
+    return *owner;
 }
 
 void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
@@ -353,11 +356,10 @@ UnitRepository::~UnitRepository() {
   }
 }
 
-Unit* UnitRepository::create(int unitType, int house, int x, int y, int view_range, int sub_cell) {
+Unit* UnitRepository::create(int unitType, House house, int x, int y, int view_range, int sub_cell, Player &thePlayer) {
   SDL_Surface* copy = Surface::copy(unit_animation[unitType]);
-  int paletteIndexUsedForColoring = 144;
-  int paletteIndex = paletteIndexUsedForColoring + (16 * house);
-  SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], paletteIndexUsedForColoring, 8);
+  int paletteIndex = thePlayer.getColor();
+  SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], 144, 8); //magic numbers
 
   UnitMoveBehavior *move_behavior = NULL;
   if (unitType == UNIT_FRIGATE) {
@@ -399,5 +401,5 @@ Unit* UnitRepository::create(int unitType, int house, int x, int y, int view_ran
     unit_width = unit_height = 8;
   }
 
-  return new Unit(copy, shadow_copy, map, move_behavior, (x * TILE_SIZE) + (TILE_SIZE / 2), (y * TILE_SIZE) + (TILE_SIZE / 2), view_range, sub_cell, Point(tile_width, tile_height), Point(unit_width, unit_height));
+  return new Unit(copy, shadow_copy, map, move_behavior, (x * TILE_SIZE) + (TILE_SIZE / 2), (y * TILE_SIZE) + (TILE_SIZE / 2), view_range, sub_cell, Point(tile_width, tile_height), Point(unit_width, unit_height), thePlayer);
 }

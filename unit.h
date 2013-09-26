@@ -11,6 +11,7 @@
 #include "map.h"
 #include "unit_move_behavior.h"
 #include <memory>
+#include "player.h"
 
 #include "fpoint.h"
 
@@ -35,14 +36,16 @@ const int SUBCELL_DOWNRIGHT = 5;
 class Unit {
 
   public:
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior);
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int world_x, int world_y, int view_range, int sub_cell, Point tile_size, Point unit_size);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int world_x, int world_y, int view_range, int sub_cell, Point tile_size, Point unit_size, Player& thePlayer
+        );
     ~Unit();
 
     void draw(SDL_Surface* screen, MapCamera* map_camera);
     void updateState();
 
     void order_move(Point target);
+
+    const Player& getOwner() const;
 
     void select();
     void unselect();
@@ -66,6 +69,8 @@ class Unit {
 
     Point tile_size;
     Point unit_size;
+
+    Player* owner; //player who owns the unit
 
     int shadow_alpha;       // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
     int anim_frame;         // animation frames are 'rows' in the tileset
@@ -103,18 +108,6 @@ class Unit {
 };
 
 
-// TEMPORARILY HOUSES ARE DEFINED HERE, BY A LACK OF BETTER PLACE (TODO: REFACTOR)
-// note, these house numbers are based on the palette indices. As index 144 is harkonnen
-// colors and the formula to actually copy the correct colors is based from 144 + house nr
-// we just use this as a convenience.
-const int HOUSE_HARKONNEN = 0;
-const int HOUSE_ATREIDES =  1;
-const int HOUSE_ORDOS =  2;
-const int HOUSE_SARDAUKAR =  4;
-const int HOUSE_FREMEN =  3;
-const int HOUSE_MERCENARY =  5;
-
-
 const int UNIT_QUAD = 0;
 const int UNIT_TRIKE = 1;
 const int UNIT_DEVASTATOR = 2;
@@ -132,7 +125,7 @@ class UnitRepository {
 
     void destroy();
 
-    Unit* create(int unitType, int house, int x, int y, int view_range, int sub_cell);
+    Unit* create(int unitType, House house, int x, int y, int view_range, int sub_cell, Player& thePlayer);
 
    private:
       SDL_Surface* unit_animation[MAX_UNIT_TYPES];

@@ -8,6 +8,7 @@
 #include "game.h"
 #include "surface.h"
 #include "eventfactory.h"
+#include "houses.h"
 
 using namespace std;
 
@@ -89,21 +90,26 @@ int Game::init() {
   map.load("maps/4PL_Mountains.ini");
   unitRepository.reset(new UnitRepository(&map));
 
-  units.emplace_back(unitRepository->create(UNIT_FRIGATE, HOUSE_SARDAUKAR, 3, 3, 10, SUBCELL_CENTER));
-  units.emplace_back(unitRepository->create(UNIT_TRIKE, HOUSE_ATREIDES, 8, 8, 3, SUBCELL_CENTER));
+  //init two players
+  int idCount = 0;
+  players.emplace_back(House::Sardaukar, idCount++);
+  players.emplace_back(House::Harkonnen, idCount++);
+
+  units.emplace_back(unitRepository->create(UNIT_FRIGATE, House::Sardaukar, 3, 3, 10, SUBCELL_CENTER, players[0]));
+  units.emplace_back(unitRepository->create(UNIT_TRIKE, House::Sardaukar, 8, 8, 3, SUBCELL_CENTER, players[0]));
 
   // soldiers
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_CENTER));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_UPLEFT));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_UPRIGHT));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_DOWNLEFT));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_SARDAUKAR, 14, 14, 3, SUBCELL_DOWNRIGHT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_CENTER, players[0]));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_UPLEFT, players[0]));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_UPRIGHT, players[0]));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_DOWNLEFT, players[0]));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_DOWNRIGHT, players[0]));
 
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_CENTER));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_UPLEFT));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_UPRIGHT));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_DOWNLEFT));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, HOUSE_HARKONNEN, 18, 8, 3, SUBCELL_DOWNRIGHT));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_CENTER, players[1]));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_UPLEFT, players[1]));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_UPRIGHT, players[1]));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_DOWNLEFT, players[1]));
+  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_DOWNRIGHT, players[1]));
 
   return true;
 }
@@ -215,5 +221,14 @@ int Game::cleanup() {
 void Game::deselectAllUnits() {
     for (auto& unit : units)
         unit->unselect();
+}
+
+bool Game::playerHasUnits(const Player &player) const
+{
+    for (const auto& unit : units){
+        if (unit->getOwner()==player)
+            return true; //unit belonging to player found
+    }
+    return false;
 }
 
