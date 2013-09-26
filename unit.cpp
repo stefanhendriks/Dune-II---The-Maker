@@ -3,11 +3,15 @@
 
 using namespace std;
 
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior) {
-  init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256), 1 + rnd(5), move_behavior);
-}
+//Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior):
+//    playerId(-1) //so it does not remain uninit
+//{
+//  init(tileset, shadowset, map, 128 + rnd(256), 128 + rnd(256), 1 + rnd(5), move_behavior);
+//}
 
-Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange) {
+Unit::Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange, Player &thePlayer):
+    owner(&thePlayer)
+{
   init(tileset, shadowset, map, x, y, viewRange, move_behavior);
 }
 
@@ -99,6 +103,11 @@ void Unit::order_move(Point target) {
   int y = (target.y / TILE_SIZE) * TILE_SIZE;
   int x = (target.x / TILE_SIZE) * TILE_SIZE;
   this->target = Point(x,y);
+}
+
+const Player &Unit::getOwner() const
+{
+    return *owner;
 }
 
 void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
@@ -291,11 +300,10 @@ UnitRepository::~UnitRepository() {
   }
 }
 
-Unit* UnitRepository::create(int unitType, int house, int x, int y, int viewRange) {
+Unit* UnitRepository::create(int unitType, Player& owner, int x, int y, int viewRange) {
   SDL_Surface* copy = Surface::copy(unit_animation[unitType]);
-  int paletteIndexUsedForColoring = 144;
-  int paletteIndex = paletteIndexUsedForColoring + (16 * house);
-  SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], paletteIndexUsedForColoring, 8);
+  int paletteIndex = owner.getColor();
+  SDL_SetColors(copy, &copy->format->palette->colors[paletteIndex], 144, 8); //magic numbers
 
   SDL_Surface* shadow_copy = Surface::copy(unit_shadow[unitType]);
   UnitMoveBehavior *move_behavior = NULL;
@@ -305,6 +313,6 @@ Unit* UnitRepository::create(int unitType, int house, int x, int y, int viewRang
   } else {
     move_behavior = new GroundUnitMovementBehavior(map);
   }
-  Unit* unit = new Unit(copy, shadow_copy, map, move_behavior, x, y, viewRange);
+  Unit* unit = new Unit(copy, shadow_copy, map, move_behavior, x, y, viewRange, owner);
   return unit;
 }

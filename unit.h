@@ -10,6 +10,7 @@
 #include "map.h"
 #include "unit_move_behavior.h"
 #include <memory>
+#include "player.h"
 
 const int FACING_RIGHT = 0;
 const int FACING_UP_RIGHT = 1;
@@ -24,14 +25,16 @@ const int FACINGS = 8;          // used to calculate width of each 'tile' for a 
 class Unit {
 
   public:
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior);
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange);
+    //Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange, Player& thePlayer);
     ~Unit();
 
     void draw(SDL_Surface* screen, MapCamera* map_camera);
     void updateState();
 
     void order_move(Point target);
+
+    const Player& getOwner() const;
 
     void select();
     void unselect();
@@ -51,6 +54,8 @@ class Unit {
     Point next_move_position;
     Point prev_position;
     Point size;
+
+    Player* owner; //player who owns the unit
 
     int shadow_alpha;       // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
     int anim_frame;         // animation frames are 'rows' in the tileset
@@ -86,18 +91,6 @@ class Unit {
 };
 
 
-// TEMPORARILY HOUSES ARE DEFINED HERE, BY A LACK OF BETTER PLACE (TODO: REFACTOR)
-// note, these house numbers are based on the palette indices. As index 144 is harkonnen
-// colors and the formula to actually copy the correct colors is based from 144 + house nr
-// we just use this as a convenience.
-const int HOUSE_HARKONNEN = 0;
-const int HOUSE_ATREIDES =  1;
-const int HOUSE_ORDOS =  2;
-const int HOUSE_SARDAUKAR =  4;
-const int HOUSE_FREMEN =  3;
-const int HOUSE_MERCENARY =  5;
-
-
 const int UNIT_QUAD = 0;
 const int UNIT_TRIKE = 1;
 const int UNIT_DEVASTATOR = 2;
@@ -114,7 +107,7 @@ class UnitRepository {
 
     void destroy();
 
-    Unit* create(int unitType, int house, int x, int y, int viewRange);
+    Unit* create(int unitType, Player &owner, int x, int y, int viewRange);
 
    private:
       SDL_Surface* unit_animation[MAX_UNIT_TYPES];
