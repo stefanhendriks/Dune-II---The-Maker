@@ -4,12 +4,17 @@
 #include "SDL/SDL.h"
 #include <SDL/SDL_gfxPrimitives.h>
 
+#include "vector2d.h"
 #include "random.h"
 #include "rectangle.h"
 #include "surface.h"
 #include "map.h"
 #include "unit_move_behavior.h"
 #include <memory>
+
+#include "fpoint.h"
+
+#define DEV_DRAWTARGETLINE true
 
 const int FACING_RIGHT = 0;
 const int FACING_UP_RIGHT = 1;
@@ -21,11 +26,17 @@ const int FACING_DOWN = 6;
 const int FACING_RIGHT_DOWN = 7;
 const int FACINGS = 8;          // used to calculate width of each 'tile' for a unit given a tilset
 
+const int SUBCELL_UPLEFT = 1;
+const int SUBCELL_UPRIGHT = 2;
+const int SUBCELL_CENTER = 3;
+const int SUBCELL_DOWNLEFT = 4;
+const int SUBCELL_DOWNRIGHT = 5;
+
 class Unit {
 
   public:
     Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior);
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int x, int y, int viewRange);
+    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int world_x, int world_y, int view_range, int sub_cell, Point tile_size, Point unit_size);
     ~Unit();
 
     void draw(SDL_Surface* screen, MapCamera* map_camera);
@@ -46,11 +57,15 @@ class Unit {
     SDL_Surface* shadowset;
     SDL_Surface* selected_bitmap;
 
-    Point target;           // target of interest (move/attack, etc)
-    Point position;         // coordinates relative to top/left of map (in pixels)
-    Point next_move_position;
-    Point prev_position;
-    Point size;
+    FPoint target;            // target of interest (move/attack, etc)
+    FPoint position;          // coordinates relative to top/left of map (in pixels)
+    FPoint sub_position;
+    FPoint next_move_position;
+    Vector2D next_move_direction;
+    FPoint prev_position;
+
+    Point tile_size;
+    Point unit_size;
 
     int shadow_alpha;       // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
     int anim_frame;         // animation frames are 'rows' in the tileset
@@ -61,10 +76,12 @@ class Unit {
 
     bool selected;
 
-    Map* map;
-    std::unique_ptr<UnitMoveBehavior> move_behavior;
+    bool is_infantry;
 
-    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int x, int y, int viewRange, UnitMoveBehavior* move_behavior);
+    Map* map;
+    std::shared_ptr<UnitMoveBehavior> move_behavior;
+
+    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int world_x, int world_y, int view_range, UnitMoveBehavior* move_behavior, int sub_cell, Point tile_size, Point unit_size);
 
     void moveUp();
     void moveDown();
@@ -103,6 +120,7 @@ const int UNIT_TRIKE = 1;
 const int UNIT_DEVASTATOR = 2;
 const int UNIT_CARRYALL = 3;
 const int UNIT_FRIGATE = 4;
+const int UNIT_SOLDIER = 5;
 const int MAX_UNIT_TYPES = 16;
 
 
@@ -114,12 +132,17 @@ class UnitRepository {
 
     void destroy();
 
-    Unit* create(int unitType, int house, int x, int y, int viewRange);
+    Unit* create(int unitType, int house, int x, int y, int view_range, int sub_cell);
 
    private:
       SDL_Surface* unit_animation[MAX_UNIT_TYPES];
       SDL_Surface* unit_shadow[MAX_UNIT_TYPES];
       Map* map;
+
+      // several unit behaviors
+      AirUnitMoveBehavior*    air_unit_move_behavior;
+      GroundUnitMoveBehavior* ground_unit_move_behavior;
+      FootUnitMoveBehavior*   foot_unit_move_behavior;
 };
 
 #endif
