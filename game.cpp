@@ -87,38 +87,20 @@ int Game::init() {
 
 void Game::onEvent(sf::Event event) {
 
-    static const float cameraSpeed = 10.f;
-
-    switch (event.type){
+  switch (event.type){
     case sf::Event::Closed:
-        playing = false;;
-        break;
+      playing = false; break;
     case sf::Event::KeyPressed:
-        switch (event.key.code) {
-        case sf::Keyboard::Up:
-            camera.move(0.f, -cameraSpeed);
-            screen.setView(camera);
-            break;
-        case sf::Keyboard::Down:
-            camera.move(0.f, cameraSpeed);
-            screen.setView(camera);
-            break;
-        case sf::Keyboard::Left:
-            camera.move(-cameraSpeed, 0.f);
-            screen.setView(camera);
-            break;
-        case sf::Keyboard::Right:
-            camera.move(cameraSpeed, 0.f);
-            screen.setView(camera);
-            break;
+      switch (event.key.code) {
+        case sf::Keyboard::Q:
+          playing = false; break;
         default:
-            break;
-        }
-        break;
-
+          break;
+      }
+      break;
     default:
-        break;
-    }
+      break;
+  }
 
   //mouse.onEvent(event);
   //keyboard.onEvent(event);
@@ -200,6 +182,16 @@ void Game::render() {
 }
 
 void Game::updateState() {
+  static const float cameraSpeed = 10.f;
+  float vec_x = 0.f, vec_y = 0.f;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) vec_y -= cameraSpeed;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) vec_y += cameraSpeed;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) vec_x -= cameraSpeed;
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) vec_x += cameraSpeed;
+
+  camera.move(vec_x, vec_y);
+  screen.setView(camera);
+
   //keyboard.updateState();
   //mouse.updateState();
   //map_camera->updateState();
