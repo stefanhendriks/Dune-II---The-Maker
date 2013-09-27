@@ -11,3 +11,5 @@ CMakeFiles
 CMakeCache.txt
 cmake_install.cmake
 dune2
+CMakeLists.txt*
+d2tm*
