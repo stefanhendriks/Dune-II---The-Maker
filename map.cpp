@@ -25,6 +25,22 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
 void Map::load(std::string file) {
   MapLoader::load(file, this);
   determineCellTileForMap();
+
+  //do the shrouds as well - but these must change dynamically!
+  for (auto& cell : cells)
+      cell.setShroudIndex(determineShroudEdge(&cell));
+}
+
+void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+    for (auto& cell : cells)
+        target.draw(cell);
+}
+
+void Map::drawShrouded(sf::RenderTarget &target, sf::RenderStates states) const
+{
+    for (auto& cell : cells)
+        cell.drawShrouded(target, states);
 }
 
 void Map::determineCellTileForMap() {
@@ -69,13 +85,13 @@ int Map::determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool
   return -1;
 }
 
-int MapCamera::determineShroudEdge(Map* map, Cell* c) {
+int Map::determineShroudEdge(Cell* c) {
   if (c->shrouded) return 0;
 
-  bool cell_up = map->getCell(c->x, c->y-1)->shrouded;
-  bool cell_down = map->getCell(c->x, c->y+1)->shrouded;
-  bool cell_left = map->getCell(c->x-1, c->y)->shrouded;
-  bool cell_right = map->getCell(c->x+1, c->y)->shrouded;
+  bool cell_up = getCell(c->x, c->y-1)->shrouded;
+  bool cell_down = getCell(c->x, c->y+1)->shrouded;
+  bool cell_left = getCell(c->x-1, c->y)->shrouded;
+  bool cell_right = getCell(c->x+1, c->y)->shrouded;
 
   // Its harder then you think to make static consts for these 'magic values'.
   if (!cell_up && !cell_down && !cell_left && !cell_right)  return -1;

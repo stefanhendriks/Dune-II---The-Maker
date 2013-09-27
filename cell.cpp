@@ -12,6 +12,9 @@ void Cell::init(const sf::Texture &terrain, const sf::Texture &shrouded_edges, i
     sprite.setTexture(terrain);
     sprite.setPosition(row*TILE_SIZE,col*TILE_SIZE);
 
+    sprite_shroud.setTexture(shrouded_edges);
+    sprite_shroud.setPosition(row*TILE_SIZE,col*TILE_SIZE);
+
     shrouded = true;
 }
 
@@ -24,9 +27,8 @@ void Cell::setIndex(int tileIndex)
 {
     int tileRow = TILE_SIZE * static_cast<int>(terrainType);
     int tileCol = TILE_SIZE * tileIndex;
-    sf::IntRect rect(tileCol, tileRow, TILE_SIZE, TILE_SIZE);
 
-    sprite.setTextureRect(rect);
+    sprite.setTextureRect({tileCol, tileRow, TILE_SIZE, TILE_SIZE});
 }
 
 void Cell::setShroudIndex(int tileIndex) {
