@@ -12,7 +12,10 @@ Game::Game():
 {
     screen.setFramerateLimit(60); //comment out for fps benchmarks
 
-    init();
+    if (!init()){
+        std::cerr << "Failed to initialized game.";
+        playing = false;
+    }
 }
 
 int Game::execute() {
@@ -30,7 +33,7 @@ int Game::execute() {
   return 0;
 }
 
-int Game::init() {
+bool Game::init() {
   if (!terrain.loadFromFile("graphics/terrain.png")) {
     std::cout << "Failed to read graphics/terrain.png data" << std::endl;
     return false;
