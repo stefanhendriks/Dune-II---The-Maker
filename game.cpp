@@ -5,7 +5,7 @@
 
 Game::Game():
     playing(true),
-    screen(sf::VideoMode(800, 600), "Dune 2 - The Maker"),
+    screen(sf::VideoMode(800, 600), "Dune 2 - The Maker", sf::Style::Close),
     map(nullptr)
     //map_camera(nullptr),
     //unitRepository(nullptr)

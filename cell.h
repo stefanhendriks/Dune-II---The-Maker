@@ -24,6 +24,7 @@ public:
     void init(const sf::Texture& terrain, int row, int col);
 
     void setType(Terrain terrain_type);
+    void setIndex(int tileIndex);
 
     bool shouldSmoothWithTerrainType(Cell* other);
 
@@ -35,6 +36,8 @@ public:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
         target.draw(sprite);
     }
+
+    int x, y;
 
 private:
 

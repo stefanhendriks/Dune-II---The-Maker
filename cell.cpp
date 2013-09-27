@@ -6,6 +6,9 @@ Cell::Cell()
 
 void Cell::init(const sf::Texture &terrain, int row, int col)
 {
+    y = col;
+    x = row;
+
     sprite.setTexture(terrain);
     sprite.setPosition(row*TILE_SIZE,col*TILE_SIZE);
 }
@@ -13,9 +16,12 @@ void Cell::init(const sf::Texture &terrain, int row, int col)
 void Cell::setType(Terrain terrain_type)
 {
     terrainType = terrain_type;
+}
 
-    int tileRow = TILE_SIZE * static_cast<int>(terrain_type);
-    int tileCol = 0; //how to determine this?
+void Cell::setIndex(int tileIndex)
+{
+    int tileRow = TILE_SIZE * static_cast<int>(terrainType);
+    int tileCol = TILE_SIZE * tileIndex;
     sf::IntRect rect(tileCol, tileRow, TILE_SIZE, TILE_SIZE);
 
     sprite.setTextureRect(rect);

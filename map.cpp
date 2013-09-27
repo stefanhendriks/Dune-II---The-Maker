@@ -25,7 +25,7 @@ Map::Map(sf::Texture &terrain) :
 
 void Map::load(std::string file) {
   MapLoader::load(file, this);
-  //determineCellTileForMap();
+  determineCellTileForMap();
 }
 
 void Map::determineCellTileForMap() {
@@ -37,16 +37,17 @@ void Map::determineCellTileForMap() {
 }
 
 void Map::determineCellTile(Cell* c) {
-//  bool cell_up = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y-1));
-//  bool cell_down = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y+1));
-//  bool cell_left = !c->shouldSmoothWithTerrainType(getCell(c->x-1, c->y));
-//  bool cell_right = !c->shouldSmoothWithTerrainType(getCell(c->x+1, c->y));
+  bool cell_up = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y-1));
+  bool cell_down = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y+1));
+  bool cell_left = !c->shouldSmoothWithTerrainType(getCell(c->x-1, c->y));
+  bool cell_right = !c->shouldSmoothWithTerrainType(getCell(c->x+1, c->y));
 
-//  int index = determineTerrainTile(cell_up, cell_down, cell_left, cell_right);
+  int index = determineTerrainTile(cell_up, cell_down, cell_left, cell_right);
+  //index += static_cast<int>(c->terrainType) * 17;
 
-//  if (index > -1) {
-//      c->setTile(index);
-//  }
+  if (index > -1) {
+      c->setIndex(index);
+  }
 }
 
 int Map::determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool cell_right) {
