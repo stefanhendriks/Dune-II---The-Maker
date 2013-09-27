@@ -4,21 +4,21 @@ Cell::Cell()
 {
 }
 
-void Cell::setTerrain(sf::Texture &terrain, Terrain terrain_type, int tile)
+void Cell::init(const sf::Texture &terrain, int row, int col)
+{
+    sprite.setTexture(terrain);
+    sprite.setPosition(row*TILE_SIZE,col*TILE_SIZE);
+}
+
+void Cell::setType(Terrain terrain_type)
 {
     terrainType = terrain_type;
-    this->tile = tile;
 
-    const int TILES_IN_ROW_ON_TERRAIN_SURFACE = 17;
-    const int TILE_SIZE = 32; // squared
+    int tileRow = TILE_SIZE * static_cast<int>(terrain_type);
+    int tileCol = 0; //how to determine this?
+    sf::IntRect rect(tileCol, tileRow, TILE_SIZE, TILE_SIZE);
 
-    int y = TILE_SIZE * static_cast<int>(terrain_type);
-    int x = TILE_SIZE * (tile%17);
-    sf::IntRect rect(x, y, TILE_SIZE, TILE_SIZE);
-
-    sprite.setTexture(terrain);
     sprite.setTextureRect(rect);
-    sprite.setPosition((this->x)*TILE_SIZE,(this->y)*TILE_SIZE);
 }
 
 bool Cell::shouldSmoothWithTerrainType(Cell *other)
@@ -44,13 +44,5 @@ bool Cell::shouldSmoothWithTerrainType(Cell *other)
     }
     return (other->terrainType != terrainType);
 }
-
-void Cell::setTile(int index)
-{
-    static const int TILES_IN_ROW_ON_TERRAIN_SURFACE = 17;
-
-    tile = (static_cast<int>(terrainType) * TILES_IN_ROW_ON_TERRAIN_SURFACE) + index;
-}
-
 
 

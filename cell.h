@@ -21,16 +21,11 @@ public:
 
     Cell();
 
-    void setTerrain(sf::Texture& terrain, Terrain terrain_type, int tile);
+    void init(const sf::Texture& terrain, int row, int col);
 
-    // considers "this" as center opposed to other cell. (ego-centric)
+    void setType(Terrain terrain_type);
+
     bool shouldSmoothWithTerrainType(Cell* other);
-
-    void setTile(int index);
-
-    int x, y;
-
-    int tile; // tile to draw (one-dimension array)
 
     Terrain terrainType; // terrain type (sand, rock, etc)
     //bool occupied[MAP_MAX_LAYERS];
@@ -42,6 +37,8 @@ public:
     }
 
 private:
+
+    static const int TILE_SIZE = 32; // squared
 
     sf::Sprite sprite;
 

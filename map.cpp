@@ -18,12 +18,7 @@ Map::Map(sf::Texture &terrain) :
   for (int x = 0; x < MAP_MAX_WIDTH; x++) {
     for (int y = 0; y < MAP_MAX_HEIGHT; y++) {
       int i = (y * MAP_MAX_WIDTH) + x;
-      cells[i].x = x;
-      cells[i].y = y;
-      cells[i].setTerrain(terrain, Terrain::Rock, 0);
-      //cells[i].occupied[MAP_LAYER_GROUND] = false;
-      //cells[i].occupied[MAP_LAYER_AIR] = false;
-      //cells[i].shrouded = true;
+      cells[i].init(terrain, x, y);
     }
   }
 }
@@ -31,17 +26,6 @@ Map::Map(sf::Texture &terrain) :
 void Map::load(std::string file) {
   MapLoader::load(file, this);
   //determineCellTileForMap();
-  for (int x = 0; x < MAP_MAX_WIDTH; x++) {
-    for (int y = 0; y < MAP_MAX_HEIGHT; y++) {
-      int i = (y * MAP_MAX_WIDTH) + x;
-      cells[i].x = x;
-      cells[i].y = y;
-      cells[i].setTerrain(terrain, cells[i].terrainType, 17*static_cast<int>(cells[i].terrainType));
-      //cells[i].occupied[MAP_LAYER_GROUND] = false;
-      //cells[i].occupied[MAP_LAYER_AIR] = false;
-      //cells[i].shrouded = true;
-    }
-  }
 }
 
 void Map::determineCellTileForMap() {
@@ -53,16 +37,16 @@ void Map::determineCellTileForMap() {
 }
 
 void Map::determineCellTile(Cell* c) {
-  bool cell_up = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y-1));
-  bool cell_down = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y+1));
-  bool cell_left = !c->shouldSmoothWithTerrainType(getCell(c->x-1, c->y));
-  bool cell_right = !c->shouldSmoothWithTerrainType(getCell(c->x+1, c->y));
+//  bool cell_up = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y-1));
+//  bool cell_down = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y+1));
+//  bool cell_left = !c->shouldSmoothWithTerrainType(getCell(c->x-1, c->y));
+//  bool cell_right = !c->shouldSmoothWithTerrainType(getCell(c->x+1, c->y));
 
-  int index = determineTerrainTile(cell_up, cell_down, cell_left, cell_right);
+//  int index = determineTerrainTile(cell_up, cell_down, cell_left, cell_right);
 
-  if (index > -1) {
-      c->setTile(index);
-  }
+//  if (index > -1) {
+//      c->setTile(index);
+//  }
 }
 
 int Map::determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool cell_right) {
