@@ -38,6 +38,9 @@ int Game::init() {
   map.reset(new Map(terrain));
   map->load("maps/4PL_Mountains.ini");
 
+  camera.reset({0,0,800,600});
+  screen.setView(camera);
+
   //shroud_edges = Surface::load("graphics/shroud_edges.bmp");
 
   //if (shroud_edges == NULL) {
@@ -83,9 +86,39 @@ int Game::init() {
 }
 
 void Game::onEvent(sf::Event event) {
-  if (event.type == sf::Event::Closed) {
-    playing = false;
-  }
+
+    static const float cameraSpeed = 10.f;
+
+    switch (event.type){
+    case sf::Event::Closed:
+        playing = false;;
+        break;
+    case sf::Event::KeyPressed:
+        switch (event.key.code) {
+        case sf::Keyboard::Up:
+            camera.move(0.f, -cameraSpeed);
+            screen.setView(camera);
+            break;
+        case sf::Keyboard::Down:
+            camera.move(0.f, cameraSpeed);
+            screen.setView(camera);
+            break;
+        case sf::Keyboard::Left:
+            camera.move(-cameraSpeed, 0.f);
+            screen.setView(camera);
+            break;
+        case sf::Keyboard::Right:
+            camera.move(cameraSpeed, 0.f);
+            screen.setView(camera);
+            break;
+        default:
+            break;
+        }
+        break;
+
+    default:
+        break;
+    }
 
   //mouse.onEvent(event);
   //keyboard.onEvent(event);

@@ -27,6 +27,7 @@ class Game {
       bool playing;
       sf::RenderWindow screen;
       sf::Texture terrain;
+      sf::View camera;
       //SDL_Surface shroud_edges;
       //SDL_Surface shroud_edges_shadow;
       //std::unique_ptr<MapCamera> map_camera;
