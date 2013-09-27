@@ -7,18 +7,17 @@
 #include <memory> //std::unique_ptr
 #include <cmath>       /* ceil */
 
-Map::Map(sf::Texture &terrain) :
-  terrain(terrain)
+Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
+  terrain(terrain),
+  shroud_edges(shroud_edges)
 {
   max_width = MAP_MAX_WIDTH - 1;
   max_height = MAP_MAX_HEIGHT - 1;
 
-  //sf::Texture terrain_texture = ;
-
   for (int x = 0; x < MAP_MAX_WIDTH; x++) {
     for (int y = 0; y < MAP_MAX_HEIGHT; y++) {
       int i = (y * MAP_MAX_WIDTH) + x;
-      cells[i].init(terrain, x, y);
+      cells[i].init(terrain, shroud_edges, x, y);
     }
   }
 }
@@ -43,11 +42,11 @@ void Map::determineCellTile(Cell* c) {
   bool cell_right = !c->shouldSmoothWithTerrainType(getCell(c->x+1, c->y));
 
   int index = determineTerrainTile(cell_up, cell_down, cell_left, cell_right);
-  //index += static_cast<int>(c->terrainType) * 17;
 
   if (index > -1) {
       c->setIndex(index);
   }
+
 }
 
 int Map::determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool cell_right) {
@@ -69,6 +68,33 @@ int Map::determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool
   if ( cell_up &&  cell_down && !cell_left && !cell_right) return 15;
   return -1;
 }
+
+int MapCamera::determineShroudEdge(Map* map, Cell* c) {
+  if (c->shrouded) return 0;
+
+  bool cell_up = map->getCell(c->x, c->y-1)->shrouded;
+  bool cell_down = map->getCell(c->x, c->y+1)->shrouded;
+  bool cell_left = map->getCell(c->x-1, c->y)->shrouded;
+  bool cell_right = map->getCell(c->x+1, c->y)->shrouded;
+
+  // Its harder then you think to make static consts for these 'magic values'.
+  if (!cell_up && !cell_down && !cell_left && !cell_right)  return -1;
+  if ( cell_up && !cell_down &&  cell_left && !cell_right)  return 1;
+  if ( cell_up && !cell_down && !cell_left && !cell_right)  return 2;
+  if ( cell_up && !cell_down && !cell_left &&  cell_right)  return 3;
+  if (!cell_up && !cell_down && !cell_left &&  cell_right)  return 4;
+  if (!cell_up &&  cell_down && !cell_left &&  cell_right)  return 5;
+  if (!cell_up &&  cell_down && !cell_left && !cell_right)  return 6;
+  if (!cell_up &&  cell_down &&  cell_left && !cell_right)  return 7;
+  if (!cell_up && !cell_down &&  cell_left && !cell_right)  return 8;
+  if ( cell_up &&  cell_down &&  cell_left && !cell_right)  return 9;
+  if ( cell_up && !cell_down &&  cell_left &&  cell_right)  return 10;
+  if ( cell_up &&  cell_down && !cell_left &&  cell_right)  return 11;
+  if (!cell_up &&  cell_down &&  cell_left &&  cell_right)  return 12;
+
+  return -1;
+}
+
 
 void Map::setBoundaries(int max_width, int max_height) {
   this->max_width = max_width;
@@ -133,86 +159,4 @@ void Map::setBoundaries(int max_width, int max_height) {
     //}
 
   //}
-//}
-
-//void MapCamera::draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen) {
-  //// determine x and y from map data.
-  //int startX = (this->x / TILE_SIZE);
-  //int startY = (this->y / TILE_SIZE);
-
-  //int offsetX = (this->x % TILE_SIZE);
-  //int offsetY = (this->y % TILE_SIZE);
-
-  //int endX = startX + (getWidth() + 1);
-  //int endY = startY + (getHeight() + 1);
-
-  //for (int dx = startX; dx < endX; dx++) {
-    //for (int dy = startY; dy < endY; dy++) {
-      //Cell* c = map->getCell(dx, dy);
-
-      //int drawX = (dx - startX) * TILE_SIZE;
-      //int drawY = (dy - startY) * TILE_SIZE;
-
-      //drawX -= offsetX;
-      //drawY -= offsetY;
-
-      //Surface::drawIndexedTile(tileset, screen, c->tile, drawX, drawY);
-      //if (DEV_DRAWGRID) rectangleRGBA(screen, drawX, drawY, drawX+32, drawY+32, 127, 127, 127, 255);
-    //}
-  //}
-//}
-
-//void MapCamera::drawShroud(Map* map, SDL_Surface* shroud_edges, SDL_Surface* shroud_edges_shadow, SDL_Surface* screen) {
-  //// determine x and y from map data.
-  //int startX = (this->x / TILE_SIZE);
-  //int startY = (this->y / TILE_SIZE);
-
-  //int offsetX = (this->x % TILE_SIZE);
-  //int offsetY = (this->y % TILE_SIZE);
-
-  //int endX = startX + (getWidth() + 1);
-  //int endY = startY + (getHeight() + 1);
-
-  //for (int dx = startX; dx < endX; dx++) {
-    //for (int dy = startY; dy < endY; dy++) {
-      //Cell* c = map->getCell(dx, dy);
-      //int drawX = (dx - startX) * TILE_SIZE;
-      //int drawY = (dy - startY) * TILE_SIZE;
-      //drawX -= offsetX;
-      //drawY -= offsetY;
-      //int tile = determineShroudEdge(map, c);
-
-      //if (tile > -1) {
-        //Surface::drawIndexedTile(shroud_edges_shadow, screen, tile, drawX, drawY, 128);
-        //Surface::drawIndexedTile(shroud_edges, screen, tile, drawX, drawY);
-      //}
-
-    //}
-  //}
-//}
-
-//int MapCamera::determineShroudEdge(Map* map, Cell* c) {
-  //if (c->shrouded) return 0;
-
-  //bool cell_up = map->getCell(c->x, c->y-1)->shrouded;
-  //bool cell_down = map->getCell(c->x, c->y+1)->shrouded;
-  //bool cell_left = map->getCell(c->x-1, c->y)->shrouded;
-  //bool cell_right = map->getCell(c->x+1, c->y)->shrouded;
-
-  //// Its harder then you think to make static consts for these 'magic values'.
-  //if (!cell_up && !cell_down && !cell_left && !cell_right)  return -1;
-  //if ( cell_up && !cell_down &&  cell_left && !cell_right)  return 1;
-  //if ( cell_up && !cell_down && !cell_left && !cell_right)  return 2;
-  //if ( cell_up && !cell_down && !cell_left &&  cell_right)  return 3;
-  //if (!cell_up && !cell_down && !cell_left &&  cell_right)  return 4;
-  //if (!cell_up &&  cell_down && !cell_left &&  cell_right)  return 5;
-  //if (!cell_up &&  cell_down && !cell_left && !cell_right)  return 6;
-  //if (!cell_up &&  cell_down &&  cell_left && !cell_right)  return 7;
-  //if (!cell_up && !cell_down &&  cell_left && !cell_right)  return 8;
-  //if ( cell_up &&  cell_down &&  cell_left && !cell_right)  return 9;
-  //if ( cell_up && !cell_down &&  cell_left &&  cell_right)  return 10;
-  //if ( cell_up &&  cell_down && !cell_left &&  cell_right)  return 11;
-  //if (!cell_up &&  cell_down &&  cell_left &&  cell_right)  return 12;
-
-  //return -1;
 //}

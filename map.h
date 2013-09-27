@@ -33,7 +33,7 @@ const int MAP_MAX_LAYERS = 2;
 class Map : public sf::Drawable {
 
   public:
-    Map(sf::Texture& terrain);
+    Map(sf::Texture& terrain, sf::Texture& shroud_edges);
 
     void setBoundaries(int max_width, int max_height);
 
@@ -50,9 +50,14 @@ class Map : public sf::Drawable {
       return &cells[cell];
     }
 
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const {
       for (auto& cell : cells)
           target.draw(cell);      
+    }
+
+    void drawShrouded(sf::RenderTarget& target, sf::RenderStates states) const {
+      for (auto& cell : cells)
+          cell.drawShrouded(target, states);
     }
 
 
@@ -64,18 +69,18 @@ class Map : public sf::Drawable {
       //getCell(toMapPoint(world_point))->occupied[layer] = false;
     //}
 
-    //void removeShroud(Point world_point, int range) {
-      //Point mapPoint = toMapPoint(world_point);
-      //int x = mapPoint.x;
-      //int y = mapPoint.y;
-      //for (int cell_x = max(x - range, 0); cell_x <= min(x + range, getMaxWidth() -1); cell_x++) {
-        //for (int cell_y = max(y - range, 0); cell_y <= min(y + range, getMaxHeight() -1); cell_y++) {
-          //if (pow(cell_x - x, 2) + pow(cell_y - y, 2) <= pow(range, 2) + 1) {
-            //getCell(cell_x, cell_y)->shrouded = false;
-          //}
-        //}
-      //}
-    //}
+    void removeShroud(Point world_point, int range) {
+      Point mapPoint = toMapPoint(world_point);
+      int x = mapPoint.x;
+      int y = mapPoint.y;
+      for (int cell_x = max(x - range, 0); cell_x <= min(x + range, getMaxWidth() -1); cell_x++) {
+        for (int cell_y = max(y - range, 0); cell_y <= min(y + range, getMaxHeight() -1); cell_y++) {
+          if (pow(cell_x - x, 2) + pow(cell_y - y, 2) <= pow(range, 2) + 1) {
+            getCell(cell_x, cell_y)->shrouded = false;
+          }
+        }
+      }
+    }
 
     int getMaxWidth() { return max_width; }
     int getMaxHeight() { return max_height; }
@@ -99,6 +104,7 @@ class Map : public sf::Drawable {
     int max_width;
     int max_height;
     sf::Texture& terrain;
+    sf::Texture& shroud_edges;
 
     void determineCellTile(Cell* c);
     void determineCellTileForMap();

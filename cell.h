@@ -21,21 +21,20 @@ public:
 
     Cell();
 
-    void init(const sf::Texture& terrain, int row, int col);
+    void init(const sf::Texture& terrain, const sf::Texture& shroud_edges, int row, int col);
 
     void setType(Terrain terrain_type);
     void setIndex(int tileIndex);
+    void setShroudIndex(int tileIndex);
 
     bool shouldSmoothWithTerrainType(Cell* other);
 
     Terrain terrainType; // terrain type (sand, rock, etc)
     //bool occupied[MAP_MAX_LAYERS];
-    //bool shrouded;
+    bool shrouded;
 
-
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
-        target.draw(sprite);
-    }
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    void drawShrouded(sf::RenderTarget& target, sf::RenderStates states) const;
 
     int x, y;
 
@@ -44,6 +43,7 @@ private:
     static const int TILE_SIZE = 32; // squared
 
     sf::Sprite sprite;
+    sf::Sprite sprite_shroud;
 
 };
 #endif // CELL_H

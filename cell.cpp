@@ -4,13 +4,15 @@ Cell::Cell()
 {
 }
 
-void Cell::init(const sf::Texture &terrain, int row, int col)
+void Cell::init(const sf::Texture &terrain, const sf::Texture &shrouded_edges, int row, int col)
 {
     y = col;
     x = row;
 
     sprite.setTexture(terrain);
     sprite.setPosition(row*TILE_SIZE,col*TILE_SIZE);
+
+    shrouded = true;
 }
 
 void Cell::setType(Terrain terrain_type)
@@ -25,6 +27,13 @@ void Cell::setIndex(int tileIndex)
     sf::IntRect rect(tileCol, tileRow, TILE_SIZE, TILE_SIZE);
 
     sprite.setTextureRect(rect);
+}
+
+void Cell::setShroudIndex(int tileIndex) {
+    int tileCol = TILE_SIZE * tileIndex;
+    sf::IntRect rect(tileCol, 0, TILE_SIZE, TILE_SIZE);
+
+    sprite_shroud.setTextureRect(rect);
 }
 
 bool Cell::shouldSmoothWithTerrainType(Cell *other)
@@ -49,6 +58,14 @@ bool Cell::shouldSmoothWithTerrainType(Cell *other)
         return (other->terrainType != Terrain::Spicehill);
     }
     return (other->terrainType != terrainType);
+}
+
+void Cell::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+  target.draw(sprite);
+}
+
+void Cell::drawShrouded(sf::RenderTarget &target, sf::RenderStates states) const {
+  target.draw(sprite_shroud);
 }
 
 

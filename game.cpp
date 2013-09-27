@@ -35,7 +35,17 @@ int Game::init() {
     std::cout << "Failed to read graphics/terrain.png data" << std::endl;
     return false;
   }
-  map.reset(new Map(terrain));
+
+  sf::Image temp;
+  if (!temp.loadFromFile("graphics/shroud_edges.bmp")) {
+    std::cout << "Failed to read graphics/shroud_edges.bmp data" << std::endl;
+    return false;
+  }
+
+  temp.createMaskFromColor(sf::Color(255, 0, 255));
+  shroud_edges.loadFromImage(temp);
+
+  map.reset(new Map(terrain, shroud_edges));
   map->load("maps/4PL_Mountains.ini");
 
   camera.reset({0,0,800,600});
@@ -164,6 +174,7 @@ void Game::onEvent(sf::Event event) {
 void Game::render() {
   screen.clear();
   screen.draw(*map);
+  map->drawShrouded(screen, sf::RenderStates::Default);
 
   //map_camera->draw(&map, terrain, screen);
 
