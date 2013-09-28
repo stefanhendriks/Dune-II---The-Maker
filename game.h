@@ -9,6 +9,7 @@
 #include <memory>
 //#include "player.h"
 #include <SFML/Graphics.hpp>
+#include "selectionbox.h"
 
 class Game {
 
@@ -29,6 +30,7 @@ class Game {
       sf::Texture terrain;
       sf::Texture shroud_edges;
       sf::View camera;
+      SelectionBox box;
       //SDL_Surface shroud_edges_shadow;
       //std::unique_ptr<MapCamera> map_camera;
       std::unique_ptr<Map> map;

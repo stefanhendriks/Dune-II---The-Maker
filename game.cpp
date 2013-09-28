@@ -58,7 +58,7 @@ bool Game::init() {
   sf::Image trikeImage;
   trikeImage.loadFromFile("graphics/Unit_Trike.bmp");
   trikeImage.createMaskFromColor(sf::Color(0,0,0));
-  sf::Texture* trikeTexture = new sf::Texture; //yes we are leaking! must decide who should own this
+  sf::Texture* trikeTexture = new sf::Texture; //yes we are leaking! Player should own this
   trikeTexture->loadFromImage(trikeImage);
   units.emplace_back(new Unit(*trikeTexture, 100, 100));
 
@@ -119,6 +119,23 @@ void Game::onEvent(sf::Event event) {
           break;
       }
       break;
+  case sf::Event::MouseButtonPressed:
+      switch (event.mouseButton.button){
+      case sf::Mouse::Left:
+          box.setTopLeft(event.mouseButton.x, event.mouseButton.y);
+          break;
+      default:
+          break;
+      }
+      break;
+  case sf::Event::MouseButtonReleased:
+      switch (event.mouseButton.button){
+      case sf::Mouse::Left:
+          box.clear();
+          break;
+      default:
+          break;
+      }
     default:
       break;
   }
@@ -192,18 +209,7 @@ void Game::render() {
 
   //map->drawShrouded(screen, sf::RenderStates::Default);
 
-  //map_camera->draw(&map, terrain, screen);
-
-  //for (auto& unit : units){
-      //if (unit->is_on_ground_layer()) map_camera->draw(unit.get(), screen);
-  //}
-  //for (auto& unit : units){
-      //if (unit->is_on_air_layer()) map_camera->draw(unit.get(), screen);
-  //}
-
-  //map_camera->drawShroud(&map, shroud_edges, shroud_edges_shadow, screen);
-
-  //mouse.draw(screen);
+  screen.draw(box);
 
   screen.display();
 }
@@ -218,6 +224,9 @@ void Game::updateState() {
 
   camera.move(vec_x, vec_y);
   screen.setView(camera);
+
+  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+      box.setBottomRight(static_cast<sf::Vector2f>(sf::Mouse::getPosition(screen)));
 
   //keyboard.updateState();
   //mouse.updateState();

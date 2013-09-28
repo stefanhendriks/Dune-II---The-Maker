@@ -15,6 +15,7 @@ set(d2_SRCS
     maploader.cpp
     unit_move_behavior.cpp
     unit.cpp
+    selectionbox.cpp
 )
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -g")
