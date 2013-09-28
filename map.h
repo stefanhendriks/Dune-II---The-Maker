@@ -31,9 +31,6 @@ class Map : public sf::Drawable {
     static const int LAYER_AIR = 1;
     static const int MAX_LAYERS = 2;
 
-
-
-
     Map(sf::Texture& terrain, sf::Texture& shroud_edges);
 
     void setBoundaries(int max_width, int max_height);
@@ -102,8 +99,7 @@ private:
     sf::Texture& terrain;
     sf::Texture& shroud_edges;
 
-    void determineCellTile(Cell* c);
-    void determineCellTileForMap();
+    int determineCellTile(Cell* c);
     int determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool cell_right);
 };
 

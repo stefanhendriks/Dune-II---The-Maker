@@ -24,11 +24,10 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
 
 void Map::load(std::string file) {
   MapLoader::load(file, this);
-  determineCellTileForMap();
-
-  //do the shrouds as well - but these must change dynamically!
-  for (auto& cell : cells)
+  for (auto& cell : cells) {
+      cell.setIndex(determineCellTile(&cell));
       cell.setShroudIndex(determineShroudEdge(&cell));
+  }
 }
 
 void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
@@ -43,26 +42,13 @@ void Map::drawShrouded(sf::RenderTarget &target, sf::RenderStates states) const
         cell.drawShrouded(target, states);
 }
 
-void Map::determineCellTileForMap() {
-  for (int x = 0; x < getMaxHeight(); x++) {
-    for (int y = 0; y < getMaxWidth(); y++) {
-       determineCellTile(getCell(x, y));
-    }
-  }
-}
-
-void Map::determineCellTile(Cell* c) {
+int Map::determineCellTile(Cell* c) {
   bool cell_up = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y-1));
   bool cell_down = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y+1));
   bool cell_left = !c->shouldSmoothWithTerrainType(getCell(c->x-1, c->y));
   bool cell_right = !c->shouldSmoothWithTerrainType(getCell(c->x+1, c->y));
 
-  int index = determineTerrainTile(cell_up, cell_down, cell_left, cell_right);
-
-  if (index > -1) {
-      c->setIndex(index);
-  }
-
+  return determineTerrainTile(cell_up, cell_down, cell_left, cell_right);
 }
 
 int Map::determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool cell_right) {
