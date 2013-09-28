@@ -1,21 +1,10 @@
 #ifndef UNIT_H
 #define UNIT_H
 
-#include "SDL/SDL.h"
-#include <SDL/SDL_gfxPrimitives.h>
-
-#include "vector2d.h"
 #include "random.h"
-#include "rectangle.h"
-#include "surface.h"
 #include "map.h"
 #include "unit_move_behavior.h"
 #include <memory>
-#include "player.h"
-
-#include "fpoint.h"
-
-#define DEV_DRAWTARGETLINE true
 
 const int FACING_RIGHT = 0;
 const int FACING_UP_RIGHT = 1;
@@ -33,44 +22,39 @@ const int SUBCELL_CENTER = 3;
 const int SUBCELL_DOWNLEFT = 4;
 const int SUBCELL_DOWNRIGHT = 5;
 
-class Unit {
+class Unit : public sf::Drawable
+{
 
   public:
-    Unit(SDL_Surface* tileset, SDL_Surface* shadowset, Map* map, UnitMoveBehavior* move_behavior, int world_x, int world_y, int view_range, int sub_cell, Point tile_size, Point unit_size, Player& thePlayer
-        );
-    ~Unit();
+    Unit(const Map& map, UnitMoveBehavior* move_behavior, int world_x, int world_y, int view_range, int sub_cell);
 
-    void draw(SDL_Surface* screen, MapCamera* map_camera);
+    void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState();
 
-    void order_move(Point target);
+    //void order_move(sf::Vector2i target);
 
-    const Player& getOwner() const;
+    //const Player& getOwner() const;
 
     void select();
     void unselect();
     bool is_selected();
-    bool is_within(const Rectangle& rectangle);
-    bool is_on_air_layer();
-    bool is_on_ground_layer();
-    bool is_point_within(const Point& point);
+//    //bool is_within(const Rectangle& rectangle);
+//    bool is_on_air_layer();
+//    bool is_on_ground_layer();
+    //bool is_point_within(const Point& point);
 
   private:
-    SDL_Surface* tileset;
-    SDL_Surface* shadowset;
-    SDL_Surface* selected_bitmap;
+    sf::Vector2f target;            // target of interest (move/attack, etc)
+    sf::Vector2f position;          // coordinates relative to top/left of map (in pixels)
+    sf::Vector2f sub_position;
+    sf::Vector2f next_move_position;
+    sf::Vector2f next_move_direction;
+    sf::Vector2f prev_position;
 
-    FPoint target;            // target of interest (move/attack, etc)
-    FPoint position;          // coordinates relative to top/left of map (in pixels)
-    FPoint sub_position;
-    FPoint next_move_position;
-    Vector2D next_move_direction;
-    FPoint prev_position;
+    sf::Vector2i tile_size;
+    sf::Vector2i unit_size;
 
-    Point tile_size;
-    Point unit_size;
-
-    Player* owner; //player who owns the unit
+    //Player* owner; //player who owns the unit
 
     int shadow_alpha;       // how transparant is the shadow being drawn (0 = invisible, 256 is solid)
     int anim_frame;         // animation frames are 'rows' in the tileset
@@ -86,14 +70,14 @@ class Unit {
     Map* map;
     std::shared_ptr<UnitMoveBehavior> move_behavior;
 
-    void init(SDL_Surface* tileset, SDL_Surface* shadowset, Map *map, int world_x, int world_y, int view_range, UnitMoveBehavior* move_behavior, int sub_cell, Point tile_size, Point unit_size);
+    void init(Map *map, int world_x, int world_y, int view_range, UnitMoveBehavior* move_behavior, int sub_cell);
 
     void moveUp();
     void moveDown();
     void moveLeft();
     void moveRight();
     void turn_body();
-    void updateMovePosition(Point p);
+    void updateMovePosition(sf::Vector2i p);
 
     int  desired_facing();
     bool is_moving();
@@ -125,11 +109,9 @@ class UnitRepository {
 
     void destroy();
 
-    Unit* create(int unitType, House house, int x, int y, int view_range, int sub_cell, Player& thePlayer);
+    Unit* create(int unitType, int x, int y, int view_range, int sub_cell);
 
    private:
-      SDL_Surface* unit_animation[MAX_UNIT_TYPES];
-      SDL_Surface* unit_shadow[MAX_UNIT_TYPES];
       Map* map;
 
       // several unit behaviors

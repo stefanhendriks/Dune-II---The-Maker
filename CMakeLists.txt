@@ -26,6 +26,7 @@ set(d2_SRCS
     INIReader.cpp
     maploader.cpp
     unit_move_behavior.cpp
+    unit.cpp
 )
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -g")
 add_executable(${PROJECT_NAME} ${d2_SRCS})
