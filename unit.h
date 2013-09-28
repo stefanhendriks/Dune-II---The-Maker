@@ -26,7 +26,7 @@ class Unit : public sf::Drawable
 {
 
   public:
-    Unit(const Map& map, UnitMoveBehavior* move_behavior, int world_x, int world_y, int view_range, int sub_cell);
+    Unit(const sf::Texture& texture, float x, float y);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState();
@@ -50,6 +50,8 @@ class Unit : public sf::Drawable
     sf::Vector2f next_move_position;
     sf::Vector2f next_move_direction;
     sf::Vector2f prev_position;
+
+    sf::Sprite sprite;
 
     sf::Vector2i tile_size;
     sf::Vector2i unit_size;

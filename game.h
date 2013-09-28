@@ -5,7 +5,7 @@
 #include "map.h"
 //#include "keyboard.h"
 //#include "mouse.h"
-//#include "unit.h"
+#include "unit.h"
 #include <memory>
 //#include "player.h"
 #include <SFML/Graphics.hpp>
@@ -36,7 +36,7 @@ class Game {
       //Mouse mouse;
 
       //std::vector<Player> players;
-      //std::vector<std::unique_ptr<Unit> > units; //possibly should be shared_ptr
+      std::vector<std::unique_ptr<Unit> > units; //possibly should be shared_ptr
 
       //std::unique_ptr<UnitRepository> unitRepository;
 

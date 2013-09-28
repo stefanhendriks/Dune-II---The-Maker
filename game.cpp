@@ -54,6 +54,14 @@ bool Game::init() {
   camera.reset({0,0,800,600});
   screen.setView(camera);
 
+  //init a trike
+  sf::Image trikeImage;
+  trikeImage.loadFromFile("graphics/Unit_Trike.bmp");
+  trikeImage.createMaskFromColor(sf::Color(0,0,0));
+  sf::Texture* trikeTexture = new sf::Texture; //yes we are leaking! must decide who should own this
+  trikeTexture->loadFromImage(trikeImage);
+  units.emplace_back(new Unit(*trikeTexture, 100, 100));
+
   //shroud_edges = Surface::load("graphics/shroud_edges.bmp");
 
   //if (shroud_edges == NULL) {
@@ -176,8 +184,13 @@ void Game::onEvent(sf::Event event) {
 
 void Game::render() {
   screen.clear();
+
   screen.draw(*map);
-  map->drawShrouded(screen, sf::RenderStates::Default);
+
+  for (const auto& unit : units)
+      screen.draw(*unit);
+
+  //map->drawShrouded(screen, sf::RenderStates::Default);
 
   //map_camera->draw(&map, terrain, screen);
 
