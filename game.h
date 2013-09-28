@@ -18,7 +18,7 @@ class Game {
      int execute();
 
    private:
-      int init();
+      bool init();
       void onEvent(sf::Event event);
       void updateState();
       void render();

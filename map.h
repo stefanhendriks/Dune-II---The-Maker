@@ -17,36 +17,37 @@
 
 //class Unit;
 
-using namespace std;
-
-const int MAP_MAX_SIZE = 65536; // 256X256 map
-const int MAP_MAX_WIDTH = 256;
-const int MAP_MAX_HEIGHT = 256;
-const int MAP_MIN_WIDTH = 32;
-const int MAP_MIN_HEIGHT = 32;
-
-const int MAP_LAYER_GROUND = 0;
-const int MAP_LAYER_AIR = 1;
-const int MAP_MAX_LAYERS = 2;
-
-
 class Map : public sf::Drawable {
 
   public:
+
+    static const int MAX_SIZE = 65536; // 256X256 map
+    static const int MAX_WIDTH = 256;
+    static const int MAX_HEIGHT = 256;
+    static const int MIN_WIDTH = 32;
+    static const int MIN_HEIGHT = 32;
+
+    static const int LAYER_GROUND = 0;
+    static const int LAYER_AIR = 1;
+    static const int MAX_LAYERS = 2;
+
+
+
+
     Map(sf::Texture& terrain, sf::Texture& shroud_edges);
 
     void setBoundaries(int max_width, int max_height);
 
-    void load(string file);
+    void load(std::string file);
 
-    //Cell* getCell(Point map_point) {
-      //return getCell(map_point.x, map_point.y);
-    //}
+    Cell* getCell(sf::Vector2i map_point) {
+      return getCell(map_point.x, map_point.y);
+    }
 
     Cell* getCell(int x, int y) {
-      x = std::min(std::max(x, 0), (MAP_MAX_WIDTH-1));
-      y = std::min(std::max(y, 0), (MAP_MAX_HEIGHT-1));
-      int cell = (y * MAP_MAX_WIDTH) + x;
+      x = std::min(std::max(x, 0), (MAX_WIDTH-1));
+      y = std::min(std::max(y, 0), (MAX_HEIGHT-1));
+      int cell = (y * MAX_WIDTH) + x;
       return &cells[cell];
     }
 
@@ -55,13 +56,13 @@ class Map : public sf::Drawable {
     void drawShrouded(sf::RenderTarget& target, sf::RenderStates states) const;
 
 
-    //void occupyCell(const Point& world_point, short layer) {
-      //getCell(toMapPoint(world_point))->occupied[layer] = true;
-    //}
+    void occupyCell(const sf::Vector2i& world_point, short layer) {
+      getCell(toMapPoint(world_point))->occupied[layer] = true;
+    }
 
-    //void unOccupyCell(const Point& world_point, short layer) {
-      //getCell(toMapPoint(world_point))->occupied[layer] = false;
-    //}
+    void unOccupyCell(const sf::Vector2i& world_point, short layer) {
+      getCell(toMapPoint(world_point))->occupied[layer] = false;
+    }
 
 //    void removeShroud(Point world_point, int range) {
 //      Point mapPoint = toMapPoint(world_point);
@@ -85,16 +86,16 @@ class Map : public sf::Drawable {
       //eventFactory.pushMapBoundariesChanged();
     //}
 
-    //bool is_occupied(Point p, short layer);
+    bool is_occupied(sf::Vector2i p, short layer);
 
-    //Point toMapPoint(const Point& world_point) {
-      //Point result(world_point.x / TILE_SIZE, world_point.y / TILE_SIZE);
-      //return result;
-    //}
+    sf::Vector2i toMapPoint(const sf::Vector2i& world_point) {
+      sf::Vector2i result(world_point.x / Cell::TILE_SIZE, world_point.y / Cell::TILE_SIZE);
+      return result;
+    }
 
     int determineShroudEdge(Cell *c);
 private:
-    std::array<Cell, MAP_MAX_SIZE> cells; //why not vector? -Koji
+    std::array<Cell, MAX_SIZE> cells; //why not vector? -Koji
     //EventFactory eventFactory;
     int max_width;
     int max_height;

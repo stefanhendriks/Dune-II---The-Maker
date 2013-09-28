@@ -11,12 +11,12 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
   terrain(terrain),
   shroud_edges(shroud_edges)
 {
-  max_width = MAP_MAX_WIDTH - 1;
-  max_height = MAP_MAX_HEIGHT - 1;
+  max_width = MAX_WIDTH - 1;
+  max_height = MAX_HEIGHT - 1;
 
-  for (int x = 0; x < MAP_MAX_WIDTH; x++) {
-    for (int y = 0; y < MAP_MAX_HEIGHT; y++) {
-      int i = (y * MAP_MAX_WIDTH) + x;
+  for (int x = 0; x < MAX_WIDTH; x++) {
+    for (int y = 0; y < MAX_HEIGHT; y++) {
+      int i = (y * MAX_WIDTH) + x;
       cells[i].init(terrain, shroud_edges, x, y);
     }
   }
@@ -117,12 +117,12 @@ void Map::setBoundaries(int max_width, int max_height) {
   this->max_height = max_height;
 }
 
-//bool Map::is_occupied(Point p, short layer) {
-  //int map_x = p.x / TILE_SIZE;
-  //int map_y = p.y / TILE_SIZE;
-  //Cell* c = getCell(map_x, map_y);
-  //return c->occupied[layer];
-//}
+bool Map::is_occupied(sf::Vector2i p, short layer) {
+  int map_x = p.x / Cell::TILE_SIZE;
+  int map_y = p.y / Cell::TILE_SIZE;
+  Cell* c = getCell(map_x, map_y);
+  return c->occupied[layer];
+}
 
 
 //=============================================================================

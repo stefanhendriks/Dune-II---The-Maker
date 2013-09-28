@@ -17,7 +17,7 @@ class MapLoader {
     static int load(std::string file, Map* map);
 
   private:
-    static string makeIntKeyWithLeadingZero(int n);
+    static std::string makeIntKeyWithLeadingZero(int n);
     static Terrain charToTerrainType(char c);
 
 };

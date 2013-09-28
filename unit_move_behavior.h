@@ -1,7 +1,7 @@
 #ifndef UNIT_MOVE_BEHAVIOR
 #define UNIT_MOVE_BEHAVIOR
 
-#include "point.h"
+#include <SFML/Graphics.hpp>
 #include "map.h"
 
 /*
@@ -13,15 +13,17 @@
  *
  */
 
+//this sounds like policy classes - Koji
+
 class UnitMoveBehavior {
 
   public:
     UnitMoveBehavior(Map* map, short layer);
     virtual ~UnitMoveBehavior(){}
-    virtual bool canMoveTo(Point p) = 0;
+    virtual bool canMoveTo(sf::Vector2i p) = 0;
 
-    void occupyCell(Point p);
-    void unOccupyCell(Point p);
+    void occupyCell(sf::Vector2i p);
+    void unOccupyCell(sf::Vector2i p);
 
     bool is_layer(short layer) { return this->layer == layer; }
   private:
@@ -32,22 +34,22 @@ class UnitMoveBehavior {
 
 };
 
-class GroundUnitMoveBehavior: public UnitMoveBehavior {
+class GroundUnitMoveBehavior : public UnitMoveBehavior {
 
   public:
     GroundUnitMoveBehavior(Map* map);
-    ~GroundUnitMoveBehavior();
-    bool canMoveTo(Point p);
+
+    bool canMoveTo(sf::Vector2i p);
 
   private:
 };
 
-class AirUnitMoveBehavior: public UnitMoveBehavior {
+class AirUnitMoveBehavior : public UnitMoveBehavior {
 
   public:
     AirUnitMoveBehavior(Map* map);
-    ~AirUnitMoveBehavior();
-    bool canMoveTo(Point p);
+
+    bool canMoveTo(sf::Vector2i p);
 
   private:
 };
@@ -56,8 +58,8 @@ class FootUnitMoveBehavior: public UnitMoveBehavior {
 
   public:
     FootUnitMoveBehavior(Map* map);
-    ~FootUnitMoveBehavior();
-    bool canMoveTo(Point p);
+
+    bool canMoveTo(sf::Vector2i p);
 
 };
 

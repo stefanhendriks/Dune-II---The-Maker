@@ -1,57 +1,46 @@
-#include <iostream>
 #include "unit_move_behavior.h"
-
-using namespace std;
 
 UnitMoveBehavior::UnitMoveBehavior(Map* map, short layer) {
   this->layer = layer;
   this->map = map;
 }
 
-void UnitMoveBehavior::occupyCell(Point p) {
+void UnitMoveBehavior::occupyCell(sf::Vector2i p) {
   map->occupyCell(p, layer);
 }
 
-void UnitMoveBehavior::unOccupyCell(Point p) {
+void UnitMoveBehavior::unOccupyCell(sf::Vector2i p) {
   map->unOccupyCell(p, layer);
 }
 
 
 //// Ground unit Move
-GroundUnitMoveBehavior::GroundUnitMoveBehavior(Map* map) : UnitMoveBehavior(map, MAP_LAYER_GROUND) {
+GroundUnitMoveBehavior::GroundUnitMoveBehavior(Map* map) : UnitMoveBehavior(map, Map::LAYER_GROUND) {
 }
 
-GroundUnitMoveBehavior::~GroundUnitMoveBehavior() {
-}
+bool GroundUnitMoveBehavior::canMoveTo(sf::Vector2i p) {
+  if (map->is_occupied(p, Map::LAYER_GROUND)) return false;
 
-bool GroundUnitMoveBehavior::canMoveTo(Point p) {
-  if (map->is_occupied(p, MAP_LAYER_GROUND)) return false;
-
-  Point map_point = map->toMapPoint(p);
-  int terrain_type = map->getCell(map_point)->terrain_type;
-  return terrain_type != TERRAIN_TYPE_MOUNTAIN;
+  sf::Vector2i map_point = map->toMapPoint(p);
+  Terrain terrain_type = map->getCell(map_point)->terrainType;
+  return terrain_type != Terrain::Mountain;
 }
 
 //// Air unit Move
-AirUnitMoveBehavior::AirUnitMoveBehavior(Map* map) : UnitMoveBehavior(map, MAP_LAYER_AIR) {
+AirUnitMoveBehavior::AirUnitMoveBehavior(Map* map) : UnitMoveBehavior(map, Map::LAYER_AIR) {
 }
 
-AirUnitMoveBehavior::~AirUnitMoveBehavior() {
-}
-
-bool AirUnitMoveBehavior::canMoveTo(Point p) {
+bool AirUnitMoveBehavior::canMoveTo(sf::Vector2i p) {
   return true;
 }
 
 //// unit Move on foot
-FootUnitMoveBehavior::FootUnitMoveBehavior(Map* map) : UnitMoveBehavior(map, MAP_LAYER_GROUND) {
+FootUnitMoveBehavior::FootUnitMoveBehavior(Map* map) : UnitMoveBehavior(map, Map::LAYER_GROUND) {
 }
 
-FootUnitMoveBehavior::~FootUnitMoveBehavior() {
-}
-
-bool FootUnitMoveBehavior::canMoveTo(Point p) {
+bool FootUnitMoveBehavior::canMoveTo(sf::Vector2i p) {
   return true;
 }
+
 
 

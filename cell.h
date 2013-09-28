@@ -19,6 +19,8 @@ enum class Terrain
 class Cell : public sf::Drawable {
 public:
 
+    static const int TILE_SIZE = 32; // squared
+
     Cell();
 
     void init(const sf::Texture& terrain, const sf::Texture& shroud_edges, int row, int col);
@@ -30,7 +32,7 @@ public:
     bool shouldSmoothWithTerrainType(Cell* other);
 
     Terrain terrainType; // terrain type (sand, rock, etc)
-    //bool occupied[MAP_MAX_LAYERS];
+    bool occupied[2]; //2 is Map::MAX_LAYERS
     bool shrouded;
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -39,8 +41,6 @@ public:
     int x, y;
 
 private:
-
-    static const int TILE_SIZE = 32; // squared
 
     sf::Sprite sprite;
     sf::Sprite sprite_shroud;

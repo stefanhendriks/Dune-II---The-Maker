@@ -10,7 +10,7 @@
 using namespace std;
 
 // Borrowed from: http://stackoverflow.com/questions/890164/how-can-i-split-a-string-by-a-delimiter-into-an-array
-vector<string> explode(const string& str, const char& ch) {
+std::vector<string> explode(const string& str, const char& ch) {
     string next;
     vector<string> result;
 
@@ -48,8 +48,8 @@ int MapLoader::load(std::string file, Map* map) {
   int width = reader.GetInteger("SKIRMISH", "width", -1);
   int height = reader.GetInteger("SKIRMISH", "height", -1);
 
-  if (width < MAP_MIN_WIDTH || height < MAP_MIN_HEIGHT) {
-    cerr << "[MAPLOADER] ERROR: Given dimensions " << width << "x" << height << " are below minimum of " << MAP_MIN_WIDTH << "x" << MAP_MAX_WIDTH << "." << endl;
+  if (width < Map::MIN_WIDTH || height < Map::MIN_HEIGHT) {
+    cerr << "[MAPLOADER] ERROR: Given dimensions " << width << "x" << height << " are below minimum of " << Map::MIN_WIDTH << "x" << Map::MAX_WIDTH << "." << endl;
     return ERROR_DIMENSIONS_INVALID;
   }
 
