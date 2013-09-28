@@ -143,7 +143,7 @@ void Game::onEvent(sf::Event event) {
           for (auto& unit : units){
               if (box.intersects(unit->getBounds())){
                   unit->select();
-                  mouse.setType(MouseType::Move); //at least one unit selected...
+                  mouse.setType(Mouse::Type::Move); //at least one unit selected...
               }
           }
           box.clear();
@@ -152,7 +152,7 @@ void Game::onEvent(sf::Event event) {
           //deselect all units
           for (auto& unit : units){
               unit->unselect();
-              mouse.setType(MouseType::Default);
+              mouse.setType(Mouse::Type::Default);
           }
       default:
           break;

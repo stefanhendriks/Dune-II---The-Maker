@@ -3,22 +3,24 @@
 
 #include <SFML/Graphics.hpp>
 
-enum class MouseType
-{
-    Default,
-    Move,
-    Attack
-};
-
 class Mouse : public sf::Drawable
 {
 public:
+
+    enum class Type
+    {
+        Default,
+        Move,
+        Attack
+    };
+
+
     Mouse();
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
     void setPosition(const sf::Vector2f& point);
-    void setType(MouseType type);
+    void setType(Type type);
 
 private:
     sf::Texture defaultTexture;
