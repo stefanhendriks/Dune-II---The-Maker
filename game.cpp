@@ -69,13 +69,6 @@ bool Game::init() {
   selectedTexture->loadFromImage(selectedImage);
   units.emplace_back(new Unit(*trikeTexture, *selectedTexture, 100, 100));
 
-  //shroud_edges = Surface::load("graphics/shroud_edges.bmp");
-
-  //if (shroud_edges == NULL) {
-    //cout << "Failed to read graphics/shroud_edges.bmp data" << endl;
-    //return false;
-  //}
-
   //shroud_edges_shadow = Surface::load("graphics/shroud_edges_shadow.bmp");
 
   //if (shroud_edges_shadow == NULL) {
