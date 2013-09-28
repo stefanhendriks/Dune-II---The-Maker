@@ -60,7 +60,13 @@ bool Game::init() {
   trikeImage.createMaskFromColor(sf::Color(0,0,0));
   sf::Texture* trikeTexture = new sf::Texture; //yes we are leaking! Player should own this
   trikeTexture->loadFromImage(trikeImage);
-  units.emplace_back(new Unit(*trikeTexture, 100, 100));
+
+  sf::Image selectedImage;
+  selectedImage.loadFromFile("graphics/selected.bmp");
+  selectedImage.createMaskFromColor(sf::Color(255, 0, 255));
+  sf::Texture* selectedTexture = new sf::Texture; //more leaks!
+  selectedTexture->loadFromImage(selectedImage);
+  units.emplace_back(new Unit(*trikeTexture, *selectedTexture, 100, 100));
 
   //shroud_edges = Surface::load("graphics/shroud_edges.bmp");
 
@@ -131,6 +137,10 @@ void Game::onEvent(sf::Event event) {
   case sf::Event::MouseButtonReleased:
       switch (event.mouseButton.button){
       case sf::Mouse::Left:
+          for (auto& unit : units){
+              if (box.intersects(unit->getBounds()))
+                  unit->select();
+          }
           box.clear();
           break;
       default:

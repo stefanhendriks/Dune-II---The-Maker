@@ -12,6 +12,8 @@ public:
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
+    bool intersects(const sf::FloatRect rect) const;
+
 private:
     sf::RectangleShape box;
 };

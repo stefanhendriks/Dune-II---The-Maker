@@ -3,18 +3,23 @@
 
 using namespace std;
 
-Unit::Unit(const sf::Texture &texture, float x, float y):
-    sprite(texture)
+Unit::Unit(const sf::Texture &texture, const sf::Texture& selectedBitmap, float x, float y):
+    sprite(texture),
+    selectedSprite(selectedBitmap),
+    selected(false)
   //owner(&thePlayer)
 {
     sprite.setPosition(x,y);
     sprite.setTextureRect({0,0,30,30});
     //init(tileset, shadowset, map, world_x, world_y, view_range, move_behavior, sub_cell, tile_size, unit_size);
+    selectedSprite.setPosition(x,y);
 }
 
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     target.draw(sprite);
+    if (selected)
+        target.draw(selectedSprite);
 }
 
 void Unit::select() {
@@ -262,6 +267,12 @@ void Unit::turn_body() {
   if (body_facing < 0) body_facing += FACINGS;
   if (body_facing > 7) body_facing -= FACINGS;
 }
+
+sf::FloatRect Unit::getBounds() const
+{
+    return sprite.getGlobalBounds();
+}
+
 
 //void Unit::updateState() {
 

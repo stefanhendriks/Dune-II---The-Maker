@@ -18,6 +18,11 @@ void SelectionBox::draw(sf::RenderTarget &target, sf::RenderStates states) const
     target.draw(box);
 }
 
+bool SelectionBox::intersects(const sf::FloatRect rect) const
+{
+    return box.getLocalBounds().intersects(rect);
+}
+
 
 void SelectionBox::clear()
 {

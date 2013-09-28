@@ -26,7 +26,7 @@ class Unit : public sf::Drawable
 {
 
   public:
-    Unit(const sf::Texture& texture, float x, float y);
+    Unit(const sf::Texture& texture, const sf::Texture &selectedBitmap, float x, float y);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState();
@@ -34,6 +34,8 @@ class Unit : public sf::Drawable
     //void order_move(sf::Vector2i target);
 
     //const Player& getOwner() const;
+
+    sf::FloatRect getBounds() const;
 
     void select();
     void unselect();
@@ -52,6 +54,7 @@ class Unit : public sf::Drawable
     sf::Vector2f prev_position;
 
     sf::Sprite sprite;
+    sf::Sprite selectedSprite;
 
     sf::Vector2i tile_size;
     sf::Vector2i unit_size;
