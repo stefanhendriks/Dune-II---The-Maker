@@ -20,7 +20,7 @@ void SelectionBox::draw(sf::RenderTarget &target, sf::RenderStates states) const
 
 bool SelectionBox::intersects(const sf::FloatRect rect) const
 {
-    return box.getLocalBounds().intersects(rect);
+    return box.getGlobalBounds().intersects(rect);
 }
 
 

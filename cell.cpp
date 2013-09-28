@@ -24,7 +24,7 @@ void Cell::setType(Terrain terrain_type)
 }
 
 void Cell::setIndex(int tileIndex) {
-    if (index < 0) return;
+    if (tileIndex < 0) return;
     int tileRow = TILE_SIZE * static_cast<int>(terrainType);
     int tileCol = TILE_SIZE * tileIndex;
 
