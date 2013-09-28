@@ -141,11 +141,19 @@ void Game::onEvent(sf::Event event) {
       switch (event.mouseButton.button){
       case sf::Mouse::Left:
           for (auto& unit : units){
-              if (box.intersects(unit->getBounds()))
+              if (box.intersects(unit->getBounds())){
                   unit->select();
+                  mouse.setType(MouseType::Move); //at least one unit selected...
+              }
           }
           box.clear();
           break;
+      case sf::Mouse::Right:
+          //deselect all units
+          for (auto& unit : units){
+              unit->unselect();
+              mouse.setType(MouseType::Default);
+          }
       default:
           break;
       }
@@ -243,7 +251,7 @@ void Game::updateState() {
   if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
       box.setBottomRight(screen.mapPixelToCoords(sf::Mouse::getPosition(screen)));
 
-  mouse.setPosition(static_cast<sf::Vector2f>(sf::Mouse::getPosition(screen)));
+  mouse.setPosition(screen.mapPixelToCoords(sf::Mouse::getPosition(screen)));
 
   //keyboard.updateState();
   //mouse.updateState();

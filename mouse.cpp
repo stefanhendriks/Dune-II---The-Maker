@@ -26,4 +26,21 @@ void Mouse::setPosition(const sf::Vector2f &point)
     sprite.setPosition(point);
 }
 
+void Mouse::setType(MouseType type)
+{
+    switch (type) {
+    case MouseType::Default:
+        sprite.setTexture(defaultTexture);
+        break;
+    case MouseType::Move:
+        sprite.setTexture(moveTexture);
+        break;
+    case MouseType::Attack:
+        sprite.setTexture(defaultTexture);
+        break;
+    default:
+        break;
+    }
+}
+
 #include "mouse.h"
