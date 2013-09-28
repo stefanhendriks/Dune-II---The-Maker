@@ -16,6 +16,7 @@ set(d2_SRCS
     unit_move_behavior.cpp
     unit.cpp
     selectionbox.cpp
+    mouse.cpp
 )
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -g")

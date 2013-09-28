@@ -10,6 +10,7 @@
 //#include "player.h"
 #include <SFML/Graphics.hpp>
 #include "selectionbox.h"
+#include "mouse.h"
 
 class Game {
 
@@ -35,7 +36,7 @@ class Game {
       //std::unique_ptr<MapCamera> map_camera;
       std::unique_ptr<Map> map;
       //Keyboard keyboard;
-      //Mouse mouse;
+      Mouse mouse;
 
       //std::vector<Player> players;
       std::vector<std::unique_ptr<Unit> > units; //possibly should be shared_ptr

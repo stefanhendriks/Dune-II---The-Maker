@@ -11,6 +11,7 @@ Game::Game():
     //unitRepository(nullptr)
 {
     screen.setFramerateLimit(60); //comment out for fps benchmarks
+    screen.setMouseCursorVisible(false);
 
     if (!init()){
         std::cerr << "Failed to initialized game.";
@@ -223,6 +224,8 @@ void Game::render() {
 
   screen.draw(box);
 
+  screen.draw(mouse);
+
   screen.display();
 }
 
@@ -239,6 +242,8 @@ void Game::updateState() {
 
   if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
       box.setBottomRight(screen.mapPixelToCoords(sf::Mouse::getPosition(screen)));
+
+  mouse.setPosition(static_cast<sf::Vector2f>(sf::Mouse::getPosition(screen)));
 
   //keyboard.updateState();
   //mouse.updateState();
