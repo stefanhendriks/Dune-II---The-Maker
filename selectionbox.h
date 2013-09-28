@@ -6,7 +6,7 @@ class SelectionBox : public sf::Drawable
 {
 public:
     SelectionBox();
-    void setTopLeft(int x, int y);
+    void setTopLeft(const sf::Vector2f &point);
     void setBottomRight(const sf::Vector2f &point);
     void clear();
 

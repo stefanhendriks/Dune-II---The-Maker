@@ -7,9 +7,9 @@ SelectionBox::SelectionBox()
     box.setFillColor(sf::Color::Transparent);
 }
 
-void SelectionBox::setTopLeft(int x, int y)
+void SelectionBox::setTopLeft(const sf::Vector2f &point)
 {
-    box.setPosition(x, y);
+    box.setPosition(point);
 }
 
 

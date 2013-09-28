@@ -54,7 +54,7 @@ class Unit : public sf::Drawable
     sf::Vector2f prev_position;
 
     sf::Sprite sprite;
-    sf::Sprite selectedSprite;
+    sf::Sprite selectedSprite; //possibly static
 
     sf::Vector2i tile_size;
     sf::Vector2i unit_size;

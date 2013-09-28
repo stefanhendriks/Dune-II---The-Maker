@@ -127,9 +127,11 @@ void Game::onEvent(sf::Event event) {
       break;
   case sf::Event::MouseButtonPressed:
       switch (event.mouseButton.button){
-      case sf::Mouse::Left:
-          box.setTopLeft(event.mouseButton.x, event.mouseButton.y);
+      case sf::Mouse::Left:{
+          sf::Vector2f toSet = screen.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+          box.setTopLeft(toSet);
           break;
+      }
       default:
           break;
       }
@@ -236,7 +238,7 @@ void Game::updateState() {
   screen.setView(camera);
 
   if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-      box.setBottomRight(static_cast<sf::Vector2f>(sf::Mouse::getPosition(screen)));
+      box.setBottomRight(screen.mapPixelToCoords(sf::Mouse::getPosition(screen)));
 
   //keyboard.updateState();
   //mouse.updateState();
