@@ -19,7 +19,12 @@ set(d2_SRCS
     mouse.cpp
 )
 
-set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -g")
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++ -Wall -g")
+ELSE()
+  set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -g")
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
 add_executable(${PROJECT_NAME} ${d2_SRCS})
 
 # Link SFML
