@@ -4,8 +4,6 @@
 #include <Thor/Math.hpp>
 #include <Thor/Shapes.hpp>
 
-using namespace std;
-
 Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const sf::Texture& selectedBitmap, float x, float y,int body_facing):
     sprite(texture),
     shadow_sprite(shadow_texture),
@@ -193,6 +191,16 @@ void Unit::turn_body() {
   setFacing(body_facing);
 }
 
+void Unit::updateMovePosition()
+{
+    if (has_target()){
+        static const float speed = 5.f;
+        sf::Vector2f direction = target - getCenter();
+        sf::Vector2f unitDirection = thor::unitVector(direction);
+        sprite.move(speed*unitDirection);
+    }
+}
+
 sf::FloatRect Unit::getBounds() const
 {
     return sprite.getGlobalBounds();
@@ -210,6 +218,8 @@ sf::Vector2f Unit::getCenter() const
 }
 
 void Unit::updateState() {
+
+    updateMovePosition();
 
   if (should_turn_body()) {
     turn_body();

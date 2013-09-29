@@ -88,7 +88,7 @@ class Unit : public sf::Drawable
     void moveLeft();
     void moveRight();
     void turn_body();
-    void updateMovePosition(sf::Vector2i p);
+    void updateMovePosition();
 
     int  desired_facing();
     bool is_moving();
