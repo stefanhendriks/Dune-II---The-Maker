@@ -14,6 +14,8 @@
 
 class Game {
 
+  const int IDEAL_FPS = 60;
+
   public:
      Game();
 

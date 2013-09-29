@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Unit::Unit(const sf::Texture &texture, const sf::Texture& selectedBitmap, float x, float y):
+Unit::Unit(const sf::Texture &texture, const sf::Texture& selectedBitmap, float x, float y,int body_facing):
     sprite(texture),
     selectedSprite(selectedBitmap),
     selected(false),
@@ -17,8 +17,8 @@ Unit::Unit(const sf::Texture &texture, const sf::Texture& selectedBitmap, float 
     //this->selected_bitmap = Surface::load("graphics/selected.bmp", 255, 0, 255);
     //this->tileset = tileset;
     //this->shadowset = shadowset;
-    setFacing(thor::random(0, FACINGS));
-    this->desired_body_facing = this->body_facing;
+    setFacing(body_facing);
+    this->desired_body_facing = body_facing;
     this->view_range = view_range;
     //this->position = Point(world_x, world_y);
 //    this->target = this->position;
@@ -26,38 +26,7 @@ Unit::Unit(const sf::Texture &texture, const sf::Texture& selectedBitmap, float 
 //    this->prev_position = this->position;
 //    this->map=map;
 //    this->move_behavior.reset(move_behavior);
-
-//    int tile_height = 0, tile_width = 0;
-  //  //this->unit_size = Point(tile_width, tile_height);
-  //  this->shadow_alpha = 128;
-  //  this->anim_frame = 0;
-  //  this->sub_position = Point(0,0);
-  //  switch (sub_cell) {
-  //    case SUBCELL_UPLEFT:    this->sub_position = Point(-8, -8); break;
-  //    case SUBCELL_UPRIGHT:   this->sub_position = Point(8, -8);  break;
-  //    case SUBCELL_DOWNLEFT:  this->sub_position = Point(-8, 8);  break;
-  //    case SUBCELL_DOWNRIGHT: this->sub_position = Point(8, 8);   break;
-  //    default: break;
-  //  }
-  //  this->position = this->position + this->sub_position;
-
-  //  this->move_behavior->occupyCell(Point(this->position.x, this->position.y));
-  //  //this->map->removeShroud(Point(this->position.x, this->position.y), this->view_range);
-
-  //  this->next_move_position = this->position;
-  //  this->prev_position = this->position;
-  //  this->target = this->position;
-  //  this->tile_size = tile_size;
-  //  this->unit_size = unit_size;
-
-  //  // make sure the position becomes the center, do this by calculating half of width/height and set it as offset
-  //  // so it will be substracted later when drawing (in the getDrawX() and getDrawY() methods)
-  //  this->offset_x = -(tile_size.x / 2);
-  //  this->offset_y = -(tile_size.y / 2);
-
-
     sprite.setPosition(x,y);
-    setFacing(thor::random(0, FACINGS));
 
     //init(tileset, shadowset, map, world_x, world_y, view_range, move_behavior, sub_cell, tile_size, unit_size);
     selectedSprite.setPosition(x,y);
@@ -194,6 +163,7 @@ int Unit::desired_facing() {
 }
 
 void Unit::turn_body() {
+  int body_facing = this->body_facing;
   int desired = desired_facing();
 
   int turning_left = (body_facing + FACINGS) - desired;
@@ -205,12 +175,14 @@ void Unit::turn_body() {
   } else if (turning_left < turning_right) {
     body_facing--;
   } else {
-    //flipCoin() ? body_facing-- : body_facing++;
+    thor::random(0, 10) < 5 ? body_facing-- : body_facing++;
   }
 
   // wrap around
   if (body_facing < 0) body_facing += FACINGS;
   if (body_facing > 7) body_facing -= FACINGS;
+
+  setFacing(body_facing);
 }
 
 sf::FloatRect Unit::getBounds() const
@@ -223,14 +195,14 @@ sf::Vector2f Unit::getPosition() const
     return sprite.getPosition();
 }
 
+void Unit::updateState() {
 
-//void Unit::updateState() {
+  if (should_turn_body()) {
+    turn_body();
+    return;
+  }
 
-//  if (should_turn_body()) {
-//    turn_body();
-//    return;
-//  }
-
+}
   // think about movement
 //  if (!is_moving()) {
 //    if (prev_position != position) {

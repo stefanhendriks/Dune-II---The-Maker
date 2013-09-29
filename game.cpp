@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include "game.h"
 
+
+
 Game::Game():
     playing(true),
     screen(sf::VideoMode(800, 600), "Dune 2 - The Maker", sf::Style::Close),
@@ -10,7 +12,7 @@ Game::Game():
     //map_camera(nullptr),
     //unitRepository(nullptr)
 {
-    screen.setFramerateLimit(60); //comment out for fps benchmarks
+    screen.setFramerateLimit(IDEAL_FPS);
     screen.setMouseCursorVisible(false);
 
     if (!init()){
@@ -67,7 +69,7 @@ bool Game::init() {
   selectedImage.createMaskFromColor(sf::Color(255, 0, 255));
   sf::Texture* selectedTexture = new sf::Texture; //more leaks!
   selectedTexture->loadFromImage(selectedImage);
-  units.emplace_back(new Unit(*trikeTexture, *selectedTexture, 100, 100));
+  units.emplace_back(new Unit(*trikeTexture, *selectedTexture, 100, 100, 0));
 
   //remove shroud here
   map->removeShroud(static_cast<sf::Vector2i>(units[0]->getPosition()), 10);
@@ -253,9 +255,9 @@ void Game::updateState() {
   //mouse.updateState();
   //map_camera->updateState();
 
-  //for (auto& unit: units){
-      //unit->updateState();
-  //}
+  for (auto& unit: units){
+      unit->updateState();
+  }
 }
 
 //void Game::deselectAllUnits() {
