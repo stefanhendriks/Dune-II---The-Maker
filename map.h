@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-//#include "surface.h"
-//#include "rectangle.h"
 //#include "eventfactory.h"
 
 #include <cmath>
@@ -12,6 +10,7 @@
 #include <array>
 
 #include <SFML/Graphics.hpp>
+#include <Thor/Vectors.hpp>
 
 #define DEV_DRAWGRID true
 
@@ -75,6 +74,7 @@ class Map : public sf::Drawable {
                 }
             }
         }
+        updateShroud();
     }
 
     int getMaxWidth() { return max_width; }
