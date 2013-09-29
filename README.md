@@ -23,8 +23,8 @@ Check the [TODO list](#todo). Create (or checkout) a feature branch. Code. And o
 submit it as a pull request.
 
 Compiling
-=========
-This projct uses cmake to generate a platform specific makefile. Before running cmake, make sure you have installed SFML 2.1 properly.
+=========`
+This projct uses cmake to generate a platform specific makefile. Before running cmake, make sure you have installed SFML 2.1 and [Thor](https://github.com/Bromeon/Thor).
 
 After that you do:
 
