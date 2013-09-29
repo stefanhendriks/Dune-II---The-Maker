@@ -38,6 +38,7 @@ class Unit : public sf::Drawable
 
     sf::FloatRect getBounds() const;
     sf::Vector2f getPosition() const;
+    sf::Vector2f getCenter() const;
 
     void select();
     void unselect();

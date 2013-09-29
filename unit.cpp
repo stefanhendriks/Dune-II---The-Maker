@@ -41,7 +41,7 @@ void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
         target.draw(selectedSprite);
 
     if (has_target())
-        target.draw(thor::Arrow(getPosition(), this->target - getPosition(), sf::Color(51,255,51,125)), sf::BlendAdd);
+        target.draw(thor::Arrow(getCenter(), this->target - getCenter(), sf::Color(51,255,51,125)), sf::BlendAdd);
 }
 
 void Unit::select() {
@@ -199,6 +199,11 @@ sf::FloatRect Unit::getBounds() const
 }
 
 sf::Vector2f Unit::getPosition() const
+{
+    return sprite.getPosition();
+}
+
+sf::Vector2f Unit::getCenter() const
 {
     sf::FloatRect spriteRect(sprite.getGlobalBounds());
     return (sprite.getPosition() + sf::Vector2f(spriteRect.width/2, spriteRect.height/2));
