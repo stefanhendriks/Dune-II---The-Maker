@@ -30,3 +30,4 @@ add_executable(${PROJECT_NAME} ${d2_SRCS})
 
 # Link SFML
 target_link_libraries(${PROJECT_NAME} ${SFML_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${THOR_LIBRARY})
