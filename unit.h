@@ -32,7 +32,7 @@ class Unit : public sf::Drawable
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState();
 
-    //void order_move(sf::Vector2i target);
+    void order_move(sf::Vector2f target);
 
     //const Player& getOwner() const;
 
@@ -90,7 +90,7 @@ class Unit : public sf::Drawable
 
     int  desired_facing();
     bool is_moving();
-    bool has_target();
+    bool has_target() const;
     bool should_turn_body();
     void stopMoving();
 

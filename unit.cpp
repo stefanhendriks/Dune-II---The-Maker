@@ -2,6 +2,7 @@
 #include "unit.h"
 
 #include <Thor/Math.hpp>
+#include <Thor/Shapes.hpp>
 
 using namespace std;
 
@@ -21,12 +22,12 @@ Unit::Unit(const sf::Texture &texture, const sf::Texture& selectedBitmap, float 
     this->desired_body_facing = body_facing;
     this->view_range = view_range;
     //this->position = Point(world_x, world_y);
-//    this->target = this->position;
 //    this->next_move_position = this->position;
 //    this->prev_position = this->position;
 //    this->map=map;
 //    this->move_behavior.reset(move_behavior);
     sprite.setPosition(x,y);
+    this->target = sprite.getPosition();
 
     //init(tileset, shadowset, map, world_x, world_y, view_range, move_behavior, sub_cell, tile_size, unit_size);
     selectedSprite.setPosition(x,y);
@@ -37,6 +38,8 @@ void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
     target.draw(sprite);
     if (selected)
         target.draw(selectedSprite);
+
+    if (has_target()) target.draw(thor::Arrow(sprite.getPosition(), this->target - sprite.getPosition()));
 }
 
 void Unit::select() {
@@ -95,8 +98,8 @@ bool Unit::is_moving() {
   return position != next_move_position;
 }
 
-bool Unit::has_target() {
-  return position != target;
+bool Unit::has_target() const {
+    return sprite.getPosition() != target;
 }
 
 bool Unit::should_turn_body() {
@@ -119,16 +122,17 @@ bool Unit::isOnLayer(short layer) {
   return this->move_behavior->is_layer(layer);
 }
 
-//void Unit::order_move(sf::Vector2i target) {
-//  // snap coordinates to center of cell
+void Unit::order_move(sf::Vector2f target) {
+  // snap coordinates to center of cell
 //  int y = ((target.y / TILE_SIZE) * TILE_SIZE) + (TILE_SIZE / 2);
 //  int x = ((target.x / TILE_SIZE) * TILE_SIZE) + (TILE_SIZE / 2);
 
 //  this->target = sf::Vector2i(x, y);
+  this->target = target;
 
-//  // then apply the same offset if given
+  // then apply the same offset if given
 //  this->target = this->target + this->sub_position;
-//}
+}
 
 //const Player &Unit::getOwner() const
 //{

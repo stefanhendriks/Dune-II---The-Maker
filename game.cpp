@@ -142,7 +142,10 @@ void Game::onEvent(sf::Event event) {
               if (box.intersects(unit->getBounds())){
                   unit->select();
                   mouse.setType(Mouse::Type::Move); //at least one unit selected...
-              }
+              }              
+          }
+          for (auto& unit : units){
+              if (unit->is_selected()) unit->order_move(screen.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
           }
           box.clear();
           break;
