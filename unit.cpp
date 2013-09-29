@@ -273,6 +273,11 @@ sf::FloatRect Unit::getBounds() const
     return sprite.getGlobalBounds();
 }
 
+sf::Vector2f Unit::getPosition() const
+{
+    return sprite.getPosition();
+}
+
 
 //void Unit::updateState() {
 

@@ -37,6 +37,8 @@ class Map : public sf::Drawable {
 
     void load(std::string file);
 
+    void updateShroud();
+
     Cell* getCell(sf::Vector2i map_point) {
       return getCell(map_point.x, map_point.y);
     }
@@ -61,18 +63,16 @@ class Map : public sf::Drawable {
       getCell(toMapPoint(world_point))->occupied[layer] = false;
     }
 
-//    void removeShroud(Point world_point, int range) {
-//      Point mapPoint = toMapPoint(world_point);
-//      int x = mapPoint.x;
-//      int y = mapPoint.y;
-//      for (int cell_x = max(x - range, 0); cell_x <= min(x + range, getMaxWidth() -1); cell_x++) {
-//        for (int cell_y = max(y - range, 0); cell_y <= min(y + range, getMaxHeight() -1); cell_y++) {
-//          if (pow(cell_x - x, 2) + pow(cell_y - y, 2) <= pow(range, 2) + 1) {
-//            getCell(cell_x, cell_y)->shrouded = false;
-//          }
-//        }
-//      }
-//    }
+    void removeShroud(sf::Vector2i world_point, int range) {
+        sf::Vector2i mapPoint = toMapPoint(world_point);
+        int x = mapPoint.x;
+        int y = mapPoint.y;
+        for (auto& cell : cells){
+            if (std::pow(cell.x - x, 2) + std::pow(cell.y - y, 2) <= std::pow(range, 2) + 1) {
+                getCell(cell.y, cell.x)->shrouded = false;
+            }
+        }
+    }
 
     int getMaxWidth() { return max_width; }
     int getMaxHeight() { return max_height; }

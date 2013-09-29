@@ -69,6 +69,10 @@ bool Game::init() {
   selectedTexture->loadFromImage(selectedImage);
   units.emplace_back(new Unit(*trikeTexture, *selectedTexture, 100, 100));
 
+  //remove shroud here
+  map->removeShroud(static_cast<sf::Vector2i>(units[0]->getPosition()), 10);
+  map->updateShroud();
+
   //shroud_edges_shadow = Surface::load("graphics/shroud_edges_shadow.bmp");
 
   //if (shroud_edges_shadow == NULL) {
@@ -221,7 +225,7 @@ void Game::render() {
   for (const auto& unit : units)
       screen.draw(*unit);
 
-  //map->drawShrouded(screen, sf::RenderStates::Default);
+  map->drawShrouded(screen, sf::RenderStates::Default);
 
   screen.draw(box);
 

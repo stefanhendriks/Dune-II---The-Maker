@@ -25,9 +25,15 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
 void Map::load(std::string file) {
   MapLoader::load(file, this);
   for (auto& cell : cells) {
-      cell.setIndex(determineCellTile(&cell));
-      cell.setShroudIndex(determineShroudEdge(&cell));
+      cell.setIndex(determineCellTile(&cell));      
   }
+  updateShroud();
+}
+
+void Map::updateShroud()
+{
+    for (auto& cell : cells)
+        cell.setShroudIndex(determineShroudEdge(&cell));
 }
 
 void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const

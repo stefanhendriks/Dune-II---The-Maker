@@ -36,6 +36,7 @@ class Unit : public sf::Drawable
     //const Player& getOwner() const;
 
     sf::FloatRect getBounds() const;
+    sf::Vector2f getPosition() const;
 
     void select();
     void unselect();
