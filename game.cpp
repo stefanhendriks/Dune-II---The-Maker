@@ -64,12 +64,18 @@ bool Game::init() {
   sf::Texture* trikeTexture = new sf::Texture; //yes we are leaking! Player should own this
   trikeTexture->loadFromImage(trikeImage);
 
+  sf::Image trikeShadowImage;
+  trikeShadowImage.loadFromFile("graphics/Unit_Trike_s.bmp");
+  trikeShadowImage.createMaskFromColor(sf::Color(255,0,255));
+  sf::Texture* trikeShadowTexture = new sf::Texture; //yes we are leaking! Player should own this
+  trikeShadowTexture->loadFromImage(trikeShadowImage);
+
   sf::Image selectedImage;
   selectedImage.loadFromFile("graphics/selected.bmp");
   selectedImage.createMaskFromColor(sf::Color(255, 0, 255));
   sf::Texture* selectedTexture = new sf::Texture; //more leaks!
   selectedTexture->loadFromImage(selectedImage);
-  units.emplace_back(new Unit(*trikeTexture, *selectedTexture, 100, 100, 0));
+  units.emplace_back(new Unit(*trikeTexture, *trikeShadowTexture, *selectedTexture, 256, 256, 0));
 
   //remove shroud here
   map->removeShroud(static_cast<sf::Vector2i>(units[0]->getPosition()), 10);

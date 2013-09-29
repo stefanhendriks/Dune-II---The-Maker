@@ -6,8 +6,9 @@
 
 using namespace std;
 
-Unit::Unit(const sf::Texture &texture, const sf::Texture& selectedBitmap, float x, float y,int body_facing):
+Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const sf::Texture& selectedBitmap, float x, float y,int body_facing):
     sprite(texture),
+    shadow_sprite(shadow_texture),
     selectedSprite(selectedBitmap),
     selected(false),
     map(nullptr)
@@ -15,8 +16,6 @@ Unit::Unit(const sf::Texture &texture, const sf::Texture& selectedBitmap, float 
 {
     this->selected = false;
     this->is_infantry = false;
-    //this->selected_bitmap = Surface::load("graphics/selected.bmp", 255, 0, 255);
-    //this->tileset = tileset;
     //this->shadowset = shadowset;
     setFacing(body_facing);
     this->desired_body_facing = body_facing;
@@ -27,6 +26,7 @@ Unit::Unit(const sf::Texture &texture, const sf::Texture& selectedBitmap, float 
 //    this->map=map;
 //    this->move_behavior.reset(move_behavior);
     sprite.setPosition(x,y);
+    shadow_sprite.setPosition(x,y);
     this->target = sprite.getPosition();
 
     //init(tileset, shadowset, map, world_x, world_y, view_range, move_behavior, sub_cell, tile_size, unit_size);
@@ -35,9 +35,9 @@ Unit::Unit(const sf::Texture &texture, const sf::Texture& selectedBitmap, float 
 
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
+    target.draw(shadow_sprite, sf::BlendAlpha);
     target.draw(sprite);
-    if (selected)
-        target.draw(selectedSprite);
+    if (selected) target.draw(selectedSprite);
 
     if (has_target()) target.draw(thor::Arrow(sprite.getPosition(), this->target - sprite.getPosition()));
 }
@@ -143,6 +143,8 @@ void Unit::setFacing(int facing) {
   body_facing = facing;
   int size = sprite.getTexture()->getSize().x / FACINGS;
   sprite.setTextureRect({size * body_facing, 0, size, size});
+  shadow_sprite.setTextureRect({size * body_facing, 0, size, size});
+  shadow_sprite.setColor(sf::Color(255, 255, 255, 128));
 }
 
 int Unit::desired_facing() {

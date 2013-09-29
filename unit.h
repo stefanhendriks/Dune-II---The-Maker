@@ -27,7 +27,7 @@ class Unit : public sf::Drawable
 {
 
   public:
-    Unit(const sf::Texture& texture, const sf::Texture &selectedBitmap, float x, float y, int body_facing);
+    Unit(const sf::Texture& texture, const sf::Texture &shadow_texture, const sf::Texture &selectedBitmap, float x, float y, int body_facing);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState();
@@ -56,6 +56,7 @@ class Unit : public sf::Drawable
     sf::Vector2f prev_position;
 
     sf::Sprite sprite;
+    sf::Sprite shadow_sprite;
     sf::Sprite selectedSprite; //possibly static
 
     sf::Vector2i tile_size;
