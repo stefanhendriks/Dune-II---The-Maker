@@ -22,11 +22,15 @@ public:
     void setPosition(const sf::Vector2f& point);
     void setType(Type type);
 
+    sf::Vector2f getPosition() const;
+
 private:
     sf::Texture defaultTexture;
     sf::Texture moveTexture;
 
     sf::Sprite sprite;
+
+    Type m_type;
 
 };
 

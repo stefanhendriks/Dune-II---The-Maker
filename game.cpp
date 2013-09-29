@@ -151,7 +151,7 @@ void Game::onEvent(sf::Event event) {
               }              
           }
           for (auto& unit : units){
-              if (unit->is_selected()) unit->order_move(screen.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
+              if (unit->is_selected()) unit->order_move(screen.mapPixelToCoords(static_cast<sf::Vector2i>(mouse.getPosition())));
           }
           box.clear();
           break;

@@ -28,7 +28,8 @@ void Mouse::setPosition(const sf::Vector2f &point)
 
 void Mouse::setType(Type type)
 {
-    switch (type) {
+    m_type = type;
+    switch (m_type) {
     case Type::Default:
         sprite.setTexture(defaultTexture);
         break;
@@ -38,7 +39,23 @@ void Mouse::setType(Type type)
     case Type::Attack:
         sprite.setTexture(defaultTexture);
         break;
-    default:
+    }
+}
+
+sf::Vector2f Mouse::getPosition() const
+{
+    //if Default hotspot is top-left, else the center
+    switch (m_type) {
+    case Type::Default:
+        return sprite.getPosition();
+        break;
+    case Type::Move:{
+        sf::FloatRect spriteRect = sprite.getGlobalBounds();
+        return (sprite.getPosition() + sf::Vector2f(spriteRect.width/2, spriteRect.height/2));
+        break;
+    }
+    case Type::Attack:
+        return sprite.getPosition();
         break;
     }
 }
