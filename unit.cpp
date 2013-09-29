@@ -37,9 +37,11 @@ void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     target.draw(shadow_sprite, sf::BlendAlpha);
     target.draw(sprite);
-    if (selected) target.draw(selectedSprite);
+    if (selected)
+        target.draw(selectedSprite);
 
-    if (has_target()) target.draw(thor::Arrow(getPosition(), this->target - getPosition()));
+    if (has_target())
+        target.draw(thor::Arrow(getPosition(), this->target - getPosition(), sf::Color(51,255,51,125)), sf::BlendAdd);
 }
 
 void Unit::select() {
