@@ -7,11 +7,14 @@
 
 Game::Game():
     playing(true),
-    screen(sf::VideoMode(800, 600), "Dune 2 - The Maker", sf::Style::Close),
+    screen(),
     map(nullptr)
     //map_camera(nullptr),
     //unitRepository(nullptr)
 {
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    screen.create(sf::VideoMode(800, 600), "Dune 2 - The Maker", sf::Style::Close, settings);
     screen.setFramerateLimit(IDEAL_FPS);
     screen.setMouseCursorVisible(false);
 
