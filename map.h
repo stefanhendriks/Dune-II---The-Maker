@@ -67,9 +67,12 @@ class Map : public sf::Drawable {
         sf::Vector2i mapPoint = toMapPoint(world_point);
         int x = mapPoint.x;
         int y = mapPoint.y;
-        for (auto& cell : cells){
-            if (std::pow(cell.x - x, 2) + std::pow(cell.y - y, 2) <= std::pow(range, 2) + 1) {
-                getCell(cell.y, cell.x)->shrouded = false;
+
+        for (int cell_x = std::max(x - range, 0); cell_x <= std::min(x + range, getMaxWidth() -1); cell_x++) {
+            for (int cell_y = std::max(y - range, 0); cell_y <= std::min(y + range, getMaxHeight() -1); cell_y++) {
+                if (std::pow(cell_x - x, 2) + std::pow(cell_y - y, 2) <= std::pow(range, 2) + 1) {
+                    getCell(cell_x, cell_y)->shrouded = false;
+                }
             }
         }
     }

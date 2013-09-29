@@ -32,6 +32,11 @@ void Cell::setIndex(int tileIndex) {
 }
 
 void Cell::setShroudIndex(int tileIndex) {
+    if (tileIndex == -1){
+        sprite_shroud.setTextureRect({0,0,0,0});
+        return;
+    }
+
     int tileCol = TILE_SIZE * tileIndex;
     sf::IntRect rect(tileCol, 0, TILE_SIZE, TILE_SIZE);
 
