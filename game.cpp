@@ -70,7 +70,7 @@ bool Game::init() {
   sf::Image trikeShadowImage;
   trikeShadowImage.loadFromFile("graphics/Unit_Trike_s.bmp");
   trikeShadowImage.createMaskFromColor(sf::Color(255,0,255));
-  sf::Texture* trikeShadowTexture = new sf::Texture; //yes we are leaking! Player should own this
+  sf::Texture* trikeShadowTexture = new sf::Texture;
   trikeShadowTexture->loadFromImage(trikeShadowImage);
 
   sf::Image selectedImage;

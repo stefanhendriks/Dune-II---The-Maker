@@ -39,7 +39,7 @@ void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
     target.draw(sprite);
     if (selected) target.draw(selectedSprite);
 
-    if (has_target()) target.draw(thor::Arrow(sprite.getPosition(), this->target - sprite.getPosition()));
+    if (has_target()) target.draw(thor::Arrow(getPosition(), this->target - getPosition()));
 }
 
 void Unit::select() {
@@ -198,7 +198,8 @@ sf::FloatRect Unit::getBounds() const
 
 sf::Vector2f Unit::getPosition() const
 {
-    return sprite.getPosition();
+    sf::FloatRect spriteRect(sprite.getGlobalBounds());
+    return (sprite.getPosition() + sf::Vector2f(spriteRect.width/2, spriteRect.height/2));
 }
 
 void Unit::updateState() {
