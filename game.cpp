@@ -71,7 +71,6 @@ bool Game::init() {
 
   //remove shroud here
   map->removeShroud(static_cast<sf::Vector2i>(units[0]->getPosition()), 10);
-  map->updateShroud();
 
   //shroud_edges_shadow = Surface::load("graphics/shroud_edges_shadow.bmp");
 

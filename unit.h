@@ -6,6 +6,7 @@
 #include "unit_move_behavior.h"
 #include <memory>
 
+
 const int FACING_RIGHT = 0;
 const int FACING_UP_RIGHT = 1;
 const int FACING_UP = 2;
@@ -77,6 +78,8 @@ class Unit : public sf::Drawable
     std::shared_ptr<UnitMoveBehavior> move_behavior;
 
     void init(Map *map, int world_x, int world_y, int view_range, UnitMoveBehavior* move_behavior, int sub_cell);
+
+    void setFacing(int facing);
 
     void moveUp();
     void moveDown();

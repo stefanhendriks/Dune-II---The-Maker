@@ -1,16 +1,64 @@
 #include <iostream>
 #include "unit.h"
 
+#include <Thor/Math.hpp>
+
 using namespace std;
 
 Unit::Unit(const sf::Texture &texture, const sf::Texture& selectedBitmap, float x, float y):
     sprite(texture),
     selectedSprite(selectedBitmap),
-    selected(false)
+    selected(false),
+    map(nullptr)
   //owner(&thePlayer)
 {
+    this->selected = false;
+    this->is_infantry = false;
+    //this->selected_bitmap = Surface::load("graphics/selected.bmp", 255, 0, 255);
+    //this->tileset = tileset;
+    //this->shadowset = shadowset;
+    setFacing(thor::random(0, FACINGS));
+    this->desired_body_facing = this->body_facing;
+    this->view_range = view_range;
+    //this->position = Point(world_x, world_y);
+//    this->target = this->position;
+//    this->next_move_position = this->position;
+//    this->prev_position = this->position;
+//    this->map=map;
+//    this->move_behavior.reset(move_behavior);
+
+//    int tile_height = 0, tile_width = 0;
+  //  //this->unit_size = Point(tile_width, tile_height);
+  //  this->shadow_alpha = 128;
+  //  this->anim_frame = 0;
+  //  this->sub_position = Point(0,0);
+  //  switch (sub_cell) {
+  //    case SUBCELL_UPLEFT:    this->sub_position = Point(-8, -8); break;
+  //    case SUBCELL_UPRIGHT:   this->sub_position = Point(8, -8);  break;
+  //    case SUBCELL_DOWNLEFT:  this->sub_position = Point(-8, 8);  break;
+  //    case SUBCELL_DOWNRIGHT: this->sub_position = Point(8, 8);   break;
+  //    default: break;
+  //  }
+  //  this->position = this->position + this->sub_position;
+
+  //  this->move_behavior->occupyCell(Point(this->position.x, this->position.y));
+  //  //this->map->removeShroud(Point(this->position.x, this->position.y), this->view_range);
+
+  //  this->next_move_position = this->position;
+  //  this->prev_position = this->position;
+  //  this->target = this->position;
+  //  this->tile_size = tile_size;
+  //  this->unit_size = unit_size;
+
+  //  // make sure the position becomes the center, do this by calculating half of width/height and set it as offset
+  //  // so it will be substracted later when drawing (in the getDrawX() and getDrawY() methods)
+  //  this->offset_x = -(tile_size.x / 2);
+  //  this->offset_y = -(tile_size.y / 2);
+
+
     sprite.setPosition(x,y);
-    sprite.setTextureRect({0,0,30,30});
+    setFacing(thor::random(0, FACINGS));
+
     //init(tileset, shadowset, map, world_x, world_y, view_range, move_behavior, sub_cell, tile_size, unit_size);
     selectedSprite.setPosition(x,y);
 }
@@ -107,11 +155,10 @@ bool Unit::isOnLayer(short layer) {
 //  int y = ((target.y / TILE_SIZE) * TILE_SIZE) + (TILE_SIZE / 2);
 //  int x = ((target.x / TILE_SIZE) * TILE_SIZE) + (TILE_SIZE / 2);
 
-//  this->target = Point(x, y);
+//  this->target = sf::Vector2i(x, y);
 
 //  // then apply the same offset if given
 //  this->target = this->target + this->sub_position;
-
 //}
 
 //const Player &Unit::getOwner() const
@@ -119,112 +166,10 @@ bool Unit::isOnLayer(short layer) {
 //    return *owner;
 //}
 
-//void Unit::draw(SDL_Surface* screen, MapCamera* map_camera) {
-//  int draw_x = map_camera->screenCoordinateX(getDrawX());
-//  int draw_y = map_camera->screenCoordinateY(getDrawY());
-
-//  int tile_width = tile_size.x;
-//  int tile_height = tile_size.y;
-
-//  int src_x = this->body_facing * tile_width;
-//  int src_y = tile_height * this->anim_frame;
-
-//  Surface::draw(shadowset, screen, src_x, src_y, tile_width, tile_height, draw_x, draw_y, this->shadow_alpha);
-//  Surface::draw(tileset, screen, src_x, src_y, tile_width, tile_height, draw_x, draw_y);
-
-//  if (selected) {
-//    // todo: draw it ourselves, with lines so it is super flexible
-//    Surface::draw(selected_bitmap, screen, draw_x, draw_y);
-//  }
-
-//  if (DEV_DRAWTARGETLINE) {
-//    int draw_x = map_camera->screenCoordinateX(position.x);
-//    int draw_y = map_camera->screenCoordinateY(position.y);
-
-//    if (target != position) {
-//      int draw_move_to_x = map_camera->screenCoordinateX(target.x);
-//      int draw_move_to_y = map_camera->screenCoordinateY(target.y);
-//      lineRGBA(screen, draw_x, draw_y, draw_move_to_x, draw_move_to_y, 255, 0, 0, 197);
-//    }
-
-//    if (next_move_position != position) {
-//      int draw_move_to_x = map_camera->screenCoordinateX(next_move_position.x);
-//      int draw_move_to_y = map_camera->screenCoordinateY(next_move_position.y);
-//      lineRGBA(screen, draw_x, draw_y, draw_move_to_x, draw_move_to_y, 0, 255, 0, 255);
-//    }
-
-//    rectangleRGBA(screen, draw_x, draw_y, draw_x + 1, draw_y + 1, 255, 255, 255, 255);
-//  }
-
-
-
-//}
-
-void Unit::init(Map* map, int world_x, int world_y, int view_range, UnitMoveBehavior* move_behavior, int sub_cell) {
-  this->selected = false;
-  this->is_infantry = false;
-  //this->selected_bitmap = Surface::load("graphics/selected.bmp", 255, 0, 255);
-  //this->tileset = tileset;
-  //this->shadowset = shadowset;
-  //this->body_facing = rnd(FACINGS);
-  this->desired_body_facing = this->body_facing;
-  this->view_range = view_range;
-  //this->position = Point(world_x, world_y);
-  this->map = map;
-  this->target = this->position;
-  this->next_move_position = this->position;
-  this->prev_position = this->position;
-  this->map=map;
-  this->move_behavior.reset(move_behavior);
-
-  int tile_height = 0, tile_width = 0;
-  //tile_width = tileset->w / FACINGS;
-
-  // check if our assumption (width==height) is true for this tileset, and if not warn the user.
-//  if (tileset->h % tile_width > 0) {
-//    cerr << "WARNING: This tileset does not meet the requirement : tile height must equal width." << endl << endl;
-//    cerr << "Based on 8 sides of a unit, the calculated width of a tile on this tileset is " << tile_width << ". The general assumption is that the height of a tile must equal width. " << endl;
-//    cerr << "However the height of this tileset (" << tileset->h << ") was not one or more multiplications of " << tile_width << ". Its dimensions are " << tileset->h << "x" << tileset->w << ".";
-//    cerr << endl;
-
-//    // if it is less height than wide, we
-//    if (tileset->h < tile_width) {
-//      cerr << "Because the height of the tileset (" << tileset->h << ") is *lower* than the width of a calculated tile(=" << tile_width << ") (and therefor has no animations). We assume the height of the tileset of " << tileset->h << "." << endl;
-//      tile_height = tileset->h;
-//    } else {
-//      cerr << "Since the height of the tileset (" << tileset->h << ") is *greater* than the width of a calculated tile(=" << tile_width <<") (which means there could be animations) we assume the height equals the calculated width of " << tile_width << "." << endl;
-//      tile_height = tile_width;
-//    }
-//    cerr << endl;
-//  } else {
-//    tile_height = tile_width;
-//  }
-//  //this->unit_size = Point(tile_width, tile_height);
-//  this->shadow_alpha = 128;
-//  this->anim_frame = 0;
-//  this->sub_position = Point(0,0);
-//  switch (sub_cell) {
-//    case SUBCELL_UPLEFT:    this->sub_position = Point(-8, -8); break;
-//    case SUBCELL_UPRIGHT:   this->sub_position = Point(8, -8);  break;
-//    case SUBCELL_DOWNLEFT:  this->sub_position = Point(-8, 8);  break;
-//    case SUBCELL_DOWNRIGHT: this->sub_position = Point(8, 8);   break;
-//    default: break;
-//  }
-//  this->position = this->position + this->sub_position;
-
-//  this->move_behavior->occupyCell(Point(this->position.x, this->position.y));
-//  //this->map->removeShroud(Point(this->position.x, this->position.y), this->view_range);
-
-//  this->next_move_position = this->position;
-//  this->prev_position = this->position;
-//  this->target = this->position;
-//  this->tile_size = tile_size;
-//  this->unit_size = unit_size;
-
-//  // make sure the position becomes the center, do this by calculating half of width/height and set it as offset
-//  // so it will be substracted later when drawing (in the getDrawX() and getDrawY() methods)
-//  this->offset_x = -(tile_size.x / 2);
-//  this->offset_y = -(tile_size.y / 2);
+void Unit::setFacing(int facing) {
+  body_facing = facing;
+  int size = sprite.getTexture()->getSize().x / FACINGS;
+  sprite.setTextureRect({size * body_facing, 0, size, size});
 }
 
 int Unit::desired_facing() {
