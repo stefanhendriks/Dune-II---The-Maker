@@ -1,8 +1,7 @@
 #include "cell.h"
 #include <cassert>
 
-Cell::Cell():
-  shouldBeDrawn(true)
+Cell::Cell()
 {
 }
 
@@ -51,20 +50,21 @@ void Cell::setIndex(int tileIndex) {
 
 void Cell::setShroudIndex(int tileIndex) {
   if (tileIndex == -1){
-    shouldBeDrawn = false;
+    shroudVertices[0].color = sf::Color::Transparent;
+    shroudVertices[1].color = sf::Color::Transparent;
+    shroudVertices[2].color = sf::Color::Transparent;
+    shroudVertices[3].color = sf::Color::Transparent;
     sprite_shroud.setTextureRect({0,0,0,0});
     return;
-  }
-
-  shouldBeDrawn = true;
+  }  
 
     int tileCol = TILE_SIZE * tileIndex;
     sf::IntRect rect(tileCol, 0, TILE_SIZE, TILE_SIZE);
 
-    vertices[0].texCoords = sf::Vector2f(tileCol, 0);
-    vertices[1].texCoords = sf::Vector2f(tileCol + TILE_SIZE, 0);
-    vertices[2].texCoords = sf::Vector2f(tileCol + TILE_SIZE, TILE_SIZE);
-    vertices[3].texCoords = sf::Vector2f(tileCol, TILE_SIZE);
+    shroudVertices[0].texCoords = sf::Vector2f(tileCol, 0);
+    shroudVertices[1].texCoords = sf::Vector2f(tileCol + TILE_SIZE, 0);
+    shroudVertices[2].texCoords = sf::Vector2f(tileCol + TILE_SIZE, TILE_SIZE);
+    shroudVertices[3].texCoords = sf::Vector2f(tileCol, TILE_SIZE);
 
     sprite_shroud.setTextureRect(rect);
 }
@@ -114,10 +114,3 @@ sf::Vertex Cell::getShroudVertex(int index) const
 
   return shroudVertices[index];
 }
-
-bool Cell::shouldDraw() const
-{
-  return shouldBeDrawn;
-}
-
-

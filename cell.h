@@ -42,16 +42,12 @@ public:
     sf::Vertex getVertex(int index) const;
     sf::Vertex getShroudVertex(int index) const;
 
-    bool shouldDraw() const;
-
     int x, y;
 
 private:
 
     std::array<sf::Vertex, 4> vertices;
     std::array<sf::Vertex, 4> shroudVertices;
-
-    bool shouldBeDrawn;
 
     sf::Sprite sprite;
     sf::Sprite sprite_shroud;

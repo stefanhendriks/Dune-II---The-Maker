@@ -37,10 +37,10 @@ void Map::load(std::string file) {
 
 void Map::updateShroud()
 {
+  shroudArray.clear();
   for (auto& cell : cells){
     cell.setShroudIndex(determineShroudEdge(&cell));
     for (int i=0; i<4; ++i){
-      if (!cell.shouldDraw()) continue;
       shroudArray.append(cell.getShroudVertex(i));
     }
 
