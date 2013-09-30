@@ -30,7 +30,10 @@ public:
     }
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const{
+        sf::View tempHolder = target.getView();
+        target.setView(target.getDefaultView());
         target.draw(mStatisticsText);
+        target.setView(tempHolder);
     }
 
 private:
