@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <array>
 
 enum class Terrain
 {
@@ -38,9 +39,19 @@ public:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void drawShrouded(sf::RenderTarget& target, sf::RenderStates states) const;
 
+    sf::Vertex getVertex(int index) const;
+    sf::Vertex getShroudVertex(int index) const;
+
+    bool shouldDraw() const;
+
     int x, y;
 
 private:
+
+    std::array<sf::Vertex, 4> vertices;
+    std::array<sf::Vertex, 4> shroudVertices;
+
+    bool shouldBeDrawn;
 
     sf::Sprite sprite;
     sf::Sprite sprite_shroud;

@@ -14,6 +14,9 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
   max_width = MAX_WIDTH - 1;
   max_height = MAX_HEIGHT - 1;
 
+  vertexArray.setPrimitiveType(sf::Quads);
+  shroudArray.setPrimitiveType(sf::Quads);
+
   for (int x = 0; x < MAX_WIDTH; x++) {
     for (int y = 0; y < MAX_HEIGHT; y++) {
       int i = (y * MAX_WIDTH) + x;
@@ -25,27 +28,33 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
 void Map::load(std::string file) {
   MapLoader::load(file, this);
   for (auto& cell : cells) {
-      cell.setIndex(determineCellTile(&cell));      
+    cell.setIndex(determineCellTile(&cell));
+    for (int i=0; i<4; ++i)
+      vertexArray.append(cell.getVertex(i));
   }
   updateShroud();
 }
 
 void Map::updateShroud()
 {
-    for (auto& cell : cells)
-        cell.setShroudIndex(determineShroudEdge(&cell));
+  for (auto& cell : cells){
+    cell.setShroudIndex(determineShroudEdge(&cell));
+    for (int i=0; i<4; ++i){
+      if (!cell.shouldDraw()) continue;
+      shroudArray.append(cell.getShroudVertex(i));
+    }
+
+  }
 }
 
 void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-    for (auto& cell : cells)
-        target.draw(cell);
+  target.draw(vertexArray, &terrain);
 }
 
 void Map::drawShrouded(sf::RenderTarget &target, sf::RenderStates states) const
 {
-    for (auto& cell : cells)
-        cell.drawShrouded(target, states);
+    target.draw(shroudArray, &shroud_edges);
 }
 
 int Map::determineCellTile(Cell* c) {

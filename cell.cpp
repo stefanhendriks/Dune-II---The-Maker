@@ -1,6 +1,8 @@
 #include "cell.h"
+#include <cassert>
 
-Cell::Cell()
+Cell::Cell():
+  shouldBeDrawn(true)
 {
 }
 
@@ -11,6 +13,17 @@ void Cell::init(const sf::Texture &terrain, const sf::Texture &shrouded_edges, i
 
     sprite.setTexture(terrain);
     sprite.setPosition(row*TILE_SIZE,col*TILE_SIZE);
+
+    vertices[0].position = sf::Vector2f(row*TILE_SIZE,col*TILE_SIZE);
+    vertices[1].position = sf::Vector2f((row+1)*TILE_SIZE,col*TILE_SIZE);
+    vertices[2].position = sf::Vector2f((row+1)*TILE_SIZE,(col+1)*TILE_SIZE);
+    vertices[3].position = sf::Vector2f(row*TILE_SIZE,(col+1)*TILE_SIZE);
+
+    shroudVertices[0].position = sf::Vector2f(row*TILE_SIZE,col*TILE_SIZE);
+    shroudVertices[1].position = sf::Vector2f((row+1)*TILE_SIZE,col*TILE_SIZE);
+    shroudVertices[2].position = sf::Vector2f((row+1)*TILE_SIZE,(col+1)*TILE_SIZE);
+    shroudVertices[3].position = sf::Vector2f(row*TILE_SIZE,(col+1)*TILE_SIZE);
+
 
     sprite_shroud.setTexture(shrouded_edges);
     sprite_shroud.setPosition(row*TILE_SIZE,col*TILE_SIZE);
@@ -28,17 +41,30 @@ void Cell::setIndex(int tileIndex) {
     int tileRow = TILE_SIZE * static_cast<int>(terrainType);
     int tileCol = TILE_SIZE * tileIndex;
 
+    vertices[0].texCoords = sf::Vector2f(tileCol, tileRow);
+    vertices[1].texCoords = sf::Vector2f(tileCol + TILE_SIZE, tileRow);
+    vertices[2].texCoords = sf::Vector2f(tileCol + TILE_SIZE, tileRow + TILE_SIZE);
+    vertices[3].texCoords = sf::Vector2f(tileCol, tileRow + TILE_SIZE);
+
     sprite.setTextureRect({tileCol, tileRow, TILE_SIZE, TILE_SIZE});
 }
 
 void Cell::setShroudIndex(int tileIndex) {
-    if (tileIndex == -1){
-        sprite_shroud.setTextureRect({0,0,0,0});
-        return;
-    }
+  if (tileIndex == -1){
+    shouldBeDrawn = false;
+    sprite_shroud.setTextureRect({0,0,0,0});
+    return;
+  }
+
+  shouldBeDrawn = true;
 
     int tileCol = TILE_SIZE * tileIndex;
     sf::IntRect rect(tileCol, 0, TILE_SIZE, TILE_SIZE);
+
+    vertices[0].texCoords = sf::Vector2f(tileCol, 0);
+    vertices[1].texCoords = sf::Vector2f(tileCol + TILE_SIZE, 0);
+    vertices[2].texCoords = sf::Vector2f(tileCol + TILE_SIZE, TILE_SIZE);
+    vertices[3].texCoords = sf::Vector2f(tileCol, TILE_SIZE);
 
     sprite_shroud.setTextureRect(rect);
 }
@@ -73,6 +99,25 @@ void Cell::draw(sf::RenderTarget &target, sf::RenderStates states) const {
 
 void Cell::drawShrouded(sf::RenderTarget &target, sf::RenderStates states) const {
   target.draw(sprite_shroud);
+}
+
+sf::Vertex Cell::getVertex(int index) const
+{
+  assert(index>=0 && index<=3);
+
+  return vertices[index];
+}
+
+sf::Vertex Cell::getShroudVertex(int index) const
+{
+  assert(index>=0 && index<=3);
+
+  return shroudVertices[index];
+}
+
+bool Cell::shouldDraw() const
+{
+  return shouldBeDrawn;
 }
 
 

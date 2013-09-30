@@ -101,6 +101,8 @@ private:
     int max_height;
     sf::Texture& terrain;
     sf::Texture& shroud_edges;
+    sf::VertexArray vertexArray;
+    sf::VertexArray shroudArray;
 
     int determineCellTile(Cell* c);
     int determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool cell_right);
