@@ -17,7 +17,7 @@ enum class Terrain
     Slab = 6
 };
 
-class Cell : public sf::Drawable {
+class Cell {
 public:
 
     static const int TILE_SIZE = 32; // squared
@@ -36,9 +36,6 @@ public:
     bool occupied[2]; //2 is Map::MAX_LAYERS
     bool shrouded;
 
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-    void drawShrouded(sf::RenderTarget& target, sf::RenderStates states) const;
-
     sf::Vertex getVertex(int index) const;
     sf::Vertex getShroudVertex(int index) const;
 
@@ -48,9 +45,5 @@ private:
 
     std::array<sf::Vertex, 4> vertices;
     std::array<sf::Vertex, 4> shroudVertices;
-
-    sf::Sprite sprite;
-    sf::Sprite sprite_shroud;
-
 };
 #endif // CELL_H
