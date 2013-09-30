@@ -11,6 +11,7 @@
 #include <SFML/Graphics.hpp>
 #include "selectionbox.h"
 #include "mouse.h"
+#include "fps_counter.h"
 
 class Game {
 
@@ -24,7 +25,7 @@ class Game {
    private:
       bool init();
       void onEvent(sf::Event event);
-      void updateState();
+      void updateState(sf::Time dt);
       void render();
       int cleanup();
       //void deselectAllUnits();
@@ -39,6 +40,7 @@ class Game {
       std::unique_ptr<Map> map;
       //Keyboard keyboard;
       Mouse mouse;
+      FPS_Counter fpsCounter;
 
       //std::vector<Player> players;
       std::vector<std::unique_ptr<Unit> > units; //possibly should be shared_ptr

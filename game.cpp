@@ -15,7 +15,7 @@ Game::Game():
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     screen.create(sf::VideoMode(800, 600), "Dune 2 - The Maker", sf::Style::Close, settings);
-    screen.setFramerateLimit(IDEAL_FPS);
+    //screen.setFramerateLimit(IDEAL_FPS);
     screen.setMouseCursorVisible(false);
 
     if (!init()){
@@ -26,13 +26,20 @@ Game::Game():
 
 int Game::execute() {
 
+    sf::Clock clock;
+    sf::Time timeSinceLastUpdate = sf::Time::Zero;
+
+
+
   while(playing) {
     sf::Event event;
+    sf::Time dt = clock.restart();
+    timeSinceLastUpdate += dt;
     while(screen.pollEvent(event)) {
       onEvent(event);
     }
 
-    updateState();
+    updateState(dt);
     render();
   }
 
@@ -242,12 +249,14 @@ void Game::render() {
 
   screen.draw(box);
 
+  screen.draw(fpsCounter);
+
   screen.draw(mouse);
 
   screen.display();
 }
 
-void Game::updateState() {
+void Game::updateState(sf::Time dt) {
   static const float cameraSpeed = 10.f;
   float vec_x = 0.f, vec_y = 0.f;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) vec_y -= cameraSpeed;
@@ -270,6 +279,8 @@ void Game::updateState() {
   for (auto& unit: units){
       unit->updateState();
   }
+
+  fpsCounter.update(dt);
 }
 
 //void Game::deselectAllUnits() {
