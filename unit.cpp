@@ -25,7 +25,7 @@ Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const 
 //    this->move_behavior.reset(move_behavior);
     sprite.setPosition(x,y);
     shadow_sprite.setPosition(x,y);
-    this->target = sprite.getPosition();
+    this->target = getCenter();
 
     //init(tileset, shadowset, map, world_x, world_y, view_range, move_behavior, sub_cell, tile_size, unit_size);
     selectedSprite.setPosition(x,y);
@@ -99,7 +99,7 @@ bool Unit::is_moving() {
 }
 
 bool Unit::has_target() const {
-    return sprite.getPosition() != target;
+    return getCenter() != target;
 }
 
 bool Unit::should_turn_body() {
