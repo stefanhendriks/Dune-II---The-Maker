@@ -5,41 +5,40 @@
 #include <Thor/Shapes.hpp>
 
 Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const sf::Texture& selectedBitmap, float x, float y,int body_facing):
-    sprite(texture),
-    shadow_sprite(shadow_texture),
-    selectedSprite(selectedBitmap),
-    selected(false),
-    map(nullptr)
-  //owner(&thePlayer)
+  sprite(texture),
+  shadow_sprite(shadow_texture),
+  selectedSprite(selectedBitmap),
+  selected(false),
+  map(nullptr)
+//owner(&thePlayer)
 {
-    this->selected = false;
-    this->is_infantry = false;
-    //this->shadowset = shadowset;
-    setFacing(body_facing);
-    this->desired_body_facing = body_facing;
-    this->view_range = view_range;
-    //this->position = Point(world_x, world_y);
-//    this->next_move_position = this->position;
-//    this->prev_position = this->position;
-//    this->map=map;
-//    this->move_behavior.reset(move_behavior);
-    sprite.setPosition(x,y);
-    shadow_sprite.setPosition(x,y);
-    this->target = getCenter();
+  this->selected = false;
+  this->is_infantry = false;
+  //this->shadowset = shadowset;
+  setFacing(body_facing);
+  this->desired_body_facing = body_facing;
+  this->view_range = view_range;
+  //    this->next_move_position = this->position;
+  //    this->prev_position = this->position;
+  //    this->map=map;
+  //    this->move_behavior.reset(move_behavior);
+  sprite.setPosition(x,y);
+  shadow_sprite.setPosition(x,y);
+  this->target = getCenter();
 
-    //init(tileset, shadowset, map, world_x, world_y, view_range, move_behavior, sub_cell, tile_size, unit_size);
-    selectedSprite.setPosition(x,y);
+  //init(tileset, shadowset, map, world_x, world_y, view_range, move_behavior, sub_cell, tile_size, unit_size);
+  selectedSprite.setPosition(x,y);
 }
 
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-    target.draw(shadow_sprite, sf::BlendAlpha);
-    target.draw(sprite);
-    if (selected)
-        target.draw(selectedSprite);
+  target.draw(shadow_sprite, sf::BlendAlpha);
+  target.draw(sprite);
+  if (selected)
+    target.draw(selectedSprite);
 
-    if (has_target())
-        target.draw(thor::Arrow(getCenter(), this->target - getCenter(), sf::Color(51,255,51,125)), sf::BlendAdd);
+  if (has_target())
+    target.draw(thor::Arrow(getCenter(), this->target - getCenter(), sf::Color(51,255,51,125)), sf::BlendAdd);
 }
 
 void Unit::select() {
@@ -99,7 +98,7 @@ bool Unit::is_moving() {
 }
 
 bool Unit::has_target() const {
-    return getCenter() != target;
+  return getCenter() != target;
 }
 
 bool Unit::should_turn_body() {
@@ -124,14 +123,14 @@ bool Unit::isOnLayer(short layer) {
 
 void Unit::order_move(sf::Vector2f target) {
   // snap coordinates to center of cell
-//  int y = ((target.y / TILE_SIZE) * TILE_SIZE) + (TILE_SIZE / 2);
-//  int x = ((target.x / TILE_SIZE) * TILE_SIZE) + (TILE_SIZE / 2);
+  //  int y = ((target.y / TILE_SIZE) * TILE_SIZE) + (TILE_SIZE / 2);
+  //  int x = ((target.x / TILE_SIZE) * TILE_SIZE) + (TILE_SIZE / 2);
 
-//  this->target = sf::Vector2i(x, y);
+  //  this->target = sf::Vector2i(x, y);
   this->target = target;
 
   // then apply the same offset if given
-//  this->target = this->target + this->sub_position;
+  //  this->target = this->target + this->sub_position;
 }
 
 //const Player &Unit::getOwner() const
@@ -191,35 +190,35 @@ void Unit::turn_body() {
   setFacing(body_facing);
 }
 
-void Unit::updateMovePosition()
-{
-    if (has_target()){
-        static const float speed = 5.f;
-        sf::Vector2f direction = target - getCenter();
-        sf::Vector2f unitDirection = thor::unitVector(direction);
-        sprite.move(speed*unitDirection);
-    }
+void Unit::updateMovePosition()  {
+  if (has_target()) {
+    float speed = 5.f;
+    sf::Vector2f direction = target - getCenter();
+    sf::Vector2f unitDirection = thor::unitVector(direction);
+    float distance = thor::length(direction);
+    if (distance < speed) speed = distance;
+    sprite.move(speed*unitDirection);
+    shadow_sprite.move(speed*unitDirection);
+    selectedSprite.move(speed*unitDirection);
+  }
 }
 
-sf::FloatRect Unit::getBounds() const
-{
-    return sprite.getGlobalBounds();
+sf::FloatRect Unit::getBounds() const {
+  return sprite.getGlobalBounds();
 }
 
-sf::Vector2f Unit::getPosition() const
-{
-    return sprite.getPosition();
+sf::Vector2f Unit::getPosition() const {
+  return sprite.getPosition();
 }
 
-sf::Vector2f Unit::getCenter() const
-{
-    sf::FloatRect spriteRect(sprite.getGlobalBounds());
-    return (sprite.getPosition() + sf::Vector2f(spriteRect.width/2, spriteRect.height/2));
+sf::Vector2f Unit::getCenter() const {
+  sf::FloatRect spriteRect(sprite.getGlobalBounds());
+  return (sprite.getPosition() + sf::Vector2f(spriteRect.width/2, spriteRect.height/2));
 }
 
 void Unit::updateState() {
 
-    updateMovePosition();
+  updateMovePosition();
 
   if (should_turn_body()) {
     turn_body();
@@ -227,7 +226,7 @@ void Unit::updateState() {
   }
 
 }
-  // think about movement
+// think about movement
 //  if (!is_moving()) {
 //    if (prev_position != position) {
 //      move_behavior->unOccupyCell(Point(prev_position.x, prev_position.y));
