@@ -27,14 +27,10 @@ Game::Game():
 int Game::execute() {
 
     sf::Clock clock;
-    sf::Time timeSinceLastUpdate = sf::Time::Zero;
-
-
 
   while(playing) {
     sf::Event event;
     sf::Time dt = clock.restart();
-    timeSinceLastUpdate += dt;
     while(screen.pollEvent(event)) {
       onEvent(event);
     }
