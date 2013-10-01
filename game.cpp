@@ -124,25 +124,21 @@ bool Game::init() {
 
   thor::Action leftClick(sf::Mouse::Left, thor::Action::PressOnce);
   thor::Action leftHold(sf::Mouse::Left, thor::Action::Hold);
+  thor::Action eventClosed(sf::Event::Closed);
+  thor::Action Qclicked(sf::Keyboard::Q, thor::Action::PressOnce);
+
   actionMap["leftClick"] = leftClick;
   actionMap["leftHold"] = leftHold;
+  actionMap["close"] = eventClosed || Qclicked;
+
+  system.connect("close", [this](thor::ActionContext<std::string>){playing = false;});
 
   return true;
 }
 
 void Game::onEvent(sf::Event event) {
 
-  switch (event.type){
-    case sf::Event::Closed:
-      playing = false; break;
-    case sf::Event::KeyPressed:
-      switch (event.key.code) {
-        case sf::Keyboard::Q:
-          playing = false; break;
-        default:
-          break;
-      }
-      break;
+  switch (event.type){    
   case sf::Event::MouseButtonPressed:
       switch (event.mouseButton.button){
       case sf::Mouse::Left:{
