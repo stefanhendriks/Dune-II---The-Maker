@@ -122,115 +122,45 @@ bool Game::init() {
   //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_DOWNLEFT, players[1]));
   //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_DOWNRIGHT, players[1]));
 
-  thor::Action leftClick(sf::Mouse::Left, thor::Action::PressOnce);
-  thor::Action leftHold(sf::Mouse::Left, thor::Action::Hold);
-  thor::Action eventClosed(sf::Event::Closed);
-  thor::Action Qclicked(sf::Keyboard::Q, thor::Action::PressOnce);
+  //thor Actions here
 
-  actionMap["leftClick"] = leftClick;
-  actionMap["leftHold"] = leftHold;
-  actionMap["close"] = eventClosed || Qclicked;
+  actionMap["boxStart"] = thor::Action(sf::Mouse::Left, thor::Action::PressOnce);
+  actionMap["orderMove"] = thor::Action(sf::Mouse::Left, thor::Action::PressOnce);
+  actionMap["boxDrag"] = thor::Action(sf::Mouse::Left, thor::Action::Hold);
+  actionMap["boxRelease"] = thor::Action(sf::Mouse::Left, thor::Action::ReleaseOnce);
+  actionMap["deselectAll"] = thor::Action(sf::Mouse::Right, thor::Action::PressOnce);
+  actionMap["close"] = thor::Action(sf::Event::Closed) || thor::Action(sf::Keyboard::Q, thor::Action::PressOnce);
 
-  system.connect("close", [this](thor::ActionContext<std::string>){playing = false;});
+  typedef thor::ActionContext<std::string> actionContext;
+
+  system.connect("close", [this](actionContext){playing = false;});
+
+  system.connect("boxStart", [this](actionContext context){
+    sf::Vector2f toSet = screen.mapPixelToCoords(sf::Vector2i(context.event->mouseButton.x, context.event->mouseButton.y));
+    box.setTopLeft(toSet);
+  });
+
+  system.connect("boxRelease", [this](actionContext){
+    for (auto& unit : units){
+      if (box.intersects(unit->getBounds())){
+        unit->select();
+        system.connect("orderMove", [this](thor::ActionContext<std::string> context){
+          units[0]->order_move(screen.mapPixelToCoords(sf::Vector2i(context.event->mouseButton.x, context.event->mouseButton.y)));
+        });
+        mouse.setType(Mouse::Type::Move); //at least one unit selected...
+      }
+    }
+    box.clear();
+  });
+
+  system.connect("deselectAll", [this](actionContext){
+    system.clearConnections("orderMove");
+    mouse.setType(Mouse::Type::Default);
+    for (auto& unit : units)
+      unit->unselect();
+  });
 
   return true;
-}
-
-void Game::onEvent(sf::Event event) {
-
-  switch (event.type){    
-  case sf::Event::MouseButtonPressed:
-      switch (event.mouseButton.button){
-      case sf::Mouse::Left:{
-          sf::Vector2f toSet = screen.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
-          box.setTopLeft(toSet);
-          break;
-      }
-      default:
-          break;
-      }
-      break;
-  case sf::Event::MouseButtonReleased:
-      switch (event.mouseButton.button){
-      case sf::Mouse::Left:
-          for (auto& unit : units){
-              if (box.intersects(unit->getBounds())){
-                  selectUnit(*unit);
-                  mouse.setType(Mouse::Type::Move); //at least one unit selected...
-              }              
-          }          
-          box.clear();
-          break;
-      case sf::Mouse::Right:
-          //deselect all units
-          for (auto& unit : units){
-              unit->unselect();
-              mouse.setType(Mouse::Type::Default);
-          }
-      default:
-          break;
-      }
-    default:
-      break;
-  }
-
-  //mouse.onEvent(event);
-  //keyboard.onEvent(event);
-
-  //map_camera->onEvent(event);
-
-  //if (event->type == SDL_USEREVENT) {
-    //if (event->user.code == D2TM_SELECT) {
-      //std::unique_ptr<D2TMSelectStruct> s(static_cast<D2TMSelectStruct*>(event->user.data1));
-
-      //Point p = map_camera->toWorldCoordinates(s->screen_position);
-
-      //if (mouse.is_pointing()) {
-        //Unit* selected_unit = NULL;
-        //for (auto& unit : units){
-            //if (unit->is_point_within(p)){
-                //selected_unit = unit.get();
-                //break;
-            //}
-
-        //}
-        //if (selected_unit != NULL) {
-          //deselectAllUnits();
-          //selected_unit->select();
-          //mouse.state_order_move();
-        //}
-      //}
-    //} else if (event->user.code == D2TM_DESELECT) {
-      //mouse.state_pointing();
-      //deselectAllUnits();
-    //} else if (event->user.code == D2TM_BOX_SELECT) {
-      //std::unique_ptr<D2TMBoxSelectStruct> s(static_cast<D2TMBoxSelectStruct*>(event->user.data1));
-
-      //Rectangle rectangle = map_camera->toWorldCoordinates(s->rectangle);
-
-      //if (mouse.is_pointing()) {
-        //mouse.state_pointing();
-
-        //deselectAllUnits();
-        //for (auto& unit : units){
-            //if (unit->is_within(rectangle)){
-                //unit->select();
-                //mouse.state_order_move();
-            //}
-        //}
-      //}
-    //} else if (event->user.code == D2TM_MOVE_UNIT) {
-      //std::unique_ptr<D2TMMoveUnitStruct> s(static_cast<D2TMMoveUnitStruct*>(event->user.data1));
-      //Point p = map_camera->toWorldCoordinates(s->screen_position);
-
-      //for (auto& unit : units){
-          //if (unit->is_selected())
-              //unit->order_move(p);
-      //}
-    //}
-
-  //}
-
 }
 
 void Game::render() {
@@ -299,8 +229,5 @@ void Game::updateState(sf::Time dt) {
 
 void Game::selectUnit(Unit &unit)
 {
-  unit.select();
-  system.connect("leftClick", [this](thor::ActionContext<std::string> context){
-    units[0]->order_move(screen.mapPixelToCoords(sf::Vector2i(context.event->mouseButton.x, context.event->mouseButton.y)));
-  });
+
 }

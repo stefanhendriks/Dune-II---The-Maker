@@ -25,7 +25,6 @@ class Game {
 
    private:
       bool init();
-      void onEvent(sf::Event event);
       void updateState(sf::Time dt);
       void render();
       int cleanup();
