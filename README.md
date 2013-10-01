@@ -73,13 +73,13 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
-- using SFML
-  - draw empty window
-  - draw map
-  - draw map using camera
-  - draw units
-  - draw mouse cursor
-  - use custom events
+- converting to SFML
+ - team coloring
+ - clearing shroud on unit movement
+ - camera should not move out of map bounds
+ - single click select of units
+ - camera should scroll when mouse is on edge of screen
+ -
 
 - have foot-men (soldiers, infantry, trooper, troopers, fremen, all are alike)
 <del>
