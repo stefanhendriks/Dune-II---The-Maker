@@ -15,7 +15,7 @@ Game::Game():
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     screen.create(sf::VideoMode(800, 600), "Dune 2 - The Maker", sf::Style::Close, settings);
-    //screen.setFramerateLimit(IDEAL_FPS);
+    screen.setFramerateLimit(IDEAL_FPS);
     screen.setMouseCursorVisible(false);
 
     if (!init()){
@@ -30,9 +30,11 @@ int Game::execute() {
 
   while(playing) {
     sf::Event event;
+    actionMap.clearEvents();
     sf::Time dt = clock.restart();
     while(screen.pollEvent(event)) {
       onEvent(event);
+      actionMap.pushEvent(event);
     }
 
     updateState(dt);
@@ -120,6 +122,11 @@ bool Game::init() {
   //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_DOWNLEFT, players[1]));
   //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_DOWNRIGHT, players[1]));
 
+  thor::Action leftClick(sf::Mouse::Left, thor::Action::PressOnce);
+  thor::Action leftHold(sf::Mouse::Left, thor::Action::Hold);
+  actionMap["leftClick"] = leftClick;
+  actionMap["leftHold"] = leftHold;
+
   return true;
 }
 
@@ -152,13 +159,10 @@ void Game::onEvent(sf::Event event) {
       case sf::Mouse::Left:
           for (auto& unit : units){
               if (box.intersects(unit->getBounds())){
-                  unit->select();
+                  selectUnit(*unit);
                   mouse.setType(Mouse::Type::Move); //at least one unit selected...
               }              
-          }
-          for (auto& unit : units){
-              if (unit->is_selected()) unit->order_move(screen.mapPixelToCoords(static_cast<sf::Vector2i>(mouse.getPosition())));
-          }
+          }          
           box.clear();
           break;
       case sf::Mouse::Right:
@@ -253,6 +257,8 @@ void Game::render() {
 }
 
 void Game::updateState(sf::Time dt) {
+  actionMap.invokeCallbacks(system, &screen);
+
   static const float cameraSpeed = 1.f;
   float vec_x = 0.f, vec_y = 0.f;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) vec_y -= cameraSpeed;
@@ -294,3 +300,11 @@ void Game::updateState(sf::Time dt) {
     //return false;
 //}
 
+
+void Game::selectUnit(Unit &unit)
+{
+  unit.select();
+  system.connect("leftClick", [this](thor::ActionContext<std::string> context){
+    units[0]->order_move(screen.mapPixelToCoords(sf::Vector2i(context.event->mouseButton.x, context.event->mouseButton.y)));
+  });
+}

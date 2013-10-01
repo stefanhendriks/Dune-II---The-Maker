@@ -12,6 +12,7 @@
 #include "selectionbox.h"
 #include "mouse.h"
 #include "fps_counter.h"
+#include <Thor/Input.hpp>
 
 class Game {
 
@@ -42,8 +43,13 @@ class Game {
       Mouse mouse;
       FPS_Counter fpsCounter;
 
+      thor::ActionMap<std::string> actionMap;
+      thor::ActionMap<std::string>::CallbackSystem system;
+
       //std::vector<Player> players;
       std::vector<std::unique_ptr<Unit> > units; //possibly should be shared_ptr
+
+      void selectUnit(Unit& unit);
 
       //std::unique_ptr<UnitRepository> unitRepository;
 
