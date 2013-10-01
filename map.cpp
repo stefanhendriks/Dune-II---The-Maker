@@ -40,19 +40,23 @@ void Map::prepare(const sf::Vector2f& topLeft)
 {
   vertexArray.clear();
   shroudArray.clear();
-  sf::Vector2f viewSize(800,600); //cheating - this should be passed by the window
+  sf::Vector2f viewSize(800,600); //TODO: cheating - this should be passed by the window
   sf::Vector2i mapCell = toMapPoint(static_cast<sf::Vector2i>(topLeft));
-  const int nofTilesInRow = viewSize.x/Cell::TILE_SIZE;
-  const int nofRows = viewSize.y/Cell::TILE_SIZE;
-  for (int i=0; i<nofTilesInRow; ++i){
-    for (int j=0; j<nofRows; ++j){
-      int index = ((j + mapCell.y) * MAX_WIDTH) + i + mapCell.x;
+
+  // TODO: remove magic numbers
+  const int nofTilesInRow = (viewSize.x/Cell::TILE_SIZE) + 3;
+  const int nofRows = (viewSize.y/Cell::TILE_SIZE) + 3;
+
+  for (int x=-1; x < nofTilesInRow; ++x) {
+    for (int y=-1; y < nofRows; ++y) {
+      int index = ((y + mapCell.y) * MAX_WIDTH) + x + mapCell.x;
       for (int k=0; k<4; ++k){
         vertexArray.append(cells[index].getVertex(k));
         shroudArray.append(cells[index].getShroudVertex(k));
       }
     }
   }
+
 }
 
 void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const

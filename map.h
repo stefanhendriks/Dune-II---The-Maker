@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-//#include "eventfactory.h"
-
 #include <cmath>
 #include "cell.h"
 #include <array>
@@ -13,8 +11,6 @@
 #include <Thor/Vectors.hpp>
 
 #define DEV_DRAWGRID true
-
-//class Unit;
 
 class Map : public sf::Drawable {
 
@@ -82,12 +78,6 @@ class Map : public sf::Drawable {
     int getMaxWidth() { return max_width; }
     int getMaxHeight() { return max_height; }
 
-    //void setMaxBoundaries(Point boundaries) {
-      //max_width = boundaries.x + 2;
-      //max_height = boundaries.y + 2;
-      //eventFactory.pushMapBoundariesChanged();
-    //}
-
     bool is_occupied(sf::Vector2i p, short layer);
 
     sf::Vector2i toMapPoint(const sf::Vector2i& world_point) {
@@ -98,7 +88,6 @@ class Map : public sf::Drawable {
     int determineShroudEdge(Cell *c);
 private:
     std::array<Cell, MAX_SIZE> cells; //why not vector? -Koji
-    //EventFactory eventFactory;
     int max_width;
     int max_height;
     sf::Texture& terrain;
@@ -110,78 +99,4 @@ private:
     int determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool cell_right);
 };
 
-//const float CAMERA_VELOCITY_ACCELERATION = 0.25f;
-//const float CAMERA_MAX_VELOCITY = 2.5f;
-
-//class MapCamera {
-
-	//public:
-		//MapCamera(int x, int y, SDL_Surface* screen, Map* map);
-
-    //void onEvent(SDL_Event* event);
-
-    //void updateState();
-
-    //void draw(Map* map, SDL_Surface* tileset, SDL_Surface* screen);
-    //void draw(Unit* unit, SDL_Surface* screen);
-    //void drawShroud(Map* map, SDL_Surface* shroud_edges, SDL_Surface* shroud_edges_shadow, SDL_Surface* screen);
-
-    //Point toScreenCoordindates(const Point& point_with_world_coords) {
-      //int screen_x = screenCoordinateX(point_with_world_coords.x);
-      //int screen_y = screenCoordinateY(point_with_world_coords.y);
-      //Point result(screen_x, screen_y);
-      //return result;
-    //}
-
-    //Point toWorldCoordinates(const Point& point_with_screen_coords) {
-      //int world_x = worldCoordinateX(point_with_screen_coords.x);
-      //int world_y = worldCoordinateY(point_with_screen_coords.y);
-      //Point result(world_x, world_y);
-      //return result;
-    //}
-
-    //Rectangle toWorldCoordinates(const Rectangle& rect_with_screen_points) {
-      //Point start = toWorldCoordinates(rect_with_screen_points.start);
-      //Point end = toWorldCoordinates(rect_with_screen_points.end);
-      //Rectangle result(start, end);
-      //return result;
-    //}
-
-    //// todo: REMOVE THESE FROM PUBLIC
-    //int screenCoordinateX(int world_x) { return world_x - this->x; }
-    //int screenCoordinateY(int world_y) { return world_y - this->y; }
-    //int worldCoordinateX(int x) { return this->x + x; };
-    //int worldCoordinateY(int y) { return this->y + y; };
-
-	//private:
-		//int x, y;
-		//int max_cells_width_on_screen;
-		//int max_cells_height_on_screen;
-    //int map_y_boundary;
-    //int map_x_boundary;
-    //int scroll_speed;
-
-    //float move_x_velocity;
-    //float move_y_velocity;
-
-    //Map* map;
-
-		//int getWidth() { return max_cells_width_on_screen; }
-		//int getHeight() { return max_cells_height_on_screen; }
-
-    //void makeSureCoordinatesDoNotExceedMapLimits();
-
-    //void moveUp() { move_y_velocity -= CAMERA_VELOCITY_ACCELERATION; }
-    //void moveDown() { move_y_velocity += CAMERA_VELOCITY_ACCELERATION; }
-    //void moveLeft() { move_x_velocity -= CAMERA_VELOCITY_ACCELERATION; }
-    //void moveRight() { move_x_velocity += CAMERA_VELOCITY_ACCELERATION; }
-    //void stopMoving() { move_x_velocity = move_y_velocity = 0.0F; }
-
-    //int min_x() { return TILE_SIZE; }
-    //int min_y() { return TILE_SIZE; }
-    //int max_y() { return (((map_y_boundary - max_cells_height_on_screen) - (1 + 2)) * TILE_SIZE); }
-    //int max_x() { return (((map_x_boundary - max_cells_width_on_screen) - (1 + 2)) * TILE_SIZE); }
-
-    //int determineShroudEdge(Map* map, Cell* c);
-//};
 #endif
