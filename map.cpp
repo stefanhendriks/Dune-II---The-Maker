@@ -1,6 +1,5 @@
 #include "map.h"
 #include "maploader.h"
-#include "random.h"
 
 #include <memory>    /* std::unique_ptr */
 #include <cmath>     /* ceil */

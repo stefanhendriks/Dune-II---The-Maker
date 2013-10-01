@@ -14,7 +14,6 @@ set(d2_SRCS
     ini.cpp
     INIReader.cpp
     maploader.cpp
-    unit_move_behavior.cpp
     unit.cpp
     selectionbox.cpp
     mouse.cpp

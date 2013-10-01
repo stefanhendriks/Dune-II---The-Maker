@@ -117,9 +117,9 @@ int Unit::getDrawY() {
   return (position.y + offset_y);
 }
 
-bool Unit::isOnLayer(short layer) {
-  return this->move_behavior->is_layer(layer);
-}
+//bool Unit::isOnLayer(short layer) {
+//  return this->move_behavior->is_layer(layer);
+//}
 
 void Unit::order_move(sf::Vector2f target) {
   // snap coordinates to center of cell

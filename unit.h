@@ -1,9 +1,7 @@
 #ifndef UNIT_H
 #define UNIT_H
 
-#include "random.h"
 #include "map.h"
-#include "unit_move_behavior.h"
 #include <memory>
 
 
@@ -77,9 +75,8 @@ class Unit : public sf::Drawable
     bool is_infantry;
 
     Map* map;
-    std::shared_ptr<UnitMoveBehavior> move_behavior;
 
-    void init(Map *map, int world_x, int world_y, int view_range, UnitMoveBehavior* move_behavior, int sub_cell);
+    void init(Map *map, int world_x, int world_y, int view_range, int sub_cell);
 
     void setFacing(int facing);
 
@@ -100,35 +97,6 @@ class Unit : public sf::Drawable
     int  getDrawY();
 
     bool isOnLayer(short layer);
-};
-
-
-const int UNIT_QUAD = 0;
-const int UNIT_TRIKE = 1;
-const int UNIT_DEVASTATOR = 2;
-const int UNIT_CARRYALL = 3;
-const int UNIT_FRIGATE = 4;
-const int UNIT_SOLDIER = 5;
-const int MAX_UNIT_TYPES = 16;
-
-
-class UnitRepository {
-
-  public:
-    UnitRepository(Map *map);
-    ~UnitRepository();
-
-    void destroy();
-
-    Unit* create(int unitType, int x, int y, int view_range, int sub_cell);
-
-   private:
-      Map* map;
-
-      // several unit behaviors
-      AirUnitMoveBehavior*    air_unit_move_behavior;
-      GroundUnitMoveBehavior* ground_unit_move_behavior;
-      FootUnitMoveBehavior*   foot_unit_move_behavior;
 };
 
 #endif
