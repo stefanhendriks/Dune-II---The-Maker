@@ -108,6 +108,57 @@ bool Game::init() {
   //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_DOWNLEFT, players[1]));
   //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_DOWNRIGHT, players[1]));
 
+<<<<<<< HEAD
+  return true;
+}
+
+void Game::onEvent(sf::Event event) {
+
+  switch (event.type){
+    case sf::Event::Closed:
+      playing = false; break;
+    case sf::Event::KeyPressed:
+      switch (event.key.code) {
+        case sf::Keyboard::Q:
+          playing = false; break;
+        default:
+          break;
+      }
+      break;
+  case sf::Event::MouseButtonPressed:
+      switch (event.mouseButton.button){
+      case sf::Mouse::Left:{
+          sf::Vector2f toSet = screen.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+          box.setTopLeft(toSet);
+          break;
+      }
+      default:
+          break;
+      }
+      break;
+  case sf::Event::MouseButtonReleased:
+      switch (event.mouseButton.button){
+      case sf::Mouse::Left:
+          for (auto& unit : units){
+              if (box.intersects(unit->getBounds())){
+                  unit->select();
+                  mouse.setType(Mouse::Type::Move); //at least one unit selected...
+              }              
+          }
+          for (auto& unit : units){
+              if (unit->is_selected()) unit->order_move(screen.mapPixelToCoords(sf::Vector2i(event.mouseButton.x + 16, event.mouseButton.y + 16)));
+          }
+          box.clear();
+          break;
+      case sf::Mouse::Right:
+          //deselect all units
+          for (auto& unit : units){
+              unit->unselect();
+              mouse.setType(Mouse::Type::Default);
+          }
+      default:
+          break;
+=======
   //thor Actions here
 
   actionMap["boxStart"] = thor::Action(sf::Mouse::Left, thor::Action::PressOnce);
@@ -133,6 +184,7 @@ bool Game::init() {
           unit->order_move(screen.mapPixelToCoords(sf::Vector2i(context.event->mouseButton.x, context.event->mouseButton.y)));
         });
         mouse.setType(Mouse::Type::Move); //at least one unit selected...
+>>>>>>> thorEvents
       }
     }
     box.clear();
