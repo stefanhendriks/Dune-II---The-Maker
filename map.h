@@ -38,6 +38,8 @@ class Map : public sf::Drawable {
 
     void updateShroud();
 
+    void prepare(const sf::Vector2f &topLeft); //prepares the arrays for drawing
+
     Cell* getCell(sf::Vector2i map_point) {
       return getCell(map_point.x, map_point.y);
     }

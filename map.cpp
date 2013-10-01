@@ -47,6 +47,23 @@ void Map::updateShroud()
   }
 }
 
+void Map::prepare(const sf::Vector2f& topLeft)
+{
+  vertexArray.clear();
+  sf::Vector2f viewSize(800,600);
+  sf::Vector2i mapCell = toMapPoint(static_cast<sf::Vector2i>(topLeft));
+  const int nofTilesInRow = viewSize.x/Cell::TILE_SIZE;
+  const int nofRows = viewSize.y/Cell::TILE_SIZE;
+  for (int i=0; i<nofTilesInRow; ++i){
+    for (int j=0; j<nofRows; ++j){
+      int index = ((j + mapCell.y) * MAX_WIDTH) + i + mapCell.x;
+      for (int k=0; k<4; ++k)
+        vertexArray.append(cells[index].getVertex(k));
+
+    }
+  }
+}
+
 void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
   target.draw(vertexArray, &terrain);

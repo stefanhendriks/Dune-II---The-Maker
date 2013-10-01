@@ -241,7 +241,7 @@ void Game::render() {
   for (const auto& unit : units)
       screen.draw(*unit);
 
-  map->drawShrouded(screen, sf::RenderStates::Default);
+  //map->drawShrouded(screen, sf::RenderStates::Default);
 
   screen.draw(box);
 
@@ -253,7 +253,7 @@ void Game::render() {
 }
 
 void Game::updateState(sf::Time dt) {
-  static const float cameraSpeed = 10.f;
+  static const float cameraSpeed = 1.f;
   float vec_x = 0.f, vec_y = 0.f;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) vec_y -= cameraSpeed;
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) vec_y += cameraSpeed;
@@ -276,7 +276,8 @@ void Game::updateState(sf::Time dt) {
       unit->updateState();
   }
 
-  fpsCounter.update(dt);
+  //fpsCounter.update(dt);
+  map->prepare(screen.mapPixelToCoords(sf::Vector2i(0,0)));
 }
 
 //void Game::deselectAllUnits() {
