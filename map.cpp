@@ -27,39 +27,33 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
 
 void Map::load(std::string file) {
   MapLoader::load(file, this);
-  for (auto& cell : cells) {
+  for (auto& cell : cells)
     cell.setIndex(determineCellTile(&cell));
-    for (int i=0; i<4; ++i)
-      vertexArray.append(cell.getVertex(i));
-  }
+
   updateShroud();
 }
 
 void Map::updateShroud()
 {
-  shroudArray.clear();
-  for (auto& cell : cells){
+  for (auto& cell : cells)
     cell.setShroudIndex(determineShroudEdge(&cell));
-    for (int i=0; i<4; ++i){
-      shroudArray.append(cell.getShroudVertex(i));
-    }
-
-  }
 }
 
 void Map::prepare(const sf::Vector2f& topLeft)
 {
   vertexArray.clear();
-  sf::Vector2f viewSize(800,600);
+  shroudArray.clear();
+  sf::Vector2f viewSize(800,600); //cheating - this should be passed by the window
   sf::Vector2i mapCell = toMapPoint(static_cast<sf::Vector2i>(topLeft));
   const int nofTilesInRow = viewSize.x/Cell::TILE_SIZE;
   const int nofRows = viewSize.y/Cell::TILE_SIZE;
   for (int i=0; i<nofTilesInRow; ++i){
     for (int j=0; j<nofRows; ++j){
       int index = ((j + mapCell.y) * MAX_WIDTH) + i + mapCell.x;
-      for (int k=0; k<4; ++k)
+      for (int k=0; k<4; ++k){
         vertexArray.append(cells[index].getVertex(k));
-
+        shroudArray.append(cells[index].getShroudVertex(k));
+      }
     }
   }
 }
