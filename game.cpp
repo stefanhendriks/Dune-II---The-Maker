@@ -154,12 +154,14 @@ bool Game::init() {
     box.setBottomRight(screen.mapPixelToCoords(sf::Mouse::getPosition(screen)));
   });
 
-  const float cameraSpeed = 1.f;
+  const float cameraSpeed = 15.f;
 
-  system.connect("cameraLeft", [this, cameraSpeed](actionContext){camera.move(-cameraSpeed, 0);});
-  system.connect("cameraRight", [this, cameraSpeed](actionContext){camera.move(cameraSpeed, 0);});
-  system.connect("cameraUp", [this, cameraSpeed](actionContext){camera.move(0, -cameraSpeed);});
-  system.connect("cameraDown", [this, cameraSpeed](actionContext){camera.move(0, cameraSpeed);});
+  moveVector = sf::Vector2f();
+
+  system.connect("cameraLeft", [this, cameraSpeed](actionContext) {moveVector.x -= cameraSpeed;});
+  system.connect("cameraRight", [this, cameraSpeed](actionContext){moveVector.x = cameraSpeed; });
+  system.connect("cameraUp", [this, cameraSpeed](actionContext)   {moveVector.y -= cameraSpeed;});
+  system.connect("cameraDown", [this, cameraSpeed](actionContext) {moveVector.y = cameraSpeed; });
 
   return true;
 }
@@ -174,7 +176,7 @@ void Game::render() {
   for (const auto& unit : units)
       screen.draw(*unit);
 
-  map->drawShrouded(screen, sf::RenderStates::Default);
+//  map->drawShrouded(screen, sf::RenderStates::Default);
 
   screen.draw(box);
 
@@ -190,6 +192,16 @@ void Game::updateState(sf::Time dt) {
   actionMap.invokeCallbacks(system, &screen);  
 
   mouse.setPosition(screen.mapPixelToCoords(sf::Mouse::getPosition(screen)));
+
+  sf::Vector2f topLeft = camera.getCenter() - (camera.getSize() / 2.f);
+  sf::Vector2f downRight = camera.getCenter() + (camera.getSize() / 2.f);
+
+  if (moveVector.x < 0 && topLeft.x <= 0) moveVector.x = 0;
+  if (moveVector.y < 0 && topLeft.y <= 0) moveVector.y = 0;
+  if (moveVector.x > 0 && downRight.x >= (map->getMaxWidth() + 3) * Cell::TILE_SIZE) moveVector.x = 0;
+  if (moveVector.y > 0 && downRight.y >= (map->getMaxHeight() + 3) * Cell::TILE_SIZE) moveVector.y = 0;
+  camera.move(moveVector);
+  moveVector = sf::Vector2f();
 
   for (auto& unit: units){
       unit->updateState();

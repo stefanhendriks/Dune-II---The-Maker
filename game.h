@@ -38,6 +38,8 @@ class Game {
       Mouse mouse;
       FPS_Counter fpsCounter;
 
+      sf::Vector2f moveVector;
+
       thor::ActionMap<std::string> actionMap;
       thor::ActionMap<std::string>::CallbackSystem system;
 
