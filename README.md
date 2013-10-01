@@ -76,7 +76,6 @@ TODO
 - converting to SFML
  - team coloring
  - clearing shroud on unit movement
- - camera should not move out of map bounds
  - single click select of units
  - camera should scroll when mouse is on edge of screen
  - player should be able to deselect units (bugged by thor)

@@ -176,7 +176,7 @@ void Game::render() {
   for (const auto& unit : units)
       screen.draw(*unit);
 
-//  map->drawShrouded(screen, sf::RenderStates::Default);
+  map->drawShrouded(screen, sf::RenderStates::Default);
 
   screen.draw(box);
 
