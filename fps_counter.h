@@ -35,7 +35,7 @@ public:
     }
 
 private:
-    sf::Font    mFont;
+    sf::Font  mFont;
     sf::Text	mStatisticsText;
     sf::Time	mStatisticsUpdateTime;
     std::size_t	mStatisticsNumFrames;
