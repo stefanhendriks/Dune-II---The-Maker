@@ -33,7 +33,6 @@ int Game::execute() {
     actionMap.clearEvents();
     sf::Time dt = clock.restart();
     while(screen.pollEvent(event)) {
-      onEvent(event);
       actionMap.pushEvent(event);
     }
 
@@ -130,22 +129,21 @@ bool Game::init() {
   actionMap["boxRelease"] = thor::Action(sf::Mouse::Left, thor::Action::ReleaseOnce);
   actionMap["deselectAll"] = thor::Action(sf::Mouse::Right, thor::Action::PressOnce);
   actionMap["close"] = thor::Action(sf::Event::Closed) || thor::Action(sf::Keyboard::Q, thor::Action::PressOnce);
+  actionMap["cameraLeft"] = thor::Action(sf::Keyboard::Left, thor::Action::Hold);
+  actionMap["cameraRight"] = thor::Action(sf::Keyboard::Right, thor::Action::Hold);
+  actionMap["cameraUp"] = thor::Action(sf::Keyboard::Up, thor::Action::Hold);
+  actionMap["cameraDown"] = thor::Action(sf::Keyboard::Down, thor::Action::Hold);
 
   typedef thor::ActionContext<std::string> actionContext;
 
   system.connect("close", [this](actionContext){playing = false;});
 
-  system.connect("boxStart", [this](actionContext context){
-    sf::Vector2f toSet = screen.mapPixelToCoords(sf::Vector2i(context.event->mouseButton.x, context.event->mouseButton.y));
-    box.setTopLeft(toSet);
-  });
-
   system.connect("boxRelease", [this](actionContext){
     for (auto& unit : units){
       if (box.intersects(unit->getBounds())){
         unit->select();
-        system.connect("orderMove", [this](thor::ActionContext<std::string> context){
-          units[0]->order_move(screen.mapPixelToCoords(sf::Vector2i(context.event->mouseButton.x, context.event->mouseButton.y)));
+        system.connect("orderMove", [this, &unit](actionContext context){
+          unit->order_move(screen.mapPixelToCoords(sf::Vector2i(context.event->mouseButton.x, context.event->mouseButton.y)));
         });
         mouse.setType(Mouse::Type::Move); //at least one unit selected...
       }
@@ -153,18 +151,36 @@ bool Game::init() {
     box.clear();
   });
 
+  system.connect("boxStart", [this](actionContext context){
+    sf::Vector2f toSet = screen.mapPixelToCoords(sf::Vector2i(context.event->mouseButton.x, context.event->mouseButton.y));
+    box.setTopLeft(toSet);
+  });
+
   system.connect("deselectAll", [this](actionContext){
-    system.clearConnections("orderMove");
+    //system.clearConnections("orderMove");
     mouse.setType(Mouse::Type::Default);
     for (auto& unit : units)
       unit->unselect();
   });
+
+  system.connect("boxDrag", [this](actionContext){
+    box.setBottomRight(screen.mapPixelToCoords(sf::Mouse::getPosition(screen)));
+  });
+
+  const float cameraSpeed = 1.f;
+
+  system.connect("cameraLeft", [this, cameraSpeed](actionContext){camera.move(-cameraSpeed, 0);});
+  system.connect("cameraRight", [this, cameraSpeed](actionContext){camera.move(cameraSpeed, 0);});
+  system.connect("cameraUp", [this, cameraSpeed](actionContext){camera.move(0, -cameraSpeed);});
+  system.connect("cameraDown", [this, cameraSpeed](actionContext){camera.move(0, cameraSpeed);});
 
   return true;
 }
 
 void Game::render() {
   screen.clear();
+
+  screen.setView(camera);
 
   screen.draw(*map);
 
@@ -177,32 +193,16 @@ void Game::render() {
 
   screen.draw(fpsCounter);
 
+  screen.setView(camera);
   screen.draw(mouse);
 
   screen.display();
 }
 
 void Game::updateState(sf::Time dt) {
-  actionMap.invokeCallbacks(system, &screen);
-
-  static const float cameraSpeed = 1.f;
-  float vec_x = 0.f, vec_y = 0.f;
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) vec_y -= cameraSpeed;
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) vec_y += cameraSpeed;
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) vec_x -= cameraSpeed;
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) vec_x += cameraSpeed;
-
-  camera.move(vec_x, vec_y);
-  screen.setView(camera);
-
-  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-      box.setBottomRight(screen.mapPixelToCoords(sf::Mouse::getPosition(screen)));
+  actionMap.invokeCallbacks(system, &screen);  
 
   mouse.setPosition(screen.mapPixelToCoords(sf::Mouse::getPosition(screen)));
-
-  //keyboard.updateState();
-  //mouse.updateState();
-  //map_camera->updateState();
 
   for (auto& unit: units){
       unit->updateState();
@@ -210,24 +210,4 @@ void Game::updateState(sf::Time dt) {
 
   fpsCounter.update(dt);
   map->prepare(screen.mapPixelToCoords(sf::Vector2i(0,0)));
-}
-
-//void Game::deselectAllUnits() {
-    //for (auto& unit : units)
-        //unit->unselect();
-//}
-
-//bool Game::playerHasUnits(const Player &player) const
-//{
-    //for (const auto& unit : units){
-        //if (unit->getOwner()==player)
-            //return true; //unit belonging to player found
-    //}
-    //return false;
-//}
-
-
-void Game::selectUnit(Unit &unit)
-{
-
 }

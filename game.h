@@ -28,17 +28,13 @@ class Game {
       void updateState(sf::Time dt);
       void render();
       int cleanup();
-      //void deselectAllUnits();
       bool playing;
       sf::RenderWindow screen;
       sf::Texture terrain;
       sf::Texture shroud_edges;
       sf::View camera;
       SelectionBox box;
-      //SDL_Surface shroud_edges_shadow;
-      //std::unique_ptr<MapCamera> map_camera;
       std::unique_ptr<Map> map;
-      //Keyboard keyboard;
       Mouse mouse;
       FPS_Counter fpsCounter;
 
@@ -47,8 +43,6 @@ class Game {
 
       //std::vector<Player> players;
       std::vector<std::unique_ptr<Unit> > units; //possibly should be shared_ptr
-
-      void selectUnit(Unit& unit);
 
       //std::unique_ptr<UnitRepository> unitRepository;
 
