@@ -24,21 +24,47 @@ submit it as a pull request.
 
 Compiling
 =========
-This projct uses cmake to generate a platform specific makefile. Before running cmake, make sure you have installed SFML 2.1 and [Thor](https://github.com/Bromeon/Thor).
+This projct uses [cmake](http://www.cmake.org/) to generate a platform specific makefile. 
+Before running cmake, make sure you have [installed the required dependencies](#installing-dependencies)
 
 After that you do:
 
 ```
 cmake .
-```
-
-And then hit:
-
-```
 make
 ```
 
-which should deliver a d2tm binary file.
+which should deliver a ```./d2tm``` binary file.
+
+Installing dependencies
+-----------------------
+This example is based on Mac OS X, the procedure is probably the same on Linux. For Windows, we have not yet tested this.
+
+First make sure you have installed cmake.
+
+You will need two dependencies, [SFML 2.1](http://www.sfml-dev.org/download/sfml/2.1/) and [Thor](https://github.com/Bromeon/Thor).
+
+Install SFML
+------------
+- download SFML binaries for Mac OS X(compatible with clang++) [from here](http://www.sfml-dev.org/download/sfml/2.1/)
+- unpack the package in /tmp, a 'SFML-2.1-osx-clang-universal' is being extracted.
+- cd to 'SFML-2.1-osx-clang-universal' directory
+- run ```sudo ./install.sh```
+- done (you may remove SFML-2.1-osx-clang-universal)
+
+Install Thor
+------------
+- cd /tmp
+- git clone [Thor](https://github.com/Bromeon/Thor)
+- cd to Thor
+- ```
+cmake .
+make
+make install
+```
+- done (you may remove the Thor directory)
+
+Now you are ready to [compile d2tm](#compiling).
 
 
 As a player I should be able to...
