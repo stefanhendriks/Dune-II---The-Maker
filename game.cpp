@@ -86,19 +86,6 @@ bool Game::init() {
   //remove shroud here
   map->removeShroud(static_cast<sf::Vector2i>(units[0]->getPosition()), 10);
 
-  //shroud_edges_shadow = Surface::load("graphics/shroud_edges_shadow.bmp");
-
-  //if (shroud_edges_shadow == NULL) {
-    //cout << "Failed to read graphics/shroud_edges_shadow.bmp data" << endl;
-    //return false;
-  //}
-
-  //mouse.init(screen);
-
-  //map_camera.reset(new MapCamera(0, 0, screen, &map));
-  //map.load("maps/4PL_Mountains.ini");
-  //unitRepository.reset(new UnitRepository(&map));
-
   ////init two players
   //int idCount = 0;
   //players.emplace_back(House::Sardaukar, idCount++);

@@ -1,11 +1,9 @@
 #include "map.h"
 #include "maploader.h"
 #include "random.h"
-//#include "eventfactory.h"
-//#include "unit.h"
 
-#include <memory> //std::unique_ptr
-#include <cmath>       /* ceil */
+#include <memory>    /* std::unique_ptr */
+#include <cmath>     /* ceil */
 
 Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
   terrain(terrain),
@@ -135,56 +133,3 @@ bool Map::is_occupied(sf::Vector2i p, short layer) {
   Cell* c = getCell(map_x, map_y);
   return c->occupied[layer];
 }
-
-
-//=============================================================================
-//
-//MapCamera::MapCamera(int x, int y, SDL_Surface* screen, Map* map) {
-  //this->x = x; // pixel size, relative to map (starts at 0,0)
-  //this->y = y;
-  //this->map = map;
-  //this->max_cells_width_on_screen = ceil(screen->w / 32);
-  //this->max_cells_height_on_screen = ceil(screen->h / 32);
-  //this->map_y_boundary = map->getMaxHeight();
-  //this->map_x_boundary = map->getMaxWidth();
-  //this->scroll_speed = 8;
-  //this->move_x_velocity = 0.0F;
-  //this->move_y_velocity = 0.0F;
-//}
-
-//void MapCamera::updateState() {
-  //if (move_x_velocity > CAMERA_MAX_VELOCITY) move_x_velocity = CAMERA_MAX_VELOCITY;
-  //if (move_y_velocity > CAMERA_MAX_VELOCITY) move_y_velocity = CAMERA_MAX_VELOCITY;
-
-  //x += (move_x_velocity * scroll_speed);
-  //y += (move_y_velocity * scroll_speed);
-
-  //makeSureCoordinatesDoNotExceedMapLimits();
-//}
-
-//void MapCamera::makeSureCoordinatesDoNotExceedMapLimits() {
-  //if (y < min_y()) y = min_y();
-  //if (y > max_y()) y = max_y();
-  //if (x < min_x()) x = min_x();
-  //if (x > max_x()) x = max_x();
-//}
-
-//void MapCamera::draw(Unit* unit, SDL_Surface* screen) {
-  //// TODO: if not visible on camera , do not draw
-  //unit->draw(screen, this);
-//}
-
-//void MapCamera::onEvent(SDL_Event* event) {
-  //if (event->type == SDL_USEREVENT) {
-
-    //if (event->user.code == D2TM_MOVE_CAMERA) {
-      //std::unique_ptr<D2TMMoveCameraStruct> s(static_cast<D2TMMoveCameraStruct*>(event->user.data1));
-      //move_x_velocity = s->vector.x;
-      //move_y_velocity = s->vector.y;
-    //} else if (event->user.code == D2TM_MAP_BOUNDARIES_CHANGED) {
-      //this->map_y_boundary = map->getMaxHeight();
-      //this->map_x_boundary = map->getMaxWidth();
-    //}
-
-  //}
-//}
