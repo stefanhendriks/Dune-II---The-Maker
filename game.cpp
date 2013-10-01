@@ -183,6 +183,7 @@ void Game::render() {
   screen.draw(fpsCounter);
 
   screen.setView(camera);
+
   screen.draw(mouse);
 
   screen.display();
@@ -193,14 +194,20 @@ void Game::updateState(sf::Time dt) {
 
   mouse.setPosition(screen.mapPixelToCoords(sf::Mouse::getPosition(screen)));
 
-  sf::Vector2f topLeft = camera.getCenter() - (camera.getSize() / 2.f);
-  sf::Vector2f downRight = camera.getCenter() + (camera.getSize() / 2.f);
-
-  if (moveVector.x < 0 && topLeft.x <= 0) moveVector.x = 0;
-  if (moveVector.y < 0 && topLeft.y <= 0) moveVector.y = 0;
-  if (moveVector.x > 0 && downRight.x >= (map->getMaxWidth() + 3) * Cell::TILE_SIZE) moveVector.x = 0;
-  if (moveVector.y > 0 && downRight.y >= (map->getMaxHeight() + 3) * Cell::TILE_SIZE) moveVector.y = 0;
   camera.move(moveVector);
+  sf::Vector2f half_of_camera = camera.getSize() / 2.f;
+  sf::Vector2f topLeft = camera.getCenter() - (half_of_camera);
+  sf::Vector2f downRight = camera.getCenter() + (half_of_camera);
+
+  if (topLeft.x <= Cell::TILE_SIZE) camera.setCenter(half_of_camera.x + Cell::TILE_SIZE, camera.getCenter().y);
+  if (topLeft.y <= Cell::TILE_SIZE) camera.setCenter(camera.getCenter().x, half_of_camera.y + Cell::TILE_SIZE);
+
+  int max_width = (map->getMaxWidth() + 1) * Cell::TILE_SIZE;
+  int max_height = (map->getMaxHeight() + 1) * Cell::TILE_SIZE;
+
+  if (downRight.x >= max_width) camera.setCenter(max_width - half_of_camera.x, camera.getCenter().y);
+  if (downRight.y >= max_height) camera.setCenter(camera.getCenter().x, max_height - half_of_camera.y);
+
   moveVector = sf::Vector2f();
 
   for (auto& unit: units){
