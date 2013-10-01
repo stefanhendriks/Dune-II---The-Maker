@@ -144,7 +144,7 @@ bool Game::init() {
   });
 
   system.connect("deselectAll", [this](actionContext){
-    //system.clearConnections("orderMove");
+//    system.clearConnections("orderMove"); // -> This is bugged in Thor
     mouse.setType(Mouse::Type::Default);
     for (auto& unit : units)
       unit->unselect();
