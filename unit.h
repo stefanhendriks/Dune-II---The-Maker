@@ -72,6 +72,8 @@ class Unit : public sf::Drawable
 
     bool selected;
 
+    int shroud_range;
+
     bool is_infantry;
 
     Map& map;

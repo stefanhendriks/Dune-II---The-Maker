@@ -53,14 +53,14 @@ class Map : public sf::Drawable {
 
 
     void occupyCell(const sf::Vector2i& world_point, short layer) {
-      getCell(toMapPoint(world_point))->occupied[layer] = true;
+      //getCell(toMapPoint(world_point))->occupied[layer] = true;
     }
 
     void unOccupyCell(const sf::Vector2i& world_point, short layer) {
-      getCell(toMapPoint(world_point))->occupied[layer] = false;
+      //getCell(toMapPoint(world_point))->occupied[layer] = false;
     }
 
-    void removeShroud(sf::Vector2i world_point, int range) {
+    void removeShroud(sf::Vector2f world_point, int range) {
         sf::Vector2i mapPoint = toMapPoint(world_point);
         int x = mapPoint.x;
         int y = mapPoint.y;
@@ -80,7 +80,7 @@ class Map : public sf::Drawable {
 
     bool is_occupied(sf::Vector2i p, short layer);
 
-    sf::Vector2i toMapPoint(const sf::Vector2i& world_point) {
+    sf::Vector2i toMapPoint(const sf::Vector2f& world_point) {
       sf::Vector2i result(world_point.x / Cell::TILE_SIZE, world_point.y / Cell::TILE_SIZE);
       return result;
     }

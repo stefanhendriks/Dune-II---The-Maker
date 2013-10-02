@@ -9,6 +9,7 @@ Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const 
   shadow_sprite(shadow_texture),
   selectedSprite(selectedBitmap),
   selected(false),
+  shroud_range(10),
   map(theMap)
 //owner(&thePlayer)
 {
@@ -28,6 +29,7 @@ Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const 
 
   //init(tileset, shadowset, map, world_x, world_y, view_range, move_behavior, sub_cell, tile_size, unit_size);
   selectedSprite.setPosition(x,y);
+  map.removeShroud(getCenter(), shroud_range);
 }
 
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
@@ -200,7 +202,7 @@ void Unit::updateMovePosition()  {
     sprite.move(speed*unitDirection);
     shadow_sprite.move(speed*unitDirection);
     selectedSprite.move(speed*unitDirection);
-    map.removeShroud(static_cast<sf::Vector2i>(sprite.getPosition()), 10);
+    map.removeShroud(getCenter(), shroud_range);
   }
 }
 

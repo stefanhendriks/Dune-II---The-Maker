@@ -41,7 +41,7 @@ void Map::prepare(const sf::Vector2f& topLeft)
   vertexArray.clear();
   shroudArray.clear();
   sf::Vector2f viewSize(800,600); //TODO: cheating - this should be passed by the window
-  sf::Vector2i mapCell = toMapPoint(static_cast<sf::Vector2i>(topLeft));
+  sf::Vector2i mapCell = toMapPoint(topLeft);
 
   // TODO: remove magic numbers
   const int nofTilesInRow = (viewSize.x/Cell::TILE_SIZE) + 3;
