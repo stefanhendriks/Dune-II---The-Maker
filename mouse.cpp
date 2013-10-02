@@ -42,22 +42,19 @@ void Mouse::setType(Type type)
     }
 }
 
-sf::Vector2f Mouse::getPosition() const
+sf::Vector2i Mouse::getHotspot(sf::Event event) const
 {
     //if Default hotspot is top-left, else the center
     switch (m_type) {
     default:
     case Type::Default:
-        return sprite.getPosition();
+      return sf::Vector2i(event.mouseButton.x, event.mouseButton.y);
         break;
     case Type::Move:{
         sf::FloatRect spriteRect = sprite.getGlobalBounds();
-        return (sprite.getPosition() + sf::Vector2f(spriteRect.width/2, spriteRect.height/2));
+        return sf::Vector2i(event.mouseButton.x + spriteRect.width/2, event.mouseButton.y + spriteRect.height/2);
         break;
     }
-    case Type::Attack:
-        return sprite.getPosition();
-        break;
     }
 }
 

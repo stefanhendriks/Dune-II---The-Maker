@@ -130,7 +130,7 @@ bool Game::init() {
       if (box.intersects(unit->getBounds())){
         unit->select();
         system.connect("orderMove", [this, &unit](actionContext context){
-          unit->order_move(screen.mapPixelToCoords(sf::Vector2i(context.event->mouseButton.x, context.event->mouseButton.y)));
+          unit->order_move(screen.mapPixelToCoords(mouse.getHotspot(*context.event)));
         });
         mouse.setType(Mouse::Type::Move); //at least one unit selected...
       }
@@ -139,7 +139,7 @@ bool Game::init() {
   });
 
   system.connect("boxStart", [this](actionContext context){
-    sf::Vector2f toSet = screen.mapPixelToCoords(sf::Vector2i(context.event->mouseButton.x, context.event->mouseButton.y));
+    sf::Vector2f toSet = screen.mapPixelToCoords(mouse.getHotspot(*context.event));
     box.setTopLeft(toSet);
   });
 
