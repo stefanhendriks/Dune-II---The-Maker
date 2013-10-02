@@ -17,7 +17,7 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
   for (int x = 0; x < MAX_WIDTH; x++) {
     for (int y = 0; y < MAX_HEIGHT; y++) {
       int i = (y * MAX_WIDTH) + x;
-      cells[i].init(terrain, shroud_edges, x, y);
+      cells[i].init(x, y);
     }
   }
 }
@@ -50,7 +50,7 @@ void Map::prepare(const sf::Vector2f& topLeft)
   for (int x=-1; x < nofTilesInRow; ++x) {
     for (int y=-1; y < nofRows; ++y) {
       int index = ((y + mapCell.y) * MAX_WIDTH) + x + mapCell.x;
-      if ((index<0) || (index>MAX_SIZE)) continue;
+      if ((index<0) || (index>=MAX_SIZE)) continue;
       for (int k=0; k<4; ++k){
         vertexArray.append(cells[index].getVertex(k));
         shroudArray.append(cells[index].getShroudVertex(k));

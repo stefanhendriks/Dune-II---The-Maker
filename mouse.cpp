@@ -46,6 +46,7 @@ sf::Vector2f Mouse::getPosition() const
 {
     //if Default hotspot is top-left, else the center
     switch (m_type) {
+    default:
     case Type::Default:
         return sprite.getPosition();
         break;

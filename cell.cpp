@@ -5,7 +5,7 @@ Cell::Cell()
 {
 }
 
-void Cell::init(const sf::Texture &terrain, const sf::Texture &shrouded_edges, int row, int col)
+void Cell::init(int row, int col)
 {
   y = col;
   x = row;

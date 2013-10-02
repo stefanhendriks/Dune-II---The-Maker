@@ -24,7 +24,7 @@ public:
 
     Cell();
 
-    void init(const sf::Texture& terrain, const sf::Texture& shroud_edges, int row, int col);
+    void init(int row, int col);
 
     void setType(Terrain terrain_type);
     void setIndex(int tileIndex);

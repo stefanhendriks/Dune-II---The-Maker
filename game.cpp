@@ -154,14 +154,12 @@ bool Game::init() {
     box.setBottomRight(screen.mapPixelToCoords(sf::Mouse::getPosition(screen)));
   });
 
-  const float cameraSpeed = 15.f;
+  const float cameraSpeed = 15.f;  
 
-  moveVector = sf::Vector2f();
-
-  system.connect("cameraLeft", [this, cameraSpeed](actionContext) {moveVector.x -= cameraSpeed;});
-  system.connect("cameraRight", [this, cameraSpeed](actionContext){moveVector.x = cameraSpeed; });
-  system.connect("cameraUp", [this, cameraSpeed](actionContext)   {moveVector.y -= cameraSpeed;});
-  system.connect("cameraDown", [this, cameraSpeed](actionContext) {moveVector.y = cameraSpeed; });
+  system.connect("cameraLeft", [this, cameraSpeed](actionContext) {camera.move(-cameraSpeed, 0.f);});
+  system.connect("cameraRight", [this, cameraSpeed](actionContext){camera.move(cameraSpeed, 0.f); });
+  system.connect("cameraUp", [this, cameraSpeed](actionContext)   {camera.move(0.f, -cameraSpeed);});
+  system.connect("cameraDown", [this, cameraSpeed](actionContext) {camera.move(0.f, cameraSpeed); });
 
   return true;
 }
@@ -194,7 +192,6 @@ void Game::updateState(sf::Time dt) {
 
   mouse.setPosition(screen.mapPixelToCoords(sf::Mouse::getPosition(screen)));
 
-  camera.move(moveVector);
   sf::Vector2f half_of_camera = camera.getSize() / 2.f;
   sf::Vector2f topLeft = camera.getCenter() - (half_of_camera);
   sf::Vector2f downRight = camera.getCenter() + (half_of_camera);
@@ -207,8 +204,6 @@ void Game::updateState(sf::Time dt) {
 
   if (downRight.x >= max_width) camera.setCenter(max_width - half_of_camera.x, camera.getCenter().y);
   if (downRight.y >= max_height) camera.setCenter(camera.getCenter().x, max_height - half_of_camera.y);
-
-  moveVector = sf::Vector2f();
 
   for (auto& unit: units){
       unit->updateState();
