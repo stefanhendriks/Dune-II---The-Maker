@@ -25,7 +25,7 @@ class Unit : public sf::Drawable
 {
 
   public:
-    Unit(const sf::Texture& texture, const sf::Texture &shadow_texture, const sf::Texture &selectedBitmap, float x, float y, int body_facing);
+    Unit(const sf::Texture& texture, const sf::Texture &shadow_texture, const sf::Texture &selectedBitmap, float x, float y, int body_facing, Map& theMap);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState();
@@ -74,7 +74,7 @@ class Unit : public sf::Drawable
 
     bool is_infantry;
 
-    Map* map;
+    Map& map;
 
     void init(Map *map, int world_x, int world_y, int view_range, int sub_cell);
 

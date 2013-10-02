@@ -82,7 +82,7 @@ bool Game::init() {
   selectedImage.createMaskFromColor(sf::Color(255, 0, 255));
   sf::Texture* selectedTexture = new sf::Texture; //more leaks!
   selectedTexture->loadFromImage(selectedImage);
-  units.emplace_back(new Unit(*trikeTexture, *trikeShadowTexture, *selectedTexture, 256, 256, 0));
+  units.emplace_back(new Unit(*trikeTexture, *trikeShadowTexture, *selectedTexture, 256, 256, 0, *map));
 
   //remove shroud here
   map->removeShroud(static_cast<sf::Vector2i>(units[0]->getPosition()), 10);

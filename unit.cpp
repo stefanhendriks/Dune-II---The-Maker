@@ -4,12 +4,12 @@
 #include <Thor/Math.hpp>
 #include <Thor/Shapes.hpp>
 
-Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const sf::Texture& selectedBitmap, float x, float y,int body_facing):
+Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const sf::Texture& selectedBitmap, float x, float y,int body_facing, Map& theMap):
   sprite(texture),
   shadow_sprite(shadow_texture),
   selectedSprite(selectedBitmap),
   selected(false),
-  map(nullptr)
+  map(theMap)
 //owner(&thePlayer)
 {
   this->selected = false;
@@ -200,6 +200,7 @@ void Unit::updateMovePosition()  {
     sprite.move(speed*unitDirection);
     shadow_sprite.move(speed*unitDirection);
     selectedSprite.move(speed*unitDirection);
+    map.removeShroud(static_cast<sf::Vector2i>(sprite.getPosition()), 10);
   }
 }
 
