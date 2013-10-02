@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "game.h"
+#include "houses.h"
 
 
 
@@ -64,13 +65,6 @@ bool Game::init() {
   camera.reset({0,0,800,600});
   screen.setView(camera);
 
-  //init a trike
-  sf::Image trikeImage;
-  trikeImage.loadFromFile("graphics/Unit_Trike.bmp");
-  trikeImage.createMaskFromColor(sf::Color(0,0,0));
-  sf::Texture* trikeTexture = new sf::Texture; //yes we are leaking! Player should own this
-  trikeTexture->loadFromImage(trikeImage);
-
   sf::Image trikeShadowImage;
   trikeShadowImage.loadFromFile("graphics/Unit_Trike_s.bmp");
   trikeShadowImage.createMaskFromColor(sf::Color(255,0,255));
@@ -82,12 +76,15 @@ bool Game::init() {
   selectedImage.createMaskFromColor(sf::Color(255, 0, 255));
   sf::Texture* selectedTexture = new sf::Texture; //more leaks!
   selectedTexture->loadFromImage(selectedImage);
-  units.emplace_back(new Unit(*trikeTexture, *trikeShadowTexture, *selectedTexture, 256, 256, 0, *map));
 
-   ////init two players
-  //int idCount = 0;
-  //players.emplace_back(House::Sardaukar, idCount++);
-  //players.emplace_back(House::Harkonnen, idCount++);
+
+   //init two players
+  int idCount = 0;
+  players.emplace_back(House::Sardaukar, idCount++);
+  players.emplace_back(House::Harkonnen, idCount++);
+
+  units.emplace_back(new Unit(players[0].getTexture(), *trikeShadowTexture, *selectedTexture, 256, 256, 0, *map));
+  units.emplace_back(new Unit(players[1].getTexture(), *trikeShadowTexture, *selectedTexture, 300, 300, 0, *map));
 
   //units.emplace_back(unitRepository->create(UNIT_FRIGATE, House::Sardaukar, 3, 3, 10, SUBCELL_CENTER, players[0]));
   //units.emplace_back(unitRepository->create(UNIT_TRIKE, House::Sardaukar, 8, 8, 3, SUBCELL_CENTER, players[0]));
@@ -148,7 +145,7 @@ bool Game::init() {
   });
 
   system.connect("boxDrag", [this](actionContext){
-    box.setBottomRight(screen.mapPixelToCoords(sf::Mouse::getPosition(screen)));
+    box.setBottomRight(screen.mapPixelToCoords(sf::Mouse::getPosition(screen),camera));
   });
 
   const float cameraSpeed = 15.f;  

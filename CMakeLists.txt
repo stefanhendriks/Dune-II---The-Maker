@@ -17,6 +17,8 @@ set(d2_SRCS
     unit.cpp
     selectionbox.cpp
     mouse.cpp
+    player.cpp
+    houses.cpp
 )
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")

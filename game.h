@@ -13,6 +13,7 @@
 #include "mouse.h"
 #include "fps_counter.h"
 #include <Thor/Input.hpp>
+#include "player.h"
 
 class Game {
 
@@ -41,7 +42,7 @@ class Game {
       thor::ActionMap<std::string> actionMap;
       thor::ActionMap<std::string>::CallbackSystem system;
 
-      //std::vector<Player> players;
+      std::vector<Player> players;
       std::vector<std::unique_ptr<Unit> > units; //possibly should be shared_ptr
 
       //std::unique_ptr<UnitRepository> unitRepository;
