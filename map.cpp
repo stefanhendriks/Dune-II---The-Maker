@@ -50,6 +50,7 @@ void Map::prepare(const sf::Vector2f& topLeft)
   for (int x=-1; x < nofTilesInRow; ++x) {
     for (int y=-1; y < nofRows; ++y) {
       int index = ((y + mapCell.y) * MAX_WIDTH) + x + mapCell.x;
+      if ((index<0) || (index>MAX_SIZE)) continue;
       for (int k=0; k<4; ++k){
         vertexArray.append(cells[index].getVertex(k));
         shroudArray.append(cells[index].getShroudVertex(k));
