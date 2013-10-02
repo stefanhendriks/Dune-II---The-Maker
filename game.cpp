@@ -185,9 +185,7 @@ void Game::render() {
 }
 
 void Game::updateState(sf::Time dt) {
-  actionMap.invokeCallbacks(system, &screen);  
-
-  mouse.setPosition(screen.mapPixelToCoords(sf::Mouse::getPosition(screen)));
+  actionMap.invokeCallbacks(system, &screen);   
 
   sf::Vector2f half_of_camera = camera.getSize() / 2.f;
   sf::Vector2f topLeft = camera.getCenter() - (half_of_camera);
@@ -196,6 +194,8 @@ void Game::updateState(sf::Time dt) {
   if (topLeft.x <= Cell::TILE_SIZE) camera.setCenter(half_of_camera.x + Cell::TILE_SIZE, camera.getCenter().y);
   if (topLeft.y <= Cell::TILE_SIZE) camera.setCenter(camera.getCenter().x, half_of_camera.y + Cell::TILE_SIZE);
 
+  mouse.setPosition(screen.mapPixelToCoords(sf::Mouse::getPosition(screen),camera));
+
   int max_width = (map->getMaxWidth() + 1) * Cell::TILE_SIZE;
   int max_height = (map->getMaxHeight() + 1) * Cell::TILE_SIZE;
 
@@ -203,7 +203,7 @@ void Game::updateState(sf::Time dt) {
   if (downRight.y >= max_height) camera.setCenter(camera.getCenter().x, max_height - half_of_camera.y);
 
   for (auto& unit: units){
-      unit->updateState();
+    unit->updateState();
   }
 
   fpsCounter.update(dt);
