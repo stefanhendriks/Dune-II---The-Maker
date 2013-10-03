@@ -95,3 +95,11 @@ sf::Vertex Cell::getShroudVertex(int index) const
 
   return shroudVertices[index];
 }
+
+sf::FloatRect Cell::getBounds() const
+{
+  sf::FloatRect rect(vertices[0].position,
+      vertices[2].position - vertices[0].position);
+
+  return rect;
+}

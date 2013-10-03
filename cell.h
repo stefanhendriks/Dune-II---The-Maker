@@ -39,6 +39,8 @@ public:
     sf::Vertex getVertex(int index) const;
     sf::Vertex getShroudVertex(int index) const;
 
+    sf::FloatRect getBounds() const;
+
     int x, y;
 
 private:
