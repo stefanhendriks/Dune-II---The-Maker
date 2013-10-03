@@ -75,12 +75,13 @@ TODO
 ----
 - converting to SFML
  - team coloring
- - clearing shroud on unit movement
  - single click select of units
  - camera should scroll when mouse is on edge of screen
- - player should be able to deselect units (bugged by thor)
  - collision detection with terrain?
  - collision detection of units
+
+ worked around:
+  - player should be able to deselect units (bugged by thor)
 
 - have foot-men (soldiers, infantry, trooper, troopers, fremen, all are alike)
 <del>

@@ -124,7 +124,9 @@ bool Game::init() {
       if (box.intersects(unit->getBounds())){
         unit->select();
         system.connect("orderMove", [this, &unit](actionContext context){
-          unit->order_move(screen.mapPixelToCoords(mouse.getHotspot(*context.event)));
+          if (unit->is_selected()) { // add this if, because Thor is bugged and causes unselected units to be moved as well
+            unit->order_move(screen.mapPixelToCoords(mouse.getHotspot(*context.event)));
+          }
         });
         mouse.setType(Mouse::Type::Move); //at least one unit selected...
       }
