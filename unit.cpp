@@ -202,13 +202,23 @@ void Unit::updateMovePosition(const std::vector<Unit>& units)  {
     if (distance < speed) speed = distance;
     sprite.move(speed*unitDirection);
     //do collision detection now
+
+    sf::Vector2i mapPoint = map.toMapPoint(getCenter());
+    if (map.getCell(mapPoint.x, mapPoint.y)->terrainType == Terrain::Mountain){
+      sprite.move(-speed*unitDirection); //unmove
+      return;
+    }
+
     for (const auto& unit : units){
       if (id == unit.id) continue;
+
       if (sprite.getGlobalBounds().intersects(unit.sprite.getGlobalBounds())){
         sprite.move(-speed*unitDirection); //unmove
         return;
       }
     }
+
+
 
     shadow_sprite.move(speed*unitDirection);
     selectedSprite.move(speed*unitDirection);
