@@ -7,9 +7,9 @@
 Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const sf::Texture& selectedBitmap, float x, float y,int body_facing, Map& theMap, int theId):
   sprite(texture),
   shadow_sprite(shadow_texture),
-  selectedSprite(selectedBitmap),
-  selected(false),
+  selectedSprite(selectedBitmap),  
   view_range(10),
+  selected(false),
   map(theMap),
   id(theId)
 {

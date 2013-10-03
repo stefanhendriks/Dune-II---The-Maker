@@ -30,8 +30,7 @@ int Game::execute() {
 
     sf::Clock clock;
 
-  while(playing) {
-    sf::Event event;    
+  while(playing) {    
     sf::Time dt = clock.restart();
 
     updateState(dt);
