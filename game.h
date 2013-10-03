@@ -43,7 +43,7 @@ class Game {
       thor::ActionMap<std::string>::CallbackSystem system;
 
       std::vector<Player> players;
-      std::vector<std::unique_ptr<Unit> > units; //possibly should be shared_ptr
+      std::vector<Unit> units;
 
       //std::unique_ptr<UnitRepository> unitRepository;
 

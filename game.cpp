@@ -84,8 +84,8 @@ bool Game::init() {
   players.emplace_back(House::Sardaukar, idCount++);
   players.emplace_back(House::Harkonnen, idCount++);
 
-  units.emplace_back(new Unit(players[0].getTexture(), *trikeShadowTexture, *selectedTexture, 256, 256, 0, *map));
-  units.emplace_back(new Unit(players[1].getTexture(), *trikeShadowTexture, *selectedTexture, 300, 300, 0, *map));
+  units.emplace_back(players[0].getTexture(), *trikeShadowTexture, *selectedTexture, 256, 256, 0, *map);
+  units.emplace_back(players[1].getTexture(), *trikeShadowTexture, *selectedTexture, 300, 300, 0, *map);
 
   //units.emplace_back(unitRepository->create(UNIT_FRIGATE, House::Sardaukar, 3, 3, 10, SUBCELL_CENTER, players[0]));
   //units.emplace_back(unitRepository->create(UNIT_TRIKE, House::Sardaukar, 8, 8, 3, SUBCELL_CENTER, players[0]));
@@ -123,8 +123,8 @@ bool Game::init() {
 
   system.connect("boxRelease", [this](actionContext){
     for (auto& unit : units){
-      if (box.intersects(unit->getBounds())){
-        selectUnit(*unit);
+      if (box.intersects(unit.getBounds())){
+        selectUnit(unit);
       }
     }
     box.clear();
@@ -138,8 +138,8 @@ bool Game::init() {
   system.connect("singleSelect", [this](actionContext context){
     sf::Vector2f toCheck = screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera);
     for (auto& unit : units){
-      if (unit->getBounds().contains(toCheck))
-        selectUnit(*unit);
+      if (unit.getBounds().contains(toCheck))
+        selectUnit(unit);
     }
   });
 
@@ -147,7 +147,7 @@ bool Game::init() {
     shouldDeselect = true;
     mouse.setType(Mouse::Type::Default);
     for (auto& unit : units)
-      unit->unselect();
+      unit.unselect();
   });
 
   system.connect("boxDrag", [this](actionContext){
@@ -172,7 +172,7 @@ void Game::render() {
   screen.draw(*map);
 
   for (const auto& unit : units)
-      screen.draw(*unit);
+      screen.draw(unit);
 
   map->drawShrouded(screen, sf::RenderStates::Default);
 
@@ -210,7 +210,7 @@ void Game::updateState(sf::Time dt) {
   mouse.setPosition(screen.mapPixelToCoords(sf::Mouse::getPosition(screen),camera));
 
   for (auto& unit: units){
-    unit->updateState();
+    unit.updateState();
   }
 
   fpsCounter.update(dt);
