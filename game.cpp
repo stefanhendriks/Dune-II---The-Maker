@@ -127,6 +127,13 @@ void Game::render() {
 void Game::updateState(sf::Time dt) {
   actions.update();
 
+  sf::Vector2i mousePosition = sf::Mouse::getPosition(screen);
+
+  if      (mousePosition.x < 50 ) actions.trigger("cameraLeft");
+  else if (mousePosition.y < 50 ) actions.trigger("cameraUp");
+  else if (mousePosition.x > 750) actions.trigger("cameraRight");
+  else if (mousePosition.y > 550) actions.trigger("cameraDown");
+
   sf::Vector2f half_of_camera = camera.getSize() / 2.f;
   sf::Vector2f topLeft = camera.getCenter() - (half_of_camera);
   sf::Vector2f downRight = camera.getCenter() + (half_of_camera);
@@ -140,13 +147,7 @@ void Game::updateState(sf::Time dt) {
   if (downRight.x >= max_width) camera.setCenter(max_width - half_of_camera.x, camera.getCenter().y);
   if (downRight.y >= max_height) camera.setCenter(camera.getCenter().x, max_height - half_of_camera.y);
 
-  mouse.setPosition(screen.mapPixelToCoords(sf::Mouse::getPosition(screen),camera));
-
-  if (mouse.getPosition().x < 5) {
-    // todo: trigger events
-  }
-
-
+  mouse.setPosition(screen.mapPixelToCoords(mousePosition,camera));
 
   for (auto& unit: units){
     unit.updateState(units);

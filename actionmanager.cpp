@@ -79,6 +79,11 @@ void ActionManager::update()
     }
 }
 
+void ActionManager::trigger(const std::string &which)
+{
+    system.triggerEvent(thor::ActionContext<std::string>(&parent->screen, nullptr, which));
+}
+
 void ActionManager::selectUnit(Unit &unit)
 {
   unit.select();

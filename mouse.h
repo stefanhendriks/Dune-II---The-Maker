@@ -24,9 +24,7 @@ public:
 
     sf::Vector2i getHotspot(sf::Event event) const;
 
-    Type getType() { return m_type; }
-
-    sf::Vector2i getPosition() { return sf::Mouse::getPosition(); }
+    Type getType() { return m_type; }    
 
 private:
     sf::Texture defaultTexture;
