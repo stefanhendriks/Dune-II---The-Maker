@@ -1,7 +1,7 @@
 #include "actionmanager.h"
 #include "game.h"
 
-ActionManager::ActionManager(Game* theParent):
+ActionManager::ActionManager(Game& theParent):
     parent(theParent),
     shouldDeselect(false)
 {
@@ -21,28 +21,28 @@ ActionManager::ActionManager(Game* theParent):
 
     typedef thor::ActionContext<std::string> actionContext;
 
-    system.connect("close", [this](actionContext){parent->playing = false;});
+    system.connect("close", [this](actionContext){parent.playing = false;});
 
     system.connect("boxRelease", [this](actionContext){
-      for (auto& unit : parent->units){
-        if (parent->box.intersects(unit.getBounds())){
+      for (auto& unit : parent.units){
+        if (parent.box.intersects(unit.getBounds())){
           selectUnit(unit);
         }
       }
-      parent->box.clear();
+      parent.box.clear();
     });
 
     system.connect("boxStart", [this](actionContext context) {
-      if (parent->mouse.getType() != Mouse::Type::Default) {
+      if (parent.mouse.getType() != Mouse::Type::Default) {
         return;
       }
-      sf::Vector2f toSet = parent->screen.mapPixelToCoords(parent->mouse.getHotspot(*context.event), parent->camera);
-      parent->box.setTopLeft(toSet);
+      sf::Vector2f toSet = parent.screen.mapPixelToCoords(parent.mouse.getHotspot(*context.event), parent.camera);
+      parent.box.setTopLeft(toSet);
     });
 
     system.connect("singleSelect", [this](actionContext context){
-      sf::Vector2f toCheck = parent->screen.mapPixelToCoords(parent->mouse.getHotspot(*context.event), parent->camera);
-      for (auto& unit : parent->units){
+      sf::Vector2f toCheck = parent.screen.mapPixelToCoords(parent.mouse.getHotspot(*context.event), parent.camera);
+      for (auto& unit : parent.units){
         if (unit.getBounds().contains(toCheck))
           selectUnit(unit);
       }
@@ -50,28 +50,28 @@ ActionManager::ActionManager(Game* theParent):
 
     system.connect("deselectAll", [this](actionContext){
       shouldDeselect = true;
-      parent->mouse.setType(Mouse::Type::Default);
-      for (auto& unit : parent->units)
+      parent.mouse.setType(Mouse::Type::Default);
+      for (auto& unit : parent.units)
         unit.unselect();
     });
 
     system.connect("boxDrag", [this](actionContext){
-      parent->box.setBottomRight(parent->screen.mapPixelToCoords(sf::Mouse::getPosition(parent->screen),parent->camera));
+      parent.box.setBottomRight(parent.screen.mapPixelToCoords(sf::Mouse::getPosition(parent.screen),parent.camera));
     });
 
     const float cameraSpeed = 15.f;
 
-    system.connect("cameraLeft", [this, cameraSpeed](actionContext) {parent->camera.move(-cameraSpeed, 0.f);});
-    system.connect("cameraRight", [this, cameraSpeed](actionContext){parent->camera.move(cameraSpeed, 0.f); });
-    system.connect("cameraUp", [this, cameraSpeed](actionContext)   {parent->camera.move(0.f, -cameraSpeed);});
-    system.connect("cameraDown", [this, cameraSpeed](actionContext) {parent->camera.move(0.f, cameraSpeed); });
+    system.connect("cameraLeft", [this, cameraSpeed](actionContext) {parent.camera.move(-cameraSpeed, 0.f);});
+    system.connect("cameraRight", [this, cameraSpeed](actionContext){parent.camera.move(cameraSpeed, 0.f); });
+    system.connect("cameraUp", [this, cameraSpeed](actionContext)   {parent.camera.move(0.f, -cameraSpeed);});
+    system.connect("cameraDown", [this, cameraSpeed](actionContext) {parent.camera.move(0.f, cameraSpeed); });
 }
 
 void ActionManager::update()
 {
-    actionMap.update(parent->screen);
+    actionMap.update(parent.screen);
 
-    actionMap.invokeCallbacks(system, &(parent->screen));
+    actionMap.invokeCallbacks(system, &(parent.screen));
 
     if (shouldDeselect){
       shouldDeselect = false;
@@ -81,14 +81,14 @@ void ActionManager::update()
 
 void ActionManager::trigger(const std::string &which)
 {
-    system.triggerEvent(thor::ActionContext<std::string>(&parent->screen, nullptr, which));
+    system.triggerEvent(thor::ActionContext<std::string>(&parent.screen, nullptr, which));
 }
 
 void ActionManager::selectUnit(Unit &unit)
 {
   unit.select();
   system.connect("orderMove", [this, &unit](thor::ActionContext<std::string> context){
-    unit.order_move(parent->screen.mapPixelToCoords(parent->mouse.getHotspot(*context.event), parent->camera));
+    unit.order_move(parent.screen.mapPixelToCoords(parent.mouse.getHotspot(*context.event), parent.camera));
   });
-  parent->mouse.setType(Mouse::Type::Move); //at least one unit selected...
+  parent.mouse.setType(Mouse::Type::Move); //at least one unit selected...
 }

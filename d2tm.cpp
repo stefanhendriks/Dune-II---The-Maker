@@ -1,9 +1,7 @@
 #include <ctime>
 #include "game.h"
 
-int main( int argc, char* args[] ) {
-  unsigned int t = (unsigned int) time(0);
-  srand(t);
+int main( int argc, char* args[] ) {  
   Game game;
   return game.execute();
 }

@@ -15,6 +15,10 @@ enum class House
     Mercenary = 5
 };
 
+namespace Houses{
+
 sf::Color getDefaultColor(House house);
+
+} //namespace Houses
 
 #endif // HOUSES_H

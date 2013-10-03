@@ -25,7 +25,7 @@ class Unit : public sf::Drawable
 {
 
   public:
-    Unit(const sf::Texture& texture, const sf::Texture &shadow_texture, const sf::Texture &selectedBitmap, float x, float y, int body_facing, Map& theMap, int theId);
+    Unit(const sf::Texture& texture, const sf::Texture &shadow_texture, const sf::Texture &selectedBitmap, const sf::Vector2f& pos, int body_facing, Map& theMap, int theId);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState(const std::vector<Unit>& units);

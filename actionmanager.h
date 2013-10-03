@@ -8,13 +8,13 @@ class Unit;
 class ActionManager
 {
 public:
-    ActionManager(Game *theParent);
+    ActionManager(Game &theParent);
 
     void update();
     void trigger(const std::string& which);
 
 private:
-    Game* parent;
+    Game& parent;
 
     thor::ActionMap<std::string> actionMap;
     thor::ActionMap<std::string>::CallbackSystem system;

@@ -2,7 +2,7 @@
 #include "houses.h"
 
 Player::Player(House theHouse, int theId):
-    id(theId), house(theHouse), color(getDefaultColor(house))
+    id(theId), house(theHouse), color(Houses::getDefaultColor(house))
 {
     //init a trike
     sf::Image trikeImage;

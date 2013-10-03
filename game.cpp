@@ -10,7 +10,7 @@ Game::Game():
     playing(true),
     screen(),
     map(nullptr),
-    actions(this)
+    actions(*this)
 {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
@@ -78,8 +78,8 @@ bool Game::init() {
   players.emplace_back(House::Harkonnen, idCount++);
 
   int unitIdCount = 0;
-  units.emplace_back(players[0].getTexture(), *trikeShadowTexture, *selectedTexture, 256, 256, 0, *map, unitIdCount++);
-  units.emplace_back(players[1].getTexture(), *trikeShadowTexture, *selectedTexture, 300, 300, 0, *map, unitIdCount++);
+  units.emplace_back(players[0].getTexture(), *trikeShadowTexture, *selectedTexture, sf::Vector2f(256, 256), 0, *map, unitIdCount++);
+  units.emplace_back(players[1].getTexture(), *trikeShadowTexture, *selectedTexture, sf::Vector2f(300, 300), 0, *map, unitIdCount++);
 
   //units.emplace_back(unitRepository->create(UNIT_FRIGATE, House::Sardaukar, 3, 3, 10, SUBCELL_CENTER, players[0]));
   //units.emplace_back(unitRepository->create(UNIT_TRIKE, House::Sardaukar, 8, 8, 3, SUBCELL_CENTER, players[0]));

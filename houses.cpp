@@ -1,5 +1,7 @@
 #include "houses.h"
 
+namespace Houses{
+
 sf::Color getDefaultColor(House house)
 {
     switch (house) {
@@ -10,3 +12,5 @@ sf::Color getDefaultColor(House house)
         return sf::Color(51,0,102);
     }
 }
+
+} //namespace Houses
