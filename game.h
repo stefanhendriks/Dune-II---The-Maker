@@ -50,6 +50,8 @@ class Game {
       //bool playerHasUnits(const Player& player) const;
 
       bool shouldDeselect;
+
+      void selectUnit(Unit &unit);
 };
 
 #endif

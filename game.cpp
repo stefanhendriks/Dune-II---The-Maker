@@ -124,11 +124,7 @@ bool Game::init() {
   system.connect("boxRelease", [this](actionContext){
     for (auto& unit : units){
       if (box.intersects(unit->getBounds())){
-        unit->select();
-        system.connect("orderMove", [this, &unit](actionContext context){
-          unit->order_move(screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera));
-        });
-        mouse.setType(Mouse::Type::Move); //at least one unit selected...
+        selectUnit(*unit);
       }
     }
     box.clear();
@@ -142,13 +138,8 @@ bool Game::init() {
   system.connect("singleSelect", [this](actionContext context){
     sf::Vector2f toCheck = screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera);
     for (auto& unit : units){
-      if (unit->getBounds().contains(toCheck)){
-        unit->select();
-        system.connect("orderMove", [this, &unit](actionContext context){
-          unit->order_move(screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera));
-        });
-        mouse.setType(Mouse::Type::Move); //at least one unit selected...
-      }
+      if (unit->getBounds().contains(toCheck))
+        selectUnit(*unit);
     }
   });
 
@@ -224,4 +215,14 @@ void Game::updateState(sf::Time dt) {
 
   fpsCounter.update(dt);
   map->prepare(screen.mapPixelToCoords(sf::Vector2i(0,0)));
+}
+
+
+void Game::selectUnit(Unit &unit)
+{
+  unit.select();
+  system.connect("orderMove", [this, &unit](thor::ActionContext<std::string> context){
+    unit.order_move(screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera));
+  });
+  mouse.setType(Mouse::Type::Move); //at least one unit selected...
 }
