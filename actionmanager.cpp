@@ -32,7 +32,10 @@ ActionManager::ActionManager(Game* theParent):
       parent->box.clear();
     });
 
-    system.connect("boxStart", [this](actionContext context){
+    system.connect("boxStart", [this](actionContext context) {
+      if (parent->mouse.getType() != Mouse::Type::Default) {
+        return;
+      }
       sf::Vector2f toSet = parent->screen.mapPixelToCoords(parent->mouse.getHotspot(*context.event), parent->camera);
       parent->box.setTopLeft(toSet);
     });
