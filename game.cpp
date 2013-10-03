@@ -9,7 +9,8 @@
 Game::Game():
     playing(true),
     screen(),
-    map(nullptr)
+    map(nullptr),
+    shouldDeselect(false)
     //map_camera(nullptr),
     //unitRepository(nullptr)
 {
@@ -124,9 +125,7 @@ bool Game::init() {
       if (box.intersects(unit->getBounds())){
         unit->select();
         system.connect("orderMove", [this, &unit](actionContext context){
-          if (unit->is_selected()) { // add this if, because Thor is bugged and causes unselected units to be moved as well
-            unit->order_move(screen.mapPixelToCoords(mouse.getHotspot(*context.event)));
-          }
+          unit->order_move(screen.mapPixelToCoords(mouse.getHotspot(*context.event)));
         });
         mouse.setType(Mouse::Type::Move); //at least one unit selected...
       }
@@ -140,7 +139,7 @@ bool Game::init() {
   });
 
   system.connect("deselectAll", [this](actionContext){
-//    system.clearConnections("orderMove"); // -> This is bugged in Thor
+    shouldDeselect = true;
     mouse.setType(Mouse::Type::Default);
     for (auto& unit : units)
       unit->unselect();
@@ -184,7 +183,11 @@ void Game::render() {
 }
 
 void Game::updateState(sf::Time dt) {
-  actionMap.invokeCallbacks(system, &screen);   
+  actionMap.invokeCallbacks(system, &screen);
+  if (shouldDeselect){
+    shouldDeselect = false;
+    system.clearConnections("orderMove");
+  }
 
   sf::Vector2f half_of_camera = camera.getSize() / 2.f;
   sf::Vector2f topLeft = camera.getCenter() - (half_of_camera);

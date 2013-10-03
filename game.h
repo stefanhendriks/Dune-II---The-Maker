@@ -48,6 +48,8 @@ class Game {
       //std::unique_ptr<UnitRepository> unitRepository;
 
       //bool playerHasUnits(const Player& player) const;
+
+      bool shouldDeselect;
 };
 
 #endif
