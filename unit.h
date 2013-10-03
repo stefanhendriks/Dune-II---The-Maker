@@ -25,10 +25,10 @@ class Unit : public sf::Drawable
 {
 
   public:
-    Unit(const sf::Texture& texture, const sf::Texture &shadow_texture, const sf::Texture &selectedBitmap, float x, float y, int body_facing, Map& theMap);
+    Unit(const sf::Texture& texture, const sf::Texture &shadow_texture, const sf::Texture &selectedBitmap, float x, float y, int body_facing, Map& theMap, int theId);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
-    void updateState();
+    void updateState(const std::vector<Unit>& units);
 
     void order_move(sf::Vector2f target);
 
@@ -87,7 +87,7 @@ class Unit : public sf::Drawable
     void moveLeft();
     void moveRight();
     void turn_body();
-    void updateMovePosition();
+    void updateMovePosition(const std::vector<Unit> &units);
 
     int  desired_facing();
     bool is_moving();
@@ -99,6 +99,8 @@ class Unit : public sf::Drawable
     int  getDrawY();
 
     bool isOnLayer(short layer);
+
+    int id; //unique id for the unit
 };
 
 #endif

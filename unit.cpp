@@ -4,13 +4,14 @@
 #include <Thor/Math.hpp>
 #include <Thor/Shapes.hpp>
 
-Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const sf::Texture& selectedBitmap, float x, float y,int body_facing, Map& theMap):
+Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const sf::Texture& selectedBitmap, float x, float y,int body_facing, Map& theMap, int theId):
   sprite(texture),
   shadow_sprite(shadow_texture),
   selectedSprite(selectedBitmap),
   selected(false),
   shroud_range(10),
-  map(theMap)
+  map(theMap),
+  id(theId)
 //owner(&thePlayer)
 {
   this->selected = false;
@@ -192,7 +193,7 @@ void Unit::turn_body() {
   setFacing(body_facing);
 }
 
-void Unit::updateMovePosition()  {
+void Unit::updateMovePosition(const std::vector<Unit>& units)  {
   if (has_target()) {
     float speed = 5.f;
     sf::Vector2f direction = target - getCenter();
@@ -200,6 +201,15 @@ void Unit::updateMovePosition()  {
     float distance = thor::length(direction);
     if (distance < speed) speed = distance;
     sprite.move(speed*unitDirection);
+    //do collision detection now
+    for (const auto& unit : units){
+      if (id == unit.id) continue;
+      if (sprite.getGlobalBounds().intersects(unit.sprite.getGlobalBounds())){
+        sprite.move(-speed*unitDirection); //unmove
+        return;
+      }
+    }
+
     shadow_sprite.move(speed*unitDirection);
     selectedSprite.move(speed*unitDirection);
     map.removeShroud(getCenter(), shroud_range);
@@ -219,9 +229,9 @@ sf::Vector2f Unit::getCenter() const {
   return (sprite.getPosition() + sf::Vector2f(spriteRect.width/2, spriteRect.height/2));
 }
 
-void Unit::updateState() {
+void Unit::updateState(const std::vector<Unit> &units) {
 
-  updateMovePosition();
+  updateMovePosition(units);
 
   if (should_turn_body()) {
     turn_body();

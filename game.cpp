@@ -84,8 +84,9 @@ bool Game::init() {
   players.emplace_back(House::Sardaukar, idCount++);
   players.emplace_back(House::Harkonnen, idCount++);
 
-  units.emplace_back(players[0].getTexture(), *trikeShadowTexture, *selectedTexture, 256, 256, 0, *map);
-  units.emplace_back(players[1].getTexture(), *trikeShadowTexture, *selectedTexture, 300, 300, 0, *map);
+  int unitIdCount = 0;
+  units.emplace_back(players[0].getTexture(), *trikeShadowTexture, *selectedTexture, 256, 256, 0, *map, unitIdCount++);
+  units.emplace_back(players[1].getTexture(), *trikeShadowTexture, *selectedTexture, 300, 300, 0, *map, unitIdCount++);
 
   //units.emplace_back(unitRepository->create(UNIT_FRIGATE, House::Sardaukar, 3, 3, 10, SUBCELL_CENTER, players[0]));
   //units.emplace_back(unitRepository->create(UNIT_TRIKE, House::Sardaukar, 8, 8, 3, SUBCELL_CENTER, players[0]));
@@ -210,7 +211,7 @@ void Game::updateState(sf::Time dt) {
   mouse.setPosition(screen.mapPixelToCoords(sf::Mouse::getPosition(screen),camera));
 
   for (auto& unit: units){
-    unit.updateState();
+    unit.updateState(units);
   }
 
   fpsCounter.update(dt);
