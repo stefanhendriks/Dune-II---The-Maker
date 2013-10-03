@@ -1,6 +1,7 @@
 #include "mouse.h"
 
-Mouse::Mouse()
+Mouse::Mouse():
+  m_type(Type::Default)
 {
     sf::Image defaultImage;
     defaultImage.loadFromFile("graphics/MS_Pointer.bmp");

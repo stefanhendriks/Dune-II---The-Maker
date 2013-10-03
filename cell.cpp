@@ -1,7 +1,10 @@
 #include "cell.h"
 #include <cassert>
 
-Cell::Cell()
+Cell::Cell():
+  terrainType(Terrain::Sand),
+  shrouded(true),
+  x(0), y(0)
 {
 }
 
@@ -19,9 +22,6 @@ void Cell::init(int row, int col)
   shroudVertices[1].position = sf::Vector2f((row+1)*TILE_SIZE,col*TILE_SIZE);
   shroudVertices[2].position = sf::Vector2f((row+1)*TILE_SIZE,(col+1)*TILE_SIZE);
   shroudVertices[3].position = sf::Vector2f(row*TILE_SIZE,(col+1)*TILE_SIZE);
-
-
-  shrouded = true;
 }
 
 void Cell::setType(Terrain terrain_type)

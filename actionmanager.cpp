@@ -2,7 +2,8 @@
 #include "game.h"
 
 ActionManager::ActionManager(Game* theParent):
-    parent(theParent)
+    parent(theParent),
+    shouldDeselect(false)
 {
     //thor Actions here
 
