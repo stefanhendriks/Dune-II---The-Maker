@@ -107,6 +107,7 @@ bool Game::init() {
 
   actionMap["boxStart"] = thor::Action(sf::Mouse::Left, thor::Action::PressOnce);
   actionMap["orderMove"] = thor::Action(sf::Mouse::Left, thor::Action::PressOnce);
+  actionMap["singleSelect"] = thor::Action(sf::Mouse::Left, thor::Action::PressOnce);
   actionMap["boxDrag"] = thor::Action(sf::Mouse::Left, thor::Action::Hold);
   actionMap["boxRelease"] = thor::Action(sf::Mouse::Left, thor::Action::ReleaseOnce);
   actionMap["deselectAll"] = thor::Action(sf::Mouse::Right, thor::Action::PressOnce);
@@ -125,7 +126,7 @@ bool Game::init() {
       if (box.intersects(unit->getBounds())){
         unit->select();
         system.connect("orderMove", [this, &unit](actionContext context){
-          unit->order_move(screen.mapPixelToCoords(mouse.getHotspot(*context.event)));
+          unit->order_move(screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera));
         });
         mouse.setType(Mouse::Type::Move); //at least one unit selected...
       }
@@ -134,8 +135,21 @@ bool Game::init() {
   });
 
   system.connect("boxStart", [this](actionContext context){
-    sf::Vector2f toSet = screen.mapPixelToCoords(mouse.getHotspot(*context.event));
+    sf::Vector2f toSet = screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera);
     box.setTopLeft(toSet);
+  });
+
+  system.connect("singleSelect", [this](actionContext context){
+    sf::Vector2f toCheck = screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera);
+    for (auto& unit : units){
+      if (unit->getBounds().contains(toCheck)){
+        unit->select();
+        system.connect("orderMove", [this, &unit](actionContext context){
+          unit->order_move(screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera));
+        });
+        mouse.setType(Mouse::Type::Move); //at least one unit selected...
+      }
+    }
   });
 
   system.connect("deselectAll", [this](actionContext){
