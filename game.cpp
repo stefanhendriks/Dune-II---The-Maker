@@ -10,7 +10,7 @@ Game::Game():
     playing(true),
     screen(),
     map(nullptr),
-    shouldDeselect(false)
+    actions(this)
     //map_camera(nullptr),
     //unitRepository(nullptr)
 {
@@ -31,12 +31,8 @@ int Game::execute() {
     sf::Clock clock;
 
   while(playing) {
-    sf::Event event;
-    actionMap.clearEvents();
+    sf::Event event;    
     sf::Time dt = clock.restart();
-    while(screen.pollEvent(event)) {
-      actionMap.pushEvent(event);
-    }
 
     updateState(dt);
     render();
@@ -104,63 +100,6 @@ bool Game::init() {
   //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_DOWNLEFT, players[1]));
   //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_DOWNRIGHT, players[1]));
 
-  //thor Actions here
-
-  actionMap["boxStart"] = thor::Action(sf::Mouse::Left, thor::Action::PressOnce);
-  actionMap["orderMove"] = thor::Action(sf::Mouse::Left, thor::Action::PressOnce);
-  actionMap["singleSelect"] = thor::Action(sf::Mouse::Left, thor::Action::PressOnce);
-  actionMap["boxDrag"] = thor::Action(sf::Mouse::Left, thor::Action::Hold);
-  actionMap["boxRelease"] = thor::Action(sf::Mouse::Left, thor::Action::ReleaseOnce);
-  actionMap["deselectAll"] = thor::Action(sf::Mouse::Right, thor::Action::PressOnce);
-  actionMap["close"] = thor::Action(sf::Event::Closed) || thor::Action(sf::Keyboard::Q, thor::Action::PressOnce);
-  actionMap["cameraLeft"] = thor::Action(sf::Keyboard::Left, thor::Action::Hold);
-  actionMap["cameraRight"] = thor::Action(sf::Keyboard::Right, thor::Action::Hold);
-  actionMap["cameraUp"] = thor::Action(sf::Keyboard::Up, thor::Action::Hold);
-  actionMap["cameraDown"] = thor::Action(sf::Keyboard::Down, thor::Action::Hold);
-
-  typedef thor::ActionContext<std::string> actionContext;
-
-  system.connect("close", [this](actionContext){playing = false;});
-
-  system.connect("boxRelease", [this](actionContext){
-    for (auto& unit : units){
-      if (box.intersects(unit.getBounds())){
-        selectUnit(unit);
-      }
-    }
-    box.clear();
-  });
-
-  system.connect("boxStart", [this](actionContext context){
-    sf::Vector2f toSet = screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera);
-    box.setTopLeft(toSet);
-  });
-
-  system.connect("singleSelect", [this](actionContext context){
-    sf::Vector2f toCheck = screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera);
-    for (auto& unit : units){
-      if (unit.getBounds().contains(toCheck))
-        selectUnit(unit);
-    }
-  });
-
-  system.connect("deselectAll", [this](actionContext){
-    shouldDeselect = true;
-    mouse.setType(Mouse::Type::Default);
-    for (auto& unit : units)
-      unit.unselect();
-  });
-
-  system.connect("boxDrag", [this](actionContext){
-    box.setBottomRight(screen.mapPixelToCoords(sf::Mouse::getPosition(screen),camera));
-  });
-
-  const float cameraSpeed = 15.f;  
-
-  system.connect("cameraLeft", [this, cameraSpeed](actionContext) {camera.move(-cameraSpeed, 0.f);});
-  system.connect("cameraRight", [this, cameraSpeed](actionContext){camera.move(cameraSpeed, 0.f); });
-  system.connect("cameraUp", [this, cameraSpeed](actionContext)   {camera.move(0.f, -cameraSpeed);});
-  system.connect("cameraDown", [this, cameraSpeed](actionContext) {camera.move(0.f, cameraSpeed); });
 
   return true;
 }
@@ -189,11 +128,7 @@ void Game::render() {
 }
 
 void Game::updateState(sf::Time dt) {
-  actionMap.invokeCallbacks(system, &screen);
-  if (shouldDeselect){
-    shouldDeselect = false;
-    system.clearConnections("orderMove");
-  }
+  actions.update();
 
   sf::Vector2f half_of_camera = camera.getSize() / 2.f;
   sf::Vector2f topLeft = camera.getCenter() - (half_of_camera);
@@ -216,14 +151,4 @@ void Game::updateState(sf::Time dt) {
 
   fpsCounter.update(dt);
   map->prepare(screen.mapPixelToCoords(sf::Vector2i(0,0)));
-}
-
-
-void Game::selectUnit(Unit &unit)
-{
-  unit.select();
-  system.connect("orderMove", [this, &unit](thor::ActionContext<std::string> context){
-    unit.order_move(screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera));
-  });
-  mouse.setType(Mouse::Type::Move); //at least one unit selected...
 }

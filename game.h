@@ -12,7 +12,7 @@
 #include "selectionbox.h"
 #include "mouse.h"
 #include "fps_counter.h"
-#include <Thor/Input.hpp>
+#include "actionmanager.h"
 #include "player.h"
 
 class Game {
@@ -39,19 +39,16 @@ class Game {
       Mouse mouse;
       FPS_Counter fpsCounter;
 
-      thor::ActionMap<std::string> actionMap;
-      thor::ActionMap<std::string>::CallbackSystem system;
-
       std::vector<Player> players;
       std::vector<Unit> units;
 
       //std::unique_ptr<UnitRepository> unitRepository;
 
-      //bool playerHasUnits(const Player& player) const;
+      //bool playerHasUnits(const Player& player) const;       
 
-      bool shouldDeselect;
+      ActionManager actions;
 
-      void selectUnit(Unit &unit);
+      friend class ActionManager;
 };
 
 #endif
