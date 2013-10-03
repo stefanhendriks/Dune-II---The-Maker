@@ -32,8 +32,7 @@ public:
 
     bool shouldSmoothWithTerrainType(Cell* other);
 
-    Terrain terrainType; // terrain type (sand, rock, etc)
-    bool occupied[2]; //2 is Map::MAX_LAYERS
+    Terrain terrainType; // terrain type (sand, rock, etc)    
     bool shrouded;
 
     sf::Vertex getVertex(int index) const;

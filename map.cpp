@@ -130,10 +130,3 @@ void Map::setBoundaries(int max_width, int max_height) {
   this->max_width = max_width;
   this->max_height = max_height;
 }
-
-bool Map::is_occupied(sf::Vector2i p, short layer) {
-  int map_x = p.x / Cell::TILE_SIZE;
-  int map_y = p.y / Cell::TILE_SIZE;
-  Cell* c = getCell(map_x, map_y);
-  return c->occupied[layer];
-}

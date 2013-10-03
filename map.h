@@ -52,14 +52,6 @@ class Map : public sf::Drawable {
     void drawShrouded(sf::RenderTarget& target, sf::RenderStates states) const;
 
 
-    void occupyCell(const sf::Vector2i& world_point, short layer) {
-      //getCell(toMapPoint(world_point))->occupied[layer] = true;
-    }
-
-    void unOccupyCell(const sf::Vector2i& world_point, short layer) {
-      //getCell(toMapPoint(world_point))->occupied[layer] = false;
-    }
-
     void removeShroud(sf::Vector2f world_point, int range) {
         sf::Vector2i mapPoint = toMapPoint(world_point);
         int x = mapPoint.x;
@@ -76,9 +68,7 @@ class Map : public sf::Drawable {
     }
 
     int getMaxWidth() { return max_width; }
-    int getMaxHeight() { return max_height; }
-
-    bool is_occupied(sf::Vector2i p, short layer);
+    int getMaxHeight() { return max_height; }    
 
     sf::Vector2i toMapPoint(const sf::Vector2f& world_point) {
       sf::Vector2i result(world_point.x / Cell::TILE_SIZE, world_point.y / Cell::TILE_SIZE);
