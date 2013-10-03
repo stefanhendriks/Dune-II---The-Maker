@@ -4,7 +4,7 @@
 
 class SelectionBox : public sf::Drawable
 {
-public:
+  public:
     SelectionBox();
     void setTopLeft(const sf::Vector2f &point);
     void setBottomRight(const sf::Vector2f &point);
@@ -14,8 +14,9 @@ public:
 
     bool intersects(const sf::FloatRect rect) const;
 
-private:
+  private:
     sf::RectangleShape box;
+    bool pointSet;
 };
 
 #endif // SELECTIONBOX_H
