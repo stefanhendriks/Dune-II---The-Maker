@@ -142,6 +142,12 @@ void Game::updateState(sf::Time dt) {
 
   mouse.setPosition(screen.mapPixelToCoords(sf::Mouse::getPosition(screen),camera));
 
+  if (mouse.getPosition().x < 5) {
+    // todo: trigger events
+  }
+
+
+
   for (auto& unit: units){
     unit.updateState(units);
   }

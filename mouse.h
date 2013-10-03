@@ -26,6 +26,8 @@ public:
 
     Type getType() { return m_type; }
 
+    sf::Vector2i getPosition() { return sf::Mouse::getPosition(); }
+
 private:
     sf::Texture defaultTexture;
     sf::Texture moveTexture;

@@ -123,11 +123,16 @@ void Unit::updateMovePosition(const std::vector<Unit>& units)  {
     float distance = thor::length(direction);
     if (distance < speed) speed = distance;
     sprite.move(speed*unitDirection);
-    //do collision detection now
 
+    //do collision detection now
     sf::Vector2i mapPoint = map.toMapPoint(getCenter());
-    if (map.getCell(mapPoint.x, mapPoint.y)->terrainType == Terrain::Mountain){
-      sprite.move(-speed*unitDirection); //unmove
+
+    // for now it may seem that units are not blocked by terrain correctly.
+    // however, units *do* get blocked, but they are being drawn over mountains
+    // because they can move on a pixel perfect level, yet are being checked
+    // against cells.
+    if (map.getCell(mapPoint.x, mapPoint.y)->terrainType == Terrain::Mountain) {
+      sprite.move(-speed*unitDirection);
       return;
     }
 
@@ -135,12 +140,10 @@ void Unit::updateMovePosition(const std::vector<Unit>& units)  {
       if (id == unit.id) continue;
 
       if (sprite.getGlobalBounds().intersects(unit.sprite.getGlobalBounds())){
-        sprite.move(-speed*unitDirection); //unmove
+        sprite.move(-speed*unitDirection);
         return;
       }
     }
-
-
 
     shadow_sprite.move(speed*unitDirection);
     selectedSprite.move(speed*unitDirection);

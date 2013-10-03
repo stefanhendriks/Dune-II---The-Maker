@@ -12,11 +12,12 @@ public:
 
     void update();
 
+    thor::ActionMap<std::string>::CallbackSystem system;
+
 private:
     Game* parent;
 
     thor::ActionMap<std::string> actionMap;
-    thor::ActionMap<std::string>::CallbackSystem system;
 
     bool shouldDeselect;
 

@@ -74,11 +74,7 @@ Features need to be written in such a way that it is obvious what the benefit is
 TODO
 ----
 - converting to SFML
- - team coloring
- - single click select of units
  - camera should scroll when mouse is on edge of screen
- - collision detection with terrain?
- - collision detection of units
 
  worked around:
   - player should be able to deselect units (bugged by thor)
