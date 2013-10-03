@@ -131,6 +131,7 @@ void Unit::order_move(sf::Vector2f target) {
 
   //  this->target = sf::Vector2i(x, y);
   this->target = target;
+  desired_body_facing = desired_facing();
 
   // then apply the same offset if given
   //  this->target = this->target + this->sub_position;
@@ -150,17 +151,17 @@ void Unit::setFacing(int facing) {
 }
 
 int Unit::desired_facing() {
-  if (position == next_move_position) return body_facing;
+  //if (position == next_move_position) return body_facing;
 
-  int nx = next_move_position.x;
-  int ny = next_move_position.y;
-  int x = position.x;
-  int y = position.y;
+  int nx = target.x;
+  int ny = target.y;
+  int x = getCenter().x;
+  int y = getCenter().y;
 
-  if (nx > x && ny == y) return FACING_RIGHT;
-  if (nx < x && ny == y) return FACING_LEFT;
-  if (nx == x && ny > y) return FACING_DOWN;
-  if (nx == x && ny < y) return FACING_UP;
+  if (nx > x && (ny-y)<0.1) return FACING_RIGHT;
+  if (nx < x && (ny-y)<0.1) return FACING_LEFT;
+  if ((nx-x)<0.1 && ny > y) return FACING_DOWN;
+  if ((nx-x)<0.1 && ny < y) return FACING_UP;
 
   if (nx > x && ny > y) return FACING_RIGHT_DOWN;
   if (nx < x && ny > y) return FACING_DOWN_LEFT;
