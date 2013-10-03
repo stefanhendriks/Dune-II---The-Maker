@@ -11,8 +11,6 @@ Game::Game():
     screen(),
     map(nullptr),
     actions(this)
-    //map_camera(nullptr),
-    //unitRepository(nullptr)
 {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
