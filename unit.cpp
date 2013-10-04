@@ -8,20 +8,20 @@ Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const 
   sprite(texture),
   shadow_sprite(shadow_texture),
   selectedSprite(selectedBitmap),  
-  view_range(10),
+  viewRange(10),
   selected(false),
   map(theMap),
   id(theId)
 {
   setFacing(body_facing);
-  this->desired_body_facing = body_facing;
+  this->desiredBodyFacing = body_facing;
 
   sprite.setPosition(pos);
   shadow_sprite.setPosition(pos);
   this->target = getCenter();
 
   selectedSprite.setPosition(pos);
-  map.removeShroud(getCenter(), view_range);
+  map.removeShroud(getCenter(), viewRange);
 }
 
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
@@ -31,7 +31,7 @@ void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
   if (selected)
     target.draw(selectedSprite);
 
-  if (has_target())
+  if (hasTarget())
     target.draw(thor::Arrow(getCenter(), this->target - getCenter(), sf::Color(51,255,51,125)), sf::BlendAdd);
 }
 
@@ -43,35 +43,35 @@ void Unit::unselect() {
   selected = false;
 }
 
-bool Unit::is_selected() {
+bool Unit::isSelected() {
   return selected;
 }
 
-bool Unit::has_target() const {
+bool Unit::hasTarget() const {
   return getCenter() != target;
 }
 
-bool Unit::should_turn_body() {
-  return desired_body_facing != body_facing;
+bool Unit::shouldTurnBody() {
+  return desiredBodyFacing != bodyFacing;
 }
 
 
 void Unit::order_move(sf::Vector2f target) {
 
   this->target = target;
-  desired_body_facing = desired_facing();
+  desiredBodyFacing = desiredFacing();
 
 }
 
 void Unit::setFacing(int facing) {
-  body_facing = facing;
+  bodyFacing = facing;
   int size = sprite.getTexture()->getSize().x / FACINGS;
-  sprite.setTextureRect({size * body_facing, 0, size, size});
-  shadow_sprite.setTextureRect({size * body_facing, 0, size, size});
+  sprite.setTextureRect({size * bodyFacing, 0, size, size});
+  shadow_sprite.setTextureRect({size * bodyFacing, 0, size, size});
   shadow_sprite.setColor(sf::Color(255, 255, 255, 128));
 }
 
-int Unit::desired_facing() {
+int Unit::desiredFacing() {
   //if (position == next_move_position) return body_facing;
 
   int nx = target.x;
@@ -89,12 +89,12 @@ int Unit::desired_facing() {
   if (nx > x && ny < y) return FACING_UP_RIGHT;
   if (nx < x && ny < y) return FACING_LEFT_UP;
 
-  return body_facing;
+  return bodyFacing;
 }
 
-void Unit::turn_body() {
-  int body_facing = this->body_facing;
-  int desired = desired_facing();
+void Unit::turnBody() {
+  int body_facing = this->bodyFacing;
+  int desired = desiredFacing();
 
   int turning_left = (body_facing + FACINGS) - desired;
   if (turning_left > (FACINGS - 1)) turning_left -= FACINGS;
@@ -116,7 +116,7 @@ void Unit::turn_body() {
 }
 
 void Unit::updateMovePosition(const std::vector<Unit>& units)  {
-  if (has_target()) {
+  if (hasTarget()) {
     float speed = 5.f;
     sf::Vector2f direction = target - getCenter();
     sf::Vector2f unitDirection = thor::unitVector(direction);
@@ -147,7 +147,7 @@ void Unit::updateMovePosition(const std::vector<Unit>& units)  {
 
     shadow_sprite.move(speed*unitDirection);
     selectedSprite.move(speed*unitDirection);
-    map.removeShroud(getCenter(), view_range);
+    map.removeShroud(getCenter(), viewRange);
   }
 }
 
@@ -168,8 +168,8 @@ void Unit::updateState(const std::vector<Unit> &units) {
 
   updateMovePosition(units);
 
-  if (should_turn_body()) {
-    turn_body();
+  if (shouldTurnBody()) {
+    turnBody();
     return;
   }
 

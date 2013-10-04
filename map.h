@@ -26,9 +26,9 @@ class Map : public sf::Drawable {
     static const int LAYER_AIR = 1;
     static const int MAX_LAYERS = 2;
 
-    Map(sf::Texture& terrain, sf::Texture& shroud_edges);
+    Map(sf::Texture& terrain, sf::Texture& shroudEdges);
 
-    void setBoundaries(int max_width, int max_height);
+    void setBoundaries(int maxWidth, int maxHeight);
 
     void load(std::string file);
 
@@ -51,7 +51,6 @@ class Map : public sf::Drawable {
 
     void drawShrouded(sf::RenderTarget& target, sf::RenderStates states) const;
 
-
     void removeShroud(sf::Vector2f world_point, int range) {
         sf::Vector2i mapPoint = toMapPoint(world_point);
         int x = mapPoint.x;
@@ -67,8 +66,8 @@ class Map : public sf::Drawable {
         updateShroud();
     }
 
-    int getMaxWidth() { return max_width; }
-    int getMaxHeight() { return max_height; }    
+    int getMaxWidth() { return maxWidth; }
+    int getMaxHeight() { return maxHeight; }
 
     sf::Vector2i toMapPoint(const sf::Vector2f& world_point) {
       sf::Vector2i result(world_point.x / Cell::TILE_SIZE, world_point.y / Cell::TILE_SIZE);
@@ -78,15 +77,15 @@ class Map : public sf::Drawable {
     int determineShroudEdge(Cell *c);
 private:
     std::array<Cell, MAX_SIZE> cells; //why not vector? -Koji
-    int max_width;
-    int max_height;
+    int maxWidth;
+    int maxHeight;
     sf::Texture& terrain;
-    sf::Texture& shroud_edges;
+    sf::Texture& shroudEdges;
     sf::VertexArray vertexArray;
     sf::VertexArray shroudArray;
 
-    int determineCellTile(Cell* c);
-    int determineTerrainTile(bool cell_up, bool cell_down, bool cell_left, bool cell_right);
+    int determineCellTile(Cell* cell);
+    int determineTerrainTile(bool cellUp, bool cellDown, bool cellLeft, bool cellRight);
 };
 
 #endif

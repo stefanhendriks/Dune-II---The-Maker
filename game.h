@@ -1,14 +1,12 @@
 #ifndef GAME_H
 #define GAME_H
 
-//#include <vector>
 #include "map.h"
-//#include "keyboard.h"
-//#include "mouse.h"
 #include "unit.h"
 #include <memory>
-//#include "player.h"
+
 #include <SFML/Graphics.hpp>
+
 #include "selectionbox.h"
 #include "mouse.h"
 #include "fps_counter.h"
@@ -29,6 +27,7 @@ class Game {
       void updateState(sf::Time dt);
       void render();
       int cleanup();
+
       bool playing;
       sf::RenderWindow screen;
       sf::Texture terrain;
@@ -41,10 +40,6 @@ class Game {
 
       std::vector<Player> players;
       std::vector<Unit> units;
-
-      //std::unique_ptr<UnitRepository> unitRepository;
-
-      //bool playerHasUnits(const Player& player) const;       
 
       ActionManager actions;
 

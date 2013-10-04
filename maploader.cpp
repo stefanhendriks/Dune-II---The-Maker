@@ -106,9 +106,3 @@ Terrain MapLoader::charToTerrainType(char c) {
     std::cerr << "[MAPLOADER] WARNING: Unable to map character " << c << " to a terrain type. Known chars are R^)-+h" << std::endl;
     return Terrain::Sand; //returns Sand as default - alternative error handling possible
 }
-
-string MapLoader::makeIntKeyWithLeadingZero(int n) {
-    stringstream ss;
-    ss << setw(3) << setfill('0') << n;
-    return ss.str();
-}
