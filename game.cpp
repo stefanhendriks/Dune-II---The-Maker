@@ -1,234 +1,158 @@
 #include <iostream>
 
-#include "SDL/SDL.h"
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_gfxPrimitives.h>
-#include "point.h"
-#include "map.h"
+#include <SFML/Graphics.hpp>
 #include "game.h"
-#include "surface.h"
-#include "eventfactory.h"
 #include "houses.h"
 
-using namespace std;
+
 
 Game::Game():
     playing(true),
-    screen(NULL),
-    terrain(NULL),
-    map_camera(nullptr),
-    unitRepository(nullptr)
+    screen(),
+    map(nullptr),
+    actions(*this)
 {
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    screen.create(sf::VideoMode(800, 600), "Dune 2 - The Maker", sf::Style::Close, settings);
+    screen.setFramerateLimit(IDEAL_FPS);
+    screen.setMouseCursorVisible(false);
 
+    if (!init()){
+        std::cerr << "Failed to initialized game.";
+        playing = false;
+    }
 }
 
 int Game::execute() {
-  if (!init()) {
-    cerr << "Errors occured when starting the game. Stopping." << endl;
-    return 1;
-  }
 
-  SDL_Event event;
+    sf::Clock clock;
 
-  while(playing) {
-    SDL_PumpEvents();
-    while(SDL_PollEvent(&event)) {
-      onEvent(&event);
-    }
+  while(playing) {    
+    sf::Time dt = clock.restart();
 
-    updateState();
+    updateState(dt);
     render();
-    // SDL rest?
   }
 
-  return cleanup();
+  return 0;
 }
 
-int Game::init() {
-  if(SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+bool Game::init() {
+  if (!terrain.loadFromFile("graphics/terrain.png")) {
+    std::cout << "Failed to read graphics/terrain.png data" << std::endl;
     return false;
   }
 
-  screen = SDL_SetVideoMode(800, 600, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
-  if(screen == NULL) {
-     return false;
-  }
-
-  int flags = IMG_INIT_JPG | IMG_INIT_PNG;
-  int initted=IMG_Init(flags);
-  if( (initted & flags) != flags) {
-    cout << "could not init SDL_Image" << endl;
-    cout << "Reason: " << IMG_GetError() << endl;
+  sf::Image temp;
+  if (!temp.loadFromFile("graphics/shroud_edges.bmp")) {
+    std::cout << "Failed to read graphics/shroud_edges.bmp data" << std::endl;
     return false;
   }
 
-  terrain = Surface::load("graphics/terrain.png");
+  temp.createMaskFromColor(sf::Color(255, 0, 255));
+  shroud_edges.loadFromImage(temp);
 
-  if (terrain == NULL) {
-    cout << "Failed to read graphics/terrain.png data" << endl;
-    return false;
-  }
+  map.reset(new Map(terrain, shroud_edges));
+  map->load("maps/4PL_Mountains.ini");
 
-  shroud_edges = Surface::load("graphics/shroud_edges.bmp");
+  camera.reset({0,0,800,600});
+  screen.setView(camera);
 
-  if (shroud_edges == NULL) {
-    cout << "Failed to read graphics/shroud_edges.bmp data" << endl;
-    return false;
-  }
+  sf::Image trikeShadowImage;
+  trikeShadowImage.loadFromFile("graphics/Unit_Trike_s.bmp");
+  trikeShadowImage.createMaskFromColor(sf::Color(255,0,255));
+  sf::Texture* trikeShadowTexture = new sf::Texture;
+  trikeShadowTexture->loadFromImage(trikeShadowImage);
 
-  shroud_edges_shadow = Surface::load("graphics/shroud_edges_shadow.bmp");
+  sf::Image selectedImage;
+  selectedImage.loadFromFile("graphics/selected.bmp");
+  selectedImage.createMaskFromColor(sf::Color(255, 0, 255));
+  sf::Texture* selectedTexture = new sf::Texture; //more leaks!
+  selectedTexture->loadFromImage(selectedImage);
 
-  if (shroud_edges_shadow == NULL) {
-    cout << "Failed to read graphics/shroud_edges_shadow.bmp data" << endl;
-    return false;
-  }
 
-  SDL_ShowCursor(0);
-  mouse.init(screen);
-
-  map_camera.reset(new MapCamera(0, 0, screen, &map));
-  map.load("maps/4PL_Mountains.ini");
-  unitRepository.reset(new UnitRepository(&map));
-
-  //init two players
+   //init two players
   int idCount = 0;
   players.emplace_back(House::Sardaukar, idCount++);
   players.emplace_back(House::Harkonnen, idCount++);
 
-  units.emplace_back(unitRepository->create(UNIT_FRIGATE, House::Sardaukar, 3, 3, 10, SUBCELL_CENTER, players[0]));
-  units.emplace_back(unitRepository->create(UNIT_TRIKE, House::Sardaukar, 8, 8, 3, SUBCELL_CENTER, players[0]));
+  int unitIdCount = 0;
+  units.emplace_back(players[0].getTexture(), *trikeShadowTexture, *selectedTexture, sf::Vector2f(256, 256), 0, *map, unitIdCount++);
+  units.emplace_back(players[1].getTexture(), *trikeShadowTexture, *selectedTexture, sf::Vector2f(300, 300), 0, *map, unitIdCount++);
 
-  // soldiers
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_CENTER, players[0]));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_UPLEFT, players[0]));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_UPRIGHT, players[0]));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_DOWNLEFT, players[0]));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_DOWNRIGHT, players[0]));
+  //units.emplace_back(unitRepository->create(UNIT_FRIGATE, House::Sardaukar, 3, 3, 10, SUBCELL_CENTER, players[0]));
+  //units.emplace_back(unitRepository->create(UNIT_TRIKE, House::Sardaukar, 8, 8, 3, SUBCELL_CENTER, players[0]));
 
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_CENTER, players[1]));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_UPLEFT, players[1]));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_UPRIGHT, players[1]));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_DOWNLEFT, players[1]));
-  units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_DOWNRIGHT, players[1]));
+  //// soldiers
+  //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_CENTER, players[0]));
+  //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_UPLEFT, players[0]));
+  //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_UPRIGHT, players[0]));
+  //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_DOWNLEFT, players[0]));
+  //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Sardaukar, 14, 14, 3, SUBCELL_DOWNRIGHT, players[0]));
+
+  //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_CENTER, players[1]));
+  //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_UPLEFT, players[1]));
+  //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_UPRIGHT, players[1]));
+  //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_DOWNLEFT, players[1]));
+  //units.emplace_back(unitRepository->create(UNIT_SOLDIER, House::Harkonnen, 18, 8, 3, SUBCELL_DOWNRIGHT, players[1]));
+
 
   return true;
 }
 
-void Game::onEvent(SDL_Event* event) {
-  if(event->type == SDL_QUIT) {
-    playing = false;
-  }
-
-  mouse.onEvent(event);
-  keyboard.onEvent(event);
-
-  map_camera->onEvent(event);
-
-  if (event->type == SDL_USEREVENT) {
-    if (event->user.code == D2TM_SELECT) {
-      std::unique_ptr<D2TMSelectStruct> s(static_cast<D2TMSelectStruct*>(event->user.data1));
-
-      Point p = map_camera->toWorldCoordinates(s->screen_position);
-
-      if (mouse.is_pointing()) {
-        Unit* selected_unit = NULL;
-        for (auto& unit : units){
-            if (unit->is_point_within(p)){
-                selected_unit = unit.get();
-                break;
-            }
-
-        }
-        if (selected_unit != NULL) {
-          deselectAllUnits();
-          selected_unit->select();
-          mouse.state_order_move();
-        }
-      }
-    } else if (event->user.code == D2TM_DESELECT) {
-      mouse.state_pointing();
-      deselectAllUnits();
-    } else if (event->user.code == D2TM_BOX_SELECT) {
-      std::unique_ptr<D2TMBoxSelectStruct> s(static_cast<D2TMBoxSelectStruct*>(event->user.data1));
-
-      Rectangle rectangle = map_camera->toWorldCoordinates(s->rectangle);
-
-      if (mouse.is_pointing()) {
-        mouse.state_pointing();
-
-        deselectAllUnits();
-        for (auto& unit : units){
-            if (unit->is_within(rectangle)){
-                unit->select();
-                mouse.state_order_move();
-            }
-        }
-      }
-    } else if (event->user.code == D2TM_MOVE_UNIT) {
-      std::unique_ptr<D2TMMoveUnitStruct> s(static_cast<D2TMMoveUnitStruct*>(event->user.data1));
-      Point p = map_camera->toWorldCoordinates(s->screen_position);
-
-      for (auto& unit : units){
-          if (unit->is_selected())
-              unit->order_move(p);
-      }
-    }
-
-  }
-
-}
-
 void Game::render() {
-  SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+  screen.clear();
 
-  map_camera->draw(&map, terrain, screen);
+  screen.setView(camera);
 
-  for (auto& unit : units){
-      if (unit->is_on_ground_layer()) map_camera->draw(unit.get(), screen);
-  }
-  for (auto& unit : units){
-      if (unit->is_on_air_layer()) map_camera->draw(unit.get(), screen);
-  }
+  screen.draw(*map);
 
-  map_camera->drawShroud(&map, shroud_edges, shroud_edges_shadow, screen);
+  for (const auto& unit : units)
+      screen.draw(unit);
 
-  mouse.draw(screen);
+  map->drawShrouded(screen, sf::RenderStates::Default);
 
-  SDL_Flip(screen);
+  screen.draw(box);
+
+  screen.draw(fpsCounter);
+
+  screen.setView(camera);
+
+  screen.draw(mouse);
+
+  screen.display();
 }
 
-void Game::updateState() {
-  keyboard.updateState();
-  mouse.updateState();
-  map_camera->updateState();
+void Game::updateState(sf::Time dt) {
+  actions.update();
+
+  sf::Vector2i mousePosition = sf::Mouse::getPosition(screen);
+
+  if      (mousePosition.x < 50 ) actions.trigger("cameraLeft");
+  else if (mousePosition.y < 50 ) actions.trigger("cameraUp");
+  else if (mousePosition.x > 750) actions.trigger("cameraRight");
+  else if (mousePosition.y > 550) actions.trigger("cameraDown");
+
+  sf::Vector2f half_of_camera = camera.getSize() / 2.f;
+  sf::Vector2f topLeft = camera.getCenter() - (half_of_camera);
+  sf::Vector2f downRight = camera.getCenter() + (half_of_camera);
+
+  if (topLeft.x <= Cell::TILE_SIZE) camera.setCenter(half_of_camera.x + Cell::TILE_SIZE, camera.getCenter().y);
+  if (topLeft.y <= Cell::TILE_SIZE) camera.setCenter(camera.getCenter().x, half_of_camera.y + Cell::TILE_SIZE);
+
+  int max_width = (map->getMaxWidth() + 1) * Cell::TILE_SIZE;
+  int max_height = (map->getMaxHeight() + 1) * Cell::TILE_SIZE;
+
+  if (downRight.x >= max_width) camera.setCenter(max_width - half_of_camera.x, camera.getCenter().y);
+  if (downRight.y >= max_height) camera.setCenter(camera.getCenter().x, max_height - half_of_camera.y);
+
+  mouse.setPosition(screen.mapPixelToCoords(mousePosition,camera));
 
   for (auto& unit: units){
-      unit->updateState();
+    unit.updateState(units);
   }
+
+  fpsCounter.update(dt);
+  map->prepare(screen.mapPixelToCoords(sf::Vector2i(0,0)));
 }
-
-int Game::cleanup() {
-
-  units.clear();
-  SDL_FreeSurface(screen);
-  SDL_FreeSurface(terrain);
-  SDL_FreeSurface(shroud_edges);
-  SDL_FreeSurface(shroud_edges_shadow);
-  SDL_Quit();
-  return 0;
-}
-
-void Game::deselectAllUnits() {
-    for (auto& unit : units)
-        unit->unselect();
-}
-
-bool Game::playerHasUnits(const Player &player) const
-{
-    for (const auto& unit : units){
-        if (unit->getOwner()==player)
-            return true; //unit belonging to player found
-    }
-    return false;
-}
-

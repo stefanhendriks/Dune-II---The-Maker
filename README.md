@@ -4,7 +4,7 @@ A.k.a. D2TM. Is a [Dune 2](http://en.wikipedia.org/wiki/Dune_II) clone. At this 
 Allegro & other libs. I am proud of that project, but it is time to rewrite it and build a game mostly focussing on skirmish
 and networking gaming.
 
-This is an attempt to rewrite the game from scratch using [SDL 1.2](http://www.libsdl.org/). If you are looking for the source code of the 'current' D2TM ([with demo binaries](http://dune2themaker.fundynamic.com/downloads/)), then you can find it [here](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/d2tm_allegro)
+This is an attempt to rewrite the game from scratch using [SFML 2.1](http://www.sfml-dev.org/resources.php). If you are looking for the source code of the 'current' D2TM ([with demo binaries](http://dune2themaker.fundynamic.com/downloads/)), then you can find it [here](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/d2tm_allegro)
 
 I do this purely for fun, and try to keep it multi-platform. I test it often on Mac OSX and Ubuntu. I sometimes test it
 on Windows (MinGW32 and MSYS).
@@ -24,32 +24,48 @@ submit it as a pull request.
 
 Compiling
 =========
-This project has makefiles for Windows (mingw32), Linux (ubuntu) and Mac OSX.
+This projct uses [cmake](http://www.cmake.org/) to generate a platform specific makefile. 
+Before running cmake, make sure you have [installed the required dependencies](#installing-dependencies)
 
-Dependencies:
-- SDL 1.2
-- SDL Image
-- SDL Gfx
+After that you do:
 
-After you check out this project, copy the appropiate makefile (with the extension matching your OS) as 'makefile'. After that hit make.
+```
+cmake .
+make
+```
 
-Example, OSX && [homebrew](http://mxcl.github.io/homebrew/):
-------------------------------------------------------------
-- Install XCode CLI tools
-- Using brew, install dependencies: `brew install SDL sdl_image sdl_gfx`
-- Then: `cp makefile.osx makefile`
-- `make`
+which should deliver a ```./d2tm``` binary file.
 
-Example, Ubuntu (inspired by [Lazy Foo](http://lazyfoo.net/SDL_tutorials/lesson01/linux/))
-------------------------------------------------------------------------------------------
-- Fetch g++ and its dependencies with apt-get:
+Installing dependencies
+-----------------------
+This example is based on Mac OS X, the procedure is probably the same on Linux. For Windows, we have not yet tested this.
 
-        apt-get install g++
-- Fetch SDL and its dependencies with apt-get:
+First make sure you have installed cmake.
 
-        apt-get install libsdl1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsdl-gfx1.2-dev
-- `cp makefile.ubuntu makefile`
-- `make`
+You will need two dependencies, [SFML 2.1](http://www.sfml-dev.org/download/sfml/2.1/) and [Thor](https://github.com/Bromeon/Thor).
+
+Install SFML
+------------
+- download SFML binaries for Mac OS X(compatible with clang++) [from here](http://www.sfml-dev.org/download/sfml/2.1/)
+- unpack the package in /tmp, a 'SFML-2.1-osx-clang-universal' is being extracted.
+- cd to 'SFML-2.1-osx-clang-universal' directory
+- run ```sudo ./install.sh```
+- done (you may remove SFML-2.1-osx-clang-universal)
+
+Install Thor
+------------
+- cd /tmp
+- git clone [Thor](https://github.com/Bromeon/Thor)
+- cd to Thor
+- ```
+cmake .
+make
+make install
+```
+- done (you may remove the Thor directory)
+
+Now you are ready to [compile d2tm](#compiling).
+
 
 As a player I should be able to...
 ==================================
@@ -57,6 +73,12 @@ Features need to be written in such a way that it is obvious what the benefit is
 
 TODO
 ----
+- converting to SFML
+ - camera should scroll when mouse is on edge of screen
+
+ worked around:
+  - player should be able to deselect units (bugged by thor)
+
 - have foot-men (soldiers, infantry, trooper, troopers, fremen, all are alike)
 <del>
   <ul>
@@ -130,7 +152,7 @@ TODO
 - harvesters should harvest without being instructed
  - when a harvester is first deployed, it head for the nearest spice field that the player can see
  - when a harvester is deployed, it keeps using the same spice field unless instructed otherwise
- - when a harvester discovers a spice field is empty, it will head for the nearest field. 
+ - when a harvester discovers a spice field is empty, it will head for the nearest field.
    - ... but if the harvester has spice, it will return first. (?)
  - the user can find out how much spice a harvester contains
  - when nonempty, a harvester when destroyed spills its spice
