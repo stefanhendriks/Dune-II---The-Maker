@@ -13,7 +13,7 @@ Player::Player(House theHouse, int theId):
     texture.loadFromImage(trikeImage);
 }
 
-sf::Color Player::getColor()
+sf::Color Player::getColor() const
 {
     return color;
 }

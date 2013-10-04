@@ -9,7 +9,7 @@ class Player
 public:
     Player(House theHouse, int theId);
 
-    sf::Color getColor();
+    sf::Color getColor() const;
 
     bool operator==(const Player& other) const;
     bool operator!=(const Player& other) const;

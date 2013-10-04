@@ -24,7 +24,7 @@ public:
 
     sf::Vector2i getHotspot(sf::Event event) const;
 
-    Type getType() { return m_type; }    
+    Type getType() const;
 
 private:
     sf::Texture defaultTexture;

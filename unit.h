@@ -31,7 +31,7 @@ class Unit : public sf::Drawable
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState(const std::vector<Unit>& units);
 
-    void order_move(sf::Vector2f target);
+    void order_move(const sf::Vector2f &target);
 
     sf::FloatRect getBounds() const;
     sf::Vector2f getPosition() const;
@@ -39,7 +39,7 @@ class Unit : public sf::Drawable
 
     void select();
     void unselect();
-    bool isSelected();
+    bool isSelected() const;
 
   private:
     sf::Vector2f target;            // target of interest (move/attack, etc)
@@ -60,9 +60,9 @@ class Unit : public sf::Drawable
     void turnBody();
     void updateMovePosition(const std::vector<Unit> &units);
 
-    int  desiredFacing();
+    int  desiredFacing() const;
     bool hasTarget() const;
-    bool shouldTurnBody();
+    bool shouldTurnBody() const;
 
     int id; //unique id for the unit
 };

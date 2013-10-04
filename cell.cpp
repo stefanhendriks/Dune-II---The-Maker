@@ -58,28 +58,28 @@ void Cell::setShroudIndex(int tileIndex) {
     shroudVertices[3].texCoords = sf::Vector2f(tileCol, TILE_SIZE);
 }
 
-bool Cell::shouldSmoothWithTerrainType(Cell *other)
+bool Cell::shouldSmoothWithTerrainType(Cell &other) const
 {
     if (terrainType == Terrain::Rock) {
-        return ((other->terrainType != Terrain::Mountain) &&
-                (other->terrainType != Terrain::Rock) &&
-                (other->terrainType != Terrain::Slab));
+        return ((other.terrainType != Terrain::Mountain) &&
+                (other.terrainType != Terrain::Rock) &&
+                (other.terrainType != Terrain::Slab));
     }
     if (terrainType == Terrain::Mountain) {
-        return (other->terrainType != Terrain::Mountain);
+        return (other.terrainType != Terrain::Mountain);
     }
     if (terrainType == Terrain::Slab) {
-        return ((other->terrainType != Terrain::Mountain) &&
-                (other->terrainType != Terrain::Rock));
+        return ((other.terrainType != Terrain::Mountain) &&
+                (other.terrainType != Terrain::Rock));
     }
     if (terrainType == Terrain::Spice) {
-        return ((other->terrainType != Terrain::Spice) &&
-                (other->terrainType != Terrain::Spicehill));
+        return ((other.terrainType != Terrain::Spice) &&
+                (other.terrainType != Terrain::Spicehill));
     }
     if (terrainType == Terrain::Spicehill) {
-        return (other->terrainType != Terrain::Spicehill);
+        return (other.terrainType != Terrain::Spicehill);
     }
-    return (other->terrainType != terrainType);
+    return (other.terrainType != terrainType);
 }
 
 sf::Vertex Cell::getVertex(int index) const

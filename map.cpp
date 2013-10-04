@@ -25,7 +25,7 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
 void Map::load(std::string file) {
   MapLoader::load(file, this);
   for (auto& cell : cells)
-    cell.setIndex(determineCellTile(&cell));
+    cell.setIndex(determineCellTile(cell));
 
   updateShroud();
 }
@@ -33,10 +33,10 @@ void Map::load(std::string file) {
 void Map::updateShroud()
 {
   for (auto& cell : cells)
-    cell.setShroudIndex(determineShroudEdge(&cell));
+    cell.setShroudIndex(determineShroudEdge(cell));
 }
 
-void Map::prepare(const sf::Vector2f& topLeft)
+void Map::prepare(const sf::Vector2f& topLeft) const
 {
   vertexArray.clear();
   shroudArray.clear();
@@ -67,19 +67,24 @@ void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 
 void Map::drawShrouded(sf::RenderTarget &target, sf::RenderStates states) const
 {
-    target.draw(shroudArray, &shroudEdges);
+  target.draw(shroudArray, &shroudEdges);
 }
 
-int Map::determineCellTile(Cell* c) {
-  bool cell_up = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y-1));
-  bool cell_down = !c->shouldSmoothWithTerrainType(getCell(c->x, c->y+1));
-  bool cell_left = !c->shouldSmoothWithTerrainType(getCell(c->x-1, c->y));
-  bool cell_right = !c->shouldSmoothWithTerrainType(getCell(c->x+1, c->y));
+sf::Vector2i Map::toMapPoint(const sf::Vector2f &world_point) const{
+  sf::Vector2i result(world_point.x / Cell::TILE_SIZE, world_point.y / Cell::TILE_SIZE);
+  return result;
+}
+
+int Map::determineCellTile(Cell& c) {
+  bool cell_up = !c.shouldSmoothWithTerrainType(getCell(c.x, c.y-1));
+  bool cell_down = !c.shouldSmoothWithTerrainType(getCell(c.x, c.y+1));
+  bool cell_left = !c.shouldSmoothWithTerrainType(getCell(c.x-1, c.y));
+  bool cell_right = !c.shouldSmoothWithTerrainType(getCell(c.x+1, c.y));
 
   return determineTerrainTile(cell_up, cell_down, cell_left, cell_right);
 }
 
-int Map::determineTerrainTile(bool cellUp, bool cellDown, bool cellLeft, bool cellRight) {
+int Map::determineTerrainTile(bool cellUp, bool cellDown, bool cellLeft, bool cellRight) const {
   if ( cellUp &&  cellDown &&  cellLeft &&  cellRight) return 0;
   if ( cellUp &&  cellDown && !cellLeft &&  cellRight) return 1;
   if ( cellUp &&  cellDown &&  cellLeft && !cellRight) return 2;
@@ -99,13 +104,13 @@ int Map::determineTerrainTile(bool cellUp, bool cellDown, bool cellLeft, bool ce
   return -1;
 }
 
-int Map::determineShroudEdge(Cell* cell) {
-  if (cell->shrouded) return 0;
+int Map::determineShroudEdge(Cell& cell) {
+  if (cell.shrouded) return 0;
 
-  bool cellUp = getCell(cell->x, cell->y-1)->shrouded;
-  bool cellDown = getCell(cell->x, cell->y+1)->shrouded;
-  bool cellLeft = getCell(cell->x-1, cell->y)->shrouded;
-  bool cellRight = getCell(cell->x+1, cell->y)->shrouded;
+  bool cellUp = getCell(cell.x, cell.y-1).shrouded;
+  bool cellDown = getCell(cell.x, cell.y+1).shrouded;
+  bool cellLeft = getCell(cell.x-1, cell.y).shrouded;
+  bool cellRight = getCell(cell.x+1, cell.y).shrouded;
 
   // Its harder then you think to make static consts for these 'magic values'.
   if (!cellUp && !cellDown && !cellLeft && !cellRight)  return -1;
@@ -123,6 +128,16 @@ int Map::determineShroudEdge(Cell* cell) {
   if (!cellUp &&  cellDown &&  cellLeft &&  cellRight)  return 12;
 
   return -1;
+}
+
+int Map::getMaxWidth() const
+{
+  return maxWidth;
+}
+
+int Map::getMaxHeight() const
+{
+  return maxHeight;
 }
 
 

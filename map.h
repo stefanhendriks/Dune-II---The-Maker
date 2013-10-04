@@ -34,17 +34,17 @@ class Map : public sf::Drawable {
 
     void updateShroud();
 
-    void prepare(const sf::Vector2f &topLeft); //prepares the arrays for drawing
+    void prepare(const sf::Vector2f &topLeft) const; //prepares the arrays for drawing
 
-    Cell* getCell(sf::Vector2i map_point) {
+    Cell& getCell(sf::Vector2i map_point) {
       return getCell(map_point.x, map_point.y);
     }
 
-    Cell* getCell(int x, int y) {
+    Cell& getCell(int x, int y) {
       x = std::min(std::max(x, 0), (MAX_WIDTH-1));
       y = std::min(std::max(y, 0), (MAX_HEIGHT-1));
       int cell = (y * MAX_WIDTH) + x;
-      return &cells[cell];
+      return cells[cell];
     }
 
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -56,36 +56,33 @@ class Map : public sf::Drawable {
         int x = mapPoint.x;
         int y = mapPoint.y;
 
-        for (int cell_x = std::max(x - range, 0); cell_x <= std::min(x + range, getMaxWidth() -1); cell_x++) {
-            for (int cell_y = std::max(y - range, 0); cell_y <= std::min(y + range, getMaxHeight() -1); cell_y++) {
+        for (int cell_x = std::max(x - range, 0); cell_x <= std::min(x + range, maxWidth -1); cell_x++) {
+            for (int cell_y = std::max(y - range, 0); cell_y <= std::min(y + range, maxHeight -1); cell_y++) {
                 if (std::pow(cell_x - x, 2) + std::pow(cell_y - y, 2) <= std::pow(range, 2) + 1) {
-                    getCell(cell_x, cell_y)->shrouded = false;
+                    getCell(cell_x, cell_y).shrouded = false;
                 }
             }
         }
         updateShroud();
     }
 
-    int getMaxWidth() { return maxWidth; }
-    int getMaxHeight() { return maxHeight; }
+    sf::Vector2i toMapPoint(const sf::Vector2f& world_point) const;
 
-    sf::Vector2i toMapPoint(const sf::Vector2f& world_point) {
-      sf::Vector2i result(world_point.x / Cell::TILE_SIZE, world_point.y / Cell::TILE_SIZE);
-      return result;
-    }
+    int determineShroudEdge(Cell &c);
 
-    int determineShroudEdge(Cell *c);
+    int getMaxWidth() const;
+    int getMaxHeight() const;
 private:
     std::array<Cell, MAX_SIZE> cells; //why not vector? -Koji
     int maxWidth;
     int maxHeight;
     sf::Texture& terrain;
     sf::Texture& shroudEdges;
-    sf::VertexArray vertexArray;
-    sf::VertexArray shroudArray;
+    mutable sf::VertexArray vertexArray;
+    mutable sf::VertexArray shroudArray;
 
-    int determineCellTile(Cell* cell);
-    int determineTerrainTile(bool cellUp, bool cellDown, bool cellLeft, bool cellRight);
+    int determineCellTile(Cell &cell);
+    int determineTerrainTile(bool cellUp, bool cellDown, bool cellLeft, bool cellRight) const;
 };
 
 #endif

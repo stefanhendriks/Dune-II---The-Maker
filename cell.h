@@ -30,7 +30,7 @@ public:
     void setIndex(int tileIndex);
     void setShroudIndex(int tileIndex);
 
-    bool shouldSmoothWithTerrainType(Cell* other);
+    bool shouldSmoothWithTerrainType(Cell& other) const;
 
     Terrain terrainType; // terrain type (sand, rock, etc)    
     bool shrouded;

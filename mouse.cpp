@@ -59,4 +59,9 @@ sf::Vector2i Mouse::getHotspot(sf::Event event) const
     }
 }
 
+Mouse::Type Mouse::getType() const
+{
+  return m_type;
+}
+
 #include "mouse.h"

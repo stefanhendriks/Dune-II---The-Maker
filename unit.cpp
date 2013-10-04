@@ -43,7 +43,7 @@ void Unit::unselect() {
   selected = false;
 }
 
-bool Unit::isSelected() {
+bool Unit::isSelected() const {
   return selected;
 }
 
@@ -51,12 +51,12 @@ bool Unit::hasTarget() const {
   return getCenter() != target;
 }
 
-bool Unit::shouldTurnBody() {
+bool Unit::shouldTurnBody() const {
   return desiredBodyFacing != bodyFacing;
 }
 
 
-void Unit::order_move(sf::Vector2f target) {
+void Unit::order_move(const sf::Vector2f& target) {
 
   this->target = target;
   desiredBodyFacing = desiredFacing();
@@ -71,7 +71,7 @@ void Unit::setFacing(int facing) {
   shadowSprite.setColor(sf::Color(255, 255, 255, 128));
 }
 
-int Unit::desiredFacing() {
+int Unit::desiredFacing() const {
   //if (position == next_move_position) return body_facing;
 
   int nx = target.x;
@@ -131,7 +131,7 @@ void Unit::updateMovePosition(const std::vector<Unit>& units)  {
     // however, units *do* get blocked, but they are being drawn over mountains
     // because they can move on a pixel perfect level, yet are being checked
     // against cells.
-    if (map.getCell(mapPoint.x, mapPoint.y)->terrainType == Terrain::Mountain) {
+    if (map.getCell(mapPoint.x, mapPoint.y).terrainType == Terrain::Mountain) {
       sprite.move(-speed*unitDirection);
       return;
     }
