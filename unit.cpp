@@ -6,7 +6,7 @@
 
 Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const sf::Texture& selectedBitmap, const sf::Vector2f& pos, int body_facing, Map& theMap, int theId):
   sprite(texture),
-  shadow_sprite(shadow_texture),
+  shadowSprite(shadow_texture),
   selectedSprite(selectedBitmap),  
   viewRange(10),
   selected(false),
@@ -17,7 +17,7 @@ Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const 
   this->desiredBodyFacing = body_facing;
 
   sprite.setPosition(pos);
-  shadow_sprite.setPosition(pos);
+  shadowSprite.setPosition(pos);
   this->target = getCenter();
 
   selectedSprite.setPosition(pos);
@@ -26,7 +26,7 @@ Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const 
 
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-  target.draw(shadow_sprite, sf::BlendAlpha);
+  target.draw(shadowSprite, sf::BlendAlpha);
   target.draw(sprite);
   if (selected)
     target.draw(selectedSprite);
@@ -67,8 +67,8 @@ void Unit::setFacing(int facing) {
   bodyFacing = facing;
   int size = sprite.getTexture()->getSize().x / FACINGS;
   sprite.setTextureRect({size * bodyFacing, 0, size, size});
-  shadow_sprite.setTextureRect({size * bodyFacing, 0, size, size});
-  shadow_sprite.setColor(sf::Color(255, 255, 255, 128));
+  shadowSprite.setTextureRect({size * bodyFacing, 0, size, size});
+  shadowSprite.setColor(sf::Color(255, 255, 255, 128));
 }
 
 int Unit::desiredFacing() {
@@ -145,7 +145,7 @@ void Unit::updateMovePosition(const std::vector<Unit>& units)  {
       }
     }
 
-    shadow_sprite.move(speed*unitDirection);
+    shadowSprite.move(speed*unitDirection);
     selectedSprite.move(speed*unitDirection);
     map.removeShroud(getCenter(), viewRange);
   }

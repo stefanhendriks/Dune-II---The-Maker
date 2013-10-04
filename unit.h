@@ -45,7 +45,7 @@ class Unit : public sf::Drawable
     sf::Vector2f target;            // target of interest (move/attack, etc)
 
     sf::Sprite sprite;
-    sf::Sprite shadow_sprite;
+    sf::Sprite shadowSprite;
     sf::Sprite selectedSprite;      //possibly static
 
     int viewRange;
