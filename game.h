@@ -1,15 +1,21 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <vector>
 #include "map.h"
-#include "keyboard.h"
-#include "mouse.h"
 #include "unit.h"
 #include <memory>
+
+#include <SFML/Graphics.hpp>
+
+#include "selectionbox.h"
+#include "mouse.h"
+#include "fps_counter.h"
+#include "actionmanager.h"
 #include "player.h"
 
 class Game {
+
+  const int IDEAL_FPS = 60;
 
   public:
      Game();
@@ -17,28 +23,27 @@ class Game {
      int execute();
 
    private:
-      int init();
-      void onEvent(SDL_Event* event);
-      void updateState();
+      bool init();
+      void updateState(sf::Time dt);
       void render();
       int cleanup();
-      void deselectAllUnits();
+
       bool playing;
-      SDL_Surface* screen;
-      SDL_Surface* terrain;
-      SDL_Surface* shroud_edges;
-      SDL_Surface* shroud_edges_shadow;
-      std::unique_ptr<MapCamera> map_camera;
-      Map map;
-      Keyboard keyboard;
+      sf::RenderWindow screen;
+      sf::Texture terrain;
+      sf::Texture shroud_edges;
+      sf::View camera;
+      SelectionBox box;
+      std::unique_ptr<Map> map;
       Mouse mouse;
+      FPS_Counter fpsCounter;
 
       std::vector<Player> players;
-      std::vector<std::unique_ptr<Unit> > units; //possibly should be shared_ptr
+      std::vector<Unit> units;
 
-      std::unique_ptr<UnitRepository> unitRepository;
+      ActionManager actions;
 
-      bool playerHasUnits(const Player& player) const;
+      friend class ActionManager;
 };
 
 #endif
