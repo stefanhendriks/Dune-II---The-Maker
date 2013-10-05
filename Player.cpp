@@ -5,12 +5,7 @@ Player::Player(House theHouse, int theId):
     id(theId), house(theHouse), color(Houses::getDefaultColor(house))
 {
     //init a trike
-    sf::Image trikeImage;
-    trikeImage.loadFromFile("graphics/Unit_Trike.bmp");
-    trikeImage.createMaskFromColor(sf::Color(0,0,0));
-    recolor(trikeImage);
 
-    texture.loadFromImage(trikeImage);
 }
 
 sf::Color Player::getColor() const
@@ -49,7 +44,19 @@ void Player::recolor(sf::Image &image) const
     }
 }
 
-const sf::Texture &Player::getTexture() const
+const sf::Texture &Player::getTexture(Unit::Type type) const
 {
-    return texture;
+  auto found = textures.find(type);
+  if (found == textures.end()){
+    sf::Image image;
+    image.loadFromFile("graphics/Unit_Trike.bmp");
+    image.createMaskFromColor(sf::Color(0,0,0));
+    recolor(image);
+
+    sf::Texture texture;
+    texture.loadFromImage(image);
+    textures.insert({type, std::move(texture)});
+    return textures[type];
+  }
+  return *found;
 }
