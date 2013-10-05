@@ -3,7 +3,7 @@
 #include <cassert>
 
 Player::Player(House theHouse, int theId):
-    id(theId), house(theHouse), color(Houses::getDefaultColor(house))
+  id(theId), house(theHouse), color(Houses::getDefaultColor(house))
 {
   // SMELL: We also do this in the unit repository
   filenames[Unit::Type::Trike] = "Unit_Trike.bmp";
@@ -14,40 +14,36 @@ Player::Player(House theHouse, int theId):
   filenames[Unit::Type::Soldier] = "Unit_Soldier.bmp";
 }
 
-sf::Color Player::getColor() const
-{
-    return color;
+sf::Color Player::getColor() const {
+  return color;
 }
 
-bool Player::operator ==(const Player &other) const
-{
-    return (id==other.id);
+bool Player::operator ==(const Player &other) const {
+  return (id==other.id);
 }
 
-bool Player::operator !=(const Player &other) const
-{
-    return !(*this==other);
+bool Player::operator !=(const Player &other) const {
+  return !(*this==other);
 }
 
 void Player::recolor(sf::Image &image) const
 {
-    sf::Vector2u imageSize = image.getSize();
+  sf::Vector2u imageSize = image.getSize();
 
-    for (unsigned int x = 0; x < imageSize.x; x++){
-        for (unsigned int y = 0; y < imageSize.y; y++){
-            sf::Color pixelColor = image.getPixel(x, y);
+  for (unsigned int x = 0; x < imageSize.x; x++){
+    for (unsigned int y = 0; y < imageSize.y; y++){
+      sf::Color pixelColor = image.getPixel(x, y);
 
-            if ((pixelColor == sf::Color(125,0,0)) ||
-                (pixelColor == sf::Color(214,0,0)) ||
-                (pixelColor == sf::Color(60,0,0))  ||
-                (pixelColor == sf::Color(89,0,0))  ||
-                (pixelColor == sf::Color(153,0,0)) ||
-                (pixelColor == sf::Color(182,0,0))) {
-              image.setPixel(x, y, color); // TODO: Shade color here properly
-            }
-
-        }
+      if ((pixelColor == sf::Color(125,0,0)) ||
+          (pixelColor == sf::Color(214,0,0)) ||
+          (pixelColor == sf::Color(60,0,0))  ||
+          (pixelColor == sf::Color(89,0,0))  ||
+          (pixelColor == sf::Color(153,0,0)) ||
+          (pixelColor == sf::Color(182,0,0))) {
+        image.setPixel(x, y, color); // TODO: Shade color here properly
+      }
     }
+  }
 }
 
 const sf::Texture &Player::getTexture(Unit::Type type) const
