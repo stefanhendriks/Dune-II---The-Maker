@@ -32,7 +32,7 @@ class Mouse : public sf::Drawable
 
     sf::Sprite sprite;
 
-    Type m_type;
+    Type type;
 
 };
 

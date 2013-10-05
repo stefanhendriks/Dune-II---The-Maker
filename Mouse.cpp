@@ -1,7 +1,7 @@
 #include "Mouse.hpp"
 
 Mouse::Mouse():
-  m_type(Type::Default)
+  type(Type::Default)
 {
   sf::Image defaultImage;
   defaultImage.loadFromFile("graphics/MS_Pointer.bmp");
@@ -29,8 +29,8 @@ void Mouse::setPosition(const sf::Vector2f &point)
 
 void Mouse::setType(Type type)
 {
-  m_type = type;
-  switch (m_type) {
+  type = type;
+  switch (type) {
   case Type::Default:
     sprite.setTexture(defaultTexture);
     break;
@@ -46,7 +46,7 @@ void Mouse::setType(Type type)
 sf::Vector2i Mouse::getHotspot(sf::Event event) const
 {
   //if Default hotspot is top-left, else the center
-  switch (m_type) {
+  switch (type) {
   default:
   case Type::Default:
     return sf::Vector2i(event.mouseButton.x, event.mouseButton.y);
@@ -61,5 +61,5 @@ sf::Vector2i Mouse::getHotspot(sf::Event event) const
 
 Mouse::Type Mouse::getType() const
 {
-  return m_type;
+  return type;
 }

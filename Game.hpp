@@ -32,7 +32,7 @@ class Game {
     bool playing;
     sf::RenderWindow screen;
     sf::Texture terrain;
-    sf::Texture shroud_edges;
+    sf::Texture shroudEdges;
     sf::View camera;
     SelectionBox box;
     std::unique_ptr<Map> map;

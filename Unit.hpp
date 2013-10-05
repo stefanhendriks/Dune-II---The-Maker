@@ -27,7 +27,7 @@ class Unit : public sf::Drawable
 
   public:
 
-    enum class Type{
+    enum class Type {
       Trike,
       Quad,
       Devastator,
