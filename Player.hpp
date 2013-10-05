@@ -8,7 +8,8 @@ enum class House;
 
 class Player
 {
-public:
+
+  public:
     Player(House theHouse, int theId);
 
     sf::Color getColor() const;
@@ -20,13 +21,14 @@ public:
 
     const sf::Texture& getTexture(Unit::Type type) const;
 
-
-private:
+  private:
     int id;
     House house;
     sf::Color color;
-    mutable std::map<Unit::Type, sf::Texture> textures;
-    std::map<Unit::Type, std::string> filenames; //this should be static
+
+    mutable std::map<Unit::Type, sf::Texture> loadedUnitTextures;
+
+    std::map<Unit::Type, std::string> filenames;
 };
 
 #endif // PLAYER_H

@@ -5,6 +5,7 @@
 Player::Player(House theHouse, int theId):
     id(theId), house(theHouse), color(Houses::getDefaultColor(house))
 {
+  // SMELL: We also do this in the unit repository
   filenames[Unit::Type::Trike] = "Unit_Trike.bmp";
   filenames[Unit::Type::Quad] = "Unit_Quad.bmp";
   filenames[Unit::Type::Frigate] = "Unit_Frigate.bmp";
@@ -43,7 +44,7 @@ void Player::recolor(sf::Image &image) const
                 ||(pixelColor == sf::Color(182,0,0))
                 )
             {
-                image.setPixel(i,j,color);
+                image.setPixel(i, j, color); // TODO: Shade color here properly
             }
         }
     }
@@ -51,8 +52,11 @@ void Player::recolor(sf::Image &image) const
 
 const sf::Texture &Player::getTexture(Unit::Type type) const
 {
-  auto found = textures.find(type);
-  if (found == textures.end()){
+  auto unitTexture = loadedUnitTextures.find(type);
+
+  // SMELL: we also do this in the unitRepository, but the only difference
+  // is coloring. Need to move to 1 spot
+  if (unitTexture == loadedUnitTextures.end()) {
     sf::Image image;
     assert(filenames.find(type) != filenames.end());
     image.loadFromFile("graphics/" + filenames.at(type));
@@ -61,8 +65,9 @@ const sf::Texture &Player::getTexture(Unit::Type type) const
 
     sf::Texture texture;
     texture.loadFromImage(image);
-    textures.insert({type, std::move(texture)});
-    return textures[type];
+    loadedUnitTextures.insert({type, std::move(texture)});
+    return loadedUnitTextures[type];
   }
-  return found->second;
+
+  return unitTexture->second;
 }
