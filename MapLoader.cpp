@@ -11,27 +11,27 @@ using namespace std;
 
 // Borrowed from: http://stackoverflow.com/questions/890164/how-can-i-split-a-string-by-a-delimiter-into-an-array
 std::vector<string> explode(const string& str, const char& ch) {
-    string next;
-    vector<string> result;
+  string next;
+  vector<string> result;
 
-    // For each character in the string
-    for (string::const_iterator it = str.begin(); it != str.end(); it++) {
-        // If we've hit the terminal character
-        if (*it == ch) {
-            // If we have some characters accumulated
-            if (!next.empty()) {
-                // Add them to the result vector
-                result.push_back(next);
-                next.clear();
-            }
-        } else {
-            // Accumulate the next character into the sequence
-            next += *it;
-        }
-    }
-    if (!next.empty())
+  // For each character in the string
+  for (string::const_iterator it = str.begin(); it != str.end(); it++) {
+    // If we've hit the terminal character
+    if (*it == ch) {
+      // If we have some characters accumulated
+      if (!next.empty()) {
+        // Add them to the result vector
         result.push_back(next);
-    return result;
+        next.clear();
+      }
+    } else {
+      // Accumulate the next character into the sequence
+      next += *it;
+    }
+  }
+  if (!next.empty())
+    result.push_back(next);
+  return result;
 }
 
 int MapLoader::load(std::string file, Map* map) {
@@ -75,16 +75,16 @@ int MapLoader::load(std::string file, Map* map) {
 
     for (int x = 0; x < width; x++) {
 
-        if (x >= (int)value.length()) {
-            cerr << "[MAPLOADER] WARNING (" << warnings << "): While parsing line " << value << ":" << endl;
-            cerr << "[MAPLOADER] WARNING (" << warnings << "): Line was expected to have width " << width << " but is actually " << value.length() << ". Either width/height property is wrong in [SKIRMISH] section or [DATA] has wrong amount of data in this line." << endl;
-            warnings++;
-            continue;
-        }
+      if (x >= (int)value.length()) {
+        cerr << "[MAPLOADER] WARNING (" << warnings << "): While parsing line " << value << ":" << endl;
+        cerr << "[MAPLOADER] WARNING (" << warnings << "): Line was expected to have width " << width << " but is actually " << value.length() << ". Either width/height property is wrong in [SKIRMISH] section or [DATA] has wrong amount of data in this line." << endl;
+        warnings++;
+        continue;
+      }
 
-        Terrain terrain_type = charToTerrainType(value.at(x));
-        Cell& cell = map->getCell(x + 1, y + 1); // compensate for invisible border
-        cell.setType(terrain_type);
+      Terrain terrain_type = charToTerrainType(value.at(x));
+      Cell& cell = map->getCell(x + 1, y + 1); // compensate for invisible border
+      cell.setType(terrain_type);
 
     }
   }
@@ -97,12 +97,12 @@ int MapLoader::load(std::string file, Map* map) {
 }
 
 Terrain MapLoader::charToTerrainType(char c) {
-    if (c == 'R') return Terrain::Mountain;
-    if (c == '^') return Terrain::Rock;
-    if (c == ')') return Terrain::Sand;
-    if (c == '-') return Terrain::Spice;
-    if (c == '+') return Terrain::Spicehill;
-    if (c == 'h') return Terrain::Hill;
-    std::cerr << "[MAPLOADER] WARNING: Unable to map character " << c << " to a terrain type. Known chars are R^)-+h" << std::endl;
-    return Terrain::Sand; //returns Sand as default - alternative error handling possible
+  if (c == 'R') return Terrain::Mountain;
+  if (c == '^') return Terrain::Rock;
+  if (c == ')') return Terrain::Sand;
+  if (c == '-') return Terrain::Spice;
+  if (c == '+') return Terrain::Spicehill;
+  if (c == 'h') return Terrain::Hill;
+  std::cerr << "[MAPLOADER] WARNING: Unable to map character " << c << " to a terrain type. Known chars are R^)-+h" << std::endl;
+  return Terrain::Sand; //returns Sand as default - alternative error handling possible
 }

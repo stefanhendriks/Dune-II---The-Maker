@@ -20,6 +20,7 @@ set(d2_SRCS
     Player.cpp
     Houses.cpp
     ActionManager.cpp
+    UnitRepository.cpp
 )
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")

@@ -7,13 +7,13 @@ class Unit;
 
 class ActionManager
 {
-public:
+  public:
     ActionManager(Game &theParent);
 
     void update();
     void trigger(const std::string& which);
 
-private:
+  private:
     Game& parent;
 
     thor::ActionMap<std::string> actionMap;

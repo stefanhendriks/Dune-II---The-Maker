@@ -1,12 +1,15 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <SFML/Graphics.hpp>
+#include "Unit.hpp"
+#include <map>
 
 enum class House;
 
 class Player
 {
-public:
+
+  public:
     Player(House theHouse, int theId);
 
     sf::Color getColor() const;
@@ -16,14 +19,16 @@ public:
 
     void recolor(sf::Image& image) const;
 
-    const sf::Texture& getTexture() const;
+    const sf::Texture& getTexture(Unit::Type type) const;
 
-
-private:
+  private:
     int id;
     House house;
     sf::Color color;
-    sf::Texture texture;
+
+    mutable std::map<Unit::Type, sf::Texture> loadedUnitTextures;
+
+    std::map<Unit::Type, std::string> filenames;
 };
 
 #endif // PLAYER_H

@@ -12,38 +12,41 @@
 #include "FpsCounter.hpp"
 #include "ActionManager.hpp"
 #include "Player.hpp"
+#include "UnitRepository.hpp"
 
 class Game {
 
-  const int IDEAL_FPS = 60;
+    const int IDEAL_FPS = 60;
 
   public:
-     Game();
+    Game();
 
-     int execute();
+    int execute();
 
-   private:
-      bool init();
-      void updateState(sf::Time dt);
-      void render();
-      int cleanup();
+  private:
+    bool init();
+    void updateState(sf::Time dt);
+    void render();
+    int cleanup();
 
-      bool playing;
-      sf::RenderWindow screen;
-      sf::Texture terrain;
-      sf::Texture shroud_edges;
-      sf::View camera;
-      SelectionBox box;
-      std::unique_ptr<Map> map;
-      Mouse mouse;
-      FPS_Counter fpsCounter;
+    bool playing;
+    sf::RenderWindow screen;
+    sf::Texture terrain;
+    sf::Texture shroudEdges;
+    sf::View camera;
+    SelectionBox box;
+    std::unique_ptr<Map> map;
+    Mouse mouse;
+    FPS_Counter fpsCounter;
 
-      std::vector<Player> players;
-      std::vector<Unit> units;
+    UnitRepository unitRepository;
 
-      ActionManager actions;
+    std::vector<Player> players;
+    std::vector<Unit> units;
 
-      friend class ActionManager;
+    ActionManager actions;
+
+    friend class ActionManager;
 };
 
 #endif

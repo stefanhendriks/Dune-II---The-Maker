@@ -8,17 +8,17 @@
 
 enum class Terrain
 {
-    Sand = 0,
-    Hill = 1,
-    Rock = 2,
-    Spice = 3,
-    Mountain = 4,
-    Spicehill = 5,
-    Slab = 6
+  Sand = 0,
+  Hill = 1,
+  Rock = 2,
+  Spice = 3,
+  Mountain = 4,
+  Spicehill = 5,
+  Slab = 6
 };
 
 class Cell {
-public:
+  public:
 
     static const int TILE_SIZE = 32; // squared
 
@@ -32,7 +32,7 @@ public:
 
     bool shouldSmoothWithTerrainType(Cell& other) const;
 
-    Terrain terrainType; // terrain type (sand, rock, etc)    
+    Terrain terrainType; // terrain type (sand, rock, etc)
     bool shrouded;
 
     sf::Vertex getVertex(int index) const;
@@ -42,7 +42,7 @@ public:
 
     int x, y;
 
-private:
+  private:
 
     std::array<sf::Vertex, 4> vertices;
     std::array<sf::Vertex, 4> shroudVertices;

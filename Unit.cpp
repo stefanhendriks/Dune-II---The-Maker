@@ -4,21 +4,22 @@
 #include <Thor/Math.hpp>
 #include <Thor/Shapes.hpp>
 
-Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const sf::Texture& selectedBitmap, const sf::Vector2f& pos, int body_facing, Map& theMap, int theId):
+Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const sf::Texture& selectedBitmap, const sf::Vector2f& pos, Map& theMap, int theId):
   sprite(texture),
   shadowSprite(shadow_texture),
-  selectedSprite(selectedBitmap),  
+  selectedSprite(selectedBitmap),
   viewRange(10),
   selected(false),
   map(theMap),
   id(theId)
 {
-  setFacing(body_facing);
-  this->desiredBodyFacing = body_facing;
+  setFacing(FACING_UP);
+  desiredBodyFacing = bodyFacing;
 
   sprite.setPosition(pos);
   shadowSprite.setPosition(pos);
-  this->target = getCenter();
+  shadowSprite.setColor(sf::Color(255, 255, 255, 128));
+  target = getCenter();
 
   selectedSprite.setPosition(pos);
   map.removeShroud(getCenter(), viewRange);
@@ -56,7 +57,7 @@ bool Unit::shouldTurnBody() const {
 }
 
 
-void Unit::order_move(const sf::Vector2f& target) {
+void Unit::orderMove(const sf::Vector2f& target) {
 
   this->target = target;
   desiredBodyFacing = desiredFacing();
@@ -68,7 +69,6 @@ void Unit::setFacing(int facing) {
   int size = sprite.getTexture()->getSize().x / FACINGS;
   sprite.setTextureRect({size * bodyFacing, 0, size, size});
   shadowSprite.setTextureRect({size * bodyFacing, 0, size, size});
-  shadowSprite.setColor(sf::Color(255, 255, 255, 128));
 }
 
 int Unit::desiredFacing() const {

@@ -26,12 +26,22 @@ class Unit : public sf::Drawable
 {
 
   public:
-    Unit(const sf::Texture& texture, const sf::Texture &shadow_texture, const sf::Texture &selectedBitmap, const sf::Vector2f& pos, int bodyFacing, Map& theMap, int theId);
+
+    enum class Type {
+      Trike,
+      Quad,
+      Devastator,
+      Carryall,
+      Frigate,
+      Soldier
+    };
+
+    Unit(const sf::Texture& texture, const sf::Texture &shadow_texture, const sf::Texture &selectedBitmap, const sf::Vector2f& pos, Map& theMap, int theId);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState(const std::vector<Unit>& units);
 
-    void order_move(const sf::Vector2f &target);
+    void orderMove(const sf::Vector2f &target);
 
     sf::FloatRect getBounds() const;
     sf::Vector2f getPosition() const;

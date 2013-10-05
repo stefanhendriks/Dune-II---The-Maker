@@ -52,18 +52,18 @@ class Map : public sf::Drawable {
     void drawShrouded(sf::RenderTarget& target, sf::RenderStates states) const;
 
     void removeShroud(sf::Vector2f world_point, int range) {
-        sf::Vector2i mapPoint = toMapPoint(world_point);
-        int x = mapPoint.x;
-        int y = mapPoint.y;
+      sf::Vector2i mapPoint = toMapPoint(world_point);
+      int x = mapPoint.x;
+      int y = mapPoint.y;
 
-        for (int cell_x = std::max(x - range, 0); cell_x <= std::min(x + range, maxWidth -1); cell_x++) {
-            for (int cell_y = std::max(y - range, 0); cell_y <= std::min(y + range, maxHeight -1); cell_y++) {
-                if (std::pow(cell_x - x, 2) + std::pow(cell_y - y, 2) <= std::pow(range, 2) + 1) {
-                    getCell(cell_x, cell_y).shrouded = false;
-                }
-            }
+      for (int cell_x = std::max(x - range, 0); cell_x <= std::min(x + range, maxWidth -1); cell_x++) {
+        for (int cell_y = std::max(y - range, 0); cell_y <= std::min(y + range, maxHeight -1); cell_y++) {
+          if (std::pow(cell_x - x, 2) + std::pow(cell_y - y, 2) <= std::pow(range, 2) + 1) {
+            getCell(cell_x, cell_y).shrouded = false;
+          }
         }
-        updateShroud();
+      }
+      updateShroud();
     }
 
     sf::Vector2i toMapPoint(const sf::Vector2f& world_point) const;
@@ -72,7 +72,7 @@ class Map : public sf::Drawable {
 
     int getMaxWidth() const;
     int getMaxHeight() const;
-private:
+  private:
     std::array<Cell, MAX_SIZE> cells; //why not vector? -Koji
     int maxWidth;
     int maxHeight;
