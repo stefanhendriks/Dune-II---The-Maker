@@ -5,7 +5,7 @@ UnitRepository::UnitRepository():
 {
 }
 
-Unit UnitRepository::create(Unit::Type type, const Player &player, sf::Vector2f position) const
+Unit UnitRepository::create(Unit::Type type, const Player &player, sf::Vector2f position, Map& map) const
 {
     //return Unit(player.getTexture(type), getShadow(type), selectedTexture, position, idCount);
 }

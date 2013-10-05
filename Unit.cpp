@@ -4,21 +4,21 @@
 #include <Thor/Math.hpp>
 #include <Thor/Shapes.hpp>
 
-Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const sf::Texture& selectedBitmap, const sf::Vector2f& pos, int body_facing, Map& theMap, int theId):
+Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const sf::Texture& selectedBitmap, const sf::Vector2f& pos, Map& theMap, int theId):
   sprite(texture),
   shadowSprite(shadow_texture),
-  selectedSprite(selectedBitmap),  
+  selectedSprite(selectedBitmap),
   viewRange(10),
   selected(false),
   map(theMap),
   id(theId)
 {
-  setFacing(body_facing);
-  this->desiredBodyFacing = body_facing;
+  setFacing(FACING_UP);
+  desiredBodyFacing = bodyFacing;
 
   sprite.setPosition(pos);
   shadowSprite.setPosition(pos);
-  this->target = getCenter();
+  target = getCenter();
 
   selectedSprite.setPosition(pos);
   map.removeShroud(getCenter(), viewRange);

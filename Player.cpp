@@ -58,5 +58,5 @@ const sf::Texture &Player::getTexture(Unit::Type type) const
     textures.insert({type, std::move(texture)});
     return textures[type];
   }
-  return *found;
+  return found->second;
 }

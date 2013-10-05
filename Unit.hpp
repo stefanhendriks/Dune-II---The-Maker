@@ -36,7 +36,7 @@ class Unit : public sf::Drawable
       Soldier
     };
 
-    Unit(const sf::Texture& texture, const sf::Texture &shadow_texture, const sf::Texture &selectedBitmap, const sf::Vector2f& pos, int bodyFacing, Map& theMap, int theId);
+    Unit(const sf::Texture& texture, const sf::Texture &shadow_texture, const sf::Texture &selectedBitmap, const sf::Vector2f& pos, Map& theMap, int theId);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState(const std::vector<Unit>& units);
