@@ -29,7 +29,7 @@ void Mouse::setPosition(const sf::Vector2f &point)
 
 void Mouse::setType(Type type)
 {
-  type = type;
+  this->type = type;
   switch (type) {
   case Type::Default:
     sprite.setTexture(defaultTexture);
