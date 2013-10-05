@@ -12,6 +12,7 @@
 #include "FpsCounter.hpp"
 #include "ActionManager.hpp"
 #include "Player.hpp"
+#include "UnitRepository.hpp"
 
 class Game {
 
@@ -37,6 +38,8 @@ class Game {
       std::unique_ptr<Map> map;
       Mouse mouse;
       FPS_Counter fpsCounter;
+
+      UnitRepository unitRepository;
 
       std::vector<Player> players;
       std::vector<Unit> units;

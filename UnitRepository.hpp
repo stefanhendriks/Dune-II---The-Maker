@@ -10,13 +10,15 @@ class UnitRepository
 public:
     UnitRepository();
 
-    Unit create(Unit::Type type, const Player& player, sf::Vector2f position, Map &map) const;
+    Unit create(Unit::Type type, const Player& player, sf::Vector2f position, Map &map);
 
 private:
-    std::map<Unit::Type, sf::Texture> shadowTextures;
+    mutable std::map<Unit::Type, sf::Texture> shadowTextures;
     sf::Texture selectedTexture;
 
     int idCount;
+
+    const sf::Texture& getShadow(Unit::Type type) const;
 };
 
 #endif // UNITREPOSITORY_HPP

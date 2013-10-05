@@ -59,27 +59,13 @@ bool Game::init() {
   camera.reset({0,0,800,600});
   screen.setView(camera);
 
-  sf::Image trikeShadowImage;
-  trikeShadowImage.loadFromFile("graphics/Unit_Trike_s.bmp");
-  trikeShadowImage.createMaskFromColor(sf::Color(255,0,255));
-  sf::Texture* trikeShadowTexture = new sf::Texture;
-  trikeShadowTexture->loadFromImage(trikeShadowImage);
-
-  sf::Image selectedImage;
-  selectedImage.loadFromFile("graphics/selected.bmp");
-  selectedImage.createMaskFromColor(sf::Color(255, 0, 255));
-  sf::Texture* selectedTexture = new sf::Texture; //more leaks!
-  selectedTexture->loadFromImage(selectedImage);
-
-
    //init two players
   int idCount = 0;
   players.emplace_back(House::Sardaukar, idCount++);
   players.emplace_back(House::Harkonnen, idCount++);
 
-  int unitIdCount = 0;
-  //units.emplace_back(players[0].getTexture(), *trikeShadowTexture, *selectedTexture, sf::Vector2f(256, 256), 0, *map, unitIdCount++);
-  //units.emplace_back(players[1].getTexture(), *trikeShadowTexture, *selectedTexture, sf::Vector2f(300, 300), 0, *map, unitIdCount++);
+  units.push_back(std::move(unitRepository.create(Unit::Type::Trike, players[0], sf::Vector2f(256, 256), *map)));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Trike, players[1], sf::Vector2f(300, 300), *map)));
 
   //units.emplace_back(unitRepository->create(UNIT_FRIGATE, House::Sardaukar, 3, 3, 10, SUBCELL_CENTER, players[0]));
   //units.emplace_back(unitRepository->create(UNIT_TRIKE, House::Sardaukar, 8, 8, 3, SUBCELL_CENTER, players[0]));
