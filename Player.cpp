@@ -33,19 +33,19 @@ void Player::recolor(sf::Image &image) const
 {
     sf::Vector2u imageSize = image.getSize();
 
-    for (unsigned int i=0; i<imageSize.x; ++i){
-        for (unsigned int j=0; j<imageSize.y; ++j){
-            sf::Color pixelColor = image.getPixel(i,j);
-            if ((pixelColor == sf::Color(125,0,0))
-                ||(pixelColor == sf::Color(214,0,0))
-                ||(pixelColor == sf::Color(60,0,0))
-                ||(pixelColor == sf::Color(89,0,0))
-                ||(pixelColor == sf::Color(153,0,0))
-                ||(pixelColor == sf::Color(182,0,0))
-                )
-            {
-                image.setPixel(i, j, color); // TODO: Shade color here properly
+    for (unsigned int x = 0; x < imageSize.x; x++){
+        for (unsigned int y = 0; y < imageSize.y; y++){
+            sf::Color pixelColor = image.getPixel(x, y);
+
+            if ((pixelColor == sf::Color(125,0,0)) ||
+                (pixelColor == sf::Color(214,0,0)) ||
+                (pixelColor == sf::Color(60,0,0))  ||
+                (pixelColor == sf::Color(89,0,0))  ||
+                (pixelColor == sf::Color(153,0,0)) ||
+                (pixelColor == sf::Color(182,0,0))) {
+              image.setPixel(x, y, color); // TODO: Shade color here properly
             }
+
         }
     }
 }
