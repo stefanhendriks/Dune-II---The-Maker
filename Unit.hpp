@@ -41,7 +41,7 @@ class Unit : public sf::Drawable
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState(const std::vector<Unit>& units);
 
-    void order_move(const sf::Vector2f &target);
+    void orderMove(const sf::Vector2f &target);
 
     sf::FloatRect getBounds() const;
     sf::Vector2f getPosition() const;

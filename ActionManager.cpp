@@ -88,7 +88,7 @@ void ActionManager::selectUnit(Unit &unit)
 {
   unit.select();
   system.connect("orderMove", [this, &unit](thor::ActionContext<std::string> context){
-    unit.order_move(parent.screen.mapPixelToCoords(parent.mouse.getHotspot(*context.event), parent.camera));
+    unit.orderMove(parent.screen.mapPixelToCoords(parent.mouse.getHotspot(*context.event), parent.camera));
   });
   parent.mouse.setType(Mouse::Type::Move); //at least one unit selected...
 }
