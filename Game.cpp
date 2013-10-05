@@ -65,7 +65,7 @@ bool Game::init() {
   players.emplace_back(House::Harkonnen, idCount++);
 
   units.push_back(std::move(unitRepository.create(Unit::Type::Trike, players[0], sf::Vector2f(256, 256), *map)));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Trike, players[1], sf::Vector2f(300, 300), *map)));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Quad, players[1], sf::Vector2f(300, 300), *map)));
 
   //units.emplace_back(unitRepository->create(UNIT_FRIGATE, House::Sardaukar, 3, 3, 10, SUBCELL_CENTER, players[0]));
   //units.emplace_back(unitRepository->create(UNIT_TRIKE, House::Sardaukar, 8, 8, 3, SUBCELL_CENTER, players[0]));

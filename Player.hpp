@@ -26,6 +26,7 @@ private:
     House house;
     sf::Color color;
     mutable std::map<Unit::Type, sf::Texture> textures;
+    std::map<Unit::Type, std::string> filenames; //this should be static
 };
 
 #endif // PLAYER_H

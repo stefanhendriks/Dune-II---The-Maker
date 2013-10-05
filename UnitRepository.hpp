@@ -19,6 +19,8 @@ private:
     int idCount;
 
     const sf::Texture& getShadow(Unit::Type type) const;
+
+    std::map<Unit::Type, std::string> filenames;
 };
 
 #endif // UNITREPOSITORY_HPP

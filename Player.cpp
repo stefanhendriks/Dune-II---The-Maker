@@ -1,11 +1,16 @@
 #include "Player.hpp"
 #include "Houses.hpp"
+#include <cassert>
 
 Player::Player(House theHouse, int theId):
     id(theId), house(theHouse), color(Houses::getDefaultColor(house))
 {
-    //init a trike
-
+  filenames[Unit::Type::Trike] = "Unit_Trike.bmp";
+  filenames[Unit::Type::Quad] = "Unit_Quad.bmp";
+  filenames[Unit::Type::Frigate] = "Unit_Frigate.bmp";
+  filenames[Unit::Type::Carryall] = "Unit_Carryall.bmp";
+  filenames[Unit::Type::Devastator] = "Unit_Devastator.bmp";
+  filenames[Unit::Type::Soldier] = "Unit_Soldier.bmp";
 }
 
 sf::Color Player::getColor() const
@@ -49,7 +54,8 @@ const sf::Texture &Player::getTexture(Unit::Type type) const
   auto found = textures.find(type);
   if (found == textures.end()){
     sf::Image image;
-    image.loadFromFile("graphics/Unit_Trike.bmp");
+    assert(filenames.find(type) != filenames.end());
+    image.loadFromFile("graphics/" + filenames.at(type));
     image.createMaskFromColor(sf::Color(0,0,0));
     recolor(image);
 
