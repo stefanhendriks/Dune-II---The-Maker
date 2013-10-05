@@ -26,18 +26,18 @@ void Cell::init(int row, int col)
 
 void Cell::setType(Terrain terrain_type)
 {
-    terrainType = terrain_type;
+  terrainType = terrain_type;
 }
 
 void Cell::setIndex(int tileIndex) {
-    if (tileIndex < 0) return;
-    int tileRow = TILE_SIZE * static_cast<int>(terrainType);
-    int tileCol = TILE_SIZE * tileIndex;
+  if (tileIndex < 0) return;
+  int tileRow = TILE_SIZE * static_cast<int>(terrainType);
+  int tileCol = TILE_SIZE * tileIndex;
 
-    vertices[0].texCoords = sf::Vector2f(tileCol, tileRow);
-    vertices[1].texCoords = sf::Vector2f(tileCol + TILE_SIZE, tileRow);
-    vertices[2].texCoords = sf::Vector2f(tileCol + TILE_SIZE, tileRow + TILE_SIZE);
-    vertices[3].texCoords = sf::Vector2f(tileCol, tileRow + TILE_SIZE);    
+  vertices[0].texCoords = sf::Vector2f(tileCol, tileRow);
+  vertices[1].texCoords = sf::Vector2f(tileCol + TILE_SIZE, tileRow);
+  vertices[2].texCoords = sf::Vector2f(tileCol + TILE_SIZE, tileRow + TILE_SIZE);
+  vertices[3].texCoords = sf::Vector2f(tileCol, tileRow + TILE_SIZE);
 }
 
 void Cell::setShroudIndex(int tileIndex) {
@@ -47,39 +47,39 @@ void Cell::setShroudIndex(int tileIndex) {
     shroudVertices[2].color = sf::Color::Transparent;
     shroudVertices[3].color = sf::Color::Transparent;
     return;
-  }  
+  }
 
-    int tileCol = TILE_SIZE * tileIndex;
-    sf::IntRect rect(tileCol, 0, TILE_SIZE, TILE_SIZE);
+  int tileCol = TILE_SIZE * tileIndex;
+  sf::IntRect rect(tileCol, 0, TILE_SIZE, TILE_SIZE);
 
-    shroudVertices[0].texCoords = sf::Vector2f(tileCol, 0);
-    shroudVertices[1].texCoords = sf::Vector2f(tileCol + TILE_SIZE, 0);
-    shroudVertices[2].texCoords = sf::Vector2f(tileCol + TILE_SIZE, TILE_SIZE);
-    shroudVertices[3].texCoords = sf::Vector2f(tileCol, TILE_SIZE);
+  shroudVertices[0].texCoords = sf::Vector2f(tileCol, 0);
+  shroudVertices[1].texCoords = sf::Vector2f(tileCol + TILE_SIZE, 0);
+  shroudVertices[2].texCoords = sf::Vector2f(tileCol + TILE_SIZE, TILE_SIZE);
+  shroudVertices[3].texCoords = sf::Vector2f(tileCol, TILE_SIZE);
 }
 
 bool Cell::shouldSmoothWithTerrainType(Cell &other) const
 {
-    if (terrainType == Terrain::Rock) {
-        return ((other.terrainType != Terrain::Mountain) &&
-                (other.terrainType != Terrain::Rock) &&
-                (other.terrainType != Terrain::Slab));
-    }
-    if (terrainType == Terrain::Mountain) {
-        return (other.terrainType != Terrain::Mountain);
-    }
-    if (terrainType == Terrain::Slab) {
-        return ((other.terrainType != Terrain::Mountain) &&
-                (other.terrainType != Terrain::Rock));
-    }
-    if (terrainType == Terrain::Spice) {
-        return ((other.terrainType != Terrain::Spice) &&
-                (other.terrainType != Terrain::Spicehill));
-    }
-    if (terrainType == Terrain::Spicehill) {
-        return (other.terrainType != Terrain::Spicehill);
-    }
-    return (other.terrainType != terrainType);
+  if (terrainType == Terrain::Rock) {
+    return ((other.terrainType != Terrain::Mountain) &&
+            (other.terrainType != Terrain::Rock) &&
+            (other.terrainType != Terrain::Slab));
+  }
+  if (terrainType == Terrain::Mountain) {
+    return (other.terrainType != Terrain::Mountain);
+  }
+  if (terrainType == Terrain::Slab) {
+    return ((other.terrainType != Terrain::Mountain) &&
+            (other.terrainType != Terrain::Rock));
+  }
+  if (terrainType == Terrain::Spice) {
+    return ((other.terrainType != Terrain::Spice) &&
+            (other.terrainType != Terrain::Spicehill));
+  }
+  if (terrainType == Terrain::Spicehill) {
+    return (other.terrainType != Terrain::Spicehill);
+  }
+  return (other.terrainType != terrainType);
 }
 
 sf::Vertex Cell::getVertex(int index) const

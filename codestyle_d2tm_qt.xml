@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorCodeStyle>
-<!-- Written by QtCreator 2.8.1, 2013-09-30T06:32:32. -->
+<!-- Written by QtCreator 2.8.1, 2013-10-05T10:23:38. -->
 <qtcreator>
  <data>
   <variable>CodeStyleData</variable>
@@ -22,8 +22,8 @@
    <value type="bool" key="IndentEnumBraces">false</value>
    <value type="bool" key="IndentFunctionBody">true</value>
    <value type="bool" key="IndentFunctionBraces">false</value>
-   <value type="bool" key="IndentNamespaceBody">false</value>
-   <value type="bool" key="IndentNamespaceBraces">true</value>
+   <value type="bool" key="IndentNamespaceBody">true</value>
+   <value type="bool" key="IndentNamespaceBraces">false</value>
    <value type="int" key="IndentSize">2</value>
    <value type="bool" key="IndentStatementsRelativeToSwitchLabels">true</value>
    <value type="bool" key="IndentSwitchLabels">false</value>
