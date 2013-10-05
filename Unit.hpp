@@ -22,6 +22,15 @@ const int SUBCELL_CENTER = 3;
 const int SUBCELL_DOWNLEFT = 4;
 const int SUBCELL_DOWNRIGHT = 5;
 
+struct TexturePack{
+    TexturePack(const sf::Texture& theUnit, const sf::Texture& theShadow, const sf::Texture& theSelected):
+      unit(theUnit), shadow(theShadow), selected(theSelected) {}
+
+    const sf::Texture& unit;
+    const sf::Texture& shadow;
+    const sf::Texture& selected;
+};
+
 class Unit : public sf::Drawable
 {
 
@@ -36,7 +45,7 @@ class Unit : public sf::Drawable
       Soldier
     };
 
-    Unit(const sf::Texture& texture, const sf::Texture &shadow_texture, const sf::Texture &selectedBitmap, const sf::Vector2f& pos, Map& theMap, int theId);
+    Unit(TexturePack pack, const sf::Vector2f& pos, Map& theMap, int theId);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState(const std::vector<Unit>& units);

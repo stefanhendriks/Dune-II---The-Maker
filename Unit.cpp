@@ -4,10 +4,10 @@
 #include <Thor/Math.hpp>
 #include <Thor/Shapes.hpp>
 
-Unit::Unit(const sf::Texture &texture, const sf::Texture &shadow_texture, const sf::Texture& selectedBitmap, const sf::Vector2f& pos, Map& theMap, int theId):
-  sprite(texture),
-  shadowSprite(shadow_texture),
-  selectedSprite(selectedBitmap),
+Unit::Unit(TexturePack pack, const sf::Vector2f& pos, Map& theMap, int theId):
+  sprite(pack.unit),
+  shadowSprite(pack.shadow),
+  selectedSprite(pack.selected),
   viewRange(10),
   selected(false),
   map(theMap),
