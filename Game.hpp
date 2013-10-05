@@ -1,17 +1,17 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "map.h"
-#include "unit.h"
+#include "Map.hpp"
+#include "Unit.hpp"
 #include <memory>
 
 #include <SFML/Graphics.hpp>
 
-#include "selectionbox.h"
-#include "mouse.h"
-#include "fps_counter.h"
-#include "actionmanager.h"
-#include "player.h"
+#include "SelectionBox.hpp"
+#include "Mouse.hpp"
+#include "FpsCounter.hpp"
+#include "ActionManager.hpp"
+#include "Player.hpp"
 
 class Game {
 

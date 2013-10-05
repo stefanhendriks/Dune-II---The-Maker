@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "map.h"
+#include "Map.hpp"
 
 const int SUCCESS = 0;
 const int ERROR_FILE_NOT_FOUND = 1;

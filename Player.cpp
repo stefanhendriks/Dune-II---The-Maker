@@ -1,5 +1,5 @@
-#include "player.h"
-#include "houses.h"
+#include "Player.hpp"
+#include "Houses.hpp"
 
 Player::Player(House theHouse, int theId):
     id(theId), house(theHouse), color(Houses::getDefaultColor(house))

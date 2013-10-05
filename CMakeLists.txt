@@ -8,18 +8,18 @@ include_directories(${SFML_INCLUDE_DIR})
 
 set(d2_SRCS
     d2tm.cpp
-    game.cpp
-    map.cpp
-    cell.cpp
+    Game.cpp
+    Map.cpp
+    Cell.cpp
     ini.cpp
     INIReader.cpp
-    maploader.cpp
-    unit.cpp
-    selectionbox.cpp
-    mouse.cpp
-    player.cpp
-    houses.cpp
-    actionmanager.cpp
+    MapLoader.cpp
+    Unit.cpp
+    SelectionBox.cpp
+    Mouse.cpp
+    Player.cpp
+    Houses.cpp
+    ActionManager.cpp
 )
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")

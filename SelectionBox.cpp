@@ -1,4 +1,4 @@
-#include "selectionbox.h"
+#include "SelectionBox.hpp"
 
 SelectionBox::SelectionBox():
   pointSet(false)

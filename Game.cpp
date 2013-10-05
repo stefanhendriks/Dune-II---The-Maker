@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include <SFML/Graphics.hpp>
-#include "game.h"
-#include "houses.h"
+#include "Game.hpp"
+#include "Houses.hpp"
 
 
 

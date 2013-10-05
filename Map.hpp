@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include <cmath>
-#include "cell.h"
+#include "Cell.hpp"
 #include <array>
 
 #include <SFML/Graphics.hpp>

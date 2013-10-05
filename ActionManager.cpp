@@ -1,5 +1,5 @@
-#include "actionmanager.h"
-#include "game.h"
+#include "ActionManager.hpp"
+#include "Game.hpp"
 
 ActionManager::ActionManager(Game& theParent):
     parent(theParent),

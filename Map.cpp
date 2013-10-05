@@ -1,5 +1,5 @@
-#include "map.h"
-#include "maploader.h"
+#include "Map.hpp"
+#include "MapLoader.hpp"
 
 #include <memory>    /* std::unique_ptr */
 #include <cmath>     /* ceil */

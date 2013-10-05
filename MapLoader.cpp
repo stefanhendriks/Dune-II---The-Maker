@@ -3,9 +3,9 @@
 #include <string>
 #include <vector>
 
-#include "maploader.h"
+#include "MapLoader.hpp"
 
-#include "INIReader.h"
+#include "INIReader.hpp"
 
 using namespace std;
 

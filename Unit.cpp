@@ -1,5 +1,5 @@
 #include <iostream>
-#include "unit.h"
+#include "Unit.hpp"
 
 #include <Thor/Math.hpp>
 #include <Thor/Shapes.hpp>

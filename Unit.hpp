@@ -1,7 +1,7 @@
 #ifndef UNIT_H
 #define UNIT_H
 
-#include "map.h"
+#include "Map.hpp"
 #include <memory>
 
 const int FACING_RIGHT = 0;
