@@ -17,18 +17,12 @@ class Player
     bool operator==(const Player& other) const;
     bool operator!=(const Player& other) const;
 
-    void recolor(sf::Image& image) const;
-
-    const sf::Texture& getTexture(Unit::Type type) const;
+    void recolor(sf::Image& image) const;    
 
   private:
     int id;
     House house;
-    sf::Color color;
-
-    mutable std::map<Unit::Type, sf::Texture> loadedUnitTextures;
-
-    std::map<Unit::Type, std::string> filenames;
+    sf::Color color;    
 };
 
 #endif // PLAYER_H

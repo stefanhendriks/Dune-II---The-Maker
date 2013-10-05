@@ -13,12 +13,17 @@ class UnitRepository
     Unit create(Unit::Type type, const Player& player, sf::Vector2f position, Map &map);
 
   private:
-    mutable std::map<Unit::Type, sf::Texture> shadowTextures;
+    std::map<Unit::Type, sf::Texture> unitTextures;
+    std::map<Unit::Type, sf::Texture> shadowTextures;
     sf::Texture selectedTexture;
 
     int idCount;
 
-    const sf::Texture& getShadow(Unit::Type type) const;
+    const sf::Texture& getTexture(Unit::Type type, const sf::Color& color);
+    const sf::Texture& getShadow(Unit::Type type);
+
+    void recolor(sf::Image& image, const sf::Color& color) const;
+    sf::Texture load(const std::string& filename, const sf::Color& bitmask, const sf::Color& color = sf::Color(0,0,0,0)) const;
 
     std::map<Unit::Type, std::string> filenames;
 };
