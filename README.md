@@ -12,14 +12,14 @@ on Windows (MinGW32 and MSYS).
 
 Current State
 -------------
-If you want to know what is possible with the current version, see the [DONE features list](#done).
-If you want to know what still has to be done, (you might want to contribute?), see the [TODO list](#todo) below what needs to be done.
+If you want to know what is possible with the current version, see the [DONE features list](#tododoingdone).
+If you want to know what still has to be done, (you might want to contribute?), see the [TODO list](#tododoingdone) below what needs to be done.
 
 There is no binary available, instead you need to [compile it yourself](#compiling).
 
 Contributing
 ------------
-Check the [TODO list](#todo). Create (or checkout) a feature branch. Code. And once you're finished
+Check the [TODO list](#tododoingdone). Create (or checkout) a feature branch. Code. And once you're finished
 submit it as a pull request.
 
 Compiling
