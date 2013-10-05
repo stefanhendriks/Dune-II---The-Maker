@@ -7,28 +7,28 @@
 
 
 Game::Game():
-    playing(true),
-    screen(),
-    map(nullptr),
-    actions(*this)
+  playing(true),
+  screen(),
+  map(nullptr),
+  actions(*this)
 {
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
-    screen.create(sf::VideoMode(800, 600), "Dune 2 - The Maker", sf::Style::Close, settings);
-    screen.setFramerateLimit(IDEAL_FPS);
-    screen.setMouseCursorVisible(false);
+  sf::ContextSettings settings;
+  settings.antialiasingLevel = 8;
+  screen.create(sf::VideoMode(800, 600), "Dune 2 - The Maker", sf::Style::Close, settings);
+  screen.setFramerateLimit(IDEAL_FPS);
+  screen.setMouseCursorVisible(false);
 
-    if (!init()){
-        std::cerr << "Failed to initialized game.";
-        playing = false;
-    }
+  if (!init()){
+    std::cerr << "Failed to initialized game.";
+    playing = false;
+  }
 }
 
 int Game::execute() {
 
-    sf::Clock clock;
+  sf::Clock clock;
 
-  while(playing) {    
+  while(playing) {
     sf::Time dt = clock.restart();
 
     updateState(dt);
@@ -59,7 +59,7 @@ bool Game::init() {
   camera.reset({0,0,800,600});
   screen.setView(camera);
 
-   //init two players
+  //init two players
   int idCount = 0;
   players.emplace_back(House::Sardaukar, idCount++);
   players.emplace_back(House::Harkonnen, idCount++);
@@ -85,7 +85,7 @@ void Game::render() {
   screen.draw(*map);
 
   for (const auto& unit : units)
-      screen.draw(unit);
+    screen.draw(unit);
 
   map->drawShrouded(screen, sf::RenderStates::Default);
 

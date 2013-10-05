@@ -7,12 +7,12 @@
 
 class UnitRepository
 {
-public:
+  public:
     UnitRepository();
 
     Unit create(Unit::Type type, const Player& player, sf::Vector2f position, Map &map);
 
-private:
+  private:
     mutable std::map<Unit::Type, sf::Texture> shadowTextures;
     sf::Texture selectedTexture;
 

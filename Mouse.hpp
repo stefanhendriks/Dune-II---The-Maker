@@ -5,13 +5,13 @@
 
 class Mouse : public sf::Drawable
 {
-public:
+  public:
 
     enum class Type
     {
-        Default,
-        Move,
-        Attack
+      Default,
+      Move,
+      Attack
     };
 
 
@@ -26,7 +26,7 @@ public:
 
     Type getType() const;
 
-private:
+  private:
     sf::Texture defaultTexture;
     sf::Texture moveTexture;
 

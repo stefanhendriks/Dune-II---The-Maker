@@ -7,17 +7,17 @@
 // we just use this as a convenience.
 enum class House
 {
-    Harkonnen = 0,
-    Atreides = 1,
-    Ordos = 2,
-    Fremen = 3,
-    Sardaukar = 4,
-    Mercenary = 5
+  Harkonnen = 0,
+  Atreides = 1,
+  Ordos = 2,
+  Fremen = 3,
+  Sardaukar = 4,
+  Mercenary = 5
 };
 
-namespace Houses{
+namespace Houses {
 
-sf::Color getDefaultColor(House house);
+  sf::Color getDefaultColor(House house);
 
 } //namespace Houses
 

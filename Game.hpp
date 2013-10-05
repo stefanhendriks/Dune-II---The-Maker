@@ -16,37 +16,37 @@
 
 class Game {
 
-  const int IDEAL_FPS = 60;
+    const int IDEAL_FPS = 60;
 
   public:
-     Game();
+    Game();
 
-     int execute();
+    int execute();
 
-   private:
-      bool init();
-      void updateState(sf::Time dt);
-      void render();
-      int cleanup();
+  private:
+    bool init();
+    void updateState(sf::Time dt);
+    void render();
+    int cleanup();
 
-      bool playing;
-      sf::RenderWindow screen;
-      sf::Texture terrain;
-      sf::Texture shroud_edges;
-      sf::View camera;
-      SelectionBox box;
-      std::unique_ptr<Map> map;
-      Mouse mouse;
-      FPS_Counter fpsCounter;
+    bool playing;
+    sf::RenderWindow screen;
+    sf::Texture terrain;
+    sf::Texture shroud_edges;
+    sf::View camera;
+    SelectionBox box;
+    std::unique_ptr<Map> map;
+    Mouse mouse;
+    FPS_Counter fpsCounter;
 
-      UnitRepository unitRepository;
+    UnitRepository unitRepository;
 
-      std::vector<Player> players;
-      std::vector<Unit> units;
+    std::vector<Player> players;
+    std::vector<Unit> units;
 
-      ActionManager actions;
+    ActionManager actions;
 
-      friend class ActionManager;
+    friend class ActionManager;
 };
 
 #endif
