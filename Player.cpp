@@ -7,7 +7,7 @@ Player::Player(House theHouse, int theId):
 { 
 }
 
-sf::Color Player::getColor() const {
+const sf::Color &Player::getColor() const {
   return color;
 }
 
