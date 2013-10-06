@@ -6,21 +6,21 @@ and networking gaming.
 
 This is an attempt to rewrite the game from scratch using [SFML 2.1](http://www.sfml-dev.org/resources.php). If you are looking for the source code of the 'current' D2TM ([with demo binaries](http://dune2themaker.fundynamic.com/downloads/)), then you can find it [here](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/d2tm_allegro)
 
-I do this purely for fun, and try to keep it multi-platform. I test it often on Mac OSX and Ubuntu. I sometimes test it
+We try to keep it multi-platform. We test it often on Mac OSX and Ubuntu. Sometimes we test it
 on Windows (MinGW32 and MSYS).
 
+If you want to know more about the dependencies used, you can read the [documentation/tutorials here](#documentation).
 
-Current State
--------------
-If you want to know what is possible with the current version, see the [DONE features list](#tododoingdone).
-If you want to know what still has to be done, (you might want to contribute?), see the [TODO list](#tododoingdone) below what needs to be done.
-
-There is no binary available, instead you need to [compile it yourself](#compiling).
+Where is the binary?
+--------------------
+There is no binary available, instead you need to [compile it yourself](#compiling). Once we meet our milestones, we will release binaries for all targetted operating systems.
 
 Contributing
-------------
-Check the [TODO list](#tododoingdone). Create (or checkout) a feature branch. Code. And once you're finished
-submit it as a pull request.
+============
+- Check the [TODO list](#tododoingdone). 
+- Create (or checkout) a feature branch. 
+- Code. 
+- Finished? Submit it as a pull request.
 
 Compiling
 =========
@@ -66,15 +66,6 @@ make install
 
 Now you are ready to [compile d2tm](#compiling).
 
-
-As a player I should be able to...
-==================================
-Features need to be written in such a way that it is obvious what the benefit is for the player.
-
-TODO/DOING/DONE
----------------
-We keep a list of stories/features on our [public Trello board](https://trello.com/b/3he26cm4/dune-ii-the-maker)
-
 Controls
 ========
 Thus far the following controls work:
@@ -85,3 +76,12 @@ Move camera around with arrow keys or with mouse hitting borders of screen.
 Right mouse click deselects all unit.
 Left mouse click selects a unit.
 Hold left mouse button and drag a rectangle over units to select them.
+
+What is left to do?
+===================
+We use a [public Trello board](https://trello.com/b/3he26cm4/dune-ii-the-maker) to keep a list of things todo. You can also see here what we're working on right now and what has been finished. If you feel like contributing, please let us know so we can move the story to 'doing' , and refer to your feature branch in the meantime.
+
+Documentation
+=============
+- [SFML 2.1](http://www.sfml-dev.org/tutorials/2.1/)
+- [Thor](http://www.bromeon.ch/libraries/thor/v2.0/doc/index.html)
