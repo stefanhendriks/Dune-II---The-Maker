@@ -23,6 +23,7 @@ set(d2_SRCS
     ActionManager.cpp
     UnitRepository.cpp
     Console.cpp
+    Entity.cpp
 )
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
