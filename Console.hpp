@@ -14,6 +14,7 @@ public:
     void update(sf::Time dt);
     void handleEvent(sf::Event event);
     void display(sf::RenderWindow& screen);
+    void toggle();
 
 private:
     sfg::SFGUI sfgui;
@@ -22,6 +23,7 @@ private:
     sfg::Box::Ptr chatAreaLayout;
     sfg::Entry::Ptr chatEntry;
     sfg::ScrolledWindow::Ptr chatWindow;
+    sfg::Window::Ptr window;
 
     Game& parent;
 

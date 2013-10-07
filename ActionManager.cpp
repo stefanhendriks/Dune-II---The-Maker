@@ -18,6 +18,7 @@ ActionManager::ActionManager(Game& theParent):
   actionMap["cameraRight"] = thor::Action(sf::Keyboard::Right, thor::Action::Hold);
   actionMap["cameraUp"] = thor::Action(sf::Keyboard::Up, thor::Action::Hold);
   actionMap["cameraDown"] = thor::Action(sf::Keyboard::Down, thor::Action::Hold);
+  actionMap["toggleConsole"] = thor::Action(sf::Keyboard::F2, thor::Action::PressOnce);
 
   typedef thor::ActionContext<std::string> actionContext;
 
@@ -65,6 +66,8 @@ ActionManager::ActionManager(Game& theParent):
   system.connect("cameraRight", [this, cameraSpeed](actionContext){parent.camera.move(cameraSpeed, 0.f); });
   system.connect("cameraUp", [this, cameraSpeed](actionContext)   {parent.camera.move(0.f, -cameraSpeed);});
   system.connect("cameraDown", [this, cameraSpeed](actionContext) {parent.camera.move(0.f, cameraSpeed); });
+
+  system.connect("toggleConsole", std::bind(&Console::toggle, &parent.console));
 }
 
 void ActionManager::update()
