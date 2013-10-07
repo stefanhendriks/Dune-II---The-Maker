@@ -27,6 +27,13 @@ Console::Console(Game &theParent):
 
     desktop.Add(window);
     chatEntry->GrabFocus();
+
+    unitMap["trike"] = Unit::Type::Trike;
+    unitMap["quad"] = Unit::Type::Quad;
+    unitMap["devastator"] = Unit::Type::Devastator;
+    unitMap["carryall"] = Unit::Type::Carryall;
+    unitMap["frigate"] = Unit::Type::Frigate;
+    unitMap["soldier"] = Unit::Type::Soldier;
 }
 
 void Console::update(sf::Time dt)
@@ -55,12 +62,15 @@ void Console::dataReady()
     boost::split(tokens, toProcess, boost::is_any_of(" "));
 
     if (tokens[0]=="add"){
-        if (tokens.size() != 6){
+        if (tokens.size() != 5){
             toConsole("Incorrect number of arguments.");
             return;
         }
-        //Unit* toAdd(parent.unitRepository->create(std::stoi(tokens[1]), std::stoi(tokens[2]), std::stoi(tokens[3]), std::stoi(tokens[4]), std::stoi(tokens[5])));
-        //parent->units.emplace_back(toAdd);
+        parent.units.push_back(
+          std::move(parent.unitRepository.create(
+                    unitMap[tokens[1]], parent.players[std::stoi(tokens[2])],
+                    sf::Vector2f(std::stoi(tokens[3]), std::stoi(tokens[4])), *parent.map)));
+
         toConsole("Unit added.");
     }else{
         toConsole("Bad command.");

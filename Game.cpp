@@ -68,13 +68,6 @@ bool Game::init() {
   units.push_back(std::move(unitRepository.create(Unit::Type::Trike, players[0], sf::Vector2f(256, 256), *map)));
   units.push_back(std::move(unitRepository.create(Unit::Type::Quad, players[1], sf::Vector2f(300, 300), *map)));
 
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(400, 500), *map)));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(410, 500), *map)));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(220, 500), *map)));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(430, 500), *map)));
-
-  units.push_back(std::move(unitRepository.create(Unit::Type::Devastator, players[1], sf::Vector2f(500, 200), *map)));
-
   return true;
 }
 
