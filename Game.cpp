@@ -105,7 +105,7 @@ bool Game::init() {
   });
 
   actions.connect("deselectAll", [this](actionContext){
-    actions.disconnect("deselectAll");
+    actions.disconnect("orderMove");
     mouse.setType(Mouse::Type::Default);
     for (auto& unit : units)
       unit.unselect();
