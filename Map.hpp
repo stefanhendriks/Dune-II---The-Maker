@@ -9,10 +9,11 @@
 
 #include <SFML/Graphics.hpp>
 #include <Thor/Vectors.hpp>
+#include "Entity.hpp"
 
 #define DEV_DRAWGRID true
 
-class Map : public sf::Drawable {
+class Map : public sf::Drawable, public Entity {
 
   public:
 

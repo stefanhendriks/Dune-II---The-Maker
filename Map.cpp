@@ -3,6 +3,7 @@
 
 #include <memory>    /* std::unique_ptr */
 #include <cmath>     /* ceil */
+#include "Unit.hpp" //MoveMessage
 
 Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
   terrain(terrain),
@@ -20,6 +21,11 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
       cells[i].init(x, y);
     }
   }
+
+  messageSystem.connect("unitMove", [this](const Message* message){
+    MoveMessage* received = dynamic_cast<MoveMessage>(message);
+    removeShroud(message.unit.getCenter(), message.unit.getViewRange());
+  });
 }
 
 void Map::load(std::string file) {
