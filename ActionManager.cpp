@@ -69,7 +69,13 @@ ActionManager::ActionManager(Game& theParent):
 
 void ActionManager::update()
 {
-  actionMap.update(parent.screen);
+  actionMap.clearEvents();
+
+  sf::Event event;
+  while (parent.screen.pollEvent(event)){
+    actionMap.pushEvent(event);
+    parent.console.handleEvent(event);
+  }
 
   actionMap.invokeCallbacks(system, &(parent.screen));
 

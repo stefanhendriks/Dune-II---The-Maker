@@ -10,7 +10,8 @@ Game::Game():
   playing(true),
   screen(),
   map(nullptr),
-  actions(*this)
+  actions(*this),
+  console(*this)
 {
   sf::ContextSettings settings;
   settings.antialiasingLevel = 8;
@@ -95,6 +96,8 @@ void Game::render() {
 
   screen.setView(camera);
 
+  console.display(screen);
+
   screen.draw(mouse);
 
   screen.display();
@@ -102,6 +105,7 @@ void Game::render() {
 
 void Game::updateState(sf::Time dt) {
   actions.update();
+  console.update(dt);
 
   sf::Vector2i mousePosition = sf::Mouse::getPosition(screen);
 

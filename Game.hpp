@@ -13,6 +13,7 @@
 #include "ActionManager.hpp"
 #include "Player.hpp"
 #include "UnitRepository.hpp"
+#include "Console.hpp"
 
 class Game {
 
@@ -45,8 +46,10 @@ class Game {
     std::vector<Unit> units;
 
     ActionManager actions;
+    Console console;
 
     friend class ActionManager;
+    friend class Console;
 };
 
 #endif
