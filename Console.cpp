@@ -9,7 +9,7 @@ Console::Console(Game &theParent):
     chatWindow(sfg::ScrolledWindow::Create()),
     parent(theParent)
 {
-    sfg::Window::Ptr window(sfg::Window::Create());
+    sfg::Window::Ptr window(sfg::Window::Create(sfg::Window::SHADOW));
 
     chatWindow->SetRequisition(sf::Vector2f(400.f,400.f));
     chatWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_AUTOMATIC | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
@@ -21,6 +21,9 @@ Console::Console(Game &theParent):
     chatEntry->GetSignal(sfg::Entry::OnKeyPress).Connect(&Console::dataReady, this);
 
     window->Add(chatLayout);
+
+    desktop.LoadThemeFromFile("gui.theme");
+    //desktop.SetProperty
 
     desktop.Add(window);
     chatEntry->GrabFocus();

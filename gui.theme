@@ -1,0 +1,5 @@
+Window {
+
+	BackgroundColor: #abcdef55;
+
+}
