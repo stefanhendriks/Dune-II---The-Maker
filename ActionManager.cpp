@@ -1,12 +1,9 @@
 #include "ActionManager.hpp"
 #include "Game.hpp"
 
-ActionManager::ActionManager(Game& theParent):
-  parent(theParent),
-  shouldDeselect(false)
+ActionManager::ActionManager(sf::RenderWindow& screen):
+  screen(screen)
 {
-  //thor Actions here
-
   actionMap["boxStart"] = thor::Action(sf::Mouse::Left, thor::Action::PressOnce);
   actionMap["orderMove"] = thor::Action(sf::Mouse::Left, thor::Action::PressOnce);
   actionMap["singleSelect"] = thor::Action(sf::Mouse::Left, thor::Action::PressOnce);
@@ -18,24 +15,24 @@ ActionManager::ActionManager(Game& theParent):
   actionMap["cameraRight"] = thor::Action(sf::Keyboard::Right, thor::Action::Hold);
   actionMap["cameraUp"] = thor::Action(sf::Keyboard::Up, thor::Action::Hold);
   actionMap["cameraDown"] = thor::Action(sf::Keyboard::Down, thor::Action::Hold);
-
 }
 
 void ActionManager::update()
 {
-  actionMap.update(parent.screen);
+  actionMap.update(screen);
 
-  actionMap.invokeCallbacks(system, &(parent.screen));
+  actionMap.invokeCallbacks(system, &(screen));
 
-  if (shouldDeselect){
-    shouldDeselect = false;
-    system.clearConnections("orderMove");
+  while (!toDisconnect.empty()){
+    system.clearConnections(toDisconnect.front());
+    toDisconnect.pop_front();
   }
+
 }
 
 void ActionManager::trigger(const std::string &which)
 {
-  system.triggerEvent(thor::ActionContext<std::string>(&parent.screen, nullptr, which));
+  system.triggerEvent(thor::ActionContext<std::string>(&screen, nullptr, which));
 }
 
 void ActionManager::connect(const std::string &which, const ActionManager::Listener &listener)
@@ -43,11 +40,7 @@ void ActionManager::connect(const std::string &which, const ActionManager::Liste
   system.connect(which, listener);
 }
 
-void ActionManager::selectUnit(Unit &unit)
+void ActionManager::disconnect(const std::string &which)
 {
-  unit.select();
-  system.connect("orderMove", [this, &unit](thor::ActionContext<std::string> context){
-    unit.orderMove(parent.screen.mapPixelToCoords(parent.mouse.getHotspot(*context.event), parent.camera));
-  });
-  parent.mouse.setType(Mouse::Type::Move); //at least one unit selected...
+  toDisconnect.emplace_back(which);
 }
