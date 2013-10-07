@@ -21,6 +21,7 @@ set(d2_SRCS
     Houses.cpp
     ActionManager.cpp
     UnitRepository.cpp
+    Entity.cpp
 )
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
