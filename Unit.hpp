@@ -3,6 +3,7 @@
 
 #include "Map.hpp"
 #include <memory>
+#include "Entity.hpp"
 
 const int FACING_RIGHT = 0;
 const int FACING_UP_RIGHT = 1;
@@ -31,7 +32,17 @@ struct TexturePack{
     const sf::Texture& selected;
 };
 
-class Unit : public sf::Drawable
+class Unit;
+
+struct MoveMessage : public Message{
+    MoveMessage(const std::string& id, const Unit& unit):
+      Message(id), unit(unit)
+    {}
+
+    const Unit& unit;
+};
+
+class Unit : public sf::Drawable, public Entity
 {
 
   public:
@@ -59,6 +70,8 @@ class Unit : public sf::Drawable
     void select();
     void unselect();
     bool isSelected() const;
+
+    int getViewRange() const;
 
   private:
     sf::Vector2f target;            // target of interest (move/attack, etc)

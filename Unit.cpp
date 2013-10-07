@@ -48,6 +48,11 @@ bool Unit::isSelected() const {
   return selected;
 }
 
+int Unit::getViewRange() const
+{
+  return viewRange;
+}
+
 bool Unit::hasTarget() const {
   return getCenter() != target;
 }
@@ -147,7 +152,9 @@ void Unit::updateMovePosition(const std::vector<Unit>& units)  {
 
     shadowSprite.move(speed*unitDirection);
     selectedSprite.move(speed*unitDirection);
-    map.removeShroud(getCenter(), viewRange);
+    messageSystem.triggerEvent(MoveMessage("unitMove", *this));
+
+    //map.removeShroud(getCenter(), viewRange);
   }
 }
 
