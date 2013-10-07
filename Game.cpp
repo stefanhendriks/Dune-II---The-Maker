@@ -74,6 +74,54 @@ bool Game::init() {
 
   units.push_back(std::move(unitRepository.create(Unit::Type::Devastator, players[1], sf::Vector2f(500, 200), *map)));
 
+  //register listeners
+  typedef thor::ActionContext<std::string> actionContext;
+
+  system.connect("close", [this](actionContext){playing = false;});
+
+  system.connect("boxRelease", [this](actionContext){
+    for (auto& unit : units){
+      if (box.intersects(unit.getBounds())){
+        selectUnit(unit);
+      }
+    }
+    parent.box.clear();
+  });
+
+  system.connect("boxStart", [this](actionContext context) {
+    if (mouse.getType() != Mouse::Type::Default) {
+      return;
+    }
+    sf::Vector2f toSet = screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera);
+    parent.box.setTopLeft(toSet);
+  });
+
+  system.connect("singleSelect", [this](actionContext context){
+    sf::Vector2f toCheck = screen.mapPixelToCoords(parent.mouse.getHotspot(*context.event), camera);
+    for (auto& unit : units){
+      if (unit.getBounds().contains(toCheck))
+        selectUnit(unit);
+    }
+  });
+
+  system.connect("deselectAll", [this](actionContext){
+    shouldDeselect = true;
+    parent.mouse.setType(Mouse::Type::Default);
+    for (auto& unit : parent.units)
+      unit.unselect();
+  });
+
+  system.connect("boxDrag", [this](actionContext){
+    parent.box.setBottomRight(parent.screen.mapPixelToCoords(sf::Mouse::getPosition(parent.screen),parent.camera));
+  });
+
+  const float cameraSpeed = 15.f;
+
+  system.connect("cameraLeft", [this, cameraSpeed](actionContext) {parent.camera.move(-cameraSpeed, 0.f);});
+  system.connect("cameraRight", [this, cameraSpeed](actionContext){parent.camera.move(cameraSpeed, 0.f); });
+  system.connect("cameraUp", [this, cameraSpeed](actionContext)   {parent.camera.move(0.f, -cameraSpeed);});
+  system.connect("cameraDown", [this, cameraSpeed](actionContext) {parent.camera.move(0.f, cameraSpeed); });
+
   return true;
 }
 

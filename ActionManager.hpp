@@ -8,10 +8,13 @@ class Unit;
 class ActionManager
 {
   public:
+    typedef thor::ActionMap::CallbackSystem::Listener Listener;
+
     ActionManager(Game &theParent);
 
     void update();
     void trigger(const std::string& which);
+    void connect(const std::string& which, const Listener& listener);
 
   private:
     Game& parent;
