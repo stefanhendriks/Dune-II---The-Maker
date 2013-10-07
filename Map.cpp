@@ -22,9 +22,9 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
     }
   }
 
-  messageSystem.connect("unitMove", [this](const Message* message){
-    MoveMessage* received = dynamic_cast<MoveMessage>(message);
-    removeShroud(message.unit.getCenter(), message.unit.getViewRange());
+  messageSystem.connect("unitMove", [this](const Message& message){
+    const MoveMessage& received = dynamic_cast<const MoveMessage&>(message);
+    removeShroud(received.unit.getCenter(), received.unit.getViewRange());
   });
 }
 

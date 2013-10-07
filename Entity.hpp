@@ -4,16 +4,15 @@
 
 struct Message{
     Message(const std::string& id):
-        id(id)
-    {
+      id(id) {}
 
-    }
+    virtual ~Message() {}
 
     std::string id;
 };
 
 
-std::string getEventId(const Message* message);
+std::string getEventId(const Message &message);
 
 
 
@@ -23,7 +22,7 @@ public:
     Entity();
 
 protected:
-    static thor::EventSystem<Message*, std::string> messageSystem;
+    static thor::EventSystem<Message, std::string> messageSystem;
 };
 
 #endif // ENTITY_HPP

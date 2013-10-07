@@ -7,7 +7,7 @@ Entity::Entity()
 }
 
 
-std::string getEventId(const Message *message)
+std::string getEventId(const Message &message)
 {
-    return message->id;
+    return message.id;
 }
