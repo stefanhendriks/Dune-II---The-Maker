@@ -1,0 +1,11 @@
+Entry {
+
+	BackgroundColor: #00000000;
+}
+
+Scrollbar {
+	StepperArrowColor: #668B8B55;
+	StepperBackgroundColor: #00000000;
+	SliderColor: #00000000;
+	TroughColor: #00000000;  
+}

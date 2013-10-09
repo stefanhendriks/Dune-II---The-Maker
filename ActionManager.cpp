@@ -15,10 +15,19 @@ ActionManager::ActionManager(sf::RenderWindow& screen):
   actionMap["cameraRight"] = thor::Action(sf::Keyboard::Right, thor::Action::Hold);
   actionMap["cameraUp"] = thor::Action(sf::Keyboard::Up, thor::Action::Hold);
   actionMap["cameraDown"] = thor::Action(sf::Keyboard::Down, thor::Action::Hold);
+  actionMap["toggleConsole"] = thor::Action(sf::Keyboard::F2, thor::Action::PressOnce);
 }
 
 void ActionManager::update()
 {
+  // actionMap.clearEvents();
+
+  // sf::Event event;
+  // while (screen.pollEvent(event)){
+  //   actionMap.pushEvent(event);
+  //   console.handleEvent(event);
+  // }
+
   actionMap.update(screen);
 
   actionMap.invokeCallbacks(system, &(screen));
@@ -27,7 +36,6 @@ void ActionManager::update()
     system.clearConnections(toDisconnect.front());
     toDisconnect.pop_front();
   }
-
 }
 
 void ActionManager::trigger(const std::string &which)

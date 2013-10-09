@@ -2,6 +2,7 @@
 #define ACTIONMANAGER_H
 #include <Thor/Input.hpp>
 #include <deque>
+#include "Console.hpp"
 
 namespace sf{ class RenderWindow; }
 
@@ -24,6 +25,8 @@ class ActionManager
     thor::ActionMap<std::string>::CallbackSystem system;
 
     std::deque<std::string> toDisconnect;
+
+    // Console console;
 };
 
 #endif // ACTIONMANAGER_H

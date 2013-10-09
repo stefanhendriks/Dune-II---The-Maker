@@ -4,13 +4,12 @@
 #include "Game.hpp"
 #include "Houses.hpp"
 
-
-
 Game::Game():
   playing(true),
   screen(),
   map(nullptr),
-  actions(screen)
+  actions(screen),
+  console()
 {
   sf::ContextSettings settings;
   settings.antialiasingLevel = 8;
@@ -122,6 +121,8 @@ bool Game::init() {
   actions.connect("cameraUp", [this, cameraSpeed](actionContext)   {camera.move(0.f, -cameraSpeed);});
   actions.connect("cameraDown", [this, cameraSpeed](actionContext) {camera.move(0.f, cameraSpeed); });
 
+  actions.connect("toggleConsole", std::bind(&Console::toggle, &console));
+
   return true;
 }
 
@@ -143,13 +144,17 @@ void Game::render() {
 
   screen.setView(camera);
 
+  console.display(screen);
+
   screen.draw(mouse);
 
   screen.display();
 }
 
 void Game::updateState(sf::Time dt) {
+
   actions.update();
+  console.update(dt);
 
   sf::Vector2i mousePosition = sf::Mouse::getPosition(screen);
 
