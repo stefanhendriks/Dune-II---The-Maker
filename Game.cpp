@@ -10,7 +10,7 @@ Game::Game():
   playing(true),
   screen(),
   map(nullptr),
-  actions(*this)
+  actions(screen)
 {
   sf::ContextSettings settings;
   settings.antialiasingLevel = 8;
@@ -74,6 +74,54 @@ bool Game::init() {
 
   units.push_back(std::move(unitRepository.create(Unit::Type::Devastator, players[1], sf::Vector2f(500, 200), *map)));
 
+  //register listeners
+  typedef thor::ActionContext<std::string> actionContext;
+
+  actions.connect("close", [this](actionContext){playing = false;});
+
+  actions.connect("boxRelease", [this](actionContext){
+    for (auto& unit : units){
+      if (box.intersects(unit.getBounds())){
+        selectUnit(unit);
+      }
+    }
+    box.clear();
+  });
+
+  actions.connect("boxStart", [this](actionContext context) {
+    if (mouse.getType() != Mouse::Type::Default) {
+      return;
+    }
+    sf::Vector2f toSet = screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera);
+    box.setTopLeft(toSet);
+  });
+
+  actions.connect("singleSelect", [this](actionContext context){
+    sf::Vector2f toCheck = screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera);
+    for (auto& unit : units){
+      if (unit.getBounds().contains(toCheck))
+        selectUnit(unit);
+    }
+  });
+
+  actions.connect("deselectAll", [this](actionContext){
+    actions.disconnect("orderMove");
+    mouse.setType(Mouse::Type::Default);
+    for (auto& unit : units)
+      unit.unselect();
+  });
+
+  actions.connect("boxDrag", [this](actionContext){
+    box.setBottomRight(screen.mapPixelToCoords(sf::Mouse::getPosition(screen), camera));
+  });
+
+  const float cameraSpeed = 15.f;
+
+  actions.connect("cameraLeft", [this, cameraSpeed](actionContext) {camera.move(-cameraSpeed, 0.f);});
+  actions.connect("cameraRight", [this, cameraSpeed](actionContext){camera.move(cameraSpeed, 0.f); });
+  actions.connect("cameraUp", [this, cameraSpeed](actionContext)   {camera.move(0.f, -cameraSpeed);});
+  actions.connect("cameraDown", [this, cameraSpeed](actionContext) {camera.move(0.f, cameraSpeed); });
+
   return true;
 }
 
@@ -131,4 +179,14 @@ void Game::updateState(sf::Time dt) {
 
   fpsCounter.update(dt);
   map->prepare(screen.mapPixelToCoords(sf::Vector2i(0,0)));
+}
+
+
+void Game::selectUnit(Unit &unit)
+{
+  unit.select();
+  actions.connect("orderMove", [this, &unit](thor::ActionContext<std::string> context){
+    unit.orderMove(screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera));
+  });
+  mouse.setType(Mouse::Type::Move); //at least one unit selected...
 }

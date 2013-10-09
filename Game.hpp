@@ -28,6 +28,7 @@ class Game {
     void updateState(sf::Time dt);
     void render();
     int cleanup();
+    void selectUnit(Unit &unit);
 
     bool playing;
     sf::RenderWindow screen;
@@ -45,8 +46,6 @@ class Game {
     std::vector<Unit> units;
 
     ActionManager actions;
-
-    friend class ActionManager;
 };
 
 #endif

@@ -1,27 +1,29 @@
 #ifndef ACTIONMANAGER_H
 #define ACTIONMANAGER_H
 #include <Thor/Input.hpp>
+#include <deque>
 
-class Game;
-class Unit;
+namespace sf{ class RenderWindow; }
 
 class ActionManager
 {
   public:
-    ActionManager(Game &theParent);
+    typedef thor::ActionMap<std::string>::CallbackSystem::Listener Listener;
+
+    ActionManager(sf::RenderWindow &screen);
 
     void update();
     void trigger(const std::string& which);
+    void connect(const std::string& which, const Listener& listener);
+    void disconnect(const std::string& which);
 
   private:
-    Game& parent;
+    sf::RenderWindow& screen;
 
     thor::ActionMap<std::string> actionMap;
     thor::ActionMap<std::string>::CallbackSystem system;
 
-    bool shouldDeselect;
-
-    void selectUnit(Unit &unit);
+    std::deque<std::string> toDisconnect;
 };
 
 #endif // ACTIONMANAGER_H
