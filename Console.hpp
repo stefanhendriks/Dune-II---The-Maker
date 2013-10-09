@@ -4,12 +4,10 @@
 #include <map>
 #include "Unit.hpp"
 
-class Game; //forward declaration
-
 class Console
 {
 public:
-    Console(Game& theParent);
+    Console();
 
     void update(sf::Time dt);
     void handleEvent(sf::Event event);
@@ -24,8 +22,6 @@ private:
     sfg::Entry::Ptr chatEntry;
     sfg::ScrolledWindow::Ptr chatWindow;
     sfg::Window::Ptr window;
-
-    Game& parent;
 
     void dataReady();
     void toConsole(std::string toWrite);

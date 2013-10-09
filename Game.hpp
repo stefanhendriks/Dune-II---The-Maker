@@ -29,6 +29,7 @@ class Game {
     void updateState(sf::Time dt);
     void render();
     int cleanup();
+    void selectUnit(Unit &unit);
 
     bool playing;
     sf::RenderWindow screen;
@@ -47,9 +48,6 @@ class Game {
 
     ActionManager actions;
     Console console;
-
-    friend class ActionManager;
-    friend class Console;
 };
 
 #endif

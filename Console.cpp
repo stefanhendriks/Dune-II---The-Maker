@@ -2,15 +2,14 @@
 #include "Game.hpp"
 #include <boost/algorithm/string.hpp>
 
-Console::Console(Game &theParent):
+Console::Console():
     chatLayout(sfg::Box::Create(sfg::Box::VERTICAL, 5.f)),
     chatAreaLayout(sfg::Box::Create(sfg::Box::VERTICAL)),
     chatEntry(sfg::Entry::Create()),
     chatWindow(sfg::ScrolledWindow::Create()),
-    window(sfg::Window::Create(sfg::Window::SHADOW)),
-    parent(theParent)
+    window(sfg::Window::Create(sfg::Window::SHADOW))
 {
-    chatWindow->SetRequisition(sf::Vector2f(400.f,100.f));
+    chatWindow->SetRequisition(sf::Vector2f(800.f,100.f));
     chatWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_AUTOMATIC | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
     chatWindow->AddWithViewport(chatAreaLayout);
 
@@ -71,10 +70,11 @@ void Console::dataReady()
             toConsole("Incorrect number of arguments.");
             return;
         }
-        parent.units.push_back(
-          std::move(parent.unitRepository.create(
-                    unitMap[tokens[1]], parent.players[std::stoi(tokens[2])],
-                    sf::Vector2f(std::stoi(tokens[3]), std::stoi(tokens[4])), *parent.map)));
+        // todo: use events emitting for this?
+        // parent.units.push_back(
+        //   std::move(parent.unitRepository.create(
+        //             unitMap[tokens[1]], parent.players[std::stoi(tokens[2])],
+        //             sf::Vector2f(std::stoi(tokens[3]), std::stoi(tokens[4])), *parent.map)));
 
         toConsole("Unit added.");
     }else{
