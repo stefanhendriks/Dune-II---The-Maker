@@ -34,15 +34,20 @@ cmake .
 make
 ```
 
-which should deliver a ```./d2tm``` binary file.
+which should deliver a ```./d2tm``` binary file you should be able to execute. 
 
 Installing dependencies
 -----------------------
-This example is based on Mac OS X, the procedure is probably the same on Linux. For Windows, we have not yet tested this.
+This example is based on Mac OS X, the procedure is probably (somewhat) the same on Linux. For Windows, we have not yet tested this. We also assume you use [homebrew](http://brew.sh/).
 
 First make sure you have installed cmake.
 
-You will need two dependencies, [SFML 2.1](http://www.sfml-dev.org/download/sfml/2.1/) and [Thor](https://github.com/Bromeon/Thor).
+You will need the following dependencies:
+
+1. SFML 2.1 [(download)](http://www.sfml-dev.org/download/sfml/2.1/) or [GIT repo](https://github.com/LaurentGomila/SFML)
+2. SFGUI [Git repo, for Mac OS X](https://github.com/stefanhendriks/SFGUI/tree/fix-mac-osx-compiling) else go to [here](https://github.com/TankOs/SFGUI)
+3. [Thor](https://github.com/Bromeon/Thor)
+4. [Boost](http://www.boost.org/users/download/)
 
 Install SFML
 ------------
@@ -52,19 +57,39 @@ Install SFML
 - run ```sudo ./install.sh```
 - done (you may remove SFML-2.1-osx-clang-universal)
 
+OR:
+
+- git clone sfml
+- `cmake .`
+- `make`
+- `make install`
+
+Install SFGUI
+-------------
+- git clone [this mac os x specific repo](https://github.com/stefanhendriks/SFGUI/tree/fix-mac-osx-compiling).
+- `git submodule init`
+- `git submodule update`
+- `cmake .`
+- `make`
+- `make install`
+
+
 Install Thor
 ------------
 - cd /tmp
 - git clone [Thor](https://github.com/Bromeon/Thor)
 - cd to Thor
-- ```
-cmake .
-make
-make install
-```
+- `cmake .`
+- `make`
+- `make install`
 - done (you may remove the Thor directory)
 
 Now you are ready to [compile d2tm](#compiling).
+
+Install Boost
+-------------
+- `brew install boost`
+
 
 Controls
 ========
@@ -84,4 +109,6 @@ We use a [public Trello board](https://trello.com/b/3he26cm4/dune-ii-the-maker) 
 Documentation
 =============
 - [SFML 2.1](http://www.sfml-dev.org/tutorials/2.1/)
+- [SFGUI](http://sfgui.sfml-dev.de/p/docs)
+- [Boost](http://www.boost.org/doc/)
 - [Thor](http://www.bromeon.ch/libraries/thor/v2.0/doc/index.html)
