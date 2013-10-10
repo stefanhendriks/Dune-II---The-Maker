@@ -1,8 +1,9 @@
 #include "ActionManager.hpp"
 #include "Game.hpp"
+#include "Console.hpp"
 
-ActionManager::ActionManager(sf::RenderWindow& screen):
-  screen(screen)
+ActionManager::ActionManager(sf::RenderWindow& screen, Console &console):
+  screen(screen), console(console)
 {
   actionMap["boxStart"] = thor::Action(sf::Mouse::Left, thor::Action::PressOnce);
   actionMap["orderMove"] = thor::Action(sf::Mouse::Left, thor::Action::PressOnce);
@@ -20,15 +21,13 @@ ActionManager::ActionManager(sf::RenderWindow& screen):
 
 void ActionManager::update()
 {
-  // actionMap.clearEvents();
+   actionMap.clearEvents();
 
-  // sf::Event event;
-  // while (screen.pollEvent(event)){
-  //   actionMap.pushEvent(event);
-  //   console.handleEvent(event);
-  // }
-
-  actionMap.update(screen);
+   sf::Event event;
+   while (screen.pollEvent(event)){
+     actionMap.pushEvent(event);
+     console.handleEvent(event);
+   }
 
   actionMap.invokeCallbacks(system, &(screen));
 

@@ -46,8 +46,9 @@ class Game {
     std::vector<Player> players;
     std::vector<Unit> units;
 
-    ActionManager actions;
     Console console;
+    ActionManager actions;
+
 };
 
 #endif

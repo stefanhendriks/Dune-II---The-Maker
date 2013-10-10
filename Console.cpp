@@ -9,7 +9,7 @@ Console::Console():
     chatWindow(sfg::ScrolledWindow::Create()),
     window(sfg::Window::Create(sfg::Window::SHADOW))
 {
-    chatWindow->SetRequisition(sf::Vector2f(800.f,100.f));
+    chatWindow->SetRequisition(sf::Vector2f(750.f,100.f));
     chatWindow->SetScrollbarPolicy( sfg::ScrolledWindow::HORIZONTAL_AUTOMATIC | sfg::ScrolledWindow::VERTICAL_AUTOMATIC );
     chatWindow->AddWithViewport(chatAreaLayout);
 
