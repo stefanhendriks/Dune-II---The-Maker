@@ -20,6 +20,8 @@ enum class Terrain
 class Cell {
   public:
 
+    typedef std::array<sf::Vertex, 4> VertexQuad;
+
     static const int TILE_SIZE = 32; // squared
 
     Cell();
@@ -35,8 +37,8 @@ class Cell {
     Terrain terrainType; // terrain type (sand, rock, etc)
     bool shrouded;
 
-    sf::Vertex getVertex(int index) const;
-    sf::Vertex getShroudVertex(int index) const;
+    const VertexQuad& getQuad() const;
+    const VertexQuad& getShroudQuad() const;
 
     sf::FloatRect getBounds() const;
 
@@ -44,7 +46,7 @@ class Cell {
 
   private:
 
-    std::array<sf::Vertex, 4> vertices;
-    std::array<sf::Vertex, 4> shroudVertices;
+    VertexQuad vertices;
+    VertexQuad shroudVertices;
 };
 #endif // CELL_H

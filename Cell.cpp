@@ -1,5 +1,4 @@
 #include "Cell.hpp"
-#include <cassert>
 
 Cell::Cell():
   terrainType(Terrain::Sand),
@@ -82,18 +81,14 @@ bool Cell::shouldSmoothWithTerrainType(Cell &other) const
   return (other.terrainType != terrainType);
 }
 
-sf::Vertex Cell::getVertex(int index) const
+const Cell::VertexQuad &Cell::getQuad() const
 {
-  assert(index>=0 && index<=3);
-
-  return vertices[index];
+  return vertices;
 }
 
-sf::Vertex Cell::getShroudVertex(int index) const
+const Cell::VertexQuad &Cell::getShroudQuad() const
 {
-  assert(index>=0 && index<=3);
-
-  return shroudVertices[index];
+  return shroudVertices;
 }
 
 sf::FloatRect Cell::getBounds() const

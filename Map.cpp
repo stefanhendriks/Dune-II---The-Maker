@@ -9,10 +9,7 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
   shroudEdges(shroud_edges)
 {
   maxWidth = MAX_WIDTH - 1;
-  maxHeight = MAX_HEIGHT - 1;
-
-  vertexArray.setPrimitiveType(sf::Quads);
-  shroudArray.setPrimitiveType(sf::Quads);
+  maxHeight = MAX_HEIGHT - 1;  
 
   for (int x = 0; x < MAX_WIDTH; x++) {
     for (int y = 0; y < MAX_HEIGHT; y++) {
@@ -51,10 +48,10 @@ void Map::prepare(const sf::Vector2f& topLeft) const
     for (int y=-1; y < nofRows; ++y) {
       int index = ((y + mapCell.y) * MAX_WIDTH) + x + mapCell.x;
       if ((index<0) || (index>=MAX_SIZE)) continue;
-      for (int k=0; k<4; ++k){
-        vertexArray.append(cells[index].getVertex(k));
-        shroudArray.append(cells[index].getShroudVertex(k));
-      }
+      const auto& vertices = cells[index].getQuad();
+      vertexArray.insert(vertexArray.end(), vertices.begin(), vertices.end());
+      const auto& shroudVertices = cells[index].getShroudQuad();
+      shroudArray.insert(shroudArray.end(), shroudVertices.begin(), shroudVertices.end());
     }
   }
 
@@ -62,12 +59,12 @@ void Map::prepare(const sf::Vector2f& topLeft) const
 
 void Map::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-  target.draw(vertexArray, &terrain);
+  target.draw(vertexArray.data(), vertexArray.size(), sf::Quads, &terrain);
 }
 
 void Map::drawShrouded(sf::RenderTarget &target, sf::RenderStates states) const
 {
-  target.draw(shroudArray, &shroudEdges);
+  target.draw(shroudArray.data(), shroudArray.size(), sf::Quads, &shroudEdges);
 }
 
 sf::Vector2i Map::toMapPoint(const sf::Vector2f &world_point) const{
