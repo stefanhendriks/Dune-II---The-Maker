@@ -71,6 +71,7 @@ set(d2_SRCS
     ${SRC_DIR}/SelectionBox.cpp
     ${SRC_DIR}/Unit.cpp
     ${SRC_DIR}/UnitRepository.cpp
+    ${SRC_DIR}/Entity.cpp
 		${INC_DIR}/ActionManager.hpp
 		${INC_DIR}/Cell.hpp
 		${INC_DIR}/Console.hpp
@@ -86,6 +87,7 @@ set(d2_SRCS
 		${INC_DIR}/SelectionBox.hpp
 		${INC_DIR}/Unit.hpp
 		${INC_DIR}/UnitRepository.hpp
+        ${INC_DIR}/Entity.hpp
 )
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
