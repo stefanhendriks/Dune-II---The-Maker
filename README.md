@@ -59,7 +59,7 @@ Install SFML
 
 OR:
 
-- git clone sfml
+- git clone [sfml](https://github.com/LaurentGomila/SFML)
 - `cmake .`
 - `make`
 - `make install`
