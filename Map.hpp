@@ -79,8 +79,8 @@ class Map : public sf::Drawable, public Entity {
     int maxHeight;
     sf::Texture& terrain;
     sf::Texture& shroudEdges;
-    mutable sf::VertexArray vertexArray;
-    mutable sf::VertexArray shroudArray;
+    mutable std::vector<sf::Vertex> vertexArray;
+    mutable std::vector<sf::Vertex> shroudArray;
 
     int determineCellTile(Cell &cell);
     int determineTerrainTile(bool cellUp, bool cellDown, bool cellLeft, bool cellRight) const;
