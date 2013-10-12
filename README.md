@@ -40,6 +40,9 @@ Installing dependencies
 -----------------------
 This example is based on Mac OS X, the procedure is probably (somewhat) the same on Linux. For Windows, we have not yet tested this. We also assume you use [homebrew](http://brew.sh/).
 
+_If you trust us you can also execute the install_dependencies_osx.sh file which does the stuff below for you_
+
+
 First make sure you have installed cmake.
 
 You will need the following dependencies:
@@ -59,7 +62,7 @@ Install SFML
 
 OR:
 
-- git clone sfml
+- git clone [sfml](https://github.com/LaurentGomila/SFML)
 - `cmake .`
 - `make`
 - `make install`
