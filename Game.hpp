@@ -49,6 +49,8 @@ class Game {
     Console console;
     ActionManager actions;
 
+    sf::Time dt;
+
 };
 
 #endif
