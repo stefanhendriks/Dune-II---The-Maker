@@ -115,9 +115,9 @@ void Unit::turnBody() {
   setFacing(body_facing);
 }
 
-void Unit::updateMovePosition(const std::vector<Unit>& units)  {
+void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
   if (hasTarget()) {
-    float speed = 5.f;
+    float speed = dt.asSeconds()*250.f;
     sf::Vector2f direction = target - getCenter();
     sf::Vector2f unitDirection = thor::unitVector(direction);
     float distance = thor::length(direction);
@@ -164,13 +164,11 @@ sf::Vector2f Unit::getCenter() const {
   return (sprite.getPosition() + sf::Vector2f(spriteRect.width/2, spriteRect.height/2));
 }
 
-void Unit::updateState(const std::vector<Unit> &units) {
+void Unit::updateState(const std::vector<Unit> &units, sf::Time dt) {
 
-  updateMovePosition(units);
+  updateMovePosition(units, dt);
 
-  if (shouldTurnBody()) {
+  if (shouldTurnBody())
     turnBody();
-    return;
-  }
 
 }

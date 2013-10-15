@@ -178,9 +178,8 @@ void Game::updateState(sf::Time dt) {
 
   mouse.setPosition(screen.mapPixelToCoords(mousePosition,camera));
 
-  for (auto& unit: units){
-    unit.updateState(units);
-  }
+  for (auto& unit: units)
+    unit.updateState(units, dt);
 
   fpsCounter.update(dt);
   map->prepare(screen.mapPixelToCoords(sf::Vector2i(0,0)));
