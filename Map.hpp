@@ -13,7 +13,7 @@
 
 #define DEV_DRAWGRID true
 
-class Map : public sf::Drawable, public Entity {
+class Map : public sf::Drawable{
 
   public:
 

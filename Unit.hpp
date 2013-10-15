@@ -15,22 +15,13 @@ const int FACING_DOWN = 6;
 const int FACING_RIGHT_DOWN = 7;
 const int FACINGS = 8;          // used to calculate width of each 'tile' for a unit given a tilset
 
-// Sub-cell is only used for positioning, but not for remembering. Collision is
-// done in another way
-const int SUBCELL_UPLEFT = 1;
-const int SUBCELL_UPRIGHT = 2;
-const int SUBCELL_CENTER = 3;
-const int SUBCELL_DOWNLEFT = 4;
-const int SUBCELL_DOWNRIGHT = 5;
-
 struct TexturePack{
-    TexturePack(const sf::Texture& theUnit, const sf::Texture& theShadow, const sf::Texture& theSelected):
-      unit(theUnit), shadow(theShadow), selected(theSelected) {}
-
-    const sf::Texture& unit;
-    const sf::Texture& shadow;
-    const sf::Texture& selected;
+    const sf::Texture* unit;
+    const sf::Texture* shadow;
+    const sf::Texture* selected;
 };
+
+static_assert(std::is_pod<TexturePack>::value, "Texture pack is a pod");
 
 class Unit;
 
@@ -42,7 +33,7 @@ struct MoveMessage : public Message{
     const Unit& unit;
 };
 
-class Unit : public sf::Drawable, public Entity
+class Unit : public sf::Drawable
 {
 
   public:

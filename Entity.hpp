@@ -14,15 +14,6 @@ struct Message{
 
 std::string getEventId(const Message &message);
 
-
-
-class Entity
-{
-public:
-    Entity();
-
-protected:
-    static thor::EventSystem<Message, std::string> messageSystem;
-};
+typedef thor::EventSystem<Message, std::string> MessageSystem;
 
 #endif // ENTITY_HPP

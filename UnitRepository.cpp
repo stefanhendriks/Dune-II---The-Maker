@@ -19,7 +19,7 @@ UnitRepository::UnitRepository():
 
 Unit UnitRepository::create(Unit::Type type, const Player &player, sf::Vector2f position, Map& map)
 {
-  TexturePack pack(getTexture(type, player.getColor()), getShadow(type), selectedTexture);
+  TexturePack pack{&getTexture(type, player.getColor()), &getShadow(type), &selectedTexture};
   return Unit(pack, position, map, idCount++);
 }
 
