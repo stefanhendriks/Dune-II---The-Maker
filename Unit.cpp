@@ -4,14 +4,13 @@
 #include <Thor/Math.hpp>
 #include <Thor/Shapes.hpp>
 
-Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, Map& theMap, int theId):
+Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, int theId):
   sprite(*pack.unit),
   shadowSprite(*pack.shadow),
   selectedSprite(*pack.selected),
   viewRange(10),
   selected(false),
   messages(messages),
-  map(theMap),
   id(theId)
 {
   setFacing(FACING_UP);
@@ -23,7 +22,9 @@ Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, M
   target = getCenter();
 
   selectedSprite.setPosition(pos);
-  map.removeShroud(getCenter(), viewRange);
+
+  //send a fake move message to remove shroud on creation
+  messages.triggerEvent(MoveMessage("unitMove", *this));
 }
 
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
@@ -131,17 +132,6 @@ void Unit::updateMovePosition(const std::vector<Unit>& units)  {
     sprite.move(speed*unitDirection);
 
     //do collision detection now
-    sf::Vector2i mapPoint = map.toMapPoint(getCenter());
-
-    // for now it may seem that units are not blocked by terrain correctly.
-    // however, units *do* get blocked, but they are being drawn over mountains
-    // because they can move on a pixel perfect level, yet are being checked
-    // against cells.
-    if (map.getCell(mapPoint.x, mapPoint.y).terrainType == Terrain::Mountain) {
-      sprite.move(-speed*unitDirection);
-      return;
-    }
-
     for (const auto& unit : units){
       if (id == unit.id) continue;
 
@@ -154,8 +144,6 @@ void Unit::updateMovePosition(const std::vector<Unit>& units)  {
     shadowSprite.move(speed*unitDirection);
     selectedSprite.move(speed*unitDirection);
     messages.triggerEvent(MoveMessage("unitMove", *this));
-
-    //map.removeShroud(getCenter(), viewRange);
   }
 }
 

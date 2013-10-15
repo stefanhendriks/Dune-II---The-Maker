@@ -1,9 +1,13 @@
 #ifndef UNIT_H
 #define UNIT_H
 
-#include "Map.hpp"
 #include <memory>
 #include "Entity.hpp"
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <Thor/Vectors/VectorAlgebra2D.hpp>
 
 const int FACING_RIGHT = 0;
 const int FACING_UP_RIGHT = 1;
@@ -47,7 +51,7 @@ class Unit : public sf::Drawable
       Soldier
     };
 
-    Unit(TexturePack pack, MessageSystem& messages, const sf::Vector2f& pos, Map& theMap, int theId);
+    Unit(TexturePack pack, MessageSystem& messages, const sf::Vector2f& pos, int theId);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState(const std::vector<Unit>& units);
@@ -78,8 +82,6 @@ class Unit : public sf::Drawable
     bool selected;
 
     MessageSystem& messages;
-
-    Map& map;
 
     void setFacing(int facing);
     void turnBody();
