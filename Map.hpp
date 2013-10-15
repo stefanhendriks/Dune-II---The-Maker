@@ -9,7 +9,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <Thor/Vectors.hpp>
-#include "Entity.hpp"
+#include "Messages.hpp"
 
 #define DEV_DRAWGRID true
 

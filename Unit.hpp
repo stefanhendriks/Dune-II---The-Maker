@@ -2,7 +2,7 @@
 #define UNIT_H
 
 #include <memory>
-#include "Entity.hpp"
+#include "Messages.hpp"
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Sprite.hpp>

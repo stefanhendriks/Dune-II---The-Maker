@@ -1,12 +1,11 @@
-#ifndef ENTITY_HPP
-#define ENTITY_HPP
+#ifndef MESSAGES_HPP
+#define MESSAGES_HPP
 #include <Thor/Input.hpp>
 
 struct Message{
-    Message(const std::string& id):
-      id(id) {}
+    Message(const std::string& id);
 
-    virtual ~Message() {}
+    virtual ~Message();
 
     std::string id;
 };
