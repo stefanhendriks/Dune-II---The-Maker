@@ -27,7 +27,7 @@ class Map : public sf::Drawable{
     static const int LAYER_AIR = 1;
     static const int MAX_LAYERS = 2;
 
-    Map(sf::Texture& terrain, sf::Texture& shroudEdges);
+    Map(sf::Texture& terrain, sf::Texture& shroudEdges, MessageSystem& messages);
 
     void setBoundaries(int maxWidth, int maxHeight);
 
@@ -81,6 +81,8 @@ class Map : public sf::Drawable{
     sf::Texture& shroudEdges;
     mutable std::vector<sf::Vertex> vertexArray;
     mutable std::vector<sf::Vertex> shroudArray;
+
+    MessageSystem& messages;
 
     int determineCellTile(Cell &cell);
     int determineTerrainTile(bool cellUp, bool cellDown, bool cellLeft, bool cellRight) const;

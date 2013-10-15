@@ -21,7 +21,7 @@ UnitRepository::UnitRepository(MessageSystem& messages):
 Unit UnitRepository::create(Unit::Type type, const Player &player, sf::Vector2f position, Map& map)
 {
   TexturePack pack{&getTexture(type, player.getColor()), &getShadow(type), &selectedTexture};
-  return Unit(pack, position, map, idCount++);
+  return Unit(pack, messages, position, map, idCount++);
 }
 
 const sf::Texture &UnitRepository::getTexture(Unit::Type type, const sf::Color &color)

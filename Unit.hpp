@@ -47,7 +47,7 @@ class Unit : public sf::Drawable
       Soldier
     };
 
-    Unit(TexturePack pack, const sf::Vector2f& pos, Map& theMap, int theId);
+    Unit(TexturePack pack, MessageSystem& messages, const sf::Vector2f& pos, Map& theMap, int theId);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState(const std::vector<Unit>& units);
@@ -76,6 +76,8 @@ class Unit : public sf::Drawable
     int desiredBodyFacing;
 
     bool selected;
+
+    MessageSystem& messages;
 
     Map& map;
 

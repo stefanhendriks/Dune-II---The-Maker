@@ -5,9 +5,10 @@
 #include <cmath>     /* ceil */
 #include "Unit.hpp" //MoveMessage
 
-Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
+Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges, MessageSystem &messages) :
   terrain(terrain),
-  shroudEdges(shroud_edges)
+  shroudEdges(shroud_edges),
+  messages(messages)
 {
   maxWidth = MAX_WIDTH - 1;
   maxHeight = MAX_HEIGHT - 1;  
@@ -19,10 +20,10 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
     }
   }
 
-//  messageSystem.connect("unitMove", [this](const Message& message){
-//    const MoveMessage& received = dynamic_cast<const MoveMessage&>(message);
-//    removeShroud(received.unit.getCenter(), received.unit.getViewRange());
-//  });
+  messages.connect("unitMove", [this](const Message& message){
+    const MoveMessage& received = dynamic_cast<const MoveMessage&>(message);
+    removeShroud(received.unit.getCenter(), received.unit.getViewRange());
+  });
 }
 
 void Map::load(std::string file) {

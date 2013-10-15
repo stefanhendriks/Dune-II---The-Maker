@@ -4,12 +4,13 @@
 #include <Thor/Math.hpp>
 #include <Thor/Shapes.hpp>
 
-Unit::Unit(TexturePack pack, const sf::Vector2f& pos, Map& theMap, int theId):
+Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, Map& theMap, int theId):
   sprite(*pack.unit),
   shadowSprite(*pack.shadow),
   selectedSprite(*pack.selected),
   viewRange(10),
   selected(false),
+  messages(messages),
   map(theMap),
   id(theId)
 {
@@ -152,7 +153,7 @@ void Unit::updateMovePosition(const std::vector<Unit>& units)  {
 
     shadowSprite.move(speed*unitDirection);
     selectedSprite.move(speed*unitDirection);
-    //messageSystem.triggerEvent(MoveMessage("unitMove", *this));
+    messages.triggerEvent(MoveMessage("unitMove", *this));
 
     //map.removeShroud(getCenter(), viewRange);
   }

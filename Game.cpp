@@ -53,7 +53,7 @@ bool Game::init() {
   temp.createMaskFromColor(sf::Color(255, 0, 255));
   shroudEdges.loadFromImage(temp);
 
-  map.reset(new Map(terrain, shroudEdges));
+  map.reset(new Map(terrain, shroudEdges, messages));
   map->load("maps/4PL_Mountains.ini");
 
   camera.reset({0,0,800,600});
