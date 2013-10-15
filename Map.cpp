@@ -3,7 +3,8 @@
 
 #include <memory>    /* std::unique_ptr */
 #include <cmath>     /* ceil */
-#include "Unit.hpp" //MoveMessage
+#include "Unit.hpp"
+#include <boost/cast.hpp>
 
 Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges, MessageSystem &messages) :
   terrain(terrain),
@@ -21,8 +22,8 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges, MessageSystem &message
   }
 
   messages.connect("unitMove", [this](const Message& message){
-    const MoveMessage& received = dynamic_cast<const MoveMessage&>(message);
-    removeShroud(received.unit.getCenter(), received.unit.getViewRange());
+    const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
+    removeShroud(received->unit.getCenter(), received->unit.getViewRange());
   });
 }
 
