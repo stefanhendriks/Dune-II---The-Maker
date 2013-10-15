@@ -9,7 +9,8 @@ Game::Game():
   screen(),
   map(nullptr),
   console(),
-  actions(screen, console)
+  actions(screen, console),
+  unitRepository(messages)
 {
   sf::ContextSettings settings;
   settings.antialiasingLevel = 8;

@@ -1,7 +1,8 @@
 #include "UnitRepository.hpp"
 #include <cassert>
 
-UnitRepository::UnitRepository():
+UnitRepository::UnitRepository(MessageSystem& messages):
+  messages(messages),
   idCount(0)
 {
   sf::Image selectedImage;
