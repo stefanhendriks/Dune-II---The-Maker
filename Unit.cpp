@@ -5,9 +5,9 @@
 #include <Thor/Shapes.hpp>
 
 Unit::Unit(TexturePack pack, const sf::Vector2f& pos, Map& theMap, int theId):
-  sprite(pack.unit),
-  shadowSprite(pack.shadow),
-  selectedSprite(pack.selected),
+  sprite(*pack.unit),
+  shadowSprite(*pack.shadow),
+  selectedSprite(*pack.selected),
   viewRange(10),
   selected(false),
   map(theMap),
