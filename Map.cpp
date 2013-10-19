@@ -21,7 +21,7 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges, MessageSystem &message
     }
   }
 
-  messages.connect("unitMove", [this](const Message& message){
+  this->messages.connect("unitMove", [this](const Message& message){
     const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
     removeShroud(received->unit.getCenter(), received->unit.getViewRange());
   });
