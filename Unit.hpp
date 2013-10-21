@@ -30,8 +30,8 @@ static_assert(std::is_pod<TexturePack>::value, "Texture pack is a pod");
 class Unit;
 
 struct MoveMessage : public Message{
-    MoveMessage(const std::string& id, const Unit& unit):
-      Message(id), unit(unit)
+    MoveMessage(const Unit& unit):
+      Message("unitMove"), unit(unit)
     {}
 
     const Unit& unit;
@@ -65,6 +65,8 @@ class Unit : public sf::Drawable
     void select();
     void unselect();
     bool isSelected() const;
+
+    bool shouldMove;
 
     int getViewRange() const;
 

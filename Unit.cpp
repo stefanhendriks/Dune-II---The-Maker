@@ -24,7 +24,7 @@ Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, i
   selectedSprite.setPosition(pos);
 
   //send a fake move message to remove shroud on creation
-  messages.triggerEvent(MoveMessage("unitMove", *this));
+  messages.triggerEvent(MoveMessage(*this));
 }
 
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
@@ -143,7 +143,7 @@ void Unit::updateMovePosition(const std::vector<Unit>& units)  {
 
     shadowSprite.move(speed*unitDirection);
     selectedSprite.move(speed*unitDirection);
-    messages.triggerEvent(MoveMessage("unitMove", *this));
+    messages.triggerEvent(MoveMessage(*this));
   }
 }
 
