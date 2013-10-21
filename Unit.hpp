@@ -37,6 +37,14 @@ struct MoveMessage : public Message{
     const Unit& unit;
 };
 
+struct PreMoveMessage : public Message{
+    PreMoveMessage(const Unit& unit):
+      Message("premove"), unit(unit)
+    {}
+
+    const Unit& unit;
+};
+
 class Unit : public sf::Drawable
 {
 
@@ -66,7 +74,7 @@ class Unit : public sf::Drawable
     void unselect();
     bool isSelected() const;
 
-    bool shouldMove;
+    mutable bool shouldMove;
 
     int getViewRange() const;
 

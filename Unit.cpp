@@ -5,6 +5,7 @@
 #include <Thor/Shapes.hpp>
 
 Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, int theId):
+  shouldMove(false),
   sprite(*pack.unit),
   shadowSprite(*pack.shadow),
   selectedSprite(*pack.selected),
@@ -131,19 +132,32 @@ void Unit::updateMovePosition(const std::vector<Unit>& units)  {
     if (distance < speed) speed = distance;
     sprite.move(speed*unitDirection);
 
-    //do collision detection now
-    for (const auto& unit : units){
-      if (id == unit.id) continue;
+    messages.triggerEvent(PreMoveMessage(*this));
 
-      if (sprite.getGlobalBounds().intersects(unit.sprite.getGlobalBounds())){
-        sprite.move(-speed*unitDirection);
-        return;
+    if (shouldMove){
+      shouldMove = false;
+
+      //collision detection with units still here
+      for (const auto& unit : units){
+        if (id == unit.id) continue;
+
+        if (sprite.getGlobalBounds().intersects(unit.sprite.getGlobalBounds())){
+          sprite.move(-speed*unitDirection);
+          return;
+        }
       }
+
+      shadowSprite.move(speed*unitDirection);
+      selectedSprite.move(speed*unitDirection);
+      messages.triggerEvent(MoveMessage(*this));
+
+    }else{
+      sprite.move(-speed*unitDirection);
     }
 
-    shadowSprite.move(speed*unitDirection);
-    selectedSprite.move(speed*unitDirection);
-    messages.triggerEvent(MoveMessage(*this));
+
+
+
   }
 }
 
