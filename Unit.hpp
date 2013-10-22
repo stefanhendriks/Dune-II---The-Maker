@@ -9,15 +9,16 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <Thor/Vectors/VectorAlgebra2D.hpp>
 
-const int FACING_RIGHT = 0;
-const int FACING_UP_RIGHT = 1;
-const int FACING_UP = 2;
-const int FACING_LEFT_UP = 3;
-const int FACING_LEFT = 4;
-const int FACING_DOWN_LEFT = 5;
-const int FACING_DOWN = 6;
+// used to calculate width of each 'tile' for a unit given a tilset
+const int FACING_RIGHT      = 0;
+const int FACING_UP_RIGHT   = 1;
+const int FACING_UP         = 2;
+const int FACING_LEFT_UP    = 3;
+const int FACING_LEFT       = 4;
+const int FACING_DOWN_LEFT  = 5;
+const int FACING_DOWN       = 6;
 const int FACING_RIGHT_DOWN = 7;
-const int FACINGS = 8;          // used to calculate width of each 'tile' for a unit given a tilset
+const int FACINGS           = 8;
 
 struct TexturePack{
     const sf::Texture* unit;
@@ -31,7 +32,7 @@ class Unit;
 
 struct MoveMessage : public Message{
     MoveMessage(const Unit& unit):
-      Message("unitMove"), unit(unit)
+      Message(MESSAGES_UNITMOVE), unit(unit)
     {}
 
     const Unit& unit;
@@ -39,7 +40,7 @@ struct MoveMessage : public Message{
 
 struct PreMoveMessage : public Message{
     PreMoveMessage(const Unit& unit):
-      Message("premove"), unit(unit)
+      Message(MESSAGES_PREMOVE), unit(unit)
     {}
 
     const Unit& unit;
