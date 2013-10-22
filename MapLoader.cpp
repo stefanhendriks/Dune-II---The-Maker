@@ -83,7 +83,7 @@ int MapLoader::load(std::string file, Map* map) {
       }
 
       Terrain terrain_type = charToTerrainType(value.at(x));
-      Cell& cell = map->getCell(x + 1, y + 1); // compensate for invisible border
+      Cell& cell = map->getCell(x, y);
       cell.setType(terrain_type);
 
     }
