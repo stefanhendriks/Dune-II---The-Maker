@@ -1,18 +1,24 @@
 #ifndef UNIT_H
 #define UNIT_H
 
-#include "Map.hpp"
 #include <memory>
+#include "Messages.hpp"
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <Thor/Vectors/VectorAlgebra2D.hpp>
 
-const int FACING_RIGHT = 0;
-const int FACING_UP_RIGHT = 1;
-const int FACING_UP = 2;
-const int FACING_LEFT_UP = 3;
-const int FACING_LEFT = 4;
-const int FACING_DOWN_LEFT = 5;
-const int FACING_DOWN = 6;
+// used to calculate width of each 'tile' for a unit given a tilset
+const int FACING_RIGHT      = 0;
+const int FACING_UP_RIGHT   = 1;
+const int FACING_UP         = 2;
+const int FACING_LEFT_UP    = 3;
+const int FACING_LEFT       = 4;
+const int FACING_DOWN_LEFT  = 5;
+const int FACING_DOWN       = 6;
 const int FACING_RIGHT_DOWN = 7;
-const int FACINGS = 8;          // used to calculate width of each 'tile' for a unit given a tilset
+const int FACINGS           = 8;
 
 struct TexturePack{
     const sf::Texture* unit;
@@ -21,6 +27,24 @@ struct TexturePack{
 };
 
 static_assert(std::is_pod<TexturePack>::value, "Texture pack is a pod");
+
+class Unit;
+
+struct MoveMessage : public Message{
+    MoveMessage(const Unit& unit):
+      Message(MESSAGES_UNITMOVE), unit(unit)
+    {}
+
+    const Unit& unit;
+};
+
+struct PreMoveMessage : public Message{
+    PreMoveMessage(const Unit& unit):
+      Message(MESSAGES_PREMOVE), unit(unit)
+    {}
+
+    const Unit& unit;
+};
 
 class Unit : public sf::Drawable
 {
@@ -36,7 +60,7 @@ class Unit : public sf::Drawable
       Soldier
     };
 
-    Unit(TexturePack pack, const sf::Vector2f& pos, Map& theMap, int theId);
+    Unit(TexturePack pack, MessageSystem& messages, const sf::Vector2f& pos, int theId);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState(const std::vector<Unit>& units, sf::Time dt);
@@ -51,6 +75,10 @@ class Unit : public sf::Drawable
     void unselect();
     bool isSelected() const;
 
+    mutable bool shouldMove;
+
+    int getViewRange() const;
+
   private:
     sf::Vector2f target;            // target of interest (move/attack, etc)
 
@@ -64,7 +92,7 @@ class Unit : public sf::Drawable
 
     bool selected;
 
-    Map& map;
+    MessageSystem& messages;
 
     void setFacing(int facing);
     void turnBody();

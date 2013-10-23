@@ -4,13 +4,14 @@
 #include <Thor/Math.hpp>
 #include <Thor/Shapes.hpp>
 
-Unit::Unit(TexturePack pack, const sf::Vector2f& pos, Map& theMap, int theId):
+Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, int theId):
+  shouldMove(false),
   sprite(*pack.unit),
   shadowSprite(*pack.shadow),
   selectedSprite(*pack.selected),
   viewRange(10),
   selected(false),
-  map(theMap),
+  messages(messages),
   id(theId)
 {
   setFacing(FACING_UP);
@@ -22,7 +23,9 @@ Unit::Unit(TexturePack pack, const sf::Vector2f& pos, Map& theMap, int theId):
   target = getCenter();
 
   selectedSprite.setPosition(pos);
-  map.removeShroud(getCenter(), viewRange);
+
+  //send a fake move message to remove shroud on creation
+  messages.triggerEvent(MoveMessage(*this));
 }
 
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
@@ -46,6 +49,11 @@ void Unit::unselect() {
 
 bool Unit::isSelected() const {
   return selected;
+}
+
+int Unit::getViewRange() const
+{
+  return viewRange;
 }
 
 bool Unit::hasTarget() const {
@@ -124,30 +132,32 @@ void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
     if (distance < speed) speed = distance;
     sprite.move(speed*unitDirection);
 
-    //do collision detection now
-    sf::Vector2i mapPoint = map.toMapPoint(getCenter());
+    messages.triggerEvent(PreMoveMessage(*this));
 
-    // for now it may seem that units are not blocked by terrain correctly.
-    // however, units *do* get blocked, but they are being drawn over mountains
-    // because they can move on a pixel perfect level, yet are being checked
-    // against cells.
-    if (map.getCell(mapPoint.x, mapPoint.y).terrainType == Terrain::Mountain) {
-      sprite.move(-speed*unitDirection);
-      return;
-    }
+    if (shouldMove){
+      shouldMove = false;
 
-    for (const auto& unit : units){
-      if (id == unit.id) continue;
+      //collision detection with units still here
+      for (const auto& unit : units){
+        if (id == unit.id) continue;
 
-      if (sprite.getGlobalBounds().intersects(unit.sprite.getGlobalBounds())){
-        sprite.move(-speed*unitDirection);
-        return;
+        if (sprite.getGlobalBounds().intersects(unit.sprite.getGlobalBounds())){
+          sprite.move(-speed*unitDirection);
+          return;
+        }
       }
+
+      shadowSprite.move(speed*unitDirection);
+      selectedSprite.move(speed*unitDirection);
+      messages.triggerEvent(MoveMessage(*this));
+
+    }else{
+      sprite.move(-speed*unitDirection);
     }
 
-    shadowSprite.move(speed*unitDirection);
-    selectedSprite.move(speed*unitDirection);
-    map.removeShroud(getCenter(), viewRange);
+
+
+
   }
 }
 

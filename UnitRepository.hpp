@@ -8,15 +8,16 @@
 class UnitRepository
 {
   public:
-    UnitRepository();
+    UnitRepository(MessageSystem& messages);
 
-    Unit create(Unit::Type type, const Player& player, sf::Vector2f position, Map &map);
+    Unit create(Unit::Type type, const Player& player, sf::Vector2f position);
 
   private:
     std::map<Unit::Type, sf::Texture> unitTextures;
     std::map<Unit::Type, sf::Texture> shadowTextures;
     sf::Texture selectedTexture;
 
+    MessageSystem& messages;
     int idCount;
 
     const sf::Texture& getTexture(Unit::Type type, const sf::Color& color);

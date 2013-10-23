@@ -9,7 +9,8 @@ Game::Game():
   screen(),
   map(nullptr),
   console(),
-  actions(screen, console)
+  actions(screen, console),
+  unitRepository(messages)
 {
   sf::ContextSettings settings;
   settings.antialiasingLevel = 8;
@@ -52,7 +53,7 @@ bool Game::init() {
   temp.createMaskFromColor(sf::Color(255, 0, 255));
   shroudEdges.loadFromImage(temp);
 
-  map.reset(new Map(terrain, shroudEdges));
+  map.reset(new Map(terrain, shroudEdges, messages));
   map->load("maps/4PL_Mountains.ini");
 
   camera.reset({0,0,800,600});
@@ -63,15 +64,15 @@ bool Game::init() {
   players.emplace_back(House::Sardaukar, idCount++);
   players.emplace_back(House::Harkonnen, idCount++);
 
-  units.push_back(std::move(unitRepository.create(Unit::Type::Trike, players[0], sf::Vector2f(256, 256), *map)));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Quad, players[1], sf::Vector2f(300, 300), *map)));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Trike, players[0], sf::Vector2f(256, 256))));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Quad, players[1], sf::Vector2f(300, 300))));
 
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(400, 500), *map)));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(410, 500), *map)));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(220, 500), *map)));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(430, 500), *map)));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(400, 500))));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(410, 500))));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(220, 500))));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(430, 500))));
 
-  units.push_back(std::move(unitRepository.create(Unit::Type::Devastator, players[1], sf::Vector2f(500, 200), *map)));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Devastator, players[1], sf::Vector2f(500, 200))));
 
   //register listeners
   typedef thor::ActionContext<std::string> actionContext;

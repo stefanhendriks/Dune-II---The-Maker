@@ -39,15 +39,17 @@ class Game {
     SelectionBox box;
     std::unique_ptr<Map> map;
     Mouse mouse;
-    FPS_Counter fpsCounter;
-
-    UnitRepository unitRepository;
+    FPS_Counter fpsCounter;    
 
     std::vector<Player> players;
     std::vector<Unit> units;
 
     Console console;
     ActionManager actions;
+    MessageSystem messages;
+
+
+    UnitRepository unitRepository;
 
     sf::Time dt;
 

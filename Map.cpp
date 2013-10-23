@@ -3,10 +3,13 @@
 
 #include <memory>    /* std::unique_ptr */
 #include <cmath>     /* ceil */
+#include "Unit.hpp"
+#include <boost/cast.hpp>
 
-Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
+Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges, MessageSystem &messages) :
   terrain(terrain),
-  shroudEdges(shroud_edges)
+  shroudEdges(shroud_edges),
+  messages(messages)
 {
   maxWidth = MAX_WIDTH - 1;
   maxHeight = MAX_HEIGHT - 1;  
@@ -17,6 +20,18 @@ Map::Map(sf::Texture &terrain, sf::Texture &shroud_edges) :
       cells[i].init(x, y);
     }
   }
+
+  this->messages.connect(MESSAGES_PREMOVE, [this](const Message& message){
+    const PreMoveMessage* received = boost::polymorphic_downcast<const PreMoveMessage*>(&message);
+    sf::Vector2i mapPoint = toMapPoint(received->unit.getCenter());
+    if (getCell(mapPoint.x, mapPoint.y).terrainType != Terrain::Mountain)
+      received->unit.shouldMove = true;
+  });
+
+  this->messages.connect(MESSAGES_UNITMOVE, [this](const Message& message){
+    const MoveMessage* received = boost::polymorphic_downcast<const MoveMessage*>(&message);
+    removeShroud(received->unit.getCenter(), received->unit.getViewRange());
+  });
 }
 
 void Map::load(std::string file) {
