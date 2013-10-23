@@ -126,7 +126,7 @@ void Unit::turnBody() {
 
 void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
   if (hasTarget()) {
-    if (type == Type::Carryall) {
+    if (type == Type::Carryall) { // HACK HACK
       float speed = dt.asSeconds() * 250.f;
       sf::Vector2f direction = target - getCenter();
       sf::Vector2f unitDirection = thor::unitVector(direction);
@@ -153,6 +153,7 @@ void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
         //collision detection with units still here
         for (const auto& unit : units){
           if (id == unit.id) continue;
+          if (unit.type == Type::Carryall) continue; // HACK HACK
 
           if (sprite.getGlobalBounds().intersects(unit.sprite.getGlobalBounds())){
             sprite.move(-speed*unitDirection);

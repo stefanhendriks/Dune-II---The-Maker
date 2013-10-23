@@ -134,8 +134,14 @@ void Game::render() {
 
   screen.draw(*map);
 
-  for (const auto& unit : units)
-    screen.draw(unit);
+  for (const auto& unit : units) {
+    if (unit.type != Unit::Type::Carryall) screen.draw(unit);
+  }
+
+  // HACK HACK
+  for (const auto& unit : units) {
+    if (unit.type == Unit::Type::Carryall) screen.draw(unit);
+  }
 
   map->drawShrouded(screen, sf::RenderStates::Default);
 

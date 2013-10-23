@@ -80,6 +80,8 @@ class Unit : public sf::Drawable
 
     int getViewRange() const;
 
+    Type type;
+
   private:
     sf::Vector2f target;            // target of interest (move/attack, etc)
 
@@ -104,7 +106,6 @@ class Unit : public sf::Drawable
     bool shouldTurnBody() const;
 
     int id; //unique id for the unit
-    Type type;
 };
 
 #endif
