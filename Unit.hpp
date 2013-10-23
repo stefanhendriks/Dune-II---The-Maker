@@ -63,7 +63,7 @@ class Unit : public sf::Drawable
     Unit(TexturePack pack, MessageSystem& messages, const sf::Vector2f& pos, int theId);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
-    void updateState(const std::vector<Unit>& units);
+    void updateState(const std::vector<Unit>& units, sf::Time dt);
 
     void orderMove(const sf::Vector2f &target);
 
@@ -96,7 +96,7 @@ class Unit : public sf::Drawable
 
     void setFacing(int facing);
     void turnBody();
-    void updateMovePosition(const std::vector<Unit> &units);
+    void updateMovePosition(const std::vector<Unit> &units, sf::Time dt);
 
     int  desiredFacing() const;
     bool hasTarget() const;

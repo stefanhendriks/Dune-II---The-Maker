@@ -29,7 +29,7 @@ int Game::execute() {
   sf::Clock clock;
 
   while(playing) {
-    sf::Time dt = clock.restart();
+    dt = clock.restart();
 
     updateState(dt);
     render();
@@ -115,12 +115,12 @@ bool Game::init() {
     box.setBottomRight(screen.mapPixelToCoords(sf::Mouse::getPosition(screen), camera));
   });
 
-  const float cameraSpeed = 15.f;
+  const float cameraSpeed = 700.f;
 
-  actions.connect("cameraLeft", [this, cameraSpeed](actionContext) {camera.move(-cameraSpeed, 0.f);});
-  actions.connect("cameraRight", [this, cameraSpeed](actionContext){camera.move(cameraSpeed, 0.f); });
-  actions.connect("cameraUp", [this, cameraSpeed](actionContext)   {camera.move(0.f, -cameraSpeed);});
-  actions.connect("cameraDown", [this, cameraSpeed](actionContext) {camera.move(0.f, cameraSpeed); });
+  actions.connect("cameraLeft", [this, cameraSpeed](actionContext) {camera.move(-dt.asSeconds()*cameraSpeed, 0.f);});
+  actions.connect("cameraRight", [this, cameraSpeed](actionContext){camera.move(dt.asSeconds()*cameraSpeed, 0.f); });
+  actions.connect("cameraUp", [this, cameraSpeed](actionContext)   {camera.move(0.f, -dt.asSeconds()*cameraSpeed);});
+  actions.connect("cameraDown", [this, cameraSpeed](actionContext) {camera.move(0.f, dt.asSeconds()*cameraSpeed); });
 
   actions.connect("toggleConsole", std::bind(&Console::toggle, &console));
 
@@ -168,20 +168,20 @@ void Game::updateState(sf::Time dt) {
   sf::Vector2f topLeft = camera.getCenter() - (half_of_camera);
   sf::Vector2f downRight = camera.getCenter() + (half_of_camera);
 
+  // Camera constraints take into account an invisible border of 1 cell
   if (topLeft.x <= Cell::TILE_SIZE) camera.setCenter(half_of_camera.x + Cell::TILE_SIZE, camera.getCenter().y);
   if (topLeft.y <= Cell::TILE_SIZE) camera.setCenter(camera.getCenter().x, half_of_camera.y + Cell::TILE_SIZE);
 
-  int max_width = (map->getMaxWidth() + 1) * Cell::TILE_SIZE;
-  int max_height = (map->getMaxHeight() + 1) * Cell::TILE_SIZE;
+  int max_width = (map->getMaxWidth() -1) * Cell::TILE_SIZE;
+  int max_height = (map->getMaxHeight() -1) * Cell::TILE_SIZE;
 
   if (downRight.x >= max_width) camera.setCenter(max_width - half_of_camera.x, camera.getCenter().y);
   if (downRight.y >= max_height) camera.setCenter(camera.getCenter().x, max_height - half_of_camera.y);
 
   mouse.setPosition(screen.mapPixelToCoords(mousePosition,camera));
 
-  for (auto& unit: units){
-    unit.updateState(units);
-  }
+  for (auto& unit: units)
+    unit.updateState(units, dt);
 
   fpsCounter.update(dt);
   map->prepare(screen.mapPixelToCoords(sf::Vector2i(0,0)));

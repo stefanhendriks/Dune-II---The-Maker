@@ -51,6 +51,8 @@ class Game {
 
     UnitRepository unitRepository;
 
+    sf::Time dt;
+
 };
 
 #endif
