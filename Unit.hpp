@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "Messages.hpp"
+#include <SFML/System/Time.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Sprite.hpp>
