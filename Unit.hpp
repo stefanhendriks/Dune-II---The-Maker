@@ -61,7 +61,7 @@ class Unit : public sf::Drawable
       Soldier
     };
 
-    Unit(TexturePack pack, MessageSystem& messages, const sf::Vector2f& pos, int theId);
+    Unit(TexturePack pack, MessageSystem& messages, const sf::Vector2f& pos, int theId, Type type);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState(const std::vector<Unit>& units, sf::Time dt);
@@ -104,6 +104,7 @@ class Unit : public sf::Drawable
     bool shouldTurnBody() const;
 
     int id; //unique id for the unit
+    Type type;
 };
 
 #endif

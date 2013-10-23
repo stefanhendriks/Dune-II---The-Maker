@@ -4,7 +4,7 @@
 #include <Thor/Math.hpp>
 #include <Thor/Shapes.hpp>
 
-Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, int theId):
+Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, int theId, Type type):
   shouldMove(false),
   sprite(*pack.unit),
   shadowSprite(*pack.shadow),
@@ -12,7 +12,8 @@ Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, i
   viewRange(10),
   selected(false),
   messages(messages),
-  id(theId)
+  id(theId),
+  type(type)
 {
   setFacing(FACING_UP);
   desiredBodyFacing = bodyFacing;
@@ -125,39 +126,48 @@ void Unit::turnBody() {
 
 void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
   if (hasTarget()) {
-    float speed = dt.asSeconds()*250.f;
-    sf::Vector2f direction = target - getCenter();
-    sf::Vector2f unitDirection = thor::unitVector(direction);
-    float distance = thor::length(direction);
-    if (distance < speed) speed = distance;
-    sprite.move(speed*unitDirection);
-
-    messages.triggerEvent(PreMoveMessage(*this));
-
-    if (shouldMove){
-      shouldMove = false;
-
-      //collision detection with units still here
-      for (const auto& unit : units){
-        if (id == unit.id) continue;
-
-        if (sprite.getGlobalBounds().intersects(unit.sprite.getGlobalBounds())){
-          sprite.move(-speed*unitDirection);
-          return;
-        }
-      }
-
+    if (type == Type::Carryall) {
+      float speed = dt.asSeconds() * 250.f;
+      sf::Vector2f direction = target - getCenter();
+      sf::Vector2f unitDirection = thor::unitVector(direction);
+      float distance = thor::length(direction);
+      if (distance < speed) speed = distance;
+      sprite.move(speed*unitDirection);
       shadowSprite.move(speed*unitDirection);
       selectedSprite.move(speed*unitDirection);
       messages.triggerEvent(MoveMessage(*this));
 
-    }else{
-      sprite.move(-speed*unitDirection);
+    } else {
+      float speed = dt.asSeconds() * 250.f;
+      sf::Vector2f direction = target - getCenter();
+      sf::Vector2f unitDirection = thor::unitVector(direction);
+      float distance = thor::length(direction);
+      if (distance < speed) speed = distance;
+      sprite.move(speed*unitDirection);
+
+      messages.triggerEvent(PreMoveMessage(*this));
+
+      if (shouldMove){
+        shouldMove = false;
+
+        //collision detection with units still here
+        for (const auto& unit : units){
+          if (id == unit.id) continue;
+
+          if (sprite.getGlobalBounds().intersects(unit.sprite.getGlobalBounds())){
+            sprite.move(-speed*unitDirection);
+            return;
+          }
+        }
+
+        shadowSprite.move(speed*unitDirection);
+        selectedSprite.move(speed*unitDirection);
+        messages.triggerEvent(MoveMessage(*this));
+
+      }else{
+        sprite.move(-speed*unitDirection);
+      }
     }
-
-
-
-
   }
 }
 
