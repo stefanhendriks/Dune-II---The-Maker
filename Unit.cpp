@@ -11,7 +11,7 @@ Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, i
   selectedSprite(*pack.selected),
   viewRange(10),
   selected(false),
-  messages(messages),
+  messages(&messages),
   id(theId),
   type(type)
 {
@@ -135,7 +135,7 @@ void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
       sprite.move(speed*unitDirection);
       shadowSprite.move(speed*unitDirection);
       selectedSprite.move(speed*unitDirection);
-      messages.triggerEvent(MoveMessage(*this));
+      messages->triggerEvent(MoveMessage(*this));
 
     } else {
       float speed = dt.asSeconds() * 250.f;
@@ -145,7 +145,7 @@ void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
       if (distance < speed) speed = distance;
       sprite.move(speed*unitDirection);
 
-      messages.triggerEvent(PreMoveMessage(*this));
+      messages->triggerEvent(PreMoveMessage(*this));
 
       if (shouldMove){
         shouldMove = false;
@@ -163,7 +163,7 @@ void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
 
         shadowSprite.move(speed*unitDirection);
         selectedSprite.move(speed*unitDirection);
-        messages.triggerEvent(MoveMessage(*this));
+        messages->triggerEvent(MoveMessage(*this));
 
       }else{
         sprite.move(-speed*unitDirection);

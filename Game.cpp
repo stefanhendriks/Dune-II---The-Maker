@@ -38,6 +38,7 @@ int Game::execute() {
   return 0;
 }
 
+
 bool Game::init() {
   if (!terrain.loadFromFile("graphics/terrain.png")) {
     std::cout << "Failed to read graphics/terrain.png data" << std::endl;
@@ -64,15 +65,19 @@ bool Game::init() {
   players.emplace_back(House::Sardaukar, idCount++);
   players.emplace_back(House::Harkonnen, idCount++);
 
-  units.push_back(std::move(unitRepository.create(Unit::Type::Carryall, players[0], sf::Vector2f(256, 256))));
   units.push_back(std::move(unitRepository.create(Unit::Type::Quad, players[1], sf::Vector2f(300, 300))));
 
   units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(400, 500))));
   units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(410, 500))));
   units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(220, 500))));
   units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(430, 500))));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Carryall, players[0], sf::Vector2f(256, 256))));
 
   units.push_back(std::move(unitRepository.create(Unit::Type::Devastator, players[1], sf::Vector2f(500, 200))));
+
+  std::sort (units.begin(), units.end(), [this](const Unit& first, const Unit& second){
+    return first.zIndex() < second.zIndex();
+  });
 
   //register listeners
   typedef thor::ActionContext<std::string> actionContext;
@@ -98,10 +103,9 @@ bool Game::init() {
 
   actions.connect("singleSelect", [this](actionContext context){
     sf::Vector2f toCheck = screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera);
-    // TODO: single select should use z-index as well
-    for (auto& unit : units) {
-      if (unit.getBounds().contains(toCheck)) {
-        selectUnit(unit);
+    for (auto unit = units.rbegin(); unit != units.rend(); ++unit) {
+      if (unit->getBounds().contains(toCheck)) {
+        selectUnit(*unit);
         break;
       }
     }
@@ -138,12 +142,7 @@ void Game::render() {
   screen.draw(*map);
 
   for (const auto& unit : units) {
-    if (unit.type != Unit::Type::Carryall) screen.draw(unit);
-  }
-
-  // HACK HACK
-  for (const auto& unit : units) {
-    if (unit.type == Unit::Type::Carryall) screen.draw(unit);
+    screen.draw(unit);
   }
 
   map->drawShrouded(screen, sf::RenderStates::Default);

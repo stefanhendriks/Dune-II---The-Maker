@@ -82,6 +82,11 @@ class Unit : public sf::Drawable
 
     Type type;
 
+    int zIndex() const {
+      if (type == Type::Carryall) return 1;
+      return 0;
+    }
+
   private:
     sf::Vector2f target;            // target of interest (move/attack, etc)
 
@@ -95,7 +100,7 @@ class Unit : public sf::Drawable
 
     bool selected;
 
-    MessageSystem& messages;
+    MessageSystem* messages;
 
     void setFacing(int facing);
     void turnBody();
