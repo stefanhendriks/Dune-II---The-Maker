@@ -98,9 +98,12 @@ bool Game::init() {
 
   actions.connect("singleSelect", [this](actionContext context){
     sf::Vector2f toCheck = screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera);
-    for (auto& unit : units){
-      if (unit.getBounds().contains(toCheck))
+    // TODO: single select should use z-index as well
+    for (auto& unit : units) {
+      if (unit.getBounds().contains(toCheck)) {
         selectUnit(unit);
+        break;
+      }
     }
   });
 
