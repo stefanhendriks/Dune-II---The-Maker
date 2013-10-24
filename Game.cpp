@@ -125,12 +125,12 @@ bool Game::init() {
     box.setBottomRight(screen.mapPixelToCoords(sf::Mouse::getPosition(screen), camera));
   });
 
-  const float cameraSpeed = 700.f;
+  const float cameraSpeed = 15.f;
 
-  actions.connect("cameraLeft", [this, cameraSpeed](actionContext) {camera.move(-TimePerFrame.asSeconds()*cameraSpeed, 0.f);});
-  actions.connect("cameraRight", [this, cameraSpeed](actionContext){camera.move(TimePerFrame.asSeconds()*cameraSpeed, 0.f); });
-  actions.connect("cameraUp", [this, cameraSpeed](actionContext)   {camera.move(0.f, -TimePerFrame.asSeconds()*cameraSpeed);});
-  actions.connect("cameraDown", [this, cameraSpeed](actionContext) {camera.move(0.f, TimePerFrame.asSeconds()*cameraSpeed); });
+  actions.connect("cameraLeft", [this, cameraSpeed](actionContext) {camera.move(-cameraSpeed, 0.f);});
+  actions.connect("cameraRight", [this, cameraSpeed](actionContext){camera.move(cameraSpeed, 0.f); });
+  actions.connect("cameraUp", [this, cameraSpeed](actionContext)   {camera.move(0.f, -cameraSpeed);});
+  actions.connect("cameraDown", [this, cameraSpeed](actionContext) {camera.move(0.f, cameraSpeed); });
 
   actions.connect("toggleConsole", std::bind(&Console::toggle, &console));
 
