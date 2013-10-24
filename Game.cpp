@@ -4,6 +4,8 @@
 #include "Game.hpp"
 #include "Houses.hpp"
 
+const sf::Time Game::TimePerFrame = sf::seconds(1.f/60.f);
+
 Game::Game():
   playing(true),
   screen(),
@@ -27,12 +29,20 @@ Game::Game():
 int Game::execute() {
 
   sf::Clock clock;
+  sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
   while(playing) {
     dt = clock.restart();
+    timeSinceLastUpdate += dt;
+    while (timeSinceLastUpdate > TimePerFrame)
+    {
+      timeSinceLastUpdate -= TimePerFrame;
 
-    updateState(dt);
+      updateState(TimePerFrame);
+    }
+
     render();
+
   }
 
   return 0;

@@ -25,6 +25,9 @@ class Game {
     int execute();
 
   private:
+
+    static const sf::Time TimePerFrame;
+
     bool init();
     void updateState(sf::Time dt);
     void render();
