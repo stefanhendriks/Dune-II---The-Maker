@@ -127,10 +127,10 @@ bool Game::init() {
 
   const float cameraSpeed = 700.f;
 
-  actions.connect("cameraLeft", [this, cameraSpeed](actionContext) {camera.move(-dt.asSeconds()*cameraSpeed, 0.f);});
-  actions.connect("cameraRight", [this, cameraSpeed](actionContext){camera.move(dt.asSeconds()*cameraSpeed, 0.f); });
-  actions.connect("cameraUp", [this, cameraSpeed](actionContext)   {camera.move(0.f, -dt.asSeconds()*cameraSpeed);});
-  actions.connect("cameraDown", [this, cameraSpeed](actionContext) {camera.move(0.f, dt.asSeconds()*cameraSpeed); });
+  actions.connect("cameraLeft", [this, cameraSpeed](actionContext) {camera.move(-TimePerFrame.asSeconds()*cameraSpeed, 0.f);});
+  actions.connect("cameraRight", [this, cameraSpeed](actionContext){camera.move(TimePerFrame.asSeconds()*cameraSpeed, 0.f); });
+  actions.connect("cameraUp", [this, cameraSpeed](actionContext)   {camera.move(0.f, -TimePerFrame.asSeconds()*cameraSpeed);});
+  actions.connect("cameraDown", [this, cameraSpeed](actionContext) {camera.move(0.f, TimePerFrame.asSeconds()*cameraSpeed); });
 
   actions.connect("toggleConsole", std::bind(&Console::toggle, &console));
 
