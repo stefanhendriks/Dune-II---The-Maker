@@ -15,7 +15,6 @@ CreateUnitMessage::CreateUnitMessage(Unit::Type type, const Player &player, cons
 }
 
 
-
 const sf::Time Game::TimePerFrame = sf::seconds(1.f/60.f);
 
 Game::Game():
