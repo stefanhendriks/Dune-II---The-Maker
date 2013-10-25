@@ -6,14 +6,14 @@
 
 Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, int theId, Type type):
   shouldMove(false),
+  type(type),
   sprite(*pack.unit),
   shadowSprite(*pack.shadow),
   selectedSprite(*pack.selected),
   viewRange(10),
   selected(false),
   messages(&messages),
-  id(theId),
-  type(type)
+  id(theId)
 {
   setFacing(FACING_UP);
   desiredBodyFacing = bodyFacing;
