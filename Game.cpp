@@ -75,15 +75,15 @@ bool Game::init() {
   players.emplace_back(House::Sardaukar, idCount++);
   players.emplace_back(House::Harkonnen, idCount++);
 
-  units.push_back(std::move(unitRepository.create(Unit::Type::Quad, players[1], sf::Vector2f(300, 300))));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Quad, players[1], 300, 300)));
 
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(400, 500))));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(410, 500))));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(220, 500))));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(430, 500))));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Carryall, players[0], sf::Vector2f(256, 256))));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], 400, 500)));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], 410, 500)));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], 220, 500)));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], 430, 500)));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Carryall, players[0], 256, 256)));
 
-  units.push_back(std::move(unitRepository.create(Unit::Type::Devastator, players[1], sf::Vector2f(500, 200))));
+  units.push_back(std::move(unitRepository.create(Unit::Type::Devastator, players[1], 500, 200)));
 
   std::sort (units.begin(), units.end(), [this](const Unit& first, const Unit& second){
     return first.zIndex() < second.zIndex();

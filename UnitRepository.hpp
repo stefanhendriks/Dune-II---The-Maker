@@ -10,7 +10,7 @@ class UnitRepository
   public:
     UnitRepository(MessageSystem& messages);
 
-    Unit create(Unit::Type type, const Player& player, sf::Vector2f position);
+    Unit create(Unit::Type type, const Player& player, int x, int y);
 
   private:
     std::map<Unit::Type, sf::Texture> unitTextures;
