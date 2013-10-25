@@ -25,6 +25,8 @@ class Game {
     int execute();
 
   private:
+    void keepCameraWithinMapBoundaries();
+    void triggerCameraMoveWhenMouseHitsScreenBorders(sf::Vector2i mousePosition);
 
     static const sf::Time TimePerFrame;
 

@@ -177,26 +177,10 @@ void Game::updateState(sf::Time dt) {
 
   sf::Vector2i mousePosition = sf::Mouse::getPosition(screen);
 
-  if      (mousePosition.x < 50 ) actions.trigger("cameraLeft");
-  else if (mousePosition.y < 50 ) actions.trigger("cameraUp");
-  else if (mousePosition.x > 750) actions.trigger("cameraRight");
-  else if (mousePosition.y > 550) actions.trigger("cameraDown");
+  triggerCameraMoveWhenMouseHitsScreenBorders(mousePosition);
+  keepCameraWithinMapBoundaries();
 
-  sf::Vector2f half_of_camera = camera.getSize() / 2.f;
-  sf::Vector2f topLeft = camera.getCenter() - (half_of_camera);
-  sf::Vector2f downRight = camera.getCenter() + (half_of_camera);
-
-  // Camera constraints take into account an invisible border of 1 cell
-  if (topLeft.x <= Cell::TILE_SIZE) camera.setCenter(half_of_camera.x + Cell::TILE_SIZE, camera.getCenter().y);
-  if (topLeft.y <= Cell::TILE_SIZE) camera.setCenter(camera.getCenter().x, half_of_camera.y + Cell::TILE_SIZE);
-
-  int max_width = (map->getMaxWidth() -1) * Cell::TILE_SIZE;
-  int max_height = (map->getMaxHeight() -1) * Cell::TILE_SIZE;
-
-  if (downRight.x >= max_width) camera.setCenter(max_width - half_of_camera.x, camera.getCenter().y);
-  if (downRight.y >= max_height) camera.setCenter(camera.getCenter().x, max_height - half_of_camera.y);
-
-  mouse.setPosition(screen.mapPixelToCoords(mousePosition,camera));
+  mouse.setPosition(screen.mapPixelToCoords(mousePosition, camera));
 
   for (auto& unit: units)
     unit.updateState(units, dt);
@@ -213,4 +197,29 @@ void Game::selectUnit(Unit &unit)
     unit.orderMove(screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera));
   });
   mouse.setType(Mouse::Type::Move); //at least one unit selected...
+}
+
+void Game::keepCameraWithinMapBoundaries()
+{
+  sf::Vector2f half_of_camera = camera.getSize() / 2.f;
+  sf::Vector2f topLeft = camera.getCenter() - (half_of_camera);
+  sf::Vector2f downRight = camera.getCenter() + (half_of_camera);
+
+  // Camera constraints take into account an invisible border of 1 cell
+  if (topLeft.x <= Cell::TILE_SIZE) camera.setCenter(half_of_camera.x + Cell::TILE_SIZE, camera.getCenter().y);
+  if (topLeft.y <= Cell::TILE_SIZE) camera.setCenter(camera.getCenter().x, half_of_camera.y + Cell::TILE_SIZE);
+
+  int max_width = (map->getMaxWidth() -1) * Cell::TILE_SIZE;
+  int max_height = (map->getMaxHeight() -1) * Cell::TILE_SIZE;
+
+  if (downRight.x >= max_width) camera.setCenter(max_width - half_of_camera.x, camera.getCenter().y);
+  if (downRight.y >= max_height) camera.setCenter(camera.getCenter().x, max_height - half_of_camera.y);
+}
+
+void Game::triggerCameraMoveWhenMouseHitsScreenBorders(sf::Vector2i mousePosition)
+{
+  if      (mousePosition.x < 50 ) actions.trigger("cameraLeft");
+  else if (mousePosition.y < 50 ) actions.trigger("cameraUp");
+  else if (mousePosition.x > 750) actions.trigger("cameraRight");
+  else if (mousePosition.y > 550) actions.trigger("cameraDown");
 }
