@@ -53,9 +53,10 @@ class Game {
     std::vector<Player> players;
     std::vector<Unit> units;
 
+
+    MessageSystem messages;
     Console console;
     ActionManager actions;
-    MessageSystem messages;
 
 
     UnitRepository unitRepository;

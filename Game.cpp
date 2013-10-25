@@ -20,7 +20,8 @@ Game::Game():
   playing(true),
   screen(),
   map(nullptr),
-  console(),
+  messages(),
+  console(messages, players),
   actions(screen, console),
   unitRepository(messages)
 {
