@@ -3,6 +3,18 @@
 #include <SFML/Graphics.hpp>
 #include "Game.hpp"
 #include "Houses.hpp"
+#include <boost/cast.hpp>
+
+CreateUnitMessage::CreateUnitMessage(Unit::Type type, const Player &player, const sf::Vector2f &position):
+  Message(Messages::createUnit),
+  type(type),
+  player(player),
+  position(position)
+{
+
+}
+
+
 
 Game::Game():
   playing(true),
@@ -18,10 +30,17 @@ Game::Game():
   screen.setFramerateLimit(IDEAL_FPS);
   screen.setMouseCursorVisible(false);
 
+  messages.connect(Messages::createUnit, [this](const Message& message){
+    const CreateUnitMessage* received = boost::polymorphic_downcast<const CreateUnitMessage*>(&message);
+    units.push_back(std::move(unitRepository.create(received->type, received->player, received->position)));
+  });
+
   if (!init()){
     std::cerr << "Failed to initialized game.";
     playing = false;
   }
+
+
 }
 
 int Game::execute() {
@@ -64,15 +83,11 @@ bool Game::init() {
   players.emplace_back(House::Sardaukar, idCount++);
   players.emplace_back(House::Harkonnen, idCount++);
 
-  units.push_back(std::move(unitRepository.create(Unit::Type::Trike, players[0], sf::Vector2f(256, 256))));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Quad, players[1], sf::Vector2f(300, 300))));
-
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(400, 500))));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(410, 500))));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(220, 500))));
-  units.push_back(std::move(unitRepository.create(Unit::Type::Soldier, players[0], sf::Vector2f(430, 500))));
-
-  units.push_back(std::move(unitRepository.create(Unit::Type::Devastator, players[1], sf::Vector2f(500, 200))));
+  messages.triggerEvent(CreateUnitMessage(Unit::Type::Trike     , players[0], {256, 256}));
+  messages.triggerEvent(CreateUnitMessage(Unit::Type::Quad      , players[1], {300, 300}));
+  messages.triggerEvent(CreateUnitMessage(Unit::Type::Soldier   , players[0], {400, 500}));
+  messages.triggerEvent(CreateUnitMessage(Unit::Type::Soldier   , players[0], {220, 500}));
+  messages.triggerEvent(CreateUnitMessage(Unit::Type::Devastator, players[1], {500, 200}));
 
   //register listeners
   typedef thor::ActionContext<std::string> actionContext;
