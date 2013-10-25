@@ -4,7 +4,8 @@
 
 enum class Messages {
   premove,
-  unitMove
+  unitMove,
+  createUnit
 };
 
 struct Message{
