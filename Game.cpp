@@ -4,6 +4,8 @@
 #include "Game.hpp"
 #include "Houses.hpp"
 
+const sf::Time Game::TimePerFrame = sf::seconds(1.f/60.f);
+
 Game::Game():
   playing(true),
   screen(),
@@ -27,12 +29,20 @@ Game::Game():
 int Game::execute() {
 
   sf::Clock clock;
+  sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
   while(playing) {
     dt = clock.restart();
+    timeSinceLastUpdate += dt;
+    while (timeSinceLastUpdate > TimePerFrame)
+    {
+      timeSinceLastUpdate -= TimePerFrame;
 
-    updateState(dt);
+      updateState(TimePerFrame);
+    }
+
     render();
+
   }
 
   return 0;
@@ -122,12 +132,12 @@ bool Game::init() {
     box.setBottomRight(screen.mapPixelToCoords(sf::Mouse::getPosition(screen), camera));
   });
 
-  const float cameraSpeed = 700.f;
+  const float cameraSpeed = 15.f;
 
-  actions.connect("cameraLeft", [this, cameraSpeed](actionContext) {camera.move(-dt.asSeconds()*cameraSpeed, 0.f);});
-  actions.connect("cameraRight", [this, cameraSpeed](actionContext){camera.move(dt.asSeconds()*cameraSpeed, 0.f); });
-  actions.connect("cameraUp", [this, cameraSpeed](actionContext)   {camera.move(0.f, -dt.asSeconds()*cameraSpeed);});
-  actions.connect("cameraDown", [this, cameraSpeed](actionContext) {camera.move(0.f, dt.asSeconds()*cameraSpeed); });
+  actions.connect("cameraLeft", [this, cameraSpeed](actionContext) {camera.move(-cameraSpeed, 0.f);});
+  actions.connect("cameraRight", [this, cameraSpeed](actionContext){camera.move(cameraSpeed, 0.f); });
+  actions.connect("cameraUp", [this, cameraSpeed](actionContext)   {camera.move(0.f, -cameraSpeed);});
+  actions.connect("cameraDown", [this, cameraSpeed](actionContext) {camera.move(0.f, cameraSpeed); });
 
   actions.connect("toggleConsole", std::bind(&Console::toggle, &console));
 

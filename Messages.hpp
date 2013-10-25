@@ -2,20 +2,22 @@
 #define MESSAGES_HPP
 #include <Thor/Input.hpp>
 
-const std::string MESSAGES_PREMOVE   = "premove";
-const std::string MESSAGES_UNITMOVE  = "unitMove";
+enum class Messages {
+  premove,
+  unitMove
+};
 
 struct Message{
-    Message(const std::string& id);
+    Message(Messages id);
 
     virtual ~Message();
 
-    std::string id;
+    Messages id;
 };
 
 
-std::string getEventId(const Message &message);
+Messages getEventId(const Message &message);
 
-typedef thor::EventSystem<Message, std::string> MessageSystem;
+typedef thor::EventSystem<Message, Messages> MessageSystem;
 
 #endif // ENTITY_HPP

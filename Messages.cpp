@@ -1,12 +1,12 @@
 #include "Messages.hpp"
 
-std::string getEventId(const Message &message)
+Messages getEventId(const Message &message)
 {
     return message.id;
 }
 
 
-Message::Message(const std::string &id):
+Message::Message(Messages id):
   id(id)
 {
 }

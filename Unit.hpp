@@ -33,7 +33,7 @@ class Unit;
 
 struct MoveMessage : public Message{
     MoveMessage(const Unit& unit):
-      Message(MESSAGES_UNITMOVE), unit(unit)
+      Message(Messages::unitMove), unit(unit)
     {}
 
     const Unit& unit;
@@ -41,7 +41,7 @@ struct MoveMessage : public Message{
 
 struct PreMoveMessage : public Message{
     PreMoveMessage(const Unit& unit):
-      Message(MESSAGES_PREMOVE), unit(unit)
+      Message(Messages::premove), unit(unit)
     {}
 
     const Unit& unit;
