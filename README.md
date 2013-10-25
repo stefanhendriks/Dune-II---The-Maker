@@ -17,14 +17,14 @@ There is no binary available, instead you need to [compile it yourself](#compili
 
 Contributing
 ============
-- Check the [TODO list](#tododoingdone). 
-- Create (or checkout) a feature branch. 
-- Code. 
+- Check the [TODO list](#tododoingdone).
+- Create (or checkout) a feature branch.
+- Code.
 - Finished? Submit it as a pull request.
 
 Compiling
 =========
-This projct uses [cmake](http://www.cmake.org/) to generate a platform specific makefile. 
+This projct uses [cmake](http://www.cmake.org/) to generate a platform specific makefile.
 Before running cmake, make sure you have [installed the required dependencies](#installing-dependencies)
 
 After that you do:
@@ -34,7 +34,7 @@ cmake .
 make
 ```
 
-which should deliver a ```./d2tm``` binary file you should be able to execute. 
+which should deliver a ```./d2tm``` binary file you should be able to execute.
 
 Installing dependencies
 -----------------------
@@ -115,3 +115,27 @@ Documentation
 - [SFGUI](http://sfgui.sfml-dev.de/p/docs)
 - [Boost](http://www.boost.org/doc/)
 - [Thor](http://www.bromeon.ch/libraries/thor/v2.0/doc/index.html)
+
+LICENSE
+=======
+The MIT License (MIT)
+
+Copyright (c) 2013 S. Hendriks
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
