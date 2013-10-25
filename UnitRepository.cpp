@@ -10,12 +10,12 @@ UnitRepository::UnitRepository(MessageSystem& messages):
   selectedImage.createMaskFromColor(sf::Color(255, 0, 255));
   selectedTexture.loadFromImage(selectedImage);
 
-  filenames[Unit::Type::Trike] = "Unit_Trike";
-  filenames[Unit::Type::Quad] = "Unit_Quad";
-  filenames[Unit::Type::Frigate] = "Unit_Frigate";
-  filenames[Unit::Type::Carryall] = "Unit_Carryall";
+  filenames[Unit::Type::Trike]      = "Unit_Trike";
+  filenames[Unit::Type::Quad]       = "Unit_Quad";
+  filenames[Unit::Type::Frigate]    = "Unit_Frigate";
+  filenames[Unit::Type::Carryall]   = "Unit_Carryall";
   filenames[Unit::Type::Devastator] = "Unit_Devastator";
-  filenames[Unit::Type::Soldier] = "Unit_Soldier";
+  filenames[Unit::Type::Soldier]    = "Unit_Soldier";
 }
 
 Unit UnitRepository::create(Unit::Type type, const Player &player, int x, int y)
