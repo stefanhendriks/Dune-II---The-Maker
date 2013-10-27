@@ -10,6 +10,8 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <Thor/Vectors/VectorAlgebra2D.hpp>
 
+class Player;
+
 // used to calculate width of each 'tile' for a unit given a tilset
 const int FACING_RIGHT      = 0;
 const int FACING_UP_RIGHT   = 1;
@@ -61,7 +63,7 @@ class Unit : public sf::Drawable
       Soldier
     };
 
-    Unit(TexturePack pack, MessageSystem& messages, const sf::Vector2f& pos, int theId);
+    Unit(TexturePack pack, const Player& owner, MessageSystem& messages, const sf::Vector2f& pos, int theId);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
     void updateState(const std::vector<Unit>& units, sf::Time dt);
@@ -79,6 +81,8 @@ class Unit : public sf::Drawable
     mutable bool shouldMove;
 
     int getViewRange() const;
+
+    const Player& getowner() const;
 
   private:
     sf::Vector2f target;            // target of interest (move/attack, etc)
@@ -103,6 +107,7 @@ class Unit : public sf::Drawable
     bool hasTarget() const;
     bool shouldTurnBody() const;
 
+    const Player& owner;
     int id; //unique id for the unit
 };
 

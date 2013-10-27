@@ -4,7 +4,7 @@
 #include <Thor/Math.hpp>
 #include <Thor/Shapes.hpp>
 
-Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, int theId):
+Unit::Unit(TexturePack pack, const Player &owner, MessageSystem &messages, const sf::Vector2f& pos, int theId):
   shouldMove(false),
   sprite(*pack.unit),
   shadowSprite(*pack.shadow),
@@ -12,6 +12,7 @@ Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, i
   viewRange(10),
   selected(false),
   messages(messages),
+  owner(owner),
   id(theId)
 {
   setFacing(FACING_UP);
@@ -54,6 +55,11 @@ bool Unit::isSelected() const {
 int Unit::getViewRange() const
 {
   return viewRange;
+}
+
+const Player &Unit::getowner() const
+{
+  return owner;
 }
 
 bool Unit::hasTarget() const {

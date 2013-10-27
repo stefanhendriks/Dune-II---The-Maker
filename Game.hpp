@@ -56,6 +56,8 @@ class Game {
 
     sf::Time dt;
 
+    Player* human;
+
 };
 
 #endif

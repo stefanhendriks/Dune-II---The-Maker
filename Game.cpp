@@ -12,7 +12,8 @@ Game::Game():
   map(nullptr),
   console(),
   actions(screen, console),
-  unitRepository(messages)
+  unitRepository(messages),
+  human(nullptr)
 {
   sf::ContextSettings settings;
   settings.antialiasingLevel = 8;
@@ -73,6 +74,8 @@ bool Game::init() {
   int idCount = 0;
   players.emplace_back(House::Sardaukar, idCount++);
   players.emplace_back(House::Harkonnen, idCount++);
+
+  human = &players[0]; //the first one is the human one
 
   units.push_back(std::move(unitRepository.create(Unit::Type::Trike, players[0], sf::Vector2f(256, 256))));
   units.push_back(std::move(unitRepository.create(Unit::Type::Quad, players[1], sf::Vector2f(300, 300))));
@@ -200,6 +203,8 @@ void Game::updateState(sf::Time dt) {
 
 void Game::selectUnit(Unit &unit)
 {
+  if (unit.getowner() != *human) return;
+
   unit.select();
   actions.connect("orderMove", [this, &unit](thor::ActionContext<std::string> context){
     unit.orderMove(screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera));
