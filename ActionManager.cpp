@@ -17,6 +17,7 @@ ActionManager::ActionManager(sf::RenderWindow& screen, Console &console):
   actionMap["cameraUp"] = thor::Action(sf::Keyboard::Up, thor::Action::Hold);
   actionMap["cameraDown"] = thor::Action(sf::Keyboard::Down, thor::Action::Hold);
   actionMap["toggleConsole"] = thor::Action(sf::Keyboard::F2, thor::Action::PressOnce);
+  actionMap["mouseMove"] = thor::Action(sf::Event::MouseMoved);
 }
 
 void ActionManager::update()

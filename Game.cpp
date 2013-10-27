@@ -137,6 +137,20 @@ bool Game::init() {
 
   actions.connect("toggleConsole", std::bind(&Console::toggle, &console));
 
+  actions.connect("mouseMove", [this](actionContext context){
+    if (mouse.getType() == Mouse::Type::Default) return;
+
+    for (const auto& unit : units){
+      sf::Vector2f toCheck = screen.mapPixelToCoords(mouse.getHotspot(*context.event));
+      if (unit.getBounds().contains(toCheck)){
+        mouse.setType(Mouse::Type::Attack);
+        return;
+      }
+    }
+
+    mouse.setType(Mouse::Type::Move);
+  });
+
   return true;
 }
 

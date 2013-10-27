@@ -13,6 +13,11 @@ Mouse::Mouse():
   moveImage.createMaskFromColor(sf::Color(255, 0, 255));
   moveTexture.loadFromImage(moveImage);
 
+  sf::Image attackImage;
+  attackImage.loadFromFile("graphics/MS_Attack.bmp");
+  attackImage.createMaskFromColor(sf::Color(255, 0, 255));
+  attackTexture.loadFromImage(attackImage);
+
   sprite.setTexture(defaultTexture);
 }
 
@@ -38,7 +43,7 @@ void Mouse::setType(Type type)
     sprite.setTexture(moveTexture);
     break;
   case Type::Attack:
-    sprite.setTexture(defaultTexture);
+    sprite.setTexture(attackTexture);
     break;
   }
 }
@@ -51,6 +56,7 @@ sf::Vector2i Mouse::getHotspot(sf::Event event) const
   case Type::Default:
     return sf::Vector2i(event.mouseButton.x, event.mouseButton.y);
     break;
+  case Type::Attack:
   case Type::Move:{
     sf::FloatRect spriteRect = sprite.getGlobalBounds();
     return sf::Vector2i(event.mouseButton.x + spriteRect.width/2, event.mouseButton.y + spriteRect.height/2);

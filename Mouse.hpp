@@ -29,6 +29,7 @@ class Mouse : public sf::Drawable
   private:
     sf::Texture defaultTexture;
     sf::Texture moveTexture;
+    sf::Texture attackTexture;
 
     sf::Sprite sprite;
 
