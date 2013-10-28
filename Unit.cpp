@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Unit.hpp"
+#include "UnitGroundMoveBehaviour.hpp"
 
 #include <Thor/Math.hpp>
 #include <Thor/Shapes.hpp>
@@ -13,7 +14,8 @@ Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, i
   viewRange(10),
   selected(false),
   messages(&messages),
-  id(theId)
+  id(theId),
+  moveBehaviour(NULL)
 {
   setFacing(FACING_UP);
   desiredBodyFacing = bodyFacing;
@@ -27,6 +29,9 @@ Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, i
 
   //send a fake move message to remove shroud on creation
   messages.triggerEvent(MoveMessage(*this));
+
+  // conditional creation (can we do this without new?)
+  moveBehaviour = new UnitGroundMoveBehaviour(this);
 }
 
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
@@ -126,6 +131,10 @@ void Unit::turnBody() {
 
 void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
   if (hasTarget()) {
+    moveBehaviour->updateMovePosition(units, dt);
+  }
+  /*
+
     if (type == Type::Carryall) { // HACK HACK
       float speed = dt.asSeconds() * 250.f;
       sf::Vector2f direction = target - getCenter();
@@ -136,40 +145,12 @@ void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
       shadowSprite.move(speed*unitDirection);
       selectedSprite.move(speed*unitDirection);
       messages->triggerEvent(MoveMessage(*this));
-
     } else {
-      float speed = dt.asSeconds() * 250.f;
-      sf::Vector2f direction = target - getCenter();
-      sf::Vector2f unitDirection = thor::unitVector(direction);
-      float distance = thor::length(direction);
-      if (distance < speed) speed = distance;
-      sprite.move(speed*unitDirection);
 
-      messages->triggerEvent(PreMoveMessage(*this));
-
-      if (shouldMove){
-        shouldMove = false;
-
-        //collision detection with units still here
-        for (const auto& unit : units){
-          if (id == unit.id) continue;
-          if (unit.type == Type::Carryall) continue; // HACK HACK
-
-          if (sprite.getGlobalBounds().intersects(unit.sprite.getGlobalBounds())){
-            sprite.move(-speed*unitDirection);
-            return;
-          }
-        }
-
-        shadowSprite.move(speed*unitDirection);
-        selectedSprite.move(speed*unitDirection);
-        messages->triggerEvent(MoveMessage(*this));
-
-      }else{
-        sprite.move(-speed*unitDirection);
-      }
     }
-  }
+
+
+   */
 }
 
 sf::FloatRect Unit::getBounds() const {

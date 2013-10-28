@@ -70,6 +70,8 @@ set(d2_SRCS
     ${SRC_DIR}/Player.cpp
     ${SRC_DIR}/SelectionBox.cpp
     ${SRC_DIR}/Unit.cpp
+    ${INC_DIR}/UnitMoveBehaviour.cpp
+    ${INC_DIR}/UnitGroundMoveBehaviour.cpp
     ${SRC_DIR}/UnitRepository.cpp
     ${SRC_DIR}/Messages.cpp
 		${INC_DIR}/ActionManager.hpp
@@ -86,8 +88,10 @@ set(d2_SRCS
 		${INC_DIR}/Player.hpp
 		${INC_DIR}/SelectionBox.hpp
 		${INC_DIR}/Unit.hpp
-		${INC_DIR}/UnitRepository.hpp
-        ${INC_DIR}/Messages.hpp
+    ${INC_DIR}/UnitMoveBehaviour.hpp
+    ${INC_DIR}/UnitGroundMoveBehaviour.hpp
+    ${INC_DIR}/UnitRepository.hpp
+    ${INC_DIR}/Messages.hpp
 )
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")

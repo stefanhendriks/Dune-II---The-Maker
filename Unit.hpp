@@ -29,9 +29,10 @@ struct TexturePack{
 
 static_assert(std::is_pod<TexturePack>::value, "Texture pack is a pod");
 
+class UnitMoveBehaviour;
 class Unit;
 
-struct MoveMessage : public Message{
+struct MoveMessage : public Message {
     MoveMessage(const Unit& unit):
       Message(Messages::unitMove), unit(unit)
     {}
@@ -39,7 +40,7 @@ struct MoveMessage : public Message{
     const Unit& unit;
 };
 
-struct PreMoveMessage : public Message{
+struct PreMoveMessage : public Message {
     PreMoveMessage(const Unit& unit):
       Message(Messages::premove), unit(unit)
     {}
@@ -49,6 +50,7 @@ struct PreMoveMessage : public Message{
 
 class Unit : public sf::Drawable
 {
+  friend class UnitGroundMoveBehaviour;
 
   public:
 
@@ -111,6 +113,8 @@ class Unit : public sf::Drawable
     bool shouldTurnBody() const;
 
     int id; //unique id for the unit
+
+    UnitMoveBehaviour* moveBehaviour;
 };
 
 #endif
