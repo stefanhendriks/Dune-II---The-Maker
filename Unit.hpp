@@ -117,6 +117,8 @@ class Unit : public sf::Drawable
     void triggerPreMove() const;
     void triggerMove();
 
+    sf::Vector2f calculateDirection();
+
     int id; //unique id for the unit
 
     UnitMoveBehaviour* moveBehaviour;

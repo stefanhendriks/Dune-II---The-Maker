@@ -180,3 +180,7 @@ void Unit::updateState(const UnitContainer &units, sf::Time dt) {
     turnBody();
 
 }
+
+sf::Vector2f Unit::calculateDirection() {
+  return target - getCenter();
+}

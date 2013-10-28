@@ -11,10 +11,10 @@ UnitGroundMoveBehaviour::~UnitGroundMoveBehaviour() {
 }
 
 void UnitGroundMoveBehaviour::updateMovePosition(const UnitContainer &units, sf::Time dt) {
-  float speed = dt.asSeconds() * 250.f;
-  sf::Vector2f direction = unit.target - unit.getCenter();
+  sf::Vector2f direction = unit.calculateDirection();
 
   float distance = thor::length(direction);
+  float speed = dt.asSeconds() * 250.f;
   if (distance < speed) speed = distance;
 
   sf::Vector2f unitDirection = thor::unitVector(direction);
