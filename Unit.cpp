@@ -199,3 +199,17 @@ bool Unit::collidesWith(Unit& other) {
 
   return sprite.getGlobalBounds().intersects(other.sprite.getGlobalBounds());
 }
+
+void Unit::move(sf::Vector2f movement) {
+  shadowSprite.move(movement);
+  selectedSprite.move(movement);
+  sprite.move(movement);
+}
+
+sf::Vector2f Unit::calculateMovement(sf::Time dt) {
+  sf::Vector2f direction = calculateDirection();
+  float speed = calculateSpeed(dt);
+  sf::Vector2f unitDirection = thor::unitVector(direction);
+  sf::Vector2f movement = (speed * unitDirection);
+  return movement;
+}

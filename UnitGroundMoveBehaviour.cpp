@@ -11,11 +11,9 @@ UnitGroundMoveBehaviour::~UnitGroundMoveBehaviour() {
 }
 
 void UnitGroundMoveBehaviour::updateMovePosition(const UnitContainer &units, sf::Time dt) {
-  sf::Vector2f direction = unit.calculateDirection();
+  sf::Vector2f movement = unit.calculateMovement(dt);
 
-  float speed = unit.calculateSpeed(dt);
-  sf::Vector2f unitDirection = thor::unitVector(direction);
-  unit.sprite.move(speed * unitDirection);
+  unit.move(movement);
 
   unit.triggerPreMove();
 
@@ -24,16 +22,14 @@ void UnitGroundMoveBehaviour::updateMovePosition(const UnitContainer &units, sf:
 
     for (const auto& u : units) {
       if (unit.collidesWith(*u)) {
-        unit.sprite.move(-speed*unitDirection);
+        unit.move(-movement);
         return;
       }
     }
 
-    unit.shadowSprite.move(speed*unitDirection);
-    unit.selectedSprite.move(speed*unitDirection);
     unit.triggerMove();
   } else {
-    unit.sprite.move(-speed * unitDirection);
+    unit.move(-movement);
   }
 
 }
