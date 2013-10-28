@@ -15,6 +15,15 @@
 #include "UnitRepository.hpp"
 #include "Console.hpp"
 
+
+struct CreateUnitMessage : public Message{
+    CreateUnitMessage(Unit::Type type, const Player& player, const sf::Vector2f& position);
+
+    const Unit::Type type;
+    const Player& player;
+    const sf::Vector2f position;
+};
+
 class Game {
 
     const int IDEAL_FPS = 60;
@@ -49,9 +58,10 @@ class Game {
     std::vector<Player> players;
     std::vector<Unit> units;
 
+
+    MessageSystem messages;
     Console console;
     ActionManager actions;
-    MessageSystem messages;
 
 
     UnitRepository unitRepository;
