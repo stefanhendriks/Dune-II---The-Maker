@@ -16,7 +16,7 @@
 #include "Console.hpp"
 
 
-struct CreateUnitMessage : public Message{
+struct CreateUnitMessage : public Message {
     CreateUnitMessage(Unit::Type type, const Player& player, const sf::Vector2f& position);
 
     const Unit::Type type;

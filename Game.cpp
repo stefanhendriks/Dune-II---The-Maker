@@ -67,7 +67,6 @@ int Game::execute() {
   return 0;
 }
 
-
 bool Game::init() {
   if (!terrain.loadFromFile("graphics/terrain.png")) {
     std::cout << "Failed to read graphics/terrain.png data" << std::endl;
@@ -94,12 +93,16 @@ bool Game::init() {
   players.emplace_back(House::Sardaukar, idCount++);
   players.emplace_back(House::Harkonnen, idCount++);
 
+  messages.triggerEvent(CreateUnitMessage(Unit::Type::Carryall  , players[1], {256, 256}));
   messages.triggerEvent(CreateUnitMessage(Unit::Type::Trike     , players[0], {256, 256}));
   messages.triggerEvent(CreateUnitMessage(Unit::Type::Quad      , players[1], {300, 300}));
   messages.triggerEvent(CreateUnitMessage(Unit::Type::Soldier   , players[0], {400, 500}));
   messages.triggerEvent(CreateUnitMessage(Unit::Type::Soldier   , players[0], {220, 500}));
   messages.triggerEvent(CreateUnitMessage(Unit::Type::Devastator, players[1], {500, 200}));
-  messages.triggerEvent(CreateUnitMessage(Unit::Type::Carryall  , players[1], {256, 256}));
+
+  std::sort (units.begin(), units.end(), [this](const std::unique_ptr<Unit>& first, const std::unique_ptr<Unit>& second){
+    return first->zIndex() < second->zIndex();
+  });
 
   //register listeners
   typedef thor::ActionContext<std::string> actionContext;
