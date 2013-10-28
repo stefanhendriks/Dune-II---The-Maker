@@ -56,7 +56,7 @@ class Game {
     FPS_Counter fpsCounter;    
 
     std::vector<Player> players;
-    std::vector<Unit> units;
+    UnitContainer units;
 
 
     MessageSystem messages;

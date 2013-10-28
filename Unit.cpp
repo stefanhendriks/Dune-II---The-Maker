@@ -15,7 +15,7 @@ Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, i
   selected(false),
   messages(&messages),
   id(theId),
-  moveBehaviour(NULL)
+  moveBehaviour(new UnitGroundMoveBehaviour(*this))
 {
   setFacing(FACING_UP);
   desiredBodyFacing = bodyFacing;
@@ -30,8 +30,6 @@ Unit::Unit(TexturePack pack, MessageSystem &messages, const sf::Vector2f& pos, i
   //send a fake move message to remove shroud on creation
   messages.triggerEvent(MoveMessage(*this));
 
-  // conditional creation (can we do this without new?)
-  moveBehaviour = new UnitGroundMoveBehaviour(this);
 }
 
 void Unit::draw(sf::RenderTarget &target, sf::RenderStates states) const
@@ -129,7 +127,7 @@ void Unit::turnBody() {
   setFacing(body_facing);
 }
 
-void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
+void Unit::updateMovePosition(const UnitContainer &units, sf::Time dt)  {
   if (hasTarget()) {
     float speed = dt.asSeconds() * 250.f;
     sf::Vector2f direction = this->target - this->getCenter();
@@ -147,10 +145,10 @@ void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
 
       //collision detection with units still here
       for (const auto& u : units){
-        if (this->id == u.id) continue;
-        if (u.type == Unit::Type::Carryall) continue; // HACK HACK
+        if (this->id == u->id) continue;
+        if (u->type == Unit::Type::Carryall) continue; // HACK HACK
 
-        if (this->sprite.getGlobalBounds().intersects(u.sprite.getGlobalBounds())){
+        if (this->sprite.getGlobalBounds().intersects(u->sprite.getGlobalBounds())){
           this->sprite.move(-speed*unitDirection);
           return;
         }
@@ -183,7 +181,7 @@ void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
    */
 }
 
-void Unit::triggerPreMove() {
+void Unit::triggerPreMove() const {
   messages->triggerEvent(PreMoveMessage(*this));
 }
 
@@ -204,7 +202,7 @@ sf::Vector2f Unit::getCenter() const {
   return (sprite.getPosition() + sf::Vector2f(spriteRect.width/2, spriteRect.height/2));
 }
 
-void Unit::updateState(const std::vector<Unit> &units, sf::Time dt) {
+void Unit::updateState(const UnitContainer &units, sf::Time dt) {
 
   updateMovePosition(units, dt);
 

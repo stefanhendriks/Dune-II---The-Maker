@@ -32,6 +32,8 @@ static_assert(std::is_pod<TexturePack>::value, "Texture pack is a pod");
 class UnitMoveBehaviour;
 class Unit;
 
+typedef std::vector<std::unique_ptr<Unit> > UnitContainer;
+
 struct MoveMessage : public Message {
     MoveMessage(const Unit& unit):
       Message(Messages::unitMove), unit(unit)
@@ -66,7 +68,7 @@ class Unit : public sf::Drawable
     Unit(TexturePack pack, MessageSystem& messages, const sf::Vector2f& pos, int theId, Type type);
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
-    void updateState(const std::vector<Unit>& units, sf::Time dt);
+    void updateState(const UnitContainer &units, sf::Time dt);
 
     void orderMove(const sf::Vector2f &target);
 
@@ -106,13 +108,13 @@ class Unit : public sf::Drawable
 
     void setFacing(int facing);
     void turnBody();
-    void updateMovePosition(const std::vector<Unit> &units, sf::Time dt);
+    void updateMovePosition(const UnitContainer &units, sf::Time dt);
 
     int  desiredFacing() const;
     bool hasTarget() const;
     bool shouldTurnBody() const;
 
-    void triggerPreMove();
+    void triggerPreMove() const;
     void triggerMove();
 
     int id; //unique id for the unit

@@ -6,13 +6,13 @@
 class UnitMoveBehaviour {
 
   public:
-    UnitMoveBehaviour(Unit *unit);
+    UnitMoveBehaviour(Unit &unit);
     ~UnitMoveBehaviour();
 
-    virtual void updateMovePosition(const std::vector<Unit>& units, sf::Time dt) = 0;
+    virtual void updateMovePosition(const UnitContainer& units, sf::Time dt) = 0;
 
   protected:
-    Unit *unit;
+    Unit &unit;
 
 };
 #endif

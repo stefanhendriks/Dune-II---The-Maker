@@ -1,7 +1,7 @@
 #include "Unit.hpp"
 #include "UnitMoveBehaviour.hpp"
 
-UnitMoveBehaviour::UnitMoveBehaviour(Unit *unit):
+UnitMoveBehaviour::UnitMoveBehaviour(Unit &unit):
   unit(unit)
 {
 }

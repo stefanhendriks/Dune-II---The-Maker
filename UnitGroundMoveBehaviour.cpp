@@ -3,13 +3,13 @@
 #include <Thor/Math.hpp>
 #include <Thor/Shapes.hpp>
 
-UnitGroundMoveBehaviour::UnitGroundMoveBehaviour(Unit *unit) : UnitMoveBehaviour(unit) {
+UnitGroundMoveBehaviour::UnitGroundMoveBehaviour(Unit &unit) : UnitMoveBehaviour(unit) {
 
 }
 
 UnitGroundMoveBehaviour::~UnitGroundMoveBehaviour() {
 }
 
-void UnitGroundMoveBehaviour::updateMovePosition(const std::vector<Unit> &units, sf::Time dt) {
-  unit->triggerPreMove();
+void UnitGroundMoveBehaviour::updateMovePosition(const UnitContainer &units, sf::Time dt) {
+  unit.triggerPreMove();
 }

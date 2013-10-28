@@ -34,7 +34,7 @@ Game::Game():
 
   messages.connect(Messages::createUnit, [this](const Message& message){
     const CreateUnitMessage* received = boost::polymorphic_downcast<const CreateUnitMessage*>(&message);
-    units.push_back(std::move(unitRepository.create(received->type, received->player, received->position)));
+    units.emplace_back(unitRepository.create(received->type, received->player, received->position));
   });
 
   if (!init()){
@@ -108,8 +108,8 @@ bool Game::init() {
 
   actions.connect("boxRelease", [this](actionContext){
     for (auto& unit : units){
-      if (box.intersects(unit.getBounds())){
-        selectUnit(unit);
+      if (box.intersects(unit->getBounds())){
+        selectUnit(*unit);
       }
     }
     box.clear();
@@ -126,8 +126,8 @@ bool Game::init() {
   actions.connect("singleSelect", [this](actionContext context){
     sf::Vector2f toCheck = screen.mapPixelToCoords(mouse.getHotspot(*context.event), camera);
     for (auto unit = units.rbegin(); unit != units.rend(); ++unit) {
-      if (unit->getBounds().contains(toCheck)) {
-        selectUnit(*unit);
+      if ((*unit)->getBounds().contains(toCheck)) {
+        selectUnit(**unit);
         break;
       }
     }
@@ -137,7 +137,7 @@ bool Game::init() {
     actions.disconnect("orderMove");
     mouse.setType(Mouse::Type::Default);
     for (auto& unit : units)
-      unit.unselect();
+      unit->unselect();
   });
 
   actions.connect("boxDrag", [this](actionContext){
@@ -164,7 +164,7 @@ void Game::render() {
   screen.draw(*map);
 
   for (const auto& unit : units) {
-    screen.draw(unit);
+    screen.draw(*unit);
   }
 
   map->drawShrouded(screen, sf::RenderStates::Default);
@@ -195,7 +195,7 @@ void Game::updateState(sf::Time dt) {
   mouse.setPosition(screen.mapPixelToCoords(mousePosition, camera));
 
   for (auto& unit: units)
-    unit.updateState(units, dt);
+    unit->updateState(units, dt);
 
   fpsCounter.update(dt);
   map->prepare(screen.mapPixelToCoords(sf::Vector2i(0,0)));

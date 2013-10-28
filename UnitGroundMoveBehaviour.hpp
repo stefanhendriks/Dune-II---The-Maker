@@ -6,10 +6,10 @@
 class UnitGroundMoveBehaviour : public UnitMoveBehaviour {
 
   public:
-    UnitGroundMoveBehaviour(Unit *unit);
+    UnitGroundMoveBehaviour(Unit &unit);
     ~UnitGroundMoveBehaviour();
 
-  void updateMovePosition(const std::vector<Unit> &units, sf::Time dt);
+  void updateMovePosition(const UnitContainer &units, sf::Time dt);
 
 };
 
