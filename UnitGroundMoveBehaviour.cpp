@@ -11,5 +11,5 @@ UnitGroundMoveBehaviour::~UnitGroundMoveBehaviour() {
 }
 
 void UnitGroundMoveBehaviour::updateMovePosition(const std::vector<Unit> &units, sf::Time dt) {
-
+  unit->triggerPreMove();
 }

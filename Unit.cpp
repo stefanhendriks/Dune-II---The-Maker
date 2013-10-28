@@ -131,7 +131,6 @@ void Unit::turnBody() {
 
 void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
   if (hasTarget()) {
-    moveBehaviour->updateMovePosition(units, dt);
     float speed = dt.asSeconds() * 250.f;
     sf::Vector2f direction = this->target - this->getCenter();
 
@@ -141,9 +140,9 @@ void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
     sf::Vector2f unitDirection = thor::unitVector(direction);
     this->sprite.move(speed * unitDirection);
 
-    this->triggerPreMove();
+    moveBehaviour->updateMovePosition(units, dt);
 
-    if (this->shouldMove){
+    if (this->shouldMove) {
       this->shouldMove = false;
 
       //collision detection with units still here
@@ -160,9 +159,8 @@ void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
       this->shadowSprite.move(speed*unitDirection);
       this->selectedSprite.move(speed*unitDirection);
       this->triggerMove();
-
-    }else{
-      this->sprite.move(-speed*unitDirection);
+    } else {
+      this->sprite.move(-speed * unitDirection);
     }
   }
   /*
