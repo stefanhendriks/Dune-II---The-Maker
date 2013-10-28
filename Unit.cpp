@@ -132,6 +132,38 @@ void Unit::turnBody() {
 void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
   if (hasTarget()) {
     moveBehaviour->updateMovePosition(units, dt);
+    float speed = dt.asSeconds() * 250.f;
+    sf::Vector2f direction = this->target - this->getCenter();
+
+    float distance = thor::length(direction);
+    if (distance < speed) speed = distance;
+
+    sf::Vector2f unitDirection = thor::unitVector(direction);
+    this->sprite.move(speed * unitDirection);
+
+    this->triggerPreMove();
+
+    if (this->shouldMove){
+      this->shouldMove = false;
+
+      //collision detection with units still here
+      for (const auto& u : units){
+        if (this->id == u.id) continue;
+        if (u.type == Unit::Type::Carryall) continue; // HACK HACK
+
+        if (this->sprite.getGlobalBounds().intersects(u.sprite.getGlobalBounds())){
+          this->sprite.move(-speed*unitDirection);
+          return;
+        }
+      }
+
+      this->shadowSprite.move(speed*unitDirection);
+      this->selectedSprite.move(speed*unitDirection);
+      this->triggerMove();
+
+    }else{
+      this->sprite.move(-speed*unitDirection);
+    }
   }
   /*
 
@@ -151,6 +183,14 @@ void Unit::updateMovePosition(const std::vector<Unit>& units, sf::Time dt)  {
 
 
    */
+}
+
+void Unit::triggerPreMove() {
+  messages->triggerEvent(PreMoveMessage(*this));
+}
+
+void Unit::triggerMove() {
+  messages->triggerEvent(MoveMessage(*this));
 }
 
 sf::FloatRect Unit::getBounds() const {

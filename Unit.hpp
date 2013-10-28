@@ -112,6 +112,9 @@ class Unit : public sf::Drawable
     bool hasTarget() const;
     bool shouldTurnBody() const;
 
+    void triggerPreMove();
+    void triggerMove();
+
     int id; //unique id for the unit
 
     UnitMoveBehaviour* moveBehaviour;
