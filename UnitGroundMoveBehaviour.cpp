@@ -13,10 +13,7 @@ UnitGroundMoveBehaviour::~UnitGroundMoveBehaviour() {
 void UnitGroundMoveBehaviour::updateMovePosition(const UnitContainer &units, sf::Time dt) {
   sf::Vector2f direction = unit.calculateDirection();
 
-  float distance = thor::length(direction);
-  float speed = dt.asSeconds() * 250.f;
-  if (distance < speed) speed = distance;
-
+  float speed = unit.calculateSpeed(dt);
   sf::Vector2f unitDirection = thor::unitVector(direction);
   unit.sprite.move(speed * unitDirection);
 
@@ -25,12 +22,8 @@ void UnitGroundMoveBehaviour::updateMovePosition(const UnitContainer &units, sf:
   if (unit.shouldMove) {
     unit.shouldMove = false;
 
-    //collision detection with units still here
-    for (const auto& u : units){
-      if (unit.id == u->id) continue;
-      if (u->type == Unit::Type::Carryall) continue; // HACK HACK
-
-      if (unit.sprite.getGlobalBounds().intersects(u->sprite.getGlobalBounds())){
+    for (const auto& u : units) {
+      if (unit.collidesWith(*u)) {
         unit.sprite.move(-speed*unitDirection);
         return;
       }

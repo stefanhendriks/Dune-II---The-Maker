@@ -184,3 +184,18 @@ void Unit::updateState(const UnitContainer &units, sf::Time dt) {
 sf::Vector2f Unit::calculateDirection() {
   return target - getCenter();
 }
+
+float Unit::calculateSpeed(sf::Time dt) {
+  float distance = thor::length(calculateDirection());
+  float speed = dt.asSeconds() * 250.f;
+  if (distance < speed) speed = distance;
+  return speed;
+}
+
+// collides only with units on same z index and is not same id
+bool Unit::collidesWith(Unit& other) {
+  if (other.id == id) return false;
+  if (other.zIndex() != zIndex()) return false;
+
+  return sprite.getGlobalBounds().intersects(other.sprite.getGlobalBounds());
+}

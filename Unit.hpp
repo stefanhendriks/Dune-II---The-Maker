@@ -118,6 +118,8 @@ class Unit : public sf::Drawable
     void triggerMove();
 
     sf::Vector2f calculateDirection();
+    float calculateSpeed(sf::Time dt);
+    bool collidesWith(Unit& other);
 
     int id; //unique id for the unit
 
