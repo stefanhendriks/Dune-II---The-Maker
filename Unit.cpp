@@ -213,3 +213,12 @@ sf::Vector2f Unit::calculateMovement(sf::Time dt) {
   sf::Vector2f movement = (speed * unitDirection);
   return movement;
 }
+
+bool Unit::collidesWithAUnit(const UnitContainer &units) {
+  for (const auto& u : units) {
+    if (collidesWith(*u)) {
+      return true;
+    }
+  }
+  return false;
+}

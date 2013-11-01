@@ -123,6 +123,8 @@ class Unit : public sf::Drawable
     bool collidesWith(Unit& other);
     sf::Vector2f calculateMovement(sf::Time dt);
 
+    bool collidesWithAUnit(const UnitContainer &units);
+
     int id; //unique id for the unit
 
     UnitMoveBehaviour* moveBehaviour;
