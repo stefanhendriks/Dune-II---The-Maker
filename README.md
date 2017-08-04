@@ -1,5 +1,11 @@
+# This repository is no longer maintained, [a more recent rewrite can be found here though](https://github.com/Fundynamic/dune2themaker4j)
+
 Dune II - The Maker
 ===================
+## Looking for the source code of DEMO 3.5/DEMO 4 ?
+If you are looking for the source code of the 'current' D2TM ([with demo binaries](http://dune2themaker.fundynamic.com/downloads/)), then you can find it [here](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/d2tm_allegro)
+
+## Original readme continues here
 A.k.a. D2TM. Is a [Dune 2](http://en.wikipedia.org/wiki/Dune_II) clone. At this moment the most known/stable version is [DEMO4 and DEMO 3.5](http://dune2themaker.fundynamic.com/?page_id=11) which are very old and using
 Allegro & other libs. I am proud of that project, but it is time to rewrite it and build a game mostly focussing on skirmish
 and networking gaming.
