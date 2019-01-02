@@ -1,7 +1,6 @@
 #ifndef CMOVIEPLAYER_H_
 #define CMOVIEPLAYER_H_
 
-
 class cMoviePlayer {
 	public:
 		cMoviePlayer(DATAFILE *movie);

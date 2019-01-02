@@ -13,9 +13,6 @@
 #ifndef CINTERACTIONMANAGER_H_
 #define CINTERACTIONMANAGER_H_
 
-#include "cKeyboardManager.h"
-#include "../player/cPlayer.h"
-
 class cInteractionManager {
 	public:
 		cInteractionManager(cPlayer * thePlayer);

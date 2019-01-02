@@ -15,7 +15,6 @@
 #include <math.h>
 
 #include "../movie/cMoviePlayer.h"
-#include "CellCalculator.h"
 
 namespace {
 	const int PAN_CENTER = 128;
@@ -28,8 +27,43 @@ namespace {
 }
 // Keep a logbook
 void logbook(const char *txt) {
-	Logger *logger = Logger::getInstance();
+	cLogger *logger = cLogger::getInstance();
 	logger->log(LOG_WARN, COMP_NONE, "Default log message (CHANGEME)", txt);
+}
+
+// determine if this cell is not out of boundries
+bool BORDER_POS(int x, int y) {
+	if (x < 1)
+		return false;
+	if (x > (map->getWidth() - 1))
+		return false;
+
+	if (y < 1)
+		return false;
+	if (y > (map->getHeight() - 1))
+		return false;
+
+	return true; // the fix-border-pos function did not change/correct the positions! yay
+}
+
+// fixes the positions according to the PLAYABLE size of the map (for unit
+// dumping, etc)
+void FIX_BORDER_POS(int &x, int &y) {
+	// filled in
+	if (x) {
+		if (x < 1)
+			x = 1;
+		if (x > (map->getWidth() - 1))
+			x = (map->getWidth() - 1);
+	}
+
+	// filled in
+	if (y) {
+		if (y < 1)
+			y = 1;
+		if (y > (map->getHeight() - 1))
+			y = (map->getHeight() - 1);
+	}
 }
 
 // Will make sure the X and Y don't get out of their boundries
@@ -153,12 +187,12 @@ void INSTALL_HOUSES() {
 }
 
 bool MOUSE_BTN_LEFT() {
-	return Mouse::getInstance()->isLeftButtonPressed();
+	return cMouse::getInstance()->isLeftButtonPressed();
 }
 
 // Did we press the right mouse button? (instant)
 bool MOUSE_BTN_RIGHT() {
-	return Mouse::getInstance()->isRightButtonPressed();
+	return cMouse::getInstance()->isRightButtonPressed();
 }
 
 /**
@@ -168,12 +202,12 @@ bool MOUSE_BTN_RIGHT() {
  * @return
  */
 bool mouse_pressed_left() {
-	return Mouse::getInstance()->isLeftButtonClicked();
+	return cMouse::getInstance()->isLeftButtonClicked();
 }
 
 // Did we press the right mouse button?
 bool mouse_pressed_right() {
-	return Mouse::getInstance()->isRightButtonClicked();
+	return cMouse::getInstance()->isRightButtonClicked();
 }
 /*****************************
  Unit Rules
@@ -559,7 +593,7 @@ void install_units() {
 void install_bullets() {
 	for (int i = 0; i < MAX_BULLET_TYPES; i++) {
 		bullets[i].bmp = NULL; // in case an invalid bitmap; default is a small rocket
-		bullets[i].deadbmp = -1; // in case an invalid bitmap; default is a small rocket
+		bullets[i].deadbmp = NULL; // in case an invalid bitmap; default is a small rocket
 		bullets[i].damage = 0; // damage to vehicles
 		bullets[i].damage_inf = 0; // damage to infantry
 		bullets[i].max_frames = 1; // 1 frame animation
@@ -1012,8 +1046,8 @@ float health_structure(int i, int w) {
 
 // return a border cell, close to iCll
 int iFindCloseBorderCell(int iCll) {
-	CellCalculator * calculator = new CellCalculator(map);
-	int result = calculator->findCloseMapBorderCellRelativelyToDestinationCell(iCll);
+	cCellCalculator * calculator = new cCellCalculator(map);
+	int result = calculator->findCloseMapBorderCellRelativelyToDestinationCel(iCll);
 	delete calculator;
 	return result;
 }
@@ -1031,15 +1065,15 @@ int iCellOnScreen(int iCell) {
 	int iMapX = mapCamera->getX();
 	int iMapY = mapCamera->getY();
 
-	int iEndX = iMapX + ((/* game.getScreenResolution()->getWidth() */ 800  - 160) / 32); // width of sidebar is 160
-	int iEndY = iMapY + ((/* game.getScreenResolution()->getHeight */ 600  - 42) / 32) + 1; // height of upper bar is 42
+	int iEndX = iMapX + ((game.getScreenResolution()->getWidth() - 160) / 32); // width of sidebar is 160
+	int iEndY = iMapY + ((game.getScreenResolution()->getHeight() - 42) / 32) + 1; // height of upper bar is 42
 
 	if ((iCellX >= iMapX && iCellX <= iEndX) && (iCellY >= iMapY && iCellY <= iEndY))
 		return 0; // on screen
 
 
-	int iCalcX = iMapX + (((/* game.getScreenResolution()->getWidth() */ 800  - 160) / 32) / 2);
-	int iCalcY = iMapY + (((/* game.getScreenResolution()->getHeight */ 600  - 42) / 32) + 1) / 2;
+	int iCalcX = iMapX + (((game.getScreenResolution()->getWidth() - 160) / 32) / 2);
+	int iCalcY = iMapY + (((game.getScreenResolution()->getHeight() - 42) / 32) + 1) / 2;
 
 	// Calc from midst of screen till the cell x,y
 	return ABS_length(iCellX, iCellY, iCalcX, iCalcY);
@@ -1053,7 +1087,12 @@ int iCellOnScreen(int iCell) {
  * @param iDistance
  */
 void play_sound_id(int s, int iDistance) {
-	/*
+	if (!game.soundEnabled)
+		return; // do not play sound when boolean is false.
+
+	if (gfxaudio[s].dat == NULL)
+		return; // no data file at the specified position in index.
+
 	// Determine if sound is on screen or not
 	if (iDistance <= 1) {
 		int volume = VOLUME_MAX;
@@ -1068,7 +1107,7 @@ void play_sound_id(int s, int iDistance) {
 		if (iVol > 0) {
 			game.getSoundPlayer()->playSound(s, 127, iVol);
 		}
-	}*/
+	}
 }
 
 void play_voice(int iType) {
@@ -1094,13 +1133,13 @@ bool MIDI_music_playing() {
 }
 
 void setMusicVolume(int i) {
-// 	if (game.mp3MusicEnabled) {
-// 		if (mp3_music != NULL) {
-// 			almp3_adjust_mp3(mp3_music, i, 127, 1000, false);
-// 		}
-// 	} else {
-// 		set_volume(VOLUME_MAX, i);
-// 	}
+	if (game.mp3MusicEnabled) {
+		if (mp3_music != NULL) {
+			almp3_adjust_mp3(mp3_music, i, 127, 1000, false);
+		}
+	} else {
+		set_volume(VOLUME_MAX, i);
+	}
 }
 
 void mp3_play_file(char filename[VOLUME_MAX]) {
@@ -1119,14 +1158,13 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 	} else {
 		logbook("MP3: Could not find mp3 file for add-on, switching to MIDI mode");
 		allegro_message("Could not find MP3 file, add-on incomplete. Switching to MIDI mode");
-// 		game.mp3MusicEnabled = false;
+		game.mp3MusicEnabled = false;
 
 		if (mp3_music != NULL) {
 			almp3_destroy_mp3(mp3_music);
 		}
 
 		mp3_music = NULL;
-		delete[] data;
 		return;
 	}
 
@@ -1138,92 +1176,92 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 	int result = almp3_play_mp3(mp3_music, BUFFER_SIZE, VOLUME_MAX, PAN_CENTER);
 	assert(result == ALMP3_OK);
 
-/*	setMusicVolume(game.iMusicVolume);*/
+	setMusicVolume(game.iMusicVolume);
 }
 
 // play type of music
 void playMusicByType(int iType) {
-// 	if (!game.soundEnabled) {
-// 		char msg[255];
-// 		sprintf(msg, "playMusicByType for music type [%d], does nothing because bSoundEnabled flag is set to [false]", iType);
-// 		logbook(msg);
-// 		return;
-// 	}
-// 	logbook("playMusicByType [BEGIN]");
-// 	game.iMusicType = iType;
-// 
-// 
-// 	int iNumber = 0;
-// 
-// 	if (iType == MUSIC_WIN || iType == MUSIC_LOSE) {
-// 		iNumber = rnd(3) + 1;
-// 	} else if (iType == MUSIC_ATTACK) {
-// 		iNumber = rnd(6) + 1;
-// 	} else if (iType == MUSIC_PEACE) {
-// 		iNumber = rnd(9) + 1;
-// 	} else if (iType == MUSIC_MENU) {
-// 		iNumber = MIDI_MENU;
-// 	} else if (iType == MUSIC_CONQUEST) {
-// 		iNumber = MIDI_SCENARIO;
-// 	} else if (iType == MUSIC_BRIEFING) {
-// 		if (game.iHouse == ATREIDES)
-// 			iNumber = MIDI_MENTAT_ATR;
-// 		if (game.iHouse == HARKONNEN)
-// 			iNumber = MIDI_MENTAT_HAR;
-// 		if (game.iHouse == ORDOS)
-// 			iNumber = MIDI_MENTAT_ORD;
-// 	}
-// 
-// 	// In the end, when mp3, play it:
-// 	if (game.mp3MusicEnabled) {
-// 		char filename[50];
-// 		memset(filename, 0, sizeof(filename));
-// 
-// 		if (iType == MUSIC_WIN) {
-// 			sprintf(filename, "mp3/win%d.mp3", iNumber);
-// 		} else if (iType == MUSIC_LOSE) {
-// 			sprintf(filename, "mp3/lose%d.mp3", iNumber);
-// 		} else if (iType == MUSIC_ATTACK) {
-// 			sprintf(filename, "mp3/attack%d.mp3", iNumber);
-// 		} else if (iType == MUSIC_PEACE) {
-// 			sprintf(filename, "mp3/peace%d.mp3", iNumber);
-// 		} else if (iType == MUSIC_MENU) {
-// 			sprintf(filename, "mp3/menu.mp3");
-// 		} else if (iType == MUSIC_CONQUEST) {
-// 			sprintf(filename, "mp3/nextconq.mp3");
-// 		} else if (iType == MUSIC_BRIEFING) {
-// 			if (game.iHouse == ATREIDES)
-// 				sprintf(filename, "mp3/mentata.mp3");
-// 			if (game.iHouse == HARKONNEN)
-// 				sprintf(filename, "mp3/mentath.mp3");
-// 			if (game.iHouse == ORDOS)
-// 				sprintf(filename, "mp3/mentato.mp3");
-// 		}
-// 
-// 		mp3_play_file(filename);
-// 	} else {
-// 		iNumber--; // make 0 based
-// 
-// 		if (iType == MUSIC_WIN) {
-// 			iNumber = MIDI_WIN01 + (iNumber);
-// 		} else if (iType == MUSIC_LOSE) {
-// 			iNumber = MIDI_LOSE01 + (iNumber);
-// 		} else if (iType == MUSIC_ATTACK) {
-// 			iNumber = MIDI_ATTACK01 + (iNumber);
-// 		} else if (iType == MUSIC_PEACE) {
-// 			iNumber = MIDI_BUILDING01 + (iNumber);
-// 		} else if (iType == MUSIC_MENU) {
-// 			// single ones are 'corrected back'...
-// 			iNumber = iNumber + 1;
-// 		} else if (iType == MUSIC_CONQUEST) {
-// 			iNumber = iNumber + 1;
-// 		} else if (iType == MUSIC_BRIEFING) {
-// 			iNumber = iNumber + 1;
-// 		}
-// 		// play midi file
-// 		game.getSoundPlayer()->playMidi(iNumber);
-// 	}
-// 	logbook("playMusicByType [END]");
+	if (!game.soundEnabled) {
+		char msg[255];
+		sprintf(msg, "playMusicByType for music type [%d], does nothing because bSoundEnabled flag is set to [false]", iType);
+		logbook(msg);
+		return;
+	}
+	logbook("playMusicByType [BEGIN]");
+	game.iMusicType = iType;
+
+
+	int iNumber = 0;
+
+	if (iType == MUSIC_WIN || iType == MUSIC_LOSE) {
+		iNumber = rnd(3) + 1;
+	} else if (iType == MUSIC_ATTACK) {
+		iNumber = rnd(6) + 1;
+	} else if (iType == MUSIC_PEACE) {
+		iNumber = rnd(9) + 1;
+	} else if (iType == MUSIC_MENU) {
+		iNumber = MIDI_MENU;
+	} else if (iType == MUSIC_CONQUEST) {
+		iNumber = MIDI_SCENARIO;
+	} else if (iType == MUSIC_BRIEFING) {
+		if (game.iHouse == ATREIDES)
+			iNumber = MIDI_MENTAT_ATR;
+		if (game.iHouse == HARKONNEN)
+			iNumber = MIDI_MENTAT_HAR;
+		if (game.iHouse == ORDOS)
+			iNumber = MIDI_MENTAT_ORD;
+	}
+
+	// In the end, when mp3, play it:
+	if (game.mp3MusicEnabled) {
+		char filename[50];
+		memset(filename, 0, sizeof(filename));
+
+		if (iType == MUSIC_WIN) {
+			sprintf(filename, "mp3/win%d.mp3", iNumber);
+		} else if (iType == MUSIC_LOSE) {
+			sprintf(filename, "mp3/lose%d.mp3", iNumber);
+		} else if (iType == MUSIC_ATTACK) {
+			sprintf(filename, "mp3/attack%d.mp3", iNumber);
+		} else if (iType == MUSIC_PEACE) {
+			sprintf(filename, "mp3/peace%d.mp3", iNumber);
+		} else if (iType == MUSIC_MENU) {
+			sprintf(filename, "mp3/menu.mp3");
+		} else if (iType == MUSIC_CONQUEST) {
+			sprintf(filename, "mp3/nextconq.mp3");
+		} else if (iType == MUSIC_BRIEFING) {
+			if (game.iHouse == ATREIDES)
+				sprintf(filename, "mp3/mentata.mp3");
+			if (game.iHouse == HARKONNEN)
+				sprintf(filename, "mp3/mentath.mp3");
+			if (game.iHouse == ORDOS)
+				sprintf(filename, "mp3/mentato.mp3");
+		}
+
+		mp3_play_file(filename);
+	} else {
+		iNumber--; // make 0 based
+
+		if (iType == MUSIC_WIN) {
+			iNumber = MIDI_WIN01 + (iNumber);
+		} else if (iType == MUSIC_LOSE) {
+			iNumber = MIDI_LOSE01 + (iNumber);
+		} else if (iType == MUSIC_ATTACK) {
+			iNumber = MIDI_ATTACK01 + (iNumber);
+		} else if (iType == MUSIC_PEACE) {
+			iNumber = MIDI_BUILDING01 + (iNumber);
+		} else if (iType == MUSIC_MENU) {
+			// single ones are 'corrected back'...
+			iNumber = iNumber + 1;
+		} else if (iType == MUSIC_CONQUEST) {
+			iNumber = iNumber + 1;
+		} else if (iType == MUSIC_BRIEFING) {
+			iNumber = iNumber + 1;
+		}
+		// play midi file
+		play_midi((MIDI *) gfxaudio[iNumber].dat, 0);
+	}
+	logbook("playMusicByType [END]");
 }
 
 /******************************
@@ -1263,13 +1301,13 @@ int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstr
 	if (ownerunit > -1) {
 		bullet[new_id].iPlayer = unit[ownerunit].iPlayer;
 		// create spot
-		map->makeCircleVisibleForPlayerOfSpecificSize(cell, 3, unit[ownerunit].iPlayer);
+		map->clear_spot(cell, 3, unit[ownerunit].iPlayer);
 
 	}
 
 	if (ownerstruc > -1) {
 		bullet[new_id].iPlayer = structure[ownerstruc]->getOwner();
-		map->makeCircleVisibleForPlayerOfSpecificSize(cell, 3, structure[ownerstruc]->getOwner());
+		map->clear_spot(cell, 3, structure[ownerstruc]->getOwner());
 	}
 
 	// play sound (when we have one)
@@ -1308,10 +1346,10 @@ void Shimmer(int r, int x, int y) {
 				x1 = 0;
 			if (y1 < 0)
 				y1 = 0;
-			if (x1 >= /* game.getScreenResolution()->getWidth() */ 800 )
-				x1 = /* game.getScreenResolution()->getWidth() */ 800  - 1;
-			if (y1 >= /* game.getScreenResolution()->getHeight */ 600 )
-				y1 = /* game.getScreenResolution()->getHeight */ 600  - 1;
+			if (x1 >= game.getScreenResolution()->getWidth())
+				x1 = game.getScreenResolution()->getWidth() - 1;
+			if (y1 >= game.getScreenResolution()->getHeight())
+				y1 = game.getScreenResolution()->getHeight() - 1;
 
 			gp = getpixel(bmp_screen, x1, y1); // use this inline function to speed up things.
 			// Now choose random spot to 'switch' with.
@@ -1322,10 +1360,10 @@ void Shimmer(int r, int x, int y) {
 				nx = 0;
 			if (ny < 0)
 				ny = 0;
-			if (nx >= /* game.getScreenResolution()->getHeight */ 600 )
-				nx = /* game.getScreenResolution()->getHeight */ 600  - 1;
-			if (ny >= /* game.getScreenResolution()->getHeight */ 600 )
-				ny = /* game.getScreenResolution()->getHeight */ 600  - 1;
+			if (nx >= game.getScreenResolution()->getHeight())
+				nx = game.getScreenResolution()->getHeight() - 1;
+			if (ny >= game.getScreenResolution()->getHeight())
+				ny = game.getScreenResolution()->getHeight() - 1;
 
 			tc = getpixel(bmp_screen, nx, ny);
 
@@ -1340,15 +1378,6 @@ void Shimmer(int r, int x, int y) {
 
 }
 
-// void createNewMoviePlayerAndSetInGame(DATAFILE * gfxmovie, cMoviePlayer * moviePlayer) {
-// 	game.setMoviePlayer(NULL);
-// 	delete moviePlayer;
-// 	moviePlayer = new cMoviePlayer(gfxmovie);
-// 	moviePlayer->setPlaying(true);
-// 	moviePlayer->setFrame(0);
-// 	game.setMoviePlayer(moviePlayer);
-// }
-
 void LOAD_SCENE(std::string scene) {
 	DATAFILE * gfxmovie = NULL;
 
@@ -1357,16 +1386,21 @@ void LOAD_SCENE(std::string scene) {
 
 	gfxmovie = load_datafile(filename);
 
-// 	cMoviePlayer * moviePlayer = game.getMoviePlayer();
-// 
-// 	if (gfxmovie != NULL) {
-// 		/*createNewMoviePlayerAndSetInGame(gfxmovie, moviePlayer);*/
-// 	} else {
-// 		if (moviePlayer) {
-// 			game.setMoviePlayer(NULL);
-// 			delete moviePlayer;
-// 		}
-// 	}
+	cMoviePlayer * moviePlayer = game.getMoviePlayer();
+
+	if (gfxmovie != NULL) {
+		game.setMoviePlayer(NULL);
+		delete moviePlayer;
+		moviePlayer = new cMoviePlayer(gfxmovie);
+		moviePlayer->setPlaying(true);
+		moviePlayer->setFrame(0);
+		game.setMoviePlayer(moviePlayer);
+	} else {
+		if (moviePlayer) {
+			game.setMoviePlayer(NULL);
+			delete moviePlayer;
+		}
+	}
 }
 
 // Skirmish map initialization
@@ -1442,11 +1476,11 @@ int getAmountReservedVoicesAndInstallSound() {
 		char msg[VOLUME_MAX];
 		if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) == 0) {
 			sprintf(msg, "Success reserving %d voices.", voices);
-			Logger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
+			cLogger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
 			break;
 		} else {
 			sprintf(msg, "Failed reserving %d voices. Will try %d.", voices, (voices / 2));
-			Logger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
+			cLogger::getInstance()->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
 			voices /= 2;
 		}
 	}

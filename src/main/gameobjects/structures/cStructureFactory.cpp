@@ -1,7 +1,5 @@
 #include "../../include/d2tmh.h"
 
-#include "../../utils/CellCalculator.h"
-
 cStructureFactory *cStructureFactory::instance = NULL;
 
 cStructureFactory::cStructureFactory() {
@@ -136,13 +134,12 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 
 	// calculate actual health
 	cHitpointCalculator *calc = new cHitpointCalculator();
-	s_Structures structureType = structures[iStructureType];
-	int hp = structureType.hp;
+	int hp = structures[iStructureType].hp;
 	assert(hp > 0);
 	float fHealth = calc->getByPercent(hp, fPercent);
 
 	char msg2[255];
-	sprintf(msg2, "createStructure: [%s] with hp [%d], fhealth [%.2f]", structureType.name, hp, fHealth);
+	sprintf(msg2, "Structure with id [%d] has [%d] hp , fhealth is [%.2f]", iStructureType, hp, fHealth);
 	logbook(msg2);
 
 	placeStructure(iCell, iStructureType, iPlayer);
@@ -175,10 +172,10 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	str->setStructureId(iNewId);
 
 	// fix up power usage
-	player[iPlayer].use_power += structureType.power_drain;
+	player[iPlayer].use_power += structures[iStructureType].power_drain;
 
 	// fix up power supply
-	player[iPlayer].has_power += structureType.power_give;
+	player[iPlayer].has_power += structures[iStructureType].power_give;
 
 	// fix up spice storage stuff
 	if (iStructureType == SILO)
@@ -186,8 +183,8 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	if (iStructureType == REFINERY)
 		player[iPlayer].max_credits += 1500;
 
-	str->setWidth(structureType.bmp_width / 32);
-	str->setHeight(structureType.bmp_height / 32);
+	str->setWidth(structures[str->getType()].bmp_width / 32);
+	str->setHeight(structures[str->getType()].bmp_height / 32);
 
 	// clear fog around structure
 	clearFogForStructureType(iCell, str);
@@ -283,7 +280,7 @@ void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, 
 
 	for (int x = iCellX; x < iCellXMax; x++) {
 		for (int y = iCellY; y < iCellYMax; y++) {
-			map->makeCircleVisibleForPlayerOfSpecificSize(createCellWithoutMapBorders(x, y), iSight, iPlayer);
+			map->clear_spot(iCellMake(x, y), iSight, iPlayer);
 		}
 	}
 }
@@ -326,7 +323,7 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDT
 
 	for (int cx = 0; cx < w; cx++)
 		for (int cy = 0; cy < h; cy++) {
-			int cll = createCellWithoutMapBorders(cx + x, cy + y); // <-- some evil global thing that calculates the cell...
+			int cll = iCellMake(cx + x, cy + y); // <-- some evil global thing that calculates the cell...
 
 			// check if terrain allows it.
 			if (map->cell[cll].terrainTypeGfxDataIndex != TERRAIN_ROCK && map->cell[cll].terrainTypeGfxDataIndex != TERRAIN_SLAB) {
@@ -415,7 +412,7 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
 	int height = structures[iStructureType].bmp_height / 32;
 	int width = structures[iStructureType].bmp_width / 32;
 
-	CellCalculator * cellCalculator = new CellCalculator(map);
+	cCellCalculator * cellCalculator = new cCellCalculator(map);
 	int cellX = cellCalculator->getX(iCell);
 	int cellY = cellCalculator->getY(iCell);
 

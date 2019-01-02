@@ -8,8 +8,8 @@
 #include "../include/d2tmh.h"
 
 cUpgradeUtils::cUpgradeUtils() {
-	rectangle = new Rectangle(29, 2, 187, 31);
-	upgradeButtonGuiShape = new GuiShape(rectangle);
+	rectangle = new cRectangle(29, 2, 187, 31);
+	upgradeButtonGuiShape = new cGuiShape(rectangle);
 }
 
 cUpgradeUtils::~cUpgradeUtils() {

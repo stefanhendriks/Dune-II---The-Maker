@@ -1,4 +1,4 @@
-/*
+/* 
  * File:   cKeyboardManager.h
  * Author: el.anormal
  *
@@ -17,8 +17,6 @@ class cKeyboardManager {
 	private:
 		void DEBUG_KEYS();
 		void GAME_KEYS();
-
-		bool mustTakeScreenshot();
 };
 
 #endif	/* CKEYBOARDMANAGER_H */

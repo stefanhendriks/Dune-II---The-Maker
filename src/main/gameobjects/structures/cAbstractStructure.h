@@ -28,7 +28,7 @@ class cAbstractStructure {
 
 		int id;
 
-		Rectangle * rectangle;
+		cRectangle * rectangle;
 
 	protected:
 		int iWidth; // width in cells (set by factory)
@@ -51,7 +51,7 @@ class cAbstractStructure {
 		// Constructor & Destructor:
 		cAbstractStructure(); // default constructor
 
-		virtual ~cAbstractStructure() = 0;
+		virtual ~cAbstractStructure();
 
 		float fConcrete; // how much concrete is *not* beneath this building (percentage)?
 		// meaning, when 0% , it is all concrete. But if 10%, it means 10% of the building
@@ -75,9 +75,9 @@ class cAbstractStructure {
 		// Filled in by derived classes
 		virtual void think()=0; // think
 		virtual void think_animation()=0; // think animation stuff
-		virtual void think_guard() = 0; // think guard stuff
-		virtual int getType() = 0; // implementation gives type of structure
+		virtual void think_guard(); // think guard stuff
 
+		virtual int getType()=0; // implementation gives type of structure
 		void think_prebuild(); // prebuild animation
 		void think_repair(); // repair thinking
 		void think_damage(); // think about damaging through time
@@ -165,7 +165,7 @@ class cAbstractStructure {
 			return bAnimate;
 		}
 		bool isPrimary();
-		bool isBeingRepaired() {
+		bool isRepairing() {
 			return bRepair;
 		}
 		bool hasUnitWithin() {
@@ -195,7 +195,7 @@ class cAbstractStructure {
 
 		void damage(int hp); // damage structure for x amount of hp
 
-		Rectangle * getRectangle();
+		cRectangle * getRectangle();
 
 		int getWidthInPixels();
 		int getHeightInPixels();

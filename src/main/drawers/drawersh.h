@@ -9,33 +9,37 @@
 #define DRAWERSH_H_
 
 // forward declr.
-class Mouse;
+class cMouse;
 
-#include "TextDrawer.h"
+#include "cTextDrawer.h"
 
-#include "MessageBarDrawer.h"
+#include "cMessageBarDrawer.h"
 
-#include "ParticleDrawer.h"
+#include "cParticleDrawer.h"
 #include "CreditsDrawer.h"
 
-#include "BuildingListDrawer.h"
-#include "UpgradeDrawer.h"
-#include "OrderDrawer.h"
+#include "cBuildingListDrawer.h"
+#include "cUpgradeDrawer.h"
+#include "cOrderDrawer.h"
 
-#include "SideBarDrawer.h"
+#include "cSideBarDrawer.h"
 
-#include "UnitDrawer.h"
+#include "cUnitDrawer.h"
 
-#include "PlaceItDrawer.h"
+#include "cMessageDrawer.h"
 
-#include "MapDrawer.h"
+#include "cPlaceItDrawer.h"
 
-#include "MiniMapDrawer.h"
+#include "cMapDrawer.h"
 
-#include "StructureDrawer.h"
+#include "cMiniMapDrawer.h"
 
-#include "MouseDrawer.h"
+#include "cStructureDrawer.h"
 
-#include "GameDrawer.h"
+#include "cMouseDrawer.h"
+
+#include "cGuiDrawer.h"
+
+#include "cGameDrawer.h"
 
 #endif /* DRAWERSH_H_ */

@@ -24,6 +24,7 @@ void timer_fps();
 
 // Process 'extern' stuff, so we can access our classes
 extern bool		bDoDebug;
+extern int		iRest;	// rest value
 
 // game
 extern cGame		  game;
@@ -31,15 +32,19 @@ extern cAbstractStructure     *structure[MAX_STRUCTURES];
 extern cUnit          unit[MAX_UNITS];
 extern cMap           * map;
 extern cMapEditor	  mapEditor;
+extern cRandomMapGenerator randomMapGenerator;
 extern cMapCamera	  *mapCamera;
 extern cMapUtils	  *mapUtils;
 extern cPlayer        player[MAX_PLAYERS];
-extern Particle      particle[MAX_PARTICLES];
-extern Projectile        bullet[MAX_BULLETS];
+extern cAIPlayer      aiplayer[MAX_PLAYERS];           // related to aiplayer (except nr 0=human)
+extern cParticle      particle[MAX_PARTICLES];
+extern cBullet        bullet[MAX_BULLETS];
 extern cRegion        world[MAX_REGIONS];
 extern cMentat		  *Mentat;
+extern cTimeManager   TimeManager;
 extern cStructureUtils structureUtils;
-extern GameDrawer   * gameDrawer;
+extern cGameDrawer   * gameDrawer;
+extern cInteractionManager *interactionManager;
 
 // ...
 extern sPreviewMap     PreviewMap[MAX_SKIRMISHMAPS];                   // max of 100 maps in skirmish directory
@@ -62,6 +67,7 @@ extern ALFONT_FONT *small_font;
 
 // DATAFILES
 extern DATAFILE *gfxdata;
+extern DATAFILE *gfxaudio;
 extern DATAFILE *gfxinter;
 extern DATAFILE *gfxworld;
 extern DATAFILE *gfxmentat;

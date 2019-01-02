@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Clean|Win32">
+      <Configuration>Clean</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FB9D6C0C-78F1-4FBF-8F74-315D1C022D00}</ProjectGuid>
+    <RootNamespace>Dune 2</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Clean|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Clean|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>14.0.25420.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\..\bin\</OutDir>
+    <IntDir>.\Release\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\..\bin\</OutDir>
+    <IntDir>.\Debug\</IntDir>
+    <LinkIncremental />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Clean|Win32'">
+    <OutDir>$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Message>Creating binary directory</Message>
+      <Command>cd ..\..\
+create_binary.bat</Command>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Message>Create binary directory</Message>
+      <Command>cd ..\..\
+create_binary.bat</Command>
+      <Outputs>custom_build.temp;%(Outputs)</Outputs>
+    </CustomBuildStep>
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/Dune 2.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader />
+      <PrecompiledHeaderOutputFile>.\Release/Dune 2.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0413</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>alleg.lib;alfontdll.lib;almp3dll.lib;fblend.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Dune 2.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Release/Dune 2.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Message>Creating binary directory</Message>
+      <Command>cd ..\..\
+create_binary.bat</Command>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Message>Copying Debug binary to bin</Message>
+      <Command />
+      <Outputs>dune 2.exe;%(Outputs)</Outputs>
+    </CustomBuildStep>
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug/Dune 2.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader />
+      <PrecompiledHeaderOutputFile>.\Debug/Dune 2.pch</PrecompiledHeaderOutputFile>
+      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0413</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>alld.lib;almp3dll.lib;alfontdll.lib;RakNetDLLDebug.lib;fblend.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)Dune 2_debug.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/Dune 2.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Clean|Win32'">
+    <PreBuildEvent>
+      <Message>Creating binary directory</Message>
+      <Command>cd ..\..\
+create_binary.bat</Command>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Message>Copying executable into bin</Message>
+      <Command>create_binary.bat
+copy Release\*.exe bin
+</Command>
+    </CustomBuildStep>
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/Dune 2.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader />
+      <PrecompiledHeaderOutputFile>.\Release/Dune 2.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0413</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>alleg.lib;alfontdll.lib;almp3dll.lib;RakNetDLL.lib;fblend.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\Release/Dune 2.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Release/Dune 2.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="game.ini" />
+    <None Include="world.asp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="controls.txt" />
+    <Text Include="DEBUGMODE.TXT" />
+    <Text Include="version history.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\ai.cpp" />
+    <ClCompile Include="..\..\building\cItemBuilder.cpp" />
+    <ClCompile Include="..\..\bullet.cpp" />
+    <ClCompile Include="..\..\cGame_draw.cpp" />
+    <ClCompile Include="..\..\cGame_logic.cpp" />
+    <ClCompile Include="..\..\cLog.cpp" />
+    <ClCompile Include="..\..\cMentat.cpp" />
+    <ClCompile Include="..\..\cParticle.cpp" />
+    <ClCompile Include="..\..\cUnit.cpp" />
+    <ClCompile Include="..\..\drawers\cBuildingListDrawer.cpp" />
+    <ClCompile Include="..\..\drawers\cMapDrawer.cpp" />
+    <ClCompile Include="..\..\drawers\cMessageDrawer.cpp" />
+    <ClCompile Include="..\..\drawers\cOrderDrawer.cpp" />
+    <ClCompile Include="..\..\drawers\cParticleDrawer.cpp" />
+    <ClCompile Include="..\..\drawers\cPlaceItDrawer.cpp" />
+    <ClCompile Include="..\..\drawers\CreditsDrawer.cpp" />
+    <ClCompile Include="..\..\drawers\cSideBarDrawer.cpp" />
+    <ClCompile Include="..\..\drawers\cUnitDrawer.cpp" />
+    <ClCompile Include="..\..\drawers\cUpgradeDrawer.cpp" />
+    <ClCompile Include="..\..\gui.cpp" />
+    <ClCompile Include="..\..\hwprof.cpp" />
+    <ClCompile Include="..\..\ini.cpp" />
+    <ClCompile Include="..\..\main.cpp" />
+    <ClCompile Include="..\..\managers\cDrawManager.cpp" />
+    <ClCompile Include="..\..\managers\cInteractionManager.cpp" />
+    <ClCompile Include="..\..\map\cMap.cpp" />
+    <ClCompile Include="..\..\map\cMapCamera.cpp" />
+    <ClCompile Include="..\..\mentat\cAtreidesMentat.cpp" />
+    <ClCompile Include="..\..\mentat\cHarkonnenMentat.cpp" />
+    <ClCompile Include="..\..\mentat\cMentatFactory.cpp" />
+    <ClCompile Include="..\..\mentat\cOrdosMentat.cpp" />
+    <ClCompile Include="..\..\network.cpp" />
+    <ClCompile Include="..\..\player\cPlayer.cpp" />
+    <ClCompile Include="..\..\player\cPlayerAtreidesDifficultySettings.cpp" />
+    <ClCompile Include="..\..\player\cPlayerDifficultySettings.cpp" />
+    <ClCompile Include="..\..\player\cPlayerHarkonnenDifficultySettings.cpp" />
+    <ClCompile Include="..\..\player\cPlayerOrdosDifficultySettings.cpp" />
+    <ClCompile Include="..\..\player\cPlayerStatistics.cpp" />
+    <ClCompile Include="..\..\regions.cpp" />
+    <ClCompile Include="..\..\sidebar\cBuildingList.cpp" />
+    <ClCompile Include="..\..\sidebar\cBuildingListFactory.cpp" />
+    <ClCompile Include="..\..\sidebar\cBuildingListItem.cpp" />
+    <ClCompile Include="..\..\sidebar\cSideBar.cpp" />
+    <ClCompile Include="..\..\sidebar\cSideBarFactory.cpp" />
+    <ClCompile Include="..\..\structures\cAbstractStructure.cpp" />
+    <ClCompile Include="..\..\structures\cBarracks.cpp" />
+    <ClCompile Include="..\..\structures\cConstYard.cpp" />
+    <ClCompile Include="..\..\structures\cGunTurret.cpp" />
+    <ClCompile Include="..\..\structures\cHeavyFactory.cpp" />
+    <ClCompile Include="..\..\structures\cHighTech.cpp" />
+    <ClCompile Include="..\..\structures\cIx.cpp" />
+    <ClCompile Include="..\..\structures\cLightFactory.cpp" />
+    <ClCompile Include="..\..\structures\cOrderProcesser.cpp" />
+    <ClCompile Include="..\..\structures\cOutPost.cpp" />
+    <ClCompile Include="..\..\structures\cPalace.cpp" />
+    <ClCompile Include="..\..\structures\cRefinery.cpp" />
+    <ClCompile Include="..\..\structures\cRepairFacility.cpp" />
+    <ClCompile Include="..\..\structures\cRocketTurret.cpp" />
+    <ClCompile Include="..\..\structures\cSpiceSilo.cpp" />
+    <ClCompile Include="..\..\structures\cStarPort.cpp" />
+    <ClCompile Include="..\..\structures\cStructureFactory.cpp" />
+    <ClCompile Include="..\..\structures\cStructurePlacer.cpp" />
+    <ClCompile Include="..\..\structures\cWindTrap.cpp" />
+    <ClCompile Include="..\..\structures\cWor.cpp" />
+    <ClCompile Include="..\..\timers.cpp" />
+    <ClCompile Include="..\..\units\cAbstractUnit.cpp" />
+    <ClCompile Include="..\..\units\cUnitFactory.cpp" />
+    <ClCompile Include="..\..\units\cUnitUtils.cpp" />
+    <ClCompile Include="..\..\upgrade\cBuildingListUpdater.cpp" />
+    <ClCompile Include="..\..\upgrade\cListUpgrade.cpp" />
+    <ClCompile Include="..\..\upgrade\cUpgradeBuilder.cpp" />
+    <ClCompile Include="..\..\utils\cCellCalculator.cpp" />
+    <ClCompile Include="..\..\utils\cHitpointCalculator.cpp" />
+    <ClCompile Include="..\..\utils\common.cpp" />
+    <ClCompile Include="..\..\utils\cSeedMap.cpp" />
+    <ClCompile Include="..\..\utils\cSeedMapGenerator.cpp" />
+    <ClCompile Include="..\..\utils\cSoundPlayer.cpp" />
+    <ClCompile Include="..\..\utils\cStructureUtils.cpp" />
+    <ClCompile Include="..\..\utils\cTimeManager.cpp" />
+    <ClCompile Include="..\..\utils\cUpgradeUtils.cpp" />
+    <ClCompile Include="..\..\utils\d2tm_math.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\ai.h" />
+    <ClInclude Include="..\..\building\cItemBuilder.h" />
+    <ClInclude Include="..\..\bullet.h" />
+    <ClInclude Include="..\..\cGame.h" />
+    <ClInclude Include="..\..\cLog.h" />
+    <ClInclude Include="..\..\cMentat.h" />
+    <ClInclude Include="..\..\cParticle.h" />
+    <ClInclude Include="..\..\cUnit.h" />
+    <ClInclude Include="..\..\d2tmc.h" />
+    <ClInclude Include="..\..\d2tmh.h" />
+    <ClInclude Include="..\..\data\gfxaudio.h" />
+    <ClInclude Include="..\..\data\gfxdata.h" />
+    <ClInclude Include="..\..\data\gfxinter.h" />
+    <ClInclude Include="..\..\data\gfxmentat.h" />
+    <ClInclude Include="..\..\data\gfxworld.h" />
+    <ClInclude Include="..\..\data\mp3mus.h" />
+    <ClInclude Include="..\..\drawers\cBuildingListDrawer.h" />
+    <ClInclude Include="..\..\drawers\cMapDrawer.h" />
+    <ClInclude Include="..\..\drawers\cMessageDrawer.h" />
+    <ClInclude Include="..\..\drawers\cOrderDrawer.h" />
+    <ClInclude Include="..\..\drawers\cParticleDrawer.h" />
+    <ClInclude Include="..\..\drawers\cPlaceItDrawer.h" />
+    <ClInclude Include="..\..\drawers\CreditsDrawer.h" />
+    <ClInclude Include="..\..\drawers\cSideBarDrawer.h" />
+    <ClInclude Include="..\..\drawers\cUnitDrawer.h" />
+    <ClInclude Include="..\..\drawers\cUpgradeDrawer.h" />
+    <ClInclude Include="..\..\drawers\drawersh.h" />
+    <ClInclude Include="..\..\enums.h" />
+    <ClInclude Include="..\..\fblend.h" />
+    <ClInclude Include="..\..\gui.h" />
+    <ClInclude Include="..\..\gui\guih.h" />
+    <ClInclude Include="..\..\hwprof.h" />
+    <ClInclude Include="..\..\ini.h" />
+    <ClInclude Include="..\..\main.h" />
+    <ClInclude Include="..\..\managers\cDrawManager.h" />
+    <ClInclude Include="..\..\managers\cInteractionManager.h" />
+    <ClInclude Include="..\..\managers\managerh.h" />
+    <ClInclude Include="..\..\map\cCell.h" />
+    <ClInclude Include="..\..\map\cMap.h" />
+    <ClInclude Include="..\..\map\cMapCamera.h" />
+    <ClInclude Include="..\..\map\maph.h" />
+    <ClInclude Include="..\..\mentat\cAtreidesMentat.h" />
+    <ClInclude Include="..\..\mentat\cHarkonnenMentat.h" />
+    <ClInclude Include="..\..\mentat\cMentatFactory.h" />
+    <ClInclude Include="..\..\mentat\cOrdosMentat.h" />
+    <ClInclude Include="..\..\mmx.h" />
+    <ClInclude Include="..\..\network.h" />
+    <ClInclude Include="..\..\player\cPlayer.h" />
+    <ClInclude Include="..\..\player\cPlayerAtreidesDifficultySettings.h" />
+    <ClInclude Include="..\..\player\cPlayerDifficultySettings.h" />
+    <ClInclude Include="..\..\player\cPlayerHarkonnenDifficultySettings.h" />
+    <ClInclude Include="..\..\player\cPlayerOrdosDifficultySettings.h" />
+    <ClInclude Include="..\..\player\cPlayerStatistics.h" />
+    <ClInclude Include="..\..\player\playerh.h" />
+    <ClInclude Include="..\..\regions.h" />
+    <ClInclude Include="..\..\sidebar\cBuildingList.h" />
+    <ClInclude Include="..\..\sidebar\cBuildingListFactory.h" />
+    <ClInclude Include="..\..\sidebar\cBuildingListItem.h" />
+    <ClInclude Include="..\..\sidebar\cSideBar.h" />
+    <ClInclude Include="..\..\sidebar\cSideBarFactory.h" />
+    <ClInclude Include="..\..\sidebar\eBuildType.h" />
+    <ClInclude Include="..\..\sidebar\sidebarh.h" />
+    <ClInclude Include="..\..\sse.h" />
+    <ClInclude Include="..\..\structures\cAbstractStructure.h" />
+    <ClInclude Include="..\..\structures\cBarracks.h" />
+    <ClInclude Include="..\..\structures\cConstYard.h" />
+    <ClInclude Include="..\..\structures\cGunTurret.h" />
+    <ClInclude Include="..\..\structures\cHeavyFactory.h" />
+    <ClInclude Include="..\..\structures\cHighTech.h" />
+    <ClInclude Include="..\..\structures\cIx.h" />
+    <ClInclude Include="..\..\structures\cLightFactory.h" />
+    <ClInclude Include="..\..\structures\cOrderProcesser.h" />
+    <ClInclude Include="..\..\structures\cOutPost.h" />
+    <ClInclude Include="..\..\structures\cPalace.h" />
+    <ClInclude Include="..\..\structures\cRefinery.h" />
+    <ClInclude Include="..\..\structures\cRepairFacility.h" />
+    <ClInclude Include="..\..\structures\cRocketTurret.h" />
+    <ClInclude Include="..\..\structures\cSpiceSilo.h" />
+    <ClInclude Include="..\..\structures\cStarPort.h" />
+    <ClInclude Include="..\..\structures\cStructureFactory.h" />
+    <ClInclude Include="..\..\structures\cStructurePlacer.h" />
+    <ClInclude Include="..\..\structures\cWindTrap.h" />
+    <ClInclude Include="..\..\structures\cWor.h" />
+    <ClInclude Include="..\..\structures\structuresh.h" />
+    <ClInclude Include="..\..\timers.h" />
+    <ClInclude Include="..\..\units\cAbstractUnit.h" />
+    <ClInclude Include="..\..\units\cUnitFactory.h" />
+    <ClInclude Include="..\..\units\cUnitUtils.h" />
+    <ClInclude Include="..\..\upgrade\cBuildingListUpdater.h" />
+    <ClInclude Include="..\..\upgrade\cListUpgrade.h" />
+    <ClInclude Include="..\..\upgrade\cUpgradeBuilder.h" />
+    <ClInclude Include="..\..\upgrade\upgradeh.h" />
+    <ClInclude Include="..\..\utils\cCellCalculator.h" />
+    <ClInclude Include="..\..\utils\cHitpointCalculator.h" />
+    <ClInclude Include="..\..\utils\common.h" />
+    <ClInclude Include="..\..\utils\cSeedMap.h" />
+    <ClInclude Include="..\..\utils\cSeedMapGenerator.h" />
+    <ClInclude Include="..\..\utils\cSoundPlayer.h" />
+    <ClInclude Include="..\..\utils\cStructureUtils.h" />
+    <ClInclude Include="..\..\utils\cTimeManager.h" />
+    <ClInclude Include="..\..\utils\cUpgradeUtils.h" />
+    <ClInclude Include="..\..\utils\d2tm_math.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

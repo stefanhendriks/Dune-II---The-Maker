@@ -6,8 +6,6 @@
  */
 #include "../../include/d2tmh.h"
 
-#include "../../utils/CellCalculator.h"
-
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer) {
 	assert(thePlayer);
 	player = thePlayer;
@@ -93,11 +91,12 @@ void cOrderProcesser::think() {
 			playTMinusSound(secondsUntilArrival);
 		}
 
+		cMessageDrawer * messageDrawer = gameDrawer->getMessageDrawer();
 		if (secondsUntilArrival == 0) {
 			sendFrigate();
-			gameDrawer->setMessage("Frigate is arriving...");
+			messageDrawer->setMessage("Frigate is arriving...");
 		} else {
-			gameDrawer->setMessage(msg);
+			messageDrawer->setMessage(msg);
 		}
 	}
 
@@ -199,8 +198,8 @@ void cOrderProcesser::sendFrigate() {
 		structure[structureId]->setAnimating(true);
 		int destinationCell = structure[structureId]->getCell();
 
-		CellCalculator * cellCalculator = new CellCalculator(map);
-		int iStartCell = cellCalculator->findCloseMapBorderCellRelativelyToDestinationCell(destinationCell);
+		cCellCalculator * cellCalculator = new cCellCalculator(map);
+		int iStartCell = cellCalculator->findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
 		delete cellCalculator;
 
 		if (iStartCell < 0) {

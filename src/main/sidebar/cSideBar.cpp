@@ -69,7 +69,7 @@ void cSideBar::thinkUpgradeButton() {
 						assert(upgradeInProgress);
 						sprintf(msg, "Upgrade completed at %d percent", upgradeInProgress->getProgressAsPercentage());
 					}
-					gameDrawer->getMessageBarDrawer()->setMessage(msg);
+					gameDrawer->getMessageDrawer()->setMessage(msg);
 				}
 
 				if (isUpgradeApplicable && MOUSE_BTN_LEFT()) {
@@ -170,13 +170,13 @@ void cSideBar::thinkInteraction() {
 	if (selectedListID > -1 && getList(selectedListID)->isAvailable()) {
 		cBuildingList *list = getList(selectedListID);
 
-		SideBarDrawer * sidebarDrawer = new SideBarDrawer();
+		cSideBarDrawer * sidebarDrawer = new cSideBarDrawer();
 
 		bool mouseOverUp = sidebarDrawer->isMouseOverScrollUp();
 		bool mouseOverDown = sidebarDrawer->isMouseOverScrollDown();
 		assert(!(mouseOverUp == true && mouseOverDown == true));// can never be both.
 
-		Mouse * mouse = Mouse::getInstance();
+		cMouse * mouse = cMouse::getInstance();
 		if (mouseOverUp) {
 			if (mouse->isLeftButtonClicked()) {
 				list->scrollUp();
@@ -192,7 +192,7 @@ void cSideBar::thinkInteraction() {
 	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && getList(selectedListID)->isUpgrading() == false) {
 		cBuildingList *list = getList(selectedListID);
 
-		BuildingListDrawer drawer;
+		cBuildingListDrawer drawer;
 		cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x, mouse_y);
 
 		cOrderProcesser * orderProcesser = player->getOrderProcesser();
@@ -219,11 +219,11 @@ void cSideBar::thinkInteraction() {
 					}
 				}
 
-				gameDrawer->setMessage(msg);
+				gameDrawer->getMessageDrawer()->setMessage(msg);
 			}
 		}
 
-		if (Mouse::getInstance()->isLeftButtonClicked()) {
+		if (cMouse::getInstance()->isLeftButtonClicked()) {
 			if (list != NULL) {
 				if (list->getType() != LIST_STARPORT) {
 					if (item != NULL) {
@@ -233,7 +233,7 @@ void cSideBar::thinkInteraction() {
 							itemBuilder->addItemToList(item);
 							list->setLastClickedId(item->getSlotId());
 						} else {
-							/*game.bPlaceIt = true;*/
+							game.bPlaceIt = true;
 						}
 					}
 				} else {
@@ -242,7 +242,7 @@ void cSideBar::thinkInteraction() {
 
 					// handle order button interaction
 					if (orderProcesser->hasOrderedAnything() && orderProcesser->isOrderPlaced() == false) {
-						OrderDrawer orderDrawer;
+						cOrderDrawer orderDrawer;
 						if (orderDrawer.isMouseOverOrderButton(mouse_x, mouse_y)) {
 							orderProcesser->placeOrder();
 						}
@@ -259,7 +259,7 @@ void cSideBar::thinkInteraction() {
 			}
 		}
 
-		if (Mouse::getInstance()->isRightButtonClicked()) {
+		if (cMouse::getInstance()->isRightButtonClicked()) {
 			if (list != NULL) {
 				// anything but the starport can 'build' things
 				if (list->getType() != LIST_STARPORT) {
@@ -269,7 +269,7 @@ void cSideBar::thinkInteraction() {
 							item->setPlaceIt(false);
 
 							if (item->getTimesToBuild() == 0) {
-								Logger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
+								cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
 								// only give money back for item that is being built
 								if (item->isBuilding()) {
 									// calculate the amount of money back:
@@ -295,7 +295,7 @@ void cSideBar::thinkInteraction() {
 				}
 
 				if (item == NULL) {
-					/*game.bPlaceIt = false;*/
+					game.bPlaceIt = false;
 				}
 			}
 		}
@@ -315,7 +315,7 @@ void cSideBar::thinkMouseZScrolling() {
 	}
 
 	cBuildingList *list = getList(selectedListID);
-	Mouse *mouse = Mouse::getInstance();
+	cMouse *mouse = cMouse::getInstance();
 
 	// MOUSE WHEEL
 	if (mouse->isMouseScrolledUp()) {

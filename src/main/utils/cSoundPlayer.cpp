@@ -1,27 +1,31 @@
-#include "cSoundPlayer.h"
+/*
+ * cSoundPlayer.cpp
+ *
+ *  Created on: 6-aug-2010
+ *      Author: Stefan
+ */
 
-#include "assert.h"
+#include "../include/d2tmh.h"
 
-cSoundPlayer::cSoundPlayer(int maximumVoices, int digiVolume, int midiVolume) {
-	assert(digiVolume <= SOUNDPLAYER_MAX_VOLUME);
-	assert(midiVolume <= SOUNDPLAYER_MAX_VOLUME);
-	assert(maximumVoices < SOUNDPLAYER_MAX_VOICES);
-	assert(maximumVoices >= 0);
-	this->maximumVoices = maximumVoices;
-	this->digiVolume = digiVolume;
-	this->midiVolume = midiVolume;
-	this->datafile = NULL;
-	this->voices.resize(maximumVoices);
-	for (int i = 0; i < (int) voices.size(); i++) {
-		voices[i] = -1;
-	}
+cSoundPlayer::cSoundPlayer(int maxVoices) {
+	maximumVoices = maxVoices;
+	memset(voices, -1, sizeof(voices));
 }
 
 cSoundPlayer::~cSoundPlayer() {
+	// this might upset Allegro here FIXME: move to another place before destructor is called
+//	if (maximumVoices > -1) {
+//		for (int i = 0; i < maximumVoices; i++) {
+//			destroySound(i, true);
+//		}
+//	}
 }
 
 void cSoundPlayer::think() {
-	for (int i = 0; i < voices.size(); i++) {
+	if (maximumVoices < 0)
+		return;
+
+	for (int i = 0; i < maximumVoices; i++) {
 
 		int pos;
 		int voice = voices[i];
@@ -40,62 +44,44 @@ void cSoundPlayer::think() {
 	}
 }
 
-int cSoundPlayer::getAvailableVoices() {
-	int availableVoices = 0;
-	for (int i = 0; i < voices.size(); i++) {
-		if (voices[i] == -1) {
-			availableVoices++;
-		}
-	}
-	return availableVoices;
-}
-
-void cSoundPlayer::destroySound(int voiceId, bool force) {
-	if (voiceId < 0) {
+void cSoundPlayer::destroySound(int voice, bool force) {
+	if (maximumVoices < 0) {
 		return;
 	}
-	int voice = voices.at(voiceId);
 	if (voice < 0) {
+		return;
+	}
+	if (voices[voice] < 0) {
 		return;
 	}
 
 	if (force) {
-		deallocate_voice(voice);
+		deallocate_voice(voices[voice]);
 	} else {
-		release_voice(voice);
+		release_voice(voices[voice]);
 	}
 
-	for (int i = 0; i < voices.size(); i++) {
-		if (voices.at(i) == voiceId) {
+	for (int i = 0; i < maximumVoices; i++) {
+		if (voices[i] == voice) {
 			voices[i] = -1;
 			break;
 		}
 	}
-
 }
 
 void cSoundPlayer::playSound(int sampleId, int pan, int vol) {
-	if (datafile[sampleId].dat == NULL) {
-		return;
-	}
-	playSound((SAMPLE *) datafile[sampleId].dat, pan, vol);
-}
-
-void cSoundPlayer::playMidi(int midiId) {
-	if (datafile[midiId].dat == NULL) {
-		return;
-	}
-	play_midi((MIDI *) datafile[midiId].dat, 0);
+	playSound((SAMPLE *) gfxaudio[sampleId].dat, pan, vol);
 }
 
 void cSoundPlayer::playSound(SAMPLE *sample, int pan, int vol) {
-	if (vol < 0) {
+	if (maximumVoices < 0)
 		return;
-	}
 
 	assert(sample);
-	assert(pan >= SOUNDPLAYER_PAN_MIN && pan < SOUNDPLAYER_PAN_MAX);
-	assert(vol <= SOUNDPLAYER_MAX_VOLUME);
+	if (vol < 0)
+		return;
+	assert(pan >= 0 && pan < 256);
+	assert(vol > 0 && vol <= 256);
 
 	// allocate voice
 	int voice = allocate_voice(sample);
@@ -105,7 +91,7 @@ void cSoundPlayer::playSound(SAMPLE *sample, int pan, int vol) {
 		voice_set_volume(voice, vol);
 		voice_set_pan(voice, pan);
 		voice_start(voice);
-		for (int i = 0; i < voices.size(); i++) {
+		for (int i = 0; i < maximumVoices; i++) {
 			if (voices[i] == -1) {
 				voices[i] = voice;
 				break;

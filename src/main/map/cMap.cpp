@@ -159,7 +159,7 @@ bool cMap::occupied(int iCll, int iUnitID) {
 // do the static info thinking
 void cMap::think_minimap() {
 	// Draw static info
-	MiniMapDrawer * miniMapDrawer = gameDrawer->getMiniMapDrawer();
+	cMiniMapDrawer * miniMapDrawer = gameDrawer->getMiniMapDrawer();
 	assert(miniMapDrawer);
 
 	int iStatus = miniMapDrawer->getStatus();
@@ -187,20 +187,19 @@ void cMap::draw_bullets() {
 	// Loop through all units, check if they should be drawn, and if so, draw them
 	for (int i = 0; i < MAX_BULLETS; i++) {
 		if (bullet[i].bAlive) {
-			if (bullet[i].draw_x() > -32 && bullet[i].draw_x() < /* game.getScreenResolution()->getWidth() */ 800  && bullet[i].draw_y() > -32 && bullet[i].draw_y()
-					< /* game.getScreenResolution()->getHeight */ 600 )
+			if (bullet[i].draw_x() > -32 && bullet[i].draw_x() < game.getScreenResolution()->getWidth() && bullet[i].draw_y() > -32 && bullet[i].draw_y()
+					< game.getScreenResolution()->getHeight())
 				bullet[i].draw();
 		}
 	}
 }
 
-void cMap::makeAllCellsVisible() {
-	for (int c = 0; c < MAX_CELLS; c++) {
-		iVisible[c][HUMAN] = true;
-	}
+void cMap::clear_all() {
+	for (int c = 0; c < MAX_CELLS; c++)
+		iVisible[c][0] = true;
 }
 
-void cMap::makeCircleVisibleForPlayerOfSpecificSize(int c, int size, int player) {
+void cMap::clear_spot(int c, int size, int player) {
 	// Get the x and y and make a circle around it of 16xR, then calculate of every step the cell and
 	// clear it
 
@@ -208,9 +207,8 @@ void cMap::makeCircleVisibleForPlayerOfSpecificSize(int c, int size, int player)
 	int cy = iCellGiveY(c); /*cell[c].y(c);*/
 
 	// fail
-	if (cx < 0 || cy < 0) {
+	if (cx < 0 || cy < 0)
 		return;
-	}
 
 	map->iVisible[c][player] = true;
 
@@ -278,7 +276,7 @@ void cMap::makeCircleVisibleForPlayerOfSpecificSize(int c, int size, int player)
 			FIX_POS(cell_x, cell_y);
 
 			//draw the cells
-			int cl = createCellWithoutMapBorders(cell_x, cell_y);
+			int cl = iCellMake(cell_x, cell_y);
 
 			if (iVisible[cl][player] == false) {
 
@@ -292,21 +290,23 @@ void cMap::makeCircleVisibleForPlayerOfSpecificSize(int c, int size, int player)
 						{
 							// when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
 
-// 							if (game.iMusicType == MUSIC_PEACE) {
-// 								playMusicByType(MUSIC_ATTACK);
-// 
-// 								// warning... bla bla
-// 								if (unit[id].iType == SANDWORM)
-// 									play_voice(SOUND_VOICE_10_ATR); // omg a sandworm, RUN!
-// 								else
-// 									play_voice(SOUND_VOICE_09_ATR); // enemy unit
-// 							}
+							if (game.iMusicType == MUSIC_PEACE) {
+								playMusicByType(MUSIC_ATTACK);
+
+								// warning... bla bla
+								if (unit[id].iType == SANDWORM)
+									play_voice(SOUND_VOICE_10_ATR); // omg a sandworm, RUN!
+								else
+									play_voice(SOUND_VOICE_09_ATR); // enemy unit
+							}
 
 						}
 					}
 				}
 
 			} // make visible
+
+
 		}
 	}
 
@@ -337,8 +337,8 @@ void cMap::draw_units() {
 				int drawx = unit[i].draw_x();
 				int drawy = unit[i].draw_y();
 
-				if (((drawx + units[unit[i].iType].bmp_width) > 0 && drawx < (/* game.getScreenResolution()->getWidth() */ 800  - 160)) && ((drawy
-						+ units[unit[i].iType].bmp_height) > 42 && drawy < /* game.getScreenResolution()->getHeight */ 600 )) {
+				if (((drawx + units[unit[i].iType].bmp_width) > 0 && drawx < (game.getScreenResolution()->getWidth() - 160)) && ((drawy
+						+ units[unit[i].iType].bmp_height) > 42 && drawy < game.getScreenResolution()->getHeight())) {
 					unit[i].draw();
 				}
 			}
@@ -356,8 +356,8 @@ void cMap::draw_units() {
 			int drawx = unit[i].draw_x();
 			int drawy = unit[i].draw_y();
 
-			if (((drawx + units[unit[i].iType].bmp_width) > 0 && drawx < (/* game.getScreenResolution()->getWidth() */ 800  - 160)) && ((drawy
-					+ units[unit[i].iType].bmp_height) > 42 && drawy < /* game.getScreenResolution()->getHeight */ 600 )) {
+			if (((drawx + units[unit[i].iType].bmp_width) > 0 && drawx < (game.getScreenResolution()->getWidth() - 160)) && ((drawy
+					+ units[unit[i].iType].bmp_height) > 42 && drawy < game.getScreenResolution()->getHeight())) {
 				// draw
 				unit[i].draw();
 
@@ -382,8 +382,8 @@ void cMap::draw_units() {
 
 			//line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(255,255,255));
 
-			if (((drawx + units[unit[i].iType].bmp_width) > 0 && drawx < (/* game.getScreenResolution()->getWidth() */ 800  - 160)) && ((drawy
-					+ units[unit[i].iType].bmp_height) > 42 && drawy < /* game.getScreenResolution()->getHeight */ 600 )) {
+			if (((drawx + units[unit[i].iType].bmp_width) > 0 && drawx < (game.getScreenResolution()->getWidth() - 160)) && ((drawy
+					+ units[unit[i].iType].bmp_height) > 42 && drawy < game.getScreenResolution()->getHeight())) {
 
 				// draw
 				unit[i].draw();
@@ -398,21 +398,32 @@ void cMap::draw_units() {
 		}
 
 	}
+
+	int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
+	if (mc > -1) {
+		if (map->cell[mc].gameObjectId[MAPID_UNITS] > -1) {
+			int iUnitId = map->cell[mc].gameObjectId[MAPID_UNITS];
+
+			if (unit[iUnitId].iTempHitPoints < 0)
+				game.hover_unit = iUnitId;
+		} else if (map->cell[mc].gameObjectId[MAPID_WORMS] > -1) {
+			int iUnitId = map->cell[mc].gameObjectId[MAPID_WORMS];
+			game.hover_unit = iUnitId;
+		}
+	}
 }
 
 void cMap::drawAirborneUnitsAndHealthBarAndExperienceOfSelectedUnits() {
 	set_trans_blender(0, 0, 0, 160);
 
-	cGameControlsContext * context = player[HUMAN].getGameControlsContext();
-
 	// draw unit power
-	if (context->isMouseOverUnit()) {
-		int id = context->getIdOfUnitWhereMouseHovers();
-		if (unit[id].iType == HARVESTER)
-			unit[id].draw_spice();
+	if (game.hover_unit > -1) {
+		if (unit[game.hover_unit].iType == HARVESTER)
+			unit[game.hover_unit].draw_spice();
 
-		unit[id].draw_health();
-		unit[id].draw_experience();
+		unit[game.hover_unit].draw_health();
+		unit[game.hover_unit].draw_experience();
+
 	}
 
 	// draw health of units
@@ -430,8 +441,8 @@ void cMap::drawAirborneUnitsAndHealthBarAndExperienceOfSelectedUnits() {
 	for (int i = 0; i < MAX_UNITS; i++) {
 		if (unit[i].isValid()) {
 
-			if (((unit[i].draw_x() + units[unit[i].iType].bmp_width) > 0 && unit[i].draw_x() < /* game.getScreenResolution()->getWidth() */ 800 ) && ((unit[i].draw_y()
-					+ units[unit[i].iType].bmp_height) > 0 && unit[i].draw_y() < /* game.getScreenResolution()->getHeight */ 600 )) {
+			if (((unit[i].draw_x() + units[unit[i].iType].bmp_width) > 0 && unit[i].draw_x() < game.getScreenResolution()->getWidth()) && ((unit[i].draw_y()
+					+ units[unit[i].iType].bmp_height) > 0 && unit[i].draw_y() < game.getScreenResolution()->getHeight())) {
 				// Draw aircraft here
 				if (unit[i].iType == CARRYALL || unit[i].iType == ORNITHOPTER || unit[i].iType == FRIGATE) {
 					unit[i].draw();
@@ -447,7 +458,7 @@ void cMap::drawAirborneUnitsAndHealthBarAndExperienceOfSelectedUnits() {
 // TODO: move this somewhere to a mouse related class
 void cMap::draw_think() {
 	// busy with selecting box, so do not think (about scrolling, etc)
-	Mouse * mouse = Mouse::getInstance();
+	cMouse * mouse = cMouse::getInstance();
 	if (mouse->isMouseDraggingRectangle()) {
 		return;
 	}
@@ -472,13 +483,13 @@ void cMap::draw_think() {
 		}
 	}
 
-	if (mouse_x >= (/* game.getScreenResolution()->getWidth() */ 800  - 2) || key[KEY_RIGHT]) {
+	if (mouse_x >= (game.getScreenResolution()->getWidth() - 2) || key[KEY_RIGHT]) {
 		if ((iEndX) < (map->getWidth() - 1)) {
 			mouse->setMouseTile(MOUSE_RIGHT);
 		}
 	}
 
-	if (mouse_y >= (/* game.getScreenResolution()->getHeight */ 600  - 2) || key[KEY_DOWN]) {
+	if (mouse_y >= (game.getScreenResolution()->getHeight() - 2) || key[KEY_DOWN]) {
 		if ((iEndY) < (map->getHeight() - 1)) {
 			mouse->setMouseTile(MOUSE_DOWN);
 		}

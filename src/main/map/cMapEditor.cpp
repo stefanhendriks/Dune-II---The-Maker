@@ -1,6 +1,11 @@
-#include "../include/d2tmh.h"
+/*
+ * cMapEditor.cpp
+ *
+ *  Created on: 16 nov. 2010
+ *      Author: Stefan
+ */
 
-#include "../utils/CellCalculator.h"
+#include "../include/d2tmh.h"
 
 cMapEditor::cMapEditor() {
 
@@ -47,7 +52,7 @@ void cMapEditor::createField(int cell, int terrainType, int size) {
 	assert(terrainType >= TERRAIN_BLOOM);
 	assert(terrainType <= TERRAIN_WALL);
 
-	CellCalculator * cellCalculator = new CellCalculator(map);
+	cCellCalculator * cellCalculator = new cCellCalculator(map);
 
 	int x = cellCalculator->getX(cell);
 	int y = cellCalculator->getY(cell);
@@ -74,7 +79,7 @@ void cMapEditor::createField(int cell, int terrainType, int size) {
 	int iOrgY = y;
 
 	for (int i = 0; i < size; i++) {
-		int c = cellCalculator->getCellTakingMapBordersIntoAccount(x, y);
+		int c = cellCalculator->getCellWithMapBorders(x, y);
 
 		iDist = ABS_length(x, y, iOrgX, iOrgY);
 
@@ -448,7 +453,7 @@ void cMapEditor::makeRockCellsSandCellWhenRockCellHasLessThanThreeNeighbouringRo
 	int startY = 1;
 	int endX = map->getWidth() - 1;
 	int endY = map->getHeight() - 1;
-	CellCalculator * cellCalculator = new CellCalculator(map);
+	cCellCalculator * cellCalculator = new cCellCalculator(map);
 
 	for (int x = startX; x < endX; x++) {
 		for (int y = startY; y < endY; y++) {

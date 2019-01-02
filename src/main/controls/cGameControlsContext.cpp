@@ -1,13 +1,18 @@
-#include "../include/d2tmh.h"
+/*
+ * cGameControlsContext.cpp
+ *
+ *  Created on: 31-okt-2010
+ *      Author: Stefan
+ */
 
-#include "../utils/CellCalculator.h"
+#include "../include/d2tmh.h"
 
 #define MOUSECELL_MINIMAP -2
 
 cGameControlsContext::cGameControlsContext(cPlayer * thePlayer) {
 	assert(thePlayer);
 	player = thePlayer;
-	mouse = Mouse::getInstance();
+	mouse = cMouse::getInstance();
 	mouseCell = -99;
 	drawToolTip = false;
 }
@@ -24,7 +29,7 @@ void cGameControlsContext::updateState() {
 	determineHoveringOverUnitId();
 }
 
-Rectangle * cGameControlsContext::getMouseLastDraggedSelectionRectangle() {
+cRectangle * cGameControlsContext::getMouseLastDraggedSelectionRectangle() {
 	return mouse->getLastCreatedRectangle();
 }
 
@@ -41,17 +46,17 @@ void cGameControlsContext::determineMouseCell() {
 		return;
 	}
 
-// 	if (mouse->getX() > (/* game.getScreenResolution()->getWidth() */ 800  - 128)) {
-// 		if (mouse->getY() > (/* game.getScreenResolution()->getHeight */ 600  - 128)) {
-// 			mouseCell = MOUSECELL_MINIMAP; // on minimap
-// 			return;
-// 		}
-// 	}
-// 
-// 	if (mouse->getX() > (/* game.getScreenResolution()->getWidth() */ 800  - 160)) {
-// 		mouseCell = -3; // on sidebar
-// 		return;
-// 	}
+	if (mouse->getX() > (game.getScreenResolution()->getWidth() - 128)) {
+		if (mouse->getY() > (game.getScreenResolution()->getHeight() - 128)) {
+			mouseCell = MOUSECELL_MINIMAP; // on minimap
+			return;
+		}
+	}
+
+	if (mouse->getX() > (game.getScreenResolution()->getWidth() - 160)) {
+		mouseCell = -3; // on sidebar
+		return;
+	}
 
 	if (map == NULL || mapCamera == NULL) {
 		mouseCell = -1;
@@ -64,7 +69,7 @@ void cGameControlsContext::determineMouseCell() {
 	iMouseX += mapCamera->getX();
 	iMouseY += mapCamera->getY();
 
-	CellCalculator * cellCalculator = new CellCalculator(map);
+	cCellCalculator * cellCalculator = new cCellCalculator(map);
 	mouseCell = cellCalculator->getCell(iMouseX, iMouseY);
 	delete cellCalculator;
 	cellCalculator = NULL;
@@ -87,7 +92,7 @@ void cGameControlsContext::determineHoveringOverStructureId() {
 
 		if (theStructure) {
 			if (structureUtils.isStructureOnScreen(theStructure)) {
-				Rectangle * rectangle = theStructure->getRectangle();
+				cRectangle * rectangle = theStructure->getRectangle();
 				if (mouse->isOverRectangle(rectangle)) {
 					mouseHoveringOverStructureId = i;
 					break;
@@ -98,21 +103,8 @@ void cGameControlsContext::determineHoveringOverStructureId() {
 }
 
 void cGameControlsContext::determineHoveringOverUnitId() {
+	//TODO:implementation of determineHoveringOverUnitId
 	mouseHoveringOverUnitId = -1;
-	if (isMouseOnBattleField()) {
-		cMapCell cell = map->cell[mouseCell];
-		if (cell.gameObjectId[MAPID_UNITS] > -1) {
-			int iUnitId = cell.gameObjectId[MAPID_UNITS];
-
-			// TODO: this really makes no sense, but it works now.
-			if (unit[iUnitId].iTempHitPoints < 0) { // is not being repaired or in structure
-				mouseHoveringOverUnitId = iUnitId;
-			}
-		} else if (cell.gameObjectId[MAPID_WORMS] > -1) {
-			int iUnitId = cell.gameObjectId[MAPID_WORMS];
-			mouseHoveringOverUnitId = iUnitId;
-		}
-	}
 }
 
 cAbstractStructure * cGameControlsContext::getStructurePointerWhereMouseHovers() {
@@ -144,8 +136,8 @@ int cGameControlsContext::getMouseCellFromMiniMap() {
 	int newY = mouseMiniMapY;/* - centerOfViewPortHeight;*/
 
 	if (map) {
-		CellCalculator * cellCalculator = new CellCalculator(map);
-		int result = cellCalculator->getCellTakingMapBordersIntoAccount(newX, newY);
+		cCellCalculator * cellCalculator = new cCellCalculator(map);
+		int result = cellCalculator->getCellWithMapBorders(newX, newY);
 		delete cellCalculator;
 		return result;
 	} else {

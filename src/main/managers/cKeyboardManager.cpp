@@ -16,56 +16,57 @@ cKeyboardManager::cKeyboardManager(const cKeyboardManager& orig) {
 cKeyboardManager::~cKeyboardManager() {
 }
 
-bool cKeyboardManager::mustTakeScreenshot() {
-	return (key[KEY_F11]);
-}
-
+/**
+ Handle keyboard keys.
+ TAB + key = debug action
+ */
 void cKeyboardManager::interact() {
-// 	if (key[KEY_TAB]) {
-// 		DEBUG_KEYS();
-// 	} else {
-// 		GAME_KEYS();
-// 
-// 		if (key[KEY_ESC]) {
-// 			game.playing = false;
-// 		}
-// 
-// 		if (mustTakeScreenshot()) {
-// 			char filename[25];
-// 
-// 			if (game.screenshot < 10) {
-// 				sprintf(filename, "%dx%d_000%d.bmp", /* game.getScreenResolution()->getWidth() */ 800 , /* game.getScreenResolution()->getHeight */ 600 , game.screenshot);
-// 			} else if (game.screenshot < 100) {
-// 				sprintf(filename, "%dx%d_00%d.bmp", /* game.getScreenResolution()->getWidth() */ 800 , /* game.getScreenResolution()->getHeight */ 600 , game.screenshot);
-// 			} else if (game.screenshot < 1000) {
-// 				sprintf(filename, "%dx%d_0%d.bmp", /* game.getScreenResolution()->getWidth() */ 800 , /* game.getScreenResolution()->getHeight */ 600 , game.screenshot);
-// 			} else {
-// 				sprintf(filename, "%dx%d_%d.bmp", /* game.getScreenResolution()->getWidth() */ 800 , /* game.getScreenResolution()->getHeight */ 600 , game.screenshot);
-// 			}
-// 
-// 			save_bmp(filename, bmp_screen, general_palette);
-// 
-// 			game.screenshot++;
-// 		}
-// 
-// 	}
-// 
-// 	if (key[KEY_F]) {
-// 		alfont_textprintf(bmp_screen, game_font, 0, 44, makecol(255, 255, 255), "FPS: %d", fps);
-// 	}
-// 
-// 	/* Handle here keys that are only active when debugging */
-// 	if (DEBUGGING) {
-// 		if (key[KEY_F4]) {
-// 			if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
-// 				map->makeCircleVisibleForPlayerOfSpecificSize(player[HUMAN].getGameControlsContext()->getMouseCell(), 3, 0);
-// 			}
-// 		}
-// 	}
+	if (key[KEY_TAB]) {
+		DEBUG_KEYS();
+	} else {
+		GAME_KEYS();
+
+		if (key[KEY_ESC]) {
+			game.playing = false;
+		}
+
+		// take screenshot
+		if (key[KEY_F11]) {
+			char filename[25];
+
+			if (game.screenshot < 10) {
+				sprintf(filename, "%dx%d_000%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
+			} else if (game.screenshot < 100) {
+				sprintf(filename, "%dx%d_00%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
+			} else if (game.screenshot < 1000) {
+				sprintf(filename, "%dx%d_0%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
+			} else {
+				sprintf(filename, "%dx%d_%d.bmp", game.getScreenResolution()->getWidth(), game.getScreenResolution()->getHeight(), game.screenshot);
+			}
+
+			save_bmp(filename, bmp_screen, general_palette);
+
+			game.screenshot++;
+		}
+
+	}
+
+	if (key[KEY_F]) {
+		alfont_textprintf(bmp_screen, game_font, 0, 44, makecol(255, 255, 255), "FPS: %d", fps);
+	}
+
+	/* Handle here keys that are only active when debugging */
+	if (DEBUGGING) {
+
+		if (key[KEY_F4]) {
+			if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
+				map->clear_spot(player[HUMAN].getGameControlsContext()->getMouseCell(), 3, 0);
+			}
+		}
+	}
 }
 
 void cKeyboardManager::DEBUG_KEYS() {
-	/*
 	//JUMP TO MISSION 9
 	if (key[KEY_F1] && game.iHouse > 0) {
 		game.mission_init();
@@ -76,28 +77,24 @@ void cKeyboardManager::DEBUG_KEYS() {
 		playMusicByType(MUSIC_BRIEFING);
 		game.iMentatSpeak = -1;
 	}
-
 	// WIN MISSION
 	if (key[KEY_F2]) {
-		if (game.iWinQuota > -1) {
+		if (game.iWinQuota > -1)
 			player[0].credits = game.iWinQuota + 1;
-		} else {
+		else {
 			game.destroyAllStructures(false);
 			game.destroyAllUnits(false);
 		}
 	}
-
 	// LOSE MISSION
 	if (key[KEY_F3]) {
 		game.destroyAllStructures(true);
 		game.destroyAllUnits(true);
 	}
-
 	// GIVE 299999 CREDITS TO PLAYER
 	if (key[KEY_F4] && !key[KEY_LSHIFT]) {
 		player[0].credits = 299999;
 	}
-
 	//DESTROY UNIT OR BUILDING
 	if (key[KEY_F4] && key[KEY_LSHIFT]) {
 		int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
@@ -113,12 +110,10 @@ void cKeyboardManager::DEBUG_KEYS() {
 			}
 		}
 	}
-
 	// REVEAL  MAP
 	if (key[KEY_F5]) {
-		map->makeAllCellsVisible();
+		map->clear_all();
 	}
-
 	//JUMP TO MISSION 3
 	if (key[KEY_F6] && game.iHouse > 0) {
 		game.mission_init();
@@ -129,7 +124,6 @@ void cKeyboardManager::DEBUG_KEYS() {
 		playMusicByType(MUSIC_BRIEFING);
 		game.iMentatSpeak = -1;
 	}
-
 	//JUMP TO MISSION 4
 	if (key[KEY_F7] && game.iHouse > 0) {
 		game.mission_init();
@@ -140,7 +134,6 @@ void cKeyboardManager::DEBUG_KEYS() {
 		playMusicByType(MUSIC_BRIEFING);
 		game.iMentatSpeak = -1;
 	}
-
 	//JUMP TO MISSION 5
 	if (key[KEY_F8] && game.iHouse > 0) {
 		game.mission_init();
@@ -150,11 +143,11 @@ void cKeyboardManager::DEBUG_KEYS() {
 		game.setState(BRIEFING);
 		playMusicByType(MUSIC_BRIEFING);
 		game.iMentatSpeak = -1;
-	} */
+	}
 }
 
+// WHen holding CTRL
 void cKeyboardManager::GAME_KEYS() {
-	/*
 	int iGroup = game.getGroupNumberFromKeyboard();
 
 	// WHEN PRESSED CTRL, MEANING, ADD....
@@ -227,6 +220,6 @@ void cKeyboardManager::GAME_KEYS() {
 				}
 			} // END HACK
 		}
-	} */
+	}
 }
 

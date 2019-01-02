@@ -179,7 +179,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 				PARTICLE_CREATE(iDieX, iDieY - 24, OBJECT_SMOKE, -1, -1);
 
 			if (iType == HARVESTER) {
-				/*game.TIMER_shake = 25;*/
+				game.TIMER_shake = 25;
 				mapEditor.createField(iCell, TERRAIN_SPICE, ((iCredits + 1) / 7));
 			}
 
@@ -207,7 +207,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 						play_sound_id(SOUND_TANKDIE + rnd(2), iCellOnScreen(iCell));
 
 					// calculate cell and damage stuff around this
-					int cll = createCellWithoutMapBorders((iCellX - 1) + cx, (iCellY - 1) + cy);
+					int cll = iCellMake((iCellX - 1) + cx, (iCellY - 1) + cy);
 
 					if (cll == iCell)
 						continue; // do not do own cell
@@ -794,15 +794,15 @@ void cUnit::think_guard() {
 
 			UNIT_ORDER_ATTACK(iID, unit[iDanger].iCell, iDanger, -1, -1);
 
-// 			if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0) {
-// 				playMusicByType(MUSIC_ATTACK);
-// 
-// 				// warning... bla bla
-// 				if (unit[iDanger].iType == SANDWORM)
-// 					play_voice(SOUND_VOICE_10_ATR); // wormsign
-// 				else
-// 					play_voice(SOUND_VOICE_09_ATR); // enemy unit approaching
-// 			}
+			if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0) {
+				playMusicByType(MUSIC_ATTACK);
+
+				// warning... bla bla
+				if (unit[iDanger].iType == SANDWORM)
+					play_voice(SOUND_VOICE_10_ATR); // wormsign
+				else
+					play_voice(SOUND_VOICE_09_ATR); // enemy unit approaching
+			}
 			return;
 		} else {
 			// NOT SANDWORM AND NOT HUMAN PLAYER
@@ -845,10 +845,10 @@ void cUnit::think_guard() {
 
 			if (iDanger > -1) {
 				UNIT_ORDER_ATTACK(iID, structure[iDanger]->getCell(), -1, iDanger, -1);
-// 
-// 				if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0) {
-// 					playMusicByType(MUSIC_ATTACK);
-// 				}
+
+				if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0) {
+					playMusicByType(MUSIC_ATTACK);
+				}
 
 			}
 		}
@@ -982,7 +982,7 @@ void cUnit::think() {
 		map->remove_id(iID, MAPID_UNITS);
 
 		die(true, false);
-		/*game.TIMER_shake = 20;*/
+		game.TIMER_shake = 20;
 		return;
 	}
 
@@ -1242,11 +1242,7 @@ void cUnit::think_move_air() {
 	// same cell (no goal specified or something)
 	if (iNextCell == iCell) {
 
-		cMapUtils * mapUtils = new cMapUtils(map);
-
-		bool isWithinMapBoundaries = mapUtils->isCellWithinMapBorders(iCell);
-
-		delete mapUtils;
+		bool bBordered = BORDER_POS(iCellGiveX(iCell), iCellGiveY(iCell));
 
 		// reinforcement stuff happens here...
 
@@ -1322,7 +1318,7 @@ void cUnit::think_move_air() {
 					if (iCell == iBringTarget) {
 
 						// check if its valid for this unit...
-						if (map->occupied(iCell, iUnitID) == false && isWithinMapBoundaries) {
+						if (map->occupied(iCell, iUnitID) == false && bBordered) {
 							// dump it here
 							unit[iUnitID].iCell = iCell;
 							unit[iUnitID].iGoalCell = iCell;
@@ -1340,7 +1336,7 @@ void cUnit::think_move_air() {
 							unit[iUnitID].iBodyShouldFace = iBodyShouldFace;
 
 							// clear spot
-							map->makeCircleVisibleForPlayerOfSpecificSize(iCell, units[unit[iUnitID].iType].sight, iPlayer);
+							map->clear_spot(iCell, units[unit[iUnitID].iType].sight, iPlayer);
 
 							int iuID = iUnitID;
 
@@ -1386,8 +1382,9 @@ void cUnit::think_move_air() {
 							poll();
 							int rx = (iCellX - 2) + rnd(5);
 							int ry = (iCellY - 2) + rnd(5);
+							FIX_BORDER_POS(rx, ry);
 
-							iGoalCell = mapUtils->createCell(rx, ry);
+							iGoalCell = iCellMake(rx, ry);
 
 							iBringTarget = iGoalCell;
 							return;
@@ -1422,7 +1419,7 @@ void cUnit::think_move_air() {
 			}
 
 			// first check if this cell is clear
-			if (map->occupied(iCell, iID) == false && isWithinMapBoundaries) {
+			if (map->occupied(iCell, iID) == false && bBordered) {
 				// drop unit
 				if (iNewUnitType > -1) {
 					int id = UNIT_CREATE(iCell, iNewUnitType, iPlayer, true);
@@ -1461,8 +1458,9 @@ void cUnit::think_move_air() {
 				poll();
 				int rx = (iCellX - 2) + rnd(5);
 				int ry = (iCellY - 2) + rnd(5);
+				FIX_BORDER_POS(rx, ry);
 
-				iGoalCell = mapUtils->createCell(rx, ry);
+				iGoalCell = iCellMake(rx, ry);
 				return;
 			}
 
@@ -1472,7 +1470,7 @@ void cUnit::think_move_air() {
 		int rx = rnd(map->getWidth());
 		int ry = rnd(map->getHeight());
 
-		iGoalCell = createCellWithoutMapBorders(rx, ry);
+		iGoalCell = iCellMake(rx, ry);
 		return;
 	}
 
@@ -1663,11 +1661,45 @@ void cUnit::shoot(int iShootCell) {
 	int iShootY = (draw_y() + 16) + (mapCamera->getY() * 32);
 	int bmp_head = convert_angle(iHeadFacing);
 
-	if (iType == TANK) {
+	if (iType == TANK)
 		PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);
-	} else if (iType == SIEGETANK) {
+	else if (iType == SIEGETANK)
 		PARTICLE_CREATE(iShootX, iShootY, OBJECT_SIEGESHOOT, -1, bmp_head);
-	}
+	/*
+	 // determine facing: depending on that, start at correct cell (neighbouring cell)
+	 int iCx = iCellGiveX(iCell);
+	 int iCy = iCellGiveY(iCell);
+
+	 if (iType == TANK ||
+	 iType == SIEGETANK ||
+	 iType == SONICTANK ||
+	 iType == DEVASTATOR)
+	 {
+
+	 int iFacing = iHeadFacing;
+
+	 if (iFacing == FACE_UP ||
+	 iFacing == FACE_UPLEFT ||
+	 iFacing == FACE_UPRIGHT)
+	 iCy--;
+
+	 if (iFacing == FACE_DOWN ||
+	 iFacing == FACE_DOWNLEFT ||
+	 iFacing == FACE_DOWNRIGHT)
+	 iCy++;
+
+	 if (iFacing == FACE_LEFT ||
+	 iFacing == FACE_UPLEFT ||
+	 iFacing == FACE_DOWNLEFT)
+	 iCx--;
+
+	 if (iFacing == FACE_RIGHT ||
+	 iFacing == FACE_UPRIGHT ||
+	 iFacing == FACE_DOWNRIGHT)
+	 iCx++;
+	 }
+
+	 int iSc = iCellMake(iCx, iCy);*/
 
 	create_bullet(units[iType].bullets, iCell, iShootCell, iID, -1);
 
@@ -1915,7 +1947,7 @@ void cUnit::think_attack() {
 						dy -= (dif);
 						dy += rnd(dif * 2);
 
-						iGc = createCellWithoutMapBorders(dx, dy);
+						iGc = iCellMake(dx, dy);
 					}
 				}
 
@@ -2019,7 +2051,7 @@ void cUnit::think_attack() {
 							iAttackUnit = -1;
 							iAttackStructure = -1;
 							iAction = ACTION_MOVE;
-							iGoalCell = createCellWithoutMapBorders(rx, ry);
+							iGoalCell = iCellMake(rx, ry);
 						}
 					}
 
@@ -2555,7 +2587,7 @@ void cUnit::think_move() {
 
 			}
 
-			map->makeCircleVisibleForPlayerOfSpecificSize(iCell, units[iType].sight, iPlayer);
+			map->clear_spot(iCell, units[iType].sight, iPlayer);
 
 			// The goal did change probably, or something else forces us to reconsider
 			if (bCalculateNewPath) {
@@ -2722,7 +2754,7 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
 	}
 
 	unit[iNewId].poll();
-	map->makeCircleVisibleForPlayerOfSpecificSize(iCll, units[iTpe].sight, iPlyr);
+	map->clear_spot(iCll, units[iTpe].sight, iPlyr);
 
 	return iNewId;
 }
@@ -2753,10 +2785,10 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
 int CREATE_PATH(int iID, int iPathCountUnits) {
 
 	// Too many paths where created , so we wait a little.
-// 	if (game.paths_created > 40) {
-// 		unit[iID].TIMER_movewait = (50 + rnd(50));
-// 		return -3;
-// 	}
+	if (game.paths_created > 40) {
+		unit[iID].TIMER_movewait = (50 + rnd(50));
+		return -3;
+	}
 
 	int iCell = unit[iID].iCell; // current cell
 
@@ -2794,7 +2826,7 @@ int CREATE_PATH(int iID, int iPathCountUnits) {
 	int goal_cell = unit[iID].iGoalCell;
 	int controller = unit[iID].iPlayer;
 
-	/*game.paths_created++;*/
+	game.paths_created++;
 	memset(temp_map, -1, sizeof(temp_map));
 
 	/*
@@ -2862,11 +2894,14 @@ int CREATE_PATH(int iID, int iPathCountUnits) {
 		ex = cx + 1;
 		ey = cy + 1;
 
-		sx = mapUtils->checkAndFixXCoordinate(sx);
-		sy = mapUtils->checkAndFixYCoordinate(sy);
+		// boundries
+		FIX_BORDER_POS(sx, sy);
+		FIX_BORDER_POS(ex, ey);
 
-		ex = mapUtils->checkAndFixXCoordinate(ex);
-		ey = mapUtils->checkAndFixYCoordinate(ey);
+		if (ex <= cx)
+			logbook("CX = EX");
+		if (ey <= cy)
+			logbook("CY = EY");
 
 		cost = 999999999;
 		the_cll = -1;
@@ -2880,7 +2915,7 @@ int CREATE_PATH(int iID, int iPathCountUnits) {
 			// circle around cell Y wise
 			for (cy = sy; cy <= ey; cy++) {
 				// only check the 'cell' that is NOT the current cell.
-				int cll = createCellWithoutMapBorders(cx, cy);
+				int cll = iCellMake(cx, cy);
 
 				// DO NOT CHECK SELF
 				if (cll == iCell)
@@ -3009,6 +3044,7 @@ int CREATE_PATH(int iID, int iPathCountUnits) {
 
 			// bail out
 			if (bail_out) {
+				//logbook("BAIL");
 				break;
 			}
 
@@ -3183,16 +3219,15 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID) {
 		iEndX = iCellGiveX(iCll) + iSize;
 		iEndY = iCellGiveY(iCll) + iSize;
 
-		iStartX = mapUtils->checkAndFixXCoordinate(iStartX);
-		iEndX = mapUtils->checkAndFixXCoordinate(iEndX);
-		iStartY = mapUtils->checkAndFixYCoordinate(iStartY);
-		iEndY = mapUtils->checkAndFixYCoordinate(iEndY);
+		// Fix boundries
+		FIX_BORDER_POS(iStartX, iStartY);
+		FIX_BORDER_POS(iEndX, iEndY);
 
 		// search
 		for (int iSX = iStartX; iSX < iEndX; iSX++)
 			for (int iSY = iStartY; iSY < iEndY; iSY++) {
 				// find an empty cell
-				int cll = createCellWithoutMapBorders(iSX, iSY);
+				int cll = iCellMake(iSX, iSY);
 
 				float dDistance2 = ABS_length(iSX, iSY, ix, iy);
 
@@ -3235,7 +3270,7 @@ int CLOSE_SPICE_BLOOM(int iCell) {
 
 		if (iCell < 0) {
 			iDistance = 9999;
-			iCell = createCellWithoutMapBorders(32, 32);
+			iCell = iCellMake(32, 32);
 		}
 
 		int cx, cy;
@@ -3292,11 +3327,8 @@ int UNIT_find_harvest_spot(int id) {
 			int dy = iCellGiveY(i);
 
 			// skip bordered ones
-			cMapUtils * mapUtils = new cMapUtils(map);
-			if (!mapUtils->isWithinMapBorders(dx, dy)) {
+			if (BORDER_POS(dx, dy) == false)
 				continue;
-			}
-			delete mapUtils;
 
 			/*
 			 if (dx <= 1) continue;
@@ -3363,7 +3395,7 @@ void SPAWN_FRIGATE(int iPlr, int iCll) {
 	iX++;
 	iY++;
 
-	iCell = createCellWithoutMapBorders(iX, iY);
+	iCell = iCellMake(iX, iY);
 
 	// step 1
 	int iStartCell = iFindCloseBorderCell(iCell);
@@ -3593,7 +3625,7 @@ int UNIT_FREE_AROUND_MOVE(int iUnit) {
 
 	for (int x = iStartX; x < iEndX; x++)
 		for (int y = iStartY; y < iEndY; y++) {
-			int cll = createCellWithoutMapBorders(x, y);
+			int cll = iCellMake(x, y);
 
 			if (map->occupied(cll) == false) {
 				iClls[iC] = cll;

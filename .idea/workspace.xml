@@ -1,0 +1,742 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="d2tm" targetName="d2tm" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1b92bf8d-3bb0-482e-a33b-e551068feb1b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/.cproject" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/.cproject" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/building/cItemBuilder.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/building/cItemBuilder.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/building/cItemBuilder.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/building/cItemBuilder.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/cGame.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cGame.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/cGame_draw.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cGame_draw.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/cGame_logic.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cGame_logic.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/controls/cGameControlsContext.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/controls/cGameControlsContext.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/controls/cGameControlsContext.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/controls/cGameControlsContext.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/controls/cKeyboard.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/controls/cKeyboard.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/controls/controlsh.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/controls/controlsh.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/domain/Mouse.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/domain/Screen.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/domain/Screen.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/domain/cMouse.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/AllegroDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/AllegroDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/BuildingListDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/BuildingListDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/CreditsDrawer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawers/CreditsDrawer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/CreditsDrawer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawers/CreditsDrawer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/GameDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/GameDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/MapDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/MapDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/MessageBarDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/MessageBarDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/MiniMapDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/MiniMapDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/MouseDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/MouseDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/OrderDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/OrderDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/ParticleDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/ParticleDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/PlaceItDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/PlaceItDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/SideBarDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/SideBarDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/StructureDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/StructureDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/TextDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/TextDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/UnitDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/UnitDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/UpgradeDrawer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/UpgradeDrawer.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawers/drawersh.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawers/drawersh.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/factory/cGameFactory.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/factory/cGameFactory.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/GameObject.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/GameObject.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/Rectangle.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/Rectangle.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/ScreenResolution.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/ScreenResolution.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/gameobjects.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/gameobjects/gameobjects.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/particles/Particle.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/particles/Particle.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/projectiles/Projectile.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/projectiles/Projectile.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/structures/cAbstractStructure.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/gameobjects/structures/cAbstractStructure.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/structures/cAbstractStructure.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/gameobjects/structures/cAbstractStructure.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/structures/cOrderProcesser.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/gameobjects/structures/cOrderProcesser.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/structures/cStarPort.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/gameobjects/structures/cStarPort.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/structures/cStructureFactory.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/gameobjects/structures/cStructureFactory.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/structures/cStructureFactory.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/gameobjects/structures/cStructureFactory.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gameobjects/units/cUnit.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/gameobjects/units/cUnit.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/GuiColors.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/GuiElement.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/GuiElement.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/GuiInteractionDelegate.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/GuiInteractionDelegate.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/MessageBar.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/MessageBar.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/MouseToolTip.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/MouseToolTip.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/TextWriter.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/TextWriter.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/dialogs/DialogBuilder.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/dialogs/DialogBuilder.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/dialogs/MainMenuDialog.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/dialogs/MainMenuDialog.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/guih.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/gui/guih.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/shapes/GuiButton.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/shapes/GuiButton.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/shapes/GuiShape.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/shapes/GuiShape.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/shapes/GuiShapeFactory.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/shapes/GuiShapeFactory.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/windows/GuiMainMenuWindow.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/windows/GuiMainMenuWindow.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/windows/GuiMainMenuWindowInteractionDelegate.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/windows/GuiMainMenuWindowInteractionDelegate.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/windows/GuiWindow.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/windows/GuiWindow.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/windows/GuiWindowBuilder.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/gui/windows/GuiWindowBuilder.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/include/d2tmc.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/include/d2tmc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/include/d2tmh.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/include/d2tmh.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/include/definitions.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/include/definitions.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/include/enums.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/include/enums.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/include/global.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/include/global.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/include/gui.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/include/gui.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ini.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ini.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ini.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ini.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/managers/RestManager.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/managers/RestManager.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/managers/cCombatInteractionManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/managers/cCombatInteractionManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/managers/cCombatInteractionManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/managers/cCombatInteractionManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/managers/cInteractionManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/managers/cInteractionManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/managers/cKeyboardManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/managers/cKeyboardManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/managers/cKeyboardManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/managers/cKeyboardManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/managers/cMenuInteractionManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/managers/cMenuInteractionManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/managers/cMenuInteractionManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/managers/cMenuInteractionManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/map/cMap.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/map/cMap.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/map/cMap.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/map/cMap.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/map/cMapCamera.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/map/cMapCamera.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/map/cMapCell.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/map/cMapEditor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/map/cMapEditor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/map/cRandomMapGenerator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/map/cRandomMapGenerator.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/map/cRandomMapGenerator.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/map/cRandomMapGenerator.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/map/maph.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/map/maph.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/mentat/cBenegesMentat.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/mentat/cBenegesMentat.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/movie/cMovieDrawer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/movie/cMovieDrawer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/movie/cMoviePlayer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/movie/cMoviePlayer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/player/cPlayer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/player/cPlayer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/player/cPlayer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/player/cPlayer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/regions.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/regions.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/sidebar/cBuildingList.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/sidebar/cBuildingList.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/sidebar/cBuildingListFactory.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/sidebar/cBuildingListFactory.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/sidebar/cBuildingListItem.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/sidebar/cBuildingListItem.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/sidebar/cSideBar.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/sidebar/cSideBar.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/sidebar/cSideBarFactory.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/sidebar/cSideBarFactory.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/states/MainMenuState.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/states/MainMenuState.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/states/State.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/states/StateRunner.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/upgrade/cBuildingListUpdater.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/upgrade/cBuildingListUpdater.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/upgrade/cBuildingListUpdater.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/upgrade/cBuildingListUpdater.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/upgrade/cListUpgrade.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/upgrade/cListUpgrade.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/upgrade/cUpgradeBuilder.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/upgrade/cUpgradeBuilder.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/BestScreenResolutionFinder.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/BestScreenResolutionFinder.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/CellCalculator.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/CellCalculator.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/FileReader.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/FileReader.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/Logger.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/Logger.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/StringUtils.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/cMapUtils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/cMapUtils.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/cMapUtils.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/cMapUtils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/cSeedMapGenerator.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/cSeedMapGenerator.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/cSoundPlayer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/cSoundPlayer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/cSoundPlayer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/cSoundPlayer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/cStructureUtils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/cStructureUtils.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/cStructureUtils.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/cStructureUtils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/cUpgradeUtils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/cUpgradeUtils.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/cUpgradeUtils.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/cUpgradeUtils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/common.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/common.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/common.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/common.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/d2tm_math.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/d2tm_math.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/d2tm_math.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/d2tm_math.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/utils/utilsh.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/utils/utilsh.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/.cproject" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/tpunit++.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/tpunit++main.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/tpunit++test.cpp" beforeDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/ini.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="401">
+              <caret line="2372" column="30" lean-forward="true" selection-start-line="2372" selection-start-column="30" selection-end-line="2372" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="57">
+              <caret line="3" column="26" selection-start-line="3" selection-start-column="26" selection-end-line="3" selection-end-column="26" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/utils/cSoundPlayer.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-7">
+              <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/utils/d2tm_math.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-7">
+              <caret line="8" column="40" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/drawers/CreditsDrawer.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-7">
+              <caret line="34" column="19" selection-start-line="34" selection-start-column="19" selection-end-line="34" selection-end-column="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/ai.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-7">
+              <caret line="104" selection-start-line="104" selection-end-line="104" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/cGame_draw.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-7">
+              <caret line="199" column="49" selection-start-line="199" selection-start-column="49" selection-end-line="199" selection-end-column="49" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/drawers/cAllegroDrawer.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-7">
+              <caret line="16" column="28" selection-start-line="16" selection-start-column="28" selection-end-line="16" selection-end-column="28" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/ini.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-7">
+              <caret line="159" selection-start-line="159" selection-end-line="159" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/utils/utilsh.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-7">
+              <caret line="11" selection-start-line="11" selection-end-line="11" />
+              <folding>
+                <element signature="e#37#87#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>ALLEGRO_MSVC</find>
+      <find>isOffsetDirectionSet</find>
+      <find>cPlayer</find>
+      <find>player</find>
+      <find>int main</find>
+      <find>sources</find>
+      <find>game.</find>
+      <find>error</find>
+    </findStrings>
+    <dirStrings>
+      <dir>C:\projects\fundynamic\Dune-II---The-Maker\cmake-build-debug</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/dependencies/mingw32/include/allegro/platform/alplatf.h" />
+        <option value="$PROJECT_DIR$/src/main/utils/cSeedMapGenerator.h" />
+        <option value="$PROJECT_DIR$/src/main/utils/cSeedMapGenerator.cpp" />
+        <option value="$PROJECT_DIR$/src/main/cGame_logic.cpp" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/src/main/main.cpp" />
+        <option value="$PROJECT_DIR$/src/main/player/cPlayer.cpp" />
+        <option value="$PROJECT_DIR$/src/main/drawers/UpgradeDrawer.cpp" />
+        <option value="$PROJECT_DIR$/src/main/cGame.h" />
+        <option value="$PROJECT_DIR$/src/main/mentat/cBenegesMentat.cpp" />
+        <option value="$PROJECT_DIR$/src/main/gameobjects/units/cUnit.cpp" />
+        <option value="$PROJECT_DIR$/src/main/utils/BestScreenResolutionFinder.cpp" />
+        <option value="$PROJECT_DIR$/src/main/utils/cSoundPlayer.cpp" />
+        <option value="$PROJECT_DIR$/src/main/utils/d2tm_math.cpp" />
+        <option value="$PROJECT_DIR$/src/main/drawers/CreditsDrawer.h" />
+        <option value="$PROJECT_DIR$/src/main/ini.cpp" />
+      </list>
+    </option>
+  </component>
+  <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-22" />
+    <option name="width" value="5144" />
+    <option name="height" value="2788" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <autoscrollFromSource ProjectPane="true" />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="d2tm" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Dune-II---The-Maker" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="settings.editor.splitter.proportion" value="0.22391653" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="d2tm" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="d2tm" TARGET_NAME="d2tm" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="d2tm" RUN_TARGET_NAME="d2tm">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1b92bf8d-3bb0-482e-a33b-e551068feb1b" name="Default Changelist" comment="" />
+      <created>1545747248746</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1545747248746</updated>
+      <workItem from="1545747261323" duration="82000" />
+      <workItem from="1545748520606" duration="10842000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="10924000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-6" y="-6" width="1933" height="1053" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25226668" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32936078" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Database Changes" order="7" />
+      <window_info anchor="bottom" id="Messages" order="8" visible="true" weight="0.32936078" />
+      <window_info anchor="bottom" id="Terminal" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="11" />
+      <window_info anchor="bottom" id="CMake" order="12" weight="0.32936078" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout>
+    <layout-to-restore>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25226668" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Database Changes" order="7" />
+      <window_info anchor="bottom" id="Messages" order="8" weight="0.32936078" />
+      <window_info anchor="bottom" id="Terminal" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="11" />
+      <window_info active="true" anchor="bottom" id="CMake" order="12" visible="true" weight="0.32936078" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/dependencies/mingw32/include/allegro/base.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="39" selection-start-line="39" selection-end-line="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dependencies/mingw32/include/allegro/internal/alconfig.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="59" column="35" selection-start-line="59" selection-start-column="35" selection-end-line="59" selection-end-column="35" />
+          <folding>
+            <element signature="e#800#860#0" expanded="true" />
+            <element signature="e#1195#1233#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dependencies/mingw32/include/allegro.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
+          <folding>
+            <element signature="e#824#849#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dependencies/mingw32/include/allegro/platform/alplatf.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="1" column="23" selection-start-line="1" selection-start-column="23" selection-end-line="1" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/drawers/drawersh.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/drawers/CreditsDrawer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="145" column="40" selection-start-line="145" selection-start-column="40" selection-end-line="145" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/utils/cSimpleCalculator.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="14" column="50" lean-forward="true" selection-start-line="14" selection-start-column="50" selection-end-line="14" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/utils/cSeedMapGenerator.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-23">
+          <caret line="48" column="42" selection-start-line="48" selection-start-column="42" selection-end-line="48" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/utils/cSeedMapGenerator.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="55" column="80" selection-start-line="55" selection-start-column="80" selection-end-line="55" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/cGame_logic.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="23" column="28" selection-start-line="23" selection-start-column="28" selection-end-line="23" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/utils/Logger.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="197">
+          <caret line="148" column="13" selection-start-line="148" selection-start-column="13" selection-end-line="148" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/utils/common.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="30" column="43" selection-start-line="30" selection-start-column="43" selection-end-line="30" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.13.2/CompilerIdCXX/CMakeCXXCompilerId.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="197">
+          <caret line="578" selection-start-line="578" selection-end-line="578" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.cxx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="451">
+          <caret line="404" selection-start-line="404" selection-end-line="404" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/domain/Screen.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="10" column="24" selection-start-line="10" selection-start-column="24" selection-end-line="10" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/drawers/MiniMapDrawer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="2" column="15" selection-start-line="2" selection-start-column="15" selection-end-line="2" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/drawers/GameDrawer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="22" lean-forward="true" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/drawers/UpgradeDrawer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="13" column="24" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/gui/shapes/GuiShapeFactory.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="2" column="24" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/player/cPlayer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="36" column="19" selection-start-line="36" selection-start-column="19" selection-end-line="36" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/player/playerh.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/cGame.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3148">
+          <caret line="177" column="12" selection-start-line="177" selection-start-column="12" selection-end-line="177" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="19" column="11" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/include/d2tmh.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="311">
+          <caret line="29" selection-start-line="29" selection-end-line="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/include/utils.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/mentat/cBenegesMentat.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="31" column="31" selection-start-line="31" selection-start-column="31" selection-end-line="31" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/utils/BestScreenResolutionFinder.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/gameobjects/units/cUnit.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="250" selection-start-line="250" selection-end-line="250" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/ini.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="159" selection-start-line="159" selection-end-line="159" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/utils/utilsh.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+          <folding>
+            <element signature="e#37#87#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/utils/BestScreenResolutionFinder.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="21" column="36" lean-forward="true" selection-start-line="21" selection-start-column="36" selection-end-line="21" selection-end-column="36" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/utils/cSoundPlayer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/utils/d2tm_math.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="8" column="40" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/drawers/CreditsDrawer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="34" column="19" selection-start-line="34" selection-start-column="19" selection-end-line="34" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/ai.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="104" selection-start-line="104" selection-end-line="104" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/cGame_draw.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="199" column="49" selection-start-line="199" selection-start-column="49" selection-end-line="199" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/drawers/cAllegroDrawer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="16" column="28" selection-start-line="16" selection-start-column="28" selection-end-line="16" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/ini.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="401">
+          <caret line="2372" column="30" lean-forward="true" selection-start-line="2372" selection-start-column="30" selection-end-line="2372" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="57">
+          <caret line="3" column="26" selection-start-line="3" selection-start-column="26" selection-end-line="3" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

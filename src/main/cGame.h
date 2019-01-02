@@ -9,14 +9,6 @@
  2001 - 2011 (c) code by Stefan Hendriks
 
  */
-#ifndef GAME_H_H
-#define GAME_H_H
-
-#include "gameobjects/ScreenResolution.h"
-
-#include "include/GameState.h"
-
-#include "states/State.h"
 
 class cGame {
 
@@ -29,26 +21,184 @@ class cGame {
 
 		bool windowed;
 		char version[15];
-		int revision;
+
+		// -- fade in/out animation
+		int iAlphaScreen;
+		int iFadeAction;
+
+		// select your next conquest vars -- begin
+		int iRegionState;
+		int iRegionScene;
+		int iRegionSceneAlpha;
+		int iRegionConquer[MAX_REGIONS];
+		int iRegionHouse[MAX_REGIONS];
+		char cRegionText[MAX_REGIONS][255];
+		int iRegion;
+		// select your next conquest vars -- end
+
+		// used for the fading/color transitioning when selecting things (units/things from item list)
+		int fade_select;
+		bool bFadeSelectDir;
+
+		bool soundEnabled;
+		bool mp3MusicEnabled;
+		bool playing;
+		int iMusicVolume;
+
+		// skirmish - start
+		bool bSkirmish;
+		int iSkirmishStartPoints;
+		int iSkirmishMap;
+		// skirmish - end
+
+		int screenshot;
+
+		int iMission;
+		int iHouse;
+
+		// combat - start
+		int selected_structure;
+		int hover_unit;
+		int paths_created;
+		int shake_x;
+		int shake_y;
+		int TIMER_shake;
+		bool bPlaceIt;
+		bool bPlacedIt;
+		int iWinQuota;
+		int iMusicType;
+		// combat - end
+
+
+		// mentat - begin
+		char mentat_sentence[10][255];
+		int TIMER_mentat_Speaking;
+		int iMentatSpeak;
+		int iMentatMouth;
+		int iMentatEyes;
+		int iMentatOther;
+		int TIMER_mentat_Mouth;
+		int TIMER_mentat_Eyes;
+		int TIMER_mentat_Other;
+		// mentat - end
+
+		/// functions
+
+		// think functions
+		void think_winlose();
+		void think_music();
+		void think_mentat();
+
+		// state functions
+		void winningState();
+		void losingState();
+		void shutdown();
+		void combat_mouse();
 
 		// init functions
 		bool setupGame();
 		void init();
+		void mission_init();
 
 		// main run function
 		void run();
 
-		void shutdown();
+		// mentat functions
+		void MENTAT_draw_mouth(int iMentat);
+		void MENTAT_draw_eyes(int iMentat);
+		void MENTAT_draw_other(int iMentat);
+		void FADE_OUT();
+		void preparementat(bool bTellHouse);
 
-		State * getState() { return state; }
+		bool isState(GameState theState);
+		void setState(GameState theState);
+
+		// misc
+		int getGroupNumberFromKeyboard();
+
+		void destroyAllUnits(bool);
+		void destroyAllStructures(bool);
+
+
+		// get / set
+
+		int getMaxVolume() {
+			return iMaxVolume;
+		}
+
+		cSoundPlayer *getSoundPlayer() {
+			return soundPlayer;
+		}
+
+		cMoviePlayer *getMoviePlayer() {
+			return moviePlayer;
+		}
+
+		void setMoviePlayer(cMoviePlayer * value) {
+			moviePlayer = value;
+		}
+
+		cScreenResolution *getScreenResolution() {
+			return screenResolution;
+		}
+
+		void setScreenResolution(cScreenResolution * newScreenResolution) {
+			screenResolution = newScreenResolution;
+		}
+
+		cScreenResolution *getScreenResolutionFromIni() {
+			return screenResolutionFromIni;
+		}
+
+		void setScreenResolutionFromIni(cScreenResolution * newScreenResolution) {
+			screenResolutionFromIni = newScreenResolution;
+		}
 
 	private:
+		bool isBusyFadingOut();
+
+		// poll
+		void updateState();
+
+		void handleTimeSlicing();
+
+		// state functions
+		void menuState();
+		void playingState();
+		void briefingState(int iType);
+		void selectNextConquestState();
+		void selectHouseState();
+		void selecthouseState();
+		void runGameState();
+		void setupSkirmishState();
+
+		// draw functions
+		void drawHousesToSelect(int iType);
+		void shakeScreenAndBlitBuffer();
+		bool isResolutionInGameINIFoundAndSet();
+		void setScreenResolutionFromGameIniSettings();
+
+		bool playerHasAnyStructures(int iPlayerId);
+		bool playerHasAnyGroundUnits(int iPlayerId);
+		bool isWinQuotaSet();
+		bool playerHasMetQuota(int iPlayerId);
+
+		bool isFadingOut();
+		bool isDoneFadingOut();
+
+		// state changing
+		void switchStateTo(GameState state);
 
 		// variables
-		GameState gameStateEnum;
-		State * state;
-		ScreenResolution * screenResolution;
+		GameState state;
+
+		cScreenResolution * screenResolution;
+		cScreenResolution * screenResolutionFromIni;
+
+		int iMaxVolume;
+
+		cSoundPlayer *soundPlayer;
+		cMoviePlayer *moviePlayer;
 
 };
 
-#endif

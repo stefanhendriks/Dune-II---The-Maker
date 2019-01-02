@@ -1,6 +1,11 @@
-#include "../include/d2tmh.h"
+/*
+ * cStructureUtils.cpp
+ *
+ *  Created on: 2-aug-2010
+ *      Author: Stefan
+ */
 
-#include "CellCalculator.h"
+#include "../include/d2tmh.h"
 
 cStructureUtils::cStructureUtils() {
 }
@@ -138,7 +143,7 @@ int cStructureUtils::findStructureTypeByTypeOfList(cBuildingList *list, cBuildin
 	int listTypeId = list->getType();
 	char msg[255];
 	sprintf(msg, "going to find list with listTypeId [%d]", listTypeId);
-	Logger::getInstance()->logCommentLine(msg);
+	cLogger::getInstance()->logCommentLine(msg);
 	switch (listTypeId) {
 		case LIST_CONSTYARD:
 			// a unit, and then built from a constyard list
@@ -179,7 +184,7 @@ int cStructureUtils::findClosestStructureTypeToCell(int cell, int structureType,
 
 	int playerId = player->getId();
 
-	CellCalculator * cellCalculator = new CellCalculator(map);
+	cCellCalculator * cellCalculator = new cCellCalculator(map);
 	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		if (structure[i]) { // exists (pointer)
 			if (structure[i]->getOwner() == playerId) { // same player
@@ -209,7 +214,7 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
 
 	assert(cellOfStructure > -1);
 
-	CellCalculator * cellCalculator = new CellCalculator(map);
+	cCellCalculator * cellCalculator = new cCellCalculator(map);
 	for (int w = 0; w < theStructure->getWidth(); w++) {
 		for (int h = 0; h < theStructure->getHeight(); h++) {
 			int xOfStructureCell = cellCalculator->getX(cellOfStructure);
@@ -230,14 +235,14 @@ bool cStructureUtils::isStructureOnScreen(cAbstractStructure *structure) {
 	int width = structure->getWidthInPixels();
 	int height = structure->getHeightInPixels();
 
-	return ((drawX + width) > 0 && drawX < /* game.getScreenResolution()->getWidth() */ 800 ) && ((drawY + height) > 0 && drawY < /* game.getScreenResolution()->getHeight */ 600 );
+	return ((drawX + width) > 0 && drawX < game.getScreenResolution()->getWidth()) && ((drawY + height) > 0 && drawY < game.getScreenResolution()->getHeight());
 }
 
-bool cStructureUtils::isMouseOverStructure(Mouse *mouse, cAbstractStructure *structure) {
+bool cStructureUtils::isMouseOverStructure(cMouse *mouse, cAbstractStructure *structure) {
 	assert(structure);
 	assert(mouse);
 
-	Rectangle * rectangle = structure->getRectangle();
+	cRectangle * rectangle = structure->getRectangle();
 	return mouse->isOverRectangle(rectangle);
 }
 

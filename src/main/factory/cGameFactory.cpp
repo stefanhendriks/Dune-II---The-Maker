@@ -13,6 +13,8 @@
 //#include "../controls/cMouse.h"
 //#include "../controls/cGameControlsContext.h"
 //
+//#include "../managers/cInteractionManager.h"
+//
 //#include "../cGame.h"
 #include "cGameFactory.h"
 
@@ -34,7 +36,7 @@ void cGameFactory::createDependenciesForPlayers() {
 		cItemBuilder * itemBuilder = new cItemBuilder(thePlayer);
 		thePlayer->setItemBuilder(itemBuilder);
 
-		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer, 9);
+		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer, game.iMission);
 		thePlayer->setSideBar(sidebar);
 
 		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(thePlayer);
@@ -49,7 +51,7 @@ void cGameFactory::createDependenciesForPlayers() {
 		cOrderProcesser * orderProcesser = new cOrderProcesser(thePlayer);
 		thePlayer->setOrderProcesser(orderProcesser);
 
-		thePlayer->setTechLevel(9);
+		thePlayer->setTechLevel(game.iMission);
 	}
 	logbook("cGameFactory:createDependenciesForPlayers [END]");
 }
@@ -68,10 +70,30 @@ void cGameFactory::createGameControlsContextsForPlayers() {
 	logbook("cGameFactory:createGameControlsContextsForPlayers [END]");
 }
 
-
-// TODO: BECOMES OBSELETE, can be removed
 void cGameFactory::createInteractionManagerForHumanPlayer(GameState state) {
 	logbook("cGameFactory:createInteractionManagerForHumanPlayer [BEGIN]");
+	delete interactionManager;
+	interactionManager = NULL;
+
+	cPlayer * thePlayer = &player[HUMAN];
+	switch (state) {
+		case MAINMENU:
+			interactionManager = new cMenuInteractionManager(thePlayer);
+			break;
+		case PLAYING:
+			interactionManager = new cCombatInteractionManager(thePlayer);
+			break;
+		case BRIEFING:
+			interactionManager = new cMenuInteractionManager(thePlayer);
+			break;
+		case SETUPSKIRMISH:
+			// FIXME: this feels odd
+			interactionManager = new cCombatInteractionManager(thePlayer);
+			break;
+		default:
+			interactionManager = NULL;
+	}
+	assert(interactionManager);
 	logbook("cGameFactory:createInteractionManagerForHumanPlayer [END]");
 }
 
@@ -83,7 +105,7 @@ void cGameFactory::createNewGameDrawerAndSetCreditsForHuman() {
 		gameDrawer = NULL;
 	}
 
-	gameDrawer = new GameDrawer(&player[HUMAN]);
+	gameDrawer = new cGameDrawer(&player[HUMAN]);
 	gameDrawer->getCreditsDrawer()->setCreditsOfPlayer();
 	logbook("cGameFactory:createNewGameDrawerAndSetCreditsForHuman [END]");
 }
@@ -141,6 +163,13 @@ void cGameFactory::destroyAll() {
 //		thePlayer = NULL;
 //	}
 
+	delete interactionManager;
+	interactionManager = NULL;
+
+	destroy_bitmap(bmp_fadeout);
+	destroy_bitmap(bmp_screen);
+	destroy_bitmap(bmp_throttle);
+	destroy_bitmap(bmp_winlose);
 
 	logbook("cGameFactory:destroyAll [END]");
 }

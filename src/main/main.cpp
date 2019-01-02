@@ -15,6 +15,9 @@
 using namespace std;
 
 bool bDoDebug = false;
+int iRest = 1; // default rest value
+
+// Server/Client system
 
 // the ultimate game variable(s)
 cGame game;
@@ -22,15 +25,19 @@ cAbstractStructure * structure[MAX_STRUCTURES];
 cUnit unit[MAX_UNITS];
 cMap * map = NULL;
 cMapEditor mapEditor;
+cRandomMapGenerator randomMapGenerator;
 cMapCamera * mapCamera;
 cMapUtils * mapUtils = NULL;
-cPlayer player[MAX_PLAYERS];
-Particle particle[MAX_PARTICLES];
-Projectile bullet[MAX_BULLETS];
+cPlayer player[MAX_PLAYERS]; // player is
+cAIPlayer aiplayer[MAX_PLAYERS]; // related to aiplayer (except nr 0=human)
+cParticle particle[MAX_PARTICLES];
+cBullet bullet[MAX_BULLETS];
 cRegion world[MAX_REGIONS];
 cMentat * Mentat = NULL;
+cTimeManager TimeManager;
 cStructureUtils structureUtils;
-GameDrawer * gameDrawer = NULL;
+cGameDrawer * gameDrawer = NULL;
+cInteractionManager * interactionManager = NULL;
 
 // Structs
 sPreviewMap PreviewMap[MAX_SKIRMISHMAPS]; // max of 100 maps in skirmish directory
@@ -51,6 +58,7 @@ BITMAP *bmp_fadeout;
 
 // datafile(s)
 DATAFILE *gfxdata; // graphics (terrain, units, structures)
+DATAFILE *gfxaudio; // audio
 DATAFILE *gfxinter; // interface graphics
 DATAFILE *gfxworld; // world/pieces graphics
 DATAFILE *gfxmentat; // mentat graphics
@@ -66,9 +74,12 @@ ALMP3_MP3 *mp3_music; // pointer to mp3 music
 // Timers
 int frame_count, fps; // fps and such
 
+/** Allegro specific timer creation starts here **/
+#ifdef ALLEGRO_H
 volatile int allegro_timerSecond = 0;
 volatile int allegro_timerGlobal = 0;
 volatile int allegro_timerUnits = 0;
+#endif
 
 bool argumentsGiven(int & argc) {
 	return argc > 1;
@@ -112,5 +123,6 @@ int main(int argc, char **argv) {
 
 	return 0;
 }
-END_OF_MAIN();
+END_OF_MAIN()
+;
 

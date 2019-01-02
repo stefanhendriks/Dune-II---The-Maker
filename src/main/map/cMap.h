@@ -9,10 +9,6 @@
  2001 - 2011 (c) code by Stefan Hendriks
 
  */
-#ifndef CMAP_H
-#define CMAP_H
-
-#include "cMapCell.h"
 
 class cMap {
 	public:
@@ -46,8 +42,8 @@ class cMap {
 
 		void thinkInteraction();
 		void draw_think();
-		void makeAllCellsVisible();
-		void makeCircleVisibleForPlayerOfSpecificSize(int c, int size, int player);
+		void clear_all();
+		void clear_spot(int c, int size, int player);
 
 		cMapCell cell[MAX_CELLS];
 
@@ -74,21 +70,8 @@ class cMap {
 		int getHeight() {
 			return height;
 		}
-
 		int getWidth() {
 			return width;
-		}
-
-		int getHeightMinusBorder() {
-			return (height - 1);
-		}
-
-		int getWidthMinusBorder() {
-			return (width - 1);
-		}
-
-		int getMaxCells() {
-			return height * width;
 		}
 
 	private:
@@ -104,4 +87,3 @@ class cMap {
 
 };
 
-#endif

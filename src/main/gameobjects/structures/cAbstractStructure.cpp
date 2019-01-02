@@ -50,7 +50,7 @@ cAbstractStructure::cAbstractStructure() {
 	TIMER_damage = 0; // damaging stuff
 	TIMER_prebuild = 0;
 
-	rectangle = new Rectangle();
+	rectangle = new cRectangle();
 }
 
 cAbstractStructure::~cAbstractStructure() {
@@ -116,11 +116,11 @@ void cAbstractStructure::die() {
 		return;
 	}
 
-	// deselected structure when dead
-	/*if (game.selected_structure == iIndex) {
-	game.selected_structure = -1;
+	// selected structure
+	if (game.selected_structure == iIndex) {
+		game.selected_structure = -1;
 	}
-	*/
+
 	// remove from array
 	structure[iIndex] = NULL;
 
@@ -153,7 +153,7 @@ void cAbstractStructure::die() {
 	// create destroy particles
 	for (int w = 0; w < iWidth; w++) {
 		for (int h = 0; h < iHeight; h++) {
-			iCll = createCellWithoutMapBorders(iCX + w, iCY + h);
+			iCll = iCellMake(iCX + w, iCY + h);
 
 			map->cell[iCll].terrainTypeGfxDataIndex = TERRAIN_ROCK;
 			mapEditor.smoothCellsAroundCell(iCll);
@@ -187,9 +187,8 @@ void cAbstractStructure::die() {
 	// remove from the playground
 	map->remove_id(iIndex, MAPID_STRUCTURES);
 
-	// screen shaking based on size of structure
-	/*
-	game.TIMER_shake = (iWidth * iHeight) * 20;*/
+	// screen shaking
+	game.TIMER_shake = (iWidth * iHeight) * 20;
 
 	// eventually die
 	// TODO: Can this really be happening? Deleting yourself?
@@ -210,8 +209,6 @@ void cAbstractStructure::think_prebuild() {
 
 // Free around structure, return the first cell that is free.
 int cAbstractStructure::iFreeAround() {
-	cMapUtils * mapUtils = new cMapUtils(map);
-
 	int iStartX = iCellGiveX(iCell);
 	int iStartY = iCellGiveY(iCell);
 
@@ -221,18 +218,23 @@ int cAbstractStructure::iFreeAround() {
 	iStartX--;
 	iStartY--;
 
-	for (int x = iStartX; x < iEndX; x++) {
+	int iCx = 0;
+	int iCy = 0;
+
+	for (int x = iStartX; x < iEndX; x++)
 		for (int y = iStartY; y < iEndY; y++) {
-			int cll = mapUtils->createCell(x, y);
+			iCx = x;
+			iCy = y;
+
+			FIX_BORDER_POS(iCx, iCy);
+
+			int cll = iCellMake(iCx, iCy);
 
 			if (map->occupied(cll) == false) {
-				delete mapUtils;
 				return cll;
 			}
 		}
-	}
 
-	delete mapUtils;
 	return -1; // fail
 }
 
@@ -390,6 +392,11 @@ void cAbstractStructure::setOwner(int player) {
  Think actions like any other structure would have.
  **/
 void cAbstractStructure::think() {
+	// AI
+	if (iPlayer > 0) {
+		aiplayer[iPlayer].think_repair_structure(this);
+	}
+
 	// Other
 	think_damage();
 	think_repair();
@@ -443,7 +450,7 @@ int cAbstractStructure::getPowerUsage() {
 	return structure.power_drain;
 }
 
-Rectangle * cAbstractStructure::getRectangle() {
+cRectangle * cAbstractStructure::getRectangle() {
 	int drawX = iDrawX();
 	int drawY = iDrawY();
 	int width = getWidthInPixels();

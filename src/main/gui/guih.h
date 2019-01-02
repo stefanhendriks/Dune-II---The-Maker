@@ -2,28 +2,17 @@
 #define GUIH_H_
 
 // forward declr.
-class Mouse;
-class TextDrawer;
+class cMouse;
+class cTextDrawer;
 
-#include "TextWriter.h"
-#include "MouseToolTip.h"
+#include "cTextWriter.h"
+#include "cMouseToolTip.h"
 
-// Delegates
-#include "GuiInteractionDelegate.h"
+#include "cGuiShape.h"
+#include "cGuiButton.h"
 
-// Shapes
-#include "shapes/GuiShape.h"
-#include "shapes/GuiButton.h"
+#include "cMessageBar.h"
 
-// Dialogs
-#include "dialogs/MainMenuDialog.h"
-
-#include "shapes/GuiShapeFactory.h"
-
-// Windows
-#include "windows/GuiWindow.h"
-
-#include "MessageBar.h"
-
+#include "cGuiShapeFactory.h"
 
 #endif

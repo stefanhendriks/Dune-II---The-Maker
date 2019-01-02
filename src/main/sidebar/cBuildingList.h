@@ -13,8 +13,6 @@
 #ifndef CBUILDINGLIST
 #define CBUILDINGLIST
 
-#include "../include/definitions.h"
-
 class cBuildingList {
 	public:
 		cBuildingList(int theId);

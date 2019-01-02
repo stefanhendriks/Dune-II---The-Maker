@@ -36,14 +36,14 @@ private:
     void drawPreviousCredits();
     int getCreditDrawIdByChar(char c);
     int getXDrawingOffset(int amount);
-    bool CreditsDrawer::isOffsetDirectionSet(int id);
+    bool isOffsetDirectionSet(int id);
     void initState();
-    int CreditsDrawer::getNewCreditsToDraw();
-    int CreditsDrawer::getSoundType();
+    int getNewCreditsToDraw();
+    int getSoundType();
     bool hasDrawnCurrentCredits();
     int getScrollingDirectionForOffset();
-    void CreditsDrawer::slowdownRollSpeed();
-    void CreditsDrawer::speedUpRollSpeed();
+    void slowdownRollSpeed();
+    void speedUpRollSpeed();
 
     int TIMER_money;
     float rollingSpeed;

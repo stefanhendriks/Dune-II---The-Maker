@@ -1,3 +1,10 @@
+/*
+ * cCombatInteractionManager.cpp
+ *
+ *  Created on: 27 feb. 2011
+ *      Author: Stefan
+ */
+
 #include "../include/d2tmh.h"
 
 cCombatInteractionManager::cCombatInteractionManager(cPlayer * thePlayer) : cInteractionManager(thePlayer) {
@@ -19,7 +26,7 @@ void cCombatInteractionManager::interactWithKeyboard() {
 void cCombatInteractionManager::interactWithSidebar() {
 	assert(sidebar);
 	sidebar->thinkInteraction();
-	MiniMapDrawer * miniMapDrawer = gameDrawer->getMiniMapDrawer();
+	cMiniMapDrawer * miniMapDrawer = gameDrawer->getMiniMapDrawer();
 	assert(miniMapDrawer);
 	miniMapDrawer->interact();
 }

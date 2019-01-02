@@ -1,7 +1,5 @@
 #include "../../include/d2tmh.h"
 
-#include "../../utils/CellCalculator.h"
-
 // Constructor
 cStarPort::cStarPort() {
 	// other variables (class specific)
@@ -81,7 +79,7 @@ void cStarPort::think_deploy() {
 					play_voice(SOUND_VOICE_05_ATR); // unit deployed
 				} else {
 					// could not find cell to deploy to, reinforce it
-					CellCalculator * cellCalculator = new CellCalculator(map);
+					cCellCalculator * cellCalculator = new cCellCalculator(map);
 					if (rallyPoint > -1) {
 						cellToDeployTo = rallyPoint;
 					}
@@ -91,7 +89,7 @@ void cStarPort::think_deploy() {
 						// assume that the cell to drop is the location of the structure itself
 						cellToDeployTo = getCell();
 					}
-					int cellAtBorderOfMap = cellCalculator->findCloseMapBorderCellRelativelyToDestinationCell(cellToDeployTo);
+					int cellAtBorderOfMap = cellCalculator->findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
 					REINFORCE(iPlayer, item->getBuildId(), cellToDeployTo, cellAtBorderOfMap);
 					delete cellCalculator;
 				}

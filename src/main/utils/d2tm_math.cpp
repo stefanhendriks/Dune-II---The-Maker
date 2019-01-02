@@ -8,19 +8,18 @@
 
  2001 - 2011 (c) code by Stefan Hendriks
 
+ Purpose of this file:
+
+ math.cpp should deliver all mathematical functions needed in the game.
+
+
  */
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
-#include "../include/definitions.h"
-#include "common.h"
-#include "d2tm_math.h"
-
-#include "assert.h" 
-
-extern bool	bDoDebug; // TODO: refactor this away
+#include "../include/d2tmh.h"
 
 // Is the cell valid?
 bool bCellValid(int c) {
@@ -54,9 +53,8 @@ int iCellGiveY(int c) {
 	return (c / MAP_W_MAX);
 }
 
-
 // make cell number out of X and Y value
-int createCellWithoutMapBorders(int x, int y) {
+int iCellMake(int x, int y) {
 	if (x < 0)
 		x = 0;
 	if (y < 0)
