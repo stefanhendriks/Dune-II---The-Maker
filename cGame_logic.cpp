@@ -876,159 +876,103 @@ void cGame::menu()
 
 	// Buttons:
 
+
 	// PLAY
-	if ((mouse_x >= 246 && mouse_x <=373) &&
-		(mouse_y >= 323 && mouse_y <=340))
+	int playX = 261;
+	int playY = 323;
+	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(playX, playY, "Campaign", makecol(255, 0, 0)))
 	{
-        alfont_textprintf(bmp_screen, bene_font, 261, 324, makecol(0,0,0), "Campaign");
-        alfont_textprintf(bmp_screen, bene_font, 261, 323, makecol(255,0,0), "Campaign");
-
 		if (cMouse::getInstance()->isLeftButtonClicked())
-        {
+		{
 			state = GAME_HOUSE; // select house
-            bFadeOut=true;
-        }
-
+			bFadeOut = true;
+		}
 	}
-    else
-    {
-        alfont_textprintf(bmp_screen, bene_font, 261, 324, makecol(0,0,0), "Campaign");
-        alfont_textprintf(bmp_screen, bene_font, 261, 323, makecol(255,255,255), "Campaign");
-
-    }
-
 
 	// SKIRMISH
-	if ((mouse_x >= 246 && mouse_x <=373) &&
-		(mouse_y >= 344 && mouse_y <=362))
+	int skirmishX = 261;
+	int skirmishY = 344;
+	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(skirmishX, skirmishY, "Skirmish", makecol(255, 0, 0)))
 	{
-        alfont_textprintf(bmp_screen, bene_font, 261, 344, makecol(0,0,0), "Skirmish");
-        alfont_textprintf(bmp_screen, bene_font, 261, 343, makecol(255,0,0), "Skirmish");
-
-        if (cMouse::getInstance()->isLeftButtonClicked())
-        {
-            game.state = GAME_SETUPSKIRMISH;
-            bFadeOut=true;
-            INI_PRESCAN_SKIRMISH();
+		if (cMouse::getInstance()->isLeftButtonClicked())
+		{
+			game.state = GAME_SETUPSKIRMISH;
+			bFadeOut = true;
+			INI_PRESCAN_SKIRMISH();
 
 			game.mission_init();
 
-			for (int p=0; p < AI_WORM; p++)
+			for (int p = 0; p < AI_WORM; p++)
 			{
 				player[p].credits = 2500;
 				player[p].iTeam = p;
 			}
-        }
-
-
-	//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[D2TM_LOAD].dat, 303, 369);
+		}
 	}
-    else
-    {
-        alfont_textprintf(bmp_screen, bene_font, 261, 344, makecol(0,0,0), "Skirmish");
-        alfont_textprintf(bmp_screen, bene_font, 261, 343, makecol(255,255,255), "Skirmish");
 
-    }
+    // MULTIPLAYER
+	int multiplayerX = 261;
+	int multiplayerY = 364;
+	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(multiplayerX, multiplayerY, "Multiplayer", makecol(128, 128, 128)))
+	{
+		if (cMouse::getInstance()->isLeftButtonClicked())
+		{
+			// NOT YET IMPLEMENTED
+			//game.state = GAME_SETUPSKIRMISH;
+			bFadeOut = true;
+		}
+	}
 
     // LOAD
-    if ((mouse_x >= 246 && mouse_x <=373) &&
-		(mouse_y >= 364 && mouse_y <=382))
+	int loadX = 261;
+	int loadY = 384;
+	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(loadX, loadY, "Load", makecol(128, 128, 128)))
 	{
-        alfont_textprintf(bmp_screen, bene_font, 261, 364, makecol(0,0,0), "Multiplayer");
-        alfont_textprintf(bmp_screen, bene_font, 261, 363, makecol(255,0,0), "Multiplayer");
-
-        if (cMouse::getInstance()->isLeftButtonClicked())
-        {
-            //game.state = GAME_SETUPSKIRMISH;
-            bFadeOut=true;
-
-			// check if the game can be server or client
-			//bCanBeServerOrClient();
-        }
-
-	//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[D2TM_LOAD].dat, 303, 369);
+		if (cMouse::getInstance()->isLeftButtonClicked())
+		{
+			// NOT YET IMPLEMENTED
+			//game.state = GAME_SETUPSKIRMISH;
+			bFadeOut = true;
+		}
 	}
-    else
-    {
-        alfont_textprintf(bmp_screen, bene_font, 261, 364, makecol(0,0,0), "Multiplayer");
-        alfont_textprintf(bmp_screen, bene_font, 261, 363, makecol(255,255,255), "Multiplayer");
-
-    }
 
     // OPTIONS
-	if ((mouse_x >= 246 && mouse_x <=373) &&
-		(mouse_y >= 384 && mouse_y <=402))
+	int optionsX = 261;
+	int optionsY = 404;
+	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(optionsX, optionsY, "Options", makecol(128, 128, 128)))
 	{
-        alfont_textprintf(bmp_screen, bene_font, 261, 384, makecol(0,0,0), "Load");
-        alfont_textprintf(bmp_screen, bene_font, 261, 383, makecol(255,0,0), "Load");
-
-        if (cMouse::getInstance()->isLeftButtonClicked())
-        {
-//            game.state = GAME_SETUPSKIRMISH;
-            bFadeOut=true;
-        }
-
-
-	//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[D2TM_LOAD].dat, 303, 369);
+		if (cMouse::getInstance()->isLeftButtonClicked())
+		{
+			// NOT YET IMPLEMENTED
+			//game.state = GAME_SETUPSKIRMISH;
+			bFadeOut = true;
+		}
 	}
-    else
-    {
-        alfont_textprintf(bmp_screen, bene_font, 261, 384, makecol(0,0,0), "Load");
-        alfont_textprintf(bmp_screen, bene_font, 261, 383, makecol(255,255,255), "Load");
-    }
 
-    // HALL OF FAME
-	if ((mouse_x >= 246 && mouse_x <=373) &&
-		(mouse_y >= 404 && mouse_y <=422))
+	// HALL OF FAME
+	int hofX = 261;
+	int hofY = 424;
+	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(hofX, hofY, "Hall of Fame", makecol(128, 128, 128)))
 	{
-        alfont_textprintf(bmp_screen, bene_font, 261, 404, makecol(0,0,0), "Options");
-        alfont_textprintf(bmp_screen, bene_font, 261, 403, makecol(255,0,0), "Options");
-
-        if (cMouse::getInstance()->isLeftButtonClicked())
-        {
-//            game.state = GAME_SETUPSKIRMISH;
-            bFadeOut=true;
-        }
-
-	//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[D2TM_LOAD].dat, 303, 369);
+		if (cMouse::getInstance()->isLeftButtonClicked())
+		{
+			// NOT YET IMPLEMENTED
+			//game.state = GAME_SETUPSKIRMISH;
+			bFadeOut = true;
+		}
 	}
-    else
-    {
-        alfont_textprintf(bmp_screen, bene_font, 261, 404, makecol(0,0,0), "Options");
-        alfont_textprintf(bmp_screen, bene_font, 261, 403, makecol(255,255,255), "Options");
-    }
 
 	// EXIT
-	if ((mouse_x >= 246 && mouse_x <=373) &&
-		(mouse_y >= 424 && mouse_y <=442))
+	int exitX = 261;
+	int exitY = 444;
+	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(exitX, exitY, "Exit", makecol(255, 0, 0)))
 	{
-
-        alfont_textprintf(bmp_screen, bene_font, 261, 424, makecol(0,0,0), "Hall of Fame");
-        alfont_textprintf(bmp_screen, bene_font, 261, 423, makecol(255,0,0), "Hall of Fame");
-	}
-    else
-    {
-        alfont_textprintf(bmp_screen, bene_font, 261, 424, makecol(0,0,0), "Hall of Fame");
-        alfont_textprintf(bmp_screen, bene_font, 261, 423, makecol(255,255,255), "Hall of Fame");
-    }
-
-
-    // EXIT
-	if ((mouse_x >= 246 && mouse_x <=373) &&
-		(mouse_y >= 444 && mouse_y <=462))
-	{
-        alfont_textprintf(bmp_screen, bene_font, 261, 444, makecol(0,0,0), "Exit");
-        alfont_textprintf(bmp_screen, bene_font, 261, 443, makecol(255,0,0), "Exit");
-
-		// quit
 		if (cMouse::getInstance()->isLeftButtonClicked())
+		{
+			bFadeOut = true;
 			game.bPlaying = false;
+		}
 	}
-    else
-    {
-        alfont_textprintf(bmp_screen, bene_font, 261, 444, makecol(0,0,0), "Exit");
-        alfont_textprintf(bmp_screen, bene_font, 261, 443, makecol(255,255,255), "Exit");
-    }
 
 
     alfont_textprintf(bmp_screen, bene_font, 291, 1, makecol(64,64,64), "CREDITS");
