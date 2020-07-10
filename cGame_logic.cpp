@@ -1043,19 +1043,22 @@ void cGame::menu()
 	//alfont_textprintf(bmp_screen, bene_font, 620,466, makecol(255,255,255), "%s", version);
 
     // version (demo)
-    alfont_textprintf(bmp_screen, bene_font, 581,467, makecol(64,64,64), "%s", version);
-	alfont_textprintf(bmp_screen, bene_font, 580,466, makecol(255,255,255), "%s", version);
+	int versionX = game.screen_x - 60;
+	int versionY = game.screen_y - 14;
+	char versionText[20];
+	sprintf(versionText, "%s", version);
+	GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(versionX, versionY, versionText, makecol(255, 0, 0));
 
 	// mp3 addon?
 	if (bMp3)
     {
-        alfont_textprintf(bmp_screen, bene_font, 1,467, makecol(64,64,64), "MP3");
-		alfont_textprintf(bmp_screen, bene_font, 0,466, makecol(255,255,255), "MP3");
+        alfont_textprintf(bmp_screen, bene_font, 1, versionY+1, makecol(64,64,64), "MP3");
+		alfont_textprintf(bmp_screen, bene_font, 0, versionY, makecol(255,255,255), "MP3");
     }
 	else
     {
-        alfont_textprintf(bmp_screen, bene_font, 1,467, makecol(64,64,64), "MIDI");
-		alfont_textprintf(bmp_screen, bene_font, 0,466, makecol(255,255,255), "MIDI");
+        alfont_textprintf(bmp_screen, bene_font, 1, versionY+1, makecol(64,64,64), "MIDI");
+		alfont_textprintf(bmp_screen, bene_font, 0, versionY, makecol(255,255,255), "MIDI");
     }
 
    	// MOUSE
