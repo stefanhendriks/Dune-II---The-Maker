@@ -871,16 +871,33 @@ void cGame::menu()
 	}
 
 	// draw menu
-	draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_D2TM].dat,  0, 0);
-    GUI_DRAW_FRAME(257, 319, 130,143);
+	int logoWidth = ((BITMAP*)gfxinter[BMP_D2TM].dat)->w;
+	int logoHeight = ((BITMAP*)gfxinter[BMP_D2TM].dat)->h;
+
+	int logoX = (game.screen_x / 2) - (logoWidth / 2);
+	int logoY = (logoHeight/10);
+	
+	draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_D2TM].dat,  logoX, logoY);
+
+	int mainMenuFrameX = 257;
+	int mainMenuFrameY = 319;
+	int mainMenuWidth = 130;
+	int mainMenuHeight = 143;
+
+	// adjust x and y according to resolution, we can add because the above values
+	// assume 640x480 resolution, and logoX/logoY are already taking care of > resolutions
+	mainMenuFrameX += logoX;
+	mainMenuFrameY += logoY;
+	
+    GUI_DRAW_FRAME(mainMenuFrameX, mainMenuFrameY, mainMenuWidth,mainMenuHeight);
 
 	// Buttons:
+	int buttonsX = mainMenuFrameX + 4;
 
 
 	// PLAY
-	int playX = 261;
-	int playY = 323;
-	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(playX, playY, "Campaign", makecol(255, 0, 0)))
+	int playY = 323 + logoY;
+	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, playY, "Campaign", makecol(255, 0, 0)))
 	{
 		if (cMouse::getInstance()->isLeftButtonClicked())
 		{
@@ -890,9 +907,8 @@ void cGame::menu()
 	}
 
 	// SKIRMISH
-	int skirmishX = 261;
-	int skirmishY = 344;
-	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(skirmishX, skirmishY, "Skirmish", makecol(255, 0, 0)))
+	int skirmishY = 344 + logoY;
+	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, skirmishY, "Skirmish", makecol(255, 0, 0)))
 	{
 		if (cMouse::getInstance()->isLeftButtonClicked())
 		{
@@ -911,9 +927,8 @@ void cGame::menu()
 	}
 
     // MULTIPLAYER
-	int multiplayerX = 261;
-	int multiplayerY = 364;
-	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(multiplayerX, multiplayerY, "Multiplayer", makecol(128, 128, 128)))
+	int multiplayerY = 364 + logoY;
+	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, multiplayerY, "Multiplayer", makecol(128, 128, 128)))
 	{
 		if (cMouse::getInstance()->isLeftButtonClicked())
 		{
@@ -924,9 +939,8 @@ void cGame::menu()
 	}
 
     // LOAD
-	int loadX = 261;
-	int loadY = 384;
-	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(loadX, loadY, "Load", makecol(128, 128, 128)))
+	int loadY = 384 + logoY;
+	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, loadY, "Load", makecol(128, 128, 128)))
 	{
 		if (cMouse::getInstance()->isLeftButtonClicked())
 		{
@@ -937,9 +951,8 @@ void cGame::menu()
 	}
 
     // OPTIONS
-	int optionsX = 261;
-	int optionsY = 404;
-	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(optionsX, optionsY, "Options", makecol(128, 128, 128)))
+	int optionsY = 404 + logoY;
+	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, optionsY, "Options", makecol(128, 128, 128)))
 	{
 		if (cMouse::getInstance()->isLeftButtonClicked())
 		{
@@ -950,9 +963,8 @@ void cGame::menu()
 	}
 
 	// HALL OF FAME
-	int hofX = 261;
-	int hofY = 424;
-	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(hofX, hofY, "Hall of Fame", makecol(128, 128, 128)))
+	int hofY = 424 + logoY;
+	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, hofY, "Hall of Fame", makecol(128, 128, 128)))
 	{
 		if (cMouse::getInstance()->isLeftButtonClicked())
 		{
@@ -963,9 +975,8 @@ void cGame::menu()
 	}
 
 	// EXIT
-	int exitX = 261;
-	int exitY = 444;
-	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(exitX, exitY, "Exit", makecol(255, 0, 0)))
+	int exitY = 444 + logoY;
+	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, exitY, "Exit", makecol(255, 0, 0)))
 	{
 		if (cMouse::getInstance()->isLeftButtonClicked())
 		{
@@ -974,19 +985,10 @@ void cGame::menu()
 		}
 	}
 
+	int creditsX = (screen_x / 2) - (alfont_text_length(bene_font, "CREDITS") / 2);
+	GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(creditsX, 1, "CREDITS", makecol(64, 64, 64));
 
-    alfont_textprintf(bmp_screen, bene_font, 291, 1, makecol(64,64,64), "CREDITS");
-
-    if (mouse_y < 24)
-        alfont_textprintf(bmp_screen, bene_font, 290, 0, makecol(255,0,0), "CREDITS");
-    else
-        alfont_textprintf(bmp_screen, bene_font, 290, 0, makecol(255,255,255), "CREDITS");
-
-	// version
-    //alfont_textprintf(bmp_screen, bene_font, 621,467, makecol(64,64,64), "%s", version);
-	//alfont_textprintf(bmp_screen, bene_font, 620,466, makecol(255,255,255), "%s", version);
-
-    // version (demo)
+    // version
 	int versionX = game.screen_x - 60;
 	int versionY = game.screen_y - 14;
 	char versionText[20];
