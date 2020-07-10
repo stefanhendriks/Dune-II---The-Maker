@@ -50,4 +50,5 @@ echo 12. Copy game rules file (game.ini)
 copy game.ini bin
 echo 13. Copy txt files
 copy *.txt bin
+copy windowed.bat bin
 echo Done.
