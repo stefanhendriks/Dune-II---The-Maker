@@ -13,3 +13,6 @@ cmake_install.cmake
 dune2
 CMakeLists.txt*
 d2tm*
+.vs/
+bin/
+Release/
