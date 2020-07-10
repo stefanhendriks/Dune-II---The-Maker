@@ -1,0 +1,733 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{e806f3b6-369b-495a-b9c0-9326afc1e5d9}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="INI">
+      <UniqueIdentifier>{1f82fcfe-7a14-47a2-a0ee-e207543ecac0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Text files">
+      <UniqueIdentifier>{09728986-102a-4880-9839-23063ac739dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="building">
+      <UniqueIdentifier>{5d7cb953-4230-45fd-a30c-3a676229cdab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{43d21fb3-dfcd-47a2-9c1a-1e87baf2af14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="drawers">
+      <UniqueIdentifier>{67995ee6-52de-49ab-af47-0d8a5f1ae7d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dune2themaker">
+      <UniqueIdentifier>{e203710f-7b6e-4fe2-89bd-0a2014dbbe30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="managers">
+      <UniqueIdentifier>{a0cf9d0b-ef61-4063-90d3-cbb4c51faff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="map">
+      <UniqueIdentifier>{adb52f8d-b130-4457-b346-69f74ca7dcf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="player">
+      <UniqueIdentifier>{c216e142-597d-4884-a686-bd96d28149dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sidebar">
+      <UniqueIdentifier>{8f9519de-d7dc-434e-8ea3-0b2be0a96e5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{6c6c545c-15e6-4fa8-9219-9014ea25ec68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="controls">
+      <UniqueIdentifier>{c98f6923-56b4-4cc0-8695-217c6108b513}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gameobjects">
+      <UniqueIdentifier>{7573ac25-3ed3-4e3b-81fa-5162dc010f03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gameobjects\particles">
+      <UniqueIdentifier>{aea33934-7dec-4dc3-9231-c9044a49e9bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gameobjects\projectiles">
+      <UniqueIdentifier>{38523bdd-bb72-4d85-ac3a-c1b9a3a5cad2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gameobjects\structures">
+      <UniqueIdentifier>{5eb434a2-d987-434b-bf95-26f6a05f69cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gameobjects\units">
+      <UniqueIdentifier>{b735d29c-a126-4c55-9e83-1352486c2d12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui">
+      <UniqueIdentifier>{e75fc50f-4c68-4c29-aaf5-7597e51f625c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{db070d6b-7739-497d-bb1d-df32837e5e23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="upgrade">
+      <UniqueIdentifier>{63619fdc-824f-43ed-8adb-5efb51e4a0b7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="world.asp" />
+    <None Include="game.ini">
+      <Filter>INI</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="building\cItemBuilder.cpp">
+      <Filter>building</Filter>
+    </ClCompile>
+    <ClCompile Include="controls\cGameControlsContext.cpp">
+      <Filter>controls</Filter>
+    </ClCompile>
+    <ClCompile Include="controls\cKeyboard.cpp">
+      <Filter>controls</Filter>
+    </ClCompile>
+    <ClCompile Include="controls\cMouse.cpp">
+      <Filter>controls</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\cBuildingListDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\cMapDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\cMessageBarDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\cMessageDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\cMiniMapDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\cMouseDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\cOrderDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\cParticleDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\cPlaceItDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\CreditsDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\cSideBarDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\cStructureDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\cTextDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\cUnitDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="drawers\cUpgradeDrawer.cpp">
+      <Filter>drawers</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\particles\cParticle.cpp">
+      <Filter>gameobjects\particles</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\projectiles\bullet.cpp">
+      <Filter>gameobjects\projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cAbstractStructure.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cBarracks.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cConstYard.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cGunTurret.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cHeavyFactory.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cHighTech.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cIx.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cLightFactory.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cOrderProcesser.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cOutPost.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cPalace.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cRefinery.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cRepairFacility.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cRocketTurret.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cSpiceSilo.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cStarPort.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cStructureFactory.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cStructurePlacer.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cWindTrap.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\structures\cWor.cpp">
+      <Filter>gameobjects\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\units\cAbstractUnit.cpp">
+      <Filter>gameobjects\units</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\units\cUnit.cpp">
+      <Filter>gameobjects\units</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\units\cUnitFactory.cpp">
+      <Filter>gameobjects\units</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\units\cUnitUtils.cpp">
+      <Filter>gameobjects\units</Filter>
+    </ClCompile>
+    <ClCompile Include="gameobjects\cGameObject.cpp">
+      <Filter>gameobjects</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\cMessageBar.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\cMouseToolTip.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\cTextWriter.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\Shape.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="managers\cDrawManager.cpp">
+      <Filter>managers</Filter>
+    </ClCompile>
+    <ClCompile Include="managers\cInteractionManager.cpp">
+      <Filter>managers</Filter>
+    </ClCompile>
+    <ClCompile Include="managers\cKeyboardManager.cpp">
+      <Filter>managers</Filter>
+    </ClCompile>
+    <ClCompile Include="map\cMap.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="map\cMapCamera.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="player\cPlayer.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="player\cPlayerAtreidesDifficultySettings.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="player\cPlayerDifficultySettings.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="player\cPlayerHarkonnenDifficultySettings.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="player\cPlayerOrdosDifficultySettings.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="player\cPlayerStatistics.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
+    <ClCompile Include="sidebar\cBuildingList.cpp">
+      <Filter>sidebar</Filter>
+    </ClCompile>
+    <ClCompile Include="sidebar\cBuildingListFactory.cpp">
+      <Filter>sidebar</Filter>
+    </ClCompile>
+    <ClCompile Include="sidebar\cBuildingListItem.cpp">
+      <Filter>sidebar</Filter>
+    </ClCompile>
+    <ClCompile Include="sidebar\cSideBar.cpp">
+      <Filter>sidebar</Filter>
+    </ClCompile>
+    <ClCompile Include="sidebar\cSideBarFactory.cpp">
+      <Filter>sidebar</Filter>
+    </ClCompile>
+    <ClCompile Include="upgrade\cBuildingListUpdater.cpp">
+      <Filter>upgrade</Filter>
+    </ClCompile>
+    <ClCompile Include="upgrade\cListUpgrade.cpp">
+      <Filter>upgrade</Filter>
+    </ClCompile>
+    <ClCompile Include="upgrade\cUpgradeBuilder.cpp">
+      <Filter>upgrade</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cCellCalculator.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cHitpointCalculator.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cListUtils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cLog.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cMapUtils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cMouseUtils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\common.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cPlayerUtils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cSeedMap.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cSeedMapGenerator.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cSimpleCalculator.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cSoundPlayer.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cStructureUtils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cTimeManager.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\cUpgradeUtils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\d2tm_math.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ai.cpp" />
+    <ClCompile Include="cGame_draw.cpp" />
+    <ClCompile Include="cGame_logic.cpp" />
+    <ClCompile Include="cMentat.cpp" />
+    <ClCompile Include="gui.cpp" />
+    <ClCompile Include="ini.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="regions.cpp" />
+    <ClCompile Include="timers.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="building\cItemBuilder.h">
+      <Filter>building</Filter>
+    </ClInclude>
+    <ClInclude Include="controls\cGameControlsContext.h">
+      <Filter>controls</Filter>
+    </ClInclude>
+    <ClInclude Include="controls\cKeyboard.h">
+      <Filter>controls</Filter>
+    </ClInclude>
+    <ClInclude Include="controls\cMouse.h">
+      <Filter>controls</Filter>
+    </ClInclude>
+    <ClInclude Include="controls\controlsh.h">
+      <Filter>controls</Filter>
+    </ClInclude>
+    <ClInclude Include="data\gfxaudio.h">
+      <Filter>data</Filter>
+    </ClInclude>
+    <ClInclude Include="data\gfxdata.h">
+      <Filter>data</Filter>
+    </ClInclude>
+    <ClInclude Include="data\gfxinter.h">
+      <Filter>data</Filter>
+    </ClInclude>
+    <ClInclude Include="data\gfxmentat.h">
+      <Filter>data</Filter>
+    </ClInclude>
+    <ClInclude Include="data\gfxworld.h">
+      <Filter>data</Filter>
+    </ClInclude>
+    <ClInclude Include="data\mp3mus.h">
+      <Filter>data</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\cBuildingListDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\cMapDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\cMessageBarDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\cMessageDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\cMiniMapDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\cMouseDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\cOrderDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\cParticleDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\cPlaceItDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\CreditsDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\cSideBarDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\cStructureDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\cTextDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\cUnitDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\cUpgradeDrawer.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="drawers\drawersh.h">
+      <Filter>drawers</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\particles\cParticle.h">
+      <Filter>gameobjects\particles</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\projectiles\bullet.h">
+      <Filter>gameobjects\projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cAbstractStructure.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cBarracks.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cConstYard.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cGunTurret.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cHeavyFactory.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cHighTech.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cIx.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cLightFactory.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cOrderProcesser.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cOutPost.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cPalace.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cRefinery.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cRepairFacility.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cRocketTurret.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cSpiceSilo.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cStarPort.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cStructureFactory.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cStructurePlacer.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cWindTrap.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\cWor.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\structures\structuresh.h">
+      <Filter>gameobjects\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\units\cAbstractUnit.h">
+      <Filter>gameobjects\units</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\units\cUnit.h">
+      <Filter>gameobjects\units</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\units\cUnitFactory.h">
+      <Filter>gameobjects\units</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\units\cUnitUtils.h">
+      <Filter>gameobjects\units</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\cGameObject.h">
+      <Filter>gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="gameobjects\gameobjects.h">
+      <Filter>gameobjects</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\cMessageBar.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\cMouseToolTip.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\cTextWriter.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\guih.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\Shape.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\allegroh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\d2tmc.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\d2tmh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\data.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\definitions.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\drawers.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\enums.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fblend.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gamelogic.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gameobjects.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\global.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gui.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\managers.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mmx.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sse.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\structs.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\system.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="managers\cDrawManager.h">
+      <Filter>managers</Filter>
+    </ClInclude>
+    <ClInclude Include="managers\cInteractionManager.h">
+      <Filter>managers</Filter>
+    </ClInclude>
+    <ClInclude Include="managers\cKeyboardManager.h">
+      <Filter>managers</Filter>
+    </ClInclude>
+    <ClInclude Include="managers\managerh.h">
+      <Filter>managers</Filter>
+    </ClInclude>
+    <ClInclude Include="map\cCell.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="map\cMap.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="map\cMapCamera.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="map\maph.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="player\cPlayer.h">
+      <Filter>player</Filter>
+    </ClInclude>
+    <ClInclude Include="player\cPlayerAtreidesDifficultySettings.h">
+      <Filter>player</Filter>
+    </ClInclude>
+    <ClInclude Include="player\cPlayerDifficultySettings.h">
+      <Filter>player</Filter>
+    </ClInclude>
+    <ClInclude Include="player\cPlayerHarkonnenDifficultySettings.h">
+      <Filter>player</Filter>
+    </ClInclude>
+    <ClInclude Include="player\cPlayerOrdosDifficultySettings.h">
+      <Filter>player</Filter>
+    </ClInclude>
+    <ClInclude Include="player\cPlayerStatistics.h">
+      <Filter>player</Filter>
+    </ClInclude>
+    <ClInclude Include="player\playerh.h">
+      <Filter>player</Filter>
+    </ClInclude>
+    <ClInclude Include="sidebar\cBuildingList.h">
+      <Filter>sidebar</Filter>
+    </ClInclude>
+    <ClInclude Include="sidebar\cBuildingListFactory.h">
+      <Filter>sidebar</Filter>
+    </ClInclude>
+    <ClInclude Include="sidebar\cBuildingListItem.h">
+      <Filter>sidebar</Filter>
+    </ClInclude>
+    <ClInclude Include="sidebar\cSideBar.h">
+      <Filter>sidebar</Filter>
+    </ClInclude>
+    <ClInclude Include="sidebar\cSideBarFactory.h">
+      <Filter>sidebar</Filter>
+    </ClInclude>
+    <ClInclude Include="sidebar\eBuildType.h">
+      <Filter>sidebar</Filter>
+    </ClInclude>
+    <ClInclude Include="sidebar\sidebarh.h">
+      <Filter>sidebar</Filter>
+    </ClInclude>
+    <ClInclude Include="upgrade\cBuildingListUpdater.h">
+      <Filter>upgrade</Filter>
+    </ClInclude>
+    <ClInclude Include="upgrade\cListUpgrade.h">
+      <Filter>upgrade</Filter>
+    </ClInclude>
+    <ClInclude Include="upgrade\cUpgradeBuilder.h">
+      <Filter>upgrade</Filter>
+    </ClInclude>
+    <ClInclude Include="upgrade\upgradeh.h">
+      <Filter>upgrade</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cCellCalculator.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cHitpointCalculator.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cListUtils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cLog.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cMapUtils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cMouseUtils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\common.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cPlayerUtils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cSeedMap.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cSeedMapGenerator.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cSimpleCalculator.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cSoundPlayer.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cStructureUtils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cTimeManager.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\cUpgradeUtils.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\d2tm_math.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\utilsh.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="abstracts.h" />
+    <ClInclude Include="ai.h" />
+    <ClInclude Include="cGame.h" />
+    <ClInclude Include="cMentat.h" />
+    <ClInclude Include="gui.h" />
+    <ClInclude Include="ini.h" />
+    <ClInclude Include="regions.h" />
+    <ClInclude Include="timers.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="howto.txt">
+      <Filter>Text files</Filter>
+    </Text>
+    <Text Include="WIP.TXT">
+      <Filter>Text files</Filter>
+    </Text>
+    <Text Include="doc\version history.txt">
+      <Filter>Text files</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

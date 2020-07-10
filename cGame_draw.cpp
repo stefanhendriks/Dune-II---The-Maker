@@ -200,7 +200,7 @@ void cGame::combat_mouse()
 						if (unit[i].isValid() && unit[i].iPlayer == HUMAN && unit[i].bSelected)	{
 							int iAttackCell=-1;
 
-							if (!context->isMouseOverStructure() < 0 && game.hover_unit < 0) {
+							if (!context->isMouseOverStructure() && game.hover_unit < 0) {
 								iAttackCell = mc;
 							}
 

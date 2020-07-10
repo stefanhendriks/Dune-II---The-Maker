@@ -41,10 +41,5 @@
 // TODO: Refactor this uber mentat class into something smaller
 #include "../cMentat.h"
 
-// TODO: Use this mentat code
-#include "../mentat/cOrdosMentat.h"
-#include "../mentat/cHarkonnenMentat.h"
-#include "../mentat/cAtreidesMentat.h"
-
 
 #endif /* GAMEOBJECTS_H_ */
