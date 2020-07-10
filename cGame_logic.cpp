@@ -19,6 +19,7 @@
 #include "include/d2tmh.h"
 
 cGame::cGame() {
+	windowed = false;
 }
 
 
@@ -43,7 +44,7 @@ void cGame::init() {
     memset(cRegionText, 0, sizeof(cRegionText));
     //int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
 
-	windowed = true;
+	
 
 	screen_x = 800;
     screen_y = 600;
@@ -2674,12 +2675,11 @@ bool cGame::setupGame() {
 			}
 		}
 	} else {
-
 		/**
 		 * Fullscreen mode
 		 */
 
-		int r = set_gfx_mode(GFX_AUTODETECT, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
+		int r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
 
 		// succes
 		if (r > -1) {
@@ -2775,9 +2775,7 @@ bool cGame::setupGame() {
 		logbook("ERROR: Could not create bitmap: bmp_throttle");
 		return false;
 	}
-	else {
-		logbook("Memory bitmap created: bmp_throttle");
-	}
+	logbook("Memory bitmap created: bmp_throttle");
 
 	bmp_winlose = create_bitmap(game.screen_x, game.screen_y);
 
@@ -2787,9 +2785,7 @@ bool cGame::setupGame() {
 		logbook("ERROR: Could not create bitmap: bmp_winlose");
 		return false;
 	}
-	else {
-		logbook("Memory bitmap created: bmp_winlose");
-	}
+	logbook("Memory bitmap created: bmp_winlose");
 
 	bmp_fadeout = create_bitmap(game.screen_x, game.screen_y);
 
@@ -2799,9 +2795,7 @@ bool cGame::setupGame() {
 		logbook("ERROR: Could not create bitmap: bmp_fadeout");
 		return false;
 	}
-	else {
-		logbook("Memory bitmap created: bmp_fadeout");
-	}
+	logbook("Memory bitmap created: bmp_fadeout");
 
 	/*** End of Bitmap Creation ***/
 	set_color_conversion(COLORCONV_MOST);

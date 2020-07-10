@@ -1,0 +1,1 @@
+"Dune 2.exe" -windowed
