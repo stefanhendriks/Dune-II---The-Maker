@@ -12,6 +12,9 @@
 
 // GUI ROUTINES
 
+#ifndef GUI_H
+#define GUI_H
+
 struct sButton
 {
     int iX, iY;
@@ -21,6 +24,8 @@ struct sButton
 
 bool GUI_DRAW_FRAME(int x1, int y1, int width, int height);
 bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height);
+void GUI_DRAW_BENE_TEXT(int x, int y, char* text);
+bool MOUSE_WITHIN_RECT(int x, int y, int width, int height);
+bool GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(int x, int y, char* text, int hoverColor);
 
-
-
+#endif // GUI_H
