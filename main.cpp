@@ -99,6 +99,9 @@ int handleArguments(int argc, char *argv[]) {
 					i++;
 					game.game_filename = string(argv[i]);
 				}
+			} else if (command.compare("-windowed") == 0) {
+				// Windowed flag passed, so use that
+				game.windowed = true;
 			}
 		}
 	} // arguments passed
