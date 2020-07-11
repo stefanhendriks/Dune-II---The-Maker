@@ -8,3 +8,4 @@ Release/
 .settings/language.settings.xml
 .idea/workspace.xml
 .settings/org.eclipse.cdt.managedbuilder.core.prefs
+.idea/
