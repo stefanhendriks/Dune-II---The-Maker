@@ -68,9 +68,11 @@ void cMessageDrawer::setMessage(char msg[255]) {
 void cMessageDrawer::draw() {
 	if (iMessageAlpha > -1) {
 		set_trans_blender(0,0,0,iMessageAlpha);
-		BITMAP *temp = create_bitmap(480,30);
+		int width = 480; // this is fixed, see BMP_MESSAGEBAR (it is one fixed image, so need to chop it up)
+		
+		BITMAP *temp = create_bitmap(width,30);
 		clear_bitmap(temp);
-		rectfill(temp, 0,0,480,40, makecol(255,0,255));
+		rectfill(temp, 0,0,width,40, makecol(255,0,255));
 		draw_sprite(temp, (BITMAP *)gfxinter[BMP_MESSAGEBAR].dat, 0,0);
 
 		// draw message
