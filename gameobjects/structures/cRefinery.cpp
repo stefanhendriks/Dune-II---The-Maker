@@ -86,6 +86,8 @@ void cRefinery::think()
                     }
 
                     unit[iUnitID].iCredits -= iAmount;
+                    unit[iUnitID].iOffsetX = 0;
+                    unit[iUnitID].iOffsetY = 0;
                 }
                 else
                 {
