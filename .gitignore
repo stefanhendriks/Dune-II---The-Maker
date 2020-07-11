@@ -3,3 +3,8 @@ cmake-build-debug/
 .vs/
 Release/
 /Default/
+.project
+.cproject
+.settings/language.settings.xml
+.idea/workspace.xml
+.settings/org.eclipse.cdt.managedbuilder.core.prefs
