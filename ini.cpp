@@ -2427,7 +2427,7 @@ logbook("[GAME.INI] Done");
 }
 
 
-void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
+void INI_LOAD_SKIRMISH(char filename[1024], bool bScan)
 {
     // search for new entry in previewed maps
     int iNew=-1;
@@ -2441,8 +2441,10 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
 
     }
 
-    if (iNew < 0)
-        return;
+	if (iNew < 0) {
+		logbook("No new index entry found for PreviewMap");
+		return;
+	}
 
 	// Load file
 
@@ -2613,6 +2615,9 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
 	fclose(stream);
 
 	} // file exists
+	else {
+		logbook("Error reading map!");
+	}
 
 }
 
