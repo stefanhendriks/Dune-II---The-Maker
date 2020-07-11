@@ -7,6 +7,10 @@
 
 #include "../include/d2tmh.h"
 
+/*
+ * The cMessageDrawer draws messages IN-GAME. This is NOT used for region texts.
+ * 
+ */
 cMessageDrawer::cMessageDrawer() {
 	init();
 }
@@ -19,6 +23,7 @@ void cMessageDrawer::init() {
 	iMessageAlpha = -1;
 	memset(cMessage, 0, sizeof(cMessage));
 	TIMER_message = 0;
+	initCombatPosition();
 }
 
 void cMessageDrawer::think() {
@@ -72,8 +77,22 @@ void cMessageDrawer::draw() {
 		alfont_textprintf(temp, game_font, 13,21, makecol(0,0,0), cMessage);
 
 		// draw temp
-		draw_trans_sprite(bmp_screen, temp, 1, 42);
+		draw_trans_sprite(bmp_screen, temp, x, y);
 
 		destroy_bitmap(temp);
 	}
+}
+
+void cMessageDrawer::initRegionPosition()
+{
+	// default positions region mode
+	x = 73;
+	y = 358;
+}
+
+void cMessageDrawer::initCombatPosition()
+{
+	// default positions in-game (battle mode)
+	x = 1;
+	y = 42;
 }
