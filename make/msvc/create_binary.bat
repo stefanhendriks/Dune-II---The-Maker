@@ -1,7 +1,7 @@
 @echo off
 cls 
 echo.
-echo Prepare binary package (./bin) of D2TM. Will copy "Dune 2.exe" from the Release dir
+echo Prepare binary package (./bin) of D2TM. Will copy "d2tm.exe" from the Release dir
 echo created by MSVC.
 echo.
 echo 1. Removing bin directory
@@ -30,6 +30,7 @@ mkdir bin\data\scenes
 echo 6. Copying data files
 copy data\*.dat bin\data
 copy data\*.fon bin\data
+copy data\*.ttf bin\data
 echo 7. Copying scenes
 copy data\scenes\*.* bin\data\scenes
 echo 8. Create save game directories
@@ -49,4 +50,5 @@ echo 12. Copy game rules file (game.ini)
 copy game.ini bin
 echo 13. Copy txt files
 copy *.txt bin
+copy windowed.bat bin
 echo Done.
