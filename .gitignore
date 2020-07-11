@@ -10,3 +10,5 @@ Release/
 .settings/org.eclipse.cdt.managedbuilder.core.prefs
 .idea/
 CMakeLists.txt
+create_binary.bat
+Dune 2.vcxproj
