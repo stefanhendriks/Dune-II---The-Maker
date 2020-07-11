@@ -2,3 +2,4 @@ bin/
 cmake-build-debug/
 .vs/
 Release/
+/Default/
