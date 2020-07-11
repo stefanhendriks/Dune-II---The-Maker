@@ -1,1 +1,1 @@
-"Dune 2.exe" -windowed
+"d2tm.exe" -windowed
