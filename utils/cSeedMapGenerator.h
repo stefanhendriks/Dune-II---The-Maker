@@ -46,8 +46,8 @@ private:
 	static short offsets2[SMG_OFFSET2_SIZE];
 	static short offsets[21];
 	static bool canAddSpiceTo[10];
-	static signed char spicemap[256];
-	static signed char spicemap2[256];
+	static unsigned char spicemap[256];
+	static unsigned char spicemap2[256];
 
 	char   matrix[16*17+1];
 	struct cell map[65][64];
