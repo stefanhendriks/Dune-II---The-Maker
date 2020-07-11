@@ -575,19 +575,21 @@ void cGame::combat() {
 
     if (iAlphaScreen == 0)
         iFadeAction = 2;
+	
     // -----------------
 	bPlacedIt = bPlaceIt;
 
 	assert(drawManager);
 	drawManager->draw();
 	assert(interactionManager);
+	
 	interactionManager->interact();
 
     // think win/lose
     think_winlose();
 }
 
-void cGame::draw_mentat(int iType)
+void cGame::draw_mentat(const int iType)
 {
 	select_palette( general_palette  );
 
@@ -759,6 +761,7 @@ void cGame::mentat(int iType)
                 {
                 // proceed, play mission
                 state = GAME_PLAYING;
+				drawManager->getMessageDrawer()->initCombatPosition();
 
                 // CENTER MOUSE
                 position_mouse(320, 240);
@@ -781,6 +784,7 @@ void cGame::mentat(int iType)
                     state = GAME_REGION;
                     REGION_SETUP(game.iMission, game.iHouse);
 
+					drawManager->getMessageDrawer()->initRegionPosition();
 
                     // PLAY THE MUSIC
                     play_music(MUSIC_CONQUEST);
@@ -807,6 +811,7 @@ void cGame::mentat(int iType)
 
 							game.iMission--; // we did not win
 							REGION_SETUP(game.iMission, game.iHouse);
+							drawManager->getMessageDrawer()->initRegionPosition();
 
 							// PLAY THE MUSIC
 							play_music(MUSIC_CONQUEST);
@@ -1670,6 +1675,7 @@ void cGame::setup_skirmish()
 		iHouse=player[HUMAN].getHouse();
 		iMission=9; // high tech level (TODO: make this customizable)
 		state = GAME_PLAYING;
+		drawManager->getMessageDrawer()->initCombatPosition();
 
 		game.setup_players();
 		assert(player[HUMAN].getItemBuilder() != NULL);
@@ -1925,7 +1931,7 @@ void cGame::tellhouse()
 // select your next conquest
 void cGame::region()
 {
-        // FADING
+    // FADING
 
 	int mouse_tile = MOUSE_NORMAL;
 
@@ -2041,12 +2047,11 @@ void cGame::region()
     //iHouse = ATREIDES;
 
     // Draw 4 times the logo (in each corner)
-    if (iLogo > -1)
-    {
-    draw_sprite(bmp_screen, (BITMAP *)gfxworld[iLogo].dat, 0,0);
-    draw_sprite(bmp_screen, (BITMAP *)gfxworld[iLogo].dat, (640)-64,0);
-    draw_sprite(bmp_screen, (BITMAP *)gfxworld[iLogo].dat, 0,(480)-64);
-    draw_sprite(bmp_screen, (BITMAP *)gfxworld[iLogo].dat, (640)-64,(480)-64);
+    if (iLogo > -1) {
+	    draw_sprite(bmp_screen, (BITMAP *)gfxworld[iLogo].dat, 0,0);
+	    draw_sprite(bmp_screen, (BITMAP *)gfxworld[iLogo].dat, (640)-64,0);
+	    draw_sprite(bmp_screen, (BITMAP *)gfxworld[iLogo].dat, 0,(480)-64);
+	    draw_sprite(bmp_screen, (BITMAP *)gfxworld[iLogo].dat, (640)-64,(480)-64);
     }
 
 
@@ -2218,22 +2223,23 @@ void cGame::region()
 
     // draw message
     // TODO: Use own message drawer here or something, with other coordinates
-//    if (iMessageAlpha > -1)
-//	{
-//		set_trans_blender(0,0,0,iMessageAlpha);
-//		BITMAP *temp = create_bitmap(480,30);
-//		clear_bitmap(temp);
-//		rectfill(temp, 0,0,480,40, makecol(255,0,255));
-//		//draw_sprite(temp, (BITMAP *)gfxinter[BMP_MESSAGEBAR].dat, 0,0);
-//
-//		// draw message
-//		alfont_textprintf(temp, game_font, 13,18, makecol(0,0,0), cMessage);
-//
-//		// draw temp
-//		draw_trans_sprite(bmp_screen, temp, 73, 358);
-//
-//		destroy_bitmap(temp);
-//	}
+	drawManager->getMessageDrawer()->draw();
+ //    if (iMessageAlpha > -1)
+	// {
+	// 	set_trans_blender(0,0,0,iMessageAlpha);
+	// 	BITMAP *temp = create_bitmap(480,30);
+	// 	clear_bitmap(temp);
+	// 	rectfill(temp, 0,0,480,40, makecol(255,0,255));
+	// 	//draw_sprite(temp, (BITMAP *)gfxinter[BMP_MESSAGEBAR].dat, 0,0);
+ //
+	// 	// draw message
+	// 	alfont_textprintf(temp, game_font, 13,18, makecol(0,0,0), cMessage);
+ //
+	// 	// draw temp
+	// 	draw_trans_sprite(bmp_screen, temp, 73, 358);
+ //
+	// 	destroy_bitmap(temp);
+	// }
 
 
     // mouse

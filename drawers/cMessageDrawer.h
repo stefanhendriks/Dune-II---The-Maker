@@ -19,6 +19,10 @@ class cMessageDrawer {
 
 		void init();
 
+		void initRegionPosition();
+
+		void initCombatPosition();
+
 		void setMessage(char msg[255]); // set a new message
 		char * getMessage() { return &cMessage[0]; }
 
@@ -29,6 +33,7 @@ class cMessageDrawer {
 		char cMessage[255];
 		int iMessageAlpha;
 		int TIMER_message;
+		int x, y;	// draw positions
 };
 
 #endif /* CMESSAGEDRAWER_H_ */

@@ -50,7 +50,7 @@ void cDrawManager::draw() {
 		structureDrawer->drawStructuresFirstLayer();
 	}
 
-	// draw layer 1 (beneath units, on top of terrain
+	// draw layer 1 (beneath units, on top of terrain)
 	particleDrawer->drawLowerLayer();
 
 	map.draw_units();
@@ -157,7 +157,9 @@ void cDrawManager::drawStructurePlacing() {
 void cDrawManager::drawMessage() {
 	assert(messageDrawer);
 	messageDrawer->draw();
-//	messageBarDrawer->drawMessageBar();
+
+	// TODO: replace messageDrawer with drawMessageBar?
+	// messageBarDrawer->drawMessageBar();
 }
 
 void cDrawManager::drawMouse() {
