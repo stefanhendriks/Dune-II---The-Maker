@@ -167,48 +167,6 @@ bool cMap::occupied(int iCll, int iUnitID)
     return bResult;
 }
 
-// HUH? WHat is this doing here? (TODO: move to structure Drawing thing)
-void cMap::draw_structures_health()
-{
-	cGameControlsContext *context = player[HUMAN].getGameControlsContext();
-    // DRAW HEALTH
-    if (context->isMouseOverStructure())
-    {
-        int i = context->getIdOfStructureWhereMouseHovers();
-
-        // Draw structure health
-        int draw_x = structure[i]->iDrawX()-1;
-        int draw_y = structure[i]->iDrawY()-5;
-        int width_x = structures[structure[i]->getType()].bmp_width-1;
-        int height_y = 4;
-
-        if (draw_y < 30) draw_y = 30;
-
-        int w = health_structure(i, structures[structure[i]->getType()].bmp_width);
-
-        int step = (255/structures[structure[i]->getType()].bmp_width);
-        int r = 255-(w*step);
-        int g = w*step;
-
-        if (g > 255)
-            g = 255;
-        if (r < 0) r= 0;
-
-
-        // shadow
-       // rectfill(bmp_screen, draw_x+2, draw_y+2, draw_x + width_x + 2, draw_y + height_y + 2, makecol(0,0,0));
-
-        // bar itself
-        rectfill(bmp_screen, draw_x, draw_y, draw_x + width_x+1, draw_y + height_y+1, makecol(0,0,0));
-        rectfill(bmp_screen, draw_x, draw_y, draw_x + (w-1), draw_y + height_y, makecol(r,g,32));
-
-        // bar around it
-        rect(bmp_screen, draw_x, draw_y, draw_x + width_x, draw_y + height_y, makecol(255, 255, 255));
-
-    }
-
-}
-
 // do the static info thinking
 void cMap::think_minimap() {
 	// Draw static info
