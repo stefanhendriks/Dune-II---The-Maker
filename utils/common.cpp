@@ -144,7 +144,6 @@ void INSTALL_HOUSES()
  House Rules
  ********************************/
 
-
   // General / Default / No House
   houses[GENERALHOUSE].swap_color   = 128;
   houses[GENERALHOUSE].minimap_color = makecol(128,128,128);
@@ -213,6 +212,7 @@ bool mouse_pressed_right()
  *****************************/
 void install_units()
 {
+    logbook("Installing:  UNITS");
   // Every unit thinks at 0.1 second. When the unit thinks, it is thinking about the path it
   // is taking, the enemies around him, etc. The speed of how a unit should move is depended on
   // time aswell. Every 0.01 second a unit 'can' move. The movespeed is like this:
@@ -604,7 +604,9 @@ void install_units()
  ****************/
 void install_bullets()
 {
-  for (int i=0; i < MAX_BULLET_TYPES; i++)
+    logbook("Installing:  BULLET TYPES");
+
+    for (int i=0; i < MAX_BULLET_TYPES; i++)
   {
     bullets[i].bmp = NULL; // in case an invalid bitmap; default is a small rocket
     bullets[i].deadbmp = NULL; // in case an invalid bitmap; default is a small rocket
@@ -820,6 +822,7 @@ void install_bullets()
  *****************************/
 void install_structures()
 {
+    logbook("Installing:  STRUCTURES");
   for (int i = 0; i < MAX_STRUCTURETYPES; i++)
   {
     structures[i].bmp = (BITMAP *)gfxdata[BUILD_WINDTRAP].dat; // in case an invalid bitmap, we are a windtrap

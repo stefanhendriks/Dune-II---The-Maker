@@ -29,6 +29,9 @@ cGame::cGame() {
 	// if not loaded, we will try automatic setup
 	ini_screen_width=-1;
 	ini_screen_height=-1;
+
+    memset(version, 0, sizeof(version));
+    sprintf(version, "0.4.6");
 }
 
 
@@ -65,7 +68,6 @@ void cGame::init() {
 
     iWinQuota=-1;              // > 0 means, get this to win the mission, else, destroy all!
 
-
 	selected_structure=-1;
 
 	// mentat
@@ -78,9 +80,6 @@ void cGame::init() {
 	map_height = 64;
 
 	mouse_tile = MOUSE_NORMAL;
-
-	memset(version, 0, sizeof(version));
-	sprintf(version, "0.4.6");
 
 	fade_select=255;
 
@@ -159,7 +158,6 @@ void cGame::mission_init() {
 
     TIMER_movie=0;
     iMovieFrame=-1;
-
 
     map.init();
 
@@ -2879,11 +2877,8 @@ bool cGame::setupGame() {
 	INSTALL_PLAYERS();
 	logbook("Installing:  HOUSES");
 	INSTALL_HOUSES();
-	logbook("Installing:  STRUCTURES");
 	install_structures();
-	logbook("Installing:  BULLET TYPES");
 	install_bullets();
-	logbook("Installing:  UNITS");
 	install_units();
 	logbook("Installing:  WORLD");
 	INSTALL_WORLD();
