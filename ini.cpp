@@ -2441,8 +2441,18 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
 
     }
 
-    if (iNew < 0)
+    if (iNew < 0) {
         return;
+    }
+
+
+    // first clear it all out
+	for (int x=0; x < game.map_width; x++) {
+	  for (int y = 0; y < game.map_height; y++) {
+		  int cll = iCellMake(x, y);
+		  PreviewMap[iNew].mapdata[cll]=TERRAIN_SAND;
+	  }
+}
 
 	// Load file
 
@@ -2473,42 +2483,38 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
 
       // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
       // character (which is "//", ";" or "#"), or an empty line, then skip it
-      if (isCommentLine(linefeed))
+      if (isCommentLine(linefeed)) {
           continue;   // Skip
+      }
 
       // Every line is checked for a new section.
       INI_Section(linefeed,linesection);
 
-      if (linesection[0] != '\0' && strlen(linesection) > 1)
-      {
-		  int iOld=section;
-        section= INI_SectionType(linesection, section);
+      if (linesection[0] != '\0' && strlen(linesection) > 1) {
+    	  int iOld=section;
+    	  section= INI_SectionType(linesection, section);
 
-        // section found
-		if (iOld != section)
-		{
-			if (section == INI_MAP)
-			{
-				if (PreviewMap[iNew].terrain == NULL)
-				{
-					PreviewMap[iNew].terrain = create_bitmap(128,128);
-					clear(PreviewMap[iNew].terrain);
-					//clear_to_color(PreviewMap[iNew].terrain, makecol(255,255,255));
+			// section found
+			if (iOld != section) {
+				if (section == INI_MAP) {
+					if (PreviewMap[iNew].terrain == NULL) {
+						PreviewMap[iNew].terrain = create_bitmap(128,128);
+						clear(PreviewMap[iNew].terrain);
+						//clear_to_color(PreviewMap[iNew].terrain, makecol(255,255,255));
+					}
+					continue; // skip
 				}
-				continue; // skip
 			}
-		}
       }
 
        // Okay, we found a new section; if its NOT [GAME] then we remember this one!
 
-      if (section != INI_NONE)
-      {
+      if (section != INI_NONE) {
           INI_Word(linefeed, lineword);
           wordtype = INI_WordType(lineword, section);
-      }
-	  else
+      } else {
 		  continue;
+      }
 
       if (section == INI_SKIRMISH)
       {
@@ -2539,17 +2545,16 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
 		  int iLength=strlen(linefeed);
 
 		  // END!
-		  if (iLength < 2)
+		  if (iLength < 2) {
 			  break; // done
+		  }
 
-		  for (int iX=0; iX < iLength; iX++)
-		  {
+		  for (int iX=0; iX < iLength; iX++) {
 			  char letter[1];
 			  letter[0] = '\0';
 			  letter[0] = linefeed[iX];
 
               int iCll=iCellMake((iX+1),(iYLine+1));
-
 
 			  int iColor=makecol(194, 125, 60);
 
@@ -2573,17 +2578,27 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan)
 			  if (letter[0] == 'H') iColor = makecol(188, 115, 50);
 			  if (letter[0] == 'h') iColor = makecol(188, 115, 50);
 
-              if (iCll > -1)
-              {
-                  if (iColor == makecol(194,125,60)) PreviewMap[iNew].mapdata[iCll]=TERRAIN_SAND;
-                  if (iColor == makecol(80,80,60)) PreviewMap[iNew].mapdata[iCll]=TERRAIN_ROCK;
-                  if (iColor == makecol(48,48,36)) PreviewMap[iNew].mapdata[iCll]=TERRAIN_MOUNTAIN;
-                  if (iColor == makecol(180,90,25)) PreviewMap[iNew].mapdata[iCll]=TERRAIN_SPICEHILL;
-                  if (iColor == makecol(186,93,32)) PreviewMap[iNew].mapdata[iCll]=TERRAIN_SPICE;
-                  if (iColor == makecol(188,115,50)) PreviewMap[iNew].mapdata[iCll]=TERRAIN_HILL;
+              if (iCll > -1) {
+                  if (iColor == makecol(194,125,60)) {
+                	  PreviewMap[iNew].mapdata[iCll]=TERRAIN_SAND;
+                  } else if (iColor == makecol(80,80,60)) {
+                	  PreviewMap[iNew].mapdata[iCll]=TERRAIN_ROCK;
+                  } else if (iColor == makecol(48,48,36)) {
+                	  PreviewMap[iNew].mapdata[iCll]=TERRAIN_MOUNTAIN;
+                  } else if (iColor == makecol(180,90,25)) {
+                	  PreviewMap[iNew].mapdata[iCll]=TERRAIN_SPICEHILL;
+                  } else if (iColor == makecol(186,93,32)) {
+                	  PreviewMap[iNew].mapdata[iCll]=TERRAIN_SPICE;
+                  } else if (iColor == makecol(188,115,50)) {
+                	  PreviewMap[iNew].mapdata[iCll]=TERRAIN_HILL;
+                  } else {
+                	  char msg[255];
+                	  sprintf(msg, "iniLoader::skirmish() - Could not determine terrain type for char \"%c\", falling back to SAND", letter[0]);
+                	  logbook(msg);
+                	  PreviewMap[iNew].mapdata[iCll]=TERRAIN_SAND;
+                	  iColor = makecol(255, 255, 255);
+                  }
               }
-
-
 
 			  putpixel(PreviewMap[iNew].terrain, 1+(iX*2), 1+(iYLine*2), iColor);
 			  putpixel(PreviewMap[iNew].terrain, 1+(iX*2)+1, 1+(iYLine*2), iColor);

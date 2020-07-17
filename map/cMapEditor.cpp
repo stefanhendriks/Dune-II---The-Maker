@@ -14,6 +14,12 @@ cMapEditor::cMapEditor() {
 cMapEditor::~cMapEditor() {
 }
 
+void cMapEditor::clearMap(int terrainType) {
+	for (int i = 0; i < MAX_CELLS; i++) {
+		createCell(i, terrainType, 0);
+	}
+}
+
 void cMapEditor::createCell(int cell, int terrainType, int tile) {
 	assert(cell > -1);
 	assert(cell < MAX_CELLS);

@@ -40,6 +40,7 @@ class cMapEditor {
 		int smoothSandHillCell(int cell);
 		int smoothWallCell(int cell);
 
+		void clearMap(int terrainType);
 	private:
 
 };
