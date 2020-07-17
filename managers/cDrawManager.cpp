@@ -58,7 +58,8 @@ void cDrawManager::draw() {
 	map.draw_bullets();
 
 	structureDrawer->drawStructuresSecondLayer();
-	map.draw_structures_health();
+	structureDrawer->drawStructuresHealthBars();
+
 	map.draw_units_2nd();
 
 	particleDrawer->drawHigherLayer();

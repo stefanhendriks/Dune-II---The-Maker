@@ -34,7 +34,6 @@ public:
 	void draw_units();
 
     void smudge_increase(int iType, int iCell);
-    void draw_structures_health();
 
     int  mouse_cell();
 
