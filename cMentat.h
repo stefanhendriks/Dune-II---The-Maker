@@ -4,7 +4,7 @@
 
 	Author : Stefan Hendriks
 	Contact: stefanhen83@gmail.com
-	Website: http://d2tm.duneii.com
+	Website: http://dune2themaker.fundynamic.com
 
 	2001 - 2009 (c) code by Stefan Hendriks
 
