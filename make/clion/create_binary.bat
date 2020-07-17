@@ -53,7 +53,5 @@ copy game.ini bin
 echo 13. Copy txt files
 copy *.txt bin
 copy windowed.bat bin
-cd bin
-del CMakeLists.txt
-cd ..
+del bin\CMakeLists.txt
 echo Done.
