@@ -906,7 +906,6 @@ void cGame::menu()
 	// Buttons:
 	int buttonsX = mainMenuFrameX + 4;
 
-
 	// PLAY
 	int playY = 323 + logoY;
 	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, playY, "Campaign", makecol(255, 0, 0)))
