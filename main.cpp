@@ -128,12 +128,7 @@ int main(int argc, char **argv) {
         return 0;
     }
 
-	game.init();
-
-    // HACKish way to let program argument overrule game.ini resolution settings!
-    if (handleArguments(argc, argv) > 0) {
-        return 0;
-    }
+    game.init();
 
     if (game.setupGame()) {
 		game.run();

@@ -2254,7 +2254,7 @@ void INI_Install_Game(string filename) {
       wordtype=WORD_NONE;
 
       // Every line is checked for a new section.
-      INI_Section(linefeed,linesection);
+      INI_Section(linefeed, linesection);
 
       if (linesection[0] != '\0' && strlen(linesection) > 1)
       {
@@ -2348,7 +2348,7 @@ void INI_Install_Game(string filename) {
             id = INI_StructureType(name_structure);
             if (id >= MAX_STRUCTURETYPES) id--;
 
-          } // found a new unit type
+          } // found a new structure type
         }
 
         continue; // next line
@@ -2424,9 +2424,9 @@ void INI_Install_Game(string filename) {
 
       if (section == INI_SETTINGS) {
 		  switch (wordtype) {
-			  case WORD_FULLSCREEN:
-				  game.windowed = (INI_WordValueBOOL(linefeed) == false);
-				  break;
+//			  case WORD_FULLSCREEN:
+//				  game.windowed = (INI_WordValueBOOL(linefeed) == false);
+//				  break;
 			  case WORD_SCREENWIDTH:
 				  game.ini_screen_width=INI_WordValueINT(linefeed);
 				  break;
