@@ -20,6 +20,8 @@
 
 cGame::cGame() {
 	windowed = false;
+    bPlaySound = true;
+    bPlayMusic = true;
 }
 
 
@@ -49,7 +51,6 @@ void cGame::init() {
 	screen_x = 800;
     screen_y = 600;
 
-    bPlaySound = true;
 
     iSkirmishMap=-1;
 

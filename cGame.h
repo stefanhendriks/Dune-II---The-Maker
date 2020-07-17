@@ -46,6 +46,7 @@ public:
 	int screen_y;
 
     bool bPlaySound;            // play sound?
+    bool bPlayMusic;            // play any music?
     bool bMp3;                  // use mp3 files instead of midi
 
 	bool bPlaying;				// playing or not
