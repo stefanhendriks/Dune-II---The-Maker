@@ -19,6 +19,7 @@ cBestScreenResolutionFinder::cBestScreenResolutionFinder() {
     addScreenResolution(1920, 1080); // Full HD
     addScreenResolution(1600, 900);
     addScreenResolution(1280, 1024);
+    addScreenResolution(1366, 768);  // widescreen
     addScreenResolution(1024, 768);
     addScreenResolution(800, 600);
     addScreenResolution(640, 480);
