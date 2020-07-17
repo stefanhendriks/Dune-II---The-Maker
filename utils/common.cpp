@@ -1243,6 +1243,8 @@ void mp3_play_file(char filename[255]) {
 // play type of music
 void play_music(int iType)
 {
+    if (!game.bPlayMusic) return;
+
     // Types of music:
     /*
 #define MUSIC_WIN           0
@@ -1289,8 +1291,6 @@ void play_music(int iType)
         if (game.iHouse == ORDOS)     iNumber=MIDI_MENTAT_ORD;
 
     }
-
-
 
     // In the end, when mp3, play it:
     if (game.bMp3)
@@ -1357,10 +1357,7 @@ void play_music(int iType)
 
         // play midi file
         play_midi((MIDI *)gfxaudio[iNumber].dat, 0);
-
     }
-
-
 
 }
 

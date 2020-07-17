@@ -102,6 +102,12 @@ int handleArguments(int argc, char *argv[]) {
 			} else if (command.compare("-windowed") == 0) {
 				// Windowed flag passed, so use that
 				game.windowed = true;
+			} else if (command.compare("-nomusic") == 0) {
+				game.bPlayMusic = false;
+			} else if (command.compare("-nosound") == 0) {
+			    // disable all sound effects
+				game.bPlayMusic = false;
+				game.bPlaySound = false;
 			}
 		}
 	} // arguments passed
