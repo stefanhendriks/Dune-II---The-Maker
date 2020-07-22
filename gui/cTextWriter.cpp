@@ -30,7 +30,7 @@ void cTextWriter::write(char * msg) {
 }
 
 void cTextWriter::write(char * msg, int color) {
-	textDrawer->drawText(drawX, drawY, msg, color);
+    textDrawer->drawText(drawX, drawY, color, msg);
 	updateDrawY();
 }
 

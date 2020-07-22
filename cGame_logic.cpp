@@ -871,7 +871,7 @@ void cGame::menu()
 		}
 	}
 
-    cTextDrawer * textDrawer = new cTextDrawer(bene_font);
+    cTextDrawer textDrawer = cTextDrawer(bene_font);
 
 	// draw main menu title (picture is 640x480)
 //	cAllegroDrawer allegroDrawer;
@@ -996,7 +996,7 @@ void cGame::menu()
 
 
     // draw version
-	textDrawer->drawTextBottomRight(version);
+	textDrawer.drawTextBottomRight(version);
 //    // version
 //	int versionX = game.screen_x - 60;
 //	int versionY = game.screen_y - 14;
@@ -1006,16 +1006,13 @@ void cGame::menu()
 
 	// mp3 addon?
 	if (bMp3) {
-		textDrawer->drawTextBottomLeft("Music: MP3 ADD-ON");
+		textDrawer.drawTextBottomLeft("Music: MP3 ADD-ON");
     } else {
-		textDrawer->drawTextBottomLeft("Music: MIDI");
+		textDrawer.drawTextBottomLeft("Music: MIDI");
     }
 
    	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
-
-
-	delete textDrawer;
 
 	if (key[KEY_ESC]) {
 		bPlaying=false;
@@ -1040,47 +1037,83 @@ void cGame::setup_skirmish()
         iFadeAction = 2;
     // -----------------
 
+    int darkishBackgroundColor = makecol(32, 32, 32);
+    int darkishBorderColor = makecol(227, 229, 211);
+    int yellow = makecol(255, 207, 41);
+
     bool bFadeOut=false;
 
-    draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_GAME_DUNE].dat, 0, (game.screen_y * 0.72));
+    draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_GAME_DUNE].dat, game.screen_x * 0.2, (game.screen_y * 0.5));
 
 	for (int dy=0; dy < game.screen_y; dy+=2) {
-		line(bmp_screen, 0, dy, 640, dy, makecol(0,0,0));
+		line(bmp_screen, 0, dy, screen_x, dy, makecol(0,0,0));
 	}
 
+	int topBarWidth = screen_x + 4;
+	int topBarHeight = 21;
+	int previewMapHeight = 129;
+	int previewMapWidth = 129;
+
+    int sidebarWidth = 158;
+
     // title box
-    GUI_DRAW_FRAME(-1, -1, 642, 21);
+    GUI_DRAW_FRAME(-1, -1, topBarWidth, topBarHeight);
 
-    // title name
-    alfont_textprintf(bmp_screen, bene_font, 280,3, makecol(0,0,0), "Skirmish");
-    alfont_textprintf(bmp_screen, bene_font, 280,2, makecol(255,0,0), "Skirmish");
+    int creditsX = (screen_x / 2) - (alfont_text_length(bene_font, "Skirmish") / 2);
+    GUI_DRAW_BENE_TEXT(creditsX, 1, "Skirmish");
 
-    // box at the right
-    GUI_DRAW_FRAME(364, 21, 276, 443);
+    int topRightBoxWidth = 276;
 
-	// draw box for map data
-    GUI_DRAW_FRAME(510, 26, 129, 129);
+    // Players title bar
+    int playerTitleBarWidth = screen_x - topRightBoxWidth;
+    int playerTitleBarHeight = topBarHeight;
+    int playerTitleBarX = 0;
+    int playerTitleBarY = topBarHeight;
+    GUI_DRAW_FRAME_WITH_COLORS(playerTitleBarX, playerTitleBarY, playerTitleBarWidth, playerTitleBarHeight, makecol(255, 255, 255), darkishBackgroundColor );
+
+    // this is the box at the right from the Player list
+    int topRightBoxHeight = playerTitleBarHeight + previewMapHeight;
+    int topRightBoxX = screen_x - topRightBoxWidth;
+    int topRightBoxY = topBarHeight;
+    GUI_DRAW_FRAME(topRightBoxX, topRightBoxY, topRightBoxWidth, topRightBoxHeight);
+
+    // player list
+    int playerListWidth = playerTitleBarWidth;
+    int playerListBarHeight = topRightBoxHeight;
+    int playerListBarX = 0;
+    int playerListBarY = playerTitleBarY + topBarHeight;
+    GUI_DRAW_FRAME_WITH_COLORS(playerListBarX, playerListBarY, playerListWidth, playerListBarHeight, makecol(255, 255, 255), darkishBackgroundColor);
+
+    // map list
+    int mapListHeight = screen_y - (topBarHeight + previewMapHeight);
+    int mapListWidth = topRightBoxWidth;
+    int mapListTopX = screen_x - mapListWidth;
+    int mapListTopY = topRightBoxY + topRightBoxHeight; // ??
 
     // rectangle for map list
-    rectfill(bmp_screen, 366, (26+128)+4, 638, 461, makecol(32,32,32));
-    rect(bmp_screen, 366, (26+128)+4, 638, 461, makecol(227,229,211));
+    GUI_DRAW_FRAME_WITH_COLORS(mapListTopX, mapListTopY, mapListWidth, mapListHeight, darkishBorderColor, darkishBackgroundColor);
+
+    int previewMapY = topBarHeight + 6;
+    int previewMapX = screen_x - (previewMapWidth + 6);
 
 	int iStartingPoints=0;
 
-//            int screenX = game.screen_x;
-    int screenX = 640;
+    ///////
+	// DRAW PREVIEW MAP
+	//////
 
-	// draw preview map (if any)
+	// iSkirmishMap holds an index of which map to load, where index 0 means random map generated, although
+	// this is only meaningful for rendering, the loading (more below) of that map does not care if it is
+	// randomly generated or not.
 	if (iSkirmishMap > -1) {
+	    // Render skirmish map as-is (pre-loaded map)
 		if (iSkirmishMap > 0) {
-
             if (PreviewMap[iSkirmishMap].name[0] != '\0') {
                 if (PreviewMap[iSkirmishMap].terrain) {
-//					draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, game.screen_x-129, 27);
-                    draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, screenX - 129, 27);
-
+                    draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, previewMapX, previewMapY);
                 }
 
+                // count starting points
                 for (int s = 0; s < 5; s++) {
                     if (PreviewMap[iSkirmishMap].iStartCell[s] > -1) {
                         iStartingPoints++;
@@ -1090,15 +1123,15 @@ void cGame::setup_skirmish()
         }
         else
         {
+            // render the 'random generated skirmish map'
             iStartingPoints = iSkirmishStartPoints;
 
             // when mouse is hovering, draw it, else do not
-            if ((mouse_x >= (screenX - 129) && mouse_x < screenX) && (mouse_y >= 27 && mouse_y < 160))
-
+            if ((mouse_x >= previewMapX && mouse_x < (previewMapX + previewMapWidth) && (mouse_y >= previewMapY && mouse_y < (previewMapY + previewMapHeight))))
             {
                 if (PreviewMap[iSkirmishMap].name[0] != '\0') {
                     if (PreviewMap[iSkirmishMap].terrain) {
-                        draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, screenX - 129, 27);
+                        draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, previewMapX, previewMapY);
                     }
                 }
             }
@@ -1106,22 +1139,27 @@ void cGame::setup_skirmish()
             {
                 if (PreviewMap[iSkirmishMap].name[0] != '\0') {
                     if (PreviewMap[iSkirmishMap].terrain) {
-                        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat, screenX - 129, 27);
+                        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat, previewMapX, previewMapY);
                     }
                 }
             }
         }
 	}
 
-	alfont_textprintf(bmp_screen, bene_font, 366, 27, makecol(0,0,0),"Startpoints: %d", iStartingPoints);
-	alfont_textprintf(bmp_screen, bene_font, 366, 26, makecol(255,255,255),"Startpoints: %d", iStartingPoints);
+	int widthOfSomething = 274; //??
+	int startPointsX = screen_x - widthOfSomething;
+	int startPointsY = previewMapY;
+	int startPointHitBoxWidth = 130;
+	int startPointHitBoxHeight = 16;
+
+	cTextDrawer textDrawer = cTextDrawer(bene_font);
+	textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, "Startpoints: %d", iStartingPoints);
 
 	bool bDoRandomMap=false;
 
-	if ((mouse_x >= 366 && mouse_x <= (640-130)) && (mouse_y >= 27 && mouse_y <= 43))
+	if ((mouse_x >= startPointsX && mouse_x <= (startPointsX + startPointHitBoxWidth)) && (mouse_y >= startPointsY && mouse_y <= (startPointsY + startPointHitBoxHeight)))
 	{
-		alfont_textprintf(bmp_screen, bene_font, 366, 27, makecol(0,0,0),"Startpoints: %d", iStartingPoints);
-		alfont_textprintf(bmp_screen, bene_font, 366, 26, makecol(255,0,0),"Startpoints: %d", iStartingPoints);
+        textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, makecol(255, 0, 0), "Startpoints: %d", iStartingPoints);
 
 		if (cMouse::getInstance()->isLeftButtonClicked())
 		{
@@ -1146,33 +1184,23 @@ void cGame::setup_skirmish()
 		}
 	}
 
+	int mapListFrameX = screen_x - mapListWidth;
+	int mapListFrameY = (playerListBarY + playerListBarHeight) - playerTitleBarHeight;
+	int mapListFrameWidth = screen_x - mapListFrameX;
+	int mapListFrameHeight = topBarHeight;
+
 	// TITLE: Map list
-    GUI_DRAW_FRAME_PRESSED(367, 159, 254, 17);
+    GUI_DRAW_FRAME_WITH_COLORS(mapListFrameX, mapListFrameY, mapListFrameWidth, mapListFrameHeight, darkishBorderColor, darkishBackgroundColor);
 
-	//rectfill(bmp_screen, 367, 159, 637, 159+17, makecol(186,190,149));
-	//rect(bmp_screen, 367,159, 637, 159+17,makecol(255,255,255));
+    textDrawer.drawTextCentered("Maps", mapListFrameX, mapListFrameWidth, mapListFrameY + 4, yellow);
 
-	alfont_textprintf(bmp_screen, bene_font, 447, 160, makecol(0,0,0),"Map List" );
-
-	int const iHeightPixels=17;
+//	int const iHeightPixels=17;
+	int const iHeightPixels=topBarHeight;
 
 	int iDrawY=-1;
-	int iDrawX=367;
-	int iEndX=637-16;
+	int iDrawX=screen_x - widthOfSomething;
+	int iEndX=screen_y;
 	int iColor=makecol(255,255,255);
-
-	// scroll barr
-	if ((mouse_x >= (iEndX+1) && mouse_x <= 637) && (mouse_y >= 159+1 && mouse_y <= 477))
-	{
-		// hovers
-		rectfill(bmp_screen, iEndX+1, 159, 637, 460, makecol(128,128,128));
-		rect(bmp_screen, iEndX+1,159, 637, 460,makecol(64,64,64));
-	}
-	else
-	{
-		rectfill(bmp_screen, iEndX+1, 159, 637, 460, makecol(186,190,149));
-		rect(bmp_screen, iEndX+1,159, 637, 460,makecol(64,64,64));
-	}
 
     // for every map that we read , draw here
     for (int i=0; i < MAX_SKIRMISHMAPS; i++)
@@ -1181,23 +1209,19 @@ void cGame::setup_skirmish()
 		{
 			bool bHover=false;
 
-			iDrawY=159+(i*iHeightPixels)+i+iHeightPixels; // skip 1 bar because the 1st = 'random map'
+			iDrawY=mapListFrameY+(i*iHeightPixels)+i+iHeightPixels; // skip 1 bar because the 1st = 'random map'
 
-            bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, 254, iHeightPixels);
+            bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapListFrameWidth, iHeightPixels);
 
-			if (bHover==false) {
-			} else {
-                GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, 254, iHeightPixels);
-			}
-
-			iColor=makecol(255,255,255);
+            iColor=makecol(255,255,255);
 
 			if (bHover)	{
 			    // Mouse reaction
-				iColor = makecol(255,207,41);
+                iColor=makecol(255,0,0);
 
 				if (cMouse::getInstance()->isLeftButtonClicked())
 				{
+                    GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapListFrameWidth, iHeightPixels);
 					iSkirmishMap=i;
 
 					if (i == 0) {
@@ -1207,27 +1231,27 @@ void cGame::setup_skirmish()
 			}
 
 			if (i == iSkirmishMap) {
-				iColor=makecol(255,0, 0);
+				iColor=yellow;
+				if (bHover) {
+				    iColor = makecol(225, 177, 21); // a bit darker yellow to give some visual clue
+				}
+                GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapListFrameWidth, iHeightPixels);
 			}
 
-			alfont_textprintf(bmp_screen, bene_font, 368,iDrawY+3, makecol(0,0,0), PreviewMap[i].name);
-			alfont_textprintf(bmp_screen, bene_font, 368,iDrawY+2, iColor, PreviewMap[i].name);
+			textDrawer.drawText(mapListFrameX + 4, iDrawY+4, iColor, PreviewMap[i].name);
 		}
     }
 
-	rectfill(bmp_screen, 0, 21, 363, 37, makecol(128,128,128));
-	line(bmp_screen, 0, 38, 363, 38, makecol(255,255,255));
-
-	// player list
-	rectfill(bmp_screen, 0, 39, 363, 122, makecol(32,32,32));
-	line(bmp_screen, 0, 123, 363, 123, makecol(255,255,255));
+//    // this is the header box (for players)
+//    GUI_DRAW_FRAME_WITH_COLORS(playerTitleBarX, playerTitleBarY, playerTitleBarWidth, playerTitleBarHeight, makecol(255, 255, 255), darkishBackgroundColor );
+//
+//    GUI_DRAW_FRAME_WITH_COLORS(playerListBarX, playerListBarY, playerListWidth, playerListBarHeight, makecol(255, 255, 255), darkishBackgroundColor);
 
 	// bottom bar
-	rectfill(bmp_screen, 0, 464, 640, 480, makecol(32,32,32));
+//	rectfill(bmp_screen, 0, 464, 640, 480, darkishBorderColor);
 
 	alfont_textprintf(bmp_screen, bene_font, 4, 26, makecol(0,0,0), "Player      House      Credits       Units    Team");
 	alfont_textprintf(bmp_screen, bene_font, 4, 25, makecol(255,255,255), "Player      House      Credits       Units    Team");
-
 
 
 	bool bHover=false;
@@ -1235,7 +1259,7 @@ void cGame::setup_skirmish()
 	// draw players who will be playing ;)
 	for (int p=0; p < (AI_WORM-1); p++)
 	{
-		int iDrawY=40+(p*22);
+		int iDrawY=playerListBarY + 4 +(p*22);
 		if (p < iStartingPoints)
 		{
 			// player playing or not
@@ -1453,16 +1477,27 @@ void cGame::setup_skirmish()
 		}
 	}
 
+    GUI_DRAW_FRAME(-1, screen_y - topBarHeight, screen_x + 2, topBarHeight + 2);
 
-    GUI_DRAW_FRAME(-1, 465, 642, 21);
 
-    // back
-    alfont_textprintf(bmp_screen, bene_font, 0, 467, makecol(0,0,0), " BACK");
-    alfont_textprintf(bmp_screen, bene_font, 0, 466, makecol(255,255,255), " BACK");
+	// back
+	int backButtonWidth = textDrawer.textLength(" BACK");
+    int backButtonHeight = topBarHeight;
+	int backButtonY = screen_y - topBarHeight;
+	int backButtonX = 0;
+    textDrawer.drawTextBottomLeft(" BACK");
+//    alfont_textprintf(bmp_screen, bene_font, 0, 467, makecol(0,0,0), " BACK");
+//    alfont_textprintf(bmp_screen, bene_font, 0, 466, makecol(255,255,255), " BACK");
 
     // start
-    alfont_textprintf(bmp_screen, bene_font, 580, 467, makecol(0,0,0), "START");
-    alfont_textprintf(bmp_screen, bene_font, 580, 466, makecol(255,255,255), "START");
+    int startButtonWidth = textDrawer.textLength("START");
+    int startButtonHeight = topBarHeight;
+    int startButtonY = screen_y - topBarHeight;
+    int startButtonX = screen_x - startButtonWidth;
+
+    textDrawer.drawTextBottomRight("START");
+//    alfont_textprintf(bmp_screen, bene_font, 580, 467, makecol(0,0,0), "START");
+//    alfont_textprintf(bmp_screen, bene_font, 580, 466, makecol(255,255,255), "START");
 
 
 	if (bDoRandomMap) {
@@ -1470,9 +1505,9 @@ void cGame::setup_skirmish()
 	}
 
     // back
-    if ((mouse_x >= 0 && mouse_x <= 50) && (mouse_y >= 465 && mouse_y <= 480))
+    if (MOUSE_WITHIN_RECT(backButtonX, backButtonY, backButtonWidth, backButtonHeight))
     {
-        alfont_textprintf(bmp_screen, bene_font, 0, 466, makecol(255,0,0), " BACK");
+        textDrawer.drawTextBottomLeft(makecol(255,0,0), " BACK");
 
         if (cMouse::getInstance()->isLeftButtonClicked())
         {
@@ -1481,211 +1516,209 @@ void cGame::setup_skirmish()
         }
     }
 
-    if ((mouse_x >= 580 && mouse_x <= 640) && (mouse_y >= 465 && mouse_y <= 480))
-        alfont_textprintf(bmp_screen, bene_font, 580, 466, makecol(255,0,0), "START");
+    if (MOUSE_WITHIN_RECT(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
+        textDrawer.drawTextBottomRight(makecol(255, 0, 0), "START");
 
+        // START
+        if ((cMouse::getInstance()->isLeftButtonClicked() && iSkirmishMap > -1)) {
+            cCellCalculator *cellCalculator = new cCellCalculator(&map);
+            // Starting skirmish mode
+            bSkirmish=true;
 
-    cCellCalculator *cellCalculator = new cCellCalculator(&map);
-    // START
-	if ((mouse_x >= 580 && mouse_x <= 640) && (mouse_y >= 465 && mouse_y <= 480) && cMouse::getInstance()->isLeftButtonClicked() && iSkirmishMap > -1)
-	{
-        // Starting skirmish mode
-		bSkirmish=true;
+            /* set up starting positions */
+            int iStartPositions[5];
+            int iMax=0;
+            for (int s=0; s < 5; s++)
+            {
+                iStartPositions[s] = PreviewMap[iSkirmishMap].iStartCell[s];
 
-        /* set up starting positions */
-		int iStartPositions[5];
-		int iMax=0;
-		for (int s=0; s < 5; s++)
-		{
-			iStartPositions[s] = PreviewMap[iSkirmishMap].iStartCell[s];
-
-			if (PreviewMap[iSkirmishMap].iStartCell[s] > -1) {
-				iMax=s;
-			}
-		}
-
-        // REGENERATE MAP DATA FROM INFO
-        if (iSkirmishMap > -1)
-        {
-            for (int c=0; c < MAX_CELLS; c++) {
-                mapEditor.createCell(c, PreviewMap[iSkirmishMap].mapdata[c], 0);
+                if (PreviewMap[iSkirmishMap].iStartCell[s] > -1) {
+                    iMax=s;
+                }
             }
-            mapEditor.smoothMap();
-        }
 
-		int iShuffles=3;
+            // REGENERATE MAP DATA FROM INFO
+            if (iSkirmishMap > -1)
+            {
+                for (int c=0; c < MAX_CELLS; c++) {
+                    mapEditor.createCell(c, PreviewMap[iSkirmishMap].mapdata[c], 0);
+                }
+                mapEditor.smoothMap();
+            }
 
-		while (iShuffles > 0)
-		{
-			int one = rnd(iMax);
-			int two = rnd(iMax);
+            int iShuffles=3;
 
-			if (one == two)
-			{
-				if (rnd(100) < 25)
-					iShuffles--;
+            while (iShuffles > 0)
+            {
+                int one = rnd(iMax);
+                int two = rnd(iMax);
 
-				continue;
-			}
+                if (one == two)
+                {
+                    if (rnd(100) < 25)
+                        iShuffles--;
 
-			int back = iStartPositions[one];
-			iStartPositions[one] = iStartPositions[two];
-			iStartPositions[two] = back; // backup
+                    continue;
+                }
 
-			iShuffles--;
-		}
+                int back = iStartPositions[one];
+                iStartPositions[one] = iStartPositions[two];
+                iStartPositions[two] = back; // backup
 
-		// set up players and their units
-		for (int p=0; p < AI_WORM; p++)	{
+                iShuffles--;
+            }
 
-			int iHouse = player[p].getHouse();
+            // set up players and their units
+            for (int p=0; p < AI_WORM; p++)	{
 
-			// house = 0 , random.
-			if (iHouse==0 && p < 4) { // (all players above 4 are non-playing AI 'sides'
-				bool bOk=false;
+                int iHouse = player[p].getHouse();
 
-				while (bOk == false) {
-					if (p > 0)
-						iHouse = rnd(4)+1;
-					else
-						iHouse = rnd(3)+1;
+                // house = 0 , random.
+                if (iHouse==0 && p < 4) { // (all players above 4 are non-playing AI 'sides'
+                    bool bOk=false;
 
-					bool bFound=false;
-					for (int pl=0; pl < AI_WORM; pl++) {
-						if (player[pl].getHouse() > 0 && player[pl].getHouse() == iHouse) {
-							bFound=true;
-						}
-					}
+                    while (bOk == false) {
+                        if (p > 0)
+                            iHouse = rnd(4)+1;
+                        else
+                            iHouse = rnd(3)+1;
 
-					if (!bFound) {
-						bOk=true;
-					}
+                        bool bFound=false;
+                        for (int pl=0; pl < AI_WORM; pl++) {
+                            if (player[pl].getHouse() > 0 && player[pl].getHouse() == iHouse) {
+                                bFound=true;
+                            }
+                        }
+
+                        if (!bFound) {
+                            bOk=true;
+                        }
 
 
-				}
-			}
+                    }
+                }
 
-			if (p == 5) {
-				iHouse = FREMEN;
-			}
+                if (p == 5) {
+                    iHouse = FREMEN;
+                }
 
-		    player[p].setHouse(iHouse);
+                player[p].setHouse(iHouse);
 
-			// not playing.. do nothing
-			if (aiplayer[p].bPlaying == false) {
-				continue;
-			}
+                // not playing.. do nothing
+                if (aiplayer[p].bPlaying == false) {
+                    continue;
+                }
 
-			// set credits
-			player[p].focus_cell = iStartPositions[p];
+                // set credits
+                player[p].focus_cell = iStartPositions[p];
 
-			// Set map position
-			if (p == 0) {
-				mapCamera->centerAndJumpViewPortToCell(player[p].focus_cell);
-			}
+                // Set map position
+                if (p == 0) {
+                    mapCamera->centerAndJumpViewPortToCell(player[p].focus_cell);
+                }
 
-			// create constyard
-			cAbstractStructure *s = cStructureFactory::getInstance()->createStructure(player[p].focus_cell, CONSTYARD, p);
+                // create constyard
+                cAbstractStructure *s = cStructureFactory::getInstance()->createStructure(player[p].focus_cell, CONSTYARD, p);
 
-			// when failure, create mcv instead
-			if (s == NULL) {
-				UNIT_CREATE(player[p].focus_cell, MCV, p, true);
-			}
+                // when failure, create mcv instead
+                if (s == NULL) {
+                    UNIT_CREATE(player[p].focus_cell, MCV, p, true);
+                }
 
-			// amount of units
-			int u=0;
+                // amount of units
+                int u=0;
 
-			// create units
-			while (u < aiplayer[p].iUnits)
-			{
-				int iX=iCellGiveX(player[p].focus_cell);
-				int iY=iCellGiveY(player[p].focus_cell);
-				int iType=rnd(12);
+                // create units
+                while (u < aiplayer[p].iUnits)
+                {
+                    int iX=iCellGiveX(player[p].focus_cell);
+                    int iY=iCellGiveY(player[p].focus_cell);
+                    int iType=rnd(12);
 
-				iX-=4;
-				iY-=4;
-				iX+=rnd(9);
-				iY+=rnd(9);
+                    iX-=4;
+                    iY-=4;
+                    iX+=rnd(9);
+                    iY+=rnd(9);
 
-				// convert house specific stuff
-				if (player[p].getHouse() == ATREIDES) {
-					if (iType == DEVASTATOR || iType == DEVIATOR) {
-						iType = SONICTANK;
-					}
+                    // convert house specific stuff
+                    if (player[p].getHouse() == ATREIDES) {
+                        if (iType == DEVASTATOR || iType == DEVIATOR) {
+                            iType = SONICTANK;
+                        }
 
-					if (iType == TROOPERS) {
-						iType = INFANTRY;
-					}
+                        if (iType == TROOPERS) {
+                            iType = INFANTRY;
+                        }
 
-					if (iType == TROOPER) {
-						iType = SOLDIER;
-					}
+                        if (iType == TROOPER) {
+                            iType = SOLDIER;
+                        }
 
-					if (iType == RAIDER) {
-						iType = TRIKE;
-					}
-				}
+                        if (iType == RAIDER) {
+                            iType = TRIKE;
+                        }
+                    }
 
-				// ordos
-				if (player[p].getHouse() == ORDOS)
-				{
-					if (iType == DEVASTATOR || iType == SONICTANK) {
-						iType = DEVIATOR;
-					}
+                    // ordos
+                    if (player[p].getHouse() == ORDOS)
+                    {
+                        if (iType == DEVASTATOR || iType == SONICTANK) {
+                            iType = DEVIATOR;
+                        }
 
-					if (iType == TRIKE) {
-						iType = RAIDER;
-					}
-				}
+                        if (iType == TRIKE) {
+                            iType = RAIDER;
+                        }
+                    }
 
-				// harkonnen
-				if (player[p].getHouse() == HARKONNEN)
-				{
-					if (iType == DEVIATOR || iType == SONICTANK) {
-						iType = DEVASTATOR;
-					}
+                    // harkonnen
+                    if (player[p].getHouse() == HARKONNEN)
+                    {
+                        if (iType == DEVIATOR || iType == SONICTANK) {
+                            iType = DEVASTATOR;
+                        }
 
-					if (iType == TRIKE || iType == RAIDER) {
-						iType = QUAD;
-					}
+                        if (iType == TRIKE || iType == RAIDER) {
+                            iType = QUAD;
+                        }
 
-					if (iType == SOLDIER) {
-						iType = TROOPER;
-					}
+                        if (iType == SOLDIER) {
+                            iType = TROOPER;
+                        }
 
-					if (iType == INFANTRY) {
-						iType = TROOPERS;
-					}
-				}
+                        if (iType == INFANTRY) {
+                            iType = TROOPERS;
+                        }
+                    }
 
-				int cell = cellCalculator->getCellWithMapBorders(iX, iY);
-				int r = UNIT_CREATE(cell, iType, p, true);
-				if (r > -1)
-				{
-					u++;
-				}
-			}
-			char msg[255];
-			sprintf(msg,"Wants %d amount of units; amount created %d", aiplayer[p].iUnits, u);
-			cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, iHouse);
-		}
+                    int cell = cellCalculator->getCellWithMapBorders(iX, iY);
+                    int r = UNIT_CREATE(cell, iType, p, true);
+                    if (r > -1)
+                    {
+                        u++;
+                    }
+                }
+                char msg[255];
+                sprintf(msg,"Wants %d amount of units; amount created %d", aiplayer[p].iUnits, u);
+                cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, iHouse);
+            }
 
-		// TODO: spawn a few worms
-		iHouse=player[HUMAN].getHouse();
-		iMission=9; // high tech level (TODO: make this customizable)
-		state = GAME_PLAYING;
-		drawManager->getMessageDrawer()->initCombatPosition();
+            // TODO: spawn a few worms
+            iHouse=player[HUMAN].getHouse();
+            iMission=9; // high tech level (TODO: make this customizable)
+            state = GAME_PLAYING;
+            drawManager->getMessageDrawer()->initCombatPosition();
 
-		game.setup_players();
-		assert(player[HUMAN].getItemBuilder() != NULL);
+            game.setup_players();
+            assert(player[HUMAN].getItemBuilder() != NULL);
 
-		bFadeOut=true;
-        playMusicByType(MUSIC_PEACE);
-	}
+            bFadeOut=true;
+            playMusicByType(MUSIC_PEACE);
 
-	// delete cell calculator
-	delete cellCalculator;
-
+            // delete cell calculator
+            delete cellCalculator;
+        } // mouse clicks on START (and skirmish map is selected)
+    } // mouse hovers over "START"
 
    	// MOUSE
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
