@@ -140,16 +140,16 @@ void cLogger::logHeader(const char *txt) {
 	delete str;
 }
 
-void cLogger::log(eLogLevel level, eLogComponent component, const char *event, const char *message) {
+void cLogger::log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message) {
 	log(level, component, event, message, OUTC_IGNOREME, -1, -1);
 }
 
-void cLogger::log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome) {
+void cLogger::log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome) {
 	log(level, component, event, message, outcome, -1, -1);
 }
 
 //	Timestamp | Level | Component | House (if component requires) | ID (if component requires) | Message | Outcome | Event | Event fields...
-void cLogger::log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome, int playerId, int houseId) {
+void cLogger::log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome, int playerId, int houseId) {
 	updateTime();
 
 	int diffTime = getTimeInMilisDifference();
@@ -178,7 +178,7 @@ void cLogger::log(eLogLevel level, eLogComponent component, const char *event, c
 	}
 
 	logline += "|";
-	logline += std::string(message);
+	logline += message;
 
 	if (outcome != OUTC_IGNOREME) {
 		std::string sOutcome = getLogOutcomeString(outcome);
@@ -187,7 +187,7 @@ void cLogger::log(eLogLevel level, eLogComponent component, const char *event, c
 	}
 
 	logline += "|";
-	logline += std::string(event);
+	logline += event;
 
 	// TODO: here could come other fields later
 

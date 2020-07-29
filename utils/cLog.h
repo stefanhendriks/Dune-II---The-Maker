@@ -4,9 +4,9 @@
 class cLogger {
 
 public:
-	void log(eLogLevel level, eLogComponent component, const char *event, const char *message);
-	void log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome, int playerId, int houseId);
-	void log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome);
+	void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message);
+	void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome, int playerId, int houseId);
+	void log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome);
 
 	void logCommentLine(const char *txt);
 
