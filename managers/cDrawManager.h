@@ -7,7 +7,7 @@
 class cDrawManager {
 
 	public:
-		cDrawManager(cPlayer * thePlayer);
+		cDrawManager(const cPlayer & thePlayer);
 		~cDrawManager();
 
 		void draw();
@@ -50,7 +50,7 @@ class cDrawManager {
 
 		// TODO: bullet/projectile drawer
 
-		cPlayer * player;
+		const cPlayer& m_Player;
 };
 
 #endif

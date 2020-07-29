@@ -7,12 +7,11 @@
 
 #include "../include/d2tmh.h"
 
-cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera * theMapCamera) {
+cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, const cPlayer& thePlayer, cMapCamera * theMapCamera) : m_Player(thePlayer) {
 	assert(theMap);
-	assert(thePlayer);
+	assert(&thePlayer);
 	assert(theMapCamera);
 	map = theMap;
-	player = thePlayer;
 	mapCamera = theMapCamera;
 	iStaticFrame = STAT14;
 	iStatus = -1;
@@ -20,7 +19,6 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera * th
 }
 
 cMiniMapDrawer::~cMiniMapDrawer() {
-	player = NULL;
 	map = NULL;
 	mapCamera = NULL;
 	iStaticFrame = STAT14;
@@ -60,7 +58,7 @@ void cMiniMapDrawer::drawTerrain() {
 			iColor = makecol(0, 0, 0);
 			int iCll = iCellMake(x, y);
 
-			if (map->isVisible(iCll, player->getId())) {
+			if (map->isVisible(iCll, m_Player.getId())) {
 				iColor = getRGBColorForTerrainType(map->cell[iCll].type);
 			}
 
@@ -100,7 +98,7 @@ void cMiniMapDrawer::drawUnitsAndStructures() {
 			int iCll = iCellMake(x, y);
 			bool drawADot = false;
 
-			if (map->isVisible(iCll, player->getId())) {
+			if (map->isVisible(iCll, m_Player.getId())) {
 				if (map->cell[iCll].id[MAPID_STRUCTURES] > -1) {
 					int	iPlr = structure[map->cell[iCll].id[MAPID_STRUCTURES]]->getOwner();
 					iColor = player[iPlr].getMinimapColor();
@@ -194,13 +192,9 @@ void cMiniMapDrawer::interact() {
 }
 
 void cMiniMapDrawer::draw() {
-	assert(player);
 	assert(map);
 
-	cPlayerUtils playerUtils;
-
-	bool hasRadarAndEnoughPower = (playerUtils.getAmountOfStructuresForStructureTypeForPlayer(player, RADAR) > 0) && player->bEnoughPower();
-
+	bool hasRadarAndEnoughPower = (m_Player.getAmountOfStructuresForType(RADAR) > 0) && m_Player.bEnoughPower();
 
 	if (hasRadarAndEnoughPower) {
 		drawTerrain();

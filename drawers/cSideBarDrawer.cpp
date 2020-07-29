@@ -49,9 +49,9 @@ void cSideBarDrawer::drawCandybar() {
 	draw_sprite(bmp_screen, candybar, drawX, drawY);
 }
 
-void cSideBarDrawer::drawHouseGui(cPlayer * thePlayer) {
-	assert(thePlayer);
-	set_palette(thePlayer->pal);
+void cSideBarDrawer::drawHouseGui(const cPlayer & thePlayer) {
+	assert(&thePlayer);
+	set_palette(thePlayer.pal);
 
 	// black out
 	rectfill(bmp_screen, (game.screen_x-160), 0, game.screen_x, game.screen_y, makecol(0,0,0));
@@ -96,8 +96,7 @@ void cSideBarDrawer::drawBuildingLists() {
 }
 
 // draws the sidebar on screen
-void cSideBarDrawer::drawSideBar(cPlayer * player) {
-
+void cSideBarDrawer::drawSideBar(const cPlayer & player) {
 	drawHouseGui(player);
 	drawBuildingLists();
 //	drawCapacities();

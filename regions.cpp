@@ -67,9 +67,9 @@ void REGION_DRAW(int i)
         // highly not efficient.... but will do for now
         if (world[i].iHouse > -1)
         {
-            cPlayer temp;                       // temp player
-            temp.init();                        // init
-            temp.setHouse(world[i].iHouse);    // create pal
+            cPlayer temp;                       // temp m_Player
+            temp.init(0);                    // init
+            temp.setHouse(world[i].iHouse);     // create pal
             select_palette(temp.pal);           // retrieve pal
 
 
@@ -105,7 +105,7 @@ void REGION_DRAW(int i)
         if (world[i].bSelectable && game.iRegionState > 2)
 		{
 			cPlayer temp;
-	        temp.init();                        // init
+	        temp.init(0);                        // init
 			temp.setHouse(game.iHouse);
 			select_palette(temp.pal);           // retrieve pal
 

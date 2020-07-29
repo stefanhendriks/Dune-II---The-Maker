@@ -16,13 +16,14 @@ cUpgradeUtils::~cUpgradeUtils() {
 }
 
 
-bool cUpgradeUtils::canUpgradeList(cPlayer * thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
+bool cUpgradeUtils::canUpgradeList(const cPlayer & thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
+    cLogger::getInstance()->log(LOG_TRACE, COMP_UPGRADE_LIST, "canUpgradeList", thePlayer.asString());
 	int costToUpgrade = getPriceToUpgradeList(thePlayer, listTypeId, techLevel, currentUpgradeLevelOfList);
 	return costToUpgrade > -1;
 }
 
-int cUpgradeUtils::getPriceToUpgradeList(cPlayer * thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
-	assert(thePlayer);
+int cUpgradeUtils::getPriceToUpgradeList(const cPlayer & thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
+	assert(&thePlayer);
 
 	cListUpgrade * upgrade = getListUpgradeForList(thePlayer, listTypeId, techLevel, currentUpgradeLevelOfList);
 
@@ -35,9 +36,9 @@ int cUpgradeUtils::getPriceToUpgradeList(cPlayer * thePlayer, int listTypeId, in
 	return -1;
 }
 
-cListUpgrade * cUpgradeUtils::getListUpgradeForList(cPlayer * thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
-	assert(thePlayer);
-	cBuildingList *list = thePlayer->getSideBar()->getList(listTypeId);
+cListUpgrade * cUpgradeUtils::getListUpgradeForList(const cPlayer & thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
+	assert(&thePlayer);
+	cBuildingList *list = thePlayer.getSideBar()->getList(listTypeId);
 
 	if (listTypeId == LIST_CONSTYARD) {
 		// upgrade for 4SLAB
@@ -45,13 +46,13 @@ cListUpgrade * cUpgradeUtils::getListUpgradeForList(cPlayer * thePlayer, int lis
 			return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(SLAB4, structures[SLAB4], list));
 		}
 		// upgrade for RTURRET
-		if (techLevel >= 6 && thePlayer->iStructures[RADAR] > 0 && currentUpgradeLevelOfList < 2) {
+		if (techLevel >= 6 && thePlayer.iStructures[RADAR] > 0 && currentUpgradeLevelOfList < 2) {
 			return new cListUpgrade(100, 200, UPGRADE_TWO, new cBuildingListItem(RTURRET, structures[RTURRET], list));
 		}
 	}
 
 	if (listTypeId == LIST_LIGHTFC) {
-		if (thePlayer->getHouse() != HARKONNEN) {
+		if (thePlayer.getHouse() != HARKONNEN) {
 			// upgrade for Quads
 			if (techLevel >= 3 && currentUpgradeLevelOfList < 1) {
 				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(QUAD, units[QUAD], list));
@@ -60,7 +61,7 @@ cListUpgrade * cUpgradeUtils::getListUpgradeForList(cPlayer * thePlayer, int lis
 	}
 
 	if (listTypeId == LIST_HEAVYFC) {
-		if (thePlayer->getHouse() == HARKONNEN || thePlayer->getHouse() == ATREIDES) {
+		if (thePlayer.getHouse() == HARKONNEN || thePlayer.getHouse() == ATREIDES) {
 			// upgrade to MCV
 			if (techLevel >= 4 && currentUpgradeLevelOfList < 1) {
 				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(MCV, units[MCV], list));
@@ -73,7 +74,7 @@ cListUpgrade * cUpgradeUtils::getListUpgradeForList(cPlayer * thePlayer, int lis
 			if (techLevel >= 6 && currentUpgradeLevelOfList < 3) {
 				return new cListUpgrade(100, 200, UPGRADE_THREE, new cBuildingListItem(SIEGETANK, units[SIEGETANK], list));
 			}
-		} else if (thePlayer->getHouse() == ORDOS) {
+		} else if (thePlayer.getHouse() == ORDOS) {
 			// upgrade to MCV
 			if (techLevel >= 4 && currentUpgradeLevelOfList < 1) {
 				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(MCV, units[MCV], list));
@@ -86,7 +87,7 @@ cListUpgrade * cUpgradeUtils::getListUpgradeForList(cPlayer * thePlayer, int lis
 	}
 
 	if (listTypeId == LIST_ORNI) {
-		if (thePlayer->getHouse() != HARKONNEN) {
+		if (thePlayer.getHouse() != HARKONNEN) {
 			// upgrade for Ornithopter
 			if (techLevel >= 7 && currentUpgradeLevelOfList < 1) {
 				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(ORNITHOPTER, units[ORNITHOPTER], list));
@@ -95,23 +96,23 @@ cListUpgrade * cUpgradeUtils::getListUpgradeForList(cPlayer * thePlayer, int lis
 	}
 
 	if (listTypeId == LIST_INFANTRY) {
-		if (thePlayer->getHouse() == HARKONNEN) {
+		if (thePlayer.getHouse() == HARKONNEN) {
 			// upgrade for troopers
 			if (techLevel >= 3 && currentUpgradeLevelOfList < 1) {
 				return new cListUpgrade(125, 300, UPGRADE_ONE, new cBuildingListItem(TROOPERS, units[TROOPERS], list));
 			}
-		} else if (thePlayer->getHouse() == ATREIDES) {
+		} else if (thePlayer.getHouse() == ATREIDES) {
 			// upgrade for infantry
 			if (techLevel >= 3 && currentUpgradeLevelOfList < 1) {
 				return new cListUpgrade(75, 300, UPGRADE_ONE, new cBuildingListItem(INFANTRY, units[INFANTRY], list));
 			}
-		} else if (thePlayer->getHouse() == ORDOS) {
+		} else if (thePlayer.getHouse() == ORDOS) {
 			// upgrade for infantry
 			if (techLevel >= 3) {
 				bool hasTroopers = list->hasItemType(TROOPERS);
 				bool hasInfantry = list->hasItemType(INFANTRY);
-				bool hasWor = thePlayer->iStructures[WOR] > 0;
-				bool hasBarracks = thePlayer->iStructures[BARRACKS] > 0;
+				bool hasWor = thePlayer.iStructures[WOR] > 0;
+				bool hasBarracks = thePlayer.iStructures[BARRACKS] > 0;
 
 				if (currentUpgradeLevelOfList < 2) {
 					if (!hasInfantry && hasBarracks) {
@@ -129,12 +130,12 @@ cListUpgrade * cUpgradeUtils::getListUpgradeForList(cPlayer * thePlayer, int lis
 	return NULL;
 }
 
-bool cUpgradeUtils::isUpgradeApplicableForPlayerAndList(cPlayer *thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
-	assert(thePlayer);
+bool cUpgradeUtils::isUpgradeApplicableForPlayerAndList(const cPlayer & thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
+	assert(&thePlayer);
 	assert(listTypeId >= LIST_CONSTYARD);
 	assert(techLevel >= 0);
 	assert(currentUpgradeLevelOfList >= 0);
-	cBuildingList *list = thePlayer->getSideBar()->getList(listTypeId);
+	cBuildingList *list = thePlayer.getSideBar()->getList(listTypeId);
 	assert(list);
 
 	bool isUpgrading = list->isUpgrading();
@@ -155,9 +156,9 @@ bool cUpgradeUtils::isUpgradeApplicableForPlayerAndList(cPlayer *thePlayer, int 
 	return canPlayerPayForUpgradeForList(thePlayer, listTypeId, techLevel, currentUpgradeLevelOfList);
 }
 
-bool cUpgradeUtils::canPlayerPayForUpgradeForList(cPlayer *thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
-	assert(thePlayer);
-	int credits = (int)thePlayer->credits;
+bool cUpgradeUtils::canPlayerPayForUpgradeForList(const cPlayer & thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
+	assert(&thePlayer);
+	int credits = (int)thePlayer.credits;
 	int price = getPriceToUpgradeList(thePlayer, listTypeId, techLevel, currentUpgradeLevelOfList);
 
 	// it is not available, so we cant pay

@@ -19,7 +19,7 @@ class cPlayer;
 class cItemBuilder {
 
 	public:
-		cItemBuilder(cPlayer * thePlayer);
+		cItemBuilder(cPlayer & thePlayer);
 		virtual ~cItemBuilder();
 
 		// think about the progress being made (time based thinker)
@@ -40,11 +40,9 @@ class cItemBuilder {
 
 		int getFreeSlot();
 
-		void setPlayer(cPlayer * thePlayer) { player = thePlayer; }
-
 	private:
 		cBuildingListItem *items[MAX_ITEMS];
-		cPlayer * player; // the player context for this builder
+		cPlayer& m_Player; // the m_Player context for this builder
 
 		int timers[MAX_ITEMS];
 

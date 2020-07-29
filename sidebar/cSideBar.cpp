@@ -7,11 +7,10 @@
 
 #include "../include/d2tmh.h"
 
-cSideBar::cSideBar(cPlayer * thePlayer) {
-	assert(thePlayer);
+cSideBar::cSideBar(cPlayer & thePlayer) : m_Player(thePlayer) {
+	assert(&thePlayer);
 	selectedListID = -1; // nothing is selected
 	memset(lists, 0, sizeof(lists));
-	player = thePlayer;
 }
 
 cSideBar::~cSideBar() {
@@ -45,35 +44,35 @@ void cSideBar::thinkUpgradeButton() {
 	bool isOverUpgradeButton = upgradeUtils.isMouseOverUpgradeButton(mouse_x, mouse_y);
 
 	if (isOverUpgradeButton) {
-		int selectedListId = player->getSideBar()->getSelectedListID();
+		int selectedListId = getSelectedListID();
 
 		if (selectedListId > -1) {
-			cBuildingList * list = player->getSideBar()->getList(selectedListId);
+			cBuildingList * list = getList(selectedListId);
 			assert(list);
 			if (list->isBuildingItem() == false) {
 				int upgradeLevel = list->getUpgradeLevel();
-				int techLevel = player->getTechLevel();
+				int techLevel = m_Player.getTechLevel();
 
-				cListUpgrade * upgrade = upgradeUtils.getListUpgradeForList(player, selectedListId, techLevel, upgradeLevel);
+				cListUpgrade * upgrade = upgradeUtils.getListUpgradeForList(m_Player, selectedListId, techLevel, upgradeLevel);
 				bool isUpgradeApplicable = upgrade != NULL;
 
 				if (upgrade != NULL) {
-					bool isUpgrading = player->getUpgradeBuilder()->isUpgrading(selectedListId);
+					bool isUpgrading = m_Player.getUpgradeBuilder()->isUpgrading(selectedListId);
 					char msg[255];
 					if (!isUpgrading) {
 						sprintf(msg, "$%d | Upgrade", upgrade->getTotalPrice());
 					} else {
-						cListUpgrade * upgradeInProgress = player->getUpgradeBuilder()->getListUpgrade(selectedListId);
-						assert(upgradeInProgress);
-						sprintf(msg, "Upgrade completed at %d percent",upgradeInProgress->getProgressAsPercentage());
+						cListUpgrade & upgradeInProgress = m_Player.getUpgradeBuilder()->getListUpgrade(selectedListId);
+						assert(&upgradeInProgress);
+						sprintf(msg, "Upgrade completed at %d percent",upgradeInProgress.getProgressAsPercentage());
 					}
 					drawManager->getMessageDrawer()->setMessage(msg);
 				}
 
 				if (isUpgradeApplicable && MOUSE_BTN_LEFT()) {
 					assert(upgrade != NULL);
-					assert(player->getUpgradeBuilder());
-					player->getUpgradeBuilder()->addUpgrade(selectedListId, upgrade);
+					assert(m_Player.getUpgradeBuilder());
+                    m_Player.getUpgradeBuilder()->addUpgrade(selectedListId, upgrade);
 				}
 			}
 		}
@@ -84,50 +83,48 @@ void cSideBar::thinkUpgradeButton() {
  * Think about the availability of lists.
  */
 void cSideBar::thinkAvailabilityLists() {
-
 	// CONSTYARD LIST
 	cBuildingList * constyardList = getList(LIST_CONSTYARD);
 	assert(constyardList);
-	assert(player);
 
-	constyardList->setAvailable(player->iStructures[CONSTYARD] > 0);
+	constyardList->setAvailable(m_Player.iStructures[CONSTYARD] > 0);
 
 	// INFANTRY LIST
 	cBuildingList * infantryList = getList(LIST_INFANTRY);
 
-	if (player->getHouse() == ATREIDES) {
-		infantryList->setAvailable(player->iStructures[BARRACKS] > 0);
-	} else if (player->getHouse() == HARKONNEN) {
-		infantryList->setAvailable(player->iStructures[WOR] > 0);
-	} else if (player->getHouse() == ORDOS) {
-		infantryList->setAvailable(player->iStructures[BARRACKS] > 0 || player->iStructures[WOR] > 0);
-	} else if (player->getHouse() == SARDAUKAR) {
-		infantryList->setAvailable(player->iStructures[WOR] > 0);
+	if (m_Player.getHouse() == ATREIDES) {
+		infantryList->setAvailable(m_Player.iStructures[BARRACKS] > 0);
+	} else if (m_Player.getHouse() == HARKONNEN) {
+		infantryList->setAvailable(m_Player.iStructures[WOR] > 0);
+	} else if (m_Player.getHouse() == ORDOS) {
+		infantryList->setAvailable(m_Player.iStructures[BARRACKS] > 0 || m_Player.iStructures[WOR] > 0);
+	} else if (m_Player.getHouse() == SARDAUKAR) {
+		infantryList->setAvailable(m_Player.iStructures[WOR] > 0);
 	}
 
 	// LIGHTFC LIST
 	cBuildingList * lightfcList = getList(LIST_LIGHTFC);
-	lightfcList->setAvailable(player->iStructures[LIGHTFACTORY] > 0);
+	lightfcList->setAvailable(m_Player.iStructures[LIGHTFACTORY] > 0);
 
 	// HEAVYFC LIST
 	cBuildingList * heavyfcList = getList(LIST_HEAVYFC);
-	heavyfcList->setAvailable(player->iStructures[HEAVYFACTORY] > 0);
+	heavyfcList->setAvailable(m_Player.iStructures[HEAVYFACTORY] > 0);
 
 	// HIGHTECH (ORNI) LIST
 	cBuildingList * orniList = getList(LIST_ORNI);
-	orniList->setAvailable(player->iStructures[HIGHTECH] > 0);
+	orniList->setAvailable(m_Player.iStructures[HIGHTECH] > 0);
 
 	// PALACE LIST
 	cBuildingList * palaceList = getList(LIST_PALACE);
-	palaceList->setAvailable(player->iStructures[PALACE] > 0);
+	palaceList->setAvailable(m_Player.iStructures[PALACE] > 0);
 
 	// STARPORT LIST
 	cBuildingList * starportList = getList(LIST_STARPORT);
-	starportList->setAvailable(player->iStructures[STARPORT] > 0);
+	starportList->setAvailable(m_Player.iStructures[STARPORT] > 0);
 
 	// when available, check if we accept orders
 	if (starportList->isAvailable()) {
-		cOrderProcesser * orderProcesser = player->getOrderProcesser();
+		cOrderProcesser * orderProcesser = m_Player.getOrderProcesser();
 		bool acceptsOrders = orderProcesser->acceptsOrders();
 		starportList->setAcceptsOrders(acceptsOrders);
 	}
@@ -190,7 +187,7 @@ void cSideBar::thinkInteraction() {
 		cBuildingListDrawer drawer;
 		cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
 
-		cOrderProcesser * orderProcesser = player->getOrderProcesser();
+		cOrderProcesser * orderProcesser = m_Player.getOrderProcesser();
 
 		// mouse is over item
 		if (item != NULL) {
@@ -222,7 +219,7 @@ void cSideBar::thinkInteraction() {
 				if (list->getType() != LIST_STARPORT) {
 					if (item != NULL) {
 						if (item->shouldPlaceIt() == false) {
-							cItemBuilder *itemBuilder = player->getItemBuilder();
+							cItemBuilder *itemBuilder = m_Player.getItemBuilder();
 							assert(itemBuilder);
 							itemBuilder->addItemToList(item);
 							list->setLastClickedId(item->getSlotId());
@@ -244,10 +241,10 @@ void cSideBar::thinkInteraction() {
 					}
 
 					if (item != NULL && orderProcesser->acceptsOrders()) {
-						if (player->credits >= item->getBuildCost()) {
+						if (m_Player.credits >= item->getBuildCost()) {
 							item->increaseTimesOrdered();
 							orderProcesser->addOrder(item);
-							player->credits -= item->getBuildCost();
+                            m_Player.substractCredits(item->getBuildCost());
 						}
 					}
 				}
@@ -272,7 +269,7 @@ void cSideBar::thinkInteraction() {
 								}
 								item->setIsBuilding(false);
 								item->setProgress(0);
-								cItemBuilder *itemBuilder = player->getItemBuilder();
+								cItemBuilder *itemBuilder = m_Player.getItemBuilder();
 								assert(itemBuilder);
 								itemBuilder->removeItemFromList(item);
 							}

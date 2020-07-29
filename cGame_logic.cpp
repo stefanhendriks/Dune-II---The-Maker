@@ -100,7 +100,7 @@ void cGame::init() {
 	map.init();
 
 	for (int i=0; i < MAX_PLAYERS; i++) {
-		player[i].init();
+		player[i].init(i);
         aiplayer[i].init(i);
     }
 
@@ -165,7 +165,7 @@ void cGame::mission_init() {
     {
         int h = player[i].getHouse();
 
-        player[i].init();
+        player[i].init(i);
         player[i].setHouse(h);
 
         aiplayer[i].init(i);
@@ -2916,7 +2916,7 @@ bool cGame::setupGame() {
 	INSTALL_WORLD();
 
 	mapCamera = new cMapCamera();
-	drawManager = new cDrawManager(&player[HUMAN]);
+	drawManager = new cDrawManager(player[HUMAN]);
 
 	mapUtils = new cMapUtils(&map);
 
@@ -2941,12 +2941,11 @@ void cGame::setup_players() {
 	// make sure each player has an own item builder
 	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
 		cPlayer * thePlayer = &player[i];
-		thePlayer->setId(i);
 
-		cItemBuilder * itemBuilder = new cItemBuilder(thePlayer);
+		cItemBuilder * itemBuilder = new cItemBuilder(*thePlayer);
 		thePlayer->setItemBuilder(itemBuilder);
 
-		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(&player[i], game.iMission, iHouse);
+		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(player[i], game.iMission, iHouse);
 		thePlayer->setSideBar(sidebar);
 
 		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(thePlayer);

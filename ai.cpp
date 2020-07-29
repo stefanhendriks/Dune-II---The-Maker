@@ -41,7 +41,7 @@ void cAIPlayer::init(int iID)
     TIMER_attack=-(900 + rnd(200));
    //  TIMER_attack=-50;
 
-    TIMER_BuildUnits=-500; // give player advantage to build his stuff first, before computer grows his army
+    TIMER_BuildUnits=-500; // give m_Player advantage to build his stuff first, before computer grows his army
     TIMER_harv=200;
     TIMER_repair=500;
 }
@@ -157,7 +157,7 @@ void cAIPlayer::think_building()
 {
 
 	if (ID == 0)
-		return; // human player does not think
+		return; // human m_Player does not think
 
     /*
 		structure building;
@@ -475,7 +475,7 @@ void cAIPlayer::think()
     if (ID == 0)
         return; // we do not think further
 
-    // depening on player, do thinking
+    // depening on m_Player, do thinking
     if (ID == AI_WORM) {
         if (rnd(100) < 25)
             think_worm();
@@ -545,7 +545,7 @@ void cAIPlayer::think_attack()
  TIMER_attack = -(rnd(600)+100);
 // TIMER_attack=-50;
 
- // find anyone with a specific random group number and send it to attack the player (focus cell)
+ // find anyone with a specific random group number and send it to attack the m_Player (focus cell)
  int iAmount=3 + rnd(8);
  int iTarget=-1;
  bool bUnit=false;
@@ -584,7 +584,7 @@ void cAIPlayer::think_attack()
 		if (DEBUGGING)
 		{
 			char msg[255];
-			sprintf(msg, "Attacking player id %d", iAttackPlayer);
+			sprintf(msg, "Attacking m_Player id %d", iAttackPlayer);
 			logbook(msg);
 		}
  }
@@ -728,7 +728,7 @@ void cAIPlayer::think_attack()
 
 void cAIPlayer::think_buildarmy()
 {
-    // prevent human player thinking
+    // prevent human m_Player thinking
     if (ID == 0)
         return; // do not build for human! :)
 
@@ -742,7 +742,7 @@ void cAIPlayer::think_buildarmy()
     /*
 	if (game.bSkirmish)
 	{
-		if (player[ID].credits < 300)
+		if (m_Player[ID].credits < 300)
 			return;
 	}*/
 
@@ -1389,7 +1389,7 @@ int cAIPlayer::iPlaceStructureCell(int iType)
 						}
 					}
 				} // sx
-			} // same player
+			} // same m_Player
 		} // valid structure
 	}
 

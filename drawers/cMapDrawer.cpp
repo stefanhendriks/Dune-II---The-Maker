@@ -8,19 +8,16 @@
 #include "../include/d2tmh.h"
 
 
-cMapDrawer::cMapDrawer(cMap * theMap, cPlayer * thePlayer, cMapCamera * theCamera) {
+cMapDrawer::cMapDrawer(cMap * theMap, const cPlayer& thePlayer, cMapCamera * theCamera) : player(thePlayer) {
 	assert(theMap);
-	assert(thePlayer);
 	assert(theCamera);
 	map = theMap;
-	player = thePlayer;
 	camera = theCamera;
 	cellCalculator = new cCellCalculator(map);
 }
 
 cMapDrawer::~cMapDrawer() {
 	map = NULL;
-	player = NULL;
 	camera = NULL;
 	delete cellCalculator;
 	cellCalculator = NULL;
@@ -37,7 +34,7 @@ void cMapDrawer::drawShroud() {
 	int cll=-1;
 	int tile=-1;
 
-	int iPl = player->getId();
+	int iPl = player.getId();
 
 	for (int iStartX = camera->getX(); iStartX < camera->getEndX(); iStartX++) {
 		iDrawY=42;
@@ -192,7 +189,7 @@ void cMapDrawer::drawTerrain() {
 
 	int iCell=-1;
 
-	int iPl = player->getId();
+	int iPl = player.getId();
 
 //	char msg[255];
 //	sprintf(msg, "Drawing from %d, %d to %d, %d", camera->getX(), camera->getY(), camera->getEndX(), camera->getEndY());
@@ -222,9 +219,9 @@ void cMapDrawer::drawTerrain() {
 
 			if (DEBUGGING)
 			{
-				if (player->getGameControlsContext()->getMouseCell() > -1)
+				if (player.getGameControlsContext()->getMouseCell() > -1)
 				{
-					int mc = player->getGameControlsContext()->getMouseCell();
+					int mc = player.getGameControlsContext()->getMouseCell();
 					if (cellCalculator->getX(mc) == iStartX && cellCalculator->getY(mc) == iStartY)
 						rectfill(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, makecol(64,64,64));
 

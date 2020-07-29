@@ -10,7 +10,7 @@
 
 class cMiniMapDrawer {
 	public:
-		cMiniMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera * theMapCamera);
+		cMiniMapDrawer(cMap *theMap, const cPlayer& thePlayer, cMapCamera * theMapCamera);
 		~cMiniMapDrawer();
 
 		void draw();
@@ -39,7 +39,7 @@ class cMiniMapDrawer {
 
 	private:
 		cMap *map;	// the minimap drawer reads data from here
-		cPlayer *player;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
+		const cPlayer& m_Player;	// the m_Player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
 		cMapCamera *mapCamera;
 
 		int iStaticFrame;

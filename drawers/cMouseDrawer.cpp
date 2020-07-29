@@ -7,19 +7,14 @@
 
 #include "../include/d2tmh.h"
 
-cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cMouse *theMouse) {
-	assert(thePlayer);
+cMouseDrawer::cMouseDrawer(const cPlayer& thePlayer, cMouse *theMouse) : m_Player(thePlayer) {
+	assert(&thePlayer);
 	assert(theMouse);
-	player = thePlayer;
 	mouse = theMouse;
 	mouseToolTip = new cMouseToolTip(player, mouse);
 }
 
-cMouseDrawer::cMouseDrawer(const cMouseDrawer& orig) {
-}
-
 cMouseDrawer::~cMouseDrawer() {
-	player = NULL;
 	mouse = NULL;
 	delete mouseToolTip;
 }
