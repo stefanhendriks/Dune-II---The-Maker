@@ -786,7 +786,7 @@ int INI_WordValueINT(char result[MAX_LINE_LENGTH])
   // nothing here, so we return NULL at the end
  }
 
- return NULL; // No value, return NULL
+ return 0; // No value, return 0
 }
 
 
