@@ -4,13 +4,13 @@
 class cLogger {
 
 public:
-	void log(eLogLevel level, eLogComponent component, char *event, char *message);
-	void log(eLogLevel level, eLogComponent component, char *event, char *message, eLogOutcome outcome, int playerId, int houseId);
-	void log(eLogLevel level, eLogComponent component, char *event, char *message, eLogOutcome outcome);
+	void log(eLogLevel level, eLogComponent component, const char *event, const char *message);
+	void log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome, int playerId, int houseId);
+	void log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome);
 
-	void logCommentLine(char *txt);
+	void logCommentLine(const char *txt);
 
-	void logHeader(char *txt);
+	void logHeader(const char *txt);
 
 	static cLogger *getInstance();
 

@@ -23,7 +23,7 @@ class cMessageDrawer {
 
 		void initCombatPosition();
 
-		void setMessage(char msg[255]); // set a new message
+		void setMessage(const char msg[255]); // set a new message
 		char * getMessage() { return &cMessage[0]; }
 
 	protected:

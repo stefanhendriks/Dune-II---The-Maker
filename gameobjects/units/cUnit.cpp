@@ -2094,7 +2094,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
     }
 
 }
-void cUnit::LOG(char *txt)
+void cUnit::LOG(const char *txt)
 {
 	// logs unit stuff, but gives unit information
 	char msg[512];

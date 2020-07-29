@@ -27,7 +27,7 @@ namespace
     const int BUFFER_SIZE = 32768;
 }
 // Keep a logbook
-void logbook(char *txt)
+void logbook(const char *txt)
 {
 	cLogger *logger = cLogger::getInstance();
 	logger->log(LOG_WARN, COMP_NONE, "Default log message (CHANGEME)", txt);
@@ -621,7 +621,7 @@ void install_bullets()
     for (int i=0; i < MAX_BULLET_TYPES; i++)
   {
     bullets[i].bmp = NULL; // in case an invalid bitmap; default is a small rocket
-    bullets[i].deadbmp = NULL; // in case an invalid bitmap; default is a small rocket
+    bullets[i].deadbmp = -1; // this points to a bitmap (in data file, using index)
     bullets[i].damage = 0;      // damage to vehicles
     bullets[i].damage_inf = 0;  // damage to infantry
     bullets[i].max_frames = 1;  // 1 frame animation

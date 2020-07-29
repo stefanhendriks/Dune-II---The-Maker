@@ -49,13 +49,13 @@ bool MOUSE_WITHIN_RECT(int x, int y, int width, int height)
     return ((mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y <= (y + height)));
 }
 
-void GUI_DRAW_BENE_TEXT(int x, int y, char *text)
+void GUI_DRAW_BENE_TEXT(int x, int y, const char *text)
 {
     alfont_textprintf(bmp_screen, bene_font, x+1, y+1, makecol(0, 0, 0), text);
     alfont_textprintf(bmp_screen, bene_font, x, y, makecol(255, 255, 255), text);
 }
 
-bool GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(int x, int y, char *text, int hoverColor)
+bool GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(int x, int y, const char *text, int hoverColor)
 {
     alfont_textprintf(bmp_screen, bene_font, x+1, y+1, makecol(0, 0, 0), text);
 
