@@ -1221,7 +1221,7 @@ void mp3_play_file(char filename[VOLUME_MAX]) {
 	int len;     // length of file(also the buffer)
 	FILE *f = NULL;  // file.mp3
 
-	len = (int)file_size(filename);
+	len = (int)file_size_ex(filename);
 
 	data = new char[len];
 	f = fopen(filename, "r");
