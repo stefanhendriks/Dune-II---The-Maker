@@ -13,21 +13,21 @@ class cTextDrawer {
 		cTextDrawer();
 		cTextDrawer(ALFONT_FONT *theFont);
 		~cTextDrawer();
-		void drawTextWithOneInteger(int x, int y, int color, char * msg, int var);
-		void drawTextWithOneInteger(int x, int y, char * msg, int var);
-		void drawTextWithTwoIntegers(int x, int y, char * msg, int var1, int var2);
-		void drawText(int x, int y, char * msg);
-		void drawText(int x, int y, int color, char *msg);
+		void drawTextWithOneInteger(int x, int y, int color, const char * msg, int var);
+		void drawTextWithOneInteger(int x, int y, const char * msg, int var);
+		void drawTextWithTwoIntegers(int x, int y, const char * msg, int var1, int var2);
+		void drawText(int x, int y, const char * msg);
+		void drawText(int x, int y, int color, const char *msg);
 
-		void drawTextCentered(char * msg, int y);
-		void drawTextCentered(char * msg, int y, int color);
-        void drawTextCentered(char * msg, int x, int width, int y, int color);
+		void drawTextCentered(const char * msg, int y);
+		void drawTextCentered(const char * msg, int y, int color);
+        void drawTextCentered(const char * msg, int x, int width, int y, int color);
 
-		void drawTextBottomRight(char * msg);
-		void drawTextBottomLeft(char * msg);
+		void drawTextBottomRight(const char * msg);
+		void drawTextBottomLeft(const char * msg);
 
-		void drawTextBottomRight(int color, char * msg);
-		void drawTextBottomLeft(int color, char * msg);
+		void drawTextBottomRight(int color, const char * msg);
+		void drawTextBottomLeft(int color, const char * msg);
 
 		void setApplyShadow(bool value) { applyShadow = value; }
 

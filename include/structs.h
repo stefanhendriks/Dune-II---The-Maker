@@ -110,7 +110,7 @@ struct s_House
 struct s_Bullet
 {
 
-  BITMAP *bmp;            // a reference to its bitmap. (16 bits here!)
+  BITMAP *bmp;        // a reference to its bitmap. (16 bits here!)
   int deadbmp;        // when the bullet dies, it will use this bmp to show its animation
   int bmp_width;      // how much pixels a bullet is (wide)
 

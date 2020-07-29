@@ -131,7 +131,7 @@ public:
     void think_attack();
     void think_guard();
 
-	void LOG(char *txt);
+	void LOG(const char *txt);
 
     void think_hit(int iShotUnit, int iShotStructure);
 

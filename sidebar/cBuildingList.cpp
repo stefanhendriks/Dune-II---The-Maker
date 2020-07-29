@@ -8,7 +8,7 @@ cBuildingList::cBuildingList(int theId) {
 	buttonDrawY = 0;
 	scrollingOffset = 0; 	// the offset for scrolling through the list.
 	available = false;		 // is this list available?
-	memset(items, NULL, sizeof(items));
+	memset(items, 0, sizeof(items));
 	typeOfList = theId;
 	upgradeLevel = 0;
 	upgrading = false;
@@ -25,7 +25,7 @@ cBuildingList::~cBuildingList() {
 	scrollingOffset = 0; 	// the offset for scrolling through the list.
 	available = false;		 // is this list available?
 	removeAllItems();
-	memset(items, NULL, sizeof(items));
+	memset(items, 0, sizeof(items));
 	upgradeLevel = 0;
 	upgrading = false;
 	maxItems = 0;

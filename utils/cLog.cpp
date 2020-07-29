@@ -125,7 +125,7 @@ void cLogger::updateTime() {
 	current_time = time (NULL);
 }
 
-void cLogger::logHeader(char *txt) {
+void cLogger::logHeader(const char *txt) {
 	int length = strlen(txt);
 	if (length > 79) length = 79;
 	std::string line(length, '-');
@@ -140,16 +140,16 @@ void cLogger::logHeader(char *txt) {
 	delete str;
 }
 
-void cLogger::log(eLogLevel level, eLogComponent component, char *event, char *message) {
+void cLogger::log(eLogLevel level, eLogComponent component, const char *event, const char *message) {
 	log(level, component, event, message, OUTC_IGNOREME, -1, -1);
 }
 
-void cLogger::log(eLogLevel level, eLogComponent component, char *event, char *message, eLogOutcome outcome) {
+void cLogger::log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome) {
 	log(level, component, event, message, outcome, -1, -1);
 }
 
 //	Timestamp | Level | Component | House (if component requires) | ID (if component requires) | Message | Outcome | Event | Event fields...
-void cLogger::log(eLogLevel level, eLogComponent component, char *event, char *message, eLogOutcome outcome, int playerId, int houseId) {
+void cLogger::log(eLogLevel level, eLogComponent component, const char *event, const char *message, eLogOutcome outcome, int playerId, int houseId) {
 	updateTime();
 
 	int diffTime = getTimeInMilisDifference();
@@ -210,7 +210,7 @@ std::string cLogger::getLongAsString(long value) {
 	return std::string(numberChar);
 }
 
-void cLogger::logCommentLine(char *txt) {
+void cLogger::logCommentLine(const char *txt) {
 	file = fopen("log.txt", "at");
 	if (file) {
 		fprintf(file, "\\\\%s\n", txt); // print the text into the file

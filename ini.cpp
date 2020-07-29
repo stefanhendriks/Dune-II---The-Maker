@@ -61,7 +61,7 @@ void INI_Section(char input[MAX_LINE_LENGTH], char section[30]) {
 	int pos=0;
 	int end_pos=-1;
 
-	memset(section, '\0', sizeof(section));
+	memset(section, '\0', strlen(section));
 
 	// check if the first character is a '['
 	if (input[0] == '[') {
@@ -91,7 +91,7 @@ void INI_Section(char input[MAX_LINE_LENGTH], char section[30]) {
 void INI_Word(char input[MAX_LINE_LENGTH], char word[25]) {
 	int word_pos = INI_GetPositionOfCharacter(input, '=');
 
-	memset(word, '\0', sizeof(word));
+	memset(word, '\0', strlen(word));
 
 	if (word_pos > -1 && word_pos < 23) {
 		for (int wc=0; wc < word_pos; wc++) {
@@ -796,7 +796,7 @@ void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256])
  int is_pos=-1;
 
  // clear out entire string
- memset(value, 0, sizeof(value));
+ memset(value, 0, strlen(value));
 
  for (int i=0; i < MAX_LINE_LENGTH;i++)
      value[i] = '\0';
@@ -876,7 +876,7 @@ void INI_WordValueCHAR(char result[MAX_LINE_LENGTH], char value[256]) {
 	int is_pos=-1;
 
 	// clear out entire string
-	memset(value, 0, sizeof(value));
+	memset(value, 0, strlen(value));
 	for (int i = 0; i < 256; i++) {
 		value[i] = '\0';
 	}
