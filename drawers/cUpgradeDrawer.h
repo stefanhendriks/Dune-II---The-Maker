@@ -13,16 +13,18 @@ class cUpgradeDrawer {
 		cUpgradeDrawer();
 		~cUpgradeDrawer();
 
-		void drawUpgradeButtonForSelectedListIfNeeded(cPlayer * thePlayer, cBuildingList * theSelectedList);
-		bool shouldDrawButtonForSelectedList(cPlayer * thePlayer, cBuildingList * theSelectedList);
+		void drawUpgradeButtonForSelectedListIfNeeded(const cPlayer & thePlayer);
+		bool shouldDrawButtonForSelectedList(const cPlayer & thePlayer, cBuildingList * theSelectedList);
 
-		void drawUpgradeButton(cPlayer * thePlayer, cBuildingList * theSelectedList);
-		void drawUpgradeProgress(cPlayer * thePlayer, cBuildingList * theSelectedList);
+		void drawUpgradeButton(const cPlayer & thePlayer, cBuildingList * theSelectedList);
+		void drawUpgradeProgress(const cPlayer & thePlayer, cBuildingList * theSelectedList);
 
 
 	protected:
 
 	private:
+        cUpgradeUtils upgradeUtils;
+
 };
 
 #endif /* CUPGRADEDRAWER_H_ */

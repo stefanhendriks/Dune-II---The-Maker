@@ -40,7 +40,7 @@ class cPlayer;
 class cSideBar {
 
 	public:
-		cSideBar(cPlayer *thePlayer);
+		cSideBar(cPlayer& thePlayer);
 		~cSideBar();
 
 		cBuildingList * getList(int listId) { return lists[listId]; }
@@ -52,14 +52,14 @@ class cSideBar {
 		void thinkUpgradeButton(); // fps based
 
 		// set
-		void setPlayer(cPlayer *thePlayer) { player = thePlayer; }
+		// no set Player, re-create Sidebar object instead if needed
 		void setSelectedListId(int value) { selectedListID = value; }
 
 	private:
 
 		// the lists:
 		cBuildingList * lists[LIST_MAX];
-		cPlayer * player;
+		cPlayer & m_Player;
 
 		int selectedListID;
 

@@ -88,7 +88,7 @@ void FIX_POS(int &x, int &y)
 void INSTALL_PLAYERS()
 {
 	for (int i=0; i < MAX_PLAYERS; i++)
-		player[i].init();
+		player[i].init(i);
 }
 
 
@@ -193,11 +193,18 @@ void INSTALL_HOUSES()
 }
 
 
+/**
+ * Returns true if left mouse button is pressed.
+ * @return
+ */
 bool MOUSE_BTN_LEFT() {
 	return cMouse::getInstance()->isLeftButtonPressed();
 }
 
-// Did we press the right mouse button? (instant)
+/**
+ * Returns true if right mouse button is pressed
+ * @return
+ */
 bool MOUSE_BTN_RIGHT() {
 	return cMouse::getInstance()->isRightButtonPressed();
 }

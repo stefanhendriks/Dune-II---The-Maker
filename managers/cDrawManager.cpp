@@ -1,8 +1,7 @@
 #include "../include/d2tmh.h"
 
-cDrawManager::cDrawManager(cPlayer * thePlayer) {
-	assert(thePlayer);
-	player = thePlayer;
+cDrawManager::cDrawManager(const cPlayer & thePlayer) : m_Player(thePlayer) {
+	assert(&thePlayer);
 	creditsDrawer = new CreditsDrawer(thePlayer);
 	sidebarDrawer = new cSideBarDrawer();
 	upgradeDrawer = new cUpgradeDrawer();
@@ -34,7 +33,6 @@ cDrawManager::~cDrawManager() {
 	delete placeitDrawer;
 	delete structureDrawer;
 	delete mouseDrawer;
-	player = NULL;
 }
 
 void cDrawManager::draw() {
@@ -126,28 +124,27 @@ int cDrawManager::getDrawYForCell(int cell) {
 
 void cDrawManager::drawOrderButton() {
 	// draw the order button
-	if (player->getSideBar()->getSelectedListID() == LIST_STARPORT) {
-		orderDrawer->drawOrderButton(player);
+	if (m_Player.getSideBar()->getSelectedListID() == LIST_STARPORT) {
+		orderDrawer->drawOrderButton(m_Player);
 	}
 }
 
 void cDrawManager::drawSidebar() {
-	sidebarDrawer->drawSideBar(player);
+	sidebarDrawer->drawSideBar(m_Player);
 }
 
 void cDrawManager::drawUpgradeButton() {
 	// draw the upgrade button
-	int selectedListId = player->getSideBar()->getSelectedListID();
+	int selectedListId = m_Player.getSideBar()->getSelectedListID();
 	if (selectedListId > -1) {
-		cBuildingList * selectedList = player->getSideBar()->getList(selectedListId);
-		upgradeDrawer->drawUpgradeButtonForSelectedListIfNeeded(player, selectedList);
+		upgradeDrawer->drawUpgradeButtonForSelectedListIfNeeded(m_Player);
 	}
 }
 
 void cDrawManager::drawStructurePlacing() {
 	if (game.bPlaceIt) {
 		// TODO: fix the placeItDrawer, it crashes the game now!
-		cBuildingListItem *itemToPlace = player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
+		cBuildingListItem *itemToPlace = m_Player.getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
 		if (itemToPlace) {
 			assert(placeitDrawer);
 			placeitDrawer->draw(itemToPlace);
@@ -166,7 +163,7 @@ void cDrawManager::drawMessage() {
 void cDrawManager::drawMouse() {
 	assert(mouseDrawer);
 	mouseDrawer->draw();
-	cGameControlsContext *context = player->getGameControlsContext();
+	cGameControlsContext *context = m_Player.getGameControlsContext();
 	if (context->shouldDrawToolTip()) {
 		mouseDrawer->drawToolTip();
 	}

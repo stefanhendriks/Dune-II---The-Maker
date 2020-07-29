@@ -20,7 +20,10 @@ class cUpgradeBuilder {
 
 		void addUpgrade(int listId, cListUpgrade * listUpgrade);
 
-		cListUpgrade * getListUpgrade(int listId) { return upgrades[listId]; }
+		cListUpgrade& getListUpgrade(int listId) const {
+		    cListUpgrade * upgrade = upgrades[listId];
+		    return *upgrade; // get back reference, not actual pointer!
+		}
 
 		void processUpgrades(); // timer based method that processes upgrades
 

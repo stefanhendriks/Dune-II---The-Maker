@@ -21,7 +21,7 @@ public:
 	int getIconId() { return icon; }
 	int getBuildId() { return ID; }
 	eBuildType getBuildType() { return type; }
-	int getBuildCost() { return cost; }
+	int getBuildCost() const { return cost; }
 	int getProgress() { return progress; }
 	bool isBuilding() { return building; }
 	bool isAvailable() { return available; }

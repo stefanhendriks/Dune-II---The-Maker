@@ -28,7 +28,7 @@ class cPlayer {
 
 		PALETTE pal;		// each player has its own 256 color scheme (used for coloring units)
 
-		void init();
+		void init(int id);
 
 		int iTeam;
 
@@ -43,10 +43,14 @@ class cPlayer {
 		int iPrimaryBuilding[MAX_STRUCTURETYPES];	// remember the primary ID (structure id) of each structure type
 		int iStructures[MAX_STRUCTURETYPES]; // remember what is built for each type of structure
 
-		bool bEnoughPower();
+		bool bEnoughPower() const;
 
 		int TIMER_think;        // timer for thinking itself (calling main routine)
 		int TIMER_attack;       // -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
+
+		void substractCredits(int amount) {
+            credits -= amount;
+        };
 
 		// set
 		void setItemBuilder(cItemBuilder *theItemBuilder);
@@ -54,7 +58,6 @@ class cPlayer {
 		void setBuildingListUpdater(cBuildingListUpdater *theBuildingListUpgrader);
 		void setTechLevel(int theTechLevel) { techLevel = theTechLevel; }
 		void setHouse(int iHouse);
-		void setId(int theId);
 		void setStructurePlacer(cStructurePlacer *theStructurePlacer);
 		void setUpgradeBuilder(cUpgradeBuilder *theUpgradeBuilder);
 		void setOrderProcesser(cOrderProcesser *theOrderProcesser);
@@ -62,27 +65,36 @@ class cPlayer {
 
 		// get
 		cBuildingListUpdater *getBuildingListUpdater() { return buildingListUpdater; }
-		cPlayerDifficultySettings *getDifficultySettings() { return difficultySettings; }
-		cItemBuilder *getItemBuilder() { return itemBuilder; }
-		cSideBar *getSideBar() { return sidebar; }
-		int getHouse() { return house; }
-		int getTechLevel() { return techLevel; }
-		int getId() { return id; }
-		cStructurePlacer * getStructurePlacer() { return structurePlacer; }
-		cUpgradeBuilder * getUpgradeBuilder() { return upgradeBuilder; }
-		cOrderProcesser * getOrderProcesser() { return orderProcesser; }
-		cGameControlsContext * getGameControlsContext() { return gameControlsContext; }
-		int getMinimapColor() { return minimapColor; }
+		cPlayerDifficultySettings *getDifficultySettings() const { return difficultySettings; }
+		cItemBuilder *getItemBuilder() const { return itemBuilder; }
+		cSideBar *getSideBar() const { return sidebar; }
+		int getHouse() const { return house; }
+		int getTechLevel() const { return techLevel; }
+		int getId() const { return id; }
+		cStructurePlacer * getStructurePlacer() const { return structurePlacer; }
+		cUpgradeBuilder * getUpgradeBuilder() const { return upgradeBuilder; }
+		cOrderProcesser * getOrderProcesser() const { return orderProcesser; }
+		cGameControlsContext * getGameControlsContext() const { return gameControlsContext; }
+		int getMinimapColor() const { return minimapColor; }
+		bool isHuman() {
+		    return m_Human;
+		}
 
-		int getAmountOfStructuresForType(int structureType);
+		int getAmountOfStructuresForType(int structureType) const;
 
 		// delete
 		void deleteSideBar() { if (sidebar) delete sidebar; }
 
 
+		std::string asString() const {
+		    char msg[512];
+		    sprintf(msg, "Player [id=%d, human=%b, sidebar=%d]", this->id, this->m_Human, this->sidebar);
+		    return std::string(msg);
+		}
 
 	private:
 		int getRGBColorForHouse(int houseId);
+		bool m_Human;
 
 		// TODO: in the end this should be redundant.. perhaps remove it now/soon anyway?
 		// TODO: redundant? OBSELETE. Since we're getting more properties for units and thereby

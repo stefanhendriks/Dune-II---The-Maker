@@ -13,7 +13,7 @@ class cSideBarDrawer {
 		cSideBarDrawer();
 		virtual ~cSideBarDrawer();
 
-		void drawSideBar(cPlayer * player);
+		void drawSideBar(const cPlayer & player);
 
 		cBuildingListDrawer * getBuildingListDrawer() { return buildingListDrawer; }
 
@@ -21,7 +21,7 @@ class cSideBarDrawer {
 		bool isMouseOverScrollDown();
 
 	protected:
-		void drawHouseGui(cPlayer * thePlayer);
+		void drawHouseGui(const cPlayer & thePlayer);
 		void drawBuildingLists();
 		void drawCapacities();
 		void drawScrollButtons();

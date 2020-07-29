@@ -45,13 +45,9 @@ cPlayer::~cPlayer() {
 	if (gameControlsContext) {
 		delete gameControlsContext;
 	}
-}
-
-void cPlayer::setId(int theId) {
-	assert(theId >= HUMAN);
-	assert(theId <= MAX_PLAYERS);
-	assert(&player[theId] == this); // check if the reference in the array is the same!
-	id = theId;
+    if (difficultySettings) {
+        delete difficultySettings;
+    }
 }
 
 void cPlayer::setUpgradeBuilder(cUpgradeBuilder *theUpgradeBuilder) {
@@ -129,10 +125,20 @@ void cPlayer::setGameControlsContext(cGameControlsContext *theGameControlsContex
 	gameControlsContext = theGameControlsContext;
 }
 
-void cPlayer::init()
+void cPlayer::init(int id)
 {
-	memcpy(pal, general_palette, sizeof(pal));
+    assert(id >= HUMAN);
+    assert(id < MAX_PLAYERS);
+    this->id = id;
+
+    memcpy(pal, general_palette, sizeof(pal));
 	house = GENERALHOUSE;
+	/**
+	 * Ok, so this is confusing.
+	 * There are also aiPlayer classes. They hold some 'brains' I guess. all other state is stored here.
+	 * So even though there are aiPlayer objects, they are complentary to this class
+	 */
+	m_Human = (id == HUMAN);
 
 	difficultySettings = new cPlayerAtreidesDifficultySettings();
 
@@ -209,7 +215,7 @@ int cPlayer::getRGBColorForHouse(int houseId) {
 	}
 }
 
-bool cPlayer::bEnoughPower() {
+bool cPlayer::bEnoughPower() const {
 
 	if (game.bSkirmish) {
        return has_power >= use_power;
@@ -235,7 +241,7 @@ bool cPlayer::bEnoughPower() {
     return false;
 }
 
-int cPlayer::getAmountOfStructuresForType(int structureType) {
+int cPlayer::getAmountOfStructuresForType(int structureType) const {
 	assert(structureType >= 0);
 	assert(structureType <= RTURRET);
 	return iStructures[structureType];

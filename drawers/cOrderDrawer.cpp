@@ -20,7 +20,7 @@ bool cOrderDrawer::isMouseOverOrderButton(int mouseX, int mouseY) {
 	return false;
 }
 
-void cOrderDrawer::drawOrderPlaced(cPlayer * thePlayer) {
+void cOrderDrawer::drawOrderPlaced(const cPlayer & thePlayer) {
 	BITMAP *bmp_trans=create_bitmap(((BITMAP *)gfxinter[BTN_ORDER].dat)->w,((BITMAP *)gfxinter[BTN_ORDER].dat)->h);
 	clear_to_color(bmp_trans, makecol(255,0,255));
 
@@ -37,10 +37,10 @@ void cOrderDrawer::drawOrderPlaced(cPlayer * thePlayer) {
 	destroy_bitmap(bmp_trans);
 }
 
-void cOrderDrawer::drawOrderButton(cPlayer * thePlayer) {
-	assert(thePlayer);
+void cOrderDrawer::drawOrderButton(const cPlayer & thePlayer) {
+	assert(&thePlayer);
 
-	cOrderProcesser * orderProcesser = thePlayer->getOrderProcesser();
+	cOrderProcesser * orderProcesser = thePlayer.getOrderProcesser();
 
 	assert(orderProcesser);
 	if (orderProcesser->isOrderPlaced()) {

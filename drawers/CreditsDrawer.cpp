@@ -7,9 +7,8 @@
 
 #include "../include/d2tmh.h"
 
-CreditsDrawer::CreditsDrawer(cPlayer *thePlayer) {
-	assert(thePlayer != NULL);
-	player = thePlayer;
+CreditsDrawer::CreditsDrawer(const cPlayer& thePlayer) : player(thePlayer){
+	assert(&thePlayer);
 	bmp = NULL;
 	memset(offset_credit, 0, sizeof(offset_credit));
 	memset(offset_direction, 0, sizeof(offset_direction));
@@ -27,7 +26,7 @@ CreditsDrawer::~CreditsDrawer() {
 }
 
 void CreditsDrawer::setCredits() {
-	setCredits((int)player->credits);
+	setCredits((int)player.credits);
 }
 
 void CreditsDrawer::setCredits(int amount) {
@@ -50,7 +49,7 @@ void CreditsDrawer::think() {
 		// determine new currentCredits
 		// TODO: make it 'roll' instead of 'jump' to the newest credits?
 		previousCredits = currentCredits;
-		int newCurrentCredits = (int)player->credits;
+		int newCurrentCredits = (int)player.credits;
 
 		if (newCurrentCredits != previousCredits) {
 			int diff = newCurrentCredits - previousCredits;

@@ -8,11 +8,11 @@
 #ifndef CREDITSDRAWER_H_
 #define CREDITSDRAWER_H_
 
-// the credits drawer takes state of a player, and draws the credits accordingly
+// the credits drawer takes state of a m_Player, and draws the credits accordingly
 
 class CreditsDrawer {
 public:
-	CreditsDrawer(cPlayer *thePlayer);
+	CreditsDrawer(const cPlayer& thePlayer);
 	virtual ~CreditsDrawer();
 
 	void think(); // set animation counters and such, time based. Also make sound when needed.
@@ -24,7 +24,7 @@ public:
 	BITMAP *getBitmap() { return bmp; }
 
 private:
-	cPlayer *player; // state
+	const cPlayer& player; // m_Player
 	BITMAP *bmp;	 // a bitmap being drawn on
 
 	void thinkAboutIndividualCreditOffsets();

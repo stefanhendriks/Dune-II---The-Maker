@@ -13,8 +13,8 @@ class cOrderDrawer {
 		cOrderDrawer();
 		~cOrderDrawer();
 
-		void drawOrderButton(cPlayer * thePlayer);
-		void drawOrderPlaced(cPlayer * thePlayer);
+		void drawOrderButton(const cPlayer & thePlayer);
+		void drawOrderPlaced(const cPlayer & thePlayer);
 
 		bool isMouseOverOrderButton(int mouseX, int mouseY);
 

@@ -21,16 +21,14 @@ cSideBarFactory *cSideBarFactory::getInstance() {
 }
 
 // construct a cSideBar
-cSideBar * cSideBarFactory::createSideBar(cPlayer *thePlayer, int techlevel, int house) {
-	assert(thePlayer);
-	cLogger *logger = cLogger::getInstance();
-
+cSideBar * cSideBarFactory::createSideBar(cPlayer& thePlayer, int techlevel, int house) {
+	assert(&thePlayer);
 	cSideBar *sidebar = new cSideBar(thePlayer);
 
 	// lists are already constructed with default constructor. Now initialize
 	// them according to the techLevel.
 	for (int listId = LIST_NONE; listId < LIST_MAX; listId++) {
-		cBuildingList *list = cBuildingListFactory::getInstance()->createList(thePlayer, listId, techlevel, house);
+		cBuildingList *list = cBuildingListFactory::getInstance()->createList(listId, techlevel, house);
 		sidebar->setList(listId, list);
 	}
 

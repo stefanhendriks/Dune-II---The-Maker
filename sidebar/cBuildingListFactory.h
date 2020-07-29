@@ -22,8 +22,8 @@ class cBuildingListFactory {
 		static cBuildingListFactory *getInstance();
 		virtual ~cBuildingListFactory();
 
-		void initializeList(cPlayer *player, cBuildingList *list, int listId, int techlevel, int house);
-		cBuildingList * createList(cPlayer *player, int listId, int techlevel, int house);
+		void initializeList(cBuildingList *list, int listId, int techlevel, int house);
+		cBuildingList *createList(int listId, int techlevel, int house);
 
 };
 

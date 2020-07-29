@@ -7,11 +7,10 @@
 
 #include "../include/d2tmh.h"
 
-cItemBuilder::cItemBuilder(cPlayer * thePlayer) {
-	assert(thePlayer);
+cItemBuilder::cItemBuilder(cPlayer & thePlayer) : m_Player(thePlayer) {
+	assert(&thePlayer);
 	removeAllItems();
 	memset(timers, 0, sizeof(timers));
-	player = thePlayer;
 }
 
 cItemBuilder::~cItemBuilder() {
@@ -24,8 +23,8 @@ int cItemBuilder::getTimerCap(cBuildingList *list, cBuildingListItem *item) {
 		iTimerCap = 3;
 	}
 
-	// when player has low power, produce twice as slow
-	if (player->bEnoughPower() == false) {
+	// when m_Player has low power, produce twice as slow
+	if (m_Player.bEnoughPower() == false) {
 		iTimerCap *= 6; // make painful
 	} else {
 		if (list->getType() != LIST_CONSTYARD) {
@@ -33,12 +32,12 @@ int cItemBuilder::getTimerCap(cBuildingList *list, cBuildingListItem *item) {
 			// is within the units properties.
 			int structureTypeItLeavesFrom = units[item->getBuildId()].structureTypeItLeavesFrom;
 			if (structureTypeItLeavesFrom > -1) {
-				iTimerCap /= (1+(player->iStructures[structureTypeItLeavesFrom]/2));
+				iTimerCap /= (1+(m_Player.iStructures[structureTypeItLeavesFrom] / 2));
 			}
 		}
 	}
 
-	cPlayerDifficultySettings *difficultySettings = player->getDifficultySettings();
+	cPlayerDifficultySettings *difficultySettings = m_Player.getDifficultySettings();
 	iTimerCap = difficultySettings->getBuildSpeed(iTimerCap);
 
 	return iTimerCap;
@@ -78,25 +77,23 @@ void cItemBuilder::think() {
 
 					// Not done building yet , and can pay for progress?
 					if (!isDoneBuilding && !item->shouldPlaceIt() &&
-						player->credits > priceForTimeUnit) {
+                        m_Player.credits > priceForTimeUnit) {
 						// increase progress
 						item->setProgress((item->getProgress() + 1));
 						// pay
-						player->credits -= priceForTimeUnit;
+						m_Player.credits -= priceForTimeUnit;
 					}
 
 					if (isDoneBuilding) {
 						bool isAbleToBuildNewOneImmidiately = true;
 						if (item->getBuildType() == STRUCTURE) {
-
 							isAbleToBuildNewOneImmidiately = false;
 
 							// play voice when placeIt is false
-							if (!item->shouldPlaceIt() && (player == &player[HUMAN])) {
+							if (!item->shouldPlaceIt() && (m_Player.isHuman())) {
 								play_voice(SOUND_VOICE_01_ATR);
 								item->setPlaceIt(true);
 							}
-
 						} else if (item->getBuildType() == UNIT) {
 
 							item->decreaseTimesToBuild(); // decrease amount of times to build
@@ -105,14 +102,14 @@ void cItemBuilder::think() {
 
 							int structureTypeOfList = structureUtils.findStructureTypeByTypeOfList(list, item);
 							assert(structureTypeOfList > -1);
-							int primaryBuildingIdOfStructureType = structureUtils.findStructureToDeployUnit(player, structureTypeOfList);
+							int primaryBuildingIdOfStructureType = structureUtils.findStructureToDeployUnit(&m_Player, structureTypeOfList);
 
 							if (primaryBuildingIdOfStructureType > -1) {
 								int cell = structure[primaryBuildingIdOfStructureType]->iFreeAround();
 								cAbstractStructure * theStructure = structure[primaryBuildingIdOfStructureType];
 								theStructure->setAnimating(true); // animate
 								// TODO: construct unit here
-								int unitId = UNIT_CREATE(cell, item->getBuildId(), player->getId(), false);
+								int unitId = UNIT_CREATE(cell, item->getBuildId(), m_Player.getId(), false);
 								int rallyPoint = theStructure->getRallyPoint();
 								if (rallyPoint > -1) {
 									unit[unitId].move_to(rallyPoint, -1, -1);

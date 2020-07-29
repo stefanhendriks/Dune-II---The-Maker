@@ -19,13 +19,13 @@ int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer);
 int AI_RANDOM_UNIT_TARGET(int iPlayer, int iAttackPlayer);
 
 
-// ai specific variables for a player
+// ai specific variables for a m_Player
 class cAIPlayer
 {
 public:
 
 	// SKIRMISH
-	bool bPlaying;			// does this AI player play?
+	bool bPlaying;			// does this AI m_Player play?
 	int  iUnits;			// units to start with (min = 1)
     int  iCheckingPlaceStructure; // checking place structure smoothenss (be nice to cpu)
     
