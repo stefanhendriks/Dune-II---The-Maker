@@ -8,13 +8,12 @@
 #include "../include/d2tmh.h"
 
 cMapCamera::cMapCamera() {
-	int widthOfSidebar = 160;
-	int heightOfOptions = 42;
-	viewportWidth=((game.screen_x-widthOfSidebar)/TILESIZE_WIDTH_PIXELS);
-	viewportHeight=((game.screen_y-heightOfOptions)/TILESIZE_HEIGHT_PIXELS)+1;
 	x=y=1;
 	targetX=targetY=1;
 	TIMER_move=0;
+	zoomLevel = 1.0f;
+	desiredZoomLevel = zoomLevel;
+	calibrate();
 
 	char msg[255];
 	sprintf(msg, "Camera initialized. Viewport width is [%d], height [%d]. Position [%d,%d]", viewportWidth, viewportHeight, getX(), getY());
@@ -24,6 +23,15 @@ cMapCamera::cMapCamera() {
 
 cMapCamera::~cMapCamera() {
 	delete cellCalculator;
+}
+
+void cMapCamera::calibrate() {
+    int widthOfSidebar = 160;
+    int heightOfOptions = 42;
+    tileHeight = TILESIZE_WIDTH_PIXELS * zoomLevel;
+    tileWidth = TILESIZE_HEIGHT_PIXELS * zoomLevel;
+    viewportWidth=((game.screen_x-widthOfSidebar)/tileWidth);
+    viewportHeight=((game.screen_y-heightOfOptions)/tileHeight)+1;
 }
 
 void cMapCamera::centerAndJumpViewPortToCell(int cell) {
@@ -75,6 +83,7 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell) {
 }
 
 void cMapCamera::think() {
+    // NOT USED!?
 	if (targetX != x || targetY != y) {
 		TIMER_move++;
 		if (TIMER_move > 5) {
@@ -133,4 +142,14 @@ void cMapCamera::thinkInteraction() {
 			mouse_tile = MOUSE_DOWN;
 		}
 	}
+
+    if (desiredZoomLevel < zoomLevel) {
+        zoomLevel -= 0.1;
+        calibrate();
+    }
+
+    if (desiredZoomLevel > zoomLevel) {
+        zoomLevel += 0.1;
+        calibrate();
+    }
 }

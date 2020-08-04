@@ -313,11 +313,13 @@ void cSideBar::thinkMouseZScrolling() {
 	// MOUSE WHEEL
 	if (mouse->isMouseScrolledUp()) {
 	   list->scrollUp();
+	   mapCamera->zoomOut();
 	}
 
 
 
 	if (mouse->isMouseScrolledDown()) {
 	   list->scrollDown();
+        mapCamera->zoomIn();
 	}
 }
