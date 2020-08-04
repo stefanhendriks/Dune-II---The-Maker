@@ -30,14 +30,8 @@ cMapDrawer::~cMapDrawer() {
 void cMapDrawer::drawShroud() {
 	set_trans_blender(0,0,0,128);
 
-    float zoomLevel = 1;
-
-    if (key[KEY_Z] && key[KEY_TAB]) {
-        zoomLevel = 1.5;
-    }
-
-    int tileWidth = TILESIZE_WIDTH_PIXELS * zoomLevel;
-    int tileHeight = TILESIZE_HEIGHT_PIXELS * zoomLevel;
+    int tileWidth = mapCamera->getTileWidth();
+    int tileHeight = mapCamera->getTileHeight();
 
     int colorDepthScreen = bitmap_color_depth(bmp_screen);
 //    bmp_temp=create_bitmap_ex(colorDepthScreen, 32,32);
@@ -199,14 +193,8 @@ void cMapDrawer::drawTerrain() {
         bmp_temp=create_bitmap_ex(colorDepthScreen, 32,32);
     }
 
-    float zoomLevel = 1;
-
-    if (key[KEY_Z] && key[KEY_TAB]) {
-        zoomLevel = 1.5;
-    }
-
-    int tileWidth = TILESIZE_WIDTH_PIXELS * zoomLevel;
-    int tileHeight = TILESIZE_HEIGHT_PIXELS * zoomLevel;
+    int tileWidth = mapCamera->getTileWidth();
+    int tileHeight = mapCamera->getTileHeight();
 
 	// draw only what is visible
 
@@ -249,7 +237,7 @@ void cMapDrawer::drawTerrain() {
 			        32, 32
                 );
 
-            stretch_blit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, 32 * zoomLevel, 32 * zoomLevel);
+            stretch_blit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, tileWidth, tileHeight);
 
 			// draw Smudge if necessary
 			if (map->cell[iCell].smudgetype > -1 && map->cell[iCell].smudgetile > -1) {
@@ -261,7 +249,7 @@ void cMapDrawer::drawTerrain() {
 						32,
 						32);
 
-                stretch_blit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, 32 * zoomLevel, 32 * zoomLevel);
+                stretch_blit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, tileWidth, tileHeight);
 
                 //				masked_blit((BITMAP *)gfxdata[SMUDGE].dat, bmp_screen,
 //						map->cell[iCell].smudgetile * 32,

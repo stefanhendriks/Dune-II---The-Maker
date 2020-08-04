@@ -28,6 +28,9 @@ class cMapCamera {
 
 		void think();
 
+		void zoomIn() { if (desiredZoomLevel < 2.0) desiredZoomLevel += 0.1; }
+		void zoomOut() { if (desiredZoomLevel > 0.25) desiredZoomLevel -= 0.1; }
+
 		void jumpTo(int	theX, int theY);
 		void moveTo(int theX, int theY);
 
@@ -46,6 +49,12 @@ class cMapCamera {
 
 		void centerAndJumpViewPortToCell(int cell);
 
+		int getTileWidth() const { return tileWidth; }
+		int getTileHeight() const { return tileHeight; }
+
+		// Calculates viewport and tile width/height
+		void calibrate();
+
 	protected:
 
 
@@ -61,10 +70,19 @@ class cMapCamera {
 		int x, targetX;
 		int y, targetY;
 
-		// timer used, when
+		// timer used, when to move camera
 		int TIMER_move;
 
+		// Zoom level, 1 == normal, > 1 is zooming in. < 1 is zooming out. Increases/decreases over time according
+		// to desiredZoomLevel
+		float zoomLevel;
+		float desiredZoomLevel;
+
 		cCellCalculator * cellCalculator;
+
+		// the calculated width and height, taking zoomlevel into account
+		int tileHeight;
+		int tileWidth;
 };
 
 #endif /* CMAPCAMERA_H_ */
