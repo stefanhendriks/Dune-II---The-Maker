@@ -27,8 +27,8 @@ cMiniMapDrawer::~cMiniMapDrawer() {
 
 void cMiniMapDrawer::drawViewPortRectangle() {
 	 // Draw the magic rectangle (viewport)
-	 int iWidth=((game.screen_x-160)/32);
-	 int iHeight=((game.screen_y-42)/32)+1;
+    int iWidth = mapCamera->getViewportWidth();
+    int iHeight = mapCamera->getViewportHeight();
 
 	 iWidth--;
 	 iHeight--;
@@ -176,9 +176,6 @@ int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
 }
 
 void cMiniMapDrawer::interact() {
-	int iWidth = mapCamera->getViewportWidth();
-	int iHeight = mapCamera->getViewportHeight();
-
 	// interact with mouse
 	if (mouse_x >= getDrawStartX() && mouse_y >= getDrawStartY()) {
 		// pressed the mouse and not boxing anything..
