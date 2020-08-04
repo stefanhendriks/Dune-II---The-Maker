@@ -33,21 +33,7 @@ void cKeyboardManager::interact() {
 
         // take screenshot
         if (key[KEY_F11]) {
-            char filename[25];
-
-            if (game.screenshot < 10) {
-                sprintf(filename, "%dx%d_000%d.bmp", game.screen_x, game.screen_y, game.screenshot);
-            } else if (game.screenshot < 100) {
-                sprintf(filename, "%dx%d_00%d.bmp", game.screen_x, game.screen_y, game.screenshot);
-            } else if (game.screenshot < 1000) {
-                sprintf(filename, "%dx%d_0%d.bmp", game.screen_x, game.screen_y, game.screenshot);
-            } else {
-                sprintf(filename, "%dx%d_%d.bmp", game.screen_x, game.screen_y, game.screenshot);
-            }
-
-            save_bmp(filename, bmp_screen, general_palette);
-
-            game.screenshot++;
+            takeScreenshot();
         }
 
 
@@ -66,6 +52,24 @@ void cKeyboardManager::interact() {
             }
         }
     }
+}
+
+void cKeyboardManager::takeScreenshot() const {
+    char filename[25];
+
+    if (game.screenshot < 10) {
+        sprintf(filename, "%dx%d_000%d.bmp", game.screen_x, game.screen_y, game.screenshot);
+    } else if (game.screenshot < 100) {
+        sprintf(filename, "%dx%d_00%d.bmp", game.screen_x, game.screen_y, game.screenshot);
+    } else if (game.screenshot < 1000) {
+        sprintf(filename, "%dx%d_0%d.bmp", game.screen_x, game.screen_y, game.screenshot);
+    } else {
+        sprintf(filename, "%dx%d_%d.bmp", game.screen_x, game.screen_y, game.screenshot);
+    }
+
+    save_bmp(filename, bmp_screen, general_palette);
+
+    game.screenshot++;
 }
 
 void cKeyboardManager::DEBUG_KEYS() {
@@ -145,6 +149,11 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.setState(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
         game.iMentatSpeak = -1;
+    }
+
+    // take screenshot
+    if (key[KEY_F11]) {
+        takeScreenshot();
     }
 }
 
