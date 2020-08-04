@@ -52,6 +52,10 @@ class cMapCamera {
 		int getTileWidth() const { return tileWidth; }
 		int getTileHeight() const { return tileHeight; }
 
+		int factorZoomLevel(int value) {
+		    return value * zoomLevel;
+		}
+
 		// Calculates viewport and tile width/height
 		void calibrate();
 

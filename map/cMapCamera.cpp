@@ -28,8 +28,8 @@ cMapCamera::~cMapCamera() {
 void cMapCamera::calibrate() {
     int widthOfSidebar = 160;
     int heightOfOptions = 42;
-    tileHeight = TILESIZE_WIDTH_PIXELS * zoomLevel;
-    tileWidth = TILESIZE_HEIGHT_PIXELS * zoomLevel;
+    tileHeight = factorZoomLevel(TILESIZE_WIDTH_PIXELS);
+    tileWidth = factorZoomLevel(TILESIZE_HEIGHT_PIXELS);
     viewportWidth=((game.screen_x-widthOfSidebar)/tileWidth);
     viewportHeight=((game.screen_y-heightOfOptions)/tileHeight)+1;
 }
