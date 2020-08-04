@@ -60,16 +60,18 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure * struc
 
 int cStructureDrawer::getDrawYForStructure(int cell) {
 	assert(structure);
+    int tileHeight = mapCamera->getTileHeight();
 	cCellCalculator * cellCalculator = map.getCellCalculator();
 	int y = cellCalculator->getY(cell);
-	return (y * TILESIZE_HEIGHT_PIXELS) - (mapCamera->getY() * TILESIZE_HEIGHT_PIXELS) + 42;
+	return (y * tileHeight) - (mapCamera->getY() * tileHeight) + 42;
 }
 
 int cStructureDrawer::getDrawXForStructure(int cell) {
 	assert(structure);
-	cCellCalculator * cellCalculator = map.getCellCalculator();
+    int tileWidth = mapCamera->getTileWidth();
+    cCellCalculator * cellCalculator = map.getCellCalculator();
 	int x = cellCalculator->getX(cell);
-	return (x * TILESIZE_WIDTH_PIXELS) - (mapCamera->getX() * TILESIZE_WIDTH_PIXELS);
+	return (x * tileWidth) - (mapCamera->getX() * tileWidth);
 }
 
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
@@ -77,41 +79,56 @@ void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
 
 	cStructureUtils structureUtils;
 
-	int widthInPixels = structureUtils.getStructureWidthInPixels(structure);
-	int heightInPixels = structureUtils.getStructureHeightInPixels(structure);
+    int orgWidthInPixels = structureUtils.getStructureWidthInPixels(structure);
+    int orgHeightInPixels = structureUtils.getStructureHeightInPixels(structure);
 
     // structures are animated within the same source bitmap. The Y coordinates determine
     // what frame is being drawn. So multiply the height of the structure size times frame
-    int iSourceY = heightInPixels * structure->getFrame();
+    int iSourceY = orgHeightInPixels * structure->getFrame();
 
-	BITMAP *temp=create_bitmap_ex(8, widthInPixels, heightInPixels);
-	BITMAP *temp_shadow=create_bitmap(widthInPixels, heightInPixels);
+    int screenDepth = bitmap_color_depth(bmp_screen);
+	BITMAP *temp=create_bitmap_ex(8, orgWidthInPixels, orgHeightInPixels);
+	BITMAP *temp_shadow=create_bitmap(orgWidthInPixels, orgHeightInPixels);
+    BITMAP *temp_result=create_bitmap_ex(screenDepth, orgWidthInPixels, orgHeightInPixels);
 
 	clear(temp);
+	clear(temp_result);
 
 	clear_to_color(temp_shadow, makecol(255,0,255));
+    clear_to_color(temp, makecol(255,0,255));
 
-	blit(structure->getBitmap(), temp, 0, iSourceY, 0, 0, widthInPixels, heightInPixels);
+    int drawX = getDrawXForStructure(structure->getCell());
+    int drawY = getDrawYForStructure(structure->getCell());
+
+    // the 'background' of the temp_result is from bmp_screen
+    blit(bmp_screen, temp_result, drawX, drawY, 0, 0, orgWidthInPixels, orgHeightInPixels);
+
+	blit(structure->getBitmap(), temp, 0, iSourceY, 0, 0, orgWidthInPixels, orgHeightInPixels);
 
 	// in case shadow, prepare shadow bitmap in memory
 	if (structure->getShadowBitmap()) {
-		blit(structure->getShadowBitmap(), temp_shadow, 0, iSourceY, 0, 0, widthInPixels, heightInPixels);
+		blit(structure->getShadowBitmap(), temp_shadow, 0, iSourceY, 0, 0, orgWidthInPixels, orgHeightInPixels);
 	}
 
-	int drawX = getDrawXForStructure(structure->getCell());
-	int drawY = getDrawYForStructure(structure->getCell());
+
+    if (structure->getShadowBitmap()) {
+        fblend_trans(temp_shadow, temp, drawX, drawY, 128);
+    }
+
+    int widthInPixels = mapCamera->factorZoomLevel(orgWidthInPixels);
+    int heightInPixels = mapCamera->factorZoomLevel(orgHeightInPixels);
 
 	// draw normal structure
-	draw_sprite(bmp_screen, temp, drawX, drawY);
+    draw_sprite(temp_result, temp, 0, 0);
+//    draw_sprite(bmp_screen, temp, drawX, drawY);
+	blit(temp_result, bmp_screen, 0, 0, drawX, drawY, widthInPixels, heightInPixels);
 
 	// in case shadow, draw shadow now using fBlend.
-	if (structure->getShadowBitmap()) {
-		fblend_trans(temp_shadow, bmp_screen, drawX, drawY, 128);
-	}
 
 	// destroy used bitmaps
 	destroy_bitmap(temp);
 	destroy_bitmap(temp_shadow);
+	destroy_bitmap(temp_result);
 }
 
 int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure * structure) {
