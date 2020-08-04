@@ -14,6 +14,7 @@ cMapDrawer::cMapDrawer(cMap * theMap, const cPlayer& thePlayer, cMapCamera * the
 	map = theMap;
 	camera = theCamera;
 	cellCalculator = new cCellCalculator(map);
+	bmp_temp = nullptr;
 }
 
 cMapDrawer::~cMapDrawer() {
@@ -21,12 +22,26 @@ cMapDrawer::~cMapDrawer() {
 	camera = NULL;
 	delete cellCalculator;
 	cellCalculator = NULL;
+	if (bmp_temp) {
+	    destroy_bitmap(bmp_temp);
+	}
 }
 
 void cMapDrawer::drawShroud() {
 	set_trans_blender(0,0,0,128);
 
-	BITMAP *temp = create_bitmap(32,32);
+    float zoomLevel = 1;
+
+    if (key[KEY_Z] && key[KEY_TAB]) {
+        zoomLevel = 1.5;
+    }
+
+    int tileWidth = TILESIZE_WIDTH_PIXELS * zoomLevel;
+    int tileHeight = TILESIZE_HEIGHT_PIXELS * zoomLevel;
+
+    int colorDepthScreen = bitmap_color_depth(bmp_screen);
+//    bmp_temp=create_bitmap_ex(colorDepthScreen, 32,32);
+    BITMAP *temp = create_bitmap(tileWidth,tileHeight);
 
 	int iDrawX=0;
 	int iDrawY=42;
@@ -145,12 +160,14 @@ void cMapDrawer::drawShroud() {
 					{
 
 						// Draw cell
-						masked_blit((BITMAP *)gfxdata[SHROUD].dat, bmp_screen, tile * 32, 0, iDrawX, iDrawY, 32, 32);
+//						masked_blit((BITMAP *)gfxdata[SHROUD].dat, bmp_screen, tile * 32, 0, iDrawX, iDrawY, 32, 32);
+						masked_stretch_blit((BITMAP *)gfxdata[SHROUD].dat, bmp_screen, tile * 32, 0, 32, 32, iDrawX, iDrawY, tileWidth, tileHeight);
 
-						 clear_to_color(temp, makecol(255,0,255));
+                        clear_to_color(temp, makecol(255, 0, 255));
 
-							masked_blit((BITMAP *)gfxdata[SHROUD_SHADOW].dat, temp, tile * 32, 0, 0, 0, 32, 32);
-							draw_trans_sprite(bmp_screen, temp, iDrawX, iDrawY);
+//                        masked_blit((BITMAP *) gfxdata[SHROUD_SHADOW].dat, temp, tile * 32, 0, 0, 0, 32, 32);
+                        masked_stretch_blit((BITMAP *) gfxdata[SHROUD_SHADOW].dat, temp, tile * 32, 0, 32, 32, 0, 0, tileWidth, tileHeight);
+                        draw_trans_sprite(bmp_screen, temp, iDrawX, iDrawY);
 
 
 					//	alfont_textprintf(bmp_screen, game_font, iDrawX,iDrawY, makecol(255,255,255), "%d", tile);
@@ -159,24 +176,38 @@ void cMapDrawer::drawShroud() {
 				  }
 				  else
 				  {
-					  // NOT VISIBLE, DO NOT DRAW A THING THEN!
-					//	alfont_textprintf(bmp_screen, game_font, iDrawX,iDrawY, makecol(255,255,255), "%d", tile);
+                      // NOT VISIBLE, DO NOT DRAW A THING THEN!
+                      //	alfont_textprintf(bmp_screen, game_font, iDrawX,iDrawY, makecol(255,255,255), "%d", tile);
 
-					  // Except when there is a building here, that should not be visible ;)
-					  // if (map.cell[cll].id[1] > -1 || map.cell[cll].id[0] > -1 || map.cell[cll].id[2] > -1 || map.cell[cll].id[3] > -1)
-						  masked_blit((BITMAP *)gfxdata[SHROUD].dat, bmp_screen, 0, 0, iDrawX, iDrawY, 32, 32);
+                      // Except when there is a building here, that should not be visible ;)
+//                      masked_blit((BITMAP *)gfxdata[SHROUD].dat, bmp_screen, 0, 0, iDrawX, iDrawY, 32, 32);
+                      masked_stretch_blit((BITMAP *)gfxdata[SHROUD].dat, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, tileWidth, tileHeight);
 				  }
 
 			  }
-			iDrawY+=32;
+			iDrawY+=tileHeight;
 		}
-		iDrawX+=32;
+		iDrawX+=tileWidth;
 	}
 
 	destroy_bitmap(temp);
 }
 
 void cMapDrawer::drawTerrain() {
+    if (bmp_temp == nullptr) {
+        int colorDepthScreen = bitmap_color_depth(bmp_screen);
+        bmp_temp=create_bitmap_ex(colorDepthScreen, 32,32);
+    }
+
+    float zoomLevel = 1;
+
+    if (key[KEY_Z] && key[KEY_TAB]) {
+        zoomLevel = 1.5;
+    }
+
+    int tileWidth = TILESIZE_WIDTH_PIXELS * zoomLevel;
+    int tileHeight = TILESIZE_HEIGHT_PIXELS * zoomLevel;
+
 	// draw only what is visible
 
 	// Scrolling:
@@ -191,6 +222,7 @@ void cMapDrawer::drawTerrain() {
 
 	int iPl = player.getId();
 
+
 //	char msg[255];
 //	sprintf(msg, "Drawing from %d, %d to %d, %d", camera->getX(), camera->getY(), camera->getEndX(), camera->getEndY());
 //	logbook(msg);
@@ -203,20 +235,44 @@ void cMapDrawer::drawTerrain() {
 		for (int iStartY=camera->getY(); iStartY < camera->getEndY(); iStartY++) {
 			iCell = iCellMake(iStartX, iStartY);
 
-			if (mapUtils->isCellVisibleForPlayerId(iPl, iCell) == false) {
-				iDrawY+=TILESIZE_HEIGHT_PIXELS;
-				continue; // do not draw this one
+			// not visible for player, so do not draw
+			if (!mapUtils->isCellVisibleForPlayerId(iPl, iCell)) {
+				iDrawY+=tileHeight;
+				continue;
 			}
 
-			blit((BITMAP *)gfxdata[map->cell[iCell].type].dat, bmp_screen, map->cell[iCell].tile * 32, 0, iDrawX, iDrawY, 32, 32);
+			// Draw terrain
+			blit((BITMAP *)gfxdata[map->cell[iCell].type].dat,
+                 bmp_temp,
+			        map->cell[iCell].tile * 32, 0,
+			        0, 0,
+			        32, 32
+                );
 
-			// draw smudge if nescesary
+            stretch_blit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, 32 * zoomLevel, 32 * zoomLevel);
+
+			// draw Smudge if necessary
 			if (map->cell[iCell].smudgetype > -1 && map->cell[iCell].smudgetile > -1) {
-				masked_blit((BITMAP *)gfxdata[SMUDGE].dat, bmp_screen,
-						map->cell[iCell].smudgetile * 32, map->cell[iCell].smudgetype * 32, iDrawX, iDrawY, 32, 32);
+                masked_blit((BITMAP *)gfxdata[SMUDGE].dat, bmp_temp,
+						map->cell[iCell].smudgetile * 32,
+						map->cell[iCell].smudgetype * 32,
+						0,
+						0,
+						32,
+						32);
 
-			}
+                stretch_blit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, 32 * zoomLevel, 32 * zoomLevel);
 
+                //				masked_blit((BITMAP *)gfxdata[SMUDGE].dat, bmp_screen,
+//						map->cell[iCell].smudgetile * 32,
+//						map->cell[iCell].smudgetype * 32,
+//						iDrawX,
+//						iDrawY,
+//						32,
+
+            }
+
+			// Draw debugging information
 			if (DEBUGGING)
 			{
 				if (player.getGameControlsContext()->getMouseCell() > -1)
@@ -230,6 +286,7 @@ void cMapDrawer::drawTerrain() {
 				rect(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, makecol(128,128,128));
 			}
 
+			// Draw more debugging information
 			if (key[KEY_D] && key[KEY_TAB])
 			{
 				int iClr=makecol(255,0,0);
@@ -258,8 +315,9 @@ void cMapDrawer::drawTerrain() {
 
 			}
 
-			iDrawY+=TILESIZE_HEIGHT_PIXELS;
+			// increase height
+			iDrawY+=tileHeight;
 		}
-		iDrawX+=TILESIZE_WIDTH_PIXELS;
+		iDrawX+=tileWidth;
 	}
 }
