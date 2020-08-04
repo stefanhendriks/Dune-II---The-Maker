@@ -427,14 +427,12 @@ bool cUnit::isValid()
 }
 
 
-int cUnit::draw_x()
-{
-  return ( (( iCellX * 32 ) - (mapCamera->getX()*32)) + iOffsetX);
+int cUnit::draw_x() {
+    return (((iCellX * 32) - (mapCamera->getX() * 32)) + iOffsetX);
 }
 
-int cUnit::draw_y()
-{
-  return ( (( iCellY * 32 ) - (mapCamera->getY()*32)) + iOffsetY) + 42; // 42 = the options bar height
+int cUnit::draw_y() {
+    return (((iCellY * 32) - (mapCamera->getY() * 32)) + iOffsetY) + 42; // 42 = the options bar height
 }
 
 void cUnit::draw_spice()
