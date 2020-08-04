@@ -24,6 +24,10 @@ class cMapDrawer {
 		const cPlayer& player;
 		cMapCamera * camera;
 		cCellCalculator * cellCalculator;
+
+		// bitmap for drawing tiles, and possibly stretching (depending on zoom level)
+        BITMAP *bmp_temp;
+
 };
 
 #endif /* CMAPDRAWER_H_ */
