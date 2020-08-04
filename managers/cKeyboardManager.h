@@ -17,6 +17,8 @@ public:
 private:
     void DEBUG_KEYS();
     void GAME_KEYS();
+
+    void takeScreenshot() const;
 };
 
 #endif	/* CKEYBOARDMANAGER_H */
