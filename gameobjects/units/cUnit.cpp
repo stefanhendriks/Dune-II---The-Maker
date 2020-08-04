@@ -428,11 +428,13 @@ bool cUnit::isValid()
 
 
 int cUnit::draw_x() {
-    return (((iCellX * 32) - (mapCamera->getX() * 32)) + iOffsetX);
+    int tileWidth = mapCamera->getTileWidth();
+    return (((iCellX * tileWidth) - (mapCamera->getX() * tileWidth)) + iOffsetX);
 }
 
 int cUnit::draw_y() {
-    return (((iCellY * 32) - (mapCamera->getY() * 32)) + iOffsetY) + 42; // 42 = the options bar height
+    int tileHeight = mapCamera->getTileHeight();
+    return (((iCellY * tileHeight) - (mapCamera->getY() * tileHeight)) + iOffsetY) + 42; // 42 = the options bar height
 }
 
 void cUnit::draw_spice()
