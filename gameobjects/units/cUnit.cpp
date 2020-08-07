@@ -428,19 +428,19 @@ bool cUnit::isValid()
 
 
 int cUnit::draw_x() {
-    int tileWidth = mapCamera->factorZoomLevel(mapCamera->getTileWidth());
-    return (((iCellX * tileWidth) - (mapCamera->getX() * tileWidth)) + iOffsetX);
+    int absoluteXCoordinateOnMap = iCellX * mapCamera->getTileWidth();
+    int absoluteXCoordinateMapCamera = mapCamera->getX() * mapCamera->getTileWidth();
+    return ((absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera) + iOffsetX);
 }
 
 int cUnit::draw_y() {
-    int tileHeight = mapCamera->factorZoomLevel(mapCamera->getTileHeight());
-    return (((iCellY * tileHeight) - (mapCamera->getY() * tileHeight)) + iOffsetY) + 42; // 42 = the options bar height
+    int absoluteYCoordinateOnMap = iCellY * mapCamera->getTileHeight();
+    int absoluteYCoordinateMapCamera = mapCamera->getY() * mapCamera->getTileHeight();
+    return ((absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera) + iOffsetY) + 42; // 42 = the options bar height
 }
 
 void cUnit::draw_spice()
 {
-    // draw units health
-
     int drawx = draw_x()-1;
     int drawy = draw_y()-10;
     int width_x = 32;
@@ -448,10 +448,7 @@ void cUnit::draw_spice()
 
     if (drawy < 42) drawy = 42;
 
-    int w = health_bar(32, iCredits, 700); //health_unit(iID, units[iType].bmp_width);
-
-    // shadow
-    //rectfill(bmp_screen, drawx+2, drawy+2, drawx + width_x + 2, drawy + height_y + 2, makecol(0,0,0));
+    int w = health_bar(32, iCredits, 700);
 
     // bar itself
     rectfill(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(0,0,0));
@@ -459,7 +456,6 @@ void cUnit::draw_spice()
 
     // bar around it
     rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(255, 255, 255));
-
 }
 
 
@@ -618,8 +614,6 @@ void cUnit::draw_path()
 void cUnit::draw()
 {
     // renders unit on map
-
-
     if (iTempHitPoints > -1)
         return; // temp hitpoints filled in, meaning it should NOT show up at all!
 
