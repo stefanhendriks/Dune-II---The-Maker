@@ -675,18 +675,14 @@ void cUnit::draw()
 		if (iType != CARRYALL) {
             blit((BITMAP *)units[iType].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
 			draw_trans_sprite(bmp_screen, shadow, ux-startpixel,uy);
-	} else {
-//            blit((BITMAP *)units[iType].shadow, shadow, start_x+2, start_y+2, 0, 0, bmp_width, bmp_height);
-	            blit((BITMAP *)units[iType].shadow, shadow, start_x+2, start_y+2, 0, 0, bmp_width, bmp_height);
-				draw_trans_sprite(bmp_screen, shadow, ux-startpixel,(uy + 24));
+	    } else {
+		    // adjust X and Y so it looks like a carry-all is 'higher up in the air'
+            blit((BITMAP *)units[iType].shadow, shadow, start_x+2, start_y+2, 0, 0, bmp_width, bmp_height);
+            draw_trans_sprite(bmp_screen, shadow, ux-startpixel,(uy + 24));
 		}
-
-		//draw_trans_sprite(bmp_screen, shadow, ux-startpixel,uy);
-//        fblend_trans(shadow, bmp_screen, ux-startpixel, uy, 128);
     }
 
-
-    // Blit the unit itself (8 bit)
+    // Blit the unit itself (8 bit) onto temp bitmap
     blit((BITMAP *)units[iType].bmp, temp, start_x, start_y, 0, 0, bmp_width, bmp_height);
 
     // When we have a top, blit it too!
@@ -708,8 +704,16 @@ void cUnit::draw()
 			mask_to_color(temp, makecol(255,255,255));
 
     // When unit is selected, draw the focus picture on it
-    draw_sprite(bmp_screen, temp, ux-startpixel,uy);
+//    stretch_sprite(bmp_screen, temp, ux-startpixel,uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
+    int colorDepth = bitmap_color_depth(bmp_screen);
+    BITMAP *tmp_bitmap = create_bitmap_ex(colorDepth, bmp_width, bmp_height);
 
+    // BUG BUG: copies from BMP Screen, which is distored when zoomed
+    blit(bmp_screen, tmp_bitmap, ux-startpixel, uy, 0, 0, 128, 128);
+
+//    draw_sprite(bmp_screen, temp, ux-startpixel,uy);
+    draw_sprite(tmp_bitmap, temp, 0,0);
+    stretch_sprite(bmp_screen, tmp_bitmap, ux-startpixel,uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
 
 	// when we want to be picked up..
 	if (bCarryMe)
@@ -725,10 +729,8 @@ void cUnit::draw()
 
 
     destroy_bitmap(temp);
+    destroy_bitmap(tmp_bitmap);
     destroy_bitmap(shadow);
-
-
-
 }
 
 // GLOBALS
