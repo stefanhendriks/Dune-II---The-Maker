@@ -161,6 +161,10 @@ void cKeyboardManager::DEBUG_KEYS() {
 void cKeyboardManager::GAME_KEYS() {
     int iGroup = game.getGroupNumberFromKeyboard();
 
+    if (key[KEY_Z]) {
+        mapCamera->resetZoom();
+    }
+
     // WHEN PRESSED CTRL, MEANING, ADD....
     if (key[KEY_LCONTROL]) {
         // UNIT GROUPING
