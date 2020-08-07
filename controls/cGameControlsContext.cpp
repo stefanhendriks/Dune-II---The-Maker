@@ -12,7 +12,6 @@
 cGameControlsContext::cGameControlsContext(cPlayer * thePlayer) {
 	assert(thePlayer);
 	player = thePlayer;
-	mouse = cMouse::getInstance();
 	mouseCell = -99;
 	cellCalculator = new cCellCalculator(&map);
 	drawToolTip = false;
@@ -20,7 +19,6 @@ cGameControlsContext::cGameControlsContext(cPlayer * thePlayer) {
 
 cGameControlsContext::~cGameControlsContext() {
 	player = NULL;
-	mouse = NULL;
 	delete cellCalculator;
 }
 
@@ -33,25 +31,25 @@ void cGameControlsContext::updateState() {
 }
 
 void cGameControlsContext::determineMouseCell() {
-	if (mouse->getY() < 42) {
+	if (cMouse::getY() < 42) {
 		mouseCell = -1; // at the top bar or higher, so no mouse cell id.
 		return;
 	}
 
-	if (mouse->getX() > (game.screen_x - 128)) {
-		if (mouse->getY() > (game.screen_y - 128)) {
+	if (cMouse::getX() > (game.screen_x - 128)) {
+		if (cMouse::getY() > (game.screen_y - 128)) {
 			mouseCell = MOUSECELL_MINIMAP ; // on minimap
 			return;
 		}
 	}
 
-	if (mouse->getX() > (game.screen_x - 160)) {
+	if (cMouse::getX() > (game.screen_x - 160)) {
 		mouseCell = -3 ; // on sidebar
 		return;
 	}
 
-	int iMouseX = mouse->getX() / 32;
-	int iMouseY = (mouse->getY() - 42) / 32;
+	int iMouseX = cMouse::getX() / 32;
+	int iMouseY = (cMouse::getY() - 42) / 32;
 
 	iMouseX += mapCamera->getX();
 	iMouseY += mapCamera->getY();
@@ -76,7 +74,7 @@ void cGameControlsContext::determineHoveringOverStructureId() {
 
 		if (theStructure) {
 			if (structureUtils.isStructureOnScreen(theStructure)) {
-				if (structureUtils.isMouseOverStructure(mouse, theStructure)) {
+				if (structureUtils.isMouseOverStructure(theStructure)) {
 					mouseHoveringOverStructureId = i;
 				}
 			}

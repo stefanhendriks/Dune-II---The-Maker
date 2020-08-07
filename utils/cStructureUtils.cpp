@@ -262,9 +262,8 @@ bool cStructureUtils::isStructureOnScreen(cAbstractStructure *structure) {
 	return ((drawX + width) > 0 && drawX < game.screen_x) && ( (drawY + height) > 0 && drawY < game.screen_y);
 }
 
-bool cStructureUtils::isMouseOverStructure(cMouse *mouse, cAbstractStructure *structure) {
+bool cStructureUtils::isMouseOverStructure(cAbstractStructure *structure) {
 	assert(structure);
-	assert(mouse);
 
 	int drawX = mapCamera->factorZoomLevel(structure->iDrawX());
 	int drawY = mapCamera->factorZoomLevel(structure->iDrawY());
@@ -272,10 +271,7 @@ bool cStructureUtils::isMouseOverStructure(cMouse *mouse, cAbstractStructure *st
 	int height = mapCamera->factorZoomLevel(getStructureHeightInPixels(structure));
 	rectfill(bmp_screen, drawX, drawY, width, height, makecol(255,255,255));
 
-	cMouseUtils * mouseUtils = new cMouseUtils(mouse);
-	bool result = mouseUtils->isMouseOverRectangle(drawX, drawY, width, height);
-	delete mouseUtils;
-	return result;
+	return cMouse::isOverRectangle(drawX, drawY, width, height);
 }
 
 int cStructureUtils::getTotalPowerUsageForPlayer(cPlayer * player) {

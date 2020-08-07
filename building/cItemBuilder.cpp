@@ -133,7 +133,7 @@ void cItemBuilder::think() {
 								removeItemFromList(item);
 
 								// now try to find an item that is in the same list. If so, start building it.
-								cBuildingListItem *itemInSameList = getSimilarListType(item);
+								cBuildingListItem *itemInSameList = findBuildingListItemOfSameListAs(item);
 
 								// found item
 								if (itemInSameList) {
@@ -204,8 +204,8 @@ void cItemBuilder::addItemToList(cBuildingListItem * item) {
 		return;
 	}
 
-	// check if there is a similiar type in the list
-	if (isTheFirstListType(item)) {
+	// check if there is a similar type in the list
+	if (isBuildListItemTheFirstOfItsListType(item)) {
 		item->setIsBuilding(true); // build it immediately
 	}
 
@@ -237,7 +237,7 @@ bool cItemBuilder::isItemInList(cBuildingListItem *item) {
  * @param item
  * @return
  */
-cBuildingListItem *cItemBuilder::getSimilarListType(cBuildingListItem *item) {
+cBuildingListItem *cItemBuilder::findBuildingListItemOfSameListAs(cBuildingListItem *item) {
 	assert(item != NULL);
 
 	// get through the build list and find an item that is of the same list.
@@ -271,8 +271,16 @@ bool cItemBuilder::isASimilarItemBeingBuilt(cBuildingListItem *item) {
 	return false;
 }
 
-bool cItemBuilder::isTheFirstListType(cBuildingListItem *item) {
-	return getSimilarListType(item) == NULL;
+/**
+ * Returns true when the buildingListItem is the first built in its list.
+ * Ie, the list is of type ConstYard. Then if there are no other buildings being constructed, this method
+ * returns true. Else, it returns false.
+ *
+ * @param item
+ * @return
+ */
+bool cItemBuilder::isBuildListItemTheFirstOfItsListType(cBuildingListItem *item) {
+	return findBuildingListItemOfSameListAs(item) == NULL;
 }
 
 /**

@@ -13,7 +13,7 @@ cDrawManager::cDrawManager(const cPlayer & thePlayer) : m_Player(thePlayer) {
 	messageBarDrawer = new cMessageBarDrawer();
 	placeitDrawer = new cPlaceItDrawer();
 	structureDrawer = new cStructureDrawer();
-	mouseDrawer = new cMouseDrawer(thePlayer, cMouse::getInstance());
+	mouseDrawer = new cMouseDrawer(thePlayer);
 
 	cMessageBar * messageBar = messageBarDrawer->getMessageBar();
 	messageBar->setX(200);

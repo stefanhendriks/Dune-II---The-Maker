@@ -10,7 +10,7 @@
 
 class cMouseDrawer {
 	public:
-		cMouseDrawer(const cPlayer& thePlayer, cMouse *theMouse);
+		cMouseDrawer(const cPlayer& thePlayer);
 		virtual ~cMouseDrawer();
 
 		void draw();
@@ -31,7 +31,6 @@ class cMouseDrawer {
 
 	private:
 		cMouseToolTip * mouseToolTip;
-		cMouse *mouse;
 		const cPlayer& m_Player;
 };
 

@@ -7,21 +7,18 @@
 
 #include "../include/d2tmh.h"
 
-cMouseDrawer::cMouseDrawer(const cPlayer& thePlayer, cMouse *theMouse) : m_Player(thePlayer) {
+cMouseDrawer::cMouseDrawer(const cPlayer& thePlayer) : m_Player(thePlayer) {
 	assert(&thePlayer);
-	assert(theMouse);
-	mouse = theMouse;
-	mouseToolTip = new cMouseToolTip(player, mouse);
+	mouseToolTip = new cMouseToolTip(player);
 }
 
 cMouseDrawer::~cMouseDrawer() {
-	mouse = NULL;
 	delete mouseToolTip;
 }
 
 void cMouseDrawer::draw() {
-	int x = mouse->getX();
-	int y = mouse->getY();
+	int x = cMouse::getX();
+	int y = cMouse::getY();
 
 	// adjust coordinates of drawing according to the specific mouse sprite/tile
 	if (mouse_tile == MOUSE_DOWN){
@@ -53,7 +50,7 @@ void cMouseDrawer::draw() {
 }
 
 int cMouseDrawer::getDrawXToolTip(int width) {
-	int x = mouse->getX() + 32;
+	int x = cMouse::getX() + 32;
 
 	// correct drawing position so it does not fall off screen.
 	int diffX = (x + width) - game.screen_x;
@@ -64,7 +61,7 @@ int cMouseDrawer::getDrawXToolTip(int width) {
 }
 
 int cMouseDrawer::getDrawYToolTip(int height) {
-	int y = mouse->getY() + 32;
+	int y = cMouse::getY() + 32;
 
 	// correct drawing position so it does not fall off screen.
 	int diffY = (y + height) - game.screen_y;

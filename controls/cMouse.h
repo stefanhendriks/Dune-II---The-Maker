@@ -13,32 +13,46 @@ class cMouse {
 public:
 	cMouse();
 
-	static cMouse *getInstance();
-
-	void updateState(); // updates state from Allegro
+	static void updateState(); // updates state from Allegro
 
 	// these functions return true when the mouse button is being hold down
-	bool isLeftButtonPressed() { return leftButtonPressed; }
-	bool isRightButtonPressed() { return rightButtonPressed; }
+//	bool isLeftButtonPressed() { return leftButtonPressed; }
+//	bool isRightButtonPressed() { return rightButtonPressed; }
+
+	static bool isLeftButtonPressed() { return getInstance()->leftButtonPressed; }
+	static bool isRightButtonPressed() { return getInstance()->rightButtonPressed; }
 
 	// these functions return true when the mouse button was pressed in the previous
 	// frame, but released in the current (which is counted as a 'click')
-	bool isLeftButtonClicked() { return leftButtonClicked; }
-	bool isRightButtonClicked() { return rightButtonClicked; }
+//	bool isLeftButtonClicked() { return leftButtonClicked; }
+//	bool isRightButtonClicked() { return rightButtonClicked; }
+	static bool isLeftButtonClicked() { return getInstance()->leftButtonClicked; }
+	static bool isRightButtonClicked() { return getInstance()->rightButtonClicked; }
 
-	bool isMouseScrolledUp() { return mouseScrolledUp; }
-	bool isMouseScrolledDown() { return mouseScrolledDown; }
+	static bool isMouseScrolledUp() { return getInstance()->mouseScrolledUp; }
+	static bool isMouseScrolledDown() { return getInstance()->mouseScrolledDown; }
 
-	int getX() { return x; }
-	int getY() { return y; }
-	int getZ() { return z; }
+	static int getX() { return getInstance()->x; }
+	static int getY() { return getInstance()->y; }
+	static int getZ() { return getInstance()->z; }
 
-	void positionMouseCursor(int x, int y);
+	static void positionMouseCursor(int x, int y);
+
+	static void init() {
+	    getInstance(); // this will create a new instance
+	}
+
+    static bool isOverRectangle(int x, int y, int width, int height) {
+        return (cMouse::getX() >= x && cMouse::getX() <= (x + width)) &&
+               (cMouse::getY() >= y && cMouse::getY() <= (y + height));
+    }
+
 
 protected:
 	~cMouse();
 
 private:
+    static cMouse *getInstance();
 
 	bool leftButtonPressed;
 	bool rightButtonPressed;

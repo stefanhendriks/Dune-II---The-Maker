@@ -10,14 +10,13 @@
 
 class cMouseToolTip {
 	public:
-		cMouseToolTip(cPlayer *thePlayer, cMouse *theMouse);
+		cMouseToolTip(cPlayer *thePlayer);
 		~cMouseToolTip();
 
 	protected:
 
 	private:
 		cPlayer * player;
-		cMouse * mouse;
 
 };
 
