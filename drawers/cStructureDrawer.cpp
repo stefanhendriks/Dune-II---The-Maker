@@ -36,8 +36,12 @@ void cStructureDrawer::drawRectangeOfStructure(cAbstractStructure * theStructure
 	assert(theStructure);
 	int drawX = getDrawXForStructure(theStructure->getCell());
 	int drawY = getDrawYForStructure(theStructure->getCell());
-	int width_x = structures[theStructure->getType()].bmp_width-1;
-	int height_y = structures[theStructure->getType()].bmp_height-1;
+    int width = structures[theStructure->getType()].bmp_width - 1;
+    int height = structures[theStructure->getType()].bmp_height - 1;
+
+    int width_x = mapCamera->factorZoomLevel(width);
+    int height_y = mapCamera->factorZoomLevel(height);
+
 	rect(bmp_screen, drawX, drawY, drawX + width_x, drawY + height_y, color);
 }
 
@@ -101,6 +105,7 @@ void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
     int drawY = getDrawYForStructure(structure->getCell());
 
     // the 'background' of the temp_result is from bmp_screen
+    // BUG BUG: This will break when zooming, this only works when unzoomed (it copies the expected terrain)
     blit(bmp_screen, temp_result, drawX, drawY, 0, 0, orgWidthInPixels, orgHeightInPixels);
 
 	blit(structure->getBitmap(), temp, 0, iSourceY, 0, 0, orgWidthInPixels, orgHeightInPixels);
@@ -120,8 +125,8 @@ void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
 
 	// draw normal structure
     draw_sprite(temp_result, temp, 0, 0);
-//    draw_sprite(bmp_screen, temp, drawX, drawY);
-	blit(temp_result, bmp_screen, 0, 0, drawX, drawY, widthInPixels, heightInPixels);
+//	blit(temp_result, bmp_screen, 0, 0, drawX, drawY, widthInPixels, heightInPixels);
+    stretch_blit(temp_result, bmp_screen, 0, 0, orgWidthInPixels, orgHeightInPixels, drawX, drawY, widthInPixels, heightInPixels);
 
 	// in case shadow, draw shadow now using fBlend.
 
@@ -175,40 +180,52 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
 
 	cStructureUtils structureUtils;
 
-	int widthInPixels = structureUtils.getStructureWidthInPixels(structure);
-	int heightInPixels = structureUtils.getStructureHeightInPixels(structure);
+	int orgWidthInPixels = structureUtils.getStructureWidthInPixels(structure);
+	int orgHeightInPixels = structureUtils.getStructureHeightInPixels(structure);
 
 	int drawX = getDrawXForStructure(structure->getCell());
 	int drawY = getDrawYForStructure(structure->getCell());
 
     // structures are animated within the same source bitmap. The Y coordinates determine
     // what frame is being drawn. So multiply the height of the structure size times frame
-    int iSourceY = heightInPixels * structure->getFrame();
+    int iSourceY = orgHeightInPixels * structure->getFrame();
 
 	int fade = windtrap->getFade();
+    int screenDepth = bitmap_color_depth(bmp_screen);
 
-	BITMAP *temp=create_bitmap_ex(8, widthInPixels, heightInPixels);
-	BITMAP *temp_shadow=create_bitmap(widthInPixels, heightInPixels);
-    BITMAP *wind=create_bitmap(widthInPixels, heightInPixels);
+	BITMAP *temp=create_bitmap_ex(8, orgWidthInPixels, orgHeightInPixels);
+	BITMAP *temp_shadow=create_bitmap(orgWidthInPixels, orgHeightInPixels);
+    BITMAP *wind=create_bitmap(orgWidthInPixels, orgHeightInPixels);
+    BITMAP *temp_result=create_bitmap_ex(screenDepth, orgWidthInPixels, orgHeightInPixels);
 
 	clear(temp);
     clear_to_color(wind, makecol(255,0,255));
 	clear_to_color(temp_shadow, makecol(255,0,255));
 
-	blit(structure->getBitmap(), temp, 0, iSourceY, 0, 0, widthInPixels, heightInPixels);
+    // the 'background' of the temp_result is from bmp_screen
+    // BUG BUG: This will break when zooming, this only works when unzoomed (it copies the expected terrain)
+    blit(bmp_screen, temp_result, drawX, drawY, 0, 0, orgWidthInPixels, orgHeightInPixels);
+
+    blit(structure->getBitmap(), temp, 0, iSourceY, 0, 0, orgWidthInPixels, orgHeightInPixels);
 
 	// in case shadow, prepare shadow bitmap in memory
 	if (structure->getShadowBitmap()) {
-		blit(structure->getShadowBitmap(), temp_shadow, 0, iSourceY, 0, 0, widthInPixels, heightInPixels);
+		blit(structure->getShadowBitmap(), temp_shadow, 0, iSourceY, 0, 0, orgWidthInPixels, orgHeightInPixels);
 	}
 
 //	// draw normal structure
 //	draw_sprite(bmp_screen, temp, drawX, drawY);
 
+    int widthInPixels = mapCamera->factorZoomLevel(orgWidthInPixels);
+    int heightInPixels = mapCamera->factorZoomLevel(orgHeightInPixels);
+
 	// windtrap animation
 	draw_sprite(wind, temp, 0, 0);
 	lit_windtrap_color(wind, makecol(0, 0, fade));
-	draw_sprite(bmp_screen, wind, drawX, drawY);
+//	draw_sprite(bmp_screen, wind, drawX, drawY);
+    draw_sprite(temp_result, temp, 0, 0);
+//	blit(temp_result, bmp_screen, 0, 0, drawX, drawY, widthInPixels, heightInPixels);
+    stretch_blit(temp_result, bmp_screen, 0, 0, orgWidthInPixels, orgHeightInPixels, drawX, drawY, widthInPixels, heightInPixels);
 
 	// in case shadow, draw shadow now using fBlend.
 	if (structure->getShadowBitmap()) {
@@ -219,6 +236,7 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
 	// destroy used bitmaps
 	destroy_bitmap(temp);
 	destroy_bitmap(temp_shadow);
+	destroy_bitmap(temp_result);
     destroy_bitmap(wind);
 }
 
@@ -363,7 +381,7 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure) {
 	int draw_x = getDrawXForStructure(theStructure->getCell()) - 1;
 	int draw_y = getDrawYForStructure(theStructure->getCell()) - 5;
 
-	int widthBmp = theStructure->getS_StructuresType().bmp_width;
+	int widthBmp = mapCamera->factorZoomLevel(theStructure->getS_StructuresType().bmp_width);
 	int width_x = widthBmp - 1;
 
 	int height_y = 4;
