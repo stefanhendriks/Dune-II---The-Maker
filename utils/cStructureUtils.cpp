@@ -254,10 +254,10 @@ int cStructureUtils::getStructureHeightInPixels(cAbstractStructure * theStructur
 
 bool cStructureUtils::isStructureOnScreen(cAbstractStructure *structure) {
 	assert(structure);
-	int drawX = structure->iDrawX();
-	int drawY = structure->iDrawY();
-	int width = getStructureWidthInPixels(structure);
-	int height = getStructureHeightInPixels(structure);
+	int drawX = mapCamera->factorZoomLevel(structure->iDrawX());
+	int drawY = mapCamera->factorZoomLevel(structure->iDrawY());
+	int width = mapCamera->factorZoomLevel(getStructureWidthInPixels(structure));
+	int height = mapCamera->factorZoomLevel(getStructureHeightInPixels(structure));
 
 	return ((drawX + width) > 0 && drawX < game.screen_x) && ( (drawY + height) > 0 && drawY < game.screen_y);
 }
@@ -266,10 +266,11 @@ bool cStructureUtils::isMouseOverStructure(cMouse *mouse, cAbstractStructure *st
 	assert(structure);
 	assert(mouse);
 
-	int drawX = structure->iDrawX();
-	int drawY = structure->iDrawY();
-	int width = getStructureWidthInPixels(structure);
-	int height = getStructureHeightInPixels(structure);
+	int drawX = mapCamera->factorZoomLevel(structure->iDrawX());
+	int drawY = mapCamera->factorZoomLevel(structure->iDrawY());
+	int width = mapCamera->factorZoomLevel(getStructureWidthInPixels(structure));
+	int height = mapCamera->factorZoomLevel(getStructureHeightInPixels(structure));
+	rectfill(bmp_screen, drawX, drawY, width, height, makecol(255,255,255));
 
 	cMouseUtils * mouseUtils = new cMouseUtils(mouse);
 	bool result = mouseUtils->isMouseOverRectangle(drawX, drawY, width, height);
