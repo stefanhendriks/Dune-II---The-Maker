@@ -471,16 +471,12 @@ void cMap::draw_units()
             int drawx = unit[i].draw_x();
             int drawy = unit[i].draw_y();
 
-			//line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(255,255,255));
-
+			// within drawable screen
             if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.screen_x-160)) &&
-                ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.screen_y))
-            {
+                ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.screen_y)) {
 
                 // draw
                 unit[i].draw();
-
-				//line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(0,255,255));
 
 				if (key[KEY_D] && key[KEY_TAB])
 					alfont_textprintf(bmp_screen, game_font, unit[i].draw_x(),unit[i].draw_y(), makecol(255,255,255), "%d", i);
