@@ -168,13 +168,12 @@ void cSideBar::thinkInteraction() {
 		bool mouseOverDown = sidebarDrawer->isMouseOverScrollDown();
 		assert(!(mouseOverUp == true && mouseOverDown == true));// can never be both.
 
-		cMouse * mouse = cMouse::getInstance();
 		if (mouseOverUp) {
-			if (mouse->isLeftButtonClicked()) {
+			if (cMouse::isLeftButtonClicked()) {
 				list->scrollUp();
 			}
 		} else if (mouseOverDown) {
-			if (mouse->isLeftButtonClicked()) {
+			if (cMouse::isLeftButtonClicked()) {
 				list->scrollDown();
 			}
 		}
@@ -214,7 +213,7 @@ void cSideBar::thinkInteraction() {
 			}
 		}
 
-		if (cMouse::getInstance()->isLeftButtonClicked()) {
+		if (cMouse::isLeftButtonClicked()) {
 			if (list != NULL) {
 				if (list->getType() != LIST_STARPORT) {
 					if (item != NULL) {
@@ -251,7 +250,7 @@ void cSideBar::thinkInteraction() {
 			}
 		}
 
-		if (cMouse::getInstance()->isRightButtonClicked()) {
+		if (cMouse::isRightButtonClicked()) {
 			if (list != NULL) {
 				// anything but the starport can 'build' things
 				if (list->getType() != LIST_STARPORT) {
@@ -307,19 +306,17 @@ void cSideBar::thinkMouseZScrolling() {
 	}
 
 	cBuildingList *list = getList(selectedListID);
-	cMouse *mouse = cMouse::getInstance();
-
 
 	// MOUSE WHEEL
-	if (mouse->isMouseScrolledUp()) {
+	if (cMouse::isMouseScrolledUp()) {
 	   list->scrollUp();
 	   mapCamera->zoomOut();
 	}
 
 
 
-	if (mouse->isMouseScrolledDown()) {
+	if (cMouse::isMouseScrolledDown()) {
 	   list->scrollDown();
-        mapCamera->zoomIn();
+	   mapCamera->zoomIn();
 	}
 }

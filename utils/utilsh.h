@@ -26,6 +26,5 @@
 #include "cUpgradeUtils.h"
 #include "cMapUtils.h"
 #include "cListUtils.h"
-#include "cMouseUtils.h"
 
 #endif /* UTILSH_H_ */

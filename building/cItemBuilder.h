@@ -32,8 +32,8 @@ class cItemBuilder {
 		void removeItemFromList(int position);
 		void removeAllItems();
 
-		bool isTheFirstListType(cBuildingListItem *item);
-		cBuildingListItem *getSimilarListType(cBuildingListItem *item);
+		bool isBuildListItemTheFirstOfItsListType(cBuildingListItem *item);
+		cBuildingListItem *findBuildingListItemOfSameListAs(cBuildingListItem *item);
 
 		void removeItemFromList(cBuildingListItem *item);
 		bool isASimilarItemBeingBuilt(cBuildingListItem *item);

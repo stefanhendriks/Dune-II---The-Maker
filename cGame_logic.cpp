@@ -476,7 +476,7 @@ void cGame::think_music()
 
 void cGame::poll()
 {
-	cMouse::getInstance()->updateState();
+	cMouse::updateState();
 	cGameControlsContext * context = player[HUMAN].getGameControlsContext();
 	context->updateState();
 
@@ -610,7 +610,7 @@ void cGame::draw_mentat(const int iType)
         }
     }
 
-    if (cMouse::getInstance()->isLeftButtonClicked())
+    if (cMouse::isLeftButtonClicked())
         if (TIMER_mentat_Speaking > 0)
         {
             TIMER_mentat_Speaking = 1;
@@ -739,7 +739,7 @@ void cGame::mentat(int iType)
         draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BTN_REPEAT].dat, 293, 423);
 
         if ((mouse_x > 293 && mouse_x < 446) && (mouse_y > 423 && mouse_y < 468))
-            if (cMouse::getInstance()->isLeftButtonClicked())
+            if (cMouse::isLeftButtonClicked())
             {
                 // head back to choose house
                 iMentatSpeak=-1; // prepare speaking
@@ -749,7 +749,7 @@ void cGame::mentat(int iType)
         // YES/PROCEED
         draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BTN_PROCEED].dat, 466, 423);
         if ((mouse_x > 446 && mouse_x < 619) && (mouse_y >423 && mouse_y < 468))
-            if (cMouse::getInstance()->isLeftButtonClicked())
+            if (cMouse::isLeftButtonClicked())
             {
                 if (isState(GAME_BRIEFING))
                 {
@@ -905,7 +905,7 @@ void cGame::menu()
 	int playY = 323 + logoY;
 	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, playY, "Campaign", makecol(255, 0, 0)))
 	{
-		if (cMouse::getInstance()->isLeftButtonClicked())
+		if (cMouse::isLeftButtonClicked())
 		{
 			state = GAME_HOUSE; // select house
 			bFadeOut = true;
@@ -916,7 +916,7 @@ void cGame::menu()
 	int skirmishY = 344 + logoY;
 	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, skirmishY, "Skirmish", makecol(255, 0, 0)))
 	{
-		if (cMouse::getInstance()->isLeftButtonClicked())
+		if (cMouse::isLeftButtonClicked())
 		{
 			game.state = GAME_SETUPSKIRMISH;
 			bFadeOut = true;
@@ -936,7 +936,7 @@ void cGame::menu()
 	int multiplayerY = 364 + logoY;
 	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, multiplayerY, "Multiplayer", makecol(128, 128, 128)))
 	{
-		if (cMouse::getInstance()->isLeftButtonClicked())
+		if (cMouse::isLeftButtonClicked())
 		{
 			// NOT YET IMPLEMENTED
 			//game.state = GAME_SETUPSKIRMISH;
@@ -948,7 +948,7 @@ void cGame::menu()
 	int loadY = 384 + logoY;
 	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, loadY, "Load", makecol(128, 128, 128)))
 	{
-		if (cMouse::getInstance()->isLeftButtonClicked())
+		if (cMouse::isLeftButtonClicked())
 		{
 			// NOT YET IMPLEMENTED
 			//game.state = GAME_SETUPSKIRMISH;
@@ -960,7 +960,7 @@ void cGame::menu()
 	int optionsY = 404 + logoY;
 	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, optionsY, "Options", makecol(128, 128, 128)))
 	{
-		if (cMouse::getInstance()->isLeftButtonClicked())
+		if (cMouse::isLeftButtonClicked())
 		{
 			// NOT YET IMPLEMENTED
 			//game.state = GAME_SETUPSKIRMISH;
@@ -972,7 +972,7 @@ void cGame::menu()
 	int hofY = 424 + logoY;
 	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, hofY, "Hall of Fame", makecol(128, 128, 128)))
 	{
-		if (cMouse::getInstance()->isLeftButtonClicked())
+		if (cMouse::isLeftButtonClicked())
 		{
 			// NOT YET IMPLEMENTED
 			//game.state = GAME_SETUPSKIRMISH;
@@ -984,7 +984,7 @@ void cGame::menu()
 	int exitY = 444 + logoY;
 	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, exitY, "Exit", makecol(255, 0, 0)))
 	{
-		if (cMouse::getInstance()->isLeftButtonClicked())
+		if (cMouse::isLeftButtonClicked())
 		{
 			bFadeOut = true;
 			game.bPlaying = false;
@@ -1161,7 +1161,7 @@ void cGame::setup_skirmish()
 	{
         textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, makecol(255, 0, 0), "Startpoints: %d", iStartingPoints);
 
-		if (cMouse::getInstance()->isLeftButtonClicked())
+		if (cMouse::isLeftButtonClicked())
 		{
 			iSkirmishStartPoints++;
 
@@ -1172,7 +1172,7 @@ void cGame::setup_skirmish()
 			bDoRandomMap=true;
 		}
 
-		if (cMouse::getInstance()->isRightButtonClicked())
+		if (cMouse::isRightButtonClicked())
 		{
 			iSkirmishStartPoints--;
 
@@ -1219,7 +1219,7 @@ void cGame::setup_skirmish()
 			    // Mouse reaction
                 iColor=makecol(255,0,0);
 
-				if (cMouse::getInstance()->isLeftButtonClicked())
+				if (cMouse::isLeftButtonClicked())
 				{
                     GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapListFrameWidth, iHeightPixels);
 					iSkirmishMap=i;
@@ -1278,7 +1278,7 @@ void cGame::setup_skirmish()
 					else
 						alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol((fade_select/2),(fade_select/2),(fade_select/2)), "  CPU");
 
-					if (cMouse::getInstance()->isLeftButtonClicked() && p > 1)
+					if (cMouse::isLeftButtonClicked() && p > 1)
 					{
 						if (aiplayer[p].bPlaying)
 							aiplayer[p].bPlaying=false;
@@ -1343,7 +1343,7 @@ void cGame::setup_skirmish()
 					alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol((fade_select/2),(fade_select/2),(fade_select/2)), "%s", cHouse);
 
 
-				if (cMouse::getInstance()->isLeftButtonClicked())
+				if (cMouse::isLeftButtonClicked())
 				{
 					player[p].setHouse((player[p].getHouse()+1));
 					if (p > 0)
@@ -1360,7 +1360,7 @@ void cGame::setup_skirmish()
 					}
 				}
 
-				if (cMouse::getInstance()->isRightButtonClicked())
+				if (cMouse::isRightButtonClicked())
 				{
 					player[p].setHouse((player[p].getHouse()-1));
 					if (p > 0)
@@ -1408,7 +1408,7 @@ void cGame::setup_skirmish()
 				else
 					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol((fade_select/2),(fade_select/2),(fade_select/2)), "%d", player[p].credits);
 
-				if (cMouse::getInstance()->isLeftButtonClicked())
+				if (cMouse::isLeftButtonClicked())
 				{
 					player[p].credits += 500;
 					if (player[p].credits > 10000) {
@@ -1416,7 +1416,7 @@ void cGame::setup_skirmish()
 					}
 				}
 
-				if (cMouse::getInstance()->isRightButtonClicked())
+				if (cMouse::isRightButtonClicked())
 				{
 					player[p].credits -= 500;
 					if (player[p].credits < 1000) {
@@ -1455,7 +1455,7 @@ void cGame::setup_skirmish()
 				else
 					alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol((fade_select/2),(fade_select/2),(fade_select/2)), "%d", aiplayer[p].iUnits);
 
-				if (cMouse::getInstance()->isLeftButtonClicked())
+				if (cMouse::isLeftButtonClicked())
 				{
 					aiplayer[p].iUnits++;
 					if (aiplayer[p].iUnits > 10) {
@@ -1463,7 +1463,7 @@ void cGame::setup_skirmish()
 					}
 				}
 
-				if (cMouse::getInstance()->isRightButtonClicked())
+				if (cMouse::isRightButtonClicked())
 				{
 					aiplayer[p].iUnits--;
 					if (aiplayer[p].iUnits < 1) {
@@ -1509,7 +1509,7 @@ void cGame::setup_skirmish()
     {
         textDrawer.drawTextBottomLeft(makecol(255,0,0), " BACK");
 
-        if (cMouse::getInstance()->isLeftButtonClicked())
+        if (cMouse::isLeftButtonClicked())
         {
             bFadeOut=true;
             state = GAME_MENU;
@@ -1520,7 +1520,7 @@ void cGame::setup_skirmish()
         textDrawer.drawTextBottomRight(makecol(255, 0, 0), "START");
 
         // START
-        if ((cMouse::getInstance()->isLeftButtonClicked() && iSkirmishMap > -1)) {
+        if ((cMouse::isLeftButtonClicked() && iSkirmishMap > -1)) {
             cCellCalculator *cellCalculator = new cCellCalculator(&map);
             // Starting skirmish mode
             bSkirmish=true;
@@ -1753,7 +1753,7 @@ void cGame::house() {
 	if ((mouse_y >= 168 && mouse_y <=267) &&
 		(mouse_x >= 116 && mouse_x <=207))
 	{
-		if (cMouse::getInstance()->isLeftButtonClicked())
+		if (cMouse::isLeftButtonClicked())
 		{
 			iHouse=ATREIDES;
 
@@ -1774,7 +1774,7 @@ void cGame::house() {
 	if ((mouse_y >= 168 && mouse_y <=267) &&
 		(mouse_x >= 271 && mouse_x <=360))
 	{
-		if (cMouse::getInstance()->isLeftButtonClicked())
+		if (cMouse::isLeftButtonClicked())
 		{
 			iHouse=ORDOS;
 
@@ -1795,7 +1795,7 @@ void cGame::house() {
 	if ((mouse_y >= 168 && mouse_y <=267) &&
 		(mouse_x >= 418 && mouse_x <=506))
 	{
-		if (cMouse::getInstance()->isLeftButtonClicked())
+		if (cMouse::isLeftButtonClicked())
 		{
 			iHouse=HARKONNEN;
 
@@ -1920,7 +1920,7 @@ void cGame::tellhouse()
         draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BTN_NO].dat, 293, 423);
 
         if ((mouse_x > 293 && mouse_x < 446) && (mouse_y > 423 && mouse_y < 468))
-            if (cMouse::getInstance()->isLeftButtonClicked())
+            if (cMouse::isLeftButtonClicked())
             {
                 // head back to choose house
                 iHouse=-1;
@@ -1931,7 +1931,7 @@ void cGame::tellhouse()
         // YES
         draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BTN_YES].dat, 466, 423);
         if ((mouse_x > 446 && mouse_x < 619) && (mouse_y >423 && mouse_y < 468))
-            if (cMouse::getInstance()->isLeftButtonClicked())
+            if (cMouse::isLeftButtonClicked())
             {
                 // yes!
                 state = GAME_BRIEFING; // briefing
@@ -2189,7 +2189,7 @@ void cGame::region()
 				bClickable=true;
 		}
 
-	if (cMouse::getInstance()->isLeftButtonClicked() && bClickable)
+	if (cMouse::isLeftButtonClicked() && bClickable)
 	{
 		// selected....
 		int iReg=0;
@@ -2579,7 +2579,7 @@ bool cGame::setupGame() {
 	install_keyboard();
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
 	install_mouse();
-	assert(cMouse::getInstance());
+	cMouse::init();
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
 	/* set up the interrupt routines... */

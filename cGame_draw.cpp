@@ -38,7 +38,7 @@ void cGame::losing()
 
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
-    if (cMouse::getInstance()->isLeftButtonClicked())
+    if (cMouse::isLeftButtonClicked())
     {
         // OMG, MENTAT IS NOT HAPPY
         state = GAME_LOSEBRIEF;
@@ -62,7 +62,7 @@ void cGame::winning()
 
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
-    if (cMouse::getInstance()->isLeftButtonClicked())
+    if (cMouse::isLeftButtonClicked())
     {
         // SELECT YOUR NEXT CONQUEST
         state = GAME_WINBRIEF;
@@ -106,7 +106,7 @@ void cGame::combat_mouse()
             				units[unit[hover_unit].iType].infantry == false &&
             				units[unit[hover_unit].iType].airborn == false)	{
 
-						if (cMouse::getInstance()->isLeftButtonClicked()) {
+						if (cMouse::isLeftButtonClicked()) {
 							// find closest repair bay to move to
 
 							cStructureUtils structureUtils;
@@ -140,12 +140,12 @@ void cGame::combat_mouse()
     // when mouse hovers above a valid cell
 	if (mc > -1) {
 
-		if (cMouse::getInstance()->isRightButtonClicked()) {
+		if (cMouse::isRightButtonClicked()) {
 			UNIT_deselect_all();
 		}
 
 		// single clicking and moving
-		if (cMouse::getInstance()->isLeftButtonClicked())
+		if (cMouse::isLeftButtonClicked())
 		{
 			bool bParticle=false;
 
@@ -401,7 +401,7 @@ void cGame::combat_mouse()
             if (structure[structureId]->getOwner() == 0 &&
                 structure[structureId]->getHitPoints() < structures[structure[structureId]->getType()].hp)
             {
-                if (cMouse::getInstance()->isLeftButtonClicked())
+                if (cMouse::isLeftButtonClicked())
                 {
 
                     if (!structure[structureId]->isRepairing()) {
@@ -415,7 +415,7 @@ void cGame::combat_mouse()
             }// MOUSE PRESSED
         }
 
-		if (cMouse::getInstance()->isLeftButtonClicked() && bOrderingUnits == false && !key[KEY_R]) {
+		if (cMouse::isLeftButtonClicked() && bOrderingUnits == false && !key[KEY_R]) {
 			game.selected_structure = context->getIdOfStructureWhereMouseHovers();
 
 			// select list that belongs to structure when it is ours

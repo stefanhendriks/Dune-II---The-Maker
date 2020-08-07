@@ -34,42 +34,43 @@ cMouse *cMouse::getInstance() {
 }
 
 void cMouse::updateState() {
-	x = mouse_x;
-	y = mouse_y;
-	z = mouse_z;
+    cMouse * mouse = getInstance();
+    mouse->x = mouse_x;
+    mouse->y = mouse_y;
+    mouse->z = mouse_z;
 
 	// check if leftButtonIsPressed=true (which is the previous frame)
-	leftButtonPressedInPreviousFrame = leftButtonPressed;
-	rightButtonPressedInPreviousFrame = rightButtonPressed;
+    mouse->leftButtonPressedInPreviousFrame = mouse->leftButtonPressed;
+    mouse->rightButtonPressedInPreviousFrame = mouse->rightButtonPressed;
 
-	leftButtonPressed = mouse_b & 1;
-	rightButtonPressed = mouse_b & 2;
+    mouse->leftButtonPressed = mouse_b & 1;
+    mouse->rightButtonPressed = mouse_b & 2;
 
 	// now check if the leftButtonPressed == false, but the previous frame was true (if so, it is
 	// counted as a click)
-	leftButtonClicked = (leftButtonPressedInPreviousFrame == true && leftButtonPressed == false);
-	rightButtonClicked = (rightButtonPressedInPreviousFrame == true && rightButtonPressed == false);
+    mouse->leftButtonClicked = (mouse->leftButtonPressedInPreviousFrame == true && mouse->leftButtonPressed == false);
+    mouse->rightButtonClicked = (mouse->rightButtonPressedInPreviousFrame == true && mouse->rightButtonPressed == false);
 
-	mouseScrolledUp = mouseScrolledDown = false;
+    mouse->mouseScrolledUp = mouse->mouseScrolledDown = false;
 
-	if (z > zValuePreviousFrame) {
-		mouseScrolledUp = true;
+	if (mouse->z > mouse->zValuePreviousFrame) {
+        mouse->mouseScrolledUp = true;
 	}
 
-	if (z < zValuePreviousFrame) {
-		mouseScrolledDown = true;
+	if (mouse->z < mouse->zValuePreviousFrame) {
+        mouse->mouseScrolledDown = true;
 	}
 
-	zValuePreviousFrame = z;
+    mouse->zValuePreviousFrame = mouse->z;
 
 	// cap mouse z
-	if (z > 10 || z < -10) {
-		z = 0;
-		position_mouse_z(0);
+	if (mouse->z > 10 || mouse->z < -10) {
+        mouse->z = 0;
+		position_mouse_z(0); // allegro function
 	}
 }
 
 void cMouse::positionMouseCursor(int x, int y) {
-	position_mouse(x, y);
+	position_mouse(x, y); // allegro function
 }
 

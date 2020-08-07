@@ -7,11 +7,9 @@
 
 #include "../include/d2tmh.h"
 
-cMouseToolTip::cMouseToolTip(cPlayer *thePlayer, cMouse *theMouse) {
+cMouseToolTip::cMouseToolTip(cPlayer *thePlayer) {
 	assert(thePlayer);
-	assert(theMouse);
 	player = thePlayer;
-	mouse = theMouse;
 }
 
 cMouseToolTip::~cMouseToolTip() {

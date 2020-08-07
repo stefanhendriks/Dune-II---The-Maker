@@ -131,15 +131,13 @@ void cSideBarDrawer::drawScrollButtons() {
 	int buttonUpX = game.screen_x - 68;
 	int buttonUpY = game.screen_y - 310;
 
-	cMouse * mouse = cMouse::getInstance();
-
 	bool leftScrollButtonPressed=false;
 	bool rightScrollButtonPressed=false;
 
-	if (mouse->isMouseScrolledUp()) {
+	if (cMouse::isMouseScrolledUp()) {
 		leftScrollButtonPressed = true;
 	}
-	if (mouse->isMouseScrolledDown()) {
+	if (cMouse::isMouseScrolledDown()) {
 		rightScrollButtonPressed = true;
 	}
 
@@ -154,11 +152,10 @@ void cSideBarDrawer::drawScrollButtons() {
 		bool mouseOverDown = isMouseOverScrollDown();
 		assert(!(mouseOverUp == true && mouseOverDown == true));// can never be both.
 
-		cMouse * mouse = cMouse::getInstance();
 		if (mouseOverUp) {
-			leftScrollButtonPressed = mouse->isLeftButtonPressed();
+			leftScrollButtonPressed = cMouse::isLeftButtonPressed();
 		} else if (mouseOverDown) {
-			rightScrollButtonPressed = mouse->isLeftButtonPressed();
+			rightScrollButtonPressed = cMouse::isLeftButtonPressed();
 		}
 	}
 
