@@ -35,7 +35,7 @@ void cMapDrawer::drawShroud() {
 
     int colorDepthScreen = bitmap_color_depth(bmp_screen);
 //    bmp_temp=create_bitmap_ex(colorDepthScreen, 32,32);
-    BITMAP *temp = create_bitmap(tileWidth,tileHeight);
+    BITMAP *temp = create_bitmap_ex(colorDepthScreen, tileWidth,tileHeight);
 
 	int iDrawX=0;
 	int iDrawY=42;
@@ -57,127 +57,27 @@ void cMapDrawer::drawShroud() {
 				if (mapUtils->isCellVisibleForPlayerId(iPl, cll)) {
 					// do nothing
 				} else {
-					rectfill(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, makecol(0,0,0));
+					rectfill(bmp_screen, iDrawX, iDrawY, iDrawX+tileWidth, iDrawY+tileHeight, makecol(0,0,0));
 				}
-
 			} else {
 				if (mapUtils->isCellVisibleForPlayerId(iPl, cll)) {
-					// Visible stuff, now check for not visible stuff. When found, assign the proper border
-					// of shroud to it.
-					int above = CELL_ABOVE(cll);
-					int under = CELL_UNDER(cll);
-					int left  = CELL_LEFT(cll);
-					int right = CELL_RIGHT(cll);
+                    tile = determineWhichShroudTileToDraw(cll, iPl);
 
-					bool a, u, l, r;
-					a=u=l=r=true;
-
-					if (above > -1)	{
-						if (mapUtils->isCellVisibleForPlayerId(iPl, above)) {
-							a = false;  // visible
-						}
-					} else {
-						a = false;
-					}
-
-					if (under > -1) {
-						if (mapUtils->isCellVisibleForPlayerId(iPl, under)) {
-							u = false;  // visible
-						}
-					} else {
-						u = false;
-					}
-
-					if (left > -1) {
-						if (mapUtils->isCellVisibleForPlayerId(iPl, left)) {
-							l = false;  // visible
-						}
-					} else {
-						l = false;
-					}
-
-					if (right > -1) {
-						if (mapUtils->isCellVisibleForPlayerId(iPl, right)) {
-							r = false;  // visible
-						}
-					} else {
-						r = false;
-					}
-
-					int t=-1;	// tile id to draw... (x axis)
-
-					// when above is not visible then change this border tile
-					if (a == true && u == false && l == false && r == false)
-						t = 3;
-
-					if (a == false && u == true && l == false && r == false)
-						t = 7;
-
-					if (a == false && u == false && l == true && r == false)
-						t = 9;
-
-					if (a == false && u == false && l == false && r == true)
-						t = 5;
-							// corners
-
-					if (a == true && u == false && l == true && r == false)
-						t = 2;
-
-					if (a == true && u == false && l == false && r == true)
-						t = 4;
-
-					if (a == false && u == true && l == true && r == false)
-						t = 8;
-
-					if (a == false && u == true && l == false && r == true)
-						t = 6;
-
-					// 3 connections
-					if (a == true && u == true && l == true && r == false)
-						t = 10;
-
-					if (a == true && u == true && l == false && r == true)
-						t = 12;
-
-					if (a == true && u == false && l == true && r == true)
-						t = 11;
-
-					if (a == false && u == true && l == true && r == true)
-						t = 13;
-
-					if (a == true && u == true && l == true && r == true)
-						t=1;
-
-					tile = t - 1;
-
-					if (tile > -1)
-					{
-
-						// Draw cell
-//						masked_blit((BITMAP *)gfxdata[SHROUD].dat, bmp_screen, tile * 32, 0, iDrawX, iDrawY, 32, 32);
+                    if (tile > -1) {
 						masked_stretch_blit((BITMAP *)gfxdata[SHROUD].dat, bmp_screen, tile * 32, 0, 32, 32, iDrawX, iDrawY, tileWidth, tileHeight);
-
                         clear_to_color(temp, makecol(255, 0, 255));
 
-//                        masked_blit((BITMAP *) gfxdata[SHROUD_SHADOW].dat, temp, tile * 32, 0, 0, 0, 32, 32);
                         masked_stretch_blit((BITMAP *) gfxdata[SHROUD_SHADOW].dat, temp, tile * 32, 0, 32, 32, 0, 0, tileWidth, tileHeight);
                         draw_trans_sprite(bmp_screen, temp, iDrawX, iDrawY);
-
-
-					//	alfont_textprintf(bmp_screen, game_font, iDrawX,iDrawY, makecol(255,255,255), "%d", tile);
-				   }
-
+                    }
 				  }
 				  else
 				  {
                       // NOT VISIBLE, DO NOT DRAW A THING THEN!
-                      //	alfont_textprintf(bmp_screen, game_font, iDrawX,iDrawY, makecol(255,255,255), "%d", tile);
-
                       // Except when there is a building here, that should not be visible ;)
-//                      masked_blit((BITMAP *)gfxdata[SHROUD].dat, bmp_screen, 0, 0, iDrawX, iDrawY, 32, 32);
+                      // tile 0 of shroud is entirely black... (effectively the same as drawing a rect here)
                       masked_stretch_blit((BITMAP *)gfxdata[SHROUD].dat, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, tileWidth, tileHeight);
 				  }
-
 			  }
 			iDrawY+=tileHeight;
 		}
@@ -185,6 +85,97 @@ void cMapDrawer::drawShroud() {
 	}
 
 	destroy_bitmap(temp);
+}
+
+int cMapDrawer::determineWhichShroudTileToDraw(int cll, int iPl) const {
+    int tile;// Visible stuff, now check for not visible stuff. When found, assign the proper border
+// of shroud to it.
+    int above = CELL_ABOVE(cll);
+    int under = CELL_UNDER(cll);
+    int left  = CELL_LEFT(cll);
+    int right = CELL_RIGHT(cll);
+
+    bool a, u, l, r;
+    a=u=l=r=true;
+
+    if (above > -1)	{
+        if (mapUtils->isCellVisibleForPlayerId(iPl, above)) {
+            a = false;  // visible
+        }
+    } else {
+        a = false;
+    }
+
+    if (under > -1) {
+        if (mapUtils->isCellVisibleForPlayerId(iPl, under)) {
+            u = false;  // visible
+        }
+    } else {
+        u = false;
+    }
+
+    if (left > -1) {
+        if (mapUtils->isCellVisibleForPlayerId(iPl, left)) {
+            l = false;  // visible
+        }
+    } else {
+        l = false;
+    }
+
+    if (right > -1) {
+        if (mapUtils->isCellVisibleForPlayerId(iPl, right)) {
+            r = false;  // visible
+        }
+    } else {
+        r = false;
+    }
+
+    int t=-1;    // tile id to draw... (x axis)
+
+    // when above is not visible then change this border tile
+    if (a == true && u == false && l == false && r == false)
+        t = 3;
+
+    if (a == false && u == true && l == false && r == false)
+        t = 7;
+
+    if (a == false && u == false && l == true && r == false)
+        t = 9;
+
+    if (a == false && u == false && l == false && r == true)
+        t = 5;
+    // corners
+
+    if (a == true && u == false && l == true && r == false)
+        t = 2;
+
+    if (a == true && u == false && l == false && r == true)
+        t = 4;
+
+    if (a == false && u == true && l == true && r == false)
+        t = 8;
+
+    if (a == false && u == true && l == false && r == true)
+        t = 6;
+
+    // 3 connections
+    if (a == true && u == true && l == true && r == false)
+        t = 10;
+
+    if (a == true && u == true && l == false && r == true)
+        t = 12;
+
+    if (a == true && u == false && l == true && r == true)
+        t = 11;
+
+    if (a == false && u == true && l == true && r == true)
+        t = 13;
+
+    if (a == true && u == true && l == true && r == true)
+        t=1;
+
+    tile = t - 1;
+    return tile;
 }
 
 void cMapDrawer::drawTerrain() {
