@@ -30,6 +30,7 @@ class cMapCamera {
 
 		void zoomIn() { if (desiredZoomLevel < 2.0) desiredZoomLevel += 0.1; }
 		void zoomOut() { if (desiredZoomLevel > 0.25) desiredZoomLevel -= 0.1; }
+		void resetZoom() { desiredZoomLevel = 1.0f; }
 
 		void jumpTo(int	theX, int theY);
 		void moveTo(int theX, int theY);
