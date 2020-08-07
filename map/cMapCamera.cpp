@@ -144,12 +144,14 @@ void cMapCamera::thinkInteraction() {
 	}
 
     if (desiredZoomLevel < zoomLevel) {
-        zoomLevel -= 0.1;
+        zoomLevel -= 0.025;
+        if (zoomLevel < 0.5) zoomLevel = 0.5;
         calibrate();
     }
 
     if (desiredZoomLevel > zoomLevel) {
-        zoomLevel += 0.1;
+        zoomLevel += 0.025;
+        if (zoomLevel > 2) zoomLevel = 2;
         calibrate();
     }
 }
