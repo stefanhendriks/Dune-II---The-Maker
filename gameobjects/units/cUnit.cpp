@@ -428,12 +428,12 @@ bool cUnit::isValid()
 
 
 int cUnit::draw_x() {
-    int tileWidth = mapCamera->getTileWidth();
+    int tileWidth = mapCamera->factorZoomLevel(mapCamera->getTileWidth());
     return (((iCellX * tileWidth) - (mapCamera->getX() * tileWidth)) + iOffsetX);
 }
 
 int cUnit::draw_y() {
-    int tileHeight = mapCamera->getTileHeight();
+    int tileHeight = mapCamera->factorZoomLevel(mapCamera->getTileHeight());
     return (((iCellY * tileHeight) - (mapCamera->getY() * tileHeight)) + iOffsetY) + 42; // 42 = the options bar height
 }
 
