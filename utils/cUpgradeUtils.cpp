@@ -17,7 +17,7 @@ cUpgradeUtils::~cUpgradeUtils() {
 
 
 bool cUpgradeUtils::canUpgradeList(const cPlayer & thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
-    cLogger::getInstance()->log(LOG_TRACE, COMP_UPGRADE_LIST, "canUpgradeList", thePlayer.asString());
+//    cLogger::getInstance()->log(LOG_TRACE, COMP_UPGRADE_LIST, "canUpgradeList", thePlayer.asString());
 	int costToUpgrade = getPriceToUpgradeList(thePlayer, listTypeId, techLevel, currentUpgradeLevelOfList);
 	return costToUpgrade > -1;
 }
