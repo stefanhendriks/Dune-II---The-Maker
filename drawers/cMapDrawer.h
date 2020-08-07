@@ -28,6 +28,7 @@ class cMapDrawer {
 		// bitmap for drawing tiles, and possibly stretching (depending on zoom level)
         BITMAP *bmp_temp;
 
+    int determineWhichShroudTileToDraw(int cll, int iPl) const;
 };
 
 #endif /* CMAPDRAWER_H_ */
