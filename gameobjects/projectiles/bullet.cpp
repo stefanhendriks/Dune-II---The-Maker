@@ -245,6 +245,8 @@ void cBullet::think_move()
     cPlayerDifficultySettings * difficultySettings = player[iPlayer].getDifficultySettings();
 
     // crash against mountains, etc
+    int idOfStructureAtCell = map.getCellIdStructuresLayer(iCell);
+
     if (iType == BULLET_SMALL ||
         iType == BULLET_TRIKE ||
         iType == BULLET_QUAD ||
@@ -255,10 +257,10 @@ void cBullet::think_move()
         bDamageRockets=false;
 
         // hit structures , walls and mountains
-        if (map.cell[iCell].type == TERRAIN_MOUNTAIN)
+        if (map.getCellType(iCell) == TERRAIN_MOUNTAIN)
             bDie=true;
 
-        if (map.cell[iCell].type == TERRAIN_WALL && iType != BULLET_TURRET) // except for bullet turret that do not hit walls...
+        if (map.getCellType(iCell) == TERRAIN_WALL && iType != BULLET_TURRET) // except for bullet turret that do not hit walls...
         {
             // damage this type of wall...
 			int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
@@ -270,9 +272,9 @@ void cBullet::think_move()
 			}
 
             //map.cell[iCell].health -= player[iPlayer].iDamage(bullets[iType].damage);
-			map.cell[iCell].health -= iDamage;
+            map.cellTakeDamage(iCell, iDamage);
 
-            if (map.cell[iCell].health < 0)
+            if (map.getCellHealth(iCell) < 0)
             {
                 // remove wall, turn into smudge:
                 mapEditor.createCell(iCell, TERRAIN_ROCK, 0);
@@ -285,10 +287,10 @@ void cBullet::think_move()
         }
 
 
-        if (map.cell[iCell].id[MAPID_STRUCTURES] > -1) {
+        if (idOfStructureAtCell > -1) {
 
             // structure hit!
-            int id = map.cell[iCell].id[MAPID_STRUCTURES];
+            int id = idOfStructureAtCell;
 
             bool bSkipSelf=false;
 
@@ -360,10 +362,10 @@ void cBullet::think_move()
         // for non bullets (thus rockets!)
         if (bDamageRockets)
         {
-			if (map.cell[iCell].id[MAPID_STRUCTURES] > -1)
+			if (idOfStructureAtCell > -1)
 			{
 				// structure hit!
-				int id = map.cell[iCell].id[MAPID_STRUCTURES];
+				int id = idOfStructureAtCell;
 
 				int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
 
@@ -408,7 +410,7 @@ void cBullet::think_move()
 				}
 			}
 
-        if (map.cell[iCell].type == TERRAIN_WALL)
+        if (map.getCellType(iCell) == TERRAIN_WALL)
         {
             // damage this type of wall...
 			int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
@@ -419,9 +421,9 @@ void cBullet::think_move()
 				iDamage += iDam;
 			}
 
-            map.cell[iCell].health -= iDamage;
+			map.cellTakeDamage(iCell, iDamage);
 
-            if (map.cell[iCell].health < 0)
+            if (map.getCellHealth(iCell) < 0)
             {
                 // remove wall, turn into smudge:
             	mapEditor.createCell(iCell, TERRAIN_ROCK, 0);
@@ -436,7 +438,7 @@ void cBullet::think_move()
         } // do damage by rockets or not?
 
         // SPICE BLOOM
-        if (map.cell[iCell].type == TERRAIN_BLOOM)
+        if (map.getCellType(iCell) == TERRAIN_BLOOM)
 		{
 			// change type of terrain to sand
 			mapEditor.createCell(iCell, TERRAIN_SAND, 0);
@@ -449,10 +451,11 @@ void cBullet::think_move()
         }
 
 		// Ok sandworm damaged
-		if (map.cell[iCell].id[MAPID_WORMS] > -1)
+        int idOfWormAtCell = map.getCellIdWormsLayer(iCell);
+        if (idOfWormAtCell > -1)
         {
             // structure hit!
-            int id = map.cell[iCell].id[MAPID_WORMS];
+            int id = idOfWormAtCell;
 
             unit[id].iHitPoints -= difficultySettings->getInflictDamage(bullets[iType].damage);
 
@@ -466,10 +469,11 @@ void cBullet::think_move()
         }
 
         // OK, units damaged:
-        if (map.cell[iCell].id[MAPID_UNITS] > -1)
+        int idOfUnitAtCell = map.getCellIdUnitLayer(iCell);
+        if (idOfUnitAtCell > -1)
         {
             // structure hit!
-            int id = map.cell[iCell].id[MAPID_UNITS];
+            int id = idOfUnitAtCell;
 
             if (units[unit[id].iType].infantry)
 			{
@@ -560,10 +564,11 @@ void cBullet::think_move()
             iType == ROCKET_SMALL_FREMEN ||
             iType == ROCKET_RTURRET)
         {
-            if (map.cell[iCell].id[MAPID_AIR] > -1)
+            int idOfAirUnitAtCell = map.getCellIdAirUnitLayer(iCell);
+            if (idOfAirUnitAtCell > -1)
             {
             // structure hit!
-            int id = map.cell[iCell].id[MAPID_AIR];
+            int id = idOfAirUnitAtCell;
 
             if (id != iOwnerUnit)
             {
@@ -624,42 +629,42 @@ void cBullet::think_move()
 			iDamage += iDam;
 		}
 
-        if (map.cell[iCell].type == TERRAIN_ROCK)
+        if (map.getCellType(iCell) == TERRAIN_ROCK)
         {
-            if (map.cell[iCell].type != TERRAIN_WALL)
-                map.cell[iCell].health -= iDamage;
+            if (map.getCellType(iCell) != TERRAIN_WALL)
+                map.cellTakeDamage(iCell, iDamage);
 
 
-            if (map.cell[iCell].health < -25)
+            if (map.getCellHealth(iCell) < -25)
             {
                 map.smudge_increase(SMUDGE_ROCK, iCell);
-                map.cell[iCell].health += rnd(25);
+                map.cellGiveHealth(iCell, rnd(25));
             }
         }
-		else if (map.cell[iCell].type == TERRAIN_SLAB)
+		else if (map.getCellType(iCell) == TERRAIN_SLAB)
 		{
 			// change into rock, get destroyed
-			if (map.cell[iCell].id[MAPID_STRUCTURES] < 0 &&
+			if (idOfStructureAtCell < 0 &&
 				iType != BULLET_SMALL &&
 				iType != BULLET_SHIMMER)
 			{
-				map.cell[iCell].type = TERRAIN_ROCK;
+				map.cellChangeType(iCell, TERRAIN_ROCK);
 				mapEditor.smoothAroundCell(iCell);
 			}
 		}
-        else if (map.cell[iCell].type == TERRAIN_SAND ||
-                 map.cell[iCell].type == TERRAIN_HILL ||
-                 map.cell[iCell].type == TERRAIN_SPICE ||
-                 map.cell[iCell].type == TERRAIN_SPICEHILL)
+        else if (map.getCellType(iCell) == TERRAIN_SAND ||
+                 map.getCellType(iCell) == TERRAIN_HILL ||
+                 map.getCellType(iCell) == TERRAIN_SPICE ||
+                 map.getCellType(iCell) == TERRAIN_SPICEHILL)
         {
-            if (map.cell[iCell].type != TERRAIN_WALL)
-                map.cell[iCell].health -= iDamage;
+            if (map.getCellType(iCell) != TERRAIN_WALL)
+                map.cellTakeDamage(iCell, iDamage);
 
 
-            if (map.cell[iCell].health < -25)
+            if (map.getCellHealth(iCell) < -25)
             {
                 map.smudge_increase(SMUDGE_SAND, iCell);
-                map.cell[iCell].health += rnd(25);
+                map.cellGiveHealth(iCell, rnd(25));
             }
         }
 

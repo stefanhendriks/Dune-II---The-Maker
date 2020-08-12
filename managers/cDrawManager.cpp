@@ -39,7 +39,7 @@ void cDrawManager::draw() {
 	// MAP
 	assert(mapDrawer);
 	map.draw_think();
-	mapDrawer->drawTerrain();
+    mapDrawer->drawTerrain(0, 42);
 
 	// Only draw units/structures, etc, when we do NOT press D
 	// TODO: this should be something like : if (keyboard->isDebuggingStructures())

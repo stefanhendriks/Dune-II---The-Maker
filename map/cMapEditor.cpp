@@ -29,22 +29,22 @@ void cMapEditor::createCell(int cell, int terrainType, int tile) {
 	assert(tile < 17);
 
 	// Set
-	map.cell[cell].type = terrainType;
-	map.cell[cell].tile = tile;
-	map.cell[cell].credits = 0;
-	map.cell[cell].passable = true;
+	map.cellChangeType(cell, terrainType);
+	map.cellChangeTile(cell, tile);
+	map.cellChangeCredits(cell, 0);
+	map.cellChangePassable(cell, true);
 
-	map.cell[cell].smudgetile=-1;
-	map.cell[cell].smudgetype=-1;
+	map.cellChangeSmudgeTile(cell, -1);
+	map.cellChangeSmudgeType(cell, -1);
 
 	// when spice
 	if (terrainType == TERRAIN_SPICE || terrainType == TERRAIN_SPICEHILL) {
-		map.cell[cell].credits = 50 + rnd(250);
+		map.cellChangeCredits(cell, 50 + rnd(250));
 	} else if (terrainType == TERRAIN_MOUNTAIN) {
-		map.cell[cell].passable = false;
+		map.cellChangePassable(cell, false);
 	} else if (terrainType == TERRAIN_WALL) {
-		map.cell[cell].health = 100;
-		map.cell[cell].passable = false;
+		map.cellChangeHealth(cell, 100);
+		map.cellChangePassable(cell, false);
 	}
 }
 
@@ -91,7 +91,7 @@ void cMapEditor::createField(int cell, int terrainType, int size) {
 
 		if (c > -1) {
 			// if we are placing spice: if NOT a rock tile, then place spice on it.
-			int terrainTypeOfNewCell = map.cell[c].type;
+			int terrainTypeOfNewCell = map.getCellType(c);
 			if (terrainType == TERRAIN_SPICE) {
 			  if ((terrainTypeOfNewCell != TERRAIN_ROCK) &&
 				  (terrainTypeOfNewCell != TERRAIN_SLAB) &&
@@ -108,12 +108,7 @@ void cMapEditor::createField(int cell, int terrainType, int size) {
 			  }
 			} else {
 				createCell(c, terrainType, 0);
-
-				if (terrainType == TERRAIN_MOUNTAIN) {
-					map.cell[c].passable=false;
-				} else {
-					map.cell[c].passable=true;
-				}
+                map.cellChangePassable(c, terrainType != TERRAIN_MOUNTAIN);
 			}
 		}
 
@@ -226,7 +221,7 @@ bool cMapEditor::isAboveSpecificTerrainType(int sourceCell, int terrainType) {
 bool cMapEditor::isSpecificTerrainType(int cell, int terrainType) {
 	if (cell < 0) return false;
 	if (cell >= MAX_CELLS) return false;
-	return map.cell[cell].type == terrainType;
+	return map.getCellType(cell) == terrainType;
 }
 
 bool cMapEditor::isBelowSpecificTerrainType(int sourceCell, int terrainType) {
@@ -366,7 +361,7 @@ int cMapEditor::smoothWallCell(int cell) {
 
 void cMapEditor::smoothCell(int cell) {
 	int tile = -1;
-	int terrainType = map.cell[cell].type;
+	int terrainType = map.getCellType(cell);
 	if (terrainType == TERRAIN_ROCK) {
 		tile = smoothRockCell(cell);
 	} else if (terrainType == TERRAIN_MOUNTAIN) {
@@ -385,15 +380,13 @@ void cMapEditor::smoothCell(int cell) {
 		char msg[255];
 		sprintf(msg, "Unknown terrain type [%d] .", terrainType);
 		logbook(msg);
-		map.cell[cell].type = TERRAIN_SAND;
-		map.cell[cell].tile = 0;
+		map.cellChangeType(cell, TERRAIN_SAND);
+		map.cellChangeTile(cell, 0);
 		return;
-		// unknown terrain type
-		assert(false);
 	}
 
 	assert(tile > -1);
-	map.cell[cell].tile = tile;
+	map.cellChangeTile(cell, tile);
 }
 
 void cMapEditor::smoothAroundCell(int cell) {
@@ -421,7 +414,7 @@ void cMapEditor::removeSingleRockSpots() {
 		for (int y=startY; y< endY; y++)
 		{
 			int cll = cellCalculator->getCell(x, y);
-			int terrainType = map.cell[cll].type;
+			int terrainType = map.getCellType(cll);
 
 			// now count how many rock is around it
 			if (terrainType == TERRAIN_ROCK) {
@@ -439,8 +432,8 @@ void cMapEditor::removeSingleRockSpots() {
 
 				// when only 1 neighbor, then make sand as well
 				if (iC < 2) {
-					map.cell[cll].type = TERRAIN_SAND;
-					map.cell[cll].tile = 0;
+					map.cellChangeType(cll, TERRAIN_SAND);
+					map.cellChangeTile(cll, 0);
 				}
 			}
 		}

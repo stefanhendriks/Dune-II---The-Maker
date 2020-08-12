@@ -32,25 +32,26 @@
 void cParticle::init()
 {
     // used or not:
-    bAlive=false;        // alive
+    bAlive=false;       // alive
 
     iAlpha=-1;			// alpha
 
     iWidth=32;          // default width of frame
     iHeight=iWidth;
+
     // Drawing effects
     x=0;
-    y=0;        // x and y position to draw (absolute numbers)
+    y=0;              // x and y position to draw (absolute numbers)
     iFrame=0;         // frame
     iType=0;          // type
 
-    layer=0;        // default layer = 0 (on top)
+    layer=0;          // default layer = 0 (on top)
 
-    iHousePal=-1;      // when specified, use this palette for drawing (and its an 8 bit picture then!)
+    iHousePal=-1;     // when specified, use this palette for drawing (and its an 8 bit picture then!)
 
     // TIMERS
     TIMER_frame=0;    // frame animation timers (when < 0, next frame, etc)
-                        // when TIMER_dead < 0, the last frame lets this thing die
+                      // when TIMER_dead < 0, the last frame lets this thing die
 
     TIMER_dead=0;     // when > -1, this timer will determine when the thing dies
 }
@@ -64,13 +65,13 @@ bool cParticle::isValid()
 // absolute pixel position
 int cParticle::draw_x()
 {
-    return (x - (mapCamera->getX()*32));
+    return (x - (mapCamera->factorZoomLevel(mapCamera->getX())));
 }
 
 // absolute pixel position
 int cParticle::draw_y()
 {
-    return (y - (mapCamera->getY()*32));
+    return (y - (mapCamera->factorZoomLevel(mapCamera->getY())));
 }
 
 // draw
@@ -91,7 +92,6 @@ void cParticle::draw()
     {
         Shimmer((16/(iFrame+1)), dx, dy);
     }*/
-
 
 
     // valid in boundries
@@ -577,6 +577,14 @@ int PARTICLE_NEW()
     return -1;
 }
 
+/**
+ * Creates a particle at exact coordinates
+ * @param x
+ * @param y
+ * @param iType
+ * @param iHouse
+ * @param iFrame
+ */
 void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
 {
     int iNewId = PARTICLE_NEW();

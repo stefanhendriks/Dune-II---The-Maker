@@ -14,7 +14,8 @@
 int iCellGiveX(int c);
 int iCellGiveY(int c);
 int iCellMake(int x, int y);
-
+int iCellMakeFromAbsolute(int absX, int absY, int tileWidth, int tileHeight);
+int iCellMakeFromAbsoluteWithCamera(int absX, int absY);
 
 // Angle stuff for unit facing
 float fDegrees(int x1, int y1, int x2, int y2);

@@ -182,13 +182,14 @@ void cRandomMapGenerator::generateRandomMap() {
 		int iColor=makecol(194, 125, 60);
 
 		// rock
-		if (map.cell[cll].type == TERRAIN_ROCK) iColor = makecol(80,80,60);
-		if (map.cell[cll].type == TERRAIN_MOUNTAIN) iColor = makecol(48, 48, 36);
-		if (map.cell[cll].type == TERRAIN_SPICEHILL) iColor = makecol(180,90,25); // bit darker
-		if (map.cell[cll].type == TERRAIN_SPICE) iColor = makecol(186,93,32);
-		if (map.cell[cll].type == TERRAIN_HILL) iColor = makecol(188, 115, 50);
+		int cellType = map.getCellType(cll);
+        if (cellType == TERRAIN_ROCK) iColor = makecol(80, 80, 60);
+		if (cellType == TERRAIN_MOUNTAIN) iColor = makecol(48, 48, 36);
+		if (cellType == TERRAIN_SPICEHILL) iColor = makecol(180, 90, 25); // bit darker
+		if (cellType == TERRAIN_SPICE) iColor = makecol(186, 93, 32);
+		if (cellType == TERRAIN_HILL) iColor = makecol(188, 115, 50);
 
-		PreviewMap[0].mapdata[cll] = map.cell[cll].type;
+		PreviewMap[0].mapdata[cll] = cellType;
 
 		for (int s=0; s < 4; s++)
 		{

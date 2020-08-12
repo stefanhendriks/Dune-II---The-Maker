@@ -138,6 +138,8 @@ int cCellCalculator::getY(int cell) {
 	(it is 0-63 instead of 1-64).
 
 	This method will not do any fancy tricks to fix the boundaries, instead it will assert its input and output.
+
+    Use getCellWithMapBorders if you want a safe way to get a cell (taking map boundaries into account)
 **/
 int cCellCalculator::getCell(int x, int y) {
 	assert(x > -1);

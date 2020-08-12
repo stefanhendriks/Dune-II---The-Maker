@@ -37,7 +37,7 @@ void cRefinery::think()
 				}
 
             // when the unit somehow does not go to us anymore, stop animating
-            if (unit[iUnitID].isValid() == false)
+            if (!unit[iUnitID].isValid())
             {
                 iUnitID=-1;
 				setAnimating(false);
@@ -126,7 +126,7 @@ void cRefinery::think()
                     if (DEBUGGING)
                         assert(iUnitID > -1);
 
-                    map.cell[unit[iUnitID].iCell].id[MAPID_UNITS] = iUnitID;
+                    map.cellSetIdForLayer(unit[iUnitID].iCell, MAPID_UNITS, iUnitID);
 
 					// perhaps we can find a carryall to help us out
 					int iHarvestCell = UNIT_find_harvest_spot(iUnitID);
