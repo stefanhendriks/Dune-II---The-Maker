@@ -59,7 +59,7 @@ void cMiniMapDrawer::drawTerrain() {
 			int iCll = iCellMake(x, y);
 
 			if (map->isVisible(iCll, m_Player.getId())) {
-				iColor = getRGBColorForTerrainType(map->cell[iCll].type);
+				iColor = getRGBColorForTerrainType(map->getCellType(iCll));
 			}
 
 			// TODO: make flexible map borders
@@ -99,25 +99,29 @@ void cMiniMapDrawer::drawUnitsAndStructures() {
 			bool drawADot = false;
 
 			if (map->isVisible(iCll, m_Player.getId())) {
-				if (map->cell[iCll].id[MAPID_STRUCTURES] > -1) {
-					int	iPlr = structure[map->cell[iCll].id[MAPID_STRUCTURES]]->getOwner();
+                int idOfStructureAtCell = map->getCellIdStructuresLayer(iCll);
+                if (idOfStructureAtCell > -1) {
+					int	iPlr = structure[idOfStructureAtCell]->getOwner();
 					iColor = player[iPlr].getMinimapColor();
 					drawADot = true;
 				}
 
-				if (map->cell[iCll].id[MAPID_UNITS] > -1) {
-					int iPlr = unit[map->cell[iCll].id[MAPID_UNITS]].iPlayer;
+                int idOfUnitAtCell = map->getCellIdUnitLayer(iCll);
+                if (idOfUnitAtCell > -1) {
+					int iPlr = unit[idOfUnitAtCell].iPlayer;
 					iColor = player[iPlr].getMinimapColor();
 					drawADot = true;
 				}
 
-				if (map->cell[iCll].id[MAPID_AIR] > -1) {
-					int iPlr = unit[map->cell[iCll].id[MAPID_AIR]].iPlayer;
+                int idOfAirUnitAtCell = map->getCellIdAirUnitLayer(iCll);
+                if (idOfAirUnitAtCell > -1) {
+					int iPlr = unit[idOfAirUnitAtCell].iPlayer;
 					iColor = player[iPlr].getMinimapColor();
 					drawADot = true;
 				}
 
-				if (map->cell[iCll].id[MAPID_WORMS] > -1) {
+                int idOfWormAtCell = map->getCellIdWormsLayer(iCll);
+                if (idOfWormAtCell > -1) {
 					iColor = makecol(game.fade_select, game.fade_select, game.fade_select);
 					drawADot = true;
 				}
@@ -170,6 +174,8 @@ int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
 			return makecol(80,80,80);
 		case TERRAIN_BLOOM:
 			return makecol(214,145,100);
+	    case -1:
+            return makecol(255, 0, 255);
 		default:
 			return makecol(255, 0, 255);
 	}

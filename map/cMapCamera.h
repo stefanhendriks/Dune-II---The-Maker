@@ -37,11 +37,17 @@ class cMapCamera {
 
 		int getX() { return x; }
 		int getY() { return y; }
+		int getAbsX() { return absX; }
+		int getAbsY() { return absY; }
+
 		int getTargetX() { return targetX; }
 		int getTargetY() { return targetY; }
 
 		int getEndX() { return x + viewportWidth; }
 		int getEndY() { return y + viewportHeight; }
+
+		int getAbsEndX() { return absX + absViewportWidth; }
+		int getAbsEndY() { return absY + absViewportHeight; }
 
 		int getViewportWidth() { return viewportWidth; }
 		int getViewportHeight() { return viewportHeight; }
@@ -70,10 +76,16 @@ class cMapCamera {
 		int viewportWidth;
 		int viewportHeight;
 
+		// viewport dimensions in pixels
+		int absViewportWidth;
+		int absViewportHeight;
+
 		// the X,Y position (top left corner of the viewport)
 		// the targetX and targetY are leading.
-		int x, targetX;
-		int y, targetY;
+		// absX and absY are the absolute pixel coordinates of the map camera
+		int x, targetX, absX;
+		int y, targetY, absY;
+
 
 		// timer used, when to move camera
 		int TIMER_move;

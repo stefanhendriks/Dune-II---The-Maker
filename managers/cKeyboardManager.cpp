@@ -105,14 +105,14 @@ void cKeyboardManager::DEBUG_KEYS() {
     if (key[KEY_F4] && key[KEY_LSHIFT]) {
         int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            if (map.cell[mc].id[MAPID_UNITS] > -1) {
-                int id = map.cell[mc].id[MAPID_UNITS];
-                unit[id].die(true, false);
+            int idOfUnitAtCell = map.getCellIdUnitLayer(mc);
+            if (idOfUnitAtCell > -1) {
+                unit[idOfUnitAtCell].die(true, false);
             }
 
-            if (map.cell[mc].id[MAPID_STRUCTURES] > -1) {
-                int id = map.cell[mc].id[MAPID_STRUCTURES];
-                structure[id]->die();
+            int idOfStructureAtCell = map.getCellIdStructuresLayer(mc);
+            if (idOfStructureAtCell > -1) {
+                structure[idOfStructureAtCell]->die();
             }
         }
     }

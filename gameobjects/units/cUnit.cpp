@@ -239,12 +239,12 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                 if (cll == iCell)
                     continue; // do not do own cell
 
-                if (map.cell[cll].type == TERRAIN_WALL)
+                if (map.getCellType(cll) == TERRAIN_WALL)
                 {
                     // damage this type of wall...
-                    map.cell[cll].health -= 150;
+                    map.cellTakeDamage(cll, 150);
 
-                    if (map.cell[cll].health < 0)
+                    if (map.getCellHealth(cll) < 0)
                     {
                         // remove wall, turn into smudge:
                         mapEditor.createCell(cll, TERRAIN_ROCK, 0);
@@ -256,9 +256,10 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                 }
 
                 // damage surrounding units
-                if (map.cell[cll].id[MAPID_UNITS] > -1)
+                int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
+                if (idOfUnitAtCell > -1)
                 {
-                    int id = map.cell[cll].id[MAPID_UNITS];
+                    int id = idOfUnitAtCell;
 
                     if (unit[id].iHitPoints > 0)
                     {
@@ -271,10 +272,11 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                     } // only die when the unit is going to die
                 }
 
-                if (map.cell[cll].id[MAPID_STRUCTURES] > -1)
+                int idOfStructureAtCell = map.getCellIdStructuresLayer(cll);
+                if (idOfStructureAtCell > -1)
                 {
                     // structure hit!
-                    int id = map.cell[cll].id[MAPID_STRUCTURES];
+                    int id = idOfStructureAtCell;
 
                     if (structure[id]->getHitPoints() > 0) {
 
@@ -293,29 +295,30 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 					}
 
 
-					if (map.cell[cll].type == TERRAIN_ROCK)
+                int cellType = map.getCellType(cll);
+                if (cellType == TERRAIN_ROCK)
 					{
-						if (map.cell[cll].type != TERRAIN_WALL)
-							map.cell[cll].health -= 30;
+						if (cellType != TERRAIN_WALL)
+							map.cellTakeDamage(cll, 30);
 
-						if (map.cell[cll].health < -25)
+						if (map.getCellHealth(cll) < -25)
 						{
 							map.smudge_increase(SMUDGE_ROCK, cll);
-							map.cell[cll].health += rnd(25);
+                            map.cellGiveHealth(cll, rnd(25));
 						}
 					}
-					else if (map.cell[cll].type == TERRAIN_SAND ||
-						map.cell[cll].type == TERRAIN_HILL ||
-						map.cell[cll].type == TERRAIN_SPICE ||
-						map.cell[cll].type == TERRAIN_SPICEHILL)
+					else if (cellType == TERRAIN_SAND ||
+                             cellType == TERRAIN_HILL ||
+                             cellType == TERRAIN_SPICE ||
+                             cellType == TERRAIN_SPICEHILL)
 					{
-						if (map.cell[cll].type != TERRAIN_WALL)
-							map.cell[cll].health -= 30;
+						if (cellType != TERRAIN_WALL)
+							map.cellTakeDamage(cll, 30);
 
-						if (map.cell[cll].health < -25)
+						if (map.getCellHealth(cll) < -25)
 						{
 							map.smudge_increase(SMUDGE_SAND, cll);
-							map.cell[cll].health += rnd(25);
+                            map.cellGiveHealth(cll, rnd(25));
 						}
 					}
 			 }
@@ -819,10 +822,11 @@ void cUnit::think_guard() {
 						if (unit[i].iPlayer != iPlayer &&
 							units[unit[i].iType].airborn == false)
 						{
-							if (map.cell[unit[i].iCell].type == TERRAIN_SAND ||
-								map.cell[unit[i].iCell].type == TERRAIN_HILL ||
-								map.cell[unit[i].iCell].type == TERRAIN_SPICE ||
-								map.cell[unit[i].iCell].type == TERRAIN_SPICEHILL)
+                            int cellType = map.getCellType(unit[i].iCell);
+                            if (cellType == TERRAIN_SAND ||
+                                cellType == TERRAIN_HILL ||
+                                cellType == TERRAIN_SPICE ||
+                                cellType == TERRAIN_SPICEHILL)
 							{
 								int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
 
@@ -1107,8 +1111,9 @@ void cUnit::think()
         return;
 
 	// when any unit is on a spice bloom, you got a problem, you die!
-	if (map.cell[iCell].type == TERRAIN_BLOOM
-		&& units[iType].airborn == false)
+    int cellType = map.getCellType(iCell);
+    if (cellType == TERRAIN_BLOOM
+        && units[iType].airborn == false)
 	{
 		// change type of terrain to sand
 		mapEditor.createCell(iCell, TERRAIN_SAND, 0);
@@ -1199,6 +1204,7 @@ void cUnit::think()
 
 
     // HARVESTERs harvest spice (doh really?)
+    int idOfStructureAtCell = map.getCellIdStructuresLayer(iCell);
     if (iType == HARVESTER)
     {
         bool bFindRefinery=false;
@@ -1212,8 +1218,8 @@ void cUnit::think()
         if (iCell == iGoalCell)
         {
             // when on spice, harvest
-            if (map.cell[iCell].type == TERRAIN_SPICE ||
-                map.cell[iCell].type == TERRAIN_SPICEHILL)
+            if (cellType == TERRAIN_SPICE ||
+                cellType == TERRAIN_SPICEHILL)
             {
                 // do timer stuff
                 if (iCredits < units[iType].credit_capacity)
@@ -1251,20 +1257,20 @@ void cUnit::think()
                     iFrame = 1;
 
                 iCredits += units[iType].harvesting_amount;
-                map.cell[iCell].credits -= units[iType].harvesting_amount;
+                map.cellTakeCredits(iCell, units[iType].harvesting_amount);
 
                 // turn into sand/spice (when spicehill)
-                if (map.cell[iCell].credits <= 0)
+                if (map.getCellCredits(iCell) <= 0)
                 {
-                    if (map.cell[iCell].type == TERRAIN_SPICEHILL)
+                    if (cellType == TERRAIN_SPICEHILL)
                     {
-                        map.cell[iCell].type = TERRAIN_SPICE;
-                        map.cell[iCell].credits += rnd(100);
+                        map.cellChangeType(iCell, TERRAIN_SPICE);
+                        map.cellGiveCredits(iCell, rnd(100));
                     }
                     else
                     {
-                        map.cell[iCell].type = TERRAIN_SAND;
-                        map.cell[iCell].tile = 0;
+                        map.cellChangeType(iCell, TERRAIN_SAND);
+                        map.cellChangeTile(iCell, 0);
                     }
 
                     // create new path to this thingy
@@ -1334,8 +1340,8 @@ void cUnit::think()
 		// we wanted to enter this structure, so do it immidiatly (else we just seem to
 		// drive over the structure, which looks odd!
 		if (iStructureID > -1 &&
-			map.cell[iCell].id[MAPID_STRUCTURES] == iStructureID &&
-			map.cell[iCell].id[MAPID_STRUCTURES] > -1)
+            idOfStructureAtCell == iStructureID &&
+            idOfStructureAtCell > -1)
 		{
 
 			// when this structure is not occupied
@@ -1361,8 +1367,8 @@ void cUnit::think()
     	// we wanted to enter this structure, so do it immidiatly (else we just seem to
 		// drive over the structure, which looks odd!
 		if (iStructureID > -1 &&
-			map.cell[iCell].id[MAPID_STRUCTURES] == iStructureID &&
-			map.cell[iCell].id[MAPID_STRUCTURES] > -1)
+            idOfStructureAtCell == iStructureID &&
+            idOfStructureAtCell > -1)
 		{
 
 			// when this structure is not occupied
@@ -1484,7 +1490,7 @@ void cUnit::think_move_air()
 								unit[iUnitID].iHitPoints = -1;
 
 								// remove unit from map id
-								map.cell[iCell].id[MAPID_UNITS] = -1;
+                                map.cellResetIdFromLayer(iCell, MAPID_UNITS);
 
 								// we got it yeah! now go
 								iGoalCell = iBringTarget;
@@ -1539,7 +1545,7 @@ void cUnit::think_move_air()
 							// dump it here
 							unit[iUnitID].iCell = iCell;
 							unit[iUnitID].iGoalCell = iCell;
-							map.cell[iCell].id[MAPID_UNITS] = iUnitID;
+							map.cellSetIdForLayer(iCell, MAPID_UNITS, iUnitID);
 							unit[iUnitID].iHitPoints = unit[iUnitID].iTempHitPoints;
 							unit[iUnitID].iTempHitPoints = -1;
 							unit[iUnitID].TIMER_movewait = 0;
@@ -1634,7 +1640,7 @@ void cUnit::think_move_air()
 			if (iType == FRIGATE)
 			{
 
-				int iStrucId = map.cell[iCell].id[MAPID_STRUCTURES];
+				int iStrucId = map.getCellIdStructuresLayer(iCell);
 
 				if (iStrucId > -1)
 				{
@@ -1658,7 +1664,7 @@ void cUnit::think_move_air()
                 {
 				    int id=	UNIT_CREATE(iCell, iNewUnitType, iPlayer, true);
 
-                    map.cell[iCell].id[MAPID_UNITS] = id;
+                    map.cellSetIdForLayer(iCell, MAPID_UNITS, id);
 
                     // when it is a TRANSFER_NEW_LEAVE , and AI, we auto-assign team number here
                     // - Normally done in AI.CPP, though from here it is out of our hands.
@@ -1741,7 +1747,11 @@ void cUnit::think_move_air()
             {
                 if (rnd(100) < 5)
                 {
-                    if (map.cell[iCell].type == TERRAIN_SAND || map.cell[iCell].type == TERRAIN_SPICE || map.cell[iCell].type == TERRAIN_HILL || map.cell[iCell].type == TERRAIN_SPICEHILL)
+                    int cellType = map.getCellType(iCell);
+                    if (cellType == TERRAIN_SAND ||
+                        cellType == TERRAIN_SPICE ||
+                        cellType == TERRAIN_HILL ||
+                        cellType == TERRAIN_SPICEHILL)
                     {
                         int iDieX=(draw_x() + 16 ) + (mapCamera->getX()*32);
                         int iDieY=(draw_y() + 16 ) + (mapCamera->getY()*32);
@@ -1794,7 +1804,7 @@ void cUnit::think_move_air()
     if (iOffsetX > 31)
     {
         iOffsetX -= 32;
-        map.cell[iCell].id[MAPID_AIR] = -1;
+        map.cellResetIdFromLayer(iCell, MAPID_AIR);
         iCell++;
         update_me=true;
     }
@@ -1803,7 +1813,7 @@ void cUnit::think_move_air()
     if (iOffsetX < -31)
     {
         iOffsetX += 32;
-        map.cell[iCell].id[MAPID_AIR] = -1;
+        map.cellResetIdFromLayer(iCell, MAPID_AIR);
         iCell--;
         update_me=true;
     }
@@ -1812,7 +1822,7 @@ void cUnit::think_move_air()
     if (iOffsetY < -31)
     {
         iOffsetY += 32;
-        map.cell[iCell].id[MAPID_AIR] = -1;
+        map.cellResetIdFromLayer(iCell, MAPID_AIR);
         iCell -= MAP_W_MAX;
         update_me=true;
     }
@@ -1821,7 +1831,7 @@ void cUnit::think_move_air()
     if (iOffsetY > 31)
     {
         iOffsetY -= 32;
-        map.cell[iCell].id[MAPID_AIR] = -1;
+        map.cellResetIdFromLayer(iCell, MAPID_AIR);
         iCell += MAP_W_MAX;
         update_me=true;
     }
@@ -1842,7 +1852,7 @@ void cUnit::think_move_air()
             if (iCell < 0) iCell = 0;
         }
 
-        map.cell[iCell].id[MAPID_AIR] = iID;
+        map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
 
         poll();
     }
@@ -2125,10 +2135,11 @@ void cUnit::think_attack()
             }
             else
             {
-                if (map.cell[unit[iAttackUnit].iCell].type != TERRAIN_SAND &&
-                    map.cell[unit[iAttackUnit].iCell].type != TERRAIN_HILL &&
-                    map.cell[unit[iAttackUnit].iCell].type != TERRAIN_SPICE &&
-                    map.cell[unit[iAttackUnit].iCell].type != TERRAIN_SPICEHILL)
+                int cellType = map.getCellType(unit[iAttackUnit].iCell);
+                if (cellType != TERRAIN_SAND &&
+                    cellType != TERRAIN_HILL &&
+                    cellType != TERRAIN_SPICE &&
+                    cellType != TERRAIN_SPICEHILL)
                 {
 
                    iAction = ACTION_GUARD;
@@ -2202,18 +2213,18 @@ void cUnit::think_attack()
 
     if (iAttackCell > -1)
     {
-        if (map.cell[iAttackCell].type == TERRAIN_BLOOM)
+        if (map.getCellType(iAttackCell) == TERRAIN_BLOOM)
         {
             // this is ok
         }
         else
         {
-			if (map.cell[iAttackCell].health < 0)
+			if (map.getCellHealth(iAttackCell) < 0)
 			{
-            // it is destroyed
-            iAttackCell=-1;
-            iGoalCell=iCell;
-            iAction = ACTION_GUARD;
+                // it is destroyed
+                iAttackCell=-1;
+                iGoalCell=iCell;
+                iAction = ACTION_GUARD;
 			}
         }
     }
@@ -2414,19 +2425,12 @@ void cUnit::think_move()
 {
 	if (DEBUGGING)
 		if (iType != SANDWORM)
-			if (units[iType].airborn == false)
+			if (!units[iType].airborn)
                 if (iHitPoints > -1)
-                    assert(map.cell[iCell].id[MAPID_UNITS] == iID);
-
-
-    /*
-    if (iType != SANDWORM)
-        if (units[iType].airborn == false)
-            if (iHitPoints > -1)
-                assert(map.cell[unit[iID].iCell].id[MAPID_UNITS] == iID);*/
+                    assert(map.getCellIdUnitLayer(iCell) == iID);
 
     // Just in case
-    if (isValid() == false)
+    if (!isValid())
 	{
 		for (int i=0; i < MAPID_MAX; i++)
 		{
@@ -2510,8 +2514,8 @@ void cUnit::think_move()
                     logbook("Reason: Could not find path (goal unreachable)");
 
                     // Check why, is our goal cell occupied?
-                    int uID =  map.cell[iGoalCell].id[MAPID_UNITS];
-                    int sID =  map.cell[iGoalCell].id[MAPID_STRUCTURES];
+                    int uID =  map.getCellIdUnitLayer(iGoalCell);
+                    int sID =  map.getCellIdStructuresLayer(iGoalCell);
 
                     // Other unit is on goal cell, do something about it.
 
@@ -2629,11 +2633,13 @@ void cUnit::think_move()
     // check
     bool bOccupied=false;
 
-    if (map.cell[iNextCell].id[MAPID_UNITS] > -1 &&
-        map.cell[iNextCell].id[MAPID_UNITS] != iID)
+    int idOfUnitAtNextCell = map.getCellIdUnitLayer(iNextCell);
+
+    if (idOfUnitAtNextCell > -1 &&
+        idOfUnitAtNextCell != iID)
     {
         // get it
-        int iUID = map.cell[iNextCell].id[MAPID_UNITS];
+        int iUID = idOfUnitAtNextCell;
 
         bOccupied=true;
         // when enemy infantry
@@ -2647,18 +2653,19 @@ void cUnit::think_move()
     }
 
     // structure is NOT matching our structure ID, then its blocking us
+    int idOfStructureAtNextCell = map.getCellIdStructuresLayer(iNextCell);
     if (iStructureID > -1 &&
-        map.cell[iNextCell].id[MAPID_STRUCTURES] != iStructureID &&
-        map.cell[iNextCell].id[MAPID_STRUCTURES] > -1)
+        idOfStructureAtNextCell != iStructureID &&
+        idOfStructureAtNextCell > -1)
         bOccupied=true;
 
 
-    if (iStructureID < 0 && map.cell[iNextCell].id[MAPID_STRUCTURES] > -1)
+    if (iStructureID < 0 && idOfStructureAtNextCell > -1)
     {
         bOccupied = true;
     }
 
-    if (iStructureID > -1 && map.cell[iNextCell].id[MAPID_STRUCTURES] == iStructureID)
+    if (iStructureID > -1 && idOfStructureAtNextCell == iStructureID)
     {
         // we may enter, only if its empty
         if (structure[iStructureID]->iUnitID > -1)
@@ -2682,11 +2689,12 @@ void cUnit::think_move()
     }
 
     // When not infantry:
+    int cellTypeAtNextCell = map.getCellType(iNextCell);
     if (units[iType].infantry == false)
-        if (map.cell[iNextCell].type == TERRAIN_MOUNTAIN)
+        if (cellTypeAtNextCell == TERRAIN_MOUNTAIN)
             bOccupied=true;
 
-    if (map.cell[iNextCell].type == TERRAIN_WALL)
+    if (cellTypeAtNextCell == TERRAIN_WALL)
             bOccupied=true;
 
     if (iType == SANDWORM)
@@ -2707,7 +2715,7 @@ void cUnit::think_move()
             iPathIndex=-1;
             return;
         }
-        else if (map.cell[iNextCell].id[MAPID_STRUCTURES] > -1)
+        else if (idOfStructureAtNextCell > -1)
         {
             // new path, structure obstructs the path (only when it has been built AFTER
             // we created our path)
@@ -2720,7 +2728,7 @@ void cUnit::think_move()
         {
             // From here, a unit is standing in our way. First check if this unit will
             // move. If so, we wait until it has moved.
-            int uID =  map.cell[iNextCell].id[MAPID_UNITS];
+            int uID = idOfUnitAtNextCell;
 
             // Wait when the obstacle is moving, perhaps it will clear our way
             if (unit[uID].TIMER_movewait <= 0 && unit[uID].iGoalCell != unit[uID].iCell)
@@ -2767,8 +2775,8 @@ void cUnit::think_move()
 		// we wanted to enter this structure, so do it immidiatly (else we just seem to
 		// drive over the structure, which looks odd!
 		if (iStructureID > -1 &&
-			map.cell[iNextCell].id[MAPID_STRUCTURES] == iStructureID &&
-			map.cell[iNextCell].id[MAPID_STRUCTURES] > -1)
+            idOfStructureAtNextCell == iStructureID &&
+            idOfStructureAtNextCell > -1)
 		{
 
 			// when this structure is not occupied
@@ -2835,23 +2843,24 @@ void cUnit::think_move()
     int iSlowDown=1;
 
     // Influenced by the terrain type
-    if (map.cell[iCell].type == TERRAIN_SAND)
+    int cellType = map.getCellType(iCell);
+    if (cellType == TERRAIN_SAND)
         iSlowDown=2;
 
     // mountain is very slow
-    if (map.cell[iCell].type == TERRAIN_MOUNTAIN)
+    if (cellType == TERRAIN_MOUNTAIN)
         iSlowDown=5;
 
-    if (map.cell[iCell].type == TERRAIN_HILL)
+    if (cellType == TERRAIN_HILL)
         iSlowDown=3;
 
-    if (map.cell[iCell].type == TERRAIN_SPICEHILL)
+    if (cellType == TERRAIN_SPICEHILL)
         iSlowDown=3;
 
-    if (map.cell[iCell].type == TERRAIN_ROCK)
+    if (cellType == TERRAIN_ROCK)
         iSlowDown=1;
 
-    if (map.cell[iCell].type == TERRAIN_SLAB)
+    if (cellType == TERRAIN_SLAB)
         iSlowDown=0;
 
 
@@ -2865,12 +2874,11 @@ void cUnit::think_move()
     // get it
 
     // from here on, set the map id, so no other unit can take its place
-    if (iType != SANDWORM)
-        map.cell[iNextCell].id[MAPID_UNITS] = iID;
-    else
-    {
-        map.cell[iNextCell].id[MAPID_WORMS] = iID;
-
+    if (iType != SANDWORM) {
+        // note, no AIRBORN here
+        map.cellSetIdForLayer(iNextCell, MAPID_UNITS, iID);
+    } else {
+        map.cellSetIdForLayer(iNextCell, MAPID_WORMS, iID);
 
         // when sandworm, add particle stuff
         int iOffX = abs(iOffsetX);
@@ -2895,10 +2903,10 @@ void cUnit::think_move()
 
         // add particle tracks
 
-        if (map.cell[iCell].type != TERRAIN_ROCK &&
-            map.cell[iCell].type != TERRAIN_MOUNTAIN &&
-            map.cell[iCell].type != TERRAIN_WALL &&
-            map.cell[iCell].type != TERRAIN_SLAB &&
+        if (cellType != TERRAIN_ROCK &&
+            cellType != TERRAIN_MOUNTAIN &&
+            cellType != TERRAIN_WALL &&
+            cellType != TERRAIN_SLAB &&
             units[iType].infantry == false && iType != SANDWORM)
         {
 
@@ -2972,13 +2980,12 @@ void cUnit::think_move()
             // next time we think, will be checking for distance, etc
         }
 
-
-
         // movement to cell complete
-        if (iType == SANDWORM)
-            map.cell[iCell].id[MAPID_WORMS] = -1;
-        else
-            map.cell[iCell].id[MAPID_UNITS] = -1;
+        if (iType == SANDWORM) {
+            map.cellResetIdFromLayer(iCell, MAPID_WORMS);
+        } else {
+            map.cellResetIdFromLayer(iCell, MAPID_UNITS);
+        }
 
 
         /*
@@ -3053,21 +3060,24 @@ void cUnit::think_move()
             if (iType == HARVESTER)
             {
                 // structure id match!
-				if (iStructureID > -1)
-                if (iStructureID == map.cell[iCell].id[MAPID_STRUCTURES])
-                {
-					logbook("Enter structure");
-                    // when this structure is not occupied
-                    if (structure[iStructureID]->iUnitID < 0)
-                    {
-                        // get in!
-                        structure[iStructureID]->setAnimating(false);
-                        structure[iStructureID]->iUnitID = iID;
-                        structure[iStructureID]->setFrame(0);
+				if (iStructureID > -1) {
+                    int idOfStructureAtCell = map.getCellIdStructuresLayer(iCell);
 
-                        // store this
-                        iTempHitPoints = iHitPoints;
-                        iHitPoints=-1; // 'kill' unit
+                    if (iStructureID == idOfStructureAtCell)
+                    {
+                        logbook("Enter structure");
+                        // when this structure is not occupied
+                        if (structure[iStructureID]->iUnitID < 0)
+                        {
+                            // get in!
+                            structure[iStructureID]->setAnimating(false);
+                            structure[iStructureID]->iUnitID = iID;
+                            structure[iStructureID]->setFrame(0);
+
+                            // store this
+                            iTempHitPoints = iHitPoints;
+                            iHitPoints=-1; // 'kill' unit
+                        }
                     }
                 }
 
@@ -3123,23 +3133,24 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart)
 	if (iTpe == SANDWORM) mapIdIndex = MAPID_WORMS;
 
 	// check if unit already exists on location
-	if (map.cell[iCll].id[mapIdIndex] > -1) {
+	if (map.cellGetIdFromLayer(iCll, mapIdIndex) > -1) {
 		return -1; // cannot place unit
 	}
 
     // check if placed on invalid terrain type
+    int cellType = map.getCellType(iCll);
     if (iTpe == SANDWORM) {
-        if (map.cell[iCll].type != TERRAIN_SAND &&
-            map.cell[iCll].type != TERRAIN_SPICE &&
-            map.cell[iCll].type != TERRAIN_HILL &&
-            map.cell[iCll].type != TERRAIN_SPICEHILL)
+        if (cellType != TERRAIN_SAND &&
+            cellType != TERRAIN_SPICE &&
+            cellType != TERRAIN_HILL &&
+            cellType != TERRAIN_SPICEHILL)
             return -1;
     }
 
 
     // not airborn, and not infantry, may not be placed on walls and mountains.
     if (!units[iTpe].infantry && !units[iTpe].airborn) {
-		if (map.cell[iCll].type == TERRAIN_MOUNTAIN || map.cell[iCll].type == TERRAIN_WALL) {
+		if (cellType == TERRAIN_MOUNTAIN || cellType == TERRAIN_WALL) {
 			return -1;
 		}
     }
@@ -3190,18 +3201,19 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart)
 
     unit[iNewId].iPlayer = iPlayer;
     // Put on map too!:
-    map.cell[iCll].id[mapIdIndex] = iNewId;
+    map.cellSetIdForLayer(iCll, mapIdIndex, iNewId);
 
     if (iTpe == SANDWORM) {
         // sandworms are controlled by the last player
-        map.cell[iCll].id[MAPID_WORMS] = iNewId;
-    } else if (iTpe != ORNITHOPTER && iTpe != FRIGATE && iTpe != CARRYALL) {
+        map.cellSetIdForLayer(iCll, MAPID_WORMS, iNewId);
+    } else if (
+            iTpe != ORNITHOPTER && iTpe != FRIGATE && iTpe != CARRYALL // not airborn
+            ) {
         unit[iNewId].iPlayer = iPlyr;
     } else {
         // aircraft
         unit[iNewId].iPlayer = iPlyr;
     }
-
 
 	unit[iNewId].poll();
     map.clear_spot(iCll, units[iTpe].sight, iPlyr);
@@ -3330,8 +3342,9 @@ int CREATE_PATH(int iID, int iPathCountUnits)
 
         if (unit[iID].iStructureID > -1 || unit[iID].iAttackStructure > -1)
         {
+            int idOfStructureAtCell = map.cellGetIdFromLayer(iCell, MAPID_STRUCTURES);
             if (unit[iID].iStructureID > -1)
-            if (map.cell[iCell].id[MAPID_STRUCTURES] == unit[iID].iStructureID)
+            if (idOfStructureAtCell == unit[iID].iStructureID)
             {
                 valid=false;
                 succes=true;
@@ -3340,7 +3353,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
             }
 
             if (unit[iID].iAttackStructure > -1)
-            if (map.cell[iCell].id[MAPID_STRUCTURES] == unit[iID].iAttackStructure)
+            if (idOfStructureAtCell == unit[iID].iAttackStructure)
             {
                 valid=false;
                 succes=true;
@@ -3393,6 +3406,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
                 bool good = false; // not good
 
                 // not a sandworm
+                int cellType = map.getCellType(cll);
                 if (is_worm == false)
                 {
                     // Step by step determine if its good
@@ -3400,40 +3414,43 @@ int CREATE_PATH(int iID, int iPathCountUnits)
                     // 1 -> Occupation by unit/structures
                     // 2 -> Occupation by terrain (but only when it is visible, since we do not want to have an
                     //      advantage or some unknowingly super intelligence by units for unknown territories!)
-                    if (map.cell[cll].id[MAPID_UNITS] == -1 && map.cell[cll].id[MAPID_STRUCTURES] == -1)
+                    int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
+                    int idOfStructureAtCell = map.getCellIdStructuresLayer(cll);
+
+                    if (idOfUnitAtCell == -1 && idOfStructureAtCell == -1)
                     {
                         // there is nothing on this cell, that is good
                         good=true;
                     }
 
-                    if (map.cell[cll].id[MAPID_STRUCTURES] > -1)
+                    if (idOfStructureAtCell > -1)
                     {
                         // when the cell is a structure, and it is the structure we want to attack, it is good
 
 
                         if (unit[iID].iAttackStructure > -1)
-                            if (map.cell[cll].id[MAPID_STRUCTURES] == unit[iID].iAttackStructure)
+                            if (idOfStructureAtCell == unit[iID].iAttackStructure)
                             good=true;
 
                         if (unit[iID].iStructureID > -1)
-                            if (map.cell[cll].id[MAPID_STRUCTURES] == unit[iID].iStructureID)
+                            if (idOfStructureAtCell == unit[iID].iStructureID)
                             good=true;
 
                     }
 
 					// blocked by other then our own unit
-					if (map.cell[cll].id[MAPID_UNITS] > -1)
+					if (idOfUnitAtCell > -1)
                     {
                         // occupied by a unit
-                        if (map.cell[cll].id[MAPID_UNITS] != iID)
+                        if (idOfUnitAtCell != iID)
 						{
-                            int iUID = map.cell[cll].id[MAPID_UNITS];
+                            int iUID = idOfUnitAtCell;
 
 							if (iPathCountUnits!=0)
 								   if (iPathCountUnits <= 0)
 								   {
-									   if (map.cell[cll].id[MAPID_UNITS] != -1 &&
-										   map.cell[cll].id[MAPID_UNITS] != iID) // occupied by a unit
+									   if (idOfUnitAtCell != -1 &&
+                                           idOfUnitAtCell != iID) // occupied by a unit
 										   good=false;
 								   }
 
@@ -3455,13 +3472,13 @@ int CREATE_PATH(int iID, int iPathCountUnits)
                         good=true;
                     } else {
                         // walls stop us
-                        if (map.cell[cll].type == TERRAIN_WALL) {
+                        if (cellType == TERRAIN_WALL) {
                             good = false;
                         }
 
                         // When we are infantry, we move through mountains. However, normal units do not
                         if (units[unit[iID].iType].infantry == false) {
-                            if (map.cell[cll].type == TERRAIN_MOUNTAIN) {
+                            if (cellType == TERRAIN_MOUNTAIN) {
                                 good=false;
                             }
                         }
@@ -3470,10 +3487,10 @@ int CREATE_PATH(int iID, int iPathCountUnits)
              else if (is_worm)
              {
                  // when not on sand, on spice or on sandhill, it is BAD
-                 if (map.cell[cll].type == TERRAIN_SAND ||
-                     map.cell[cll].type == TERRAIN_SPICE ||
-                     map.cell[cll].type == TERRAIN_HILL ||
-                     map.cell[cll].type == TERRAIN_SPICEHILL)
+                 if (cellType == TERRAIN_SAND ||
+                     cellType == TERRAIN_SPICE ||
+                     cellType == TERRAIN_HILL ||
+                     cellType == TERRAIN_SPICEHILL)
                  {
                      good=true;
                  }
@@ -3749,17 +3766,20 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID)
 
                 float dDistance2 = ABS_length(iSX, iSY, ix, iy);
 
-                if ( (map.cell[cll].id[MAPID_STRUCTURES] < 0) &&
-                     (map.cell[cll].id[MAPID_UNITS] < 0))
+                int idOfStructureAtCell = map.getCellIdStructuresLayer(cll);
+                int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
+
+                if ((idOfStructureAtCell < 0) && (idOfUnitAtCell < 0)) // no unit or structure at cell
                 {
                     // depending on unit type, do not choose walls (or mountains)
+                    int cellType = map.getCellType(cll);
                     if (units[unit[iID].iType].infantry)
                     {
-                        if (map.cell[cll].type == TERRAIN_MOUNTAIN)
+                        if (cellType == TERRAIN_MOUNTAIN)
                             continue; // do not use this one
                     }
 
-                    if (map.cell[cll].type == TERRAIN_WALL)
+                    if (cellType == TERRAIN_WALL)
                             continue; // do not use this one
 
                     if (dDistance2 < dDistance)
@@ -3806,17 +3826,19 @@ int CLOSE_SPICE_BLOOM(int iCell)
 	cx = iCellGiveX(iCell);
 	cy = iCellGiveY(iCell);
 
-	for (int i=0; i < MAX_CELLS; i++)
-		if (map.cell[i].type == TERRAIN_BLOOM)
-		{
-			int d = ABS_length(cx, cy, iCellGiveX(i), iCellGiveY(i));
+	for (int i=0; i < MAX_CELLS; i++) {
+        int cellType = map.getCellType(i);
+        if (cellType == TERRAIN_BLOOM)
+        {
+            int d = ABS_length(cx, cy, iCellGiveX(i), iCellGiveY(i));
 
-			if (d < iDistance)
-			{
-				iBloom=i;
-				iDistance=d;
-			}
-		}
+            if (d < iDistance)
+            {
+                iBloom=i;
+                iDistance=d;
+            }
+        }
+    }
 
 	// when finished, return bloom
 	return iBloom;
@@ -3827,12 +3849,14 @@ int CLOSE_SPICE_BLOOM(int iCell)
 	memset(iTargets, -1, sizeof(iTargets));
 	int iT=0;
 
-	for (int i=0; i < MAX_CELLS; i++)
-		if (map.cell[i].type == TERRAIN_BLOOM)
-		{
-			iTargets[iT] = i;
-			iT++;
-		}
+	for (int i=0; i < MAX_CELLS; i++) {
+        int cellType = map.getCellType(i);
+        if (cellType == TERRAIN_BLOOM)
+        {
+            iTargets[iT] = i;
+            iT++;
+        }
+    }
 
 	// when finished, return bloom
 	return iTargets[rnd(iT)];
@@ -3856,7 +3880,7 @@ int UNIT_find_harvest_spot(int id)
 
 
   for (int i=0; i < (MAX_CELLS); i++)
-    if (map.cell[i].credits > 0 && i != unit[id].iCell)
+    if (map.getCellCredits(i) > 0 && i != unit[id].iCell)
     {
       // check if its not out of reach
       int dx = iCellGiveX(i);
@@ -3876,7 +3900,8 @@ int UNIT_find_harvest_spot(int id)
       if (dy >= (game.map_height-1))
         continue;*/
 
-      if (map.cell[i].id[MAPID_UNITS] > -1)
+      int idOfUnitAtCell = map.getCellIdUnitLayer(i);
+      if (idOfUnitAtCell > -1)
         continue;
 
       if (map.occupied(i, id))
@@ -3884,7 +3909,8 @@ int UNIT_find_harvest_spot(int id)
 
       int d = ABS_length(cx, cy, iCellGiveX(i), iCellGiveY(i));
 
-	  if (map.cell[i].type == TERRAIN_SPICE)
+        int cellType = map.getCellType(i);
+        if (cellType == TERRAIN_SPICE)
 	  {
 		  if (d < TargetSpiceDistance)
 		  {
@@ -3892,7 +3918,7 @@ int UNIT_find_harvest_spot(int id)
 			  TargetSpiceDistance=d; // update distance
 		  }
 	  }
-	  else if (map.cell[i].type == TERRAIN_SPICEHILL)
+	  else if (cellType == TERRAIN_SPICEHILL)
 	  {
 		  if (d < TargetSpiceHillDistance)
 		  {

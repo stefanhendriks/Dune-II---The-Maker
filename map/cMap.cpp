@@ -605,8 +605,12 @@ void cMap::thinkInteraction() {
 
 int cMap::mouse_draw_x()
 {
-	if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1)
-  return ( (( iCellGiveX(player[HUMAN].getGameControlsContext()->getMouseCell()) * 32 ) - (mapCamera->getX()*32)));
+	if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
+//        int tileWidth = mapCamera->getTileWidth();
+        int tileWidth = 32;
+        return ( ((iCellGiveX(player[HUMAN].getGameControlsContext()->getMouseCell()) * tileWidth) - (mapCamera->getX() *
+                                                                                                      tileWidth)));
+    }
 	else
 		return -1;
 }

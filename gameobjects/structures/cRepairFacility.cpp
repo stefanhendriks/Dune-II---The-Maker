@@ -69,12 +69,9 @@ void cRepairFacility::think()
                         if (DEBUGGING)
                             assert(iUnitID > -1);
 
-                        map.cell[unit[iUnitID].iCell].id[MAPID_UNITS] = iUnitID;
-
+                        map.cellSetIdForLayer(unit[iUnitID].iCell, MAPID_UNITS, iUnitID);
 
                         iUnitID=-1;
-
-
                     }
                 }
             }

@@ -13,7 +13,7 @@ class cMapDrawer {
 		cMapDrawer(cMap * theMap, const cPlayer& thePlayer, cMapCamera * theCamera);
 		~cMapDrawer();
 
-		void drawTerrain();
+		void drawTerrain(int startX, int startY);
 		void drawShroud();
 
 	protected:

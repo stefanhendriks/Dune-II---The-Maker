@@ -9,11 +9,17 @@
 
 cMapCamera::cMapCamera() {
 	x=y=1;
+    absX = absY = 32;
 	targetX=targetY=1;
 	TIMER_move=0;
 	zoomLevel = 1.0f;
 	desiredZoomLevel = zoomLevel;
 	calibrate();
+
+    int widthOfSidebar = 160;
+    int heightOfOptions = 42;
+    absViewportWidth=game.screen_x-widthOfSidebar;
+    absViewportHeight=game.screen_y-heightOfOptions;
 
 	char msg[255];
 	sprintf(msg, "Camera initialized. Viewport width is [%d], height [%d]. Position [%d,%d]", viewportWidth, viewportHeight, getX(), getY());
@@ -26,12 +32,10 @@ cMapCamera::~cMapCamera() {
 }
 
 void cMapCamera::calibrate() {
-    int widthOfSidebar = 160;
-    int heightOfOptions = 42;
     tileHeight = factorZoomLevel(TILESIZE_WIDTH_PIXELS);
     tileWidth = factorZoomLevel(TILESIZE_HEIGHT_PIXELS);
-    viewportWidth=((game.screen_x-widthOfSidebar)/tileWidth);
-    viewportHeight=((game.screen_y-heightOfOptions)/tileHeight)+1;
+    viewportWidth=(absViewportWidth/tileWidth);
+    viewportHeight=(absViewportHeight/tileHeight)+1;
 }
 
 void cMapCamera::centerAndJumpViewPortToCell(int cell) {
@@ -95,8 +99,10 @@ void cMapCamera::think() {
 
 void cMapCamera::jumpTo(int theX, int theY) {
 	x = theX;
+	absX = x * tileWidth;
 	targetX = theX;
 	y = theY;
+	absY = y * tileHeight;
 	targetY = theY;
 }
 
@@ -107,14 +113,16 @@ void cMapCamera::moveTo(int theX, int theY) {
 
 
 void cMapCamera::thinkInteraction() {
-   if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
-		return;
-   }
+    // Mouse is 'dragging' (border select) so do not do anything
+    if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
+        return;
+    }
 
 	// thinking for map (scrolling that is)
 	if (mouse_x <= 1 || key[KEY_LEFT]) {
 		if (x > 1) {
 			x--;
+			absX -= 32;
 			mouse_tile = MOUSE_LEFT;
 		}
 	}
@@ -123,6 +131,7 @@ void cMapCamera::thinkInteraction() {
 	if (mouse_y <= 1 || key[KEY_UP]) {
 		if (y > 1) {
 			y--;
+			absY -= 32;
 			mouse_tile = MOUSE_UP;
 
 		}
@@ -132,6 +141,7 @@ void cMapCamera::thinkInteraction() {
 	if (mouse_x >= (game.screen_x-2) || key[KEY_RIGHT]) {
 		if ((getEndX()) < (game.map_width-1)) {
 			x++;
+			absX += 32;
 			mouse_tile = MOUSE_RIGHT;
 		}
 	}
@@ -139,6 +149,7 @@ void cMapCamera::thinkInteraction() {
 	if (mouse_y >= (game.screen_y-2) || key[KEY_DOWN]) {
 		if ((getEndY()) < (game.map_height-1)) {
 			y++;
+            absY += 32;
 			mouse_tile = MOUSE_DOWN;
 		}
 	}
