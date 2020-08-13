@@ -26,7 +26,7 @@ public:
 
 	int getCellWithMapBorders(int x, int y);
 
-	// get cell from X, Y
+	// get cell from MAP X, Y coordinates
 	int getCell(int x, int y);
 
 	// calculate distance between 2 coordinates:

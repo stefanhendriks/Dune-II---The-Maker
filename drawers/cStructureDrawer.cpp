@@ -334,35 +334,28 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
 }
 
 void cStructureDrawer::drawStructuresForLayer(int layer) {
-	// draw all structures
-	cStructureUtils structureUtils;
-
 	for (int i=0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
 
-		if (theStructure) {
+		if (!theStructure) continue;
 
-			structureUtils.putStructureOnDimension(MAPID_STRUCTURES, theStructure);
+        structureUtils.putStructureOnDimension(MAPID_STRUCTURES, theStructure);
 
-			if (structureUtils.isStructureOnScreen(theStructure))
-			{
-				// draw
-				drawStructureForLayer(theStructure, layer);
-				//theStructure->draw(layer);
+        if (structureUtils.isStructureOnScreen(theStructure)) {
+            // draw
+            drawStructureForLayer(theStructure, layer);
+            //theStructure->draw(layer);
 
-				if (player[0].iPrimaryBuilding[theStructure->getType()] == i) {
-					int color = theStructure->getPlayer()->getMinimapColor();
-					// TODO: change it into fading color or something other than this ugly rectangle.
-					drawRectangeOfStructure(theStructure, color);
-				}
+            if (player[0].iPrimaryBuilding[theStructure->getType()] == i) {
+                int color = theStructure->getPlayer()->getMinimapColor();
+                // TODO: change it into fading color or something other than this ugly rectangle.
+                drawRectangeOfStructure(theStructure, color);
+            }
 
-				if (i == game.selected_structure) {
-					drawRectangeOfStructure(theStructure, makecol(game.fade_select, game.fade_select, game.fade_select));
-				}
-			}
-
-		}
-
+            if (i == game.selected_structure) {
+                drawRectangeOfStructure(theStructure, makecol(game.fade_select, game.fade_select, game.fade_select));
+            }
+        }
 	}
 
 	rectfill(bmp_screen, (game.screen_x-160), 0, game.screen_x, game.screen_y, makecol(0,0,0));

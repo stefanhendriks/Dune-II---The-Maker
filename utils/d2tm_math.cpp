@@ -63,22 +63,25 @@ int iCellGiveY(int c)
 // make cell number out of X and Y value
 int iCellMake(int x, int y)
 {
-  if (x < 0) x=0;
-  if (y < 0) y=0;
-
-  int c = (y * MAP_W_MAX) + x;
-
-  // FIXED: Do never give a cell number higher then the max!
-  if (c >= MAX_CELLS)
-      c = (MAX_CELLS-1);
-
-  return c;
+    // expensive, creating new object all the time :/
+    cCellCalculator cellCalculator(&map);
+    return cellCalculator.getCell(x, y);
+//    if (x < 0) x=0;
+//  if (y < 0) y=0;
+//
+//  int c = (y * MAP_W_MAX) + x;
+//
+//  // FIXED: Do never give a cell number higher then the max!
+//  if (c >= MAX_CELLS)
+//      c = (MAX_CELLS-1);
+//
+//  return c;
 }
 
 // make cell number out of X and Y value
 int iCellMakeFromAbsolute(int absX, int absY, int tileWidth, int tileHeight)
 {
-    return iCellMake(absX / tileWidth, absY / tileHeight);
+    return iCellMake((absX / tileWidth), (absY / tileHeight));
 }
 
 int iCellMakeFromAbsoluteWithCamera(int absX, int absY)

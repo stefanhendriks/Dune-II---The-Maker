@@ -28,6 +28,7 @@ cMapDrawer::~cMapDrawer() {
 }
 
 void cMapDrawer::drawShroud() {
+    return;
 	set_trans_blender(0,0,0,128);
 
     int tileWidth = mapCamera->getTileWidth();
@@ -178,6 +179,12 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int iPl) const {
     return tile;
 }
 
+
+// Future me:
+// shroud drawing is stuk (geen shroud randen te zien?)
+// particles zijn te veel naar rechts (en naar onder), off by one?
+// centreren is stuk (obv abs coordinaten iets niet tof?)
+
 void cMapDrawer::drawTerrain(int startX, int startY) {
     if (bmp_temp == nullptr) {
         int colorDepthScreen = bitmap_color_depth(bmp_screen);
@@ -194,16 +201,17 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
 	// - all we need is the end of the 'to be drawn area' , which is:
 	//   WIDTH OF SCREEN / 32
 //
-	int iDrawX=0;
-	int iDrawY=42;
+	int iDrawX=startX;
+	int iDrawY=startY;
 
 	int iCell=-1;
 
 	int iPl = player.getId();
+    int mouseCell = player.getGameControlsContext()->getMouseCell();
 
 	// draw vertical rows..
 	for (int iStartX = camera->getAbsX(); iStartX < camera->getAbsEndX(); iStartX+= tileWidth) {
-        iDrawY=42;
+        iDrawY=startY;
 
 		// new row
 		for (int iStartY=camera->getAbsY(); iStartY < camera->getAbsEndY(); iStartY+= tileHeight) {
@@ -211,75 +219,90 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
 
 			// not visible for player, so do not draw
 			if (!mapUtils->isCellVisibleForPlayerId(iPl, iCell)) {
-				continue;
+                rectfill(bmp_screen, iDrawX, iDrawY, iDrawX + tileWidth, iDrawY + tileHeight, makecol(256, 128, 256));
+                iDrawY += tileHeight;
+                continue;
 			}
 
             tCell *cell = map->getCell(iCell);
 
-			if (cell) {
-                // Draw terrain
-                blit((BITMAP *) gfxdata[cell->type].dat,
-                     bmp_temp,
-                     cell->tile * 32, 0, // keep 32 here, because in BMP this is the size of the tiles
-                     0, 0,
-                     32, 32
-                );
+			if (cell == nullptr) {
+                iDrawY += tileHeight;
+                continue;
+			}
+
+            // Draw terrain
+            blit((BITMAP *) gfxdata[cell->type].dat,
+                 bmp_temp,
+                 cell->tile * 32, 0, // keep 32 here, because in BMP this is the size of the tiles
+                 0, 0,
+                 32, 32
+            );
+
+            stretch_blit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, tileWidth, tileHeight);
+
+            // draw Smudge if necessary
+            if (cell->smudgetype > -1 && cell->smudgetile > -1) {
+                masked_blit((BITMAP *) gfxdata[SMUDGE].dat, bmp_temp,
+                            cell->smudgetile * 32,
+                            cell->smudgetype * 32,
+                            0,
+                            0,
+                            32,
+                            32);
 
                 stretch_blit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, tileWidth, tileHeight);
-
-                // draw Smudge if necessary
-                if (cell->smudgetype > -1 && cell->smudgetile > -1) {
-                    masked_blit((BITMAP *) gfxdata[SMUDGE].dat, bmp_temp,
-                                cell->smudgetile * 32,
-                                cell->smudgetype * 32,
-                                0,
-                                0,
-                                32,
-                                32);
-
-                    stretch_blit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, tileWidth, tileHeight);
-                }
-
-                // Draw debugging information
-                if (DEBUGGING) {
-                    if (player.getGameControlsContext()->getMouseCell() > -1) {
-                        int mc = player.getGameControlsContext()->getMouseCell();
-                        if (cellCalculator->getX(mc) == iStartX && cellCalculator->getY(mc) == iStartY)
-                            rectfill(bmp_screen, iDrawX, iDrawY, iDrawX + 32, iDrawY + 32, makecol(64, 64, 64));
-
-                    }
-
-                    rect(bmp_screen, iStartX, iStartY, iStartX + 32, iStartY + 32, makecol(128, 128, 128));
-                }
-
-                // Draw more debugging information
-                if (key[KEY_D] && key[KEY_TAB]) {
-                    int iClr = makecol(255, 0, 0);
-
-                    bool bDraw = false;
-
-                    if (!map->isCellPassable(iCell))
-                        bDraw = true;
-
-                    if (map->getCellIdStructuresLayer(iCell) > -1) {
-                        iClr = makecol(0, 255, 0);
-                        bDraw = true;
-                    }
-
-                    if (map->getCellIdUnitLayer(iCell) > -1) {
-                        iClr = makecol(0, 0, 255);
-                        bDraw = true;
-                    }
-
-                    if (bDraw) {
-                        rectfill(bmp_screen, iDrawX, iDrawY, iDrawX + 32, iDrawY + 32, iClr);
-                    }
-
-                }
             }
+
+            // Draw debugging information
+            if (DEBUGGING) {
+                if (mouseCell > -1) {
+                    int cellX = (iStartX / tileWidth);
+                    int cellY = (iStartY / tileHeight);
+                    int mcX = cellCalculator->getX(mouseCell);
+                    int mcY = cellCalculator->getY(mouseCell);
+
+                    if (mcX == cellX && mcY == cellY)
+                        rectfill(bmp_screen, iDrawX, iDrawY, iDrawX + tileWidth, iDrawY + tileHeight, makecol(255, 255, 0));
+                }
+
+                rect(bmp_screen, iDrawX, iDrawY, iDrawX + tileWidth, iDrawY + tileHeight, makecol(128, 128, 128));
+            }
+
+            // Draw more debugging information
+            if (key[KEY_D] && key[KEY_TAB]) {
+                int iClr = makecol(255, 0, 0);
+
+                bool bDraw = false;
+
+                if (!map->isCellPassable(iCell))
+                    bDraw = true;
+
+                if (map->getCellIdStructuresLayer(iCell) > -1) {
+                    iClr = makecol(0, 255, 0);
+                    bDraw = true;
+                }
+
+                if (map->getCellIdUnitLayer(iCell) > -1) {
+                    iClr = makecol(0, 0, 255);
+                    bDraw = true;
+                }
+
+                if (bDraw) {
+                    rectfill(bmp_screen, iDrawX, iDrawY, iDrawX + tileWidth, iDrawY + tileHeight, iClr);
+                }
+
+            }
+
             // increase height
             iDrawY += tileHeight;
 		}
 		iDrawX+=tileWidth;
 	}
+
+    cTextDrawer cTextDrawer;
+    char msg[255];
+    sprintf(msg, "startX = %d startY = %d, mapCamera X = %d, Y = %d, abs X = %d, abs Y = %d, tileWidth = %d, tileHeight = %d, mc=%d", startX, startY, mapCamera->getX(), mapCamera->getY(), mapCamera->getAbsX(), mapCamera->getAbsY(), tileWidth, tileHeight, mouseCell);
+    cTextDrawer.drawText(0, 100, msg);
+
 }

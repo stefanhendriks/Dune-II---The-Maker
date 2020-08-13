@@ -38,6 +38,7 @@ class cStructureDrawer {
 		void drawStructureForLayer(cAbstractStructure * structure, int layer);
 
 	private:
+        cStructureUtils structureUtils;
 
 };
 

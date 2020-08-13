@@ -27,7 +27,7 @@ class cGameControlsContext {
 		int getIdOfStructureWhereMouseHovers() { return mouseHoveringOverStructureId; }
 		int getIdOfUnitWhereMouseHovers() { return mouseHoveringOverUnitId; }
 
-		int getMouseCell() const { return  mouseCell; }
+		int getMouseCell() const { return mouseCell; }
 		int getMouseCellFromMiniMap();
 
 		bool isMouseOverStructure() { return mouseHoveringOverStructureId > -1; }
@@ -42,11 +42,14 @@ class cGameControlsContext {
 
 		cAbstractStructure * getStructurePointerWhereMouseHovers();
 
+		int getMouseCellFromScreen(int heightTopBar, int screenY, int screenX) const;
+
 	protected:
 		void determineMouseCell();
 		void determineToolTip();
 		void determineHoveringOverStructureId();
 		void determineHoveringOverUnitId();
+
 
 	private:
 		int mouseHoveringOverStructureId;

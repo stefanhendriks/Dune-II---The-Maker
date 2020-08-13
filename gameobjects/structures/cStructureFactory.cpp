@@ -429,6 +429,6 @@ void cStructureFactory::clearAllStructures() {
 		}
 
 		// clear pointer
-		structure[i] = NULL;
+		structure[i] = nullptr;
 	}
 }
