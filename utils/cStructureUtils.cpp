@@ -210,7 +210,11 @@ int cStructureUtils::findClosestStructureTypeToCell(int cell, int structureType,
 }
 
 void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructure * theStructure) {
-	assert(theStructure);
+	if (!theStructure) {
+	    logbook("!theStruture");
+	    // bail
+	    return;
+	}
 
 	int cellOfStructure = theStructure->getCell();
 
@@ -253,7 +257,8 @@ int cStructureUtils::getStructureHeightInPixels(cAbstractStructure * theStructur
 }
 
 bool cStructureUtils::isStructureOnScreen(cAbstractStructure *structure) {
-	assert(structure);
+	if (!structure) return false;
+
 	int drawX = mapCamera->factorZoomLevel(structure->iDrawX());
 	int drawY = mapCamera->factorZoomLevel(structure->iDrawY());
 	int width = mapCamera->factorZoomLevel(getStructureWidthInPixels(structure));

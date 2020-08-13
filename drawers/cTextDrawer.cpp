@@ -13,8 +13,7 @@ cTextDrawer::cTextDrawer(ALFONT_FONT *theFont) {
 	applyShadow=true;
 }
 
-cTextDrawer::cTextDrawer() {
-	font = small_font;
+cTextDrawer::cTextDrawer() : cTextDrawer(small_font) {
 }
 
 cTextDrawer::~cTextDrawer() {

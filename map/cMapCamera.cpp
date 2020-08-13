@@ -14,12 +14,13 @@ cMapCamera::cMapCamera() {
 	TIMER_move=0;
 	zoomLevel = 1.0f;
 	desiredZoomLevel = zoomLevel;
-	calibrate();
 
     int widthOfSidebar = 160;
     int heightOfOptions = 42;
     absViewportWidth=game.screen_x-widthOfSidebar;
     absViewportHeight=game.screen_y-heightOfOptions;
+
+    calibrate();
 
 	char msg[255];
 	sprintf(msg, "Camera initialized. Viewport width is [%d], height [%d]. Position [%d,%d]", viewportWidth, viewportHeight, getX(), getY());
@@ -133,7 +134,6 @@ void cMapCamera::thinkInteraction() {
 			y--;
 			absY -= 32;
 			mouse_tile = MOUSE_UP;
-
 		}
 	}
 

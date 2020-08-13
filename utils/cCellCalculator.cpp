@@ -150,6 +150,10 @@ int cCellCalculator::getCell(int x, int y) {
 	// create cell
 	int cell = (y * MAP_W_MAX) + x;
 
+    // FIXED: Do never give a cell number higher then the max!
+    if (cell >= MAX_CELLS)
+        cell = (MAX_CELLS-1);
+
 	assert(cell < MAX_CELLS); // may never be => (will since MAX_CELLS-1 is max in array!)
 	assert(cell > -1); // may never be < 0
 

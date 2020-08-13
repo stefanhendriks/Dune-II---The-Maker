@@ -31,30 +31,44 @@ void cGameControlsContext::updateState() {
 }
 
 void cGameControlsContext::determineMouseCell() {
-	if (cMouse::getY() < 42) {
+    int heightTopBar = 42;
+    int screenY = cMouse::getY();
+    int screenX = cMouse::getX();
+
+    if (screenY < heightTopBar) {
 		mouseCell = -1; // at the top bar or higher, so no mouse cell id.
 		return;
 	}
 
-	if (cMouse::getX() > (game.screen_x - 128)) {
-		if (cMouse::getY() > (game.screen_y - 128)) {
+    if (screenX > (game.screen_x - 128)) {
+		if (screenY > (game.screen_y - 128)) {
 			mouseCell = MOUSECELL_MINIMAP ; // on minimap
 			return;
 		}
 	}
 
-	if (cMouse::getX() > (game.screen_x - 160)) {
+	if (screenX > (game.screen_x - 160)) {
 		mouseCell = -3 ; // on sidebar
 		return;
 	}
 
-	int iMouseX = cMouse::getX() / 32;
-	int iMouseY = (cMouse::getY() - 42) / 32;
+    int result = getMouseCellFromScreen(heightTopBar, screenY, screenX);
 
-	iMouseX += mapCamera->getX();
-	iMouseY += mapCamera->getY();
+    mouseCell = result;
+}
 
-	mouseCell = cellCalculator->getCell(iMouseX, iMouseY);
+int cGameControlsContext::getMouseCellFromScreen(int heightTopBar, int screenY, int screenX) const {
+    int tileWidth = mapCamera->getTileWidth();
+    int tileHeight = mapCamera->getTileHeight();
+
+    int iMouseX = screenX / tileWidth;
+    int iMouseY = (screenY - heightTopBar) / tileHeight;
+
+    iMouseX += mapCamera->getX();
+    iMouseY += mapCamera->getY();
+
+    int result = cellCalculator->getCell(iMouseX, iMouseY);
+    return result;
 }
 
 void cGameControlsContext::determineToolTip() {
