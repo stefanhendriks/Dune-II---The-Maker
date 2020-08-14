@@ -194,13 +194,6 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
     int tileWidth = mapCamera->getTileWidth();
     int tileHeight = mapCamera->getTileHeight();
 
-	// draw only what is visible
-
-	// Scrolling:
-	// - is X,Y position of map, not smoothed!
-	// - all we need is the end of the 'to be drawn area' , which is:
-	//   WIDTH OF SCREEN / 32
-//
 	int iDrawX=startX;
 	int iDrawY=startY;
 
@@ -262,8 +255,9 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                     int mcX = cellCalculator->getX(mouseCell);
                     int mcY = cellCalculator->getY(mouseCell);
 
-                    if (mcX == cellX && mcY == cellY)
-                        rectfill(bmp_screen, iDrawX, iDrawY, iDrawX + tileWidth, iDrawY + tileHeight, makecol(255, 255, 0));
+                    if (mcX == cellX && mcY == cellY) {
+                        rectfill(bmp_screen, iDrawX, iDrawY,iDrawX + tileWidth, iDrawY + tileHeight,makecol(255, 255, 0));
+                    }
                 }
 
                 rect(bmp_screen, iDrawX, iDrawY, iDrawX + tileWidth, iDrawY + tileHeight, makecol(128, 128, 128));
@@ -300,9 +294,13 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
 		iDrawX+=tileWidth;
 	}
 
+	if (DEBUGGING) {
+        rect(bmp_screen, startX, startY, startX + mapCamera->getAbsViewportWidth(),
+             startY + mapCamera->getAbsViewportHeight(), makecol(255, 255, 0));
+    }
+
     cTextDrawer cTextDrawer;
     char msg[255];
     sprintf(msg, "startX = %d startY = %d, mapCamera X = %d, Y = %d, abs X = %d, abs Y = %d, tileWidth = %d, tileHeight = %d, mc=%d", startX, startY, mapCamera->getX(), mapCamera->getY(), mapCamera->getAbsX(), mapCamera->getAbsY(), tileWidth, tileHeight, mouseCell);
     cTextDrawer.drawText(0, 100, msg);
-
 }
