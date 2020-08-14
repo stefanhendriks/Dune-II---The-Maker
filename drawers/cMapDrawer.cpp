@@ -177,11 +177,8 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int iPl) const {
     return tile;
 }
 
-
 // Future me:
-// shroud drawing is stuk (geen shroud randen te zien?)
 // particles zijn te veel naar rechts (en naar onder), off by one?
-// centreren is stuk (obv abs coordinaten iets niet tof?)
 
 void cMapDrawer::drawTerrain(int startX, int startY) {
     if (bmp_temp == nullptr) {
@@ -253,7 +250,7 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                     int mcY = cellCalculator->getY(mouseCell);
 
                     if (mcX == cellX && mcY == cellY) {
-                        rectfill(bmp_screen, iDrawX, iDrawY,iDrawX + tileWidth, iDrawY + tileHeight,makecol(255, 255, 0));
+                        fblend_rect_trans(bmp_screen, iDrawX, iDrawY,iDrawX + tileWidth, iDrawY + tileHeight,makecol(255, 255, 0), 96);
                     }
                 }
 
@@ -294,10 +291,10 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
 	if (DEBUGGING) {
         rect(bmp_screen, startX, startY, startX + mapCamera->getAbsViewportWidth(),
              startY + mapCamera->getAbsViewportHeight(), makecol(255, 255, 0));
-    }
 
-    cTextDrawer cTextDrawer;
-    char msg[255];
-    sprintf(msg, "startX = %d startY = %d, mapCamera X = %d, Y = %d, abs X = %d, abs Y = %d, tileWidth = %d, tileHeight = %d, mc=%d", startX, startY, mapCamera->getX(), mapCamera->getY(), mapCamera->getAbsX(), mapCamera->getAbsY(), tileWidth, tileHeight, mouseCell);
-    cTextDrawer.drawText(0, 100, msg);
+        cTextDrawer cTextDrawer;
+        char msg[255];
+        sprintf(msg, "startX = %d startY = %d, mapCamera X = %d, Y = %d, abs X = %d, abs Y = %d, tileWidth = %d, tileHeight = %d, mc=%d", startX, startY, mapCamera->getX(), mapCamera->getY(), mapCamera->getAbsX(), mapCamera->getAbsY(), tileWidth, tileHeight, mouseCell);
+        cTextDrawer.drawText(0, 100, msg);
+    }
 }
