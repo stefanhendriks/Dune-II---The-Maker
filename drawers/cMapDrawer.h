@@ -14,7 +14,7 @@ class cMapDrawer {
 		~cMapDrawer();
 
 		void drawTerrain(int startX, int startY);
-		void drawShroud();
+		void drawShroud(int startX, int startY);
 
 	protected:
 

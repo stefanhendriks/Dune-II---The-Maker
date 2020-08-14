@@ -27,34 +27,32 @@ cMapDrawer::~cMapDrawer() {
 	}
 }
 
-void cMapDrawer::drawShroud() {
-    return;
+void cMapDrawer::drawShroud(int startX, int startY) {
 	set_trans_blender(0,0,0,128);
 
     int tileWidth = mapCamera->getTileWidth();
     int tileHeight = mapCamera->getTileHeight();
 
     int colorDepthScreen = bitmap_color_depth(bmp_screen);
-//    bmp_temp=create_bitmap_ex(colorDepthScreen, 32,32);
     BITMAP *temp = create_bitmap_ex(colorDepthScreen, tileWidth,tileHeight);
 
-	int iDrawX=0;
-	int iDrawY=42;
+	int iDrawX=startX;
+	int iDrawY=startY;
 
 	int cll=-1;
 	int tile=-1;
 
 	int iPl = player.getId();
 
-	for (int iStartX = camera->getX(); iStartX < camera->getEndX(); iStartX++) {
-		iDrawY=42;
+    for (int iStartX = camera->getAbsX(); iStartX < camera->getAbsEndX(); iStartX+= tileWidth) {
+        iDrawY=startY;
 		tile=-1;
 
-		// new row
-		for (int iStartY=camera->getY(); iStartY < camera->getEndY(); iStartY++) {
-			cll = iCellMake(iStartX, iStartY);
+        // new row
+        for (int iStartY=camera->getAbsY(); iStartY < camera->getAbsEndY(); iStartY+= tileHeight) {
+            cll = iCellMakeFromAbsoluteWithCamera(iStartX, iStartY);
 
-			if (DEBUGGING) {
+			if (DEBUGGING && key[KEY_D] && key[KEY_TAB]) {
 				if (mapUtils->isCellVisibleForPlayerId(iPl, cll)) {
 					// do nothing
 				} else {
@@ -212,7 +210,6 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
 
 			// not visible for player, so do not draw
 			if (!mapUtils->isCellVisibleForPlayerId(iPl, iCell)) {
-                rectfill(bmp_screen, iDrawX, iDrawY, iDrawX + tileWidth, iDrawY + tileHeight, makecol(256, 128, 256));
                 iDrawY += tileHeight;
                 continue;
 			}
