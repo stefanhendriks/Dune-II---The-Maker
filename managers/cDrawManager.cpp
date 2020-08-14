@@ -61,7 +61,7 @@ void cDrawManager::draw() {
 	map.draw_units_2nd();
 
 	particleDrawer->drawHigherLayer();
-	mapDrawer->drawShroud();
+	mapDrawer->drawShroud(0, 42);
 
 	drawRallyPoint();
 
