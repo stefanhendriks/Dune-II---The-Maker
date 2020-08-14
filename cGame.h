@@ -149,6 +149,7 @@ public:
 private:
 	void poll();
 	void combat();		// the combat part (main) of the game
+	bool isMusicPlaying();
 
 	void draw_mentat(int iType); // draw mentat type
 
