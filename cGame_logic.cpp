@@ -434,44 +434,34 @@ void cGame::think_mentat()
 // TODO: Move to music related class (MusicPlayer?)
 void cGame::think_music()
 {
-    // all this does is repeating music in the same theme.
+    if (!game.bPlayMusic) // no music enabled, so no need to think
+        return;
 
+    // all this does is repeating music in the same theme.
     if (iMusicType < 0)
         return;
 
-	// When mp3 mode
-    if (bMp3)
-    {
+    if (!isMusicPlaying()) {
 
+        if (iMusicType == MUSIC_ATTACK) {
+            iMusicType = MUSIC_PEACE; // set back to peace
+        }
+
+        playMusicByType(iMusicType);
+    }
+}
+
+bool cGame::isMusicPlaying() {
+    if (bMp3) {
         if (mp3_music != NULL)
         {
             int s = almp3_poll_mp3(mp3_music);
-
-            if (s == ALMP3_POLL_PLAYJUSTFINISHED || s == ALMP3_POLL_NOTPLAYING)
-            {
-                if (iMusicType == MUSIC_ATTACK)
-                    iMusicType = MUSIC_PEACE; // set back to peace
-
-                playMusicByType(iMusicType);
-            }
+            return !(s == ALMP3_POLL_PLAYJUSTFINISHED || s == ALMP3_POLL_NOTPLAYING);
         }
     }
-	// MIDI mode
-    else
-    {
-        if (MIDI_music_playing() == false)
-        {
-			if (DEBUGGING)
-				logbook("Going to play the same kind of music (MIDI)");
-
-            if (iMusicType == MUSIC_ATTACK)
-                iMusicType = MUSIC_PEACE; // set back to peace
-
-            playMusicByType(iMusicType); //
-        }
-    }
-
-
+    
+    // MIDI mode:
+    return MIDI_music_playing();
 }
 
 void cGame::poll()
