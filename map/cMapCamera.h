@@ -86,9 +86,9 @@ class cMapCamera {
 		// the X,Y position (top left corner of the viewport)
 		// the targetX and targetY are leading.
 		// absX and absY are the absolute pixel coordinates of the map camera
+		// TODO: get rid of the cell based positions and use pixel based positions instead
 		int x, targetX, absX;
 		int y, targetY, absY;
-
 
 		// timer used, when to move camera
 		int TIMER_move;
