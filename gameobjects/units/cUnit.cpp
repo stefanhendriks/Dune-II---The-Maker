@@ -433,13 +433,21 @@ bool cUnit::isValid()
 int cUnit::draw_x() {
     int absoluteXCoordinateOnMap = iCellX * mapCamera->getTileWidth();
     int absoluteXCoordinateMapCamera = mapCamera->getX() * mapCamera->getTileWidth();
-    return ((absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera) + iOffsetX);
+    int maxOffsetZoomLevelOne = 32;
+    float zoomLevelFactored = mapCamera->factorZoomLevel(maxOffsetZoomLevelOne);
+    float factor = zoomLevelFactored / maxOffsetZoomLevelOne;
+//    float factor = 1.0f;
+    return ((absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera) + (iOffsetX * factor));
 }
 
 int cUnit::draw_y() {
     int absoluteYCoordinateOnMap = iCellY * mapCamera->getTileHeight();
     int absoluteYCoordinateMapCamera = mapCamera->getY() * mapCamera->getTileHeight();
-    return ((absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera) + iOffsetY) + 42; // 42 = the options bar height
+    int maxOffsetZoomLevelOne = 32;
+    float zoomLevelFactored = mapCamera->factorZoomLevel(maxOffsetZoomLevelOne);
+    float factor = zoomLevelFactored / maxOffsetZoomLevelOne;
+//    float factor = 1.0f;
+    return ((absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera) + (iOffsetY * factor)) + 42; // 42 = the options bar height
 }
 
 void cUnit::draw_spice()
