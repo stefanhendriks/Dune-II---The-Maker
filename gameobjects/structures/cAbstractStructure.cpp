@@ -60,18 +60,24 @@ cAbstractStructure::~cAbstractStructure()
 // X drawing position
 int cAbstractStructure::iDrawX()
 {
-  return ( (( iCellGiveX(iCell) * 32 ) - (mapCamera->getX()*32)));
+    int tileWidth = mapCamera->getTileWidth();
+    cCellCalculator * cellCalculator = map.getCellCalculator();
+    int x = cellCalculator->getX(iCell);
+    return (x * tileWidth) - (mapCamera->getX() * tileWidth);
 }
 
 // Y drawing position
 int cAbstractStructure::iDrawY()
 {
-  return (( (( iCellGiveY(iCell) * 32 ) - (mapCamera->getY()*32)))+42);
+    int tileHeight = mapCamera->getTileHeight();
+    cCellCalculator * cellCalculator = map.getCellCalculator();
+    int y = cellCalculator->getY(iCell);
+    int heightOfTopBar = 42;
+    return (y * tileHeight) - (mapCamera->getY() * tileHeight) + heightOfTopBar;
 }
 
 BITMAP * cAbstractStructure::getBitmap() {
-	s_Structures structureType = getS_StructuresType();
-	return structureType.bmp;
+    return this->getPlayer()->getStructureBitmap(getType());
 }
 
 BITMAP * cAbstractStructure::getShadowBitmap() {
