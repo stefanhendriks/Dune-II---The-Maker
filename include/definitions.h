@@ -135,10 +135,10 @@
 #define MAX_HOUSES        12      // 12 different type of houses
 
 // UNITS stuff
-#define MAX_UNIT_TYPES    25     // maximum of unit types
+#define MAX_UNITTYPES       50    // maximum of unit types
 
 // STRUCTURES stuff
-#define MAX_BUILDING_TYPES 25    // max of building types
+#define MAX_STRUCTURETYPES  50    // max of building types
 
 // BULLETS stuff
 #define MAX_BULLET_TYPES      30    // max of 30 types of bullets
@@ -190,9 +190,6 @@
 #define BRAIN_CLIENT    2
 #define BRAIN_NONE      3
 #define BRAIN_AI_WORM   4
-
-#define MAX_UNITTYPES       50
-#define MAX_STRUCTURETYPES  50
 
 // Structure types
 #define PALACE            0         // cPalace

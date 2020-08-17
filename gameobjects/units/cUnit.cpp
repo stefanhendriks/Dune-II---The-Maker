@@ -436,7 +436,6 @@ int cUnit::draw_x() {
     int maxOffsetZoomLevelOne = 32;
     float zoomLevelFactored = mapCamera->factorZoomLevel(maxOffsetZoomLevelOne);
     float factor = zoomLevelFactored / maxOffsetZoomLevelOne;
-//    float factor = 1.0f;
     return ((absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera) + (iOffsetX * factor));
 }
 
@@ -446,7 +445,6 @@ int cUnit::draw_y() {
     int maxOffsetZoomLevelOne = 32;
     float zoomLevelFactored = mapCamera->factorZoomLevel(maxOffsetZoomLevelOne);
     float factor = zoomLevelFactored / maxOffsetZoomLevelOne;
-//    float factor = 1.0f;
     return ((absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera) + (iOffsetY * factor)) + 42; // 42 = the options bar height
 }
 
@@ -624,34 +622,27 @@ void cUnit::draw_path()
 
 void cUnit::draw()
 {
+    if (iTempHitPoints > -1) {
+        // temp hitpoints filled, meaning it is not visible (but not dead). Ie, it is being repaired, or transfered
+        // by carry-all
+        return;
+    }
+
     // renders unit on map
-    if (iTempHitPoints > -1)
-        return; // temp hitpoints filled in, meaning it should NOT show up at all!
-
-    int ux = draw_x();  // draw unit, compensate wideness
-    int uy = draw_y(); // same here, for height
-
+    int ux = draw_x();  // draw unit, compensate wideness of unit (compared to cell width/height)
+    int uy = draw_y();  // same here
 
     if (iType == SANDWORM) {
-        Shimmer(20, ux+16, uy+16);
+        Shimmer(20, ux+(mapCamera->getTileWidth()/2), uy+(mapCamera->getTileHeight()/2));
 		return;
     }
 
-    // Temp bitmap (16 bits)
-    BITMAP *temp;
-    BITMAP *shadow;
-    temp = create_bitmap_ex(8, 128,128);      // 8 bits to copy from datafile
-    shadow = create_bitmap(64,64);              // current bitdepth to draw proper shadow
-
-    clear_bitmap(temp);
-    clear_to_color(shadow, makecol(255,0,255));
-
-    int     bmp_width           = units[iType].bmp_width;
-    int     bmp_height          = units[iType].bmp_height;
+    int bmp_width = units[iType].bmp_width;
+    int bmp_height = units[iType].bmp_height;
 
     // the multiplier we will use to draw the unit
-    int     bmp_head            = convert_angle(iHeadFacing);
-    int     bmp_body            = convert_angle(iBodyFacing);
+    int bmp_head = convert_angle(iHeadFacing);
+    int bmp_body = convert_angle(iBodyFacing);
 
     int start_x, start_y;
     int startpixel = units[iType].bmp_startpixel;
@@ -659,13 +650,6 @@ void cUnit::draw()
     // draw body first
     start_x = bmp_body * bmp_width;
     start_y = bmp_height * iFrame;
-
-    // select proper palette
-    int index = iPlayer;
-    if (iType == UNIT_FREMEN_ONE || iType == UNIT_FREMEN_THREE) {
-    	index = FREMEN;
-    }
-    select_palette( player[index].pal );
 
     // Selection box x, y position. Depends on unit size
     int iSelX = ux;
@@ -680,68 +664,57 @@ void cUnit::draw()
         uy-=2;
     }
 
-    // DRAW SHADOW
-    if (units[iType].shadow)
-    {
-		if (iType != CARRYALL) {
-            blit((BITMAP *)units[iType].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
-			draw_trans_sprite(bmp_screen, shadow, ux-startpixel,uy);
-	    } else {
+    // The final coordinates for drawing
+    int iDrawX = ux - startpixel;
+    int iDrawY = uy;
+
+    cPlayer &cPlayer = player[this->iPlayer];
+
+    // Draw SHADOW
+    BITMAP *shadow = cPlayer.getUnitShadowBitmap(iType, bmp_body, iFrame);
+    if (shadow) {
+        int destY = iDrawY;
+
+		if (iType == CARRYALL) {
 		    // adjust X and Y so it looks like a carry-all is 'higher up in the air'
-            blit((BITMAP *)units[iType].shadow, shadow, start_x+2, start_y+2, 0, 0, bmp_width, bmp_height);
-            draw_trans_sprite(bmp_screen, shadow, ux-startpixel,(uy + 24));
+            destY = iDrawY + 24; // TODO; do something with height here? the closer to target, the less distant the shadow?
 		}
+
+        masked_stretch_blit(shadow, bmp_screen, 0, 0, bmp_width, bmp_height, iDrawX, destY, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
+		destroy_bitmap(shadow);
     }
 
-    // Blit the unit itself (8 bit) onto temp bitmap
-    blit((BITMAP *)units[iType].bmp, temp, start_x, start_y, 0, 0, bmp_width, bmp_height);
+    // Draw BODY
+    BITMAP *bitmap = cPlayer.getUnitBitmap(iType);
+    masked_stretch_blit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux-startpixel, uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
 
-    // When we have a top, blit it too!
-    if (units[iType].top != NULL && iHitPoints > -1)
-    {
-        // recalculate start_x
+    // Draw TOP
+    BITMAP *top = cPlayer.getUnitTopBitmap(iType);
+    if (top && iHitPoints > -1) {
+        // recalculate start_x using head instead of body
         start_x = bmp_head * bmp_width;
         start_y = bmp_height * iFrame;
 
-        //start_x += units[iType].bmp_startpixel;
-
-        masked_blit((BITMAP *)units[iType].top, temp, start_x, start_y, 0, 0, bmp_width, bmp_height);
-
+        masked_stretch_blit(top, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux-startpixel, uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
     }
 
-
-	if (TIMER_blink > 0)
-		if (rnd(100) < 15)
-			mask_to_color(temp, makecol(255,255,255));
-
-    // When unit is selected, draw the focus picture on it
-//    stretch_sprite(bmp_screen, temp, ux-startpixel,uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
-    int colorDepth = bitmap_color_depth(bmp_screen);
-    BITMAP *tmp_bitmap = create_bitmap_ex(colorDepth, bmp_width, bmp_height);
-
-    // BUG BUG: copies from BMP Screen, which is distored when zoomed
-    blit(bmp_screen, tmp_bitmap, ux-startpixel, uy, 0, 0, 128, 128);
-
-//    draw_sprite(bmp_screen, temp, ux-startpixel,uy);
-    draw_sprite(tmp_bitmap, temp, 0,0);
-    stretch_sprite(bmp_screen, tmp_bitmap, ux-startpixel,uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
+    // TODO: Fix this / Draw BLINKING (ie, when targeted unit)
+//	if (TIMER_blink > 0)
+//		if (rnd(100) < 15)
+//			mask_to_color(temp, makecol(255,255,255));
 
 	// when we want to be picked up..
-	if (bCarryMe)
-		draw_sprite(bmp_screen, (BITMAP *)gfxdata[SYMB_PICKMEUP].dat, ux-startpixel,uy-7);
-
-    // convert back
-
-    if (bSelected)
-    {
-       draw_sprite(bmp_screen, (BITMAP *)gfxdata[FOCUS].dat, iSelX/*+startpixel*/-2, iSelY);
+	if (bCarryMe) {
+        draw_sprite(bmp_screen, (BITMAP *) gfxdata[SYMB_PICKMEUP].dat, ux - startpixel, uy - 7);
     }
 
-
-
-    destroy_bitmap(temp);
-    destroy_bitmap(tmp_bitmap);
-    destroy_bitmap(shadow);
+    if (bSelected) {
+//       draw_sprite(bmp_screen, (BITMAP *)gfxdata[FOCUS].dat, iSelX/*+startpixel*/-2, iSelY);
+        BITMAP *focusBitmap = (BITMAP *) gfxdata[FOCUS].dat;
+        int bmp_width = focusBitmap->w;
+        int bmp_height = focusBitmap->h;
+        masked_stretch_blit(focusBitmap, bmp_screen, 0, 0, bmp_width, bmp_height, iSelX/*+startpixel*/- 2, iSelY, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
+    }
 }
 
 // GLOBALS
