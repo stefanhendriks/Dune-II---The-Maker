@@ -21,6 +21,8 @@ cPlayer::cPlayer() {
 	upgradeBuilder = NULL;
 	buildingListUpdater = NULL;
 	gameControlsContext = NULL;
+    clearStructureTypeBitmaps();
+	clearUnitTypeBitmaps();
 }
 
 cPlayer::~cPlayer() {
@@ -49,6 +51,7 @@ cPlayer::~cPlayer() {
         delete difficultySettings;
     }
     clearStructureTypeBitmaps();
+    clearUnitTypeBitmaps();
 }
 
 void cPlayer::clearStructureTypeBitmaps() {
@@ -57,6 +60,20 @@ void cPlayer::clearStructureTypeBitmaps() {
             destroy_bitmap(bmp_structure[i]);
         }
         bmp_structure[i] = nullptr;
+    }
+}
+
+void cPlayer::clearUnitTypeBitmaps() {
+    for (int i = 0; i < MAX_UNITTYPES; i++) {
+        if (bmp_unit[i]) {
+            destroy_bitmap(bmp_unit[i]);
+        }
+        bmp_unit[i] = nullptr;
+
+        if (bmp_unit_top[i]) {
+            destroy_bitmap(bmp_unit_top[i]);
+        }
+        bmp_unit_top[i] = nullptr;
     }
 }
 
@@ -169,7 +186,6 @@ void cPlayer::init(int id)
 
     TIMER_think=rnd(10);        // timer for thinking itself (calling main routine)
     TIMER_attack=-1;			// -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
-
 }
 
 
@@ -224,7 +240,23 @@ void cPlayer::setHouse(int iHouse) {
       clear_to_color(bmp_structure[i], makecol(255, 0, 255));
 
       draw_sprite(bmp_structure[i], structureType.bmp, 0, 0);
-//      blit(structureType.bmp, bmp_structure[i], 0, 0, 0, 0, structureType.bmp->w, structureType.bmp->h);
+  }
+
+  // same goes for units
+  for (int i = 0; i < MAX_UNITTYPES; i++) {
+      s_UnitP &unitType = units[i];
+
+      bmp_unit[i] = create_bitmap_ex(colorDepthBmpScreen, unitType.bmp->w, unitType.bmp->h);
+      clear_to_color(bmp_unit[i], makecol(255, 0, 255));
+
+      draw_sprite(bmp_unit[i], unitType.bmp, 0, 0);
+
+      if (unitType.top) {
+          bmp_unit_top[i] = create_bitmap_ex(colorDepthBmpScreen, unitType.bmp->w, unitType.bmp->h);
+          clear_to_color(bmp_unit_top[i], makecol(255, 0, 255));
+
+          draw_sprite(bmp_unit_top[i], unitType.top, 0, 0);
+      }
   }
 
 }
@@ -276,9 +308,68 @@ int cPlayer::getAmountOfStructuresForType(int structureType) const {
 	return iStructures[structureType];
 }
 
-BITMAP *cPlayer::getStructureBitmap(int structureTypeIndex) {
-    if (bmp_structure[structureTypeIndex]) {
-        return bmp_structure[structureTypeIndex];
+/**
+ * Returns the bitmap for structure type "index", this structure has been colorized beforehand for this player and is
+ * in same color depth as bmp_screen.
+ * @param index
+ * @return
+ */
+BITMAP *cPlayer::getStructureBitmap(int index) {
+    if (bmp_structure[index]) {
+        return bmp_structure[index];
+    }
+    return nullptr;
+}
+
+/**
+ * Returns the bitmap for unit type "index", this unit has been colorized beforehand for this player and is
+ * in same color depth as bmp_screen.
+ * @param index
+ * @return
+ */
+BITMAP *cPlayer::getUnitBitmap(int index) {
+    if (bmp_unit[index]) {
+        return bmp_unit[index];
+    }
+    return nullptr;
+}
+
+/**
+ * Returns the bitmap for unit top type "index", this top of unit has been colorized beforehand for this player and is
+ * in same color depth as bmp_screen.
+ * @param index
+ * @return
+ */
+BITMAP *cPlayer::getUnitTopBitmap(int index) {
+    if (bmp_unit_top[index]) {
+        return bmp_unit_top[index];
+    }
+    return nullptr;
+}
+
+/**
+ * Returns the shadow bitmap of unit type "index", using bodyFacing and animationFrame.
+ * !!! Be sure to destroy the bitmap returned from here !!!
+ * @param index
+ * @return
+ */
+BITMAP *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFrame) {
+    if (units[index].shadow) {
+        int bmp_width = units[index].bmp_width;
+        int bmp_height = units[index].bmp_height;
+        int start_x = bodyFacing * bmp_width;
+        int start_y = bmp_height * animationFrame;
+
+        // Carry-all has a bit different offset for shadow
+        if (index == CARRYALL) {
+            start_x += 2;
+            start_y += 2;
+        }
+
+        BITMAP *shadow = create_bitmap(64,64);
+        clear_to_color(shadow, makecol(255,0,255));
+        blit((BITMAP *)units[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
+        return shadow;
     }
     return nullptr;
 }

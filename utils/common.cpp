@@ -1527,34 +1527,22 @@ void lit_windtrap_color(BITMAP *bmp, int iColor)
 	}
 }
 
-void mask_to_color(BITMAP *bmp, int color)
+void mask_to_color(BITMAP *bmp, int maskColor, int color)
 {
-	//BITMAP *temp16;
-	//temp16=create_bitmap(bmp->w, bmp->h);
-
-	//clear_to_color(temp16, makecol(255,0,255));
-
-	//masked_blit(bmp, temp16, 0, 0, 0, 0, bmp->w, bmp->h);
-
 	for (int x=0; x < bmp->w; x++)
 	{
 		for (int y=0; y < bmp->h; y++)
 		{
 			int c = getpixel(bmp, x, y);
 
-			if (c != makecol(0,0,0))
+			if (c != maskColor)
 			{
 				// masked
-				putpixel(bmp, x, y, makecol(VOLUME_MAX, VOLUME_MAX, VOLUME_MAX));
+				putpixel(bmp, x, y, color);
 				//allegro_message("Non pink detected");
 			}
 		}
 	}
-
-	//draw_sprite(bmp, temp16, 0, 0);
-	//masked_blit(temp16, bmp, 0, 0, 0, 0, bmp->w, bmp->h);
-	//destroy_bitmap(temp16);
-
 }
 
 int getAmountReservedVoicesAndInstallSound() {

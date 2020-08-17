@@ -92,7 +92,10 @@ class cPlayer {
 		    return std::string(msg);
 		}
 
-    BITMAP *getStructureBitmap(int structureTypeIndex);
+    BITMAP *getStructureBitmap(int index);
+    BITMAP *getUnitBitmap(int index);
+    BITMAP *getUnitTopBitmap(int index);
+    BITMAP *getUnitShadowBitmap(int index, int bodyFacing, int animationFrame);
 
 private:
 		int getRGBColorForHouse(int houseId);
@@ -121,7 +124,11 @@ private:
 
 		BITMAP * bmp_structure[MAX_STRUCTURETYPES];
 
+		BITMAP * bmp_unit[MAX_UNITTYPES]; // the body of unit
+		BITMAP * bmp_unit_top[MAX_UNITTYPES]; // optionally a 'top' of unit (barrel of tank, for example)
+
         void clearStructureTypeBitmaps();
+        void clearUnitTypeBitmaps();
 };
 
 #endif
