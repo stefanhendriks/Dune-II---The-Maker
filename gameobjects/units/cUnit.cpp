@@ -471,13 +471,10 @@ void cUnit::draw_spice()
 void cUnit::draw_health()
 {
     // draw units health
-
-    int drawx = draw_x()-1;
-    int drawy = draw_y()-5;
-    int width_x = 32;
-    int height_y = 4;
-
-    //if (drawy < 42) drawy = 42;
+    int width_x = mapCamera->factorZoomLevel(32);
+    int height_y = mapCamera->factorZoomLevel(4);
+    int drawx = draw_x();
+    int drawy = draw_y()-(height_y + 2);
 
     int w = health_unit(iID, width_x);
 
@@ -487,22 +484,21 @@ void cUnit::draw_health()
 
     if (g > 255)
         g = 255;
+
     if (r < 0) r= 0;
-
-
-    // shadow
-    //rectfill(bmp_screen, drawx+2, drawy+2, drawx + width_x + 2, drawy + height_y + 2, makecol(0,0,0));
 
     // bar itself
     rectfill(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(0,0,0));
     rectfill(bmp_screen, drawx, drawy, drawx + (w-1), drawy + height_y, makecol(r,g,32));
 
-    // bar around it
-    rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(255, 255, 255));
+    // bar around it (only when it makes sense due zooming)
+    if (height_y > 2) {
+        rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(255, 255, 255));
+    }
 
     // draw group
-    if (iGroup > 0 && iPlayer == 0)
-    {
+    if (iGroup > 0 &&
+        iPlayer == HUMAN) {
         alfont_textprintf(bmp_screen, bene_font, drawx+26,drawy-11, makecol(0,0,0), "%d", iGroup);
         alfont_textprintf(bmp_screen, bene_font, drawx+26,drawy-12, makecol(255,255,255), "%d", iGroup);
     }
