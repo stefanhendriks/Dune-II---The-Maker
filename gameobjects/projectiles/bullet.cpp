@@ -35,19 +35,28 @@ void cBullet::init()
 
     iHoming=-1;        // homing to unit...
     TIMER_homing=0;   // when timer set, > 0 means homing
-
 }
 
 
 int cBullet::draw_x()
 {
-return ( (( iCellGiveX(iCell) * 32 ) - (mapCamera->getX()*32)) + iOffsetX);
+    int absoluteXCoordinateOnMap = iCellGiveX(iCell) * mapCamera->getTileWidth();
+    int absoluteXCoordinateMapCamera = mapCamera->getX() * mapCamera->getTileWidth();
+    int maxOffsetZoomLevelOne = 32;
+    float zoomLevelFactored = mapCamera->factorZoomLevel(maxOffsetZoomLevelOne);
+    float factor = zoomLevelFactored / maxOffsetZoomLevelOne;
+    return ((absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera) + (iOffsetX * factor));
 }
 
 
 int cBullet::draw_y()
 {
-return ( (( iCellGiveY(iCell) * 32 ) - (mapCamera->getY()*32)) + iOffsetY)+42;
+    int absoluteYCoordinateOnMap = iCellGiveY(iCell) * mapCamera->getTileHeight();
+    int absoluteYCoordinateMapCamera = mapCamera->getY() * mapCamera->getTileHeight();
+    int maxOffsetZoomLevelOne = 32;
+    float zoomLevelFactored = mapCamera->factorZoomLevel(maxOffsetZoomLevelOne);
+    float factor = zoomLevelFactored / maxOffsetZoomLevelOne;
+    return ((absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera) + (iOffsetY * factor)) + 42; // 42 = the options bar height
 }
 
 // draw the bullet
@@ -62,7 +71,6 @@ void cBullet::draw()
     if (y < 0 || y > game.screen_y)
         return;
 
-
     int x1, y1, x2, y2;
     x1 = iCellGiveX(iCell);
     y1 = iCellGiveY(iCell);
@@ -73,10 +81,8 @@ void cBullet::draw()
     int fa = bullet_face_angle(fDegrees(x1, y1, x2, y2));
     int ba = bullet_correct_angle(fa);
 
-
-    int h, w;
-    w = bullets[iType].bmp_width;
-    h = 32;
+    int h = 32;
+    int bmp_width = bullets[iType].bmp_width;
 
     int sx, sy;
 
@@ -102,12 +108,19 @@ void cBullet::draw()
     // Whenever this bullet is a shimmer, draw a shimmer and leave
   if (iType == BULLET_SHIMMER)
   {
-    Shimmer(16, x, y);
+    Shimmer(mapCamera->factorZoomLevel(16), x, y);
     return;
   }
 
-  if (bullets[iType].bmp != NULL)
-    masked_blit((BITMAP *)bullets[iType].bmp, bmp_screen, sx, sy, x, y, bullets[iType].bmp_width, bullets[iType].bmp_width);
+  if (bullets[iType].bmp != NULL) {
+      masked_stretch_blit((BITMAP *) bullets[iType].bmp,
+            bmp_screen,
+            sx, sy,
+            bmp_width, bmp_width,
+            x, y,
+            mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_width)
+            );
+  }
 
   return;
 }
