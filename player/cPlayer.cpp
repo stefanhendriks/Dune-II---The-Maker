@@ -48,6 +48,16 @@ cPlayer::~cPlayer() {
     if (difficultySettings) {
         delete difficultySettings;
     }
+    clearStructureTypeBitmaps();
+}
+
+void cPlayer::clearStructureTypeBitmaps() {
+    for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
+        if (bmp_structure[i]) {
+            destroy_bitmap(bmp_structure[i]);
+        }
+        bmp_structure[i] = nullptr;
+    }
 }
 
 void cPlayer::setUpgradeBuilder(cUpgradeBuilder *theUpgradeBuilder) {
@@ -186,7 +196,7 @@ void cPlayer::setHouse(int iHouse) {
   // copy entire palette
   memcpy (pal, general_palette, sizeof(pal));
 
-  // now set the different colors based uppon house
+  // now set the different colors based upon house
   if (houses[house].swap_color > -1) {
     int start = houses[house].swap_color;
     int s=144;                // original position (harkonnen)
@@ -198,6 +208,25 @@ void cPlayer::setHouse(int iHouse) {
   }
 
   minimapColor = getRGBColorForHouse(house);
+
+  clearStructureTypeBitmaps();
+
+  int colorDepthBmpScreen = bitmap_color_depth(bmp_screen);
+
+  // use this palette to draw stuff
+  select_palette(pal);
+
+  // now copy / set all structures for this player, with the correct color
+  for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
+      s_Structures &structureType = structures[i];
+
+      bmp_structure[i] = create_bitmap_ex(colorDepthBmpScreen, structureType.bmp->w, structureType.bmp->h);
+      clear_to_color(bmp_structure[i], makecol(255, 0, 255));
+
+      draw_sprite(bmp_structure[i], structureType.bmp, 0, 0);
+//      blit(structureType.bmp, bmp_structure[i], 0, 0, 0, 0, structureType.bmp->w, structureType.bmp->h);
+  }
+
 }
 
 int cPlayer::getRGBColorForHouse(int houseId) {
@@ -245,4 +274,11 @@ int cPlayer::getAmountOfStructuresForType(int structureType) const {
 	assert(structureType >= 0);
 	assert(structureType <= RTURRET);
 	return iStructures[structureType];
+}
+
+BITMAP *cPlayer::getStructureBitmap(int structureTypeIndex) {
+    if (bmp_structure[structureTypeIndex]) {
+        return bmp_structure[structureTypeIndex];
+    }
+    return nullptr;
 }

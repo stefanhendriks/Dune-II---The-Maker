@@ -92,7 +92,9 @@ class cPlayer {
 		    return std::string(msg);
 		}
 
-	private:
+    BITMAP *getStructureBitmap(int structureTypeIndex);
+
+private:
 		int getRGBColorForHouse(int houseId);
 		bool m_Human;
 
@@ -116,6 +118,10 @@ class cPlayer {
 		int house;
 		int minimapColor;			// color of this team on minimap;
 		int id;	// this id is the reference to the player array
+
+		BITMAP * bmp_structure[MAX_STRUCTURETYPES];
+
+        void clearStructureTypeBitmaps();
 };
 
 #endif
