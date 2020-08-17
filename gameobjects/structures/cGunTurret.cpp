@@ -92,16 +92,13 @@ void cGunTurret::think() {
 
                     int iBullet = BULLET_TURRET;
 
-                    if (getType() == RTURRET && iDistance > 3)
+                    if (getType() == RTURRET && iDistance > 3) {
                         iBullet = ROCKET_RTURRET;
-                    else
-                    {
+                    } else {
                         int iShootX=(iDrawX() + 16 ) + (mapCamera->getX()*32);
                         int iShootY=(iDrawY() + 16 ) + (mapCamera->getY()*32);
-                        int     bmp_head            = convert_angle(iHeadFacing);
-
+                        int bmp_head = convert_angle(iHeadFacing);
                         PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);
-
                     }
 
                     int iBull = create_bullet(iBullet, getCell(), iTargetCell, -1, iMyIndex);
