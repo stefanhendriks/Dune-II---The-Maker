@@ -18,14 +18,17 @@ namespace
 {
     const int PAN_CENTER = 128;
 }
+
 namespace
 {
     const int VOLUME_MAX = 255;
 }
+
 namespace
 {
     const int BUFFER_SIZE = 32768;
 }
+
 // Keep a logbook
 void logbook(const char *txt)
 {
@@ -886,7 +889,6 @@ void install_structures()
   structures[WALL].bmp_width = 16*2;
   structures[WALL].bmp_height = 16*2;
   strcpy(structures[WALL].name, "Concrete Wall");
-
 
   // Structure    : Windtrap
   // Description  : <none>

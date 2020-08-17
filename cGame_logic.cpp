@@ -459,7 +459,7 @@ bool cGame::isMusicPlaying() {
             return !(s == ALMP3_POLL_PLAYJUSTFINISHED || s == ALMP3_POLL_NOTPLAYING);
         }
     }
-    
+
     // MIDI mode:
     return MIDI_music_playing();
 }
