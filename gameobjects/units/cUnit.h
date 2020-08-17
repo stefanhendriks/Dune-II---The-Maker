@@ -160,7 +160,9 @@ public:
 
     int TIMER_attack;   // when to shoot?
 
-    int TIMER_wormeat;  // when do we eat? (when worm)     
+    int TIMER_wormeat;  // when do we eat? (when worm)
+
+    s_UnitP& getUnitType();
 };
 
 

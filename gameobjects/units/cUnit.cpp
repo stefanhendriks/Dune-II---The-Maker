@@ -450,21 +450,24 @@ int cUnit::draw_y() {
 
 void cUnit::draw_spice()
 {
-    int drawx = draw_x()-1;
-    int drawy = draw_y()-10;
-    int width_x = 32;
-    int height_y = 4;
+    int width_x = mapCamera->factorZoomLevel(32);
+    int height_y = mapCamera->factorZoomLevel(4);
+    int drawx = draw_x();
+    int drawy = draw_y()-((height_y *2)+ 2);
 
     if (drawy < 42) drawy = 42;
 
-    int w = health_bar(32, iCredits, 700);
+    int max = getUnitType().credit_capacity;
+    int w = health_bar(width_x, iCredits, max);
 
     // bar itself
     rectfill(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(0,0,0));
     rectfill(bmp_screen, drawx, drawy, drawx + (w), drawy + height_y, makecol(255,91,1));
 
-    // bar around it
-    rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(255, 255, 255));
+    // bar around it (only when it makes sense due zooming)
+    if (height_y > 2) {
+        rect(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(255, 255, 255));
+    }
 }
 
 
@@ -2395,6 +2398,10 @@ void cUnit::think_attack()
             iAttackStructure=-1;
         }
     }
+}
+
+s_UnitP& cUnit::getUnitType() {
+    return units[iType];
 }
 
 // thinking about movement (which is called upon a faster rate)
