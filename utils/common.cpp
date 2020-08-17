@@ -1065,10 +1065,7 @@ void install_structures()
  // MAX_W = pixels maxed
  // I = How much we have (CURRENT STATE)
  // W = MAX it can have
-float health_bar(float max_w, int i, int w)
-{
-
-  float health = 0.0f;
+float health_bar(float max_w, int i, int w) {
   float flHP   = i;
   float flMAX  = w;
 
@@ -1077,8 +1074,7 @@ float health_bar(float max_w, int i, int w)
   }
 
   // amount of pixels (max_w = 100%)
-
-  health = (float)(flHP / flMAX);
+  float health = (float)(flHP / flMAX);
 
   return (health * max_w);
 }
@@ -1087,16 +1083,10 @@ float health_bar(float max_w, int i, int w)
 /******************************
  Unit health-bar calculation, returns amount of pictures
  ******************************/
-float health_unit(int i, float w)
-{
-
-  float health = 0.0f;
+float health_unit(int i, float w) {
   float flHP   = unit[i].iHitPoints;
   float flMAX  = units[unit[i].iType].hp;
-
-  // amount of pixels (max 16 = 100%)
-
-  health = (float)(flHP / flMAX);
+  float health = (float)(flHP / flMAX);
 
   return (health*w);
 }
