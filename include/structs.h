@@ -8,7 +8,6 @@
 #ifndef STRUCTS_H_
 #define STRUCTS_H_
 
-
 // Unit properties
 // note: This is NOT the unit class, this is simply a 'prefix' for a unit!
 // note: The unit properties are actually set in common.cpp , like the houses!
@@ -69,23 +68,24 @@ struct s_UnitP
 struct s_Structures
 {
   // Structures
-  BITMAP *bmp;         // a reference to his 8 bit bitmap. (id in graphics)
-  BITMAP *shadow;	   // shadow
+  BITMAP *bmp;         // a pointer to the 8 bit bitmap
+  BITMAP *shadow;	   // a pointer to the shadow bitmap
 
-  int bmp_width;
-  int bmp_height;
+  int bmp_width;       // width structure (in pixels)
+  int bmp_height;      // height structure (in pixels)
 
   int list;            // list this structure has!
 
   int hp;              // max hp
-  int fixhp;	   	   // how much you get for fixing this thing
+  int fixhp;	   	   // how much you get for fixing (reparing) this thing
+
   int bullets;         // type of bullet
 
-  int build_time;      // how long it takes for building this thing
+  int build_time;      // how long it takes for building this structure
 
 
-  int    power_drain;       // the power that this building drains...
-  int    power_give;        // the power that this building gives...
+  int power_drain;       // the power that this building drains...
+  int power_give;        // the power that this building gives...
 
   int sight;
 
@@ -94,7 +94,7 @@ struct s_Structures
 
   int icon;            // icon id
 
-  int cost;            // price of this thing
+  int cost;            // price
 
   char name[64];       // name
 };
@@ -116,7 +116,7 @@ struct s_Bullet
 
   int damage;         // how much damage it does -> vehicles
   int damage_inf;     // how much damage it does -> infantry
-  int max_frames;     // when > 0 it animates automaticly
+  int max_frames;     // when > 0 it animates automatically
   int max_deadframes; // max dead frames
 
   int sound;          // Sound produced when 'shot' (or explosion sound)
@@ -130,14 +130,6 @@ struct sPreviewMap {
      int iPlayers;           // players
      int iStartCell[5];      // starting locations
      char name[80];          // name
-};
-
-// SETTINGS
-struct sGameSettings {
-    int iIdealFPS;          // ideal fps to reach
-    bool bUseRest;          // use Rest technique
-    int iScollSpeed;        // scroll speed
-    bool bWindowed;         // launch default as windowed or not?
 };
 
 #endif /* STRUCTS_H_ */
