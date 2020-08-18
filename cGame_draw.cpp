@@ -235,10 +235,13 @@ void cGame::combat_mouse()
 			}
 
 			if (bParticle) {
+                int absoluteXCoordinate = mouse_x + (mapCamera->getAbsX());
+                int absoluteYCoordinate = mouse_y + (mapCamera->getAbsY());
+
                 if (mouse_tile == MOUSE_ATTACK) {
-                    PARTICLE_CREATE(mouse_x + (mapCamera->getX()*32), mouse_y + (mapCamera->getY()*32), ATTACK_INDICATOR, -1, -1);
+                    PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, ATTACK_INDICATOR, -1, -1);
                 } else {
-                    PARTICLE_CREATE(mouse_x + (mapCamera->getX()*32), mouse_y + (mapCamera->getY()*32), MOVE_INDICATOR, -1, -1);
+                    PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, MOVE_INDICATOR, -1, -1);
                 }
 			}
 		}

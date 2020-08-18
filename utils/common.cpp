@@ -67,7 +67,7 @@ void FIX_BORDER_POS(int &x, int &y)
     }
 }
 
-// Will make sure the X and Y don't get out of their boundries
+// Will make sure the X and Y don't get out of their boundaries
 void FIX_POS(int &x, int &y)
 {
     // filled in
@@ -1361,13 +1361,11 @@ int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstr
   bullet[new_id].iOffsetX = 8 + rnd(9);
   bullet[new_id].iOffsetY = 8 + rnd(9);
 
-
   if (ownerunit > -1)
   {
       bullet[new_id].iPlayer = unit[ownerunit].iPlayer;
       // create spot
       map.clear_spot(cell, 3, unit[ownerunit].iPlayer);
-
   }
 
   if (ownerstruc > -1)

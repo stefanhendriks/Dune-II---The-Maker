@@ -135,7 +135,7 @@ public:
 
     void think_hit(int iShotUnit, int iShotStructure);
 
-    int is_nextcell(); // what is the next cell to move to
+    int isNextCell(); // what is the next cell to move to
 
     void move_to(int iCll, int iStrucID, int iUnitID);
 	

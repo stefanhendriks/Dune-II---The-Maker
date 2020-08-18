@@ -41,7 +41,7 @@ void cBullet::init()
 int cBullet::draw_x()
 {
     int absoluteXCoordinateOnMap = iCellGiveX(iCell) * mapCamera->getTileWidth();
-    int absoluteXCoordinateMapCamera = mapCamera->getX() * mapCamera->getTileWidth();
+    int absoluteXCoordinateMapCamera = mapCamera->getAbsX();
     int maxOffsetZoomLevelOne = 32;
     float zoomLevelFactored = mapCamera->factorZoomLevel(maxOffsetZoomLevelOne);
     float factor = zoomLevelFactored / maxOffsetZoomLevelOne;
@@ -52,7 +52,7 @@ int cBullet::draw_x()
 int cBullet::draw_y()
 {
     int absoluteYCoordinateOnMap = iCellGiveY(iCell) * mapCamera->getTileHeight();
-    int absoluteYCoordinateMapCamera = mapCamera->getY() * mapCamera->getTileHeight();
+    int absoluteYCoordinateMapCamera = mapCamera->getAbsY();
     int maxOffsetZoomLevelOne = 32;
     float zoomLevelFactored = mapCamera->factorZoomLevel(maxOffsetZoomLevelOne);
     float factor = zoomLevelFactored / maxOffsetZoomLevelOne;
@@ -126,9 +126,7 @@ void cBullet::draw()
 }
 
 
-void cBullet::think()
-{
-
+void cBullet::think() {
     // frame animation first
     TIMER_frame++;
 
@@ -137,37 +135,40 @@ void cBullet::think()
         bool bCreatePuf=false;
 
         // big rockets create smoke
-        if (iType == ROCKET_NORMAL || iType == BULLET_GAS || iType == ROCKET_RTURRET)
-        {
+        if (iType == ROCKET_NORMAL ||
+            iType == BULLET_GAS ||
+            iType == ROCKET_RTURRET) {
+
             iFrame++;
-            if (iFrame > 1)
+            if (iFrame > 1) { // fire animation of rocket
                 iFrame=0;
+            }
 
             bCreatePuf=true;
         }
 
-
-        // smaller rockets don't
+        // smaller rockets don't create smoke... except for ornithopters
         if (iType == ROCKET_SMALL || iType == ROCKET_SMALL_ORNI)
         {
             iFrame++;
-            if (iFrame > 1)
+            if (iFrame > 1) {
                 iFrame=0;
+            }
 
-            if (iType == ROCKET_SMALL_ORNI)
-                bCreatePuf=true;
+            if (iType == ROCKET_SMALL_ORNI) {
+                bCreatePuf = true;
+            }
 
         }
 
-        // except for orni's
-
-
-
-        if (bCreatePuf)
-            PARTICLE_CREATE(draw_x()+(mapCamera->getX()*32)+16 , draw_y()+(mapCamera->getY()*32)+16, BULLET_PUF, -1, -1);
+        if (bCreatePuf) {
+            int half = mapCamera->getHalfTileSize();
+            // crashes seem to happen with particles?? even without drawing enabled of particles?
+            PARTICLE_CREATE(draw_x() + mapCamera->getAbsX() + half, draw_y() + mapCamera->getAbsY() + half,
+                            BULLET_PUF, -1, -1);
+        }
 
         TIMER_frame = 0;
-
     }
 
     // when this bastard is homing... set goal
@@ -343,8 +344,13 @@ void cBullet::think_move()
 				if (structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
 					iChance = 30;
 
-				if (rnd(100) < iChance)
-					PARTICLE_CREATE(draw_x()+(mapCamera->getX()*32)+16+ (-8 + rnd(16)), draw_y()+(mapCamera->getY()*32)+16+ (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
+				if (rnd(100) < iChance) {
+                    int half = mapCamera->getHalfTileSize();
+                    int randomX = mapCamera->factorZoomLevel(-8 + rnd(16));
+                    int randomY = mapCamera->factorZoomLevel(-8 + rnd(16));
+                    PARTICLE_CREATE(draw_x() + (mapCamera->getAbsX()) + half + randomX,
+                                    draw_y() + (mapCamera->getAbsY()) + half + randomY, OBJECT_SMOKE, -1, -1);
+                }
 
 
 				// NO HP LEFT, DIE
@@ -401,8 +407,13 @@ void cBullet::think_move()
 						iChance = 45;
 
 					// smoke
-					if (rnd(100) < iChance)
-						PARTICLE_CREATE(draw_x()+(mapCamera->getX()*32)+16+ (-8 + rnd(16)), draw_y()+(mapCamera->getY()*32)+16+ (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
+					if (rnd(100) < iChance) {
+                        int half = mapCamera->getHalfTileSize();
+                        int randomX = mapCamera->factorZoomLevel(-8 + rnd(16));
+                        int randomY = mapCamera->factorZoomLevel(-8 + rnd(16));
+                        PARTICLE_CREATE(draw_x() + (mapCamera->getAbsX()) + half + randomX,
+                                        draw_y() + (mapCamera->getAbsY()) + half + randomY, OBJECT_SMOKE, -1, -1);
+					}
 
 
 					// NO HP LEFT, DIE
@@ -631,8 +642,14 @@ void cBullet::think_move()
         if (iType == BULLET_GAS)
             play_sound_id(SOUND_GAS, iCellOnScreen(iCell));
 
-        if (bullets[iType].deadbmp > -1)
-            PARTICLE_CREATE(draw_x()+(mapCamera->getX()*32)+16+ (-8 + rnd(16)), draw_y()+(mapCamera->getY()*32)+16+ (-8 + rnd(16)), bullets[iType].deadbmp, -1, -1);
+        if (bullets[iType].deadbmp > -1) {
+            int half = mapCamera->getHalfTileSize();
+            int randomX = mapCamera->factorZoomLevel(-8 + rnd(16));
+            int randomY = mapCamera->factorZoomLevel(-8 + rnd(16));
+            PARTICLE_CREATE(draw_x() + (mapCamera->getAbsX()) + half + randomX,
+                            draw_y() + (mapCamera->getAbsY()) + half + randomY, bullets[iType].deadbmp, -1, -1);
+
+        }
 
 		int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
 

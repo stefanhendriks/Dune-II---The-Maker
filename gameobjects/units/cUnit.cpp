@@ -118,8 +118,9 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
     // Animation / Sound
 	// TODO: update statistics player
 
-    int iDieX=(draw_x() + 16 ) + (mapCamera->getX()*32);
-    int iDieY=(draw_y() + 16 ) + (mapCamera->getY()*32);
+    int half = mapCamera->getHalfTileSize();
+    int iDieX=(draw_x() + half ) + (mapCamera->getAbsX());
+    int iDieY=(draw_y() + half ) + (mapCamera->getAbsY());
 
     // when harveter, check if there are any friends , if not, then deliver one
     if (iType == HARVESTER &&
@@ -431,7 +432,7 @@ bool cUnit::isValid()
 
 int cUnit::draw_x() {
     int absoluteXCoordinateOnMap = iCellX * mapCamera->getTileWidth();
-    int absoluteXCoordinateMapCamera = mapCamera->getX() * mapCamera->getTileWidth();
+    int absoluteXCoordinateMapCamera = mapCamera->getAbsX();
     int maxOffsetZoomLevelOne = 32;
     float zoomLevelFactored = mapCamera->factorZoomLevel(maxOffsetZoomLevelOne);
     float factor = zoomLevelFactored / maxOffsetZoomLevelOne;
@@ -440,7 +441,7 @@ int cUnit::draw_x() {
 
 int cUnit::draw_y() {
     int absoluteYCoordinateOnMap = iCellY * mapCamera->getTileHeight();
-    int absoluteYCoordinateMapCamera = mapCamera->getY() * mapCamera->getTileHeight();
+    int absoluteYCoordinateMapCamera = mapCamera->getAbsY();
     int maxOffsetZoomLevelOne = 32;
     float zoomLevelFactored = mapCamera->factorZoomLevel(maxOffsetZoomLevelOne);
     float factor = zoomLevelFactored / maxOffsetZoomLevelOne;
@@ -1433,7 +1434,7 @@ void cUnit::think()
   // aircraft specific
 void cUnit::think_move_air()
 {
-    iNextCell = is_nextcell();
+    iNextCell = isNextCell();
 
 	if (bCellValid(iCell) == false)
 	{
@@ -1506,8 +1507,10 @@ void cUnit::think_move_air()
 								iGoalCell = iBringTarget;
 
 
-                                int iDieX=(draw_x() + 16 ) + (mapCamera->getX()*32);
-                                int iDieY=(draw_y() + 16 ) + (mapCamera->getY()*32);
+                                int half = mapCamera->getHalfTileSize();
+                                int iDieX=(draw_x() + half ) + (mapCamera->getAbsX());
+                                int iDieY=(draw_y() + half ) + (mapCamera->getAbsY());
+
                                 PARTICLE_CREATE(iDieX, iDieY, OBJECT_CARRYPUFF, -1, -1);
 
 								LOG("Pick up unit");
@@ -1939,60 +1942,23 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe)
 
 }
 
-void cUnit::shoot(int iShootCell)
-{
-
-
+void cUnit::shoot(int iShootCell) {
     // do timer stuff
-    int iShootX=(draw_x() + 16 ) + (mapCamera->getX()*32);
-    int iShootY=(draw_y() + 16 ) + (mapCamera->getY()*32);
-    int     bmp_head            = convert_angle(iHeadFacing);
+    int half = mapCamera->getHalfTileSize();
+    int iShootX=(draw_x() + half) + mapCamera->getAbsX();
+    int iShootY=(draw_y() + half) + mapCamera->getAbsY();
+    int bmp_head = convert_angle(iHeadFacing);
 
-    if (iType == TANK)
+    if (iType == TANK) {
         PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);
-    else if (iType == SIEGETANK)
+    } else if (iType == SIEGETANK) {
         PARTICLE_CREATE(iShootX, iShootY, OBJECT_SIEGESHOOT, -1, bmp_head);
-/*
-    // determine facing: depending on that, start at correct cell (neighbouring cell)
-    int iCx = iCellGiveX(iCell);
-    int iCy = iCellGiveY(iCell);
-
-    if (iType == TANK ||
-        iType == SIEGETANK ||
-        iType == SONICTANK ||
-        iType == DEVASTATOR)
-    {
-
-       int iFacing = iHeadFacing;
-
-    if (iFacing == FACE_UP ||
-        iFacing == FACE_UPLEFT ||
-        iFacing == FACE_UPRIGHT)
-        iCy--;
-
-    if (iFacing == FACE_DOWN ||
-        iFacing == FACE_DOWNLEFT ||
-        iFacing == FACE_DOWNRIGHT)
-        iCy++;
-
-    if (iFacing == FACE_LEFT ||
-        iFacing == FACE_UPLEFT ||
-        iFacing == FACE_DOWNLEFT)
-        iCx--;
-
-    if (iFacing == FACE_RIGHT ||
-        iFacing == FACE_UPRIGHT ||
-        iFacing == FACE_DOWNRIGHT)
-        iCx++;
     }
 
-    int iSc = iCellMake(iCx, iCy);*/
-
     create_bullet(units[iType].bullets, iCell, iShootCell, iID, -1);
-
 }
 
-int cUnit::is_nextcell()
+int cUnit::isNextCell()
 {
     if (iType != CARRYALL && iType != ORNITHOPTER && iType != FRIGATE)
     {
@@ -2099,8 +2065,9 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
 
                 iHitPoints = units[iType].hp;
 
-                int iDieX=(draw_x() + 16 ) + (mapCamera->getX()*32);
-                int iDieY=(draw_y() + 16 ) + (mapCamera->getY()*32);
+                int half = mapCamera->getHalfTileSize();
+                int iDieX=(draw_x() + half ) + (mapCamera->getAbsX());
+                int iDieY=(draw_y() + half ) + (mapCamera->getAbsY());
 
                 PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF01, iPlayer, -1);
                 play_sound_id(SOUND_DIE01+rnd(5),iCellOnScreen(iCell));
@@ -2132,8 +2099,9 @@ void cUnit::think_attack()
             {
                 // eat
                 unit[iAttackUnit].die(false, false);
-                int iParX=(draw_x() + 16 ) + (mapCamera->getX()*32);
-                int iParY=(draw_y() + 16 ) + (mapCamera->getY()*32);
+                int half = mapCamera->getHalfTileSize();
+                int iParX=(draw_x() + half ) + (mapCamera->getAbsX());
+                int iParY=(draw_y() + half ) + (mapCamera->getAbsY());
 
                 PARTICLE_CREATE(iParX, iParY, OBJECT_WORMEAT, -1, -1);
                 play_sound_id(SOUND_WORM, iCellOnScreen(iCell));
@@ -2498,7 +2466,7 @@ void cUnit::think_move()
 
     // everything from here is wheeled or tracked
     // QUAD, TRIKE, TANK, etc
-	iNextCell = is_nextcell();
+	iNextCell = isNextCell();
 
     //char msg[256];
     //sprintf(msg, "cell=%d, nextcell=%d, goalcell=%d, iPath[0] = %d", iCell, iNextCell, iGoalCell, iPath[0]);
@@ -2900,8 +2868,9 @@ void cUnit::think_move()
         if ((iOffX == 8 || iOffX == 16 || iOffX == 24 || iOffX == 32) ||
             (iOffY == 8 || iOffY == 16 || iOffY == 24 || iOffY == 32))
         {
-            int iParX=(draw_x() + 16 ) + (mapCamera->getX()*32);
-            int iParY=(draw_y() + 16 ) + (mapCamera->getY()*32);
+            int half = mapCamera->getHalfTileSize();
+            int iParX=(draw_x() + half ) + (mapCamera->getAbsX());
+            int iParY=(draw_y() + half ) + (mapCamera->getAbsY());
 
             PARTICLE_CREATE(iParX, iParY, OBJECT_WORMTRAIL, -1, -1);
         }
@@ -2911,8 +2880,9 @@ void cUnit::think_move()
     // 100% on cell.
     if (iOffsetX == 0 && iOffsetY == 0)
     {
-        int iParX=(draw_x() + 16 ) + (mapCamera->getX()*32);
-        int iParY=(draw_y() + 16 ) + (mapCamera->getY()*32);
+        int half = mapCamera->getHalfTileSize();
+        int iParX=(draw_x() + half ) + (mapCamera->getAbsX());
+        int iParY=(draw_y() + half ) + (mapCamera->getAbsY());
 
 
         // add particle tracks
@@ -4091,12 +4061,12 @@ void UNIT_deselect_all() {
 
 void UNIT_ORDER_ATTACK(int iUnitID, int iGoalCell, int iUnit, int iStructure, int iAttackCell)
 {
-    // basicly the same as move, but since we use iAction as ATTACK
+    // basically the same as move, but since we use iAction as ATTACK
     // it will think first in attack mode, determining if it will be CHASE now or not.
     // if not, it will just fire.
 
 	char msg[255];
-	sprintf(msg, "Attacking UNIT ID %d, STRUC ID %d, ATTACKCLL %d, GoalCell %d", iUnit, iStructure, iAttackCell, iGoalCell);
+	sprintf(msg, "Attacking UNIT ID [%d], STRUCTURE ID [%d], ATTACKCLL [%d], GoalCell [%d]", iUnit, iStructure, iAttackCell, iGoalCell);
 	unit[iUnitID].LOG(msg);
 
 	if (iUnit < 0 && iStructure < 0 && iAttackCell < 0)

@@ -99,9 +99,10 @@ void cRocketTurret::think()
                         iBullet = ROCKET_RTURRET;
                     else
                     {
-                        int iShootX=(iDrawX() + 16 ) + (mapCamera->getX()*32);
-                        int iShootY=(iDrawY() + 16 ) + (mapCamera->getY()*32);
-                        int     bmp_head            = convert_angle(iHeadFacing);
+                        int half = mapCamera->getHalfTileSize();
+                        int iShootX=(iDrawX() + half ) + (mapCamera->getAbsX());
+                        int iShootY=(iDrawY() + half ) + (mapCamera->getAbsY());
+                        int bmp_head = convert_angle(iHeadFacing);
 
                         PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);
 
@@ -109,13 +110,11 @@ void cRocketTurret::think()
 
                     int iBull = create_bullet(iBullet, getCell(), iTargetCell, -1, iMyIndex);
 
-                    if (unit[iTargetID].iType == ORNITHOPTER)
+                    if (iBull > -1 && unit[iTargetID].iType == ORNITHOPTER)
                     {
                         // it is a homing missile!
                         bullet[iBull].iHoming = iTargetID;
                         bullet[iBull].TIMER_homing = 200;
-
-
                     }
 
                     TIMER_fire=0;

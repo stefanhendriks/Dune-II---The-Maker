@@ -59,6 +59,7 @@ class cMapCamera {
 
 		void centerAndJumpViewPortToCell(int cell);
 
+		int getHalfTileSize() const { return halfTile; }
 		int getTileWidth() const { return tileWidth; }
 		int getTileHeight() const { return tileHeight; }
 
@@ -103,8 +104,9 @@ class cMapCamera {
 		// the calculated width and height, taking zoomlevel into account
 		int tileHeight;
 		int tileWidth;
+		int halfTile;
 
-    void correctCameraIfOutsideBoundaries(int newViewPortX, int newViewPortY);
+        void correctCameraIfOutsideBoundaries(int newViewPortX, int newViewPortY);
 };
 
 #endif /* CMAPCAMERA_H_ */

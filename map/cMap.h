@@ -25,7 +25,7 @@ public:
 
 	bool occupied(int iCell);
 	bool occupied(int iCll, int iUnitID);
-	bool occupiedInDimension(int iCll, int dimension);
+	bool occupiedInDimension(int iCell, int dimension);
 	bool occupiedByType(int iCell);
 
 	void soft();
