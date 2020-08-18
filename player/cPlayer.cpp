@@ -154,6 +154,11 @@ void cPlayer::setGameControlsContext(cGameControlsContext *theGameControlsContex
 
 void cPlayer::init(int id)
 {
+    if (id < 0 || id >= MAX_PLAYERS) {
+        char msg[255];
+        sprintf(msg, "Error initializing player, id %d is not valid.", id);
+        logbook(msg);
+    }
     assert(id >= HUMAN);
     assert(id < MAX_PLAYERS);
     this->id = id;
