@@ -55,6 +55,8 @@ cAbstractStructure::cAbstractStructure() {
 cAbstractStructure::~cAbstractStructure()
 {
     // destructor
+    iHitPoints = -1;
+    iCell = -1;
 }
 
 // X drawing position
@@ -470,4 +472,18 @@ bool cAbstractStructure::isPrimary() {
 int cAbstractStructure::getPowerUsage() {
 	s_Structures structure = getS_StructuresType();
 	return structure.power_drain;
+}
+
+bool cAbstractStructure::isValid()
+{
+    if (iPlayer < 0)
+        return false;
+
+    if (iHitPoints < 0)
+        return false;
+
+    if (iCell < 0 || iCell >= MAX_CELLS)
+        return false;
+
+    return true;
 }

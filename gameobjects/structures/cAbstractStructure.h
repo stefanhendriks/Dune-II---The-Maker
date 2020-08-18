@@ -107,6 +107,10 @@ class cAbstractStructure {
 		// changing the entire game rules.
 		s_Structures getS_StructuresType();
 		cPlayer * getPlayer();
+
+		// Really sure you need this? You can use getPlayer() ?
+		int getPlayerId() const { return iPlayer; }
+
 		BITMAP * getBitmap();
 		BITMAP * getShadowBitmap();
 
@@ -133,6 +137,7 @@ class cAbstractStructure {
 		bool isPrimary();
 		bool isRepairing() { return bRepair; }
 		bool hasUnitWithin() { return iUnitID > -1; }
+		bool isValid();
 
 
 		void setHeight(int height);
