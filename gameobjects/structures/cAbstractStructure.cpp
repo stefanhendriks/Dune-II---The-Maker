@@ -171,8 +171,10 @@ void cAbstractStructure::die()
 			map.cellChangeType(iCll, TERRAIN_ROCK);
 			mapEditor.smoothAroundCell(iCll);
 
-			PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16,
-				iDrawY() + (mapCamera->getY()*32) + (h*32) + 16, OBJECT_BOOM01, -1, -1);
+
+            int half = mapCamera->getHalfTileSize();
+            PARTICLE_CREATE(iDrawX() + (mapCamera->getAbsX()) + half,
+                            iDrawY() + (mapCamera->getAbsY()) + half, OBJECT_BOOM01, -1, -1);
 
 
             for (int i=0; i < 3; i++)
@@ -180,18 +182,26 @@ void cAbstractStructure::die()
 				map.smudge_increase(SMUDGE_ROCK, iCll);
 
                 // create particle
-                PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16 + (-8 + rnd(16)),
-                                iDrawY() + (mapCamera->getY()*32) + (h*32) + 16 + (-8 + rnd(16)), EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
+                PARTICLE_CREATE(iDrawX() + (mapCamera->getAbsX()) + half,
+                                iDrawY() + (mapCamera->getAbsY()) + half, EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
 
                 // create smoke
-                if (rnd(100) < 7)
-                    PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16 + (-8 + rnd(16)),
-                                    iDrawY() + (mapCamera->getY()*32) + (h*32) + 16 + (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
+                if (rnd(100) < 7) {
+                    int randomX = mapCamera->factorZoomLevel(-8 + rnd(16));
+                    int randomY = mapCamera->factorZoomLevel(-8 + rnd(16));
+
+                    PARTICLE_CREATE(iDrawX() + (mapCamera->getAbsX()) + half + randomX,
+                                    iDrawY() + (mapCamera->getAbsY()) + half + randomY, OBJECT_SMOKE, -1, -1);
+                }
 
                 // create fire
-                if (rnd(100) < 5)
-                    PARTICLE_CREATE(iDrawX() + (mapCamera->getX()*32) + (w*32) + 16 + (-8 + rnd(16)),
-                                    iDrawY() + (mapCamera->getY()*32) + (h*32) + 16 + (-8 + rnd(16)), EXPLOSION_FIRE, -1, -1);
+                if (rnd(100) < 5) {
+                    int randomX = mapCamera->factorZoomLevel(-8 + rnd(16));
+                    int randomY = mapCamera->factorZoomLevel(-8 + rnd(16));
+
+                    PARTICLE_CREATE(iDrawX() + (mapCamera->getAbsX()) + half + randomX,
+                                    iDrawY() + (mapCamera->getAbsY()) + half + randomY, EXPLOSION_FIRE, -1, -1);
+                }
 
             }
         }

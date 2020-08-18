@@ -35,6 +35,8 @@ cMapCamera::~cMapCamera() {
 void cMapCamera::calibrate() {
     tileHeight = factorZoomLevel(TILESIZE_WIDTH_PIXELS);
     tileWidth = factorZoomLevel(TILESIZE_HEIGHT_PIXELS);
+    halfTile = factorZoomLevel(TILESIZE_WIDTH_PIXELS); // assumes squared tiles
+
     viewportWidth=(absViewportWidth/tileWidth);
     viewportHeight=(absViewportHeight/tileHeight)+1;
 

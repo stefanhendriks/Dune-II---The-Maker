@@ -93,8 +93,7 @@ void cMap::smudge_increase(int iType, int iCell) {
  * @return
  */
 bool cMap::occupiedByType(int iCell) {
-	assert(iCell > -1);
-	assert(iCell < MAX_CELLS);
+    if (iCell < 0 || iCell >= MAX_CELLS) return false;
 
 	if (map.cell[iCell].type == TERRAIN_WALL) return true;
 	if (map.cell[iCell].type == TERRAIN_MOUNTAIN) return true;
@@ -102,12 +101,11 @@ bool cMap::occupiedByType(int iCell) {
 	return false;
 }
 
-bool cMap::occupiedInDimension(int iCll, int dimension) {
-	assert(iCll > -1);
-	assert(iCll < MAX_CELLS);
-	assert(dimension > -1);
-	assert(dimension < MAPID_MAX);
-	return map.cell[iCll].id[dimension] > -1;
+bool cMap::occupiedInDimension(int iCell, int dimension) {
+    if (iCell < 0 || iCell >= MAX_CELLS) return false;
+    if (dimension < 0 || dimension >= MAPID_MAX) return false;
+
+	return map.cell[iCell].id[dimension] > -1;
 }
 
 /**
@@ -117,8 +115,7 @@ bool cMap::occupiedInDimension(int iCll, int dimension) {
  * @return
  */
 bool cMap::occupied(int iCell) {
-	assert(iCell > -1);
-	assert(iCell < MAX_CELLS);
+    if (iCell < 0 || iCell >= MAX_CELLS) return false;
 
     if (occupiedInDimension(iCell, MAPID_UNITS)) return true;
     if (occupiedInDimension(iCell, MAPID_AIR)) return true;
@@ -212,184 +209,138 @@ void cMap::clear_all()
         iVisible[c][0] = true;
 }
 
-void cMap::clear_spot(int c, int size, int player)
-{
-  // Get the x and y and make a circle around it of 16xR, then calculate of every step the cell and
-  // clear it
+void cMap::clear_spot(int c, int size, int player) {
+    // Get the x and y and make a circle around it of 16xR, then calculate of every step the cell and
+    // clear it
+    int cx = iCellGiveX(c);
+    int cy = iCellGiveY(c);
 
-  int cx = iCellGiveX(c); /*cell[c].x(c);*/
-  int cy = iCellGiveY(c); /*cell[c].y(c);*/
+    if (cx < 0 || cy < 0)
+        return;
 
-  // fail
-  if (cx < 0 || cy < 0)
-      return;
-
-  map.iVisible[c][player]=true;
+    map.iVisible[c][player] = true;
 
 #define TILE_SIZE_PIXELS 32
 
-  // go around 360 fDegrees and calculate new stuff
-  for (int dr=1; dr < size; dr++)
-  {
-    for (double d=0; d < 360; d++)
-    {
-      int x = cx, y = cy;
+    // go around 360 fDegrees and calculate new stuff
+    for (int dr = 1; dr < size; dr++) {
+        for (double d = 0; d < 360; d++) {
+            int x = cx, y = cy;
 
-      // when scrolling, compensate
-      x -= mapCamera->getX();
-      y -= mapCamera->getY();
+            // when scrolling, compensate
+            x -= mapCamera->getX();
+            y -= mapCamera->getY();
 
-      // convert to pixels (*32)
-      x *= TILE_SIZE_PIXELS;
-      y *= TILE_SIZE_PIXELS;
+            // convert to pixels (*32)
+            x *= TILE_SIZE_PIXELS;
+            y *= TILE_SIZE_PIXELS;
 
-      y += 42;
+            y += 42;
 
-	  // center on unit
-      x+= 16;
-      y+= 16;
+            // center on unit
+            x += 16;
+            y += 16;
 
 
-      int dx, dy;
-      dx = x;
-      dy = y;
+            int dx, dy;
+            dx = x;
+            dy = y;
 
-       x = (x + (cos(d)*((dr*32))));
-       y = (y + (sin(d)*((dr*32))));
+            x = (x + (cos(d) * ((dr * 32))));
+            y = (y + (sin(d) * ((dr * 32))));
 
-     // DEBUG
+            // DEBUG
 
-      //line (bmp_screen, dx, dy, x, y, makecol(255,255,255));
-      //if (DEBUGGING)
-		//  putpixel(bmp_screen, x, y, makecol(255,255,0));
+            //line (bmp_screen, dx, dy, x, y, makecol(255,255,255));
+            //if (DEBUGGING)
+            //  putpixel(bmp_screen, x, y, makecol(255,255,0));
 
-      //putpixel(bmp_screen, dx, dy, makecol(0,255,0));
-     // DEBUG
+            //putpixel(bmp_screen, dx, dy, makecol(0,255,0));
+            // DEBUG
 
-      // convert back
+            // convert back
 
-       int cell_x, cell_y;
+            int cell_x, cell_y;
 
-       cell_y  = y;
-	   cell_y -= 42;
-	   cell_y += (mapCamera->getY()*32);
-	   cell_y = cell_y/32;
+            cell_y = y;
+            cell_y -= 42;
+            cell_y += (mapCamera->getY() * 32);
+            cell_y = cell_y / 32;
 
-	   cell_x  = x;
-	   cell_x += (mapCamera->getX()*32);
-       cell_x  = cell_x/32;
-
-
-	   /*
-	   if (DEBUGGING)
-	   {
-
-	   int iDrawX = (cell_x-scroll_x)*32;
-	   int iDrawY = (((cell_y-scroll_y)*32)+42);
-
-	   rectfill(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, makecol(0,32,0));
-
-	   }*/
+            cell_x = x;
+            cell_x += (mapCamera->getX() * 32);
+            cell_x = cell_x / 32;
 
 
-       FIX_POS(cell_x, cell_y);
-
-
-
-	   //draw the cells
-
-
-
-	   /*
-	   if (game.state == GAME_PLAYING)
-	   {
-	   char msg[255];
-	   sprintf(msg, "X %d, Y %d -> CX %d, CY = %d", x, y, cell_x, cell_y);
-	   logbook(msg);
-	   }*/
-
-       int cl = iCellMake(cell_x, cell_y);
-
-
-
-       if (iVisible[cl][player] == false)
-       {
-
-       iVisible[cl][player] = true;     // make visible
-           // human unit detected enemy, now be scared and play some neat music
-       if (player == 0)
-       {
-            if (cell[cl].id[MAPID_UNITS] > -1)
+            /*
+            if (DEBUGGING)
             {
-                int id = cell[cl].id[MAPID_UNITS];
 
-                if (unit[id].iPlayer != 0) // NOT friend
-                {
-                    // when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
+            int iDrawX = (cell_x-scroll_x)*32;
+            int iDrawY = (((cell_y-scroll_y)*32)+42);
 
-                    if (game.iMusicType == MUSIC_PEACE)
-                    {
-                        playMusicByType(MUSIC_ATTACK);
+            rectfill(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, makecol(0,32,0));
 
-                        // warning... bla bla
-                        if (unit[id].iType == SANDWORM)
-                            play_voice(SOUND_VOICE_10_ATR);  // omg a sandworm, RUN!
-                        else
-                            play_voice(SOUND_VOICE_09_ATR);  // enemy unit
+            }*/
+
+
+            FIX_POS(cell_x, cell_y);
+
+            //draw the cells
+
+            /*
+            if (game.state == GAME_PLAYING)
+            {
+            char msg[255];
+            sprintf(msg, "X %d, Y %d -> CX %d, CY = %d", x, y, cell_x, cell_y);
+            logbook(msg);
+            }*/
+
+            int cl = iCellMake(cell_x, cell_y);
+
+
+            if (!iVisible[cl][player]) {
+
+                iVisible[cl][player] = true;     // make visible
+
+                // human unit detected enemy, now be scared and play some neat music
+                if (player == HUMAN) {
+                    if (cell[cl].id[MAPID_UNITS] > -1) {
+                        int id = cell[cl].id[MAPID_UNITS];
+
+                        if (unit[id].iPlayer != HUMAN) // NOT friend
+                        {
+                            // when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
+                            if (game.iMusicType == MUSIC_PEACE) {
+                                playMusicByType(MUSIC_ATTACK);
+
+                                // warning... bla bla
+                                if (unit[id].iType == SANDWORM)
+                                    play_voice(SOUND_VOICE_10_ATR);  // omg a sandworm, RUN!
+                                else
+                                    play_voice(SOUND_VOICE_09_ATR);  // enemy unit
+                            }
+                        }
                     }
-
                 }
-            }
-       }
-
-       } // make visible
-
-
-
+            } // make visible
+        }
     }
-  }
-
-
 }
 
-// Each index is a mapdata field holding indexes of the map layout
+// Each index is a map data field holding indexes of the map layout
 //
-void cMap::remove_id(int iIndex, int iIDType)
-{
-    // Search through the entire map and remove it
-    // Using X,Y stuff, since we do not want to have unnescesary slow-downs
-    // when using small maps... and going through a 512x512 map
-
-	/*
-
-	int x, y, cll;
-    x = y = cll = 0;
-
-
-
-    for (x=0; x < game.map_width; x++)
-        for (y=0; y < game.map_height; y++)
-        {
-            cll = iCellMake(x,y);
-            if (cell[cll].id[iIDType] == iIndex)
-			{
-                cell[cll].id[iIDType] = -1; // remove it
-			}
-        }*/
-
-	for (int iCell=0; iCell < MAX_CELLS; iCell++)
-		if (cell[iCell].id[iIDType] == iIndex)
-		{
-			// remove
-			cell[iCell].id[iIDType] = -1;
-		}
-
-
-
+void cMap::remove_id(int iIndex, int iIDType) {
+    // Search through the entire map and remove the id
+	for (int iCell=0; iCell < MAX_CELLS; iCell++) {
+        if (cell[iCell].id[iIDType] == iIndex) {
+            // remove
+            cell[iCell].id[iIDType] = -1;
+        }
+    }
 }
 
-void cMap::draw_units()
-{
+void cMap::draw_units() {
     set_trans_blender(0, 0, 0, 160);
 
     // draw all worms first

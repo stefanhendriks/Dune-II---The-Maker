@@ -65,19 +65,22 @@ bool cParticle::isValid()
 // absolute pixel position
 int cParticle::draw_x()
 {
-    return (x - (mapCamera->factorZoomLevel(mapCamera->getX())));
+    int absoluteXCoordinateOnMap = x;
+    int absoluteXCoordinateMapCamera = mapCamera->getAbsX();
+    return absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera;
 }
 
 // absolute pixel position
 int cParticle::draw_y()
 {
-    return (y - (mapCamera->factorZoomLevel(mapCamera->getY())));
+    int absoluteYCoordinateOnMap = y;
+    int absoluteYCoordinateMapCamera = mapCamera->getAbsY();
+    return absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera;
 }
 
 // draw
-void cParticle::draw()
-{
-
+void cParticle::draw() {
+//    return;
     int dx = draw_x();
     int dy = draw_y();
 
@@ -105,17 +108,28 @@ void cParticle::draw()
         blit((BITMAP *)gfxdata[iType].dat, temp, (iWidth*iFrame), 0, 0, 0, iWidth, iHeight);
     else
     {
-        select_palette(  player[iHousePal].pal  );
+        select_palette(  player[iHousePal].pal);
         blit((BITMAP *)gfxdata[iType].dat, temp, (iWidth*iFrame), 0, 0, 0, iWidth, iHeight);
     }
 
-	if (iAlpha > -1)
+    int bmp_width = mapCamera->factorZoomLevel(iWidth);
+    int bmp_height = mapCamera->factorZoomLevel(iHeight);
+
+    // create bmp that is the stretched version of temp
+    BITMAP *stretched = create_bitmap(bmp_width, bmp_height);
+    clear_to_color(stretched, makecol(255, 0, 255)); // mask color
+    masked_stretch_blit(temp, stretched, 0, 0, iWidth, iHeight, 0, 0, bmp_width, bmp_height);
+
+    int drawX = dx - (iWidth / 2);
+    int drawY = dy - (iHeight / 2);
+
+    if (iAlpha > -1)
 	{
-		set_trans_blender(0,0,0,iAlpha);
+		set_trans_blender(0,0,0, iAlpha);
 
 		if (iType != OBJECT_BOOM01 && iType != OBJECT_BOOM02 && iType != OBJECT_BOOM03)
         {
-			draw_trans_sprite(bmp_screen, temp, dx-(iWidth/2), dy-(iHeight/2));
+			draw_trans_sprite(bmp_screen, stretched, drawX, drawY);
 
 			if (iType == EXPLOSION_ROCKET || iType == EXPLOSION_ROCKET_SMALL)
             {
@@ -124,14 +138,15 @@ void cParticle::draw()
 
         }
 		else
-			fblend_add(temp, bmp_screen,  dx-(iWidth/2), dy-(iHeight/2), iAlpha);
+			fblend_add(stretched, bmp_screen, drawX, drawY, iAlpha);
 	}
 	else
-		draw_sprite(bmp_screen, temp, dx-(iWidth/2), dy-(iHeight/2));
+		draw_sprite(bmp_screen, stretched, drawX, drawY);
 
 	set_trans_blender(0,0,0,128);
 
     destroy_bitmap(temp);
+    destroy_bitmap(stretched);
 
 }
 
@@ -343,7 +358,6 @@ void cParticle::think()
 
             if (iFrame > 7)
                 bAlive=false;
-
         }
 
     }
@@ -592,6 +606,10 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
     if (iNewId < 0)
         return;
 
+    char msg[255];
+    sprintf(msg, "Creating particle, x [%d], y [%d], iType [%d], iHouse [%d], iFrame [%d]", x, y, iType, iHouse, iFrame);
+    logbook(msg);
+
     particle[iNewId].init();
 
     particle[iNewId].x = x;
@@ -600,7 +618,6 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
     particle[iNewId].iType = iType;
 
      // depending on type, set TIMER_dead & FRAME & FRAME TIME
-
     particle[iNewId].iFrame = 0;
     particle[iNewId].TIMER_dead = 0;
     particle[iNewId].TIMER_frame = 10;
@@ -624,7 +641,6 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
         particle[iNewId].iHeight=48;
 		PARTICLE_CREATE(x, y, OBJECT_BOOM03, -1, 0);
     }
-
 
     if (iType == OBJECT_SMOKE)
     {
@@ -773,7 +789,7 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
 		particle[iNewId].iHeight=128;
 	}
 
- //   logbook("Particle created");
+    logbook("Particle created");
 }
 
 
