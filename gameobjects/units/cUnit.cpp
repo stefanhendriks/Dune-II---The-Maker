@@ -413,7 +413,6 @@ if (bSquish)
 }
 
 
-
 bool cUnit::isValid()
 {
     if (iPlayer <0)
@@ -1118,41 +1117,30 @@ void cUnit::think()
         if (iFrame > 3)
             iFrame = 0;
 
-        if (iAttackUnit < 0 && TIMER_attack == 0)
-        {
-        // scan for enemy activities.
-        int iDistance=9999;
-        int iTarget=-1;
+        if ((iAttackUnit < 0 || iAttackStructure < 0) && TIMER_attack == 0) {
+            // scan for enemy activities.
+            int iDistance=9999;
+            int iTarget=-1;
 
-        	for (int i=0; i < MAX_UNITS; i++)
-				{
-					if (unit[i].isValid() && i != iID)
-					{
-						bool bAlly=false;
-
-                        /*
-						// When we are player 1 till 5 (6 = SANDWORM) then we have a lot of allies)
-						if (iPlayer >= 1 && iPlayer <= 5)
-							if (unit[i].iPlayer >= 1 && unit[i].iPlayer <= 5)
-								bAlly=true; // friend dude!*/
-
+        	for (int i=0; i < MAX_UNITS; i++) {
+					if (unit[i].isValid() && i != iID) {
 
                         if (player[iPlayer].iTeam == player[unit[i].iPlayer].iTeam)
-                            bAlly=true;
+                            continue;
 
 
                         if (iPlayer == 0 && player[0].getHouse() == ATREIDES)
                         {
                             // when the unit player == FREMEN
                             if (player[unit[i].iPlayer].getHouse() == FREMEN && iType != SANDWORM)
-                                bAlly=true;
+                                continue;
                         }
 
 
 							// not ours and its visible
 							if (unit[i].iPlayer != iPlayer &&
 								mapUtils->isCellVisibleForPlayerId(iPlayer, unit[i].iCell) &&
-								units[unit[i].iType].airborn == false && bAlly == false)
+								units[unit[i].iType].airborn == false) // do not attack airborn units!?
 							{
 								int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
 
@@ -1168,13 +1156,55 @@ void cUnit::think()
 				}
 
             // target known?
-            if (iTarget > -1)
-            {
+            if (iTarget > -1) {
                 UNIT_ORDER_ATTACK(iID, unit[iTarget].iCell, iTarget, -1,-1);
 				if (DEBUGGING)
 					logbook("FOUND ENEMY TO ATTACK");
-            }
+            } else {
+                // no unit found, attack structure
+                // scan for enemy activities.
+                int iDistance=9999;
+                int iTarget=-1;
 
+                for (int i=0; i < MAX_STRUCTURES; i++) {
+                    cAbstractStructure *pStructure = structure[i];
+                    if (!pStructure) continue;
+                    if (!pStructure->isValid()) continue;
+
+                    // skip same team
+                    if (player[iPlayer].iTeam == pStructure->getPlayer()->iTeam)
+                        continue;
+
+                    //
+                    if (iPlayer == HUMAN && player[HUMAN].isHouse(ATREIDES))
+                    {
+                        // ATREIDES is allies with FREMEN
+                        if (pStructure->getPlayer()->isHouse(FREMEN))
+                            continue;
+                    }
+
+                    // not ours and its visible
+                    if (pStructure->getPlayerId() != iPlayer && // enemy
+                        mapUtils->isCellVisibleForPlayerId(iPlayer, pStructure->getCell()))
+                    {
+                        int cellX = iCellGiveX(pStructure->getCell());
+                        int cellY = iCellGiveX(pStructure->getCell());
+                        int distance = ABS_length(iCellX, iCellY, pStructure->getCell(), unit[i].iCellY);
+
+                        // attack closest structure
+                        if (distance < iDistance)
+                        {
+                            // ATTACK
+                            iDistance = distance;
+                            iTarget=i;
+                        }
+                    }
+                }
+
+                if (iTarget > -1) {
+                    UNIT_ORDER_ATTACK(iID, unit[iTarget].iCell, -1, iTarget, -1);
+                }
+            }
         }
         else if (iAttackUnit < 0 && TIMER_attack < 0)
         {
