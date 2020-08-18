@@ -34,12 +34,7 @@ bool bCellValid(int c)
 // return the X value from a cell
 int iCellGiveX(int c)
 {
-  //int t = c / MAP_W_MAX;
-  if (c < 0 || c >= MAX_CELLS)
-  {
-	  if (DEBUGGING)
-		  logbook("ERROR: Encountered invalid cell");
-
+  if (c < 0 || c >= MAX_CELLS) {
     return -1;
   }
   return (c - ((c/MAP_W_MAX) * MAP_W_MAX));
