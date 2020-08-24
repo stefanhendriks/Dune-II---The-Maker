@@ -40,6 +40,9 @@ class cMapCamera {
 		int getAbsX() { return absX; }
 		int getAbsY() { return absY; }
 
+		int getAbsMapMouseX() { return mouse_x + absX; }
+		int getAbsMapMouseY() { return mouse_y + absY; }
+
 		int getTargetX() { return targetX; }
 		int getTargetY() { return targetY; }
 
@@ -59,9 +62,9 @@ class cMapCamera {
 
 		void centerAndJumpViewPortToCell(int cell);
 
-		int getHalfTileSize() const { return halfTile; }
-		int getTileWidth() const { return tileWidth; }
-		int getTileHeight() const { return tileHeight; }
+		int getZoomedHalfTileSize() const { return halfTile; }
+		int getZoomedTileWidth() const { return tileWidth; }
+		int getZoomedTileHeight() const { return tileHeight; }
 
 		int factorZoomLevel(int value) {
 		    return value * zoomLevel;
@@ -69,6 +72,10 @@ class cMapCamera {
 
 		// Calculates viewport and tile width/height
 		void calibrate();
+
+		float getZoomLevel() {
+		    return zoomLevel;
+		}
 
 	protected:
 
@@ -88,7 +95,7 @@ class cMapCamera {
 		// the targetX and targetY are leading.
 		// absX and absY are the absolute pixel coordinates of the map camera
 		// TODO: get rid of the cell based positions and use pixel based positions instead
-		int x, targetX, absX;
+		int x, targetX, absX; // absX and absY are pixel based coordinates on the map. (they are not influenced by zooming)
 		int y, targetY, absY;
 
 		// timer used, when to move camera

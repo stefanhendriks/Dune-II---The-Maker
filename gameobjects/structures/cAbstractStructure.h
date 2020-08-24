@@ -114,6 +114,9 @@ class cAbstractStructure {
 		BITMAP * getBitmap();
 		BITMAP * getShadowBitmap();
 
+		int pos_x();
+		int pos_y();
+
 		int getArmor() { return armor; }
 		int getWidth() { return iWidth; }
 		int getHeight() { return iHeight; }

@@ -118,7 +118,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
     // Animation / Sound
 	// TODO: update statistics player
 
-    int half = mapCamera->getHalfTileSize();
+    int half = mapCamera->getZoomedHalfTileSize();
     int iDieX=(draw_x() + half ) + (mapCamera->getAbsX());
     int iDieY=(draw_y() + half ) + (mapCamera->getAbsY());
 
@@ -429,27 +429,33 @@ bool cUnit::isValid()
     return true;
 }
 
+int cUnit::pos_x() {
+    return (iCellX * TILESIZE_WIDTH_PIXELS) + iOffsetX;
+}
+
+int cUnit::pos_y() {
+    return (iCellY * TILESIZE_HEIGHT_PIXELS) + iOffsetY;
+}
 
 int cUnit::draw_x() {
-    int absoluteXCoordinateOnMap = iCellX * mapCamera->getTileWidth();
+    int absoluteXCoordinateOnMap = pos_x();
     int absoluteXCoordinateMapCamera = mapCamera->getAbsX();
-    int maxOffsetZoomLevelOne = 32;
-    float zoomLevelFactored = mapCamera->factorZoomLevel(maxOffsetZoomLevelOne);
-    float factor = zoomLevelFactored / maxOffsetZoomLevelOne;
-    return ((absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera) + (iOffsetX * factor));
+    int screenPosition = (absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera);
+    int iWidth = units[iType].bmp_width;
+    int bmpOffset = TILESIZE_WIDTH_PIXELS - iWidth;
+    return mapCamera->factorZoomLevel(screenPosition + bmpOffset);
 }
 
 int cUnit::draw_y() {
-    int absoluteYCoordinateOnMap = iCellY * mapCamera->getTileHeight();
+    int absoluteYCoordinateOnMap = pos_y();
     int absoluteYCoordinateMapCamera = mapCamera->getAbsY();
-    int maxOffsetZoomLevelOne = 32;
-    float zoomLevelFactored = mapCamera->factorZoomLevel(maxOffsetZoomLevelOne);
-    float factor = zoomLevelFactored / maxOffsetZoomLevelOne;
-    return ((absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera) + (iOffsetY * factor)) + 42; // 42 = the options bar height
+    int screenPosition = (absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera);
+    int iHeight = units[iType].bmp_height;
+    int bmpOffset = (TILESIZE_HEIGHT_PIXELS - iHeight) / 2;
+    return mapCamera->factorZoomLevel(screenPosition + bmpOffset) + 42;
 }
 
-void cUnit::draw_spice()
-{
+void cUnit::draw_spice() {
     int width_x = mapCamera->factorZoomLevel(32);
     int height_y = mapCamera->factorZoomLevel(4);
     int drawx = draw_x();
@@ -618,21 +624,18 @@ void cUnit::draw_path()
 
 }
 
-
-void cUnit::draw()
-{
+void cUnit::draw() {
     if (iTempHitPoints > -1) {
         // temp hitpoints filled, meaning it is not visible (but not dead). Ie, it is being repaired, or transfered
         // by carry-all
         return;
     }
 
-    // renders unit on map
-    int ux = draw_x();  // draw unit, compensate wideness of unit (compared to cell width/height)
-    int uy = draw_y();  // same here
+    int ux = draw_x();
+    int uy = draw_y();
 
     if (iType == SANDWORM) {
-        Shimmer(20, ux+(mapCamera->getTileWidth()/2), uy+(mapCamera->getTileHeight()/2));
+        Shimmer(20, ux+(mapCamera->getZoomedHalfTileSize()), uy + (mapCamera->getZoomedHalfTileSize()));
 		return;
     }
 
@@ -644,7 +647,6 @@ void cUnit::draw()
     int bmp_body = convert_angle(iBodyFacing);
 
     int start_x, start_y;
-    int startpixel = units[iType].bmp_startpixel;
 
     // draw body first
     start_x = bmp_body * bmp_width;
@@ -654,17 +656,8 @@ void cUnit::draw()
     int iSelX = ux;
     int iSelY = uy;
 
-    if (iType == HARVESTER)
-        uy-=8;
-
-    if (iType == SIEGETANK)
-    {
-        ux-=2;
-        uy-=2;
-    }
-
     // The final coordinates for drawing
-    int iDrawX = ux - startpixel;
+    int iDrawX = ux;
     int iDrawY = uy;
 
     cPlayer &cPlayer = player[this->iPlayer];
@@ -685,7 +678,7 @@ void cUnit::draw()
 
     // Draw BODY
     BITMAP *bitmap = cPlayer.getUnitBitmap(iType);
-    masked_stretch_blit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux-startpixel, uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
+    masked_stretch_blit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux, uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
 
     // Draw TOP
     BITMAP *top = cPlayer.getUnitTopBitmap(iType);
@@ -694,7 +687,7 @@ void cUnit::draw()
         start_x = bmp_head * bmp_width;
         start_y = bmp_height * iFrame;
 
-        masked_stretch_blit(top, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux-startpixel, uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
+        masked_stretch_blit(top, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux, uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
     }
 
     // TODO: Fix this / Draw BLINKING (ie, when targeted unit)
@@ -704,7 +697,7 @@ void cUnit::draw()
 
 	// when we want to be picked up..
 	if (bCarryMe) {
-        draw_sprite(bmp_screen, (BITMAP *) gfxdata[SYMB_PICKMEUP].dat, ux - startpixel, uy - 7);
+        draw_sprite(bmp_screen, (BITMAP *) gfxdata[SYMB_PICKMEUP].dat, ux, uy - 7);
     }
 
     if (bSelected) {
@@ -1507,7 +1500,7 @@ void cUnit::think_move_air()
 								iGoalCell = iBringTarget;
 
 
-                                int half = mapCamera->getHalfTileSize();
+                                int half = mapCamera->getZoomedHalfTileSize();
                                 int iDieX=(draw_x() + half ) + (mapCamera->getAbsX());
                                 int iDieY=(draw_y() + half ) + (mapCamera->getAbsY());
 
@@ -1944,9 +1937,8 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe)
 
 void cUnit::shoot(int iShootCell) {
     // do timer stuff
-    int half = mapCamera->getHalfTileSize();
-    int iShootX=(draw_x() + half) + mapCamera->getAbsX();
-    int iShootY=(draw_y() + half) + mapCamera->getAbsY();
+    int iShootX=pos_x();
+    int iShootY=pos_y();
     int bmp_head = convert_angle(iHeadFacing);
 
     if (iType == TANK) {
@@ -2065,7 +2057,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
 
                 iHitPoints = units[iType].hp;
 
-                int half = mapCamera->getHalfTileSize();
+                int half = mapCamera->getZoomedHalfTileSize();
                 int iDieX=(draw_x() + half ) + (mapCamera->getAbsX());
                 int iDieY=(draw_y() + half ) + (mapCamera->getAbsY());
 
@@ -2099,7 +2091,7 @@ void cUnit::think_attack()
             {
                 // eat
                 unit[iAttackUnit].die(false, false);
-                int half = mapCamera->getHalfTileSize();
+                int half = mapCamera->getZoomedHalfTileSize();
                 int iParX=(draw_x() + half ) + (mapCamera->getAbsX());
                 int iParY=(draw_y() + half ) + (mapCamera->getAbsY());
 
@@ -2868,7 +2860,7 @@ void cUnit::think_move()
         if ((iOffX == 8 || iOffX == 16 || iOffX == 24 || iOffX == 32) ||
             (iOffY == 8 || iOffY == 16 || iOffY == 24 || iOffY == 32))
         {
-            int half = mapCamera->getHalfTileSize();
+            int half = mapCamera->getZoomedHalfTileSize();
             int iParX=(draw_x() + half ) + (mapCamera->getAbsX());
             int iParY=(draw_y() + half ) + (mapCamera->getAbsY());
 
@@ -2880,7 +2872,7 @@ void cUnit::think_move()
     // 100% on cell.
     if (iOffsetX == 0 && iOffsetY == 0)
     {
-        int half = mapCamera->getHalfTileSize();
+        int half = mapCamera->getZoomedHalfTileSize();
         int iParX=(draw_x() + half ) + (mapCamera->getAbsX());
         int iParY=(draw_y() + half ) + (mapCamera->getAbsY());
 

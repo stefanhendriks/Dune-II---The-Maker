@@ -25,10 +25,8 @@
 // Is the cell valid?
 bool bCellValid(int c)
 {
-  if (c < 0 || c >= MAX_CELLS)
-	  return false;
+    return !(c < 0 || c >= MAX_CELLS);
 
-  return true;
 }
 
 // return the X value from a cell
@@ -81,8 +79,8 @@ int iCellMakeFromAbsolute(int absX, int absY, int tileWidth, int tileHeight)
 
 int iCellMakeFromAbsoluteWithCamera(int absX, int absY)
 {
-    int tileWidth = mapCamera->getTileWidth();
-    int tileHeight = mapCamera->getTileHeight();
+    int tileWidth = mapCamera->getZoomedTileWidth();
+    int tileHeight = mapCamera->getZoomedTileHeight();
     return iCellMakeFromAbsolute(absX, absY, tileWidth, tileHeight);
 }
 

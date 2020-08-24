@@ -1136,17 +1136,18 @@ int iCellOnScreen(int iCell)
     int iMapX = mapCamera->getX();
     int iMapY = mapCamera->getY();
 
-    int iEndX=iMapX + ((game.screen_x-160)/32); // width of sidebar is 160
-    int iEndY=iMapY + ((game.screen_y-42)/32)+1;  // height of upper bar is 42
+    // calculate screen position into cell coordinate
+    int iEndX=iMapX + ((game.screen_x-160)/ mapCamera->getZoomedTileWidth()); // width of sidebar is 160
+    int iEndY= iMapY + ((game.screen_y-42)/ mapCamera->getZoomedTileHeight()) + 1;  // height of upper bar is 42
 
     if ((iCellX >= iMapX && iCellX <= iEndX) && (iCellY >= iMapY && iCellY <= iEndY))
         return 0; // on screen
 
+    // determine cell on center of screen
+    int iCalcX = iMapX + (((game.screen_x-160)/ mapCamera->getZoomedTileWidth()) / 2);
+    int iCalcY = iMapY + (((game.screen_y-42)/ mapCamera->getZoomedTileHeight()) + 1) / 2;
 
-    int iCalcX = iMapX + (((game.screen_x-160)/32) / 2);
-    int iCalcY = iMapY + (((game.screen_y-42)/32)+1)/2;
-
-    // Calc from midst of screen till the cell x,y
+    // calculate length between cell on center of screen and given iCell coordinates
     return ABS_length(iCellX, iCellY, iCalcX, iCalcY);
 }
 

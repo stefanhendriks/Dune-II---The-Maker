@@ -30,8 +30,8 @@ cMapDrawer::~cMapDrawer() {
 void cMapDrawer::drawShroud(int startX, int startY) {
 	set_trans_blender(0,0,0,128);
 
-    int tileWidth = mapCamera->getTileWidth();
-    int tileHeight = mapCamera->getTileHeight();
+    int tileWidth = mapCamera->getZoomedTileWidth();
+    int tileHeight = mapCamera->getZoomedTileHeight();
 
     int colorDepthScreen = bitmap_color_depth(bmp_screen);
     BITMAP *temp = create_bitmap_ex(colorDepthScreen, tileWidth,tileHeight);
@@ -186,8 +186,8 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
         bmp_temp=create_bitmap_ex(colorDepthScreen, 32,32);
     }
 
-    int tileWidth = mapCamera->getTileWidth();
-    int tileHeight = mapCamera->getTileHeight();
+    int tileWidth = mapCamera->getZoomedTileWidth();
+    int tileHeight = mapCamera->getZoomedTileHeight();
 
 	int iDrawX=startX;
 	int iDrawY=startY;
@@ -289,12 +289,16 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
 	}
 
 	if (DEBUGGING) {
-        rect(bmp_screen, startX, startY, startX + mapCamera->getAbsViewportWidth(),
-             startY + mapCamera->getAbsViewportHeight(), makecol(255, 255, 0));
+//        rect(bmp_screen, startX, startY, startX + mapCamera->getAbsViewportWidth(),
+//             startY + mapCamera->getAbsViewportHeight(), makecol(255, 255, 0));
 
-        cTextDrawer cTextDrawer;
+        cTextDrawer textDrawer = cTextDrawer(bene_font);
         char msg[255];
-        sprintf(msg, "startX = %d startY = %d, mapCamera X = %d, Y = %d, abs X = %d, abs Y = %d, tileWidth = %d, tileHeight = %d, mc=%d", startX, startY, mapCamera->getX(), mapCamera->getY(), mapCamera->getAbsX(), mapCamera->getAbsY(), tileWidth, tileHeight, mouseCell);
-        cTextDrawer.drawText(0, 100, msg);
+        sprintf(msg, "camX=%d, camY=%d, absX=%d, absY=%d, zoom=%f",
+                mapCamera->getX(), mapCamera->getY(),
+                mapCamera->getAbsX(), mapCamera->getAbsY(),
+                mapCamera->getZoomLevel());
+
+        textDrawer.drawText(0, 100, msg);
     }
 }

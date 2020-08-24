@@ -110,6 +110,8 @@ public:
     void init(int i);        // inits units
     int draw_x();
     int draw_y();
+    int pos_x();
+    int pos_y();
     void draw_health();
 	void draw_experience();
 	void draw_spice();
