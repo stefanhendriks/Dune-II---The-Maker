@@ -119,8 +119,8 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 	// TODO: update statistics player
 
     int half = mapCamera->getZoomedHalfTileSize();
-    int iDieX=(draw_x() + half ) + (mapCamera->getAbsX());
-    int iDieY=(draw_y() + half ) + (mapCamera->getAbsY());
+    int iDieX=pos_x() + half;
+    int iDieY=pos_y() + half;
 
     // when harveter, check if there are any friends , if not, then deliver one
     if (iType == HARVESTER &&
@@ -1500,9 +1500,9 @@ void cUnit::think_move_air()
 								iGoalCell = iBringTarget;
 
 
-                                int half = mapCamera->getZoomedHalfTileSize();
-                                int iDieX=(draw_x() + half ) + (mapCamera->getAbsX());
-                                int iDieY=(draw_y() + half ) + (mapCamera->getAbsY());
+                                int half = 16;
+                                int iDieX=pos_x() + half;
+                                int iDieY=pos_y() + half;
 
                                 PARTICLE_CREATE(iDieX, iDieY, OBJECT_CARRYPUFF, -1, -1);
 
@@ -2057,9 +2057,9 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
 
                 iHitPoints = units[iType].hp;
 
-                int half = mapCamera->getZoomedHalfTileSize();
-                int iDieX=(draw_x() + half ) + (mapCamera->getAbsX());
-                int iDieY=(draw_y() + half ) + (mapCamera->getAbsY());
+                int half = 16;
+                int iDieX=pos_x() + half;
+                int iDieY=pos_y() + half;
 
                 PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF01, iPlayer, -1);
                 play_sound_id(SOUND_DIE01+rnd(5),iCellOnScreen(iCell));
@@ -2091,9 +2091,9 @@ void cUnit::think_attack()
             {
                 // eat
                 unit[iAttackUnit].die(false, false);
-                int half = mapCamera->getZoomedHalfTileSize();
-                int iParX=(draw_x() + half ) + (mapCamera->getAbsX());
-                int iParY=(draw_y() + half ) + (mapCamera->getAbsY());
+                int half = 16;
+                int iParX=pos_x() + half;
+                int iParY=pos_y() + half;
 
                 PARTICLE_CREATE(iParX, iParY, OBJECT_WORMEAT, -1, -1);
                 play_sound_id(SOUND_WORM, iCellOnScreen(iCell));
@@ -2860,9 +2860,9 @@ void cUnit::think_move()
         if ((iOffX == 8 || iOffX == 16 || iOffX == 24 || iOffX == 32) ||
             (iOffY == 8 || iOffY == 16 || iOffY == 24 || iOffY == 32))
         {
-            int half = mapCamera->getZoomedHalfTileSize();
-            int iParX=(draw_x() + half ) + (mapCamera->getAbsX());
-            int iParY=(draw_y() + half ) + (mapCamera->getAbsY());
+            int half = 16;
+            int iParX=pos_x() + half;
+            int iParY=pos_y() + half;
 
             PARTICLE_CREATE(iParX, iParY, OBJECT_WORMTRAIL, -1, -1);
         }
@@ -2872,9 +2872,9 @@ void cUnit::think_move()
     // 100% on cell.
     if (iOffsetX == 0 && iOffsetY == 0)
     {
-        int half = mapCamera->getZoomedHalfTileSize();
-        int iParX=(draw_x() + half ) + (mapCamera->getAbsX());
-        int iParY=(draw_y() + half ) + (mapCamera->getAbsY());
+        int half = 16;
+        int iParX=pos_x() + half;
+        int iParY=pos_y() + half;
 
 
         // add particle tracks

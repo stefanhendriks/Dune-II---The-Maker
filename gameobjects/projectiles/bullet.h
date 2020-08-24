@@ -18,6 +18,8 @@ public:
 
     void init();
     void draw();
+    int pos_x();
+    int pos_y();
     int  draw_x();
     int  draw_y();
     void think();       // think (when dying, doing damage, etc)

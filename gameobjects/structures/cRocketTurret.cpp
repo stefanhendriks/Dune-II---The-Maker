@@ -99,9 +99,9 @@ void cRocketTurret::think()
                         iBullet = ROCKET_RTURRET;
                     else
                     {
-                        int half = mapCamera->getZoomedHalfTileSize();
-                        int iShootX=(iDrawX() + half ) + (mapCamera->getAbsX());
-                        int iShootY=(iDrawY() + half ) + (mapCamera->getAbsY());
+                        int half = 16;
+                        int iShootX=pos_x() + half;
+                        int iShootY=pos_y() + half;
                         int bmp_head = convert_angle(iHeadFacing);
 
                         PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);
@@ -118,11 +118,7 @@ void cRocketTurret::think()
                     }
 
                     TIMER_fire=0;
-
                 }
-
-
-
             }
             else
             {

@@ -37,26 +37,32 @@ void cBullet::init()
     TIMER_homing=0;   // when timer set, > 0 means homing
 }
 
-
-int cBullet::draw_x()
-{
-    int absoluteXCoordinateOnMap = iCellGiveX(iCell) * mapCamera->getZoomedTileWidth();
-    int absoluteXCoordinateMapCamera = mapCamera->getAbsX();
-    int maxOffsetZoomLevelOne = 32;
-    float zoomLevelFactored = mapCamera->factorZoomLevel(maxOffsetZoomLevelOne);
-    float factor = zoomLevelFactored / maxOffsetZoomLevelOne;
-    return ((absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera) + (iOffsetX * factor));
+int cBullet::pos_x() {
+    int iCellX = iCellGiveX(iCell);
+    return (iCellX * TILESIZE_WIDTH_PIXELS) + iOffsetX;
 }
 
+int cBullet::pos_y() {
+    int iCellY = iCellGiveY(iCell);
+    return (iCellY * TILESIZE_HEIGHT_PIXELS) + iOffsetY;
+}
 
-int cBullet::draw_y()
-{
-    int absoluteYCoordinateOnMap = iCellGiveY(iCell) * mapCamera->getZoomedTileHeight();
+int cBullet::draw_x() {
+    int absoluteXCoordinateOnMap = pos_x();
+    int absoluteXCoordinateMapCamera = mapCamera->getAbsX();
+    int screenPosition = (absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera);
+    int iWidth = units[iType].bmp_width;
+    int bmpOffset = TILESIZE_WIDTH_PIXELS - iWidth;
+    return mapCamera->factorZoomLevel(screenPosition + bmpOffset);
+}
+
+int cBullet::draw_y() {
+    int absoluteYCoordinateOnMap = pos_y();
     int absoluteYCoordinateMapCamera = mapCamera->getAbsY();
-    int maxOffsetZoomLevelOne = 32;
-    float zoomLevelFactored = mapCamera->factorZoomLevel(maxOffsetZoomLevelOne);
-    float factor = zoomLevelFactored / maxOffsetZoomLevelOne;
-    return ((absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera) + (iOffsetY * factor)) + 42; // 42 = the options bar height
+    int screenPosition = (absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera);
+    int iHeight = units[iType].bmp_height;
+    int bmpOffset = (TILESIZE_HEIGHT_PIXELS - iHeight) / 2;
+    return mapCamera->factorZoomLevel(screenPosition + bmpOffset) + 42;
 }
 
 // draw the bullet
@@ -84,6 +90,8 @@ void cBullet::draw()
     int h = 32;
     int bmp_width = bullets[iType].bmp_width;
 
+
+    // source X,Y image coordinates?
     int sx, sy;
 
     sy = iFrame * h;
@@ -162,10 +170,8 @@ void cBullet::think() {
         }
 
         if (bCreatePuf) {
-            int half = mapCamera->getZoomedHalfTileSize();
-            // crashes seem to happen with particles?? even without drawing enabled of particles?
-            PARTICLE_CREATE(draw_x() + mapCamera->getAbsX() + half, draw_y() + mapCamera->getAbsY() + half,
-                            BULLET_PUF, -1, -1);
+            int half = 16;
+            PARTICLE_CREATE(pos_x() + half, pos_y() + half, BULLET_PUF, -1, -1);
         }
 
         TIMER_frame = 0;
@@ -347,11 +353,11 @@ void cBullet::think_move()
 					iChance = 30;
 
 				if (rnd(100) < iChance) {
-                    int half = mapCamera->getZoomedHalfTileSize();
-                    int randomX = mapCamera->factorZoomLevel(-8 + rnd(16));
-                    int randomY = mapCamera->factorZoomLevel(-8 + rnd(16));
-                    PARTICLE_CREATE(draw_x() + (mapCamera->getAbsX()) + half + randomX,
-                                    draw_y() + (mapCamera->getAbsY()) + half + randomY, OBJECT_SMOKE, -1, -1);
+                    int half = 16;
+                    int randomX = -8 + rnd(half);
+                    int randomY = -8 + rnd(half);
+                    PARTICLE_CREATE(pos_x() + half + randomX,
+                                    pos_y() + half + randomY, OBJECT_SMOKE, -1, -1);
                 }
 
 
@@ -410,12 +416,12 @@ void cBullet::think_move()
 
 					// smoke
 					if (rnd(100) < iChance) {
-                        int half = mapCamera->getZoomedHalfTileSize();
-                        int randomX = mapCamera->factorZoomLevel(-8 + rnd(16));
-                        int randomY = mapCamera->factorZoomLevel(-8 + rnd(16));
+                        int half = 16;
+                        int randomX = -8 + rnd(half);
+                        int randomY = -8 + rnd(half);
 
-                        PARTICLE_CREATE(draw_x() + (mapCamera->getAbsX()) + half + randomX,
-                                        draw_y() + (mapCamera->getAbsY()) + half + randomY, OBJECT_SMOKE, -1, -1);
+                        PARTICLE_CREATE(pos_x() + half + randomX,
+                                        pos_y() + half + randomY, OBJECT_SMOKE, -1, -1);
 					}
 
 
@@ -646,11 +652,11 @@ void cBullet::think_move()
             play_sound_id(SOUND_GAS, iCellOnScreen(iCell));
 
         if (bullets[iType].deadbmp > -1) {
-            int half = mapCamera->getZoomedHalfTileSize();
-            int randomX = mapCamera->factorZoomLevel(-8 + rnd(16));
-            int randomY = mapCamera->factorZoomLevel(-8 + rnd(16));
-            PARTICLE_CREATE(draw_x() + (mapCamera->getAbsX()) + half + randomX,
-                            draw_y() + (mapCamera->getAbsY()) + half + randomY, bullets[iType].deadbmp, -1, -1);
+            int half = 16;
+            int randomX = -8 + rnd(half);
+            int randomY = -8 + rnd(half);
+            PARTICLE_CREATE(pos_x() + half + randomX,
+                            pos_y() + half + randomY, bullets[iType].deadbmp, -1, -1);
 
         }
 
