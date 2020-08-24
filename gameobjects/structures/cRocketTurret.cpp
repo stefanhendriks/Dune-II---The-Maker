@@ -99,7 +99,7 @@ void cRocketTurret::think()
                         iBullet = ROCKET_RTURRET;
                     else
                     {
-                        int half = mapCamera->getHalfTileSize();
+                        int half = mapCamera->getZoomedHalfTileSize();
                         int iShootX=(iDrawX() + half ) + (mapCamera->getAbsX());
                         int iShootY=(iDrawY() + half ) + (mapCamera->getAbsY());
                         int bmp_head = convert_angle(iHeadFacing);

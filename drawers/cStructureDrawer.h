@@ -20,9 +20,6 @@ class cStructureDrawer {
 		void drawStructuresSecondLayer();
 		void drawStructuresHealthBars();
 
-		int getDrawXForStructure(int cell);
-		int getDrawYForStructure(int cell);
-
 	protected:
 		void drawStructureHealthBar(int iStructure);
 		void drawStructuresForLayer(int layer);

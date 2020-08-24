@@ -59,23 +59,33 @@ cAbstractStructure::~cAbstractStructure()
     iCell = -1;
 }
 
-// X drawing position
-int cAbstractStructure::iDrawX()
-{
-    int tileWidth = mapCamera->getTileWidth();
+int cAbstractStructure::pos_x() {
     cCellCalculator * cellCalculator = map.getCellCalculator();
-    int x = cellCalculator->getX(iCell);
-    return (x * tileWidth) - (mapCamera->getX() * tileWidth);
+    int iCellX = cellCalculator->getX(iCell);
+    return iCellX * TILESIZE_WIDTH_PIXELS;
+}
+
+int cAbstractStructure::pos_y() {
+    cCellCalculator * cellCalculator = map.getCellCalculator();
+    int iCellY = cellCalculator->getY(iCell);
+    return (iCellY * TILESIZE_HEIGHT_PIXELS);
+}
+
+// X drawing position
+int cAbstractStructure::iDrawX() {
+    int absoluteXCoordinateOnMap = pos_x();
+    int absoluteXCoordinateMapCamera = mapCamera->getAbsX();
+    int screenPosition = (absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera);
+    return mapCamera->factorZoomLevel(screenPosition);
 }
 
 // Y drawing position
-int cAbstractStructure::iDrawY()
-{
-    int tileHeight = mapCamera->getTileHeight();
-    cCellCalculator * cellCalculator = map.getCellCalculator();
-    int y = cellCalculator->getY(iCell);
+int cAbstractStructure::iDrawY() {
+    int absoluteYCoordinateOnMap = pos_y();
+    int absoluteYCoordinateMapCamera = mapCamera->getAbsY();
+    int screenPosition = (absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera);
     int heightOfTopBar = 42;
-    return (y * tileHeight) - (mapCamera->getY() * tileHeight) + heightOfTopBar;
+    return mapCamera->factorZoomLevel(screenPosition) + heightOfTopBar;
 }
 
 BITMAP * cAbstractStructure::getBitmap() {
@@ -171,36 +181,34 @@ void cAbstractStructure::die()
 			map.cellChangeType(iCll, TERRAIN_ROCK);
 			mapEditor.smoothAroundCell(iCll);
 
-
-            int half = mapCamera->getHalfTileSize();
-            PARTICLE_CREATE(iDrawX() + (mapCamera->getAbsX()) + half,
-                            iDrawY() + (mapCamera->getAbsY()) + half, OBJECT_BOOM01, -1, -1);
-
+            int half = 16;
+            PARTICLE_CREATE(pos_x() + half,
+                            pos_y() + half, OBJECT_BOOM01, -1, -1);
 
             for (int i=0; i < 3; i++)
             {
 				map.smudge_increase(SMUDGE_ROCK, iCll);
 
                 // create particle
-                PARTICLE_CREATE(iDrawX() + (mapCamera->getAbsX()) + half,
-                                iDrawY() + (mapCamera->getAbsY()) + half, EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
+                PARTICLE_CREATE(pos_x() + half,
+                                pos_y() + half, EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
 
                 // create smoke
                 if (rnd(100) < 7) {
-                    int randomX = mapCamera->factorZoomLevel(-8 + rnd(16));
-                    int randomY = mapCamera->factorZoomLevel(-8 + rnd(16));
+                    int randomX = -8 + rnd(16);
+                    int randomY = -8 + rnd(16);
 
-                    PARTICLE_CREATE(iDrawX() + (mapCamera->getAbsX()) + half + randomX,
-                                    iDrawY() + (mapCamera->getAbsY()) + half + randomY, OBJECT_SMOKE, -1, -1);
+                    PARTICLE_CREATE(pos_x() + half + randomX,
+                                    pos_y() + half + randomY, OBJECT_SMOKE, -1, -1);
                 }
 
                 // create fire
                 if (rnd(100) < 5) {
-                    int randomX = mapCamera->factorZoomLevel(-8 + rnd(16));
-                    int randomY = mapCamera->factorZoomLevel(-8 + rnd(16));
+                    int randomX = -8 + rnd(16);
+                    int randomY = -8 + rnd(16);
 
-                    PARTICLE_CREATE(iDrawX() + (mapCamera->getAbsX()) + half + randomX,
-                                    iDrawY() + (mapCamera->getAbsY()) + half + randomY, EXPLOSION_FIRE, -1, -1);
+                    PARTICLE_CREATE(pos_x() + half + randomX,
+                                    pos_y() + half + randomY, EXPLOSION_FIRE, -1, -1);
                 }
 
             }

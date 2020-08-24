@@ -349,21 +349,25 @@ void cMap::draw_units() {
         if (unit[i].isValid())
         {
 			// DEBUG MODE: DRAW PATHS
-			if (DEBUGGING)
-				unit[i].draw_path();
+			if (DEBUGGING) {
+                unit[i].draw_path();
+
+                char msg[255];
+                sprintf(msg, "Unit [%d], posX = [%d], posY = [%d]", i, unit[i].pos_x(), unit[i].pos_y());
+                logbook(msg);
+            }
 
             if (unit[i].iType == SANDWORM)
             {
+                int drawx = unit[i].draw_x();
+                int drawy = unit[i].draw_y();
 
-            int drawx = unit[i].draw_x();
-            int drawy = unit[i].draw_y();
-
-            if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.screen_x-160)) &&
-                ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.screen_y))
-            {
-                // draw
-                unit[i].draw();
-            }
+                if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.screen_x-160)) &&
+                    ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.screen_y))
+                {
+                    // draw
+                    unit[i].draw();
+                }
             }
 
         }
@@ -371,10 +375,8 @@ void cMap::draw_units() {
     }
 
     // draw all units
-    for (int i=0; i < MAX_UNITS; i++)
-    {
-        if (unit[i].isValid())
-        {
+    for (int i=0; i < MAX_UNITS; i++) {
+        if (unit[i].isValid()) {
 
             if (unit[i].iType == CARRYALL ||
                 unit[i].iType == ORNITHOPTER ||
@@ -383,26 +385,26 @@ void cMap::draw_units() {
                 units[unit[i].iType].infantry == false)
                 continue; // do not draw aircraft
 
-            int drawx = unit[i].draw_x();
-            int drawy = unit[i].draw_y();
+                int drawx = unit[i].draw_x();
+                int drawy = unit[i].draw_y();
 
 			//line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(255,255,255));
 
-            if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.screen_x-160)) &&
-                ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.screen_y))
-            {
+                if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.screen_x-160)) &&
+                    ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.screen_y))
+                {
 
-                // draw
-                unit[i].draw();
+                    // draw
+                    unit[i].draw();
 
-				//line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(0,255,255));
+                    //line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(0,255,255));
 
-				if (key[KEY_D] && key[KEY_TAB])
-					alfont_textprintf(bmp_screen, game_font, unit[i].draw_x(),unit[i].draw_y(), makecol(255,255,255), "%d", i);
+                    if (key[KEY_D] && key[KEY_TAB])
+                        alfont_textprintf(bmp_screen, game_font, unit[i].draw_x(),unit[i].draw_y(), makecol(255,255,255), "%d", i);
+
+                }
 
             }
-
-        }
 
     }
 

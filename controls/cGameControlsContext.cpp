@@ -58,8 +58,8 @@ void cGameControlsContext::determineMouseCell() {
 }
 
 int cGameControlsContext::getMouseCellFromScreen(int heightTopBar, int screenY, int screenX) const {
-    int tileWidth = mapCamera->getTileWidth();
-    int tileHeight = mapCamera->getTileHeight();
+    int tileWidth = mapCamera->getZoomedTileWidth();
+    int tileHeight = mapCamera->getZoomedTileHeight();
 
     int iMouseX = screenX / tileWidth;
     int iMouseY = (screenY - heightTopBar) / tileHeight;

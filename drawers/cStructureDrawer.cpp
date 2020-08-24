@@ -34,8 +34,8 @@ void cStructureDrawer::drawStructuresHealthBars() {
 
 void cStructureDrawer::drawRectangeOfStructure(cAbstractStructure * theStructure, int color) {
 	assert(theStructure);
-	int drawX = getDrawXForStructure(theStructure->getCell());
-	int drawY = getDrawYForStructure(theStructure->getCell());
+	int drawX = theStructure->iDrawX();
+	int drawY = theStructure->iDrawY();
     int width = structures[theStructure->getType()].bmp_width - 1;
     int height = structures[theStructure->getType()].bmp_height - 1;
 
@@ -48,8 +48,8 @@ void cStructureDrawer::drawRectangeOfStructure(cAbstractStructure * theStructure
 void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure * structure) {
 	int iDrawPreBuild = determinePreBuildAnimationIndex(structure);
 
-	int drawX = getDrawXForStructure(structure->getCell());
-	int drawY = getDrawYForStructure(structure->getCell());
+	int drawX = structure->iDrawX();
+	int drawY = structure->iDrawY();
 
     // Draw prebuild
     draw_sprite(bmp_screen, (BITMAP *)gfxdata[iDrawPreBuild].dat, drawX, drawY);
@@ -62,22 +62,6 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure * struc
 
 }
 
-int cStructureDrawer::getDrawYForStructure(int cell) {
-	assert(structure);
-    int tileHeight = mapCamera->getTileHeight();
-	cCellCalculator * cellCalculator = map.getCellCalculator();
-	int y = cellCalculator->getY(cell);
-	return (y * tileHeight) - (mapCamera->getY() * tileHeight) + 42;
-}
-
-int cStructureDrawer::getDrawXForStructure(int cell) {
-	assert(structure);
-    int tileWidth = mapCamera->getTileWidth();
-    cCellCalculator * cellCalculator = map.getCellCalculator();
-	int x = cellCalculator->getX(cell);
-	return (x * tileWidth) - (mapCamera->getX() * tileWidth);
-}
-
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
 	if (!structure) return;
 
@@ -88,8 +72,8 @@ void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
     // what frame is being drawn. So multiply the height of the structure size times frame
     int iSourceY = orgHeightInPixels * structure->getFrame();
 
-    int drawX = getDrawXForStructure(structure->getCell());
-    int drawY = getDrawYForStructure(structure->getCell());
+    int drawX = structure->iDrawX();
+    int drawY = structure->iDrawY();
 
     int widthInPixels = mapCamera->factorZoomLevel(orgWidthInPixels);
     int heightInPixels = mapCamera->factorZoomLevel(orgHeightInPixels);
@@ -149,8 +133,8 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
 	int orgWidthInPixels = structureUtils.getStructureWidthInPixels(structure);
 	int orgHeightInPixels = structureUtils.getStructureHeightInPixels(structure);
 
-	int drawX = getDrawXForStructure(structure->getCell());
-	int drawY = getDrawYForStructure(structure->getCell());
+	int drawX = structure->iDrawX();
+	int drawY = structure->iDrawY();
 
     // structures are animated within the same source bitmap. The Y coordinates determine
     // what frame is being drawn. So multiply the height of the structure size times frame
@@ -285,8 +269,8 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
 		if (structure->isRepairing()) {
 			if (structure->getRepairAlpha() > -1) {
 				set_trans_blender(0, 0, 0, structure->getRepairAlpha());
-				int drawX = getDrawXForStructure(structure->getCell());
-				int drawY = getDrawYForStructure(structure->getCell());
+				int drawX = structure->iDrawX();
+				int drawY = structure->iDrawY();
 				int repairX = structure->getRepairX();
 				int repairY = structure->getRepairY();
 				draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_REPAIR].dat, drawX+repairX, drawY + repairY);
@@ -335,8 +319,8 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure) {
 	}
 
 	// Draw structure health
-	int draw_x = getDrawXForStructure(theStructure->getCell()) - 1;
-	int draw_y = getDrawYForStructure(theStructure->getCell()) - 5;
+	int draw_x = theStructure->iDrawX() - 1;
+	int draw_y = theStructure->iDrawY() - 5;
 
 	int widthBmp = mapCamera->factorZoomLevel(theStructure->getS_StructuresType().bmp_width);
 	int width_x = widthBmp - 1;

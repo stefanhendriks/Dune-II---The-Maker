@@ -67,7 +67,9 @@ int cParticle::draw_x()
 {
     int absoluteXCoordinateOnMap = x;
     int absoluteXCoordinateMapCamera = mapCamera->getAbsX();
-    return absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera;
+    int screenPosition = absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera;
+    int bmpOffset = (TILESIZE_WIDTH_PIXELS - iWidth) / 2;
+    return mapCamera->factorZoomLevel(screenPosition + bmpOffset);
 }
 
 // absolute pixel position
@@ -75,12 +77,13 @@ int cParticle::draw_y()
 {
     int absoluteYCoordinateOnMap = y;
     int absoluteYCoordinateMapCamera = mapCamera->getAbsY();
-    return absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera;
+    int screenPosition = absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera;
+    int bmpOffset = (TILESIZE_HEIGHT_PIXELS - iHeight) / 2;
+    return mapCamera->factorZoomLevel(screenPosition + bmpOffset);
 }
 
 // draw
 void cParticle::draw() {
-//    return;
     int dx = draw_x();
     int dy = draw_y();
 
@@ -96,18 +99,16 @@ void cParticle::draw() {
         Shimmer((16/(iFrame+1)), dx, dy);
     }*/
 
-
-    // valid in boundries
-    BITMAP *temp = create_bitmap(iWidth,iHeight);
+    // valid in boundaries
+    BITMAP *temp = create_bitmap(iWidth, iHeight);
 
     // transparency
     clear_to_color(temp, makecol(255,0,255));
 
     // now blit it
-    if (iHousePal < 0)
-        blit((BITMAP *)gfxdata[iType].dat, temp, (iWidth*iFrame), 0, 0, 0, iWidth, iHeight);
-    else
-    {
+    if (iHousePal < 0) {
+        blit((BITMAP *) gfxdata[iType].dat, temp, (iWidth * iFrame), 0, 0, 0, iWidth, iHeight);
+    } else {
         select_palette(  player[iHousePal].pal);
         blit((BITMAP *)gfxdata[iType].dat, temp, (iWidth*iFrame), 0, 0, 0, iWidth, iHeight);
     }
@@ -116,12 +117,24 @@ void cParticle::draw() {
     int bmp_height = mapCamera->factorZoomLevel(iHeight);
 
     // create bmp that is the stretched version of temp
-    BITMAP *stretched = create_bitmap(bmp_width, bmp_height);
+    BITMAP *stretched = create_bitmap(bmp_width + 1, bmp_height + 1);
     clear_to_color(stretched, makecol(255, 0, 255)); // mask color
     masked_stretch_blit(temp, stretched, 0, 0, iWidth, iHeight, 0, 0, bmp_width, bmp_height);
 
-    int drawX = dx - (iWidth / 2);
-    int drawY = dy - (iHeight / 2);
+    // temp is no longer needed
+    destroy_bitmap(temp);
+
+    // drawX and drawY = is the draw coordinates but centered within cell (iWidth/Height are the cell size?)
+    int drawX = dx; // - mapCamera->factorZoomLevel(iWidth);
+    int drawY = dy; // - mapCamera->factorZoomLevel(iHeight);
+
+    if (iType == OBJECT_SIEGESHOOT) {
+        char msg[255];
+        // iWidth = 64, iHeight = 64
+        sprintf(msg, "Particle, drawX = [%d], drawY = [%d], dx=[%d], dy=[%d]", drawX, drawY, dx, dy);
+        logbook(msg);
+    }
+
 
     if (iAlpha > -1)
 	{
@@ -133,21 +146,22 @@ void cParticle::draw() {
 
 			if (iType == EXPLOSION_ROCKET || iType == EXPLOSION_ROCKET_SMALL)
             {
-                fblend_add((BITMAP *)gfxdata[OBJECT_BOOM03].dat, bmp_screen,  dx-(64), dy-(64), (iAlpha/2));
+                int half = mapCamera->getZoomedHalfTileSize();
+                fblend_add((BITMAP *)gfxdata[OBJECT_BOOM03].dat, bmp_screen,  dx-(half*2), dy-(half*2), (iAlpha/2));
             }
 
         }
-		else
-			fblend_add(stretched, bmp_screen, drawX, drawY, iAlpha);
+		else {
+            fblend_add(stretched, bmp_screen, drawX, drawY, iAlpha);
+        }
 	}
-	else
-		draw_sprite(bmp_screen, stretched, drawX, drawY);
+	else {
+        draw_sprite(bmp_screen, stretched, drawX, drawY);
+    }
 
 	set_trans_blender(0,0,0,128);
 
-    destroy_bitmap(temp);
     destroy_bitmap(stretched);
-
 }
 
 
