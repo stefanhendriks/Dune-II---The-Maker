@@ -8,22 +8,24 @@
 #include "../include/d2tmh.h"
 
 cMapCamera::cMapCamera() {
-	x=y=1;
-    absX = absY = 32;
-	targetX=targetY=1;
+    viewportStartX = viewportStartY = 32;
 	TIMER_move=0;
 	zoomLevel = 1.0f;
 	desiredZoomLevel = zoomLevel;
 
     int widthOfSidebar = 160;
     int heightOfOptions = 42;
-    absViewportWidth=game.screen_x-widthOfSidebar;
-    absViewportHeight=game.screen_y-heightOfOptions;
+
+    windowWidth=game.screen_x-widthOfSidebar;
+    windowHeight=game.screen_y-heightOfOptions;
+
+    viewportWidth=windowWidth;
+    viewportHeight=windowHeight;
 
     calibrate();
 
 	char msg[255];
-	sprintf(msg, "Camera initialized. Viewport width is [%d], height [%d]. Position [%d,%d]", viewportWidth, viewportHeight, getX(), getY());
+	sprintf(msg, "Camera initialized. Viewport width is [%d], height [%d]. Position [%d,%d]", viewportWidth, viewportHeight, viewportStartX, viewportStartY);
 	logbook(msg);
 	cellCalculator = new cCellCalculator(&map);
 }
@@ -37,10 +39,8 @@ void cMapCamera::calibrate() {
     tileWidth = factorZoomLevel(TILESIZE_HEIGHT_PIXELS);
     halfTile = factorZoomLevel(TILESIZE_WIDTH_PIXELS); // assumes squared tiles
 
-    viewportWidth=(absViewportWidth/tileWidth);
-    viewportHeight=(absViewportHeight/tileHeight)+1;
-
-    correctCameraIfOutsideBoundaries(getX(), getY());
+    viewportWidth = divideByZoomLevel(windowWidth);
+    viewportHeight = divideByZoomLevel(windowHeight);
 }
 
 void cMapCamera::centerAndJumpViewPortToCell(int cell) {
@@ -68,11 +68,13 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell) {
 	jumpTo(newViewPortX, newViewPortY);
 
     correctCameraIfOutsideBoundaries(newViewPortX, newViewPortY);
+
+    calibrate();
 }
 
 void cMapCamera::correctCameraIfOutsideBoundaries(int newViewPortX, int newViewPortY) {
-    int diffX = getEndX() - (game.map_width - 1);
-    int diffY = getEndY() - (game.map_height - 1);
+    int diffX = getViewportEndX() - (game.map_width - 32);
+    int diffY = getViewportEndY() - (game.map_height - 32);
 
     // when > 0 then it has overlapped, and should be substracted to the original X
     if (diffX > 0) {
@@ -83,12 +85,12 @@ void cMapCamera::correctCameraIfOutsideBoundaries(int newViewPortX, int newViewP
         newViewPortY -= diffY;
     }
 
-    if (newViewPortX < 1) {
-        newViewPortX = 1;
+    if (newViewPortX < 32) {
+        newViewPortX = 32;
     }
 
-    if (newViewPortY < 1) {
-        newViewPortY = 1;
+    if (newViewPortY < 32) {
+        newViewPortY = 32;
     }
 
     // now the final 'jump' to the correct positions
@@ -96,30 +98,21 @@ void cMapCamera::correctCameraIfOutsideBoundaries(int newViewPortX, int newViewP
 }
 
 void cMapCamera::think() {
-    // NOT USED!?
-	if (targetX != x || targetY != y) {
-		TIMER_move++;
-		if (TIMER_move > 5) {
-			TIMER_move = 0;
-			// move a bit closer
-		}
-	}
+//    // NOT USED!?
+//	if (targetX != x || targetY != y) {
+//		TIMER_move++;
+//		if (TIMER_move > 5) {
+//			TIMER_move = 0;
+//			// move a bit closer
+//		}
+//	}
 }
 
 void cMapCamera::jumpTo(int theX, int theY) {
-	x = theX;
-	absX = x * tileWidth;
-	targetX = theX;
-	y = theY;
-	absY = y * tileHeight;
-	targetY = theY;
+	viewportStartX = theX * tileWidth;
+	viewportStartY = theY * tileHeight;
+    calibrate();
 }
-
-void cMapCamera::moveTo(int theX, int theY) {
-	targetX = theX;
-	targetY = theY;
-}
-
 
 void cMapCamera::thinkInteraction() {
     // Mouse is 'dragging' (border select) so do not do anything
@@ -129,48 +122,47 @@ void cMapCamera::thinkInteraction() {
 
 	// thinking for map (scrolling that is)
 	if (mouse_x <= 1 || key[KEY_LEFT]) {
-		if (x > 1) {
-			x--;
-			absX -= 32;
+		if (viewportStartX > TILESIZE_WIDTH_PIXELS) {
+			viewportStartX -= TILESIZE_HEIGHT_PIXELS;
 			mouse_tile = MOUSE_LEFT;
 		}
 	}
 
 
 	if (mouse_y <= 1 || key[KEY_UP]) {
-		if (y > 1) {
-			y--;
-			absY -= 32;
+		if (viewportStartY > TILESIZE_HEIGHT_PIXELS) {
+			viewportStartY -= TILESIZE_HEIGHT_PIXELS;
 			mouse_tile = MOUSE_UP;
 		}
 	}
 
-
 	if (mouse_x >= (game.screen_x-2) || key[KEY_RIGHT]) {
-		if ((getEndX()) < (game.map_width-1)) {
-			x++;
-			absX += 32;
+		if (getViewportEndX() < ((game.map_width*TILESIZE_WIDTH_PIXELS)-TILESIZE_WIDTH_PIXELS)) {
+			viewportStartX += TILESIZE_WIDTH_PIXELS;
 			mouse_tile = MOUSE_RIGHT;
 		}
 	}
 
 	if (mouse_y >= (game.screen_y-2) || key[KEY_DOWN]) {
-		if ((getEndY()) < (game.map_height-1)) {
-			y++;
-            absY += 32;
+		if ((getViewportEndY()) < ((game.map_height*TILESIZE_HEIGHT_PIXELS)-TILESIZE_HEIGHT_PIXELS)) {
+			viewportStartY += TILESIZE_HEIGHT_PIXELS;
 			mouse_tile = MOUSE_DOWN;
 		}
 	}
 
-    if (desiredZoomLevel < zoomLevel) {
-        zoomLevel -= 0.025;
-        if (zoomLevel < 0.5) zoomLevel = 0.5;
-        calibrate();
-    }
+//    if (desiredZoomLevel < zoomLevel) {
+//        zoomLevel -= 0.025;
+//        if (zoomLevel < 0.5) zoomLevel = 0.5;
+//        calibrate();
+//    }
 
-    if (desiredZoomLevel > zoomLevel) {
-        zoomLevel += 0.025;
-        if (zoomLevel > 2) zoomLevel = 2;
-        calibrate();
-    }
+//    if (desiredZoomLevel > zoomLevel) {
+//        zoomLevel += 0.025;
+//        if (zoomLevel > 2) zoomLevel = 2;
+//        calibrate();
+//    }
+}
+
+int cMapCamera::getCellFromViewportPosition(int x, int y) {
+    return iCellMake((x / 32), (y / 32));
 }

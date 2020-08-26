@@ -228,8 +228,8 @@ void cMap::clear_spot(int c, int size, int player) {
             int x = cx, y = cy;
 
             // when scrolling, compensate
-            x -= mapCamera->getX();
-            y -= mapCamera->getY();
+            x -= mapCamera->getViewportStartX() / 32;
+            y -= mapCamera->getViewportStartY() / 32;
 
             // convert to pixels (*32)
             x *= TILE_SIZE_PIXELS;
@@ -264,11 +264,11 @@ void cMap::clear_spot(int c, int size, int player) {
 
             cell_y = y;
             cell_y -= 42;
-            cell_y += (mapCamera->getY() * 32);
+            cell_y += mapCamera->getViewportStartY();
             cell_y = cell_y / 32;
 
             cell_x = x;
-            cell_x += (mapCamera->getX() * 32);
+            cell_x += mapCamera->getViewportStartX();
             cell_x = cell_x / 32;
 
 
@@ -520,58 +520,55 @@ void cMap::draw_think() {
 		return;
 	}
 
-	// determine the width and height in cells
-	// this way we know the size of the viewport
-
-	int iEndX = mapCamera->getX() + ((game.screen_x - 160) / 32); // width of sidebar is 160
-	int iEndY = mapCamera->getY() + ((game.screen_y - 42) / 32) + 1; // height of upper bar is 42
-
-	// thinking for map (scrolling that is)
-	if (mouse_x <= 1 || key[KEY_LEFT]) {
-		if (mapCamera->getX() > 1) {
-			mouse_tile = MOUSE_LEFT;
-		}
-	}
-
-	if (mouse_y <= 1 || key[KEY_UP]) {
-		if (mapCamera->getY() > 1) {
-			mouse_tile = MOUSE_UP;
-		}
-	}
-
-	if (mouse_x >= (game.screen_x - 2) || key[KEY_RIGHT]) {
-		if ((iEndX) < (game.map_width - 1)) {
-			mouse_tile = MOUSE_RIGHT;
-		}
-	}
-
-	if (mouse_y >= (game.screen_y - 2) || key[KEY_DOWN]) {
-		if ((iEndY) < (game.map_height - 1)) {
-			mouse_tile = MOUSE_DOWN;
-		}
-	}
+//	// determine the width and height in cells
+//	// this way we know the size of the viewport
+//	int iEndX = mapCamera->getX() + ((game.screen_x - 160) / 32); // width of sidebar is 160
+//	int iEndY = mapCamera->getY() + ((game.screen_y - 42) / 32) + 1; // height of upper bar is 42
+//
+//	// thinking for map (scrolling that is)
+//	if (mouse_x <= 1 || key[KEY_LEFT]) {
+//		if (mapCamera->getX() > 1) {
+//			mouse_tile = MOUSE_LEFT;
+//		}
+//	}
+//
+//	if (mouse_y <= 1 || key[KEY_UP]) {
+//		if (mapCamera->getY() > 1) {
+//			mouse_tile = MOUSE_UP;
+//		}
+//	}
+//
+//	if (mouse_x >= (game.screen_x - 2) || key[KEY_RIGHT]) {
+//		if ((iEndX) < (game.map_width - 1)) {
+//			mouse_tile = MOUSE_RIGHT;
+//		}
+//	}
+//
+//	if (mouse_y >= (game.screen_y - 2) || key[KEY_DOWN]) {
+//		if ((iEndY) < (game.map_height - 1)) {
+//			mouse_tile = MOUSE_DOWN;
+//		}
+//	}
 }
 
 void cMap::thinkInteraction() {
 	mapCamera->thinkInteraction();
 }
 
-int cMap::mouse_draw_x()
-{
-	if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
+int cMap::mouse_draw_x() {
+    if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
 //        int tileWidth = mapCamera->getTileWidth();
         int tileWidth = 32;
-        return ( ((iCellGiveX(player[HUMAN].getGameControlsContext()->getMouseCell()) * tileWidth) - (mapCamera->getX() *
-                                                                                                      tileWidth)));
-    }
-	else
-		return -1;
+        return (((iCellGiveX(player[HUMAN].getGameControlsContext()->getMouseCell()) * tileWidth) -
+                 (mapCamera->getViewportStartX())));
+    } else
+        return -1;
 }
 
-int cMap::mouse_draw_y()
-{
-	if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1)
-  return (( (( iCellGiveY(player[HUMAN].getGameControlsContext()->getMouseCell()) * 32 ) - (mapCamera->getY()*32)))+42);
-	else
-		return -1;
+int cMap::mouse_draw_y() {
+    if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1)
+        return ((((iCellGiveY(player[HUMAN].getGameControlsContext()->getMouseCell()) * 32) -
+                  (mapCamera->getViewportStartY()))) + 42);
+    else
+        return -1;
 }

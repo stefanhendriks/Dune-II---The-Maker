@@ -114,12 +114,12 @@ void cDrawManager::drawRallyPoint() {
 
 int cDrawManager::getDrawXForCell(int cell) {
 	int cellX = iCellGiveX(cell);
-	return (cellX * 32) - (mapCamera->getX() * 32);
+	return (cellX * 32) - (mapCamera->getViewportStartX());
 }
 
 int cDrawManager::getDrawYForCell(int cell) {
 	int cellY = iCellGiveY(cell);
-	return (cellY * 32) - (mapCamera->getY() * 32) +42; // + 42 is the top bar (options/upgrade/credits)
+	return (cellY * 32) - mapCamera->getViewportStartY() + 42; // + 42 is the top bar (options/upgrade/credits)
 }
 
 void cDrawManager::drawOrderButton() {

@@ -71,19 +71,6 @@ int iCellMake(int x, int y)
 //  return c;
 }
 
-// make cell number out of X and Y value
-int iCellMakeFromAbsolute(int absX, int absY, int tileWidth, int tileHeight)
-{
-    return iCellMake((absX / tileWidth), (absY / tileHeight));
-}
-
-int iCellMakeFromAbsoluteWithCamera(int absX, int absY)
-{
-    int tileWidth = mapCamera->getZoomedTileWidth();
-    int tileHeight = mapCamera->getZoomedTileHeight();
-    return iCellMakeFromAbsolute(absX, absY, tileWidth, tileHeight);
-}
-
 // returns in fRadians
 float fRadians(int x1, int y1, int x2, int y2)
 {
