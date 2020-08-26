@@ -66,20 +66,21 @@ bool cParticle::isValid()
 int cParticle::draw_x()
 {
     int absoluteXCoordinateOnMap = x;
-    int absoluteXCoordinateMapCamera = mapCamera->getAbsX();
-    int screenPosition = absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera;
+    int absoluteXCoordinateMapCamera = mapCamera->getViewportStartX();
+    int relativeViewportX = absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera;
     int bmpOffset = (TILESIZE_WIDTH_PIXELS - iWidth) / 2;
-    return mapCamera->factorZoomLevel(screenPosition + bmpOffset);
+    int windowDrawX = mapCamera->factorZoomLevel(relativeViewportX + bmpOffset);
+    return windowDrawX;
 }
 
 // absolute pixel position
 int cParticle::draw_y()
 {
     int absoluteYCoordinateOnMap = y;
-    int absoluteYCoordinateMapCamera = mapCamera->getAbsY();
-    int screenPosition = absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera;
+    int absoluteYCoordinateMapCamera = mapCamera->getViewportStartY();
+    int relativeViewportY = absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera;
     int bmpOffset = (TILESIZE_HEIGHT_PIXELS - iHeight) / 2;
-    return mapCamera->factorZoomLevel(screenPosition + bmpOffset);
+    return mapCamera->factorZoomLevel(relativeViewportY + bmpOffset);
 }
 
 // draw

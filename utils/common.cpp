@@ -1133,8 +1133,8 @@ int iCellOnScreen(int iCell)
     int iCellX=iCellGiveX(iCell);
     int iCellY=iCellGiveY(iCell);
 
-    int iMapX = mapCamera->getX();
-    int iMapY = mapCamera->getY();
+    int iMapX = mapCamera->getViewportStartX() / 32;
+    int iMapY = mapCamera->getViewportStartY() / 32;
 
     // calculate screen position into cell coordinate
     int iEndX=iMapX + ((game.screen_x-160)/ mapCamera->getZoomedTileWidth()); // width of sidebar is 160

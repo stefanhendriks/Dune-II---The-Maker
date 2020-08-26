@@ -58,17 +58,16 @@ void cGameControlsContext::determineMouseCell() {
 }
 
 int cGameControlsContext::getMouseCellFromScreen(int heightTopBar, int screenY, int screenX) const {
-    int tileWidth = mapCamera->getZoomedTileWidth();
-    int tileHeight = mapCamera->getZoomedTileHeight();
+    int iMouseX = mapCamera->divideByZoomLevel(screenX);
+    int iMouseY = mapCamera->divideByZoomLevel(screenY - heightTopBar);
 
-    int iMouseX = screenX / tileWidth;
-    int iMouseY = (screenY - heightTopBar) / tileHeight;
+    int viewportMouseX = iMouseX + mapCamera->getViewportStartX();
+    int viewportMouseY = iMouseY + mapCamera->getViewportStartY();
 
-    iMouseX += mapCamera->getX();
-    iMouseY += mapCamera->getY();
+    int mapX = viewportMouseX / TILESIZE_WIDTH_PIXELS;
+    int mapY = viewportMouseY / TILESIZE_HEIGHT_PIXELS;
 
-    int result = cellCalculator->getCell(iMouseX, iMouseY);
-    return result;
+    return cellCalculator->getCell(mapX, mapY);
 }
 
 void cGameControlsContext::determineToolTip() {

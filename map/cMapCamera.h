@@ -28,46 +28,56 @@ class cMapCamera {
 
 		void think();
 
-		void zoomIn() { if (desiredZoomLevel < 2.0) desiredZoomLevel += 0.1; }
-		void zoomOut() { if (desiredZoomLevel > 0.25) desiredZoomLevel -= 0.1; }
-		void resetZoom() { desiredZoomLevel = 1.0f; }
+		void zoomIn() {
+//		    if (desiredZoomLevel < 2.0) desiredZoomLevel += 0.1;
+//            zoomLevel = 0.75f;
+//            calibrate();
+		    if (zoomLevel < 2.0) {
+                zoomLevel += 0.1;
+                calibrate();
+            }
+		}
+		void zoomOut() {
+//		    if (desiredZoomLevel > 0.25) desiredZoomLevel -= 0.1;
+//            zoomLevel = 1.25f;
+//            calibrate();
+		    if (zoomLevel > 0.25) {
+		        zoomLevel -= 0.1;
+                calibrate();
+            }
+		}
+		void resetZoom() { zoomLevel = 1.0f; }
 
 		void jumpTo(int	theX, int theY);
 		void moveTo(int theX, int theY);
 
-		int getX() { return x; }
-		int getY() { return y; }
-		int getAbsX() { return absX; }
-		int getAbsY() { return absY; }
+		// These methods need to use zoomfactor to properly calculate the position on the map
+		int getAbsMapMouseX() { return mouse_x + viewportStartX; } // <---
+		int getAbsMapMouseY() { return mouse_y + viewportStartY; } // <---
 
-		int getAbsMapMouseX() { return mouse_x + absX; }
-		int getAbsMapMouseY() { return mouse_y + absY; }
+		int getViewportStartX() { return viewportStartX; }
+		int getViewportStartY() { return viewportStartY; }
 
-		int getTargetX() { return targetX; }
-		int getTargetY() { return targetY; }
-
-		int getEndX() { return x + viewportWidth; }
-		int getEndY() { return y + viewportHeight; }
-
-		int getAbsEndX() { return absX + absViewportWidth; }
-		int getAbsEndY() { return absY + absViewportHeight; }
+		int getViewportEndX() { return viewportStartX + viewportWidth; }
+		int getViewportEndY() { return viewportStartY + viewportHeight; }
 
 		int getViewportWidth() { return viewportWidth; }
 		int getViewportHeight() { return viewportHeight; }
-
-		int getAbsViewportWidth() { return absViewportWidth; }
-		int getAbsViewportHeight() { return absViewportHeight; }
 
 		void thinkInteraction();
 
 		void centerAndJumpViewPortToCell(int cell);
 
 		int getZoomedHalfTileSize() const { return halfTile; }
-		int getZoomedTileWidth() const { return tileWidth; }
-		int getZoomedTileHeight() const { return tileHeight; }
+		float getZoomedTileWidth() const { return tileWidth; }
+		float getZoomedTileHeight() const { return tileHeight; }
 
-		int factorZoomLevel(int value) {
+		float factorZoomLevel(int value) {
 		    return value * zoomLevel;
+		}
+
+		float divideByZoomLevel(int value) {
+		    return value / zoomLevel;
 		}
 
 		// Calculates viewport and tile width/height
@@ -77,26 +87,19 @@ class cMapCamera {
 		    return zoomLevel;
 		}
 
-	protected:
+    int getCellFromViewportPosition(int x, int y);
 
+protected:
 
 	private:
-		// the width and height of the viewport
-		// calculated at the constructor. The viewport width and height is
-		// in cells (not in pixels).
-		int viewportWidth;
-		int viewportHeight;
+		// rendering coordinates, they are manipulated by zooming
+		int viewportStartX;
+		int viewportStartY;
+        int viewportWidth;
+        int viewportHeight;
 
-		// viewport dimensions in pixels
-		int absViewportWidth;
-		int absViewportHeight;
-
-		// the X,Y position (top left corner of the viewport)
-		// the targetX and targetY are leading.
-		// absX and absY are the absolute pixel coordinates of the map camera
-		// TODO: get rid of the cell based positions and use pixel based positions instead
-		int x, targetX, absX; // absX and absY are pixel based coordinates on the map. (they are not influenced by zooming)
-		int y, targetY, absY;
+		int windowWidth;
+		int windowHeight;
 
 		// timer used, when to move camera
 		int TIMER_move;
@@ -109,8 +112,8 @@ class cMapCamera {
 		cCellCalculator * cellCalculator;
 
 		// the calculated width and height, taking zoomlevel into account
-		int tileHeight;
-		int tileWidth;
+		float tileHeight;
+		float tileWidth;
 		int halfTile;
 
         void correctCameraIfOutsideBoundaries(int newViewPortX, int newViewPortY);

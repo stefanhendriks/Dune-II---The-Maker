@@ -289,11 +289,13 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 						if (structure && structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
 							iChance = 30;
 
-						if (rnd(100) < iChance)
-							PARTICLE_CREATE(draw_x()+(mapCamera->getX()*32)+16+ (-8 + rnd(16)), draw_y()+(mapCamera->getY()*32)+16+ (-8 + rnd(16)), OBJECT_SMOKE, -1, -1);
-
-						}
+						if (rnd(100) < iChance) {
+                            long x = pos_x() + (mapCamera->getViewportStartX()) + 16 + (-8 + rnd(16));
+                            long y = pos_y() + (mapCamera->getViewportStartY()) + 16 + (-8 + rnd(16));
+                            PARTICLE_CREATE(x, y, OBJECT_SMOKE, -1, -1);
+                        }
 					}
+                }
 
 
                 int cellType = map.getCellType(cll);
@@ -439,7 +441,7 @@ int cUnit::pos_y() {
 
 int cUnit::draw_x() {
     int absoluteXCoordinateOnMap = pos_x();
-    int absoluteXCoordinateMapCamera = mapCamera->getAbsX();
+    int absoluteXCoordinateMapCamera = mapCamera->getViewportStartX();
     int screenPosition = (absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera);
     int iWidth = units[iType].bmp_width;
     int bmpOffset = TILESIZE_WIDTH_PIXELS - iWidth;
@@ -448,7 +450,7 @@ int cUnit::draw_x() {
 
 int cUnit::draw_y() {
     int absoluteYCoordinateOnMap = pos_y();
-    int absoluteYCoordinateMapCamera = mapCamera->getAbsY();
+    int absoluteYCoordinateMapCamera = mapCamera->getViewportStartY();
     int screenPosition = (absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera);
     int iHeight = units[iType].bmp_height;
     int bmpOffset = (TILESIZE_HEIGHT_PIXELS - iHeight) / 2;
@@ -573,8 +575,7 @@ void cUnit::draw_experience()
 
 }
 
-void cUnit::draw_path()
-{
+void cUnit::draw_path() {
 	// for debugging purposes
 
 	if (iCell == iGoalCell)
@@ -583,8 +584,8 @@ void cUnit::draw_path()
 	if (iPath[0] < 0)
 		return;
 
-	int iPrevX  = ( (( iCellGiveX(iPath[0]) * 32 ) - (mapCamera->getX()*32)));
-	int iPrevY  = ( (( iCellGiveY(iPath[0]) * 32 ) - (mapCamera->getY()*32))) + 42;
+	int iPrevX  = ( (( iCellGiveX(iPath[0]) * 32 ) - mapCamera->getViewportStartX()));
+	int iPrevY  = ( (( iCellGiveY(iPath[0]) * 32 ) - mapCamera->getViewportStartY())) + 42;
 
 	iPrevX+=16;
 	iPrevY+=16;
@@ -593,8 +594,8 @@ void cUnit::draw_path()
 	{
 		if (iPath[i] > -1)
 		{
-			int iDx = ( (( iCellGiveX(iPath[i]) * 32 ) - (mapCamera->getX()*32)));
-			int iDy = ( (( iCellGiveY(iPath[i]) * 32 ) - (mapCamera->getY()*32))) + 42;
+			int iDx = ( (( iCellGiveX(iPath[i]) * 32 ) - mapCamera->getViewportStartX()));
+			int iDy = ( (( iCellGiveY(iPath[i]) * 32 ) - mapCamera->getViewportStartY())) + 42;
 
 			iDx+=16;
 			iDy+=16;
@@ -1603,8 +1604,8 @@ void cUnit::think_move_air()
 							}
 
 
-                                int iDieX=(draw_x() + 16 ) + (mapCamera->getX()*32);
-                                int iDieY=(draw_y() + 16 ) + (mapCamera->getY()*32);
+                                int iDieX=(pos_x() + 16 ) + (mapCamera->getViewportStartX());
+                                int iDieY=(pos_y() + 16 ) + (mapCamera->getViewportStartY());
                                 PARTICLE_CREATE(iDieX, iDieY, OBJECT_CARRYPUFF, -1, -1);
 
 						}
@@ -1759,8 +1760,8 @@ void cUnit::think_move_air()
                         cellType == TERRAIN_HILL ||
                         cellType == TERRAIN_SPICEHILL)
                     {
-                        int iDieX=(draw_x() + 16 ) + (mapCamera->getX()*32);
-                        int iDieY=(draw_y() + 16 ) + (mapCamera->getY()*32);
+                        int iDieX=(pos_x() + 16 ) + (mapCamera->getViewportStartX());
+                        int iDieY=(pos_y() + 16 ) + (mapCamera->getViewportStartY());
                         PARTICLE_CREATE(iDieX, iDieY, OBJECT_CARRYPUFF, -1, -1);
                     }
                 }

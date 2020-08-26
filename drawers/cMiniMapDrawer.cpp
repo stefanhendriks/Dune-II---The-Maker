@@ -27,12 +27,12 @@ cMiniMapDrawer::~cMiniMapDrawer() {
 
 void cMiniMapDrawer::drawViewPortRectangle() {
 	 // Draw the magic rectangle (viewport)
-    int iWidth = mapCamera->getViewportWidth();
-    int iHeight = mapCamera->getViewportHeight();
+     int iWidth = mapCamera->getViewportWidth();
+     int iHeight = mapCamera->getViewportHeight();
 
 	 iWidth--;
 	 iHeight--;
-	 rect(bmp_screen, getDrawStartX()+(mapCamera->getX()*2), getDrawStartY()+(mapCamera->getY()*2), ((getDrawStartX()+(mapCamera->getX()*2))+iWidth*2)+1, (getDrawStartY()+(mapCamera->getY()*2)+iHeight*2)+1, makecol(255,255,255));
+	 rect(bmp_screen, getDrawStartX(), getDrawStartY(), (getDrawStartX()+iWidth*2)+1, (getDrawStartY()+iHeight*2)+1, makecol(255,0,255));
 }
 
 int cMiniMapDrawer::getDrawStartX() {
