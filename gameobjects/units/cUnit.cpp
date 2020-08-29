@@ -1937,9 +1937,9 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe)
 }
 
 void cUnit::shoot(int iShootCell) {
-    // do timer stuff
-    int iShootX=pos_x();
-    int iShootY=pos_y();
+    // particles are rendered at the center, so do it here as well
+    int iShootX=pos_x() + units[iType].bmp_width / 2;
+    int iShootY=pos_y() + units[iType].bmp_height / 2;
     int bmp_head = convert_angle(iHeadFacing);
 
     if (iType == TANK) {
