@@ -210,11 +210,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
         }
     }
 
-
-
-    if (iType == DEVASTATOR)
-    {
-
+    if (iType == DEVASTATOR) {
 		int iOrgDieX=iDieX;
 		int iOrgDieY=iDieY;
 
@@ -1620,7 +1616,7 @@ void cUnit::think_move_air()
 							int ry = (iCellY - 2) + rnd(5);
 							FIX_BORDER_POS(rx, ry);
 
-							iGoalCell = iCellMake(rx, ry);
+							iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
 
 							iBringTarget = iGoalCell;
 							return;
@@ -1714,7 +1710,7 @@ void cUnit::think_move_air()
 				int ry = (iCellY - 2) + rnd(5);
 				FIX_BORDER_POS(rx, ry);
 
-				iGoalCell = iCellMake(rx, ry);
+				iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
 				return;
 			}
 
@@ -1727,7 +1723,7 @@ void cUnit::think_move_air()
         int rx=rnd(game.map_width);
         int ry=rnd(game.map_height);
 
-        iGoalCell = iCellMake(rx, ry);
+        iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
         return;
     }
 
@@ -2245,7 +2241,7 @@ void cUnit::think_attack()
                         dy -= (dif);
                         dy += rnd(dif*2);
 
-                        iGc = iCellMake(dx, dy);
+                        iGc = iCellMakeWhichCanReturnMinusOne(dx, dy);
                     }
                 }
 
@@ -2373,7 +2369,7 @@ void cUnit::think_attack()
                             iAttackUnit=-1;
                             iAttackStructure=-1;
                             iAction = ACTION_MOVE;
-                            iGoalCell = iCellMake(rx, ry);
+                            iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
                         }
                     }
 
@@ -3373,7 +3369,11 @@ int CREATE_PATH(int iID, int iPathCountUnits)
             for (cy = sy; cy <= ey; cy++)
             {
                 // only check the 'cell' that is NOT the current cell.
-                int cll = iCellMake(cx, cy);
+                int cll = iCellMakeWhichCanReturnMinusOne(cx, cy);
+
+                // skip invalid cell
+                if (cll < 0)
+                    continue;
 
                 // DO NOT CHECK SELF
                 if (cll == iCell)
@@ -3739,7 +3739,7 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID)
             for (int iSY=iStartY; iSY < iEndY; iSY++)
             {
                 // find an empty cell
-                int cll = iCellMake(iSX, iSY);
+                int cll = iCellMakeWhichCanReturnMinusOne(iSX, iSY);
 
                 float dDistance2 = ABS_length(iSX, iSY, ix, iy);
 
@@ -3785,42 +3785,39 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID)
 
 
 
-int CLOSE_SPICE_BLOOM(int iCell)
-{
-	// closest spicebloom
-	if (rnd(100) < 40)
-	{
-	int iDistance=16;
+int CLOSE_SPICE_BLOOM(int iCell) {
 
-	if (iCell < 0)
-	{
-		iDistance=9999;
-		iCell = iCellMake(32,32);
-	}
+    // closest spicebloom
+	if (rnd(100) < 40)	{
+        int iDistance=16;
 
-	int cx, cy;
-	int iBloom=-1;
-	cx = iCellGiveX(iCell);
-	cy = iCellGiveY(iCell);
+        if (iCell < 0) {
+            iDistance=9999;
+            iCell = iCellMakeWhichCanReturnMinusOne(32,32);
+        }
 
-	for (int i=0; i < MAX_CELLS; i++) {
-        int cellType = map.getCellType(i);
-        if (cellType == TERRAIN_BLOOM)
-        {
-            int d = ABS_length(cx, cy, iCellGiveX(i), iCellGiveY(i));
+        int cx, cy;
+        int iBloom=-1;
+        cx = iCellGiveX(iCell);
+        cy = iCellGiveY(iCell);
 
-            if (d < iDistance)
+        for (int i=0; i < MAX_CELLS; i++) {
+            int cellType = map.getCellType(i);
+            if (cellType == TERRAIN_BLOOM)
             {
-                iBloom=i;
-                iDistance=d;
+                int d = ABS_length(cx, cy, iCellGiveX(i), iCellGiveY(i));
+
+                if (d < iDistance)
+                {
+                    iBloom=i;
+                    iDistance=d;
+                }
             }
         }
-    }
 
-	// when finished, return bloom
-	return iBloom;
+        // when finished, return bloom
+        return iBloom;
 	}
-
 
 	int iTargets[10];
 	memset(iTargets, -1, sizeof(iTargets));
@@ -3837,8 +3834,6 @@ int CLOSE_SPICE_BLOOM(int iCell)
 
 	// when finished, return bloom
 	return iTargets[rnd(iT)];
-
-
 }
 
 int UNIT_find_harvest_spot(int id)
@@ -3943,7 +3938,7 @@ void SPAWN_FRIGATE(int iPlr, int iCll)
 	iX++;
 	iY++;
 
-	iCell = iCellMake(iX, iY);
+	iCell = iCellMakeWhichCanReturnMinusOne(iX, iY);
 
 	// step 1
 	int iStartCell = iFindCloseBorderCell(iCell);
@@ -4212,7 +4207,7 @@ int UNIT_FREE_AROUND_MOVE(int iUnit)
 	for (int x = iStartX; x < iEndX; x++)
 		for (int y = iStartY; y < iEndY; y++)
 		{
-			int cll = iCellMake(x, y);
+			int cll = iCellMakeWhichCanReturnMinusOne(x, y);
 
 			if (map.occupied(cll) == false)
             {

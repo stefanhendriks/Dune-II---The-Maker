@@ -67,7 +67,7 @@ int cGameControlsContext::getMouseCellFromScreen(int heightTopBar, int screenY, 
     int mapX = viewportMouseX / TILESIZE_WIDTH_PIXELS;
     int mapY = viewportMouseY / TILESIZE_HEIGHT_PIXELS;
 
-    return cellCalculator->getCell(mapX, mapY);
+    return cellCalculator->getCellWithMapDimensions(mapX, mapY, game.map_width, game.map_height);
 }
 
 void cGameControlsContext::determineToolTip() {

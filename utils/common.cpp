@@ -1329,8 +1329,7 @@ void playMusicByType(int iType) {
 /******************************
  Bullet creation
  ******************************/
-int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstruc)
-{
+int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstruc) {
   int new_id=-1;
 
   for (int i=0; i < MAX_BULLETS; i++)

@@ -18,6 +18,7 @@ cMapUtils::~cMapUtils() {
 
 bool cMapUtils::isCellVisibleForPlayerId(int playerId, int iCell) {
     if (playerId < HUMAN || playerId >= MAX_PLAYERS) return false;
+    if (iCell < 0) return false;
 	return isCellVisible(&player[playerId], iCell);
 }
 
