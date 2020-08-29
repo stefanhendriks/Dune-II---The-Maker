@@ -121,6 +121,15 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                 continue;
 			}
 
+            int cellX = cellCalculator->getX(iCell);
+            int cellY = cellCalculator->getY(iCell);
+            if (cellX == 0 || cellX == (game.map_width-1) ||
+                cellY == 0 || cellY == (game.map_height-1)) {
+                // the outer border is not visible
+                fDrawY += tileHeight;
+                continue;
+            }
+
             tCell *cell = map->getCell(iCell);
 
 			if (cell == nullptr) {
