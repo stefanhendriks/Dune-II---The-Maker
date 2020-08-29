@@ -40,7 +40,12 @@ void cUpgradeBuilder::processUpgrades() {
 	for (int i = 0; i < LIST_MAX; i++) {
 		cListUpgrade * upgrade = upgrades[i];
 		if (upgrade) {
-			upgrade->setTimerProgress(upgrade->getTimerProgress()+1);
+		    int increment = 1;
+		    if (DEBUGGING) {
+		        increment = 11;
+		    }
+
+			upgrade->setTimerProgress(upgrade->getTimerProgress()+increment);
 
 			if (upgrade->getTimerProgress() > 10) {
 				upgrade->setTimerProgress(0);
