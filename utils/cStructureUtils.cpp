@@ -259,8 +259,8 @@ int cStructureUtils::getStructureHeightInPixels(cAbstractStructure * theStructur
 bool cStructureUtils::isStructureOnScreen(cAbstractStructure *structure) {
 	if (!structure) return false;
 
-	int drawX = mapCamera->factorZoomLevel(structure->iDrawX());
-	int drawY = mapCamera->factorZoomLevel(structure->iDrawY());
+	int drawX = structure->iDrawX();
+	int drawY = structure->iDrawY();
 	int width = mapCamera->factorZoomLevel(getStructureWidthInPixels(structure));
 	int height = mapCamera->factorZoomLevel(getStructureHeightInPixels(structure));
 
@@ -270,8 +270,8 @@ bool cStructureUtils::isStructureOnScreen(cAbstractStructure *structure) {
 bool cStructureUtils::isMouseOverStructure(cAbstractStructure *structure) {
 	assert(structure);
 
-	int drawX = mapCamera->factorZoomLevel(structure->iDrawX());
-	int drawY = mapCamera->factorZoomLevel(structure->iDrawY());
+	int drawX = structure->iDrawX();
+	int drawY = structure->iDrawY();
 	int width = mapCamera->factorZoomLevel(getStructureWidthInPixels(structure));
 	int height = mapCamera->factorZoomLevel(getStructureHeightInPixels(structure));
 	rectfill(bmp_screen, drawX, drawY, width, height, makecol(255,255,255));
