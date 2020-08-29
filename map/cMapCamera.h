@@ -32,17 +32,20 @@ class cMapCamera {
 		    if (zoomLevel < 2.0) {
                 zoomLevel += 0.1;
                 calibrate();
+                keepCameraWithinReasonableBounds();
             }
 		}
 		void zoomOut() {
 		    if (zoomLevel > 0.25) {
 		        zoomLevel -= 0.1;
                 calibrate();
+                keepCameraWithinReasonableBounds();
             }
 		}
 		void resetZoom() {
 		    zoomLevel = 1.0f;
 		    calibrate();
+            keepCameraWithinReasonableBounds();
 		}
 
 		void jumpTo(int	theX, int theY);
@@ -72,6 +75,7 @@ class cMapCamera {
 		void thinkInteraction();
 
 		void centerAndJumpViewPortToCell(int cell);
+		void keepCameraWithinReasonableBounds();
 
 		int getZoomedHalfTileSize() const { return halfTile; }
 		float getZoomedTileWidth() const { return tileWidth; }
@@ -93,6 +97,8 @@ class cMapCamera {
 		}
 
     int getCellFromViewportPosition(int x, int y);
+
+		void setViewportPosition(int x, int y);
 
 protected:
 
