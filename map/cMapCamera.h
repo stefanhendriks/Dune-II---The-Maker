@@ -52,8 +52,16 @@ class cMapCamera {
 		void moveTo(int theX, int theY);
 
 		// These methods need to use zoomfactor to properly calculate the position on the map
-		int getAbsMapMouseX() { return mouse_x + viewportStartX; } // <---
-		int getAbsMapMouseY() { return mouse_y + viewportStartY; } // <---
+		int getAbsMapMouseX(int mouseX) {
+            int iMouseX = divideByZoomLevel(mouseX);
+            return iMouseX + getViewportStartX();
+		}
+
+		int getAbsMapMouseY(int mouseY) {
+		    int heightTopBar = 42; // TODO: this should be Y position of window
+            int iMouseY = divideByZoomLevel(mouseY - heightTopBar);
+            return iMouseY + getViewportStartY();
+        }
 
 		int getViewportStartX() { return viewportStartX; }
 		int getViewportStartY() { return viewportStartY; }
