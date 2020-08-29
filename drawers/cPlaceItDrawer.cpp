@@ -76,20 +76,23 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 	// Determine if the structure may be placed or not (true/false)
 	for (int iX=iStartX; iX < iEndX; iX++) {
-		for (int iY=iStartY; iY < iEndY; iY++)
-		{
-			int iCll=iCellMake(iX, iY);
-            int idOfStructureAtCell = map.getCellIdStructuresLayer(iCll);
-            if (idOfStructureAtCell > -1)
-			{
-				int iID = idOfStructureAtCell;
+		for (int iY=iStartY; iY < iEndY; iY++) {
+			int iCll=iCellMakeWhichCanReturnMinusOne(iX, iY);
+			if (iCll < 0) {
+			    bMayPlace = false;
+			} else {
 
-				if (structure[iID]->getOwner() == 0) {
-					bOutOfBorder=false; // connection!
-				} else {
-					bMayPlace=false;
-				}
-			}
+                int idOfStructureAtCell = map.getCellIdStructuresLayer(iCll);
+                if (idOfStructureAtCell > -1) {
+                    int iID = idOfStructureAtCell;
+
+                    if (structure[iID]->getOwner() == 0) {
+                        bOutOfBorder = false; // connection!
+                    } else {
+                        bMayPlace = false;
+                    }
+                }
+            }
 
 			if (map.getCellType(iCll) == TERRAIN_WALL ||
 				map.getCellType(iCll) == TERRAIN_SLAB) {

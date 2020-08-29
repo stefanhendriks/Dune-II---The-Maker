@@ -148,16 +148,34 @@ int cCellCalculator::getCell(int x, int y) {
 	assert(y < MAP_W_MAX);
 
 	// create cell
-	int cell = (y * MAP_W_MAX) + x;
+	int cell = getCellWithMapDimensions(x, y, game.map_width, game.map_height);
 
     // FIXED: Do never give a cell number higher then the max!
-    if (cell >= MAX_CELLS)
-        cell = (MAX_CELLS-1);
+//    if (cell >= MAX_CELLS)
+//        cell = (MAX_CELLS-1);
 
 	assert(cell < MAX_CELLS); // may never be => (will since MAX_CELLS-1 is max in array!)
 	assert(cell > -1); // may never be < 0
 
 	return cell;
+}
+
+/**
+ * This function will return a cell index based on x, y and given map width/height dimensions.
+ * @param x
+ * @param y
+ * @param mapWidth
+ * @param mapHeight
+ * @return
+ */
+int cCellCalculator::getCellWithMapDimensions(int x, int y, int mapWidth, int mapHeight) {
+    // (over the) boundaries result in cell -1
+    if (x < 0) return -1;
+    if (x >= mapWidth) return -1;
+    if (y < 0) return -1;
+    if (y >= mapHeight) return -1;
+
+    return (y * mapWidth) + x;
 }
 
 double cCellCalculator::distance(int x1, int y1, int x2, int y2) {

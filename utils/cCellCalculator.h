@@ -28,6 +28,7 @@ public:
 
 	// get cell from MAP X, Y coordinates
 	int getCell(int x, int y);
+	int getCellWithMapDimensions(int x, int y, int mapWidth, int mapHeight);
 
 	// calculate distance between 2 coordinates:
 	double distance(int x1, int y1, int x2, int y2);

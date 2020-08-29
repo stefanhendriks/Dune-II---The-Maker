@@ -227,7 +227,7 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
 			int xOfStructureCell = cellCalculator->getX(cellOfStructure);
 			int yOfStructureCell = cellCalculator->getY(cellOfStructure);
 
-			int iCell =cellCalculator->getCell(xOfStructureCell + w, yOfStructureCell + h);
+			int iCell = cellCalculator->getCell(xOfStructureCell + w, yOfStructureCell + h);
 
 			map.cellSetIdForLayer(iCell, dimensionId, theStructure->getStructureId());
 		}

@@ -54,8 +54,7 @@ int iCellGiveY(int c)
 
 
 // make cell number out of X and Y value
-int iCellMake(int x, int y)
-{
+int iCellMake(int x, int y) {
     // expensive, creating new object all the time :/
     cCellCalculator cellCalculator(&map);
     return cellCalculator.getCell(x, y);
@@ -69,6 +68,12 @@ int iCellMake(int x, int y)
 //      c = (MAX_CELLS-1);
 //
 //  return c;
+}
+
+int iCellMakeWhichCanReturnMinusOne(int x, int y) {
+    // expensive, creating new object all the time :/
+    cCellCalculator cellCalculator(&map);
+    return cellCalculator.getCellWithMapDimensions(x, y, game.map_width, game.map_height);
 }
 
 // returns in fRadians

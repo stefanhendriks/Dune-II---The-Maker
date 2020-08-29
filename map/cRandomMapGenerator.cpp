@@ -135,20 +135,17 @@ void cRandomMapGenerator::generateRandomMap() {
 	rectfill(bmp_screen, 216, 225, 216+iProgress, 257, makecol(255,0,0));
 	blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
 
-	while (a_spice > 0)
-	{
-	  int iCll=iCellMake(rnd(game.map_width), rnd(game.map_height));
+	while (a_spice > 0)	{
+	  int iCll=iCellMakeWhichCanReturnMinusOne(rnd(game.map_width), rnd(game.map_height));
 	  mapEditor.createField(iCll, TERRAIN_SPICE, 2500);
 	  a_spice--;
 	  // blit on screen
 	  rectfill(bmp_screen, 216, 225, 216+iProgress, 257, makecol(255,0,0));
 	  blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
-
 	}
 
-	while (a_hill > 0)
-	{
-	  int cell = iCellMake(rnd(game.map_width), rnd(game.map_height));
+	while (a_hill > 0)	{
+	  int cell = iCellMakeWhichCanReturnMinusOne(rnd(game.map_width), rnd(game.map_height));
 	  mapEditor.createField(cell, TERRAIN_HILL, 500+rnd(500));
 	  a_hill--;
 	  iProgress+=10;
@@ -178,7 +175,9 @@ void cRandomMapGenerator::generateRandomMap() {
 			rectfill(screen, 216, 225, 216+iProgress, 257, makecol(255,0,0));
 		}
 
-		int cll=iCellMake(x,y);
+		int cll=iCellMakeWhichCanReturnMinusOne(x,y);
+		if (cll < 0) continue;
+
 		int iColor=makecol(194, 125, 60);
 
 		// rock

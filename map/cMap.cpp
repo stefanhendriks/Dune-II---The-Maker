@@ -296,8 +296,8 @@ void cMap::clear_spot(int c, int size, int player) {
             logbook(msg);
             }*/
 
-            int cl = iCellMake(cell_x, cell_y);
-
+            int cl = iCellMakeWhichCanReturnMinusOne(cell_x, cell_y);
+            if (cl < 0) continue;
 
             if (!iVisible[cl][player]) {
 

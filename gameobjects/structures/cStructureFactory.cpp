@@ -415,7 +415,7 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
 	int endCellY = cellY + height;
 	for (int x = cellX; x < endCellX; x++) {
 		for (int y = cellY; y < endCellY; y++) {
-			int cell = cellCalculator->getCell(x, y);
+			int cell = cellCalculator->getCellWithMapDimensions(x, y, game.map_width, game.map_height);
 			mapEditor.createCell(cell, TERRAIN_SLAB, 0);
 		}
 	}

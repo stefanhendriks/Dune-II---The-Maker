@@ -164,5 +164,5 @@ void cMapCamera::thinkInteraction() {
 }
 
 int cMapCamera::getCellFromViewportPosition(int x, int y) {
-    return iCellMake((x / 32), (y / 32));
+    return iCellMakeWhichCanReturnMinusOne((x / 32), (y / 32));
 }

@@ -204,6 +204,14 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
 	}
 
 	if (DEBUGGING) {
+//        int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
+//        int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
+//        cTextDrawer textDrawer = cTextDrawer(bene_font);
+//        char msg[255];
+//        sprintf(msg, "absMouseX=%d, absMouseY=%d, window mouseX = %d, window mouseY = %d", absoluteXCoordinate, absoluteYCoordinate, mouse_x, mouse_y);
+//        logbook(msg);
+//        textDrawer.drawText(0, 100, msg);
+
 //        rect(bmp_screen, startX, startY, startX + mapCamera->getAbsViewportWidth(),
 //             startY + mapCamera->getAbsViewportHeight(), makecol(255, 255, 0));
 
@@ -218,9 +226,12 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
     }
 }
 
-int cMapDrawer::determineWhichShroudTileToDraw(int cll, int iPl) const {
-    int tile;// Visible stuff, now check for not visible stuff. When found, assign the proper border
-// of shroud to it.
+int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
+    if (cll < 0) return -1;
+    if (playerId < HUMAN || playerId >= MAX_PLAYERS) return -1;
+
+    int tile; // Visible stuff, now check for not visible stuff. When found, assign the proper border
+              // of shroud to it.
     int above = CELL_ABOVE(cll);
     int under = CELL_UNDER(cll);
     int left  = CELL_LEFT(cll);
@@ -230,7 +241,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int iPl) const {
     a=u=l=r=true;
 
     if (above > -1)	{
-        if (mapUtils->isCellVisibleForPlayerId(iPl, above)) {
+        if (mapUtils->isCellVisibleForPlayerId(playerId, above)) {
             a = false;  // visible
         }
     } else {
@@ -238,7 +249,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int iPl) const {
     }
 
     if (under > -1) {
-        if (mapUtils->isCellVisibleForPlayerId(iPl, under)) {
+        if (mapUtils->isCellVisibleForPlayerId(playerId, under)) {
             u = false;  // visible
         }
     } else {
@@ -246,7 +257,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int iPl) const {
     }
 
     if (left > -1) {
-        if (mapUtils->isCellVisibleForPlayerId(iPl, left)) {
+        if (mapUtils->isCellVisibleForPlayerId(playerId, left)) {
             l = false;  // visible
         }
     } else {
@@ -254,7 +265,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int iPl) const {
     }
 
     if (right > -1) {
-        if (mapUtils->isCellVisibleForPlayerId(iPl, right)) {
+        if (mapUtils->isCellVisibleForPlayerId(playerId, right)) {
             r = false;  // visible
         }
     } else {

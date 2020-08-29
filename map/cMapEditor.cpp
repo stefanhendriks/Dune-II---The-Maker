@@ -21,6 +21,8 @@ void cMapEditor::clearMap(int terrainType) {
 }
 
 void cMapEditor::createCell(int cell, int terrainType, int tile) {
+    if (cell < 0) return; // do nothing
+
 	assert(cell > -1);
 	assert(cell < MAX_CELLS);
 	assert(terrainType >= TERRAIN_BLOOM);
@@ -413,7 +415,9 @@ void cMapEditor::removeSingleRockSpots() {
 	for (int x=startX; x < endX; x++) {
 		for (int y=startY; y< endY; y++)
 		{
-			int cll = cellCalculator->getCell(x, y);
+			int cll = cellCalculator->getCellWithMapDimensions(x, y, game.map_width, game.map_height);
+			if (cll < 0) continue;
+
 			int terrainType = map.getCellType(cll);
 
 			// now count how many rock is around it
