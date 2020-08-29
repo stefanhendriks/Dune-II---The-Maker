@@ -68,7 +68,7 @@ int cParticle::draw_x()
     int absoluteXCoordinateOnMap = x;
     int absoluteXCoordinateMapCamera = mapCamera->getViewportStartX();
     int relativeViewportX = absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera;
-    int bmpOffset = (TILESIZE_WIDTH_PIXELS - iWidth) / 2;
+    int bmpOffset = (iWidth/2) * -1;
     int windowDrawX = mapCamera->factorZoomLevel(relativeViewportX + bmpOffset);
     return windowDrawX;
 }
@@ -79,8 +79,9 @@ int cParticle::draw_y()
     int absoluteYCoordinateOnMap = y;
     int absoluteYCoordinateMapCamera = mapCamera->getViewportStartY();
     int relativeViewportY = absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera;
-    int bmpOffset = (TILESIZE_HEIGHT_PIXELS - iHeight) / 2;
-    return mapCamera->factorZoomLevel(relativeViewportY + bmpOffset);
+    int heightOfTopBar = 42;
+    int bmpOffset = (iHeight/2) * -1;
+    return heightOfTopBar + mapCamera->factorZoomLevel(relativeViewportY + bmpOffset);
 }
 
 // draw
@@ -126,23 +127,19 @@ void cParticle::draw() {
     destroy_bitmap(temp);
 
     // drawX and drawY = is the draw coordinates but centered within cell (iWidth/Height are the cell size?)
-    int drawX = dx; // - mapCamera->factorZoomLevel(iWidth);
-    int drawY = dy; // - mapCamera->factorZoomLevel(iHeight);
+    int drawX = dx;
+    int drawY = dy;
 
-    if (iType == OBJECT_SIEGESHOOT) {
+    if (iType == OBJECT_SIEGESHOOT || iType == MOVE_INDICATOR) {
         char msg[255];
         // iWidth = 64, iHeight = 64
         sprintf(msg, "Particle, drawX = [%d], drawY = [%d], dx=[%d], dy=[%d]", drawX, drawY, dx, dy);
         logbook(msg);
     }
 
-
-    if (iAlpha > -1)
-	{
-		set_trans_blender(0,0,0, iAlpha);
-
-		if (iType != OBJECT_BOOM01 && iType != OBJECT_BOOM02 && iType != OBJECT_BOOM03)
-        {
+    if (iAlpha > -1) {
+		if (iType != OBJECT_BOOM01 && iType != OBJECT_BOOM02 && iType != OBJECT_BOOM03) {
+            set_trans_blender(0,0,0, iAlpha);
 			draw_trans_sprite(bmp_screen, stretched, drawX, drawY);
 
 			if (iType == EXPLOSION_ROCKET || iType == EXPLOSION_ROCKET_SMALL)
@@ -151,12 +148,10 @@ void cParticle::draw() {
                 fblend_add((BITMAP *)gfxdata[OBJECT_BOOM03].dat, bmp_screen,  dx-(half*2), dy-(half*2), (iAlpha/2));
             }
 
-        }
-		else {
+        } else {
             fblend_add(stretched, bmp_screen, drawX, drawY, iAlpha);
         }
-	}
-	else {
+	} else {
         draw_sprite(bmp_screen, stretched, drawX, drawY);
     }
 
