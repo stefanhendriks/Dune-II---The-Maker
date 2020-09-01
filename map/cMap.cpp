@@ -18,7 +18,7 @@
 
 cMap::cMap() {
 	TIMER_scroll=0;
-	iScrollSpeed=10;
+	iScrollSpeed=1;
 	cellCalculator = NULL;
 }
 
@@ -57,7 +57,7 @@ void cMap::init()
 	}
 
 	TIMER_scroll=0;
-	iScrollSpeed=10;
+	iScrollSpeed=1;
 
 	delete mapUtils;
 }

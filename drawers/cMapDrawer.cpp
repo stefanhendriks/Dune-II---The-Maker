@@ -33,28 +33,30 @@ void cMapDrawer::drawShroud(int startX, int startY) {
 
     float tileWidth = mapCamera->getZoomedTileWidth();
     float tileHeight = mapCamera->getZoomedTileHeight();
+
     int iTileHeight = (tileHeight + 1);
     int iTileWidth = (tileWidth + 1);
 
     int colorDepthScreen = bitmap_color_depth(bmp_screen);
     BITMAP *temp = create_bitmap_ex(colorDepthScreen, iTileWidth, iTileHeight);
 
-	float fDrawX=(float)startX;
-	float fDrawY=(float)startY;
-
     int iPl = player.getId();
 
-    int iCell=-1;
-
-
-    for (int viewportX = camera->getViewportStartX(); viewportX < camera->getViewportEndX(); viewportX+= 32) {
-        fDrawY=(float)startY;
+    for (int viewportX = camera->getViewportStartX(); viewportX < camera->getViewportEndX() + 32; viewportX+= 32) {
 
         // new row
-        for (int viewportY= camera->getViewportStartY(); viewportY < camera->getViewportEndY(); viewportY+= 32) {
-            iCell = mapCamera->getCellFromViewportPosition(viewportX, viewportY);
+        for (int viewportY= camera->getViewportStartY(); viewportY < camera->getViewportEndY() + 32; viewportY+= 32) {
+            int iCell = mapCamera->getCellFromViewportPosition(viewportX, viewportY);
 
-			if (DEBUGGING && key[KEY_D] && key[KEY_TAB]) {
+            if (iCell < 0) continue;
+
+            int absoluteXCoordinateOnMap = cellCalculator->getAbsoluteX(iCell);
+            float fDrawX = mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
+
+            int absoluteYCoordinateOnMap = cellCalculator->getAbsoluteY(iCell);
+            float fDrawY = mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
+
+            if (DEBUGGING && key[KEY_D] && key[KEY_TAB]) {
 				if (mapUtils->isCellVisibleForPlayerId(iPl, iCell)) {
 					// do nothing
 				} else {
@@ -80,9 +82,7 @@ void cMapDrawer::drawShroud(int startX, int startY) {
                       masked_stretch_blit((BITMAP *)gfxdata[SHROUD].dat, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY, iTileWidth, iTileHeight);
 				  }
 			  }
-			fDrawY+=tileHeight;
 		}
-		fDrawX+=tileWidth;
 	}
 
 	destroy_bitmap(temp);
@@ -96,46 +96,45 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
 
     float tileWidth = mapCamera->getZoomedTileWidth();
     float tileHeight = mapCamera->getZoomedTileHeight();
+
     int iTileHeight = (tileHeight + 1);
     int iTileWidth = (tileWidth + 1);
-
-	float fDrawX=(float)startX;
-	float fDrawY=(float)startY;
-
-	int iCell=-1;
 
 	int iPl = player.getId();
     int mouseCell = player.getGameControlsContext()->getMouseCell();
 
 	// draw vertical rows..
-	for (int viewportX = camera->getViewportStartX(); viewportX < camera->getViewportEndX(); viewportX+= 32) {
-        fDrawY=(float)startY;
+	for (int viewportX = camera->getViewportStartX(); viewportX < camera->getViewportEndX() + 32; viewportX+= 32) {
 
 		// new row
-		for (int viewportY= camera->getViewportStartY(); viewportY < camera->getViewportEndY(); viewportY+= 32) {
-		    iCell = mapCamera->getCellFromViewportPosition(viewportX, viewportY);
+		for (int viewportY= camera->getViewportStartY(); viewportY < camera->getViewportEndY() + 32; viewportY+= 32) {
+		    int iCell = mapCamera->getCellFromViewportPosition(viewportX, viewportY);
 
 			// not visible for player, so do not draw
 			if (!mapUtils->isCellVisibleForPlayerId(iPl, iCell)) {
-                fDrawY += tileHeight;
                 continue;
 			}
 
             int cellX = cellCalculator->getX(iCell);
             int cellY = cellCalculator->getY(iCell);
+
+            // skip outer border cells
             if (cellX == 0 || cellX == (game.map_width-1) ||
                 cellY == 0 || cellY == (game.map_height-1)) {
-                // the outer border is not visible
-                fDrawY += tileHeight;
                 continue;
             }
 
             tCell *cell = map->getCell(iCell);
 
 			if (cell == nullptr) {
-                fDrawY += tileHeight;
                 continue;
 			}
+
+			int absoluteXCoordinateOnMap = cellCalculator->getAbsoluteX(iCell);
+            float fDrawX = mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
+
+            int absoluteYCoordinateOnMap = cellCalculator->getAbsoluteY(iCell);
+            float fDrawY = mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
 
             // Draw terrain
             blit((BITMAP *) gfxdata[cell->type].dat,
@@ -157,8 +156,6 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                             32);
             }
 
-            // losing precision, but adding 1 pixel to make up for it to avoid too small tiles
-            // if a tile is a pixel too wide, it is overwritten in the next row drawing
             int iDrawX = round(fDrawX);
             int iDrawY = round(fDrawY);
             stretch_blit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
@@ -205,11 +202,7 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                 }
 
             }
-
-            // increase height
-            fDrawY += tileHeight;
 		}
-        fDrawX+=tileWidth;
 	}
 
 	if (DEBUGGING) {
