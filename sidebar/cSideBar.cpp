@@ -313,8 +313,6 @@ void cSideBar::thinkMouseZScrolling() {
 	   mapCamera->zoomOut();
 	}
 
-
-
 	if (cMouse::isMouseScrolledDown()) {
 	   list->scrollDown();
 	   mapCamera->zoomIn();

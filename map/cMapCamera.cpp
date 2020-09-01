@@ -33,6 +33,63 @@ cMapCamera::~cMapCamera() {
 	delete cellCalculator;
 }
 
+void cMapCamera::zoomIn() {
+    if (zoomLevel < 2.0) {
+        zoomLevel += 0.1;
+
+        int oldViewportWidth = viewportWidth;
+        int oldViewportHeight = viewportHeight;
+
+        calibrate();
+
+        int diffViewportWidth = oldViewportWidth - viewportWidth;
+        int diffViewportHeight = oldViewportHeight - viewportHeight;
+
+        int topBarHeight = 42;
+
+        float nMouseX = (float)mouse_x/windowWidth;
+        float nMouseY = (float)(mouse_y - topBarHeight)/windowHeight;
+
+        float newX = diffViewportWidth * nMouseX;
+        int fixedNewX = (int)(newX/32)*32;
+        viewportStartX += fixedNewX;
+
+        float newY = diffViewportHeight*nMouseY;
+        int fixedNewY = (int)(newY/32)*32;
+        viewportStartY += fixedNewY;
+
+        keepCameraWithinReasonableBounds();
+    }
+}
+
+void cMapCamera::zoomOut()  {
+    if (zoomLevel > 0.25) {
+        zoomLevel -= 0.1;
+        int oldViewportWidth = viewportWidth;
+        int oldViewportHeight = viewportHeight;
+
+        calibrate();
+
+        int diffViewportWidth = oldViewportWidth - viewportWidth;
+        int diffViewportHeight = oldViewportHeight - viewportHeight;
+
+        int topBarHeight = 42;
+
+        float nMouseX = (float)mouse_x/windowWidth;
+        float nMouseY = (float)(mouse_y - topBarHeight)/windowHeight;
+
+        float newX = diffViewportWidth * nMouseX;
+        int fixedNewX = (int)(newX/32)*32;
+        viewportStartX += fixedNewX;
+
+        float newY = diffViewportHeight*nMouseY;
+        int fixedNewY = (int)(newY/32)*32;
+        viewportStartY += fixedNewY;
+
+        keepCameraWithinReasonableBounds();
+    }
+}
+
 void cMapCamera::calibrate() {
     tileHeight = factorZoomLevel(TILESIZE_WIDTH_PIXELS);
     tileWidth = factorZoomLevel(TILESIZE_HEIGHT_PIXELS);
