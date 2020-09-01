@@ -13,19 +13,16 @@ cMapCamera::cMapCamera() {
 	zoomLevel = 1.0f;
 
     int widthOfSidebar = 160;
-    int heightOfOptions = 42;
+    heightOfTopBar = 42;
 
     windowWidth=game.screen_x-widthOfSidebar;
-    windowHeight=game.screen_y-heightOfOptions;
+    windowHeight= game.screen_y - heightOfTopBar;
 
     viewportWidth=windowWidth;
     viewportHeight=windowHeight;
 
     calibrate();
 
-	char msg[255];
-	sprintf(msg, "Camera initialized. Viewport width is [%d], height [%d]. Position [%d,%d]", viewportWidth, viewportHeight, viewportStartX, viewportStartY);
-	logbook(msg);
 	cellCalculator = new cCellCalculator(&map);
 }
 
@@ -34,7 +31,7 @@ cMapCamera::~cMapCamera() {
 }
 
 void cMapCamera::zoomIn() {
-    if (zoomLevel < 2.0) {
+    if (zoomLevel < 4.0) {
         zoomLevel += 0.1;
         adjustViewport(mouse_x, mouse_y);
     }
@@ -49,18 +46,15 @@ void cMapCamera::adjustViewport(float screenX, float screenY) {
     int diffViewportWidth = oldViewportWidth - viewportWidth;
     int diffViewportHeight = oldViewportHeight - viewportHeight;
 
-    int topBarHeight = 42;
-
     float nMouseX = screenX / windowWidth;
-    float nMouseY = (screenY - topBarHeight) / windowHeight;
+    float nMouseY = (screenY - heightOfTopBar) / windowHeight;
 
-    float newX = diffViewportWidth * nMouseX;
-    int fixedNewX = (int)(newX/32)*32;
-    viewportStartX += fixedNewX;
+    viewportStartX += diffViewportWidth * nMouseX;
+    viewportStartY += diffViewportHeight * nMouseY;
 
-    float newY = diffViewportHeight*nMouseY;
-    int fixedNewY = (int)(newY/32)*32;
-    viewportStartY += fixedNewY;
+    char msg[255];
+    sprintf(msg, "screenX=%f, screenY=%f, nMouseX=%f, nMouseY=%f", screenX, screenY, nMouseX, nMouseY);
+    logbook(msg);
 
     keepCameraWithinReasonableBounds();
 }
@@ -175,7 +169,7 @@ void cMapCamera::thinkInteraction() {
 	// thinking for map (scrolling that is)
 	if (mouse_x <= 1 || key[KEY_LEFT]) {
 		if (viewportStartX > -halfViewportWidth) {
-            setViewportPosition(viewportStartX -= TILESIZE_HEIGHT_PIXELS, viewportStartY);
+            setViewportPosition(viewportStartX -= 1, viewportStartY);
 			mouse_tile = MOUSE_LEFT;
 		}
 	}
@@ -183,21 +177,21 @@ void cMapCamera::thinkInteraction() {
 
 	if (mouse_y <= 1 || key[KEY_UP]) {
 		if (viewportStartY > -halfViewportHeight) {
-            setViewportPosition(viewportStartX, viewportStartY -= TILESIZE_HEIGHT_PIXELS);
+            setViewportPosition(viewportStartX, viewportStartY -= 1);
 			mouse_tile = MOUSE_UP;
 		}
 	}
 
 	if (mouse_x >= (game.screen_x-2) || key[KEY_RIGHT]) {
 		if (getViewportEndX() < ((game.map_width*TILESIZE_WIDTH_PIXELS)+halfViewportWidth)) {
-            setViewportPosition(viewportStartX += TILESIZE_WIDTH_PIXELS, viewportStartY);
+            setViewportPosition(viewportStartX += 1, viewportStartY);
 			mouse_tile = MOUSE_RIGHT;
 		}
 	}
 
 	if (mouse_y >= (game.screen_y-2) || key[KEY_DOWN]) {
 		if ((getViewportEndY()) < ((game.map_height*TILESIZE_HEIGHT_PIXELS)+halfViewportHeight)) {
-            setViewportPosition(viewportStartX, viewportStartY += TILESIZE_HEIGHT_PIXELS);
+            setViewportPosition(viewportStartX, viewportStartY += 1);
 			mouse_tile = MOUSE_DOWN;
 		}
 	}

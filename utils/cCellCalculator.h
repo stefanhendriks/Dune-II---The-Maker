@@ -24,6 +24,14 @@ public:
 	int getX(int cell);
 	int getY(int cell);
 
+	int getAbsoluteX(int cell) {
+	    return getX(cell) * 32;
+	}
+
+	int getAbsoluteY(int cell) {
+	    return getY(cell) * 32;
+	}
+
 	int getCellWithMapBorders(int x, int y);
 
 	// get cell from MAP X, Y coordinates

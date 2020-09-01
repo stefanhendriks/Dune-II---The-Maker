@@ -41,6 +41,14 @@ class cMapCamera {
 		void jumpTo(int	theX, int theY);
 		void moveTo(int theX, int theY);
 
+		int getWindowXPosition(int absoluteXPosition) {
+            return factorZoomLevel(absoluteXPosition - viewportStartX);
+		}
+
+		int getWindowYPosition(int absoluteYPosition) {
+            return factorZoomLevel(absoluteYPosition - viewportStartY) + heightOfTopBar;
+		}
+
 		// These methods need to use zoomfactor to properly calculate the position on the map
 		int getAbsMapMouseX(int mouseX) {
             int iMouseX = divideByZoomLevel(mouseX);
@@ -48,8 +56,7 @@ class cMapCamera {
 		}
 
 		int getAbsMapMouseY(int mouseY) {
-		    int heightTopBar = 42; // TODO: this should be Y position of window
-            int iMouseY = divideByZoomLevel(mouseY - heightTopBar);
+            int iMouseY = divideByZoomLevel(mouseY - heightOfTopBar);
             return iMouseY + getViewportStartY();
         }
 
@@ -99,6 +106,7 @@ protected:
         int viewportWidth;
         int viewportHeight;
 
+        int heightOfTopBar;
 		int windowWidth;
 		int windowHeight;
 
