@@ -28,20 +28,10 @@ class cMapCamera {
 
 		void think();
 
-		void zoomIn() {
-		    if (zoomLevel < 2.0) {
-                zoomLevel += 0.1;
-                calibrate();
-                keepCameraWithinReasonableBounds();
-            }
-		}
-		void zoomOut() {
-		    if (zoomLevel > 0.25) {
-		        zoomLevel -= 0.1;
-                calibrate();
-                keepCameraWithinReasonableBounds();
-            }
-		}
+		void zoomIn();
+
+		void zoomOut();
+
 		void resetZoom() {
 		    zoomLevel = 1.0f;
 		    calibrate();
