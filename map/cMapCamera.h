@@ -118,6 +118,8 @@ protected:
         int getMapXPositionFromCell(int cell);
 
         int getMapYPositionFromCell(int cell);
+
+    void adjustViewport(float screenX, float screenY);
 };
 
 #endif /* CMAPCAMERA_H_ */
