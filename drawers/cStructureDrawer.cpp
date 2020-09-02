@@ -333,9 +333,7 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure) {
     int r = (1.1 - healthNormalized) * 255;
     int g = healthNormalized * 255;
 
-	if (g > 255)
-		g = 255;
-	if (r < 0) r= 0;
+    if (r > 255) r = 255;
 
 	// shadow
    // rectfill(bmp_screen, draw_x+2, draw_y+2, draw_x + width_x + 2, draw_y + height_y + 2, makecol(0,0,0));
