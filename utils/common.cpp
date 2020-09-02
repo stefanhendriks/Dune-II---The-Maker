@@ -1079,16 +1079,29 @@ float health_bar(float max_w, int i, int w) {
   return (health * max_w);
 }
 
+/**
+ * Given value v, and a MIN and MAX. Make sure v is between MIN and MAX. Ie, if v < MIN, it returns MIN. if v > MAX
+ * it returns MAX. Else returns v.
+ * @param value
+ * @param min
+ * @param max
+ * @return
+ */
+int keepBetween(int value, int min, int max) {
+    if (value < min) return min;
+    if (value > max) return max;
+    return value;
+}
+
 
 /******************************
  Unit health-bar calculation, returns amount of pictures
  ******************************/
-float health_unit(int i, float w) {
+float health_unit(int i, float widthInPixels) {
   float flHP   = unit[i].iHitPoints;
   float flMAX  = units[unit[i].iType].hp;
   float health = (float)(flHP / flMAX);
-
-  return (health*w);
+  return (health * widthInPixels);
 }
 
 

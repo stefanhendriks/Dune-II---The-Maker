@@ -14,7 +14,7 @@
 
 using namespace std;
 
-bool bDoDebug = false;
+bool bDoDebug = true;
 int	iRest = 1;	// default rest value
 
 // Server/Client system
@@ -77,6 +77,11 @@ int mouse_co_x1;      // coordinates
 int mouse_co_y1;      // of
 int mouse_co_x2;      // the
 int mouse_co_y2;      // mouse border
+
+int mouse_mv_x1;
+int mouse_mv_y1;
+int mouse_mv_x2;
+int mouse_mv_y2;
 
 int mouse_status;     // status of the mouse (see main.h)
 int mouse_tile;       // mouse picture in gfxdata

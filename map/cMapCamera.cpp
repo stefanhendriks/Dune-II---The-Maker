@@ -52,11 +52,7 @@ void cMapCamera::adjustViewport(float screenX, float screenY) {
     viewportStartX += diffViewportWidth * nMouseX;
     viewportStartY += diffViewportHeight * nMouseY;
 
-    char msg[255];
-    sprintf(msg, "screenX=%f, screenY=%f, nMouseX=%f, nMouseY=%f", screenX, screenY, nMouseX, nMouseY);
-    logbook(msg);
-
-    keepCameraWithinReasonableBounds();
+    keepViewportWithinReasonableBounds();
 }
 
 void cMapCamera::zoomOut()  {
@@ -85,7 +81,7 @@ int cMapCamera::getMapYPositionFromCell(int cell) {
     return cellCalculator->getY(cell) * 32;
 }
 
-void cMapCamera::keepCameraWithinReasonableBounds() {
+void cMapCamera::keepViewportWithinReasonableBounds() {
     int halfViewportWidth = viewportWidth / 2;
     int halfViewportHeight = viewportHeight / 2;
 
@@ -132,7 +128,7 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell) {
 
     calibrate();
 
-    keepCameraWithinReasonableBounds();
+    keepViewportWithinReasonableBounds();
 }
 
 void cMapCamera::think() {
@@ -154,12 +150,42 @@ void cMapCamera::jumpTo(int theX, int theY) {
 
 void cMapCamera::setViewportPosition(int x, int y) {
     jumpTo(x, y);
-    keepCameraWithinReasonableBounds();
+    keepViewportWithinReasonableBounds();
 }
 
 void cMapCamera::thinkInteraction() {
     // Mouse is 'dragging' (border select) so do not do anything
     if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
+        return;
+    }
+
+    // mouse is 'moving by pressing right mouse button', this supersedes behavior with borders
+    if (mouse_mv_x1 > -1 && mouse_mv_y1 > -1 &&
+        mouse_mv_x2 > -1 && mouse_mv_y2 > -1) {
+
+        // difference in pixels (- means up/left, + means down/right)
+        int diffX = mouse_mv_x2 - mouse_mv_x1;
+        int diffY = mouse_mv_y2 - mouse_mv_y1;
+
+        // now calculate the speed in which we want to do this, the further
+        // away (greater distance) the faster.
+        float factorX = (float)abs(diffX) / (windowWidth/2);
+        float factorY = (float)abs(diffY) / (windowHeight/2);
+
+        // now we know factor, we only want to move so fast in pixels, so clamp/keep the diffX/Y between sane
+        // values. If we don't do this, the scrolling is too fast. Also take zoomLevel into account so when we
+        // zoom in, it won't go faster. And if we have zoomed out, it will be faster, but relatively the same speed as
+        // zoom factor 1.0
+        diffX = divideByZoomLevel(keepBetween(diffX, -24, 24));
+        diffY = divideByZoomLevel(keepBetween(diffY, -24, 24));
+
+        float resultX = diffX * factorX;
+        float resultY = diffY * factorY;
+
+        viewportStartX += resultX;
+        viewportStartY += resultY;
+
+        keepViewportWithinReasonableBounds();
         return;
     }
 

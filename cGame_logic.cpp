@@ -2537,11 +2537,15 @@ bool cGame::setupGame() {
 		logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Fullscreen mode");
 	}
 
-
 	mouse_co_x1 = -1;      // coordinates
 	mouse_co_y1 = -1;      // of
 	mouse_co_x2 = -1;      // the
 	mouse_co_y2 = -1;      // mouse border
+
+	mouse_mv_x1 = -1;
+	mouse_mv_y1 = -1;
+	mouse_mv_x2 = -1;
+	mouse_mv_y2 = -1;
 
 	// TODO: load eventual game settings (resolution, etc)
 
@@ -2919,7 +2923,7 @@ bool cGame::setupGame() {
 
 	playMusicByType(MUSIC_MENU);
 
-	// all has installed well. Lets rock and role.
+	// all has installed well. Lets rock and roll.
 	return true;
 
 }

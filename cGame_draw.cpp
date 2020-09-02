@@ -253,134 +253,155 @@ void cGame::combat_mouse()
 		// keep updating the second coordinates and create a 'border' (to select units with)
 		// this way.
 
-		// keep the mouse pressed ;)
+		// in the second frame, when left mouse button is still pressed we will assign second coordinates when
+		// difference is great enough
 		if (mouse_co_x1 > -1 && mouse_co_y1 > -1 ) {
-			if (abs(mouse_x-mouse_co_x1) > 4 && abs(mouse_y-mouse_co_y1) > 4) {
-			  mouse_co_x2 = mouse_x;
-			  mouse_co_y2 = mouse_y;
+            if (abs(mouse_x - mouse_co_x1) > 4 &&
+                abs(mouse_y - mouse_co_y1) > 4) {
 
-			  rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2, makecol(game.fade_select, game.fade_select, game.fade_select));
-			}
+                // assign 2nd coordinates
+                mouse_co_x2 = mouse_x;
+                mouse_co_y2 = mouse_y;
 
-			// Note that we have to fix up the coordinates when checking 'within border'
-			// for units (when X2 < X1 for example!)
+                // and draw the selection box
+                rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2,
+                     makecol(game.fade_select, game.fade_select, game.fade_select));
+            }
+
+            // Note that we have to fix up the coordinates when checking 'within border'
+            // for units (when X2 < X1 for example!)
 		} else if (mc > -1) {
+		    // no first coordinates set, so do that here.
 			mouse_co_x1 = mouse_x;
 			mouse_co_y1 = mouse_y;
 		}
 	} else {
-		 if (mouse_co_x1 > -1 && mouse_co_y1 > -1 &&
-                mouse_co_x2 != mouse_co_x1 && mouse_co_y2 != mouse_co_y1 &&
-                mouse_co_x2 > -1 && mouse_co_y2 > -1)
-            {
-                mouse_status = MOUSE_STATE_NORMAL;
+        // no left mouse button pressed, check if we had the co1/co2 coordinates filled in
+        // if so, try to select units within that box.
+        if (mouse_co_x1 > -1 && mouse_co_y1 > -1 &&
+            mouse_co_x2 != mouse_co_x1 && mouse_co_y2 != mouse_co_y1 &&
+            mouse_co_x2 > -1 && mouse_co_y2 > -1) {
+            mouse_status = MOUSE_STATE_NORMAL;
 
-                int min_x, min_y;
-                int max_x, max_y;
+            int min_x, min_y;
+            int max_x, max_y;
 
-                // sort out borders:
-                if (mouse_co_x1 < mouse_co_x2)
-                {
-                    min_x = mouse_co_x1;
-                    max_x = mouse_co_x2;
-                }
-                else
-                {
-                    max_x = mouse_co_x1;
-                    min_x = mouse_co_x2;
-                }
+            // sort out borders:
+            if (mouse_co_x1 < mouse_co_x2) {
+                min_x = mouse_co_x1;
+                max_x = mouse_co_x2;
+            } else {
+                max_x = mouse_co_x1;
+                min_x = mouse_co_x2;
+            }
 
-                // Y coordinates
-                if (mouse_co_y1 < mouse_co_y2)
-                {
-                    min_y = mouse_co_y1;
-                    max_y = mouse_co_y2;
-                }
-                else
-                {
-                    max_y = mouse_co_y1;
-                    min_y = mouse_co_y2;
-                }
+            // Y coordinates
+            if (mouse_co_y1 < mouse_co_y2) {
+                min_y = mouse_co_y1;
+                max_y = mouse_co_y2;
+            } else {
+                max_y = mouse_co_y1;
+                min_y = mouse_co_y2;
+            }
 
-              //  char msg[256];
-              //  sprintf(msg, "MINX=%d, MAXX=%d, MINY=%d, MAXY=%d", min_x, min_y, max_x, max_y);
-              //  logbook(msg);
+            //  char msg[256];
+            //  sprintf(msg, "MINX=%d, MAXX=%d, MINY=%d, MAXY=%d", min_x, min_y, max_x, max_y);
+            //  logbook(msg);
 
-                // Now do it!
-           // deselect all units
-         UNIT_deselect_all();
+            // Now do it!
+            // deselect all units
+            UNIT_deselect_all();
 
-         bool bPlayRep=false;
-         bool bPlayInf=false;
+            bool bPlayRep = false;
+            bool bPlayInf = false;
 
-                for (int i=0 ; i < MAX_UNITS; i++)
-                {
-                    if (unit[i].isValid()) {
-                        if (unit[i].iPlayer == 0)
-                        {
+            for (int i = 0; i < MAX_UNITS; i++) {
+                if (unit[i].isValid()) {
+                    if (unit[i].iPlayer == 0) {
 
-							// do not select airborn units
-							if (units[unit[i].iType].airborn) {
-								// always deselect unit:
-								unit[i].bSelected = false;
-								continue;
-							}
+                        // do not select airborn units
+                        if (units[unit[i].iType].airborn) {
+                            // always deselect unit:
+                            unit[i].bSelected = false;
+                            continue;
+                        }
 
-                            // now check X and Y coordinates (center of unit now)
-                            if (((unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) >= min_x &&
-                            	 (unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) <= max_x) &&
-                                 (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2 >= min_y &&
-                                 (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2) <= max_y) )
-                            {
-                                // It is in the borders, select it
-                                unit[i].bSelected = true;
+                        // now check X and Y coordinates (center of unit now)
+                        if (((unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) >= min_x &&
+                             (unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) <= max_x) &&
+                            (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2 >= min_y &&
+                             (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2) <= max_y)) {
+                            // It is in the borders, select it
+                            unit[i].bSelected = true;
 
-								if (units[unit[i].iType].infantry) {
-                                    bPlayInf=true;
-								} else {
-                                    bPlayRep=true;
-								}
-
+                            if (units[unit[i].iType].infantry) {
+                                bPlayInf = true;
+                            } else {
+                                bPlayRep = true;
                             }
-
 
                         }
                     }
                 }
+            }
 
-                if (bPlayInf || bPlayRep)
-                {
+            if (bPlayInf || bPlayRep) {
 
-                   if (bPlayRep)
-                       play_sound_id(SOUND_REPORTING, -1);
+                if (bPlayRep)
+                    play_sound_id(SOUND_REPORTING, -1);
 
-                   if (bPlayInf)
-                       play_sound_id(SOUND_YESSIR, -1);
+                if (bPlayInf)
+                    play_sound_id(SOUND_YESSIR, -1);
 
-                   bOrderingUnits=true;
-
-                }
+                bOrderingUnits = true;
 
             }
 
+        }
 
-		mouse_co_x1=-1;
-		mouse_co_y1=-1;
-		mouse_co_x2=-1;
-		mouse_co_y2=-1;
+
+        mouse_co_x1 = -1;
+        mouse_co_y1 = -1;
+        mouse_co_x2 = -1;
+        mouse_co_y2 = -1;
 	}
 
+	if (MOUSE_BTN_RIGHT()) {
+        if (mouse_mv_x1 < 0 || mouse_mv_y1 < 0) {
+            mouse_mv_x1 = mouse_x;
+            mouse_mv_y1 = mouse_y;
+        } else {
+            // mouse mv 1st coordinates filled
+            // when mouse is deviating from this coordinate, draw a line
+
+            if (abs(mouse_x - mouse_mv_x1) > 0 &&
+                abs(mouse_y - mouse_mv_y1) > 0) {
+
+                // assign 2nd coordinates
+                mouse_mv_x2 = mouse_x;
+                mouse_mv_y2 = mouse_y;
+
+                // draw a line
+                line(bmp_screen, mouse_mv_x1, mouse_mv_y1, mouse_mv_x2, mouse_mv_y2,
+                     makecol(game.fade_select, game.fade_select, game.fade_select));
+            }
+        }
+	} else {
+        mouse_mv_x1 = -1;
+        mouse_mv_y1 = -1;
+        mouse_mv_x2 = -1;
+        mouse_mv_y2 = -1;
+    }
 
 	} // NOT PLACING STUFF
 
+	// placing stuff!?
 	if (bOrderingUnits) {
 		game.selected_structure = -1;
 	}
 
-	if (context->isMouseOverStructure())
-	{
-		if (key[KEY_P])
-		{
+	if (context->isMouseOverStructure()) {
+		if (key[KEY_P])	{
 			int iStr=context->getIdOfStructureWhereMouseHovers();
 
 			if (structure[iStr]->getOwner() == 0)
@@ -397,8 +418,7 @@ void cGame::combat_mouse()
 		}
 
         // REPAIR
-        if (key[KEY_R] && !bOrderingUnits)
-        {
+        if (key[KEY_R] && !bOrderingUnits) {
         	int structureId = context->getIdOfStructureWhereMouseHovers();
 
             if (structure[structureId]->getOwner() == 0 &&

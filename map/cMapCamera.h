@@ -35,7 +35,7 @@ class cMapCamera {
 		void resetZoom() {
 		    zoomLevel = 1.0f;
 		    calibrate();
-            keepCameraWithinReasonableBounds();
+            keepViewportWithinReasonableBounds();
 		}
 
 		void jumpTo(int	theX, int theY);
@@ -72,7 +72,7 @@ class cMapCamera {
 		void thinkInteraction();
 
 		void centerAndJumpViewPortToCell(int cell);
-		void keepCameraWithinReasonableBounds();
+		void keepViewportWithinReasonableBounds();
 
 		int getZoomedHalfTileSize() const { return halfTile; }
 		float getZoomedTileWidth() const { return tileWidth; }
