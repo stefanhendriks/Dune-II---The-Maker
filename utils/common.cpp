@@ -71,15 +71,13 @@ void FIX_BORDER_POS(int &x, int &y)
 void FIX_POS(int &x, int &y)
 {
     // filled in
-    if (x)
-    {
+    if (x) {
         if (x < 0) x = 0;
         if (x > game.map_width) x = game.map_width;
     }
 
     // filled in
-    if (y)
-    {
+    if (y) {
         if (y < 0) y = 0;
         if (y > game.map_height) y = game.map_height;
     }
