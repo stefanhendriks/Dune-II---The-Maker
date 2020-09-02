@@ -85,7 +85,7 @@ class cAbstractStructure {
 		virtual void think_animation()=0; // think animation stuff
 		virtual void think_guard();       // think guard stuff
 
-		virtual int getType()=0;					  // implementation gives type of structure
+		virtual int getType()=0;		  // implementation gives type of structure
 		void think_prebuild();            // prebuild animation
 		void think_repair();              // repair thinking
 		void think_damage();              // think about damaging through time
@@ -153,7 +153,7 @@ class cAbstractStructure {
 		void setFrame(int frame);
 		void setStructureId(int theId) { id = theId; }
 		void setBuildingFase(int value) { iBuildFase = value; }
-		void setRepairing(bool value) { bRepair = value; }
+		void setRepairing(bool value);
 		void setRepairAlpha(int value) { iRepairAlpha = value; }
 
 		void damage(int hp); // damage structure for x amount of hp

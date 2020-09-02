@@ -268,12 +268,15 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
 		// now draw the repair alpha when repairing
 		if (structure->isRepairing()) {
 			if (structure->getRepairAlpha() > -1) {
-				set_trans_blender(0, 0, 0, structure->getRepairAlpha());
-				int drawX = structure->iDrawX();
+                int iconWidth = ((BITMAP *)gfxdata[MOUSE_REPAIR].dat)->w;
+                int iconHeight = ((BITMAP *)gfxdata[MOUSE_REPAIR].dat)->h;
+                int drawX = structure->iDrawX();
 				int drawY = structure->iDrawY();
-				int repairX = structure->getRepairX();
-				int repairY = structure->getRepairY();
-				draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_REPAIR].dat, drawX+repairX, drawY + repairY);
+				int repairX = mapCamera->factorZoomLevel(structure->getRepairX());
+				int repairY = mapCamera->factorZoomLevel(structure->getRepairY());
+                int scaledWidth = mapCamera->factorZoomLevel(iconWidth);
+                int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
+                stretch_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_REPAIR].dat, drawX+repairX, drawY + repairY, scaledWidth, scaledHeight);
 			} else {
 				structure->setRepairAlpha(rnd(255));
 			}
