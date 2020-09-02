@@ -17,7 +17,7 @@ class cPlaceItDrawer {
 
 	protected:
 		void drawStructureIdAtCell(cBuildingListItem *itemToPlace, int cell);
-		void drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int cell);
+		void drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell);
 
 	private:
 

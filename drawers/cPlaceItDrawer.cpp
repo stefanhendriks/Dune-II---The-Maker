@@ -34,75 +34,77 @@ void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace) {
 	drawStatusOfStructureAtCell(itemToPlace, iMouseCell);
 }
 
-void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int cell) {
+void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell) {
 	assert(itemToPlace);
-	if (cell < 0) return;
+	if (mouseCell < 0) return;
 
 	cStructureUtils structureUtils;
 	int structureId = itemToPlace->getBuildId();
 	assert(structureId > -1);
 
-	bool bOutOfBorder=true;
+	bool bWithinBuildDistance=false;
 	bool bMayPlace=true;
 
 	int iTile = PLACE_ROCK;	// rocky placement = ok, but bad for power
 
-	BITMAP *temp;
-	temp = create_bitmap(structures[structureId].bmp_width, structures[structureId].bmp_height);
-	clear_bitmap(temp);
+    int width = structures[structureId].bmp_width;
+    int height = structures[structureId].bmp_height;
+    int scaledWidth = mapCamera->factorZoomLevel(width);
+    int scaledHeight = mapCamera->factorZoomLevel(height);
+    int cellWidth = structureUtils.getWidthOfStructureTypeInCells(structureId);
+    int cellHeight = structureUtils.getHeightOfStructureTypeInCells(structureId);
 
-	int width = structureUtils.getWidthOfStructureTypeInCells(structureId);
-	int height = structureUtils.getHeightOfStructureTypeInCells(structureId);
 
-	int iTotalBlocks = width * height;
+    //
+	int iTotalBlocks = cellWidth * cellHeight;
 
-	int iTotalRocks=0.0f;
+	int iTotalRocks=0.0;
 
 #define SCANWIDTH	1
 
-	int iCellX = cellCalculator->getX(cell);
-	int iCellY = cellCalculator->getY(cell);
+	int iCellX = cellCalculator->getX(mouseCell);
+	int iCellY = cellCalculator->getY(mouseCell);
 
 	// check
 	int iStartX = iCellX-SCANWIDTH;
 	int iStartY = iCellY-SCANWIDTH;
 
-	int iEndX = iCellX + SCANWIDTH + width;
-	int iEndY = iCellY + SCANWIDTH + height;
+	int iEndX = iCellX + SCANWIDTH + cellWidth;
+	int iEndY = iCellY + SCANWIDTH + cellHeight;
 
 	// Fix up the boundaries
 	FIX_POS(iStartX, iStartY);
 	FIX_POS(iEndX, iEndY);
 
-	// Determine if the structure may be placed or not (true/false)
+    BITMAP *temp;
+    temp = create_bitmap(scaledWidth, scaledHeight);
+    clear_bitmap(temp);
+
+	// Determine if structure to be placed is within build distance
 	for (int iX=iStartX; iX < iEndX; iX++) {
 		for (int iY=iStartY; iY < iEndY; iY++) {
-			int iCll=iCellMakeWhichCanReturnMinusOne(iX, iY);
-			if (iCll < 0) {
-			    bMayPlace = false;
-			} else {
+            int iCll = iCellMakeWhichCanReturnMinusOne(iX, iY);
 
+			if (iCll > -1) {
                 int idOfStructureAtCell = map.getCellIdStructuresLayer(iCll);
                 if (idOfStructureAtCell > -1) {
                     int iID = idOfStructureAtCell;
 
-                    if (structure[iID]->getOwner() == 0) {
-                        bOutOfBorder = false; // connection!
-                    } else {
-                        bMayPlace = false;
+                    if (structure[iID]->getOwner() == HUMAN) {
+                        bWithinBuildDistance = true; // connection!
                     }
                 }
-            }
 
-			if (map.getCellType(iCll) == TERRAIN_WALL ||
-				map.getCellType(iCll) == TERRAIN_SLAB) {
-				bOutOfBorder=false;
-				// TODO: here we should actually find out if the slab is ours or not??
-			}
+                if (map.getCellType(iCll) == TERRAIN_WALL ||
+                    map.getCellType(iCll) == TERRAIN_SLAB) {
+                    bWithinBuildDistance=true;
+                    // TODO: here we should actually find out if the slab is ours or not??
+                }
+            }
 		}
 	}
 
-	if (bOutOfBorder) {
+	if (!bWithinBuildDistance) {
 		bMayPlace=false;
 	}
 
@@ -110,19 +112,21 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	int iDrawY = map.mouse_draw_y();
 
 	// Draw over it the mask for good/bad placing (decorates temp bitmap)
-	for (int iX=0; iX < width; iX++) {
-		for (int iY=0; iY < height; iY++)
-		{
+	for (int iX=0; iX < cellWidth; iX++) {
+		for (int iY=0; iY < cellHeight; iY++) {
 			iTile = PLACE_ROCK;
 
-			if ((iCellX+iX > 62) || (iCellY + iY > 62))
-			{
-				bOutOfBorder=true;
-				bMayPlace=false;
-				break;
-			}
+            int cellX = iCellX + iX;
+            int cellY = iCellY + iY;
 
-			int iCll=iCellMake((iCellX+iX), (iCellY+ iY));
+            if (cellX < 1 || cellY < 1 || cellX > (game.map_width - 2) || cellX > (game.map_height - 2)) {
+                // out of bounds
+                bWithinBuildDistance=false;
+                bMayPlace=false;
+                break;
+            }
+
+            int iCll = iCellMake(cellX, cellY);
 
 			if (!map.isCellPassable(iCll))
 				iTile = PLACE_BAD;
@@ -153,10 +157,14 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 				iTotalRocks++;
 
 			// Draw bad gfx on spot
-			draw_sprite(temp, (BITMAP *)gfxdata[iTile].dat, iX*32, iY*32);
+			stretch_blit((BITMAP *)gfxdata[iTile].dat, temp, 0, 0, 32, 32,
+                iX*mapCamera->getZoomedTileWidth(),
+                iY*mapCamera->getZoomedTileHeight(),
+                mapCamera->getZoomedTileWidth(),
+                mapCamera->getZoomedTileHeight());
 		}
 
-		if (bOutOfBorder) {
+		if (!bWithinBuildDistance) {
 			clear_to_color(temp, makecol(160,0,0));
 		}
 	}
@@ -173,8 +181,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 	// clicked mouse button
 	if (cMouse::isLeftButtonClicked()) {
-		if (bMayPlace && bOutOfBorder == false)	{
-			int iHealthPercent =  50; // the minimum is 50% (with no slabs)
+		if (bMayPlace && bWithinBuildDistance)	{
+			int iHealthPercent = 50; // the minimum is 50% (with no slabs)
 
 			if (iTotalRocks > 0) {
 				iHealthPercent += health_bar(50, iTotalRocks, iTotalBlocks);
@@ -182,9 +190,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 			play_sound_id(SOUND_PLACE, -1);
 
-			//cStructureFactory::getInstance()->createStructure(iMouseCell, iStructureID, 0, iHealthPercent);
-
-			player[HUMAN].getStructurePlacer()->placeStructure(cell, structureId, iHealthPercent);
+			player[HUMAN].getStructurePlacer()->placeStructure(mouseCell, structureId, iHealthPercent);
 
 			game.bPlaceIt=false;
 
@@ -197,10 +203,6 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 			}
 		}
 	}
-	//iDrawX *=32;
-	//iDrawY *=32;
-
-	//rect(bmp_screen, iDrawX, iDrawY, iDrawX+(iWidth*32), iDrawY+(iHeight*32), makecol(255,255,255));
 }
 
 void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int cell) {
