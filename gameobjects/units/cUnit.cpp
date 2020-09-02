@@ -635,8 +635,9 @@ void cUnit::draw() {
 		return;
     }
 
-    int bmp_width = units[iType].bmp_width;
-    int bmp_height = units[iType].bmp_height;
+    s_UnitP &unitType = getUnitType();
+    int bmp_width = unitType.bmp_width;
+    int bmp_height = unitType.bmp_height;
 
     // the multiplier we will use to draw the unit
     int bmp_head = convert_angle(iHeadFacing);
@@ -660,6 +661,9 @@ void cUnit::draw() {
 
     // Draw SHADOW
     BITMAP *shadow = cPlayer.getUnitShadowBitmap(iType, bmp_body, iFrame);
+    float scaledWidth = mapCamera->factorZoomLevel(bmp_width);
+    float scaledHeight = mapCamera->factorZoomLevel(bmp_height);
+
     if (shadow) {
         int destY = iDrawY;
 
@@ -668,13 +672,22 @@ void cUnit::draw() {
             destY = iDrawY + 24; // TODO; do something with height here? the closer to target, the less distant the shadow?
 		}
 
-        masked_stretch_blit(shadow, bmp_screen, 0, 0, bmp_width, bmp_height, iDrawX, destY, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
+        masked_stretch_blit(shadow, bmp_screen, 0, 0, bmp_width, bmp_height, iDrawX, destY, scaledWidth, scaledHeight);
 		destroy_bitmap(shadow);
     }
 
     // Draw BODY
     BITMAP *bitmap = cPlayer.getUnitBitmap(iType);
-    masked_stretch_blit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux, uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
+    if (bitmap) {
+        masked_stretch_blit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height,
+                            ux, uy,
+                            scaledWidth,
+                            scaledHeight);
+    } else {
+        char msg[255];
+        sprintf(msg, "unit of iType [%d] did not have a bitmap!?", iType);
+        logbook(msg);
+    }
 
     // Draw TOP
     BITMAP *top = cPlayer.getUnitTopBitmap(iType);
