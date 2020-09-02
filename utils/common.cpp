@@ -32,8 +32,10 @@ namespace
 // Keep a logbook
 void logbook(const char *txt)
 {
-	cLogger *logger = cLogger::getInstance();
-	logger->log(LOG_WARN, COMP_NONE, "Default log message (CHANGEME)", txt);
+    if (DEBUGGING) {
+        cLogger *logger = cLogger::getInstance();
+        logger->log(LOG_WARN, COMP_NONE, "Default log message (CHANGEME)", txt);
+    }
 }
 
 // determine if this cell is not out of boundries
