@@ -327,15 +327,11 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure) {
 
 	int height_y = 4;
 
-	if (draw_y < 30) {
-		draw_y = 30;
-	}
+    float healthNormalized = theStructure->getHealthNormalized();
 
-	int w = health_structure(iStructure, widthBmp);
-
-	int step = (255/widthBmp);
-	int r = 255-(w*step);
-	int g = w*step;
+    int w = healthNormalized * width_x;
+    int r = (1.1 - healthNormalized) * 255;
+    int g = healthNormalized * 255;
 
 	if (g > 255)
 		g = 255;

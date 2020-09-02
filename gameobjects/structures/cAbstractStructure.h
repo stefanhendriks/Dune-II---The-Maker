@@ -157,6 +157,7 @@ class cAbstractStructure {
 		void setRepairAlpha(int value) { iRepairAlpha = value; }
 
 		void damage(int hp); // damage structure for x amount of hp
+    float getHealthNormalized();
 };
 
 #endif
