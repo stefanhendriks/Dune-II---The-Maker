@@ -31,8 +31,8 @@ struct sReinforcement
     int iCell;          // Where to?
 };
 
-class cUnit
-{
+class cUnit {
+
 public:
 
 	float fExperience;	// experience gained by unit
@@ -165,6 +165,16 @@ public:
     int TIMER_wormeat;  // when do we eat? (when worm)
 
     s_UnitP& getUnitType();
+
+    /**
+     * Return current health normalized (between 0.0 and 1.0)
+     * @return
+     */
+    float getHealthNormalized();
+
+    bool isAirbornUnit() {
+        return iType == CARRYALL || iType == ORNITHOPTER || iType == FRIGATE;
+    }
 };
 
 

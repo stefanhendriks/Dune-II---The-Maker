@@ -474,20 +474,24 @@ void cUnit::draw_spice() {
     }
 }
 
+float cUnit::getHealthNormalized() {
+    s_UnitP &unitType = getUnitType();
+    float flMAX  = unitType.hp;
+    return (iHitPoints / flMAX);
+}
 
-void cUnit::draw_health()
-{
+void cUnit::draw_health() {
     // draw units health
-    int width_x = mapCamera->factorZoomLevel(32);
+    float width_x = mapCamera->factorZoomLevel(units[iType].bmp_width);
     int height_y = mapCamera->factorZoomLevel(4);
     int drawx = draw_x();
     int drawy = draw_y()-(height_y + 2);
 
-    int w = health_unit(iID, width_x);
+    float healthNormalized = getHealthNormalized();
 
-    int step = (255/width_x);
-    int r = 255-(w*step);
-    int g = w*step;
+    int w = healthNormalized * width_x;
+    int r = (1.1 - healthNormalized) * 255;
+    int g = healthNormalized * 255;
 
     if (g > 255)
         g = 255;
