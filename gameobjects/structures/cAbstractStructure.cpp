@@ -301,15 +301,18 @@ void cAbstractStructure::think_animation() {
 
 			// when faded out completely, choose new location
 			if (iRepairAlpha < 1) {
-				iRepairX = -8 + rnd((structures[getType()].bmp_width + 8));
-				iRepairY = -16 + rnd((structures[getType()].bmp_height + 16));
 				iRepairAlpha = 255;
-			} else {
-				iRepairY--;
-				// raise the repair icon.
 			}
 		}
      }
+}
+
+void cAbstractStructure::setRepairing(bool value) {
+    bRepair = value;
+    int iconWidth = ((BITMAP *)gfxdata[MOUSE_REPAIR].dat)->w;
+    int iconHeight = ((BITMAP *)gfxdata[MOUSE_REPAIR].dat)->h;
+    iRepairX = (structures[getType()].bmp_width - iconWidth) / 2;
+    iRepairY = (structures[getType()].bmp_height - iconHeight) / 2;
 }
 
 void cAbstractStructure::think_flag() {
