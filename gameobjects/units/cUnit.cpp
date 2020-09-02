@@ -454,12 +454,10 @@ int cUnit::draw_y() {
 }
 
 void cUnit::draw_spice() {
-    int width_x = mapCamera->factorZoomLevel(32);
+    float width_x = mapCamera->factorZoomLevel(units[iType].bmp_width);
     int height_y = mapCamera->factorZoomLevel(4);
     int drawx = draw_x();
     int drawy = draw_y()-((height_y *2)+ 2);
-
-    if (drawy < 42) drawy = 42;
 
     int max = getUnitType().credit_capacity;
     int w = health_bar(width_x, iCredits, max);
@@ -1087,8 +1085,7 @@ void cUnit::think()
 	// when any unit is on a spice bloom, you got a problem, you die!
     int cellType = map.getCellType(iCell);
     if (cellType == TERRAIN_BLOOM
-        && units[iType].airborn == false)
-	{
+        && units[iType].airborn == false) {
 		// change type of terrain to sand
 		mapEditor.createCell(iCell, TERRAIN_SAND, 0);
 
@@ -1104,8 +1101,7 @@ void cUnit::think()
 
 
     // --- think
-    if (iType == ORNITHOPTER)
-    {
+    if (iType == ORNITHOPTER) {
         // flap with your wings
         iFrame++;
 
@@ -1397,16 +1393,15 @@ void cUnit::think()
 
 
 	// When this is a carry-all, show proper animation when filled
-	if (iType == CARRYALL)
-	{
+	if (iType == CARRYALL) {
 		// A carry-all has something when:
 		// - it carries a unit (iUnitID > -1)
 		// - it has the flag TRANSFER_NEW_
 
 		if ((iTransferType == TRANSFER_NEW_STAY ||
 			 iTransferType == TRANSFER_NEW_LEAVE ||
-			 iTransferType == TRANSFER_PICKUP) || iUnitID > -1)
-		{
+			 iTransferType == TRANSFER_PICKUP) || iUnitID > -1) {
+
 			// when picking up a unit.. only draw when picked up
 			if (iTransferType == TRANSFER_PICKUP && bPickedUp)
 				iFrame=1;
@@ -1414,24 +1409,17 @@ void cUnit::think()
 			// any other transfer, means it is filled from start...
 			if (iTransferType != TRANSFER_PICKUP)
 				iFrame=1;
-		}
-		else
-			iFrame=0;
-
+		} else {
+            iFrame = 0;
+        }
 	}
-
-
-
-
 }
 
-  // aircraft specific
-void cUnit::think_move_air()
-{
+// aircraft specific
+void cUnit::think_move_air() {
     iNextCell = isNextCell();
 
-	if (bCellValid(iCell) == false)
-	{
+	if (bCellValid(iCell) == false)	{
 		die(true, false);
 
 		// KILL UNITS WHO SOMEHOW GET INVALID
@@ -1874,14 +1862,10 @@ void cUnit::think_move_air()
 //
 void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe)
 {
-	// What i do:
-	// depending on the transfer , we set the variables:
-
 	if (iTransferType > -1)
 		return; // we cannot do multiple things at a time!!
 
-	if (iTransfer == 0 || iTransfer == 2)
-	{
+	if (iTransfer == TRANSFER_NEW_STAY || iTransfer == TRANSFER_NEW_LEAVE) {
 
 		// bring a new unit, depending on the iTransfer the carryall who brings this will be
 		// removed after he brought the unit...
@@ -1908,15 +1892,10 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe)
 
 
 		// DONE!
-	}
-	else if (iTransfer == 1 && iuID > -1)
-	{
-		// the carryall must pickup the unit, and then bring it to the iBring stuff
-		if (unit[iuID].isValid())
-		{
-			if (DEBUGGING)
-				logbook("GOING TO PICKUP UNIT");
+	} else if (iTransfer == TRANSFER_PICKUP && iuID > -1) {
 
+		// the carryall must pickup the unit, and then bring it to the iBring stuff
+		if (unit[iuID].isValid()) {
 			iTransferType = iTransfer;
 
 			iGoalCell	 = unit[iuID].iCell; // first go to the target to pick it up
@@ -1933,7 +1912,6 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe)
 			iUnitID = iuID;
 		}
 	}
-
 }
 
 void cUnit::shoot(int iShootCell) {
@@ -1951,68 +1929,60 @@ void cUnit::shoot(int iShootCell) {
     create_bullet(units[iType].bullets, iCell, iShootCell, iID, -1);
 }
 
-int cUnit::isNextCell()
-{
-    if (iType != CARRYALL && iType != ORNITHOPTER && iType != FRIGATE)
-    {
-        if (iPathIndex < 0)
-        {
-			if (iNextCell < 0)
-			{
-				iOffsetX=0;
-				iOffsetY=0;
-				LOG("No pathindex & no nextcell, resetting unit");
-				return iCell; // same as our location
-			}
+int cUnit::isNextCell() {
+    if (isAirbornUnit()) {
+        // Aircraft
+        if (iGoalCell == iCell)
+            return iCell;
 
-			return iNextCell;
-        }
+        return iGoalCell; // return the goal
+    }
 
-        // not valid OR same location
-        if (iPath[iPathIndex] < 0)
-        {
+    if (iPathIndex < 0) {
+        if (iNextCell < 0) {
             iOffsetX=0;
             iOffsetY=0;
-			LOG("No valid iPATH[pathindex]");
+            LOG("No pathindex & no nextcell, resetting unit");
             return iCell; // same as our location
         }
 
-		if (iPath[iPathIndex] == iCell)
-			if (iPath[iPathIndex++] > -1)
-			{
-				LOG("Odd Pathindex, sollution (HACK HACK)");
-				iPathIndex++; // when accidently the index refers to our location, do this
-			}
+        return iNextCell;
+    }
 
-        // now, we are sure it will be another location
-        return iPath[iPathIndex];
-    } // NON AIRCRAFT
+    // not valid OR same location
+    if (iPath[iPathIndex] < 0) {
+        iOffsetX=0;
+        iOffsetY=0;
+        LOG("No valid iPATH[pathindex]");
+        return iCell; // same as our location
+    }
 
-    // Aircraft
-    if (iGoalCell == iCell)
-        return iCell;
+    if (iPath[iPathIndex] == iCell) {
+        if (iPath[iPathIndex++] > -1) {
+            LOG("Odd Pathindex, sollution (HACK HACK)");
+            iPathIndex++; // when accidently the index refers to our location, do this
+        }
+    }
 
-    return iGoalCell; // return the goal
+    // now, we are sure it will be another location
+    return iPath[iPathIndex];
 }
 
 // ouch, who shot me?
-void cUnit::think_hit(int iShotUnit, int iShotStructure)
-{
+void cUnit::think_hit(int iShotUnit, int iShotStructure) {
+
     // only act when we are doing 'nothing'...
-    if (iAction == ACTION_GUARD)
-    {
-        if (iShotUnit > -1)
-            UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1,-1);
+    if (iAction == ACTION_GUARD) {
+        if (iShotUnit > -1) {
+            UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1, -1);
+        }
     }
 
-    if (iPlayer > 0)
-    {
-        if (iShotUnit > -1)
-        {
-            if (iAction != ACTION_ATTACK)
-                UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1,-1);
-            else
-            {
+    if (iPlayer > HUMAN) {
+        if (iShotUnit > -1) {
+            if (iAction != ACTION_ATTACK) {
+                UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1, -1);
+            } else {
                 // we are attacking, but when target is very far away (out of range?) then we should not attack that but defend
                 // ourselves
                 int iDestCell = iAttackCell;
