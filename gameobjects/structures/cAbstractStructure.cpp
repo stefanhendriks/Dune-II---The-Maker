@@ -505,3 +505,9 @@ bool cAbstractStructure::isValid()
 
     return true;
 }
+
+float cAbstractStructure::getHealthNormalized() {
+    const s_Structures &structure = getS_StructuresType();
+    float flMAX  = structure.hp;
+    return (iHitPoints / flMAX);
+}
