@@ -12,3 +12,4 @@ Release/
 CMakeLists.txt
 create_binary.bat
 Dune 2.vcxproj
+cmake-build-debug-mingw
