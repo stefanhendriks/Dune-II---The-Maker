@@ -491,10 +491,7 @@ void cUnit::draw_health() {
     int r = (1.1 - healthNormalized) * 255;
     int g = healthNormalized * 255;
 
-    if (g > 255)
-        g = 255;
-
-    if (r < 0) r= 0;
+    if (r > 255) r = 255;
 
     // bar itself
     rectfill(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(0,0,0));
