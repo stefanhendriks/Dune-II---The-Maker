@@ -260,8 +260,7 @@ double length(int x1, int y1, int x2, int y2)
 
 // ABS
 // returns length between 2 points
-double ABS_length(int x1, int y1, int x2, int y2)
-{
+double ABS_length(int x1, int y1, int x2, int y2) {
   if (x1 == x2 && y1 == y2) return 1; // when all the same, distance is 1 ...
 
   int A = abs(x2-x1) * abs(x2-x1);

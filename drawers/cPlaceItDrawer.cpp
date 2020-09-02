@@ -212,23 +212,30 @@ void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int c
 	int iDrawX = map.mouse_draw_x();
 	int iDrawY = map.mouse_draw_y();
 
-	if (structureId == SLAB1) {
-		draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[PLACE_SLAB1].dat, iDrawX, iDrawY);
+    BITMAP *temp;
+    int width = structures[structureId].bmp_width;
+    int height = structures[structureId].bmp_height;
+
+    int scaledWidth = mapCamera->factorZoomLevel(width);
+    int scaledHeight = mapCamera->factorZoomLevel(height);
+
+    temp = create_bitmap(scaledWidth, scaledHeight);
+    clear_bitmap(temp);
+
+    BITMAP *bmp = nullptr;
+    if (structureId == SLAB1) {
+		bmp = (BITMAP *)gfxdata[PLACE_SLAB1].dat;
 	} else if (structureId == SLAB4) {
-		draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[PLACE_SLAB4].dat, iDrawX, iDrawY);
+        bmp = (BITMAP *)gfxdata[PLACE_SLAB4].dat;
 	} else if (structureId == WALL) {
-		draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[PLACE_WALL].dat, iDrawX, iDrawY);
+        bmp = (BITMAP *)gfxdata[PLACE_WALL].dat;
 	} else {
-		BITMAP *temp;
-		temp = create_bitmap(structures[structureId].bmp_width, structures[structureId].bmp_height);
-		clear_bitmap(temp);
-
-		blit(structures[structureId].bmp, temp, 0,0, 0,0, structures[structureId].bmp_width, structures[structureId].bmp_height);
-
-		draw_trans_sprite(bmp_screen, temp, iDrawX, iDrawY);
-
-		destroy_bitmap(temp);
+        bmp = player->getStructureBitmap(structureId);
 	}
 
+    stretch_blit(bmp, temp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);
 
+    draw_trans_sprite(bmp_screen, temp, iDrawX, iDrawY);
+
+    destroy_bitmap(temp);
 }
