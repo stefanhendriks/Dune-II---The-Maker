@@ -26,13 +26,21 @@ cMiniMapDrawer::~cMiniMapDrawer() {
 }
 
 void cMiniMapDrawer::drawViewPortRectangle() {
-	 // Draw the magic rectangle (viewport)
-     int iWidth = mapCamera->getViewportWidth();
-     int iHeight = mapCamera->getViewportHeight();
+    // Draw the magic rectangle (viewport)
+    int iWidth = (mapCamera->getViewportWidth()) / 32;
+    int iHeight = (mapCamera->getViewportHeight()) / 32;
+    iWidth--;
+    iHeight--;
 
-	 iWidth--;
-	 iHeight--;
-	 rect(bmp_screen, getDrawStartX(), getDrawStartY(), (getDrawStartX()+iWidth*2)+1, (getDrawStartY()+iHeight*2)+1, makecol(255,0,255));
+    int startX = getDrawStartX() + ((mapCamera->getViewportStartX() / 32) * 2);
+    int startY = getDrawStartY() + ((mapCamera->getViewportStartY() / 32) * 2);
+
+    int minimapWidth = (iWidth * 2) + 1;
+    int minimapHeight = (iHeight * 2) + 1;
+
+    set_clip_rect(bmp_screen, getDrawStartX(), getDrawStartY(), game.screen_x, game.screen_y);
+    rect(bmp_screen, startX, startY, startX + minimapWidth, startY + minimapHeight, makecol(255, 255, 255));
+    set_clip_rect(bmp_screen, 0, 0, game.screen_x, game.screen_y);
 }
 
 int cMiniMapDrawer::getDrawStartX() {
