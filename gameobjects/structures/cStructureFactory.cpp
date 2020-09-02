@@ -93,11 +93,12 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	of a non-structure (ie SLAB/WALL) is done.
 **/
 cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructureType, int iPlayer, int iPercent) {
-    int iNewId = getFreeSlot();
-
-	assert(iPercent < 200); // percentages may not really exceed 200, above is weird behavior
 	assert(iPlayer >= 0);
 	assert(iPlayer <= MAX_PLAYERS);
+
+	int iNewId = getFreeSlot();
+
+	if (iPercent > 100) iPercent = 100;
 
 	// fail
     if (iNewId < 0) {
@@ -117,7 +118,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
     }
 
 	float fPercent = iPercent;
-	fPercent /=100;				// devide by 100 (to make it 0.x)
+	fPercent /=100;				// divide by 100 (to make it 0.x)
 
 	// calculate actual health
 	cHitpointCalculator *calc = new cHitpointCalculator();
