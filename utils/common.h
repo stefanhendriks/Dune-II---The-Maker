@@ -22,6 +22,8 @@ bool mouse_pressed_right();
 bool MOUSE_BTN_LEFT();
 bool MOUSE_BTN_RIGHT();
 
+int keepBetween(int value, int min, int max);
+
 // Installment of properties/settings in the game.
 void INSTALL_HOUSES();
 void INSTALL_PLAYERS();
@@ -38,7 +40,7 @@ void install_bullets();
 
 float health_structure(int i, int w);
 float health_bar(float max_w, int i, int w);
-float health_unit(int i, float w);
+float health_unit(int i, float widthInPixels);
 
 int iFindCloseBorderCell(int iCll);
 
