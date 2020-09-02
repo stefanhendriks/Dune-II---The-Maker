@@ -77,7 +77,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	FIX_POS(iEndX, iEndY);
 
     BITMAP *temp;
-    temp = create_bitmap(scaledWidth, scaledHeight);
+    temp = create_bitmap(scaledWidth+1, scaledHeight+1);
     clear_bitmap(temp);
 
 	// Determine if structure to be placed is within build distance
@@ -221,7 +221,7 @@ void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int c
     int scaledWidth = mapCamera->factorZoomLevel(width);
     int scaledHeight = mapCamera->factorZoomLevel(height);
 
-    temp = create_bitmap(scaledWidth, scaledHeight);
+    temp = create_bitmap(scaledWidth+1, scaledHeight+1);
     clear_bitmap(temp);
 
     BITMAP *bmp = nullptr;
