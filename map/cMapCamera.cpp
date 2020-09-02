@@ -71,12 +71,12 @@ void cMapCamera::calibrate() {
     viewportHeight = divideByZoomLevel(windowHeight);
 }
 
-int cMapCamera::getMapXPositionFromCell(int cell) {
+int cMapCamera::getAbsoluteXPositionFromCell(int cell) {
     if (cell < 0) return -1;
     return cellCalculator->getX(cell) * 32;
 }
 
-int cMapCamera::getMapYPositionFromCell(int cell) {
+int cMapCamera::getAbsoluteYPositionFromCell(int cell) {
     if (cell < 0) return -1;
     return cellCalculator->getY(cell) * 32;
 }
@@ -109,8 +109,8 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell) {
 	if (cell < 0) cell = 0;
 	if (cell >= MAX_CELLS) cell = (MAX_CELLS-1);
 
-	int mapCellX = getMapXPositionFromCell(cell);
-	int mapCellY = getMapYPositionFromCell(cell);
+	int mapCellX = getAbsoluteXPositionFromCell(cell);
+	int mapCellY = getAbsoluteYPositionFromCell(cell);
 
 	// determine the half of our screen
 	int halfViewportWidth = viewportWidth / 2;
@@ -223,6 +223,6 @@ void cMapCamera::thinkInteraction() {
 	}
 }
 
-int cMapCamera::getCellFromViewportPosition(int x, int y) {
+int cMapCamera::getCellFromAbsolutePosition(int x, int y) {
     return iCellMakeWhichCanReturnMinusOne((x / 32), (y / 32));
 }

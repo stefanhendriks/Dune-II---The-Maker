@@ -22,110 +22,119 @@
 #define TILESIZE_HEIGHT_PIXELS 32
 
 class cMapCamera {
-	public:
-		cMapCamera();
-		~cMapCamera();
 
-		void think();
+public:
+    cMapCamera();
 
-		void zoomIn();
+    ~cMapCamera();
 
-		void zoomOut();
+    void think();
 
-		void resetZoom() {
-		    zoomLevel = 1.0f;
-		    calibrate();
-            keepViewportWithinReasonableBounds();
-		}
+    void zoomIn();
 
-		void jumpTo(int	theX, int theY);
-		void moveTo(int theX, int theY);
+    void zoomOut();
 
-		int getWindowXPosition(int absoluteXPosition) {
-            return factorZoomLevel(absoluteXPosition - viewportStartX);
-		}
+    void resetZoom() {
+        zoomLevel = 1.0f;
+        calibrate();
+        keepViewportWithinReasonableBounds();
+    }
 
-		int getWindowYPosition(int absoluteYPosition) {
-            return factorZoomLevel(absoluteYPosition - viewportStartY) + heightOfTopBar;
-		}
+    void jumpTo(int theX, int theY);
 
-		// These methods need to use zoomfactor to properly calculate the position on the map
-		int getAbsMapMouseX(int mouseX) {
-            int iMouseX = divideByZoomLevel(mouseX);
-            return iMouseX + getViewportStartX();
-		}
+    void moveTo(int theX, int theY);
 
-		int getAbsMapMouseY(int mouseY) {
-            int iMouseY = divideByZoomLevel(mouseY - heightOfTopBar);
-            return iMouseY + getViewportStartY();
-        }
+    int getWindowXPosition(int absoluteXPosition) {
+        return factorZoomLevel(absoluteXPosition - viewportStartX);
+    }
 
-		int getViewportStartX() { return viewportStartX; }
-		int getViewportStartY() { return viewportStartY; }
+    int getWindowYPosition(int absoluteYPosition) {
+        return factorZoomLevel(absoluteYPosition - viewportStartY) + heightOfTopBar;
+    }
 
-		int getViewportEndX() { return viewportStartX + viewportWidth; }
-		int getViewportEndY() { return viewportStartY + viewportHeight; }
+    // These methods need to use zoomfactor to properly calculate the position on the map
+    int getAbsMapMouseX(int mouseX) {
+        int iMouseX = divideByZoomLevel(mouseX);
+        return iMouseX + getViewportStartX();
+    }
 
-		int getViewportWidth() { return viewportWidth; }
-		int getViewportHeight() { return viewportHeight; }
+    int getAbsMapMouseY(int mouseY) {
+        int iMouseY = divideByZoomLevel(mouseY - heightOfTopBar);
+        return iMouseY + getViewportStartY();
+    }
 
-		void thinkInteraction();
+    int getViewportStartX() { return viewportStartX; }
 
-		void centerAndJumpViewPortToCell(int cell);
-		void keepViewportWithinReasonableBounds();
+    int getViewportStartY() { return viewportStartY; }
 
-		int getZoomedHalfTileSize() const { return halfTile; }
-		float getZoomedTileWidth() const { return tileWidth; }
-		float getZoomedTileHeight() const { return tileHeight; }
+    int getViewportEndX() { return viewportStartX + viewportWidth; }
 
-		float factorZoomLevel(int value) {
-		    return value * zoomLevel;
-		}
+    int getViewportEndY() { return viewportStartY + viewportHeight; }
 
-		float divideByZoomLevel(int value) {
-		    return value / zoomLevel;
-		}
+    int getViewportWidth() { return viewportWidth; }
 
-		// Calculates viewport and tile width/height
-		void calibrate();
+    int getViewportHeight() { return viewportHeight; }
 
-		float getZoomLevel() {
-		    return zoomLevel;
-		}
+    void thinkInteraction();
 
-    int getCellFromViewportPosition(int x, int y);
+    void centerAndJumpViewPortToCell(int cell);
 
-		void setViewportPosition(int x, int y);
+    void keepViewportWithinReasonableBounds();
+
+    int getZoomedHalfTileSize() const { return halfTile; }
+
+    float getZoomedTileWidth() const { return tileWidth; }
+
+    float getZoomedTileHeight() const { return tileHeight; }
+
+    float factorZoomLevel(int value) {
+        return value * zoomLevel;
+    }
+
+    float divideByZoomLevel(int value) {
+        return value / zoomLevel;
+    }
+
+    // Calculates viewport and tile width/height
+    void calibrate();
+
+    float getZoomLevel() {
+        return zoomLevel;
+    }
+
+    int getCellFromAbsolutePosition(int x, int y);
+
+    void setViewportPosition(int x, int y);
+
+    int getAbsoluteXPositionFromCell(int cell);
+
+    int getAbsoluteYPositionFromCell(int cell);
 
 protected:
 
-	private:
-		// rendering coordinates, they are manipulated by zooming
-		int viewportStartX;
-		int viewportStartY;
-        int viewportWidth;
-        int viewportHeight;
+private:
+    // rendering coordinates, they are manipulated by zooming
+    int viewportStartX;
+    int viewportStartY;
+    int viewportWidth;
+    int viewportHeight;
 
-        int heightOfTopBar;
-		int windowWidth;
-		int windowHeight;
+    int heightOfTopBar;
+    int windowWidth;
+    int windowHeight;
 
-		// timer used, when to move camera
-		int TIMER_move;
+    // timer used, when to move camera
+    int TIMER_move;
 
-		// Zoom level, 1 == normal, > 1 is zooming in. < 1 is zooming out.
-		float zoomLevel;
+    // Zoom level, 1 == normal, > 1 is zooming in. < 1 is zooming out.
+    float zoomLevel;
 
-		cCellCalculator * cellCalculator;
+    cCellCalculator *cellCalculator;
 
-		// the calculated width and height, taking zoomlevel into account
-		float tileHeight;
-		float tileWidth;
-		int halfTile;
-
-        int getMapXPositionFromCell(int cell);
-
-        int getMapYPositionFromCell(int cell);
+    // the calculated width and height, taking zoomlevel into account
+    float tileHeight;
+    float tileWidth;
+    int halfTile;
 
     void adjustViewport(float screenX, float screenY);
 };
