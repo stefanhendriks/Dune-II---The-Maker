@@ -423,8 +423,8 @@ void install_units()
   // Description : Trike, 3 wheeled (single gunned)
   units[TRIKE].bmp = (BITMAP *)gfxdata[UNIT_TRIKE].dat;      // pointer to the original 8bit bitmap
   units[TRIKE].shadow = (BITMAP *)gfxdata[UNIT_TRIKE_SHADOW].dat;      // pointer to the original 8bit bitmap
-  units[TRIKE].bmp_width  = 14*2;
-  units[TRIKE].bmp_height = 14*2;
+  units[TRIKE].bmp_width  = 28;
+  units[TRIKE].bmp_height = 26;
   units[TRIKE].bmp_startpixel = 0;
   units[TRIKE].bmp_frames = 1;
   units[TRIKE].icon = ICON_UNIT_TRIKE;
