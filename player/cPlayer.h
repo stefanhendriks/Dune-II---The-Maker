@@ -98,6 +98,8 @@ class cPlayer {
     BITMAP *getUnitTopBitmap(int index);
     BITMAP *getUnitShadowBitmap(int index, int bodyFacing, int animationFrame);
 
+    void destroyAllegroBitmaps();
+
 private:
 		int getRGBColorForHouse(int houseId);
 		bool m_Human;
@@ -130,6 +132,7 @@ private:
 
         void clearStructureTypeBitmaps();
         void clearUnitTypeBitmaps();
+
 };
 
 #endif

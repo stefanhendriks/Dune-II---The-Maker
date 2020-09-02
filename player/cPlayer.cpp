@@ -50,6 +50,11 @@ cPlayer::~cPlayer() {
     if (difficultySettings) {
         delete difficultySettings;
     }
+    // cannot do this in destructor, as Allegro is already shutdown
+//    destroyAllegroBitmaps();
+}
+
+void cPlayer::destroyAllegroBitmaps() {
     clearStructureTypeBitmaps();
     clearUnitTypeBitmaps();
 }
