@@ -13,3 +13,6 @@ CMakeLists.txt
 create_binary.bat
 Dune 2.vcxproj
 cmake-build-debug-mingw
+cmake-build-release
+cmake-build-release-mingw
+dependencies/allegro-src
