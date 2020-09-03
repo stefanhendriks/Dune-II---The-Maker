@@ -16,8 +16,7 @@
 // TODO: constructor/destructors
 
 // cAIPlayer functions
-void cAIPlayer::init(int iID)
-{
+void cAIPlayer::init(int iID) {
     ID = iID;
 
 	// SKIRMISH RELATED SETTINGS
