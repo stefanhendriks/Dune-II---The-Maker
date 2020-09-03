@@ -74,3 +74,6 @@ void cMouse::positionMouseCursor(int x, int y) {
 	position_mouse(x, y); // allegro function
 }
 
+bool cMouse::isOverRectangle(int x, int y, int width, int height) {
+    return cRectangle::isWithin(cMouse::getX(), cMouse::getY(), x, y, width, height);
+}

@@ -234,49 +234,28 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
 	}
 }
 
-int cStructureUtils::getStructureWidthInPixels(int structureType) {
-	assert(structureType >= 0);
-	assert(structureType < MAX_STRUCTURETYPES);
-	return structures[structureType].bmp_width;
-}
-
-int cStructureUtils::getStructureHeightInPixels(int structureType) {
-	assert(structureType >= 0);
-	assert(structureType < MAX_STRUCTURETYPES);
-	return structures[structureType].bmp_height;
-}
-
-int cStructureUtils::getStructureWidthInPixels(cAbstractStructure * theStructure) {
-	assert(theStructure);
-	return getStructureWidthInPixels(theStructure->getType());
-}
-
-int cStructureUtils::getStructureHeightInPixels(cAbstractStructure * theStructure) {
-	assert(theStructure);
-	return getStructureHeightInPixels(theStructure->getType());
-}
-
-bool cStructureUtils::isStructureOnScreen(cAbstractStructure *structure) {
+bool cStructureUtils::isStructureVisibleOnScreen(cAbstractStructure *structure) {
 	if (!structure) return false;
 
 	int drawX = structure->iDrawX();
 	int drawY = structure->iDrawY();
-	int width = mapCamera->factorZoomLevel(getStructureWidthInPixels(structure));
-	int height = mapCamera->factorZoomLevel(getStructureHeightInPixels(structure));
+	int width = mapCamera->factorZoomLevel(structure->getWidthInPixels());
+	int height = mapCamera->factorZoomLevel(structure->getHeightInPixels());
 
-	return ((drawX + width) > 0 && drawX < game.screen_x) && ( (drawY + height) > 0 && drawY < game.screen_y);
+	return (drawX + width  >= 0 && drawX < game.screen_x) &&
+	       (drawY + height >= 0 && drawY < game.screen_y);
 }
 
-bool cStructureUtils::isMouseOverStructure(cAbstractStructure *structure) {
+bool cStructureUtils::isMouseOverStructure(cAbstractStructure *structure, int screenX, int screenY) {
 	assert(structure);
 
+	// translate the structure coordinates to screen coordinates
 	int drawX = structure->iDrawX();
 	int drawY = structure->iDrawY();
-	int width = mapCamera->factorZoomLevel(getStructureWidthInPixels(structure));
-	int height = mapCamera->factorZoomLevel(getStructureHeightInPixels(structure));
-	rectfill(bmp_screen, drawX, drawY, width, height, makecol(255,255,255));
+	int width = mapCamera->factorZoomLevel(structure->getWidthInPixels());
+	int height = mapCamera->factorZoomLevel(structure->getHeightInPixels());
 
-	return cMouse::isOverRectangle(drawX, drawY, width, height);
+    return cRectangle::isWithin(screenX, screenY, drawX, drawY, width, height);
 }
 
 int cStructureUtils::getTotalPowerUsageForPlayer(cPlayer * player) {

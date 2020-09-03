@@ -58,8 +58,6 @@ class cAbstractStructure {
 
 		virtual ~cAbstractStructure();
 
-
-
 		float fConcrete;     // how much concrete is *not* beneath this building (percentage)?
 							 // meaning, when 0% , it is all concrete. But if 10%, it means 10% of the building
 							 // is not covered.
@@ -120,6 +118,8 @@ class cAbstractStructure {
 		int getArmor() { return armor; }
 		int getWidth() { return iWidth; }
 		int getHeight() { return iHeight; }
+		int getWidthInPixels();
+		int getHeightInPixels();
 		int getHitPoints() { return iHitPoints; }
 		int getCell() { return iCell; }
 		int getOwner() { return iPlayer; } // return the player id who owns this structure
