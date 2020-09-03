@@ -165,7 +165,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
     {
         // play quick 'boom' sound and show animation
         PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_TRIKE, -1, -1);
-        play_sound_id(SOUND_TRIKEDIE,iCellOnScreen(iCell));
+        play_sound_id(SOUND_TRIKEDIE, distanceBetweenCellAndCenterOnScreen(iCell));
 
         if (rnd(100) < 30)
             PARTICLE_CREATE(iDieX, iDieY-24, OBJECT_SMOKE, -1, -1);
@@ -187,12 +187,12 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
         if (rnd(100) < 50)
         {
             PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_TANK_ONE, -1, -1);
-            play_sound_id(SOUND_TANKDIE2,iCellOnScreen(iCell));
+            play_sound_id(SOUND_TANKDIE2, distanceBetweenCellAndCenterOnScreen(iCell));
         }
         else
         {
             PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_TANK_TWO, -1, -1);
-            play_sound_id(SOUND_TANKDIE,iCellOnScreen(iCell));
+            play_sound_id(SOUND_TANKDIE, distanceBetweenCellAndCenterOnScreen(iCell));
         }
 
         if (rnd(100) < 30)
@@ -228,7 +228,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                     PARTICLE_CREATE(iDieX+(cx*32), iDieY+(cy*32), EXPLOSION_STRUCTURE01+rnd(2), -1, -1);
 
                 if (rnd(100) < 35)
-                play_sound_id(SOUND_TANKDIE + rnd(2),iCellOnScreen(iCell));
+                play_sound_id(SOUND_TANKDIE + rnd(2), distanceBetweenCellAndCenterOnScreen(iCell));
 
                 // calculate cell and damage stuff around this
                 int cll = iCellMake((iCellX-1) +cx, (iCellY-1)+cy);
@@ -339,7 +339,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 
         PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF02, iPlayer, -1);
 
-        play_sound_id(SOUND_DIE01+rnd(5),iCellOnScreen(iCell));
+        play_sound_id(SOUND_DIE01+rnd(5), distanceBetweenCellAndCenterOnScreen(iCell));
     }
 
     if (iType == TROOPERS || iType == INFANTRY)
@@ -348,7 +348,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 
         PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF01, iPlayer, -1);
 
-        play_sound_id(SOUND_DIE01+rnd(5),iCellOnScreen(iCell));
+        play_sound_id(SOUND_DIE01+rnd(5), distanceBetweenCellAndCenterOnScreen(iCell));
     }
 } // blow up
 else
@@ -364,12 +364,12 @@ if (bSquish)
     if (iType == SOLDIER || iType == TROOPER)
     {
         PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_SQUISH01+rnd(2), iPlayer, iFrame);
-        play_sound_id(SOUND_SQUISH,iCellOnScreen(iCell));
+        play_sound_id(SOUND_SQUISH, distanceBetweenCellAndCenterOnScreen(iCell));
     }
     else if (iType == TROOPERS || iType == INFANTRY)
     {
         PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_SQUISH03, iPlayer, iFrame);
-        play_sound_id(SOUND_SQUISH,iCellOnScreen(iCell));
+        play_sound_id(SOUND_SQUISH, distanceBetweenCellAndCenterOnScreen(iCell));
     }
 
 }
@@ -2035,7 +2035,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                 int iDieY=pos_y() + half;
 
                 PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF01, iPlayer, -1);
-                play_sound_id(SOUND_DIE01+rnd(5),iCellOnScreen(iCell));
+                play_sound_id(SOUND_DIE01+rnd(5), distanceBetweenCellAndCenterOnScreen(iCell));
 
             }
         }
@@ -2069,7 +2069,7 @@ void cUnit::think_attack()
                 int iParY=pos_y() + half;
 
                 PARTICLE_CREATE(iParX, iParY, OBJECT_WORMEAT, -1, -1);
-                play_sound_id(SOUND_WORM, iCellOnScreen(iCell));
+                play_sound_id(SOUND_WORM, distanceBetweenCellAndCenterOnScreen(iCell));
                 iAction = ACTION_GUARD;
                 iAttackUnit=-1;
                 bCalculateNewPath=true;

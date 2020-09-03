@@ -37,7 +37,6 @@ void cSpiceSilo::think_guard()
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cSpiceSilo::getSpiceSiloCapacity() {
-	cHitpointCalculator hitpointCalculator;
 	float percentage = ((float)getHitPoints() / (float)structures[getType()].hp);
-	return hitpointCalculator.getByPercent(1000, percentage);
+	return 1000 * percentage;
 }
