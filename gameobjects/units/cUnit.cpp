@@ -436,21 +436,13 @@ int cUnit::pos_y() {
 }
 
 int cUnit::draw_x() {
-    int absoluteXCoordinateOnMap = pos_x();
-    int absoluteXCoordinateMapCamera = mapCamera->getViewportStartX();
-    int screenPosition = (absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera);
-    int iWidth = units[iType].bmp_width;
-    int bmpOffset = TILESIZE_WIDTH_PIXELS - iWidth;
-    return mapCamera->factorZoomLevel(screenPosition + bmpOffset);
+    int bmpOffset = TILESIZE_WIDTH_PIXELS - units[iType].bmp_width;
+    return mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
 }
 
 int cUnit::draw_y() {
-    int absoluteYCoordinateOnMap = pos_y();
-    int absoluteYCoordinateMapCamera = mapCamera->getViewportStartY();
-    int screenPosition = (absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera);
-    int iHeight = units[iType].bmp_height;
-    int bmpOffset = (TILESIZE_HEIGHT_PIXELS - iHeight) / 2;
-    return mapCamera->factorZoomLevel(screenPosition + bmpOffset) + 42;
+    int bmpOffset = (TILESIZE_HEIGHT_PIXELS - units[iType].bmp_height) / 2;
+    return mapCamera->getWindowYPositionWithOffset(pos_y(), bmpOffset);
 }
 
 void cUnit::draw_spice() {

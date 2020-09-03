@@ -73,19 +73,12 @@ int cAbstractStructure::pos_y() {
 
 // X drawing position
 int cAbstractStructure::iDrawX() {
-    int absoluteXCoordinateOnMap = pos_x();
-    int absoluteXCoordinateMapCamera = mapCamera->getViewportStartX();
-    int screenPosition = (absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera);
-    return mapCamera->factorZoomLevel(screenPosition);
+    return mapCamera->getWindowXPosition(pos_x());
 }
 
 // Y drawing position
 int cAbstractStructure::iDrawY() {
-    int absoluteYCoordinateOnMap = pos_y();
-    int absoluteYCoordinateMapCamera = mapCamera->getViewportStartY();
-    int screenPosition = (absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera);
-    int heightOfTopBar = 42;
-    return mapCamera->factorZoomLevel(screenPosition) + heightOfTopBar;
+    return mapCamera->getWindowYPosition(pos_y());
 }
 
 BITMAP * cAbstractStructure::getBitmap() {
