@@ -48,19 +48,12 @@ int cBullet::pos_y() {
 }
 
 int cBullet::draw_x() {
-    int absoluteXCoordinateOnMap = pos_x();
-    int absoluteXCoordinateMapCamera = mapCamera->getViewportStartX();
-    int screenPosition = (absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera);
-    int iWidth = bullets[iType].bmp_width;
-    int bmpOffset = TILESIZE_WIDTH_PIXELS - iWidth;
-    return mapCamera->factorZoomLevel(screenPosition + bmpOffset);
+    int bmpOffset = TILESIZE_WIDTH_PIXELS - bullets[iType].bmp_width;
+    return mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
 }
 
 int cBullet::draw_y() {
-    int absoluteYCoordinateOnMap = pos_y();
-    int absoluteYCoordinateMapCamera = mapCamera->getViewportStartY();
-    int screenPosition = (absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera);
-    return mapCamera->factorZoomLevel(screenPosition) + 42;
+    return mapCamera->getWindowYPosition(pos_y());
 }
 
 // draw the bullet

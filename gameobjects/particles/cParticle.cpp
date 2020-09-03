@@ -62,26 +62,14 @@ bool cParticle::isValid()
     return bAlive;
 }
 
-// absolute pixel position
-int cParticle::draw_x()
-{
-    int absoluteXCoordinateOnMap = x;
-    int absoluteXCoordinateMapCamera = mapCamera->getViewportStartX();
-    int relativeViewportX = absoluteXCoordinateOnMap - absoluteXCoordinateMapCamera;
+int cParticle::draw_x() {
     int bmpOffset = (iWidth/2) * -1;
-    int windowDrawX = mapCamera->factorZoomLevel(relativeViewportX + bmpOffset);
-    return windowDrawX;
+    return mapCamera->getWindowXPositionWithOffset(x, bmpOffset);
 }
 
-// absolute pixel position
-int cParticle::draw_y()
-{
-    int absoluteYCoordinateOnMap = y;
-    int absoluteYCoordinateMapCamera = mapCamera->getViewportStartY();
-    int relativeViewportY = absoluteYCoordinateOnMap - absoluteYCoordinateMapCamera;
-    int heightOfTopBar = 42;
+int cParticle::draw_y() {
     int bmpOffset = (iHeight/2) * -1;
-    return heightOfTopBar + mapCamera->factorZoomLevel(relativeViewportY + bmpOffset);
+    return mapCamera->getWindowYPositionWithOffset(y, bmpOffset);
 }
 
 // draw

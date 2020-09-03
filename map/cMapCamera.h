@@ -45,11 +45,19 @@ public:
     void moveTo(int theX, int theY);
 
     int getWindowXPosition(int absoluteXPosition) {
-        return factorZoomLevel(absoluteXPosition - viewportStartX);
+        return getWindowXPositionWithOffset(absoluteXPosition, 0);
     }
 
     int getWindowYPosition(int absoluteYPosition) {
-        return factorZoomLevel(absoluteYPosition - viewportStartY) + heightOfTopBar;
+        return getWindowYPositionWithOffset(absoluteYPosition, 0);
+    }
+
+    int getWindowXPositionWithOffset(int absoluteXPosition, int offset) {
+        return factorZoomLevel((absoluteXPosition - viewportStartX)+offset);
+    }
+
+    int getWindowYPositionWithOffset(int absoluteYPosition, int offset) {
+        return factorZoomLevel((absoluteYPosition - viewportStartY)+offset) + heightOfTopBar;
     }
 
     // These methods need to use zoomfactor to properly calculate the position on the map
