@@ -243,6 +243,7 @@ void cSeedMapGenerator::scanRegions(struct cell map[64][64])
 
    for (i = 0; i < 64; i++)
       currln[i] = map[0][i].w;
+
    for (y = 0; y < 64; y++)
    {
       for (i = 0; i < 64; i++)
@@ -250,13 +251,31 @@ void cSeedMapGenerator::scanRegions(struct cell map[64][64])
          prevln[i] = currln[i];
          currln[i] = map[y][i].w;
       }
+
       for (x = 0; x < 64; x++)
       {
          middle = map[y][x].w;
-         left   = currln[x-1];
+
+         if (x > 0) {
+             left = currln[x - 1];
+         } else {
+             left = middle;
+         }
+
          up     = prevln[x];
-         right  = currln[x+1];
-         down   = map[y+1][x].w;
+
+         if (x < 63) {
+             right  = currln[x+1];
+         } else {
+             right = middle;
+         }
+
+         if (y < 63) {
+             down = map[y+1][x].w;
+         } else {
+             down = middle;
+         }
+
          if (x == 0)  left  = middle;
          if (x == 63) right = middle;
          if (y == 0)  up    = middle;
@@ -334,31 +353,45 @@ void cSeedMapGenerator::createRegions(struct cell map[64][64])
  * to 'prevln'.
  */
 
-void cSeedMapGenerator::balanceMap(struct cell map[64][64])
-{
+void cSeedMapGenerator::balanceMap(struct cell map[64][64]) {
    short prevln[64], currln[64];
    short i, x, y;
+
    /* these variables store proper numbers (c=center, l=left etc.) */
    short c, u, ru, r, rd, d, ld, l, lu;
 
-   for (i = 0; i < 64; i++)
-      currln[i] = 0;
-   for (y = 0; y < 64; y++)
-   {
-      for (i = 0; i < 64; i++)
-      {
+   for (i = 0; i < 64; i++) {
+       currln[i] = 0;
+   }
+
+   for (y = 0; y < 64; y++) {
+      for (i = 0; i < 64; i++) {
          prevln[i] = currln[i];
          currln[i] = map[y][i].w;
       }
-      for (x = 0; x < 64; x++)
-      {
-         lu = prevln[x-1];      u = prevln[x];     ru = prevln[x+1];
-         l  = currln[x-1];      c = currln[x];     r  = currln[x+1];
-         rd = map[y+1][x+1].w;  d = map[y+1][x].w; ld = map[y+1][x-1].w;
-         if (x==0)  lu = l = ld = c; /* left edge */
-         if (y==0)  lu = u = ru = c; /* top edge*/
-         if (x==63) ru = r = rd = c; /* right edge */
-         if (y==63) ld = d = rd = c; /* bottom edge */
+      for (x = 0; x < 64; x++) {
+          bool onEdge = false;
+          // all initialize as center
+          c = currln[x];
+          lu = l = ld = ru = r = rd = u = d = c;
+          if (x > 1 && x < 63) {
+              lu = prevln[x - 1];
+              l = currln[x - 1];
+              ru = prevln[x + 1];
+              r = currln[x + 1];
+
+              if (y < 63) rd = map[y + 1][x + 1].w;
+              if (y > 63) ld = map[y + 1][x - 1].w;
+          }
+
+          if (y > 1 && y < 63) {
+              u = prevln[x];
+              if (x > 1) lu = prevln[x - 1];
+              if (x > 1) ld = map[y + 1][x - 1].w;
+              if (x < 63) ru = prevln[x + 1];
+              d = map[y + 1][x].w;
+          }
+
          map[y][x].w = (lu + u + ru + r + rd + d + ld + l + c)/9;
       }
    }
