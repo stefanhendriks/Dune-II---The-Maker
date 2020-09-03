@@ -13,6 +13,86 @@ cAllegroDrawer::cAllegroDrawer() {
 cAllegroDrawer::~cAllegroDrawer() {
 }
 
+void cAllegroDrawer::stretchBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
+    if (src == nullptr) return;
+    if (dest == nullptr) return;
+
+    if (src_x + width > src->w) width = src->w-src_x;
+    if (src_y + height > src->h) height = src->h-src_y;
+
+    // could happen due to 'fix' above, you can't have a original width or height of 0
+    if (width < 0) return;
+    if (height < 0) return;
+
+    // no use drawing outside of bounds
+    if (pos_x + desiredWidth < 0) return;
+    if (pos_y + desiredHeight < 0) return;
+    if (pos_x > dest->w) return;
+    if (pos_y > dest->h) return;
+
+    // no use drawing a desired image with 0 width or height
+    if (desiredHeight <= 0) return;
+    if (desiredWidth <= 0) return;
+
+    stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+}
+
+void cAllegroDrawer::stretchBlitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
+    stretchBlit((BITMAP *)gfxdata[index].dat, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+}
+
+void cAllegroDrawer::maskedBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height) {
+    if (src == nullptr) return;
+    if (dest == nullptr) return;
+
+    if (src_x + width > src->w) width = src->w-src_x;
+    if (src_y + height > src->h) height = src->h-src_y;
+
+    // could happen due to 'fix' above, you can't have a original width or height of 0
+    if (width <= 0) return;
+    if (height <= 0) return;
+
+    // no use drawing outside of bounds
+    if (pos_x + width < 0) return;
+    if (pos_y + height < 0) return;
+    if (pos_x > dest->w) return;
+    if (pos_y > dest->h) return;
+
+    masked_blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
+}
+
+void cAllegroDrawer::maskedBlitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int pos_x, int pos_y, int width, int height) {
+    maskedBlit((BITMAP *)gfxdata[index].dat, dest, src_x, src_y, pos_x, pos_y, width, height);
+}
+
+void cAllegroDrawer::maskedStretchBlitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
+    maskedStretchBlit((BITMAP *)gfxdata[index].dat, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+}
+
+void cAllegroDrawer::maskedStretchBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
+    if (src == nullptr) return;
+    if (dest == nullptr) return;
+
+    if (src_x + width > src->w) width = src->w-src_x;
+    if (src_y + height > src->h) height = src->h-src_y;
+
+    // could happen due to 'fix' above, you can't have a original width or height of 0
+    if (width <= 0) return;
+    if (height <= 0) return;
+
+    // no use drawing outside of bounds
+    if (pos_x + desiredWidth < 0) return;
+    if (pos_y + desiredHeight < 0) return;
+    if (pos_x > dest->w) return;
+    if (pos_y > dest->h) return;
+
+    // no use drawing a desired image with 0 width or height
+    if (desiredHeight <= 0) return;
+    if (desiredWidth <= 0) return;
+
+    masked_stretch_blit(src, dest, src_x, src_y, width, height, pos_x, pos_y, desiredWidth, desiredHeight);
+}
+
 void cAllegroDrawer::drawCenteredSprite(BITMAP *dest, BITMAP *src) {
 	assert(src);
 	assert(dest);

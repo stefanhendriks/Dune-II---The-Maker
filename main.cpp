@@ -38,6 +38,7 @@ cTimeManager   				TimeManager;
 cStructureUtils 			structureUtils;
 cDrawManager   			*	drawManager = NULL;
 cInteractionManager 	*	interactionManager = NULL;
+cAllegroDrawer          *   allegroDrawer = nullptr;
 
 // Structs
 sPreviewMap     			PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory

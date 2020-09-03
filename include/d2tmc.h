@@ -45,6 +45,7 @@ extern cTimeManager   TimeManager;
 extern cStructureUtils structureUtils;
 extern cDrawManager   *drawManager;
 extern cInteractionManager *interactionManager;
+extern cAllegroDrawer      *allegroDrawer;
 
 // ...
 extern sPreviewMap     PreviewMap[MAX_SKIRMISHMAPS];                   // max of 100 maps in skirmish directory

@@ -67,21 +67,19 @@ void cMapDrawer::drawShroud(int startX, int startY) {
                     int tile = determineWhichShroudTileToDraw(iCell, iPl);
 
                     if (tile > -1) {
-						masked_stretch_blit((BITMAP *)gfxdata[SHROUD].dat, bmp_screen, tile * 32, 0, 32, 32, fDrawX, fDrawY, iTileWidth, iTileHeight);
+                        allegroDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, tile * 32, 0, 32, 32, fDrawX, fDrawY, iTileWidth, iTileHeight);
                         clear_to_color(temp, makecol(255, 0, 255));
 
-                        masked_stretch_blit((BITMAP *) gfxdata[SHROUD_SHADOW].dat, temp, tile * 32, 0, 32, 32, 0, 0, iTileWidth, iTileHeight);
+                        allegroDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0, iTileWidth, iTileHeight);
                         draw_trans_sprite(bmp_screen, temp, fDrawX, fDrawY);
                     }
-				  }
-				  else
-				  {
-                      // NOT VISIBLE, DO NOT DRAW A THING THEN!
-                      // Except when there is a building here, that should not be visible ;)
-                      // tile 0 of shroud is entirely black... (effectively the same as drawing a rect here)
-                      masked_stretch_blit((BITMAP *)gfxdata[SHROUD].dat, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY, iTileWidth, iTileHeight);
-				  }
-			  }
+                } else {
+				    // NOT VISIBLE, DO NOT DRAW A THING THEN!
+				    // Except when there is a building here, that should not be visible ;)
+				    // tile 0 of shroud is entirely black... (effectively the same as drawing a rect here)
+				    allegroDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY, iTileWidth, iTileHeight);
+			    }
+            }
 		}
 	}
 
@@ -147,18 +145,26 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
             // draw Smudge if necessary
             if (cell->smudgetype > -1 && cell->smudgetile > -1) {
                 // no need to stretch here, we stretch bmp_temp below
-                masked_blit((BITMAP *) gfxdata[SMUDGE].dat, bmp_temp,
-                            cell->smudgetile * 32,
-                            cell->smudgetype * 32,
-                            0,
-                            0,
-                            32,
-                            32);
+                allegroDrawer->maskedBlitFromGfxData(SMUDGE, bmp_temp,
+                        cell->smudgetile * 32,
+                        cell->smudgetype * 32,
+                        0,
+                        0,
+                        32,
+                        32);
+//                masked_blit((BITMAP *) gfxdata[SMUDGE].dat, bmp_temp,
+//                            cell->smudgetile * 32,
+//                            cell->smudgetype * 32,
+//                            0,
+//                            0,
+//                            32,
+//                            32);
             }
 
             int iDrawX = round(fDrawX);
             int iDrawY = round(fDrawY);
-            stretch_blit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
+            allegroDrawer->stretchBlit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
+//            stretch_blit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
 
             // Draw debugging information
             if (DEBUGGING) {
