@@ -80,10 +80,10 @@ void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
 
     if (structure->getShadowBitmap()) {
         set_trans_blender(0, 0, 0, 128);
-        masked_stretch_blit(structure->getShadowBitmap(), bmp_screen, 0, iSourceY, orgWidthInPixels, orgHeightInPixels, drawX, drawY, widthInPixels, heightInPixels);
+        allegroDrawer->maskedStretchBlit(structure->getShadowBitmap(), bmp_screen, 0, iSourceY, orgWidthInPixels, orgHeightInPixels, drawX, drawY, widthInPixels, heightInPixels);
     }
 
-    masked_stretch_blit(structure->getBitmap(), bmp_screen, 0, iSourceY, orgWidthInPixels, orgHeightInPixels, drawX, drawY, widthInPixels, heightInPixels);
+    allegroDrawer->maskedStretchBlit(structure->getBitmap(), bmp_screen, 0, iSourceY, orgWidthInPixels, orgHeightInPixels, drawX, drawY, widthInPixels, heightInPixels);
 }
 
 int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure * structure) {
@@ -172,10 +172,8 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
 	// windtrap animation
 	draw_sprite(wind, temp, 0, 0);
 	lit_windtrap_color(wind, makecol(0, 0, fade));
-//	draw_sprite(bmp_screen, wind, drawX, drawY);
     draw_sprite(temp_result, temp, 0, 0);
-//	blit(temp_result, bmp_screen, 0, 0, drawX, drawY, widthInPixels, heightInPixels);
-    stretch_blit(temp_result, bmp_screen, 0, 0, orgWidthInPixels, orgHeightInPixels, drawX, drawY, widthInPixels, heightInPixels);
+    allegroDrawer->stretchBlit(temp_result, bmp_screen, 0, 0, orgWidthInPixels, orgHeightInPixels, drawX, drawY, widthInPixels, heightInPixels);
 
 	// in case shadow, draw shadow now using fBlend.
 	if (structure->getShadowBitmap()) {

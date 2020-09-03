@@ -164,7 +164,6 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
             int iDrawX = round(fDrawX);
             int iDrawY = round(fDrawY);
             allegroDrawer->stretchBlit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
-//            stretch_blit(bmp_temp, bmp_screen, 0, 0, 32, 32, iDrawX, iDrawY, iTileWidth, iTileHeight);
 
             // Draw debugging information
             if (DEBUGGING) {

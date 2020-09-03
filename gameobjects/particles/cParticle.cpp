@@ -121,7 +121,7 @@ void cParticle::draw() {
     // create bmp that is the stretched version of temp
     BITMAP *stretched = create_bitmap(bmp_width + 1, bmp_height + 1);
     clear_to_color(stretched, makecol(255, 0, 255)); // mask color
-    masked_stretch_blit(temp, stretched, 0, 0, iWidth, iHeight, 0, 0, bmp_width, bmp_height);
+    allegroDrawer->maskedStretchBlit(temp, stretched, 0, 0, iWidth, iHeight, 0, 0, bmp_width, bmp_height);
 
     // temp is no longer needed
     destroy_bitmap(temp);

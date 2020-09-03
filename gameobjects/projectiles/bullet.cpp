@@ -119,13 +119,13 @@ void cBullet::draw()
   }
 
   if (bullets[iType].bmp != NULL) {
-      masked_stretch_blit((BITMAP *) bullets[iType].bmp,
-            bmp_screen,
-            sx, sy,
-            bmp_width, bmp_width,
-            x, y,
-            mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_width)
-            );
+      BITMAP *src = (BITMAP *) bullets[iType].bmp;
+      allegroDrawer->maskedStretchBlit(src,
+                                       bmp_screen,
+                                       sx, sy,
+                                       bmp_width, bmp_width,
+                                       x, y,
+                                       mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_width));
   }
 
   return;
