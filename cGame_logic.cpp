@@ -1488,8 +1488,6 @@ void cGame::setup_skirmish()
 	int backButtonY = screen_y - topBarHeight;
 	int backButtonX = 0;
     textDrawer.drawTextBottomLeft(" BACK");
-//    alfont_textprintf(bmp_screen, bene_font, 0, 467, makecol(0,0,0), " BACK");
-//    alfont_textprintf(bmp_screen, bene_font, 0, 466, makecol(255,255,255), " BACK");
 
     // start
     int startButtonWidth = textDrawer.textLength("START");
@@ -1498,8 +1496,6 @@ void cGame::setup_skirmish()
     int startButtonX = screen_x - startButtonWidth;
 
     textDrawer.drawTextBottomRight("START");
-//    alfont_textprintf(bmp_screen, bene_font, 580, 467, makecol(0,0,0), "START");
-//    alfont_textprintf(bmp_screen, bene_font, 580, 466, makecol(255,255,255), "START");
 
 
 	if (bDoRandomMap) {
