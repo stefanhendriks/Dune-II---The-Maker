@@ -2489,7 +2489,13 @@ void cGame::shutdown() {
 
 	logbook("Allegro MP3 library shut down.");
 
-	// Now we are all neatly closed, we exit Allegro and return to OS hell.
+	for (int i = 0; i < MAX_PLAYERS; i++) {
+	    player[i].destroyAllegroBitmaps();
+	}
+
+    delete allegroDrawer;
+
+	// Now we are all neatly closed, we exit Allegro and return to OS.
 	allegro_exit();
 	logbook("Allegro shut down.");
 	logbook("Thanks for playing.");
@@ -2566,6 +2572,8 @@ bool cGame::setupGame() {
 		logger->log(LOG_FATAL, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_FAILED);
 		return false;
 	}
+
+    allegroDrawer = new cAllegroDrawer();
 
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
 
