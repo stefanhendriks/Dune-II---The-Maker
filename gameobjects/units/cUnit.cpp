@@ -436,7 +436,7 @@ int cUnit::pos_y() {
 }
 
 int cUnit::draw_x() {
-    int bmpOffset = TILESIZE_WIDTH_PIXELS - units[iType].bmp_width;
+    int bmpOffset = (TILESIZE_WIDTH_PIXELS - units[iType].bmp_width) / 2;
     return mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
 }
 
