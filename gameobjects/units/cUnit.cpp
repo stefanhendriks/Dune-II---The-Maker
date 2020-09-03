@@ -672,14 +672,14 @@ void cUnit::draw() {
             destY = iDrawY + 24; // TODO; do something with height here? the closer to target, the less distant the shadow?
 		}
 
-        masked_stretch_blit(shadow, bmp_screen, 0, 0, bmp_width, bmp_height, iDrawX, destY, scaledWidth, scaledHeight);
+        allegroDrawer->maskedStretchBlit(shadow, bmp_screen, 0, 0, bmp_width, bmp_height, iDrawX, destY, scaledWidth, scaledHeight);
 		destroy_bitmap(shadow);
     }
 
     // Draw BODY
     BITMAP *bitmap = cPlayer.getUnitBitmap(iType);
     if (bitmap) {
-        masked_stretch_blit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height,
+        allegroDrawer->maskedStretchBlit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height,
                             ux, uy,
                             scaledWidth,
                             scaledHeight);
@@ -696,7 +696,7 @@ void cUnit::draw() {
         start_x = bmp_head * bmp_width;
         start_y = bmp_height * iFrame;
 
-        masked_stretch_blit(top, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux, uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
+        allegroDrawer->maskedStretchBlit(top, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux, uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
     }
 
     // TODO: Fix this / Draw BLINKING (ie, when targeted unit)
@@ -714,7 +714,7 @@ void cUnit::draw() {
         BITMAP *focusBitmap = (BITMAP *) gfxdata[FOCUS].dat;
         int bmp_width = focusBitmap->w;
         int bmp_height = focusBitmap->h;
-        masked_stretch_blit(focusBitmap, bmp_screen, 0, 0, bmp_width, bmp_height, iSelX/*+startpixel*/- 2, iSelY, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
+        allegroDrawer->maskedStretchBlit(focusBitmap, bmp_screen, 0, 0, bmp_width, bmp_height, iSelX/*+startpixel*/- 2, iSelY, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
     }
 }
 

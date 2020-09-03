@@ -49,6 +49,7 @@ void logbook(const char *txt)
 //void stretch_sprite(BITMAP *dst, BITMAP *src, int x, int y, int w, int h) {
 ////    logbook("stretch_sprite called");
 //}
+
 // determine if this cell is not out of boundries
 bool BORDER_POS(int x, int y)
 {

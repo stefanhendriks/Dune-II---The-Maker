@@ -157,7 +157,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 				iTotalRocks++;
 
 			// Draw bad gfx on spot
-			stretch_blit((BITMAP *)gfxdata[iTile].dat, temp, 0, 0, 32, 32,
+            allegroDrawer->stretchBlitFromGfxData(iTile, temp, 0, 0, 32, 32,
                 iX*mapCamera->getZoomedTileWidth(),
                 iY*mapCamera->getZoomedTileHeight(),
                 mapCamera->getZoomedTileWidth(),
@@ -235,7 +235,7 @@ void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int c
         bmp = player->getStructureBitmap(structureId);
 	}
 
-    stretch_blit(bmp, temp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);
+    allegroDrawer->stretchBlit(bmp, temp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);
 
     draw_trans_sprite(bmp_screen, temp, iDrawX, iDrawY);
 
