@@ -104,6 +104,14 @@ void cGame::init() {
         aiplayer[i].init(i);
     }
 
+	for (int i=0; i < MAX_UNITS; i++) {
+	    unit[i].init(i);
+	}
+
+	for (int i=0; i < MAX_PARTICLES; i++) {
+	    particle[i].init();
+	}
+
 	// Units & Structures are already initialized in map.init()
 	if (game.bMp3) {
 	  almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
