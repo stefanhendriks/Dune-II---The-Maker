@@ -13,9 +13,30 @@ cAllegroDrawer::cAllegroDrawer() {
 cAllegroDrawer::~cAllegroDrawer() {
 }
 
+void cAllegroDrawer::stretchSprite(BITMAP *src, BITMAP *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
+    if (src == nullptr) return;
+    if (dest == nullptr) return;
+    // only same color depth is supported
+    if (bitmap_color_depth(src) != bitmap_color_depth(dest)) return;
+
+    // no use drawing outside of bounds
+    if (pos_x + desiredWidth < 0) return;
+    if (pos_y + desiredHeight < 0) return;
+    if (pos_x > dest->w) return;
+    if (pos_y > dest->h) return;
+
+    // no use drawing a desired image with 0 width or height
+    if (desiredHeight <= 0) return;
+    if (desiredWidth <= 0) return;
+
+    stretch_sprite(dest, src, pos_x, pos_y, desiredWidth, desiredHeight);
+}
+
 void cAllegroDrawer::stretchBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
     if (src == nullptr) return;
     if (dest == nullptr) return;
+    // only same color depth is supported
+    if (bitmap_color_depth(src) != bitmap_color_depth(dest)) return;
 
     if (src_x + width > src->w) width = src->w-src_x;
     if (src_y + height > src->h) height = src->h-src_y;
@@ -72,6 +93,8 @@ void cAllegroDrawer::maskedStretchBlitFromGfxData(int index, BITMAP *dest, int s
 void cAllegroDrawer::maskedStretchBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
     if (src == nullptr) return;
     if (dest == nullptr) return;
+    // only same color depth is supported
+    if (bitmap_color_depth(src) != bitmap_color_depth(dest)) return;
 
     if (src_x + width > src->w) width = src->w-src_x;
     if (src_y + height > src->h) height = src->h-src_y;

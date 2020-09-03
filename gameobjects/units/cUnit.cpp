@@ -645,10 +645,6 @@ void cUnit::draw() {
     int iSelX = ux;
     int iSelY = uy;
 
-    // The final coordinates for drawing
-    int iDrawX = ux;
-    int iDrawY = uy;
-
     cPlayer &cPlayer = player[this->iPlayer];
 
     // Draw SHADOW
@@ -657,14 +653,16 @@ void cUnit::draw() {
     float scaledHeight = mapCamera->factorZoomLevel(bmp_height);
 
     if (shadow) {
-        int destY = iDrawY;
+        int destY = uy;
 
 		if (iType == CARRYALL) {
 		    // adjust X and Y so it looks like a carry-all is 'higher up in the air'
-            destY = iDrawY + 24; // TODO; do something with height here? the closer to target, the less distant the shadow?
+            destY = uy + 24; // TODO; do something with height here? the closer to target, the less distant the shadow?
 		}
 
-        allegroDrawer->maskedStretchBlit(shadow, bmp_screen, 0, 0, bmp_width, bmp_height, iDrawX, destY, scaledWidth, scaledHeight);
+        allegroDrawer->maskedStretchBlit(shadow, bmp_screen, 0, 0, bmp_width, bmp_height,
+                                         ux, destY,
+                                         scaledWidth, scaledHeight);
 		destroy_bitmap(shadow);
     }
 
