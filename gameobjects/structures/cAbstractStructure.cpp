@@ -222,18 +222,16 @@ void cAbstractStructure::die()
 }
 
 
-void cAbstractStructure::think_prebuild()
-{
-        // not yet done prebuilding
-        // Buildfase 1, 3, 5, 7, 9 are all 'prebuilds'
-        TIMER_prebuild--;
+void cAbstractStructure::think_prebuild() {
+    // not yet done prebuilding
+    // Buildfase 1, 3, 5, 7, 9 are all 'prebuilds'
+    TIMER_prebuild--;
 
-        if (TIMER_prebuild < 0)
-        {
-            iBuildFase++;
-
-            TIMER_prebuild = (240 / iBuildFase);
-        }
+    if (TIMER_prebuild < 0) {
+        iBuildFase++;
+        int structureSize = getWidthInPixels() * getHeightInPixels();
+        TIMER_prebuild = ((std::min(structureSize/16, 250)) / iBuildFase);
+    }
 }
 
 // Free around structure, return the first cell that is free.
@@ -325,8 +323,7 @@ void cAbstractStructure::think_flag() {
     }
 }
 
-void cAbstractStructure::think_damage()
-{
+void cAbstractStructure::think_damage() {
     TIMER_damage--;
     if (TIMER_damage < 0) {
         TIMER_damage = rnd(500)+250;

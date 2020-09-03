@@ -156,26 +156,15 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
     str->setCell(iCell);
     str->setOwner(iPlayer);
     str->setBuildingFase(1); // prebuild
-    str->TIMER_prebuild = structureSize/16; // prebuild timer. A structure of 64x64 will result in 256, bigger structure has longer timer
+    str->TIMER_prebuild = std::min(structureSize/16, 250); // prebuild timer. A structure of 64x64 will result in 256, bigger structure has longer timer
     str->TIMER_damage = rnd(1000)+100;
     str->fConcrete = (1 - fPercent);
 	str->setHitPoints((int)fHealth);
     str->setFrame(rnd(1)); // random start frame (flag)
     str->setStructureId(iNewId);
 
-    // fix up power usage
-    player[iPlayer].use_power += structures[iStructureType].power_drain;
-
-    // fix up power supply
-    player[iPlayer].has_power += structures[iStructureType].power_give;
-
-    // fix up spice storage stuff
-    if (iStructureType == SILO)	    player[iPlayer].max_credits += 1000;
-	if (iStructureType == REFINERY)   player[iPlayer].max_credits += 1500;
-
-	str->setWidth(structures[str->getType()].bmp_width/32);
-	str->setHeight(structures[str->getType()].bmp_height/32);
-
+	str->setWidth(structures[str->getType()].bmp_width/TILESIZE_WIDTH_PIXELS);
+	str->setHeight(structures[str->getType()].bmp_height/TILESIZE_HEIGHT_PIXELS);
 
  	// clear fog around structure
 	clearFogForStructureType(iCell, str);
@@ -184,9 +173,6 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	if (iStructureType == REFINERY) {
 		REINFORCE(iPlayer, HARVESTER, iCell+2, iCell+2);
 	}
-
-    // Use power
-	powerUp(iStructureType, iPlayer);
 
     return str;
 }
@@ -366,42 +352,6 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDT
 
     return slabs; // ranges from 0 to <max slabs possible of building (ie height * width in cells)
 }
-
-void cStructureFactory::powerUp(int iStructureType, int iPlayer) {
-   // fix up power usage
-    player[iPlayer].use_power += structures[iStructureType].power_drain;
-
-    // fix up power supply
-    player[iPlayer].has_power += structures[iStructureType].power_give;
-
-
-	// TODO: move to other methods regarding spice management?
-	if (iStructureType == SILO) {
-		player[iPlayer].max_credits += 1000;
-	}
-
-	if (iStructureType == REFINERY) {
-		player[iPlayer].max_credits += 1500;
-	}
-
-}
-
-void cStructureFactory::powerDown(int iStructureType, int iPlayer) {
-    // fix up power usage
-    player[iPlayer].use_power -= structures[iStructureType].power_drain;
-
-    // less power
-    player[iPlayer].has_power -= structures[iStructureType].power_give;
-
-	if (iStructureType == SILO) {
-		player[iPlayer].max_credits -= 1000;
-	}
-
-	if (iStructureType == REFINERY) {
-		player[iPlayer].max_credits -= 1500;
-	}
-}
-
 
 void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType) {
 	assert(iCell > -1);
