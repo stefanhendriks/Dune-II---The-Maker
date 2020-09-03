@@ -178,12 +178,12 @@ int cStructureUtils::findStructureTypeByTypeOfList(cBuildingList *list, cBuildin
 	return -1;
 }
 
-int cStructureUtils::findClosestStructureTypeToCell(int cell, int structureType, cPlayer * player) {
+int cStructureUtils::findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(int cell, int structureType, cPlayer * player) {
 	assert(player);
 	assert(structureType > -1);
 	assert(cell >= 0 || cell < MAX_CELLS);
 
-	int foundStructureId=-1;		// found structure id
+	int foundStructureId=-1;	// found structure id
 	long shortestDistance=9999; // max distance to search in
 
 	int playerId = player->getId();

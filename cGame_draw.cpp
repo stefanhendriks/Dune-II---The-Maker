@@ -110,7 +110,8 @@ void cGame::combat_mouse()
 							// find closest repair bay to move to
 
 							cStructureUtils structureUtils;
-							int	iNewID = structureUtils.findClosestStructureTypeToCell(unit[hover_unit].iCell, REPAIR, &player[HUMAN]);
+							int	iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
+                                    unit[hover_unit].iCell, REPAIR, &player[HUMAN]);
 
 							if (iNewID > -1) {
 								int iCarry = CARRYALL_TRANSFER(hover_unit, structure[iNewID]->getCell() + 2);
