@@ -191,8 +191,7 @@ void cGame::mission_init() {
 }
 
 
-void cGame::think_winlose()
-{
+void cGame::think_winlose() {
     bool bSucces=false;
     bool bFailed=true;
 
@@ -261,8 +260,7 @@ void cGame::think_winlose()
 
 
     // On succes...
-    if (bSucces)
-    {
+    if (bSucces) {
         state = GAME_WINNING;
 
         shake_x=0;
@@ -276,8 +274,7 @@ void cGame::think_winlose()
         // copy over
         blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
 
-        draw_sprite(bmp_winlose, (BITMAP *)gfxinter[BMP_WINNING].dat, 77, 182);
-
+        allegroDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *)gfxinter[BMP_WINNING].dat);
     }
 
     if (bFailed)
@@ -295,8 +292,7 @@ void cGame::think_winlose()
         // copy over
         blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
 
-        draw_sprite(bmp_winlose, (BITMAP *)gfxinter[BMP_LOSING].dat, 77, 182);
-
+        allegroDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *)gfxinter[BMP_LOSING].dat);
     }
 }
 
