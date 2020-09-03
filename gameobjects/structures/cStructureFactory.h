@@ -46,7 +46,7 @@ public:
 
 	void createSlabForStructureType(int iCell, int iStructureType);
 
-	void placeStructure(int iCell, int iStructureType, int iPlayer);
+	void updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(int iCell, int iStructureType, int iPlayer);
 
 	int getSlabStatus(int iCell, int iStructureType, int iUnitIDToIgnore);
 

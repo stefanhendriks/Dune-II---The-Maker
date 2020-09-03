@@ -209,7 +209,7 @@ void cAbstractStructure::die()
     }
 
     // play sound
-    play_sound_id(SOUND_CRUMBLE01 + rnd(2), iCellOnScreen(iCell));
+    play_sound_id(SOUND_CRUMBLE01 + rnd(2), distanceBetweenCellAndCenterOnScreen(iCell));
 
     // remove from the playground
     map.remove_id(iIndex, MAPID_STRUCTURES);

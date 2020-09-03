@@ -36,9 +36,6 @@ void install_structures();
 void install_units();
 void install_bullets();
 
-
-
-float health_structure(int i, int w);
 float health_bar(float max_w, int i, int w);
 float health_unit(int i, float widthInPixels);
 
@@ -57,14 +54,9 @@ void playMusicByType(int iType);
 void Shimmer(int r, int x, int y);
 int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstruc);
 
+int distanceBetweenCellAndCenterOnScreen(int iCell);
 
-// Creation of units / structures / bullets / reinforcements, etc
-void CREATE_STRUCTURE(int iCell, int iType, int iPlayer, int iPercent);
-
-int iCellOnScreen(int iCell);
-
-void mask_to_color(BITMAP *bmp, int maskColor, int color);
-void lit_windtrap_color(BITMAP *bmp, int color);
+void bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor);
 int getAmountReservedVoicesAndInstallSound();
 
 //void masked_stretch_blit(BITMAP *s, BITMAP *d, int s_x, int s_y, int s_w, int s_h, int d_x, int d_y, int d_w, int d_h);

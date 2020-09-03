@@ -1118,39 +1118,18 @@ float health_unit(int i, float widthInPixels) {
 
 
 
-/******************************
- Structure health-bar calculation, returns amount of pictures
- ******************************/
-float health_structure(int i, int w)
-{
-  float health = 0.0f;
-  float flHP   = structure[i]->getHitPoints();
-  float flMAX  = structures[structure[i]->getType()].hp;
-
-  // amount of pixels (max 16 = 100%)
-
-  health = (float)(flHP / flMAX);
-
-  if (health > 1.0)
-      health=1.0;
-
-  return (health*w);
-}
-
-
 // return a border cell, close to iCll
-int iFindCloseBorderCell(int iCll)
-{
+int iFindCloseBorderCell(int iCll) {
 	cCellCalculator * calculator = new cCellCalculator(&map);
 	int result = calculator->findCloseMapBorderCellRelativelyToDestinationCel(iCll);
 	delete calculator;
 	return result;
 }
 
-int iCellOnScreen(int iCell)
-{
-    // return 0 when on screen, else the distance..
 
+// TODO: Revisit, because distance can be calculated easier? Using mapCamera? This method does not seem to make sense
+// when reading the comments...
+int distanceBetweenCellAndCenterOnScreen(int iCell) {
     if (iCell < 0) {
         return 0; // return its on screen, probably some sound that has nothing to do with the battlefield (money, etc)
     }
@@ -1166,7 +1145,7 @@ int iCellOnScreen(int iCell)
     int iEndY= iMapY + ((game.screen_y-42)/ mapCamera->getZoomedTileHeight()) + 1;  // height of upper bar is 42
 
     if ((iCellX >= iMapX && iCellX <= iEndX) && (iCellY >= iMapY && iCellY <= iEndY))
-        return 0; // on screen
+        return 0; // off screen
 
     // determine cell on center of screen
     int iCalcX = iMapX + (((game.screen_x-160)/ mapCamera->getZoomedTileWidth()) / 2);
@@ -1183,8 +1162,7 @@ int iCellOnScreen(int iCell)
  * @param s
  * @param iDistance
  */
-void play_sound_id(int s, int iDistance)
-{
+void play_sound_id(int s, int iDistance) {
 	if (!game.bPlaySound) return; // do not play sound when boolean is false.
 
 	if (gfxaudio[s].dat == NULL) return; // no data file at the specified position in index.
@@ -1402,7 +1380,7 @@ int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstr
 
   // play sound (when we have one)
   if (bullets[type].sound > -1)
-      play_sound_id(bullets[type].sound, iCellOnScreen(cell));
+      play_sound_id(bullets[type].sound, distanceBetweenCellAndCenterOnScreen(cell));
 
   return new_id;
 }
@@ -1516,43 +1494,15 @@ void INIT_PREVIEWS()
 	PreviewMap[0].terrain = create_bitmap(PAN_CENTER, PAN_CENTER);
 }
 
-// 8 bit memory putpixel
-void memory_putpixel(BITMAP *bmp, int x, int y, int color)
-{
-	bmp->line[y][x] = color;
-}
-
 /**
-	BMP must be 16 bit.
+	Function that will go through all pixels and will replace a certain color with another.
+    Ie, this can be used to create the fading animation for Windtraps.
 **/
-void lit_windtrap_color(BITMAP *bmp, int iColor)
-{
-	for (int x = 0; x < bmp->w; x++)
-	{
-		for (int y = 0; y < bmp->h; y++)
-		{
-            // masked
-			if (getpixel(bmp, x, y) == makecol(40,40,182)) {
-                //_putpixel16(bmp, x, y, iColor);
-				putpixel(bmp, x, y, iColor);
-			}
-		}
-	}
-}
-
-void mask_to_color(BITMAP *bmp, int maskColor, int color)
-{
-	for (int x=0; x < bmp->w; x++)
-	{
-		for (int y=0; y < bmp->h; y++)
-		{
-			int c = getpixel(bmp, x, y);
-
-			if (c != maskColor)
-			{
-				// masked
-				putpixel(bmp, x, y, color);
-				//allegro_message("Non pink detected");
+void bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor) {
+	for (int x = 0; x < bmp->w; x++) {
+		for (int y = 0; y < bmp->h; y++) {
+			if (getpixel(bmp, x, y) == colorToReplace) {
+				putpixel(bmp, x, y, newColor);
 			}
 		}
 	}

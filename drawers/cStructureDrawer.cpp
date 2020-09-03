@@ -140,58 +140,36 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
 
 	assert(structure);
 
-	int orgWidthInPixels = structure->getWidthInPixels();
-	int orgHeightInPixels = structure->getHeightInPixels();
+	int pixelWidth = structure->getWidthInPixels();
+	int pixelHeight = structure->getHeightInPixels();
 
 	int drawX = structure->iDrawX();
 	int drawY = structure->iDrawY();
 
     // structures are animated within the same source bitmap. The Y coordinates determine
     // what frame is being drawn. So multiply the height of the structure size times frame
-    int iSourceY = orgHeightInPixels * structure->getFrame();
+    int iSourceY = pixelHeight * structure->getFrame();
 
 	int fade = windtrap->getFade();
     int screenDepth = bitmap_color_depth(bmp_screen);
 
-	BITMAP *temp=create_bitmap_ex(8, orgWidthInPixels, orgHeightInPixels);
-	BITMAP *temp_shadow=create_bitmap(orgWidthInPixels, orgHeightInPixels);
-    BITMAP *wind=create_bitmap(orgWidthInPixels, orgHeightInPixels);
-    BITMAP *temp_result=create_bitmap_ex(screenDepth, orgWidthInPixels, orgHeightInPixels);
+    BITMAP *wind=create_bitmap_ex(screenDepth, pixelWidth, pixelHeight);
 
-	clear(temp);
     clear_to_color(wind, makecol(255,0,255));
-	clear_to_color(temp_shadow, makecol(255,0,255));
 
-    // the 'background' of the temp_result is from bmp_screen
-    // BUG BUG: This will break when zooming, this only works when unzoomed (it copies the expected terrain)
-    blit(bmp_screen, temp_result, drawX, drawY, 0, 0, orgWidthInPixels, orgHeightInPixels);
+    blit(structure->getBitmap(), wind, 0, iSourceY, 0, 0, pixelWidth, pixelHeight);
 
-    blit(structure->getBitmap(), temp, 0, iSourceY, 0, 0, orgWidthInPixels, orgHeightInPixels);
+    int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
+    int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
-	// in case shadow, prepare shadow bitmap in memory
-	if (structure->getShadowBitmap()) {
-		blit(structure->getShadowBitmap(), temp_shadow, 0, iSourceY, 0, 0, orgWidthInPixels, orgHeightInPixels);
-	}
+    if (structure->getShadowBitmap()) {
+        allegroDrawer->maskedStretchBlit(structure->getShadowBitmap(), bmp_screen, 0, iSourceY, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
+    }
 
-    int widthInPixels = mapCamera->factorZoomLevel(orgWidthInPixels);
-    int heightInPixels = mapCamera->factorZoomLevel(orgHeightInPixels);
+    bitmap_replace_color(wind, makecol(40, 40, 182), makecol(0, 0, fade));
 
-	// windtrap animation
-	draw_sprite(wind, temp, 0, 0);
-	lit_windtrap_color(wind, makecol(0, 0, fade));
-    draw_sprite(temp_result, temp, 0, 0);
-    allegroDrawer->stretchBlit(temp_result, bmp_screen, 0, 0, orgWidthInPixels, orgHeightInPixels, drawX, drawY, widthInPixels, heightInPixels);
+    allegroDrawer->maskedStretchBlit(wind, bmp_screen, 0, 0, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
 
-	// in case shadow, draw shadow now using fBlend.
-	if (structure->getShadowBitmap()) {
-		fblend_trans(temp_shadow, bmp_screen, drawX, drawY, 128);
-	}
-
-
-	// destroy used bitmaps
-	destroy_bitmap(temp);
-	destroy_bitmap(temp_shadow);
-	destroy_bitmap(temp_result);
     destroy_bitmap(wind);
 }
 

@@ -210,7 +210,7 @@
 #define RTURRET           15        // cRocketTurret
 
 // SPECIAL! -> These are not actually structures. When they are done with building the
-// cell properties will be changed, this is also done in CREATE_STRUCTURE()
+// cell properties will be changed, this is also done in cStructureFactory::createStructure
 #define SLAB1             24      // 1 single slab
 #define SLAB4             25      // 4 slabs
 #define WALL              26      // 1 wall

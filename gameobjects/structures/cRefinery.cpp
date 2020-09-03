@@ -192,7 +192,6 @@ void cRefinery::think_guard()
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cRefinery::getSpiceSiloCapacity() {
-	cHitpointCalculator hitpointCalculator;
 	float percentage = ((float)getHitPoints() / (float)structures[getType()].hp);
-	return hitpointCalculator.getByPercent(1000, percentage);
+	return 1000*percentage;
 }

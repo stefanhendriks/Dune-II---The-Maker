@@ -14,7 +14,6 @@ cStructureFactory *cStructureFactory::getInstance() {
 	if (instance == NULL) {
 		instance = new cStructureFactory();
 	}
-
 	return instance;
 }
 
@@ -89,8 +88,8 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 /**
 	Create a structure, place it and return a reference to this created class.
 
-	This method will return NULL when either an error occured, or the creation
-	of a non-structure (ie SLAB/WALL) is done.
+	This method will return NULL when either an error occurred, or the creation
+	of a non-structure type (ie SLAB/WALL) is done.
 **/
 cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructureType, int iPlayer, int iPercent) {
 	assert(iPlayer >= 0);
@@ -98,13 +97,13 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 
 	int iNewId = getFreeSlot();
 
-	if (iPercent > 100) iPercent = 100;
-
 	// fail
     if (iNewId < 0) {
-		logbook("cStructureFactory::createStructure -> cannot create structure: No free slot available, returning NULL");
-        return NULL;
+        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "No free slot available, returning NULL");
+        return nullptr;
     }
+
+    if (iPercent > 100) iPercent = 100;
 
 	// When 100% of the structure is blocked, this method is never called
 	// therefore we can assume that SLAB4 can be placed always partially
@@ -113,28 +112,23 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 
 	// we may not place it, GUI messed up
     if (result < -1 && iStructureType != SLAB4) {
-		logbook("cStructureFactory::createStructure -> cannot create structure: slab status < -1, and type != SLAB4, returning NULL");
-       return NULL;
+        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "cannot create structure: slab status < -1, and type != SLAB4, returning NULL");
+        return nullptr;
     }
 
-	float fPercent = iPercent;
-	fPercent /=100;				// divide by 100 (to make it 0.x)
+	float fPercent = (float)iPercent/100; // divide by 100 (to make it 0.x)
 
-	// calculate actual health
-	cHitpointCalculator *calc = new cHitpointCalculator();
-	int hp = structures[iStructureType].hp;
-	assert(hp > 0);
-	float fHealth = calc->getByPercent(hp, fPercent);
+    int hp = structures[iStructureType].hp;
+    if (hp < 0) {
+        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "Structure to create has no hp, aborting creation.");
+        return nullptr;
+    }
 
-	char msg2[255];
-	sprintf(msg2, "Structure with id [%d] has [%d] hp , fhealth is [%d]", iStructureType, hp, fHealth);
-	logbook(msg2);
-
-	placeStructure(iCell, iStructureType, iPlayer);
+    updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(iCell, iStructureType, iPlayer);
 	clearFogForStructureType(iCell, iStructureType, 2, iPlayer);
 
-	// SLAB and WALL is not a real structure. The terrain will be manipulated
-	// therefore quit here.
+	// SLAB and WALL is not a real structure. The terrain is manipulated
+	// therefore quit here, as we won't place real structure.
     if (iStructureType == SLAB1 || iStructureType == SLAB4 || iStructureType == WALL) {
 		return NULL;
 	}
@@ -142,17 +136,27 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	cAbstractStructure *str = createStructureInstance(iStructureType);
 
 	if (str == NULL) {
+        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "cannot create structure: createStructureInstance returned NULL");
 		return NULL; // fail
 	}
 
-	// assign to array
+    // calculate actual health
+    float fHealth = hp * fPercent;
+
+    char msg2[255];
+    sprintf(msg2, "Structure with id [%d] has [%d] hp , fhealth is [%d]", iStructureType, hp, fHealth);
+    logbook(msg2);
+
+    int structureSize = structures[iStructureType].bmp_width * structures[iStructureType].bmp_height;
+
+    // assign to array
 	structure[iNewId] = str;
 
     // Now set it up for location & player
     str->setCell(iCell);
     str->setOwner(iPlayer);
     str->setBuildingFase(1); // prebuild
-    str->TIMER_prebuild = 250; // prebuild timer
+    str->TIMER_prebuild = structureSize/16; // prebuild timer. A structure of 64x64 will result in 256, bigger structure has longer timer
     str->TIMER_damage = rnd(1000)+100;
     str->fConcrete = (1 - fPercent);
 	str->setHitPoints((int)fHealth);
@@ -184,18 +188,16 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
     // Use power
 	powerUp(iStructureType, iPlayer);
 
-	// deletion of objects used
-	delete (cHitpointCalculator *)calc;
-
     return str;
 }
 
 
 /**
-	Actually place the structure on the map now. Assign to the array of structures.
+	If this is a SLAB1, SLAB4, or WALL. Make changes in terrain.
+    Also updates player catalog of structure types.
 **/
-void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlayer) {
-	// add this structure to the array of the player (for some score management)
+void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(int iCell, int iStructureType, int iPlayer) {
+    // add this structure to the array of the player (for some score management)
 	player[iPlayer].iStructures[iStructureType]++;
 
 	if (iStructureType == SLAB1) {
@@ -203,8 +205,7 @@ void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlaye
 		return; // done
 	}
 
-    if (iStructureType == SLAB4)   {
-
+    if (iStructureType == SLAB4) {
 		if (map.occupied(iCell) == false) {
 			if (map.getCellType(iCell) == TERRAIN_ROCK) {
 				mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
@@ -218,7 +219,7 @@ void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlaye
 			}
 		}
 
-        int oneRowBelowCell = iCell + MAP_W_MAX;
+        int oneRowBelowCell = iCell + game.map_width;
         if (map.occupied(oneRowBelowCell) == false) {
 			if (map.getCellType(oneRowBelowCell) == TERRAIN_ROCK) {
 				mapEditor.createCell(oneRowBelowCell, TERRAIN_SLAB, 0);
@@ -241,7 +242,6 @@ void cStructureFactory::placeStructure(int iCell, int iStructureType, int iPlaye
         mapEditor.smoothAroundCell(iCell);
 		return;
     }
-
 }
 
 

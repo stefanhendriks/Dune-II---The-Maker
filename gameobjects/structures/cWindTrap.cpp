@@ -73,9 +73,8 @@ void cWindTrap::think_guard() {
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 
 int cWindTrap::getPowerOut() {
-	cHitpointCalculator hitpointCalculator;
 	float percentage = ((float)getHitPoints() / (float)structures[getType()].hp);
-	return hitpointCalculator.getByPercent(structures[getType()].power_give, percentage);
+	return getMaxPowerOut() * percentage;
 }
 
 int cWindTrap::getMaxPowerOut() {

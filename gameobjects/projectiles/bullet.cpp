@@ -640,7 +640,7 @@ void cBullet::think_move()
 
 
         if (iType == BULLET_GAS)
-            play_sound_id(SOUND_GAS, iCellOnScreen(iCell));
+            play_sound_id(SOUND_GAS, distanceBetweenCellAndCenterOnScreen(iCell));
 
         if (bullets[iType].deadbmp > -1) {
             int half = 16;
