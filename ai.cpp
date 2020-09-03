@@ -508,7 +508,8 @@ void cAIPlayer::think_repair() {
                     {
                         // head off to repair
                     	cStructureUtils structureUtils;
-                    	int iNewID = structureUtils.findClosestStructureTypeToCell(unit[i].iCell, REPAIR, &player[ID]);
+                    	int iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
+                                unit[i].iCell, REPAIR, &player[ID]);
 
 						if (iNewID > -1) {
 							int iCarry = CARRYALL_TRANSFER(i, structure[iNewID]->getCell() + 2);

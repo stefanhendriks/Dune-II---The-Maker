@@ -1296,7 +1296,9 @@ void cUnit::think()
                 char msg[255];
                 sprintf(msg, "Going to look for a refinery, playerId [%d], cell [%d]", iPlayer, iCell);
                 logbook(msg);
-                int	iTheID = structureUtils.findClosestStructureTypeToCell(iCell, REFINERY, &player[iPlayer]);
+                int	iTheID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(iCell,
+                                                                                                            REFINERY,
+                                                                                                            &player[iPlayer]);
 
                 if (iTheID < 0)
                 {
@@ -2619,7 +2621,9 @@ void cUnit::think_move()
         {
             // already occupied, find alternative
             cStructureUtils structureUtils;
-            int	iNewID = structureUtils.findClosestStructureTypeToCell(iCell, structure[iStructureID]->getType(), &player[iPlayer]);
+            int	iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(iCell,
+                                                                                                        structure[iStructureID]->getType(),
+                                                                                                        &player[iPlayer]);
 
             if (iNewID > -1 && iNewID != iStructureID)
             {
