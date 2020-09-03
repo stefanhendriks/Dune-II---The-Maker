@@ -50,8 +50,5 @@ public:
 
 	int getSlabStatus(int iCell, int iStructureType, int iUnitIDToIgnore);
 
-	void powerUp(int iStructureType, int iPlayer);
-	void powerDown(int iStructureType, int iPlayer);
-
 };
 #endif
