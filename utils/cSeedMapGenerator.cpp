@@ -370,7 +370,6 @@ void cSeedMapGenerator::balanceMap(struct cell map[64][64]) {
          currln[i] = map[y][i].w;
       }
       for (x = 0; x < 64; x++) {
-          bool onEdge = false;
           // all initialize as center
           c = currln[x];
           lu = l = ld = ru = r = rd = u = d = c;
