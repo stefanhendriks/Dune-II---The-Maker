@@ -376,8 +376,10 @@ BITMAP *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFra
             start_y += 2;
         }
 
-        BITMAP *shadow = create_bitmap(64,64);
+        int colorDepth = bitmap_color_depth(bmp_screen);
+        BITMAP *shadow = create_bitmap_ex(colorDepth, bmp_width,bmp_height);
         clear_to_color(shadow, makecol(255,0,255));
+
         blit((BITMAP *)units[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
         return shadow;
     }
