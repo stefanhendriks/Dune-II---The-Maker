@@ -514,3 +514,11 @@ float cAbstractStructure::getHealthNormalized() {
     float flMAX  = structure.hp;
     return (iHitPoints / flMAX);
 }
+
+int cAbstractStructure::getWidthInPixels() {
+    return getS_StructuresType().bmp_width;
+}
+
+int cAbstractStructure::getHeightInPixels() {
+    return getS_StructuresType().bmp_height;
+}

@@ -42,10 +42,7 @@ public:
 	    getInstance(); // this will create a new instance
 	}
 
-    static bool isOverRectangle(int x, int y, int width, int height) {
-        return (cMouse::getX() >= x && cMouse::getX() <= (x + width)) &&
-               (cMouse::getY() >= y && cMouse::getY() <= (y + height));
-    }
+    static bool isOverRectangle(int x, int y, int width, int height);
 
 
 protected:

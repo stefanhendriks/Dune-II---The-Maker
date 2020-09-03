@@ -65,8 +65,8 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure * struc
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
 	if (!structure) return;
 
-    int orgWidthInPixels = structureUtils.getStructureWidthInPixels(structure);
-    int orgHeightInPixels = structureUtils.getStructureHeightInPixels(structure);
+    int orgWidthInPixels = structure->getWidthInPixels();
+    int orgHeightInPixels = structure->getHeightInPixels();
 
     // structures are animated within the same source bitmap. The Y coordinates determine
     // what frame is being drawn. So multiply the height of the structure size times frame
@@ -128,10 +128,8 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
 
 	assert(structure);
 
-	cStructureUtils structureUtils;
-
-	int orgWidthInPixels = structureUtils.getStructureWidthInPixels(structure);
-	int orgHeightInPixels = structureUtils.getStructureHeightInPixels(structure);
+	int orgWidthInPixels = structure->getWidthInPixels();
+	int orgHeightInPixels = structure->getHeightInPixels();
 
 	int drawX = structure->iDrawX();
 	int drawY = structure->iDrawY();
@@ -162,9 +160,6 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
 	if (structure->getShadowBitmap()) {
 		blit(structure->getShadowBitmap(), temp_shadow, 0, iSourceY, 0, 0, orgWidthInPixels, orgHeightInPixels);
 	}
-
-//	// draw normal structure
-//	draw_sprite(bmp_screen, temp, drawX, drawY);
 
     int widthInPixels = mapCamera->factorZoomLevel(orgWidthInPixels);
     int heightInPixels = mapCamera->factorZoomLevel(orgHeightInPixels);
@@ -290,7 +285,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer) {
 
         structureUtils.putStructureOnDimension(MAPID_STRUCTURES, theStructure);
 
-        if (structureUtils.isStructureOnScreen(theStructure)) {
+        if (structureUtils.isStructureVisibleOnScreen(theStructure)) {
             // draw
             drawStructureForLayer(theStructure, layer);
             //theStructure->draw(layer);

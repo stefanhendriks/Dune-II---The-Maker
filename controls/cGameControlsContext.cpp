@@ -86,8 +86,8 @@ void cGameControlsContext::determineHoveringOverStructureId() {
 		cAbstractStructure * theStructure = structure[i];
 
 		if (theStructure) {
-			if (structureUtils.isStructureOnScreen(theStructure)) {
-				if (structureUtils.isMouseOverStructure(theStructure)) {
+			if (structureUtils.isStructureVisibleOnScreen(theStructure)) {
+				if (structureUtils.isMouseOverStructure(theStructure, cMouse::getX(), cMouse::getY())) {
 					mouseHoveringOverStructureId = i;
 				}
 			}
