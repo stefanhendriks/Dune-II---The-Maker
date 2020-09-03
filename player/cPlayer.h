@@ -93,14 +93,14 @@ class cPlayer {
 		    return std::string(msg);
 		}
 
-    BITMAP *getStructureBitmap(int index);
-    BITMAP *getUnitBitmap(int index);
-    BITMAP *getUnitTopBitmap(int index);
-    BITMAP *getUnitShadowBitmap(int index, int bodyFacing, int animationFrame);
+        BITMAP *getStructureBitmap(int index);
+        BITMAP *getUnitBitmap(int index);
+        BITMAP *getUnitTopBitmap(int index);
+        BITMAP *getUnitShadowBitmap(int index, int bodyFacing, int animationFrame);
 
-    void destroyAllegroBitmaps();
+        void destroyAllegroBitmaps();
 
-private:
+    private:
 		int getRGBColorForHouse(int houseId);
 		bool m_Human;
 
