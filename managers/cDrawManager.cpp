@@ -91,35 +91,33 @@ void cDrawManager::drawCredits() {
 }
 
 void cDrawManager::drawRallyPoint() {
-	if (game.selected_structure > -1) {
-		cAbstractStructure * theStructure = structure[game.selected_structure];
-		int rallyPointCell = theStructure->getRallyPoint();
+    if (game.selected_structure < 0) return;
+    cAbstractStructure * theStructure = structure[game.selected_structure];
+    if (!theStructure) return;
+    int rallyPointCell = theStructure->getRallyPoint();
+    if (rallyPointCell < 0) return;
 
-		// show draw a target on this cell so we know this is the rally point.
-		if (rallyPointCell > -1) {
-			// draw this thing ...
-			set_trans_blender(0,0,0,128);
-			draw_trans_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_MOVE].dat, getDrawXForCell(rallyPointCell), getDrawYForCell(rallyPointCell));
+    set_trans_blender(0,0,0,128);
+    int drawX = mapCamera->getWindowXPositionFromCell(rallyPointCell);
+    int drawY = mapCamera->getWindowYPositionFromCell(rallyPointCell);
 
-			int startX = theStructure->iDrawX() + (theStructure->getS_StructuresType().bmp_width / 2);
-			int startY = theStructure->iDrawY() + (theStructure->getS_StructuresType().bmp_height / 2);
+    BITMAP *mouseMoveBitmap = (BITMAP *) gfxdata[MOUSE_MOVE].dat;
 
-			int endX = getDrawXForCell(rallyPointCell) + 16;
-			int endY = getDrawYForCell(rallyPointCell) + 16;
+    int rallyPointWidthScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->w);
+    int rallyPointHeightScaled = mapCamera->factorZoomLevel(mouseMoveBitmap->h);
+    allegroDrawer->stretchSprite(mouseMoveBitmap, bmp_screen, drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled);
 
-			line(bmp_screen, startX, startY, endX, endY, player[HUMAN].getMinimapColor());
-		}
-	}
-}
+    int startX = theStructure->iDrawX() + mapCamera->factorZoomLevel(theStructure->getWidthInPixels() / 2);
+    int startY = theStructure->iDrawY() + mapCamera->factorZoomLevel(theStructure->getHeightInPixels() / 2);
 
-int cDrawManager::getDrawXForCell(int cell) {
-	int cellX = iCellGiveX(cell);
-	return (cellX * 32) - (mapCamera->getViewportStartX());
-}
+    int offset = (mouseMoveBitmap->w/2);
+    drawX = mapCamera->getWindowXPositionFromCellWithOffset(rallyPointCell, offset);
+    drawY = mapCamera->getWindowYPositionFromCellWithOffset(rallyPointCell, offset);
 
-int cDrawManager::getDrawYForCell(int cell) {
-	int cellY = iCellGiveY(cell);
-	return (cellY * 32) - mapCamera->getViewportStartY() + 42; // + 42 is the top bar (options/upgrade/credits)
+    int endX = drawX;
+    int endY = drawY;
+
+    line(bmp_screen, startX, startY, endX, endY, player[HUMAN].getMinimapColor());
 }
 
 void cDrawManager::drawOrderButton() {
@@ -143,7 +141,6 @@ void cDrawManager::drawUpgradeButton() {
 
 void cDrawManager::drawStructurePlacing() {
 	if (game.bPlaceIt) {
-		// TODO: fix the placeItDrawer, it crashes the game now!
 		cBuildingListItem *itemToPlace = m_Player.getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
 		if (itemToPlace) {
 			assert(placeitDrawer);

@@ -18,9 +18,6 @@ class cDrawManager {
 		cMiniMapDrawer *getMiniMapDrawer() { return miniMapDrawer; }
 		cSideBarDrawer *getSidebarDrawer() { return sidebarDrawer; }
 
-		int getDrawXForCell(int cell);
-		int getDrawYForCell(int cell);
-
 	protected:
 		void drawSidebar();
 		void drawUpgradeButton();
