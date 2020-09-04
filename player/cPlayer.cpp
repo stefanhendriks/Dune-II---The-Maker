@@ -235,7 +235,7 @@ void cPlayer::setHouse(int iHouse) {
 
   minimapColor = getRGBColorForHouse(house);
 
-  clearStructureTypeBitmaps();
+  destroyAllegroBitmaps();
 
   int colorDepthBmpScreen = bitmap_color_depth(bmp_screen);
 
@@ -287,29 +287,24 @@ int cPlayer::getRGBColorForHouse(int houseId) {
 }
 
 bool cPlayer::bEnoughPower() const {
-
 	if (game.bSkirmish) {
        return has_power >= use_power;
-    } else {
-        // AI cheats on power
-        if (id > 0) {
-            // original dune 2 , the AI cheats.
-        	// Unfortunatly D2TM has to cheat too, else the game will
-            // be unplayable.
-            if (iStructures[WINDTRAP] > 0) {
-                // always enough power so it seems
-                return true;
-			} else {
-                return false; // not enough power
-			}
+    }
+
+    // AI cheats on power
+    if (id > 0) {
+        // original dune 2 , the AI cheats.
+        // Unfortunatly D2TM has to cheat too, else the game will
+        // be unplayable.
+        if (iStructures[WINDTRAP] > 0) {
+            // always enough power so it seems
+            return true;
         } else {
-            return has_power >= use_power;
+            return false; // not enough power
         }
     }
 
-
-    // return false on any other case
-    return false;
+    return has_power >= use_power;
 }
 
 int cPlayer::getAmountOfStructuresForType(int structureType) const {
