@@ -278,7 +278,6 @@ void cStructureDrawer::drawStructuresForLayer(int layer) {
         if (structureUtils.isStructureVisibleOnScreen(theStructure)) {
             // draw
             drawStructureForLayer(theStructure, layer);
-            //theStructure->draw(layer);
 
             if (player[0].iPrimaryBuilding[theStructure->getType()] == i) {
                 int color = theStructure->getPlayer()->getMinimapColor();
