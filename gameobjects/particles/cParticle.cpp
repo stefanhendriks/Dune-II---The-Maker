@@ -129,14 +129,7 @@ void cParticle::draw() {
 		if (iType != OBJECT_BOOM01 && iType != OBJECT_BOOM02 && iType != OBJECT_BOOM03) {
             set_trans_blender(0,0,0, iAlpha);
 			draw_trans_sprite(bmp_screen, stretched, drawX, drawY);
-
-			if (iType == EXPLOSION_ROCKET || iType == EXPLOSION_ROCKET_SMALL)
-            {
-                int half = mapCamera->getZoomedHalfTileSize();
-                fblend_add((BITMAP *)gfxdata[OBJECT_BOOM03].dat, bmp_screen,  dx-(half*2), dy-(half*2), (iAlpha/2));
-            }
-
-        } else {
+		} else {
             fblend_add(stretched, bmp_screen, drawX, drawY, iAlpha);
         }
 	} else {
@@ -763,8 +756,11 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
         particle[iNewId].iAlpha=96+rnd(64);
     }
 
-    if (iType == EXPLOSION_ROCKET || iType == EXPLOSION_ROCKET_SMALL)
+    if (iType == EXPLOSION_ROCKET || iType == EXPLOSION_ROCKET_SMALL) {
         particle[iNewId].iAlpha = 255;
+        // also create bloom
+        PARTICLE_CREATE(x, y, OBJECT_BOOM03, iHouse, 0);
+    }
 
 	if (iType == OBJECT_BOOM01)
 	{
