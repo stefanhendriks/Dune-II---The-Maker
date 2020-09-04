@@ -52,6 +52,24 @@ public:
         return getWindowYPositionWithOffset(absoluteYPosition, 0);
     }
 
+    int getWindowXPositionFromCell(int cell) {
+        return getWindowXPositionFromCellWithOffset(cell, 0);
+    }
+
+    int getWindowYPositionFromCell(int cell) {
+        return getWindowYPositionFromCellWithOffset(cell, 0);
+    }
+
+    int getWindowXPositionFromCellWithOffset(int cell, int offset) {
+        int absoluteXPosition = getAbsoluteXPositionFromCell(cell);
+        return getWindowXPositionWithOffset(absoluteXPosition, offset);
+    }
+
+    int getWindowYPositionFromCellWithOffset(int cell, int offset) {
+        int absoluteYPosition = getAbsoluteYPositionFromCell(cell);
+        return getWindowYPositionWithOffset(absoluteYPosition, offset);
+    }
+
     int getWindowXPositionWithOffset(int absoluteXPosition, int offset) {
         return factorZoomLevel((absoluteXPosition - viewportStartX)+offset);
     }
