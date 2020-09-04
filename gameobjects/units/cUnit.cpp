@@ -4164,12 +4164,14 @@ int UNIT_FREE_AROUND_MOVE(int iUnit)
 		return -1;
 	}
 
-	int iStartX = iCellGiveX(unit[iUnit].iCell);
-	int iStartY = iCellGiveY(unit[iUnit].iCell);
+    cUnit &cUnit = unit[iUnit];
+
+    int iStartX = iCellGiveX(cUnit.iCell);
+	int iStartY = iCellGiveY(cUnit.iCell);
 
     int iWidth=rnd(4);
 
-    if (unit[iUnit].iType == HARVESTER)
+    if (cUnit.iType == HARVESTER)
         iWidth=2;
 
 	int iEndX = (iStartX + 1) + iWidth;
