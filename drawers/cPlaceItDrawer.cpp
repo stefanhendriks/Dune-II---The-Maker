@@ -222,7 +222,7 @@ void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int c
     int scaledHeight = mapCamera->factorZoomLevel(height);
 
     temp = create_bitmap(scaledWidth+1, scaledHeight+1);
-    clear_bitmap(temp);
+    clear_to_color(temp, makecol(255, 0, 255));
 
     BITMAP *bmp = nullptr;
     if (structureId == SLAB1) {
