@@ -10,8 +10,6 @@
 #ifndef D2TMH_H
 #define D2TMH_H
 
-#include <algorithm>
-
 #include "system.h"
 #include "allegroh.h"
 #include "data.h"
