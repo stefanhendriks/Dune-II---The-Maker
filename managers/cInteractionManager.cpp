@@ -20,6 +20,7 @@ cInteractionManager::~cInteractionManager() {
 
 void cInteractionManager::interact() {
 	interactWithSidebar();
+	interactWithMapCamera();
 }
 
 void cInteractionManager::interactWithKeyboard(){
@@ -29,4 +30,15 @@ void cInteractionManager::interactWithKeyboard(){
 void cInteractionManager::interactWithSidebar() {
 	sidebar->thinkInteraction();
 	miniMapDrawer->interact();
+}
+
+void cInteractionManager::interactWithMapCamera() {
+    // MOUSE WHEEL scrolling causes zooming in/out
+    if (cMouse::isMouseScrolledUp()) {
+        mapCamera->zoomOut();
+    }
+
+    if (cMouse::isMouseScrolledDown()) {
+        mapCamera->zoomIn();
+    }
 }

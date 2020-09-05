@@ -11,6 +11,7 @@ cSideBar::cSideBar(cPlayer & thePlayer) : m_Player(thePlayer) {
 	assert(&thePlayer);
 	selectedListID = -1; // nothing is selected
 	memset(lists, 0, sizeof(lists));
+	upgradeUtils = new cUpgradeUtils();
 }
 
 cSideBar::~cSideBar() {
@@ -19,6 +20,7 @@ cSideBar::~cSideBar() {
 			delete lists[i]; // delete list
 		}
 	}
+	delete upgradeUtils;
 }
 
 void cSideBar::setList(int listId, cBuildingList* list) {
@@ -40,8 +42,7 @@ void cSideBar::think() {
 }
 
 void cSideBar::thinkUpgradeButton() {
-	cUpgradeUtils upgradeUtils;
-	bool isOverUpgradeButton = upgradeUtils.isMouseOverUpgradeButton(mouse_x, mouse_y);
+	bool isOverUpgradeButton = upgradeUtils->isMouseOverUpgradeButton(mouse_x, mouse_y);
 
 	if (isOverUpgradeButton) {
 		int selectedListId = getSelectedListID();
@@ -53,7 +54,7 @@ void cSideBar::thinkUpgradeButton() {
 				int upgradeLevel = list->getUpgradeLevel();
 				int techLevel = m_Player.getTechLevel();
 
-				cListUpgrade * upgrade = upgradeUtils.getListUpgradeForList(m_Player, selectedListId, techLevel, upgradeLevel);
+				cListUpgrade * upgrade = upgradeUtils->getListUpgradeForList(m_Player, selectedListId, techLevel, upgradeLevel);
 				bool isUpgradeApplicable = upgrade != NULL;
 
 				if (upgrade != NULL) {
@@ -154,9 +155,6 @@ void cSideBar::thinkInteraction() {
 			}
 		}
 	}
-
-	// scroll buttons interaction
-	thinkMouseZScrolling();
 
 	// when mouse pressed, a list is selected, and that list is still available
 	if (selectedListID > -1 && getList(selectedListID)->isAvailable()) {
@@ -293,28 +291,4 @@ void cSideBar::thinkInteraction() {
 
 	}
 
-}
-
-void cSideBar::thinkMouseZScrolling() {
-
-	if (selectedListID < 0) {
-		return;
-	}
-
-	if (!getList(selectedListID)->isAvailable()) {
-		return;
-	}
-
-	cBuildingList *list = getList(selectedListID);
-
-	// MOUSE WHEEL
-	if (cMouse::isMouseScrolledUp()) {
-	   list->scrollUp();
-	   mapCamera->zoomOut();
-	}
-
-	if (cMouse::isMouseScrolledDown()) {
-	   list->scrollDown();
-	   mapCamera->zoomIn();
-	}
 }

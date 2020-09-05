@@ -16,6 +16,7 @@
 
 // forward declaration
 class cPlayer;
+class cUpgradeUtils;
 
 // List ID's corresponding buttons
 #define LIST_NONE		0
@@ -57,7 +58,9 @@ class cSideBar {
 
 	private:
 
-		// the lists:
+        cUpgradeUtils * upgradeUtils;
+
+        // the lists:
 		cBuildingList * lists[LIST_MAX];
 		cPlayer & m_Player;
 
@@ -65,7 +68,6 @@ class cSideBar {
 
 		// methods
 		void thinkAvailabilityLists();
-		void thinkMouseZScrolling(); // think about mouse wheel scrolling
 };
 
 #endif /* CSIDEBAR_H_ */
