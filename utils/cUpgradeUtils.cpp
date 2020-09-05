@@ -170,9 +170,5 @@ bool cUpgradeUtils::canPlayerPayForUpgradeForList(const cPlayer & thePlayer, int
 }
 
 bool cUpgradeUtils::isMouseOverUpgradeButton(int mouseX, int mouseY) {
-	// determine if mouse is over the button..
-	if (  (mouseX > 29 && mouseX < 187) && (mouseY > 2 && mouseY < 31)) {
-		return true;
-	}
-	return false;
+    return cMouse::isOverRectangle(29, 2, 158, 29);
 }

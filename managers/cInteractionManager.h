@@ -30,6 +30,7 @@ class cInteractionManager {
 		cKeyboardManager keyboardManager;
 
 
+    void interactWithMapCamera();
 };
 
 #endif /* CINTERACTIONMANAGER_H_ */
