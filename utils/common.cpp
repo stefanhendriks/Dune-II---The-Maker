@@ -874,6 +874,7 @@ void install_structures() {
     structures[i].icon = -1; // stupid default icon
     structures[i].build_time = 0;
     structures[i].list = -1; // no list attached
+    structures[i].configured = false;
     strcpy(structures[i].name,   "Unknown");
   }
 
@@ -883,6 +884,7 @@ void install_structures() {
   structures[SLAB1].hp   = 25;            // Not functional in-game, only for building
   structures[SLAB1].bmp_width = 16*2;
   structures[SLAB1].bmp_height = 16*2;
+  structures[SLAB1].configured = true;
   strcpy(structures[SLAB1].name, "Concrete Slab");
 
   structures[SLAB4].bmp = (BITMAP *)gfxdata[PLACE_SLAB4].dat; // in case an invalid bitmap, we are a windtrap
@@ -890,6 +892,7 @@ void install_structures() {
   structures[SLAB4].hp   = 75;            // Not functional in-game, only for building
   structures[SLAB4].bmp_width = 32*2;
   structures[SLAB4].bmp_height = 32*2;
+  structures[SLAB4].configured = true;
   strcpy(structures[SLAB4].name, "4 Concrete Slabs");
 
 
@@ -899,6 +902,7 @@ void install_structures() {
   structures[WALL].hp   = 75;            // Not functional in-game, only for building
   structures[WALL].bmp_width = 16*2;
   structures[WALL].bmp_height = 16*2;
+  structures[WALL].configured = true;
   strcpy(structures[WALL].name, "Concrete Wall");
 
   // Structure    : Windtrap
@@ -908,6 +912,7 @@ void install_structures() {
   structures[WINDTRAP].fadecol = PAN_CENTER;
   structures[WINDTRAP].fademax = 134;
   structures[WINDTRAP].icon  = ICON_STR_WINDTRAP;
+  structures[WINDTRAP].configured = true;
   strcpy(structures[WINDTRAP].name, "Windtrap");
 
   // Structure    : Heavy Factory
@@ -918,6 +923,7 @@ void install_structures() {
   structures[HEAVYFACTORY].shadow = (BITMAP *)gfxdata[BUILD_HEAVYFACTORY_SHADOW].dat; // shadow
   structures[HEAVYFACTORY].fadecol = -1;
   structures[HEAVYFACTORY].icon = ICON_STR_HEAVYFACTORY;
+  structures[HEAVYFACTORY].configured = true;
   strcpy(structures[HEAVYFACTORY].name, "Heavy Factory");
 
   // Structure    : Hight Tech Factory (for aircraft only)
@@ -928,6 +934,7 @@ void install_structures() {
   structures[HIGHTECH].shadow = (BITMAP *)gfxdata[BUILD_HIGHTECH_SHADOW].dat;
   structures[HIGHTECH].fadecol = -1;
   structures[HIGHTECH].icon = ICON_STR_HIGHTECH;
+  structures[HIGHTECH].configured = true;
   strcpy(structures[HIGHTECH].name, "Hi-Tech");
 
   // Structure    : Repair
@@ -938,6 +945,7 @@ void install_structures() {
   structures[REPAIR].shadow = (BITMAP *)gfxdata[BUILD_REPAIR_SHADOW].dat;
   structures[REPAIR].fadecol = -1;
   structures[REPAIR].icon = ICON_STR_REPAIR;
+  structures[REPAIR].configured = true;
   strcpy(structures[REPAIR].name, "Repair Facility");
 
   // Structure    : Palace
@@ -947,6 +955,7 @@ void install_structures() {
   structures[PALACE].bmp = (BITMAP *)gfxdata[BUILD_PALACE].dat;
   structures[PALACE].shadow = (BITMAP *)gfxdata[BUILD_PALACE_SHADOW].dat;
   structures[PALACE].icon = ICON_STR_PALACE;
+  structures[PALACE].configured = true;
   strcpy(structures[PALACE].name, "Palace");
 
   // Structure    : Light Factory
@@ -957,6 +966,7 @@ void install_structures() {
   structures[LIGHTFACTORY].shadow = (BITMAP *)gfxdata[BUILD_LIGHTFACTORY_SHADOW].dat;
   structures[LIGHTFACTORY].fadecol = -1;
   structures[LIGHTFACTORY].icon = ICON_STR_LIGHTFACTORY;
+  structures[LIGHTFACTORY].configured = true;
   strcpy(structures[LIGHTFACTORY].name, "Light Factory");
 
   // Structure    : Radar
@@ -968,6 +978,7 @@ void install_structures() {
   structures[RADAR].sight = 12;
   structures[RADAR].fadecol = -1;
   structures[RADAR].icon = ICON_STR_RADAR;
+  structures[RADAR].configured = true;
   strcpy(structures[RADAR].name, "Outpost");
 
   // Structure    : Barracks
@@ -978,6 +989,7 @@ void install_structures() {
   structures[BARRACKS].shadow = (BITMAP *)gfxdata[BUILD_BARRACKS_SHADOW].dat;
   structures[BARRACKS].fadecol = -1;
   structures[BARRACKS].icon = ICON_STR_BARRACKS;
+  structures[BARRACKS].configured = true;
   strcpy(structures[BARRACKS].name, "Barracks");
 
   // Structure    : WOR
@@ -988,6 +1000,7 @@ void install_structures() {
   structures[WOR].shadow = (BITMAP *)gfxdata[BUILD_WOR_SHADOW].dat;
   structures[WOR].fadecol = -1;
   structures[WOR].icon = ICON_STR_WOR;
+  structures[WOR].configured = true;
   strcpy(structures[WOR].name, "WOR");
 
 
@@ -999,6 +1012,7 @@ void install_structures() {
   structures[SILO].shadow = (BITMAP *)gfxdata[BUILD_SILO_SHADOW].dat;
   structures[SILO].fadecol = -1;
   structures[SILO].icon = ICON_STR_SILO;
+  structures[SILO].configured = true;
   strcpy(structures[SILO].name, "Spice Storage Silo");
 
   // Structure    : Refinery
@@ -1009,6 +1023,7 @@ void install_structures() {
   structures[REFINERY].shadow = (BITMAP *)gfxdata[BUILD_REFINERY_SHADOW].dat;
   structures[REFINERY].fadecol = -1;
   structures[REFINERY].icon = ICON_STR_REFINERY;
+  structures[REFINERY].configured = true;
   strcpy(structures[REFINERY].name, "Spice Refinery");
 
   // Structure    : Construction Yard
@@ -1019,6 +1034,7 @@ void install_structures() {
   structures[CONSTYARD].bmp = (BITMAP *)gfxdata[BUILD_CONSTYARD].dat;
   structures[CONSTYARD].fadecol = -1;
   structures[CONSTYARD].icon = ICON_STR_CONSTYARD;
+  structures[CONSTYARD].configured = true;
   strcpy(structures[CONSTYARD].name, "Construction Yard");
 
   // Structure    : Starport
@@ -1029,6 +1045,7 @@ void install_structures() {
   structures[STARPORT].shadow = (BITMAP *)gfxdata[BUILD_STARPORT_SHADOW].dat;
   structures[STARPORT].fadecol = -1;
   structures[STARPORT].icon  = ICON_STR_STARPORT;
+  structures[STARPORT].configured = true;
   strcpy(structures[STARPORT].name, "Starport");
 
   // Structure    : House of IX
@@ -1039,6 +1056,7 @@ void install_structures() {
   structures[IX].shadow = (BITMAP *)gfxdata[BUILD_IX_SHADOW].dat;
   structures[IX].fadecol = -1;
   structures[IX].icon  = ICON_STR_IX;
+  structures[IX].configured = true;
   strcpy(structures[IX].name, "House of IX");
 
   // Structure    : Normal Turret
@@ -1050,6 +1068,7 @@ void install_structures() {
   structures[TURRET].fadecol = -1;
   structures[TURRET].icon  = ICON_STR_TURRET;
   structures[TURRET].sight = 7;
+  structures[TURRET].configured = true;
   strcpy(structures[TURRET].name, "Gun Turret");
 
   // Structure    : Rocket Turret
@@ -1061,6 +1080,7 @@ void install_structures() {
   structures[RTURRET].fadecol = -1;
   structures[RTURRET].icon  = ICON_STR_RTURRET;
   structures[RTURRET].sight = 10;
+  structures[RTURRET].configured = true;
   strcpy(structures[RTURRET].name, "Rocket Turret");
 
   // Structure    : Windtrap

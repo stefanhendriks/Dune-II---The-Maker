@@ -32,6 +32,13 @@ void REGION_SETUP(int iMission, int iHouse)
     // Every house has a different campaign, so...
 
     INI_Load_Regionfile(iHouse, iMission);
+
+    // prepare players, so we know house index == player index (for colorizing region pieces)
+    for (int i=1; i < FREMEN; i++) {
+        player[i].init(i);
+        player[i].setHouse(i);
+    }
+
     return;
 }
 
@@ -59,79 +66,71 @@ void REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile)
 }
 
 // draw a region
-void REGION_DRAW(int i)
-{
-    if (world[i].iAlpha > 0)
-    {
-        // HACK HACK - Using a temp player variable, we do a trick to calculate the proper palette for this
-        // highly not efficient.... but will do for now
-        if (world[i].iHouse > -1)
+void REGION_DRAW(cRegion &regionPiece) {
+    if (regionPiece.iAlpha <= 0) {
+        // no alpha, no use in drawing
+        return;
+    }
+
+    int screenBitDepth = bitmap_color_depth(bmp_screen);
+
+    // HACK HACK - Using a temp player variable, we do a trick to calculate the proper palette for this
+    // highly not efficient.... but will do for now
+    if (regionPiece.iHouse > -1) {
+        cPlayer &temp = player[regionPiece.iHouse];
+        select_palette(temp.pal);           // retrieve pal
+
+
+        // alpha is lower then 255
+        if (regionPiece.iAlpha < 255) {
+            regionPiece.iAlpha += 7;
+
+            if (game.iRegionState <= 2)
+                if (MOUSE_BTN_LEFT())
+                    regionPiece.iAlpha += 25;
+        }
+
+        // When alpha is 255 or higher, do not use trans_sprite, which is useless
+        if (regionPiece.iAlpha >= 255) {
+            draw_sprite(bmp_screen, (BITMAP *)gfxworld[regionPiece.iTile].dat, regionPiece.x, regionPiece.y);
+        } else {
+            // Draw region with trans_sprite, the trick is that we have to convert it to 16 bit first.
+            set_trans_blender(0, 0, 0, regionPiece.iAlpha);				// set blender
+            BITMAP *tempregion=create_bitmap_ex(screenBitDepth, 256, 256);				// 16 bit bmp
+            clear_to_color(tempregion, makecol(255,0,255));			// clear
+            draw_sprite(tempregion, (BITMAP *)gfxworld[regionPiece.iTile].dat, 0, 0); // copy
+            draw_trans_sprite(bmp_screen, tempregion, regionPiece.x, regionPiece.y); //	draw trans
+            destroy_bitmap(tempregion); // destroy temp
+        }
+    } // House > -1
+
+    // select your next conquest... always draw them in the human playing house color
+    if (regionPiece.bSelectable && game.iRegionState > 2) {
+        cPlayer &temp = player[game.iHouse];
+        select_palette(temp.pal);           // retrieve pal
+
+        // House < 0
+        if (regionPiece.iHouse < 0)
         {
-            cPlayer temp;                       // temp m_Player
-            temp.init(0);                    // init
-            temp.setHouse(world[i].iHouse);     // create pal
-            select_palette(temp.pal);           // retrieve pal
+            if (regionPiece.iAlpha < 255)
+                regionPiece.iAlpha += 5;
+        }
 
-
-            // alpha is lower then 255
-            if (world[i].iAlpha < 255)
-            {
-                world[i].iAlpha += 7;
-
-                if (game.iRegionState <= 2)
-                    if (MOUSE_BTN_LEFT())
-                        world[i].iAlpha += 25;
-            }
-
-            // When alpha is 255 or higher, do not use trans_sprite, which is useless
-
-            if (world[i].iAlpha >= 255)
-            {
-                draw_sprite(bmp_screen, (BITMAP *)gfxworld[world[i].iTile].dat, world[i].x, world[i].y);
-            }
-            else
-            {
-                // Draw region with trans_sprite, the trick is that we have to convert it to 16 bit first.
-
-                set_trans_blender(0,0,0, world[i].iAlpha);				// set blender
-                BITMAP *tempregion=create_bitmap(256, 256);				// 16 bit bmp
-                clear_to_color(tempregion, makecol(255,0,255));			// clear
-                draw_sprite(tempregion,(BITMAP *)gfxworld[world[i].iTile].dat, 0, 0); // copy
-                draw_trans_sprite(bmp_screen, tempregion, world[i].x, world[i].y); //	draw trans
-                destroy_bitmap(tempregion); // destroy temp
-            }
-        } // House > -1
-
-        if (world[i].bSelectable && game.iRegionState > 2)
-		{
-			cPlayer temp;
-	        temp.init(0);                        // init
-			temp.setHouse(game.iHouse);
-			select_palette(temp.pal);           // retrieve pal
-
-            // House < 0
-			if (world[i].iHouse < 0)
-            {
-                if (world[i].iAlpha < 255)
-                    world[i].iAlpha += 5;
-            }
-
-            // Alpha >= 255
-            if (world[i].iAlpha >= 255)
-            {
-                draw_sprite(bmp_screen, (BITMAP *)gfxworld[world[i].iTile].dat, world[i].x, world[i].y);
-                world[i].iAlpha = 1;
-            }
-            else
-            {
-                set_trans_blender(0,0,0, world[i].iAlpha);
-                BITMAP *tempregion=create_bitmap(256, 256);
-                clear_to_color(tempregion, makecol(255,0,255));
-                draw_sprite(tempregion,(BITMAP *)gfxworld[world[i].iTile].dat, 0, 0);
-                draw_trans_sprite(bmp_screen, tempregion, world[i].x, world[i].y);
-                destroy_bitmap(tempregion);
-            }
-		}
+        // Alpha >= 255
+        if (regionPiece.iAlpha >= 255)
+        {
+            draw_sprite(bmp_screen, (BITMAP *)gfxworld[regionPiece.iTile].dat, regionPiece.x, regionPiece.y);
+            regionPiece.iAlpha = 1;
+        }
+        else
+        {
+            set_trans_blender(0, 0, 0, regionPiece.iAlpha);
+            BITMAP *tempregion=create_bitmap_ex(screenBitDepth, 256, 256);
+            clear_to_color(tempregion, makecol(255,0,255));
+            draw_sprite(tempregion, (BITMAP *)gfxworld[regionPiece.iTile].dat, 0, 0);
+            draw_trans_sprite(bmp_screen, tempregion, regionPiece.x, regionPiece.y);
+            destroy_bitmap(tempregion);
+        }
     }
 } // End of function
 

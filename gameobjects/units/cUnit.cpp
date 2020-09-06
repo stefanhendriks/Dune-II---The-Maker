@@ -2369,47 +2369,28 @@ s_UnitP& cUnit::getUnitType() {
 }
 
 // thinking about movement (which is called upon a faster rate)
-void cUnit::think_move()
-{
-	if (DEBUGGING)
-		if (iType != SANDWORM)
-			if (!units[iType].airborn)
-                if (iHitPoints > -1)
-                    assert(map.getCellIdUnitLayer(iCell) == iID);
+void cUnit::think_move() {
+    if (!isValid()) {
+        assert(false && "Expected to have a valid unit calling think_move()");
+    }
 
-    // Just in case
-    if (!isValid())
-	{
-		for (int i=0; i < MAPID_MAX; i++)
-		{
-			if (i != MAPID_STRUCTURES)
-				map.remove_id(iID, i);
-		}
+    if (iTempHitPoints > -1) {
         return;
-	}
+    }
 
-
-    if (iTempHitPoints > -1)
-        return;
-
-    if (TIMER_movewait > 0)
-    {
+    if (TIMER_movewait > 0) {
         TIMER_movewait--;
         return;
     }
 
     // aircraft
-    if (iType == CARRYALL ||
-        iType == ORNITHOPTER ||
-        iType == FRIGATE)
-    {
+    if (isAirbornUnit()) {
         think_move_air();
         return;
     }
 
     // when there is a valid goal cell (differs), then we go further
-    if (iGoalCell == iCell)
-    {
+    if (iGoalCell == iCell) {
         iAction = ACTION_GUARD; // do nothing
 
 		// clear path
@@ -2434,13 +2415,8 @@ void cUnit::think_move()
     // QUAD, TRIKE, TANK, etc
 	iNextCell = isNextCell();
 
-    //char msg[256];
-    //sprintf(msg, "cell=%d, nextcell=%d, goalcell=%d, iPath[0] = %d", iCell, iNextCell, iGoalCell, iPath[0]);
-    //logbook(msg);
-
     // Same cell? Get out of here
-    if (iNextCell == iCell)
-    {
+    if (iNextCell == iCell) {
         // clear path
         memset(iPath, -1, sizeof(iPath));
         iPathIndex=-1;
