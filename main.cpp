@@ -116,6 +116,9 @@ int handleArguments(int argc, char *argv[]) {
 			    // disable all sound effects
 				game.bPlayMusic = false;
 				game.bPlaySound = false;
+			} else if (command.compare("-debug") == 0) {
+			    // debugging enabled
+                bDoDebug = true;
 			}
 		}
 	} // arguments passed
