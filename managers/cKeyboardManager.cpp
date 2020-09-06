@@ -249,11 +249,11 @@ void cKeyboardManager::GAME_KEYS() {
             // so you will not hear 100x "yes sir" at a time, blowing your speakers
             if (rnd(100) < 15) {
                 if (bPlayRep) {
-                    play_sound_id(SOUND_REPORTING, -1);
+                    play_sound_id(SOUND_REPORTING);
                 }
 
                 if (bPlayInf) {
-                    play_sound_id(SOUND_YESSIR, -1);
+                    play_sound_id(SOUND_YESSIR);
                 }
             } // END HACK
         }

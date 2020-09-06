@@ -17,7 +17,7 @@ public:
 	cMap();
 	~cMap();
 
-    void init();
+    void init(int width, int height);
     void smooth();
     void draw_bullets();
 
@@ -237,8 +237,25 @@ public:
     cCellCalculator * getCellCalculator() { return cellCalculator; }
     void resetCellCalculator();
 
+    /**
+     * Get height of map in cells
+     * @return
+     */
     int getHeight() { return height; }
+
+    /**
+     * Get width of map in cells
+     * @return
+     */
     int getWidth() { return width; }
+
+    int getMaxDistanceInPixels() {
+        int tileWidth = 32;
+        int tileHeight = 32;
+        int maxWidthDistance = width * tileWidth;
+        int maxHeightDistance = height * tileHeight;
+        return ABS_length(0, 0, maxWidthDistance, maxHeightDistance);
+    }
 
 	private:
         tCell cell[MAX_CELLS];

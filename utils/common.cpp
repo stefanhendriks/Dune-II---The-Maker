@@ -854,11 +854,10 @@ void install_bullets()
 /*****************************
  Structure Rules
  *****************************/
-void install_structures()
-{
+void install_structures() {
+
     logbook("Installing:  STRUCTURES");
-  for (int i = 0; i < MAX_STRUCTURETYPES; i++)
-  {
+  for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
     structures[i].bmp = (BITMAP *)gfxdata[BUILD_WINDTRAP].dat; // in case an invalid bitmap, we are a windtrap
 	structures[i].shadow = NULL; // in case an invalid bitmap, we are a windtrap
     structures[i].sight = 1;
@@ -990,7 +989,6 @@ void install_structures()
   structures[WOR].fadecol = -1;
   structures[WOR].icon = ICON_STR_WOR;
   strcpy(structures[WOR].name, "WOR");
-
 
 
   // Structure    : Silo
@@ -1127,32 +1125,34 @@ int iFindCloseBorderCell(int iCll) {
 }
 
 
-// TODO: Revisit, because distance can be calculated easier? Using mapCamera? This method does not seem to make sense
-// when reading the comments...
-int distanceBetweenCellAndCenterOnScreen(int iCell) {
-    if (iCell < 0) {
-        return 0; // return its on screen, probably some sound that has nothing to do with the battlefield (money, etc)
+int distanceBetweenCellAndCenterOfScreen(int iCell) {
+    assert(iCell > -1);
+
+    int centerX = mapCamera->getViewportCenterX();
+    int centerY = mapCamera->getViewportCenterY();
+
+    int cellX = mapCamera->getAbsoluteXPositionFromCell(iCell);
+    int cellY = mapCamera->getAbsoluteYPositionFromCell(iCell);
+
+    return ABS_length(centerX, centerY, cellX, cellY);
+}
+
+void play_sound_id(int s, int volume) {
+    if (!game.bPlaySound) return; // do not play sound when boolean is false.
+
+    int vol = keepBetween(volume, 0, 255);
+    // credits up/down sound has lower volume
+    if (s == SOUND_CREDITUP || s == SOUND_CREDITDOWN) {
+        vol = PAN_CENTER;
     }
 
-    int iCellX=iCellGiveX(iCell);
-    int iCellY=iCellGiveY(iCell);
+    if (vol > 0) {
+        game.getSoundPlayer()->playSound(s, 127, vol);
+    }
+}
 
-    int iMapX = mapCamera->getViewportStartX() / 32;
-    int iMapY = mapCamera->getViewportStartY() / 32;
-
-    // calculate screen position into cell coordinate
-    int iEndX=iMapX + ((game.screen_x-160)/ mapCamera->getZoomedTileWidth()); // width of sidebar is 160
-    int iEndY= iMapY + ((game.screen_y-42)/ mapCamera->getZoomedTileHeight()) + 1;  // height of upper bar is 42
-
-    if ((iCellX >= iMapX && iCellX <= iEndX) && (iCellY >= iMapY && iCellY <= iEndY))
-        return 0; // off screen
-
-    // determine cell on center of screen
-    int iCalcX = iMapX + (((game.screen_x-160)/ mapCamera->getZoomedTileWidth()) / 2);
-    int iCalcY = iMapY + (((game.screen_y-42)/ mapCamera->getZoomedTileHeight()) + 1) / 2;
-
-    // calculate length between cell on center of screen and given iCell coordinates
-    return ABS_length(iCellX, iCellY, iCalcX, iCalcY);
+void play_sound_id(int s) {
+    play_sound_id(s, VOLUME_MAX);
 }
 
 /**
@@ -1162,32 +1162,44 @@ int distanceBetweenCellAndCenterOnScreen(int iCell) {
  * @param s
  * @param iDistance
  */
-void play_sound_id(int s, int iDistance) {
+void play_sound_id_with_distance(int s, int iDistance) {
 	if (!game.bPlaySound) return; // do not play sound when boolean is false.
 
 	if (gfxaudio[s].dat == NULL) return; // no data file at the specified position in index.
 
-	// Determine if sound is on screen or not
-	if (iDistance <= 1) {
-		int volume = VOLUME_MAX;
-		// credits up/down sound has lower volume
-		if (s == SOUND_CREDITUP || s == SOUND_CREDITDOWN) {
-			volume = PAN_CENTER;
-		}
-		game.getSoundPlayer()->playSound(s, 127, volume);
-	} else {
-		// adjust volume from distance
-		int iVol = game.getMaxVolume() - ((game.getMaxVolume() / 32) * iDistance);
-		if (iVol > 0) {
-			game.getSoundPlayer()->playSound(s, 127, iVol);
-		}
+	if (iDistance <= 1) { // means "on screen" (meaning fixed volume, and no need for panning)
+	    play_sound_id(s, VOLUME_MAX);
+		return;
 	}
+
+	// zoom factor influences distance we can 'hear'. The closer up, the less max distance. Unzoomed, this is half the map.
+	// where when unit is at half map, we can hear it only a bit.
+    float maxDistance = mapCamera->divideByZoomLevel(map.getMaxDistanceInPixels()/2);
+    float distanceNormalized = 1.0 - ((float)iDistance / maxDistance);
+
+    float volume = game.getMaxVolume() * distanceNormalized;
+
+    // zoom factor influences volume (more zoomed in means louder)
+    float volumeFactor = mapCamera->factorZoomLevel(0.7f);
+    int iVolFactored = volumeFactor * volume;
+
+    if (DEBUGGING) {
+        char msg[255];
+        sprintf(msg, "iDistance [%d], distanceNormalized [%f] maxDistance [%f], zoomLevel [%f], volumeFactor [%f], volume [%f], iVolFactored [%d]",
+                iDistance,
+                distanceNormalized,
+                maxDistance,
+                mapCamera->getZoomLevel(),
+                volumeFactor,
+                volume,
+                iVolFactored);
+        logbook(msg);
+    }
+
+    play_sound_id(s, iVolFactored);
 }
 
-void play_voice(int iType)
-{
-//	int iTpe = iType;
-
+void play_voice(int iType) {
 	if (player[0].getHouse() == HARKONNEN) {
 		iType++;
 	}
@@ -1196,7 +1208,7 @@ void play_voice(int iType)
 		iType+=2;
 	}
 
-	play_sound_id(iType,-1); // pass -1 as 'onscreen' since its a normal sound
+    play_sound_id(iType); // pass -1 as 'onscreen' since its a normal sound
 }
 
 
@@ -1380,7 +1392,7 @@ int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstr
 
   // play sound (when we have one)
   if (bullets[type].sound > -1)
-      play_sound_id(bullets[type].sound, distanceBetweenCellAndCenterOnScreen(cell));
+      play_sound_id_with_distance(bullets[type].sound, distanceBetweenCellAndCenterOfScreen(cell));
 
   return new_id;
 }

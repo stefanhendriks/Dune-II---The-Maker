@@ -33,8 +33,7 @@ void cMap::resetCellCalculator() {
 	cellCalculator = new cCellCalculator(this);
 }
 
-void cMap::init()
-{
+void cMap::init(int width, int height) {
     INIT_REINFORCEMENT();
     resetCellCalculator();
 
@@ -60,6 +59,9 @@ void cMap::init()
 	iScrollSpeed=1;
 
 	delete mapUtils;
+
+    this->width = width;
+    this->height = height;
 }
 
 void cMap::smudge_increase(int iType, int iCell) {

@@ -79,7 +79,7 @@ void cOrderProcesser::playTMinusSound(int seconds) {
 	}
 
 	if (soundIdToPlay > -1) {
-		play_sound_id(soundIdToPlay, -1);
+        play_sound_id(soundIdToPlay);
 	}
 }
 

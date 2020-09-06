@@ -171,9 +171,9 @@ void cGame::combat_mouse()
 					unit[hover_unit].bSelected=true;
 
 					if (units[unit[hover_unit].iType].infantry == false) {
-						play_sound_id(SOUND_REPORTING, -1);
+                        play_sound_id(SOUND_REPORTING);
 					} else {
-						play_sound_id(SOUND_YESSIR, -1);
+                        play_sound_id(SOUND_YESSIR);
 					}
 
 				}
@@ -225,10 +225,10 @@ void cGame::combat_mouse()
                 // AUDITIVE FEEDBACK
                 if (bPlayInf || bPlayRep) {
                     if (bPlayInf)
-                        play_sound_id(SOUND_MOVINGOUT+rnd(2), -1);
+                        play_sound_id(SOUND_MOVINGOUT + rnd(2));
 
                     if (bPlayRep)
-                        play_sound_id(SOUND_ACKNOWLEDGED+rnd(3), -1);
+                        play_sound_id(SOUND_ACKNOWLEDGED + rnd(3));
 
                     bOrderingUnits=true;
                 }
@@ -349,10 +349,10 @@ void cGame::combat_mouse()
             if (bPlayInf || bPlayRep) {
 
                 if (bPlayRep)
-                    play_sound_id(SOUND_REPORTING, -1);
+                    play_sound_id(SOUND_REPORTING);
 
                 if (bPlayInf)
-                    play_sound_id(SOUND_YESSIR, -1);
+                    play_sound_id(SOUND_YESSIR);
 
                 bOrderingUnits = true;
 

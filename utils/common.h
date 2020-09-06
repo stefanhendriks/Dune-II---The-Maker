@@ -45,7 +45,10 @@ void mp3_play_file(char filename[255]);
 
 void LOAD_SCENE(std::string scene);
 
-void play_sound_id(int s, int iOnScreen);
+void play_sound_id(int s, int volume);
+void play_sound_id(int s);
+void play_sound_id_with_distance(int s, int iOnScreen);
+
 bool MIDI_music_playing();
 void play_voice(int iType);
 void setMusicVolume(int i);
@@ -54,7 +57,7 @@ void playMusicByType(int iType);
 void Shimmer(int r, int x, int y);
 int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstruc);
 
-int distanceBetweenCellAndCenterOnScreen(int iCell);
+int distanceBetweenCellAndCenterOfScreen(int iCell);
 
 void bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor);
 int getAmountReservedVoicesAndInstallSound();

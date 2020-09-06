@@ -216,7 +216,7 @@ void cMiniMapDrawer::draw() {
 
 	if (hasRadarAndEnoughPower) {
 		if (iStatus < 0) {
-			play_sound_id(SOUND_RADAR, -1);
+            play_sound_id(SOUND_RADAR);
 			play_voice(SOUND_VOICE_03_ATR);
 		}
 		iStatus = 0;

@@ -16,7 +16,7 @@ cRandomMapGenerator::~cRandomMapGenerator() {
 
 void cRandomMapGenerator::generateRandomMap() {
 	// create random map
-	map.init();
+	map.init(game.map_width, game.map_height);
 
   // <> is MAP_WIDTH+MAP_HEIGHT / <a number>
 

@@ -101,6 +101,11 @@ public:
 
     int getViewportHeight() { return viewportHeight; }
 
+    int getViewportCenterX() { return viewportStartX + (viewportWidth / 2); }
+
+    int getViewportCenterY() { return viewportStartY + (viewportHeight / 2); }
+
+
     void thinkInteraction();
 
     void centerAndJumpViewPortToCell(int cell);
@@ -117,7 +122,15 @@ public:
         return value * zoomLevel;
     }
 
+    float factorZoomLevel(float value) {
+        return value * zoomLevel;
+    }
+
     float divideByZoomLevel(int value) {
+        return value / zoomLevel;
+    }
+
+    float divideByZoomLevel(float value) {
         return value / zoomLevel;
     }
 
