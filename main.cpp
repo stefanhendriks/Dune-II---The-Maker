@@ -14,7 +14,7 @@
 
 using namespace std;
 
-bool bDoDebug = true;
+bool bDoDebug = false;
 int	iRest = 1;	// default rest value
 
 // Server/Client system
