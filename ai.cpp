@@ -1335,17 +1335,18 @@ int cAIPlayer::iPlaceStructureCell(int iType)
 			break;
 
 		// valid
-		if (structure[i])
+        cAbstractStructure *pStructure = structure[i];
+        if (pStructure)
 		{
 			// same owner
-			if (structure[i]->getOwner() == ID)
+			if (pStructure->getOwner() == ID)
 			{
 				// scan around
-				int iStartX=iCellGiveX(structure[i]->getCell());
-				int iStartY=iCellGiveY(structure[i]->getCell());
+				int iStartX=iCellGiveX(pStructure->getCell());
+				int iStartY=iCellGiveY(pStructure->getCell());
 
-				int iEndX = iStartX + (structures[structure[i]->getType()].bmp_width/32) + 1;
-				int iEndY = iStartY + (structures[structure[i]->getType()].bmp_height/32) + 1;
+				int iEndX = iStartX + (pStructure->getWidthInPixels() / 32) + 1;
+				int iEndY = iStartY + (pStructure->getHeightInPixels() / 32) + 1;
 
 				iStartX -= iWidth;
 				iStartY -= iHeight;
