@@ -353,10 +353,6 @@ void cMap::draw_units() {
 			// DEBUG MODE: DRAW PATHS
 			if (DEBUGGING) {
                 unit[i].draw_path();
-
-                char msg[255];
-                sprintf(msg, "Unit [%d], posX = [%d], posY = [%d]", i, unit[i].pos_x(), unit[i].pos_y());
-                logbook(msg);
             }
 
             if (unit[i].iType == SANDWORM)

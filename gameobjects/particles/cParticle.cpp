@@ -118,13 +118,6 @@ void cParticle::draw() {
     int drawX = dx;
     int drawY = dy;
 
-    if (iType == OBJECT_SIEGESHOOT || iType == MOVE_INDICATOR) {
-        char msg[255];
-        // iWidth = 64, iHeight = 64
-        sprintf(msg, "Particle, drawX = [%d], drawY = [%d], dx=[%d], dy=[%d]", drawX, drawY, dx, dy);
-        logbook(msg);
-    }
-
     if (iAlpha > -1) {
 		if (iType != OBJECT_BOOM01 && iType != OBJECT_BOOM02 && iType != OBJECT_BOOM03) {
             set_trans_blender(0,0,0, iAlpha);
@@ -590,16 +583,11 @@ int PARTICLE_NEW()
  * @param iHouse
  * @param iFrame
  */
-void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
-{
+void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame) {
     int iNewId = PARTICLE_NEW();
 
     if (iNewId < 0)
         return;
-
-    char msg[255];
-    sprintf(msg, "Creating particle, x [%d], y [%d], iType [%d], iHouse [%d], iFrame [%d]", x, y, iType, iHouse, iFrame);
-    logbook(msg);
 
     particle[iNewId].init();
 
@@ -782,8 +770,6 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame)
 		particle[iNewId].iWidth=128;
 		particle[iNewId].iHeight=128;
 	}
-
-    logbook("Particle created");
 }
 
 
