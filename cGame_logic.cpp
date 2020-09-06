@@ -2619,13 +2619,7 @@ bool cGame::setupGame() {
 			setScreenResolutionFromGameIniSettings();
 		}
 
-		//GFX_AUTODETECT_WINDOWED
-		int r = 0;
-		#ifdef UNIX
-				r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
-		#else
-				r = set_gfx_mode(GFX_DIRECTX_WIN, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
-		#endif
+        r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
 
 		char msg[255];
 		sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d.", game.screen_x, game.screen_y);
@@ -2681,7 +2675,7 @@ bool cGame::setupGame() {
             bestScreenResolutionFinder.checkResolutions();
             bool result = bestScreenResolutionFinder.acquireBestScreenResolutionFullScreen();
 
-            // succes
+            // success
             if (result) {
                 logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fullscreen)", "Succesfully initialized graphics mode.", OUTC_SUCCESS);
             } else {
