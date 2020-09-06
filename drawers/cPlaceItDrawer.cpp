@@ -188,7 +188,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 				iHealthPercent += health_bar(50, iTotalRocks, iTotalBlocks);
 			}
 
-			play_sound_id(SOUND_PLACE, -1);
+            play_sound_id(SOUND_PLACE);
 
 			player[HUMAN].getStructurePlacer()->placeStructure(mouseCell, structureId, iHealthPercent);
 

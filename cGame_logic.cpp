@@ -97,7 +97,7 @@ void cGame::init() {
     TIMER_movie=0;
     iMovieFrame=-1;
 
-	map.init();
+	map.init(map_width, map_height);
 
 	for (int i=0; i < MAX_PLAYERS; i++) {
 		player[i].init(i);
@@ -166,7 +166,7 @@ void cGame::mission_init() {
     TIMER_movie=0;
     iMovieFrame=-1;
 
-    map.init();
+    map.init(game.map_width, game.map_height);
 
     // clear out players but not entirely
     for (int i=0; i < MAX_PLAYERS; i++)
@@ -1754,7 +1754,7 @@ void cGame::house() {
 			// let bene gesserit tell about atreides
 			// when NO, iHouse gets reset to -1
 
-			play_sound_id(SOUND_ATREIDES,-1);
+            play_sound_id(SOUND_ATREIDES);
 
             LOAD_SCENE("platr"); // load planet of atreides
 
@@ -1775,7 +1775,7 @@ void cGame::house() {
 			// let bene gesserit tell about harkonnen
 			// when NO, iHouse gets reset to -1
 
-			play_sound_id(SOUND_ORDOS,-1);
+            play_sound_id(SOUND_ORDOS);
 
             LOAD_SCENE("plord"); // load planet of ordos
 
@@ -1796,7 +1796,7 @@ void cGame::house() {
 			// let bene gesserit tell about harkonnen
 			// when NO, iHouse gets reset to -1
 
-			play_sound_id(SOUND_HARKONNEN,-1);
+            play_sound_id(SOUND_HARKONNEN);
 
             LOAD_SCENE("plhar"); // load planet of harkonnen
 
