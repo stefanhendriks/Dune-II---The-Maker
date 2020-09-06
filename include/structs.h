@@ -12,8 +12,7 @@
 // note: This is NOT the unit class, this is simply a 'prefix' for a unit!
 // note: The unit properties are actually set in common.cpp , like the houses!
 // note: Some values are now read via INI.CPP (GAME.INI reader).
-struct s_UnitP
-{
+struct s_UnitP {
   BITMAP  *bmp;         // each unit has a reference to his 8 bit bitmap.
   BITMAP  *top;         // top of unit
   BITMAP  *shadow;      // shadow of unit (24 bit)
@@ -65,8 +64,7 @@ struct s_UnitP
 
 
 // Structure types
-struct s_Structures
-{
+struct s_Structures {
   // Structures
   BITMAP *bmp;         // a pointer to the 8 bit bitmap
   BITMAP *shadow;	   // a pointer to the shadow bitmap
@@ -97,11 +95,12 @@ struct s_Structures
   int cost;            // price
 
   char name[64];       // name
+
+  bool configured;     // is this structure configured? (poor man solution)
 };
 
 // House properties
-struct s_House
-{
+struct s_House {
   int swap_color;           // color index to start swapping with.
   int minimap_color;        // rgb value on minimap
 };

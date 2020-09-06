@@ -21,8 +21,12 @@ cPlayer::cPlayer() {
 	upgradeBuilder = NULL;
 	buildingListUpdater = NULL;
 	gameControlsContext = NULL;
-    clearStructureTypeBitmaps();
-	clearUnitTypeBitmaps();
+	char msg[255];
+	sprintf(msg, "MAX_STRUCTURETYPES=[%d], sizeof bmp_structure=%d, sizeof(BITMAP *)", MAX_STRUCTURETYPES, sizeof(bmp_structure), sizeof(BITMAP*));
+	logbook(msg);
+	memset(bmp_structure, 0, sizeof(bmp_structure));
+	memset(bmp_unit, 0, sizeof(bmp_unit));
+	memset(bmp_unit_top, 0, sizeof(bmp_unit_top));
 }
 
 cPlayer::~cPlayer() {
@@ -62,7 +66,18 @@ void cPlayer::destroyAllegroBitmaps() {
 void cPlayer::clearStructureTypeBitmaps() {
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
         if (bmp_structure[i]) {
+            if (DEBUGGING) {
+                char msg[255];
+                sprintf(msg, "clearStructureTypeBitmaps: Destroying bmp_structure for index [%d].", i);
+                logbook(msg);
+            }
             destroy_bitmap(bmp_structure[i]);
+        } else {
+            if (DEBUGGING) {
+                char msg[255];
+                sprintf(msg, "clearStructureTypeBitmaps: Index [%d] is null.", i);
+                logbook(msg);
+            }
         }
         bmp_structure[i] = nullptr;
     }
@@ -71,11 +86,21 @@ void cPlayer::clearStructureTypeBitmaps() {
 void cPlayer::clearUnitTypeBitmaps() {
     for (int i = 0; i < MAX_UNITTYPES; i++) {
         if (bmp_unit[i]) {
+            if (DEBUGGING) {
+                char msg[255];
+                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit for index [%d].", i);
+                logbook(msg);
+            }
             destroy_bitmap(bmp_unit[i]);
         }
         bmp_unit[i] = nullptr;
 
         if (bmp_unit_top[i]) {
+            if (DEBUGGING) {
+                char msg[255];
+                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit_top for index [%d].", i);
+                logbook(msg);
+            }
             destroy_bitmap(bmp_unit_top[i]);
         }
         bmp_unit_top[i] = nullptr;
@@ -157,8 +182,7 @@ void cPlayer::setGameControlsContext(cGameControlsContext *theGameControlsContex
 	gameControlsContext = theGameControlsContext;
 }
 
-void cPlayer::init(int id)
-{
+void cPlayer::init(int id) {
     if (id < 0 || id >= MAX_PLAYERS) {
         char msg[255];
         sprintf(msg, "Error initializing player, id %d is not valid.", id);
@@ -170,6 +194,7 @@ void cPlayer::init(int id)
 
     memcpy(pal, general_palette, sizeof(pal));
 	house = GENERALHOUSE;
+
 	/**
 	 * Ok, so this is confusing.
 	 * There are also aiPlayer classes. They hold some 'brains' I guess. all other state is stored here.
@@ -198,77 +223,88 @@ void cPlayer::init(int id)
     TIMER_attack=-1;			// -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 }
 
-
-// set house
 void cPlayer::setHouse(int iHouse) {
-  house = iHouse;      // use rules of this house
+    int currentHouse = house;
+    char msg[255];
+    sprintf(msg, "cPlayer::setHouse - Current house is [%d], setting house to [%d]", currentHouse, iHouse);
+    logbook(msg);
+    house = iHouse;      // use rules of this house
 
-  if (difficultySettings) {
-	  delete difficultySettings;
-  }
+    if (difficultySettings) {
+        delete difficultySettings;
+    }
 
-  if (iHouse == ATREIDES) {
-	  difficultySettings = new cPlayerAtreidesDifficultySettings();
-  } else if (iHouse == ORDOS) {
-	  difficultySettings = new cPlayerOrdosDifficultySettings();
-  } else if (iHouse == HARKONNEN) {
-	  difficultySettings = new cPlayerHarkonnenDifficultySettings();
-  } else {
-	  // for now default is atreides
-	  // TODO: create for other houses difficultysettings
-	  difficultySettings = new cPlayerAtreidesDifficultySettings();
-  }
+    if (iHouse == ATREIDES) {
+        difficultySettings = new cPlayerAtreidesDifficultySettings();
+    } else if (iHouse == ORDOS) {
+        difficultySettings = new cPlayerOrdosDifficultySettings();
+    } else if (iHouse == HARKONNEN) {
+        difficultySettings = new cPlayerHarkonnenDifficultySettings();
+    } else {
+        // for now default is atreides
+        // TODO: create for other houses difficultysettings
+        difficultySettings = new cPlayerAtreidesDifficultySettings();
+    }
 
-  // copy entire palette
-  memcpy (pal, general_palette, sizeof(pal));
+    if (currentHouse != iHouse) {
+        // copy entire palette
+        memcpy(pal, general_palette, sizeof(pal));
 
-  // now set the different colors based upon house
-  if (houses[house].swap_color > -1) {
-    int start = houses[house].swap_color;
-    int s=144;                // original position (harkonnen)
-    for (int j = start; j < (start+7);j++) {
-      // swap everything from S with J
-       pal[s] = pal[j];
-       s++;
-     }
-  }
+        // now set the different colors based upon house
+        if (houses[house].swap_color > -1) {
+            int start = houses[house].swap_color;
+            int s = 144;                // original position (harkonnen)
+            for (int j = start; j < (start + 7); j++) {
+                // swap everything from S with J
+                pal[s] = pal[j];
+                s++;
+            }
+        }
 
-  minimapColor = getRGBColorForHouse(house);
+        minimapColor = getRGBColorForHouse(house);
 
-  destroyAllegroBitmaps();
+        destroyAllegroBitmaps();
 
-  int colorDepthBmpScreen = bitmap_color_depth(bmp_screen);
+        int colorDepthBmpScreen = bitmap_color_depth(bmp_screen);
 
-  // use this palette to draw stuff
-  select_palette(pal);
+        // use this palette to draw stuff
+        select_palette(pal);
 
-  // now copy / set all structures for this player, with the correct color
-  for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
-      s_Structures &structureType = structures[i];
+        // now copy / set all structures for this player, with the correct color
+        for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
+            s_Structures &structureType = structures[i];
 
-      bmp_structure[i] = create_bitmap_ex(colorDepthBmpScreen, structureType.bmp->w, structureType.bmp->h);
-      clear_to_color(bmp_structure[i], makecol(255, 0, 255));
+            if (!structureType.configured) continue;
 
-      draw_sprite(bmp_structure[i], structureType.bmp, 0, 0);
-  }
+            bmp_structure[i] = create_bitmap_ex(colorDepthBmpScreen, structureType.bmp->w, structureType.bmp->h);
+            if (!bmp_structure[i]) {
+                alert("Could not create bmp structure bitmap!?", "", "", "Uh oh...", NULL, 13, 0);
+            }
+            clear_to_color(bmp_structure[i], makecol(255, 0, 255));
 
-  // same goes for units
-  for (int i = 0; i < MAX_UNITTYPES; i++) {
-      s_UnitP &unitType = units[i];
+            draw_sprite(bmp_structure[i], structureType.bmp, 0, 0);
+        }
 
-      bmp_unit[i] = create_bitmap_ex(colorDepthBmpScreen, unitType.bmp->w, unitType.bmp->h);
-      clear_to_color(bmp_unit[i], makecol(255, 0, 255));
+        // same goes for units
+        for (int i = 0; i < MAX_UNITTYPES; i++) {
+            s_UnitP &unitType = units[i];
 
-      draw_sprite(bmp_unit[i], unitType.bmp, 0, 0);
+            bmp_unit[i] = create_bitmap_ex(colorDepthBmpScreen, unitType.bmp->w, unitType.bmp->h);
+            if (!bmp_unit[i]) {
+                alert("Could not create bmp unit bitmap!?", "", "", "Uh oh...", NULL, 13, 0);
+            }
+            clear_to_color(bmp_unit[i], makecol(255, 0, 255));
 
-      if (unitType.top) {
-          bmp_unit_top[i] = create_bitmap_ex(colorDepthBmpScreen, unitType.bmp->w, unitType.bmp->h);
-          clear_to_color(bmp_unit_top[i], makecol(255, 0, 255));
+            draw_sprite(bmp_unit[i], unitType.bmp, 0, 0);
 
-          draw_sprite(bmp_unit_top[i], unitType.top, 0, 0);
-      }
-  }
+            if (unitType.top) {
+                bmp_unit_top[i] = create_bitmap_ex(colorDepthBmpScreen, unitType.bmp->w, unitType.bmp->h);
+                clear_to_color(bmp_unit_top[i], makecol(255, 0, 255));
 
+                draw_sprite(bmp_unit_top[i], unitType.top, 0, 0);
+            }
+        }
+    }
 }
 
 int cPlayer::getRGBColorForHouse(int houseId) {

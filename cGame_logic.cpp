@@ -1954,10 +1954,7 @@ void cGame::tellhouse()
 }
 
 // select your next conquest
-void cGame::region()
-{
-        // FADING
-
+void cGame::region() {
 	int mouse_tile = MOUSE_NORMAL;
 
     if (iFadeAction == 1) // fading out
@@ -1972,8 +1969,6 @@ void cGame::region()
 
     bool bFadeOut=false;
 
-
-
     // STEPS:
     // 1. Show current conquered regions
     // 2. Show next progress + story (in message bar)
@@ -1982,8 +1977,7 @@ void cGame::region()
 
     select_palette(player[0].pal);
 
-
-    // region = one we have won, only changing after we have choosen this one
+    // region = one we have won, only changing after we have chosen this one
     if (iRegionState <= 0)
         iRegionState = 1;
 
@@ -1991,8 +1985,7 @@ void cGame::region()
         iRegionSceneAlpha = 255;
 
     // tell the story
-    if (iRegionState == 1)
-    {
+    if (iRegionState == 1) {
         // depending on the mission, we tell the story
         if (iRegionScene == 0)
         {
@@ -2027,31 +2020,24 @@ void cGame::region()
                 iRegionSceneAlpha=-5;
             }
         }
-        else if (iRegionScene == 3)
-        {
+        else if (iRegionScene == 3) {
             draw_sprite(bmp_screen, (BITMAP *)gfxworld[WORLD_DUNE].dat, 16, 73);
             set_trans_blender(0,0,0,iRegionSceneAlpha);
             draw_trans_sprite(bmp_screen, (BITMAP *)gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
 
-            if (iRegionSceneAlpha >= 255)
-            {
-            iRegionScene = 4;
-            iRegionState++;
+            if (iRegionSceneAlpha >= 255) {
+                iRegionScene = 4;
+                iRegionState++;
             }
-
-
         }
         else if (iRegionScene > 3)
             iRegionState++;
 
-        if (iRegionSceneAlpha < 255)
-		{
+        if (iRegionSceneAlpha < 255) {
 			iRegionSceneAlpha+=5;
 		}
 
         // when  mission is 1, do the '3 houses has come to dune, blah blah story)
-
-        //iRegionState++;
     }
 
     // Draw
@@ -2069,8 +2055,6 @@ void cGame::region()
     if (iHouse == HARKONNEN)
         iLogo=BMP_NCHAR;
 
-    //iHouse = ATREIDES;
-
     // Draw 4 times the logo (in each corner)
     if (iLogo > -1) {
 	    draw_sprite(bmp_screen, (BITMAP *)gfxworld[iLogo].dat, 0,0);
@@ -2079,17 +2063,15 @@ void cGame::region()
 	    draw_sprite(bmp_screen, (BITMAP *)gfxworld[iLogo].dat, (640)-64,(480)-64);
     }
 
-
     char * cMessage = drawManager->getMessageDrawer()->getMessage();
-    if (iRegionState == 2)
-    {
+    if (iRegionState == 2) {
         // draw dune first
         draw_sprite(bmp_screen, (BITMAP *)gfxworld[WORLD_DUNE].dat, 16, 73);
         draw_sprite(bmp_screen, (BITMAP *)gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
 
         // draw here stuff
         for (int i=0; i < 27; i++)
-            REGION_DRAW(i);
+            REGION_DRAW(world[i]);
 
         // Animate here (so add regions that are conquered)
         char * cMessage = drawManager->getMessageDrawer()->getMessage();
@@ -2153,97 +2135,92 @@ void cGame::region()
             }
         }
 
-        if (bDone && cMessage[0] == '\0')
-        {
+        if (bDone && cMessage[0] == '\0') {
             iRegionState++;
             drawManager->getMessageDrawer()->setMessage("Select your next region.");
-         //   allegro_message("done2");
         }
-    }
-    else if (iRegionState == 3)
-    {
+    } else if (iRegionState == 3) {
 
-                // draw dune first
+        // draw dune first
         draw_sprite(bmp_screen, (BITMAP *)gfxworld[WORLD_DUNE].dat, 16, 73);
         draw_sprite(bmp_screen, (BITMAP *)gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
 
         // draw here stuff
         for (int i=0; i < 27; i++)
-            REGION_DRAW(i);
+            REGION_DRAW(world[i]);
 
-    int r = REGION_OVER();
+        int r = REGION_OVER();
 
-	bool bClickable=false;
+        bool bClickable=false;
 
-    if (r > -1)
-        if (world[r].bSelectable)
-		{
-                world[r].iAlpha = 255;
-				mouse_tile = MOUSE_ATTACK;
-				bClickable=true;
-		}
+        if (r > -1)
+            if (world[r].bSelectable)
+            {
+                    world[r].iAlpha = 255;
+                    mouse_tile = MOUSE_ATTACK;
+                    bClickable=true;
+            }
 
-	if (cMouse::isLeftButtonClicked() && bClickable)
-	{
-		// selected....
-		int iReg=0;
-		for (int ir=0; ir < MAX_REGIONS; ir++)
-			if (world[ir].bSelectable)
-				if (ir != r)
-					iReg++;
-				else
-					break;
+        if (cMouse::isLeftButtonClicked() && bClickable)
+        {
+            // selected....
+            int iReg=0;
+            for (int ir=0; ir < MAX_REGIONS; ir++)
+                if (world[ir].bSelectable)
+                    if (ir != r)
+                        iReg++;
+                    else
+                        break;
 
-		// calculate region stuff, and add it up
-		int iNewReg=0;
-		if (iMission == 0)	iNewReg=1;
-		if (iMission == 1)	iNewReg=2;
-		if (iMission == 2)	iNewReg=5;
-		if (iMission == 3)	iNewReg=8;
-		if (iMission == 4)	iNewReg=11;
-		if (iMission == 5)	iNewReg=14;
-		if (iMission == 6)	iNewReg=17;
-		if (iMission == 7)	iNewReg=20;
-		if (iMission == 8)	iNewReg=22;
+            // calculate region stuff, and add it up
+            int iNewReg=0;
+            if (iMission == 0)	iNewReg=1;
+            if (iMission == 1)	iNewReg=2;
+            if (iMission == 2)	iNewReg=5;
+            if (iMission == 3)	iNewReg=8;
+            if (iMission == 4)	iNewReg=11;
+            if (iMission == 5)	iNewReg=14;
+            if (iMission == 6)	iNewReg=17;
+            if (iMission == 7)	iNewReg=20;
+            if (iMission == 8)	iNewReg=22;
 
-		iNewReg += iReg;
+            iNewReg += iReg;
 
-		//char msg[255];
-		//sprintf(msg, "Mission = %d", game.iMission);
-		//allegro_message(msg);
+            //char msg[255];
+            //sprintf(msg, "Mission = %d", game.iMission);
+            //allegro_message(msg);
 
-        game.mission_init();
-		game.iRegionState=0;
-        game.state = GAME_BRIEFING;
-		game.iRegion = iNewReg;
-		game.iMission++;						// FINALLY ADD MISSION NUMBER...
-        //    iRegion++;
-        iMentatSpeak=-1;
+            game.mission_init();
+            game.iRegionState=0;
+            game.state = GAME_BRIEFING;
+            game.iRegion = iNewReg;
+            game.iMission++;						// FINALLY ADD MISSION NUMBER...
+            //    iRegion++;
+            iMentatSpeak=-1;
 
-		INI_Load_scenario(iHouse, game.iRegion);
+            INI_Load_scenario(iHouse, game.iRegion);
 
-		//sprintf(msg, "Mission = %d", game.iMission);
-		//allegro_message(msg);
+            //sprintf(msg, "Mission = %d", game.iMission);
+            //allegro_message(msg);
 
-		playMusicByType(MUSIC_BRIEFING);
+            playMusicByType(MUSIC_BRIEFING);
 
-		//allegro_message(msg);
+            //allegro_message(msg);
 
-		bFadeOut=true;
+            bFadeOut=true;
 
-		// Calculate mission from region:
-		// region 1 = mission 1
-		// region 2, 3, 4 = mission 2
-		// region 5, 6, 7 = mission 3
-		// region 8, 9, 10 = mission 4
-		// region 11,12,13 = mission 5
-		// region 14,15,16 = mission 6
-		// region 17,18,19 = mission 7
-		// region 20,21    = mission 8
-		// region 22 = mission 9
+            // Calculate mission from region:
+            // region 1 = mission 1
+            // region 2, 3, 4 = mission 2
+            // region 5, 6, 7 = mission 3
+            // region 8, 9, 10 = mission 4
+            // region 11,12,13 = mission 5
+            // region 14,15,16 = mission 6
+            // region 17,18,19 = mission 7
+            // region 20,21    = mission 8
+            // region 22 = mission 9
 
-	}
-
+        }
     }
 
     // draw message

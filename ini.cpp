@@ -1543,7 +1543,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 			if (bSetUpPlayers)
 			{
 				logbook("Going to setup players");
-                int iRealID=1;
+                int iRealID=1; // because 0 is human
 
                 for (int iP=0; iP < MAX_PLAYERS; iP++) // till 6 , since player 6 itself is sandworm
                 {
@@ -1552,8 +1552,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 					sprintf(msg, "House for id [%d] is [%d] - human id is [%d]", iP, iPl_house[iP], iHumanID);
 					logbook(msg);
                     if (iPl_house[iP] > -1) {
-                        if (iP == iHumanID)
-                        {
+                        if (iP == iHumanID) {
                         	char msg[255];
 							memset(msg, 0, sizeof(msg));
 							sprintf(msg, "Setting up human player, credits to [%d]", iPl_credits[iP]);
@@ -1570,9 +1569,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
                             if (iPl_quota[iP] > 0) {
                                 game.iWinQuota = iPl_quota[iP];
                             }
-						}
-						else
-						{
+						} else {
                             // CPU player
                             player[iRealID].iTeam = 1; // All AI players are on the same team
 

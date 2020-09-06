@@ -10,11 +10,6 @@
 
   */
 
-void REGION_DRAW(int i); // draw this region
-int  REGION_OVER(); // what region is the mouse on?
-void REGION_SETUP(int iMission, int iHouse);
-void REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile);
-
 class cRegion
 {
 public:
@@ -25,3 +20,7 @@ public:
     bool bSelectable;   // selectable for attacking (default = false)
 };
 
+void REGION_DRAW(cRegion &regionPiece); // draw this region
+int  REGION_OVER(); // what region is the mouse on?
+void REGION_SETUP(int iMission, int iHouse);
+void REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile);
