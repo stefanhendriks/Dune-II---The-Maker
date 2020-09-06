@@ -278,7 +278,7 @@ void cPlayer::setHouse(int iHouse) {
 
             bmp_structure[i] = create_bitmap_ex(colorDepthBmpScreen, structureType.bmp->w, structureType.bmp->h);
             if (!bmp_structure[i]) {
-                alert("Could not create bmp structure bitmap!?", "", "", "Uh oh...", NULL, 13, 0);
+                allegro_message("Could not create bmp structure bitmap!? - Imminent crash.");
             }
             clear_to_color(bmp_structure[i], makecol(255, 0, 255));
 
@@ -291,7 +291,7 @@ void cPlayer::setHouse(int iHouse) {
 
             bmp_unit[i] = create_bitmap_ex(colorDepthBmpScreen, unitType.bmp->w, unitType.bmp->h);
             if (!bmp_unit[i]) {
-                alert("Could not create bmp unit bitmap!?", "", "", "Uh oh...", NULL, 13, 0);
+                allegro_message("Could not create bmp unit bitmap!? - Imminent crash.");
             }
             clear_to_color(bmp_unit[i], makecol(255, 0, 255));
 
