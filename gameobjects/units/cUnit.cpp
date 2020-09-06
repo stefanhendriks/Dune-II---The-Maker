@@ -118,297 +118,269 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
     // Animation / Sound
 	// TODO: update statistics player
 
-    int half = mapCamera->getZoomedHalfTileSize();
-    int iDieX=pos_x() + half;
-    int iDieY=pos_y() + half;
+    int iDieX=pos_x() + getUnitType().bmp_width/2;
+    int iDieY=pos_y() + getUnitType().bmp_height/2;
 
     // when harveter, check if there are any friends , if not, then deliver one
-    if (iType == HARVESTER &&
-        player[iPlayer].iStructures[REFINERY] > 0)
-    {
-		if (DEBUGGING)
-			logbook("Harvester died, looking for more...");
+    if (iType == HARVESTER && // a harvester died
+        player[iPlayer].iStructures[REFINERY] > 0) { // and its player still has a refinery
 
-        bool bFound=false;
-        for (int i=0; i < MAX_UNITS; i++)
-            if (i != iID)
-                if (unit[i].isValid())
-                    if (unit[i].iPlayer == iPlayer)
-                    {
-                        bFound=true;
+        // check if the player has any harvester left
+        bool bFoundHarvester=false;
+        for (int i=0; i < MAX_UNITS; i++) {
+            if (i != iID) {
+                cUnit &theUnit = unit[i];
+
+                if (theUnit.isValid() && theUnit.iType == HARVESTER) {
+                    if (theUnit.iPlayer == iPlayer) {
+                        bFoundHarvester = true;
                         break;
                     }
-
-        if (bFound == false)
-        {
-			if (DEBUGGING)
-				logbook("no friends, reinforcing...");
-
-            // deliver
-            for (int k=0; k < MAX_STRUCTURES; k++)
-            {
-                if (structure[k])
-                    if (structure[k]->getOwner() == iPlayer)
-                        if (structure[k]->getType() == REFINERY)
-                        {
-                            REINFORCE(iPlayer, HARVESTER, structure[k]->getCell(), -1);
-                            break;
-                        }
-
+                }
             }
         }
-    }
 
-    if (bBlowUp)
-    {
-    if (iType == TRIKE || iType == RAIDER || iType == QUAD)
-    {
-        // play quick 'boom' sound and show animation
-        PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_TRIKE, -1, -1);
-        play_sound_id_with_distance(SOUND_TRIKEDIE, distanceBetweenCellAndCenterOfScreen(iCell));
+        // No harvester found, deliver one
+        if (!bFoundHarvester) {
+            // deliver
 
-        if (rnd(100) < 30)
-            PARTICLE_CREATE(iDieX, iDieY-24, OBJECT_SMOKE, -1, -1);
-    }
+            cAbstractStructure * refinery = nullptr;
+            for (int k=0; k < MAX_STRUCTURES; k++) {
+                cAbstractStructure *theStructure = structure[k];
+                if (!theStructure) continue;
+                if (!theStructure->getOwner() == iPlayer) continue;
+                if (!theStructure->getType() == REFINERY) continue;
 
-    if (iType == SIEGETANK || iType == DEVASTATOR && rnd(100) < 25)
-    {
-        if (iBodyFacing == FACE_UPLEFT ||
-            iBodyFacing == FACE_DOWNRIGHT)
-        {
-            PARTICLE_CREATE(iDieX, iDieY, OBJECT_SIEGEDIE, iPlayer, -1);
+                // found!
+                refinery = theStructure;
+                break;
+            }
+
+            // found a refinery, deliver harvester to that
+            if (refinery) {
+                REINFORCE(iPlayer, HARVESTER, refinery->getCell(), -1);
+            }
         }
-    }
+    } // a harvester died, check if we have to deliver a new one to the player
 
-    if (iType == TANK || iType == SIEGETANK || iType == SONICTANK || iType == LAUNCHER || iType == DEVIATOR ||
-        iType == HARVESTER || iType == ORNITHOPTER || iType == MCV)
-    {
-        // play quick 'boom' sound and show animation
-        if (rnd(100) < 50)
-        {
-            PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_TANK_ONE, -1, -1);
-            play_sound_id_with_distance(SOUND_TANKDIE2, distanceBetweenCellAndCenterOfScreen(iCell));
-        }
-        else
-        {
-            PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_TANK_TWO, -1, -1);
-            play_sound_id_with_distance(SOUND_TANKDIE, distanceBetweenCellAndCenterOfScreen(iCell));
+    if (bBlowUp) {
+        if (iType == TRIKE || iType == RAIDER || iType == QUAD) {
+            // play quick 'boom' sound and show animation
+            PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_TRIKE, -1, -1);
+            play_sound_id_with_distance(SOUND_TRIKEDIE, distanceBetweenCellAndCenterOfScreen(iCell));
+
+            if (rnd(100) < 30) {
+                PARTICLE_CREATE(iDieX, iDieY - 24, OBJECT_SMOKE, -1, -1);
+            }
         }
 
-        if (rnd(100) < 30)
-            PARTICLE_CREATE(iDieX, iDieY-24, OBJECT_SMOKE, -1, -1);
-
-        if (iType == HARVESTER)
-        {
-            game.TIMER_shake=25;
-            mapEditor.createField(iCell, TERRAIN_SPICE, ((iCredits+1)/7));
+        if (iType == SIEGETANK || iType == DEVASTATOR && rnd(100) < 25) {
+            if (iBodyFacing == FACE_UPLEFT ||
+                iBodyFacing == FACE_DOWNRIGHT) {
+                PARTICLE_CREATE(iDieX, iDieY, OBJECT_SIEGEDIE, iPlayer, -1);
+            }
         }
 
-        if (iType == ORNITHOPTER)
-        {
-            PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_ORNI, -1, -1);
+        if (iType == TANK || iType == SIEGETANK || iType == SONICTANK || iType == LAUNCHER || iType == DEVIATOR ||
+            iType == HARVESTER || iType == ORNITHOPTER || iType == MCV) {
+            // play quick 'boom' sound and show animation
+            if (rnd(100) < 50) {
+                PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_TANK_ONE, -1, -1);
+                play_sound_id_with_distance(SOUND_TANKDIE2, distanceBetweenCellAndCenterOfScreen(iCell));
+            } else {
+                PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_TANK_TWO, -1, -1);
+                play_sound_id_with_distance(SOUND_TANKDIE, distanceBetweenCellAndCenterOfScreen(iCell));
+            }
+
+            if (rnd(100) < 30)
+                PARTICLE_CREATE(iDieX, iDieY - 24, OBJECT_SMOKE, -1, -1);
+
+            if (iType == HARVESTER) {
+                game.TIMER_shake = 25;
+                mapEditor.createField(iCell, TERRAIN_SPICE, ((iCredits + 1) / 7));
+            }
+
+            if (iType == ORNITHOPTER) {
+                PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_ORNI, -1, -1);
+            }
         }
-    }
 
-    if (iType == DEVASTATOR) {
-		int iOrgDieX=iDieX;
-		int iOrgDieY=iDieY;
-
-
-        // create a cirlce of explosions (big ones)
-        iDieX-=32;
-        iDieY-=32;
-
-        for (int cx = 0; cx < 3; cx++)
-            for (int cy = 0; cy < 3; cy++)
-            {
+        if (iType == DEVASTATOR) {
+            int iOrgDieX = iDieX;
+            int iOrgDieY = iDieY;
 
 
-                for (int i=0; i < 2; i++)
-                    PARTICLE_CREATE(iDieX+(cx*32), iDieY+(cy*32), EXPLOSION_STRUCTURE01+rnd(2), -1, -1);
+            // create a cirlce of explosions (big ones)
+            iDieX -= 32;
+            iDieY -= 32;
 
-                if (rnd(100) < 35)
-                    play_sound_id_with_distance(SOUND_TANKDIE + rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
+            for (int cx = 0; cx < 3; cx++)
+                for (int cy = 0; cy < 3; cy++) {
 
-                // calculate cell and damage stuff around this
-                int cll = iCellMake((iCellX-1) +cx, (iCellY-1)+cy);
 
-                if (cll == iCell)
-                    continue; // do not do own cell
+                    for (int i = 0; i < 2; i++)
+                        PARTICLE_CREATE(iDieX + (cx * 32), iDieY + (cy * 32), EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
 
-                if (map.getCellType(cll) == TERRAIN_WALL)
-                {
-                    // damage this type of wall...
-                    map.cellTakeDamage(cll, 150);
+                    if (rnd(100) < 35)
+                        play_sound_id_with_distance(SOUND_TANKDIE + rnd(2),
+                                                    distanceBetweenCellAndCenterOfScreen(iCell));
 
-                    if (map.getCellHealth(cll) < 0)
-                    {
-                        // remove wall, turn into smudge:
-                        mapEditor.createCell(cll, TERRAIN_ROCK, 0);
+                    // calculate cell and damage stuff around this
+                    int cll = iCellMake((iCellX - 1) + cx, (iCellY - 1) + cy);
 
-                        mapEditor.smoothAroundCell(cll);
+                    if (cll == iCell)
+                        continue; // do not do own cell
 
-                        map.smudge_increase(SMUDGE_WALL, cll);
+                    if (map.getCellType(cll) == TERRAIN_WALL) {
+                        // damage this type of wall...
+                        map.cellTakeDamage(cll, 150);
+
+                        if (map.getCellHealth(cll) < 0) {
+                            // remove wall, turn into smudge:
+                            mapEditor.createCell(cll, TERRAIN_ROCK, 0);
+
+                            mapEditor.smoothAroundCell(cll);
+
+                            map.smudge_increase(SMUDGE_WALL, cll);
+                        }
+                    }
+
+                    // damage surrounding units
+                    int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
+                    if (idOfUnitAtCell > -1) {
+                        int id = idOfUnitAtCell;
+
+                        if (unit[id].iHitPoints > 0) {
+
+                            unit[id].iHitPoints -= 150;
+
+                            // NO HP LEFT, DIE
+                            if (unit[id].iHitPoints <= 1)
+                                unit[id].die(true, false);
+                        } // only die when the unit is going to die
+                    }
+
+                    int idOfStructureAtCell = map.getCellIdStructuresLayer(cll);
+                    if (idOfStructureAtCell > -1) {
+                        // structure hit!
+                        int id = idOfStructureAtCell;
+
+                        if (structure[id]->getHitPoints() > 0) {
+
+                            int iDamage = 150 + rnd(100);
+                            structure[id]->damage(iDamage);
+
+                            int iChance = 10;
+
+                            if (structure &&
+                                structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
+                                iChance = 30;
+
+                            if (rnd(100) < iChance) {
+                                long x = pos_x() + (mapCamera->getViewportStartX()) + 16 + (-8 + rnd(16));
+                                long y = pos_y() + (mapCamera->getViewportStartY()) + 16 + (-8 + rnd(16));
+                                PARTICLE_CREATE(x, y, OBJECT_SMOKE, -1, -1);
+                            }
+                        }
+                    }
+
+
+                    int cellType = map.getCellType(cll);
+                    if (cellType == TERRAIN_ROCK) {
+                        if (cellType != TERRAIN_WALL)
+                            map.cellTakeDamage(cll, 30);
+
+                        if (map.getCellHealth(cll) < -25) {
+                            map.smudge_increase(SMUDGE_ROCK, cll);
+                            map.cellGiveHealth(cll, rnd(25));
+                        }
+                    } else if (cellType == TERRAIN_SAND ||
+                               cellType == TERRAIN_HILL ||
+                               cellType == TERRAIN_SPICE ||
+                               cellType == TERRAIN_SPICEHILL) {
+                        if (cellType != TERRAIN_WALL)
+                            map.cellTakeDamage(cll, 30);
+
+                        if (map.getCellHealth(cll) < -25) {
+                            map.smudge_increase(SMUDGE_SAND, cll);
+                            map.cellGiveHealth(cll, rnd(25));
+                        }
                     }
                 }
 
-                // damage surrounding units
-                int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
-                if (idOfUnitAtCell > -1)
-                {
-                    int id = idOfUnitAtCell;
 
-                    if (unit[id].iHitPoints > 0)
-                    {
+            PARTICLE_CREATE(iOrgDieX, iOrgDieY, OBJECT_BOOM02, -1, -1);
 
-                    unit[id].iHitPoints -= 150;
+            PARTICLE_CREATE(iOrgDieX - 32, iOrgDieY, OBJECT_BOOM02, -1, -1);
+            PARTICLE_CREATE(iOrgDieX + 32, iOrgDieY, OBJECT_BOOM02, -1, -1);
+            PARTICLE_CREATE(iOrgDieX, iOrgDieY - 32, OBJECT_BOOM02, -1, -1);
+            PARTICLE_CREATE(iOrgDieX, iOrgDieY + 32, OBJECT_BOOM02, -1, -1);
 
-                    // NO HP LEFT, DIE
-                    if (unit[id].iHitPoints <= 1)
-                        unit[id].die(true, false);
-                    } // only die when the unit is going to die
-                }
+        }
 
-                int idOfStructureAtCell = map.getCellIdStructuresLayer(cll);
-                if (idOfStructureAtCell > -1)
-                {
-                    // structure hit!
-                    int id = idOfStructureAtCell;
+        if (iType == TROOPER || iType == SOLDIER) {
+            // create particle of dead body
 
-                    if (structure[id]->getHitPoints() > 0) {
+            PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF02, iPlayer, -1);
 
-						int iDamage = 150+rnd(100);
-						structure[id]->damage(iDamage);
+            play_sound_id_with_distance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
+        }
 
-						int iChance = 10;
+        if (iType == TROOPERS || iType == INFANTRY) {
+            // create particle of dead body
 
-						if (structure && structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
-							iChance = 30;
+            PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF01, iPlayer, -1);
 
-						if (rnd(100) < iChance) {
-                            long x = pos_x() + (mapCamera->getViewportStartX()) + 16 + (-8 + rnd(16));
-                            long y = pos_y() + (mapCamera->getViewportStartY()) + 16 + (-8 + rnd(16));
-                            PARTICLE_CREATE(x, y, OBJECT_SMOKE, -1, -1);
-                        }
-					}
-                }
+            play_sound_id_with_distance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
+        }
+    } // blow up
+    else {
 
-
-                int cellType = map.getCellType(cll);
-                if (cellType == TERRAIN_ROCK)
-					{
-						if (cellType != TERRAIN_WALL)
-							map.cellTakeDamage(cll, 30);
-
-						if (map.getCellHealth(cll) < -25)
-						{
-							map.smudge_increase(SMUDGE_ROCK, cll);
-                            map.cellGiveHealth(cll, rnd(25));
-						}
-					}
-					else if (cellType == TERRAIN_SAND ||
-                             cellType == TERRAIN_HILL ||
-                             cellType == TERRAIN_SPICE ||
-                             cellType == TERRAIN_SPICEHILL)
-					{
-						if (cellType != TERRAIN_WALL)
-							map.cellTakeDamage(cll, 30);
-
-						if (map.getCellHealth(cll) < -25)
-						{
-							map.smudge_increase(SMUDGE_SAND, cll);
-                            map.cellGiveHealth(cll, rnd(25));
-						}
-					}
-			 }
-
-
-
-		PARTICLE_CREATE(iOrgDieX, iOrgDieY, OBJECT_BOOM02, -1, -1);
-
-		PARTICLE_CREATE(iOrgDieX-32, iOrgDieY, OBJECT_BOOM02, -1, -1);
-		PARTICLE_CREATE(iOrgDieX+32, iOrgDieY, OBJECT_BOOM02, -1, -1);
-		PARTICLE_CREATE(iOrgDieX, iOrgDieY-32, OBJECT_BOOM02, -1, -1);
-		PARTICLE_CREATE(iOrgDieX, iOrgDieY+32, OBJECT_BOOM02, -1, -1);
 
     }
 
-    if (iType == TROOPER || iType == SOLDIER)
-    {
-        // create particle of dead body
+    if (bSquish) {
 
-        PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF02, iPlayer, -1);
+        // when we do not 'blow up', we died by something else. Only infantry will be 'squished' here now.
+        if (iType == SOLDIER || iType == TROOPER) {
+            PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_SQUISH01 + rnd(2), iPlayer, iFrame);
+            play_sound_id_with_distance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
+        } else if (iType == TROOPERS || iType == INFANTRY) {
+            PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_SQUISH03, iPlayer, iFrame);
+            play_sound_id_with_distance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
+        }
 
-        play_sound_id_with_distance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
     }
 
-    if (iType == TROOPERS || iType == INFANTRY)
-    {
-        // create particle of dead body
-
-        PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF01, iPlayer, -1);
-
-        play_sound_id_with_distance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
-    }
-} // blow up
-else
-{
-
-
-}
-
-if (bSquish)
-{
-
-    // when we do not 'blow up', we died by something else. Only infantry will be 'squished' here now.
-    if (iType == SOLDIER || iType == TROOPER)
-    {
-        PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_SQUISH01+rnd(2), iPlayer, iFrame);
-        play_sound_id_with_distance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
-    }
-    else if (iType == TROOPERS || iType == INFANTRY)
-    {
-        PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_SQUISH03, iPlayer, iFrame);
-        play_sound_id_with_distance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
-    }
-
-}
     // NOW IT IS FREE FOR USAGE AGAIN
 
-    if (iStructureID > -1)
-    {
+    if (iStructureID > -1) {
         if (structure[iStructureID])
             structure[iStructureID]->setAnimating(false);
     }
 
-	// Anyone who was attacking this unit is on guard
-	for (int i=0; i < MAX_UNITS; i++)
-	{
-		if (unit[i].isValid())
-			if (i != iID)
-				if (unit[i].iAttackUnit == i)
-				{
-					unit[i].iAttackUnit = -1;
+    // Anyone who was attacking this unit is on guard
+    for (int i = 0; i < MAX_UNITS; i++) {
+        if (unit[i].isValid())
+            if (i != iID)
+                if (unit[i].iAttackUnit == i) {
+                    unit[i].iAttackUnit = -1;
                     unit[i].iGoalCell = unit[i].iCell;
-					unit[i].iAction = ACTION_GUARD;
+                    unit[i].iAction = ACTION_GUARD;
 
-					// Ai will still move to this location
+                    // Ai will still move to this location
                     logbook("Another move to");
-					unit[i].move_to(iCell, -1, -1);
-				}
-	}
+                    unit[i].move_to(iCell, -1, -1);
+                }
+    }
 
-	init(iID);	// init
-	for (int i=0; i < MAPID_MAX; i++)
-	{
-        if (i != MAPID_STRUCTURES)
+    init(iID);    // init
+
+    for (int i = 0; i < MAPID_MAX; i++) {
+        if (i != MAPID_STRUCTURES) {
             map.remove_id(iID, i);
-	}
-
-
-	/*
-    map.remove_id(iID, MAPID_UNITS);
-    map.remove_id(iID, MAPID_WORMS);*/
+        }
+    }
 }
 
 

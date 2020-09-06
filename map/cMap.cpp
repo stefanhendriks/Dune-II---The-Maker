@@ -335,9 +335,9 @@ void cMap::clear_spot(int c, int size, int player) {
 void cMap::remove_id(int iIndex, int iIDType) {
     // Search through the entire map and remove the id
 	for (int iCell=0; iCell < MAX_CELLS; iCell++) {
-        if (cell[iCell].id[iIDType] == iIndex) {
-            // remove
-            cell[iCell].id[iIDType] = -1;
+        tCell &tCell = cell[iCell];
+        if (tCell.id[iIDType] == iIndex) {
+            tCell.id[iIDType] = -1;
         }
     }
 }
