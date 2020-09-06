@@ -456,8 +456,7 @@ void cAIPlayer::think_harvester()
 
 }
 
-void cAIPlayer::think()
-{
+void cAIPlayer::think() {
     think_building();
 
     // not time yet to think
