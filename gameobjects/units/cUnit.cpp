@@ -1410,8 +1410,7 @@ void cUnit::think_move_air() {
 		iGoalCell = iCell;
 
     // same cell (no goal specified or something)
-    if (iNextCell == iCell)
-    {
+    if (iNextCell == iCell) {
 
         bool bBordered=BORDER_POS(iCellGiveX(iCell), iCellGiveY(iCell));
 
@@ -1463,11 +1462,10 @@ void cUnit::think_move_air() {
 								iGoalCell = iBringTarget;
 
 
-                                int half = 16;
-                                int iDieX=pos_x() + half;
-                                int iDieY=pos_y() + half;
+                                int pufX=(pos_x() + units[iType].bmp_width / 2);
+                                int pufY=(pos_y() + units[iType].bmp_height / 2);
 
-                                PARTICLE_CREATE(iDieX, iDieY, OBJECT_CARRYPUFF, -1, -1);
+                                PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
 
 								LOG("Pick up unit");
 								return;
@@ -1566,9 +1564,9 @@ void cUnit::think_move_air() {
 							}
 
 
-                                int iDieX=(pos_x() + 16 ) + (mapCamera->getViewportStartX());
-                                int iDieY=(pos_y() + 16 ) + (mapCamera->getViewportStartY());
-                                PARTICLE_CREATE(iDieX, iDieY, OBJECT_CARRYPUFF, -1, -1);
+                            int pufX=(pos_x() + units[iType].bmp_width / 2);
+                            int pufY=(pos_y() + units[iType].bmp_height / 2);
+                            PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
 
 						}
 						else
@@ -1602,8 +1600,7 @@ void cUnit::think_move_air() {
 
 		// transfer is to create a new unit
 		if (iTransferType == TRANSFER_NEW_LEAVE ||
-			iTransferType == TRANSFER_NEW_STAY)
-		{
+			iTransferType == TRANSFER_NEW_STAY) {
 			// bring a new unit
 
 			if (iType == FRIGATE)
@@ -1704,41 +1701,33 @@ void cUnit::think_move_air() {
 
     // use this when picking something up
 
-	if (iUnitID > -1 || (iTransferType != TRANSFER_DIE && iTransferType != TRANSFER_NONE))
-	{
+	if (iUnitID > -1 || (iTransferType != TRANSFER_DIE && iTransferType != TRANSFER_NONE)) {
 		int iLength = ABS_length(iCellX, iCellY, cx, cy);
 
-		if (iType != FRIGATE)
-		{
-            if (iLength > 8)
-                iLength=8;
-            else
-            {
-                if (rnd(100) < 5)
-                {
+		if (iType != FRIGATE) {
+
+            if (iLength > 8) {
+                iLength = 8;
+            } else {
+                if (rnd(100) < 5) {
                     int cellType = map.getCellType(iCell);
                     if (cellType == TERRAIN_SAND ||
                         cellType == TERRAIN_SPICE ||
                         cellType == TERRAIN_HILL ||
-                        cellType == TERRAIN_SPICEHILL)
-                    {
-                        int iDieX=(pos_x() + 16 ) + (mapCamera->getViewportStartX());
-                        int iDieY=(pos_y() + 16 ) + (mapCamera->getViewportStartY());
-                        PARTICLE_CREATE(iDieX, iDieY, OBJECT_CARRYPUFF, -1, -1);
+                        cellType == TERRAIN_SPICEHILL) {
+                        int pufX=(pos_x() + units[iType].bmp_width / 2);
+                        int pufY=(pos_y() + units[iType].bmp_height / 2);
+                        PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
                     }
                 }
-
-
             }
 
             iSlowDown = 8 - iLength;
+		} else {
+			if (iLength > 6) {
+                iLength = 6;
+            }
 
-		}
-		else
-		{
-
-			if (iLength > 6)
-				iLength=6;
 			iSlowDown = 12 - iLength;
 
 		}
