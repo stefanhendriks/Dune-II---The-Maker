@@ -67,6 +67,7 @@ void cBestScreenResolutionFinder::checkResolutions() {
 #endif
 
     if (!isGfxModeListSet(modeList)) {
+        logbook("Must detect resolutions by testing them out!?");
         detectScreenResolutionsByTestingThemOut();
         return;
     }

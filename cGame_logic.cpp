@@ -2593,27 +2593,20 @@ bool cGame::setupGame() {
 	set_window_title(title);
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up window title", title, OUTC_SUCCESS);
 
-	set_color_depth(16);
+    int colorDepth = desktop_color_depth();
+    set_color_depth(colorDepth);
+
+    char colorDepthMsg[255];
+    sprintf(colorDepthMsg,"Desktop color dept is %d.", colorDepth);
+    cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", colorDepthMsg);
+
 
 	// TODO: read/write rest value so it does not have to 'fine-tune'
 	// but is already set up. Perhaps even offer it in the options screen? So the user
 	// can specify how much CPU this game may use?
 
 	if (game.windowed) {
-		cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "Searching for optimal graphics settings");
-		int 	iDepth = desktop_color_depth();
-
-		// dont switch to 15 bit or lower, or at 24 bit
-		if (iDepth > 15 && iDepth != 24) {
-			char msg[255];
-			sprintf(msg,"Desktop color dept is %d.", iDepth);
-			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", msg);
-			set_color_depth(iDepth);      // run in the same bit depth as the desktop
-		} else {
-			// default color depth is 16
-			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Analyzing desktop color depth.", "Could not find color depth, or unsupported color depth found. Will use 16 bit");
-			set_color_depth(16);
-		}
+		cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Windowed mode requested.", "");
 
 		if (isResolutionInGameINIFoundAndSet()) {
 			setScreenResolutionFromGameIniSettings();
@@ -2622,32 +2615,13 @@ bool cGame::setupGame() {
         r = set_gfx_mode(GFX_AUTODETECT_WINDOWED, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
 
 		char msg[255];
-		sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d.", game.screen_x, game.screen_y);
+		sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d, colorDepth %d.", game.screen_x, game.screen_y, colorDepth);
 
 		if (r > -1) {
 			logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Succesfully created window with graphics mode.", OUTC_SUCCESS);
 		} else {
-			logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Failed to create window with graphics mode. Fallback to fullscreen.", OUTC_FAILED);
-
-			set_color_depth(16);
-
-			// GFX_DIRECTX_ACCEL / GFX_AUTODETECT
-			#ifdef UNIX
-						r = set_gfx_mode(GFX_XWINDOWS, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
-			#else
-						r = set_gfx_mode(GFX_DIRECTX_ACCEL, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
-			#endif
-
-			if (r > -1)	{
-				logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fallback, fullscreen)", "Fallback succeeded.", OUTC_SUCCESS);
-				game.windowed = false;
-			}
-			else
-			{
-				logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing graphics mode (fallback, fullscreen)", "Fallback failed!", OUTC_FAILED);
-				allegro_message("Fatal error:\n\nCould not start game.\n\nGraphics mode (windowed mode & fallback) could not be initialized.");
-				return false;
-			}
+		    allegro_message("Failed to initialize graphics mode");
+		    return false;
 		}
 	} else {
         /**
@@ -2665,7 +2639,6 @@ bool cGame::setupGame() {
 		} else {
             cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", "No resolution defined in ini file.");
 		}
-
 
 		// find best possible resolution
 		if (!mustAutoDetectResolution) {
