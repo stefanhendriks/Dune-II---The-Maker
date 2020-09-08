@@ -56,6 +56,10 @@ class cSideBar {
 		// no set Player, re-create Sidebar object instead if needed
 		void setSelectedListId(int value) { selectedListID = value; }
 
+		static const int SidebarWidth = 224;
+		static const int TopBarHeight = 42;
+		static const int HeightOfMinimap = 200 + 8;
+
 	private:
 
         cUpgradeUtils * upgradeUtils;

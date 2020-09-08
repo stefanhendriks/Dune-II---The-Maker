@@ -26,10 +26,7 @@ cSideBarDrawer::~cSideBarDrawer() {
 
 void cSideBarDrawer::drawCandybar() {
 	if (candybar == NULL) {
-		// startpos = 40
-		// end pos = height - 156
-		// height = start pos - end pos
-		int heightInPixels = (game.screen_y - 156) - 40;
+		int heightInPixels = (game.screen_y - cSideBar::TopBarHeight);
 		candybar = create_bitmap_ex(8, 24, heightInPixels);
 		clear_to_color(candybar, makecol(0, 0, 0));
 
@@ -37,14 +34,37 @@ void cSideBarDrawer::drawCandybar() {
 	    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BALL].dat, 0, 0); // height of ball = 25
 	    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_TOP].dat, 0, 26); // height of top = 10
 	    // now draw pieces untill the end (height of piece is 23 pixels)
-	    for (int y = 36; y < (heightInPixels + 23); y += 24) {
+	    int startY = 26 + 10; // end of ball (26) + height of top candybar (=10) , makes 36
+        int heightMinimap = cSideBar::HeightOfMinimap;
+        set_clip_rect(candybar, 0, 0, 24, heightMinimap - (6 + 1)); // (add 1 pixel for room between ball and bar)
+	    for (int y = startY; y < (heightMinimap); y += 24) {
+		    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_PIECE].dat, 0, y);
+	    }
+        set_clip_rect(candybar, 0, 0, candybar->w, candybar->h);
+
+	    // note: no need to take top bar into account because 'candybar' is a separate bitmap so coords start at 0,0
+	    // ball is 6 pixels higher than horizontal candybar
+	    int ballY = (heightMinimap) - 6;
+
+	    // draw bottom candybar
+        draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, ballY - 10); // height of bottom = 9
+
+	    // draw ball
+        draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BALL].dat, 0, ballY); // height of ball = 25
+
+	    // draw top candybar again
+        draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_TOP].dat, 0, ballY + 26); // height of top = 10
+
+        startY = ballY + 26 + 10;
+	    for (int y = startY; y < (heightInPixels + 23); y += 24) {
 		    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_PIECE].dat, 0, y);
 	    }
 	    // draw bottom
 	    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, heightInPixels-10); // height of top = 10
 	}
 
-	int drawX = game.screen_x - 158;
+	// 200 + 24 (widthof candy bar) = 224
+	int drawX = game.screen_x - cSideBar::SidebarWidth;
 	int drawY = 40;
 	draw_sprite(bmp_screen, candybar, drawX, drawY);
 }
@@ -53,13 +73,12 @@ void cSideBarDrawer::drawHouseGui(const cPlayer & thePlayer) {
 	assert(&thePlayer);
 	set_palette(thePlayer.pal);
 
-	// black out
-	rectfill(bmp_screen, (game.screen_x-160), 0, game.screen_x, game.screen_y, makecol(0,0,0));
+	// black out sidebar
+	rectfill(bmp_screen, (game.screen_x-cSideBar::SidebarWidth), 0, game.screen_x, game.screen_y, makecol(0,0,0));
 
     // upper bar
     rectfill(bmp_screen, 0, 0, game.screen_x, 42, makecol(0,0,0));
 
-    //draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_800X600].dat, 0, 0);
     drawCandybar();
 
     // draw the list background of the icons
@@ -70,7 +89,6 @@ void cSideBarDrawer::drawHouseGui(const cPlayer & thePlayer) {
 
     // draw options bar (todo: move to own options drawer and delegate in drawManager)
     drawOptionsBar();
-
 }
 
 void cSideBarDrawer::drawBuildingLists() {
@@ -80,19 +98,19 @@ void cSideBarDrawer::drawBuildingLists() {
 	// draw the buildlist icons
 	int selectedListId = sidebar->getSelectedListID();
 
-	for (int listId = LIST_CONSTYARD; listId < LIST_MAX; listId++) {
-		cBuildingList *list = sidebar->getList(listId);
-		bool isListIdSelectedList = (selectedListId == listId);
-		buildingListDrawer->drawButton(list, isListIdSelectedList);
-	}
+//	for (int listId = LIST_CONSTYARD; listId < LIST_MAX; listId++) {
+//		cBuildingList *list = sidebar->getList(listId);
+//		bool isListIdSelectedList = (selectedListId == listId);
+//		buildingListDrawer->drawButton(list, isListIdSelectedList);
+//	}
 
-	// draw the buildlist itself (take scrolling into account)
-	cBuildingList *selectedList = NULL;
-
-	if (selectedListId > -1) {
-		selectedList = sidebar->getList(selectedListId);
-		buildingListDrawer->drawList(selectedList, selectedListId, selectedList->getScrollingOffset());
-	}
+//	// draw the buildlist itself (take scrolling into account)
+//	cBuildingList *selectedList = NULL;
+//
+//	if (selectedListId > -1) {
+//		selectedList = sidebar->getList(selectedListId);
+//		buildingListDrawer->drawList(selectedList, selectedListId, selectedList->getScrollingOffset());
+//	}
 }
 
 // draws the sidebar on screen
@@ -205,9 +223,11 @@ bool cSideBarDrawer::isMouseOverScrollDown() {
 }
 
 void cSideBarDrawer::drawMinimap() {
-	BITMAP * sprite = (BITMAP *)gfxinter[BMP_GERALD_MINIMAP_BOTTOMRIGHT].dat;
-	int drawX = game.screen_x - sprite->w;
-	int drawY = game.screen_y - sprite->h;
+	BITMAP * sprite = (BITMAP *)gfxinter[HORIZONTAL_CANDYBAR].dat;
+	int drawX = (game.screen_x - sprite->w) + 1;
+	// 128 pixels (each pixel is a cell) + 8 margin
+    int heightMinimap = cSideBar::HeightOfMinimap;
+	int drawY = cSideBar::TopBarHeight + heightMinimap;
 	draw_sprite(bmp_screen, sprite, drawX, drawY);
 }
 
@@ -229,35 +249,35 @@ void cSideBarDrawer::drawOptionsBar() {
 
 void cSideBarDrawer::drawIconsListBackground() {
 	// fill
-	rectfill(bmp_screen, (game.screen_x-130), 40, game.screen_x, (game.screen_y - 160), sidebarColor);
+//	rectfill(bmp_screen, (game.screen_x-130), 40, game.screen_x, (game.screen_y - 160), sidebarColor);
 
 	int heightInPixels = (game.screen_y - 315) - 45;
-	BITMAP * backgroundList = create_bitmap_ex(8, 66, heightInPixels);
+//	BITMAP * backgroundList = create_bitmap_ex(8, 66, heightInPixels);
 
 	// left 'lines'
-	vline(bmp_screen, game.screen_x-132, 40, game.screen_y - 276, makecol(255, 198, 93));
-	vline(bmp_screen, game.screen_x-131, 40, game.screen_y - 276, makecol(60, 36, 0));
-	vline(bmp_screen, game.screen_x-130, 40, game.screen_y - 276, makecol(255, 210, 125));
-	vline(bmp_screen, game.screen_x-129, 40, game.screen_y - 276, makecol(255, 190, 76));
+//	vline(bmp_screen, game.screen_x-132, 40, game.screen_y - 276, makecol(255, 198, 93));
+//	vline(bmp_screen, game.screen_x-131, 40, game.screen_y - 276, makecol(60, 36, 0));
+//	vline(bmp_screen, game.screen_x-130, 40, game.screen_y - 276, makecol(255, 210, 125));
+//	vline(bmp_screen, game.screen_x-129, 40, game.screen_y - 276, makecol(255, 190, 76));
 
-	// the list pieces
-	draw_sprite(backgroundList, (BITMAP *)gfxinter[BMP_GERALD_LIST_TOP].dat, 0, 45); // 2 high
+//	// the list pieces
+//	draw_sprite(backgroundList, (BITMAP *)gfxinter[BMP_GERALD_LIST_TOP].dat, 0, 45); // 2 high
+//
+//	for (int w = 0; w < heightInPixels; w += 84) { // pieces are 84 pixels high
+//		draw_sprite(backgroundList, (BITMAP *)gfxinter[BMP_GERALD_LIST_PIECE].dat, 0, w);
+//	}
+//
+//	draw_sprite(backgroundList, (BITMAP *)gfxinter[BMP_GERALD_LIST_BOTTOM].dat, 0, (heightInPixels - 2));
+//
+//	int x = game.screen_x - 69;
+//	draw_sprite(bmp_screen, backgroundList, x, 45);
 
-	for (int w = 0; w < heightInPixels; w += 84) { // pieces are 84 pixels high
-		draw_sprite(backgroundList, (BITMAP *)gfxinter[BMP_GERALD_LIST_PIECE].dat, 0, w);
-	}
+//	// at the right lines
+//	vline(bmp_screen, game.screen_x-1, 44, game.screen_y - 276, makecol(153, 105, 0));
+//	vline(bmp_screen, game.screen_x-2, 44, game.screen_y - 276, makecol(182, 125, 12));
+//	vline(bmp_screen, game.screen_x-3, 44, game.screen_y - 276, makecol(202, 141, 16));
 
-	draw_sprite(backgroundList, (BITMAP *)gfxinter[BMP_GERALD_LIST_BOTTOM].dat, 0, (heightInPixels - 2));
+//	destroy_bitmap(backgroundList);
 
-	int x = game.screen_x - 69;
-	draw_sprite(bmp_screen, backgroundList, x, 45);
-
-	// at the right lines
-	vline(bmp_screen, game.screen_x-1, 44, game.screen_y - 276, makecol(153, 105, 0));
-	vline(bmp_screen, game.screen_x-2, 44, game.screen_y - 276, makecol(182, 125, 12));
-	vline(bmp_screen, game.screen_x-3, 44, game.screen_y - 276, makecol(202, 141, 16));
-
-	destroy_bitmap(backgroundList);
-
-	draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_SIDEBAR_PIECE].dat, (game.screen_x - 130), 42);
+//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_SIDEBAR_PIECE].dat, (game.screen_x - 130), 42);
 }
