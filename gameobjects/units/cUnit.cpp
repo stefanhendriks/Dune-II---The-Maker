@@ -536,52 +536,35 @@ void cUnit::draw_experience()
 
 void cUnit::draw_path() {
 	// for debugging purposes
-
 	if (iCell == iGoalCell)
 		return;
 
 	if (iPath[0] < 0)
 		return;
 
-	int iPrevX  = ( (( iCellGiveX(iPath[0]) * 32 ) - mapCamera->getViewportStartX()));
-	int iPrevY  = ( (( iCellGiveY(iPath[0]) * 32 ) - mapCamera->getViewportStartY())) + 42;
+    int halfTile = 16;
+	int iPrevX  = mapCamera->getWindowXPositionFromCellWithOffset(iPath[0], halfTile);
+	int iPrevY  = mapCamera->getWindowYPositionFromCellWithOffset(iPath[0], halfTile);
 
-	iPrevX+=16;
-	iPrevY+=16;
+	for (int i=1; i < MAX_PATH_SIZE; i++) {
+	    if (iPath[i] < 0) break;
+        int iDx  = mapCamera->getWindowXPositionFromCellWithOffset(iPath[i], halfTile);
+        int iDy  = mapCamera->getWindowYPositionFromCellWithOffset(iPath[i], halfTile);
 
-	for (int i=1; i < MAX_PATH_SIZE; i++)
-	{
-		if (iPath[i] > -1)
-		{
-			int iDx = ( (( iCellGiveX(iPath[i]) * 32 ) - mapCamera->getViewportStartX()));
-			int iDy = ( (( iCellGiveY(iPath[i]) * 32 ) - mapCamera->getViewportStartY())) + 42;
+        if (i == iPathIndex) { // current node we navigate to
+            line(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 255, 255));
+        } else if (iPath[i] == iGoalCell) {
+            // end of path (goal)
+            line(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 0, 0));
+        } else {
+            // everything else
+            line(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 255, 64));
+        }
 
-			iDx+=16;
-			iDy+=16;
-
-			if (i == iPathIndex)
-				line(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255,255,255));
-			else if (iPath[i] == iGoalCell)
-				line(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255,0,0));
-			else
-			{
-				if (bSelected == false)
-					line(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(i,i,i));
-				else
-					line(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255,255,64));
-			}
-
-
-			iPrevX = iDx;
-			iPrevY = iDy;
-			// draw a line from previous to current
-
-		}
-		else
-			break;
+        // draw a line from previous to current
+        iPrevX = iDx;
+        iPrevY = iDy;
 	}
-
-
 }
 
 void cUnit::draw() {
