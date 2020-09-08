@@ -346,30 +346,25 @@ void cMap::draw_units() {
     set_trans_blender(0, 0, 0, 160);
 
     // draw all worms first
-    for (int i=0; i < MAX_UNITS; i++)
-    {
-        if (unit[i].isValid())
-        {
-			// DEBUG MODE: DRAW PATHS
-			if (DEBUGGING) {
-                unit[i].draw_path();
-            }
-
-            if (unit[i].iType == SANDWORM)
-            {
-                int drawx = unit[i].draw_x();
-                int drawy = unit[i].draw_y();
-
-                if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.screen_x-160)) &&
-                    ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.screen_y))
-                {
-                    // draw
-                    unit[i].draw();
-                }
-            }
-
+    for (int i=0; i < MAX_UNITS; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
+        // DEBUG MODE: DRAW PATHS
+        if (DEBUGGING && cUnit.bSelected) {
+            cUnit.draw_path();
         }
 
+        if (cUnit.iType == SANDWORM) {
+            int drawx = cUnit.draw_x();
+            int drawy = cUnit.draw_y();
+
+            if (((drawx+units[cUnit.iType].bmp_width) > 0 && drawx < (game.screen_x - 160)) &&
+                ((drawy+units[cUnit.iType].bmp_height) > 42 && drawy < game.screen_y))
+            {
+                // draw
+                cUnit.draw();
+            }
+        }
     }
 
     // draw all units
