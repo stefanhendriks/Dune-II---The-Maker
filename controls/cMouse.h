@@ -45,6 +45,8 @@ public:
     static bool isOverRectangle(int x, int y, int width, int height);
 
 
+    static bool isMapScrolling();
+
 protected:
 	~cMouse();
 

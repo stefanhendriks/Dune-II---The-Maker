@@ -141,7 +141,7 @@ void cGame::combat_mouse()
     // when mouse hovers above a valid cell
 	if (mc > -1) {
 
-		if (cMouse::isRightButtonClicked()) {
+		if (cMouse::isRightButtonClicked() && !cMouse::isMapScrolling()) {
 			UNIT_deselect_all();
 		}
 
@@ -375,8 +375,8 @@ void cGame::combat_mouse()
             // mouse mv 1st coordinates filled
             // when mouse is deviating from this coordinate, draw a line
 
-            if (abs(mouse_x - mouse_mv_x1) > 0 &&
-                abs(mouse_y - mouse_mv_y1) > 0) {
+            if (abs(mouse_x - mouse_mv_x1) > 1 &&
+                abs(mouse_y - mouse_mv_y1) > 1) {
 
                 // assign 2nd coordinates
                 mouse_mv_x2 = mouse_x;
