@@ -262,6 +262,7 @@ void cPlayer::setHouse(int iHouse) {
         }
 
         minimapColor = getRGBColorForHouse(house);
+        emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
         destroyAllegroBitmaps();
 
@@ -317,6 +318,21 @@ int cPlayer::getRGBColorForHouse(int houseId) {
 			return makecol(0, 255, 0);
 		case SARDAUKAR:
 			return makecol(255, 0, 255);
+		default:
+			return makecol(100, 255, 100);
+	}
+}
+
+int cPlayer::getEmblemBackgroundColorForHouse(int houseId) {
+	switch(houseId) {
+		case ATREIDES:
+			return makecol(8, 12, 89);
+		case HARKONNEN:
+			return makecol(60, 0, 0);
+		case ORDOS:
+			return makecol(0, 32, 0);
+		case SARDAUKAR:
+			return makecol(128, 0, 128);
 		default:
 			return makecol(100, 255, 100);
 	}
