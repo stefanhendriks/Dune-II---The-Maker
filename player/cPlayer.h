@@ -77,6 +77,7 @@ class cPlayer {
 		cOrderProcesser * getOrderProcesser() const { return orderProcesser; }
 		cGameControlsContext * getGameControlsContext() const { return gameControlsContext; }
 		int getMinimapColor() const { return minimapColor; }
+        int getEmblemBackgroundColor() const { return emblemBackgroundColor; }
 		bool isHuman() {
 		    return m_Human;
 		}
@@ -102,6 +103,7 @@ class cPlayer {
 
     private:
 		int getRGBColorForHouse(int houseId);
+		int getEmblemBackgroundColorForHouse(int houseId);
 		bool m_Human;
 
 		// TODO: in the end this should be redundant.. perhaps remove it now/soon anyway?
@@ -123,6 +125,7 @@ class cPlayer {
 		int techLevel;		// technology level
 		int house;
 		int minimapColor;			// color of this team on minimap;
+		int emblemBackgroundColor;	// color of the emblem background
 		int id;	// this id is the reference to the player array
 
 		BITMAP * bmp_structure[MAX_STRUCTURETYPES];

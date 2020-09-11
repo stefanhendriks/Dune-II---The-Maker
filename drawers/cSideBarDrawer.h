@@ -34,7 +34,7 @@ class cSideBarDrawer {
 		int getScrollButtonDownX();
 		bool isOverScrollButton(int buttonX, int buttonY);
 
-		void drawMinimap();
+		void drawMinimap(const cPlayer & player);
 		void drawOptionsBar();
 		void drawIconsListBackground();
 

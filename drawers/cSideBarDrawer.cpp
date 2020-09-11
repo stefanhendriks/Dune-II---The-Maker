@@ -85,7 +85,7 @@ void cSideBarDrawer::drawHouseGui(const cPlayer & thePlayer) {
     drawIconsListBackground();
 
     // minimap at bottom right
-    drawMinimap();
+    drawMinimap(thePlayer);
 
     // draw options bar (todo: move to own options drawer and delegate in drawManager)
     drawOptionsBar();
@@ -222,13 +222,50 @@ bool cSideBarDrawer::isMouseOverScrollDown() {
 	return isOverScrollButton(getScrollButtonDownX(), getScrollButtonY());
 }
 
-void cSideBarDrawer::drawMinimap() {
+void cSideBarDrawer::drawMinimap(const cPlayer & player) {
 	BITMAP * sprite = (BITMAP *)gfxinter[HORIZONTAL_CANDYBAR].dat;
 	int drawX = (game.screen_x - sprite->w) + 1;
 	// 128 pixels (each pixel is a cell) + 8 margin
     int heightMinimap = cSideBar::HeightOfMinimap;
 	int drawY = cSideBar::TopBarHeight + heightMinimap;
 	draw_sprite(bmp_screen, sprite, drawX, drawY);
+
+	// 11, 10
+	// 78, 60
+	// ------
+	// 67, 50 (width/height)
+
+	rectfill(bmp_screen, drawX + 1, cSideBar::TopBarHeight + 1, game.screen_x, drawY, player.getEmblemBackgroundColor());
+
+	if (player.isHouse(ATREIDES) || player.isHouse(HARKONNEN) || player.isHouse(ORDOS)) {
+	    int bitmapId = BMP_SELECT_HOUSE_ATREIDES;
+
+        int srcX = 11;
+        int srcY = 10;
+
+        // draw house emblem, which is the same as the 'select house x' picture, but partially
+        int emblemWidth = 68;
+        int emblemHeight = 50;
+
+        if (player.isHouse(HARKONNEN)) {
+            bitmapId = BMP_SELECT_HOUSE_HARKONNEN;
+        }
+
+        if (player.isHouse(ORDOS)) {
+            bitmapId = BMP_SELECT_HOUSE_ORDOS;
+            emblemHeight = 49;
+            srcY = 11;
+        }
+
+        int emblemDesiredWidth = (emblemWidth * 2);
+        int emblemDesiredHeight = (emblemHeight * 2);
+
+        drawX += (sprite->w / 2) - (emblemDesiredWidth / 2);
+        drawY = cSideBar::TopBarHeight + ((heightMinimap / 2) - (emblemDesiredHeight / 2));
+
+        allegroDrawer->stretchBlit((BITMAP *) gfxinter[bitmapId].dat, bmp_screen, srcX, srcY, emblemWidth,
+                                   emblemHeight, drawX, drawY, emblemDesiredWidth, emblemDesiredHeight);
+    }
 }
 
 void cSideBarDrawer::drawOptionsBar() {

@@ -13,11 +13,13 @@ class cAllegroDrawer {
 		cAllegroDrawer();
 		virtual ~cAllegroDrawer();
 
-		void drawCenteredSpriteHorizontal(BITMAP *dest, BITMAP *src, int y);
+		void drawCenteredSpriteHorizontal(BITMAP *dest, BITMAP *src, int y, int totalWidth, int xOffset);
 		void drawCenteredSpriteVertical(BITMAP *dest, BITMAP *src, int x);
 		void drawCenteredSprite(BITMAP *dest, BITMAP *src);
 
 		void drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP* src, float percentage);
+
+		void blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
 
 		void stretchSprite(BITMAP *src, BITMAP *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
@@ -31,7 +33,7 @@ class cAllegroDrawer {
 		void maskedStretchBlitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
 	protected:
-		int getCenteredXPosForBitmap(BITMAP *bmp);
+		int getCenteredXPosForBitmap(BITMAP *bmp, int totalWidth);
 		int getCenteredYPosForBitmap(BITMAP *bmp);
 };
 
