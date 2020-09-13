@@ -6,7 +6,6 @@ cBuildingList::cBuildingList(int theId) {
 	buttonIconIdPressed = 0;	// the button to draw at the left of the list
 	buttonDrawX = 0;
 	buttonDrawY = 0;
-	scrollingOffset = 0; 	// the offset for scrolling through the list.
 	available = false;		 // is this list available?
 	memset(items, 0, sizeof(items));
 	typeOfList = theId;
@@ -22,7 +21,6 @@ cBuildingList::~cBuildingList() {
 	buttonIconIdPressed = 0;	// the button to draw at the left of the list
 	buttonDrawX = 0;
 	buttonDrawY = 0;
-	scrollingOffset = 0; 	// the offset for scrolling through the list.
 	available = false;		 // is this list available?
 	removeAllItems();
 	memset(items, 0, sizeof(items));
@@ -133,47 +131,7 @@ void cBuildingList::removeItemFromList(int position) {
  * @return
  */
 bool cBuildingList::isOverButton(int x, int y) {
-	int drawX = getButtonDrawX();
-	int drawY = getButtonDrawY();
-	return (x >= drawX && x <= (drawX + 51) && (y >= drawY && y <= (drawY + 37)));
-}
-
-void cBuildingList::setScrollingOffset(int value) {
-	assert(value > -1);
-	assert(value < MAX_ICONS);
-	scrollingOffset = value;
-}
-
-/**
- * Scroll list up one item
- */
-void cBuildingList::scrollUp() {
-	logbook("cBuildingList::scrollUp");
-	int offset = getScrollingOffset() - 1;
-	if (offset > -1) {
-		setScrollingOffset(offset);
-	}
-}
-
-/**
- * Scroll list down one item
- */
-void cBuildingList::scrollDown() {
-	logbook("cBuildingList::scrollDown");
-	int oldOffset = getScrollingOffset();
-	int offset = oldOffset + 1;
-	int max = maxItems - 4;
-
-	char msg[255];
-	sprintf(msg, "old offset is [%d], new offset is [%d], maxItems is [%d] max is [%d].", oldOffset, offset, maxItems, max);
-	logbook(msg);
-
-	if (offset <= max) {
-		logbook("cBuildingList::scrolling down");
-		setScrollingOffset(offset);
-	} else {
-		logbook("cBuildingList::scrolling down not allowed");
-	}
+    return cMouse::isOverRectangle(getButtonDrawX(), getButtonDrawY(), 27, 27);
 }
 
 /**

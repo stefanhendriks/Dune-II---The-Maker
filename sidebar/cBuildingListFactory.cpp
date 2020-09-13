@@ -23,12 +23,12 @@ cBuildingListFactory *cBuildingListFactory::getInstance() {
 	return instance;
 }
 
-int cBuildingListFactory::getButtonDrawX() {
-	return game.screen_x - 127;
+int cBuildingListFactory::getButtonDrawY() {
+	return cSideBar::TopBarHeight + 230;
 }
 
-int cBuildingListFactory::getButtonDrawYStart() {
-	return 45;
+int cBuildingListFactory::getButtonDrawXStart() {
+	return (game.screen_x - 200) + 2;
 }
 
 
@@ -46,16 +46,18 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 	// first clear the list
 	list->removeAllItems();
 
-	// X is the same for all list buttons
-	list->setButtonDrawX(getButtonDrawX());
+	// Y is the same for all list buttons
+	list->setButtonDrawY(getButtonDrawY());
+
+	int startX = getButtonDrawXStart();
 
 	list->setAvailable(false);
 
 	// now set it up
 	if (listId == LIST_CONSTYARD) {
-		list->setButtonDrawY(45);
-		list->setButtonIconIdPressed(BTN_CONST_PRESSED);
-		list->setButtonIconIdUnpressed(BTN_CONST_UNPRESSED);
+		list->setButtonDrawX(startX);
+		list->setButtonIconIdPressed(LIST_BTN_CONSTYARD);
+		list->setButtonIconIdUnpressed(LIST_BTN_CONSTYARD);
 
 		// add items
 		list->addItemToList(new cBuildingListItem(SLAB1, structures[SLAB1], list));
@@ -77,23 +79,21 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 		list->addItemToList(new cBuildingListItem(WINDTRAP, structures[WINDTRAP], list));
 	}
 
+	startX += 27;
+
 	// other lists, have 40 pixels more Y , but the X remains the same
 	// now set it up
 	if (listId == LIST_INFANTRY) {
-		list->setButtonDrawY(85);
+        list->setButtonDrawX(startX);
+        list->setButtonIconIdPressed(LIST_BTN_INFANTRY);
+        list->setButtonIconIdUnpressed(LIST_BTN_INFANTRY);
 		if (house == ATREIDES) {
-			list->setButtonIconIdPressed(BTN_INFANTRY_PRESSED);
-			list->setButtonIconIdUnpressed(BTN_INFANTRY_UNPRESSED);
 			// add items
 			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list));
 		} else if (house == HARKONNEN) {
-			list->setButtonIconIdPressed(BTN_TROOPER_PRESSED);
-			list->setButtonIconIdUnpressed(BTN_TROOPER_UNPRESSED);
 			// add items
 			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
 		} else if (house == ORDOS) {
-			list->setButtonIconIdPressed(BTN_TRPINF_PRESSED);
-			list->setButtonIconIdUnpressed(BTN_TRPINF_UNPRESSED);
 			// add items , since ordos can have both, it is determined on structure place
 //			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list));
 //			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
@@ -102,10 +102,12 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 		}
 	}
 
+    startX += 27;
+
 	if (listId == LIST_LIGHTFC) {
-		list->setButtonDrawY(125);
-		list->setButtonIconIdPressed(BTN_LIGHTFC_PRESSED);
-		list->setButtonIconIdUnpressed(BTN_LIGHTFC_UNPRESSED);
+		list->setButtonDrawX(startX);
+		list->setButtonIconIdPressed(LIST_BTN_LIGHTFCTRY);
+		list->setButtonIconIdUnpressed(LIST_BTN_LIGHTFCTRY);
 
 		if (house == ATREIDES) {
 			list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE], list));
@@ -120,27 +122,33 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 		}
 	}
 
+	startX += 27;
+
 	if (listId == LIST_HEAVYFC) {
-		list->setButtonDrawY(165);
-		list->setButtonIconIdPressed(BTN_HEAVYFC_PRESSED);
-		list->setButtonIconIdUnpressed(BTN_HEAVYFC_UNPRESSED);
+        list->setButtonDrawX(startX);
+		list->setButtonIconIdPressed(LIST_BTN_HEAVYFCTRY);
+		list->setButtonIconIdUnpressed(LIST_BTN_HEAVYFCTRY);
 
 		list->addItemToList(new cBuildingListItem(TANK, units[TANK], list));
 		list->addItemToList(new cBuildingListItem(HARVESTER, units[HARVESTER], list));
 	}
 
+	startX += 27;
+
 	if (listId == LIST_ORNI) {
-		list->setButtonDrawY(205);
-		list->setButtonIconIdPressed(BTN_ORNI_PRESSED);
-		list->setButtonIconIdUnpressed(BTN_ORNI_UNPRESSED);
+        list->setButtonDrawX(startX);
+		list->setButtonIconIdPressed(LIST_BTN_HIGHTECH);
+		list->setButtonIconIdUnpressed(LIST_BTN_HIGHTECH);
 
 		list->addItemToList(new cBuildingListItem(CARRYALL, units[CARRYALL], list));
 	}
 
+	startX += 27;
+
 	if (listId == LIST_STARPORT) {
-		list->setButtonDrawY(245);
-		list->setButtonIconIdPressed(BTN_STARPORT_PRESSED);
-		list->setButtonIconIdUnpressed(BTN_STARPORT_UNPRESSED);
+        list->setButtonDrawX(startX);
+		list->setButtonIconIdPressed(LIST_BTN_STARPORT);
+		list->setButtonIconIdUnpressed(LIST_BTN_STARPORT);
 
 		list->addItemToList(new cBuildingListItem(INFANTRY, units[INFANTRY], list));
 		list->addItemToList(new cBuildingListItem(TROOPERS, units[TROOPERS], list));
@@ -154,10 +162,12 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 		list->addItemToList(new cBuildingListItem(CARRYALL, units[CARRYALL], list));
 	}
 
+	startX += 27;
+
 	if (listId == LIST_PALACE) {
-		list->setButtonDrawY(285);
-		list->setButtonIconIdPressed(BTN_PALACE_PRESSED);
-		list->setButtonIconIdUnpressed(BTN_PALACE_UNPRESSED);
+        list->setButtonDrawX(startX);
+		list->setButtonIconIdPressed(LIST_BTN_PALACE);
+		list->setButtonIconIdUnpressed(LIST_BTN_PALACE);
 
 		// special weapons
 		switch (house) {

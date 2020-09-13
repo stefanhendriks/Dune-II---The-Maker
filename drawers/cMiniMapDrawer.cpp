@@ -16,6 +16,7 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, const cPlayer& thePlayer, cMapCamer
 	iStaticFrame = STAT14;
 	iStatus = -1;
 	iTrans = 0;
+    m_RectMinimap = new cRectangle(getDrawStartX(), getDrawStartY(), 200, 200);
 }
 
 cMiniMapDrawer::~cMiniMapDrawer() {
@@ -23,6 +24,7 @@ cMiniMapDrawer::~cMiniMapDrawer() {
 	mapCamera = NULL;
 	iStaticFrame = STAT14;
 	iStatus = -1;
+	delete m_RectMinimap;
 }
 
 void cMiniMapDrawer::drawViewPortRectangle() {
@@ -44,11 +46,11 @@ void cMiniMapDrawer::drawViewPortRectangle() {
 }
 
 int cMiniMapDrawer::getDrawStartX() {
-	return game.screen_x - 129;
+    return (game.screen_x - 100) - map->getWidth() / 2;
 }
 
 int cMiniMapDrawer::getDrawStartY() {
-	return game.screen_y - 129;
+	return cSideBar::TopBarHeight + 100 - (map->getHeight()/2);
 }
 
 void cMiniMapDrawer::drawTerrain() {
@@ -59,7 +61,6 @@ void cMiniMapDrawer::drawTerrain() {
 	int iColor=makecol(0,0,0);
 
 	for (int x = 0; x < (game.map_width); x++) {
-
 		iDrawY = getDrawStartY(); // reset Y coordinate for drawing for each column
 
 		for (int y = 0; y < (game.map_height); y++) {
@@ -191,10 +192,9 @@ int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
 
 void cMiniMapDrawer::interact() {
 	// interact with mouse
-	if (mouse_x >= getDrawStartX() && mouse_y >= getDrawStartY()) {
+	if (m_RectMinimap->isMouseOver()) {
 		// pressed the mouse and not boxing anything..
 		if (MOUSE_BTN_LEFT() && mouse_co_x1 < 0 && mouse_co_y1 < 0) {
-
 			cGameControlsContext * context = player[HUMAN].getGameControlsContext();
 			int mouseCellOnMiniMap = context->getMouseCellFromMiniMap();
 			mapCamera->centerAndJumpViewPortToCell(mouseCellOnMiniMap);
@@ -204,15 +204,15 @@ void cMiniMapDrawer::interact() {
 
 void cMiniMapDrawer::draw() {
 	assert(map);
+	return;
 
 	bool hasRadarAndEnoughPower = (m_Player.getAmountOfStructuresForType(RADAR) > 0) && m_Player.bEnoughPower();
 
 	if (hasRadarAndEnoughPower) {
 		drawTerrain();
 		drawUnitsAndStructures();
+        drawViewPortRectangle();
 	}
-
-	drawViewPortRectangle();
 
 	if (hasRadarAndEnoughPower) {
 		if (iStatus < 0) {
@@ -242,8 +242,7 @@ void cMiniMapDrawer::drawStaticFrame() {
 			 iTrans = 255;
 		 }
 
-		 if (iStaticFrame != STAT01)
-		 {
+		 if (iStaticFrame != STAT01) {
 			 set_trans_blender(0,0,0,iTrans);
 
 			 draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, getDrawStartX(), getDrawStartY());

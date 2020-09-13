@@ -9,30 +9,22 @@
 
 
 cBuildingListDrawer::cBuildingListDrawer() {
-	maximumItemsToDraw = 5;
-	// room = screen_y - (top bar + bottom part)
-	// example: 600 - (40 + 278)
-	// and divide by 48 height
-	int height = game.screen_y - (40 + 278);
-	maximumItemsToDraw = (height / 48); // (-1?)
-
-	maxListYCoordinate = (game.screen_y - 315);
 }
 
-void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int startId) {
+void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw) {
 	if (listIDToDraw == LIST_CONSTYARD) {
-		drawListWithStructures(list, listIDToDraw, startId);
+        drawListWithStructures(list, listIDToDraw);
 	} else {
-		drawListWithUnitsOrAbilities(list, listIDToDraw, startId);
+        drawListWithUnitsOrAbilities(list, listIDToDraw);
 	}
 }
 
-void cBuildingListDrawer::drawListWithStructures(cBuildingList *list, int listIDToDraw, int startId) {
-	drawList(list, listIDToDraw, startId, true);
+void cBuildingListDrawer::drawListWithStructures(cBuildingList *list, int listIDToDraw) {
+    drawList(list, listIDToDraw, true);
 }
 
-void cBuildingListDrawer::drawListWithUnitsOrAbilities(cBuildingList *list, int listIDToDraw, int startId) {
-	drawList(list, listIDToDraw, startId, false);
+void cBuildingListDrawer::drawListWithUnitsOrAbilities(cBuildingList *list, int listIDToDraw) {
+    drawList(list, listIDToDraw, false);
 }
 
 /**
@@ -65,7 +57,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 
     // set blender
     set_trans_blender(0,0,0,128);
-	draw_sprite(bmp_screen, (BITMAP *)gfxinter[id].dat, x, y);		// draw pressed button version (unpressed == default in gui)
+	draw_sprite(bmp_screen, (BITMAP *)gfxinter[id].dat, x, y);
 
     if (!available) {
     	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 96);
@@ -75,11 +67,11 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 
 
 int cBuildingListDrawer::getDrawX() {
-	return game.screen_x - 68;
+	return (game.screen_x - cSideBar::SidebarWidthWithoutCandyBar) + 2;
 }
 
 int cBuildingListDrawer::getDrawY() {
-	return 46;
+    return cSideBar::TopBarHeight + 230 + 30;
 }
 
 
@@ -88,28 +80,23 @@ int cBuildingListDrawer::getDrawY() {
  *
  * @param startId
  */
-void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int startId, bool shouldDrawStructureSize) {
+void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool shouldDrawStructureSize) {
 	// starting draw coordinates
 	int iDrawX=getDrawX();
 	int iDrawY=getDrawY();
 
-	int maxYClip = maxListYCoordinate;
-	int minYClip = 45;
-	int minXClip = game.screen_x - 69;
-	int maxXClip = game.screen_x;
-	set_clip_rect(bmp_screen, minXClip, minYClip, maxXClip, maxYClip);
-
-	int end = startId + maximumItemsToDraw; // max 5 icons are showed at once
+	int end = MAX_ITEMS;
 
 	// is building an item in the list?
 	bool isBuildingItemInList = list->isBuildingItem();
 
-	// draw the icons
-	for (int i = startId; i < end; i++) {
+	// draw the icons, in rows of 3
+	int rowNr = 0;
+	for (int i = 0; i < end; i++) {
 		cBuildingListItem * item = list->getItem(i);
 
 		if (item == NULL) {
-			break; // stop. List became empty.
+			break; // stop. assume this is the end of the items to draw
 		}
 
 		int iDrawXEnd = iDrawX + 63;
@@ -238,7 +225,15 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, int st
 			rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, iColor);
 		}
 
-		iDrawY+=48;
+
+		if (rowNr < 2) {
+            iDrawX+=66;
+            rowNr++;
+		} else {
+            rowNr = 0;
+            iDrawX=getDrawX();
+            iDrawY+=48;
+        }
 	}
 
 	set_clip_rect(bmp_screen, 0, 0, game.screen_x, game.screen_y);
@@ -287,9 +282,6 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y) {
 }
 
 bool cBuildingListDrawer::isOverItemCoordinates_Boolean(int x, int y, int drawX, int drawY) {
-	if (y > maxListYCoordinate) {
-		return false;
-	}
 	if (x >= drawX && x <= (drawX + 64) && y >= drawY && y < (drawY + 48)) {
 		return true;
 	}
@@ -303,10 +295,10 @@ cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *li
 	int iDrawX=drawManager->getSidebarDrawer()->getBuildingListDrawer()->getDrawX();
 	int iDrawY=drawManager->getSidebarDrawer()->getBuildingListDrawer()->getDrawY();
 
-	int startId = list->getScrollingOffset();
-	int end = startId + maximumItemsToDraw; // 5 icons in the list
+	int end = MAX_ITEMS;
 
-	for (int i = startId; i < end; i++) {
+    int rowNr = 0;
+	for (int i = 0; i < end; i++) {
 		cBuildingListItem * item = list->getItem(i);
 		if (item == NULL) break;
 
@@ -314,7 +306,14 @@ cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *li
 			return item;
 		}
 
-		iDrawY+=48;
+		if (rowNr < 2) {
+            rowNr++;
+            iDrawX+=66;
+		} else {
+            iDrawY += 48;
+            iDrawX=getDrawX();
+            rowNr = 0;
+        }
 	}
 
 	return NULL;

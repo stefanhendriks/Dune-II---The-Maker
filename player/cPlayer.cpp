@@ -359,6 +359,10 @@ bool cPlayer::bEnoughPower() const {
     return has_power >= use_power;
 }
 
+bool cPlayer::hasRadarAndEnoughPower() const {
+    return getAmountOfStructuresForType(RADAR) > 0 && bEnoughPower();
+}
+
 int cPlayer::getAmountOfStructuresForType(int structureType) const {
 	assert(structureType >= 0);
 	assert(structureType <= RTURRET);

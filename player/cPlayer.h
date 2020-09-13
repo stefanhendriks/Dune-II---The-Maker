@@ -83,6 +83,7 @@ class cPlayer {
 		}
 
 		int getAmountOfStructuresForType(int structureType) const;
+		bool hasRadarAndEnoughPower() const;
 
 		// delete
 		void deleteSideBar() { if (sidebar) delete sidebar; }

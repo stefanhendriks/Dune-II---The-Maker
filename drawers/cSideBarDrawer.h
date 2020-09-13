@@ -17,22 +17,12 @@ class cSideBarDrawer {
 
 		cBuildingListDrawer * getBuildingListDrawer() { return buildingListDrawer; }
 
-		bool isMouseOverScrollUp();
-		bool isMouseOverScrollDown();
-
 	protected:
 		void drawHouseGui(const cPlayer & thePlayer);
 		void drawBuildingLists();
 		void drawCapacities();
-		void drawScrollButtons();
 
 		void drawCandybar();
-
-		// get
-		int getScrollButtonUpX();
-		int getScrollButtonY();
-		int getScrollButtonDownX();
-		bool isOverScrollButton(int buttonX, int buttonY);
 
 		void drawMinimap(const cPlayer & player);
 		void drawOptionsBar();

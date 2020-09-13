@@ -146,7 +146,6 @@
 // Lists stuff
 #define MAX_ICONS       30      // max of 30 icons per list
 #define MAX_ITEMS		MAX_ICONS
-//#define MAX_LISTS       25      // max of 25 lists
 
 // #TIMERS
 #define TIMER_GUARD         10
