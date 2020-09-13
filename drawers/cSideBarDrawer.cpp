@@ -63,7 +63,7 @@ void cSideBarDrawer::drawCandybar() {
 	    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, heightInPixels-10); // height of top = 10
 	}
 
-	// 200 + 24 (widthof candy bar) = 224
+	// 200 + 24 (width of candy bar) = 224
 	int drawX = game.screen_x - cSideBar::SidebarWidth;
 	int drawY = 40;
 	draw_sprite(bmp_screen, candybar, drawX, drawY);
@@ -98,19 +98,19 @@ void cSideBarDrawer::drawBuildingLists() {
 	// draw the buildlist icons
 	int selectedListId = sidebar->getSelectedListID();
 
-//	for (int listId = LIST_CONSTYARD; listId < LIST_MAX; listId++) {
-//		cBuildingList *list = sidebar->getList(listId);
-//		bool isListIdSelectedList = (selectedListId == listId);
-//		buildingListDrawer->drawButton(list, isListIdSelectedList);
-//	}
+	for (int listId = LIST_CONSTYARD; listId < LIST_MAX; listId++) {
+		cBuildingList *list = sidebar->getList(listId);
+		bool isListIdSelectedList = (selectedListId == listId);
+		buildingListDrawer->drawButton(list, isListIdSelectedList);
+	}
 
-//	// draw the buildlist itself (take scrolling into account)
-//	cBuildingList *selectedList = NULL;
-//
-//	if (selectedListId > -1) {
-//		selectedList = sidebar->getList(selectedListId);
-//		buildingListDrawer->drawList(selectedList, selectedListId, selectedList->getScrollingOffset());
-//	}
+	// draw the buildlist itself (take scrolling into account)
+	cBuildingList *selectedList = NULL;
+
+	if (selectedListId > -1) {
+		selectedList = sidebar->getList(selectedListId);
+        buildingListDrawer->drawList(selectedList, selectedListId);
+	}
 }
 
 // draws the sidebar on screen
@@ -118,7 +118,7 @@ void cSideBarDrawer::drawSideBar(const cPlayer & player) {
 	drawHouseGui(player);
 	drawBuildingLists();
 //	drawCapacities();
-	drawScrollButtons();
+//	drawScrollButtons();
 }
 
 void cSideBarDrawer::drawCapacities() {
@@ -145,83 +145,6 @@ void cSideBarDrawer::drawCapacities() {
 	rectfill(bmp_screen, 497,442, 499, 442-iHeight, makecol(0,0,255));
 }
 
-void cSideBarDrawer::drawScrollButtons() {
-	int buttonUpX = game.screen_x - 68;
-	int buttonUpY = game.screen_y - 310;
-
-	bool leftScrollButtonPressed=false;
-	bool rightScrollButtonPressed=false;
-
-	if (cMouse::isMouseScrolledUp()) {
-		leftScrollButtonPressed = true;
-	}
-	if (cMouse::isMouseScrolledDown()) {
-		rightScrollButtonPressed = true;
-	}
-
-	cSideBar *sidebar = player->getSideBar();
-
-	// when mouse pressed, a list is selected, and that list is still available
-	int selectedListID = sidebar->getSelectedListID();
-	if (selectedListID > -1 && sidebar->getList(selectedListID)->isAvailable()) {
-		cBuildingList *list = sidebar->getList(selectedListID);
-
-		bool mouseOverUp = isMouseOverScrollUp();
-		bool mouseOverDown = isMouseOverScrollDown();
-		assert(!(mouseOverUp == true && mouseOverDown == true));// can never be both.
-
-		if (mouseOverUp) {
-			leftScrollButtonPressed = cMouse::isLeftButtonPressed();
-		} else if (mouseOverDown) {
-			rightScrollButtonPressed = cMouse::isLeftButtonPressed();
-		}
-	}
-
-	if (leftScrollButtonPressed) {
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_SCROLL_UP_PRESSED].dat, buttonUpX, buttonUpY);
-	} else {
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_SCROLL_UP_UNPRESSED].dat, buttonUpX, buttonUpY);
-	}
-
-	buttonUpX = game.screen_x - 34;
-
-	if (rightScrollButtonPressed) {
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_SCROLL_DOWN_PRESSED].dat, buttonUpX, buttonUpY);
-	} else {
-		draw_sprite(bmp_screen, (BITMAP *)gfxinter[BTN_SCROLL_DOWN_UNPRESSED].dat, buttonUpX, buttonUpY);
-	}
-
-
-}
-
-
-int cSideBarDrawer::getScrollButtonUpX() {
-	return game.screen_x - 68;
-}
-
-int cSideBarDrawer::getScrollButtonDownX() {
-	return game.screen_x - 34;
-}
-
-int cSideBarDrawer::getScrollButtonY() {
-	return game.screen_y - 310;
-}
-
-bool cSideBarDrawer::isOverScrollButton(int buttonX, int buttonY) {
-	if ((mouse_x >= buttonX && mouse_y >= buttonY) && (mouse_x < (buttonX + 30) && mouse_y < (buttonY + 30))) {
-			return true;
-	}
-	return false;
-}
-
-bool cSideBarDrawer::isMouseOverScrollUp() {
-	return isOverScrollButton(getScrollButtonUpX(), getScrollButtonY());
-}
-
-bool cSideBarDrawer::isMouseOverScrollDown() {
-	return isOverScrollButton(getScrollButtonDownX(), getScrollButtonY());
-}
-
 void cSideBarDrawer::drawMinimap(const cPlayer & player) {
 	BITMAP * sprite = (BITMAP *)gfxinter[HORIZONTAL_CANDYBAR].dat;
 	int drawX = (game.screen_x - sprite->w) + 1;
@@ -235,6 +158,13 @@ void cSideBarDrawer::drawMinimap(const cPlayer & player) {
 	// ------
 	// 67, 50 (width/height)
 
+    bool hasRadarAndEnoughPower = player.hasRadarAndEnoughPower();
+
+    if (hasRadarAndEnoughPower){
+        return; // bail, because we render the minimap
+    }
+
+    // else, we render the house emblem
 	rectfill(bmp_screen, drawX + 1, cSideBar::TopBarHeight + 1, game.screen_x, drawY, player.getEmblemBackgroundColor());
 
 	if (player.isHouse(ATREIDES) || player.isHouse(HARKONNEN) || player.isHouse(ORDOS)) {

@@ -156,27 +156,6 @@ void cSideBar::thinkInteraction() {
 		}
 	}
 
-	// when mouse pressed, a list is selected, and that list is still available
-	if (selectedListID > -1 && getList(selectedListID)->isAvailable()) {
-		cBuildingList *list = getList(selectedListID);
-
-		cSideBarDrawer * sidebarDrawer = new cSideBarDrawer();
-
-		bool mouseOverUp = sidebarDrawer->isMouseOverScrollUp();
-		bool mouseOverDown = sidebarDrawer->isMouseOverScrollDown();
-		assert(!(mouseOverUp == true && mouseOverDown == true));// can never be both.
-
-		if (mouseOverUp) {
-			if (cMouse::isLeftButtonClicked()) {
-				list->scrollUp();
-			}
-		} else if (mouseOverDown) {
-			if (cMouse::isLeftButtonClicked()) {
-				list->scrollDown();
-			}
-		}
-	}
-
 	// when mouse pressed, build item if over item
 	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && getList(selectedListID)->isUpgrading() == false) {
 		cBuildingList *list = getList(selectedListID);

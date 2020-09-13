@@ -15,8 +15,8 @@ class cBuildingListFactory {
 
 	protected:
 		cBuildingListFactory();
-		int getButtonDrawX();
-		int getButtonDrawYStart();
+		int getButtonDrawY();
+		int getButtonDrawXStart();
 
 	public:
 		static cBuildingListFactory *getInstance();

@@ -25,8 +25,6 @@ cSideBar * cSideBarFactory::createSideBar(cPlayer& thePlayer, int techlevel, int
 	assert(&thePlayer);
 	cSideBar *sidebar = new cSideBar(thePlayer);
 
-	// lists are already constructed with default constructor. Now initialize
-	// them according to the techLevel.
 	for (int listId = LIST_NONE; listId < LIST_MAX; listId++) {
 		cBuildingList *list = cBuildingListFactory::getInstance()->createList(listId, techlevel, house);
 		sidebar->setList(listId, list);

@@ -22,6 +22,10 @@ public:
     }
 
 
+    bool isMouseOver() {
+        return cMouse::isOverRectangle(this->x, this->y, this->width, this->height);
+    }
+
 private:
     int x;
     int y;

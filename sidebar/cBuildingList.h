@@ -37,14 +37,10 @@ class cBuildingList {
 		int getButtonIconIdUnpressed() { return buttonIconIdUnpressed; }
 		int getButtonDrawX() { return buttonDrawX; }
 		int getButtonDrawY() { return buttonDrawY; }
-		int getScrollingOffset() { return scrollingOffset; }
 		bool isAvailable() { return available; }
 		bool isAcceptsOrders() { return acceptsOrders; }
 		bool isBuildingItem();
 		bool hasItemType(int itemTypeId);
-
-		void scrollUp();
-		void scrollDown();
 
 		// set
 		void setTimer(int value) { TIMER_progress = value; }
@@ -57,7 +53,6 @@ class cBuildingList {
 
 		void setButtonDrawX(int value) { buttonDrawX = value; }
 		void setButtonDrawY(int value) { buttonDrawY = value; }
-		void setScrollingOffset(int value);
 		void setAvailable(bool value) { available = value; }
 		void setLastClickedId(int value) { lastClickedId = value; }
 		void setAcceptsOrders(bool value) { acceptsOrders = value; }
@@ -75,7 +70,6 @@ class cBuildingList {
 		int buttonIconIdUnpressed;	// the button to draw at the left of the list when unpressed
 		int buttonDrawX;
 		int buttonDrawY;
-		int scrollingOffset; // the offset for scrolling through the list.
 		bool available;		 // is this list available?
 		bool acceptsOrders;	 // accepts orders
 		int maxItems;		 // how many items have been set in the list?

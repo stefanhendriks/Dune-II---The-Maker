@@ -13,7 +13,7 @@ class cBuildingListDrawer {
 public:
 	cBuildingListDrawer();
 
-	void drawList(cBuildingList *list, int listIDToDraw, int startId);
+	void drawList(cBuildingList *list, int listIDToDraw);
 	void drawButton(cBuildingList *list, bool pressed);
 
 	bool isOverItem(cBuildingList *list, int x, int y);
@@ -25,17 +25,14 @@ protected:
 
 private:
 	void drawStructureSize(int structureId, int x, int y);
-	void drawList(cBuildingList *list, int listIDToDraw, int startId, bool shouldDrawStructureSize);
-	void drawListWithStructures(cBuildingList *list, int listIDToDraw, int startId);		// used for const yard
-	void drawListWithUnitsOrAbilities(cBuildingList *list, int listIDToDraw, int startId); // used for units or palace / starport
+	void drawList(cBuildingList *list, int listIDToDraw, bool shouldDrawStructureSize);
+	void drawListWithStructures(cBuildingList *list, int listIDToDraw);		// used for const yard
+	void drawListWithUnitsOrAbilities(cBuildingList *list, int listIDToDraw); // used for units or palace / starport
 
 	bool isOverItemCoordinates_Boolean(int x, int y, int drawX, int drawY);
 
 	// the list to draw
 	cBuildingList *list;
-	int maximumItemsToDraw;
-	int maxListYCoordinate;
-
 };
 
 #endif /* CBUILDINGLISTDRAWER_H_ */

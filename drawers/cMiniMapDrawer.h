@@ -41,6 +41,7 @@ class cMiniMapDrawer {
 		cMap *map;	// the minimap drawer reads data from here
 		const cPlayer& m_Player;	// the m_Player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
 		cMapCamera *mapCamera;
+		cRectangle *m_RectMinimap;
 
 		int iStaticFrame;
 	    int iStatus;                       // 0 = show minimap , -1 = no minimap (static animation, of going down), 1 = static animation
