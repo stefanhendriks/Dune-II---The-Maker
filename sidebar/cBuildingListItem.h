@@ -12,14 +12,15 @@ class cBuildingListItem {
 
 public:
 	// constructors
-	cBuildingListItem(int theID, s_Structures entry, cBuildingList* list);
-	cBuildingListItem(int theID, s_UnitP entry, cBuildingList* list);
+	cBuildingListItem(int theID, s_Structures entry, cBuildingList* list, int subList);
+	cBuildingListItem(int theID, s_UnitP entry, cBuildingList* list, int subList);
 
 
 	// gettters
 	int getTotalBuildTime() { return totalBuildTime; }
 	int getIconId() { return icon; }
 	int getBuildId() { return ID; }
+	int getSubList() { return subList; }
 	eBuildType getBuildType() { return type; }
 	int getBuildCost() const { return cost; }
 	int getProgress() { return progress; }
@@ -73,6 +74,7 @@ private:
 	bool placeIt;			// when true, this item is ready for placement.
 
 	int totalBuildTime;		// total time it takes to build.
+	int subList;            // subList id's allow us to distinguish built items within the same buildingList.
 
 	cBuildingList *myList;
 };

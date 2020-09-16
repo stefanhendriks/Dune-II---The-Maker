@@ -135,22 +135,30 @@ bool cBuildingList::isOverButton(int x, int y) {
 }
 
 /**
- * Return true if an item is being built in this list.
+ * Returns an array of id's of subLists of items being built. The array is 5 items big (ie, we assume we don't have
+ * more than 5 sublists in a building list). When a value > -1 then it means something is being built for that subList.
+ * Ie, the index in the array corresponds with the subList id. Meaning, result[1] = 5 means sublist 1 is building something
+ * of ID 5. (depending on the TYPE, it is either a structure or a unit).
  *
  * @return
  */
-bool cBuildingList::isBuildingItem() {
+std::array<int, 5> cBuildingList::isBuildingItem() {
+    std::array<int, 5> subListIds;
+    for (int i = 0; i < 5; i++) {
+        subListIds[i] = -1;
+    }
 	for (int i = 0 ; i < MAX_ITEMS; i++) {
 		cBuildingListItem *item = getItem(i);
+
 		// valid pointer
 		if (item) {
 			// get isBuilding
 			if (item->isBuilding() || item->shouldPlaceIt()) {
-				return true;
+                subListIds[item->getSubList()] = item->getBuildId();
 			}
 		}
 	}
-	return false;
+	return subListIds;
 }
 
 cBuildingListItem * cBuildingList::getItemToPlace() {

@@ -1,6 +1,6 @@
 #include "../include/d2tmh.h"
 
-cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingList *list) {
+cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingList *list, int subList) {
 	assert(theID >= 0);
 	assert(list);
 	ID = theID;
@@ -14,13 +14,14 @@ cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingLis
 	myList = list;
 	timesToBuild = 0;
 	timesOrdered  = 0;
+	this->subList = subList;
 	if (entry.cost > 0) {
 		creditsPerProgressTime = (float)entry.cost / (float)entry.build_time;
 	}
 	placeIt = false;
 }
 
-cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *list) {
+cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *list, int subList) {
 	assert(theID >= 0);
 	assert(list);
 	ID = theID;
@@ -34,6 +35,7 @@ cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *li
 	myList = list;
 	timesToBuild = 0;
 	timesOrdered  = 0;
+    this->subList = subList;
 	if (entry.cost > 0 && entry.build_time > 0) {
 		creditsPerProgressTime = (float)entry.cost / (float)entry.build_time;
 	}
