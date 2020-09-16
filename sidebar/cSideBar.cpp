@@ -44,40 +44,49 @@ void cSideBar::think() {
 void cSideBar::thinkUpgradeButton() {
 	bool isOverUpgradeButton = upgradeUtils->isMouseOverUpgradeButton(mouse_x, mouse_y);
 
-	if (isOverUpgradeButton) {
-		int selectedListId = getSelectedListID();
+	if (!isOverUpgradeButton) return;
 
-		if (selectedListId > -1) {
-			cBuildingList * list = getList(selectedListId);
-			assert(list);
-			if (list->isBuildingItem() == false) {
-				int upgradeLevel = list->getUpgradeLevel();
-				int techLevel = m_Player.getTechLevel();
+    int selectedListId = getSelectedListID();
 
-				cListUpgrade * upgrade = upgradeUtils->getListUpgradeForList(m_Player, selectedListId, techLevel, upgradeLevel);
-				bool isUpgradeApplicable = upgrade != NULL;
+    if (selectedListId < 0) return;
 
-				if (upgrade != NULL) {
-					bool isUpgrading = m_Player.getUpgradeBuilder()->isUpgrading(selectedListId);
-					char msg[255];
-					if (!isUpgrading) {
-						sprintf(msg, "$%d | Upgrade", upgrade->getTotalPrice());
-					} else {
-						cListUpgrade & upgradeInProgress = m_Player.getUpgradeBuilder()->getListUpgrade(selectedListId);
-						assert(&upgradeInProgress);
-						sprintf(msg, "Upgrade completed at %d percent",upgradeInProgress.getProgressAsPercentage());
-					}
-					drawManager->getMessageDrawer()->setMessage(msg);
-				}
+    cBuildingList * list = getList(selectedListId);
+    if (list == NULL) return;
 
-				if (isUpgradeApplicable && MOUSE_BTN_LEFT()) {
-					assert(upgrade != NULL);
-					assert(m_Player.getUpgradeBuilder());
-                    m_Player.getUpgradeBuilder()->addUpgrade(selectedListId, upgrade);
-				}
-			}
-		}
-	}
+    const std::array<int, 5> &isBuildingItem = list->isBuildingItem();
+    bool isBuildingAnyItem = false;
+    for (int i = 0; i < 5; i++) {
+        if (isBuildingItem[i] > -1) {
+            isBuildingAnyItem = true;
+        }
+    }
+
+    if (isBuildingAnyItem) return;
+
+    int upgradeLevel = list->getUpgradeLevel();
+    int techLevel = m_Player.getTechLevel();
+
+    cListUpgrade * upgrade = upgradeUtils->getListUpgradeForList(m_Player, selectedListId, techLevel, upgradeLevel);
+    bool isUpgradeApplicable = upgrade != NULL;
+
+    if (upgrade != NULL) {
+        bool isUpgrading = m_Player.getUpgradeBuilder()->isUpgrading(selectedListId);
+        char msg[255];
+        if (!isUpgrading) {
+            sprintf(msg, "$%d | Upgrade", upgrade->getTotalPrice());
+        } else {
+            cListUpgrade & upgradeInProgress = m_Player.getUpgradeBuilder()->getListUpgrade(selectedListId);
+            assert(&upgradeInProgress);
+            sprintf(msg, "Upgrade completed at %d percent",upgradeInProgress.getProgressAsPercentage());
+        }
+        drawManager->getMessageDrawer()->setMessage(msg);
+    }
+
+    if (isUpgradeApplicable && MOUSE_BTN_LEFT()) {
+        assert(upgrade != NULL);
+        assert(m_Player.getUpgradeBuilder());
+        m_Player.getUpgradeBuilder()->addUpgrade(selectedListId, upgrade);
+    }
 }
 
 /**

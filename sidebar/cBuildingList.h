@@ -10,6 +10,8 @@
  *
  */
 
+#include <array>
+
 #ifndef CBUILDINGLIST
 #define CBUILDINGLIST
 
@@ -39,7 +41,7 @@ class cBuildingList {
 		int getButtonDrawY() { return buttonDrawY; }
 		bool isAvailable() { return available; }
 		bool isAcceptsOrders() { return acceptsOrders; }
-		bool isBuildingItem();
+        std::array<int, 5> isBuildingItem();
 		bool hasItemType(int itemTypeId);
 
 		// set

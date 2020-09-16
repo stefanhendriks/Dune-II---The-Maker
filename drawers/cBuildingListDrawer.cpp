@@ -88,7 +88,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 	int end = MAX_ITEMS;
 
 	// is building an item in the list?
-	bool isBuildingItemInList = list->isBuildingItem();
+	std::array<int, 5> isBuildingItemInList = list->isBuildingItem();
 
 	// draw the icons, in rows of 3
 	int rowNr = 0;
@@ -96,10 +96,10 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 		cBuildingListItem * item = list->getItem(i);
 
 		if (item == NULL) {
-			break; // stop. assume this is the end of the items to draw
+			continue; // allow gaps in the list data structure (just not with rendering)
 		}
 
-		int iDrawXEnd = iDrawX + 63;
+        int iDrawXEnd = iDrawX + 63;
 		int iDrawYEnd = iDrawY + 47;
 
 		// icon id must be set , assert it.
@@ -163,7 +163,16 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 			// - some other item is being built
 			// - list is being upgraded, so you cannot build items
 			 /*|| cannotPayIt*/
-			if (!item->isAvailable() || isBuildingItemInList || list->isUpgrading() || !list->isAcceptsOrders()) {
+            bool isBuildingSameSubListItem = false;
+            for (int i = 0; i < 5; i++) {
+                if (isBuildingItemInList[i] < 0) continue;
+                if (i == item->getSubList()) {
+                    isBuildingSameSubListItem = true;
+                    break;
+                }
+            }
+
+			if (!item->isAvailable() || isBuildingSameSubListItem || list->isUpgrading() || !list->isAcceptsOrders()) {
 				set_trans_blender(0,0,0,128);
 				fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
 			}
