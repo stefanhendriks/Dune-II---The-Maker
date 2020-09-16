@@ -436,3 +436,11 @@ BITMAP *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFra
     }
     return nullptr;
 }
+
+bool cPlayer::hasWor() const {
+    return iStructures[WOR] > 0;
+}
+
+bool cPlayer::hasBarracks() const {
+    return iStructures[BARRACKS] > 0;
+}

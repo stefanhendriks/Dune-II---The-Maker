@@ -246,7 +246,8 @@ cBuildingListItem *cItemBuilder::findBuildingListItemOfSameListAs(cBuildingListI
 		if (listItem) {
 			if (listItem == item) continue; // do not check self
 
-			if (item->getList() == listItem->getList()) {
+			if (item->getList() == listItem->getList() &&
+			    item->getSubList() == listItem->getSubList()) {
 				return listItem;
 			}
 		}

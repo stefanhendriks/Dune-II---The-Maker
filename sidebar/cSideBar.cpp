@@ -102,15 +102,10 @@ void cSideBar::thinkAvailabilityLists() {
 	// INFANTRY LIST
 	cBuildingList * infantryList = getList(LIST_INFANTRY);
 
-	if (m_Player.getHouse() == ATREIDES) {
-		infantryList->setAvailable(m_Player.iStructures[BARRACKS] > 0);
-	} else if (m_Player.getHouse() == HARKONNEN) {
-		infantryList->setAvailable(m_Player.iStructures[WOR] > 0);
-	} else if (m_Player.getHouse() == ORDOS) {
-		infantryList->setAvailable(m_Player.iStructures[BARRACKS] > 0 || m_Player.iStructures[WOR] > 0);
-	} else if (m_Player.getHouse() == SARDAUKAR) {
-		infantryList->setAvailable(m_Player.iStructures[WOR] > 0);
-	}
+	bool hasBarracks = m_Player.hasBarracks();
+	bool hasWor = m_Player.hasWor();
+
+    infantryList->setAvailable(hasBarracks || hasWor);
 
 	// LIGHTFC LIST
 	cBuildingList * lightfcList = getList(LIST_LIGHTFC);
