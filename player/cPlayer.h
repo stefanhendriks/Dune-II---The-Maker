@@ -102,7 +102,10 @@ class cPlayer {
 
         void destroyAllegroBitmaps();
 
-    private:
+        bool hasWor() const;
+        bool hasBarracks() const;
+
+private:
 		int getRGBColorForHouse(int houseId);
 		int getEmblemBackgroundColorForHouse(int houseId);
 		bool m_Human;

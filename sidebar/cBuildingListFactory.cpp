@@ -87,19 +87,20 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
         list->setButtonDrawX(startX);
         list->setButtonIconIdPressed(LIST_BTN_INFANTRY);
         list->setButtonIconIdUnpressed(LIST_BTN_INFANTRY);
-		if (house == ATREIDES) {
-			// add items
-			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list, 0));
-		} else if (house == HARKONNEN) {
-			// add items
-			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list, 0));
-		} else if (house == ORDOS) {
-			// add items , since ordos can have both, it is determined on structure place
+
+//		if (house == ATREIDES) {
+//			// add items
 //			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list, 0));
-//			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list, 0));
-		} else {
-			// do nothing
-		}
+//		} else if (house == HARKONNEN) {
+//			// add items
+//			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list, 1));
+//		} else if (house == ORDOS) {
+//			// add items , since ordos can have both, it is determined on structure place
+////			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list, 0));
+////			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list, 0));
+//		} else {
+//			// do nothing
+//		}
 	}
 
     startX += 27;

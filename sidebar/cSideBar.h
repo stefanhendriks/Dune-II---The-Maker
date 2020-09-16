@@ -22,9 +22,9 @@ class cUpgradeUtils;
 #define LIST_NONE		0
 #define LIST_CONSTYARD	1
 #define LIST_INFANTRY	2
-#define LIST_LIGHTFC	3
-#define LIST_HEAVYFC	4
-#define LIST_ORNI		5
+#define LIST_LIGHTFC	3 // merge
+#define LIST_HEAVYFC	4 // merge
+#define LIST_ORNI		5 // merge
 #define LIST_STARPORT	6
 #define LIST_PALACE		7
 #define LIST_MAX		8			// max amount of lists
