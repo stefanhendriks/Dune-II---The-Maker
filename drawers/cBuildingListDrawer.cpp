@@ -241,7 +241,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 		} else {
             rowNr = 0;
             iDrawX=getDrawX();
-            iDrawY+=48;
+            iDrawY+=50;
         }
 	}
 
@@ -319,7 +319,7 @@ cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *li
             rowNr++;
             iDrawX+=66;
 		} else {
-            iDrawY += 48;
+            iDrawY += 50;
             iDrawX=getDrawX();
             rowNr = 0;
         }
