@@ -161,6 +161,7 @@ std::array<int, 5> cBuildingList::isBuildingItem() {
 	return subListIds;
 }
 
+
 cBuildingListItem * cBuildingList::getItemToPlace() {
 	for (int i = 0 ; i < MAX_ITEMS; i++) {
 		cBuildingListItem *item = getItem(i);

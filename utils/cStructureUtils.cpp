@@ -139,43 +139,52 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureTy
 /**
  * Depending on list type, return a structure type.
  */
-int cStructureUtils::findStructureTypeByTypeOfList(cBuildingList *list, cBuildingListItem *item) {
-	assert(list);
-	assert(item);
-	assert(item->getBuildType() == UNIT);
+int cStructureUtils::findStructureTypeByTypeOfList(cBuildingListItem *item) {
+    if (!item) return -1;
+	if (item->getBuildType() != UNIT) return -1;
 
-	int listTypeId = list->getType();
-	char msg[255];
-	sprintf(msg, "going to find list with listTypeId [%d]", listTypeId);
-	cLogger::getInstance()->logCommentLine(msg);
-	switch (listTypeId) {
-		case LIST_CONSTYARD:
-			// a unit, and then built from a constyard list
-			assert(false);
-			return CONSTYARD;
-		case LIST_HEAVYFC:
-			return HEAVYFACTORY;
-		case LIST_INFANTRY:
-			if (item->getBuildId() == INFANTRY || item->getBuildId() == SOLDIER) {
-				return BARRACKS;
-			}
-			return WOR;
-		case LIST_LIGHTFC:
-			return LIGHTFACTORY;
-		case LIST_ORNI:
-			return HIGHTECH;
-		case LIST_PALACE:
-			return PALACE;
-		case LIST_NONE:
-			assert(false);
-			return -1;
-		case LIST_STARPORT:
-			return STARPORT;
-		default:
-			assert(false);
-			return -1;
+	switch(item->getBuildId()) {
+        case INFANTRY:
+            return BARRACKS;
+        case SOLDIER:
+            return BARRACKS;
+        case TROOPER:
+            return WOR;
+        case TROOPERS:
+            return WOR;
+        case QUAD:
+            return LIGHTFACTORY;
+        case TRIKE:
+            return LIGHTFACTORY;
+        case RAIDER:
+            return LIGHTFACTORY;
+        case TANK:
+            return HEAVYFACTORY;
+        case SIEGETANK:
+            return HEAVYFACTORY;
+        case LAUNCHER:
+            return HEAVYFACTORY;
+        case DEVASTATOR:
+            return HEAVYFACTORY;
+        case HARVESTER:
+            return HEAVYFACTORY;
+        case MCV:
+            return HEAVYFACTORY;
+        case SONICTANK:
+            return HEAVYFACTORY;
+        case DEVIATOR:
+            return HEAVYFACTORY;
+        case ORNITHOPTER:
+            return HIGHTECH;
+        case CARRYALL:
+            return HIGHTECH;
+        default:
+            char msg[255];
+            sprintf(msg, "Item buildId is [%d], which is not mapped", item->getBuildId());
+            logbook(msg);
+            assert(false);
+            return -1;
 	}
-	return -1;
 }
 
 int cStructureUtils::findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(int cell, int structureType, cPlayer * player) {

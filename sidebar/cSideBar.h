@@ -21,13 +21,15 @@ class cUpgradeUtils;
 // List ID's corresponding buttons
 #define LIST_NONE		0
 #define LIST_CONSTYARD	1
-#define LIST_INFANTRY	2
-#define LIST_LIGHTFC	3 // merge
-#define LIST_HEAVYFC	4 // merge
-#define LIST_ORNI		5 // merge
-#define LIST_STARPORT	6
-#define LIST_PALACE		7
-#define LIST_MAX		8			// max amount of lists
+#define LIST_FOOT_UNITS	2 // infantry, soldier, trooper, troopers, etc.
+#define LIST_UNITS	    3 // quad, trike, tanks, air units
+#define LIST_STARPORT	4 // special list to order stuff
+#define LIST_PALACE		5 // REMOVE? (ie super weapon icon should always show top left/right?)
+#define LIST_MAX		6 // max amount of lists
+
+#define SUBLIST_LIGHTFCTRY 0 // quad, trike, etc
+#define SUBLIST_HEAVYFCTRY 1 // tanks
+#define SUBLIST_HIGHTECH   2 // orni, carry-all
 
 /**
  * Basically a container:

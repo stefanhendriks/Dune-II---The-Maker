@@ -76,3 +76,20 @@ float cBuildingListItem::getRefundAmount() {
 void cBuildingListItem::decreaseTimesToBuild() {
 	timesToBuild--;
 }
+
+void cBuildingListItem::increaseProgress(int byAmount) {
+    setProgress(getProgress() + byAmount);
+}
+
+int cBuildingListItem::getBuildTime() {
+    if (!myList) return 0;
+    if (myList->getType() == LIST_CONSTYARD) {
+        return structures[getBuildId()].build_time;
+    }
+    // assumes other things (ie super weapons and such) are also under 'units' array.
+    return units[getBuildId()].build_time;
+}
+
+bool cBuildingListItem::isDoneBuilding() {
+    return getProgress() >= getBuildTime();
+}

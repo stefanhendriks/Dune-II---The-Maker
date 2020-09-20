@@ -444,3 +444,13 @@ bool cPlayer::hasWor() const {
 bool cPlayer::hasBarracks() const {
     return iStructures[BARRACKS] > 0;
 }
+
+bool cPlayer::hasAtleastOneStructure(int structureType) {
+    if (structureType < 0) return false;
+    if (structureType >= MAX_STRUCTURETYPES) return false;
+    return iStructures[structureType] > 0;
+}
+
+bool cPlayer::hasEnoughCreditsFor(float requestedAmount) {
+    return credits > requestedAmount;
+}

@@ -33,18 +33,17 @@ void cUpgradeDrawer::drawUpgradeButtonForSelectedListIfNeeded(const cPlayer & th
 
 	bool shouldDrawButton = shouldDrawButtonForSelectedList(thePlayer, theSelectedList);
 
-	if (shouldDrawButton) {
-		drawUpgradeButton(thePlayer, theSelectedList);
+    if (!shouldDrawButton) return;
 
-		if (theSelectedList->isUpgrading()) {
-			drawUpgradeProgress(thePlayer, theSelectedList);
-		}
-	}
+    drawUpgradeButton(thePlayer, theSelectedList);
+
+    if (theSelectedList->isUpgrading()) {
+        drawUpgradeProgress(thePlayer, theSelectedList);
+    }
 }
 
 void cUpgradeDrawer::drawUpgradeButton(const cPlayer & thePlayer, cBuildingList * theSelectedList) {
 	assert(&thePlayer);
-	assert(theSelectedList);
 
 	// No upgradeList provided, so bail.
 	if (theSelectedList == NULL) {

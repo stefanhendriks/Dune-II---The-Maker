@@ -43,127 +43,112 @@ int cItemBuilder::getTimerCap(cBuildingList *list, cBuildingListItem *item) {
 	return iTimerCap;
 }
 
-int cItemBuilder::getBuildTime(cBuildingList *list, cBuildingListItem *item) {
-	// get max build time:
-	int iBuildTime = 0;
-
-	if (list->getType() == LIST_CONSTYARD) {
-		iBuildTime = structures[item->getBuildId()].build_time;
-	} else {
-		iBuildTime = units[item->getBuildId()].build_time;
-	}
-
-	return iBuildTime;
-}
-
 void cItemBuilder::think() {
 	// go through all the items and increase progress counters...
 	for (int i = 0; i < MAX_ITEMS; i++) {
 		cBuildingListItem *item = getItem(i);
-		if (item) {
-			if (item->isBuilding()) {
-				timers[i]++;
-				cBuildingList *list = item->getList();
+		if (!item) continue;
 
-				int timerCap = getTimerCap(list, item);
+        // not building now, but in list.
+        // Build as soon as possible.
 
-				float priceForTimeUnit = item->getCreditsPerProgressTime();
+        if (!item->isBuilding()) {
+            bool anotherItemOfSameListIsBeingBuilt = isASimilarItemBeingBuilt(item);
 
-				// build stuff
-				if (timers[i] >= timerCap) {
-					int buildTime = getBuildTime(list, item);
+            // only start building this, if no other item is already being built in the same list.
+            if (!anotherItemOfSameListIsBeingBuilt) {
+                item->setIsBuilding(true);
+            }
+            continue;
+        }
 
-					bool isDoneBuilding = item->getProgress() >= buildTime;
+        // ITEM is building
+        timers[i]++;
+        cBuildingList *list = item->getList();
 
-					// Not done building yet , and can pay for progress?
-					if (!isDoneBuilding && !item->shouldPlaceIt() &&
-                        m_Player.credits > priceForTimeUnit) {
-						// increase progress
-						item->setProgress((item->getProgress() + 1));
-						// pay
-						m_Player.credits -= priceForTimeUnit;
-					}
+        // determines how fast an item is built, this is the so called 'delay' before 1 'build time tick' has passed
+        int timerCap = getTimerCap(list, item);
 
-					if (isDoneBuilding) {
-						bool isAbleToBuildNewOneImmidiately = true;
-						if (item->getBuildType() == STRUCTURE) {
-							isAbleToBuildNewOneImmidiately = false;
+        // not yet done building
+        if (timers[i] < timerCap) continue;
 
-							// play voice when placeIt is false
-							if (!item->shouldPlaceIt() && (m_Player.isHuman())) {
-								play_voice(SOUND_VOICE_01_ATR);
-								item->setPlaceIt(true);
-							}
-						} else if (item->getBuildType() == UNIT) {
+        // reset timer for next tick
+        timers[i] = 0;
 
-							item->decreaseTimesToBuild(); // decrease amount of times to build
+        // timer reached cap, so one 'tick' is reached for building this item
+        bool isDoneBuilding = item->isDoneBuilding();
 
-							assert(item->getTimesToBuild() > -1);
+        float priceForTimeUnit = item->getCreditsPerProgressTime();
 
-							int structureTypeOfList = structureUtils.findStructureTypeByTypeOfList(list, item);
-							assert(structureTypeOfList > -1);
-							int primaryBuildingIdOfStructureType = structureUtils.findStructureToDeployUnit(&m_Player, structureTypeOfList);
+        if (!isDoneBuilding) {
+            // Not done building yet , and can pay for progress?
+            if (!item->shouldPlaceIt() && m_Player.hasEnoughCreditsFor(priceForTimeUnit)) {
+                // increase progress
+                item->increaseProgress(1);
+                // pay
+                m_Player.substractCredits(priceForTimeUnit);
+            }
+            continue;
+        }
 
-							if (primaryBuildingIdOfStructureType > -1) {
-								int cell = structure[primaryBuildingIdOfStructureType]->iFreeAround();
-								cAbstractStructure * theStructure = structure[primaryBuildingIdOfStructureType];
-								theStructure->setAnimating(true); // animate
-								// TODO: construct unit here
-								int unitId = UNIT_CREATE(cell, item->getBuildId(), m_Player.getId(), false);
-								int rallyPoint = theStructure->getRallyPoint();
-								if (rallyPoint > -1) {
-									unit[unitId].move_to(rallyPoint, -1, -1);
-								}
-							}
-						} else if (item->getBuildType() == SPECIAL) {
-							// super weapons and that kind of stuff
+        // DONE building
+        if (item->getBuildType() == STRUCTURE) {
+            // play voice when placeIt is false
+            if (!item->shouldPlaceIt() && (m_Player.isHuman())) {
+                play_voice(SOUND_VOICE_01_ATR);
+                item->setPlaceIt(true);
+            }
+        } else if (item->getBuildType() == UNIT) {
 
-							// requires user interaction
-							isAbleToBuildNewOneImmidiately = false;
-						}
+            item->decreaseTimesToBuild(); // decrease amount of times to build
 
-						if (isAbleToBuildNewOneImmidiately) {
-							// stop building this item when we are done
-							if (item->getTimesToBuild() == 0) {	// no more items to build
-								// stop building (set flags)
-								item->setIsBuilding(false);
-								item->setProgress(0); // set back progress
+            assert(item->getTimesToBuild() > -1);
 
-								// remove this item from the build list (does not delete item, so pointer is still valid)
-								removeItemFromList(item);
+            int structureTypeByItem = structureUtils.findStructureTypeByTypeOfList(item);
+            assert(structureTypeByItem > -1);
+            int primaryBuildingIdOfStructureType = structureUtils.findStructureToDeployUnit(&m_Player, structureTypeByItem);
 
-								// now try to find an item that is in the same list. If so, start building it.
-								cBuildingListItem *itemInSameList = findBuildingListItemOfSameListAs(item);
+            if (primaryBuildingIdOfStructureType > -1) {
+                int cell = structure[primaryBuildingIdOfStructureType]->iFreeAround();
+                cAbstractStructure * theStructure = structure[primaryBuildingIdOfStructureType];
+                theStructure->setAnimating(true); // animate
+                // TODO: construct unit here
+                int unitId = UNIT_CREATE(cell, item->getBuildId(), m_Player.getId(), false);
+                int rallyPoint = theStructure->getRallyPoint();
+                if (rallyPoint > -1) {
+                    unit[unitId].move_to(rallyPoint, -1, -1);
+                }
+            }
+        } else if (item->getBuildType() == SPECIAL) {
+            // super weapons and that kind of stuff
+        }
 
-								// found item
-								if (itemInSameList) {
-									itemInSameList->setIsBuilding(true);
-								}
+        bool isAbleToBuildNewOneImmidiately = item->getBuildType() == UNIT;
 
-							} else {
-								// item still needs to be built more times.
-								item->setProgress(0); // set back progress
-								item->setIsBuilding(true);
-							}
-						}
-					}
+        if (!isAbleToBuildNewOneImmidiately) continue;
 
-					timers[i] = 0;
-				}
-			} else {
-				// not building now, but in list.
-				// Build as soon as possible.
+        // stop building this item when we are done
+        if (item->getTimesToBuild() == 0) {	// no more items to build
+            // stop building (set flags)
+            item->setIsBuilding(false);
+            item->setProgress(0); // set back progress
 
-				bool anotherItemOfSameListIsBeingBuilt = isASimilarItemBeingBuilt(item);
+            // remove this item from the build list (does not delete item, so pointer is still valid)
+            removeItemFromList(item);
 
-				// only start building this, if no other item is already being built in the same list.
-				if (!anotherItemOfSameListIsBeingBuilt) {
-					item->setIsBuilding(true);
-				}
-			}
-		} else {
-			// item not valid (no pointer)
-		}
+            // now try to find an item that is in the same list. If so, start building it.
+            cBuildingListItem *itemInSameList = findBuildingListItemOfSameListAs(item);
+
+            // found item
+            if (itemInSameList) {
+                itemInSameList->setIsBuilding(true);
+            }
+
+        } else {
+            // item still needs to be built more times.
+            item->setProgress(0); // set back progress
+            item->setIsBuilding(true);
+        }
 	}
 }
 
@@ -308,7 +293,7 @@ void cItemBuilder::removeItemFromList(cBuildingListItem *item) {
 }
 
 /**
- * Remove item from list. Delete item object and set NULL in array.
+ * Remove item from list. This does do any delete operation, it merely sets the pointer to NULL
  *
  * @param position
  */

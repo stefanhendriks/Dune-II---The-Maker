@@ -57,6 +57,12 @@ public:
 
 	cBuildingList *getList() { return myList; }	// returns the list it belongs to
 
+    void increaseProgress(int byAmount);
+
+    int getBuildTime();
+
+    bool isDoneBuilding();
+
 private:
 	int icon;				// the icon ID to draw (from datafile)
 	int ID;					// the ID to build ..
