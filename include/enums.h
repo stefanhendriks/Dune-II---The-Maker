@@ -47,7 +47,9 @@ enum eLogLevel {
 };
 
 enum eUpgradeType {
-	UPGRADE_ONE, UPGRADE_TWO, UPGRADE_THREE
+	UPGRADE_ONE,
+	UPGRADE_TWO,
+	UPGRADE_THREE
 };
 
 
