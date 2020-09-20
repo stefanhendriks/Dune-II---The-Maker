@@ -83,7 +83,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 
 	// other lists, have 40 pixels more Y , but the X remains the same
 	// now set it up
-	if (listId == LIST_INFANTRY) {
+	if (listId == LIST_FOOT_UNITS) {
         list->setButtonDrawX(startX);
         list->setButtonIconIdPressed(LIST_BTN_INFANTRY);
         list->setButtonIconIdUnpressed(LIST_BTN_INFANTRY);
@@ -105,41 +105,25 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 
     startX += 27;
 
-	if (listId == LIST_LIGHTFC) {
+	if (listId == LIST_UNITS) {
 		list->setButtonDrawX(startX);
 		list->setButtonIconIdPressed(LIST_BTN_LIGHTFCTRY);
 		list->setButtonIconIdUnpressed(LIST_BTN_LIGHTFCTRY);
 
 		if (house == ATREIDES) {
-			list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE], list, 0));
+			list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE], list, SUBLIST_LIGHTFCTRY));
 		} else if (house == ORDOS) {
-			list->addItemToList(new cBuildingListItem(RAIDER, units[RAIDER], list, 0));
+			list->addItemToList(new cBuildingListItem(RAIDER, units[RAIDER], list, SUBLIST_LIGHTFCTRY));
 		} else if (house == HARKONNEN) {
-			list->addItemToList(new cBuildingListItem(QUAD, units[QUAD], list, 0));
+			list->addItemToList(new cBuildingListItem(QUAD, units[QUAD], list, SUBLIST_LIGHTFCTRY));
 		} else {
-			list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE], list, 0));
-			list->addItemToList(new cBuildingListItem(RAIDER, units[RAIDER], list, 0));
-			list->addItemToList(new cBuildingListItem(QUAD, units[QUAD], list, 0));
+			list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE], list, SUBLIST_LIGHTFCTRY));
+			list->addItemToList(new cBuildingListItem(RAIDER, units[RAIDER], list, SUBLIST_LIGHTFCTRY));
+			list->addItemToList(new cBuildingListItem(QUAD, units[QUAD], list, SUBLIST_LIGHTFCTRY));
 		}
-	}
-
-	startX += 27;
-
-	if (listId == LIST_HEAVYFC) {
-        list->setButtonDrawX(startX);
-		list->setButtonIconIdPressed(LIST_BTN_HEAVYFCTRY);
-		list->setButtonIconIdUnpressed(LIST_BTN_HEAVYFCTRY);
 
 		list->addItemToList(new cBuildingListItem(TANK, units[TANK], list, 0));
 		list->addItemToList(new cBuildingListItem(HARVESTER, units[HARVESTER], list, 0));
-	}
-
-	startX += 27;
-
-	if (listId == LIST_ORNI) {
-        list->setButtonDrawX(startX);
-		list->setButtonIconIdPressed(LIST_BTN_HIGHTECH);
-		list->setButtonIconIdUnpressed(LIST_BTN_HIGHTECH);
 
 		list->addItemToList(new cBuildingListItem(CARRYALL, units[CARRYALL], list, 0));
 	}

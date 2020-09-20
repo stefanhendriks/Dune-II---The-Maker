@@ -47,7 +47,6 @@ class cItemBuilder {
 		int timers[MAX_ITEMS];
 
 		int getTimerCap(cBuildingList *list, cBuildingListItem *item);
-		int getBuildTime(cBuildingList *list, cBuildingListItem *item);
 		bool isItemInList(cBuildingListItem *item);
 };
 

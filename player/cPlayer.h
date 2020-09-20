@@ -105,6 +105,10 @@ class cPlayer {
         bool hasWor() const;
         bool hasBarracks() const;
 
+    bool hasAtleastOneStructure(int structureType);
+
+    bool hasEnoughCreditsFor(float requestedAmount);
+
 private:
 		int getRGBColorForHouse(int houseId);
 		int getEmblemBackgroundColorForHouse(int houseId);

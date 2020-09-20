@@ -17,7 +17,6 @@ cUpgradeUtils::~cUpgradeUtils() {
 
 
 bool cUpgradeUtils::canUpgradeList(const cPlayer & thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
-//    cLogger::getInstance()->log(LOG_TRACE, COMP_UPGRADE_LIST, "canUpgradeList", thePlayer.asString());
 	int costToUpgrade = getPriceToUpgradeList(thePlayer, listTypeId, techLevel, currentUpgradeLevelOfList);
 	return costToUpgrade > -1;
 }
@@ -27,13 +26,11 @@ int cUpgradeUtils::getPriceToUpgradeList(const cPlayer & thePlayer, int listType
 
 	cListUpgrade * upgrade = getListUpgradeForList(thePlayer, listTypeId, techLevel, currentUpgradeLevelOfList);
 
-	if (upgrade) {
-		int totalPrice = upgrade->getTotalPrice();
-		delete upgrade; // delete, as it was temporarily created
-		return totalPrice;
-	}
+	if (!upgrade) return -1;
 
-	return -1;
+    int totalPrice = upgrade->getTotalPrice();
+    delete upgrade; // delete, as it was temporarily created
+    return totalPrice;
 }
 
 cListUpgrade * cUpgradeUtils::getListUpgradeForList(const cPlayer & thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
@@ -51,16 +48,14 @@ cListUpgrade * cUpgradeUtils::getListUpgradeForList(const cPlayer & thePlayer, i
 		}
 	}
 
-	if (listTypeId == LIST_LIGHTFC) {
+	if (listTypeId == LIST_UNITS) {
 		if (thePlayer.getHouse() != HARKONNEN) {
 			// upgrade for Quads
 			if (techLevel >= 3 && currentUpgradeLevelOfList < 1) {
 				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(QUAD, units[QUAD], list, 0));
 			}
 		}
-	}
 
-	if (listTypeId == LIST_HEAVYFC) {
 		if (thePlayer.getHouse() == HARKONNEN || thePlayer.getHouse() == ATREIDES) {
 			// upgrade to MCV
 			if (techLevel >= 4 && currentUpgradeLevelOfList < 1) {
@@ -84,9 +79,7 @@ cListUpgrade * cUpgradeUtils::getListUpgradeForList(const cPlayer & thePlayer, i
 				return new cListUpgrade(100, 200, UPGRADE_TWO, new cBuildingListItem(SIEGETANK, units[SIEGETANK], list, 0));
 			}
 		}
-	}
 
-	if (listTypeId == LIST_ORNI) {
 		if (thePlayer.getHouse() != HARKONNEN) {
 			// upgrade for Ornithopter
 			if (techLevel >= 7 && currentUpgradeLevelOfList < 1) {
@@ -95,7 +88,7 @@ cListUpgrade * cUpgradeUtils::getListUpgradeForList(const cPlayer & thePlayer, i
 		}
 	}
 
-	if (listTypeId == LIST_INFANTRY) {
+	if (listTypeId == LIST_FOOT_UNITS) {
 		if (thePlayer.getHouse() == HARKONNEN) {
 			// upgrade for troopers
 			if (techLevel >= 3 && currentUpgradeLevelOfList < 1) {

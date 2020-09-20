@@ -97,35 +97,27 @@ void cSideBar::thinkAvailabilityLists() {
 	cBuildingList * constyardList = getList(LIST_CONSTYARD);
 	assert(constyardList);
 
-	constyardList->setAvailable(m_Player.iStructures[CONSTYARD] > 0);
+	constyardList->setAvailable(m_Player.hasAtleastOneStructure(CONSTYARD));
 
 	// INFANTRY LIST
-	cBuildingList * infantryList = getList(LIST_INFANTRY);
+	cBuildingList * infantryList = getList(LIST_FOOT_UNITS);
 
-	bool hasBarracks = m_Player.hasBarracks();
-	bool hasWor = m_Player.hasWor();
-
-    infantryList->setAvailable(hasBarracks || hasWor);
+    infantryList->setAvailable(m_Player.hasBarracks() || m_Player.hasWor());
 
 	// LIGHTFC LIST
-	cBuildingList * lightfcList = getList(LIST_LIGHTFC);
-	lightfcList->setAvailable(m_Player.iStructures[LIGHTFACTORY] > 0);
-
-	// HEAVYFC LIST
-	cBuildingList * heavyfcList = getList(LIST_HEAVYFC);
-	heavyfcList->setAvailable(m_Player.iStructures[HEAVYFACTORY] > 0);
-
-	// HIGHTECH (ORNI) LIST
-	cBuildingList * orniList = getList(LIST_ORNI);
-	orniList->setAvailable(m_Player.iStructures[HIGHTECH] > 0);
+	cBuildingList * listUnits = getList(LIST_UNITS);
+    listUnits->setAvailable(m_Player.hasAtleastOneStructure(LIGHTFACTORY) ||
+                            m_Player.hasAtleastOneStructure(HEAVYFACTORY) ||
+                            m_Player.hasAtleastOneStructure(HIGHTECH)
+    );
 
 	// PALACE LIST
 	cBuildingList * palaceList = getList(LIST_PALACE);
-	palaceList->setAvailable(m_Player.iStructures[PALACE] > 0);
+	palaceList->setAvailable(m_Player.hasAtleastOneStructure(PALACE));
 
 	// STARPORT LIST
 	cBuildingList * starportList = getList(LIST_STARPORT);
-	starportList->setAvailable(m_Player.iStructures[STARPORT] > 0);
+	starportList->setAvailable(m_Player.hasAtleastOneStructure(STARPORT));
 
 	// when available, check if we accept orders
 	if (starportList->isAvailable()) {
