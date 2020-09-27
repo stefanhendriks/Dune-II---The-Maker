@@ -152,6 +152,13 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string& e
 void cLogger::log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome, int playerId, int houseId) {
 	updateTime();
 
+	if (level == LOG_TRACE) {
+	    if (!DEBUGGING) {
+	        // trace level is only in debug mode
+	        return;
+	    }
+	}
+
 	int diffTime = getTimeInMilisDifference();
 
 	// log line starts with time
