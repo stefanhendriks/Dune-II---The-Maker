@@ -68,20 +68,6 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
         list->setButtonDrawX(startX);
         list->setButtonIconIdPressed(LIST_BTN_INFANTRY);
         list->setButtonIconIdUnpressed(LIST_BTN_INFANTRY);
-
-//		if (house == ATREIDES) {
-//			// add items
-//			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list, 0));
-//		} else if (house == HARKONNEN) {
-//			// add items
-//			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list, 1));
-//		} else if (house == ORDOS) {
-//			// add items , since ordos can have both, it is determined on structure place
-////			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list, 0));
-////			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list, 0));
-//		} else {
-//			// do nothing
-//		}
 	}
 
     startX += 27;
@@ -90,23 +76,6 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 		list->setButtonDrawX(startX);
 		list->setButtonIconIdPressed(LIST_BTN_LIGHTFCTRY);
 		list->setButtonIconIdUnpressed(LIST_BTN_LIGHTFCTRY);
-
-		if (house == ATREIDES) {
-			list->addUnitToList(TRIKE, SUBLIST_LIGHTFCTRY);
-		} else if (house == ORDOS) {
-			list->addUnitToList(RAIDER, SUBLIST_LIGHTFCTRY);
-		} else if (house == HARKONNEN) {
-			list->addUnitToList(QUAD, SUBLIST_LIGHTFCTRY);
-		} else {
-			list->addUnitToList(TRIKE, SUBLIST_LIGHTFCTRY);
-			list->addUnitToList(RAIDER, SUBLIST_LIGHTFCTRY);
-			list->addUnitToList(QUAD, SUBLIST_LIGHTFCTRY);
-		}
-
-		list->addUnitToList(TANK, SUBLIST_HEAVYFCTRY);
-		list->addUnitToList(HARVESTER, SUBLIST_HEAVYFCTRY);
-
-		list->addUnitToList(CARRYALL, SUBLIST_HIGHTECH);
 	}
 
 	startX += 27;

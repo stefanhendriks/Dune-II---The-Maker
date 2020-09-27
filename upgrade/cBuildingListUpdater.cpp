@@ -17,6 +17,8 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 
 	// activate/deactivate any lists if needed
 	cBuildingList *listConstYard = player->getSideBar()->getList(LIST_CONSTYARD);
+    cBuildingList *listFootUnits = player->getSideBar()->getList(LIST_FOOT_UNITS);
+    cBuildingList *listUnits = player->getSideBar()->getList(LIST_UNITS);
 
 	int house = player->getHouse();
 	int techLevel = player->getTechLevel();
@@ -25,6 +27,8 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
     sprintf(msg, "onStructureCreated - for player [%d], structureType [%d], techlevel [%d], house [%d]", player->getId(), structureType, techLevel, house);
     cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureCreated", msg);
 
+	assert(listConstYard);
+	assert(listFootUnits);
 	assert(listConstYard);
 
 	if (structureType == CONSTYARD) {
@@ -123,6 +127,17 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 			listConstYard->addStructureToList(STARPORT, 0);
 		}
 
+        if (house == ATREIDES) {
+            listUnits->addUnitToList(TRIKE, SUBLIST_LIGHTFCTRY);
+        } else if (house == ORDOS) {
+            listUnits->addUnitToList(RAIDER, SUBLIST_LIGHTFCTRY);
+        } else if (house == HARKONNEN) {
+            listUnits->addUnitToList(QUAD, SUBLIST_LIGHTFCTRY);
+        } else {
+            listUnits->addUnitToList(TRIKE, SUBLIST_LIGHTFCTRY);
+            listUnits->addUnitToList(RAIDER, SUBLIST_LIGHTFCTRY);
+            listUnits->addUnitToList(QUAD, SUBLIST_LIGHTFCTRY);
+        }
 	}
 
 	// Heavyfactory
@@ -132,12 +147,14 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 			cLogger::getInstance()->logCommentLine("onStructureCreated - added IX to list");
 			listConstYard->addStructureToList(IX, 0);
 		}
+
+        listUnits->addUnitToList(TANK, SUBLIST_HEAVYFCTRY);
+        listUnits->addUnitToList(HARVESTER, SUBLIST_HEAVYFCTRY);
 	}
 
 	///////////////////////////////////
 	// ADJUSTMENTS TO INFANTRY LIST
 	///////////////////////////////////
-    cBuildingList *listFootUnits = player->getSideBar()->getList(LIST_FOOT_UNITS);
 	if (structureType == BARRACKS) {
         listFootUnits->addUnitToList(SOLDIER, SUBLIST_INFANTRY);
     } else if (structureType == WOR) {
@@ -147,11 +164,9 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 	///////////////////////////////////
 	// ADJUSTMENTS TO HEAVY FACTORY LIST
 	///////////////////////////////////
-    cBuildingList *listUnits = player->getSideBar()->getList(LIST_UNITS);
 
 	// Heavyfactory
-	if (structureType == IX)
-	{
+	if (structureType == IX) {
 		if (techLevel >= 7) {
 			if (player->getHouse() == ATREIDES) {
                 listUnits->addUnitToList(SONICTANK, SUBLIST_HEAVYFCTRY);
@@ -162,6 +177,10 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 			}
 		}
 	}
+
+	if (structureType == HIGHTECH) {
+        listUnits->addUnitToList(CARRYALL, SUBLIST_HIGHTECH);
+    }
 
 	// do something
 	cLogger::getInstance()->logCommentLine("onStructureCreated - end");
