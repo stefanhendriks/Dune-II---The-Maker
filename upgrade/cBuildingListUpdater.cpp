@@ -14,9 +14,6 @@ cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer) {
 
 void cBuildingListUpdater::onStructureCreated(int structureType) {
 	cLogger::getInstance()->logCommentLine("onStructureCreated - begin");
-    char msg[255];
-    sprintf(msg, "onStructureCreated - for player [%d], structureType [%d]", player->getId(), structureType);
-    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureCreated", msg);
 
 	// activate/deactivate any lists if needed
 	cBuildingList *listConstYard = player->getSideBar()->getList(LIST_CONSTYARD);
@@ -24,7 +21,37 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 	int house = player->getHouse();
 	int techLevel = player->getTechLevel();
 
+    char msg[255];
+    sprintf(msg, "onStructureCreated - for player [%d], structureType [%d], techlevel [%d], house [%d]", player->getId(), structureType, techLevel, house);
+    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureCreated", msg);
+
 	assert(listConstYard);
+
+	if (structureType == CONSTYARD) {
+        // add items
+        listConstYard->addStructureToList(SLAB1, 0);
+        cLogger::getInstance()->logCommentLine("onStructureCreated - added SLAB1 to list");
+
+        if (techLevel >= 2) {
+            if (house == ATREIDES || house == ORDOS) {
+                listConstYard->addStructureToList(BARRACKS, 0);
+                cLogger::getInstance()->logCommentLine("onStructureCreated - added BARRACKS to list");
+            }
+            if (house == HARKONNEN) {
+                listConstYard->addStructureToList(WOR, 0);
+                cLogger::getInstance()->logCommentLine("onStructureCreated - added WOR to list");
+            }
+        }
+
+        if (techLevel >= 4) {
+            //list->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4])); // only available after upgrading
+            listConstYard->addStructureToList(WALL, 0);
+            cLogger::getInstance()->logCommentLine("onStructureCreated - added WALL to list");
+        }
+
+        listConstYard->addStructureToList(WINDTRAP, 0);
+        cLogger::getInstance()->logCommentLine("onStructureCreated - added WINDTRAP to list");
+    }
 
 	if (structureType == WINDTRAP) {
 		listConstYard->addStructureToList(REFINERY, 0);

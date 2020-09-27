@@ -29,7 +29,7 @@ class cBuildingList {
         void addUnitToList(int unitType, int subList);
 
         // generic way, ie by upgradeBuilder
-        void addItemToList(cBuildingListItem * item);
+        bool addItemToList(cBuildingListItem * item);
 
 		bool isOverButton(int x, int y);
 		void removeAllItems();
@@ -65,7 +65,10 @@ class cBuildingList {
 
 		int getType() { return typeOfList; }
 		int getUpgradeLevel() { return upgradeLevel; }
-	protected:
+
+    void increaseUpgradeLevel();
+
+protected:
 		// nothing
 
 	private:

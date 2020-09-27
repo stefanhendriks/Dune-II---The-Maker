@@ -58,25 +58,6 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 		list->setButtonDrawX(startX);
 		list->setButtonIconIdPressed(LIST_BTN_CONSTYARD);
 		list->setButtonIconIdUnpressed(LIST_BTN_CONSTYARD);
-
-		// add items
-		list->addStructureToList(SLAB1, 0);
-
-		if (techlevel >= 2) {
-			if (house == ATREIDES || house == ORDOS) {
-				list->addStructureToList(BARRACKS, 0);
-			}
-			if (house == HARKONNEN) {
-				list->addStructureToList(WOR, 0);
-			}
-		}
-
-		if (techlevel >= 4) {
-			//list->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4])); // only available after upgrading
-			list->addStructureToList(WALL, 0);
-		}
-
-		list->addStructureToList(WINDTRAP,0);
 	}
 
 	startX += 27;

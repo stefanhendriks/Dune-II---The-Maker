@@ -86,20 +86,19 @@ void cBuildingList::addUnitToList(int unitType, int subList) {
     addItemToList(new cBuildingListItem(unitType, units[unitType], subList));
 }
 
-void cBuildingList::addItemToList(cBuildingListItem * item) {
+bool cBuildingList::addItemToList(cBuildingListItem * item) {
 	assert(item);
 
 	if (isItemInList(item)) {
 		logbook("Will not add, item is already in list.");
 		// item is already in list, do not add
-		delete item; // delete it
-		return;
+		return false;
 	}
 
 	int slot = getFreeSlot();
 	if (slot < 0 ) {
 		logbook("Failed to add icon to cBuildingList, no free slot left in list");
-		assert(false);
+        return false;
 	}
 
 	// add
@@ -110,6 +109,7 @@ void cBuildingList::addItemToList(cBuildingListItem * item) {
 //	char msg[355];
 //	sprintf(msg, "Icon added with id [%d] added to cBuilding list, put in slot[%d], set maxItems to [%d]", item->getBuildId(), slot, maxItems);
 //	logbook(msg);
+    return true;
 }
 
 /**
@@ -183,4 +183,8 @@ cBuildingListItem * cBuildingList::getItemToPlace() {
 		}
 	}
 	return NULL;
+}
+
+void cBuildingList::increaseUpgradeLevel() {
+    this->upgradeLevel++;
 }

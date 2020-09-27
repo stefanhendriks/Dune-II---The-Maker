@@ -1513,6 +1513,12 @@ void cGame::setup_skirmish()
     if (MOUSE_WITHIN_RECT(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
         textDrawer.drawTextBottomRight(makecol(255, 0, 0), "START");
 
+        // this needs to be before setup_players :/
+        iMission=9; // high tech level (TODO: make this customizable)
+
+        game.setup_players();
+        assert(player[HUMAN].getItemBuilder() != NULL);
+
         // START
         if ((cMouse::isLeftButtonClicked() && iSkirmishMap > -1)) {
             cCellCalculator *cellCalculator = new cCellCalculator(&map);
@@ -1607,7 +1613,7 @@ void cGame::setup_skirmish()
                 player[p].focus_cell = iStartPositions[p];
 
                 // Set map position
-                if (p == 0) {
+                if (p == HUMAN) {
                     mapCamera->centerAndJumpViewPortToCell(player[p].focus_cell);
                 }
 
@@ -1623,8 +1629,7 @@ void cGame::setup_skirmish()
                 int u=0;
 
                 // create units
-                while (u < aiplayer[p].iUnits)
-                {
+                while (u < aiplayer[p].iUnits) {
                     int iX=iCellGiveX(player[p].focus_cell);
                     int iY=iCellGiveY(player[p].focus_cell);
                     int iType=rnd(12);
@@ -1654,8 +1659,7 @@ void cGame::setup_skirmish()
                     }
 
                     // ordos
-                    if (player[p].getHouse() == ORDOS)
-                    {
+                    if (player[p].getHouse() == ORDOS) {
                         if (iType == DEVASTATOR || iType == SONICTANK) {
                             iType = DEVIATOR;
                         }
@@ -1666,8 +1670,7 @@ void cGame::setup_skirmish()
                     }
 
                     // harkonnen
-                    if (player[p].getHouse() == HARKONNEN)
-                    {
+                    if (player[p].getHouse() == HARKONNEN) {
                         if (iType == DEVIATOR || iType == SONICTANK) {
                             iType = DEVASTATOR;
                         }
@@ -1692,22 +1695,19 @@ void cGame::setup_skirmish()
                         u++;
                     }
                 }
+
                 char msg[255];
                 sprintf(msg,"Wants %d amount of units; amount created %d", aiplayer[p].iUnits, u);
                 cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, iHouse);
             }
 
-            // TODO: spawn a few worms
-            iHouse=player[HUMAN].getHouse();
-            iMission=9; // high tech level (TODO: make this customizable)
-            state = GAME_PLAYING;
-            drawManager->getMessageDrawer()->initCombatPosition();
-
-            game.setup_players();
-            assert(player[HUMAN].getItemBuilder() != NULL);
-
             bFadeOut=true;
             playMusicByType(MUSIC_PEACE);
+
+            // TODO: spawn a few worms
+            iHouse=player[HUMAN].getHouse();
+            state = GAME_PLAYING;
+            drawManager->getMessageDrawer()->initCombatPosition();
 
             // delete cell calculator
             delete cellCalculator;
