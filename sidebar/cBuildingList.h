@@ -23,9 +23,13 @@ class cBuildingList {
 		cBuildingListItem * getItem(int position); 	// return building list item in array at position.
 		cBuildingListItem * getItemToPlace();		// return building list item with placeIt = true.
 
-		// add item to the list
-		void addItemToList(cBuildingListItem * item);
 		void removeItemFromList(int position);
+
+        void addStructureToList(int structureType, int subList);
+        void addUnitToList(int unitType, int subList);
+
+        // generic way, ie by upgradeBuilder
+        void addItemToList(cBuildingListItem * item);
 
 		bool isOverButton(int x, int y);
 		void removeAllItems();
@@ -82,6 +86,7 @@ class cBuildingList {
 		int getFreeSlot();
 		int typeOfList;
 		int upgradeLevel;
+
 };
 
 #endif

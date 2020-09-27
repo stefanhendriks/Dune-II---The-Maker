@@ -42,7 +42,7 @@ void cSideBar::think() {
 }
 
 void cSideBar::thinkUpgradeButton() {
-	bool isOverUpgradeButton = upgradeUtils->isMouseOverUpgradeButton(mouse_x, mouse_y);
+	bool isOverUpgradeButton = upgradeUtils->isMouseOverUpgradeButton();
 
 	if (!isOverUpgradeButton) return;
 
