@@ -12,8 +12,8 @@ class cBuildingListItem {
 
 public:
 	// constructors
-	cBuildingListItem(int theID, s_Structures entry, cBuildingList* list, int subList);
-	cBuildingListItem(int theID, s_UnitP entry, cBuildingList* list, int subList);
+    cBuildingListItem(int theID, s_Structures entry, int subList);
+	cBuildingListItem(int theID, s_UnitP entry, int subList);
 
 
 	// gettters
@@ -54,6 +54,7 @@ public:
 	void decreaseTimesOrdered() { timesOrdered--; }
 	void setSlotId(int value) { slotId = value; }
 	void setPlaceIt(bool value) { placeIt = value; }
+	void setList(cBuildingList *theList) { myList = theList; }
 
 	cBuildingList *getList() { return myList; }	// returns the list it belongs to
 
@@ -83,6 +84,9 @@ private:
 	int subList;            // subList id's allow us to distinguish built items within the same buildingList.
 
 	cBuildingList *myList;
+
+    cBuildingListItem(int theID, s_Structures entry, cBuildingList* list, int subList);
+    cBuildingListItem(int theID, s_UnitP entry, cBuildingList* list, int subList);
 };
 
 #endif

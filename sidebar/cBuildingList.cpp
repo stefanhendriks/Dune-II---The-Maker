@@ -78,12 +78,21 @@ bool cBuildingList::hasItemType(int itemTypeId) {
 }
 
 
+void cBuildingList::addStructureToList(int structureType, int subList) {
+    addItemToList(new cBuildingListItem(structureType, structures[structureType], subList));
+}
+
+void cBuildingList::addUnitToList(int unitType, int subList) {
+    addItemToList(new cBuildingListItem(unitType, units[unitType], subList));
+}
+
 void cBuildingList::addItemToList(cBuildingListItem * item) {
 	assert(item);
 
 	if (isItemInList(item)) {
-		logbook("Failed to add icon to cBuildingList, item is already in list.");
+		logbook("Will not add, item is already in list.");
 		// item is already in list, do not add
+		delete item; // delete it
 		return;
 	}
 
@@ -91,12 +100,12 @@ void cBuildingList::addItemToList(cBuildingListItem * item) {
 	if (slot < 0 ) {
 		logbook("Failed to add icon to cBuildingList, no free slot left in list");
 		assert(false);
-		return;
 	}
 
 	// add
 	items[slot] = item;
 	item->setSlotId(slot);
+	item->setList(this);
 	maxItems = slot;
 //	char msg[355];
 //	sprintf(msg, "Icon added with id [%d] added to cBuilding list, put in slot[%d], set maxItems to [%d]", item->getBuildId(), slot, maxItems);

@@ -12,8 +12,11 @@ cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer) {
 	player = thePlayer;
 }
 
-void cBuildingListUpdater::updateStructureCreated(int structureType) {
-	cLogger::getInstance()->logCommentLine("updateStructureCreated - begin");
+void cBuildingListUpdater::onStructureCreated(int structureType) {
+	cLogger::getInstance()->logCommentLine("onStructureCreated - begin");
+    char msg[255];
+    sprintf(msg, "onStructureCreated - for player [%d], structureType [%d]", player->getId(), structureType);
+    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureCreated", msg);
 
 	// activate/deactivate any lists if needed
 	cBuildingList *listConstYard = player->getSideBar()->getList(LIST_CONSTYARD);
@@ -24,73 +27,73 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 	assert(listConstYard);
 
 	if (structureType == WINDTRAP) {
-		listConstYard->addItemToList(new cBuildingListItem(REFINERY, structures[REFINERY], listConstYard, 0));
-		cLogger::getInstance()->logCommentLine("updateStructureCreated - added REFINARY to list");
+		listConstYard->addStructureToList(REFINERY, 0);
+		cLogger::getInstance()->logCommentLine("onStructureCreated - added REFINARY to list");
 	}
 
 	if (structureType == REFINERY) {
 		if (techLevel >= 2) {
-			cLogger::getInstance()->logCommentLine("updateStructureCreated - added LIGHTFACTORY to list");
-			listConstYard->addItemToList(new cBuildingListItem(LIGHTFACTORY, structures[LIGHTFACTORY], listConstYard, 0));
+			cLogger::getInstance()->logCommentLine("onStructureCreated - added LIGHTFACTORY to list");
+			listConstYard->addStructureToList(LIGHTFACTORY,0);
 
 			if (house == ATREIDES ||
 				house == ORDOS ||
 				house == FREMEN) {
-				cLogger::getInstance()->logCommentLine("updateStructureCreated - added BARRACKS to list");
-				listConstYard->addItemToList(new cBuildingListItem(BARRACKS, structures[BARRACKS], listConstYard, 0));
+				cLogger::getInstance()->logCommentLine("onStructureCreated - added BARRACKS to list");
+				listConstYard->addStructureToList(BARRACKS, 0);
 
 				if (house == ORDOS && techLevel >= 5) {
-					cLogger::getInstance()->logCommentLine("updateStructureCreated - added WOR to list");
-					listConstYard->addItemToList(new cBuildingListItem(WOR, structures[WOR], listConstYard, 0));
+					cLogger::getInstance()->logCommentLine("onStructureCreated - added WOR to list");
+					listConstYard->addStructureToList(WOR, 0);
 				}
 			} else if (
 					house == HARKONNEN ||
 					house == SARDAUKAR ||
 					house == FREMEN ||
 					house == MERCENARY) {
-				cLogger::getInstance()->logCommentLine("updateStructureCreated - added WOR to list");
-				listConstYard->addItemToList(new cBuildingListItem(WOR, structures[WOR], listConstYard, 0));
+				cLogger::getInstance()->logCommentLine("onStructureCreated - added WOR to list");
+				listConstYard->addStructureToList(WOR, 0);
 			}
 		}
 
 		if (techLevel >= 3) {
-			listConstYard->addItemToList(new cBuildingListItem(RADAR, structures[RADAR], listConstYard, 0));
+			listConstYard->addStructureToList(RADAR, 0);
 		}
 
-		cLogger::getInstance()->logCommentLine("updateStructureCreated - added SILO to list");
-		listConstYard->addItemToList(new cBuildingListItem(SILO, structures[SILO], listConstYard, 0));
+		cLogger::getInstance()->logCommentLine("onStructureCreated - added SILO to list");
+		listConstYard->addStructureToList(SILO, 0);
 	}
 
 
 	if (structureType == RADAR) {
 		if (techLevel >= 5) {
-			cLogger::getInstance()->logCommentLine("updateStructureCreated - added TURRET to list");
-			listConstYard->addItemToList(new cBuildingListItem(TURRET, structures[TURRET], listConstYard, 0));
+			cLogger::getInstance()->logCommentLine("onStructureCreated - added TURRET to list");
+			listConstYard->addStructureToList(TURRET, 0);
 		}
 
 		if (techLevel >= 8) {
-			cLogger::getInstance()->logCommentLine("updateStructureCreated - added PALACE to list");
-			listConstYard->addItemToList(new cBuildingListItem(PALACE, structures[PALACE], listConstYard, 0));
+			cLogger::getInstance()->logCommentLine("onStructureCreated - added PALACE to list");
+			listConstYard->addStructureToList(PALACE, 0);
 		}
 	}
 
 	if (structureType == LIGHTFACTORY)
 	{
 		if (techLevel >=4) {
-			cLogger::getInstance()->logCommentLine("updateStructureCreated - added HEAVYFACTORY to list");
-			listConstYard->addItemToList(new cBuildingListItem(HEAVYFACTORY, structures[HEAVYFACTORY], listConstYard, 0));
+			cLogger::getInstance()->logCommentLine("onStructureCreated - added HEAVYFACTORY to list");
+			listConstYard->addStructureToList(HEAVYFACTORY, 0);
 		}
 
 		if (techLevel >=5) {
-			cLogger::getInstance()->logCommentLine("updateStructureCreated - added HIGHTECH to list");
-			cLogger::getInstance()->logCommentLine("updateStructureCreated - added REPAIR to list");
-			listConstYard->addItemToList(new cBuildingListItem(HIGHTECH, structures[HIGHTECH], listConstYard, 0));
-			listConstYard->addItemToList(new cBuildingListItem(REPAIR, structures[REPAIR], listConstYard, 0));
+			cLogger::getInstance()->logCommentLine("onStructureCreated - added HIGHTECH to list");
+			cLogger::getInstance()->logCommentLine("onStructureCreated - added REPAIR to list");
+			listConstYard->addStructureToList(HIGHTECH, 0);
+			listConstYard->addStructureToList(REPAIR, 0);
 		}
 
 		if (techLevel >= 6) {
-			cLogger::getInstance()->logCommentLine("updateStructureCreated - added STARPORT to list");
-			listConstYard->addItemToList(new cBuildingListItem(STARPORT, structures[STARPORT], listConstYard, 0));
+			cLogger::getInstance()->logCommentLine("onStructureCreated - added STARPORT to list");
+			listConstYard->addStructureToList(STARPORT, 0);
 		}
 
 	}
@@ -99,8 +102,8 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 	if (structureType == HEAVYFACTORY)
 	{
 		if (techLevel >= 7) {
-			cLogger::getInstance()->logCommentLine("updateStructureCreated - added IX to list");
-			listConstYard->addItemToList(new cBuildingListItem(IX, structures[IX], listConstYard, 0));
+			cLogger::getInstance()->logCommentLine("onStructureCreated - added IX to list");
+			listConstYard->addStructureToList(IX, 0);
 		}
 	}
 
@@ -109,9 +112,9 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 	///////////////////////////////////
     cBuildingList *listFootUnits = player->getSideBar()->getList(LIST_FOOT_UNITS);
 	if (structureType == BARRACKS) {
-        listFootUnits->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], listFootUnits, 0));
+        listFootUnits->addUnitToList(SOLDIER, SUBLIST_INFANTRY);
     } else if (structureType == WOR) {
-        listFootUnits->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], listFootUnits, 1));
+        listFootUnits->addUnitToList(TROOPER, SUBLIST_TROOPERS);
     }
 
 	///////////////////////////////////
@@ -124,17 +127,17 @@ void cBuildingListUpdater::updateStructureCreated(int structureType) {
 	{
 		if (techLevel >= 7) {
 			if (player->getHouse() == ATREIDES) {
-                listUnits->addItemToList(new cBuildingListItem(SONICTANK, units[SONICTANK], listUnits, 0));
+                listUnits->addUnitToList(SONICTANK, SUBLIST_HEAVYFCTRY);
 			} else if (player->getHouse() == HARKONNEN) {
-                listUnits->addItemToList(new cBuildingListItem(DEVASTATOR, units[DEVASTATOR], listUnits, 0));
+                listUnits->addUnitToList(DEVASTATOR, SUBLIST_HEAVYFCTRY);
 			} else if (player->getHouse() == ORDOS) {
-                listUnits->addItemToList(new cBuildingListItem(DEVIATOR, units[DEVIATOR], listUnits, 0));
+                listUnits->addUnitToList(DEVIATOR, SUBLIST_HEAVYFCTRY);
 			}
 		}
 	}
 
 	// do something
-	cLogger::getInstance()->logCommentLine("updateStructureCreated - end");
+	cLogger::getInstance()->logCommentLine("onStructureCreated - end");
 }
 
 // structure destroyed..
@@ -166,15 +169,15 @@ void cBuildingListUpdater::updateUpgradeCompleted(cBuildingList *listToUpgrade) 
 
 	if (listToUpgrade->getType() == LIST_CONSTYARD) {
 		if (listToUpgrade->getUpgradeLevel() == 1) {
-			listToUpgrade->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4], listToUpgrade, 0));
+			listToUpgrade->addStructureToList(SLAB4, 0);
 		} else if (listToUpgrade->getUpgradeLevel() == 2) {
-			listToUpgrade->addItemToList(new cBuildingListItem(RTURRET, structures[RTURRET], listToUpgrade, 0));
+			listToUpgrade->addStructureToList(RTURRET, 0);
 		}
 	}
 
 	if (listToUpgrade->getType() == LIST_UNITS) {
 		if (listToUpgrade->getUpgradeLevel() == 1) {
-			listToUpgrade->addItemToList(new cBuildingListItem(QUAD, units[QUAD], listToUpgrade, SUBLIST_LIGHTFCTRY));
+			listToUpgrade->addUnitToList(QUAD, SUBLIST_LIGHTFCTRY);
 		}
 	}
 

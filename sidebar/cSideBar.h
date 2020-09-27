@@ -30,6 +30,8 @@ class cUpgradeUtils;
 #define SUBLIST_LIGHTFCTRY 0 // quad, trike, etc
 #define SUBLIST_HEAVYFCTRY 1 // tanks
 #define SUBLIST_HIGHTECH   2 // orni, carry-all
+#define SUBLIST_INFANTRY   0 // soldier, infantry
+#define SUBLIST_TROOPERS   1 // trooper, troopers
 
 /**
  * Basically a container:

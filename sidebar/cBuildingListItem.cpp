@@ -2,7 +2,6 @@
 
 cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingList *list, int subList) {
 	assert(theID >= 0);
-	assert(list);
 	ID = theID;
 	cost = entry.cost;
 	icon = entry.icon;
@@ -21,9 +20,11 @@ cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingLis
 	placeIt = false;
 }
 
+cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
+}
+
 cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *list, int subList) {
 	assert(theID >= 0);
-	assert(list);
 	ID = theID;
 	cost = entry.cost;
 	icon = entry.icon;
@@ -40,6 +41,9 @@ cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *li
 		creditsPerProgressTime = (float)entry.cost / (float)entry.build_time;
 	}
 	placeIt = false;
+}
+
+cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
 }
 
 bool cBuildingListItem::canPay() {

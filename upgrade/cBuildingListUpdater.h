@@ -16,7 +16,7 @@ class cBuildingListUpdater {
 		// when structure is destroyed, etc
 
 		// structure created and placed (ie, building windtrap, gives refinery in list, etc)
-		void updateStructureCreated(int structureType);
+		void onStructureCreated(int structureType);
 
 		// structure destroyed..
 		void updateStructureDestroyed(int structureType);

@@ -19,7 +19,7 @@ class cUpgradeUtils {
 
 		bool canPlayerPayForUpgradeForList(const cPlayer & thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList);
 
-		bool isMouseOverUpgradeButton(int mouseX, int mouseY);
+		bool isMouseOverUpgradeButton();
 
 		bool isUpgradeApplicableForPlayerAndList(const cPlayer & thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList);
 

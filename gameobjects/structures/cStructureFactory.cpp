@@ -143,9 +143,11 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
     // calculate actual health
     float fHealth = hp * fPercent;
 
-    char msg2[255];
-    sprintf(msg2, "Structure with id [%d] has [%d] hp , fhealth is [%d]", iStructureType, hp, fHealth);
-    logbook(msg2);
+    if (DEBUGGING) {
+        char msg2[255];
+        sprintf(msg2, "Structure with id [%d] has [%d] hp , fhealth is [%f]", iStructureType, hp, fHealth);
+        logbook(msg2);
+    }
 
     int structureSize = structures[iStructureType].bmp_width * structures[iStructureType].bmp_height;
 
@@ -173,6 +175,13 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	if (iStructureType == REFINERY) {
 		REINFORCE(iPlayer, HARVESTER, iCell+2, iCell+2);
 	}
+
+    // handle update
+    cPlayer * pPlayer = &player[iPlayer];
+    cBuildingListUpdater * buildingListUpdater = pPlayer->getBuildingListUpdater();
+    if (buildingListUpdater) {
+        buildingListUpdater->onStructureCreated(iStructureType);
+    }
 
     return str;
 }
