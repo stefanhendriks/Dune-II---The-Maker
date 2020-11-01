@@ -32,8 +32,6 @@ public:
 
 	void deleteStructureInstance(cAbstractStructure *structure);
 
-	cAbstractStructure *createStructureInstance(int type);
-
 	cAbstractStructure *createStructure(int iCell, int iStructureType, int iPlayer, int iPercent);
 	cAbstractStructure *createStructure(int iCell, int iStructureType, int iPlayer);
 
@@ -49,6 +47,9 @@ public:
 	void updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(int iCell, int iStructureType, int iPlayer);
 
 	int getSlabStatus(int iCell, int iStructureType, int iUnitIDToIgnore);
+
+private:
+    cAbstractStructure *createStructureInstance(int type);
 
 };
 #endif

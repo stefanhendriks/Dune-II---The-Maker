@@ -11,7 +11,18 @@
 // what type of thing do we build?
 // a unit/structure of something special (super weapon)
 enum eBuildType {
-	STRUCTURE, UNIT, SPECIAL
+	STRUCTURE,
+	UNIT,
+	SPECIAL
+};
+
+// the BuildingListItemState
+enum eBuildingListItemState {
+	AVAILABLE,
+	REQUIRES_UPGRADE,
+	UPGRADING,
+	BUILDING,
+	UNAVAILABLE
 };
 
 #endif /* EBUILDTYPE_H_ */

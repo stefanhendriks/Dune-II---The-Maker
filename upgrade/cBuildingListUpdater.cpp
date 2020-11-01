@@ -187,12 +187,19 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 }
 
 // structure destroyed..
-void cBuildingListUpdater::updateStructureDestroyed(int structureType) {
-	cLogger::getInstance()->logCommentLine("updateStructureDestroyed - begin");
+void cBuildingListUpdater::onStructureDestroyed(int structureType) {
+	cLogger::getInstance()->logCommentLine("onStructureDestroyed - begin");
 
 	// do something
+    int house = player->getHouse();
+    int techLevel = player->getTechLevel();
 
-	cLogger::getInstance()->logCommentLine("updateStructureDestroyed - end");
+    char msg[255];
+    sprintf(msg, "onStructureDestroyed - for player [%d], structureType [%d], techlevel [%d], house [%d]", player->getId(), structureType, techLevel, house);
+    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureDestroyed", msg);
+
+
+    cLogger::getInstance()->logCommentLine("onStructureDestroyed - end");
 }
 
 

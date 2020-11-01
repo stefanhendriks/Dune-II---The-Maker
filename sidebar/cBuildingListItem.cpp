@@ -8,7 +8,7 @@ cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingLis
 	totalBuildTime = entry.build_time;
 	type = STRUCTURE;
 	progress = 0;
-	available = true;
+	state = AVAILABLE;
 	building = false;
 	myList = list;
 	timesToBuild = 0;
@@ -31,7 +31,7 @@ cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *li
 	totalBuildTime = entry.build_time;
 	type = UNIT;
 	progress = 0;
-	available = true;
+	state = AVAILABLE;
 	building = false;
 	myList = list;
 	timesToBuild = 0;
