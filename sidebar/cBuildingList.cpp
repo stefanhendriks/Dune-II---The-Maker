@@ -78,6 +78,7 @@ bool cBuildingList::hasItemType(int itemTypeId) {
 }
 
 
+
 void cBuildingList::addStructureToList(int structureType, int subList) {
     addItemToList(new cBuildingListItem(structureType, structures[structureType], subList));
 }

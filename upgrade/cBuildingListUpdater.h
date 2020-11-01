@@ -19,7 +19,7 @@ class cBuildingListUpdater {
 		void onStructureCreated(int structureType);
 
 		// structure destroyed..
-		void updateStructureDestroyed(int structureType);
+		void onStructureDestroyed(int structureType);
 
 		// upgrade completed, like add 4slab
 		void updateUpgradeCompleted(cBuildingList *listToUpgrade);

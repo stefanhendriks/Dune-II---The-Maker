@@ -40,41 +40,15 @@ cAbstractStructure *cStructureFactory::createStructureInstance(int type) {
 }
 
 void cStructureFactory::deleteStructureInstance(cAbstractStructure *structure) {
-	// delete memory that was aquired
-	/*
-    if (structure->getType() == CONSTYARD)
-        delete (cConstYard *)structure;
-    else if (structure->getType() == STARPORT)
-        delete (cStarPort *)structure;
-    else if (structure->getType() == WINDTRAP)
-        delete (cWindTrap *)structure;
-    else if (structure->getType() == SILO)
-        delete (cSpiceSilo *)structure;
-    else if (structure->getType() == RADAR)
-        delete (cOutPost *)structure;
-    else if (structure->getType() == HIGHTECH)
-        delete (cHighTech *)structure;
-    else if (structure->getType() == LIGHTFACTORY)
-        delete (cLightFactory *)structure;
-    else if (structure->getType() == HEAVYFACTORY)
-        delete (cHeavyFactory *)structure;
-    else if (structure->getType() == PALACE)
-        delete (cPalace *)structure;
-    else if (structure->getType() == TURRET)
-        delete (cGunTurret *)structure;
-    else if (structure->getType() == RTURRET)
-        delete (cRocketTurret *)structure;
-    else if (structure->getType() == REPAIR)
-        delete (cRepairFacility *)structure;
-    else if (structure->getType() == BARRACKS)
-        delete (cBarracks *)structure;
-    else if (structure->getType() == WOR)
-        delete (cWor *)structure;
-    else if (structure->getType() == IX)
-        delete (cIx *)structure;
-    else
-		*/
-        delete structure;
+    // notify building list updater
+    cPlayer * pPlayer = &player[structure->getPlayerId()];
+    cBuildingListUpdater * buildingListUpdater = pPlayer->getBuildingListUpdater();
+    if (buildingListUpdater) {
+        buildingListUpdater->onStructureDestroyed(structure->getStructureId());
+    }
+
+    // delete memory acquired
+    delete structure;
 }
 
 
