@@ -20,7 +20,7 @@ class cBuildingList {
 		cBuildingList(int theId);
 		~cBuildingList();
 
-		cBuildingListItem * getItem(int position); 	// return building list item in array at position.
+		cBuildingListItem * getItem(int i); 	// return building list item in array at position.
 		cBuildingListItem * getItemToPlace();		// return building list item with placeIt = true.
 
 		void removeItemFromList(int position);
