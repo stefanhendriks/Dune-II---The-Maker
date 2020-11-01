@@ -12,6 +12,7 @@ class cBuildingListDrawer {
 
 public:
 	cBuildingListDrawer();
+	~cBuildingListDrawer();
 
 	void drawList(cBuildingList *list, int listIDToDraw);
 	void drawButton(cBuildingList *list, bool pressed);
@@ -33,6 +34,7 @@ private:
 
 	// the list to draw
 	cBuildingList *list;
+	cTextDrawer *textDrawer;
 };
 
 #endif /* CBUILDINGLISTDRAWER_H_ */

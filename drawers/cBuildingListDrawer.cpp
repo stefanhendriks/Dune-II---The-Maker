@@ -1,14 +1,11 @@
-/*
- * cBuildingListDrawer.cpp
- *
- *  Created on: Aug 1, 2009
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
-
 cBuildingListDrawer::cBuildingListDrawer() {
+    textDrawer = new cTextDrawer(game_font);
+}
+
+cBuildingListDrawer::~cBuildingListDrawer() {
+    delete textDrawer;
 }
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw) {
@@ -41,16 +38,19 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 	int x = list->getButtonDrawX();
 	int y = list->getButtonDrawY();
 	int id = list->getButtonIconIdUnpressed();
-	bool available = list->isAvailable();
 
 	if (pressed) {
 		id = list->getButtonIconIdPressed();
 	}
 
-	assert(id > -1);
+	if (id < 0) {
+	    // this is not good
+	    logbook("ERROR UNABLE TO DRAW LIST BECAUSE ID IS NOT VALID!?");
+	    return;
+	}
 
-	int width = ((BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat)->w;
-	int height = ((BITMAP *)gfxinter[BTN_INFANTRY_PRESSED].dat)->h;
+	int width = ((BITMAP *)gfxinter[id].dat)->w;
+	int height = ((BITMAP *)gfxinter[id].dat)->h;
 
     // clear
 	draw_sprite(bmp_screen, (BITMAP *)gfxinter[list->getButtonIconIdUnpressed()].dat, x, y);		// draw pressed button version (unpressed == default in gui)
@@ -59,7 +59,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
     set_trans_blender(0,0,0,128);
 	draw_sprite(bmp_screen, (BITMAP *)gfxinter[id].dat, x, y);
 
-    if (!available) {
+    if (!list->isAvailable()) {
     	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 96);
     }
 
@@ -114,6 +114,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 			drawStructureSize(item->getBuildId(), iDrawX, iDrawY);
 		}
 
+		// asumes drawing for human player
 		bool cannotPayIt = item->getBuildCost() > player[HUMAN].credits;
 
 		// when this item is being built.
@@ -210,8 +211,11 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 			}
 
 			// draw
-			alfont_textprintf(bmp_screen, game_font, textX + 1,textY + 1, makecol(0,0,0), "%d", amountToShow);
-			alfont_textprintf(bmp_screen, game_font, textX,textY, makecol(255,255,255), "%d", amountToShow);
+			char msg[10];
+			sprintf(msg, "%d", amountToShow);
+            textDrawer->drawText(textX, textY, msg);
+//			alfont_textprintf(bmp_screen, game_font, textX + 1,textY + 1, makecol(0,0,0), "%d", amountToShow);
+//			alfont_textprintf(bmp_screen, game_font, textX,textY, makecol(255,255,255), "%d", amountToShow);
 		}
 
 		// draw rectangle when mouse hovers over icon
@@ -230,11 +234,14 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 				iColor = makecol(0, game.fade_select, 0);
 			}
 
+			// TODO: Sardaukar?
+
 			rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), iColor);
 			rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, iColor);
 		}
 
 
+		// update coordinates, 3 icons in a row
 		if (rowNr < 2) {
             iDrawX+=66;
             rowNr++;
