@@ -30,10 +30,10 @@ cBuildingList::~cBuildingList() {
 	acceptsOrders = false;
 }
 
-cBuildingListItem * cBuildingList::getItem(int position) {
-	assert(position > -1);
-	assert(position < MAX_ICONS);
-	return items[position];
+cBuildingListItem * cBuildingList::getItem(int i) {
+    if (i < 0) return nullptr;
+    if (i >= MAX_ICONS) return nullptr;
+	return items[i];
 }
 
 /**
@@ -76,8 +76,6 @@ bool cBuildingList::hasItemType(int itemTypeId) {
 	}
 	return false;
 }
-
-
 
 void cBuildingList::addStructureToList(int structureType, int subList) {
     addItemToList(new cBuildingListItem(structureType, structures[structureType], subList));
@@ -150,7 +148,7 @@ bool cBuildingList::isOverButton(int x, int y) {
  * Ie, the index in the array corresponds with the subList id. Meaning, result[1] = 5 means sublist 1 is building something
  * of ID 5. (depending on the TYPE, it is either a structure or a unit).
  *
- * @return
+ * @return std::array<int, 5>
  */
 std::array<int, 5> cBuildingList::isBuildingItem() {
     std::array<int, 5> subListIds;
