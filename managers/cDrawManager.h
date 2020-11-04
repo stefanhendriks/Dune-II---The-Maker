@@ -20,7 +20,6 @@ class cDrawManager {
 
 	protected:
 		void drawSidebar();
-		void drawUpgradeButton();
 		void drawOrderButton();
 		void drawCredits();
 		void drawMap();
@@ -33,7 +32,6 @@ class cDrawManager {
 		cSideBarDrawer * sidebarDrawer;
 		CreditsDrawer * creditsDrawer;
 		cOrderDrawer * orderDrawer;
-		cUpgradeDrawer * upgradeDrawer;
 		cMapDrawer * mapDrawer;
 		cMiniMapDrawer * miniMapDrawer;
 		cParticleDrawer * particleDrawer;

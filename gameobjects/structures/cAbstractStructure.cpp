@@ -139,7 +139,7 @@ void cAbstractStructure::die()
     structure[iIndex]=NULL;
 
     // Destroy structure, take stuff in effect for the player
-    player[iPlayer].iStructures[getType()]--; // remove from player building indexes
+    player[iPlayer].decreaseStructureAmount(getType()); // remove from player building indexes
 
     // fix up power usage
     player[iPlayer].use_power -= structures[getType()].power_drain;
@@ -478,7 +478,7 @@ int cAbstractStructure::getPercentageNotPaved() {
 
 bool cAbstractStructure::isPrimary() {
 	cPlayer * thePlayer = getPlayer();
-	return thePlayer->iPrimaryBuilding[getType()] == id;
+	return thePlayer->getPrimaryStructureForStructureType(getType()) == id;
 }
 
 int cAbstractStructure::getPowerUsage() {

@@ -55,7 +55,6 @@ class cSideBar {
 
 		void think();	// timer based
 		void thinkInteraction(); // fps based
-		void thinkUpgradeButton(); // fps based
 
 		// set
 		// no set Player, re-create Sidebar object instead if needed

@@ -37,42 +37,42 @@ bool cUpgradeBuilder::isUpgrading(int listId) {
 
 // timer based method that processes upgrades
 void cUpgradeBuilder::processUpgrades() {
-	for (int i = 0; i < LIST_MAX; i++) {
-		cListUpgrade * upgrade = upgrades[i];
-		if (upgrade) {
-		    int increment = 1;
-		    if (DEBUGGING) {
-		        increment = 11;
-		    }
-
-			upgrade->setTimerProgress(upgrade->getTimerProgress()+increment);
-
-			if (upgrade->getTimerProgress() > 10) {
-				upgrade->setTimerProgress(0);
-
-				upgrade->setProgress(upgrade->getProgress() + 1);
-
-				// pay for each slice of upgrade
-				player->credits -= upgrade->getPricePerTimeUnit();
-
-				if (upgrade->getProgress() >= upgrade->getProgressLimit()) {
-					cBuildingList *listToUpgrade = player->getSideBar()->getList(i);
-					listToUpgrade->increaseUpgradeLevel();
-
-					char msg[255];
-					sprintf(msg, "Upgrade completed. Adding item to list.");
-					logbook(msg);
-
-                    bool upgradeResult = listToUpgrade->addItemToList(upgrade->getItem());
-                    if (upgradeResult) {
-                        upgrade->setItem(NULL); // remove pointer, else item gets cleaned up in destruct of upgrade
-                    }
-					upgrades[i] = NULL;
-					listToUpgrade->setUpgrading(false);
-					delete upgrade;
-				}
-
-			}
-		}
-	}
+//	for (int i = 0; i < LIST_MAX; i++) {
+//		cListUpgrade * upgrade = upgrades[i];
+//		if (upgrade) {
+//		    int increment = 1;
+//		    if (DEBUGGING) {
+//		        increment = 11;
+//		    }
+//
+//			upgrade->setTimerProgress(upgrade->getTimerProgress()+increment);
+//
+//			if (upgrade->getTimerProgress() > 10) {
+//				upgrade->setTimerProgress(0);
+//
+//				upgrade->setProgress(upgrade->getProgress() + 1);
+//
+//				// pay for each slice of upgrade
+//				player->credits -= upgrade->getPricePerTimeUnit();
+//
+//				if (upgrade->getProgress() >= upgrade->getProgressLimit()) {
+//					cBuildingList *listToUpgrade = player->getSideBar()->getList(i);
+//					listToUpgrade->increaseUpgradeLevel();
+//
+//					char msg[255];
+//					sprintf(msg, "Upgrade completed. Adding item to list.");
+//					logbook(msg);
+//
+//                    bool upgradeResult = listToUpgrade->addItemToList(upgrade->getItem());
+//                    if (upgradeResult) {
+//                        upgrade->setItem(NULL); // remove pointer, else item gets cleaned up in destruct of upgrade
+//                    }
+//					upgrades[i] = NULL;
+//					listToUpgrade->setUpgrading(false);
+//					delete upgrade;
+//				}
+//
+//			}
+//		}
+//	}
 }

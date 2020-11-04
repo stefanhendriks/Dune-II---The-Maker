@@ -123,7 +123,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 
     // when harveter, check if there are any friends , if not, then deliver one
     if (iType == HARVESTER && // a harvester died
-        player[iPlayer].iStructures[REFINERY] > 0) { // and its player still has a refinery
+        player[iPlayer].hasAtleastOneStructure(REFINERY)) { // and its player still has a refinery
 
         // check if the player has any harvester left
         bool bFoundHarvester=false;
@@ -2991,11 +2991,8 @@ int UNIT_REMOVE(int iID)
 }
 
 
-int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart)
-{
-
-	if (bCellValid(iCll) == false)
-	{
+int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
+	if (bCellValid(iCll) == false) {
 		logbook("UNIT_CREATE: Invalid cell as param");
 		return -1;
 	}

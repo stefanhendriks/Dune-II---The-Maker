@@ -137,6 +137,9 @@
 // UNITS stuff
 #define MAX_UNITTYPES       50    // maximum of unit types
 
+// UPGRADES stuff
+#define MAX_UPGRADETYPES       50    // maximum of upgrades
+
 // STRUCTURES stuff
 #define MAX_STRUCTURETYPES  50    // max of building types
 
@@ -213,6 +216,12 @@
 #define SLAB1             24      // 1 single slab
 #define SLAB4             25      // 4 slabs
 #define WALL              26      // 1 wall
+
+// Upgrade types
+#define UPGRADE_TYPE_SLAB4              0 // 4SLAB upgrade
+#define UPGRADE_TYPE_RTURRET            1 // Rturret
+#define UPGRADE_TYPE_LIGHTFCTRY_ATR     2 // upgrade for Atreides (trike->Quad)
+#define UPGRADE_TYPE_LIGHTFCTRY_ORD     3 // upgrade for Ordos (raider trike->Quad) ?
 
 
 #define MUSIC_WIN           0

@@ -208,6 +208,7 @@ void cPlayer::init(int id) {
 	for (int i = 0 ; i < MAX_STRUCTURETYPES; i++) {
 		iStructures[i] = 0;
 		iPrimaryBuilding[i] = -1;
+		iStructureUpgradeLevel[i] = 0;
 	}
 
 	credits	=	0;

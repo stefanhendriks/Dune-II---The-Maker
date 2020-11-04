@@ -74,7 +74,6 @@ int cBuildingListDrawer::getDrawY() {
     return cSideBar::TopBarHeight + 230 + 30;
 }
 
-
 /**
  * Draw the list, start from startId, until the max icons in the list to be drawn.
  *
@@ -121,13 +120,10 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 		if (item->isBuilding()) {
 			int iTotalBuildPoints = 0;
 
-			// get the total build time
-			if (listIDToDraw == LIST_CONSTYARD) {
-				iTotalBuildPoints = structures[item->getBuildId()].build_time;
-			}
-			else if (listIDToDraw != LIST_STARPORT) {
-				iTotalBuildPoints = units[item->getBuildId()].build_time;
-			}
+            // get the total build time
+            if (listIDToDraw != LIST_STARPORT) {
+                iTotalBuildPoints = item->getBuildTime();
+            }
 
 			// Now calculate the right frame.
 			float iPiece = iTotalBuildPoints / 31; // = 17 - 1 (of above)
@@ -173,7 +169,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
                 }
             }
 
-			if (!item->isAvailable() || isBuildingSameSubListItem || list->isUpgrading() || !list->isAcceptsOrders()) {
+			if (!item->isAvailable() || isBuildingSameSubListItem || !list->isAcceptsOrders()) {
 				set_trans_blender(0,0,0,128);
 				fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
 			}
@@ -308,8 +304,10 @@ cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *li
 	assert(list != NULL);
 	// starting draw coordinates
 
-	int iDrawX=drawManager->getSidebarDrawer()->getBuildingListDrawer()->getDrawX();
-	int iDrawY=drawManager->getSidebarDrawer()->getBuildingListDrawer()->getDrawY();
+//	int iDrawX=drawManager->getSidebarDrawer()->getBuildingListDrawer()->getDrawX();
+//	int iDrawY=drawManager->getSidebarDrawer()->getBuildingListDrawer()->getDrawY();
+    int iDrawX=getDrawX();
+    int iDrawY=getDrawY();
 
 	int end = MAX_ITEMS;
 

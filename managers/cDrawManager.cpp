@@ -4,7 +4,6 @@ cDrawManager::cDrawManager(const cPlayer & thePlayer) : m_Player(thePlayer) {
 	assert(&thePlayer);
 	creditsDrawer = new CreditsDrawer(thePlayer);
 	sidebarDrawer = new cSideBarDrawer();
-	upgradeDrawer = new cUpgradeDrawer();
 	orderDrawer = new cOrderDrawer();
 	mapDrawer = new cMapDrawer(&map, thePlayer, mapCamera);
 	miniMapDrawer = new cMiniMapDrawer(&map, thePlayer, mapCamera);
@@ -23,7 +22,6 @@ cDrawManager::cDrawManager(const cPlayer & thePlayer) : m_Player(thePlayer) {
 
 cDrawManager::~cDrawManager() {
 	delete sidebarDrawer;
-	delete upgradeDrawer;
 	delete orderDrawer;
 	delete creditsDrawer;
 	delete mapDrawer;
@@ -71,7 +69,6 @@ void cDrawManager::draw() {
 
 	drawStructurePlacing();
 	drawCredits();
-	drawUpgradeButton();
 	drawOrderButton();
 
 	// THE MESSAGE
@@ -129,14 +126,6 @@ void cDrawManager::drawOrderButton() {
 
 void cDrawManager::drawSidebar() {
 	sidebarDrawer->drawSideBar(m_Player);
-}
-
-void cDrawManager::drawUpgradeButton() {
-	// draw the upgrade button
-	int selectedListId = m_Player.getSideBar()->getSelectedListID();
-	if (selectedListId > -1) {
-		upgradeDrawer->drawUpgradeButtonForSelectedListIfNeeded(m_Player);
-	}
 }
 
 void cDrawManager::drawStructurePlacing() {
