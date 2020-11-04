@@ -118,6 +118,17 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
 		}
 	}
 
+	startX += 27;
+
+	if (listId == LIST_UPGRADES) {
+        list->setButtonDrawX(startX);
+        // temp, use CONST YARD
+		list->setButtonIconIdPressed(LIST_BTN_CONSTYARD);
+		list->setButtonIconIdUnpressed(LIST_BTN_CONSTYARD);
+
+		// the contents of the list is determined elsewhere
+	}
+
 }
 
 /**

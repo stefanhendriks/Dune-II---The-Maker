@@ -25,7 +25,8 @@ class cUpgradeUtils;
 #define LIST_UNITS	    3 // quad, trike, tanks, air units
 #define LIST_STARPORT	4 // special list to order stuff
 #define LIST_PALACE		5 // REMOVE? (ie super weapon icon should always show top left/right?)
-#define LIST_MAX		6 // max amount of lists
+#define LIST_UPGRADES	6 // possible upgrades
+#define LIST_MAX		7 // max amount of lists
 
 #define SUBLIST_LIGHTFCTRY 0 // quad, trike, etc
 #define SUBLIST_HEAVYFCTRY 1 // tanks
