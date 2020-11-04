@@ -279,7 +279,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer) {
             // draw
             drawStructureForLayer(theStructure, layer);
 
-            if (player[0].iPrimaryBuilding[theStructure->getType()] == i) {
+            if (player[0].getPrimaryStructureForStructureType(theStructure->getType()) == i) {
                 int color = theStructure->getPlayer()->getMinimapColor();
                 // TODO: change it into fading color or something other than this ugly rectangle.
                 drawRectangeOfStructure(theStructure, color);

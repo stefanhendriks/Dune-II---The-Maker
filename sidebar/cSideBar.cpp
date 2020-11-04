@@ -41,54 +41,6 @@ void cSideBar::think() {
 	thinkAvailabilityLists();
 }
 
-void cSideBar::thinkUpgradeButton() {
-	bool isOverUpgradeButton = upgradeUtils->isMouseOverUpgradeButton();
-
-	if (!isOverUpgradeButton) return;
-
-    int selectedListId = getSelectedListID();
-
-    if (selectedListId < 0) return;
-
-    cBuildingList * list = getList(selectedListId);
-    if (list == NULL) return;
-
-    const std::array<int, 5> &isBuildingItem = list->isBuildingItem();
-    bool isBuildingAnyItem = false;
-    for (int i = 0; i < 5; i++) {
-        if (isBuildingItem[i] > -1) {
-            isBuildingAnyItem = true;
-        }
-    }
-
-    if (isBuildingAnyItem) return;
-
-    int upgradeLevel = list->getUpgradeLevel();
-    int techLevel = m_Player.getTechLevel();
-
-    cListUpgrade * upgrade = upgradeUtils->getListUpgradeForList(m_Player, selectedListId, techLevel, upgradeLevel);
-    bool isUpgradeApplicable = upgrade != NULL;
-
-    if (upgrade != NULL) {
-        bool isUpgrading = m_Player.getUpgradeBuilder()->isUpgrading(selectedListId);
-        char msg[255];
-        if (!isUpgrading) {
-            sprintf(msg, "$%d | Upgrade", upgrade->getTotalPrice());
-        } else {
-            cListUpgrade & upgradeInProgress = m_Player.getUpgradeBuilder()->getListUpgrade(selectedListId);
-            assert(&upgradeInProgress);
-            sprintf(msg, "Upgrade completed at %d percent",upgradeInProgress.getProgressAsPercentage());
-        }
-        drawManager->getMessageDrawer()->setMessage(msg);
-    }
-
-    if (isUpgradeApplicable && MOUSE_BTN_LEFT()) {
-        assert(upgrade != NULL);
-        assert(m_Player.getUpgradeBuilder());
-        m_Player.getUpgradeBuilder()->addUpgrade(selectedListId, upgrade);
-    }
-}
-
 /**
  * Think about the availability of lists.
  */
@@ -136,8 +88,6 @@ void cSideBar::thinkAvailabilityLists() {
  *
  */
 void cSideBar::thinkInteraction() {
-	thinkUpgradeButton();
-
 	// button interaction
 	for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {
 		if (i == selectedListID) continue; // skip selected list for button interaction
@@ -174,16 +124,21 @@ void cSideBar::thinkInteraction() {
 				// now we have in miliseconds, we know the amount of seconds too.
 				int seconds = buildTimeInMs / 1000;
 
-				if (list->getType() == LIST_CONSTYARD) {
+				if (item->getBuildType() == STRUCTURE) {
 					s_Structures structureType = structures[item->getBuildId()];
 					sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
-				} else {
+				} else if (item->getBuildType() == UNIT) {
 					s_UnitP unitType = units[item->getBuildId()];
 					if (item->getBuildCost() > 0) {
-						sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), units[item->getBuildId()].name, seconds);
+						sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), unitType.name, seconds);
 					} else {
 						sprintf(msg, "%s", units[item->getBuildId()].name);
 					}
+				} else if (item->getBuildType() == UPGRADE){
+                    s_Upgrade upgrade = upgrades[item->getBuildId()];
+                    sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), upgrade.description, seconds);
+				} else {
+                    sprintf(msg, "UNKNOWN BUILD TYPE");
 				}
 
 				drawManager->getMessageDrawer()->setMessage(msg);

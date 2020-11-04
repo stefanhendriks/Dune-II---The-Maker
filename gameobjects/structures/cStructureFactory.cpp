@@ -167,7 +167,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 **/
 void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(int iCell, int iStructureType, int iPlayer) {
     // add this structure to the array of the player (for some score management)
-	player[iPlayer].iStructures[iStructureType]++;
+	player[iPlayer].increaseStructureAmount(iStructureType);
 
 	if (iStructureType == SLAB1) {
 		mapEditor.createCell(iCell, TERRAIN_SLAB, 0);

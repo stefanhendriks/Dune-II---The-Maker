@@ -11,10 +11,15 @@
 class cBuildingListItem {
 
 public:
-	// constructors
-    cBuildingListItem(int theID, s_Structures entry, int subList);
-	cBuildingListItem(int theID, s_UnitP entry, int subList);
+    ~cBuildingListItem();
 
+	// uber constructoe
+    cBuildingListItem(eBuildType type, int theID, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList);
+
+	// easier constructors
+    cBuildingListItem(int theID, s_Structures entry, int subList);
+    cBuildingListItem(int theID, s_UnitP entry, int subList);
+    cBuildingListItem(int theID, s_Upgrade entry, int subList);
 
 	// gettters
 	int getTotalBuildTime() { return totalBuildTime; }
@@ -87,6 +92,7 @@ private:
 
     cBuildingListItem(int theID, s_Structures entry, cBuildingList* list, int subList);
     cBuildingListItem(int theID, s_UnitP entry, cBuildingList* list, int subList);
+    cBuildingListItem(int theID, s_Upgrade entry, cBuildingList* list, int subList);
 };
 
 #endif

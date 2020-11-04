@@ -225,22 +225,6 @@ bool MOUSE_BTN_RIGHT() {
 }
 
 
-/**
- * Returns true when a single mouse click has been detected. (that is, hold
- * and released left mouse button).
- *
- * @return
- */
-bool mouse_pressed_left()
-{
-	return cMouse::isLeftButtonClicked();
-}
-
-// Did we press the right mouse button?
-bool mouse_pressed_right()
-{
-	return cMouse::isRightButtonClicked();
-}
 /*****************************
  Unit Rules
  *****************************/
@@ -849,6 +833,56 @@ void install_bullets()
 }
 
 
+void install_upgrades() {
+    logbook("Installing:  UPGRADES");
+    for (int i = 0; i < MAX_UPGRADETYPES; i++) {
+        upgrades[i].icon = ICON_STR_PALACE;
+        upgrades[i].cost = 100;
+        upgrades[i].atUpgradeLevel = -1;
+        upgrades[i].structureType = CONSTYARD;
+        upgrades[i].providesTypeId = -1;
+        upgrades[i].providesType = STRUCTURE;
+        upgrades[i].providesTypeList = -1;
+        upgrades[i].providesTypeSubList = -1;
+        upgrades[i].buildTime = 10;
+        strcpy(upgrades[i].description, "Upgrade");
+    }
+
+    // First upgrade Constyard: 4Slabs
+    upgrades[UPGRADE_TYPE_SLAB4].icon = ICON_STR_4SLAB;
+    upgrades[UPGRADE_TYPE_SLAB4].cost = 200;
+    upgrades[UPGRADE_TYPE_SLAB4].structureType = CONSTYARD;
+    upgrades[UPGRADE_TYPE_SLAB4].atUpgradeLevel = 0;
+    upgrades[UPGRADE_TYPE_SLAB4].providesType = STRUCTURE;
+    upgrades[UPGRADE_TYPE_SLAB4].providesTypeId = SLAB4;
+    upgrades[UPGRADE_TYPE_SLAB4].providesTypeList = LIST_CONSTYARD;
+    upgrades[UPGRADE_TYPE_SLAB4].providesTypeSubList = 0;
+    upgrades[UPGRADE_TYPE_SLAB4].buildTime = 50;
+    strcpy(upgrades[UPGRADE_TYPE_SLAB4].description, "Upgrade: Build 4 concrete slabs at once");
+
+    // Second upgrade Constyard: Rturret
+    upgrades[UPGRADE_TYPE_RTURRET].icon = ICON_STR_RTURRET;
+    upgrades[UPGRADE_TYPE_RTURRET].cost = 400;
+    upgrades[UPGRADE_TYPE_RTURRET].structureType = CONSTYARD;
+    upgrades[UPGRADE_TYPE_RTURRET].atUpgradeLevel = 1;
+    upgrades[UPGRADE_TYPE_RTURRET].providesType = STRUCTURE;
+    upgrades[UPGRADE_TYPE_RTURRET].providesTypeId = RTURRET;
+    upgrades[UPGRADE_TYPE_RTURRET].providesTypeList = LIST_CONSTYARD;
+    upgrades[UPGRADE_TYPE_RTURRET].providesTypeSubList = 0;
+    upgrades[UPGRADE_TYPE_RTURRET].buildTime = 150;
+
+    // Second upgrade Constyard: Rturret
+    upgrades[UPGRADE_TYPE_RTURRET].icon = ICON_STR_RTURRET;
+    upgrades[UPGRADE_TYPE_RTURRET].cost = 400;
+    upgrades[UPGRADE_TYPE_RTURRET].structureType = CONSTYARD;
+    upgrades[UPGRADE_TYPE_RTURRET].atUpgradeLevel = 1;
+    upgrades[UPGRADE_TYPE_RTURRET].providesType = STRUCTURE;
+    upgrades[UPGRADE_TYPE_RTURRET].providesTypeId = RTURRET;
+    upgrades[UPGRADE_TYPE_RTURRET].providesTypeList = LIST_CONSTYARD;
+    upgrades[UPGRADE_TYPE_RTURRET].providesTypeSubList = 0;
+    upgrades[UPGRADE_TYPE_RTURRET].buildTime = 150;
+    strcpy(upgrades[UPGRADE_TYPE_RTURRET].description, "Upgrade: build Rocket Turret");
+}
 
 
 /*****************************

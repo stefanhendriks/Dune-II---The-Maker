@@ -16,9 +16,6 @@ bool BORDER_POS(int x, int y);
 void FIX_BORDER_POS(int &x, int &y);
 void FIX_POS(int &x, int &y);
 
-bool mouse_pressed_left();
-bool mouse_pressed_right();
-
 bool MOUSE_BTN_LEFT();
 bool MOUSE_BTN_RIGHT();
 
@@ -35,6 +32,7 @@ void INIT_PREVIEWS();
 void install_structures();
 void install_units();
 void install_bullets();
+void install_upgrades();
 
 float health_bar(float max_w, int i, int w);
 float health_unit(int i, float widthInPixels);

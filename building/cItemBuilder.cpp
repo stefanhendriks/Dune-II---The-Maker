@@ -16,7 +16,7 @@ cItemBuilder::cItemBuilder(cPlayer & thePlayer) : m_Player(thePlayer) {
 cItemBuilder::~cItemBuilder() {
 }
 
-int cItemBuilder::getTimerCap(cBuildingList *list, cBuildingListItem *item) {
+int cItemBuilder::getTimerCap(cBuildingListItem *item) {
 	int iTimerCap = 35; // was 35 = ORIGINAL
 
 	if (DEBUGGING) {
@@ -27,12 +27,12 @@ int cItemBuilder::getTimerCap(cBuildingList *list, cBuildingListItem *item) {
 	if (m_Player.bEnoughPower() == false) {
 		iTimerCap *= 6; // make painful
 	} else {
-		if (list->getType() != LIST_CONSTYARD) {
+		if (item->getBuildType() == UNIT) {
 			// the given unit will get out of a specific structure. This type
 			// is within the units properties.
 			int structureTypeItLeavesFrom = units[item->getBuildId()].structureTypeItLeavesFrom;
 			if (structureTypeItLeavesFrom > -1) {
-				iTimerCap /= (1+(m_Player.iStructures[structureTypeItLeavesFrom] / 2));
+				iTimerCap /= (1+(m_Player.getAmountOfStructuresForType(structureTypeItLeavesFrom) / 2));
 			}
 		}
 	}
@@ -64,10 +64,11 @@ void cItemBuilder::think() {
 
         // ITEM is building
         timers[i]++;
+
         cBuildingList *list = item->getList();
 
         // determines how fast an item is built, this is the so called 'delay' before 1 'build time tick' has passed
-        int timerCap = getTimerCap(list, item);
+        int timerCap = getTimerCap(item);
 
         // not yet done building
         if (timers[i] < timerCap) continue;
@@ -99,7 +100,6 @@ void cItemBuilder::think() {
                 item->setPlaceIt(true);
             }
         } else if (item->getBuildType() == UNIT) {
-
             item->decreaseTimesToBuild(); // decrease amount of times to build
 
             assert(item->getTimesToBuild() > -1);
@@ -109,10 +109,9 @@ void cItemBuilder::think() {
             int primaryBuildingIdOfStructureType = structureUtils.findStructureToDeployUnit(&m_Player, structureTypeByItem);
 
             if (primaryBuildingIdOfStructureType > -1) {
-                int cell = structure[primaryBuildingIdOfStructureType]->iFreeAround();
                 cAbstractStructure * theStructure = structure[primaryBuildingIdOfStructureType];
+                int cell = theStructure->iFreeAround();
                 theStructure->setAnimating(true); // animate
-                // TODO: construct unit here
                 int unitId = UNIT_CREATE(cell, item->getBuildId(), m_Player.getId(), false);
                 int rallyPoint = theStructure->getRallyPoint();
                 if (rallyPoint > -1) {
@@ -121,11 +120,16 @@ void cItemBuilder::think() {
             }
         } else if (item->getBuildType() == SPECIAL) {
             // super weapons and that kind of stuff
+        } else if (item->getBuildType() == UPGRADE) {
+            m_Player.getBuildingListUpdater()->onUpgradeCompleted(item);
+            removeItemFromList(item);
+            list->removeItemFromList(item->getSlotId());
+            continue;
         }
 
-        bool isAbleToBuildNewOneImmidiately = item->getBuildType() == UNIT;
+        bool isAbleToBuildNewOneImmediately = item->getBuildType() == UNIT;
 
-        if (!isAbleToBuildNewOneImmidiately) continue;
+        if (!isAbleToBuildNewOneImmediately) continue;
 
         // stop building this item when we are done
         if (item->getTimesToBuild() == 0) {	// no more items to build

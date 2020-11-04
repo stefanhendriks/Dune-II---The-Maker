@@ -16,9 +16,11 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 	cLogger::getInstance()->logCommentLine("onStructureCreated - begin");
 
 	// activate/deactivate any lists if needed
-	cBuildingList *listConstYard = player->getSideBar()->getList(LIST_CONSTYARD);
-    cBuildingList *listFootUnits = player->getSideBar()->getList(LIST_FOOT_UNITS);
-    cBuildingList *listUnits = player->getSideBar()->getList(LIST_UNITS);
+    cSideBar *sideBar = player->getSideBar();
+    cBuildingList *listConstYard = sideBar->getList(LIST_CONSTYARD);
+    cBuildingList *listFootUnits = sideBar->getList(LIST_FOOT_UNITS);
+    cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
+    cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
 
 	int house = player->getHouse();
 	int techLevel = player->getTechLevel();
@@ -48,6 +50,9 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
         }
 
         if (techLevel >= 4) {
+            if (player->getStructureUpgradeLevel(structureType) == 0) {
+                listUpgrades->addUpgradeStructureToList(UPGRADE_TYPE_SLAB4);
+            }
             //list->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4])); // only available after upgrading
             listConstYard->addStructureToList(WALL, 0);
             cLogger::getInstance()->logCommentLine("onStructureCreated - added WALL to list");
@@ -97,7 +102,7 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 
 
 	if (structureType == RADAR) {
-		if (techLevel >= 5) {
+        if (techLevel >= 5) {
 			cLogger::getInstance()->logCommentLine("onStructureCreated - added TURRET to list");
 			listConstYard->addStructureToList(TURRET, 0);
 		}
@@ -204,35 +209,59 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
 
 
 /**
- * this method will update any list given, with phase given.
+ * method called, when buildingListItem (the upgrade) has finished building.
  */
-void cBuildingListUpdater::updateUpgradeCompleted(cBuildingList *listToUpgrade) {
-	assert(listToUpgrade);
+void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item) {
+	assert(item);
 	cLogger::getInstance()->logCommentLine("updateUpgradeCompleted - begin");
 
-	int currentLevel = listToUpgrade->getUpgradeLevel();
-	int newLevel = currentLevel + 1;
-	// up the upgrade level
-	listToUpgrade->setUpgradeLevel(newLevel);
+    // activate/deactivate any lists if needed
+    cSideBar *sideBar = player->getSideBar();
 
-	// constyard list upgrades two times
-	char msg[255];
-	sprintf(msg, "currentLevel = %d, newLevel = %d , listId = %d", currentLevel, newLevel, listToUpgrade->getType());
-	cLogger::getInstance()->logCommentLine(msg);
+    s_Upgrade upgradeType = upgrades[item->getBuildId()];
 
-	if (listToUpgrade->getType() == LIST_CONSTYARD) {
-		if (listToUpgrade->getUpgradeLevel() == 1) {
-			listToUpgrade->addStructureToList(SLAB4, 0);
-		} else if (listToUpgrade->getUpgradeLevel() == 2) {
-			listToUpgrade->addStructureToList(RTURRET, 0);
-		}
-	}
+    if (upgradeType.structureType > -1) {
+        player->increaseStructureUpgradeLevel(upgradeType.structureType);
+    }
 
-	if (listToUpgrade->getType() == LIST_UNITS) {
-		if (listToUpgrade->getUpgradeLevel() == 1) {
-			listToUpgrade->addUnitToList(QUAD, SUBLIST_LIGHTFCTRY);
-		}
-	}
+    assert(upgradeType.providesTypeId > -1);
+    assert(upgradeType.providesType > -1);
+
+    assert(upgradeType.providesTypeList > -1);
+    assert(upgradeType.providesTypeList < LIST_UPGRADES);
+
+    cBuildingList *list = sideBar->getList(upgradeType.providesTypeList);
+    if (upgradeType.providesType == UNIT) {
+        list->addUnitToList(upgradeType.providesTypeId, upgradeType.providesTypeSubList);
+    } else if (upgradeType.providesType == STRUCTURE) {
+        list->addStructureToList(upgradeType.providesTypeId, upgradeType.providesTypeSubList);
+    }
+
+    // MOVE to structure upgrader
+//
+//	int currentLevel = listToUpgrade->getUpgradeLevel();
+//	int newLevel = currentLevel + 1;
+//	// up the upgrade level
+//	listToUpgrade->setUpgradeLevel(newLevel);
+//
+//	// constyard list upgrades two times
+//	char msg[255];
+//	sprintf(msg, "currentLevel = %d, newLevel = %d , listId = %d", currentLevel, newLevel, listToUpgrade->getType());
+//	cLogger::getInstance()->logCommentLine(msg);
+//
+//	if (listToUpgrade->getType() == LIST_CONSTYARD) {
+//		if (listToUpgrade->getUpgradeLevel() == 1) {
+//			listToUpgrade->addStructureToList(SLAB4, 0);
+//		} else if (listToUpgrade->getUpgradeLevel() == 2) {
+//			listToUpgrade->addStructureToList(RTURRET, 0);
+//		}
+//	}
+//
+//	if (listToUpgrade->getType() == LIST_UNITS) {
+//		if (listToUpgrade->getUpgradeLevel() == 1) {
+//			listToUpgrade->addUnitToList(QUAD, SUBLIST_LIGHTFCTRY);
+//		}
+//	}
 
 	cLogger::getInstance()->logCommentLine("updateUpgradeCompleted - end");
 }

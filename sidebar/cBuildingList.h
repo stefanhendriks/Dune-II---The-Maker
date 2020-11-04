@@ -25,6 +25,7 @@ class cBuildingList {
 
 		void removeItemFromList(int position);
 
+        void addUpgradeStructureToList(int structureTypeToUpgrade);
         void addStructureToList(int structureType, int subList);
         void addUnitToList(int unitType, int subList);
 
@@ -51,7 +52,6 @@ class cBuildingList {
 		// set
 		void setTimer(int value) { TIMER_progress = value; }
 		void setTypeOfList(int value) { typeOfList = value; }
-		void setUpgradeLevel(int value) { upgradeLevel = value; }
 		void setUpgrading(bool value) { upgrading = value; }
 
 		void setButtonIconIdPressed(int iconId) { buttonIconIdPressed = iconId; }
@@ -64,9 +64,6 @@ class cBuildingList {
 		void setAcceptsOrders(bool value) { acceptsOrders = value; }
 
 		int getType() { return typeOfList; }
-		int getUpgradeLevel() { return upgradeLevel; }
-
-    void increaseUpgradeLevel();
 
 protected:
 		// nothing
@@ -88,8 +85,6 @@ protected:
 
 		int getFreeSlot();
 		int typeOfList;
-		int upgradeLevel;
-
 };
 
 #endif

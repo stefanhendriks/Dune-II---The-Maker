@@ -39,7 +39,7 @@ int cStructureUtils::findStarportToDeployUnit(cPlayer * player) {
 	int playerId = player->getId();
 
 	// check primary building first if set
-	int primaryBuildingOfStructureType = player->iPrimaryBuilding[STARPORT];
+	int primaryBuildingOfStructureType = player->getPrimaryStructureForStructureType(STARPORT);
 
 	if (primaryBuildingOfStructureType > -1) {
 		cAbstractStructure * theStructure = structure[primaryBuildingOfStructureType];
@@ -106,7 +106,7 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureTy
 	}
 
 	// check primary building first if set
-	int primaryBuildingOfStructureType = player->iPrimaryBuilding[structureType];
+	int primaryBuildingOfStructureType = player->getPrimaryStructureForStructureType(structureType);
 
 	if (primaryBuildingOfStructureType > -1) {
 		cAbstractStructure * theStructure = structure[primaryBuildingOfStructureType];
@@ -130,7 +130,7 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureTy
 
 	// assign as primary building
 	if (structureIdFound > -1) {
-		player->iPrimaryBuilding[structureType] = structureIdFound;
+		player->setPrimaryBuildingForStructureType(structureType, structureIdFound);
 	}
 
 	return structureIdFound;

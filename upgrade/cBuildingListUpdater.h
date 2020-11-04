@@ -22,7 +22,7 @@ class cBuildingListUpdater {
 		void onStructureDestroyed(int structureType);
 
 		// upgrade completed, like add 4slab
-		void updateUpgradeCompleted(cBuildingList *listToUpgrade);
+		void onUpgradeCompleted(cBuildingListItem *item);
 
 	private:
 		// this sidebar will be updated

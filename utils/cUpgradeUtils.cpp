@@ -34,92 +34,92 @@ int cUpgradeUtils::getPriceToUpgradeList(const cPlayer & thePlayer, int listType
 }
 
 cListUpgrade * cUpgradeUtils::getListUpgradeForList(const cPlayer & thePlayer, int listTypeId, int techLevel, int currentUpgradeLevelOfList) {
-	assert(&thePlayer);
-	cBuildingList *list = thePlayer.getSideBar()->getList(listTypeId);
-
-	if (listTypeId == LIST_CONSTYARD) {
-		// upgrade for 4SLAB
-		if (techLevel >= 4 && currentUpgradeLevelOfList < 1) {
-			return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(SLAB4, structures[SLAB4], 0));
-		}
-		// upgrade for RTURRET
-		if (techLevel >= 6 && thePlayer.iStructures[RADAR] > 0 && currentUpgradeLevelOfList < 2) {
-			return new cListUpgrade(100, 200, UPGRADE_TWO, new cBuildingListItem(RTURRET, structures[RTURRET], 0));
-		}
-	}
-
-	if (listTypeId == LIST_UNITS) {
-		if (thePlayer.getHouse() != HARKONNEN) {
-			// upgrade for Quads
-			if (techLevel >= 3 && currentUpgradeLevelOfList < 1) {
-				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(QUAD, units[QUAD], SUBLIST_LIGHTFCTRY));
-			}
-		}
-
-		if (thePlayer.getHouse() == HARKONNEN || thePlayer.getHouse() == ATREIDES) {
-			// upgrade to MCV
-			if (techLevel >= 4 && currentUpgradeLevelOfList < 1) {
-				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(MCV, units[MCV], SUBLIST_HEAVYFCTRY));
-			}
-			// upgrade to Launcher
-			if (techLevel >= 5 && currentUpgradeLevelOfList < 2) {
-				return new cListUpgrade(100, 200, UPGRADE_TWO, new cBuildingListItem(LAUNCHER, units[LAUNCHER], SUBLIST_HEAVYFCTRY));
-			}
-			// upgrade to Siege Tank
-			if (techLevel >= 6 && currentUpgradeLevelOfList < 3) {
-				return new cListUpgrade(100, 200, UPGRADE_THREE, new cBuildingListItem(SIEGETANK, units[SIEGETANK], SUBLIST_HEAVYFCTRY));
-			}
-		} else if (thePlayer.getHouse() == ORDOS) {
-			// upgrade to MCV
-			if (techLevel >= 4 && currentUpgradeLevelOfList < 1) {
-				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(MCV, units[MCV], SUBLIST_HEAVYFCTRY));
-			}
-			// upgrade to Siege tank
-			if (techLevel >= 7 && currentUpgradeLevelOfList < 2) {
-				return new cListUpgrade(100, 200, UPGRADE_TWO, new cBuildingListItem(SIEGETANK, units[SIEGETANK], SUBLIST_HEAVYFCTRY));
-			}
-		}
-
-		if (thePlayer.getHouse() != HARKONNEN) {
-			// upgrade for Ornithopter
-			if (techLevel >= 7 && currentUpgradeLevelOfList < 1) {
-				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(ORNITHOPTER, units[ORNITHOPTER], SUBLIST_HIGHTECH));
-			}
-		}
-	}
-
-	if (listTypeId == LIST_FOOT_UNITS) {
-		if (thePlayer.getHouse() == HARKONNEN) {
-			// upgrade for troopers
-			if (techLevel >= 3 && currentUpgradeLevelOfList < 1) {
-				return new cListUpgrade(125, 300, UPGRADE_ONE, new cBuildingListItem(TROOPERS, units[TROOPERS], SUBLIST_TROOPERS));
-			}
-		} else if (thePlayer.getHouse() == ATREIDES) {
-			// upgrade for infantry
-			if (techLevel >= 3 && currentUpgradeLevelOfList < 1) {
-				return new cListUpgrade(75, 300, UPGRADE_ONE, new cBuildingListItem(INFANTRY, units[INFANTRY], SUBLIST_INFANTRY));
-			}
-		} else if (thePlayer.getHouse() == ORDOS) {
-			// upgrade for infantry
-			if (techLevel >= 3) {
-				bool hasTroopers = list->hasItemType(TROOPERS);
-				bool hasInfantry = list->hasItemType(INFANTRY);
-
-				bool hasWor = thePlayer.hasWor();
-				bool hasBarracks = thePlayer.hasBarracks();
-
-				if (currentUpgradeLevelOfList < 2) {
-					if (!hasInfantry && hasBarracks) {
-						return new cListUpgrade(75, 300, UPGRADE_ONE, new cBuildingListItem(INFANTRY, units[INFANTRY], SUBLIST_INFANTRY));
-					} else if (!hasTroopers && hasWor) {
-						return new cListUpgrade(75, 300, UPGRADE_TWO, new cBuildingListItem(TROOPERS, units[TROOPERS], SUBLIST_TROOPERS));
-					} else {
-						// do nothing
-					}
-				}
-			}
-		}
-	}
+//	assert(&thePlayer);
+//	cBuildingList *list = thePlayer.getSideBar()->getList(listTypeId);
+//
+//	if (listTypeId == LIST_CONSTYARD) {
+//		// upgrade for 4SLAB
+//		if (techLevel >= 4 && currentUpgradeLevelOfList < 1) {
+//			return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(SLAB4, structures[SLAB4], 0));
+//		}
+//		// upgrade for RTURRET
+//		if (techLevel >= 6 && thePlayer.iStructures[RADAR] > 0 && currentUpgradeLevelOfList < 2) {
+//			return new cListUpgrade(100, 200, UPGRADE_TWO, new cBuildingListItem(RTURRET, structures[RTURRET], 0));
+//		}
+//	}
+//
+//	if (listTypeId == LIST_UNITS) {
+//		if (thePlayer.getHouse() != HARKONNEN) {
+//			// upgrade for Quads
+//			if (techLevel >= 3 && currentUpgradeLevelOfList < 1) {
+//				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(QUAD, units[QUAD], SUBLIST_LIGHTFCTRY));
+//			}
+//		}
+//
+//		if (thePlayer.getHouse() == HARKONNEN || thePlayer.getHouse() == ATREIDES) {
+//			// upgrade to MCV
+//			if (techLevel >= 4 && currentUpgradeLevelOfList < 1) {
+//				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(MCV, units[MCV], SUBLIST_HEAVYFCTRY));
+//			}
+//			// upgrade to Launcher
+//			if (techLevel >= 5 && currentUpgradeLevelOfList < 2) {
+//				return new cListUpgrade(100, 200, UPGRADE_TWO, new cBuildingListItem(LAUNCHER, units[LAUNCHER], SUBLIST_HEAVYFCTRY));
+//			}
+//			// upgrade to Siege Tank
+//			if (techLevel >= 6 && currentUpgradeLevelOfList < 3) {
+//				return new cListUpgrade(100, 200, UPGRADE_THREE, new cBuildingListItem(SIEGETANK, units[SIEGETANK], SUBLIST_HEAVYFCTRY));
+//			}
+//		} else if (thePlayer.getHouse() == ORDOS) {
+//			// upgrade to MCV
+//			if (techLevel >= 4 && currentUpgradeLevelOfList < 1) {
+//				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(MCV, units[MCV], SUBLIST_HEAVYFCTRY));
+//			}
+//			// upgrade to Siege tank
+//			if (techLevel >= 7 && currentUpgradeLevelOfList < 2) {
+//				return new cListUpgrade(100, 200, UPGRADE_TWO, new cBuildingListItem(SIEGETANK, units[SIEGETANK], SUBLIST_HEAVYFCTRY));
+//			}
+//		}
+//
+//		if (thePlayer.getHouse() != HARKONNEN) {
+//			// upgrade for Ornithopter
+//			if (techLevel >= 7 && currentUpgradeLevelOfList < 1) {
+//				return new cListUpgrade(100, 200, UPGRADE_ONE, new cBuildingListItem(ORNITHOPTER, units[ORNITHOPTER], SUBLIST_HIGHTECH));
+//			}
+//		}
+//	}
+//
+//	if (listTypeId == LIST_FOOT_UNITS) {
+//		if (thePlayer.getHouse() == HARKONNEN) {
+//			// upgrade for troopers
+//			if (techLevel >= 3 && currentUpgradeLevelOfList < 1) {
+//				return new cListUpgrade(125, 300, UPGRADE_ONE, new cBuildingListItem(TROOPERS, units[TROOPERS], SUBLIST_TROOPERS));
+//			}
+//		} else if (thePlayer.getHouse() == ATREIDES) {
+//			// upgrade for infantry
+//			if (techLevel >= 3 && currentUpgradeLevelOfList < 1) {
+//				return new cListUpgrade(75, 300, UPGRADE_ONE, new cBuildingListItem(INFANTRY, units[INFANTRY], SUBLIST_INFANTRY));
+//			}
+//		} else if (thePlayer.getHouse() == ORDOS) {
+//			// upgrade for infantry
+//			if (techLevel >= 3) {
+//				bool hasTroopers = list->hasItemType(TROOPERS);
+//				bool hasInfantry = list->hasItemType(INFANTRY);
+//
+//				bool hasWor = thePlayer.hasWor();
+//				bool hasBarracks = thePlayer.hasBarracks();
+//
+//				if (currentUpgradeLevelOfList < 2) {
+//					if (!hasInfantry && hasBarracks) {
+//						return new cListUpgrade(75, 300, UPGRADE_ONE, new cBuildingListItem(INFANTRY, units[INFANTRY], SUBLIST_INFANTRY));
+//					} else if (!hasTroopers && hasWor) {
+//						return new cListUpgrade(75, 300, UPGRADE_TWO, new cBuildingListItem(TROOPERS, units[TROOPERS], SUBLIST_TROOPERS));
+//					} else {
+//						// do nothing
+//					}
+//				}
+//			}
+//		}
+//	}
 
 	return NULL;
 }

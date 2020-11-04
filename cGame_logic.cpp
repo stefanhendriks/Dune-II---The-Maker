@@ -2862,6 +2862,7 @@ bool cGame::setupGame() {
 	install_structures();
 	install_bullets();
 	install_units();
+	install_upgrades();
 	logbook("Installing:  WORLD");
 	INSTALL_WORLD();
 

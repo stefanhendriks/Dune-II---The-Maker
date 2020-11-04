@@ -100,7 +100,7 @@ void cGame::combat_mouse()
         if (hover_unit > -1) {
 
         	// wanting to repair UNITS, check if its possible
-            if (key[KEY_R] && player[0].iStructures[REPAIR] > 0) {
+            if (key[KEY_R] && player[0].hasAtleastOneStructure(REPAIR)) {
             	if (unit[hover_unit].iPlayer == HUMAN) {
             		if (unit[hover_unit].iHitPoints < units[unit[hover_unit].iType].hp &&
             				units[unit[hover_unit].iType].infantry == false &&
@@ -414,7 +414,7 @@ void cGame::combat_mouse()
 					structure[iStr]->getType() == WOR ||
 					structure[iStr]->getType() == BARRACKS ||
 					structure[iStr]->getType() == REPAIR)
-					player[0].iPrimaryBuilding[structure[iStr]->getType()] = iStr;
+					player[0].setPrimaryBuildingForStructureType(structure[iStr]->getType(), iStr);
 			}
 		}
 

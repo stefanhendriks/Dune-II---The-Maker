@@ -40,9 +40,6 @@ class cPlayer {
 
 		int focus_cell;		// this is the cell that will be showed in the game centralized upon map loading
 
-		int iPrimaryBuilding[MAX_STRUCTURETYPES];	// remember the primary ID (structure id) of each structure type
-		int iStructures[MAX_STRUCTURETYPES]; // remember what is built for each type of structure
-
 		bool bEnoughPower() const;
 
 		int TIMER_think;        // timer for thinking itself (calling main routine)
@@ -107,7 +104,31 @@ class cPlayer {
 
     bool hasAtleastOneStructure(int structureType);
 
+    void decreaseStructureAmount(int structureType) {
+        iStructures[structureType]--;
+    }
+
+    void increaseStructureAmount(int structureType) {
+        iStructures[structureType]++;
+    }
+
     bool hasEnoughCreditsFor(float requestedAmount);
+
+    int getPrimaryStructureForStructureType(int structureType) {
+        return iPrimaryBuilding[structureType];
+    }
+
+    void setPrimaryBuildingForStructureType(int structureType, int structureIndex) {
+        iPrimaryBuilding[structureType] = structureIndex;
+    }
+
+    int getStructureUpgradeLevel(int structureType) {
+        return iStructureUpgradeLevel[structureType];
+    }
+
+    void increaseStructureUpgradeLevel(int structureType) {
+        iStructureUpgradeLevel[structureType]++;
+    }
 
 private:
 		int getRGBColorForHouse(int houseId);
@@ -144,6 +165,9 @@ private:
         void clearStructureTypeBitmaps();
         void clearUnitTypeBitmaps();
 
+        int iPrimaryBuilding[MAX_STRUCTURETYPES];	// remember the primary ID (structure id) of each structure type
+        int iStructures[MAX_STRUCTURETYPES]; // remember what is built for each type of structure
+        int iStructureUpgradeLevel[MAX_STRUCTURETYPES]; // remember the upgrade level for each structure type
 };
 
 #endif

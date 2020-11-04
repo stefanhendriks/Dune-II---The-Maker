@@ -9,7 +9,6 @@ cBuildingList::cBuildingList(int theId) {
 	available = false;		 // is this list available?
 	memset(items, 0, sizeof(items));
 	typeOfList = theId;
-	upgradeLevel = 0;
 	upgrading = false;
 	maxItems = 0;
 	acceptsOrders = true;
@@ -24,7 +23,6 @@ cBuildingList::~cBuildingList() {
 	available = false;		 // is this list available?
 	removeAllItems();
 	memset(items, 0, sizeof(items));
-	upgradeLevel = 0;
 	upgrading = false;
 	maxItems = 0;
 	acceptsOrders = false;
@@ -77,6 +75,10 @@ bool cBuildingList::hasItemType(int itemTypeId) {
 	return false;
 }
 
+void cBuildingList::addUpgradeStructureToList(int upgradeType) {
+    addItemToList(new cBuildingListItem(upgradeType, upgrades[upgradeType], upgradeType));
+}
+
 void cBuildingList::addStructureToList(int structureType, int subList) {
     addItemToList(new cBuildingListItem(structureType, structures[structureType], subList));
 }
@@ -94,17 +96,17 @@ bool cBuildingList::addItemToList(cBuildingListItem * item) {
 		return false;
 	}
 
-	int slot = getFreeSlot();
-	if (slot < 0 ) {
+	int slotId = getFreeSlot();
+	if (slotId < 0 ) {
 		logbook("Failed to add icon to cBuildingList, no free slot left in list");
         return false;
 	}
 
 	// add
-	items[slot] = item;
-	item->setSlotId(slot);
+	items[slotId] = item;
+	item->setSlotId(slotId);
 	item->setList(this);
-	maxItems = slot;
+	maxItems = slotId + 1;
 //	char msg[355];
 //	sprintf(msg, "Icon added with id [%d] added to cBuilding list, put in slot[%d], set maxItems to [%d]", item->getBuildId(), slot, maxItems);
 //	logbook(msg);
@@ -125,7 +127,19 @@ void cBuildingList::removeItemFromList(int position) {
 	} else {
 		delete item;
 		items[position] = NULL;
-		maxItems--;
+
+		// starting from 'position' which became NULL, make sure everything
+		// after that slotIndex is moved. So we don't get gaps.
+        for (int i = (position + 1); i < maxItems; i++) {
+            items[i-1] = items[i];
+            items[i-1]->setSlotId(i-1);
+
+            // and clear it out, which in the next loop will be filled
+            // if there is any other pointer. If not, the 'last' item is NULL now.
+            items[i] = NULL;
+        }
+
+		maxItems--; // now we can do this
 	}
 
 }
@@ -182,8 +196,4 @@ cBuildingListItem * cBuildingList::getItemToPlace() {
 		}
 	}
 	return NULL;
-}
-
-void cBuildingList::increaseUpgradeLevel() {
-    this->upgradeLevel++;
 }
