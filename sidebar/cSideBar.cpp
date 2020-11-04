@@ -125,6 +125,10 @@ void cSideBar::thinkAvailabilityLists() {
 		bool acceptsOrders = orderProcesser->acceptsOrders();
 		starportList->setAcceptsOrders(acceptsOrders);
 	}
+
+    // UPGRADES LIST (for now is always available - later should be depending on items in list)
+    cBuildingList * upgradesList = getList(LIST_UPGRADES);
+    upgradesList->setAvailable(true);
 }
 
 /**
