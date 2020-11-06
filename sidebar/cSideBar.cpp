@@ -201,7 +201,6 @@ void cSideBar::thinkInteraction() {
 								item->setIsBuilding(false);
 								item->setProgress(0);
 								cItemBuilder *itemBuilder = m_Player.getItemBuilder();
-								assert(itemBuilder);
 								itemBuilder->removeItemFromList(item);
 							}
 							// else, only the number is decreased (used for queueing)

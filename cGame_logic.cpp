@@ -2896,7 +2896,7 @@ void cGame::setup_players() {
 		cItemBuilder * itemBuilder = new cItemBuilder(*thePlayer);
 		thePlayer->setItemBuilder(itemBuilder);
 
-		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(player[i], game.iMission, iHouse);
+		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(player[i], iHouse);
 		thePlayer->setSideBar(sidebar);
 
 		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(thePlayer);

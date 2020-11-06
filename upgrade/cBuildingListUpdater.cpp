@@ -20,7 +20,6 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
     cBuildingList *listConstYard = sideBar->getList(LIST_CONSTYARD);
     cBuildingList *listFootUnits = sideBar->getList(LIST_FOOT_UNITS);
     cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
-    cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
 
 	int house = player->getHouse();
 	int techLevel = player->getTechLevel();
@@ -50,9 +49,6 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
         }
 
         if (techLevel >= 4) {
-            if (player->getStructureUpgradeLevel(structureType) == 0) {
-                listUpgrades->addUpgradeStructureToList(UPGRADE_TYPE_SLAB4);
-            }
             //list->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4])); // only available after upgrading
             listConstYard->addStructureToList(WALL, 0);
             cLogger::getInstance()->logCommentLine("onStructureCreated - added WALL to list");
@@ -187,7 +183,9 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
         listUnits->addUnitToList(CARRYALL, SUBLIST_HIGHTECH);
     }
 
-	// do something
+    evaluateUpgrades();
+
+    // do something
 	cLogger::getInstance()->logCommentLine("onStructureCreated - end");
 }
 
@@ -203,10 +201,65 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
     sprintf(msg, "onStructureDestroyed - for player [%d], structureType [%d], techlevel [%d], house [%d]", player->getId(), structureType, techLevel, house);
     cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureDestroyed", msg);
 
+    evaluateUpgrades();
 
     cLogger::getInstance()->logCommentLine("onStructureDestroyed - end");
 }
 
+
+void cBuildingListUpdater::evaluateUpgrades() {
+    cLogger::getInstance()->logCommentLine("evaluateUpgrades - start");
+    cSideBar *sideBar = player->getSideBar();
+    cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
+
+    for (int i = 0; i < MAX_UPGRADETYPES; i++) {
+        s_Upgrade &upgrade = upgrades[i];
+        if (!upgrade.enabled) continue;
+        // check techlevel (this is a non-changing value per mission, usually coupled with mission nr, ie
+        // mission 1 = techlevel 1. Mission 9 = techlevel 9. Skirmish is usually techlevel 9.
+        if (player->getTechLevel() < upgrade.techLevel) continue;
+
+        bool meetsConditions = true;
+
+        // check if player has structure to upgrade
+        if (!player->hasAtleastOneStructure(upgrade.structureType)) meetsConditions = false;
+
+        // check if player has the additional structure (if required)
+        if (upgrade.needsStructure > -1 && !player->hasAtleastOneStructure(upgrade.needsStructure)) meetsConditions = false;
+
+        // check if the structure to upgrade is at the expected level
+        if (player->getStructureUpgradeLevel(upgrade.structureType) != upgrade.atUpgradeLevel) meetsConditions = false;
+
+        if (meetsConditions) {
+            listUpgrades->addUpgradeToList(i);
+        } else {
+            cBuildingListItem * item = listUpgrades->getItemByBuildId(i);
+
+            if (item) {
+                if (item->isBuilding() && !item->isDoneBuilding()) {
+                    // DUPLICATION OF cSidebar::thinkInteraction, line ~ 195!
+                    cLogger::getInstance()->log(LOG_INFO, COMP_BUILDING_LIST_UPDATER, "Cancel upgrading", "Upgrade no longer available, aborted mid-way upgrading so refunding.");
+                    // only give money back for item that is being built
+                    if (item->isBuilding()) {
+                        // calculate the amount of money back:
+                        player->credits += item->getRefundAmount();
+                    }
+                    item->setIsBuilding(false);
+                    item->setProgress(0);
+                    cItemBuilder *itemBuilder = player->getItemBuilder();
+                    itemBuilder->removeItemFromList(item);
+                }
+            }
+
+            // remove it
+            listUpgrades->removeItemFromListByBuildId(i);
+        }
+    }
+
+    // TODO: Delete upgrades when structure no longer available
+
+    cLogger::getInstance()->logCommentLine("evaluateUpgrades - end");
+}
 
 /**
  * method called, when buildingListItem (the upgrade) has finished building.
@@ -237,31 +290,7 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item) {
         list->addStructureToList(upgradeType.providesTypeId, upgradeType.providesTypeSubList);
     }
 
-    // MOVE to structure upgrader
-//
-//	int currentLevel = listToUpgrade->getUpgradeLevel();
-//	int newLevel = currentLevel + 1;
-//	// up the upgrade level
-//	listToUpgrade->setUpgradeLevel(newLevel);
-//
-//	// constyard list upgrades two times
-//	char msg[255];
-//	sprintf(msg, "currentLevel = %d, newLevel = %d , listId = %d", currentLevel, newLevel, listToUpgrade->getType());
-//	cLogger::getInstance()->logCommentLine(msg);
-//
-//	if (listToUpgrade->getType() == LIST_CONSTYARD) {
-//		if (listToUpgrade->getUpgradeLevel() == 1) {
-//			listToUpgrade->addStructureToList(SLAB4, 0);
-//		} else if (listToUpgrade->getUpgradeLevel() == 2) {
-//			listToUpgrade->addStructureToList(RTURRET, 0);
-//		}
-//	}
-//
-//	if (listToUpgrade->getType() == LIST_UNITS) {
-//		if (listToUpgrade->getUpgradeLevel() == 1) {
-//			listToUpgrade->addUnitToList(QUAD, SUBLIST_LIGHTFCTRY);
-//		}
-//	}
+    evaluateUpgrades();
 
 	cLogger::getInstance()->logCommentLine("updateUpgradeCompleted - end");
 }

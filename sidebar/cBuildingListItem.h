@@ -14,7 +14,7 @@ public:
     ~cBuildingListItem();
 
 	// uber constructoe
-    cBuildingListItem(eBuildType type, int theID, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList);
+    cBuildingListItem(eBuildType type, int buildId, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList);
 
 	// easier constructors
     cBuildingListItem(int theID, s_Structures entry, int subList);
@@ -24,7 +24,7 @@ public:
 	// gettters
 	int getTotalBuildTime() { return totalBuildTime; }
 	int getIconId() { return icon; }
-	int getBuildId() { return ID; }
+	int getBuildId() { return buildId; }
 	int getSubList() { return subList; }
 	eBuildType getBuildType() { return type; }
 	int getBuildCost() const { return cost; }
@@ -33,10 +33,10 @@ public:
 	bool isState(eBuildingListItemState value) { return state == value; }
 	bool isAvailable() { return isState(eBuildingListItemState::AVAILABLE); }
 	int getTimesToBuild() { return timesToBuild; }
-	int getSlotId() { return slotId; }
+	int getSlotId() { return slotId; } // return index of items[] array (set after adding item to list, default is < 0)
 	int getTimesOrdered() { return timesOrdered; }
 
-	bool canPay();
+	int getCosts();
 
 	float getCreditsPerProgressTime() { return creditsPerProgressTime; }
 
@@ -46,8 +46,6 @@ public:
 
 	// setters
 	void setIconId(int value) { icon = value; }
-	void setBuildId(int value) { ID = value; }
-	void setBuildType(eBuildType value) { type = value; }
 	void setBuildCost(int value) { cost = value; }
 	void setProgress(int value) { progress = value; }
 	void setIsBuilding(bool value) { building = value; }
@@ -72,7 +70,7 @@ public:
 
 private:
 	int icon;				// the icon ID to draw (from datafile)
-	int ID;					// the ID to build ..
+	int buildId;			// the ID to build .. (ie TRIKE, or CONSTYARD)
 	eBuildType type;		// .. of this type of thing (ie, UNIT or STRUCTURE)
 	int cost;				// price
 	bool building;			// building this item? (default = false)

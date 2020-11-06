@@ -23,8 +23,6 @@ enum eBuildType {
 // the BuildingListItemState
 enum eBuildingListItemState {
 	AVAILABLE,
-	REQUIRES_UPGRADE,
-	UPGRADING,
 	BUILDING,
 	UNAVAILABLE
 };
