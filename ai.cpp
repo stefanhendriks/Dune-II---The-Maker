@@ -989,14 +989,14 @@ void cAIPlayer::think_buildbase()
                 }
 
 			// when no windtrap, then build one (or when low power)
-			if (player[ID].getAmountOfStructuresForType(WINDTRAP) || !player[ID].bEnoughPower())
+			if (!player[ID].hasAtleastOneStructure(WINDTRAP) || !player[ID].bEnoughPower())
 			{
 				BUILD_STRUCTURE(WINDTRAP);
 				return;
 			}
 
 			// build refinery
-			if (player[ID].getAmountOfStructuresForType(REFINERY) < 1)
+			if (!player[ID].hasAtleastOneStructure(REFINERY))
 			{
 				BUILD_STRUCTURE(REFINERY);
 				return;
@@ -1110,42 +1110,36 @@ void cAIPlayer::think_buildbase()
 
 }
 
-void cAIPlayer::think_worm()
-{
-
+void cAIPlayer::think_worm() {
     // loop through all its worms and move them around
-    for (int i=0; i < MAX_UNITS; i++)
-        if (unit[i].isValid())
-            if (unit[i].iType == SANDWORM && unit[i].iPlayer == ID)
-            {
-                // when on guard
-                if (unit[i].iAction == ACTION_GUARD)
-                {
-                    // find new spot to go to
-                    for (int iTries=0; iTries < 10; iTries++)
-                    {
-                        int iMoveTo = rnd(MAX_CELLS);
+    for (int i=0; i < MAX_UNITS; i++) {
+        if (!unit[i].isValid()) continue;
+        if (unit[i].iType != SANDWORM) continue;
+        if (unit[i].iPlayer != ID) continue;
 
-                        if (map.getCellType(iMoveTo) == TERRAIN_SAND ||
-                            map.getCellType(iMoveTo) == TERRAIN_HILL ||
-                            map.getCellType(iMoveTo) == TERRAIN_SPICE ||
-                            map.getCellType(iMoveTo) == TERRAIN_SPICEHILL)
-                        {
-                            logbook("Order move #4");
-                            UNIT_ORDER_MOVE(i, iMoveTo);
-                            break;
-                        }
-                    }
+        // when on guard
+        if (unit[i].iAction == ACTION_GUARD) {
 
+            // find new spot to go to
+            for (int iTries = 0; iTries < 10; iTries++) {
+                int iMoveTo = rnd(MAX_CELLS);
+
+                if (map.getCellType(iMoveTo) == TERRAIN_SAND ||
+                    map.getCellType(iMoveTo) == TERRAIN_HILL ||
+                    map.getCellType(iMoveTo) == TERRAIN_SPICE ||
+                    map.getCellType(iMoveTo) == TERRAIN_SPICEHILL) {
+                    UNIT_ORDER_MOVE(i, iMoveTo);
+                    break;
                 }
             }
+        }
+    }
 }
 
 /////////////////////////////////////////////////
 
 
-int AI_STRUCTYPE(int iUnitType)
-{
+int AI_STRUCTYPE(int iUnitType) {
     // CHECK FOR BUILDING
     int iStrucType=HEAVYFACTORY;     // what do we need to build this unit?
 
@@ -1154,7 +1148,6 @@ int AI_STRUCTYPE(int iUnitType)
     // light vehicles
     if (iUnitType == TRIKE || iUnitType == RAIDER || iUnitType == QUAD)
         iStrucType =LIGHTFACTORY;
-
 
     // soldiers and troopers
     if (iUnitType == INFANTRY || iUnitType == SOLDIER)
@@ -1171,8 +1164,7 @@ int AI_STRUCTYPE(int iUnitType)
 }
 
 // Helper functions to keep fair play:
-bool AI_UNITSTRUCTURETYPE(int iPlayer, int iUnitType)
-{
+bool AI_UNITSTRUCTURETYPE(int iPlayer, int iUnitType) {
     // This function will do a check what kind of structure is needed to build the unittype
     // Basicly the function returns true when its valid to build the unittype, or false
     // when its impossible (due no structure, money, etc)
@@ -1193,7 +1185,6 @@ bool AI_UNITSTRUCTURETYPE(int iPlayer, int iUnitType)
     // Do the reality-check, do we have the building needed?
     if (!player[iPlayer].hasAtleastOneStructure(iStrucType))
         return false; // we do not have the building
-
 
     // WE MAY BUILD IT!
     return true;
