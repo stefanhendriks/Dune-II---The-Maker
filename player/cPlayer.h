@@ -56,7 +56,6 @@ class cPlayer {
 		void setTechLevel(int theTechLevel) { techLevel = theTechLevel; }
 		void setHouse(int iHouse);
 		void setStructurePlacer(cStructurePlacer *theStructurePlacer);
-		void setUpgradeBuilder(cUpgradeBuilder *theUpgradeBuilder);
 		void setOrderProcesser(cOrderProcesser *theOrderProcesser);
 		void setGameControlsContext(cGameControlsContext *theGameControlsContext);
 
@@ -70,7 +69,6 @@ class cPlayer {
 		int getTechLevel() const { return techLevel; }
 		int getId() const { return id; }
 		cStructurePlacer * getStructurePlacer() const { return structurePlacer; }
-		cUpgradeBuilder * getUpgradeBuilder() const { return upgradeBuilder; }
 		cOrderProcesser * getOrderProcesser() const { return orderProcesser; }
 		cGameControlsContext * getGameControlsContext() const { return gameControlsContext; }
 		int getMinimapColor() const { return minimapColor; }
@@ -143,7 +141,6 @@ private:
 		// these have all state, and need to be recreated for each mission.
 		cSideBar * sidebar;			// each player has a sidebar (lists of what it can build)
 		cItemBuilder * itemBuilder; // each player can build items
-		cUpgradeBuilder * upgradeBuilder; // each player can upgrade lists
 
 		cBuildingListUpdater * buildingListUpdater; // modifies list of sidebar on upgrades
 		cStructurePlacer * structurePlacer;	// used to place structures and handle updates in sidebar accordingly

@@ -2905,9 +2905,6 @@ void cGame::setup_players() {
 		cStructurePlacer * structurePlacer = new cStructurePlacer(thePlayer);
 		thePlayer->setStructurePlacer(structurePlacer);
 
-		cUpgradeBuilder * upgradeBuilder = new cUpgradeBuilder(thePlayer);
-		thePlayer->setUpgradeBuilder(upgradeBuilder);
-
 		cOrderProcesser * orderProcesser = new cOrderProcesser(thePlayer);
 		thePlayer->setOrderProcesser(orderProcesser);
 

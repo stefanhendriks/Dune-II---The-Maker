@@ -11,16 +11,15 @@ cSideBar::cSideBar(cPlayer & thePlayer) : m_Player(thePlayer) {
 	assert(&thePlayer);
 	selectedListID = -1; // nothing is selected
 	memset(lists, 0, sizeof(lists));
-	upgradeUtils = new cUpgradeUtils();
 }
 
 cSideBar::~cSideBar() {
 	for (int i = 0; i < LIST_MAX; i++) {
-		if (lists[i] != NULL) {
+		if (lists[i]) {
+		    lists[i]->removeAllItems();
 			delete lists[i]; // delete list
 		}
 	}
-	delete upgradeUtils;
 }
 
 void cSideBar::setList(int listId, cBuildingList* list) {

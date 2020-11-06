@@ -7,8 +7,4 @@ class cBuildingListItem;
 // this thing can update building lists from a sidebar
 #include "cBuildingListUpdater.h"
 
-#include "cListUpgrade.h"
-
-#include "cUpgradeBuilder.h"
-
 #endif

@@ -18,7 +18,6 @@ cPlayer::cPlayer() {
 	orderProcesser = NULL;
 	sidebar = NULL;
 	structurePlacer = NULL;
-	upgradeBuilder = NULL;
 	buildingListUpdater = NULL;
 	gameControlsContext = NULL;
 	char msg[255];
@@ -41,9 +40,6 @@ cPlayer::~cPlayer() {
 	}
 	if (structurePlacer) {
 		delete structurePlacer;
-	}
-	if (upgradeBuilder) {
-		delete upgradeBuilder;
 	}
 	if (buildingListUpdater) {
 		delete buildingListUpdater;
@@ -105,17 +101,6 @@ void cPlayer::clearUnitTypeBitmaps() {
         }
         bmp_unit_top[i] = nullptr;
     }
-}
-
-void cPlayer::setUpgradeBuilder(cUpgradeBuilder *theUpgradeBuilder) {
-	assert(theUpgradeBuilder);
-
-	// delete old reference
-	if (upgradeBuilder) {
-		delete upgradeBuilder;
-	}
-
-	upgradeBuilder = theUpgradeBuilder;
 }
 
 void cPlayer::setSideBar(cSideBar *theSideBar) {

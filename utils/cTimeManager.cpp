@@ -152,11 +152,6 @@ void cTimeManager::handleTimerGlobal() {
 					if (itemBuilder) {
 						itemBuilder->think();
 					}
-
-					cUpgradeBuilder * upgradeBuilder = player[i].getUpgradeBuilder();
-					if (upgradeBuilder) {
-						upgradeBuilder->processUpgrades();
-					}
 				}
 
 

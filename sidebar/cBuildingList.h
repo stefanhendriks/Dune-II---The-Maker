@@ -31,7 +31,6 @@ class cBuildingList {
         void addStructureToList(int structureType, int subList);
         void addUnitToList(int unitType, int subList);
 
-        // generic way, ie by upgradeBuilder
         bool addItemToList(cBuildingListItem * item);
 
 		bool isOverButton(int x, int y);
