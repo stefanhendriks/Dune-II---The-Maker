@@ -23,9 +23,11 @@ class cBuildingList {
 		cBuildingListItem * getItem(int i); 	// return building list item in array at position.
 		cBuildingListItem * getItemToPlace();		// return building list item with placeIt = true.
 
-		void removeItemFromList(int position);
+		bool removeItemFromList(cBuildingListItem * item);
+		bool removeItemFromList(int position);
+		bool removeItemFromListByBuildId(int type);
 
-        void addUpgradeStructureToList(int structureTypeToUpgrade);
+        void addUpgradeToList(int structureTypeToUpgrade);
         void addStructureToList(int structureType, int subList);
         void addUnitToList(int unitType, int subList);
 
@@ -47,7 +49,7 @@ class cBuildingList {
 		bool isAvailable() { return available; }
 		bool isAcceptsOrders() { return acceptsOrders; }
         std::array<int, 5> isBuildingItem();
-		bool hasItemType(int itemTypeId);
+        cBuildingListItem * getItemByBuildId(int buildId);
 
 		// set
 		void setTimer(int value) { TIMER_progress = value; }

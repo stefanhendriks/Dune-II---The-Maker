@@ -21,12 +21,12 @@ cSideBarFactory *cSideBarFactory::getInstance() {
 }
 
 // construct a cSideBar
-cSideBar * cSideBarFactory::createSideBar(cPlayer& thePlayer, int techlevel, int house) {
+cSideBar * cSideBarFactory::createSideBar(cPlayer& thePlayer, int house) {
 	assert(&thePlayer);
 	cSideBar *sidebar = new cSideBar(thePlayer);
 
 	for (int listId = LIST_NONE; listId < LIST_MAX; listId++) {
-		cBuildingList *list = cBuildingListFactory::getInstance()->createList(listId, techlevel, house);
+		cBuildingList *list = cBuildingListFactory::getInstance()->createList(listId, house);
 		sidebar->setList(listId, list);
 	}
 

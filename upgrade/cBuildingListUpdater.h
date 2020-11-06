@@ -24,6 +24,8 @@ class cBuildingListUpdater {
 		// upgrade completed, like add 4slab
 		void onUpgradeCompleted(cBuildingListItem *item);
 
+		void evaluateUpgrades();
+
 	private:
 		// this sidebar will be updated
 		cSideBar *sidebar;

@@ -105,6 +105,8 @@ struct s_Structures {
  * Then, also, this struct provides which item and what kind of item will be made available.
  */
 struct s_Upgrade {
+    bool enabled;        // set to true to use this upgrade logic
+
     int icon;            // icon id
 
     int cost;            // price
@@ -113,8 +115,12 @@ struct s_Upgrade {
 
     int buildTime;     // how long it takes to upgrade/build
 
+    int techLevel;      // the minimum techlevel required for this upgrade
     int atUpgradeLevel; // linear upgradeLevel per structure type, this is the nr where this upgrade is offered. (0 = start)
     int structureType;  // if > -1 then increase upgradeLevel for structureType
+    int needsStructure; // the upgrade is only available when this structure is available, this is additional to the structureType property
+                        // above, so if you require CONSTYARD *and* RADAR you set structureType=CONSTYARD and needsStructure=RADAR, keep -1
+                        // if you don't require any additional structure
 
     int providesType; // UNIT or STRUCTURE (0/1)
 

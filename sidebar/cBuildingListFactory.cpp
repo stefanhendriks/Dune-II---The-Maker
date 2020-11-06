@@ -40,7 +40,7 @@ int cBuildingListFactory::getButtonDrawXStart() {
  * @param techlevel
  * @param house
  */
-void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int techlevel, int house) {
+void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int house) {
 	assert(list != NULL);
 
 	// first clear the list
@@ -138,9 +138,9 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
  * @param techlevel
  * @return
  */
-cBuildingList * cBuildingListFactory::createList(int listId, int techlevel, int house) {
+cBuildingList * cBuildingListFactory::createList(int listId, int house) {
 	cBuildingList * list = new cBuildingList(listId);
-    initializeList(list, listId, techlevel, house);
+    initializeList(list, listId, house);
 	list->setTypeOfList(listId); // list id == type (see cSideBarFactory)
 	return list;
 }

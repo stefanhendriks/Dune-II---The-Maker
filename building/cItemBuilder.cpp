@@ -20,7 +20,7 @@ int cItemBuilder::getTimerCap(cBuildingListItem *item) {
 	int iTimerCap = 35; // was 35 = ORIGINAL
 
 	if (DEBUGGING) {
-		iTimerCap = 3;
+//		iTimerCap = 3;
 	}
 
 	// when m_Player has low power, produce twice as slow
@@ -278,7 +278,7 @@ bool cItemBuilder::isBuildListItemTheFirstOfItsListType(cBuildingListItem *item)
  * @param item
  */
 void cItemBuilder::removeItemFromList(cBuildingListItem *item) {
-	if (item == NULL) return;
+	if (item == nullptr) return;
 
 	int indexToDelete = -1;
 	for (int i = 0; i < MAX_ITEMS; i++) {

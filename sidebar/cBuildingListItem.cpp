@@ -3,16 +3,16 @@
 /**
  *
  * @param type
- * @param theID (id of the TYPE, ie structureType ID or unitType ID or upgradeType ID)
+ * @param buildId (id of the TYPE, ie structureType ID or unitType ID or upgradeType ID)
  * @param cost
  * @param icon
  * @param totalBuildTime
  * @param list
  * @param subList
  */
-cBuildingListItem::cBuildingListItem(eBuildType type, int theID, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList) {
-    assert(theID >= 0);
-    ID = theID;
+cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList) {
+    assert(buildId >= 0);
+    this->buildId = buildId;
     this->cost = cost;
     this->icon = icon;
     this->totalBuildTime = totalBuildTime;
@@ -56,23 +56,17 @@ cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, int subList) : cB
 cBuildingListItem::cBuildingListItem(int theID, s_Upgrade entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
 }
 
-bool cBuildingListItem::canPay() {
-	int costs = 0;
+int cBuildingListItem::getCosts() {
+    int costs = 0;
 
-	// get the ID
-	if (type == UNIT) {
-		costs = units[ID].cost;
-	} else if (type == STRUCTURE) {
-		costs = structures[ID].cost;
-	} else {
-		costs = 0;
-	}
-
-	if (player[0].credits >= costs) {
-		return true;
-	}
-
-	return false;
+    if (type == UNIT) {
+        costs = units[buildId].cost;
+    } else if (type == STRUCTURE) {
+        costs = structures[buildId].cost;
+    } else if (type == UPGRADE) {
+        costs = upgrades[buildId].cost;
+    }
+    return costs;
 }
 
 /**
@@ -97,13 +91,13 @@ void cBuildingListItem::increaseProgress(int byAmount) {
 
 int cBuildingListItem::getBuildTime() {
     if (type == STRUCTURE) {
-        return structures[getBuildId()].build_time;
+        return structures[buildId].build_time;
     }
     if (type == UPGRADE) {
-        return upgrades[getBuildId()].buildTime;
+        return upgrades[buildId].buildTime;
     }
     // assumes other things (ie super weapons and such) are also under 'units' array.
-    return units[getBuildId()].build_time;
+    return units[buildId].build_time;
 }
 
 bool cBuildingListItem::isDoneBuilding() {

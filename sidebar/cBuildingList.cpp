@@ -56,26 +56,24 @@ void cBuildingList::removeAllItems() {
 }
 
 bool cBuildingList::isItemInList(cBuildingListItem * item) {
-	assert(item);
-	return hasItemType(item->getBuildId());
+	if (item == nullptr) return false;
+	return getItemByBuildId(item->getBuildId()) != nullptr;
 }
 
-bool cBuildingList::hasItemType(int itemTypeId) {
-	assert(itemTypeId >= 0);
+cBuildingListItem * cBuildingList::getItemByBuildId(int buildId) {
 	for (int i =0; i < MAX_ICONS; i++) {
 		cBuildingListItem * itemInList = getItem(i);
+		if (itemInList == nullptr) continue;
 
 		// item already in list (same build id)
-		if (itemInList) {
-			if (itemTypeId == itemInList->getBuildId()) {
-				return true;
-			}
-		}
+        if (buildId == itemInList->getBuildId()) {
+            return itemInList;
+        }
 	}
-	return false;
+	return nullptr;
 }
 
-void cBuildingList::addUpgradeStructureToList(int upgradeType) {
+void cBuildingList::addUpgradeToList(int upgradeType) {
     addItemToList(new cBuildingListItem(upgradeType, upgrades[upgradeType], upgradeType));
 }
 
@@ -88,8 +86,6 @@ void cBuildingList::addUnitToList(int unitType, int subList) {
 }
 
 bool cBuildingList::addItemToList(cBuildingListItem * item) {
-	assert(item);
-
 	if (isItemInList(item)) {
 		logbook("Will not add, item is already in list.");
 		// item is already in list, do not add
@@ -113,35 +109,47 @@ bool cBuildingList::addItemToList(cBuildingListItem * item) {
     return true;
 }
 
+bool cBuildingList::removeItemFromList(cBuildingListItem * item) {
+    if (item == nullptr) return false;
+    return removeItemFromList(item->getSlotId());
+}
+
+bool cBuildingList::removeItemFromListByBuildId(int buildId) {
+    cBuildingListItem * item = getItemByBuildId(buildId);
+    return removeItemFromList(item);
+}
 /**
- * Remove item from list. Delete item object and set NULL in array.
+ * Remove item from list. Delete item object and set NULL in array. Makes sure to shift all items so that
+ * there won't be gaps
  *
  * @param position
  */
-void cBuildingList::removeItemFromList(int position) {
-	assert(position > -1);
-	assert(position < MAX_ICONS);
+bool cBuildingList::removeItemFromList(int position) {
+    if (position < 0) return false;
+    if (position >= MAX_ICONS) return false;
+
 	cBuildingListItem * item = getItem(position);
-	if (item == NULL) {
+	if (item == nullptr) {
 		// item can be null, in that case do nothing.
-	} else {
-		delete item;
-		items[position] = NULL;
-
-		// starting from 'position' which became NULL, make sure everything
-		// after that slotIndex is moved. So we don't get gaps.
-        for (int i = (position + 1); i < maxItems; i++) {
-            items[i-1] = items[i];
-            items[i-1]->setSlotId(i-1);
-
-            // and clear it out, which in the next loop will be filled
-            // if there is any other pointer. If not, the 'last' item is NULL now.
-            items[i] = NULL;
-        }
-
-		maxItems--; // now we can do this
+		return false;
 	}
 
+	delete item;
+    items[position] = nullptr;
+
+    // starting from 'position' which became NULL, make sure everything
+    // after that slotIndex is moved. So we don't get gaps.
+    for (int i = (position + 1); i < maxItems; i++) {
+        items[i-1] = items[i];
+        items[i-1]->setSlotId(i-1);
+
+        // and clear it out, which in the next loop will be filled
+        // if there is any other pointer. If not, the 'last' item is NULL now.
+        items[i] = nullptr;
+    }
+
+    maxItems--; // now we can do this
+    return true;
 }
 
 /**
