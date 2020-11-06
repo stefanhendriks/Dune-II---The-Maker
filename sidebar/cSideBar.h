@@ -16,7 +16,6 @@
 
 // forward declaration
 class cPlayer;
-class cUpgradeUtils;
 
 // List ID's corresponding buttons
 #define LIST_NONE		0
@@ -67,8 +66,6 @@ class cSideBar {
 		static const int HeightOfMinimap = 200 + 8;
 
 	private:
-
-        cUpgradeUtils * upgradeUtils;
 
         // the lists:
 		cBuildingList * lists[LIST_MAX];
