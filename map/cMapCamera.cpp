@@ -13,7 +13,8 @@ cMapCamera::cMapCamera() {
 	zoomLevel = 1.0f;
 
     int widthOfSidebar = cSideBar::SidebarWidth;
-    heightOfTopBar = 42;
+    heightOfTopBar = cSideBar::TopBarHeight;
+//    heightOfTopBar = 42;
 
     windowWidth=game.screen_x-widthOfSidebar;
     windowHeight= game.screen_y - heightOfTopBar;

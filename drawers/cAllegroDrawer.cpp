@@ -172,3 +172,13 @@ void cAllegroDrawer::blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int w
     // use :: so we use global scope Allegro blit
     ::blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
 }
+
+void cAllegroDrawer::drawRectangle(BITMAP *dest, cRectangle *pRectangle, int color) {
+    if (pRectangle == nullptr) return;
+    rect(dest, pRectangle->getX(), pRectangle->getY(), pRectangle->getEndX(), pRectangle->getEndY(), color);
+}
+
+void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, cRectangle *pRectangle, int color) {
+    if (pRectangle == nullptr) return;
+    rectfill(dest, pRectangle->getX(), pRectangle->getY(), pRectangle->getEndX(), pRectangle->getEndY(), color);
+}

@@ -14,54 +14,73 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, const cPlayer& thePlayer, cMapCamer
 	map = theMap;
 	mapCamera = theMapCamera;
 	iStaticFrame = STAT14;
-	iStatus = -1;
+	status = eMinimapStatus::NOTAVAILABLE;
 	iTrans = 0;
-    m_RectMinimap = new cRectangle(getDrawStartX(), getDrawStartY(), 200, 200);
+    m_mapUtils = new cMapUtils(map);
+    cellCalculator = map->getCellCalculator();
+
+    int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
+    int halfWidthOfMap = getMapWidthInPixels() / 2;
+    int topLeftX = game.screen_x - cSideBar::WidthOfMinimap;
+    drawX = topLeftX + (halfWidthOfMinimap - halfWidthOfMap);
+
+    int halfHeightOfMinimap = cSideBar::HeightOfMinimap / 2;
+    int halfHeightOfMap = getMapHeightInPixels() / 2;
+    int topLeftY = cSideBar::TopBarHeight;
+    drawY = topLeftY + (halfHeightOfMinimap - halfHeightOfMap);
+
+    m_RectMinimap = new cRectangle(drawX, drawY, getMapWidthInPixels(), getMapHeightInPixels());
+    m_RectFullMinimap = new cRectangle(topLeftX, topLeftY, cSideBar::WidthOfMinimap, cSideBar::HeightOfMinimap);
 }
 
 cMiniMapDrawer::~cMiniMapDrawer() {
 	map = NULL;
 	mapCamera = NULL;
 	iStaticFrame = STAT14;
-	iStatus = -1;
+    eMinimapStatus::NOTAVAILABLE;
 	delete m_RectMinimap;
+	delete m_RectFullMinimap;
+    delete m_mapUtils;
+    // do not delete cellCalculator, as we get it from Map (we don't own it)
 }
 
 void cMiniMapDrawer::drawViewPortRectangle() {
     // Draw the magic rectangle (viewport)
-    int iWidth = (mapCamera->getViewportWidth()) / 32;
-    int iHeight = (mapCamera->getViewportHeight()) / 32;
+    int iWidth = (mapCamera->getViewportWidth()) / TILESIZE_WIDTH_PIXELS;
+    int iHeight = (mapCamera->getViewportHeight()) / TILESIZE_HEIGHT_PIXELS;
     iWidth--;
     iHeight--;
 
-    int startX = getDrawStartX() + ((mapCamera->getViewportStartX() / 32) * 2);
-    int startY = getDrawStartY() + ((mapCamera->getViewportStartY() / 32) * 2);
+    int startX = drawX + ((mapCamera->getViewportStartX() / TILESIZE_WIDTH_PIXELS) * 2);
+    int startY = drawY + ((mapCamera->getViewportStartY() / TILESIZE_HEIGHT_PIXELS) * 2);
 
     int minimapWidth = (iWidth * 2) + 1;
     int minimapHeight = (iHeight * 2) + 1;
 
-    set_clip_rect(bmp_screen, getDrawStartX(), getDrawStartY(), game.screen_x, game.screen_y);
+    set_clip_rect(bmp_screen, drawX, drawY, game.screen_x, game.screen_y);
     rect(bmp_screen, startX, startY, startX + minimapWidth, startY + minimapHeight, makecol(255, 255, 255));
     set_clip_rect(bmp_screen, 0, 0, game.screen_x, game.screen_y);
 }
 
-int cMiniMapDrawer::getDrawStartX() {
-    return (game.screen_x - 100) - map->getWidth() / 2;
+int cMiniMapDrawer::getMapWidthInPixels() {
+    // for now, it always uses double pixels. But it could be 1 tile = 1 pixel later when map dimensions can be bigger.
+    return map->getWidth() * 2; // double pixel size
 }
 
-int cMiniMapDrawer::getDrawStartY() {
-	return cSideBar::TopBarHeight + 100 - (map->getHeight()/2);
+int cMiniMapDrawer::getMapHeightInPixels() {
+    // for now, it always uses double pixels. But it could be 1 tile = 1 pixel later when map dimensions can be bigger.
+    return map->getHeight() * 2;
 }
 
 void cMiniMapDrawer::drawTerrain() {
 	// startX = MAX_SCREEN_X - 129
-	int iDrawX=getDrawStartX();
-	int iDrawY=getDrawStartY();
+	int iDrawX=drawX;
+	int iDrawY=drawY;
 
 	int iColor=makecol(0,0,0);
 
 	for (int x = 0; x < (game.map_width); x++) {
-		iDrawY = getDrawStartY(); // reset Y coordinate for drawing for each column
+		iDrawY = drawY; // reset Y coordinate for drawing for each column
 
 		for (int y = 0; y < (game.map_height); y++) {
 			iColor = makecol(0, 0, 0);
@@ -92,15 +111,14 @@ void cMiniMapDrawer::drawTerrain() {
 }
 
 void cMiniMapDrawer::drawUnitsAndStructures() {
-	int iDrawX=getDrawStartX();
-	int iDrawY=getDrawStartY();
+	int iDrawX=drawX;
+	int iDrawY=drawY;
 
 	int iColor=makecol(0,0,0);
-	cMapUtils * mapUtils = new cMapUtils(map);
 
 	for (int x = 0; x < (game.map_width); x++) {
 
-		iDrawY = getDrawStartY(); // reset Y coordinate for drawing for each column
+		iDrawY = drawY; // reset Y coordinate for drawing for each column
 
 		for (int y = 0; y < (game.map_height); y++) {
 			iColor = makecol(0, 0, 0);
@@ -156,8 +174,6 @@ void cMiniMapDrawer::drawUnitsAndStructures() {
 
 		iDrawX += 1;
 	}
-
-	delete mapUtils;
 }
 
 
@@ -203,38 +219,30 @@ void cMiniMapDrawer::interact() {
 }
 
 void cMiniMapDrawer::draw() {
-	assert(map);
-	return;
+    if (!map) return;
 
-	bool hasRadarAndEnoughPower = (m_Player.getAmountOfStructuresForType(RADAR) > 0) && m_Player.bEnoughPower();
+    if (status == eMinimapStatus::NOTAVAILABLE) return;
 
-	if (hasRadarAndEnoughPower) {
-		drawTerrain();
-		drawUnitsAndStructures();
+    allegroDrawer->drawRectangleFilled(bmp_screen, m_RectFullMinimap, makecol(0,0,0));
+
+    if (status == eMinimapStatus::POWERUP ||
+        status == eMinimapStatus::RENDERMAP ||
+        status == eMinimapStatus::POWERDOWN) {
+        drawTerrain();
+        drawUnitsAndStructures();
         drawViewPortRectangle();
-	}
+    }
 
-	if (hasRadarAndEnoughPower) {
-		if (iStatus < 0) {
-            play_sound_id(SOUND_RADAR);
-			play_voice(SOUND_VOICE_03_ATR);
-		}
-		iStatus = 0;
-	} else {
-		if (iStatus > -1) {
-			play_voice(SOUND_VOICE_04_ATR);
-		}
-
-		iStatus = -1;
-	}
-
-	drawStaticFrame();
+    drawStaticFrame();
 }
 
 void cMiniMapDrawer::drawStaticFrame() {
+    if (status == eMinimapStatus::NOTAVAILABLE) return;
+    if (status == eMinimapStatus::RENDERMAP) return;
+
 	// Draw static info
-	 if (iStatus < 0) {
-		 draw_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, getDrawStartX(), getDrawStartY());
+	 if (status == eMinimapStatus::POWERDOWN) {
+		 draw_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, drawX, drawY);
 	 } else {
 		 if (iStaticFrame < STAT10) {
 			 iTrans = 255 - health_bar(192, (STAT12-iStaticFrame), 12);
@@ -245,7 +253,7 @@ void cMiniMapDrawer::drawStaticFrame() {
 		 if (iStaticFrame != STAT01) {
 			 set_trans_blender(0,0,0,iTrans);
 
-			 draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, getDrawStartX(), getDrawStartY());
+			 draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, drawX, drawY);
 			 // reset the trans blender
 			 set_trans_blender(0,0,0,128);
 		 }
@@ -258,4 +266,70 @@ void cMiniMapDrawer::drawDot(int x, int y, int color) {
 	putpixel(bmp_screen, x + 1, y, color);
 	putpixel(bmp_screen, x + 1, y + 1, color);
 	putpixel(bmp_screen, x, y + 1, color);
+}
+
+int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
+    // the minimap can be 128x128 pixels at the bottom right of the screen.
+    int mouseMiniMapX = mouseX - drawX;
+    int mouseMiniMapY = mouseY - drawY;
+
+    // HACK HACK: Major assumption here - if map dimensions ever get > 64x64 this will BREAK!
+    // However, every dot is (due the 64x64 map) 2 pixels wide...
+    mouseMiniMapX /= 2;
+    mouseMiniMapY /= 2;
+
+    // the mouse is the center of the screen, so substract half of the viewport coordinates
+    int newX = mouseMiniMapX;
+    int newY = mouseMiniMapY;
+
+    return cellCalculator->getCellWithMapBorders(newX, newY);
+}
+
+void cMiniMapDrawer::think() {
+    if (m_Player.hasAtleastOneStructure(RADAR)) {
+        if (status == eMinimapStatus::NOTAVAILABLE) {
+            status = eMinimapStatus::POWERUP;
+        }
+    } else {
+        status = eMinimapStatus::NOTAVAILABLE;
+    }
+
+    if (status == eMinimapStatus::NOTAVAILABLE) return;
+
+    bool hasRadarAndEnoughPower = (m_Player.getAmountOfStructuresForType(RADAR) > 0) && m_Player.bEnoughPower();
+
+    // minimap state is enough power
+    if (status == eMinimapStatus::POWERUP || status == eMinimapStatus::RENDERMAP) {
+        if (!hasRadarAndEnoughPower) {
+            // go to state power down (not enough power)
+            status = eMinimapStatus::POWERDOWN;
+            play_voice(SOUND_VOICE_04_ATR); // radar de-activated!
+        }
+    }
+
+    // minimap state is not enough power
+    if (status == eMinimapStatus::POWERDOWN || status == eMinimapStatus::LOWPOWER) {
+        if (hasRadarAndEnoughPower) {
+            // go to state power up (enough power)
+            status = eMinimapStatus::POWERUP;
+            play_sound_id(SOUND_RADAR);
+            play_voice(SOUND_VOICE_03_ATR); // radar activated!
+        }
+    }
+
+    // think about the animation
+
+    if (status == eMinimapStatus::POWERDOWN) {
+        if (iStaticFrame < STAT21) {
+            iStaticFrame++;
+        } else {
+            status = eMinimapStatus::LOWPOWER;
+        }
+    } else if (status == eMinimapStatus::POWERUP) {
+        if (iStaticFrame > STAT01) {
+            iStaticFrame--;
+        } else {
+            status = eMinimapStatus::RENDERMAP;
+        }
+    }
 }

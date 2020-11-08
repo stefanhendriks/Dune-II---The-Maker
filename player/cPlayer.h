@@ -100,33 +100,33 @@ class cPlayer {
         bool hasWor() const;
         bool hasBarracks() const;
 
-    bool hasAtleastOneStructure(int structureType);
+        bool hasAtleastOneStructure(int structureType) const;
 
-    void decreaseStructureAmount(int structureType) {
-        iStructures[structureType]--;
-    }
+        void decreaseStructureAmount(int structureType) {
+            iStructures[structureType]--;
+        }
 
-    void increaseStructureAmount(int structureType) {
-        iStructures[structureType]++;
-    }
+        void increaseStructureAmount(int structureType) {
+            iStructures[structureType]++;
+        }
 
-    bool hasEnoughCreditsFor(float requestedAmount);
+        bool hasEnoughCreditsFor(float requestedAmount) const;
 
-    int getPrimaryStructureForStructureType(int structureType) {
-        return iPrimaryBuilding[structureType];
-    }
+        int getPrimaryStructureForStructureType(int structureType) const {
+            return iPrimaryBuilding[structureType];
+        }
 
-    void setPrimaryBuildingForStructureType(int structureType, int structureIndex) {
-        iPrimaryBuilding[structureType] = structureIndex;
-    }
+        void setPrimaryBuildingForStructureType(int structureType, int structureIndex) {
+            iPrimaryBuilding[structureType] = structureIndex;
+        }
 
-    int getStructureUpgradeLevel(int structureType) {
-        return iStructureUpgradeLevel[structureType];
-    }
+        int getStructureUpgradeLevel(int structureType) const {
+            return iStructureUpgradeLevel[structureType];
+        }
 
-    void increaseStructureUpgradeLevel(int structureType) {
-        iStructureUpgradeLevel[structureType]++;
-    }
+        void increaseStructureUpgradeLevel(int structureType) {
+            iStructureUpgradeLevel[structureType]++;
+        }
 
 private:
 		int getRGBColorForHouse(int houseId);

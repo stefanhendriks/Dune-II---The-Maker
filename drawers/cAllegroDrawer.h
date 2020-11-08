@@ -32,7 +32,10 @@ class cAllegroDrawer {
 		void maskedStretchBlit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 		void maskedStretchBlitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
-	protected:
+        void drawRectangle(BITMAP *dest, cRectangle *pRectangle, int color);
+        void drawRectangleFilled(BITMAP *dest, cRectangle *pRectangle, int color);
+
+protected:
 		int getCenteredXPosForBitmap(BITMAP *bmp, int totalWidth);
 		int getCenteredYPosForBitmap(BITMAP *bmp);
 };
