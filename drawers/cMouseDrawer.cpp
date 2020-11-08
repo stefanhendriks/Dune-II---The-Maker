@@ -47,6 +47,9 @@ void cMouseDrawer::draw() {
     }
 
 	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, x, y);
+
+    cTextDrawer textDrawer(bene_font);
+    textDrawer.drawTextWithTwoIntegers(0, 0, "%d,%d", x, y);
 }
 
 int cMouseDrawer::getDrawXToolTip(int width) {

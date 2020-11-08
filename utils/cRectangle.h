@@ -26,6 +26,13 @@ public:
         return cMouse::isOverRectangle(this->x, this->y, this->width, this->height);
     }
 
+    int getX() { return x; }
+    int getEndX() { return x + width; }
+    int getY() { return y; }
+    int getEndY() { return y + height; }
+    int getWidth() { return width; }
+    int getHeight() { return height; }
+
 private:
     int x;
     int y;

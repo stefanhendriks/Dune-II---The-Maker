@@ -431,12 +431,12 @@ bool cPlayer::hasBarracks() const {
     return iStructures[BARRACKS] > 0;
 }
 
-bool cPlayer::hasAtleastOneStructure(int structureType) {
+bool cPlayer::hasAtleastOneStructure(int structureType) const {
     if (structureType < 0) return false;
     if (structureType >= MAX_STRUCTURETYPES) return false;
     return iStructures[structureType] > 0;
 }
 
-bool cPlayer::hasEnoughCreditsFor(float requestedAmount) {
+bool cPlayer::hasEnoughCreditsFor(float requestedAmount) const {
     return credits > requestedAmount;
 }

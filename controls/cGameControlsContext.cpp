@@ -112,21 +112,5 @@ int cGameControlsContext::getMouseCellFromMiniMap() {
 		return -1;
 	}
 
-	int drawStartX = drawManager->getMiniMapDrawer()->getDrawStartX();
-	int drawStartY = drawManager->getMiniMapDrawer()->getDrawStartY();
-
-	// the minimap is 128x128 pixels at the bottom right of the screen.
-	int mouseMiniMapX = mouse_x - drawStartX;
-	int mouseMiniMapY = mouse_y - drawStartY;
-
-	// However, every dot is (due the 64x64 map) 2 pixels wide.
-	mouseMiniMapX /= 2;
-	mouseMiniMapY /= 2;
-
-	// the mouse is the center of the screen, so substract half of the viewport coordinates
-	int newX = mouseMiniMapX;/* - centerOfViewPortWidth;*/
-	int newY = mouseMiniMapY;/* - centerOfViewPortHeight;*/
-
-	cCellCalculator * cellCalculator = map.getCellCalculator();
-	return cellCalculator->getCellWithMapBorders(newX, newY);
+	return drawManager->getMiniMapDrawer()->getMouseCell(mouse_x, mouse_y);
 }

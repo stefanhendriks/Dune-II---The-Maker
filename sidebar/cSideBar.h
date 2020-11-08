@@ -64,6 +64,7 @@ class cSideBar {
 		static const int SidebarWidth = SidebarWidthWithoutCandyBar + VerticalCandyBarWidth; // including vertical candy bar
 		static const int TopBarHeight = 42;
 		static const int HeightOfMinimap = 200 + 8;
+		static const int WidthOfMinimap = 200;
 
 	private:
 

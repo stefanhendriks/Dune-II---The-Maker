@@ -170,21 +170,8 @@ bool cMap::occupied(int iCll, int iUnitID)
 void cMap::think_minimap() {
 	// Draw static info
 	cMiniMapDrawer * miniMapDrawer = drawManager->getMiniMapDrawer();
-	int iStatus = miniMapDrawer->getStatus();
-	int currentStaticFrame = miniMapDrawer->getStaticFrame();
-	if (iStatus < 0) {
-		miniMapDrawer->drawStaticFrame();
+	miniMapDrawer->think();
 
-		if (currentStaticFrame < STAT21) {
-			currentStaticFrame++;
-		}
-	} else {
-		// transparancy is calculated actulaly
-		if (currentStaticFrame > STAT01) {
-			currentStaticFrame--;
-		}
-	}
-	miniMapDrawer->setStaticFrame(currentStaticFrame);
 }
 
 // TODO: move this to a bulletDrawer (remove here!)
