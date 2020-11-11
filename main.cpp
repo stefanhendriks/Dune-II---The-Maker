@@ -133,6 +133,7 @@ int handleArguments(int argc, char *argv[]) {
 */
 int main(int argc, char **argv) {
 	game.game_filename = "game.ini";
+    set_config_file("d2tm.cfg");
 
     if (handleArguments(argc, argv) > 0) {
         return 0;
