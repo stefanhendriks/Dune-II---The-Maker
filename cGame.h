@@ -71,9 +71,6 @@ public:
 	int selected_structure;
 	int hover_unit;
 
-	int fade_select;        // fade color when selected
-    bool bFadeSelectDir;    // fade select direction
-
 	int paths_created;
 
     int iMusicVolume;       // volume of the mp3 / midi
@@ -146,6 +143,10 @@ public:
 	void destroyAllUnits(bool);
 	void destroyAllStructures(bool);
 
+    int getFadeSelect();
+
+    void think_fading();
+
 private:
 	void poll();
 	void combat();		// the combat part (main) of the game
@@ -174,5 +175,8 @@ private:
 	int iMaxVolume;
 
 	cSoundPlayer *soundPlayer;
+
+    int fade_select;        // fade color when selected
+    bool bFadeSelectDir;    // fade select direction
 };
 

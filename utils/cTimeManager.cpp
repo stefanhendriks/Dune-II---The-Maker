@@ -219,19 +219,7 @@ void cTimeManager::handleTimerGlobal() {
 
 		}
 
-		// Fading of selected stuff
-		if (game.bFadeSelectDir)
-		{
-			game.fade_select++;
-			if (game.fade_select > 254)
-				game.bFadeSelectDir=false;
-		}
-		else
-		{
-			game.fade_select--;
-			if (game.fade_select < 32)
-				game.bFadeSelectDir = true;
-		}
+		game.think_fading();
 
 		timerGlobal--;
   }

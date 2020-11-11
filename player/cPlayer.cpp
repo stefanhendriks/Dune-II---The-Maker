@@ -440,3 +440,41 @@ bool cPlayer::hasAtleastOneStructure(int structureType) const {
 bool cPlayer::hasEnoughCreditsFor(float requestedAmount) const {
     return credits > requestedAmount;
 }
+
+/**
+ * Returns house based fading/pulsating color
+ * @return
+ */
+int cPlayer::getHouseFadingColor() const {
+    int fadeSelect = game.getFadeSelect();
+    if (house == ATREIDES) {
+        return makecol(0, 0, fadeSelect);
+    }
+    if (house == HARKONNEN) {
+        return makecol(fadeSelect, 0, 0);
+    }
+    if (house == ORDOS) {
+        return makecol(0, fadeSelect, 0);
+    }
+
+    // TODO other houses (Sardaukar, etc)
+    return makecol(fadeSelect, fadeSelect, fadeSelect);
+}
+
+/**
+ * Returns the error fading color (red to black pulsating)
+ * @return
+ */
+int cPlayer::getErrorFadingColor() const {
+    int fadeSelect = game.getFadeSelect();
+    return makecol(fadeSelect, 0, 0); // red fading
+}
+
+/**
+ * Returns the fading white color
+ * @return
+ */
+int cPlayer::getSelectFadingColor() const {
+    int fadeSelect = game.getFadeSelect();
+    return makecol(fadeSelect, fadeSelect, fadeSelect); // white fading
+}

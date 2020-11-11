@@ -24,14 +24,6 @@ void cBuildingListDrawer::drawListWithUnitsOrAbilities(cBuildingList *list, int 
     drawList(list, listIDToDraw, false);
 }
 
-/**
- * Remember, the buttons are already drawn 'unpressed' with the overall GUI picture (GERALD_XXX , see datafile).
- *
- * So only draw over these buttons the 'not available' or 'pressed' version.
- *
- * @param list
- * @param pressed
- */
 void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 	assert(list != NULL);
 
@@ -63,6 +55,16 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
     	fblend_rect_trans(bmp_screen, x, y, width, height, makecol(0,0,0), 96);
     }
 
+    if (pressed) {
+        int color = player[HUMAN].getHouseFadingColor();
+        // TODO: Sardaukar?
+
+//        rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), iColor);
+//        rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, iColor);
+        allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
+        allegroDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width-2, height-2, color);
+    }
+
 }
 
 
@@ -84,7 +86,9 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 	int iDrawX=getDrawX();
 	int iDrawY=getDrawY();
 
-	int end = MAX_ITEMS;
+    int selectFadingColor = player[HUMAN].getSelectFadingColor();
+
+    int end = MAX_ITEMS;
 
 	// is building an item in the list?
 	std::array<int, 5> isBuildingItemInList = list->isBuildingItem();
@@ -178,17 +182,18 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 				if (cannotPayIt) {
 					set_trans_blender(0,0,0,128);
 					fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
-					rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(game.fade_select, 0, 0));
-					line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(game.fade_select, 0, 0));
-					line(bmp_screen, iDrawX, iDrawY+47, iDrawX+63, iDrawY, makecol(game.fade_select, 0, 0));
+					int errorFadingColor = player[HUMAN].getErrorFadingColor();
+					rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+					line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+					line(bmp_screen, iDrawX, iDrawY+47, iDrawX+63, iDrawY, errorFadingColor);
 					set_trans_blender(0,0,0,128);
 				}
 			}
 
 			// last built id
 			if (list->getLastClickedId() == i) {
-				rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), makecol(game.fade_select, game.fade_select, game.fade_select));
-				rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(game.fade_select, game.fade_select, game.fade_select));
+				rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), selectFadingColor);
+				rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, selectFadingColor);
 			}
 		}
 
@@ -216,26 +221,9 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 
 		// draw rectangle when mouse hovers over icon
 		if (isOverItemCoordinates_Boolean(mouse_x, mouse_y, iDrawX, iDrawY)) {
-			int iColor=makecol(game.fade_select, game.fade_select, game.fade_select);
-
-			if (player[0].getHouse() == ATREIDES) {
-				iColor = makecol(0, 0, game.fade_select);
-			}
-
-			if (player[0].getHouse() == HARKONNEN) {
-				iColor = makecol(game.fade_select, 0, 0);
-			}
-
-			if (player[0].getHouse() == ORDOS) {
-				iColor = makecol(0, game.fade_select, 0);
-			}
-
-			// TODO: Sardaukar?
-
-			rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), iColor);
-			rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, iColor);
+			rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), selectFadingColor);
+			rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, selectFadingColor);
 		}
-
 
 		// update coordinates, 3 icons in a row
 		if (rowNr < 2) {
