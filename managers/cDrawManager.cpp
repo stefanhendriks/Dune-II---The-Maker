@@ -36,7 +36,7 @@ cDrawManager::~cDrawManager() {
 }
 
 void cDrawManager::draw() {
-	// MAP
+    // MAP
 	assert(mapDrawer);
 	map.draw_think();
     mapDrawer->drawTerrain(0, 42);
@@ -159,6 +159,8 @@ void cDrawManager::drawMessage() {
 
 void cDrawManager::drawMouse() {
 	assert(mouseDrawer);
+	unscare_mouse();
+    select_mouse_cursor(MOUSE_CURSOR_ALLEGRO);
 	mouseDrawer->draw();
 	cGameControlsContext *context = m_Player.getGameControlsContext();
 	if (context->shouldDrawToolTip()) {
