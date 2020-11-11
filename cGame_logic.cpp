@@ -756,7 +756,7 @@ void cGame::mentat(int iType)
 				drawManager->getMessageDrawer()->initCombatPosition();
 
                 // CENTER MOUSE
-                position_mouse(320, 240);
+                cMouse::positionMouseCursor(game.screen_x/2, game.screen_y/2);
 
                 bFadeOut=true;
 
@@ -826,10 +826,8 @@ void cGame::mentat(int iType)
 
     }
 
-
-
-	// MOUSE
-	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+    set_mouse_sprite_focus(0, 0);
+    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
 
     if (bFadeOut) {
         FADE_OUT();
@@ -1010,7 +1008,8 @@ void cGame::menu()
     }
 
    	// MOUSE
-	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+    set_mouse_sprite_focus(0, 0);
+    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
 
 	if (key[KEY_ESC]) {
 		bPlaying=false;
@@ -1513,6 +1512,12 @@ void cGame::setup_skirmish()
     if (MOUSE_WITHIN_RECT(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
         textDrawer.drawTextBottomRight(makecol(255, 0, 0), "START");
 
+        // this needs to be before setup_players :/
+        iMission=9; // high tech level (TODO: make this customizable)
+
+        game.setup_players();
+//        assert(player[HUMAN].getItemBuilder() != NULL);
+
         // START
         if ((cMouse::isLeftButtonClicked() && iSkirmishMap > -1)) {
             cCellCalculator *cellCalculator = new cCellCalculator(&map);
@@ -1715,7 +1720,8 @@ void cGame::setup_skirmish()
     } // mouse hovers over "START"
 
    	// MOUSE
-	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+    set_mouse_sprite_focus(0, 0);
+    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
 
     if (bFadeOut) {
         game.FADE_OUT();
@@ -1808,10 +1814,8 @@ void cGame::house() {
 
 
 	// MOUSE
-	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
-
-
-
+    set_mouse_sprite_focus(0, 0);
+    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
 
     if (bFadeOut)
         game.FADE_OUT();
@@ -1945,8 +1949,8 @@ void cGame::tellhouse()
     }
 
     // draw mouse
-	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
-
+    set_mouse_sprite_focus(0, 0);
+    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
 
     if (bFadeOut)
         FADE_OUT();
@@ -2246,9 +2250,11 @@ void cGame::region() {
 
     // mouse
 	if (mouse_tile == MOUSE_ATTACK)
-		draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
+        set_mouse_sprite_focus(16, 16);
 	else
-		draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+        set_mouse_sprite_focus(0, 0);
+
+    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
 
     if (bFadeOut)
         FADE_OUT();
@@ -2326,7 +2332,10 @@ void cGame::handleTimeSlicing() {
 }
 
 void cGame::shakeScreenAndBlitBuffer() {
-	if (TIMER_shake == 0) {
+    // at last, show mouse
+    show_mouse(bmp_screen);
+
+    if (TIMER_shake == 0) {
 		TIMER_shake = -1;
 	}
 	// blit on screen
@@ -2363,12 +2372,12 @@ void cGame::shakeScreenAndBlitBuffer() {
 			blit(temp, screen, 0, 0, 0, 0, screen_x, screen_y);
 			destroy_bitmap(temp);
 		}
-
 	}
 }
 
 void cGame::runGameState() {
-	switch (state) {
+    show_mouse(NULL);
+    switch (state) {
 		case GAME_PLAYING:
 			combat();
 			break;
@@ -2562,6 +2571,7 @@ bool cGame::setupGame() {
 	install_keyboard();
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
 	install_mouse();
+	enable_hardware_cursor();
 	cMouse::init();
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
@@ -2735,7 +2745,7 @@ bool cGame::setupGame() {
 		clear(bmp_screen);
 	}
 
-	bmp_throttle = create_bitmap(game.screen_x, game.screen_y);
+    bmp_throttle = create_bitmap(game.screen_x, game.screen_y);
 
 	if (bmp_throttle == NULL)
 	{
@@ -2777,7 +2787,7 @@ bool cGame::setupGame() {
 	logbook("Color conversion method set");
 
 	// setup mouse speed
-	set_mouse_speed(-1,-1);
+	set_mouse_speed(0,0);
 
 	logbook("MOUSE: Mouse speed set");
 
