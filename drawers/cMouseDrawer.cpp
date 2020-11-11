@@ -17,39 +17,43 @@ cMouseDrawer::~cMouseDrawer() {
 }
 
 void cMouseDrawer::draw() {
-	int x = cMouse::getX();
-	int y = cMouse::getY();
+    int x = 0;
+    int y = 0;
 
 	// adjust coordinates of drawing according to the specific mouse sprite/tile
 	if (mouse_tile == MOUSE_DOWN){
-		y-=16;
+		y+=16;
     }
     else if (mouse_tile == MOUSE_RIGHT){
-    	x-=16;
+    	x+=16;
     }
     else if (mouse_tile == MOUSE_MOVE || mouse_tile == MOUSE_RALLY){
-    	x-=16;
-    	y-=16;
+    	x+=16;
+    	y+=16;
     }
     else if (mouse_tile == MOUSE_ATTACK){
-    	x-=16;
-    	y-=16;
+    	x+=16;
+    	y+=16;
     }
     else if (mouse_tile == MOUSE_REPAIR){
-    	x-=16;
-    	y-=16;
+    	x+=16;
+    	y+=16;
     }
     else if (mouse_tile == MOUSE_PICK){
-    	x-=16;
-    	y-=16;
+    	x+=16;
+    	y+=16;
     }
     else{
     }
 
-	draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, x, y);
+    set_mouse_sprite_focus(x, y);
+    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
 
-    cTextDrawer textDrawer(bene_font);
-    textDrawer.drawTextWithTwoIntegers(0, 0, "%d,%d", x, y);
+    if (DEBUGGING) {
+        cTextDrawer textDrawer(bene_font);
+        textDrawer.drawTextWithTwoIntegers(0, 0, "X,Y POS: %d,%d", cMouse::getX(), cMouse::getY());
+        textDrawer.drawTextWithTwoIntegers(0, 16, "X,Y OFF: %d,%d", x, y);
+    }
 }
 
 int cMouseDrawer::getDrawXToolTip(int width) {

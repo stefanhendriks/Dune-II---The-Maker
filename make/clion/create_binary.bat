@@ -53,5 +53,6 @@ copy game.ini bin
 echo 13. Copy txt files
 copy *.txt bin
 copy windowed.bat bin
+copy d2tm.cfg bin
 del bin\CMakeLists.txt
 echo Done.
