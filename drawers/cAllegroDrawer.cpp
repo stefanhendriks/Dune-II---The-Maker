@@ -178,6 +178,13 @@ void cAllegroDrawer::drawRectangle(BITMAP *dest, cRectangle *pRectangle, int col
     rect(dest, pRectangle->getX(), pRectangle->getY(), pRectangle->getEndX(), pRectangle->getEndY(), color);
 }
 
+void cAllegroDrawer::drawRectangle(BITMAP *dest, int x, int y, int width, int height, int color) {
+    if (dest == nullptr) return;
+    // the -1 is because the width /height is "including" the current pixel
+    // ie, a width of 1 pixel means it draws just 1 pixel, since the x2 is a dest it should result into x1
+    rect(dest, x, y, x + (width-1), y + (height-1), color);
+}
+
 void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, cRectangle *pRectangle, int color) {
     if (pRectangle == nullptr) return;
     rectfill(dest, pRectangle->getX(), pRectangle->getY(), pRectangle->getEndX(), pRectangle->getEndY(), color);

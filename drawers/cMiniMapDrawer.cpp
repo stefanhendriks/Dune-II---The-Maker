@@ -149,7 +149,7 @@ void cMiniMapDrawer::drawUnitsAndStructures() {
 
                 int idOfWormAtCell = map->getCellIdWormsLayer(iCll);
                 if (idOfWormAtCell > -1) {
-					iColor = makecol(game.fade_select, game.fade_select, game.fade_select);
+					iColor = m_Player.getSelectFadingColor();
 					drawADot = true;
 				}
 			}

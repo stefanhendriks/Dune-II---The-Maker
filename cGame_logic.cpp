@@ -2925,3 +2925,23 @@ bool cGame::isState(int thisState) {
 void cGame::setState(int thisState) {
 	state = thisState;
 }
+
+int cGame::getFadeSelect() {
+    return fade_select;
+}
+
+void cGame::think_fading() {
+    // Fading / pulsating of selected stuff
+    if (bFadeSelectDir) {
+        fade_select++;
+
+        // when 255, then fade back
+        if (fade_select > 254) bFadeSelectDir=false;
+
+        return;
+    }
+
+    fade_select--;
+    // not too dark,
+    if (fade_select < 32) bFadeSelectDir = true;
+}
