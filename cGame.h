@@ -48,6 +48,7 @@ public:
     int ini_screen_height;
 
     bool bPlaySound;            // play sound?
+    bool bDisableAI;            // disable AI thinking?
     bool bPlayMusic;            // play any music?
     bool bMp3;                  // use mp3 files instead of midi
 
