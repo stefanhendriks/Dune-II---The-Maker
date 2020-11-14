@@ -44,7 +44,7 @@ void cStructureFactory::deleteStructureInstance(cAbstractStructure *structure) {
     cPlayer * pPlayer = &player[structure->getPlayerId()];
     cBuildingListUpdater * buildingListUpdater = pPlayer->getBuildingListUpdater();
     if (buildingListUpdater) {
-        buildingListUpdater->onStructureDestroyed(structure->getStructureId());
+        buildingListUpdater->onStructureDestroyed(structure->getType());
     }
 
     // delete memory acquired
