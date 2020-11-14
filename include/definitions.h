@@ -233,6 +233,11 @@
 // Hi-Tech:
 #define UPGRADE_TYPE_HITECH_ORNI                  7 // upgrade HiTech to get Ornithopter
 
+// WOR (Harkonnen & Ordos)
+#define UPGRADE_TYPE_WOR_TROOPERS                 8 // upgrade WOR to get Troopers
+
+// Barracks (Atreides & Ordos)
+#define UPGRADE_TYPE_BARRACKS_INFANTRY            9 // upgrade BARRACKS to get Infantry
 
 #define MUSIC_WIN           0
 #define MUSIC_LOSE          1
