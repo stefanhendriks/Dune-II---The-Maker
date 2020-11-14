@@ -120,7 +120,10 @@ int handleArguments(int argc, char *argv[]) {
 			} else if (command.compare("-debug") == 0) {
 			    // debugging enabled
                 bDoDebug = true;
-			}
+			} else if (command.compare("-noai") == 0) {
+                game.bDisableAI = true;
+
+            }
 		}
 	} // arguments passed
 

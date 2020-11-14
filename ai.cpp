@@ -457,6 +457,8 @@ void cAIPlayer::think_harvester()
 }
 
 void cAIPlayer::think() {
+    if (game.bDisableAI) return; // do nothing
+
     think_building();
 
     // not time yet to think
