@@ -139,20 +139,22 @@ void cAbstractStructure::die()
     structure[iIndex]=NULL;
 
     // Destroy structure, take stuff in effect for the player
-    player[iPlayer].decreaseStructureAmount(getType()); // remove from player building indexes
+    cPlayer &thePlayer = player[iPlayer];
+
+    thePlayer.decreaseStructureAmount(getType()); // remove from player building indexes
 
     // fix up power usage
-    player[iPlayer].use_power -= structures[getType()].power_drain;
+    thePlayer.use_power -= structures[getType()].power_drain;
 
     // less power
-    player[iPlayer].has_power -= structures[getType()].power_give;
+    thePlayer.has_power -= structures[getType()].power_give;
 
 	if (getType() == SILO) {
-		player[iPlayer].max_credits -= 1000;
+        thePlayer.max_credits -= 1000;
 	}
 
 	if (getType() == REFINERY) {
-		player[iPlayer].max_credits -= 1500;
+        thePlayer.max_credits -= 1500;
 	}
 
     // UnitID > -1, means the unit inside will die too
