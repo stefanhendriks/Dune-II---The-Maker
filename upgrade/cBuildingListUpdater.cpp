@@ -109,6 +109,14 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 		}
 	}
 
+    if (structureType == STARPORT) {
+        // House of IX is available if Starport is built
+        if (techLevel >= 7) {
+            cLogger::getInstance()->logCommentLine("onStructureCreated - added IX to list");
+            listConstYard->addStructureToList(IX, 0);
+        }
+    }
+
 	if (structureType == LIGHTFACTORY)
 	{
 		if (techLevel >=4) {
@@ -144,16 +152,11 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 	// Heavyfactory
 	if (structureType == HEAVYFACTORY)
 	{
-		if (techLevel >= 7) {
-			cLogger::getInstance()->logCommentLine("onStructureCreated - added IX to list");
-			listConstYard->addStructureToList(IX, 0);
-		}
-
         listUnits->addUnitToList(TANK, SUBLIST_HEAVYFCTRY);
         listUnits->addUnitToList(HARVESTER, SUBLIST_HEAVYFCTRY);
 	}
 
-	///////////////////////////////////
+    ///////////////////////////////////
 	// ADJUSTMENTS TO INFANTRY LIST
 	///////////////////////////////////
 	if (structureType == BARRACKS) {
@@ -193,7 +196,17 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 void cBuildingListUpdater::onStructureDestroyed(int structureType) {
 	cLogger::getInstance()->logCommentLine("onStructureDestroyed - begin");
 
-	// do something
+    // activate/deactivate any lists if needed
+    cSideBar *sideBar = player->getSideBar();
+    cBuildingList *listConstYard = sideBar->getList(LIST_CONSTYARD);
+
+    if (structureType == STARPORT) {
+        if (!player->hasAtleastOneStructure(STARPORT)) {
+            listConstYard->removeItemFromListByBuildId(IX);
+        }
+    }
+
+    // do something
     int house = player->getHouse();
     int techLevel = player->getTechLevel();
 
