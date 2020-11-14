@@ -218,10 +218,19 @@
 #define WALL              26      // 1 wall
 
 // Upgrade types
-#define UPGRADE_TYPE_SLAB4              0 // 4SLAB upgrade
-#define UPGRADE_TYPE_RTURRET            1 // Rturret
-#define UPGRADE_TYPE_LIGHTFCTRY_ATR     2 // upgrade for Atreides (trike->Quad)
-#define UPGRADE_TYPE_LIGHTFCTRY_ORD     3 // upgrade for Ordos (raider trike->Quad) ?
+#define UPGRADE_TYPE_CONSTYARD_SLAB4              0 // 4SLAB upgrade
+#define UPGRADE_TYPE_CONSTYARD_RTURRET            1 // Rturret
+#define UPGRADE_TYPE_LIGHTFCTRY_QUAD              2 // upgrade LightFctry to get Quad
+
+// Heavy Factory: harkonnen / atreides / ordos
+#define UPGRADE_TYPE_HEAVYFCTRY_MVC               3 // upgrade HeavyFctry to get MVC
+// Heavy Factory: harkonnen / atreides only
+#define UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER          4 // upgrade HeavyFctry to get Rocker Launcher
+#define UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK         5 // upgrade HeavyFctry to get Siege Tank
+// Heavy Factory: ordos only (ordos can only access Launcher via Starport)
+#define UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD     6 // upgrade HeavyFctry to get Siege Tank (later techlevel, after MVC)
+
+// ordos has no upgrade for LIGHTFCTRY
 
 
 #define MUSIC_WIN           0

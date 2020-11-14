@@ -115,6 +115,8 @@ struct s_Upgrade {
 
     int buildTime;     // how long it takes to upgrade/build
 
+    unsigned char house; // 8-bit-flag for which house this upgrade applies.
+
     int techLevel;      // the minimum techlevel required for this upgrade
     int atUpgradeLevel; // linear upgradeLevel per structure type, this is the nr where this upgrade is offered. (0 = start)
     int structureType;  // if > -1 then increase upgradeLevel for structureType

@@ -478,3 +478,15 @@ int cPlayer::getSelectFadingColor() const {
     int fadeSelect = game.getFadeSelect();
     return makecol(fadeSelect, fadeSelect, fadeSelect); // white fading
 }
+
+eHouseBitFlag cPlayer::getHouseBitFlag() {
+    switch(house) {
+        case ATREIDES: return eHouseBitFlag::Atreides;
+        case HARKONNEN: return eHouseBitFlag::Harkonnen;
+        case ORDOS: return eHouseBitFlag::Ordos;
+        case SARDAUKAR: return eHouseBitFlag::Sardaukar;
+        case FREMEN: return eHouseBitFlag::Fremen;
+        default:
+            return eHouseBitFlag::Unknown;
+    }
+}
