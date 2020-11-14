@@ -90,6 +90,7 @@ void cBuildingListItem::increaseProgress(int byAmount) {
 }
 
 int cBuildingListItem::getBuildTime() {
+    if (DEBUGGING) return 1;
     if (type == STRUCTURE) {
         return structures[buildId].build_time;
     }
