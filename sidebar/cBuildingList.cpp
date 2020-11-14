@@ -11,7 +11,7 @@ cBuildingList::cBuildingList(int theId) {
 	typeOfList = theId;
 	upgrading = false;
 	maxItems = 0;
-	acceptsOrders = true;
+	acceptsOrders = true; // at default true, will be set to FALSE/TRUE by starport logic for starport list only
 }
 
 cBuildingList::~cBuildingList() {
