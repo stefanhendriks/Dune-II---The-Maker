@@ -219,6 +219,14 @@ void cBuildingListUpdater::evaluateUpgrades() {
         // mission 1 = techlevel 1. Mission 9 = techlevel 9. Skirmish is usually techlevel 9.
         if (player->getTechLevel() < upgrade.techLevel) continue;
 
+        if (!(upgrade.house & player->getHouseBitFlag())) {
+            // house specific upgrade, player house does not match
+            char msg[255];
+            sprintf(msg, "Upgrade [%s] has not same house.", upgrade.description);
+            logbook(msg);
+            continue;
+        }
+
         bool meetsConditions = true;
 
         // check if player has structure to upgrade

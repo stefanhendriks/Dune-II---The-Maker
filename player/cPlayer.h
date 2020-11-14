@@ -65,6 +65,7 @@ class cPlayer {
 		cItemBuilder *getItemBuilder() const { return itemBuilder; }
 		cSideBar *getSideBar() const { return sidebar; }
 		int getHouse() const { return house; }
+		eHouseBitFlag getHouseBitFlag();
 
 		int getHouseFadingColor() const;
 		int getErrorFadingColor() const;
