@@ -965,6 +965,21 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].buildTime = 150;
     strcpy(upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].description, "Build Siege Tank at Heavy Factory");
 
+    // HI-TECH UPGRADES (Ordos/Atreides only)
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].enabled = true;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].house = Atreides | Ordos;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].techLevel = 8;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].icon = ICON_UNIT_ORNITHOPTER;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].cost = 400;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].structureType = HIGHTECH;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].atUpgradeLevel = 0; // After upgrade to MCV
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].providesType = UNIT;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].providesTypeId = ORNITHOPTER;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].providesTypeList = LIST_UNITS;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].providesTypeSubList = SUBLIST_HIGHTECH;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].buildTime = 150;
+    strcpy(upgrades[UPGRADE_TYPE_HITECH_ORNI].description, "Build Ornithopter at Hi-Tech");
+
 }
 
 

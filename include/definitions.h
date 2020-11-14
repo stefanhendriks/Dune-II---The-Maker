@@ -230,7 +230,8 @@
 // Heavy Factory: ordos only (ordos can only access Launcher via Starport)
 #define UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD     6 // upgrade HeavyFctry to get Siege Tank (later techlevel, after MVC)
 
-// ordos has no upgrade for LIGHTFCTRY
+// Hi-Tech:
+#define UPGRADE_TYPE_HITECH_ORNI                  7 // upgrade HiTech to get Ornithopter
 
 
 #define MUSIC_WIN           0
