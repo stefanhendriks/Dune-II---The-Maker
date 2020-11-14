@@ -135,7 +135,7 @@ void cSideBar::thinkInteraction() {
 					}
 				} else if (item->getBuildType() == UPGRADE){
                     s_Upgrade upgrade = upgrades[item->getBuildId()];
-                    sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), upgrade.description, seconds);
+                    sprintf(msg, "UPGRADE: $%d | %s | %d Secs", item->getBuildCost(), upgrade.description, seconds);
 				} else {
                     sprintf(msg, "UNKNOWN BUILD TYPE");
 				}
