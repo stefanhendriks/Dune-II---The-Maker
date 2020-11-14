@@ -222,13 +222,25 @@ void cBuildingListUpdater::evaluateUpgrades() {
         bool meetsConditions = true;
 
         // check if player has structure to upgrade
-        if (!player->hasAtleastOneStructure(upgrade.structureType)) meetsConditions = false;
+        bool hasAtLeastOneStructureForStructureType = player->hasAtleastOneStructure(upgrade.structureType);
+        if (!hasAtLeastOneStructureForStructureType) {
+            meetsConditions = false;
+        }
 
         // check if player has the additional structure (if required)
-        if (upgrade.needsStructure > -1 && !player->hasAtleastOneStructure(upgrade.needsStructure)) meetsConditions = false;
+        if (upgrade.needsStructureType > -1) {
+            bool hasAtleastOneNeedStructureType = player->hasAtleastOneStructure(upgrade.needsStructureType);
+            if (!hasAtleastOneNeedStructureType) {
+                meetsConditions = false;
+            }
+        }
 
         // check if the structure to upgrade is at the expected level
-        if (player->getStructureUpgradeLevel(upgrade.structureType) != upgrade.atUpgradeLevel) meetsConditions = false;
+        int structureUpgradeLevel = player->getStructureUpgradeLevel(upgrade.structureType);
+
+        if (structureUpgradeLevel != upgrade.atUpgradeLevel) {
+            meetsConditions = false;
+        }
 
         if (meetsConditions) {
             listUpgrades->addUpgradeToList(i);
@@ -256,8 +268,6 @@ void cBuildingListUpdater::evaluateUpgrades() {
         }
     }
 
-    // TODO: Delete upgrades when structure no longer available
-
     cLogger::getInstance()->logCommentLine("evaluateUpgrades - end");
 }
 
@@ -273,9 +283,7 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item) {
 
     s_Upgrade upgradeType = upgrades[item->getBuildId()];
 
-    if (upgradeType.structureType > -1) {
-        player->increaseStructureUpgradeLevel(upgradeType.structureType);
-    }
+    player->increaseStructureUpgradeLevel(upgradeType.structureType);
 
     assert(upgradeType.providesTypeId > -1);
     assert(upgradeType.providesType > -1);

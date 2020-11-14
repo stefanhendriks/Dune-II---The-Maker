@@ -123,7 +123,7 @@ void cItemBuilder::think() {
         } else if (item->getBuildType() == UPGRADE) {
             m_Player.getBuildingListUpdater()->onUpgradeCompleted(item);
             removeItemFromList(item);
-            list->removeItemFromList(item->getSlotId());
+//            list->removeItemFromList(item->getSlotId()); // no need to explicitly remove from list, will be done by onUpgradeCompleted
             continue;
         }
 

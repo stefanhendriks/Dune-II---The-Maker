@@ -838,7 +838,7 @@ void install_upgrades() {
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
         upgrades[i].enabled = false;
         upgrades[i].techLevel = -1;
-        upgrades[i].needsStructure = -1;
+        upgrades[i].needsStructureType = -1;
         upgrades[i].icon = ICON_STR_PALACE;
         upgrades[i].cost = 100;
         upgrades[i].atUpgradeLevel = -1;
@@ -863,13 +863,13 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_SLAB4].providesTypeList = LIST_CONSTYARD;
     upgrades[UPGRADE_TYPE_SLAB4].providesTypeSubList = 0;
     upgrades[UPGRADE_TYPE_SLAB4].buildTime = 50;
-    strcpy(upgrades[UPGRADE_TYPE_SLAB4].description, "Upgrade: Build 4 concrete slabs at once");
+    strcpy(upgrades[UPGRADE_TYPE_SLAB4].description, "Build 4 concrete slabs at once");
 
     // Second upgrade Constyard: Rturret
     upgrades[UPGRADE_TYPE_RTURRET].enabled = true;
     upgrades[UPGRADE_TYPE_RTURRET].icon = ICON_STR_RTURRET;
     upgrades[UPGRADE_TYPE_RTURRET].cost = 400;
-    upgrades[UPGRADE_TYPE_RTURRET].needsStructure = RADAR;
+    upgrades[UPGRADE_TYPE_RTURRET].needsStructureType = RADAR;
     upgrades[UPGRADE_TYPE_RTURRET].structureType = CONSTYARD;
     upgrades[UPGRADE_TYPE_RTURRET].atUpgradeLevel = 1;
     upgrades[UPGRADE_TYPE_RTURRET].providesType = STRUCTURE;
@@ -877,7 +877,7 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_RTURRET].providesTypeList = LIST_CONSTYARD;
     upgrades[UPGRADE_TYPE_RTURRET].providesTypeSubList = 0;
     upgrades[UPGRADE_TYPE_RTURRET].buildTime = 150;
-    strcpy(upgrades[UPGRADE_TYPE_RTURRET].description, "Upgrade: build Rocket Turret");
+    strcpy(upgrades[UPGRADE_TYPE_RTURRET].description, "Build Rocket Turret");
 }
 
 
