@@ -65,8 +65,6 @@ void cItemBuilder::think() {
         // ITEM is building
         timers[i]++;
 
-        cBuildingList *list = item->getList();
-
         // determines how fast an item is built, this is the so called 'delay' before 1 'build time tick' has passed
         int timerCap = getTimerCap(item);
 

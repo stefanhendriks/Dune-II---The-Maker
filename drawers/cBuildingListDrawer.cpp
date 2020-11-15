@@ -24,6 +24,23 @@ void cBuildingListDrawer::drawListWithUnitsOrAbilities(cBuildingList *list, int 
     drawList(list, listIDToDraw, false);
 }
 
+void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list) {
+    assert(list != NULL);
+
+    int x = list->getButtonDrawX();
+    int y = list->getButtonDrawY();
+    int id = list->getButtonIconIdUnpressed();
+
+    int width = ((BITMAP *)gfxinter[id].dat)->w;
+    int height = ((BITMAP *)gfxinter[id].dat)->h;
+
+    int color = player[HUMAN].getSelectFadingColor();
+
+    allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
+    allegroDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width-2, height-2, color);
+
+}
+
 void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 	assert(list != NULL);
 
@@ -57,14 +74,10 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 
     if (pressed) {
         int color = player[HUMAN].getHouseFadingColor();
-        // TODO: Sardaukar?
 
-//        rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), iColor);
-//        rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, iColor);
         allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
         allegroDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width-2, height-2, color);
     }
-
 }
 
 
@@ -215,8 +228,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 			char msg[10];
 			sprintf(msg, "%d", amountToShow);
             textDrawer->drawText(textX, textY, msg);
-//			alfont_textprintf(bmp_screen, game_font, textX + 1,textY + 1, makecol(0,0,0), "%d", amountToShow);
-//			alfont_textprintf(bmp_screen, game_font, textX,textY, makecol(255,255,255), "%d", amountToShow);
 		}
 
 		// draw rectangle when mouse hovers over icon
