@@ -225,14 +225,11 @@ cBuildingListItem *cItemBuilder::findBuildingListItemOfSameListAs(cBuildingListI
 	// get through the build list and find an item that is of the same list.
 	for (int i = 0; i < MAX_ITEMS; i++) {
 		cBuildingListItem *listItem = getItem(i);
-		if (listItem) {
-			if (listItem == item) continue; // do not check self
-
-			if (item->getList() == listItem->getList() &&
-			    item->getSubList() == listItem->getSubList()) {
-				return listItem;
-			}
-		}
+        if (!listItem) continue;
+        if (item->getList() == listItem->getList() &&
+            item->getSubList() == listItem->getSubList()) {
+            return listItem;
+        }
 	}
 	return NULL;
 }
