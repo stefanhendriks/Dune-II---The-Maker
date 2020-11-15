@@ -38,7 +38,6 @@ class cBuildingList {
 		bool isItemInList(cBuildingListItem * item);
 
 		// get
-		bool isUpgrading() { return upgrading; }
 		int getTimer() { return TIMER_progress; }
 		int getLastClickedId() { return lastClickedId; }
 		int getButtonIconIdPressed() { return buttonIconIdPressed; }
@@ -53,7 +52,6 @@ class cBuildingList {
 		// set
 		void setTimer(int value) { TIMER_progress = value; }
 		void setTypeOfList(int value) { typeOfList = value; }
-		void setUpgrading(bool value) { upgrading = value; }
 
 		void setButtonIconIdPressed(int iconId) { buttonIconIdPressed = iconId; }
 		void setButtonIconIdUnpressed(int iconId) { buttonIconIdUnpressed = iconId; }
@@ -71,7 +69,7 @@ protected:
 
 	private:
 		int TIMER_progress;	// timer for upping progress
-		bool upgrading;		// upgrading this field of technology?
+
 		int lastClickedId;	// last clicked item id
 		int buttonIconIdPressed;	// the button to draw at the left of the list when pressed (selected)
 		int buttonIconIdUnpressed;	// the button to draw at the left of the list when unpressed
