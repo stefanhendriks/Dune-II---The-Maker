@@ -55,6 +55,8 @@ struct s_UnitP {
 
   int structureTypeItLeavesFrom; // the type of structure this unit will 'leave' from when it is built. (ie Quad from Light Factory, etc)
 
+  bool queuable;        // can this item be queued in the buildList? (default = true for units)
+
   // UNIT : HARVESTER specific types
   int credit_capacity;      // max credits capacity
   int harvesting_speed;     // speed rate for harvesting (time)
@@ -94,6 +96,8 @@ struct s_Structures {
   int cost;            // price
 
   char name[64];       // name
+
+  bool queuable;        // can this item be queued in the buildList? (default = false)
 
   bool configured;     // is this structure configured? (poor man solution)
 };

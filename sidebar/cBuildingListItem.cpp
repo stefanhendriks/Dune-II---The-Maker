@@ -10,17 +10,18 @@
  * @param list
  * @param subList
  */
-cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList) {
+cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList, bool queuable) {
     assert(buildId >= 0);
     this->buildId = buildId;
     this->cost = cost;
     this->icon = icon;
     this->totalBuildTime = totalBuildTime;
     this->type = type;
+    this->queuable = queuable;
     progress = 0;
     state = AVAILABLE;
     building = false;
-    myList = list;
+    myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
     timesToBuild = 0;
     timesOrdered  = 0;
     slotId = -1; // is set later
@@ -35,19 +36,40 @@ cBuildingListItem::~cBuildingListItem() {
     myList = NULL;
 }
 
+/**
+ * Constructor for Structures
+ * @param theID
+ * @param entry
+ * @param list
+ * @param subList
+ */
 cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingList *list, int subList) :
-                    cBuildingListItem(STRUCTURE, theID, entry.cost, entry.icon, entry.build_time, list, subList) {
+                    cBuildingListItem(STRUCTURE, theID, entry.cost, entry.icon, entry.build_time, list, subList, entry.queuable) {
 }
 
+/**
+ * Constructor for Upgrades
+ * @param theID
+ * @param entry
+ * @param list
+ * @param subList
+ */
 cBuildingListItem::cBuildingListItem(int theID, s_Upgrade entry, cBuildingList *list, int subList) :
-                    cBuildingListItem(UPGRADE, theID, entry.cost, entry.icon, entry.buildTime, list, subList) {
+                    cBuildingListItem(UPGRADE, theID, entry.cost, entry.icon, entry.buildTime, list, subList, false) {
 }
 
 cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
 }
 
+/**
+ * Constructor for units
+ * @param theID
+ * @param entry
+ * @param list
+ * @param subList
+ */
 cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *list, int subList) :
-                    cBuildingListItem(UNIT, theID, entry.cost, entry.icon, entry.build_time, list, subList) {
+                    cBuildingListItem(UNIT, theID, entry.cost, entry.icon, entry.build_time, list, subList, entry.queuable) {
 }
 
 cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
@@ -90,7 +112,7 @@ void cBuildingListItem::increaseProgress(int byAmount) {
 }
 
 int cBuildingListItem::getBuildTime() {
-    if (DEBUGGING) return 1;
+//    if (DEBUGGING) return 1;
     if (type == STRUCTURE) {
         return structures[buildId].build_time;
     }

@@ -117,50 +117,55 @@ void cSideBar::thinkInteraction() {
     cBuildingList *list = getList(selectedListID);
 
     cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
+    if (item == nullptr) return;
 
     cOrderProcesser * orderProcesser = m_Player.getOrderProcesser();
 
-    // mouse is over item
-    if (item != NULL) {
-        char msg[255];
-        if (list->isAcceptsOrders()) {
-            // build time is in global time units , using a timer cap of 35 * 5 miliseconds = 175 miliseconds
-            int buildTimeInMs = item->getTotalBuildTime() * 175;
-            // now we have in miliseconds, we know the amount of seconds too.
-            int seconds = buildTimeInMs / 1000;
+    // mouse is over item - draw "messagebar"
+    char msg[255];
+    if (list->isAcceptsOrders()) {
+        // build time is in global time units , using a timer cap of 35 * 5 miliseconds = 175 miliseconds
+        int buildTimeInMs = item->getTotalBuildTime() * 175;
+        // now we have in miliseconds, we know the amount of seconds too.
+        int seconds = buildTimeInMs / 1000;
 
-            if (item->getBuildType() == STRUCTURE) {
-                s_Structures structureType = structures[item->getBuildId()];
-                sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
-            } else if (item->getBuildType() == UNIT) {
-                s_UnitP unitType = units[item->getBuildId()];
-                if (item->getBuildCost() > 0) {
-                    sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), unitType.name, seconds);
-                } else {
-                    sprintf(msg, "%s", units[item->getBuildId()].name);
-                }
-            } else if (item->getBuildType() == UPGRADE){
-                s_Upgrade upgrade = upgrades[item->getBuildId()];
-                sprintf(msg, "UPGRADE: $%d | %s | %d Secs", item->getBuildCost(), upgrade.description, seconds);
+        if (item->getBuildType() == STRUCTURE) {
+            s_Structures structureType = structures[item->getBuildId()];
+            sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
+        } else if (item->getBuildType() == UNIT) {
+            s_UnitP unitType = units[item->getBuildId()];
+            if (item->getBuildCost() > 0) {
+                sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), unitType.name, seconds);
             } else {
-                sprintf(msg, "UNKNOWN BUILD TYPE");
+                sprintf(msg, "%s", units[item->getBuildId()].name);
             }
-
-            drawManager->getMessageDrawer()->setMessage(msg);
+        } else if (item->getBuildType() == UPGRADE){
+            s_Upgrade upgrade = upgrades[item->getBuildId()];
+            sprintf(msg, "UPGRADE: $%d | %s | %d Secs", item->getBuildCost(), upgrade.description, seconds);
+        } else {
+            sprintf(msg, "UNKNOWN BUILD TYPE");
         }
+
+        drawManager->getMessageDrawer()->setMessage(msg);
     }
 
     if (cMouse::isLeftButtonClicked()) {
         if (list->getType() != LIST_STARPORT) {
-            if (item != NULL) {
-                if (item->shouldPlaceIt() == false) {
-                    cItemBuilder *itemBuilder = m_Player.getItemBuilder();
-                    assert(itemBuilder);
+
+            // icon is in "Place it" mode, meaning if clicked the "place the thing" state should be set
+            if (item->shouldPlaceIt()) {
+                game.bPlaceIt = true;
+            } else {
+                // Item should not be placed, so it can be built
+                cItemBuilder *itemBuilder = m_Player.getItemBuilder();
+                bool firstOfItsListType = itemBuilder->isBuildListItemTheFirstOfItsListType(item);
+
+                if (item->isQueuable()) {
                     itemBuilder->addItemToList(item);
-                    list->setLastClickedId(item->getSlotId());
-                } else {
-                    game.bPlaceIt = true;
+                } else if (firstOfItsListType) { // may only build if there is nothing else in the list type being built
+                    itemBuilder->addItemToList(item);
                 }
+                list->setLastClickedId(item->getSlotId());
             }
         } else {
             assert(orderProcesser);
@@ -174,7 +179,7 @@ void cSideBar::thinkInteraction() {
                 }
             }
 
-            if (item != NULL && orderProcesser->acceptsOrders()) {
+            if (orderProcesser->acceptsOrders()) {
                 if (m_Player.credits >= item->getBuildCost()) {
                     item->increaseTimesOrdered();
                     orderProcesser->addOrder(item);
@@ -187,29 +192,27 @@ void cSideBar::thinkInteraction() {
     if (cMouse::isRightButtonClicked()) {
         // anything but the starport can 'build' things
         if (list->getType() != LIST_STARPORT) {
-            if (item != NULL) {
-                if (item->getTimesToBuild() > 0) {
-                    item->decreaseTimesToBuild();
-                    item->setPlaceIt(false);
+            if (item->getTimesToBuild() > 0) {
+                item->decreaseTimesToBuild();
+                item->setPlaceIt(false);
 
-                    if (item->getTimesToBuild() == 0) {
-                        cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
-                        // only give money back for item that is being built
-                        if (item->isBuilding()) {
-                            // calculate the amount of money back:
-                            player[HUMAN].credits += item->getRefundAmount();
-                        }
-                        item->setIsBuilding(false);
-                        item->setProgress(0);
-                        cItemBuilder *itemBuilder = m_Player.getItemBuilder();
-                        itemBuilder->removeItemFromList(item);
+                if (item->getTimesToBuild() == 0) {
+                    cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
+                    // only give money back for item that is being built
+                    if (item->isBuilding()) {
+                        // calculate the amount of money back:
+                        player[HUMAN].credits += item->getRefundAmount();
                     }
-                    // else, only the number is decreased (used for queueing)
+                    item->setIsBuilding(false);
+                    item->setProgress(0);
+                    cItemBuilder *itemBuilder = m_Player.getItemBuilder();
+                    itemBuilder->removeItemFromList(item);
                 }
+                // else, only the number is decreased (used for queueing)
             }
         } else {
             assert(orderProcesser);
-            if (item != NULL && orderProcesser->isOrderPlaced() == false) {
+            if (orderProcesser->isOrderPlaced() == false) {
                 if (item->getTimesOrdered() > 0) {
                     item->decreaseTimesOrdered();
                     orderProcesser->removeOrder(item);
@@ -217,8 +220,6 @@ void cSideBar::thinkInteraction() {
             }
         }
 
-        if (item == NULL) {
-            game.bPlaceIt = false;
-        }
+        game.bPlaceIt = false;
     }
 }
