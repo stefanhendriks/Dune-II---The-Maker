@@ -19,10 +19,6 @@ cItemBuilder::~cItemBuilder() {
 int cItemBuilder::getTimerCap(cBuildingListItem *item) {
 	int iTimerCap = 35; // was 35 = ORIGINAL
 
-	if (DEBUGGING) {
-//		iTimerCap = 3;
-	}
-
 	// when m_Player has low power, produce twice as slow
 	if (m_Player.bEnoughPower() == false) {
 		iTimerCap *= 6; // make painful
@@ -51,7 +47,6 @@ void cItemBuilder::think() {
 
         // not building now, but in list.
         // Build as soon as possible.
-
         if (!item->isBuilding()) {
             bool anotherItemOfSameListIsBeingBuilt = isASimilarItemBeingBuilt(item);
 
@@ -94,7 +89,7 @@ void cItemBuilder::think() {
         if (item->getBuildType() == STRUCTURE) {
             // play voice when placeIt is false
             if (!item->shouldPlaceIt() && (m_Player.isHuman())) {
-                play_voice(SOUND_VOICE_01_ATR);
+                play_voice(SOUND_VOICE_01_ATR); // "Construction Complete"
                 item->setPlaceIt(true);
             }
         } else if (item->getBuildType() == UNIT) {

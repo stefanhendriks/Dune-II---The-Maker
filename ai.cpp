@@ -169,10 +169,6 @@ void cAIPlayer::think_building()
 		{
 			int iTimerCap=35; // was 35
 
-
-            if (DEBUGGING)
-                iTimerCap=7;
-
 			// the more constyards
 			iTimerCap /= (1+(player[ID].getAmountOfStructuresForType(CONSTYARD)/2));
 
