@@ -15,6 +15,7 @@ public:
 	~cBuildingListDrawer();
 
 	void drawList(cBuildingList *list, int listIDToDraw);
+    void drawButtonHoverRectangle(cBuildingList *list);
 	void drawButton(cBuildingList *list, bool pressed);
 
 	bool isOverItem(cBuildingList *list, int x, int y);

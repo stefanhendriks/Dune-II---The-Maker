@@ -87,7 +87,9 @@ void cSideBar::thinkAvailabilityLists() {
  *
  */
 void cSideBar::thinkInteraction() {
-	// button interaction
+    cBuildingListDrawer drawer;
+
+    // button interaction
 	for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {
 		if (i == selectedListID) continue; // skip selected list for button interaction
 		cBuildingList *list = getList(i);
@@ -102,6 +104,9 @@ void cSideBar::thinkInteraction() {
                 play_sound_id(SOUND_BUTTON); // click sound
 				break;
 			}
+			
+			// render hover over border
+            drawer.drawButtonHoverRectangle(list);
 		}
 	}
 
@@ -109,7 +114,6 @@ void cSideBar::thinkInteraction() {
 	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && getList(selectedListID)->isUpgrading() == false) {
 		cBuildingList *list = getList(selectedListID);
 
-		cBuildingListDrawer drawer;
 		cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
 
 		cOrderProcesser * orderProcesser = m_Player.getOrderProcesser();
