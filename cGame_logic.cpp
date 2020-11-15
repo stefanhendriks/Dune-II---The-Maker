@@ -2866,7 +2866,6 @@ bool cGame::setupGame() {
 	install_structures();
 	install_bullets();
 	install_units();
-	install_upgrades();
 	logbook("Installing:  WORLD");
 	INSTALL_WORLD();
 
@@ -2876,6 +2875,11 @@ bool cGame::setupGame() {
 	mapUtils = new cMapUtils(&map);
 
 	game.init();
+
+	// do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
+	// unit/structures catalog loaded - which the install_upgrades depends on.
+    install_upgrades();
+
 	game.setup_players();
 
 	playMusicByType(MUSIC_MENU);
