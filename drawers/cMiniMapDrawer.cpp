@@ -57,9 +57,7 @@ void cMiniMapDrawer::drawViewPortRectangle() {
     int minimapWidth = (iWidth * 2) + 1;
     int minimapHeight = (iHeight * 2) + 1;
 
-    set_clip_rect(bmp_screen, drawX, drawY, game.screen_x, game.screen_y);
     rect(bmp_screen, startX, startY, startX + minimapWidth, startY + minimapHeight, makecol(255, 255, 255));
-    set_clip_rect(bmp_screen, 0, 0, game.screen_x, game.screen_y);
 }
 
 int cMiniMapDrawer::getMapWidthInPixels() {
@@ -234,13 +232,13 @@ void cMiniMapDrawer::draw() {
     if (status == eMinimapStatus::NOTAVAILABLE) return;
 
     allegroDrawer->drawRectangleFilled(bmp_screen, m_RectFullMinimap, makecol(0,0,0));
+    set_clip_rect(bmp_screen, m_RectFullMinimap->getX(), m_RectFullMinimap->getY(), m_RectFullMinimap->getEndX(), m_RectFullMinimap->getEndY());
 
     if (status == eMinimapStatus::POWERUP ||
         status == eMinimapStatus::RENDERMAP ||
         status == eMinimapStatus::POWERDOWN) {
         drawTerrain();
         drawUnitsAndStructures(false);
-        drawViewPortRectangle();
     }
 
     if (status == eMinimapStatus::LOWPOWER) {
@@ -250,6 +248,7 @@ void cMiniMapDrawer::draw() {
     drawStaticFrame();
 
     drawViewPortRectangle();
+    set_clip_rect(bmp_screen, 0, 0, game.screen_x, game.screen_y);
 }
 
 void cMiniMapDrawer::drawStaticFrame() {
