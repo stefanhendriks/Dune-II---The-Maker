@@ -2485,8 +2485,15 @@ bool cGame::isResolutionInGameINIFoundAndSet() {
 
 */
 
-void cGame::setScreenResolutionFromGameIniSettings()
-{
+void cGame::setScreenResolutionFromGameIniSettings() {
+    if (game.ini_screen_width < 800) {
+        game.ini_screen_width = 800;
+        logbook("INI screen width < 800; unsupported; will set to 800.");
+    }
+    if (game.ini_screen_height < 600) {
+        game.ini_screen_height = 600;
+        logbook("INI screen height < 600; unsupported; will set to 600.");
+    }
     game.screen_x = game.ini_screen_width;
     game.screen_y = game.ini_screen_height;
     char msg[255];
