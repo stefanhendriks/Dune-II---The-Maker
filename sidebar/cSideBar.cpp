@@ -104,127 +104,121 @@ void cSideBar::thinkInteraction() {
                 play_sound_id(SOUND_BUTTON); // click sound
 				break;
 			}
-			
+
 			// render hover over border
             drawer.drawButtonHoverRectangle(list);
 		}
 	}
 
+	if (selectedListID < 0) return;
+	if (!getList(selectedListID)->isAvailable()) return;
+
 	// when mouse pressed, build item if over item
-	if (selectedListID > -1 && getList(selectedListID)->isAvailable() && getList(selectedListID)->isUpgrading() == false) {
-		cBuildingList *list = getList(selectedListID);
+    cBuildingList *list = getList(selectedListID);
 
-		cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
+    cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
 
-		cOrderProcesser * orderProcesser = m_Player.getOrderProcesser();
+    cOrderProcesser * orderProcesser = m_Player.getOrderProcesser();
 
-		// mouse is over item
-		if (item != NULL) {
-			char msg[255];
-			if (list->isAcceptsOrders()) {
-				// build time is in global time units , using a timer cap of 35 * 5 miliseconds = 175 miliseconds
-				int buildTimeInMs = item->getTotalBuildTime() * 175;
-				// now we have in miliseconds, we know the amount of seconds too.
-				int seconds = buildTimeInMs / 1000;
+    // mouse is over item
+    if (item != NULL) {
+        char msg[255];
+        if (list->isAcceptsOrders()) {
+            // build time is in global time units , using a timer cap of 35 * 5 miliseconds = 175 miliseconds
+            int buildTimeInMs = item->getTotalBuildTime() * 175;
+            // now we have in miliseconds, we know the amount of seconds too.
+            int seconds = buildTimeInMs / 1000;
 
-				if (item->getBuildType() == STRUCTURE) {
-					s_Structures structureType = structures[item->getBuildId()];
-					sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
-				} else if (item->getBuildType() == UNIT) {
-					s_UnitP unitType = units[item->getBuildId()];
-					if (item->getBuildCost() > 0) {
-						sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), unitType.name, seconds);
-					} else {
-						sprintf(msg, "%s", units[item->getBuildId()].name);
-					}
-				} else if (item->getBuildType() == UPGRADE){
-                    s_Upgrade upgrade = upgrades[item->getBuildId()];
-                    sprintf(msg, "UPGRADE: $%d | %s | %d Secs", item->getBuildCost(), upgrade.description, seconds);
-				} else {
-                    sprintf(msg, "UNKNOWN BUILD TYPE");
-				}
+            if (item->getBuildType() == STRUCTURE) {
+                s_Structures structureType = structures[item->getBuildId()];
+                sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
+            } else if (item->getBuildType() == UNIT) {
+                s_UnitP unitType = units[item->getBuildId()];
+                if (item->getBuildCost() > 0) {
+                    sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), unitType.name, seconds);
+                } else {
+                    sprintf(msg, "%s", units[item->getBuildId()].name);
+                }
+            } else if (item->getBuildType() == UPGRADE){
+                s_Upgrade upgrade = upgrades[item->getBuildId()];
+                sprintf(msg, "UPGRADE: $%d | %s | %d Secs", item->getBuildCost(), upgrade.description, seconds);
+            } else {
+                sprintf(msg, "UNKNOWN BUILD TYPE");
+            }
 
-				drawManager->getMessageDrawer()->setMessage(msg);
-			}
-		}
+            drawManager->getMessageDrawer()->setMessage(msg);
+        }
+    }
 
-		if (cMouse::isLeftButtonClicked()) {
-			if (list != NULL) {
-				if (list->getType() != LIST_STARPORT) {
-					if (item != NULL) {
-						if (item->shouldPlaceIt() == false) {
-							cItemBuilder *itemBuilder = m_Player.getItemBuilder();
-							assert(itemBuilder);
-							itemBuilder->addItemToList(item);
-							list->setLastClickedId(item->getSlotId());
-						} else {
-							game.bPlaceIt = true;
-						}
-					}
-				} else {
-					// list is starport
-					assert(orderProcesser);
+    if (cMouse::isLeftButtonClicked()) {
+        if (list->getType() != LIST_STARPORT) {
+            if (item != NULL) {
+                if (item->shouldPlaceIt() == false) {
+                    cItemBuilder *itemBuilder = m_Player.getItemBuilder();
+                    assert(itemBuilder);
+                    itemBuilder->addItemToList(item);
+                    list->setLastClickedId(item->getSlotId());
+                } else {
+                    game.bPlaceIt = true;
+                }
+            }
+        } else {
+            assert(orderProcesser);
 
-					// handle order button interaction
-					if (orderProcesser->hasOrderedAnything() &&
-						orderProcesser->isOrderPlaced() == false) {
-						cOrderDrawer orderDrawer;
-						if (orderDrawer.isMouseOverOrderButton(mouse_x, mouse_y)) {
-							orderProcesser->placeOrder();
-						}
-					}
+            // handle order button interaction
+            if (orderProcesser->hasOrderedAnything() &&
+                orderProcesser->isOrderPlaced() == false) {
+                cOrderDrawer orderDrawer;
+                if (orderDrawer.isMouseOverOrderButton(mouse_x, mouse_y)) {
+                    orderProcesser->placeOrder();
+                }
+            }
 
-					if (item != NULL && orderProcesser->acceptsOrders()) {
-						if (m_Player.credits >= item->getBuildCost()) {
-							item->increaseTimesOrdered();
-							orderProcesser->addOrder(item);
-                            m_Player.substractCredits(item->getBuildCost());
-						}
-					}
-				}
-			}
-		}
+            if (item != NULL && orderProcesser->acceptsOrders()) {
+                if (m_Player.credits >= item->getBuildCost()) {
+                    item->increaseTimesOrdered();
+                    orderProcesser->addOrder(item);
+                    m_Player.substractCredits(item->getBuildCost());
+                }
+            }
+        }
+    }
 
-		if (cMouse::isRightButtonClicked()) {
-			if (list != NULL) {
-				// anything but the starport can 'build' things
-				if (list->getType() != LIST_STARPORT) {
-					if (item != NULL) {
-						if (item->getTimesToBuild() > 0) {
-							item->decreaseTimesToBuild();
-							item->setPlaceIt(false);
+    if (cMouse::isRightButtonClicked()) {
+        // anything but the starport can 'build' things
+        if (list->getType() != LIST_STARPORT) {
+            if (item != NULL) {
+                if (item->getTimesToBuild() > 0) {
+                    item->decreaseTimesToBuild();
+                    item->setPlaceIt(false);
 
-							if (item->getTimesToBuild() == 0) {
-								cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
-								// only give money back for item that is being built
-								if (item->isBuilding()) {
-									// calculate the amount of money back:
-									player[HUMAN].credits += item->getRefundAmount();
-								}
-								item->setIsBuilding(false);
-								item->setProgress(0);
-								cItemBuilder *itemBuilder = m_Player.getItemBuilder();
-								itemBuilder->removeItemFromList(item);
-							}
-							// else, only the number is decreased (used for queueing)
-						}
-					}
-				} else {
-					assert(orderProcesser);
-					if (item != NULL && orderProcesser->isOrderPlaced() == false) {
-						if (item->getTimesOrdered() > 0) {
-							item->decreaseTimesOrdered();
-							orderProcesser->removeOrder(item);
-						}
-					}
-				}
+                    if (item->getTimesToBuild() == 0) {
+                        cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
+                        // only give money back for item that is being built
+                        if (item->isBuilding()) {
+                            // calculate the amount of money back:
+                            player[HUMAN].credits += item->getRefundAmount();
+                        }
+                        item->setIsBuilding(false);
+                        item->setProgress(0);
+                        cItemBuilder *itemBuilder = m_Player.getItemBuilder();
+                        itemBuilder->removeItemFromList(item);
+                    }
+                    // else, only the number is decreased (used for queueing)
+                }
+            }
+        } else {
+            assert(orderProcesser);
+            if (item != NULL && orderProcesser->isOrderPlaced() == false) {
+                if (item->getTimesOrdered() > 0) {
+                    item->decreaseTimesOrdered();
+                    orderProcesser->removeOrder(item);
+                }
+            }
+        }
 
-				if (item == NULL) {
-					game.bPlaceIt = false;
-				}
-			}
-		}
-
-	}
-
+        if (item == NULL) {
+            game.bPlaceIt = false;
+        }
+    }
 }

@@ -9,7 +9,6 @@ cBuildingList::cBuildingList(int theId) {
 	available = false;		 // is this list available?
 	memset(items, 0, sizeof(items));
 	typeOfList = theId;
-	upgrading = false;
 	maxItems = 0;
 	acceptsOrders = true; // at default true, will be set to FALSE/TRUE by starport logic for starport list only
 }
@@ -23,7 +22,6 @@ cBuildingList::~cBuildingList() {
 	available = false;		 // is this list available?
 	removeAllItems();
 	memset(items, 0, sizeof(items));
-	upgrading = false;
 	maxItems = 0;
 	acceptsOrders = false;
 }
