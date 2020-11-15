@@ -36,9 +36,12 @@ class cAllegroDrawer {
         void drawRectangle(BITMAP *dest, cRectangle *pRectangle, int color);
         void drawRectangleFilled(BITMAP *dest, cRectangle *pRectangle, int color);
 
+        int getColor_BLACK() { return colorBlack; }
 protected:
 		int getCenteredXPosForBitmap(BITMAP *bmp, int totalWidth);
 		int getCenteredYPosForBitmap(BITMAP *bmp);
+
+		int colorBlack;
 };
 
 #endif /* CALLEGRODRAWER_H_ */

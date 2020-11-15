@@ -110,69 +110,79 @@ void cMiniMapDrawer::drawTerrain() {
 	}
 }
 
-void cMiniMapDrawer::drawUnitsAndStructures() {
+/**
+ * Draws minimap units and structures.
+ *
+ * @param playerOnly (if false, draws all other players than m_Player)
+ */
+void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
 	int iDrawX=drawX;
 	int iDrawY=drawY;
 
-	int iColor=makecol(0,0,0);
+
+	int iColor=allegroDrawer->getColor_BLACK();
 
 	for (int x = 0; x < (game.map_width); x++) {
-
-		iDrawY = drawY; // reset Y coordinate for drawing for each column
-
 		for (int y = 0; y < (game.map_height); y++) {
-			iColor = makecol(0, 0, 0);
+            // do not show the helper border
+            if (x == 0 || y == 0) {
+                continue;
+            }
+
+            if (x == 63 || y == 63) {
+                continue;
+            }
+
 			int iCll = iCellMake(x, y);
-			bool drawADot = false;
 
-			if (map->isVisible(iCll, m_Player.getId())) {
-                int idOfStructureAtCell = map->getCellIdStructuresLayer(iCll);
-                if (idOfStructureAtCell > -1) {
-					int	iPlr = structure[idOfStructureAtCell]->getOwner();
-					iColor = player[iPlr].getMinimapColor();
-					drawADot = true;
-				}
-
-                int idOfUnitAtCell = map->getCellIdUnitLayer(iCll);
-                if (idOfUnitAtCell > -1) {
-					int iPlr = unit[idOfUnitAtCell].iPlayer;
-					iColor = player[iPlr].getMinimapColor();
-					drawADot = true;
-				}
-
-                int idOfAirUnitAtCell = map->getCellIdAirUnitLayer(iCll);
-                if (idOfAirUnitAtCell > -1) {
-					int iPlr = unit[idOfAirUnitAtCell].iPlayer;
-					iColor = player[iPlr].getMinimapColor();
-					drawADot = true;
-				}
-
-                int idOfWormAtCell = map->getCellIdWormsLayer(iCll);
-                if (idOfWormAtCell > -1) {
-					iColor = m_Player.getSelectFadingColor();
-					drawADot = true;
-				}
+			if (!map->isVisible(iCll, m_Player.getId())) {
+			    // invisible cell
+			    continue;
 			}
 
-			// TODO: make flexible map borders
-			// do not show the helper border
-			if (x == 0 || y == 0) {
-				iColor = makecol(0, 0, 0);
-			}
+            iColor = allegroDrawer->getColor_BLACK();
 
-			if (x == 63 || y == 63) {
-				iColor = makecol(0, 0, 0);
-			}
+            int idOfStructureAtCell = map->getCellIdStructuresLayer(iCll);
+            if (idOfStructureAtCell > -1) {
+                int	iPlr = structure[idOfStructureAtCell]->getOwner();
+                if (playerOnly) {
+                    if (iPlr != m_Player.getId()) continue; // skip non m_Player units
+                }
+                iColor = player[iPlr].getMinimapColor();
+            }
 
-			if (drawADot) {
-				// double sized 'pixels'.
-				drawDot(iDrawX + x, iDrawY + y, iColor);
-			}
+            int idOfUnitAtCell = map->getCellIdUnitLayer(iCll);
+            if (idOfUnitAtCell > -1) {
+                int iPlr = unit[idOfUnitAtCell].iPlayer;
+                if (playerOnly) {
+                    if (iPlr != m_Player.getId()) continue; // skip non m_Player units
+                }
+                iColor = player[iPlr].getMinimapColor();
+            }
 
-			iDrawY += 1;
+            int idOfAirUnitAtCell = map->getCellIdAirUnitLayer(iCll);
+            if (idOfAirUnitAtCell > -1) {
+                int iPlr = unit[idOfAirUnitAtCell].iPlayer;
+                if (playerOnly) {
+                    if (iPlr != m_Player.getId()) continue; // skip non m_Player units
+                }
+                iColor = player[iPlr].getMinimapColor();
+            }
+
+            int idOfWormAtCell = map->getCellIdWormsLayer(iCll);
+            if (idOfWormAtCell > -1) {
+                if (playerOnly) {
+                    continue; // skip sandworms
+                }
+                iColor = m_Player.getSelectFadingColor();
+            }
+
+            // no need to draw black on black background
+            if (iColor != allegroDrawer->getColor_BLACK()) {
+                // double sized 'pixels'. (FOR NOW)
+                drawDot(iDrawX + (x*2), iDrawY + (y*2), iColor);
+            }
 		}
-
-		iDrawX += 1;
 	}
 }
 
@@ -229,35 +239,45 @@ void cMiniMapDrawer::draw() {
         status == eMinimapStatus::RENDERMAP ||
         status == eMinimapStatus::POWERDOWN) {
         drawTerrain();
-        drawUnitsAndStructures();
+        drawUnitsAndStructures(false);
         drawViewPortRectangle();
     }
 
+    if (status == eMinimapStatus::LOWPOWER) {
+        drawUnitsAndStructures(true);
+    }
+
     drawStaticFrame();
+
+    drawViewPortRectangle();
 }
 
 void cMiniMapDrawer::drawStaticFrame() {
     if (status == eMinimapStatus::NOTAVAILABLE) return;
     if (status == eMinimapStatus::RENDERMAP) return;
+    if (status == eMinimapStatus::LOWPOWER) return;
+
+    if (status == eMinimapStatus::POWERDOWN) {
+        draw_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, drawX, drawY);
+        return;
+    }
 
 	// Draw static info
-	 if (status == eMinimapStatus::POWERDOWN) {
-		 draw_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, drawX, drawY);
-	 } else {
-		 if (iStaticFrame < STAT10) {
-			 iTrans = 255 - health_bar(192, (STAT12-iStaticFrame), 12);
-		 } else {
-			 iTrans = 255;
-		 }
+    // < STAT01 frames are going from very transparent to opaque
+     if (iStaticFrame < STAT10) {
+         iTrans = 255 - health_bar(192, (STAT12-iStaticFrame), 12);
+     } else {
+         iTrans = 255;
+     }
 
-		 if (iStaticFrame != STAT01) {
-			 set_trans_blender(0,0,0,iTrans);
+     // non-stat01 frames are drawn transparent
+     if (iStaticFrame != STAT01) {
+         set_trans_blender(0,0,0, iTrans);
 
-			 draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, drawX, drawY);
-			 // reset the trans blender
-			 set_trans_blender(0,0,0,128);
-		 }
-	 }
+         draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[iStaticFrame].dat, drawX, drawY);
+         // reset the trans blender
+         set_trans_blender(0,0,0,128);
+     }
 }
 
 void cMiniMapDrawer::drawDot(int x, int y, int color) {

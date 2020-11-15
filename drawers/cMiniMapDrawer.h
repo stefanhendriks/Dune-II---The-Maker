@@ -40,7 +40,7 @@ protected:
 
 		void drawTerrain();
 		void drawViewPortRectangle();
-		void drawUnitsAndStructures();
+		void drawUnitsAndStructures(bool playerOnly);
 
 		int getRGBColorForTerrainType(int terrainType);
 

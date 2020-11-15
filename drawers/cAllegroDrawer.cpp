@@ -10,6 +10,7 @@
 
 
 cAllegroDrawer::cAllegroDrawer() {
+    colorBlack=makecol(0,0,0);
 }
 
 cAllegroDrawer::~cAllegroDrawer() {
