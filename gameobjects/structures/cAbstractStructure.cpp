@@ -484,8 +484,7 @@ bool cAbstractStructure::isPrimary() {
 }
 
 int cAbstractStructure::getPowerUsage() {
-	s_Structures structure = getS_StructuresType();
-	return structure.power_drain;
+	return getS_StructuresType().power_drain;
 }
 
 bool cAbstractStructure::isValid()
