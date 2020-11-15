@@ -277,8 +277,6 @@ int cStructureUtils::getTotalPowerUsageForPlayer(cPlayer * player) {
 			if (theStructure->getPlayer()->getId() == player->getId()) {
 				int powerUsageOfStructure = theStructure->getPowerUsage();
 				totalPowerUsage += powerUsageOfStructure;
-			} else if (theStructure->getType() == CONSTYARD) {
-				totalPowerUsage += 4;
 			}
 		}
 	}
