@@ -210,14 +210,10 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 			}
 		}
 
-		// Queueing:
-		// when BUILDING something, you want to see any additional builds. Ie, a nr 1 showing means
-		// it means an additional item being built
-		// when you build a unit ONCE you don't see any number at the icon.
-		//
-		// for STARPORT you *always* see the number of items you have ordered.
-        int amountToShow = item->getTimesToBuild() - 1; // -1 because we don't show nr 1
-		bool showAmount = amountToShow > 0;
+		// if item is queuable, then it will show the amount of
+		// items being built. Meaning, with 1 item to build, it will show a 1.
+        int amountToShow = item->getTimesToBuild();
+		bool showAmount = item->isQueuable() && amountToShow > 0;
 
         bool listIsStarport = item->getList()->getType() == LIST_STARPORT;
         if (listIsStarport) {
