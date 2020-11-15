@@ -14,7 +14,7 @@ public:
     ~cBuildingListItem();
 
 	// uber constructoe
-    cBuildingListItem(eBuildType type, int buildId, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList);
+    cBuildingListItem(eBuildType type, int buildId, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList, bool queuable);
 
 	// easier constructors
     cBuildingListItem(int theID, s_Structures entry, int subList);
@@ -43,6 +43,7 @@ public:
 	float getRefundAmount();
 
 	bool shouldPlaceIt() { return placeIt; }
+	bool isQueuable() { return queuable; }
 
 	// setters
 	void setIconId(int value) { icon = value; }
@@ -82,6 +83,7 @@ private:
 
 	float creditsPerProgressTime; // credits to pay for each progress point. (calculated at creation)
 	bool placeIt;			// when true, this item is ready for placement.
+	bool queuable;			// when true, this item can be ordered multiple times to build
 
 	int totalBuildTime;		// total time it takes to build.
 	int subList;            // subList id's allow us to distinguish built items within the same buildingList.

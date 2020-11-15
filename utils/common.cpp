@@ -240,9 +240,8 @@ void install_units()
 
 
   // some things for ALL unit types; initialization
-  for (int i = 0; i < MAX_UNITTYPES; i++)
-  {
-    units[i].bmp              = (BITMAP *)gfxdata[UNIT_QUAD].dat; // in case an invalid unit is choosen, it is a quad! :D
+  for (int i = 0; i < MAX_UNITTYPES; i++) {
+    units[i].bmp              = (BITMAP *)gfxdata[UNIT_QUAD].dat; // default bitmap is a quad!
     units[i].top              = NULL;  // no top
     units[i].shadow           = NULL;  // no shadow (deliverd with picture itself)
     units[i].bmp_width        = 0;
@@ -261,6 +260,7 @@ void install_units()
     units[i].squish           = true;     // most units can squish
     units[i].range            = -1;
     units[i].sight            = -1;
+    units[i].queuable         = true;
 
     // harvester properties
     units[i].harvesting_amount= 0;
@@ -1036,6 +1036,7 @@ void install_structures() {
     structures[i].icon = -1; // stupid default icon
     structures[i].build_time = 0;
     structures[i].list = -1; // no list attached
+    structures[i].queuable = false;
     structures[i].configured = false;
     strcpy(structures[i].name,   "Unknown");
   }
@@ -1047,6 +1048,7 @@ void install_structures() {
   structures[SLAB1].bmp_width = 16*2;
   structures[SLAB1].bmp_height = 16*2;
   structures[SLAB1].configured = true;
+  structures[SLAB1].queuable = true;
   strcpy(structures[SLAB1].name, "Concrete Slab");
 
   structures[SLAB4].bmp = (BITMAP *)gfxdata[PLACE_SLAB4].dat; // in case an invalid bitmap, we are a windtrap
@@ -1055,6 +1057,7 @@ void install_structures() {
   structures[SLAB4].bmp_width = 32*2;
   structures[SLAB4].bmp_height = 32*2;
   structures[SLAB4].configured = true;
+  structures[SLAB4].queuable = true;
   strcpy(structures[SLAB4].name, "4 Concrete Slabs");
 
 
@@ -1064,6 +1067,7 @@ void install_structures() {
   structures[WALL].hp   = 75;            // Not functional in-game, only for building
   structures[WALL].bmp_width = 16*2;
   structures[WALL].bmp_height = 16*2;
+  structures[WALL].queuable = true;
   structures[WALL].configured = true;
   strcpy(structures[WALL].name, "Concrete Wall");
 
@@ -1175,6 +1179,7 @@ void install_structures() {
   structures[SILO].fadecol = -1;
   structures[SILO].icon = ICON_STR_SILO;
   structures[SILO].configured = true;
+  structures[SILO].queuable = true;
   strcpy(structures[SILO].name, "Spice Storage Silo");
 
   // Structure    : Refinery
