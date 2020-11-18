@@ -76,7 +76,8 @@ void cDrawManager::draw() {
 
 	// DO COMBAT MOUSE (TODO: remove this eventually, as it updates state and that is not what
 	// this class should be doing)
-	game.combat_mouse();
+//    scare_mouse();
+    game.combat_mouse();
 
 	// MOUSE
 	drawMouse();
@@ -148,7 +149,6 @@ void cDrawManager::drawMessage() {
 
 void cDrawManager::drawMouse() {
 	assert(mouseDrawer);
-	unscare_mouse();
     select_mouse_cursor(MOUSE_CURSOR_ALLEGRO);
 	mouseDrawer->draw();
 	cGameControlsContext *context = m_Player.getGameControlsContext();

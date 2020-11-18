@@ -826,8 +826,7 @@ void cGame::mentat(int iType)
 
     }
 
-    set_mouse_sprite_focus(0, 0);
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
     if (bFadeOut) {
         FADE_OUT();
@@ -1008,8 +1007,7 @@ void cGame::menu()
     }
 
    	// MOUSE
-    set_mouse_sprite_focus(0, 0);
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
 	if (key[KEY_ESC]) {
 		bPlaying=false;
@@ -1714,8 +1712,7 @@ void cGame::setup_skirmish()
     } // mouse hovers over "START"
 
    	// MOUSE
-    set_mouse_sprite_focus(0, 0);
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
     if (bFadeOut) {
         game.FADE_OUT();
@@ -1808,8 +1805,7 @@ void cGame::house() {
 
 
 	// MOUSE
-    set_mouse_sprite_focus(0, 0);
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
     if (bFadeOut)
         game.FADE_OUT();
@@ -1943,8 +1939,7 @@ void cGame::tellhouse()
     }
 
     // draw mouse
-    set_mouse_sprite_focus(0, 0);
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
     if (bFadeOut)
         FADE_OUT();
@@ -2243,12 +2238,10 @@ void cGame::region() {
 
 
     // mouse
-	if (mouse_tile == MOUSE_ATTACK)
-        set_mouse_sprite_focus(16, 16);
-	else
-        set_mouse_sprite_focus(0, 0);
-
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
+    if (mouse_tile == MOUSE_ATTACK)
+        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
+    else
+        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
     if (bFadeOut)
         FADE_OUT();
@@ -2326,9 +2319,6 @@ void cGame::handleTimeSlicing() {
 }
 
 void cGame::shakeScreenAndBlitBuffer() {
-    // at last, show mouse
-    show_mouse(bmp_screen);
-
     if (TIMER_shake == 0) {
 		TIMER_shake = -1;
 	}
@@ -2370,7 +2360,6 @@ void cGame::shakeScreenAndBlitBuffer() {
 }
 
 void cGame::runGameState() {
-    show_mouse(NULL);
     switch (state) {
 		case GAME_PLAYING:
 			combat();
@@ -2572,7 +2561,6 @@ bool cGame::setupGame() {
 	install_keyboard();
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
 	install_mouse();
-	enable_hardware_cursor();
 	cMouse::init();
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
