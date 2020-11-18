@@ -36,8 +36,7 @@ void cGame::losing()
 {
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, screen_x, screen_y);
 
-    set_mouse_sprite_focus(0, 0);
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[MOUSE_NORMAL].dat);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
     if (cMouse::isLeftButtonClicked())
     {
@@ -61,8 +60,7 @@ void cGame::winning()
 {
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, screen_x, screen_y);
 
-    set_mouse_sprite_focus(0, 0);
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[MOUSE_NORMAL].dat);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
     if (cMouse::isLeftButtonClicked())
     {
@@ -85,7 +83,6 @@ void cGame::winning()
 // Draw the mouse in combat mode, and do its interactions
 void cGame::combat_mouse()
 {
-    scare_mouse();
 	cGameControlsContext *context = player[HUMAN].getGameControlsContext();
     bool bOrderingUnits=false;
 
@@ -458,5 +455,4 @@ void cGame::combat_mouse()
 		}
 
 	}
-	unscare_mouse();
 }
