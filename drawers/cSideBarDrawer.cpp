@@ -203,8 +203,8 @@ void cSideBarDrawer::drawOptionsBar() {
 		optionsBar = create_bitmap(game.screen_x, 40);
 		clear_to_color(optionsBar, sidebarColor);
 
-		// credits
-		draw_sprite(optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOPBAR_CREDITS].dat, (game.screen_x - 240), 0);
+//		// credits
+//		draw_sprite(optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOPBAR_CREDITS].dat, (game.screen_x - 240), 0);
 
 		for (int w = 0; w < (game.screen_x + 800); w += 789) {
 			draw_sprite(optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOP_BAR].dat, w, 31);
