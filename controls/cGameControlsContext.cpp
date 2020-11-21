@@ -7,8 +7,6 @@
 
 #include "../include/d2tmh.h"
 
-#define MOUSECELL_MINIMAP -2
-
 cGameControlsContext::cGameControlsContext(cPlayer * thePlayer) {
 	assert(thePlayer);
 	player = thePlayer;
@@ -31,12 +29,11 @@ void cGameControlsContext::updateState() {
 }
 
 void cGameControlsContext::determineMouseCell() {
-    int heightTopBar = 42;
     int screenY = cMouse::getY();
     int screenX = cMouse::getX();
 
-    if (screenY < heightTopBar) {
-		mouseCell = -1; // at the top bar or higher, so no mouse cell id.
+    if (screenY < cSideBar::TopBarHeight) {
+		mouseCell = MOUSECELL_TOPBAR; // at the top bar or higher, so no mouse cell id.
 		return;
 	}
 
@@ -45,13 +42,12 @@ void cGameControlsContext::determineMouseCell() {
         return;
     }
 
-	if (screenX > (game.screen_x - 160)) {
-		mouseCell = -3 ; // on sidebar
+	if (screenX > (game.screen_x - cSideBar::SidebarWidth)) {
+		mouseCell = MOUSECELL_SIDEBAR; // on sidebar
 		return;
 	}
 
-    int result = getMouseCellFromScreen(heightTopBar, screenY, screenX);
-
+    int result = getMouseCellFromScreen(cSideBar::TopBarHeight, screenY, screenX);
     mouseCell = result;
 }
 

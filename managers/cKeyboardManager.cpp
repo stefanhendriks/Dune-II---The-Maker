@@ -21,7 +21,6 @@ cKeyboardManager::~cKeyboardManager() {
         TAB + key = debug action
  */
 void cKeyboardManager::interact() {
-
     if (key[KEY_TAB]) {
         DEBUG_KEYS();
     } else {
@@ -35,8 +34,6 @@ void cKeyboardManager::interact() {
         if (key[KEY_F11]) {
             takeScreenshot();
         }
-
-
     }
 
     if (key[KEY_F]) {

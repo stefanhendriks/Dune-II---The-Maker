@@ -33,9 +33,10 @@ class cGameControlsContext {
 		bool isMouseOverStructure() { return mouseHoveringOverStructureId > -1; }
 		bool isMouseOverUnit() { return mouseHoveringOverUnitId > -1; }
 
-		bool isMouseOnSidebar() { return mouseCell == -3; }
-		bool isMouseOnTopBar() { return mouseCell == -1; }
-		bool isMouseOnMiniMap() { return mouseCell == -2; }
+		bool isMouseOnSidebar() { return mouseCell == MOUSECELL_SIDEBAR; }
+		bool isMouseOnTopBar() { return mouseCell == MOUSECELL_TOPBAR; }
+		bool isMouseOnMiniMap() { return mouseCell == MOUSECELL_MINIMAP; }
+        bool isMouseOnSidebarOrMinimap() { return isMouseOnSidebar() || isMouseOnMiniMap(); }
 		bool isMouseOnBattleField() { return mouseCell > -1; }
 
 		bool shouldDrawToolTip() { return drawToolTip; }

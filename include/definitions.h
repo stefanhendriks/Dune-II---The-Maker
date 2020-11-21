@@ -10,6 +10,11 @@
 
 #define DEBUGGING bDoDebug
 
+
+#define MOUSECELL_TOPBAR -1
+#define MOUSECELL_MINIMAP -2
+#define MOUSECELL_SIDEBAR -3
+
 #define IDEAL_FPS	60
 
 // MAP ID
