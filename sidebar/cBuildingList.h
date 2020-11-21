@@ -56,6 +56,8 @@ class cBuildingList {
 		void setButtonIconIdPressed(int iconId) { buttonIconIdPressed = iconId; }
 		void setButtonIconIdUnpressed(int iconId) { buttonIconIdUnpressed = iconId; }
 
+		void setButtonWidth(int value) { buttonWidth = value; }
+		void setButtonHeight(int value) { buttonHeight = value; }
 		void setButtonDrawX(int value) { buttonDrawX = value; }
 		void setButtonDrawY(int value) { buttonDrawY = value; }
 		void setAvailable(bool value) { available = value; }
@@ -75,6 +77,9 @@ protected:
 		int buttonIconIdUnpressed;	// the button to draw at the left of the list when unpressed
 		int buttonDrawX;
 		int buttonDrawY;
+		int buttonWidth;
+		int buttonHeight;
+
 		bool available;		 // is this list available?
 		bool acceptsOrders;	 // accepts orders
 		int maxItems;		 // how many items have been set in the list?

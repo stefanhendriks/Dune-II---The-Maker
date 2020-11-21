@@ -91,9 +91,9 @@ void cSideBarDrawer::drawHouseGui(const cPlayer & thePlayer) {
     drawOptionsBar();
 }
 
-void cSideBarDrawer::drawBuildingLists() {
+void cSideBarDrawer::drawBuildingLists(const cPlayer & thePlayer) {
 	// draw the sidebar itself (the backgrounds, borders, etc)
-	cSideBar *sidebar = player->getSideBar();
+	cSideBar *sidebar = thePlayer.getSideBar();
 
 	// draw the buildlist icons
 	int selectedListId = sidebar->getSelectedListID();
@@ -104,19 +104,57 @@ void cSideBarDrawer::drawBuildingLists() {
 		buildingListDrawer->drawButton(list, isListIdSelectedList);
 	}
 
-	// draw the buildlist itself (take scrolling into account)
+    // draw background of buildlist
+    BITMAP * backgroundSprite = (BITMAP *)gfxinter[BMP_GERALD_ICONLIST_BACKGROUND].dat;
+
+    int heightOfListButton = 28 + 6;
+    int drawX = game.screen_x - cSideBar::SidebarWidthWithoutCandyBar + 1;
+
+    int startY = cSideBar::TopBarHeight + cSideBar::HeightOfMinimap + cSideBar::HorizontalCandyBarHeight +
+                 heightOfListButton;
+
+    for (; drawX < game.screen_x; drawX += backgroundSprite->w) {
+        for (int drawY=startY; drawY < game.screen_y; drawY += backgroundSprite->h) {
+            draw_sprite(bmp_screen, backgroundSprite, drawX, drawY);
+        }
+    }
+
+    // draw the 'lines' between the icons    // draw the buildlist itself (take scrolling into account)
 	cBuildingList *selectedList = NULL;
 
 	if (selectedListId > -1) {
 		selectedList = sidebar->getList(selectedListId);
         buildingListDrawer->drawList(selectedList, selectedListId);
 	}
+
+    // button interaction
+    for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {
+        if (i == selectedListId) continue; // skip selected list for button interaction
+        cBuildingList *list = sidebar->getList(i);
+
+        if (list->isAvailable() == false) continue; // not available, so no interaction possible
+
+        // render hover over border
+        if (list->isOverButton(mouse_x, mouse_y)) {
+            buildingListDrawer->drawButtonHoverRectangle(list);
+        }
+    }
+
+    cOrderDrawer * orderDrawer = drawManager->getOrderDrawer();
+
+    // allow clicking on the order button
+    if (selectedList && selectedList->getType() == LIST_STARPORT) {
+        orderDrawer->drawOrderButton(thePlayer);
+        if (orderDrawer->isMouseOverOrderButton()) {
+            orderDrawer->drawRectangleOrderButton();
+        }
+    }
 }
 
 // draws the sidebar on screen
 void cSideBarDrawer::drawSideBar(const cPlayer & player) {
 	drawHouseGui(player);
-	drawBuildingLists();
+	drawBuildingLists(player);
 //	drawCapacities();
 //	drawScrollButtons();
 }

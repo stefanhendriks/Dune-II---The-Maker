@@ -159,7 +159,7 @@ bool cBuildingList::removeItemFromList(int position) {
  * @return
  */
 bool cBuildingList::isOverButton(int x, int y) {
-    return cMouse::isOverRectangle(getButtonDrawX(), getButtonDrawY(), 27, 27);
+    return cMouse::isOverRectangle(getButtonDrawX(), getButtonDrawY(), 33, 27);
 }
 
 /**

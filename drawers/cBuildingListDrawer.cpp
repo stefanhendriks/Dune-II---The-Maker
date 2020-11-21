@@ -31,7 +31,7 @@ void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list) {
     int y = list->getButtonDrawY();
     int id = list->getButtonIconIdUnpressed();
 
-    int width = ((BITMAP *)gfxinter[id].dat)->w;
+    int width = 33;
     int height = ((BITMAP *)gfxinter[id].dat)->h;
 
     int color = player[HUMAN].getSelectFadingColor();
@@ -58,8 +58,10 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
 	    return;
 	}
 
-	int width = ((BITMAP *)gfxinter[id].dat)->w;
+//	int width = ((BITMAP *)gfxinter[id].dat)->w;
+	int width = 33;
 	int height = ((BITMAP *)gfxinter[id].dat)->h;
+	rectfill(bmp_screen, x, y, x+width, y+height, makecol(255, list->getType() * (255/LIST_MAX), list->getType() * (255/LIST_MAX)));
 
     // clear
 	draw_sprite(bmp_screen, (BITMAP *)gfxinter[list->getButtonIconIdUnpressed()].dat, x, y);		// draw pressed button version (unpressed == default in gui)
@@ -99,6 +101,10 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 	int iDrawX=getDrawX();
 	int iDrawY=getDrawY();
 
+    BITMAP *horBar = (BITMAP *) gfxinter[BMP_GERALD_SIDEBAR_PIECE].dat;
+	draw_sprite(bmp_screen, horBar, iDrawX-1, iDrawY-38); // above sublist buttons
+    draw_sprite(bmp_screen, horBar, iDrawX-1, iDrawY-5); // above normal icons
+
     int selectFadingColor = player[HUMAN].getSelectFadingColor();
 
     int end = MAX_ITEMS;
@@ -106,7 +112,41 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 	// is building an item in the list?
 	std::array<int, 5> isBuildingItemInList = list->isBuildingItem();
 
-	// draw the icons, in rows of 3
+    int withOfIcon = 63;
+    int heightOfIcon = 47;
+
+    int endY = game.screen_y;
+    int rows = 6;
+    if (list->getType() == LIST_STARPORT) {
+        rows = 5;
+        endY = game.screen_y - 50;
+    }
+
+    for (int i = 1; i < 3; i++) {
+        int barX = (iDrawX - 1) + (i * 66);
+        int darker = makecol(89, 56, 0);
+        int veryDark = makecol(48, 28, 0);
+        line(bmp_screen, barX - 1, iDrawY, barX - 1, endY, darker);
+        line(bmp_screen, barX, iDrawY, barX, endY, veryDark);
+
+        // horizontal lines
+        for (int j = 1; j < rows; j++) {
+            int barY = iDrawY - 1 + (j * 50);
+            line(bmp_screen, iDrawX, barY-1, game.screen_x, barY-1, darker);
+            line(bmp_screen, iDrawX, barY, game.screen_x, barY, veryDark);
+        }
+    }
+
+    if (list->getType() == LIST_STARPORT) {
+        rectfill(bmp_screen, iDrawX, endY, game.screen_x, game.screen_y, makecol(214,149,20));
+        draw_sprite(bmp_screen, horBar, iDrawX-1, endY); // just below the last icons
+    }
+
+    // vertical lines at the side
+    line(bmp_screen, iDrawX - 1, iDrawY-38, iDrawX-1, game.screen_y, makecol(255, 211, 125)); // left
+    line(bmp_screen, game.screen_x - 1, iDrawY-38, game.screen_x - 1, endY, makecol(209, 150, 28)); // right
+
+    // draw the icons, in rows of 3
 	int rowNr = 0;
 	for (int i = 0; i < end; i++) {
 		cBuildingListItem * item = list->getItem(i);
@@ -115,14 +155,11 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 			continue; // allow gaps in the list data structure (just not with rendering)
 		}
 
-        int iDrawXEnd = iDrawX + 63;
-		int iDrawYEnd = iDrawY + 47;
+        int iDrawXEnd = iDrawX + withOfIcon;
+        int iDrawYEnd = iDrawY + heightOfIcon;
 
 		// icon id must be set , assert it.
 		assert(item->getIconId() > -1);
-
-		rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(255, 255, 255));
-		line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, makecol(255, 255, 255));
 
 		draw_sprite(bmp_screen, (BITMAP *)gfxinter[item->getIconId()].dat, iDrawX, iDrawY);
 
@@ -198,7 +235,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 					int errorFadingColor = player[HUMAN].getErrorFadingColor();
 					rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
 					line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-					line(bmp_screen, iDrawX, iDrawY+47, iDrawX+63, iDrawY, errorFadingColor);
+					line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 					set_trans_blender(0,0,0,128);
 				}
 			}
