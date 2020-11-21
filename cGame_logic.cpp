@@ -572,9 +572,7 @@ void cGame::combat() {
     // -----------------
 	bPlacedIt = bPlaceIt;
 
-	assert(drawManager);
 	drawManager->draw();
-	assert(interactionManager);
 	interactionManager->interact();
 
     // think win/lose
