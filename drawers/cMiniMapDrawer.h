@@ -34,7 +34,9 @@ class cMiniMapDrawer {
 
         int getMouseCell(int mouseX, int mouseY);
 
-    void think();
+        void think();
+
+        bool isMouseOver();
 
 protected:
 
@@ -61,7 +63,6 @@ protected:
         eMinimapStatus status;
 
         int iStaticFrame;
-//	    int iStatus;                        // 0 = show minimap , -1 = no minimap (static animation, of going down), 1 = static animation
 	    int iTrans;							// transparancy
 
 	    // the top left coordinates for the minimap

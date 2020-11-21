@@ -40,12 +40,10 @@ void cGameControlsContext::determineMouseCell() {
 		return;
 	}
 
-    if (screenX > (game.screen_x - 128)) {
-		if (screenY > (game.screen_y - 128)) {
-			mouseCell = MOUSECELL_MINIMAP ; // on minimap
-			return;
-		}
-	}
+    if (drawManager->getMiniMapDrawer()->isMouseOver()) {
+        mouseCell = MOUSECELL_MINIMAP ; // on minimap
+        return;
+    }
 
 	if (screenX > (game.screen_x - 160)) {
 		mouseCell = -3 ; // on sidebar
@@ -107,10 +105,5 @@ cAbstractStructure * cGameControlsContext::getStructurePointerWhereMouseHovers()
 }
 
 int cGameControlsContext::getMouseCellFromMiniMap() {
-	// is not on minimap
-	if (getMouseCell() != MOUSECELL_MINIMAP) {
-		return -1;
-	}
-
 	return drawManager->getMiniMapDrawer()->getMouseCell(mouse_x, mouse_y);
 }

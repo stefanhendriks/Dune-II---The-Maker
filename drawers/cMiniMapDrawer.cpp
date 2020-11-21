@@ -217,12 +217,13 @@ int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
 void cMiniMapDrawer::interact() {
 	// interact with mouse
 	if (m_RectMinimap->isMouseOver()) {
-		// pressed the mouse and not boxing anything..
-		if (MOUSE_BTN_LEFT() && mouse_co_x1 < 0 && mouse_co_y1 < 0) {
-			cGameControlsContext * context = player[HUMAN].getGameControlsContext();
-			int mouseCellOnMiniMap = context->getMouseCellFromMiniMap();
-			mapCamera->centerAndJumpViewPortToCell(mouseCellOnMiniMap);
-		}
+        if (m_Player.hasAtleastOneStructure(RADAR)) {
+            // pressed the mouse and not boxing anything..
+            if (MOUSE_BTN_LEFT() && mouse_co_x1 < 0 && mouse_co_y1 < 0) {
+                int mouseCellOnMinimap = getMouseCell(mouse_x, mouse_y);
+                mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
+            }
+        }
 	}
 }
 
@@ -351,4 +352,8 @@ void cMiniMapDrawer::think() {
             status = eMinimapStatus::RENDERMAP;
         }
     }
+}
+
+bool cMiniMapDrawer::isMouseOver() {
+    return m_RectMinimap->isMouseOver();
 }
