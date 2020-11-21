@@ -256,13 +256,20 @@ void cGame::combat_mouse()
 
 		// in the second frame, when left mouse button is still pressed we will assign second coordinates when
 		// difference is great enough
-		if (mouse_co_x1 > -1 && mouse_co_y1 > -1 ) {
+		if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
             if (abs(mouse_x - mouse_co_x1) > 4 &&
                 abs(mouse_y - mouse_co_y1) > 4) {
 
                 // assign 2nd coordinates
                 mouse_co_x2 = mouse_x;
+                if (mouse_co_x2 > game.screen_x - cSideBar::SidebarWidth) {
+                    mouse_co_x2 = game.screen_x - cSideBar::SidebarWidth - 1;
+                }
+
                 mouse_co_y2 = mouse_y;
+                if (mouse_co_y2 < cSideBar::TopBarHeight) {
+                    mouse_co_y2 = cSideBar::TopBarHeight;
+                }
 
                 // and draw the selection box
                 rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2,
