@@ -16,11 +16,15 @@ class cOrderDrawer {
 		void drawOrderButton(const cPlayer & thePlayer);
 		void drawOrderPlaced(const cPlayer & thePlayer);
 
-		bool isMouseOverOrderButton(int mouseX, int mouseY);
+		bool isMouseOverOrderButton();
 
-	protected:
+    void drawRectangleOrderButton();
+
+protected:
 
 	private:
+        cRectangle * buttonRect;
+        BITMAP * buttonBitmap;
 
 };
 

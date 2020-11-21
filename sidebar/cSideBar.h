@@ -66,6 +66,9 @@ class cSideBar {
 		static const int HeightOfMinimap = 200 + 8;
 		static const int WidthOfMinimap = 200;
 
+		// Horizontal candybar is below minimap
+        static const int HorizontalCandyBarHeight = 12;
+
 	private:
 
         // the lists:

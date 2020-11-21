@@ -69,7 +69,6 @@ void cDrawManager::draw() {
 
 	drawStructurePlacing();
 	drawCredits();
-	drawOrderButton();
 
 	// THE MESSAGE
 	drawMessage();
@@ -116,13 +115,6 @@ void cDrawManager::drawRallyPoint() {
     int endY = drawY;
 
     line(bmp_screen, startX, startY, endX, endY, player[HUMAN].getMinimapColor());
-}
-
-void cDrawManager::drawOrderButton() {
-	// draw the order button
-	if (m_Player.getSideBar()->getSelectedListID() == LIST_STARPORT) {
-		orderDrawer->drawOrderButton(m_Player);
-	}
 }
 
 void cDrawManager::drawSidebar() {

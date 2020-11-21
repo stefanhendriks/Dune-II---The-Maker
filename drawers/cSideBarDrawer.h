@@ -19,7 +19,7 @@ class cSideBarDrawer {
 
 	protected:
 		void drawHouseGui(const cPlayer & thePlayer);
-		void drawBuildingLists();
+		void drawBuildingLists(const cPlayer & thePlayer);
 		void drawCapacities();
 
 		void drawCandybar();

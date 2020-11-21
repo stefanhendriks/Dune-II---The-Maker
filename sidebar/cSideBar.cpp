@@ -87,7 +87,7 @@ void cSideBar::thinkAvailabilityLists() {
  *
  */
 void cSideBar::thinkInteraction() {
-    cBuildingListDrawer drawer;
+    cBuildingListDrawer * buildingListDrawer = drawManager->getBuildingListDrawer();
 
     // button interaction
 	for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {
@@ -104,9 +104,6 @@ void cSideBar::thinkInteraction() {
                 play_sound_id(SOUND_BUTTON); // click sound
 				break;
 			}
-
-			// render hover over border
-            drawer.drawButtonHoverRectangle(list);
 		}
 	}
 
@@ -116,10 +113,23 @@ void cSideBar::thinkInteraction() {
 	// when mouse pressed, build item if over item
     cBuildingList *list = getList(selectedListID);
 
-    cBuildingListItem *item = drawer.isOverItemCoordinates(list, mouse_x,  mouse_y);
-    if (item == nullptr) return;
-
     cOrderProcesser * orderProcesser = m_Player.getOrderProcesser();
+    cOrderDrawer * orderDrawer = drawManager->getOrderDrawer();
+
+    // allow clicking on the order button
+    if (list->getType() == LIST_STARPORT) {
+        if (cMouse::isLeftButtonClicked() && orderDrawer->isMouseOverOrderButton()) {
+            assert(orderProcesser);
+
+            // handle "order" button interaction
+            if (orderProcesser->canPlaceOrder()) {
+                orderProcesser->placeOrder();
+            }
+        }
+    }
+
+    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, mouse_x, mouse_y);
+    if (item == nullptr) return;
 
     // mouse is over item - draw "messagebar"
     char msg[255];
@@ -168,17 +178,7 @@ void cSideBar::thinkInteraction() {
                 list->setLastClickedId(item->getSlotId());
             }
         } else {
-            assert(orderProcesser);
-
-            // handle order button interaction
-            if (orderProcesser->hasOrderedAnything() &&
-                orderProcesser->isOrderPlaced() == false) {
-                cOrderDrawer orderDrawer;
-                if (orderDrawer.isMouseOverOrderButton(mouse_x, mouse_y)) {
-                    orderProcesser->placeOrder();
-                }
-            }
-
+            // add orders
             if (orderProcesser->acceptsOrders()) {
                 if (m_Player.credits >= item->getBuildCost()) {
                     item->increaseTimesOrdered();

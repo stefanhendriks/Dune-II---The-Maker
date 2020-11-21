@@ -24,7 +24,9 @@ cBuildingListFactory *cBuildingListFactory::getInstance() {
 }
 
 int cBuildingListFactory::getButtonDrawY() {
-	return cSideBar::TopBarHeight + 230;
+    // 6 pixels margin below horizontal candybar, so it lines up nice horizontally with the sphere
+    // of the vertical candybar at the left of the building list icons
+	return cSideBar::TopBarHeight + cSideBar::HeightOfMinimap + cSideBar::HorizontalCandyBarHeight + 6;
 }
 
 int cBuildingListFactory::getButtonDrawXStart() {
@@ -49,6 +51,10 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
 	// Y is the same for all list buttons
 	list->setButtonDrawY(getButtonDrawY());
 
+    int widthOfButtonIncludingMargin = 33;
+    list->setButtonWidth(widthOfButtonIncludingMargin);
+//    list->setButtonHeight()
+
 	int startX = getButtonDrawXStart();
 
 	list->setAvailable(false);
@@ -60,7 +66,8 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
 		list->setButtonIconIdUnpressed(LIST_BTN_CONSTYARD);
 	}
 
-	startX += 27;
+
+    startX += widthOfButtonIncludingMargin;
 
 	// other lists, have 40 pixels more Y , but the X remains the same
 	// now set it up
@@ -70,7 +77,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
         list->setButtonIconIdUnpressed(LIST_BTN_INFANTRY);
 	}
 
-    startX += 27;
+    startX += widthOfButtonIncludingMargin;
 
 	if (listId == LIST_UNITS) {
 		list->setButtonDrawX(startX);
@@ -78,7 +85,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
 		list->setButtonIconIdUnpressed(LIST_BTN_LIGHTFCTRY);
 	}
 
-	startX += 27;
+	startX += widthOfButtonIncludingMargin;
 
 	if (listId == LIST_STARPORT) {
         list->setButtonDrawX(startX);
@@ -97,7 +104,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
 		list->addUnitToList(CARRYALL, 0);
 	}
 
-	startX += 27;
+	startX += widthOfButtonIncludingMargin;
 
 	if (listId == LIST_PALACE) {
         list->setButtonDrawX(startX);
@@ -118,7 +125,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
 		}
 	}
 
-	startX += 27;
+	startX += widthOfButtonIncludingMargin;
 
 	if (listId == LIST_UPGRADES) {
         list->setButtonDrawX(startX);
