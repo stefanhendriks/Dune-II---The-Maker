@@ -10,6 +10,8 @@ class cPlayer;
 #include "cBuildingList.h"
 #include "cBuildingListFactory.h"
 
+#include "cBuildingListUpdater.h"
+
 #include "cSideBar.h"
 #include "cSideBarFactory.h"
 

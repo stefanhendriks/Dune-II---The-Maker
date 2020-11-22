@@ -1,14 +1,9 @@
-/*
- * cItemBuilder.cpp
- *
- *  Created on: Aug 8, 2009
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
-cItemBuilder::cItemBuilder(cPlayer & thePlayer) : m_Player(thePlayer) {
-	assert(&thePlayer);
+cItemBuilder::cItemBuilder(cPlayer * thePlayer, cBuildingListUpdater * buildingListUpdater) {
+	assert(thePlayer);
+	this->m_Player = thePlayer;
+    this->buildingListUpdater = buildingListUpdater;
 	removeAllItems();
 	memset(timers, 0, sizeof(timers));
 }
@@ -20,7 +15,7 @@ int cItemBuilder::getTimerCap(cBuildingListItem *item) {
 	int iTimerCap = 35; // was 35 = ORIGINAL
 
 	// when m_Player has low power, produce twice as slow
-	if (m_Player.bEnoughPower() == false) {
+	if (m_Player->bEnoughPower() == false) {
 		iTimerCap *= 6; // make painful
 	} else {
 		if (item->getBuildType() == UNIT) {
@@ -28,12 +23,12 @@ int cItemBuilder::getTimerCap(cBuildingListItem *item) {
 			// is within the units properties.
 			int structureTypeItLeavesFrom = units[item->getBuildId()].structureTypeItLeavesFrom;
 			if (structureTypeItLeavesFrom > -1) {
-				iTimerCap /= (1+(m_Player.getAmountOfStructuresForType(structureTypeItLeavesFrom) / 2));
+				iTimerCap /= (1+(m_Player->getAmountOfStructuresForType(structureTypeItLeavesFrom) / 2));
 			}
 		}
 	}
 
-	cPlayerDifficultySettings *difficultySettings = m_Player.getDifficultySettings();
+	cPlayerDifficultySettings *difficultySettings = m_Player->getDifficultySettings();
 	iTimerCap = difficultySettings->getBuildSpeed(iTimerCap);
 
 	return iTimerCap;
@@ -76,11 +71,11 @@ void cItemBuilder::think() {
 
         if (!isDoneBuilding) {
             // Not done building yet , and can pay for progress?
-            if (!item->shouldPlaceIt() && m_Player.hasEnoughCreditsFor(priceForTimeUnit)) {
+            if (!item->shouldPlaceIt() && m_Player->hasEnoughCreditsFor(priceForTimeUnit)) {
                 // increase progress
                 item->increaseProgress(1);
                 // pay
-                m_Player.substractCredits(priceForTimeUnit);
+                m_Player->substractCredits(priceForTimeUnit);
             }
             continue;
         }
@@ -88,7 +83,7 @@ void cItemBuilder::think() {
         // DONE building
         if (item->getBuildType() == STRUCTURE) {
             // play voice when placeIt is false
-            if (!item->shouldPlaceIt() && (m_Player.isHuman())) {
+            if (!item->shouldPlaceIt() && (m_Player->isHuman())) {
                 play_voice(SOUND_VOICE_01_ATR); // "Construction Complete"
                 item->setPlaceIt(true);
             }
@@ -99,13 +94,13 @@ void cItemBuilder::think() {
 
             int structureTypeByItem = structureUtils.findStructureTypeByTypeOfList(item);
             assert(structureTypeByItem > -1);
-            int primaryBuildingIdOfStructureType = structureUtils.findStructureToDeployUnit(&m_Player, structureTypeByItem);
+            int primaryBuildingIdOfStructureType = structureUtils.findStructureToDeployUnit(m_Player, structureTypeByItem);
 
             if (primaryBuildingIdOfStructureType > -1) {
                 cAbstractStructure * theStructure = structure[primaryBuildingIdOfStructureType];
                 int cell = theStructure->iFreeAround();
                 theStructure->setAnimating(true); // animate
-                int unitId = UNIT_CREATE(cell, item->getBuildId(), m_Player.getId(), false);
+                int unitId = UNIT_CREATE(cell, item->getBuildId(), m_Player->getId(), false);
                 int rallyPoint = theStructure->getRallyPoint();
                 if (rallyPoint > -1) {
                     unit[unitId].move_to(rallyPoint, -1, -1);
@@ -114,7 +109,7 @@ void cItemBuilder::think() {
         } else if (item->getBuildType() == SPECIAL) {
             // super weapons and that kind of stuff
         } else if (item->getBuildType() == UPGRADE) {
-            m_Player.getBuildingListUpdater()->onUpgradeCompleted(item);
+            buildingListUpdater->onUpgradeCompleted(item);
             removeItemFromList(item);
 //            list->removeItemFromList(item->getSlotId()); // no need to explicitly remove from list, will be done by onUpgradeCompleted
             continue;
@@ -182,7 +177,7 @@ void cItemBuilder::addItemToList(cBuildingListItem * item) {
 	assert(item != NULL);
 	int slot = getFreeSlot();
 	if (slot < 0) {
-		assert(false);
+	    logbook("ERROR: Unable to add item to list because no slots are free!");
 		return;
 	}
 
@@ -198,6 +193,7 @@ void cItemBuilder::addItemToList(cBuildingListItem * item) {
 		cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Add item to item builder", "item is not in list, adding.");
 		// add to list
 		items[slot] = item;
+        buildingListUpdater->onBuildItemStarted(item);
 	} else {
 		cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Add item to item builder", "item is in list already. Only times to build is updated.");
 	}

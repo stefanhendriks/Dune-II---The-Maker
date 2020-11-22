@@ -52,6 +52,8 @@ class cBuildingList {
 		// set
 		void setTimer(int value) { TIMER_progress = value; }
 		void setTypeOfList(int value) { typeOfList = value; }
+		void setStatusPendingUpgrade(int subListId);
+		void setStatusAvailable(int subListId);
 
 		void setButtonIconIdPressed(int iconId) { buttonIconIdPressed = iconId; }
 		void setButtonIconIdUnpressed(int iconId) { buttonIconIdUnpressed = iconId; }

@@ -1,15 +1,3 @@
-/*
- * cItemBuilder.h
- *
- * Responsible for building items (cBuildListItems)
- *
- * Each player has an itemBuilder (also AI). The correct setup should
- * be done by the cPlayerFactory.
- *
- *  Created on: Aug 8, 2009
- *      Author: Stefan
- */
-
 #ifndef CITEMBUILDER_H_
 #define CITEMBUILDER_H_
 
@@ -19,7 +7,7 @@ class cPlayer;
 class cItemBuilder {
 
 	public:
-		cItemBuilder(cPlayer & thePlayer);
+		cItemBuilder(cPlayer * thePlayer, cBuildingListUpdater * buildingListUpdater);
 		virtual ~cItemBuilder();
 
 		// think about the progress being made (time based thinker)
@@ -42,7 +30,8 @@ class cItemBuilder {
 
 	private:
 		cBuildingListItem *items[MAX_ITEMS];
-		cPlayer& m_Player; // the m_Player context for this builder
+		cPlayer * m_Player; // the m_Player context for this builder
+        cBuildingListUpdater * buildingListUpdater;
 
 		int timers[MAX_ITEMS];
 

@@ -24,6 +24,7 @@ enum eBuildType {
 enum eBuildingListItemState {
 	AVAILABLE,
 	BUILDING,
+	PENDING_UPGRADE,    // an upgrade is blocking this item to be built
 	UNAVAILABLE
 };
 
