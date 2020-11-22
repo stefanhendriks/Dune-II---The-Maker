@@ -13,7 +13,7 @@ class cBuildingListItem {
 public:
     ~cBuildingListItem();
 
-	// uber constructoe
+	// uber constructor
     cBuildingListItem(eBuildType type, int buildId, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList, bool queuable);
 
 	// easier constructors
@@ -32,9 +32,14 @@ public:
 	bool isBuilding() { return building; }
 	bool isState(eBuildingListItemState value) { return state == value; }
 	bool isAvailable() { return isState(eBuildingListItemState::AVAILABLE); }
+	bool isPendingUpgrading() { return isState(eBuildingListItemState::PENDING_UPGRADE); }
 	int getTimesToBuild() { return timesToBuild; }
 	int getSlotId() { return slotId; } // return index of items[] array (set after adding item to list, default is < 0)
 	int getTimesOrdered() { return timesOrdered; }
+
+	s_Upgrade getS_Upgrade();
+	s_UnitP getS_UnitP();
+	s_Structures getS_Structures();
 
 	int getCosts();
 
@@ -50,6 +55,8 @@ public:
 	void setBuildCost(int value) { cost = value; }
 	void setProgress(int value) { progress = value; }
 	void setIsBuilding(bool value) { building = value; }
+	void setStatusPendingUpgrade() { state = eBuildingListItemState::PENDING_UPGRADE; }
+	void setStatusAvailable() { state = eBuildingListItemState::AVAILABLE; }
 	void setIsAvailable(bool value) { value ? state = eBuildingListItemState::AVAILABLE : eBuildingListItemState::UNAVAILABLE; }
 	void setTimesToBuild(int value) { timesToBuild = value; }
 	void setTimesOrdered(int value) { timesOrdered = value; }
@@ -68,6 +75,8 @@ public:
     int getBuildTime();
 
     bool isDoneBuilding();
+
+	bool isTypeUpgrade();
 
 private:
 	int icon;				// the icon ID to draw (from datafile)

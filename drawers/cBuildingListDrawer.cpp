@@ -112,6 +112,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 	// is building an item in the list?
 	std::array<int, 5> isBuildingItemInList = list->isBuildingItem();
 
+	// Start drawing the 'icons grid'
     int withOfIcon = 63;
     int heightOfIcon = 47;
 
@@ -145,6 +146,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
     // vertical lines at the side
     line(bmp_screen, iDrawX - 1, iDrawY-38, iDrawX-1, game.screen_y, makecol(255, 211, 125)); // left
     line(bmp_screen, game.screen_x - 1, iDrawY-38, game.screen_x - 1, endY, makecol(209, 150, 28)); // right
+
+    // END drawing icons grid
 
     // draw the icons, in rows of 3
 	int rowNr = 0;
@@ -226,6 +229,17 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 			if (!item->isAvailable() || isBuildingSameSubListItem || !list->isAcceptsOrders()) {
 				set_trans_blender(0,0,0,128);
 				fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
+				if (item->isPendingUpgrading()) {
+                    int errorFadingColor = player[HUMAN].getErrorFadingColor();
+                    rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                    line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                    line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
+
+                    int yellow = makecol(255, 207, 41);
+				    textDrawer->setFont(small_font);
+				    textDrawer->drawTextCenteredInBox("Upgrading", iDrawX, iDrawY, withOfIcon, heightOfIcon, yellow);
+				    textDrawer->setFont(game_font);
+				}
 			}
 
 			if (list->getType() == LIST_STARPORT) {
@@ -373,8 +387,4 @@ cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *li
 	}
 
 	return NULL;
-}
-
-bool cBuildingListDrawer::isOverItem(cBuildingList *list, int x, int y) {
-	return isOverItemCoordinates(list, x, y) != NULL;
 }

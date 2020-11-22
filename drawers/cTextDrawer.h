@@ -13,6 +13,9 @@ class cTextDrawer {
 		cTextDrawer();
 		cTextDrawer(ALFONT_FONT *theFont);
 		~cTextDrawer();
+
+		void setFont(ALFONT_FONT *theFont);
+
 		void drawTextWithOneInteger(int x, int y, int color, const char * msg, int var);
 		void drawTextWithOneInteger(int x, int y, const char * msg, int var);
 		void drawTextWithTwoIntegers(int x, int y, const char * msg, int var1, int var2);
@@ -22,6 +25,19 @@ class cTextDrawer {
 		void drawTextCentered(const char * msg, int y);
 		void drawTextCentered(const char * msg, int y, int color);
         void drawTextCentered(const char * msg, int x, int width, int y, int color);
+
+        /**
+         * Draws the text within a 'box' (rectangle), positioned at X,Y. The width/height of the box determine
+         * how to center the text. When centering text, the height/width of the font is taken into account.
+         *
+         * @param msg
+         * @param x
+         * @param y
+         * @param boxWidth
+         * @param boxHeight
+         * @param color
+         */
+        void drawTextCenteredInBox(const char * msg, int x, int y, int boxWidth, int boxHeight, int color);
 
 		void drawTextBottomRight(const char * msg);
 		void drawTextBottomLeft(const char * msg);

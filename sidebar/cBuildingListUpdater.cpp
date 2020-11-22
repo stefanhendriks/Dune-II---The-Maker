@@ -1,31 +1,24 @@
-/*
- * cBuildingListUpgrader.cpp
- *
- *  Created on: Aug 1, 2009
- *      Author: Stefan
- */
-
-#include "../include/d2tmh.h"
+#include "include/d2tmh.h"
 
 cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer) {
 	assert(thePlayer);
-	player = thePlayer;
+    m_Player = thePlayer;
 }
 
 void cBuildingListUpdater::onStructureCreated(int structureType) {
 	cLogger::getInstance()->logCommentLine("onStructureCreated - begin");
 
 	// activate/deactivate any lists if needed
-    cSideBar *sideBar = player->getSideBar();
+    cSideBar *sideBar = m_Player->getSideBar();
     cBuildingList *listConstYard = sideBar->getList(LIST_CONSTYARD);
     cBuildingList *listFootUnits = sideBar->getList(LIST_FOOT_UNITS);
     cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
 
-	int house = player->getHouse();
-	int techLevel = player->getTechLevel();
+	int house = m_Player->getHouse();
+	int techLevel = m_Player->getTechLevel();
 
     char msg[255];
-    sprintf(msg, "onStructureCreated - for player [%d], structureType [%d], techlevel [%d], house [%d]", player->getId(), structureType, techLevel, house);
+    sprintf(msg, "onStructureCreated - for player [%d], structureType [%d], techlevel [%d], house [%d]", m_Player->getId(), structureType, techLevel, house);
     cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureCreated", msg);
 
 	assert(listConstYard);
@@ -197,7 +190,7 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
 	cLogger::getInstance()->logCommentLine("onStructureDestroyed - begin");
 
     // activate/deactivate any lists if needed
-    cSideBar *sideBar = player->getSideBar();
+    cSideBar *sideBar = m_Player->getSideBar();
     cBuildingList *listConstYard = sideBar->getList(LIST_CONSTYARD);
 
     if (structureType == STARPORT) {
@@ -207,11 +200,11 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
     }
 
     // do something
-    int house = player->getHouse();
-    int techLevel = player->getTechLevel();
+    int house = m_Player->getHouse();
+    int techLevel = m_Player->getTechLevel();
 
     char msg[255];
-    sprintf(msg, "onStructureDestroyed - for player [%d], structureType [%d], techlevel [%d], house [%d]", player->getId(), structureType, techLevel, house);
+    sprintf(msg, "onStructureDestroyed - for player [%d], structureType [%d], techlevel [%d], house [%d]", m_Player->getId(), structureType, techLevel, house);
     cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureDestroyed", msg);
 
     evaluateUpgrades();
@@ -222,7 +215,7 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
 
 void cBuildingListUpdater::evaluateUpgrades() {
     cLogger::getInstance()->logCommentLine("evaluateUpgrades - start");
-    cSideBar *sideBar = player->getSideBar();
+    cSideBar *sideBar = m_Player->getSideBar();
     cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
 
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
@@ -232,7 +225,7 @@ void cBuildingListUpdater::evaluateUpgrades() {
         // mission 1 = techlevel 1. Mission 9 = techlevel 9. Skirmish is usually techlevel 9.
         if (player->getTechLevel() < upgrade.techLevel) continue;
 
-        if (!(upgrade.house & player->getHouseBitFlag())) {
+        if (!(upgrade.house & m_Player->getHouseBitFlag())) {
             // house specific upgrade, player house does not match
             char msg[255];
             sprintf(msg, "Upgrade [%s] has not same house.", upgrade.description);
@@ -243,21 +236,21 @@ void cBuildingListUpdater::evaluateUpgrades() {
         bool meetsConditions = true;
 
         // check if player has structure to upgrade
-        bool hasAtLeastOneStructureForStructureType = player->hasAtleastOneStructure(upgrade.structureType);
+        bool hasAtLeastOneStructureForStructureType = m_Player->hasAtleastOneStructure(upgrade.structureType);
         if (!hasAtLeastOneStructureForStructureType) {
             meetsConditions = false;
         }
 
         // check if player has the additional structure (if required)
         if (upgrade.needsStructureType > -1) {
-            bool hasAtleastOneNeedStructureType = player->hasAtleastOneStructure(upgrade.needsStructureType);
+            bool hasAtleastOneNeedStructureType = m_Player->hasAtleastOneStructure(upgrade.needsStructureType);
             if (!hasAtleastOneNeedStructureType) {
                 meetsConditions = false;
             }
         }
 
         // check if the structure to upgrade is at the expected level
-        int structureUpgradeLevel = player->getStructureUpgradeLevel(upgrade.structureType);
+        int structureUpgradeLevel = m_Player->getStructureUpgradeLevel(upgrade.structureType);
 
         if (structureUpgradeLevel != upgrade.atUpgradeLevel) {
             meetsConditions = false;
@@ -275,11 +268,11 @@ void cBuildingListUpdater::evaluateUpgrades() {
                     // only give money back for item that is being built
                     if (item->isBuilding()) {
                         // calculate the amount of money back:
-                        player->credits += item->getRefundAmount();
+                        m_Player->credits += item->getRefundAmount();
                     }
                     item->setIsBuilding(false);
                     item->setProgress(0);
-                    cItemBuilder *itemBuilder = player->getItemBuilder();
+                    cItemBuilder *itemBuilder = m_Player->getItemBuilder();
                     itemBuilder->removeItemFromList(item);
                 }
             }
@@ -300,26 +293,99 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item) {
 	cLogger::getInstance()->logCommentLine("updateUpgradeCompleted - begin");
 
     // activate/deactivate any lists if needed
-    cSideBar *sideBar = player->getSideBar();
+    cSideBar *sideBar = m_Player->getSideBar();
 
-    s_Upgrade upgradeType = upgrades[item->getBuildId()];
+    // get the structure type it is upgrading
+    const s_Upgrade &upgradeType = item->getS_Upgrade();
+    int listType = upgradeType.providesTypeList;
+    int subListType = upgradeType.providesTypeSubList;
 
-    player->increaseStructureUpgradeLevel(upgradeType.structureType);
+    cBuildingList *listBeingUpgraded = sideBar->getList(listType);
+    listBeingUpgraded->setStatusAvailable(subListType);
+
+    // Upgrade structure + provide any unit or structure
+
+    m_Player->increaseStructureUpgradeLevel(upgradeType.structureType);
 
     assert(upgradeType.providesTypeId > -1);
     assert(upgradeType.providesType > -1);
 
-    assert(upgradeType.providesTypeList > -1);
-    assert(upgradeType.providesTypeList < LIST_UPGRADES);
+    assert(listType > -1);
+    assert(listType < LIST_UPGRADES);
 
-    cBuildingList *list = sideBar->getList(upgradeType.providesTypeList);
+    cBuildingList *list = sideBar->getList(listType);
     if (upgradeType.providesType == UNIT) {
-        list->addUnitToList(upgradeType.providesTypeId, upgradeType.providesTypeSubList);
+        list->addUnitToList(upgradeType.providesTypeId, subListType);
     } else if (upgradeType.providesType == STRUCTURE) {
-        list->addStructureToList(upgradeType.providesTypeId, upgradeType.providesTypeSubList);
+        list->addStructureToList(upgradeType.providesTypeId, subListType);
     }
 
     evaluateUpgrades();
 
 	cLogger::getInstance()->logCommentLine("updateUpgradeCompleted - end");
+}
+
+/**
+ * Called when a BuildingLisItem is being started (to build), and it is of type
+ * upgrade.
+ *
+ * This should influence the corresponding list/sublist.
+ * @param pItem
+ */
+void cBuildingListUpdater::onUpgradeStarted(cBuildingListItem *pItem) {
+    cLogger::getInstance()->logCommentLine("onUpgradeStarted - start");
+    assert(pItem);
+    assert(pItem->isTypeUpgrade());
+    cSideBar *sideBar = m_Player->getSideBar();
+
+    // get the structure type it is upgrading
+    const s_Upgrade &upgrade = pItem->getS_Upgrade();
+    int listType = upgrade.providesTypeList;
+    int subListType = upgrade.providesTypeSubList;
+
+    cBuildingList *listBeingUpgraded = sideBar->getList(listType);
+    listBeingUpgraded->setStatusPendingUpgrade(subListType);
+    
+    cLogger::getInstance()->logCommentLine("onUpgradeStarted - end");
+}
+
+/**
+ * Called when a BuildingListItem is being cancelled (while building), and it is of type
+ * upgrade.
+ * @param pItem
+ */
+void cBuildingListUpdater::onUpgradeCancelled(cBuildingListItem *pItem) {
+    cLogger::getInstance()->logCommentLine("onUpgradeCancelled - start");
+    assert(pItem);
+    assert(pItem->isTypeUpgrade());
+
+    cSideBar *sideBar = m_Player->getSideBar();
+
+    // get the structure type it is upgrading
+    const s_Upgrade &upgrade = pItem->getS_Upgrade();
+    int listType = upgrade.providesTypeList;
+    int subListType = upgrade.providesTypeSubList;
+
+    cBuildingList *listBeingUpgraded = sideBar->getList(listType);
+    listBeingUpgraded->setStatusAvailable(subListType);
+
+    cLogger::getInstance()->logCommentLine("onUpgradeCancelled - end");
+}
+
+void cBuildingListUpdater::onBuildItemCancelled(cBuildingListItem *pItem) {
+    cLogger::getInstance()->logCommentLine("onBuildItemCancelled - start");
+    if (pItem == nullptr) return;
+    if (pItem->isTypeUpgrade()) {
+        onUpgradeCancelled(pItem);
+    }
+    cLogger::getInstance()->logCommentLine("onBuildItemCancelled - end");
+}
+
+void cBuildingListUpdater::onBuildItemStarted(cBuildingListItem *pItem) {
+    cLogger::getInstance()->logCommentLine("onBuildItemStarted - start");
+    if (pItem == nullptr) return;
+    if (pItem->isTypeUpgrade()) {
+        onUpgradeStarted(pItem);
+    }
+    cLogger::getInstance()->logCommentLine("onBuildItemStarted - end");
 }

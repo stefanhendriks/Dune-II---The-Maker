@@ -1,4 +1,6 @@
 #include "../include/d2tmh.h"
+#include "cBuildingList.h"
+
 
 cBuildingList::cBuildingList(int theId) {
 	TIMER_progress = 0;
@@ -202,4 +204,24 @@ cBuildingListItem * cBuildingList::getItemToPlace() {
 		}
 	}
 	return NULL;
+}
+
+void cBuildingList::setStatusPendingUpgrade(int subListId) {
+    for (int i = 0 ; i < MAX_ITEMS; i++) {
+        cBuildingListItem *item = getItem(i);
+        // valid pointer
+        if (item && item->getSubList() == subListId) {
+            item->setStatusPendingUpgrade();
+        }
+    }
+}
+
+void cBuildingList::setStatusAvailable(int subListId) {
+    for (int i = 0 ; i < MAX_ITEMS; i++) {
+        cBuildingListItem *item = getItem(i);
+        // valid pointer
+        if (item && item->getSubList() == subListId) {
+            item->setStatusAvailable();
+        }
+    }
 }

@@ -1,16 +1,9 @@
-/*
- * cBuildingListUpgrader.h
- *
- *  Created on: Aug 1, 2009
- *      Author: Stefan
- */
-
 #ifndef CBUILDINGLISTUPDATER_H_
 #define CBUILDINGLISTUPDATER_H_
 
 class cBuildingListUpdater {
 	public:
-		cBuildingListUpdater(cPlayer *thePlayer);
+		cBuildingListUpdater(cPlayer * thePlayer);
 
 		// update methods are event based. Ie, when structure is created,
 		// when structure is destroyed, etc
@@ -26,13 +19,18 @@ class cBuildingListUpdater {
 
 		void evaluateUpgrades();
 
-	private:
-		// this sidebar will be updated
-		cSideBar *sidebar;
+        void onUpgradeStarted(cBuildingListItem *pItem);
 
+        void onUpgradeCancelled(cBuildingListItem *pItem);
+
+        void onBuildItemCancelled(cBuildingListItem *pItem);
+
+        void onBuildItemStarted(cBuildingListItem *pItem);
+
+private:
 		// this player will be used to read state from
 		// in order to know what to update
-		cPlayer *player;
+		cPlayer * m_Player;
 };
 
 #endif /* CBUILDINGLISTUPDATER_H_ */

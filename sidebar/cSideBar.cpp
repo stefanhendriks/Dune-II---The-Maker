@@ -1,10 +1,3 @@
-/*
- * cSideBar.cpp
- *
- *  Created on: Aug 2, 2009
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
 cSideBar::cSideBar(cPlayer & thePlayer) : m_Player(thePlayer) {
@@ -166,16 +159,19 @@ void cSideBar::thinkInteraction() {
             if (item->shouldPlaceIt()) {
                 game.bPlaceIt = true;
             } else {
-                // Item should not be placed, so it can be built
-                cItemBuilder *itemBuilder = m_Player.getItemBuilder();
-                bool firstOfItsListType = itemBuilder->isBuildListItemTheFirstOfItsListType(item);
+                if (item->isAvailable()) {
+                    // Item should not be placed, so it can be built
+                    cItemBuilder *itemBuilder = m_Player.getItemBuilder();
+                    bool firstOfItsListType = itemBuilder->isBuildListItemTheFirstOfItsListType(item);
 
-                if (item->isQueuable()) {
-                    itemBuilder->addItemToList(item);
-                } else if (firstOfItsListType) { // may only build if there is nothing else in the list type being built
-                    itemBuilder->addItemToList(item);
+                    if (item->isQueuable()) {
+                        itemBuilder->addItemToList(item);
+                    } else if (firstOfItsListType) { // may only build if there is nothing else in the list type being built
+
+                        itemBuilder->addItemToList(item);
+                    }
+                    list->setLastClickedId(item->getSlotId());
                 }
-                list->setLastClickedId(item->getSlotId());
             }
         } else {
             // add orders
@@ -202,6 +198,7 @@ void cSideBar::thinkInteraction() {
                     if (item->isBuilding()) {
                         // calculate the amount of money back:
                         player[HUMAN].credits += item->getRefundAmount();
+                        m_Player.getBuildingListUpdater()->onBuildItemCancelled(item);
                     }
                     item->setIsBuilding(false);
                     item->setProgress(0);

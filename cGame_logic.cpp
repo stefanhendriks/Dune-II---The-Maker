@@ -1017,8 +1017,7 @@ void cGame::menu()
 
 }
 
-void cGame::setup_skirmish()
-{
+void cGame::setup_skirmish() {
     // FADING STUFF
     if (iFadeAction == 1) // fading out
     {
@@ -2894,14 +2893,14 @@ void cGame::setup_players() {
 	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
 		cPlayer * thePlayer = &player[i];
 
-		cItemBuilder * itemBuilder = new cItemBuilder(*thePlayer);
-		thePlayer->setItemBuilder(itemBuilder);
-
-		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(player[i], iHouse);
+		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(*thePlayer, iHouse);
 		thePlayer->setSideBar(sidebar);
 
 		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(thePlayer);
 		thePlayer->setBuildingListUpdater(buildingListUpdater);
+
+        cItemBuilder * itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
+        thePlayer->setItemBuilder(itemBuilder);
 
 		cStructurePlacer * structurePlacer = new cStructurePlacer(thePlayer);
 		thePlayer->setStructurePlacer(structurePlacer);

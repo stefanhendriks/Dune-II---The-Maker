@@ -6,6 +6,8 @@
  */
 
 #include "../include/d2tmh.h"
+#include "cTextDrawer.h"
+
 
 cTextDrawer::cTextDrawer(ALFONT_FONT *theFont) {
 	assert(theFont);
@@ -60,6 +62,19 @@ void cTextDrawer::drawTextCentered(const char * msg, int y, int color) {
     drawText(xPos, y, color, msg);
 }
 
+void cTextDrawer::drawTextCenteredInBox(const char * msg, int x, int y, int boxWidth, int boxHeight, int color) {
+	int lenghtInPixels = alfont_text_length(font, msg);
+    int heightInPixels = alfont_text_height(font);
+
+    int halfLengthInPixels = lenghtInPixels / 2;
+	int xPos = x + ((boxWidth / 2) - halfLengthInPixels);
+
+	int halfHeightInPixels = heightInPixels / 2;
+	int yPos = y + ((boxHeight / 2) - halfHeightInPixels);
+
+    drawText(xPos, yPos, color, msg);
+}
+
 void cTextDrawer::drawTextCentered(const char * msg, int x, int width, int y, int color) {
 	int lenghtInPixels = alfont_text_length(font, msg);
 	int half = lenghtInPixels / 2;
@@ -89,4 +104,9 @@ void cTextDrawer::drawTextBottomLeft(int color, const char * msg) {
 
 int cTextDrawer::textLength(const char * msg) {
     return alfont_text_length(font, msg);
+}
+
+void cTextDrawer::setFont(ALFONT_FONT *theFont) {
+    if (theFont == nullptr) return; // do not allow null
+    this->font = theFont;
 }

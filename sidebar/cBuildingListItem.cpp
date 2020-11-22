@@ -126,3 +126,35 @@ int cBuildingListItem::getBuildTime() {
 bool cBuildingListItem::isDoneBuilding() {
     return getProgress() >= getBuildTime();
 }
+
+bool cBuildingListItem::isTypeUpgrade() {
+    return getBuildType() == eBuildType::UPGRADE;
+}
+
+s_Upgrade cBuildingListItem::getS_Upgrade() {
+    int buildId = getBuildId();
+    if (getBuildType() != eBuildType::UPGRADE){
+        logbook("ERROR!!! - calling getS_Upgrade while type is not UPGRADE! - falling back to buildId 1 as safety");
+        buildId = 1;
+    }
+    return upgrades[buildId];
+}
+
+s_UnitP cBuildingListItem::getS_UnitP() {
+    int buildId = getBuildId();
+    if (getBuildType() != eBuildType::UNIT){
+        logbook("ERROR!!! - calling getS_UnitP while type is not UNIT! - falling back to buildId 1 as safety");
+        buildId = 1;
+    }
+    return units[buildId];
+}
+
+s_Structures cBuildingListItem::getS_Structures() {
+    int buildId = getBuildId();
+    if (getBuildType() != eBuildType::STRUCTURE){
+        logbook("ERROR!!! - calling getS_Structures while type is not STRUCTURE! - falling back to buildId 1 as safety");
+        buildId = 1;
+    }
+    return structures[buildId];
+}
+

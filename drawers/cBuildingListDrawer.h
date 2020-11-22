@@ -18,7 +18,6 @@ public:
     void drawButtonHoverRectangle(cBuildingList *list);
 	void drawButton(cBuildingList *list, bool pressed);
 
-	bool isOverItem(cBuildingList *list, int x, int y);
 	cBuildingListItem *isOverItemCoordinates(cBuildingList *list, int x, int y);
 
 protected:
