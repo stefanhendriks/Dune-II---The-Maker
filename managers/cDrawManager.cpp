@@ -122,13 +122,13 @@ void cDrawManager::drawSidebar() {
 }
 
 void cDrawManager::drawStructurePlacing() {
-	if (game.bPlaceIt) {
-		cBuildingListItem *itemToPlace = m_Player.getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
-		if (itemToPlace) {
-			assert(placeitDrawer);
-			placeitDrawer->draw(itemToPlace);
-		}
-	}
+    if (!game.bPlaceIt) return;
+
+    cBuildingListItem *itemToPlace = m_Player.getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
+    if (itemToPlace == nullptr) return;
+
+    assert(placeitDrawer);
+    placeitDrawer->draw(itemToPlace);
 }
 
 void cDrawManager::drawMessage() {
