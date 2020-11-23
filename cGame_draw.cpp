@@ -392,10 +392,14 @@ void cGame::combat_mouse()
             }
         }
     } else {
-        mouse_mv_x1 = -1;
-        mouse_mv_y1 = -1;
-        mouse_mv_x2 = -1;
-        mouse_mv_y2 = -1;
+        // set to -1 only when it was > -1
+        if (mouse_mv_x2 > -1 || mouse_mv_y2 > -1) {
+            mouse_mv_x1 = -1;
+            mouse_mv_x2 = -1;
+
+            mouse_mv_y1 = -1;
+            mouse_mv_y2 = -1;
+        }
     }
 
 	// placing stuff!?
