@@ -1,16 +1,9 @@
-/*
- * cPlaceItDrawer.h
- *
- *  Created on: 12-aug-2010
- *      Author: Stefan
- */
-
 #ifndef CPLACEITDRAWER_H_
 #define CPLACEITDRAWER_H_
 
 class cPlaceItDrawer {
 	public:
-		cPlaceItDrawer();
+		cPlaceItDrawer(const cPlayer& thePlayer);
 		~cPlaceItDrawer();
 
 		void draw(cBuildingListItem *itemToPlace);
@@ -22,6 +15,7 @@ class cPlaceItDrawer {
 	private:
 
 		cCellCalculator * cellCalculator;
+        const cPlayer& m_Player;
 };
 
 #endif /* CPLACEITDRAWER_H_ */

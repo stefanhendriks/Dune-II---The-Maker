@@ -74,7 +74,7 @@ cBuildingListItem * cBuildingList::getItemByBuildId(int buildId) {
 }
 
 void cBuildingList::addUpgradeToList(int upgradeType) {
-    addItemToList(new cBuildingListItem(upgradeType, upgrades[upgradeType], upgradeType));
+    addItemToList(new cBuildingListItem(upgradeType, upgrades[upgradeType], upgrades[upgradeType].providesTypeSubList));
 }
 
 void cBuildingList::addStructureToList(int structureType, int subList) {
@@ -210,8 +210,17 @@ void cBuildingList::setStatusPendingUpgrade(int subListId) {
     for (int i = 0 ; i < MAX_ITEMS; i++) {
         cBuildingListItem *item = getItem(i);
         // valid pointer
-        if (item && item->getSubList() == subListId) {
-            item->setStatusPendingUpgrade();
+        if (item) {
+            if (item->isTypeUpgrade()) {
+                // match the "provides" sublist id here!
+                if (item->getS_Upgrade().providesTypeSubList == subListId) {
+                    item->setStatusPendingUpgrade();
+                }
+            } else {
+                if (item->getSubList() == subListId) {
+                    item->setStatusPendingUpgrade();
+                }
+            }
         }
     }
 }
@@ -220,8 +229,36 @@ void cBuildingList::setStatusAvailable(int subListId) {
     for (int i = 0 ; i < MAX_ITEMS; i++) {
         cBuildingListItem *item = getItem(i);
         // valid pointer
-        if (item && item->getSubList() == subListId) {
-            item->setStatusAvailable();
+        if (item) {
+            if (item->isTypeUpgrade()) {
+                // match the "provides" sublist id here!
+                if (item->getS_Upgrade().providesTypeSubList == subListId) {
+                    item->setStatusAvailable();
+                }
+            } else {
+                if (item->getSubList() == subListId) {
+                    item->setStatusAvailable();
+                }
+            }
+        }
+    }
+}
+
+void cBuildingList::setStatusPendingBuilding(int subListId) {
+    for (int i = 0 ; i < MAX_ITEMS; i++) {
+        cBuildingListItem *item = getItem(i);
+        // valid pointer
+        if (item) {
+            if (item->isTypeUpgrade()) {
+                // match the "provides" sublist id here!
+                if (item->getS_Upgrade().providesTypeSubList == subListId) {
+                    item->setStatusPendingBuilding();
+                }
+            } else {
+                if (item->getSubList() == subListId) {
+                    item->setStatusPendingBuilding();
+                }
+            }
         }
     }
 }

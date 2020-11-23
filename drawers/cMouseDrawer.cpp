@@ -1,10 +1,3 @@
-/*
- * File:   cMouseDrawer.cpp
- * Author: el.anormal
- *
- * Created Oct 23, 2010
- */
-
 #include "../include/d2tmh.h"
 
 cMouseDrawer::cMouseDrawer(const cPlayer& thePlayer) : m_Player(thePlayer) {

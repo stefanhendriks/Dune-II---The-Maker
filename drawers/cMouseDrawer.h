@@ -1,10 +1,3 @@
-/*
- * File:   cMouseDrawer.h
- * Author: el.anormal
- *
- * Created Oct 23, 2010
- */
-
 #ifndef CMOUSEDRAWER_H
 #define	CMOUSEDRAWER_H
 

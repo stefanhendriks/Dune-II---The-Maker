@@ -27,11 +27,13 @@ class cPlayer;
 #define LIST_UPGRADES	6 // possible upgrades
 #define LIST_MAX		7 // max amount of lists
 
-#define SUBLIST_LIGHTFCTRY 0 // quad, trike, etc
-#define SUBLIST_HEAVYFCTRY 1 // tanks
-#define SUBLIST_HIGHTECH   2 // orni, carry-all
-#define SUBLIST_INFANTRY   0 // soldier, infantry
-#define SUBLIST_TROOPERS   1 // trooper, troopers
+#define SUBLIST_CONSTYARD  0  // structures
+#define SUBLIST_LIGHTFCTRY 1 // quad, trike, etc
+#define SUBLIST_HEAVYFCTRY 2 // tanks
+#define SUBLIST_HIGHTECH   3 // orni, carry-all
+
+#define SUBLIST_INFANTRY   4 // soldier, infantry
+#define SUBLIST_TROOPERS   5 // trooper, troopers
 
 /**
  * Basically a container:

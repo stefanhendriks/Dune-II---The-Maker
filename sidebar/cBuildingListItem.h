@@ -33,6 +33,7 @@ public:
 	bool isState(eBuildingListItemState value) { return state == value; }
 	bool isAvailable() { return isState(eBuildingListItemState::AVAILABLE); }
 	bool isPendingUpgrading() { return isState(eBuildingListItemState::PENDING_UPGRADE); }
+	bool isPendingBuilding() { return isState(eBuildingListItemState::PENDING_BUILDING); }
 	int getTimesToBuild() { return timesToBuild; }
 	int getSlotId() { return slotId; } // return index of items[] array (set after adding item to list, default is < 0)
 	int getTimesOrdered() { return timesOrdered; }
@@ -57,6 +58,7 @@ public:
 	void setIsBuilding(bool value) { building = value; }
 	void setStatusPendingUpgrade() { state = eBuildingListItemState::PENDING_UPGRADE; }
 	void setStatusAvailable() { state = eBuildingListItemState::AVAILABLE; }
+	void setStatusPendingBuilding() { state = eBuildingListItemState::PENDING_BUILDING; }
 	void setIsAvailable(bool value) { value ? state = eBuildingListItemState::AVAILABLE : eBuildingListItemState::UNAVAILABLE; }
 	void setTimesToBuild(int value) { timesToBuild = value; }
 	void setTimesOrdered(int value) { timesOrdered = value; }

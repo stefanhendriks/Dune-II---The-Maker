@@ -865,7 +865,7 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesType = STRUCTURE;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeId = SLAB4;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeList = LIST_CONSTYARD;
-    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeSubList = 0;
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeSubList = SUBLIST_CONSTYARD;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].buildTime = 50;
     strcpy(upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].description, "Build 4 concrete slabs at once");
 
@@ -881,7 +881,7 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesType = STRUCTURE;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeId = RTURRET;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeList = LIST_CONSTYARD;
-    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeSubList = 0;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeSubList = SUBLIST_CONSTYARD;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].buildTime = 150;
     strcpy(upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].description, "Build Rocket Turret");
 
