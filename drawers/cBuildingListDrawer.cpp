@@ -125,7 +125,10 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
         int iDrawXEnd = iDrawX + withOfIcon;
         int iDrawYEnd = iDrawY + heightOfIcon;
 
-		// icon id must be set , assert it.
+        // asumes drawing for human player
+        bool cannotPayIt = item->getBuildCost() > m_Player.credits;
+
+        // icon id must be set , assert it.
 		assert(item->getIconId() > -1);
 
 		draw_sprite(bmp_screen, (BITMAP *)gfxinter[item->getIconId()].dat, iDrawX, iDrawY);
@@ -133,9 +136,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 		if (shouldDrawStructureSize) {
 			drawStructureSize(item->getBuildId(), iDrawX, iDrawY);
 		}
-
-		// asumes drawing for human player
-		bool cannotPayIt = item->getBuildCost() > m_Player.credits;
 
 		// when this item is being built.
 		if (item->isBuilding()) {
@@ -171,7 +171,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 					draw_sprite(bmp_screen, (BITMAP *)gfxinter[READY01].dat, iDrawX+3, iDrawY+16);
 				}
 			}
-		} else {
+		} else { // not building
 			// this item is not being built. So we do not draw a progress indicator.
 			// however, it could be that an other item is being built.
 
@@ -180,7 +180,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 			// - we cant pay it
 			// - some other item is being built
 			// - list is being upgraded, so you cannot build items
-			 /*|| cannotPayIt*/
             bool isBuildingSameSubListItem = false;
             for (int i = 0; i < 5; i++) {
                 if (isBuildingItemInList[i] < 0) continue;
@@ -226,6 +225,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 			}
 
 			if (list->getType() == LIST_STARPORT) {
+			    // only for starport show you can't pay it, as we allow building units when you cannot pay it (ie partial
+			    // payment/progress)
 				if (cannotPayIt) {
 					set_trans_blender(0,0,0,128);
 					fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
