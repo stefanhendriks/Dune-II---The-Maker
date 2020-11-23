@@ -216,7 +216,5 @@ void cSideBar::thinkInteraction() {
                 }
             }
         }
-
-        game.bPlaceIt = false;
     }
 }

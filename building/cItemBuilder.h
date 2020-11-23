@@ -37,6 +37,8 @@ class cItemBuilder {
 
 		int getTimerCap(cBuildingListItem *item);
 		bool isItemInList(cBuildingListItem *item);
+
+		void startBuilding(cBuildingListItem *item);
 };
 
 #endif /* CITEMBUILDER_H_ */

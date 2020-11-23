@@ -27,6 +27,8 @@ class cBuildingListUpdater {
 
         void onBuildItemStarted(cBuildingListItem *pItem);
 
+    void onBuildItemCompleted(cBuildingListItem *pItem);
+
 private:
 		// this player will be used to read state from
 		// in order to know what to update

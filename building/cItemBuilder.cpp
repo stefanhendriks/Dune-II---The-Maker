@@ -1,4 +1,6 @@
 #include "../include/d2tmh.h"
+#include "cItemBuilder.h"
+
 
 cItemBuilder::cItemBuilder(cPlayer * thePlayer, cBuildingListUpdater * buildingListUpdater) {
 	assert(thePlayer);
@@ -38,7 +40,7 @@ void cItemBuilder::think() {
 	// go through all the items and increase progress counters...
 	for (int i = 0; i < MAX_ITEMS; i++) {
 		cBuildingListItem *item = getItem(i);
-		if (!item) continue;
+		if (item == nullptr) continue;
 
         // not building now, but in list.
         // Build as soon as possible.
@@ -47,7 +49,7 @@ void cItemBuilder::think() {
 
             // only start building this, if no other item is already being built in the same list.
             if (!anotherItemOfSameListIsBeingBuilt) {
-                item->setIsBuilding(true);
+                startBuilding(item);
             }
             continue;
         }
@@ -88,6 +90,7 @@ void cItemBuilder::think() {
                 item->setPlaceIt(true);
             }
         } else if (item->getBuildType() == UNIT) {
+            buildingListUpdater->onBuildItemCompleted(item);
             item->decreaseTimesToBuild(); // decrease amount of times to build
 
             assert(item->getTimesToBuild() > -1);
@@ -107,6 +110,7 @@ void cItemBuilder::think() {
                 }
             }
         } else if (item->getBuildType() == SPECIAL) {
+            buildingListUpdater->onBuildItemCompleted(item);
             // super weapons and that kind of stuff
         } else if (item->getBuildType() == UPGRADE) {
             buildingListUpdater->onUpgradeCompleted(item);
@@ -133,13 +137,13 @@ void cItemBuilder::think() {
 
             // found item
             if (itemInSameList) {
-                itemInSameList->setIsBuilding(true);
+                startBuilding(itemInSameList);
             }
 
         } else {
             // item still needs to be built more times.
             item->setProgress(0); // set back progress
-            item->setIsBuilding(true);
+            startBuilding(item);
         }
 	}
 }
@@ -183,7 +187,9 @@ void cItemBuilder::addItemToList(cBuildingListItem * item) {
 
 	// check if there is a similar type in the list
 	if (isBuildListItemTheFirstOfItsListType(item)) {
-		item->setIsBuilding(true); // build it immediately
+        // build it immediately, if we don't do this the start of building is a bit delayed by the think timer
+        // of the ItemBuilder.
+		startBuilding(item);
 	}
 
 	// increase amount
@@ -193,7 +199,6 @@ void cItemBuilder::addItemToList(cBuildingListItem * item) {
 		cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Add item to item builder", "item is not in list, adding.");
 		// add to list
 		items[slot] = item;
-        buildingListUpdater->onBuildItemStarted(item);
 	} else {
 		cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Add item to item builder", "item is in list already. Only times to build is updated.");
 	}
@@ -300,4 +305,10 @@ cBuildingListItem * cItemBuilder::getItem(int position) {
 	assert(position > -1);
 	assert(position < MAX_ITEMS);
 	return items[position];
+}
+
+void cItemBuilder::startBuilding(cBuildingListItem *item) {
+    if (item == nullptr) return;
+    item->setIsBuilding(true);
+    buildingListUpdater->onBuildItemStarted(item);
 }

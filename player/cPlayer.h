@@ -60,7 +60,7 @@ class cPlayer {
 		void setGameControlsContext(cGameControlsContext *theGameControlsContext);
 
 		// get
-		cBuildingListUpdater *getBuildingListUpdater() { return buildingListUpdater; }
+		cBuildingListUpdater * getBuildingListUpdater() const { return buildingListUpdater; }
 		cPlayerDifficultySettings *getDifficultySettings() const { return difficultySettings; }
 		cItemBuilder *getItemBuilder() const { return itemBuilder; }
 		cSideBar *getSideBar() const { return sidebar; }

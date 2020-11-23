@@ -377,7 +377,14 @@ void cBuildingListUpdater::onBuildItemCancelled(cBuildingListItem *pItem) {
     if (pItem == nullptr) return;
     if (pItem->isTypeUpgrade()) {
         onUpgradeCancelled(pItem);
+        return;
     }
+
+    // it is a unit/structure/special
+    cSideBar *sideBar = m_Player->getSideBar();
+    cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
+    listUpgrades->setStatusAvailable(pItem->getSubList());
+
     cLogger::getInstance()->logCommentLine("onBuildItemCancelled - end");
 }
 
@@ -386,6 +393,34 @@ void cBuildingListUpdater::onBuildItemStarted(cBuildingListItem *pItem) {
     if (pItem == nullptr) return;
     if (pItem->isTypeUpgrade()) {
         onUpgradeStarted(pItem);
+        return;
     }
+
+    // it is a unit/structure/special
+    cSideBar *sideBar = m_Player->getSideBar();
+    cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
+    listUpgrades->setStatusPendingBuilding(pItem->getSubList());
+
     cLogger::getInstance()->logCommentLine("onBuildItemStarted - end");
+}
+
+/**
+ * A unit is done building; a super weapon is completed
+ * @param pItem
+ */
+void cBuildingListUpdater::onBuildItemCompleted(cBuildingListItem *pItem) {
+    cLogger::getInstance()->logCommentLine("onBuildItemCompleted - start");
+    if (pItem == nullptr) return;
+    if (pItem->isTypeUpgrade()) {
+        // do nothing, this is normally called via OnUpgradeCompleted, see method above.
+        logbook("Wrongfully called onBuildItemCompleted when OnUpgradeCompleted was expected.");
+        return;
+    }
+
+    // it is a unit/structure/special
+    cSideBar *sideBar = m_Player->getSideBar();
+    cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
+    listUpgrades->setStatusAvailable(pItem->getSubList());
+
+    cLogger::getInstance()->logCommentLine("onBuildItemCompleted - end");
 }

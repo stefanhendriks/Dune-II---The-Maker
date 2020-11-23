@@ -1,13 +1,6 @@
-/*
- * cPlaceItDrawer.cpp
- *
- *  Created on: 12-aug-2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
-cPlaceItDrawer::cPlaceItDrawer() {
+cPlaceItDrawer::cPlaceItDrawer(const cPlayer& thePlayer) : m_Player(thePlayer) {
 	cellCalculator = new cCellCalculator(&map);
 }
 
@@ -20,11 +13,11 @@ void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace) {
 	assert(itemToPlace->getBuildType() == STRUCTURE);
 
 	// this is only done when bPlaceIt=true
-	if (player[HUMAN].getSideBar() == NULL) {
+	if (m_Player.getSideBar() == NULL) {
 		return;
 	}
 
-	int iMouseCell = player[HUMAN].getGameControlsContext()->getMouseCell();
+	int iMouseCell = m_Player.getGameControlsContext()->getMouseCell();
 
 	if (iMouseCell < 0) {
 		return;
@@ -53,7 +46,6 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     int scaledHeight = mapCamera->factorZoomLevel(height);
     int cellWidth = structureUtils.getWidthOfStructureTypeInCells(structureId);
     int cellHeight = structureUtils.getHeightOfStructureTypeInCells(structureId);
-
 
     //
 	int iTotalBlocks = cellWidth * cellHeight;
@@ -189,8 +181,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 			}
 
             play_sound_id(SOUND_PLACE);
-
-			player[HUMAN].getStructurePlacer()->placeStructure(mouseCell, structureId, iHealthPercent);
+			m_Player.getStructurePlacer()->placeStructure(mouseCell, structureId, iHealthPercent);
+            m_Player.getBuildingListUpdater()->onBuildItemCompleted(itemToPlace);
 
 			game.bPlaceIt=false;
 
@@ -199,7 +191,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 			itemToPlace->setIsBuilding(false);
 			itemToPlace->setProgress(0);
 			if (itemToPlace->getTimesToBuild() < 1) {
-				player[HUMAN].getItemBuilder()->removeItemFromList(itemToPlace);
+                m_Player.getItemBuilder()->removeItemFromList(itemToPlace);
 			}
 		}
 	}

@@ -10,7 +10,7 @@ cDrawManager::cDrawManager(const cPlayer & thePlayer) : m_Player(thePlayer) {
 	particleDrawer = new cParticleDrawer();
 	messageDrawer = new cMessageDrawer();
 	messageBarDrawer = new cMessageBarDrawer();
-	placeitDrawer = new cPlaceItDrawer();
+	placeitDrawer = new cPlaceItDrawer(thePlayer);
 	structureDrawer = new cStructureDrawer();
 	mouseDrawer = new cMouseDrawer(thePlayer);
 

@@ -105,7 +105,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 	draw_sprite(bmp_screen, horBar, iDrawX-1, iDrawY-38); // above sublist buttons
     draw_sprite(bmp_screen, horBar, iDrawX-1, iDrawY-5); // above normal icons
 
-    int selectFadingColor = player[HUMAN].getSelectFadingColor();
+    cPlayer &m_Player = player[HUMAN];
+    int selectFadingColor = m_Player.getSelectFadingColor();
 
     int end = MAX_ITEMS;
 
@@ -171,7 +172,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 		}
 
 		// asumes drawing for human player
-		bool cannotPayIt = item->getBuildCost() > player[HUMAN].credits;
+		bool cannotPayIt = item->getBuildCost() > m_Player.credits;
 
 		// when this item is being built.
 		if (item->isBuilding()) {
@@ -229,15 +230,34 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 			if (!item->isAvailable() || isBuildingSameSubListItem || !list->isAcceptsOrders()) {
 				set_trans_blender(0,0,0,128);
 				fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
+
+				// Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
 				if (item->isPendingUpgrading()) {
-                    int errorFadingColor = player[HUMAN].getErrorFadingColor();
+                    int errorFadingColor = m_Player.getErrorFadingColor();
                     rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
                     int yellow = makecol(255, 207, 41);
+                    int red = makecol(255, 0, 0);
 				    textDrawer->setFont(small_font);
-				    textDrawer->drawTextCenteredInBox("Upgrading", iDrawX, iDrawY, withOfIcon, heightOfIcon, yellow);
+				    textDrawer->drawTextCenteredInBox("Upgrading", iDrawX, iDrawY, withOfIcon, heightOfIcon, red);
+				    textDrawer->setFont(game_font);
+				}
+
+				// Pending building (ie: a build is progressing, blocking the upgrade)
+				if (item->isPendingBuilding()) {
+                    int errorFadingColor = m_Player.getErrorFadingColor();
+                    rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                    line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                    line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
+
+                    int red = makecol(255, 0, 0);
+				    textDrawer->setFont(small_font);
+                    int height = heightOfIcon / 3;
+                    textDrawer->drawTextCenteredInBox("Building", iDrawX, iDrawY, withOfIcon, height, red);
+                    textDrawer->drawTextCenteredInBox("in", iDrawX, iDrawY+height, withOfIcon, height, red);
+                    textDrawer->drawTextCenteredInBox("progress", iDrawX, iDrawY+(height*2), withOfIcon, height, red);
 				    textDrawer->setFont(game_font);
 				}
 			}
@@ -246,7 +266,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 				if (cannotPayIt) {
 					set_trans_blender(0,0,0,128);
 					fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
-					int errorFadingColor = player[HUMAN].getErrorFadingColor();
+					int errorFadingColor = m_Player.getErrorFadingColor();
 					rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
 					line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
 					line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
