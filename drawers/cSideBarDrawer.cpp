@@ -122,8 +122,51 @@ void cSideBarDrawer::drawBuildingLists(const cPlayer & thePlayer) {
     // draw the 'lines' between the icons    // draw the buildlist itself (take scrolling into account)
 	cBuildingList *selectedList = NULL;
 
-	if (selectedListId > -1) {
-		selectedList = sidebar->getList(selectedListId);
+    int iDrawX = buildingListDrawer->getDrawX();
+    int iDrawY = buildingListDrawer->getDrawY();
+
+    BITMAP *horBar = (BITMAP *) gfxinter[BMP_GERALD_SIDEBAR_PIECE].dat;
+    draw_sprite(bmp_screen, horBar, iDrawX-1, iDrawY-38); // above sublist buttons
+    draw_sprite(bmp_screen, horBar, iDrawX-1, iDrawY-5); // above normal icons
+
+    if (selectedListId > -1) {
+        selectedList = sidebar->getList(selectedListId);
+    }
+
+    int endY = game.screen_y;
+    int rows = 6;
+    if (selectedList && selectedList->getType() == LIST_STARPORT) {
+        rows = 5;
+        endY = game.screen_y - 50;
+    }
+
+    for (int i = 1; i < 3; i++) {
+        int barX = (iDrawX - 1) + (i * 66);
+        int darker = makecol(89, 56, 0);
+        int veryDark = makecol(48, 28, 0);
+        line(bmp_screen, barX - 1, iDrawY, barX - 1, endY, darker);
+        line(bmp_screen, barX, iDrawY, barX, endY, veryDark);
+
+        // horizontal lines
+        for (int j = 1; j < rows; j++) {
+            int barY = iDrawY - 1 + (j * 50);
+            line(bmp_screen, iDrawX, barY-1, game.screen_x, barY-1, darker);
+            line(bmp_screen, iDrawX, barY, game.screen_x, barY, veryDark);
+        }
+    }
+
+    if (selectedList && selectedList->getType() == LIST_STARPORT) {
+        rectfill(bmp_screen, iDrawX, endY, game.screen_x, game.screen_y, makecol(214,149,20));
+        draw_sprite(bmp_screen, horBar, iDrawX-1, endY); // just below the last icons
+    }
+
+    // vertical lines at the side
+    line(bmp_screen, iDrawX - 1, iDrawY-38, iDrawX-1, game.screen_y, makecol(255, 211, 125)); // left
+    line(bmp_screen, game.screen_x - 1, iDrawY-38, game.screen_x - 1, endY, makecol(209, 150, 28)); // right
+
+    // END drawing icons grid
+
+    if (selectedList) {
         buildingListDrawer->drawList(selectedList, selectedListId);
 	}
 
