@@ -81,8 +81,8 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
 
 	if (listId == LIST_UNITS) {
 		list->setButtonDrawX(startX);
-		list->setButtonIconIdPressed(LIST_BTN_LIGHTFCTRY);
-		list->setButtonIconIdUnpressed(LIST_BTN_LIGHTFCTRY);
+		list->setButtonIconIdPressed(LIST_BTN_FACTORY);
+		list->setButtonIconIdUnpressed(LIST_BTN_FACTORY);
 	}
 
 	startX += widthOfButtonIncludingMargin;
@@ -130,8 +130,8 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
 	if (listId == LIST_UPGRADES) {
         list->setButtonDrawX(startX);
         // temp, use CONST YARD
-		list->setButtonIconIdPressed(LIST_BTN_CONSTYARD);
-		list->setButtonIconIdUnpressed(LIST_BTN_CONSTYARD);
+		list->setButtonIconIdPressed(LIST_BTN_UPGRADE);
+		list->setButtonIconIdUnpressed(LIST_BTN_UPGRADE);
 
 		// the contents of the list is determined elsewhere
 	}
