@@ -161,8 +161,7 @@ void cMapCamera::thinkInteraction() {
     }
 
     // mouse is 'moving by pressing right mouse button', this supersedes behavior with borders
-    if (mouse_mv_x1 > -1 && mouse_mv_y1 > -1 &&
-        mouse_mv_x2 > -1 && mouse_mv_y2 > -1) {
+    if (cMouse::isMapScrolling()) {
 
         // difference in pixels (- means up/left, + means down/right)
         int diffX = mouse_mv_x2 - mouse_mv_x1;
