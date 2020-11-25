@@ -1,3 +1,4 @@
+#include <vector>
 #include "../include/d2tmh.h"
 #include "cBuildingList.h"
 
@@ -260,5 +261,20 @@ void cBuildingList::setStatusPendingBuilding(int subListId) {
                 }
             }
         }
+    }
+}
+
+void cBuildingList::removeAllSublistItems(int sublistId) {
+    std::vector<int> buildIdsToRemove;
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *pItem = getItem(i);
+        if (pItem == nullptr) continue;
+        if (pItem->getSubList() == sublistId) {
+            buildIdsToRemove.push_back(pItem->getBuildId());
+        }
+    }
+
+    for(int buildId : buildIdsToRemove) {
+        removeItemFromListByBuildId(buildId);
     }
 }

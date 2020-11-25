@@ -69,6 +69,8 @@ class cBuildingList {
 
 		int getType() { return typeOfList; }
 
+    void removeAllSublistItems(int sublistId);
+
 protected:
 		// nothing
 
