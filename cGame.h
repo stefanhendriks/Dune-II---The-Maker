@@ -12,12 +12,18 @@
 
 // TODO: Clean this class up big time.
 
+#ifndef D2TM_GAME_H
+#define D2TM_GAME_H
+
+// forward declaration :/ sigh should really look into these includes and such
+class cRectangle;
 
 class cGame {
 
 public:
 
 	cGame();
+	~cGame();
 
 	std::string game_filename;
 
@@ -148,6 +154,8 @@ public:
 
     void think_fading();
 
+    cRectangle * mapViewport;
+
 private:
 	void poll();
 	void combat();		// the combat part (main) of the game
@@ -179,5 +187,7 @@ private:
 
     int fade_select;        // fade color when selected
     bool bFadeSelectDir;    // fade select direction
+
 };
 
+#endif

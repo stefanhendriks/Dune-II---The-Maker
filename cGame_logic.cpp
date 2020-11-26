@@ -17,6 +17,8 @@
   */
 
 #include "include/d2tmh.h"
+#include "cGame.h"
+
 
 cGame::cGame() {
 	screen_x = 800;
@@ -2656,7 +2658,6 @@ bool cGame::setupGame() {
 
 	}
 
-
 	alfont_text_mode(-1);
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set mode to -1", OUTC_SUCCESS);
 
@@ -2716,6 +2717,7 @@ bool cGame::setupGame() {
 	/***
 	Bitmap Creation
 	***/
+    mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.screen_x-cSideBar::SidebarWidth, game.screen_y-cSideBar::TopBarHeight);
 
 	bmp_screen = create_bitmap(game.screen_x, game.screen_y);
 
@@ -2944,4 +2946,9 @@ void cGame::think_fading() {
     fade_select--;
     // not too dark,
     if (fade_select < 32) bFadeSelectDir = true;
+}
+
+cGame::~cGame() {
+    delete soundPlayer;
+    delete mapViewport;
 }

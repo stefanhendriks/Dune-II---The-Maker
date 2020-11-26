@@ -336,158 +336,128 @@ void cMap::draw_units() {
     for (int i=0; i < MAX_UNITS; i++) {
         cUnit &cUnit = unit[i];
         if (!cUnit.isValid()) continue;
+
         // DEBUG MODE: DRAW PATHS
         if (DEBUGGING && cUnit.bSelected) {
             cUnit.draw_path();
         }
 
-        if (cUnit.iType == SANDWORM) {
-            int drawx = cUnit.draw_x();
-            int drawy = cUnit.draw_y();
+        if (cUnit.iType != SANDWORM) continue;
 
-            if (((drawx+units[cUnit.iType].bmp_width) > 0 && drawx < (game.screen_x - 160)) &&
-                ((drawy+units[cUnit.iType].bmp_height) > 42 && drawy < game.screen_y))
-            {
-                // draw
-                cUnit.draw();
-            }
+        if (key[KEY_D]) {
+            allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
+        }
+
+        if (cUnit.dimensions->isOverlapping(game.mapViewport)) {
+            cUnit.draw();
         }
     }
 
-    // draw all units
+    // then: draw infantry units
     for (int i=0; i < MAX_UNITS; i++) {
-        if (unit[i].isValid()) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
 
-            if (unit[i].iType == CARRYALL ||
-                unit[i].iType == ORNITHOPTER ||
-                unit[i].iType == FRIGATE ||
-                unit[i].iType == SANDWORM ||
-                units[unit[i].iType].infantry == false)
-                continue; // do not draw aircraft
+        if (!cUnit.isInfantryUnit())
+            continue; // skip non-infantry units
 
-                int drawx = unit[i].draw_x();
-                int drawy = unit[i].draw_y();
+        if (key[KEY_D]) {
+            allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
+        }
 
-			//line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(255,255,255));
+        if (cUnit.dimensions->isOverlapping(game.mapViewport)) {
+            // draw
+            cUnit.draw();
 
-                if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.screen_x-160)) &&
-                    ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.screen_y))
-                {
+            //line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(0,255,255));
 
-                    // draw
-                    unit[i].draw();
+            if (key[KEY_D] && key[KEY_TAB])
+                alfont_textprintf(bmp_screen, game_font, cUnit.draw_x(), cUnit.draw_y(), makecol(255, 255, 255), "%d", i);
 
-                    //line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(0,255,255));
-
-                    if (key[KEY_D] && key[KEY_TAB])
-                        alfont_textprintf(bmp_screen, game_font, unit[i].draw_x(),unit[i].draw_y(), makecol(255,255,255), "%d", i);
-
-                }
-
-            }
-
+        }
     }
 
-    // draw all units
-    for (int i=0; i < MAX_UNITS; i++)
-    {
-        if (unit[i].isValid())
-        {
+    // then: draw ground units
+    for (int i=0; i < MAX_UNITS; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
 
-            if (unit[i].iType == CARRYALL ||
-                unit[i].iType == ORNITHOPTER ||
-                unit[i].iType == FRIGATE ||
-                unit[i].iType == SANDWORM ||
-                units[unit[i].iType].infantry)
-                continue; // do not draw aircraft
+        if (cUnit.isAirbornUnit() ||
+            cUnit.iType == SANDWORM ||
+            cUnit.isInfantryUnit())
+            continue; // skip airborn, infantry and sandworm
 
-            int drawx = unit[i].draw_x();
-            int drawy = unit[i].draw_y();
+        if (key[KEY_D]) {
+            allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
+        }
 
-			// within drawable screen
-            if (((drawx+units[unit[i].iType].bmp_width) > 0 && drawx < (game.screen_x-160)) &&
-                ((drawy+units[unit[i].iType].bmp_height) > 42 && drawy < game.screen_y)) {
+        if (cUnit.dimensions->isOverlapping(game.mapViewport)) {
+            // draw
+            cUnit.draw();
 
-                // draw
-                unit[i].draw();
-
-				if (key[KEY_D] && key[KEY_TAB])
-					alfont_textprintf(bmp_screen, game_font, unit[i].draw_x(),unit[i].draw_y(), makecol(255,255,255), "%d", i);
-
+            if (key[KEY_D] && key[KEY_TAB]) {
+                alfont_textprintf(bmp_screen, game_font, cUnit.draw_x(), cUnit.draw_y(), makecol(255, 255, 255), "%d", i);
             }
 
         }
-
     }
 
     int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
-    if (mc > -1)
-    {
-        if (map.cell[mc].id[MAPID_UNITS] > -1)
-        {
-            int iUnitId = map.cell[mc].id[MAPID_UNITS];
+    if (mc > -1) {
+        tCell &cellOfMouse = map.cell[mc];
+
+        if (cellOfMouse.id[MAPID_UNITS] > -1) {
+            int iUnitId = cellOfMouse.id[MAPID_UNITS];
 
             if (unit[iUnitId].iTempHitPoints < 0)
                 game.hover_unit = iUnitId;
-        }
-        else if (map.cell[mc].id[MAPID_WORMS] > -1)
-        {
-            int iUnitId = map.cell[mc].id[MAPID_WORMS];
+
+        } else if (cellOfMouse.id[MAPID_WORMS] > -1) {
+            int iUnitId = cellOfMouse.id[MAPID_WORMS];
             game.hover_unit = iUnitId;
         }
     }
-
 }
 
-// draw airborn units
-void cMap::draw_units_2nd()
-{
+// draw 2nd layer for units, this is health/spice bars and eventually airborn units (last)
+void cMap::draw_units_2nd() {
     set_trans_blender(0, 0, 0, 160);
 
     // draw unit power
-    if (game.hover_unit > -1)
-    {
-		if (unit[game.hover_unit].iType == HARVESTER)
-			unit[game.hover_unit].draw_spice();
+    if (game.hover_unit > -1) {
+        cUnit &hoverUnit = unit[game.hover_unit];
 
-        unit[game.hover_unit].draw_health();
-		unit[game.hover_unit].draw_experience();
+        if (hoverUnit.iType == HARVESTER) {
+            hoverUnit.draw_spice();
+        }
 
+        hoverUnit.draw_health();
+		hoverUnit.draw_experience();
     }
 
     // draw health of units
-    for (int i=0; i < MAX_UNITS; i++)
-    {
-        if (unit[i].isValid())
-        {
-            if (unit[i].bSelected)
-			{
+    for (int i=0; i < MAX_UNITS; i++) {
+        if (unit[i].isValid()) {
+            if (unit[i].bSelected) {
                unit[i].draw_health();
 			   unit[i].draw_experience();
 			}
         }
-
     }
 
-	// draw all units
-    for (int i=0; i < MAX_UNITS; i++)
-    {
-        if (unit[i].isValid())
-        {
+	// draw airborn units
+    for (int i=0; i < MAX_UNITS; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
+        if (!cUnit.isAirbornUnit()) continue;
 
-            if (((unit[i].draw_x()+units[unit[i].iType].bmp_width) > 0 && unit[i].draw_x() < game.screen_x) &&
-                ((unit[i].draw_y()+units[unit[i].iType].bmp_height) > 0 && unit[i].draw_y() < game.screen_y))
-            {
-                // Draw aircraft here
-                if (unit[i].iType == CARRYALL ||
-                    unit[i].iType == ORNITHOPTER ||
-                    unit[i].iType == FRIGATE)
-                {
-                    unit[i].draw();
-                }
-            }
+        if (key[KEY_D]) {
+            allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
         }
 
+        if (cUnit.dimensions->isOverlapping(game.mapViewport)) {
+            cUnit.draw();
+        }
     }
 
     set_trans_blender(0, 0, 0, 128);
@@ -499,36 +469,6 @@ void cMap::draw_think() {
 	if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
 		return;
 	}
-
-//	// determine the width and height in cells
-//	// this way we know the size of the viewport
-//	int iEndX = mapCamera->getX() + ((game.screen_x - 160) / 32); // width of sidebar is 160
-//	int iEndY = mapCamera->getY() + ((game.screen_y - 42) / 32) + 1; // height of upper bar is 42
-//
-//	// thinking for map (scrolling that is)
-//	if (mouse_x <= 1 || key[KEY_LEFT]) {
-//		if (mapCamera->getX() > 1) {
-//			mouse_tile = MOUSE_LEFT;
-//		}
-//	}
-//
-//	if (mouse_y <= 1 || key[KEY_UP]) {
-//		if (mapCamera->getY() > 1) {
-//			mouse_tile = MOUSE_UP;
-//		}
-//	}
-//
-//	if (mouse_x >= (game.screen_x - 2) || key[KEY_RIGHT]) {
-//		if ((iEndX) < (game.map_width - 1)) {
-//			mouse_tile = MOUSE_RIGHT;
-//		}
-//	}
-//
-//	if (mouse_y >= (game.screen_y - 2) || key[KEY_DOWN]) {
-//		if ((iEndY) < (game.map_height - 1)) {
-//			mouse_tile = MOUSE_DOWN;
-//		}
-//	}
 }
 
 void cMap::thinkInteraction() {
