@@ -35,6 +35,7 @@ void cSideBar::think() {
 
 /**
  * Think about the availability of lists.
+ * TODO: move this to the cBuildingListUpdater? (event driven??)
  */
 void cSideBar::thinkAvailabilityLists() {
 	// CONSTYARD LIST
@@ -86,7 +87,7 @@ void cSideBar::thinkInteraction() {
 	for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {
 		if (i == selectedListID) continue; // skip selected list for button interaction
 		cBuildingList *list = getList(i);
-
+        if (list == nullptr) continue;
 		if (list->isAvailable() == false) continue; // not available, so no interaction possible
 
 		// interaction is possible.
@@ -101,10 +102,17 @@ void cSideBar::thinkInteraction() {
 	}
 
 	if (selectedListID < 0) return;
-	if (!getList(selectedListID)->isAvailable()) return;
 
 	// when mouse pressed, build item if over item
     cBuildingList *list = getList(selectedListID);
+
+    if (list == nullptr) return;
+
+    if (!list->isAvailable()) {
+        // unselect this list
+        player[HUMAN].getSideBar()->setSelectedListId(-1);
+        return;
+    }
 
     cOrderProcesser * orderProcesser = m_Player.getOrderProcesser();
     cOrderDrawer * orderDrawer = drawManager->getOrderDrawer();

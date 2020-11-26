@@ -514,3 +514,7 @@ int cAbstractStructure::getWidthInPixels() {
 int cAbstractStructure::getHeightInPixels() {
     return getS_StructuresType().bmp_height;
 }
+
+bool cAbstractStructure::isDamaged() {
+    return getHitPoints() < getMaxHP();
+}

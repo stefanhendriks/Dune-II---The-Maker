@@ -12,6 +12,8 @@
 
 #include <math.h>
 #include "../../include/d2tmh.h"
+#include "cUnit.h"
+
 
 // Path creation definitions / var
 #define CLOSED        -1
@@ -31,8 +33,7 @@ ASTAR temp_map[MAX_CELLS];
 // Class specific on top
 // Globals on bottom
 
-void cUnit::init(int i)
-{
+void cUnit::init(int i) {
 
 	fExperience=0;
 
@@ -112,6 +113,17 @@ void cUnit::init(int i)
     TIMER_bored=0;    // how long are we bored?
     TIMER_attack=0;
     TIMER_wormeat=0;
+
+
+}
+
+void cUnit::recreateDimensions() {
+    if (dimensions != nullptr) {
+        delete dimensions;
+    }
+
+    // set up dimensions
+    dimensions = new cRectangle(draw_x(), draw_y(), getBmpWidth(), getBmpHeight());
 }
 
 void cUnit::die(bool bBlowUp, bool bSquish) {
@@ -408,17 +420,21 @@ int cUnit::pos_y() {
 }
 
 int cUnit::draw_x() {
-    int bmpOffset = (TILESIZE_WIDTH_PIXELS - units[iType].bmp_width) / 2;
+    int bmpOffset = (TILESIZE_WIDTH_PIXELS - getBmpWidth()) / 2;
     return mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
 }
 
 int cUnit::draw_y() {
-    int bmpOffset = (TILESIZE_HEIGHT_PIXELS - units[iType].bmp_height) / 2;
+    int bmpOffset = (TILESIZE_HEIGHT_PIXELS - getBmpHeight()) / 2;
     return mapCamera->getWindowYPositionWithOffset(pos_y(), bmpOffset);
 }
 
+int cUnit::getBmpHeight() const {
+    return units[iType].bmp_height;
+}
+
 void cUnit::draw_spice() {
-    float width_x = mapCamera->factorZoomLevel(units[iType].bmp_width);
+    float width_x = mapCamera->factorZoomLevel(getBmpWidth());
     int height_y = mapCamera->factorZoomLevel(4);
     int drawx = draw_x();
     int drawy = draw_y()-((height_y *2)+ 2);
@@ -436,6 +452,10 @@ void cUnit::draw_spice() {
     }
 }
 
+int cUnit::getBmpWidth() const {
+    return units[iType].bmp_width;
+}
+
 float cUnit::getHealthNormalized() {
     s_UnitP &unitType = getUnitType();
     float flMAX  = unitType.hp;
@@ -444,7 +464,7 @@ float cUnit::getHealthNormalized() {
 
 void cUnit::draw_health() {
     // draw units health
-    float width_x = mapCamera->factorZoomLevel(units[iType].bmp_width);
+    float width_x = mapCamera->factorZoomLevel(getBmpWidth());
     int height_y = mapCamera->factorZoomLevel(4);
     int drawx = draw_x();
     int drawy = draw_y()-(height_y + 2);
@@ -661,6 +681,8 @@ void cUnit::draw() {
         int bmp_height = focusBitmap->h;
         allegroDrawer->maskedStretchBlit(focusBitmap, bmp_screen, 0, 0, bmp_width, bmp_height, iSelX/*+startpixel*/- 2, iSelY, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
     }
+
+
 }
 
 // GLOBALS
@@ -921,10 +943,8 @@ void cUnit::think_guard() {
 }
 
 // NORMAL thinking
-void cUnit::think()
-{
-
-	if (TIMER_blink > 0)
+void cUnit::think() {
+    if (TIMER_blink > 0)
 		TIMER_blink--;
 
     if (iType == MCV)
@@ -1445,8 +1465,8 @@ void cUnit::think_move_air() {
 								iGoalCell = iBringTarget;
 
 
-                                int pufX=(pos_x() + units[iType].bmp_width / 2);
-                                int pufY=(pos_y() + units[iType].bmp_height / 2);
+                                int pufX=(pos_x() + getBmpWidth() / 2);
+                                int pufY=(pos_y() + getBmpHeight() / 2);
 
                                 PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
 
@@ -1547,8 +1567,8 @@ void cUnit::think_move_air() {
 							}
 
 
-                            int pufX=(pos_x() + units[iType].bmp_width / 2);
-                            int pufY=(pos_y() + units[iType].bmp_height / 2);
+                            int pufX=(pos_x() + getBmpWidth() / 2);
+                            int pufY=(pos_y() + getBmpHeight() / 2);
                             PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
 
 						}
@@ -1698,8 +1718,8 @@ void cUnit::think_move_air() {
                         cellType == TERRAIN_SPICE ||
                         cellType == TERRAIN_HILL ||
                         cellType == TERRAIN_SPICEHILL) {
-                        int pufX=(pos_x() + units[iType].bmp_width / 2);
-                        int pufY=(pos_y() + units[iType].bmp_height / 2);
+                        int pufX=(pos_x() + getBmpWidth() / 2);
+                        int pufY=(pos_y() + getBmpHeight() / 2);
                         PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
                     }
                 }
@@ -1862,8 +1882,8 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe)
 
 void cUnit::shoot(int iShootCell) {
     // particles are rendered at the center, so do it here as well
-    int iShootX=pos_x() + units[iType].bmp_width / 2;
-    int iShootY=pos_y() + units[iType].bmp_height / 2;
+    int iShootX=pos_x() + getBmpWidth() / 2;
+    int iShootY=pos_y() + getBmpHeight() / 2;
     int bmp_head = convert_angle(iHeadFacing);
 
     if (iType == TANK) {
@@ -2966,6 +2986,26 @@ void cUnit::think_move() {
 
 }
 
+bool cUnit::isInfantryUnit() {
+    return units[iType].infantry;
+}
+
+cUnit::cUnit() {
+    dimensions = nullptr;
+}
+
+/**
+ * Poor man solution to frequently update the dimensions of unit, better would be using events?
+ * (onMove, onViewportMove, onViewportZoom?)
+ */
+void cUnit::think_position() {
+    // keep updating dimensions
+    dimensions->move(draw_x(), draw_y());
+    dimensions->resize(mapCamera->factorZoomLevel(getBmpWidth()),
+                       mapCamera->factorZoomLevel(getBmpHeight()));
+
+}
+
 // return new valid ID
 int UNIT_NEW()
 {
@@ -3032,24 +3072,26 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
         return -1;
 	}
 
-    unit[iNewId].init(iNewId);
+    cUnit &newUnit = unit[iNewId];
+    newUnit.init(iNewId);
 
-    unit[iNewId].iCell=iCll;
-    unit[iNewId].iBodyFacing=rnd(8);
-    unit[iNewId].iHeadFacing=rnd(8);
+    newUnit.iCell=iCll;
+    newUnit.iBodyFacing=rnd(8);
+    newUnit.iHeadFacing=rnd(8);
 
-    unit[iNewId].iBodyShouldFace = unit[iNewId].iBodyFacing;
-    unit[iNewId].iHeadShouldFace = unit[iNewId].iHeadFacing;
+    newUnit.iBodyShouldFace = newUnit.iBodyFacing;
+    newUnit.iHeadShouldFace = newUnit.iHeadFacing;
 
-    unit[iNewId].iType = iTpe;
+    newUnit.iType = iTpe;
     //unit[iNewId].iHitPoints = rnd(units[iTpe].hp);
-    unit[iNewId].iHitPoints = units[iTpe].hp;
-    unit[iNewId].iGoalCell = iCll;
+    newUnit.iHitPoints = units[iTpe].hp;
+    newUnit.iGoalCell = iCll;
 
-    unit[iNewId].bSelected=false;
+    newUnit.bSelected=false;
 
-    unit[iNewId].TIMER_bored = rnd(3000);
-    unit[iNewId].TIMER_guard = -20 + rnd(70);
+    newUnit.TIMER_bored = rnd(3000);
+    newUnit.TIMER_guard = -20 + rnd(70);
+    newUnit.recreateDimensions();
 
 
     if (iPlyr > 0 && iPlyr < AI_WORM && units[iTpe].airborn == false && bOnStart == false)
@@ -3068,7 +3110,7 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
     int iPlayer = iPlyr;
     if (iTpe == SANDWORM) iPlayer = AI_WORM;
 
-    unit[iNewId].iPlayer = iPlayer;
+    newUnit.iPlayer = iPlayer;
     // Put on map too!:
     map.cellSetIdForLayer(iCll, mapIdIndex, iNewId);
 
@@ -3078,13 +3120,13 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
     } else if (
             iTpe != ORNITHOPTER && iTpe != FRIGATE && iTpe != CARRYALL // not airborn
             ) {
-        unit[iNewId].iPlayer = iPlyr;
+        newUnit.iPlayer = iPlyr;
     } else {
         // aircraft
-        unit[iNewId].iPlayer = iPlyr;
+        newUnit.iPlayer = iPlyr;
     }
 
-	unit[iNewId].poll();
+	newUnit.poll();
     map.clear_spot(iCll, units[iTpe].sight, iPlyr);
 
     return iNewId;

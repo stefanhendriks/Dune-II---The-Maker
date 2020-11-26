@@ -393,7 +393,7 @@ void cGame::combat_mouse()
         }
     } else {
         // set to -1 only when it was > -1
-        if (mouse_mv_x2 > -1 || mouse_mv_y2 > -1) {
+        if (mouse_mv_x1 > -1 || mouse_mv_y1 > -1 || mouse_mv_x2 > -1 || mouse_mv_y2 > -1) {
             mouse_mv_x1 = -1;
             mouse_mv_x2 = -1;
 
@@ -411,8 +411,7 @@ void cGame::combat_mouse()
 		if (key[KEY_P])	{
 			int iStr=context->getIdOfStructureWhereMouseHovers();
 
-			if (structure[iStr]->getOwner() == 0)
-			{
+			if (structure[iStr]->getOwner() == HUMAN) {
 				if (structure[iStr]->getType() == LIGHTFACTORY ||
 					structure[iStr]->getType() == HEAVYFACTORY ||
 					structure[iStr]->getType() == HIGHTECH ||
@@ -420,7 +419,7 @@ void cGame::combat_mouse()
 					structure[iStr]->getType() == WOR ||
 					structure[iStr]->getType() == BARRACKS ||
 					structure[iStr]->getType() == REPAIR)
-					player[0].setPrimaryBuildingForStructureType(structure[iStr]->getType(), iStr);
+					player[HUMAN].setPrimaryBuildingForStructureType(structure[iStr]->getType(), iStr);
 			}
 		}
 
@@ -428,23 +427,23 @@ void cGame::combat_mouse()
         if (key[KEY_R] && !bOrderingUnits) {
         	int structureId = context->getIdOfStructureWhereMouseHovers();
 
-            if (structure[structureId]->getOwner() == 0 &&
-                structure[structureId]->getHitPoints() < structures[structure[structureId]->getType()].hp)
-            {
-                if (cMouse::isLeftButtonClicked())
-                {
+            if (structure[structureId]->getOwner() == HUMAN &&
+                structure[structureId]->isDamaged()) {
+                if (cMouse::isLeftButtonClicked()) {
 
                     if (!structure[structureId]->isRepairing()) {
                         structure[structureId]->setRepairing(true);
                     } else {
                         structure[structureId]->setRepairing(false);
                     }
+
                 }
 
                 mouse_tile = MOUSE_REPAIR;
-            }// MOUSE PRESSED
-        }
+            }
+        } // MOUSE PRESSED
 
+        // select structure
 		if (cMouse::isLeftButtonClicked() && bOrderingUnits == false && !key[KEY_R]) {
 			game.selected_structure = context->getIdOfStructureWhereMouseHovers();
 
