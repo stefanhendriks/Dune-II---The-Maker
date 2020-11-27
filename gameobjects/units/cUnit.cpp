@@ -1514,6 +1514,7 @@ void cUnit::think_move_air() {
 							// dump it here
 							unitToPickup.iCell = iCell;
                             unitToPickup.iGoalCell = iCell;
+                            unitToPickup.poll(); // update cellx and celly
 							map.cellSetIdForLayer(iCell, MAPID_UNITS, iUnitID);
                             unitToPickup.iHitPoints = unitToPickup.iTempHitPoints;
                             unitToPickup.iTempHitPoints = -1;
@@ -1542,30 +1543,23 @@ void cUnit::think_move_air() {
 							// make it enter the refinery instantly
 							if (unit[unitIdOfUnitThatHasBeenPickedUp].iType == HARVESTER) {
                                 // valid structure
-                                if (structure[unit[unitIdOfUnitThatHasBeenPickedUp].iStructureID])
-                                {
+                                cAbstractStructure *structureUnitWantsToEnter = structure[unit[unitIdOfUnitThatHasBeenPickedUp].iStructureID];
+                                if (structureUnitWantsToEnter && structureUnitWantsToEnter->isValid()) {
+                                    // when this structure is not occupied
+                                    if (structureUnitWantsToEnter->iUnitID < 0)	{
+                                        // get in!
+                                        structureUnitWantsToEnter->setAnimating(false);
+                                        structureUnitWantsToEnter->iUnitID = unitIdOfUnitThatHasBeenPickedUp;  // !!
+                                        structureUnitWantsToEnter->setFrame(0);
 
-								// when this structure is not occupied
-								if (structure[unit[unitIdOfUnitThatHasBeenPickedUp].iStructureID]->iUnitID < 0)
-								{
-									// get in!
-									structure[unit[unitIdOfUnitThatHasBeenPickedUp].iStructureID]->setAnimating(false);
-									structure[unit[unitIdOfUnitThatHasBeenPickedUp].iStructureID]->iUnitID = unitIdOfUnitThatHasBeenPickedUp;  // !!
-									structure[unit[unitIdOfUnitThatHasBeenPickedUp].iStructureID]->setFrame(0);
+                                        // store this
+                                        unit[unitIdOfUnitThatHasBeenPickedUp].iTempHitPoints = unit[unitIdOfUnitThatHasBeenPickedUp].iHitPoints;
+                                        unit[unitIdOfUnitThatHasBeenPickedUp].iHitPoints=-1; // 'kill' unit
 
-									// store this
-									unit[unitIdOfUnitThatHasBeenPickedUp].iTempHitPoints = unit[unitIdOfUnitThatHasBeenPickedUp].iHitPoints;
-									unit[unitIdOfUnitThatHasBeenPickedUp].iHitPoints=-1; // 'kill' unit
-
-									map.remove_id(unitIdOfUnitThatHasBeenPickedUp, MAPID_UNITS);
-
-									if (DEBUGGING)
-										logbook("[UNIT] -> Enter refinery #2");
-
-								} // enter..
+                                        map.remove_id(unitIdOfUnitThatHasBeenPickedUp, MAPID_UNITS);
+                                    } // enter..
                                 }
 							}
-
 
                             int pufX=(pos_x() + getBmpWidth() / 2);
                             int pufY=(pos_y() + getBmpHeight() / 2);
