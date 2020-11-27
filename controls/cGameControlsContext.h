@@ -28,7 +28,6 @@ class cGameControlsContext {
 		int getIdOfUnitWhereMouseHovers() { return mouseHoveringOverUnitId; }
 
 		int getMouseCell() const { return mouseCell; }
-		int getMouseCellFromMiniMap();
 
 		bool isMouseOverStructure() { return mouseHoveringOverStructureId > -1; }
 		bool isMouseOverUnit() { return mouseHoveringOverUnitId > -1; }
@@ -46,7 +45,7 @@ class cGameControlsContext {
 		int getMouseCellFromScreen(int heightTopBar, int screenY, int screenX) const;
 
 	protected:
-		void determineMouseCell();
+		void updateMouseCell();
 		void determineToolTip();
 		void determineHoveringOverStructureId();
 		void determineHoveringOverUnitId();
