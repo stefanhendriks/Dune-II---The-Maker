@@ -22,13 +22,13 @@ cGameControlsContext::~cGameControlsContext() {
 
 
 void cGameControlsContext::updateState() {
-	determineMouseCell();
+    updateMouseCell();
 	determineToolTip();
 	determineHoveringOverStructureId();
 	determineHoveringOverUnitId();
 }
 
-void cGameControlsContext::determineMouseCell() {
+void cGameControlsContext::updateMouseCell() {
     int screenY = cMouse::getY();
     int screenX = cMouse::getX();
 
@@ -47,8 +47,7 @@ void cGameControlsContext::determineMouseCell() {
 		return;
 	}
 
-    int result = getMouseCellFromScreen(cSideBar::TopBarHeight, screenY, screenX);
-    mouseCell = result;
+    mouseCell = getMouseCellFromScreen(cSideBar::TopBarHeight, screenY, screenX);
 }
 
 int cGameControlsContext::getMouseCellFromScreen(int heightTopBar, int screenY, int screenX) const {
@@ -98,8 +97,4 @@ cAbstractStructure * cGameControlsContext::getStructurePointerWhereMouseHovers()
 		return NULL;
 	}
 	return structure[mouseHoveringOverStructureId];
-}
-
-int cGameControlsContext::getMouseCellFromMiniMap() {
-	return drawManager->getMiniMapDrawer()->getMouseCell(mouse_x, mouse_y);
 }

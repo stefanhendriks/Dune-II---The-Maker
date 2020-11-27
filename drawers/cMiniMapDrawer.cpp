@@ -215,14 +215,15 @@ int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
 }
 
 void cMiniMapDrawer::interact() {
-	// interact with mouse
-	if (m_RectMinimap->isMouseOver()) {
-        if (m_Player.hasAtleastOneStructure(RADAR)) {
-            // pressed the mouse and not boxing anything..
-            if (MOUSE_BTN_LEFT() && mouse_co_x1 < 0 && mouse_co_y1 < 0) {
-                int mouseCellOnMinimap = getMouseCell(mouse_x, mouse_y);
-                mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
-            }
+
+
+	if (m_RectMinimap->isMouseOver() && // on minimap
+	    cMouse::isLeftButtonPressed() && !cMouse::isBoxSelecting() // pressed the mouse and not boxing anything..
+	    ) {
+
+	    if (m_Player.hasAtleastOneStructure(RADAR)) {
+            int mouseCellOnMinimap = getMouseCell(mouse_x, mouse_y);
+            mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
         }
 	}
 }
