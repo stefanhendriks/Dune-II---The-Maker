@@ -141,10 +141,11 @@ public:
 
 	int getMaxVolume() { return iMaxVolume; }
 
-	cSoundPlayer * getSoundPlayer() { return soundPlayer; }
+	cSoundPlayer * getSoundPlayer() {
+	    return soundPlayer;
+	}
 
-	void draw_placeit();
-	void combat_mouse();
+    void combat_mouse();
 
 	int getGroupNumberFromKeyboard();
 	void destroyAllUnits(bool);
@@ -188,6 +189,7 @@ private:
     int fade_select;        // fade color when selected
     bool bFadeSelectDir;    // fade select direction
 
+    void init_skirmish() const;
 };
 
 #endif
