@@ -156,7 +156,7 @@ void cMapCamera::setViewportPosition(int x, int y) {
 
 void cMapCamera::thinkInteraction() {
     // Mouse is 'dragging' (border select) so do not do anything
-    if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
+    if (cMouse::isBoxSelecting()) {
         return;
     }
 

@@ -119,6 +119,9 @@ public:
     int draw_y();
     int pos_x();
     int pos_y();
+    int center_draw_x();
+    int center_draw_y();
+
     void draw_health();
 	void draw_experience();
 	void draw_spice();

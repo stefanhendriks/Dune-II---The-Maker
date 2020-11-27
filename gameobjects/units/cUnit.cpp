@@ -424,6 +424,14 @@ int cUnit::draw_x() {
     return mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
 }
 
+int cUnit::center_draw_x() {
+    return draw_x() + (mapCamera->factorZoomLevel(getBmpWidth())/2);
+}
+
+int cUnit::center_draw_y() {
+    return draw_y() + (mapCamera->factorZoomLevel(getBmpHeight())/2);
+}
+
 int cUnit::draw_y() {
     int bmpOffset = (TILESIZE_HEIGHT_PIXELS - getBmpHeight()) / 2;
     return mapCamera->getWindowYPositionWithOffset(pos_y(), bmpOffset);
@@ -588,6 +596,8 @@ void cUnit::draw_path() {
 }
 
 void cUnit::draw() {
+    putpixel(bmp_screen, center_draw_x(), center_draw_y(), makecol(255, 0, 255));
+
     if (iTempHitPoints > -1) {
         // temp hitpoints filled, meaning it is not visible (but not dead). Ie, it is being repaired, or transfered
         // by carry-all
