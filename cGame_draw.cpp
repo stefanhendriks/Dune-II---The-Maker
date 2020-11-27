@@ -81,8 +81,7 @@ void cGame::winning()
 }
 
 // Draw the mouse in combat mode, and do its interactions
-void cGame::combat_mouse()
-{
+void cGame::combat_mouse() {
 	cGameControlsContext *context = player[HUMAN].getGameControlsContext();
     bool bOrderingUnits=false;
 
@@ -332,12 +331,6 @@ void cGame::combat_mouse()
                         continue;
                     }
 
-                    // now check X and Y coordinates (center of unit now)
-//                        if (((cUnit.draw_x() + cUnit.getBmpWidth() / 2) >= min_x &&
-//                             (cUnit.draw_x() + cUnit.getBmpWidth() / 2) <= max_x) &&
-//                            (cUnit.draw_y() + cUnit.getBmpHeight() / 2 >= min_y &&
-//                             (cUnit.draw_y() + cUnit.getBmpHeight() / 2) <= max_y)) {
-
                     if (boxSelectRectangle.isWithin(cUnit.center_draw_x(), cUnit.center_draw_y())) {
                         // It is in the borders, select it
                         cUnit.bSelected = true;
@@ -391,7 +384,7 @@ void cGame::combat_mouse()
 	} // NOT PLACING STUFF
 
 
-    if (MOUSE_BTN_RIGHT()) {
+    if (cMouse::isRightButtonPressed()) {
         if (mouse_mv_x1 < 0 || mouse_mv_y1 < 0) {
             mouse_mv_x1 = mouse_x;
             mouse_mv_y1 = mouse_y;
@@ -399,8 +392,8 @@ void cGame::combat_mouse()
             // mouse mv 1st coordinates filled
             // when mouse is deviating from this coordinate, draw a line
 
-            if (abs(mouse_x - mouse_mv_x1) > 1 &&
-                abs(mouse_y - mouse_mv_y1) > 1) {
+            if (abs(mouse_x - mouse_mv_x1) > 4 &&
+                abs(mouse_y - mouse_mv_y1) > 4) {
 
                 // assign 2nd coordinates
                 mouse_mv_x2 = mouse_x;
@@ -415,10 +408,10 @@ void cGame::combat_mouse()
         // set to -1 only when it was > -1
         if (mouse_mv_x1 > -1 || mouse_mv_y1 > -1 || mouse_mv_x2 > -1 || mouse_mv_y2 > -1) {
             mouse_mv_x1 = -1;
-            mouse_mv_x2 = -1;
+            if (mouse_mv_x2 > -1) mouse_mv_x2 = -1;
 
             mouse_mv_y1 = -1;
-            mouse_mv_y2 = -1;
+            if (mouse_mv_y2 > -1) mouse_mv_y2 = -1;
         }
     }
 
