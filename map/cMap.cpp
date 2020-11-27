@@ -344,13 +344,18 @@ void cMap::draw_units() {
 
         if (cUnit.iType != SANDWORM) continue;
 
-        if (key[KEY_D]) {
-            allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
-        }
-
         if (cUnit.dimensions->isOverlapping(game.mapViewport)) {
             cUnit.draw();
         }
+
+        if (key[KEY_D]) {
+            allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
+            putpixel(bmp_screen, cUnit.center_draw_x(), cUnit.center_draw_y(), makecol(255, 0, 255));
+            if (key[KEY_TAB]) { // render unit id
+                alfont_textprintf(bmp_screen, game_font, cUnit.draw_x(), cUnit.draw_y(), makecol(255, 255, 255), "%d", i);
+            }
+        }
+
     }
 
     // then: draw infantry units
@@ -361,20 +366,20 @@ void cMap::draw_units() {
         if (!cUnit.isInfantryUnit())
             continue; // skip non-infantry units
 
-        if (key[KEY_D]) {
-            allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
-        }
-
         if (cUnit.dimensions->isOverlapping(game.mapViewport)) {
             // draw
             cUnit.draw();
 
-            //line(bmp_screen, mouse_x, mouse_y, unit[i].draw_x(), unit[i].draw_y(), makecol(0,255,255));
-
-            if (key[KEY_D] && key[KEY_TAB])
-                alfont_textprintf(bmp_screen, game_font, cUnit.draw_x(), cUnit.draw_y(), makecol(255, 255, 255), "%d", i);
-
         }
+
+        if (key[KEY_D]) {
+            allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
+            putpixel(bmp_screen, cUnit.center_draw_x(), cUnit.center_draw_y(), makecol(255, 0, 255));
+            if (key[KEY_TAB]) { // render unit id
+                alfont_textprintf(bmp_screen, game_font, cUnit.draw_x(), cUnit.draw_y(), makecol(255, 255, 255), "%d", i);
+            }
+        }
+
     }
 
     // then: draw ground units
@@ -387,21 +392,22 @@ void cMap::draw_units() {
             cUnit.isInfantryUnit())
             continue; // skip airborn, infantry and sandworm
 
-        if (key[KEY_D]) {
-            allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
-        }
-
         if (cUnit.dimensions->isOverlapping(game.mapViewport)) {
             // draw
             cUnit.draw();
+        }
 
-            if (key[KEY_D] && key[KEY_TAB]) {
+        if (key[KEY_D]) {
+            allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
+            putpixel(bmp_screen, cUnit.center_draw_x(), cUnit.center_draw_y(), makecol(255, 0, 255));
+            if (key[KEY_TAB]) { // render unit id
                 alfont_textprintf(bmp_screen, game_font, cUnit.draw_x(), cUnit.draw_y(), makecol(255, 255, 255), "%d", i);
             }
-
         }
+
     }
 
+    // TODO: move somewhere else than drawing function
     int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
     if (mc > -1) {
         tCell &cellOfMouse = map.cell[mc];
@@ -409,8 +415,8 @@ void cMap::draw_units() {
         if (cellOfMouse.id[MAPID_UNITS] > -1) {
             int iUnitId = cellOfMouse.id[MAPID_UNITS];
 
-            if (unit[iUnitId].iTempHitPoints < 0)
-                game.hover_unit = iUnitId;
+        if (unit[iUnitId].iTempHitPoints < 0)
+            game.hover_unit = iUnitId;
 
         } else if (cellOfMouse.id[MAPID_WORMS] > -1) {
             int iUnitId = cellOfMouse.id[MAPID_WORMS];
@@ -451,12 +457,16 @@ void cMap::draw_units_2nd() {
         if (!cUnit.isValid()) continue;
         if (!cUnit.isAirbornUnit()) continue;
 
-        if (key[KEY_D]) {
-            allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
-        }
-
         if (cUnit.dimensions->isOverlapping(game.mapViewport)) {
             cUnit.draw();
+        }
+
+        if (key[KEY_D]) {
+            allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
+            putpixel(bmp_screen, cUnit.center_draw_x(), cUnit.center_draw_y(), makecol(255, 0, 255));
+            if (key[KEY_TAB]) { // render unit id
+                alfont_textprintf(bmp_screen, game_font, cUnit.draw_x(), cUnit.draw_y(), makecol(255, 255, 255), "%d", i);
+            }
         }
     }
 

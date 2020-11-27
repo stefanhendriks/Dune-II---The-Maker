@@ -596,8 +596,6 @@ void cUnit::draw_path() {
 }
 
 void cUnit::draw() {
-    putpixel(bmp_screen, center_draw_x(), center_draw_y(), makecol(255, 0, 255));
-
     if (iTempHitPoints > -1) {
         // temp hitpoints filled, meaning it is not visible (but not dead). Ie, it is being repaired, or transfered
         // by carry-all
