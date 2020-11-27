@@ -46,6 +46,8 @@ public:
 
     static bool isMapScrolling();
 
+    static bool isBoxSelecting();
+
 protected:
 	~cMouse();
 

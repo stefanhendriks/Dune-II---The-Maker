@@ -465,10 +465,6 @@ void cMap::draw_units_2nd() {
 
 // TODO: move this somewhere to a mouse related class
 void cMap::draw_think() {
-	// busy with selecting box, so do not think (about scrolling, etc)
-	if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
-		return;
-	}
 }
 
 void cMap::thinkInteraction() {

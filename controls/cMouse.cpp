@@ -6,6 +6,8 @@
  */
 
 #include "../include/d2tmh.h"
+#include "cMouse.h"
+
 
 cMouse *cMouse::instance = NULL;
 
@@ -80,4 +82,10 @@ bool cMouse::isOverRectangle(int x, int y, int width, int height) {
 
 bool cMouse::isMapScrolling() {
     return mouse_mv_x1 > -1 && mouse_mv_y1 > -1 && mouse_mv_x2 > -1 && mouse_mv_y2 > -1;
+}
+
+bool cMouse::isBoxSelecting() {
+    return mouse_co_x1 > -1 && mouse_co_y1 > -1 &&
+    mouse_co_x2 != mouse_co_x1 && mouse_co_y2 != mouse_co_y1 &&
+    mouse_co_x2 > -1 && mouse_co_y2 > -1;
 }

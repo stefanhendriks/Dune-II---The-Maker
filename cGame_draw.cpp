@@ -279,11 +279,9 @@ void cGame::combat_mouse()
                 mouse_co_y1 = mouse_y;
             }
         } else {
-            // no left mouse button pressed, check if we had the co1/co2 coordinates filled in
-            // if so, try to select units within that box.
-            if (mouse_co_x1 > -1 && mouse_co_y1 > -1 &&
-                mouse_co_x2 != mouse_co_x1 && mouse_co_y2 != mouse_co_y1 &&
-                mouse_co_x2 > -1 && mouse_co_y2 > -1) {
+            // where we box selecting? then this must be the unpress of the mouse button and thus we
+            // should start selecting units within the rectangle
+            if (cMouse::isBoxSelecting()) {
                 mouse_status = MOUSE_STATE_NORMAL;
 
                 int min_x, min_y;
@@ -318,38 +316,61 @@ void cGame::combat_mouse()
                 bool bPlayRep = false;
                 bool bPlayInf = false;
 
+                bool harvesterSelected=false;
+                bool attackingUnitSelected=false;
+
+                cRectangle boxSelectRectangle(min_x, min_y, (max_x-min_x), (max_y-min_y));
+
                 for (int i = 0; i < MAX_UNITS; i++) {
-                    if (unit[i].isValid()) {
-                        if (unit[i].iPlayer == 0) {
+                    cUnit &cUnit = unit[i];
+                    if (!cUnit.isValid()) continue;
+                    if (cUnit.iPlayer != HUMAN) continue;
+                    // do not select airborn units
+                    if (cUnit.isAirbornUnit()) {
+                        // always deselect unit:
+                        cUnit.bSelected = false;
+                        continue;
+                    }
 
-                            // do not select airborn units
-                            if (units[unit[i].iType].airborn) {
-                                // always deselect unit:
-                                unit[i].bSelected = false;
-                                continue;
-                            }
+                    // now check X and Y coordinates (center of unit now)
+//                        if (((cUnit.draw_x() + cUnit.getBmpWidth() / 2) >= min_x &&
+//                             (cUnit.draw_x() + cUnit.getBmpWidth() / 2) <= max_x) &&
+//                            (cUnit.draw_y() + cUnit.getBmpHeight() / 2 >= min_y &&
+//                             (cUnit.draw_y() + cUnit.getBmpHeight() / 2) <= max_y)) {
 
-                            // now check X and Y coordinates (center of unit now)
-                            if (((unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) >= min_x &&
-                                 (unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) <= max_x) &&
-                                (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2 >= min_y &&
-                                 (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2) <= max_y)) {
-                                // It is in the borders, select it
-                                unit[i].bSelected = true;
+                    if (boxSelectRectangle.isWithin(cUnit.center_draw_x(), cUnit.center_draw_y())) {
+                        // It is in the borders, select it
+                        cUnit.bSelected = true;
 
-                                if (units[unit[i].iType].infantry) {
-                                    bPlayInf = true;
-                                } else {
-                                    bPlayRep = true;
-                                }
+                        if (cUnit.iType == HARVESTER) {
+                            harvesterSelected = true;
+                        } else {
+                            attackingUnitSelected = true;
+                        }
 
-                            }
+                        if (units[cUnit.iType].infantry) {
+                            bPlayInf = true;
+                        } else {
+                            bPlayRep = true;
+                        }
+
+                    }
+                }
+
+                if (harvesterSelected && attackingUnitSelected) {
+                    // unselect harvesters
+                    for (int i = 0; i < MAX_UNITS; i++) {
+                        cUnit &cUnit = unit[i];
+                        if (!cUnit.isValid()) continue;
+                        if (cUnit.iPlayer != HUMAN) continue;
+                        if (!cUnit.bSelected) continue;
+                        if (cUnit.iType == HARVESTER) {
+                            cUnit.bSelected = false; // unselect
                         }
                     }
                 }
 
                 if (bPlayInf || bPlayRep) {
-
                     if (bPlayRep)
                         play_sound_id(SOUND_REPORTING);
 
@@ -357,7 +378,6 @@ void cGame::combat_mouse()
                         play_sound_id(SOUND_YESSIR);
 
                     bOrderingUnits = true;
-
                 }
 
             }
