@@ -1400,8 +1400,17 @@ void cUnit::think() {
 	}
 }
 
-// aircraft specific
+// aircraft specific thinking
 void cUnit::think_move_air() {
+    if (iTempHitPoints > -1) {
+        return;
+    }
+
+    if (TIMER_movewait > 0) {
+        TIMER_movewait--;
+        return;
+    }
+
     iNextCell = isNextCell();
 
 	if (bCellValid(iCell) == false)	{
@@ -1422,57 +1431,54 @@ void cUnit::think_move_air() {
 
     // same cell (no goal specified or something)
     if (iNextCell == iCell) {
-
         bool bBordered=BORDER_POS(iCellGiveX(iCell), iCellGiveY(iCell));
-
 
 		// reinforcement stuff happens here...
 
-		if (iTransferType == TRANSFER_DIE)
-		{
-			// kill
+		if (iTransferType == TRANSFER_DIE) {
+			// kill (probably reached border or something)
 			die(false, false);
 			return;
 		}
 
 		// transfer wants to pickup and drop a unit...
-		if (iTransferType == TRANSFER_PICKUP)
-		{
-			if (iUnitID > -1)
-			{
-				// PICK UP
-				if (bPickedUp == false)
-				{
-					if (unit[iUnitID].isValid() && unit[iUnitID].bPickedUp == false)
-					{
+		if (iTransferType == TRANSFER_PICKUP) {
+			if (iUnitID > -1) {
+				// Not yet picked up the unit
+                cUnit &unitToPickup = unit[iUnitID];
+                if (!bPickedUp)	{
+                    if (!unitToPickup.isValid()) {
+                        logbook("THIS UNIT IS NOT VALID ANYMORE");
+                        iTransferType = TRANSFER_NONE; // nope...
+                        return;
+                    }
+
+                    // I believe this statement is always true, as we do not set flag
+                    // on unit that is being picked up
+                    if (unitToPickup.bPickedUp == false) {
 						// check where the unit is:
-						int iTheGoal = unit[iUnitID].iCell;
+						int iTheGoal = unitToPickup.iCell;
 
-						if (iCell == iTheGoal)
-						{
+						if (iCell == iTheGoal) {
 							// when this unit is NOT moving
-							if (unit[iUnitID].iOffsetX == 0 &&
-								unit[iUnitID].iOffsetY == 0)
-							{
-								// pick this up baby
-								//iTempHitPoints = unit[iUnitID].iHitPoints;
-								bPickedUp = true;
+							if (!unitToPickup.isMovingBetweenCells())	{
 
-								// we set temp here as well, so we mislead the engine
-								// that it is not really dead
-								// HACK HACK
-								unit[iUnitID].iTempHitPoints = unit[iUnitID].iHitPoints;
+								bPickedUp = true; // set state in aircraft, that it has picked up a unit
+
+								// so we set the tempHitpoints so the unit 'dissapears' from the map without being
+								// really dead.
+								unitToPickup.iTempHitPoints = unitToPickup.iHitPoints;
 
 								// now remove hitpoints (HACK HACK)
-								unit[iUnitID].iHitPoints = -1;
+								unitToPickup.iHitPoints = -1;
 
-								// remove unit from map id
+								// remove unit from map id (so it wont block other units)
                                 map.cellResetIdFromLayer(iCell, MAPID_UNITS);
 
-								// we got it yeah! now go
+								// now move air unit to the 'bring target'
 								iGoalCell = iBringTarget;
 
-
+								// smoke puffs when picking up unit
                                 int pufX=(pos_x() + getBmpWidth() / 2);
                                 int pufY=(pos_y() + getBmpHeight() / 2);
 
@@ -1481,91 +1487,77 @@ void cUnit::think_move_air() {
 								LOG("Pick up unit");
 								return;
 							}
-						}
-						else
-						{
-                            if (!unit[iUnitID].bPickedUp)
-                            {
+						} else {
+						    // goal/unit not yet reached
 
-							iGoalCell = unit[iUnitID].iCell;
-							iCarryTarget = unit[iUnitID].iCell;
-                            }
-                            else
-                            {
+						    if (!unitToPickup.bPickedUp) {
+						        // keep updating goal as long as unit has not been picked up yet.
+                                iGoalCell = unitToPickup.iCell;
+                                iCarryTarget = unitToPickup.iCell;
+                            } else {
                                 // forget about this
                                 iGoalCell=iCell;
                                 iTransferType=TRANSFER_NONE;
                             }
-							//iGoalCell = iTheGoal;
-
-							//logbook("HEADING FOR PICKUP UNIT");
 							return;
 						}
-					}
-					else  // unit is not valid anymore!
-					{
-						logbook("THIS UNIT IS NOT VALID ANYMORE");
-						iTransferType = TRANSFER_NONE; // nope...
-						return;
-					}
-				} // no temp hitpoints
-				else
-				{
+					} // is the unit to pick up, not yet picked up yet?
+				} // has the aircraft (this) not yet picked up unit?
+				else {
 					// picked up unit! yay, we are at the destination where we had to
 					// bring it... w00t
 
-					if (iCell == iBringTarget)
-					{
+					if (iCell == iBringTarget) {
 
 						// check if its valid for this unit...
-						if (map.occupied(iCell, iUnitID) == false && bBordered)
-						{
+						if (map.occupied(iCell, iUnitID) == false && bBordered) {
 							// dump it here
-							unit[iUnitID].iCell = iCell;
-							unit[iUnitID].iGoalCell = iCell;
+							unitToPickup.iCell = iCell;
+                            unitToPickup.iGoalCell = iCell;
 							map.cellSetIdForLayer(iCell, MAPID_UNITS, iUnitID);
-							unit[iUnitID].iHitPoints = unit[iUnitID].iTempHitPoints;
-							unit[iUnitID].iTempHitPoints = -1;
-							unit[iUnitID].TIMER_movewait = 0;
-							unit[iUnitID].TIMER_thinkwait = 0;
-							unit[iUnitID].iCarryAll = -1;
+                            unitToPickup.iHitPoints = unitToPickup.iTempHitPoints;
+                            unitToPickup.iTempHitPoints = -1;
+                            unitToPickup.TIMER_movewait = 0;
+                            unitToPickup.TIMER_thinkwait = 0;
+                            unitToPickup.iCarryAll = -1;
 
 							// match facing of carryall
-							unit[iUnitID].iHeadFacing = iHeadFacing;
-							unit[iUnitID].iHeadShouldFace = iHeadShouldFace;
-							unit[iUnitID].iBodyFacing = iBodyFacing;
-							unit[iUnitID].iBodyShouldFace = iBodyShouldFace;
+							unitToPickup.iHeadFacing = iHeadFacing;
+                            unitToPickup.iHeadShouldFace = iHeadShouldFace;
+                            unitToPickup.iBodyFacing = iBodyFacing;
+                            unitToPickup.iBodyShouldFace = iBodyShouldFace;
+                            unitToPickup.iOffsetX=0;
+                            unitToPickup.iOffsetY=0;
 
 							// clear spot
-							map.clear_spot(iCell, units[unit[iUnitID].iType].sight, iPlayer);
+							map.clear_spot(iCell, units[unitToPickup.iType].sight, iPlayer);
 
-							int iuID = iUnitID;
+							int unitIdOfUnitThatHasBeenPickedUp = iUnitID;
 
-							iUnitID = -1;		  // reset this
+							iUnitID = -1;		 // reset this
 							iTempHitPoints = -1; // reset this
 							iTransferType = TRANSFER_NONE; // done
 
 							// WHEN DUMPING A HARVESTER IN A REFINERY
-							// LET IT ENTER IMMIDIATLY , ELSE IT LOOKS VERY ODD!
-							if (unit[iuID].iType == HARVESTER)
-							{
+							// make it enter the refinery instantly
+							if (unit[unitIdOfUnitThatHasBeenPickedUp].iType == HARVESTER) {
                                 // valid structure
-                                if (structure[unit[iuID].iStructureID])
+                                if (structure[unit[unitIdOfUnitThatHasBeenPickedUp].iStructureID])
                                 {
 
 								// when this structure is not occupied
-								if (structure[unit[iuID].iStructureID]->iUnitID < 0)
+								if (structure[unit[unitIdOfUnitThatHasBeenPickedUp].iStructureID]->iUnitID < 0)
 								{
 									// get in!
-									structure[unit[iuID].iStructureID]->setAnimating(false);
-									structure[unit[iuID].iStructureID]->iUnitID = iuID;  // !!
-									structure[unit[iuID].iStructureID]->setFrame(0);
+									structure[unit[unitIdOfUnitThatHasBeenPickedUp].iStructureID]->setAnimating(false);
+									structure[unit[unitIdOfUnitThatHasBeenPickedUp].iStructureID]->iUnitID = unitIdOfUnitThatHasBeenPickedUp;  // !!
+									structure[unit[unitIdOfUnitThatHasBeenPickedUp].iStructureID]->setFrame(0);
 
 									// store this
-									unit[iuID].iTempHitPoints = unit[iuID].iHitPoints;
-									unit[iuID].iHitPoints=-1; // 'kill' unit
+									unit[unitIdOfUnitThatHasBeenPickedUp].iTempHitPoints = unit[unitIdOfUnitThatHasBeenPickedUp].iHitPoints;
+									unit[unitIdOfUnitThatHasBeenPickedUp].iHitPoints=-1; // 'kill' unit
 
-									map.remove_id(iuID, MAPID_UNITS);
+									map.remove_id(unitIdOfUnitThatHasBeenPickedUp, MAPID_UNITS);
 
 									if (DEBUGGING)
 										logbook("[UNIT] -> Enter refinery #2");
@@ -1604,8 +1596,6 @@ void cUnit::think_move_air() {
 				iTransferType = TRANSFER_NONE; // unit is not valid?
 				return;
 			}
-
-
 		}
 
 
@@ -1614,13 +1604,11 @@ void cUnit::think_move_air() {
 			iTransferType == TRANSFER_NEW_STAY) {
 			// bring a new unit
 
-			if (iType == FRIGATE)
-			{
+			if (iType == FRIGATE) {
 
 				int iStrucId = map.getCellIdStructuresLayer(iCell);
 
-				if (iStrucId > -1)
-				{
+				if (iStrucId > -1) {
 					iGoalCell = iFindCloseBorderCell(iCell);
 					iTransferType = TRANSFER_DIE;
 
@@ -1632,35 +1620,30 @@ void cUnit::think_move_air() {
 				return; // override for frigates
 			}
 
-
 			// first check if this cell is clear
-			if (map.occupied(iCell, iID) == false && bBordered)
-			{
+			if (map.occupied(iCell, iID) == false && bBordered)	{
 				// drop unit
-				if (iNewUnitType > -1)
-                {
+				if (iNewUnitType > -1) {
 				    int id=	UNIT_CREATE(iCell, iNewUnitType, iPlayer, true);
 
                     map.cellSetIdForLayer(iCell, MAPID_UNITS, id);
 
                     // when it is a TRANSFER_NEW_LEAVE , and AI, we auto-assign team number here
                     // - Normally done in AI.CPP, though from here it is out of our hands.
-                    if (iTransferType == TRANSFER_NEW_LEAVE)
-                        if (iPlayer > 0)
-                        {
-                            if (id > -1)
-                                unit[id].iGroup = rnd(3)+1; // assign group
+                    if (iTransferType == TRANSFER_NEW_LEAVE) {
+                        if (iPlayer > 0) {
+                            if (id > -1) {
+                                unit[id].iGroup = rnd(3) + 1; // assign group
+                            }
                         }
-
-
+                    }
                 }
 
 				// now make sure this carry-all will not be drawn as having a unit:
 				iNewUnitType = -1;
 
 				// depending on transfertype...
-				if (iTransferType == TRANSFER_NEW_LEAVE)
-				{
+				if (iTransferType == TRANSFER_NEW_LEAVE) {
 					iTransferType = TRANSFER_DIE;
 
 					// find a new border cell close to us... to die
@@ -1674,20 +1657,16 @@ void cUnit::think_move_air() {
 					return;
 				}
 
-			}
-			else
-			{
-
-				// find a new spot
+			} else {
+				// find a new spot for delivery
 				poll();
-				int rx = (iCellX - 2) + rnd(5);
-				int ry = (iCellY - 2) + rnd(5);
+				int rx = (iCellX - 4) + rnd(7);
+				int ry = (iCellY - 4) + rnd(7);
 				FIX_BORDER_POS(rx, ry);
 
 				iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
 				return;
 			}
-
 		}
 
 
@@ -1862,7 +1841,7 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe)
 		// the unit type...
 		iNewUnitType=iTpe;
 
-		bPickedUp=false;
+        bPickedUp=false;
 
 
 		// DONE!
@@ -2357,7 +2336,6 @@ void cUnit::think_move() {
 
     // aircraft
     if (isAirbornUnit()) {
-        think_move_air();
         return;
     }
 
@@ -3012,6 +2990,10 @@ void cUnit::think_position() {
     dimensions->resize(mapCamera->factorZoomLevel(getBmpWidth()),
                        mapCamera->factorZoomLevel(getBmpHeight()));
 
+}
+
+bool cUnit::isMovingBetweenCells() {
+    return iOffsetX != 0 || iOffsetY != 0;
 }
 
 // return new valid ID
