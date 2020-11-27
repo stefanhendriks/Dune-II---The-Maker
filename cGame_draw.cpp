@@ -330,6 +330,7 @@ void cGame::combat_mouse() {
                         cUnit.bSelected = false;
                         continue;
                     }
+                    if (cUnit.iTempHitPoints >= 0) continue; // skip units that have been 'hidden' in a refinery or repair
 
                     if (boxSelectRectangle.isWithin(cUnit.center_draw_x(), cUnit.center_draw_y())) {
                         // It is in the borders, select it
