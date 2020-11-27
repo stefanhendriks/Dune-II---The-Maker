@@ -197,6 +197,8 @@ public:
     void recreateDimensions();
 
     void think_position();
+
+    bool isMovingBetweenCells();
 };
 
 

@@ -173,6 +173,11 @@ void cTimeManager::handleTimerGlobal() {
 
                     cUnit.think_position();
 
+                    // aircraft
+                    if (cUnit.isAirbornUnit()) {
+                        cUnit.think_move_air();
+                    }
+
                     // move
                     if (cUnit.iAction == ACTION_MOVE || cUnit.iAction == ACTION_CHASE)
                         cUnit.think_move();
