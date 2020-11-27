@@ -22,142 +22,125 @@ cRefinery::~cRefinery()
 /*  OVERLOADED FUNCTIONS  */
 
 // Specific Construction Yard thinking
-void cRefinery::think()
-{
+void cRefinery::think() {
 
-     // When a refinery, and expecting a unit
-     if (iUnitID > -1)
-        {
-			int iMyID=-1;
-			for (int i=0; i < MAX_STRUCTURES; i++)
-				if (structure[i] == this)
-				{
-					iMyID=i;
-					break;
-				}
+     if (iUnitID > -1) { // unit has entered structure
+         think_unit_occupation();
+     }
 
-            // when the unit somehow does not go to us anymore, stop animating
-            if (!unit[iUnitID].isValid())
-            {
-                iUnitID=-1;
-				setAnimating(false);
-                return;
-            }
+    // think like base class
+    cAbstractStructure::think();
 
-			if (unit[iUnitID].iStructureID != iMyID)
-			{
-				iUnitID=-1;
-				setAnimating(false);
-				return;
-			}
+}
 
-            // the unit id is filled in, that means the unit is IN this structure
-            // the TIMER_harvest of the unit will be used to dump the harvest in the
-            // refinery
+void cRefinery::think_unit_occupation() {
+    int iMyID = -1;
 
-            unit[iUnitID].TIMER_harvest++;
-
-            cPlayerDifficultySettings * difficultySettings = player[getOwner()].getDifficultySettings();
-
-            if (unit[iUnitID].TIMER_harvest > difficultySettings->getDumpSpeed(10))
-            {
-                unit[iUnitID].TIMER_harvest = 0;
-
-                // dump credits
-                if (unit[iUnitID].iCredits > 0)
-                {
-                    int iAmount = 5;
-
-                    // cap at max
-                    if (unit[iUnitID].iCredits > units[unit[iUnitID].iType].credit_capacity)
-                        unit[iUnitID].iCredits = units[unit[iUnitID].iType].credit_capacity;
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+        if (structure[i] == this) {
+            iMyID = i;
+            break;
+        }
+    }
 
 
-                    if ((unit[iUnitID].iCredits - iAmount) < 0)
-                    {
-                        iAmount = unit[iUnitID].iCredits;
-                    }
+    // TODO: REMOVE? the iUnitID is only filled when unit already entered?! so this is wrong?
+    // when the unit somehow does not go to us anymore, stop animating
+    cUnit &cUnit = unit[iUnitID];
 
-					if (player[unit[iUnitID].iPlayer].credits < player[unit[iUnitID].iPlayer].max_credits)
-                    {
-						player[unit[iUnitID].iPlayer].credits += iAmount;
+    if (!cUnit.isValid()) {
+        iUnitID = -1;
+        setAnimating(false);
+        return;
+    }
 
-                        // TODO: update harvested amopunt
-                    }
+    // TODO: REMOVE? the iUnitID is only filled when unit already entered?! so this is wrong?
+    // unit decided to go to other structure
+    if (cUnit.iStructureID != iMyID) {
+        iUnitID = -1;
+        setAnimating(false);
+        return;
+    }
 
-                    unit[iUnitID].iCredits -= iAmount;
-                    unit[iUnitID].iOffsetX = 0;
-                    unit[iUnitID].iOffsetY = 0;
-                }
-                else
-                {
-					int iNewCell = iFreeAround();
+    // the unit id is filled in, that means the unit is IN this structure
+    // the TIMER_harvest of the unit will be used to dump the harvest in the
+    // refinery
 
-					if (iNewCell > -1)
-					{
-						unit[iUnitID].iCell = iNewCell;
+    cUnit.TIMER_harvest++;
 
-                        // let player know...
-						if (unit[iUnitID].iPlayer==0)
-							play_voice(SOUND_VOICE_02_ATR);
+    cPlayerDifficultySettings *difficultySettings = player[getOwner()].getDifficultySettings();
 
-						// place back on map now
-						//map.cell[iCell].id[MAPID_UNITS] = iUnitID;
-					}
-					else
-					{
-						logbook("Could not find space for this unit");
+    if (cUnit.TIMER_harvest < difficultySettings->getDumpSpeed(10)) return;
 
-						// TODO: make carryall pick this up
-						return;
-					}
+    cUnit.TIMER_harvest = 0;
 
-                    // done & restore unit
-                    unit[iUnitID].iCredits = 0;
-                    unit[iUnitID].iStructureID = -1;
-                    unit[iUnitID].iHitPoints = unit[iUnitID].iTempHitPoints;
-                    unit[iUnitID].iTempHitPoints = -1;
-                    unit[iUnitID].iGoalCell = unit[iUnitID].iCell;
-					unit[iUnitID].iPathIndex = -1;
+    // dump credits
+    if (cUnit.iCredits > 0) {
+        int iAmount = 5;
 
-					unit[iUnitID].TIMER_movewait = 0;
-					unit[iUnitID].TIMER_thinkwait = 0;
-
-                    if (DEBUGGING)
-                        assert(iUnitID > -1);
-
-                    map.cellSetIdForLayer(unit[iUnitID].iCell, MAPID_UNITS, iUnitID);
-
-					// perhaps we can find a carryall to help us out
-					int iHarvestCell = UNIT_find_harvest_spot(iUnitID);
-
-					if (iHarvestCell)
-					{
-						int iCarry = CARRYALL_TRANSFER(iUnitID, iHarvestCell);
-
-						if (iCarry < 0)
-						{
-							unit[iUnitID].iGoalCell = iHarvestCell;
-						}
-						else
-						{
-							unit[iUnitID].TIMER_movewait = 100;
-							unit[iUnitID].TIMER_thinkwait = 100;
-						}
-					}
-
-					iUnitID=-1;
-                }
+        // cap at max
+        if (cUnit.iCredits > units[cUnit.iType].credit_capacity)
+            cUnit.iCredits = units[cUnit.iType].credit_capacity;
 
 
-            }
-
-
+        if ((cUnit.iCredits - iAmount) < 0) {
+            iAmount = cUnit.iCredits;
         }
 
-	// think like base class
-	cAbstractStructure::think();
+        if (player[cUnit.iPlayer].credits < player[cUnit.iPlayer].max_credits) {
+            player[cUnit.iPlayer].credits += iAmount;
+            // TODO: update harvested amount (player stats)
+        }
 
+        cUnit.iCredits -= iAmount;
+        return;
+    }
+
+    // the unit is empty (no more credits to dump)
+    int iNewCell = iFreeAround();
+
+    if (iNewCell > -1) {
+        cUnit.iCell = iNewCell;
+
+        // let player know...
+        if (cUnit.iPlayer == 0)
+            play_voice(SOUND_VOICE_02_ATR);
+
+    } else {
+        logbook("Could not find space for this unit");
+        // TODO: make carryall pick this up
+        return;
+    }
+
+    // done & restore unit
+    cUnit.iOffsetX = 0;
+    cUnit.iOffsetY = 0;
+    cUnit.iCredits = 0;
+    cUnit.iStructureID = -1;
+    cUnit.iHitPoints = cUnit.iTempHitPoints; // restore true hitpoints
+    cUnit.iTempHitPoints = -1; // get rid of this hack
+    cUnit.iGoalCell = cUnit.iCell;
+    cUnit.iPathIndex = -1;
+    cUnit.poll();
+
+    cUnit.TIMER_movewait = 0;
+    cUnit.TIMER_thinkwait = 0;
+
+    map.cellSetIdForLayer(cUnit.iCell, MAPID_UNITS, iUnitID);
+
+    // perhaps we can find a carryall to help us out
+    int iHarvestCell = UNIT_find_harvest_spot(iUnitID);
+
+    if (iHarvestCell > -1) {
+        int iCarry = CARRYALL_TRANSFER(iUnitID, iHarvestCell);
+
+        if (iCarry > -1) {
+            cUnit.TIMER_movewait = 500;
+            cUnit.TIMER_thinkwait = 500;
+        }
+    }
+
+    iUnitID = -1;
 }
 
 void cRefinery::think_harvester_deploy() {

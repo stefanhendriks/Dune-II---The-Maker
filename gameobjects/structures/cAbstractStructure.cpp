@@ -252,20 +252,20 @@ int cAbstractStructure::iFreeAround()
 	int iCx=0;
 	int iCy=0;
 
-	for (int x = iStartX; x < iEndX; x++)
-		for (int y = iStartY; y < iEndY; y++)
-		{
-			iCx=x;
-			iCy=y;
+	for (int x = iStartX; x < iEndX; x++) {
+        for (int y = iStartY; y < iEndY; y++) {
+            iCx = x;
+            iCy = y;
 
-			FIX_BORDER_POS(iCx, iCy);
+            FIX_BORDER_POS(iCx, iCy);
 
-			int cll = iCellMake(iCx, iCy);
+            int cll = iCellMake(iCx, iCy);
 
-			if (map.occupied(cll) == false) {
-				return cll;
-			}
-		}
+            if (!map.occupied(cll)) {
+                return cll;
+            }
+        }
+    }
 
 	return -1; // fail
 }
