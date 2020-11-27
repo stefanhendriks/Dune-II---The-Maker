@@ -19,6 +19,7 @@ public:
     void think();
     void think_animation();
     void think_guard();
+    void think_unit_occupation();
 
     void draw(int iStage);
 

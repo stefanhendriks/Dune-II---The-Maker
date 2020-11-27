@@ -133,7 +133,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
     int iDieX=pos_x() + getUnitType().bmp_width/2;
     int iDieY=pos_y() + getUnitType().bmp_height/2;
 
-    // when harveter, check if there are any friends , if not, then deliver one
+    // when HARVESTER, check if there are any friends , if not, then deliver one
     if (iType == HARVESTER && // a harvester died
         player[iPlayer].hasAtleastOneStructure(REFINERY)) { // and its player still has a refinery
 
@@ -1187,20 +1187,17 @@ void cUnit::think() {
     }
 
 
-    // HARVESTERs harvest spice (doh really?)
+    // HARVESTERs logic here
     int idOfStructureAtCell = map.getCellIdStructuresLayer(iCell);
-    if (iType == HARVESTER)
-    {
+    if (iType == HARVESTER) {
         bool bFindRefinery=false;
 
-        if (iCredits > 0)
-           if (bSelected)
-               if (key[KEY_D])
-                   bFindRefinery=true;
+        if (iCredits > 0 && bSelected && key[KEY_D]) {
+            bFindRefinery = true;
+        }
 
         // cell = goal cell (doing nothing)
-        if (iCell == iGoalCell)
-        {
+        if (iCell == iGoalCell) {
             // when on spice, harvest
             if (cellType == TERRAIN_SPICE ||
                 cellType == TERRAIN_SPICEHILL)
@@ -1208,17 +1205,12 @@ void cUnit::think() {
                 // do timer stuff
                 if (iCredits < units[iType].credit_capacity)
                     TIMER_harvest++;
-            }
-            else
-            {
+            } else {
                 // not on spice, find a new location
-                if (iCredits < units[iType].credit_capacity)
-                {
+                if (iCredits < units[iType].credit_capacity) {
                     // find harvest cell
                     move_to(UNIT_find_harvest_spot(iID), -1, -1);
-                }
-                else
-                {
+                } else {
                     iFrame=0;
                     bFindRefinery=true;
                     // find a refinery
@@ -1231,8 +1223,7 @@ void cUnit::think() {
             // when we should harvest...
             cPlayerDifficultySettings *difficultySettings = player[iPlayer].getDifficultySettings();
             if (TIMER_harvest > (difficultySettings->getHarvestSpeed(units[iType].harvesting_speed)) &&
-                iCredits < units[iType].credit_capacity)
-            {
+                iCredits < units[iType].credit_capacity) {
                 TIMER_harvest=1;
 
                 iFrame++;
@@ -1268,60 +1259,49 @@ void cUnit::think() {
             }
 
 
-             // find a darn refinery
-            if (bFindRefinery)
-            {
+            // refinery required, go find one that is available
+            if (bFindRefinery) {
                 iFrame=0;
 
                 cStructureUtils structureUtils;
                 char msg[255];
                 sprintf(msg, "Going to look for a refinery, playerId [%d], cell [%d]", iPlayer, iCell);
                 logbook(msg);
-                int	iTheID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(iCell,
-                                                                                                            REFINERY,
-                                                                                                            &player[iPlayer]);
+                int	refineryStructureId = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
+                        iCell, REFINERY,&player[iPlayer]);
 
-                if (iTheID < 0)
-                {
-                    // wait?
+                if (refineryStructureId < 0) {
+                    // none found, wait
                     TIMER_thinkwait=10;
                     return;
                 }
 
-				// find carry-all (TEST)
-				int r = CARRYALL_TRANSFER(iID, structure[iTheID]->getCell()+2);
+				// found a refinery, lets check if we can find a carry-all that will bring us
+                cAbstractStructure *refinery = structure[refineryStructureId];
+                refinery->setAnimating(true);
 
-                iStructureID = iTheID;
+                // how? carry-all or ride?
+                int r = CARRYALL_TRANSFER(iID, refinery->getCell() + 2);
 
-				if (r < 0)
-				{
+                iStructureID = refineryStructureId;
+
+                if (r < 0) {
                     char msg[255];
-                    sprintf(msg, "Returning to refinery ID %d", iTheID);
+                    sprintf(msg, "Returning to refinery ID %d", refineryStructureId);
                     LOG(msg);
-					move_to(structure[iTheID]->getCell()+rnd(2)+ (rnd(2) * 64), iTheID, -1); // move yourself...
-                    structure[iTheID]->setAnimating(true);
-				}
-				else
-				{
-					TIMER_movewait = 500; // wait
+					move_to(refinery->getCell() + rnd(2) + (rnd(2) * 64), refineryStructureId, -1); // move yourself...
+				} else {
+					TIMER_movewait = 500; // wait for pickup!
 					TIMER_thinkwait = 500;
 				}
-
-
-
-                //structure[iTheID].iUnitID = iID; // make structure aware of this unit
-
-
-                //iGoalCell = structure[iTheID].iCell;
-                //iPathIndex=-1; // create path to this goal
 
                 TIMER_movewait=0;
             }
 
+        } else {
+            // ??
+            iFrame = 0;
         }
-        else
-            iFrame=0;
-
 
 		// we wanted to enter this structure, so do it immidiatly (else we just seem to
 		// drive over the structure, which looks odd!
@@ -1445,9 +1425,9 @@ void cUnit::think_move_air() {
 		if (iTransferType == TRANSFER_PICKUP) {
 			if (iUnitID > -1) {
 				// Not yet picked up the unit
-                cUnit &unitToPickup = unit[iUnitID];
+                cUnit &unitToPickupOrDrop = unit[iUnitID];
                 if (!bPickedUp)	{
-                    if (!unitToPickup.isValid()) {
+                    if (!unitToPickupOrDrop.isValid()) {
                         logbook("THIS UNIT IS NOT VALID ANYMORE");
                         iTransferType = TRANSFER_NONE; // nope...
                         return;
@@ -1455,22 +1435,22 @@ void cUnit::think_move_air() {
 
                     // I believe this statement is always true, as we do not set flag
                     // on unit that is being picked up
-                    if (unitToPickup.bPickedUp == false) {
+                    if (unitToPickupOrDrop.bPickedUp == false) {
 						// check where the unit is:
-						int iTheGoal = unitToPickup.iCell;
+						int iTheGoal = unitToPickupOrDrop.iCell;
 
 						if (iCell == iTheGoal) {
 							// when this unit is NOT moving
-							if (!unitToPickup.isMovingBetweenCells())	{
+							if (!unitToPickupOrDrop.isMovingBetweenCells())	{
 
 								bPickedUp = true; // set state in aircraft, that it has picked up a unit
 
 								// so we set the tempHitpoints so the unit 'dissapears' from the map without being
 								// really dead.
-								unitToPickup.iTempHitPoints = unitToPickup.iHitPoints;
+								unitToPickupOrDrop.iTempHitPoints = unitToPickupOrDrop.iHitPoints;
 
 								// now remove hitpoints (HACK HACK)
-								unitToPickup.iHitPoints = -1;
+								unitToPickupOrDrop.iHitPoints = -1;
 
 								// remove unit from map id (so it wont block other units)
                                 map.cellResetIdFromLayer(iCell, MAPID_UNITS);
@@ -1490,10 +1470,10 @@ void cUnit::think_move_air() {
 						} else {
 						    // goal/unit not yet reached
 
-						    if (!unitToPickup.bPickedUp) {
+						    if (!unitToPickupOrDrop.bPickedUp) {
 						        // keep updating goal as long as unit has not been picked up yet.
-                                iGoalCell = unitToPickup.iCell;
-                                iCarryTarget = unitToPickup.iCell;
+                                iGoalCell = unitToPickupOrDrop.iCell;
+                                iCarryTarget = unitToPickupOrDrop.iCell;
                             } else {
                                 // forget about this
                                 iGoalCell=iCell;
@@ -1512,26 +1492,26 @@ void cUnit::think_move_air() {
 						// check if its valid for this unit...
 						if (map.occupied(iCell, iUnitID) == false && bBordered) {
 							// dump it here
-							unitToPickup.iCell = iCell;
-                            unitToPickup.iGoalCell = iCell;
-                            unitToPickup.poll(); // update cellx and celly
+							unitToPickupOrDrop.iCell = iCell;
+                            unitToPickupOrDrop.iGoalCell = iCell;
+                            unitToPickupOrDrop.poll(); // update cellx and celly
 							map.cellSetIdForLayer(iCell, MAPID_UNITS, iUnitID);
-                            unitToPickup.iHitPoints = unitToPickup.iTempHitPoints;
-                            unitToPickup.iTempHitPoints = -1;
-                            unitToPickup.TIMER_movewait = 0;
-                            unitToPickup.TIMER_thinkwait = 0;
-                            unitToPickup.iCarryAll = -1;
+                            unitToPickupOrDrop.iHitPoints = unitToPickupOrDrop.iTempHitPoints;
+                            unitToPickupOrDrop.iTempHitPoints = -1;
+                            unitToPickupOrDrop.TIMER_movewait = 0;
+                            unitToPickupOrDrop.TIMER_thinkwait = 0;
+                            unitToPickupOrDrop.iCarryAll = -1;
 
 							// match facing of carryall
-							unitToPickup.iHeadFacing = iHeadFacing;
-                            unitToPickup.iHeadShouldFace = iHeadShouldFace;
-                            unitToPickup.iBodyFacing = iBodyFacing;
-                            unitToPickup.iBodyShouldFace = iBodyShouldFace;
-                            unitToPickup.iOffsetX=0;
-                            unitToPickup.iOffsetY=0;
+							unitToPickupOrDrop.iHeadFacing = iHeadFacing;
+                            unitToPickupOrDrop.iHeadShouldFace = iHeadShouldFace;
+                            unitToPickupOrDrop.iBodyFacing = iBodyFacing;
+                            unitToPickupOrDrop.iBodyShouldFace = iBodyShouldFace;
+                            unitToPickupOrDrop.iOffsetX=0;
+                            unitToPickupOrDrop.iOffsetY=0;
 
 							// clear spot
-							map.clear_spot(iCell, units[unitToPickup.iType].sight, iPlayer);
+							map.clear_spot(iCell, units[unitToPickupOrDrop.iType].sight, iPlayer);
 
 							int unitIdOfUnitThatHasBeenPickedUp = iUnitID;
 
@@ -1553,8 +1533,10 @@ void cUnit::think_move_air() {
                                         structureUnitWantsToEnter->setFrame(0);
 
                                         // store this
-                                        unit[unitIdOfUnitThatHasBeenPickedUp].iTempHitPoints = unit[unitIdOfUnitThatHasBeenPickedUp].iHitPoints;
-                                        unit[unitIdOfUnitThatHasBeenPickedUp].iHitPoints=-1; // 'kill' unit
+                                        unitToPickupOrDrop.iTempHitPoints = unitToPickupOrDrop.iHitPoints;
+                                        unitToPickupOrDrop.iHitPoints=-1; // 'kill' unit
+                                        unitToPickupOrDrop.iCell = structureUnitWantsToEnter->getCell();
+                                        unitToPickupOrDrop.poll();
 
                                         map.remove_id(unitIdOfUnitThatHasBeenPickedUp, MAPID_UNITS);
                                     } // enter..
@@ -2642,7 +2624,7 @@ void cUnit::think_move() {
     }
 	else
 	{
-		// we wanted to enter this structure, so do it immidiatly (else we just seem to
+		// we wanted to enter this structure, so do it immediately (else we just seem to
 		// drive over the structure, which looks odd!
 		if (iStructureID > -1 &&
             idOfStructureAtNextCell == iStructureID &&
@@ -2650,8 +2632,7 @@ void cUnit::think_move() {
 		{
 
 			// when this structure is not occupied
-			if (structure[iStructureID]->iUnitID < 0)
-			{
+			if (structure[iStructureID]->iUnitID < 0) {
 				// get in!
 				structure[iStructureID]->setAnimating(false);
 				structure[iStructureID]->iUnitID = iID;  // !!
@@ -3933,24 +3914,26 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart)
 
 }
 
-
-int CARRYALL_TRANSFER(int iuID, int iGoal)
-{
+/**
+ * Finds a free carryall of the same player as unit iuID. Returns > -1 which is the ID of the
+ * carry-all which is going to pick up the unit. Or < 0 if no carry-all has been found to transfer unit.
+ * @param iuID
+ * @param iGoal
+ * @return
+ */
+int CARRYALL_TRANSFER(int iuID, int iGoal) {
 	// find a free carry all, and bring unit to goal..
-	for (int iCarry=0; iCarry < MAX_UNITS; iCarry++)
-	{
-		if (unit[iCarry].isValid() &&
-			unit[iCarry].iPlayer == unit[iuID].iPlayer &&
-			unit[iCarry].iType == CARRYALL)
-		{
-			// now check if this carryall has nothing to do
-			if (unit[iCarry].iTransferType == TRANSFER_NONE)
-			{
-				// assign an order
-				unit[iCarry].carryall_order(iuID, TRANSFER_PICKUP, iGoal, -1);
-				return iCarry;
-			}
-		}
+	for (int i=0; i < MAX_UNITS; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
+        if (cUnit.iPlayer != unit[iuID].iPlayer) continue;
+        if (cUnit.iType != CARRYALL) continue; // skip non-carry-all units
+        if (cUnit.iTransferType != TRANSFER_NONE) continue; // skip busy carry-alls
+
+
+        // assign an order
+        cUnit.carryall_order(iuID, TRANSFER_PICKUP, iGoal, -1);
+        return i;
 	}
 
 	return -1; // fail
