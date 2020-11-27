@@ -768,6 +768,7 @@ void cGame::mentat(int iType)
 					if (bSkirmish)
 					{
 						state = GAME_SETUPSKIRMISH;
+                        init_skirmish();
 						playMusicByType(MUSIC_MENU);
 					}
 					else
@@ -793,6 +794,7 @@ void cGame::mentat(int iType)
 					if (bSkirmish)
 					{
 						state = GAME_SETUPSKIRMISH;
+                        init_skirmish();
 						playMusicByType(MUSIC_MENU);
 					}
 					else
@@ -917,14 +919,8 @@ void cGame::menu()
 			bFadeOut = true;
 			INI_PRESCAN_SKIRMISH();
 
-			game.mission_init();
-
-			for (int p = 0; p < AI_WORM; p++)
-			{
-				player[p].credits = 2500;
-				player[p].iTeam = p;
-			}
-		}
+            init_skirmish();
+        }
 	}
 
     // MULTIPLAYER
@@ -934,7 +930,6 @@ void cGame::menu()
 		if (cMouse::isLeftButtonClicked())
 		{
 			// NOT YET IMPLEMENTED
-			//game.state = GAME_SETUPSKIRMISH;
 			bFadeOut = true;
 		}
 	}
@@ -946,7 +941,6 @@ void cGame::menu()
 		if (cMouse::isLeftButtonClicked())
 		{
 			// NOT YET IMPLEMENTED
-			//game.state = GAME_SETUPSKIRMISH;
 			bFadeOut = true;
 		}
 	}
@@ -958,7 +952,6 @@ void cGame::menu()
 		if (cMouse::isLeftButtonClicked())
 		{
 			// NOT YET IMPLEMENTED
-			//game.state = GAME_SETUPSKIRMISH;
 			bFadeOut = true;
 		}
 	}
@@ -970,7 +963,6 @@ void cGame::menu()
 		if (cMouse::isLeftButtonClicked())
 		{
 			// NOT YET IMPLEMENTED
-			//game.state = GAME_SETUPSKIRMISH;
 			bFadeOut = true;
 		}
 	}
@@ -1017,6 +1009,15 @@ void cGame::menu()
         game.FADE_OUT();
     }
 
+}
+
+void cGame::init_skirmish() const {
+    game.mission_init();
+
+    for (int p = 0; p < AI_WORM; p++) {
+        player[p].credits = 2500;
+        player[p].iTeam = p;
+    }
 }
 
 void cGame::setup_skirmish() {
@@ -2259,7 +2260,6 @@ void cGame::destroyAllUnits(bool bHumanPlayer) {
 				}
 			}
 		}
-
 	} else {
 		for (int i=0; i < MAX_UNITS; i++) {
 			if (unit[i].isValid()) {
@@ -2307,7 +2307,6 @@ int cGame::getGroupNumberFromKeyboard() {
 	if (key[KEY_5]) {
 		return 5;
 	}
-
 	return 0;
 }
 
