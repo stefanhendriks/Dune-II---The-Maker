@@ -12,6 +12,7 @@ cSideBarDrawer::cSideBarDrawer() {
 	candybar = NULL;
 	optionsBar = NULL;
 	sidebarColor = makecol(214, 149, 20);
+    textDrawer = new cTextDrawer(bene_font);
 }
 
 cSideBarDrawer::~cSideBarDrawer() {
@@ -22,51 +23,55 @@ cSideBarDrawer::~cSideBarDrawer() {
 	if (optionsBar) {
 		destroy_bitmap(optionsBar);
 	}
+	delete textDrawer;
 }
 
 void cSideBarDrawer::drawCandybar() {
 	if (candybar == NULL) {
-		int heightInPixels = (game.screen_y - cSideBar::TopBarHeight);
-		candybar = create_bitmap_ex(8, 24, heightInPixels);
-		clear_to_color(candybar, makecol(0, 0, 0));
+        createCandyBar();
+    }
 
-		// ball first
-	    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BALL].dat, 0, 0); // height of ball = 25
-	    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_TOP].dat, 0, 26); // height of top = 10
-	    // now draw pieces untill the end (height of piece is 23 pixels)
-	    int startY = 26 + 10; // end of ball (26) + height of top candybar (=10) , makes 36
-        int heightMinimap = cSideBar::HeightOfMinimap;
-        set_clip_rect(candybar, 0, 0, 24, heightMinimap - (6 + 1)); // (add 1 pixel for room between ball and bar)
-	    for (int y = startY; y < (heightMinimap); y += 24) {
-		    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_PIECE].dat, 0, y);
-	    }
-        set_clip_rect(candybar, 0, 0, candybar->w, candybar->h);
-
-	    // note: no need to take top bar into account because 'candybar' is a separate bitmap so coords start at 0,0
-	    // ball is 6 pixels higher than horizontal candybar
-	    int ballY = (heightMinimap) - 6;
-
-	    // draw bottom candybar
-        draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, ballY - 10); // height of bottom = 9
-
-	    // draw ball
-        draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BALL].dat, 0, ballY); // height of ball = 25
-
-	    // draw top candybar again
-        draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_TOP].dat, 0, ballY + 26); // height of top = 10
-
-        startY = ballY + 26 + 10;
-	    for (int y = startY; y < (heightInPixels + 23); y += 24) {
-		    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_PIECE].dat, 0, y);
-	    }
-	    // draw bottom
-	    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, heightInPixels-10); // height of top = 10
-	}
-
-	// 200 + 24 (width of candy bar) = 224
 	int drawX = game.screen_x - cSideBar::SidebarWidth;
 	int drawY = 40;
 	draw_sprite(bmp_screen, candybar, drawX, drawY);
+}
+
+void cSideBarDrawer::createCandyBar() {
+    int heightInPixels = (game.screen_y - cSideBar::TopBarHeight);
+    candybar = create_bitmap_ex(8, 24, heightInPixels);
+    clear_to_color(candybar, makecol(0, 0, 0));
+
+    // ball first
+    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BALL].dat, 0, 0); // height of ball = 25
+    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_TOP].dat, 0, 26); // height of top = 10
+// now draw pieces untill the end (height of piece is 23 pixels)
+    int startY = 26 + 10; // end of ball (26) + height of top candybar (=10) , makes 36
+    int heightMinimap = cSideBar::HeightOfMinimap;
+    set_clip_rect(candybar, 0, 0, 24, heightMinimap - (6 + 1)); // (add 1 pixel for room between ball and bar)
+    for (int y = startY; y < (heightMinimap); y += 24) {
+        draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_PIECE].dat, 0, y);
+    }
+    set_clip_rect(candybar, 0, 0, candybar->w, candybar->h);
+
+    // note: no need to take top bar into account because 'candybar' is a separate bitmap so coords start at 0,0
+// ball is 6 pixels higher than horizontal candybar
+    int ballY = (heightMinimap) - 6;
+
+    // draw bottom candybar
+    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, ballY - 10); // height of bottom = 9
+
+    // draw ball
+    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BALL].dat, 0, ballY); // height of ball = 25
+
+    // draw top candybar again
+    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_TOP].dat, 0, ballY + 26); // height of top = 10
+
+    startY = ballY + 26 + 10;
+    for (int y = startY; y < (heightInPixels + 23); y += 24) {
+        draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_PIECE].dat, 0, y);
+    }
+    // draw bottom
+    draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, heightInPixels - 10); // height of top = 10
 }
 
 void cSideBarDrawer::drawHouseGui(const cPlayer & thePlayer) {
@@ -77,18 +82,11 @@ void cSideBarDrawer::drawHouseGui(const cPlayer & thePlayer) {
 	rectfill(bmp_screen, (game.screen_x-cSideBar::SidebarWidth), 0, game.screen_x, game.screen_y, makecol(0,0,0));
 
     // upper bar
-    rectfill(bmp_screen, 0, 0, game.screen_x, 42, makecol(0,0,0));
+    rectfill(bmp_screen, 0, 0, game.screen_x, cSideBar::TopBarHeight, makecol(0,0,0));
 
     drawCandybar();
 
-    // draw the list background of the icons
-    drawIconsListBackground();
-
-    // minimap at bottom right
     drawMinimap(thePlayer);
-
-    // draw options bar (todo: move to own options drawer and delegate in drawManager)
-    drawOptionsBar();
 }
 
 void cSideBarDrawer::drawBuildingLists(const cPlayer & thePlayer) {
@@ -107,11 +105,10 @@ void cSideBarDrawer::drawBuildingLists(const cPlayer & thePlayer) {
     // draw background of buildlist
     BITMAP * backgroundSprite = (BITMAP *)gfxinter[BMP_GERALD_ICONLIST_BACKGROUND].dat;
 
-    int heightOfListButton = 28 + 6;
     int drawX = game.screen_x - cSideBar::SidebarWidthWithoutCandyBar + 1;
 
     int startY = cSideBar::TopBarHeight + cSideBar::HeightOfMinimap + cSideBar::HorizontalCandyBarHeight +
-                 heightOfListButton;
+                 cSideBar::HeightOfListButton;
 
     for (; drawX < game.screen_x; drawX += backgroundSprite->w) {
         for (int drawY=startY; drawY < game.screen_y; drawY += backgroundSprite->h) {
@@ -156,7 +153,7 @@ void cSideBarDrawer::drawBuildingLists(const cPlayer & thePlayer) {
     }
 
     if (selectedList && selectedList->getType() == LIST_STARPORT) {
-        rectfill(bmp_screen, iDrawX, endY, game.screen_x, game.screen_y, makecol(214,149,20));
+        rectfill(bmp_screen, iDrawX, endY, game.screen_x, game.screen_y, sidebarColor);
         draw_sprite(bmp_screen, horBar, iDrawX-1, endY); // just below the last icons
     }
 
@@ -197,33 +194,121 @@ void cSideBarDrawer::drawBuildingLists(const cPlayer & thePlayer) {
 // draws the sidebar on screen
 void cSideBarDrawer::drawSideBar(const cPlayer & player) {
 	drawHouseGui(player);
-	drawBuildingLists(player);
-//	drawCapacities();
-//	drawScrollButtons();
+    drawOptionsBar(player);
+    drawBuildingLists(player);
 }
 
-void cSideBarDrawer::drawCapacities() {
-	// Draw the bars
-	int iHeight = 79 - health_bar(79, player[0].use_power,player[0].has_power);
+void cSideBarDrawer::drawCapacities(const cPlayer & player) {
+    drawPowerUsage(player);
+    drawCreditsUsage(player);
+}
 
-	int step = (255/79);
-	int r = 255-(iHeight*step);
-	int g = iHeight*step;
+void cSideBarDrawer::drawCreditsUsage(const cPlayer &player) {
+    int barTotalHeight = (cSideBar::HeightOfMinimap - 76);
+    int barX = (game.screen_x - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
+    int barY = cSideBar::TopBarHeight + 48;
+    int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
+    cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
 
-	if (g > 255) {
-		g = 255;
-	}
+    allegroDrawer->drawRectangleFilled(bmp_screen, &powerBarRect, allegroDrawer->getColor_BLACK());
 
-	if (r < 0) {
-		r = 0;
-	}
+    // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
+    int maxSpiceCapacity = 1000; // this is still hard coded, need to move to INI file
+    int structuresWithSpice = player.getAmountOfStructuresForType(REFINERY) + player.getAmountOfStructuresForType(SILO);
+    float totalSpiceCapacity = (1 + structuresWithSpice) * maxSpiceCapacity;
+    float maxSpice = (float)player.max_credits / totalSpiceCapacity;
+    float spiceStored = (float)player.credits / totalSpiceCapacity;
 
-	// power use bar
-	rectfill(bmp_screen, 488,442, 490, 442-iHeight, makecol(r,g,0));
+    float barHeightToDraw = barTotalHeight * maxSpice;
+    if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
+    int powerInY = barY + (barTotalHeight - barHeightToDraw);
 
-	// spice/credits bar
-	iHeight=health_bar(79, player[0].credits, player[0].max_credits);
-	rectfill(bmp_screen, 497,442, 499, 442-iHeight, makecol(0,0,255));
+    rectfill(bmp_screen, barX, powerInY, barX + barWidth, barY + barTotalHeight, makecol(0, 232, 0));
+
+    barHeightToDraw = barTotalHeight * spiceStored;
+    if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
+    int powerOutY = barY + (barTotalHeight - barHeightToDraw);
+
+    float spiceCapacityRatio = ((float)player.credits + 1) / ((float)player.max_credits + 1);
+    if (spiceCapacityRatio < 0) spiceCapacityRatio= 0;
+    if (spiceCapacityRatio > 1) spiceCapacityRatio= 1;
+    int r = spiceCapacityRatio * 255;
+    int g = (1.1 - spiceCapacityRatio) * 255;
+
+    if (r > 255) r = 255;
+    if (g > 255) g = 255;
+
+    if (player.bEnoughSpiceCapacityToStoreCredits()) {
+        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, makecol(r, g, 32));
+    } else {
+        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, player.getErrorFadingColor());
+    }
+
+    line(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
+
+    allegroDrawer->drawRectangle(bmp_screen, &powerBarRect, sidebarColor);
+
+    // draw darker 'sides' at the left and top
+    int darker = makecol(89, 56, 0);
+    line(bmp_screen, barX, barY, barX, barY + barTotalHeight, darker); // left side |
+    line(bmp_screen, barX, barY, barX+barWidth, barY, darker); // top side _
+
+    textDrawer->drawText(barX-1, barY - 21, makecol(0,0,0),"$");
+    textDrawer->drawText(barX+1, barY - 19, makecol(0,0,0),"$");
+    textDrawer->drawText(barX, barY - 20, "$");
+}
+
+void cSideBarDrawer::drawPowerUsage(const cPlayer &player) const {
+    int arbitraryMargin = 6;
+    int barTotalHeight = game.screen_y - (cSideBar::TotalHeightBeforePowerBarStarts + cSideBar::PowerBarMargingHeight);
+    int barX = (game.screen_x - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
+    int barY = cSideBar::TotalHeightBeforePowerBarStarts + arbitraryMargin;
+    int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
+    cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
+
+    allegroDrawer->drawRectangleFilled(bmp_screen, &powerBarRect, allegroDrawer->getColor_BLACK());
+
+    // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
+    int maxPowerOutageOfWindtrap = structures[WINDTRAP].power_give;
+    float totalPowerOutput = (1 + (player.getAmountOfStructuresForType(WINDTRAP)))*maxPowerOutageOfWindtrap;
+    float powerIn = (float)player.has_power / totalPowerOutput;
+    float powerUse = (float)player.use_power / totalPowerOutput;
+
+    float barHeightToDraw = barTotalHeight * powerIn;
+    if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
+    int powerInY = barY + (barTotalHeight - barHeightToDraw);
+
+    rectfill(bmp_screen, barX, powerInY, barX + barWidth, barY + barTotalHeight, makecol(0, 232, 0));
+
+    barHeightToDraw = barTotalHeight * powerUse;
+    if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
+    int powerOutY = barY + (barTotalHeight - barHeightToDraw);
+
+    float powerUsageRatio = ((float)player.use_power + 1) / ((float)player.has_power + 1);
+    int r = powerUsageRatio * 255;
+    int g = (1.1 - powerUsageRatio) * 255;
+
+    if (r > 255) r = 255;
+    if (g > 255) g = 255;
+
+    if (player.bEnoughPower()) {
+        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, makecol(r, g, 32));
+    } else {
+        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, player.getErrorFadingColor());
+    }
+
+    line(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
+
+    allegroDrawer->drawRectangle(bmp_screen, &powerBarRect, sidebarColor);
+
+    // draw darker 'sides' at the left and top
+    int darker = makecol(89, 56, 0);
+    line(bmp_screen, barX, barY, barX, barY + barTotalHeight, darker); // left side |
+    line(bmp_screen, barX, barY, barX+barWidth, barY, darker); // top side _
+
+    textDrawer->drawText(barX-1, barY - 21, makecol(0,0,0),"P");
+    textDrawer->drawText(barX+1, barY - 19, makecol(0,0,0),"P");
+    textDrawer->drawText(barX, barY - 20, "P");
 }
 
 void cSideBarDrawer::drawMinimap(const cPlayer & player) {
@@ -279,7 +364,7 @@ void cSideBarDrawer::drawMinimap(const cPlayer & player) {
     }
 }
 
-void cSideBarDrawer::drawOptionsBar() {
+void cSideBarDrawer::drawOptionsBar(const cPlayer & thePlayer) {
 	if (optionsBar == NULL) {
 		optionsBar = create_bitmap(game.screen_x, 40);
 		clear_to_color(optionsBar, sidebarColor);
@@ -293,39 +378,5 @@ void cSideBarDrawer::drawOptionsBar() {
 
 	}
 	draw_sprite(bmp_screen, optionsBar, 0, 0);
-}
-
-void cSideBarDrawer::drawIconsListBackground() {
-	// fill
-//	rectfill(bmp_screen, (game.screen_x-130), 40, game.screen_x, (game.screen_y - 160), sidebarColor);
-
-	int heightInPixels = (game.screen_y - 315) - 45;
-//	BITMAP * backgroundList = create_bitmap_ex(8, 66, heightInPixels);
-
-	// left 'lines'
-//	vline(bmp_screen, game.screen_x-132, 40, game.screen_y - 276, makecol(255, 198, 93));
-//	vline(bmp_screen, game.screen_x-131, 40, game.screen_y - 276, makecol(60, 36, 0));
-//	vline(bmp_screen, game.screen_x-130, 40, game.screen_y - 276, makecol(255, 210, 125));
-//	vline(bmp_screen, game.screen_x-129, 40, game.screen_y - 276, makecol(255, 190, 76));
-
-//	// the list pieces
-//	draw_sprite(backgroundList, (BITMAP *)gfxinter[BMP_GERALD_LIST_TOP].dat, 0, 45); // 2 high
-//
-//	for (int w = 0; w < heightInPixels; w += 84) { // pieces are 84 pixels high
-//		draw_sprite(backgroundList, (BITMAP *)gfxinter[BMP_GERALD_LIST_PIECE].dat, 0, w);
-//	}
-//
-//	draw_sprite(backgroundList, (BITMAP *)gfxinter[BMP_GERALD_LIST_BOTTOM].dat, 0, (heightInPixels - 2));
-//
-//	int x = game.screen_x - 69;
-//	draw_sprite(bmp_screen, backgroundList, x, 45);
-
-//	// at the right lines
-//	vline(bmp_screen, game.screen_x-1, 44, game.screen_y - 276, makecol(153, 105, 0));
-//	vline(bmp_screen, game.screen_x-2, 44, game.screen_y - 276, makecol(182, 125, 12));
-//	vline(bmp_screen, game.screen_x-3, 44, game.screen_y - 276, makecol(202, 141, 16));
-
-//	destroy_bitmap(backgroundList);
-
-//	draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_SIDEBAR_PIECE].dat, (game.screen_x - 130), 42);
+    drawCapacities(thePlayer);
 }

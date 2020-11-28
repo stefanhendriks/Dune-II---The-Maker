@@ -324,6 +324,10 @@ int cPlayer::getEmblemBackgroundColorForHouse(int houseId) {
 	}
 }
 
+bool cPlayer::bEnoughSpiceCapacityToStoreCredits() const {
+    return max_credits > credits;
+}
+
 bool cPlayer::bEnoughPower() const {
 	if (game.bSkirmish) {
        return has_power >= use_power;
@@ -335,7 +339,7 @@ bool cPlayer::bEnoughPower() const {
         // Unfortunatly D2TM has to cheat too, else the game will
         // be unplayable.
         if (iStructures[WINDTRAP] > 0) {
-            // always enough power so it seems
+            // always enough power so it seems?
             return true;
         } else {
             return false; // not enough power

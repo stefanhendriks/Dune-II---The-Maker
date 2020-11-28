@@ -32,8 +32,8 @@ class cPlayer {
 
 		int iTeam;
 
-		int use_power;
-		int has_power;
+		int use_power;      // total amount of power usage
+		int has_power;      // total amount of power generated
 
 		float credits;		// the credits this player has
 		float max_credits;	// max credits a player can have (influenced by silo's)
@@ -41,6 +41,7 @@ class cPlayer {
 		int focus_cell;		// this is the cell that will be showed in the game centralized upon map loading
 
 		bool bEnoughPower() const;
+		bool bEnoughSpiceCapacityToStoreCredits() const;
 
 		int TIMER_think;        // timer for thinking itself (calling main routine)
 		int TIMER_attack;       // -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
