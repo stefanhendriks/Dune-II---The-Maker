@@ -67,11 +67,16 @@ class cSideBar {
 		static const int TopBarHeight = 42;
 		static const int HeightOfMinimap = 200 + 8;
 		static const int WidthOfMinimap = 200;
+		static const int PowerBarMargingHeight = 32; // for a power icon
 
 		// Horizontal candybar is below minimap
         static const int HorizontalCandyBarHeight = 12;
 
-	private:
+        static const int HeightOfListButton = 34;
+
+        static const int TotalHeightBeforePowerBarStarts = TopBarHeight + HeightOfMinimap + HorizontalCandyBarHeight + PowerBarMargingHeight;
+
+private:
 
         // the lists:
 		cBuildingList * lists[LIST_MAX];

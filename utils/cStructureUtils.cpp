@@ -288,21 +288,21 @@ int cStructureUtils::getTotalSpiceCapacityForPlayer(cPlayer * player) {
 	int totalCapacity = 0;
 	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
-		if (theStructure) {
-			if (theStructure->getPlayer()->getId() == player->getId()) {
-				int capacity = 0;
-				if (theStructure->getType() == SILO) {
-					cSpiceSilo * spiceSilo = dynamic_cast<cSpiceSilo*>(theStructure);
-					capacity = spiceSilo->getSpiceSiloCapacity();
-				} else if (theStructure->getType() == REFINERY) {
-					cRefinery * refinery = dynamic_cast<cRefinery*>(theStructure);
-					capacity = refinery->getSpiceSiloCapacity();
-				} else if (theStructure->getType() == CONSTYARD) {
-					capacity = 5;
-				}
-				totalCapacity += capacity;
-			}
-		}
+		if (theStructure == nullptr) continue;
+		if (!theStructure->isValid()) continue;
+        if (theStructure->getPlayer()->getId() != player->getId()) continue; // does not belong to player
+
+        int capacity = 0;
+        if (theStructure->getType() == SILO) {
+            cSpiceSilo * spiceSilo = dynamic_cast<cSpiceSilo*>(theStructure);
+            capacity = spiceSilo->getSpiceSiloCapacity();
+        } else if (theStructure->getType() == REFINERY) {
+            cRefinery * refinery = dynamic_cast<cRefinery*>(theStructure);
+            capacity = refinery->getSpiceSiloCapacity();
+        } else if (theStructure->getType() == CONSTYARD) {
+            capacity = 5;
+        }
+        totalCapacity += capacity;
 	}
 	return totalCapacity;
 }
@@ -312,17 +312,18 @@ int cStructureUtils::getTotalPowerOutForPlayer(cPlayer * player) {
 	int totalPowerOut = 0;
 	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
-		if (theStructure) {
-			if (theStructure->getPlayer()->getId() == player->getId()) {
-				if (theStructure->getType() == WINDTRAP) {
-					cWindTrap * windTrap = dynamic_cast<cWindTrap*>(theStructure);
-					int powerOutOfStructure = windTrap->getPowerOut();
-					totalPowerOut += powerOutOfStructure;
-				} else if (theStructure->getType() == CONSTYARD) {
-					totalPowerOut += 5;
-				}
-			}
-		}
+		if (theStructure == nullptr) continue;
+		if (!theStructure->isValid()) continue;
+		if (theStructure->getPlayer()->getId() != player->getId()) continue; // not for player
+
+		// TODO abstract it further so it wont need to cast/check for structure type
+        if (theStructure->getType() == WINDTRAP) {
+            cWindTrap * windTrap = dynamic_cast<cWindTrap*>(theStructure);
+            int powerOutOfStructure = windTrap->getPowerOut();
+            totalPowerOut += powerOutOfStructure;
+        } else if (theStructure->getType() == CONSTYARD) {
+            totalPowerOut += 5;
+        }
 	}
 	return totalPowerOut;
 }
