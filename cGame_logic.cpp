@@ -17,6 +17,8 @@
   */
 
 #include "include/d2tmh.h"
+#include "cGame.h"
+
 
 cGame::cGame() {
 	screen_x = 800;
@@ -572,9 +574,7 @@ void cGame::combat() {
     // -----------------
 	bPlacedIt = bPlaceIt;
 
-	assert(drawManager);
 	drawManager->draw();
-	assert(interactionManager);
 	interactionManager->interact();
 
     // think win/lose
@@ -768,6 +768,7 @@ void cGame::mentat(int iType)
 					if (bSkirmish)
 					{
 						state = GAME_SETUPSKIRMISH;
+                        init_skirmish();
 						playMusicByType(MUSIC_MENU);
 					}
 					else
@@ -793,6 +794,7 @@ void cGame::mentat(int iType)
 					if (bSkirmish)
 					{
 						state = GAME_SETUPSKIRMISH;
+                        init_skirmish();
 						playMusicByType(MUSIC_MENU);
 					}
 					else
@@ -826,8 +828,7 @@ void cGame::mentat(int iType)
 
     }
 
-    set_mouse_sprite_focus(0, 0);
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
     if (bFadeOut) {
         FADE_OUT();
@@ -918,14 +919,8 @@ void cGame::menu()
 			bFadeOut = true;
 			INI_PRESCAN_SKIRMISH();
 
-			game.mission_init();
-
-			for (int p = 0; p < AI_WORM; p++)
-			{
-				player[p].credits = 2500;
-				player[p].iTeam = p;
-			}
-		}
+            init_skirmish();
+        }
 	}
 
     // MULTIPLAYER
@@ -935,7 +930,6 @@ void cGame::menu()
 		if (cMouse::isLeftButtonClicked())
 		{
 			// NOT YET IMPLEMENTED
-			//game.state = GAME_SETUPSKIRMISH;
 			bFadeOut = true;
 		}
 	}
@@ -947,7 +941,6 @@ void cGame::menu()
 		if (cMouse::isLeftButtonClicked())
 		{
 			// NOT YET IMPLEMENTED
-			//game.state = GAME_SETUPSKIRMISH;
 			bFadeOut = true;
 		}
 	}
@@ -959,7 +952,6 @@ void cGame::menu()
 		if (cMouse::isLeftButtonClicked())
 		{
 			// NOT YET IMPLEMENTED
-			//game.state = GAME_SETUPSKIRMISH;
 			bFadeOut = true;
 		}
 	}
@@ -971,7 +963,6 @@ void cGame::menu()
 		if (cMouse::isLeftButtonClicked())
 		{
 			// NOT YET IMPLEMENTED
-			//game.state = GAME_SETUPSKIRMISH;
 			bFadeOut = true;
 		}
 	}
@@ -1008,8 +999,7 @@ void cGame::menu()
     }
 
    	// MOUSE
-    set_mouse_sprite_focus(0, 0);
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
 	if (key[KEY_ESC]) {
 		bPlaying=false;
@@ -1021,8 +1011,16 @@ void cGame::menu()
 
 }
 
-void cGame::setup_skirmish()
-{
+void cGame::init_skirmish() const {
+    game.mission_init();
+
+    for (int p = 0; p < AI_WORM; p++) {
+        player[p].credits = 2500;
+        player[p].iTeam = p;
+    }
+}
+
+void cGame::setup_skirmish() {
     // FADING STUFF
     if (iFadeAction == 1) // fading out
     {
@@ -1612,7 +1610,7 @@ void cGame::setup_skirmish()
                 player[p].focus_cell = iStartPositions[p];
 
                 // Set map position
-                if (p == 0) {
+                if (p == HUMAN) {
                     mapCamera->centerAndJumpViewPortToCell(player[p].focus_cell);
                 }
 
@@ -1628,8 +1626,7 @@ void cGame::setup_skirmish()
                 int u=0;
 
                 // create units
-                while (u < aiplayer[p].iUnits)
-                {
+                while (u < aiplayer[p].iUnits) {
                     int iX=iCellGiveX(player[p].focus_cell);
                     int iY=iCellGiveY(player[p].focus_cell);
                     int iType=rnd(12);
@@ -1659,8 +1656,7 @@ void cGame::setup_skirmish()
                     }
 
                     // ordos
-                    if (player[p].getHouse() == ORDOS)
-                    {
+                    if (player[p].getHouse() == ORDOS) {
                         if (iType == DEVASTATOR || iType == SONICTANK) {
                             iType = DEVIATOR;
                         }
@@ -1671,8 +1667,7 @@ void cGame::setup_skirmish()
                     }
 
                     // harkonnen
-                    if (player[p].getHouse() == HARKONNEN)
-                    {
+                    if (player[p].getHouse() == HARKONNEN) {
                         if (iType == DEVIATOR || iType == SONICTANK) {
                             iType = DEVASTATOR;
                         }
@@ -1697,22 +1692,19 @@ void cGame::setup_skirmish()
                         u++;
                     }
                 }
+
                 char msg[255];
                 sprintf(msg,"Wants %d amount of units; amount created %d", aiplayer[p].iUnits, u);
                 cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, iHouse);
             }
 
-            // TODO: spawn a few worms
-            iHouse=player[HUMAN].getHouse();
-            iMission=9; // high tech level (TODO: make this customizable)
-            state = GAME_PLAYING;
-            drawManager->getMessageDrawer()->initCombatPosition();
-
-            game.setup_players();
-            assert(player[HUMAN].getItemBuilder() != NULL);
-
             bFadeOut=true;
             playMusicByType(MUSIC_PEACE);
+
+            // TODO: spawn a few worms
+            iHouse=player[HUMAN].getHouse();
+            state = GAME_PLAYING;
+            drawManager->getMessageDrawer()->initCombatPosition();
 
             // delete cell calculator
             delete cellCalculator;
@@ -1720,8 +1712,7 @@ void cGame::setup_skirmish()
     } // mouse hovers over "START"
 
    	// MOUSE
-    set_mouse_sprite_focus(0, 0);
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
     if (bFadeOut) {
         game.FADE_OUT();
@@ -1814,8 +1805,7 @@ void cGame::house() {
 
 
 	// MOUSE
-    set_mouse_sprite_focus(0, 0);
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
     if (bFadeOut)
         game.FADE_OUT();
@@ -1949,8 +1939,7 @@ void cGame::tellhouse()
     }
 
     // draw mouse
-    set_mouse_sprite_focus(0, 0);
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
     if (bFadeOut)
         FADE_OUT();
@@ -2249,12 +2238,10 @@ void cGame::region() {
 
 
     // mouse
-	if (mouse_tile == MOUSE_ATTACK)
-        set_mouse_sprite_focus(16, 16);
-	else
-        set_mouse_sprite_focus(0, 0);
-
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[mouse_tile].dat);
+    if (mouse_tile == MOUSE_ATTACK)
+        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
+    else
+        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
     if (bFadeOut)
         FADE_OUT();
@@ -2273,7 +2260,6 @@ void cGame::destroyAllUnits(bool bHumanPlayer) {
 				}
 			}
 		}
-
 	} else {
 		for (int i=0; i < MAX_UNITS; i++) {
 			if (unit[i].isValid()) {
@@ -2321,7 +2307,6 @@ int cGame::getGroupNumberFromKeyboard() {
 	if (key[KEY_5]) {
 		return 5;
 	}
-
 	return 0;
 }
 
@@ -2332,9 +2317,6 @@ void cGame::handleTimeSlicing() {
 }
 
 void cGame::shakeScreenAndBlitBuffer() {
-    // at last, show mouse
-    show_mouse(bmp_screen);
-
     if (TIMER_shake == 0) {
 		TIMER_shake = -1;
 	}
@@ -2376,7 +2358,6 @@ void cGame::shakeScreenAndBlitBuffer() {
 }
 
 void cGame::runGameState() {
-    show_mouse(NULL);
     switch (state) {
 		case GAME_PLAYING:
 			combat();
@@ -2491,8 +2472,15 @@ bool cGame::isResolutionInGameINIFoundAndSet() {
 
 */
 
-void cGame::setScreenResolutionFromGameIniSettings()
-{
+void cGame::setScreenResolutionFromGameIniSettings() {
+    if (game.ini_screen_width < 800) {
+        game.ini_screen_width = 800;
+        logbook("INI screen width < 800; unsupported; will set to 800.");
+    }
+    if (game.ini_screen_height < 600) {
+        game.ini_screen_height = 600;
+        logbook("INI screen height < 600; unsupported; will set to 600.");
+    }
     game.screen_x = game.ini_screen_width;
     game.screen_y = game.ini_screen_height;
     char msg[255];
@@ -2571,7 +2559,6 @@ bool cGame::setupGame() {
 	install_keyboard();
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Keyboard", "install_keyboard()", OUTC_SUCCESS);
 	install_mouse();
-	enable_hardware_cursor();
 	cMouse::init();
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Initializing Allegro Mouse", "install_mouse()", OUTC_SUCCESS);
 
@@ -2670,7 +2657,6 @@ bool cGame::setupGame() {
 
 	}
 
-
 	alfont_text_mode(-1);
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set mode to -1", OUTC_SUCCESS);
 
@@ -2730,6 +2716,7 @@ bool cGame::setupGame() {
 	/***
 	Bitmap Creation
 	***/
+    mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.screen_x-cSideBar::SidebarWidth, game.screen_y-cSideBar::TopBarHeight);
 
 	bmp_screen = create_bitmap(game.screen_x, game.screen_y);
 
@@ -2881,6 +2868,11 @@ bool cGame::setupGame() {
 	mapUtils = new cMapUtils(&map);
 
 	game.init();
+
+	// do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
+	// unit/structures catalog loaded - which the install_upgrades depends on.
+    install_upgrades();
+
 	game.setup_players();
 
 	playMusicByType(MUSIC_MENU);
@@ -2902,20 +2894,17 @@ void cGame::setup_players() {
 	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
 		cPlayer * thePlayer = &player[i];
 
-		cItemBuilder * itemBuilder = new cItemBuilder(*thePlayer);
-		thePlayer->setItemBuilder(itemBuilder);
-
-		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(player[i], game.iMission, iHouse);
+		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(*thePlayer, iHouse);
 		thePlayer->setSideBar(sidebar);
 
 		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(thePlayer);
 		thePlayer->setBuildingListUpdater(buildingListUpdater);
 
+        cItemBuilder * itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
+        thePlayer->setItemBuilder(itemBuilder);
+
 		cStructurePlacer * structurePlacer = new cStructurePlacer(thePlayer);
 		thePlayer->setStructurePlacer(structurePlacer);
-
-		cUpgradeBuilder * upgradeBuilder = new cUpgradeBuilder(thePlayer);
-		thePlayer->setUpgradeBuilder(upgradeBuilder);
 
 		cOrderProcesser * orderProcesser = new cOrderProcesser(thePlayer);
 		thePlayer->setOrderProcesser(orderProcesser);
@@ -2936,4 +2925,29 @@ bool cGame::isState(int thisState) {
 
 void cGame::setState(int thisState) {
 	state = thisState;
+}
+
+int cGame::getFadeSelect() {
+    return fade_select;
+}
+
+void cGame::think_fading() {
+    // Fading / pulsating of selected stuff
+    if (bFadeSelectDir) {
+        fade_select++;
+
+        // when 255, then fade back
+        if (fade_select > 254) bFadeSelectDir=false;
+
+        return;
+    }
+
+    fade_select--;
+    // not too dark,
+    if (fade_select < 32) bFadeSelectDir = true;
+}
+
+cGame::~cGame() {
+    delete soundPlayer;
+    delete mapViewport;
 }

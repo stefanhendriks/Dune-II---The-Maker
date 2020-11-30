@@ -25,7 +25,6 @@
 #include "cStructureUtils.h"
 
 #include "cTimeManager.h"
-#include "cUpgradeUtils.h"
 #include "cMapUtils.h"
 #include "cListUtils.h"
 

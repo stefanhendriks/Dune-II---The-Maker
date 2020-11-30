@@ -10,6 +10,8 @@
  *
  */
 
+#include <array>
+
 #ifndef CBUILDINGLIST
 #define CBUILDINGLIST
 
@@ -18,64 +20,71 @@ class cBuildingList {
 		cBuildingList(int theId);
 		~cBuildingList();
 
-		cBuildingListItem * getItem(int position); 	// return building list item in array at position.
+		cBuildingListItem * getItem(int i); 	// return building list item in array at position.
 		cBuildingListItem * getItemToPlace();		// return building list item with placeIt = true.
 
-		// add item to the list
-		void addItemToList(cBuildingListItem * item);
-		void removeItemFromList(int position);
+		bool removeItemFromList(cBuildingListItem * item);
+		bool removeItemFromList(int position);
+		bool removeItemFromListByBuildId(int type);
+
+        void addUpgradeToList(int structureTypeToUpgrade);
+        void addStructureToList(int structureType, int subList);
+        void addUnitToList(int unitType, int subList);
+
+        bool addItemToList(cBuildingListItem * item);
 
 		bool isOverButton(int x, int y);
 		void removeAllItems();
 		bool isItemInList(cBuildingListItem * item);
 
 		// get
-		bool isUpgrading() { return upgrading; }
 		int getTimer() { return TIMER_progress; }
 		int getLastClickedId() { return lastClickedId; }
 		int getButtonIconIdPressed() { return buttonIconIdPressed; }
 		int getButtonIconIdUnpressed() { return buttonIconIdUnpressed; }
 		int getButtonDrawX() { return buttonDrawX; }
 		int getButtonDrawY() { return buttonDrawY; }
-		int getScrollingOffset() { return scrollingOffset; }
 		bool isAvailable() { return available; }
 		bool isAcceptsOrders() { return acceptsOrders; }
-		bool isBuildingItem();
-		bool hasItemType(int itemTypeId);
-
-		void scrollUp();
-		void scrollDown();
+        std::array<int, 5> isBuildingItem();
+        cBuildingListItem * getItemByBuildId(int buildId);
 
 		// set
 		void setTimer(int value) { TIMER_progress = value; }
 		void setTypeOfList(int value) { typeOfList = value; }
-		void setUpgradeLevel(int value) { upgradeLevel = value; }
-		void setUpgrading(bool value) { upgrading = value; }
+		void setStatusPendingUpgrade(int subListId);
+		void setStatusPendingBuilding(int subListId);
+		void setStatusAvailable(int subListId);
 
 		void setButtonIconIdPressed(int iconId) { buttonIconIdPressed = iconId; }
 		void setButtonIconIdUnpressed(int iconId) { buttonIconIdUnpressed = iconId; }
 
+		void setButtonWidth(int value) { buttonWidth = value; }
+		void setButtonHeight(int value) { buttonHeight = value; }
 		void setButtonDrawX(int value) { buttonDrawX = value; }
 		void setButtonDrawY(int value) { buttonDrawY = value; }
-		void setScrollingOffset(int value);
 		void setAvailable(bool value) { available = value; }
 		void setLastClickedId(int value) { lastClickedId = value; }
 		void setAcceptsOrders(bool value) { acceptsOrders = value; }
 
 		int getType() { return typeOfList; }
-		int getUpgradeLevel() { return upgradeLevel; }
-	protected:
+
+    void removeAllSublistItems(int sublistId);
+
+protected:
 		// nothing
 
 	private:
 		int TIMER_progress;	// timer for upping progress
-		bool upgrading;		// upgrading this field of technology?
+
 		int lastClickedId;	// last clicked item id
 		int buttonIconIdPressed;	// the button to draw at the left of the list when pressed (selected)
 		int buttonIconIdUnpressed;	// the button to draw at the left of the list when unpressed
 		int buttonDrawX;
 		int buttonDrawY;
-		int scrollingOffset; // the offset for scrolling through the list.
+		int buttonWidth;
+		int buttonHeight;
+
 		bool available;		 // is this list available?
 		bool acceptsOrders;	 // accepts orders
 		int maxItems;		 // how many items have been set in the list?
@@ -85,7 +94,6 @@ class cBuildingList {
 
 		int getFreeSlot();
 		int typeOfList;
-		int upgradeLevel;
 };
 
 #endif

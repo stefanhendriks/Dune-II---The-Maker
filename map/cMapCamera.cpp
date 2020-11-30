@@ -12,8 +12,9 @@ cMapCamera::cMapCamera() {
 	TIMER_move=0;
 	zoomLevel = 1.0f;
 
-    int widthOfSidebar = 160;
-    heightOfTopBar = 42;
+    int widthOfSidebar = cSideBar::SidebarWidth;
+    heightOfTopBar = cSideBar::TopBarHeight;
+//    heightOfTopBar = 42;
 
     windowWidth=game.screen_x-widthOfSidebar;
     windowHeight= game.screen_y - heightOfTopBar;
@@ -155,13 +156,12 @@ void cMapCamera::setViewportPosition(int x, int y) {
 
 void cMapCamera::thinkInteraction() {
     // Mouse is 'dragging' (border select) so do not do anything
-    if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
+    if (cMouse::isBoxSelecting()) {
         return;
     }
 
     // mouse is 'moving by pressing right mouse button', this supersedes behavior with borders
-    if (mouse_mv_x1 > -1 && mouse_mv_y1 > -1 &&
-        mouse_mv_x2 > -1 && mouse_mv_y2 > -1) {
+    if (cMouse::isMapScrolling()) {
 
         // difference in pixels (- means up/left, + means down/right)
         int diffX = mouse_mv_x2 - mouse_mv_x1;

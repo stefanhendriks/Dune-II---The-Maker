@@ -14,7 +14,4 @@
 // BUILDING LOGIC
 #include "../building/cItemBuilder.h"
 
-// UPGRADE LOGIC
-#include "../upgrade/upgradeh.h"
-
 #endif /* GAMELOGIC_H_ */

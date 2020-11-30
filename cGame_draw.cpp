@@ -36,8 +36,7 @@ void cGame::losing()
 {
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, screen_x, screen_y);
 
-    set_mouse_sprite_focus(0, 0);
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[MOUSE_NORMAL].dat);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
     if (cMouse::isLeftButtonClicked())
     {
@@ -61,8 +60,7 @@ void cGame::winning()
 {
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, screen_x, screen_y);
 
-    set_mouse_sprite_focus(0, 0);
-    set_mouse_cursor_bitmap(MOUSE_CURSOR_ALLEGRO, (BITMAP *)gfxdata[MOUSE_NORMAL].dat);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
     if (cMouse::isLeftButtonClicked())
     {
@@ -83,14 +81,12 @@ void cGame::winning()
 }
 
 // Draw the mouse in combat mode, and do its interactions
-void cGame::combat_mouse()
-{
-    scare_mouse();
+void cGame::combat_mouse() {
 	cGameControlsContext *context = player[HUMAN].getGameControlsContext();
     bool bOrderingUnits=false;
 
 	if (bPlaceIt == false && bPlacedIt==false) {
-		int mc = context->getMouseCell();
+		int mouseCell = context->getMouseCell();
 
         if (hover_unit > -1) {
             if (unit[hover_unit].iPlayer == 0) {
@@ -103,7 +99,7 @@ void cGame::combat_mouse()
         if (hover_unit > -1) {
 
         	// wanting to repair UNITS, check if its possible
-            if (key[KEY_R] && player[0].iStructures[REPAIR] > 0) {
+            if (key[KEY_R] && player[0].hasAtleastOneStructure(REPAIR)) {
             	if (unit[hover_unit].iPlayer == HUMAN) {
             		if (unit[hover_unit].iHitPoints < units[unit[hover_unit].iType].hp &&
             				units[unit[hover_unit].iType].infantry == false &&
@@ -139,238 +135,257 @@ void cGame::combat_mouse()
 					}
             	}
             }
-	} // IF (HOVER UNIT)
+	    } // IF (HOVER UNIT)
 
-    // when mouse hovers above a valid cell
-	if (mc > -1) {
-
-		if (cMouse::isRightButtonClicked() && !cMouse::isMapScrolling()) {
-			UNIT_deselect_all();
-		}
-
-		// single clicking and moving
-		if (cMouse::isLeftButtonClicked())
-		{
-			bool bParticle=false;
-
-            if (mouse_tile == MOUSE_RALLY)
-            {
-                int id = game.selected_structure;
-                if (id > -1)
-                    if (structure[id]->getOwner() == 0)
-                    {
-                        structure[id]->setRallyPoint(mc);
-                        bParticle=true;
-                    }
+        // when mouse hovers above a valid cell
+        if (mouseCell > -1) {
+            if (cMouse::isRightButtonClicked() && !cMouse::isMapScrolling()) {
+                UNIT_deselect_all();
             }
 
-            if (hover_unit > -1 && (mouse_tile == MOUSE_NORMAL || mouse_tile == MOUSE_PICK))
-			{
-				if (unit[hover_unit].iPlayer == 0) {
-                    if (!key[KEY_LSHIFT]) {
-                        UNIT_deselect_all();
+            // single clicking and moving
+            if (cMouse::isLeftButtonClicked()) {
+                bool bParticle=false;
+
+                if (mouse_tile == MOUSE_RALLY) {
+                    int id = game.selected_structure;
+                    if (id > -1)
+                        if (structure[id]->getOwner() == HUMAN) {
+                            structure[id]->setRallyPoint(mouseCell);
+                            bParticle=true;
+                        }
+                }
+
+                if (hover_unit > -1 && (mouse_tile == MOUSE_NORMAL || mouse_tile == MOUSE_PICK)) {
+                    if (unit[hover_unit].iPlayer == 0) {
+                        if (!key[KEY_LSHIFT]) {
+                            UNIT_deselect_all();
+                        }
+
+                        unit[hover_unit].bSelected=true;
+
+                        if (units[unit[hover_unit].iType].infantry == false) {
+                            play_sound_id(SOUND_REPORTING);
+                        } else {
+                            play_sound_id(SOUND_YESSIR);
+                        }
+
                     }
-
-					unit[hover_unit].bSelected=true;
-
-					if (units[unit[hover_unit].iType].infantry == false) {
-                        play_sound_id(SOUND_REPORTING);
-					} else {
-                        play_sound_id(SOUND_YESSIR);
-					}
-
-				}
-			} else {
-                bool bPlayInf=false;
-                bool bPlayRep=false;
-
-                if (mouse_tile == MOUSE_MOVE) {
-                    // any selected unit will move
-					for (int i=0; i < MAX_UNITS; i++) {
-						if (unit[i].isValid() && unit[i].iPlayer == HUMAN && unit[i].bSelected) {
-							UNIT_ORDER_MOVE(i, mc);
-
-							if (units[unit[i].iType].infantry)
-								bPlayInf=true;
-							else
-								bPlayRep=true;
-
-							bParticle=true;
-						}
-					}
-                } else if (mouse_tile == MOUSE_ATTACK) {
-                    // check who or what to attack
-					for (int i=0; i < MAX_UNITS; i++) {
-						if (unit[i].isValid() && unit[i].iPlayer == HUMAN && unit[i].bSelected)	{
-							int iAttackCell=-1;
-
-							if (!context->isMouseOverStructure() && game.hover_unit < 0) {
-								iAttackCell = mc;
-							}
-
-							UNIT_ORDER_ATTACK(i, mc, game.hover_unit, context->getIdOfStructureWhereMouseHovers(), iAttackCell);
-
-							if (game.hover_unit > -1) {
-								unit[game.hover_unit].TIMER_blink = 5;
-							}
-
-							if (units[unit[i].iType].infantry) {
-								bPlayInf=true;
-							} else {
-								bPlayRep=true;
-							}
-
-							bParticle=true;
-						}
-					}
-                }
-
-                // AUDITIVE FEEDBACK
-                if (bPlayInf || bPlayRep) {
-                    if (bPlayInf)
-                        play_sound_id(SOUND_MOVINGOUT + rnd(2));
-
-                    if (bPlayRep)
-                        play_sound_id(SOUND_ACKNOWLEDGED + rnd(3));
-
-                    bOrderingUnits=true;
-                }
-
-			}
-
-			if (bParticle) {
-			    int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
-                int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
-
-                if (mouse_tile == MOUSE_ATTACK) {
-                    PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, ATTACK_INDICATOR, -1, -1);
                 } else {
-                    PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, MOVE_INDICATOR, -1, -1);
-                }
-			}
-		}
-	}
+                    bool bPlayInf=false;
+                    bool bPlayRep=false;
 
-	if (MOUSE_BTN_LEFT()) {
-		// When the mouse is pressed, we will check if the first coordinates are filled in
-		// if so, we will update the second coordinates. If the player holds his mouse we
-		// keep updating the second coordinates and create a 'border' (to select units with)
-		// this way.
+                    if (mouse_tile == MOUSE_MOVE) {
+                        // any selected unit will move
+                        for (int i=0; i < MAX_UNITS; i++) {
+                            if (unit[i].isValid() && unit[i].iPlayer == HUMAN && unit[i].bSelected) {
+                                UNIT_ORDER_MOVE(i, mouseCell);
 
-		// in the second frame, when left mouse button is still pressed we will assign second coordinates when
-		// difference is great enough
-		if (mouse_co_x1 > -1 && mouse_co_y1 > -1 ) {
-            if (abs(mouse_x - mouse_co_x1) > 4 &&
-                abs(mouse_y - mouse_co_y1) > 4) {
+                                if (units[unit[i].iType].infantry)
+                                    bPlayInf=true;
+                                else
+                                    bPlayRep=true;
 
-                // assign 2nd coordinates
-                mouse_co_x2 = mouse_x;
-                mouse_co_y2 = mouse_y;
-
-                // and draw the selection box
-                rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2,
-                     makecol(game.fade_select, game.fade_select, game.fade_select));
-            }
-
-            // Note that we have to fix up the coordinates when checking 'within border'
-            // for units (when X2 < X1 for example!)
-		} else if (mc > -1) {
-		    // no first coordinates set, so do that here.
-			mouse_co_x1 = mouse_x;
-			mouse_co_y1 = mouse_y;
-		}
-	} else {
-        // no left mouse button pressed, check if we had the co1/co2 coordinates filled in
-        // if so, try to select units within that box.
-        if (mouse_co_x1 > -1 && mouse_co_y1 > -1 &&
-            mouse_co_x2 != mouse_co_x1 && mouse_co_y2 != mouse_co_y1 &&
-            mouse_co_x2 > -1 && mouse_co_y2 > -1) {
-            mouse_status = MOUSE_STATE_NORMAL;
-
-            int min_x, min_y;
-            int max_x, max_y;
-
-            // sort out borders:
-            if (mouse_co_x1 < mouse_co_x2) {
-                min_x = mouse_co_x1;
-                max_x = mouse_co_x2;
-            } else {
-                max_x = mouse_co_x1;
-                min_x = mouse_co_x2;
-            }
-
-            // Y coordinates
-            if (mouse_co_y1 < mouse_co_y2) {
-                min_y = mouse_co_y1;
-                max_y = mouse_co_y2;
-            } else {
-                max_y = mouse_co_y1;
-                min_y = mouse_co_y2;
-            }
-
-            //  char msg[256];
-            //  sprintf(msg, "MINX=%d, MAXX=%d, MINY=%d, MAXY=%d", min_x, min_y, max_x, max_y);
-            //  logbook(msg);
-
-            // Now do it!
-            // deselect all units
-            UNIT_deselect_all();
-
-            bool bPlayRep = false;
-            bool bPlayInf = false;
-
-            for (int i = 0; i < MAX_UNITS; i++) {
-                if (unit[i].isValid()) {
-                    if (unit[i].iPlayer == 0) {
-
-                        // do not select airborn units
-                        if (units[unit[i].iType].airborn) {
-                            // always deselect unit:
-                            unit[i].bSelected = false;
-                            continue;
-                        }
-
-                        // now check X and Y coordinates (center of unit now)
-                        if (((unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) >= min_x &&
-                             (unit[i].draw_x() + units[unit[i].iType].bmp_width / 2) <= max_x) &&
-                            (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2 >= min_y &&
-                             (unit[i].draw_y() + units[unit[i].iType].bmp_height / 2) <= max_y)) {
-                            // It is in the borders, select it
-                            unit[i].bSelected = true;
-
-                            if (units[unit[i].iType].infantry) {
-                                bPlayInf = true;
-                            } else {
-                                bPlayRep = true;
+                                bParticle=true;
                             }
-
                         }
+                    } else if (mouse_tile == MOUSE_ATTACK) {
+                        // check who or what to attack
+                        for (int i=0; i < MAX_UNITS; i++) {
+                            if (unit[i].isValid() && unit[i].iPlayer == HUMAN && unit[i].bSelected)	{
+                                int iAttackCell=-1;
+
+                                if (!context->isMouseOverStructure() && game.hover_unit < 0) {
+                                    iAttackCell = mouseCell;
+                                }
+
+                                UNIT_ORDER_ATTACK(i, mouseCell, game.hover_unit, context->getIdOfStructureWhereMouseHovers(), iAttackCell);
+
+                                if (game.hover_unit > -1) {
+                                    unit[game.hover_unit].TIMER_blink = 5;
+                                }
+
+                                if (units[unit[i].iType].infantry) {
+                                    bPlayInf=true;
+                                } else {
+                                    bPlayRep=true;
+                                }
+
+                                bParticle=true;
+                            }
+                        }
+                    }
+
+                    // AUDITIVE FEEDBACK
+                    if (bPlayInf || bPlayRep) {
+                        if (bPlayInf)
+                            play_sound_id(SOUND_MOVINGOUT + rnd(2));
+
+                        if (bPlayRep)
+                            play_sound_id(SOUND_ACKNOWLEDGED + rnd(3));
+
+                        bOrderingUnits=true;
+                    }
+
+                }
+
+                if (bParticle) {
+                    int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
+                    int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
+
+                    if (mouse_tile == MOUSE_ATTACK) {
+                        PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, ATTACK_INDICATOR, -1, -1);
+                    } else {
+                        PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, MOVE_INDICATOR, -1, -1);
                     }
                 }
             }
-
-            if (bPlayInf || bPlayRep) {
-
-                if (bPlayRep)
-                    play_sound_id(SOUND_REPORTING);
-
-                if (bPlayInf)
-                    play_sound_id(SOUND_YESSIR);
-
-                bOrderingUnits = true;
-
-            }
-
         }
 
+        if (MOUSE_BTN_LEFT()) {
+            // When the mouse is pressed, we will check if the first coordinates are filled in
+            // if so, we will update the second coordinates. If the player holds his mouse we
+            // keep updating the second coordinates and create a 'border' (to select units with)
+            // this way.
 
-        mouse_co_x1 = -1;
-        mouse_co_y1 = -1;
-        mouse_co_x2 = -1;
-        mouse_co_y2 = -1;
-	}
+            // in the second frame, when left mouse button is still pressed we will assign second coordinates when
+            // difference is great enough
+            if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
+                if (abs(mouse_x - mouse_co_x1) > 4 &&
+                    abs(mouse_y - mouse_co_y1) > 4) {
 
-	if (MOUSE_BTN_RIGHT()) {
+                    // assign 2nd coordinates
+                    mouse_co_x2 = mouse_x;
+                    if (mouse_co_x2 > game.screen_x - cSideBar::SidebarWidth) {
+                        mouse_co_x2 = game.screen_x - cSideBar::SidebarWidth - 1;
+                    }
+
+                    mouse_co_y2 = mouse_y;
+                    if (mouse_co_y2 < cSideBar::TopBarHeight) {
+                        mouse_co_y2 = cSideBar::TopBarHeight;
+                    }
+
+                    // and draw the selection box
+                    rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2,
+                         makecol(game.fade_select, game.fade_select, game.fade_select));
+                }
+
+                // Note that we have to fix up the coordinates when checking 'within border'
+                // for units (when X2 < X1 for example!)
+            } else if (mouseCell > -1) {
+                // no first coordinates set, so do that here.
+                mouse_co_x1 = mouse_x;
+                mouse_co_y1 = mouse_y;
+            }
+        } else {
+            // where we box selecting? then this must be the unpress of the mouse button and thus we
+            // should start selecting units within the rectangle
+            if (cMouse::isBoxSelecting()) {
+                mouse_status = MOUSE_STATE_NORMAL;
+
+                int min_x, min_y;
+                int max_x, max_y;
+
+                // sort out borders:
+                if (mouse_co_x1 < mouse_co_x2) {
+                    min_x = mouse_co_x1;
+                    max_x = mouse_co_x2;
+                } else {
+                    max_x = mouse_co_x1;
+                    min_x = mouse_co_x2;
+                }
+
+                // Y coordinates
+                if (mouse_co_y1 < mouse_co_y2) {
+                    min_y = mouse_co_y1;
+                    max_y = mouse_co_y2;
+                } else {
+                    max_y = mouse_co_y1;
+                    min_y = mouse_co_y2;
+                }
+
+                //  char msg[256];
+                //  sprintf(msg, "MINX=%d, MAXX=%d, MINY=%d, MAXY=%d", min_x, min_y, max_x, max_y);
+                //  logbook(msg);
+
+                // Now do it!
+                // deselect all units
+                UNIT_deselect_all();
+
+                bool bPlayRep = false;
+                bool bPlayInf = false;
+
+                bool harvesterSelected=false;
+                bool attackingUnitSelected=false;
+
+                cRectangle boxSelectRectangle(min_x, min_y, (max_x-min_x), (max_y-min_y));
+
+                for (int i = 0; i < MAX_UNITS; i++) {
+                    cUnit &cUnit = unit[i];
+                    if (!cUnit.isValid()) continue;
+                    if (cUnit.iPlayer != HUMAN) continue;
+                    // do not select airborn units
+                    if (cUnit.isAirbornUnit()) {
+                        // always deselect unit:
+                        cUnit.bSelected = false;
+                        continue;
+                    }
+                    if (cUnit.iTempHitPoints >= 0) continue; // skip units that have been 'hidden' in a refinery or repair
+
+                    if (boxSelectRectangle.isWithin(cUnit.center_draw_x(), cUnit.center_draw_y())) {
+                        // It is in the borders, select it
+                        cUnit.bSelected = true;
+
+                        if (cUnit.iType == HARVESTER) {
+                            harvesterSelected = true;
+                        } else {
+                            attackingUnitSelected = true;
+                        }
+
+                        if (units[cUnit.iType].infantry) {
+                            bPlayInf = true;
+                        } else {
+                            bPlayRep = true;
+                        }
+
+                    }
+                }
+
+                if (harvesterSelected && attackingUnitSelected) {
+                    // unselect harvesters
+                    for (int i = 0; i < MAX_UNITS; i++) {
+                        cUnit &cUnit = unit[i];
+                        if (!cUnit.isValid()) continue;
+                        if (cUnit.iPlayer != HUMAN) continue;
+                        if (!cUnit.bSelected) continue;
+                        if (cUnit.iType == HARVESTER) {
+                            cUnit.bSelected = false; // unselect
+                        }
+                    }
+                }
+
+                if (bPlayInf || bPlayRep) {
+                    if (bPlayRep)
+                        play_sound_id(SOUND_REPORTING);
+
+                    if (bPlayInf)
+                        play_sound_id(SOUND_YESSIR);
+
+                    bOrderingUnits = true;
+                }
+
+            }
+
+            mouse_co_x1 = -1;
+            mouse_co_y1 = -1;
+            mouse_co_x2 = -1;
+            mouse_co_y2 = -1;
+        }
+
+	} // NOT PLACING STUFF
+
+
+    if (cMouse::isRightButtonPressed()) {
         if (mouse_mv_x1 < 0 || mouse_mv_y1 < 0) {
             mouse_mv_x1 = mouse_x;
             mouse_mv_y1 = mouse_y;
@@ -378,8 +393,8 @@ void cGame::combat_mouse()
             // mouse mv 1st coordinates filled
             // when mouse is deviating from this coordinate, draw a line
 
-            if (abs(mouse_x - mouse_mv_x1) > 1 &&
-                abs(mouse_y - mouse_mv_y1) > 1) {
+            if (abs(mouse_x - mouse_mv_x1) > 4 &&
+                abs(mouse_y - mouse_mv_y1) > 4) {
 
                 // assign 2nd coordinates
                 mouse_mv_x2 = mouse_x;
@@ -390,14 +405,16 @@ void cGame::combat_mouse()
                      makecol(game.fade_select, game.fade_select, game.fade_select));
             }
         }
-	} else {
-        mouse_mv_x1 = -1;
-        mouse_mv_y1 = -1;
-        mouse_mv_x2 = -1;
-        mouse_mv_y2 = -1;
-    }
+    } else {
+        // set to -1 only when it was > -1
+        if (mouse_mv_x1 > -1 || mouse_mv_y1 > -1 || mouse_mv_x2 > -1 || mouse_mv_y2 > -1) {
+            mouse_mv_x1 = -1;
+            if (mouse_mv_x2 > -1) mouse_mv_x2 = -1;
 
-	} // NOT PLACING STUFF
+            mouse_mv_y1 = -1;
+            if (mouse_mv_y2 > -1) mouse_mv_y2 = -1;
+        }
+    }
 
 	// placing stuff!?
 	if (bOrderingUnits) {
@@ -408,8 +425,7 @@ void cGame::combat_mouse()
 		if (key[KEY_P])	{
 			int iStr=context->getIdOfStructureWhereMouseHovers();
 
-			if (structure[iStr]->getOwner() == 0)
-			{
+			if (structure[iStr]->getOwner() == HUMAN) {
 				if (structure[iStr]->getType() == LIGHTFACTORY ||
 					structure[iStr]->getType() == HEAVYFACTORY ||
 					structure[iStr]->getType() == HIGHTECH ||
@@ -417,7 +433,7 @@ void cGame::combat_mouse()
 					structure[iStr]->getType() == WOR ||
 					structure[iStr]->getType() == BARRACKS ||
 					structure[iStr]->getType() == REPAIR)
-					player[0].iPrimaryBuilding[structure[iStr]->getType()] = iStr;
+					player[HUMAN].setPrimaryBuildingForStructureType(structure[iStr]->getType(), iStr);
 			}
 		}
 
@@ -425,23 +441,23 @@ void cGame::combat_mouse()
         if (key[KEY_R] && !bOrderingUnits) {
         	int structureId = context->getIdOfStructureWhereMouseHovers();
 
-            if (structure[structureId]->getOwner() == 0 &&
-                structure[structureId]->getHitPoints() < structures[structure[structureId]->getType()].hp)
-            {
-                if (cMouse::isLeftButtonClicked())
-                {
+            if (structure[structureId]->getOwner() == HUMAN &&
+                structure[structureId]->isDamaged()) {
+                if (cMouse::isLeftButtonClicked()) {
 
                     if (!structure[structureId]->isRepairing()) {
                         structure[structureId]->setRepairing(true);
                     } else {
                         structure[structureId]->setRepairing(false);
                     }
+
                 }
 
                 mouse_tile = MOUSE_REPAIR;
-            }// MOUSE PRESSED
-        }
+            }
+        } // MOUSE PRESSED
 
+        // select structure
 		if (cMouse::isLeftButtonClicked() && bOrderingUnits == false && !key[KEY_R]) {
 			game.selected_structure = context->getIdOfStructureWhereMouseHovers();
 
@@ -458,5 +474,4 @@ void cGame::combat_mouse()
 		}
 
 	}
-	unscare_mouse();
 }

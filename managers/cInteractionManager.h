@@ -22,15 +22,16 @@ class cInteractionManager {
                 void interactWithKeyboard();
 
 	protected:
-		void interactWithSidebar();
+		void mouseInteractWithSidebarOrMinimap();
 
 	private:
 		cSideBar * sidebar;
 		cMiniMapDrawer * miniMapDrawer;
 		cKeyboardManager keyboardManager;
+		cPlayer * m_Player;
 
 
-    void interactWithMapCamera();
+    void mouseInteractWithBattlefield();
 };
 
 #endif /* CINTERACTIONMANAGER_H_ */

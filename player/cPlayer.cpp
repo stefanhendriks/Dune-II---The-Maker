@@ -18,7 +18,6 @@ cPlayer::cPlayer() {
 	orderProcesser = NULL;
 	sidebar = NULL;
 	structurePlacer = NULL;
-	upgradeBuilder = NULL;
 	buildingListUpdater = NULL;
 	gameControlsContext = NULL;
 	char msg[255];
@@ -41,9 +40,6 @@ cPlayer::~cPlayer() {
 	}
 	if (structurePlacer) {
 		delete structurePlacer;
-	}
-	if (upgradeBuilder) {
-		delete upgradeBuilder;
 	}
 	if (buildingListUpdater) {
 		delete buildingListUpdater;
@@ -105,17 +101,6 @@ void cPlayer::clearUnitTypeBitmaps() {
         }
         bmp_unit_top[i] = nullptr;
     }
-}
-
-void cPlayer::setUpgradeBuilder(cUpgradeBuilder *theUpgradeBuilder) {
-	assert(theUpgradeBuilder);
-
-	// delete old reference
-	if (upgradeBuilder) {
-		delete upgradeBuilder;
-	}
-
-	upgradeBuilder = theUpgradeBuilder;
 }
 
 void cPlayer::setSideBar(cSideBar *theSideBar) {
@@ -208,6 +193,7 @@ void cPlayer::init(int id) {
 	for (int i = 0 ; i < MAX_STRUCTURETYPES; i++) {
 		iStructures[i] = 0;
 		iPrimaryBuilding[i] = -1;
+		iStructureUpgradeLevel[i] = 0;
 	}
 
 	credits	=	0;
@@ -262,6 +248,7 @@ void cPlayer::setHouse(int iHouse) {
         }
 
         minimapColor = getRGBColorForHouse(house);
+        emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
         destroyAllegroBitmaps();
 
@@ -322,6 +309,25 @@ int cPlayer::getRGBColorForHouse(int houseId) {
 	}
 }
 
+int cPlayer::getEmblemBackgroundColorForHouse(int houseId) {
+	switch(houseId) {
+		case ATREIDES:
+			return makecol(8, 12, 89);
+		case HARKONNEN:
+			return makecol(60, 0, 0);
+		case ORDOS:
+			return makecol(0, 32, 0);
+		case SARDAUKAR:
+			return makecol(128, 0, 128);
+		default:
+			return makecol(100, 255, 100);
+	}
+}
+
+bool cPlayer::bEnoughSpiceCapacityToStoreCredits() const {
+    return max_credits > credits;
+}
+
 bool cPlayer::bEnoughPower() const {
 	if (game.bSkirmish) {
        return has_power >= use_power;
@@ -333,7 +339,7 @@ bool cPlayer::bEnoughPower() const {
         // Unfortunatly D2TM has to cheat too, else the game will
         // be unplayable.
         if (iStructures[WINDTRAP] > 0) {
-            // always enough power so it seems
+            // always enough power so it seems?
             return true;
         } else {
             return false; // not enough power
@@ -341,6 +347,10 @@ bool cPlayer::bEnoughPower() const {
     }
 
     return has_power >= use_power;
+}
+
+bool cPlayer::hasRadarAndEnoughPower() const {
+    return getAmountOfStructuresForType(RADAR) > 0 && bEnoughPower();
 }
 
 int cPlayer::getAmountOfStructuresForType(int structureType) const {
@@ -415,4 +425,72 @@ BITMAP *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFra
         return shadow;
     }
     return nullptr;
+}
+
+bool cPlayer::hasWor() const {
+    return iStructures[WOR] > 0;
+}
+
+bool cPlayer::hasBarracks() const {
+    return iStructures[BARRACKS] > 0;
+}
+
+bool cPlayer::hasAtleastOneStructure(int structureType) const {
+    if (structureType < 0) return false;
+    if (structureType >= MAX_STRUCTURETYPES) return false;
+    return iStructures[structureType] > 0;
+}
+
+bool cPlayer::hasEnoughCreditsFor(float requestedAmount) const {
+    return credits > requestedAmount;
+}
+
+/**
+ * Returns house based fading/pulsating color
+ * @return
+ */
+int cPlayer::getHouseFadingColor() const {
+    int fadeSelect = game.getFadeSelect();
+    if (house == ATREIDES) {
+        return makecol(0, 0, fadeSelect);
+    }
+    if (house == HARKONNEN) {
+        return makecol(fadeSelect, 0, 0);
+    }
+    if (house == ORDOS) {
+        return makecol(0, fadeSelect, 0);
+    }
+
+    // TODO other houses (Sardaukar, etc)
+    return makecol(fadeSelect, fadeSelect, fadeSelect);
+}
+
+/**
+ * Returns the error fading color (red to black pulsating)
+ * @return
+ */
+int cPlayer::getErrorFadingColor() const {
+    int fadeSelect = game.getFadeSelect();
+    return makecol(fadeSelect, 0, 0); // red fading
+}
+
+/**
+ * Returns the fading white color
+ * @return
+ */
+int cPlayer::getSelectFadingColor() const {
+    int fadeSelect = game.getFadeSelect();
+    return makecol(fadeSelect, fadeSelect, fadeSelect); // white fading
+}
+
+eHouseBitFlag cPlayer::getHouseBitFlag() {
+    switch(house) {
+        case ATREIDES: return eHouseBitFlag::Atreides;
+        case HARKONNEN: return eHouseBitFlag::Harkonnen;
+        case ORDOS: return eHouseBitFlag::Ordos;
+        case SARDAUKAR: return eHouseBitFlag::Sardaukar;
+        case FREMEN: return eHouseBitFlag::Fremen;
+        default:
+            return eHouseBitFlag::Unknown;
+    }
 }

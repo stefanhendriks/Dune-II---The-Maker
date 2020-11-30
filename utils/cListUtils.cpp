@@ -18,17 +18,17 @@ int cListUtils::findListTypeByStructureType(int structureType) {
 	case CONSTYARD:
 		return LIST_CONSTYARD;
 	case LIGHTFACTORY:
-		return LIST_LIGHTFC;
+		return LIST_UNITS;
 	case HEAVYFACTORY:
-		return LIST_HEAVYFC;
+		return LIST_UNITS;
 	case HIGHTECH:
-		return LIST_ORNI;
+		return LIST_UNITS;
 	case PALACE:
 		return LIST_PALACE;
 	case BARRACKS:
-		return LIST_INFANTRY;
+		return LIST_FOOT_UNITS;
 	case WOR:
-		return LIST_INFANTRY;
+		return LIST_FOOT_UNITS;
 	case STARPORT:
 		return LIST_STARPORT;
 	default:

@@ -1,62 +1,94 @@
 #include "../include/d2tmh.h"
 
-cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingList *list) {
-	assert(theID >= 0);
-	assert(list);
-	ID = theID;
-	cost = entry.cost;
-	icon = entry.icon;
-	totalBuildTime = entry.build_time;
-	type = STRUCTURE;
-	progress = 0;
-	available = true;
-	building = false;
-	myList = list;
-	timesToBuild = 0;
-	timesOrdered  = 0;
-	if (entry.cost > 0) {
-		creditsPerProgressTime = (float)entry.cost / (float)entry.build_time;
-	}
-	placeIt = false;
+/**
+ *
+ * @param type
+ * @param buildId (id of the TYPE, ie structureType ID or unitType ID or upgradeType ID)
+ * @param cost
+ * @param icon
+ * @param totalBuildTime
+ * @param list
+ * @param subList
+ */
+cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList, bool queuable) {
+    assert(buildId >= 0);
+    this->buildId = buildId;
+    this->cost = cost;
+    this->icon = icon;
+    this->totalBuildTime = totalBuildTime;
+    this->type = type;
+    this->queuable = queuable;
+    progress = 0;
+    state = AVAILABLE;
+    building = false;
+    myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
+    timesToBuild = 0;
+    timesOrdered  = 0;
+    slotId = -1; // is set later
+    this->subList = subList;
+    if (cost > 0 && totalBuildTime > 0) {
+        creditsPerProgressTime = (float)this->cost / (float)this->totalBuildTime;
+    }
+    placeIt = false;
 }
 
-cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *list) {
-	assert(theID >= 0);
-	assert(list);
-	ID = theID;
-	cost = entry.cost;
-	icon = entry.icon;
-	totalBuildTime = entry.build_time;
-	type = UNIT;
-	progress = 0;
-	available = true;
-	building = false;
-	myList = list;
-	timesToBuild = 0;
-	timesOrdered  = 0;
-	if (entry.cost > 0 && entry.build_time > 0) {
-		creditsPerProgressTime = (float)entry.cost / (float)entry.build_time;
-	}
-	placeIt = false;
+cBuildingListItem::~cBuildingListItem() {
+    myList = NULL;
 }
 
-bool cBuildingListItem::canPay() {
-	int costs = 0;
+/**
+ * Constructor for Structures
+ * @param theID
+ * @param entry
+ * @param list
+ * @param subList
+ */
+cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingList *list, int subList) :
+                    cBuildingListItem(STRUCTURE, theID, entry.cost, entry.icon, entry.build_time, list, subList, entry.queuable) {
+}
 
-	// get the ID
-	if (type == UNIT) {
-		costs = units[ID].cost;
-	} else if (type == STRUCTURE) {
-		costs = structures[ID].cost;
-	} else {
-		costs = 0;
-	}
+/**
+ * Constructor for Upgrades
+ * @param theID
+ * @param entry
+ * @param list
+ * @param subList
+ */
+cBuildingListItem::cBuildingListItem(int theID, s_Upgrade entry, cBuildingList *list, int subList) :
+                    cBuildingListItem(UPGRADE, theID, entry.cost, entry.icon, entry.buildTime, list, subList, false) {
+}
 
-	if (player[0].credits >= costs) {
-		return true;
-	}
+cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
+}
 
-	return false;
+/**
+ * Constructor for units
+ * @param theID
+ * @param entry
+ * @param list
+ * @param subList
+ */
+cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *list, int subList) :
+                    cBuildingListItem(UNIT, theID, entry.cost, entry.icon, entry.build_time, list, subList, entry.queuable) {
+}
+
+cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
+}
+
+cBuildingListItem::cBuildingListItem(int theID, s_Upgrade entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
+}
+
+int cBuildingListItem::getCosts() {
+    int costs = 0;
+
+    if (type == UNIT) {
+        costs = units[buildId].cost;
+    } else if (type == STRUCTURE) {
+        costs = structures[buildId].cost;
+    } else if (type == UPGRADE) {
+        costs = upgrades[buildId].cost;
+    }
+    return costs;
 }
 
 /**
@@ -74,3 +106,55 @@ float cBuildingListItem::getRefundAmount() {
 void cBuildingListItem::decreaseTimesToBuild() {
 	timesToBuild--;
 }
+
+void cBuildingListItem::increaseProgress(int byAmount) {
+    setProgress(getProgress() + byAmount);
+}
+
+int cBuildingListItem::getBuildTime() {
+//    if (DEBUGGING) return 1;
+    if (type == STRUCTURE) {
+        return structures[buildId].build_time;
+    }
+    if (type == UPGRADE) {
+        return upgrades[buildId].buildTime;
+    }
+    // assumes other things (ie super weapons and such) are also under 'units' array.
+    return units[buildId].build_time;
+}
+
+bool cBuildingListItem::isDoneBuilding() {
+    return getProgress() >= getBuildTime();
+}
+
+bool cBuildingListItem::isTypeUpgrade() {
+    return getBuildType() == eBuildType::UPGRADE;
+}
+
+s_Upgrade cBuildingListItem::getS_Upgrade() {
+    int buildId = getBuildId();
+    if (getBuildType() != eBuildType::UPGRADE){
+        logbook("ERROR!!! - calling getS_Upgrade while type is not UPGRADE! - falling back to buildId 1 as safety");
+        buildId = 1;
+    }
+    return upgrades[buildId];
+}
+
+s_UnitP cBuildingListItem::getS_UnitP() {
+    int buildId = getBuildId();
+    if (getBuildType() != eBuildType::UNIT){
+        logbook("ERROR!!! - calling getS_UnitP while type is not UNIT! - falling back to buildId 1 as safety");
+        buildId = 1;
+    }
+    return units[buildId];
+}
+
+s_Structures cBuildingListItem::getS_Structures() {
+    int buildId = getBuildId();
+    if (getBuildType() != eBuildType::STRUCTURE){
+        logbook("ERROR!!! - calling getS_Structures while type is not STRUCTURE! - falling back to buildId 1 as safety");
+        buildId = 1;
+    }
+    return structures[buildId];
+}
+

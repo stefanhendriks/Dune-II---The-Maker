@@ -51,9 +51,11 @@ struct s_UnitP {
 
   bool squish;              // can this unit squish infantry?
 
-  char name[50];            // name of unit
+  char name[64];            // name of unit
 
   int structureTypeItLeavesFrom; // the type of structure this unit will 'leave' from when it is built. (ie Quad from Light Factory, etc)
+
+  bool queuable;        // can this item be queued in the buildList? (default = true for units)
 
   // UNIT : HARVESTER specific types
   int credit_capacity;      // max credits capacity
@@ -61,7 +63,6 @@ struct s_UnitP {
   int harvesting_amount;    // value rate for harvesting (amount)
   // house specific rates
 };
-
 
 // Structure types
 struct s_Structures {
@@ -96,7 +97,42 @@ struct s_Structures {
 
   char name[64];       // name
 
+  bool queuable;        // can this item be queued in the buildList? (default = false)
+
   bool configured;     // is this structure configured? (poor man solution)
+};
+
+/**
+ * Upgrades are tied to structures (ie this is used to upgrade a structure type). After
+ * the upgrade is completed, the result is always an increased upgrade count.
+ *
+ * Then, also, this struct provides which item and what kind of item will be made available.
+ */
+struct s_Upgrade {
+    bool enabled;        // set to true to use this upgrade logic
+
+    int icon;            // icon id
+
+    int cost;            // price
+
+    char description[64]; // ie: "Upgrade to 4slab"
+
+    int buildTime;     // how long it takes to upgrade/build
+
+    unsigned char house; // 8-bit-flag for which house this upgrade applies.
+
+    int techLevel;      // the minimum techlevel required for this upgrade
+    int atUpgradeLevel; // linear upgradeLevel per structure type, this is the nr where this upgrade is offered. (0 = start)
+    int structureType;  // if > -1 then increase upgradeLevel for structureType (this is the structureType being 'upgraded')
+    int needsStructureType; // the upgrade is only available when this structure is available, this is additional to the structureType property
+                        // above, so if you require CONSTYARD *and* RADAR you set structureType=CONSTYARD and needsStructure=RADAR, keep -1
+                        // if you don't require any additional structure
+
+    int providesType;    // UNIT or STRUCTURE (0/1)
+
+    int providesTypeId;   // upgrade results into getting this typeId (type depends on 'providesType') (points to s_Unit/s_Structure)
+    int providesTypeList; // into which list will this type be made available?
+    int providesTypeSubList; // and sublist
 };
 
 // House properties

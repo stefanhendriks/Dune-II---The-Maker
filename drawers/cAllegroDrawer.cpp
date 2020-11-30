@@ -6,8 +6,11 @@
  */
 
 #include "../include/d2tmh.h"
+#include "cAllegroDrawer.h"
+
 
 cAllegroDrawer::cAllegroDrawer() {
+    colorBlack=makecol(0,0,0);
 }
 
 cAllegroDrawer::~cAllegroDrawer() {
@@ -119,13 +122,13 @@ void cAllegroDrawer::maskedStretchBlit(BITMAP *src, BITMAP *dest, int src_x, int
 void cAllegroDrawer::drawCenteredSprite(BITMAP *dest, BITMAP *src) {
 	assert(src);
 	assert(dest);
-	int xPos = getCenteredXPosForBitmap(src);
-	int yPos = getCenteredXPosForBitmap(src);
+	int xPos = getCenteredXPosForBitmap(src, game.screen_x);
+	int yPos = getCenteredYPosForBitmap(src);
 	draw_sprite(dest, src, xPos, yPos);
 }
 
 void cAllegroDrawer::drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP* src, float percentage) {
-	int xPos = getCenteredXPosForBitmap(src);
+	int xPos = getCenteredXPosForBitmap(src, game.screen_x);
 
 	// we want to know the 'center' first. This is done in the percentage
 	int wantedYPos = ((float)game.screen_y * percentage);
@@ -138,25 +141,25 @@ void cAllegroDrawer::drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP* 
 }
 
 
-void cAllegroDrawer::drawCenteredSpriteHorizontal(BITMAP *dest, BITMAP *src, int y) {
+void cAllegroDrawer::drawCenteredSpriteHorizontal(BITMAP *dest, BITMAP *src, int y, int totalWidth, int xOffset) {
 	assert(src);
 	assert(dest);
-	int xPos = getCenteredXPosForBitmap(src);
+	int xPos = getCenteredXPosForBitmap(src, totalWidth) + xOffset;
 	draw_sprite(dest, src, xPos, y);
 }
 
 void cAllegroDrawer::drawCenteredSpriteVertical(BITMAP *dest, BITMAP *src, int x) {
 	assert(src);
 	assert(dest);
-	int yPos = getCenteredXPosForBitmap(src);
+	int yPos = getCenteredXPosForBitmap(src, game.screen_x);
 	draw_sprite(dest, src, x, yPos);
 }
 
-int cAllegroDrawer::getCenteredXPosForBitmap(BITMAP *bmp) {
+int cAllegroDrawer::getCenteredXPosForBitmap(BITMAP *bmp, int totalWidth) {
 	assert(bmp);
 	int width = bmp->w;
 	int halfOfWidth = width / 2;
-	return (game.screen_x / 2) - halfOfWidth;
+	return (totalWidth / 2) - halfOfWidth;
 }
 
 int cAllegroDrawer::getCenteredYPosForBitmap(BITMAP *bmp) {
@@ -164,4 +167,26 @@ int cAllegroDrawer::getCenteredYPosForBitmap(BITMAP *bmp) {
 	int height = bmp->h;
 	int halfOfHeight = height / 2;
 	return (game.screen_y / 2) - halfOfHeight;
+}
+
+void cAllegroDrawer::blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
+    // use :: so we use global scope Allegro blit
+    ::blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
+}
+
+void cAllegroDrawer::drawRectangle(BITMAP *dest, cRectangle *pRectangle, int color) {
+    if (pRectangle == nullptr) return;
+    rect(dest, pRectangle->getX(), pRectangle->getY(), pRectangle->getEndX(), pRectangle->getEndY(), color);
+}
+
+void cAllegroDrawer::drawRectangle(BITMAP *dest, int x, int y, int width, int height, int color) {
+    if (dest == nullptr) return;
+    // the -1 is because the width /height is "including" the current pixel
+    // ie, a width of 1 pixel means it draws just 1 pixel, since the x2 is a dest it should result into x1
+    rect(dest, x, y, x + (width-1), y + (height-1), color);
+}
+
+void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, cRectangle *pRectangle, int color) {
+    if (pRectangle == nullptr) return;
+    rectfill(dest, pRectangle->getX(), pRectangle->getY(), pRectangle->getEndX(), pRectangle->getEndY(), color);
 }

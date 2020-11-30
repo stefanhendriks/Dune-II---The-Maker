@@ -17,13 +17,12 @@ class cDrawManager {
 		cMessageBarDrawer *getMessageBarDrawer() { return messageBarDrawer; }
 		cMiniMapDrawer *getMiniMapDrawer() { return miniMapDrawer; }
 		cSideBarDrawer *getSidebarDrawer() { return sidebarDrawer; }
+		cOrderDrawer *getOrderDrawer() { return orderDrawer; }
+		cBuildingListDrawer *getBuildingListDrawer() { return sidebarDrawer->getBuildingListDrawer(); }
 
 	protected:
 		void drawSidebar();
-		void drawUpgradeButton();
-		void drawOrderButton();
 		void drawCredits();
-		void drawMap();
 		void drawStructurePlacing();
 		void drawMessage();
 		void drawMouse();
@@ -33,7 +32,6 @@ class cDrawManager {
 		cSideBarDrawer * sidebarDrawer;
 		CreditsDrawer * creditsDrawer;
 		cOrderDrawer * orderDrawer;
-		cUpgradeDrawer * upgradeDrawer;
 		cMapDrawer * mapDrawer;
 		cMiniMapDrawer * miniMapDrawer;
 		cParticleDrawer * particleDrawer;

@@ -23,12 +23,14 @@ cBuildingListFactory *cBuildingListFactory::getInstance() {
 	return instance;
 }
 
-int cBuildingListFactory::getButtonDrawX() {
-	return game.screen_x - 127;
+int cBuildingListFactory::getButtonDrawY() {
+    // 6 pixels margin below horizontal candybar, so it lines up nice horizontally with the sphere
+    // of the vertical candybar at the left of the building list icons
+	return cSideBar::TopBarHeight + cSideBar::HeightOfMinimap + cSideBar::HorizontalCandyBarHeight + 6;
 }
 
-int cBuildingListFactory::getButtonDrawYStart() {
-	return 45;
+int cBuildingListFactory::getButtonDrawXStart() {
+	return (game.screen_x - 200) + 2;
 }
 
 
@@ -40,137 +42,98 @@ int cBuildingListFactory::getButtonDrawYStart() {
  * @param techlevel
  * @param house
  */
-void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int techlevel, int house) {
+void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int house) {
 	assert(list != NULL);
 
 	// first clear the list
 	list->removeAllItems();
 
-	// X is the same for all list buttons
-	list->setButtonDrawX(getButtonDrawX());
+	// Y is the same for all list buttons
+	list->setButtonDrawY(getButtonDrawY());
+
+    int widthOfButtonIncludingMargin = 33;
+    list->setButtonWidth(widthOfButtonIncludingMargin);
+//    list->setButtonHeight()
+
+	int startX = getButtonDrawXStart();
 
 	list->setAvailable(false);
 
 	// now set it up
 	if (listId == LIST_CONSTYARD) {
-		list->setButtonDrawY(45);
-		list->setButtonIconIdPressed(BTN_CONST_PRESSED);
-		list->setButtonIconIdUnpressed(BTN_CONST_UNPRESSED);
-
-		// add items
-		list->addItemToList(new cBuildingListItem(SLAB1, structures[SLAB1], list));
-
-		if (techlevel >= 2) {
-			if (house == ATREIDES || house == ORDOS) {
-				list->addItemToList(new cBuildingListItem(BARRACKS, structures[BARRACKS], list));
-			}
-			if (house == HARKONNEN) {
-				list->addItemToList(new cBuildingListItem(WOR, structures[WOR], list));
-			}
-		}
-
-		if (techlevel >= 4) {
-			//list->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4])); // only available after upgrading
-			list->addItemToList(new cBuildingListItem(WALL, structures[WALL], list));
-		}
-
-		list->addItemToList(new cBuildingListItem(WINDTRAP, structures[WINDTRAP], list));
+		list->setButtonDrawX(startX);
+		list->setButtonIconIdPressed(LIST_BTN_CONSTYARD);
+		list->setButtonIconIdUnpressed(LIST_BTN_CONSTYARD);
 	}
+
+
+    startX += widthOfButtonIncludingMargin;
 
 	// other lists, have 40 pixels more Y , but the X remains the same
 	// now set it up
-	if (listId == LIST_INFANTRY) {
-		list->setButtonDrawY(85);
-		if (house == ATREIDES) {
-			list->setButtonIconIdPressed(BTN_INFANTRY_PRESSED);
-			list->setButtonIconIdUnpressed(BTN_INFANTRY_UNPRESSED);
-			// add items
-			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list));
-		} else if (house == HARKONNEN) {
-			list->setButtonIconIdPressed(BTN_TROOPER_PRESSED);
-			list->setButtonIconIdUnpressed(BTN_TROOPER_UNPRESSED);
-			// add items
-			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
-		} else if (house == ORDOS) {
-			list->setButtonIconIdPressed(BTN_TRPINF_PRESSED);
-			list->setButtonIconIdUnpressed(BTN_TRPINF_UNPRESSED);
-			// add items , since ordos can have both, it is determined on structure place
-//			list->addItemToList(new cBuildingListItem(SOLDIER, units[SOLDIER], list));
-//			list->addItemToList(new cBuildingListItem(TROOPER, units[TROOPER], list));
-		} else {
-			// do nothing
-		}
+	if (listId == LIST_FOOT_UNITS) {
+        list->setButtonDrawX(startX);
+        list->setButtonIconIdPressed(LIST_BTN_INFANTRY);
+        list->setButtonIconIdUnpressed(LIST_BTN_INFANTRY);
 	}
 
-	if (listId == LIST_LIGHTFC) {
-		list->setButtonDrawY(125);
-		list->setButtonIconIdPressed(BTN_LIGHTFC_PRESSED);
-		list->setButtonIconIdUnpressed(BTN_LIGHTFC_UNPRESSED);
+    startX += widthOfButtonIncludingMargin;
 
-		if (house == ATREIDES) {
-			list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE], list));
-		} else if (house == ORDOS) {
-			list->addItemToList(new cBuildingListItem(RAIDER, units[RAIDER], list));
-		} else if (house == HARKONNEN) {
-			list->addItemToList(new cBuildingListItem(QUAD, units[QUAD], list));
-		} else {
-			list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE], list));
-			list->addItemToList(new cBuildingListItem(RAIDER, units[RAIDER], list));
-			list->addItemToList(new cBuildingListItem(QUAD, units[QUAD], list));
-		}
+	if (listId == LIST_UNITS) {
+		list->setButtonDrawX(startX);
+		list->setButtonIconIdPressed(LIST_BTN_FACTORY);
+		list->setButtonIconIdUnpressed(LIST_BTN_FACTORY);
 	}
 
-	if (listId == LIST_HEAVYFC) {
-		list->setButtonDrawY(165);
-		list->setButtonIconIdPressed(BTN_HEAVYFC_PRESSED);
-		list->setButtonIconIdUnpressed(BTN_HEAVYFC_UNPRESSED);
-
-		list->addItemToList(new cBuildingListItem(TANK, units[TANK], list));
-		list->addItemToList(new cBuildingListItem(HARVESTER, units[HARVESTER], list));
-	}
-
-	if (listId == LIST_ORNI) {
-		list->setButtonDrawY(205);
-		list->setButtonIconIdPressed(BTN_ORNI_PRESSED);
-		list->setButtonIconIdUnpressed(BTN_ORNI_UNPRESSED);
-
-		list->addItemToList(new cBuildingListItem(CARRYALL, units[CARRYALL], list));
-	}
+	startX += widthOfButtonIncludingMargin;
 
 	if (listId == LIST_STARPORT) {
-		list->setButtonDrawY(245);
-		list->setButtonIconIdPressed(BTN_STARPORT_PRESSED);
-		list->setButtonIconIdUnpressed(BTN_STARPORT_UNPRESSED);
+        list->setButtonDrawX(startX);
+		list->setButtonIconIdPressed(LIST_BTN_STARPORT);
+		list->setButtonIconIdUnpressed(LIST_BTN_STARPORT);
 
-		list->addItemToList(new cBuildingListItem(INFANTRY, units[INFANTRY], list));
-		list->addItemToList(new cBuildingListItem(TROOPERS, units[TROOPERS], list));
-		list->addItemToList(new cBuildingListItem(TRIKE, units[TRIKE], list));
-		list->addItemToList(new cBuildingListItem(QUAD, units[QUAD], list));
-		list->addItemToList(new cBuildingListItem(TANK, units[TANK], list));
-		list->addItemToList(new cBuildingListItem(MCV, units[MCV], list));
-		list->addItemToList(new cBuildingListItem(HARVESTER, units[HARVESTER], list));
-		list->addItemToList(new cBuildingListItem(LAUNCHER, units[LAUNCHER], list));
-		list->addItemToList(new cBuildingListItem(SIEGETANK, units[SIEGETANK], list));
-		list->addItemToList(new cBuildingListItem(CARRYALL, units[CARRYALL], list));
+		list->addUnitToList(INFANTRY, 0);
+		list->addUnitToList(TROOPERS, 0);
+		list->addUnitToList(TRIKE, 0);
+		list->addUnitToList(QUAD, 0);
+		list->addUnitToList(TANK, 0);
+		list->addUnitToList(MCV, 0);
+		list->addUnitToList(HARVESTER, 0);
+		list->addUnitToList(LAUNCHER, 0);
+		list->addUnitToList(SIEGETANK, 0);
+		list->addUnitToList(CARRYALL, 0);
 	}
 
+	startX += widthOfButtonIncludingMargin;
+
 	if (listId == LIST_PALACE) {
-		list->setButtonDrawY(285);
-		list->setButtonIconIdPressed(BTN_PALACE_PRESSED);
-		list->setButtonIconIdUnpressed(BTN_PALACE_UNPRESSED);
+        list->setButtonDrawX(startX);
+		list->setButtonIconIdPressed(LIST_BTN_PALACE);
+		list->setButtonIconIdUnpressed(LIST_BTN_PALACE);
 
 		// special weapons
 		switch (house) {
 			case ATREIDES:
-				list->addItemToList(new cBuildingListItem(UNIT_FREMEN_THREE, units[UNIT_FREMEN_THREE], list));
+				list->addUnitToList(UNIT_FREMEN_THREE, 0);
 				break;
 			case HARKONNEN:
-				list->addItemToList(new cBuildingListItem(MISSILE, units[MISSILE], list));
+				list->addUnitToList(MISSILE,0);
 				break;
 			case ORDOS:
-				list->addItemToList(new cBuildingListItem(SABOTEUR, units[SABOTEUR], list));
+				list->addUnitToList(SABOTEUR, 0);
 				break;
 		}
+	}
+
+	startX += widthOfButtonIncludingMargin;
+
+	if (listId == LIST_UPGRADES) {
+        list->setButtonDrawX(startX);
+        // temp, use CONST YARD
+		list->setButtonIconIdPressed(LIST_BTN_UPGRADE);
+		list->setButtonIconIdUnpressed(LIST_BTN_UPGRADE);
+
+		// the contents of the list is determined elsewhere
 	}
 
 }
@@ -182,9 +145,9 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int t
  * @param techlevel
  * @return
  */
-cBuildingList * cBuildingListFactory::createList(int listId, int techlevel, int house) {
+cBuildingList * cBuildingListFactory::createList(int listId, int house) {
 	cBuildingList * list = new cBuildingList(listId);
-    initializeList(list, listId, techlevel, house);
+    initializeList(list, listId, house);
 	list->setTypeOfList(listId); // list id == type (see cSideBarFactory)
 	return list;
 }

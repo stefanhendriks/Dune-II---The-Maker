@@ -39,7 +39,7 @@ int cStructureUtils::findStarportToDeployUnit(cPlayer * player) {
 	int playerId = player->getId();
 
 	// check primary building first if set
-	int primaryBuildingOfStructureType = player->iPrimaryBuilding[STARPORT];
+	int primaryBuildingOfStructureType = player->getPrimaryStructureForStructureType(STARPORT);
 
 	if (primaryBuildingOfStructureType > -1) {
 		cAbstractStructure * theStructure = structure[primaryBuildingOfStructureType];
@@ -106,7 +106,7 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureTy
 	}
 
 	// check primary building first if set
-	int primaryBuildingOfStructureType = player->iPrimaryBuilding[structureType];
+	int primaryBuildingOfStructureType = player->getPrimaryStructureForStructureType(structureType);
 
 	if (primaryBuildingOfStructureType > -1) {
 		cAbstractStructure * theStructure = structure[primaryBuildingOfStructureType];
@@ -130,7 +130,7 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureTy
 
 	// assign as primary building
 	if (structureIdFound > -1) {
-		player->iPrimaryBuilding[structureType] = structureIdFound;
+		player->setPrimaryBuildingForStructureType(structureType, structureIdFound);
 	}
 
 	return structureIdFound;
@@ -139,43 +139,52 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureTy
 /**
  * Depending on list type, return a structure type.
  */
-int cStructureUtils::findStructureTypeByTypeOfList(cBuildingList *list, cBuildingListItem *item) {
-	assert(list);
-	assert(item);
-	assert(item->getBuildType() == UNIT);
+int cStructureUtils::findStructureTypeByTypeOfList(cBuildingListItem *item) {
+    if (!item) return -1;
+	if (item->getBuildType() != UNIT) return -1;
 
-	int listTypeId = list->getType();
-	char msg[255];
-	sprintf(msg, "going to find list with listTypeId [%d]", listTypeId);
-	cLogger::getInstance()->logCommentLine(msg);
-	switch (listTypeId) {
-		case LIST_CONSTYARD:
-			// a unit, and then built from a constyard list
-			assert(false);
-			return CONSTYARD;
-		case LIST_HEAVYFC:
-			return HEAVYFACTORY;
-		case LIST_INFANTRY:
-			if (item->getBuildId() == INFANTRY || item->getBuildId() == SOLDIER) {
-				return BARRACKS;
-			}
-			return WOR;
-		case LIST_LIGHTFC:
-			return LIGHTFACTORY;
-		case LIST_ORNI:
-			return HIGHTECH;
-		case LIST_PALACE:
-			return PALACE;
-		case LIST_NONE:
-			assert(false);
-			return -1;
-		case LIST_STARPORT:
-			return STARPORT;
-		default:
-			assert(false);
-			return -1;
+	switch(item->getBuildId()) {
+        case INFANTRY:
+            return BARRACKS;
+        case SOLDIER:
+            return BARRACKS;
+        case TROOPER:
+            return WOR;
+        case TROOPERS:
+            return WOR;
+        case QUAD:
+            return LIGHTFACTORY;
+        case TRIKE:
+            return LIGHTFACTORY;
+        case RAIDER:
+            return LIGHTFACTORY;
+        case TANK:
+            return HEAVYFACTORY;
+        case SIEGETANK:
+            return HEAVYFACTORY;
+        case LAUNCHER:
+            return HEAVYFACTORY;
+        case DEVASTATOR:
+            return HEAVYFACTORY;
+        case HARVESTER:
+            return HEAVYFACTORY;
+        case MCV:
+            return HEAVYFACTORY;
+        case SONICTANK:
+            return HEAVYFACTORY;
+        case DEVIATOR:
+            return HEAVYFACTORY;
+        case ORNITHOPTER:
+            return HIGHTECH;
+        case CARRYALL:
+            return HIGHTECH;
+        default:
+            char msg[255];
+            sprintf(msg, "Item buildId is [%d], which is not mapped", item->getBuildId());
+            logbook(msg);
+            assert(false);
+            return -1;
 	}
-	return -1;
 }
 
 int cStructureUtils::findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(int cell, int structureType, cPlayer * player) {
@@ -268,8 +277,6 @@ int cStructureUtils::getTotalPowerUsageForPlayer(cPlayer * player) {
 			if (theStructure->getPlayer()->getId() == player->getId()) {
 				int powerUsageOfStructure = theStructure->getPowerUsage();
 				totalPowerUsage += powerUsageOfStructure;
-			} else if (theStructure->getType() == CONSTYARD) {
-				totalPowerUsage += 4;
 			}
 		}
 	}
@@ -281,21 +288,21 @@ int cStructureUtils::getTotalSpiceCapacityForPlayer(cPlayer * player) {
 	int totalCapacity = 0;
 	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
-		if (theStructure) {
-			if (theStructure->getPlayer()->getId() == player->getId()) {
-				int capacity = 0;
-				if (theStructure->getType() == SILO) {
-					cSpiceSilo * spiceSilo = dynamic_cast<cSpiceSilo*>(theStructure);
-					capacity = spiceSilo->getSpiceSiloCapacity();
-				} else if (theStructure->getType() == REFINERY) {
-					cRefinery * refinery = dynamic_cast<cRefinery*>(theStructure);
-					capacity = refinery->getSpiceSiloCapacity();
-				} else if (theStructure->getType() == CONSTYARD) {
-					capacity = 5;
-				}
-				totalCapacity += capacity;
-			}
-		}
+		if (theStructure == nullptr) continue;
+		if (!theStructure->isValid()) continue;
+        if (theStructure->getPlayer()->getId() != player->getId()) continue; // does not belong to player
+
+        int capacity = 0;
+        if (theStructure->getType() == SILO) {
+            cSpiceSilo * spiceSilo = dynamic_cast<cSpiceSilo*>(theStructure);
+            capacity = spiceSilo->getSpiceSiloCapacity();
+        } else if (theStructure->getType() == REFINERY) {
+            cRefinery * refinery = dynamic_cast<cRefinery*>(theStructure);
+            capacity = refinery->getSpiceSiloCapacity();
+        } else if (theStructure->getType() == CONSTYARD) {
+            capacity = 5;
+        }
+        totalCapacity += capacity;
 	}
 	return totalCapacity;
 }
@@ -305,17 +312,18 @@ int cStructureUtils::getTotalPowerOutForPlayer(cPlayer * player) {
 	int totalPowerOut = 0;
 	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
-		if (theStructure) {
-			if (theStructure->getPlayer()->getId() == player->getId()) {
-				if (theStructure->getType() == WINDTRAP) {
-					cWindTrap * windTrap = dynamic_cast<cWindTrap*>(theStructure);
-					int powerOutOfStructure = windTrap->getPowerOut();
-					totalPowerOut += powerOutOfStructure;
-				} else if (theStructure->getType() == CONSTYARD) {
-					totalPowerOut += 5;
-				}
-			}
-		}
+		if (theStructure == nullptr) continue;
+		if (!theStructure->isValid()) continue;
+		if (theStructure->getPlayer()->getId() != player->getId()) continue; // not for player
+
+		// TODO abstract it further so it wont need to cast/check for structure type
+        if (theStructure->getType() == WINDTRAP) {
+            cWindTrap * windTrap = dynamic_cast<cWindTrap*>(theStructure);
+            int powerOutOfStructure = windTrap->getPowerOut();
+            totalPowerOut += powerOutOfStructure;
+        } else if (theStructure->getType() == CONSTYARD) {
+            totalPowerOut += 5;
+        }
 	}
 	return totalPowerOut;
 }

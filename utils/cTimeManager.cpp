@@ -152,11 +152,6 @@ void cTimeManager::handleTimerGlobal() {
 					if (itemBuilder) {
 						itemBuilder->think();
 					}
-
-					cUpgradeBuilder * upgradeBuilder = player[i].getUpgradeBuilder();
-					if (upgradeBuilder) {
-						upgradeBuilder->processUpgrades();
-					}
 				}
 
 
@@ -173,50 +168,40 @@ void cTimeManager::handleTimerGlobal() {
 
 				// units think (move only)
 				for (int i=0; i < MAX_UNITS; i++) {
-					if (unit[i].isValid()) {
-						// move
-						if (unit[i].iAction == ACTION_MOVE || unit[i].iAction == ACTION_CHASE)
-							unit[i].think_move();
+                    cUnit &cUnit = unit[i];
+                    if (!cUnit.isValid()) continue;
 
-						// guard
-						if (unit[i].iAction == ACTION_GUARD)
-							unit[i].think_guard();
+                    cUnit.think_position();
+
+                    // aircraft
+                    if (cUnit.isAirbornUnit()) {
+                        cUnit.think_move_air();
+                    }
+
+                    // move
+                    if (cUnit.iAction == ACTION_MOVE || cUnit.iAction == ACTION_CHASE)
+                        cUnit.think_move();
+
+                    // guard
+                    if (cUnit.iAction == ACTION_GUARD)
+                        cUnit.think_guard();
 
 
-						// move in air
-						if (unit[i].iType == ORNITHOPTER &&
-							unit[i].iAction == ACTION_ATTACK)
-							unit[i].think_move_air(); // keep flying even when attacking
-
-
-					}
-					else
-					{
-
-					}
+                    // move in air
+                    if (cUnit.iType == ORNITHOPTER &&
+                        cUnit.iAction == ACTION_ATTACK)
+                        cUnit.think_move_air(); // keep flying even when attacking
 				}
 
-					for (int i=0; i < MAX_PARTICLES; i++) {
-						if (particle[i].isValid()) particle[i].think();
-					}
+                for (int i=0; i < MAX_PARTICLES; i++) {
+                    if (particle[i].isValid()) particle[i].think();
+                }
 
-					/*
-					BEGIN_PROF("Players think");
-					for (i=0; i < MAX_PLAYERS; i++)
-					player[i].think(i);
-					END_PROF();
-
-					} // game playing
-					*/
-
-
-					// when not drawing the options, the game does all it needs to do
-					// bullets think
-					for (int i=0; i < MAX_BULLETS; i++)
-						if (bullet[i].bAlive)
-							bullet[i].think();
-
-
+                // when not drawing the options, the game does all it needs to do
+                // bullets think
+                for (int i=0; i < MAX_BULLETS; i++)
+                    if (bullet[i].bAlive)
+                        bullet[i].think();
 		}
 
 		if (game.isState(GAME_WINNING))
@@ -224,19 +209,7 @@ void cTimeManager::handleTimerGlobal() {
 
 		}
 
-		// Fading of selected stuff
-		if (game.bFadeSelectDir)
-		{
-			game.fade_select++;
-			if (game.fade_select > 254)
-				game.bFadeSelectDir=false;
-		}
-		else
-		{
-			game.fade_select--;
-			if (game.fade_select < 32)
-				game.bFadeSelectDir = true;
-		}
+		game.think_fading();
 
 		timerGlobal--;
   }
