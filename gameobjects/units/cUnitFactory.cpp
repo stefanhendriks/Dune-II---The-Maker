@@ -5,7 +5,6 @@ cUnitFactory *cUnitFactory::instance = NULL;
 cUnitFactory::cUnitFactory() {
 }
 
-
 cUnitFactory *cUnitFactory::getInstance() {
 	if (instance == NULL) {
 		instance = new cUnitFactory();
@@ -18,8 +17,6 @@ cAbstractUnit *cUnitFactory::createUnit(int type) {
 	// return new c<bla>Unit (extends cAbstractUnit)
 	return NULL;
 }
-
-
 
 void cUnitFactory::deleteUnit(cAbstractUnit *unit) {
 	// delete memory that was aquired

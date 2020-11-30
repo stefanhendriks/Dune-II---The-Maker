@@ -12,12 +12,18 @@
 
 // TODO: Clean this class up big time.
 
+#ifndef D2TM_GAME_H
+#define D2TM_GAME_H
+
+// forward declaration :/ sigh should really look into these includes and such
+class cRectangle;
 
 class cGame {
 
 public:
 
 	cGame();
+	~cGame();
 
 	std::string game_filename;
 
@@ -48,6 +54,7 @@ public:
     int ini_screen_height;
 
     bool bPlaySound;            // play sound?
+    bool bDisableAI;            // disable AI thinking?
     bool bPlayMusic;            // play any music?
     bool bMp3;                  // use mp3 files instead of midi
 
@@ -70,9 +77,6 @@ public:
 
 	int selected_structure;
 	int hover_unit;
-
-	int fade_select;        // fade color when selected
-    bool bFadeSelectDir;    // fade select direction
 
 	int paths_created;
 
@@ -137,14 +141,21 @@ public:
 
 	int getMaxVolume() { return iMaxVolume; }
 
-	cSoundPlayer * getSoundPlayer() { return soundPlayer; }
+	cSoundPlayer * getSoundPlayer() {
+	    return soundPlayer;
+	}
 
-	void draw_placeit();
-	void combat_mouse();
+    void combat_mouse();
 
 	int getGroupNumberFromKeyboard();
 	void destroyAllUnits(bool);
 	void destroyAllStructures(bool);
+
+    int getFadeSelect();
+
+    void think_fading();
+
+    cRectangle * mapViewport;
 
 private:
 	void poll();
@@ -174,5 +185,11 @@ private:
 	int iMaxVolume;
 
 	cSoundPlayer *soundPlayer;
+
+    int fade_select;        // fade color when selected
+    bool bFadeSelectDir;    // fade select direction
+
+    void init_skirmish() const;
 };
 
+#endif

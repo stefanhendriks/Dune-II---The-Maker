@@ -10,6 +10,11 @@
 
 #define DEBUGGING bDoDebug
 
+
+#define MOUSECELL_TOPBAR  -1
+#define MOUSECELL_MINIMAP -2
+#define MOUSECELL_SIDEBAR -3
+
 #define IDEAL_FPS	60
 
 // MAP ID
@@ -137,6 +142,9 @@
 // UNITS stuff
 #define MAX_UNITTYPES       50    // maximum of unit types
 
+// UPGRADES stuff
+#define MAX_UPGRADETYPES       50    // maximum of upgrades
+
 // STRUCTURES stuff
 #define MAX_STRUCTURETYPES  50    // max of building types
 
@@ -146,7 +154,6 @@
 // Lists stuff
 #define MAX_ICONS       30      // max of 30 icons per list
 #define MAX_ITEMS		MAX_ICONS
-//#define MAX_LISTS       25      // max of 25 lists
 
 // #TIMERS
 #define TIMER_GUARD         10
@@ -215,6 +222,27 @@
 #define SLAB4             25      // 4 slabs
 #define WALL              26      // 1 wall
 
+// Upgrade types
+#define UPGRADE_TYPE_CONSTYARD_SLAB4              0 // 4SLAB upgrade
+#define UPGRADE_TYPE_CONSTYARD_RTURRET            1 // Rturret
+#define UPGRADE_TYPE_LIGHTFCTRY_QUAD              2 // upgrade LightFctry to get Quad
+
+// Heavy Factory: harkonnen / atreides / ordos
+#define UPGRADE_TYPE_HEAVYFCTRY_MVC               3 // upgrade HeavyFctry to get MVC
+// Heavy Factory: harkonnen / atreides only
+#define UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER          4 // upgrade HeavyFctry to get Rocker Launcher
+#define UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK         5 // upgrade HeavyFctry to get Siege Tank
+// Heavy Factory: ordos only (ordos can only access Launcher via Starport)
+#define UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD     6 // upgrade HeavyFctry to get Siege Tank (later techlevel, after MVC)
+
+// Hi-Tech:
+#define UPGRADE_TYPE_HITECH_ORNI                  7 // upgrade HiTech to get Ornithopter
+
+// WOR (Harkonnen & Ordos)
+#define UPGRADE_TYPE_WOR_TROOPERS                 8 // upgrade WOR to get Troopers
+
+// Barracks (Atreides & Ordos)
+#define UPGRADE_TYPE_BARRACKS_INFANTRY            9 // upgrade BARRACKS to get Infantry
 
 #define MUSIC_WIN           0
 #define MUSIC_LOSE          1

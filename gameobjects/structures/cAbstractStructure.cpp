@@ -139,20 +139,22 @@ void cAbstractStructure::die()
     structure[iIndex]=NULL;
 
     // Destroy structure, take stuff in effect for the player
-    player[iPlayer].iStructures[getType()]--; // remove from player building indexes
+    cPlayer &thePlayer = player[iPlayer];
+
+    thePlayer.decreaseStructureAmount(getType()); // remove from player building indexes
 
     // fix up power usage
-    player[iPlayer].use_power -= structures[getType()].power_drain;
+    thePlayer.use_power -= structures[getType()].power_drain;
 
     // less power
-    player[iPlayer].has_power -= structures[getType()].power_give;
+    thePlayer.has_power -= structures[getType()].power_give;
 
 	if (getType() == SILO) {
-		player[iPlayer].max_credits -= 1000;
+        thePlayer.max_credits -= 1000;
 	}
 
 	if (getType() == REFINERY) {
-		player[iPlayer].max_credits -= 1500;
+        thePlayer.max_credits -= 1500;
 	}
 
     // UnitID > -1, means the unit inside will die too
@@ -250,20 +252,20 @@ int cAbstractStructure::iFreeAround()
 	int iCx=0;
 	int iCy=0;
 
-	for (int x = iStartX; x < iEndX; x++)
-		for (int y = iStartY; y < iEndY; y++)
-		{
-			iCx=x;
-			iCy=y;
+	for (int x = iStartX; x < iEndX; x++) {
+        for (int y = iStartY; y < iEndY; y++) {
+            iCx = x;
+            iCy = y;
 
-			FIX_BORDER_POS(iCx, iCy);
+            FIX_BORDER_POS(iCx, iCy);
 
-			int cll = iCellMake(iCx, iCy);
+            int cll = iCellMake(iCx, iCy);
 
-			if (map.occupied(cll) == false) {
-				return cll;
-			}
-		}
+            if (!map.occupied(cll)) {
+                return cll;
+            }
+        }
+    }
 
 	return -1; // fail
 }
@@ -478,12 +480,11 @@ int cAbstractStructure::getPercentageNotPaved() {
 
 bool cAbstractStructure::isPrimary() {
 	cPlayer * thePlayer = getPlayer();
-	return thePlayer->iPrimaryBuilding[getType()] == id;
+	return thePlayer->getPrimaryStructureForStructureType(getType()) == id;
 }
 
 int cAbstractStructure::getPowerUsage() {
-	s_Structures structure = getS_StructuresType();
-	return structure.power_drain;
+	return getS_StructuresType().power_drain;
 }
 
 bool cAbstractStructure::isValid()
@@ -512,4 +513,8 @@ int cAbstractStructure::getWidthInPixels() {
 
 int cAbstractStructure::getHeightInPixels() {
     return getS_StructuresType().bmp_height;
+}
+
+bool cAbstractStructure::isDamaged() {
+    return getHitPoints() < getMaxHP();
 }

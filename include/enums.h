@@ -17,6 +17,7 @@ enum eLogComponent {
 	COMP_BULLET,
 	COMP_AI,
 	COMP_UPGRADE_LIST,
+	COMP_BUILDING_LIST_UPDATER,
 	COMP_SIDEBAR,
 	COMP_MAP,
 	COMP_NONE,
@@ -46,9 +47,21 @@ enum eLogLevel {
 	LOG_FATAL
 };
 
-enum eUpgradeType {
-	UPGRADE_ONE, UPGRADE_TWO, UPGRADE_THREE
+// 0x01 ==   1 == "00000001"
+// 0x02 ==   2 == "00000010"
+// 0x04 ==   4 == "00000100"
+// 0x08 ==   8 == "00001000"
+// 0x10 ==  16 == "00010000"
+// 0x20 ==  32 == "00100000"
+// 0x40 ==  64 == "01000000"
+// 0x80 == 128 == "10000000"
+enum eHouseBitFlag {
+    Atreides = 0x01,
+    Ordos = 0x02,
+    Harkonnen = 0x04,
+    Sardaukar = 0x08,
+    Fremen = 0x10,
+    Unknown = 0x20
 };
-
 
 #endif /* ENUMS_H_ */

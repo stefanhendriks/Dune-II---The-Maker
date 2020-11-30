@@ -225,22 +225,6 @@ bool MOUSE_BTN_RIGHT() {
 }
 
 
-/**
- * Returns true when a single mouse click has been detected. (that is, hold
- * and released left mouse button).
- *
- * @return
- */
-bool mouse_pressed_left()
-{
-	return cMouse::isLeftButtonClicked();
-}
-
-// Did we press the right mouse button?
-bool mouse_pressed_right()
-{
-	return cMouse::isRightButtonClicked();
-}
 /*****************************
  Unit Rules
  *****************************/
@@ -256,9 +240,8 @@ void install_units()
 
 
   // some things for ALL unit types; initialization
-  for (int i = 0; i < MAX_UNITTYPES; i++)
-  {
-    units[i].bmp              = (BITMAP *)gfxdata[UNIT_QUAD].dat; // in case an invalid unit is choosen, it is a quad! :D
+  for (int i = 0; i < MAX_UNITTYPES; i++) {
+    units[i].bmp              = (BITMAP *)gfxdata[UNIT_QUAD].dat; // default bitmap is a quad!
     units[i].top              = NULL;  // no top
     units[i].shadow           = NULL;  // no shadow (deliverd with picture itself)
     units[i].bmp_width        = 0;
@@ -277,6 +260,7 @@ void install_units()
     units[i].squish           = true;     // most units can squish
     units[i].range            = -1;
     units[i].sight            = -1;
+    units[i].queuable         = true;
 
     // harvester properties
     units[i].harvesting_amount= 0;
@@ -849,6 +833,184 @@ void install_bullets()
 }
 
 
+void install_upgrades() {
+    logbook("Installing:  UPGRADES");
+    for (int i = 0; i < MAX_UPGRADETYPES; i++) {
+        upgrades[i].enabled = false;
+        upgrades[i].techLevel = -1;
+        upgrades[i].house = 0;
+        upgrades[i].needsStructureType = -1;
+        upgrades[i].icon = ICON_STR_PALACE;
+        upgrades[i].cost = 100;
+        upgrades[i].atUpgradeLevel = -1;
+        upgrades[i].structureType = CONSTYARD;
+        upgrades[i].providesTypeId = -1;
+        upgrades[i].providesType = STRUCTURE;
+        upgrades[i].providesTypeList = -1;
+        upgrades[i].providesTypeSubList = -1;
+        upgrades[i].buildTime = 10;
+        strcpy(upgrades[i].description, "Upgrade");
+    }
+
+    // CONSTYARD UPGRADES
+
+    // First upgrade Constyard: 4Slabs
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].enabled = true;
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].house = Atreides | Harkonnen | Ordos;
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].techLevel = 4; // start from mission 4
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].icon = ICON_STR_4SLAB;
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].cost = structures[CONSTYARD].cost / 2;
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].structureType = CONSTYARD;
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].atUpgradeLevel = 0;
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesType = STRUCTURE;
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeId = SLAB4;
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeList = LIST_CONSTYARD;
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeSubList = SUBLIST_CONSTYARD;
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].buildTime = 50;
+    strcpy(upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].description, "Build 4 concrete slabs at once");
+
+    // Second upgrade Constyard: Rturret
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].enabled = true;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].house = Atreides | Harkonnen | Ordos;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].techLevel = 6;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].icon = ICON_STR_RTURRET;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].cost = structures[CONSTYARD].cost / 2;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].needsStructureType = RADAR;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].structureType = CONSTYARD;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].atUpgradeLevel = 1;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesType = STRUCTURE;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeId = RTURRET;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeList = LIST_CONSTYARD;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeSubList = SUBLIST_CONSTYARD;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].buildTime = 150;
+    strcpy(upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].description, "Build Rocket Turret");
+
+    // LIGHTFACTORY UPGRADES, only for ATREIDES and ORDOS
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].enabled = true;
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].house = Atreides | Ordos;
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].techLevel = 3;
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].icon = ICON_UNIT_QUAD;
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].cost = structures[LIGHTFACTORY].cost / 2;
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].needsStructureType = LIGHTFACTORY;
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].structureType = LIGHTFACTORY;
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].atUpgradeLevel = 0;
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesType = UNIT;
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeId = QUAD;
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeList = LIST_UNITS;
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeSubList =  SUBLIST_LIGHTFCTRY;
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].buildTime = 150;
+    strcpy(upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].description, "Build Quad at Light Factory");
+
+    // HEAVYFACTORY UPGRADES:
+
+    // ALL HOUSES GET MVC
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].enabled = true;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].house = Atreides | Ordos | Harkonnen;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].techLevel = 4;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].icon = ICON_UNIT_MCV;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].cost = structures[HEAVYFACTORY].cost / 2;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].needsStructureType = HEAVYFACTORY;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].structureType = HEAVYFACTORY;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].atUpgradeLevel = 0;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesType = UNIT;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeId = MCV;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeList = LIST_UNITS;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeSubList = SUBLIST_HEAVYFCTRY;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].buildTime = 150;
+    strcpy(upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].description, "Build MCV at Heavy Factory");
+
+    // Harkonnen/Atreides only
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].enabled = true;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].house = Atreides | Harkonnen;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].techLevel = 5;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].icon = ICON_UNIT_LAUNCHER;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].cost = structures[HEAVYFACTORY].cost / 2;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].needsStructureType = HEAVYFACTORY;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].structureType = HEAVYFACTORY;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].atUpgradeLevel = 1; // requires MCV upgrade first
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesType = UNIT;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeId = LAUNCHER;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeList = LIST_UNITS;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeSubList = SUBLIST_HEAVYFCTRY;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].buildTime = 150;
+    strcpy(upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].description, "Build Rocket Launcher at Heavy Factory");
+
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].enabled = true;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].house = Atreides | Harkonnen;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].techLevel = 6;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].icon = ICON_UNIT_SIEGETANK;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].cost = structures[HEAVYFACTORY].cost / 2;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].needsStructureType = HEAVYFACTORY;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].structureType = HEAVYFACTORY;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].atUpgradeLevel = 2; // After upgrade to Rocket Launcher
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesType = UNIT;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeId = SIEGETANK;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeList = LIST_UNITS;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeSubList = SUBLIST_HEAVYFCTRY;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].buildTime = 150;
+    strcpy(upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].description, "Build Siege Tank at Heavy Factory");
+
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].enabled = true;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].house = Ordos;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].techLevel = 6;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].icon = ICON_UNIT_SIEGETANK;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].cost = structures[HEAVYFACTORY].cost / 2;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].needsStructureType = HEAVYFACTORY;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].structureType = HEAVYFACTORY;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].atUpgradeLevel = 1; // After upgrade to MCV
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesType = UNIT;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeId = SIEGETANK;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeList = LIST_UNITS;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeSubList = SUBLIST_HEAVYFCTRY;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].buildTime = 150;
+    strcpy(upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].description, "Build Siege Tank at Heavy Factory");
+
+    // HI-TECH UPGRADES (Ordos/Atreides only)
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].enabled = true;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].house = Atreides | Ordos;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].techLevel = 8;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].icon = ICON_UNIT_ORNITHOPTER;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].cost = structures[HIGHTECH].cost / 2;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].structureType = HIGHTECH;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].atUpgradeLevel = 0; // After upgrade to MCV
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].providesType = UNIT;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].providesTypeId = ORNITHOPTER;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].providesTypeList = LIST_UNITS;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].providesTypeSubList = SUBLIST_HIGHTECH;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].buildTime = 150;
+    strcpy(upgrades[UPGRADE_TYPE_HITECH_ORNI].description, "Build Ornithopter at Hi-Tech");
+
+    // WOR (Harkonnen & Ordos)
+    upgrades[UPGRADE_TYPE_WOR_TROOPERS].enabled = true;
+    upgrades[UPGRADE_TYPE_WOR_TROOPERS].house = Harkonnen | Ordos;
+    upgrades[UPGRADE_TYPE_WOR_TROOPERS].techLevel = 3;
+    upgrades[UPGRADE_TYPE_WOR_TROOPERS].icon = ICON_UNIT_TROOPERS;
+    upgrades[UPGRADE_TYPE_WOR_TROOPERS].cost = structures[WOR].cost / 2;
+    upgrades[UPGRADE_TYPE_WOR_TROOPERS].structureType = WOR;
+    upgrades[UPGRADE_TYPE_WOR_TROOPERS].atUpgradeLevel = 0; // After upgrade to MCV
+    upgrades[UPGRADE_TYPE_WOR_TROOPERS].providesType = UNIT;
+    upgrades[UPGRADE_TYPE_WOR_TROOPERS].providesTypeId = TROOPERS;
+    upgrades[UPGRADE_TYPE_WOR_TROOPERS].providesTypeList = LIST_FOOT_UNITS;
+    upgrades[UPGRADE_TYPE_WOR_TROOPERS].providesTypeSubList = SUBLIST_TROOPERS;
+    upgrades[UPGRADE_TYPE_WOR_TROOPERS].buildTime = 150;
+    strcpy(upgrades[UPGRADE_TYPE_WOR_TROOPERS].description, "Build Troopers at WOR");
+
+    // BARRACKS (Atreides & Ordos)
+    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].enabled = true;
+    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].house = Atreides | Ordos;
+    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].techLevel = 3;
+    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].icon = ICON_UNIT_INFANTRY;
+    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].cost = structures[BARRACKS].cost / 2;
+    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].structureType = BARRACKS;
+    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].atUpgradeLevel = 0; // After upgrade to MCV
+    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].providesType = UNIT;
+    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeId = INFANTRY;
+    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeList = LIST_FOOT_UNITS;
+    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeSubList = SUBLIST_INFANTRY;
+    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;
+    strcpy(upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].description, "Build Infantry at Barracks");
+
+}
 
 
 /*****************************
@@ -874,6 +1036,7 @@ void install_structures() {
     structures[i].icon = -1; // stupid default icon
     structures[i].build_time = 0;
     structures[i].list = -1; // no list attached
+    structures[i].queuable = false;
     structures[i].configured = false;
     strcpy(structures[i].name,   "Unknown");
   }
@@ -885,6 +1048,7 @@ void install_structures() {
   structures[SLAB1].bmp_width = 16*2;
   structures[SLAB1].bmp_height = 16*2;
   structures[SLAB1].configured = true;
+  structures[SLAB1].queuable = true;
   strcpy(structures[SLAB1].name, "Concrete Slab");
 
   structures[SLAB4].bmp = (BITMAP *)gfxdata[PLACE_SLAB4].dat; // in case an invalid bitmap, we are a windtrap
@@ -893,6 +1057,7 @@ void install_structures() {
   structures[SLAB4].bmp_width = 32*2;
   structures[SLAB4].bmp_height = 32*2;
   structures[SLAB4].configured = true;
+  structures[SLAB4].queuable = true;
   strcpy(structures[SLAB4].name, "4 Concrete Slabs");
 
 
@@ -902,6 +1067,7 @@ void install_structures() {
   structures[WALL].hp   = 75;            // Not functional in-game, only for building
   structures[WALL].bmp_width = 16*2;
   structures[WALL].bmp_height = 16*2;
+  structures[WALL].queuable = true;
   structures[WALL].configured = true;
   strcpy(structures[WALL].name, "Concrete Wall");
 
@@ -1013,6 +1179,7 @@ void install_structures() {
   structures[SILO].fadecol = -1;
   structures[SILO].icon = ICON_STR_SILO;
   structures[SILO].configured = true;
+  structures[SILO].queuable = true;
   strcpy(structures[SILO].name, "Spice Storage Silo");
 
   // Structure    : Refinery

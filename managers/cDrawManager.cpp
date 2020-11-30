@@ -4,14 +4,13 @@ cDrawManager::cDrawManager(const cPlayer & thePlayer) : m_Player(thePlayer) {
 	assert(&thePlayer);
 	creditsDrawer = new CreditsDrawer(thePlayer);
 	sidebarDrawer = new cSideBarDrawer();
-	upgradeDrawer = new cUpgradeDrawer();
 	orderDrawer = new cOrderDrawer();
 	mapDrawer = new cMapDrawer(&map, thePlayer, mapCamera);
 	miniMapDrawer = new cMiniMapDrawer(&map, thePlayer, mapCamera);
 	particleDrawer = new cParticleDrawer();
 	messageDrawer = new cMessageDrawer();
 	messageBarDrawer = new cMessageBarDrawer();
-	placeitDrawer = new cPlaceItDrawer();
+	placeitDrawer = new cPlaceItDrawer(thePlayer);
 	structureDrawer = new cStructureDrawer();
 	mouseDrawer = new cMouseDrawer(thePlayer);
 
@@ -23,7 +22,6 @@ cDrawManager::cDrawManager(const cPlayer & thePlayer) : m_Player(thePlayer) {
 
 cDrawManager::~cDrawManager() {
 	delete sidebarDrawer;
-	delete upgradeDrawer;
 	delete orderDrawer;
 	delete creditsDrawer;
 	delete mapDrawer;
@@ -71,15 +69,14 @@ void cDrawManager::draw() {
 
 	drawStructurePlacing();
 	drawCredits();
-	drawUpgradeButton();
-	drawOrderButton();
 
 	// THE MESSAGE
 	drawMessage();
 
 	// DO COMBAT MOUSE (TODO: remove this eventually, as it updates state and that is not what
 	// this class should be doing)
-	game.combat_mouse();
+//    scare_mouse();
+    game.combat_mouse();
 
 	// MOUSE
 	drawMouse();
@@ -120,33 +117,18 @@ void cDrawManager::drawRallyPoint() {
     line(bmp_screen, startX, startY, endX, endY, player[HUMAN].getMinimapColor());
 }
 
-void cDrawManager::drawOrderButton() {
-	// draw the order button
-	if (m_Player.getSideBar()->getSelectedListID() == LIST_STARPORT) {
-		orderDrawer->drawOrderButton(m_Player);
-	}
-}
-
 void cDrawManager::drawSidebar() {
 	sidebarDrawer->drawSideBar(m_Player);
 }
 
-void cDrawManager::drawUpgradeButton() {
-	// draw the upgrade button
-	int selectedListId = m_Player.getSideBar()->getSelectedListID();
-	if (selectedListId > -1) {
-		upgradeDrawer->drawUpgradeButtonForSelectedListIfNeeded(m_Player);
-	}
-}
-
 void cDrawManager::drawStructurePlacing() {
-	if (game.bPlaceIt) {
-		cBuildingListItem *itemToPlace = m_Player.getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
-		if (itemToPlace) {
-			assert(placeitDrawer);
-			placeitDrawer->draw(itemToPlace);
-		}
-	}
+    if (!game.bPlaceIt) return;
+
+    cBuildingListItem *itemToPlace = m_Player.getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
+    if (itemToPlace == nullptr) return;
+
+    assert(placeitDrawer);
+    placeitDrawer->draw(itemToPlace);
 }
 
 void cDrawManager::drawMessage() {
@@ -159,7 +141,6 @@ void cDrawManager::drawMessage() {
 
 void cDrawManager::drawMouse() {
 	assert(mouseDrawer);
-	unscare_mouse();
     select_mouse_cursor(MOUSE_CURSOR_ALLEGRO);
 	mouseDrawer->draw();
 	cGameControlsContext *context = m_Player.getGameControlsContext();

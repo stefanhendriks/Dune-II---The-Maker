@@ -15,15 +15,15 @@ class cBuildingListFactory {
 
 	protected:
 		cBuildingListFactory();
-		int getButtonDrawX();
-		int getButtonDrawYStart();
+		int getButtonDrawY();
+		int getButtonDrawXStart();
 
 	public:
 		static cBuildingListFactory *getInstance();
 		virtual ~cBuildingListFactory();
 
-		void initializeList(cBuildingList *list, int listId, int techlevel, int house);
-		cBuildingList *createList(int listId, int techlevel, int house);
+		void initializeList(cBuildingList *list, int listId, int house);
+		cBuildingList *createList(int listId, int house);
 
 };
 

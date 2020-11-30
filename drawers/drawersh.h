@@ -21,7 +21,6 @@ class cMouse;
 #include "CreditsDrawer.h"
 
 #include "cBuildingListDrawer.h"
-#include "cUpgradeDrawer.h"
 #include "cOrderDrawer.h"
 
 #include "cSideBarDrawer.h"

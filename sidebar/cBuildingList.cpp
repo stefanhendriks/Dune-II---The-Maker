@@ -1,4 +1,7 @@
+#include <vector>
 #include "../include/d2tmh.h"
+#include "cBuildingList.h"
+
 
 cBuildingList::cBuildingList(int theId) {
 	TIMER_progress = 0;
@@ -6,14 +9,11 @@ cBuildingList::cBuildingList(int theId) {
 	buttonIconIdPressed = 0;	// the button to draw at the left of the list
 	buttonDrawX = 0;
 	buttonDrawY = 0;
-	scrollingOffset = 0; 	// the offset for scrolling through the list.
 	available = false;		 // is this list available?
 	memset(items, 0, sizeof(items));
 	typeOfList = theId;
-	upgradeLevel = 0;
-	upgrading = false;
 	maxItems = 0;
-	acceptsOrders = true;
+	acceptsOrders = true; // at default true, will be set to FALSE/TRUE by starport logic for starport list only
 }
 
 cBuildingList::~cBuildingList() {
@@ -22,20 +22,17 @@ cBuildingList::~cBuildingList() {
 	buttonIconIdPressed = 0;	// the button to draw at the left of the list
 	buttonDrawX = 0;
 	buttonDrawY = 0;
-	scrollingOffset = 0; 	// the offset for scrolling through the list.
 	available = false;		 // is this list available?
 	removeAllItems();
 	memset(items, 0, sizeof(items));
-	upgradeLevel = 0;
-	upgrading = false;
 	maxItems = 0;
 	acceptsOrders = false;
 }
 
-cBuildingListItem * cBuildingList::getItem(int position) {
-	assert(position > -1);
-	assert(position < MAX_ICONS);
-	return items[position];
+cBuildingListItem * cBuildingList::getItem(int i) {
+    if (i < 0) return nullptr;
+    if (i >= MAX_ICONS) return nullptr;
+	return items[i];
 }
 
 /**
@@ -60,68 +57,100 @@ void cBuildingList::removeAllItems() {
 }
 
 bool cBuildingList::isItemInList(cBuildingListItem * item) {
-	assert(item);
-	return hasItemType(item->getBuildId());
+	if (item == nullptr) return false;
+	return getItemByBuildId(item->getBuildId()) != nullptr;
 }
 
-bool cBuildingList::hasItemType(int itemTypeId) {
-	assert(itemTypeId >= 0);
+cBuildingListItem * cBuildingList::getItemByBuildId(int buildId) {
 	for (int i =0; i < MAX_ICONS; i++) {
 		cBuildingListItem * itemInList = getItem(i);
+		if (itemInList == nullptr) continue;
 
 		// item already in list (same build id)
-		if (itemInList) {
-			if (itemTypeId == itemInList->getBuildId()) {
-				return true;
-			}
-		}
+        if (buildId == itemInList->getBuildId()) {
+            return itemInList;
+        }
 	}
-	return false;
+	return nullptr;
 }
 
+void cBuildingList::addUpgradeToList(int upgradeType) {
+    addItemToList(new cBuildingListItem(upgradeType, upgrades[upgradeType], upgrades[upgradeType].providesTypeSubList));
+}
 
-void cBuildingList::addItemToList(cBuildingListItem * item) {
-	assert(item);
+void cBuildingList::addStructureToList(int structureType, int subList) {
+    addItemToList(new cBuildingListItem(structureType, structures[structureType], subList));
+}
 
+void cBuildingList::addUnitToList(int unitType, int subList) {
+    addItemToList(new cBuildingListItem(unitType, units[unitType], subList));
+}
+
+bool cBuildingList::addItemToList(cBuildingListItem * item) {
 	if (isItemInList(item)) {
-		logbook("Failed to add icon to cBuildingList, item is already in list.");
+		logbook("Will not add, item is already in list.");
 		// item is already in list, do not add
-		return;
+		return false;
 	}
 
-	int slot = getFreeSlot();
-	if (slot < 0 ) {
+	int slotId = getFreeSlot();
+	if (slotId < 0 ) {
 		logbook("Failed to add icon to cBuildingList, no free slot left in list");
-		assert(false);
-		return;
+        return false;
 	}
 
 	// add
-	items[slot] = item;
-	item->setSlotId(slot);
-	maxItems = slot;
+	items[slotId] = item;
+	item->setSlotId(slotId);
+	item->setList(this);
+	maxItems = slotId + 1;
 //	char msg[355];
 //	sprintf(msg, "Icon added with id [%d] added to cBuilding list, put in slot[%d], set maxItems to [%d]", item->getBuildId(), slot, maxItems);
 //	logbook(msg);
+    return true;
 }
 
+bool cBuildingList::removeItemFromList(cBuildingListItem * item) {
+    if (item == nullptr) return false;
+    return removeItemFromList(item->getSlotId());
+}
+
+bool cBuildingList::removeItemFromListByBuildId(int buildId) {
+    cBuildingListItem * item = getItemByBuildId(buildId);
+    return removeItemFromList(item);
+}
 /**
- * Remove item from list. Delete item object and set NULL in array.
+ * Remove item from list. Delete item object and set NULL in array. Makes sure to shift all items so that
+ * there won't be gaps
  *
  * @param position
  */
-void cBuildingList::removeItemFromList(int position) {
-	assert(position > -1);
-	assert(position < MAX_ICONS);
+bool cBuildingList::removeItemFromList(int position) {
+    if (position < 0) return false;
+    if (position >= MAX_ICONS) return false;
+
 	cBuildingListItem * item = getItem(position);
-	if (item == NULL) {
+	if (item == nullptr) {
 		// item can be null, in that case do nothing.
-	} else {
-		delete item;
-		items[position] = NULL;
-		maxItems--;
+		return false;
 	}
 
+	delete item;
+    items[position] = nullptr;
+
+    // starting from 'position' which became NULL, make sure everything
+    // after that slotIndex is moved. So we don't get gaps.
+    for (int i = (position + 1); i < maxItems; i++) {
+        items[i-1] = items[i];
+        items[i-1]->setSlotId(i-1);
+
+        // and clear it out, which in the next loop will be filled
+        // if there is any other pointer. If not, the 'last' item is NULL now.
+        items[i] = nullptr;
+    }
+
+    maxItems--; // now we can do this
+    return true;
 }
 
 /**
@@ -133,67 +162,36 @@ void cBuildingList::removeItemFromList(int position) {
  * @return
  */
 bool cBuildingList::isOverButton(int x, int y) {
-	int drawX = getButtonDrawX();
-	int drawY = getButtonDrawY();
-	return (x >= drawX && x <= (drawX + 51) && (y >= drawY && y <= (drawY + 37)));
-}
-
-void cBuildingList::setScrollingOffset(int value) {
-	assert(value > -1);
-	assert(value < MAX_ICONS);
-	scrollingOffset = value;
+    return cMouse::isOverRectangle(getButtonDrawX(), getButtonDrawY(), 33, 27);
 }
 
 /**
- * Scroll list up one item
- */
-void cBuildingList::scrollUp() {
-	logbook("cBuildingList::scrollUp");
-	int offset = getScrollingOffset() - 1;
-	if (offset > -1) {
-		setScrollingOffset(offset);
-	}
-}
-
-/**
- * Scroll list down one item
- */
-void cBuildingList::scrollDown() {
-	logbook("cBuildingList::scrollDown");
-	int oldOffset = getScrollingOffset();
-	int offset = oldOffset + 1;
-	int max = maxItems - 4;
-
-	char msg[255];
-	sprintf(msg, "old offset is [%d], new offset is [%d], maxItems is [%d] max is [%d].", oldOffset, offset, maxItems, max);
-	logbook(msg);
-
-	if (offset <= max) {
-		logbook("cBuildingList::scrolling down");
-		setScrollingOffset(offset);
-	} else {
-		logbook("cBuildingList::scrolling down not allowed");
-	}
-}
-
-/**
- * Return true if an item is being built in this list.
+ * Returns an array of id's of subLists of items being built. The array is 5 items big (ie, we assume we don't have
+ * more than 5 sublists in a building list). When a value > -1 then it means something is being built for that subList.
+ * Ie, the index in the array corresponds with the subList id. Meaning, result[1] = 5 means sublist 1 is building something
+ * of ID 5. (depending on the TYPE, it is either a structure or a unit).
  *
- * @return
+ * @return std::array<int, 5>
  */
-bool cBuildingList::isBuildingItem() {
+std::array<int, 5> cBuildingList::isBuildingItem() {
+    std::array<int, 5> subListIds;
+    for (int i = 0; i < 5; i++) {
+        subListIds[i] = -1;
+    }
 	for (int i = 0 ; i < MAX_ITEMS; i++) {
 		cBuildingListItem *item = getItem(i);
+
 		// valid pointer
 		if (item) {
 			// get isBuilding
 			if (item->isBuilding() || item->shouldPlaceIt()) {
-				return true;
+                subListIds[item->getSubList()] = item->getBuildId();
 			}
 		}
 	}
-	return false;
+	return subListIds;
 }
+
 
 cBuildingListItem * cBuildingList::getItemToPlace() {
 	for (int i = 0 ; i < MAX_ITEMS; i++) {
@@ -207,4 +205,76 @@ cBuildingListItem * cBuildingList::getItemToPlace() {
 		}
 	}
 	return NULL;
+}
+
+void cBuildingList::setStatusPendingUpgrade(int subListId) {
+    for (int i = 0 ; i < MAX_ITEMS; i++) {
+        cBuildingListItem *item = getItem(i);
+        // valid pointer
+        if (item) {
+            if (item->isTypeUpgrade()) {
+                // match the "provides" sublist id here!
+                if (item->getS_Upgrade().providesTypeSubList == subListId) {
+                    item->setStatusPendingUpgrade();
+                }
+            } else {
+                if (item->getSubList() == subListId) {
+                    item->setStatusPendingUpgrade();
+                }
+            }
+        }
+    }
+}
+
+void cBuildingList::setStatusAvailable(int subListId) {
+    for (int i = 0 ; i < MAX_ITEMS; i++) {
+        cBuildingListItem *item = getItem(i);
+        // valid pointer
+        if (item) {
+            if (item->isTypeUpgrade()) {
+                // match the "provides" sublist id here!
+                if (item->getS_Upgrade().providesTypeSubList == subListId) {
+                    item->setStatusAvailable();
+                }
+            } else {
+                if (item->getSubList() == subListId) {
+                    item->setStatusAvailable();
+                }
+            }
+        }
+    }
+}
+
+void cBuildingList::setStatusPendingBuilding(int subListId) {
+    for (int i = 0 ; i < MAX_ITEMS; i++) {
+        cBuildingListItem *item = getItem(i);
+        // valid pointer
+        if (item) {
+            if (item->isTypeUpgrade()) {
+                // match the "provides" sublist id here!
+                if (item->getS_Upgrade().providesTypeSubList == subListId) {
+                    item->setStatusPendingBuilding();
+                }
+            } else {
+                if (item->getSubList() == subListId) {
+                    item->setStatusPendingBuilding();
+                }
+            }
+        }
+    }
+}
+
+void cBuildingList::removeAllSublistItems(int sublistId) {
+    std::vector<int> buildIdsToRemove;
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *pItem = getItem(i);
+        if (pItem == nullptr) continue;
+        if (pItem->getSubList() == sublistId) {
+            buildIdsToRemove.push_back(pItem->getBuildId());
+        }
+    }
+
+    for(int buildId : buildIdsToRemove) {
+        removeItemFromListByBuildId(buildId);
+    }
 }

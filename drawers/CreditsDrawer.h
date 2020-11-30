@@ -52,6 +52,9 @@ private:
 	float rollSpeed;
 	int rolled; // how many credits did get rolled over?
 	int soundsMade; // sounds made per time frame
+
+	// topleft position of credits-bar bmp
+	int drawX, drawY;
 };
 
 #endif /* CREDITSDRAWER_H_ */

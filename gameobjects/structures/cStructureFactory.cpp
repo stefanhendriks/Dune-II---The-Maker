@@ -40,41 +40,15 @@ cAbstractStructure *cStructureFactory::createStructureInstance(int type) {
 }
 
 void cStructureFactory::deleteStructureInstance(cAbstractStructure *structure) {
-	// delete memory that was aquired
-	/*
-    if (structure->getType() == CONSTYARD)
-        delete (cConstYard *)structure;
-    else if (structure->getType() == STARPORT)
-        delete (cStarPort *)structure;
-    else if (structure->getType() == WINDTRAP)
-        delete (cWindTrap *)structure;
-    else if (structure->getType() == SILO)
-        delete (cSpiceSilo *)structure;
-    else if (structure->getType() == RADAR)
-        delete (cOutPost *)structure;
-    else if (structure->getType() == HIGHTECH)
-        delete (cHighTech *)structure;
-    else if (structure->getType() == LIGHTFACTORY)
-        delete (cLightFactory *)structure;
-    else if (structure->getType() == HEAVYFACTORY)
-        delete (cHeavyFactory *)structure;
-    else if (structure->getType() == PALACE)
-        delete (cPalace *)structure;
-    else if (structure->getType() == TURRET)
-        delete (cGunTurret *)structure;
-    else if (structure->getType() == RTURRET)
-        delete (cRocketTurret *)structure;
-    else if (structure->getType() == REPAIR)
-        delete (cRepairFacility *)structure;
-    else if (structure->getType() == BARRACKS)
-        delete (cBarracks *)structure;
-    else if (structure->getType() == WOR)
-        delete (cWor *)structure;
-    else if (structure->getType() == IX)
-        delete (cIx *)structure;
-    else
-		*/
-        delete structure;
+    // notify building list updater
+    cPlayer * pPlayer = &player[structure->getPlayerId()];
+    cBuildingListUpdater * buildingListUpdater = pPlayer->getBuildingListUpdater();
+    if (buildingListUpdater) {
+        buildingListUpdater->onStructureDestroyed(structure->getType());
+    }
+
+    // delete memory acquired
+    delete structure;
 }
 
 
@@ -143,9 +117,11 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
     // calculate actual health
     float fHealth = hp * fPercent;
 
-    char msg2[255];
-    sprintf(msg2, "Structure with id [%d] has [%d] hp , fhealth is [%d]", iStructureType, hp, fHealth);
-    logbook(msg2);
+    if (DEBUGGING) {
+        char msg2[255];
+        sprintf(msg2, "Structure with id [%d] has [%d] hp , fhealth is [%f]", iStructureType, hp, fHealth);
+        logbook(msg2);
+    }
 
     int structureSize = structures[iStructureType].bmp_width * structures[iStructureType].bmp_height;
 
@@ -174,6 +150,13 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 		REINFORCE(iPlayer, HARVESTER, iCell+2, iCell+2);
 	}
 
+    // handle update
+    cPlayer * pPlayer = &player[iPlayer];
+    cBuildingListUpdater * buildingListUpdater = pPlayer->getBuildingListUpdater();
+    if (buildingListUpdater) {
+        buildingListUpdater->onStructureCreated(iStructureType);
+    }
+
     return str;
 }
 
@@ -184,7 +167,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 **/
 void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(int iCell, int iStructureType, int iPlayer) {
     // add this structure to the array of the player (for some score management)
-	player[iPlayer].iStructures[iStructureType]++;
+	player[iPlayer].increaseStructureAmount(iStructureType);
 
 	if (iStructureType == SLAB1) {
 		mapEditor.createCell(iCell, TERRAIN_SLAB, 0);

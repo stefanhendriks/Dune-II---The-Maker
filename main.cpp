@@ -45,6 +45,7 @@ sPreviewMap     			PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in sk
 s_House         			houses[MAX_HOUSES];
 s_Structures    			structures[MAX_STRUCTURETYPES];    // structure types
 s_UnitP         			units[MAX_UNITTYPES];              // unit types
+s_Upgrade                   upgrades[MAX_UPGRADETYPES];        // upgrade types
 s_Bullet        			bullets[MAX_BULLET_TYPES];          // bullet slots
 sReinforcement  			reinforcements[MAX_REINFORCEMENTS];  // reinforcement slots
 
@@ -119,7 +120,10 @@ int handleArguments(int argc, char *argv[]) {
 			} else if (command.compare("-debug") == 0) {
 			    // debugging enabled
                 bDoDebug = true;
-			}
+			} else if (command.compare("-noai") == 0) {
+                game.bDisableAI = true;
+
+            }
 		}
 	} // arguments passed
 

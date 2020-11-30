@@ -19,6 +19,11 @@ CreditsDrawer::CreditsDrawer(const cPlayer& thePlayer) : player(thePlayer){
 	soundsMade = 0;
 	currentCredits = 0;
 	previousCredits = 0;
+
+	// center credits bar within sidebar
+    int widthCreditsBar = ((BITMAP *)gfxinter[CREDITS_BAR].dat)->w;
+	drawX = game.screen_x - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
+	drawY = 0;
 }
 
 CreditsDrawer::~CreditsDrawer() {
@@ -157,17 +162,18 @@ void CreditsDrawer::draw() {
 	clear_bitmap(bmp);
 	clear_to_color(bmp, makecol(255, 0, 255)); // transparency
 
+	draw_sprite(bmp_screen, (BITMAP *)gfxinter[CREDITS_BAR].dat, drawX, drawY);
+
 	drawCurrentCredits();
 	drawPreviousCredits();
 
 	// draw bmp on screen
-	draw_sprite(bmp_screen, bmp, game.screen_x - 120, 8);
-//	draw_sprite(bmp_screen, bmp, mouse_x - 120, mouse_y - 8);
+	draw_sprite(bmp_screen, bmp, drawX+8, drawY + 8);
 }
 
 int CreditsDrawer::getXDrawingOffset(int amount) {
 	int offset = 1;
-	if (amount > 0)		offset = 4;
+	if (amount > 0)		offset =  4;
 	if (amount < 10)	offset =  5;
 	if (amount > 99)	offset =  3;
 	if (amount > 999)	offset =  2;

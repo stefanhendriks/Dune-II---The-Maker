@@ -57,7 +57,7 @@ void cAIPlayer::BUILD_STRUCTURE(int iStrucType)
 	// not building
 
 	// check if its allowed at all
-	if (player[ID].iStructures[CONSTYARD] < 1)
+	if (!player[ID].hasAtleastOneStructure(CONSTYARD))
 		return;
 
 	if (player[ID].credits < structures[iStrucType].cost)
@@ -169,12 +169,8 @@ void cAIPlayer::think_building()
 		{
 			int iTimerCap=35; // was 35
 
-
-            if (DEBUGGING)
-                iTimerCap=7;
-
 			// the more constyards
-			iTimerCap /= (1+(player[ID].iStructures[CONSTYARD]/2));
+			iTimerCap /= (1+(player[ID].getAmountOfStructuresForType(CONSTYARD)/2));
 
 			TIMER_BuildStructure[i]++;
 
@@ -227,7 +223,7 @@ void cAIPlayer::think_building()
 
             int iTimerCap=35;
 
-            iTimerCap /= (1+(player[ID].iStructures[iStrucType]/2));
+            iTimerCap /= (1+(player[ID].getAmountOfStructuresForType(iStrucType)/2));
 
             cPlayerDifficultySettings * difficultySettings = player[ID].getDifficultySettings();
 			iTimerCap = difficultySettings->getBuildSpeed(iTimerCap);
@@ -243,7 +239,7 @@ void cAIPlayer::think_building()
             //logbook("DONE BUILDING");
 
             // produce now
-            int iStr = player[ID].iPrimaryBuilding[iStrucType];
+            int iStr = player[ID].getPrimaryStructureForStructureType(iStrucType);
 
             // no primary building yet, assign one
             if (iStr < 0) {
@@ -261,7 +257,7 @@ void cAIPlayer::think_building()
 					if (structure[iStr]->iFreeAround() -1)
 					{
 						int iSpot = structure[iStr]->iFreeAround();
-						player[ID].iPrimaryBuilding[iStrucType] = iStr;
+						player[ID].setPrimaryBuildingForStructureType(iStrucType, iStr);
 						structure[iStr]->setAnimating(true); // animate
 						iProducedUnit=UNIT_CREATE(iSpot, i, ID, false);
 					}
@@ -273,7 +269,7 @@ void cAIPlayer::think_building()
 						if (iNewStr != iStr && iNewStr > -1)
 						{
 							int iSpot = structure[iNewStr]->iFreeAround();
-							player[ID].iPrimaryBuilding[iStrucType] = iNewStr;
+							player[ID].setPrimaryBuildingForStructureType(iStrucType, iNewStr);
 							structure[iNewStr]->setAnimating(true); // animate
 							iProducedUnit=UNIT_CREATE(iSpot, i, ID, false);
 						}
@@ -286,7 +282,7 @@ void cAIPlayer::think_building()
                 }
                 else
                 {
-                    player[ID].iPrimaryBuilding[iStrucType]=-1;
+                    player[ID].setPrimaryBuildingForStructureType(iStrucType, -1);
                 }
 
                 // produce
@@ -397,7 +393,7 @@ void cAIPlayer::think_harvester()
 
  bool bFoundHarvester=false;
 
- if (player[ID].iStructures[REFINERY] > 0)
+ if (player[ID].hasAtleastOneStructure(REFINERY))
  {
      bFoundHarvester=false;
 
@@ -457,6 +453,8 @@ void cAIPlayer::think_harvester()
 }
 
 void cAIPlayer::think() {
+    if (game.bDisableAI) return; // do nothing
+
     think_building();
 
     // not time yet to think
@@ -497,7 +495,7 @@ void cAIPlayer::think_repair() {
 
     // check if we must repair, only if we have a repair structure ofcourse
     // and we have some money to spare for repairs
-    if (player[ID].iStructures[REPAIR] > 0 && player[ID].credits > 250)
+    if (player[ID].hasAtleastOneStructure(REPAIR) && player[ID].credits > 250)
     {
         // yes, we can repair
         for (int i=0; i < MAX_UNITS; i++) {
@@ -589,13 +587,13 @@ void cAIPlayer::think_attack()
  }
 
  // only when ai has a wor/barracks to regenerate his troops, send off infantry sometimes.
- if (player[ID].iStructures[WOR] > 0 ||
-     player[ID].iStructures[BARRACKS])
-     if (rnd(100) < 30)
-     {
-     bInfantryOnly=true;
-     iAmount=10;
+ if (player[ID].hasAtleastOneStructure(WOR) ||
+     player[ID].hasAtleastOneStructure(BARRACKS)) {
+     if (rnd(100) < 30) {
+         bInfantryOnly = true;
+         iAmount = 10;
      }
+ }
 
  if (rnd(100) < 50)
  {
@@ -820,17 +818,18 @@ void cAIPlayer::think_buildarmy()
                 if (unit[i].iPlayer == ID && unit[i].iType == HARVESTER)
                     iHarvs++;
 
-        if (iHarvs < player[ID].iStructures[REFINERY])
+        if (iHarvs < player[ID].getAmountOfStructuresForType(REFINERY))
         {
             if (player[ID].credits > units[HARVESTER].cost)
                 BUILD_UNIT(HARVESTER); // build harvester
         }
-        else if (iHarvs >= player[ID].iStructures[REFINERY])
+        else if (iHarvs >= player[ID].getAmountOfStructuresForType(REFINERY))
         {
             // enough harvesters , try to get ratio 2 harvs - 1 refinery
-            if (iHarvs < (player[ID].iStructures[REFINERY] * 2))
+            if (iHarvs < (player[ID].getAmountOfStructuresForType(REFINERY) * 2)) {
                 if (rnd(100) < 30)
                     BUILD_UNIT(HARVESTER);
+            }
         }
 
     }
@@ -977,7 +976,7 @@ void cAIPlayer::think_buildbase()
 {
 	if (game.bSkirmish)
 	{
-		if (player[ID].iStructures[CONSTYARD] > 0)
+		if (player[ID].hasAtleastOneStructure(CONSTYARD))
 		{
             // already building
             for (int i=0; i < MAX_STRUCTURETYPES; i++)
@@ -988,14 +987,14 @@ void cAIPlayer::think_buildbase()
                 }
 
 			// when no windtrap, then build one (or when low power)
-			if (player[ID].iStructures[WINDTRAP] < 1 || player[ID].bEnoughPower() == false)
+			if (!player[ID].hasAtleastOneStructure(WINDTRAP) || !player[ID].bEnoughPower())
 			{
 				BUILD_STRUCTURE(WINDTRAP);
 				return;
 			}
 
 			// build refinery
-			if (player[ID].iStructures[REFINERY] < 1)
+			if (!player[ID].hasAtleastOneStructure(REFINERY))
 			{
 				BUILD_STRUCTURE(REFINERY);
 				return;
@@ -1004,7 +1003,7 @@ void cAIPlayer::think_buildbase()
 			// build wor / barracks
 			if (player[ID].getHouse() == ATREIDES)
 			{
-				if (player[ID].iStructures[BARRACKS] < 1)
+				if (!player[ID].hasAtleastOneStructure(BARRACKS))
 				{
 					BUILD_STRUCTURE(BARRACKS);
 					return;
@@ -1012,14 +1011,14 @@ void cAIPlayer::think_buildbase()
 			}
 			else
 			{
-				if (player[ID].iStructures[WOR] < 1)
+				if (!player[ID].hasAtleastOneStructure(WOR))
 				{
 					BUILD_STRUCTURE(WOR);
 					return;
 				}
 			}
 
-			if (player[ID].iStructures[RADAR] < 1)
+			if (!player[ID].hasAtleastOneStructure(RADAR))
 			{
 				BUILD_STRUCTURE(RADAR);
 				return;
@@ -1027,13 +1026,13 @@ void cAIPlayer::think_buildbase()
 
 			// from here, we can build turrets & rocket turrets
 
-			if (player[ID].iStructures[LIGHTFACTORY] < 1)
+			if (!player[ID].hasAtleastOneStructure(LIGHTFACTORY))
 			{
 				BUILD_STRUCTURE(LIGHTFACTORY);
 				return;
 			}
 
-			if (player[ID].iStructures[HEAVYFACTORY] < 1)
+			if (!player[ID].hasAtleastOneStructure(HEAVYFACTORY))
 			{
 				BUILD_STRUCTURE(HEAVYFACTORY);
 				return;
@@ -1042,7 +1041,7 @@ void cAIPlayer::think_buildbase()
 			// when mission is lower then 5, build normal turrets
 			if (game.iMission <= 5)
 			{
-				if (player[ID].iStructures[TURRET] < 3)
+				if (player[ID].getAmountOfStructuresForType(TURRET) < 3)
 				{
 					BUILD_STRUCTURE(TURRET);
 					return;
@@ -1051,7 +1050,7 @@ void cAIPlayer::think_buildbase()
 
 			if (game.iMission >= 6)
 			{
-				if (player[ID].iStructures[RTURRET] < 3)
+				if (player[ID].getAmountOfStructuresForType(RTURRET) < 3)
 				{
 					BUILD_STRUCTURE(RTURRET);
 					return;
@@ -1059,25 +1058,25 @@ void cAIPlayer::think_buildbase()
 			}
 
             // build refinery
-			if (player[ID].iStructures[REFINERY] < 2)
+			if (player[ID].getAmountOfStructuresForType(REFINERY) < 2)
 			{
 				BUILD_STRUCTURE(REFINERY);
 				return;
 			}
 
-			if (player[ID].iStructures[HIGHTECH] < 1)
+			if (!player[ID].hasAtleastOneStructure(HIGHTECH))
 			{
 				BUILD_STRUCTURE(HIGHTECH);
 				return;
 			}
 
-			if (player[ID].iStructures[REPAIR] < 1)
+			if (player[ID].hasAtleastOneStructure(REPAIR))
 			{
 				BUILD_STRUCTURE(REPAIR);
 				return;
 			}
 
-			if (player[ID].iStructures[PALACE] < 1)
+			if (!player[ID].hasAtleastOneStructure(PALACE))
 			{
 				BUILD_STRUCTURE(PALACE);
 				return;
@@ -1085,14 +1084,14 @@ void cAIPlayer::think_buildbase()
 
             if (game.iMission >= 6)
 			{
-				if (player[ID].iStructures[RTURRET] < 9)
+				if (player[ID].getAmountOfStructuresForType(RTURRET) < 9)
 				{
 					BUILD_STRUCTURE(RTURRET);
 					return;
 				}
 			}
 
-   			if (player[ID].iStructures[STARPORT] < 1)
+   			if (player[ID].getAmountOfStructuresForType(STARPORT) < 1)
 			{
 				BUILD_STRUCTURE(STARPORT);
 				return;
@@ -1109,42 +1108,36 @@ void cAIPlayer::think_buildbase()
 
 }
 
-void cAIPlayer::think_worm()
-{
-
+void cAIPlayer::think_worm() {
     // loop through all its worms and move them around
-    for (int i=0; i < MAX_UNITS; i++)
-        if (unit[i].isValid())
-            if (unit[i].iType == SANDWORM && unit[i].iPlayer == ID)
-            {
-                // when on guard
-                if (unit[i].iAction == ACTION_GUARD)
-                {
-                    // find new spot to go to
-                    for (int iTries=0; iTries < 10; iTries++)
-                    {
-                        int iMoveTo = rnd(MAX_CELLS);
+    for (int i=0; i < MAX_UNITS; i++) {
+        if (!unit[i].isValid()) continue;
+        if (unit[i].iType != SANDWORM) continue;
+        if (unit[i].iPlayer != ID) continue;
 
-                        if (map.getCellType(iMoveTo) == TERRAIN_SAND ||
-                            map.getCellType(iMoveTo) == TERRAIN_HILL ||
-                            map.getCellType(iMoveTo) == TERRAIN_SPICE ||
-                            map.getCellType(iMoveTo) == TERRAIN_SPICEHILL)
-                        {
-                            logbook("Order move #4");
-                            UNIT_ORDER_MOVE(i, iMoveTo);
-                            break;
-                        }
-                    }
+        // when on guard
+        if (unit[i].iAction == ACTION_GUARD) {
 
+            // find new spot to go to
+            for (int iTries = 0; iTries < 10; iTries++) {
+                int iMoveTo = rnd(MAX_CELLS);
+
+                if (map.getCellType(iMoveTo) == TERRAIN_SAND ||
+                    map.getCellType(iMoveTo) == TERRAIN_HILL ||
+                    map.getCellType(iMoveTo) == TERRAIN_SPICE ||
+                    map.getCellType(iMoveTo) == TERRAIN_SPICEHILL) {
+                    UNIT_ORDER_MOVE(i, iMoveTo);
+                    break;
                 }
             }
+        }
+    }
 }
 
 /////////////////////////////////////////////////
 
 
-int AI_STRUCTYPE(int iUnitType)
-{
+int AI_STRUCTYPE(int iUnitType) {
     // CHECK FOR BUILDING
     int iStrucType=HEAVYFACTORY;     // what do we need to build this unit?
 
@@ -1153,7 +1146,6 @@ int AI_STRUCTYPE(int iUnitType)
     // light vehicles
     if (iUnitType == TRIKE || iUnitType == RAIDER || iUnitType == QUAD)
         iStrucType =LIGHTFACTORY;
-
 
     // soldiers and troopers
     if (iUnitType == INFANTRY || iUnitType == SOLDIER)
@@ -1170,8 +1162,7 @@ int AI_STRUCTYPE(int iUnitType)
 }
 
 // Helper functions to keep fair play:
-bool AI_UNITSTRUCTURETYPE(int iPlayer, int iUnitType)
-{
+bool AI_UNITSTRUCTURETYPE(int iPlayer, int iUnitType) {
     // This function will do a check what kind of structure is needed to build the unittype
     // Basicly the function returns true when its valid to build the unittype, or false
     // when its impossible (due no structure, money, etc)
@@ -1190,9 +1181,8 @@ bool AI_UNITSTRUCTURETYPE(int iPlayer, int iUnitType)
     int iStrucType = AI_STRUCTYPE(iUnitType);
 
     // Do the reality-check, do we have the building needed?
-    if (player[iPlayer].iStructures[iStrucType] < 1)
+    if (!player[iPlayer].hasAtleastOneStructure(iStrucType))
         return false; // we do not have the building
-
 
     // WE MAY BUILD IT!
     return true;

@@ -35,8 +35,6 @@ public:
 
     void smudge_increase(int iType, int iCell);
 
-    int  mouse_cell();
-
 	// Drawing
 	int  mouse_draw_x();
 	int  mouse_draw_y();

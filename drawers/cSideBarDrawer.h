@@ -17,36 +17,30 @@ class cSideBarDrawer {
 
 		cBuildingListDrawer * getBuildingListDrawer() { return buildingListDrawer; }
 
-		bool isMouseOverScrollUp();
-		bool isMouseOverScrollDown();
-
 	protected:
 		void drawHouseGui(const cPlayer & thePlayer);
-		void drawBuildingLists();
-		void drawCapacities();
-		void drawScrollButtons();
+		void drawBuildingLists(const cPlayer & thePlayer);
+		void drawCapacities(const cPlayer & thePlayer);
 
 		void drawCandybar();
 
-		// get
-		int getScrollButtonUpX();
-		int getScrollButtonY();
-		int getScrollButtonDownX();
-		bool isOverScrollButton(int buttonX, int buttonY);
-
-		void drawMinimap();
-		void drawOptionsBar();
-		void drawIconsListBackground();
-
+		void drawMinimap(const cPlayer & player);
+		void drawOptionsBar(const cPlayer & thePlayer);
 	private:
 		cBuildingListDrawer * buildingListDrawer;
 
 		// the 'candybar' is the bar with the ball at the top. Colored with the house color.
 		BITMAP *candybar;
 		BITMAP *optionsBar;
+		cTextDrawer *textDrawer;
 
 		int sidebarColor;
 
+        void createCandyBar();
+
+        void drawPowerUsage(const cPlayer &player) const;
+
+    void drawCreditsUsage(const cPlayer &player);
 };
 
 #endif /* CSIDEBARDRAWER_H_ */

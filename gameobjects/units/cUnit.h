@@ -10,7 +10,12 @@
 
   */
 
+#ifndef D2TM_UNIT_H
+#define D2TM_UNIT_H
+
 // Define TRANSFER stuff for reinforcements	
+class cRectangle; // forward declaration :(
+
 #define TRANSFER_NONE	-1				// nothing to transfer
 #define TRANSFER_NEW_STAY	0			// bring a new unit, and let the carryall stay
 #define TRANSFER_NEW_LEAVE	2			// bring a new unit, and let the carryall go back (and die)
@@ -34,6 +39,8 @@ struct sReinforcement
 class cUnit {
 
 public:
+
+    cUnit();
 
 	float fExperience;	// experience gained by unit
 
@@ -112,6 +119,9 @@ public:
     int draw_y();
     int pos_x();
     int pos_y();
+    int center_draw_x();
+    int center_draw_y();
+
     void draw_health();
 	void draw_experience();
 	void draw_spice();
@@ -175,6 +185,20 @@ public:
     bool isAirbornUnit() {
         return iType == CARRYALL || iType == ORNITHOPTER || iType == FRIGATE;
     }
+
+    bool isInfantryUnit();
+
+    int getBmpWidth() const;
+
+    int getBmpHeight() const;
+
+    cRectangle * dimensions;
+
+    void recreateDimensions();
+
+    void think_position();
+
+    bool isMovingBetweenCells();
 };
 
 
@@ -203,3 +227,4 @@ void INIT_REINFORCEMENT();
 int CLOSE_SPICE_BLOOM(int iCell);
 
 
+#endif

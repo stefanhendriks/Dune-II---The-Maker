@@ -21,6 +21,32 @@ public:
                (pointY >= y && pointY <= (y + height));
     }
 
+    bool isOverlapping(cRectangle *other);
+
+    bool isMouseOver();
+
+    int getX() { return x; }
+    int getEndX() { return x + width; }
+    int getY() { return y; }
+    int getEndY() { return y + height; }
+    int getWidth() { return width; }
+    int getHeight() { return height; }
+
+    /**
+     * Moves rectangle around, updates x and y coordinate.
+     *
+     * @param newX
+     * @param newY
+     */
+    void move(int newX, int newY) {
+        this->x = newX;
+        this->y = newY;
+    }
+
+    void resize(int newWidth, int newHeight) {
+        this->width = newWidth;
+        this->height = newHeight;
+    }
 
 private:
     int x;

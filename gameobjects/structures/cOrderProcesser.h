@@ -29,6 +29,15 @@ class cOrderProcesser {
 		void placeOrder();
 		void playTMinusSound(int seconds);
 
+		/**
+		 * Can place an order (call for Frigate) when anything has been ordered and the order hasn't been placed yet.
+		 * @return
+		 */
+		bool canPlaceOrder() {
+            return hasOrderedAnything() &&
+                    isOrderPlaced() == false;
+		}
+
 		bool isOrderPlaced() { return orderPlaced; }
 		bool isFrigateSent() { return frigateSent; }
 		bool hasOrderedAnything();

@@ -1,0 +1,1 @@
+grabber.exe -800x600 -windowed

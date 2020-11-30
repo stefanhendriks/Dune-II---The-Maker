@@ -32,18 +32,16 @@ class cPlayer {
 
 		int iTeam;
 
-		int use_power;
-		int has_power;
+		int use_power;      // total amount of power usage
+		int has_power;      // total amount of power generated
 
 		float credits;		// the credits this player has
 		float max_credits;	// max credits a player can have (influenced by silo's)
 
 		int focus_cell;		// this is the cell that will be showed in the game centralized upon map loading
 
-		int iPrimaryBuilding[MAX_STRUCTURETYPES];	// remember the primary ID (structure id) of each structure type
-		int iStructures[MAX_STRUCTURETYPES]; // remember what is built for each type of structure
-
 		bool bEnoughPower() const;
+		bool bEnoughSpiceCapacityToStoreCredits() const;
 
 		int TIMER_think;        // timer for thinking itself (calling main routine)
 		int TIMER_attack;       // -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
@@ -59,29 +57,35 @@ class cPlayer {
 		void setTechLevel(int theTechLevel) { techLevel = theTechLevel; }
 		void setHouse(int iHouse);
 		void setStructurePlacer(cStructurePlacer *theStructurePlacer);
-		void setUpgradeBuilder(cUpgradeBuilder *theUpgradeBuilder);
 		void setOrderProcesser(cOrderProcesser *theOrderProcesser);
 		void setGameControlsContext(cGameControlsContext *theGameControlsContext);
 
 		// get
-		cBuildingListUpdater *getBuildingListUpdater() { return buildingListUpdater; }
+		cBuildingListUpdater * getBuildingListUpdater() const { return buildingListUpdater; }
 		cPlayerDifficultySettings *getDifficultySettings() const { return difficultySettings; }
 		cItemBuilder *getItemBuilder() const { return itemBuilder; }
 		cSideBar *getSideBar() const { return sidebar; }
 		int getHouse() const { return house; }
+		eHouseBitFlag getHouseBitFlag();
+
+		int getHouseFadingColor() const;
+		int getErrorFadingColor() const;
+		int getSelectFadingColor() const;
+
 		bool isHouse(int houseId ) const { return house == houseId; }
 		int getTechLevel() const { return techLevel; }
 		int getId() const { return id; }
 		cStructurePlacer * getStructurePlacer() const { return structurePlacer; }
-		cUpgradeBuilder * getUpgradeBuilder() const { return upgradeBuilder; }
 		cOrderProcesser * getOrderProcesser() const { return orderProcesser; }
 		cGameControlsContext * getGameControlsContext() const { return gameControlsContext; }
 		int getMinimapColor() const { return minimapColor; }
+        int getEmblemBackgroundColor() const { return emblemBackgroundColor; }
 		bool isHuman() {
 		    return m_Human;
 		}
 
 		int getAmountOfStructuresForType(int structureType) const;
+		bool hasRadarAndEnoughPower() const;
 
 		// delete
 		void deleteSideBar() { if (sidebar) delete sidebar; }
@@ -100,8 +104,55 @@ class cPlayer {
 
         void destroyAllegroBitmaps();
 
-    private:
+        bool hasWor() const;
+        bool hasBarracks() const;
+
+        bool hasAtleastOneStructure(int structureType) const;
+
+        void decreaseStructureAmount(int structureType) {
+            if (structureType < 0) return;
+            if (structureType >= MAX_STRUCTURETYPES) return;
+
+            iStructures[structureType]--;
+
+            char msg[255];
+            sprintf(msg, "Player[%d] - decreaseStructureAmount result: iStructures[%d]=%d", id, structureType, iStructures[structureType]);
+            logbook(msg);
+        }
+
+        void increaseStructureAmount(int structureType) {
+            if (structureType < 0) return;
+            if (structureType >= MAX_STRUCTURETYPES) return;
+            iStructures[structureType]++;
+
+            char msg[255];
+            sprintf(msg, "Player[%d] - increaseStructureAmount result: iStructures[%d]=%d", id, structureType, iStructures[structureType]);
+            logbook(msg);
+        }
+
+        bool hasEnoughCreditsFor(float requestedAmount) const;
+
+        int getPrimaryStructureForStructureType(int structureType) const {
+            return iPrimaryBuilding[structureType];
+        }
+
+        void setPrimaryBuildingForStructureType(int structureType, int structureIndex) {
+            iPrimaryBuilding[structureType] = structureIndex;
+        }
+
+        int getStructureUpgradeLevel(int structureType) const {
+            return iStructureUpgradeLevel[structureType];
+        }
+
+        void increaseStructureUpgradeLevel(int structureType) {
+            if (structureType < 0) return;
+            if (structureType >= MAX_STRUCTURETYPES) return;
+            iStructureUpgradeLevel[structureType]++;
+        }
+
+private:
 		int getRGBColorForHouse(int houseId);
+		int getEmblemBackgroundColorForHouse(int houseId);
 		bool m_Human;
 
 		// TODO: in the end this should be redundant.. perhaps remove it now/soon anyway?
@@ -112,7 +163,6 @@ class cPlayer {
 		// these have all state, and need to be recreated for each mission.
 		cSideBar * sidebar;			// each player has a sidebar (lists of what it can build)
 		cItemBuilder * itemBuilder; // each player can build items
-		cUpgradeBuilder * upgradeBuilder; // each player can upgrade lists
 
 		cBuildingListUpdater * buildingListUpdater; // modifies list of sidebar on upgrades
 		cStructurePlacer * structurePlacer;	// used to place structures and handle updates in sidebar accordingly
@@ -123,6 +173,7 @@ class cPlayer {
 		int techLevel;		// technology level
 		int house;
 		int minimapColor;			// color of this team on minimap;
+		int emblemBackgroundColor;	// color of the emblem background
 		int id;	// this id is the reference to the player array
 
 		BITMAP * bmp_structure[MAX_STRUCTURETYPES];
@@ -133,6 +184,9 @@ class cPlayer {
         void clearStructureTypeBitmaps();
         void clearUnitTypeBitmaps();
 
+        int iPrimaryBuilding[MAX_STRUCTURETYPES];	// remember the primary ID (structure id) of each structure type
+        int iStructures[MAX_STRUCTURETYPES]; // remember what is built for each type of structure
+        int iStructureUpgradeLevel[MAX_STRUCTURETYPES]; // remember the upgrade level for each structure type
 };
 
 #endif
