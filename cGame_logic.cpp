@@ -1080,10 +1080,15 @@ void cGame::setup_skirmish() {
     GUI_DRAW_FRAME_WITH_COLORS(playerListBarX, playerListBarY, playerListWidth, playerListBarHeight, makecol(255, 255, 255), darkishBackgroundColor);
 
     // map list
-    int mapListHeight = screen_y - (topBarHeight + previewMapHeight);
+    int mapListHeight = screen_y - (topBarHeight + topRightBoxHeight + topBarHeight + topBarHeight);
     int mapListWidth = topRightBoxWidth;
     int mapListTopX = screen_x - mapListWidth;
     int mapListTopY = topRightBoxY + topRightBoxHeight; // ??
+
+    int mapListFrameX = screen_x - mapListWidth;
+    int mapListFrameY = (playerListBarY + playerListBarHeight) - playerTitleBarHeight;
+    int mapListFrameWidth = screen_x - mapListFrameX;
+    int mapListFrameHeight = topBarHeight;
 
     // rectangle for map list
     GUI_DRAW_FRAME_WITH_COLORS(mapListTopX, mapListTopY, mapListWidth, mapListHeight, darkishBorderColor, darkishBackgroundColor);
@@ -1091,7 +1096,13 @@ void cGame::setup_skirmish() {
     int previewMapY = topBarHeight + 6;
     int previewMapX = screen_x - (previewMapWidth + 6);
 
-	int iStartingPoints=0;
+    // TITLE: Map list
+    GUI_DRAW_FRAME_WITH_COLORS(mapListFrameX, mapListFrameY, mapListFrameWidth, mapListFrameHeight, darkishBorderColor, darkishBackgroundColor);
+
+    cTextDrawer textDrawer = cTextDrawer(bene_font);
+    textDrawer.drawTextCentered("Maps", mapListFrameX, mapListFrameWidth, mapListFrameY + 4, yellow);
+
+    int iStartingPoints=0;
 
     ///////
 	// DRAW PREVIEW MAP
@@ -1147,7 +1158,6 @@ void cGame::setup_skirmish() {
 	int startPointHitBoxWidth = 130;
 	int startPointHitBoxHeight = 16;
 
-	cTextDrawer textDrawer = cTextDrawer(bene_font);
 	textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, "Startpoints: %d", iStartingPoints);
 
 	bool bDoRandomMap=false;
@@ -1179,17 +1189,6 @@ void cGame::setup_skirmish() {
 		}
 	}
 
-	int mapListFrameX = screen_x - mapListWidth;
-	int mapListFrameY = (playerListBarY + playerListBarHeight) - playerTitleBarHeight;
-	int mapListFrameWidth = screen_x - mapListFrameX;
-	int mapListFrameHeight = topBarHeight;
-
-	// TITLE: Map list
-    GUI_DRAW_FRAME_WITH_COLORS(mapListFrameX, mapListFrameY, mapListFrameWidth, mapListFrameHeight, darkishBorderColor, darkishBackgroundColor);
-
-    textDrawer.drawTextCentered("Maps", mapListFrameX, mapListFrameWidth, mapListFrameY + 4, yellow);
-
-//	int const iHeightPixels=17;
 	int const iHeightPixels=topBarHeight;
 
 	int iDrawY=-1;
@@ -1197,9 +1196,12 @@ void cGame::setup_skirmish() {
 	int iEndX=screen_y;
 	int iColor=makecol(255,255,255);
 
+	// yes, this means higher resolutions can show more maps.. for now
+	int maxMapsInList=std::min((mapListHeight / iHeightPixels), MAX_SKIRMISHMAPS);
+
+
     // for every map that we read , draw here
-    for (int i=0; i < MAX_SKIRMISHMAPS; i++)
-    {
+    for (int i=0; i < maxMapsInList; i++) {
 		if (PreviewMap[i].name[0] != '\0')
 		{
 			bool bHover=false;
@@ -1252,45 +1254,43 @@ void cGame::setup_skirmish() {
 	bool bHover=false;
 
 	// draw players who will be playing ;)
-	for (int p=0; p < (AI_WORM-1); p++)
-	{
+	for (int p=0; p < (AI_WORM-1); p++)	{
 		int iDrawY=playerListBarY + 4 +(p*22);
-		if (p < iStartingPoints)
-		{
+		if (p < iStartingPoints) {
 			// player playing or not
-			if (p == 0)
-			{
+            cAIPlayer &aiPlayer = aiplayer[p];
+            if (p == HUMAN)	{
 				alfont_textprintf(bmp_screen, bene_font, 4,iDrawY+1, makecol(0,0,0), "Human");
 				alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol(255,255,255), "Human");
-			}
-			else
-			{
+			} else {
+
 				alfont_textprintf(bmp_screen, bene_font, 4,iDrawY+1, makecol(0,0,0), "  CPU");
-				if ((mouse_x >= 4 && mouse_x <= 73) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16)))
-				{
-					if (aiplayer[p].bPlaying)
-						alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol(fade_select,0,0), "  CPU");
-					else
-						alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol((fade_select/2),(fade_select/2),(fade_select/2)), "  CPU");
 
-					if (cMouse::isLeftButtonClicked() && p > 1)
-					{
-						if (aiplayer[p].bPlaying)
-							aiplayer[p].bPlaying=false;
-						else
-							aiplayer[p].bPlaying=true;
+				// move hovers over... :/
+				if ((mouse_x >= 4 && mouse_x <= 73) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16))) {
+					if (aiPlayer.bPlaying) {
+                        alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, makecol(fade_select, 0, 0), "  CPU");
+                    } else {
+					    // not available
+                        alfont_textprintf(bmp_screen, bene_font, 4, iDrawY,
+                                          makecol((fade_select / 2), (fade_select / 2), (fade_select / 2)), "  CPU");
+                    }
 
-
+					if (cMouse::isLeftButtonClicked())	{
+						if (aiPlayer.bPlaying) {
+                            aiPlayer.bPlaying = false;
+                        } else {
+                            aiPlayer.bPlaying = true;
+                        }
 					}
 				}
 				else
 				{
-					if (aiplayer[p].bPlaying)
+					if (aiPlayer.bPlaying)
 						alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol(255,255,255), "  CPU");
 					else
 						alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol(128,128,128), "  CPU");
 				}
-
 			}
 
 			// HOUSE
@@ -1323,7 +1323,7 @@ void cGame::setup_skirmish() {
 			}
 			else
 			{
-				if (aiplayer[p].bPlaying)
+				if (aiPlayer.bPlaying)
 					alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol(255,255,255), "%s", cHouse);
 				else
 					alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol(128,128,128), "%s", cHouse);
@@ -1332,7 +1332,7 @@ void cGame::setup_skirmish() {
 
 			if (bHover)
 			{
-				if (aiplayer[p].bPlaying)
+				if (aiPlayer.bPlaying)
 					alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol(fade_select,0,0), "%s", cHouse);
 				else
 					alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol((fade_select/2),(fade_select/2),(fade_select/2)), "%s", cHouse);
@@ -1389,7 +1389,7 @@ void cGame::setup_skirmish() {
 			}
 			else
 			{
-				if (aiplayer[p].bPlaying)
+				if (aiPlayer.bPlaying)
 					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", (int)player[p].credits);
 				else
 					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(128,128,128), "%d", (int)player[p].credits);
@@ -1398,7 +1398,7 @@ void cGame::setup_skirmish() {
 
 			if (bHover)
 			{
-				if (aiplayer[p].bPlaying)
+				if (aiPlayer.bPlaying)
 					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(fade_select,0,0), "%d", (int)player[p].credits);
 				else
 					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol((fade_select/2),(fade_select/2),(fade_select/2)), "%d", player[p].credits);
@@ -1423,7 +1423,7 @@ void cGame::setup_skirmish() {
 			// Units
 			bHover = false;
 
-			alfont_textprintf(bmp_screen, bene_font, 269,iDrawY+1, makecol(0,0,0), "%d",aiplayer[p].iUnits);
+			alfont_textprintf(bmp_screen, bene_font, 269,iDrawY+1, makecol(0,0,0), "%d", aiPlayer.iUnits);
 
 			//rect(bmp_screen, 269, iDrawY, 290, iDrawY+16, makecol(255,255,255));
 
@@ -1432,37 +1432,37 @@ void cGame::setup_skirmish() {
 
 			if (p == 0)
 			{
-				alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol(255,255,255), "%d", aiplayer[p].iUnits);
+				alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(255,255,255), "%d", aiPlayer.iUnits);
 			}
 			else
 			{
-				if (aiplayer[p].bPlaying)
-					alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol(255,255,255), "%d", aiplayer[p].iUnits);
+				if (aiPlayer.bPlaying)
+					alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(255,255,255), "%d", aiPlayer.iUnits);
 				else
-					alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol(128,128,128), "%d", aiplayer[p].iUnits);
+					alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(128,128,128), "%d", aiPlayer.iUnits);
 
 			}
 
 			if (bHover)
 			{
-				if (aiplayer[p].bPlaying)
-					alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol(fade_select,0,0), "%d", aiplayer[p].iUnits);
+				if (aiPlayer.bPlaying)
+					alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(fade_select,0,0), "%d", aiPlayer.iUnits);
 				else
-					alfont_textprintf(bmp_screen, bene_font, 269,iDrawY, makecol((fade_select/2),(fade_select/2),(fade_select/2)), "%d", aiplayer[p].iUnits);
+					alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol((fade_select/2),(fade_select/2),(fade_select/2)), "%d", aiPlayer.iUnits);
 
 				if (cMouse::isLeftButtonClicked())
 				{
-					aiplayer[p].iUnits++;
-					if (aiplayer[p].iUnits > 10) {
-						aiplayer[p].iUnits = 1;
+					aiPlayer.iUnits++;
+					if (aiPlayer.iUnits > 10) {
+                        aiPlayer.iUnits = 1;
 					}
 				}
 
 				if (cMouse::isRightButtonClicked())
 				{
-					aiplayer[p].iUnits--;
-					if (aiplayer[p].iUnits < 1) {
-						aiplayer[p].iUnits = 10;
+					aiPlayer.iUnits--;
+					if (aiPlayer.iUnits < 1) {
+                        aiPlayer.iUnits = 10;
 					}
 				}
 			}
@@ -1490,18 +1490,15 @@ void cGame::setup_skirmish() {
 
     textDrawer.drawTextBottomRight("START");
 
-
 	if (bDoRandomMap) {
 		randomMapGenerator.generateRandomMap();
 	}
 
     // back
-    if (MOUSE_WITHIN_RECT(backButtonX, backButtonY, backButtonWidth, backButtonHeight))
-    {
+    if (MOUSE_WITHIN_RECT(backButtonX, backButtonY, backButtonWidth, backButtonHeight)) {
         textDrawer.drawTextBottomLeft(makecol(255,0,0), " BACK");
 
-        if (cMouse::isLeftButtonClicked())
-        {
+        if (cMouse::isLeftButtonClicked()) {
             bFadeOut=true;
             state = GAME_MENU;
         }
@@ -1514,7 +1511,6 @@ void cGame::setup_skirmish() {
         iMission=9; // high tech level (TODO: make this customizable)
 
         game.setup_players();
-//        assert(player[HUMAN].getItemBuilder() != NULL);
 
         // START
         if ((cMouse::isLeftButtonClicked() && iSkirmishMap > -1)) {
@@ -1525,60 +1521,66 @@ void cGame::setup_skirmish() {
             /* set up starting positions */
             int iStartPositions[5];
             int iMax=0;
-            for (int s=0; s < 5; s++)
-            {
+            for (int s=0; s < 5; s++) {
                 iStartPositions[s] = PreviewMap[iSkirmishMap].iStartCell[s];
 
+                // counts how many start cells are actually given in the skirmish maps, (sets iMax)
                 if (PreviewMap[iSkirmishMap].iStartCell[s] > -1) {
                     iMax=s;
                 }
             }
 
             // REGENERATE MAP DATA FROM INFO
-            if (iSkirmishMap > -1)
-            {
-                for (int c=0; c < MAX_CELLS; c++) {
-                    mapEditor.createCell(c, PreviewMap[iSkirmishMap].mapdata[c], 0);
-                }
-                mapEditor.smoothMap();
+            for (int c=0; c < MAX_CELLS; c++) {
+                mapEditor.createCell(c, PreviewMap[iSkirmishMap].mapdata[c], 0);
             }
+
+            mapEditor.smoothMap();
 
             int iShuffles=3;
 
-            while (iShuffles > 0)
-            {
-                int one = rnd(iMax);
-                int two = rnd(iMax);
+            for (int i = 0; i < iMax; i++) {
+                char msg[255];
+                sprintf(msg, "iStartPositions[%d] = [%d]", i, iStartPositions[i]);
+                logbook(msg);
+            }
 
-                if (one == two)
-                {
-                    if (rnd(100) < 25)
-                        iShuffles--;
+            logbook("Start swapping...");
+            for (int i = 0; i < iMax; i++) {
+                if (rnd(100) > 33) continue; // 33% chance we will randomly swap things around
+                int spot = rnd(iMax); // pick random spot
 
+                if (i == spot) {
                     continue;
                 }
 
-                int back = iStartPositions[one];
-                iStartPositions[one] = iStartPositions[two];
-                iStartPositions[two] = back; // backup
+                int startPosAtI = iStartPositions[i]; // remember current startpos
+                iStartPositions[i] = iStartPositions[spot]; // assign the startpos at 'spot' to 'i'
+                iStartPositions[spot] = startPosAtI; // and swap 'spot' with i (basically swapping them)
+            }
+            logbook("Done swapping...");
 
-                iShuffles--;
+            for (int i = 0; i < iMax; i++) {
+                char msg[255];
+                sprintf(msg, "iStartPositions[%d] = [%d]", i, iStartPositions[i]);
+                logbook(msg);
             }
 
             // set up players and their units
             for (int p=0; p < AI_WORM; p++)	{
 
-                int iHouse = player[p].getHouse();
+                cPlayer &cPlayer = player[p];
+                int iHouse = cPlayer.getHouse();
 
                 // house = 0 , random.
                 if (iHouse==0 && p < 4) { // (all players above 4 are non-playing AI 'sides'
                     bool bOk=false;
 
                     while (bOk == false) {
-                        if (p > 0)
+                        if (p > 0) // cpu player
                             iHouse = rnd(4)+1;
-                        else
-                            iHouse = rnd(3)+1;
+                        else // human may not be sardaukar
+                            iHouse = rnd(3)+1; // hark = 1, atr = 2, ord = 3, sar = 4
 
                         bool bFound=false;
                         for (int pl=0; pl < AI_WORM; pl++) {
@@ -1590,8 +1592,6 @@ void cGame::setup_skirmish() {
                         if (!bFound) {
                             bOk=true;
                         }
-
-
                     }
                 }
 
@@ -1599,7 +1599,7 @@ void cGame::setup_skirmish() {
                     iHouse = FREMEN;
                 }
 
-                player[p].setHouse(iHouse);
+                cPlayer.setHouse(iHouse);
 
                 // not playing.. do nothing
                 if (aiplayer[p].bPlaying == false) {
@@ -1607,19 +1607,20 @@ void cGame::setup_skirmish() {
                 }
 
                 // set credits
-                player[p].focus_cell = iStartPositions[p];
+                cPlayer.focus_cell = iStartPositions[p];
 
                 // Set map position
                 if (p == HUMAN) {
-                    mapCamera->centerAndJumpViewPortToCell(player[p].focus_cell);
+                    mapCamera->centerAndJumpViewPortToCell(cPlayer.focus_cell);
                 }
 
+
                 // create constyard
-                cAbstractStructure *s = cStructureFactory::getInstance()->createStructure(player[p].focus_cell, CONSTYARD, p);
+                cAbstractStructure *s = cStructureFactory::getInstance()->createStructure(cPlayer.focus_cell, CONSTYARD, p);
 
                 // when failure, create mcv instead
                 if (s == NULL) {
-                    UNIT_CREATE(player[p].focus_cell, MCV, p, true);
+                    UNIT_CREATE(cPlayer.focus_cell, MCV, p, true);
                 }
 
                 // amount of units
@@ -1627,8 +1628,8 @@ void cGame::setup_skirmish() {
 
                 // create units
                 while (u < aiplayer[p].iUnits) {
-                    int iX=iCellGiveX(player[p].focus_cell);
-                    int iY=iCellGiveY(player[p].focus_cell);
+                    int iX=iCellGiveX(cPlayer.focus_cell);
+                    int iY=iCellGiveY(cPlayer.focus_cell);
                     int iType=rnd(12);
 
                     iX-=4;
@@ -1637,7 +1638,7 @@ void cGame::setup_skirmish() {
                     iY+=rnd(9);
 
                     // convert house specific stuff
-                    if (player[p].getHouse() == ATREIDES) {
+                    if (cPlayer.getHouse() == ATREIDES) {
                         if (iType == DEVASTATOR || iType == DEVIATOR) {
                             iType = SONICTANK;
                         }
@@ -1656,7 +1657,7 @@ void cGame::setup_skirmish() {
                     }
 
                     // ordos
-                    if (player[p].getHouse() == ORDOS) {
+                    if (cPlayer.getHouse() == ORDOS) {
                         if (iType == DEVASTATOR || iType == SONICTANK) {
                             iType = DEVIATOR;
                         }
@@ -1667,7 +1668,7 @@ void cGame::setup_skirmish() {
                     }
 
                     // harkonnen
-                    if (player[p].getHouse() == HARKONNEN) {
+                    if (cPlayer.getHouse() == HARKONNEN) {
                         if (iType == DEVIATOR || iType == SONICTANK) {
                             iType = DEVASTATOR;
                         }
