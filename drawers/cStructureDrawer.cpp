@@ -273,8 +273,6 @@ void cStructureDrawer::drawStructuresForLayer(int layer) {
 
 		if (!theStructure) continue;
 
-        structureUtils.putStructureOnDimension(MAPID_STRUCTURES, theStructure);
-
         if (structureUtils.isStructureVisibleOnScreen(theStructure)) {
             // draw
             drawStructureForLayer(theStructure, layer);
