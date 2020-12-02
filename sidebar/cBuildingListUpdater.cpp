@@ -279,6 +279,9 @@ void cBuildingListUpdater::evaluateUpgrades() {
         bool hasAtLeastOneStructureForStructureType = m_Player->hasAtleastOneStructure(upgrade.structureType);
         if (!hasAtLeastOneStructureForStructureType) {
             addToUpgradesList = false;
+            char msg[255];
+            sprintf(msg, "Upgrade [%s] has not required structureType (upgrade.structureType) #1 [%s].", upgrade.description, structures[upgrade.structureType].name);
+            logbook(msg);
         }
 
         // check if player has the additional structure (if required)
@@ -286,6 +289,9 @@ void cBuildingListUpdater::evaluateUpgrades() {
             bool hasAtleastOneNeedStructureType = m_Player->hasAtleastOneStructure(upgrade.needsStructureType);
             if (!hasAtleastOneNeedStructureType) {
                 addToUpgradesList = false;
+                char msg[255];
+                sprintf(msg, "Upgrade [%s] has not required additional structureType (upgrade.needsStructureType) [%s].", upgrade.description, structures[upgrade.needsStructureType].name);
+                logbook(msg);
             }
         }
 
@@ -293,12 +299,18 @@ void cBuildingListUpdater::evaluateUpgrades() {
         int structureUpgradeLevel = m_Player->getStructureUpgradeLevel(upgrade.structureType);
 
         if (structureUpgradeLevel != upgrade.atUpgradeLevel) {
-            if (structureUpgradeLevel >= upgrade.atUpgradeLevel &&  // already at correct upgrade level
-                m_Player->hasAtleastOneStructure(upgrade.structureType)) { // and structure is available
+            // already at correct upgrade level, no = comparison because that means it should be offered
+            if (structureUpgradeLevel > upgrade.atUpgradeLevel) {
                 // this upgrade has been executed already, so apply again
                 applyUpgrade(upgrade);
+                char msg[255];
+                sprintf(msg, "Upgrade [%s] has already been achieved, so re-apply. StructureUpgradeLevel=%d and upgrade.atUpgradeLevel=%d.", upgrade.description, structureUpgradeLevel, upgrade.atUpgradeLevel);
+                logbook(msg);
             }
             addToUpgradesList = false;
+            char msg[255];
+            sprintf(msg, "Upgrade [%s] will not be offered because it has a different atUpgradeLevel. StructureUpgradeLevel=%d and upgrade.atUpgradeLevel=%d not required additional structureType (upgrade.needsStructureType).", upgrade.description, structureUpgradeLevel, upgrade.atUpgradeLevel);
+            logbook(msg);
         }
 
         if (addToUpgradesList) {
@@ -343,7 +355,12 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item) {
 
 	cLogger::getInstance()->logCommentLine("updateUpgradeCompleted - begin");
 
-    applyUpgrade(item->getS_Upgrade());
+    const s_Upgrade &upgradeType = item->getS_Upgrade();
+
+    // Upgrade structure + provide any unit or structure
+    m_Player->increaseStructureUpgradeLevel(upgradeType.structureType);
+
+    applyUpgrade(upgradeType);
 
     evaluateUpgrades();
 
@@ -364,11 +381,7 @@ void cBuildingListUpdater::applyUpgrade(const s_Upgrade &upgradeType) {
 
     cBuildingList *listBeingUpgraded = sideBar->getList(listType);
     listBeingUpgraded->setStatusAvailable(subListType);
-
-    // Upgrade structure + provide any unit or structure
-
-    m_Player->increaseStructureUpgradeLevel(upgradeType.structureType);
-
+    
     assert(upgradeType.providesTypeId > -1);
     assert(upgradeType.providesType > -1);
 
