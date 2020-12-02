@@ -228,8 +228,7 @@ int convert_angle(int face_angle)
 }
 
 // return random number between 0 and 'max'
-int rnd(int max)
-{
+int rnd(int max) {
   if (max < 1) return 0;
   return (rand() % max);
 }
