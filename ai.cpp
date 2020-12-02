@@ -20,12 +20,16 @@ void cAIPlayer::init(int iID) {
     ID = iID;
 
 	// SKIRMISH RELATED SETTINGS
-	if (iID > 1)
-		bPlaying=false;
-	else
-		bPlaying=true;
+	// TODO: move this out of here, this basically ensures there is one playable AI at start (when setting up
+	// skirmish game)
+	if (iID > 1) {
+        bPlaying = false;
+    } else {
+        bPlaying = true;
+    }
 
-	iUnits=1;
+	// same here, this initially sets 3 units
+	iUnits=3;
 
     iCheckingPlaceStructure=-1;
 
@@ -76,8 +80,8 @@ void cAIPlayer::BUILD_STRUCTURE(int iStrucType)
 
 }
 
-void cAIPlayer::BUILD_UNIT(int iUnitType)
-{
+void cAIPlayer::BUILD_UNIT(int iUnitType) {
+
     // Fix up house mixtures
     if (player[ID].getHouse() == HARKONNEN || player[ID].getHouse() == SARDAUKAR)
     {
@@ -107,11 +111,10 @@ void cAIPlayer::BUILD_UNIT(int iUnitType)
 
     // when building a tank, etc, check if we do not already build
     bool bAlreadyBuilding=false;
-    for (int i=0; i < MAX_UNITTYPES; i++)
-    {
+    for (int i=0; i < MAX_UNITTYPES; i++) {
+
         // when building a quad
-        if (iUnitType == QUAD || iUnitType == TRIKE || iUnitType == RAIDER)
-        {
+        if (iUnitType == QUAD || iUnitType == TRIKE || iUnitType == RAIDER) {
             // the same
             if (i == iUnitType)
                 if (iBuildingUnit[i] > -1)
@@ -120,35 +123,36 @@ void cAIPlayer::BUILD_UNIT(int iUnitType)
 
         // when building a tank or something
         if (iUnitType == TANK || iUnitType == LAUNCHER || iUnitType == SIEGETANK ||
-            iUnitType == SONICTANK || iUnitType == DEVASTATOR || iUnitType == HARVESTER)
-        {
+            iUnitType == SONICTANK || iUnitType == DEVASTATOR || iUnitType == HARVESTER) {
+
             if (i == iUnitType)
                 if (iBuildingUnit[i] > -1)
                     bAlreadyBuilding=true;
         }
 
         // when building a carryall
-        if (iUnitType == CARRYALL || iUnitType == ORNITHOPTER)
-        {
+        if (iUnitType == CARRYALL || iUnitType == ORNITHOPTER) {
             if (i == iUnitType)
                 if (iBuildingUnit[i] > -1)
-                bAlreadyBuilding=true;
-
+                    bAlreadyBuilding=true;
         }
     }
 
-    //if (bAlreadyBuilding)
-      //  return;
-
-    // Now build it
-    iBuildingUnit[iUnitType]=0;                  // start building!
-    player[ID].credits -= units[iUnitType].cost; // pay for it
-
-	if (DEBUGGING)
-	{
-		logbook("Building UNIT: ");
-		logbook(units[iUnitType].name);
-	}
+    if (!bAlreadyBuilding) {
+        // Now build it
+        iBuildingUnit[iUnitType] = 0;                  // start building!
+        player[ID].credits -= units[iUnitType].cost; // pay for it
+        if (DEBUGGING) {
+            logbook("Building UNIT: ");
+            logbook(units[iUnitType].name);
+        }
+    } else {
+        if (DEBUGGING) {
+            std::string unitName = units[iUnitType].name;
+            std::string message = "Attempted to build unit " + unitName + " but something similar is already being built";
+            cLogger::getInstance()->log(eLogLevel::LOG_TRACE, eLogComponent::COMP_AI, "BUILD_UNIT", message, eLogOutcome::OUTC_FAILED, ID, player[ID].getHouse());
+        }
+    }
 }
 
 
@@ -723,15 +727,12 @@ void cAIPlayer::think_attack()
 
 }
 
-void cAIPlayer::think_buildarmy()
-{
+void cAIPlayer::think_buildarmy() {
     // prevent human m_Player thinking
     if (ID == 0)
         return; // do not build for human! :)
 
-
-    if (TIMER_BuildUnits < 3)
-    {
+    if (TIMER_BuildUnits < 5) {
         TIMER_BuildUnits++;
         return;
     }
@@ -750,8 +751,7 @@ void cAIPlayer::think_buildarmy()
 	int iChance = 10;
 
 	if (player[ID].getHouse() == HARKONNEN ||
-        player[ID].getHouse() == SARDAUKAR)
-	{
+        player[ID].getHouse() == SARDAUKAR) {
 		if (iMission <= 2) {
 			iChance=50;
 		} else {
@@ -782,6 +782,7 @@ void cAIPlayer::think_buildarmy()
     }
 
 
+    // QUAD/TRIKE BUILDING
 	iChance=50;
 
 	// low chance on buying the higher the mission
@@ -795,8 +796,7 @@ void cAIPlayer::think_buildarmy()
         iChance=7;
 
 	// build quads / trikes
-    if (iMission > 2 && rnd(100) < iChance)
-    {
+    if (iMission > 2 && rnd(100) < iChance) {
         if (player[ID].credits > units[QUAD].cost)
         {
 			BUILD_UNIT(QUAD);
@@ -807,59 +807,50 @@ void cAIPlayer::think_buildarmy()
 		}
     }
 
-    int iHarvs = 0;     // harvesters
-    int iCarrys= 0;     // carryalls
-
-    if (iMission > 3)
-    {
+    int harvesters = 0;     // harvesters
+    if (iMission > 3) {
         // how many harvesters do we own?
-        for (int i=0; i < MAX_UNITS; i++)
-            if (unit[i].isValid())
-                if (unit[i].iPlayer == ID && unit[i].iType == HARVESTER)
-                    iHarvs++;
-
-        if (iHarvs < player[ID].getAmountOfStructuresForType(REFINERY))
-        {
-            if (player[ID].credits > units[HARVESTER].cost)
-                BUILD_UNIT(HARVESTER); // build harvester
+        for (int i=0; i < MAX_UNITS; i++) {
+            if (!unit[i].isValid()) continue;
+            if (unit[i].iPlayer == ID && unit[i].iType == HARVESTER)
+               harvesters++;
         }
-        else if (iHarvs >= player[ID].getAmountOfStructuresForType(REFINERY))
-        {
-            // enough harvesters , try to get ratio 2 harvs - 1 refinery
-            if (iHarvs < (player[ID].getAmountOfStructuresForType(REFINERY) * 2)) {
-                if (rnd(100) < 30)
-                    BUILD_UNIT(HARVESTER);
+
+        // 1 harvester for each refinery please
+        if (harvesters < player[ID].getAmountOfStructuresForType(REFINERY)) {
+            if (player[ID].hasEnoughCreditsFor(units[HARVESTER].cost)) {
+                BUILD_UNIT(HARVESTER); // build harvester
             }
         }
-
-    }
+        else if (harvesters >= player[ID].getAmountOfStructuresForType(REFINERY)) {
+            // enough harvesters , try to get ratio 2 harvesters for one refinery
+            if (harvesters < (player[ID].getAmountOfStructuresForType(REFINERY) * 2)) {
+                if (rnd(100) < 15) {
+                    BUILD_UNIT(HARVESTER);
+                }
+            }
+        }
+    } // Harvester buy logic when mission > 3
 
     // ability to build carryalls
-    if (iMission >= 5)
-    {
-        if (player[ID].credits > units[CARRYALL].cost)
-        {
+    if (iMission >= 5) {
+        int carryalls= 0;     // carryalls
+        if (player[ID].hasEnoughCreditsFor(units[CARRYALL].cost)) {
 
-        for (int i=0; i < MAX_UNITS; i++)
-            if (unit[i].isValid())
+            for (int i=0; i < MAX_UNITS; i++) {
+                if (!unit[i].isValid()) continue;
                 if (unit[i].iPlayer == ID && unit[i].iType == CARRYALL)
-                    iCarrys++;
+                    carryalls++;
+            }
 
-        int iLimit = 1;
+            int optimalAmountCarryAlls = (harvesters + 1) / 2;
 
-        if (iHarvs > 1 )
-            iLimit = iHarvs / 2;
-
-        if (iCarrys < iLimit)
-        {
-            // randomly, build
-            if (rnd(100) < 50) // it is pretty wise to do so, so high chance of doing so...
-                BUILD_UNIT(CARRYALL);
+            if (carryalls < optimalAmountCarryAlls) {
+                if (rnd(100) < 30) {
+                    BUILD_UNIT(CARRYALL);
+                }
+            }
         }
-
-
-        }
-
     }
 
     if (iMission > 6) {
@@ -872,20 +863,22 @@ void cAIPlayer::think_buildarmy()
         }
     }
 
-	if (iMission >= 8 || game.bSkirmish)
-    {
-        int iSpecial = DEVASTATOR;
+	if (iMission >= 8 || game.bSkirmish) {
+	    bool canBuySpecial = player[ID].hasAtleastOneStructure(HEAVYFACTORY) && player[ID].hasAtleastOneStructure(IX);
+	    if (canBuySpecial) {
+            int iSpecial = DEVASTATOR;
 
-        if (player[ID].getHouse() == ATREIDES) {
-        	iSpecial = SONICTANK;
-        }
+            if (player[ID].getHouse() == ATREIDES) {
+                iSpecial = SONICTANK;
+            }
 
-        if (player[ID].getHouse() == ORDOS) {
-        	iSpecial = DEVIATOR;
-        }
+            if (player[ID].getHouse() == ORDOS) {
+                iSpecial = DEVIATOR;
+            }
 
-        if (player[ID].credits > units[iSpecial].cost) {
-            BUILD_UNIT(iSpecial);
+            if (player[ID].credits > units[iSpecial].cost) {
+                BUILD_UNIT(iSpecial);
+            }
         }
 
         if (player[ID].credits > units[SIEGETANK].cost)
