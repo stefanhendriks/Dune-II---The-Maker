@@ -157,6 +157,8 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
         buildingListUpdater->onStructureCreated(iStructureType);
     }
 
+    structureUtils.putStructureOnDimension(MAPID_STRUCTURES, str);
+
     return str;
 }
 
