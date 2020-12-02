@@ -209,6 +209,10 @@ void cPlayer::init(int id) {
     TIMER_attack=-1;			// -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 }
 
+/**
+ * Sets house value , but also sets up difficulty settings + creates bitmaps for that corresponding house
+ * @param iHouse
+ */
 void cPlayer::setHouse(int iHouse) {
     int currentHouse = house;
     char msg[255];
