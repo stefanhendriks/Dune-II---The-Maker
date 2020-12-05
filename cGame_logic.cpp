@@ -16,6 +16,9 @@
 
   */
 
+#include <vector>
+#include <algorithm>
+#include <random>
 #include "include/d2tmh.h"
 #include "cGame.h"
 
@@ -1519,16 +1522,16 @@ void cGame::setup_skirmish() {
             bSkirmish=true;
 
             /* set up starting positions */
-            int iStartPositions[5];
-            int iMax=0;
-            for (int s=0; s < 5; s++) {
-                iStartPositions[s] = PreviewMap[iSkirmishMap].iStartCell[s];
+            std::vector<int> iStartPositions;
 
-                // counts how many start cells are actually given in the skirmish maps, (sets iMax)
-                if (PreviewMap[iSkirmishMap].iStartCell[s] > -1) {
-                    iMax=s;
-                }
+            int startCellsOnSkirmishMap=0;
+            for (int s=0; s < 5; s++) {
+                int startPosition = PreviewMap[iSkirmishMap].iStartCell[s];
+                if (startPosition < 0) continue;
+                iStartPositions.push_back(startPosition);
             }
+
+            startCellsOnSkirmishMap = iStartPositions.size();
 
             // REGENERATE MAP DATA FROM INFO
             for (int c=0; c < MAX_CELLS; c++) {
@@ -1537,33 +1540,25 @@ void cGame::setup_skirmish() {
 
             mapEditor.smoothMap();
 
-            int iShuffles=3;
-
-            for (int i = 0; i < iMax; i++) {
-                char msg[255];
-                sprintf(msg, "iStartPositions[%d] = [%d]", i, iStartPositions[i]);
-                logbook(msg);
-            }
-
-            logbook("Start swapping...");
-            for (int i = 0; i < iMax; i++) {
-                if (rnd(100) > 33) continue; // 33% chance we will randomly swap things around
-                int spot = rnd(iMax); // pick random spot
-
-                if (i == spot) {
-                    continue;
+            if (DEBUGGING) {
+                logbook("Starting positions before shuffling:");
+                for (int i = 0; i < startCellsOnSkirmishMap; i++) {
+                    char msg[255];
+                    sprintf(msg, "iStartPositions[%d] = [%d]", i, iStartPositions[i]);
+                    logbook(msg);
                 }
-
-                int startPosAtI = iStartPositions[i]; // remember current startpos
-                iStartPositions[i] = iStartPositions[spot]; // assign the startpos at 'spot' to 'i'
-                iStartPositions[spot] = startPosAtI; // and swap 'spot' with i (basically swapping them)
             }
-            logbook("Done swapping...");
 
-            for (int i = 0; i < iMax; i++) {
-                char msg[255];
-                sprintf(msg, "iStartPositions[%d] = [%d]", i, iStartPositions[i]);
-                logbook(msg);
+            logbook("Shuffling starting positions");
+            std::random_shuffle(iStartPositions.begin(), iStartPositions.end());
+
+            if (DEBUGGING) {
+                logbook("Starting positions after shuffling:");
+                for (int i = 0; i < startCellsOnSkirmishMap; i++) {
+                    char msg[255];
+                    sprintf(msg, "iStartPositions[%d] = [%d]", i, iStartPositions[i]);
+                    logbook(msg);
+                }
             }
 
             // set up players and their units
@@ -1572,12 +1567,12 @@ void cGame::setup_skirmish() {
                 cPlayer &cPlayer = player[p];
                 int iHouse = cPlayer.getHouse();
 
-                // house = 0 , random.
+                // house = 0 means pick random house
                 if (iHouse==0 && p < 4) { // (all players above 4 are non-playing AI 'sides'
                     bool bOk=false;
 
                     while (bOk == false) {
-                        if (p > 0) // cpu player
+                        if (p > HUMAN) // cpu player
                             iHouse = rnd(4)+1;
                         else // human may not be sardaukar
                             iHouse = rnd(3)+1; // hark = 1, atr = 2, ord = 3, sar = 4
