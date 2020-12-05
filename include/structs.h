@@ -159,7 +159,7 @@ struct s_Bullet
 };
 
 // SKIRMISH MAP PREVIEW DATA
-struct sPreviewMap {
+struct s_PreviewMap {
      BITMAP *terrain;        // terrain
      int mapdata[MAX_CELLS]; // map data
      int iPlayers;           // players
