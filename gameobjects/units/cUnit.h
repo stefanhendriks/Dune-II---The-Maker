@@ -186,6 +186,10 @@ public:
         return iType == CARRYALL || iType == ORNITHOPTER || iType == FRIGATE;
     }
 
+    bool isHarvester() {
+        return iType == HARVESTER;
+    }
+
     bool isInfantryUnit();
 
     int getBmpWidth() const;
@@ -199,6 +203,8 @@ public:
     void think_position();
 
     bool isMovingBetweenCells();
+
+    bool isIdle() { return iAction == ACTION_GUARD; }
 };
 
 

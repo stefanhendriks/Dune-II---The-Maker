@@ -29,7 +29,10 @@ namespace
     const int BUFFER_SIZE = 32768;
 }
 
-// Keep a logbook
+/**
+ * Default printing in logs. Only will be done if DEBUGGING is true.
+ * @param txt
+ */
 void logbook(const char *txt)
 {
     if (DEBUGGING) {

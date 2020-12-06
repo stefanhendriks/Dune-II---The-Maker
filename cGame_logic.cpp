@@ -174,8 +174,7 @@ void cGame::mission_init() {
     map.init(game.map_width, game.map_height);
 
     // clear out players but not entirely
-    for (int i=0; i < MAX_PLAYERS; i++)
-    {
+    for (int i=0; i < MAX_PLAYERS; i++) {
         int h = player[i].getHouse();
 
         player[i].init(i);
@@ -1608,7 +1607,6 @@ void cGame::setup_skirmish() {
                 if (p == HUMAN) {
                     mapCamera->centerAndJumpViewPortToCell(cPlayer.focus_cell);
                 }
-
 
                 // create constyard
                 cAbstractStructure *s = cStructureFactory::getInstance()->createStructure(cPlayer.focus_cell, CONSTYARD, p);
