@@ -41,12 +41,11 @@ void cAIPlayer::init(int iID) {
     memset(TIMER_BuildUnit, -1, sizeof(TIMER_BuildUnit));
 	memset(TIMER_BuildStructure, -1, sizeof(TIMER_BuildStructure));
 
-    TIMER_attack=-(900 + rnd(200));
-   //  TIMER_attack=-50;
+    TIMER_attack = (700 + rnd(400));
 
-    TIMER_BuildUnits=-500; // give m_Player advantage to build his stuff first, before computer grows his army
-    TIMER_harv=200;
-    TIMER_repair=500;
+    TIMER_BuildUnits = 500; // give m_Player advantage to build his stuff first, before computer grows his army
+    TIMER_harv = 200;
+    TIMER_repair = 500;
 }
 
 void cAIPlayer::BUILD_STRUCTURE(int iStrucType)
@@ -156,10 +155,9 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
 }
 
 
-void cAIPlayer::think_building()
-{
+void cAIPlayer::think_building() {
 
-	if (ID == 0)
+	if (ID == HUMAN)
 		return; // human m_Player does not think
 
     /*
@@ -167,10 +165,8 @@ void cAIPlayer::think_building()
 
 		when building completed, search for a spot and place it!
 	*/
-    for (int i=0; i < MAX_STRUCTURETYPES; i++)
-	{
-		if (iBuildingStructure[i] > -1)
-		{
+    for (int i=0; i < MAX_STRUCTURETYPES; i++) {
+		if (iBuildingStructure[i] > -1) {
 			int iTimerCap=35; // was 35
 
 			// the more constyards
@@ -211,16 +207,11 @@ void cAIPlayer::think_building()
 		}
 	}
 
-
-
-
 	/*
-		unit building
+		unit building ---> TODO: use the itemBuilder logic instead, this is duplicate logic
 	*/
-    for (int i=0; i < MAX_UNITTYPES; i++)
-    {
-        if (iBuildingUnit[i] > -1)
-        {
+    for (int i=0; i < MAX_UNITTYPES; i++) {
+        if (iBuildingUnit[i] > -1) {
             int iStrucType = AI_STRUCTYPE(i);
 
             TIMER_BuildUnit[i]++;
@@ -232,14 +223,12 @@ void cAIPlayer::think_building()
             cPlayerDifficultySettings * difficultySettings = player[ID].getDifficultySettings();
 			iTimerCap = difficultySettings->getBuildSpeed(iTimerCap);
 
-            if (TIMER_BuildUnit[i] > iTimerCap)
-            {
+            if (TIMER_BuildUnit[i] > iTimerCap) {
                 iBuildingUnit[i]++;
                 TIMER_BuildUnit[i]=0; // set to 0 again
             }
 
-            if (iBuildingUnit[i] >= units[i].build_time)
-            {
+            if (iBuildingUnit[i] >= units[i].build_time) {
             //logbook("DONE BUILDING");
 
             // produce now
@@ -252,8 +241,7 @@ void cAIPlayer::think_building()
 //                iStr = FIND_PRIMARY_BUILDING(iStrucType, ID);
             }
 
-            if (iStr > -1)
-            {
+            if (iStr > -1) {
                 int iProducedUnit=-1;
 
                 if (structure[iStr])
@@ -320,140 +308,109 @@ void cAIPlayer::think_building()
 	// END OF THINK BUILDING
 }
 
-void cAIPlayer::think_harvester()
-{
+void cAIPlayer::think_harvester() {
+    if (TIMER_harv > 0) {
+        TIMER_harv--;
+        return;
+    }
 
- if (TIMER_harv > 0)
- {
-    TIMER_harv--;
-    return;
- }
+    TIMER_harv = 200;
 
- TIMER_harv=200;
+    // think about spice blooms
+    int iBlooms = -1;
 
- // think about spice blooms
- int iBlooms=-1;
+    for (int c = 0; c < MAX_CELLS; c++)
+        if (map.getCellType(c) == TERRAIN_BLOOM)
+            iBlooms++;
 
- for (int c=0; c < MAX_CELLS; c++)
-	 if (map.getCellType(c) == TERRAIN_BLOOM)
-		 iBlooms++;
+    // When no blooms are detected, we must 'spawn' one
+    if (iBlooms < 3) {
+        int iCll = rnd(MAX_CELLS);
 
- // When no blooms are detected, we must 'spawn' one
- if (iBlooms < 3)
- {
-	int iCll = rnd(MAX_CELLS);
+        if (map.getCellType(iCll) == TERRAIN_SAND) {
+            // create bloom
+            mapEditor.createCell(iCll, TERRAIN_BLOOM, 0);
+        }
+    } else {
+        // TODO: auto detonate spice bloom?
 
-	if (map.getCellType(iCll) == TERRAIN_SAND)
-	{
-		// create bloom
-		mapEditor.createCell(iCll, TERRAIN_BLOOM, 0);
-	}
+        if (rnd(100) < 15) {
+            // if we got a unit to spare (something light), we can blow it up  by walking over it
+            // with a soldier or something
+            int iUnit = -1;
+            int iDist = 9999;
+            int iBloom = CLOSE_SPICE_BLOOM(-1);
+            for (int i = 0; i < MAX_UNITS; i++) {
+                if (unit[i].isValid()) {
+                    if (unit[i].iPlayer > 0 &&
+                        unit[i].iPlayer == ID && unit[i].iAction == ACTION_GUARD) {
 
- }
- else
- {
-	if (rnd(100) < 15)
-	{
+                        if (units[unit[i].iType].infantry) {
+                            int d = ABS_length(iCellGiveX(iBloom),
+                                               iCellGiveY(iBloom),
+                                               iCellGiveX(unit[i].iCell),
+                                               iCellGiveY(unit[i].iCell));
 
-	// if we got a unit to spare (something light), we can blow it up  by walking over it
-	// with a soldier or something
-	int iUnit=-1;
-	int iDist=9999;
-	int iBloom =  CLOSE_SPICE_BLOOM(-1);
-	for (int i=0; i < MAX_UNITS; i++)
-	{
-		if (unit[i].isValid()){
-			if (unit[i].iPlayer > 0 &&
-				unit[i].iPlayer == ID && unit[i].iAction == ACTION_GUARD) {
-
-				if (units[unit[i].iType].infantry) {
-					int d = ABS_length(	iCellGiveX(iBloom),
-										iCellGiveY(iBloom),
-										iCellGiveX(unit[i].iCell),
-										iCellGiveY(unit[i].iCell));
-
-					if (d < iDist)
-					{
-						iUnit = i;
-						iDist = d;
-					}
-				}
-			}
-		}
-
-	}
-
-	if (iUnit > -1)
-		{
-            // shoot spice bloom
-		    UNIT_ORDER_ATTACK(iUnit, iBloom,-1, -1, iBloom);
-		}
-		else
-			BUILD_UNIT(SOLDIER);
-
-	}
- }
-
-
- bool bFoundHarvester=false;
-
- if (player[ID].hasAtleastOneStructure(REFINERY))
- {
-     bFoundHarvester=false;
-
-         for (int j = 0; j < MAX_UNITS; j++)
-         {
-             if (unit[j].isValid())
-                 if (unit[j].iPlayer == ID)
-                 {
-                     if (unit[j].iType == HARVESTER)
-                     {
-                         bFoundHarvester=true;
-                         break;
-                     }
-
-                     else if (unit[j].iType == CARRYALL)
-                     {
-                        if (unit[j].iUnitID > -1)
-                            if (unit[unit[j].iUnitID].iType == HARVESTER)
-                            {
-                                bFoundHarvester=true;
-                                break;
+                            if (d < iDist) {
+                                iUnit = i;
+                                iDist = d;
                             }
-
-                        if (unit[j].iNewUnitType == HARVESTER)
-                        {
-                            bFoundHarvester=true;
-                            break;
                         }
-                     }
+                    }
+                }
 
-                 }
+            }
 
+            if (iUnit > -1) {
+                // shoot spice bloom
+                UNIT_ORDER_ATTACK(iUnit, iBloom, -1, -1, iBloom);
+            } else
+                BUILD_UNIT(SOLDIER);
+        }
+    }
 
-         }
+    bool bFoundHarvester = false;
 
+    cPlayer &cPlayer = player[ID];
+    if (cPlayer.hasAtleastOneStructure(REFINERY)) {
+        for (int j = 0; j < MAX_UNITS; j++) {
+            cUnit &cUnit = unit[j];
+            if (!cUnit.isValid()) continue;
+            if (cUnit.iPlayer != ID) continue;
 
+            if (cUnit.isHarvester()) {
+                bFoundHarvester = true;
+                break;
+            } else if (cUnit.iType == CARRYALL) {
+                // check what it is carrying
+                if (cUnit.iUnitID > -1) {
+                    if (unit[cUnit.iUnitID].iType == HARVESTER) {
+                        bFoundHarvester = true;
+                        break;
+                    }
+                }
 
-        if (bFoundHarvester == false)
-        {
-            for (int k=0; k < MAX_STRUCTURES; k++)
-            {
-                if (structure[k])
-                    if (structure[k]->getOwner() == ID)
-                        if (structure[k]->getType() == REFINERY)
-                        {
-                            REINFORCE(ID, HARVESTER, structure[k]->getCell(), -1);
-
-                        }
-
+                // or perhaps it is bringing a new unit type...
+                if (cUnit.iNewUnitType == HARVESTER) {
+                    bFoundHarvester = true;
+                    break;
+                }
             }
         }
 
-     } // has refinery
+        if (bFoundHarvester == false) {
+            for (int k = 0; k < MAX_STRUCTURES; k++) {
+                cAbstractStructure *pStructure = structure[k];
+                if (pStructure == nullptr) continue;
+                if (pStructure->getOwner() != ID) continue;
+                if (pStructure->getType() != REFINERY) continue;
 
+                REINFORCE(ID, HARVESTER, pStructure->getCell(), -1);
+                break; // done
+            }
 
-
+        }
+    } // has refinery
 }
 
 void cAIPlayer::think() {
@@ -462,12 +419,12 @@ void cAIPlayer::think() {
     think_building();
 
     // not time yet to think
-    if (player[ID].TIMER_think < 10) {
-        player[ID].TIMER_think++;
+    if (player[ID].TIMER_think > 0) {
+        player[ID].TIMER_think--;
         return;
     }
 
-    player[ID].TIMER_think = 0;
+    player[ID].TIMER_think = 10;
 
     // think about fair harvester stuff
     think_harvester();
@@ -495,12 +452,11 @@ void cAIPlayer::think_repair() {
         return;
     }
 
-    TIMER_repair=500; // next timed interval to think about this...
+    TIMER_repair=1000; // next timed interval to think about this...
 
     // check if we must repair, only if we have a repair structure ofcourse
     // and we have some money to spare for repairs
-    if (player[ID].hasAtleastOneStructure(REPAIR) && player[ID].credits > 250)
-    {
+    if (player[ID].hasAtleastOneStructure(REPAIR) && player[ID].credits > 250) {
         // yes, we can repair
         for (int i=0; i < MAX_UNITS; i++) {
             if (unit[i].isValid()) {
@@ -534,197 +490,159 @@ void cAIPlayer::think_repair() {
     // check if any structures where breaking down due decay
 }
 
-void cAIPlayer::think_attack()
-{
- if (TIMER_attack < 0)
- {
-    TIMER_attack++;
-    think_repair();
-    return;
- }
 
- TIMER_attack = -(rnd(600)+100);
-// TIMER_attack=-50;
+// Attack logic, do note this is used for Skirmish and Campaign gameplay
+void cAIPlayer::think_attack() {
+    if (TIMER_attack > 0) {
+        TIMER_attack--;
+        think_repair();
+        return;
+    }
 
- // find anyone with a specific random group number and send it to attack the m_Player (focus cell)
- int iAmount=3 + rnd(8);
- int iTarget=-1;
- bool bUnit=false;
- int iGroup=rnd(3)+1;
- bool bInfantryOnly=false;
+    TIMER_attack = (rnd(900) + 100);
 
- int iAttackPlayer=0;
+    int armySize = 3 + rnd(8); // size of units to attack with
+    int iTarget = -1;
+    bool isAttackingUnit = false; // do we attack a unit? (if false, it means we attack a structure)
 
- if (game.bSkirmish)
- {
-	 // skirmish games will make the ai a bit more agressive!
-	 iAmount+=3 + rnd(7);
+    bool bInfantryOnly = false;
 
-	// check what players are playing
-	 int iPl[5];
-	 int iPlID=0;
-	 memset(iPl, -1, sizeof(iPl));
+    int iAttackPlayer = 0; // HUMAN
 
-	 for (int p=0; p < AI_WORM; p++)
-	 {
-		if (p != ID)
-		{
-			bool bOk=false;
-			if (p == 0) bOk=true;
-			if (p > 1 && aiplayer[p].bPlaying) bOk=true;
+    cPlayer &cPlayer = player[ID];
+    if (game.bSkirmish) {
+        // skirmish games will make the ai a bit more agressive!
+        armySize += 3 + rnd(7);
 
-			if (player[p].iTeam != player[ID].iTeam)
-			{
-				iPl[iPlID] = p;
-				iPlID++;
-			}
-		}
-	 }
+        // check what players are playing
+        int iPl[5];
+        int iPlID = 0;
+        memset(iPl, -1, sizeof(iPl));
 
-	 	iAttackPlayer=iPl[rnd(iPlID)];
-		if (DEBUGGING)
-		{
-			char msg[255];
-			sprintf(msg, "Attacking m_Player id %d", iAttackPlayer);
-			logbook(msg);
-		}
- }
+        for (int p = 0; p < AI_WORM; p++) {
+            if (p != ID) {
+                bool bOk = false;
+                if (p == 0) bOk = true;
+                if (p > 1 && aiplayer[p].bPlaying) bOk = true;
 
- // only when ai has a wor/barracks to regenerate his troops, send off infantry sometimes.
- if (player[ID].hasAtleastOneStructure(WOR) ||
-     player[ID].hasAtleastOneStructure(BARRACKS)) {
-     if (rnd(100) < 30) {
-         bInfantryOnly = true;
-         iAmount = 10;
-     }
- }
-
- if (rnd(100) < 50)
- {
-     iTarget = AI_RANDOM_STRUCTURE_TARGET(ID, iAttackPlayer);
-
-     if (iTarget < 0)
-     {
-         iTarget = AI_RANDOM_UNIT_TARGET(ID, iAttackPlayer);
-         bUnit=true;
-     }
- }
- else
- {
-     iTarget = AI_RANDOM_UNIT_TARGET(ID,iAttackPlayer);
-     bUnit=true;
-
-     if (iTarget < 0)
-     {
-         iTarget = AI_RANDOM_STRUCTURE_TARGET(ID, iAttackPlayer);
-         bUnit=false;
-     }
- }
-
- if (iTarget < 0)
- {
-	 if (DEBUGGING)
-		 logbook("No target!");
-
-
-    return;
- }
-
- // make up the balance
- int iWe=0;
- int iThem=0;
-
- for (int i=0; i < MAX_UNITS; i++)
- {
-	if (unit[i].isValid())
-		if (unit[i].iPlayer == 0)
-		{
-			if (unit[i].iType != HARVESTER &&
-				unit[i].iType != CARRYALL)
-				iThem++;
-		}
-		else
-		{
-			if (unit[i].iType != HARVESTER &&
-				unit[i].iType != CARRYALL)
-				iWe++;
-		}
- }
-
- // When WE do not even match THEM, we wait until we have build more
- if (iWe <= iThem && rnd(100) < 50)
- {
-	 if (DEBUGGING)
-		 logbook("AI: Decission to wait, no use to attack opponent which is equal or stronger then AI");
-
-     TIMER_attack = -250;
-
-	 return;
- }
-
- int iUnits=0;
-
- for (int i=0; i < MAX_UNITS; i++)
- {
-   if (unit[i].isValid())
-       if (unit[i].iPlayer == ID &&
-		   unit[i].iType != HARVESTER && unit[i].iType != CARRYALL)
-       {
-
-           if (bInfantryOnly == false)
-           {
-
-            if (unit[i].iGroup == iGroup)
-            {
-                if (bUnit)
-                    UNIT_ORDER_ATTACK(i, unit[iTarget].iCell, iTarget, -1, -1);
-                else
-                    UNIT_ORDER_ATTACK(i, structure[iTarget]->getCell(), -1, iTarget, -1);
-
-                iUnits++;
+                // skip same team
+                if (player[p].iTeam != cPlayer.iTeam) {
+                    iPl[iPlID] = p;
+                    iPlID++;
+                }
             }
-           }
-           else
-           {
-               if (units[unit[i].iType].infantry)
-               {
-                   if (bUnit)
-                       UNIT_ORDER_ATTACK(i, unit[iTarget].iCell, iTarget, -1, -1);
-                   else
-                       UNIT_ORDER_ATTACK(i, structure[iTarget]->getCell(), -1, iTarget, -1);
-               }
-           }
-       }
- }
+        }
 
- // get remaining units (not always)
- if (iUnits < iAmount &&
-	 rnd(100) < 10 && player[ID].credits > 700)
- {
-     for (int i=0; i < MAX_UNITS; i++)
-     {
-         if (unit[i].isValid())
-             if (unit[i].iPlayer == ID)
-             {
-                 if (unit[i].iType != HARVESTER &&
-                     unit[i].iType != CARRYALL &&
-                     unit[i].iType != FRIGATE &&
-                     unit[i].iAction == ACTION_GUARD)
-                 {
-                     if (bUnit)
-                         UNIT_ORDER_ATTACK(i, unit[iTarget].iCell, iTarget, -1, -1);
-                     else
-                         UNIT_ORDER_ATTACK(i, structure[iTarget]->getCell(), -1, iTarget, -1);
+        iAttackPlayer = iPl[rnd(iPlID)];
+        if (DEBUGGING) {
+            char msg[255];
+            sprintf(msg, "AI (id=%d) - Attacking player id %d", this->ID, iAttackPlayer);
+            logbook(msg);
+        }
+    }
 
-                     iUnits++;
-                     if (iUnits >= iAmount)
-                         break;
-                 }
-             }
-     }
+    // only when ai has a wor/barracks to regenerate his troops, send off infantry sometimes.
+    bool hasHeavyOrLightFactory = cPlayer.hasAtleastOneStructure(LIGHTFACTORY) || cPlayer.hasAtleastOneStructure(HEAVYFACTORY);
+    bool hasInfantryStructures = cPlayer.hasAtleastOneStructure(WOR) || cPlayer.hasAtleastOneStructure(BARRACKS);
+    if (hasInfantryStructures && !hasHeavyOrLightFactory) {
+        bInfantryOnly = true;
+    }
 
- }
+    int unitsAvailable = 0;
+    for (int i = 0; i < MAX_UNITS; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
+        if (cUnit.iPlayer != ID) continue; // skip all units but my own
+        if (cUnit.isHarvester()) continue; // skip harvesters
+        if (cUnit.isAirbornUnit()) continue; // skip airborn
+        if (!cUnit.isIdle()) continue; // skip non-idle units
+        unitsAvailable++;
+    }
 
+    if (unitsAvailable < (armySize / 2)) {
+        char msg[255];
+        sprintf(msg, "AI: (ID=%d) skipping attack, because we have %d units available for attacking which is less than 50% of requested army size %d", unitsAvailable, armySize);
+        logbook(msg);
+    }
+
+    // flip coin, either attack a random unit or structure
+    if (rnd(100) < 50) {
+        iTarget = AI_RANDOM_STRUCTURE_TARGET(ID, iAttackPlayer);
+
+        if (iTarget < 0) {
+            iTarget = AI_RANDOM_UNIT_TARGET(ID, iAttackPlayer);
+            isAttackingUnit = true;
+        }
+    } else {
+        iTarget = AI_RANDOM_UNIT_TARGET(ID, iAttackPlayer);
+        isAttackingUnit = true;
+
+        if (iTarget < 0) {
+            iTarget = AI_RANDOM_STRUCTURE_TARGET(ID, iAttackPlayer);
+            isAttackingUnit = false;
+        }
+    }
+
+    if (iTarget < 0) {
+        logbook("Could not determine target to attack.");
+        return;
+    }
+
+    // make up the balance
+    int iWe = 0;
+    int iThem = 0;
+
+    for (int i = 0; i < MAX_UNITS; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
+        if (cUnit.isAirbornUnit()) continue; // do not count airborn units
+        if (cUnit.isHarvester()) continue;
+
+        if (cUnit.iPlayer == iAttackPlayer) {
+            iThem++;
+        } else {
+            iWe++;
+        }
+    }
+
+    // When WE do not even match THEM, we wait until we have build more
+    bool scared = rnd(100) < 30;
+    if (iWe <= iThem && scared) {
+        logbook("AI: Decided to wait a bit because 'our' army is as big as theirs...");
+
+        TIMER_attack = 250;
+        return;
+    }
+
+    int unitsOrderedToAttack = 0;
+
+    for (int i = 0; i < MAX_UNITS; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
+        if (cUnit.iPlayer != ID) continue; // skip all units but my own
+        if (cUnit.isHarvester()) continue; // skip harvesters
+        if (cUnit.isAirbornUnit()) continue; // skip airborn
+        if (!cUnit.isIdle()) continue; // skip non-idle units
+
+        if (isAttackingUnit)
+            UNIT_ORDER_ATTACK(i, unit[iTarget].iCell, iTarget, -1, -1);
+        else
+            UNIT_ORDER_ATTACK(i, structure[iTarget]->getCell(), -1, iTarget, -1);
+
+        unitsOrderedToAttack++;
+        if (unitsOrderedToAttack >= armySize)
+            break;
+    }
+
+    if (DEBUGGING) {
+        char msg[255];
+        if (isAttackingUnit) {
+            sprintf(msg, "AI: I (id=%d) ordered %d units to attack player %d (armySize=%d), UNIT %d", ID, unitsOrderedToAttack, armySize, iTarget);
+        } else {
+            sprintf(msg, "AI: I (id=%d) ordered %d units to attack player %d (armySize=%d), STRUCTURE %d", ID, unitsOrderedToAttack, armySize, iTarget);
+        }
+        logbook(msg);
+    }
 }
 
 void cAIPlayer::think_buildarmy() {
@@ -732,8 +650,8 @@ void cAIPlayer::think_buildarmy() {
     if (ID == 0)
         return; // do not build for human! :)
 
-    if (TIMER_BuildUnits < 5) {
-        TIMER_BuildUnits++;
+    if (TIMER_BuildUnits > 0) {
+        TIMER_BuildUnits--;
         return;
     }
 
@@ -744,7 +662,7 @@ void cAIPlayer::think_buildarmy() {
 			return;
 	}*/
 
-    TIMER_BuildUnits=0;
+    TIMER_BuildUnits=5;
 
     // Depending on the mission/tech level, try to build stuff
     int iMission = game.iMission;
@@ -1181,45 +1099,49 @@ bool AI_UNITSTRUCTURETYPE(int iPlayer, int iUnitType) {
     return true;
 }
 
-int AI_RANDOM_UNIT_TARGET(int iPlayer, int iAttackPlayer)
-{
+int AI_RANDOM_UNIT_TARGET(int iPlayer, int playerIndexToAttack) {
+    if (iPlayer < 0 || iPlayer >= MAX_PLAYERS) return -1;
+
+    cPlayer &cPlayer = player[iPlayer];
 
     // Randomly assemble list, and then pick one
     int iTargets[100];
     memset(iTargets, -1, sizeof(iTargets));
 
-    int iT=0;
+    int maxTargets=0;
 
-    for (int i=0; i < MAX_UNITS; i++)
-        if (unit[i].isValid())
-            if (unit[i].iPlayer == iAttackPlayer)
-			{
-				if (DEBUGGING)
-				{
-				char msg[255];
-				sprintf(msg, "AI %d (House %d) -> Visible = %d", iPlayer, player[iPlayer].getHouse(), mapUtils->isCellVisibleForPlayerId(iPlayer, unit[i].iCell));
-				logbook(msg);
-				}
+    for (int i=0; i < MAX_UNITS; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
+        if (cUnit.iPlayer != playerIndexToAttack) continue;
+        // unit belongs to player of the player we wish to attack
 
-				if (mapUtils->isCellVisibleForPlayerId(iPlayer, unit[i].iCell) || game.bSkirmish)
-				{
-					iTargets[iT] = i;
-					iT++;
+        bool isVisibleForPlayer = mapUtils->isCellVisible(&cPlayer, cUnit.iCell);
 
-					if (iT > 99)
-						break;
-				}
-			}
+        if (DEBUGGING) {
+            char msg[255];
+            sprintf(msg, "AI %d (House %d) -> Visible = %d", iPlayer, cPlayer.getHouse(),
+                    isVisibleForPlayer);
+            logbook(msg);
+        }
 
+        // HACK HACK: the AI player does not need to discover an enemy player yet
+        if (isVisibleForPlayer || game.bSkirmish) {
+            iTargets[maxTargets] = i;
+            maxTargets++;
 
-	if (DEBUGGING)
-	{
-	char msg[255];
-	sprintf(msg, "Targets %d", iT);
-	logbook(msg);
+            if (maxTargets > 99)
+                break;
+        }
+    }
+
+	if (DEBUGGING) {
+        char msg[255];
+        sprintf(msg, "Targets %d", maxTargets);
+        logbook(msg);
 	}
 
-    return (iTargets[rnd(iT)]);
+    return iTargets[rnd(maxTargets)];
 }
 
 int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer)
@@ -1386,7 +1308,7 @@ int cAIPlayer::iPlaceStructureCell(int iType)
 	}
 
     iCheckingPlaceStructure=i;
-    player[ID].TIMER_think-=5;
+    player[ID].TIMER_think = 5;
 
 	return -1;
 }

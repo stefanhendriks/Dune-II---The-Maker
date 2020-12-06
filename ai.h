@@ -16,12 +16,11 @@
 bool AI_UNITSTRUCTURETYPE(int iPlayer, int iUnitType);
 int AI_STRUCTYPE(int iUnitType);
 int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer);
-int AI_RANDOM_UNIT_TARGET(int iPlayer, int iAttackPlayer);
-
+int AI_RANDOM_UNIT_TARGET(int iPlayer, int playerIndexToAttack);
 
 // ai specific variables for a m_Player
-class cAIPlayer
-{
+class cAIPlayer {
+
 public:
 
 	// SKIRMISH
@@ -38,18 +37,14 @@ public:
     int iBuildingStructure[MAX_STRUCTURETYPES]; // > -1 = progress
     int TIMER_BuildUnit[MAX_UNITTYPES];         // 
     int TIMER_BuildStructure[MAX_STRUCTURETYPES]; // ONLY ONE BUILDING AT A TIME CAN BE BUILT!
-    
-    // building stuff
     int TIMER_BuildUnits;       // when to build units?
-
-    // Attacking
     int TIMER_attack;           // when to attack
     int TIMER_repair;           // repair
 
 
     // harvester reinforcements
-    int TIMER_harv;             // harv
-    void init(int iID);            // initialize
+    int TIMER_harv;                 // harv
+    void init(int iID);             // initialize
 	
     void think();
     void think_worm();

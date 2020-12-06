@@ -1607,7 +1607,7 @@ void cUnit::think_move_air() {
                     // when it is a TRANSFER_NEW_LEAVE , and AI, we auto-assign team number here
                     // - Normally done in AI.CPP, though from here it is out of our hands.
                     if (iTransferType == TRANSFER_NEW_LEAVE) {
-                        if (iPlayer > 0) {
+                        if (iPlayer > HUMAN) {
                             if (id > -1) {
                                 unit[id].iGroup = rnd(3) + 1; // assign group
                             }
@@ -3870,8 +3870,7 @@ void SPAWN_FRIGATE(int iPlr, int iCll)
 // iTpe = unit type
 // iCll = location where to bring it
 
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart)
-{
+void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
 
 	// handle invalid arguments
 	if (iPlr < 0 || iTpe < 0)
