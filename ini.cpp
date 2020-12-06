@@ -27,8 +27,7 @@ bool caseInsCompare(const string& s1, const string& s2) {
 }
 
 // Reads out an entire sentence and returns it
-void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
-{
+void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH]) {
   char ch;
   int pos=0;
 
@@ -45,11 +44,7 @@ void INI_Sentence(FILE *f, char result[MAX_LINE_LENGTH])
   // users who do exceed the limit.
   if (pos> (MAX_LINE_LENGTH-1))
     break;
-
-  putchar(ch);
  }
-
-
 }
 
 /*********************************************************************************/
