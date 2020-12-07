@@ -33,7 +33,7 @@ class cAbstractStructure {
 		bool bAnimate;      // Do its special animation? (unit leaving building, starport
 							// dropping something, etc)
 
-		int id;				// the id within the structures[] array
+		int id;				// the id within the structure[] array
 
 	protected:
 		int iWidth;			// width in cells (set by factory)
@@ -47,9 +47,6 @@ class cAbstractStructure {
 
 		// Repairing stuff
 		bool bRepair;       // repairing? (using timer + gives animation)
-		int iRepairY;		// raising repair thingy
-		int iRepairX;		// repair X position (changes everytime?)
-		int iRepairAlpha;	// repair alpha
 
     public:
 
@@ -67,7 +64,6 @@ class cAbstractStructure {
 
 		// TIMERS that all structures use
 		int TIMER_repair;   // repairing timer
-		int TIMER_repairanimation; // repair animation timer
 		int TIMER_flag;     // flag animation
 		int TIMER_fade;     // fading timer
 
@@ -132,14 +128,12 @@ class cAbstractStructure {
 		int getPercentageNotPaved();
 		int getPowerUsage();
 		int getBuildingFase() { return iBuildFase; }
-		int getRepairX() { return iRepairX; }
-		int getRepairY() { return iRepairY; }
-		int getRepairAlpha() { return iRepairAlpha; }
 
 		bool isAnimating() { return bAnimate; }
 		bool isPrimary();
 		bool isRepairing() { return bRepair; }
-		bool hasUnitWithin() { return iUnitID > -1; }
+		bool hasUnitWithin() const { return iUnitID > -1; }
+		int getUnitIdWithin() const { return iUnitID; }
 		bool isValid();
 
 
@@ -154,7 +148,6 @@ class cAbstractStructure {
 		void setStructureId(int theId) { id = theId; }
 		void setBuildingFase(int value) { iBuildFase = value; }
 		void setRepairing(bool value);
-		void setRepairAlpha(int value) { iRepairAlpha = value; }
 
 		void damage(int hp); // damage structure for x amount of hp
     	float getHealthNormalized();

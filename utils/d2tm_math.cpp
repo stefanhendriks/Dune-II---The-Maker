@@ -234,8 +234,7 @@ int rnd(int max) {
 }
 
 // returns length between 2 points
-double length(int x1, int y1, int x2, int y2)
-{
+double length(int x1, int y1, int x2, int y2) {
 
   int A = x2-x1;
   int B = y2-y1;

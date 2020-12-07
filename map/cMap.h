@@ -10,37 +10,62 @@
 
   */
 
-class cMap
-{
+class cMap {
+
 public:
 
 	cMap();
 	~cMap();
 
     void init(int width, int height);
-    void smooth();
-    void draw_bullets();
-
-    void think_minimap();
 
 	bool occupied(int iCell);
 	bool occupied(int iCll, int iUnitID);
 	bool occupiedInDimension(int iCell, int dimension);
 	bool occupiedByType(int iCell);
 
-	void soft();
+	/**
+	 * Returns true/false when x,y coordinate is within bounds of the map. Taking invisible boundary into account.
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	bool isWithinBoundaries(int x, int y) {
+	    // in a map of 64x64, the outer boundaries are impassable
+	    // so; the actual valid values are 1...62 (because the coordinates
+	    // are 0 based. Ie, coordinate 63 means it is at the 64th tile.
+	    // hence, if coordinate 63 is passed in, it means it is out of bounds.
+	    // but coordinate 62 is within bounds.
 
+	    // since the width/height passed in the constructor is not 0 based (but 1 based)
+	    // we need to take that into account when checking width/height (hence the -2)
+
+	    // Example:
+	    // width=64
+	    // height=64
+	    // ie: x = 63 ... 63 =< (64-2=62) -> out of bounds
+	    //     x = 62 ... 62 =< (64-2-62) -> at the edge
+	    //     x = 0  ...  0 > 0 ? no
+	    //     x = 1  ...  1 > 0 ? yes, in bounds
+
+	    return  x > 0 && x <= (width-2) &&
+	            y > 0 && y <= (height -2);
+	}
+
+    // Drawing
+    int  mouse_draw_x();
+    int  mouse_draw_y();
 	void draw_units_2nd();
 	void draw_units();
+    void draw_bullets();
 
     void smudge_increase(int iType, int iCell);
 
-	// Drawing
-	int  mouse_draw_x();
-	int  mouse_draw_y();
 
     void thinkInteraction();
-	void draw_think();
+    void think_minimap();
+    void draw_think();
+
     void clear_all();
     void clear_spot(int c, int size, int player);
 

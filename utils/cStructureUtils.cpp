@@ -198,21 +198,20 @@ int cStructureUtils::findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCel
 	int playerId = player->getId();
 
 	for (int i=0; i < MAX_STRUCTURES; i++) {
-		if (structure[i]) {												// exists (pointer)
-			if (structure[i]->getOwner() == playerId) {     			// same player
-				if (structure[i]->getType() == structureType) {   		// type equals parameter
-					if (structure[i]->iUnitID < 0) {    				// no other unit is heading to this structure
-						long distance = cellCalculator->distance(cell, structure[i]->getCell());
+        cAbstractStructure *pStructure = structure[i];
+        if (pStructure == nullptr) continue;
+        if (pStructure->getOwner() != playerId) continue;
+        if (pStructure->getType() != structureType) continue;
 
-						// if distance is lower than last found distance, it is the closest for now.
-						if (distance < shortestDistance) {
-							foundStructureId=i;
-							shortestDistance=distance;
-						}
-					}
-				}
-			}
-		}
+        if (pStructure->iUnitID < 0) {	// no other unit is heading to this structure
+            long distance = cellCalculator->distance(cell, pStructure->getCell());
+
+            // if distance is lower than last found distance, it is the closest for now.
+            if (distance < shortestDistance) {
+                foundStructureId=i;
+                shortestDistance=distance;
+            }
+        }
 	}
 
 	return foundStructureId;

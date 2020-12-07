@@ -393,9 +393,7 @@ void cGame::combat_mouse() {
             // mouse mv 1st coordinates filled
             // when mouse is deviating from this coordinate, draw a line
 
-            if (abs(mouse_x - mouse_mv_x1) > 4 &&
-                abs(mouse_y - mouse_mv_y1) > 4) {
-
+            if (ABS_length(mouse_x, mouse_y, mouse_mv_x1, mouse_mv_y1) > 4) {
                 // assign 2nd coordinates
                 mouse_mv_x2 = mouse_x;
                 mouse_mv_y2 = mouse_y;

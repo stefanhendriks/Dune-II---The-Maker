@@ -160,8 +160,8 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
             for (int k=0; k < MAX_STRUCTURES; k++) {
                 cAbstractStructure *theStructure = structure[k];
                 if (!theStructure) continue;
-                if (!theStructure->getOwner() == iPlayer) continue;
-                if (!theStructure->getType() == REFINERY) continue;
+                if (theStructure->getOwner() != iPlayer) continue;
+                if (theStructure->getType() != REFINERY) continue;
 
                 // found!
                 refinery = theStructure;
@@ -263,7 +263,6 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                         int id = idOfUnitAtCell;
 
                         if (unit[id].iHitPoints > 0) {
-
                             unit[id].iHitPoints -= 150;
 
                             // NO HP LEFT, DIE
@@ -506,7 +505,7 @@ void cUnit::draw_health() {
 // this method returns the amount of percent extra damage may be done
 float cUnit::fExpDamage()
 {
-	if (fExperience < 1) return 0; // no stars, no increasement
+	if (fExperience < 1) return 0; // no stars
 
 	// MAX EXPERIENCE = 10 (9 stars)
 
@@ -1909,29 +1908,38 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
 
     if (iPlayer > HUMAN) {
         if (iShotUnit > -1) {
-            if (iAction != ACTION_ATTACK) {
-                UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1, -1);
+            if (isHarvester()) {
+                if (unit[iShotUnit].isInfantryUnit() && !isMovingBetweenCells()) {
+                    // this harvester will try to run over the infantry that attacks it
+                    UNIT_ORDER_MOVE(iID, unit[iShotUnit].iCell);
+                } else {
+                    // under attack, retreat to base? find nearby units to help out?
+                }
             } else {
-                // we are attacking, but when target is very far away (out of range?) then we should not attack that but defend
-                // ourselves
-                int iDestCell = iAttackCell;
+                if (iAction != ACTION_ATTACK) {
+                    UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1, -1);
+                } else {
+                    // we are attacking, but when target is very far away (out of range?) then we should not attack that but defend
+                    // ourselves
+                    int iDestCell = iAttackCell;
 
-                if (iDestCell < 0)
-                {
-                    if (iAttackUnit > -1)
-                        iDestCell = unit[iAttackUnit].iCell;
-
-                    if (iAttackStructure > -1)
-                        iDestCell = structure[iAttackStructure]->getCell();
-
-                    if (ABS_length(iCellX, iCellY, iCellGiveX(iDestCell), iCellGiveY(iDestCell)) < units[iType].range)
+                    if (iDestCell < 0)
                     {
-                        // within range, do nothing
-                    }
-                    else
-                    {
-                        // fire back
-                        UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1,-1);
+                        if (iAttackUnit > -1)
+                            iDestCell = unit[iAttackUnit].iCell;
+
+                        if (iAttackStructure > -1)
+                            iDestCell = structure[iAttackStructure]->getCell();
+
+                        if (ABS_length(iCellX, iCellY, iCellGiveX(iDestCell), iCellGiveY(iDestCell)) < units[iType].range)
+                        {
+                            // within range, do nothing
+                        }
+                        else
+                        {
+                            // fire back
+                            UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1,-1);
+                        }
                     }
                 }
             }
@@ -3894,14 +3902,13 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
 		iStartCell = iFindCloseBorderCell(iStart);
 	}
 
-	if (iStartCell < 0)
-	{
+	if (iStartCell < 0)	{
 		logbook("ERROR (reinforce): Could not figure a startcell");
 		return;
 	}
 
 	char msg[255];
-	sprintf(msg, "REINFORCE: Starting from cell %d, going to cell %d", iStartCell, iCll);
+	sprintf(msg, "REINFORCE: Bringing unit type %d for player %d. Starting from cell %d, going to cell %d", iTpe, iPlr, iStartCell, iCll);
 	logbook(msg);
 
 	// STEP 2: create carryall
@@ -3909,8 +3916,6 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
 
 	// STEP 3: assign order to carryall
 	unit[iUnit].carryall_order(-1, TRANSFER_NEW_LEAVE, iCll, iTpe);
-
-
 }
 
 /**

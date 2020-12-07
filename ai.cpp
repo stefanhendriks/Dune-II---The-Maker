@@ -44,7 +44,7 @@ void cAIPlayer::init(int iID) {
     TIMER_attack = (700 + rnd(400));
 
     TIMER_BuildUnits = 500; // give m_Player advantage to build his stuff first, before computer grows his army
-    TIMER_harv = 200;
+    TIMER_blooms = 200;
     TIMER_repair = 500;
 }
 
@@ -82,7 +82,9 @@ void cAIPlayer::BUILD_STRUCTURE(int iStrucType)
 void cAIPlayer::BUILD_UNIT(int iUnitType) {
 
     // Fix up house mixtures
-    if (player[ID].getHouse() == HARKONNEN || player[ID].getHouse() == SARDAUKAR)
+    cPlayer &cPlayer = player[ID];
+
+    if (cPlayer.getHouse() == HARKONNEN || cPlayer.getHouse() == SARDAUKAR)
     {
         if (iUnitType == INFANTRY) iUnitType = TROOPERS;
         if (iUnitType == SOLDIER) iUnitType = TROOPER;
@@ -96,12 +98,10 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
         if (iUnitType == SOLDIER) iUnitType = TROOPER;
 	}
 
-    if (player[ID].getHouse() == ORDOS)
+    if (cPlayer.getHouse() == ORDOS)
     {
         if (iUnitType == TRIKE) iUnitType = RAIDER;
     }
-
-
 
     bool bAllowed = AI_UNITSTRUCTURETYPE(ID, iUnitType);
 
@@ -140,7 +140,7 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
     if (!bAlreadyBuilding) {
         // Now build it
         iBuildingUnit[iUnitType] = 0;                  // start building!
-        player[ID].credits -= units[iUnitType].cost; // pay for it
+        cPlayer.credits -= units[iUnitType].cost; // pay for it
         if (DEBUGGING) {
             logbook("Building UNIT: ");
             logbook(units[iUnitType].name);
@@ -149,7 +149,7 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
         if (DEBUGGING) {
             std::string unitName = units[iUnitType].name;
             std::string message = "Attempted to build unit " + unitName + " but something similar is already being built";
-            cLogger::getInstance()->log(eLogLevel::LOG_TRACE, eLogComponent::COMP_AI, "BUILD_UNIT", message, eLogOutcome::OUTC_FAILED, ID, player[ID].getHouse());
+            cLogger::getInstance()->log(eLogLevel::LOG_TRACE, eLogComponent::COMP_AI, "BUILD_UNIT", message, eLogOutcome::OUTC_FAILED, ID, cPlayer.getHouse());
         }
     }
 }
@@ -286,12 +286,10 @@ void cAIPlayer::think_building() {
 			else
 			{
 				// deliver unit by carryall
-				for (int s=0; s < MAX_STRUCTURES; s++)
-				{
+				for (int s=0; s < MAX_STRUCTURES; s++) {
 					if (structure[s])
 						if (structure[s]->getOwner() == ID)
-							if (structure[s]->getType() == iStrucType)
-							{
+							if (structure[s]->getType() == iStrucType) {
 								REINFORCE(ID, i, structure[s]->getCell(), -1);
 							}
 				}
@@ -308,13 +306,13 @@ void cAIPlayer::think_building() {
 	// END OF THINK BUILDING
 }
 
-void cAIPlayer::think_harvester() {
-    if (TIMER_harv > 0) {
-        TIMER_harv--;
+void cAIPlayer::think_spiceBlooms() {
+    if (TIMER_blooms > 0) {
+        TIMER_blooms--;
         return;
     }
 
-    TIMER_harv = 200;
+    TIMER_blooms = 200;
 
     // think about spice blooms
     int iBlooms = -1;
@@ -368,49 +366,6 @@ void cAIPlayer::think_harvester() {
                 BUILD_UNIT(SOLDIER);
         }
     }
-
-    bool bFoundHarvester = false;
-
-    cPlayer &cPlayer = player[ID];
-    if (cPlayer.hasAtleastOneStructure(REFINERY)) {
-        for (int j = 0; j < MAX_UNITS; j++) {
-            cUnit &cUnit = unit[j];
-            if (!cUnit.isValid()) continue;
-            if (cUnit.iPlayer != ID) continue;
-
-            if (cUnit.isHarvester()) {
-                bFoundHarvester = true;
-                break;
-            } else if (cUnit.iType == CARRYALL) {
-                // check what it is carrying
-                if (cUnit.iUnitID > -1) {
-                    if (unit[cUnit.iUnitID].iType == HARVESTER) {
-                        bFoundHarvester = true;
-                        break;
-                    }
-                }
-
-                // or perhaps it is bringing a new unit type...
-                if (cUnit.iNewUnitType == HARVESTER) {
-                    bFoundHarvester = true;
-                    break;
-                }
-            }
-        }
-
-        if (bFoundHarvester == false) {
-            for (int k = 0; k < MAX_STRUCTURES; k++) {
-                cAbstractStructure *pStructure = structure[k];
-                if (pStructure == nullptr) continue;
-                if (pStructure->getOwner() != ID) continue;
-                if (pStructure->getType() != REFINERY) continue;
-
-                REINFORCE(ID, HARVESTER, pStructure->getCell(), -1);
-                break; // done
-            }
-
-        }
-    } // has refinery
 }
 
 void cAIPlayer::think() {
@@ -427,7 +382,7 @@ void cAIPlayer::think() {
     player[ID].TIMER_think = 10;
 
     // think about fair harvester stuff
-    think_harvester();
+    think_spiceBlooms();
 
     if (ID == 0)
         return; // we do not think further
@@ -1184,12 +1139,12 @@ void cAIPlayer::think_repair_structure(cAbstractStructure *struc)
 	if (!struc->isRepairing()) {
 		// when ai has a lot of money, repair even faster
 		if (player[struc->getOwner()].credits > 1000) {
-			if (struc->getHitPoints() < (structures[struc->getType()].hp))  {
+			if (struc->getHitPoints() < (struc->getS_StructuresType().hp))  {
 				struc->setRepairing(true);
 			}
 		} else {
 			// AUTO-REPAIR BY AI
-			if (struc->getHitPoints() < (structures[struc->getType()].hp/2)) {
+			if (struc->getHitPoints() < (struc->getS_StructuresType().hp/2)) {
 				struc->setRepairing(true);
 			}
 		}
