@@ -39,7 +39,7 @@ struct s_UnitP {
   int    sight;             // Sight of a unit (in radius)
   int    range;             // Range of a unit (in radius)
 
-  int    icon;              // icon id
+  int    icon;              // icon id (taken from gfxInter data file)
 
   int    cost;              // cost/price
 

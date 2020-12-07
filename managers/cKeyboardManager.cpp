@@ -94,10 +94,14 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.destroyAllStructures(true);
         game.destroyAllUnits(true);
     }
-    // GIVE 299999 CREDITS TO PLAYER
+
+    // GIVE 299999 CREDITS TO ALL PLAYERS
     if (key[KEY_F4] && !key[KEY_LSHIFT]) {
-        player[0].credits = 299999;
+        for (int i = 0; i < AI_WORM; i++) {
+            player[i].credits = 299999;
+        }
     }
+
     //DESTROY UNIT OR BUILDING
     if (key[KEY_F4] && key[KEY_LSHIFT]) {
         int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
@@ -117,6 +121,7 @@ void cKeyboardManager::DEBUG_KEYS() {
     if (key[KEY_F5]) {
         map.clear_all();
     }
+
     //JUMP TO MISSION 3
     if (key[KEY_F6] && game.iHouse > 0) {
         game.mission_init();
@@ -127,6 +132,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         playMusicByType(MUSIC_BRIEFING);
         game.iMentatSpeak = -1;
     }
+
     //JUMP TO MISSION 4
     if (key[KEY_F7] && game.iHouse > 0) {
         game.mission_init();

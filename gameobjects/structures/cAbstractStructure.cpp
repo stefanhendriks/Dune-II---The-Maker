@@ -27,10 +27,6 @@ cAbstractStructure::cAbstractStructure() {
     iFrame=-1;
 
     bRepair=false;
-    iRepairX=0;
-    iRepairY=0;
-    iRepairAlpha=255;
-
     bAnimate=false;
 
     iRallyPoint=-1;
@@ -44,7 +40,6 @@ cAbstractStructure::cAbstractStructure() {
 
     // TIMERS
     TIMER_repair=-1;
-    TIMER_repairanimation=-1;
     TIMER_flag=-1;
     TIMER_fade=-1;
 
@@ -113,30 +108,14 @@ int cAbstractStructure::getRange() {
 
 
 // this structure dies
-void cAbstractStructure::die()
-{
-    // find myself and set to zero
-    int iIndex=-1;
-	for (int i=0; i < MAX_STRUCTURES; i++) {
-        if (structure[i] == this)
-        {
-            iIndex=i;
-            break;
-        }
-	}
-
-    if (iIndex < 0) {
-        logbook("cAbstractStructure(): Could not die");
-        return;
-    }
-
+void cAbstractStructure::die() {
     // selected structure
-    if (game.selected_structure == iIndex) {
+    if (game.selected_structure == id) {
         game.selected_structure = -1;
     }
 
 	// remove from array
-    structure[iIndex]=NULL;
+    structure[id]=NULL;
 
     // Destroy structure, take stuff in effect for the player
     cPlayer &thePlayer = player[iPlayer];
@@ -215,7 +194,7 @@ void cAbstractStructure::die()
                                 distanceBetweenCellAndCenterOfScreen(iCell));
 
     // remove from the playground
-    map.remove_id(iIndex, MAPID_STRUCTURES);
+    map.remove_id(id, MAPID_STRUCTURES);
 
     // screen shaking
     game.TIMER_shake = (iWidth * iHeight) * 20;
@@ -281,32 +260,10 @@ void cAbstractStructure::think_animation() {
         think_prebuild();
 	}
 
-    // Repair blink
-    if (bRepair) {
-		TIMER_repairanimation++;
-
-		// when there is still enough
-		if (TIMER_repairanimation > 1 &&
-			player[0].credits > 2) {
-
-			TIMER_repairanimation=0;
-			// decrease alpha (make it fade out)
-			iRepairAlpha -= 7;
-
-			// when faded out completely, choose new location
-			if (iRepairAlpha < 1) {
-				iRepairAlpha = 255;
-			}
-		}
-     }
 }
 
 void cAbstractStructure::setRepairing(bool value) {
     bRepair = value;
-    int iconWidth = ((BITMAP *)gfxdata[MOUSE_REPAIR].dat)->w;
-    int iconHeight = ((BITMAP *)gfxdata[MOUSE_REPAIR].dat)->h;
-    iRepairX = (structures[getType()].bmp_width - iconWidth) / 2;
-    iRepairY = (structures[getType()].bmp_height - iconHeight) / 2;
 }
 
 void cAbstractStructure::think_flag() {

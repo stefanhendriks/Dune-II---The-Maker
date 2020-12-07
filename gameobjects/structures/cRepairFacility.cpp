@@ -1,95 +1,91 @@
 #include "../../include/d2tmh.h"
 
+
 // Constructor
 cRepairFacility::cRepairFacility() {
 
- // other variables (class specific)
- TIMER_repairunit=0;
+    // other variables (class specific)
+    TIMER_repairunit = 0;
 }
 
 int cRepairFacility::getType() {
-	return REPAIR;
+    return REPAIR;
 }
 
-cRepairFacility::~cRepairFacility()
-{
+cRepairFacility::~cRepairFacility() {
 
 }
 
 
-
-void cRepairFacility::think()
-{
+void cRepairFacility::think() {
 
     // Repair unit here (if any)
-    if (iUnitID > -1)
-    {
-        // must repair...
-        if (unit[iUnitID].iTempHitPoints < units[unit[iUnitID].iType].hp)
-        {
-            TIMER_repairunit++;
+    if (iUnitID > -1) {
+        think_repairUnit();
+    }
 
-            if (TIMER_repairunit > 15)
-            {
-                TIMER_repairunit=0;
+    // think like base class
+    cAbstractStructure::think();
 
-                if (player[getOwner()].credits > 2)
-                {
-                    unit[iUnitID].iTempHitPoints+=3;
-                    player[getOwner()].credits--;
+}
 
-                    if (unit[iUnitID].iTempHitPoints >= units[unit[iUnitID].iType].hp)
-                    {
-                        unit[iUnitID].iHitPoints = units[unit[iUnitID].iType].hp;
+void cRepairFacility::think_repairUnit() {// must repair...
+    cUnit &unitToRepair = unit[iUnitID];
+    int maxHpForUnitType = units[unitToRepair.iType].hp;
 
-                        // dump unit, get rid of it
-                        int iNewCell = iFreeAround();
+    if (unitToRepair.iTempHitPoints < maxHpForUnitType) {
+        TIMER_repairunit++;
 
-                        if (iNewCell > -1)
-                        {
-                            unit[iUnitID].iCell = iNewCell;
-                        }
-                        else
-                            logbook("Could not find space for this unit");
+        if (TIMER_repairunit < 15) return;
 
-                        // done & restore unit
-                        unit[iUnitID].iStructureID = -1;
+        TIMER_repairunit = 0;
 
-                        unit[iUnitID].iTempHitPoints = -1;
+        cPlayer *pPlayer = getPlayer();
+        if (pPlayer->hasEnoughCreditsFor(2)) {
+            unitToRepair.iTempHitPoints += 3; // ie, unit with 300 HP, costs 100 to repair
+            pPlayer->substractCredits(1);
 
-                        unit[iUnitID].iGoalCell = unit[iUnitID].iCell;
-                        unit[iUnitID].iPathIndex = -1;
+            if (unitToRepair.iTempHitPoints >= maxHpForUnitType) {
+                unitToRepair.iHitPoints = maxHpForUnitType;
 
-                        unit[iUnitID].TIMER_movewait = 0;
-                        unit[iUnitID].TIMER_thinkwait = 0;
+                // dump unit, get rid of it
+                int iNewCell = iFreeAround();
 
-                        if (getRallyPoint() > -1)
-                            unit[iUnitID].move_to(getRallyPoint(), -1, -1);
-
-                        if (DEBUGGING)
-                            assert(iUnitID > -1);
-
-                        map.cellSetIdForLayer(unit[iUnitID].iCell, MAPID_UNITS, iUnitID);
-
-                        iUnitID=-1;
-                    }
+                if (iNewCell > -1) {
+                    unitToRepair.iCell = iNewCell;
+                } else {
+                    logbook("Could not find space for this unit");
+                    // TODO: Pick up by carry-all!?
                 }
+
+                // done & restore unit
+                unitToRepair.iStructureID = -1;
+
+                unitToRepair.iTempHitPoints = -1;
+
+                unitToRepair.iGoalCell = unitToRepair.iCell;
+                unitToRepair.iPathIndex = -1;
+
+                unitToRepair.TIMER_movewait = 0;
+                unitToRepair.TIMER_thinkwait = 0;
+
+                if (getRallyPoint() > -1)
+                    unitToRepair.move_to(getRallyPoint(), -1, -1);
+
+                map.cellSetIdForLayer(unitToRepair.iCell, MAPID_UNITS, iUnitID);
+
+                iUnitID = -1;
             }
         }
     }
-
-	// think like base class
-	cAbstractStructure::think();
-
 }
 
 void cRepairFacility::think_animation() {
-	cAbstractStructure::think_animation();
-	cAbstractStructure::think_flag();
+    cAbstractStructure::think_animation();
+    cAbstractStructure::think_flag();
 }
 
-void cRepairFacility::think_guard()
-{
+void cRepairFacility::think_guard() {
 
 }
 

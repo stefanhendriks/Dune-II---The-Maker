@@ -174,22 +174,13 @@ void cMap::think_minimap() {
 
 }
 
-// TODO: move this to a bulletDrawer (remove here!)
-void cMap::draw_bullets()
-{
-
+void cMap::draw_bullets() {
     // Loop through all units, check if they should be drawn, and if so, draw them
-  for (int i=0; i < MAX_BULLETS; i++)
-  {
-    if (bullet[i].bAlive)
-    {
-      if (bullet[i].draw_x() > -32 &&
-          bullet[i].draw_x() < game.screen_x &&
-          bullet[i].draw_y() > -32 &&
-          bullet[i].draw_y() < game.screen_y)
-          bullet[i].draw();
+    for (int i = 0; i < MAX_BULLETS; i++) {
+        if (bullet[i].bAlive) {
+            bullet[i].draw();
+        }
     }
-  }
 }
 
 void cMap::clear_all()

@@ -43,7 +43,7 @@ public:
 
 
     // harvester reinforcements
-    int TIMER_harv;                 // harv
+    int TIMER_blooms;                 // harv
     void init(int iID);             // initialize
 	
     void think();
@@ -52,7 +52,7 @@ public:
     void think_buildbase();
     void think_attack();
     void think_building();
-    void think_harvester();
+    void think_spiceBlooms();
     
     void think_repair_structure(cAbstractStructure *struc);
     

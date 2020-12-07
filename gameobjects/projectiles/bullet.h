@@ -25,7 +25,7 @@ public:
     void think();       // think (when dying, doing damage, etc)
     void think_move();  // thinking for movement
 
-    bool bAlive;        // alive or not?, when dying, a particle is created
+    bool bAlive;
 
     int iCell;          // cell of bullet   
     int iType;          // type of bullet    
@@ -50,7 +50,9 @@ public:
 
 private:
 
+    int getBulletBmpWidth() const;
+    int getBulletBmpHeight() const;
 
-
+    void die();
 };
 

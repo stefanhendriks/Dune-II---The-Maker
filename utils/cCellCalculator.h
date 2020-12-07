@@ -45,7 +45,6 @@ public:
 	int findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell);
 
 	private:
-
 		int height, width;
 };
 

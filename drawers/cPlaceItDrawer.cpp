@@ -111,7 +111,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
             int cellX = iCellX + iX;
             int cellY = iCellY + iY;
 
-            if (cellX < 1 || cellY < 1 || cellX > (game.map_width - 2) || cellX > (game.map_height - 2)) {
+//            if (cellX < 1 || cellY < 1 || cellX > (game.map_width - 2) || cellX > (game.map_height - 2)) {
+            if (!map.isWithinBoundaries(cellX, cellY)) {
                 // out of bounds
                 bWithinBuildDistance=false;
                 bMayPlace=false;

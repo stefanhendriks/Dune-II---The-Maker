@@ -249,20 +249,39 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
 	else if (layer == 2) {
 		// TODO: REMOVE THIS CODE AND create particles for this
 		// now draw the repair alpha when repairing
-		if (structure->isRepairing()) {
-			if (structure->getRepairAlpha() > -1) {
-                int iconWidth = ((BITMAP *)gfxdata[MOUSE_REPAIR].dat)->w;
-                int iconHeight = ((BITMAP *)gfxdata[MOUSE_REPAIR].dat)->h;
-                int drawX = structure->iDrawX();
-				int drawY = structure->iDrawY();
-				int repairX = mapCamera->factorZoomLevel(structure->getRepairX());
-				int repairY = mapCamera->factorZoomLevel(structure->getRepairY());
-                int scaledWidth = mapCamera->factorZoomLevel(iconWidth);
-                int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
-                stretch_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_REPAIR].dat, drawX+repairX, drawY + repairY, scaledWidth, scaledHeight);
-			} else {
-				structure->setRepairAlpha(rnd(255));
-			}
+        if (structure->getType() == REPAIR && structure->hasUnitWithin()) {
+            cRepairFacility * repairFacility = dynamic_cast<cRepairFacility*>(structure);
+            int unitId = repairFacility->getUnitIdWithin();
+            int iconId = unit[unitId].getUnitType().icon;
+            int iconWidth = ((BITMAP *)gfxinter[iconId].dat)->w;
+            int iconHeight = ((BITMAP *)gfxinter[iconId].dat)->h;
+            BITMAP *bmp = create_bitmap(iconWidth, iconHeight);
+            clear_to_color(bmp, makecol(255, 0, 255));
+            draw_sprite(bmp, (BITMAP *)gfxinter[iconId].dat, 0, 0);
+            int drawX = structure->iDrawX();
+            int drawY = structure->iDrawY();
+            int offsetX = (structure->getWidthInPixels() - iconWidth) / 2;
+            int offsetY = (structure->getHeightInPixels() - iconHeight) / 2;
+            int offsetXScaled = mapCamera->factorZoomLevel(offsetX);
+            int offsetYScaled = mapCamera->factorZoomLevel(offsetY);
+            int scaledWidth = mapCamera->factorZoomLevel(iconWidth);
+            int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
+            stretch_sprite(bmp_screen, bmp, drawX + offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight);
+            destroy_bitmap(bmp);
+        }
+
+        if (structure->isRepairing()) {
+            int iconWidth = ((BITMAP *)gfxdata[MOUSE_REPAIR].dat)->w;
+            int iconHeight = ((BITMAP *)gfxdata[MOUSE_REPAIR].dat)->h;
+            int drawX = structure->iDrawX();
+            int drawY = structure->iDrawY();
+            int offsetX = (structure->getWidthInPixels() - iconWidth) / 2;
+            int offsetY = (structure->getHeightInPixels() - iconHeight) / 2;
+            int offsetXScaled = mapCamera->factorZoomLevel(offsetX);
+            int offsetYScaled = mapCamera->factorZoomLevel(offsetY);
+            int scaledWidth = mapCamera->factorZoomLevel(iconWidth);
+            int scaledHeight = mapCamera->factorZoomLevel(iconHeight);
+            stretch_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_REPAIR].dat, drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight);
 		}
 	}
 }
@@ -289,7 +308,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer) {
         }
 	}
 
-	rectfill(bmp_screen, (game.screen_x-160), 0, game.screen_x, game.screen_y, makecol(0,0,0));
+	rectfill(bmp_screen, (game.screen_x-cSideBar::SidebarWidth), 0, game.screen_x, game.screen_y, makecol(0,0,0));
 }
 
 void cStructureDrawer::drawStructureHealthBar(int iStructure) {
