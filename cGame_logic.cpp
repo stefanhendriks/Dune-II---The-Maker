@@ -36,7 +36,7 @@ cGame::cGame() {
 	ini_screen_height=-1;
 
     memset(version, 0, sizeof(version));
-    sprintf(version, "0.4.6");
+    sprintf(version, "0.4.9");
 }
 
 
