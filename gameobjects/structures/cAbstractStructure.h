@@ -33,9 +33,10 @@ class cAbstractStructure {
 		bool bAnimate;      // Do its special animation? (unit leaving building, starport
 							// dropping something, etc)
 
-		int id;				// the id within the structure[] array
 
 	protected:
+        int id;				// the id within the structure[] array
+
 		int iWidth;			// width in cells (set by factory)
 		int iHeight;		// height in cells (set by factory)
 

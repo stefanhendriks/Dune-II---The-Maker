@@ -25,10 +25,14 @@ cMouse::cMouse() {
 }
 
 cMouse::~cMouse() {
+    if (instance) {
+        delete instance;
+        instance = nullptr;
+    }
 }
 
 cMouse *cMouse::getInstance() {
-	if (instance == NULL) {
+	if (instance == nullptr) {
 		instance = new cMouse();
 	}
 

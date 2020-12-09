@@ -7,16 +7,21 @@
 
 #include "../include/d2tmh.h"
 
+cBuildingListFactory *cBuildingListFactory::instance = NULL;
+
 cBuildingListFactory::cBuildingListFactory() {
 }
 
 cBuildingListFactory::~cBuildingListFactory() {
+    if (instance) {
+        delete instance;
+        instance = nullptr;
+    }
 }
 
-cBuildingListFactory *cBuildingListFactory::instance = NULL;
 
 cBuildingListFactory *cBuildingListFactory::getInstance() {
-	if (instance == NULL) {
+	if (instance == nullptr) {
 		instance = new cBuildingListFactory();
 	}
 

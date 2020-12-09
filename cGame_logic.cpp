@@ -2425,7 +2425,19 @@ void cGame::shutdown() {
 	cLogger *logger = cLogger::getInstance();
 	logger->logHeader("SHUTDOWN");
 
-	// Destroy font of Allegro FONT library
+    if (drawManager) {
+        delete drawManager;
+    }
+
+    if (mapCamera) {
+        delete mapCamera;
+    }
+
+    if (mapUtils) {
+        delete mapUtils;
+    }
+
+    // Destroy font of Allegro FONT library
 	alfont_destroy_font(game_font);
 	alfont_destroy_font(bene_font);
 
@@ -2488,8 +2500,7 @@ bool cGame::setupGame() {
 	game.init(); // Must be first!
 
 	// Each time we run the game, we clear out the logbook
-	FILE *fp;
-	fp = fopen("log.txt", "wt");
+	FILE *fp = fopen("log.txt", "wt");
 
 	// this will empty the log file (create a new one)
 	if (fp)	{
@@ -2856,9 +2867,19 @@ bool cGame::setupGame() {
 	logbook("Installing:  WORLD");
 	INSTALL_WORLD();
 
+	if (mapCamera) {
+	    delete mapCamera;
+	}
 	mapCamera = new cMapCamera();
+
+	if (drawManager) {
+	    delete drawManager;
+	}
 	drawManager = new cDrawManager(player[HUMAN]);
 
+	if (mapUtils) {
+	    delete mapUtils;
+	}
 	mapUtils = new cMapUtils(&map);
 
 	game.init();
@@ -2944,4 +2965,9 @@ void cGame::think_fading() {
 cGame::~cGame() {
     delete soundPlayer;
     delete mapViewport;
+    // cannot do this, because when game is being quit, and the cGame object being deleted, Allegro has been shut down
+    // already, so the deletion of drawManager has to happen *before* that, hence look in shutdown() method
+//    if (drawManager) {
+//        delete drawManager;
+//    }
 }

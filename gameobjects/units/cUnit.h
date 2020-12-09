@@ -41,6 +41,7 @@ class cUnit {
 public:
 
     cUnit();
+    ~cUnit();
 
 	float fExperience;	// experience gained by unit
 

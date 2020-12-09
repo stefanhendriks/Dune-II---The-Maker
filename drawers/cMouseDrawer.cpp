@@ -145,6 +145,8 @@ void cMouseDrawer::drawToolTip() {
 		} else if (structureType == TURRET || structureType == RTURRET) {
 			drawToolTipTurretInformation(theStructure, textWriter);
 		}
+
+		delete textWriter;
 	}
 }
 

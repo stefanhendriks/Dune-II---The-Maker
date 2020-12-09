@@ -19,7 +19,7 @@ cTextDrawer::cTextDrawer() : cTextDrawer(small_font) {
 }
 
 cTextDrawer::~cTextDrawer() {
-	font = NULL;
+	font = NULL; // do not delete, because we are not the owner of it
 }
 
 void cTextDrawer::drawTextWithTwoIntegers(int x, int y, const char * msg, int var1, int var2) {

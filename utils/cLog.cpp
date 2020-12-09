@@ -6,6 +6,13 @@ cLogger::cLogger() {
 	startTime = clock();
 }
 
+cLogger::~cLogger() {
+    if (instance) {
+        delete instance;
+        instance = nullptr;
+    }
+}
+
 cLogger *cLogger::getInstance() {
 	if (instance == NULL) {
 		instance = new cLogger();
@@ -137,15 +144,15 @@ void cLogger::logHeader(const char *txt) {
 	logCommentLine(txt);
 	logCommentLine(str);
 
-	delete str;
+	delete[] str;
 }
 
 void cLogger::log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message) {
-	log(level, component, event, message, OUTC_IGNOREME, -1, -1);
+	log(level, component, event, message.c_str(), OUTC_IGNOREME, -1, -1);
 }
 
 void cLogger::log(eLogLevel level, eLogComponent component, const std::string& event, const std::string& message, eLogOutcome outcome) {
-	log(level, component, event, message, outcome, -1, -1);
+	log(level, component, event, message.c_str(), outcome, -1, -1);
 }
 
 //	Timestamp | Level | Component | House (if component requires) | ID (if component requires) | Message | Outcome | Event | Event fields...

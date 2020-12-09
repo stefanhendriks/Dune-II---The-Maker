@@ -15,6 +15,7 @@ private:
 
 protected:
 	cSideBarFactory();
+	~cSideBarFactory();
 
 public:
 	static cSideBarFactory *getInstance();
