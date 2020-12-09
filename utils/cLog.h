@@ -38,6 +38,7 @@ private:
 	long getTimeInMilisDifference();
 protected:
 	cLogger();
+	~cLogger();
 
 };
 

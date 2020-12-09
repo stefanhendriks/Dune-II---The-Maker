@@ -21,13 +21,14 @@ cDrawManager::cDrawManager(const cPlayer & thePlayer) : m_Player(thePlayer) {
 }
 
 cDrawManager::~cDrawManager() {
-	delete sidebarDrawer;
-	delete orderDrawer;
-	delete creditsDrawer;
+    delete creditsDrawer;
+    delete sidebarDrawer;
+    delete orderDrawer;
 	delete mapDrawer;
 	delete miniMapDrawer;
 	delete particleDrawer;
 	delete messageDrawer;
+	delete messageBarDrawer;
 	delete placeitDrawer;
 	delete structureDrawer;
 	delete mouseDrawer;

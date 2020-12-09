@@ -118,7 +118,7 @@ void cUnit::init(int i) {
 }
 
 void cUnit::recreateDimensions() {
-    if (dimensions != nullptr) {
+    if (dimensions) {
         delete dimensions;
     }
 
@@ -2961,6 +2961,10 @@ bool cUnit::isInfantryUnit() {
 
 cUnit::cUnit() {
     dimensions = nullptr;
+}
+
+cUnit::~cUnit() {
+    if (dimensions) delete dimensions;
 }
 
 /**

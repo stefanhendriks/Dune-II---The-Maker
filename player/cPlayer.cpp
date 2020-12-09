@@ -187,6 +187,7 @@ void cPlayer::init(int id) {
 	 */
 	m_Human = (id == HUMAN);
 
+	if (difficultySettings) delete difficultySettings;
 	difficultySettings = new cPlayerAtreidesDifficultySettings();
 
 	// Reset structures amount

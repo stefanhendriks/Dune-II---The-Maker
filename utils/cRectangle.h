@@ -11,6 +11,8 @@ public:
     cRectangle(int x, int y, int width, int height) : x(x), y(y), height(height), width(width) {
     }
 
+    ~cRectangle();
+
     bool isWithin(int pointX, int pointY) {
         return (pointX >= x && pointX <= (x + width)) &&
                (pointY >= y && pointY <= (y + height));

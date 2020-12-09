@@ -12,6 +12,13 @@ cSideBarFactory *cSideBarFactory::instance = NULL;
 cSideBarFactory::cSideBarFactory() {
 }
 
+cSideBarFactory::~cSideBarFactory() {
+    if (instance) {
+        delete instance;
+        instance = nullptr;
+    }
+}
+
 cSideBarFactory *cSideBarFactory::getInstance() {
 	if (instance == NULL) {
 		instance = new cSideBarFactory();

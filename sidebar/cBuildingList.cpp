@@ -52,8 +52,10 @@ int cBuildingList::getFreeSlot() {
 
 void cBuildingList::removeAllItems() {
 	for (int i =0 ; i < MAX_ICONS; i++) {
-		removeItemFromList(i);
-	}
+        cBuildingListItem * item = getItem(i);
+        if (item == nullptr) continue;
+        delete item;
+    }
 }
 
 bool cBuildingList::isItemInList(cBuildingListItem * item) {
@@ -75,15 +77,25 @@ cBuildingListItem * cBuildingList::getItemByBuildId(int buildId) {
 }
 
 void cBuildingList::addUpgradeToList(int upgradeType) {
-    addItemToList(new cBuildingListItem(upgradeType, upgrades[upgradeType], upgrades[upgradeType].providesTypeSubList));
+    cBuildingListItem *item = new cBuildingListItem(upgradeType, upgrades[upgradeType],
+                                                    upgrades[upgradeType].providesTypeSubList);
+    if (!addItemToList(item)) {
+        delete item;
+    }
 }
 
 void cBuildingList::addStructureToList(int structureType, int subList) {
-    addItemToList(new cBuildingListItem(structureType, structures[structureType], subList));
+    cBuildingListItem *item = new cBuildingListItem(structureType, structures[structureType], subList);
+    if (!addItemToList(item)) {
+        delete item;
+    }
 }
 
 void cBuildingList::addUnitToList(int unitType, int subList) {
-    addItemToList(new cBuildingListItem(unitType, units[unitType], subList));
+    cBuildingListItem *item = new cBuildingListItem(unitType, units[unitType], subList);
+    if (!addItemToList(item)) {
+        delete item;
+    }
 }
 
 bool cBuildingList::addItemToList(cBuildingListItem * item) {

@@ -5,6 +5,10 @@
 
 #include "cRectangle.h"
 
+cRectangle::~cRectangle() {
+
+}
+
 /**
  * scans each edge of the rectangle if it is within the other rectangle, returns true if so, or false if not.
  * @param other

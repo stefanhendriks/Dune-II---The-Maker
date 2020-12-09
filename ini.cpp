@@ -1008,6 +1008,10 @@ void INI_Load_seed(int seed) {
 			mapEditor.createCell(iCell, type, 0);
 		}
 	}
+
+	delete seedMap;
+	delete seedGenerator;
+
 	logbook("Seedmap converted into D2TM map.");
 }
 

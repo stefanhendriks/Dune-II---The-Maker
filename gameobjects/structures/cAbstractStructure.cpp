@@ -47,9 +47,13 @@ cAbstractStructure::cAbstractStructure() {
     TIMER_prebuild=0;
 }
 
-cAbstractStructure::~cAbstractStructure()
-{
+cAbstractStructure::~cAbstractStructure() {
     // destructor
+    if (DEBUGGING) {
+        char msg[255];
+        sprintf(msg, "(~cAbstractStructure)(ID %d) Destructor", this->id);
+        logbook(msg);
+    }
     iHitPoints = -1;
     iCell = -1;
 }

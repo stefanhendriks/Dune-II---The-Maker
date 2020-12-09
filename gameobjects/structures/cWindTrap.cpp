@@ -15,9 +15,12 @@ int cWindTrap::getType() {
 	return WINDTRAP;
 }
 
-cWindTrap::~cWindTrap()
-{
-
+cWindTrap::~cWindTrap() {
+    if (DEBUGGING) {
+        char msg[255];
+        sprintf(msg, "(~cWindTrap)(ID %d) Destructor", this->id);
+        logbook(msg);
+    }
 }
 
 

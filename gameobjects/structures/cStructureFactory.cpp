@@ -8,10 +8,14 @@ cStructureFactory::cStructureFactory() {
 
 cStructureFactory::~cStructureFactory() {
 	delete cellCalculator;
+	if (instance) {
+	    delete instance;
+	    instance = nullptr;
+	}
 }
 
 cStructureFactory *cStructureFactory::getInstance() {
-	if (instance == NULL) {
+	if (instance == nullptr) {
 		instance = new cStructureFactory();
 	}
 	return instance;
@@ -361,9 +365,8 @@ void cStructureFactory::clearAllStructures() {
 	for (int i=0; i < MAX_STRUCTURES; i++) {
 		// clear out all structures
 		if (structure[i]) {
-			cStructureFactory::getInstance()->deleteStructureInstance(structure[i]);
+			deleteStructureInstance(structure[i]);
 		}
-
 		// clear pointer
 		structure[i] = nullptr;
 	}
