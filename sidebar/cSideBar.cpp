@@ -97,7 +97,7 @@ void cSideBar::thinkInteraction() {
 			if (MOUSE_BTN_LEFT()) {
 				// clicked on it. Set focus on this one
 				selectedListID = i;
-                play_sound_id(SOUND_BUTTON); // click sound
+                play_sound_id(SOUND_BUTTON, 64); // click sound
 				break;
 			}
 		}
