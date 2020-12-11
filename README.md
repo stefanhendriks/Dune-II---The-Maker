@@ -1,10 +1,12 @@
+This project uses [Deleaker](https://www.deleaker.com/) to find memory leaks and more.
+
 Dune II - The Maker
 ===================
 A.k.a. D2TM. Is a [Dune 2](http://en.wikipedia.org/wiki/Dune_II) clone.
 
-This branch is considered the version that has made the most progress, now at version WIP 337. 
-
 At this moment the most known/stable version is [DEMO4 and DEMO 3.5](http://dune2themaker.fundynamic.com/?page_id=11).
+
+This repository reflects the latest version coming up (version 0.5).
 
 ## Bit of history
 This is also the version where I learned to code C/C++ for the first time and that shows. This is the 3rd iteration, of my many attempts to write an RTS engine for myself in my teens.
