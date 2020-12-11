@@ -2425,6 +2425,14 @@ void cGame::shutdown() {
 	cLogger *logger = cLogger::getInstance();
 	logger->logHeader("SHUTDOWN");
 
+	if (soundPlayer) {
+        delete soundPlayer;
+    }
+
+    if (mapViewport) {
+        delete mapViewport;
+    }
+
     if (drawManager) {
         delete drawManager;
     }
@@ -2723,7 +2731,7 @@ bool cGame::setupGame() {
 	memset(msg, 0, sizeof(msg));
 
 	if (maxSounds > -1) {
-		sprintf(msg, "Successful installed sound. %d voices reserved", maxSounds);
+		sprintf(msg, "Successfully installed sound. %d voices reserved", maxSounds);
 		logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
 	} else {
 		logger->log(LOG_INFO, COMP_SOUND, "Initialization", "Failed installing sound.", OUTC_FAILED);
@@ -2975,8 +2983,6 @@ void cGame::think_fading() {
 }
 
 cGame::~cGame() {
-    delete soundPlayer;
-    delete mapViewport;
     // cannot do this, because when game is being quit, and the cGame object being deleted, Allegro has been shut down
     // already, so the deletion of drawManager has to happen *before* that, hence look in shutdown() method
 //    if (drawManager) {
