@@ -6,7 +6,7 @@ cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer) {
 }
 
 void cBuildingListUpdater::onStructureCreated(int structureType) {
-	cLogger::getInstance()->logCommentLine("onStructureCreated - begin");
+    logbook("onStructureCreated - begin");
 
 	// activate/deactivate any lists if needed
     cSideBar *sideBar = m_Player->getSideBar();
@@ -28,27 +28,27 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 	if (structureType == CONSTYARD) {
         // add items
         listConstYard->addStructureToList(SLAB1, 0);
-        cLogger::getInstance()->logCommentLine("onStructureCreated - added SLAB1 to list");
+        logbook("onStructureCreated - added SLAB1 to list");
 
         if (techLevel >= 2) {
             if (house == ATREIDES || house == ORDOS) {
                 listConstYard->addStructureToList(BARRACKS, 0);
-                cLogger::getInstance()->logCommentLine("onStructureCreated - added BARRACKS to list");
+                logbook("onStructureCreated - added BARRACKS to list");
             }
             if (house == HARKONNEN) {
                 listConstYard->addStructureToList(WOR, 0);
-                cLogger::getInstance()->logCommentLine("onStructureCreated - added WOR to list");
+                logbook("onStructureCreated - added WOR to list");
             }
         }
 
         if (techLevel >= 4) {
             //list->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4])); // only available after upgrading
             listConstYard->addStructureToList(WALL, 0);
-            cLogger::getInstance()->logCommentLine("onStructureCreated - added WALL to list");
+            logbook("onStructureCreated - added WALL to list");
         }
 
         listConstYard->addStructureToList(WINDTRAP, 0);
-        cLogger::getInstance()->logCommentLine("onStructureCreated - added WINDTRAP to list");
+        logbook("onStructureCreated - added WINDTRAP to list");
     }
 
 	if (structureType == WINDTRAP) {
@@ -191,12 +191,12 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
     evaluateUpgrades();
 
     // do something
-	cLogger::getInstance()->logCommentLine("onStructureCreated - end");
+    logbook("onStructureCreated - end");
 }
 
 // structure destroyed..
 void cBuildingListUpdater::onStructureDestroyed(int structureType) {
-	cLogger::getInstance()->logCommentLine("onStructureDestroyed - begin");
+    logbook("onStructureDestroyed - begin");
 
     // activate/deactivate any lists if needed
     cSideBar *sideBar = m_Player->getSideBar();
@@ -249,12 +249,12 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
 
     evaluateUpgrades();
 
-    cLogger::getInstance()->logCommentLine("onStructureDestroyed - end");
+    logbook("onStructureDestroyed - end");
 }
 
 
 void cBuildingListUpdater::evaluateUpgrades() {
-    cLogger::getInstance()->logCommentLine("evaluateUpgrades - start");
+    logbook("evaluateUpgrades - start");
     cSideBar *sideBar = m_Player->getSideBar();
     cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
 
@@ -339,7 +339,7 @@ void cBuildingListUpdater::evaluateUpgrades() {
         }
     }
 
-    cLogger::getInstance()->logCommentLine("evaluateUpgrades - end");
+    logbook("evaluateUpgrades - end");
 }
 
 /**
