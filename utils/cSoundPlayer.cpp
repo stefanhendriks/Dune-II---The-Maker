@@ -21,26 +21,24 @@ cSoundPlayer::~cSoundPlayer() {
 }
 
 void cSoundPlayer::think() {
-	if (maximumVoices < 0) return;
+    if (maximumVoices < 0) return;
 
-	for(int i = 0;i < maximumVoices; i++) {
+    for (int i = 0; i < maximumVoices; i++) {
+        int pos;
+        int voice = voices[i];
 
-		int pos;
-		int voice = voices[i];
+        //if it contains a voice get its position
+        if (voice != -1) {
+            pos = voice_get_position(voice);
+        } else {
+            pos = -2;
+        }
 
-		//if it contains a voice get its position
-		if(voice != -1) {
-			pos = voice_get_position(voice);
-		} else {
-			pos = -2;
-		}
-
-		//if it is at the end then release it
-		if(pos == -1)
-		{
-			destroySound(voice, true);
-		}
-	}
+        //if it is at the end then release it
+        if (pos == -1) {
+            destroySound(voice, true);
+        }
+    }
 }
 
 void cSoundPlayer::destroySound(int voice, bool force) {
@@ -82,6 +80,7 @@ void cSoundPlayer::playSound(SAMPLE *sample, int pan, int vol) {
 		voice_set_volume(voice, vol);
 		voice_set_pan(voice, pan);
 		voice_start(voice);
+
 		for (int i = 0; i < maximumVoices; i++) {
 			if (voices[i] == -1) {
 				voices[i] = voice;
