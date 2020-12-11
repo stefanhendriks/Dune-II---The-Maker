@@ -13,6 +13,8 @@ class cMouse {
 public:
 	cMouse();
 
+	static void destroy();
+
 	static void updateState(); // updates state from Allegro
 
 	// these functions return true when the mouse button is being hold down
@@ -53,6 +55,7 @@ protected:
 
 private:
     static cMouse *getInstance();
+    static cMouse *instance;
 
 	bool leftButtonPressed;
 	bool rightButtonPressed;
@@ -65,8 +68,6 @@ private:
 
 	bool mouseScrolledUp;
 	bool mouseScrolledDown;
-
-	static cMouse *instance;
 
 	int x, y, z;	// z = scroll wheel value
 	int zValuePreviousFrame;

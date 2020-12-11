@@ -2,14 +2,16 @@
 
 cInteractionManager::cInteractionManager(cPlayer * thePlayer) {
 	assert(thePlayer);
+	// does not own these things!
 	sidebar = thePlayer->getSideBar();
 	m_Player = thePlayer;
 	miniMapDrawer = drawManager->getMiniMapDrawer();
 }
 
 cInteractionManager::~cInteractionManager() {
-	sidebar = NULL;
-	miniMapDrawer = NULL;
+    m_Player = nullptr;
+	sidebar = nullptr;
+	miniMapDrawer = nullptr;
 }
 
 void cInteractionManager::interact() {

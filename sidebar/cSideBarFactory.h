@@ -19,6 +19,8 @@ protected:
 
 public:
 	static cSideBarFactory *getInstance();
+	static void destroy();
+
 
 	cSideBar *createSideBar(cPlayer& thePlayer, int house);
 

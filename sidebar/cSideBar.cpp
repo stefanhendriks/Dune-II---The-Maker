@@ -8,9 +8,11 @@ cSideBar::cSideBar(cPlayer & thePlayer) : m_Player(thePlayer) {
 
 cSideBar::~cSideBar() {
 	for (int i = 0; i < LIST_MAX; i++) {
-		if (lists[i]) {
-		    lists[i]->removeAllItems();
-			delete lists[i]; // delete list
+        cBuildingList *pList = lists[i];
+        if (pList) {
+            pList->removeAllItems();
+			delete pList; // delete list (also removes pointers within the list)
+			lists[i] = nullptr;
 		}
 	}
 }

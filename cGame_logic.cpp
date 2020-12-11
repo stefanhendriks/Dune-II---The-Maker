@@ -2437,6 +2437,14 @@ void cGame::shutdown() {
         delete mapUtils;
     }
 
+    if (interactionManager) {
+        delete interactionManager;
+    }
+
+    cStructureFactory::destroy();
+    cSideBarFactory::destroy();
+    cBuildingListFactory::destroy();
+
     // Destroy font of Allegro FONT library
 	alfont_destroy_font(game_font);
 	alfont_destroy_font(bene_font);
@@ -2459,6 +2467,10 @@ void cGame::shutdown() {
 	}
 
     delete allegroDrawer;
+
+	cMouse::destroy();
+	cLogger::destroy();
+
 
 	// Now we are all neatly closed, we exit Allegro and return to OS.
 	allegro_exit();

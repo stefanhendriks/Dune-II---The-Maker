@@ -6,6 +6,8 @@
  */
 
 #include "../include/d2tmh.h"
+#include "cBuildingListFactory.h"
+
 
 cBuildingListFactory *cBuildingListFactory::instance = NULL;
 
@@ -13,10 +15,6 @@ cBuildingListFactory::cBuildingListFactory() {
 }
 
 cBuildingListFactory::~cBuildingListFactory() {
-    if (instance) {
-        delete instance;
-        instance = nullptr;
-    }
 }
 
 
@@ -155,4 +153,10 @@ cBuildingList * cBuildingListFactory::createList(int listId, int house) {
     initializeList(list, listId, house);
 	list->setTypeOfList(listId); // list id == type (see cSideBarFactory)
 	return list;
+}
+
+void cBuildingListFactory::destroy() {
+    if (instance) {
+        delete instance;
+    }
 }

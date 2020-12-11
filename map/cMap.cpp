@@ -24,6 +24,17 @@ cMap::cMap() {
 
 cMap::~cMap() {
 	if (cellCalculator) delete cellCalculator;
+
+	// do not trigger getInstance from structure factory
+    for (int i=0; i < MAX_STRUCTURES; i++) {
+        // clear out all structures
+        cAbstractStructure *pStructure = structure[i];
+        if (pStructure) {
+            delete pStructure;
+        }
+        // clear pointer
+        structure[i] = nullptr;
+    }
 }
 
 void cMap::resetCellCalculator() {
@@ -41,7 +52,7 @@ void cMap::init(int width, int height) {
     cMapUtils * mapUtils = new cMapUtils(this);
     mapUtils->clearAllCells();
 
-    cStructureFactory::getInstance()->clearAllStructures();
+    cStructureFactory::getInstance()->deleteAllExistingStructures();
 
 	for (int i=0; i < MAX_BULLETS; i++) {
 		bullet[i].init();

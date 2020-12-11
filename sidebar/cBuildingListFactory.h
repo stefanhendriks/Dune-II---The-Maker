@@ -20,7 +20,9 @@ class cBuildingListFactory {
 
 	public:
 		static cBuildingListFactory *getInstance();
-		virtual ~cBuildingListFactory();
+		static void destroy();
+
+		~cBuildingListFactory();
 
 		void initializeList(cBuildingList *list, int listId, int house);
 		cBuildingList *createList(int listId, int house);

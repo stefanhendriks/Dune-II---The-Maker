@@ -25,10 +25,7 @@ cMouse::cMouse() {
 }
 
 cMouse::~cMouse() {
-    if (instance) {
-        delete instance;
-        instance = nullptr;
-    }
+
 }
 
 cMouse *cMouse::getInstance() {
@@ -92,4 +89,10 @@ bool cMouse::isBoxSelecting() {
     return mouse_co_x1 > -1 && mouse_co_y1 > -1 &&
     mouse_co_x2 != mouse_co_x1 && mouse_co_y2 != mouse_co_y1 &&
     mouse_co_x2 > -1 && mouse_co_y2 > -1;
+}
+
+void cMouse::destroy() {
+    if (instance) {
+        delete instance;
+    }
 }

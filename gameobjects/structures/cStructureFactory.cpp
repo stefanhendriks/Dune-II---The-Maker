@@ -1,4 +1,6 @@
 #include "../../include/d2tmh.h"
+#include "cStructureFactory.h"
+
 
 cStructureFactory *cStructureFactory::instance = NULL;
 
@@ -7,11 +9,7 @@ cStructureFactory::cStructureFactory() {
 }
 
 cStructureFactory::~cStructureFactory() {
-	delete cellCalculator;
-	if (instance) {
-	    delete instance;
-	    instance = nullptr;
-	}
+   delete cellCalculator;
 }
 
 cStructureFactory *cStructureFactory::getInstance() {
@@ -361,13 +359,20 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
 	}
 }
 
-void cStructureFactory::clearAllStructures() {
+void cStructureFactory::deleteAllExistingStructures() {
 	for (int i=0; i < MAX_STRUCTURES; i++) {
 		// clear out all structures
-		if (structure[i]) {
-			deleteStructureInstance(structure[i]);
+        cAbstractStructure *pStructure = structure[i];
+        if (pStructure) {
+            delete pStructure;
 		}
 		// clear pointer
-		structure[i] = nullptr;
+        structure[i] = nullptr;
 	}
+}
+
+void cStructureFactory::destroy() {
+    if (instance) {
+        delete instance;
+    }
 }

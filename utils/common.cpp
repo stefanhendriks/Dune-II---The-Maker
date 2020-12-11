@@ -1331,10 +1331,6 @@ void play_sound_id(int s, int volume) {
     if (!game.bPlaySound) return; // do not play sound when boolean is false.
 
     int vol = keepBetween(volume, 0, 255);
-    // credits up/down sound has lower volume
-    if (s == SOUND_CREDITUP || s == SOUND_CREDITDOWN) {
-        vol = PAN_CENTER;
-    }
 
     if (vol > 0) {
         game.getSoundPlayer()->playSound(s, 127, vol);
