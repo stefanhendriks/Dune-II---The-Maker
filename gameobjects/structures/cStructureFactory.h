@@ -24,11 +24,12 @@ private:
 
 protected:
 	cStructureFactory();
-	~cStructureFactory();
+    ~cStructureFactory();
 
 public:
 
 	static cStructureFactory *getInstance();
+	static void destroy();
 
 	void deleteStructureInstance(cAbstractStructure *structure);
 
@@ -37,7 +38,7 @@ public:
 
 	int getFreeSlot();
 
-	void clearAllStructures();
+	void deleteAllExistingStructures();
 
 	void clearFogForStructureType(int iCell, cAbstractStructure *str);
 	void clearFogForStructureType(int iCell, int iStructureType, int iSight, int iPlayer);

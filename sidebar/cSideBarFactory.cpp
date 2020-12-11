@@ -13,10 +13,6 @@ cSideBarFactory::cSideBarFactory() {
 }
 
 cSideBarFactory::~cSideBarFactory() {
-    if (instance) {
-        delete instance;
-        instance = nullptr;
-    }
 }
 
 cSideBarFactory *cSideBarFactory::getInstance() {
@@ -38,5 +34,11 @@ cSideBar * cSideBarFactory::createSideBar(cPlayer& thePlayer, int house) {
 	}
 
 	return sidebar;
+}
+
+void cSideBarFactory::destroy() {
+    if (instance) {
+        delete instance;
+    }
 }
 

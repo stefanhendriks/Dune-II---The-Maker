@@ -130,7 +130,6 @@ int handleArguments(int argc, char *argv[]) {
 	return 0;
 }
 
-
 /**
 	Entry point of the game
 */

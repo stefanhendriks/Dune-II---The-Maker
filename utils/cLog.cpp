@@ -1,4 +1,6 @@
 #include "../include/d2tmh.h"
+#include "cLog.h"
+
 
 cLogger *cLogger::instance = NULL;
 
@@ -7,10 +9,6 @@ cLogger::cLogger() {
 }
 
 cLogger::~cLogger() {
-    if (instance) {
-        delete instance;
-        instance = nullptr;
-    }
 }
 
 cLogger *cLogger::getInstance() {
@@ -237,4 +235,10 @@ long cLogger::getTimeInMilisDifference() {
 	long time_taken_millis;
 	time_taken_millis = (long)((clock()-startTime)*1E3/CLOCKS_PER_SEC);
 	return time_taken_millis;
+}
+
+void cLogger::destroy() {
+    if (instance) {
+        delete instance;
+    }
 }

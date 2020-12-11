@@ -13,6 +13,7 @@ public:
 	void logHeader(const char *txt);
 
 	static cLogger *getInstance();
+	static void destroy();
 
 private:
 	FILE *file;

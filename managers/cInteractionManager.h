@@ -19,7 +19,7 @@ class cInteractionManager {
 		~cInteractionManager();
 
 		void interact();
-                void interactWithKeyboard();
+		void interactWithKeyboard();
 
 	protected:
 		void mouseInteractWithSidebarOrMinimap();

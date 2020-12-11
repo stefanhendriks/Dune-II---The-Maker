@@ -55,6 +55,7 @@ void cBuildingList::removeAllItems() {
         cBuildingListItem * item = getItem(i);
         if (item == nullptr) continue;
         delete item;
+        items[i] = nullptr;
     }
 }
 
