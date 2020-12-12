@@ -7,8 +7,7 @@ link_directories("lib/mingw")
 
 # add the executable
 add_executable(d2tm)
-
-target_link_libraries(d2tm fblend alleg aldat almp3dll alfontdll)
+target_link_libraries(d2tm fblend alleg aldat almp3dll alfontdll -static-libgcc -static-libstdc++)
 
 file(GLOB d2tm_SRC
         "*.h"
