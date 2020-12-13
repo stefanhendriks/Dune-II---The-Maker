@@ -18,20 +18,17 @@
 
 #ifndef D2TMC_H
 
-void timer_units();
-void timer_global();
-void timer_fps();
-
 // Process 'extern' stuff, so we can access our classes
 extern bool		bDoDebug;
 extern int		iRest;	// rest value
 
 // game
 extern cGame		  game;
-extern cAbstractStructure     *structure[MAX_STRUCTURES];
-extern cUnit          unit[MAX_UNITS];
 extern cMap           map;
 extern cMapEditor	  mapEditor;
+
+extern cAbstractStructure     *structure[MAX_STRUCTURES];
+extern cUnit          unit[MAX_UNITS];
 extern cRandomMapGenerator randomMapGenerator;
 extern cMapCamera	  *mapCamera;
 extern cMapUtils	  *mapUtils;
@@ -40,7 +37,6 @@ extern cAIPlayer      aiplayer[MAX_PLAYERS];           // related to aiplayer (e
 extern cParticle      particle[MAX_PARTICLES];
 extern cBullet        bullet[MAX_BULLETS];
 extern cRegion        world[MAX_REGIONS];
-extern cMentat		  *Mentat;
 extern cTimeManager   TimeManager;
 extern cStructureUtils structureUtils;
 extern cDrawManager   *drawManager;

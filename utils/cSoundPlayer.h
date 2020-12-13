@@ -24,6 +24,8 @@ class cSoundPlayer {
 		// think about voices, clear voices, etc.
 		void think();
 
+        void destroyAllSounds();
+
 	protected:
 		void destroySound(int voice, bool force);
 

@@ -13,6 +13,10 @@ cSoundPlayer::cSoundPlayer(int maxVoices) {
 }
 
 cSoundPlayer::~cSoundPlayer() {
+
+}
+
+void cSoundPlayer::destroyAllSounds() {
 	if (maximumVoices > -1) {
 		for (int i = 0; i < maximumVoices; i++) {
 			destroySound(i, true);

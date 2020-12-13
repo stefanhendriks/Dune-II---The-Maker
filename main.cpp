@@ -21,11 +21,14 @@ int	iRest = 1;	// default rest value
 
 // the ultimate game variable(s)
 cGame          				game;
-cAbstractStructure     	*	structure[MAX_STRUCTURES];
-cUnit          				unit[MAX_UNITS];
+cTimeManager   				TimeManager;
+cStructureUtils 			structureUtils;
 cMap           				map;
 cMapEditor	  				mapEditor;
 cRandomMapGenerator 		randomMapGenerator;
+
+cAbstractStructure     	*	structure[MAX_STRUCTURES];
+cUnit          				unit[MAX_UNITS];
 cMapCamera				*	mapCamera;
 cMapUtils				*   mapUtils;
 cPlayer        				player[MAX_PLAYERS];             // player is
@@ -33,17 +36,15 @@ cAIPlayer      				aiplayer[MAX_PLAYERS];           // related to aiplayer (exce
 cParticle      				particle[MAX_PARTICLES];
 cBullet        				bullet[MAX_BULLETS];
 cRegion        				world[MAX_REGIONS];
-cMentat		   			*	Mentat = NULL;
-cTimeManager   				TimeManager;
-cStructureUtils 			structureUtils;
 cDrawManager   			*	drawManager = NULL;
 cInteractionManager 	*	interactionManager = NULL;
+
 cAllegroDrawer          *   allegroDrawer = nullptr;
 
 // Structs
 s_PreviewMap     			PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory
 s_House         			houses[MAX_HOUSES];
-s_Structures    			structures[MAX_STRUCTURETYPES];    // structure types
+s_Structures    			structures[MAX_STRUCTURETYPES];         // structure types
 s_UnitP         			units[MAX_UNITTYPES];              // unit types
 s_Upgrade                   upgrades[MAX_UPGRADETYPES];        // upgrade types
 s_Bullet        			bullets[MAX_BULLET_TYPES];          // bullet slots
@@ -131,6 +132,22 @@ int handleArguments(int argc, char *argv[]) {
 }
 
 /**
+ * This stuff initializes only at the beginning, a plug point/method before moving to actual constructor, but
+ * atleast moving out the big game.init and game.setup_players methods.
+ */
+void initializingOnlyOnce() {
+    mouse_co_x1 = -1;      // coordinates
+    mouse_co_y1 = -1;      // of
+    mouse_co_x2 = -1;      // the
+    mouse_co_y2 = -1;      // mouse border
+
+    mouse_mv_x1 = -1;
+    mouse_mv_y1 = -1;
+    mouse_mv_x2 = -1;
+    mouse_mv_y2 = -1;
+}
+
+/**
 	Entry point of the game
 */
 int main(int argc, char **argv) {
@@ -140,6 +157,8 @@ int main(int argc, char **argv) {
     if (handleArguments(argc, argv) > 0) {
         return 0;
     }
+
+    initializingOnlyOnce();
 
     game.init();
 

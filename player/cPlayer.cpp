@@ -183,7 +183,7 @@ void cPlayer::init(int id) {
 	/**
 	 * Ok, so this is confusing.
 	 * There are also aiPlayer classes. They hold some 'brains' I guess. all other state is stored here.
-	 * So even though there are aiPlayer objects, they are complentary to this class
+	 * So even though there are aiPlayer objects, they are complimentary to this class
 	 */
 	m_Human = (id == HUMAN);
 

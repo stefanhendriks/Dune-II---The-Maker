@@ -118,8 +118,8 @@ void cGame::init() {
 	}
 
 	// Units & Structures are already initialized in map.init()
-	if (game.bMp3) {
-	  almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
+	if (game.bMp3 && mp3_music) {
+	    almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
 	}
 
 	// Load properties
@@ -460,12 +460,9 @@ void cGame::think_music()
 }
 
 bool cGame::isMusicPlaying() {
-    if (bMp3) {
-        if (mp3_music != NULL)
-        {
-            int s = almp3_poll_mp3(mp3_music);
-            return !(s == ALMP3_POLL_PLAYJUSTFINISHED || s == ALMP3_POLL_NOTPLAYING);
-        }
+    if (bMp3 && mp3_music) {
+        int s = almp3_poll_mp3(mp3_music);
+        return !(s == ALMP3_POLL_PLAYJUSTFINISHED || s == ALMP3_POLL_NOTPLAYING);
     }
 
     // MIDI mode:
@@ -986,12 +983,6 @@ void cGame::menu()
 
     // draw version
 	textDrawer.drawTextBottomRight(version);
-//    // version
-//	int versionX = game.screen_x - 60;
-//	int versionY = game.screen_y - 14;
-//	char versionText[20];
-//	sprintf(versionText, "%s", version);
-//	GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(versionX, versionY, versionText, makecol(255, 0, 0));
 
 	// mp3 addon?
 	if (bMp3) {
@@ -1241,14 +1232,6 @@ void cGame::setup_skirmish() {
 		}
     }
 
-//    // this is the header box (for players)
-//    GUI_DRAW_FRAME_WITH_COLORS(playerTitleBarX, playerTitleBarY, playerTitleBarWidth, playerTitleBarHeight, makecol(255, 255, 255), darkishBackgroundColor );
-//
-//    GUI_DRAW_FRAME_WITH_COLORS(playerListBarX, playerListBarY, playerListWidth, playerListBarHeight, makecol(255, 255, 255), darkishBackgroundColor);
-
-	// bottom bar
-//	rectfill(bmp_screen, 0, 464, 640, 480, darkishBorderColor);
-
 	alfont_textprintf(bmp_screen, bene_font, 4, 26, makecol(0,0,0), "Player      House      Credits       Units    Team");
 	alfont_textprintf(bmp_screen, bene_font, 4, 25, makecol(255,255,255), "Player      House      Credits       Units    Team");
 
@@ -1313,8 +1296,6 @@ void cGame::setup_skirmish() {
 			}
 
 			alfont_textprintf(bmp_screen, bene_font, 74,iDrawY+1, makecol(0,0,0), "%s", cHouse);
-
-//			rect(bmp_screen, 74, (40+(p*22)), 150, (40+(p*22))+16, makecol(255,255,255));
 
 			if ((mouse_x >= 74 && mouse_x <= 150) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16)))
 				bHover=true;
@@ -2401,8 +2382,7 @@ void cGame::runGameState() {
 /**
 	Main game loop
 */
-void cGame::run()
-{
+void cGame::run() {
 	set_trans_blender(0, 0, 0, 128);
 
 	while (bPlaying) {
@@ -2410,7 +2390,6 @@ void cGame::run()
 		poll();
 		handleTimeSlicing();
 		runGameState();
-		assert(interactionManager);
 		interactionManager->interactWithKeyboard();
 		shakeScreenAndBlitBuffer();
 		frame_count++;
@@ -2426,6 +2405,7 @@ void cGame::shutdown() {
 	logger->logHeader("SHUTDOWN");
 
 	if (soundPlayer) {
+        soundPlayer->destroyAllSounds();
         delete soundPlayer;
     }
 
@@ -2453,50 +2433,58 @@ void cGame::shutdown() {
     cSideBarFactory::destroy();
     cBuildingListFactory::destroy();
 
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        player[i].destroyAllegroBitmaps();
+    }
+
+    delete allegroDrawer;
+    cMouse::destroy();
+
+    if (gfxdata) {
+        unload_datafile(gfxdata);
+    }
+    if (gfxinter) {
+        unload_datafile(gfxinter);
+    }
+    if (gfxworld) {
+        unload_datafile(gfxworld);
+    }
+    if (gfxmentat) {
+        unload_datafile(gfxmentat);
+    }
+    if (gfxmovie) {
+        unload_datafile(gfxmovie);
+    }
+
     // Destroy font of Allegro FONT library
 	alfont_destroy_font(game_font);
 	alfont_destroy_font(bene_font);
 
 	// Exit the font library (must be first)
-
 	alfont_exit();
+
 	logbook("Allegro FONT library shut down.");
 
-	if (mp3_music != NULL)
-	{
+	// MP3 Library
+	if (mp3_music) {
 		almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
 		almp3_destroy_mp3(mp3_music);
 	}
 
 	logbook("Allegro MP3 library shut down.");
 
-	for (int i = 0; i < MAX_PLAYERS; i++) {
-	    player[i].destroyAllegroBitmaps();
-	}
-
-    delete allegroDrawer;
-
-	cMouse::destroy();
-	cLogger::destroy();
-
-
 	// Now we are all neatly closed, we exit Allegro and return to OS.
 	allegro_exit();
+
 	logbook("Allegro shut down.");
 	logbook("Thanks for playing.");
+
+    cLogger::destroy();
 }
 
 bool cGame::isResolutionInGameINIFoundAndSet() {
     return game.ini_screen_height != -1 && game.ini_screen_width != -1;
 }
-
-
-/**
-	Setup the game
-
-	Should not be called twice.
-
-*/
 
 void cGame::setScreenResolutionFromGameIniSettings() {
     if (game.ini_screen_width < 800) {
@@ -2514,21 +2502,20 @@ void cGame::setScreenResolutionFromGameIniSettings() {
     cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Resolution from ini file", msg);
 }
 
+/**
+	Setup the game
+
+	Should not be called twice.
+*/
 bool cGame::setupGame() {
 	cLogger *logger = cLogger::getInstance();
 
 	game.init(); // Must be first!
 
-	// Each time we run the game, we clear out the logbook
-	FILE *fp = fopen("log.txt", "wt");
-
-	// this will empty the log file (create a new one)
-	if (fp)	{
-		fclose(fp);
-	}
+	logger->clearLogFile();
 
 	logger->logHeader("Dune II - The Maker");
-	logger->logCommentLine(""); // white space
+	logger->logCommentLine(""); // whitespace
 
 	logger->logHeader("Version information");
 	char msg[255];
@@ -2542,18 +2529,7 @@ bool cGame::setupGame() {
 		logger->log(LOG_INFO, COMP_SETUP, "Initializing", "Fullscreen mode");
 	}
 
-	mouse_co_x1 = -1;      // coordinates
-	mouse_co_y1 = -1;      // of
-	mouse_co_x2 = -1;      // the
-	mouse_co_y2 = -1;      // mouse border
-
-	mouse_mv_x1 = -1;
-	mouse_mv_y1 = -1;
-	mouse_mv_x2 = -1;
-	mouse_mv_y2 = -1;
-
 	// TODO: load eventual game settings (resolution, etc)
-
 
 	// Logbook notification
 	logger->logHeader("Allegro");
@@ -2816,7 +2792,7 @@ bool cGame::setupGame() {
 		return false;
 	} else {
 		logbook("Datafile hooked: gfxdata.dat");
-		memcpy (general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
+		memcpy(general_palette, gfxdata[PALETTE_D2TM].dat, sizeof general_palette);
 	}
 
 	gfxaudio = load_datafile("data/gfxaudio.dat");
@@ -2863,9 +2839,6 @@ bool cGame::setupGame() {
 	game.bPlaying = true;
 	game.screenshot = 0;
 	game.state = -1;
-
-	// Mentat class pointer set at null
-	Mentat = NULL;
 
 	// Mouse stuff
 	mouse_status = MOUSE_STATE_NORMAL;
