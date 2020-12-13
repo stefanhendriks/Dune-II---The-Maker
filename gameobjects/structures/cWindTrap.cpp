@@ -2,17 +2,21 @@
 
 // Constructor
 cWindTrap::cWindTrap() {
+    if (DEBUGGING) {
+        char msg[255];
+        sprintf(msg, "(cWindTrap)(ID %d) Constructor", this->id);
+        logbook(msg);
+    }
+    // other variables (class specific)
+    iFade = rnd(63);
+    bFadeDir = true;
 
- // other variables (class specific)
- iFade=rnd(63);
- bFadeDir=true;
-
- // Timers
- TIMER_fade=0;
+    // Timers
+    TIMER_fade = 0;
 }
 
 int cWindTrap::getType() {
-	return WINDTRAP;
+    return WINDTRAP;
 }
 
 cWindTrap::~cWindTrap() {
@@ -24,49 +28,47 @@ cWindTrap::~cWindTrap() {
 }
 
 
-void cWindTrap::think()
-{
-	// think like base class
-	cAbstractStructure::think();
-
+void cWindTrap::think() {
+    // think like base class
+    cAbstractStructure::think();
 }
 
 void cWindTrap::think_fade() {
-	TIMER_fade++;
+    TIMER_fade++;
 
     int iTime; // the speed of fading
 
     // depending on fade direction, fade in slower/faster
-	if (bFadeDir) { // go to blue
+    if (bFadeDir) { // go to blue
         iTime = 3;
-	} else { // go to black
+    } else { // go to black
         iTime = 4;
-	}
+    }
 
     // time passed, we may change fade color
     if (TIMER_fade > iTime) {
         if (bFadeDir) {
             iFade++;
 
-			if (iFade > 254) {
-                bFadeDir=false;
-			}
+            if (iFade > 254) {
+                bFadeDir = false;
+            }
         } else {
             iFade--;
 
-			if (iFade < 1) {
-                bFadeDir=true;
-			}
+            if (iFade < 1) {
+                bFadeDir = true;
+            }
         }
 
-        TIMER_fade=0;
+        TIMER_fade = 0;
     }
 }
 
 void cWindTrap::think_animation() {
-	cAbstractStructure::think_animation();
-	think_fade(); // windtrap specific blue fading
-	cAbstractStructure::think_flag();
+    cAbstractStructure::think_animation();
+    think_fade(); // windtrap specific blue fading
+    cAbstractStructure::think_flag();
 }
 
 void cWindTrap::think_guard() {
@@ -76,10 +78,10 @@ void cWindTrap::think_guard() {
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 
 int cWindTrap::getPowerOut() {
-	float percentage = ((float)getHitPoints() / (float)structures[getType()].hp);
-	return getMaxPowerOut() * percentage;
+    float percentage = ((float) getHitPoints() / (float) structures[getType()].hp);
+    return getMaxPowerOut() * percentage;
 }
 
 int cWindTrap::getMaxPowerOut() {
-	return getS_StructuresType().power_give;
+    return getS_StructuresType().power_give;
 }
