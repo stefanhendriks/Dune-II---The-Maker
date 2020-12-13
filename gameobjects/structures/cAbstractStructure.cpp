@@ -45,6 +45,14 @@ cAbstractStructure::cAbstractStructure() {
 
     TIMER_damage=0;   // damaging stuff
     TIMER_prebuild=0;
+
+    id = -1; // invalid ID at first, it is set in the structureFactory
+
+    if (DEBUGGING) {
+        char msg[255];
+        sprintf(msg, "(cAbstractStructure)(ID %d) Constructor", this->id);
+        logbook(msg);
+    }
 }
 
 cAbstractStructure::~cAbstractStructure() {
