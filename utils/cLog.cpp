@@ -14,6 +14,7 @@ cLogger::~cLogger() {
 cLogger *cLogger::getInstance() {
 	if (instance == NULL) {
 		instance = new cLogger();
+		logbook("New instance of Logger created");
 	}
 
 	return instance;
@@ -240,5 +241,15 @@ long cLogger::getTimeInMilisDifference() {
 void cLogger::destroy() {
     if (instance) {
         delete instance;
+    }
+}
+
+void cLogger::clearLogFile() {
+    // Each time we run the game, we clear out the logfile
+    FILE *fp = fopen("log.txt", "wt");
+
+    // this will empty the log file (create a new one)
+    if (fp)	{
+        fclose(fp);
     }
 }

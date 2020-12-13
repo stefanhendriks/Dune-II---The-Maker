@@ -43,7 +43,6 @@ void cRefinery::think_unit_occupation() {
         }
     }
 
-
     // TODO: REMOVE? the iUnitID is only filled when unit already entered?! so this is wrong?
     // when the unit somehow does not go to us anymore, stop animating
     cUnit &cUnit = unit[iUnitID];

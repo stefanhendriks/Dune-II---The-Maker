@@ -15,6 +15,8 @@ public:
 	static cLogger *getInstance();
 	static void destroy();
 
+    void clearLogFile();
+
 private:
 	FILE *file;
 

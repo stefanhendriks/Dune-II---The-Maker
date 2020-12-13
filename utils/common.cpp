@@ -1479,8 +1479,7 @@ void playMusicByType(int iType) {
     }
 
     // In the end, when mp3, play it:
-    if (game.bMp3)
-    {
+    if (game.bMp3) {
         char filename[50];
         memset(filename, 0, sizeof(filename));
 

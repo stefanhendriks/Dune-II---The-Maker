@@ -255,7 +255,7 @@ void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, 
 **/
 int cStructureFactory::getFreeSlot() {
 	for (int i=0; i < MAX_STRUCTURES; i++) {
-		if (structure[i] == NULL) {
+		if (structure[i] == nullptr) {
 			return i;
 		}
 	}
@@ -372,6 +372,7 @@ void cStructureFactory::deleteAllExistingStructures() {
 }
 
 void cStructureFactory::destroy() {
+    cStructureFactory::getInstance()->deleteAllExistingStructures();
     if (instance) {
         delete instance;
     }
