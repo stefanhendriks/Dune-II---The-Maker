@@ -67,15 +67,11 @@ cAbstractStructure::~cAbstractStructure() {
 }
 
 int cAbstractStructure::pos_x() {
-    cCellCalculator * cellCalculator = map.getCellCalculator();
-    int iCellX = cellCalculator->getX(iCell);
-    return iCellX * TILESIZE_WIDTH_PIXELS;
+    return mapCamera->getAbsoluteXPositionFromCell(iCell);
 }
 
 int cAbstractStructure::pos_y() {
-    cCellCalculator * cellCalculator = map.getCellCalculator();
-    int iCellY = cellCalculator->getY(iCell);
-    return (iCellY * TILESIZE_HEIGHT_PIXELS);
+    return mapCamera->getAbsoluteYPositionFromCell(iCell);
 }
 
 // X drawing position
@@ -168,33 +164,36 @@ void cAbstractStructure::die() {
 			mapEditor.smoothAroundCell(iCll);
 
             int half = 16;
-            PARTICLE_CREATE(pos_x() + half,
-                            pos_y() + half, OBJECT_BOOM01, -1, -1);
+            int posX = mapCamera->getAbsoluteXPositionFromCell(iCll);
+            int posY = mapCamera->getAbsoluteYPositionFromCell(iCll);
+
+            PARTICLE_CREATE(posX + half,
+                            posY + half, OBJECT_BOOM01, -1, -1);
 
             for (int i=0; i < 3; i++)
             {
 				map.smudge_increase(SMUDGE_ROCK, iCll);
 
                 // create particle
-                PARTICLE_CREATE(pos_x() + half,
-                                pos_y() + half, EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
+                PARTICLE_CREATE(posX + half,
+                                posY + half, EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
 
                 // create smoke
-                if (rnd(100) < 7) {
+                if (rnd(100) < 15) {
                     int randomX = -8 + rnd(16);
                     int randomY = -8 + rnd(16);
 
-                    PARTICLE_CREATE(pos_x() + half + randomX,
-                                    pos_y() + half + randomY, OBJECT_SMOKE, -1, -1);
+                    PARTICLE_CREATE(posX + half + randomX,
+                                    posY + half + randomY, OBJECT_SMOKE, -1, -1);
                 }
 
                 // create fire
-                if (rnd(100) < 5) {
+                if (rnd(100) < 15) {
                     int randomX = -8 + rnd(16);
                     int randomY = -8 + rnd(16);
 
-                    PARTICLE_CREATE(pos_x() + half + randomX,
-                                    pos_y() + half + randomY, EXPLOSION_FIRE, -1, -1);
+                    PARTICLE_CREATE(posX + half + randomX,
+                                    posY + half + randomY, EXPLOSION_FIRE, -1, -1);
                 }
 
             }
