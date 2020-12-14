@@ -35,7 +35,6 @@ void install_bullets();
 void install_upgrades();
 
 float health_bar(float max_w, int i, int w);
-float health_unit(int i, float widthInPixels);
 
 int iFindCloseBorderCell(int iCll);
 

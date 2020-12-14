@@ -76,26 +76,27 @@ void cMap::init(int width, int height) {
 }
 
 void cMap::smudge_increase(int iType, int iCell) {
-    if (cell[iCell].smudgetype < 0)
-        cell[iCell].smudgetype = iType;
+    if (!bCellValid(iCell)) return;
+    tCell *pCell = getCell(iCell);
 
-    if (cell[iCell].smudgetype == SMUDGE_WALL)
-        cell[iCell].smudgetile = 0;
+    if (pCell->smudgetype < 0)
+        pCell->smudgetype = iType;
 
-    if (cell[iCell].smudgetype == SMUDGE_ROCK)
-    {
-        if (cell[iCell].smudgetile < 0)
-            cell[iCell].smudgetile = rnd(2);
-        else if (cell[iCell].smudgetile + 2 < 6)
-            cell[iCell].smudgetile += 2;
+    if (pCell->smudgetype == SMUDGE_WALL)
+        pCell->smudgetile = 0;
+
+    if (pCell->smudgetype == SMUDGE_ROCK) {
+        if (pCell->smudgetile < 0)
+            pCell->smudgetile = rnd(2);
+        else if (pCell->smudgetile + 2 < 6)
+            pCell->smudgetile += 2;
     }
 
-    if (cell[iCell].smudgetype == SMUDGE_SAND)
-    {
-        if (cell[iCell].smudgetile < 0)
-            cell[iCell].smudgetile = rnd(2);
-        else if (cell[iCell].smudgetile + 2 < 6)
-            cell[iCell].smudgetile += 2;
+    if (pCell->smudgetype == SMUDGE_SAND) {
+        if (pCell->smudgetile < 0)
+            pCell->smudgetile = rnd(2);
+        else if (pCell->smudgetile + 2 < 6)
+            pCell->smudgetile += 2;
     }
 }
 

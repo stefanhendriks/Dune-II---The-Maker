@@ -37,12 +37,12 @@ void cBullet::init() {
     TIMER_homing = 0;   // when timer set, > 0 means homing
 }
 
-int cBullet::pos_x() {
+int cBullet::pos_x() const {
     int iCellX = iCellGiveX(iCell);
     return (iCellX * TILESIZE_WIDTH_PIXELS) + iOffsetX;
 }
 
-int cBullet::pos_y() {
+int cBullet::pos_y() const {
     int iCellY = iCellGiveY(iCell);
     return (iCellY * TILESIZE_HEIGHT_PIXELS) + iOffsetY;
 }
@@ -197,21 +197,283 @@ void cBullet::think_move() {
         return;
     }
 
+    // move bullet a bit towards its goal
+    moveBulletTowardsGoal();
+
+    if (isAtGoalCell()) {
+        arrivedAtGoalLogic();
+        return;
+    }
+
+    int idOfStructureAtCell = map.getCellIdStructuresLayer(iCell);
+    int cellTypeAtCell = map.getCellType(iCell);
+
+    // still heading towards goal; we might hit something while flying
+    if (isNonFlyingTerrainBullet()) {
+
+        // hit structures, walls and mountains
+        if (cellTypeAtCell == TERRAIN_MOUNTAIN) {
+            die();
+            return;
+        }
+
+        // non flying bullets hit against a wall, except for bullets from turrets
+        if (cellTypeAtCell == TERRAIN_WALL && !isTurretBullet()) {
+            damageWall(iCell);
+        }
+
+        if (idOfStructureAtCell > -1) {
+            // structures block non flying bullets, except when it is from the structure
+            // which spawned the bullet. It will also 'shoot over' our own buildings.
+            int id = idOfStructureAtCell;
+            bool bHitsEnemyBuilding = false;
+
+            if (isTurretBullet()) {
+                if (id != iOwnerStructure) {
+                    bHitsEnemyBuilding = true;
+                } else {
+                    // do not shoot yourself
+                    if (structure[id]->getOwner() != iPlayer) {
+                        bHitsEnemyBuilding = true;
+                    }
+                }
+            }
+
+            if (bHitsEnemyBuilding) {
+                damageStructure(idOfStructureAtCell);
+            }
+        }
+    } // non-flying bullets
+}
+
+void cBullet::arrivedAtGoalLogic() {
+    //
+    // we handle different kind of places where we can inflict damage
+    // and we don't bail out after doing that, allowing to inflict damage on several layers on the battle field
+    // for instance: damage a wall, but also a unit (ornithopter), and so forth
+    //
+
+    damageStructure(iCell);                 // damage structure at cell if applicable
+    damageWall(iCell);                      // damage wall if applicable
+    detonateSpiceBloom(iCell);              // detonate spice bloom if applicable
+    damageSandworm(iCell);                  // inflict damage on sandworm if applicable
+    damageGroundUnit(iCell);                // inflict damage on ground unit if applicable
+    damageAirUnit(iCell);                   // inflict damage on air unit (if rocket)
+
+    // create particle of explosion
+    s_Bullet const &sBullet = gets_Bullet();
+    if (sBullet.deadbmp > -1) {
+        PARTICLE_CREATE(getRandomX(), getRandomY(), sBullet.deadbmp, -1, -1);
+    }
+
+    damageTerrain(iCell);
+
+    die();
+}
+
+void cBullet::damageTerrain(int cell) const {
+    if (!bCellValid(cell)) return;
+    int iDamage = getDamageToInflictToNonInfantry();
+
+    int idOfStructureAtCell = map.getCellIdStructuresLayer(cell);
+    int cellTypeAtCell = map.getCellType(cell);
+
+    map.cellTakeDamage(cell, iDamage);
+
+    if (cellTypeAtCell == TERRAIN_SLAB) {
+        // change into rock, get destroyed. But only when we did not hit a structure.
+        if (idOfStructureAtCell < 0 && !isInfantryBullet() && !isSonicWave()) {
+            map.cellChangeType(cell, TERRAIN_ROCK);
+            mapEditor.smoothAroundCell(cell);
+        }
+    }
+}
+
+bool cBullet::isInfantryBullet() const {
+    return iType == BULLET_SMALL;
+}
+
+bool cBullet::isSonicWave() const {
+    return iType == BULLET_SHIMMER;
+}
+
+/**
+ * Handle damaging at cell, if cell is invalid or this bullet type is not a rocket, it will abort.
+ */
+void cBullet::damageAirUnit(int cell) const {
+    if (!bCellValid(cell)) return;
+    if (!isRocket()) return;
+    int id = map.getCellIdAirUnitLayer(cell);
+    if (id < 0) return;
+    if (iOwnerUnit > 0 && id == iOwnerUnit) return; // do not damage self
+
+    int iDamage = getDamageToInflictToNonInfantry();
+
+    cUnit &airUnit = unit[id];
+    airUnit.takeDamage(iDamage);
+
+    if (airUnit.isDead()) {
+        airUnit.die(true, false);
+
+        int iID = iOwnerUnit;
+
+        if (iID > -1) {
+            if (unit[iID].isValid()) {
+                // TODO: update statistics
+            }
+        }
+    }
+}
+
+/**
+ * Inflicts damage on ground unit if it exists at this cell.
+ * If cell param is invalid or no ground unit exists at (valid) cell, then this method aborts.
+ * @param cell
+ */
+void cBullet::damageGroundUnit(int cell) const {
+    if (!bCellValid(cell)) return;
+    int id = map.getCellIdUnitLayer(cell);
+    if (id < 0) return;
+
+    cUnit &groundUnitTakingDamage = unit[id];
+
+    int iDamage = getDamageToInflictToUnit(groundUnitTakingDamage);
+    groundUnitTakingDamage.takeDamage(iDamage);
+
+    // this unit will think what to do now (he got hit ouchy!)
+    groundUnitTakingDamage.think_hit(iOwnerUnit, iOwnerStructure);
+
+    // NO HP LEFT, DIE
+    if (groundUnitTakingDamage.isDead()) {
+        // who is to blame for killing this unit?
+        if (iOwnerUnit > -1) {
+            cUnit &ownerUnit = unit[iOwnerUnit];
+            if (ownerUnit.isValid()) {
+                // TODO: update statistics
+
+                if (units[groundUnitTakingDamage.iType].infantry) {
+                    ownerUnit.fExperience += 0.25; // 4 kills = 1 star
+                } else {
+                    ownerUnit.fExperience += 0.45; // ~ 3 kills = 1 star
+                }
+            }
+        }
+        groundUnitTakingDamage.die(true, false);
+    }
+
+    if (isDeviatorGas()) {
+        // TODO: Stefan: is this needed?!- aren't we playing sound effects in a more generic way?
+        play_sound_id_with_distance(SOUND_GAS, distanceBetweenCellAndCenterOfScreen(iCell));
+
+        // take over unit
+        if (rnd(100) < 40) { // TODO: make property for probability of capturing unit?
+            if (iOwnerUnit > -1) {
+                cUnit &ownerUnit = unit[iOwnerUnit];
+                groundUnitTakingDamage.iPlayer = ownerUnit.iPlayer;
+            }
+
+            groundUnitTakingDamage.iAttackStructure = -1;
+            groundUnitTakingDamage.iAttackUnit = -1;
+            groundUnitTakingDamage.iGroup = -1;
+            groundUnitTakingDamage.iAction = ACTION_GUARD;
+        }
+    }
+}
+
+/**
+ * Given a unit that is taking damage, decide what kind and how many damage to inflict
+ * @param unitTakingDamage
+ * @return
+ */
+int cBullet::getDamageToInflictToUnit(cUnit &unitTakingDamage) const {
+    if (unitTakingDamage.isInfantryUnit()) {
+        return getDamageToInflictToInfantry();
+    }
+    return getDamageToInflictToNonInfantry();
+}
+
+int cBullet::getDamageToInflictToInfantry() const {
+    cPlayerDifficultySettings *difficultySettings = getDifficultySettings();
+
+    int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage_inf);
+
+    if (iOwnerUnit > -1) {
+        int iDam = unit[iOwnerUnit].fExpDamage() * iDamage;
+        iDamage = iDamage + iDam;
+    }
+    return iDamage;
+}
+
+/**
+ * If cell is TERRAIN_BLOOM, then it will detonate the spice bloom.
+ * if cell is invalid, or terrain is not TERRAIN_BLOOM; it will abort.
+ * @param cell
+ */
+void cBullet::detonateSpiceBloom(int cell) const {
+    if (!bCellValid(cell)) return;
+    int cellTypeAtCell = map.getCellType(cell);
+    if (cellTypeAtCell != TERRAIN_BLOOM) return;
+
+    // change type of terrain to sand
+    mapEditor.createCell(cell, TERRAIN_SAND, 0);
+    mapEditor.createField(cell, TERRAIN_SPICE, 50 + (rnd(75)));
+    game.TIMER_shake = 20;
+}
+
+void cBullet::damageSandworm(int cell) const {
+    if (!bCellValid(cell)) return;
+    int id = map.getCellIdWormsLayer(cell);
+    if (id < 0) return; // bail
+
+    cUnit &worm = unit[id];
+    worm.takeDamage(getDamageToInflictToNonInfantry());
+
+    if (worm.isDead()) {
+        worm.die(true, false);
+    }
+}
+
+bool cBullet::isAtGoalCell() const {
+    return iCell == iGoalCell;
+}
+
+/**
+ * If provided cell is of TERRAIN_WALL, then damage it.
+ * If the terrain is not TERRAIN_WALL, then it aborts.
+ * If cell param provided is invalid, it aborts.
+ * @param cell
+ */
+void cBullet::damageWall(int cell) const {
+    if (!bCellValid(cell)) return;
+    int cellTypeAtCell = map.getCellType(cell);
+    if (cellTypeAtCell != TERRAIN_WALL) return;
+
+    int iDamage = getDamageToInflictToNonInfantry();
+
+    map.cellTakeDamage(cell, iDamage);
+
+    if (map.getCellHealth(cell) < 0) {
+        // remove wall, turn into smudge:
+        mapEditor.createCell(cell, TERRAIN_ROCK, 0);
+        mapEditor.smoothAroundCell(cell);
+        map.smudge_increase(SMUDGE_WALL, cell);
+    }
+}
+
+void cBullet::moveBulletTowardsGoal() {
+    int iCellX = iCellGiveX(iCell);
+    int iCellY = iCellGiveY(iCell);
     int iGoalCellX = iCellGiveX(iGoalCell);
     int iGoalCellY = iCellGiveY(iGoalCell);
 
-    int iSlowDown = 0;
-
-    // use this when picking something up
-
     // step 1 : look to the correct direction
-    int d = fDegrees(iCellX, iCellY, iGoalCellX, iGoalCellY);
     float angle = fRadians(iCellX, iCellY, iGoalCellX, iGoalCellY);
 
     // now do some thing to make
     // 1/8 of a cell (2 pixels) per movement
-    iOffsetX += cos(angle) * 2;
-    iOffsetY += sin(angle) * 2;
+    int movespeed = 2; // this is fixed!
+    iOffsetX += cos(angle) * movespeed;
+    iOffsetY += sin(angle) * movespeed;
 
     bool update_me = false;
 
@@ -245,8 +507,9 @@ void cBullet::think_move() {
 
     // TODO: replace logic iCell determining based on abs pixel positions on map!?
 
-    if (iCell == iGoalCell)
+    if (iCell == iGoalCell) {
         iOffsetX = iOffsetY = 0;
+    }
 
     if (update_me) {
         if (!bCellValid(iCell)) {
@@ -254,411 +517,139 @@ void cBullet::think_move() {
             if (iCell < 0) iCell = 0;
         }
     }
+}
 
-    bool bDie = false;
-    bool bDamageRockets = true;
+/**
+ * Is bullet from a turret
+ * @return
+ */
+bool cBullet::isTurretBullet() const {
+    return iType == BULLET_TURRET;
+}
 
-    cPlayerDifficultySettings *difficultySettings = player[iPlayer].getDifficultySettings();
+bool cBullet::isNonFlyingTerrainBullet() const {
+    return iType == BULLET_SMALL ||
+           iType == BULLET_TRIKE ||
+           iType == BULLET_QUAD ||
+           iType == BULLET_TANK ||
+           iType == BULLET_SIEGE ||
+           iType == BULLET_DEVASTATOR ||
+           iType == BULLET_TURRET;
+}
 
-    // crash against mountains, etc
-    int idOfStructureAtCell = map.getCellIdStructuresLayer(iCell);
 
-    if (iType == BULLET_SMALL ||
-        iType == BULLET_TRIKE ||
-        iType == BULLET_QUAD ||
-        iType == BULLET_TANK ||
-        iType == BULLET_SIEGE ||
-        iType == BULLET_DEVASTATOR ||
-        iType == BULLET_TURRET) {
-        bDamageRockets = false;
+bool cBullet::isDeviatorGas() const {
+    return iType == BULLET_GAS;
+}
 
-        // hit structures , walls and mountains
-        if (map.getCellType(iCell) == TERRAIN_MOUNTAIN)
-            bDie = true;
+bool cBullet::isRocket() const {
+    return iType == ROCKET_NORMAL ||
+           iType == ROCKET_SMALL_ORNI ||
+           iType == ROCKET_SMALL ||
+           iType == ROCKET_SMALL_FREMEN ||
+           iType == ROCKET_RTURRET;
+}
 
-        if (map.getCellType(iCell) == TERRAIN_WALL &&
-            iType != BULLET_TURRET) // except for bullet turret that do not hit walls...
-        {
-            // damage this type of wall...
-            int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
+int cBullet::getDamageToInflictToNonInfantry() const {
+    cPlayerDifficultySettings *pDifficultySettings = getDifficultySettings();
+    const s_Bullet &sBullet = gets_Bullet();
+    int iDamage = pDifficultySettings->getInflictDamage(sBullet.damage);
 
-            if (iOwnerUnit > -1) {
-                int iDam = (unit[iOwnerUnit].fExpDamage() * iDamage);
-                iDamage += iDam;
-            }
-
-            //map.cell[iCell].health -= player[iPlayer].iDamage(bullets[iType].damage);
-            map.cellTakeDamage(iCell, iDamage);
-
-            if (map.getCellHealth(iCell) < 0) {
-                // remove wall, turn into smudge:
-                mapEditor.createCell(iCell, TERRAIN_ROCK, 0);
-                mapEditor.smoothAroundCell(iCell);
-                map.smudge_increase(SMUDGE_WALL, iCell);
-
-            }
-
-            bDie = true;
+    // increase damage by experience of unit
+    if (iOwnerUnit > -1) {
+        // extra damage by experience:
+        cUnit &cUnit = unit[iOwnerUnit];
+        if (cUnit.isValid()) { // in case the unit died while firing
+            int iDam = (cUnit.fExpDamage() * iDamage);
+            iDamage = iDamage + iDam;
         }
-
-
-        if (idOfStructureAtCell > -1) {
-
-            // structure hit!
-            int id = idOfStructureAtCell;
-
-            bool bSkipSelf = false;
-
-            if (iType == BULLET_TURRET) {
-                if (id == iOwnerStructure) {
-                    //logbook("Turret bullet shot itself, will skip friendly fire");
-                    bSkipSelf = true; // do not shoot yourself
-                } else {
-                    if (structure[id]->getOwner() == iPlayer) {
-                        bSkipSelf = true; // do not shoot own buildings
-                        //logbook("Bullet shot itself, will skip friendly fire");
-                    }
-                }
-            }
-
-            if (bSkipSelf == false) {
-                int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
-
-                // increase damage by experience of unit
-                if (iOwnerUnit > -1) {
-                    // extra damage by experience:
-                    int iDam = (unit[iOwnerUnit].fExpDamage() * iDamage);
-                    iDamage = iDamage + iDam;
-                }
-
-                int oldHp = structure[id]->getHitPoints();
-                assert(iDamage > -1); // as long not giving health it is fine. (0 too!)
-                structure[id]->damage(iDamage);
-
-                // this assert is disabled, because it is not obliged to have bullets that cause damage
-                // think of the deviator missiles.
-                //assert(oldHp >= structure[id]->getHitPoints()); // damage should be done
-
-                int iChance = 10;
-
-                if (structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
-                    iChance = 30;
-
-                if (rnd(100) < iChance) {
-                    int half = 16;
-                    int randomX = -8 + rnd(half);
-                    int randomY = -8 + rnd(half);
-                    PARTICLE_CREATE(pos_x() + half + randomX,
-                                    pos_y() + half + randomY, OBJECT_SMOKE, -1, -1);
-                }
-
-
-                // NO HP LEFT, DIE
-                if (structure[id]->getHitPoints() <= 0) {
-                    if (iOwnerUnit > -1)
-                        if (unit[iOwnerUnit].isValid()) {
-                            // TODO: update statistics
-//							player[unit[iOwnerUnit].iPlayer].iKills[INDEX_KILLS_STRUCTURES]++;  // we killed!
-                        }
-
-                    structure[id]->die();
-                }
-
-                bDie = true;
-            } // skip self
-            else {
-                logbook("Skipped friendly fire");
-            }
-
-        }
-
     }
 
-    if (iCell == iGoalCell || bDie) {
-        // for non bullets (thus rockets!)
-        if (bDamageRockets) {
-            if (idOfStructureAtCell > -1) {
-                // structure hit!
-                int id = idOfStructureAtCell;
+    return iDamage;
+}
 
-                int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
+cPlayerDifficultySettings *cBullet::getDifficultySettings() const {
+    const cPlayer * cPlayer = getPlayer();
+    cPlayerDifficultySettings *pDifficultySettings = cPlayer->getDifficultySettings();
+    return pDifficultySettings;
+}
 
-                if (iOwnerUnit > -1) {
-                    int iDam = (unit[iOwnerUnit].fExpDamage() * iDamage);
-                    iDamage += iDam;
-                }
+s_Bullet cBullet::gets_Bullet() const {
+    return bullets[iType];
+}
 
-                // this assertion is false, some bullets (like bullet_gas) do not
-                // any damage.
-//				assert(iDamage > 0);
-                if (iDamage > 0) {
-                    structure[id]->damage(iDamage);
+cPlayer * cBullet::getPlayer() const {
+    return &player[iPlayer];
+}
 
-                    int iChance = 15;
+/**
+ * Damage the structure; if id < 0 then this method does nothing.
+ *
+ * @param difficultySettings
+ * @param idOfStructureAtCell
+ */
+void cBullet::damageStructure(int cell) {
+    if (!bCellValid(cell)) return;
+    int id = map.getCellIdStructuresLayer(cell);
+    if (id < 0) return; // bail
 
-                    // structure could be dead here (damage->calls die when dead)
-                    if (structure && structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
-                        iChance = 45;
+    cPlayerDifficultySettings *difficultySettings = getDifficultySettings();
 
-                    // smoke
-                    if (rnd(100) < iChance) {
-                        int half = 16;
-                        int randomX = -8 + rnd(half);
-                        int randomY = -8 + rnd(half);
+    int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
 
-                        PARTICLE_CREATE(pos_x() + half + randomX,
-                                        pos_y() + half + randomY, OBJECT_SMOKE, -1, -1);
-                    }
-
-
-                    // NO HP LEFT, DIE
-                    if (structure[id]->getHitPoints() <= 0) {
-                        if (iOwnerUnit > -1)
-                            if (unit[iOwnerUnit].isValid()) {
-                                // TODO: update statistics
-//								player[unit[iOwnerUnit].iPlayer].iKills[INDEX_KILLS_STRUCTURES]++;  // we killed!
-                            }
-
-
-                        structure[id]->die();
-                    }
-
-                    bDie = true;
-                }
-            }
-
-            if (map.getCellType(iCell) == TERRAIN_WALL) {
-                // damage this type of wall...
-                int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
-
-                if (iOwnerUnit > -1) {
-                    int iDam = (unit[iOwnerUnit].fExpDamage() * iDamage);
-                    iDamage += iDam;
-                }
-
-                map.cellTakeDamage(iCell, iDamage);
-
-                if (map.getCellHealth(iCell) < 0) {
-                    // remove wall, turn into smudge:
-                    mapEditor.createCell(iCell, TERRAIN_ROCK, 0);
-                    mapEditor.smoothAroundCell(iCell);
-                    map.smudge_increase(SMUDGE_WALL, iCell);
-
-                }
-
-                bDie = true;
-            }
-
-        } // do damage by rockets or not?
-
-        // SPICE BLOOM
-        if (map.getCellType(iCell) == TERRAIN_BLOOM) {
-            // change type of terrain to sand
-            mapEditor.createCell(iCell, TERRAIN_SAND, 0);
-
-            mapEditor.createField(iCell, TERRAIN_SPICE, 50 + (rnd(75)));
-
-            // kill unit
-            game.TIMER_shake = 20;
-
+    cUnit *pUnit = nullptr;
+    if (iOwnerUnit > -1) {
+        if (&unit[iOwnerUnit] && unit[iOwnerUnit].isValid()) {
+            pUnit = &unit[iOwnerUnit];
         }
-
-        // Ok sandworm damaged
-        int idOfWormAtCell = map.getCellIdWormsLayer(iCell);
-        if (idOfWormAtCell > -1) {
-            // structure hit!
-            int id = idOfWormAtCell;
-
-            unit[id].iHitPoints -= difficultySettings->getInflictDamage(bullets[iType].damage);
-
-            // NO HP LEFT, DIE
-            if (unit[id].iHitPoints <= 0) {
-                unit[id].die(true, false);
-            }
-
-            bDie = true;
-        }
-
-        // OK, units damaged:
-        int idOfUnitAtCell = map.getCellIdUnitLayer(iCell);
-        if (idOfUnitAtCell > -1) {
-            // structure hit!
-            int id = idOfUnitAtCell;
-
-            if (units[unit[id].iType].infantry) {
-                int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage_inf);
-
-                if (iOwnerUnit > -1) {
-                    int iDam = unit[iOwnerUnit].fExpDamage() * iDamage;
-                    iDamage = iDamage + iDam;
-                }
-
-                unit[id].iHitPoints -= iDamage;
-            } else {
-                int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
-
-                if (iOwnerUnit > -1) {
-                    int iDam = unit[iOwnerUnit].fExpDamage() * iDamage;
-                    iDamage = iDamage + iDam;
-                }
-
-                unit[id].iHitPoints -= iDamage;
-                //unit[id].iHitPoints -= player[iPlayer].iDamage(bullets[iType].damage);
-            }
-
-
-            // NO HP LEFT, DIE
-            if (unit[id].iHitPoints <= 0) {
-                int iID = iOwnerUnit;
-
-                if (iID < 0)
-                    iID = iOwnerStructure;
-
-                if (iID > -1) {
-                    if (iOwnerUnit > -1) {
-                        if (unit[iID].isValid()) {
-                            // TODO: update statistics
-//                        player[unit[iID].iPlayer].iKills[INDEX_KILLS_UNITS]++;  // we killed!
-
-                            if (units[unit[id].iType].infantry)
-                                unit[iID].fExperience += 0.25; // 4 kills = 1 star
-                            else
-                                unit[iID].fExperience += 0.45; // ~ 3 kills = 1 star
-                        }
-                    }
-
-
-                }
-
-                unit[id].die(true, false);
-            } else
-                unit[id].think_hit(iOwnerUnit,
-                                   iOwnerStructure); // this unit will think what to do now (he got hit ouchy!)
-
-
-            bDie = true;
-
-            if (iType == BULLET_GAS) {
-                if (rnd(100) < 40) {
-                    if (iOwnerUnit > -1) {
-                        unit[id].iPlayer = unit[iOwnerUnit].iPlayer;
-                    } else if (iOwnerStructure > -1) {
-                        unit[id].iPlayer = structure[iOwnerStructure]->getOwner();
-                    }
-
-                    unit[id].iAttackStructure = -1;
-                    unit[id].iAttackUnit = -1;
-                    unit[id].iAction = ACTION_GUARD;
-                }
-            }
-
-        }
-
-
-        // ok, only rockets can damage aircraft:
-        if (iType == ROCKET_NORMAL ||
-            iType == ROCKET_SMALL_ORNI ||
-            iType == ROCKET_SMALL ||
-            iType == ROCKET_SMALL_FREMEN ||
-            iType == ROCKET_RTURRET) {
-            int idOfAirUnitAtCell = map.getCellIdAirUnitLayer(iCell);
-            if (idOfAirUnitAtCell > -1) {
-                // structure hit!
-                int id = idOfAirUnitAtCell;
-
-                if (id != iOwnerUnit) {
-
-                    int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
-
-                    if (iOwnerUnit > -1) {
-                        int iDam = (unit[iOwnerUnit].fExpDamage() * iDamage);
-
-                        iDamage += iDam;
-                    }
-
-                    unit[id].iHitPoints -= iDamage;
-
-//            unit[id].iHitPoints -= player[iPlayer].iDamage(bullets[iType].damage);
-
-                    // NO HP LEFT, DIE
-                    if (unit[id].iHitPoints <= 0) {
-                        unit[id].die(true, false);
-
-                        int iID = iOwnerUnit;
-
-                        if (iID < 0)
-                            iID = iOwnerStructure;
-
-                        if (iID > -1) {
-                            if (unit[iID].isValid()) {
-                                // TODO: update statistics
-//                        player[unit[iID].iPlayer].iKills[INDEX_KILLS_UNITS]++;  // we killed!
-                            }
-                        }
-
-
-                    }
-
-                    bDie = true;
-                }
-            }
-
-        }
-
-
-        if (iType == BULLET_GAS)
-            play_sound_id_with_distance(SOUND_GAS, distanceBetweenCellAndCenterOfScreen(iCell));
-
-        if (bullets[iType].deadbmp > -1) {
-            int half = 16;
-            int randomX = -8 + rnd(half);
-            int randomY = -8 + rnd(half);
-            PARTICLE_CREATE(pos_x() + half + randomX,
-                            pos_y() + half + randomY, bullets[iType].deadbmp, -1, -1);
-
-        }
-
-        int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
-
-        if (iOwnerUnit > -1) {
-            int iDam = (unit[iOwnerUnit].fExpDamage() * iDamage);
-            iDamage += iDam;
-        }
-
-        if (map.getCellType(iCell) == TERRAIN_ROCK) {
-            if (map.getCellType(iCell) != TERRAIN_WALL)
-                map.cellTakeDamage(iCell, iDamage);
-
-
-            if (map.getCellHealth(iCell) < -25) {
-                map.smudge_increase(SMUDGE_ROCK, iCell);
-                map.cellGiveHealth(iCell, rnd(25));
-            }
-        } else if (map.getCellType(iCell) == TERRAIN_SLAB) {
-            // change into rock, get destroyed
-            if (idOfStructureAtCell < 0 &&
-                iType != BULLET_SMALL &&
-                iType != BULLET_SHIMMER) {
-                map.cellChangeType(iCell, TERRAIN_ROCK);
-                mapEditor.smoothAroundCell(iCell);
-            }
-        } else if (map.getCellType(iCell) == TERRAIN_SAND ||
-                   map.getCellType(iCell) == TERRAIN_HILL ||
-                   map.getCellType(iCell) == TERRAIN_SPICE ||
-                   map.getCellType(iCell) == TERRAIN_SPICEHILL) {
-            if (map.getCellType(iCell) != TERRAIN_WALL)
-                map.cellTakeDamage(iCell, iDamage);
-
-
-            if (map.getCellHealth(iCell) < -25) {
-                map.smudge_increase(SMUDGE_SAND, iCell);
-                map.cellGiveHealth(iCell, rnd(25));
-            }
-        }
-
-        die();
     }
 
+    if (pUnit) {
+        int iDam = (pUnit->fExpDamage() * iDamage);
+        iDamage += iDam;
+    }
+
+    cAbstractStructure *pStructure = structure[id];
+    if (pStructure == nullptr) {
+        return; // invalid pointer!
+    }
+
+    pStructure->damage(iDamage);
+
+    int iChance = pStructure->getSmokeChance();
+
+    // smoke
+    if (rnd(100) < iChance) {
+        PARTICLE_CREATE(getRandomX(), getRandomY(), OBJECT_SMOKE, -1, -1);
+    }
+
+    // The damage function says dying should not be part of it, so it is put here?!
+    if (pStructure->getHitPoints() <= 0) {
+        if (pUnit) {
+            // TODO: update statistics
+        }
+        pStructure->die();
+    }
+}
+
+/**
+ * Picks a random Y position around current position. (max half tile distance)
+ * @return
+ */
+int cBullet::getRandomY() const {
+    int half = 16;
+    int randomY = -8 + rnd(half);
+    return pos_y() + half + randomY;
+}
+
+/**
+ * Picks a random X position around current position. (max half tile distance)
+ * @return
+ */
+int cBullet::getRandomX() const {
+    int half = 16;
+    int randomX = -8 + rnd(half);
+    return pos_x() + half + randomX;
 }
 
 void cBullet::die() {

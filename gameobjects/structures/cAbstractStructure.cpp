@@ -227,28 +227,33 @@ void cAbstractStructure::think_prebuild() {
     }
 }
 
-// Free around structure, return the first cell that is free.
-int cAbstractStructure::iFreeAround()
-{
-	int iStartX = iCellGiveX(iCell);
-	int iStartY = iCellGiveY(iCell);
+/**
+ * Searches around the border of a structure (from top left to bottom right) for a free cell. If found, returns it.
+ * If fails, it returns -1
+ * @return
+ */
+int cAbstractStructure::getNonOccupiedCellAroundStructure() {
+    int iStartX = iCellGiveX(iCell);
+    int iStartY = iCellGiveY(iCell);
 
-	int iEndX = (iStartX + iWidth) + 1;
-	int iEndY = (iStartY + iHeight) + 1;
+    int iEndX = (iStartX + iWidth) + 1;
+    int iEndY = (iStartY + iHeight) + 1;
 
-	iStartX--;
-	iStartY--;
+    iStartX--;
+    iStartY--;
 
-	int iCx=0;
-	int iCy=0;
+    int iCx = 0;
+    int iCy = 0;
 
-	for (int x = iStartX; x < iEndX; x++) {
+    for (int x = iStartX; x < iEndX; x++) {
         for (int y = iStartY; y < iEndY; y++) {
             iCx = x;
             iCy = y;
 
+            // iCx and iCy are passed by reference
             FIX_BORDER_POS(iCx, iCy);
 
+            // so they are for sure not at the outer edges on the map now...
             int cll = iCellMake(iCx, iCy);
 
             if (!map.occupied(cll)) {
@@ -257,7 +262,7 @@ int cAbstractStructure::iFreeAround()
         }
     }
 
-	return -1; // fail
+    return -1; // fail
 }
 
 void cAbstractStructure::think_guard() {
@@ -470,8 +475,8 @@ bool cAbstractStructure::isValid()
 }
 
 float cAbstractStructure::getHealthNormalized() {
-    const s_Structures &structure = getS_StructuresType();
-    float flMAX  = structure.hp;
+    const s_Structures &structureType = getS_StructuresType();
+    float flMAX  = structureType.hp;
     return (iHitPoints / flMAX);
 }
 
@@ -485,4 +490,17 @@ int cAbstractStructure::getHeightInPixels() {
 
 bool cAbstractStructure::isDamaged() {
     return getHitPoints() < getMaxHP();
+}
+
+/**
+ * Probability between 0-100 when to create smoke particles.
+ * Based on health of structure. (< 50% has 3x higher probability to spawn smoke)
+ * @return
+ */
+int cAbstractStructure::getSmokeChance() {
+    if (getHitPoints() < (getMaxHP() / 2)) {
+        return 45;
+    }
+
+    return 15;
 }

@@ -40,8 +40,7 @@ void cGunTurret::think() {
         return;
 	}
 
-
-	if (player[getOwner()].bEnoughPower() == false) {
+	if (!getPlayer()->bEnoughPower()) {
         return;
 	}
 

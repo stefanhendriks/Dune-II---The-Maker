@@ -46,10 +46,10 @@ void cRepairFacility::think_repairUnit() {// must repair...
             pPlayer->substractCredits(1);
 
             if (unitToRepair.iTempHitPoints >= maxHpForUnitType) {
-                unitToRepair.iHitPoints = maxHpForUnitType;
+                unitToRepair.setMaxHitPoints();
 
                 // dump unit, get rid of it
-                int iNewCell = iFreeAround();
+                int iNewCell = getNonOccupiedCellAroundStructure();
 
                 if (iNewCell > -1) {
                     unitToRepair.iCell = iNewCell;

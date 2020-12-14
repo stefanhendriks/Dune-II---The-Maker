@@ -28,7 +28,7 @@ cMapEditor	  				mapEditor;
 cRandomMapGenerator 		randomMapGenerator;
 
 cAbstractStructure     	*	structure[MAX_STRUCTURES];
-cUnit          				unit[MAX_UNITS];
+cUnit          				unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
 cMapCamera				*	mapCamera;
 cMapUtils				*   mapUtils;
 cPlayer        				player[MAX_PLAYERS];             // player is

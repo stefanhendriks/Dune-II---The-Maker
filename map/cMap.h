@@ -169,7 +169,24 @@ public:
 
     void cellTakeDamage(int cellNr, int damage) {
         tCell *pCell = getCell(cellNr);
-        if (pCell) pCell->health -= damage;
+        if (pCell) {
+            pCell->health -= damage;
+
+            if (pCell->health < -25) {
+                if (pCell->type == TERRAIN_ROCK) {
+                    smudge_increase(SMUDGE_ROCK, cellNr);
+                }
+
+                if (pCell->type == TERRAIN_SAND ||
+                    pCell->type == TERRAIN_HILL ||
+                    pCell->type == TERRAIN_SPICE ||
+                    pCell->type == TERRAIN_SPICEHILL) {
+                    smudge_increase(SMUDGE_SAND, cellNr);
+                }
+
+                pCell->health += rnd(35);
+            }
+        }
     }
 
     void cellTakeCredits(int cellNr, int amount) {

@@ -12,15 +12,12 @@
 
 #include <math.h>
 #include "../../include/d2tmh.h"
-#include "cUnit.h"
-
 
 // Path creation definitions / var
 #define CLOSED        -1
 #define OPEN          0
 
-struct ASTAR
-{
+struct ASTAR {
   int cost;
   int parent;
   int state;
@@ -29,12 +26,10 @@ struct ASTAR
 // Temp map
 ASTAR temp_map[MAX_CELLS];
 
-
 // Class specific on top
 // Globals on bottom
 
 void cUnit::init(int i) {
-
 	fExperience=0;
 
     iID = i;
@@ -283,9 +278,10 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 
                             int iChance = 10;
 
-                            if (structure &&
-                                structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2))
+                            if (structure[id] &&
+                                structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2)) {
                                 iChance = 30;
+                            }
 
                             if (rnd(100) < iChance) {
                                 long x = pos_x() + (mapCamera->getViewportStartX()) + 16 + (-8 + rnd(16));
@@ -395,13 +391,12 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 }
 
 
-bool cUnit::isValid()
-{
-    if (iPlayer <0)
+bool cUnit::isValid() {
+    if (iPlayer < 0)
         return false;
 
     // no hitpoints and not in a structure
-    if (iHitPoints < 0  && iTempHitPoints < 0)
+    if (iHitPoints < 0 && iTempHitPoints < 0)
         return false;
 
     if (iCell < 0 || iCell >= MAX_CELLS)
@@ -503,19 +498,18 @@ void cUnit::draw_health() {
 }
 
 // this method returns the amount of percent extra damage may be done
-float cUnit::fExpDamage()
-{
-	if (fExperience < 1) return 0; // no stars
+float cUnit::fExpDamage() {
+    if (fExperience < 1) return 0; // no stars
 
-	// MAX EXPERIENCE = 10 (9 stars)
+    // MAX EXPERIENCE = 10 (9 stars)
 
-	// A unit can do 2x damage on full experience; being very powerfull.
-	// it does take a long time to get there though.
-	float fResult = (fExperience/10);
+    // A unit can do 2x damage on full experience; being very powerfull.
+    // it does take a long time to get there though.
+    float fResult = (fExperience / 10);
 
-	// never make a unit weaker.
-	if (fResult < 1.0) fResult = 1.0F;
-	return fResult;
+    // never make a unit weaker.
+    if (fResult < 1.0) fResult = 1.0F;
+    return fResult;
 }
 
 void cUnit::draw_experience()
@@ -705,7 +699,7 @@ void cUnit::move_to(int iCll, int iStrucID, int iUnitID)
 
     iGoalCell = iCll;
     iStructureID = iStrucID;
-    iUnitID = iUnitID;
+    this->iUnitID = iUnitID;
     iPathIndex=-1;
 	iAttackStructure=-1;
     iAttackCell=-1;
@@ -718,10 +712,8 @@ void cUnit::move_to(int iCll, int iStrucID, int iUnitID)
 
 	memset(iPath,-1, sizeof(iPath));
 
-    if (iStrucID > -1)
-    {
-        if (structure[iStrucID])
-        {
+    if (iStrucID > -1) {
+        if (structure[iStrucID]) {
             structure[iStrucID]->iUnitID = iUnitID;
         }
     }
@@ -1261,8 +1253,6 @@ void cUnit::think() {
             // refinery required, go find one that is available
             if (bFindRefinery) {
                 iFrame=0;
-
-                cStructureUtils structureUtils;
                 char msg[255];
                 sprintf(msg, "Going to look for a refinery, playerId [%d], cell [%d]", iPlayer, iCell);
                 logbook(msg);
@@ -1289,12 +1279,11 @@ void cUnit::think() {
                     sprintf(msg, "Returning to refinery ID %d", refineryStructureId);
                     LOG(msg);
 					move_to(refinery->getCell() + rnd(2) + (rnd(2) * 64), refineryStructureId, -1); // move yourself...
+                    TIMER_movewait=0;
 				} else {
 					TIMER_movewait = 500; // wait for pickup!
 					TIMER_thinkwait = 500;
 				}
-
-                TIMER_movewait=0;
             }
 
         } else {
@@ -1441,7 +1430,6 @@ void cUnit::think_move_air() {
 						if (iCell == iTheGoal) {
 							// when this unit is NOT moving
 							if (!unitToPickupOrDrop.isMovingBetweenCells())	{
-
 								bPickedUp = true; // set state in aircraft, that it has picked up a unit
 
 								// so we set the tempHitpoints so the unit 'dissapears' from the map without being
@@ -1898,6 +1886,10 @@ int cUnit::isNextCell() {
 
 // ouch, who shot me?
 void cUnit::think_hit(int iShotUnit, int iShotStructure) {
+    if (isDead()) {
+        // I've died , so don't bother
+        return;
+    }
 
     // only act when we are doing 'nothing'...
     if (iAction == ACTION_GUARD) {
@@ -2512,37 +2504,32 @@ void cUnit::think_move() {
 
     // structure is NOT matching our structure ID, then its blocking us
     int idOfStructureAtNextCell = map.getCellIdStructuresLayer(iNextCell);
+
     if (iStructureID > -1 &&
         idOfStructureAtNextCell != iStructureID &&
-        idOfStructureAtNextCell > -1)
-        bOccupied=true;
-
-
-    if (iStructureID < 0 && idOfStructureAtNextCell > -1)
-    {
+        idOfStructureAtNextCell > -1) {
         bOccupied = true;
     }
 
-    if (iStructureID > -1 && idOfStructureAtNextCell == iStructureID)
-    {
-        // we may enter, only if its empty
-        if (structure[iStructureID]->iUnitID > -1)
-        {
-            // already occupied, find alternative
-            cStructureUtils structureUtils;
-            int	iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(iCell,
-                                                                                                        structure[iStructureID]->getType(),
-                                                                                                        &player[iPlayer]);
 
-            if (iNewID > -1 && iNewID != iStructureID)
-            {
+    if (iStructureID < 0 && idOfStructureAtNextCell > -1) {
+        bOccupied = true;
+    }
+
+    if (iStructureID > -1 && idOfStructureAtNextCell == iStructureID) {
+        // we may enter, only if its empty
+        if (structure[iStructureID]->iUnitID > -1) {
+            // already occupied, find alternative
+            int iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(iCell,
+                                                                                                     structure[iStructureID]->getType(),
+                                                                                                     &player[iPlayer]);
+
+            if (iNewID > -1 && iNewID != iStructureID) {
                 iStructureID = iNewID;
                 move_to(structure[iNewID]->getCell(), iNewID, -1);
-            }
-            else
-            {
-                iNextCell=iCell;
-                TIMER_movewait=100; // we wait
+            } else {
+                iNextCell = iCell;
+                TIMER_movewait = 100; // we wait
                 return;
             }
         }
@@ -2961,6 +2948,7 @@ bool cUnit::isInfantryUnit() {
 
 cUnit::cUnit() {
     dimensions = nullptr;
+    init(-1);
 }
 
 cUnit::~cUnit() {
@@ -2981,6 +2969,19 @@ void cUnit::think_position() {
 
 bool cUnit::isMovingBetweenCells() {
     return iOffsetX != 0 || iOffsetY != 0;
+}
+
+bool cUnit::isDamaged() {
+    return iHitPoints < getUnitType().hp;
+}
+
+void cUnit::restoreFromTempHitPoints() {
+    iHitPoints = iTempHitPoints; // restore true hitpoints
+    iTempHitPoints = -1; // get rid of this hack
+}
+
+void cUnit::setMaxHitPoints() {
+    iHitPoints = getUnitType().hp;
 }
 
 // return new valid ID
@@ -3060,8 +3061,7 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
     newUnit.iHeadShouldFace = newUnit.iHeadFacing;
 
     newUnit.iType = iTpe;
-    //unit[iNewId].iHitPoints = rnd(units[iTpe].hp);
-    newUnit.iHitPoints = units[iTpe].hp;
+    newUnit.setMaxHitPoints();
     newUnit.iGoalCell = iCll;
 
     newUnit.bSelected=false;
@@ -3118,7 +3118,7 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
   It will check if the unit is free to move, if the timer is set correctly
   and so forth.
 
-  Then the actualy FDS path finder starts. Which will output a 'reversed' tracable
+  Then the actual FDS path finder starts. Which will output a 'reversed' traceable
   path.
 
   Eventually this path is converted back to a waypoint string for units, and also
@@ -3130,69 +3130,63 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
   -2 = Cannot move, surrounded by a lot of units
   -3 = Too many paths created
   -4 = Offset is not 0
-
+  -99= iUnitId is < 0 (invalid input)
   */
-int CREATE_PATH(int iID, int iPathCountUnits)
-{
-
-    // Too many paths where created , so we wait a little.
-    if (game.paths_created > 40)
-    {
-        unit[iID].TIMER_movewait = (50 + rnd(50));
-        return -3;
+int CREATE_PATH(int iUnitId, int iPathCountUnits) {
+    if (iUnitId < 0) {
+        return -99; // Wut!?
     }
 
-    int iCell = unit[iID].iCell; // current cell
+    cUnit &cUnit = unit[iUnitId];
 
     // do not start calculating anything before we are on 0,0 x,y wise on a cell
-    if (unit[iID].iOffsetX != 0 || unit[iID].iOffsetY != 0)
-    {
+    if (cUnit.iOffsetX != 0 || cUnit.iOffsetY != 0) {
         return -4; // no calculation before we are straight on a cell baby
     }
 
+    // Too many paths where created , so we wait a little.
+    // make sure not to create too many paths at once
+    if (game.paths_created > 40) {
+        cUnit.TIMER_movewait = (50 + rnd(50));
+        return -3;
+    }
+
+    int iCell = cUnit.iCell; // current cell
+
+    // When the goal == cell, then skip.
+    if (iCell == cUnit.iGoalCell) {
+        logbook("ODD: The goal = cell?");
+        return -1;
+    }
+
     // when all around the unit there is no space, dont even bother
-    if (map.occupied(CELL_LEFT(iCell), iID)    &&
-        map.occupied(CELL_RIGHT(iCell), iID)   &&
-        map.occupied(CELL_ABOVE(iCell), iID)   &&
-        map.occupied(CELL_UNDER(iCell), iID)   &&
-        map.occupied(CELL_L_LEFT(iCell), iID)  &&
-        map.occupied(CELL_L_RIGHT(iCell), iID) &&
-        map.occupied(CELL_U_RIGHT(iCell), iID) &&
-        map.occupied(CELL_U_LEFT(iCell), iID))
+    if (map.occupied(CELL_LEFT(iCell), iUnitId) &&
+        map.occupied(CELL_RIGHT(iCell), iUnitId) &&
+        map.occupied(CELL_ABOVE(iCell), iUnitId) &&
+        map.occupied(CELL_UNDER(iCell), iUnitId) &&
+        map.occupied(CELL_L_LEFT(iCell), iUnitId) &&
+        map.occupied(CELL_L_RIGHT(iCell), iUnitId) &&
+        map.occupied(CELL_U_RIGHT(iCell), iUnitId) &&
+        map.occupied(CELL_U_LEFT(iCell), iUnitId))
     {
-        unit[iID].TIMER_movewait = 30 + rnd(50);
+       cUnit.TIMER_movewait = 30 + rnd(50);
        return -2;
     }
 
     // Now start create path
 
     // Clear unit path settings (index & path string)
-	//for (int i=0; i < MAX_PATH_SIZE; i++)
-	//	unit[iID].iPath[i] = -1;
+    memset(cUnit.iPath, -1, sizeof(cUnit.iPath));
 
-    memset(unit[iID].iPath, -1, sizeof(unit[iID].iPath));
-
-    unit[iID].iPathIndex=-1;
-
-    // When the goal == cell, then skip.
-    if (unit[iID].iCell == unit[iID].iGoalCell)
-    {
-        logbook("ODD: The goal = cell?");
-        return -1;
-    }
-
+    cUnit.iPathIndex=-1;
 
     // Search around a cell:
     int cx, cy, the_cll, ex, ey;
-    int goal_cell = unit[iID].iGoalCell;
-    int controller = unit[iID].iPlayer;
+    int goal_cell = cUnit.iGoalCell;
+    int controller = cUnit.iPlayer;
 
     game.paths_created++;
     memset(temp_map, -1, sizeof(temp_map));
-
-    /*
-    for (int i=0; i < MAX_CELLS; i++)
-        temp_map[i].state = CLOSED;*/
 
     the_cll=-1;
     ex=-1;
@@ -3214,7 +3208,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
     bool is_worm       = false;
 
     // Sandworm
-    if (unit[iID].iType == SANDWORM)
+    if (cUnit.iType == SANDWORM)
         is_worm=true;
 
     // WHILE VALID TO RUN THIS LOOP
@@ -3228,11 +3222,11 @@ int CREATE_PATH(int iID, int iPathCountUnits)
             break;
         }
 
-        if (unit[iID].iStructureID > -1 || unit[iID].iAttackStructure > -1)
+        if (cUnit.iStructureID > -1 || cUnit.iAttackStructure > -1)
         {
             int idOfStructureAtCell = map.cellGetIdFromLayer(iCell, MAPID_STRUCTURES);
-            if (unit[iID].iStructureID > -1)
-            if (idOfStructureAtCell == unit[iID].iStructureID)
+            if (cUnit.iStructureID > -1)
+            if (idOfStructureAtCell == cUnit.iStructureID)
             {
                 valid=false;
                 succes=true;
@@ -3240,8 +3234,8 @@ int CREATE_PATH(int iID, int iPathCountUnits)
                 break;
             }
 
-            if (unit[iID].iAttackStructure > -1)
-            if (idOfStructureAtCell == unit[iID].iAttackStructure)
+            if (cUnit.iAttackStructure > -1)
+            if (idOfStructureAtCell == cUnit.iAttackStructure)
             {
                 valid=false;
                 succes=true;
@@ -3278,11 +3272,9 @@ int CREATE_PATH(int iID, int iPathCountUnits)
         bool bail_out=false;
 
         // circle around cell X wise
-        for (cx = sx; cx <= ex; cx++)
-        {
+        for (cx = sx; cx <= ex; cx++) {
           // circle around cell Y wise
-            for (cy = sy; cy <= ey; cy++)
-            {
+            for (cy = sy; cy <= ey; cy++) {
                 // only check the 'cell' that is NOT the current cell.
                 int cll = iCellMakeWhichCanReturnMinusOne(cx, cy);
 
@@ -3295,67 +3287,65 @@ int CREATE_PATH(int iID, int iPathCountUnits)
                     continue;
 
                 // Determine if its a good cell to use or not:
-                bool good = false; // not good
+                bool good = false; // not good by default
 
                 // not a sandworm
                 int cellType = map.getCellType(cll);
-                if (is_worm == false)
-                {
+                if (!is_worm) {
                     // Step by step determine if its good
                     // 2 fases:
                     // 1 -> Occupation by unit/structures
                     // 2 -> Occupation by terrain (but only when it is visible, since we do not want to have an
-                    //      advantage or some unknowingly super intelligence by units for unknown territories!)
+                    //      advantage or some super intelligence by units for unknown territories!)
                     int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
                     int idOfStructureAtCell = map.getCellIdStructuresLayer(cll);
 
-                    if (idOfUnitAtCell == -1 && idOfStructureAtCell == -1)
-                    {
+                    if (idOfUnitAtCell == -1 && idOfStructureAtCell == -1) {
                         // there is nothing on this cell, that is good
-                        good=true;
+                        good = true;
                     }
 
-                    if (idOfStructureAtCell > -1)
-                    {
+                    if (idOfStructureAtCell > -1) {
                         // when the cell is a structure, and it is the structure we want to attack, it is good
 
-
-                        if (unit[iID].iAttackStructure > -1)
-                            if (idOfStructureAtCell == unit[iID].iAttackStructure)
+                        if (cUnit.iAttackStructure > -1)
+                            if (idOfStructureAtCell == cUnit.iAttackStructure)
                             good=true;
 
-                        if (unit[iID].iStructureID > -1)
-                            if (idOfStructureAtCell == unit[iID].iStructureID)
+                        if (cUnit.iStructureID > -1)
+                            if (idOfStructureAtCell == cUnit.iStructureID)
                             good=true;
 
                     }
 
 					// blocked by other then our own unit
-					if (idOfUnitAtCell > -1)
-                    {
-                        // occupied by a unit
-                        if (idOfUnitAtCell != iID)
-						{
+                    if (idOfUnitAtCell > -1) {
+                        // occupied by a different unit than ourselves
+                        if (idOfUnitAtCell != iUnitId) {
                             int iUID = idOfUnitAtCell;
 
-							if (iPathCountUnits!=0)
-								   if (iPathCountUnits <= 0)
-								   {
-									   if (idOfUnitAtCell != -1 &&
-                                           idOfUnitAtCell != iID) // occupied by a unit
-										   good=false;
-								   }
+                            if (iPathCountUnits != 0) {
+                                if (iPathCountUnits <= 0) {
+                                    good = false;
+                                    char msg[255];
+                                    sprintf(msg, "PATH_CREATE(unitId=%d) - iPathCountUnits < 0 - variable 'good' becomes 'false'", iUnitId);
+                                    logbook(msg);
+                                }
+                            }
 
+                            if (unit[iUID].iPlayer != cUnit.iPlayer) {
+                                // unit is not of same player
+                                // TODO: check same team
 
-                            if (unit[iUID].iPlayer != unit[iID].iPlayer)
+                                // allow running over enemy infantry/squishable units
                                 if (units[unit[iUID].iType].infantry &&
-                                    units[unit[iID].iType].squish) // and the current unit can squish
+                                    units[cUnit.iType].squish) // and the current unit can squish
                                     good = true; // its infantry we want to run over, so don't be bothered!
-
+                            }
                             //good=false; // it is not good, other unit blocks
-						} else {
-							good= true;
-						}
+                        } else {
+                            good = true;
+                        }
                     }
 
 
@@ -3369,50 +3359,44 @@ int CREATE_PATH(int iID, int iPathCountUnits)
                         }
 
                         // When we are infantry, we move through mountains. However, normal units do not
-                        if (units[unit[iID].iType].infantry == false) {
+                        if (units[cUnit.iType].infantry == false) {
                             if (cellType == TERRAIN_MOUNTAIN) {
                                 good=false;
                             }
                         }
                     }
              }
-             else if (is_worm)
+             else
              {
+                 // is worm
+
                  // when not on sand, on spice or on sandhill, it is BAD
                  if (cellType == TERRAIN_SAND ||
                      cellType == TERRAIN_SPICE ||
                      cellType == TERRAIN_HILL ||
-                     cellType == TERRAIN_SPICEHILL)
-                 {
-                     good=true;
+                     cellType == TERRAIN_SPICEHILL) {
+                     good = true;
+                 } else {
+                     good = false;
                  }
-                 else
-                     good=false;
-                 //good=true;
              }
 
-             if (cll == goal_cell)
-                 good=true;
-
-
-             // it is the goal cell
-             if (cll == goal_cell && good)
-             {
-                 the_cll = cll;
-                 cost = 0;
-                 succes=true;
-                 found_one=true;
-                 bail_out=true;
-                 logbook("CREATE_PATH: Found the goal cell, succes, bailing out");
-                 break;
-             }
+            // it is the goal cell
+            if (cll == goal_cell) {
+                the_cll = cll;
+                cost = 0;
+                succes = true;
+                found_one = true;
+                bail_out = true;
+                logbook("CREATE_PATH: Found the goal cell, succes, bailing out");
+                break;
+            }
 
              // when the cell (the attached one) is NOT the cell we are on and
              // the cell is CLOSED (not checked yet)
              if (cll != iCell &&                            // not checking on our own
                  temp_map[cll].state == CLOSED &&          // and is closed (else its not valid to check)
                  (good)) // and its not occupied (but may be occupied by own id!
-
              {
                  int gcx = iCellGiveX(goal_cell);
                  int gcy = iCellGiveY(goal_cell);
@@ -3525,7 +3509,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
    if (pi >= MAX_PATH_SIZE)
      cp=false;
 
-   if (sc==unit[iID].iCell)
+   if (sc == cUnit.iCell)
      cp=false;
  }
 
@@ -3563,7 +3547,7 @@ int CREATE_PATH(int iID, int iPathCountUnits)
              z = iGoodZ;
      }
 
-     unit[iID].iPath[a] = temp_path[z];
+       cUnit.iPath[a] = temp_path[z];
      iPrevCell = temp_path[z];
      a++;
    }
@@ -3572,15 +3556,15 @@ int CREATE_PATH(int iID, int iPathCountUnits)
 
  // optimize path
  //nextcell=cell;
- unit[iID].iPathIndex=1;
+ cUnit.iPathIndex=1;
 
  // take the closest bordering cell as 'far' away to start with
  for (int i=1; i < MAX_PATH_SIZE; i++)
  {
-	if (unit[iID].iPath[i] > -1)
+	if (cUnit.iPath[i] > -1)
 	{
-		if (CELL_BORDERS(unit[iID].iCell, unit[iID].iPath[i]))
-			unit[iID].iPathIndex = i;
+		if (CELL_BORDERS(cUnit.iCell, cUnit.iPath[i]))
+            cUnit.iPathIndex = i;
 	}
  }
 
@@ -3590,17 +3574,17 @@ int CREATE_PATH(int iID, int iPathCountUnits)
  // debug debug
  for (int i=0; i <	MAX_PATH_SIZE; i++)
  {
-	if (unit[iID].iPath[i] > -1)
+	if (unit[iUnitId].iPath[i] > -1)
 	{
 		char msg[256];
-		sprintf(msg, "WAYPOINT %d = %d ", iID, i, unit[iID].iPath[i]);
-		unit[iID].LOG(msg);
+		sprintf(msg, "WAYPOINT %d = %d ", iUnitId, i, unit[iUnitId].iPath[i]);
+		unit[iUnitId].LOG(msg);
 	}
  }*/
 
 
- unit[iID].poll();
- unit[iID].bCalculateNewPath=false;
+ cUnit.poll();
+     cUnit.bCalculateNewPath=false;
 
 
  //logbook("SUCCES");
@@ -3833,47 +3817,6 @@ int UNIT_find_harvest_spot(int id)
 
 	return TargetSpice;
 }
-
-void SPAWN_FRIGATE(int iPlr, int iCll)
-{
-	// send out a frigate to this structure
-	if (iPlr < 0)
-		return;
-
-	// iCll = structure start cell (up left), since we must go to the center
-	// of the cell:
-
-	if (bCellValid(iCll) == false)
-		return;
-
-	int iCell = iCll;
-
-	int iX=iCellGiveX(iCell);
-	int iY=iCellGiveY(iCell);
-	iX++;
-	iY++;
-
-	iCell = iCellMakeWhichCanReturnMinusOne(iX, iY);
-
-	// step 1
-	int iStartCell = iFindCloseBorderCell(iCell);
-
-	if (iStartCell < 0)
-	{
-		logbook("ERROR (reinforce): Could not figure a startcell");
-		return;
-	}
-
-	// STEP 2: create frigate
-	int iUnit = UNIT_CREATE(iStartCell, FRIGATE, iPlr, true);
-
-
-	// STEP 3: assign order to frigate (use carryall order function)
-	unit[iUnit].carryall_order(-1, TRANSFER_NEW_LEAVE, iCll, -1);
-
-
-}
-
 
 // Reinforce:
 // create a new unit by sending it:

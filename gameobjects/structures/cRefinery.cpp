@@ -96,7 +96,7 @@ void cRefinery::think_unit_occupation() {
     }
 
     // the unit is empty (no more credits to dump)
-    int iNewCell = iFreeAround();
+    int iNewCell = getNonOccupiedCellAroundStructure();
 
     if (iNewCell > -1) {
         cUnit.iCell = iNewCell;
@@ -116,8 +116,7 @@ void cRefinery::think_unit_occupation() {
     cUnit.iOffsetY = 0;
     cUnit.iCredits = 0;
     cUnit.iStructureID = -1;
-    cUnit.iHitPoints = cUnit.iTempHitPoints; // restore true hitpoints
-    cUnit.iTempHitPoints = -1; // get rid of this hack
+    cUnit.restoreFromTempHitPoints();
     cUnit.iGoalCell = cUnit.iCell;
     cUnit.iPathIndex = -1;
     cUnit.poll();

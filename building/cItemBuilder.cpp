@@ -101,7 +101,7 @@ void cItemBuilder::think() {
 
             if (primaryBuildingIdOfStructureType > -1) {
                 cAbstractStructure * theStructure = structure[primaryBuildingIdOfStructureType];
-                int cell = theStructure->iFreeAround();
+                int cell = theStructure->getNonOccupiedCellAroundStructure();
                 theStructure->setAnimating(true); // animate
                 int unitId = UNIT_CREATE(cell, item->getBuildId(), m_Player->getId(), false);
                 int rallyPoint = theStructure->getRallyPoint();
