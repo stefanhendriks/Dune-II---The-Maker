@@ -86,6 +86,8 @@ class cAbstractStructure {
 		void think_damage();              // think about damaging through time
 		void think_flag();				  // think method for flag animation
 
+		int getSmokeChance();             // probability to create smoke particle
+
 		void die();                       // die
 
 		// drawing
@@ -93,7 +95,7 @@ class cAbstractStructure {
 		int iDrawY();
 
 		// Functionality
-		int iFreeAround();
+		int getNonOccupiedCellAroundStructure();
 
 		// getters
 

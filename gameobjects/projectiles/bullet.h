@@ -1,4 +1,6 @@
-/* 
+#include <player/cPlayerDifficultySettings.h>
+
+/*
 
   Dune II - The Maker
 
@@ -18,8 +20,8 @@ public:
 
     void init();
     void draw();
-    int pos_x();
-    int pos_y();
+    int pos_x() const;
+    int pos_y() const;
     int  draw_x();
     int  draw_y();
     void think();       // think (when dying, doing damage, etc)
@@ -31,7 +33,7 @@ public:
     int iType;          // type of bullet    
     
     int iOwnerUnit;     // unit who shoots
-    int iOwnerStructure;// structure who shoots (rocket turret?)
+    int iOwnerStructure;// structure who shoots (rocket/normal turret for example)
     int iPlayer;        // what player shot this? (for damage control)
     
 
@@ -54,5 +56,53 @@ private:
     int getBulletBmpHeight() const;
 
     void die();
+
+    void damageStructure(int idOfStructureAtCell);
+
+    cPlayer * getPlayer() const;
+
+    int getDamageToInflictToNonInfantry() const;
+
+    s_Bullet gets_Bullet() const;
+
+    bool isNonFlyingTerrainBullet() const;
+
+    bool isTurretBullet() const;
+
+    void moveBulletTowardsGoal();
+
+    int getRandomX() const;
+
+    int getRandomY() const;
+
+    void damageWall(int cell) const;
+
+    bool isAtGoalCell() const;
+
+    void arrivedAtGoalLogic();
+
+    void damageSandworm(int cell) const;
+
+    void detonateSpiceBloom(int cell) const;
+
+    void damageGroundUnit(int cell) const;
+
+    int getDamageToInflictToInfantry() const;
+
+    int getDamageToInflictToUnit(cUnit &unitTakingDamage) const;
+
+    bool isDeviatorGas() const;
+
+    bool isRocket() const;
+
+    void damageAirUnit(int cell) const;
+
+    void damageTerrain(int cell) const;
+
+    bool isSonicWave() const;
+
+    bool isInfantryBullet() const;
+
+    cPlayerDifficultySettings *getDifficultySettings() const;
 };
 

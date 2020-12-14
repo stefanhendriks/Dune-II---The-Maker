@@ -88,45 +88,40 @@ void cGame::combat_mouse() {
 	if (bPlaceIt == false && bPlacedIt==false) {
 		int mouseCell = context->getMouseCell();
 
-        if (hover_unit > -1) {
-            if (unit[hover_unit].iPlayer == 0) {
-                mouse_tile = MOUSE_PICK;
-            }
-        }
-
-
         // Mouse is hovering above a unit
         if (hover_unit > -1) {
+            cUnit &hoverUnit = unit[hover_unit];
+            if (hoverUnit.iPlayer == 0) {
+                mouse_tile = MOUSE_PICK;
+            }
 
         	// wanting to repair UNITS, check if its possible
             if (key[KEY_R] && player[0].hasAtleastOneStructure(REPAIR)) {
-            	if (unit[hover_unit].iPlayer == HUMAN) {
-            		if (unit[hover_unit].iHitPoints < units[unit[hover_unit].iType].hp &&
-            				units[unit[hover_unit].iType].infantry == false &&
-            				units[unit[hover_unit].iType].airborn == false)	{
+            	if (hoverUnit.iPlayer == HUMAN) {
+            		if (hoverUnit.isDamaged() && !hoverUnit.isInfantryUnit() && !hoverUnit.isAirbornUnit())	{
 
 						if (cMouse::isLeftButtonClicked()) {
 							// find closest repair bay to move to
 
 							cStructureUtils structureUtils;
 							int	iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
-                                    unit[hover_unit].iCell, REPAIR, &player[HUMAN]);
+                                    hoverUnit.iCell, REPAIR, &player[HUMAN]);
 
 							if (iNewID > -1) {
 								int iCarry = CARRYALL_TRANSFER(hover_unit, structure[iNewID]->getCell() + 2);
 
 								if (iCarry > -1) {
 									// yehaw we will be picked up!
-									unit[hover_unit].TIMER_movewait = 100;
-									unit[hover_unit].TIMER_thinkwait = 100;
+									hoverUnit.TIMER_movewait = 100;
+                                    hoverUnit.TIMER_thinkwait = 100;
 								} else {
 									logbook("Order move #5");
 									UNIT_ORDER_MOVE(hover_unit, structure[iNewID]->getCell());
 								}
 
-								unit[hover_unit].TIMER_blink = 5;
-								unit[hover_unit].iStructureID = iNewID;
-								unit[hover_unit].iGoalCell = structure[iNewID]->getCell();
+                                hoverUnit.TIMER_blink = 5;
+                                hoverUnit.iStructureID = iNewID;
+                                hoverUnit.iGoalCell = structure[iNewID]->getCell();
 							}
 
 						}
@@ -157,14 +152,15 @@ void cGame::combat_mouse() {
                 }
 
                 if (hover_unit > -1 && (mouse_tile == MOUSE_NORMAL || mouse_tile == MOUSE_PICK)) {
-                    if (unit[hover_unit].iPlayer == 0) {
+                    cUnit &hoverUnit = unit[hover_unit];
+                    if (hoverUnit.iPlayer == 0) {
                         if (!key[KEY_LSHIFT]) {
                             UNIT_deselect_all();
                         }
 
-                        unit[hover_unit].bSelected=true;
+                        hoverUnit.bSelected=true;
 
-                        if (units[unit[hover_unit].iType].infantry == false) {
+                        if (units[hoverUnit.iType].infantry == false) {
                             play_sound_id(SOUND_REPORTING);
                         } else {
                             play_sound_id(SOUND_YESSIR);

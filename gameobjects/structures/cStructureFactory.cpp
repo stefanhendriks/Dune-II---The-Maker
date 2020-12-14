@@ -1,6 +1,4 @@
 #include "../../include/d2tmh.h"
-#include "cStructureFactory.h"
-
 
 cStructureFactory *cStructureFactory::instance = NULL;
 

@@ -67,26 +67,30 @@ bool BORDER_POS(int x, int y)
 
 // fixes the positions according to the PLAYABLE size of the map (for unit
 // dumping, etc)
-void FIX_BORDER_POS(int &x, int &y)
-{
-	// filled in
-    if (x)
-    {
-        if (x < 1) x = 1;
-        if (x > (game.map_width-1)) x = (game.map_width-1);
+void FIX_BORDER_POS(int &x, int &y) {
+    // filled in
+    if (x) {
+        if (x < 1) {
+            x = 1;
+        }
+        if (x > (game.map_width - 1)) {
+            x = (game.map_width - 1);
+        }
     }
 
     // filled in
-    if (y)
-    {
-        if (y < 1) y = 1;
-        if (y > (game.map_height-1)) y = (game.map_height-1);
+    if (y) {
+        if (y < 1) {
+            y = 1;
+        }
+        if (y > (game.map_height - 1)) {
+            y = (game.map_height - 1);
+        }
     }
 }
 
 // Will make sure the X and Y don't get out of their boundaries
-void FIX_POS(int &x, int &y)
-{
+void FIX_POS(int &x, int &y) {
     // filled in
     if (x) {
         if (x < 0) x = 0;
@@ -1293,19 +1297,6 @@ int keepBetween(int value, int min, int max) {
     return value;
 }
 
-
-/******************************
- Unit health-bar calculation, returns amount of pictures
- ******************************/
-float health_unit(int i, float widthInPixels) {
-  float flHP   = unit[i].iHitPoints;
-  float flMAX  = units[unit[i].iType].hp;
-  float health = (float)(flHP / flMAX);
-  return (health * widthInPixels);
-}
-
-
-
 // return a border cell, close to iCll
 int iFindCloseBorderCell(int iCll) {
 	cCellCalculator * calculator = new cCellCalculator(&map);
@@ -1561,19 +1552,22 @@ int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstr
   bullet[new_id].iOffsetX = 8 + rnd(9);
   bullet[new_id].iOffsetY = 8 + rnd(9);
 
-  if (ownerunit > -1)
-  {
+  bullet[new_id].iPlayer = -1;
+
+  if (ownerunit > -1) {
       bullet[new_id].iPlayer = unit[ownerunit].iPlayer;
       // create spot
       map.clear_spot(cell, 3, unit[ownerunit].iPlayer);
   }
 
-  if (ownerstruc > -1)
-  {
+  if (ownerstruc > -1) {
       bullet[new_id].iPlayer = structure[ownerstruc]->getOwner();
       map.clear_spot(cell, 3, structure[ownerstruc]->getOwner());
   }
 
+  if (bullet[new_id].iPlayer < 0) {
+      logbook("New bullet produced without any player!?");
+  }
 
   // play sound (when we have one)
   if (bullets[type].sound > -1)

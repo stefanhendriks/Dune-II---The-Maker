@@ -69,8 +69,7 @@ void cStarPort::think_deploy()
 			  cOrderProcesser * orderProcesser = player[iPlayer].getOrderProcesser();
 			  cBuildingListItem * item = orderProcesser->getItemToDeploy();
 			  if (item) {
-				  cStructureUtils structureUtils;
-				  int cellToDeployTo = iFreeAround();
+				  int cellToDeployTo = getNonOccupiedCellAroundStructure();
 				  orderProcesser->markOrderAsDeployed(item);
 				  item->decreaseTimesOrdered();
 				  int rallyPoint = getRallyPoint();

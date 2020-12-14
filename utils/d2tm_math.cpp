@@ -22,11 +22,14 @@
 #include "../include/d2tmh.h"
 
 
-// Is the cell valid?
-bool bCellValid(int c)
-{
+/**
+ * Checks if param c (cell index) is within the boundaries of the Array (thus, this also accepts the outer
+ * map boundaries)
+ * @param c
+ * @return
+ */
+bool bCellValid(int c) {
     return !(c < 0 || c >= MAX_CELLS);
-
 }
 
 // return the X value from a cell

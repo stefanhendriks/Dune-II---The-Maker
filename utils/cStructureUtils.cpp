@@ -43,7 +43,7 @@ int cStructureUtils::findStarportToDeployUnit(cPlayer * player) {
 
 	if (primaryBuildingOfStructureType > -1) {
 		cAbstractStructure * theStructure = structure[primaryBuildingOfStructureType];
-		if (theStructure && theStructure->iFreeAround() > -1) {
+		if (theStructure && theStructure->getNonOccupiedCellAroundStructure() > -1) {
 			return primaryBuildingOfStructureType;
 		}
 	}
@@ -65,7 +65,7 @@ int cStructureUtils::findStarportToDeployUnit(cPlayer * player) {
 					firstFoundStarportId = i;
 				}
 
-				if (theStructure->iFreeAround() > -1) {
+				if (theStructure->getNonOccupiedCellAroundStructure() > -1) {
 					// when free around structure, override id and break out of loop
 					starportId = i;
 					foundStarportWithFreeAround = true;
@@ -110,7 +110,7 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureTy
 
 	if (primaryBuildingOfStructureType > -1) {
 		cAbstractStructure * theStructure = structure[primaryBuildingOfStructureType];
-		if (theStructure && theStructure->iFreeAround() > -1) {
+		if (theStructure && theStructure->getNonOccupiedCellAroundStructure() > -1) {
 			return primaryBuildingOfStructureType;
 		}
 	}
@@ -121,7 +121,7 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureTy
 		cAbstractStructure * theStructure = structure[i];
 		if (theStructure && theStructure->getOwner() == playerId) {
 			if (theStructure->getType() == structureType) {
-				if (theStructure->iFreeAround() > -1) {
+				if (theStructure->getNonOccupiedCellAroundStructure() > -1) {
 					structureIdFound = i; // return this structure
 				}
 			}

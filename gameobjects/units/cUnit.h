@@ -45,16 +45,14 @@ public:
 
 	float fExperience;	// experience gained by unit
 
-    int iID;
+    int iID;            // index of unit in the unit array
 
     int iCell;          // cell of unit    
    
     int iType;          // type of unit
-    
-    // Use char, max groups = 5, we do not need even an int! (byte is enough!)
-    char iGroup;         // belongs to group...
 
-    int iHitPoints;     // hitpoints of unit
+    int iGroup;         // belongs to group...
+
     int iTempHitPoints; // temp hold back for 'reinforced' / 'dumping' and 'repairing' units
 
     int iPlayer;        // belongs to player
@@ -206,14 +204,30 @@ public:
     bool isMovingBetweenCells();
 
     bool isIdle() { return iAction == ACTION_GUARD; }
+
+    void takeDamage(int damage) {
+        iHitPoints -= damage;
+    }
+
+    bool isDead() {
+        return iHitPoints <= 0;
+    }
+
+    bool isDamaged();
+
+    void restoreFromTempHitPoints();
+
+    void setMaxHitPoints();
+
+private:
+    int iHitPoints;     // hitpoints of unit
+
 };
 
 
 
-void SPAWN_FRIGATE(int iPlr, int iCll);
-
 int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart);
-int CREATE_PATH(int iID, int iPathCountUnits);
+int CREATE_PATH(int iUnitId, int iPathCountUnits);
 int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 
 void UNIT_deselect_all();

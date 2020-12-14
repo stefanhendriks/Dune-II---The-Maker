@@ -246,9 +246,9 @@ void cAIPlayer::think_building() {
 
                 if (structure[iStr])
                 {
-					if (structure[iStr]->iFreeAround() -1)
+					if (structure[iStr]->getNonOccupiedCellAroundStructure() - 1)
 					{
-						int iSpot = structure[iStr]->iFreeAround();
+						int iSpot = structure[iStr]->getNonOccupiedCellAroundStructure();
 						player[ID].setPrimaryBuildingForStructureType(iStrucType, iStr);
 						structure[iStr]->setAnimating(true); // animate
 						iProducedUnit=UNIT_CREATE(iSpot, i, ID, false);
@@ -260,7 +260,7 @@ void cAIPlayer::think_building() {
 						// assign new primary
 						if (iNewStr != iStr && iNewStr > -1)
 						{
-							int iSpot = structure[iNewStr]->iFreeAround();
+							int iSpot = structure[iNewStr]->getNonOccupiedCellAroundStructure();
 							player[ID].setPrimaryBuildingForStructureType(iStrucType, iNewStr);
 							structure[iNewStr]->setAnimating(true); // animate
 							iProducedUnit=UNIT_CREATE(iSpot, i, ID, false);
@@ -416,7 +416,7 @@ void cAIPlayer::think_repair() {
         for (int i=0; i < MAX_UNITS; i++) {
             if (unit[i].isValid()) {
                 if (unit[i].iPlayer == ID) {
-                    if (unit[i].iHitPoints < units[unit[i].iType].hp)
+                    if (unit[i].isDamaged())
                     {
                         // head off to repair
                     	cStructureUtils structureUtils;
