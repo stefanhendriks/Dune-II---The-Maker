@@ -123,6 +123,7 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureTy
 			if (theStructure->getType() == structureType) {
 				if (theStructure->getNonOccupiedCellAroundStructure() > -1) {
 					structureIdFound = i; // return this structure
+					break;
 				}
 			}
 		}

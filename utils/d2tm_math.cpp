@@ -44,11 +44,11 @@ int iCellGiveX(int c)
 // return the Y value from a cell
 int iCellGiveY(int c)
 {
-    if (c < 0 || c >= MAX_CELLS)
-    {
-		if (DEBUGGING)
-			logbook("ERROR: Encountered invalid cell");
-
+    if (c < 0 || c >= MAX_CELLS) {
+		if (DEBUGGING) {
+            logbook("ERROR: Encountered invalid cell");
+//            assert(false);
+        }
         return -1;
     }
 
@@ -279,56 +279,41 @@ int CELL_UNDER(int c)
 }
 
 // Left
-int CELL_LEFT(int c)
-{
-  int x = iCellGiveX(c);
-//  int y = iCellGiveY(c);
+int CELL_LEFT(int c) {
+    int x = iCellGiveX(c);
 
-  if (x-1 >=0)
-  {
-	  if (c-1 >= 0)
-		  return c-1;
+    if (x - 1 >= 0)  // don't go too much to the left
+        if (c - 1 >= 0)
+            return c - 1;
 
-	  return -1;
-  }
-
-	  else
     return -1;
 }
 
 // Right
-int CELL_RIGHT(int c)
-{
-  int x = iCellGiveX(c);
-  //int y = iCellGiveY(c);
+int CELL_RIGHT(int c) {
+    int x = iCellGiveX(c);
 
-  if (x+1 < MAP_W_MAX)
-  {
-	    if (c+1 < MAX_CELLS) // make sure we don't overdo it
-			return c+1;
+    if (x + 1 < MAP_W_MAX)
+        if (c + 1 < MAX_CELLS) // make sure we don't overdo it
+            return c + 1;
 
-		return -1;
-  }
-  else
-	  return -1;
+    return -1;
 }
 
 
 // Up / LEFT
-int CELL_U_LEFT(int c)
-{
-  if ((CELL_ABOVE(c)-1) > -1)
-    return (CELL_ABOVE(c) - 1);      // upper left is ONE row - 1 cell
-  else
+int CELL_U_LEFT(int c) {
+    if ((CELL_ABOVE(c) - 1) > -1)
+        return (CELL_ABOVE(c) - 1);      // upper left is ONE row - 1 cell
+
     return -1;
 }
 
 // Up / RIGHT
-int CELL_U_RIGHT(int c)
-{
-  if ((CELL_ABOVE(c)+1) > -1)
-    return (CELL_ABOVE(c) + 1);      // upper right is ONE row + 1 cell (to the right)
-  else
+int CELL_U_RIGHT(int c) {
+    if ((CELL_ABOVE(c) + 1) > -1)
+        return (CELL_ABOVE(c) + 1);      // upper right is ONE row + 1 cell (to the right)
+
     return -1;
 }
 

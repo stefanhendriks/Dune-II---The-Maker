@@ -126,8 +126,10 @@ void cTimeManager::handleTimerGlobal() {
 		}
 
 		for (int i = HUMAN; i < MAX_PLAYERS; i++) {
-			if (player[i].getSideBar()) {
-				player[i].getSideBar()->think();
+            cPlayer &cPlayer = player[i];
+            cSideBar *sidebar = cPlayer.getSideBar();
+            if (sidebar) {
+				sidebar->think();
 			}
 		}
 
@@ -135,12 +137,14 @@ void cTimeManager::handleTimerGlobal() {
 		if (game.isState(GAME_PLAYING)) {
 
 			// structures think
-			for (int i=0; i < MAX_STRUCTURES; i++)
-				if (structure[i]) {
-					structure[i]->think();           // think about actions going on
-					structure[i]->think_animation(); // think about animating
-					structure[i]->think_guard();     // think about 'guarding' the area (turrets only)
-				}
+			for (int i=0; i < MAX_STRUCTURES; i++) {
+                cAbstractStructure *pStructure = structure[i];
+                if (pStructure && pStructure->isValid()) {
+                    pStructure->think();           // think about actions going on
+                    pStructure->think_animation(); // think about animating
+                    pStructure->think_guard();     // think about 'guarding' the area (turrets only)
+                }
+            }
 
 				// DO NOT THINK FOR HUMAN PLAYER (== 0)
 				for (int i=0; i < MAX_PLAYERS; i++) {
@@ -179,18 +183,20 @@ void cTimeManager::handleTimerGlobal() {
                     }
 
                     // move
-                    if (cUnit.iAction == ACTION_MOVE || cUnit.iAction == ACTION_CHASE)
+                    if (cUnit.iAction == ACTION_MOVE || cUnit.iAction == ACTION_CHASE) {
                         cUnit.think_move();
+                    }
 
                     // guard
-                    if (cUnit.iAction == ACTION_GUARD)
+                    if (cUnit.iAction == ACTION_GUARD) {
                         cUnit.think_guard();
-
+                    }
 
                     // move in air
                     if (cUnit.iType == ORNITHOPTER &&
-                        cUnit.iAction == ACTION_ATTACK)
+                        cUnit.iAction == ACTION_ATTACK) {
                         cUnit.think_move_air(); // keep flying even when attacking
+                    }
 				}
 
                 for (int i=0; i < MAX_PARTICLES; i++) {
@@ -199,9 +205,12 @@ void cTimeManager::handleTimerGlobal() {
 
                 // when not drawing the options, the game does all it needs to do
                 // bullets think
-                for (int i=0; i < MAX_BULLETS; i++)
-                    if (bullet[i].bAlive)
-                        bullet[i].think();
+                for (int i=0; i < MAX_BULLETS; i++) {
+                    cBullet &cBullet = bullet[i];
+                    if (cBullet.bAlive) {
+                        cBullet.think();
+                    }
+                }
 		}
 
 		if (game.isState(GAME_WINNING))
