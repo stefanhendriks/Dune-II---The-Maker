@@ -1508,9 +1508,9 @@ void cUnit::think_move_air() {
 
 							// WHEN DUMPING A HARVESTER IN A REFINERY
 							// make it enter the refinery instantly
-							if (unit[unitIdOfUnitThatHasBeenPickedUp].iType == HARVESTER) {
+							if (unitToPickupOrDrop.isHarvester() && unitToPickupOrDrop.iStructureID > -1) {
                                 // valid structure
-                                cAbstractStructure *structureUnitWantsToEnter = structure[unit[unitIdOfUnitThatHasBeenPickedUp].iStructureID];
+                                cAbstractStructure *structureUnitWantsToEnter = structure[unitToPickupOrDrop.iStructureID];
                                 if (structureUnitWantsToEnter && structureUnitWantsToEnter->isValid()) {
                                     // when this structure is not occupied
                                     if (structureUnitWantsToEnter->iUnitID < 0)	{
