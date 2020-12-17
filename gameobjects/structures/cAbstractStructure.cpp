@@ -460,8 +460,7 @@ int cAbstractStructure::getPowerUsage() {
 	return getS_StructuresType().power_drain;
 }
 
-bool cAbstractStructure::isValid()
-{
+bool cAbstractStructure::isValid() {
     if (iPlayer < 0)
         return false;
 
