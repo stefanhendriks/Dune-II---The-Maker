@@ -53,22 +53,18 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 
 	if (structureType == WINDTRAP) {
 		listConstYard->addStructureToList(REFINERY, 0);
-		cLogger::getInstance()->logCommentLine("onStructureCreated - added REFINARY to list");
 	}
 
 	if (structureType == REFINERY) {
 		if (techLevel >= 2) {
-			cLogger::getInstance()->logCommentLine("onStructureCreated - added LIGHTFACTORY to list");
 			listConstYard->addStructureToList(LIGHTFACTORY,0);
 
 			if (house == ATREIDES ||
 				house == ORDOS ||
 				house == FREMEN) {
-				cLogger::getInstance()->logCommentLine("onStructureCreated - added BARRACKS to list");
 				listConstYard->addStructureToList(BARRACKS, 0);
 
 				if (house == ORDOS && techLevel >= 5) {
-					cLogger::getInstance()->logCommentLine("onStructureCreated - added WOR to list");
 					listConstYard->addStructureToList(WOR, 0);
 				}
 			} else if (
@@ -76,7 +72,6 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 					house == SARDAUKAR ||
 					house == FREMEN ||
 					house == MERCENARY) {
-				cLogger::getInstance()->logCommentLine("onStructureCreated - added WOR to list");
 				listConstYard->addStructureToList(WOR, 0);
 			}
 		}
@@ -85,19 +80,16 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 			listConstYard->addStructureToList(RADAR, 0);
 		}
 
-		cLogger::getInstance()->logCommentLine("onStructureCreated - added SILO to list");
 		listConstYard->addStructureToList(SILO, 0);
 	}
 
 
 	if (structureType == RADAR) {
         if (techLevel >= 5) {
-			cLogger::getInstance()->logCommentLine("onStructureCreated - added TURRET to list");
 			listConstYard->addStructureToList(TURRET, 0);
 		}
 
 		if (techLevel >= 8) {
-			cLogger::getInstance()->logCommentLine("onStructureCreated - added PALACE to list");
 			listConstYard->addStructureToList(PALACE, 0);
 		}
 	}
@@ -105,7 +97,6 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
     if (structureType == STARPORT) {
         // House of IX is available if Starport is built
         if (techLevel >= 7) {
-            cLogger::getInstance()->logCommentLine("onStructureCreated - added IX to list");
             listConstYard->addStructureToList(IX, 0);
         }
     }
@@ -113,19 +104,15 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 	if (structureType == LIGHTFACTORY)
 	{
 		if (techLevel >=4) {
-			cLogger::getInstance()->logCommentLine("onStructureCreated - added HEAVYFACTORY to list");
 			listConstYard->addStructureToList(HEAVYFACTORY, 0);
 		}
 
 		if (techLevel >=5) {
-			cLogger::getInstance()->logCommentLine("onStructureCreated - added HIGHTECH to list");
-			cLogger::getInstance()->logCommentLine("onStructureCreated - added REPAIR to list");
 			listConstYard->addStructureToList(HIGHTECH, 0);
 			listConstYard->addStructureToList(REPAIR, 0);
 		}
 
 		if (techLevel >= 6) {
-			cLogger::getInstance()->logCommentLine("onStructureCreated - added STARPORT to list");
 			listConstYard->addStructureToList(STARPORT, 0);
 		}
 
@@ -243,9 +230,9 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
         listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
     }
 
-    char msg[255];
-    sprintf(msg, "onStructureDestroyed - for player [%d], structureType [%d], techlevel [%d], house [%d]", m_Player->getId(), structureType, techLevel, house);
-    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureDestroyed", msg);
+//    char msg[255];
+//    sprintf(msg, "onStructureDestroyed - for player [%d], structureType [%d], techlevel [%d], house [%d]", m_Player->getId(), structureType, techLevel, house);
+//    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureDestroyed", msg);
 
     evaluateUpgrades();
 
