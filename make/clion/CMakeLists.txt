@@ -5,8 +5,8 @@ project(d2tm)
 
 link_directories("lib/mingw")
 
-# add the executable
-add_executable(d2tm)
+# add the executableS
+add_executable(d2tm Script.rc)
 target_link_libraries(d2tm fblend alleg aldat almp3dll alfontdll -static-libgcc -static-libstdc++)
 
 file(GLOB d2tm_SRC
