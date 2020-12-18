@@ -9,7 +9,6 @@ Release/
 .idea/workspace.xml
 .settings/org.eclipse.cdt.managedbuilder.core.prefs
 .idea/
-CMakeLists.txt
 create_binary.bat
 Dune 2.vcxproj
 cmake-build-debug-mingw
