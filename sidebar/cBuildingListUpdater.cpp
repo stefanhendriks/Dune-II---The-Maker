@@ -340,8 +340,6 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item) {
         return;
     }
 
-	cLogger::getInstance()->logCommentLine("updateUpgradeCompleted - begin");
-
     const s_Upgrade &upgradeType = item->getS_Upgrade();
 
     // Upgrade structure + provide any unit or structure
@@ -350,8 +348,6 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item) {
     applyUpgrade(upgradeType);
 
     evaluateUpgrades();
-
-	cLogger::getInstance()->logCommentLine("updateUpgradeCompleted - end");
 }
 
 
@@ -391,7 +387,6 @@ void cBuildingListUpdater::applyUpgrade(const s_Upgrade &upgradeType) {
  * @param pItem
  */
 void cBuildingListUpdater::onUpgradeStarted(cBuildingListItem *pItem) {
-    cLogger::getInstance()->logCommentLine("onUpgradeStarted - start");
     assert(pItem);
     assert(pItem->isTypeUpgrade());
     cSideBar *sideBar = m_Player->getSideBar();
@@ -403,8 +398,6 @@ void cBuildingListUpdater::onUpgradeStarted(cBuildingListItem *pItem) {
 
     cBuildingList *listBeingUpgraded = sideBar->getList(listType);
     listBeingUpgraded->setStatusPendingUpgrade(subListType);
-    
-    cLogger::getInstance()->logCommentLine("onUpgradeStarted - end");
 }
 
 /**
@@ -464,7 +457,6 @@ void cBuildingListUpdater::onBuildItemStarted(cBuildingListItem *pItem) {
  * @param pItem
  */
 void cBuildingListUpdater::onBuildItemCompleted(cBuildingListItem *pItem) {
-    cLogger::getInstance()->logCommentLine("onBuildItemCompleted - start");
     if (pItem == nullptr) return;
     if (pItem->isTypeUpgrade()) {
         // do nothing, this is normally called via OnUpgradeCompleted, see method above.
@@ -476,6 +468,4 @@ void cBuildingListUpdater::onBuildItemCompleted(cBuildingListItem *pItem) {
     cSideBar *sideBar = m_Player->getSideBar();
     cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
     listUpgrades->setStatusAvailable(pItem->getSubList());
-
-    cLogger::getInstance()->logCommentLine("onBuildItemCompleted - end");
 }

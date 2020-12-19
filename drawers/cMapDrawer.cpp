@@ -1,15 +1,8 @@
-/*
- * cMapDrawer.cpp
- *
- *  Created on: 10-aug-2010
- *      Author: Stefan
- */
-
 #include <cmath>
 #include "../include/d2tmh.h"
 
 
-cMapDrawer::cMapDrawer(cMap * theMap, const cPlayer& thePlayer, cMapCamera * theCamera) : player(thePlayer) {
+cMapDrawer::cMapDrawer(cMap * theMap, cPlayer * thePlayer, cMapCamera * theCamera) : m_Player(thePlayer) {
 	assert(theMap);
 	assert(theCamera);
 	map = theMap;
@@ -19,10 +12,11 @@ cMapDrawer::cMapDrawer(cMap * theMap, const cPlayer& thePlayer, cMapCamera * the
 }
 
 cMapDrawer::~cMapDrawer() {
-	map = NULL;
-	camera = NULL;
+	map = nullptr;
+	camera = nullptr;
 	delete cellCalculator;
-	cellCalculator = NULL;
+	cellCalculator = nullptr;
+    m_Player = nullptr;
 	if (bmp_temp) {
 	    destroy_bitmap(bmp_temp);
 	}
@@ -40,7 +34,7 @@ void cMapDrawer::drawShroud(int startX, int startY) {
     int colorDepthScreen = bitmap_color_depth(bmp_screen);
     BITMAP *temp = create_bitmap_ex(colorDepthScreen, iTileWidth, iTileHeight);
 
-    int iPl = player.getId();
+    int iPl = m_Player->getId();
 
     for (int viewportX = camera->getViewportStartX(); viewportX < camera->getViewportEndX() + 32; viewportX+= 32) {
 
@@ -98,8 +92,8 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
     int iTileHeight = (tileHeight + 1);
     int iTileWidth = (tileWidth + 1);
 
-	int iPl = player.getId();
-    int mouseCell = player.getGameControlsContext()->getMouseCell();
+	int iPl = m_Player->getId();
+    int mouseCell = m_Player->getGameControlsContext()->getMouseCell();
 
 	// draw vertical rows..
 	for (int viewportX = camera->getViewportStartX(); viewportX < camera->getViewportEndX() + 32; viewportX+= 32) {

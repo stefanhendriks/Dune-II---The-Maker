@@ -503,3 +503,12 @@ int cAbstractStructure::getSmokeChance() {
 
     return 15;
 }
+
+bool cAbstractStructure::belongsTo(int playerId) const {
+    return iPlayer == playerId;
+}
+
+bool cAbstractStructure::belongsTo(const cPlayer * other) const {
+    if (other == nullptr) return false;
+    return belongsTo(other->getId());
+}

@@ -47,7 +47,7 @@ class cPlayer;
 class cSideBar {
 
 	public:
-		cSideBar(cPlayer& thePlayer);
+		cSideBar(cPlayer * thePlayer);
 		~cSideBar();
 
 		cBuildingList * getList(int listId) { return lists[listId]; }
@@ -80,7 +80,7 @@ private:
 
         // the lists:
 		cBuildingList * lists[LIST_MAX];
-		cPlayer & m_Player;
+		cPlayer * m_Player;
 
 		int selectedListID;
 

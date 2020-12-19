@@ -1,15 +1,8 @@
-/*
- * cMiniMapDrawer.cpp
- *
- *  Created on: 20-okt-2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
-cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, const cPlayer& thePlayer, cMapCamera * theMapCamera) : m_Player(thePlayer) {
+cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * theMapCamera) : m_Player(thePlayer) {
 	assert(theMap);
-	assert(&thePlayer);
+	assert(thePlayer);
 	assert(theMapCamera);
 	map = theMap;
 	mapCamera = theMapCamera;
@@ -84,7 +77,7 @@ void cMiniMapDrawer::drawTerrain() {
 			iColor = makecol(0, 0, 0);
 			int iCll = iCellMake(x, y);
 
-			if (map->isVisible(iCll, m_Player.getId())) {
+			if (map->isVisible(iCll, m_Player->getId())) {
 				iColor = getRGBColorForTerrainType(map->getCellType(iCll));
 			}
 
@@ -133,7 +126,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
 
 			int iCll = iCellMake(x, y);
 
-			if (!map->isVisible(iCll, m_Player.getId())) {
+			if (!map->isVisible(iCll, m_Player->getId())) {
 			    // invisible cell
 			    continue;
 			}
@@ -144,7 +137,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
             if (idOfStructureAtCell > -1) {
                 int	iPlr = structure[idOfStructureAtCell]->getOwner();
                 if (playerOnly) {
-                    if (iPlr != m_Player.getId()) continue; // skip non m_Player units
+                    if (iPlr != m_Player->getId()) continue; // skip non m_Player units
                 }
                 iColor = player[iPlr].getMinimapColor();
             }
@@ -153,7 +146,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
             if (idOfUnitAtCell > -1) {
                 int iPlr = unit[idOfUnitAtCell].iPlayer;
                 if (playerOnly) {
-                    if (iPlr != m_Player.getId()) continue; // skip non m_Player units
+                    if (iPlr != m_Player->getId()) continue; // skip non m_Player units
                 }
                 iColor = player[iPlr].getMinimapColor();
             }
@@ -162,7 +155,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
             if (idOfAirUnitAtCell > -1) {
                 int iPlr = unit[idOfAirUnitAtCell].iPlayer;
                 if (playerOnly) {
-                    if (iPlr != m_Player.getId()) continue; // skip non m_Player units
+                    if (iPlr != m_Player->getId()) continue; // skip non m_Player units
                 }
                 iColor = player[iPlr].getMinimapColor();
             }
@@ -172,7 +165,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
                 if (playerOnly) {
                     continue; // skip sandworms
                 }
-                iColor = m_Player.getSelectFadingColor();
+                iColor = m_Player->getSelectFadingColor();
             }
 
             // no need to draw black on black background
@@ -221,7 +214,7 @@ void cMiniMapDrawer::interact() {
 	    cMouse::isLeftButtonPressed() && !cMouse::isBoxSelecting() // pressed the mouse and not boxing anything..
 	    ) {
 
-	    if (m_Player.hasAtleastOneStructure(RADAR)) {
+	    if (m_Player->hasAtleastOneStructure(RADAR)) {
             int mouseCellOnMinimap = getMouseCell(mouse_x, mouse_y);
             mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
         }
@@ -307,7 +300,7 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
 }
 
 void cMiniMapDrawer::think() {
-    if (m_Player.hasAtleastOneStructure(RADAR)) {
+    if (m_Player->hasAtleastOneStructure(RADAR)) {
         if (status == eMinimapStatus::NOTAVAILABLE) {
             status = eMinimapStatus::POWERUP;
         }
@@ -317,7 +310,7 @@ void cMiniMapDrawer::think() {
 
     if (status == eMinimapStatus::NOTAVAILABLE) return;
 
-    bool hasRadarAndEnoughPower = (m_Player.getAmountOfStructuresForType(RADAR) > 0) && m_Player.bEnoughPower();
+    bool hasRadarAndEnoughPower = (m_Player->getAmountOfStructuresForType(RADAR) > 0) && m_Player->bEnoughPower();
 
     // minimap state is enough power
     if (status == eMinimapStatus::POWERUP || status == eMinimapStatus::RENDERMAP) {

@@ -156,6 +156,9 @@ class cAbstractStructure {
     	float getHealthNormalized();
 
     	bool isDamaged();
+
+        bool belongsTo(int playerId) const;
+        bool belongsTo(const cPlayer * other) const;
 };
 
 #endif

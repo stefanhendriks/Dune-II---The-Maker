@@ -20,7 +20,7 @@ bool cOrderDrawer::isMouseOverOrderButton() {
     return buttonRect->isMouseOver();
 }
 
-void cOrderDrawer::drawOrderPlaced(const cPlayer & thePlayer) {
+void cOrderDrawer::drawOrderPlaced() {
 	BITMAP *bmp_trans=create_bitmap(buttonBitmap->w, buttonBitmap->h);
 	clear_to_color(bmp_trans, makecol(255,0,255));
 
@@ -37,14 +37,14 @@ void cOrderDrawer::drawOrderPlaced(const cPlayer & thePlayer) {
 	destroy_bitmap(bmp_trans);
 }
 
-void cOrderDrawer::drawOrderButton(const cPlayer & thePlayer) {
-	assert(&thePlayer);
+void cOrderDrawer::drawOrderButton(cPlayer * thePlayer) {
+	assert(thePlayer);
 
-	cOrderProcesser * orderProcesser = thePlayer.getOrderProcesser();
+	cOrderProcesser * orderProcesser = thePlayer->getOrderProcesser();
 
 	assert(orderProcesser);
 	if (orderProcesser->isOrderPlaced()) {
-		drawOrderPlaced(thePlayer);
+		drawOrderPlaced();
 	} else {
 		draw_sprite(bmp_screen, buttonBitmap, buttonRect->getX(), buttonRect->getY());
 	}
@@ -55,7 +55,7 @@ void cOrderDrawer::drawRectangleOrderButton() {
     int y = buttonRect->getY();
     int width = buttonRect->getWidth();
     int height = buttonRect->getHeight();
-    int color = player->getHouseFadingColor();
+    int color = player[HUMAN].getHouseFadingColor();
     allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
     allegroDrawer->drawRectangle(bmp_screen, x+1, y+1, width-2, height-2, color);
 }

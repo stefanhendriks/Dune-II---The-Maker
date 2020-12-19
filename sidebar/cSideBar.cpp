@@ -1,7 +1,7 @@
 #include "../include/d2tmh.h"
 
-cSideBar::cSideBar(cPlayer & thePlayer) : m_Player(thePlayer) {
-	assert(&thePlayer);
+cSideBar::cSideBar(cPlayer * thePlayer) : m_Player(thePlayer) {
+    assert(thePlayer != nullptr && "Expected player to be not null!");
 	selectedListID = -1; // nothing is selected
 	memset(lists, 0, sizeof(lists));
 }
@@ -44,31 +44,31 @@ void cSideBar::thinkAvailabilityLists() {
 	cBuildingList * constyardList = getList(LIST_CONSTYARD);
 	assert(constyardList);
 
-	constyardList->setAvailable(m_Player.hasAtleastOneStructure(CONSTYARD));
+	constyardList->setAvailable(m_Player->hasAtleastOneStructure(CONSTYARD));
 
 	// INFANTRY LIST
 	cBuildingList * infantryList = getList(LIST_FOOT_UNITS);
 
-    infantryList->setAvailable(m_Player.hasBarracks() || m_Player.hasWor());
+    infantryList->setAvailable(m_Player->hasBarracks() || m_Player->hasWor());
 
 	// LIGHTFC LIST
 	cBuildingList * listUnits = getList(LIST_UNITS);
-    listUnits->setAvailable(m_Player.hasAtleastOneStructure(LIGHTFACTORY) ||
-                            m_Player.hasAtleastOneStructure(HEAVYFACTORY) ||
-                            m_Player.hasAtleastOneStructure(HIGHTECH)
+    listUnits->setAvailable(m_Player->hasAtleastOneStructure(LIGHTFACTORY) ||
+                            m_Player->hasAtleastOneStructure(HEAVYFACTORY) ||
+                            m_Player->hasAtleastOneStructure(HIGHTECH)
     );
 
 	// PALACE LIST
 	cBuildingList * palaceList = getList(LIST_PALACE);
-	palaceList->setAvailable(m_Player.hasAtleastOneStructure(PALACE));
+	palaceList->setAvailable(m_Player->hasAtleastOneStructure(PALACE));
 
 	// STARPORT LIST
 	cBuildingList * starportList = getList(LIST_STARPORT);
-	starportList->setAvailable(m_Player.hasAtleastOneStructure(STARPORT));
+	starportList->setAvailable(m_Player->hasAtleastOneStructure(STARPORT));
 
 	// when available, check if we accept orders
 	if (starportList->isAvailable()) {
-		cOrderProcesser * orderProcesser = m_Player.getOrderProcesser();
+		cOrderProcesser * orderProcesser = m_Player->getOrderProcesser();
 		bool acceptsOrders = orderProcesser->acceptsOrders();
 		starportList->setAcceptsOrders(acceptsOrders);
 	}
@@ -116,7 +116,7 @@ void cSideBar::thinkInteraction() {
         return;
     }
 
-    cOrderProcesser * orderProcesser = m_Player.getOrderProcesser();
+    cOrderProcesser * orderProcesser = m_Player->getOrderProcesser();
     cOrderDrawer * orderDrawer = drawManager->getOrderDrawer();
 
     // allow clicking on the order button
@@ -171,7 +171,7 @@ void cSideBar::thinkInteraction() {
             } else {
                 if (item->isAvailable()) {
                     // Item should not be placed, so it can be built
-                    cItemBuilder *itemBuilder = m_Player.getItemBuilder();
+                    cItemBuilder *itemBuilder = m_Player->getItemBuilder();
                     bool firstOfItsListType = itemBuilder->isBuildListItemTheFirstOfItsListType(item);
 
                     if (item->isQueuable()) {
@@ -186,10 +186,10 @@ void cSideBar::thinkInteraction() {
         } else {
             // add orders
             if (orderProcesser->acceptsOrders()) {
-                if (m_Player.credits >= item->getBuildCost()) {
+                if (m_Player->credits >= item->getBuildCost()) {
                     item->increaseTimesOrdered();
                     orderProcesser->addOrder(item);
-                    m_Player.substractCredits(item->getBuildCost());
+                    m_Player->substractCredits(item->getBuildCost());
                 }
             }
         }
@@ -208,11 +208,11 @@ void cSideBar::thinkInteraction() {
                     if (item->isBuilding()) {
                         // calculate the amount of money back:
                         player[HUMAN].credits += item->getRefundAmount();
-                        m_Player.getBuildingListUpdater()->onBuildItemCancelled(item);
+                        m_Player->getBuildingListUpdater()->onBuildItemCancelled(item);
                     }
                     item->setIsBuilding(false);
                     item->setProgress(0);
-                    cItemBuilder *itemBuilder = m_Player.getItemBuilder();
+                    cItemBuilder *itemBuilder = m_Player->getItemBuilder();
                     itemBuilder->removeItemFromList(item);
                 }
                 // else, only the number is decreased (used for queueing)

@@ -19,7 +19,7 @@ enum eMinimapStatus {
 
 class cMiniMapDrawer {
 	public:
-		cMiniMapDrawer(cMap *theMap, const cPlayer& thePlayer, cMapCamera * theMapCamera);
+		cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * theMapCamera);
 		~cMiniMapDrawer();
 
 		void draw();
@@ -53,7 +53,7 @@ protected:
 
 	private:
 		cMap *map;	// the minimap drawer reads data from here
-		const cPlayer& m_Player;	// the m_Player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
+		cPlayer * m_Player;	// the m_Player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
 		cMapCamera *mapCamera;
 		cRectangle *m_RectMinimap; // the minimap (map) itself
 		cRectangle *m_RectFullMinimap; // the total space it could take

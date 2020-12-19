@@ -12,7 +12,7 @@
 
 class CreditsDrawer {
 public:
-	CreditsDrawer(const cPlayer& thePlayer);
+	CreditsDrawer(cPlayer * thePlayer);
 	virtual ~CreditsDrawer();
 
 	void think(); // set animation counters and such, time based. Also make sound when needed.
@@ -24,7 +24,7 @@ public:
 	BITMAP *getBitmap() { return bmp; }
 
 private:
-	const cPlayer& player; // m_Player
+	cPlayer * m_Player; //
 	BITMAP *bmp;	 // a bitmap being drawn on
 
 	void thinkAboutIndividualCreditOffsets();

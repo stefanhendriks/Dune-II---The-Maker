@@ -32,14 +32,14 @@ int cStructureUtils::getWidthOfStructureTypeInCells(int structureType) {
 /**
  * This is almost the same as the findStructureToDeployUnit
  *
- * However, whenever the player has not set any primary building. Try to find a structure that has some free cell around it.
+ * However, whenever the pPlayer has not set any primary building. Try to find a structure that has some free cell around it.
  */
-int cStructureUtils::findStarportToDeployUnit(cPlayer * player) {
-	assert(player);
-	int playerId = player->getId();
+int cStructureUtils::findStarportToDeployUnit(cPlayer * pPlayer) {
+	assert(pPlayer);
+	int playerId = pPlayer->getId();
 
 	// check primary building first if set
-	int primaryBuildingOfStructureType = player->getPrimaryStructureForStructureType(STARPORT);
+	int primaryBuildingOfStructureType = pPlayer->getPrimaryStructureForStructureType(STARPORT);
 
 	if (primaryBuildingOfStructureType > -1) {
 		cAbstractStructure * theStructure = structure[primaryBuildingOfStructureType];
@@ -88,25 +88,27 @@ int cStructureUtils::findStarportToDeployUnit(cPlayer * player) {
 }
 
 /**
- * Finds a building to deploy a unit from. Returns the structure ID of the found structure.
+ * Finds a building to deploy a unit from. Does this by first checking if a primary structure has been set;
+ * if so, it will check if the primary building has space around it. If not, then it will check other structures.
+ * If found other structure to deploy (space around) it will automatically set the primary building to that structure.
  *
- * Will use primary building set by player first, before looking for alternatives.
+ * Returns the structure ID of the found structure.
  *
  */
-int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureType) {
-	assert(player);
+int cStructureUtils::findStructureToDeployUnit(cPlayer * pPlayer, int structureType) {
+	assert(pPlayer);
 	assert(structureType > -1);
 
-	int playerId = player->getId();
+	int playerId = pPlayer->getId();
 
 	if (DEBUGGING) {
 		char msg[255];
-		sprintf(msg, "Looking for primary building (type %d, name %s, player %d)", structureType, structures[structureType].name, playerId);
+		sprintf(msg, "Looking for primary building (type %d, name %s, pPlayer %d)", structureType, structures[structureType].name, playerId);
 		logbook(msg);
 	}
 
 	// check primary building first if set
-	int primaryBuildingOfStructureType = player->getPrimaryStructureForStructureType(structureType);
+	int primaryBuildingOfStructureType = pPlayer->getPrimaryStructureForStructureType(structureType);
 
 	if (primaryBuildingOfStructureType > -1) {
 		cAbstractStructure * theStructure = structure[primaryBuildingOfStructureType];
@@ -119,19 +121,19 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * player, int structureTy
 	// check other structures now
 	for (int i=0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
-		if (theStructure && theStructure->getOwner() == playerId) {
-			if (theStructure->getType() == structureType) {
-				if (theStructure->getNonOccupiedCellAroundStructure() > -1) {
-					structureIdFound = i; // return this structure
-					break;
-				}
-			}
+		if (theStructure &&
+		    theStructure->isValid() &&
+		    theStructure->belongsTo(playerId) &&
+            theStructure->getType() == structureType &&
+            theStructure->getNonOccupiedCellAroundStructure() > -1) {
+            structureIdFound = i; // return this structure
+            break;
 		}
 	}
 
 	// assign as primary building
 	if (structureIdFound > -1) {
-		player->setPrimaryBuildingForStructureType(structureType, structureIdFound);
+		pPlayer->setPrimaryBuildingForStructureType(structureType, structureIdFound);
 	}
 
 	return structureIdFound;
@@ -188,15 +190,15 @@ int cStructureUtils::findStructureTypeByTypeOfList(cBuildingListItem *item) {
 	}
 }
 
-int cStructureUtils::findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(int cell, int structureType, cPlayer * player) {
-	assert(player);
+int cStructureUtils::findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(int cell, int structureType, cPlayer * pPlayer) {
+	assert(pPlayer);
 	assert(structureType > -1);
 	assert(cell >= 0 || cell < MAX_CELLS);
 
 	int foundStructureId=-1;	// found structure id
 	long shortestDistance=9999; // max distance to search in
 
-	int playerId = player->getId();
+	int playerId = pPlayer->getId();
 
 	for (int i=0; i < MAX_STRUCTURES; i++) {
         cAbstractStructure *pStructure = structure[i];
@@ -267,14 +269,14 @@ bool cStructureUtils::isMouseOverStructure(cAbstractStructure *structure, int sc
     return cRectangle::isWithin(screenX, screenY, drawX, drawY, width, height);
 }
 
-int cStructureUtils::getTotalPowerUsageForPlayer(cPlayer * player) {
-	assert(player);
+int cStructureUtils::getTotalPowerUsageForPlayer(cPlayer * pPlayer) {
+	assert(pPlayer);
 	int totalPowerUsage = 0;
 
 	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
 		if (theStructure) {
-			if (theStructure->getPlayer()->getId() == player->getId()) {
+			if (theStructure->getPlayer()->getId() == pPlayer->getId()) {
 				int powerUsageOfStructure = theStructure->getPowerUsage();
 				totalPowerUsage += powerUsageOfStructure;
 			}
@@ -284,13 +286,13 @@ int cStructureUtils::getTotalPowerUsageForPlayer(cPlayer * player) {
 	return totalPowerUsage;
 }
 
-int cStructureUtils::getTotalSpiceCapacityForPlayer(cPlayer * player) {
+int cStructureUtils::getTotalSpiceCapacityForPlayer(cPlayer * pPlayer) {
 	int totalCapacity = 0;
 	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
 		if (theStructure == nullptr) continue;
 		if (!theStructure->isValid()) continue;
-        if (theStructure->getPlayer()->getId() != player->getId()) continue; // does not belong to player
+        if (theStructure->getPlayer()->getId() != pPlayer->getId()) continue; // does not belong to pPlayer
 
         int capacity = 0;
         if (theStructure->getType() == SILO) {
@@ -307,14 +309,14 @@ int cStructureUtils::getTotalSpiceCapacityForPlayer(cPlayer * player) {
 	return totalCapacity;
 }
 
-int cStructureUtils::getTotalPowerOutForPlayer(cPlayer * player) {
-	assert(player);
+int cStructureUtils::getTotalPowerOutForPlayer(cPlayer * pPlayer) {
+	assert(pPlayer);
 	int totalPowerOut = 0;
 	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
 		if (theStructure == nullptr) continue;
 		if (!theStructure->isValid()) continue;
-		if (theStructure->getPlayer()->getId() != player->getId()) continue; // not for player
+		if (theStructure->getPlayer()->getId() != pPlayer->getId()) continue; // not for pPlayer
 
 		// TODO abstract it further so it wont need to cast/check for structure type
         if (theStructure->getType() == WINDTRAP) {

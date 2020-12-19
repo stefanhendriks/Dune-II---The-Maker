@@ -3,7 +3,7 @@
 
 class cPlaceItDrawer {
 	public:
-		cPlaceItDrawer(const cPlayer& thePlayer);
+		cPlaceItDrawer(cPlayer * thePlayer);
 		~cPlaceItDrawer();
 
 		void draw(cBuildingListItem *itemToPlace);
@@ -15,7 +15,7 @@ class cPlaceItDrawer {
 	private:
 
 		cCellCalculator * cellCalculator;
-        const cPlayer& m_Player;
+        cPlayer * m_Player;
 };
 
 #endif /* CPLACEITDRAWER_H_ */

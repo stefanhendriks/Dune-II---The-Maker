@@ -8,7 +8,7 @@
 
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer) {
 	assert(thePlayer);
-	player = thePlayer;
+    m_Player = thePlayer;
 	orderPlaced = false;
 	frigateSent = false;
 	secondsUntilArrival = -1;
@@ -22,7 +22,7 @@ cOrderProcesser::cOrderProcesser(cPlayer *thePlayer) {
 
 cOrderProcesser::~cOrderProcesser() {
 	removeAllItems();
-	player = NULL;
+    m_Player = NULL;
 	delete cellCalculator;
 	cellCalculator = NULL;
 }
@@ -61,19 +61,19 @@ void cOrderProcesser::playTMinusSound(int seconds) {
 	int soundIdToPlay = -1;
 
 	if (seconds == 0) {
-		if (player->getHouse() == ATREIDES) {
+		if (m_Player->getHouse() == ATREIDES) {
 			soundIdToPlay = SOUND_VOICE_06_ATR;
-		} else if (player->getHouse() == HARKONNEN) {
+		} else if (m_Player->getHouse() == HARKONNEN) {
 			soundIdToPlay = SOUND_VOICE_06_HAR;
-		} else if (player->getHouse() == ORDOS) {
+		} else if (m_Player->getHouse() == ORDOS) {
 			soundIdToPlay = SOUND_VOICE_06_ORD;
 		}
 	} else {
-		if (player->getHouse() == ATREIDES) {
+		if (m_Player->getHouse() == ATREIDES) {
 			soundIdToPlay = (SOUND_ATR_S1 + (seconds - 1));
-		} else if (player->getHouse() == HARKONNEN) {
+		} else if (m_Player->getHouse() == HARKONNEN) {
 			soundIdToPlay = (SOUND_HAR_S1 + (seconds - 1));
-		} else if (player->getHouse() == ORDOS) {
+		} else if (m_Player->getHouse() == ORDOS) {
 			soundIdToPlay = (SOUND_ORD_S1 + (seconds - 1));
 		}
 	}
@@ -91,7 +91,7 @@ void cOrderProcesser::think() {
 		char msg[255];
 		sprintf(msg, "T-%d before Frigate arrival.", secondsUntilArrival);
 
-		if (secondsUntilArrival <= 5 && player->getId() == HUMAN) {
+		if (secondsUntilArrival <= 5 && m_Player->getId() == HUMAN) {
 			playTMinusSound(secondsUntilArrival);
 		}
 
@@ -113,7 +113,7 @@ void cOrderProcesser::think() {
 }
 
 void cOrderProcesser::updatePricesForStarport() {
-	cBuildingList * list = player->getSideBar()->getList(LIST_STARPORT);
+	cBuildingList * list = m_Player->getSideBar()->getList(LIST_STARPORT);
 	assert(list);
 	for (int i = 0; i < MAX_ICONS; i++) {
 		cBuildingListItem * item = list->getItem(i);
@@ -175,7 +175,7 @@ void cOrderProcesser::removeItem(int slot) {
 	orderedItems[slot] = NULL;
 	// give money back to player
 	if (pricePaidForItem[slot] > 0) {
-		player->credits += pricePaidForItem[slot];
+        m_Player->credits += pricePaidForItem[slot];
 	}
 	// and reset the amount
 	pricePaidForItem[slot] = -1;
@@ -195,7 +195,7 @@ void cOrderProcesser::sendFrigate() {
 	// iCll = structure start cell (up left), since we must go to the center
 	// of the cell:
 	cStructureUtils structureUtils;
-	int structureId = structureUtils.findStarportToDeployUnit(player);
+	int structureId = structureUtils.findStarportToDeployUnit(m_Player);
 
 	if (structureId > -1) {
 		// found structure
@@ -209,7 +209,7 @@ void cOrderProcesser::sendFrigate() {
 			setOrderHasBeenProcessed();
 		} else {
 			// STEP 2: create frigate
-			int unitId = UNIT_CREATE(iStartCell, FRIGATE, player->getId(), true);
+			int unitId = UNIT_CREATE(iStartCell, FRIGATE, m_Player->getId(), true);
 			// STEP 3: assign order to frigate (use carryall order function)
 			unit[unitId].carryall_order(-1, TRANSFER_NEW_LEAVE, destinationCell, -1);
 			unitIdOfFrigateSent = unitId;

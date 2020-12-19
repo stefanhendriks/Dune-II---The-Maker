@@ -24,7 +24,7 @@ cSideBarFactory *cSideBarFactory::getInstance() {
 }
 
 // construct a cSideBar
-cSideBar * cSideBarFactory::createSideBar(cPlayer& thePlayer, int house) {
+cSideBar * cSideBarFactory::createSideBar(cPlayer * thePlayer, int house) {
 	assert(&thePlayer);
 	cSideBar *sidebar = new cSideBar(thePlayer);
 

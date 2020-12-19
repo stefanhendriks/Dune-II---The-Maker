@@ -22,7 +22,7 @@ public:
 	static void destroy();
 
 
-	cSideBar *createSideBar(cPlayer& thePlayer, int house);
+	cSideBar *createSideBar(cPlayer * thePlayer, int house);
 
 private:
 
