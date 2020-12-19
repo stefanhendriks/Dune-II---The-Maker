@@ -112,7 +112,12 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * pPlayer, int structureT
 
 	if (primaryBuildingOfStructureType > -1) {
 		cAbstractStructure * theStructure = structure[primaryBuildingOfStructureType];
-		if (theStructure && theStructure->getNonOccupiedCellAroundStructure() > -1) {
+		// this IF is needed, because the structure could be destroyed/replaced
+		if (theStructure &&
+            theStructure->isValid() &&
+            theStructure->getType() == structureType &&
+            theStructure->belongsTo(playerId) && // in case this changed...
+		    theStructure->getNonOccupiedCellAroundStructure() > -1) {
 			return primaryBuildingOfStructureType;
 		}
 	}
