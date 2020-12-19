@@ -7,16 +7,14 @@
 class cDrawManager {
 
 	public:
-		cDrawManager(const cPlayer & thePlayer);
+		cDrawManager(cPlayer * thePlayer);
 		~cDrawManager();
 
 		void draw();
 
 		CreditsDrawer *getCreditsDrawer() { return creditsDrawer; }
 		cMessageDrawer *getMessageDrawer() { return messageDrawer; }
-		cMessageBarDrawer *getMessageBarDrawer() { return messageBarDrawer; }
 		cMiniMapDrawer *getMiniMapDrawer() { return miniMapDrawer; }
-		cSideBarDrawer *getSidebarDrawer() { return sidebarDrawer; }
 		cOrderDrawer *getOrderDrawer() { return orderDrawer; }
 		cBuildingListDrawer *getBuildingListDrawer() { return sidebarDrawer->getBuildingListDrawer(); }
 
@@ -45,7 +43,7 @@ class cDrawManager {
 
 		// TODO: bullet/projectile drawer
 
-		const cPlayer& m_Player;
+		cPlayer * m_Player;
 };
 
 #endif

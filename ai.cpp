@@ -251,63 +251,51 @@ void cAIPlayer::think_building() {
             if (iBuildingUnit[unitType] >= units[unitType].build_time) {
                 //logbook("DONE BUILDING");
 
+                // produce
+                iBuildingUnit[unitType] = -1;
+
+                // TODO: Remove duplication, which also exists in cItemBuilder::think()
+
                 // produce now
-                int iStr = cPlayer.getPrimaryStructureForStructureType(iStrucType);
+                int structureToDeployUnit = structureUtils.findStructureToDeployUnit(&cPlayer, iStrucType);
+                if (structureToDeployUnit > -1) {
+                    // TODO: Remove duplication, which also exists in cItemBuilder::think()
+                    cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
+                    int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
 
-                // no primary building yet, assign one
-                if (iStr < 0) {
-                    // TODO: remove/rewrite! This has nothing to do with primary stuff and such..
-                    iStr = structureUtils.findStructureToDeployUnit(&cPlayer, iStrucType);
-                }
-
-                if (iStr > -1) {
-                    int iProducedUnit = -1;
-
-                    cAbstractStructure *pStructure = structure[iStr];
-                    if (pStructure && pStructure->isValid()) {
-                        int cellAroundStructure = pStructure->getNonOccupiedCellAroundStructure();
-                        if (cellAroundStructure > -1) {
-                            int iSpot = cellAroundStructure;
-                            cPlayer.setPrimaryBuildingForStructureType(iStrucType, iStr);
-                            pStructure->setAnimating(true); // animate
-                            iProducedUnit = UNIT_CREATE(iSpot, unitType, ID, false);
-                        } else {
-                            int iNewStr = structureUtils.findStructureToDeployUnit(&cPlayer, iStrucType);
-
-                            // assign new primary
-                            if (iNewStr != iStr && iNewStr > -1) {
-                                int iSpot = structure[iNewStr]->getNonOccupiedCellAroundStructure();
-                                cPlayer.setPrimaryBuildingForStructureType(iStrucType, iNewStr);
-                                structure[iNewStr]->setAnimating(true); // animate
-                                iProducedUnit = UNIT_CREATE(iSpot, unitType, ID, false);
-                            } else {
-                                // nothing found, deliver the unit as is.
-                            }
-                        }
-                    } else {
-                        cPlayer.setPrimaryBuildingForStructureType(iStrucType, -1);
-                    }
-
-                    // produce
-                    iBuildingUnit[unitType] = -1;
-
-                    if (iProducedUnit > -1) {
+                    if (cell > -1) {
+                        pStructureToDeploy->setAnimating(true); // animate
+                        int iProducedUnit = UNIT_CREATE(cell, unitType, ID, false);
                         // Assign to team (for AI attack purposes)
                         unit[iProducedUnit].iGroup = rnd(3) + 1;
+                    } else {
+                        logbook("AI: huh? I was promised that this structure would have some place to deploy unit at!?");
                     }
                 } else {
-                    logbook("No primary building");
-                    // deliver unit by carryall
-                    for (int s = 0; s < MAX_STRUCTURES; s++) {
-                        if (structure[s])
-                            if (structure[s]->getOwner() == ID)
-                                if (structure[s]->getType() == iStrucType) {
-                                    REINFORCE(ID, unitType, structure[s]->getCell(), -1);
-                                }
+                    // TODO: Remove duplication, which also exists in cItemBuilder::think()
+                    structureToDeployUnit = cPlayer.getPrimaryStructureForStructureType(iStrucType);
+                    if (structureToDeployUnit < 0) {
+                        // find any structure of type (regardless if we can deploy or not)
+                        for (int i = 0; i < MAX_STRUCTURES; i++) {
+                            cAbstractStructure *pStructure = structure[i];
+                            if (pStructure &&
+                                pStructure->isValid() &&
+                                pStructure->belongsTo(ID) &&
+                                pStructure->getType() == iStrucType) {
+                                structureToDeployUnit = i;
+                                break;
+                            }
+                        }
+                    }
+                    // TODO: Remove duplication, which also exists in cItemBuilder::think()
+
+                    if (structureToDeployUnit > -1) {
+                        // deliver unit by carryall
+                        REINFORCE(ID, unitType, structure[structureToDeployUnit]->getCell(), -1);
+                    } else {
+                        logbook("ERROR: Unable to find structure to deploy unit!");
                     }
 
-                    // produce
-                    iBuildingUnit[unitType] = -1;
                 }
             }
 

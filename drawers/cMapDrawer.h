@@ -10,7 +10,7 @@
 
 class cMapDrawer {
 	public:
-		cMapDrawer(cMap * theMap, const cPlayer& thePlayer, cMapCamera * theCamera);
+		cMapDrawer(cMap * theMap, cPlayer * thePlayer, cMapCamera * theCamera);
 		~cMapDrawer();
 
 		void drawTerrain(int startX, int startY);
@@ -21,7 +21,7 @@ class cMapDrawer {
 
 	private:
 		cMap * map;
-		const cPlayer& player;
+		cPlayer * m_Player;
 		cMapCamera * camera;
 		cCellCalculator * cellCalculator;
 

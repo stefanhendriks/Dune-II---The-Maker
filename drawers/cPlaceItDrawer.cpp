@@ -1,11 +1,12 @@
 #include "../include/d2tmh.h"
 
-cPlaceItDrawer::cPlaceItDrawer(const cPlayer& thePlayer) : m_Player(thePlayer) {
+cPlaceItDrawer::cPlaceItDrawer(cPlayer * thePlayer) : m_Player(thePlayer) {
 	cellCalculator = new cCellCalculator(&map);
 }
 
 cPlaceItDrawer::~cPlaceItDrawer() {
 	delete cellCalculator;
+	m_Player = nullptr;
 }
 
 void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace) {
@@ -13,11 +14,11 @@ void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace) {
 	assert(itemToPlace->getBuildType() == STRUCTURE);
 
 	// this is only done when bPlaceIt=true
-	if (m_Player.getSideBar() == NULL) {
+	if (m_Player->getSideBar() == NULL) {
 		return;
 	}
 
-	int iMouseCell = m_Player.getGameControlsContext()->getMouseCell();
+	int iMouseCell = m_Player->getGameControlsContext()->getMouseCell();
 
 	if (iMouseCell < 0) {
 		return;
@@ -182,8 +183,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 			}
 
             play_sound_id(SOUND_PLACE);
-			m_Player.getStructurePlacer()->placeStructure(mouseCell, structureId, iHealthPercent);
-            m_Player.getBuildingListUpdater()->onBuildItemCompleted(itemToPlace);
+			m_Player->getStructurePlacer()->placeStructure(mouseCell, structureId, iHealthPercent);
+            m_Player->getBuildingListUpdater()->onBuildItemCompleted(itemToPlace);
 
 			game.bPlaceIt=false;
 
@@ -192,7 +193,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 			itemToPlace->setIsBuilding(false);
 			itemToPlace->setProgress(0);
 			if (itemToPlace->getTimesToBuild() < 1) {
-                m_Player.getItemBuilder()->removeItemFromList(itemToPlace);
+                m_Player->getItemBuilder()->removeItemFromList(itemToPlace);
 			}
 		}
 	}
@@ -225,7 +226,7 @@ void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int c
 	} else if (structureId == WALL) {
         bmp = (BITMAP *)gfxdata[PLACE_WALL].dat;
 	} else {
-        bmp = player->getStructureBitmap(structureId);
+        bmp = m_Player->getStructureBitmap(structureId);
 	}
 
     allegroDrawer->stretchBlit(bmp, temp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);

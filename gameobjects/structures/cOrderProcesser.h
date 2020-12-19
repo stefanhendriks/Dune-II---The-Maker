@@ -59,7 +59,7 @@ class cOrderProcesser {
 		cBuildingListItem * orderedItems[MAX_ITEMS_TO_ORDER];
 		int pricePaidForItem[MAX_ITEMS_TO_ORDER];
 
-		cPlayer * player;
+		cPlayer * m_Player;
 
 		bool orderPlaced;
 

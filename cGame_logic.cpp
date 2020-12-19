@@ -2868,7 +2868,7 @@ bool cGame::setupGame() {
 	if (drawManager) {
 	    delete drawManager;
 	}
-	drawManager = new cDrawManager(player[HUMAN]);
+	drawManager = new cDrawManager(&player[HUMAN]);
 
 	if (mapUtils) {
 	    delete mapUtils;
@@ -2902,7 +2902,7 @@ void cGame::setup_players() {
 	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
 		cPlayer * thePlayer = &player[i];
 
-		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(*thePlayer, iHouse);
+		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer, iHouse);
 		thePlayer->setSideBar(sidebar);
 
 		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(thePlayer);

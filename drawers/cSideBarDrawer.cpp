@@ -1,18 +1,13 @@
-/*
- * cSideBarDrawer.cpp
- *
- *  Created on: Aug 2, 2009
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
-cSideBarDrawer::cSideBarDrawer() {
+cSideBarDrawer::cSideBarDrawer(cPlayer * thePlayer) : m_Player(thePlayer) {
+    assert(thePlayer);
 	buildingListDrawer = new cBuildingListDrawer();
-	candybar = NULL;
-	optionsBar = NULL;
+	candybar = nullptr;
+	optionsBar = nullptr;
 	sidebarColor = makecol(214, 149, 20);
     textDrawer = new cTextDrawer(bene_font);
+    sidebar = nullptr;
 }
 
 cSideBarDrawer::~cSideBarDrawer() {
@@ -24,6 +19,7 @@ cSideBarDrawer::~cSideBarDrawer() {
 		destroy_bitmap(optionsBar);
 	}
 	delete textDrawer;
+	sidebar = nullptr;
 }
 
 void cSideBarDrawer::drawCandybar() {
@@ -74,9 +70,8 @@ void cSideBarDrawer::createCandyBar() {
     draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, heightInPixels - 10); // height of top = 10
 }
 
-void cSideBarDrawer::drawHouseGui(const cPlayer & thePlayer) {
-	assert(&thePlayer);
-	set_palette(thePlayer.pal);
+void cSideBarDrawer::drawHouseGui() {
+	set_palette(m_Player->pal);
 
 	// black out sidebar
 	rectfill(bmp_screen, (game.screen_x-cSideBar::SidebarWidth), 0, game.screen_x, game.screen_y, makecol(0,0,0));
@@ -86,12 +81,16 @@ void cSideBarDrawer::drawHouseGui(const cPlayer & thePlayer) {
 
     drawCandybar();
 
-    drawMinimap(thePlayer);
+    drawMinimap();
 }
 
-void cSideBarDrawer::drawBuildingLists(const cPlayer & thePlayer) {
+void cSideBarDrawer::drawBuildingLists() {
 	// draw the sidebar itself (the backgrounds, borders, etc)
-	cSideBar *sidebar = thePlayer.getSideBar();
+
+	if (sidebar == nullptr) {
+	    // !??! sidebar is not set earlier...r
+        sidebar = m_Player->getSideBar();
+	}
 
 	// draw the buildlist icons
 	int selectedListId = sidebar->getSelectedListID();
@@ -184,7 +183,7 @@ void cSideBarDrawer::drawBuildingLists(const cPlayer & thePlayer) {
 
     // allow clicking on the order button
     if (selectedList && selectedList->getType() == LIST_STARPORT) {
-        orderDrawer->drawOrderButton(thePlayer);
+        orderDrawer->drawOrderButton(m_Player);
         if (orderDrawer->isMouseOverOrderButton()) {
             orderDrawer->drawRectangleOrderButton();
         }
@@ -192,18 +191,18 @@ void cSideBarDrawer::drawBuildingLists(const cPlayer & thePlayer) {
 }
 
 // draws the sidebar on screen
-void cSideBarDrawer::drawSideBar(const cPlayer & player) {
-	drawHouseGui(player);
-    drawOptionsBar(player);
-    drawBuildingLists(player);
+void cSideBarDrawer::draw() {
+	drawHouseGui();
+    drawOptionsBar();
+    drawBuildingLists();
 }
 
-void cSideBarDrawer::drawCapacities(const cPlayer & player) {
-    drawPowerUsage(player);
-    drawCreditsUsage(player);
+void cSideBarDrawer::drawCapacities() {
+    drawPowerUsage();
+    drawCreditsUsage();
 }
 
-void cSideBarDrawer::drawCreditsUsage(const cPlayer &player) {
+void cSideBarDrawer::drawCreditsUsage() {
     int barTotalHeight = (cSideBar::HeightOfMinimap - 76);
     int barX = (game.screen_x - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
     int barY = cSideBar::TopBarHeight + 48;
@@ -214,10 +213,10 @@ void cSideBarDrawer::drawCreditsUsage(const cPlayer &player) {
 
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
     int maxSpiceCapacity = 1000; // this is still hard coded, need to move to INI file
-    int structuresWithSpice = player.getAmountOfStructuresForType(REFINERY) + player.getAmountOfStructuresForType(SILO);
+    int structuresWithSpice = m_Player->getAmountOfStructuresForType(REFINERY) + m_Player->getAmountOfStructuresForType(SILO);
     float totalSpiceCapacity = (1 + structuresWithSpice) * maxSpiceCapacity;
-    float maxSpice = (float)player.max_credits / totalSpiceCapacity;
-    float spiceStored = (float)player.credits / totalSpiceCapacity;
+    float maxSpice = (float)m_Player->max_credits / totalSpiceCapacity;
+    float spiceStored = (float)m_Player->credits / totalSpiceCapacity;
 
     float barHeightToDraw = barTotalHeight * maxSpice;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -229,7 +228,7 @@ void cSideBarDrawer::drawCreditsUsage(const cPlayer &player) {
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerOutY = barY + (barTotalHeight - barHeightToDraw);
 
-    float spiceCapacityRatio = ((float)player.credits + 1) / ((float)player.max_credits + 1);
+    float spiceCapacityRatio = ((float)m_Player->credits + 1) / ((float)m_Player->max_credits + 1);
     if (spiceCapacityRatio < 0) spiceCapacityRatio= 0;
     if (spiceCapacityRatio > 1) spiceCapacityRatio= 1;
     int r = spiceCapacityRatio * 255;
@@ -238,10 +237,10 @@ void cSideBarDrawer::drawCreditsUsage(const cPlayer &player) {
     if (r > 255) r = 255;
     if (g > 255) g = 255;
 
-    if (player.bEnoughSpiceCapacityToStoreCredits()) {
+    if (m_Player->bEnoughSpiceCapacityToStoreCredits()) {
         rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, makecol(r, g, 32));
     } else {
-        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, player.getErrorFadingColor());
+        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, m_Player->getErrorFadingColor());
     }
 
     line(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
@@ -258,7 +257,7 @@ void cSideBarDrawer::drawCreditsUsage(const cPlayer &player) {
     textDrawer->drawText(barX, barY - 20, "$");
 }
 
-void cSideBarDrawer::drawPowerUsage(const cPlayer &player) const {
+void cSideBarDrawer::drawPowerUsage() const {
     int arbitraryMargin = 6;
     int barTotalHeight = game.screen_y - (cSideBar::TotalHeightBeforePowerBarStarts + cSideBar::PowerBarMargingHeight);
     int barX = (game.screen_x - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
@@ -270,9 +269,9 @@ void cSideBarDrawer::drawPowerUsage(const cPlayer &player) const {
 
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
     int maxPowerOutageOfWindtrap = structures[WINDTRAP].power_give;
-    float totalPowerOutput = (1 + (player.getAmountOfStructuresForType(WINDTRAP)))*maxPowerOutageOfWindtrap;
-    float powerIn = (float)player.has_power / totalPowerOutput;
-    float powerUse = (float)player.use_power / totalPowerOutput;
+    float totalPowerOutput = (1 + (m_Player->getAmountOfStructuresForType(WINDTRAP)))*maxPowerOutageOfWindtrap;
+    float powerIn = (float)m_Player->has_power / totalPowerOutput;
+    float powerUse = (float)m_Player->use_power / totalPowerOutput;
 
     float barHeightToDraw = barTotalHeight * powerIn;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -284,17 +283,17 @@ void cSideBarDrawer::drawPowerUsage(const cPlayer &player) const {
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerOutY = barY + (barTotalHeight - barHeightToDraw);
 
-    float powerUsageRatio = ((float)player.use_power + 1) / ((float)player.has_power + 1);
+    float powerUsageRatio = ((float)m_Player->use_power + 1) / ((float)m_Player->has_power + 1);
     int r = powerUsageRatio * 255;
     int g = (1.1 - powerUsageRatio) * 255;
 
     if (r > 255) r = 255;
     if (g > 255) g = 255;
 
-    if (player.bEnoughPower()) {
+    if (m_Player->bEnoughPower()) {
         rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, makecol(r, g, 32));
     } else {
-        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, player.getErrorFadingColor());
+        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, m_Player->getErrorFadingColor());
     }
 
     line(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
@@ -311,7 +310,7 @@ void cSideBarDrawer::drawPowerUsage(const cPlayer &player) const {
     textDrawer->drawText(barX, barY - 20, "P");
 }
 
-void cSideBarDrawer::drawMinimap(const cPlayer & player) {
+void cSideBarDrawer::drawMinimap() {
 	BITMAP * sprite = (BITMAP *)gfxinter[HORIZONTAL_CANDYBAR].dat;
 	int drawX = (game.screen_x - sprite->w) + 1;
 	// 128 pixels (each pixel is a cell) + 8 margin
@@ -324,16 +323,16 @@ void cSideBarDrawer::drawMinimap(const cPlayer & player) {
 	// ------
 	// 67, 50 (width/height)
 
-    bool hasRadarAndEnoughPower = player.hasRadarAndEnoughPower();
+    bool hasRadarAndEnoughPower = m_Player->hasRadarAndEnoughPower();
 
     if (hasRadarAndEnoughPower){
         return; // bail, because we render the minimap
     }
 
     // else, we render the house emblem
-	rectfill(bmp_screen, drawX + 1, cSideBar::TopBarHeight + 1, game.screen_x, drawY, player.getEmblemBackgroundColor());
+	rectfill(bmp_screen, drawX + 1, cSideBar::TopBarHeight + 1, game.screen_x, drawY, m_Player->getEmblemBackgroundColor());
 
-	if (player.isHouse(ATREIDES) || player.isHouse(HARKONNEN) || player.isHouse(ORDOS)) {
+	if (m_Player->isHouse(ATREIDES) || m_Player->isHouse(HARKONNEN) || m_Player->isHouse(ORDOS)) {
 	    int bitmapId = BMP_SELECT_HOUSE_ATREIDES;
 
         int srcX = 11;
@@ -343,11 +342,11 @@ void cSideBarDrawer::drawMinimap(const cPlayer & player) {
         int emblemWidth = 68;
         int emblemHeight = 50;
 
-        if (player.isHouse(HARKONNEN)) {
+        if (m_Player->isHouse(HARKONNEN)) {
             bitmapId = BMP_SELECT_HOUSE_HARKONNEN;
         }
 
-        if (player.isHouse(ORDOS)) {
+        if (m_Player->isHouse(ORDOS)) {
             bitmapId = BMP_SELECT_HOUSE_ORDOS;
             emblemHeight = 49;
             srcY = 11;
@@ -364,7 +363,7 @@ void cSideBarDrawer::drawMinimap(const cPlayer & player) {
     }
 }
 
-void cSideBarDrawer::drawOptionsBar(const cPlayer & thePlayer) {
+void cSideBarDrawer::drawOptionsBar() {
 	if (optionsBar == NULL) {
 		optionsBar = create_bitmap(game.screen_x, 40);
 		clear_to_color(optionsBar, sidebarColor);
@@ -378,5 +377,5 @@ void cSideBarDrawer::drawOptionsBar(const cPlayer & thePlayer) {
 
 	}
 	draw_sprite(bmp_screen, optionsBar, 0, 0);
-    drawCapacities(thePlayer);
+    drawCapacities();
 }

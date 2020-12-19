@@ -13,10 +13,10 @@ class cStructureUtils {
 		cStructureUtils();
 		~cStructureUtils();
 
-		int findStructureToDeployUnit(cPlayer * player, int structureType);
-		int findStarportToDeployUnit(cPlayer * player);
+		int findStructureToDeployUnit(cPlayer * pPlayer, int structureType);
+		int findStarportToDeployUnit(cPlayer * pPlayer);
 		int findStructureTypeByTypeOfList(cBuildingListItem *item);
-		int findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(int cell, int structureType, cPlayer * player);
+		int findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(int cell, int structureType, cPlayer * pPlayer);
 
 		int getHeightOfStructureTypeInCells(int structureType);
 		int getWidthOfStructureTypeInCells(int structureType);
@@ -26,9 +26,9 @@ class cStructureUtils {
 		bool isStructureVisibleOnScreen(cAbstractStructure *structure);
 		bool isMouseOverStructure(cAbstractStructure *structure, int screenX, int screenY);
 
-		int getTotalPowerOutForPlayer(cPlayer * player);
-		int getTotalPowerUsageForPlayer(cPlayer * player);
-		int getTotalSpiceCapacityForPlayer(cPlayer * player);
+		int getTotalPowerOutForPlayer(cPlayer * pPlayer);
+		int getTotalPowerUsageForPlayer(cPlayer * pPlayer);
+		int getTotalSpiceCapacityForPlayer(cPlayer * pPlayer);
 	protected:
 
 	private:

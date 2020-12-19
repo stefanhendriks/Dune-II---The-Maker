@@ -11,6 +11,7 @@ cItemBuilder::cItemBuilder(cPlayer * thePlayer, cBuildingListUpdater * buildingL
 }
 
 cItemBuilder::~cItemBuilder() {
+    removeAllItems();
 }
 
 int cItemBuilder::getTimerCap(cBuildingListItem *item) {
@@ -103,19 +104,48 @@ void cItemBuilder::think() {
 
             assert(item->getTimesToBuild() > -1);
 
+            // TODO: Remove duplication, which also exists in AI::think_building()
             int structureTypeByItem = structureUtils.findStructureTypeByTypeOfList(item);
             assert(structureTypeByItem > -1);
-            int primaryBuildingIdOfStructureType = structureUtils.findStructureToDeployUnit(m_Player, structureTypeByItem);
+            int structureToDeployUnit = structureUtils.findStructureToDeployUnit(m_Player, structureTypeByItem);
 
-            if (primaryBuildingIdOfStructureType > -1) {
-                cAbstractStructure * theStructure = structure[primaryBuildingIdOfStructureType];
-                int cell = theStructure->getNonOccupiedCellAroundStructure();
-                theStructure->setAnimating(true); // animate
-                int unitId = UNIT_CREATE(cell, item->getBuildId(), m_Player->getId(), false);
-                int rallyPoint = theStructure->getRallyPoint();
-                if (rallyPoint > -1) {
-                    unit[unitId].move_to(rallyPoint, -1, -1);
+            if (structureToDeployUnit > -1) {
+                // TODO: Remove duplication, which also exists in AI::think_building()
+                cAbstractStructure * pStructureToDeploy = structure[structureToDeployUnit];
+                int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
+                if (cell > -1) {
+                    pStructureToDeploy->setAnimating(true); // animate
+                    int unitId = UNIT_CREATE(cell, item->getBuildId(), m_Player->getId(), false);
+                    int rallyPoint = pStructureToDeploy->getRallyPoint();
+                    if (rallyPoint > -1) {
+                        unit[unitId].move_to(rallyPoint, -1, -1);
+                    }
+                } else {
+                    logbook("cItemBuilder: huh? I was promised that this structure would have some place to deploy unit at!?");
                 }
+            } else {
+                structureToDeployUnit = m_Player->getPrimaryStructureForStructureType(structureTypeByItem);
+                if (structureToDeployUnit < 0) {
+                    // find any structure of type (regardless if we can deploy or not)
+                    for (int structureId = 0; structureId < MAX_STRUCTURES; structureId++) {
+                        cAbstractStructure *pStructure = structure[structureId];
+                        if (pStructure &&
+                            pStructure->isValid() &&
+                            pStructure->belongsTo(m_Player->getId()) &&
+                            pStructure->getType() == structureTypeByItem) {
+                            structureToDeployUnit = structureId;
+                            break;
+                        }
+                    }
+                }
+
+                int cellToDeploy = structure[structureToDeployUnit]->getCell();
+                cAbstractStructure * pStructureToDeploy = structure[structureToDeployUnit];
+                if (pStructureToDeploy->getRallyPoint() > -1) {
+                    cellToDeploy = pStructureToDeploy->getRallyPoint();
+                }
+
+                REINFORCE(m_Player->getId(), item->getBuildId(), cellToDeploy, -1);
             }
         } else if (item->getBuildType() == SPECIAL) {
             buildingListUpdater->onBuildItemCompleted(item);
@@ -171,6 +201,9 @@ int cItemBuilder::getFreeSlot() {
 	return -1; // no free slot
 }
 
+/**
+ * Removes all references to items, because this itemBuilder does not *own* the items it is building
+ */
 void cItemBuilder::removeAllItems() {
 	for (int i =0 ; i < MAX_ITEMS; i++) {
 		removeItemFromList(i);
@@ -296,7 +329,8 @@ void cItemBuilder::removeItemFromList(cBuildingListItem *item) {
 }
 
 /**
- * Remove item from list. This does do any delete operation, it merely sets the pointer to NULL
+ * Remove item from list. This does do any delete operation, it merely sets the pointer to NULL. This is because
+ * the item builder does not own any of the items being built.
  *
  * @param position
  */
@@ -305,7 +339,7 @@ void cItemBuilder::removeItemFromList(int position) {
 	assert(position < MAX_ICONS);
 
 	// remove
-	items[position] = NULL;
+	items[position] = nullptr;
 	timers[position] = 0;
 }
 

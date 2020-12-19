@@ -1,9 +1,9 @@
 #include "../include/d2tmh.h"
 
-cDrawManager::cDrawManager(const cPlayer & thePlayer) : m_Player(thePlayer) {
+cDrawManager::cDrawManager(cPlayer * thePlayer) : m_Player(thePlayer) {
 	assert(&thePlayer);
 	creditsDrawer = new CreditsDrawer(thePlayer);
-	sidebarDrawer = new cSideBarDrawer();
+	sidebarDrawer = new cSideBarDrawer(thePlayer);
 	orderDrawer = new cOrderDrawer();
 	mapDrawer = new cMapDrawer(&map, thePlayer, mapCamera);
 	miniMapDrawer = new cMiniMapDrawer(&map, thePlayer, mapCamera);
@@ -119,13 +119,13 @@ void cDrawManager::drawRallyPoint() {
 }
 
 void cDrawManager::drawSidebar() {
-	sidebarDrawer->drawSideBar(m_Player);
+    sidebarDrawer->draw();
 }
 
 void cDrawManager::drawStructurePlacing() {
     if (!game.bPlaceIt) return;
 
-    cBuildingListItem *itemToPlace = m_Player.getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
+    cBuildingListItem *itemToPlace = m_Player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
     if (itemToPlace == nullptr) return;
 
     assert(placeitDrawer);
@@ -144,7 +144,7 @@ void cDrawManager::drawMouse() {
 	assert(mouseDrawer);
     select_mouse_cursor(MOUSE_CURSOR_ALLEGRO);
 	mouseDrawer->draw();
-	cGameControlsContext *context = m_Player.getGameControlsContext();
+	cGameControlsContext *context = m_Player->getGameControlsContext();
 	if (context->shouldDrawToolTip()) {
 		mouseDrawer->drawToolTip();
 	}
