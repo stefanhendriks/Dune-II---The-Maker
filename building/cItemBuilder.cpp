@@ -16,22 +16,30 @@ cItemBuilder::~cItemBuilder() {
 int cItemBuilder::getTimerCap(cBuildingListItem *item) {
 	int iTimerCap = 35; // was 35 = ORIGINAL
 
-	// when m_Player has low power, produce twice as slow
-	if (m_Player->bEnoughPower() == false) {
-		iTimerCap *= 6; // make painful
-	} else {
-		if (item->getBuildType() == UNIT) {
-			// the given unit will get out of a specific structure. This type
-			// is within the units properties.
-			int structureTypeItLeavesFrom = units[item->getBuildId()].structureTypeItLeavesFrom;
-			if (structureTypeItLeavesFrom > -1) {
-				iTimerCap /= (1+(m_Player->getAmountOfStructuresForType(structureTypeItLeavesFrom) / 2));
-			}
-		}
-	}
+    // when m_Player has low power, produce twice as slow
+    if (item->getBuildType() == UNIT) {
+        // the given unit will get out of a specific structure. This type
+        // is within the units properties.
+        int structureTypeItLeavesFrom = units[item->getBuildId()].structureTypeItLeavesFrom;
+        int structureCount = m_Player->getAmountOfStructuresForType(structureTypeItLeavesFrom);
+        if (structureCount > 1) {
+            iTimerCap /= structureCount;
+        }
+    } else if (item->getBuildType() == STRUCTURE) {
+        // the given unit will get out of a specific structure. This type
+        // is within the units properties.
+        int structureCount = m_Player->getAmountOfStructuresForType(CONSTYARD);
+        if (structureCount > 1) {
+            iTimerCap /= structureCount;
+        }
+    }
 
-	cPlayerDifficultySettings *difficultySettings = m_Player->getDifficultySettings();
-	iTimerCap = difficultySettings->getBuildSpeed(iTimerCap);
+    cPlayerDifficultySettings *difficultySettings = m_Player->getDifficultySettings();
+    iTimerCap = difficultySettings->getBuildSpeed(iTimerCap);
+
+    if (!m_Player->bEnoughPower()) {
+        iTimerCap *= 6; // make painful
+    }
 
 	return iTimerCap;
 }

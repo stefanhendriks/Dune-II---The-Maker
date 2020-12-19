@@ -166,43 +166,51 @@ void cAIPlayer::think_building() {
 		when building completed, search for a spot and place it!
 	*/
     cPlayer &cPlayer = player[ID];
-    for (int i=0; i < MAX_STRUCTURETYPES; i++) {
-		if (iBuildingStructure[i] > -1) {
+    for (int structureType=0; structureType < MAX_STRUCTURETYPES; structureType++) {
+		if (iBuildingStructure[structureType] > -1) {
 			int iTimerCap=35; // was 35
 
-			// the more constyards
-			iTimerCap /= (1+(cPlayer.getAmountOfStructuresForType(CONSTYARD) / 2));
+			int structureCount = cPlayer.getAmountOfStructuresForType(CONSTYARD);
+//			char msg[255];
+//			sprintf(msg, "AI [%d] - StructureCount for CONSTYARD = %d", ID, structureCount);
+//			logbook(msg);
 
-			TIMER_BuildStructure[i]++;
-
-			if (TIMER_BuildStructure[i] > iTimerCap)
-			{
-				iBuildingStructure[i]++;
-				TIMER_BuildStructure[i]=0;
+			if (structureCount > 0) {
+                iTimerCap /= structureCount;
+			} else {
+			    // no more const yards, abort construction
+                iBuildingStructure[structureType]=-1;
+                TIMER_BuildStructure[structureType]=-1;
+                continue;
 			}
 
-			if (iBuildingStructure[i] >= structures[i].build_time)
-			{
-				// find place to place structure
-				if (game.bSkirmish)
-				{
-					int iCll=iPlaceStructureCell(i);
+            cPlayerDifficultySettings *difficultySettings = cPlayer.getDifficultySettings();
+            iTimerCap = difficultySettings->getBuildSpeed(iTimerCap);
 
-					if (iCll > -1)
-					{
-						iBuildingStructure[i]=-1;
-						TIMER_BuildStructure[i]=-1;
-						cStructureFactory::getInstance()->createStructure(iCll, i, ID, 100);
-					}
-					else
-					{
+			TIMER_BuildStructure[structureType]++;
+
+            if (TIMER_BuildStructure[structureType] > iTimerCap) {
+                iBuildingStructure[structureType]++;
+                TIMER_BuildStructure[structureType] = 0;
+            }
+
+            if (iBuildingStructure[structureType] >= structures[structureType].build_time) {
+				// find place to place structure
+                if (game.bSkirmish) {
+					int iCll= findCellToPlaceStructure(structureType);
+
+                    iBuildingStructure[structureType]=-1;
+                    TIMER_BuildStructure[structureType]=-1;
+
+                    if (iCll > -1) {
+						cStructureFactory::getInstance()->createStructure(iCll, structureType, ID, 100);
+                    } else {
 						// cannot place structure now, this sucks big time. return money
-						iBuildingStructure[i]=-1;
-						TIMER_BuildStructure[i]=0;
-                        cPlayer.credits+= structures[i].cost;
+                        cPlayer.credits+= structures[structureType].cost;
 					}
 				}
 			}
+
 			// now break the loop, as we may only do one building at a time!
 			break;
 		}
@@ -211,91 +219,97 @@ void cAIPlayer::think_building() {
 	/*
 		unit building ---> TODO: use the itemBuilder logic instead, this is duplicate logic
 	*/
-    for (int i=0; i < MAX_UNITTYPES; i++) {
-        if (iBuildingUnit[i] > -1) {
-            int iStrucType = AI_STRUCTYPE(i);
+    for (int unitType=0; unitType < MAX_UNITTYPES; unitType++) {
+        if (iBuildingUnit[unitType] > -1) {
+            int iStrucType = AI_STRUCTYPE(unitType);
 
-            TIMER_BuildUnit[i]++;
+            TIMER_BuildUnit[unitType]++;
 
             int iTimerCap=35;
+            int structureCount = cPlayer.getAmountOfStructuresForType(iStrucType);
+//            char msg[255];
+//            sprintf(msg, "AI [%d] - StructureCount for %s = %d", ID, structures[iStrucType].name, structureCount);
+//            logbook(msg);
 
-            iTimerCap /= (1+(cPlayer.getAmountOfStructuresForType(iStrucType) / 2));
-
-            cPlayerDifficultySettings * difficultySettings = cPlayer.getDifficultySettings();
-			iTimerCap = difficultySettings->getBuildSpeed(iTimerCap);
-
-            if (TIMER_BuildUnit[i] > iTimerCap) {
-                iBuildingUnit[i]++;
-                TIMER_BuildUnit[i]=0; // set to 0 again
+            if (structureCount > 0) {
+                iTimerCap /= structureCount;
+            } else {
+                // structure got destroyed while building!
+                iBuildingUnit[unitType] = -1;
+                TIMER_BuildUnit[unitType]=0;
+                continue;
             }
 
-            if (iBuildingUnit[i] >= units[i].build_time) {
-            //logbook("DONE BUILDING");
+            cPlayerDifficultySettings *difficultySettings = cPlayer.getDifficultySettings();
+            iTimerCap = difficultySettings->getBuildSpeed(iTimerCap);
 
-            // produce now
-            int iStr = cPlayer.getPrimaryStructureForStructureType(iStrucType);
-
-            // no primary building yet, assign one
-            if (iStr < 0) {
-            	// TODO: remove/rewrite! This has nothing to do with primary stuff and such..
-            	iStr = structureUtils.findStructureToDeployUnit(&cPlayer, iStrucType);
+            if (TIMER_BuildUnit[unitType] > iTimerCap) {
+                iBuildingUnit[unitType]++;
+                TIMER_BuildUnit[unitType]=0; // set to 0 again
             }
 
-            if (iStr > -1) {
-                int iProducedUnit=-1;
+            if (iBuildingUnit[unitType] >= units[unitType].build_time) {
+                //logbook("DONE BUILDING");
 
-                cAbstractStructure *pStructure = structure[iStr];
-                if (pStructure && pStructure->isValid())
-                {
-                    int cellAroundStructure = pStructure->getNonOccupiedCellAroundStructure();
-                    if (cellAroundStructure > -1) {
-						int iSpot = cellAroundStructure;
-						cPlayer.setPrimaryBuildingForStructureType(iStrucType, iStr);
-						pStructure->setAnimating(true); // animate
-						iProducedUnit=UNIT_CREATE(iSpot, i, ID, false);
-					} else {
-						int iNewStr = structureUtils.findStructureToDeployUnit(&cPlayer, iStrucType);
+                // produce now
+                int iStr = cPlayer.getPrimaryStructureForStructureType(iStrucType);
 
-                        // assign new primary
-                        if (iNewStr != iStr && iNewStr > -1) {
-                            int iSpot = structure[iNewStr]->getNonOccupiedCellAroundStructure();
-                            cPlayer.setPrimaryBuildingForStructureType(iStrucType, iNewStr);
-                            structure[iNewStr]->setAnimating(true); // animate
-                            iProducedUnit = UNIT_CREATE(iSpot, i, ID, false);
+                // no primary building yet, assign one
+                if (iStr < 0) {
+                    // TODO: remove/rewrite! This has nothing to do with primary stuff and such..
+                    iStr = structureUtils.findStructureToDeployUnit(&cPlayer, iStrucType);
+                }
+
+                if (iStr > -1) {
+                    int iProducedUnit = -1;
+
+                    cAbstractStructure *pStructure = structure[iStr];
+                    if (pStructure && pStructure->isValid()) {
+                        int cellAroundStructure = pStructure->getNonOccupiedCellAroundStructure();
+                        if (cellAroundStructure > -1) {
+                            int iSpot = cellAroundStructure;
+                            cPlayer.setPrimaryBuildingForStructureType(iStrucType, iStr);
+                            pStructure->setAnimating(true); // animate
+                            iProducedUnit = UNIT_CREATE(iSpot, unitType, ID, false);
                         } else {
-                            // nothing found, deliver the unit as is.
+                            int iNewStr = structureUtils.findStructureToDeployUnit(&cPlayer, iStrucType);
+
+                            // assign new primary
+                            if (iNewStr != iStr && iNewStr > -1) {
+                                int iSpot = structure[iNewStr]->getNonOccupiedCellAroundStructure();
+                                cPlayer.setPrimaryBuildingForStructureType(iStrucType, iNewStr);
+                                structure[iNewStr]->setAnimating(true); // animate
+                                iProducedUnit = UNIT_CREATE(iSpot, unitType, ID, false);
+                            } else {
+                                // nothing found, deliver the unit as is.
+                            }
                         }
-					}
-                }
-                else
-                {
-                    cPlayer.setPrimaryBuildingForStructureType(iStrucType, -1);
-                }
+                    } else {
+                        cPlayer.setPrimaryBuildingForStructureType(iStrucType, -1);
+                    }
 
-                // produce
-                iBuildingUnit[i] = -1;
+                    // produce
+                    iBuildingUnit[unitType] = -1;
 
-                if (iProducedUnit > -1) {
-                    // Assign to team (for AI attack purposes)
-                    unit[iProducedUnit].iGroup = rnd(3) + 1;
+                    if (iProducedUnit > -1) {
+                        // Assign to team (for AI attack purposes)
+                        unit[iProducedUnit].iGroup = rnd(3) + 1;
+                    }
+                } else {
+                    logbook("No primary building");
+                    // deliver unit by carryall
+                    for (int s = 0; s < MAX_STRUCTURES; s++) {
+                        if (structure[s])
+                            if (structure[s]->getOwner() == ID)
+                                if (structure[s]->getType() == iStrucType) {
+                                    REINFORCE(ID, unitType, structure[s]->getCell(), -1);
+                                }
+                    }
+
+                    // produce
+                    iBuildingUnit[unitType] = -1;
                 }
             }
-			else
-			{
-			    logbook("No primary building");
-				// deliver unit by carryall
-				for (int s=0; s < MAX_STRUCTURES; s++) {
-					if (structure[s])
-						if (structure[s]->getOwner() == ID)
-							if (structure[s]->getType() == iStrucType) {
-								REINFORCE(ID, i, structure[s]->getCell(), -1);
-							}
-				}
-
-				// produce
-                iBuildingUnit[i] = -1;
-			}
-        }
 
         }
     }
@@ -381,7 +395,7 @@ void cAIPlayer::think() {
         return; // AI is not human / skip
     }
 
-    // think about building stuff
+    // think about building stuff (yes this is before the timer_think stuff!)
     think_building();
 
     // not time yet to think
@@ -1021,28 +1035,26 @@ void cAIPlayer::think_worm() {
 /////////////////////////////////////////////////
 
 
+/**
+ * Returns what kind of structure will build this unit type
+ * @param iUnitType
+ * @return
+ */
 int AI_STRUCTYPE(int iUnitType) {
-    // CHECK FOR BUILDING
-    int iStrucType=HEAVYFACTORY;     // what do we need to build this unit?
-
     // Default = heavyfactory, so do a check if its NOT.
 
     // light vehicles
-    if (iUnitType == TRIKE || iUnitType == RAIDER || iUnitType == QUAD)
-        iStrucType =LIGHTFACTORY;
+    if (iUnitType == TRIKE || iUnitType == RAIDER || iUnitType == QUAD) return LIGHTFACTORY;
 
     // soldiers and troopers
-    if (iUnitType == INFANTRY || iUnitType == SOLDIER)
-        iStrucType = BARRACKS;
+    if (iUnitType == INFANTRY || iUnitType == SOLDIER) return BARRACKS;
 
-    if (iUnitType == TROOPER || iUnitType == TROOPERS)
-        iStrucType = WOR;
+    if (iUnitType == TROOPER || iUnitType == TROOPERS) return WOR;
 
     // airborn stuff
-    if (iUnitType == CARRYALL || iUnitType == ORNITHOPTER)
-        iStrucType = HIGHTECH;
+    if (iUnitType == CARRYALL || iUnitType == ORNITHOPTER) return HIGHTECH;
 
-    return iStrucType;
+    return HEAVYFACTORY;
 }
 
 // Helper functions to keep fair play:
@@ -1169,8 +1181,7 @@ void cAIPlayer::think_repair_structure(cAbstractStructure *struc)
 	}
 }
 
-int cAIPlayer::iPlaceStructureCell(int iType)
-{
+int cAIPlayer::findCellToPlaceStructure(int iType) {
 	// loop through all structures, and try to place structure
 	// next to them:
 	//         ww
@@ -1213,11 +1224,9 @@ int cAIPlayer::iPlaceStructureCell(int iType)
 
 		// valid
         cAbstractStructure *pStructure = structure[i];
-        if (pStructure)
-		{
+        if (pStructure) {
 			// same owner
-			if (pStructure->getOwner() == ID)
-			{
+            if (pStructure->getOwner() == ID) {
 				// scan around
 				int iStartX=iCellGiveX(pStructure->getCell());
 				int iStartY=iCellGiveY(pStructure->getCell());

@@ -17,9 +17,9 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 	int house = m_Player->getHouse();
 	int techLevel = m_Player->getTechLevel();
 
-    char msg[255];
-    sprintf(msg, "onStructureCreated - for player [%d], structureType [%d], techlevel [%d], house [%d]", m_Player->getId(), structureType, techLevel, house);
-    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureCreated", msg);
+//    char msg[255];
+//    sprintf(msg, "onStructureCreated - for player [%d], structureType [%d], techlevel [%d], house [%d]", m_Player->getId(), structureType, techLevel, house);
+//    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureCreated", msg);
 
 	assert(listConstYard);
 	assert(listFootUnits);
@@ -447,7 +447,6 @@ void cBuildingListUpdater::onBuildItemCancelled(cBuildingListItem *pItem) {
 }
 
 void cBuildingListUpdater::onBuildItemStarted(cBuildingListItem *pItem) {
-    cLogger::getInstance()->logCommentLine("onBuildItemStarted - start");
     if (pItem == nullptr) return;
     if (pItem->isTypeUpgrade()) {
         onUpgradeStarted(pItem);
@@ -458,8 +457,6 @@ void cBuildingListUpdater::onBuildItemStarted(cBuildingListItem *pItem) {
     cSideBar *sideBar = m_Player->getSideBar();
     cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
     listUpgrades->setStatusPendingBuilding(pItem->getSubList());
-
-    cLogger::getInstance()->logCommentLine("onBuildItemStarted - end");
 }
 
 /**

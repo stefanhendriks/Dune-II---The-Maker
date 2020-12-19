@@ -61,7 +61,7 @@ public:
 	void BUILD_STRUCTURE(int iStrucType);
     void BUILD_UNIT(int iUnitType);
 
-	int  iPlaceStructureCell(int iType);
+	int  findCellToPlaceStructure(int iType);
 };
 
 
