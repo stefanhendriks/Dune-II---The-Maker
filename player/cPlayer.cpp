@@ -366,7 +366,7 @@ bool cPlayer::hasRadarAndEnoughPower() const {
  * @return
  */
 int cPlayer::getAmountOfStructuresForType(int structureType) const {
-    if (structureType < 0 || structureType >= RTURRET) return -1;
+    if (structureType < 0 || structureType > RTURRET) return -1;
 	return iStructures[structureType];
 }
 
