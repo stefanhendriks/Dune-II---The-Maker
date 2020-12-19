@@ -11,6 +11,7 @@
   */
 
 #include "../include/d2tmh.h"
+#include "cPlayer.h"
 
 
 cPlayer::cPlayer() {
@@ -358,9 +359,14 @@ bool cPlayer::hasRadarAndEnoughPower() const {
     return getAmountOfStructuresForType(RADAR) > 0 && bEnoughPower();
 }
 
+/**
+ * This function returns the amount for the given structure type. If structureType param is invalid, then it will
+ * return -1
+ * @param structureType
+ * @return
+ */
 int cPlayer::getAmountOfStructuresForType(int structureType) const {
-	assert(structureType >= 0);
-	assert(structureType <= RTURRET);
+    if (structureType < 0 || structureType >= RTURRET) return -1;
 	return iStructures[structureType];
 }
 
@@ -498,4 +504,25 @@ eHouseBitFlag cPlayer::getHouseBitFlag() {
         default:
             return eHouseBitFlag::Unknown;
     }
+}
+
+void cPlayer::increaseStructureAmount(int structureType) {
+    if (structureType < 0) return;
+    if (structureType >= MAX_STRUCTURETYPES) return;
+    iStructures[structureType]++;
+
+    char msg[255];
+    sprintf(msg, "Player[%d] - increaseStructureAmount result: iStructures[%d(=%s)]=%d", id, structureType, structures[structureType].name, iStructures[structureType]);
+    logbook(msg);
+}
+
+void cPlayer::decreaseStructureAmount(int structureType) {
+    if (structureType < 0) return;
+    if (structureType >= MAX_STRUCTURETYPES) return;
+
+    iStructures[structureType]--;
+
+    char msg[255];
+    sprintf(msg, "Player[%d] - decreaseStructureAmount result: iStructures[%d(=%s)]=%d", id, structureType, structures[structureType].name, iStructures[structureType]);
+    logbook(msg);
 }

@@ -109,26 +109,8 @@ class cPlayer {
 
         bool hasAtleastOneStructure(int structureType) const;
 
-        void decreaseStructureAmount(int structureType) {
-            if (structureType < 0) return;
-            if (structureType >= MAX_STRUCTURETYPES) return;
-
-            iStructures[structureType]--;
-
-            char msg[255];
-            sprintf(msg, "Player[%d] - decreaseStructureAmount result: iStructures[%d]=%d", id, structureType, iStructures[structureType]);
-            logbook(msg);
-        }
-
-        void increaseStructureAmount(int structureType) {
-            if (structureType < 0) return;
-            if (structureType >= MAX_STRUCTURETYPES) return;
-            iStructures[structureType]++;
-
-            char msg[255];
-            sprintf(msg, "Player[%d] - increaseStructureAmount result: iStructures[%d]=%d", id, structureType, iStructures[structureType]);
-            logbook(msg);
-        }
+        void decreaseStructureAmount(int structureType);
+        void increaseStructureAmount(int structureType);
 
         bool hasEnoughCreditsFor(float requestedAmount) const;
 
