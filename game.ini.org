@@ -24,6 +24,13 @@
 ;	Everything is case sensitive
 ;
 
+[SETTINGS]
+#Uncomment to hard set resolution, keep commented to use auto-detection
+ScreenWidth=800
+ScreenHeight=600
+#this flag is not yet supported
+MP3Music=false
+
 [UNITS]
 ; ========================================================
 ; Unit types
