@@ -2,13 +2,13 @@ changelog:
   contributors:
     title: "Contributors"
   sections:
-    - title: "New features"
-      labels: ["feature", "improvement"]
-    - title: "Gameplay"
-      labels: ["balancing"]
-    - title: "Experimental"
-      labels: ["experimental"]
-    - title: "Bug fixes"
-      labels: ["bug"]
-    - title: "Technical"
-      labels: ["refactoring", "technical"]
+  - title: "New features"
+    labels: ["feature", "improvement"]
+  - title: "Gameplay"
+    labels: ["balancing"]
+  - title: "Experimental"
+    labels: ["experimental"]
+  - title: "Bug fixes"
+    labels: ["bug"]
+  - title: "Technical"
+    labels: ["refactoring", "technical"]
