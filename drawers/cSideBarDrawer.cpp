@@ -87,10 +87,8 @@ void cSideBarDrawer::drawHouseGui() {
 void cSideBarDrawer::drawBuildingLists() {
 	// draw the sidebar itself (the backgrounds, borders, etc)
 
-	if (sidebar == nullptr) {
-	    // !??! sidebar is not set earlier...r
-        sidebar = m_Player->getSideBar();
-	}
+    // !??! sidebar is not set earlier...but can be re-set, so keep doing this :(
+    sidebar = m_Player->getSideBar();
 
 	// draw the buildlist icons
 	int selectedListId = sidebar->getSelectedListID();
