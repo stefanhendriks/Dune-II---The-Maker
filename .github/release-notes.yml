@@ -5,10 +5,10 @@ changelog:
     - title: "New features"
       labels: ["feature", "improvement"]
     - title: "Gameplay"
-      labels: [ "balancing" ]
+      labels: ["balancing"]
     - title: "Experimental"
-      labels: [ "experimental" ]
+      labels: ["experimental"]
     - title: "Bug fixes"
       labels: ["bug"]
     - title: "Technical"
-      labels: [ "refactoring", "technical" ]
+      labels: ["refactoring", "technical"]
