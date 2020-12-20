@@ -14,3 +14,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OUTPUT_FOLDER: temp_release_notes
           USE_MILESTONE_TITLE: "true"
+      - name: Upload Release Notes to Wiki
+        uses: docker://decathlon/wiki-page-creator-action:2.0.1
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          ACTION_MAIL: stefan@fundynamic.com
+          ACTION_NAME: stefanhendriks
+          OWNER: stefanhendriks
+          REPO_NAME: Dune-II---The-Maker
