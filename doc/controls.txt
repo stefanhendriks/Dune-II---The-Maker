@@ -1,11 +1,33 @@
 Controls & keys:
 ----------------
 
-LEFT  mouse click -> action
-RIGHT mouse click -> deselect / cancel
+LEFT  mouse button -> action
+RIGHT mouse button -> deselect / cancel
 
 * use the drag-box to select groups of units
 * Move mouse around the borders of the screen to scroll around the map
+* Hold right mouse button to drag viewport
+
+GAME KEYS:
+----------
+
+ESC			- quits instantly! (no confirmation asked)
+
+Arrow keys	- scroll through the map (is slow)
+
+F11			- Take screenshot
+
+Mouse wheel - Map zooming. Press Z to restore.
+
+R			- hold, hover above structures. Mouse will turn into repair icon when structure
+			  can be repaired.
+F			- Show FPS
+D		    - When harvester selected, it will return to refinery (carryall will pickup if possible)
+SHIFT		- Hold and click on other units to add them to your selection
+H			- Set screen to Construction Yard / Start location
+CTRL-<NR>	- Create group of selected units (till nr 5)
+<number>	- Select created group
+Z           - Restore zoom factor.
 
 
 DEBUG MODE KEYS
@@ -18,7 +40,7 @@ keys then to perform the specific given action:
 F1			-	Jump to mission 9 of your selected house
 F2			-	Win mission
 F3			-	Lose mission
-F4			-	Instant 9999 credits
+F4			-	Instant 299999 credits (this ALSO gives AI player this much credits)
 F5			-	Reveal all shroud
 
 Note:
@@ -29,24 +51,3 @@ D		- Show all non-passable cells (keep key pressed)
 				   BLUE= IMPASSABLE UNIT
 				   GREEN=IMPASSABLE STRUCTURE
 D		- Show ID's of unit/Structures (keep key pressed)
-
-
-GAME KEYS:
-----------
-
-Arrows		- scroll through the map
-ESC			- quit
-F11			- Take screenshot
-
-Mouse wheel - Scroll through iconlist
-R			- hold, hover above structures. Mouse will turn into repair icon when structure
-			  can be repaired.
-F			- Show FPS
-D		    - When harvester selected, it will return to refinery (carryall will pickup if possible)
-SHIFT		- Hold and click on other units to add them to your selection
-H			- Set screen to Construction Yard / Start location
-CTRL-<NR>	- Create group of selected units (till nr 5)
-<number>	- Select created group
-U			- Hotkey for Upgrading
-B			- Build last built icon from selected list
-P			- Place built structure.
