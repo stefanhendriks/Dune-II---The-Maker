@@ -83,22 +83,19 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
     // Fix up house mixtures
     cPlayer &cPlayer = player[ID];
 
-    if (cPlayer.getHouse() == HARKONNEN || cPlayer.getHouse() == SARDAUKAR)
-    {
+    if (cPlayer.getHouse() == HARKONNEN || cPlayer.getHouse() == SARDAUKAR) {
         if (iUnitType == INFANTRY) iUnitType = TROOPERS;
         if (iUnitType == SOLDIER) iUnitType = TROOPER;
         if (iUnitType == TRIKE) iUnitType = QUAD;
     }
 
-	// In mission 9 there are only WOR's, so make a special hack hack for that ;)
-	if (game.iMission >= 8)
-	{
+    // In mission 9 there are only WOR's, so make a special hack hack for that ;)
+    if (game.iMission >= 8) {
         if (iUnitType == INFANTRY) iUnitType = TROOPERS;
         if (iUnitType == SOLDIER) iUnitType = TROOPER;
-	}
+    }
 
-    if (cPlayer.getHouse() == ORDOS)
-    {
+    if (cPlayer.getHouse() == ORDOS) {
         if (iUnitType == TRIKE) iUnitType = RAIDER;
     }
 
@@ -108,15 +105,15 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
         return; // do not go further
 
     // when building a tank, etc, check if we do not already build
-    bool bAlreadyBuilding=false;
-    for (int i=0; i < MAX_UNITTYPES; i++) {
+    bool bAlreadyBuilding = false;
+    for (int i = 0; i < MAX_UNITTYPES; i++) {
 
         // when building a quad
         if (iUnitType == QUAD || iUnitType == TRIKE || iUnitType == RAIDER) {
             // the same
             if (i == iUnitType)
                 if (iBuildingUnit[i] > -1)
-                    bAlreadyBuilding=true;
+                    bAlreadyBuilding = true;
         }
 
         // when building a tank or something
@@ -125,14 +122,14 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
 
             if (i == iUnitType)
                 if (iBuildingUnit[i] > -1)
-                    bAlreadyBuilding=true;
+                    bAlreadyBuilding = true;
         }
 
         // when building a carryall
         if (iUnitType == CARRYALL || iUnitType == ORNITHOPTER) {
             if (i == iUnitType)
                 if (iBuildingUnit[i] > -1)
-                    bAlreadyBuilding=true;
+                    bAlreadyBuilding = true;
         }
     }
 
@@ -149,8 +146,10 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
 //            char msg[255];
 //            sprintf(msg, "Attempted to build unit %s but something similar is already being built")
             std::string unitName = units[iUnitType].name;
-            std::string message = "Attempted to build unit " + unitName + " but something similar is already being built";
-            cLogger::getInstance()->log(eLogLevel::LOG_TRACE, eLogComponent::COMP_AI, "BUILD_UNIT", message, eLogOutcome::OUTC_FAILED, ID, cPlayer.getHouse());
+            std::string message =
+                    "Attempted to build unit " + unitName + " but something similar is already being built";
+            cLogger::getInstance()->log(eLogLevel::LOG_TRACE, eLogComponent::COMP_AI, "BUILD_UNIT", message,
+                                        eLogOutcome::OUTC_FAILED, ID, cPlayer.getHouse());
         }
     }
 }
