@@ -22,3 +22,4 @@ jobs:
           ACTION_NAME: stefanhendriks
           OWNER: stefanhendriks
           REPO_NAME: Dune-II---The-Maker
+          MD_FOLDER: temp_release_notes
