@@ -1,8 +1,10 @@
 Dune II - The Maker
 ===================
 Contact	: stefanhen83@gmail.com
-Url	#1	: http://dune2themaker.fundynamic.com
-Url	#2	: http://arrakis.dune2k.com
+Url	#1	: http://www.dune2themaker.com
+Url	#2	: http://dune2themaker.fundynamic.com
+Github  : https://github.com/stefanhendriks/Dune-II---The-Maker
+Forums  : https://forum.dune2k.com/forum/19-arrakis/
 
 ==========
 DISCLAIMER
@@ -12,26 +14,28 @@ SOFTWARE (DUNE 2 - THE BUILDING FOR A DYNASTY / DUNE 2 - THE BATTLE FOR ARRAKIS)
 IN ORDER TO USE THIS SOFTWARE. YOU UNDERSTAND THAT THIS PROGRAM IS NOT DUNE 2.
 
 IF YOU DO NOT OWN DUNE 2 (ONE OF ITS TITLES, AS DESCRIBED ABOVE) YOU MUST DELETE
-THIS PROGRAM FROM YOUR COMPUTER IMMIDIATLY.
+THIS PROGRAM FROM YOUR COMPUTER IMMEDIATELY.
 
 USE AT YOUR OWN RISK.
 
 ===================
 Version information
 ===================
-Version number	: 0.4.2
-Status			: UNSTABLE
+Version number	: 0.5.0
+
 
 ===========
 Description
 ===========
+This game is a tribute and a Dune 2 remake that is more up to date with the 
+current standards yet still keeps the 'nostalgia' (as far as that can go with remakes).
 
-* Game that must be as close to DUNE 2 as possible, with some enhanced features, 
-  but enormous nostalgic entertainment.
 
-Features:
-* 640x480 screen resolution
- - Bit depth is 16 or 32 bit, windowed mode = desktop bit depth, full screen = 16 bit.
+
+========
+Features
+========
+* 800x600 or higher screen resolution
 * Smooth gameplay
   - C&C like controls
   - "point and click" gameplay
@@ -48,22 +52,29 @@ Features:
   - enhanced terrain
   - enhanced shroud
   - drawn graphics resemble size of original dune 2 (so it looks 'big' , yes, but better)  
-* Able to load any dune 2 scenario file
-  - Replay the original Dune 2 campaign
-  - spice blooms
-  - spice fields (determined in scenario file)
-  - structures
-  - units
-  - player settings (credits, quota, etc)
-  - reinforcements
+* Able play the original Dune 2 campaign
 * Able to show the strategy/campaign map, use similiar animations and has the same
   campaigns as in the original dune 2
 * Uses the dune 2 tech-level tree
 * Ability to generate dune 2 seed maps
 * Uses all original dune 2 (english) mission briefings
 * Little animation 'system' for nice effects (fading, explosions, smoke, etc)
-* Optimized, but still nostalgic, DUNE II GUI.
+* Ability to play Skirmish games (4 players max)
+   - note, max map size is 64x64
+   - with random map generator
+   - ability to create your own maps (see skirmish folder)
+   
 
+
+==========
+CHANGELOG:
+==========
+For the list of changes, see github release notes.
+
+==========
+TO-DO LIST
+==========
+See Github issues.
 
 ===================
 System Requirements
@@ -76,6 +87,10 @@ run the program.
 There are good experiences running this game within Wine on Linux. Those who
 do not use Windows, but still want to try out the game, you could give Wine
 a shot.
+
+FYI: There is a Github ticket for working on Linux support; I dont use Linux
+so if anyone wants to help with this contact me.
+
 
 ==================================
 BALACING NOTES / UNIT DESCRIPTIONS
@@ -97,7 +112,6 @@ Infantry/Soldier:
 These units have little to no effect on bigger units, but they are the best weapon against the Trooper
 and Troopers. Having no soldiers around your base, makes it a lot tougher to defend it. Even trikes
 and Quads will have a more harder time to take out Trooper/Troopers then the Infantry/Soldier.
-
 
 Quad/Trike/Raider:
 ------------------
@@ -135,6 +149,7 @@ The Deviator acts like a normal Rocket Launcher. However, by firing its nerve ga
 any unit to its own side. (Unline Dune 2, the units will STAY that way and not be converted back).
 The unit is fast, light-weighted and has little armor; thus easily to destroy. However, do NOT
 underestimate the power and danger of this unit!
+
 
 =======
 CREDITS
@@ -228,50 +243,3 @@ Special Thanks To
 						
 European Cover Design	
 						Andrew Wright
-
-==========
-TO-DO LIST
-==========
-* Make tech-tree 100% accurate
-* Balance game more (game.ini)
-* Mentat for 'advice' and unit descriptions
-* Eventually clean up code (source code is available at google code)
-
-New features:
-* Skirmish (<- working on this)
-* Multiplayer
-* Options
-* Save/Load game
-
-==========
-CHANGELOG:
-==========
-A lot has changed 'under the hood'. This means that on the surface, you will not notice
-the hard work put into this release. Expectation is that next releases will get more new
-features and less fixes.
-
-FIXED:
-- Instantly upgrade complete bug fixed. (completely rewritten)
-- Sandorm able to squish infantry when going under infantry.
-- It is no longer possible to select airborn units with box-selecting.
-- animation fixes for structures (WOR/Barracks stopped animating after building unit)
-- animation fix for outpost
-- box selecting problem (needed to cover entire unit). Now only the center is required to select a unit.
-- Bug that would give higher/lower refund when declining order for starport (completely rewritten) 
-
-GAME BALANCING:
-- Harvester has more HP (300->450)
-- Troopers are made less effective
-
-NEW:
-- Dune 2 Seed map generator. Thanks to jpexs for completing the generator and making this possible!
-- "game" switch to load own ini file (ie, use d2tm.exe -game myinifile.ini)
-- 8 new skirmish maps
-
-CHANGED:
-- skirmish maps do not need to be MAP##.ini anymore, they can be named anything
-- Units are a bit more aggresive in 'defense' mode (for both AI as Human player)
-- the way sound is played in the game is rewritten, which allows more sounds to be played
-  at once
-- money gain/drain animation
-- AI gets slabs underneath buildings in the original dune2 missions
