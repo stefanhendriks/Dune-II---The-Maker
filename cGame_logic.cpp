@@ -142,6 +142,7 @@ void cGame::init() {
 // TODO: Bad smell (duplicate code)
 // initialize for missions
 void cGame::mission_init() {
+    mapCamera->resetZoom();
 
     iMusicVolume=128; // volume is 0...
 
