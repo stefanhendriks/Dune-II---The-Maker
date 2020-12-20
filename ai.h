@@ -13,7 +13,7 @@
 // Computer Opponent variables
 
 // helpers
-bool AI_UNITSTRUCTURETYPE(int iPlayer, int iUnitType);
+bool canAIBuildUnit(int iPlayer, int iUnitType);
 int AI_STRUCTYPE(int iUnitType);
 int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer);
 int AI_RANDOM_UNIT_TARGET(int iPlayer, int playerIndexToAttack);
@@ -62,6 +62,8 @@ public:
     void BUILD_UNIT(int iUnitType);
 
 	int  findCellToPlaceStructure(int iType);
+
+    bool isBuildingUnitType(int iUnitType) const;
 };
 
 
