@@ -99,44 +99,48 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
         if (iUnitType == TRIKE) iUnitType = RAIDER;
     }
 
-    bool bAllowed = AI_UNITSTRUCTURETYPE(ID, iUnitType);
+    bool bAllowed = canAIBuildUnit(ID, iUnitType);
 
-    if (bAllowed == false)
+    if (!bAllowed)
         return; // do not go further
 
-    // when building a tank, etc, check if we do not already build
-    bool bAlreadyBuilding = false;
-    for (int i = 0; i < MAX_UNITTYPES; i++) {
+    bool bAlreadyBuilding = isBuildingUnitType(iUnitType);
 
-        // when building a quad
-        if (iUnitType == QUAD || iUnitType == TRIKE || iUnitType == RAIDER) {
-            // the same
-            if (i == iUnitType)
-                if (iBuildingUnit[i] > -1)
-                    bAlreadyBuilding = true;
+    // the current unitType is not being built, check if similar types are being built
+    if (!bAlreadyBuilding) {
+        if (iUnitType == QUAD ||
+            iUnitType == TRIKE ||
+            iUnitType == RAIDER) {
+            bAlreadyBuilding =  isBuildingUnitType(QUAD) ||
+                                isBuildingUnitType(TRIKE) ||
+                                isBuildingUnitType(RAIDER);
         }
 
-        // when building a tank or something
-        if (iUnitType == TANK || iUnitType == LAUNCHER || iUnitType == SIEGETANK ||
-            iUnitType == SONICTANK || iUnitType == DEVASTATOR || iUnitType == HARVESTER) {
-
-            if (i == iUnitType)
-                if (iBuildingUnit[i] > -1)
-                    bAlreadyBuilding = true;
+        if (iUnitType == TANK ||
+            iUnitType == LAUNCHER ||
+            iUnitType == SIEGETANK ||
+            iUnitType == SONICTANK ||
+            iUnitType == DEVASTATOR ||
+            iUnitType == HARVESTER) {
+            bAlreadyBuilding =  isBuildingUnitType(TANK) ||
+                                isBuildingUnitType(LAUNCHER) ||
+                                isBuildingUnitType(SIEGETANK) ||
+                                isBuildingUnitType(SONICTANK) ||
+                                isBuildingUnitType(DEVASTATOR) ||
+                                isBuildingUnitType(HARVESTER);
         }
 
-        // when building a carryall
-        if (iUnitType == CARRYALL || iUnitType == ORNITHOPTER) {
-            if (i == iUnitType)
-                if (iBuildingUnit[i] > -1)
-                    bAlreadyBuilding = true;
+        if (iUnitType == CARRYALL ||
+            iUnitType == ORNITHOPTER) {
+            bAlreadyBuilding =  isBuildingUnitType(CARRYALL) ||
+                                isBuildingUnitType(ORNITHOPTER);
         }
     }
 
     if (!bAlreadyBuilding) {
         // Now build it
         iBuildingUnit[iUnitType] = 0;                  // start building!
-        cPlayer.credits -= units[iUnitType].cost; // pay for it
+        cPlayer.substractCredits(units[iUnitType].cost); // pay for it
         if (DEBUGGING) {
             logbook("Building UNIT: ");
             logbook(units[iUnitType].name);
@@ -153,6 +157,8 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
         }
     }
 }
+
+bool cAIPlayer::isBuildingUnitType(int iUnitType) const { return iBuildingUnit[iUnitType] > -1; }
 
 
 void cAIPlayer::think_building() {
@@ -1044,12 +1050,10 @@ int AI_STRUCTYPE(int iUnitType) {
     return HEAVYFACTORY;
 }
 
-// Helper functions to keep fair play:
-bool AI_UNITSTRUCTURETYPE(int iPlayer, int iUnitType) {
-    // This function will do a check what kind of structure is needed to build the unittype
-    // Basicly the function returns true when its valid to build the unittype, or false
-    // when its impossible (due no structure, money, etc)
-
+// This function will do a check what kind of structure is needed to build the unittype
+// Basicly the function returns true when its valid to build the unittype, or false
+// when its impossible (due no structure, money, etc)
+bool canAIBuildUnit(int iPlayer, int iUnitType) {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
 
@@ -1066,6 +1070,7 @@ bool AI_UNITSTRUCTURETYPE(int iPlayer, int iUnitType) {
     // Do the reality-check, do we have the building needed?
     if (!player[iPlayer].hasAtleastOneStructure(iStrucType))
         return false; // we do not have the building
+
 
     // WE MAY BUILD IT!
     return true;
