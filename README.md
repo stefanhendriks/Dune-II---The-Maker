@@ -17,7 +17,7 @@ It felt better to have the D2TM github point to the (almost) latest WIP version 
 
 ## Binaries
 You have various options:
-- Grab the latest package from Github
+- Grab the [latest release from Github](https://github.com/stefanhendriks/Dune-II---The-Maker/releases)
 - Grab a version from [D2TM's homepage](https://www.dune2themaker.com)
 - Compile this project yourself
 
