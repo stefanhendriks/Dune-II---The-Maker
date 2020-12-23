@@ -1,3 +1,5 @@
+[![Github All Releases](https://img.shields.io/github/downloads/stefanhendriks/Dune-II---The-Maker/total.svg)]()
+
 This project uses [Deleaker](https://www.deleaker.com/) to find memory leaks and more.
 
 Dune II - The Maker
