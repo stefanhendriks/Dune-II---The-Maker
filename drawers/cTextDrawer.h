@@ -48,7 +48,9 @@ class cTextDrawer {
 		void setApplyShadow(bool value) { applyShadow = value; }
 
 		int textLength(const char * msg);
+        int getFontHeight() const;
 
+        cRectangle * getAsRectangle(int x, int y, const char * msg);
 	protected:
 
 	private:

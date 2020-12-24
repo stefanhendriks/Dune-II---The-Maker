@@ -1,6 +1,6 @@
 /* Allegro datafile object indexes, produced by grabber v4.2.0, MSVC.s */
 /* Datafile: c:\projects\fundynamic\Dune-II---The-Maker\data\gfxinter.dat */
-/* Date: Mon Nov 23 22:22:12 2020 */
+/* Date: Wed Dec 23 17:28:15 2020 */
 /* Do not hand edit! */
 
 #define BMP_D2TM                         0        /* BMP  */
@@ -17,12 +17,12 @@
 #define BMP_GERALD_SIDEBAR_PIECE         11       /* BMP  */
 #define BMP_GERALD_TOP_BAR               12       /* BMP  */
 #define BMP_GERALD_TOPBAR_CREDITS        13       /* BMP  */
-#define BMP_HERALD                       14       /* BMP  */
-#define BMP_LOSING                       15       /* BMP  */
-#define BMP_MESSAGEBAR                   16       /* BMP  */
-#define BMP_SELECT_HOUSE_ATREIDES        17       /* BMP  */
-#define BMP_SELECT_HOUSE_HARKONNEN       18       /* BMP  */
-#define BMP_SELECT_HOUSE_ORDOS           19       /* BMP  */
+#define BMP_LOSING                       14       /* BMP  */
+#define BMP_MESSAGEBAR                   15       /* BMP  */
+#define BMP_SELECT_HOUSE_ATREIDES        16       /* BMP  */
+#define BMP_SELECT_HOUSE_HARKONNEN       17       /* BMP  */
+#define BMP_SELECT_HOUSE_ORDOS           18       /* BMP  */
+#define BMP_SELECT_YOUR_HOUSE            19       /* BMP  */
 #define BMP_UNKNOWNMAP                   20       /* BMP  */
 #define BMP_WINNING                      21       /* BMP  */
 #define BTN_ORDER                        22       /* BMP  */

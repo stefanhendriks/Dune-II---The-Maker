@@ -170,8 +170,13 @@ int cAllegroDrawer::getCenteredYPosForBitmap(BITMAP *bmp) {
 }
 
 void cAllegroDrawer::blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
-    // use :: so we use global scope Allegro blit
+    // use :: so we use global scope Allegro blitSprite
     ::blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
+}
+
+void cAllegroDrawer::blitSprite(BITMAP *src, BITMAP *dest, cRectangle *rectangle) {
+    if (rectangle == nullptr) return;
+    blit(src, dest, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
 }
 
 void cAllegroDrawer::drawRectangle(BITMAP *dest, cRectangle *pRectangle, int color) {
@@ -189,4 +194,8 @@ void cAllegroDrawer::drawRectangle(BITMAP *dest, int x, int y, int width, int he
 void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, cRectangle *pRectangle, int color) {
     if (pRectangle == nullptr) return;
     rectfill(dest, pRectangle->getX(), pRectangle->getY(), pRectangle->getEndX(), pRectangle->getEndY(), color);
+}
+
+cRectangle *cAllegroDrawer::fromBitmap(int x, int y, BITMAP *src) {
+    return new cRectangle(x, y, src->w, src->h);
 }

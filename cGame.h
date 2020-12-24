@@ -165,7 +165,7 @@ private:
 	void draw_mentat(int iType); // draw mentat type
 
     void setup_skirmish();  // set up a skirmish game
-	void house();		// house selection
+	void stateSelectHouse();		// house selection
 	void tellhouse();	// tell about the house
 	void mentat(int iType);		// mentat talking
 	void menu();		// main menu
