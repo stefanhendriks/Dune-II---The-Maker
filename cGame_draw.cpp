@@ -16,8 +16,7 @@
 #include "include/d2tmh.h"
 
 // Fading between menu items
-void cGame::FADE_OUT()
-{
+void cGame::FADE_OUT() {
     iFadeAction = 1; // fade out
     draw_sprite(bmp_fadeout, bmp_screen, 0, 0);
 }
@@ -32,14 +31,13 @@ void cGame::draw_movie(int iType)
     }
 }
 
-void cGame::losing()
-{
+// this shows the you have lost bmp at screen, after mouse press the mentat debriefing state will begin
+void cGame::losing() {
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, screen_x, screen_y);
 
-    draw_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
+    draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
-    if (cMouse::isLeftButtonClicked())
-    {
+    if (cMouse::isLeftButtonClicked()) {
         // OMG, MENTAT IS NOT HAPPY
         state = GAME_LOSEBRIEF;
 
@@ -48,23 +46,21 @@ void cGame::losing()
         }
 
         // PREPARE NEW MENTAT BABBLE
-        iMentatSpeak=-1;
+        iMentatSpeak = -1;
 
         // FADE OUT
         FADE_OUT();
     }
 }
 
-// winning animation
-void cGame::winning()
-{
+// this shows the you have won bmp at screen, after mouse press the mentat debriefing state will begin
+void cGame::winning() {
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, screen_x, screen_y);
 
-    draw_sprite(bmp_screen, (BITMAP *)gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
+    draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
-    if (cMouse::isLeftButtonClicked())
-    {
-        // SELECT YOUR NEXT CONQUEST
+    if (cMouse::isLeftButtonClicked()) {
+        // Mentat will be happy, after that enter "Select your next Conquest"
         state = GAME_WINBRIEF;
 
         if (bSkirmish) {
@@ -72,7 +68,7 @@ void cGame::winning()
         }
 
         // PREPARE NEW MENTAT BABBLE
-        iMentatSpeak=-1;
+        iMentatSpeak = -1;
 
 
         // FADE OUT

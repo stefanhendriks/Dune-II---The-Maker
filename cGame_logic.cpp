@@ -20,7 +20,6 @@
 #include <algorithm>
 #include <random>
 #include "include/d2tmh.h"
-#include "cGame.h"
 
 
 cGame::cGame() {
@@ -130,11 +129,9 @@ void cGame::init() {
 	TIMER_mentat_Speaking=-1;	// speaking = time
 	TIMER_mentat_Mouth=0;
 	TIMER_mentat_Eyes=0;
-	TIMER_mentat_Other=0;
 
 	iMentatMouth=3;			// frames	... (mouth)
 	iMentatEyes=3;				// ... for mentat ... (eyes)
-	iMentatOther=0;			// ... animations . (book/ring)
 
     mp3_music=NULL;
 }
@@ -224,43 +221,38 @@ void cGame::think_winlose() {
 
 
     // win by money quota
-    if (iWinQuota > 0)
-    {
-        if (player[0].credits >= iWinQuota)
-        {
-            // won!
-            bSucces=true;
+    if (iWinQuota > 0) {
+        if (player[HUMAN].credits >= iWinQuota) {
+            bSucces = true;
         }
-    }
-    else
-    {
+    } else {
         // determine if any player (except sandworm) is dead
-        bool bAllDead=true;
-        for (int i=0; i < MAX_STRUCTURES; i++)
-            if (structure[i])
-                if (structure[i]->getOwner() > 0 && structure[i]->getOwner() != AI_WORM)
-                {
-                    bAllDead=false;
-                    break;
-                }
-
-        if (bAllDead)
-        {
-                // check units now
-            for (int i=0; i < MAX_UNITS; i++)
-                if (unit[i].isValid())
-                    if (unit[i].iPlayer > 0 && unit[i].iPlayer != AI_WORM)
-                        if (units[unit[i].iType].airborn == false)
-                        {
-                               bAllDead=false;
-                               break;
-                        }
-
+        bool bAllDead = true;
+        for (int i = 0; i < MAX_STRUCTURES; i++) {
+            cAbstractStructure *pStructure = structure[i];
+            if (pStructure == nullptr) continue;
+            if (pStructure->getOwner() == HUMAN || pStructure->getOwner() == AI_WORM) continue;
+            bAllDead = false;
+            break;
         }
 
-        if (bAllDead)
-            bSucces=true;
+        // no structures found, validate units
+        if (bAllDead) {
+            // check units now
+            for (int i = 0; i < MAX_UNITS; i++) {
+                cUnit &cUnit = unit[i];
+                if (!cUnit.isValid()) continue;
+                if (cUnit.iPlayer == HUMAN || cUnit.iPlayer == AI_WORM) continue;
+                if (cUnit.isAirbornUnit()) continue;
+                bAllDead = false;
+                break;
+            }
+        }
 
+        // all dead == mission success!
+        if (bAllDead) {
+            bSucces = true;
+        }
     }
 
 
@@ -268,42 +260,40 @@ void cGame::think_winlose() {
     if (bSucces) {
         state = GAME_WINNING;
 
-        shake_x=0;
-        shake_y=0;
-        TIMER_shake=0;
+        shake_x = 0;
+        shake_y = 0;
+        TIMER_shake = 0;
 
-		play_voice(SOUND_VOICE_07_ATR);
+        play_voice(SOUND_VOICE_07_ATR);
 
         playMusicByType(MUSIC_WIN);
 
         // copy over
         blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
 
-        allegroDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *)gfxinter[BMP_WINNING].dat);
+        allegroDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_WINNING].dat);
     }
 
-    if (bFailed)
-    {
+    if (bFailed) {
         state = GAME_LOSING;
 
-        shake_x=0;
-        shake_y=0;
-        TIMER_shake=0;
+        shake_x = 0;
+        shake_y = 0;
+        TIMER_shake = 0;
 
-		play_voice(SOUND_VOICE_08_ATR);
+        play_voice(SOUND_VOICE_08_ATR);
 
         playMusicByType(MUSIC_LOSE);
 
         // copy over
         blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
 
-        allegroDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *)gfxinter[BMP_LOSING].dat);
+        allegroDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_LOSING].dat);
     }
 }
 
 // MOVIE: Play frames
-void cGame::think_movie()
-{
+void cGame::think_movie() {
     if (gfxmovie != NULL) {
         TIMER_movie++;
 
@@ -311,138 +301,125 @@ void cGame::think_movie()
             iMovieFrame++;
 
             if (gfxmovie[iMovieFrame].type == DAT_END ||
-				gfxmovie[iMovieFrame].type != DAT_BITMAP) {
-                iMovieFrame=0;
-			}
-            TIMER_movie=0;
-		}
+                gfxmovie[iMovieFrame].type != DAT_BITMAP) {
+                iMovieFrame = 0;
+            }
+            TIMER_movie = 0;
+        }
     }
 }
 
 //TODO: move to mentat classes
-void cGame::think_mentat()
-{
+void cGame::think_mentat() {
 
-	if (TIMER_mentat_Speaking > 0) {
-		TIMER_mentat_Speaking--;
-	}
+    if (TIMER_mentat_Speaking > 0) {
+        TIMER_mentat_Speaking--;
+    }
 
-	if (TIMER_mentat_Speaking == 0)	{
-		// calculate speaking stuff
+    if (TIMER_mentat_Speaking == 0) {
+        // calculate speaking stuff
 
-		iMentatSpeak += 2; // makes 0, 2, etc.
+        iMentatSpeak += 2; // makes 0, 2, etc.
 
-		if (iMentatSpeak > 8) {
-			iMentatSpeak = -2;
-			TIMER_mentat_Speaking=-1;
-			return;
-		}
+        if (iMentatSpeak > 8) {
+            iMentatSpeak = -2;
+            TIMER_mentat_Speaking = -1;
+            return;
+        }
 
-		// lentgh calculation of time
-		int iLength = strlen(mentat_sentence[iMentatSpeak]);
-		iLength += strlen(mentat_sentence[iMentatSpeak+1]);
+        // lentgh calculation of time
+        int iLength = strlen(mentat_sentence[iMentatSpeak]);
+        iLength += strlen(mentat_sentence[iMentatSpeak + 1]);
 
-		if (iLength < 2) {
-			iMentatSpeak = -2;
-			TIMER_mentat_Speaking=-1;
-			return;
-		}
+        if (iLength < 2) {
+            iMentatSpeak = -2;
+            TIMER_mentat_Speaking = -1;
+            return;
+        }
 
-		TIMER_mentat_Speaking = iLength*12;
-	}
+        TIMER_mentat_Speaking = iLength * 12;
+    }
 
-	if (TIMER_mentat_Mouth > 0) {
-		TIMER_mentat_Mouth--;
-	} else if (TIMER_mentat_Mouth == 0) {
+    if (TIMER_mentat_Mouth > 0) {
+        TIMER_mentat_Mouth--;
+    } else if (TIMER_mentat_Mouth == 0) {
 
-		if (TIMER_mentat_Speaking > 0) {
-			int iOld = iMentatMouth;
+        if (TIMER_mentat_Speaking > 0) {
+            int iOld = iMentatMouth;
 
-			if (iMentatMouth == 0) {
-				// when mouth is shut, we wait a bit.
-				if (rnd(100) < 45) {
-					iMentatMouth += (1 + rnd(4));
-				} else {
-					TIMER_mentat_Mouth=3; // wait
-				}
+            if (iMentatMouth == 0) {
+                // when mouth is shut, we wait a bit.
+                if (rnd(100) < 45) {
+                    iMentatMouth += (1 + rnd(4));
+                } else {
+                    TIMER_mentat_Mouth = 3; // wait
+                }
 
-				// correct any frame
-				if (iMentatMouth > 4) {
-					iMentatMouth-=5;
-				}
-			} else {
-				iMentatMouth += (1 + rnd(4));
+                // correct any frame
+                if (iMentatMouth > 4) {
+                    iMentatMouth -= 5;
+                }
+            } else {
+                iMentatMouth += (1 + rnd(4));
 
-				if (iMentatMouth > 4) {
-					iMentatMouth-=5;
-				}
-			}
+                if (iMentatMouth > 4) {
+                    iMentatMouth -= 5;
+                }
+            }
 
-			// Test if we did not set the timer, when not, we changed stuff, and we
-			// have to make sure we do not reshow the same animation.. which looks
-			// odd!
-			if (TIMER_mentat_Mouth == 0) {
-				if (iMentatMouth == iOld) {
-					iMentatMouth++;
-				}
+            // Test if we did not set the timer, when not, we changed stuff, and we
+            // have to make sure we do not reshow the same animation.. which looks
+            // odd!
+            if (TIMER_mentat_Mouth == 0) {
+                if (iMentatMouth == iOld) {
+                    iMentatMouth++;
+                }
 
-				// correct if nescesary:
-				if (iMentatMouth > 4) {
-					iMentatMouth-=5;
-				}
+                // correct if nescesary:
+                if (iMentatMouth > 4) {
+                    iMentatMouth -= 5;
+                }
 
-				// Done!
-			}
-		} else {
-			iMentatMouth=0; // when there is no sentence, do not animate mouth
-		}
+                // Done!
+            }
+        } else {
+            iMentatMouth = 0; // when there is no sentence, do not animate mouth
+        }
 
-		TIMER_mentat_Mouth=-1; // this way we make sure we do not update it too much
-	} // speaking
+        TIMER_mentat_Mouth = -1; // this way we make sure we do not update it too much
+    } // speaking
 
 
-	if (TIMER_mentat_Eyes > 0)
-	{
-		TIMER_mentat_Eyes--;
-	}
-	else
-	{
-		int i = rnd(100);
+    if (TIMER_mentat_Eyes > 0) {
+        TIMER_mentat_Eyes--;
+    } else {
+        int i = rnd(100);
 
         int iWas = iMentatEyes;
 
-        if (i < 30)
-			iMentatEyes = 3;
-		else if (i >= 30 && i < 60)
-			iMentatEyes = 0;
-		else
-			iMentatEyes=4;
+        if (i < 30) {
+            iMentatEyes = 3;
+        } else if (i >= 30 && i < 60) {
+            iMentatEyes = 0;
+        } else {
+            iMentatEyes = 4;
+        }
 
         // its the same
-        if (iMentatEyes == iWas)
+        if (iMentatEyes == iWas) {
             iMentatEyes = rnd(4);
+        }
 
-        if (iMentatEyes != 4)
+        if (iMentatEyes != 4) {
             TIMER_mentat_Eyes = 90 + rnd(160);
-        else
+        } else {
             TIMER_mentat_Eyes = 30;
-	}
-
-	// think wohoo
-	if (TIMER_mentat_Other > 0)
-	{
-		TIMER_mentat_Other--;
-	}
-	else
-	{
-		iMentatOther = rnd(5);
-	}
-
+        }
+    }
 }
 
 // TODO: Move to music related class (MusicPlayer?)
-void cGame::think_music()
-{
+void cGame::think_music() {
     if (!game.bPlayMusic) // no music enabled, so no need to think
         return;
 
@@ -1114,15 +1091,13 @@ void cGame::setup_skirmish() {
                 }
 
                 // count starting points
-                for (int s = 0; s < 5; s++) {
-                    if (PreviewMap[iSkirmishMap].iStartCell[s] > -1) {
+                for (int s : PreviewMap[iSkirmishMap].iStartCell) {
+                    if (s > -1) {
                         iStartingPoints++;
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             // render the 'random generated skirmish map'
             iStartingPoints = iSkirmishStartPoints;
 
@@ -2031,7 +2006,6 @@ void cGame::region() {
 	    draw_sprite(bmp_screen, (BITMAP *)gfxworld[iLogo].dat, (640)-64,(480)-64);
     }
 
-    char * cMessage = drawManager->getMessageDrawer()->getMessage();
     if (iRegionState == 2) {
         // draw dune first
         draw_sprite(bmp_screen, (BITMAP *)gfxworld[WORLD_DUNE].dat, 16, 73);
@@ -2129,16 +2103,18 @@ void cGame::region() {
                     bClickable=true;
             }
 
-        if (cMouse::isLeftButtonClicked() && bClickable)
-        {
+        if (cMouse::isLeftButtonClicked() && bClickable) {
             // selected....
             int iReg=0;
-            for (int ir=0; ir < MAX_REGIONS; ir++)
-                if (world[ir].bSelectable)
-                    if (ir != r)
+            for (int ir=0; ir < MAX_REGIONS; ir++) {
+                if (world[ir].bSelectable) {
+                    if (ir != r) {
                         iReg++;
-                    else
+                    } else {
                         break;
+                    }
+                }
+            }
 
             // calculate region stuff, and add it up
             int iNewReg=0;
@@ -2406,28 +2382,13 @@ void cGame::shutdown() {
 
 	if (soundPlayer) {
         soundPlayer->destroyAllSounds();
-        delete soundPlayer;
     }
-
-    if (mapViewport) {
-        delete mapViewport;
-    }
-
-    if (drawManager) {
-        delete drawManager;
-    }
-
-    if (mapCamera) {
-        delete mapCamera;
-    }
-
-    if (mapUtils) {
-        delete mapUtils;
-    }
-
-    if (interactionManager) {
-        delete interactionManager;
-    }
+    delete soundPlayer;
+    delete mapViewport;
+    delete drawManager;
+    delete mapCamera;
+    delete mapUtils;
+    delete interactionManager;
 
     cStructureFactory::destroy();
     cSideBarFactory::destroy();
@@ -2787,7 +2748,7 @@ bool cGame::setupGame() {
 
 	// load datafiles
 	gfxdata = load_datafile("data/gfxdata.dat");
-	if (gfxdata == NULL) {
+	if (gfxdata == nullptr) {
 		logbook("ERROR: Could not hook/load datafile: gfxdata.dat");
 		return false;
 	} else {
@@ -2796,7 +2757,7 @@ bool cGame::setupGame() {
 	}
 
 	gfxaudio = load_datafile("data/gfxaudio.dat");
-	if (gfxaudio == NULL)  {
+	if (gfxaudio == nullptr)  {
 		logbook("ERROR: Could not hook/load datafile: gfxaudio.dat");
 		return false;
 	} else {
@@ -2804,7 +2765,7 @@ bool cGame::setupGame() {
 	}
 
 	gfxinter = load_datafile("data/gfxinter.dat");
-	if (gfxinter == NULL)  {
+	if (gfxinter == nullptr)  {
 		logbook("ERROR: Could not hook/load datafile: gfxinter.dat");
 		return false;
 	} else {
@@ -2812,7 +2773,7 @@ bool cGame::setupGame() {
 	}
 
 	gfxworld = load_datafile("data/gfxworld.dat");
-	if (gfxworld == NULL) {
+	if (gfxworld == nullptr) {
 		logbook("ERROR: Could not hook/load datafile: gfxworld.dat");
 		return false;
 	} else {
@@ -2820,19 +2781,19 @@ bool cGame::setupGame() {
 	}
 
 	gfxmentat = load_datafile("data/gfxmentat.dat");
-	if (gfxworld == NULL) {
+	if (gfxworld == nullptr) {
 		logbook("ERROR: Could not hook/load datafile: gfxmentat.dat");
 		return false;
 	} else {
 		logbook("Datafile hooked: gfxmentat.dat");
 	}
 
-	gfxmovie = NULL; // nothing loaded at start. This is done when loading a mission briefing.
+	gfxmovie = nullptr; // nothing loaded at start. This is done when loading a mission briefing.
 
 	// randomize timer
 	unsigned int t = (unsigned int) time(0);
 	char seedtxt[80];
-	sprintf(seedtxt, "Seed is %d", t);
+	sprintf(seedtxt, "Seed is %u", t);
 	logbook(seedtxt);
 	srand(t);
 
@@ -2860,19 +2821,13 @@ bool cGame::setupGame() {
 	logbook("Installing:  WORLD");
 	INSTALL_WORLD();
 
-	if (mapCamera) {
-	    delete mapCamera;
-	}
+    delete mapCamera;
 	mapCamera = new cMapCamera();
 
-	if (drawManager) {
-	    delete drawManager;
-	}
+    delete drawManager;
 	drawManager = new cDrawManager(&player[HUMAN]);
 
-	if (mapUtils) {
-	    delete mapUtils;
-	}
+    delete mapUtils;
 	mapUtils = new cMapUtils(&map);
 
 	game.init();
@@ -2894,10 +2849,6 @@ bool cGame::setupGame() {
  * Set up players
  */
 void cGame::setup_players() {
-	if (interactionManager) {
-		delete interactionManager;
-	}
-
 	// make sure each player has an own item builder
 	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
 		cPlayer * thePlayer = &player[i];
@@ -2924,6 +2875,7 @@ void cGame::setup_players() {
 		thePlayer->setTechLevel(game.iMission);
 	}
 
+    delete interactionManager;
 	interactionManager = new cInteractionManager(&player[HUMAN]);
 }
 

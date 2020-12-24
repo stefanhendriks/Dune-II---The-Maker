@@ -26,9 +26,9 @@ cBestScreenResolutionFinder::cBestScreenResolutionFinder() {
 }
 
 cBestScreenResolutionFinder::~cBestScreenResolutionFinder() {
-	for (int i = 0; i < MAX_SCREEN_RESOLUTIONS; i ++) {
-	    if (screenResolutions[i]) delete screenResolutions[i];
-		screenResolutions[i] = NULL;
+	for (auto & screenResolution : screenResolutions) {
+	    delete screenResolution;
+		screenResolution = nullptr;
 	}
 }
 
@@ -36,9 +36,8 @@ void cBestScreenResolutionFinder::init() {
     memset(screenResolutions, 0, sizeof(screenResolutions));
 }
 
-bool cBestScreenResolutionFinder::isGfxModeListSet(GFX_MODE_LIST *mode_list)
-{
-    return mode_list != NULL;
+bool cBestScreenResolutionFinder::isGfxModeListSet(GFX_MODE_LIST *mode_list) {
+    return mode_list != nullptr;
 }
 
 
@@ -58,7 +57,7 @@ void cBestScreenResolutionFinder::checkResolutions() {
     of match will set up setTested and setUsable flags.
     */
 
-    GFX_MODE_LIST *modeList = NULL;
+    GFX_MODE_LIST *modeList = nullptr;
 
 #ifdef UNIX
     modeList = get_gfx_mode_list(GFX_XWINDOWS_FULLSCREEN);
@@ -99,35 +98,31 @@ void cBestScreenResolutionFinder::setMatchingScreenResolutionsToTestedAndUsable(
 }
 
 cScreenResolution * cBestScreenResolutionFinder::findMatchingScreenResolution(int width, int height) {
-	for (int i = 0; i < MAX_SCREEN_RESOLUTIONS; i ++) {
-		cScreenResolution * screenResolution = screenResolutions[i];
-		if (screenResolution) {
+	for (auto screenResolution : screenResolutions) {
+			if (screenResolution) {
 			if (screenResolution->getWidth() == width && screenResolution->getHeight() == height) {
 				return screenResolution;
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 void cBestScreenResolutionFinder::detectScreenResolutionsByTestingThemOut() {
-	for (int i = 0; i < MAX_SCREEN_RESOLUTIONS; i++)
-	{
-		cScreenResolution * screenResolution = screenResolutions[i];
-		if (screenResolution) {
-			int screen_x = screenResolution->getWidth();
-			int screen_y = screenResolution->getHeight();
-			int r = set_gfx_mode(GFX_AUTODETECT, screen_x, screen_y, screen_x, screen_y);
-			screenResolution->setTested(true);
-			screenResolution->setUsable((r > -1));
-			screenResolution->printLog();
-		}
-	}
+    for (auto screenResolution : screenResolutions) {
+        if (screenResolution) {
+            int screen_x = screenResolution->getWidth();
+            int screen_y = screenResolution->getHeight();
+            int r = set_gfx_mode(GFX_AUTODETECT, screen_x, screen_y, screen_x, screen_y);
+            screenResolution->setTested(true);
+            screenResolution->setUsable((r > -1));
+            screenResolution->printLog();
+        }
+    }
 }
 
 bool cBestScreenResolutionFinder::acquireBestScreenResolutionFullScreen() {
-    for (int i = 0; i < MAX_SCREEN_RESOLUTIONS; i++) {
-        cScreenResolution * screenResolution = screenResolutions[i];
+    for (auto screenResolution : screenResolutions) {
         if (screenResolution) {
             if (screenResolution->isTested()) {
                 if (screenResolution->isUsable()) {

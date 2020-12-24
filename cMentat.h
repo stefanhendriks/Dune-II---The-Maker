@@ -41,7 +41,6 @@ private:
 
 	int iMentatMouth;
 	int iMentatEyes;
-	int iMentatOther;
 
 public:
 	virtual void draw()=0;

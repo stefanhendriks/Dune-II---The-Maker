@@ -106,7 +106,6 @@ public:
 	bool bPlacedIt;		// for remembering, for combat_mouse stuff..
 
 	void setup_players();
-	void think_message();
 
     void think_music();
 
@@ -117,15 +116,12 @@ public:
 	int iMentatSpeak;			// = sentence to draw and speak with (-1 = not ready)
 	int iMentatMouth;			// frames	...
 	int iMentatEyes;				// ... for mentat ...
-	int iMentatOther;			// ... animations .
 
 	int TIMER_mentat_Mouth;			// timer for animations
 	int TIMER_mentat_Eyes;			// timer for animations
-	int TIMER_mentat_Other;			// timer for animations
 
 	void MENTAT_draw_mouth(int iMentat);
 	void MENTAT_draw_eyes(int iMentat);
-	void MENTAT_draw_other(int iMentat);
 
 	void think_mentat();
 
