@@ -24,7 +24,6 @@ cMentat::cMentat() {
 
 	iMentatMouth = 3;
 	iMentatEyes = 3;
-	iMentatOther = 0;
 
 	memset(sentence, 0, sizeof(sentence));
 }
@@ -39,7 +38,6 @@ cMentat::~cMentat() {
 
 	iMentatMouth = 3;
 	iMentatEyes = 3;
-	iMentatOther = 0;
 
 	memset(sentence, 0, sizeof(sentence));
 }
