@@ -741,7 +741,7 @@ void cGame::mentat(int iType)
             {
                 // head back to choose house
                 iMentatSpeak=-1; // prepare speaking
-                //state = GAME_HOUSE;
+                //state = GAME_SELECT_HOUSE;
             }
 
         // YES/PROCEED
@@ -904,7 +904,7 @@ void cGame::menu()
 	{
 		if (cMouse::isLeftButtonClicked())
 		{
-			state = GAME_HOUSE; // select house
+			state = GAME_SELECT_HOUSE; // select house
 			bFadeOut = true;
 		}
 	}
@@ -1696,7 +1696,7 @@ void cGame::setup_skirmish() {
 }
 
 // select house
-void cGame::house() {
+void cGame::stateSelectHouse() {
     // FADING STUFF
     if (iFadeAction == 1) // fading out
     {
@@ -1710,82 +1710,81 @@ void cGame::house() {
 
     bool bFadeOut=false;
 
-	// draw menu
-	draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_HERALD].dat,  0, 0);
-    draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_GAME_DUNE].dat, 0, 350);
+	// Render the planet Dune a bit downward
+    BITMAP *duneBitmap = (BITMAP *) gfxinter[BMP_GAME_DUNE].dat;
+    draw_sprite(bmp_screen, duneBitmap, ((game.screen_x - duneBitmap->w)), ((game.screen_y - (duneBitmap->h * 0.90))));
 
 	// HOUSES
+    BITMAP *sprite = (BITMAP *) gfxinter[BMP_SELECT_YOUR_HOUSE].dat;
+    int selectYourHouseXCentered = (game.screen_x / 2) - sprite->w / 2;
+    draw_sprite(bmp_screen, sprite, selectYourHouseXCentered, 0);
 
-	// ATREIDES
-	if ((mouse_y >= 168 && mouse_y <=267) &&
-		(mouse_x >= 116 && mouse_x <=207))
-	{
-		if (cMouse::isLeftButtonClicked())
-		{
-			iHouse=ATREIDES;
+    int selectYourHouseY = game.screen_y * 0.35f;
 
-			// let bene gesserit tell about atreides
-			// when NO, iHouse gets reset to -1
+    int columnWidth = game.screen_x / 7; // empty, atr, empty, har, empty, ord, empty (7 columns)
+    int offset = (columnWidth / 2) - (((BITMAP *)gfxinter[BMP_SELECT_HOUSE_ATREIDES].dat)->w / 2);
+    cRectangle houseAtreides = cRectangle((columnWidth * 1) + offset, selectYourHouseY, 90, 98);
+    cRectangle houseOrdos = cRectangle((columnWidth * 3) + offset, selectYourHouseY, 90, 98);
+    cRectangle houseHarkonnen = cRectangle((columnWidth * 5) + offset, selectYourHouseY, 90, 98);
+    allegroDrawer->blitSprite((BITMAP *)gfxinter[BMP_SELECT_HOUSE_ATREIDES].dat, bmp_screen, &houseAtreides);
+    allegroDrawer->blitSprite((BITMAP *)gfxinter[BMP_SELECT_HOUSE_ORDOS].dat, bmp_screen, &houseOrdos);
+    allegroDrawer->blitSprite((BITMAP *)gfxinter[BMP_SELECT_HOUSE_HARKONNEN].dat, bmp_screen, &houseHarkonnen);
+
+    cTextDrawer textDrawer = cTextDrawer(bene_font);
+
+    // back
+    cRectangle *backButtonRect = textDrawer.getAsRectangle(0, screen_y - textDrawer.getFontHeight(), " BACK");
+    textDrawer.drawText(backButtonRect->getX(), backButtonRect->getY(), makecol(255,255,255), " BACK");
+
+    if (backButtonRect->isMouseOver()) {
+        textDrawer.drawText(backButtonRect->getX(), backButtonRect->getY(), makecol(255, 0, 0), " BACK");
+    }
+
+    if (cMouse::isLeftButtonClicked()) {
+        if (cMouse::isOverRectangle(&houseAtreides)) {
+            iHouse=ATREIDES;
 
             play_sound_id(SOUND_ATREIDES);
 
             LOAD_SCENE("platr"); // load planet of atreides
 
-			state = GAME_TELLHOUSE;
+            state = GAME_TELLHOUSE;
             iMentatSpeak=-1;
             bFadeOut=true;
-        }
-	}
-
-	// ORDOS
-	if ((mouse_y >= 168 && mouse_y <=267) &&
-		(mouse_x >= 271 && mouse_x <=360))
-	{
-		if (cMouse::isLeftButtonClicked())
-		{
-			iHouse=ORDOS;
-
-			// let bene gesserit tell about harkonnen
-			// when NO, iHouse gets reset to -1
+        } else if (cMouse::isOverRectangle(&houseOrdos)) {
+            iHouse=ORDOS;
 
             play_sound_id(SOUND_ORDOS);
 
             LOAD_SCENE("plord"); // load planet of ordos
 
-			state = GAME_TELLHOUSE;
+            state = GAME_TELLHOUSE;
             iMentatSpeak=-1;
             bFadeOut=true;
-		}
-	}
-
-	// ORDOS
-	if ((mouse_y >= 168 && mouse_y <=267) &&
-		(mouse_x >= 418 && mouse_x <=506))
-	{
-		if (cMouse::isLeftButtonClicked())
-		{
-			iHouse=HARKONNEN;
-
-			// let bene gesserit tell about harkonnen
-			// when NO, iHouse gets reset to -1
+        } else if (cMouse::isOverRectangle(&houseHarkonnen)) {
+            iHouse=HARKONNEN;
 
             play_sound_id(SOUND_HARKONNEN);
 
             LOAD_SCENE("plhar"); // load planet of harkonnen
 
-			state = GAME_TELLHOUSE;
+            state = GAME_TELLHOUSE;
             iMentatSpeak=-1;
             bFadeOut=true;
-		}
-	}
+        } else if (backButtonRect->isMouseOver()) {
+            bFadeOut=true;
+            state = GAME_MENU;
+        }
+    }
 
+    delete backButtonRect;
 
 	// MOUSE
     draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
-    if (bFadeOut)
+    if (bFadeOut) {
         game.FADE_OUT();
-
+    }
 }
 
 
@@ -1888,7 +1887,7 @@ void cGame::tellhouse()
             {
                 // head back to choose house
                 iHouse=-1;
-                state = GAME_HOUSE;
+                state = GAME_SELECT_HOUSE;
                 bFadeOut=true;
             }
 
@@ -2296,7 +2295,7 @@ void cGame::shakeScreenAndBlitBuffer() {
     if (TIMER_shake == 0) {
 		TIMER_shake = -1;
 	}
-	// blit on screen
+	// blitSprite on screen
 
 	if (TIMER_shake > 0)
 	{
@@ -2353,8 +2352,8 @@ void cGame::runGameState() {
 		case GAME_REGION:
 			region();
 			break;
-		case GAME_HOUSE:
-			house();
+		case GAME_SELECT_HOUSE:
+            stateSelectHouse();
 			break;
 		case GAME_TELLHOUSE:
 			tellhouse();

@@ -93,8 +93,12 @@ void cTextDrawer::drawTextBottomLeft(const char * msg) {
 void cTextDrawer::drawTextBottomRight(int color, const char * msg) {
 	int lenghtInPixels = alfont_text_length(font, msg);
 	int x = game.screen_x - lenghtInPixels;
-	int y = game.screen_y - alfont_text_height(font);
+	int y = game.screen_y - getFontHeight();
 	drawText(x, y, color, msg);
+}
+
+int cTextDrawer::getFontHeight() const {
+    return alfont_text_height(font);
 }
 
 void cTextDrawer::drawTextBottomLeft(int color, const char * msg) {
@@ -109,4 +113,8 @@ int cTextDrawer::textLength(const char * msg) {
 void cTextDrawer::setFont(ALFONT_FONT *theFont) {
     if (theFont == nullptr) return; // do not allow null
     this->font = theFont;
+}
+
+cRectangle *cTextDrawer::getAsRectangle(int x, int y, const char * msg) {
+    return new cRectangle(x, y, textLength(msg), getFontHeight());
 }

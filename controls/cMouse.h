@@ -8,6 +8,8 @@
 #ifndef CMOUSE_H_
 #define CMOUSE_H_
 
+class cRectangle;
+
 class cMouse {
 
 public:
@@ -45,6 +47,8 @@ public:
 	}
 
     static bool isOverRectangle(int x, int y, int width, int height);
+
+	static bool isOverRectangle(cRectangle *rectangle);
 
     static bool isMapScrolling();
 

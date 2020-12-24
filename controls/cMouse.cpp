@@ -81,6 +81,10 @@ bool cMouse::isOverRectangle(int x, int y, int width, int height) {
     return cRectangle::isWithin(cMouse::getX(), cMouse::getY(), x, y, width, height);
 }
 
+bool cMouse::isOverRectangle(cRectangle *rectangle) {
+    return rectangle->isMouseOver();
+}
+
 bool cMouse::isMapScrolling() {
     return mouse_mv_x1 > -1 && mouse_mv_y1 > -1 && mouse_mv_x2 > -1 && mouse_mv_y2 > -1;
 }

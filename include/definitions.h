@@ -102,7 +102,7 @@
 #define GAME_EDITING      4      // running the editor
 #define GAME_OPTIONS	  5		 // options menu
 #define GAME_REGION		  6		 // select a region
-#define GAME_HOUSE		  8		 // pick a house
+#define GAME_SELECT_HOUSE 8		 // pick a house
 #define GAME_INTRO	      9
 #define GAME_TELLHOUSE	 10		 // tell about the house
 #define GAME_WINNING     11      // when winning, do some cool animation
