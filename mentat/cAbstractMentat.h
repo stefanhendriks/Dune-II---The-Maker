@@ -16,23 +16,31 @@
 	c<anyhouse>Mentat.cpp / c<anyhouse>Mentat.h which will be derived from this class.
 
 	There is only one mentat in-game shown to the player. Therefore a good creation/deletion of it (when switching
-	houses) is essential. These responsibilities should lay in the cMentatFactory class.
+	houses) is essential.
 */
-#ifndef CMENTAT_H
-#define CMENTAT_H
+#ifndef CABSTRACTMENTAT_H
+#define CABSTRACTMENTAT_H
 
-class cMentat {
+class cAbstractMentat {
 
-private:
-	virtual void draw_mouth()=0;
-	virtual void draw_eyes()=0;
-	virtual void draw_other()=0;
+protected:
+    virtual void draw_mouth()=0;
+    virtual void draw_eyes()=0;
+    virtual void draw_other()=0;
+
+    void draw_movie();
 
 	// Timed animation
 	int TIMER_Mouth;
 	int TIMER_Eyes;
 	int TIMER_Other;
 	int TIMER_Speaking;
+
+    // Movie playback (scene's from datafile)
+    int TIMER_movie;
+    int iMovieFrame;
+
+    int iBackgroundFrame;
 
 	// draw 2 sentences at once, so 0 1, 2 3, 4 5, 6 7, 8 9
 	char sentence[10][255];
@@ -42,14 +50,26 @@ private:
 	int iMentatMouth;
 	int iMentatEyes;
 
+    DATAFILE *gfxmovie;
+
 public:
 	virtual void draw()=0;
+    virtual void think()=0;
+    virtual void interact()=0;
 
-	void think();
+    void playMovie(DATAFILE *movie);
+    void loadScene(std::string scene);
+
 	void prepare(bool bTellHouse, int state, int house, int region);
 
-	cMentat();
-	virtual ~cMentat();
+	cAbstractMentat();
+	virtual ~cAbstractMentat();
+
+    BITMAP *getBackgroundBitmap() const;
+
+    void initSentences();
+
+    void setSentence(int i, char text[256]);
 };
 
 #endif

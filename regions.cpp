@@ -12,16 +12,15 @@
 
 #include "include/d2tmh.h"
 
-void REGION_SETUP(int iMission, int iHouse)
-{
+void REGION_SETUP(int iMission, int iHouse) {
     // The first mission, nothing is 'ready', as the pieces gets placed and taken by the houses.
     // Later, after mission 2, the pieces are already taken. Thats what this function takes care off
     // making sure everything is 'there' to go on with. Hard-coded stuff.
 
     // First step:
     // remove all pieces (house properties)
-    for (int i=0; i < MAX_REGIONS; i++)
-		world[i].bSelectable=false;
+    for (int i = 0; i < MAX_REGIONS; i++)
+        world[i].bSelectable = false;
 
     // clear conquer stuff
     memset(game.iRegionConquer, -1, sizeof(game.iRegionConquer));
@@ -34,7 +33,7 @@ void REGION_SETUP(int iMission, int iHouse)
     INI_Load_Regionfile(iHouse, iMission);
 
     // prepare players, so we know house index == player index (for colorizing region pieces)
-    for (int i=1; i < FREMEN; i++) {
+    for (int i = 1; i < FREMEN; i++) {
         player[i].init(i);
         player[i].setHouse(i);
     }

@@ -166,440 +166,415 @@ int INI_StructureType(char word[256]) {
 }
 
 // Reads out word[], does a string compare and returns type id
-int INI_WordType(char word[25], int section)
-{
+int INI_WordType(char word[25], int section) {
 
 //	char msg[255];
 //	memset(msg, 0, sizeof(msg));
 //	sprintf(msg, "Going to find word-type for [%s]", word);
 //	logbook(msg);
 
-	if (section == SEC_REGION)
-	{
-		if (strcmp(word, "Region") == 0)
-			return WORD_REGION;
+    if (section == SEC_REGION) {
+        if (strcmp(word, "Region") == 0)
+            return WORD_REGION;
 
         if (strcmp(word, "RegionConquer") == 0)
-			return WORD_REGIONCONQUER;
+            return WORD_REGIONCONQUER;
 
-		if (strcmp(word, "House") == 0)
-			return WORD_REGIONHOUSE;
+        if (strcmp(word, "House") == 0)
+            return WORD_REGIONHOUSE;
 
-		if (strcmp(word, "Text") == 0)
-			return WORD_REGIONTEXT;
+        if (strcmp(word, "Text") == 0)
+            return WORD_REGIONTEXT;
 
-		if (strcmp(word, "Select") == 0)
-			return WORD_REGIONSELECT;
+        if (strcmp(word, "Select") == 0)
+            return WORD_REGIONSELECT;
 
-		return WORD_NONE;
-	}
+        return WORD_NONE;
+    }
 
     if (section == INI_SCEN ||
         section == INI_DESCRIPTION ||
         section == INI_BRIEFING ||
         section == INI_ADVICE ||
         section == INI_LOSE ||
-        section == INI_WIN )
-    {
-		if (strcmp(word, "Number") == 0)
-			return WORD_NUMBER;
+        section == INI_WIN) {
+        if (strcmp(word, "Number") == 0)
+            return WORD_NUMBER;
 
-   		if (strcmp(word, "Text") == 0)
-			return WORD_REGIONTEXT;
+        if (strcmp(word, "Text") == 0)
+            return WORD_REGIONTEXT;
 
         return WORD_NONE;
     }
 
-  if (section == INI_SKIRMISH)
-  {
-    if (strcmp(word, "Title") == 0)
-        return WORD_MAPNAME;
+    if (section == INI_SKIRMISH) {
+        if (strcmp(word, "Title") == 0)
+            return WORD_MAPNAME;
 
 
-	if (strcmp(word, "StartCell") == 0)
-        return WORD_STARTCELL;
-
-  }
-
-  if (section == INI_GAME)
-  {
-    if (strcmp(word, "ModId") == 0)
-      return WORD_MODID;
-  }
-  else if (section == INI_BASIC)
-  {
-	if (strcmp(word, "CursorPos") == 0)
-		return WORD_FOCUS;
-
-    if (strcmp(word, "BriefPicture") == 0)
-		return WORD_BRIEFPICTURE;
-
-
-  }
-  else if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY)
-  {
-	if (strcmp(word, "Team") == 0)
-		return WORD_TEAM;
-
-	if (strcmp(word, "Credits") == 0)
-		return WORD_CREDITS;
-
-    if (strcmp(word, "Quota") == 0)
-		return WORD_QUOTA;
-
-	if (strcmp(word, "Brain") == 0)
-		return WORD_BRAIN;
-
-	//if (strcmp(word, "Skill") == 0)
-		//return WORD_SKILL;
-
-	if (strcmp(word, "House") == 0)
-		return WORD_HOUSE;
-
-	if (strcmp(word, "Focus") == 0)
-		return WORD_FOCUS;
-  }
-  /*
-  else if (section == INI_MENU)
-  {
-    if (strcmp(word, "TitleBitmap") == 0)
-      return WORD_TITLEBITMAP;
-
-    if (strcmp(word, "ClickSound") == 0)
-      return WORD_MENUCLICKSOUND;
-  }
-  else if (section == INI_MOD)
-  {
-    // Title of mod
-    if (strcmp(word, "Title") == 0)
-      return WORD_TITLE;
-
-    // Version of mod
-    if (strcmp(word, "Version") == 0)
-      return WORD_VERSION;
-
-    // Dir of mod
-    if (strcmp(word, "Dir") == 0)
-      return WORD_DIR;
-
-  }
-  else if (section == INI_SIDEBAR)
-  {
-    if (strcmp(word, "ColorRed") == 0)
-      return WORD_RED;
-
-    if (strcmp(word, "ColorBlue") == 0)
-      return WORD_BLUE;
-
-    if (strcmp(word, "ColorGreen") == 0)
-      return WORD_GREEN;
-  }
-  else if (section == INI_MOUSE)
-  {
-    // normal mouse
-    if (strcmp(word, "Normal") == 0)
-      return WORD_MOUSENORMAL;
-
-    // cannot move
-    if (strcmp(word, "CannotMove") == 0)
-      return WORD_MOUSENOMOVE;
-
-    // Move
-    if (strcmp(word, "Move") == 0)
-      return WORD_MOUSEMOVE;
-
-    // Attack
-    if (strcmp(word, "Attack") == 0)
-      return WORD_MOUSEATTACK;
-
-    // Deploy
-    if (strcmp(word, "Deploy") == 0)
-      return WORD_MOUSEDEPLOY;
-  }*/
-  else if (section == INI_MAP)
-  {
-    // When reading [MAP], interpet the 'width' and 'height' for default width and height
-    // for the Map Editor
-
-    // Map width
-    if (strcmp(word, "Width") == 0)
-      return WORD_MAPWIDTH;
-
-    // Map heigth
-    if (strcmp(word, "Height") == 0)
-      return WORD_MAPHEIGHT;
-
-	// Dune II scens have a seed
-	if (strcmp(word, "Seed") == 0)
-      return WORD_MAPSEED;
-
-    // Dune II scens have spice blooms
-	if (strcmp(word, "Bloom") == 0)
-      return WORD_MAPBLOOM;
-
-	// Dune II scens have spice blooms
-	if (strcmp(word, "Field") == 0)
-      return WORD_MAPFIELD;
-
-
-  }
-  else if (section == INI_BULLETS)
-  {
-    // Bitmap
-    if (strcmp(word, "Bitmap") == 0)
-      return WORD_BITMAP;
-
-    // Dead Animation Bitmap
-    if (strcmp(word, "BitmapExplosion") == 0)
-      return WORD_BITMAP_DEAD;
-
-    // Bitmap width
-    if (strcmp(word, "BitmapWidth") == 0)
-      return WORD_BITMAP_WIDTH;
-
-    // Frames
-    if (strcmp(word, "BitmapFrames") == 0)
-      return WORD_BITMAP_FRAMES;
-
-    // Dead frames
-    if (strcmp(word, "BitmapExplFrames") == 0)
-      return WORD_BITMAP_DEADFRAMES;
-
-    // Damage
-    if (strcmp(word, "Damage") == 0)
-      return WORD_DAMAGE;
-
-    // Definition
-    if (strcmp(word, "Definition") == 0)
-      return WORD_DEFINITION;
-
-    if (strcmp(word, "Sound") == 0)
-      return WORD_SOUND;
-
-  }
-  else if (section == INI_STRUCTURES)
-  {
-    // HitPoints
-    if (strcmp(word, "HitPoints") == 0)
-      return WORD_HITPOINTS;
-
-	// 'getting fixed 'HitPoints
-    if (strcmp(word, "FixPoints") == 0)
-      return WORD_FIXHP;
-
-    // Power drain
-    if (strcmp(word, "PowerDrain") == 0)
-      return WORD_POWERDRAIN;
-
-    // Power give
-    if (strcmp(word, "PowerGive") == 0)
-      return WORD_POWERGIVE;
-
-    // Cost
-    if (strcmp(word, "Cost") == 0)
-      return WORD_COST;
-
-    // Build time
-    if (strcmp(word, "BuildTime") == 0)
-      return WORD_BUILDTIME;
-
-  }
-  else if (section == INI_UNITS)
-  {
-    // Bitmap
-    if (strcmp(word, "Bitmap") == 0)
-      return WORD_BITMAP;
-
-    // TOP Bitmap
-    if (strcmp(word, "BitmapTop") == 0)
-      return WORD_BITMAP_TOP;
-
-    // ICON Bitmap
-    if (strcmp(word, "Icon") == 0)
-      return WORD_ICON;
-
-    // WIDTH and HEIGHT of a bitmap
-    if (strcmp(word, "BitmapWidth") == 0)
-      return WORD_BITMAP_WIDTH;
-
-    // Bitmap Height
-    if (strcmp(word, "BitmapHeight") == 0)
-      return WORD_BITMAP_HEIGHT;
-
-    // HitPoints
-    if (strcmp(word, "HitPoints") == 0)
-      return WORD_HITPOINTS;
-
-    // Cost
-    if (strcmp(word, "Cost") == 0)
-      return WORD_COST;
-
-    // Bullet Type
-    if (strcmp(word, "BulletType") == 0)
-      return WORD_BULLETTYPE;
-
-    // Move speed
-    if (strcmp(word, "MoveSpeed") == 0)
-      return WORD_MOVESPEED;
-
-    // Turn speed
-    if (strcmp(word, "TurnSpeed") == 0)
-      return WORD_TURNSPEED;
-
-    // Attack frequency
-    if (strcmp(word, "AttackFrequency") == 0)
-      return WORD_ATTACKFREQ;
-
-    // Sight
-    if (strcmp(word, "Sight") == 0)
-      return WORD_SIGHT;
-
-    // Range
-    if (strcmp(word, "Range") == 0)
-      return WORD_RANGE;
-
-    // Build time
-    if (strcmp(word, "BuildTime") == 0)
-      return WORD_BUILDTIME;
-
-    // Description
-    if (strcmp(word, "Description") == 0)
-      return WORD_DESCRIPTION;
-
-    // BOOLEANS
-    if (strcmp(word, "IsHarvester") == 0)
-      return WORD_ISHARVESTER;
-
-    if (strcmp(word, "SecondShot") == 0)
-      return WORD_SECONDSHOT;
-
-    if (strcmp(word, "IsInfantry") == 0)
-      return WORD_ISINFANTRY;
-
-    if (strcmp(word, "IsAirborn") == 0)
-      return WORD_ISAIRBORN;
-
-    if (strcmp(word, "AbleToCarry") == 0)
-      return WORD_ABLETOCARRY;
-
-    if (strcmp(word, "FreeRoam") == 0)
-      return WORD_FREEROAM;
-
-    // what structure type produces this kind of unit?
-    if (strcmp(word, "Producer") == 0)				return WORD_PRODUCER;
-
-    // HARVESTER
-    if (strcmp(word, "MaxCredits") == 0)			return WORD_HARVESTLIMIT;
-    if (strcmp(word, "HarvestSpeed") == 0)			return WORD_HARVESTSPEED;
-    if (strcmp(word, "HarvestAmount") == 0)			return WORD_HARVESTAMOUNT;
-  }
-  else if (section == INI_TEAMS)
-  {
-    // SwapColor
-    if (strcmp(word, "SwapColor") == 0)
-      return WORD_SWAPCOLOR;
-
-    // Red MiniMap value
-    if (strcmp(word, "MapColorRed") == 0)
-      return WORD_HOUSE_RED;
-
-    // Green MiniMap value
-    if (strcmp(word, "MapColorGreen") == 0)
-      return WORD_HOUSE_GREEN;
-
-    // Blue MiniMap value
-    if (strcmp(word, "MapColorBlue") == 0)
-      return WORD_HOUSE_BLUE;
-
-  }
-  /*
-  else if (section == INI_ICONS)
-  {
-    // Process all Icons here
-    if (strlen(word) > 1)
-      return WORD_ICONID;
-    else
-      return WORD_NONE;
-  }
-  else if (section == INI_BITMAPS)
-  {
-    // Process all Bitmaps here
-    if (strlen(word) > 1)
-      return WORD_BITMAPID;
-    else
-      return WORD_NONE;
-  }*/
-  else if (section == INI_STRUCTURES)
-  {
-    if (strlen(word) > 1)
-    {
-      // Structure properties
-      if (strcmp(word, "PreBuild") == 0)
-        return WORD_PREBUILD;
-
-      if (strcmp(word, "Description") == 0)
-        return WORD_DESCRIPTION;
-
-      if (strcmp(word, "Power") == 0)
-        return WORD_POWER;        // What power it takes
+        if (strcmp(word, "StartCell") == 0)
+            return WORD_STARTCELL;
 
     }
-    else
-      return WORD_NONE;
-  }
-  else if (section == INI_HOUSES)
-  {
-	  // each house has properties..
 
-	  if (strcmp(word, "ColorR") == 0)
-        return WORD_RED;
+    if (section == INI_GAME) {
+        if (strcmp(word, "ModId") == 0)
+            return WORD_MODID;
+    } else if (section == INI_BASIC) {
+        if (strcmp(word, "CursorPos") == 0)
+            return WORD_FOCUS;
 
-	  if (strcmp(word, "ColorG") == 0)
-        return WORD_GREEN;
+        if (strcmp(word, "BriefPicture") == 0)
+            return WORD_BRIEFPICTURE;
 
-	  if (strcmp(word, "ColorB") == 0)
-        return WORD_BLUE;
 
-	  // and specific stuff:
-	  if (strcmp(word, "FirePower") == 0)
-        return WORD_FIREPOWER;
+    } else if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
+        if (strcmp(word, "Team") == 0)
+            return WORD_TEAM;
 
-	  if (strcmp(word, "FireRate") == 0)
-        return WORD_FIRERATE;
+        if (strcmp(word, "Credits") == 0)
+            return WORD_CREDITS;
 
-	  if (strcmp(word, "StructPrice") == 0)
-        return WORD_STRUCTPRICE;
+        if (strcmp(word, "Quota") == 0)
+            return WORD_QUOTA;
 
-	  if (strcmp(word, "UnitPrice") == 0)
-        return WORD_UNITPRICE;
+        if (strcmp(word, "Brain") == 0)
+            return WORD_BRAIN;
 
-	  if (strcmp(word, "Speed") == 0)
-        return WORD_SPEED;
+        //if (strcmp(word, "Skill") == 0)
+        //return WORD_SKILL;
 
-	  if (strcmp(word, "BuildSpeed") == 0)
-        return WORD_BUILDSPEED;
+        if (strcmp(word, "House") == 0)
+            return WORD_HOUSE;
 
-	  if (strcmp(word, "HarvestSpeed") == 0)
-        return WORD_HARVESTSPEED;
+        if (strcmp(word, "Focus") == 0)
+            return WORD_FOCUS;
+    }
+        /*
+        else if (section == INI_MENU)
+        {
+          if (strcmp(word, "TitleBitmap") == 0)
+            return WORD_TITLEBITMAP;
 
-		if (strcmp(word, "DumpSpeed") == 0)
-        return WORD_DUMPSPEED;
+          if (strcmp(word, "ClickSound") == 0)
+            return WORD_MENUCLICKSOUND;
+        }
+        else if (section == INI_MOD)
+        {
+          // Title of mod
+          if (strcmp(word, "Title") == 0)
+            return WORD_TITLE;
 
-  }
-  else if (section == INI_SETTINGS)
-  {
-	  if (strcmp(word, "FullScreen") == 0)   return WORD_FULLSCREEN;
-	  if (strcmp(word, "ScreenWidth") == 0)  return WORD_SCREENWIDTH;
-	  if (strcmp(word, "ScreenHeight") == 0) return WORD_SCREENHEIGHT;
-	  if (strcmp(word, "MP3Music") == 0)	 return WORD_MP3MUSIC;
-  }
+          // Version of mod
+          if (strcmp(word, "Version") == 0)
+            return WORD_VERSION;
+
+          // Dir of mod
+          if (strcmp(word, "Dir") == 0)
+            return WORD_DIR;
+
+        }
+        else if (section == INI_SIDEBAR)
+        {
+          if (strcmp(word, "ColorRed") == 0)
+            return WORD_RED;
+
+          if (strcmp(word, "ColorBlue") == 0)
+            return WORD_BLUE;
+
+          if (strcmp(word, "ColorGreen") == 0)
+            return WORD_GREEN;
+        }
+        else if (section == INI_MOUSE)
+        {
+          // normal mouse
+          if (strcmp(word, "Normal") == 0)
+            return WORD_MOUSENORMAL;
+
+          // cannot move
+          if (strcmp(word, "CannotMove") == 0)
+            return WORD_MOUSENOMOVE;
+
+          // Move
+          if (strcmp(word, "Move") == 0)
+            return WORD_MOUSEMOVE;
+
+          // Attack
+          if (strcmp(word, "Attack") == 0)
+            return WORD_MOUSEATTACK;
+
+          // Deploy
+          if (strcmp(word, "Deploy") == 0)
+            return WORD_MOUSEDEPLOY;
+        }*/
+    else if (section == INI_MAP) {
+        // When reading [MAP], interpet the 'width' and 'height' for default width and height
+        // for the Map Editor
+
+        // Map width
+        if (strcmp(word, "Width") == 0)
+            return WORD_MAPWIDTH;
+
+        // Map heigth
+        if (strcmp(word, "Height") == 0)
+            return WORD_MAPHEIGHT;
+
+        // Dune II scens have a seed
+        if (strcmp(word, "Seed") == 0)
+            return WORD_MAPSEED;
+
+        // Dune II scens have spice blooms
+        if (strcmp(word, "Bloom") == 0)
+            return WORD_MAPBLOOM;
+
+        // Dune II scens have spice blooms
+        if (strcmp(word, "Field") == 0)
+            return WORD_MAPFIELD;
+
+
+    } else if (section == INI_BULLETS) {
+        // Bitmap
+        if (strcmp(word, "Bitmap") == 0)
+            return WORD_BITMAP;
+
+        // Dead Animation Bitmap
+        if (strcmp(word, "BitmapExplosion") == 0)
+            return WORD_BITMAP_DEAD;
+
+        // Bitmap width
+        if (strcmp(word, "BitmapWidth") == 0)
+            return WORD_BITMAP_WIDTH;
+
+        // Frames
+        if (strcmp(word, "BitmapFrames") == 0)
+            return WORD_BITMAP_FRAMES;
+
+        // Dead frames
+        if (strcmp(word, "BitmapExplFrames") == 0)
+            return WORD_BITMAP_DEADFRAMES;
+
+        // Damage
+        if (strcmp(word, "Damage") == 0)
+            return WORD_DAMAGE;
+
+        // Definition
+        if (strcmp(word, "Definition") == 0)
+            return WORD_DEFINITION;
+
+        if (strcmp(word, "Sound") == 0)
+            return WORD_SOUND;
+
+    } else if (section == INI_STRUCTURES) {
+        // HitPoints
+        if (strcmp(word, "HitPoints") == 0)
+            return WORD_HITPOINTS;
+
+        // 'getting fixed 'HitPoints
+        if (strcmp(word, "FixPoints") == 0)
+            return WORD_FIXHP;
+
+        // Power drain
+        if (strcmp(word, "PowerDrain") == 0)
+            return WORD_POWERDRAIN;
+
+        // Power give
+        if (strcmp(word, "PowerGive") == 0)
+            return WORD_POWERGIVE;
+
+        // Cost
+        if (strcmp(word, "Cost") == 0)
+            return WORD_COST;
+
+        // Build time
+        if (strcmp(word, "BuildTime") == 0)
+            return WORD_BUILDTIME;
+
+    } else if (section == INI_UNITS) {
+        // Bitmap
+        if (strcmp(word, "Bitmap") == 0)
+            return WORD_BITMAP;
+
+        // TOP Bitmap
+        if (strcmp(word, "BitmapTop") == 0)
+            return WORD_BITMAP_TOP;
+
+        // ICON Bitmap
+        if (strcmp(word, "Icon") == 0)
+            return WORD_ICON;
+
+        // WIDTH and HEIGHT of a bitmap
+        if (strcmp(word, "BitmapWidth") == 0)
+            return WORD_BITMAP_WIDTH;
+
+        // Bitmap Height
+        if (strcmp(word, "BitmapHeight") == 0)
+            return WORD_BITMAP_HEIGHT;
+
+        // HitPoints
+        if (strcmp(word, "HitPoints") == 0)
+            return WORD_HITPOINTS;
+
+        // Cost
+        if (strcmp(word, "Cost") == 0)
+            return WORD_COST;
+
+        // Bullet Type
+        if (strcmp(word, "BulletType") == 0)
+            return WORD_BULLETTYPE;
+
+        // Move speed
+        if (strcmp(word, "MoveSpeed") == 0)
+            return WORD_MOVESPEED;
+
+        // Turn speed
+        if (strcmp(word, "TurnSpeed") == 0)
+            return WORD_TURNSPEED;
+
+        // Attack frequency
+        if (strcmp(word, "AttackFrequency") == 0)
+            return WORD_ATTACKFREQ;
+
+        // Sight
+        if (strcmp(word, "Sight") == 0)
+            return WORD_SIGHT;
+
+        // Range
+        if (strcmp(word, "Range") == 0)
+            return WORD_RANGE;
+
+        // Build time
+        if (strcmp(word, "BuildTime") == 0)
+            return WORD_BUILDTIME;
+
+        // Description
+        if (strcmp(word, "Description") == 0)
+            return WORD_DESCRIPTION;
+
+        // BOOLEANS
+        if (strcmp(word, "IsHarvester") == 0)
+            return WORD_ISHARVESTER;
+
+        if (strcmp(word, "SecondShot") == 0)
+            return WORD_SECONDSHOT;
+
+        if (strcmp(word, "IsInfantry") == 0)
+            return WORD_ISINFANTRY;
+
+        if (strcmp(word, "IsAirborn") == 0)
+            return WORD_ISAIRBORN;
+
+        if (strcmp(word, "AbleToCarry") == 0)
+            return WORD_ABLETOCARRY;
+
+        if (strcmp(word, "FreeRoam") == 0)
+            return WORD_FREEROAM;
+
+        // what structure type produces this kind of unit?
+        if (strcmp(word, "Producer") == 0) return WORD_PRODUCER;
+
+        // HARVESTER
+        if (strcmp(word, "MaxCredits") == 0) return WORD_HARVESTLIMIT;
+        if (strcmp(word, "HarvestSpeed") == 0) return WORD_HARVESTSPEED;
+        if (strcmp(word, "HarvestAmount") == 0) return WORD_HARVESTAMOUNT;
+    } else if (section == INI_TEAMS) {
+        // SwapColor
+        if (strcmp(word, "SwapColor") == 0)
+            return WORD_SWAPCOLOR;
+
+        // Red MiniMap value
+        if (strcmp(word, "MapColorRed") == 0)
+            return WORD_HOUSE_RED;
+
+        // Green MiniMap value
+        if (strcmp(word, "MapColorGreen") == 0)
+            return WORD_HOUSE_GREEN;
+
+        // Blue MiniMap value
+        if (strcmp(word, "MapColorBlue") == 0)
+            return WORD_HOUSE_BLUE;
+
+    }
+        /*
+        else if (section == INI_ICONS)
+        {
+          // Process all Icons here
+          if (strlen(word) > 1)
+            return WORD_ICONID;
+          else
+            return WORD_NONE;
+        }
+        else if (section == INI_BITMAPS)
+        {
+          // Process all Bitmaps here
+          if (strlen(word) > 1)
+            return WORD_BITMAPID;
+          else
+            return WORD_NONE;
+        }*/
+    else if (section == INI_STRUCTURES) {
+        if (strlen(word) > 1) {
+            // Structure properties
+            if (strcmp(word, "PreBuild") == 0)
+                return WORD_PREBUILD;
+
+            if (strcmp(word, "Description") == 0)
+                return WORD_DESCRIPTION;
+
+            if (strcmp(word, "Power") == 0)
+                return WORD_POWER;        // What power it takes
+
+        } else
+            return WORD_NONE;
+    } else if (section == INI_HOUSES) {
+        // each house has properties..
+
+        if (strcmp(word, "ColorR") == 0)
+            return WORD_RED;
+
+        if (strcmp(word, "ColorG") == 0)
+            return WORD_GREEN;
+
+        if (strcmp(word, "ColorB") == 0)
+            return WORD_BLUE;
+
+        // and specific stuff:
+        if (strcmp(word, "FirePower") == 0)
+            return WORD_FIREPOWER;
+
+        if (strcmp(word, "FireRate") == 0)
+            return WORD_FIRERATE;
+
+        if (strcmp(word, "StructPrice") == 0)
+            return WORD_STRUCTPRICE;
+
+        if (strcmp(word, "UnitPrice") == 0)
+            return WORD_UNITPRICE;
+
+        if (strcmp(word, "Speed") == 0)
+            return WORD_SPEED;
+
+        if (strcmp(word, "BuildSpeed") == 0)
+            return WORD_BUILDSPEED;
+
+        if (strcmp(word, "HarvestSpeed") == 0)
+            return WORD_HARVESTSPEED;
+
+        if (strcmp(word, "DumpSpeed") == 0)
+            return WORD_DUMPSPEED;
+
+    } else if (section == INI_SETTINGS) {
+        if (strcmp(word, "FullScreen") == 0) return WORD_FULLSCREEN;
+        if (strcmp(word, "ScreenWidth") == 0) return WORD_SCREENWIDTH;
+        if (strcmp(word, "ScreenHeight") == 0) return WORD_SCREENHEIGHT;
+        if (strcmp(word, "MP3Music") == 0) return WORD_MP3MUSIC;
+    }
 
 //  char msg[255];
 //  memset(msg, 0, sizeof(msg));
 //  sprintf(msg, "Could not find word-type for [%s]", word);
 //  logbook(msg);
 
-  return WORD_NONE;
+    return WORD_NONE;
 }
 
 
@@ -724,64 +699,56 @@ int INI_SectionType(char section[30], int last)
 
 // Reads out 'result' and will return the value after the '='. Returns integer.
 // For CHAR returns see "INI_WordValueCHAR(char result[80]);
-int INI_WordValueINT(char result[MAX_LINE_LENGTH])
-{
- int pos=0;
- int is_pos=-1;
+int INI_WordValueINT(char result[MAX_LINE_LENGTH]) {
+    int pos = 0;
+    int is_pos = -1;
 
- while (pos < (MAX_LINE_LENGTH-1))
- {
-  if (result[pos] == '=')
-  {
-    is_pos=pos;
-    break;
-  }
-    pos++;
- }
-
- if (is_pos > -1)
- {
-   // Whenever the IS (=) position is known, we make a number out of 'IS_POS' till the next empty
-   // space.
-   int end_pos=-1;
-
-  while (pos < (MAX_LINE_LENGTH-1))
-  {
-    if (result[pos] == '\0')
-    {
-      end_pos=pos;
-      break;
+    while (pos < (MAX_LINE_LENGTH - 1)) {
+        if (result[pos] == '=') {
+            is_pos = pos;
+            break;
+        }
+        pos++;
     }
-      pos++;
-  }
 
-  // End position found!
-  if (end_pos > -1)
-  {
-    // We know the END position. We will use that piece of string to read out a number.
-    char number[10];
+    if (is_pos > -1) {
+        // Whenever the IS (=) position is known, we make a number out of 'IS_POS' till the next empty
+        // space.
+        int end_pos = -1;
 
-    // clear out entire string
-    for (int i=0; i < 10;i++)
-      number[i] = '\0';
+        while (pos < (MAX_LINE_LENGTH - 1)) {
+            if (result[pos] == '\0') {
+                end_pos = pos;
+                break;
+            }
+            pos++;
+        }
 
-    // Copy the part to 'number', Make sure we won't get outside the array of the character.
-    int cp=is_pos+1;
-    int c=0;
-    while (cp < end_pos)
-    {
-      number[c] = result[cp];
-      c++;
-      cp++;
-      if (c > 9)
-        break;
+        // End position found!
+        if (end_pos > -1) {
+            // We know the END position. We will use that piece of string to read out a number.
+            char number[10];
+
+            // clear out entire string
+            for (int i = 0; i < 10; i++)
+                number[i] = '\0';
+
+            // Copy the part to 'number', Make sure we won't get outside the array of the character.
+            int cp = is_pos + 1;
+            int c = 0;
+            while (cp < end_pos) {
+                number[c] = result[cp];
+                c++;
+                cp++;
+                if (c > 9)
+                    break;
+            }
+            return atoi(number);
+        }
+        // nothing here, so we return NULL at the end
     }
-    return atoi(number);
-  }
-  // nothing here, so we return NULL at the end
- }
 
- return 0; // No value, return 0
+    return 0; // No value, return 0
 }
 
 
@@ -1173,7 +1140,7 @@ int getUnitTypeFromChar(char chunk[35]) {
 	if (caseInsCompare(unitString, "THREEFREMEN"))		return UNIT_FREMEN_THREE;
 
 	char msg[255];
-	sprintf(msg, "getUnitTypeFromChar could not determine what unit type '%s' (original is '%s%') is. Returning -1; this will probably cause problems.", unitString.c_str(), chunk);
+	sprintf(msg, "getUnitTypeFromChar could not determine what unit type '%s' (original is '%s') is. Returning -1; this will probably cause problems.", unitString.c_str(), chunk);
 	logbook(msg);
 	return -1;
 }
@@ -1249,7 +1216,7 @@ string INI_GetScenarioFileName(int iHouse, int iRegion) {
 }
 
 
-void INI_Load_scenario(int iHouse, int iRegion) {
+void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
     game.bSkirmish = false;
     game.mission_init();
 
@@ -1351,7 +1318,7 @@ void INI_Load_scenario(int iHouse, int iRegion) {
 					scene = INI_SceneFileToScene(scenefile);
 
 					if (!isInString(scene, "unknown")) {
-						LOAD_SCENE(scene);
+						pMentat->loadScene(scene);
 					}
 				}
 
@@ -2099,15 +2066,14 @@ void INI_Load_scenario(int iHouse, int iRegion) {
     mapEditor.smoothMap();
 }
 
-void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
-{
+void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstractMentat *pMentat) {
     logbook("[BRIEFING] Opening file");
 
     char filename[80];
 
-    if (iHouse == ATREIDES)       sprintf(filename, "mentata.ini");
-    if (iHouse == ORDOS)          sprintf(filename, "mentato.ini");
-    if (iHouse == HARKONNEN)      sprintf(filename, "mentath.ini");
+    if (iHouse == ATREIDES) sprintf(filename, "mentata.ini");
+    if (iHouse == ORDOS) sprintf(filename, "mentato.ini");
+    if (iHouse == HARKONNEN) sprintf(filename, "mentath.ini");
 
     FILE *stream;
 
@@ -2115,102 +2081,77 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind)
 
 
     // clear mentat
-    memset(game.mentat_sentence, 0, sizeof(game.mentat_sentence));
+    pMentat->initSentences();
 
     sprintf(path, "campaign/briefings/%s", filename);
 
     logbook(path);
 
-	if (DEBUGGING)
-	{
-    char msg[255];
-    sprintf(msg, "Going to find SCEN ID #%d and SectionID %d", iScenarioFind, iSectionFind);
-    logbook(msg);
-	}
+    if (DEBUGGING) {
+        char msg[255];
+        sprintf(msg, "Going to find SCEN ID #%d and SectionID %d", iScenarioFind, iSectionFind);
+        logbook(msg);
+    }
 
-    int iScenario=0;
-    int iSection=0;
-    int iLine=0; // max 8 lines
+    int iScenario = 0;
+    int iSection = 0;
+    int iLine = 0; // max 8 lines
 
 
-    if( (stream = fopen( path, "r+t" )) != NULL )
-    {
-
+    if ((stream = fopen(path, "r+t")) != NULL) {
         char linefeed[MAX_LINE_LENGTH];
         char lineword[25];
         char linesection[30];
 
-        while( !feof( stream ) )
-        {
+        while (!feof(stream)) {
             INI_Sentence(stream, linefeed);
 
-                  // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-      // character (which is "//", ";" or "#"), or an empty line, then skip it
-      if (isCommentLine(linefeed))  continue;   // Skip
+            // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
+            // character (which is "//", ";" or "#"), or an empty line, then skip it
+            if (isCommentLine(linefeed)) continue;   // Skip
 
-      INI_Section(linefeed,linesection);
+            INI_Section(linefeed, linesection);
 
-      if (linesection[0] != '\0' && strlen(linesection) > 1)
-      {
-          // until we found the right sections/parts, keep searching
-          iSection=INI_SectionType(linesection, iSection);
-      }
-
-      if (iSection == INI_SCEN)
-      {
-         INI_Word(linefeed, lineword);
-         int wordtype = INI_WordType(lineword, iSection);
-
-         if (wordtype == WORD_NUMBER)
-         {
-             iScenario = INI_WordValueINT(linefeed);
-             continue;
-         }
-      }
-
-        if (iScenario == iScenarioFind)
-        {
-            if (iSection == iSectionFind)
-            {
-                INI_Word(linefeed, lineword);
-
-                int wordtype = INI_WordType(lineword, iSection);
-
-                if (wordtype == WORD_REGIONTEXT)
-                {
-                    char cHouseText[256];
-                    INI_WordValueSENTENCE(linefeed, cHouseText);
-
-                    // this is not a comment, add this....
-                    sprintf(game.mentat_sentence[iLine], "%s",cHouseText);
-                   // logbook(game.mentat_sentence[iLine]);
-                    iLine++;
-
-                    if (iLine > 9)
-                        break;
-                }
-
+            if (linesection[0] != '\0' && strlen(linesection) > 1) {
+                // until we found the right sections/parts, keep searching
+                iSection = INI_SectionType(linesection, iSection);
             }
 
+            if (iSection == INI_SCEN) {
+                INI_Word(linefeed, lineword);
+                int wordtype = INI_WordType(lineword, iSection);
 
+                if (wordtype == WORD_NUMBER) {
+                    iScenario = INI_WordValueINT(linefeed);
+                    continue;
+                }
+            }
+
+            if (iScenario == iScenarioFind) {
+                if (iSection == iSectionFind) {
+                    INI_Word(linefeed, lineword);
+
+                    int wordtype = INI_WordType(lineword, iSection);
+
+                    if (wordtype == WORD_REGIONTEXT) {
+                        char cHouseText[256];
+                        INI_WordValueSENTENCE(linefeed, cHouseText);
+
+                        // this is not a comment, add this....
+                        pMentat->setSentence(iLine, cHouseText);
+                        iLine++;
+
+                        if (iLine > 9)
+                            break;
+                    }
+                }
+            }
         }
-
-
-      /*
-
-
-  */
-
-
-        }
-
-
     }
 
     fclose(stream);
 
     logbook("[BRIEFING] File opened");
-
 }
 
 
