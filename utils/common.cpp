@@ -1634,28 +1634,6 @@ void Shimmer(int r, int x, int y)
 
 }
 
-void LOAD_SCENE(std::string scene) {
-	gfxmovie = NULL;
-
-	char filename[PAN_CENTER];
-	sprintf(filename, "data/scenes/%s.dat", scene.c_str());
-
-	gfxmovie = load_datafile(filename);
-
-	if (gfxmovie != NULL) {
-		game.iMovieFrame=0;
-		char msg[VOLUME_MAX];
-		sprintf(msg, "Successful loaded scene [%s]", filename);
-		logbook(msg);
-	} else {
-		gfxmovie=NULL;
-		game.iMovieFrame=-1;
-		char msg[VOLUME_MAX];
-		sprintf(msg, "Failed to load scene [%s]", filename);
-		logbook(msg);
-	}
-}
-
 // Skirmish map initialization
 void INIT_PREVIEWS()
 {

@@ -78,7 +78,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
-        game.iMentatSpeak = -1;
+        game.createHouseMentat();
     }
     // WIN MISSION
     if (key[KEY_F2]) {
@@ -130,7 +130,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
-        game.iMentatSpeak = -1;
+        game.createHouseMentat();
     }
 
     //JUMP TO MISSION 4
@@ -141,7 +141,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
-        game.iMentatSpeak = -1;
+        game.createHouseMentat();
     }
     //JUMP TO MISSION 5
     if (key[KEY_F8] && game.iHouse > 0) {
@@ -151,7 +151,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
-        game.iMentatSpeak = -1;
+        game.createHouseMentat();
     }
 
     // take screenshot

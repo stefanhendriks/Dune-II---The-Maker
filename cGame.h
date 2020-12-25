@@ -17,6 +17,7 @@
 
 // forward declaration :/ sigh should really look into these includes and such
 class cRectangle;
+class cAbstractMentat;
 
 class cGame {
 
@@ -82,9 +83,9 @@ public:
 
     int iMusicVolume;       // volume of the mp3 / midi
 
-    // Movie playback (scene's from datafile)
-    int TIMER_movie;
-    int iMovieFrame;
+//    // Movie playback (scene's from datafile)
+//    int TIMER_movie;
+//    int iMovieFrame;
 
     // throttle stuff
 	int shake_x;
@@ -100,8 +101,6 @@ public:
     void winning();       // winning
     void losing();        // losing
 
-    void think_movie();
-
 	bool bPlaceIt;		// placing something? (for structures only)
 	bool bPlacedIt;		// for remembering, for combat_mouse stuff..
 
@@ -109,25 +108,25 @@ public:
 
     void think_music();
 
-	char mentat_sentence[10][255];		// draw 2 sentences at once, so 0 1, 2 3, 4 5, 6 7, 8 9
+//	char mentat_sentence[10][255];		// draw 2 sentences at once, so 0 1, 2 3, 4 5, 6 7, 8 9
+//
+//	int TIMER_mentat_Speaking;	// speaking = time
+//
+//	int iMentatSpeak;			// = sentence to draw and speak with (-1 = not ready)
+//	int iMentatMouth;			// frames	...
+//	int iMentatEyes;				// ... for mentat ...
+//
+//	int TIMER_mentat_Mouth;			// timer for animations
+//	int TIMER_mentat_Eyes;			// timer for animations
 
-	int TIMER_mentat_Speaking;	// speaking = time
-
-	int iMentatSpeak;			// = sentence to draw and speak with (-1 = not ready)
-	int iMentatMouth;			// frames	...
-	int iMentatEyes;				// ... for mentat ...
-
-	int TIMER_mentat_Mouth;			// timer for animations
-	int TIMER_mentat_Eyes;			// timer for animations
-
-	void MENTAT_draw_mouth(int iMentat);
-	void MENTAT_draw_eyes(int iMentat);
+//	void MENTAT_draw_mouth(int iMentat);
+//	void MENTAT_draw_eyes(int iMentat);
 
 	void think_mentat();
 
     void FADE_OUT(); // fade out with current screen_bmp, this is a little game loop itself!
 
-	void preparementat(bool bTellHouse);
+	void preparementat(cAbstractMentat *theMentat);
 
 	bool setupGame();
 	void shutdown();
@@ -153,6 +152,9 @@ public:
 
     cRectangle * mapViewport;
 
+    void init_skirmish() const;
+
+    void createHouseMentat();
 private:
 	void poll();
 	void combat();		// the combat part (main) of the game
@@ -170,7 +172,6 @@ private:
 	void runGameState();
 	void shakeScreenAndBlitBuffer();
 	void handleTimeSlicing();
-    void draw_movie(int iType);  // draw movie sequence
 
     bool isResolutionInGameINIFoundAndSet();
     void setScreenResolutionFromGameIniSettings();
@@ -181,11 +182,10 @@ private:
 	int iMaxVolume;
 
 	cSoundPlayer *soundPlayer;
+	cAbstractMentat *pMentat;
 
     int fade_select;        // fade color when selected
     bool bFadeSelectDir;    // fade select direction
-
-    void init_skirmish() const;
 };
 
 #endif

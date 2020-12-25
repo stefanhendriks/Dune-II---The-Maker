@@ -21,16 +21,6 @@ void cGame::FADE_OUT() {
     draw_sprite(bmp_fadeout, bmp_screen, 0, 0);
 }
 
-// Drawing of any movie/scene loaded
-void cGame::draw_movie(int iType)
-{
-    if (gfxmovie != NULL && iMovieFrame > -1)
-    {
-        // drawing only, circulating is done in think function
-        draw_sprite(bmp_screen, (BITMAP *)gfxmovie[iMovieFrame].dat, 256, 120);
-    }
-}
-
 // this shows the you have lost bmp at screen, after mouse press the mentat debriefing state will begin
 void cGame::losing() {
     blit(bmp_winlose, bmp_screen, 0, 0, 0, 0, screen_x, screen_y);
@@ -44,9 +34,6 @@ void cGame::losing() {
         if (bSkirmish) {
             game.mission_init();
         }
-
-        // PREPARE NEW MENTAT BABBLE
-        iMentatSpeak = -1;
 
         // FADE OUT
         FADE_OUT();
@@ -66,10 +53,6 @@ void cGame::winning() {
         if (bSkirmish) {
             game.mission_init();
         }
-
-        // PREPARE NEW MENTAT BABBLE
-        iMentatSpeak = -1;
-
 
         // FADE OUT
         FADE_OUT();
