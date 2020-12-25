@@ -29,7 +29,10 @@ class cStructureUtils {
 		int getTotalPowerOutForPlayer(cPlayer * pPlayer);
 		int getTotalPowerUsageForPlayer(cPlayer * pPlayer);
 		int getTotalSpiceCapacityForPlayer(cPlayer * pPlayer);
-	protected:
+
+    void init(cMap *pMap);
+
+protected:
 
 	private:
 		cCellCalculator * cellCalculator;

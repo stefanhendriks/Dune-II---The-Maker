@@ -170,6 +170,7 @@ void cGame::mission_init() {
     iMovieFrame=-1;
 
     map.init(game.map_width, game.map_height);
+    structureUtils.init(&map);
 
     // clear out players but not entirely
     for (int i=0; i < MAX_PLAYERS; i++) {
@@ -447,8 +448,7 @@ bool cGame::isMusicPlaying() {
     return MIDI_music_playing();
 }
 
-void cGame::poll()
-{
+void cGame::poll() {
 	cMouse::updateState();
 	cGameControlsContext * context = player[HUMAN].getGameControlsContext();
 	context->updateState();
@@ -553,6 +553,7 @@ void cGame::combat() {
 
 	drawManager->draw();
 	interactionManager->interact();
+
 
     // think win/lose
     think_winlose();
