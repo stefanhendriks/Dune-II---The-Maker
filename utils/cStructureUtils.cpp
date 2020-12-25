@@ -9,7 +9,8 @@
 
 
 cStructureUtils::cStructureUtils() {
-	cellCalculator = new cCellCalculator(&map);
+	cellCalculator = nullptr;
+	init(&map);
 }
 
 cStructureUtils::~cStructureUtils() {
@@ -333,4 +334,9 @@ int cStructureUtils::getTotalPowerOutForPlayer(cPlayer * pPlayer) {
         }
 	}
 	return totalPowerOut;
+}
+
+void cStructureUtils::init(cMap *pMap) {
+    delete cellCalculator;
+    cellCalculator = new cCellCalculator(pMap);
 }
