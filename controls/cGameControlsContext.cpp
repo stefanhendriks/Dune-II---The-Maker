@@ -23,9 +23,11 @@ cGameControlsContext::~cGameControlsContext() {
 
 void cGameControlsContext::updateState() {
     updateMouseCell();
-	determineToolTip();
-	determineHoveringOverStructureId();
-	determineHoveringOverUnitId();
+    if (isMouseOnBattleField()) {
+        determineToolTip();
+        determineHoveringOverStructureId();
+        determineHoveringOverUnitId();
+    }
 }
 
 void cGameControlsContext::updateMouseCell() {
@@ -71,8 +73,6 @@ void cGameControlsContext::determineToolTip() {
 }
 
 void cGameControlsContext::determineHoveringOverStructureId() {
-	cStructureUtils structureUtils;
-
 	mouseHoveringOverStructureId = -1;
 
 	for (int i=0; i < MAX_STRUCTURES; i++) {
