@@ -1694,7 +1694,7 @@ void cGame::stateSelectHouse() {
     int selectYourHouseXCentered = (game.screen_x / 2) - sprite->w / 2;
     draw_sprite(bmp_screen, sprite, selectYourHouseXCentered, 0);
 
-    int selectYourHouseY = game.screen_y * 0.35f;
+    int selectYourHouseY = game.screen_y * 0.25f;
 
     int columnWidth = game.screen_x / 7; // empty, atr, empty, har, empty, ord, empty (7 columns)
     int offset = (columnWidth / 2) - (((BITMAP *)gfxinter[BMP_SELECT_HOUSE_ATREIDES].dat)->w / 2);
