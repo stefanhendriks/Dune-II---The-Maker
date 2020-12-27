@@ -8,7 +8,7 @@
 
 	2001 - 2020 (c) code by Stefan Hendriks
 
-	Mentat class
+	AbstractMentat class
 
 	The mentat class encapsulates all mentat specific functions.
 	This is a global class. In the Mentat directory there will be:
@@ -27,6 +27,7 @@ enum eMentatState {
     INIT,               // for loading data (Default state)
     SPEAKING,           // the mentat is speaking about whatever
     AWAITING_RESPONSE,  // the mentat is done speaking, the user needs to click something (yes/no, proceed/repeat, etc)
+    DESTROY,            // the mentat became 'invalid' (BeneGeserit-><house> transition)
 };
 
 class cAbstractMentat {
@@ -75,6 +76,9 @@ protected:
     cButtonCommand *leftButtonCommand;
     cButtonCommand *rightButtonCommand;
 
+    // this is used for Bene Geserit house selection
+    int house;
+
 public:
 	virtual void draw()=0;
     virtual void think()=0;
@@ -97,6 +101,11 @@ public:
     void thinkEyes();
 
     void thinkMovie();
+
+    void setHouse(int value) { house = value; }
+    int getHouse() { return house; }
+
+    void resetSpeak();
 };
 
 #endif

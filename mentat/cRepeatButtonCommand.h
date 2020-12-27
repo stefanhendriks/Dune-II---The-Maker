@@ -8,7 +8,7 @@ class cAbstractMentat;
 class cRepeatButtonCommand : public cButtonCommand {
 
 public:
-    void execute(cAbstractMentat& mentat);
+    void execute(cAbstractMentat& mentat) override;
 };
 
 

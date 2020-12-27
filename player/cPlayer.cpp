@@ -218,7 +218,7 @@ void cPlayer::init(int id) {
 void cPlayer::setHouse(int iHouse) {
     int currentHouse = house;
     char msg[255];
-    sprintf(msg, "cPlayer::setHouse - Current house is [%d], setting house to [%d]", currentHouse, iHouse);
+    sprintf(msg, "cPlayer[%d]::setHouse - Current house is [%d], setting house to [%d]", this->id, currentHouse, iHouse);
     logbook(msg);
     house = iHouse;      // use rules of this house
 

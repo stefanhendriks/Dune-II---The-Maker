@@ -35,9 +35,7 @@ void cGame::losing() {
             game.mission_init();
         }
 
-        createHouseMentat();
-        preparementat(pMentat, iHouse, iRegion, state);
-        pMentat->speak();
+        createAndPrepareMentatForHumanPlayer();
 
         // FADE OUT
         FADE_OUT();
@@ -58,9 +56,7 @@ void cGame::winning() {
             game.mission_init();
         }
 
-        createHouseMentat();
-        preparementat(pMentat, iHouse, iRegion, state);
-        pMentat->speak();
+        createAndPrepareMentatForHumanPlayer();
 
         // FADE OUT
         FADE_OUT();

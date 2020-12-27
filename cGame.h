@@ -74,7 +74,6 @@ public:
 
     int iRegion;        // what region is selected?
 	int iMission;		// what mission are we playing? (= techlevel)
-	int iHouse;			// what house is selected for playing?
 
 	int selected_structure;
 	int hover_unit;
@@ -126,7 +125,7 @@ public:
 
     void FADE_OUT(); // fade out with current screen_bmp, this is a little game loop itself!
 
-	void preparementat(cAbstractMentat *theMentat, int house, int region, int theState);
+    void prepareMentatForPlayer();
 
 	bool setupGame();
 	void shutdown();
@@ -154,7 +153,8 @@ public:
 
     void init_skirmish() const;
 
-    void createHouseMentat();
+    void createAndPrepareMentatForHumanPlayer();
+
 private:
 	void poll();
 	void combat();		// the combat part (main) of the game
@@ -162,7 +162,7 @@ private:
 
     void setup_skirmish();  // set up a skirmish game
 	void stateSelectHouse();		// house selection
-	void tellhouse();	// tell about the house
+	void stateMentatTellAboutHouse();	// tell about the house
 	void stateMentat(cAbstractMentat *pMentat);  // stateMentat state
 	void menu();		// main menu
 	void region();		// region selection
@@ -184,6 +184,7 @@ private:
 
     int fade_select;        // fade color when selected
     bool bFadeSelectDir;    // fade select direction
+    void prepareMentatToTellAboutHouse(int house);
 };
 
 #endif

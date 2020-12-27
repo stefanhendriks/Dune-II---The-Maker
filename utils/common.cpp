@@ -1451,9 +1451,10 @@ void playMusicByType(int iType) {
     } else if (iType == MUSIC_CONQUEST) {
     	iNumber=MIDI_SCENARIO;
     } else if (iType == MUSIC_BRIEFING) {
-        if (game.iHouse == ATREIDES)     	iNumber=MIDI_MENTAT_ATR;
-        if (game.iHouse == HARKONNEN)     	iNumber=MIDI_MENTAT_HAR;
-        if (game.iHouse == ORDOS)     		iNumber=MIDI_MENTAT_ORD;
+      int houseIndex = player[HUMAN].getHouse();
+        if (houseIndex == ATREIDES)         iNumber=MIDI_MENTAT_ATR;
+        if (houseIndex == HARKONNEN)     	iNumber=MIDI_MENTAT_HAR;
+        if (houseIndex == ORDOS)     		iNumber=MIDI_MENTAT_ORD;
     }
 
     // In the end, when mp3, play it:
@@ -1474,9 +1475,10 @@ void playMusicByType(int iType) {
         } else if (iType == MUSIC_CONQUEST) {
             sprintf(filename, "mp3/nextconq.mp3");
         } else if (iType == MUSIC_BRIEFING) {
-            if (game.iHouse == ATREIDES)	sprintf(filename, "mp3/mentata.mp3");
-            if (game.iHouse == HARKONNEN)	sprintf(filename, "mp3/mentath.mp3");
-            if (game.iHouse == ORDOS)		sprintf(filename, "mp3/mentato.mp3");
+          int houseIndex = player[HUMAN].getHouse();
+            if (houseIndex == ATREIDES)	sprintf(filename, "mp3/mentata.mp3");
+            if (houseIndex == HARKONNEN)	sprintf(filename, "mp3/mentath.mp3");
+            if (houseIndex == ORDOS)		sprintf(filename, "mp3/mentato.mp3");
         }
 
         mp3_play_file(filename);

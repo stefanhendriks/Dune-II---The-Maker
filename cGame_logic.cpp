@@ -94,7 +94,6 @@ void cGame::init() {
 
     iRegion=1;          // what region ? (calumative, from player perspective, NOT the actual region number)
 	iMission=0;         // calculated by mission loading (region -> mission calculation)
-	iHouse=-1;			// what house is selected for playing?
 
     shake_x=0;
     shake_y=0;
@@ -546,9 +545,14 @@ void cGame::stateMentat(cAbstractMentat *pMentat) {
     clear_to_color(bmp_screen, makecol(8,8,16));
 
 	// draw speaking animation, and text, etc
-    if (pMentat) {
-        pMentat->draw();
+    if (pMentat == nullptr) {
+        cTextDrawer textDrawer(game_font);
+        textDrawer.drawText(100, 100, "THIS IS WRONG 2 !!");
+        return;
     }
+
+    pMentat->draw();
+    pMentat->interact();
 
     draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 }
@@ -1393,7 +1397,6 @@ void cGame::setup_skirmish() {
             playMusicByType(MUSIC_PEACE);
 
             // TODO: spawn a few worms
-            iHouse=player[HUMAN].getHouse();
             setState(GAME_PLAYING);
             drawManager->getMessageDrawer()->initCombatPosition();
 
@@ -1459,21 +1462,21 @@ void cGame::stateSelectHouse() {
         delete pMentat;
         pMentat = nullptr;
         if (cMouse::isOverRectangle(&houseAtreides)) {
-            iHouse=ATREIDES;
+            prepareMentatToTellAboutHouse(ATREIDES);
 
             play_sound_id(SOUND_ATREIDES);
 
             setState(GAME_TELLHOUSE);
             bFadeOut=true;
         } else if (cMouse::isOverRectangle(&houseOrdos)) {
-            iHouse=ORDOS;
+            prepareMentatToTellAboutHouse(ORDOS);
 
             play_sound_id(SOUND_ORDOS);
 
             setState(GAME_TELLHOUSE);
             bFadeOut=true;
         } else if (cMouse::isOverRectangle(&houseHarkonnen)) {
-            iHouse=HARKONNEN;
+            prepareMentatToTellAboutHouse(HARKONNEN);
 
             play_sound_id(SOUND_HARKONNEN);
 
@@ -1496,30 +1499,7 @@ void cGame::stateSelectHouse() {
 }
 
 
-void cGame::preparementat(cAbstractMentat *theMentat, int house, int region, int theState) {
-    if (theState == GAME_BRIEFING) {
-        game.setup_players();
-        INI_Load_scenario(house, region, theMentat);
-        INI_LOAD_BRIEFING(house, region, INI_BRIEFING, theMentat);
-    } else if (theState == GAME_WINBRIEF) {
-        if (rnd(100) < 50) {
-            theMentat->loadScene("win01");
-        } else {
-            theMentat->loadScene("win02");
-        }
-        INI_LOAD_BRIEFING(house, region, INI_WIN, theMentat);
-    } else if (theState == GAME_LOSEBRIEF) {
-        if (rnd(100) < 50) {
-            theMentat->loadScene("lose01");
-        } else {
-            theMentat->loadScene("lose02");
-        }
-
-        INI_LOAD_BRIEFING(house, region, INI_LOSE, theMentat);
-    }
-}
-
-void cGame::tellhouse() {
+void cGame::stateMentatTellAboutHouse() {
     // FADING
     if (iFadeAction == 1) // fading out
     {
@@ -1531,26 +1511,14 @@ void cGame::tellhouse() {
         iFadeAction = 2;
     // -----------------
 
-    if (pMentat) {
-        pMentat->draw();
-        pMentat->interact();
-    } else {
-        pMentat = new cBeneMentat();
-        // create new stateMentat
-        if (iHouse == ATREIDES) {
-            INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION, pMentat);
-            pMentat->loadScene("platr"); // load planet of atreides
-        } else if (iHouse == HARKONNEN) {
-            INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION, pMentat);
-            pMentat->loadScene("plhar"); // load planet of harkonnen
-        } else if (iHouse == ORDOS) {
-            INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION, pMentat);
-            pMentat->loadScene("plord"); // load planet of ordos
-        }
-        // todo: Sardaukar, etc? (Super Dune 2 features)
-
-        pMentat->speak();
+    if (pMentat == nullptr) {
+        cTextDrawer textDrawer(game_font);
+        textDrawer.drawText(100, 100, "THIS IS WRONG!!");
+        return;
     }
+
+    pMentat->draw();
+    pMentat->interact();
 
     // draw mouse
     draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
@@ -1578,6 +1546,7 @@ void cGame::region() {
     // 3. Click next region
     // 4. Set up region and go to GAME_BRIEFING, which will do the rest...-> fade out
 
+    int iHouse = player[0].getHouse();
     select_palette(player[0].pal);
 
     // region = one we have won, only changing after we have chosen this one
@@ -1802,9 +1771,7 @@ void cGame::region() {
             //    iRegion++;
 
             // set up stateMentat
-            createHouseMentat();
-            preparementat(pMentat, iHouse, iRegion, state);
-            pMentat->speak();
+            createAndPrepareMentatForHumanPlayer();
 
             // load map
             INI_Load_scenario(iHouse, game.iRegion, pMentat);
@@ -1994,7 +1961,7 @@ void cGame::runGameState() {
             stateSelectHouse();
 			break;
 		case GAME_TELLHOUSE:
-			tellhouse();
+            stateMentatTellAboutHouse();
 			break;
 		case GAME_WINNING:
 			winning();
@@ -2506,7 +2473,7 @@ void cGame::setup_players() {
 	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
 		cPlayer * thePlayer = &player[i];
 
-		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer, iHouse);
+		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer);
 		thePlayer->setSideBar(sidebar);
 
 		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(thePlayer);
@@ -2571,16 +2538,64 @@ cGame::~cGame() {
 //    }
 }
 
-void cGame::createHouseMentat() {
+void cGame::prepareMentatForPlayer() {
+    int house = player[HUMAN].getHouse();
+    if (state == GAME_BRIEFING) {
+        game.mission_init();
+        game.setup_players();
+        INI_Load_scenario(house, iRegion, pMentat);
+        INI_LOAD_BRIEFING(house, iRegion, INI_BRIEFING, pMentat);
+    } else if (state == GAME_WINBRIEF) {
+        if (rnd(100) < 50) {
+            pMentat->loadScene("win01");
+        } else {
+            pMentat->loadScene("win02");
+        }
+        INI_LOAD_BRIEFING(house, iRegion, INI_WIN, pMentat);
+    } else if (state == GAME_LOSEBRIEF) {
+        if (rnd(100) < 50) {
+            pMentat->loadScene("lose01");
+        } else {
+            pMentat->loadScene("lose02");
+        }
+
+        INI_LOAD_BRIEFING(house, iRegion, INI_LOSE, pMentat);
+    }
+}
+
+void cGame::createAndPrepareMentatForHumanPlayer() {
     delete pMentat;
-    if (iHouse == ATREIDES) {
+    int houseIndex = player[0].getHouse();
+    if (houseIndex == ATREIDES) {
         pMentat = new cAtreidesMentat();
-    } else if (iHouse == HARKONNEN) {
+    } else if (houseIndex == HARKONNEN) {
         pMentat = new cHarkonnenMentat();
-    } else if (iHouse == ORDOS) {
+    } else if (houseIndex == ORDOS) {
         pMentat = new cOrdosMentat();
     } else {
         // fallback
         pMentat = new cBeneMentat();
     }
+    prepareMentatForPlayer();
+    pMentat->speak();
+}
+
+void cGame::prepareMentatToTellAboutHouse(int house) {
+    delete pMentat;
+    pMentat = new cBeneMentat();
+    pMentat->setHouse(house);
+    // create new stateMentat
+    if (house == ATREIDES) {
+        INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION, pMentat);
+        pMentat->loadScene("platr"); // load planet of atreides
+    } else if (house == HARKONNEN) {
+        INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION, pMentat);
+        pMentat->loadScene("plhar"); // load planet of harkonnen
+    } else if (house == ORDOS) {
+        INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION, pMentat);
+        pMentat->loadScene("plord"); // load planet of ordos
+    }
+    // todo: Sardaukar, etc? (Super Dune 2 features)
+
+    pMentat->speak();
 }

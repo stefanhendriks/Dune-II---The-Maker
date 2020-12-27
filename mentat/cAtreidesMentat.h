@@ -7,17 +7,17 @@ class cAtreidesMentat : public cAbstractMentat {
 
 protected:
 
-    void draw_mouth();
-    void draw_eyes();
-    void draw_other();
-    void draw();
-    void interact();
+    void draw_mouth() override;
+    void draw_eyes() override;
+    void draw_other() override;
+    void draw() override;
+    void interact() override;
 
 public:
     cAtreidesMentat();
-    ~cAtreidesMentat();
+    ~cAtreidesMentat() override;
 
-    void think();
+    void think() override;
 };
 
 
