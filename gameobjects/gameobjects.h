@@ -38,6 +38,11 @@
 #include "../controls/controlsh.h"
 
 // Mentats
+#include "mentat/cButtonCommand.h"
+#include "mentat/cYesButtonCommand.h"
+#include "mentat/cNoButtonCommand.h"
+#include "mentat/cProceedButtonCommand.h"
+#include "mentat/cRepeatButtonCommand.h"
 #include "mentat/cAbstractMentat.h"
 #include "mentat/cBeneMentat.h"
 #include "mentat/cAtreidesMentat.h"
