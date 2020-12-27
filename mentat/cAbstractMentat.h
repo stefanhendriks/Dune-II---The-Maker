@@ -15,7 +15,7 @@
 
 	c<anyhouse>Mentat.cpp / c<anyhouse>Mentat.h which will be derived from this class.
 
-	There is only one mentat in-game shown to the player. Therefore a good creation/deletion of it (when switching
+	There is only one stateMentat in-game shown to the player. Therefore a good creation/deletion of it (when switching
 	houses) is essential.
 */
 #ifndef CABSTRACTMENTAT_H
@@ -57,10 +57,7 @@ public:
     virtual void think()=0;
     virtual void interact()=0;
 
-    void playMovie(DATAFILE *movie);
-    void loadScene(std::string scene);
-
-	void prepare(bool bTellHouse, int state, int house, int region);
+    void loadScene(const std::string& scene);
 
 	cAbstractMentat();
 	virtual ~cAbstractMentat();
@@ -68,8 +65,15 @@ public:
     BITMAP *getBackgroundBitmap() const;
 
     void initSentences();
+    void speak();
 
     void setSentence(int i, char text[256]);
+
+    void thinkMouth();
+
+    void thinkEyes();
+
+    void thinkMovie();
 };
 
 #endif

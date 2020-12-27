@@ -2079,7 +2079,6 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstrac
 
     char path[50];
 
-
     // clear mentat
     pMentat->initSentences();
 
@@ -2097,8 +2096,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstrac
     int iSection = 0;
     int iLine = 0; // max 8 lines
 
-
-    if ((stream = fopen(path, "r+t")) != NULL) {
+    if ((stream = fopen(path, "r+t")) != nullptr) {
         char linefeed[MAX_LINE_LENGTH];
         char lineword[25];
         char linesection[30];
@@ -2147,9 +2145,10 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstrac
                 }
             }
         }
+
+        fclose(stream);
     }
 
-    fclose(stream);
 
     logbook("[BRIEFING] File opened");
 }
