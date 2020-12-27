@@ -43,6 +43,10 @@ cAbstractMentat::cAbstractMentat() {
 
     font = alfont_load_font("data/arrak.ttf");
 
+    // offsetX = 0 for screen resolution 640x480, ie, meaning > 640 we take the difference / 2
+    offsetX = (game.screen_x - 640) / 2;
+    offsetY = (game.screen_y - 480) / 2; // same goes for offsetY (but then for 480 height).
+
 	memset(sentence, 0, sizeof(sentence));
 	logbook("cAbstractMentat::cAbstractMentat()");
 }
@@ -226,12 +230,16 @@ void cAbstractMentat::thinkMouth() {// MOUTH
 }
 
 void cAbstractMentat::draw() {
+    rectfill(bmp_screen, offsetX, offsetY, offsetX + 640, offsetY + 480, makecol(0,0,0));
+    rect(bmp_screen, offsetX-1, offsetY-1, offsetX + 641, offsetY + 481, makecol(64, 64,89));
+    rect(bmp_screen, offsetX-2, offsetY-2, offsetX + 642, offsetY + 482, makecol(40,40,60));
+    rect(bmp_screen, offsetX-3, offsetY-3, offsetX + 643, offsetY + 483, makecol(0,0,0));
     select_palette(general_palette);
 
     // movie
     draw_movie();
 
-    draw_sprite(bmp_screen, getBackgroundBitmap(), 0, 0);
+    draw_sprite(bmp_screen, getBackgroundBitmap(), offsetX, offsetY);
 
     draw_eyes();
     draw_mouth();
@@ -240,11 +248,11 @@ void cAbstractMentat::draw() {
     if (state == SPEAKING) {
         // draw text that is being spoken
         if (iMentatSentence >= 0) {
-            alfont_textprintf(bmp_screen, bene_font, 17, 17, makecol(0, 0, 0), "%s", sentence[iMentatSentence]);
-            alfont_textprintf(bmp_screen, bene_font, 16, 16, makecol(255, 255, 255), "%s", sentence[iMentatSentence]);
+            alfont_textprintf(bmp_screen, bene_font, offsetX + 17, offsetY + 17, makecol(0, 0, 0), "%s", sentence[iMentatSentence]);
+            alfont_textprintf(bmp_screen, bene_font, offsetX + 16, offsetY + 16, makecol(255, 255, 255), "%s", sentence[iMentatSentence]);
 
-            alfont_textprintf(bmp_screen, bene_font, 17, 37, makecol(0, 0, 0), "%s", sentence[iMentatSentence + 1]);
-            alfont_textprintf(bmp_screen, bene_font, 16, 36, makecol(255, 255, 255), "%s",
+            alfont_textprintf(bmp_screen, bene_font, offsetX + 17, offsetY + 37, makecol(0, 0, 0), "%s", sentence[iMentatSentence + 1]);
+            alfont_textprintf(bmp_screen, bene_font, offsetX + 16, offsetY + 36, makecol(255, 255, 255), "%s",
                               sentence[iMentatSentence + 1]);
         }
     }
@@ -265,8 +273,8 @@ void cAbstractMentat::draw_movie() {
     if (iMovieFrame < 0) return;
     
     // drawing only, circulating is done in think function
-    int movieTopleftX = 256;
-    int movieTopleftY = 120;
+    int movieTopleftX = offsetX + 256;
+    int movieTopleftY = offsetY + 120;
 
     draw_sprite(bmp_screen, (BITMAP *)gfxmovie[iMovieFrame].dat, movieTopleftX, movieTopleftY);
 }
@@ -340,13 +348,13 @@ void cAbstractMentat::speak() {
 
 void cAbstractMentat::buildLeftButton(BITMAP *bmp, int x, int y) {
     delete leftButton;
-    leftButton = new cRectangle(x, y, bmp->w, bmp->h);
+    leftButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);
     leftButtonBmp = bmp;
 }
 
 void cAbstractMentat::buildRightButton(BITMAP *bmp, int x, int y) {
     delete rightButton;
-    rightButton = new cRectangle(x, y, bmp->w, bmp->h);
+    rightButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);
     rightButtonBmp = bmp;
 }
 

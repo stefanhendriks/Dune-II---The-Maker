@@ -74,6 +74,7 @@ extern DATAFILE *gfxmentat;
 
 // BITMAPS
 extern BITMAP *bmp_screen;
+extern BITMAP *bmp_backgroundMentat;
 extern BITMAP *bmp_fadeout;
 extern BITMAP *bmp_throttle;
 extern BITMAP *bmp_winlose;

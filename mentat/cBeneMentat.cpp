@@ -29,9 +29,9 @@ void cBeneMentat::draw() {
         } else if (house == ORDOS) {
             houseName = "Ordos";
         }
-        alfont_textprintf_aa_ex(bmp_screen, font, 17, 17, makecol(0, 0, 0), makecol(0, 0, 0),
+        alfont_textprintf_aa_ex(bmp_screen, font, offsetX + 17, offsetY + 17, makecol(0, 0, 0), makecol(0, 0, 0),
                                 "Do you wish to join house %s ?", houseName.c_str());
-        alfont_textprintf_aa_ex(bmp_screen, font, 16, 16, makecol(255, 214, 137), makecol(0, 0, 0),
+        alfont_textprintf_aa_ex(bmp_screen, font, offsetX + 16, offsetY + 16, makecol(255, 214, 137), makecol(0, 0, 0),
                                 "Do you wish to join house %s ?", houseName.c_str());
     }
 }
@@ -41,11 +41,11 @@ void cBeneMentat::draw_other() {
 }
 
 void cBeneMentat::draw_eyes() {
-    draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BEN_EYES01+ iMentatEyes].dat, 128, 240);
+    draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BEN_EYES01+ iMentatEyes].dat, offsetX + 128, offsetY + 240);
 }
 
 void cBeneMentat::draw_mouth() {
-    draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BEN_MOUTH01+ iMentatMouth].dat, 112, 272);
+    draw_sprite(bmp_screen, (BITMAP *)gfxmentat[BEN_MOUTH01+ iMentatMouth].dat, offsetX + 112, offsetY + 272);
 }
 
 void cBeneMentat::interact() {

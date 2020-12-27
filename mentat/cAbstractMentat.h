@@ -79,6 +79,9 @@ protected:
     // this is used for Bene Geserit house selection
     int house;
 
+    int offsetX;
+    int offsetY;
+
 public:
 	virtual void draw()=0;
     virtual void think()=0;
