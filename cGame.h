@@ -126,7 +126,7 @@ public:
 
     void FADE_OUT(); // fade out with current screen_bmp, this is a little game loop itself!
 
-	void preparementat(cAbstractMentat *theMentat);
+	void preparementat(cAbstractMentat *theMentat, int house, int region, int theState);
 
 	bool setupGame();
 	void shutdown();
@@ -160,12 +160,10 @@ private:
 	void combat();		// the combat part (main) of the game
 	bool isMusicPlaying();
 
-	void draw_mentat(int iType); // draw mentat type
-
     void setup_skirmish();  // set up a skirmish game
 	void stateSelectHouse();		// house selection
 	void tellhouse();	// tell about the house
-	void mentat(int iType);		// mentat talking
+	void stateMentat(cAbstractMentat *pMentat);  // stateMentat state
 	void menu();		// main menu
 	void region();		// region selection
 

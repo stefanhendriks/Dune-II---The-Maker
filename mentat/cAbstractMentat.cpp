@@ -11,8 +11,6 @@
   */
 
 #include "include/d2tmh.h"
-#include "cAbstractMentat.h"
-
 
 // "default" Constructor
 cAbstractMentat::cAbstractMentat() {
@@ -33,6 +31,7 @@ cAbstractMentat::cAbstractMentat() {
     gfxmovie = nullptr;
 
 	memset(sentence, 0, sizeof(sentence));
+	logbook("cAbstractMentat::cAbstractMentat()");
 }
 
 cAbstractMentat::~cAbstractMentat() {
@@ -58,25 +57,19 @@ cAbstractMentat::~cAbstractMentat() {
     gfxmovie = nullptr;
 
 	memset(sentence, 0, sizeof(sentence));
+    logbook("cAbstractMentat::~cAbstractMentat()");
 }
 
 void cAbstractMentat::think() {
-    // mentat mouth
-    if (TIMER_Mouth <= 0) {
-        TIMER_Mouth = 13 + rnd(5);
-    }
-
     if (TIMER_Speaking > 0) {
         TIMER_Speaking--;
-    }
-
-    if (TIMER_Speaking == 0) {
+    } else if (TIMER_Speaking == 0) {
         // calculate speaking stuff
 
         iMentatSentence += 2; // makes 0, 2, etc.
 
         if (iMentatSentence > 8) {
-            iMentatSentence = -2;
+            iMentatSentence = -2; // TODO: Change state to 'end of speaking - do some action'
             TIMER_Speaking = -1;
             return;
         }
@@ -94,56 +87,28 @@ void cAbstractMentat::think() {
         TIMER_Speaking = iLength * 12;
     }
 
-    if (TIMER_Mouth > 0) {
-        TIMER_Mouth--;
-    } else if (TIMER_Mouth == 0) {
+    thinkMouth();
+    thinkEyes();
+    thinkMovie();
+}
 
-        if (TIMER_Speaking > 0) {
-            int iOld = iMentatMouth;
+void cAbstractMentat::thinkMovie() {
+    if (gfxmovie != nullptr) {
+        TIMER_movie++;
 
-            if (iMentatMouth == 0) {
-                // when mouth is shut, we wait a bit.
-                if (rnd(100) < 45) {
-                    iMentatMouth += (1 + rnd(4));
-                } else {
-                    TIMER_Mouth = 3; // wait
-                }
+        if (TIMER_movie > 20) {
+            iMovieFrame++;
 
-                // correct any frame
-                if (iMentatMouth > 4) {
-                    iMentatMouth -= 5;
-                }
-            } else {
-                iMentatMouth += (1 + rnd(4));
-
-                if (iMentatMouth > 4) {
-                    iMentatMouth -= 5;
-                }
+            if (gfxmovie[iMovieFrame].type == DAT_END ||
+                gfxmovie[iMovieFrame].type != DAT_BITMAP) {
+                iMovieFrame = 0;
             }
-
-            // Test if we did not set the timer, when not, we changed stuff, and we
-            // have to make sure we do not reshow the same animation.. which looks
-            // odd!
-            if (TIMER_Mouth == 0) {
-                if (iMentatMouth == iOld) {
-                    iMentatMouth++;
-                }
-
-                // correct if nescesary:
-                if (iMentatMouth > 4) {
-                    iMentatMouth -= 5;
-                }
-
-                // Done!
-            }
-        } else {
-            iMentatMouth = 0; // when there is no sentence, do not animate mouth
+            TIMER_movie = 0;
         }
+    }
+}
 
-        TIMER_Mouth = -1; // this way we make sure we do not update it too much
-    } // speaking
-
-
+void cAbstractMentat::thinkEyes() {
     if (TIMER_Eyes > 0) {
         TIMER_Eyes--;
     } else {
@@ -153,7 +118,7 @@ void cAbstractMentat::think() {
 
         if (i < 30) {
             iMentatEyes = 3;
-        } else if (i >= 30 && i < 60) {
+        } else if (i < 60) {
             iMentatEyes = 0;
         } else {
             iMentatEyes = 4;
@@ -170,46 +135,56 @@ void cAbstractMentat::think() {
             TIMER_Eyes = 30;
         }
     }
-
-    if (gfxmovie != NULL) {
-        TIMER_movie++;
-
-        if (TIMER_movie > 20) {
-            iMovieFrame++;
-
-            if (gfxmovie[iMovieFrame].type == DAT_END ||
-                gfxmovie[iMovieFrame].type != DAT_BITMAP) {
-                iMovieFrame = 0;
-            }
-            TIMER_movie = 0;
-        }
-    }
 }
 
-void cAbstractMentat::prepare(bool bTellHouse, int state, int house, int region) {
-//    if (state == GAME_BRIEFING) {
-//        INI_Load_scenario(house, region);
-//        INI_LOAD_BRIEFING(house, region, INI_BRIEFING);
-//    } else if (state == GAME_WINBRIEF) {
-//        if (rnd(100) < 50) {
-//            std::string scene = "win01";
-//            LOAD_SCENE(scene); // ltank
-//        } else {
-//            std::string scene = "win02";
-//            LOAD_SCENE(scene); // ltank
-//        }
-//
-//        INI_LOAD_BRIEFING(house, region, INI_WIN);
-//    } else if (state == GAME_LOSEBRIEF)	{
-//        if (rnd(100) < 50) {
-//            std::string scene = "lose01";
-//            LOAD_SCENE(scene); // ltank
-//        } else {
-//            std::string scene = "lose02";
-//            LOAD_SCENE(scene); // ltank
-//        }
-//        INI_LOAD_BRIEFING(house, region, INI_LOSE);
-//    }
+void cAbstractMentat::thinkMouth() {// MOUTH
+    if (TIMER_Mouth > 0) {
+        TIMER_Mouth--;
+    } else {
+        // still speaking
+        if (TIMER_Speaking > 0) {
+
+            int iOld = iMentatMouth;
+
+            if (iMentatMouth == 0) { // mouth is shut
+                // when mouth is shut, we wait a bit.
+                if (rnd(100) < 45) {
+                    iMentatMouth += (1 + rnd(4));
+                } else {
+                    TIMER_Mouth = 25; // wait
+                }
+            } else {
+                iMentatMouth += (1 + rnd(4));
+            }
+
+            // correct any frame
+            if (iMentatMouth > 4) {
+                iMentatMouth -= 5;
+            }
+
+            // Test if we did not set the timer, when not, we changed stuff, and we
+            // have to make sure we do not reshow the same animation.. which looks
+            // odd!
+            if (TIMER_Mouth <= 0) {
+                // did not change mouth, force it
+                if (iMentatMouth == iOld) {
+                    iMentatMouth++;
+                }
+
+                // correct if needed:
+                if (iMentatMouth > 4) {
+                    iMentatMouth -= 5;
+                }
+            }
+        } else {
+            iMentatMouth = 0; // when there is no sentence, do not animate mouth
+        }
+
+        if (TIMER_Mouth <= 0) {
+            TIMER_Mouth = 13 + rnd(15);
+        }
+    } // Animating mouth
+
 }
 
 void cAbstractMentat::draw() {
@@ -342,21 +317,18 @@ void cAbstractMentat::interact() {
     }
 }
 
-void cAbstractMentat::playMovie(DATAFILE *movie) {
-    gfxmovie = movie;
-    TIMER_movie = 0;
-    iMovieFrame = 0;
-}
-
 void cAbstractMentat::initSentences() {
     memset(sentence, 0, sizeof(sentence));
 }
 
 void cAbstractMentat::setSentence(int i, char *text) {
     sprintf(sentence[i], "%s", text);
+    char msg[512];
+    sprintf(msg, "Sentence[%d]=%s", i, text);
+    logbook(msg);
 }
 
-void cAbstractMentat::loadScene(std::string scene) {
+void cAbstractMentat::loadScene(const std::string& scene) {
     gfxmovie = nullptr;
 
     char filename[255];
@@ -364,16 +336,24 @@ void cAbstractMentat::loadScene(std::string scene) {
 
     gfxmovie = load_datafile(filename);
 
+    TIMER_movie = 0;
+    iMovieFrame=0;
+
     if (gfxmovie != nullptr) {
-        iMovieFrame=0;
         char msg[255];
         sprintf(msg, "Successful loaded scene [%s]", filename);
         logbook(msg);
-    } else {
-        gfxmovie=nullptr;
-        iMovieFrame=-1;
-        char msg[255];
-        sprintf(msg, "Failed to load scene [%s]", filename);
-        logbook(msg);
+        return;
     }
+
+    gfxmovie=nullptr;
+    char msg[255];
+    sprintf(msg, "Failed to load scene [%s]", filename);
+    logbook(msg);
+}
+
+void cAbstractMentat::speak() {
+    TIMER_Speaking = 0;
+    TIMER_Mouth = 0;
+    iMentatSentence = -2; // ugh
 }

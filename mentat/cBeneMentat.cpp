@@ -12,13 +12,13 @@ void cBeneMentat::think() {
 
     // when not speaking, draw 'do you wish to join house x'
     if (TIMER_Speaking < 0) {
-        iBackgroundFrame = MEN_WISH;
+//        iBackgroundFrame = MEN_WISH;
+        draw_sprite(bmp_screen, (BITMAP *) gfxmentat[MEN_WISH].dat, 0, 0);
     }
 }
 
 void cBeneMentat::draw() {
     cAbstractMentat::draw();
-
 }
 
 void cBeneMentat::draw_other() {

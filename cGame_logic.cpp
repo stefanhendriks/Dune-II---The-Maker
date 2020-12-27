@@ -70,13 +70,13 @@ void cGame::init() {
 	paths_created=0;
 	hover_unit=-1;
 
-    state = GAME_MENU;
+    setState(GAME_MENU);
 
     iWinQuota=-1;              // > 0 means, get this to win the mission, else, destroy all!
 
 	selected_structure=-1;
 
-	// mentat
+	// stateMentat
     delete pMentat;
     pMentat = nullptr;
 
@@ -245,7 +245,7 @@ void cGame::think_winlose() {
 
     // On succes...
     if (bSucces) {
-        state = GAME_WINNING;
+        setState(GAME_WINNING);
 
         shake_x = 0;
         shake_y = 0;
@@ -262,7 +262,7 @@ void cGame::think_winlose() {
     }
 
     if (bFailed) {
-        state = GAME_LOSING;
+        setState(GAME_LOSING);
 
         shake_x = 0;
         shake_y = 0;
@@ -279,7 +279,7 @@ void cGame::think_winlose() {
     }
 }
 
-//TODO: move to mentat classes
+//TODO: move to stateMentat classes
 void cGame::think_mentat() {
     if (pMentat) {
         pMentat->think();
@@ -531,8 +531,8 @@ void cGame::combat() {
     think_winlose();
 }
 
-// mentat logic + drawing mouth/eyes
-void cGame::mentat(int iType) {
+// stateMentat logic + drawing mouth/eyes
+void cGame::stateMentat(cAbstractMentat *pMentat) {
     if (iFadeAction == 1) // fading out
     {
         draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
@@ -621,7 +621,7 @@ void cGame::menu()
 	{
 		if (cMouse::isLeftButtonClicked())
 		{
-			state = GAME_SELECT_HOUSE; // select house
+			setState(GAME_SELECT_HOUSE); // select house
 			bFadeOut = true;
 		}
 	}
@@ -632,7 +632,7 @@ void cGame::menu()
 	{
 		if (cMouse::isLeftButtonClicked())
 		{
-			game.state = GAME_SETUPSKIRMISH;
+			setState(GAME_SETUPSKIRMISH);
 			bFadeOut = true;
 			INI_PRESCAN_SKIRMISH();
 
@@ -1199,7 +1199,7 @@ void cGame::setup_skirmish() {
 
         if (cMouse::isLeftButtonClicked()) {
             bFadeOut=true;
-            state = GAME_MENU;
+            setState(GAME_MENU);
         }
     }
 
@@ -1394,7 +1394,7 @@ void cGame::setup_skirmish() {
 
             // TODO: spawn a few worms
             iHouse=player[HUMAN].getHouse();
-            state = GAME_PLAYING;
+            setState(GAME_PLAYING);
             drawManager->getMessageDrawer()->initCombatPosition();
 
             // delete cell calculator
@@ -1457,37 +1457,46 @@ void cGame::stateSelectHouse() {
 
     if (cMouse::isLeftButtonClicked()) {
         delete pMentat;
-        pMentat = new cBeneMentat();
+        pMentat = nullptr;
         if (cMouse::isOverRectangle(&houseAtreides)) {
+            pMentat = new cBeneMentat();
             iHouse=ATREIDES;
 
             play_sound_id(SOUND_ATREIDES);
 
+            INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION, pMentat);
             pMentat->loadScene("platr"); // load planet of atreides
+            pMentat->speak();
 
-            state = GAME_TELLHOUSE;
+            setState(GAME_TELLHOUSE);
             bFadeOut=true;
         } else if (cMouse::isOverRectangle(&houseOrdos)) {
+            pMentat = new cBeneMentat();
             iHouse=ORDOS;
 
             play_sound_id(SOUND_ORDOS);
 
+            INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION, pMentat);
             pMentat->loadScene("plord"); // load planet of ordos
+            pMentat->speak();
 
-            state = GAME_TELLHOUSE;
+            setState(GAME_TELLHOUSE);
             bFadeOut=true;
         } else if (cMouse::isOverRectangle(&houseHarkonnen)) {
+            pMentat = new cBeneMentat();
             iHouse=HARKONNEN;
 
             play_sound_id(SOUND_HARKONNEN);
 
+            INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION, pMentat);
             pMentat->loadScene("plhar"); // load planet of harkonnen
+            pMentat->speak();
 
-            state = GAME_TELLHOUSE;
+            setState(GAME_TELLHOUSE);
             bFadeOut=true;
         } else if (backButtonRect->isMouseOver()) {
             bFadeOut=true;
-            state = GAME_MENU;
+            setState(GAME_MENU);
         }
     }
 
@@ -1502,25 +1511,26 @@ void cGame::stateSelectHouse() {
 }
 
 
-void cGame::preparementat(cAbstractMentat * theMentat) {
-    if (state == GAME_BRIEFING) {
+void cGame::preparementat(cAbstractMentat *theMentat, int house, int region, int theState) {
+    if (theState == GAME_BRIEFING) {
         game.setup_players();
-        INI_Load_scenario(iHouse, iRegion, theMentat);
-        INI_LOAD_BRIEFING(iHouse, iRegion, INI_BRIEFING, theMentat);
-    } else if (state == GAME_WINBRIEF) {
-        if (rnd(100) < 50)
-            theMentat->loadScene("win01"); // ltank
-        else
-            theMentat->loadScene("win02"); // ltank
+        INI_Load_scenario(house, region, theMentat);
+        INI_LOAD_BRIEFING(house, region, INI_BRIEFING, theMentat);
+    } else if (theState == GAME_WINBRIEF) {
+        if (rnd(100) < 50) {
+            theMentat->loadScene("win01");
+        } else {
+            theMentat->loadScene("win02");
+        }
+        INI_LOAD_BRIEFING(house, region, INI_WIN, theMentat);
+    } else if (theState == GAME_LOSEBRIEF) {
+        if (rnd(100) < 50) {
+            theMentat->loadScene("lose01");
+        } else {
+            theMentat->loadScene("lose02");
+        }
 
-        INI_LOAD_BRIEFING(iHouse, iRegion, INI_WIN, theMentat);
-    } else if (state == GAME_LOSEBRIEF) {
-        if (rnd(100) < 50)
-            theMentat->loadScene("lose01"); // ltank
-        else
-            theMentat->loadScene("lose02"); // ltank
-
-        INI_LOAD_BRIEFING(iHouse, iRegion, INI_LOSE, theMentat);
+        INI_LOAD_BRIEFING(house, region, INI_LOSE, theMentat);
     }
 }
 
@@ -1541,7 +1551,7 @@ void cGame::tellhouse() {
         pMentat->interact();
     } else {
         pMentat = new cBeneMentat();
-        // create new mentat
+        // create new stateMentat
         if (iHouse == ATREIDES) {
             INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION, pMentat);
         } else if (iHouse == HARKONNEN) {
@@ -1795,12 +1805,17 @@ void cGame::region() {
 
             game.mission_init();
             game.iRegionState=0;
-            game.state = GAME_BRIEFING;
+            game.setState(GAME_BRIEFING);
             game.iRegion = iNewReg;
             game.iMission++;						// FINALLY ADD MISSION NUMBER...
             //    iRegion++;
 
+            // set up stateMentat
             createHouseMentat();
+            preparementat(pMentat, iHouse, iRegion, state);
+            pMentat->speak();
+
+            // load map
             INI_Load_scenario(iHouse, game.iRegion, pMentat);
 
             //sprintf(msg, "Mission = %d", game.iMission);
@@ -1973,9 +1988,7 @@ void cGame::runGameState() {
 			combat();
 			break;
 		case GAME_BRIEFING:
-		    createHouseMentat();
-            preparementat(pMentat);
-			mentat(iHouse);
+            stateMentat(pMentat);
 			break;
 		case GAME_SETUPSKIRMISH:
 			setup_skirmish();
@@ -1999,14 +2012,10 @@ void cGame::runGameState() {
 			losing();
 			break;
 		case GAME_WINBRIEF:
-            createHouseMentat();
-            preparementat(pMentat);
-			mentat(iHouse);
+            stateMentat(pMentat);
 			break;
 		case GAME_LOSEBRIEF:
-            createHouseMentat();
-            preparementat(pMentat);
-			mentat(iHouse);
+            stateMentat(pMentat);
 			break;
 	}
 }
@@ -2537,6 +2546,9 @@ bool cGame::isState(int thisState) {
 }
 
 void cGame::setState(int thisState) {
+    char msg[255];
+    sprintf(msg, "Setting state from %d to %d", state, thisState);
+    logbook(msg);
 	state = thisState;
 }
 

@@ -7,6 +7,7 @@ cAtreidesMentat::cAtreidesMentat() {
 cAtreidesMentat::~cAtreidesMentat() = default;
 
 void cAtreidesMentat::think() {
+    logbook("cAtreidesMentat::think");
     // think like base class
     cAbstractMentat::think();
 }
