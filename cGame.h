@@ -107,20 +107,6 @@ public:
 
     void think_music();
 
-//	char mentat_sentence[10][255];		// draw 2 sentences at once, so 0 1, 2 3, 4 5, 6 7, 8 9
-//
-//	int TIMER_mentat_Speaking;	// speaking = time
-//
-//	int iMentatSpeak;			// = sentence to draw and speak with (-1 = not ready)
-//	int iMentatMouth;			// frames	...
-//	int iMentatEyes;				// ... for mentat ...
-//
-//	int TIMER_mentat_Mouth;			// timer for animations
-//	int TIMER_mentat_Eyes;			// timer for animations
-
-//	void MENTAT_draw_mouth(int iMentat);
-//	void MENTAT_draw_eyes(int iMentat);
-
 	void think_mentat();
 
     void FADE_OUT(); // fade out with current screen_bmp, this is a little game loop itself!
@@ -162,8 +148,7 @@ private:
 
     void setup_skirmish();  // set up a skirmish game
 	void stateSelectHouse();		// house selection
-	void stateMentatTellAboutHouse();	// tell about the house
-	void stateMentat(cAbstractMentat *pMentat);  // stateMentat state
+	void stateMentat(cAbstractMentat *pMentat);  // state mentat talking and interaction
 	void menu();		// main menu
 	void region();		// region selection
 
