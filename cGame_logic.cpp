@@ -76,7 +76,7 @@ void cGame::init() {
 
 	selected_structure=-1;
 
-	// stateMentat
+	// mentat
     delete pMentat;
     pMentat = nullptr;
 
