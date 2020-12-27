@@ -278,116 +278,10 @@ void cGame::think_winlose() {
     }
 }
 
-//TODO: move to stateMentat classes
 void cGame::think_mentat() {
     if (pMentat) {
         pMentat->think();
     }
-//
-//    if (TIMER_mentat_Speaking > 0) {
-//        TIMER_mentat_Speaking--;
-//    }
-//
-//    if (TIMER_mentat_Speaking == 0) {
-//        // calculate speaking stuff
-//
-//        iMentatSpeak += 2; // makes 0, 2, etc.
-//
-//        if (iMentatSpeak > 8) {
-//            iMentatSpeak = -2;
-//            TIMER_mentat_Speaking = -1;
-//            return;
-//        }
-//
-//        // lentgh calculation of time
-//        int iLength = strlen(mentat_sentence[iMentatSpeak]);
-//        iLength += strlen(mentat_sentence[iMentatSpeak + 1]);
-//
-//        if (iLength < 2) {
-//            iMentatSpeak = -2;
-//            TIMER_mentat_Speaking = -1;
-//            return;
-//        }
-//
-//        TIMER_mentat_Speaking = iLength * 12;
-//    }
-//
-//    if (TIMER_mentat_Mouth > 0) {
-//        TIMER_mentat_Mouth--;
-//    } else if (TIMER_mentat_Mouth == 0) {
-//
-//        if (TIMER_mentat_Speaking > 0) {
-//            int iOld = iMentatMouth;
-//
-//            if (iMentatMouth == 0) {
-//                // when mouth is shut, we wait a bit.
-//                if (rnd(100) < 45) {
-//                    iMentatMouth += (1 + rnd(4));
-//                } else {
-//                    TIMER_mentat_Mouth = 3; // wait
-//                }
-//
-//                // correct any frame
-//                if (iMentatMouth > 4) {
-//                    iMentatMouth -= 5;
-//                }
-//            } else {
-//                iMentatMouth += (1 + rnd(4));
-//
-//                if (iMentatMouth > 4) {
-//                    iMentatMouth -= 5;
-//                }
-//            }
-//
-//            // Test if we did not set the timer, when not, we changed stuff, and we
-//            // have to make sure we do not reshow the same animation.. which looks
-//            // odd!
-//            if (TIMER_mentat_Mouth == 0) {
-//                if (iMentatMouth == iOld) {
-//                    iMentatMouth++;
-//                }
-//
-//                // correct if nescesary:
-//                if (iMentatMouth > 4) {
-//                    iMentatMouth -= 5;
-//                }
-//
-//                // Done!
-//            }
-//        } else {
-//            iMentatMouth = 0; // when there is no sentence, do not animate mouth
-//        }
-//
-//        TIMER_mentat_Mouth = -1; // this way we make sure we do not update it too much
-//    } // speaking
-//
-//
-//    if (TIMER_mentat_Eyes > 0) {
-//        TIMER_mentat_Eyes--;
-//    } else {
-//        int i = rnd(100);
-//
-//        int iWas = iMentatEyes;
-//
-//        if (i < 30) {
-//            iMentatEyes = 3;
-//        } else if (i >= 30 && i < 60) {
-//            iMentatEyes = 0;
-//        } else {
-//            iMentatEyes = 4;
-//        }
-//
-//        // its the same
-//        if (iMentatEyes == iWas) {
-//            iMentatEyes = rnd(4);
-//        }
-//
-//        if (iMentatEyes != 4) {
-//            TIMER_mentat_Eyes = 90 + rnd(160);
-//        } else {
-//            TIMER_mentat_Eyes = 30;
-//        }
-//    }
 }
 
 // TODO: Move to music related class (MusicPlayer?)
@@ -542,7 +436,7 @@ void cGame::stateMentat(cAbstractMentat *pMentat) {
         iFadeAction = 2;
     // -----------------
 
-    clear_to_color(bmp_screen, makecol(8,8,16));
+    draw_sprite(bmp_screen, bmp_backgroundMentat, 0, 0);
 
 	// draw speaking animation, and text, etc
     if (pMentat == nullptr) {
@@ -1498,32 +1392,6 @@ void cGame::stateSelectHouse() {
     }
 }
 
-
-void cGame::stateMentatTellAboutHouse() {
-    // FADING
-    if (iFadeAction == 1) // fading out
-    {
-        draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
-        return;
-    }
-
-    if (iAlphaScreen == 0)
-        iFadeAction = 2;
-    // -----------------
-
-    if (pMentat == nullptr) {
-        cTextDrawer textDrawer(game_font);
-        textDrawer.drawText(100, 100, "THIS IS WRONG!!");
-        return;
-    }
-
-    pMentat->draw();
-    pMentat->interact();
-
-    // draw mouse
-    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
-}
-
 // select your next conquest
 void cGame::region() {
 	int mouse_tile = MOUSE_NORMAL;
@@ -1942,6 +1810,12 @@ void cGame::shakeScreenAndBlitBuffer() {
 
 void cGame::runGameState() {
     switch (state) {
+        case GAME_SELECT_HOUSE:
+            stateSelectHouse();
+            break;
+        case GAME_TELLHOUSE:
+            stateMentat(pMentat);
+            break;
 		case GAME_PLAYING:
 			combat();
 			break;
@@ -1957,12 +1831,6 @@ void cGame::runGameState() {
 		case GAME_REGION:
 			region();
 			break;
-		case GAME_SELECT_HOUSE:
-            stateSelectHouse();
-			break;
-		case GAME_TELLHOUSE:
-            stateMentatTellAboutHouse();
-			break;
 		case GAME_WINNING:
 			winning();
 			break;
@@ -1975,6 +1843,7 @@ void cGame::runGameState() {
 		case GAME_LOSEBRIEF:
             stateMentat(pMentat);
 			break;
+        // TODO: GAME_STATISTICS, ETC
 	}
 }
 
@@ -2314,6 +2183,51 @@ bool cGame::setupGame() {
 	{
 		logbook("Memory bitmap created: bmp_screen");
 		clear(bmp_screen);
+	}
+
+    bmp_backgroundMentat = create_bitmap(game.screen_x, game.screen_y);
+
+	if (bmp_backgroundMentat == NULL)
+	{
+		allegro_message("Failed to create a memory bitmap");
+		logbook("ERROR: Could not create bitmap: bmp_backgroundMentat");
+		return false;
+	}
+	else
+	{
+		logbook("Memory bitmap created: bmp_backgroundMentat");
+		clear(bmp_backgroundMentat);
+
+		// create only once
+        clear_to_color(bmp_backgroundMentat, makecol(8,8,16));
+        bool offsetX = false;
+
+        float horizon = game.screen_y / 2;
+        float centered = game.screen_x / 2;
+        for (int y = 0; y < game.screen_y; y++) {
+            float diffYToCenter = 1.0f;
+            if (y < horizon) {
+                diffYToCenter = y / horizon;
+            } else {
+                diffYToCenter = 1 - ((y-horizon) / horizon);
+            }
+
+            for (int x = offsetX ? 0 : 1; x < game.screen_x; x += 2) {
+                float diffXToCenter = 1.0f;
+                if (x < centered) {
+                    diffXToCenter = x / centered;
+                } else {
+                    diffXToCenter = 1-((x-centered) / centered);
+                }
+
+                float red = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
+                float green = 2 + (12 * diffXToCenter) + (12 * diffYToCenter);
+                float blue = 4 + (24 * diffXToCenter) + (24 * diffYToCenter);
+                putpixel(bmp_backgroundMentat, x, y, makecol((int)red, (int)green, (int)blue));
+            }
+            // flip offset every y row
+            offsetX = !offsetX;
+        }
 	}
 
     bmp_throttle = create_bitmap(game.screen_x, game.screen_y);

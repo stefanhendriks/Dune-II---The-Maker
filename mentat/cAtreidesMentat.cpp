@@ -24,11 +24,11 @@ void cAtreidesMentat::draw_other() {
 }
 
 void cAtreidesMentat::draw_eyes() {
-    draw_sprite(bmp_screen, (BITMAP *)gfxmentat[ATR_EYES01+ iMentatEyes].dat, 80, 241);
+    draw_sprite(bmp_screen, (BITMAP *)gfxmentat[ATR_EYES01+ iMentatEyes].dat,  offsetX + 80, offsetY + 241);
 }
 
 void cAtreidesMentat::draw_mouth() {
-    draw_sprite(bmp_screen, (BITMAP *)gfxmentat[ATR_MOUTH01+ iMentatMouth].dat, 80, 273);
+    draw_sprite(bmp_screen, (BITMAP *)gfxmentat[ATR_MOUTH01+ iMentatMouth].dat,  offsetX + 80, offsetY + 273);
 }
 
 void cAtreidesMentat::interact() {
