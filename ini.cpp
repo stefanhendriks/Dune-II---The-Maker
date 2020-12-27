@@ -1526,7 +1526,6 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 							player[HUMAN].credits = iPl_credits[iP];
 							player[HUMAN].setHouse(iPl_house[iP]);
                             player[HUMAN].iTeam = 0;
-                            game.iHouse = iPl_house[iP];
                             assert(drawManager);
                             if (drawManager->getCreditsDrawer())  {
                             	drawManager->getCreditsDrawer()->setCredits();
@@ -1691,7 +1690,6 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 							player[0].credits = iPl_credits[iP];
 							player[0].setHouse(iPl_house[iP]);
                             player[0].iTeam=0;
-                            game.iHouse = iPl_house[iP];
 
                             if (iPl_quota[iP] > 0) {
                                 game.iWinQuota = iPl_quota[iP];

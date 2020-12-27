@@ -105,7 +105,8 @@ void REGION_DRAW(cRegion &regionPiece) {
 
     // select your next conquest... always draw them in the human playing house color
     if (regionPiece.bSelectable && game.iRegionState > 2) {
-        cPlayer &temp = player[game.iHouse];
+        int iHouse = player[HUMAN].getHouse();
+        cPlayer &temp = player[iHouse];
         select_palette(temp.pal);           // retrieve pal
 
         // House < 0

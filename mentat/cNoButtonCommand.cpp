@@ -3,7 +3,7 @@
 void cNoButtonCommand::execute(cAbstractMentat& mentat) {
     logbook("cNoButtonCommand::execute()");
     // head back to choose house
-    game.iHouse=-1;
+    player[HUMAN].setHouse(GENERALHOUSE);
     game.setState(GAME_SELECT_HOUSE);
     game.FADE_OUT();
 }

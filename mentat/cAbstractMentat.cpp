@@ -11,8 +11,6 @@
   */
 
 #include "include/d2tmh.h"
-#include "cAbstractMentat.h"
-
 
 // "default" Constructor
 cAbstractMentat::cAbstractMentat() {
@@ -29,6 +27,8 @@ cAbstractMentat::cAbstractMentat() {
     iMovieFrame=-1;
 
     iBackgroundFrame = -1;
+
+    house = GENERALHOUSE;
 
     gfxmovie = nullptr;
     leftButton = nullptr;
@@ -238,29 +238,21 @@ void cAbstractMentat::draw() {
     draw_other();
 
     if (state == SPEAKING) {
-        alfont_set_font_size(font, 19);
-
         // draw text that is being spoken
         if (iMentatSentence >= 0) {
-            alfont_textprintf_aa_ex(bmp_screen, font, 17, 17, makecol(0, 0, 0), makecol(0, 0, 0), "%s", sentence[iMentatSentence]);
-            alfont_textprintf_aa_ex(bmp_screen, font, 16, 16, makecol(255, 255, 255), makecol(0, 0, 0), "%s", sentence[iMentatSentence]);
+            alfont_textprintf(bmp_screen, bene_font, 17, 17, makecol(0, 0, 0), "%s", sentence[iMentatSentence]);
+            alfont_textprintf(bmp_screen, bene_font, 16, 16, makecol(255, 255, 255), "%s", sentence[iMentatSentence]);
 
-            alfont_textprintf_aa_ex(bmp_screen, font, 17, 37, makecol(0, 0, 0), makecol(0, 0, 0), "%s", sentence[iMentatSentence + 1]);
-            alfont_textprintf_aa_ex(bmp_screen, font, 16, 36, makecol(255, 255, 255), makecol(0, 0, 0), "%s",
+            alfont_textprintf(bmp_screen, bene_font, 17, 37, makecol(0, 0, 0), "%s", sentence[iMentatSentence + 1]);
+            alfont_textprintf(bmp_screen, bene_font, 16, 36, makecol(255, 255, 255), "%s",
                               sentence[iMentatSentence + 1]);
         }
     }
-
-//    bool bFadeOut=false;
 
     if (state == AWAITING_RESPONSE) {
         allegroDrawer->blitSprite(leftButtonBmp, bmp_screen, leftButton);
         allegroDrawer->blitSprite(rightButtonBmp, bmp_screen, rightButton);
     }
-//
-//    if (bFadeOut) {
-//        game.FADE_OUT();
-//    }
 }
 
 BITMAP *cAbstractMentat::getBackgroundBitmap() const {
@@ -293,12 +285,12 @@ void cAbstractMentat::interact() {
 
     if (cMouse::isLeftButtonClicked()) {
         // execute left button logic
-        if (leftButton->isMouseOver()) {
+        if (leftButton && leftButton->isMouseOver()) {
             leftButtonCommand->execute(*this);
         }
 
         // execute right button logic
-        if (rightButton->isMouseOver()) {
+        if (rightButton && rightButton->isMouseOver()) {
             rightButtonCommand->execute(*this);
         }
     }
@@ -356,4 +348,8 @@ void cAbstractMentat::buildRightButton(BITMAP *bmp, int x, int y) {
     delete rightButton;
     rightButton = new cRectangle(x, y, bmp->w, bmp->h);
     rightButtonBmp = bmp;
+}
+
+void cAbstractMentat::resetSpeak() {
+    speak();
 }

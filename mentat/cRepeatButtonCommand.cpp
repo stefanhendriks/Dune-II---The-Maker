@@ -1,5 +1,6 @@
-//
-// Created by shendriks on 12/27/2020.
-//
+#include "d2tmh.h"
 
-#include "cRepeatButtonCommand.h"
+void cRepeatButtonCommand::execute(cAbstractMentat &mentat) {
+    mentat.resetSpeak();
+}
+
