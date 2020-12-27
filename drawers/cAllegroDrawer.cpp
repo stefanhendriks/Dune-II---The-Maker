@@ -176,6 +176,8 @@ void cAllegroDrawer::blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int w
 
 void cAllegroDrawer::blitSprite(BITMAP *src, BITMAP *dest, cRectangle *rectangle) {
     if (rectangle == nullptr) return;
+    if (src == nullptr) return;
+    if (dest == nullptr) return;
     blit(src, dest, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
 }
 

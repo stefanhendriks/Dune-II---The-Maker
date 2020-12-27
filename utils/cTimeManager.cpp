@@ -113,7 +113,6 @@ void cTimeManager::handleTimerGlobal() {
 		game.getSoundPlayer()->think();
 		game.think_music();
 		game.think_mentat();
-		game.think_movie();
 
 
 		if (drawManager) {

@@ -55,6 +55,7 @@ PALETTE general_palette;
 
 // bitmap(s)
 BITMAP *bmp_screen;
+BITMAP *bmp_backgroundMentat;
 BITMAP *bmp_throttle;
 BITMAP *bmp_winlose;
 BITMAP *bmp_fadeout;

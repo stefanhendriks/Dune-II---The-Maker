@@ -70,10 +70,11 @@ extern DATAFILE *gfxinter;
 extern DATAFILE *gfxworld;
 extern DATAFILE *gfxmentat;
 
-extern DATAFILE *gfxmovie;     // movie to be played (= scene = data file)
+//extern DATAFILE *gfxmovie;     // movie to be played (= scene = data file)
 
 // BITMAPS
 extern BITMAP *bmp_screen;
+extern BITMAP *bmp_backgroundMentat;
 extern BITMAP *bmp_fadeout;
 extern BITMAP *bmp_throttle;
 extern BITMAP *bmp_winlose;

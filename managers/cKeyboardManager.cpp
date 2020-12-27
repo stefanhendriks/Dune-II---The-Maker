@@ -71,14 +71,14 @@ void cKeyboardManager::takeScreenshot() const {
 
 void cKeyboardManager::DEBUG_KEYS() {
     //JUMP TO MISSION 9
-    if (key[KEY_F1] && game.iHouse > 0) {
+    if (key[KEY_F1] && player[HUMAN].getHouse() > 0) {
         game.mission_init();
         game.iMission = 9;
         game.iRegion = 22;
         game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
-        game.iMentatSpeak = -1;
+        game.createAndPrepareMentatForHumanPlayer();
     }
     // WIN MISSION
     if (key[KEY_F2]) {
@@ -123,35 +123,35 @@ void cKeyboardManager::DEBUG_KEYS() {
     }
 
     //JUMP TO MISSION 3
-    if (key[KEY_F6] && game.iHouse > 0) {
+    if (key[KEY_F6] && player[HUMAN].getHouse() > 0) {
         game.mission_init();
         game.iMission = 3;
         game.iRegion = 6;
         game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
-        game.iMentatSpeak = -1;
+        game.createAndPrepareMentatForHumanPlayer();
     }
 
     //JUMP TO MISSION 4
-    if (key[KEY_F7] && game.iHouse > 0) {
+    if (key[KEY_F7] && player[HUMAN].getHouse() > 0) {
         game.mission_init();
         game.iMission = 4;
         game.iRegion = 10;
         game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
-        game.iMentatSpeak = -1;
+        game.createAndPrepareMentatForHumanPlayer();
     }
     //JUMP TO MISSION 5
-    if (key[KEY_F8] && game.iHouse > 0) {
+    if (key[KEY_F8] && player[HUMAN].getHouse() > 0) {
         game.mission_init();
         game.iMission = 5;
         game.iRegion = 13;
         game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
-        game.iMentatSpeak = -1;
+        game.createAndPrepareMentatForHumanPlayer();
     }
 
     // take screenshot

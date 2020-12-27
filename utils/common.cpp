@@ -33,25 +33,12 @@ namespace
  * Default printing in logs. Only will be done if DEBUGGING is true.
  * @param txt
  */
-void logbook(const char *txt)
-{
-    if (DEBUGGING) {
-        cLogger *logger = cLogger::getInstance();
-        logger->log(LOG_WARN, COMP_NONE, "Default log message (CHANGEME)", txt);
-    }
+void logbook(const char *txt) {
+  if (DEBUGGING) {
+    cLogger *logger = cLogger::getInstance();
+    logger->log(LOG_WARN, COMP_NONE, "(logbook)", txt);
+  }
 }
-
-//void masked_stretch_blit(BITMAP *s, BITMAP *d, int s_x, int s_y, int s_w, int s_h, int d_x, int d_y, int d_w, int d_h) {
-////    logbook("masked_stretch_blit called");
-//}
-
-//void stretch_blit(BITMAP *src, BITMAP *dst, int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh) {
-////    logbook("stretch_blit called");
-//}
-//
-//void stretch_sprite(BITMAP *dst, BITMAP *src, int x, int y, int w, int h) {
-////    logbook("stretch_sprite called");
-//}
 
 // determine if this cell is not out of boundries
 bool BORDER_POS(int x, int y)
@@ -1464,9 +1451,10 @@ void playMusicByType(int iType) {
     } else if (iType == MUSIC_CONQUEST) {
     	iNumber=MIDI_SCENARIO;
     } else if (iType == MUSIC_BRIEFING) {
-        if (game.iHouse == ATREIDES)     	iNumber=MIDI_MENTAT_ATR;
-        if (game.iHouse == HARKONNEN)     	iNumber=MIDI_MENTAT_HAR;
-        if (game.iHouse == ORDOS)     		iNumber=MIDI_MENTAT_ORD;
+      int houseIndex = player[HUMAN].getHouse();
+        if (houseIndex == ATREIDES)         iNumber=MIDI_MENTAT_ATR;
+        if (houseIndex == HARKONNEN)     	iNumber=MIDI_MENTAT_HAR;
+        if (houseIndex == ORDOS)     		iNumber=MIDI_MENTAT_ORD;
     }
 
     // In the end, when mp3, play it:
@@ -1487,9 +1475,10 @@ void playMusicByType(int iType) {
         } else if (iType == MUSIC_CONQUEST) {
             sprintf(filename, "mp3/nextconq.mp3");
         } else if (iType == MUSIC_BRIEFING) {
-            if (game.iHouse == ATREIDES)	sprintf(filename, "mp3/mentata.mp3");
-            if (game.iHouse == HARKONNEN)	sprintf(filename, "mp3/mentath.mp3");
-            if (game.iHouse == ORDOS)		sprintf(filename, "mp3/mentato.mp3");
+          int houseIndex = player[HUMAN].getHouse();
+            if (houseIndex == ATREIDES)	sprintf(filename, "mp3/mentata.mp3");
+            if (houseIndex == HARKONNEN)	sprintf(filename, "mp3/mentath.mp3");
+            if (houseIndex == ORDOS)		sprintf(filename, "mp3/mentato.mp3");
         }
 
         mp3_play_file(filename);
@@ -1632,28 +1621,6 @@ void Shimmer(int r, int x, int y)
     }
   }
 
-}
-
-void LOAD_SCENE(std::string scene) {
-	gfxmovie = NULL;
-
-	char filename[PAN_CENTER];
-	sprintf(filename, "data/scenes/%s.dat", scene.c_str());
-
-	gfxmovie = load_datafile(filename);
-
-	if (gfxmovie != NULL) {
-		game.iMovieFrame=0;
-		char msg[VOLUME_MAX];
-		sprintf(msg, "Successful loaded scene [%s]", filename);
-		logbook(msg);
-	} else {
-		gfxmovie=NULL;
-		game.iMovieFrame=-1;
-		char msg[VOLUME_MAX];
-		sprintf(msg, "Failed to load scene [%s]", filename);
-		logbook(msg);
-	}
 }
 
 // Skirmish map initialization
