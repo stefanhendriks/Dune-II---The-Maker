@@ -1459,38 +1459,23 @@ void cGame::stateSelectHouse() {
         delete pMentat;
         pMentat = nullptr;
         if (cMouse::isOverRectangle(&houseAtreides)) {
-            pMentat = new cBeneMentat();
             iHouse=ATREIDES;
 
             play_sound_id(SOUND_ATREIDES);
 
-            INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION, pMentat);
-            pMentat->loadScene("platr"); // load planet of atreides
-            pMentat->speak();
-
             setState(GAME_TELLHOUSE);
             bFadeOut=true;
         } else if (cMouse::isOverRectangle(&houseOrdos)) {
-            pMentat = new cBeneMentat();
             iHouse=ORDOS;
 
             play_sound_id(SOUND_ORDOS);
 
-            INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION, pMentat);
-            pMentat->loadScene("plord"); // load planet of ordos
-            pMentat->speak();
-
             setState(GAME_TELLHOUSE);
             bFadeOut=true;
         } else if (cMouse::isOverRectangle(&houseHarkonnen)) {
-            pMentat = new cBeneMentat();
             iHouse=HARKONNEN;
 
             play_sound_id(SOUND_HARKONNEN);
-
-            INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION, pMentat);
-            pMentat->loadScene("plhar"); // load planet of harkonnen
-            pMentat->speak();
 
             setState(GAME_TELLHOUSE);
             bFadeOut=true;
@@ -1554,11 +1539,17 @@ void cGame::tellhouse() {
         // create new stateMentat
         if (iHouse == ATREIDES) {
             INI_LOAD_BRIEFING(ATREIDES, 0, INI_DESCRIPTION, pMentat);
+            pMentat->loadScene("platr"); // load planet of atreides
         } else if (iHouse == HARKONNEN) {
             INI_LOAD_BRIEFING(HARKONNEN, 0, INI_DESCRIPTION, pMentat);
+            pMentat->loadScene("plhar"); // load planet of harkonnen
         } else if (iHouse == ORDOS) {
             INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION, pMentat);
+            pMentat->loadScene("plord"); // load planet of ordos
         }
+        // todo: Sardaukar, etc? (Super Dune 2 features)
+
+        pMentat->speak();
     }
 
     // draw mouse

@@ -11,6 +11,8 @@
   */
 
 #include "include/d2tmh.h"
+#include "cAbstractMentat.h"
+
 
 // "default" Constructor
 cAbstractMentat::cAbstractMentat() {
@@ -29,6 +31,17 @@ cAbstractMentat::cAbstractMentat() {
     iBackgroundFrame = -1;
 
     gfxmovie = nullptr;
+    leftButton = nullptr;
+    rightButton = nullptr;
+    // the mentat does not *own* the bitmaps
+    leftButtonBmp = nullptr;
+    rightButtonBmp = nullptr;
+    leftButtonCommand = nullptr;
+    rightButtonCommand = nullptr;
+
+    state = INIT;
+
+    font = alfont_load_font("data/arrak.ttf");
 
 	memset(sentence, 0, sizeof(sentence));
 	logbook("cAbstractMentat::cAbstractMentat()");
@@ -47,6 +60,8 @@ cAbstractMentat::~cAbstractMentat() {
 	iMentatEyes = 3;
     iMovieFrame=-1;
 
+    state = INIT;
+
     iBackgroundFrame = -1;
 
     // we can do this because Mentats are created/deleted before allegro gets destroyed
@@ -55,40 +70,63 @@ cAbstractMentat::~cAbstractMentat() {
     }
 
     gfxmovie = nullptr;
+    delete leftButton;
+    delete rightButton;
+    leftButtonBmp = nullptr;
+    rightButtonBmp = nullptr;
+
+    delete leftButtonCommand;
+    delete rightButtonCommand;
+
+    alfont_destroy_font(font);
 
 	memset(sentence, 0, sizeof(sentence));
+
     logbook("cAbstractMentat::~cAbstractMentat()");
 }
 
 void cAbstractMentat::think() {
-    if (TIMER_Speaking > 0) {
-        TIMER_Speaking--;
-    } else if (TIMER_Speaking == 0) {
-        // calculate speaking stuff
-
-        iMentatSentence += 2; // makes 0, 2, etc.
-
-        if (iMentatSentence > 8) {
-            iMentatSentence = -2; // TODO: Change state to 'end of speaking - do some action'
-            TIMER_Speaking = -1;
-            return;
-        }
-
-        // lentgh calculation of time
-        int iLength = strlen(sentence[iMentatSentence]);
-        iLength += strlen(sentence[iMentatSentence + 1]);
-
-        if (iLength < 2) {
-            iMentatSentence = -2;
-            TIMER_Speaking = -1;
-            return;
-        }
-
-        TIMER_Speaking = iLength * 12;
+    if (state == INIT) {
+        // no thinking for init state
+        return;
     }
 
-    thinkMouth();
+    if (state == SPEAKING) {
+        if (TIMER_Speaking > 0) {
+            TIMER_Speaking--;
+        } else if (TIMER_Speaking == 0) {
+            // calculate speaking stuff
+
+            iMentatSentence += 2; // makes 0, 2, etc.
+
+            // done talking
+            if (iMentatSentence > 8) {
+                state = AWAITING_RESPONSE;
+                return;
+            }
+
+            // lentgh calculation of time
+            int iLength = strlen(sentence[iMentatSentence]);
+            iLength += strlen(sentence[iMentatSentence + 1]);
+
+            // nothing to say, await response
+            if (iLength < 2) {
+                state = AWAITING_RESPONSE;
+                return;
+            }
+
+            TIMER_Speaking = iLength * 12;
+        }
+
+        thinkMouth();
+    } else {
+        iMentatMouth = 0; // keep lips sealed
+    }
+
+    // eyes blink always
     thinkEyes();
+
+    // regardless, think about movie animation
     thinkMovie();
 }
 
@@ -199,98 +237,30 @@ void cAbstractMentat::draw() {
     draw_mouth();
     draw_other();
 
-    // draw text
-    if (iMentatSentence >= 0) {
-        alfont_textprintf(bmp_screen, bene_font, 17, 17, makecol(0, 0, 0), "%s", sentence[iMentatSentence]);
-        alfont_textprintf(bmp_screen, bene_font, 16, 16, makecol(255, 255, 255), "%s", sentence[iMentatSentence]);
-        alfont_textprintf(bmp_screen, bene_font, 17, 33, makecol(0, 0, 0), "%s", sentence[iMentatSentence + 1]);
-        alfont_textprintf(bmp_screen, bene_font, 16, 32, makecol(255, 255, 255), "%s", sentence[iMentatSentence + 1]);
+    if (state == SPEAKING) {
+        alfont_set_font_size(font, 19);
+
+        // draw text that is being spoken
+        if (iMentatSentence >= 0) {
+            alfont_textprintf_aa_ex(bmp_screen, font, 17, 17, makecol(0, 0, 0), makecol(0, 0, 0), "%s", sentence[iMentatSentence]);
+            alfont_textprintf_aa_ex(bmp_screen, font, 16, 16, makecol(255, 255, 255), makecol(0, 0, 0), "%s", sentence[iMentatSentence]);
+
+            alfont_textprintf_aa_ex(bmp_screen, font, 17, 37, makecol(0, 0, 0), makecol(0, 0, 0), "%s", sentence[iMentatSentence + 1]);
+            alfont_textprintf_aa_ex(bmp_screen, font, 16, 36, makecol(255, 255, 255), makecol(0, 0, 0), "%s",
+                              sentence[iMentatSentence + 1]);
+        }
     }
 
-    bool bFadeOut=false;
+//    bool bFadeOut=false;
 
-    if (TIMER_Speaking < 0) {
-        // NO
-        draw_sprite(bmp_screen, (BITMAP *) gfxmentat[BTN_REPEAT].dat, 293, 423);
-
-        if ((mouse_x > 293 && mouse_x < 446) && (mouse_y > 423 && mouse_y < 468))
-            if (cMouse::isLeftButtonClicked()) {
-                // head back to choose house
-                iMentatSentence = -1; // prepare speaking
-                //state = GAME_SELECT_HOUSE;
-            }
-
-        // YES/PROCEED
-        draw_sprite(bmp_screen, (BITMAP *) gfxmentat[BTN_PROCEED].dat, 466, 423);
-        if ((mouse_x > 446 && mouse_x < 619) && (mouse_y > 423 && mouse_y < 468))
-            if (cMouse::isLeftButtonClicked()) {
-                if (game.isState(GAME_BRIEFING)) {
-                    // proceed, play mission
-                    game.setState(GAME_PLAYING);
-                    drawManager->getMessageDrawer()->initCombatPosition();
-
-                    // CENTER MOUSE
-                    cMouse::positionMouseCursor(game.screen_x / 2, game.screen_y / 2);
-
-                    bFadeOut = true;
-
-                    playMusicByType(MUSIC_PEACE);
-                } else if (game.isState(GAME_WINBRIEF)) {
-                    //
-                    if (game.bSkirmish) {
-                        game.setState(GAME_SETUPSKIRMISH);
-                        game.init_skirmish();
-                        playMusicByType(MUSIC_MENU);
-                    } else {
-
-                        game.setState(GAME_REGION);
-                        REGION_SETUP(game.iMission, game.iHouse);
-
-                        drawManager->getMessageDrawer()->initRegionPosition();
-
-                        // PLAY THE MUSIC
-                        playMusicByType(MUSIC_CONQUEST);
-                    }
-
-                    // PREPARE NEW MENTAT BABBLE
-                    iMentatSentence = -1;
-
-                    bFadeOut = true;
-                } else if (game.isState(GAME_LOSEBRIEF)) {
-                    //
-                    if (game.bSkirmish) {
-                        game.setState(GAME_SETUPSKIRMISH);
-                        game.init_skirmish();
-                        playMusicByType(MUSIC_MENU);
-                    } else {
-                        if (game.iMission > 1) {
-                            game.setState(GAME_REGION);
-
-                            game.iMission--; // we did not win
-                            REGION_SETUP(game.iMission, game.iHouse);
-                            drawManager->getMessageDrawer()->initRegionPosition();
-
-                            // PLAY THE MUSIC
-                            playMusicByType(MUSIC_CONQUEST);
-                        } else {
-                            game.setState(GAME_BRIEFING);
-                            playMusicByType(MUSIC_BRIEFING);
-                        }
-
-                    }
-
-                    // PREPARE NEW MENTAT BABBLE
-                    iMentatSentence = -1;
-
-                    bFadeOut = true;
-                }
-
-            }
+    if (state == AWAITING_RESPONSE) {
+        allegroDrawer->blitSprite(leftButtonBmp, bmp_screen, leftButton);
+        allegroDrawer->blitSprite(rightButtonBmp, bmp_screen, rightButton);
     }
-
-    if (bFadeOut) {
-        game.FADE_OUT();
-    }
+//
+//    if (bFadeOut) {
+//        game.FADE_OUT();
+//    }
 }
 
 BITMAP *cAbstractMentat::getBackgroundBitmap() const {
@@ -310,9 +280,26 @@ void cAbstractMentat::draw_movie() {
 }
 
 void cAbstractMentat::interact() {
+    if (state == INIT) return;
+    if (state == SPEAKING) {
+        if (cMouse::isLeftButtonClicked()) {
+            if (TIMER_Speaking > 0) {
+                TIMER_Speaking = 1;
+            }
+        }
+        return;
+    }
+    if (state != AWAITING_RESPONSE) return;
+
     if (cMouse::isLeftButtonClicked()) {
-        if (TIMER_Speaking > 0) {
-            TIMER_Speaking = 1;
+        // execute left button logic
+        if (leftButton->isMouseOver()) {
+            leftButtonCommand->execute(*this);
+        }
+
+        // execute right button logic
+        if (rightButton->isMouseOver()) {
+            rightButtonCommand->execute(*this);
         }
     }
 }
@@ -356,4 +343,17 @@ void cAbstractMentat::speak() {
     TIMER_Speaking = 0;
     TIMER_Mouth = 0;
     iMentatSentence = -2; // ugh
+    state = SPEAKING;
+}
+
+void cAbstractMentat::buildLeftButton(BITMAP *bmp, int x, int y) {
+    delete leftButton;
+    leftButton = new cRectangle(x, y, bmp->w, bmp->h);
+    leftButtonBmp = bmp;
+}
+
+void cAbstractMentat::buildRightButton(BITMAP *bmp, int x, int y) {
+    delete rightButton;
+    rightButton = new cRectangle(x, y, bmp->w, bmp->h);
+    rightButtonBmp = bmp;
 }

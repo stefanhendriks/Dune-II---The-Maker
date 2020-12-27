@@ -21,6 +21,14 @@
 #ifndef CABSTRACTMENTAT_H
 #define CABSTRACTMENTAT_H
 
+class cButtonCommand;
+
+enum eMentatState {
+    INIT,               // for loading data (Default state)
+    SPEAKING,           // the mentat is speaking about whatever
+    AWAITING_RESPONSE,  // the mentat is done speaking, the user needs to click something (yes/no, proceed/repeat, etc)
+};
+
 class cAbstractMentat {
 
 protected:
@@ -51,6 +59,21 @@ protected:
 	int iMentatEyes;
 
     DATAFILE *gfxmovie;
+    ALFONT_FONT *font;
+
+    eMentatState state;
+
+    cRectangle *leftButton;
+    cRectangle *rightButton;
+
+    BITMAP * leftButtonBmp;
+    BITMAP * rightButtonBmp;
+
+    void buildLeftButton(BITMAP *bmp, int x, int y);
+    void buildRightButton(BITMAP *bmp, int x, int y);
+
+    cButtonCommand *leftButtonCommand;
+    cButtonCommand *rightButtonCommand;
 
 public:
 	virtual void draw()=0;
