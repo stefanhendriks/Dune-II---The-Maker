@@ -17,6 +17,7 @@
 
 // forward declaration :/ sigh should really look into these includes and such
 class cRectangle;
+class cAbstractMentat;
 
 class cGame {
 
@@ -73,7 +74,6 @@ public:
 
     int iRegion;        // what region is selected?
 	int iMission;		// what mission are we playing? (= techlevel)
-	int iHouse;			// what house is selected for playing?
 
 	int selected_structure;
 	int hover_unit;
@@ -82,9 +82,9 @@ public:
 
     int iMusicVolume;       // volume of the mp3 / midi
 
-    // Movie playback (scene's from datafile)
-    int TIMER_movie;
-    int iMovieFrame;
+//    // Movie playback (scene's from datafile)
+//    int TIMER_movie;
+//    int iMovieFrame;
 
     // throttle stuff
 	int shake_x;
@@ -100,8 +100,6 @@ public:
     void winning();       // winning
     void losing();        // losing
 
-    void think_movie();
-
 	bool bPlaceIt;		// placing something? (for structures only)
 	bool bPlacedIt;		// for remembering, for combat_mouse stuff..
 
@@ -109,25 +107,11 @@ public:
 
     void think_music();
 
-	char mentat_sentence[10][255];		// draw 2 sentences at once, so 0 1, 2 3, 4 5, 6 7, 8 9
-
-	int TIMER_mentat_Speaking;	// speaking = time
-
-	int iMentatSpeak;			// = sentence to draw and speak with (-1 = not ready)
-	int iMentatMouth;			// frames	...
-	int iMentatEyes;				// ... for mentat ...
-
-	int TIMER_mentat_Mouth;			// timer for animations
-	int TIMER_mentat_Eyes;			// timer for animations
-
-	void MENTAT_draw_mouth(int iMentat);
-	void MENTAT_draw_eyes(int iMentat);
-
 	void think_mentat();
 
     void FADE_OUT(); // fade out with current screen_bmp, this is a little game loop itself!
 
-	void preparementat(bool bTellHouse);
+    void prepareMentatForPlayer();
 
 	bool setupGame();
 	void shutdown();
@@ -153,24 +137,24 @@ public:
 
     cRectangle * mapViewport;
 
+    void init_skirmish() const;
+
+    void createAndPrepareMentatForHumanPlayer();
+
 private:
 	void poll();
 	void combat();		// the combat part (main) of the game
 	bool isMusicPlaying();
 
-	void draw_mentat(int iType); // draw mentat type
-
     void setup_skirmish();  // set up a skirmish game
 	void stateSelectHouse();		// house selection
-	void tellhouse();	// tell about the house
-	void mentat(int iType);		// mentat talking
+	void stateMentat(cAbstractMentat *pMentat);  // state mentat talking and interaction
 	void menu();		// main menu
 	void region();		// region selection
 
 	void runGameState();
 	void shakeScreenAndBlitBuffer();
 	void handleTimeSlicing();
-    void draw_movie(int iType);  // draw movie sequence
 
     bool isResolutionInGameINIFoundAndSet();
     void setScreenResolutionFromGameIniSettings();
@@ -181,11 +165,11 @@ private:
 	int iMaxVolume;
 
 	cSoundPlayer *soundPlayer;
+	cAbstractMentat *pMentat;
 
     int fade_select;        // fade color when selected
     bool bFadeSelectDir;    // fade select direction
-
-    void init_skirmish() const;
+    void prepareMentatToTellAboutHouse(int house);
 };
 
 #endif

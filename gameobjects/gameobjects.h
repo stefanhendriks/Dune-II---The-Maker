@@ -38,8 +38,16 @@
 #include "../controls/controlsh.h"
 
 // Mentats
-// TODO: Refactor this uber mentat class into something smaller
-#include "../cMentat.h"
+#include "mentat/cButtonCommand.h"
+#include "mentat/cYesButtonCommand.h"
+#include "mentat/cNoButtonCommand.h"
+#include "mentat/cProceedButtonCommand.h"
+#include "mentat/cRepeatButtonCommand.h"
+#include "mentat/cAbstractMentat.h"
+#include "mentat/cBeneMentat.h"
+#include "mentat/cAtreidesMentat.h"
+#include "mentat/cOrdosMentat.h"
+#include "mentat/cHarkonnenMentat.h"
 
 
 #endif /* GAMEOBJECTS_H_ */

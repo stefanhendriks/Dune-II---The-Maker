@@ -170,12 +170,12 @@
 
 // Scenario loading
 //void INI_Load_scenario(bool bOrDune, char filename[30] );
-void INI_Load_scenario(int iHouse, int iRegion);
+void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat);
 void INI_Load_seed(int seed);
 
 void INI_Install_Game(std::string filename);
 //void LOAD_BRIEFING(char filename[35]);
-void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind);
+void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstractMentat *pMentat);
 void INI_Load_Regionfile(int iHouse, int iMission);
 
 int INI_SectionType(char section[30], int last);

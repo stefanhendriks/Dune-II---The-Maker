@@ -32,6 +32,8 @@ file(GLOB d2tm_SRC
         "gui/*.h"
         "gui/*.cpp"
         "include/*.h"
+        "mentat/*.h"
+        "mentat/*.cpp"
         "managers/*.h"
         "managers/*.cpp"
         "map/*.h"
