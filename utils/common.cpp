@@ -102,63 +102,6 @@ void INSTALL_PLAYERS()
 
 
 
-void INSTALL_WORLD()
-{
-    // create regions
-    for (int i=0; i < MAX_REGIONS; i++)
-    {
-        world[i].bSelectable=false;
-        world[i].iAlpha=0;
-        world[i].iHouse=-1;
-        world[i].iTile=-1;
-        world[i].x=-1;
-        world[i].y=-1;
-
-    }
-
-    // Now create the regions (x,y wise)
-
-    // FIRST ROW (EASY, SAME Y AXIS)
-    REGION_NEW(16 ,  73, 1, -1, PIECE_DUNE_001);
-    REGION_NEW(126,  73, 1, -1, PIECE_DUNE_002);
-    REGION_NEW(210,  73, 1, -1, PIECE_DUNE_003);
-    REGION_NEW(306,  73, 1, -1, PIECE_DUNE_004);
-    REGION_NEW(438,  73, 1, -1, PIECE_DUNE_005);
-    REGION_NEW(510,  73, 1, -1, PIECE_DUNE_006);
-
-    // SECOND ROW, HARDER FROM NOW ON (DIFFERENT Y AXIS ALL THE TIME)
-    REGION_NEW(16,  91, 1, -1, PIECE_DUNE_007);
-    REGION_NEW(158,  149, 1, -1, PIECE_DUNE_008);
-    REGION_NEW(282,  135, 1, -1, PIECE_DUNE_009);
-    REGION_NEW(362,  105, 1, -1, PIECE_DUNE_010);
-    REGION_NEW(456,  117, 1, -1, PIECE_DUNE_011);
-    REGION_NEW(544,  105, 1, -1, PIECE_DUNE_012);
-
-    // THIRD ROW
-    REGION_NEW(16,  155, 1, -1, PIECE_DUNE_013);
-    REGION_NEW(58,  165, 1, -1, PIECE_DUNE_014);
-    REGION_NEW(190,  213, 1, -1, PIECE_DUNE_015);
-    REGION_NEW(312,  163, 1, -1, PIECE_DUNE_016);
-    REGION_NEW(388,  163, 1, -1, PIECE_DUNE_017);
-    REGION_NEW(502,  167, 1, -1, PIECE_DUNE_018);
-    REGION_NEW(576,  167, 1, -1, PIECE_DUNE_019);
-
-    // FOURTH ROW
-    REGION_NEW(16,  237, 1, -1, PIECE_DUNE_020);
-    REGION_NEW(62, VOLUME_MAX, 1, -1, PIECE_DUNE_021);
-    REGION_NEW(134,  245, 1, -1, PIECE_DUNE_022);
-    REGION_NEW(282,  257, 1, -1, PIECE_DUNE_023);
-    REGION_NEW(360,  253, 1, -1, PIECE_DUNE_024);
-    REGION_NEW(406,  213, 1, -1, PIECE_DUNE_025);
-    REGION_NEW(448,  269, 1, -1, PIECE_DUNE_026);
-    REGION_NEW(514,  227, 1, -1, PIECE_DUNE_027);
-
-  //  game.iHouse = ATREIDES;
-    //REGION_SETUP(4, game.iHouse);
-
-
-}
-
 void INSTALL_HOUSES()
 {
 /********************************

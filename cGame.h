@@ -41,12 +41,12 @@ public:
     // 3. Click next region
     // 4. Set up region and go to GAME_BRIEFING, which will do the rest...-> fade out
 
-    int iRegionState;           //
-    int iRegionScene;           // scene
-    int iRegionSceneAlpha;           // scene alpha
-    int iRegionConquer[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
-    int iRegionHouse[MAX_REGIONS];
-    char cRegionText[MAX_REGIONS][255]; // text for this
+//    int iRegionState;           //
+//    int iRegionScene;           // scene
+//    int iRegionSceneAlpha;           // scene alpha
+//    int iRegionConquer[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
+//    int iRegionHouse[MAX_REGIONS];
+//    char cRegionText[MAX_REGIONS][255]; // text for this
 
     // resolution of the game
 	int screen_x;
@@ -117,7 +117,7 @@ public:
 	void shutdown();
 
 	bool isState(int thisState);
-	void setState(int thisState);
+	void setState(int newState);
 
 	int getMaxVolume() { return iMaxVolume; }
 
@@ -140,6 +140,8 @@ public:
     void init_skirmish() const;
 
     void createAndPrepareMentatForHumanPlayer();
+
+    void loadScenario();
 
 private:
 	void poll();

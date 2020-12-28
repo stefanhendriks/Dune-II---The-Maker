@@ -21,6 +21,9 @@ int	iRest = 1;	// default rest value
 
 // the ultimate game variable(s)
 cGame          				game;
+cGameState                  *gameState;
+cSelectYourNextConquestState *selectYourNextConquestState; // there is only 1 instance of this
+
 cTimeManager   				TimeManager;
 cStructureUtils 			structureUtils;
 cMap           				map;
@@ -137,6 +140,9 @@ int handleArguments(int argc, char *argv[]) {
  * atleast moving out the big game.init and game.setup_players methods.
  */
 void initializingOnlyOnce() {
+    gameState = nullptr;
+    selectYourNextConquestState = new cSelectYourNextConquestState(game);
+
     mouse_co_x1 = -1;      // coordinates
     mouse_co_y1 = -1;      // of
     mouse_co_x2 = -1;      // the

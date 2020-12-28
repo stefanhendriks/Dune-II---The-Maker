@@ -33,7 +33,7 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
     // won mission, transition to region selection (Select your next Conquest)
     if (game.isState(GAME_WINBRIEF)) {
         game.setState(GAME_REGION);
-        REGION_SETUP(game.iMission, player[HUMAN].getHouse());
+        selectYourNextConquestState->REGION_SETUP(game.iMission, player[HUMAN].getHouse());
 
         drawManager->getMessageDrawer()->initRegionPosition();
 
@@ -52,7 +52,7 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
             game.setState(GAME_REGION);
 
             game.iMission--; // we did not win
-            REGION_SETUP(game.iMission, player[HUMAN].getHouse());
+            selectYourNextConquestState->REGION_SETUP(game.iMission, player[HUMAN].getHouse());
             drawManager->getMessageDrawer()->initRegionPosition();
 
             // PLAY THE MUSIC

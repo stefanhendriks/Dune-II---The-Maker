@@ -17,6 +17,7 @@
 #include "structs.h"
 #include "global.h"
 #include "gameobjects.h"
+#include "gamestates.h"
 #include "gamelogic.h"
 #include "utils.h"
 

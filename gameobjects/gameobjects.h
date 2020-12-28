@@ -31,9 +31,6 @@
 // bullet/projectiles
 #include "projectiles/bullet.h"                         // bullets
 
-// regions drawn
-#include "../regions.h"
-
 // CONTROLS (mouse/keyboard)
 #include "../controls/controlsh.h"
 

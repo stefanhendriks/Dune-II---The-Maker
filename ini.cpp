@@ -1061,7 +1061,7 @@ void INI_Load_Regionfile(int iHouse, int iMission) {
 			  iRegionConquer=-1;
 			  iRegionIndex++;
 			  iRegionConquer = INI_WordValueINT(linefeed)-1;
-			  game.iRegionConquer[iRegionIndex] = iRegionConquer;
+			  selectYourNextConquestState->setRegionConquer(iRegionIndex, iRegionConquer);
 			}
 
 			if (iRegionIndex > -1 || iRegionNumber > -1) {
@@ -1079,7 +1079,7 @@ void INI_Load_Regionfile(int iHouse, int iMission) {
 					}
 
 					if (iRegionConquer > -1) {
-						game.iRegionHouse[iRegionIndex] = iH;
+                        selectYourNextConquestState->setRegionHouse(iRegionIndex, iH);
 					}
 
 				}
@@ -1087,7 +1087,7 @@ void INI_Load_Regionfile(int iHouse, int iMission) {
 				if (wordtype == WORD_REGIONTEXT && iRegionConquer > -1 && iRegionIndex > -1) {
 					char cHouseText[256];
 					INI_WordValueSENTENCE(linefeed, cHouseText);
-					sprintf(game.cRegionText[iRegionIndex], "%s", cHouseText);
+					selectYourNextConquestState->setRegionText(iRegionIndex, cHouseText);
 				}
 
 				if (wordtype == WORD_REGIONSELECT) {
