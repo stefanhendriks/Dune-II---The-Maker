@@ -24,7 +24,6 @@ int keepBetween(int value, int min, int max);
 // Installment of properties/settings in the game.
 void INSTALL_HOUSES();
 void INSTALL_PLAYERS();
-void INSTALL_WORLD();
 
 void INIT_PREVIEWS();
 
