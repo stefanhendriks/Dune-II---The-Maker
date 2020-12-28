@@ -1393,7 +1393,7 @@ void cGame::stateSelectHouse() {
 }
 
 // select your next conquest
-void cGame::region() {
+void cGame::stateSelectYourNextConquest() {
 	int mouse_tile = MOUSE_NORMAL;
 
     if (iFadeAction == 1) // fading out
@@ -1636,7 +1636,6 @@ void cGame::region() {
             game.setState(GAME_BRIEFING);
             game.iRegion = iNewReg;
             game.iMission++;						// FINALLY ADD MISSION NUMBER...
-            //    iRegion++;
 
             // set up stateMentat
             createAndPrepareMentatForHumanPlayer();
@@ -1668,37 +1667,19 @@ void cGame::region() {
     }
 
     // draw message
-    // TODO: Use own message drawer here or something, with other coordinates
 	drawManager->getMessageDrawer()->draw();
- //    if (iMessageAlpha > -1)
-	// {
-	// 	set_trans_blender(0,0,0,iMessageAlpha);
-	// 	BITMAP *temp = create_bitmap(480,30);
-	// 	clear_bitmap(temp);
-	// 	rectfill(temp, 0,0,480,40, makecol(255,0,255));
-	// 	//draw_sprite(temp, (BITMAP *)gfxinter[BMP_MESSAGEBAR].dat, 0,0);
- //
-	// 	// draw message
-	// 	alfont_textprintf(temp, game_font, 13,18, makecol(0,0,0), cMessage);
- //
-	// 	// draw temp
-	// 	draw_trans_sprite(bmp_screen, temp, 73, 358);
- //
-	// 	destroy_bitmap(temp);
-	// }
-
 
     // mouse
-    if (mouse_tile == MOUSE_ATTACK)
-        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x-16, mouse_y-16);
-    else
-        draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+    if (mouse_tile == MOUSE_ATTACK) {
+        draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x - 16, mouse_y - 16);
+    } else {
+        draw_sprite(bmp_screen, (BITMAP *) gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+    }
 
     if (bFadeOut)
         FADE_OUT();
 
 	vsync();
-
 }
 
 void cGame::destroyAllUnits(bool bHumanPlayer) {
@@ -1829,7 +1810,7 @@ void cGame::runGameState() {
 			menu();
 			break;
 		case GAME_REGION:
-			region();
+            stateSelectYourNextConquest();
 			break;
 		case GAME_WINNING:
 			winning();

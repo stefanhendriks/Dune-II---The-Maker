@@ -150,7 +150,7 @@ private:
 	void stateSelectHouse();		// house selection
 	void stateMentat(cAbstractMentat *pMentat);  // state mentat talking and interaction
 	void menu();		// main menu
-	void region();		// region selection
+	void stateSelectYourNextConquest();		// region selection
 
 	void runGameState();
 	void shakeScreenAndBlitBuffer();
