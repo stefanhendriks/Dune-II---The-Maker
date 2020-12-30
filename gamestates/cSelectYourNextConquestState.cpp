@@ -3,8 +3,9 @@
 
 
 cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGameState(theGame) {
-    state = eRegionState::INTRODUCTION;
-    iRegionScene = 0;       // scene for introduction
+    state = eRegionState::REGSTATE_INTRODUCTION;
+    regionSceneState = eRegionSceneState::SCENE_INIT;
+
     iRegionSceneAlpha = 0;  // alpha for scene in introduction state
 
     memset(iRegionConquer, -1, sizeof(iRegionConquer));
@@ -17,7 +18,59 @@ cSelectYourNextConquestState::~cSelectYourNextConquestState() {
 }
 
 void cSelectYourNextConquestState::think() {
+    if (state == eRegionState::REGSTATE_INTRODUCTION) {
+        if (iRegionSceneAlpha < 255) {
+            iRegionSceneAlpha += 1;
+        }
 
+        if (iRegionSceneAlpha > 255) {
+            iRegionSceneAlpha = 255;
+        }
+
+        int iHouse = player[0].getHouse();
+        int iMission = game.iMission;
+
+        if (regionSceneState == SCENE_INIT) {
+            REGION_SETUP(iMission, iHouse);
+            drawManager->getMessageDrawer()->setMessage("3 Houses have come to Dune.");
+            transitionToNextRegionSceneState(SCENE_THREE_HOUSES_COME_FOR_DUNE);
+        } else if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
+            bool hasMessage = drawManager->getMessageDrawer()->hasMessage();
+            if (!hasMessage && iRegionSceneAlpha >= 255) {
+                drawManager->getMessageDrawer()->setMessage("To take control of the land.");
+                transitionToNextRegionSceneState(SCENE_TO_TAKE_CONTROL_OF_THE_LAND);
+            }
+        } else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
+            bool hasMessage = drawManager->getMessageDrawer()->hasMessage();
+            if (!hasMessage && iRegionSceneAlpha >= 255) {
+                drawManager->getMessageDrawer()->setMessage("That has become divided.");
+                transitionToNextRegionSceneState(SCENE_THAT_HAS_BECOME_DIVIDED);
+            }
+        } else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
+            if (iRegionSceneAlpha >= 255) {
+                transitionToNextRegionSceneState(SCENE_SELECT_YOUR_NEXT_CONQUEST);
+                conquerRegions(); // this will change the message bar and state
+            }
+        }
+    }
+
+    if (state == eRegionState::REGSTATE_CONQUER_REGIONS ||
+        state == eRegionState::REGSTATE_INTRODUCTION) {
+        for (int i = 0; i < 27; i++) {
+            cRegion &regionPiece = world[i];
+
+            if (regionPiece.iHouse < 0) continue; // skip pieces that do not belong to any house
+
+            if (regionPiece.iAlpha < 255) {
+                regionPiece.iAlpha += 3;
+
+                // speed up when holding mouse button
+                if (MOUSE_BTN_LEFT()) {
+                    regionPiece.iAlpha += 3;
+                }
+            }
+        }
+    }
 }
 
 void cSelectYourNextConquestState::draw() {
@@ -43,27 +96,26 @@ void cSelectYourNextConquestState::draw() {
     int iHouse = player[0].getHouse();
     int iMission = game.iMission;
 
-    select_palette(player[0].pal);
+    PALETTE &humanPlayerPalette = player[0].pal;
+    select_palette(humanPlayerPalette);
 
-    if (iRegionSceneAlpha > 255)
-        iRegionSceneAlpha = 255;
-
-    if (state == eRegionState::INTRODUCTION) {
-        drawStateIntroduction(iHouse, iMission);
-    } else if (state == eRegionState::CONQUER_REGIONS) {
+    if (state == eRegionState::REGSTATE_INTRODUCTION) {
+        drawStateIntroduction();
+    } else if (state == eRegionState::REGSTATE_CONQUER_REGIONS) {
         drawStateConquerRegions();
-    } else if (state == eRegionState::SELECT_NEXT_CONQUEST) {
+    } else if (state == eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) {
         drawStateSelectYourNextConquest(iMission);
     }
+
+    // make sure to select the correct palette again
+    select_palette(humanPlayerPalette);
+
     // Draw this last
     draw_sprite(bmp_screen, (BITMAP *) gfxworld[BMP_NEXTCONQ].dat, 0, 0); // title "Select your next Conquest"
     drawLogoInFourCorners(iHouse);
-
-    // draw message
     drawManager->getMessageDrawer()->draw();
-    drawManager->drawMouse();
 
-    vsync();
+    drawManager->drawMouse();
 }
 
 void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const {
@@ -88,49 +140,27 @@ void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const {
     }
 }
 
-void cSelectYourNextConquestState::drawStateIntroduction(int iHouse,
-                                                         int iMission) {// depending on the mission, we tell the story
-    if (iRegionScene == 0) {
-        REGION_SETUP(iMission, iHouse);
-        iRegionScene++;
-        drawManager->getMessageDrawer()->setMessage("3 Houses have come to Dune.");
-        iRegionSceneAlpha = -5;
-    } else if (iRegionScene == 1) {
-        // draw the
-        set_trans_blender(0, 0, 0, iRegionSceneAlpha);
+void cSelectYourNextConquestState::drawStateIntroduction() {
+    if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
+        allegroDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
+
+        // draw dune planet (being faded in)
         draw_trans_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0, 12);
-        char *cMessage = drawManager->getMessageDrawer()->getMessage();
-        if (cMessage[0] == '\0' && iRegionSceneAlpha >= 255) {
-            drawManager->getMessageDrawer()->setMessage("To take control of the land.");
-            iRegionScene++;
-            iRegionSceneAlpha = -5;
-        }
-    } else if (iRegionScene == 2) {
-        draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0, 12);
-        set_trans_blender(0, 0, 0, iRegionSceneAlpha);
+    } else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
+        draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0, 12); // dune is opaque
+        allegroDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
+        // draw dune world map over Dune planet , transitioning
         draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
-        char *cMessage = drawManager->getMessageDrawer()->getMessage();
-        if (cMessage[0] == '\0' && iRegionSceneAlpha >= 255) {
-            drawManager->getMessageDrawer()->setMessage("That has become divided.");
-            iRegionScene++;
-            iRegionSceneAlpha = -5;
-        }
-    } else if (iRegionScene == 3) {
+    } else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
+        // now the world map is opaque
         draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
-        set_trans_blender(0, 0, 0, iRegionSceneAlpha);
+        allegroDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
+
+        // introduce the borders (world pieces), draw over world dune, transitioning
         draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
-
-        if (iRegionSceneAlpha >= 255) {
-            iRegionScene = 4;
-            conquerRegions();
-        }
+    } else if (regionSceneState == SCENE_SELECT_YOUR_NEXT_CONQUEST) {
+        draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
     }
-
-    if (iRegionSceneAlpha < 255) {
-        iRegionSceneAlpha += 5;
-    }
-
-    // when  mission is 1, do the '3 houses has come to dune, blah blah story)
 }
 
 void cSelectYourNextConquestState::drawStateConquerRegions() {// draw dune first
@@ -138,62 +168,66 @@ void cSelectYourNextConquestState::drawStateConquerRegions() {// draw dune first
     draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
 
     // draw here stuff
-    for (int i = 0; i < 27; i++)
+    for (int i = 0; i < 27; i++) {
         REGION_DRAW(world[i]);
+    }
 
     // Animate here (so add regions that are conquered)
     char *cMessage = drawManager->getMessageDrawer()->getMessage();
 
-    bool bDone = true;
+    bool isFinishedConqueringRegions = true;
+    bool isDisplayingMessage = cMessage[0] == '\0';
+
     for (int i = 0; i < MAX_REGIONS; i++) {
         if (iRegionConquer[i] < 0) continue;
+        int houseThatConquersTheRegion = iRegionHouse[i];
+        if (houseThatConquersTheRegion < 0) continue;
 
         int iRegNr = iRegionConquer[i];
 
-        if (iRegionHouse[i] > -1) {
-            // when the region is NOT this house, turn it into this house
-            cRegion &region = world[iRegNr];
+        cRegion &region = world[iRegNr];
 
-            if (region.iHouse != iRegionHouse[i]) {
+        // when the region is NOT this house, turn it into this house
+        if (region.iHouse != houseThatConquersTheRegion) {
+            char *regionTextString = cRegionText[i];
+            bool isRegionTextGiven = regionTextString[0] != '\0';
+            bool isRegionTextEmpty = regionTextString[0] == '\0';
 
-                if ((cRegionText[i][0] != '\0' && cMessage[0] == '\0') ||
-                    (cRegionText[i][0] == '\0')) {
+            if ((isRegionTextGiven && isDisplayingMessage) ||
+                isRegionTextEmpty) {
+                // set this up
+                region.iHouse = houseThatConquersTheRegion;
+                region.iAlpha = 1; // this makes it > 0 and thus it will become opaque over time (see THINK function)
 
-                    // set this up
-                    region.iHouse = iRegionHouse[i];
-                    region.iAlpha = 1;
-
-                    if (cRegionText[i][0] != '\0') {
-                        drawManager->getMessageDrawer()->setMessage(cRegionText[i]);
-                    }
-
-                    bDone = false;
-                    break;
-
-                } else {
-                    bDone = false;
-                    break;
-
+                if (isRegionTextGiven) {
+                    drawManager->getMessageDrawer()->setMessage(regionTextString);
                 }
+
+                isFinishedConqueringRegions = false;
+                break;
             } else {
-                // house = ok
-                if (region.iAlpha >= 255) {
-                    // remove from list
-                    iRegionConquer[i] = -1;
-                    iRegionHouse[i] = -1; //
-                    bDone = false;
+                isFinishedConqueringRegions = false;
+                break;
 
-                    break;
-                } else if (region.iAlpha < 255) {
-                    bDone = false;
-                    break; // not done yet, so wait before we do another region!
-                }
+            }
+        } else {
+            // house = the same
+            if (region.iAlpha >= 255) {
+                // remove this from the 'regionToConquer' index
+                iRegionConquer[i] = -1;
+                houseThatConquersTheRegion = -1; //
+                isFinishedConqueringRegions = false;
+
+                break;
+            } else if (region.iAlpha < 255) {
+                isFinishedConqueringRegions = false;
+                break; // not done yet, so wait before we do another region!
             }
         }
     }
 
-    if (bDone && cMessage[0] == '\0') {
-        state = SELECT_NEXT_CONQUEST;
+    if (isFinishedConqueringRegions && isDisplayingMessage) {
+        state = REGSTATE_SELECT_NEXT_CONQUEST;
         drawManager->getMessageDrawer()->setMessage("Select your next region.");
     }
 }
@@ -203,8 +237,9 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest(int iMission)
     draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
 
     // draw here stuff
-    for (int i = 0; i < 27; i++)
+    for (int i = 0; i < 27; i++) {
         REGION_DRAW(world[i]);
+    }
 
     int r = REGION_OVER();
 
@@ -292,10 +327,10 @@ void cSelectYourNextConquestState::REGION_SETUP(int iMission, int iHouse) {
     // Later, after mission 2, the pieces are already taken. Thats what this function takes care off
     // making sure everything is 'there' to go on with. Hard-coded stuff.
 
-    // First step:
-    // remove all pieces (house properties)
-    for (int i = 0; i < MAX_REGIONS; i++)
+    // make world pieces not selectable
+    for (int i = 0; i < MAX_REGIONS; i++) {
         world[i].bSelectable = false;
+    }
 
     // clear conquer stuff
     memset(iRegionConquer, -1, sizeof(iRegionConquer));
@@ -327,22 +362,24 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) {
     // HACK HACK - Using a temp player variable, we do a trick to calculate the proper palette for this
     // highly not efficient.... but will do for now
     if (regionPiece.iHouse > -1) {
+        // single player campaign has house ID == player ID, so we can do this hack and assume player with iHouse
+        // is the player we want to get the correct house collor for this piece...
+
         cPlayer &temp = player[regionPiece.iHouse];
         select_palette(temp.pal);           // retrieve pal
 
-
-        // alpha is lower then 255
-        // TODO: Move this stuff to timer / think logic
-        if (regionPiece.iAlpha < 255) {
-            regionPiece.iAlpha += 7;
-
-            if (state == eRegionState::CONQUER_REGIONS) {
-                // speed up when holding mouse button
-                if (MOUSE_BTN_LEFT()) {
-                    regionPiece.iAlpha += 25;
-                }
-            }
-        }
+//        // alpha is lower then 255
+//        // TODO: Move this stuff to timer / think logic
+//        if (regionPiece.iAlpha < 255) {
+//            regionPiece.iAlpha += 7;
+//
+//            if (state == eRegionState::REGSTATE_CONQUER_REGIONS) {
+//                // speed up when holding mouse button
+//                if (MOUSE_BTN_LEFT()) {
+//                    regionPiece.iAlpha += 25;
+//                }
+//            }
+//        }
 
         // When alpha is 255 or higher, do not use trans_sprite, which is useless
         if (regionPiece.iAlpha >= 255) {
@@ -351,7 +388,7 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) {
             // TODO: Move this so we only create 16 bit bitmaps once
 
             // Draw region with trans_sprite, the trick is that we have to convert it to 16 bit first.
-            set_trans_blender(0, 0, 0, regionPiece.iAlpha);                // set blender
+            allegroDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
             BITMAP *tempregion = create_bitmap_ex(screenBitDepth, 256, 256);                // 16 bit bmp
             clear_to_color(tempregion, makecol(255, 0, 255));            // clear
             draw_sprite(tempregion, (BITMAP *) gfxworld[regionPiece.iTile].dat, 0, 0); // copy
@@ -361,7 +398,7 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) {
     } // House > -1
 
     // select your next conquest... always draw them in the human playing house color
-    if (regionPiece.bSelectable && state == SELECT_NEXT_CONQUEST) {
+    if (regionPiece.bSelectable && state == REGSTATE_SELECT_NEXT_CONQUEST) {
         int iHouse = player[HUMAN].getHouse();
         cPlayer &temp = player[iHouse];
         select_palette(temp.pal);           // retrieve pal
@@ -378,7 +415,7 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) {
             regionPiece.iAlpha = 1;
         } else {
             // TODO: Move this so we only create 16 bit bitmaps once
-            set_trans_blender(0, 0, 0, regionPiece.iAlpha);
+            allegroDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
             BITMAP *tempregion = create_bitmap_ex(screenBitDepth, 256, 256);
             clear_to_color(tempregion, makecol(255, 0, 255));
             draw_sprite(tempregion, (BITMAP *) gfxworld[regionPiece.iTile].dat, 0, 0);
@@ -487,5 +524,10 @@ eGameStateType cSelectYourNextConquestState::getType() {
 }
 
 void cSelectYourNextConquestState::conquerRegions() {
-    state = CONQUER_REGIONS;
+    state = REGSTATE_CONQUER_REGIONS;
+}
+
+void cSelectYourNextConquestState::transitionToNextRegionSceneState(eRegionSceneState newSceneState) {
+    regionSceneState = newSceneState;
+    iRegionSceneAlpha = 0;
 }

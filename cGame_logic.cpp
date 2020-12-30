@@ -55,14 +55,6 @@ void cGame::init() {
     iAlphaScreen=0;           // 255 = opaque , anything else
     iFadeAction=2;            // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
 
-//    state=1;// default = 0
-//    iRegionScene=0;           // scene
-//    iRegionSceneAlpha=0;           // scene
-//    memset(iRegionConquer, -1, sizeof(iRegionConquer));
-//    memset(iRegionHouse, -1, sizeof(iRegionHouse));
-//    memset(cRegionText, 0, sizeof(cRegionText));
-    //int iConquerRegion[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
-
     iSkirmishMap=-1;
 
     iMusicVolume=128; // volume is 0...
@@ -2239,4 +2231,10 @@ void cGame::prepareMentatToTellAboutHouse(int house) {
 void cGame::loadScenario() {
     int iHouse = player[HUMAN].getHouse();
     INI_Load_scenario(iHouse, game.iRegion, pMentat);
+}
+
+void cGame::think_state() {
+    if (gameState) {
+        gameState->think();
+    }
 }

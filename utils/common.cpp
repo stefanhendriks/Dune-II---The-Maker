@@ -52,6 +52,19 @@ bool BORDER_POS(int x, int y)
 	return true; // the fix-border-pos function did not change/correct the positions! yay
 }
 
+/**
+ * Returns value within MIN/MAX provided
+ * @param val
+ * @param min
+ * @param max
+ * @return
+ */
+int BETWEEN(int val, int min, int max) {
+  if (val < min) return min;
+  if (val > max) return max;
+  return val;
+}
+
 // fixes the positions according to the PLAYABLE size of the map (for unit
 // dumping, etc)
 void FIX_BORDER_POS(int &x, int &y) {

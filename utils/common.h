@@ -13,6 +13,7 @@
 void logbook(const char *txt);
 
 bool BORDER_POS(int x, int y);
+int BETWEEN(int val, int min, int max);
 void FIX_BORDER_POS(int &x, int &y);
 void FIX_POS(int &x, int &y);
 
@@ -26,7 +27,6 @@ void INSTALL_HOUSES();
 void INSTALL_PLAYERS();
 
 void INIT_PREVIEWS();
-
 
 void install_structures();
 void install_units();

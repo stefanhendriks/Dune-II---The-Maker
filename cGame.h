@@ -35,19 +35,6 @@ public:
     int iAlphaScreen;           // 255 = opaque , anything else
     int iFadeAction;            // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
 
-    // World stuff
-    // 1. Show current conquered regions
-    // 2. Show next progress + story (in message bar)
-    // 3. Click next region
-    // 4. Set up region and go to GAME_BRIEFING, which will do the rest...-> fade out
-
-//    int state;           //
-//    int iRegionScene;           // scene
-//    int iRegionSceneAlpha;           // scene alpha
-//    int iRegionConquer[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
-//    int iRegionHouse[MAX_REGIONS];
-//    char cRegionText[MAX_REGIONS][255]; // text for this
-
     // resolution of the game
 	int screen_x;
 	int screen_y;
@@ -72,7 +59,7 @@ public:
 	int map_width;
 	int map_height;
 
-    int iRegion;        // what region is selected?
+    int iRegion;        // what region is selected? (changed by cSelectYourNextConquestState class)
 	int iMission;		// what mission are we playing? (= techlevel)
 
 	int selected_structure;
@@ -81,10 +68,6 @@ public:
 	int paths_created;
 
     int iMusicVolume;       // volume of the mp3 / midi
-
-//    // Movie playback (scene's from datafile)
-//    int TIMER_movie;
-//    int iMovieFrame;
 
     // throttle stuff
 	int shake_x;
@@ -142,6 +125,8 @@ public:
     void createAndPrepareMentatForHumanPlayer();
 
     void loadScenario();
+
+    void think_state();
 
 private:
 	void poll();

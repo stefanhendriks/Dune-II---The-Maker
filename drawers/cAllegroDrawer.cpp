@@ -201,3 +201,10 @@ void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, cRectangle *pRectangle, i
 cRectangle *cAllegroDrawer::fromBitmap(int x, int y, BITMAP *src) {
     return new cRectangle(x, y, src->w, src->h);
 }
+
+void cAllegroDrawer::setTransBlender(int red, int green, int blue, int alpha) {
+    set_trans_blender(BETWEEN(red, 0, 255),
+                      BETWEEN(green, 0, 255),
+                      BETWEEN(blue, 0, 255),
+                      BETWEEN(alpha, 0, 255));
+}
