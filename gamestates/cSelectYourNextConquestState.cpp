@@ -48,10 +48,6 @@ void cSelectYourNextConquestState::draw() {
     if (iRegionSceneAlpha > 255)
         iRegionSceneAlpha = 255;
 
-    // Draw
-    draw_sprite(bmp_screen, (BITMAP *) gfxworld[BMP_NEXTCONQ].dat, 0, 0); // title "Select your next Conquest"
-    drawLogoInFourCorners(iHouse);
-
     if (state == eRegionState::INTRODUCTION) {
         drawStateIntroduction(iHouse, iMission);
     } else if (state == eRegionState::CONQUER_REGIONS) {
@@ -59,6 +55,9 @@ void cSelectYourNextConquestState::draw() {
     } else if (state == eRegionState::SELECT_NEXT_CONQUEST) {
         drawStateSelectYourNextConquest(iMission);
     }
+    // Draw this last
+    draw_sprite(bmp_screen, (BITMAP *) gfxworld[BMP_NEXTCONQ].dat, 0, 0); // title "Select your next Conquest"
+    drawLogoInFourCorners(iHouse);
 
     // draw message
     drawManager->getMessageDrawer()->draw();
