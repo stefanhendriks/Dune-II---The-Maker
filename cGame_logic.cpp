@@ -55,7 +55,7 @@ void cGame::init() {
     iAlphaScreen=0;           // 255 = opaque , anything else
     iFadeAction=2;            // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
 
-//    iRegionState=1;// default = 0
+//    state=1;// default = 0
 //    iRegionScene=0;           // scene
 //    iRegionSceneAlpha=0;           // scene
 //    memset(iRegionConquer, -1, sizeof(iRegionConquer));
@@ -416,7 +416,7 @@ void cGame::combat() {
     // -----------------
 	bPlacedIt = bPlaceIt;
 
-	drawManager->draw();
+    drawManager->drawCombatState();
 	interactionManager->interact();
 
 
@@ -1568,7 +1568,16 @@ void cGame::shutdown() {
 	cLogger *logger = cLogger::getInstance();
 	logger->logHeader("SHUTDOWN");
 
-	delete gameState;
+    if (gameState != nullptr) {
+        if (gameState->getType() != eGameStateType::SELECT_YOUR_NEXT_CONQUEST) {
+            // destroy game state object, unless we talk about the region select
+            delete gameState;
+        } else {
+            gameState = nullptr;
+        }
+    }
+    // delete explicitly here
+	delete selectYourNextConquestState;
 
 	if (soundPlayer) {
         soundPlayer->destroyAllSounds();

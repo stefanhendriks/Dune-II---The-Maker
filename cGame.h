@@ -41,7 +41,7 @@ public:
     // 3. Click next region
     // 4. Set up region and go to GAME_BRIEFING, which will do the rest...-> fade out
 
-//    int iRegionState;           //
+//    int state;           //
 //    int iRegionScene;           // scene
 //    int iRegionSceneAlpha;           // scene alpha
 //    int iRegionConquer[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..

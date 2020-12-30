@@ -5,6 +5,12 @@ class cGame;
 
 #include "cGameState.h"
 
+enum eRegionState {
+    INTRODUCTION,           // The very beginning, ie "3 houses have come to Dune" and ends with drawing the dune regions
+    CONQUER_REGIONS,        // here we change state of regions, ie some regions get conquered / change sides
+    SELECT_NEXT_CONQUEST    // here the user may select the next area to attack
+};
+
 class cRegion
 {
 public:
@@ -42,18 +48,32 @@ public:
 
     void REGION_SETUP(int iMission, int iHouse);
     void INSTALL_WORLD();
+
+    void conquerRegions();
+
 private:
 
-    int iRegionState;           //
-    int iRegionScene;           // scene
-    int iRegionSceneAlpha;           // scene alpha
+    eRegionState state;
+
+    int iRegionScene;               // scene
+    int iRegionSceneAlpha;          // scene alpha
+
     int iRegionConquer[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
     int iRegionHouse[MAX_REGIONS];
+
     char cRegionText[MAX_REGIONS][255]; // text for this
 
     void REGION_DRAW(cRegion &regionPiece);
     int REGION_OVER();
     void REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile);
+
+    void drawStateSelectYourNextConquest(int iMission);
+
+    void drawStateConquerRegions();
+
+    void drawStateIntroduction(int iHouse, int iMission);
+
+    void drawLogoInFourCorners(int iHouse) const;
 };
 
 #endif //D2TM_CSELECTYOURNEXTCONQUESTSTATE_H

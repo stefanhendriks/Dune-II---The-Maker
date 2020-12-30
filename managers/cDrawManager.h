@@ -10,7 +10,7 @@ class cDrawManager {
 		cDrawManager(cPlayer * thePlayer);
 		~cDrawManager();
 
-		void draw();
+		void drawCombatState();
 
 		CreditsDrawer *getCreditsDrawer() { return creditsDrawer; }
 		cMessageDrawer *getMessageDrawer() { return messageDrawer; }
@@ -18,12 +18,14 @@ class cDrawManager {
 		cOrderDrawer *getOrderDrawer() { return orderDrawer; }
 		cBuildingListDrawer *getBuildingListDrawer() { return sidebarDrawer->getBuildingListDrawer(); }
 
-	protected:
+        void drawMouse();
+
+    protected:
 		void drawSidebar();
 		void drawCredits();
 		void drawStructurePlacing();
 		void drawMessage();
-		void drawMouse();
+		void drawCombatMouse();
 		void drawRallyPoint();
 
 	private:

@@ -34,7 +34,7 @@ cDrawManager::~cDrawManager() {
 	delete mouseDrawer;
 }
 
-void cDrawManager::draw() {
+void cDrawManager::drawCombatState() {
     // MAP
 	assert(mapDrawer);
 	map.draw_think();
@@ -80,7 +80,7 @@ void cDrawManager::draw() {
     game.combat_mouse();
 
 	// MOUSE
-	drawMouse();
+    drawCombatMouse();
 }
 
 void cDrawManager::drawCredits() {
@@ -140,14 +140,19 @@ void cDrawManager::drawMessage() {
 	// messageBarDrawer->drawMessageBar();
 }
 
+void cDrawManager::drawCombatMouse() {
+    drawMouse();
+
+    cGameControlsContext *context = m_Player->getGameControlsContext();
+    if (context->shouldDrawToolTip()) {
+        mouseDrawer->drawToolTip();
+    }
+}
+
 void cDrawManager::drawMouse() {
 	assert(mouseDrawer);
     select_mouse_cursor(MOUSE_CURSOR_ALLEGRO);
 	mouseDrawer->draw();
-	cGameControlsContext *context = m_Player->getGameControlsContext();
-	if (context->shouldDrawToolTip()) {
-		mouseDrawer->drawToolTip();
-	}
 }
 
 //int points[] =
