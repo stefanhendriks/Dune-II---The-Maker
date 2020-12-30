@@ -33,6 +33,11 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
     // won mission, transition to region selection (Select your next Conquest)
     if (game.isState(GAME_WINBRIEF)) {
         game.setState(GAME_REGION);
+
+        if (game.iMission > 1) {
+            selectYourNextConquestState->conquerRegions();
+        }
+
         selectYourNextConquestState->REGION_SETUP(game.iMission, player[HUMAN].getHouse());
 
         drawManager->getMessageDrawer()->initRegionPosition();
