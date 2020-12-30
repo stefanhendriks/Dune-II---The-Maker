@@ -59,6 +59,12 @@ void cMessageDrawer::think() {
 	}
 }
 
+/**
+ * This sets a message on the message bar, which will fade out
+ * after a specific amount of time and then get cleared again.
+ *
+ * @param msg
+ */
 void cMessageDrawer::setMessage(const char msg[255]) {
 	TIMER_message=0;
 	memset(cMessage, 0, sizeof(cMessage));
