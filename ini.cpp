@@ -1093,6 +1093,7 @@ void INI_Load_Regionfile(int iHouse, int iMission) {
 				if (wordtype == WORD_REGIONSELECT) {
 					if (iRegionNumber > -1) {
 						world[iRegionNumber].bSelectable = INI_WordValueBOOL(linefeed);
+						world[iRegionNumber].iAlpha = 1;
 					}
 				}
 

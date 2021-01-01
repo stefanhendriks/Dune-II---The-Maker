@@ -86,6 +86,9 @@ private:
 
     void transitionToNextRegionSceneState(eRegionSceneState newSceneState);
 
+    void drawRegion(const cRegion &regionPiece) const;
+
+    void drawRegion(cRegion &regionPiece) const;
 };
 
 #endif //D2TM_CSELECTYOURNEXTCONQUESTSTATE_H

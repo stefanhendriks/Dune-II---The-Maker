@@ -71,6 +71,22 @@ void cSelectYourNextConquestState::think() {
             }
         }
     }
+
+    // select your next conquest... always draw them in the human playing house color
+    if (state == REGSTATE_SELECT_NEXT_CONQUEST) {
+        for (int i = 0; i < 27; i++) {
+            cRegion &regionPiece = world[i];
+
+            if (!regionPiece.bSelectable) continue; // only animate selectable pieces
+
+            if (regionPiece.iAlpha < 255) {
+                regionPiece.iAlpha += 3;
+            } else {
+                regionPiece.iAlpha = 1;
+            }
+        }
+    }
+
 }
 
 void cSelectYourNextConquestState::draw() {
@@ -163,7 +179,7 @@ void cSelectYourNextConquestState::drawStateIntroduction() {
     }
 }
 
-void cSelectYourNextConquestState::drawStateConquerRegions() {// draw dune first
+void cSelectYourNextConquestState::drawStateConquerRegions() { // draw dune first
     draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
     draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
 
@@ -241,13 +257,14 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest(int iMission)
         REGION_DRAW(world[i]);
     }
 
-    int r = REGION_OVER();
+    int regionMouseIsHoveringOver = REGION_OVER();
 
     bool bClickable = false;
 
-    if (r > -1) {
-        if (world[r].bSelectable) {
-            world[r].iAlpha = 255;
+    if (regionMouseIsHoveringOver > -1) {
+        cRegion &region = world[regionMouseIsHoveringOver];
+        if (region.bSelectable) {
+            region.iAlpha = 255;
             mouse_tile = MOUSE_ATTACK;
             bClickable = true;
         }
@@ -258,7 +275,7 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest(int iMission)
         int iReg = 0;
         for (int ir = 0; ir < MAX_REGIONS; ir++) {
             if (world[ir].bSelectable) {
-                if (ir != r) {
+                if (ir != regionMouseIsHoveringOver) {
                     iReg++;
                 } else {
                     break;
@@ -357,73 +374,42 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) {
         return;
     }
 
-    int screenBitDepth = bitmap_color_depth(bmp_screen);
-
     // HACK HACK - Using a temp player variable, we do a trick to calculate the proper palette for this
     // highly not efficient.... but will do for now
     if (regionPiece.iHouse > -1) {
         // single player campaign has house ID == player ID, so we can do this hack and assume player with iHouse
         // is the player we want to get the correct house collor for this piece...
-
         cPlayer &temp = player[regionPiece.iHouse];
-        select_palette(temp.pal);           // retrieve pal
-
-//        // alpha is lower then 255
-//        // TODO: Move this stuff to timer / think logic
-//        if (regionPiece.iAlpha < 255) {
-//            regionPiece.iAlpha += 7;
-//
-//            if (state == eRegionState::REGSTATE_CONQUER_REGIONS) {
-//                // speed up when holding mouse button
-//                if (MOUSE_BTN_LEFT()) {
-//                    regionPiece.iAlpha += 25;
-//                }
-//            }
-//        }
-
-        // When alpha is 255 or higher, do not use trans_sprite, which is useless
-        if (regionPiece.iAlpha >= 255) {
-            draw_sprite(bmp_screen, (BITMAP *) gfxworld[regionPiece.iTile].dat, regionPiece.x, regionPiece.y);
-        } else {
-            // TODO: Move this so we only create 16 bit bitmaps once
-
-            // Draw region with trans_sprite, the trick is that we have to convert it to 16 bit first.
-            allegroDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
-            BITMAP *tempregion = create_bitmap_ex(screenBitDepth, 256, 256);                // 16 bit bmp
-            clear_to_color(tempregion, makecol(255, 0, 255));            // clear
-            draw_sprite(tempregion, (BITMAP *) gfxworld[regionPiece.iTile].dat, 0, 0); // copy
-            draw_trans_sprite(bmp_screen, tempregion, regionPiece.x, regionPiece.y); //	draw trans
-            destroy_bitmap(tempregion); // destroy temp
-        }
+        select_palette(temp.pal);
+        drawRegion(regionPiece);
     } // House > -1
 
     // select your next conquest... always draw them in the human playing house color
-    if (regionPiece.bSelectable && state == REGSTATE_SELECT_NEXT_CONQUEST) {
+    if (regionPiece.bSelectable && state == eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) {
         int iHouse = player[HUMAN].getHouse();
         cPlayer &temp = player[iHouse];
-        select_palette(temp.pal);           // retrieve pal
-
-        // House < 0
-        if (regionPiece.iHouse < 0) {
-            if (regionPiece.iAlpha < 255)
-                regionPiece.iAlpha += 5;
-        }
-
-        // Alpha >= 255
-        if (regionPiece.iAlpha >= 255) {
-            draw_sprite(bmp_screen, (BITMAP *) gfxworld[regionPiece.iTile].dat, regionPiece.x, regionPiece.y);
-            regionPiece.iAlpha = 1;
-        } else {
-            // TODO: Move this so we only create 16 bit bitmaps once
-            allegroDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
-            BITMAP *tempregion = create_bitmap_ex(screenBitDepth, 256, 256);
-            clear_to_color(tempregion, makecol(255, 0, 255));
-            draw_sprite(tempregion, (BITMAP *) gfxworld[regionPiece.iTile].dat, 0, 0);
-            draw_trans_sprite(bmp_screen, tempregion, regionPiece.x, regionPiece.y);
-            destroy_bitmap(tempregion);
-        }
+        select_palette(temp.pal);
+        drawRegion(regionPiece);
     }
-} // End of function
+
+}
+
+void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const {
+    BITMAP *regionTile = (BITMAP *) gfxworld[regionPiece.iTile].dat;
+
+    if (regionPiece.iAlpha >= 255) {
+        draw_sprite(bmp_screen, regionTile, regionPiece.x, regionPiece.y);
+    } else {
+        int screenBitDepth = bitmap_color_depth(bmp_screen);
+        allegroDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
+        BITMAP *tempregion = create_bitmap_ex(screenBitDepth, 256, 256);
+        clear_to_color(tempregion, makecol(255, 0, 255));
+        draw_sprite(tempregion, regionTile, 0, 0);
+        draw_trans_sprite(bmp_screen, tempregion, regionPiece.x, regionPiece.y);
+        destroy_bitmap(tempregion);
+    }
+}
+// End of function
 
 int cSelectYourNextConquestState::REGION_OVER() {
     // when mouse is not even on the map, return -1
