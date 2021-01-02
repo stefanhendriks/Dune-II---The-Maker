@@ -91,16 +91,14 @@ void cMessageDrawer::draw() {
 	}
 }
 
-void cMessageDrawer::initRegionPosition()
-{
-	// default positions region mode
-	x = 73;
-	y = 358;
+void cMessageDrawer::initRegionPosition(int offsetX, int offsetY) {
+    // default positions region mode
+    x = offsetX + 73;
+    y = offsetY + 358;
 }
 
-void cMessageDrawer::initCombatPosition()
-{
-	// default positions in-game (battle mode)
-	x = 1;
-	y = 42;
+void cMessageDrawer::initCombatPosition() {
+    // default positions in-game (battle mode)
+    x = 1;
+    y = 42;
 }
