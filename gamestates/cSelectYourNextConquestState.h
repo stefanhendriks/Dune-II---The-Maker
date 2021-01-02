@@ -8,7 +8,8 @@ class cGame;
 enum eRegionState {
     REGSTATE_INTRODUCTION,           // The very beginning, ie "3 houses have come to Dune" and ends with drawing the dune regions
     REGSTATE_CONQUER_REGIONS,        // here we change state of regions, ie some regions get conquered / change sides
-    REGSTATE_SELECT_NEXT_CONQUEST    // here the user may select the next area to attack
+    REGSTATE_SELECT_NEXT_CONQUEST,   // here the user may select the next area to attack
+    REGSTATE_FADEOUT                 // the player clicked on a region and we fade out
 };
 
 // these are the 3 iconic 'scenes' the campaign overview shows, and ends with "Select your next conquest
@@ -76,7 +77,7 @@ private:
     int REGION_OVER();
     void REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile);
 
-    void drawStateSelectYourNextConquest(int iMission);
+    void drawStateSelectYourNextConquest();
 
     void drawStateConquerRegions();
 
@@ -86,9 +87,10 @@ private:
 
     void transitionToNextRegionSceneState(eRegionSceneState newSceneState);
 
-    void drawRegion(const cRegion &regionPiece) const;
-
     void drawRegion(cRegion &regionPiece) const;
+
+    int offsetX;
+    int offsetY;
 };
 
 #endif //D2TM_CSELECTYOURNEXTCONQUESTSTATE_H

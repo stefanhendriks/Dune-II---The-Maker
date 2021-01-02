@@ -19,7 +19,7 @@ class cMessageDrawer {
 
 		void init();
 
-		void initRegionPosition();
+		void initRegionPosition(int offsetX, int offsetY);
 
 		void initCombatPosition();
 

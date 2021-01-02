@@ -241,6 +241,7 @@ void cGame::think_winlose() {
         shake_x = 0;
         shake_y = 0;
         TIMER_shake = 0;
+        mouse_tile = MOUSE_NORMAL;
 
         play_voice(SOUND_VOICE_07_ATR);
 
@@ -258,6 +259,7 @@ void cGame::think_winlose() {
         shake_x = 0;
         shake_y = 0;
         TIMER_shake = 0;
+        mouse_tile = MOUSE_NORMAL;
 
         play_voice(SOUND_VOICE_08_ATR);
 
@@ -1387,6 +1389,7 @@ void cGame::stateSelectHouse() {
 // select your next conquest
 void cGame::stateSelectYourNextConquest() {
     gameState->draw();
+    gameState->interact();
 }
 
 void cGame::destroyAllUnits(bool bHumanPlayer) {

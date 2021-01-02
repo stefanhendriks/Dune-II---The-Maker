@@ -40,8 +40,6 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
 
         selectYourNextConquestState->REGION_SETUP(game.iMission, player[HUMAN].getHouse());
 
-        drawManager->getMessageDrawer()->initRegionPosition();
-
         // PLAY THE MUSIC
         playMusicByType(MUSIC_CONQUEST);
 
@@ -58,7 +56,6 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
 
             game.iMission--; // we did not win
             selectYourNextConquestState->REGION_SETUP(game.iMission, player[HUMAN].getHouse());
-            drawManager->getMessageDrawer()->initRegionPosition();
 
             // PLAY THE MUSIC
             playMusicByType(MUSIC_CONQUEST);

@@ -11,6 +11,9 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     memset(iRegionConquer, -1, sizeof(iRegionConquer));
     memset(iRegionHouse, -1, sizeof(iRegionHouse));
     memset(cRegionText, 0, sizeof(cRegionText));
+
+    offsetX = (game.screen_x - 640) / 2;
+    offsetY = (game.screen_y - 480) / 2; // same goes for offsetY (but then for 480 height).
 }
 
 cSelectYourNextConquestState::~cSelectYourNextConquestState() {
@@ -102,6 +105,8 @@ void cSelectYourNextConquestState::draw() {
         game.iFadeAction = 2;
     }
     // -----------------
+    int veryDark = makecol(48, 28, 0);
+    clear_to_color(bmp_screen, veryDark);
 
     // STEPS:
     // 1. Show current conquered regions
@@ -110,7 +115,6 @@ void cSelectYourNextConquestState::draw() {
     // 4. Set up region and go to GAME_BRIEFING, which will do the rest...-> fade out
 
     int iHouse = player[0].getHouse();
-    int iMission = game.iMission;
 
     PALETTE &humanPlayerPalette = player[0].pal;
     select_palette(humanPlayerPalette);
@@ -120,14 +124,16 @@ void cSelectYourNextConquestState::draw() {
     } else if (state == eRegionState::REGSTATE_CONQUER_REGIONS) {
         drawStateConquerRegions();
     } else if (state == eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) {
-        drawStateSelectYourNextConquest(iMission);
+        drawStateSelectYourNextConquest();
+    } else if (state == eRegionState::REGSTATE_FADEOUT) {
+        drawStateConquerRegions();
     }
 
     // make sure to select the correct palette again
     select_palette(humanPlayerPalette);
 
     // Draw this last
-    draw_sprite(bmp_screen, (BITMAP *) gfxworld[BMP_NEXTCONQ].dat, 0, 0); // title "Select your next Conquest"
+    draw_sprite(bmp_screen, (BITMAP *) gfxworld[BMP_NEXTCONQ].dat, offsetX, offsetY); // title "Select your next Conquest"
     drawLogoInFourCorners(iHouse);
     drawManager->getMessageDrawer()->draw();
 
@@ -149,10 +155,10 @@ void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const {
 
     // Draw 4 times the logo (in each corner)
     if (iLogo > -1) {
-        draw_sprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, 0, 0);
-        draw_sprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, (640) - 64, 0);
-        draw_sprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, 0, (480) - 64);
-        draw_sprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, (640) - 64, (480) - 64);
+        draw_sprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, offsetX, offsetY);
+        draw_sprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, offsetX + (640) - 64, offsetY);
+        draw_sprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, offsetX, offsetY + (480) - 64);
+        draw_sprite(bmp_screen, (BITMAP *) gfxworld[iLogo].dat, offsetX + (640) - 64, offsetY + (480) - 64);
     }
 }
 
@@ -161,27 +167,27 @@ void cSelectYourNextConquestState::drawStateIntroduction() {
         allegroDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
 
         // draw dune planet (being faded in)
-        draw_trans_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0, 12);
+        draw_trans_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, offsetX, offsetY + 12);
     } else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
-        draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, 0, 12); // dune is opaque
+        draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GAME_DUNE].dat, offsetX, offsetY + 12); // dune is opaque
         allegroDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
         // draw dune world map over Dune planet , transitioning
-        draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
+        draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
     } else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
         // now the world map is opaque
-        draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
+        draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
         allegroDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
 
         // introduce the borders (world pieces), draw over world dune, transitioning
-        draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
+        draw_trans_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
     } else if (regionSceneState == SCENE_SELECT_YOUR_NEXT_CONQUEST) {
-        draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
+        draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
     }
 }
 
 void cSelectYourNextConquestState::drawStateConquerRegions() { // draw dune first
-    draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
-    draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
+    draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
+    draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
 
     // draw here stuff
     for (int i = 0; i < 27; i++) {
@@ -248,14 +254,31 @@ void cSelectYourNextConquestState::drawStateConquerRegions() { // draw dune firs
     }
 }
 
-void cSelectYourNextConquestState::drawStateSelectYourNextConquest(int iMission) {
-    draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, 16, 73);
-    draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, 16, 73);
+void cSelectYourNextConquestState::drawStateSelectYourNextConquest() {
+    draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
+    draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
+
+    int regionMouseIsHoveringOver = REGION_OVER();
+
+    if (regionMouseIsHoveringOver > -1) {
+        cRegion &region = world[regionMouseIsHoveringOver];
+        if (region.bSelectable) {
+            region.iAlpha = 256;
+            mouse_tile = MOUSE_ATTACK;
+        }
+    }
 
     // draw here stuff
     for (int i = 0; i < 27; i++) {
         REGION_DRAW(world[i]);
     }
+}
+
+void cSelectYourNextConquestState::interact() {
+    // no interaction unless we select next conquest
+    if (state != eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) return;
+
+    int iMission = game.iMission;
 
     int regionMouseIsHoveringOver = REGION_OVER();
 
@@ -331,18 +354,17 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest(int iMission)
 
         //allegro_message(msg);
 
+        state = REGSTATE_FADEOUT;
         game.FADE_OUT();
     }
-}
-
-void cSelectYourNextConquestState::interact() {
-
 }
 
 void cSelectYourNextConquestState::REGION_SETUP(int iMission, int iHouse) {
     // The first mission, nothing is 'ready', as the pieces gets placed and taken by the houses.
     // Later, after mission 2, the pieces are already taken. Thats what this function takes care off
     // making sure everything is 'there' to go on with. Hard-coded stuff.
+
+    drawManager->getMessageDrawer()->initRegionPosition(offsetX, offsetY);
 
     // make world pieces not selectable
     for (int i = 0; i < MAX_REGIONS; i++) {
@@ -397,24 +419,33 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) {
 void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const {
     BITMAP *regionTile = (BITMAP *) gfxworld[regionPiece.iTile].dat;
 
+    int regionX = offsetX + regionPiece.x;
+    int regionY = offsetY + regionPiece.y;
+
     if (regionPiece.iAlpha >= 255) {
-        draw_sprite(bmp_screen, regionTile, regionPiece.x, regionPiece.y);
+        draw_sprite(bmp_screen, regionTile, regionX, regionY);
     } else {
         int screenBitDepth = bitmap_color_depth(bmp_screen);
         allegroDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
         BITMAP *tempregion = create_bitmap_ex(screenBitDepth, 256, 256);
         clear_to_color(tempregion, makecol(255, 0, 255));
         draw_sprite(tempregion, regionTile, 0, 0);
-        draw_trans_sprite(bmp_screen, tempregion, regionPiece.x, regionPiece.y);
+        draw_trans_sprite(bmp_screen, tempregion, regionX, regionY);
         destroy_bitmap(tempregion);
     }
 }
 // End of function
 
 int cSelectYourNextConquestState::REGION_OVER() {
+    int mouseX = mouse_x;
+    int mouseY = mouse_y;
+
     // when mouse is not even on the map, return -1
-    if (mouse_y < 72 || mouse_y > 313 || mouse_x < 16 || mouse_x > 624)
-        return -1;
+    cRectangle mapRect(offsetX + 16, offsetY + 72, 608, 241);
+//    if (mouseY < 72 || mouseY > 313 || mouseX < 16 || mouseX > 624)
+//        return -1;
+//    allegroDrawer->drawRectangle(bmp_screen, &mapRect, makecol(255, 255, 255));
+    if (!mapRect.isMouseOver()) return -1;
 
     // from here, we are on a region
     int iRegion = -1;
@@ -424,9 +455,11 @@ int cSelectYourNextConquestState::REGION_OVER() {
     select_palette(general_palette); // default palette
     clear(tempreg); // clear bitmap
 
+    // NOTE: No need to use Offset here, as it is on a tempreg and we pretend our mouse is on that BMP as well
+    // we substract the offset from mouse coordinates to compensate
     draw_sprite(tempreg, (BITMAP *) gfxworld[WORLD_DUNE_CLICK].dat, 16, 73);
 
-    int c = getpixel(tempreg, mouse_x, mouse_y);
+    int c = getpixel(tempreg, (mouseX-offsetX), (mouseY-offsetY));
 
     //alfont_textprintf(bmp_screen, bene_font, 17,17, makecol(0,0,0), "region %d", c-1);
 
