@@ -6,6 +6,7 @@ class cGame;
 #include "cGameState.h"
 
 enum eRegionState {
+    REGSTATE_INIT,                   // Initialization
     REGSTATE_INTRODUCTION,           // The very beginning, ie "3 houses have come to Dune" and ends with drawing the dune regions
     REGSTATE_CONQUER_REGIONS,        // here we change state of regions, ie some regions get conquered / change sides
     REGSTATE_SELECT_NEXT_CONQUEST,   // here the user may select the next area to attack
@@ -21,14 +22,15 @@ enum eRegionSceneState {
     SCENE_SELECT_YOUR_NEXT_CONQUEST     // this transitions to the next regionState "CONQUER_REGIONS"
 };
 
-class cRegion
-{
+class cRegion {
 public:
     int iHouse;         // who (which house) owns this?
     int x, y;           // x and y position of the region
     int iAlpha;         // Alpha (0 = not visible, > 0 goes up to 255)
     int iTile;          // tile refering to gfxworld.dat
     bool bSelectable;   // selectable for attacking (default = false)
+    BITMAP *bmp;        // the original bmp
+    BITMAP *bmpHighBit; // the bmp (created! and thus must be destroyed) on same bitdepth as bmp_screen
 };
 
 class cSelectYourNextConquestState : public cGameState {
@@ -61,6 +63,8 @@ public:
 
     void conquerRegions();
 
+    void destroy();
+
 private:
 
     eRegionState state;
@@ -91,6 +95,10 @@ private:
 
     int offsetX;
     int offsetY;
+
+    int selectNextConquestAlpha;
+
+    BITMAP *regionClickMapBmp;  // this is the bmp that
 };
 
 #endif //D2TM_CSELECTYOURNEXTCONQUESTSTATE_H

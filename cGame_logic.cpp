@@ -1571,6 +1571,8 @@ void cGame::shutdown() {
             gameState = nullptr;
         }
     }
+
+    selectYourNextConquestState->destroy(); // destroy the world bitmaps
     // delete explicitly here
 	delete selectYourNextConquestState;
 

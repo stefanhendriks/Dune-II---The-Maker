@@ -3,7 +3,7 @@
 
 
 cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGameState(theGame) {
-    state = eRegionState::REGSTATE_INTRODUCTION;
+    state = eRegionState::REGSTATE_INIT;
     regionSceneState = eRegionSceneState::SCENE_INIT;
 
     iRegionSceneAlpha = 0;  // alpha for scene in introduction state
@@ -14,13 +14,31 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
 
     offsetX = (game.screen_x - 640) / 2;
     offsetY = (game.screen_y - 480) / 2; // same goes for offsetY (but then for 480 height).
+
+    regionClickMapBmp = nullptr;
 }
 
 cSelectYourNextConquestState::~cSelectYourNextConquestState() {
-
+    destroy_bitmap(regionClickMapBmp);
 }
 
 void cSelectYourNextConquestState::think() {
+
+    // First time INIT
+    if (state == eRegionState::REGSTATE_INIT) {
+        // temp bitmap to read from
+        regionClickMapBmp = create_bitmap_ex(8, 640, 480); // 8 bit bitmap
+        select_palette(general_palette); // default palette
+        clear(regionClickMapBmp); // clear bitmap
+
+        // NOTE: No need to use Offset here, as it is on a tempreg and we pretend our mouse is on that BMP as well
+        // we substract the offset from mouse coordinates to compensate
+        draw_sprite(regionClickMapBmp, (BITMAP *) gfxworld[WORLD_DUNE_CLICK].dat, 16, 73);
+
+        state = eRegionState::REGSTATE_INTRODUCTION;
+        return;
+    }
+
     if (state == eRegionState::REGSTATE_INTRODUCTION) {
         if (iRegionSceneAlpha < 255) {
             iRegionSceneAlpha += 1;
@@ -77,16 +95,18 @@ void cSelectYourNextConquestState::think() {
 
     // select your next conquest... always draw them in the human playing house color
     if (state == REGSTATE_SELECT_NEXT_CONQUEST) {
+        if (selectNextConquestAlpha < 255) {
+            selectNextConquestAlpha += 1;
+        } else {
+            selectNextConquestAlpha = 1;
+        }
+
         for (int i = 0; i < 27; i++) {
             cRegion &regionPiece = world[i];
 
             if (!regionPiece.bSelectable) continue; // only animate selectable pieces
 
-            if (regionPiece.iAlpha < 255) {
-                regionPiece.iAlpha += 3;
-            } else {
-                regionPiece.iAlpha = 1;
-            }
+            regionPiece.iAlpha = selectNextConquestAlpha;
         }
     }
 
@@ -363,7 +383,6 @@ void cSelectYourNextConquestState::REGION_SETUP(int iMission, int iHouse) {
     // The first mission, nothing is 'ready', as the pieces gets placed and taken by the houses.
     // Later, after mission 2, the pieces are already taken. Thats what this function takes care off
     // making sure everything is 'there' to go on with. Hard-coded stuff.
-
     drawManager->getMessageDrawer()->initRegionPosition(offsetX, offsetY);
 
     // make world pieces not selectable
@@ -380,6 +399,8 @@ void cSelectYourNextConquestState::REGION_SETUP(int iMission, int iHouse) {
     // Every house has a different campaign, so...
 
     INI_Load_Regionfile(iHouse, iMission);
+
+    selectNextConquestAlpha = 1;
 
     // prepare players, so we know house index == player index (for colorizing region pieces)
     for (int i = 1; i < FREMEN; i++) {
@@ -417,21 +438,16 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) {
 }
 
 void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const {
-    BITMAP *regionTile = (BITMAP *) gfxworld[regionPiece.iTile].dat;
-
     int regionX = offsetX + regionPiece.x;
     int regionY = offsetY + regionPiece.y;
 
     if (regionPiece.iAlpha >= 255) {
-        draw_sprite(bmp_screen, regionTile, regionX, regionY);
+        draw_sprite(bmp_screen, regionPiece.bmp, regionX, regionY);
     } else {
-        int screenBitDepth = bitmap_color_depth(bmp_screen);
         allegroDrawer->setTransBlender(0, 0, 0, regionPiece.iAlpha);
-        BITMAP *tempregion = create_bitmap_ex(screenBitDepth, 256, 256);
-        clear_to_color(tempregion, makecol(255, 0, 255));
-        draw_sprite(tempregion, regionTile, 0, 0);
-        draw_trans_sprite(bmp_screen, tempregion, regionX, regionY);
-        destroy_bitmap(tempregion);
+        clear_to_color(regionPiece.bmpHighBit, makecol(255, 0, 255));
+        draw_sprite(regionPiece.bmpHighBit, regionPiece.bmp, 0, 0);
+        draw_trans_sprite(bmp_screen, regionPiece.bmpHighBit, regionX, regionY);
     }
 }
 // End of function
@@ -442,30 +458,15 @@ int cSelectYourNextConquestState::REGION_OVER() {
 
     // when mouse is not even on the map, return -1
     cRectangle mapRect(offsetX + 16, offsetY + 72, 608, 241);
-//    if (mouseY < 72 || mouseY > 313 || mouseX < 16 || mouseX > 624)
-//        return -1;
-//    allegroDrawer->drawRectangle(bmp_screen, &mapRect, makecol(255, 255, 255));
     if (!mapRect.isMouseOver()) return -1;
 
     // from here, we are on a region
-    int iRegion = -1;
 
-    // temp bitmap to read from
-    BITMAP *tempreg = create_bitmap_ex(8, 640, 480); // 8 bit bitmap
-    select_palette(general_palette); // default palette
-    clear(tempreg); // clear bitmap
-
-    // NOTE: No need to use Offset here, as it is on a tempreg and we pretend our mouse is on that BMP as well
-    // we substract the offset from mouse coordinates to compensate
-    draw_sprite(tempreg, (BITMAP *) gfxworld[WORLD_DUNE_CLICK].dat, 16, 73);
-
-    int c = getpixel(tempreg, (mouseX-offsetX), (mouseY-offsetY));
+    int c = getpixel(regionClickMapBmp, (mouseX-offsetX), (mouseY-offsetY));
 
     //alfont_textprintf(bmp_screen, bene_font, 17,17, makecol(0,0,0), "region %d", c-1);
 
-    iRegion = c - 1;
-    destroy_bitmap(tempreg);
-    return iRegion;
+    return c - 1;
 }
 
 void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile) {
@@ -482,11 +483,18 @@ void cSelectYourNextConquestState::REGION_NEW(int x, int y, int iAlpha, int iHou
     if (iNew < 0)
         return;
 
-    world[iNew].x = x;
-    world[iNew].y = y;
-    world[iNew].iAlpha = iAlpha;
-    world[iNew].iHouse = iHouse;
-    world[iNew].iTile = iTile;
+    cRegion &region = world[iNew];
+    region.x = x;
+    region.y = y;
+    region.iAlpha = iAlpha;
+    region.iHouse = iHouse;
+    region.iTile = iTile;
+    region.bmp = (BITMAP *) gfxworld[iTile].dat;
+
+    int screenBitDepth = bitmap_color_depth(bmp_screen);
+    BITMAP *tempregion = create_bitmap_ex(screenBitDepth, region.bmp->w, region.bmp->h);
+    clear_to_color(tempregion, makecol(255, 0, 255));
+    region.bmpHighBit = tempregion;
 }
 
 void cSelectYourNextConquestState::INSTALL_WORLD() {
@@ -498,6 +506,7 @@ void cSelectYourNextConquestState::INSTALL_WORLD() {
         world[i].iTile = -1;
         world[i].x = -1;
         world[i].y = -1;
+        world[i].bmp = nullptr;
     }
 
     // Now create the regions (x,y wise)
@@ -549,4 +558,13 @@ void cSelectYourNextConquestState::conquerRegions() {
 void cSelectYourNextConquestState::transitionToNextRegionSceneState(eRegionSceneState newSceneState) {
     regionSceneState = newSceneState;
     iRegionSceneAlpha = 0;
+}
+
+void cSelectYourNextConquestState::destroy() {
+    for (int i = 0; i < 27; i++) {
+        cRegion &region = world[i];
+        if (region.bmpHighBit) {
+            destroy_bitmap(region.bmpHighBit);
+        }
+    }
 }
