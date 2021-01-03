@@ -20,6 +20,8 @@ class cDrawManager {
 
         void drawMouse();
 
+		void destroy();
+
     protected:
 		void drawSidebar();
 		void drawCredits();
@@ -27,6 +29,7 @@ class cDrawManager {
 		void drawMessage();
 		void drawCombatMouse();
 		void drawRallyPoint();
+        void drawTopBarBackground();
 
 	private:
 		cSideBarDrawer * sidebarDrawer;
@@ -36,7 +39,6 @@ class cDrawManager {
 		cMiniMapDrawer * miniMapDrawer;
 		cParticleDrawer * particleDrawer;
 		cMessageDrawer * messageDrawer;
-		cMessageBarDrawer * messageBarDrawer;
 		cPlaceItDrawer *placeitDrawer;
 		cStructureDrawer * structureDrawer;
 		cMouseDrawer * mouseDrawer;
@@ -46,6 +48,8 @@ class cDrawManager {
 		// TODO: bullet/projectile drawer
 
 		cPlayer * m_Player;
+
+		BITMAP *topBarBmp;
 };
 
 #endif

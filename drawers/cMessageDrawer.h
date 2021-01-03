@@ -8,6 +8,11 @@
 #ifndef CMESSAGEDRAWER_H_
 #define CMESSAGEDRAWER_H_
 
+enum eMessageDraweState {
+    COMBAT,
+    NEXT_CONQUEST
+};
+
 class cMessageDrawer {
 	public:
 		cMessageDrawer();
@@ -18,6 +23,7 @@ class cMessageDrawer {
 		void think(); // timer based thinking to fade in/out message
 
 		void init();
+		void destroy();
 
 		void initRegionPosition(int offsetX, int offsetY);
 
@@ -35,6 +41,12 @@ class cMessageDrawer {
 		int iMessageAlpha;
 		int TIMER_message;
 		int x, y;	// draw positions
+		BITMAP *bmpBar;
+		BITMAP *temp;
+
+        eMessageDraweState state;
+
+    void createMessageBarBmp(int desiredWidth);
 };
 
 #endif /* CMESSAGEDRAWER_H_ */

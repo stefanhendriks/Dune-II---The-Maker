@@ -1,4 +1,6 @@
 #include "../include/d2tmh.h"
+#include "cDrawManager.h"
+
 
 cDrawManager::cDrawManager(cPlayer * thePlayer) : m_Player(thePlayer) {
 	assert(&thePlayer);
@@ -9,15 +11,10 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) : m_Player(thePlayer) {
 	miniMapDrawer = new cMiniMapDrawer(&map, thePlayer, mapCamera);
 	particleDrawer = new cParticleDrawer();
 	messageDrawer = new cMessageDrawer();
-	messageBarDrawer = new cMessageBarDrawer();
 	placeitDrawer = new cPlaceItDrawer(thePlayer);
 	structureDrawer = new cStructureDrawer();
 	mouseDrawer = new cMouseDrawer(thePlayer);
-
-	cMessageBar * messageBar = messageBarDrawer->getMessageBar();
-	messageBar->setX(200);
-	messageBar->setY(200);
-	messageBar->setWidth(game.screen_x - 160);
+    topBarBmp = nullptr;
 }
 
 cDrawManager::~cDrawManager() {
@@ -28,7 +25,6 @@ cDrawManager::~cDrawManager() {
 	delete miniMapDrawer;
 	delete particleDrawer;
 	delete messageDrawer;
-	delete messageBarDrawer;
 	delete placeitDrawer;
 	delete structureDrawer;
 	delete mouseDrawer;
@@ -69,6 +65,7 @@ void cDrawManager::drawCombatState() {
 	miniMapDrawer->draw();
 
 	drawStructurePlacing();
+    drawTopBarBackground();
 	drawCredits();
 
 	// THE MESSAGE
@@ -76,7 +73,6 @@ void cDrawManager::drawCombatState() {
 
 	// DO COMBAT MOUSE (TODO: remove this eventually, as it updates state and that is not what
 	// this class should be doing)
-//    scare_mouse();
     game.combat_mouse();
 
 	// MOUSE
@@ -153,6 +149,24 @@ void cDrawManager::drawMouse() {
 	assert(mouseDrawer);
     select_mouse_cursor(MOUSE_CURSOR_ALLEGRO);
 	mouseDrawer->draw();
+}
+
+void cDrawManager::drawTopBarBackground() {
+    if (topBarBmp == nullptr) {
+        topBarBmp = create_bitmap(game.screen_x, 30);
+        BITMAP *topbarPiece = (BITMAP *)gfxinter[BMP_TOPBAR_BACKGROUND].dat;
+        for (int x = 0; x < game.screen_x; x+= topbarPiece->w) {
+            allegroDrawer->drawSprite(topBarBmp, topbarPiece, x, 0);
+        }
+    }
+
+    allegroDrawer->drawSprite(bmp_screen, topBarBmp, 0, 0);
+}
+
+void cDrawManager::destroy() {
+    if (topBarBmp) {
+        destroy_bitmap(topBarBmp);
+    }
 }
 
 //int points[] =

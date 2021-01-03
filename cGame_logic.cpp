@@ -1580,9 +1580,13 @@ void cGame::shutdown() {
         soundPlayer->destroyAllSounds();
     }
     delete soundPlayer;
+
     delete pMentat;
     delete mapViewport;
+
+    drawManager->destroy();
     delete drawManager;
+
     delete mapCamera;
     delete mapUtils;
     delete interactionManager;
