@@ -42,21 +42,20 @@ void cTimeManager::capTimers() {
 }
 
 void cTimeManager::handleTimerFPS() {
-	while (timerSecond > 0)
-	{
+    while (timerSecond > 0) {
 		gameTime++;
 
-		if (game.isState(GAME_PLAYING))
-		{
+        if (game.isState(GAME_PLAYING)) {
 			game.paths_created = 0;
 
 			THINK_REINFORCEMENTS();
 
 			// starports think per second for deployment (if any)
 			for (int i =0; i < MAX_STRUCTURES; i++) {
-				if (structure[i]) {
-					if (structure[i]->getType() == STARPORT) {
-						((cStarPort *)structure[i])->think_deploy();
+                cAbstractStructure *pStructure = structure[i];
+                if (pStructure && pStructure->isValid()) {
+					if (pStructure->getType() == STARPORT) {
+						((cStarPort *) pStructure)->think_deploy();
 					}
 				}
 			}
@@ -77,10 +76,10 @@ void cTimeManager::handleTimerFPS() {
 
 		// 'auto resting'
 		if (fps < IDEAL_FPS) {
-			if (iRest > 0) iRest-=6;
+			if (iRest > 0) iRest-=1;
 			if (iRest < 0) iRest=0;
 		} else {
-			if (iRest < 500) iRest+=2;
+			if (iRest < 500) iRest+=1;
 			if (iRest > 500) iRest=500;
 		}
 
