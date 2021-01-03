@@ -234,7 +234,11 @@ void cItemBuilder::addItemToList(cBuildingListItem * item) {
 	}
 
 	// increase amount
-	item->increaseTimesToBuild();
+	if (key[KEY_LSHIFT] || key[KEY_RSHIFT]) {
+        item->increaseTimesToBuildNTimes(4); // 4 times makes more sense (for structures ~ 4 slabs)
+	} else {
+        item->increaseTimesToBuild();
+    }
 
 	if (!isItemInList(item)) {
 		cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Add item to item builder", "item is not in list, adding.");

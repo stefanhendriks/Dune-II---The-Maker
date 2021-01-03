@@ -63,6 +63,13 @@ public:
 	void setTimesToBuild(int value) { timesToBuild = value; }
 	void setTimesOrdered(int value) { timesOrdered = value; }
 	void increaseTimesToBuild() { timesToBuild++; }
+	void increaseTimesToBuildNTimes(int amount) {
+	    if (queuable) {
+            timesToBuild += amount;
+	    } else {
+            timesToBuild = 1; // not queueable always means 1
+        }
+	}
 	void decreaseTimesToBuild();
 	void increaseTimesOrdered() { timesOrdered++; }
 	void decreaseTimesOrdered() { timesOrdered--; }
