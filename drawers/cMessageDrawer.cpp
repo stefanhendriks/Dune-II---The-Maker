@@ -1,17 +1,8 @@
-/*
- * cMessageDrawer.cpp
- *
- *  Created on: 11-aug-2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
-/*
- * The cMessageDrawer draws messages IN-GAME. This is NOT used for region texts.
- * 
- */
 cMessageDrawer::cMessageDrawer() {
+    bmpBar = nullptr;
+    temp = nullptr;
 	init();
 }
 
@@ -19,11 +10,44 @@ cMessageDrawer::~cMessageDrawer() {
 	init();
 }
 
+void cMessageDrawer::destroy() {
+    iMessageAlpha = -1;
+    memset(cMessage, 0, sizeof(cMessage));
+    TIMER_message = 0;
+
+    destroy_bitmap(bmpBar);
+    destroy_bitmap(temp);
+}
+
 void cMessageDrawer::init() {
+    state = COMBAT;
 	iMessageAlpha = -1;
 	memset(cMessage, 0, sizeof(cMessage));
 	TIMER_message = 0;
 	initCombatPosition();
+}
+
+void cMessageDrawer::createMessageBarBmp(int desiredWidth) {
+    if (bmpBar) {
+        destroy_bitmap(bmpBar);
+    }
+
+    if (temp) {
+        destroy_bitmap(temp);
+    }
+
+    bmpBar = create_bitmap(desiredWidth, 30);
+    clear_to_color(bmpBar, makecol(255, 0, 255));
+
+    allegroDrawer->drawSprite(bmpBar, (BITMAP *)gfxinter[MESSAGE_LEFT].dat, 0, 0);
+    for (int drawX = 11; drawX < bmpBar->w; drawX+= 55) {
+        allegroDrawer->drawSprite(bmpBar, (BITMAP *)gfxinter[MESSAGE_MIDDLE].dat, drawX, 0);
+    }
+
+    allegroDrawer->drawSprite(bmpBar, (BITMAP *)gfxinter[MESSAGE_RIGHT].dat, bmpBar->w - 11, 0);
+
+    // create this one which we use for actual drawing
+    temp = create_bitmap(bmpBar->w, bmpBar->h);
 }
 
 void cMessageDrawer::think() {
@@ -72,33 +96,45 @@ void cMessageDrawer::setMessage(const char msg[255]) {
 }
 
 void cMessageDrawer::draw() {
+    if (state == COMBAT) {
+        draw_sprite(bmp_screen, bmpBar, x, y);
+    }
+
 	if (iMessageAlpha > -1) {
 		set_trans_blender(0,0,0,iMessageAlpha);
-		int width = 480; // this is fixed, see BMP_MESSAGEBAR (it is one fixed image, so need to chop it up)
-		
-		BITMAP *temp = create_bitmap(width,30);
-		clear_bitmap(temp);
-		rectfill(temp, 0,0,width,40, makecol(255,0,255));
-		draw_sprite(temp, (BITMAP *)gfxinter[BMP_MESSAGEBAR].dat, 0,0);
+
+		clear_to_color(temp, makecol(255, 0, 255));
+
+		draw_sprite(temp, bmpBar, 0,0);
 
 		// draw message
 		alfont_textprintf(temp, game_font, 13,21, makecol(0,0,0), cMessage);
 
 		// draw temp
 		draw_trans_sprite(bmp_screen, temp, x, y);
-
-		destroy_bitmap(temp);
 	}
 }
 
 void cMessageDrawer::initRegionPosition(int offsetX, int offsetY) {
+    state = NEXT_CONQUEST;
+
+    int desiredWidth = 480;
+
+    createMessageBarBmp(desiredWidth);
+
     // default positions region mode
     x = offsetX + 73;
     y = offsetY + 358;
 }
 
 void cMessageDrawer::initCombatPosition() {
+    state = COMBAT;
+
+    int desiredWidth = game.screen_x - cSideBar::SidebarWidth;
+    createMessageBarBmp(desiredWidth);
+
     // default positions in-game (battle mode)
     x = 1;
-    y = 42;
+//    y = 42;
+    y = 1;
 }

@@ -208,3 +208,7 @@ void cAllegroDrawer::setTransBlender(int red, int green, int blue, int alpha) {
                       BETWEEN(blue, 0, 255),
                       BETWEEN(alpha, 0, 255));
 }
+
+void cAllegroDrawer::drawSprite(BITMAP *dest, BITMAP *src, int x, int y) {
+    draw_sprite(dest, src, x, y);
+}

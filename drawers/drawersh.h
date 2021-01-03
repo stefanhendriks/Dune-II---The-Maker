@@ -1,10 +1,3 @@
-/*
- * drawersh.h
- *
- *  Created on: 11-aug-2010
- *      Author: Stefan
- */
-
 #ifndef DRAWERSH_H_
 #define DRAWERSH_H_
 
@@ -14,8 +7,6 @@ class cMouse;
 #include "cAllegroDrawer.h"
 
 #include "cTextDrawer.h"
-
-#include "cMessageBarDrawer.h"
 
 #include "cParticleDrawer.h"
 #include "CreditsDrawer.h"

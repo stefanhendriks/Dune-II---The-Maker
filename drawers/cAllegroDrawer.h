@@ -18,6 +18,7 @@ class cAllegroDrawer {
 		void drawCenteredSpriteHorizontal(BITMAP *dest, BITMAP *src, int y, int totalWidth, int xOffset);
 		void drawCenteredSpriteVertical(BITMAP *dest, BITMAP *src, int x);
 		void drawCenteredSprite(BITMAP *dest, BITMAP *src);
+		void drawSprite(BITMAP *dest, BITMAP *src, int x, int y);
 
 		void drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP* src, float percentage);
 
