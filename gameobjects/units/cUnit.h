@@ -223,6 +223,8 @@ private:
     int iHitPoints;     // hitpoints of unit
 
     bool isUnitWhoCanSquishInfantry();
+
+    bool isSandworm() const;
 };
 
 
