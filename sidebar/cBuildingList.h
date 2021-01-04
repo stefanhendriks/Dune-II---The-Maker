@@ -71,6 +71,8 @@ class cBuildingList {
 
     void removeAllSublistItems(int sublistId);
 
+    void resetTimesOrderedForAllItems();
+
 protected:
 		// nothing
 

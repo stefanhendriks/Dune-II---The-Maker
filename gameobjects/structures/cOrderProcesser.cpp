@@ -194,7 +194,6 @@ int cOrderProcesser::getRandomizedSecondsToWait() {
 void cOrderProcesser::sendFrigate() {
 	// iCll = structure start cell (up left), since we must go to the center
 	// of the cell:
-	cStructureUtils structureUtils;
 	int structureId = structureUtils.findStarportToDeployUnit(m_Player);
 
 	if (structureId > -1) {
@@ -225,5 +224,18 @@ void cOrderProcesser::setOrderHasBeenProcessed() {
 	orderPlaced = false;
 	frigateSent = false;
 	removeAllItems();
+	if (unitIdOfFrigateSent > 0) {
+	    if (unit[unitIdOfFrigateSent].isValid()) {
+	        // destroy frigate
+	        unit[unitIdOfFrigateSent].die(true, false);
+	    }
+	}
 	unitIdOfFrigateSent = -1;
+}
+
+/**
+ * Called when order processor should cancel and clear state, ie when all starports are destroyed
+ */
+void cOrderProcesser::clear() {
+    setOrderHasBeenProcessed();
 }

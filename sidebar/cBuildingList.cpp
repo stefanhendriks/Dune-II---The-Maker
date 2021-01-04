@@ -291,3 +291,11 @@ void cBuildingList::removeAllSublistItems(int sublistId) {
         removeItemFromListByBuildId(buildId);
     }
 }
+
+void cBuildingList::resetTimesOrderedForAllItems() {
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *pItem = getItem(i);
+        if (pItem == nullptr) continue;
+        pItem->resetTimesOrdered();
+    }
+}

@@ -158,3 +158,7 @@ s_Structures cBuildingListItem::getS_Structures() {
     return structures[buildId];
 }
 
+void cBuildingListItem::resetTimesOrdered() {
+    timesOrdered = 0;
+}
+
