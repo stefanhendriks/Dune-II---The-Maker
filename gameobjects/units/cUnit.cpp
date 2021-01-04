@@ -727,158 +727,141 @@ void cUnit::move_to(int iCll, int iStrucID, int iUnitID)
 
 void cUnit::think_guard() {
 
-    if (units[iType].airborn)
-    {
+    if (isAirbornUnit()) {
         iAction = ACTION_MOVE; // fly around man
         return;
     }
 
-    if (iType == HARVESTER)
-    {
+    if (isHarvester()) {
         iAction = ACTION_MOVE;
         return;
-
     }
 
     TIMER_bored++; // we are bored ow yeah
     TIMER_guard++; // scan time
 
-    if (TIMER_guard > 5)
-    {
+    if (TIMER_guard > 5) {
         // scan area
-        TIMER_guard = 0 - (rnd(5)); // do not scan all at the same time so do it like this
+        TIMER_guard = 0 - (rnd(5)); // do not scan all at the same time
 
         poll();
         // scan
         int iDistance=9999;
-        int iDanger=-1;
+        int unitIdSelectedForAttacking=-1;
 
-        // non airborn
-        if (!units[iType].airborn)
+        // non airborn units thinking
+        if (isSandworm()) {
+            if (TIMER_wormeat > 0) {
+                TIMER_wormeat--;
+                return; // get back, not hungry just yet
+            }
+
+            for (int i = 0; i < MAX_UNITS; i++) {
+                if (unit[i].isValid() && i != iID) {
+                    // not ours and its visible
+                    if (unit[i].iPlayer != iPlayer &&
+                        !unit[i].isAirbornUnit()) {
+                        int cellType = map.getCellType(unit[i].iCell);
+                        if (cellType == TERRAIN_SAND ||
+                            cellType == TERRAIN_HILL ||
+                            cellType == TERRAIN_SPICE ||
+                            cellType == TERRAIN_SPICEHILL) {
+                            int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
+
+                            if (distance <= units[iType].sight && distance < iDistance) {
+                                // ATTACK
+                                iDistance = distance;
+                                unitIdSelectedForAttacking = i;
+                                // logbook("WORM FOUND ENEMY");
+                            }
+                        } // valid terrain
+                    }
+
+                }
+            }
+
+        } else // not sandworm
         {
-			if (iType == SANDWORM) {
-				if (TIMER_wormeat > 0)
-				{
-					TIMER_wormeat--;
-					return; // get back, not hungry just yet
-				}
 
-				for (int i=0; i < MAX_UNITS; i++)
-				{
-					if (unit[i].isValid() && i != iID)
-					{
-						// not ours and its visible
-						if (unit[i].iPlayer != iPlayer &&
-							units[unit[i].iType].airborn == false)
-						{
-                            int cellType = map.getCellType(unit[i].iCell);
-                            if (cellType == TERRAIN_SAND ||
-                                cellType == TERRAIN_HILL ||
-                                cellType == TERRAIN_SPICE ||
-                                cellType == TERRAIN_SPICEHILL)
-							{
-								int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
+            for (int i = 0; i < MAX_UNITS; i++) {
+                cUnit &potentialThreath = unit[i];
+                if (!potentialThreath.isValid()) continue;
+                if (i == iID) continue; // skip self
 
-								if (distance <= units[iType].sight && distance < iDistance)
-								{
-									// ATTACK
-									iDistance = distance;
-									iDanger=i;
-									// logbook("WORM FOUND ENEMY");
-								}
-							} // valid terrain
-						}
+                bool bAlly = false;
 
-					}
-				}
+                // When we are player 1 till 5 (6 = SANDWORM) then we have a lot of allies)
+                //if (iPlayer >= 1 && iPlayer <= 5)
+                //	if (unit[i].iPlayer >= 1 && unit[i].iPlayer <= 5)
+                //		bAlly=true; // friend dude!
 
-			}
-			else // not sandworm
-			{
+                if (player[iPlayer].iTeam == player[potentialThreath.iPlayer].iTeam)
+                    bAlly = true;
 
-				for (int i=0; i < MAX_UNITS; i++)
-				{
-					if (unit[i].isValid() && i != iID)
-					{
-						bool bAlly=false;
+                if (iPlayer == 0 && player[0].getHouse() == ATREIDES) {
+                    // when the unit player == FREMEN
+                    if (player[potentialThreath.iPlayer].getHouse() == FREMEN && iType != SANDWORM)
+                        bAlly = true;
+                }
 
-						// When we are player 1 till 5 (6 = SANDWORM) then we have a lot of allies)
-						//if (iPlayer >= 1 && iPlayer <= 5)
-						//	if (unit[i].iPlayer >= 1 && unit[i].iPlayer <= 5)
-						//		bAlly=true; // friend dude!
+                // not ours and its visible
+                if (potentialThreath.iPlayer != iPlayer &&
+                    mapUtils->isCellVisibleForPlayerId(iPlayer, potentialThreath.iCell) && // is visible for ai as well?
+                    potentialThreath.isAirbornUnit() == isAirbornUnit() &&
+                    !bAlly) {
 
+                    int distance = ABS_length(iCellX, iCellY, potentialThreath.iCellX, potentialThreath.iCellY);
 
-                        if (player[iPlayer].iTeam == player[unit[i].iPlayer].iTeam)
-                            bAlly=true;
+                    // TODO: perhaps make this configurable, so you can set the 'aggressiveness' of units?
+                    int range = units[iType].sight + 3; // do react earlier than already in range.
 
-							if (iPlayer == 0 && player[0].getHouse() == ATREIDES)
-							{
-								// when the unit player == FREMEN
-								if (player[unit[i].iPlayer].getHouse() == FREMEN && iType != SANDWORM)
-									bAlly=true;
-							}
-
-
-							// not ours and its visible
-							if (unit[i].iPlayer != iPlayer &&
-									mapUtils->isCellVisibleForPlayerId(iPlayer, unit[i].iCell) && // is visible for ai as well?
-								units[unit[i].iType].airborn == units[iType].airborn && bAlly == false)
-							{
-								int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
-
-								// TODO: perhaps make this configurable, so you can set the 'aggresiveness' of units?
-								int range = units[iType].sight + 3; // do react earlier than already in range.
-
-								if (distance <= range && distance < iDistance)
-								{
-									// ATTACK
-									iDistance = distance;
-									iDanger=i;
-								}
-							}
-
-					}
-				}
-
-			}
-
+                    if (distance <= range && distance < iDistance) {
+                        // ATTACK
+                        iDistance = distance;
+                        unitIdSelectedForAttacking = i;
+                    }
+                }
+            }
 
         }
 
+        if (unitIdSelectedForAttacking > -1) {
 
-        if (iDanger > -1)
-        {
+            cUnit &unitToAttack = unit[unitIdSelectedForAttacking];
 
-			if (units[unit[iDanger].iType].airborn)
-				allegro_message("Choosen to attack airborn unit?");
+            if (iPlayer > HUMAN) {
+                if (unitToAttack.isInfantryUnit() && isUnitWhoCanSquishInfantry()) {
+                    // AI will try to squish infantry units
+                    UNIT_ORDER_MOVE(iID, unitToAttack.iCell);
+                } else {
+                    UNIT_ORDER_ATTACK(iID, unitToAttack.iCell, unitIdSelectedForAttacking, -1, -1);
+                }
+            } else {
+                UNIT_ORDER_ATTACK(iID, unitToAttack.iCell, unitIdSelectedForAttacking, -1, -1);
+            }
 
-            UNIT_ORDER_ATTACK(iID, unit[iDanger].iCell, iDanger, -1,-1);
+            if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == HUMAN) {
+                playMusicByType(MUSIC_ATTACK);
 
-			if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0)
-			{
-				playMusicByType(MUSIC_ATTACK);
-
-				// warning... bla bla
-				if (unit[iDanger].iType == SANDWORM)
-					play_voice(SOUND_VOICE_10_ATR); // wormsign
-				else
-					play_voice(SOUND_VOICE_09_ATR); // enemy unit approaching
-			}
+                // warning... bla bla
+                if (unitToAttack.iType == SANDWORM)
+                    play_voice(SOUND_VOICE_10_ATR); // wormsign
+                else
+                    play_voice(SOUND_VOICE_09_ATR); // enemy unit approaching
+            }
             return;
         }
 		else
 		{
-			// NOT SANDWORM AND NOT HUMAN PLAYER
-			if (iType != SANDWORM && iPlayer > 0)
-			{
+		    int structureIdSelectedForAttacking = -1;
+
+            if (!isSandworm() && iPlayer > HUMAN) {
 				// nothing found yet to attack;
 				// ai units will auto-attack structures nearby
 
-				for (int i=0; i < MAX_STRUCTURES; i++)
-				{
-					if (structure[i] && i != iID)
-					{
-						bool bAlly=false;
+                for (int i = 0; i < MAX_STRUCTURES; i++) {
+                    if (structure[i] && i != iID) {
+                        bool bAlly = false;
 /*
 						// When we are player 1 till 5 (6 = SANDWORM) then we have a lot of allies)
 						if (iPlayer >= 1 && iPlayer <= 5)
@@ -886,46 +869,45 @@ void cUnit::think_guard() {
 								bAlly=true; // friend dude!*/
 
                         if (player[iPlayer].iTeam == player[structure[i]->getOwner()].iTeam)
-                            bAlly=true;
+                            bAlly = true;
 
 
-							if (iPlayer == 0 && player[0].getHouse() == ATREIDES)
-							{
-								// when the unit player == FREMEN
-								if (player[unit[i].iPlayer].getHouse() == FREMEN && iType != SANDWORM)
-									bAlly=true;
-							}
+                        if (iPlayer == 0 && player[0].getHouse() == ATREIDES) {
+                            // when the unit player == FREMEN
+                            if (player[unit[i].iPlayer].getHouse() == FREMEN && iType != SANDWORM)
+                                bAlly = true;
+                        }
 
 
-							// not ours and its visible
-							if (structure[i]->getOwner() != iPlayer &&
-								mapUtils->isCellVisibleForPlayerId(iPlayer, structure[i]->getCell()) &&
-								bAlly == false)	{
-								int distance = ABS_length(iCellX, iCellY, iCellGiveX(structure[i]->getCell()),
-															iCellGiveY(structure[i]->getCell()));
+                        // not ours and its visible
+                        if (structure[i]->getOwner() != iPlayer &&
+                            mapUtils->isCellVisibleForPlayerId(iPlayer, structure[i]->getCell()) &&
+                            !bAlly) {
+                            int distance = ABS_length(iCellX, iCellY, iCellGiveX(structure[i]->getCell()),
+                                                      iCellGiveY(structure[i]->getCell()));
 
-								if (distance <= units[iType].sight && distance < iDistance)
-								{
-									// ATTACK
-									iDistance = distance;
-									iDanger=i;
-								}
-							}
+                            int sight = units[iType].sight + 3;
 
-					}
-				}
+                            if (distance <= sight && distance < iDistance) {
+                                // ATTACK
+                                iDistance = distance;
+                                structureIdSelectedForAttacking = i;
+                            }
+                        }
+
+                    }
+                }
 			}
 
-			if (iDanger > -1)
-			{
-				UNIT_ORDER_ATTACK(iID, structure[iDanger]->getCell(), -1, iDanger,-1);
+            if (structureIdSelectedForAttacking > -1) {
 
-				if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0)
-				{
-					playMusicByType(MUSIC_ATTACK);
-				}
+                UNIT_ORDER_ATTACK(iID, structure[structureIdSelectedForAttacking]->getCell(), -1,
+                                  structureIdSelectedForAttacking, -1);
 
-			}
+                if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0) {
+                    playMusicByType(MUSIC_ATTACK);
+                }
+            }
 		}
 
     }
@@ -941,6 +923,8 @@ void cUnit::think_guard() {
     // When bored we turn our body and head sometimes, so do it here:
 
 }
+
+bool cUnit::isSandworm() const { return iType == SANDWORM; }
 
 // NORMAL thinking
 void cUnit::think() {
