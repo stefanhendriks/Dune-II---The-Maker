@@ -87,6 +87,8 @@ public:
 
 	bool isTypeUpgrade();
 
+    void resetTimesOrdered();
+
 private:
 	int icon;				// the icon ID to draw (from datafile)
 	int buildId;			// the ID to build .. (ie TRIKE, or CONSTYARD)

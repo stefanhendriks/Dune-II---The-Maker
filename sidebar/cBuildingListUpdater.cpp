@@ -55,6 +55,20 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 		listConstYard->addStructureToList(REFINERY, 0);
 	}
 
+	if (structureType == STARPORT) {
+        cBuildingList *list = sideBar->getList(LIST_STARPORT);
+        list->addUnitToList(INFANTRY, 0);
+        list->addUnitToList(TROOPERS, 0);
+        list->addUnitToList(TRIKE, 0);
+        list->addUnitToList(QUAD, 0);
+        list->addUnitToList(TANK, 0);
+        list->addUnitToList(MCV, 0);
+        list->addUnitToList(HARVESTER, 0);
+        list->addUnitToList(LAUNCHER, 0);
+        list->addUnitToList(SIEGETANK, 0);
+        list->addUnitToList(CARRYALL, 0);
+	}
+
 	if (structureType == REFINERY) {
 		if (techLevel >= 2) {
 			listConstYard->addStructureToList(LIGHTFACTORY,0);
@@ -194,6 +208,10 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
     if (structureType == STARPORT) {
         if (!m_Player->hasAtleastOneStructure(STARPORT)) {
             listConstYard->removeItemFromListByBuildId(IX);
+            cOrderProcesser *pProcesser = m_Player->getOrderProcesser();
+            pProcesser->clear();
+            cBuildingList *listStarport = sideBar->getList(LIST_STARPORT);
+            listStarport->resetTimesOrderedForAllItems();
         }
     }
 

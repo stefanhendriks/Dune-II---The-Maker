@@ -94,17 +94,6 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
         list->setButtonDrawX(startX);
 		list->setButtonIconIdPressed(LIST_BTN_STARPORT);
 		list->setButtonIconIdUnpressed(LIST_BTN_STARPORT);
-
-		list->addUnitToList(INFANTRY, 0);
-		list->addUnitToList(TROOPERS, 0);
-		list->addUnitToList(TRIKE, 0);
-		list->addUnitToList(QUAD, 0);
-		list->addUnitToList(TANK, 0);
-		list->addUnitToList(MCV, 0);
-		list->addUnitToList(HARVESTER, 0);
-		list->addUnitToList(LAUNCHER, 0);
-		list->addUnitToList(SIEGETANK, 0);
-		list->addUnitToList(CARRYALL, 0);
 	}
 
 	startX += widthOfButtonIncludingMargin;

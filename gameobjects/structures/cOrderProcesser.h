@@ -48,7 +48,9 @@ class cOrderProcesser {
 
 		void sendFrigate();
 
-	protected:
+    void clear();
+
+protected:
 		void removeAllItems();
 		void removeItem(int slot);
 		int getFreeSlot();
