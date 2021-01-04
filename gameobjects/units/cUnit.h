@@ -222,6 +222,7 @@ public:
 private:
     int iHitPoints;     // hitpoints of unit
 
+    bool isUnitWhoCanSquishInfantry();
 };
 
 
