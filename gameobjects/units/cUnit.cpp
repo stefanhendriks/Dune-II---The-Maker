@@ -189,7 +189,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
         }
 
         if (iType == TANK || iType == SIEGETANK || iType == SONICTANK || iType == LAUNCHER || iType == DEVIATOR ||
-            iType == HARVESTER || iType == ORNITHOPTER || iType == MCV) {
+            iType == HARVESTER || iType == ORNITHOPTER || iType == MCV || iType == FRIGATE) {
             // play quick 'boom' sound and show animation
             if (rnd(100) < 50) {
                 PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_TANK_ONE, -1, -1);
@@ -210,6 +210,8 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
             if (iType == ORNITHOPTER) {
                 PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_ORNI, -1, -1);
             }
+
+            // Frigate death particle? (doesnt exist in Dune 2, but would be cool to have)
         }
 
         if (iType == DEVASTATOR) {
@@ -1565,7 +1567,6 @@ void cUnit::think_move_air() {
 			// bring a new unit
 
 			if (iType == FRIGATE) {
-
 				int iStrucId = map.getCellIdStructuresLayer(iCell);
 
 				if (iStrucId > -1) {
@@ -1575,6 +1576,18 @@ void cUnit::think_move_air() {
                     structure[iStrucId]->setFrame(4); // show package on this structure
 					structure[iStrucId]->setAnimating(true); // keep animating
                     ((cStarPort *)structure[iStrucId])->setFrigateDroppedPackage(true);
+				} else {
+                    int closestStarport = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
+                            iCell, STARPORT, &player[iPlayer]);
+
+                    // find closest Starport to deliver next (Starport got mid-way destroyed)
+                    if (closestStarport < 0) {
+                        // not found, die
+                        die(true, false);
+                    } else {
+                        iGoalCell = structure[closestStarport]->getCell();
+                        structure[closestStarport]->setAnimating(true); // start animating
+                    }
 				}
 
 				return; // override for frigates
