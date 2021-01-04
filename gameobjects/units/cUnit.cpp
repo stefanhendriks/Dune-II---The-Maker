@@ -1892,46 +1892,67 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
         return;
     }
 
-    // only act when we are doing 'nothing'...
-    if (iAction == ACTION_GUARD) {
-        if (iShotUnit > -1) {
-            UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1, -1);
-        }
-    }
+    if (iShotUnit > -1) {
+        cUnit &unitWhoShotMe = unit[iShotUnit];
+        bool unitWhoShotMeIsInfantry = unitWhoShotMe.isInfantryUnit();
+        bool unitWhoShotMeIsAirborn = unitWhoShotMe.isAirbornUnit();
 
-    if (iPlayer > HUMAN) {
-        if (iShotUnit > -1) {
+        // only act when we are doing 'nothing'...
+        if (iAction == ACTION_GUARD) {
+            // only auto attack back when it is not an airborn unit
+            // note: guard state already takes care of scanning for air units and attacking them
+            if (!unitWhoShotMeIsAirborn) {
+                UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1, -1);
+            }
+        }
+
+        if (iPlayer > HUMAN) {
             if (isHarvester()) {
+
                 if (unit[iShotUnit].isInfantryUnit() && !isMovingBetweenCells()) {
                     // this harvester will try to run over the infantry that attacks it
                     UNIT_ORDER_MOVE(iID, unit[iShotUnit].iCell);
                 } else {
                     // under attack, retreat to base? find nearby units to help out?
                 }
+
             } else {
                 if (iAction != ACTION_ATTACK) {
-                    UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1, -1);
+                    if (isUnitWhoCanSquishInfantry() && unitWhoShotMeIsInfantry) {
+                        // AI tries to run over infantry units that attack it
+                        UNIT_ORDER_MOVE(iID, unit[iShotUnit].iCell);
+                    } else {
+                        // else simply shoot it
+                        if (!unitWhoShotMeIsAirborn) {
+                            UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1, -1);
+                        }
+                    }
                 } else {
                     // we are attacking, but when target is very far away (out of range?) then we should not attack that but defend
                     // ourselves
                     int iDestCell = iAttackCell;
 
-                    if (iDestCell < 0)
-                    {
+                    if (iDestCell < 0) {
                         if (iAttackUnit > -1)
                             iDestCell = unit[iAttackUnit].iCell;
 
                         if (iAttackStructure > -1)
                             iDestCell = structure[iAttackStructure]->getCell();
 
-                        if (ABS_length(iCellX, iCellY, iCellGiveX(iDestCell), iCellGiveY(iDestCell)) < units[iType].range)
-                        {
-                            // within range, do nothing
-                        }
-                        else
-                        {
-                            // fire back
-                            UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1,-1);
+                        if (ABS_length(iCellX, iCellY, iCellGiveX(iDestCell), iCellGiveY(iDestCell)) <
+                            units[iType].range) {
+                            // within range, don't move (just prepare retaliation fire)
+                        } else {
+                            // out of range unit, attack it
+                            if (isUnitWhoCanSquishInfantry() && unitWhoShotMeIsInfantry) {
+                                // AI tries to run over infantry units that attack it
+                                UNIT_ORDER_MOVE(iID, unit[iShotUnit].iCell);
+                            } else {
+                                // else simply shoot it
+                                if (!unitWhoShotMeIsAirborn) {
+                                    UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1, -1);
+                                }
+                            }
                         }
                     }
                 }
@@ -1940,13 +1961,10 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
     }
 
     // for infantry , infantry turns into soldier and troopers into trooper when on 50% damage.
-    if (units[iType].infantry)
-    {
-        if (iType == INFANTRY || iType == TROOPERS)
-        {
+    if (isInfantryUnit()) {
+        if (iType == INFANTRY || iType == TROOPERS) {
             // turn into soldier or trooper when on 50% health
-            if (iHitPoints <= (units[iType].hp / 3))
-            {
+            if (iHitPoints <= (units[iType].hp / 3)) {
                 // leave 2 dead bodies (of 3 ;))
 
                 // turn into single one
@@ -1959,17 +1977,17 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                 iHitPoints = units[iType].hp;
 
                 int half = 16;
-                int iDieX=pos_x() + half;
-                int iDieY=pos_y() + half;
+                int iDieX = pos_x() + half;
+                int iDieY = pos_y() + half;
 
                 PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF01, iPlayer, -1);
+
                 play_sound_id_with_distance(SOUND_DIE01 + rnd(5),
                                             distanceBetweenCellAndCenterOfScreen(iCell));
 
             }
         }
     }
-
 }
 
 void cUnit::LOG(const char *txt) {
@@ -2953,6 +2971,10 @@ void cUnit::restoreFromTempHitPoints() {
 
 void cUnit::setMaxHitPoints() {
     iHitPoints = getUnitType().hp;
+}
+
+bool cUnit::isUnitWhoCanSquishInfantry() {
+    return getUnitType().squish;
 }
 
 // return new valid ID

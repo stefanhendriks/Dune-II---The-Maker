@@ -164,7 +164,7 @@ void cDrawManager::drawTopBarBackground() {
 }
 
 void cDrawManager::destroy() {
-    if (topBarBmp) {
+    if (topBarBmp != nullptr) {
         destroy_bitmap(topBarBmp);
     }
 }
