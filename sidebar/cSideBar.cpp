@@ -1,4 +1,6 @@
 #include "../include/d2tmh.h"
+#include "cSideBar.h"
+
 
 cSideBar::cSideBar(cPlayer * thePlayer) : m_Player(thePlayer) {
     assert(thePlayer != nullptr && "Expected player to be not null!");
@@ -90,7 +92,7 @@ void cSideBar::thinkInteraction() {
 		if (i == selectedListID) continue; // skip selected list for button interaction
 		cBuildingList *list = getList(i);
         if (list == nullptr) continue;
-		if (list->isAvailable() == false) continue; // not available, so no interaction possible
+		if (!list->isAvailable()) continue; // not available, so no interaction possible
 
 		// interaction is possible.
 		if (list->isOverButton(mouse_x, mouse_y)) {
@@ -135,53 +137,15 @@ void cSideBar::thinkInteraction() {
     if (item == nullptr) return;
 
     // mouse is over item - draw "messagebar"
-    char msg[255];
-    if (list->isAcceptsOrders()) {
-        // build time is in global time units , using a timer cap of 35 * 5 miliseconds = 175 miliseconds
-        int buildTimeInMs = item->getTotalBuildTime() * 175;
-        // now we have in miliseconds, we know the amount of seconds too.
-        int seconds = buildTimeInMs / 1000;
-
-        if (item->getBuildType() == STRUCTURE) {
-            s_Structures structureType = structures[item->getBuildId()];
-            sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
-        } else if (item->getBuildType() == UNIT) {
-            s_UnitP unitType = units[item->getBuildId()];
-            if (item->getBuildCost() > 0) {
-                sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), unitType.name, seconds);
-            } else {
-                sprintf(msg, "%s", units[item->getBuildId()].name);
-            }
-        } else if (item->getBuildType() == UPGRADE){
-            s_Upgrade upgrade = upgrades[item->getBuildId()];
-            sprintf(msg, "UPGRADE: $%d | %s | %d Secs", item->getBuildCost(), upgrade.description, seconds);
-        } else {
-            sprintf(msg, "UNKNOWN BUILD TYPE");
-        }
-
-        drawManager->getMessageDrawer()->setMessage(msg);
-    }
+    drawMessageBarWithItemInfo(list, item);
 
     if (cMouse::isLeftButtonClicked()) {
         if (list->getType() != LIST_STARPORT) {
-
             // icon is in "Place it" mode, meaning if clicked the "place the thing" state should be set
             if (item->shouldPlaceIt()) {
                 game.bPlaceIt = true;
             } else {
-                if (item->isAvailable()) {
-                    // Item should not be placed, so it can be built
-                    cItemBuilder *itemBuilder = m_Player->getItemBuilder();
-                    bool firstOfItsListType = itemBuilder->isBuildListItemTheFirstOfItsListType(item);
-
-                    if (item->isQueuable()) {
-                        itemBuilder->addItemToList(item);
-                    } else if (firstOfItsListType) { // may only build if there is nothing else in the list type being built
-
-                        itemBuilder->addItemToList(item);
-                    }
-                    list->setLastClickedId(item->getSlotId());
-                }
+                startBuildingItemIfOk(item);
             }
         } else {
             // add orders
@@ -227,4 +191,74 @@ void cSideBar::thinkInteraction() {
             }
         }
     }
+}
+
+void cSideBar::drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem *item) const {
+    char msg[255];
+    if (list->isAcceptsOrders()) {
+        // build time is in global time units , using a timer cap of 35 * 5 miliseconds = 175 miliseconds
+        int buildTimeInMs = item->getTotalBuildTime() * 175;
+        // now we have in miliseconds, we know the amount of seconds too.
+        int seconds = buildTimeInMs / 1000;
+
+        if (item->getBuildType() == STRUCTURE) {
+            s_Structures structureType = structures[item->getBuildId()];
+            sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
+        } else if (item->getBuildType() == UNIT) {
+            s_UnitP unitType = units[item->getBuildId()];
+            if (item->getBuildCost() > 0) {
+                sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), unitType.name, seconds);
+            } else {
+                sprintf(msg, "%s", units[item->getBuildId()].name);
+            }
+        } else if (item->getBuildType() == UPGRADE){
+            s_Upgrade upgrade = upgrades[item->getBuildId()];
+            sprintf(msg, "UPGRADE: $%d | %s | %d Secs", item->getBuildCost(), upgrade.description, seconds);
+        } else {
+            sprintf(msg, "UNKNOWN BUILD TYPE");
+        }
+
+        drawManager->getMessageDrawer()->setMessage(msg);
+    }
+}
+
+void cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
+    if (item == nullptr) return;
+    if (item->shouldPlaceIt()) {
+        allegro_message("Attempting to build an item that is in the \"Place it\" mode - which should not happen - ignoring!");
+        return;
+    }
+
+    cBuildingList *list = item->getList();
+    if (item->isAvailable()) {
+        // Item should not be placed, so it can be built
+        cItemBuilder *itemBuilder = m_Player->getItemBuilder();
+        bool firstOfItsListType = itemBuilder->isBuildListItemTheFirstOfItsListType(item);
+
+        if (item->isQueuable()) {
+            itemBuilder->addItemToList(item);
+        } else if (firstOfItsListType) { // may only build if there is nothing else in the list type being built
+            itemBuilder->addItemToList(item);
+        }
+        list->setLastClickedId(item->getSlotId());
+    }
+}
+
+bool cSideBar::startBuildingItemIfOk(int listId, int buildId) const {
+    if (listId < 0) return false;
+    if (listId >= LIST_MAX) return false;
+
+    cBuildingList *pList = lists[listId];
+    if (pList == nullptr) return false;
+
+    cBuildingListItem *pItem = pList->getItemByBuildId(buildId);
+    if (pItem) {
+        startBuildingItemIfOk(pItem);
+        return true;
+    } else {
+        char msg[255];
+        sprintf(msg, "ERROR: startBuildingItemIfOk with listId[%d] and buildId[%d] did not find an item to build!", listId, buildId);
+        logbook(msg);
+    }
+    return false;
 }

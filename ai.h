@@ -33,7 +33,6 @@ public:
 
     int ID; 
 
-    int iBuildingUnit[MAX_UNITTYPES];           // > -1 = progress
     int iBuildingStructure[MAX_STRUCTURETYPES]; // > -1 = progress
     int TIMER_BuildUnit[MAX_UNITTYPES];         // 
     int TIMER_BuildStructure[MAX_STRUCTURETYPES]; // ONLY ONE BUILDING AT A TIME CAN BE BUILT!

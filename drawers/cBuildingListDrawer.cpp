@@ -181,9 +181,9 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 			// - some other item is being built
 			// - list is being upgraded, so you cannot build items
             bool isBuildingSameSubListItem = false;
-            for (int i = 0; i < 5; i++) {
-                if (isBuildingItemInList[i] < 0) continue;
-                if (i == item->getSubList()) {
+            for (int i2 = 0; i2 < 5; i2++) {
+                if (isBuildingItemInList[i2] < 0) continue;
+                if (i2 == item->getSubList()) {
                     isBuildingSameSubListItem = true;
                     break;
                 }
