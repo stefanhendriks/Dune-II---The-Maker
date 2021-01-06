@@ -2986,15 +2986,30 @@ int UNIT_REMOVE(int iID)
 }
 
 
-int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
-	if (bCellValid(iCll) == false) {
+/**
+ * Creates a new unit, when bOnStart is true, it will prevent AI players from moving a unit immediately a bit.
+ *
+ * @param iCll
+ * @param unitType
+ * @param iPlayer
+ * @param bOnStart
+ * @return
+ */
+int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
+	if (!bCellValid(iCll)) {
 		logbook("UNIT_CREATE: Invalid cell as param");
 		return -1;
 	}
 
-	int mapIdIndex = MAPID_UNITS;
-	if (units[iTpe].airborn) mapIdIndex = MAPID_AIR;
-	if (iTpe == SANDWORM) mapIdIndex = MAPID_WORMS;
+
+    s_UnitP &sUnitType = units[unitType];
+
+    int mapIdIndex = MAPID_UNITS;
+    if (sUnitType.airborn) {
+        mapIdIndex = MAPID_AIR;
+    } else if (sUnitType.type == SANDWORM) {
+        mapIdIndex = MAPID_WORMS;
+    }
 
 	// check if unit already exists on location
 	if (map.cellGetIdFromLayer(iCll, mapIdIndex) > -1) {
@@ -3003,7 +3018,7 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
 
     // check if placed on invalid terrain type
     int cellType = map.getCellType(iCll);
-    if (iTpe == SANDWORM) {
+    if (unitType == SANDWORM) {
         if (cellType != TERRAIN_SAND &&
             cellType != TERRAIN_SPICE &&
             cellType != TERRAIN_HILL &&
@@ -3013,7 +3028,7 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
 
 
     // not airborn, and not infantry, may not be placed on walls and mountains.
-    if (!units[iTpe].infantry && !units[iTpe].airborn) {
+    if (!sUnitType.infantry && !sUnitType.airborn) {
 		if (cellType == TERRAIN_MOUNTAIN || cellType == TERRAIN_WALL) {
 			return -1;
 		}
@@ -3021,11 +3036,10 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
 
     int iNewId = UNIT_NEW();
 
-    if (iNewId < 0)
-	{
-		logbook("UNIT_CREATE:Could not find new unit index");
+    if (iNewId < 0) {
+        logbook("UNIT_CREATE:Could not find new unit index");
         return -1;
-	}
+    }
 
     cUnit &newUnit = unit[iNewId];
     newUnit.init(iNewId);
@@ -3037,7 +3051,7 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
     newUnit.iBodyShouldFace = newUnit.iBodyFacing;
     newUnit.iHeadShouldFace = newUnit.iHeadFacing;
 
-    newUnit.iType = iTpe;
+    newUnit.iType = unitType;
     newUnit.setMaxHitPoints();
     newUnit.iGoalCell = iCll;
 
@@ -3048,40 +3062,43 @@ int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart) {
     newUnit.recreateDimensions();
 
 
-    if (iPlyr > 0 && iPlyr < AI_WORM && units[iTpe].airborn == false && bOnStart == false)
-    {
-        int iF=UNIT_FREE_AROUND_MOVE(iNewId);
+    // AI player immediately moves unit away
+    if (iPlayer > 0 && iPlayer < AI_WORM && !sUnitType.airborn && !bOnStart) {
+        int iF = UNIT_FREE_AROUND_MOVE(iNewId);
 
-        if (iF > -1)
-        {
+        if (iF > -1) {
             logbook("Order move #2");
             UNIT_ORDER_MOVE(iNewId, iF);
         }
     }
 
-
-    // set player id:
-    int iPlayer = iPlyr;
-    if (iTpe == SANDWORM) iPlayer = AI_WORM;
+    // set (Correct!?) player id, when type is SANDWORM (!?)
+    if (unitType == SANDWORM) {
+        if (iPlayer != AI_WORM) {
+            logbook("ERROR: Wanted to create sandworm for player other than AI_WORM!?");
+        }
+        iPlayer = AI_WORM;
+    }
 
     newUnit.iPlayer = iPlayer;
+
     // Put on map too!:
     map.cellSetIdForLayer(iCll, mapIdIndex, iNewId);
 
-    if (iTpe == SANDWORM) {
-        // sandworms are controlled by the last player
+    if (unitType == SANDWORM) {
         map.cellSetIdForLayer(iCll, MAPID_WORMS, iNewId);
-    } else if (
-            iTpe != ORNITHOPTER && iTpe != FRIGATE && iTpe != CARRYALL // not airborn
-            ) {
-        newUnit.iPlayer = iPlyr;
+    } else if (!newUnit.isAirbornUnit()) {  // not airborn
+        newUnit.iPlayer = iPlayer;
+        map.cellSetIdForLayer(iCll, MAPID_UNITS, iNewId);
     } else {
         // aircraft
-        newUnit.iPlayer = iPlyr;
+        newUnit.iPlayer = iPlayer;
+        map.cellSetIdForLayer(iCll, MAPID_AIR, iNewId);
     }
 
 	newUnit.poll();
-    map.clear_spot(iCll, units[iTpe].sight, iPlyr);
+
+    map.clear_spot(iCll, sUnitType.sight, iPlayer);
 
     return iNewId;
 }

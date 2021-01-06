@@ -261,46 +261,62 @@ void cAIPlayer::think_building() {
 
                 // TODO: Remove duplication, which also exists in cItemBuilder::think()
 
-                // produce now
-                int structureToDeployUnit = structureUtils.findStructureToDeployUnit(&cPlayer, iStrucType);
-                if (structureToDeployUnit > -1) {
-                    // TODO: Remove duplication, which also exists in cItemBuilder::think()
-                    cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
-                    int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
+                if (!units[unitType].airborn) {
+                    // produce now
+                    int structureToDeployUnit = structureUtils.findStructureToDeployUnit(&cPlayer, iStrucType);
+                    if (structureToDeployUnit > -1) {
+                        // TODO: Remove duplication, which also exists in cItemBuilder::think()
+                        cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
 
-                    if (cell > -1) {
-                        pStructureToDeploy->setAnimating(true); // animate
-                        int iProducedUnit = UNIT_CREATE(cell, unitType, ID, false);
-                        // Assign to team (for AI attack purposes)
-                        unit[iProducedUnit].iGroup = rnd(3) + 1;
+                        int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
+                        if (cell > -1) {
+                            pStructureToDeploy->setAnimating(true); // animate
+                            int unitId = UNIT_CREATE(cell, unitType, ID, false);
+                            int rallyPoint = pStructureToDeploy->getRallyPoint();
+                            if (rallyPoint > -1) {
+                                unit[unitId].move_to(rallyPoint, -1, -1);
+                            }
+                        } else {
+                            logbook("cItemBuilder: huh? I was promised that this structure would have some place to deploy unit at!?");
+                        }
                     } else {
-                        logbook("AI: huh? I was promised that this structure would have some place to deploy unit at!?");
-                    }
-                } else {
-                    // TODO: Remove duplication, which also exists in cItemBuilder::think()
-                    structureToDeployUnit = cPlayer.getPrimaryStructureForStructureType(iStrucType);
-                    if (structureToDeployUnit < 0) {
-                        // find any structure of type (regardless if we can deploy or not)
-                        for (int i = 0; i < MAX_STRUCTURES; i++) {
-                            cAbstractStructure *pStructure = structure[i];
-                            if (pStructure &&
-                                pStructure->isValid() &&
-                                pStructure->belongsTo(ID) &&
-                                pStructure->getType() == iStrucType) {
-                                structureToDeployUnit = i;
-                                break;
+                        // TODO: Remove duplication, which also exists in cItemBuilder::think()
+                        structureToDeployUnit = cPlayer.getPrimaryStructureForStructureType(iStrucType);
+                        if (structureToDeployUnit < 0) {
+                            // find any structure of type (regardless if we can deploy or not)
+                            for (int i = 0; i < MAX_STRUCTURES; i++) {
+                                cAbstractStructure *pStructure = structure[i];
+                                if (pStructure &&
+                                    pStructure->isValid() &&
+                                    pStructure->belongsTo(ID) &&
+                                    pStructure->getType() == iStrucType) {
+                                    structureToDeployUnit = i;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    // TODO: Remove duplication, which also exists in cItemBuilder::think()
+                        // TODO: Remove duplication, which also exists in cItemBuilder::think()
 
+                        if (structureToDeployUnit > -1) {
+                            // deliver unit by carryall
+                            REINFORCE(ID, unitType, structure[structureToDeployUnit]->getCell(), -1);
+                        } else {
+                            logbook("ERROR: Unable to find structure to deploy unit!");
+                        }
+
+                    }
+                } else {
+                    // airborn unit
+                    int structureToDeployUnit = structureUtils.findHiTechToDeployAirUnit(&cPlayer);
                     if (structureToDeployUnit > -1) {
-                        // deliver unit by carryall
-                        REINFORCE(ID, unitType, structure[structureToDeployUnit]->getCell(), -1);
-                    } else {
-                        logbook("ERROR: Unable to find structure to deploy unit!");
+                        cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
+                        pStructureToDeploy->setAnimating(true); // animate
+                        int unitId = UNIT_CREATE(pStructureToDeploy->getCell(), unitType, ID, false);
+                        int rallyPoint = pStructureToDeploy->getRallyPoint();
+                        if (rallyPoint > -1) {
+                            unit[unitId].move_to(rallyPoint, -1, -1);
+                        }
                     }
-
                 }
             }
 

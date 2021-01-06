@@ -229,7 +229,7 @@ private:
 
 
 
-int UNIT_CREATE(int iCll, int iTpe, int iPlyr, bool bOnStart);
+int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart);
 int CREATE_PATH(int iUnitId, int iPathCountUnits);
 int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 

@@ -1,10 +1,3 @@
-/*
- * cStructureUtils.cpp
- *
- *  Created on: 2-aug-2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
 
@@ -123,19 +116,7 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * pPlayer, int structureT
 		}
 	}
 
-	int structureIdFound = -1;
-	// check other structures now
-	for (int i=0; i < MAX_STRUCTURES; i++) {
-		cAbstractStructure * theStructure = structure[i];
-		if (theStructure &&
-		    theStructure->isValid() &&
-		    theStructure->belongsTo(playerId) &&
-            theStructure->getType() == structureType &&
-            theStructure->getNonOccupiedCellAroundStructure() > -1) {
-            structureIdFound = i; // return this structure
-            break;
-		}
-	}
+    int structureIdFound = findStructureBy(playerId, structureType, true);
 
 	// assign as primary building
 	if (structureIdFound > -1) {
@@ -339,4 +320,59 @@ int cStructureUtils::getTotalPowerOutForPlayer(cPlayer * pPlayer) {
 void cStructureUtils::init(cMap *pMap) {
     delete cellCalculator;
     cellCalculator = new cCellCalculator(pMap);
+}
+
+int cStructureUtils::findHiTechToDeployAirUnit(cPlayer *pPlayer) {
+    assert(pPlayer);
+
+    int playerId = pPlayer->getId();
+
+    // check primary building first if set
+    int primaryBuildingOfStructureType = pPlayer->getPrimaryStructureForStructureType(HIGHTECH);
+
+    if (primaryBuildingOfStructureType > -1) {
+        cAbstractStructure * theStructure = structure[primaryBuildingOfStructureType];
+        // this IF is needed, because the structure could be destroyed/replaced
+        if (theStructure &&
+            theStructure->isValid() &&
+            theStructure->getType() == HIGHTECH &&
+            theStructure->belongsTo(playerId) // in case this changed...
+            ) {
+            return primaryBuildingOfStructureType;
+        }
+    }
+
+    int structureIdFound = findStructureBy(playerId, HIGHTECH, false);
+
+    // assign as primary building
+    if (structureIdFound > -1) {
+        pPlayer->setPrimaryBuildingForStructureType(HIGHTECH, structureIdFound);
+    }
+
+    return structureIdFound;
+}
+
+int cStructureUtils::findStructureBy(int iPlayer, int iType, bool bFreeAround) {
+    if (iPlayer < 0) return -1;
+    if (iPlayer > AI_WORM) return -1;
+    if (iType < 0) return -1;
+
+    for (int i=0; i < MAX_STRUCTURES; i++) {
+        cAbstractStructure * theStructure = structure[i];
+        if (theStructure &&
+            theStructure->isValid() &&
+            theStructure->belongsTo(iPlayer) &&
+            theStructure->getType() == iType) {
+            if (bFreeAround) {
+                if (theStructure->getNonOccupiedCellAroundStructure() > -1) {
+                    return i;
+                } else {
+                    continue; // look for next structure with free around
+                }
+            }
+            return i; // return this structure
+            break;
+        }
+    }
+    return -1;
 }

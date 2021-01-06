@@ -105,48 +105,64 @@ void cItemBuilder::think() {
             assert(item->getTimesToBuild() > -1);
 
             // TODO: Remove duplication, which also exists in AI::think_building()
-            int structureTypeByItem = structureUtils.findStructureTypeByTypeOfList(item);
-            assert(structureTypeByItem > -1);
-            int structureToDeployUnit = structureUtils.findStructureToDeployUnit(m_Player, structureTypeByItem);
+            if (!units[item->getBuildId()].airborn) {
+                int structureTypeByItem = structureUtils.findStructureTypeByTypeOfList(item);
+                assert(structureTypeByItem > -1);
+                int structureToDeployUnit = structureUtils.findStructureToDeployUnit(m_Player, structureTypeByItem);
+                if (structureToDeployUnit > -1) {
+                    cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
+                    // TODO: Remove duplication, which also exists in AI::think_building()
+                    int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
+                    if (cell > -1) {
+                        pStructureToDeploy->setAnimating(true); // animate
+                        int unitId = UNIT_CREATE(cell, item->getBuildId(), m_Player->getId(), false);
+                        int rallyPoint = pStructureToDeploy->getRallyPoint();
+                        if (rallyPoint > -1) {
+                            unit[unitId].move_to(rallyPoint, -1, -1);
+                        }
+                    } else {
+                        logbook("cItemBuilder: huh? I was promised that this structure would have some place to deploy unit at!?");
+                    }
+                } else {
+                    structureToDeployUnit = m_Player->getPrimaryStructureForStructureType(structureTypeByItem);
+                    if (structureToDeployUnit < 0) {
+                        // find any structure of type (regardless if we can deploy or not)
+                        for (int structureId = 0; structureId < MAX_STRUCTURES; structureId++) {
+                            cAbstractStructure *pStructure = structure[structureId];
+                            if (pStructure &&
+                                pStructure->isValid() &&
+                                pStructure->belongsTo(m_Player->getId()) &&
+                                pStructure->getType() == structureTypeByItem) {
+                                structureToDeployUnit = structureId;
+                                break;
+                            }
+                        }
+                    }
 
-            if (structureToDeployUnit > -1) {
-                // TODO: Remove duplication, which also exists in AI::think_building()
-                cAbstractStructure * pStructureToDeploy = structure[structureToDeployUnit];
-                int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
-                if (cell > -1) {
+                    int cellToDeploy = structure[structureToDeployUnit]->getCell();
+                    cAbstractStructure * pStructureToDeploy = structure[structureToDeployUnit];
+                    if (pStructureToDeploy->getRallyPoint() > -1) {
+                        cellToDeploy = pStructureToDeploy->getRallyPoint();
+                    }
+
+                    REINFORCE(m_Player->getId(), item->getBuildId(), cellToDeploy, -1);
+                }
+            } else {
+                // airborn unit
+                int structureToDeployUnit = structureUtils.findHiTechToDeployAirUnit(m_Player);
+                if (structureToDeployUnit > -1) {
+                    cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
                     pStructureToDeploy->setAnimating(true); // animate
-                    int unitId = UNIT_CREATE(cell, item->getBuildId(), m_Player->getId(), false);
+                    int unitId = UNIT_CREATE(pStructureToDeploy->getCell(), item->getBuildId(), m_Player->getId(), false);
                     int rallyPoint = pStructureToDeploy->getRallyPoint();
                     if (rallyPoint > -1) {
                         unit[unitId].move_to(rallyPoint, -1, -1);
                     }
                 } else {
-                    logbook("cItemBuilder: huh? I was promised that this structure would have some place to deploy unit at!?");
+                    // got destroyed very recently
                 }
-            } else {
-                structureToDeployUnit = m_Player->getPrimaryStructureForStructureType(structureTypeByItem);
-                if (structureToDeployUnit < 0) {
-                    // find any structure of type (regardless if we can deploy or not)
-                    for (int structureId = 0; structureId < MAX_STRUCTURES; structureId++) {
-                        cAbstractStructure *pStructure = structure[structureId];
-                        if (pStructure &&
-                            pStructure->isValid() &&
-                            pStructure->belongsTo(m_Player->getId()) &&
-                            pStructure->getType() == structureTypeByItem) {
-                            structureToDeployUnit = structureId;
-                            break;
-                        }
-                    }
-                }
-
-                int cellToDeploy = structure[structureToDeployUnit]->getCell();
-                cAbstractStructure * pStructureToDeploy = structure[structureToDeployUnit];
-                if (pStructureToDeploy->getRallyPoint() > -1) {
-                    cellToDeploy = pStructureToDeploy->getRallyPoint();
-                }
-
-                REINFORCE(m_Player->getId(), item->getBuildId(), cellToDeploy, -1);
             }
+
         } else if (item->getBuildType() == SPECIAL) {
             buildingListUpdater->onBuildItemCompleted(item);
             // super weapons and that kind of stuff
