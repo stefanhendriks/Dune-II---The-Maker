@@ -24,16 +24,40 @@ public:
 	// gettters
 	int getTotalBuildTime() { return totalBuildTime; }
 	int getIconId() { return icon; }
+
+	/**
+	 * The buildId is the 'type', ie if eBuildType == STRUCTURE, then buildId refers to what *kind* of structure. Ie, the
+	 * structure type. This could be WINDTRAP, REFINERY, etc. If eBuildType is UNIT, then buildId is for TANK, QUAD, etc.
+	 *
+	 * @return
+	 */
 	int getBuildId() { return buildId; }
+
 	int getSubList() { return subList; }
 	eBuildType getBuildType() { return type; }
 	int getBuildCost() const { return cost; }
 	int getProgress() { return progress; }
 	bool isBuilding() { return building; }
 	bool isState(eBuildingListItemState value) { return state == value; }
+
+	/**
+	 * Returns if item is available to build, if not, then it won't be drawn
+	 * @return
+	 */
 	bool isAvailable() { return isState(eBuildingListItemState::AVAILABLE); }
+
+	/**
+	 * Item is pending because upgrade is in progress (used for building items)
+	 * @return
+	 */
 	bool isPendingUpgrading() { return isState(eBuildingListItemState::PENDING_UPGRADE); }
+
+	/**
+	 * Item is pending because building is in progress (used for upgrade items)
+	 * @return
+	 */
 	bool isPendingBuilding() { return isState(eBuildingListItemState::PENDING_BUILDING); }
+
 	int getTimesToBuild() { return timesToBuild; }
 	int getSlotId() { return slotId; } // return index of items[] array (set after adding item to list, default is < 0)
 	int getTimesOrdered() { return timesOrdered; }

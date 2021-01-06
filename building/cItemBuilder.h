@@ -24,7 +24,8 @@ class cItemBuilder {
 		cBuildingListItem *findBuildingListItemOfSameListAs(cBuildingListItem *item);
 
 		void removeItemFromList(cBuildingListItem *item);
-		bool isASimilarItemBeingBuilt(cBuildingListItem *item);
+		bool isAnotherBuildingListItemInTheSameListBeingBuilt(cBuildingListItem *item);
+        bool isAnythingBeingBuiltForListId(int listType, int sublistType);
 
 		int getFreeSlot();
 
@@ -39,6 +40,8 @@ class cItemBuilder {
 		bool isItemInList(cBuildingListItem *item);
 
 		void startBuilding(cBuildingListItem *item);
+
+        cBuildingListItem * getBuildingListItem(eBuildType buildType, int iBuildId);
 };
 
 #endif /* CITEMBUILDER_H_ */

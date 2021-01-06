@@ -144,11 +144,10 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 	}
 
 	// Heavyfactory
-	if (structureType == HEAVYFACTORY)
-	{
+    if (structureType == HEAVYFACTORY) {
         listUnits->addUnitToList(TANK, SUBLIST_HEAVYFCTRY);
         listUnits->addUnitToList(HARVESTER, SUBLIST_HEAVYFCTRY);
-	}
+    }
 
     ///////////////////////////////////
 	// ADJUSTMENTS TO INFANTRY LIST

@@ -54,7 +54,7 @@ void cItemBuilder::think() {
         // not building now, but in list.
         // Build as soon as possible.
         if (!item->isBuilding()) {
-            bool anotherItemOfSameListIsBeingBuilt = isASimilarItemBeingBuilt(item);
+            bool anotherItemOfSameListIsBeingBuilt = isAnotherBuildingListItemInTheSameListBeingBuilt(item);
 
             // only start building this, if no other item is already being built in the same list.
             if (!anotherItemOfSameListIsBeingBuilt) {
@@ -296,7 +296,12 @@ cBuildingListItem *cItemBuilder::findBuildingListItemOfSameListAs(cBuildingListI
 	return NULL;
 }
 
-bool cItemBuilder::isASimilarItemBeingBuilt(cBuildingListItem *item) {
+/**
+ * Checks if another cBuildingListItem exists which has the same list ID, and is building. If so returns true.
+ * @param item
+ * @return
+ */
+bool cItemBuilder::isAnotherBuildingListItemInTheSameListBeingBuilt(cBuildingListItem *item) {
 	assert(item != NULL);
 
 	// get through the build list and find an item that is of the same list.
@@ -312,6 +317,22 @@ bool cItemBuilder::isASimilarItemBeingBuilt(cBuildingListItem *item) {
 	}
 	return false;
 }
+
+bool cItemBuilder::isAnythingBeingBuiltForListId(int listType, int sublistType) {
+    // get through the build list and find an item that is of the same list.
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *listItem = getItem(i);
+        if (listItem) {
+            cBuildingList *pList = listItem->getList();
+            if (listType == pList->getType() &&
+                sublistType == listItem->getSubList()) {
+                if (listItem->isBuilding()) return true;
+            }
+        }
+    }
+    return false;
+}
+
 
 /**
  * Returns true when the buildingListItem is the first built in its list.
@@ -348,6 +369,17 @@ void cItemBuilder::removeItemFromList(cBuildingListItem *item) {
 	}
 }
 
+cBuildingListItem * cItemBuilder::getBuildingListItem(eBuildType buildType, int iBuildId) {
+    for (int i = 0; i < MAX_ICONS; i++) {
+        cBuildingListItem *pItem = items[i];
+        if (pItem == nullptr) continue;
+        if (pItem->getBuildType() != buildType) continue;
+        if (pItem->getBuildId() != iBuildId) continue;
+        return pItem;
+    }
+    return nullptr;
+}
+
 /**
  * Remove item from list. This does do any delete operation, it merely sets the pointer to NULL. This is because
  * the item builder does not own any of the items being built.
@@ -374,3 +406,4 @@ void cItemBuilder::startBuilding(cBuildingListItem *item) {
     item->setIsBuilding(true);
     buildingListUpdater->onBuildItemStarted(item);
 }
+

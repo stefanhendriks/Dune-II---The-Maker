@@ -35,15 +35,13 @@ void cAIPlayer::init(int iID) {
 
 	// -- END
 
-    // iBuildingUnit[TRIKE] > 0 = its building a trike (progress!)
-    memset(iBuildingUnit, -1, sizeof(iBuildingUnit));
 	memset(iBuildingStructure, -1, sizeof(iBuildingStructure));
     memset(TIMER_BuildUnit, -1, sizeof(TIMER_BuildUnit));
 	memset(TIMER_BuildStructure, -1, sizeof(TIMER_BuildStructure));
 
     TIMER_attack = (700 + rnd(400));
 
-    TIMER_BuildUnits = 500; // give m_Player advantage to build his stuff first, before computer grows his army
+    TIMER_BuildUnits = 300; // give m_Player advantage to build his stuff first, before computer grows his army
     TIMER_blooms = 200;
     TIMER_repair = 500;
 }
@@ -81,7 +79,7 @@ void cAIPlayer::BUILD_STRUCTURE(int iStrucType) {
 void cAIPlayer::BUILD_UNIT(int iUnitType) {
 
     // Fix up house mixtures
-    cPlayer &cPlayer = player[ID];
+    const cPlayer &cPlayer = player[ID];
 
     if (cPlayer.getHouse() == HARKONNEN || cPlayer.getHouse() == SARDAUKAR) {
         if (iUnitType == INFANTRY) iUnitType = TROOPERS;
@@ -101,8 +99,9 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
 
     bool bAllowed = canAIBuildUnit(ID, iUnitType);
 
-    if (!bAllowed)
+    if (!bAllowed) {
         return; // do not go further
+    }
 
     bool bAlreadyBuilding = isBuildingUnitType(iUnitType);
 
@@ -138,32 +137,64 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
     }
 
     if (!bAlreadyBuilding) {
-        // Now build it
-        iBuildingUnit[iUnitType] = 0;                  // start building!
-        cPlayer.substractCredits(units[iUnitType].cost); // pay for it
+        // Duplicated logic - for now - determining lists by unit id.
+        int listId = LIST_UNITS;
+        int sublistId = SUBLIST_HEAVYFCTRY; // default
+
+        if (iUnitType == SOLDIER || iUnitType == INFANTRY) {
+            listId = LIST_FOOT_UNITS;
+        } else if (iUnitType == TROOPER || iUnitType == TROOPERS) {
+            listId = LIST_FOOT_UNITS;
+        }
+
+        bool startedBuilding = cPlayer.getSideBar()->startBuildingItemIfOk(listId, iUnitType);
+
         if (DEBUGGING) {
-            logbook("Building UNIT: ");
-            logbook(units[iUnitType].name);
+            char msg[255];
+            if (startedBuilding) {
+                sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] and subListId[%d] - SUCCESS", units[iUnitType].name, iUnitType, listId, sublistId);
+            } else {
+                sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] and subListId[%d] - FAILED", units[iUnitType].name, iUnitType, listId, sublistId);
+            }
+            logbook(msg);
         }
     } else {
-        if (DEBUGGING) {
-//            char msg[255];
-//            sprintf(msg, "Attempted to build unit %s but something similar is already being built")
-            std::string unitName = units[iUnitType].name;
-            std::string message =
-                    "Attempted to build unit " + unitName + " but something similar is already being built";
-            cLogger::getInstance()->log(eLogLevel::LOG_TRACE, eLogComponent::COMP_AI, "BUILD_UNIT", message,
-                                        eLogOutcome::OUTC_FAILED, ID, cPlayer.getHouse());
-        }
+        char msg[255];
+        sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d] - but already building.", units[iUnitType].name, iUnitType);
+        logbook(msg);
     }
 }
 
-bool cAIPlayer::isBuildingUnitType(int iUnitType) const { return iBuildingUnit[iUnitType] > -1; }
+bool cAIPlayer::isBuildingUnitType(int iUnitType) const {
+    const cPlayer &cPlayer = player[ID];
+    cItemBuilder *pItemBuilder = cPlayer.getItemBuilder();
+
+    // here we hard-code a transition from unitType to LIST_ * and sublist id, need to think how we can shove this
+    // into the game.ini and such. This logic is taken from the cBuildingListUpdater::onStructureCreated.
+    // Duplicated logic - for now - determining lists by unit id.
+    int listId = LIST_UNITS;
+    int sublistId = SUBLIST_HEAVYFCTRY; // default
+
+    if (iUnitType == SOLDIER || iUnitType == INFANTRY) {
+        listId = LIST_FOOT_UNITS;
+        sublistId = SUBLIST_INFANTRY;
+    } else if (iUnitType == TROOPER || iUnitType == TROOPERS) {
+        listId = LIST_FOOT_UNITS;
+        sublistId = SUBLIST_TROOPERS;
+    } else if (iUnitType == QUAD || iUnitType == TRIKE || iUnitType == RAIDER) {
+        sublistId = SUBLIST_LIGHTFCTRY;
+    } else  if (iUnitType == CARRYALL || iUnitType == ORNITHOPTER) {
+        sublistId = SUBLIST_HIGHTECH;
+    }
+
+    return pItemBuilder->isAnythingBeingBuiltForListId(listId, sublistId);
+}
 
 
 void cAIPlayer::think_building() {
-	if (ID == HUMAN)
-		return; // human m_Player does not think
+	if (ID == HUMAN) {
+        return; // human m_Player does not think
+    }
 
     /*
 		structure building;
@@ -220,114 +251,6 @@ void cAIPlayer::think_building() {
 			break;
 		}
 	}
-
-	/*
-		unit building ---> TODO: use the itemBuilder logic instead, this is duplicate logic
-	*/
-    for (int unitType=0; unitType < MAX_UNITTYPES; unitType++) {
-        if (iBuildingUnit[unitType] > -1) {
-            int iStrucType = AI_STRUCTYPE(unitType);
-
-            TIMER_BuildUnit[unitType]++;
-
-            int iTimerCap=35;
-            int structureCount = cPlayer.getAmountOfStructuresForType(iStrucType);
-//            char msg[255];
-//            sprintf(msg, "AI [%d] - StructureCount for %s = %d", ID, structures[iStrucType].name, structureCount);
-//            logbook(msg);
-
-            if (structureCount > 0) {
-                iTimerCap /= structureCount;
-            } else {
-                // structure got destroyed while building!
-                iBuildingUnit[unitType] = -1;
-                TIMER_BuildUnit[unitType]=0;
-                continue;
-            }
-
-            cPlayerDifficultySettings *difficultySettings = cPlayer.getDifficultySettings();
-            iTimerCap = difficultySettings->getBuildSpeed(iTimerCap);
-
-            if (TIMER_BuildUnit[unitType] > iTimerCap) {
-                iBuildingUnit[unitType]++;
-                TIMER_BuildUnit[unitType]=0; // set to 0 again
-            }
-
-            if (iBuildingUnit[unitType] >= units[unitType].build_time) {
-                //logbook("DONE BUILDING");
-
-                // produce
-                iBuildingUnit[unitType] = -1;
-
-                // TODO: Remove duplication, which also exists in cItemBuilder::think()
-
-                if (!units[unitType].airborn) {
-                    // produce now
-                    int structureToDeployUnit = structureUtils.findStructureToDeployUnit(&cPlayer, iStrucType);
-                    if (structureToDeployUnit > -1) {
-                        // TODO: Remove duplication, which also exists in cItemBuilder::think()
-                        cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
-
-                        int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
-                        if (cell > -1) {
-                            pStructureToDeploy->setAnimating(true); // animate
-                            int unitId = UNIT_CREATE(cell, unitType, ID, false);
-                            int rallyPoint = pStructureToDeploy->getRallyPoint();
-                            if (rallyPoint > -1) {
-                                unit[unitId].move_to(rallyPoint, -1, -1);
-                            }
-                        } else {
-                            logbook("cItemBuilder: huh? I was promised that this structure would have some place to deploy unit at!?");
-                        }
-                    } else {
-                        // TODO: Remove duplication, which also exists in cItemBuilder::think()
-                        structureToDeployUnit = cPlayer.getPrimaryStructureForStructureType(iStrucType);
-                        if (structureToDeployUnit < 0) {
-                            // find any structure of type (regardless if we can deploy or not)
-                            for (int i = 0; i < MAX_STRUCTURES; i++) {
-                                cAbstractStructure *pStructure = structure[i];
-                                if (pStructure &&
-                                    pStructure->isValid() &&
-                                    pStructure->belongsTo(ID) &&
-                                    pStructure->getType() == iStrucType) {
-                                    structureToDeployUnit = i;
-                                    break;
-                                }
-                            }
-                        }
-                        // TODO: Remove duplication, which also exists in cItemBuilder::think()
-
-                        if (structureToDeployUnit > -1) {
-                            // deliver unit by carryall
-                            REINFORCE(ID, unitType, structure[structureToDeployUnit]->getCell(), -1);
-                        } else {
-                            logbook("ERROR: Unable to find structure to deploy unit!");
-                        }
-
-                    }
-                } else {
-                    // airborn unit
-                    int structureToDeployUnit = structureUtils.findHiTechToDeployAirUnit(&cPlayer);
-                    if (structureToDeployUnit > -1) {
-                        cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
-                        pStructureToDeploy->setAnimating(true); // animate
-                        int unitId = UNIT_CREATE(pStructureToDeploy->getCell(), unitType, ID, false);
-                        int rallyPoint = pStructureToDeploy->getRallyPoint();
-                        if (rallyPoint > -1) {
-                            unit[unitId].move_to(rallyPoint, -1, -1);
-                        }
-                    }
-                }
-            }
-
-        }
-    }
-
-//    char msg2[255];
-//    sprintf(msg2, "AI [%d] think_building() - end", ID);
-//    logbook(msg2);
-
-	// END OF THINK BUILDING
 }
 
 void cAIPlayer::think_spiceBlooms() {
@@ -649,13 +572,6 @@ void cAIPlayer::think_buildarmy() {
         TIMER_BuildUnits--;
         return;
     }
-
-    /*
-	if (game.bSkirmish)
-	{
-		if (m_Player[ID].credits < 300)
-			return;
-	}*/
 
     TIMER_BuildUnits=5;
 
@@ -1036,9 +952,9 @@ void cAIPlayer::think_worm() {
         }
     }
 
-    char msg2[255];
-    sprintf(msg2, "AI [%d] think_worm() - end", ID);
-    logbook(msg2);
+//    char msg2[255];
+//    sprintf(msg2, "AI [%d] think_worm() - end", ID);
+//    logbook(msg2);
 }
 
 /////////////////////////////////////////////////
@@ -1072,21 +988,38 @@ int AI_STRUCTYPE(int iUnitType) {
 bool canAIBuildUnit(int iPlayer, int iUnitType) {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
+    char msg[255];
+    sprintf(msg, "canAIBuildUnit: Wanting to build iUnitType = [%d(=%s)] for player [%d]; allowed?...", iUnitType, units[iUnitType].name, iPlayer);
+    logbook(msg);
+
 
     // CHECK 1: Do we have the money?
-    if (player[iPlayer].credits < units[iUnitType].cost)
+    if (player[iPlayer].credits < units[iUnitType].cost) {
+        char msg[255];
+        sprintf(msg, "canAIBuildUnit: FALSE, because cost %d higher than credits %d", units[iUnitType].cost, player[iPlayer].credits);
+        logbook(msg);
         return false; // NOPE
+    }
 
     // CHECK 2: Aren't we building this already?
-    if (aiplayer[iPlayer].iBuildingUnit[iUnitType] >= 0)
+    if (aiplayer[iPlayer].isBuildingUnitType(iUnitType)) {
+        char msg[255];
+        sprintf(msg, "canAIBuildUnit: FALSE, because already building unitType");
+        logbook(msg);
         return false;
+    }
 
     int iStrucType = AI_STRUCTYPE(iUnitType);
 
     // Do the reality-check, do we have the building needed?
-    if (!player[iPlayer].hasAtleastOneStructure(iStrucType))
+    if (!player[iPlayer].hasAtleastOneStructure(iStrucType)) {
+        char msg[255];
+        sprintf(msg, "canAIBuildUnit: FALSE, because we do not own the required structure type [%s] for this unit. [%s]", structures[iStrucType].name, units[iUnitType].name);
+        logbook(msg);
         return false; // we do not have the building
+    }
 
+    logbook("canAIBuildUnit: ALLOWED");
 
     // WE MAY BUILD IT!
     return true;
