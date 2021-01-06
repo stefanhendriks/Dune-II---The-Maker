@@ -15,6 +15,8 @@ class cStructureUtils {
 
 		int findStructureToDeployUnit(cPlayer * pPlayer, int structureType);
 		int findStarportToDeployUnit(cPlayer * pPlayer);
+		int findHiTechToDeployAirUnit(cPlayer * pPlayer);
+		int findStructureBy(int iPlayer, int iType, bool bFreeAround);
 		int findStructureTypeByTypeOfList(cBuildingListItem *item);
 		int findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(int cell, int structureType, cPlayer * pPlayer);
 
