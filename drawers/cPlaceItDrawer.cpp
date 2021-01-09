@@ -174,6 +174,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	destroy_bitmap(temp);
 
 	// clicked mouse button
+	// TODO: move to INTERACT function?
 	if (cMouse::isLeftButtonClicked()) {
 		if (bMayPlace && bWithinBuildDistance)	{
 			int iHealthPercent = 50; // the minimum is 50% (with no slabs)

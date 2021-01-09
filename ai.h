@@ -33,9 +33,6 @@ public:
 
     int ID; 
 
-    int iBuildingStructure[MAX_STRUCTURETYPES]; // > -1 = progress
-    int TIMER_BuildUnit[MAX_UNITTYPES];         // 
-    int TIMER_BuildStructure[MAX_STRUCTURETYPES]; // ONLY ONE BUILDING AT A TIME CAN BE BUILT!
     int TIMER_BuildUnits;       // when to build units?
     int TIMER_attack;           // when to attack
     int TIMER_repair;           // repair
@@ -60,9 +57,18 @@ public:
 	void BUILD_STRUCTURE(int iStrucType);
     void BUILD_UNIT(int iUnitType);
 
-	int  findCellToPlaceStructure(int iType);
+	int  findCellToPlaceStructure(int iStructureType);
 
     bool isBuildingUnitType(int iUnitType) const;
+    bool isBuildingStructure() const;
+    bool isBuildingStructureAwaitingPlacement() const;
+
+    int getStructureTypeBeingBuilt();
+
+    void startBuildingUnit(int iUnitType) const;
+    void startBuildingStructure(int iStructureType) const;
+
+    cBuildingListItem *getStructureBuildingListItemBeingBuilt() const;
 };
 
 

@@ -93,7 +93,7 @@ private:
     // methods
     void thinkAvailabilityLists();
 
-    void startBuildingItemIfOk(cBuildingListItem *item) const;
+    bool startBuildingItemIfOk(cBuildingListItem *item) const;
 
     void drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem *item) const;
 };

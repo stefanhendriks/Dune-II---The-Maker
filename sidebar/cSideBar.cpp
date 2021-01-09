@@ -167,7 +167,7 @@ void cSideBar::thinkInteraction() {
                 item->setPlaceIt(false);
 
                 if (item->getTimesToBuild() == 0) {
-                    cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
+                    cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "(Human) Item is last item in queue, will give money back.");
                     // only give money back for item that is being built
                     if (item->isBuilding()) {
                         // calculate the amount of money back:
@@ -183,7 +183,7 @@ void cSideBar::thinkInteraction() {
             }
         } else {
             assert(orderProcesser);
-            if (orderProcesser->isOrderPlaced() == false) {
+            if (!orderProcesser->isOrderPlaced()) {
                 if (item->getTimesOrdered() > 0) {
                     item->decreaseTimesOrdered();
                     orderProcesser->removeOrder(item);
@@ -222,11 +222,11 @@ void cSideBar::drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem
     }
 }
 
-void cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
-    if (item == nullptr) return;
+bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
+    if (item == nullptr) return false;
     if (item->shouldPlaceIt()) {
-        allegro_message("Attempting to build an item that is in the \"Place it\" mode - which should not happen - ignoring!");
-        return;
+        logbook("Attempting to build an item that is in the \"Place it\" mode - which should not happen - ignoring!");
+        return false;
     }
 
     cBuildingList *list = item->getList();
@@ -241,9 +241,17 @@ void cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
             itemBuilder->addItemToList(item);
         }
         list->setLastClickedId(item->getSlotId());
+        return true;
     }
+    return false;
 }
 
+/**
+ * Starts building item of type <b>buildId</b>, returns false if the construction cannot commence.
+ * @param listId
+ * @param buildId
+ * @return
+ */
 bool cSideBar::startBuildingItemIfOk(int listId, int buildId) const {
     if (listId < 0) return false;
     if (listId >= LIST_MAX) return false;
@@ -253,8 +261,7 @@ bool cSideBar::startBuildingItemIfOk(int listId, int buildId) const {
 
     cBuildingListItem *pItem = pList->getItemByBuildId(buildId);
     if (pItem) {
-        startBuildingItemIfOk(pItem);
-        return true;
+        return startBuildingItemIfOk(pItem);
     } else {
         char msg[255];
         sprintf(msg, "ERROR: startBuildingItemIfOk with listId[%d] and buildId[%d] did not find an item to build!", listId, buildId);

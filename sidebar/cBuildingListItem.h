@@ -126,7 +126,7 @@ private:
 	int slotId;			 	// return index of items[] array (set after adding item to list, default is < 0)
 
 	float creditsPerProgressTime; // credits to pay for each progress point. (calculated at creation)
-	bool placeIt;			// when true, this item is ready for placement.
+	bool placeIt;			// when true, this item is ready for placement
 	bool queuable;			// when true, this item can be ordered multiple times to build
 
 	int totalBuildTime;		// total time it takes to build.

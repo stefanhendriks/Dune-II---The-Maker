@@ -94,8 +94,10 @@ void cItemBuilder::think() {
         // DONE building
         if (item->getBuildType() == STRUCTURE) {
             // play voice when placeIt is false
-            if (!item->shouldPlaceIt() && (m_Player->isHuman())) {
-                play_voice(SOUND_VOICE_01_ATR); // "Construction Complete"
+            if (!item->shouldPlaceIt()) {
+                if (m_Player->isHuman()) {
+                    play_voice(SOUND_VOICE_01_ATR); // "Construction Complete"
+                }
                 item->setPlaceIt(true);
             }
         } else if (item->getBuildType() == UNIT) {
@@ -318,19 +320,78 @@ bool cItemBuilder::isAnotherBuildingListItemInTheSameListBeingBuilt(cBuildingLis
 	return false;
 }
 
+/**
+ * Returns true if any item is being built for the listType / subListType.
+ * If you wish to know which item , use getListItemWhichIsBuilding()
+ * @param listType
+ * @param sublistType
+ * @return
+ */
 bool cItemBuilder::isAnythingBeingBuiltForListId(int listType, int sublistType) {
-    // get through the build list and find an item that is of the same list.
+    cBuildingListItem *pItem = getListItemWhichIsBuilding(listType, sublistType);
+    return pItem != nullptr;
+}
+
+/**
+ * Returns true if any item awaits placement for the listType / subListType.
+ * If you wish to know which item , use getListItemWhichIsAwaitingPlacement()
+ * @param listType
+ * @param sublistType
+ * @return
+ */
+bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingPlacement(int listType, int sublistType) {
+    cBuildingListItem *pItem = getListItemWhichIsAwaitingPlacement(listType, sublistType);
+    return pItem != nullptr;
+}
+
+/**
+ * Iterates over listType and subList, finds any item that isBuilding() returns true.
+ * @param listType
+ * @param sublistType
+ * @return
+ */
+cBuildingListItem *cItemBuilder::getListItemWhichIsBuilding(int listType, int sublistType) {
+    cBuildingListItem *pItem = nullptr; // get through the build list and find an item that is of the same list.
+
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *listItem = getItem(i);
         if (listItem) {
             cBuildingList *pList = listItem->getList();
             if (listType == pList->getType() &&
                 sublistType == listItem->getSubList()) {
-                if (listItem->isBuilding()) return true;
+                if (listItem->isBuilding()) {
+                    pItem = listItem;
+                    break;
+                }
             }
         }
     }
-    return false;
+    return pItem;
+}
+
+/**
+ * Iterates over listType and subList, finds any item that isBuilding() returns true.
+ * @param listType
+ * @param sublistType
+ * @return
+ */
+cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingPlacement(int listType, int sublistType) {
+    cBuildingListItem *pItem = nullptr;
+
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *listItem = getItem(i);
+        if (listItem) {
+            cBuildingList *pList = listItem->getList();
+            if (listType == pList->getType() &&
+                sublistType == listItem->getSubList()) {
+                if (listItem->shouldPlaceIt()) {
+                    pItem = listItem;
+                    break;
+                }
+            }
+        }
+    }
+    return pItem;
 }
 
 
@@ -369,6 +430,12 @@ void cItemBuilder::removeItemFromList(cBuildingListItem *item) {
 	}
 }
 
+/**
+ * Finds item being built by eBuildType (UNIT/STRUCTURE/SPECIAL) and BuildId (TRIKE, QUAD, WINDTRAP, NUKE)
+ * @param buildType
+ * @param iBuildId
+ * @return
+ */
 cBuildingListItem * cItemBuilder::getBuildingListItem(eBuildType buildType, int iBuildId) {
     for (int i = 0; i < MAX_ICONS; i++) {
         cBuildingListItem *pItem = items[i];

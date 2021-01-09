@@ -35,10 +35,6 @@ void cAIPlayer::init(int iID) {
 
 	// -- END
 
-	memset(iBuildingStructure, -1, sizeof(iBuildingStructure));
-    memset(TIMER_BuildUnit, -1, sizeof(TIMER_BuildUnit));
-	memset(TIMER_BuildStructure, -1, sizeof(TIMER_BuildStructure));
-
     TIMER_attack = (700 + rnd(400));
 
     TIMER_BuildUnits = 300; // give m_Player advantage to build his stuff first, before computer grows his army
@@ -47,14 +43,21 @@ void cAIPlayer::init(int iID) {
 }
 
 void cAIPlayer::BUILD_STRUCTURE(int iStrucType) {
-	for (int i=0; i < MAX_STRUCTURETYPES; i++) {
-        if (iBuildingStructure[i] > -1) {
-            // already building some structure
-            return;
-        }
+    if (isBuildingStructure()) {
+        char msg[255];
+        sprintf(msg, "BUILD_STRUCTURE AI[%d] wants to build structure type [%d(=%s)] but it is still building a structure - ABORTING", ID, iStrucType, structures[iStrucType].name);
+        logbook(msg);
+        return;
     }
 
-	// not building
+    if (isBuildingStructureAwaitingPlacement()) {
+        char msg[255];
+        sprintf(msg, "BUILD_STRUCTURE AI[%d] wants to build structure type [%d(=%s)] but it is still awaiting placement of a structure", ID, iStrucType, structures[iStrucType].name);
+        logbook(msg);
+        return;
+    }
+
+	// not building & busy placing
 
 	// check if its allowed at all
     cPlayer &cPlayer = player[ID];
@@ -65,15 +68,7 @@ void cAIPlayer::BUILD_STRUCTURE(int iStrucType) {
 	if (!cPlayer.hasEnoughCreditsFor(structures[iStrucType].cost))
 		return; // cannot buy
 
-	iBuildingStructure[iStrucType]=0;
-	TIMER_BuildStructure[iStrucType]=0; // start building
-
-    if (DEBUGGING) {
-        logbook("Building STRUCTURE: ");
-        logbook(structures[iStrucType].name);
-    }
-
-	cPlayer.substractCredits(structures[iStrucType].cost);
+    startBuildingStructure(iStrucType);
 }
 
 void cAIPlayer::BUILD_UNIT(int iUnitType) {
@@ -137,30 +132,56 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
     }
 
     if (!bAlreadyBuilding) {
-        // Duplicated logic - for now - determining lists by unit id.
-        int listId = LIST_UNITS;
-        int sublistId = SUBLIST_HEAVYFCTRY; // default
-
-        if (iUnitType == SOLDIER || iUnitType == INFANTRY) {
-            listId = LIST_FOOT_UNITS;
-        } else if (iUnitType == TROOPER || iUnitType == TROOPERS) {
-            listId = LIST_FOOT_UNITS;
-        }
-
-        bool startedBuilding = cPlayer.getSideBar()->startBuildingItemIfOk(listId, iUnitType);
-
-        if (DEBUGGING) {
-            char msg[255];
-            if (startedBuilding) {
-                sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] and subListId[%d] - SUCCESS", units[iUnitType].name, iUnitType, listId, sublistId);
-            } else {
-                sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] and subListId[%d] - FAILED", units[iUnitType].name, iUnitType, listId, sublistId);
-            }
-            logbook(msg);
-        }
+        startBuildingUnit(iUnitType);
     } else {
         char msg[255];
         sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d] - but already building.", units[iUnitType].name, iUnitType);
+        logbook(msg);
+    }
+}
+
+void cAIPlayer::startBuildingUnit(int iUnitType) const {
+    const cPlayer &cPlayer = player[ID];
+
+    // Duplicated logic - for now - determining lists by unit id.
+    int listId = LIST_UNITS;
+    int sublistId = SUBLIST_HEAVYFCTRY; // default
+
+    if (iUnitType == SOLDIER || iUnitType == INFANTRY) {
+        listId = LIST_FOOT_UNITS;
+    } else if (iUnitType == TROOPER || iUnitType == TROOPERS) {
+        listId = LIST_FOOT_UNITS;
+    }
+
+    bool startedBuilding = cPlayer.getSideBar()->startBuildingItemIfOk(listId, iUnitType);
+
+    if (DEBUGGING) {
+        char msg[255];
+        if (startedBuilding) {
+            sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] and subListId[%d] - SUCCESS", units[iUnitType].name, iUnitType, listId, sublistId);
+        } else {
+            sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] and subListId[%d] - FAILED", units[iUnitType].name, iUnitType, listId, sublistId);
+        }
+        logbook(msg);
+    }
+}
+
+void cAIPlayer::startBuildingStructure(int iStructureType) const {
+    const cPlayer &cPlayer = player[ID];
+
+    // Duplicated logic - for now - determining lists by unit id.
+    int listId = LIST_CONSTYARD;
+    int sublistId = 0; // default
+
+    bool startedBuilding = cPlayer.getSideBar()->startBuildingItemIfOk(listId, iStructureType);
+
+    if (DEBUGGING) {
+        char msg[255];
+        if (startedBuilding) {
+            sprintf(msg, "Wanting to build structure [%s] iStructureType = [%d], with listId[%d] and subListId[%d] - SUCCESS", structures[iStructureType].name, iStructureType, listId, sublistId);
+        } else {
+            sprintf(msg, "Wanting to build structure [%s] iStructureType = [%d], with listId[%d] and subListId[%d] - FAILED", structures[iStructureType].name, iStructureType, listId, sublistId);
+        }
         logbook(msg);
     }
 }
@@ -190,6 +211,44 @@ bool cAIPlayer::isBuildingUnitType(int iUnitType) const {
     return pItemBuilder->isAnythingBeingBuiltForListId(listId, sublistId);
 }
 
+/**
+ * Returns true if anything is built from ConstYard
+ */
+bool cAIPlayer::isBuildingStructure() const {
+    const cPlayer &cPlayer = player[ID];
+    cItemBuilder *pItemBuilder = cPlayer.getItemBuilder();
+
+    int listId = LIST_CONSTYARD;
+    int sublistId = 0; // default
+
+    return pItemBuilder->isAnythingBeingBuiltForListId(listId, sublistId);
+}
+
+/**
+ * Returns true if anything is built from ConstYard
+ */
+bool cAIPlayer::isBuildingStructureAwaitingPlacement() const {
+    const cPlayer &cPlayer = player[ID];
+    cItemBuilder *pItemBuilder = cPlayer.getItemBuilder();
+
+    return pItemBuilder->isAnythingBeingBuiltForListIdAwaitingPlacement(LIST_CONSTYARD, 0);
+}
+
+int cAIPlayer::getStructureTypeBeingBuilt() {
+    cBuildingListItem *pItem = getStructureBuildingListItemBeingBuilt();
+    if (pItem) {
+        return pItem->getBuildId();
+    }
+    return -1;
+}
+
+cBuildingListItem *cAIPlayer::getStructureBuildingListItemBeingBuilt() const {
+    const cPlayer &cPlayer = player[ID];
+    cItemBuilder *pItemBuilder = cPlayer.getItemBuilder();
+
+    return pItemBuilder->getListItemWhichIsBuilding(LIST_CONSTYARD, 0);
+}
+
 
 void cAIPlayer::think_building() {
 	if (ID == HUMAN) {
@@ -201,56 +260,50 @@ void cAIPlayer::think_building() {
 
 		when building completed, search for a spot and place it!
 	*/
-    cPlayer &cPlayer = player[ID];
-    for (int structureType=0; structureType < MAX_STRUCTURETYPES; structureType++) {
-		if (iBuildingStructure[structureType] > -1) {
-			int iTimerCap=35; // was 35
-
-			int structureCount = cPlayer.getAmountOfStructuresForType(CONSTYARD);
-//			char msg[255];
-//			sprintf(msg, "AI [%d] - StructureCount for CONSTYARD = %d", ID, structureCount);
-//			logbook(msg);
-
-			if (structureCount > 0) {
-                iTimerCap /= structureCount;
-			} else {
-			    // no more const yards, abort construction
-                iBuildingStructure[structureType]=-1;
-                TIMER_BuildStructure[structureType]=-1;
-                continue;
-			}
-
-            cPlayerDifficultySettings *difficultySettings = cPlayer.getDifficultySettings();
-            iTimerCap = difficultySettings->getBuildSpeed(iTimerCap);
-
-			TIMER_BuildStructure[structureType]++;
-
-            if (TIMER_BuildStructure[structureType] > iTimerCap) {
-                iBuildingStructure[structureType]++;
-                TIMER_BuildStructure[structureType] = 0;
+    bool buildingStructureAwaitingPlacement = isBuildingStructureAwaitingPlacement();
+    if (game.bSkirmish) {
+        if (isBuildingStructure()) {
+            // still building, so do nothing, unless we await placement
+            if (!buildingStructureAwaitingPlacement) {
+                return;
             }
+        }
 
-            if (iBuildingStructure[structureType] >= structures[structureType].build_time) {
-				// find place to place structure
-                if (game.bSkirmish) {
-					int iCll= findCellToPlaceStructure(structureType);
+        cPlayer &cPlayer = player[ID];
 
-                    iBuildingStructure[structureType]=-1;
-                    TIMER_BuildStructure[structureType]=-1;
+        // find place to place structure
+        if (buildingStructureAwaitingPlacement) {
+            int structureType = getStructureTypeBeingBuilt();
+            int iCll = findCellToPlaceStructure(structureType);
 
-                    if (iCll > -1) {
-						cStructureFactory::getInstance()->createStructure(iCll, structureType, ID, 100);
-                    } else {
-						// cannot place structure now, this sucks big time. return money
-                        cPlayer.credits+= structures[structureType].cost;
-					}
-				}
-			}
+            if (iCll > -1) {
+//                cStructureFactory::getInstance()->createStructure(iCll, structureType, ID, 100);
 
-			// now break the loop, as we may only do one building at a time!
-			break;
-		}
-	}
+                int iHealthPercent = 50; // the minimum is 50% (with no slabs)
+
+                // TODO: This logic is duplicated in cPlaceItDrawer, this should be somewhere
+                // generic, unrelated to player in places (ie, the health determination?)
+//                if (iTotalRocks > 0) {
+//                    iHealthPercent += health_bar(50, iTotalRocks, iTotalBlocks);
+//                }
+
+                cBuildingListItem *pItem = getStructureBuildingListItemBeingBuilt();
+                cPlayer.getStructurePlacer()->placeStructure(iCll, structureType, iHealthPercent);
+                cPlayer.getBuildingListUpdater()->onBuildItemCompleted(pItem);
+
+                pItem->decreaseTimesToBuild();
+                pItem->setPlaceIt(false);
+                pItem->setIsBuilding(false);
+                pItem->setProgress(0);
+                if (pItem->getTimesToBuild() < 1) {
+                    cPlayer.getItemBuilder()->removeItemFromList(pItem);
+                }
+            } else {
+                // unable to place?!
+                logbook("CANNOT PLACE STRUCTURE");
+            }
+        }
+    }
 }
 
 void cAIPlayer::think_spiceBlooms() {
@@ -327,9 +380,6 @@ void cAIPlayer::think() {
         return; // AI is not human / skip
     }
 
-    // think about building stuff (yes this is before the timer_think stuff!)
-    think_building();
-
     // not time yet to think
     cPlayer &cPlayer = player[ID];
     if (cPlayer.TIMER_think > 0) {
@@ -346,6 +396,8 @@ void cAIPlayer::think() {
 
         return;
     }
+
+    think_building();
 
     // think about fair harvester stuff
     think_spiceBlooms();
@@ -796,34 +848,31 @@ void cAIPlayer::think_buildarmy() {
 
 void cAIPlayer::think_buildbase() {
     if (game.bSkirmish) {
-        for (int i=0; i < MAX_STRUCTURETYPES; i++) {
-            if (iBuildingStructure[i] > -1) {
-                // already building
-                return;
-            }
-        }
+        if (isBuildingStructure()) return; // wait
 
-        if (player[ID].hasAtleastOneStructure(CONSTYARD)) {
+        cPlayer &cPlayer = player[ID];
+
+        if (cPlayer.hasAtleastOneStructure(CONSTYARD)) {
             // already building
 
 			// when no windtrap, then build one (or when low power)
-			if (!player[ID].hasAtleastOneStructure(WINDTRAP) || !player[ID].bEnoughPower())
+			if (!cPlayer.hasAtleastOneStructure(WINDTRAP) || !cPlayer.bEnoughPower())
 			{
 				BUILD_STRUCTURE(WINDTRAP);
 				return;
 			}
 
 			// build refinery
-			if (!player[ID].hasAtleastOneStructure(REFINERY))
+			if (!cPlayer.hasAtleastOneStructure(REFINERY))
 			{
 				BUILD_STRUCTURE(REFINERY);
 				return;
 			}
 
 			// build wor / barracks
-			if (player[ID].getHouse() == ATREIDES)
+			if (cPlayer.getHouse() == ATREIDES)
 			{
-				if (!player[ID].hasAtleastOneStructure(BARRACKS))
+				if (!cPlayer.hasAtleastOneStructure(BARRACKS))
 				{
 					BUILD_STRUCTURE(BARRACKS);
 					return;
@@ -831,14 +880,14 @@ void cAIPlayer::think_buildbase() {
 			}
 			else
 			{
-				if (!player[ID].hasAtleastOneStructure(WOR))
+				if (!cPlayer.hasAtleastOneStructure(WOR))
 				{
 					BUILD_STRUCTURE(WOR);
 					return;
 				}
 			}
 
-			if (!player[ID].hasAtleastOneStructure(RADAR))
+			if (!cPlayer.hasAtleastOneStructure(RADAR))
 			{
 				BUILD_STRUCTURE(RADAR);
 				return;
@@ -846,13 +895,13 @@ void cAIPlayer::think_buildbase() {
 
 			// from here, we can build turrets & rocket turrets
 
-			if (!player[ID].hasAtleastOneStructure(LIGHTFACTORY))
+			if (!cPlayer.hasAtleastOneStructure(LIGHTFACTORY))
 			{
 				BUILD_STRUCTURE(LIGHTFACTORY);
 				return;
 			}
 
-			if (!player[ID].hasAtleastOneStructure(HEAVYFACTORY))
+			if (!cPlayer.hasAtleastOneStructure(HEAVYFACTORY))
 			{
 				BUILD_STRUCTURE(HEAVYFACTORY);
 				return;
@@ -861,7 +910,7 @@ void cAIPlayer::think_buildbase() {
 			// when mission is lower then 5, build normal turrets
 			if (game.iMission <= 5)
 			{
-				if (player[ID].getAmountOfStructuresForType(TURRET) < 3)
+				if (cPlayer.getAmountOfStructuresForType(TURRET) < 3)
 				{
 					BUILD_STRUCTURE(TURRET);
 					return;
@@ -870,7 +919,7 @@ void cAIPlayer::think_buildbase() {
 
 			if (game.iMission >= 6)
 			{
-				if (player[ID].getAmountOfStructuresForType(RTURRET) < 3)
+				if (cPlayer.getAmountOfStructuresForType(RTURRET) < 3)
 				{
 					BUILD_STRUCTURE(RTURRET);
 					return;
@@ -878,25 +927,25 @@ void cAIPlayer::think_buildbase() {
 			}
 
             // build refinery
-			if (player[ID].getAmountOfStructuresForType(REFINERY) < 2)
+			if (cPlayer.getAmountOfStructuresForType(REFINERY) < 2)
 			{
 				BUILD_STRUCTURE(REFINERY);
 				return;
 			}
 
-			if (!player[ID].hasAtleastOneStructure(HIGHTECH))
+			if (!cPlayer.hasAtleastOneStructure(HIGHTECH))
 			{
 				BUILD_STRUCTURE(HIGHTECH);
 				return;
 			}
 
-			if (player[ID].hasAtleastOneStructure(REPAIR))
+			if (cPlayer.hasAtleastOneStructure(REPAIR))
 			{
 				BUILD_STRUCTURE(REPAIR);
 				return;
 			}
 
-			if (!player[ID].hasAtleastOneStructure(PALACE))
+			if (!cPlayer.hasAtleastOneStructure(PALACE))
 			{
 				BUILD_STRUCTURE(PALACE);
 				return;
@@ -904,14 +953,14 @@ void cAIPlayer::think_buildbase() {
 
             if (game.iMission >= 6)
 			{
-				if (player[ID].getAmountOfStructuresForType(RTURRET) < 9)
+				if (cPlayer.getAmountOfStructuresForType(RTURRET) < 9)
 				{
 					BUILD_STRUCTURE(RTURRET);
 					return;
 				}
 			}
 
-   			if (player[ID].getAmountOfStructuresForType(STARPORT) < 1)
+   			if (cPlayer.getAmountOfStructuresForType(STARPORT) < 1)
 			{
 				BUILD_STRUCTURE(STARPORT);
 				return;
@@ -1122,7 +1171,7 @@ void cAIPlayer::think_repair_structure(cAbstractStructure *struc)
 	}
 }
 
-int cAIPlayer::findCellToPlaceStructure(int iType) {
+int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
 	// loop through all structures, and try to place structure
 	// next to them:
 	//         ww
@@ -1136,8 +1185,10 @@ int cAIPlayer::findCellToPlaceStructure(int iType) {
 	// ending at      : x + width of structure + width of type
 	// ...            : y + height of s + height of type
 
-	int iWidth=structures[iType].bmp_width/32;
-	int iHeight=structures[iType].bmp_height/32;
+	if (iStructureType < 0) return -1;
+
+	int iWidth= structures[iStructureType].bmp_width / 32;
+	int iHeight= structures[iStructureType].bmp_height / 32;
 
 	int iDistance=0;
 
@@ -1149,89 +1200,69 @@ int cAIPlayer::findCellToPlaceStructure(int iType) {
 
 	bool bGood=false;
 
-	if (iCheckingPlaceStructure < 0)
-		iCheckingPlaceStructure=0;
+    cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
 
-	if (iCheckingPlaceStructure >= MAX_STRUCTURES)
-		iCheckingPlaceStructure=0;
+    // loop through structures
+    for (int i=0; i < MAX_STRUCTURES; i++)	{
 
-	// loop through structures
-	int i;
-	for (i=iCheckingPlaceStructure; i < iCheckingPlaceStructure+2; i++)
-	{
-		// just in case
-		if (i >= MAX_STRUCTURES)
-			break;
-
-		// valid
+        // valid
         cAbstractStructure *pStructure = structure[i];
-        if (pStructure) {
-			// same owner
-            if (pStructure->getOwner() == ID) {
-				// scan around
-				int iStartX=iCellGiveX(pStructure->getCell());
-				int iStartY=iCellGiveY(pStructure->getCell());
+        if (pStructure == nullptr) continue;
+        if (pStructure->getOwner() != ID) continue;
 
-				int iEndX = iStartX + (pStructure->getWidthInPixels() / 32) + 1;
-				int iEndY = iStartY + (pStructure->getHeightInPixels() / 32) + 1;
+        // scan around
+        int iStartX=iCellGiveX(pStructure->getCell());
+        int iStartY=iCellGiveY(pStructure->getCell());
 
-				iStartX -= iWidth;
-				iStartY -= iHeight;
+        int iEndX = iStartX + (pStructure->getWidthInPixels() / 32) + 1;
+        int iEndY = iStartY + (pStructure->getHeightInPixels() / 32) + 1;
 
-				// do not go out of boundries
-				FIX_POS(iStartX, iStartY);
-				FIX_POS(iEndX, iEndY);
+        iStartX -= iWidth;
+        iStartY -= iHeight;
+
+        // do not go out of boundries
+        FIX_POS(iStartX, iStartY);
+        FIX_POS(iEndX, iEndY);
 
 
-				for (int sx=iStartX; sx < iEndX; sx++)
-				{
-					for (int sy=iStartY; sy < iEndY; sy++)
-					{
-						int r =  cStructureFactory::getInstance()->getSlabStatus(iCellMake(sx, sy), iType, -1);
+        for (int sx = iStartX; sx < iEndX; sx++) {
+            for (int sy = iStartY; sy < iEndY; sy++) {
+                int cell = iCellMake(sx, sy);
 
-						if (r > -2)
-						{
-							if (iType != TURRET && iType != RTURRET)
-							{
-								// for turrets, the most far counts
-								bGood=true;
-								iGoodCells[iGoodCellID] = iCellMake(sx, sy);
-								iGoodCellID++;
+                int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
 
-                                return iCellMake(sx, sy);
-							}
-							else
-							{
-								bGood=true;
+                if (r > -2) {
+                    if (iStructureType == TURRET && iStructureType == RTURRET) {
+                        // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
+                        int iDist = ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),
+                                               iCellGiveY(player[ID].focus_cell));
 
-								int iDist=ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),iCellGiveY(player[ID].focus_cell));
+                        if (iDist >= iDistance) {
+                            iDistance = iDist;
+                            iGoodCells[iGoodCellID] = cell;
+                            iGoodCellID++;
+                        }
 
-								if ((iDist > iDistance) || (iDist == iDistance))
-								{
-									iDistance=iDist;
-									iGoodCells[iGoodCellID] = iCellMake(sx, sy);
-									iGoodCellID++;
-                                    return iCellMake(sx, sy);
-								}
-							}
-						}
-					}
-				} // sx
-			} // same m_Player
-		} // valid structure
-	}
+                    } else {
+                        // for turrets, the most far counts
+                        iGoodCells[iGoodCellID] = cell;
+                        iGoodCellID++;
+                    }
+                }
+            }
+        } // sx
 
-	// not turret
-	if (bGood)
-	{
-		//					STRUCTURE_CREATE(iGoodCells[rnd(iGoodCellID)], iType, structures[iType].hp, ID);
-		logbook("FOUND CELL TO PLACE");
-        iCheckingPlaceStructure=-1;
-		return (iGoodCells[rnd(iGoodCellID)]);
-	}
+        if (iGoodCellID > 10) {
+            break; // found 10 good spots
+        }
+    }
 
-    iCheckingPlaceStructure=i;
-    player[ID].TIMER_think = 5;
+    if (iGoodCellID > 0) {
+        char msg[255];
+        sprintf(msg, "Found %d possible cells to place structureType [%d(=%s)]", iGoodCellID, iStructureType, structures[iStructureType].name);
+        logbook(msg);
+        return (iGoodCells[rnd(iGoodCellID)]);
+    }
 
 	return -1;
 }

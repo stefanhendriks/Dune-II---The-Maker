@@ -25,13 +25,18 @@ class cItemBuilder {
 
 		void removeItemFromList(cBuildingListItem *item);
 		bool isAnotherBuildingListItemInTheSameListBeingBuilt(cBuildingListItem *item);
-        bool isAnythingBeingBuiltForListId(int listType, int sublistType);
 
-		int getFreeSlot();
+		bool isAnythingBeingBuiltForListId(int listType, int sublistType);
+        bool isAnythingBeingBuiltForListIdAwaitingPlacement(int listType, int sublistType);
+
+        cBuildingListItem *getListItemWhichIsBuilding(int listType, int sublistType);
+        cBuildingListItem *getListItemWhichIsAwaitingPlacement(int listType, int sublistType);
 
 	private:
-		cBuildingListItem *items[MAX_ITEMS];
-		cPlayer * m_Player; // the m_Player context for this builder
+        cBuildingListItem *items[MAX_ITEMS];
+        int getFreeSlot();
+
+        cPlayer * m_Player; // the m_Player context for this builder
         cBuildingListUpdater * buildingListUpdater;
 
 		int timers[MAX_ITEMS];
