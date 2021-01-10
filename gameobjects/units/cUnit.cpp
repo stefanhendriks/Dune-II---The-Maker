@@ -1920,8 +1920,13 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                         if (iAttackUnit > -1)
                             iDestCell = unit[iAttackUnit].iCell;
 
-                        if (iAttackStructure > -1)
-                            iDestCell = structure[iAttackStructure]->getCell();
+                        if (iAttackStructure > -1) {
+                            cAbstractStructure *pStructure = structure[iAttackStructure];
+                            // it can become null, so check!
+                            if (pStructure && pStructure->isValid()) {
+                                iDestCell = pStructure->getCell();
+                            }
+                        }
 
                         if (ABS_length(iCellX, iCellY, iCellGiveX(iDestCell), iCellGiveY(iDestCell)) <
                             units[iType].range) {
