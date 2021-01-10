@@ -12,7 +12,6 @@
 
 #include "include/d2tmh.h"
 
-
 // TODO: constructor/destructors
 
 // cAIPlayer functions
@@ -63,11 +62,12 @@ void cAIPlayer::BUILD_STRUCTURE(int iStrucType) {
 	// check if its allowed at all
     cPlayer &cPlayer = player[ID];
 
-    if (!cPlayer.hasAtleastOneStructure(CONSTYARD))
-		return;
-
-	if (!cPlayer.hasEnoughCreditsFor(structures[iStrucType].cost))
-		return; // cannot buy
+    if (!cPlayer.hasAtleastOneStructure(CONSTYARD)) {
+        char msg[255];
+        sprintf(msg, "BUILD_STRUCTURE AI[%d] wants to build structure type [%d(=%s)] but can't because no CONSTYARD present.", ID, iStrucType, structures[iStrucType].name);
+        logbook(msg);
+        return;
+    }
 
     startBuildingStructure(iStrucType);
 }
@@ -146,7 +146,6 @@ void cAIPlayer::startBuildingUnit(int iUnitType) const {
 
     // Duplicated logic - for now - determining lists by unit id.
     int listId = LIST_UNITS;
-    int sublistId = SUBLIST_HEAVYFCTRY; // default
 
     if (iUnitType == SOLDIER || iUnitType == INFANTRY) {
         listId = LIST_FOOT_UNITS;
@@ -159,9 +158,9 @@ void cAIPlayer::startBuildingUnit(int iUnitType) const {
     if (DEBUGGING) {
         char msg[255];
         if (startedBuilding) {
-            sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] and subListId[%d] - SUCCESS", units[iUnitType].name, iUnitType, listId, sublistId);
+            sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] - SUCCESS", units[iUnitType].name, iUnitType, listId);
         } else {
-            sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] and subListId[%d] - FAILED", units[iUnitType].name, iUnitType, listId, sublistId);
+            sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] - FAILED", units[iUnitType].name, iUnitType, listId);
         }
         logbook(msg);
     }
@@ -172,16 +171,31 @@ void cAIPlayer::startBuildingStructure(int iStructureType) const {
 
     // Duplicated logic - for now - determining lists by unit id.
     int listId = LIST_CONSTYARD;
-    int sublistId = 0; // default
 
     bool startedBuilding = cPlayer.getSideBar()->startBuildingItemIfOk(listId, iStructureType);
 
     if (DEBUGGING) {
         char msg[255];
         if (startedBuilding) {
-            sprintf(msg, "Wanting to build structure [%s] iStructureType = [%d], with listId[%d] and subListId[%d] - SUCCESS", structures[iStructureType].name, iStructureType, listId, sublistId);
+            sprintf(msg, "Wanting to build structure [%s] iStructureType = [%d], with listId[%d] - SUCCESS", structures[iStructureType].name, iStructureType, listId);
         } else {
-            sprintf(msg, "Wanting to build structure [%s] iStructureType = [%d], with listId[%d] and subListId[%d] - FAILED", structures[iStructureType].name, iStructureType, listId, sublistId);
+            sprintf(msg, "Wanting to build structure [%s] iStructureType = [%d], with listId[%d] - FAILED", structures[iStructureType].name, iStructureType, listId);
+        }
+        logbook(msg);
+    }
+}
+
+void cAIPlayer::startUpgrading(int iUpgradeType) const {
+    const cPlayer &cPlayer = player[ID];
+    int listId = LIST_UPGRADES;
+    bool startedBuilding = cPlayer.getSideBar()->startBuildingItemIfOk(listId, iUpgradeType);
+
+    if (DEBUGGING) {
+        char msg[255];
+        if (startedBuilding) {
+            sprintf(msg, "Wanting to start upgrade [%s] iUpgradeType = [%d], with listId[%d] - SUCCESS", upgrades[iUpgradeType].description, iUpgradeType, listId);
+        } else {
+            sprintf(msg, "Wanting to start upgrade [%s] iUpgradeType = [%d], with listId[%d] - FAILED", upgrades[iUpgradeType].description, iUpgradeType, listId);
         }
         logbook(msg);
     }
@@ -215,14 +229,11 @@ bool cAIPlayer::isBuildingUnitType(int iUnitType) const {
 /**
  * Returns true if anything is built from ConstYard
  */
-bool cAIPlayer::isBuildingStructure() const {
+cBuildingListItem *cAIPlayer::isBuildingStructure() const {
     const cPlayer &cPlayer = player[ID];
     cItemBuilder *pItemBuilder = cPlayer.getItemBuilder();
 
-    int listId = LIST_CONSTYARD;
-    int sublistId = 0; // default
-
-    return pItemBuilder->isAnythingBeingBuiltForListId(listId, sublistId);
+    return pItemBuilder->getListItemWhichIsBuilding(LIST_CONSTYARD, 0);
 }
 
 /**
@@ -251,17 +262,14 @@ cBuildingListItem *cAIPlayer::getStructureBuildingListItemBeingBuilt() const {
 }
 
 
-void cAIPlayer::think_building() {
-	if (ID == HUMAN) {
-        return; // human m_Player does not think
-    }
-
+void cAIPlayer::think_buildingplacement() {
     /*
 		structure building;
 
 		when building completed, search for a spot and place it!
 	*/
     bool buildingStructureAwaitingPlacement = isBuildingStructureAwaitingPlacement();
+
     if (game.bSkirmish) {
         if (isBuildingStructure()) {
             // still building, so do nothing, unless we await placement
@@ -409,13 +417,10 @@ void cAIPlayer::think() {
     // think about fair harvester stuff
     think_spiceBlooms();
 
-    think_building();
-
-
     // Now think about building stuff etc
 	think_buildbase();
-	think_buildarmy();
-    think_attack();
+//	think_buildarmy();
+//    think_attack();
 }
 
 void cAIPlayer::think_repair() {
@@ -857,126 +862,155 @@ void cAIPlayer::think_buildarmy() {
 }
 
 void cAIPlayer::think_buildbase() {
+    if (ID == HUMAN) {
+        return; // human m_Player does not think for buildbase
+    }
+
     if (game.bSkirmish) {
-        if (isBuildingStructure()) return; // wait
+        cBuildingListItem *pUpgrade = isUpgradingConstyard();
+        if (pUpgrade) {
+            char msg[255];
+            sprintf(msg, "AI[%d] think_buildbase() - upgrade [%s] in progress [%d/%d] for ConstYard.", ID, pUpgrade->getS_Upgrade().description, pUpgrade->getBuildTime(), pUpgrade->getTotalBuildTime());
+            logbook(msg);
+            return; // wait for upgrade to be completed
+        }
+
+        think_buildingplacement();
+
+        cBuildingListItem *pBuildingStructure = isBuildingStructure();
+        if (pBuildingStructure) {
+            char msg[255];
+            sprintf(msg, "AI[%d] think_buildbase() - building structure [%s]; [%d/%d] wait for that to complete.", ID, pBuildingStructure->getS_Structures().name, pBuildingStructure->getBuildTime(), pBuildingStructure->getTotalBuildTime());
+            logbook(msg);
+            return; // wait
+        }
 
         cPlayer &cPlayer = player[ID];
 
-        if (cPlayer.hasAtleastOneStructure(CONSTYARD)) {
-            // already building
+        if (!cPlayer.hasAtleastOneStructure(CONSTYARD)) {
+            // if player has HEAVY FACTORY, try to build MVC and then get new Const Yard.
+//            char msg[255];
+//            sprintf(msg, "AI[%d] think_buildbase() - No Constyard present, bail.", ID);
+//            logbook(msg);
+            return;
+        }
 
-			// when no windtrap, then build one (or when low power)
-			if (!cPlayer.hasAtleastOneStructure(WINDTRAP) || !cPlayer.bEnoughPower())
-			{
-				BUILD_STRUCTURE(WINDTRAP);
-				return;
-			}
+        // when no windtrap, then build one (or when low power)
+        if (!cPlayer.hasAtleastOneStructure(WINDTRAP) ||
+            !cPlayer.bEnoughPower()) {
+            BUILD_STRUCTURE(WINDTRAP);
+            return;
+        }
 
-			// build refinery
-			if (!cPlayer.hasAtleastOneStructure(REFINERY))
-			{
-				BUILD_STRUCTURE(REFINERY);
-				return;
-			}
+        // build refinery
+        if (!cPlayer.hasAtleastOneStructure(REFINERY)) {
+            BUILD_STRUCTURE(REFINERY);
+            return;
+        }
 
-			// build wor / barracks
-			if (cPlayer.getHouse() == ATREIDES)
-			{
-				if (!cPlayer.hasAtleastOneStructure(BARRACKS))
-				{
-					BUILD_STRUCTURE(BARRACKS);
-					return;
-				}
-			}
-			else
-			{
-				if (!cPlayer.hasAtleastOneStructure(WOR))
-				{
-					BUILD_STRUCTURE(WOR);
-					return;
-				}
-			}
+        // build wor / barracks
+        if (cPlayer.getHouse() == ATREIDES) {
+            if (!cPlayer.hasAtleastOneStructure(BARRACKS)) {
+                BUILD_STRUCTURE(BARRACKS);
+                return;
+            }
+        } else {
+            if (!cPlayer.hasAtleastOneStructure(WOR)) {
+                BUILD_STRUCTURE(WOR);
+                return;
+            }
+        }
 
-			if (!cPlayer.hasAtleastOneStructure(RADAR))
-			{
-				BUILD_STRUCTURE(RADAR);
-				return;
-			}
+        if (!cPlayer.hasAtleastOneStructure(RADAR)) {
+            BUILD_STRUCTURE(RADAR);
+            return;
+        }
 
-			// from here, we can build turrets & rocket turrets
+        if (!cPlayer.hasAtleastOneStructure(LIGHTFACTORY)) {
+            BUILD_STRUCTURE(LIGHTFACTORY);
+            return;
+        }
 
-			if (!cPlayer.hasAtleastOneStructure(LIGHTFACTORY))
-			{
-				BUILD_STRUCTURE(LIGHTFACTORY);
-				return;
-			}
+        // from here, we can build turrets
+        if (!cPlayer.hasAtleastOneStructure(HEAVYFACTORY)) {
+            BUILD_STRUCTURE(HEAVYFACTORY);
+            return;
+        }
 
-			if (!cPlayer.hasAtleastOneStructure(HEAVYFACTORY))
-			{
-				BUILD_STRUCTURE(HEAVYFACTORY);
-				return;
-			}
+        // when mission is lower then 5, build normal turrets
+        if (game.iMission <= 5) {
+            int amountOfTurretsWanted = 3;
+            if (cPlayer.getAmountOfStructuresForType(TURRET) < amountOfTurretsWanted) {
+                BUILD_STRUCTURE(TURRET);
+                return;
+            }
+        }
 
-			// when mission is lower then 5, build normal turrets
-			if (game.iMission <= 5)
-			{
-				if (cPlayer.getAmountOfStructuresForType(TURRET) < 3)
-				{
-					BUILD_STRUCTURE(TURRET);
-					return;
-				}
-			}
+        if (game.iMission >= 6) {
+            // Requires an upgrade
+            if (isStructureAvailableForBuilding(RTURRET)) {
+                if (cPlayer.getAmountOfStructuresForType(RTURRET) < 3) {
+                    BUILD_STRUCTURE(RTURRET);
+                    return;
+                }
+            } else {
+                // Requires an upgrade
+                cBuildingListItem *upgrade = isUpgradeAvailableToGrantStructure(RTURRET);
+                if (upgrade) {
+                    logbook("think_buildbase: Cannot build RTURRET because I need to upgrade; starting upgrade now.");
+                    startUpgrading(upgrade->getBuildId());
+                    return;
+                } else {
+                    logbook("think_buildbase: Cannot build RTURRET because I need to upgrade; but no RTURRET upgrade available.");
+                    // no rturret upgrade available - check if 4slab upgrade is still there
+                    cBuildingListItem *upgrade = isUpgradeAvailableToGrantStructure(SLAB4);
+                    if (upgrade) {
+                        logbook("think_buildbase: SLAB4 upgrade available, starting upgrade now.");
+                        startUpgrading(upgrade->getBuildId());
+                    }
+                }
+            }
+        }
 
-			if (game.iMission >= 6)
-			{
-				if (cPlayer.getAmountOfStructuresForType(RTURRET) < 3)
-				{
-					BUILD_STRUCTURE(RTURRET);
-					return;
-				}
-			}
+        // build refinery
+        if (cPlayer.getAmountOfStructuresForType(REFINERY) < 2)
+        {
+            BUILD_STRUCTURE(REFINERY);
+            return;
+        }
 
-            // build refinery
-			if (cPlayer.getAmountOfStructuresForType(REFINERY) < 2)
-			{
-				BUILD_STRUCTURE(REFINERY);
-				return;
-			}
+        if (!cPlayer.hasAtleastOneStructure(HIGHTECH))
+        {
+            BUILD_STRUCTURE(HIGHTECH);
+            return;
+        }
 
-			if (!cPlayer.hasAtleastOneStructure(HIGHTECH))
-			{
-				BUILD_STRUCTURE(HIGHTECH);
-				return;
-			}
+        if (cPlayer.hasAtleastOneStructure(REPAIR))
+        {
+            BUILD_STRUCTURE(REPAIR);
+            return;
+        }
 
-			if (cPlayer.hasAtleastOneStructure(REPAIR))
-			{
-				BUILD_STRUCTURE(REPAIR);
-				return;
-			}
+        if (!cPlayer.hasAtleastOneStructure(PALACE))
+        {
+            BUILD_STRUCTURE(PALACE);
+            return;
+        }
 
-			if (!cPlayer.hasAtleastOneStructure(PALACE))
-			{
-				BUILD_STRUCTURE(PALACE);
-				return;
-			}
+        if (game.iMission >= 6)
+        {
+            if (cPlayer.getAmountOfStructuresForType(RTURRET) < 9)
+            {
+                BUILD_STRUCTURE(RTURRET);
+                return;
+            }
+        }
 
-            if (game.iMission >= 6)
-			{
-				if (cPlayer.getAmountOfStructuresForType(RTURRET) < 9)
-				{
-					BUILD_STRUCTURE(RTURRET);
-					return;
-				}
-			}
-
-   			if (cPlayer.getAmountOfStructuresForType(STARPORT) < 1)
-			{
-				BUILD_STRUCTURE(STARPORT);
-				return;
-			}
-
-		}
+        if (cPlayer.getAmountOfStructuresForType(STARPORT) < 1)
+        {
+            BUILD_STRUCTURE(STARPORT);
+            return;
+        }
 
 	}
 	else
@@ -1276,6 +1310,77 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
     }
 
 	return -1;
+}
+
+/**
+ * Checks if the given structureType is available for producing.
+ *
+ * @param iStructureType
+ * @return
+ */
+bool cAIPlayer::isStructureAvailableForBuilding(int iStructureType) const {
+    const cPlayer &cPlayer = player[ID];
+    cBuildingListItem *pItem = cPlayer.getSideBar()->getBuildingListItem(LIST_CONSTYARD, iStructureType);
+    return pItem != nullptr;
+}
+
+/**
+ * Checks if the given structureType is available for upgrading. If so, returns the corresponding cBuildingListItem
+ * which can be used later (ie, to execute an upgrade, or check other info)
+ *
+ * @param iStructureType
+ * @return
+ */
+cBuildingListItem * cAIPlayer::isUpgradeAvailableToGrantStructure(int iStructureType) const {
+    const cPlayer &cPlayer = player[ID];
+    cBuildingList *pList = cPlayer.getSideBar()->getList(LIST_UPGRADES);
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *pItem = pList->getItem(i);
+        if (pItem == nullptr) continue;
+        const s_Upgrade &theUpgrade = pItem->getS_Upgrade();
+        if (theUpgrade.providesType != STRUCTURE) continue;
+        if (theUpgrade.providesTypeId == iStructureType) {
+            return pItem;
+        }
+    }
+    return nullptr;
+}
+
+/**
+ * Checks if any Upgrade is in progress for the given listId/sublistId
+ *
+ * @param listId
+ * @param sublistId
+ * @return
+ */
+cBuildingListItem * cAIPlayer::isUpgradingList(int listId, int sublistId) const {
+    const cPlayer &cPlayer = player[ID];
+    cBuildingList *upgradesList = cPlayer.getSideBar()->getList(LIST_UPGRADES);
+    if (upgradesList == nullptr) {
+        char msg[255];
+        sprintf(msg, "AI[%d] - isUpgradingList for listId [%d] and sublistId [%d], could not find upgradesList!? - will return FALSE.", ID, listId, sublistId);
+        logbook(msg);
+        assert(false);
+        return nullptr;
+    }
+    
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *pItem = upgradesList->getItem(i);
+        if (pItem == nullptr) continue;
+        const s_Upgrade &theUpgrade = pItem->getS_Upgrade();
+        // is this upgrade applicable to the listId/sublistId we're interested in?
+        if (theUpgrade.providesTypeList == listId && theUpgrade.providesTypeSubList == sublistId) {
+            if (pItem->isBuilding()) {
+                // it is in progress, so yes!
+                return pItem;
+            }
+        }
+    }
+    return nullptr;
+}
+
+cBuildingListItem * cAIPlayer::isUpgradingConstyard() const {
+    return isUpgradingList(LIST_CONSTYARD, 0);
 }
 
 /**

@@ -253,13 +253,7 @@ bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
  * @return
  */
 bool cSideBar::startBuildingItemIfOk(int listId, int buildId) const {
-    if (listId < 0) return false;
-    if (listId >= LIST_MAX) return false;
-
-    cBuildingList *pList = lists[listId];
-    if (pList == nullptr) return false;
-
-    cBuildingListItem *pItem = pList->getItemByBuildId(buildId);
+    cBuildingListItem *pItem = getBuildingListItem(listId, buildId);
     if (pItem) {
         return startBuildingItemIfOk(pItem);
     } else {
@@ -268,4 +262,14 @@ bool cSideBar::startBuildingItemIfOk(int listId, int buildId) const {
         logbook(msg);
     }
     return false;
+}
+
+cBuildingListItem * cSideBar::getBuildingListItem(int listId, int buildId) const {
+    if (listId < 0) return nullptr;
+    if (listId >= LIST_MAX) return nullptr;
+
+    cBuildingList *pList = lists[listId];
+    if (pList == nullptr) return nullptr;
+
+    return pList->getItemByBuildId(buildId);
 }

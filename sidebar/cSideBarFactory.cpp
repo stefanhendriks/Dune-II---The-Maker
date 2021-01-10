@@ -31,6 +31,7 @@ cSideBar * cSideBarFactory::createSideBar(cPlayer * thePlayer) {
 	for (int listId = LIST_NONE; listId < LIST_MAX; listId++) {
 		cBuildingList *list = cBuildingListFactory::getInstance()->createList(listId, thePlayer->getHouse());
 		sidebar->setList(listId, list);
+		list->setItemBuilder(thePlayer->getItemBuilder()); // TODO: this should be easier!?
 	}
 
 	return sidebar;

@@ -58,6 +58,7 @@ public:
     void setList(int listId, cBuildingList *list);
 
     int getSelectedListID() { return selectedListID; }
+    cBuildingListItem * getBuildingListItem(int listId, int buildId) const;
 
     void think();    // timer based
     void thinkInteraction(); // fps based

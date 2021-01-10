@@ -106,14 +106,14 @@ void cItemBuilder::think() {
 
             assert(item->getTimesToBuild() > -1);
 
-            // TODO: Remove duplication, which also exists in AI::think_building()
+            // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
             if (!units[item->getBuildId()].airborn) {
                 int structureTypeByItem = structureUtils.findStructureTypeByTypeOfList(item);
                 assert(structureTypeByItem > -1);
                 int structureToDeployUnit = structureUtils.findStructureToDeployUnit(m_Player, structureTypeByItem);
                 if (structureToDeployUnit > -1) {
                     cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
-                    // TODO: Remove duplication, which also exists in AI::think_building()
+                    // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
                     int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
                     if (cell > -1) {
                         pStructureToDeploy->setAnimating(true); // animate

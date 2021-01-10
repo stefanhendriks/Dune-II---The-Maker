@@ -133,6 +133,7 @@ struct s_Upgrade {
     int providesTypeId;   // upgrade results into getting this typeId (type depends on 'providesType') (points to s_Unit/s_Structure)
     int providesTypeList; // into which list will this type be made available?
     int providesTypeSubList; // and sublist
+
 };
 
 // House properties
