@@ -3668,59 +3668,6 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID)
     return iCll;
 }
 
-
-
-int CLOSE_SPICE_BLOOM(int iCell) {
-
-    // closest spicebloom
-	if (rnd(100) < 40)	{
-        int iDistance=16;
-
-        if (iCell < 0) {
-            iDistance=9999;
-            iCell = iCellMakeWhichCanReturnMinusOne(32,32);
-        }
-
-        int cx, cy;
-        int iBloom=-1;
-        cx = iCellGiveX(iCell);
-        cy = iCellGiveY(iCell);
-
-        for (int i=0; i < MAX_CELLS; i++) {
-            int cellType = map.getCellType(i);
-            if (cellType == TERRAIN_BLOOM)
-            {
-                int d = ABS_length(cx, cy, iCellGiveX(i), iCellGiveY(i));
-
-                if (d < iDistance)
-                {
-                    iBloom=i;
-                    iDistance=d;
-                }
-            }
-        }
-
-        // when finished, return bloom
-        return iBloom;
-	}
-
-	int iTargets[10];
-	memset(iTargets, -1, sizeof(iTargets));
-	int iT=0;
-
-	for (int i=0; i < MAX_CELLS; i++) {
-        int cellType = map.getCellType(i);
-        if (cellType == TERRAIN_BLOOM)
-        {
-            iTargets[iT] = i;
-            iT++;
-        }
-    }
-
-	// when finished, return bloom
-	return iTargets[rnd(iT)];
-}
-
 int UNIT_find_harvest_spot(int id)
 {
   // finds the closest harvest spot

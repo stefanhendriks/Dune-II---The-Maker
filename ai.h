@@ -18,6 +18,8 @@ int AI_STRUCTYPE(int iUnitType);
 int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer);
 int AI_RANDOM_UNIT_TARGET(int iPlayer, int playerIndexToAttack);
 
+int CLOSE_SPICE_BLOOM(int iCell);
+
 // ai specific variables for a m_Player
 class cAIPlayer {
 

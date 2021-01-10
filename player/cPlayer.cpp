@@ -526,3 +526,24 @@ void cPlayer::decreaseStructureAmount(int structureType) {
     sprintf(msg, "Player[%d] - decreaseStructureAmount result: iStructures[%d(=%s)]=%d", id, structureType, structures[structureType].name, iStructures[structureType]);
     logbook(msg);
 }
+
+std::string cPlayer::getHouseName() {
+    if (house == ATREIDES) {
+        return "Atreides";
+    } else if (house == HARKONNEN) {
+        return "Harkonnen";
+    } else if (house == ORDOS) {
+        return "Ordos";
+    } else if (house == SARDAUKAR) {
+        return "Sardaukar";
+    } else if (house == FREMEN) {
+        return "Fremen";
+    } else if (house == MERCENARY) {
+        return "Mercenary";
+    } else if (house == GENERALHOUSE) {
+        return "Generalhouse (none)";
+    } else if (house == CORRINO) {
+        return "Corrino / House for worms";
+    }
+    return "Unknown !?";
+}
