@@ -38,7 +38,8 @@ void cAIPlayer::init(int iID) {
     TIMER_attack = (700 + rnd(400));
 
     TIMER_BuildUnits = 300; // give m_Player advantage to build his stuff first, before computer grows his army
-    TIMER_blooms = 200;
+//    TIMER_blooms = 200;
+    TIMER_blooms = 50;
     TIMER_repair = 500;
 }
 
@@ -311,61 +312,69 @@ void cAIPlayer::think_spiceBlooms() {
         TIMER_blooms--;
         return;
     }
+    logbook("think_spiceBlooms - START");
 
-    TIMER_blooms = 200;
+//    TIMER_blooms = 200;
+    TIMER_blooms = 50;
 
-    // think about spice blooms
-    int iBlooms = -1;
-
-    for (int c = 0; c < MAX_CELLS; c++)
-        if (map.getCellType(c) == TERRAIN_BLOOM)
-            iBlooms++;
+    int totalSpiceBloomsCount = map.getTotalCountCellType(TERRAIN_BLOOM);
 
     // When no blooms are detected, we must 'spawn' one
-    if (iBlooms < 3) {
-        int iCll = rnd(MAX_CELLS);
-
-        if (map.getCellType(iCll) == TERRAIN_SAND) {
-            // create bloom
-            mapEditor.createCell(iCll, TERRAIN_BLOOM, 0);
+    int amountOfSpiceBloomsInMap = 3;
+    if (totalSpiceBloomsCount < amountOfSpiceBloomsInMap) {
+        // randomly create a new spice bloom somewhere on the map
+        int iCll = -1;
+        for (int i = 0; i < 10; i++) {
+            int cell = rnd(MAX_CELLS);
+            if (map.getCellType(cell) == TERRAIN_SAND) {
+                iCll = cell;
+                break;
+            }
         }
+        // create bloom (can deal with < -1 cell)
+        mapEditor.createCell(iCll, TERRAIN_BLOOM, 0);
     } else {
-        // TODO: auto detonate spice bloom?
-
         if (rnd(100) < 15) {
+            logbook("AI: think_spiceBlooms - Going to find (or build) an infantry unit to blow up a spice bloom");
             // if we got a unit to spare (something light), we can blow it up  by walking over it
             // with a soldier or something
             int iUnit = -1;
             int iDist = 9999;
-            int iBloom = CLOSE_SPICE_BLOOM(-1);
+            cPlayer &cPlayer = player[ID];
+            int iBloom = CLOSE_SPICE_BLOOM(cPlayer.focus_cell);
+
+            // TODO: Move this to a unit repository thingy which can query the units
             for (int i = 0; i < MAX_UNITS; i++) {
-                if (unit[i].isValid()) {
-                    if (unit[i].iPlayer > 0 &&
-                        unit[i].iPlayer == ID && unit[i].iAction == ACTION_GUARD) {
+                cUnit &cUnit = unit[i];
+                if (!cUnit.isValid()) continue;
+                if (cUnit.iPlayer == HUMAN) continue; // skip human units
+                if (cUnit.iPlayer != ID) continue; // skip units which are not my own
+                if (cUnit.iAction != ACTION_GUARD) continue; // skip units which are doing something else
+                if (!cUnit.isInfantryUnit()) continue; // skip non-infantry units
 
-                        if (units[unit[i].iType].infantry) {
-                            int d = ABS_length(iCellGiveX(iBloom),
-                                               iCellGiveY(iBloom),
-                                               iCellGiveX(unit[i].iCell),
-                                               iCellGiveY(unit[i].iCell));
+                int d = ABS_length(iCellGiveX(iBloom),
+                                   iCellGiveY(iBloom),
+                                   iCellGiveX(cUnit.iCell),
+                                   iCellGiveY(cUnit.iCell));
 
-                            if (d < iDist) {
-                                iUnit = i;
-                                iDist = d;
-                            }
-                        }
-                    }
+                if (d < iDist) {
+                    iUnit = i;
+                    iDist = d;
                 }
-
             }
 
             if (iUnit > -1) {
+                logbook("AI: think_spiceBlooms - Found unit to attack spice bloom");
                 // shoot spice bloom
                 UNIT_ORDER_ATTACK(iUnit, iBloom, -1, -1, iBloom);
-            } else
+            } else {
+                logbook("AI: think_spiceBlooms - No unit found to attack spice bloom, building...");
+                // try to build a unit to shoot the spice bloom
                 BUILD_UNIT(SOLDIER);
+            }
         }
     }
+    logbook("think_spiceBlooms - END");
 }
 
 void cAIPlayer::think() {
@@ -397,10 +406,11 @@ void cAIPlayer::think() {
         return;
     }
 
-    think_building();
-
     // think about fair harvester stuff
     think_spiceBlooms();
+
+    think_building();
+
 
     // Now think about building stuff etc
 	think_buildbase();
@@ -1037,15 +1047,16 @@ int AI_STRUCTYPE(int iUnitType) {
 bool canAIBuildUnit(int iPlayer, int iUnitType) {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
+    cPlayer &cPlayer = player[iPlayer];
+
     char msg[255];
-    sprintf(msg, "canAIBuildUnit: Wanting to build iUnitType = [%d(=%s)] for player [%d]; allowed?...", iUnitType, units[iUnitType].name, iPlayer);
+    sprintf(msg, "canAIBuildUnit: Wanting to build iUnitType = [%d(=%s)] for player [%d(=%s)]; allowed?...", iUnitType, units[iUnitType].name, iPlayer, cPlayer.getHouseName().c_str());
     logbook(msg);
 
-
     // CHECK 1: Do we have the money?
-    if (player[iPlayer].credits < units[iUnitType].cost) {
+    if (cPlayer.credits < units[iUnitType].cost) {
         char msg[255];
-        sprintf(msg, "canAIBuildUnit: FALSE, because cost %d higher than credits %d", units[iUnitType].cost, player[iPlayer].credits);
+        sprintf(msg, "canAIBuildUnit: FALSE, because cost %d higher than credits %d", units[iUnitType].cost, cPlayer.credits);
         logbook(msg);
         return false; // NOPE
     }
@@ -1061,9 +1072,9 @@ bool canAIBuildUnit(int iPlayer, int iUnitType) {
     int iStrucType = AI_STRUCTYPE(iUnitType);
 
     // Do the reality-check, do we have the building needed?
-    if (!player[iPlayer].hasAtleastOneStructure(iStrucType)) {
+    if (!cPlayer.hasAtleastOneStructure(iStrucType)) {
         char msg[255];
-        sprintf(msg, "canAIBuildUnit: FALSE, because we do not own the required structure type [%s] for this unit. [%s]", structures[iStrucType].name, units[iUnitType].name);
+        sprintf(msg, "canAIBuildUnit: FALSE, because we do not own the required structure type [%s] for this unit: [%s]", structures[iStrucType].name, units[iUnitType].name);
         logbook(msg);
         return false; // we do not have the building
     }
@@ -1265,4 +1276,71 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
     }
 
 	return -1;
+}
+
+/**
+ * Find the closest spice bloom compared to iCell. If iCell < 0 then use middle of map. If no close cell is found
+ * a fall back of 'select any spice bloom randomly' is performed.
+ * <br/>
+ * @param iCell
+ * @return > -1 if found or < 0 upon failure
+ */
+int CLOSE_SPICE_BLOOM(int iCell) {
+    int quarterOfMap = map.getWidth() / 4;
+    int iDistance = quarterOfMap;
+    int halfWidth = map.getWidth() / 2;
+    int halfHeight = map.getHeight() / 2;
+
+    if (iCell < 0) {
+        // use cell at center
+        iCell = iCellMakeWhichCanReturnMinusOne(halfWidth, halfHeight);
+        iDistance = map.getWidth();
+    }
+
+    int cx, cy;
+    int closestBloomFoundSoFar=-1;
+    int bloomsEvaluated = 0;
+
+    cx = iCellGiveX(iCell);
+    cy = iCellGiveY(iCell);
+
+    for (int i=0; i < MAX_CELLS; i++) {
+        int cellType = map.getCellType(i);
+        if (cellType != TERRAIN_BLOOM) continue;
+        bloomsEvaluated++;
+
+        int d = ABS_length(cx, cy, iCellGiveX(i), iCellGiveY(i));
+
+        if (d < iDistance) {
+            closestBloomFoundSoFar = i;
+            iDistance = d;
+        }
+    }
+
+    // found a close spice bloom
+    if (closestBloomFoundSoFar > 0) {
+        return closestBloomFoundSoFar;
+    }
+
+    // no spice blooms evaluated, abort
+    if (bloomsEvaluated < 0) {
+        return -1;
+    }
+
+    // randomly pick one
+    int iTargets[10];
+    memset(iTargets, -1, sizeof(iTargets));
+    int iT=0;
+
+    for (int i=0; i < MAX_CELLS; i++) {
+        int cellType = map.getCellType(i);
+        if (cellType == TERRAIN_BLOOM) {
+            iTargets[iT] = i;
+            iT++;
+            if (iT >= 10) break;
+        }
+    }
+
+    // when finished, return bloom
+    return iTargets[rnd(iT)];
 }
