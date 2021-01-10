@@ -456,6 +456,10 @@ void cBuildingListUpdater::onBuildItemCancelled(cBuildingListItem *pItem) {
     cLogger::getInstance()->logCommentLine("onBuildItemCancelled - end");
 }
 
+/**
+ * Called when a buildItem is started to build/upgrade (by cItemBuilder).
+ * @param pItem
+ */
 void cBuildingListUpdater::onBuildItemStarted(cBuildingListItem *pItem) {
     if (pItem == nullptr) return;
     if (pItem->isTypeUpgrade()) {

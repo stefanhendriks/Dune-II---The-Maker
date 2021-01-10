@@ -798,7 +798,7 @@ void install_upgrades() {
         upgrades[i].providesType = STRUCTURE;
         upgrades[i].providesTypeList = -1;
         upgrades[i].providesTypeSubList = -1;
-        upgrades[i].buildTime = 10;
+        upgrades[i].buildTime = 5;
         strcpy(upgrades[i].description, "Upgrade");
     }
 
@@ -816,7 +816,9 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeId = SLAB4;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeList = LIST_CONSTYARD;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeSubList = SUBLIST_CONSTYARD;
-    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].buildTime = 50;
+    if (!DEBUGGING) {
+        upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].buildTime = 50;
+    }
     strcpy(upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].description, "Build 4 concrete slabs at once");
 
     // Second upgrade Constyard: Rturret
@@ -832,7 +834,9 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeId = RTURRET;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeList = LIST_CONSTYARD;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeSubList = SUBLIST_CONSTYARD;
-    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].buildTime = 150;
+    if (!DEBUGGING) {
+        upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].buildTime = 150;
+    }
     strcpy(upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].description, "Build Rocket Turret");
 
     // LIGHTFACTORY UPGRADES, only for ATREIDES and ORDOS
@@ -848,7 +852,9 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeId = QUAD;
     upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeList = LIST_UNITS;
     upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeSubList =  SUBLIST_LIGHTFCTRY;
-    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].buildTime = 150;
+    if (!DEBUGGING) {
+        upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].buildTime = 150;
+    }
     strcpy(upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].description, "Build Quad at Light Factory");
 
     // HEAVYFACTORY UPGRADES:
@@ -866,7 +872,9 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeId = MCV;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeList = LIST_UNITS;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].buildTime = 150;
+    if (!DEBUGGING) {
+        upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].buildTime = 150;
+    }
     strcpy(upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].description, "Build MCV at Heavy Factory");
 
     // Harkonnen/Atreides only
@@ -882,7 +890,9 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeId = LAUNCHER;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeList = LIST_UNITS;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].buildTime = 150;
+    if (!DEBUGGING) {
+        upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].buildTime = 150;
+    }
     strcpy(upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].description, "Build Rocket Launcher at Heavy Factory");
 
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].enabled = true;
@@ -897,7 +907,9 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeId = SIEGETANK;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeList = LIST_UNITS;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].buildTime = 150;
+    if (!DEBUGGING) {
+        upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].buildTime = 150;
+    }
     strcpy(upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].description, "Build Siege Tank at Heavy Factory");
 
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].enabled = true;
@@ -912,7 +924,9 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeId = SIEGETANK;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeList = LIST_UNITS;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].buildTime = 150;
+    if (!DEBUGGING) {
+        upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].buildTime = 150;
+    }
     strcpy(upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].description, "Build Siege Tank at Heavy Factory");
 
     // HI-TECH UPGRADES (Ordos/Atreides only)
@@ -927,7 +941,9 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_HITECH_ORNI].providesTypeId = ORNITHOPTER;
     upgrades[UPGRADE_TYPE_HITECH_ORNI].providesTypeList = LIST_UNITS;
     upgrades[UPGRADE_TYPE_HITECH_ORNI].providesTypeSubList = SUBLIST_HIGHTECH;
-    upgrades[UPGRADE_TYPE_HITECH_ORNI].buildTime = 150;
+    if (!DEBUGGING) {
+        upgrades[UPGRADE_TYPE_HITECH_ORNI].buildTime = 150;
+    }
     strcpy(upgrades[UPGRADE_TYPE_HITECH_ORNI].description, "Build Ornithopter at Hi-Tech");
 
     // WOR (Harkonnen & Ordos)
@@ -942,7 +958,9 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_WOR_TROOPERS].providesTypeId = TROOPERS;
     upgrades[UPGRADE_TYPE_WOR_TROOPERS].providesTypeList = LIST_FOOT_UNITS;
     upgrades[UPGRADE_TYPE_WOR_TROOPERS].providesTypeSubList = SUBLIST_TROOPERS;
-    upgrades[UPGRADE_TYPE_WOR_TROOPERS].buildTime = 150;
+    if (!DEBUGGING) {
+        upgrades[UPGRADE_TYPE_WOR_TROOPERS].buildTime = 150;
+    }
     strcpy(upgrades[UPGRADE_TYPE_WOR_TROOPERS].description, "Build Troopers at WOR");
 
     // BARRACKS (Atreides & Ordos)
@@ -957,7 +975,9 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeId = INFANTRY;
     upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeList = LIST_FOOT_UNITS;
     upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeSubList = SUBLIST_INFANTRY;
-    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;
+    if (!DEBUGGING) {
+        upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;
+    }
     strcpy(upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].description, "Build Infantry at Barracks");
 
 }

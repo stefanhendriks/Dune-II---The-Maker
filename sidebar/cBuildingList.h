@@ -11,9 +11,13 @@
  */
 
 #include <array>
+#include "cSideBar.h"
 
 #ifndef CBUILDINGLIST
 #define CBUILDINGLIST
+
+// forward declr..
+class cItemBuilder;
 
 class cBuildingList {
 public:
@@ -22,6 +26,7 @@ public:
     ~cBuildingList();
 
     cBuildingListItem *getItem(int i);    // return building list item in array at position.
+    cBuildingListItem *getFirstItemInSubList(int sublistId);
     cBuildingListItem *getItemToPlace();        // return building list item with placeIt = true.
 
     bool removeItemFromList(cBuildingListItem *item);
@@ -104,6 +109,8 @@ public:
 
     void resetTimesOrderedForAllItems();
 
+    void setItemBuilder(cItemBuilder *value) { m_itemBuilder = value; }
+
 protected:
     // nothing
 
@@ -124,6 +131,8 @@ private:
 
     // the list of icons
     cBuildingListItem *items[MAX_ITEMS];
+
+    cItemBuilder *m_itemBuilder;
 
     int getFreeSlot();
 

@@ -49,7 +49,7 @@ public:
     void think_buildarmy();
     void think_buildbase();
     void think_attack();
-    void think_building();
+    void think_buildingplacement();
     void think_spiceBlooms();
     
     void think_repair_structure(cAbstractStructure *struc);
@@ -62,13 +62,19 @@ public:
 	int  findCellToPlaceStructure(int iStructureType);
 
     bool isBuildingUnitType(int iUnitType) const;
-    bool isBuildingStructure() const;
+    cBuildingListItem * isUpgradingList(int listId, int sublistId) const;
+    cBuildingListItem * isUpgradingConstyard() const;
+    cBuildingListItem * isBuildingStructure() const;
     bool isBuildingStructureAwaitingPlacement() const;
 
     int getStructureTypeBeingBuilt();
 
     void startBuildingUnit(int iUnitType) const;
     void startBuildingStructure(int iStructureType) const;
+    void startUpgrading(int iUpgradeType) const;
+
+    bool isStructureAvailableForBuilding(int iStructureType) const;
+    cBuildingListItem * isUpgradeAvailableToGrantStructure(int iStructureType) const;
 
     cBuildingListItem *getStructureBuildingListItemBeingBuilt() const;
 };
