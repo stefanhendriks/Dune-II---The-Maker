@@ -192,7 +192,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 			itemToPlace->decreaseTimesToBuild();
 			itemToPlace->setPlaceIt(false);
 			itemToPlace->setIsBuilding(false);
-			itemToPlace->setProgress(0);
+			itemToPlace->resetProgress();
 			if (itemToPlace->getTimesToBuild() < 1) {
                 m_Player->getItemBuilder()->removeItemFromList(itemToPlace);
 			}
