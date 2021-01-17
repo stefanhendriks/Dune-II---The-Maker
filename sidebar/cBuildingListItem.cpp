@@ -111,6 +111,10 @@ void cBuildingListItem::increaseProgress(int byAmount) {
     setProgress(getProgress() + byAmount);
 }
 
+/**
+ * Duplicated by getTotalBuildtime!?
+ * @return
+ */
 int cBuildingListItem::getBuildTime() {
 //    if (DEBUGGING) return 1;
     if (type == STRUCTURE) {

@@ -183,7 +183,7 @@ void cItemBuilder::think() {
         if (item->getTimesToBuild() == 0) {	// no more items to build
             // stop building (set flags)
             item->setIsBuilding(false);
-            item->setProgress(0); // set back progress
+            item->resetProgress(); // set back progress
 
             // remove this item from the build list (does not delete item, so pointer is still valid)
             removeItemFromList(item);
@@ -198,7 +198,7 @@ void cItemBuilder::think() {
 
         } else {
             // item still needs to be built more times.
-            item->setProgress(0); // set back progress
+            item->resetProgress(); // set back progress
             startBuilding(item);
         }
 	}

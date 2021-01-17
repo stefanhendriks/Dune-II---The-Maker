@@ -78,7 +78,6 @@ public:
 	// setters
 	void setIconId(int value) { icon = value; }
 	void setBuildCost(int value) { cost = value; }
-	void setProgress(int value) { progress = value; }
 	void setIsBuilding(bool value) { building = value; }
 	void setStatusPendingUpgrade() { state = eBuildingListItemState::PENDING_UPGRADE; }
 	void setStatusAvailable() { state = eBuildingListItemState::AVAILABLE; }
@@ -104,6 +103,7 @@ public:
 	cBuildingList *getList() { return myList; }	// returns the list it belongs to
 
     void increaseProgress(int byAmount);
+	void resetProgress() { progress = 0; }
 
     int getBuildTime();
 
@@ -114,6 +114,8 @@ public:
     void resetTimesOrdered();
 
 private:
+	void setProgress(int value) { progress = value; }
+
 	int icon;				// the icon ID to draw (from datafile)
 	int buildId;			// the ID to build .. (ie TRIKE, or CONSTYARD)
 	eBuildType type;		// .. of this type of thing (ie, UNIT or STRUCTURE)

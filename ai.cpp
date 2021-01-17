@@ -286,8 +286,6 @@ void cAIPlayer::think_buildingplacement() {
             int iCll = findCellToPlaceStructure(structureType);
 
             if (iCll > -1) {
-//                cStructureFactory::getInstance()->createStructure(iCll, structureType, ID, 100);
-
                 int iHealthPercent = 50; // the minimum is 50% (with no slabs)
 
                 // TODO: This logic is duplicated in cPlaceItDrawer, this should be somewhere
@@ -303,7 +301,7 @@ void cAIPlayer::think_buildingplacement() {
                 pItem->decreaseTimesToBuild();
                 pItem->setPlaceIt(false);
                 pItem->setIsBuilding(false);
-                pItem->setProgress(0);
+                pItem->resetProgress();
                 if (pItem->getTimesToBuild() < 1) {
                     cPlayer.getItemBuilder()->removeItemFromList(pItem);
                 }
@@ -880,7 +878,7 @@ void cAIPlayer::think_buildbase() {
         cBuildingListItem *pBuildingStructure = isBuildingStructure();
         if (pBuildingStructure) {
             char msg[255];
-            sprintf(msg, "AI[%d] think_buildbase() - building structure [%s]; [%d/%d] wait for that to complete.", ID, pBuildingStructure->getS_Structures().name, pBuildingStructure->getBuildTime(), pBuildingStructure->getTotalBuildTime());
+            sprintf(msg, "AI[%d] think_buildbase() - building structure [%s]; [%d/%d] wait for that to complete.", ID, pBuildingStructure->getS_Structures().name, pBuildingStructure->getProgress(), pBuildingStructure->getTotalBuildTime());
             logbook(msg);
             return; // wait
         }
@@ -1259,40 +1257,118 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
         int iStartX=iCellGiveX(pStructure->getCell());
         int iStartY=iCellGiveY(pStructure->getCell());
 
-        int iEndX = iStartX + (pStructure->getWidthInPixels() / 32) + 1;
-        int iEndY = iStartY + (pStructure->getHeightInPixels() / 32) + 1;
+        int iEndX = iStartX + pStructure->getWidth() + 1;
+        int iEndY = iStartY + pStructure->getHeight()  + 1;
 
-        iStartX -= iWidth;
-        iStartY -= iHeight;
+        int topLeftX = iStartX - iWidth;
+        int topLeftY = iStartY - iHeight;
 
-        // do not go out of boundries
-        FIX_POS(iStartX, iStartY);
-        FIX_POS(iEndX, iEndY);
+//        // check above structure if it can place
+        for (int sx = topLeftX; sx < iEndX; sx++) {
+            int sy = iStartY;
+            int cell = iCellMakeWhichCanReturnMinusOne(sx, sy);
 
+            int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
 
-        for (int sx = iStartX; sx < iEndX; sx++) {
-            for (int sy = iStartY; sy < iEndY; sy++) {
-                int cell = iCellMake(sx, sy);
+            if (r > -2) {
+                if (iStructureType == TURRET && iStructureType == RTURRET) {
+                    // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
+                    int iDist = ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),
+                                           iCellGiveY(player[ID].focus_cell));
 
-                int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
-
-                if (r > -2) {
-                    if (iStructureType == TURRET && iStructureType == RTURRET) {
-                        // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                        int iDist = ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),
-                                               iCellGiveY(player[ID].focus_cell));
-
-                        if (iDist >= iDistance) {
-                            iDistance = iDist;
-                            iGoodCells[iGoodCellID] = cell;
-                            iGoodCellID++;
-                        }
-
-                    } else {
-                        // for turrets, the most far counts
+                    if (iDist >= iDistance) {
+                        iDistance = iDist;
                         iGoodCells[iGoodCellID] = cell;
-                        iGoodCellID++;
+                        // do not increment iGoodCellID, so we overwrite (and end up further and further)
                     }
+
+                } else {
+                    // for turrets, the most far counts
+                    iGoodCells[iGoodCellID] = cell;
+                    iGoodCellID++;
+                }
+            }
+        } // sx
+
+        int underNeathStructureY = iStartY + pStructure->getHeight();
+        // check underneath structure
+        for (int sx = topLeftX; sx < iEndX; sx++) {
+            int sy = underNeathStructureY;
+            int cell = iCellMakeWhichCanReturnMinusOne(sx, sy);
+
+            int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
+
+            if (r > -2) {
+                if (iStructureType == TURRET && iStructureType == RTURRET) {
+                    // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
+                    int iDist = ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),
+                                           iCellGiveY(player[ID].focus_cell));
+
+                    if (iDist >= iDistance) {
+                        iDistance = iDist;
+                        iGoodCells[iGoodCellID] = cell;
+                        // do not increment iGoodCellID, so we overwrite (and end up further and further)
+                    }
+
+                } else {
+                    // for turrets, the most far counts
+                    iGoodCells[iGoodCellID] = cell;
+                    iGoodCellID++;
+                }
+            }
+        } // sx
+
+        // check left side
+        for (int sy = topLeftY; sy < iEndY; sy++) {
+            int sx = topLeftX;
+            int cell = iCellMakeWhichCanReturnMinusOne(sx, sy);
+
+            int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
+
+            if (r > -2) {
+                if (iStructureType == TURRET && iStructureType == RTURRET) {
+                    // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
+                    int iDist = ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),
+                                           iCellGiveY(player[ID].focus_cell));
+
+                    if (iDist >= iDistance) {
+                        iDistance = iDist;
+                        iGoodCells[iGoodCellID] = cell;
+                        // do not increment iGoodCellID, so we overwrite (and end up further and further)
+                    }
+
+                } else {
+                    // for turrets, the most far counts
+                    iGoodCells[iGoodCellID] = cell;
+                    iGoodCellID++;
+                }
+            }
+        } // sx
+
+        // check right side
+        int rightOfStructure = iStartX + pStructure->getWidth();
+        for (int sy = topLeftY; sy < iEndY; sy++) {
+            int sx = rightOfStructure;
+            int cell = iCellMakeWhichCanReturnMinusOne(sx, sy);
+
+            int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
+
+            if (r > -2) {
+                if (iStructureType == TURRET && iStructureType == RTURRET) {
+                    // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
+                    int iDist = ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),
+                                           iCellGiveY(player[ID].focus_cell));
+
+                    if (iDist >= iDistance) {
+                        iDistance = iDist;
+                        iGoodCells[iGoodCellID] = cell;
+                        // do not increment iGoodCellID, so we overwrite (and end up further and further)
+                    }
+
+                } else {
+                    // for turrets, the most far counts
+                    iGoodCells[iGoodCellID] = cell;
+                    iGoodCellID++;
                 }
             }
         } // sx

@@ -282,6 +282,8 @@ int cStructureFactory::getFreeSlot() {
  </p>
 **/
 int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDToIgnore) {
+    if (iCell < 0) return -2;
+
     // checks if this structure can be placed on this cell
     int w = structures[iStructureType].bmp_width/32;
     int h = structures[iStructureType].bmp_height/32;

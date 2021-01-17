@@ -332,7 +332,7 @@ void cBuildingListUpdater::evaluateUpgrades() {
                         m_Player->credits += item->getRefundAmount();
                     }
                     item->setIsBuilding(false);
-                    item->setProgress(0);
+                    item->resetProgress();
                     cItemBuilder *itemBuilder = m_Player->getItemBuilder();
                     itemBuilder->removeItemFromList(item);
                 }
