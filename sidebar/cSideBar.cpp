@@ -99,6 +99,9 @@ void cSideBar::thinkInteraction() {
 			if (MOUSE_BTN_LEFT()) {
 				// clicked on it. Set focus on this one
 				selectedListID = i;
+				char msg[255];
+				sprintf(msg, "selectedListID becomes [%d], m_PlayerId = [%d]", i, m_Player->getId());
+				logbook(msg);
                 play_sound_id(SOUND_BUTTON, 64); // click sound
 				break;
 			}
@@ -114,7 +117,7 @@ void cSideBar::thinkInteraction() {
 
     if (!list->isAvailable()) {
         // unselect this list
-        player[HUMAN].getSideBar()->setSelectedListId(-1);
+        m_Player->getSideBar()->setSelectedListId(-1);
         return;
     }
 
@@ -171,7 +174,7 @@ void cSideBar::thinkInteraction() {
                     // only give money back for item that is being built
                     if (item->isBuilding()) {
                         // calculate the amount of money back:
-                        player[HUMAN].credits += item->getRefundAmount();
+                        m_Player->giveCredits(item->getRefundAmount());
                         m_Player->getBuildingListUpdater()->onBuildItemCancelled(item);
                     }
                     item->setIsBuilding(false);

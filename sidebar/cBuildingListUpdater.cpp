@@ -17,9 +17,9 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
 	int house = m_Player->getHouse();
 	int techLevel = m_Player->getTechLevel();
 
-//    char msg[255];
-//    sprintf(msg, "onStructureCreated - for player [%d], structureType [%d], techlevel [%d], house [%d]", m_Player->getId(), structureType, techLevel, house);
-//    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureCreated", msg);
+    char msg[255];
+    sprintf(msg, "onStructureCreated - for player [%d], structureType [%d], techlevel [%d], house [%d]", m_Player->getId(), structureType, techLevel, house);
+    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureCreated", msg);
 
 	assert(listConstYard);
 	assert(listFootUnits);

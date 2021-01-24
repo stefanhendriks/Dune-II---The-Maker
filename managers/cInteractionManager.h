@@ -21,6 +21,8 @@ class cInteractionManager {
 		void interact();
 		void interactWithKeyboard();
 
+		void setPlayerToInteractFor(cPlayer * thePlayer);
+
 	protected:
 		void mouseInteractWithSidebarOrMinimap();
 

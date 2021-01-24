@@ -2,7 +2,7 @@
 
 cSideBarDrawer::cSideBarDrawer(cPlayer * thePlayer) : m_Player(thePlayer) {
     assert(thePlayer);
-	buildingListDrawer = new cBuildingListDrawer();
+	buildingListDrawer = new cBuildingListDrawer(thePlayer);
 	candybar = nullptr;
 	optionsBar = nullptr;
 	sidebarColor = makecol(214, 149, 20);
@@ -376,4 +376,9 @@ void cSideBarDrawer::drawOptionsBar() {
 	}
 	draw_sprite(bmp_screen, optionsBar, 0, 0);
     drawCapacities();
+}
+
+void cSideBarDrawer::setPlayer(cPlayer *pPlayer) {
+    this->m_Player = pPlayer;
+    this->buildingListDrawer->setPlayer(pPlayer);
 }
