@@ -63,18 +63,14 @@ void cPlayer::destroyAllegroBitmaps() {
 void cPlayer::clearStructureTypeBitmaps() {
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
         if (bmp_structure[i]) {
-            if (DEBUGGING) {
-                char msg[255];
-                sprintf(msg, "clearStructureTypeBitmaps: Destroying bmp_structure for index [%d].", i);
-                logbook(msg);
-            }
+//            char msg[255];
+//            sprintf(msg, "clearStructureTypeBitmaps: Destroying bmp_structure for index [%d].", i);
+//            logbook(msg);
             destroy_bitmap(bmp_structure[i]);
         } else {
-            if (DEBUGGING) {
-                char msg[255];
-                sprintf(msg, "clearStructureTypeBitmaps: Index [%d] is null.", i);
-                logbook(msg);
-            }
+//            char msg[255];
+//            sprintf(msg, "clearStructureTypeBitmaps: Index [%d] is null.", i);
+//            logbook(msg);
         }
         bmp_structure[i] = nullptr;
     }
@@ -546,4 +542,8 @@ std::string cPlayer::getHouseName() {
         return "Corrino / House for worms";
     }
     return "Unknown !?";
+}
+
+void cPlayer::giveCredits(float amountToGive) {
+    credits += amountToGive;
 }

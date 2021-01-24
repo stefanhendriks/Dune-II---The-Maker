@@ -133,6 +133,8 @@ class cPlayer {
             iStructureUpgradeLevel[structureType]++;
         }
 
+    void giveCredits(float amountToGive);
+
 private:
 		int getRGBColorForHouse(int houseId);
 		int getEmblemBackgroundColorForHouse(int houseId);

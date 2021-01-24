@@ -11,7 +11,7 @@
 class cBuildingListDrawer {
 
 public:
-	cBuildingListDrawer();
+	cBuildingListDrawer(cPlayer *thePlayer);
 	~cBuildingListDrawer();
 
 	void drawList(cBuildingList *list, int listIDToDraw);
@@ -22,6 +22,8 @@ public:
 
     int getDrawX();
     int getDrawY();
+
+    void setPlayer(cPlayer * thePlayer);
 
 protected:
 
@@ -36,6 +38,8 @@ private:
 	// the list to draw
 	cBuildingList *list;
 	cTextDrawer *textDrawer;
+
+	cPlayer * m_Player;
 };
 
 #endif /* CBUILDINGLISTDRAWER_H_ */

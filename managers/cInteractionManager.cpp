@@ -1,4 +1,6 @@
 #include "../include/d2tmh.h"
+#include "cInteractionManager.h"
+
 
 cInteractionManager::cInteractionManager(cPlayer * thePlayer) {
 	assert(thePlayer);
@@ -15,11 +17,13 @@ cInteractionManager::~cInteractionManager() {
 }
 
 void cInteractionManager::interact() {
-    if (m_Player->getGameControlsContext()->isMouseOnSidebarOrMinimap()) {
+    cGameControlsContext *pContext = m_Player->getGameControlsContext();
+
+    if (pContext->isMouseOnSidebarOrMinimap()) {
         mouseInteractWithSidebarOrMinimap();
     }
 
-    if (m_Player->getGameControlsContext()->isMouseOnBattleField()) {
+    if (pContext->isMouseOnBattleField()) {
         mouseInteractWithBattlefield();
     }
 }
@@ -57,4 +61,12 @@ void cInteractionManager::mouseInteractWithBattlefield() {
     if (mouse_mv_y2 == -1) {
         mouse_mv_y2 = -2;
     }
+}
+
+void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer) {
+    this->sidebar = thePlayer->getSideBar();
+    this->m_Player = thePlayer;
+    char msg[255];
+    sprintf(msg, "cInteractionManager::setPlayerToInteractFor for player [%d] [%s]", thePlayer->getId(), thePlayer->getHouseName().c_str());
+    logbook(msg);
 }

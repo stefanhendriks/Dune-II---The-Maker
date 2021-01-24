@@ -10,7 +10,9 @@ class cSideBarDrawer {
 
 		cBuildingListDrawer * getBuildingListDrawer() { return buildingListDrawer; }
 
-	protected:
+    void setPlayer(cPlayer *pPlayer);
+
+protected:
 		void drawHouseGui();
 		void drawBuildingLists();
 		void drawCapacities();

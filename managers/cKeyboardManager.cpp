@@ -70,6 +70,16 @@ void cKeyboardManager::takeScreenshot() const {
 }
 
 void cKeyboardManager::DEBUG_KEYS() {
+    if (key[KEY_0]) {
+        drawManager->setPlayerToDraw(&player[0]);
+    } else if (key[KEY_1]) {
+        drawManager->setPlayerToDraw(&player[1]);
+    } else if (key[KEY_2]) {
+        drawManager->setPlayerToDraw(&player[2]);
+    } else if (key[KEY_3]) {
+        drawManager->setPlayerToDraw(&player[3]);
+    }
+
     //JUMP TO MISSION 9
     if (key[KEY_F1] && player[HUMAN].getHouse() > 0) {
         game.mission_init();
