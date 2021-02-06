@@ -43,7 +43,6 @@ class cPlayer {
 		bool bEnoughPower() const;
 		bool bEnoughSpiceCapacityToStoreCredits() const;
 
-		int TIMER_think;        // timer for thinking itself (calling main routine)
 		int TIMER_attack;       // -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 
 		void substractCredits(int amount) {

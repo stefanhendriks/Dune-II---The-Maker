@@ -23,6 +23,10 @@ int CLOSE_SPICE_BLOOM(int iCell);
 // ai specific variables for a m_Player
 class cAIPlayer {
 
+private:
+    int DELAY_buildbase;    // additional delay when building base
+    int TIMER_think;        // timer for thinking itself (calling main routine)
+
 public:
 
 	// SKIRMISH
@@ -49,7 +53,7 @@ public:
     void think_buildarmy();
     void think_buildbase();
     void think_attack();
-    void think_buildingplacement();
+    bool think_buildingplacement();
     void think_spiceBlooms();
     
     void think_repair_structure(cAbstractStructure *struc);

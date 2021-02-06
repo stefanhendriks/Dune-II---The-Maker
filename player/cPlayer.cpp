@@ -203,7 +203,6 @@ void cPlayer::init(int id) {
 
     iTeam=-1;
 
-    TIMER_think=rnd(10);        // timer for thinking itself (calling main routine)
     TIMER_attack=-1;			// -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 }
 
