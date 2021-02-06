@@ -75,7 +75,7 @@ void cAIPlayer::BUILD_STRUCTURE(int iStrucType) {
     startBuildingStructure(iStrucType);
 }
 
-void cAIPlayer::BUILD_UNIT(int iUnitType) {
+bool cAIPlayer::BUILD_UNIT(int iUnitType) {
 
     // Fix up house mixtures
     const cPlayer &cPlayer = player[ID];
@@ -99,7 +99,7 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
     bool bAllowed = canAIBuildUnit(ID, iUnitType);
 
     if (!bAllowed) {
-        return; // do not go further
+        return false; // do not go further
     }
 
     bool bAlreadyBuilding = isBuildingUnitType(iUnitType);
@@ -136,15 +136,16 @@ void cAIPlayer::BUILD_UNIT(int iUnitType) {
     }
 
     if (!bAlreadyBuilding) {
-        startBuildingUnit(iUnitType);
+        return startBuildingUnit(iUnitType);
     } else {
         char msg[255];
         sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d] - but already building.", units[iUnitType].name, iUnitType);
         logbook(msg);
     }
+    return false;
 }
 
-void cAIPlayer::startBuildingUnit(int iUnitType) const {
+bool cAIPlayer::startBuildingUnit(int iUnitType) const {
     const cPlayer &cPlayer = player[ID];
 
     // Duplicated logic - for now - determining lists by unit id.
@@ -167,6 +168,7 @@ void cAIPlayer::startBuildingUnit(int iUnitType) const {
         }
         logbook(msg);
     }
+    return startedBuilding;
 }
 
 void cAIPlayer::startBuildingStructure(int iStructureType) const {
@@ -429,7 +431,7 @@ void cAIPlayer::think() {
 
     // Now think about building stuff etc
 	think_buildbase();
-//	think_buildarmy();
+	think_buildarmy();
 //    think_attack();
 }
 
@@ -642,7 +644,7 @@ void cAIPlayer::think_attack() {
 
 void cAIPlayer::think_buildarmy() {
     // prevent human m_Player thinking
-    if (ID == 0)
+    if (ID == HUMAN)
         return; // do not build for human! :)
 
     if (TIMER_BuildUnits > 0) {
@@ -679,14 +681,12 @@ void cAIPlayer::think_buildarmy() {
         iChance=10;
     }
 
-    if (iMission > 1 && rnd(100) < iChance)
-    {
-        if (cPlayer.credits > units[INFANTRY].cost)
-        {
+    if (iMission > 1 && rnd(100) < iChance) {
+        if (cPlayer.credits > units[INFANTRY].cost) {
             BUILD_UNIT(INFANTRY); // (INFANTRY->TROOPERS CONVERSION IN FUNCTION)
-        }
-        else
+        } else {
             BUILD_UNIT(SOLDIER); // (SOLDIER->TROOPER CONVERSION IN FUNCTION)
+        }
     }
 
 
@@ -716,7 +716,7 @@ void cAIPlayer::think_buildarmy() {
     }
 
     int harvesters = 0;     // harvesters
-    if (iMission > 3) {
+    if (cPlayer.hasAtleastOneStructure(HEAVYFACTORY)) {
         // how many harvesters do we own?
         for (int i=0; i < MAX_UNITS; i++) {
             if (!unit[i].isValid()) continue;
@@ -738,20 +738,13 @@ void cAIPlayer::think_buildarmy() {
                 }
             }
         }
-    } // Harvester buy logic when mission > 3
+    } // Harvester buy logic
 
     // ability to build carryalls
-    if (iMission >= 5) {
-        int carryalls= 0;     // carryalls
-        if (cPlayer.hasEnoughCreditsFor(units[CARRYALL].cost)) {
-
-            for (int i=0; i < MAX_UNITS; i++) {
-                if (!unit[i].isValid()) continue;
-                if (unit[i].iPlayer == ID && unit[i].iType == CARRYALL)
-                    carryalls++;
-            }
-
+    if (cPlayer.hasAtleastOneStructure(HIGHTECH)) {
+        if (cPlayer.hasEnoughCreditsForUnit(CARRYALL)) {
             int optimalAmountCarryAlls = (harvesters + 1) / 2;
+            int carryalls = cPlayer.getAmountOfUnitsForType(CARRYALL);     // carryalls
 
             if (carryalls < optimalAmountCarryAlls) {
                 if (rnd(100) < 30) {
@@ -759,21 +752,21 @@ void cAIPlayer::think_buildarmy() {
                 }
             }
         }
-    }
 
-    if (iMission > 6) {
-        if (cPlayer.getHouse() == ATREIDES) {
-            if (cPlayer.credits > units[ORNITHOPTER].cost) {
-                if (rnd(100) < 15) {
-                    BUILD_UNIT(ORNITHOPTER);
+        if (iMission > 6) {
+            if (cPlayer.getHouse() == ATREIDES) {
+                if (cPlayer.credits > cPlayer.hasEnoughCreditsForUnit(ORNITHOPTER)) {
+                    if (rnd(100) < 15) {
+                        BUILD_UNIT(ORNITHOPTER);
+                    }
                 }
             }
         }
     }
 
-	if (iMission >= 8 || game.bSkirmish) {
-	    bool canBuySpecial = cPlayer.hasAtleastOneStructure(HEAVYFACTORY) && cPlayer.hasAtleastOneStructure(IX);
-	    if (canBuySpecial) {
+    if (iMission >= 8 || game.bSkirmish) {
+        bool canBuySpecial = cPlayer.hasAtleastOneStructure(HEAVYFACTORY) && cPlayer.hasAtleastOneStructure(IX);
+        if (canBuySpecial) {
             int iSpecial = DEVASTATOR;
 
             if (cPlayer.getHouse() == ATREIDES) {
@@ -784,13 +777,12 @@ void cAIPlayer::think_buildarmy() {
                 iSpecial = DEVIATOR;
             }
 
-            if (cPlayer.credits > units[iSpecial].cost) {
+            if (cPlayer.hasEnoughCreditsForUnit(iSpecial)) {
                 BUILD_UNIT(iSpecial);
             }
         }
 
-        if (cPlayer.credits > units[SIEGETANK].cost)
-        {
+        if (cPlayer.hasEnoughCreditsForUnit(SIEGETANK)) {
             // enough to buy launcher , tank
             int nr = rnd(100);
             if (nr < 30)
@@ -799,75 +791,62 @@ void cAIPlayer::think_buildarmy() {
                 BUILD_UNIT(TANK);
             else if (nr > 60)
                 BUILD_UNIT(SIEGETANK);
-        }
-        else if (cPlayer.credits > units[LAUNCHER].cost)
-        {
+        } else if (cPlayer.hasEnoughCreditsForUnit(LAUNCHER)) {
             if (rnd(100) < 50)
                 BUILD_UNIT(LAUNCHER);
             else
                 BUILD_UNIT(TANK);
-        }
-        else if (cPlayer.credits > units[TANK].cost)
-        {
+        } else if (cPlayer.hasEnoughCreditsForUnit(TANK)) {
             BUILD_UNIT(TANK);
         }
     }
 
 
-    if (iMission == 4 && rnd(100) < 70)
-    {
-        if (cPlayer.credits > units[TANK].cost)
+    if (iMission == 4 && rnd(100) < 70) {
+        if (cPlayer.hasEnoughCreditsForUnit(TANK)) {
             BUILD_UNIT(TANK);
+        }
     }
 
-    if (iMission == 5)
-    {
-        if (cPlayer.credits > units[LAUNCHER].cost)
-        {
-            // enough to buy launcher , tank
-            if (rnd(100) < 50)
+    if (iMission == 5) {
+        if (cPlayer.hasEnoughCreditsForUnit(LAUNCHER)) {
+            if (rnd(100) < 50) {
                 BUILD_UNIT(LAUNCHER);
-            else
+            } else {
                 BUILD_UNIT(TANK);
-        }
-        else if (cPlayer.credits > units[TANK].cost)
-        {
+            }
+        } else if (cPlayer.hasEnoughCreditsForUnit(TANK)) {
             BUILD_UNIT(TANK);
         }
     }
 
-    if (iMission == 6)
-    {
-		// when enough money, 50/50 on siege/launcher. Else just buy a tank or do nothing
-		if (cPlayer.credits > units[SIEGETANK].cost)
-		{
-			if (rnd(100) < 50)
-				BUILD_UNIT(SIEGETANK);
-			else
-				BUILD_UNIT(LAUNCHER);
-		}
-		else if (cPlayer.credits > units[TANK].cost)
-		{
-			if (rnd(100) < 30)
-				BUILD_UNIT(TANK); // buy a normal tank in mission 6
-		}
-    }
-
-    if (iMission == 7)
-    {
+    if (iMission == 6) {
         // when enough money, 50/50 on siege/launcher. Else just buy a tank or do nothing
-		if (cPlayer.credits > units[SIEGETANK].cost)
-		{
-			if (rnd(100) < 50)
-				BUILD_UNIT(SIEGETANK);
-			else
-				BUILD_UNIT(LAUNCHER);
-		}
-		else if (cPlayer.credits > units[TANK].cost)
-		{
-			if (rnd(100) < 30)
-				BUILD_UNIT(TANK); // buy a normal tank in mission 6
-		}
+        if (cPlayer.hasEnoughCreditsForUnit(SIEGETANK)) {
+            if (rnd(100) < 50) {
+                BUILD_UNIT(SIEGETANK);
+            } else {
+                BUILD_UNIT(LAUNCHER);
+            }
+        } else if (cPlayer.hasEnoughCreditsForUnit(TANK)) {
+            {
+                if (rnd(100) < 30)
+                    BUILD_UNIT(TANK); // buy a normal tank in mission 6
+            }
+        }
+    }
+
+    if (iMission == 7) {
+        // when enough money, 50/50 on siege/launcher. Else just buy a tank or do nothing
+        if (cPlayer.credits > units[SIEGETANK].cost) {
+            if (rnd(100) < 50)
+                BUILD_UNIT(SIEGETANK);
+            else
+                BUILD_UNIT(LAUNCHER);
+        } else if (cPlayer.credits > units[TANK].cost) {
+            if (rnd(100) < 30)
+                BUILD_UNIT(TANK); // buy a normal tank in mission 6
+        }
     }
 }
 
@@ -1114,7 +1093,7 @@ bool canAIBuildUnit(int iPlayer, int iUnitType) {
     logbook(msg);
 
     // CHECK 1: Do we have the money?
-    if (cPlayer.credits < units[iUnitType].cost) {
+    if (!cPlayer.hasEnoughCreditsForUnit(iUnitType)) {
         char msg[255];
         sprintf(msg, "canAIBuildUnit: FALSE, because cost %d higher than credits %d", units[iUnitType].cost, cPlayer.credits);
         logbook(msg);

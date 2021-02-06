@@ -61,7 +61,7 @@ public:
     void think_repair(); // ai repairing units
 
 	void BUILD_STRUCTURE(int iStrucType);
-    void BUILD_UNIT(int iUnitType);
+    bool BUILD_UNIT(int iUnitType);
 
 	int  findCellToPlaceStructure(int iStructureType);
 
@@ -73,7 +73,7 @@ public:
 
     int getStructureTypeBeingBuilt();
 
-    void startBuildingUnit(int iUnitType) const;
+    bool startBuildingUnit(int iUnitType) const;
     void startBuildingStructure(int iStructureType) const;
     void startUpgrading(int iUpgradeType) const;
 
