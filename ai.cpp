@@ -30,6 +30,9 @@ void cAIPlayer::init(int iID) {
 	// same here, this initially sets 3 units
 	iUnits=3;
 
+    DELAY_buildbase = 0;
+    TIMER_think=rnd(10);        // timer for thinking itself (calling main routine)
+
     iCheckingPlaceStructure=-1;
 
 	// -- END
@@ -262,7 +265,7 @@ cBuildingListItem *cAIPlayer::getStructureBuildingListItemBeingBuilt() const {
 }
 
 
-void cAIPlayer::think_buildingplacement() {
+bool cAIPlayer::think_buildingplacement() {
     /*
 		structure building;
 
@@ -274,7 +277,7 @@ void cAIPlayer::think_buildingplacement() {
         if (isBuildingStructure()) {
             // still building, so do nothing, unless we await placement
             if (!buildingStructureAwaitingPlacement) {
-                return;
+                return false;
             }
         }
 
@@ -305,12 +308,17 @@ void cAIPlayer::think_buildingplacement() {
                 if (pItem->getTimesToBuild() < 1) {
                     cPlayer.getItemBuilder()->removeItemFromList(pItem);
                 }
+                // delay base build thinking a bit, so the new structure will be taken into account when deciding
+                // which structure to build next
+                return true;
             } else {
                 // unable to place?!
                 logbook("CANNOT PLACE STRUCTURE");
             }
         }
     }
+
+    return false;
 }
 
 void cAIPlayer::think_spiceBlooms() {
@@ -395,14 +403,18 @@ void cAIPlayer::think() {
         return; // AI is not human / skip
     }
 
+    if (ID == 1) {
+        char msg[255];
+        sprintf(msg, "AI[%d]: TIMER_think [%d]", ID, TIMER_think);
+        logbook(msg);
+    }
     // not time yet to think
-    cPlayer &cPlayer = player[ID];
-    if (cPlayer.TIMER_think > 0) {
-        cPlayer.TIMER_think--;
+    if (TIMER_think > 0) {
+        TIMER_think--;
         return;
     }
 
-    cPlayer.TIMER_think = 10;
+    TIMER_think = 25;
 
     // depening on m_Player, do thinking
     if (ID == AI_WORM) {
@@ -864,6 +876,16 @@ void cAIPlayer::think_buildbase() {
         return; // human m_Player does not think for buildbase
     }
 
+    char msg[255];
+    sprintf(msg, "AI[%d]: DELAY_buildbase [%d]", ID, DELAY_buildbase);
+    logbook(msg);
+    if (DELAY_buildbase > 0) {
+        DELAY_buildbase--;
+        return; // skip
+    }
+
+    DELAY_buildbase = 0;
+
     if (game.bSkirmish) {
         cBuildingListItem *pUpgrade = isUpgradingConstyard();
         if (pUpgrade) {
@@ -873,7 +895,13 @@ void cAIPlayer::think_buildbase() {
             return; // wait for upgrade to be completed
         }
 
-        think_buildingplacement();
+        bool result = think_buildingplacement();
+        if (result) {
+            char msg[255];
+            sprintf(msg, "AI[%d] think_buildingplacement returns true, delaying!", ID);
+            DELAY_buildbase = 3;
+            return;
+        }
 
         cBuildingListItem *pBuildingStructure = isBuildingStructure();
         if (pBuildingStructure) {
