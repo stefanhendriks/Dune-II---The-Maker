@@ -84,6 +84,7 @@ class cPlayer {
 		    return m_Human;
 		}
 
+		int getAmountOfUnitsForType(int unitType) const;
 		int getAmountOfStructuresForType(int structureType) const;
 		bool hasRadarAndEnoughPower() const;
 
@@ -133,6 +134,8 @@ class cPlayer {
         }
 
     void giveCredits(float amountToGive);
+
+    float hasEnoughCreditsForUnit(int unitType);
 
 private:
 		int getRGBColorForHouse(int houseId);

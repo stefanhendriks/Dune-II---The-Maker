@@ -366,6 +366,29 @@ int cPlayer::getAmountOfStructuresForType(int structureType) const {
 }
 
 /**
+ * This function will return the amount of units for given type, but it is not (yet) optimized, so it will
+ * loop over all units and count them. Use it with caution.
+ * return -1
+ * @param unitType
+ * @return
+ */
+int cPlayer::getAmountOfUnitsForType(int unitType) const {
+    if (unitType < 0 || unitType > MAX_UNITTYPES) return -1;
+    int count = 0;
+    for (int i=0; i < MAX_UNITS; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
+        if (cUnit.iPlayer != this->getId()) continue;
+        if (cUnit.iType == unitType) {
+            count++;
+        }
+    }
+    return count;
+}
+
+
+
+/**
  * Returns the bitmap for structure type "index", this structure has been colorized beforehand for this player and is
  * in same color depth as bmp_screen.
  * @param index
@@ -545,4 +568,9 @@ std::string cPlayer::getHouseName() {
 
 void cPlayer::giveCredits(float amountToGive) {
     credits += amountToGive;
+}
+
+float cPlayer::hasEnoughCreditsForUnit(int unitType) {
+    if (unitType < 0 || unitType >= MAX_UNITTYPES) return false;
+    return this->credits > units[unitType].cost;
 }
