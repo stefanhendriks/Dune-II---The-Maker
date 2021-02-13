@@ -9,7 +9,7 @@
   2001 - 2020 (c) code by Stefan Hendriks
 
   */
-
+#include <vector>
 #include "include/d2tmh.h"
 
 // TODO: constructor/destructors
@@ -88,7 +88,7 @@ bool cAIPlayer::BUILD_UNIT(int iUnitType) {
     }
 
     // In mission 9 there are only WOR's, so make a special hack hack for that ;)
-    if (game.bSkirmish == false && game.iMission >= 8) {
+    if (!game.bSkirmish && game.iMission >= 8) {
         if (iUnitType == INFANTRY) iUnitType = TROOPERS;
         if (iUnitType == SOLDIER) iUnitType = TROOPER;
     }
@@ -103,11 +103,24 @@ bool cAIPlayer::BUILD_UNIT(int iUnitType) {
         if (reason == cantBuildReason::REQUIRES_UPGRADE) {
             // try to build upgrade instead?
             cBuildingListItem *upgrade = isUpgradeAvailableToGrantUnit(iUnitType);
-            if (upgrade != nullptr && upgrade->isAvailable() && cPlayer.hasEnoughCreditsFor(upgrade->getCosts())) {
+            if (upgrade != nullptr) {
+                if (upgrade->isAvailable() && cPlayer.hasEnoughCreditsFor(upgrade->getCosts())) {
+                    char msg[255];
+                    sprintf(msg, "BUILD_UNIT: Cannot build %s because I need to upgrade; starting upgrade now.",
+                            units[iUnitType].name);
+                    logbook(msg);
+                    startUpgrading(upgrade->getBuildId());
+                } else {
+                    char msg[255];
+                    sprintf(msg, "BUILD_UNIT: Cannot build %s; upgrade available, but either cant upgrade or is too expensive.",
+                            units[iUnitType].name);
+                    logbook(msg);
+                }
+            } else {
                 char msg[255];
-                sprintf(msg, "BUILD_UNIT: Cannot build %s because I need to upgrade; starting upgrade now.", units[iUnitType].name);
+                sprintf(msg, "BUILD_UNIT: Cannot build %s , nor an upgrade available.",
+                        units[iUnitType].name);
                 logbook(msg);
-                startUpgrading(upgrade->getBuildId());
             }
         }
         return false; // do not go further
@@ -159,15 +172,7 @@ bool cAIPlayer::BUILD_UNIT(int iUnitType) {
 bool cAIPlayer::startBuildingUnit(int iUnitType) const {
     const cPlayer &cPlayer = player[ID];
 
-    // Duplicated logic - for now - determining lists by unit id.
-    int listId = LIST_UNITS;
-
-    if (iUnitType == SOLDIER || iUnitType == INFANTRY) {
-        listId = LIST_FOOT_UNITS;
-    } else if (iUnitType == TROOPER || iUnitType == TROOPERS) {
-        listId = LIST_FOOT_UNITS;
-    }
-
+    int listId = units[iUnitType].listId;
     bool startedBuilding = cPlayer.getSideBar()->startBuildingItemIfOk(listId, iUnitType);
 
     if (DEBUGGING) {
@@ -221,25 +226,10 @@ bool cAIPlayer::isBuildingUnitType(int iUnitType) const {
     const cPlayer &cPlayer = player[ID];
     cItemBuilder *pItemBuilder = cPlayer.getItemBuilder();
 
-    // here we hard-code a transition from unitType to LIST_ * and sublist id, need to think how we can shove this
-    // into the game.ini and such. This logic is taken from the cBuildingListUpdater::onStructureCreated.
-    // Duplicated logic - for now - determining lists by unit id.
-    int listId = LIST_UNITS;
-    int sublistId = SUBLIST_HEAVYFCTRY; // default
+    int listId = units[iUnitType].listId;
+    int subListId = units[iUnitType].subListId;
 
-    if (iUnitType == SOLDIER || iUnitType == INFANTRY) {
-        listId = LIST_FOOT_UNITS;
-        sublistId = SUBLIST_INFANTRY;
-    } else if (iUnitType == TROOPER || iUnitType == TROOPERS) {
-        listId = LIST_FOOT_UNITS;
-        sublistId = SUBLIST_TROOPERS;
-    } else if (iUnitType == QUAD || iUnitType == TRIKE || iUnitType == RAIDER) {
-        sublistId = SUBLIST_LIGHTFCTRY;
-    } else  if (iUnitType == CARRYALL || iUnitType == ORNITHOPTER) {
-        sublistId = SUBLIST_HIGHTECH;
-    }
-
-    return pItemBuilder->isAnythingBeingBuiltForListId(listId, sublistId);
+    return pItemBuilder->isAnythingBeingBuiltForListId(listId, subListId);
 }
 
 /**
@@ -716,13 +706,25 @@ void cAIPlayer::think_buildarmy() {
 
     // Skirmish override
     if (game.bSkirmish) {
-        iChance=10;
+        // chance depends on ideal size of foot soldier army
+        int groundUnits = cPlayer.getAmountOfUnitsForType(std::vector<int>{TROOPERS, TROOPER, INFANTRY, SOLDIER});
+        float idealSize = 7;
+        iChance = (idealSize - groundUnits) * (100.0f / idealSize);
+        char msg[255];
+        sprintf(msg, "AI[%d] determines chance to build infantry units. Counted %d. Ideal size %f, iChance is %d", ID, groundUnits, idealSize, iChance);
+        logbook(msg);
     }
 
     if (iMission > 1 && rnd(100) < iChance) {
-        if (cPlayer.credits > units[INFANTRY].cost) {
+        if (cPlayer.hasEnoughCreditsForUnit(INFANTRY) || cPlayer.hasEnoughCreditsForUnit(TROOPERS)) {
+            char msg[255];
+            sprintf(msg, "AI[%d]: Wants to build infantry/troopers.", ID);
+            logbook(msg);
             BUILD_UNIT(INFANTRY); // (INFANTRY->TROOPERS CONVERSION IN FUNCTION)
         } else {
+            char msg[255];
+            sprintf(msg, "AI[%d]: Wants to build soldier/trooper.", ID);
+            logbook(msg);
             BUILD_UNIT(SOLDIER); // (SOLDIER->TROOPER CONVERSION IN FUNCTION)
         }
     }
