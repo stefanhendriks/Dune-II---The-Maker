@@ -9,7 +9,7 @@
 #define STRUCTS_H_
 
 // Unit properties
-// note: This is NOT the unit class, this is simply a 'prefix' for a unit!
+// the s_UnitP struct is holding all properties for a specific unit type.
 // note: The unit properties are actually set in common.cpp , like the houses!
 // note: Some values are now read via INI.CPP (GAME.INI reader).
 struct s_UnitP {
@@ -61,7 +61,12 @@ struct s_UnitP {
   int credit_capacity;      // max credits capacity
   int harvesting_speed;     // speed rate for harvesting (time)
   int harvesting_amount;    // value rate for harvesting (amount)
+
   // house specific rates
+
+  // list related
+  int listId;               // ie LIST_FOOT_UNITS or LIST_UNITS
+  int subListId;            // ie SUBLIST_LIGHTFCTRY
 };
 
 // Structure types
