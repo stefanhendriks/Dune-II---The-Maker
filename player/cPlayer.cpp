@@ -10,8 +10,9 @@
 
   */
 
+#include <vector>
+#include <algorithm>
 #include "../include/d2tmh.h"
-#include "cPlayer.h"
 
 
 cPlayer::cPlayer() {
@@ -380,6 +381,26 @@ int cPlayer::getAmountOfUnitsForType(int unitType) const {
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != this->getId()) continue;
         if (cUnit.iType == unitType) {
+            count++;
+        }
+    }
+    return count;
+}
+
+/**
+ * This function will return the amount of units for given type, but it is not (yet) optimized, so it will
+ * loop over all units and count them. Use it with caution.
+ * return -1
+ * @param unitTypes (vector of all unitTypes to check)
+ * @return
+ */
+int cPlayer::getAmountOfUnitsForType(std::vector<int> unitTypes) const {
+    int count = 0;
+    for (int i=0; i < MAX_UNITS; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
+        if (cUnit.iPlayer != this->getId()) continue;
+        if (std::find(unitTypes.begin(), unitTypes.end(), cUnit.iType) != unitTypes.end()) {
             count++;
         }
     }

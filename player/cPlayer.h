@@ -20,6 +20,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <vector>
+
 class cPlayer {
 
 	public:
@@ -86,6 +88,7 @@ class cPlayer {
 
 		int getAmountOfUnitsForType(int unitType) const;
 		int getAmountOfStructuresForType(int structureType) const;
+        int getAmountOfUnitsForType(std::vector<int> unitTypes) const;
 		bool hasRadarAndEnoughPower() const;
 
 		// delete
