@@ -217,6 +217,10 @@ void install_units()
     units[i].harvesting_speed = 0;
     units[i].credit_capacity  = 0;
 
+    // list properties
+    units[i].listId           = 0;
+    units[i].subListId        = 0;
+
     strcpy(units[i].name, "\0");
   }
 
@@ -231,6 +235,8 @@ void install_units()
   units[CARRYALL].icon = ICON_UNIT_CARRYALL;
   units[CARRYALL].airborn=true;   // is airborn
   units[CARRYALL].free_roam=true; // may freely roam the air
+  units[CARRYALL].listId=LIST_UNITS;
+  units[CARRYALL].subListId=SUBLIST_HIGHTECH;
   strcpy(units[CARRYALL].name, "Carry-All");
 
       // Unit        : Ornithopter
@@ -246,6 +252,8 @@ void install_units()
   units[ORNITHOPTER].second_shot = true;
   units[ORNITHOPTER].airborn = true;   // is airborn
   units[ORNITHOPTER].free_roam=true; // may freely roam the air
+  units[ORNITHOPTER].listId=LIST_UNITS;
+  units[ORNITHOPTER].subListId=SUBLIST_HIGHTECH;
   strcpy(units[ORNITHOPTER].name, "Ornithopter");
 
     // Unit        : Devastator
@@ -259,6 +267,8 @@ void install_units()
   units[DEVASTATOR].bullets = BULLET_DEVASTATOR;
   units[DEVASTATOR].second_shot = true;
   units[DEVASTATOR].icon    = ICON_UNIT_DEVASTATOR;
+  units[DEVASTATOR].listId=LIST_UNITS;
+  units[DEVASTATOR].subListId=SUBLIST_HEAVYFCTRY;
   strcpy(units[DEVASTATOR].name, "Devastator");
 
   // Unit        : Harvester
@@ -272,6 +282,8 @@ void install_units()
   units[HARVESTER].icon = ICON_UNIT_HARVESTER;
   units[HARVESTER].credit_capacity = 700;
   units[HARVESTER].harvesting_amount = 5;
+  units[HARVESTER].listId=LIST_UNITS;
+  units[HARVESTER].subListId=SUBLIST_HEAVYFCTRY;
   strcpy(units[HARVESTER].name, "Harvester");
 
   // Unit        : Combattank
@@ -285,6 +297,8 @@ void install_units()
   units[TANK].bmp_frames = 0;
   units[TANK].bullets = BULLET_TANK;
   units[TANK].icon    = ICON_UNIT_TANK;
+  units[TANK].listId=LIST_UNITS;
+  units[TANK].subListId=SUBLIST_HEAVYFCTRY;
   strcpy(units[TANK].name, "Tank");
 
 
@@ -300,6 +314,8 @@ void install_units()
   units[SIEGETANK].bullets = BULLET_SIEGE;
   units[SIEGETANK].second_shot = true;
   units[SIEGETANK].icon    = ICON_UNIT_SIEGETANK;
+  units[SIEGETANK].listId=LIST_UNITS;
+  units[SIEGETANK].subListId=SUBLIST_HEAVYFCTRY;
   strcpy(units[SIEGETANK].name, "Siege Tank");
 
   // Unit        : MCV
@@ -311,6 +327,8 @@ void install_units()
   units[MCV].bmp_height = 25*2;
   units[MCV].bmp_frames = 1;
   units[MCV].icon = ICON_UNIT_MCV;
+  units[MCV].listId=LIST_UNITS;
+  units[MCV].subListId=SUBLIST_HEAVYFCTRY;
   strcpy(units[MCV].name, "MCV");
 
 
@@ -323,6 +341,8 @@ void install_units()
   units[DEVIATOR].bmp_frames = 1;
   units[DEVIATOR].icon = ICON_UNIT_DEVIATOR;
   units[DEVIATOR].bullets = BULLET_GAS; // our gassy rocket
+  units[DEVIATOR].listId=LIST_UNITS;
+  units[DEVIATOR].subListId=SUBLIST_HEAVYFCTRY;
   strcpy(units[DEVIATOR].name, "Deviator");
 
   // Unit        : Launcher
@@ -337,6 +357,8 @@ void install_units()
   units[LAUNCHER].second_shot = true;
   //units[LAUNCHER].bullets = ROCKET_NORMAL; // our gassy rocket
   units[LAUNCHER].bullets = ROCKET_NORMAL; // our gassy rocket
+  units[LAUNCHER].listId=LIST_UNITS;
+  units[LAUNCHER].subListId=SUBLIST_HEAVYFCTRY;
   strcpy(units[LAUNCHER].name, "Launcher");
 
   // Unit        : Quad
@@ -351,6 +373,8 @@ void install_units()
   units[QUAD].second_shot = true;
   units[QUAD].bullets = BULLET_QUAD;
   units[QUAD].squish=false;
+  units[QUAD].listId=LIST_UNITS;
+  units[QUAD].subListId=SUBLIST_LIGHTFCTRY;
   strcpy(units[QUAD].name, "Quad");
 
 
@@ -365,6 +389,8 @@ void install_units()
   units[TRIKE].icon = ICON_UNIT_TRIKE;
   units[TRIKE].bullets = BULLET_TRIKE;
   units[TRIKE].squish=false;
+  units[TRIKE].listId=LIST_UNITS;
+  units[TRIKE].subListId=SUBLIST_LIGHTFCTRY;
   strcpy(units[TRIKE].name, "Trike");
 
   // Unit        : Raider Trike (Ordos trike)
@@ -379,7 +405,8 @@ void install_units()
   units[RAIDER].icon = ICON_UNIT_RAIDER;
   units[RAIDER].bullets = BULLET_TRIKE;
   units[RAIDER].squish=false;
-
+  units[RAIDER].listId=LIST_UNITS;
+  units[RAIDER].subListId=SUBLIST_LIGHTFCTRY;
 
 
   // Unit        : Frigate
@@ -396,6 +423,7 @@ void install_units()
   units[FRIGATE].squish = false;
   units[FRIGATE].free_roam = true; // Frigate does not roam, yet needed?
   units[FRIGATE].hp = 9999;
+  // frigate has no list
   strcpy(units[FRIGATE].name, "Frigate");
 
   /*
@@ -418,6 +446,8 @@ void install_units()
   units[SONICTANK].bmp_frames = 1; // no extra frames
   units[SONICTANK].bullets = BULLET_SHIMMER;
   units[SONICTANK].icon = ICON_UNIT_SONICTANK;
+  units[SONICTANK].listId=LIST_UNITS;
+  units[SONICTANK].subListId=SUBLIST_HEAVYFCTRY;
   strcpy(units[SONICTANK].name, "Sonic Tank");
 
 
@@ -432,6 +462,8 @@ void install_units()
   units[SOLDIER].bullets  = BULLET_SMALL;
   units[SOLDIER].icon       = ICON_UNIT_SOLDIER;
   units[SOLDIER].squish=false;
+  units[SOLDIER].listId=LIST_FOOT_UNITS;
+  units[SOLDIER].subListId=SUBLIST_INFANTRY;
   strcpy(units[SOLDIER].name, "Soldier");
 
 
@@ -448,6 +480,8 @@ void install_units()
   units[INFANTRY].second_shot = true;
   units[INFANTRY].icon = ICON_UNIT_INFANTRY;
   units[INFANTRY].squish=false;
+  units[INFANTRY].listId=LIST_FOOT_UNITS;
+  units[INFANTRY].subListId=SUBLIST_INFANTRY;
   strcpy(units[INFANTRY].name, "Light Infantry");
 
   // Unit        : Single Trooper
@@ -461,6 +495,8 @@ void install_units()
   units[TROOPER].infantry = true;
   units[TROOPER].bullets = ROCKET_SMALL;
   units[TROOPER].icon      = ICON_UNIT_TROOPER;
+  units[TROOPER].listId=LIST_FOOT_UNITS;
+  units[TROOPER].subListId=SUBLIST_TROOPERS;
   units[TROOPER].squish=false;
 
   // Unit        : Group Trooper
@@ -475,6 +511,8 @@ void install_units()
   units[TROOPERS].bullets = ROCKET_SMALL;
   units[TROOPERS].second_shot = true;
   units[TROOPERS].infantry = true;
+  units[TROOPERS].listId=LIST_FOOT_UNITS;
+  units[TROOPERS].subListId=SUBLIST_TROOPERS;
   units[TROOPERS].squish=false;
 
   // Unit        : Fremen
@@ -490,6 +528,8 @@ void install_units()
   units[UNIT_FREMEN_ONE].second_shot = false;
   units[UNIT_FREMEN_ONE].infantry = true;
   units[UNIT_FREMEN_ONE].squish=false;
+  units[UNIT_FREMEN_ONE].listId=LIST_PALACE;
+  units[UNIT_FREMEN_ONE].subListId=0;
 
   // Unit        : Fremen
   // Description : A group of Fremen
@@ -504,6 +544,8 @@ void install_units()
   units[UNIT_FREMEN_THREE].second_shot = true;
   units[UNIT_FREMEN_THREE].infantry = true;
   units[UNIT_FREMEN_THREE].squish=false;
+  units[UNIT_FREMEN_THREE].listId=LIST_PALACE;
+  units[UNIT_FREMEN_THREE].subListId=0;
 
   // Unit        : Saboteur
   // Description : Special infantry unit, moves like trike, deadly as hell, not detectable on radar!
@@ -524,6 +566,8 @@ void install_units()
   units[SABOTEUR].infantry = true;
   units[SABOTEUR].icon      = ICON_SPECIAL_SABOTEUR;
   units[SABOTEUR].squish=false;
+  units[SABOTEUR].listId=LIST_PALACE;
+  units[SABOTEUR].subListId=0;
 
   // Unit        : Death Hand
   // Description : A missile that destroys a large area. Is actually not a unit at all.
@@ -543,10 +587,11 @@ void install_units()
   units[MISSILE].infantry = true;
   units[MISSILE].icon      = ICON_SPECIAL_MISSILE;
   units[MISSILE].squish=false;
+  units[MISSILE].listId=LIST_PALACE;
+  units[MISSILE].subListId=0;
 
 
-  // Unit        : Saboteur
-  // Description : Special infantry unit, moves like trike, deadly as hell, not detectable on radar!
+  // Unit        : Sandworm
   units[SANDWORM].speed = 3; // very fast
   units[SANDWORM].bmp = (BITMAP *)gfxdata[UNIT_SANDWORM].dat;
   units[SANDWORM].hp = 9999;
@@ -561,8 +606,6 @@ void install_units()
 
   // Unit        : <name>
   // Description : <description>
-
-
 
 }
 

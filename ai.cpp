@@ -39,6 +39,7 @@ void cAIPlayer::init(int iID) {
 
     TIMER_attack = (700 + rnd(400));
 
+    TIMER_Upgrades = 50;
     TIMER_BuildUnits = 300; // give m_Player advantage to build his stuff first, before computer grows his army
 //    TIMER_blooms = 200;
     TIMER_blooms = 50;
@@ -87,7 +88,7 @@ bool cAIPlayer::BUILD_UNIT(int iUnitType) {
     }
 
     // In mission 9 there are only WOR's, so make a special hack hack for that ;)
-    if (game.iMission >= 8) {
+    if (game.bSkirmish == false && game.iMission >= 8) {
         if (iUnitType == INFANTRY) iUnitType = TROOPERS;
         if (iUnitType == SOLDIER) iUnitType = TROOPER;
     }
@@ -96,9 +97,19 @@ bool cAIPlayer::BUILD_UNIT(int iUnitType) {
         if (iUnitType == TRIKE) iUnitType = RAIDER;
     }
 
-    bool bAllowed = canAIBuildUnit(ID, iUnitType);
+    cantBuildReason reason = canAIBuildUnit(ID, iUnitType);
 
-    if (!bAllowed) {
+    if (reason != cantBuildReason::NONE) {
+        if (reason == cantBuildReason::REQUIRES_UPGRADE) {
+            // try to build upgrade instead?
+            cBuildingListItem *upgrade = isUpgradeAvailableToGrantUnit(iUnitType);
+            if (upgrade != nullptr && upgrade->isAvailable() && cPlayer.hasEnoughCreditsFor(upgrade->getCosts())) {
+                char msg[255];
+                sprintf(msg, "BUILD_UNIT: Cannot build %s because I need to upgrade; starting upgrade now.", units[iUnitType].name);
+                logbook(msg);
+                startUpgrading(upgrade->getBuildId());
+            }
+        }
         return false; // do not go further
     }
 
@@ -251,7 +262,7 @@ bool cAIPlayer::isBuildingStructureAwaitingPlacement() const {
     return pItemBuilder->isAnythingBeingBuiltForListIdAwaitingPlacement(LIST_CONSTYARD, 0);
 }
 
-int cAIPlayer::getStructureTypeBeingBuilt() {
+int cAIPlayer::getStructureTypeBeingBuilt() const {
     cBuildingListItem *pItem = getStructureBuildingListItemBeingBuilt();
     if (pItem) {
         return pItem->getBuildId();
@@ -431,6 +442,7 @@ void cAIPlayer::think() {
 
     // Now think about building stuff etc
 	think_buildbase();
+	think_upgrades();
 	think_buildarmy();
 //    think_attack();
 }
@@ -640,6 +652,32 @@ void cAIPlayer::think_attack() {
     sprintf(msg2, "AI [%d] think_attack() - end", ID);
     logbook(msg2);
 
+}
+
+
+void cAIPlayer::think_upgrades() {
+    // prevent human m_Player thinking
+    if (ID == HUMAN) {
+        return; // do not build for human! :)
+    }
+
+    if (TIMER_Upgrades > 0) {
+        TIMER_Upgrades--;
+        return;
+    }
+
+    TIMER_Upgrades = 20;
+
+    // logic for remaining upgrades? (ie super weapons?)
+    cPlayer &cPlayer = player[ID];
+
+    if (cPlayer.hasAtleastOneStructure(HEAVYFACTORY)) {
+        // check if there is an upgrade for MCV available
+        cBuildingListItem *upgrade = isUpgradeAvailableToGrantUnit(MCV);
+        if (upgrade != nullptr && upgrade->isAvailable() && cPlayer.hasEnoughCreditsFor(upgrade->getCosts())) {
+            startUpgrading(upgrade->getBuildId());
+        }
+    }
 }
 
 void cAIPlayer::think_buildarmy() {
@@ -1083,7 +1121,7 @@ int AI_STRUCTYPE(int iUnitType) {
 // This function will do a check what kind of structure is needed to build the unittype
 // Basicly the function returns true when its valid to build the unittype, or false
 // when its impossible (due no structure, money, etc)
-bool canAIBuildUnit(int iPlayer, int iUnitType) {
+cantBuildReason canAIBuildUnit(int iPlayer, int iUnitType) {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
     cPlayer &cPlayer = player[iPlayer];
@@ -1097,7 +1135,7 @@ bool canAIBuildUnit(int iPlayer, int iUnitType) {
         char msg[255];
         sprintf(msg, "canAIBuildUnit: FALSE, because cost %d higher than credits %d", units[iUnitType].cost, cPlayer.credits);
         logbook(msg);
-        return false; // NOPE
+        return cantBuildReason::NOT_ENOUGH_MONEY; // NOPE
     }
 
     // CHECK 2: Aren't we building this already?
@@ -1105,7 +1143,7 @@ bool canAIBuildUnit(int iPlayer, int iUnitType) {
         char msg[255];
         sprintf(msg, "canAIBuildUnit: FALSE, because already building unitType");
         logbook(msg);
-        return false;
+        return cantBuildReason::ALREADY_BUILDING;
     }
 
     int iStrucType = AI_STRUCTYPE(iUnitType);
@@ -1115,13 +1153,19 @@ bool canAIBuildUnit(int iPlayer, int iUnitType) {
         char msg[255];
         sprintf(msg, "canAIBuildUnit: FALSE, because we do not own the required structure type [%s] for this unit: [%s]", structures[iStrucType].name, units[iUnitType].name);
         logbook(msg);
-        return false; // we do not have the building
+        return cantBuildReason::REQUIRES_STRUCTURE;
+    }
+
+    cAIPlayer &aiPlayer = aiplayer[iPlayer];
+    if (!aiPlayer.isUnitAvailableForBuilding(iUnitType)) {
+        // not available to build (not in list)
+        // assume it requires an upgrade?
+        return cantBuildReason::REQUIRES_UPGRADE;
     }
 
     logbook("canAIBuildUnit: ALLOWED");
 
-    // WE MAY BUILD IT!
-    return true;
+    return cantBuildReason::NONE;
 }
 
 int AI_RANDOM_UNIT_TARGET(int iPlayer, int playerIndexToAttack) {
@@ -1408,6 +1452,23 @@ bool cAIPlayer::isStructureAvailableForBuilding(int iStructureType) const {
 }
 
 /**
+ * Checks if the given unitType is available for producing.
+ *
+ * @param iUnitType
+ * @return
+ */
+bool cAIPlayer::isUnitAvailableForBuilding(int iUnitType) const {
+    int listId = units[iUnitType].listId;
+    const cPlayer &cPlayer = player[ID];
+    cBuildingListItem *pItem = cPlayer.getSideBar()->getBuildingListItem(listId, iUnitType);
+    char msg[255];
+    bool result = pItem != nullptr;
+    sprintf(msg, "AI[%d] isUnitAvailableForBuilding(unitType=%d) -> %s", ID, iUnitType, result ? "TRUE" : "FALSE");
+    logbook(msg);
+    return result;
+}
+
+/**
  * Checks if the given structureType is available for upgrading. If so, returns the corresponding cBuildingListItem
  * which can be used later (ie, to execute an upgrade, or check other info)
  *
@@ -1428,6 +1489,31 @@ cBuildingListItem * cAIPlayer::isUpgradeAvailableToGrantStructure(int iStructure
     }
     return nullptr;
 }
+
+
+/**
+ * Checks if the given unitType is available for upgrading. If so, returns the corresponding cBuildingListItem
+ * which can be used later (ie, to execute an upgrade, or check other info)
+ *
+ * @param iUnitTYpe
+ * @return
+ */
+cBuildingListItem * cAIPlayer::isUpgradeAvailableToGrantUnit(int iUnitType) const {
+    const cPlayer &cPlayer = player[ID];
+    cBuildingList *pList = cPlayer.getSideBar()->getList(LIST_UPGRADES);
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *pItem = pList->getItem(i);
+        if (pItem == nullptr) continue;
+        const s_Upgrade &theUpgrade = pItem->getS_Upgrade();
+        if (theUpgrade.providesType != UNIT) continue;
+        if (theUpgrade.providesTypeId == iUnitType) {
+            return pItem;
+        }
+    }
+    return nullptr;
+}
+
+
 
 /**
  * Checks if any Upgrade is in progress for the given listId/sublistId

@@ -13,12 +13,40 @@
 // Computer Opponent variables
 
 // helpers
-bool canAIBuildUnit(int iPlayer, int iUnitType);
 int AI_STRUCTYPE(int iUnitType);
 int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer);
 int AI_RANDOM_UNIT_TARGET(int iPlayer, int playerIndexToAttack);
 
 int CLOSE_SPICE_BLOOM(int iCell);
+
+enum cantBuildReason {
+    /**
+     * Not enough money to build it
+     */
+    NOT_ENOUGH_MONEY,
+
+    /**
+     * The thing to build requires an upgrade
+     */
+    REQUIRES_UPGRADE,
+
+    /**
+     * Already building the thing (does not take queueing into account)
+     */
+    ALREADY_BUILDING,
+
+    /**
+     * Requires a structure to build this (??) - this should not happen (anymore) though
+     */
+    REQUIRES_STRUCTURE,
+
+    /**
+     * There is no reason we can't build it (ie SUCCESS)
+     */
+    NONE
+};
+
+cantBuildReason canAIBuildUnit(int iPlayer, int iUnitType);
 
 // ai specific variables for a m_Player
 class cAIPlayer {
@@ -40,6 +68,7 @@ public:
     int ID; 
 
     int TIMER_BuildUnits;       // when to build units?
+    int TIMER_Upgrades;         //
     int TIMER_attack;           // when to attack
     int TIMER_repair;           // repair
 
@@ -52,6 +81,7 @@ public:
     void think_worm();
     void think_buildarmy();
     void think_buildbase();
+    void think_upgrades();
     void think_attack();
     bool think_buildingplacement();
     void think_spiceBlooms();
@@ -71,15 +101,18 @@ public:
     cBuildingListItem * isBuildingStructure() const;
     bool isBuildingStructureAwaitingPlacement() const;
 
-    int getStructureTypeBeingBuilt();
 
     bool startBuildingUnit(int iUnitType) const;
     void startBuildingStructure(int iStructureType) const;
     void startUpgrading(int iUpgradeType) const;
 
+    bool isUnitAvailableForBuilding(int iUnitType) const;
+    cBuildingListItem * isUpgradeAvailableToGrantUnit(int iUnitType) const;
+
     bool isStructureAvailableForBuilding(int iStructureType) const;
     cBuildingListItem * isUpgradeAvailableToGrantStructure(int iStructureType) const;
 
+    int getStructureTypeBeingBuilt() const;
     cBuildingListItem *getStructureBuildingListItemBeingBuilt() const;
 };
 
