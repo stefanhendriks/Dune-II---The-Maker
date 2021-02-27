@@ -406,6 +406,10 @@ void cAIPlayer::think() {
         return; // AI is not human / skip
     }
 
+    if (game.bSkirmish) {
+        if (!aiplayer[ID].bPlaying) return; // skip non playing AI?
+    }
+
     if (ID == 1) {
         char msg[255];
         sprintf(msg, "AI[%d]: TIMER_think [%d]", ID, TIMER_think);
@@ -434,7 +438,7 @@ void cAIPlayer::think() {
 	think_buildbase();
 	think_upgrades();
 	think_buildarmy();
-//    think_attack();
+    think_attack();
 }
 
 void cAIPlayer::think_repair() {

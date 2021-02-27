@@ -21,7 +21,7 @@ class cItemBuilder;
 
 class cBuildingList {
 public:
-    cBuildingList(int theId);
+    cBuildingList(eListType listType);
 
     ~cBuildingList();
 
@@ -73,8 +73,6 @@ public:
     // set
     void setTimer(int value) { TIMER_progress = value; }
 
-    void setTypeOfList(int value) { typeOfList = value; }
-
     void setStatusPendingUpgrade(int subListId);
 
     void setStatusPendingBuilding(int subListId);
@@ -103,7 +101,7 @@ public:
     * type of list (see cSideBarFactory) , ie 0 = CONSTYARD, last is IX (upgrades), etc.
     * @param value
     */
-    int getType() { return typeOfList; }
+    eListType getType() { return typeOfList; }
 
     void removeAllSublistItems(int sublistId);
 
@@ -136,7 +134,7 @@ private:
 
     int getFreeSlot();
 
-    int typeOfList;
+    eListType typeOfList;
 };
 
 #endif

@@ -33,7 +33,12 @@ public:
 	 */
 	int getBuildId() { return buildId; }
 
+	/**
+	 * The index of the sublist
+	 * @return
+	 */
 	int getSubList() { return subList; }
+
 	eBuildType getBuildType() { return type; }
 	int getBuildCost() const { return cost; }
 	int getProgress() { return progress; }
@@ -101,6 +106,12 @@ public:
 	void setList(cBuildingList *theList) { myList = theList; }
 
 	cBuildingList *getList() { return myList; }	// returns the list it belongs to
+
+    /**
+     * List type (integer)
+     * @return
+     */
+    eListType getListType();
 
     void increaseProgress(int byAmount);
 	void resetProgress() { progress = 0; }

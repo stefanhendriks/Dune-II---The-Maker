@@ -3,7 +3,7 @@
 #include "cBuildingList.h"
 
 
-cBuildingList::cBuildingList(int theId) {
+cBuildingList::cBuildingList(eListType listType) {
 	TIMER_progress = 0;
 	lastClickedId = 0;
 	buttonIconIdPressed = 0;	// the button to draw at the left of the list
@@ -11,7 +11,7 @@ cBuildingList::cBuildingList(int theId) {
 	buttonDrawY = 0;
 	available = false;		 // is this list available?
 	memset(items, 0, sizeof(items));
-	typeOfList = theId;
+	typeOfList = listType;
 	maxItems = 0;
 	acceptsOrders = true; // at default true, will be set to FALSE/TRUE by starport logic for starport list only
     m_itemBuilder = nullptr;
@@ -154,7 +154,6 @@ bool cBuildingList::removeItemFromList(int position) {
 	    // first remove this, before deleting it!
         m_itemBuilder->removeItemFromList(item);
 	}
-
 
 	delete item;
     items[position] = nullptr;

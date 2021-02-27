@@ -17,7 +17,9 @@ class cItemBuilder {
 
 		// add item to the list
 		void addItemToList(cBuildingListItem * item);
-		void removeItemFromList(int position);
+        void removeItemsFromListType(eListType listType, int subListId);
+        void removeItemFromList(int position);
+        void removeItemsByBuildId(eBuildType buildType, int buildId);
 		void removeAllItems();
 
 		bool isBuildListItemTheFirstOfItsListType(cBuildingListItem *item);
