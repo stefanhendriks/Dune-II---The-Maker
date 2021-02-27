@@ -247,8 +247,4 @@ void THINK_REINFORCEMENTS();
 void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType);
 void INIT_REINFORCEMENT();
 
-
-int CLOSE_SPICE_BLOOM(int iCell);
-
-
 #endif

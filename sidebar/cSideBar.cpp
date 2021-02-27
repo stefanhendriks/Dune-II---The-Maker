@@ -1,4 +1,6 @@
 #include "../include/d2tmh.h"
+#include "cSideBar.h"
+
 
 cSideBar::cSideBar(cPlayer * thePlayer) : m_Player(thePlayer) {
     assert(thePlayer != nullptr && "Expected player to be not null!");
@@ -90,13 +92,16 @@ void cSideBar::thinkInteraction() {
 		if (i == selectedListID) continue; // skip selected list for button interaction
 		cBuildingList *list = getList(i);
         if (list == nullptr) continue;
-		if (list->isAvailable() == false) continue; // not available, so no interaction possible
+		if (!list->isAvailable()) continue; // not available, so no interaction possible
 
 		// interaction is possible.
 		if (list->isOverButton(mouse_x, mouse_y)) {
 			if (MOUSE_BTN_LEFT()) {
 				// clicked on it. Set focus on this one
 				selectedListID = i;
+				char msg[255];
+				sprintf(msg, "selectedListID becomes [%d], m_PlayerId = [%d]", i, m_Player->getId());
+				logbook(msg);
                 play_sound_id(SOUND_BUTTON, 64); // click sound
 				break;
 			}
@@ -112,7 +117,7 @@ void cSideBar::thinkInteraction() {
 
     if (!list->isAvailable()) {
         // unselect this list
-        player[HUMAN].getSideBar()->setSelectedListId(-1);
+        m_Player->getSideBar()->setSelectedListId(-1);
         return;
     }
 
@@ -135,6 +140,63 @@ void cSideBar::thinkInteraction() {
     if (item == nullptr) return;
 
     // mouse is over item - draw "messagebar"
+    drawMessageBarWithItemInfo(list, item);
+
+    if (cMouse::isLeftButtonClicked()) {
+        if (list->getType() != LIST_STARPORT) {
+            // icon is in "Place it" mode, meaning if clicked the "place the thing" state should be set
+            if (item->shouldPlaceIt()) {
+                game.bPlaceIt = true;
+            } else {
+                startBuildingItemIfOk(item);
+            }
+        } else {
+            // add orders
+            if (orderProcesser->acceptsOrders()) {
+                if (m_Player->credits >= item->getBuildCost()) {
+                    item->increaseTimesOrdered();
+                    orderProcesser->addOrder(item);
+                    m_Player->substractCredits(item->getBuildCost());
+                }
+            }
+        }
+    }
+
+    if (cMouse::isRightButtonClicked()) {
+        // anything but the starport can 'build' things
+        if (list->getType() != LIST_STARPORT) {
+            if (item->getTimesToBuild() > 0) {
+                item->decreaseTimesToBuild();
+                item->setPlaceIt(false);
+
+                if (item->getTimesToBuild() == 0) {
+                    cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "(Human) Item is last item in queue, will give money back.");
+                    // only give money back for item that is being built
+                    if (item->isBuilding()) {
+                        // calculate the amount of money back:
+                        m_Player->giveCredits(item->getRefundAmount());
+                        m_Player->getBuildingListUpdater()->onBuildItemCancelled(item);
+                    }
+                    item->setIsBuilding(false);
+                    item->resetProgress();
+                    cItemBuilder *itemBuilder = m_Player->getItemBuilder();
+                    itemBuilder->removeItemFromList(item);
+                }
+                // else, only the number is decreased (used for queueing)
+            }
+        } else {
+            assert(orderProcesser);
+            if (!orderProcesser->isOrderPlaced()) {
+                if (item->getTimesOrdered() > 0) {
+                    item->decreaseTimesOrdered();
+                    orderProcesser->removeOrder(item);
+                }
+            }
+        }
+    }
+}
+
+void cSideBar::drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem *item) const {
     char msg[255];
     if (list->isAcceptsOrders()) {
         // build time is in global time units , using a timer cap of 35 * 5 miliseconds = 175 miliseconds
@@ -161,70 +223,56 @@ void cSideBar::thinkInteraction() {
 
         drawManager->getMessageDrawer()->setMessage(msg);
     }
+}
 
-    if (cMouse::isLeftButtonClicked()) {
-        if (list->getType() != LIST_STARPORT) {
-
-            // icon is in "Place it" mode, meaning if clicked the "place the thing" state should be set
-            if (item->shouldPlaceIt()) {
-                game.bPlaceIt = true;
-            } else {
-                if (item->isAvailable()) {
-                    // Item should not be placed, so it can be built
-                    cItemBuilder *itemBuilder = m_Player->getItemBuilder();
-                    bool firstOfItsListType = itemBuilder->isBuildListItemTheFirstOfItsListType(item);
-
-                    if (item->isQueuable()) {
-                        itemBuilder->addItemToList(item);
-                    } else if (firstOfItsListType) { // may only build if there is nothing else in the list type being built
-
-                        itemBuilder->addItemToList(item);
-                    }
-                    list->setLastClickedId(item->getSlotId());
-                }
-            }
-        } else {
-            // add orders
-            if (orderProcesser->acceptsOrders()) {
-                if (m_Player->credits >= item->getBuildCost()) {
-                    item->increaseTimesOrdered();
-                    orderProcesser->addOrder(item);
-                    m_Player->substractCredits(item->getBuildCost());
-                }
-            }
-        }
+bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
+    if (item == nullptr) return false;
+    if (item->shouldPlaceIt()) {
+        logbook("Attempting to build an item that is in the \"Place it\" mode - which should not happen - ignoring!");
+        return false;
     }
 
-    if (cMouse::isRightButtonClicked()) {
-        // anything but the starport can 'build' things
-        if (list->getType() != LIST_STARPORT) {
-            if (item->getTimesToBuild() > 0) {
-                item->decreaseTimesToBuild();
-                item->setPlaceIt(false);
+    cBuildingList *list = item->getList();
+    if (item->isAvailable()) {
+        // Item should not be placed, so it can be built
+        cItemBuilder *itemBuilder = m_Player->getItemBuilder();
+        bool firstOfItsListType = itemBuilder->isBuildListItemTheFirstOfItsListType(item);
 
-                if (item->getTimesToBuild() == 0) {
-                    cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
-                    // only give money back for item that is being built
-                    if (item->isBuilding()) {
-                        // calculate the amount of money back:
-                        player[HUMAN].credits += item->getRefundAmount();
-                        m_Player->getBuildingListUpdater()->onBuildItemCancelled(item);
-                    }
-                    item->setIsBuilding(false);
-                    item->setProgress(0);
-                    cItemBuilder *itemBuilder = m_Player->getItemBuilder();
-                    itemBuilder->removeItemFromList(item);
-                }
-                // else, only the number is decreased (used for queueing)
-            }
-        } else {
-            assert(orderProcesser);
-            if (orderProcesser->isOrderPlaced() == false) {
-                if (item->getTimesOrdered() > 0) {
-                    item->decreaseTimesOrdered();
-                    orderProcesser->removeOrder(item);
-                }
-            }
+        if (item->isQueuable()) {
+            itemBuilder->addItemToList(item);
+        } else if (firstOfItsListType) { // may only build if there is nothing else in the list type being built
+            itemBuilder->addItemToList(item);
         }
+        list->setLastClickedId(item->getSlotId());
+        return true;
     }
+    return false;
+}
+
+/**
+ * Starts building item of type <b>buildId</b>, returns false if the construction cannot commence.
+ * @param listId
+ * @param buildId
+ * @return
+ */
+bool cSideBar::startBuildingItemIfOk(int listId, int buildId) const {
+    cBuildingListItem *pItem = getBuildingListItem(listId, buildId);
+    if (pItem) {
+        return startBuildingItemIfOk(pItem);
+    } else {
+        char msg[255];
+        sprintf(msg, "ERROR: startBuildingItemIfOk with listId[%d] and buildId[%d] did not find an item to build!", listId, buildId);
+        logbook(msg);
+    }
+    return false;
+}
+
+cBuildingListItem * cSideBar::getBuildingListItem(int listId, int buildId) const {
+    if (listId < 0) return nullptr;
+    if (listId >= LIST_MAX) return nullptr;
+
+    cBuildingList *pList = lists[listId];
+    if (pList == nullptr) return nullptr;
+
+    return pList->getItemByBuildId(buildId);
 }

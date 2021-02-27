@@ -263,19 +263,27 @@ int cStructureFactory::getFreeSlot() {
 }
 
 /**
+<p>
 	This function will check if at iCell (the upper left corner of a structure) a structure
 	can be placed of type "iStructureType". If iUnitIDTOIgnore is > -1, then if any unit is
 	supposidly 'blocking' this structure from placing, it will be ignored.
-
+ </p>
+<p>
 	Ie, you will use the iUnitIDToIgnore value when you want to create a Const Yard on the
 	location of an MCV.
-
-	Returns:
-	-2  = ERROR / Cannot be placed at this location with the params given.
-	-1  = PERFECT / Can be placed, and entire structure has pavement (slabs)
-	>=0 = GOOD but it is not slabbed all (so not perfect)
+</p>
+ <p>
+ <b>Returns:</b><br>
+ <ul>
+ <li>-2  = ERROR / Cannot be placed at this location with the params given.</li>
+ <li>-1  = PERFECT / Can be placed, and entire structure has pavement (slabs)</li>
+ <li>>=0 = GOOD but it is not slabbed all (so not perfect)</li>
+ <ul>
+ </p>
 **/
 int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDToIgnore) {
+    if (iCell < 0) return -2;
+
     // checks if this structure can be placed on this cell
     int w = structures[iStructureType].bmp_width/32;
     int h = structures[iStructureType].bmp_height/32;

@@ -17,15 +17,15 @@
 // forward declaration
 class cPlayer;
 
-// List ID's corresponding buttons
-#define LIST_NONE		0
-#define LIST_CONSTYARD	1
-#define LIST_FOOT_UNITS	2 // infantry, soldier, trooper, troopers, etc.
-#define LIST_UNITS	    3 // quad, trike, tanks, air units
-#define LIST_STARPORT	4 // special list to order stuff
-#define LIST_PALACE		5 // REMOVE? (ie super weapon icon should always show top left/right?)
-#define LIST_UPGRADES	6 // possible upgrades
-#define LIST_MAX		7 // max amount of lists
+//// List ID's corresponding buttons
+//#define LIST_NONE        0
+//#define LIST_CONSTYARD    1
+//#define LIST_FOOT_UNITS    2 // infantry, soldier, trooper, troopers, etc.
+//#define LIST_UNITS        3 // quad, trike, tanks, air units
+//#define LIST_STARPORT    4 // special list to order stuff
+//#define LIST_PALACE        5 // REMOVE? (ie super weapon icon should always show top left/right?)
+//#define LIST_UPGRADES    6 // possible upgrades
+//#define LIST_MAX        7 // max amount of lists
 
 #define SUBLIST_CONSTYARD  0  // structures
 #define SUBLIST_LIGHTFCTRY 1 // quad, trike, etc
@@ -46,46 +46,57 @@ class cPlayer;
  */
 class cSideBar {
 
-	public:
-		cSideBar(cPlayer * thePlayer);
-		~cSideBar();
+public:
+    cSideBar(cPlayer *thePlayer);
 
-		cBuildingList * getList(int listId) { return lists[listId]; }
-		void setList(int listId, cBuildingList *list);
-		int getSelectedListID() { return selectedListID; }
+    ~cSideBar();
 
-		void think();	// timer based
-		void thinkInteraction(); // fps based
+    cBuildingList *getList(int listId) { return lists[listId]; }
 
-		// set
-		// no set Player, re-create Sidebar object instead if needed
-		void setSelectedListId(int value) { selectedListID = value; }
+    bool startBuildingItemIfOk(int listId, int buildId) const;
 
-		static const int VerticalCandyBarWidth = 24;
-		static const int SidebarWidthWithoutCandyBar = 200;
-		static const int SidebarWidth = SidebarWidthWithoutCandyBar + VerticalCandyBarWidth; // including vertical candy bar
-		static const int TopBarHeight = 42;
-		static const int HeightOfMinimap = 200 + 8;
-		static const int WidthOfMinimap = 200;
-		static const int PowerBarMargingHeight = 32; // for a power icon
+    void setList(int listId, cBuildingList *list);
 
-		// Horizontal candybar is below minimap
-        static const int HorizontalCandyBarHeight = 12;
+    int getSelectedListID() { return selectedListID; }
+    cBuildingListItem * getBuildingListItem(int listId, int buildId) const;
 
-        static const int HeightOfListButton = 34;
+    void think();    // timer based
+    void thinkInteraction(); // fps based
 
-        static const int TotalHeightBeforePowerBarStarts = TopBarHeight + HeightOfMinimap + HorizontalCandyBarHeight + PowerBarMargingHeight;
+    // set
+    // no set Player, re-create Sidebar object instead if needed
+    void setSelectedListId(int value) { selectedListID = value; }
+
+    static const int VerticalCandyBarWidth = 24;
+    static const int SidebarWidthWithoutCandyBar = 200;
+    static const int SidebarWidth = SidebarWidthWithoutCandyBar + VerticalCandyBarWidth; // including vertical candy bar
+    static const int TopBarHeight = 42;
+    static const int HeightOfMinimap = 200 + 8;
+    static const int WidthOfMinimap = 200;
+    static const int PowerBarMargingHeight = 32; // for a power icon
+
+    // Horizontal candybar is below minimap
+    static const int HorizontalCandyBarHeight = 12;
+
+    static const int HeightOfListButton = 34;
+
+    static const int TotalHeightBeforePowerBarStarts =
+            TopBarHeight + HeightOfMinimap + HorizontalCandyBarHeight + PowerBarMargingHeight;
 
 private:
 
-        // the lists:
-		cBuildingList * lists[LIST_MAX];
-		cPlayer * m_Player;
+    // the lists:
+    cBuildingList *lists[LIST_MAX];
+    cPlayer *m_Player;
 
-		int selectedListID;
+    int selectedListID;
 
-		// methods
-		void thinkAvailabilityLists();
+    // methods
+    void thinkAvailabilityLists();
+
+    bool startBuildingItemIfOk(cBuildingListItem *item) const;
+
+    void drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem *item) const;
 };
 
 #endif /* CSIDEBAR_H_ */

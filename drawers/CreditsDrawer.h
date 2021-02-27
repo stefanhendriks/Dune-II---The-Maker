@@ -23,6 +23,8 @@ public:
 
 	BITMAP *getBitmap() { return bmp; }
 
+	void setPlayer(cPlayer * thePlayer);
+
 private:
 	cPlayer * m_Player; //
 	BITMAP *bmp;	 // a bitmap being drawn on

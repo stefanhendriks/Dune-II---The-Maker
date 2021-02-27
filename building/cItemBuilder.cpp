@@ -54,7 +54,7 @@ void cItemBuilder::think() {
         // not building now, but in list.
         // Build as soon as possible.
         if (!item->isBuilding()) {
-            bool anotherItemOfSameListIsBeingBuilt = isASimilarItemBeingBuilt(item);
+            bool anotherItemOfSameListIsBeingBuilt = isAnotherBuildingListItemInTheSameListBeingBuilt(item);
 
             // only start building this, if no other item is already being built in the same list.
             if (!anotherItemOfSameListIsBeingBuilt) {
@@ -94,8 +94,10 @@ void cItemBuilder::think() {
         // DONE building
         if (item->getBuildType() == STRUCTURE) {
             // play voice when placeIt is false
-            if (!item->shouldPlaceIt() && (m_Player->isHuman())) {
-                play_voice(SOUND_VOICE_01_ATR); // "Construction Complete"
+            if (!item->shouldPlaceIt()) {
+                if (m_Player->isHuman()) {
+                    play_voice(SOUND_VOICE_01_ATR); // "Construction Complete"
+                }
                 item->setPlaceIt(true);
             }
         } else if (item->getBuildType() == UNIT) {
@@ -104,14 +106,14 @@ void cItemBuilder::think() {
 
             assert(item->getTimesToBuild() > -1);
 
-            // TODO: Remove duplication, which also exists in AI::think_building()
+            // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
             if (!units[item->getBuildId()].airborn) {
                 int structureTypeByItem = structureUtils.findStructureTypeByTypeOfList(item);
                 assert(structureTypeByItem > -1);
                 int structureToDeployUnit = structureUtils.findStructureToDeployUnit(m_Player, structureTypeByItem);
                 if (structureToDeployUnit > -1) {
                     cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
-                    // TODO: Remove duplication, which also exists in AI::think_building()
+                    // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
                     int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
                     if (cell > -1) {
                         pStructureToDeploy->setAnimating(true); // animate
@@ -181,7 +183,7 @@ void cItemBuilder::think() {
         if (item->getTimesToBuild() == 0) {	// no more items to build
             // stop building (set flags)
             item->setIsBuilding(false);
-            item->setProgress(0); // set back progress
+            item->resetProgress(); // set back progress
 
             // remove this item from the build list (does not delete item, so pointer is still valid)
             removeItemFromList(item);
@@ -196,7 +198,7 @@ void cItemBuilder::think() {
 
         } else {
             // item still needs to be built more times.
-            item->setProgress(0); // set back progress
+            item->resetProgress(); // set back progress
             startBuilding(item);
         }
 	}
@@ -296,7 +298,12 @@ cBuildingListItem *cItemBuilder::findBuildingListItemOfSameListAs(cBuildingListI
 	return NULL;
 }
 
-bool cItemBuilder::isASimilarItemBeingBuilt(cBuildingListItem *item) {
+/**
+ * Checks if another cBuildingListItem exists which has the same list ID, and is building. If so returns true.
+ * @param item
+ * @return
+ */
+bool cItemBuilder::isAnotherBuildingListItemInTheSameListBeingBuilt(cBuildingListItem *item) {
 	assert(item != NULL);
 
 	// get through the build list and find an item that is of the same list.
@@ -312,6 +319,82 @@ bool cItemBuilder::isASimilarItemBeingBuilt(cBuildingListItem *item) {
 	}
 	return false;
 }
+
+/**
+ * Returns true if any item is being built for the listType / subListType.
+ * If you wish to know which item , use getListItemWhichIsBuilding()
+ * @param listType
+ * @param sublistType
+ * @return
+ */
+bool cItemBuilder::isAnythingBeingBuiltForListId(int listType, int sublistType) {
+    cBuildingListItem *pItem = getListItemWhichIsBuilding(listType, sublistType);
+    return pItem != nullptr;
+}
+
+/**
+ * Returns true if any item awaits placement for the listType / subListType.
+ * If you wish to know which item , use getListItemWhichIsAwaitingPlacement()
+ * @param listType
+ * @param sublistType
+ * @return
+ */
+bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingPlacement(int listType, int sublistType) {
+    cBuildingListItem *pItem = getListItemWhichIsAwaitingPlacement(listType, sublistType);
+    return pItem != nullptr;
+}
+
+/**
+ * Iterates over listType and subList, finds any item that isBuilding() returns true.
+ * @param listType
+ * @param sublistType
+ * @return
+ */
+cBuildingListItem *cItemBuilder::getListItemWhichIsBuilding(int listType, int sublistType) {
+    cBuildingListItem *pItem = nullptr; // get through the build list and find an item that is of the same list.
+
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *listItem = getItem(i);
+        if (listItem) {
+            cBuildingList *pList = listItem->getList();
+            if (listType == pList->getType() &&
+                sublistType == listItem->getSubList()) {
+                if (listItem->isBuilding()) {
+                    pItem = listItem;
+                    break;
+                }
+            }
+        }
+    }
+    return pItem;
+}
+
+/**
+ * Iterates over listType and subList, finds any item that isBuilding() returns true.
+ * @param listType
+ * @param sublistType
+ * @return
+ */
+cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingPlacement(int listType, int sublistType) {
+    cBuildingListItem *pItem = nullptr;
+
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *listItem = getItem(i);
+        if (listItem) {
+            cBuildingList *pList = listItem->getList();
+            // check if list is available
+            if (pList && listType == pList->getType() &&
+                sublistType == listItem->getSubList()) {
+                if (listItem->shouldPlaceIt()) {
+                    pItem = listItem;
+                    break;
+                }
+            }
+        }
+    }
+    return pItem;
+}
+
 
 /**
  * Returns true when the buildingListItem is the first built in its list.
@@ -349,6 +432,23 @@ void cItemBuilder::removeItemFromList(cBuildingListItem *item) {
 }
 
 /**
+ * Finds item being built by eBuildType (UNIT/STRUCTURE/SPECIAL) and BuildId (TRIKE, QUAD, WINDTRAP, NUKE)
+ * @param buildType
+ * @param iBuildId
+ * @return
+ */
+cBuildingListItem * cItemBuilder::getBuildingListItem(eBuildType buildType, int iBuildId) {
+    for (int i = 0; i < MAX_ICONS; i++) {
+        cBuildingListItem *pItem = items[i];
+        if (pItem == nullptr) continue;
+        if (pItem->getBuildType() != buildType) continue;
+        if (pItem->getBuildId() != iBuildId) continue;
+        return pItem;
+    }
+    return nullptr;
+}
+
+/**
  * Remove item from list. This does do any delete operation, it merely sets the pointer to NULL. This is because
  * the item builder does not own any of the items being built.
  *
@@ -374,3 +474,25 @@ void cItemBuilder::startBuilding(cBuildingListItem *item) {
     item->setIsBuilding(true);
     buildingListUpdater->onBuildItemStarted(item);
 }
+
+void cItemBuilder::removeItemsFromListType(eListType listType, int subListId) {
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *theItem = getItem(i);
+        if (theItem == nullptr) continue;
+        if (theItem->getListType() != listType) continue;
+        if (theItem->getSubList() != subListId) continue;
+        removeItemFromList(theItem);
+    }
+}
+
+void cItemBuilder::removeItemsByBuildId(eBuildType buildType, int buildId) {
+    for (int i = 0; i < MAX_ICONS; i++) {
+        cBuildingListItem *pItem = items[i];
+        if (pItem == nullptr) continue;
+        if (pItem->getBuildType() != buildType) continue;
+        if (pItem->getBuildId() != buildId) continue;
+
+        removeItemFromList(pItem);
+    }
+}
+

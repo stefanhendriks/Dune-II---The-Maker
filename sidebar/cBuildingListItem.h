@@ -24,16 +24,45 @@ public:
 	// gettters
 	int getTotalBuildTime() { return totalBuildTime; }
 	int getIconId() { return icon; }
+
+	/**
+	 * The buildId is the 'type', ie if eBuildType == STRUCTURE, then buildId refers to what *kind* of structure. Ie, the
+	 * structure type. This could be WINDTRAP, REFINERY, etc. If eBuildType is UNIT, then buildId is for TANK, QUAD, etc.
+	 *
+	 * @return
+	 */
 	int getBuildId() { return buildId; }
+
+	/**
+	 * The index of the sublist
+	 * @return
+	 */
 	int getSubList() { return subList; }
+
 	eBuildType getBuildType() { return type; }
 	int getBuildCost() const { return cost; }
 	int getProgress() { return progress; }
 	bool isBuilding() { return building; }
 	bool isState(eBuildingListItemState value) { return state == value; }
+
+	/**
+	 * Returns if item is available to build, if not, then it won't be drawn
+	 * @return
+	 */
 	bool isAvailable() { return isState(eBuildingListItemState::AVAILABLE); }
+
+	/**
+	 * Item is pending because upgrade is in progress (used for building items)
+	 * @return
+	 */
 	bool isPendingUpgrading() { return isState(eBuildingListItemState::PENDING_UPGRADE); }
+
+	/**
+	 * Item is pending because building is in progress (used for upgrade items)
+	 * @return
+	 */
 	bool isPendingBuilding() { return isState(eBuildingListItemState::PENDING_BUILDING); }
+
 	int getTimesToBuild() { return timesToBuild; }
 	int getSlotId() { return slotId; } // return index of items[] array (set after adding item to list, default is < 0)
 	int getTimesOrdered() { return timesOrdered; }
@@ -54,7 +83,6 @@ public:
 	// setters
 	void setIconId(int value) { icon = value; }
 	void setBuildCost(int value) { cost = value; }
-	void setProgress(int value) { progress = value; }
 	void setIsBuilding(bool value) { building = value; }
 	void setStatusPendingUpgrade() { state = eBuildingListItemState::PENDING_UPGRADE; }
 	void setStatusAvailable() { state = eBuildingListItemState::AVAILABLE; }
@@ -79,7 +107,14 @@ public:
 
 	cBuildingList *getList() { return myList; }	// returns the list it belongs to
 
+    /**
+     * List type (integer)
+     * @return
+     */
+    eListType getListType();
+
     void increaseProgress(int byAmount);
+	void resetProgress() { progress = 0; }
 
     int getBuildTime();
 
@@ -90,6 +125,8 @@ public:
     void resetTimesOrdered();
 
 private:
+	void setProgress(int value) { progress = value; }
+
 	int icon;				// the icon ID to draw (from datafile)
 	int buildId;			// the ID to build .. (ie TRIKE, or CONSTYARD)
 	eBuildType type;		// .. of this type of thing (ie, UNIT or STRUCTURE)
@@ -102,7 +139,7 @@ private:
 	int slotId;			 	// return index of items[] array (set after adding item to list, default is < 0)
 
 	float creditsPerProgressTime; // credits to pay for each progress point. (calculated at creation)
-	bool placeIt;			// when true, this item is ready for placement.
+	bool placeIt;			// when true, this item is ready for placement
 	bool queuable;			// when true, this item can be ordered multiple times to build
 
 	int totalBuildTime;		// total time it takes to build.

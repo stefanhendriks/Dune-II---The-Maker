@@ -20,6 +20,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <vector>
+
 class cPlayer {
 
 	public:
@@ -43,7 +45,6 @@ class cPlayer {
 		bool bEnoughPower() const;
 		bool bEnoughSpiceCapacityToStoreCredits() const;
 
-		int TIMER_think;        // timer for thinking itself (calling main routine)
 		int TIMER_attack;       // -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 
 		void substractCredits(int amount) {
@@ -65,6 +66,7 @@ class cPlayer {
 		cPlayerDifficultySettings *getDifficultySettings() const { return difficultySettings; }
 		cItemBuilder *getItemBuilder() const { return itemBuilder; }
 		cSideBar *getSideBar() const { return sidebar; }
+		std::string getHouseName();
 		int getHouse() const { return house; }
 		eHouseBitFlag getHouseBitFlag();
 
@@ -84,7 +86,9 @@ class cPlayer {
 		    return m_Human;
 		}
 
+		int getAmountOfUnitsForType(int unitType) const;
 		int getAmountOfStructuresForType(int structureType) const;
+        int getAmountOfUnitsForType(std::vector<int> unitTypes) const;
 		bool hasRadarAndEnoughPower() const;
 
 		// delete
@@ -131,6 +135,10 @@ class cPlayer {
             if (structureType >= MAX_STRUCTURETYPES) return;
             iStructureUpgradeLevel[structureType]++;
         }
+
+    void giveCredits(float amountToGive);
+
+    float hasEnoughCreditsForUnit(int unitType);
 
 private:
 		int getRGBColorForHouse(int houseId);

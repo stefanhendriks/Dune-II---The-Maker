@@ -41,11 +41,11 @@ int cBuildingListFactory::getButtonDrawXStart() {
  * Initialize list according to techlevel. This will also remove all previously set icons.
  *
  * @param list
- * @param listId
+ * @param listType
  * @param techlevel
  * @param house
  */
-void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int house) {
+void cBuildingListFactory::initializeList(cBuildingList *list, eListType listType, int house) {
 	assert(list != NULL);
 
 	// first clear the list
@@ -63,7 +63,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
 	list->setAvailable(false);
 
 	// now set it up
-	if (listId == LIST_CONSTYARD) {
+	if (listType == LIST_CONSTYARD) {
 		list->setButtonDrawX(startX);
 		list->setButtonIconIdPressed(LIST_BTN_CONSTYARD);
 		list->setButtonIconIdUnpressed(LIST_BTN_CONSTYARD);
@@ -74,7 +74,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
 
 	// other lists, have 40 pixels more Y , but the X remains the same
 	// now set it up
-	if (listId == LIST_FOOT_UNITS) {
+	if (listType == LIST_FOOT_UNITS) {
         list->setButtonDrawX(startX);
         list->setButtonIconIdPressed(LIST_BTN_INFANTRY);
         list->setButtonIconIdUnpressed(LIST_BTN_INFANTRY);
@@ -82,7 +82,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
 
     startX += widthOfButtonIncludingMargin;
 
-	if (listId == LIST_UNITS) {
+	if (listType == LIST_UNITS) {
 		list->setButtonDrawX(startX);
 		list->setButtonIconIdPressed(LIST_BTN_FACTORY);
 		list->setButtonIconIdUnpressed(LIST_BTN_FACTORY);
@@ -90,7 +90,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
 
 	startX += widthOfButtonIncludingMargin;
 
-	if (listId == LIST_STARPORT) {
+	if (listType == LIST_STARPORT) {
         list->setButtonDrawX(startX);
 		list->setButtonIconIdPressed(LIST_BTN_STARPORT);
 		list->setButtonIconIdUnpressed(LIST_BTN_STARPORT);
@@ -98,7 +98,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
 
 	startX += widthOfButtonIncludingMargin;
 
-	if (listId == LIST_PALACE) {
+	if (listType == LIST_PALACE) {
         list->setButtonDrawX(startX);
 		list->setButtonIconIdPressed(LIST_BTN_PALACE);
 		list->setButtonIconIdUnpressed(LIST_BTN_PALACE);
@@ -119,7 +119,7 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
 
 	startX += widthOfButtonIncludingMargin;
 
-	if (listId == LIST_UPGRADES) {
+	if (listType == LIST_UPGRADES) {
         list->setButtonDrawX(startX);
         // temp, use CONST YARD
 		list->setButtonIconIdPressed(LIST_BTN_UPGRADE);
@@ -133,14 +133,13 @@ void cBuildingListFactory::initializeList(cBuildingList *list, int listId, int h
 /**
  * Create new instance of list, initialize and return it.
  *
- * @param listId
+ * @param listType
  * @param techlevel
  * @return
  */
-cBuildingList * cBuildingListFactory::createList(int listId, int house) {
-	cBuildingList * list = new cBuildingList(listId);
-    initializeList(list, listId, house);
-	list->setTypeOfList(listId); // list id == type (see cSideBarFactory)
+cBuildingList * cBuildingListFactory::createList(eListType listType, int house) {
+	cBuildingList * list = new cBuildingList(listType);
+    initializeList(list, listType, house);
 	return list;
 }
 

@@ -297,7 +297,14 @@ public:
         return ABS_length(0, 0, maxWidthDistance, maxHeightDistance);
     }
 
-	private:
+    /**
+     * Returns the amount of cells of a specific type
+     * @param cellType
+     * @return
+     */
+    int getTotalCountCellType(int cellType);
+
+private:
         tCell cell[MAX_CELLS];
 
     	bool iVisible[MAX_CELLS][MAX_PLAYERS];      // visibility for <player>

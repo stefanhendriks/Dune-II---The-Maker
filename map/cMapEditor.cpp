@@ -22,6 +22,11 @@ void cMapEditor::clearMap(int terrainType) {
 
 void cMapEditor::createCell(int cell, int terrainType, int tile) {
     if (cell < 0) return; // do nothing
+    if (cell >= MAX_CELLS) return;
+    if (terrainType > TERRAIN_WALL) return;
+    if (terrainType < TERRAIN_BLOOM) return;
+    if (tile < 0) return;
+    if (tile > 16) return;
 
 	assert(cell > -1);
 	assert(cell < MAX_CELLS);

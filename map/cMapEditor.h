@@ -21,6 +21,14 @@ class cMapEditor {
 		void removeSingleRockSpots();		// when single rock cells have less than 3 neighbors, remove them
 
 		void createField(int cell, int terraintType, int size); // create a field on the map
+
+		/**
+		 * Sets/changes cell state. If cell < 0 will do nothing.
+		 *
+		 * @param cell
+		 * @param terrainType
+		 * @param tile
+		 */
 		void createCell(int cell, int terrainType, int tile);
 
 		bool isSpecificTerrainType(int cell, int terrainType);

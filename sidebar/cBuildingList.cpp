@@ -3,7 +3,7 @@
 #include "cBuildingList.h"
 
 
-cBuildingList::cBuildingList(int theId) {
+cBuildingList::cBuildingList(eListType listType) {
 	TIMER_progress = 0;
 	lastClickedId = 0;
 	buttonIconIdPressed = 0;	// the button to draw at the left of the list
@@ -11,9 +11,10 @@ cBuildingList::cBuildingList(int theId) {
 	buttonDrawY = 0;
 	available = false;		 // is this list available?
 	memset(items, 0, sizeof(items));
-	typeOfList = theId;
+	typeOfList = listType;
 	maxItems = 0;
 	acceptsOrders = true; // at default true, will be set to FALSE/TRUE by starport logic for starport list only
+    m_itemBuilder = nullptr;
 }
 
 cBuildingList::~cBuildingList() {
@@ -27,6 +28,7 @@ cBuildingList::~cBuildingList() {
 	memset(items, 0, sizeof(items));
 	maxItems = 0;
 	acceptsOrders = false;
+    m_itemBuilder = nullptr;
 }
 
 cBuildingListItem * cBuildingList::getItem(int i) {
@@ -146,6 +148,11 @@ bool cBuildingList::removeItemFromList(int position) {
 	if (item == nullptr) {
 		// item can be null, in that case do nothing.
 		return false;
+	}
+
+	if (m_itemBuilder) {
+	    // first remove this, before deleting it!
+        m_itemBuilder->removeItemFromList(item);
 	}
 
 	delete item;
@@ -298,4 +305,14 @@ void cBuildingList::resetTimesOrderedForAllItems() {
         if (pItem == nullptr) continue;
         pItem->resetTimesOrdered();
     }
+}
+
+cBuildingListItem *cBuildingList::getFirstItemInSubList(int sublistId) {
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *pItem = getItem(i);
+        if (pItem == nullptr) continue;
+        if (pItem->getSubList() != sublistId) continue;
+        return pItem;
+    }
+    return nullptr;
 }
