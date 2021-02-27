@@ -309,92 +309,90 @@ bool cGame::isMusicPlaying() {
 
 void cGame::poll() {
 	cMouse::updateState();
-	cGameControlsContext * context = player[HUMAN].getGameControlsContext();
-	context->updateState();
+	for (int i = 0; i < MAX_PLAYERS; i++) {
+        cPlayer *pPlayer = &player[i];
+        cGameControlsContext *context = pPlayer->getGameControlsContext();
+        context->updateState();
 
-    clear(bmp_screen);
-	mouse_tile = MOUSE_NORMAL;
+        pPlayer->use_power = structureUtils.getTotalPowerUsageForPlayer(pPlayer);
+        pPlayer->has_power = structureUtils.getTotalPowerOutForPlayer(pPlayer);
+        // update spice capacity
+        pPlayer->max_credits = structureUtils.getTotalSpiceCapacityForPlayer(pPlayer);
 
-	// change this when selecting stuff
-	int mc = context->getMouseCell();
-	if (mc > -1) {
+        if (i != HUMAN) continue; // non HUMAN players are done
+        mouse_tile = MOUSE_NORMAL;
 
-		// check if any unit is 'selected'
-		for (int i=0; i < MAX_UNITS; i++) {
-			if (unit[i].isValid()) {
-				if (unit[i].iPlayer == 0) {
-					if (unit[i].bSelected) {
-						mouse_tile = MOUSE_MOVE;
-						break;
-					}
-				}
-			}
-		}
+        // change this when selecting stuff
+        int mc = context->getMouseCell();
+        if (mc > -1) {
 
-        if (mouse_tile == MOUSE_MOVE)
-        {
-        	// change to attack cursor if hovering over enemy unit
-			if (mapUtils->isCellVisibleForPlayerId(HUMAN, mc)) {
+            // check if any unit is 'selected'
+            for (int i=0; i < MAX_UNITS; i++) {
+                if (unit[i].isValid()) {
+                    if (unit[i].iPlayer == 0) {
+                        if (unit[i].bSelected) {
+                            mouse_tile = MOUSE_MOVE;
+                            break;
+                        }
+                    }
+                }
+            }
 
-                int idOfUnitOnCell = map.getCellIdUnitLayer(mc);
+            if (mouse_tile == MOUSE_MOVE)
+            {
+                // change to attack cursor if hovering over enemy unit
+                if (mapUtils->isCellVisibleForPlayerId(HUMAN, mc)) {
 
-                if (idOfUnitOnCell > -1)
-				{
-					int id = idOfUnitOnCell;
+                    int idOfUnitOnCell = map.getCellIdUnitLayer(mc);
 
-					if (unit[id].iPlayer > 0)
-						mouse_tile = MOUSE_ATTACK;
-				}
+                    if (idOfUnitOnCell > -1)
+                    {
+                        int id = idOfUnitOnCell;
 
-                int idOfStructureOnCell = map.getCellIdStructuresLayer(mc);
+                        if (unit[id].iPlayer > 0)
+                            mouse_tile = MOUSE_ATTACK;
+                    }
 
-                if (idOfStructureOnCell > -1)
-				{
-					int id = idOfStructureOnCell;
+                    int idOfStructureOnCell = map.getCellIdStructuresLayer(mc);
 
-					if (structure[id]->getOwner() > 0)
-						mouse_tile = MOUSE_ATTACK;
-				}
+                    if (idOfStructureOnCell > -1)
+                    {
+                        int id = idOfStructureOnCell;
 
-				if (key[KEY_LCONTROL]) {
-					mouse_tile = MOUSE_ATTACK;
-				}
+                        if (structure[id]->getOwner() > 0)
+                            mouse_tile = MOUSE_ATTACK;
+                    }
 
-				if (key[KEY_ALT]) {
-					mouse_tile = MOUSE_MOVE;
-				}
+                    if (key[KEY_LCONTROL]) {
+                        mouse_tile = MOUSE_ATTACK;
+                    }
 
-			} // visible
+                    if (key[KEY_ALT]) {
+                        mouse_tile = MOUSE_MOVE;
+                    }
+
+                } // visible
+            }
         }
-    }
 
-    if (mouse_tile == MOUSE_NORMAL)
-    {
-        // when selecting a structure
-        if (game.selected_structure > -1)
+        if (mouse_tile == MOUSE_NORMAL)
         {
-            int id = game.selected_structure;
-            if (structure[id]->getOwner() == 0)
-                if (key[KEY_LCONTROL])
-                    mouse_tile = MOUSE_RALLY;
+            // when selecting a structure
+            if (game.selected_structure > -1)
+            {
+                int id = game.selected_structure;
+                if (structure[id]->getOwner() == 0)
+                    if (key[KEY_LCONTROL])
+                        mouse_tile = MOUSE_RALLY;
 
+            }
         }
+
+        bPlacedIt=false;
+
+        //selected_structure=-1;
+        hover_unit=-1;
     }
-
-	bPlacedIt=false;
-
-	//selected_structure=-1;
-	hover_unit=-1;
-
-	// update power
-	// update total spice capacity
-	for (int p = 0; p < MAX_PLAYERS; p++) {
-		cPlayer * thePlayer = &player[p];
-		thePlayer->use_power = structureUtils.getTotalPowerUsageForPlayer(thePlayer);
-		thePlayer->has_power = structureUtils.getTotalPowerOutForPlayer(thePlayer);
-		// update spice capacity
-		thePlayer->max_credits = structureUtils.getTotalSpiceCapacityForPlayer(thePlayer);
-	}
 }
 
 void cGame::combat() {
@@ -1189,7 +1187,6 @@ void cGame::setup_skirmish() {
                     continue;
                 }
 
-                // set credits
                 cPlayer.focus_cell = iStartPositions[p];
 
                 // Set map position
@@ -1546,11 +1543,12 @@ void cGame::run() {
 
 	while (bPlaying) {
 		TimeManager.processTime();
-		poll();
-		handleTimeSlicing();
-		runGameState();
-		interactionManager->interactWithKeyboard();
-		shakeScreenAndBlitBuffer();
+		clear(bmp_screen);
+		poll(); // update state
+		handleTimeSlicing(); // handle time diff (needs to change!)
+		runGameState(); // run game state, includes interaction + drawing
+		interactionManager->interactWithKeyboard(); // generic interaction
+		shakeScreenAndBlitBuffer(); // finally draw the bmp_screen to real screen (double buffering)
 		frame_count++;
 	}
 }

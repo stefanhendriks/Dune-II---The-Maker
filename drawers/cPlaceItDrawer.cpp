@@ -174,6 +174,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	destroy_bitmap(temp);
 
 	// clicked mouse button
+	// TODO: move to INTERACT function?
 	if (cMouse::isLeftButtonClicked()) {
 		if (bMayPlace && bWithinBuildDistance)	{
 			int iHealthPercent = 50; // the minimum is 50% (with no slabs)
@@ -191,7 +192,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 			itemToPlace->decreaseTimesToBuild();
 			itemToPlace->setPlaceIt(false);
 			itemToPlace->setIsBuilding(false);
-			itemToPlace->setProgress(0);
+			itemToPlace->resetProgress();
 			if (itemToPlace->getTimesToBuild() < 1) {
                 m_Player->getItemBuilder()->removeItemFromList(itemToPlace);
 			}

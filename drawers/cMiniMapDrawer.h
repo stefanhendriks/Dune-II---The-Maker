@@ -38,6 +38,8 @@ class cMiniMapDrawer {
 
         bool isMouseOver();
 
+        void setPlayer(cPlayer * thePlayer);
+
 protected:
 
 		void drawTerrain();

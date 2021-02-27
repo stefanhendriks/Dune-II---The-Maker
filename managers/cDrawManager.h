@@ -22,6 +22,8 @@ class cDrawManager {
 
 		void destroy();
 
+		void setPlayerToDraw(cPlayer * playerToDraw);
+
     protected:
 		void drawSidebar();
 		void drawCredits();

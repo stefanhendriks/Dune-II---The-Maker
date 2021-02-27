@@ -17,20 +17,28 @@ class cItemBuilder {
 
 		// add item to the list
 		void addItemToList(cBuildingListItem * item);
-		void removeItemFromList(int position);
+        void removeItemsFromListType(eListType listType, int subListId);
+        void removeItemFromList(int position);
+        void removeItemsByBuildId(eBuildType buildType, int buildId);
 		void removeAllItems();
 
 		bool isBuildListItemTheFirstOfItsListType(cBuildingListItem *item);
 		cBuildingListItem *findBuildingListItemOfSameListAs(cBuildingListItem *item);
 
 		void removeItemFromList(cBuildingListItem *item);
-		bool isASimilarItemBeingBuilt(cBuildingListItem *item);
+		bool isAnotherBuildingListItemInTheSameListBeingBuilt(cBuildingListItem *item);
 
-		int getFreeSlot();
+		bool isAnythingBeingBuiltForListId(int listType, int sublistType);
+        bool isAnythingBeingBuiltForListIdAwaitingPlacement(int listType, int sublistType);
+
+        cBuildingListItem *getListItemWhichIsBuilding(int listType, int sublistType);
+        cBuildingListItem *getListItemWhichIsAwaitingPlacement(int listType, int sublistType);
 
 	private:
-		cBuildingListItem *items[MAX_ITEMS];
-		cPlayer * m_Player; // the m_Player context for this builder
+        cBuildingListItem *items[MAX_ITEMS];
+        int getFreeSlot();
+
+        cPlayer * m_Player; // the m_Player context for this builder
         cBuildingListUpdater * buildingListUpdater;
 
 		int timers[MAX_ITEMS];
@@ -39,6 +47,8 @@ class cItemBuilder {
 		bool isItemInList(cBuildingListItem *item);
 
 		void startBuilding(cBuildingListItem *item);
+
+        cBuildingListItem * getBuildingListItem(eBuildType buildType, int iBuildId);
 };
 
 #endif /* CITEMBUILDER_H_ */

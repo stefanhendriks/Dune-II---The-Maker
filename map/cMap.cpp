@@ -501,3 +501,13 @@ int cMap::mouse_draw_y() {
     }
     return -1;
 }
+
+int cMap::getTotalCountCellType(int cellType) {
+    int count = 0;
+    for (int c = 0; c < MAX_CELLS; c++) {
+        if (getCellType(c) == cellType) {
+            count++;
+        }
+    }
+    return count;
+}

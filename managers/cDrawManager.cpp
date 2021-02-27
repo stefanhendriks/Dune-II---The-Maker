@@ -169,6 +169,15 @@ void cDrawManager::destroy() {
     }
 }
 
+void cDrawManager::setPlayerToDraw(cPlayer * playerToDraw) {
+    this->m_Player = playerToDraw;
+    this->creditsDrawer->setPlayer(playerToDraw);
+    this->sidebarDrawer->setPlayer(playerToDraw);
+//    this->orderDrawer->setPlayer(playerToDraw);
+    this->miniMapDrawer->setPlayer(playerToDraw);
+    interactionManager->setPlayerToInteractFor(playerToDraw);
+}
+
 //int points[] =
 //{
 //    0,0,

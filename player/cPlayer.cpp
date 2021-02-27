@@ -10,8 +10,9 @@
 
   */
 
+#include <vector>
+#include <algorithm>
 #include "../include/d2tmh.h"
-#include "cPlayer.h"
 
 
 cPlayer::cPlayer() {
@@ -63,18 +64,14 @@ void cPlayer::destroyAllegroBitmaps() {
 void cPlayer::clearStructureTypeBitmaps() {
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
         if (bmp_structure[i]) {
-            if (DEBUGGING) {
-                char msg[255];
-                sprintf(msg, "clearStructureTypeBitmaps: Destroying bmp_structure for index [%d].", i);
-                logbook(msg);
-            }
+//            char msg[255];
+//            sprintf(msg, "clearStructureTypeBitmaps: Destroying bmp_structure for index [%d].", i);
+//            logbook(msg);
             destroy_bitmap(bmp_structure[i]);
         } else {
-            if (DEBUGGING) {
-                char msg[255];
-                sprintf(msg, "clearStructureTypeBitmaps: Index [%d] is null.", i);
-                logbook(msg);
-            }
+//            char msg[255];
+//            sprintf(msg, "clearStructureTypeBitmaps: Index [%d] is null.", i);
+//            logbook(msg);
         }
         bmp_structure[i] = nullptr;
     }
@@ -207,7 +204,6 @@ void cPlayer::init(int id) {
 
     iTeam=-1;
 
-    TIMER_think=rnd(10);        // timer for thinking itself (calling main routine)
     TIMER_attack=-1;			// -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 }
 
@@ -371,6 +367,49 @@ int cPlayer::getAmountOfStructuresForType(int structureType) const {
 }
 
 /**
+ * This function will return the amount of units for given type, but it is not (yet) optimized, so it will
+ * loop over all units and count them. Use it with caution.
+ * return -1
+ * @param unitType
+ * @return
+ */
+int cPlayer::getAmountOfUnitsForType(int unitType) const {
+    if (unitType < 0 || unitType > MAX_UNITTYPES) return -1;
+    int count = 0;
+    for (int i=0; i < MAX_UNITS; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
+        if (cUnit.iPlayer != this->getId()) continue;
+        if (cUnit.iType == unitType) {
+            count++;
+        }
+    }
+    return count;
+}
+
+/**
+ * This function will return the amount of units for given type, but it is not (yet) optimized, so it will
+ * loop over all units and count them. Use it with caution.
+ * return -1
+ * @param unitTypes (vector of all unitTypes to check)
+ * @return
+ */
+int cPlayer::getAmountOfUnitsForType(std::vector<int> unitTypes) const {
+    int count = 0;
+    for (int i=0; i < MAX_UNITS; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
+        if (cUnit.iPlayer != this->getId()) continue;
+        if (std::find(unitTypes.begin(), unitTypes.end(), cUnit.iType) != unitTypes.end()) {
+            count++;
+        }
+    }
+    return count;
+}
+
+
+
+/**
  * Returns the bitmap for structure type "index", this structure has been colorized beforehand for this player and is
  * in same color depth as bmp_screen.
  * @param index
@@ -525,4 +564,34 @@ void cPlayer::decreaseStructureAmount(int structureType) {
     char msg[255];
     sprintf(msg, "Player[%d] - decreaseStructureAmount result: iStructures[%d(=%s)]=%d", id, structureType, structures[structureType].name, iStructures[structureType]);
     logbook(msg);
+}
+
+std::string cPlayer::getHouseName() {
+    if (house == ATREIDES) {
+        return "Atreides";
+    } else if (house == HARKONNEN) {
+        return "Harkonnen";
+    } else if (house == ORDOS) {
+        return "Ordos";
+    } else if (house == SARDAUKAR) {
+        return "Sardaukar";
+    } else if (house == FREMEN) {
+        return "Fremen";
+    } else if (house == MERCENARY) {
+        return "Mercenary";
+    } else if (house == GENERALHOUSE) {
+        return "Generalhouse (none)";
+    } else if (house == CORRINO) {
+        return "Corrino / House for worms";
+    }
+    return "Unknown !?";
+}
+
+void cPlayer::giveCredits(float amountToGive) {
+    credits += amountToGive;
+}
+
+float cPlayer::hasEnoughCreditsForUnit(int unitType) {
+    if (unitType < 0 || unitType >= MAX_UNITTYPES) return false;
+    return this->credits > units[unitType].cost;
 }

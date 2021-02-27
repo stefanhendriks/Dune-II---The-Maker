@@ -24,8 +24,8 @@ class cBuildingListFactory {
 
 		~cBuildingListFactory();
 
-		void initializeList(cBuildingList *list, int listId, int house);
-		cBuildingList *createList(int listId, int house);
+		void initializeList(cBuildingList *list, eListType listType, int house);
+		cBuildingList *createList(eListType listType, int house);
 
 };
 

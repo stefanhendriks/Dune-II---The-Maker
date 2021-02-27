@@ -1,4 +1,6 @@
 #include "../include/d2tmh.h"
+#include "cBuildingListItem.h"
+
 
 /**
  *
@@ -111,6 +113,10 @@ void cBuildingListItem::increaseProgress(int byAmount) {
     setProgress(getProgress() + byAmount);
 }
 
+/**
+ * Duplicated by getTotalBuildtime!?
+ * @return
+ */
 int cBuildingListItem::getBuildTime() {
 //    if (DEBUGGING) return 1;
     if (type == STRUCTURE) {
@@ -160,5 +166,12 @@ s_Structures cBuildingListItem::getS_Structures() {
 
 void cBuildingListItem::resetTimesOrdered() {
     timesOrdered = 0;
+}
+
+eListType cBuildingListItem::getListType() {
+    if (myList) {
+        return myList->getType();
+    }
+    return eListType::LIST_NONE;
 }
 

@@ -1,4 +1,6 @@
 #include "../include/d2tmh.h"
+#include "cMiniMapDrawer.h"
+
 
 cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * theMapCamera) : m_Player(thePlayer) {
 	assert(theMap);
@@ -30,7 +32,7 @@ cMiniMapDrawer::~cMiniMapDrawer() {
 	map = NULL;
 	mapCamera = NULL;
 	iStaticFrame = STAT14;
-    eMinimapStatus::NOTAVAILABLE;
+    status = eMinimapStatus::NOTAVAILABLE;
 	delete m_RectMinimap;
 	delete m_RectFullMinimap;
     delete m_mapUtils;
@@ -350,4 +352,8 @@ void cMiniMapDrawer::think() {
 
 bool cMiniMapDrawer::isMouseOver() {
     return m_RectMinimap->isMouseOver();
+}
+
+void cMiniMapDrawer::setPlayer(cPlayer *thePlayer) {
+    this->m_Player = thePlayer;
 }

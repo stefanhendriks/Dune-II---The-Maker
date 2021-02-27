@@ -1,4 +1,6 @@
 #include "../include/d2tmh.h"
+#include "CreditsDrawer.h"
+
 
 CreditsDrawer::CreditsDrawer(cPlayer * thePlayer) : m_Player(thePlayer){
 	assert(thePlayer);
@@ -257,6 +259,10 @@ void CreditsDrawer::drawPreviousCredits() {
 // the think method will gradually update the currentCredits array so that it is 'the same'
 bool CreditsDrawer::hasDrawnCurrentCredits() {
 	return previousCredits == currentCredits;
+}
+
+void CreditsDrawer::setPlayer(cPlayer *thePlayer) {
+    this->m_Player = thePlayer;
 }
 
 
