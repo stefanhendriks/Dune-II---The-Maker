@@ -1,4 +1,6 @@
 #include "../include/d2tmh.h"
+#include "cBuildingListItem.h"
+
 
 /**
  *
@@ -164,5 +166,12 @@ s_Structures cBuildingListItem::getS_Structures() {
 
 void cBuildingListItem::resetTimesOrdered() {
     timesOrdered = 0;
+}
+
+eListType cBuildingListItem::getListType() {
+    if (myList) {
+        return myList->getType();
+    }
+    return eListType::LIST_NONE;
 }
 

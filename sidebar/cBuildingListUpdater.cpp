@@ -200,6 +200,7 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
 
     // activate/deactivate any lists if needed
     cSideBar *sideBar = m_Player->getSideBar();
+    cItemBuilder *pItemBuilder = m_Player->getItemBuilder();
     cBuildingList *listConstYard = sideBar->getList(LIST_CONSTYARD);
     cBuildingList *listFootUnits = sideBar->getList(LIST_FOOT_UNITS);
     cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
@@ -219,31 +220,43 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
     int techLevel = m_Player->getTechLevel();
 
     if (!m_Player->hasAtleastOneStructure(CONSTYARD)) {
-        listConstYard->removeAllSublistItems(SUBLIST_CONSTYARD);
+        pItemBuilder->removeItemsFromListType(LIST_CONSTYARD, SUBLIST_CONSTYARD);
+        listConstYard->removeAllSublistItems(SUBLIST_CONSTYARD);        
     }
 
     if (techLevel >= 7) {
         if (!m_Player->hasAtleastOneStructure(HEAVYFACTORY) ||
             !m_Player->hasAtleastOneStructure(IX)) {
             if (m_Player->getHouse() == ATREIDES) {
+                pItemBuilder->removeItemsByBuildId(UNIT, SONICTANK);
                 listUnits->removeItemFromListByBuildId(SONICTANK);
             } else if (m_Player->getHouse() == HARKONNEN) {
+                pItemBuilder->removeItemsByBuildId(UNIT, DEVASTATOR);
                 listUnits->removeItemFromListByBuildId(DEVASTATOR);
             } else if (m_Player->getHouse() == ORDOS) {
+                pItemBuilder->removeItemsByBuildId(UNIT, DEVIATOR);
                 listUnits->removeItemFromListByBuildId(DEVIATOR);
             }
         }
     }
 
     if (!m_Player->hasAtleastOneStructure(HIGHTECH)) {
+        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_HIGHTECH);
         listUnits->removeAllSublistItems(SUBLIST_HIGHTECH);
     }
 
     if (!m_Player->hasAtleastOneStructure(LIGHTFACTORY)) {
+        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_LIGHTFCTRY);
         listUnits->removeAllSublistItems(SUBLIST_LIGHTFCTRY);
     }
 
     if (!m_Player->hasAtleastOneStructure(HEAVYFACTORY)) {
+        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_HEAVYFCTRY);
+        listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
+    }
+
+    if (!m_Player->hasAtleastOneStructure(PALACE)) {
+        pItemBuilder->removeItemsFromListType(LIST_PALACE, 0);
         listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
     }
 

@@ -28,11 +28,11 @@ cSideBar * cSideBarFactory::createSideBar(cPlayer * thePlayer) {
 	assert(&thePlayer);
 	cSideBar *sidebar = new cSideBar(thePlayer);
 
-	for (int listId = LIST_NONE; listId < LIST_MAX; listId++) {
-		cBuildingList *list = cBuildingListFactory::getInstance()->createList(listId, thePlayer->getHouse());
-		sidebar->setList(listId, list);
-		list->setItemBuilder(thePlayer->getItemBuilder()); // TODO: this should be easier!?
-	}
+    for (const auto listType : AllListTypes) {
+        cBuildingList *list = cBuildingListFactory::getInstance()->createList(listType, thePlayer->getHouse());
+        sidebar->setList(listType, list);
+        list->setItemBuilder(thePlayer->getItemBuilder()); // TODO: this should be easier!?
+    }
 
 	return sidebar;
 }

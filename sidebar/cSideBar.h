@@ -17,15 +17,15 @@
 // forward declaration
 class cPlayer;
 
-// List ID's corresponding buttons
-#define LIST_NONE        0
-#define LIST_CONSTYARD    1
-#define LIST_FOOT_UNITS    2 // infantry, soldier, trooper, troopers, etc.
-#define LIST_UNITS        3 // quad, trike, tanks, air units
-#define LIST_STARPORT    4 // special list to order stuff
-#define LIST_PALACE        5 // REMOVE? (ie super weapon icon should always show top left/right?)
-#define LIST_UPGRADES    6 // possible upgrades
-#define LIST_MAX        7 // max amount of lists
+//// List ID's corresponding buttons
+//#define LIST_NONE        0
+//#define LIST_CONSTYARD    1
+//#define LIST_FOOT_UNITS    2 // infantry, soldier, trooper, troopers, etc.
+//#define LIST_UNITS        3 // quad, trike, tanks, air units
+//#define LIST_STARPORT    4 // special list to order stuff
+//#define LIST_PALACE        5 // REMOVE? (ie super weapon icon should always show top left/right?)
+//#define LIST_UPGRADES    6 // possible upgrades
+//#define LIST_MAX        7 // max amount of lists
 
 #define SUBLIST_CONSTYARD  0  // structures
 #define SUBLIST_LIGHTFCTRY 1 // quad, trike, etc

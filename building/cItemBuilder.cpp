@@ -382,7 +382,8 @@ cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingPlacement(int listTyp
         cBuildingListItem *listItem = getItem(i);
         if (listItem) {
             cBuildingList *pList = listItem->getList();
-            if (listType == pList->getType() &&
+            // check if list is available
+            if (pList && listType == pList->getType() &&
                 sublistType == listItem->getSubList()) {
                 if (listItem->shouldPlaceIt()) {
                     pItem = listItem;
@@ -472,5 +473,26 @@ void cItemBuilder::startBuilding(cBuildingListItem *item) {
     if (item == nullptr) return;
     item->setIsBuilding(true);
     buildingListUpdater->onBuildItemStarted(item);
+}
+
+void cItemBuilder::removeItemsFromListType(eListType listType, int subListId) {
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *theItem = getItem(i);
+        if (theItem == nullptr) continue;
+        if (theItem->getListType() != listType) continue;
+        if (theItem->getSubList() != subListId) continue;
+        removeItemFromList(theItem);
+    }
+}
+
+void cItemBuilder::removeItemsByBuildId(eBuildType buildType, int buildId) {
+    for (int i = 0; i < MAX_ICONS; i++) {
+        cBuildingListItem *pItem = items[i];
+        if (pItem == nullptr) continue;
+        if (pItem->getBuildType() != buildType) continue;
+        if (pItem->getBuildId() != buildId) continue;
+
+        removeItemFromList(pItem);
+    }
 }
 
