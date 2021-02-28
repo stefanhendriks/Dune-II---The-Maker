@@ -1529,59 +1529,61 @@ void playMusicByType(int iType) {
  Bullet creation
  ******************************/
 int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstruc) {
-  int new_id=-1;
+    int new_id = -1;
 
-  for (int i=0; i < MAX_BULLETS; i++)
-    if (bullet[i].bAlive==false)
-    {
-      new_id = i;
-      break;
+    for (int i = 0; i < MAX_BULLETS; i++)
+        if (bullet[i].bAlive == false) {
+            new_id = i;
+            break;
+        }
+
+    if (new_id < 0)
+        return -1;  // failed
+
+    if (type < 0)
+        return -1; // failed
+
+
+    cBullet &newBullet = bullet[new_id];
+    newBullet.init();
+
+    newBullet.iType = type;
+    newBullet.iCell = cell;
+    newBullet.iOwnerStructure = ownerstruc;
+    newBullet.iOwnerUnit = ownerunit;
+
+    newBullet.iGoalCell = goal_cell;
+
+    newBullet.bAlive = true;
+    newBullet.iFrame = 0;
+
+    newBullet.iOffsetX = 8 + rnd(9);
+    newBullet.iOffsetY = 8 + rnd(9);
+
+    newBullet.iPlayer = -1;
+
+    if (ownerunit > -1) {
+        newBullet.iPlayer = unit[ownerunit].iPlayer;
+
+        // create spot
+        map.clear_spot(cell, 3, unit[ownerunit].iPlayer);
     }
 
-  if (new_id < 0)
-    return -1;  // failed
+    if (ownerstruc > -1) {
+        newBullet.iPlayer = structure[ownerstruc]->getOwner();
 
-  if (type < 0)
-    return -1; // failed
+        map.clear_spot(cell, 3, structure[ownerstruc]->getOwner());
+    }
 
+    if (newBullet.iPlayer < 0) {
+        logbook("New bullet produced without any player!?");
+    }
 
-  bullet[new_id].init();
+    // play sound (when we have one)
+    if (bullets[type].sound > -1)
+        play_sound_id_with_distance(bullets[type].sound, distanceBetweenCellAndCenterOfScreen(cell));
 
-  bullet[new_id].iType = type;
-  bullet[new_id].iCell = cell;
-  bullet[new_id].iOwnerStructure = ownerstruc;
-  bullet[new_id].iOwnerUnit = ownerunit;
-
-  bullet[new_id].iGoalCell = goal_cell;
-
-  bullet[new_id].bAlive=true;
-  bullet[new_id].iFrame = 0;
-
-  bullet[new_id].iOffsetX = 8 + rnd(9);
-  bullet[new_id].iOffsetY = 8 + rnd(9);
-
-  bullet[new_id].iPlayer = -1;
-
-  if (ownerunit > -1) {
-      bullet[new_id].iPlayer = unit[ownerunit].iPlayer;
-      // create spot
-      map.clear_spot(cell, 3, unit[ownerunit].iPlayer);
-  }
-
-  if (ownerstruc > -1) {
-      bullet[new_id].iPlayer = structure[ownerstruc]->getOwner();
-      map.clear_spot(cell, 3, structure[ownerstruc]->getOwner());
-  }
-
-  if (bullet[new_id].iPlayer < 0) {
-      logbook("New bullet produced without any player!?");
-  }
-
-  // play sound (when we have one)
-  if (bullets[type].sound > -1)
-      play_sound_id_with_distance(bullets[type].sound, distanceBetweenCellAndCenterOfScreen(cell));
-
-  return new_id;
+    return new_id;
 }
 
 
