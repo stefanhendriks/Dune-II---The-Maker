@@ -195,13 +195,20 @@ void cMap::draw_bullets() {
     }
 }
 
-void cMap::clear_all()
+void cMap::clear_all(int playerId)
 {
     for (int c=0; c < MAX_CELLS; c++)
-        iVisible[c][0] = true;
+        iVisible[c][playerId] = true;
 }
 
-void cMap::clear_spot(int c, int size, int player) {
+void cMap::clear_spot(int c, int size) {
+    for (int p = 0; p < MAX_PLAYERS; p++) {
+        clear_spot(c, size, p);
+    }
+}
+
+void cMap::clear_spot(int c, int size, int playerId) {
+
     // Get the x and y and make a circle around it of 16xR, then calculate of every step the cell and
     // clear it
     int cx = iCellGiveX(c);
@@ -210,7 +217,7 @@ void cMap::clear_spot(int c, int size, int player) {
     if (cx < 0 || cy < 0)
         return;
 
-    map.iVisible[c][player] = true;
+    map.iVisible[c][playerId] = true;
 
 #define TILE_SIZE_PIXELS 32
 
@@ -291,12 +298,12 @@ void cMap::clear_spot(int c, int size, int player) {
             int cl = iCellMakeWhichCanReturnMinusOne(cell_x, cell_y);
             if (cl < 0) continue;
 
-            if (!iVisible[cl][player]) {
+            if (!iVisible[cl][playerId]) {
 
-                iVisible[cl][player] = true;     // make visible
+                iVisible[cl][playerId] = true;     // make visible
 
                 // human unit detected enemy, now be scared and play some neat music
-                if (player == HUMAN) {
+                if (playerId == HUMAN) {
                     if (cell[cl].id[MAPID_UNITS] > -1) {
                         int id = cell[cl].id[MAPID_UNITS];
 

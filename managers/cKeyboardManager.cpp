@@ -129,7 +129,7 @@ void cKeyboardManager::DEBUG_KEYS() {
     }
     // REVEAL  MAP
     if (key[KEY_F5]) {
-        map.clear_all();
+        map.clear_all(HUMAN);
     }
 
     //JUMP TO MISSION 3
