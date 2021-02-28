@@ -1525,10 +1525,17 @@ void playMusicByType(int iType) {
     }
 }
 
-/******************************
- Bullet creation
- ******************************/
-int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstruc) {
+/**
+ * Creates a bullet, of type, starting at *cell* and moving towards *goal_cell*. The 'unitWhichShoots' or
+ * 'structureWhichShoots' is the owner of the bullet.
+ * @param type
+ * @param cell
+ * @param goal_cell
+ * @param unitWhichShoots
+ * @param structureWhichShoots
+ * @return
+ */
+int create_bullet(int type, int cell, int goal_cell, int unitWhichShoots, int structureWhichShoots) {
     int new_id = -1;
 
     for (int i = 0; i < MAX_BULLETS; i++)
@@ -1549,8 +1556,8 @@ int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstr
 
     newBullet.iType = type;
     newBullet.iCell = cell;
-    newBullet.iOwnerStructure = ownerstruc;
-    newBullet.iOwnerUnit = ownerunit;
+    newBullet.iOwnerStructure = structureWhichShoots;
+    newBullet.iOwnerUnit = unitWhichShoots;
 
     newBullet.iGoalCell = goal_cell;
 
@@ -1562,17 +1569,19 @@ int create_bullet(int type, int cell, int goal_cell, int ownerunit, int ownerstr
 
     newBullet.iPlayer = -1;
 
-    if (ownerunit > -1) {
-        newBullet.iPlayer = unit[ownerunit].iPlayer;
-
-        // create spot
-        map.clear_spot(cell, 3, unit[ownerunit].iPlayer);
+    if (unitWhichShoots > -1 ) {
+        cUnit &cUnit = unit[unitWhichShoots];
+        newBullet.iPlayer = cUnit.iPlayer;
+        // if an airborn unit shoots (ie Ornithopter), reveal on map
+        if (cUnit.isAirbornUnit()) {
+            map.clear_spot(cell, cUnit.getUnitType().sight);
+        }
     }
 
-    if (ownerstruc > -1) {
-        newBullet.iPlayer = structure[ownerstruc]->getOwner();
-
-        map.clear_spot(cell, 3, structure[ownerstruc]->getOwner());
+    if (structureWhichShoots > -1) {
+        cAbstractStructure *pStructure = structure[structureWhichShoots];
+        newBullet.iPlayer = pStructure->getOwner();
+        map.clear_spot(cell, pStructure->getS_StructuresType().sight);
     }
 
     if (newBullet.iPlayer < 0) {

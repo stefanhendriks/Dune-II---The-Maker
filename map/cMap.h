@@ -66,8 +66,15 @@ public:
     void think_minimap();
     void draw_think();
 
-    void clear_all();
-    void clear_spot(int c, int size, int player);
+    void clear_all(int playerId);
+    void clear_spot(int cell, int size, int playerId);
+
+    /**
+     * Clears shroud for all players at cell
+     * @param c
+     * @param size
+     */
+    void clear_spot(int cell, int size);
 
     /**
      * returns pointer to cell or nullptr when not valid
