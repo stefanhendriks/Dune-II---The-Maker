@@ -85,6 +85,7 @@ public:
     void think_attack();
     bool think_buildingplacement();
     void think_spiceBlooms();
+    void think_skirmishBuildBase();
     
     void think_repair_structure(cAbstractStructure *struc);
     

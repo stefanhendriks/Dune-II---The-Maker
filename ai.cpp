@@ -910,163 +910,165 @@ void cAIPlayer::think_buildbase() {
     DELAY_buildbase = 0;
 
     if (game.bSkirmish) {
-        cBuildingListItem *pUpgrade = isUpgradingConstyard();
-        if (pUpgrade) {
-            char msg[255];
-            sprintf(msg, "AI[%d] think_buildbase() - upgrade [%s] in progress [%d/%d] for ConstYard.", ID, pUpgrade->getS_Upgrade().description, pUpgrade->getBuildTime(), pUpgrade->getTotalBuildTime());
-            logbook(msg);
-            return; // wait for upgrade to be completed
-        }
+        think_skirmishBuildBase();
+        return;
+	}
 
-        bool result = think_buildingplacement();
-        if (result) {
-            char msg[255];
-            sprintf(msg, "AI[%d] think_buildingplacement returns true, delaying!", ID);
-            DELAY_buildbase = 3;
-            return;
-        }
+    // non-skirmish game, rebuild destroyed structures (TODO)
 
-        cBuildingListItem *pBuildingStructure = isBuildingStructure();
-        if (pBuildingStructure) {
-            char msg[255];
-            sprintf(msg, "AI[%d] think_buildbase() - building structure [%s]; [%d/%d] wait for that to complete.", ID, pBuildingStructure->getS_Structures().name, pBuildingStructure->getProgress(), pBuildingStructure->getTotalBuildTime());
-            logbook(msg);
-            return; // wait
-        }
+}
 
-        cPlayer &cPlayer = player[ID];
+void cAIPlayer::think_skirmishBuildBase() {
+    cBuildingListItem *pUpgrade = isUpgradingConstyard();
+    if (pUpgrade) {
+        char msg[255];
+        sprintf(msg, "AI[%d] think_buildbase() - upgrade [%s] in progress [%d/%d] for ConstYard.", ID, pUpgrade->getS_Upgrade().description, pUpgrade->getBuildTime(), pUpgrade->getTotalBuildTime());
+        logbook(msg);
+        return; // wait for upgrade to be completed
+    }
 
-        if (!cPlayer.hasAtleastOneStructure(CONSTYARD)) {
-            // if player has HEAVY FACTORY, try to build MVC and then get new Const Yard.
+    bool result = think_buildingplacement();
+    if (result) {
+        char msg[255];
+        sprintf(msg, "AI[%d] think_buildingplacement returns true, delaying!", ID);
+        DELAY_buildbase = 3;
+        return;
+    }
+
+    cBuildingListItem *pBuildingStructure = isBuildingStructure();
+    if (pBuildingStructure) {
+        char msg[255];
+        sprintf(msg, "AI[%d] think_buildbase() - building structure [%s]; [%d/%d] wait for that to complete.", ID, pBuildingStructure->getS_Structures().name, pBuildingStructure->getProgress(), pBuildingStructure->getTotalBuildTime());
+        logbook(msg);
+        return; // wait
+    }
+
+    cPlayer &cPlayer = player[ID];
+
+    if (!cPlayer.hasAtleastOneStructure(CONSTYARD)) {
+        // if player has HEAVY FACTORY, try to build MVC and then get new Const Yard.
 //            char msg[255];
 //            sprintf(msg, "AI[%d] think_buildbase() - No Constyard present, bail.", ID);
 //            logbook(msg);
+        return;
+    }
+
+    // when no windtrap, then build one (or when low power)
+    if (!cPlayer.hasAtleastOneStructure(WINDTRAP) ||
+        !cPlayer.bEnoughPower()) {
+        BUILD_STRUCTURE(WINDTRAP);
+        return;
+    }
+
+    // build refinery
+    if (!cPlayer.hasAtleastOneStructure(REFINERY)) {
+        BUILD_STRUCTURE(REFINERY);
+        return;
+    }
+
+    // build wor / barracks
+    if (cPlayer.getHouse() == ATREIDES) {
+        if (!cPlayer.hasAtleastOneStructure(BARRACKS)) {
+            BUILD_STRUCTURE(BARRACKS);
             return;
         }
-
-        // when no windtrap, then build one (or when low power)
-        if (!cPlayer.hasAtleastOneStructure(WINDTRAP) ||
-            !cPlayer.bEnoughPower()) {
-            BUILD_STRUCTURE(WINDTRAP);
+    } else {
+        if (!cPlayer.hasAtleastOneStructure(WOR)) {
+            BUILD_STRUCTURE(WOR);
             return;
         }
+    }
 
-        // build refinery
-        if (!cPlayer.hasAtleastOneStructure(REFINERY)) {
-            BUILD_STRUCTURE(REFINERY);
+    if (!cPlayer.hasAtleastOneStructure(RADAR)) {
+        BUILD_STRUCTURE(RADAR);
+        return;
+    }
+
+    if (!cPlayer.hasAtleastOneStructure(LIGHTFACTORY)) {
+        BUILD_STRUCTURE(LIGHTFACTORY);
+        return;
+    }
+
+    // from here, we can build turrets
+    if (!cPlayer.hasAtleastOneStructure(HEAVYFACTORY)) {
+        BUILD_STRUCTURE(HEAVYFACTORY);
+        return;
+    }
+
+    // when mission is lower then 5, build normal turrets
+    if (game.iMission <= 5) {
+        int amountOfTurretsWanted = 3;
+        if (cPlayer.getAmountOfStructuresForType(TURRET) < amountOfTurretsWanted) {
+            BUILD_STRUCTURE(TURRET);
             return;
         }
+    }
 
-        // build wor / barracks
-        if (cPlayer.getHouse() == ATREIDES) {
-            if (!cPlayer.hasAtleastOneStructure(BARRACKS)) {
-                BUILD_STRUCTURE(BARRACKS);
-                return;
-            }
-        } else {
-            if (!cPlayer.hasAtleastOneStructure(WOR)) {
-                BUILD_STRUCTURE(WOR);
-                return;
-            }
-        }
-
-        if (!cPlayer.hasAtleastOneStructure(RADAR)) {
-            BUILD_STRUCTURE(RADAR);
-            return;
-        }
-
-        if (!cPlayer.hasAtleastOneStructure(LIGHTFACTORY)) {
-            BUILD_STRUCTURE(LIGHTFACTORY);
-            return;
-        }
-
-        // from here, we can build turrets
-        if (!cPlayer.hasAtleastOneStructure(HEAVYFACTORY)) {
-            BUILD_STRUCTURE(HEAVYFACTORY);
-            return;
-        }
-
-        // when mission is lower then 5, build normal turrets
-        if (game.iMission <= 5) {
-            int amountOfTurretsWanted = 3;
-            if (cPlayer.getAmountOfStructuresForType(TURRET) < amountOfTurretsWanted) {
-                BUILD_STRUCTURE(TURRET);
-                return;
-            }
-        }
-
-        if (game.iMission >= 6) {
-            // Requires an upgrade
-            if (isStructureAvailableForBuilding(RTURRET)) {
-                if (cPlayer.getAmountOfStructuresForType(RTURRET) < 3) {
-                    BUILD_STRUCTURE(RTURRET);
-                    return;
-                }
-            } else {
-                // Requires an upgrade
-                cBuildingListItem *upgrade = isUpgradeAvailableToGrantStructure(RTURRET);
-                if (upgrade) {
-                    logbook("think_buildbase: Cannot build RTURRET because I need to upgrade; starting upgrade now.");
-                    startUpgrading(upgrade->getBuildId());
-                    return;
-                } else {
-                    logbook("think_buildbase: Cannot build RTURRET because I need to upgrade; but no RTURRET upgrade available.");
-                    // no rturret upgrade available - check if 4slab upgrade is still there
-                    cBuildingListItem *upgrade = isUpgradeAvailableToGrantStructure(SLAB4);
-                    if (upgrade) {
-                        logbook("think_buildbase: SLAB4 upgrade available, starting upgrade now.");
-                        startUpgrading(upgrade->getBuildId());
-                    }
-                }
-            }
-        }
-
-        // build refinery
-        if (cPlayer.getAmountOfStructuresForType(REFINERY) < 2)
-        {
-            BUILD_STRUCTURE(REFINERY);
-            return;
-        }
-
-        if (!cPlayer.hasAtleastOneStructure(HIGHTECH))
-        {
-            BUILD_STRUCTURE(HIGHTECH);
-            return;
-        }
-
-        if (cPlayer.hasAtleastOneStructure(REPAIR))
-        {
-            BUILD_STRUCTURE(REPAIR);
-            return;
-        }
-
-        if (!cPlayer.hasAtleastOneStructure(PALACE))
-        {
-            BUILD_STRUCTURE(PALACE);
-            return;
-        }
-
-        if (game.iMission >= 6)
-        {
-            if (cPlayer.getAmountOfStructuresForType(RTURRET) < 9)
-            {
+    if (game.iMission >= 6) {
+        // Requires an upgrade
+        if (isStructureAvailableForBuilding(RTURRET)) {
+            if (cPlayer.getAmountOfStructuresForType(RTURRET) < 3) {
                 BUILD_STRUCTURE(RTURRET);
                 return;
             }
+        } else {
+            // Requires an upgrade
+            cBuildingListItem *upgrade = isUpgradeAvailableToGrantStructure(RTURRET);
+            if (upgrade) {
+                logbook("think_buildbase: Cannot build RTURRET because I need to upgrade; starting upgrade now.");
+                startUpgrading(upgrade->getBuildId());
+                return;
+            } else {
+                logbook("think_buildbase: Cannot build RTURRET because I need to upgrade; but no RTURRET upgrade available.");
+                // no rturret upgrade available - check if 4slab upgrade is still there
+                cBuildingListItem *upgrade = isUpgradeAvailableToGrantStructure(SLAB4);
+                if (upgrade) {
+                    logbook("think_buildbase: SLAB4 upgrade available, starting upgrade now.");
+                    startUpgrading(upgrade->getBuildId());
+                }
+            }
         }
+    }
 
-        if (cPlayer.getAmountOfStructuresForType(STARPORT) < 1)
+    // build refinery
+    if (cPlayer.getAmountOfStructuresForType(REFINERY) < 2)
+    {
+        BUILD_STRUCTURE(REFINERY);
+        return;
+    }
+
+    if (!cPlayer.hasAtleastOneStructure(HIGHTECH))
+    {
+        BUILD_STRUCTURE(HIGHTECH);
+        return;
+    }
+
+    if (cPlayer.hasAtleastOneStructure(REPAIR))
+    {
+        BUILD_STRUCTURE(REPAIR);
+        return;
+    }
+
+    if (!cPlayer.hasAtleastOneStructure(PALACE))
+    {
+        BUILD_STRUCTURE(PALACE);
+        return;
+    }
+
+    if (game.iMission >= 6)
+    {
+        if (cPlayer.getAmountOfStructuresForType(RTURRET) < 9)
         {
-            BUILD_STRUCTURE(STARPORT);
+            BUILD_STRUCTURE(RTURRET);
             return;
         }
+    }
 
-	}
-	else
-	{
-		// rebuild only destroyed stuff
-	}
-
+    if (cPlayer.getAmountOfStructuresForType(STARPORT) < 1)
+    {
+        BUILD_STRUCTURE(STARPORT);
+        return;
+    }
 }
 
 void cAIPlayer::think_worm() {
