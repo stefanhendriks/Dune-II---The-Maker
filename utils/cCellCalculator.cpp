@@ -139,7 +139,8 @@ int cCellCalculator::getY(int cell) {
 
 	This method will not do any fancy tricks to fix the boundaries, instead it will assert its input and output.
 
-    Use getCellWithMapBorders if you want a safe way to get a cell (taking map boundaries into account)
+    Use <b>getCellWithMapBorders</b> if you want a safe way to get a cell within the <i>playable</i> map boundaries.
+    Use <b>getCellWithMapDimensions</b> if you want a safe way to get a cell within the <i>maximum</i> map boundaries.
 **/
 int cCellCalculator::getCell(int x, int y) {
 	assert(x > -1);
@@ -150,10 +151,6 @@ int cCellCalculator::getCell(int x, int y) {
 	// create cell
 	int cell = getCellWithMapDimensions(x, y, game.map_width, game.map_height);
 
-    // FIXED: Do never give a cell number higher then the max!
-//    if (cell >= MAX_CELLS)
-//        cell = (MAX_CELLS-1);
-
 	assert(cell < MAX_CELLS); // may never be => (will since MAX_CELLS-1 is max in array!)
 	assert(cell > -1); // may never be < 0
 
@@ -161,7 +158,9 @@ int cCellCalculator::getCell(int x, int y) {
 }
 
 /**
- * This function will return a cell index based on x, y and given map width/height dimensions.
+ * This function will return a cell index based on x, y and given map width/height dimensions. Ie, this includes
+ * the invisible border around a map. If you want to check against the playable dimensions you should use
+ * getCellWithMapBorders instead.
  * @param x
  * @param y
  * @param mapWidth
@@ -176,6 +175,27 @@ int cCellCalculator::getCellWithMapDimensions(int x, int y, int mapWidth, int ma
     if (y >= mapHeight) return -1;
 
     return (y * mapWidth) + x;
+}
+
+
+/**
+ * Return map cell; taking the map borders into account. If x or y falls out of bounds, this function will return
+ * -1.
+ *
+ * @param x
+ * @param y
+ * @return
+ */
+int cCellCalculator::getCellWithMapBorders(int x, int y) {
+    int maxHeight = (height-1);
+    int maxWidth = (width-1);
+
+    if (x < 1) return -1;
+    if (y < 1) return -1;
+    if (x > maxWidth) return -1;
+    if (y > maxHeight) return -1;
+
+    return getCellWithMapDimensions(x, y, width, height);
 }
 
 double cCellCalculator::distance(int x1, int y1, int x2, int y2) {
@@ -199,24 +219,5 @@ double cCellCalculator::distance(int cell1, int cell2) {
 	int x2 = getX(cell2);
 	int y2 = getY(cell2);
 	return ABS_length(x1, y1, x2, y2);
-}
-
-/**
- * Return map cell; taking the map borders into account.
- *
- * @param x
- * @param y
- * @return
- */
-int cCellCalculator::getCellWithMapBorders(int x, int y) {
-	int maxHeight = (height-1);
-	int maxWidth = (width-1);
-
-	if (x < 1) x = 1;
-	if (y < 1) y = 1;
-	if (x > maxWidth) x = maxWidth;
-	if (y > maxHeight) y = maxHeight;
-
-	return getCell(x, y);
 }
 

@@ -101,6 +101,7 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
 		// new row
 		for (int viewportY= camera->getViewportStartY(); viewportY < camera->getViewportEndY() + 32; viewportY+= 32) {
 		    int iCell = mapCamera->getCellFromAbsolutePosition(viewportX, viewportY);
+            if (iCell < 0) continue;
 
 			// not visible for player, so do not draw
 			if (!mapUtils->isCellVisibleForPlayerId(iPl, iCell)) {

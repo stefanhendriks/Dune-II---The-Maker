@@ -39,6 +39,11 @@ void cMouseDrawer::draw() {
     else{
     }
 
+    if (DEBUGGING) {
+        cTextDrawer textDrawer(bene_font);
+        textDrawer.drawTextWithOneInteger(0, 0, "MouseCell %d", m_Player->getGameControlsContext()->getMouseCell());
+    }
+
     draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, x, y);
 }
 

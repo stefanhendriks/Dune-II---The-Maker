@@ -160,7 +160,14 @@ bool cAIPlayer::BUILD_UNIT(int iUnitType) {
     }
 
     if (!bAlreadyBuilding) {
-        return startBuildingUnit(iUnitType);
+        bool result = startBuildingUnit(iUnitType);
+        if (result) {
+            int delay = 25; // increase delay with 'weaker' ai ?
+            TIMER_BuildUnits = units[iUnitType].build_time + delay;
+        } else {
+            TIMER_BuildUnits = 25;
+        }
+        return result;
     } else {
         char msg[255];
         sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d] - but already building.", units[iUnitType].name, iUnitType);
@@ -172,15 +179,16 @@ bool cAIPlayer::BUILD_UNIT(int iUnitType) {
 bool cAIPlayer::startBuildingUnit(int iUnitType) const {
     const cPlayer &cPlayer = player[ID];
 
-    int listId = units[iUnitType].listId;
+    s_UnitP &unitType = units[iUnitType];
+    int listId = unitType.listId;
     bool startedBuilding = cPlayer.getSideBar()->startBuildingItemIfOk(listId, iUnitType);
 
     if (DEBUGGING) {
         char msg[255];
         if (startedBuilding) {
-            sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] - SUCCESS", units[iUnitType].name, iUnitType, listId);
+            sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] - SUCCESS", unitType.name, iUnitType, listId);
         } else {
-            sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] - FAILED", units[iUnitType].name, iUnitType, listId);
+            sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] - FAILED", unitType.name, iUnitType, listId);
         }
         logbook(msg);
     }

@@ -93,6 +93,12 @@ public:
         return -1;
     }
 
+    /**
+     * Returns ID at layer on cell. Returns -1 when layer or cell is not valid.
+     * @param cellNr
+     * @param idLayer
+     * @return
+     */
     int cellGetIdFromLayer(int cellNr, int idLayer) {
         if (idLayer < 0 || idLayer >= 4) return -1; // safeguard layers
         tCell *pCell = getCell(cellNr);

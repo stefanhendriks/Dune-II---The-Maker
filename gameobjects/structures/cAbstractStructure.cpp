@@ -254,9 +254,9 @@ int cAbstractStructure::getNonOccupiedCellAroundStructure() {
             FIX_BORDER_POS(iCx, iCy);
 
             // so they are for sure not at the outer edges on the map now...
-            int cll = iCellMake(iCx, iCy);
+            int cll = iCellMakeWhichCanReturnMinusOneWithinMapBorders(iCx, iCy);
 
-            if (!map.occupied(cll)) {
+            if (cll > -1 && !map.occupied(cll)) {
                 return cll;
             }
         }
