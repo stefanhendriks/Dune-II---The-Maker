@@ -18,9 +18,9 @@
 #define OPEN          0
 
 struct ASTAR {
-  int cost;
-  int parent;
-  int state;
+    int cost;
+    int parent;
+    int state;
 };
 
 // Temp map
@@ -30,84 +30,84 @@ ASTAR temp_map[MAX_CELLS];
 // Globals on bottom
 
 void cUnit::init(int i) {
-	fExperience=0;
+    fExperience = 0;
 
     iID = i;
 
-    iCell=0;          // cell of unit
+    iCell = 0;          // cell of unit
 
-    iType=0;          // type of unit
+    iType = 0;          // type of unit
 
-    iHitPoints=-1;     // hitpoints of unit
-    iTempHitPoints=-1; // temp hold back for 'reinforced' / 'dumping' and 'repairing' units
+    iHitPoints = -1;     // hitpoints of unit
+    iTempHitPoints = -1; // temp hold back for 'reinforced' / 'dumping' and 'repairing' units
 
-    iPlayer=-1;        // belongs to player
+    iPlayer = -1;        // belongs to player
 
-    iGroup=-1;
+    iGroup = -1;
 
     // Movement
-    iNextCell=-1;      // where to move to (next cell)
-    iGoalCell=-1;      // the goal cell (goal of path)
-    iCellX=-1;
-    iCellY=-1;
-    iOffsetX=0;       // X offset
-    iOffsetY=0;       // Y offset
+    iNextCell = -1;      // where to move to (next cell)
+    iGoalCell = -1;      // the goal cell (goal of path)
+    iCellX = -1;
+    iCellY = -1;
+    iOffsetX = 0;       // X offset
+    iOffsetY = 0;       // Y offset
     memset(iPath, -1, sizeof(iPath));    // path of unit
-    iPathIndex=-1;     // where are we?
-    iPathFails=0;
-    bCalculateNewPath=false;
+    iPathIndex = -1;     // where are we?
+    iPathFails = 0;
+    bCalculateNewPath = false;
 
-	bCarryMe=false;		// carry this unit when moving it around?
-    iCarryAll=-1;		// any carry-all that will pickup this unit... so this unit knows
-						// it should wait when moving, etc, etc
+    bCarryMe = false;        // carry this unit when moving it around?
+    iCarryAll = -1;        // any carry-all that will pickup this unit... so this unit knows
+    // it should wait when moving, etc, etc
 
 
     iAction = ACTION_GUARD;
 
-    iAttackUnit=-1;      // attacking unit id
-    iAttackStructure=-1; // attack structure id
-    iAttackCell=-1;
+    iAttackUnit = -1;      // attacking unit id
+    iAttackStructure = -1; // attack structure id
+    iAttackCell = -1;
 
     // selected
-    bSelected=false;
+    bSelected = false;
 
     // Action given code
-    iUnitID=-1;        // Unit ID to attack/pickup, etc
-    iStructureID=-1;   // structure ID to attack/bring to (refinery)
+    iUnitID = -1;        // Unit ID to attack/pickup, etc
+    iStructureID = -1;   // structure ID to attack/bring to (refinery)
 
-	// Carry-All specific
-	iTransferType=-1;	// -1 = none, 0 = new , 1 = carrying existing unit
-						// iUnitID = unit we CARRY (when TransferType == 1)
-						// iTempHitPoints = hp of unit when transfertype = 1
+    // Carry-All specific
+    iTransferType = -1;    // -1 = none, 0 = new , 1 = carrying existing unit
+    // iUnitID = unit we CARRY (when TransferType == 1)
+    // iTempHitPoints = hp of unit when transfertype = 1
 
-	iCarryTarget=-1;	// Unit ID to carry, but is not carried yet
-	iBringTarget=-1;	// Where to bring the carried unit (when iUnitID > -1)
-	iNewUnitType=-1;	// new unit that will be brought, will be this type
-	bPickedUp=false;		// picked up the unit?
+    iCarryTarget = -1;    // Unit ID to carry, but is not carried yet
+    iBringTarget = -1;    // Where to bring the carried unit (when iUnitID > -1)
+    iNewUnitType = -1;    // new unit that will be brought, will be this type
+    bPickedUp = false;        // picked up the unit?
 
     // harv
-    iCredits=0;
+    iCredits = 0;
 
     // Drawing
-    iBodyFacing=0;    // Body of tanks facing
-    iHeadFacing=0;    // Head of tanks facing
-    iBodyShouldFace=iBodyFacing;    // where should the unit body look at?
-    iHeadShouldFace=iHeadFacing;    // where should th eunit look at?
+    iBodyFacing = 0;    // Body of tanks facing
+    iHeadFacing = 0;    // Head of tanks facing
+    iBodyShouldFace = iBodyFacing;    // where should the unit body look at?
+    iHeadShouldFace = iHeadFacing;    // where should th eunit look at?
 
-    iFrame=0;
+    iFrame = 0;
 
     // TIMERS
-	TIMER_blink=0;
-    TIMER_move=0;
-    TIMER_movewait=0;
-    TIMER_thinkwait=0;    // wait with normal thinking..
-    TIMER_turn=0;
-    TIMER_frame=0;
-    TIMER_harvest=0;
-    TIMER_guard=0;    // guard scanning timer
-    TIMER_bored=0;    // how long are we bored?
-    TIMER_attack=0;
-    TIMER_wormeat=0;
+    TIMER_blink = 0;
+    TIMER_move = 0;
+    TIMER_movewait = 0;
+    TIMER_thinkwait = 0;    // wait with normal thinking..
+    TIMER_turn = 0;
+    TIMER_frame = 0;
+    TIMER_harvest = 0;
+    TIMER_guard = 0;    // guard scanning timer
+    TIMER_bored = 0;    // how long are we bored?
+    TIMER_attack = 0;
+    TIMER_wormeat = 0;
 
 
 }
@@ -123,18 +123,18 @@ void cUnit::recreateDimensions() {
 
 void cUnit::die(bool bBlowUp, bool bSquish) {
     // Animation / Sound
-	// TODO: update statistics player
+    // TODO: update statistics player
 
-    int iDieX=pos_x() + getUnitType().bmp_width/2;
-    int iDieY=pos_y() + getUnitType().bmp_height/2;
+    int iDieX = pos_x() + getUnitType().bmp_width / 2;
+    int iDieY = pos_y() + getUnitType().bmp_height / 2;
 
     // when HARVESTER, check if there are any friends , if not, then deliver one
     if (iType == HARVESTER && // a harvester died
         player[iPlayer].hasAtleastOneStructure(REFINERY)) { // and its player still has a refinery
 
         // check if the player has any harvester left
-        bool bFoundHarvester=false;
-        for (int i=0; i < MAX_UNITS; i++) {
+        bool bFoundHarvester = false;
+        for (int i = 0; i < MAX_UNITS; i++) {
             if (i != iID) {
                 cUnit &theUnit = unit[i];
 
@@ -151,8 +151,8 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
         if (!bFoundHarvester) {
             // deliver
 
-            cAbstractStructure * refinery = nullptr;
-            for (int k=0; k < MAX_STRUCTURES; k++) {
+            cAbstractStructure *refinery = nullptr;
+            for (int k = 0; k < MAX_STRUCTURES; k++) {
                 cAbstractStructure *theStructure = structure[k];
                 if (!theStructure) continue;
                 if (theStructure->getOwner() != iPlayer) continue;
@@ -421,11 +421,11 @@ int cUnit::draw_x() {
 }
 
 int cUnit::center_draw_x() {
-    return draw_x() + (mapCamera->factorZoomLevel(getBmpWidth())/2);
+    return draw_x() + (mapCamera->factorZoomLevel(getBmpWidth()) / 2);
 }
 
 int cUnit::center_draw_y() {
-    return draw_y() + (mapCamera->factorZoomLevel(getBmpHeight())/2);
+    return draw_y() + (mapCamera->factorZoomLevel(getBmpHeight()) / 2);
 }
 
 int cUnit::draw_y() {
@@ -441,14 +441,14 @@ void cUnit::draw_spice() {
     float width_x = mapCamera->factorZoomLevel(getBmpWidth());
     int height_y = mapCamera->factorZoomLevel(4);
     int drawx = draw_x();
-    int drawy = draw_y()-((height_y *2)+ 2);
+    int drawy = draw_y() - ((height_y * 2) + 2);
 
     int max = getUnitType().credit_capacity;
     int w = health_bar(width_x, iCredits, max);
 
     // bar itself
-    rectfill(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(0,0,0));
-    rectfill(bmp_screen, drawx, drawy, drawx + (w), drawy + height_y, makecol(255,91,1));
+    rectfill(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(0, 0, 0));
+    rectfill(bmp_screen, drawx, drawy, drawx + (w), drawy + height_y, makecol(255, 91, 1));
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
@@ -462,7 +462,7 @@ int cUnit::getBmpWidth() const {
 
 float cUnit::getHealthNormalized() {
     s_UnitP &unitType = getUnitType();
-    float flMAX  = unitType.hp;
+    float flMAX = unitType.hp;
     return (iHitPoints / flMAX);
 }
 
@@ -471,7 +471,7 @@ void cUnit::draw_health() {
     float width_x = mapCamera->factorZoomLevel(getBmpWidth());
     int height_y = mapCamera->factorZoomLevel(4);
     int drawx = draw_x();
-    int drawy = draw_y()-(height_y + 2);
+    int drawy = draw_y() - (height_y + 2);
 
     float healthNormalized = getHealthNormalized();
 
@@ -482,8 +482,8 @@ void cUnit::draw_health() {
     if (r > 255) r = 255;
 
     // bar itself
-    rectfill(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(0,0,0));
-    rectfill(bmp_screen, drawx, drawy, drawx + (w-1), drawy + height_y, makecol(r,g,32));
+    rectfill(bmp_screen, drawx, drawy, drawx + width_x, drawy + height_y, makecol(0, 0, 0));
+    rectfill(bmp_screen, drawx, drawy, drawx + (w - 1), drawy + height_y, makecol(r, g, 32));
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
@@ -493,8 +493,8 @@ void cUnit::draw_health() {
     // draw group
     if (iGroup > 0 &&
         iPlayer == HUMAN) {
-        alfont_textprintf(bmp_screen, bene_font, drawx+26,drawy-11, makecol(0,0,0), "%d", iGroup);
-        alfont_textprintf(bmp_screen, bene_font, drawx+26,drawy-12, makecol(255,255,255), "%d", iGroup);
+        alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 11, makecol(0, 0, 0), "%d", iGroup);
+        alfont_textprintf(bmp_screen, bene_font, drawx + 26, drawy - 12, makecol(255, 255, 255), "%d", iGroup);
     }
 
 }
@@ -514,65 +514,60 @@ float cUnit::fExpDamage() {
     return fResult;
 }
 
-void cUnit::draw_experience()
-{
-	// draws experience above health
+void cUnit::draw_experience() {
+    // draws experience above health
 
-	int iStars= (int)fExperience;
+    int iStars = (int) fExperience;
 
-	if (iStars < 1)
-		return; // no stars to draw!
+    if (iStars < 1)
+        return; // no stars to draw!
 
-	int iStarType = 0;
+    int iStarType = 0;
 
-	// twice correct and upgrade star type
-	if (iStars > 2)
-	{
-		iStarType++;
-		iStars-=3;
-	}
+    // twice correct and upgrade star type
+    if (iStars > 2) {
+        iStarType++;
+        iStars -= 3;
+    }
 
-	// red stars now, very much experience!
-	if (iStars > 2)
-	{
-		iStarType++;
-		iStars-=3;
-	}
+    // red stars now, very much experience!
+    if (iStars > 2) {
+        iStarType++;
+        iStars -= 3;
+    }
 
-	// still enough experience! wow
-	if (iStars > 2)
-	{
-		iStars=3;
-	}
+    // still enough experience! wow
+    if (iStars > 2) {
+        iStars = 3;
+    }
 
 
-	int drawx = draw_x()+3;
-    int drawy = draw_y()-19;
+    int drawx = draw_x() + 3;
+    int drawy = draw_y() - 19;
 
-	// 1 star = 1 experience
-	for (int i=0; i < iStars; i++)
-	{
-		draw_sprite(bmp_screen, (BITMAP *)gfxdata[OBJECT_STAR_01+iStarType].dat, drawx+i*9, drawy);
-	}
+    // 1 star = 1 experience
+    for (int i = 0; i < iStars; i++) {
+        draw_sprite(bmp_screen, (BITMAP *) gfxdata[OBJECT_STAR_01 + iStarType].dat, drawx + i * 9, drawy);
+    }
 
 }
 
 void cUnit::draw_path() {
-	// for debugging purposes
-	if (iCell == iGoalCell)
-		return;
+    // for debugging purposes
+    if (iCell == iGoalCell)
+        return;
 
-	if (iPath[0] < 0)
-		return;
+    if (iPath[0] < 0)
+        return;
 
     int halfTile = 16;
-	int iPrevX  = mapCamera->getWindowXPositionFromCellWithOffset(iPath[0], halfTile);
-	int iPrevY  = mapCamera->getWindowYPositionFromCellWithOffset(iPath[0], halfTile);
+    int iPrevX = mapCamera->getWindowXPositionFromCellWithOffset(iPath[0], halfTile);
+    int iPrevY = mapCamera->getWindowYPositionFromCellWithOffset(iPath[0], halfTile);
 
-	for (int i=1; i < MAX_PATH_SIZE; i++) {
-	    if (iPath[i] < 0) break;
-        int iDx  = mapCamera->getWindowXPositionFromCellWithOffset(iPath[i], halfTile);
-        int iDy  = mapCamera->getWindowYPositionFromCellWithOffset(iPath[i], halfTile);
+    for (int i = 1; i < MAX_PATH_SIZE; i++) {
+        if (iPath[i] < 0) break;
+        int iDx = mapCamera->getWindowXPositionFromCellWithOffset(iPath[i], halfTile);
+        int iDy = mapCamera->getWindowYPositionFromCellWithOffset(iPath[i], halfTile);
 
         if (i == iPathIndex) { // current node we navigate to
             line(bmp_screen, iPrevX, iPrevY, iDx, iDy, makecol(255, 255, 255));
@@ -587,7 +582,7 @@ void cUnit::draw_path() {
         // draw a line from previous to current
         iPrevX = iDx;
         iPrevY = iDy;
-	}
+    }
 }
 
 void cUnit::draw() {
@@ -601,8 +596,8 @@ void cUnit::draw() {
     int uy = draw_y();
 
     if (iType == SANDWORM) {
-        Shimmer(20, ux+(mapCamera->getZoomedHalfTileSize()), uy + (mapCamera->getZoomedHalfTileSize()));
-		return;
+        Shimmer(20, ux + (mapCamera->getZoomedHalfTileSize()), uy + (mapCamera->getZoomedHalfTileSize()));
+        return;
     }
 
     s_UnitP &unitType = getUnitType();
@@ -633,24 +628,24 @@ void cUnit::draw() {
     if (shadow) {
         int destY = uy;
 
-		if (iType == CARRYALL) {
-		    // adjust X and Y so it looks like a carry-all is 'higher up in the air'
+        if (iType == CARRYALL) {
+            // adjust X and Y so it looks like a carry-all is 'higher up in the air'
             destY = uy + 24; // TODO; do something with height here? the closer to target, the less distant the shadow?
-		}
+        }
 
         allegroDrawer->maskedStretchBlit(shadow, bmp_screen, 0, 0, bmp_width, bmp_height,
                                          ux, destY,
                                          scaledWidth, scaledHeight);
-		destroy_bitmap(shadow);
+        destroy_bitmap(shadow);
     }
 
     // Draw BODY
     BITMAP *bitmap = cPlayer.getUnitBitmap(iType);
     if (bitmap) {
         allegroDrawer->maskedStretchBlit(bitmap, bmp_screen, start_x, start_y, bmp_width, bmp_height,
-                            ux, uy,
-                            scaledWidth,
-                            scaledHeight);
+                                         ux, uy,
+                                         scaledWidth,
+                                         scaledHeight);
     } else {
         char msg[255];
         sprintf(msg, "unit of iType [%d] did not have a bitmap!?", iType);
@@ -664,7 +659,8 @@ void cUnit::draw() {
         start_x = bmp_head * bmp_width;
         start_y = bmp_height * iFrame;
 
-        allegroDrawer->maskedStretchBlit(top, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux, uy, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
+        allegroDrawer->maskedStretchBlit(top, bmp_screen, start_x, start_y, bmp_width, bmp_height, ux, uy,
+                                         mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
     }
 
     // TODO: Fix this / Draw BLINKING (ie, when targeted unit)
@@ -672,8 +668,8 @@ void cUnit::draw() {
 //		if (rnd(100) < 15)
 //			mask_to_color(temp, makecol(255,255,255));
 
-	// when we want to be picked up..
-	if (bCarryMe) {
+    // when we want to be picked up..
+    if (bCarryMe) {
         draw_sprite(bmp_screen, (BITMAP *) gfxdata[SYMB_PICKMEUP].dat, ux, uy - 7);
     }
 
@@ -682,7 +678,9 @@ void cUnit::draw() {
         BITMAP *focusBitmap = (BITMAP *) gfxdata[FOCUS].dat;
         int bmp_width = focusBitmap->w;
         int bmp_height = focusBitmap->h;
-        allegroDrawer->maskedStretchBlit(focusBitmap, bmp_screen, 0, 0, bmp_width, bmp_height, iSelX/*+startpixel*/- 2, iSelY, mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_height));
+        allegroDrawer->maskedStretchBlit(focusBitmap, bmp_screen, 0, 0, bmp_width, bmp_height, iSelX/*+startpixel*/- 2,
+                                         iSelY, mapCamera->factorZoomLevel(bmp_width),
+                                         mapCamera->factorZoomLevel(bmp_height));
     }
 
 
@@ -694,24 +692,23 @@ void cUnit::poll() {
     iCellY = iCellGiveY(iCell);
 }
 
-void cUnit::move_to(int iCll, int iStrucID, int iUnitID)
-{
-	LOG("ORDERED TO MOVE");
+void cUnit::move_to(int iCll, int iStrucID, int iUnitID) {
+    LOG("ORDERED TO MOVE");
 
     iGoalCell = iCll;
     iStructureID = iStrucID;
     this->iUnitID = iUnitID;
-    iPathIndex=-1;
-	iAttackStructure=-1;
-    iAttackCell=-1;
+    iPathIndex = -1;
+    iAttackStructure = -1;
+    iAttackCell = -1;
 
-	// only when not moving (half on tile) reset nextcell
-	if (iOffsetX == 0 && iOffsetY == 0)
-		iNextCell=-1;
+    // only when not moving (half on tile) reset nextcell
+    if (iOffsetX == 0 && iOffsetY == 0)
+        iNextCell = -1;
 
-	iAction = ACTION_MOVE;
+    iAction = ACTION_MOVE;
 
-	memset(iPath,-1, sizeof(iPath));
+    memset(iPath, -1, sizeof(iPath));
 
     if (iStrucID > -1) {
         if (structure[iStrucID]) {
@@ -746,8 +743,8 @@ void cUnit::think_guard() {
 
         poll();
         // scan
-        int iDistance=9999;
-        int unitIdSelectedForAttacking=-1;
+        int iDistance = 9999;
+        int unitIdSelectedForAttacking = -1;
 
         // non airborn units thinking
         if (isSandworm()) {
@@ -850,14 +847,12 @@ void cUnit::think_guard() {
                     play_voice(SOUND_VOICE_09_ATR); // enemy unit approaching
             }
             return;
-        }
-		else
-		{
-		    int structureIdSelectedForAttacking = -1;
+        } else {
+            int structureIdSelectedForAttacking = -1;
 
             if (!isSandworm() && iPlayer > HUMAN) {
-				// nothing found yet to attack;
-				// ai units will auto-attack structures nearby
+                // nothing found yet to attack;
+                // ai units will auto-attack structures nearby
 
                 for (int i = 0; i < MAX_STRUCTURES; i++) {
                     if (structure[i] && i != iID) {
@@ -897,7 +892,7 @@ void cUnit::think_guard() {
 
                     }
                 }
-			}
+            }
 
             if (structureIdSelectedForAttacking > -1) {
 
@@ -908,16 +903,15 @@ void cUnit::think_guard() {
                     playMusicByType(MUSIC_ATTACK);
                 }
             }
-		}
+        }
 
     }
 
 
-    if (TIMER_bored > 3500)
-    {
-        TIMER_bored=0;
-        iBodyShouldFace=rnd(8);
-        iHeadShouldFace=rnd(8);
+    if (TIMER_bored > 3500) {
+        TIMER_bored = 0;
+        iBodyShouldFace = rnd(8);
+        iHeadShouldFace = rnd(8);
     }
 
     // When bored we turn our body and head sometimes, so do it here:
@@ -929,111 +923,99 @@ bool cUnit::isSandworm() const { return iType == SANDWORM; }
 // NORMAL thinking
 void cUnit::think() {
     if (TIMER_blink > 0)
-		TIMER_blink--;
+        TIMER_blink--;
 
-    if (iType == MCV)
-    {
-        if (iPlayer == 0)
-        {
+    if (iType == MCV) {
+        if (iPlayer == 0) {
             if (bSelected)
-                if (key[KEY_D])
-                {
-					int iGood = cStructureFactory::getInstance()->getSlabStatus(iCell, CONSTYARD, iID);
+                if (key[KEY_D]) {
+                    int iGood = cStructureFactory::getInstance()->getSlabStatus(iCell, CONSTYARD, iID);
 
-                    if (iGood >= -1)
-                    {
-                        int iLocation=iCell;
+                    if (iGood >= -1) {
+                        int iLocation = iCell;
 
                         die(false, false);
 
                         // place const yard
-						cStructureFactory::getInstance()->createStructure(iLocation, CONSTYARD, 0, 100);
+                        cStructureFactory::getInstance()->createStructure(iLocation, CONSTYARD, 0, 100);
                     }
                 }
         }
     }
 
     // HEAD is not facing correctly
-    if (units[iType].airborn == false)
-    {
-    if (iBodyFacing == iBodyShouldFace)
-    {
-     if (iHeadFacing != iHeadShouldFace)
-     {
+    if (units[iType].airborn == false) {
+        if (iBodyFacing == iBodyShouldFace) {
+            if (iHeadFacing != iHeadShouldFace) {
 
-         TIMER_turn++;
+                TIMER_turn++;
 
 
-        if (TIMER_turn > (units[iType].turnspeed))
-        {
-            TIMER_turn=0;
+                if (TIMER_turn > (units[iType].turnspeed)) {
+                    TIMER_turn = 0;
 
-            int d = 1;
+                    int d = 1;
 
-            int toleft = (iHeadFacing + 8) - iHeadShouldFace;
-            if (toleft > 7) toleft -= 8;
+                    int toleft = (iHeadFacing + 8) - iHeadShouldFace;
+                    if (toleft > 7) toleft -= 8;
 
-            int toright = abs(toleft-8);
+                    int toright = abs(toleft - 8);
 
-            if (toright == toleft) d = -1+(rnd(2));
-            if (toleft  > toright) d = 1;
-            if (toright > toleft)  d = -1;
+                    if (toright == toleft) d = -1 + (rnd(2));
+                    if (toleft > toright) d = 1;
+                    if (toright > toleft) d = -1;
 
-            iHeadFacing += d;
+                    iHeadFacing += d;
 
-            if (iHeadFacing < 0)
-                iHeadFacing = 7;
+                    if (iHeadFacing < 0)
+                        iHeadFacing = 7;
 
-            if (iHeadFacing > 7)
-                iHeadFacing = 0;
+                    if (iHeadFacing > 7)
+                        iHeadFacing = 0;
 
 
-        } // turn
+                } // turn
 
 
 
 
-     } // head facing
+            } // head facing
 
-    }
-    else
-    {
-        // BODY is not facing correctly
-		        TIMER_turn++;
+        } else {
+            // BODY is not facing correctly
+            TIMER_turn++;
 
 
-        if (TIMER_turn > (units[iType].turnspeed))
-        {
-            TIMER_turn=0;
+            if (TIMER_turn > (units[iType].turnspeed)) {
+                TIMER_turn = 0;
 
-            int d = 1;
+                int d = 1;
 
-            int toleft = (iBodyFacing + 8) - iBodyShouldFace;
-            if (toleft > 7) toleft -= 8;
+                int toleft = (iBodyFacing + 8) - iBodyShouldFace;
+                if (toleft > 7) toleft -= 8;
 
-            int toright = abs(toleft-8);
+                int toright = abs(toleft - 8);
 
-            if (toright == toleft) d = -1+(rnd(2));
-            if (toleft  > toright) d = 1;
-            if (toright > toleft)  d = -1;
+                if (toright == toleft) d = -1 + (rnd(2));
+                if (toleft > toright) d = 1;
+                if (toright > toleft) d = -1;
 
-            iBodyFacing += d;
+                iBodyFacing += d;
 
-            if (iBodyFacing < 0)
-                iBodyFacing = 7;
+                if (iBodyFacing < 0)
+                    iBodyFacing = 7;
 
-            if (iBodyFacing > 7)
-                iBodyFacing = 0;
+                if (iBodyFacing > 7)
+                    iBodyFacing = 0;
 
 
-        } // turn
-    }
+            } // turn
+        }
 
     } // airborn stuff
 
     // when waiting.. wait
-    if (TIMER_thinkwait > 0)
-    {
+    if (TIMER_thinkwait > 0) {
         TIMER_thinkwait--;
         return;
     }
@@ -1041,22 +1023,22 @@ void cUnit::think() {
     if (iTempHitPoints > -1)
         return;
 
-	// when any unit is on a spice bloom, you got a problem, you die!
+    // when any unit is on a spice bloom, you got a problem, you die!
     int cellType = map.getCellType(iCell);
     if (cellType == TERRAIN_BLOOM
         && units[iType].airborn == false) {
-		// change type of terrain to sand
-		mapEditor.createCell(iCell, TERRAIN_SAND, 0);
+        // change type of terrain to sand
+        mapEditor.createCell(iCell, TERRAIN_SAND, 0);
 
-		mapEditor.createField(iCell, TERRAIN_SPICE, 25+(rnd(50)));
+        mapEditor.createField(iCell, TERRAIN_SPICE, 25 + (rnd(50)));
 
-		// kill unit
-		map.remove_id(iID, MAPID_UNITS);
+        // kill unit
+        map.remove_id(iID, MAPID_UNITS);
 
-		die(true, false);
-		game.TIMER_shake=20;
-		return;
-	}
+        die(true, false);
+        game.TIMER_shake = 20;
+        return;
+    }
 
 
     // --- think
@@ -1069,54 +1051,52 @@ void cUnit::think() {
 
         if ((iAttackUnit < 0 || iAttackStructure < 0) && TIMER_attack == 0) {
             // scan for enemy activities.
-            int iDistance=9999;
-            int iTarget=-1;
+            int iDistance = 9999;
+            int iTarget = -1;
 
-        	for (int i=0; i < MAX_UNITS; i++) {
-					if (unit[i].isValid() && i != iID) {
+            for (int i = 0; i < MAX_UNITS; i++) {
+                if (unit[i].isValid() && i != iID) {
 
-                        if (player[iPlayer].iTeam == player[unit[i].iPlayer].iTeam)
+                    if (player[iPlayer].iTeam == player[unit[i].iPlayer].iTeam)
+                        continue;
+
+
+                    if (iPlayer == 0 && player[0].getHouse() == ATREIDES) {
+                        // when the unit player == FREMEN
+                        if (player[unit[i].iPlayer].getHouse() == FREMEN && iType != SANDWORM)
                             continue;
+                    }
 
 
-                        if (iPlayer == 0 && player[0].getHouse() == ATREIDES)
-                        {
-                            // when the unit player == FREMEN
-                            if (player[unit[i].iPlayer].getHouse() == FREMEN && iType != SANDWORM)
-                                continue;
+                    // not ours and its visible
+                    if (unit[i].iPlayer != iPlayer &&
+                        mapUtils->isCellVisibleForPlayerId(iPlayer, unit[i].iCell) &&
+                        units[unit[i].iType].airborn == false) // do not attack airborn units!?
+                    {
+                        int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
+
+                        if (distance <= units[iType].range && distance < iDistance) {
+                            // ATTACK
+                            iDistance = distance;
+                            iTarget = i;
                         }
+                    }
 
-
-							// not ours and its visible
-							if (unit[i].iPlayer != iPlayer &&
-								mapUtils->isCellVisibleForPlayerId(iPlayer, unit[i].iCell) &&
-								units[unit[i].iType].airborn == false) // do not attack airborn units!?
-							{
-								int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
-
-								if (distance <= units[iType].range && distance < iDistance)
-								{
-									// ATTACK
-									iDistance = distance;
-									iTarget=i;
-								}
-							}
-
-					}
-				}
+                }
+            }
 
             // target known?
             if (iTarget > -1) {
-                UNIT_ORDER_ATTACK(iID, unit[iTarget].iCell, iTarget, -1,-1);
-				if (DEBUGGING)
-					logbook("FOUND ENEMY TO ATTACK");
+                UNIT_ORDER_ATTACK(iID, unit[iTarget].iCell, iTarget, -1, -1);
+                if (DEBUGGING)
+                    logbook("FOUND ENEMY TO ATTACK");
             } else {
                 // no unit found, attack structure
                 // scan for enemy activities.
-                int iDistance=9999;
-                int iTarget=-1;
+                int iDistance = 9999;
+                int iTarget = -1;
 
-                for (int i=0; i < MAX_STRUCTURES; i++) {
+                for (int i = 0; i < MAX_STRUCTURES; i++) {
                     cAbstractStructure *pStructure = structure[i];
                     if (!pStructure) continue;
                     if (!pStructure->isValid()) continue;
@@ -1126,8 +1106,7 @@ void cUnit::think() {
                         continue;
 
                     //
-                    if (iPlayer == HUMAN && player[HUMAN].isHouse(ATREIDES))
-                    {
+                    if (iPlayer == HUMAN && player[HUMAN].isHouse(ATREIDES)) {
                         // ATREIDES is allies with FREMEN
                         if (pStructure->getPlayer()->isHouse(FREMEN))
                             continue;
@@ -1135,18 +1114,16 @@ void cUnit::think() {
 
                     // not ours and its visible
                     if (pStructure->getPlayerId() != iPlayer && // enemy
-                        mapUtils->isCellVisibleForPlayerId(iPlayer, pStructure->getCell()))
-                    {
+                        mapUtils->isCellVisibleForPlayerId(iPlayer, pStructure->getCell())) {
                         int cellX = iCellGiveX(pStructure->getCell());
                         int cellY = iCellGiveX(pStructure->getCell());
                         int distance = ABS_length(iCellX, iCellY, pStructure->getCell(), unit[i].iCellY);
 
                         // attack closest structure
-                        if (distance < iDistance)
-                        {
+                        if (distance < iDistance) {
                             // ATTACK
                             iDistance = distance;
-                            iTarget=i;
+                            iTarget = i;
                         }
                     }
                 }
@@ -1155,9 +1132,7 @@ void cUnit::think() {
                     UNIT_ORDER_ATTACK(iID, unit[iTarget].iCell, -1, iTarget, -1);
                 }
             }
-        }
-        else if (iAttackUnit < 0 && TIMER_attack < 0)
-        {
+        } else if (iAttackUnit < 0 && TIMER_attack < 0) {
             TIMER_attack++;
         }
     }
@@ -1166,7 +1141,7 @@ void cUnit::think() {
     // HARVESTERs logic here
     int idOfStructureAtCell = map.getCellIdStructuresLayer(iCell);
     if (iType == HARVESTER) {
-        bool bFindRefinery=false;
+        bool bFindRefinery = false;
 
         if (iCredits > 0 && bSelected && key[KEY_D]) {
             bFindRefinery = true;
@@ -1176,8 +1151,7 @@ void cUnit::think() {
         if (iCell == iGoalCell) {
             // when on spice, harvest
             if (cellType == TERRAIN_SPICE ||
-                cellType == TERRAIN_SPICEHILL)
-            {
+                cellType == TERRAIN_SPICEHILL) {
                 // do timer stuff
                 if (iCredits < units[iType].credit_capacity)
                     TIMER_harvest++;
@@ -1187,20 +1161,20 @@ void cUnit::think() {
                     // find harvest cell
                     move_to(UNIT_find_harvest_spot(iID), -1, -1);
                 } else {
-                    iFrame=0;
-                    bFindRefinery=true;
+                    iFrame = 0;
+                    bFindRefinery = true;
                     // find a refinery
                 }
             }
 
             if (iCredits >= units[iType].credit_capacity)
-                bFindRefinery=true;
+                bFindRefinery = true;
 
             // when we should harvest...
             cPlayerDifficultySettings *difficultySettings = player[iPlayer].getDifficultySettings();
             if (TIMER_harvest > (difficultySettings->getHarvestSpeed(units[iType].harvesting_speed)) &&
                 iCredits < units[iType].credit_capacity) {
-                TIMER_harvest=1;
+                TIMER_harvest = 1;
 
                 iFrame++;
 
@@ -1211,15 +1185,11 @@ void cUnit::think() {
                 map.cellTakeCredits(iCell, units[iType].harvesting_amount);
 
                 // turn into sand/spice (when spicehill)
-                if (map.getCellCredits(iCell) <= 0)
-                {
-                    if (cellType == TERRAIN_SPICEHILL)
-                    {
+                if (map.getCellCredits(iCell) <= 0) {
+                    if (cellType == TERRAIN_SPICEHILL) {
                         map.cellChangeType(iCell, TERRAIN_SPICE);
                         map.cellGiveCredits(iCell, rnd(100));
-                    }
-                    else
-                    {
+                    } else {
                         map.cellChangeType(iCell, TERRAIN_SAND);
                         map.cellChangeTile(iCell, 0);
                     }
@@ -1237,20 +1207,20 @@ void cUnit::think() {
 
             // refinery required, go find one that is available
             if (bFindRefinery) {
-                iFrame=0;
+                iFrame = 0;
                 char msg[255];
                 sprintf(msg, "Going to look for a refinery, playerId [%d], cell [%d]", iPlayer, iCell);
                 logbook(msg);
-                int	refineryStructureId = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
-                        iCell, REFINERY,&player[iPlayer]);
+                int refineryStructureId = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
+                        iCell, REFINERY, &player[iPlayer]);
 
                 if (refineryStructureId < 0) {
                     // none found, wait
-                    TIMER_thinkwait=10;
+                    TIMER_thinkwait = 10;
                     return;
                 }
 
-				// found a refinery, lets check if we can find a carry-all that will bring us
+                // found a refinery, lets check if we can find a carry-all that will bring us
                 cAbstractStructure *refinery = structure[refineryStructureId];
                 refinery->setAnimating(true);
 
@@ -1263,12 +1233,12 @@ void cUnit::think() {
                     char msg[255];
                     sprintf(msg, "Returning to refinery ID %d", refineryStructureId);
                     LOG(msg);
-					move_to(refinery->getCell() + rnd(2) + (rnd(2) * 64), refineryStructureId, -1); // move yourself...
-                    TIMER_movewait=0;
-				} else {
-					TIMER_movewait = 500; // wait for pickup!
-					TIMER_thinkwait = 500;
-				}
+                    move_to(refinery->getCell() + rnd(2) + (rnd(2) * 64), refineryStructureId, -1); // move yourself...
+                    TIMER_movewait = 0;
+                } else {
+                    TIMER_movewait = 500; // wait for pickup!
+                    TIMER_thinkwait = 500;
+                }
             }
 
         } else {
@@ -1276,81 +1246,77 @@ void cUnit::think() {
             iFrame = 0;
         }
 
-		// we wanted to enter this structure, so do it immidiatly (else we just seem to
-		// drive over the structure, which looks odd!
-		if (iStructureID > -1 &&
+        // we wanted to enter this structure, so do it immidiatly (else we just seem to
+        // drive over the structure, which looks odd!
+        if (iStructureID > -1 &&
             idOfStructureAtCell == iStructureID &&
-            idOfStructureAtCell > -1)
-		{
+            idOfStructureAtCell > -1) {
 
-			// when this structure is not occupied
-			if (structure[iStructureID]->iUnitID < 0)
-			{
-				// get in!
-				structure[iStructureID]->setAnimating(false);
-				structure[iStructureID]->iUnitID = iID;  // !!
-				structure[iStructureID]->setFrame(0);
+            // when this structure is not occupied
+            if (structure[iStructureID]->iUnitID < 0) {
+                // get in!
+                structure[iStructureID]->setAnimating(false);
+                structure[iStructureID]->iUnitID = iID;  // !!
+                structure[iStructureID]->setFrame(0);
 
-				// store this
-				iTempHitPoints = iHitPoints;
-				iHitPoints=-1; // 'kill' unit
+                // store this
+                iTempHitPoints = iHitPoints;
+                iHitPoints = -1; // 'kill' unit
 
-				if (DEBUGGING)
-					logbook("[UNIT] -> Enter refinery #1");
+                if (DEBUGGING)
+                    logbook("[UNIT] -> Enter refinery #1");
 
-				map.remove_id(iID, MAPID_UNITS);
-			} // enter..
-		}
+                map.remove_id(iID, MAPID_UNITS);
+            } // enter..
+        }
     }
 
-    	// we wanted to enter this structure, so do it immidiatly (else we just seem to
-		// drive over the structure, which looks odd!
-		if (iStructureID > -1 &&
-            idOfStructureAtCell == iStructureID &&
-            idOfStructureAtCell > -1)
-		{
+    // we wanted to enter this structure, so do it immidiatly (else we just seem to
+    // drive over the structure, which looks odd!
+    if (iStructureID > -1 &&
+        idOfStructureAtCell == iStructureID &&
+        idOfStructureAtCell > -1) {
 
-			// when this structure is not occupied
-			if (structure[iStructureID]->iUnitID < 0)
-			{
-				// get in!
-				structure[iStructureID]->setAnimating(false);
-				structure[iStructureID]->iUnitID = iID;  // !!
-				structure[iStructureID]->setFrame(0);
+        // when this structure is not occupied
+        if (structure[iStructureID]->iUnitID < 0) {
+            // get in!
+            structure[iStructureID]->setAnimating(false);
+            structure[iStructureID]->iUnitID = iID;  // !!
+            structure[iStructureID]->setFrame(0);
 
-				// store this
-				iTempHitPoints = iHitPoints;
-				iHitPoints=-1; // 'kill' unit
+            // store this
+            iTempHitPoints = iHitPoints;
+            iHitPoints = -1; // 'kill' unit
 
-				if (DEBUGGING)
-					logbook("[UNIT] -> Enter Structure");
+            if (DEBUGGING)
+                logbook("[UNIT] -> Enter Structure");
 
-				map.remove_id(iID, MAPID_UNITS);
-			} // enter..
-		}
+            map.remove_id(iID, MAPID_UNITS);
+        } // enter..
+    }
 
 
-	// When this is a carry-all, show proper animation when filled
-	if (iType == CARRYALL) {
-		// A carry-all has something when:
-		// - it carries a unit (iUnitID > -1)
-		// - it has the flag TRANSFER_NEW_
+    // When this is a carry-all, show proper animation when filled
+    if (iType == CARRYALL) {
+        // A carry-all has something when:
+        // - it carries a unit (iUnitID > -1)
+        // - it has the flag TRANSFER_NEW_
 
-		if ((iTransferType == TRANSFER_NEW_STAY ||
-			 iTransferType == TRANSFER_NEW_LEAVE ||
-			 iTransferType == TRANSFER_PICKUP) || iUnitID > -1) {
+        if ((iTransferType == TRANSFER_NEW_STAY ||
+             iTransferType == TRANSFER_NEW_LEAVE ||
+             iTransferType == TRANSFER_PICKUP) || iUnitID > -1) {
 
-			// when picking up a unit.. only draw when picked up
-			if (iTransferType == TRANSFER_PICKUP && bPickedUp)
-				iFrame=1;
+            // when picking up a unit.. only draw when picked up
+            if (iTransferType == TRANSFER_PICKUP && bPickedUp)
+                iFrame = 1;
 
-			// any other transfer, means it is filled from start...
-			if (iTransferType != TRANSFER_PICKUP)
-				iFrame=1;
-		} else {
+            // any other transfer, means it is filled from start...
+            if (iTransferType != TRANSFER_PICKUP)
+                iFrame = 1;
+        } else {
             iFrame = 0;
         }
-	}
+    }
 }
 
 // aircraft specific thinking
@@ -1366,40 +1332,40 @@ void cUnit::think_move_air() {
 
     iNextCell = isNextCell();
 
-    if (!bCellValid(iCell))	{
-		die(true, false);
+    if (!bCellValid(iCell)) {
+        die(true, false);
 
-		// KILL UNITS WHO SOMEHOW GET INVALID
-		if (DEBUGGING)
-			logbook("ERROR: Unit became invalid somehow, killed it");
+        // KILL UNITS WHO SOMEHOW GET INVALID
+        if (DEBUGGING)
+            logbook("ERROR: Unit became invalid somehow, killed it");
 
-		return;
-	}
+        return;
+    }
 
-	if (!bCellValid(iNextCell))
-		iNextCell = iCell;
+    if (!bCellValid(iNextCell))
+        iNextCell = iCell;
 
-	if (!bCellValid(iGoalCell))
-		iGoalCell = iCell;
+    if (!bCellValid(iGoalCell))
+        iGoalCell = iCell;
 
     // same cell (no goal specified or something)
     if (iNextCell == iCell) {
 
-        bool bBordered=BORDER_POS(iCellGiveX(iCell), iCellGiveY(iCell));
+        bool bBordered = BORDER_POS(iCellGiveX(iCell), iCellGiveY(iCell));
 
-		// reinforcement stuff happens here...
-		if (iTransferType == TRANSFER_DIE) {
-			// kill (probably reached border or something)
-			die(false, false);
-			return;
-		}
+        // reinforcement stuff happens here...
+        if (iTransferType == TRANSFER_DIE) {
+            // kill (probably reached border or something)
+            die(false, false);
+            return;
+        }
 
-		// transfer wants to pickup and drop a unit...
-		if (iTransferType == TRANSFER_PICKUP) {
-			if (iUnitID > -1) {
-				// Not yet picked up the unit
+        // transfer wants to pickup and drop a unit...
+        if (iTransferType == TRANSFER_PICKUP) {
+            if (iUnitID > -1) {
+                // Not yet picked up the unit
                 cUnit &unitToPickupOrDrop = unit[iUnitID];
-                if (!bPickedUp)	{
+                if (!bPickedUp) {
                     if (!unitToPickupOrDrop.isValid()) {
                         iTransferType = TRANSFER_NONE; // nope...
                         return;
@@ -1408,97 +1374,97 @@ void cUnit::think_move_air() {
                     // I believe this statement is always true, as we do not set flag
                     // on unit that is being picked up
                     if (unitToPickupOrDrop.bPickedUp == false) {
-						// check where the unit is:
-						int iTheGoal = unitToPickupOrDrop.iCell;
+                        // check where the unit is:
+                        int iTheGoal = unitToPickupOrDrop.iCell;
 
-						if (iCell == iTheGoal) {
-							// when this unit is NOT moving
-							if (!unitToPickupOrDrop.isMovingBetweenCells())	{
-								bPickedUp = true; // set state in aircraft, that it has picked up a unit
+                        if (iCell == iTheGoal) {
+                            // when this unit is NOT moving
+                            if (!unitToPickupOrDrop.isMovingBetweenCells()) {
+                                bPickedUp = true; // set state in aircraft, that it has picked up a unit
 
-								// so we set the tempHitpoints so the unit 'dissapears' from the map without being
-								// really dead.
-								unitToPickupOrDrop.iTempHitPoints = unitToPickupOrDrop.iHitPoints;
+                                // so we set the tempHitpoints so the unit 'dissapears' from the map without being
+                                // really dead.
+                                unitToPickupOrDrop.iTempHitPoints = unitToPickupOrDrop.iHitPoints;
 
-								// now remove hitpoints (HACK HACK)
-								unitToPickupOrDrop.iHitPoints = -1;
+                                // now remove hitpoints (HACK HACK)
+                                unitToPickupOrDrop.iHitPoints = -1;
 
-								// remove unit from map id (so it wont block other units)
+                                // remove unit from map id (so it wont block other units)
                                 map.cellResetIdFromLayer(iCell, MAPID_UNITS);
 
-								// now move air unit to the 'bring target'
-								iGoalCell = iBringTarget;
+                                // now move air unit to the 'bring target'
+                                iGoalCell = iBringTarget;
 
-								// smoke puffs when picking up unit
-                                int pufX=(pos_x() + getBmpWidth() / 2);
-                                int pufY=(pos_y() + getBmpHeight() / 2);
+                                // smoke puffs when picking up unit
+                                int pufX = (pos_x() + getBmpWidth() / 2);
+                                int pufY = (pos_y() + getBmpHeight() / 2);
 
                                 PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
 
-								LOG("Pick up unit");
-								return;
-							}
-						} else {
-						    // goal/unit not yet reached
+                                LOG("Pick up unit");
+                                return;
+                            }
+                        } else {
+                            // goal/unit not yet reached
 
-						    if (!unitToPickupOrDrop.bPickedUp) {
-						        // keep updating goal as long as unit has not been picked up yet.
+                            if (!unitToPickupOrDrop.bPickedUp) {
+                                // keep updating goal as long as unit has not been picked up yet.
                                 iGoalCell = unitToPickupOrDrop.iCell;
                                 iCarryTarget = unitToPickupOrDrop.iCell;
                             } else {
                                 // forget about this
-                                iGoalCell=iCell;
-                                iTransferType=TRANSFER_NONE;
+                                iGoalCell = iCell;
+                                iTransferType = TRANSFER_NONE;
                             }
-							return;
-						}
-					} // is the unit to pick up, not yet picked up yet?
-				} // has the aircraft (this) not yet picked up unit?
-				else {
-					// picked up unit! yay, we are at the destination where we had to
-					// bring it... w00t
+                            return;
+                        }
+                    } // is the unit to pick up, not yet picked up yet?
+                } // has the aircraft (this) not yet picked up unit?
+                else {
+                    // picked up unit! yay, we are at the destination where we had to
+                    // bring it... w00t
 
-					if (iCell == iBringTarget) {
+                    if (iCell == iBringTarget) {
 
-						// check if its valid for this unit...
-						if (!map.occupied(iCell, iUnitID) && bBordered) {
+                        // check if its valid for this unit...
+                        if (!map.occupied(iCell, iUnitID) && bBordered) {
 
                             // dump it here
-							unitToPickupOrDrop.iCell = iCell;
+                            unitToPickupOrDrop.iCell = iCell;
                             unitToPickupOrDrop.iGoalCell = iCell;
                             unitToPickupOrDrop.poll(); // update cellx and celly
-							map.cellSetIdForLayer(iCell, MAPID_UNITS, iUnitID);
+                            map.cellSetIdForLayer(iCell, MAPID_UNITS, iUnitID);
                             unitToPickupOrDrop.iHitPoints = unitToPickupOrDrop.iTempHitPoints;
                             unitToPickupOrDrop.iTempHitPoints = -1;
                             unitToPickupOrDrop.TIMER_movewait = 0;
                             unitToPickupOrDrop.TIMER_thinkwait = 0;
                             unitToPickupOrDrop.iCarryAll = -1;
 
-							// match facing of carryall
-							unitToPickupOrDrop.iHeadFacing = iHeadFacing;
+                            // match facing of carryall
+                            unitToPickupOrDrop.iHeadFacing = iHeadFacing;
                             unitToPickupOrDrop.iHeadShouldFace = iHeadShouldFace;
                             unitToPickupOrDrop.iBodyFacing = iBodyFacing;
                             unitToPickupOrDrop.iBodyShouldFace = iBodyShouldFace;
-                            unitToPickupOrDrop.iOffsetX=0;
-                            unitToPickupOrDrop.iOffsetY=0;
+                            unitToPickupOrDrop.iOffsetX = 0;
+                            unitToPickupOrDrop.iOffsetY = 0;
 
-							// clear spot
-							map.clear_spot(iCell, unitToPickupOrDrop.getUnitType().sight, iPlayer);
+                            // clear spot
+                            map.clear_spot(iCell, unitToPickupOrDrop.getUnitType().sight, iPlayer);
 
-							int unitIdOfUnitThatHasBeenPickedUp = iUnitID;
+                            int unitIdOfUnitThatHasBeenPickedUp = iUnitID;
 
-							iUnitID = -1;		 // reset this
-							iTempHitPoints = -1; // reset this
-							iTransferType = TRANSFER_NONE; // done
+                            iUnitID = -1;         // reset this
+                            iTempHitPoints = -1; // reset this
+                            iTransferType = TRANSFER_NONE; // done
 
-							// WHEN DUMPING A HARVESTER IN A REFINERY
-							// make it enter the refinery instantly
-							if (unitToPickupOrDrop.isHarvester() && unitToPickupOrDrop.iStructureID > -1) {
+                            // WHEN DUMPING A HARVESTER IN A REFINERY
+                            // make it enter the refinery instantly
+                            if (unitToPickupOrDrop.isHarvester() && unitToPickupOrDrop.iStructureID > -1) {
                                 // valid structure
                                 cAbstractStructure *structureUnitWantsToEnter = structure[unitToPickupOrDrop.iStructureID];
                                 if (structureUnitWantsToEnter && structureUnitWantsToEnter->isValid()) {
                                     // when this structure is not occupied
-                                    if (structureUnitWantsToEnter->iUnitID < 0)	{
+                                    if (structureUnitWantsToEnter->iUnitID < 0) {
                                         // get in!
                                         structureUnitWantsToEnter->setAnimating(false);
                                         structureUnitWantsToEnter->iUnitID = unitIdOfUnitThatHasBeenPickedUp;  // !!
@@ -1506,61 +1472,57 @@ void cUnit::think_move_air() {
 
                                         // store this
                                         unitToPickupOrDrop.iTempHitPoints = unitToPickupOrDrop.iHitPoints;
-                                        unitToPickupOrDrop.iHitPoints=-1; // 'kill' unit
+                                        unitToPickupOrDrop.iHitPoints = -1; // 'kill' unit
                                         unitToPickupOrDrop.iCell = structureUnitWantsToEnter->getCell();
                                         unitToPickupOrDrop.poll();
 
                                         map.remove_id(unitIdOfUnitThatHasBeenPickedUp, MAPID_UNITS);
                                     } // enter..
                                 }
-							}
+                            }
 
-                            int pufX=(pos_x() + getBmpWidth() / 2);
-                            int pufY=(pos_y() + getBmpHeight() / 2);
+                            int pufX = (pos_x() + getBmpWidth() / 2);
+                            int pufY = (pos_y() + getBmpHeight() / 2);
                             PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
-						}
-						else
-						{
-							if (DEBUGGING)
-								logbook("Could not dump here, searching other spot");
+                        } else {
+                            if (DEBUGGING)
+                                logbook("Could not dump here, searching other spot");
 
-							// find a new spot
-							poll();
-							int rx = (iCellX - 2) + rnd(5);
-							int ry = (iCellY - 2) + rnd(5);
-							FIX_BORDER_POS(rx, ry);
+                            // find a new spot
+                            poll();
+                            int rx = (iCellX - 2) + rnd(5);
+                            int ry = (iCellY - 2) + rnd(5);
+                            FIX_BORDER_POS(rx, ry);
 
-							iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
+                            iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
 
-							iBringTarget = iGoalCell;
-							return;
-						}
-					}
-				}
-			}
-			else
-			{
+                            iBringTarget = iGoalCell;
+                            return;
+                        }
+                    }
+                }
+            } else {
                 iTransferType = TRANSFER_NONE; // unit is not valid?
-				return;
-			}
-		}
+                return;
+            }
+        }
 
-		// transfer is to create a new unit
-		if (iTransferType == TRANSFER_NEW_LEAVE ||
-			iTransferType == TRANSFER_NEW_STAY) {
-			// bring a new unit
+        // transfer is to create a new unit
+        if (iTransferType == TRANSFER_NEW_LEAVE ||
+            iTransferType == TRANSFER_NEW_STAY) {
+            // bring a new unit
 
-			if (iType == FRIGATE) {
-				int iStrucId = map.getCellIdStructuresLayer(iCell);
+            if (iType == FRIGATE) {
+                int iStrucId = map.getCellIdStructuresLayer(iCell);
 
-				if (iStrucId > -1) {
-					iGoalCell = iFindCloseBorderCell(iCell);
-					iTransferType = TRANSFER_DIE;
+                if (iStrucId > -1) {
+                    iGoalCell = iFindCloseBorderCell(iCell);
+                    iTransferType = TRANSFER_DIE;
 
                     structure[iStrucId]->setFrame(4); // show package on this structure
-					structure[iStrucId]->setAnimating(true); // keep animating
-                    ((cStarPort *)structure[iStrucId])->setFrigateDroppedPackage(true);
-				} else {
+                    structure[iStrucId]->setAnimating(true); // keep animating
+                    ((cStarPort *) structure[iStrucId])->setFrigateDroppedPackage(true);
+                } else {
                     int closestStarport = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
                             iCell, STARPORT, &player[iPlayer]);
 
@@ -1572,16 +1534,16 @@ void cUnit::think_move_air() {
                         iGoalCell = structure[closestStarport]->getCell();
                         structure[closestStarport]->setAnimating(true); // start animating
                     }
-				}
+                }
 
-				return; // override for frigates
-			}
+                return; // override for frigates
+            }
 
-			// first check if this cell is clear
-			if (map.occupied(iCell, iID) == false && bBordered)	{
-				// drop unit
-				if (iNewUnitType > -1) {
-				    int id=	UNIT_CREATE(iCell, iNewUnitType, iPlayer, true);
+            // first check if this cell is clear
+            if (map.occupied(iCell, iID) == false && bBordered) {
+                // drop unit
+                if (iNewUnitType > -1) {
+                    int id = UNIT_CREATE(iCell, iNewUnitType, iPlayer, true);
 
                     map.cellSetIdForLayer(iCell, MAPID_UNITS, id);
 
@@ -1596,39 +1558,37 @@ void cUnit::think_move_air() {
                     }
                 }
 
-				// now make sure this carry-all will not be drawn as having a unit:
-				iNewUnitType = -1;
+                // now make sure this carry-all will not be drawn as having a unit:
+                iNewUnitType = -1;
 
-				// depending on transfertype...
-				if (iTransferType == TRANSFER_NEW_LEAVE) {
-					iTransferType = TRANSFER_DIE;
+                // depending on transfertype...
+                if (iTransferType == TRANSFER_NEW_LEAVE) {
+                    iTransferType = TRANSFER_DIE;
 
-					// find a new border cell close to us... to die
-					iGoalCell = iFindCloseBorderCell(iCell);
-					return;
-				}
-				else if (iTransferType == TRANSFER_NEW_STAY)
-				{
-					// reset transfertype:
-					iTransferType = TRANSFER_NONE;
-					return;
-				}
+                    // find a new border cell close to us... to die
+                    iGoalCell = iFindCloseBorderCell(iCell);
+                    return;
+                } else if (iTransferType == TRANSFER_NEW_STAY) {
+                    // reset transfertype:
+                    iTransferType = TRANSFER_NONE;
+                    return;
+                }
 
-			} else {
-				// find a new spot for delivery
-				poll();
-				int rx = (iCellX - 4) + rnd(7);
-				int ry = (iCellY - 4) + rnd(7);
-				FIX_BORDER_POS(rx, ry);
+            } else {
+                // find a new spot for delivery
+                poll();
+                int rx = (iCellX - 4) + rnd(7);
+                int ry = (iCellY - 4) + rnd(7);
+                FIX_BORDER_POS(rx, ry);
 
-				iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
-				return;
-			}
-		}
+                iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
+                return;
+            }
+        }
 
         // move randomly
-        int rx=rnd(game.map_width);
-        int ry=rnd(game.map_height);
+        int rx = rnd(game.map_width);
+        int ry = rnd(game.map_height);
 
         iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
         return;
@@ -1641,14 +1601,14 @@ void cUnit::think_move_air() {
     int cx = iCellGiveX(iGoalCell);
     int cy = iCellGiveY(iGoalCell);
 
-    int iSlowDown=0;
+    int iSlowDown = 0;
 
     // use this when picking something up
 
-	if (iUnitID > -1 || (iTransferType != TRANSFER_DIE && iTransferType != TRANSFER_NONE)) {
-		int iLength = ABS_length(iCellX, iCellY, cx, cy);
+    if (iUnitID > -1 || (iTransferType != TRANSFER_DIE && iTransferType != TRANSFER_NONE)) {
+        int iLength = ABS_length(iCellX, iCellY, cx, cy);
 
-		if (iType != FRIGATE) {
+        if (iType != FRIGATE) {
 
             if (iLength > 8) {
                 iLength = 8;
@@ -1659,31 +1619,31 @@ void cUnit::think_move_air() {
                         cellType == TERRAIN_SPICE ||
                         cellType == TERRAIN_HILL ||
                         cellType == TERRAIN_SPICEHILL) {
-                        int pufX=(pos_x() + getBmpWidth() / 2);
-                        int pufY=(pos_y() + getBmpHeight() / 2);
+                        int pufX = (pos_x() + getBmpWidth() / 2);
+                        int pufY = (pos_y() + getBmpHeight() / 2);
                         PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
                     }
                 }
             }
 
             iSlowDown = 8 - iLength;
-		} else {
-			if (iLength > 6) {
+        } else {
+            if (iLength > 6) {
                 iLength = 6;
             }
 
-			iSlowDown = 12 - iLength;
+            iSlowDown = 12 - iLength;
 
-		}
-	}
+        }
+    }
 
-	cPlayerDifficultySettings *difficultySettings = player[iPlayer].getDifficultySettings();
+    cPlayerDifficultySettings *difficultySettings = player[iPlayer].getDifficultySettings();
 
     if (TIMER_move < (difficultySettings->getMoveSpeed(iType) + iSlowDown)) {
         return;
     }
 
-    TIMER_move=0;
+    TIMER_move = 0;
 
     // step 1 : look to the correct direction
     int d = fDegrees(iCellX, iCellY, cx, cy);
@@ -1697,48 +1657,44 @@ void cUnit::think_move_air() {
 
     // now do some thing to make
     // 1/8 of a cell (2 pixels) per movement
-    iOffsetX += cos(angle)*2;
-    iOffsetY += sin(angle)*2;
+    iOffsetX += cos(angle) * 2;
+    iOffsetY += sin(angle) * 2;
 
-    bool update_me=false;
+    bool update_me = false;
     // update when to much on the right.
-    if (iOffsetX > 31)
-    {
+    if (iOffsetX > 31) {
         iOffsetX -= 32;
         map.cellResetIdFromLayer(iCell, MAPID_AIR);
         iCell++;
-        update_me=true;
+        update_me = true;
     }
 
     // update when to much on the left
-    if (iOffsetX < -31)
-    {
+    if (iOffsetX < -31) {
         iOffsetX += 32;
         map.cellResetIdFromLayer(iCell, MAPID_AIR);
         iCell--;
-        update_me=true;
+        update_me = true;
     }
 
-                  // update when to much up
-    if (iOffsetY < -31)
-    {
+    // update when to much up
+    if (iOffsetY < -31) {
         iOffsetY += 32;
         map.cellResetIdFromLayer(iCell, MAPID_AIR);
         iCell -= MAP_W_MAX;
-        update_me=true;
+        update_me = true;
     }
 
     // update when to much down
-    if (iOffsetY > 31)
-    {
+    if (iOffsetY > 31) {
         iOffsetY -= 32;
         map.cellResetIdFromLayer(iCell, MAPID_AIR);
         iCell += MAP_W_MAX;
-        update_me=true;
+        update_me = true;
     }
 
-    if (iCell==iGoalCell)
-        iOffsetX=iOffsetY=0;
+    if (iCell == iGoalCell)
+        iOffsetX = iOffsetY = 0;
 
     if (update_me) {
         if (!bCellValid(iCell)) {
@@ -1761,64 +1717,63 @@ void cUnit::think_move_air() {
 // Purpose:
 // Order a carryall to pickup a unit, or send a new unit (depending on iTransfer)
 //
-void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe)
-{
-	if (iTransferType > -1)
-		return; // we cannot do multiple things at a time!!
+void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe) {
+    if (iTransferType > -1)
+        return; // we cannot do multiple things at a time!!
 
-	if (iTransfer == TRANSFER_NEW_STAY || iTransfer == TRANSFER_NEW_LEAVE) {
+    if (iTransfer == TRANSFER_NEW_STAY || iTransfer == TRANSFER_NEW_LEAVE) {
 
-		// bring a new unit, depending on the iTransfer the carryall who brings this will be
-		// removed after he brought the unit...
+        // bring a new unit, depending on the iTransfer the carryall who brings this will be
+        // removed after he brought the unit...
 
-		// when iTranfer is 0 or 2, the unit is just created by REINFORCE() and this function
-		// sets the target and such.
+        // when iTranfer is 0 or 2, the unit is just created by REINFORCE() and this function
+        // sets the target and such.
 
-		iTransferType = iTransfer;
+        iTransferType = iTransfer;
 
-		// Go to this:
-		iGoalCell = iBring;
-		iBringTarget = iGoalCell;
+        // Go to this:
+        iGoalCell = iBring;
+        iBringTarget = iGoalCell;
 
-		// carry is not valid
-		iCarryTarget=-1;
+        // carry is not valid
+        iCarryTarget = -1;
 
-		// unit we carry is none
-		iUnitID = -1;
+        // unit we carry is none
+        iUnitID = -1;
 
-		// the unit type...
-		iNewUnitType=iTpe;
+        // the unit type...
+        iNewUnitType = iTpe;
 
-        bPickedUp=false;
+        bPickedUp = false;
 
 
-		// DONE!
-	} else if (iTransfer == TRANSFER_PICKUP && iuID > -1) {
+        // DONE!
+    } else if (iTransfer == TRANSFER_PICKUP && iuID > -1) {
 
-		// the carryall must pickup the unit, and then bring it to the iBring stuff
-		if (unit[iuID].isValid()) {
-			iTransferType = iTransfer;
+        // the carryall must pickup the unit, and then bring it to the iBring stuff
+        if (unit[iuID].isValid()) {
+            iTransferType = iTransfer;
 
-			iGoalCell	 = unit[iuID].iCell; // first go to the target to pick it up
-			iCarryTarget = unit[iuID].iCell; // same here...
+            iGoalCell = unit[iuID].iCell; // first go to the target to pick it up
+            iCarryTarget = unit[iuID].iCell; // same here...
 
-			iNewUnitType = -1;
+            iNewUnitType = -1;
 
-			// where to bring it to
-			iBringTarget = iBring; // bring
+            // where to bring it to
+            iBringTarget = iBring; // bring
 
-			bPickedUp=false;
+            bPickedUp = false;
 
-			// what unit do we carry? (in case the unit moves away)
-			iUnitID = iuID;
-		}
-	}
+            // what unit do we carry? (in case the unit moves away)
+            iUnitID = iuID;
+        }
+    }
 }
 
 void cUnit::shoot(int iShootCell) {
     // particles are rendered at the center, so do it here as well
-    int iShootX=pos_x() + getBmpWidth() / 2;
-    int iShootY=pos_y() + getBmpHeight() / 2;
+    int iShootX = pos_x() + getBmpWidth() / 2;
+    int iShootY = pos_y() + getBmpHeight() / 2;
     int bmp_head = convert_angle(iHeadFacing);
 
     if (iType == TANK) {
@@ -1841,8 +1796,8 @@ int cUnit::isNextCell() {
 
     if (iPathIndex < 0) {
         if (iNextCell < 0) {
-            iOffsetX=0;
-            iOffsetY=0;
+            iOffsetX = 0;
+            iOffsetY = 0;
             LOG("No pathindex & no nextcell, resetting unit");
             return iCell; // same as our location
         }
@@ -1852,18 +1807,18 @@ int cUnit::isNextCell() {
 
     // not valid OR same location
     if (iPath[iPathIndex] < 0) {
-        iOffsetX=0;
-        iOffsetY=0;
+        iOffsetX = 0;
+        iOffsetY = 0;
         LOG("No valid iPATH[pathindex]");
         return iCell; // same as our location
     }
 
-    if (iPath[iPathIndex] == iCell) {
-        if (iPath[iPathIndex++] > -1) {
-            LOG("Odd Pathindex, sollution (HACK HACK)");
-            iPathIndex++; // when accidently the index refers to our location, do this
-        }
-    }
+//    if (iPath[iPathIndex] == iCell) {
+//        iPathIndex++;
+//        if (iPath[iPathIndex] > -1) {
+//            iPathIndex++; // when accidently the index refers to our location, do this
+//        }
+//    }
 
     // now, we are sure it will be another location
     return iPath[iPathIndex];
@@ -1980,61 +1935,52 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
 }
 
 void cUnit::LOG(const char *txt) {
-	// logs unit stuff, but gives unit information
-	char msg[512];
-	sprintf(msg, "[UNIT[%d]: %s - House %d, iCell = %d, iGoal = %d ] '%s'",iID,  units[iType].name, player[iPlayer].getHouse(), iCell, iGoalCell, txt);
-	logbook(msg);
+    // logs unit stuff, but gives unit information
+    char msg[512];
+    sprintf(msg, "[UNIT[%d]: %s - House %d, iCell = %d, iGoal = %d ] '%s'", iID, units[iType].name,
+            player[iPlayer].getHouse(), iCell, iGoalCell, txt);
+    logbook(msg);
 }
 
-void cUnit::think_attack()
-{
+void cUnit::think_attack() {
     poll();
 
 
-    if (iType == SANDWORM)
-    {
-        if (iAttackUnit > -1)
-        {
+    if (iType == SANDWORM) {
+        if (iAttackUnit > -1) {
             iGoalCell = unit[iAttackUnit].iCell;
-            if (iGoalCell == iCell)
-            {
+            if (iGoalCell == iCell) {
                 // eat
                 unit[iAttackUnit].die(false, false);
                 int half = 16;
-                int iParX=pos_x() + half;
-                int iParY=pos_y() + half;
+                int iParX = pos_x() + half;
+                int iParY = pos_y() + half;
 
                 PARTICLE_CREATE(iParX, iParY, OBJECT_WORMEAT, -1, -1);
                 play_sound_id_with_distance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(iCell));
                 iAction = ACTION_GUARD;
-                iAttackUnit=-1;
-                bCalculateNewPath=true;
+                iAttackUnit = -1;
+                bCalculateNewPath = true;
                 TIMER_wormeat += rnd(150);
                 return;
-            }
-            else
-            {
+            } else {
                 int cellType = map.getCellType(unit[iAttackUnit].iCell);
                 if (cellType != TERRAIN_SAND &&
                     cellType != TERRAIN_HILL &&
                     cellType != TERRAIN_SPICE &&
-                    cellType != TERRAIN_SPICEHILL)
-                {
+                    cellType != TERRAIN_SPICEHILL) {
 
-                   iAction = ACTION_GUARD;
-                   iAttackUnit=-1;
-                }
-                else
-                {
-                    iAction   = ACTION_CHASE;
-					bCalculateNewPath = true;
+                    iAction = ACTION_GUARD;
+                    iAttackUnit = -1;
+                } else {
+                    iAction = ACTION_CHASE;
+                    bCalculateNewPath = true;
                 }
 
 
             }
 
-        }
-        else
+        } else
             iAction = ACTION_GUARD;
 
 
@@ -2042,69 +1988,58 @@ void cUnit::think_attack()
     }
 
     // make sure the goalcell is correct
-    if (iAttackUnit > -1)
-    {
+    if (iAttackUnit > -1) {
         iGoalCell = unit[iAttackUnit].iCell;
     }
 
-    if (iAttackStructure > -1)
-    {
+    if (iAttackStructure > -1) {
         if (structure[iAttackStructure])
             iGoalCell = structure[iAttackStructure]->getCell();
-        else
-        {
-            iAttackUnit=-1;
-            iAttackStructure=-1;
-            iGoalCell=iCell;
+        else {
+            iAttackUnit = -1;
+            iAttackStructure = -1;
+            iGoalCell = iCell;
             iAction = ACTION_GUARD;
             return;
         }
 
     }
 
-    if (iAttackCell > -1)
-    {
+    if (iAttackCell > -1) {
         iGoalCell = iAttackCell;
         LOG("I am attacking a cell.. right");
     }
 
-	if (iAttackUnit > -1) {
-        if (unit[iAttackUnit].iHitPoints < 0)
-        {
-            iAttackUnit=-1;
-            iGoalCell=iCell;
+    if (iAttackUnit > -1) {
+        if (unit[iAttackUnit].iHitPoints < 0) {
+            iAttackUnit = -1;
+            iGoalCell = iCell;
             iAction = ACTION_GUARD;
             LOG("Destroyed unit target");
             return;
         }
-	}
+    }
 
-	if (iAttackStructure > -1) {
-	   if (structure[iAttackStructure]->getHitPoints() < 0)
-	   {
-		   iAttackStructure=-1;
-		   iGoalCell=iCell;
-		   iAction = ACTION_GUARD;
-		   LOG("Destroyed structure target");
-		   return;
-	   }
-	}
-
-    if (iAttackCell > -1)
-    {
-        if (map.getCellType(iAttackCell) == TERRAIN_BLOOM)
-        {
-            // this is ok
+    if (iAttackStructure > -1) {
+        if (structure[iAttackStructure]->getHitPoints() < 0) {
+            iAttackStructure = -1;
+            iGoalCell = iCell;
+            iAction = ACTION_GUARD;
+            LOG("Destroyed structure target");
+            return;
         }
-        else
-        {
-			if (map.getCellHealth(iAttackCell) < 0)
-			{
+    }
+
+    if (iAttackCell > -1) {
+        if (map.getCellType(iAttackCell) == TERRAIN_BLOOM) {
+            // this is ok
+        } else {
+            if (map.getCellHealth(iAttackCell) < 0) {
                 // it is destroyed
-                iAttackCell=-1;
-                iGoalCell=iCell;
+                iAttackCell = -1;
+                iGoalCell = iCell;
                 iAction = ACTION_GUARD;
-			}
+            }
         }
     }
     int iDestX = iCellGiveX(iGoalCell);
@@ -2114,10 +2049,8 @@ void cUnit::think_attack()
 
     int distance = ABS_length(iCellX, iCellY, iDestX, iDestY);
 
-    if (units[iType].airborn == false)
-    {
-        if (distance <= units[iType].range && iOffsetX == 0 && iOffsetY == 0)
-        {
+    if (units[iType].airborn == false) {
+        if (distance <= units[iType].range && iOffsetX == 0 && iOffsetY == 0) {
             // in range , fire and such
 
             // Facing
@@ -2131,27 +2064,24 @@ void cUnit::think_attack()
             d = fDegrees(iCellX, iCellY, iCellGiveX(iGoalCell), iCellGiveY(iGoalCell));
             f = face_angle(d); // get the angle
 
-            iHeadShouldFace=f;
+            iHeadShouldFace = f;
 
-            if (iBodyShouldFace == iBodyFacing && iHeadShouldFace == iHeadFacing)
-            {
+            if (iBodyShouldFace == iBodyFacing && iHeadShouldFace == iHeadFacing) {
 
                 int iGc = iGoalCell;
 
-                if (iType == LAUNCHER || iType == DEVIATOR)
-                {
-                    if (distance < units[iType].range)
-                    {
+                if (iType == LAUNCHER || iType == DEVIATOR) {
+                    if (distance < units[iType].range) {
                         int dx = iCellGiveX(iGc);
                         int dy = iCellGiveY(iGc);
 
-                        int dif = (units[iType].range-distance) / 2;
+                        int dif = (units[iType].range - distance) / 2;
 
                         dx -= (dif);
-                        dx += rnd(dif*2);
+                        dx += rnd(dif * 2);
 
                         dy -= (dif);
-                        dy += rnd(dif*2);
+                        dy += rnd(dif * 2);
 
                         iGc = iCellMakeWhichCanReturnMinusOne(dx, dy);
                     }
@@ -2160,16 +2090,12 @@ void cUnit::think_attack()
                 // facing ok?
 
                 TIMER_attack++;
-                if (TIMER_attack >= units[iType].attack_frequency)
-                {
-                    if (TIMER_attack == units[iType].attack_frequency)
-                    {
-                        if (iAttackUnit > -1)
-                        {
-                            if (unit[iAttackUnit].iPlayer == iPlayer)
-                            {
+                if (TIMER_attack >= units[iType].attack_frequency) {
+                    if (TIMER_attack == units[iType].attack_frequency) {
+                        if (iAttackUnit > -1) {
+                            if (unit[iAttackUnit].iPlayer == iPlayer) {
                                 // unit got converted
-                                iAttackUnit=-1;
+                                iAttackUnit = -1;
                                 iAction = ACTION_GUARD;
                                 return;
                             }
@@ -2178,15 +2104,11 @@ void cUnit::think_attack()
                         shoot(iGc);
                     }
 
-                    if (units[iType].second_shot == false)
-                    {
+                    if (units[iType].second_shot == false) {
                         //shoot(iGoalCell);
                         TIMER_attack = 0;
-                    }
-                    else
-                    {
-                        if (TIMER_attack > (units[iType].attack_frequency + (units[iType].attack_frequency / 6)))
-                        {
+                    } else {
+                        if (TIMER_attack > (units[iType].attack_frequency + (units[iType].attack_frequency / 6))) {
                             shoot(iGc);
                             TIMER_attack = 0;
                         }
@@ -2196,33 +2118,26 @@ void cUnit::think_attack()
 
             }
 
-        }
-        else
-        {
+        } else {
 
             // chase unit
-            if (unit[iAttackUnit].iType != SANDWORM)
-            {
-                iAction   = ACTION_CHASE;
+            if (unit[iAttackUnit].iType != SANDWORM) {
+                iAction = ACTION_CHASE;
                 bCalculateNewPath = true;
-            }
-            else
-            {
+            } else {
                 // do not chase sandworms, very ... inconvenient
                 iAction = ACTION_GUARD;
-				iGoalCell=iCell;
-				iNextCell=iCell;
-				iPathIndex=-1;
-				// clear path
-				memset(iPath, -1, sizeof(iPath));
+                iGoalCell = iCell;
+                iNextCell = iCell;
+                iPathIndex = -1;
+                // clear path
+                memset(iPath, -1, sizeof(iPath));
             }
 
         }
     } // NON AIRBORN UNITS ATTACK THINKING
-    else
-    {
-        if (distance <= units[iType].range)
-        {
+    else {
+        if (distance <= units[iType].range) {
             // in range , fire and such
 
             // Facing
@@ -2236,26 +2151,21 @@ void cUnit::think_attack()
             d = fDegrees(iCellX, iCellY, iCellGiveX(iGoalCell), iCellGiveY(iGoalCell));
             f = face_angle(d); // get the angle
 
-            iHeadShouldFace=f;
+            iHeadShouldFace = f;
 
-            if (iBodyShouldFace == iBodyFacing && iHeadShouldFace == iHeadFacing)
-            {
+            if (iBodyShouldFace == iBodyFacing && iHeadShouldFace == iHeadFacing) {
 
                 int iGc = iGoalCell;
 
                 // facing ok?
 
                 TIMER_attack++;
-                if (TIMER_attack >= units[iType].attack_frequency)
-                {
-                    if (TIMER_attack == units[iType].attack_frequency)
-                    {
-                        if (iAttackUnit > -1)
-                        {
-                            if (unit[iAttackUnit].iPlayer == iPlayer)
-                            {
+                if (TIMER_attack >= units[iType].attack_frequency) {
+                    if (TIMER_attack == units[iType].attack_frequency) {
+                        if (iAttackUnit > -1) {
+                            if (unit[iAttackUnit].iPlayer == iPlayer) {
                                 // unit got converted
-                                iAttackUnit=-1;
+                                iAttackUnit = -1;
                                 iAction = ACTION_MOVE;
                                 return;
                             }
@@ -2264,22 +2174,18 @@ void cUnit::think_attack()
                         shoot(iGc);
                     }
 
-                    if (units[iType].second_shot == false)
-                    {
+                    if (units[iType].second_shot == false) {
                         //shoot(iGoalCell);
                         TIMER_attack = 0;
-                    }
-                    else
-                    {
-                        if (TIMER_attack > (units[iType].attack_frequency + (units[iType].attack_frequency / 6)))
-                        {
+                    } else {
+                        if (TIMER_attack > (units[iType].attack_frequency + (units[iType].attack_frequency / 6))) {
                             shoot(iGc);
                             TIMER_attack = -20;
 
-                            int rx=iCellGiveX(iGc) - 16 + rnd(32);
-                            int ry=iCellGiveY(iGc) - 16 + rnd(32);
-                            iAttackUnit=-1;
-                            iAttackStructure=-1;
+                            int rx = iCellGiveX(iGc) - 16 + rnd(32);
+                            int ry = iCellGiveY(iGc) - 16 + rnd(32);
+                            iAttackUnit = -1;
+                            iAttackStructure = -1;
                             iAction = ACTION_MOVE;
                             iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
                         }
@@ -2289,17 +2195,15 @@ void cUnit::think_attack()
 
             }
 
-        }
-        else
-        {
+        } else {
             iAction = ACTION_MOVE;
-            iAttackUnit=-1;
-            iAttackStructure=-1;
+            iAttackUnit = -1;
+            iAttackStructure = -1;
         }
     }
 }
 
-s_UnitP& cUnit::getUnitType() {
+s_UnitP &cUnit::getUnitType() {
     return units[iType];
 }
 
@@ -2331,8 +2235,8 @@ void cUnit::think_move() {
     if (iGoalCell == iCell) {
         iAction = ACTION_GUARD; // do nothing
 
-		// clear path
-		memset(iPath, -1, sizeof(iPath));
+        // clear path
+        memset(iPath, -1, sizeof(iPath));
 
         return;
     }
@@ -2351,121 +2255,101 @@ void cUnit::think_move() {
 
     // everything from here is wheeled or tracked
     // QUAD, TRIKE, TANK, etc
-	iNextCell = isNextCell();
+    iNextCell = isNextCell();
 
     // Same cell? Get out of here
     if (iNextCell == iCell) {
         // clear path
         memset(iPath, -1, sizeof(iPath));
-        iPathIndex=-1;
+        iPathIndex = -1;
 
         // when we do have a different goal, we should get a path:
         if (iGoalCell != iCell) {
             char msg[255];
             int iResult = CREATE_PATH(iID, 0); // do not take units into account yet
-            sprintf(msg, "Create path ... result = %d",  iResult);
+            sprintf(msg, "Create path ... result = %d", iResult);
             LOG(msg);
 
             // On fail:
             if (iPathIndex < 0) {
                 // simply failed
-                if (iResult == -1)
-                {
+                if (iResult == -1) {
 
                     // Check why, is our goal cell occupied?
-                    int uID =  map.getCellIdUnitLayer(iGoalCell);
-                    int sID =  map.getCellIdStructuresLayer(iGoalCell);
+                    int uID = map.getCellIdUnitLayer(iGoalCell);
+                    int sID = map.getCellIdStructuresLayer(iGoalCell);
 
                     // Other unit is on goal cell, do something about it.
 
                     // uh oh
-                    if (uID > -1 && uID != iID)
-                    {
+                    if (uID > -1 && uID != iID) {
                         // occupied, not by self
                         // find a goal cell near to it
                         int iNewGoal = RETURN_CLOSE_GOAL(iGoalCell, iCell, iID);
 
-                        if (iNewGoal == iGoalCell)
-                        {
+                        if (iNewGoal == iGoalCell) {
                             // same goal, cant find new, stop
-                            iGoalCell= iCell;
-							LOG("Could not find alternative goal");
-                            iPathIndex=-1;
-                            iPathFails=0;
+                            iGoalCell = iCell;
+                            LOG("Could not find alternative goal");
+                            iPathIndex = -1;
+                            iPathFails = 0;
                             return;
 
-                        }
-                        else
-                        {
+                        } else {
                             iGoalCell = iNewGoal;
-                            TIMER_movewait=rnd(20);
-							LOG("Found alternative goal");
+                            TIMER_movewait = rnd(20);
+                            LOG("Found alternative goal");
                             return;
                         }
-                    }
-                    else if (sID > -1 && iStructureID > -1 && iStructureID != sID)
-                    {
+                    } else if (sID > -1 && iStructureID > -1 && iStructureID != sID) {
                         LOG("Want to enter structure, yet ID's do not match");
                         LOG("Resetting structure id and such to redo what i was doing?");
                         iStructureID = -1;
-                        iGoalCell=iCell;
-                        iPathIndex=-1;
-                        iPathFails=0;
+                        iGoalCell = iCell;
+                        iPathIndex = -1;
+                        iPathFails = 0;
 
 
-                    }
-                    else
-                    {
+                    } else {
                         LOG("Something else blocks path, but goal itself is not occupied.");
-                        iGoalCell=iCell;
-                        iPathIndex=-1;
-                        iPathFails=0;
-                        iStructureID=-1;
+                        iGoalCell = iCell;
+                        iPathIndex = -1;
+                        iPathFails = 0;
+                        iStructureID = -1;
 
                         // random move around
-                        int iF=UNIT_FREE_AROUND_MOVE(iID);
+                        int iF = UNIT_FREE_AROUND_MOVE(iID);
 
-                        if (iF > -1)
-                        {
+                        if (iF > -1) {
                             UNIT_ORDER_MOVE(iID, iF);
                         }
                     }
                 }
 
-                if (iResult == -2)
-                {
+                if (iResult == -2) {
                     // we have a problem here, units/stuff around us blocks the unit
-					if (DEBUGGING)
-						logbook("Units surround me, what to do?");
-
-
+                    logbook("Units surround me, what to do?");
                 }
 
-                if (iResult == -3)
-                {
-					if (DEBUGGING)
-						logbook("I just failed, ugh");
-
+                if (iResult == -3) {
+                    logbook("I just failed, ugh");
                     return;
                 }
 
                 // We failed
                 iPathFails++;
 
-                if (iPathFails > 2)
-                {
+                if (iPathFails > 2) {
                     // stop trying
-                    iGoalCell=iCell;
-                    iPathFails=0;
-                    iPathIndex=-1;
-                    if (TIMER_movewait <=0 )
-                        TIMER_movewait=100;
+                    iGoalCell = iCell;
+                    iPathFails = 0;
+                    iPathIndex = -1;
+                    if (TIMER_movewait <= 0)
+                        TIMER_movewait = 100;
                 }
 
 
-            }
-            else
-            {
+            } else {
                 //logbook("SUCCES");
             }
         }
@@ -2483,11 +2367,11 @@ void cUnit::think_move() {
     d = fDegrees(iCellX, iCellY, iCellGiveX(iGoalCell), iCellGiveY(iGoalCell));
     f = face_angle(d); // get the angle
 
-    iHeadShouldFace=f;
+    iHeadShouldFace = f;
 
 
     // check
-    bool bOccupied=false;
+    bool bOccupied = false;
 
     int idOfUnitAtNextCell = map.getCellIdUnitLayer(iNextCell);
 
@@ -2497,11 +2381,14 @@ void cUnit::think_move() {
         // get it
         int iUID = idOfUnitAtNextCell;
 
-        bOccupied=true;
+        bOccupied = true;
         // unless... it is an enemy infantry unit and I can squish stuff
         if (getUnitType().squish) {
             cUnit &unitAtCell = unit[iUID];
-            if (unitAtCell.isValid() && unitAtCell.iPlayer != iPlayer && unitAtCell.isInfantryUnit()) {
+            if (unitAtCell.isValid() &&
+                unitAtCell.iPlayer != iPlayer && // enemy player?
+                unitAtCell.isInfantryUnit() // squishable?
+            ) {
                 bOccupied = false;
             }
         }
@@ -2553,13 +2440,11 @@ void cUnit::think_move() {
     }
 
     if (iType == SANDWORM) {
-        bOccupied=false;
+        bOccupied = false;
     }
 
     // check if id is not possessed already:
     if (bOccupied) {
-//        logbook("bOccupied = true");
-
         // it is taken by someone else
         if (iNextCell == iGoalCell) {
             // it is our goal cell, modify goal cell
@@ -2594,24 +2479,6 @@ void cUnit::think_move() {
                 memset(iPath, -1, sizeof(iPath));
                 iPathIndex = -1;
                 TIMER_movewait = 100;
-
-                /*
-                // on fail
-                if (iPathIndex < 0)
-                {
-                    // We failed
-                    iPathFails++;
-
-                    if (iPathFails > 2)
-                    {
-                        // stop trying
-                        iGoalCell=iCell;
-                        iPathFails=0;
-                        iPathIndex=-1;
-                        TIMER_movewait=100;
-                    }
-                }*/
-
             }
         }
 
@@ -2652,12 +2519,9 @@ void cUnit::think_move() {
         }
     }
 
-//    logbook("poll()");
     poll();
 
     if (iBodyShouldFace == iBodyFacing) {
-//        logbook("iBodyShouldFace == iBodyFacing");
-
         // When we should move:
         int bToLeft = -1;         // 0 = go left, 1 = go right
         int bToDown = -1;         // 0 = go down, 1 = go up
@@ -2967,9 +2831,8 @@ bool cUnit::isUnitWhoCanSquishInfantry() {
 }
 
 // return new valid ID
-int UNIT_NEW()
-{
-    for (int i=0; i < MAX_UNITS; i++)
+int UNIT_NEW() {
+    for (int i = 0; i < MAX_UNITS; i++)
         if (unit[i].isValid() == false)
             return i;
 
@@ -2977,8 +2840,7 @@ int UNIT_NEW()
 }
 
 // removes unit ID
-int UNIT_REMOVE(int iID)
-{
+int UNIT_REMOVE(int iID) {
     // STEP 1: make it invalid
     unit[iID].init(iID); // initialize it
 
@@ -3001,11 +2863,10 @@ int UNIT_REMOVE(int iID)
  * @return
  */
 int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
-	if (!bCellValid(iCll)) {
-		logbook("UNIT_CREATE: Invalid cell as param");
-		return -1;
-	}
-
+    if (!bCellValid(iCll)) {
+        logbook("UNIT_CREATE: Invalid cell as param");
+        return -1;
+    }
 
     s_UnitP &sUnitType = units[unitType];
 
@@ -3016,10 +2877,10 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
         mapIdIndex = MAPID_WORMS;
     }
 
-	// check if unit already exists on location
-	if (map.cellGetIdFromLayer(iCll, mapIdIndex) > -1) {
-		return -1; // cannot place unit
-	}
+    // check if unit already exists on location
+    if (map.cellGetIdFromLayer(iCll, mapIdIndex) > -1) {
+        return -1; // cannot place unit
+    }
 
     // check if placed on invalid terrain type
     int cellType = map.getCellType(iCll);
@@ -3034,9 +2895,9 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
 
     // not airborn, and not infantry, may not be placed on walls and mountains.
     if (!sUnitType.infantry && !sUnitType.airborn) {
-		if (cellType == TERRAIN_MOUNTAIN || cellType == TERRAIN_WALL) {
-			return -1;
-		}
+        if (cellType == TERRAIN_MOUNTAIN || cellType == TERRAIN_WALL) {
+            return -1;
+        }
     }
 
     int iNewId = UNIT_NEW();
@@ -3049,9 +2910,9 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
     cUnit &newUnit = unit[iNewId];
     newUnit.init(iNewId);
 
-    newUnit.iCell=iCll;
-    newUnit.iBodyFacing=rnd(8);
-    newUnit.iHeadFacing=rnd(8);
+    newUnit.iCell = iCll;
+    newUnit.iBodyFacing = rnd(8);
+    newUnit.iHeadFacing = rnd(8);
 
     newUnit.iBodyShouldFace = newUnit.iBodyFacing;
     newUnit.iHeadShouldFace = newUnit.iHeadFacing;
@@ -3060,7 +2921,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
     newUnit.setMaxHitPoints();
     newUnit.iGoalCell = iCll;
 
-    newUnit.bSelected=false;
+    newUnit.bSelected = false;
 
     newUnit.TIMER_bored = rnd(3000);
     newUnit.TIMER_guard = -20 + rnd(70);
@@ -3101,7 +2962,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
         map.cellSetIdForLayer(iCll, MAPID_AIR, iNewId);
     }
 
-	newUnit.poll();
+    newUnit.poll();
 
     map.clear_spot(iCll, sUnitType.sight, iPlayer);
 
@@ -3126,7 +2987,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
 
   Return possibilities:
   -1 = FAIL (goalcell = cell, or cannot find path)
-  -2 = Cannot move, surrounded by a lot of units
+  -2 = Cannot move, all surrounded (blocked)
   -3 = Too many paths created
   -4 = Offset is not 0
   -99= iUnitId is < 0 (invalid input)
@@ -3143,7 +3004,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
     // do not start calculating anything before we are on 0,0 x,y wise on a cell
     if (cUnit.iOffsetX != 0 || cUnit.iOffsetY != 0) {
         logbook("CREATE_PATH -- END 2");
-        return -4; // no calculation before we are straight on a cell baby
+        return -4; // no calculation before we are straight on a cell
     }
 
     // Too many paths where created , so we wait a little.
@@ -3171,11 +3032,10 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
         map.occupied(CELL_L_LEFT(iCell), iUnitId) &&
         map.occupied(CELL_L_RIGHT(iCell), iUnitId) &&
         map.occupied(CELL_U_RIGHT(iCell), iUnitId) &&
-        map.occupied(CELL_U_LEFT(iCell), iUnitId))
-    {
+        map.occupied(CELL_U_LEFT(iCell), iUnitId)) {
         logbook("CREATE_PATH -- END 5");
-       cUnit.TIMER_movewait = 30 + rnd(50);
-       return -2;
+        cUnit.TIMER_movewait = 30 + rnd(50);
+        return -2;
     }
 
     // Now start create path
@@ -3183,7 +3043,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
     // Clear unit path settings (index & path string)
     memset(cUnit.iPath, -1, sizeof(cUnit.iPath));
 
-    cUnit.iPathIndex=-1;
+    cUnit.iPathIndex = -1;
 
     // Search around a cell:
     int cx, cy, the_cll, ex, ey;
@@ -3193,9 +3053,9 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
     game.paths_created++;
     memset(temp_map, -1, sizeof(temp_map));
 
-    the_cll=-1;
-    ex=-1;
-    ey=-1;
+    the_cll = -1;
+    ex = -1;
+    ey = -1;
     cx = iCellGiveX(iCell);
     cy = iCellGiveY(iCell);
 
@@ -3204,42 +3064,37 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
     temp_map[iCell].parent = -1;
     temp_map[iCell].state = CLOSED;
 
-    bool valid         = true;
-    bool succes        = false;
-    bool found_one     = false;
+    bool valid = true;
+    bool succes = false;
+    bool found_one = false;
 
     int sx, sy;
-    double cost        = -1;
-    bool is_worm       = (cUnit.iType == SANDWORM);
+    double cost = -1;
+    bool is_worm = (cUnit.iType == SANDWORM);
 
     // WHILE VALID TO RUN THIS LOOP
-    while (valid)
-    {
+    while (valid) {
         // iCell reached Goal Cell
-        if (iCell == goal_cell)
-        {
-            valid=false;
-            succes=true;
+        if (iCell == goal_cell) {
+            valid = false;
+            succes = true;
             break;
         }
 
-        if (cUnit.iStructureID > -1 || cUnit.iAttackStructure > -1)
-        {
-            int idOfStructureAtCell = map.cellGetIdFromLayer(iCell, MAPID_STRUCTURES);
-            if (cUnit.iStructureID > -1)
-            if (idOfStructureAtCell == cUnit.iStructureID)
-            {
-                valid=false;
-                succes=true;
+        int idOfStructureAtCell = map.cellGetIdFromLayer(iCell, MAPID_STRUCTURES);
+        if (cUnit.iStructureID > -1) {
+            if (idOfStructureAtCell == cUnit.iStructureID) {
+                valid = false;
+                succes = true;
                 logbook("Found structure ID");
                 break;
             }
+        }
 
-            if (cUnit.iAttackStructure > -1)
-            if (idOfStructureAtCell == cUnit.iAttackStructure)
-            {
-                valid=false;
-                succes=true;
+        if (cUnit.iAttackStructure > -1) {
+            if (idOfStructureAtCell == cUnit.iAttackStructure) {
+                valid = false;
+                succes = true;
                 logbook("Found attack structure ID");
                 break;
             }
@@ -3253,8 +3108,8 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
         sy = cy - 1;
 
         // check for not going under zero
-        ex = cx+1;
-        ey = cy+1;
+        ex = cx + 1;
+        ey = cy + 1;
 
         // boundries
         FIX_BORDER_POS(sx, sy);
@@ -3265,21 +3120,21 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
         if (ey <= cy)
             logbook("CY = EY");
 
-        cost=999999999;
-        the_cll=-1;
-        found_one=false;
+        cost = 999999999;
+        the_cll = -1;
+        found_one = false;
 
         // go around the cell we are checking!
-        bool bail_out=false;
+        bool bail_out = false;
 
         // circle around cell X wise
         for (cx = sx; cx <= ex; cx++) {
-          // circle around cell Y wise
+            // circle around cell Y wise
             for (cy = sy; cy <= ey; cy++) {
                 // only check the 'cell' that is NOT the current cell.
-                int cll = iCellMakeWhichCanReturnMinusOne(cx, cy);
+                int cll = iCellMakeWhichCanReturnMinusOneWithinMapBorders(cx, cy);
 
-                // skip invalid cell
+                // skip invalid cells
                 if (cll < 0)
                     continue;
 
@@ -3311,15 +3166,15 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
                         if (cUnit.iAttackStructure > -1)
                             if (idOfStructureAtCell == cUnit.iAttackStructure)
-                            good=true;
+                                good = true;
 
                         if (cUnit.iStructureID > -1)
                             if (idOfStructureAtCell == cUnit.iStructureID)
-                            good=true;
+                                good = true;
 
                     }
 
-					// blocked by other then our own unit
+                    // blocked by other then our own unit
                     if (idOfUnitAtCell > -1) {
                         // occupied by a different unit than ourselves
                         if (idOfUnitAtCell != iUnitId) {
@@ -3329,7 +3184,9 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
                                 if (iPathCountUnits <= 0) {
                                     good = false;
                                     char msg[255];
-                                    sprintf(msg, "PATH_CREATE(unitId=%d) - iPathCountUnits < 0 - variable 'good' becomes 'false'", iUnitId);
+                                    sprintf(msg,
+                                            "CREATE_PATH(unitId=%d) - iPathCountUnits < 0 - variable 'good' becomes 'false'",
+                                            iUnitId);
                                     logbook(msg);
                                 }
                             }
@@ -3352,7 +3209,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
                     // is not visible, always good (since we dont know yet if its blocked!)
                     if (mapUtils->isCellVisibleForPlayerId(controller, cll) == false) {
-                        good=true;
+                        good = true;
                     } else {
                         // walls stop us
                         if (cellType == TERRAIN_WALL) {
@@ -3360,60 +3217,57 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
                         }
 
                         // When we are infantry, we move through mountains. However, normal units do not
-                        if (units[cUnit.iType].infantry == false) {
+                        if (!cUnit.isInfantryUnit()) {
                             if (cellType == TERRAIN_MOUNTAIN) {
-                                good=false;
+                                good = false;
                             }
                         }
                     }
-             }
-             else
-             {
-                 // is worm
+                } else {
+                    // is worm
 
-                 // when not on sand, on spice or on sandhill, it is BAD
-                 if (cellType == TERRAIN_SAND ||
-                     cellType == TERRAIN_SPICE ||
-                     cellType == TERRAIN_HILL ||
-                     cellType == TERRAIN_SPICEHILL) {
-                     good = true;
-                 } else {
-                     good = false;
-                 }
-             }
+                    // when not on sand, on spice or on sandhill, it is BAD
+                    if (cellType == TERRAIN_SAND ||
+                        cellType == TERRAIN_SPICE ||
+                        cellType == TERRAIN_HILL ||
+                        cellType == TERRAIN_SPICEHILL) {
+                        good = true;
+                    } else {
+                        good = false;
+                    }
+                }
 
-            // it is the goal cell
-            if (cll == goal_cell) {
-                the_cll = cll;
-                cost = 0;
-                succes = true;
-                found_one = true;
-                bail_out = true;
-                logbook("CREATE_PATH: Found the goal cell, succes, bailing out");
-                break;
-            }
+                // it is the goal cell
+                if (cll == goal_cell) {
+                    the_cll = cll;
+                    cost = 0;
+                    succes = true;
+                    found_one = true;
+                    bail_out = true;
+                    logbook("CREATE_PATH: Found the goal cell, succes, bailing out");
+                    break;
+                }
 
-             // when the cell (the attached one) is NOT the cell we are on and
-             // the cell is CLOSED (not checked yet)
-             if (cll != iCell &&                            // not checking on our own
-                 temp_map[cll].state == CLOSED &&          // and is closed (else its not valid to check)
-                 (good)) // and its not occupied (but may be occupied by own id!
-             {
-                 int gcx = iCellGiveX(goal_cell);
-                 int gcy = iCellGiveY(goal_cell);
+                // when the cell (the attached one) is NOT the cell we are on and
+                // the cell is CLOSED (not checked yet)
+                if (cll != iCell &&                            // not checking on our own
+                    temp_map[cll].state == CLOSED &&          // and is closed (else its not valid to check)
+                    (good)) // and its not occupied (but may be occupied by own id!
+                {
+                    int gcx = iCellGiveX(goal_cell);
+                    int gcy = iCellGiveY(goal_cell);
 
-                 // calculate the cost
-                 double d_cost = ABS_length(cx, cy, gcx, gcy) + temp_map[cll].cost;
+                    // calculate the cost
+                    double d_cost = ABS_length(cx, cy, gcx, gcy) + temp_map[cll].cost;
 
-                 // when the cost is lower then we had before
-                 if (d_cost < cost)
-                 {
-                     // when the cost is lower then the previous cost, then we set the new cost and we set the cell
-                     the_cll=cll;
-                     cost=d_cost;
-                     // found a new cell, now decrease ipathcountunits
-                     iPathCountUnits--;
-                 }
+                    // when the cost is lower then we had before
+                    if (d_cost < cost) {
+                        // when the cost is lower then the previous cost, then we set the new cost and we set the cell
+                        the_cll = cll;
+                        cost = d_cost;
+                        // found a new cell, now decrease ipathcountunits
+                        iPathCountUnits--;
+                    }
 
 
 /*
@@ -3421,52 +3275,49 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
                  sprintf(msg, "Waypoint found : cell %d - goalcell = %d", cll, goal_cell);
                  logbook(msg);*/
 
-             } // END OF LOOP #2
-   } // Y thingy
+                } // END OF LOOP #2
+            } // Y thingy
 
-   // bail out
-   if (bail_out) {
-       //logbook("BAIL");
-       break;
-   }
+            // bail out
+            if (bail_out) {
+                //logbook("BAIL");
+                break;
+            }
 
- } // X thingy
+        } // X thingy
 
- // When found a new c(e)ll;
-     if (the_cll > -1)
-     {
-       // Open this one, so we do not check it again
-       temp_map[the_cll].state = OPEN;
-       temp_map[the_cll].parent = iCell;
-       temp_map[the_cll].cost = cost;
+        // When found a new c(e)ll;
+        if (the_cll > -1) {
+            // Open this one, so we do not check it again
+            temp_map[the_cll].state = OPEN;
+            temp_map[the_cll].parent = iCell;
+            temp_map[the_cll].cost = cost;
 
-       // Now set c to the cll
-       iCell = the_cll;
-       found_one=true;
+            // Now set c to the cll
+            iCell = the_cll;
+            found_one = true;
 
-       // DEBUG:
-       // draws a SLAB when the cell is assigned for our path
-       //map.cell[c].type = TERRAIN_SPICE;
-       //map.cell[c].tile = 0;
+            // DEBUG:
+            // draws a SLAB when the cell is assigned for our path
+            //map.cell[c].type = TERRAIN_SPICE;
+            //map.cell[c].tile = 0;
 
-       if (iCell == goal_cell)
-       {
-        valid=false;
-        succes=true;
-       }
-     }
+            if (iCell == goal_cell) {
+                valid = false;
+                succes = true;
+            }
+        }
 
-     if (found_one == false)
-     {
-       valid=false;
-       succes=false;
-       logbook("FAILED TO CREATE PATH - nothing found to continue");
-       break;
-     }
+        if (found_one == false) {
+            valid = false;
+            succes = false;
+            logbook("FAILED TO CREATE PATH - nothing found to continue");
+            break;
+        }
 
- } // valid to run loop (and try to create a path)
+    } // valid to run loop (and try to create a path)
 
- logbook("CREATE_PATH -- valid loop finished");
+    logbook("CREATE_PATH -- valid loop finished");
 
     if (succes) {
         logbook("CREATE_PATH -- success");
@@ -3590,28 +3441,26 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
 
 // find
-int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID)
-{
+int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID) {
     //
-    int iSize=1;
-    int iStartX=iCellGiveX(iCll)-iSize;
-    int iStartY=iCellGiveY(iCll)-iSize;
+    int iSize = 1;
+    int iStartX = iCellGiveX(iCll) - iSize;
+    int iStartY = iCellGiveY(iCll) - iSize;
     int iEndX = iCellGiveX(iCll) + iSize;
     int iEndY = iCellGiveX(iCll) + iSize;
 
-    float dDistance=9999;
+    float dDistance = 9999;
 
-    int ix=iCellGiveX(iMyCell);
-    int iy=iCellGiveY(iMyCell);
+    int ix = iCellGiveX(iMyCell);
+    int iy = iCellGiveY(iMyCell);
 
-    bool bSearch=true;
+    bool bSearch = true;
 
-    int iTheClosest=-1;
+    int iTheClosest = -1;
 
-    while (bSearch)
-    {
-        iStartX=iCellGiveX(iCll)-iSize;
-        iStartY=iCellGiveY(iCll)-iSize;
+    while (bSearch) {
+        iStartX = iCellGiveX(iCll) - iSize;
+        iStartY = iCellGiveY(iCll) - iSize;
         iEndX = iCellGiveX(iCll) + iSize;
         iEndY = iCellGiveY(iCll) + iSize;
 
@@ -3620,9 +3469,8 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID)
         FIX_BORDER_POS(iEndX, iEndY);
 
         // search
-        for (int iSX=iStartX; iSX < iEndX; iSX++)
-            for (int iSY=iStartY; iSY < iEndY; iSY++)
-            {
+        for (int iSX = iStartX; iSX < iEndX; iSX++)
+            for (int iSY = iStartY; iSY < iEndY; iSY++) {
                 // find an empty cell
                 int cll = iCellMakeWhichCanReturnMinusOne(iSX, iSY);
 
@@ -3635,31 +3483,28 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID)
                 {
                     // depending on unit type, do not choose walls (or mountains)
                     int cellType = map.getCellType(cll);
-                    if (units[unit[iID].iType].infantry)
-                    {
+                    if (units[unit[iID].iType].infantry) {
                         if (cellType == TERRAIN_MOUNTAIN)
                             continue; // do not use this one
                     }
 
                     if (cellType == TERRAIN_WALL)
-                            continue; // do not use this one
+                        continue; // do not use this one
 
-                    if (dDistance2 < dDistance)
-                    {
+                    if (dDistance2 < dDistance) {
                         dDistance = dDistance2;
-                        iTheClosest=cll;
+                        iTheClosest = cll;
                     }
                 }
             }
 
-         if (iTheClosest > -1)
-             return iTheClosest;
+        if (iTheClosest > -1)
+            return iTheClosest;
 
         iSize++;
 
-        if (iSize > 9)
-        {
-            bSearch=false;
+        if (iSize > 9) {
+            bSearch = false;
             break; // get out
         }
     }
@@ -3668,87 +3513,77 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID)
     return iCll;
 }
 
-int UNIT_find_harvest_spot(int id)
-{
-  // finds the closest harvest spot
-  unit[id].poll();
-  int cx = unit[id].iCellX;
-  int cy = unit[id].iCellY;
+int UNIT_find_harvest_spot(int id) {
+    // finds the closest harvest spot
+    unit[id].poll();
+    int cx = unit[id].iCellX;
+    int cy = unit[id].iCellY;
 
-  int TargetSpice=-1;
-  int TargetSpiceHill=-1;
+    int TargetSpice = -1;
+    int TargetSpiceHill = -1;
 
-  // distances
-  int TargetSpiceDistance=40;
-  int TargetSpiceHillDistance=40;
+    // distances
+    int TargetSpiceDistance = 40;
+    int TargetSpiceHillDistance = 40;
 
 
-  for (int i=0; i < (MAX_CELLS); i++)
-    if (map.getCellCredits(i) > 0 && i != unit[id].iCell)
-    {
-      // check if its not out of reach
-      int dx = iCellGiveX(i);
-      int dy = iCellGiveY(i);
+    for (int i = 0; i < (MAX_CELLS); i++)
+        if (map.getCellCredits(i) > 0 && i != unit[id].iCell) {
+            // check if its not out of reach
+            int dx = iCellGiveX(i);
+            int dy = iCellGiveY(i);
 
-      // skip bordered ones
-      if (BORDER_POS(dx, dy) == false)
-          continue;
+            // skip bordered ones
+            if (BORDER_POS(dx, dy) == false)
+                continue;
 
-      /*
-	  if (dx <= 1) continue;
-	  if (dy <= 1) continue;
+            /*
+            if (dx <= 1) continue;
+            if (dy <= 1) continue;
 
-      if (dx >= (game.map_width-1))
-        continue;
+            if (dx >= (game.map_width-1))
+              continue;
 
-      if (dy >= (game.map_height-1))
-        continue;*/
+            if (dy >= (game.map_height-1))
+              continue;*/
 
-      int idOfUnitAtCell = map.getCellIdUnitLayer(i);
-      if (idOfUnitAtCell > -1)
-        continue;
+            int idOfUnitAtCell = map.getCellIdUnitLayer(i);
+            if (idOfUnitAtCell > -1)
+                continue;
 
-      if (map.occupied(i, id))
-          continue; // occupied
+            if (map.occupied(i, id))
+                continue; // occupied
 
-      int d = ABS_length(cx, cy, iCellGiveX(i), iCellGiveY(i));
+            int d = ABS_length(cx, cy, iCellGiveX(i), iCellGiveY(i));
 
-        int cellType = map.getCellType(i);
-        if (cellType == TERRAIN_SPICE)
-	  {
-		  if (d < TargetSpiceDistance)
-		  {
-			  TargetSpice=i;
-			  TargetSpiceDistance=d; // update distance
-		  }
-	  }
-	  else if (cellType == TERRAIN_SPICEHILL)
-	  {
-		  if (d < TargetSpiceHillDistance)
-		  {
-			  TargetSpiceHill=i;
-			  TargetSpiceHillDistance=d; // update distance
-		  }
-	  }
+            int cellType = map.getCellType(i);
+            if (cellType == TERRAIN_SPICE) {
+                if (d < TargetSpiceDistance) {
+                    TargetSpice = i;
+                    TargetSpiceDistance = d; // update distance
+                }
+            } else if (cellType == TERRAIN_SPICEHILL) {
+                if (d < TargetSpiceHillDistance) {
+                    TargetSpiceHill = i;
+                    TargetSpiceHillDistance = d; // update distance
+                }
+            }
 
-	  if (TargetSpiceHillDistance < 3 && TargetSpiceDistance < 3)
-		  break;
+            if (TargetSpiceHillDistance < 3 && TargetSpiceDistance < 3)
+                break;
 
-	}
+        }
 
-	// when distance is greater then 3 (meaning 'far' away)
-	if (TargetSpiceHillDistance >= 3 && TargetSpiceDistance >= 3)
-	{
-		return TargetSpice;
-	}
-	else
-	{
-		// when both are close, prefer spice hill
-		if (TargetSpiceHill > -1 && (TargetSpiceHillDistance <= TargetSpiceDistance))
-			return TargetSpiceHill;
-	}
+    // when distance is greater then 3 (meaning 'far' away)
+    if (TargetSpiceHillDistance >= 3 && TargetSpiceDistance >= 3) {
+        return TargetSpice;
+    } else {
+        // when both are close, prefer spice hill
+        if (TargetSpiceHill > -1 && (TargetSpiceHillDistance <= TargetSpiceDistance))
+            return TargetSpiceHill;
+    }
 
-	return TargetSpice;
+    return TargetSpice;
 }
 
 // Reinforce:
@@ -3760,42 +3595,42 @@ int UNIT_find_harvest_spot(int id)
 
 void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
 
-	// handle invalid arguments
-	if (iPlr < 0 || iTpe < 0)
-		return;
+    // handle invalid arguments
+    if (iPlr < 0 || iTpe < 0)
+        return;
 
-	//if (iCll < 0 || iCll >= MAX_CELLS)
-	if (bCellValid(iCll) == false)
-		return;
+    //if (iCll < 0 || iCll >= MAX_CELLS)
+    if (bCellValid(iCll) == false)
+        return;
 
-	if (iStart < 0)
-		iStart = iCll;
+    if (iStart < 0)
+        iStart = iCll;
 
-	int iStartCell = iFindCloseBorderCell(iStart);
+    int iStartCell = iFindCloseBorderCell(iStart);
 
-	if (iStartCell < 0)
-	{
-		iStart += rnd(64);
+    if (iStartCell < 0) {
+        iStart += rnd(64);
         if (iStart >= MAX_CELLS)
             iStart -= 64;
 
-		iStartCell = iFindCloseBorderCell(iStart);
-	}
+        iStartCell = iFindCloseBorderCell(iStart);
+    }
 
-	if (iStartCell < 0)	{
-		logbook("ERROR (reinforce): Could not figure a startcell");
-		return;
-	}
+    if (iStartCell < 0) {
+        logbook("ERROR (reinforce): Could not figure a startcell");
+        return;
+    }
 
-	char msg[255];
-	sprintf(msg, "REINFORCE: Bringing unit type %d for player %d. Starting from cell %d, going to cell %d", iTpe, iPlr, iStartCell, iCll);
-	logbook(msg);
+    char msg[255];
+    sprintf(msg, "REINFORCE: Bringing unit type %d for player %d. Starting from cell %d, going to cell %d", iTpe, iPlr,
+            iStartCell, iCll);
+    logbook(msg);
 
-	// STEP 2: create carryall
-	int iUnit = UNIT_CREATE(iStartCell, CARRYALL, iPlr, true);
+    // STEP 2: create carryall
+    int iUnit = UNIT_CREATE(iStartCell, CARRYALL, iPlr, true);
 
-	// STEP 3: assign order to carryall
-	unit[iUnit].carryall_order(-1, TRANSFER_NEW_LEAVE, iCll, iTpe);
+    // STEP 3: assign order to carryall
+    unit[iUnit].carryall_order(-1, TRANSFER_NEW_LEAVE, iCll, iTpe);
 }
 
 /**
@@ -3806,8 +3641,8 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
  * @return
  */
 int CARRYALL_TRANSFER(int iuID, int iGoal) {
-	// find a free carry all, and bring unit to goal..
-	for (int i=0; i < MAX_UNITS; i++) {
+    // find a free carry all, and bring unit to goal..
+    for (int i = 0; i < MAX_UNITS; i++) {
         cUnit &cUnit = unit[i];
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != unit[iuID].iPlayer) continue;
@@ -3818,9 +3653,9 @@ int CARRYALL_TRANSFER(int iuID, int iGoal) {
         // assign an order
         cUnit.carryall_order(iuID, TRANSFER_PICKUP, iGoal, -1);
         return i;
-	}
+    }
 
-	return -1; // fail
+    return -1; // fail
 }
 
 /**
@@ -3829,186 +3664,168 @@ int CARRYALL_TRANSFER(int iuID, int iGoal) {
  *
  */
 void UNIT_deselect_all() {
-	for (int i=0; i < MAX_UNITS; i++) {
-		if (unit[i].isValid()) {
-			unit[i].bSelected=false;
-		}
-	}
+    for (int i = 0; i < MAX_UNITS; i++) {
+        if (unit[i].isValid()) {
+            unit[i].bSelected = false;
+        }
+    }
 }
 
-void UNIT_ORDER_ATTACK(int iUnitID, int iGoalCell, int iUnit, int iStructure, int iAttackCell)
-{
+void UNIT_ORDER_ATTACK(int iUnitID, int iGoalCell, int iUnit, int iStructure, int iAttackCell) {
     // basically the same as move, but since we use iAction as ATTACK
     // it will think first in attack mode, determining if it will be CHASE now or not.
     // if not, it will just fire.
 
-	char msg[255];
-	sprintf(msg, "Attacking UNIT ID [%d], STRUCTURE ID [%d], ATTACKCLL [%d], GoalCell [%d]", iUnit, iStructure, iAttackCell, iGoalCell);
-	unit[iUnitID].LOG(msg);
+    char msg[255];
+    sprintf(msg, "Attacking UNIT ID [%d], STRUCTURE ID [%d], ATTACKCLL [%d], GoalCell [%d]", iUnit, iStructure,
+            iAttackCell, iGoalCell);
+    unit[iUnitID].LOG(msg);
 
-	if (iUnit < 0 && iStructure < 0 && iAttackCell < 0)
-	{
-		unit[iUnitID].LOG("What is this? Ordered to attack but no target?");
-		return;
-	}
+    if (iUnit < 0 && iStructure < 0 && iAttackCell < 0) {
+        unit[iUnitID].LOG("What is this? Ordered to attack but no target?");
+        return;
+    }
 
-    unit[iUnitID].iAction   = ACTION_ATTACK;
-	unit[iUnitID].iGoalCell = iGoalCell;
+    unit[iUnitID].iAction = ACTION_ATTACK;
+    unit[iUnitID].iGoalCell = iGoalCell;
     unit[iUnitID].iNextCell = -1;
-	unit[iUnitID].bCalculateNewPath = true;
+    unit[iUnitID].bCalculateNewPath = true;
     unit[iUnitID].iAttackStructure = iStructure;
     unit[iUnitID].iAttackUnit = iUnit;
     unit[iUnitID].iAttackCell = iAttackCell;
 }
 
 
-
-void UNIT_ORDER_MOVE(int iUnitID, int iGoalCell)
-{
-	unit[iUnitID].move_to(iGoalCell, -1, -1);
+void UNIT_ORDER_MOVE(int iUnitID, int iGoalCell) {
+    unit[iUnitID].move_to(iGoalCell, -1, -1);
 }
-
 
 
 ///////////////////////////////////////////////////////////////////////
 // REINFORCEMENT STUFF
 ///////////////////////////////////////////////////////////////////////
-void INIT_REINFORCEMENT()
-{
- for (int i=0; i < MAX_REINFORCEMENTS; i++)
- {
-    reinforcements[i].iCell=-1;
-    reinforcements[i].iPlayer=-1;
-    reinforcements[i].iSeconds=-1;
-    reinforcements[i].iUnitType=-1;
- }
+void INIT_REINFORCEMENT() {
+    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
+        reinforcements[i].iCell = -1;
+        reinforcements[i].iPlayer = -1;
+        reinforcements[i].iSeconds = -1;
+        reinforcements[i].iUnitType = -1;
+    }
 }
 
 // done every second
-void THINK_REINFORCEMENTS()
-{
-    for (int i=0; i < MAX_REINFORCEMENTS; i++)
-    {
-        if (reinforcements[i].iCell > -1)
-        {
-            if (reinforcements[i].iSeconds > 0)
-            {
+void THINK_REINFORCEMENTS() {
+    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
+        if (reinforcements[i].iCell > -1) {
+            if (reinforcements[i].iSeconds > 0) {
                 reinforcements[i].iSeconds--;
                 continue; // next one
-            }
-            else
-            {
+            } else {
                 // deliver
-                REINFORCE(reinforcements[i].iPlayer, reinforcements[i].iUnitType, reinforcements[i].iCell, player[reinforcements[i].iPlayer].focus_cell);
+                REINFORCE(reinforcements[i].iPlayer, reinforcements[i].iUnitType, reinforcements[i].iCell,
+                          player[reinforcements[i].iPlayer].focus_cell);
 
                 // and make this unvalid
-                reinforcements[i].iCell=-1;
+                reinforcements[i].iCell = -1;
             }
         }
     }
 }
 
 // returns next free reinforcement index
-int NEXT_REINFORCEMENT()
-{
- for (int i=0; i < MAX_REINFORCEMENTS; i++)
- {
-     // new one yey
-    if (reinforcements[i].iCell < 0)
-        return i;
- }
+int NEXT_REINFORCEMENT() {
+    for (int i = 0; i < MAX_REINFORCEMENTS; i++) {
+        // new one yey
+        if (reinforcements[i].iCell < 0)
+            return i;
+    }
 
- return -1;
+    return -1;
 }
 
 // set reinforcement
-void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType)
-{
-    int iIndex=NEXT_REINFORCEMENT();
+void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType) {
+    int iIndex = NEXT_REINFORCEMENT();
 
-	// do not allow falsy indexes.
-	if (iIndex < 0)
-		return;
+    // do not allow falsy indexes.
+    if (iIndex < 0)
+        return;
 
-	if (iCll < 0)
-	{
-		logbook("REINFORCEMENT: Cannot set; invalid cell given");
-		return;
-	}
+    if (iCll < 0) {
+        logbook("REINFORCEMENT: Cannot set; invalid cell given");
+        return;
+    }
 
-	if (iPlyr < 0)
-	{
-		logbook("REINFORCEMENT: Cannot set; invalid plyr");
-		return;
-	}
+    if (iPlyr < 0) {
+        logbook("REINFORCEMENT: Cannot set; invalid plyr");
+        return;
+    }
 
-	if (iTime < 0)
-	{
-		logbook("REINFORCEMENT: Cannot set; invalid time given");
-		return;
-	}
+    if (iTime < 0) {
+        logbook("REINFORCEMENT: Cannot set; invalid time given");
+        return;
+    }
 
-	if (iUType < 0)
-	{
-		logbook("REINFORCEMENT: Cannot set; invalid unit type given");
-		return;
-	}
+    if (iUType < 0) {
+        logbook("REINFORCEMENT: Cannot set; invalid unit type given");
+        return;
+    }
 
-	char msg[255];
-	sprintf(msg, "[%d] Reinforcement: Controller = %d, House %d, Time %d, Type = %d", iIndex, iPlyr, player[iPlyr].getHouse(), iTime, iUType);
-	logbook(msg);
+    char msg[255];
+    sprintf(msg, "[%d] Reinforcement: Controller = %d, House %d, Time %d, Type = %d", iIndex, iPlyr,
+            player[iPlyr].getHouse(), iTime, iUType);
+    logbook(msg);
 
-	// DEBUG DEBUG
+    // DEBUG DEBUG
     if (!DEBUGGING)
         iTime *= 15;
 
-    reinforcements[iIndex].iCell	= iCll;
-    reinforcements[iIndex].iPlayer	= iPlyr;
-    reinforcements[iIndex].iUnitType= iUType;
+    reinforcements[iIndex].iCell = iCll;
+    reinforcements[iIndex].iPlayer = iPlyr;
+    reinforcements[iIndex].iUnitType = iUType;
     reinforcements[iIndex].iSeconds = iTime;
 }
 
-int UNIT_FREE_AROUND_MOVE(int iUnit)
-{
-	if (iUnit < 0) {
-		logbook("Invalid unit");
-		return -1;
-	}
+int UNIT_FREE_AROUND_MOVE(int iUnit) {
+    if (iUnit < 0) {
+        logbook("Invalid unit");
+        return -1;
+    }
 
     cUnit &cUnit = unit[iUnit];
 
     int iStartX = iCellGiveX(cUnit.iCell);
-	int iStartY = iCellGiveY(cUnit.iCell);
+    int iStartY = iCellGiveY(cUnit.iCell);
 
-    int iWidth=rnd(4);
+    int iWidth = rnd(4);
 
     if (cUnit.iType == HARVESTER)
-        iWidth=2;
+        iWidth = 2;
 
-	int iEndX = (iStartX + 1) + iWidth;
-	int iEndY = (iStartY + 1) + iWidth;
+    int iEndX = (iStartX + 1) + iWidth;
+    int iEndY = (iStartY + 1) + iWidth;
 
-	iStartX-=iWidth;
-	iStartY-=iWidth;
+    iStartX -= iWidth;
+    iStartY -= iWidth;
 
     int iClls[50];
     memset(iClls, -1, sizeof(iClls));
-    int iC=0;
+    int foundCoordinates = 0;
 
-	for (int x = iStartX; x < iEndX; x++)
-		for (int y = iStartY; y < iEndY; y++)
-		{
-			int cll = iCellMakeWhichCanReturnMinusOne(x, y);
+    for (int x = iStartX; x < iEndX; x++) {
+        for (int y = iStartY; y < iEndY; y++) {
+            int cll = iCellMakeWhichCanReturnMinusOneWithinMapBorders(x, y);
 
-			if (map.occupied(cll) == false)
-            {
-                iClls[iC]=cll;
-                iC++;
+            if (cll > -1 && !map.occupied(cll)) {
+                iClls[foundCoordinates] = cll;
+                foundCoordinates++;
             }
 
-		}
+        }
+    }
 
+    if (foundCoordinates < 1) return -1;
 
-	return (iClls[rnd(iC)]); // fail
+    return iClls[rnd(foundCoordinates)]; // random cell
 }
 

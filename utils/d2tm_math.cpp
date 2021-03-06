@@ -59,14 +59,17 @@ int iCellGiveY(int c)
 // make cell number out of X and Y value
 int iCellMake(int x, int y) {
     cCellCalculator * cellCalculator = map.getCellCalculator();
-    assert(cellCalculator);
     return cellCalculator->getCell(x, y);
 }
 
 int iCellMakeWhichCanReturnMinusOne(int x, int y) {
     cCellCalculator * cellCalculator = map.getCellCalculator();
-    assert(cellCalculator);
     return cellCalculator->getCellWithMapDimensions(x, y, game.map_width, game.map_height);
+}
+
+int iCellMakeWhichCanReturnMinusOneWithinMapBorders(int x, int y) {
+    cCellCalculator * cellCalculator = map.getCellCalculator();
+    return cellCalculator->getCellWithMapBorders(x, y);
 }
 
 // returns in fRadians
