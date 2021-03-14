@@ -1124,7 +1124,6 @@ int getUnitTypeFromChar(char chunk[35]) {
     if (caseInsCompare(unitString, "Ornithopter")) return ORNITHOPTER;
     if (caseInsCompare(unitString, "Sandworm")) return SANDWORM;
     if (caseInsCompare(unitString, "Saboteur")) return SABOTEUR;
-    if (caseInsCompare(unitString, "MISSILE")) return MISSILE;
     if (caseInsCompare(unitString, "ONEFREMEN")) return UNIT_FREMEN_ONE;
     if (caseInsCompare(unitString, "THREEFREMEN")) return UNIT_FREMEN_THREE;
 

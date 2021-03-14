@@ -32,6 +32,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
         creditsPerProgressTime = (float)this->cost / (float)this->totalBuildTime;
     }
     placeIt = false;
+    deployIt = false;
 }
 
 cBuildingListItem::~cBuildingListItem() {
@@ -50,6 +51,17 @@ cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingLis
 }
 
 /**
+ * Constructor for Specials
+ * @param theID
+ * @param entry
+ * @param list
+ * @param subList
+ */
+cBuildingListItem::cBuildingListItem(int theID, s_Special entry, cBuildingList *list, int subList) :
+                    cBuildingListItem(SPECIAL, theID, 0, entry.icon, entry.buildTime, list, subList, false) {
+}
+
+/**
  * Constructor for Upgrades
  * @param theID
  * @param entry
@@ -61,6 +73,9 @@ cBuildingListItem::cBuildingListItem(int theID, s_Upgrade entry, cBuildingList *
 }
 
 cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
+}
+
+cBuildingListItem::cBuildingListItem(int theID, s_Special entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
 }
 
 /**
@@ -134,7 +149,23 @@ bool cBuildingListItem::isDoneBuilding() {
 }
 
 bool cBuildingListItem::isTypeUpgrade() {
-    return getBuildType() == eBuildType::UPGRADE;
+    return isType(eBuildType::UPGRADE);
+}
+
+bool cBuildingListItem::isTypeStructure() {
+    return isType(eBuildType::STRUCTURE);
+}
+
+bool cBuildingListItem::isTypeUnit() {
+    return isType(eBuildType::UNIT);
+}
+
+bool cBuildingListItem::isTypeSpecial() {
+    return isType(eBuildType::SPECIAL);
+}
+
+bool cBuildingListItem::isType(eBuildType value) {
+    return getBuildType() == value;
 }
 
 s_Upgrade cBuildingListItem::getS_Upgrade() {
@@ -144,6 +175,15 @@ s_Upgrade cBuildingListItem::getS_Upgrade() {
         buildId = 1;
     }
     return upgrades[buildId];
+}
+
+s_Special cBuildingListItem::getS_Special() {
+    int buildId = getBuildId();
+    if (getBuildType() != eBuildType::SPECIAL){
+        logbook("ERROR!!! - calling gets_Special while type is not SPECIAL! - falling back to buildId 1 as safety");
+        buildId = 1;
+    }
+    return specials[buildId];
 }
 
 s_UnitP cBuildingListItem::getS_UnitP() {

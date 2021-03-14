@@ -2051,14 +2051,19 @@ bool cGame::setupGame() {
 	set_volume(iMaxVolume, 150);
 
 	// A few messages for the player
-	logbook("Installing:  PLAYERS");
-	INSTALL_PLAYERS();
-	logbook("Installing:  HOUSES");
+	logbook("Initializing:  PLAYERS");
+    INIT_ALL_PLAYERS();
+	logbook("Setup:  HOUSES");
 	INSTALL_HOUSES();
+    logbook("Setup:  STRUCTURES");
 	install_structures();
+    logbook("Setup:  PROJECTILES");
 	install_bullets();
+    logbook("Setup:  UNITS");
 	install_units();
-	logbook("Installing:  WORLD");
+    logbook("Setup:  SPECIALS");
+	install_specials();
+	logbook("Setup:  WORLD");
 	selectYourNextConquestState->INSTALL_WORLD();
 
     delete mapCamera;

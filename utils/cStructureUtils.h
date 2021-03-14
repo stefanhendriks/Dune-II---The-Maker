@@ -39,6 +39,7 @@ protected:
 	private:
 		cCellCalculator * cellCalculator;
 
+        int getStructureTypeByUnitBuildId(int unitBuildId) const;
 };
 
 #endif /* CSTRUCTUREUTILS_H_ */

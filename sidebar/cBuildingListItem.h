@@ -16,8 +16,9 @@ public:
 	// uber constructor
     cBuildingListItem(eBuildType type, int buildId, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList, bool queuable);
 
-	// easier constructors
+	// easier constructors (they have no LIST, this is intentional and assigned later to the item by add**toList functions in the cBuildingList.cpp class
     cBuildingListItem(int theID, s_Structures entry, int subList);
+    cBuildingListItem(int theID, s_Special entry, int subList);
     cBuildingListItem(int theID, s_UnitP entry, int subList);
     cBuildingListItem(int theID, s_Upgrade entry, int subList);
 
@@ -67,6 +68,7 @@ public:
 	int getSlotId() { return slotId; } // return index of items[] array (set after adding item to list, default is < 0)
 	int getTimesOrdered() { return timesOrdered; }
 
+	s_Special getS_Special();
 	s_Upgrade getS_Upgrade();
 	s_UnitP getS_UnitP();
 	s_Structures getS_Structures();
@@ -78,6 +80,7 @@ public:
 	float getRefundAmount();
 
 	bool shouldPlaceIt() { return placeIt; }
+	bool shouldDeployIt() { return deployIt; }
 	bool isQueuable() { return queuable; }
 
 	// setters
@@ -103,6 +106,7 @@ public:
 	void decreaseTimesOrdered() { timesOrdered--; }
 	void setSlotId(int value) { slotId = value; }
 	void setPlaceIt(bool value) { placeIt = value; }
+	void setDeployIt(bool value) { deployIt = value; }
 	void setList(cBuildingList *theList) { myList = theList; }
 
 	cBuildingList *getList() { return myList; }	// returns the list it belongs to
@@ -121,6 +125,9 @@ public:
     bool isDoneBuilding();
 
 	bool isTypeUpgrade();
+	bool isTypeSpecial();
+	bool isTypeUnit();
+	bool isTypeStructure();
 
     void resetTimesOrdered();
 
@@ -140,6 +147,7 @@ private:
 
 	float creditsPerProgressTime; // credits to pay for each progress point. (calculated at creation)
 	bool placeIt;			// when true, this item is ready for placement
+	bool deployIt;			// when true, this item is ready for deployment (FYI, super weapons)
 	bool queuable;			// when true, this item can be ordered multiple times to build
 
 	int totalBuildTime;		// total time it takes to build.
@@ -150,6 +158,9 @@ private:
     cBuildingListItem(int theID, s_Structures entry, cBuildingList* list, int subList);
     cBuildingListItem(int theID, s_UnitP entry, cBuildingList* list, int subList);
     cBuildingListItem(int theID, s_Upgrade entry, cBuildingList* list, int subList);
+    cBuildingListItem(int theID, s_Special entry, cBuildingList *list, int subList);
+
+    bool isType(eBuildType value);
 };
 
 #endif
