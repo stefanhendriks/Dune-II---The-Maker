@@ -50,6 +50,7 @@ s_House         			houses[MAX_HOUSES];
 s_Structures    			structures[MAX_STRUCTURETYPES];         // structure types
 s_UnitP         			units[MAX_UNITTYPES];              // unit types
 s_Upgrade                   upgrades[MAX_UPGRADETYPES];        // upgrade types
+s_Special                   specials[MAX_SPECIALTYPES];        // special types
 s_Bullet        			bullets[MAX_BULLET_TYPES];          // bullet slots
 sReinforcement  			reinforcements[MAX_REINFORCEMENTS];  // reinforcement slots
 

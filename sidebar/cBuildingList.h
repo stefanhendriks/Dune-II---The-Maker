@@ -39,6 +39,8 @@ public:
 
     void addStructureToList(int structureType, int subList);
 
+    void addSpecialToList(int specialType, int subList);
+
     void addUnitToList(int unitType, int subList);
 
     bool addItemToList(cBuildingListItem *item);

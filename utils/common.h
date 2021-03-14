@@ -24,7 +24,7 @@ int keepBetween(int value, int min, int max);
 
 // Installment of properties/settings in the game.
 void INSTALL_HOUSES();
-void INSTALL_PLAYERS();
+void INIT_ALL_PLAYERS();
 
 void INIT_PREVIEWS();
 
@@ -32,6 +32,7 @@ void install_structures();
 void install_units();
 void install_bullets();
 void install_upgrades();
+void install_specials();
 
 float health_bar(float max_w, int i, int w);
 

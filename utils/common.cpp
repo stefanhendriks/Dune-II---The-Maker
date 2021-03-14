@@ -105,56 +105,51 @@ void FIX_POS(int &x, int &y) {
 }
 
 
-
-
-void INSTALL_PLAYERS()
-{
-	for (int i=0; i < MAX_PLAYERS; i++)
-		player[i].init(i);
+void INIT_ALL_PLAYERS() {
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        player[i].init(i);
+    }
 }
 
 
-
-void INSTALL_HOUSES()
-{
 /********************************
  House Rules
  ********************************/
+void INSTALL_HOUSES() {
 
-  // General / Default / No House
-  houses[GENERALHOUSE].swap_color   = PAN_CENTER;
-  houses[GENERALHOUSE].minimap_color = makecol(PAN_CENTER, PAN_CENTER, PAN_CENTER);
+    // General / Default / No House
+    houses[GENERALHOUSE].swap_color = 128;
+    houses[GENERALHOUSE].minimap_color = makecol(128, 128, 128);
 
-  // Harkonnen
-  houses[HARKONNEN].swap_color = -1;  // 144
-  houses[HARKONNEN].minimap_color = makecol(125,0,0);
+    // Harkonnen
+    houses[HARKONNEN].swap_color = -1;  // 144
+    houses[HARKONNEN].minimap_color = makecol(125, 0, 0);
 
-  // Atreides
-  houses[ATREIDES].swap_color  = 160;
-  houses[ATREIDES].minimap_color = makecol(24,32,125);
+    // Atreides
+    houses[ATREIDES].swap_color = 160;
+    houses[ATREIDES].minimap_color = makecol(24, 32, 125);
 
-  // Ordos
-  houses[ORDOS].swap_color     = 176;
-  houses[ORDOS].minimap_color = makecol(24,125,24);
+    // Ordos
+    houses[ORDOS].swap_color = 176;
+    houses[ORDOS].minimap_color = makecol(24, 125, 24);
 
-  // Mercenary
-  houses[MERCENARY].swap_color    = 192;
-  houses[MERCENARY].minimap_color = makecol(214, 121, 16);
+    // Mercenary
+    houses[MERCENARY].swap_color = 192;
+    houses[MERCENARY].minimap_color = makecol(214, 121, 16);
 
-  // Sardaukar
-  houses[SARDAUKAR].swap_color = 208;
-  houses[SARDAUKAR].minimap_color = makecol(137,24,137);
+    // Sardaukar
+    houses[SARDAUKAR].swap_color = 208;
+    houses[SARDAUKAR].minimap_color = makecol(137, 24, 137);
 
-  // Fremen
-  houses[FREMEN].swap_color = 224;
-  houses[FREMEN].minimap_color = makecol(214,149,0);
+    // Fremen
+    houses[FREMEN].swap_color = 224;
+    houses[FREMEN].minimap_color = makecol(214, 149, 0);
 
-  // GREY
+    // GREY
 
-  // Corrino (?)
-  houses[CORRINO].swap_color   = 136;
-  houses[CORRINO].minimap_color = makecol(192,192,192); // grey
-
+    // ???
+    houses[CORRINO].swap_color = 136;
+    houses[CORRINO].minimap_color = makecol(192, 192, 192); // grey
 }
 
 
@@ -522,14 +517,14 @@ void install_units()
   units[UNIT_FREMEN_ONE].bmp_height = 16*2;
   units[UNIT_FREMEN_ONE].bmp_startpixel = 0;
   units[UNIT_FREMEN_ONE].bmp_frames = 3; // 2 extra frames
-  strcpy(units[UNIT_FREMEN_ONE].name, "Fremen");
+  strcpy(units[UNIT_FREMEN_ONE].name, "Fremen (1)");
   units[UNIT_FREMEN_ONE].icon      = ICON_SPECIAL_FREMEN;
   units[UNIT_FREMEN_ONE].bullets = ROCKET_SMALL_FREMEN;
   units[UNIT_FREMEN_ONE].second_shot = false;
   units[UNIT_FREMEN_ONE].infantry = true;
   units[UNIT_FREMEN_ONE].squish=false;
-  units[UNIT_FREMEN_ONE].listId=LIST_PALACE;
-  units[UNIT_FREMEN_ONE].subListId=0;
+//  units[UNIT_FREMEN_ONE].listId=LIST_PALACE;
+//  units[UNIT_FREMEN_ONE].subListId=0;
 
   // Unit        : Fremen
   // Description : A group of Fremen
@@ -538,14 +533,14 @@ void install_units()
   units[UNIT_FREMEN_THREE].bmp_height = 16*2;
   units[UNIT_FREMEN_THREE].bmp_startpixel = 0;
   units[UNIT_FREMEN_THREE].bmp_frames = 3; // 2 extra frames
-  strcpy(units[UNIT_FREMEN_THREE].name, "Fremen");
+  strcpy(units[UNIT_FREMEN_THREE].name, "Fremen (3)");
   units[UNIT_FREMEN_THREE].icon      = ICON_SPECIAL_FREMEN;
   units[UNIT_FREMEN_THREE].bullets = ROCKET_SMALL_FREMEN;
   units[UNIT_FREMEN_THREE].second_shot = true;
   units[UNIT_FREMEN_THREE].infantry = true;
   units[UNIT_FREMEN_THREE].squish=false;
-  units[UNIT_FREMEN_THREE].listId=LIST_PALACE;
-  units[UNIT_FREMEN_THREE].subListId=0;
+//  units[UNIT_FREMEN_THREE].listId=LIST_PALACE;
+//  units[UNIT_FREMEN_THREE].subListId=0;
 
   // Unit        : Saboteur
   // Description : Special infantry unit, moves like trike, deadly as hell, not detectable on radar!
@@ -569,28 +564,6 @@ void install_units()
   units[SABOTEUR].listId=LIST_PALACE;
   units[SABOTEUR].subListId=0;
 
-  // Unit        : Death Hand
-  // Description : A missile that destroys a large area. Is actually not a unit at all.
-  units[MISSILE].build_time = 1000;
-  units[MISSILE].bmp_width  = 16*2;
-  units[MISSILE].bmp_height = 16*2;
-  units[MISSILE].bmp_startpixel = 0;
-  units[MISSILE].bmp_frames = 3; // 2 extra frames
-  units[MISSILE].speed = 0; // very fast
-  units[MISSILE].hp = 60;   // quite some health
-  units[MISSILE].cost = 0;
-  units[MISSILE].sight = 3; // immense sight! (sorta scouting guys)
-  units[MISSILE].range = 2;
-  units[MISSILE].attack_frequency = 0;
-  units[MISSILE].turnspeed = 0; // very fast
-  strcpy(units[MISSILE].name, "Death Hand");
-  units[MISSILE].infantry = true;
-  units[MISSILE].icon      = ICON_SPECIAL_MISSILE;
-  units[MISSILE].squish=false;
-  units[MISSILE].listId=LIST_PALACE;
-  units[MISSILE].subListId=0;
-
-
   // Unit        : Sandworm
   units[SANDWORM].speed = 3; // very fast
   units[SANDWORM].bmp = (BITMAP *)gfxdata[UNIT_SANDWORM].dat;
@@ -606,6 +579,60 @@ void install_units()
 
   // Unit        : <name>
   // Description : <description>
+
+}
+
+void install_specials() {
+
+    for (int i = 0; i < MAX_SPECIALTYPES; i++) {
+        specials[i].icon = -1;
+        specials[i].providesType = eBuildType::UNIT;
+        specials[i].buildTime = 0;
+        specials[i].deployAt = eDeployType::AT_RANDOM_CELL;
+        specials[i].deployAtStructureType = -1;
+        specials[i].house = eHouseBitFlag::Unknown;
+        specials[i].autoBuild = false;
+        strcpy(specials[i].description, "\0");
+    }
+
+    // Deploy Saboteur
+    specials[SPECIAL_SABOTEUR].icon = ICON_SPECIAL_SABOTEUR;
+    specials[SPECIAL_SABOTEUR].house=eHouseBitFlag::Ordos;
+    specials[SPECIAL_SABOTEUR].autoBuild=true;
+    specials[SPECIAL_SABOTEUR].providesType = eBuildType::UNIT;
+    specials[SPECIAL_SABOTEUR].providesTypeId = UNIT_SABOTEUR;
+    specials[SPECIAL_SABOTEUR].deployAt = eDeployType::AT_STRUCTURE;
+    specials[SPECIAL_SABOTEUR].deployAtStructureType = PALACE;
+    specials[SPECIAL_SABOTEUR].buildTime = 10;
+    specials[SPECIAL_SABOTEUR].listId=LIST_PALACE;
+    specials[SPECIAL_SABOTEUR].subListId=0;
+    strcpy(specials[SPECIAL_SABOTEUR].description, "Saboteur");
+
+    // Deploy Fremen
+    specials[SPECIAL_FREMEN].icon = ICON_SPECIAL_FREMEN;
+    specials[SPECIAL_FREMEN].house=eHouseBitFlag::Atreides;
+    specials[SPECIAL_FREMEN].autoBuild=true;
+    specials[SPECIAL_FREMEN].providesType = eBuildType::UNIT;
+    specials[SPECIAL_FREMEN].providesTypeId = UNIT_FREMEN_THREE;
+    specials[SPECIAL_FREMEN].deployAt = eDeployType::AT_STRUCTURE;
+    specials[SPECIAL_FREMEN].deployAtStructureType = PALACE;
+    specials[SPECIAL_FREMEN].buildTime = 10;
+    specials[SPECIAL_FREMEN].listId=LIST_PALACE;
+    specials[SPECIAL_FREMEN].subListId=0;
+    strcpy(specials[SPECIAL_FREMEN].description, "Fremen");
+
+    // Launch Death Hand
+    specials[SPECIAL_DEATHHAND].icon = ICON_SPECIAL_MISSILE;
+    specials[SPECIAL_DEATHHAND].house = Harkonnen | Sardaukar;
+    specials[SPECIAL_DEATHHAND].autoBuild=true;
+    specials[SPECIAL_DEATHHAND].providesType = eBuildType::BULLET;
+    specials[SPECIAL_DEATHHAND].providesTypeId = ROCKET_BIG;
+    specials[SPECIAL_DEATHHAND].deployAt = eDeployType::AT_STRUCTURE; // the rocket is fired FROM ...
+    specials[SPECIAL_DEATHHAND].deployAtStructureType = PALACE; // ... the palace
+    specials[SPECIAL_DEATHHAND].buildTime = 10;
+    specials[SPECIAL_DEATHHAND].listId=LIST_PALACE;
+    specials[SPECIAL_DEATHHAND].subListId=0;
+    strcpy(specials[SPECIAL_DEATHHAND].description, "Death Hand");
 
 }
 

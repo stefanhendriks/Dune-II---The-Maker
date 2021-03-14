@@ -101,6 +101,13 @@ void cBuildingList::addUnitToList(int unitType, int subList) {
     }
 }
 
+void cBuildingList::addSpecialToList(int specialType, int subList) {
+    cBuildingListItem *item = new cBuildingListItem(specialType, specials[specialType], subList);
+    if (!addItemToList(item)) {
+        delete item;
+    }
+}
+
 bool cBuildingList::addItemToList(cBuildingListItem * item) {
 	if (isItemInList(item)) {
 		logbook("Will not add, item is already in list.");

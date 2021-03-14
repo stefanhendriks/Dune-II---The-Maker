@@ -127,13 +127,31 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * pPlayer, int structureT
 }
 
 /**
- * Depending on list type, return a structure type.
+ * Depending on list item, return a structure type; used to determine where to deploy this item.
  */
 int cStructureUtils::findStructureTypeByTypeOfList(cBuildingListItem *item) {
     if (!item) return -1;
-	if (item->getBuildType() != UNIT) return -1;
+    if (item->isTypeUpgrade()) {
+        return -1; // no clue
+    }
+    if (item->isTypeStructure()) {
+        return -1;
+    }
 
-	switch(item->getBuildId()) {
+    if (item->isTypeSpecial()) {
+        const s_Special &special = item->getS_Special();
+        if (special.providesType == UNIT) {
+	        return special.deployAtStructureType;
+	    }
+        return -1;
+	}
+
+    int unitBuildId = item->getBuildId();
+    return getStructureTypeByUnitBuildId(unitBuildId);
+}
+
+int cStructureUtils::getStructureTypeByUnitBuildId(int unitBuildId) const {
+    switch(unitBuildId) {
         case INFANTRY:
             return BARRACKS;
         case SOLDIER:
@@ -170,7 +188,7 @@ int cStructureUtils::findStructureTypeByTypeOfList(cBuildingListItem *item) {
             return HIGHTECH;
         default:
             char msg[255];
-            sprintf(msg, "Item buildId is [%d], which is not mapped", item->getBuildId());
+            sprintf(msg, "Item buildId is [%d], which is not mapped", unitBuildId);
             logbook(msg);
             assert(false);
             return -1;
