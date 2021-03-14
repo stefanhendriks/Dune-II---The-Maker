@@ -187,8 +187,9 @@ int cCellCalculator::getCellWithMapDimensions(int x, int y, int mapWidth, int ma
  * @return
  */
 int cCellCalculator::getCellWithMapBorders(int x, int y) {
-    int maxHeight = (height-1);
-    int maxWidth = (width-1);
+    // internal vars are 1 based (ie 64x64 means 0-63, which really means 1...62 are valid)
+    int maxHeight = (height-2); // hence the -2!
+    int maxWidth = (width-2);
 
     if (x < 1) return -1;
     if (y < 1) return -1;
