@@ -179,6 +179,13 @@ public:
     int getCellIdStructuresLayer(int cellNr) {
         return cellGetIdFromLayer(cellNr, MAPID_STRUCTURES);
     }
+    
+    bool isCellPassableAndNotBlockedForFootUnits(int cellNr) {
+        bool isPassable = isCellPassable(cellNr);
+        int unitId = getCellIdUnitLayer(cellNr);
+        int strucId = getCellIdStructuresLayer(cellNr);
+        return isPassable && unitId < 0 && strucId < 0;
+    }
 
     void cellTakeDamage(int cellNr, int damage) {
         tCell *pCell = getCell(cellNr);

@@ -235,6 +235,7 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 
 void UNIT_deselect_all();
 void UNIT_ORDER_MOVE(int iUnitID, int iGoalCell);
+
 void UNIT_ORDER_ATTACK(int iUnitID, int iGoalCell, int iUnit, int iStructure, int iAttackCell);
 
 int UNIT_find_harvest_spot(int id);

@@ -1,5 +1,4 @@
 #include "../include/d2tmh.h"
-#include "cBuildingListDrawer.h"
 
 
 cBuildingListDrawer::cBuildingListDrawer(cPlayer *thePlayer) : m_Player(thePlayer) {

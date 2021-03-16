@@ -94,7 +94,6 @@ class cPlayer {
 		// delete
 		void deleteSideBar() { if (sidebar) delete sidebar; }
 
-
 		std::string asString() const {
 		    char msg[512];
 		    sprintf(msg, "Player [id=%d, human=%b, sidebar=%d]", this->id, this->m_Human, this->sidebar);
@@ -112,6 +111,7 @@ class cPlayer {
         bool hasBarracks() const;
 
         bool hasAtleastOneStructure(int structureType) const;
+
 
         void decreaseStructureAmount(int structureType);
         void increaseStructureAmount(int structureType);
@@ -139,6 +139,10 @@ class cPlayer {
     void giveCredits(float amountToGive);
 
     float hasEnoughCreditsForUnit(int unitType);
+
+    std::vector<int> getAllMyUnits();
+
+    std::vector<int> getAllMyStructures();
 
 private:
 		int getRGBColorForHouse(int houseId);

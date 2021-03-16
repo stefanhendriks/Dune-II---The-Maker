@@ -9,8 +9,10 @@
   2001 - 2020 (c) code by Stefan Hendriks
 
   */
-#include <vector>
 #include "include/d2tmh.h"
+#include <vector>
+#include <algorithm>
+#include <random>
 
 // TODO: constructor/destructors
 
@@ -411,18 +413,24 @@ void cAIPlayer::think() {
     if (game.bDisableAI) return; // do nothing
 
     if (ID == HUMAN) {
-        return; // AI is not human / skip
+        return; // AI is human / skip
     }
 
     if (game.bSkirmish) {
         if (!aiplayer[ID].bPlaying) return; // skip non playing AI?
     }
 
-    if (ID == 1) {
-        char msg[255];
-        sprintf(msg, "AI[%d]: TIMER_think [%d]", ID, TIMER_think);
-        logbook(msg);
+    if (player[ID].isHouse(FREMEN)) {
+        // do fremen thinking ??
+        think_fremen_campaignmode();
     }
+
+//    if (ID == 1) {
+//        char msg[255];
+//        sprintf(msg, "AI[%d]: TIMER_think [%d]", ID, TIMER_think);
+//        logbook(msg);
+//    }
+
     // not time yet to think
     if (TIMER_think > 0) {
         TIMER_think--;
@@ -438,6 +446,7 @@ void cAIPlayer::think() {
 
         return;
     }
+
 
     // think about fair harvester stuff
     think_spiceBlooms();
@@ -1566,6 +1575,63 @@ cBuildingListItem * cAIPlayer::isUpgradingList(int listId, int sublistId) const 
 
 cBuildingListItem * cAIPlayer::isUpgradingConstyard() const {
     return isUpgradingList(LIST_CONSTYARD, 0);
+}
+
+void cAIPlayer::think_fremen_campaignmode() {
+    // find any unit that does not attack, and let it attack an enemy?
+    
+    cPlayer &cPlayer = player[ID];
+
+    bool findTargetToAttack = false;
+    std::vector<int> ids = cPlayer.getAllMyUnits();
+    for (auto & id : ids) {
+        cUnit &cUnit = unit[id];
+        if (cUnit.isIdle()) {
+            findTargetToAttack = true;
+            break;
+        }
+    }
+
+    if (findTargetToAttack) {
+        // attack things!
+        int playerIdToAttack = -1;
+        int unitIdToAttack = -1;
+        int structureIdToAttack = -1;
+        for (int i = 1; i < MAX_PLAYERS; i++) {
+            if (i == ID) continue; // skip self
+            if (i == HUMAN) continue;
+
+            std::vector<int> structureIds = player[i].getAllMyStructures();
+            if (!structureIds.empty()) {
+                // pick structure to attack
+                playerIdToAttack = i;
+                std::random_shuffle(structureIds.begin(), structureIds.end());
+                structureIdToAttack = structureIds.front();
+                break;
+            }
+
+            std::vector<int> unitIds = player[i].getAllMyUnits();
+            if (!unitIds.empty()) {
+                playerIdToAttack = i;
+                std::random_shuffle(unitIds.begin(), unitIds.end());
+                unitIdToAttack = unitIds.front();
+            }
+        }
+
+        // order units to attack!
+        for (auto & id : ids) {
+            cUnit &cUnit = unit[id];
+            if (cUnit.isIdle()) {
+                if (structureIdToAttack > -1) {
+                    int cell = structure[structureIdToAttack]->getCell();
+                    UNIT_ORDER_ATTACK(id, cell, -1, structureIdToAttack, -1);
+                } else if (unitIdToAttack > -1) {
+                    UNIT_ORDER_ATTACK(id, unit[unitIdToAttack].iCell, unitIdToAttack, -1, -1);
+                }
+                break;
+            }
+        }
+    }
 }
 
 /**

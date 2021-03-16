@@ -595,3 +595,27 @@ float cPlayer::hasEnoughCreditsForUnit(int unitType) {
     if (unitType < 0 || unitType >= MAX_UNITTYPES) return false;
     return this->credits > units[unitType].cost;
 }
+
+std::vector<int> cPlayer::getAllMyUnits() {
+    std::vector<int> ids = std::vector<int>();
+    for (int i = 0; i < MAX_UNITTYPES; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
+        if (cUnit.isDead()) continue;
+        if (cUnit.iPlayer != getId()) continue;
+        ids.push_back(i);
+    }
+    return ids;
+}
+
+std::vector<int> cPlayer::getAllMyStructures() {
+    std::vector<int> ids = std::vector<int>();
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+        cAbstractStructure * abstractStructure = structure[i];
+        if (!abstractStructure) continue;
+        if (!abstractStructure->isValid()) continue;
+        if (!abstractStructure->belongsTo(getId())) continue;
+        ids.push_back(i);
+    }
+    return ids;
+}
