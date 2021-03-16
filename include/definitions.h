@@ -145,6 +145,9 @@
 // UPGRADES stuff
 #define MAX_UPGRADETYPES       50    // maximum of upgrades
 
+// SPECIALS (super weapons) stuff
+#define MAX_SPECIALTYPES       10    // maximum of specials
+
 // STRUCTURES stuff
 #define MAX_STRUCTURETYPES  50    // max of building types
 
@@ -273,18 +276,22 @@
 #define SANDWORM		  17
 
 // special units
-#define SABOTEUR		  19  // special unit
-#define UNIT_FREMEN_ONE       20  // special unit(s) for fremen support
-#define UNIT_FREMEN_THREE       21  // special unit(s) for fremen support
-#define MISSILE			  22  // unit abusal id for missile (death hand)
+#define SABOTEUR		    19
+#define UNIT_FREMEN_ONE     20
+#define UNIT_FREMEN_THREE   21
 
 // Frigate
 #define FRIGATE           29  // air unit (should be last!!)
 
+// Specials (super weapons)
+#define SPECIAL_SABOTEUR		0
+#define SPECIAL_FREMEN          1  // special unit(s) for fremen support
+#define SPECIAL_DEATHHAND       2
+
 // Bullet types
 #define ROCKET_SMALL      0   // small rocket (trooper/troopers)
 #define ROCKET_NORMAL     1   // normal rocket (turret/launcher/deviator)
-#define ROCKET_BIG        2   // big rocket (palace, nuclear)
+#define ROCKET_BIG        2   // big rocket (palace, nuclear/deathhand/missile)
 #define BULLET_SMALL      3   // infantry bullet
 #define BULLET_TRIKE      4   // a trike bullet, looks like infantry but is stronger
 #define BULLET_QUAD       5   // a quad bullet

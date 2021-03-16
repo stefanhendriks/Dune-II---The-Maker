@@ -8,6 +8,8 @@
 #ifndef STRUCTS_H_
 #define STRUCTS_H_
 
+#include "enums.h"
+
 // Unit properties
 // the s_UnitP struct is holding all properties for a specific unit type.
 // note: The unit properties are actually set in common.cpp , like the houses!
@@ -139,6 +141,36 @@ struct s_Upgrade {
     int providesTypeList; // into which list will this type be made available?
     int providesTypeSubList; // and sublist
 
+};
+
+/**
+ * Upgrades are tied to structures (ie this is used to upgrade a structure type). After
+ * the upgrade is completed, the result is always an increased upgrade count.
+ *
+ * Then, also, this struct provides which item and what kind of item will be made available.
+ */
+struct s_Special {
+    int icon;            // icon id
+
+    char description[64]; // ie: "Upgrade to 4slab"
+
+    int buildTime;     // how long it takes to 'build' (ie wait before ready)
+
+    eBuildType providesType;
+    int providesTypeId;   // slot of type it points to (typeId)
+
+    int units;   // amount of units to spawn at once
+
+    eDeployType deployAt; // for Fremen, deploys unit to random cell
+
+    unsigned char house; // which house(s) have access to this?
+
+    bool autoBuild; // if true, then this item is built automatically
+
+    int deployAtStructureType; // if deployAt == STRUCTURE, then this is the structure type to deploy at
+
+    int listId;
+    int subListId;
 };
 
 // House properties

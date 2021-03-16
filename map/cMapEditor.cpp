@@ -127,7 +127,7 @@ void cMapEditor::createField(int cell, int terrainType, int size) {
         }
 
 
-        // randomly shift the cell one coordindate up/down/left/right
+        // randomly shift the cell one coordinate up/down/left/right
         switch (rnd(4)) {
             case 0:
                 x++;

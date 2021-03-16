@@ -20,7 +20,6 @@
 #include <algorithm>
 #include <random>
 #include "include/d2tmh.h"
-#include "cGame.h"
 
 
 cGame::cGame() {
@@ -1178,12 +1177,13 @@ void cGame::setup_skirmish() {
 
                 if (p == 5) {
                     iHouse = FREMEN;
+                    aiplayer[p].bPlaying = true; // fremen is game!
                 }
 
                 cPlayer.setHouse(iHouse);
 
                 // not playing.. do nothing
-                if (aiplayer[p].bPlaying == false) {
+                if (aiplayer[p].bPlaying == false || iHouse == FREMEN) {
                     continue;
                 }
 

@@ -590,6 +590,7 @@ void install_specials() {
         specials[i].buildTime = 0;
         specials[i].deployAt = eDeployType::AT_RANDOM_CELL;
         specials[i].deployAtStructureType = -1;
+        specials[i].units = 0;
         specials[i].house = eHouseBitFlag::Unknown;
         specials[i].autoBuild = false;
         strcpy(specials[i].description, "\0");
@@ -603,6 +604,7 @@ void install_specials() {
     specials[SPECIAL_SABOTEUR].providesTypeId = UNIT_SABOTEUR;
     specials[SPECIAL_SABOTEUR].deployAt = eDeployType::AT_STRUCTURE;
     specials[SPECIAL_SABOTEUR].deployAtStructureType = PALACE;
+    specials[SPECIAL_SABOTEUR].units = 1;
     specials[SPECIAL_SABOTEUR].buildTime = 10;
     specials[SPECIAL_SABOTEUR].listId=LIST_PALACE;
     specials[SPECIAL_SABOTEUR].subListId=0;
@@ -614,8 +616,9 @@ void install_specials() {
     specials[SPECIAL_FREMEN].autoBuild=true;
     specials[SPECIAL_FREMEN].providesType = eBuildType::UNIT;
     specials[SPECIAL_FREMEN].providesTypeId = UNIT_FREMEN_THREE;
-    specials[SPECIAL_FREMEN].deployAt = eDeployType::AT_STRUCTURE;
-    specials[SPECIAL_FREMEN].deployAtStructureType = PALACE;
+    specials[SPECIAL_FREMEN].deployAt = eDeployType::AT_RANDOM_CELL;
+    specials[SPECIAL_FREMEN].deployAtStructureType = PALACE; // This is not used with AT_RANDOM_CELL ...
+    specials[SPECIAL_FREMEN].units = 6; // ... but this is
     specials[SPECIAL_FREMEN].buildTime = 10;
     specials[SPECIAL_FREMEN].listId=LIST_PALACE;
     specials[SPECIAL_FREMEN].subListId=0;
@@ -629,6 +632,7 @@ void install_specials() {
     specials[SPECIAL_DEATHHAND].providesTypeId = ROCKET_BIG;
     specials[SPECIAL_DEATHHAND].deployAt = eDeployType::AT_STRUCTURE; // the rocket is fired FROM ...
     specials[SPECIAL_DEATHHAND].deployAtStructureType = PALACE; // ... the palace
+    specials[SPECIAL_DEATHHAND].units = 1;
     specials[SPECIAL_DEATHHAND].buildTime = 10;
     specials[SPECIAL_DEATHHAND].listId=LIST_PALACE;
     specials[SPECIAL_DEATHHAND].subListId=0;
