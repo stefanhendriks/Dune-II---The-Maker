@@ -20,7 +20,9 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     this->totalBuildTime = totalBuildTime;
     this->type = type;
     this->queuable = queuable;
+    timerCap = 0;
     progress = 0;
+    buildFrameToDraw = 0;
     state = AVAILABLE;
     building = false;
     myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
@@ -33,6 +35,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     }
     placeIt = false;
     deployIt = false;
+    TIMER_progressFrame = 0.0f;
 }
 
 cBuildingListItem::~cBuildingListItem() {
@@ -140,6 +143,9 @@ int cBuildingListItem::getBuildTime() {
     if (type == UPGRADE) {
         return upgrades[buildId].buildTime;
     }
+    if (type == SPECIAL) {
+        return specials[buildId].buildTime;
+    }
     // assumes other things (ie super weapons and such) are also under 'units' array.
     return units[buildId].build_time;
 }
@@ -215,3 +221,36 @@ eListType cBuildingListItem::getListType() {
     return eListType::LIST_NONE;
 }
 
+int cBuildingListItem::calculateBuildProgressFrameBasedOnBuildProgress() {
+    // frame to draw (for building in progress)
+    int iFrame = health_bar(31, progress, getTotalBuildTime());
+
+    if (iFrame > 31) {
+        iFrame = 31;
+    }
+
+    return iFrame;
+}
+
+void cBuildingListItem::decreaseProgressFrameTimer() {
+    TIMER_progressFrame--;
+}
+
+float cBuildingListItem::getProgressFrameTimer() {
+    return TIMER_progressFrame;
+}
+
+void cBuildingListItem::resetProgressFrameTimer() {
+    // total time to build is progress * 35 (time unit).
+    // divide that by frames (31), and get the time between frames!
+    int timeSpent = timerCap * totalBuildTime;
+    if (timeSpent > 0) {
+        TIMER_progressFrame = timeSpent / 31;
+    } else {
+        TIMER_progressFrame = 0;
+    }
+}
+
+void cBuildingListItem::setTimerCap(int value) {
+    timerCap = value;
+}

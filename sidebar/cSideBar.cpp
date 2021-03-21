@@ -35,6 +35,7 @@ void cSideBar::setList(int listId, cBuildingList* list) {
  */
 void cSideBar::think() {
 	thinkAvailabilityLists();
+	thinkProgressAnimation();
 }
 
 /**
@@ -278,4 +279,28 @@ cBuildingListItem * cSideBar::getBuildingListItem(int listId, int buildId) const
     if (pList == nullptr) return nullptr;
 
     return pList->getItemByBuildId(buildId);
+}
+
+void cSideBar::thinkProgressAnimation() {
+    for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {
+        cBuildingList *list = getList(i);
+        if (list == nullptr) continue;
+        if (!list->isAvailable()) continue; // not available, so no interaction possible
+
+        for (int j = 0; j < MAX_ITEMS; j++) {
+            cBuildingListItem *item = list->getItem(j);
+            if (item == nullptr) continue;
+            if (!item->isBuilding()) continue;
+
+            int frameToBecome = item->calculateBuildProgressFrameBasedOnBuildProgress();
+
+            if (item->getBuildProgressFrame() < frameToBecome) {
+                item->decreaseProgressFrameTimer();
+                if (item->getProgressFrameTimer() < 0) {
+                    item->increaseBuildProgressFrame();
+                    item->resetProgressFrameTimer();
+                }
+            }
+        }
+    }
 }

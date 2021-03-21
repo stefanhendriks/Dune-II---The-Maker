@@ -118,7 +118,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 	for (int i = 0; i < end; i++) {
 		cBuildingListItem * item = list->getItem(i);
 
-		if (item == NULL) {
+		if (item == nullptr) {
 			continue; // allow gaps in the list data structure (just not with rendering)
 		}
 
@@ -139,32 +139,20 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 
 		// when this item is being built.
 		if (item->isBuilding()) {
-			int iTotalBuildPoints = 0;
+            int iFrame = item->getBuildProgressFrame();
+
+            int iTotalBuildPoints = 0;
 
             // get the total build time
             if (listIDToDraw != LIST_STARPORT) {
                 iTotalBuildPoints = item->getBuildTime();
             }
 
-			// Now calculate the right frame.
-			float iPiece = iTotalBuildPoints / 31; // = 17 - 1 (of above)
-
-			if (iPiece < 0.1) {
-				iPiece = 0.1;
-			}
-
-			int iFrame = health_bar(31, item->getProgress(), iTotalBuildPoints);
-
-			if (iFrame > 31) {
-				iFrame = 31;
-			}
-
-			if (item->getProgress() < iTotalBuildPoints) {
+			if (item->getProgress() < iTotalBuildPoints || iFrame < 31) {
 				// draw the other progress stuff
 				set_trans_blender(0, 0, 0, 128);
 				draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESSFIX].dat, iDrawX+2, iDrawY+2);
 				draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESS001+iFrame].dat, iDrawX+2, iDrawY+2);
-
 			} else {
 				// draw 'ready' text when done building.
 				if (listIDToDraw == LIST_CONSTYARD) {

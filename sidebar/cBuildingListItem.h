@@ -122,7 +122,12 @@ public:
     eListType getListType();
 
     void increaseProgress(int byAmount);
-	void resetProgress() { progress = 0; }
+
+    void resetProgress() {
+	    progress = 0;
+        buildFrameToDraw = 0;
+        TIMER_progressFrame = 0.0f;
+	}
 
     int getBuildTime();
 
@@ -135,6 +140,19 @@ public:
 
     void resetTimesOrdered();
 
+    void increaseBuildProgressFrame() { buildFrameToDraw++; }
+    int getBuildProgressFrame() { return buildFrameToDraw; }
+
+    int calculateBuildProgressFrameBasedOnBuildProgress();
+
+    void decreaseProgressFrameTimer();
+
+    float getProgressFrameTimer();
+
+    void resetProgressFrameTimer();
+
+    void setTimerCap(int i);
+
 private:
 	void setProgress(int value) { progress = value; }
 
@@ -145,6 +163,7 @@ private:
 	bool building;			// building this item? (default = false)
 	eBuildingListItemState state;
 	int progress;			// progress building this item
+	int buildFrameToDraw;   // for the progress drawing
 	int timesToBuild;		// the amount of times to build this item (queueing) (meaning, when building = true, this should be 1...)
 	int timesOrdered;		// the amount of times this item has been ordered (starport related)
 	int slotId;			 	// return index of items[] array (set after adding item to list, default is < 0)
@@ -156,6 +175,9 @@ private:
 
 	int totalBuildTime;		// total time it takes to build.
 	int subList;            // subList id's allow us to distinguish built items within the same buildingList.
+
+	float TIMER_progressFrame; // timer used for progress drawing animation
+	int timerCap;           // passed in by item builder (determined by power outage, etc)
 
 	cBuildingList *myList;
 
