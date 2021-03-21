@@ -132,6 +132,7 @@ void cItemBuilder::think() {
                 if (special.providesType == UNIT) {
                     deployUnit(item, special.providesTypeId);
                 }
+                item->stopBuilding();
                 removeItemFromList(item);
             } else if (special.deployAt == AT_RANDOM_CELL) {
                 if (special.providesType == UNIT) {
@@ -173,7 +174,7 @@ void cItemBuilder::think() {
                         iCll = cellCalculator.getCell(x, y);
                     }
                 }
-
+                item->stopBuilding();
                 removeItemFromList(item);
             }
 
@@ -194,8 +195,7 @@ void cItemBuilder::think() {
         // stop building this item when we are done
         if (item->getTimesToBuild() == 0) {	// no more items to build
             // stop building (set flags)
-            item->setIsBuilding(false);
-            item->resetProgress(); // set back progress
+            item->stopBuilding();
 
             // remove this item from the build list (does not delete item, so pointer is still valid)
             removeItemFromList(item);
