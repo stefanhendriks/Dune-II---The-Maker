@@ -40,6 +40,7 @@ void cMapEditor::createCell(int cell, int terrainType, int tile) {
     map.cellChangeTile(cell, tile);
     map.cellChangeCredits(cell, 0);
     map.cellChangePassable(cell, true);
+    map.cellChangePassableFoot(cell, true);
 
     map.cellChangeSmudgeTile(cell, -1);
     map.cellChangeSmudgeType(cell, -1);
@@ -49,9 +50,11 @@ void cMapEditor::createCell(int cell, int terrainType, int tile) {
         map.cellChangeCredits(cell, 50 + rnd(250));
     } else if (terrainType == TERRAIN_MOUNTAIN) {
         map.cellChangePassable(cell, false);
+        map.cellChangePassableFoot(cell, true);
     } else if (terrainType == TERRAIN_WALL) {
         map.cellChangeHealth(cell, 100);
         map.cellChangePassable(cell, false);
+        map.cellChangePassableFoot(cell, false);
     }
 }
 
@@ -117,7 +120,6 @@ void cMapEditor::createField(int cell, int terrainType, int size) {
                 }
             } else {
                 createCell(c, terrainType, 0);
-                map.cellChangePassable(c, terrainType != TERRAIN_MOUNTAIN);
             }
         }
 

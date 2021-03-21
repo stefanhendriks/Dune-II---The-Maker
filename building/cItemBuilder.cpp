@@ -141,7 +141,7 @@ void cItemBuilder::think() {
                     int iCll = cellCalculator.getCellWithMapBorders(4 + rnd(game.map_width - 8), 4 + rnd(game.map_height - 8));
 
                     for (int j = 0; j < special.units; j++) {
-                        bool passable = map.isCellPassableAndNotBlockedForFootUnits(iCll);
+                        bool passable = map.isCellPassableForFootUnits(iCll);
 
                         if (passable) {
                             UNIT_CREATE(iCll, special.providesTypeId, FREMEN, false);
