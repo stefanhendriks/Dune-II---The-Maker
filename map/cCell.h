@@ -10,6 +10,7 @@ struct tCell
     int smudgetype;     // smudge type id
     int health;         // hitpoints for specific tile (used for walls)
     bool passable;      // passable? > pathfinder (TRUE = default)
+    bool passableFoot;  // passable for foot units? > pathfinder (TRUE = default)
 
     // there are 4 'dimensions' of this cell. Each represents the perspective of
     // an entity that is either a unit, structure, the 'worms' dimension and the 'air' dimension.

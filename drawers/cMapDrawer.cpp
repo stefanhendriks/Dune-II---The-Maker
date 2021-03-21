@@ -184,8 +184,16 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
 
                 bool bDraw = false;
 
-                if (!map->isCellPassable(iCell))
+                if (!map->isCellPassable(iCell)) {
+                    iClr = makecol(0, 255, 0);
+                    if (!map->isCellPassableFoot(iCell)) {
+                        iClr = makecol(0, 198, 0);
+                    }
                     bDraw = true;
+                } else if (map->isCellPassableFoot(iCell)) {
+                    iClr = makecol(64, 255, 64);
+                    bDraw = true;
+                }
 
                 if (map->getCellIdStructuresLayer(iCell) > -1) {
                     iClr = makecol(0, 255, 0);
