@@ -19,10 +19,11 @@ public:
     void think();
     void think_animation();
     void think_guard();
+    void think_attack();
 
-    void draw(int iStage);
-
-	int getType();
+    int getType() const;
 	int getHeadFacing() { return iHeadFacing; }
+
+    void think_turning();
 };
 

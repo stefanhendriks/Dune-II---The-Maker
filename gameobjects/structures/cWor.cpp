@@ -6,7 +6,7 @@ cWor::cWor()
  // other variables (class specific)
 }
 
-int cWor::getType() {
+int cWor::getType() const {
 	return WOR;
 }
 

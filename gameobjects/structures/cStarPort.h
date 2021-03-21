@@ -20,9 +20,7 @@ public:
     void think_deploy();            // starport uses this to deploy unit
     void think_guard();
 
-    void draw(int iStage);
-
-	int getType();
+    int getType() const;
 
 	bool isFrigatePackageDropped() { return frigateDroppedPackage; }
 	void setFrigateDroppedPackage (bool value) { frigateDroppedPackage = value; }

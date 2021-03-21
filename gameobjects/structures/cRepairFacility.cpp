@@ -8,7 +8,7 @@ cRepairFacility::cRepairFacility() {
     TIMER_repairunit = 0;
 }
 
-int cRepairFacility::getType() {
+int cRepairFacility::getType() const {
     return REPAIR;
 }
 

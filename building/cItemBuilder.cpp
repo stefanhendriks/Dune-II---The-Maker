@@ -140,9 +140,9 @@ void cItemBuilder::think() {
                     int iCll = cellCalculator.getCellWithMapBorders(4 + rnd(game.map_width - 8), 4 + rnd(game.map_height - 8));
 
                     for (int j = 0; j < special.units; j++) {
-                        bool reinforce = (map.isCellPassableAndNotBlockedForFootUnits(iCll) == false);
+                        bool passable = map.isCellPassableAndNotBlockedForFootUnits(iCll);
 
-                        if (reinforce) {
+                        if (passable) {
                             UNIT_CREATE(iCll, special.providesTypeId, FREMEN, false);
                         } else {
                             REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
@@ -150,20 +150,21 @@ void cItemBuilder::think() {
 
                         int x = iCellGiveX(iCll);
                         int y = iCellGiveY(iCll);
+                        int amount = rnd(2) + 1;
 
                         // randomly shift the cell one coordinate up/down/left/right
                         switch (rnd(4)) {
                             case 0:
-                                x++;
+                                x += amount;
                                 break;
                             case 1:
-                                y++;
+                                y+= amount;
                                 break;
                             case 2:
-                                x--;
+                                x -= amount;
                                 break;
                             case 3:
-                                y--;
+                                y -= amount;
                                 break;
                         }
                         // change cell

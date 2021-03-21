@@ -15,7 +15,7 @@ cWindTrap::cWindTrap() {
     TIMER_fade = 0;
 }
 
-int cWindTrap::getType() {
+int cWindTrap::getType() const {
     return WINDTRAP;
 }
 

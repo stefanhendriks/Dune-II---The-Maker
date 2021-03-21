@@ -19,6 +19,7 @@ public:
 
     void init(int width, int height);
 
+	bool canDeployUnitAtCell(int iCell, int iUnitId);
 	bool occupied(int iCell);
 	bool occupied(int iCll, int iUnitID);
 	bool occupiedInDimension(int iCell, int dimension);

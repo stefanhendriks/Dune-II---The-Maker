@@ -443,7 +443,8 @@ void cAbstractStructure::think_repair()
 	}
 }
 
-s_Structures cAbstractStructure::getS_StructuresType() {
+s_Structures cAbstractStructure::
+getS_StructuresType() const {
 	return structures[getType()];
 }
 

@@ -393,11 +393,16 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 }
 
 
+/**
+ * Returns true when it belongs to a player and is alive. If it is dead it will return false.
+ * If it has any invalid cell (which should never happen really) then it will return false as well.
+ * @return
+ */
 bool cUnit::isValid() {
     if (iPlayer < 0)
         return false;
 
-    // no hitpoints and not in a structure
+    // no hitpoints (dead) and not in a structure
     if (iHitPoints < 0 && iTempHitPoints < 0)
         return false;
 
@@ -781,31 +786,22 @@ void cUnit::think_guard() {
         {
 
             for (int i = 0; i < MAX_UNITS; i++) {
+                if (i == iID) continue; // skip self
                 cUnit &potentialThreath = unit[i];
                 if (!potentialThreath.isValid()) continue;
-                if (i == iID) continue; // skip self
 
-                bool bAlly = false;
+                bool bSameTeam = getPlayer()->isSameTeamAs(potentialThreath.getPlayer());
+                if (bSameTeam) continue; // skip same team player
 
-                // When we are player 1 till 5 (6 = SANDWORM) then we have a lot of allies)
-                //if (iPlayer >= 1 && iPlayer <= 5)
-                //	if (unit[i].iPlayer >= 1 && unit[i].iPlayer <= 5)
-                //		bAlly=true; // friend dude!
-
-                if (player[iPlayer].iTeam == player[potentialThreath.iPlayer].iTeam)
-                    bAlly = true;
-
-                if (iPlayer == 0 && player[0].getHouse() == ATREIDES) {
-                    // when the unit player == FREMEN
-                    if (player[potentialThreath.iPlayer].getHouse() == FREMEN && iType != SANDWORM)
-                        bAlly = true;
-                }
+                // this unit is a non-air unit. And its potential threat IS an air unit. If we can't attack it skip it
+                if (!isAirbornUnit() &&
+                    !canAttackAirUnits() &&
+                    potentialThreath.isAttackableAirUnit())
+                    continue;
 
                 // not ours and its visible
-                if (potentialThreath.iPlayer != iPlayer &&
-                    mapUtils->isCellVisibleForPlayerId(iPlayer, potentialThreath.iCell) && // is visible for ai as well?
-                    potentialThreath.isAirbornUnit() == isAirbornUnit() &&
-                    !bAlly) {
+                if (mapUtils->isCellVisibleForPlayerId(iPlayer, potentialThreath.iCell) && // is visible for ai as well?
+                    potentialThreath.isAirbornUnit() == isAirbornUnit()) {
 
                     int distance = ABS_length(iCellX, iCellY, potentialThreath.iCellX, potentialThreath.iCellY);
 
@@ -823,7 +819,6 @@ void cUnit::think_guard() {
         }
 
         if (unitIdSelectedForAttacking > -1) {
-
             cUnit &unitToAttack = unit[unitIdSelectedForAttacking];
 
             if (iPlayer > HUMAN) {
@@ -855,33 +850,17 @@ void cUnit::think_guard() {
                 // ai units will auto-attack structures nearby
 
                 for (int i = 0; i < MAX_STRUCTURES; i++) {
-                    if (structure[i] && i != iID) {
-                        bool bAlly = false;
-/*
-						// When we are player 1 till 5 (6 = SANDWORM) then we have a lot of allies)
-						if (iPlayer >= 1 && iPlayer <= 5)
-							if (structure[i].iPlayer >= 1 && structure[i].iPlayer <= 5)
-								bAlly=true; // friend dude!*/
-
-                        if (player[iPlayer].iTeam == player[structure[i]->getOwner()].iTeam)
-                            bAlly = true;
-
-
-                        if (iPlayer == 0 && player[0].getHouse() == ATREIDES) {
-                            // when the unit player == FREMEN
-                            if (player[unit[i].iPlayer].getHouse() == FREMEN && iType != SANDWORM)
-                                bAlly = true;
-                        }
-
+                    cAbstractStructure *pStructure = structure[i];
+                    if (pStructure && i != iID) {
+                        bool bAlly = getPlayer()->isSameTeamAs(pStructure->getPlayer());
 
                         // not ours and its visible
-                        if (structure[i]->getOwner() != iPlayer &&
-                            mapUtils->isCellVisibleForPlayerId(iPlayer, structure[i]->getCell()) &&
+                        if (mapUtils->isCellVisibleForPlayerId(iPlayer, pStructure->getCell()) &&
                             !bAlly) {
-                            int distance = ABS_length(iCellX, iCellY, iCellGiveX(structure[i]->getCell()),
-                                                      iCellGiveY(structure[i]->getCell()));
+                            int distance = ABS_length(iCellX, iCellY, iCellGiveX(pStructure->getCell()),
+                                                      iCellGiveY(pStructure->getCell()));
 
-                            int sight = units[iType].sight + 3;
+                            int sight = getUnitType().sight + 3;
 
                             if (distance <= sight && distance < iDistance) {
                                 // ATTACK
@@ -1055,25 +1034,18 @@ void cUnit::think() {
             int iTarget = -1;
 
             for (int i = 0; i < MAX_UNITS; i++) {
-                if (unit[i].isValid() && i != iID) {
+                cUnit &cUnit = unit[i];
+                if (cUnit.isValid() && i != iID) {
 
-                    if (player[iPlayer].iTeam == player[unit[i].iPlayer].iTeam)
+                    if (getPlayer()->isSameTeamAs(cUnit.getPlayer()))
                         continue;
 
-
-                    if (iPlayer == 0 && player[0].getHouse() == ATREIDES) {
-                        // when the unit player == FREMEN
-                        if (player[unit[i].iPlayer].getHouse() == FREMEN && iType != SANDWORM)
-                            continue;
-                    }
-
-
                     // not ours and its visible
-                    if (unit[i].iPlayer != iPlayer &&
-                        mapUtils->isCellVisibleForPlayerId(iPlayer, unit[i].iCell) &&
-                        units[unit[i].iType].airborn == false) // do not attack airborn units!?
+                    if (cUnit.iPlayer != iPlayer &&
+                        mapUtils->isCellVisibleForPlayerId(iPlayer, cUnit.iCell) &&
+                        units[cUnit.iType].airborn == false) // do not attack airborn units!?
                     {
-                        int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
+                        int distance = ABS_length(iCellX, iCellY, cUnit.iCellX, cUnit.iCellY);
 
                         if (distance <= units[iType].range && distance < iDistance) {
                             // ATTACK
@@ -1102,15 +1074,8 @@ void cUnit::think() {
                     if (!pStructure->isValid()) continue;
 
                     // skip same team
-                    if (player[iPlayer].iTeam == pStructure->getPlayer()->iTeam)
+                    if (getPlayer()->isSameTeamAs(pStructure->getPlayer()))
                         continue;
-
-                    //
-                    if (iPlayer == HUMAN && player[HUMAN].isHouse(ATREIDES)) {
-                        // ATREIDES is allies with FREMEN
-                        if (pStructure->getPlayer()->isHouse(FREMEN))
-                            continue;
-                    }
 
                     // not ours and its visible
                     if (pStructure->getPlayerId() != iPlayer && // enemy
@@ -1350,8 +1315,7 @@ void cUnit::think_move_air() {
 
     // same cell (no goal specified or something)
     if (iNextCell == iCell) {
-
-        bool bBordered = BORDER_POS(iCellGiveX(iCell), iCellGiveY(iCell));
+        bool isWithinMapBoundaries = BORDER_POS(iCellGiveX(iCell), iCellGiveY(iCell));
 
         // reinforcement stuff happens here...
         if (iTransferType == TRANSFER_DIE) {
@@ -1427,7 +1391,7 @@ void cUnit::think_move_air() {
                     if (iCell == iBringTarget) {
 
                         // check if its valid for this unit...
-                        if (!map.occupied(iCell, iUnitID) && bBordered) {
+                        if (!map.occupied(iCell, iUnitID) && isWithinMapBoundaries) {
 
                             // dump it here
                             unitToPickupOrDrop.iCell = iCell;
@@ -1539,8 +1503,14 @@ void cUnit::think_move_air() {
                 return; // override for frigates
             }
 
+            bool canDeployAtCell = map.occupied(iCell, iID) == false;
+
+            if (iNewUnitType > -1) {
+                 canDeployAtCell = map.canDeployUnitAtCell(iCell, iID);
+            }
+
             // first check if this cell is clear
-            if (map.occupied(iCell, iID) == false && bBordered) {
+            if (canDeployAtCell && isWithinMapBoundaries) {
                 // drop unit
                 if (iNewUnitType > -1) {
                     int id = UNIT_CREATE(iCell, iNewUnitType, iPlayer, true);
@@ -2727,6 +2697,10 @@ void cUnit::think_move() {
 
             }
 
+            if (iPlayer == AI_CPU5 && player[HUMAN].isHouse(ATREIDES)) {
+                // hackish way to get Fog of war clearance by allied fremen units (super weapon).
+                map.clear_spot(iCell, units[iType].sight, HUMAN);
+            }
 
             map.clear_spot(iCell, units[iType].sight, iPlayer);
 
@@ -2828,6 +2802,10 @@ void cUnit::setMaxHitPoints() {
 
 bool cUnit::isUnitWhoCanSquishInfantry() {
     return getUnitType().squish;
+}
+
+cPlayer *cUnit::getPlayer() {
+    return &player[iPlayer];
 }
 
 // return new valid ID

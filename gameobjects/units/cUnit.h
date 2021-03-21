@@ -181,12 +181,35 @@ public:
      */
     float getHealthNormalized();
 
+    /**
+     * is this unit an airborn unit?
+     * @return
+     */
     bool isAirbornUnit() {
         return iType == CARRYALL || iType == ORNITHOPTER || iType == FRIGATE;
     }
 
+    /**
+     * An air unit that may be attacked according to generic game rules, ie this does not say anything
+     * about if the unit *can* attack it. (use canAttackAirUnits function for that)
+     * @return
+     */
+    bool isAttackableAirUnit() {
+        return iType == ORNITHOPTER;
+    }
+
     bool isHarvester() {
         return iType == HARVESTER;
+    }
+
+    bool isSandworm() const;
+
+    /**
+     * Can this unit attack air units?
+     * @return
+     */
+    bool canAttackAirUnits() {
+        return getUnitType().canAttackAirUnits;
     }
 
     bool isInfantryUnit();
@@ -219,12 +242,13 @@ public:
 
     void setMaxHitPoints();
 
+    cPlayer *getPlayer();
+
 private:
     int iHitPoints;     // hitpoints of unit
 
     bool isUnitWhoCanSquishInfantry();
 
-    bool isSandworm() const;
 };
 
 

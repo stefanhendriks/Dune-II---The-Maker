@@ -117,24 +117,15 @@
 // GAME (MENU) FLAGS: (used when GAME_MENU)
 // Game menu state machine
 
-#define HUMAN			0
-// PLAYER/AI stuff
-// 0 = HUMAN			== ALLIES WITH FREMEN WHEN ATREIDES
-// 1 = CPU (Atreides)
-// 2 = CPU (Harkonnen)
-// 3 = CPU (Ordos)
-// 4 = CPU (Sardaukar)	== ALLIES WITH EVERYBODY (EXCEPT PLAYER)
-// 5 = CPU (Fremen)		== ALLIES WITH ATREIDES
-// 6 = WORM
+#define HUMAN			0  // 0 = HUMAN			== ALLIES WITH FREMEN WHEN ATREIDES
+#define AI_CPU1         1  // 1 = CPU (Atreides)
+#define AI_CPU2         2  // 2 = CPU (Harkonnen)
+#define AI_CPU3         3  // 3 = CPU (Ordos)
+#define AI_CPU4         4  // 4 = CPU (Sardaukar)	== ALLIES WITH EVERYBODY (EXCEPT PLAYER)
+#define AI_CPU5         5  // 5 = CPU (Fremen)		== ALLIES WITH ATREIDES
+#define AI_CPU6         6  // 6 = WORM
+#define AI_WORM			AI_CPU6
 #define MAX_PLAYERS       7
-
-#define AI_WORM			  6
-
-#define THINK_PLAYER      1      // real player is thinking for this one
-#define THINK_CLIENT      2      // this ID is a client; so this is updated through the network
-#define THINK_SERVER      3      // this ID is the server (??)
-#define THINK_NONE        4      // un-used slot
-#define THINK_CPU         99     // computer thinks for this player
 
 // HOUSES stuff
 #define MAX_HOUSES        12      // 12 different type of houses

@@ -40,16 +40,21 @@ void logbook(const char *txt) {
   }
 }
 
+/**
+ * Returns true if x,y is within the playable map boundaries
+ * @param x
+ * @param y
+ * @return
+ */
 // determine if this cell is not out of boundries
-bool BORDER_POS(int x, int y)
-{
-	if (x < 1) return false;
-    if (x > (game.map_width-1)) return false;
+bool BORDER_POS(int x, int y) {
+    if (x < 1) return false;
+    if (x > (game.map_width - 2)) return false;
 
     if (y < 1) return false;
-    if (y > (game.map_height-1)) return false;
+    if (y > (game.map_height - 2)) return false;
 
-	return true; // the fix-border-pos function did not change/correct the positions! yay
+    return true;
 }
 
 /**
@@ -116,22 +121,21 @@ void INIT_ALL_PLAYERS() {
  House Rules
  ********************************/
 void INSTALL_HOUSES() {
-
     // General / Default / No House
     houses[GENERALHOUSE].swap_color = 128;
     houses[GENERALHOUSE].minimap_color = makecol(128, 128, 128);
 
     // Harkonnen
     houses[HARKONNEN].swap_color = -1;  // 144
-    houses[HARKONNEN].minimap_color = makecol(125, 0, 0);
+    houses[HARKONNEN].minimap_color = makecol(255, 0, 0);
 
     // Atreides
     houses[ATREIDES].swap_color = 160;
-    houses[ATREIDES].minimap_color = makecol(24, 32, 125);
+    houses[ATREIDES].minimap_color = makecol(0, 0, 255);
 
     // Ordos
     houses[ORDOS].swap_color = 176;
-    houses[ORDOS].minimap_color = makecol(24, 125, 24);
+    houses[ORDOS].minimap_color = makecol(0, 255, 0);
 
     // Mercenary
     houses[MERCENARY].swap_color = 192;
@@ -139,11 +143,11 @@ void INSTALL_HOUSES() {
 
     // Sardaukar
     houses[SARDAUKAR].swap_color = 208;
-    houses[SARDAUKAR].minimap_color = makecol(137, 24, 137);
+    houses[SARDAUKAR].minimap_color = makecol(255, 0, 255);
 
     // Fremen
     houses[FREMEN].swap_color = 224;
-    houses[FREMEN].minimap_color = makecol(214, 149, 0);
+    houses[FREMEN].minimap_color = makecol(194, 125, 60); // Fremen is colored as "sand" on the minimap
 
     // GREY
 
@@ -215,6 +219,9 @@ void install_units()
     // list properties
     units[i].listId           = 0;
     units[i].subListId        = 0;
+
+    // attack related
+    units[i].canAttackAirUnits = false;
 
     strcpy(units[i].name, "\0");
   }
@@ -354,6 +361,7 @@ void install_units()
   units[LAUNCHER].bullets = ROCKET_NORMAL; // our gassy rocket
   units[LAUNCHER].listId=LIST_UNITS;
   units[LAUNCHER].subListId=SUBLIST_HEAVYFCTRY;
+  units[LAUNCHER].canAttackAirUnits=true;
   strcpy(units[LAUNCHER].name, "Launcher");
 
   // Unit        : Quad
@@ -493,6 +501,7 @@ void install_units()
   units[TROOPER].listId=LIST_FOOT_UNITS;
   units[TROOPER].subListId=SUBLIST_TROOPERS;
   units[TROOPER].squish=false;
+  units[TROOPER].canAttackAirUnits=true;
 
   // Unit        : Group Trooper
   // Description : 3 troopers
@@ -509,6 +518,7 @@ void install_units()
   units[TROOPERS].listId=LIST_FOOT_UNITS;
   units[TROOPERS].subListId=SUBLIST_TROOPERS;
   units[TROOPERS].squish=false;
+  units[TROOPERS].canAttackAirUnits=true;
 
   // Unit        : Fremen
   // Description : A single fremen
@@ -523,6 +533,7 @@ void install_units()
   units[UNIT_FREMEN_ONE].second_shot = false;
   units[UNIT_FREMEN_ONE].infantry = true;
   units[UNIT_FREMEN_ONE].squish=false;
+  units[UNIT_FREMEN_ONE].canAttackAirUnits=true;
 //  units[UNIT_FREMEN_ONE].listId=LIST_PALACE;
 //  units[UNIT_FREMEN_ONE].subListId=0;
 
@@ -539,6 +550,7 @@ void install_units()
   units[UNIT_FREMEN_THREE].second_shot = true;
   units[UNIT_FREMEN_THREE].infantry = true;
   units[UNIT_FREMEN_THREE].squish=false;
+  units[UNIT_FREMEN_THREE].canAttackAirUnits=true;
 //  units[UNIT_FREMEN_THREE].listId=LIST_PALACE;
 //  units[UNIT_FREMEN_THREE].subListId=0;
 
@@ -1082,6 +1094,7 @@ void install_structures() {
     structures[i].list = -1; // no list attached
     structures[i].queuable = false;
     structures[i].configured = false;
+    structures[i].canAttackAirUnits = false;
     strcpy(structures[i].name,   "Unknown");
   }
 
@@ -1292,6 +1305,7 @@ void install_structures() {
   structures[RTURRET].icon  = ICON_STR_RTURRET;
   structures[RTURRET].sight = 10;
   structures[RTURRET].configured = true;
+  structures[RTURRET].canAttackAirUnits = true;
   strcpy(structures[RTURRET].name, "Rocket Turret");
 
   // Structure    : Windtrap

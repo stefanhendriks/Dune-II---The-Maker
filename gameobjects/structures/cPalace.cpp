@@ -7,7 +7,7 @@ cPalace::cPalace()
 
 }
 
-int cPalace::getType() {
+int cPalace::getType() const {
 	return PALACE;
 }
 

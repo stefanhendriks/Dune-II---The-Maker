@@ -7,7 +7,7 @@ cOutPost::cOutPost()
 
 }
 
-int cOutPost::getType() {
+int cOutPost::getType() const {
 	return RADAR;
 }
 
