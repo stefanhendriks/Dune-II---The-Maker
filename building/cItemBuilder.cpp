@@ -66,6 +66,7 @@ void cItemBuilder::think() {
 
         // determines how fast an item is built, this is the so called 'delay' before 1 'build time tick' has passed
         int timerCap = getTimerCap(item);
+        item->setTimerCap(timerCap);
 
         // not yet done building
         if (timers[i] < timerCap) continue;
@@ -87,6 +88,11 @@ void cItemBuilder::think() {
                 m_Player->substractCredits(priceForTimeUnit);
             }
             continue;
+        }
+
+        // check if frame being drawn for building is still showing, if so wait for it
+        if (item->getBuildProgressFrame() < 31) {
+            continue; // wait
         }
 
         // DONE building
@@ -529,6 +535,8 @@ cBuildingListItem * cItemBuilder::getItem(int position) {
 void cItemBuilder::startBuilding(cBuildingListItem *item) {
     if (item == nullptr) return;
     item->setIsBuilding(true);
+    item->setTimerCap(getTimerCap(item));
+    item->resetProgressFrameTimer();
     buildingListUpdater->onBuildItemStarted(item);
 }
 

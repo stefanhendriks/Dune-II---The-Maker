@@ -97,6 +97,8 @@ private:
     bool startBuildingItemIfOk(cBuildingListItem *item) const;
 
     void drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem *item) const;
+
+    void thinkProgressAnimation();
 };
 
 #endif /* CSIDEBAR_H_ */
