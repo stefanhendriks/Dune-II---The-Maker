@@ -14,7 +14,7 @@ cGunTurret::cGunTurret() {
 }
 
 
-int cGunTurret::getType() {
+int cGunTurret::getType() const {
 	return TURRET;
 }
 
@@ -25,128 +25,14 @@ cGunTurret::~cGunTurret()
 }
 
 void cGunTurret::think() {
-    int iMyIndex=-1;
-
-	for (int i=0; i < MAX_STRUCTURES; i++) {
-        if (structure[i] == this)
-        {
-            iMyIndex=i;
-            break;
-        }
-	}
-
-    // this should not happen, but just in case
-	if (iMyIndex < 0) {
-        return;
-	}
-
 	if (!getPlayer()->bEnoughPower()) {
         return;
 	}
 
     // turning & shooting
-     if (iTargetID > -1)
-        {
-            if (unit[iTargetID].isValid())
-            {
-            // first make sure we face okay!
-            int iCellX=iCellGiveX(getCell());
-            int iCellY=iCellGiveY(getCell());
-
-            int iTargetX = iCellGiveX(unit[iTargetID].iCell);
-            int iTargetY = iCellGiveY(unit[iTargetID].iCell);
-
-            int d = fDegrees(iCellX, iCellY, iTargetX, iTargetY);
-            int f = face_angle(d); // get the angle
-
-            // set facing
-            iShouldHeadFacing = f;
-
-            if (iShouldHeadFacing == iHeadFacing || (unit[iTargetID].iType == ORNITHOPTER)) {
-                TIMER_fire++;
-
-                int iDistance=9999;
-                int iSlowDown=200;
-
-                if (unit[iTargetID].isValid())
-                {
-                    // calculate distance
-                    iDistance = ABS_length(iCellX, iCellY, iTargetX, iTargetY);
-
-                    if (iDistance > structures[getType()].sight)
-                        iTargetID=-1;
-                }
-                else
-                    iTargetID=-1;
-
-                if (iTargetID < 0)
-                    return;
-
-                if (TIMER_fire > iSlowDown)
-                {
-                    int iTargetCell = unit[iTargetID].iCell;
-
-                    int iBullet = BULLET_TURRET;
-
-                    if (getType() == RTURRET && iDistance > 3) {
-                        iBullet = ROCKET_RTURRET;
-                    } else {
-                        int half = 16;
-                        int iShootX=pos_x() + half;
-                        int iShootY=pos_y() + half;
-                        int bmp_head = convert_angle(iHeadFacing);
-                        PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);
-                    }
-
-                    int iBull = create_bullet(iBullet, getCell(), iTargetCell, -1, iMyIndex);
-
-                    if (iBull > -1 && unit[iTargetID].iType == ORNITHOPTER)
-                    {
-                        // it is a homing missile!
-                        bullet[iBull].iHoming = iTargetID;
-                        bullet[iBull].TIMER_homing = 200;
-                    }
-
-                    TIMER_fire=0;
-                }
-            }
-            else
-            {
-                TIMER_turn++;
-
-                int iSlowDown = 125;
-
-                if (TIMER_turn > iSlowDown)
-                {
-                    TIMER_turn=0;
-
-                    int d = 1;
-
-                    int toleft = (iHeadFacing + 8) - iShouldHeadFacing;
-                    if (toleft > 7) toleft -= 8;
-
-
-                    int toright = abs(toleft-8);
-
-                    if (toright == toleft) d = -1+(rnd(2));
-                    if (toleft  > toright) d = 1;
-                    if (toright > toleft)  d = -1;
-
-                    iHeadFacing += d;
-
-                    if (iHeadFacing < 0)
-                        iHeadFacing = 7;
-
-                    if (iHeadFacing > 7)
-                        iHeadFacing = 0;
-                } // turning
-
-            }
-
-            }
-            else
-                iTargetID=-1;
-        }
+    if (iTargetID > -1) {
+        think_attack();
+    }
 
 	// last but not least, think like our abstraction
 	cAbstractStructure::think();
@@ -157,17 +43,108 @@ void cGunTurret::think_animation() {
 	cAbstractStructure::think_animation();
 }
 
-void cGunTurret::think_guard()
-{
- // TURRET CODE HERE
+void cGunTurret::think_attack() {
+    cUnit &unitTarget = unit[iTargetID];
+    if (unitTarget.isValid()) {
+        int iCellX = iCellGiveX(getCell());
+        int iCellY = iCellGiveY(getCell());
 
-    if (player[getOwner()].bEnoughPower() == false)
+        int iTargetX = iCellGiveX(unitTarget.iCell);
+        int iTargetY = iCellGiveY(unitTarget.iCell);
+
+        int d = fDegrees(iCellX, iCellY, iTargetX, iTargetY);
+        int f = face_angle(d); // get the angle
+
+        // set facing
+        iShouldHeadFacing = f;
+
+        // if attacking an airunit, then don't care about facing (we use homing missiles)
+        bool isFacingTarget = iShouldHeadFacing == iHeadFacing;
+
+        if (isFacingTarget || unitTarget.isAirbornUnit()) {
+            TIMER_fire++;
+
+            int iDistance = ABS_length(iCellX, iCellY, iTargetX, iTargetY);
+
+            if (iDistance > getSight()) {
+                iTargetID = -1;
+                // went out of sight, unfortunately
+                return;
+            }
+
+            int iSlowDown = 200; // fire-rate of turret
+            if (TIMER_fire > iSlowDown) {
+                int iTargetCell = unitTarget.iCell;
+
+                int bulletType = BULLET_TURRET; // short range bullet
+
+                if (getType() == RTURRET && iDistance > 3) {
+                    bulletType = ROCKET_RTURRET; // long-range bullet,
+                } else {
+                    int half = 16;
+                    int iShootX = pos_x() + half;
+                    int iShootY = pos_y() + half;
+                    int bmp_head = convert_angle(iHeadFacing);
+                    PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);
+                }
+
+                int iBull = create_bullet(bulletType, getCell(), iTargetCell, -1, id);
+
+                // only rockets are homing
+                if (iBull > -1 && bulletType == ROCKET_RTURRET && unitTarget.isAirbornUnit()) {
+                    // it is a homing missile!
+                    bullet[iBull].iHoming = iTargetID;
+                    bullet[iBull].TIMER_homing = 200;
+                }
+
+                TIMER_fire = 0;
+            }
+        } else { // not yet facing target
+            think_turning();
+        }
+    } else {
+        iTargetID = -1;
+    }
+}
+
+void cGunTurret::think_turning() {
+    TIMER_turn++;
+
+    int iSlowDown = 125;
+
+    if (TIMER_turn > iSlowDown) {
+        TIMER_turn = 0;
+
+        int d = 1;
+
+        int toleft = (iHeadFacing + 8) - iShouldHeadFacing;
+        if (toleft > 7) toleft -= 8;
+
+        int toright = abs(toleft - 8);
+
+        if (toright == toleft) d = -1 + (rnd(2));
+        if (toleft > toright) d = 1;
+        if (toright > toleft) d = -1;
+
+        iHeadFacing += d;
+
+        if (iHeadFacing < 0)
+            iHeadFacing = 7;
+
+        if (iHeadFacing > 7)
+            iHeadFacing = 0;
+    } // turning
+}
+
+void cGunTurret::think_guard() {
+    // TURRET CODE HERE
+    if (!getPlayer()->bEnoughPower()) {
         return;
+    }
 
     TIMER_guard++;
 
-    if (TIMER_guard > 10)
-    {
+    if (TIMER_guard > 10) {
         int iCellX = iCellGiveX(getCell());
         int iCellY = iCellGiveY(getCell());
 
@@ -180,64 +157,46 @@ void cGunTurret::think_guard()
         iTargetID=-1;       // no target
 
         // scan area for units
-        for (int i=0; i < MAX_UNITS; i++)
-        {
+        for (int i = 0; i < MAX_UNITS; i++) {
             // is valid
-            if (unit[i].isValid())
-            {
-				bool bAlly=false;
+            cUnit &cUnit = unit[i];
+            if (!cUnit.isValid()) continue;
+            if (cUnit.iPlayer == getOwner()) continue; // skip own units
+            bool bSameTeam = getPlayer()->isSameTeamAs(cUnit.getPlayer());
+            if (bSameTeam) continue; // skip same team units
+            if (!mapUtils->isCellVisibleForPlayerId(getOwner(), cUnit.iCell)) continue; // not visible for player
 
-                if (player[getOwner()].iTeam == player[unit[i].iPlayer].iTeam)
-                    bAlly=true;
+            if (canAttackAirUnits()) {
+                if (cUnit.isAirbornUnit()) {
+                    continue; // it was airborn, and normal turrets cannot hit this
+                }
+            }
 
+            int distance = ABS_length(iCellX, iCellY, iCellGiveX(cUnit.iCell), iCellGiveY(cUnit.iCell));
 
-
-                // not ours and its visible
-                if (unit[i].iPlayer != getOwner() &&
-					mapUtils->isCellVisibleForPlayerId(getOwner(), unit[i].iCell) &&
-					bAlly == false) {
-
-                    if (getType() == TURRET)
-                        if (units[unit[i].iType].airborn)
-                            continue; // it was airborn, and normal turrets cannot hit this
-
-                    int distance = ABS_length(iCellX, iCellY, iCellGiveX(unit[i].iCell), iCellGiveY(unit[i].iCell));
-
-                    if (unit[i].iType == ORNITHOPTER)
-                    {
-                        if (distance <= structures[getType()].sight)
-                        {
-                            iAir=i;
-                        }
-                    }
-                    else if (unit[i].iType == SANDWORM)
-                    {
-                        if (distance <= structures[getType()].sight)
-                        {
-                            iWorm=i;
-                        }
-                    }
-                    else if (distance <= structures[getType()].sight && distance < iDistance)
-                    {
-                        // ATTACK
-                        iDistance = distance;
-                        iDanger=i;
-                    }
-
+            if (distance <= getSight()) {
+                if (cUnit.isAttackableAirUnit()) {
+                    iAir = i;
+                } else if (cUnit.isSandworm()) {
+                    iWorm = i;
+                } else if (distance < iDistance) {
+                    // ATTACK
+                    iDistance = distance;
+                    iDanger = i;
                 }
             }
         }
 
         // set target
-        if (iAir > -1)
+        if (iAir > -1) {
             iTargetID = iAir;
-        else if (iDanger > -1)
+        } else if (iDanger > -1) {
             iTargetID = iDanger;
-        else if (iWorm > -1)
-            iTargetID = iWorm; // else pick worm
+        } else if (iWorm > -1) {
+            iTargetID = iWorm;
+        }
 
-        TIMER_guard=0-rnd(20); // redo
-
+        TIMER_guard=0-rnd(20);
     }
 }
 

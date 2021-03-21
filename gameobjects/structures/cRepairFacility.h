@@ -18,7 +18,7 @@ public:
 
     void think_guard();
 
-    int getType();
+    int getType() const;
 
     void think_repairUnit();
 };

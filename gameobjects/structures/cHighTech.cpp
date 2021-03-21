@@ -9,8 +9,7 @@ cHighTech::cHighTech()
 
 }
 
-
-int cHighTech::getType() {
+int cHighTech::getType() const {
 	return HIGHTECH;
 }
 

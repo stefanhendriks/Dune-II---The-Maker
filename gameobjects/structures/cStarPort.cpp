@@ -8,7 +8,7 @@ cStarPort::cStarPort()
  frigateDroppedPackage = false;
 }
 
-int cStarPort::getType() {
+int cStarPort::getType() const {
 	return STARPORT;
 }
 

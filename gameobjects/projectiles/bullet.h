@@ -35,11 +35,10 @@ public:
     int iOwnerUnit;     // unit who shoots
     int iOwnerStructure;// structure who shoots (rocket/normal turret for example)
     int iPlayer;        // what player shot this? (for damage control)
-    
 
-    // when set, the bullet will track down the bastard, but only for a while
-    int iHoming;        // homing to unit...
-    int TIMER_homing;   // when timer set, > 0 means homing
+    // when set, the bullet will follow the unit, but only for a while
+    int iHoming;
+    int TIMER_homing;   // when timer set, > 0 means homing (follow unit until timer runs out)
 
     // Movement
     int iGoalCell;      // the goal cell (goal of path)    

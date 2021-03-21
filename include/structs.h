@@ -69,6 +69,9 @@ struct s_UnitP {
   // list related
   int listId;               // ie LIST_FOOT_UNITS or LIST_UNITS
   int subListId;            // ie SUBLIST_LIGHTFCTRY
+
+  // attack related
+  bool canAttackAirUnits;   // ie for rocket typed units
 };
 
 // Structure types
@@ -107,6 +110,8 @@ struct s_Structures {
   bool queuable;        // can this item be queued in the buildList? (default = false)
 
   bool configured;     // is this structure configured? (poor man solution)
+
+  bool canAttackAirUnits; // for turrets
 };
 
 /**

@@ -11,7 +11,7 @@ void cBarracks::think() {
 	cAbstractStructure::think();
 }
 
-int cBarracks::getType() {
+int cBarracks::getType() const {
 	return BARRACKS;
 }
 

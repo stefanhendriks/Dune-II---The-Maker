@@ -7,7 +7,7 @@ cConstYard::cConstYard() {
 cConstYard::~cConstYard() {
 }
 
-int cConstYard::getType() {
+int cConstYard::getType() const {
 	return CONSTYARD;
 }
 

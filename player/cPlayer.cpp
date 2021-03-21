@@ -214,7 +214,7 @@ void cPlayer::init(int id) {
 void cPlayer::setHouse(int iHouse) {
     int currentHouse = house;
     char msg[255];
-    sprintf(msg, "cPlayer[%d]::setHouse - Current house is [%d], setting house to [%d]", this->id, currentHouse, iHouse);
+    sprintf(msg, "cPlayer[%d]::setHouse - Current house is [%d/%s], setting house to [%d/%s]", this->id, currentHouse, this->getHouseNameForId(currentHouse).c_str(), iHouse, this->getHouseNameForId(iHouse).c_str());
     logbook(msg);
     house = iHouse;      // use rules of this house
 
@@ -238,10 +238,17 @@ void cPlayer::setHouse(int iHouse) {
         // copy entire palette
         memcpy(pal, general_palette, sizeof(pal));
 
+        char msg[255];
+        sprintf(msg, "cPlayer[%d]::setHouse - Current house differs from iHouse, preparing palette.", this->id);
+        logbook(msg);
+
         // now set the different colors based upon house
         if (houses[house].swap_color > -1) {
             int start = houses[house].swap_color;
             int s = 144;                // original position (harkonnen)
+            char msg[255];
+            sprintf(msg, "cPlayer[%d]::setHouse - Swap_color index is %d.", this->id, start);
+            logbook(msg);
             for (int j = start; j < (start + 7); j++) {
                 // swap everything from S with J
                 pal[s] = pal[j];
@@ -249,7 +256,7 @@ void cPlayer::setHouse(int iHouse) {
             }
         }
 
-        minimapColor = getRGBColorForHouse(house);
+        minimapColor = houses[house].minimap_color;
         emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
         destroyAllegroBitmaps();
@@ -294,21 +301,6 @@ void cPlayer::setHouse(int iHouse) {
             }
         }
     }
-}
-
-int cPlayer::getRGBColorForHouse(int houseId) {
-	switch(houseId) {
-		case ATREIDES:
-			return makecol(0, 0, 255);
-		case HARKONNEN:
-			return makecol(255, 0, 0);
-		case ORDOS:
-			return makecol(0, 255, 0);
-		case SARDAUKAR:
-			return makecol(255, 0, 255);
-		default:
-			return makecol(100, 255, 100);
-	}
 }
 
 int cPlayer::getEmblemBackgroundColorForHouse(int houseId) {
@@ -567,6 +559,10 @@ void cPlayer::decreaseStructureAmount(int structureType) {
 }
 
 std::string cPlayer::getHouseName() {
+    return getHouseNameForId(house);
+}
+
+std::string cPlayer::getHouseNameForId(int house) const {
     if (house == ATREIDES) {
         return "Atreides";
     } else if (house == HARKONNEN) {
@@ -614,8 +610,13 @@ std::vector<int> cPlayer::getAllMyStructures() {
         cAbstractStructure * abstractStructure = structure[i];
         if (!abstractStructure) continue;
         if (!abstractStructure->isValid()) continue;
-        if (!abstractStructure->belongsTo(getId())) continue;
+        if (!abstractStructure->belongsTo(this)) continue;
         ids.push_back(i);
     }
     return ids;
+}
+
+bool cPlayer::isSameTeamAs(cPlayer *pPlayer) {
+    if (pPlayer == nullptr) return false;
+    return pPlayer->iTeam == iTeam;
 }

@@ -9,7 +9,7 @@ cRefinery::cRefinery()
 
 }
 
-int cRefinery::getType() {
+int cRefinery::getType() const {
 	return REFINERY;
 }
 

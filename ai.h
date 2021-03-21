@@ -116,7 +116,7 @@ public:
     int getStructureTypeBeingBuilt() const;
     cBuildingListItem *getStructureBuildingListItemBeingBuilt() const;
 
-    void think_fremen_campaignmode();
+    void think_fremen_superweapon();
 };
 
 

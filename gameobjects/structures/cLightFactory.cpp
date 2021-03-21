@@ -7,7 +7,7 @@ cLightFactory::cLightFactory()
 
 }
 
-int cLightFactory::getType() {
+int cLightFactory::getType() const {
 	return LIGHTFACTORY;
 }
 

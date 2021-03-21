@@ -614,10 +614,13 @@ void cGame::menu()
 void cGame::init_skirmish() const {
     game.mission_init();
 
-    for (int p = 0; p < AI_WORM; p++) {
+    for (int p = HUMAN; p < AI_WORM; p++) {
         player[p].credits = 2500;
-        player[p].iTeam = p;
+        player[p].setTeam(p);
     }
+
+    // Fremen allies with Human by default
+    player[FREMEN].setTeam(HUMAN);
 }
 
 void cGame::setup_skirmish() {
@@ -1147,45 +1150,68 @@ void cGame::setup_skirmish() {
             }
 
             // set up players and their units
-            for (int p=0; p < AI_WORM; p++)	{
+            for (int p=0; p < MAX_PLAYERS; p++)	{
 
                 cPlayer &cPlayer = player[p];
-                int iHouse = cPlayer.getHouse();
+                cAIPlayer &aiPlayer = aiplayer[p];
+                int iHouse = cPlayer.getHouse(); // get house selected, which can be 0 for RANDOM
 
-                // house = 0 means pick random house
-                if (iHouse==0 && p < 4) { // (all players above 4 are non-playing AI 'sides'
-                    bool bOk=false;
+                // not playing.. do nothing (only for playable factions)
+                bool playableFaction = p < AI_CPU5;
 
-                    while (bOk == false) {
-                        if (p > HUMAN) // cpu player
-                            iHouse = rnd(4)+1;
-                        else // human may not be sardaukar
-                            iHouse = rnd(3)+1; // hark = 1, atr = 2, ord = 3, sar = 4
+                if (playableFaction) {
+                    if (!aiPlayer.bPlaying) continue;
 
-                        bool bFound=false;
-                        for (int pl=0; pl < AI_WORM; pl++) {
-                            if (player[pl].getHouse() > 0 && player[pl].getHouse() == iHouse) {
-                                bFound=true;
+                    // house = 0 means pick random house
+                    if (iHouse == 0) {
+                        bool bOk=false;
+
+                        while (bOk == false) {
+                            if (p > HUMAN) {
+                                iHouse = rnd(4)+1;
+                                // cpu player
+                            } else {// human may not be sardaukar
+                                iHouse = rnd(3) + 1; // hark = 1, atr = 2, ord = 3, sar = 4
+                            }
+
+                            bool houseInUse=false;
+                            for (int pl=0; pl < AI_WORM; pl++) {
+                                if (player[pl].getHouse() > 0 &&
+                                    player[pl].getHouse() == iHouse) {
+                                    houseInUse=true;
+                                }
+                            }
+
+                            if (!houseInUse) {
+                                bOk=true;
                             }
                         }
-
-                        if (!bFound) {
-                            bOk=true;
-                        }
+                    }
+                } else {
+                    aiPlayer.bPlaying = true;
+                    if (p == AI_CPU5) {
+                        iHouse = FREMEN;
+                    } else {
+                        iHouse = GENERALHOUSE;
                     }
                 }
 
-                if (p == 5) {
-                    iHouse = FREMEN;
-                    aiplayer[p].bPlaying = true; // fremen is game!
+                // TEAM Logic
+                if (p == HUMAN) {
+                    cPlayer.setTeam(0);
+                } else if (p == AI_CPU5) {
+                    cPlayer.setTeam(0);
+                } else if (p == AI_CPU6) {
+                    cPlayer.setTeam(2); // worm team is against everyone
+                } else {
+                    // all other AI's are their own team (campaign == AI's are friends, here they are enemies)
+                    cPlayer.setTeam(p);
                 }
 
                 cPlayer.setHouse(iHouse);
 
-                // not playing.. do nothing
-                if (aiplayer[p].bPlaying == false || iHouse == FREMEN) {
-                    continue;
-                }
+                // from here, ignore non playable factions
+                if (!playableFaction) continue;
 
                 cPlayer.focus_cell = iStartPositions[p];
 
@@ -1206,7 +1232,7 @@ void cGame::setup_skirmish() {
                 int u=0;
 
                 // create units
-                while (u < aiplayer[p].iUnits) {
+                while (u < aiPlayer.iUnits) {
                     int iX=iCellGiveX(cPlayer.focus_cell);
                     int iY=iCellGiveY(cPlayer.focus_cell);
                     int iType=rnd(12);
@@ -1274,7 +1300,7 @@ void cGame::setup_skirmish() {
                 }
 
                 char msg[255];
-                sprintf(msg,"Wants %d amount of units; amount created %d", aiplayer[p].iUnits, u);
+                sprintf(msg, "Wants %d amount of units; amount created %d", aiPlayer.iUnits, u);
                 cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, iHouse);
             }
 
