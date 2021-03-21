@@ -87,6 +87,10 @@ public:
 	void setIconId(int value) { icon = value; }
 	void setBuildCost(int value) { cost = value; }
 	void setIsBuilding(bool value) { building = value; }
+	void stopBuilding() {
+	    setIsBuilding(false);
+	    resetProgress();
+	}
 	void setStatusPendingUpgrade() { state = eBuildingListItemState::PENDING_UPGRADE; }
 	void setStatusAvailable() { state = eBuildingListItemState::AVAILABLE; }
 	void setStatusPendingBuilding() { state = eBuildingListItemState::PENDING_BUILDING; }
