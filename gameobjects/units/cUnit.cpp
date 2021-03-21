@@ -327,7 +327,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 
         }
 
-        if (iType == TROOPER || iType == SOLDIER) {
+        if (iType == TROOPER || iType == SOLDIER || iType == UNIT_FREMEN_ONE) {
             // create particle of dead body
 
             PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF02, iPlayer, -1);
@@ -335,7 +335,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
             play_sound_id_with_distance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
         }
 
-        if (iType == TROOPERS || iType == INFANTRY) {
+        if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
             // create particle of dead body
 
             PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF01, iPlayer, -1);
@@ -351,10 +351,10 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
     if (bSquish) {
 
         // when we do not 'blow up', we died by something else. Only infantry will be 'squished' here now.
-        if (iType == SOLDIER || iType == TROOPER) {
+        if (iType == SOLDIER || iType == TROOPER || iType == UNIT_FREMEN_ONE) {
             PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_SQUISH01 + rnd(2), iPlayer, iFrame);
             play_sound_id_with_distance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
-        } else if (iType == TROOPERS || iType == INFANTRY) {
+        } else if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
             PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_SQUISH03, iPlayer, iFrame);
             play_sound_id_with_distance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
         }
