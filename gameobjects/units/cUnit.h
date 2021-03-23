@@ -230,8 +230,15 @@ public:
 
     void takeDamage(int damage) {
         iHitPoints -= damage;
+        if (isDead()) {
+            die(true, false);
+        }
     }
 
+    /**
+     * Returns true if dead (ie hitpoints <= 0)
+     * @return
+     */
     bool isDead() {
         return iHitPoints <= 0;
     }
@@ -249,6 +256,7 @@ private:
 
     bool isUnitWhoCanSquishInfantry();
 
+    bool isSaboteur();
 };
 
 

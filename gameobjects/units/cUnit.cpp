@@ -2658,23 +2658,6 @@ void cUnit::think_move() {
                 map.cellResetIdFromLayer(iCell, MAPID_UNITS);
             }
 
-
-            /*
-            int iUID = map.cell[iNextCell].id[MAPID_UNITS];
-
-            if (iUID > -1)
-            {
-            // when we may squish
-            if (units[iType].squish)
-                if (unit[iUID].iPlayer != iPlayer) // other player
-                   if (units[unit[iUID].iType].infantry == true) // and it is squishable infantry
-            {
-                // we squish them and they are dead!
-                unit[iUID].die(false);
-            }
-            }*/
-
-
             iCell = iNextCell;
             iOffsetX = 0.0f;
             iOffsetY = 0.0f;
@@ -2685,16 +2668,23 @@ void cUnit::think_move() {
             poll();
 
             // quick scan for infantry we squish
+            // TODO: this can be sped up
             for (int iq = 0; iq < MAX_UNITS; iq++) {
-                if (unit[iq].isValid())
-                    if (unit[iq].iType != SANDWORM) // sandworms do not squish (TODO: units[unit[iq].iType].canSquish)
-                        if (units[unit[iq].iType].infantry)
-                            if (unit[iq].iPlayer != iPlayer)
-                                if (unit[iq].iCell == iCell) {
-                                    // die
-                                    unit[iq].die(false, true);
-                                }
+                cUnit &potentialDeadUnit = unit[iq];
+                if (!potentialDeadUnit.isValid()) continue;
+                if (potentialDeadUnit.isSandworm()) continue; // sandworms cannot be squished
+                if (!potentialDeadUnit.isInfantryUnit()) continue; // (TODO: units[unit[iq].iType].canBeSquished)
+                if (potentialDeadUnit.iPlayer == iPlayer)
+                    continue; // can't squish own units (but we can squish allied units)
 
+                if (potentialDeadUnit.iCell == iCell) {
+                    if (potentialDeadUnit.isSaboteur()) {
+                        takeDamage(potentialDeadUnit.getUnitType().damageOnEnterStructure);
+                    }
+
+                    // die
+                    potentialDeadUnit.die(false, true);
+                }
             }
 
             if (iPlayer == AI_CPU5 && player[HUMAN].isHouse(ATREIDES)) {
@@ -2806,6 +2796,10 @@ bool cUnit::isUnitWhoCanSquishInfantry() {
 
 cPlayer *cUnit::getPlayer() {
     return &player[iPlayer];
+}
+
+bool cUnit::isSaboteur() {
+    return iType == SABOTEUR;
 }
 
 // return new valid ID
