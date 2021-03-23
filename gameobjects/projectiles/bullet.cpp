@@ -313,8 +313,6 @@ void cBullet::damageAirUnit(int cell) const {
     airUnit.takeDamage(iDamage);
 
     if (airUnit.isDead()) {
-        airUnit.die(true, false);
-
         int iID = iOwnerUnit;
 
         if (iID > -1) {
@@ -358,7 +356,6 @@ void cBullet::damageGroundUnit(int cell) const {
                 }
             }
         }
-        groundUnitTakingDamage.die(true, false);
     }
 
     if (isDeviatorGas()) {
@@ -427,10 +424,6 @@ void cBullet::damageSandworm(int cell) const {
 
     cUnit &worm = unit[id];
     worm.takeDamage(getDamageToInflictToNonInfantry());
-
-    if (worm.isDead()) {
-        worm.die(true, false);
-    }
 }
 
 bool cBullet::isAtGoalCell() const {

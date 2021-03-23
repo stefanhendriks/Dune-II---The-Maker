@@ -27,7 +27,7 @@ struct s_UnitP {
   int    bmp_startpixel; // The X axis starting pixel (i.e. for the harvester)
 
   int    hp;             // Amount of hitpoints at maximum
-  int    speed;          // speed (0 being uberly slow, 1000 being super fast).
+  int    speed;          // speed (0 being super fast, the higher the number, the slower).
   int    turnspeed;
   int    attack_frequency;  // timer for attacking
 
@@ -72,6 +72,10 @@ struct s_UnitP {
 
   // attack related
   bool canAttackAirUnits;   // ie for rocket typed units
+
+  bool canEnterAndDamageStructure;  // can this unit enter a structure and damage it? (and eventually capture?)
+  bool attackIsEnterStructure;      // for saboteur only really
+  float damageOnEnterStructure;     // the damage inflicted to a structure when entered
 };
 
 // Structure types

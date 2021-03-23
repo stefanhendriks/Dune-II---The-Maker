@@ -223,6 +223,11 @@ void install_units()
     // attack related
     units[i].canAttackAirUnits = false;
 
+    // capturing / damage upon entering structure related
+    units[i].canEnterAndDamageStructure = false;
+    units[i].attackIsEnterStructure = false;
+    units[i].damageOnEnterStructure = 0.0f;
+
     strcpy(units[i].name, "\0");
   }
 
@@ -467,6 +472,9 @@ void install_units()
   units[SOLDIER].squish=false;
   units[SOLDIER].listId=LIST_FOOT_UNITS;
   units[SOLDIER].subListId=SUBLIST_INFANTRY;
+  units[SOLDIER].canEnterAndDamageStructure = true;
+  units[SOLDIER].attackIsEnterStructure = false;
+  units[SOLDIER].damageOnEnterStructure = 10.0f;
   strcpy(units[SOLDIER].name, "Soldier");
 
 
@@ -485,6 +493,9 @@ void install_units()
   units[INFANTRY].squish=false;
   units[INFANTRY].listId=LIST_FOOT_UNITS;
   units[INFANTRY].subListId=SUBLIST_INFANTRY;
+  units[INFANTRY].canEnterAndDamageStructure = true;
+  units[INFANTRY].attackIsEnterStructure = false;
+  units[INFANTRY].damageOnEnterStructure = 25.0f;
   strcpy(units[INFANTRY].name, "Light Infantry");
 
   // Unit        : Single Trooper
@@ -502,6 +513,9 @@ void install_units()
   units[TROOPER].subListId=SUBLIST_TROOPERS;
   units[TROOPER].squish=false;
   units[TROOPER].canAttackAirUnits=true;
+  units[TROOPER].canEnterAndDamageStructure = true;
+  units[TROOPER].attackIsEnterStructure = false;
+  units[TROOPER].damageOnEnterStructure = 12.0f;
 
   // Unit        : Group Trooper
   // Description : 3 troopers
@@ -519,6 +533,9 @@ void install_units()
   units[TROOPERS].subListId=SUBLIST_TROOPERS;
   units[TROOPERS].squish=false;
   units[TROOPERS].canAttackAirUnits=true;
+  units[TROOPERS].canEnterAndDamageStructure = true;
+  units[TROOPERS].attackIsEnterStructure = false;
+  units[TROOPERS].damageOnEnterStructure = 35.0f;
 
   // Unit        : Fremen
   // Description : A single fremen
@@ -534,6 +551,7 @@ void install_units()
   units[UNIT_FREMEN_ONE].infantry = true;
   units[UNIT_FREMEN_ONE].squish=false;
   units[UNIT_FREMEN_ONE].canAttackAirUnits=true;
+
 //  units[UNIT_FREMEN_ONE].listId=LIST_PALACE;
 //  units[UNIT_FREMEN_ONE].subListId=0;
 
@@ -570,11 +588,14 @@ void install_units()
   units[SABOTEUR].attack_frequency = 0;
   units[SABOTEUR].turnspeed = 0; // very fast
   strcpy(units[SABOTEUR].name, "Saboteur");
-  units[SABOTEUR].infantry = true;
   units[SABOTEUR].icon      = ICON_SPECIAL_SABOTEUR;
   units[SABOTEUR].squish=false;
+  units[SABOTEUR].infantry = true; // infantry unit, so it can be squished
   units[SABOTEUR].listId=LIST_PALACE;
   units[SABOTEUR].subListId=0;
+  units[SABOTEUR].canEnterAndDamageStructure = true;
+  units[SABOTEUR].attackIsEnterStructure = true;
+  units[SABOTEUR].damageOnEnterStructure = 9999.99f; // a lot of damage (instant destroy)
 
   // Unit        : Sandworm
   units[SANDWORM].speed = 3; // very fast
