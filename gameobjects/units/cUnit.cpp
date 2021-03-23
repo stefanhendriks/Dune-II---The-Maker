@@ -1607,9 +1607,9 @@ void cUnit::think_move_air() {
         }
     }
 
-    cPlayerDifficultySettings *difficultySettings = player[iPlayer].getDifficultySettings();
+    cPlayerDifficultySettings *difficultySettings = getPlayer()->getDifficultySettings();
 
-    if (TIMER_move < (difficultySettings->getMoveSpeed(iType) + iSlowDown)) {
+    if (TIMER_move < (difficultySettings->getMoveSpeed(iType, iSlowDown))) {
         return;
     }
 
@@ -2542,7 +2542,7 @@ void cUnit::think_move() {
 
 
         cPlayerDifficultySettings *difficultySettings = player[iPlayer].getDifficultySettings();
-        if (TIMER_move < ((difficultySettings->getMoveSpeed(iType)) + iSlowDown)) {
+        if (TIMER_move < ((difficultySettings->getMoveSpeed(iType, iSlowDown)))) {
             return; // get out
         }
 

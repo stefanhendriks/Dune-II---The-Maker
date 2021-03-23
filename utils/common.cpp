@@ -565,7 +565,7 @@ void install_units()
   units[SABOTEUR].speed = 0; // very fast
   units[SABOTEUR].hp = 60;   // quite some health
   units[SABOTEUR].cost = 0;
-  units[SABOTEUR].sight = 3; // immense sight! (sorta scouting guys)
+  units[SABOTEUR].sight = 4; // immense sight! (sorta scouting guys)
   units[SABOTEUR].range = 2;
   units[SABOTEUR].attack_frequency = 0;
   units[SABOTEUR].turnspeed = 0; // very fast
@@ -613,7 +613,7 @@ void install_specials() {
     specials[SPECIAL_SABOTEUR].house=eHouseBitFlag::Ordos;
     specials[SPECIAL_SABOTEUR].autoBuild=true;
     specials[SPECIAL_SABOTEUR].providesType = eBuildType::UNIT;
-    specials[SPECIAL_SABOTEUR].providesTypeId = UNIT_SABOTEUR;
+    specials[SPECIAL_SABOTEUR].providesTypeId = SABOTEUR;
     specials[SPECIAL_SABOTEUR].deployAt = eDeployType::AT_STRUCTURE;
     specials[SPECIAL_SABOTEUR].deployAtStructureType = PALACE;
     specials[SPECIAL_SABOTEUR].units = 1;
