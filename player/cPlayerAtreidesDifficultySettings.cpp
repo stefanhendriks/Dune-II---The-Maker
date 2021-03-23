@@ -24,8 +24,8 @@ int cPlayerAtreidesDifficultySettings::getInflictDamage(int iDamageInflicted) {
 	return iDamageInflicted;
 }
 
-int cPlayerAtreidesDifficultySettings::getMoveSpeed(int iUnitType) {
-	return (int)(units[iUnitType].speed);
+int cPlayerAtreidesDifficultySettings::getMoveSpeed(int iUnitType, int terrainSlowDown) {
+	return (int)(units[iUnitType].speed) + terrainSlowDown;
 }
 
 

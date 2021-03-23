@@ -26,8 +26,8 @@ int cPlayerHarkonnenDifficultySettings::getInflictDamage(int iDamageInflicted) {
 	return (int) (iDamageInflicted * 1.2);
 }
 
-int cPlayerHarkonnenDifficultySettings::getMoveSpeed(int iUnitType) {
-	return (int)(units[iUnitType].speed);
+int cPlayerHarkonnenDifficultySettings::getMoveSpeed(int iUnitType, int terrainSlowDown) {
+	return (int)(units[iUnitType].speed) + ((float)terrainSlowDown * 1.1);
 }
 
 

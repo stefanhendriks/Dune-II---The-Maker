@@ -9,7 +9,7 @@ public:
 	cPlayerHarkonnenDifficultySettings();
 	~cPlayerHarkonnenDifficultySettings();
 
-	int getMoveSpeed(int iUnitType);	// get move speed of a unit
+	int getMoveSpeed(int iUnitType, int terrainSlowDown);	// get move speed of a unit
 
 	int getBuildSpeed(int iSpeed);		// get build speed
 

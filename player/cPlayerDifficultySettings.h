@@ -28,7 +28,7 @@ class cPlayerDifficultySettings {
 		cPlayerDifficultySettings();
 		virtual ~cPlayerDifficultySettings() = 0;
 
-		virtual int getMoveSpeed(int iUnitType) = 0;	// get move speed of a unit
+		virtual int getMoveSpeed(int iUnitType, int terrainSlowDown) = 0;	// get move speed of a unit
 
 		virtual int getBuildSpeed(int iSpeed) = 0;		// get build speed
 
