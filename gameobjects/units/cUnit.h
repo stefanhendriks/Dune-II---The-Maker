@@ -82,10 +82,11 @@ public:
 
     // Action its doing:
     int iAction;        // ACTION_MOVE; ACTION_GUARD; ACTION_CHASE;
+    eUnitActionIntent intent;
 
     // Action given code 
     int iUnitID;        // Unit ID to attack/pickup, etc
-    int iStructureID;   // structure ID to attack/bring to (refinery)
+    int iStructureID;   // structure ID to attack/bring to (refinery)/capture
 
     // Harvester specific
     int iCredits;       // credits stored in this baby
@@ -148,8 +149,9 @@ public:
 
     int isNextCell(); // what is the next cell to move to
 
+    void move_to(int iCll, int iStrucID, int iUnitID, eUnitActionIntent intent);
     void move_to(int iCll, int iStrucID, int iUnitID);
-	
+
 	// carryall-functions:
 	void carryall_order(int iuID, int iTransfer, int iBring, int iTpe);
 

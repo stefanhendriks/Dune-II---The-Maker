@@ -47,6 +47,16 @@ enum eLogLevel {
 	LOG_FATAL
 };
 
+// what is the intent of the action given to the unit?
+enum eUnitActionIntent {
+    INTENT_NONE, // none
+    INTENT_MOVE, // move to target
+    INTENT_ATTACK, // attack target
+    INTENT_REPAIR, // repair at target
+    INTENT_CAPTURE, // capture target
+    INTENT_UNLOAD_SPICE // deposit spice
+};
+
 // 0x01 ==   1 == "00000001"
 // 0x02 ==   2 == "00000010"
 // 0x04 ==   4 == "00000100"

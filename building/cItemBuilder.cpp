@@ -122,7 +122,7 @@ void cItemBuilder::think() {
                     int unitId = UNIT_CREATE(pStructureToDeploy->getCell(), item->getBuildId(), m_Player->getId(), false);
                     int rallyPoint = pStructureToDeploy->getRallyPoint();
                     if (rallyPoint > -1) {
-                        unit[unitId].move_to(rallyPoint, -1, -1);
+                        unit[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
                     }
                 } else {
                     // got destroyed very recently
@@ -236,7 +236,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
             int unitId = UNIT_CREATE(cell, buildIdToProduce, m_Player->getId(), false);
             int rallyPoint = pStructureToDeploy->getRallyPoint();
             if (rallyPoint > -1) {
-                unit[unitId].move_to(rallyPoint, -1, -1);
+                unit[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
             }
         } else {
             logbook("cItemBuilder: huh? I was promised that this structure would have some place to deploy unit at!?");
