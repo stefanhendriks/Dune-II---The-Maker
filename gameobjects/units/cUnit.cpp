@@ -63,6 +63,7 @@ void cUnit::init(int i) {
 
 
     iAction = ACTION_GUARD;
+    intent = INTENT_NONE;
 
     iAttackUnit = -1;      // attacking unit id
     iAttackStructure = -1; // attack structure id
@@ -698,6 +699,10 @@ void cUnit::poll() {
 }
 
 void cUnit::move_to(int iCll, int iStrucID, int iUnitID) {
+    move_to(iCll, iStrucID, iUnitID, eUnitActionIntent::INTENT_MOVE);
+}
+
+void cUnit::move_to(int iCll, int iStrucID, int iUnitID, eUnitActionIntent intent) {
     LOG("ORDERED TO MOVE");
 
     iGoalCell = iCll;
@@ -712,6 +717,7 @@ void cUnit::move_to(int iCll, int iStrucID, int iUnitID) {
         iNextCell = -1;
 
     iAction = ACTION_MOVE;
+    this->intent = intent;
 
     memset(iPath, -1, sizeof(iPath));
 
@@ -2278,8 +2284,6 @@ void cUnit::think_move() {
                         iGoalCell = iCell;
                         iPathIndex = -1;
                         iPathFails = 0;
-
-
                     } else {
                         LOG("Something else blocks path, but goal itself is not occupied.");
                         iGoalCell = iCell;
@@ -2376,21 +2380,44 @@ void cUnit::think_move() {
         bOccupied = true;
     }
 
-    cAbstractStructure *pStructure = structure[iStructureID];
     if (iStructureID > -1 && idOfStructureAtNextCell == iStructureID) {
+        cAbstractStructure *pStructure = structure[iStructureID];
         // we may enter, only if its empty
-        if (pStructure && pStructure->isValid() && pStructure->iUnitID > -1) {
-            // already occupied, find alternative
-            int iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(iCell,
-                                                                                                     pStructure->getType(),
-                                                                                                     &player[iPlayer]);
+        if (pStructure && pStructure->isValid()) {
+            // repair/spice unloading structures can only 'contain' ONE unit. So if it is occupied, find another.
+            if (intent == eUnitActionIntent::INTENT_UNLOAD_SPICE || intent == eUnitActionIntent::INTENT_REPAIR) {
+                if (pStructure->iUnitID > -1) { // occupied
+                    // already occupied, find alternative
+                    int iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(iCell,
+                                                                                                             pStructure->getType(),
+                                                                                                             getPlayer());
 
-            if (iNewID > -1 && iNewID != iStructureID) {
-                iStructureID = iNewID;
-                move_to(structure[iNewID]->getCell(), iNewID, -1);
-            } else {
-                iNextCell = iCell;
-                TIMER_movewait = 100; // we wait
+                    if (iNewID > -1 && iNewID != iStructureID) {
+                        iStructureID = iNewID;
+                        move_to(structure[iNewID]->getCell(), iNewID, -1);
+                    } else {
+                        iNextCell = iCell;
+                        TIMER_movewait = 100; // we wait
+                        return;
+                    }
+                }
+            } else if (intent == eUnitActionIntent::INTENT_CAPTURE) {
+                if (isSaboteur()) {
+                    // the unit will die and inflict damage
+                    pStructure->damage(getUnitType().damageOnEnterStructure);
+                    die(true, false);
+                } else {
+                    // TODO: Capture hp threshold (property in structure)
+                    if (pStructure->getHitPoints() < 50) {
+                        // make structure switch sides
+                        pStructure->setOwner(iPlayer);
+                        die(false, false);
+                    } else {
+                        // the unit will die and inflict damage
+                        die(true, false);
+                        pStructure->damage(getUnitType().damageOnEnterStructure);
+                    }
+                }
                 return;
             }
         }
@@ -2461,6 +2488,7 @@ void cUnit::think_move() {
             idOfStructureAtNextCell == iStructureID &&
             idOfStructureAtNextCell > -1) {
 //            logbook("bOccupied = false && entering structure");
+            cAbstractStructure *pStructure = structure[iStructureID];
 
             // when this structure is not occupied
             if (pStructure && pStructure->isValid() && pStructure->iUnitID < 0) {
@@ -2722,6 +2750,7 @@ void cUnit::think_move() {
                     // structure id match!
                     if (iStructureID > -1) {
                         int idOfStructureAtCell = map.getCellIdStructuresLayer(iCell);
+                        cAbstractStructure *pStructure = structure[iStructureID];
 
                         if (iStructureID == idOfStructureAtCell) {
                             logbook("Enter structure");
@@ -3651,25 +3680,66 @@ void UNIT_ORDER_ATTACK(int iUnitID, int iGoalCell, int iUnit, int iStructure, in
     char msg[255];
     sprintf(msg, "Attacking UNIT ID [%d], STRUCTURE ID [%d], ATTACKCLL [%d], GoalCell [%d]", iUnit, iStructure,
             iAttackCell, iGoalCell);
-    unit[iUnitID].LOG(msg);
+    cUnit &cUnit = unit[iUnitID];
+    cUnit.LOG(msg);
 
     if (iUnit < 0 && iStructure < 0 && iAttackCell < 0) {
-        unit[iUnitID].LOG("What is this? Ordered to attack but no target?");
+        cUnit.LOG("What is this? Ordered to attack but no target?");
         return;
     }
 
-    unit[iUnitID].iAction = ACTION_ATTACK;
-    unit[iUnitID].iGoalCell = iGoalCell;
-    unit[iUnitID].iNextCell = -1;
-    unit[iUnitID].bCalculateNewPath = true;
-    unit[iUnitID].iAttackStructure = iStructure;
-    unit[iUnitID].iAttackUnit = iUnit;
-    unit[iUnitID].iAttackCell = iAttackCell;
+    if (cUnit.iType == SABOTEUR) {
+        // saboteur does not attack, but only captures
+        UNIT_ORDER_MOVE(iUnitID, iGoalCell);
+        return;
+    }
+
+    cUnit.iAction = ACTION_ATTACK;
+    cUnit.iGoalCell = iGoalCell;
+    cUnit.iNextCell = -1;
+    cUnit.bCalculateNewPath = true;
+    cUnit.iAttackStructure = iStructure;
+    cUnit.iAttackUnit = iUnit;
+    cUnit.iAttackCell = iAttackCell;
 }
 
 
 void UNIT_ORDER_MOVE(int iUnitID, int iGoalCell) {
-    unit[iUnitID].move_to(iGoalCell, -1, -1);
+    eUnitActionIntent intent = eUnitActionIntent::INTENT_MOVE;
+
+    int structureID = -1;
+    cUnit &cUnit = unit[iUnitID];
+    if (iGoalCell > -1) {
+        structureID = map.getCellIdStructuresLayer(iGoalCell);
+        if (structureID > -1) {
+            cAbstractStructure *pStructure = structure[structureID];
+            if (pStructure) {
+                bool friendlyStructure = cUnit.getPlayer()->isSameTeamAs(pStructure->getPlayer());
+                if (friendlyStructure) {
+                    if (cUnit.isInfantryUnit()) {
+                        structureID = -1; // reset back, we don't allow capturing own/allied buildings
+                    } else if (cUnit.isHarvester()) {
+                        if (pStructure->getType() == REFINERY) {
+                            // unit ordered to move to refinery, let refinery animate about that.
+                            pStructure->setAnimating(true);
+                            intent = eUnitActionIntent::INTENT_UNLOAD_SPICE;
+                        } else if (pStructure->getType() == REPAIR) {
+                            intent = eUnitActionIntent::INTENT_REPAIR;
+                        }
+                    } else {
+                        if (pStructure->getType() == REPAIR) {
+                            intent = eUnitActionIntent::INTENT_REPAIR;
+                        }
+                    }
+                } else {
+                    // if capturable... (TODO)
+                    intent = eUnitActionIntent::INTENT_CAPTURE;
+                }
+            }
+        }
+    }
+
+    cUnit.move_to(iGoalCell, structureID, -1, intent);
 }
 
 

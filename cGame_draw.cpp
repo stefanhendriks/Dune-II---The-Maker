@@ -65,7 +65,8 @@ void cGame::winning() {
 
 // Draw the mouse in combat mode, and do its interactions
 void cGame::combat_mouse() {
-	cGameControlsContext *context = player[HUMAN].getGameControlsContext();
+    cPlayer &humanPlayer = player[HUMAN];
+    cGameControlsContext *context = humanPlayer.getGameControlsContext();
     bool bOrderingUnits=false;
 
 	if (bPlaceIt == false && bPlacedIt==false) {
@@ -74,21 +75,20 @@ void cGame::combat_mouse() {
         // Mouse is hovering above a unit
         if (hover_unit > -1) {
             cUnit &hoverUnit = unit[hover_unit];
-            if (hoverUnit.iPlayer == 0) {
+            if (hoverUnit.iPlayer == HUMAN) {
                 mouse_tile = MOUSE_PICK;
             }
 
         	// wanting to repair UNITS, check if its possible
-            if (key[KEY_R] && player[0].hasAtleastOneStructure(REPAIR)) {
+            if (key[KEY_R] && humanPlayer.hasAtleastOneStructure(REPAIR)) {
             	if (hoverUnit.iPlayer == HUMAN) {
             		if (hoverUnit.isDamaged() && !hoverUnit.isInfantryUnit() && !hoverUnit.isAirbornUnit())	{
-
 						if (cMouse::isLeftButtonClicked()) {
 							// find closest repair bay to move to
 
 							cStructureUtils structureUtils;
 							int	iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
-                                    hoverUnit.iCell, REPAIR, &player[HUMAN]);
+                                    hoverUnit.iCell, REPAIR, &humanPlayer);
 
 							if (iNewID > -1) {
 								int iCarry = CARRYALL_TRANSFER(hover_unit, structure[iNewID]->getCell() + 2);
@@ -157,13 +157,15 @@ void cGame::combat_mouse() {
                     if (mouse_tile == MOUSE_MOVE) {
                         // any selected unit will move
                         for (int i=0; i < MAX_UNITS; i++) {
-                            if (unit[i].isValid() && unit[i].iPlayer == HUMAN && unit[i].bSelected) {
+                            cUnit &cUnit = unit[i];
+                            if (cUnit.isValid() && cUnit.iPlayer == HUMAN && cUnit.bSelected) {
                                 UNIT_ORDER_MOVE(i, mouseCell);
 
-                                if (units[unit[i].iType].infantry)
-                                    bPlayInf=true;
-                                else
-                                    bPlayRep=true;
+                                if (cUnit.isInfantryUnit()) {
+                                    bPlayInf = true;
+                                } else {
+                                    bPlayRep = true;
+                                }
 
                                 bParticle=true;
                             }
@@ -410,7 +412,7 @@ void cGame::combat_mouse() {
 					structure[iStr]->getType() == WOR ||
 					structure[iStr]->getType() == BARRACKS ||
 					structure[iStr]->getType() == REPAIR)
-					player[HUMAN].setPrimaryBuildingForStructureType(structure[iStr]->getType(), iStr);
+					humanPlayer.setPrimaryBuildingForStructureType(structure[iStr]->getType(), iStr);
 			}
 		}
 
@@ -445,7 +447,7 @@ void cGame::combat_mouse() {
 				cListUtils listUtils;
 				int listId = listUtils.findListTypeByStructureType(typeOfStructure);
 				if (listId != LIST_NONE) {
-					player[HUMAN].getSideBar()->setSelectedListId(listId);
+					humanPlayer.getSideBar()->setSelectedListId(listId);
 				}
 			}
 		}

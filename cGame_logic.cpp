@@ -344,29 +344,29 @@ void cGame::poll() {
 
                     int idOfUnitOnCell = map.getCellIdUnitLayer(mc);
 
-                    if (idOfUnitOnCell > -1)
-                    {
+                    if (idOfUnitOnCell > -1) {
                         int id = idOfUnitOnCell;
 
-                        if (unit[id].iPlayer > 0)
+                        if (!unit[id].getPlayer()->isSameTeamAs(&player[HUMAN])) {
                             mouse_tile = MOUSE_ATTACK;
+                        }
                     }
 
                     int idOfStructureOnCell = map.getCellIdStructuresLayer(mc);
 
-                    if (idOfStructureOnCell > -1)
-                    {
+                    if (idOfStructureOnCell > -1) {
                         int id = idOfStructureOnCell;
 
-                        if (structure[id]->getOwner() > 0)
+                        if (!structure[id]->getPlayer()->isSameTeamAs(&player[HUMAN])) {
                             mouse_tile = MOUSE_ATTACK;
+                        }
                     }
 
-                    if (key[KEY_LCONTROL]) {
+                    if (key[KEY_LCONTROL]) { // force attack
                         mouse_tile = MOUSE_ATTACK;
                     }
 
-                    if (key[KEY_ALT]) {
+                    if (key[KEY_ALT]) { // force move
                         mouse_tile = MOUSE_MOVE;
                     }
 
@@ -389,7 +389,6 @@ void cGame::poll() {
 
         bPlacedIt=false;
 
-        //selected_structure=-1;
         hover_unit=-1;
     }
 }

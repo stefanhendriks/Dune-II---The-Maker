@@ -360,11 +360,14 @@ void cAbstractStructure::setFrame(int frame) {
 void cAbstractStructure::damage(int hp) {
 	int damage = hp;
 	if (damage < 0) {
-		logbook("cAbstractStructuredamage() got negative parameter, wrapped");
+		logbook("cAbstractStructure::damage() got negative parameter, wrapped");
 		damage *= -1; // - * - = +
 	}
 
 	iHitPoints -= damage; // do damage
+    char msg[255];
+    sprintf(msg, "cAbstractStructure::damage() - Structure [%d] received [%d] damage, HP is now [%d]", id, damage, iHitPoints);
+    logbook(msg);
 
 	// do not die here, that is not the responsibility of this method to determine
 }
