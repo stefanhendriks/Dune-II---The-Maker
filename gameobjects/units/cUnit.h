@@ -133,7 +133,7 @@ public:
 
 	void die(bool bBlowUp, bool bSquish);			// die!
 
-    void poll();        // poll status
+    void updateCellXAndY();        // updateCellXAndY status
 
     void think();       // thinking in general
     void think_move_air();  // aircraft specific
@@ -147,8 +147,9 @@ public:
 
     void think_hit(int iShotUnit, int iShotStructure);
 
-    int isNextCell(); // what is the next cell to move to
+    int getNextCellToMoveTo(); // what is the next cell to move to
 
+    void move_to(int iGoalCell);
     void move_to(int iCll, int iStrucID, int iUnitID, eUnitActionIntent intent);
     void move_to(int iCll, int iStrucID, int iUnitID);
 
@@ -259,6 +260,11 @@ private:
     bool isUnitWhoCanSquishInfantry();
 
     bool isSaboteur();
+
+    void forgetAboutCurrentPathAndPrepareToCreateNewOne();
+    void forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait);
+
+    eUnitMoveToCellResult moveToNextCellLogic();
 };
 
 

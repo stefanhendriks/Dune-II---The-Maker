@@ -257,13 +257,14 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
             }
         }
 
-        int cellToDeploy = structure[structureToDeployUnit]->getCell();
         cAbstractStructure * pStructureToDeploy = structure[structureToDeployUnit];
-        if (pStructureToDeploy->getRallyPoint() > -1) {
-            cellToDeploy = pStructureToDeploy->getRallyPoint();
+        if (pStructureToDeploy && pStructureToDeploy->isValid()) {
+            int cellToDeploy = structure[structureToDeployUnit]->getCell();
+            if (pStructureToDeploy->getRallyPoint() > -1) {
+                cellToDeploy = pStructureToDeploy->getRallyPoint();
+            }
+            REINFORCE(m_Player->getId(), buildIdToProduce, cellToDeploy, -1);
         }
-
-        REINFORCE(m_Player->getId(), buildIdToProduce, cellToDeploy, -1);
     }
 }
 

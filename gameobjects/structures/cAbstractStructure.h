@@ -33,6 +33,8 @@ class cAbstractStructure {
 		bool bAnimate;      // Do its special animation? (unit leaving building, starport
 							// dropping something, etc)
 
+		bool dead;		// set to true when die() is called, and thus this structure can be deleted.
+
 
 	protected:
         int id;				// the id within the structure[] array
@@ -114,6 +116,8 @@ class cAbstractStructure {
 		int pos_x();
 		int pos_y();
 
+		bool isDead() { return dead; } // if set, then it is elegible for cleanup
+
 		int getArmor() { return armor; }
 		int getWidth() { return iWidth; }
 		int getHeight() { return iHeight; }
@@ -126,6 +130,7 @@ class cAbstractStructure {
 		int getFrame() { return iFrame; }
 		int getStructureId() { return id; }
 		int getMaxHP();
+		int getCaptureHP();
 		int getSight();
 		int getRange();
 		int getPercentageNotPaved();

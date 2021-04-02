@@ -575,3 +575,16 @@ int cMap::getTotalCountCellType(int cellType) {
     }
     return count;
 }
+
+int cMap::getCellSlowDown(int iCell) {
+    int cellType = map.getCellType(iCell);
+
+    if (cellType == TERRAIN_SAND) return 2;
+    if (cellType == TERRAIN_MOUNTAIN) return 5;
+    if (cellType == TERRAIN_HILL) return 3;
+    if (cellType == TERRAIN_SPICEHILL) return 3;
+    if (cellType == TERRAIN_ROCK) return 1;
+    if (cellType == TERRAIN_SLAB) return 0;
+
+    return 1;
+}

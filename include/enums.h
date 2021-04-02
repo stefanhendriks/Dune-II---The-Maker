@@ -57,6 +57,15 @@ enum eUnitActionIntent {
     INTENT_UNLOAD_SPICE // deposit spice
 };
 
+// what is the intent of the action given to the unit?
+enum eUnitMoveToCellResult {
+    MOVERESULT_BUSY, // still busy moving between cells (offsets != 0)
+    MOVERESULT_AT_CELL, // arrived at a cell (but it is not the end-goal)
+    MOVERESULT_AT_GOALCELL, // arrived at the GOAL cell
+    MOVERESULT_WAIT_FOR_CARRYALL,
+    MOVERESULT_SLOWDOWN, // the unit has to 'wait' (ie its slowdown is in effect)
+};
+
 // 0x01 ==   1 == "00000001"
 // 0x02 ==   2 == "00000010"
 // 0x04 ==   4 == "00000100"

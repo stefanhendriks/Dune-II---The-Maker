@@ -119,7 +119,7 @@ void cRefinery::think_unit_occupation() {
     cUnit.restoreFromTempHitPoints();
     cUnit.iGoalCell = cUnit.iCell;
     cUnit.iPathIndex = -1;
-    cUnit.poll();
+    cUnit.updateCellXAndY();
 
     cUnit.TIMER_movewait = 0;
     cUnit.TIMER_thinkwait = 0;

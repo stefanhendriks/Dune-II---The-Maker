@@ -190,8 +190,8 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                         iClr = makecol(0, 198, 0);
                     }
                     bDraw = true;
-                } else if (map->isCellPassableFoot(iCell)) {
-                    iClr = makecol(64, 255, 64);
+                } else if (!map->isCellPassableFoot(iCell)) {
+                    iClr = makecol(0, 198, 0);
                     bDraw = true;
                 }
 
