@@ -1229,31 +1229,6 @@ void cUnit::think() {
         }
     }
 
-//    // we wanted to enter this structure, so do it immidiatly (else we just seem to
-//    // drive over the structure, which looks odd!
-//    if (iStructureID > -1 &&
-//        idOfStructureAtCell == iStructureID &&
-//        idOfStructureAtCell > -1) {
-//
-//        // when this structure is not occupied
-//        if (structure[iStructureID]->iUnitID < 0) {
-//            // get in!
-//            structure[iStructureID]->setAnimating(false);
-//            structure[iStructureID]->iUnitID = iID;  // !!
-//            structure[iStructureID]->setFrame(0);
-//
-//            // store this
-//            iTempHitPoints = iHitPoints;
-//            iHitPoints = -1; // 'kill' unit
-//
-//            if (DEBUGGING)
-//                logbook("[UNIT] -> Enter Structure");
-//
-//            map.remove_id(iID, MAPID_UNITS);
-//        } // enter..
-//    }
-
-
     // When this is a carry-all, show proper animation when filled
     if (iType == CARRYALL) {
         // A carry-all has something when:
