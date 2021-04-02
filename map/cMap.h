@@ -337,6 +337,8 @@ public:
      */
     int getTotalCountCellType(int cellType);
 
+    int getCellSlowDown(int i);
+
 private:
         tCell cell[MAX_CELLS];
 

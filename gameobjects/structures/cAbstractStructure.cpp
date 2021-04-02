@@ -48,6 +48,8 @@ cAbstractStructure::cAbstractStructure() {
 
     id = -1; // invalid ID at first, it is set in the structureFactory
 
+    dead = false;
+
     if (DEBUGGING) {
         char msg[255];
         sprintf(msg, "(cAbstractStructure)(ID %d) Constructor", this->id);
@@ -102,6 +104,12 @@ cPlayer * cAbstractStructure::getPlayer() {
 int cAbstractStructure::getMaxHP() {
 	int type = getType();
 	return structures[type].hp;
+}
+
+int cAbstractStructure::getCaptureHP() {
+	int type = getType();
+    // TODO: Capture hp threshold (property in structure)
+    return ((float)structures[type].hp) * 0.30f;
 }
 
 int cAbstractStructure::getSight() {
@@ -210,8 +218,8 @@ void cAbstractStructure::die() {
     // screen shaking
     game.TIMER_shake = (iWidth * iHeight) * 20;
 
-    // eventually die
-    cStructureFactory::getInstance()->deleteStructureInstance(this);
+    // elegible for cleanup
+    dead = true;
 }
 
 
@@ -353,9 +361,8 @@ void cAbstractStructure::setFrame(int frame) {
 	must be > 0. When it is < 0, it will be wrapped to > 0 anyway and
 	an error is written in the log.
 
-	When the hitpoints drop below 1, the structure will die. The actual call
-	to the die method will be done by the abstract think function. So it is
-	still safe to refer to this structure even if it is declared dead (ie hp < 1).
+	When the hitpoints drop below 1, the structure will die / cause destroyed animation and set 'dead' flag
+    so that the structure can be cleaned up from memory.
 **/
 void cAbstractStructure::damage(int hp) {
 	int damage = hp;
@@ -369,7 +376,9 @@ void cAbstractStructure::damage(int hp) {
     sprintf(msg, "cAbstractStructure::damage() - Structure [%d] received [%d] damage, HP is now [%d]", id, damage, iHitPoints);
     logbook(msg);
 
-	// do not die here, that is not the responsibility of this method to determine
+    if (iHitPoints < 1) {
+        die();
+    }
 }
 
 /**
@@ -412,11 +421,6 @@ void cAbstractStructure::think() {
     // Other
     think_damage();
     think_repair();
-
-	// die when out of hp
-	if (iHitPoints < 1) {
-		die();
-	}
 }
 
 void cAbstractStructure::think_repair()
@@ -468,7 +472,7 @@ bool cAbstractStructure::isValid() {
     if (iPlayer < 0)
         return false;
 
-    if (iHitPoints < 0)
+    if (dead) // flagged for deletion, so no longer 'valid'
         return false;
 
     if (iCell < 0 || iCell >= MAX_CELLS)
