@@ -141,23 +141,28 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 		if (item->isBuilding()) {
             int iFrame = item->getBuildProgressFrame();
 
-            int iTotalBuildPoints = 0;
-
-            // get the total build time
-            if (listIDToDraw != LIST_STARPORT) {
-                iTotalBuildPoints = item->getBuildTime();
-            }
-
-			if (item->getProgress() < iTotalBuildPoints || iFrame < 31) {
+			if (!item->isDoneBuilding() || iFrame < 31) {
 				// draw the other progress stuff
 				set_trans_blender(0, 0, 0, 128);
 				draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESSFIX].dat, iDrawX+2, iDrawY+2);
 				draw_trans_sprite(bmp_screen, (BITMAP *)gfxinter[PROGRESS001+iFrame].dat, iDrawX+2, iDrawY+2);
 			} else {
-				// draw 'ready' text when done building.
-				if (listIDToDraw == LIST_CONSTYARD) {
-					draw_sprite(bmp_screen, (BITMAP *)gfxinter[READY01].dat, iDrawX+3, iDrawY+16);
-				}
+			    if (item->shouldPlaceIt()) {
+                    // TODO: draw white/red (flicker)
+                    int icon = READY01;
+                    if (game.bPlaceIt) {
+                        icon = READY02;
+                    }
+                    draw_sprite(bmp_screen, (BITMAP *) gfxinter[icon].dat, iDrawX + 3, iDrawY + 16);
+				} else if (item->shouldDeployIt()) {
+                    // TODO: draw white/red (flicker)
+                    // TODO: draw DEPLOY
+                    int icon = READY01;
+                    if (game.bDeployIt) {
+                        icon = READY02;
+                    }
+                    draw_sprite(bmp_screen, (BITMAP *) gfxinter[icon].dat, iDrawX + 3, iDrawY + 16);
+                }
 			}
 		} else { // not building
 			// this item is not being built. So we do not draw a progress indicator.

@@ -83,6 +83,10 @@ public:
     static const int TotalHeightBeforePowerBarStarts =
             TopBarHeight + HeightOfMinimap + HorizontalCandyBarHeight + PowerBarMargingHeight;
 
+    static bool isMouseOverSidebar(cGame &game) {
+        return cMouse::getX() > game.screen_x - cSideBar::SidebarWidth;
+    }
+
 private:
 
     // the lists:

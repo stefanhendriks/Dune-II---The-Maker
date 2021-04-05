@@ -74,6 +74,9 @@ void cGame::init() {
 	bPlaceIt=false;			// we do not place
 	bPlacedIt=false;
 
+	bDeployIt=false;
+	bDeployedIt=false;
+
 	map_width  = 64;
 	map_height = 64;
 
@@ -109,7 +112,7 @@ void cGame::init() {
 
 	// Units & Structures are already initialized in map.init()
 	if (game.bMp3 && mp3_music) {
-	    almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
+	    almp3_stop_autopoll_mp3(mp3_music); // stop auto updateState
 	}
 
 	// Load properties
@@ -134,6 +137,9 @@ void cGame::mission_init() {
 
 	bPlaceIt=false;			// we do not place
 	bPlacedIt=false;
+
+    bDeployIt=false;
+    bDeployedIt=false;
 
 	mouse_tile = MOUSE_NORMAL;
 
@@ -171,27 +177,26 @@ void cGame::mission_init() {
 
 
 void cGame::think_winlose() {
-    bool bSucces=false;
-    bool bFailed=true;
+    bool bSucces = false;
+    bool bFailed = true;
 
     // determine if player is still alive
-    for (int i=0; i < MAX_STRUCTURES; i++)
-        if (structure[i])
-            if (structure[i]->getOwner() == 0)
-            {
-                bFailed=false; // no, we are not failing just yet
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+        if (structure[i]) {
+            if (structure[i]->getOwner() == 0) {
+                bFailed = false; // no, we are not failing just yet
                 break;
             }
+        }
+    }
 
     // determine if any unit is found
-    if (bFailed)
-    {
+    if (bFailed) {
         // check if any unit is ours, if not, we have a problem (airborn does not count)
-        for (int i=0; i < MAX_UNITS; i++)
+        for (int i = 0; i < MAX_UNITS; i++)
             if (unit[i].isValid())
-                if (unit[i].iPlayer == 0)
-                {
-                    bFailed=false;
+                if (unit[i].iPlayer == 0) {
+                    bFailed = false;
                     break;
                 }
     }
@@ -306,7 +311,7 @@ bool cGame::isMusicPlaying() {
     return MIDI_music_playing();
 }
 
-void cGame::poll() {
+void cGame::updateState() {
 	cMouse::updateState();
 	for (int i = 0; i < MAX_PLAYERS; i++) {
         cPlayer *pPlayer = &player[i];
@@ -321,24 +326,23 @@ void cGame::poll() {
         if (i != HUMAN) continue; // non HUMAN players are done
         mouse_tile = MOUSE_NORMAL;
 
-        // change this when selecting stuff
+        // change the mouse tile depending on what we're hovering over
         int mc = context->getMouseCell();
         if (mc > -1) {
 
             // check if any unit is 'selected'
-            for (int i=0; i < MAX_UNITS; i++) {
-                if (unit[i].isValid()) {
-                    if (unit[i].iPlayer == 0) {
-                        if (unit[i].bSelected) {
-                            mouse_tile = MOUSE_MOVE;
-                            break;
-                        }
-                    }
+            for (int j=0; j < MAX_UNITS; j++) {
+                cUnit &cUnit = unit[j];
+                if (!cUnit.isValid()) continue;
+                if (cUnit.iPlayer != HUMAN) continue;
+                if (cUnit.bSelected) {
+                    mouse_tile = MOUSE_MOVE;
+                    break;
                 }
             }
 
-            if (mouse_tile == MOUSE_MOVE)
-            {
+
+            if (mouse_tile == MOUSE_MOVE) {
                 // change to attack cursor if hovering over enemy unit
                 if (mapUtils->isCellVisibleForPlayerId(HUMAN, mc)) {
 
@@ -374,20 +378,21 @@ void cGame::poll() {
             }
         }
 
-        if (mouse_tile == MOUSE_NORMAL)
-        {
+        if (mouse_tile == MOUSE_NORMAL) {
             // when selecting a structure
-            if (game.selected_structure > -1)
-            {
+            if (game.selected_structure > -1) {
                 int id = game.selected_structure;
-                if (structure[id]->getOwner() == 0)
-                    if (key[KEY_LCONTROL])
+                cAbstractStructure *pStructure = structure[id];
+                if (pStructure && pStructure->getOwner() == HUMAN) {
+                    if (key[KEY_LCONTROL]) {
                         mouse_tile = MOUSE_RALLY;
-
+                    }
+                }
             }
         }
 
         bPlacedIt=false;
+        bDeployedIt = false;
 
         hover_unit=-1;
     }
@@ -405,6 +410,7 @@ void cGame::combat() {
         iFadeAction = 2;
     // -----------------
 	bPlacedIt = bPlaceIt;
+	bDeployedIt = bDeployIt;
 
     drawManager->drawCombatState();
 	interactionManager->interact();
@@ -1569,7 +1575,7 @@ void cGame::run() {
 	while (bPlaying) {
 		TimeManager.processTime();
 		clear(bmp_screen);
-		poll(); // update state
+        updateState();
 		handleTimeSlicing(); // handle time diff (needs to change!)
 		runGameState(); // run game state, includes interaction + drawing
 		interactionManager->interactWithKeyboard(); // generic interaction
@@ -1650,7 +1656,7 @@ void cGame::shutdown() {
 
 	// MP3 Library
 	if (mp3_music) {
-		almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
+		almp3_stop_autopoll_mp3(mp3_music); // stop auto updateState
 		almp3_destroy_mp3(mp3_music);
 	}
 
