@@ -673,6 +673,7 @@ void install_bullets()
     bullets[i].max_deadframes = 4; // 4 frame animation
     bullets[i].bmp_width = 8*2;
     bullets[i].sound = -1;    // no sound
+    bullets[i].explosionSize = 1; // 1 tile sized explosion
   }
 
   // huge rocket/missile
@@ -681,8 +682,9 @@ void install_bullets()
   bullets[ROCKET_BIG].bmp_width = 48;
   bullets[ROCKET_BIG].damage = 999;
   bullets[ROCKET_BIG].damage_inf = 999;
-  bullets[ROCKET_BIG].max_frames = 0;
+  bullets[ROCKET_BIG].max_frames = 1;
   bullets[ROCKET_BIG].sound = SOUND_ROCKET;
+  bullets[ROCKET_BIG].explosionSize = 5;
 
 
     // small rocket (for ornithopter)
