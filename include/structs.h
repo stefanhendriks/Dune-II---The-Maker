@@ -189,8 +189,7 @@ struct s_House {
 };
 
 
-struct s_Bullet
-{
+struct s_Bullet {
 
   BITMAP *bmp;        // a reference to its bitmap. (16 bits here!)
   int deadbmp;        // when the bullet dies, it will use this bmp to show its animation
@@ -198,6 +197,7 @@ struct s_Bullet
 
   int damage;         // how much damage it does -> vehicles
   int damage_inf;     // how much damage it does -> infantry
+  int explosionSize;  // square like explosion, defaults 1 (=1x1 tile), 2 means 2x2, etc.
   int max_frames;     // when > 0 it animates automatically
   int max_deadframes; // max dead frames
 

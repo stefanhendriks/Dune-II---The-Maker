@@ -38,13 +38,15 @@ void cBullet::init() {
 }
 
 int cBullet::pos_x() const {
-    int iCellX = iCellGiveX(iCell);
-    return (iCellX * TILESIZE_WIDTH_PIXELS) + iOffsetX;
+    return mapCamera->getAbsoluteXPositionFromCell(iCell) + iOffsetX;
+//    int iCellX = iCellGiveX(iCell);
+//    return (iCellX * TILESIZE_WIDTH_PIXELS) + iOffsetX;
 }
 
 int cBullet::pos_y() const {
-    int iCellY = iCellGiveY(iCell);
-    return (iCellY * TILESIZE_HEIGHT_PIXELS) + iOffsetY;
+    return mapCamera->getAbsoluteYPositionFromCell(iCell) + iOffsetY;
+//    int iCellY = iCellGiveY(iCell);
+//    return (iCellY * TILESIZE_HEIGHT_PIXELS) + iOffsetY;
 }
 
 int cBullet::draw_x() {
@@ -73,7 +75,6 @@ void cBullet::draw() {
     x2 = iCellGiveX(iGoalCell);
     y2 = iCellGiveY(iGoalCell);
 
-    int a = bullet_face_angle(fDegrees(x1, y1, x2, y2));
     int fa = bullet_face_angle(fDegrees(x1, y1, x2, y2));
     int ba = bullet_correct_angle(fa);
 
@@ -86,10 +87,15 @@ void cBullet::draw() {
 
     sy = iFrame * h;
 
+    if (iType == ROCKET_BIG) {
+        sy = (iFrame * 48);
+    }
+
     if (iType == ROCKET_SMALL ||
         iType == ROCKET_SMALL_FREMEN ||
-        iType == ROCKET_SMALL_ORNI)
+        iType == ROCKET_SMALL_ORNI) {
         sy = (iFrame * 16);
+    }
 
     if (iType != BULLET_SMALL &&
         iType != BULLET_TRIKE &&
@@ -97,11 +103,11 @@ void cBullet::draw() {
         iType != BULLET_TANK &&
         iType != BULLET_SIEGE &&
         iType != BULLET_DEVASTATOR &&
-        iType != BULLET_TURRET)
+        iType != BULLET_TURRET) {
         sx = ba * getBulletBmpWidth();
-    else
+    } else {
         sx = 0;
-
+    }
 
     // Whenever this bullet is a shimmer, draw a shimmer and leave
     if (iType == BULLET_SHIMMER) {
@@ -118,8 +124,6 @@ void cBullet::draw() {
                                          x, y,
                                          mapCamera->factorZoomLevel(bmp_width), mapCamera->factorZoomLevel(bmp_width));
     }
-
-    return;
 }
 
 int cBullet::getBulletBmpWidth() const {
@@ -141,7 +145,8 @@ void cBullet::think() {
         // big rockets create smoke
         if (iType == ROCKET_NORMAL ||
             iType == BULLET_GAS ||
-            iType == ROCKET_RTURRET) {
+            iType == ROCKET_RTURRET ||
+            iType == ROCKET_BIG) {
 
             iFrame++;
             if (iFrame > 1) { // fire animation of rocket
@@ -165,7 +170,7 @@ void cBullet::think() {
         }
 
         if (bCreatePuf) {
-            int half = 16;
+            int half = getBulletBmpWidth() / 2;
             PARTICLE_CREATE(pos_x() + half, pos_y() + half, BULLET_PUF, -1, -1);
         }
 
@@ -176,11 +181,11 @@ void cBullet::think() {
     if (TIMER_homing > 0) {
         TIMER_homing--;
 
-        if (iHoming > -1)
-            if (unit[iHoming].isValid())
+        if (iHoming > -1) {
+            if (unit[iHoming].isValid()) {
                 iGoalCell = unit[iHoming].iCell;
-
-        // this units gonna die!
+            }
+        }
     }
 
     think_move();
@@ -253,20 +258,50 @@ void cBullet::arrivedAtGoalLogic() {
     // for instance: damage a wall, but also a unit (ornithopter), and so forth
     //
 
-    damageStructure(iCell);                 // damage structure at cell if applicable
-    damageWall(iCell);                      // damage wall if applicable
-    detonateSpiceBloom(iCell);              // detonate spice bloom if applicable
-    damageSandworm(iCell);                  // inflict damage on sandworm if applicable
-    damageGroundUnit(iCell);                // inflict damage on ground unit if applicable
-    damageAirUnit(iCell);                   // inflict damage on air unit (if rocket)
-
-    // create particle of explosion
     s_Bullet const &sBullet = gets_Bullet();
-    if (sBullet.deadbmp > -1) {
-        PARTICLE_CREATE(getRandomX(), getRandomY(), sBullet.deadbmp, -1, -1);
-    }
 
-    damageTerrain(iCell);
+    int cellToDamage = iCell;
+
+    // damage is inflicted to size of explosion
+    int x = iCellGiveX(iCell);
+    int y = iCellGiveY(iCell);
+
+    int startX = x - ((sBullet.explosionSize - 1) / 2);
+    int startY = y - ((sBullet.explosionSize - 1) / 2);
+    int endX = x + sBullet.explosionSize;
+    int endY = y + sBullet.explosionSize;
+
+    int iCx = -1;
+    int iCy = -1;
+    for (int sx = startX; sx < endX; sx++) {
+        for (int sy = startY; sy < endY; sy++) {
+            iCx = sx;
+            iCy = sy;
+            FIX_BORDER_POS(iCx, iCy);
+
+            int cellToDamage = iCellMake(iCx, iCy);
+
+            damageStructure(cellToDamage);                 // damage structure at cell if applicable
+            damageWall(cellToDamage);                      // damage wall if applicable
+            detonateSpiceBloom(cellToDamage);              // detonate spice bloom if applicable
+            damageSandworm(cellToDamage);                  // inflict damage on sandworm if applicable
+            damageGroundUnit(cellToDamage);                // inflict damage on ground unit if applicable
+            damageAirUnit(cellToDamage);                   // inflict damage on air unit (if rocket)
+
+            // create particle of explosion
+            if (sBullet.deadbmp > -1) {
+                // depending on 'explosion size'
+                int half = 16;
+                int randomX = -8 + rnd(half);
+                int randomY = -8 + rnd(half);
+                int posX = mapCamera->getAbsoluteXPositionFromCell(cellToDamage) + randomX;
+                int posY = mapCamera->getAbsoluteYPositionFromCell(cellToDamage) + randomY;
+                PARTICLE_CREATE(posX, posY, sBullet.deadbmp, -1, -1);
+            }
+
+            damageTerrain(cellToDamage);
+        }
+    }
 
     die();
 }
