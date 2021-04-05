@@ -6,7 +6,7 @@
   Contact: stefanhen83@gmail.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2020 (c) code by Stefan Hendriks
+  2001 - 2021 (c) code by Stefan Hendriks
 
   */
 
@@ -16,9 +16,6 @@ bool BORDER_POS(int x, int y);
 int BETWEEN(int val, int min, int max);
 void FIX_BORDER_POS(int &x, int &y);
 void FIX_POS(int &x, int &y);
-
-bool MOUSE_BTN_LEFT();
-bool MOUSE_BTN_RIGHT();
 
 int keepBetween(int value, int min, int max);
 

@@ -156,24 +156,6 @@ void INSTALL_HOUSES() {
     houses[CORRINO].minimap_color = makecol(192, 192, 192); // grey
 }
 
-
-/**
- * Returns true if left mouse button is pressed.
- * @return
- */
-bool MOUSE_BTN_LEFT() {
-	return cMouse::isLeftButtonPressed();
-}
-
-/**
- * Returns true if right mouse button is pressed
- * @return
- */
-bool MOUSE_BTN_RIGHT() {
-	return cMouse::isRightButtonPressed();
-}
-
-
 /*****************************
  Unit Rules
  *****************************/

@@ -28,6 +28,7 @@ public:
     cBuildingListItem *getItem(int i);    // return building list item in array at position.
     cBuildingListItem *getFirstItemInSubList(int sublistId);
     cBuildingListItem *getItemToPlace();        // return building list item with placeIt = true.
+    cBuildingListItem *getItemToDeploy();       // return building list item with deployIt = true.
 
     bool removeItemFromList(cBuildingListItem *item);
 

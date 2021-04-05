@@ -97,7 +97,7 @@ void cItemBuilder::think() {
 
         // DONE building
         if (item->getBuildType() == STRUCTURE) {
-            // play voice when placeIt is false
+            // play voice when placeIt is false`
             if (!item->shouldPlaceIt()) {
                 if (m_Player->isHuman()) {
                     play_voice(SOUND_VOICE_01_ATR); // "Construction Complete"
@@ -131,61 +131,64 @@ void cItemBuilder::think() {
 
         } else if (item->getBuildType() == SPECIAL) {
             buildingListUpdater->onBuildItemCompleted(item);
-            item->decreaseTimesToBuild(); // decrease amount of times to build
             const s_Special &special = item->getS_Special();
 
-            if (special.deployAt == AT_STRUCTURE) {
-                if (special.providesType == UNIT) {
-                    deployUnit(item, special.providesTypeId);
-                }
-                item->stopBuilding();
-                removeItemFromList(item);
-            } else if (special.deployAt == AT_RANDOM_CELL) {
-                if (special.providesType == UNIT) {
-                    // determine cell
-                    cCellCalculator cellCalculator = cCellCalculator(&map);
-                    int iCll = cellCalculator.getCellWithMapBorders(4 + rnd(game.map_width - 8), 4 + rnd(game.map_height - 8));
-
-                    for (int j = 0; j < special.units; j++) {
-                        bool passable = map.isCellPassableForFootUnits(iCll);
-
-                        if (passable) {
-                            UNIT_CREATE(iCll, special.providesTypeId, FREMEN, false);
-                        } else {
-                            REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
-                        }
-
-                        int x = iCellGiveX(iCll);
-                        int y = iCellGiveY(iCll);
-                        int amount = rnd(2) + 1;
-
-                        // randomly shift the cell one coordinate up/down/left/right
-                        switch (rnd(4)) {
-                            case 0:
-                                x += amount;
-                                break;
-                            case 1:
-                                y+= amount;
-                                break;
-                            case 2:
-                                x -= amount;
-                                break;
-                            case 3:
-                                y -= amount;
-                                break;
-                        }
-                        // change cell
-                        FIX_POS(x, y);
-
-                        iCll = cellCalculator.getCell(x, y);
+            if (special.providesType == eBuildType::UNIT) {
+                item->decreaseTimesToBuild(); // decrease amount of times to build
+                if (special.deployAt == AT_STRUCTURE) {
+                    if (special.providesType == UNIT) {
+                        deployUnit(item, special.providesTypeId);
                     }
-                }
-                item->stopBuilding();
-                removeItemFromList(item);
-            }
+                    item->stopBuilding();
+                    removeItemFromList(item);
+                } else if (special.deployAt == AT_RANDOM_CELL) {
+                    if (special.providesType == UNIT) {
+                        // determine cell
+                        cCellCalculator cellCalculator = cCellCalculator(&map);
+                        int iCll = cellCalculator.getCellWithMapBorders(4 + rnd(game.map_width - 8),
+                                                                        4 + rnd(game.map_height - 8));
 
-            if (special.deployAt == AT_STRUCTURE) {
-                item->setDeployIt(true);
+                        for (int j = 0; j < special.units; j++) {
+                            bool passable = map.isCellPassableForFootUnits(iCll);
+
+                            if (passable) {
+                                UNIT_CREATE(iCll, special.providesTypeId, FREMEN, false);
+                            } else {
+                                REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
+                            }
+
+                            int x = iCellGiveX(iCll);
+                            int y = iCellGiveY(iCll);
+                            int amount = rnd(2) + 1;
+
+                            // randomly shift the cell one coordinate up/down/left/right
+                            switch (rnd(4)) {
+                                case 0:
+                                    x += amount;
+                                    break;
+                                case 1:
+                                    y += amount;
+                                    break;
+                                case 2:
+                                    x -= amount;
+                                    break;
+                                case 3:
+                                    y -= amount;
+                                    break;
+                            }
+                            // change cell
+                            FIX_POS(x, y);
+
+                            iCll = cellCalculator.getCell(x, y);
+                        }
+                    }
+                    item->stopBuilding();
+                    removeItemFromList(item);
+                }
+            } else if (special.providesType == eBuildType::BULLET) {
+                if (special.deployAt == AT_STRUCTURE) {
+                    item->setDeployIt(true);
+                }
             }
         } else if (item->getBuildType() == UPGRADE) {
             buildingListUpdater->onUpgradeCompleted(item);

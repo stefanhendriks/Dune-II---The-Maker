@@ -97,7 +97,7 @@ void cSideBar::thinkInteraction() {
 
 		// interaction is possible.
 		if (list->isOverButton(mouse_x, mouse_y)) {
-			if (MOUSE_BTN_LEFT()) {
+            if (cMouse::isLeftButtonPressed()) {
 				// clicked on it. Set focus on this one
 				selectedListID = i;
 				char msg[255];
@@ -148,6 +148,8 @@ void cSideBar::thinkInteraction() {
             // icon is in "Place it" mode, meaning if clicked the "place the thing" state should be set
             if (item->shouldPlaceIt()) {
                 game.bPlaceIt = true;
+            } else if (item->shouldDeployIt()) {
+                game.bDeployIt = true;
             } else {
                 startBuildingItemIfOk(item);
             }
@@ -169,6 +171,7 @@ void cSideBar::thinkInteraction() {
             if (item->getTimesToBuild() > 0) {
                 item->decreaseTimesToBuild();
                 item->setPlaceIt(false);
+                item->setDeployIt(false);
 
                 if (item->getTimesToBuild() == 0) {
                     cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "(Human) Item is last item in queue, will give money back.");
