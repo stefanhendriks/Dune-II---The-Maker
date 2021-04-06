@@ -134,13 +134,17 @@ void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGa
 
         // select list that belongs to structure when it is ours
         cAbstractStructure * theSelectedStructure = structure[game.selected_structure];
-        if (theSelectedStructure->getOwner() == HUMAN) {
-            int typeOfStructure = theSelectedStructure->getType();
-            cListUtils listUtils;
-            int listId = listUtils.findListTypeByStructureType(typeOfStructure);
-            if (listId != LIST_NONE) {
-                humanPlayer.getSideBar()->setSelectedListId(listId);
+        if (theSelectedStructure) {
+            if (theSelectedStructure->getOwner() == HUMAN) {
+                int typeOfStructure = theSelectedStructure->getType();
+                cListUtils listUtils;
+                int listId = listUtils.findListTypeByStructureType(typeOfStructure);
+                if (listId != LIST_NONE) {
+                    humanPlayer.getSideBar()->setSelectedListId(listId);
+                }
             }
+        } else {
+            game.selected_structure = -1;
         }
     }
 }
