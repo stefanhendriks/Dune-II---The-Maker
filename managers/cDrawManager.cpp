@@ -155,7 +155,7 @@ void cDrawManager::drawDeployment() {
             const s_Special &special = itemToDeploy->getS_Special();
             if (special.providesType == eBuildType::BULLET) {
                 // from where
-                int structureId = structureUtils.findStructureBy(this->m_Player->getId(), special.deployAtStructureType,
+                int structureId = structureUtils.findStructureBy(this->m_Player->getId(), special.deployAtStructure,
                                                                  false);
                 if (structureId > -1) {
                     cAbstractStructure *pStructure = structure[structureId];

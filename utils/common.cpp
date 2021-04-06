@@ -603,11 +603,14 @@ void install_specials() {
         specials[i].icon = -1;
         specials[i].providesType = eBuildType::UNIT;
         specials[i].buildTime = 0;
-        specials[i].deployAt = eDeployType::AT_RANDOM_CELL;
-        specials[i].deployAtStructureType = -1;
+        specials[i].deployFrom = eDeployFromType::AT_RANDOM_CELL;
+        specials[i].deployAtStructure = -1;
         specials[i].units = 0;
         specials[i].house = eHouseBitFlag::Unknown;
         specials[i].autoBuild = false;
+        specials[i].deployTargetType = eDeployTargetType::TARGET_NONE;
+        specials[i].listId = -1;
+        specials[i].subListId = -1;
         strcpy(specials[i].description, "\0");
     }
 
@@ -617,8 +620,8 @@ void install_specials() {
     specials[SPECIAL_SABOTEUR].autoBuild=true;
     specials[SPECIAL_SABOTEUR].providesType = eBuildType::UNIT;
     specials[SPECIAL_SABOTEUR].providesTypeId = SABOTEUR;
-    specials[SPECIAL_SABOTEUR].deployAt = eDeployType::AT_STRUCTURE;
-    specials[SPECIAL_SABOTEUR].deployAtStructureType = PALACE;
+    specials[SPECIAL_SABOTEUR].deployFrom = eDeployFromType::AT_STRUCTURE;
+    specials[SPECIAL_SABOTEUR].deployAtStructure = PALACE;
     specials[SPECIAL_SABOTEUR].units = 1;
     specials[SPECIAL_SABOTEUR].buildTime = 10;
     specials[SPECIAL_SABOTEUR].listId=LIST_PALACE;
@@ -631,8 +634,8 @@ void install_specials() {
     specials[SPECIAL_FREMEN].autoBuild=true;
     specials[SPECIAL_FREMEN].providesType = eBuildType::UNIT;
     specials[SPECIAL_FREMEN].providesTypeId = UNIT_FREMEN_THREE;
-    specials[SPECIAL_FREMEN].deployAt = eDeployType::AT_RANDOM_CELL;
-    specials[SPECIAL_FREMEN].deployAtStructureType = PALACE; // This is not used with AT_RANDOM_CELL ...
+    specials[SPECIAL_FREMEN].deployFrom = eDeployFromType::AT_RANDOM_CELL;
+    specials[SPECIAL_FREMEN].deployAtStructure = PALACE; // This is not used with AT_RANDOM_CELL ...
     specials[SPECIAL_FREMEN].units = 6; // ... but this is
     specials[SPECIAL_FREMEN].buildTime = 10;
     specials[SPECIAL_FREMEN].listId=LIST_PALACE;
@@ -645,8 +648,9 @@ void install_specials() {
     specials[SPECIAL_DEATHHAND].autoBuild=true;
     specials[SPECIAL_DEATHHAND].providesType = eBuildType::BULLET;
     specials[SPECIAL_DEATHHAND].providesTypeId = ROCKET_BIG;
-    specials[SPECIAL_DEATHHAND].deployAt = eDeployType::AT_STRUCTURE; // the rocket is fired FROM ...
-    specials[SPECIAL_DEATHHAND].deployAtStructureType = PALACE; // ... the palace
+    specials[SPECIAL_DEATHHAND].deployFrom = eDeployFromType::AT_STRUCTURE; // the rocket is fired FROM ...
+    specials[SPECIAL_DEATHHAND].deployAtStructure = PALACE; // ... the palace
+    specials[SPECIAL_DEATHHAND].deployTargetType = eDeployTargetType::TARGET_INACCURATE_CELL;
     specials[SPECIAL_DEATHHAND].units = 1;
     specials[SPECIAL_DEATHHAND].buildTime = 10;
     specials[SPECIAL_DEATHHAND].listId=LIST_PALACE;
@@ -684,7 +688,7 @@ void install_bullets()
   bullets[ROCKET_BIG].damage_inf = 999;
   bullets[ROCKET_BIG].max_frames = 1;
   bullets[ROCKET_BIG].sound = SOUND_ROCKET;
-  bullets[ROCKET_BIG].explosionSize = 5;
+  bullets[ROCKET_BIG].explosionSize = 7;
 
 
     // small rocket (for ornithopter)

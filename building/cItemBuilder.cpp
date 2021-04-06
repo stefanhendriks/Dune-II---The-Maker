@@ -135,13 +135,13 @@ void cItemBuilder::think() {
 
             if (special.providesType == eBuildType::UNIT) {
                 item->decreaseTimesToBuild(); // decrease amount of times to build
-                if (special.deployAt == AT_STRUCTURE) {
+                if (special.deployFrom == AT_STRUCTURE) {
                     if (special.providesType == UNIT) {
                         deployUnit(item, special.providesTypeId);
                     }
                     item->stopBuilding();
                     removeItemFromList(item);
-                } else if (special.deployAt == AT_RANDOM_CELL) {
+                } else if (special.deployFrom == AT_RANDOM_CELL) {
                     if (special.providesType == UNIT) {
                         // determine cell
                         cCellCalculator cellCalculator = cCellCalculator(&map);
@@ -186,7 +186,7 @@ void cItemBuilder::think() {
                     removeItemFromList(item);
                 }
             } else if (special.providesType == eBuildType::BULLET) {
-                if (special.deployAt == AT_STRUCTURE) {
+                if (special.deployFrom == AT_STRUCTURE) {
                     item->setDeployIt(true);
                 }
             }

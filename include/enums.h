@@ -97,12 +97,27 @@ enum eBuildType {
     BULLET     // 4 (ie, used for super weapon)
 };
 
-enum eDeployType {
-    /**
-     * Player specifies cell where to deploy.
-     */
-    AT_SPECIFIC_CELL,
+enum eDeployTargetType {
+    TARGET_NONE,
 
+    /**
+     * Player specifies exactly cell where to deploy.
+     */
+    TARGET_SPECIFIC_CELL,
+
+    /**
+     * Player specifies cell where to deploy, but the actual cell to deploy
+     * is determined by make it more inaccurate. The inaccuracy is determined by
+     * a different variable.
+     */
+    TARGET_INACCURATE_CELL,
+};
+
+/**
+ * Used to determine how deployment is arranged. Usually AT_STRUCTURE is default behavior (ie for spawning next
+ * of a structure. AT_RANDOM_CELL is used for Fremen Super Weapon.
+ */
+enum eDeployFromType {
     /**
      * Random cell
      */

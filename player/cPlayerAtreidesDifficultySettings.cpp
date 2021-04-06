@@ -8,23 +8,23 @@ cPlayerAtreidesDifficultySettings::~cPlayerAtreidesDifficultySettings() {
 
 }
 
-int cPlayerAtreidesDifficultySettings::getBuildSpeed(int iSpeed) {
+float cPlayerAtreidesDifficultySettings::getBuildSpeed(int iSpeed) {
 	return iSpeed;
 }
 
-int cPlayerAtreidesDifficultySettings::getDumpSpeed(int iSpeed) {
+float cPlayerAtreidesDifficultySettings::getDumpSpeed(int iSpeed) {
 	return iSpeed;
 }
 
-int cPlayerAtreidesDifficultySettings::getHarvestSpeed(int iSpeed) {
+float cPlayerAtreidesDifficultySettings::getHarvestSpeed(int iSpeed) {
 	return iSpeed;
 }
 
-int cPlayerAtreidesDifficultySettings::getInflictDamage(int iDamageInflicted) {
+float cPlayerAtreidesDifficultySettings::getInflictDamage(int iDamageInflicted) {
 	return iDamageInflicted;
 }
 
-int cPlayerAtreidesDifficultySettings::getMoveSpeed(int iUnitType, int terrainSlowDown) {
+float cPlayerAtreidesDifficultySettings::getMoveSpeed(int iUnitType, int terrainSlowDown) {
 	return (int)(units[iUnitType].speed) + terrainSlowDown;
 }
 
