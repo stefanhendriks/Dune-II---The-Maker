@@ -9,15 +9,15 @@ public:
 	cPlayerAtreidesDifficultySettings();
 	~cPlayerAtreidesDifficultySettings();
 
-	int getMoveSpeed(int iUnitType, int terrainSlowDown);	// get move speed of a unit
+	float getMoveSpeed(int iUnitType, int terrainSlowDown);	// get move speed of a unit
 
-	int getBuildSpeed(int iSpeed);		// get build speed
+	float getBuildSpeed(int iSpeed);		// get build speed
 
-	int getHarvestSpeed(int iSpeed);	// get harvesting speed
+	float getHarvestSpeed(int iSpeed);	// get harvesting speed
 
-	int getDumpSpeed(int iSpeed);		// get harvester 'dumping spice in refinery' speed
+	float getDumpSpeed(int iSpeed);		// get harvester 'dumping spice in refinery' speed
 
-	int getInflictDamage(int iDamageInflicted);	// get damage inflicted by this house
+	float getInflictDamage(int iDamageInflicted);	// get damage inflicted by this house
 
 };
 

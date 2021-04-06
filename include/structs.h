@@ -170,13 +170,15 @@ struct s_Special {
 
     int units;   // amount of units to spawn at once
 
-    eDeployType deployAt; // for Fremen, deploys unit to random cell
+    eDeployFromType deployFrom; // for Fremen, deploys unit to random cell
+
+    eDeployTargetType deployTargetType; // for ie DeathHand, how 'accurate' the deploy target will become
 
     unsigned char house; // which house(s) have access to this?
 
     bool autoBuild; // if true, then this item is built automatically
 
-    int deployAtStructureType; // if deployAt == STRUCTURE, then this is the structure type to deploy at
+    int deployAtStructure; // if deployFrom == STRUCTURE, then this is the structure type to deploy at
 
     int listId;
     int subListId;

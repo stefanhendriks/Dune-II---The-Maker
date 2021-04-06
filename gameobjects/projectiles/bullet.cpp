@@ -224,7 +224,7 @@ void cBullet::think_move() {
 
         // non flying bullets hit against a wall, except for bullets from turrets
         if (cellTypeAtCell == TERRAIN_WALL && !isTurretBullet()) {
-            damageWall(iCell);
+            damageWall(iCell, 0);
         }
 
         if (idOfStructureAtCell > -1) {
@@ -245,7 +245,7 @@ void cBullet::think_move() {
             }
 
             if (bHitsEnemyBuilding) {
-                damageStructure(idOfStructureAtCell);
+                damageStructure(idOfStructureAtCell, 0);
             }
         }
     } // non-flying bullets
@@ -260,33 +260,43 @@ void cBullet::arrivedAtGoalLogic() {
 
     s_Bullet const &sBullet = gets_Bullet();
 
-    int cellToDamage = iCell;
-
     // damage is inflicted to size of explosion
     int x = iCellGiveX(iCell);
     int y = iCellGiveY(iCell);
 
-    int startX = x - ((sBullet.explosionSize - 1) / 2);
-    int startY = y - ((sBullet.explosionSize - 1) / 2);
-    int endX = x + sBullet.explosionSize;
-    int endY = y + sBullet.explosionSize;
+    int halfExplosionSize = std::round((float)(sBullet.explosionSize / 2));
+    int startX = (x - halfExplosionSize);
+    int startY = (y - halfExplosionSize);
+    int endX = x + (halfExplosionSize + 1);
+    int endY = y + (halfExplosionSize + 1);
 
-    int iCx = -1;
-    int iCy = -1;
+    float maxDistanceFromCenter = halfExplosionSize + 0.5f;
     for (int sx = startX; sx < endX; sx++) {
         for (int sy = startY; sy < endY; sy++) {
-            iCx = sx;
-            iCy = sy;
+            int iCx = sx;
+            int iCy = sy;
             FIX_BORDER_POS(iCx, iCy);
 
             int cellToDamage = iCellMake(iCx, iCy);
 
-            damageStructure(cellToDamage);                 // damage structure at cell if applicable
-            damageWall(cellToDamage);                      // damage wall if applicable
-            detonateSpiceBloom(cellToDamage);              // detonate spice bloom if applicable
-            damageSandworm(cellToDamage);                  // inflict damage on sandworm if applicable
-            damageGroundUnit(cellToDamage);                // inflict damage on ground unit if applicable
-            damageAirUnit(cellToDamage);                   // inflict damage on air unit (if rocket)
+            float actualDistance = ABS_length(iCx, iCy, x, y);
+            if (actualDistance > maxDistanceFromCenter) actualDistance = maxDistanceFromCenter;
+
+            float factor = 1.0f;
+            if (actualDistance > 1.0f) {
+                factor = 1.0f - (actualDistance / maxDistanceFromCenter);
+            }
+
+            char msg[255];
+            sprintf(msg, "iCell %d : cellToDamage : %d : ExplosionSize is %d, maxDistanceFromCenter is %f , actualDistance = %f, iCx=%d, iCy=%d and factor = %f", iCell, cellToDamage, sBullet.explosionSize, maxDistanceFromCenter, actualDistance, iCx, iCy, factor);
+            logbook(msg);
+
+            damageStructure(cellToDamage, factor);                 // damage structure at cell if applicable
+            damageWall(cellToDamage, factor);                      // damage wall if applicable
+            detonateSpiceBloom(cellToDamage, factor);              // detonate spice bloom if applicable
+            damageSandworm(cellToDamage, factor);                  // inflict damage on sandworm if applicable
+            damageGroundUnit(cellToDamage, factor);                // inflict damage on ground unit if applicable
+            damageAirUnit(cellToDamage, factor);                   // inflict damage on air unit (if rocket)
 
             // create particle of explosion
             if (sBullet.deadbmp > -1) {
@@ -299,16 +309,16 @@ void cBullet::arrivedAtGoalLogic() {
                 PARTICLE_CREATE(posX, posY, sBullet.deadbmp, -1, -1);
             }
 
-            damageTerrain(cellToDamage);
+            damageTerrain(cellToDamage, factor);
         }
     }
 
     die();
 }
 
-void cBullet::damageTerrain(int cell) const {
+void cBullet::damageTerrain(int cell, double factor) const {
     if (!bCellValid(cell)) return;
-    int iDamage = getDamageToInflictToNonInfantry();
+    float iDamage = getDamageToInflictToNonInfantry() * factor;
 
     int idOfStructureAtCell = map.getCellIdStructuresLayer(cell);
     int cellTypeAtCell = map.getCellType(cell);
@@ -335,14 +345,14 @@ bool cBullet::isSonicWave() const {
 /**
  * Handle damaging at cell, if cell is invalid or this bullet type is not a rocket, it will abort.
  */
-void cBullet::damageAirUnit(int cell) const {
+void cBullet::damageAirUnit(int cell, double factor) const {
     if (!bCellValid(cell)) return;
     if (!isRocket()) return;
     int id = map.getCellIdAirUnitLayer(cell);
     if (id < 0) return;
     if (iOwnerUnit > 0 && id == iOwnerUnit) return; // do not damage self
 
-    int iDamage = getDamageToInflictToNonInfantry();
+    float iDamage = getDamageToInflictToNonInfantry() * factor;
 
     cUnit &airUnit = unit[id];
     airUnit.takeDamage(iDamage);
@@ -363,14 +373,14 @@ void cBullet::damageAirUnit(int cell) const {
  * If cell param is invalid or no ground unit exists at (valid) cell, then this method aborts.
  * @param cell
  */
-void cBullet::damageGroundUnit(int cell) const {
+void cBullet::damageGroundUnit(int cell, double factor) const {
     if (!bCellValid(cell)) return;
     int id = map.getCellIdUnitLayer(cell);
     if (id < 0) return;
 
     cUnit &groundUnitTakingDamage = unit[id];
 
-    int iDamage = getDamageToInflictToUnit(groundUnitTakingDamage);
+    float iDamage = getDamageToInflictToUnit(groundUnitTakingDamage) * factor;
     groundUnitTakingDamage.takeDamage(iDamage);
 
     // this unit will think what to do now (he got hit ouchy!)
@@ -417,23 +427,23 @@ void cBullet::damageGroundUnit(int cell) const {
  * @param unitTakingDamage
  * @return
  */
-int cBullet::getDamageToInflictToUnit(cUnit &unitTakingDamage) const {
+float cBullet::getDamageToInflictToUnit(cUnit &unitTakingDamage) const {
     if (unitTakingDamage.isInfantryUnit()) {
         return getDamageToInflictToInfantry();
     }
     return getDamageToInflictToNonInfantry();
 }
 
-int cBullet::getDamageToInflictToInfantry() const {
+float cBullet::getDamageToInflictToInfantry() const {
     cPlayerDifficultySettings *difficultySettings = getDifficultySettings();
 
-    int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage_inf);
+    float result = difficultySettings->getInflictDamage(bullets[iType].damage_inf);
 
     if (iOwnerUnit > -1) {
-        int iDam = unit[iOwnerUnit].fExpDamage() * iDamage;
-        iDamage = iDamage + iDam;
+        float fDam = unit[iOwnerUnit].fExpDamage() * result;
+        result += fDam;
     }
-    return iDamage;
+    return result;
 }
 
 /**
@@ -441,7 +451,7 @@ int cBullet::getDamageToInflictToInfantry() const {
  * if cell is invalid, or terrain is not TERRAIN_BLOOM; it will abort.
  * @param cell
  */
-void cBullet::detonateSpiceBloom(int cell) const {
+void cBullet::detonateSpiceBloom(int cell, double factor) const {
     if (!bCellValid(cell)) return;
     int cellTypeAtCell = map.getCellType(cell);
     if (cellTypeAtCell != TERRAIN_BLOOM) return;
@@ -452,13 +462,14 @@ void cBullet::detonateSpiceBloom(int cell) const {
     game.TIMER_shake = 20;
 }
 
-void cBullet::damageSandworm(int cell) const {
+void cBullet::damageSandworm(int cell, double factor) const {
     if (!bCellValid(cell)) return;
     int id = map.getCellIdWormsLayer(cell);
     if (id < 0) return; // bail
 
     cUnit &worm = unit[id];
-    worm.takeDamage(getDamageToInflictToNonInfantry());
+    float damage = getDamageToInflictToNonInfantry() * factor;
+    worm.takeDamage(damage);
 }
 
 bool cBullet::isAtGoalCell() const {
@@ -471,12 +482,12 @@ bool cBullet::isAtGoalCell() const {
  * If cell param provided is invalid, it aborts.
  * @param cell
  */
-void cBullet::damageWall(int cell) const {
+void cBullet::damageWall(int cell, double factor) const {
     if (!bCellValid(cell)) return;
     int cellTypeAtCell = map.getCellType(cell);
     if (cellTypeAtCell != TERRAIN_WALL) return;
 
-    int iDamage = getDamageToInflictToNonInfantry();
+    float iDamage = getDamageToInflictToNonInfantry() * factor;
 
     map.cellTakeDamage(cell, iDamage);
 
@@ -578,17 +589,17 @@ bool cBullet::isRocket() const {
            iType == ROCKET_RTURRET;
 }
 
-int cBullet::getDamageToInflictToNonInfantry() const {
+float cBullet::getDamageToInflictToNonInfantry() const {
     cPlayerDifficultySettings *pDifficultySettings = getDifficultySettings();
     const s_Bullet &sBullet = gets_Bullet();
-    int iDamage = pDifficultySettings->getInflictDamage(sBullet.damage);
+    float iDamage = pDifficultySettings->getInflictDamage(sBullet.damage);
 
     // increase damage by experience of unit
     if (iOwnerUnit > -1) {
         // extra damage by experience:
         cUnit &cUnit = unit[iOwnerUnit];
         if (cUnit.isValid()) { // in case the unit died while firing
-            int iDam = (cUnit.fExpDamage() * iDamage);
+            float iDam = (cUnit.fExpDamage() * iDamage);
             iDamage = iDamage + iDam;
         }
     }
@@ -616,14 +627,14 @@ cPlayer * cBullet::getPlayer() const {
  * @param difficultySettings
  * @param idOfStructureAtCell
  */
-void cBullet::damageStructure(int cell) {
-    if (!bCellValid(cell)) return;
-    int id = map.getCellIdStructuresLayer(cell);
+void cBullet::damageStructure(int idOfStructureAtCell, double factor) {
+    if (!bCellValid(idOfStructureAtCell)) return;
+    int id = map.getCellIdStructuresLayer(idOfStructureAtCell);
     if (id < 0) return; // bail
 
     cPlayerDifficultySettings *difficultySettings = getDifficultySettings();
 
-    int iDamage = difficultySettings->getInflictDamage(bullets[iType].damage);
+    float iDamage = difficultySettings->getInflictDamage(bullets[iType].damage) * factor;
 
     cUnit *pUnit = nullptr;
     if (iOwnerUnit > -1) {
