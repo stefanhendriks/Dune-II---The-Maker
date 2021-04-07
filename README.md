@@ -25,7 +25,7 @@ You have various options:
 - Compile this project yourself
 
 ## Compiling
-For [version 0.5.0](https://github.com/stefanhendriks/Dune-II---The-Maker/issues?q=milestone%3A%22version+0.5%22+) I have worked with CLion which uses CMake. Hence the `CMakeList.txt` file in the root of this project.
+For [version 0.5.0](https://github.com/stefanhendriks/Dune-II---The-Maker/milestone/1) I have worked with CLion which uses CMake. Hence the `CMakeList.txt` file in the root of this project.
 
 I've also used MinGW32, and the required libraries (ALFont, ALMP3, fblend, etc) are in the [lib folder](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/master/lib/mingw).
 
