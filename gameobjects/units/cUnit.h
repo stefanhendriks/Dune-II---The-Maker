@@ -82,10 +82,11 @@ public:
 
     // Action its doing:
     int iAction;        // ACTION_MOVE; ACTION_GUARD; ACTION_CHASE;
+    eUnitActionIntent intent;
 
     // Action given code 
     int iUnitID;        // Unit ID to attack/pickup, etc
-    int iStructureID;   // structure ID to attack/bring to (refinery)
+    int iStructureID;   // structure ID to attack/bring to (refinery)/capture
 
     // Harvester specific
     int iCredits;       // credits stored in this baby
@@ -132,7 +133,7 @@ public:
 
 	void die(bool bBlowUp, bool bSquish);			// die!
 
-    void poll();        // poll status
+    void updateCellXAndY();        // updateCellXAndY status
 
     void think();       // thinking in general
     void think_move_air();  // aircraft specific
@@ -146,10 +147,12 @@ public:
 
     void think_hit(int iShotUnit, int iShotStructure);
 
-    int isNextCell(); // what is the next cell to move to
+    int getNextCellToMoveTo(); // what is the next cell to move to
 
+    void move_to(int iGoalCell);
+    void move_to(int iCll, int iStrucID, int iUnitID, eUnitActionIntent intent);
     void move_to(int iCll, int iStrucID, int iUnitID);
-	
+
 	// carryall-functions:
 	void carryall_order(int iuID, int iTransfer, int iBring, int iTpe);
 
@@ -181,12 +184,35 @@ public:
      */
     float getHealthNormalized();
 
+    /**
+     * is this unit an airborn unit?
+     * @return
+     */
     bool isAirbornUnit() {
         return iType == CARRYALL || iType == ORNITHOPTER || iType == FRIGATE;
     }
 
+    /**
+     * An air unit that may be attacked according to generic game rules, ie this does not say anything
+     * about if the unit *can* attack it. (use canAttackAirUnits function for that)
+     * @return
+     */
+    bool isAttackableAirUnit() {
+        return iType == ORNITHOPTER;
+    }
+
     bool isHarvester() {
         return iType == HARVESTER;
+    }
+
+    bool isSandworm() const;
+
+    /**
+     * Can this unit attack air units?
+     * @return
+     */
+    bool canAttackAirUnits() {
+        return getUnitType().canAttackAirUnits;
     }
 
     bool isInfantryUnit();
@@ -207,8 +233,15 @@ public:
 
     void takeDamage(int damage) {
         iHitPoints -= damage;
+        if (isDead()) {
+            die(true, false);
+        }
     }
 
+    /**
+     * Returns true if dead (ie hitpoints <= 0)
+     * @return
+     */
     bool isDead() {
         return iHitPoints <= 0;
     }
@@ -219,12 +252,19 @@ public:
 
     void setMaxHitPoints();
 
+    cPlayer *getPlayer();
+
 private:
     int iHitPoints;     // hitpoints of unit
 
     bool isUnitWhoCanSquishInfantry();
 
-    bool isSandworm() const;
+    bool isSaboteur();
+
+    void forgetAboutCurrentPathAndPrepareToCreateNewOne();
+    void forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait);
+
+    eUnitMoveToCellResult moveToNextCellLogic();
 };
 
 
@@ -235,6 +275,7 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 
 void UNIT_deselect_all();
 void UNIT_ORDER_MOVE(int iUnitID, int iGoalCell);
+
 void UNIT_ORDER_ATTACK(int iUnitID, int iGoalCell, int iUnit, int iStructure, int iAttackCell);
 
 int UNIT_find_harvest_spot(int id);

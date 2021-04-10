@@ -65,6 +65,7 @@ void cDrawManager::drawCombatState() {
 	miniMapDrawer->draw();
 
 	drawStructurePlacing();
+	drawDeployment();
     drawTopBarBackground();
 	drawCredits();
 
@@ -118,14 +119,86 @@ void cDrawManager::drawSidebar() {
     sidebarDrawer->draw();
 }
 
+/**
+ * When placing a structure, draw a transparent version of the structure we want to place.
+ */
 void cDrawManager::drawStructurePlacing() {
+    if (game.bDeployIt) return; // do not do this
     if (!game.bPlaceIt) return;
+
 
     cBuildingListItem *itemToPlace = m_Player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
     if (itemToPlace == nullptr) return;
 
     assert(placeitDrawer);
     placeitDrawer->draw(itemToPlace);
+}
+
+/**
+ * When deploying something
+ */
+void cDrawManager::drawDeployment() {
+    if (game.bPlaceIt) return;
+    if (!game.bDeployIt) return;
+
+    // mouse attack special?
+    mouse_tile = MOUSE_ATTACK;
+
+    cBuildingListItem *itemToDeploy = m_Player->getSideBar()->getList(LIST_PALACE)->getItemToDeploy();
+    if (itemToDeploy == nullptr) return;
+
+    int iMouseCell = m_Player->getGameControlsContext()->getMouseCell();
+
+    //
+    if (cMouse::isLeftButtonClicked() && iMouseCell > -1) {
+        if (itemToDeploy->getBuildType() == eBuildType::SPECIAL) {
+            const s_Special &special = itemToDeploy->getS_Special();
+
+            int deployCell = -1;
+            if (special.deployTargetType == eDeployTargetType::TARGET_SPECIFIC_CELL) {
+                deployCell = iMouseCell;
+            } else if (special.deployTargetType == eDeployTargetType::TARGET_INACCURATE_CELL) {
+                int precision = special.deployTargetPrecision;
+                int mouseCellX = iCellGiveX(iMouseCell) - precision;
+                int mouseCellY = iCellGiveY(iMouseCell) - precision;
+
+                int posX = mouseCellX + rnd((precision*2) + 1);
+                int posY = mouseCellY + rnd((precision*2) + 1);
+                FIX_POS(posX, posY);
+
+                char msg[255];
+                sprintf(msg, "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = %d,%d - target pos =%d,%d - precision %d", mouseCellY, mouseCellY, posX, posY,
+                        precision);
+                logbook(msg);
+
+                deployCell = iCellMake(posX, posY);
+            }
+
+
+            if (special.providesType == eBuildType::BULLET) {
+                // from where
+                int structureId = structureUtils.findStructureBy(this->m_Player->getId(), special.deployAtStructure,
+                                                                 false);
+                if (structureId > -1) {
+                    cAbstractStructure *pStructure = structure[structureId];
+                    if (pStructure && pStructure->isValid()) {
+                        play_sound_id(SOUND_PLACE);
+                        create_bullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
+                    }
+                }
+            }
+        }
+
+        itemToDeploy->decreaseTimesToBuild();
+        itemToDeploy->setDeployIt(false);
+        itemToDeploy->setIsBuilding(false);
+        itemToDeploy->resetProgress();
+        if (itemToDeploy->getTimesToBuild() < 1) {
+            m_Player->getItemBuilder()->removeItemFromList(itemToDeploy);
+        }
+
+        game.bDeployIt = false;
+    }
 }
 
 void cDrawManager::drawMessage() {

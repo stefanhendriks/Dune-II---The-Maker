@@ -101,6 +101,13 @@ void cBuildingList::addUnitToList(int unitType, int subList) {
     }
 }
 
+void cBuildingList::addSpecialToList(int specialType, int subList) {
+    cBuildingListItem *item = new cBuildingListItem(specialType, specials[specialType], subList);
+    if (!addItemToList(item)) {
+        delete item;
+    }
+}
+
 bool cBuildingList::addItemToList(cBuildingListItem * item) {
 	if (isItemInList(item)) {
 		logbook("Will not add, item is already in list.");
@@ -213,6 +220,10 @@ std::array<int, 5> cBuildingList::isBuildingItem() {
 }
 
 
+// TODO: This should be set, not looked up. Ie, the item to place should be set somewhere (instead of setting
+// placeIt = true, so that we *know* which item to place, and not have to retrospectively decide which item we where
+// placing - this makes no sense. Especially when we are going to deploy stuff later as well... (and we assume
+// that placement is ALWAYS from CONSTYARD; deployment from PALACE. Which may work, but is not flexible at all.
 cBuildingListItem * cBuildingList::getItemToPlace() {
 	for (int i = 0 ; i < MAX_ITEMS; i++) {
 		cBuildingListItem *item = getItem(i);
@@ -220,6 +231,23 @@ cBuildingListItem * cBuildingList::getItemToPlace() {
 		if (item) {
 			// get isBuilding
 			if (item->shouldPlaceIt()) {
+				return item;
+			}
+		}
+	}
+	return NULL;
+}
+
+// TODO: This should be set, not looked up. Ie, the item to place should be set somewhere (instead of setting
+// deployIt = true, so that we *know* which item to place, and not have to retrospectively decide which item we where
+// deploying - this makes no sense.
+cBuildingListItem * cBuildingList::getItemToDeploy() {
+	for (int i = 0 ; i < MAX_ITEMS; i++) {
+		cBuildingListItem *item = getItem(i);
+		// valid pointer
+		if (item) {
+			// get isBuilding
+			if (item->shouldDeployIt()) {
 				return item;
 			}
 		}

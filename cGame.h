@@ -15,9 +15,14 @@
 #ifndef D2TM_GAME_H
 #define D2TM_GAME_H
 
+//#include <controls/cGameControlsContext.h>
+//#include <player/cPlayer.h>
+
 // forward declaration :/ sigh should really look into these includes and such
 class cRectangle;
 class cAbstractMentat;
+class cPlayer;
+class cGameControlsContext;
 
 class cGame {
 
@@ -83,8 +88,13 @@ public:
     void winning();       // winning
     void losing();        // losing
 
+    // TODO: This belongs to a Mouse state?
 	bool bPlaceIt;		// placing something? (for structures only)
 	bool bPlacedIt;		// for remembering, for combat_mouse stuff..
+
+    // TODO: This belongs to a Mouse state?
+	bool bDeployIt;		// deploying something? (for palace)
+	bool bDeployedIt;   // for remembering, for combat_mouse stuff..
 
 	void setup_players();
 
@@ -129,7 +139,7 @@ public:
     void think_state();
 
 private:
-	void poll();
+	void updateState();
 	void combat();		// the combat part (main) of the game
 	bool isMusicPlaying();
 
@@ -157,6 +167,17 @@ private:
     int fade_select;        // fade color when selected
     bool bFadeSelectDir;    // fade select direction
     void prepareMentatToTellAboutHouse(int house);
+
+    void combat_mouse_normalCombatInteraction(cGameControlsContext *context, cPlayer &humanPlayer,
+                                              bool &bOrderingUnits) const;
+
+    void mouse_combat_dragViewportInteraction() const;
+
+    void mouse_combat_resetDragViewportInteraction() const;
+
+    void
+    mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGameControlsContext *context,
+                                               bool bOrderingUnits) const;
 };
 
 #endif

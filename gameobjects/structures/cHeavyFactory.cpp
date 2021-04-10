@@ -8,8 +8,7 @@ cHeavyFactory::cHeavyFactory()
 
 }
 
-
-int cHeavyFactory::getType() {
+int cHeavyFactory::getType() const {
 	return HEAVYFACTORY;
 }
 

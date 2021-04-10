@@ -117,24 +117,15 @@
 // GAME (MENU) FLAGS: (used when GAME_MENU)
 // Game menu state machine
 
-#define HUMAN			0
-// PLAYER/AI stuff
-// 0 = HUMAN			== ALLIES WITH FREMEN WHEN ATREIDES
-// 1 = CPU (Atreides)
-// 2 = CPU (Harkonnen)
-// 3 = CPU (Ordos)
-// 4 = CPU (Sardaukar)	== ALLIES WITH EVERYBODY (EXCEPT PLAYER)
-// 5 = CPU (Fremen)		== ALLIES WITH ATREIDES
-// 6 = WORM
+#define HUMAN			0  // 0 = HUMAN			== ALLIES WITH FREMEN WHEN ATREIDES
+#define AI_CPU1         1  // 1 = CPU (Atreides)
+#define AI_CPU2         2  // 2 = CPU (Harkonnen)
+#define AI_CPU3         3  // 3 = CPU (Ordos)
+#define AI_CPU4         4  // 4 = CPU (Sardaukar)	== ALLIES WITH EVERYBODY (EXCEPT PLAYER)
+#define AI_CPU5         5  // 5 = CPU (Fremen)		== ALLIES WITH ATREIDES
+#define AI_CPU6         6  // 6 = WORM
+#define AI_WORM			AI_CPU6
 #define MAX_PLAYERS       7
-
-#define AI_WORM			  6
-
-#define THINK_PLAYER      1      // real player is thinking for this one
-#define THINK_CLIENT      2      // this ID is a client; so this is updated through the network
-#define THINK_SERVER      3      // this ID is the server (??)
-#define THINK_NONE        4      // un-used slot
-#define THINK_CPU         99     // computer thinks for this player
 
 // HOUSES stuff
 #define MAX_HOUSES        12      // 12 different type of houses
@@ -144,6 +135,9 @@
 
 // UPGRADES stuff
 #define MAX_UPGRADETYPES       50    // maximum of upgrades
+
+// SPECIALS (super weapons) stuff
+#define MAX_SPECIALTYPES       10    // maximum of specials
 
 // STRUCTURES stuff
 #define MAX_STRUCTURETYPES  50    // max of building types
@@ -273,18 +267,22 @@
 #define SANDWORM		  17
 
 // special units
-#define SABOTEUR		  19  // special unit
-#define UNIT_FREMEN_ONE       20  // special unit(s) for fremen support
-#define UNIT_FREMEN_THREE       21  // special unit(s) for fremen support
-#define MISSILE			  22  // unit abusal id for missile (death hand)
+#define SABOTEUR		    19
+#define UNIT_FREMEN_ONE     20
+#define UNIT_FREMEN_THREE   21
 
 // Frigate
 #define FRIGATE           29  // air unit (should be last!!)
 
+// Specials (super weapons)
+#define SPECIAL_SABOTEUR		0
+#define SPECIAL_FREMEN          1  // special unit(s) for fremen support
+#define SPECIAL_DEATHHAND       2
+
 // Bullet types
 #define ROCKET_SMALL      0   // small rocket (trooper/troopers)
 #define ROCKET_NORMAL     1   // normal rocket (turret/launcher/deviator)
-#define ROCKET_BIG        2   // big rocket (palace, nuclear)
+#define ROCKET_BIG        2   // big rocket (palace, nuclear/deathhand/missile)
 #define BULLET_SMALL      3   // infantry bullet
 #define BULLET_TRIKE      4   // a trike bullet, looks like infantry but is stronger
 #define BULLET_QUAD       5   // a quad bullet

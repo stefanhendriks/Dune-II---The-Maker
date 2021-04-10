@@ -252,8 +252,14 @@ double length(int x1, int y1, int x2, int y2) {
 }
 
 
-// ABS
-// returns length between 2 points
+/**
+ * returns length between 2 points, always > 0. If x and y match, distance is 1.
+ * @param x1
+ * @param y1
+ * @param x2
+ * @param y2
+ * @return
+ */
 double ABS_length(int x1, int y1, int x2, int y2) {
   if (x1 == x2 && y1 == y2) return 1; // when all the same, distance is 1 ...
 

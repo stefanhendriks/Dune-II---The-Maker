@@ -33,6 +33,8 @@ class cAbstractStructure {
 		bool bAnimate;      // Do its special animation? (unit leaving building, starport
 							// dropping something, etc)
 
+		bool dead;		// set to true when die() is called, and thus this structure can be deleted.
+
 
 	protected:
         int id;				// the id within the structure[] array
@@ -80,7 +82,7 @@ class cAbstractStructure {
 		virtual void think_animation()=0; // think animation stuff
 		virtual void think_guard();       // think guard stuff
 
-		virtual int getType()=0;		  // implementation gives type of structure
+		virtual int getType() const = 0;		  // implementation gives type of structure
 		void think_prebuild();            // prebuild animation
 		void think_repair();              // repair thinking
 		void think_damage();              // think about damaging through time
@@ -102,7 +104,7 @@ class cAbstractStructure {
 		// convenience get method, which should eventually only be used in rare cases as all properties should be
 		// TODO: copied from this struct to this class, so each structure can change the properties without
 		// changing the entire game rules.
-		s_Structures getS_StructuresType();
+		s_Structures getS_StructuresType() const;
 		cPlayer * getPlayer();
 
 		// Really sure you need this? You can use getPlayer() ?
@@ -113,6 +115,8 @@ class cAbstractStructure {
 
 		int pos_x();
 		int pos_y();
+
+		bool isDead() { return dead; } // if set, then it is elegible for cleanup
 
 		int getArmor() { return armor; }
 		int getWidth() { return iWidth; }
@@ -126,6 +130,7 @@ class cAbstractStructure {
 		int getFrame() { return iFrame; }
 		int getStructureId() { return id; }
 		int getMaxHP();
+		int getCaptureHP();
 		int getSight();
 		int getRange();
 		int getPercentageNotPaved();
@@ -138,6 +143,7 @@ class cAbstractStructure {
 		bool hasUnitWithin() const { return iUnitID > -1; }
 		int getUnitIdWithin() const { return iUnitID; }
 		bool isValid();
+		bool canAttackAirUnits() const { return getS_StructuresType().canAttackAirUnits; }
 
 
 		void setHeight(int height);

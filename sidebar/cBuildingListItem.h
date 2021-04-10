@@ -16,8 +16,9 @@ public:
 	// uber constructor
     cBuildingListItem(eBuildType type, int buildId, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList, bool queuable);
 
-	// easier constructors
+	// easier constructors (they have no LIST, this is intentional and assigned later to the item by add**toList functions in the cBuildingList.cpp class
     cBuildingListItem(int theID, s_Structures entry, int subList);
+    cBuildingListItem(int theID, s_Special entry, int subList);
     cBuildingListItem(int theID, s_UnitP entry, int subList);
     cBuildingListItem(int theID, s_Upgrade entry, int subList);
 
@@ -67,6 +68,7 @@ public:
 	int getSlotId() { return slotId; } // return index of items[] array (set after adding item to list, default is < 0)
 	int getTimesOrdered() { return timesOrdered; }
 
+	s_Special getS_Special();
 	s_Upgrade getS_Upgrade();
 	s_UnitP getS_UnitP();
 	s_Structures getS_Structures();
@@ -78,12 +80,17 @@ public:
 	float getRefundAmount();
 
 	bool shouldPlaceIt() { return placeIt; }
+	bool shouldDeployIt() { return deployIt; }
 	bool isQueuable() { return queuable; }
 
 	// setters
 	void setIconId(int value) { icon = value; }
 	void setBuildCost(int value) { cost = value; }
 	void setIsBuilding(bool value) { building = value; }
+	void stopBuilding() {
+	    setIsBuilding(false);
+	    resetProgress();
+	}
 	void setStatusPendingUpgrade() { state = eBuildingListItemState::PENDING_UPGRADE; }
 	void setStatusAvailable() { state = eBuildingListItemState::AVAILABLE; }
 	void setStatusPendingBuilding() { state = eBuildingListItemState::PENDING_BUILDING; }
@@ -103,6 +110,7 @@ public:
 	void decreaseTimesOrdered() { timesOrdered--; }
 	void setSlotId(int value) { slotId = value; }
 	void setPlaceIt(bool value) { placeIt = value; }
+	void setDeployIt(bool value) { deployIt = value; }
 	void setList(cBuildingList *theList) { myList = theList; }
 
 	cBuildingList *getList() { return myList; }	// returns the list it belongs to
@@ -114,15 +122,36 @@ public:
     eListType getListType();
 
     void increaseProgress(int byAmount);
-	void resetProgress() { progress = 0; }
+
+    void resetProgress() {
+	    progress = 0;
+        buildFrameToDraw = 0;
+        TIMER_progressFrame = 0.0f;
+	}
 
     int getBuildTime();
 
     bool isDoneBuilding();
 
 	bool isTypeUpgrade();
+	bool isTypeSpecial();
+	bool isTypeUnit();
+	bool isTypeStructure();
 
     void resetTimesOrdered();
+
+    void increaseBuildProgressFrame() { buildFrameToDraw++; }
+    int getBuildProgressFrame() { return buildFrameToDraw; }
+
+    int calculateBuildProgressFrameBasedOnBuildProgress();
+
+    void decreaseProgressFrameTimer();
+
+    float getProgressFrameTimer();
+
+    void resetProgressFrameTimer();
+
+    void setTimerCap(int i);
 
 private:
 	void setProgress(int value) { progress = value; }
@@ -134,22 +163,30 @@ private:
 	bool building;			// building this item? (default = false)
 	eBuildingListItemState state;
 	int progress;			// progress building this item
+	int buildFrameToDraw;   // for the progress drawing
 	int timesToBuild;		// the amount of times to build this item (queueing) (meaning, when building = true, this should be 1...)
 	int timesOrdered;		// the amount of times this item has been ordered (starport related)
 	int slotId;			 	// return index of items[] array (set after adding item to list, default is < 0)
 
 	float creditsPerProgressTime; // credits to pay for each progress point. (calculated at creation)
 	bool placeIt;			// when true, this item is ready for placement
+	bool deployIt;			// when true, this item is ready for deployment (FYI, super weapons)
 	bool queuable;			// when true, this item can be ordered multiple times to build
 
 	int totalBuildTime;		// total time it takes to build.
 	int subList;            // subList id's allow us to distinguish built items within the same buildingList.
+
+	float TIMER_progressFrame; // timer used for progress drawing animation
+	int timerCap;           // passed in by item builder (determined by power outage, etc)
 
 	cBuildingList *myList;
 
     cBuildingListItem(int theID, s_Structures entry, cBuildingList* list, int subList);
     cBuildingListItem(int theID, s_UnitP entry, cBuildingList* list, int subList);
     cBuildingListItem(int theID, s_Upgrade entry, cBuildingList* list, int subList);
+    cBuildingListItem(int theID, s_Special entry, cBuildingList *list, int subList);
+
+    bool isType(eBuildType value);
 };
 
 #endif

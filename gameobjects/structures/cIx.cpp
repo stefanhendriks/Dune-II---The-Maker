@@ -7,7 +7,7 @@ cIx::cIx() {
 
 }
 
-int cIx::getType() {
+int cIx::getType() const {
 	return IX;
 }
 

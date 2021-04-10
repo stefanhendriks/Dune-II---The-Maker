@@ -20,7 +20,9 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     this->totalBuildTime = totalBuildTime;
     this->type = type;
     this->queuable = queuable;
+    timerCap = 0;
     progress = 0;
+    buildFrameToDraw = 0;
     state = AVAILABLE;
     building = false;
     myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
@@ -32,6 +34,8 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
         creditsPerProgressTime = (float)this->cost / (float)this->totalBuildTime;
     }
     placeIt = false;
+    deployIt = false;
+    TIMER_progressFrame = 0.0f;
 }
 
 cBuildingListItem::~cBuildingListItem() {
@@ -50,6 +54,17 @@ cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingLis
 }
 
 /**
+ * Constructor for Specials
+ * @param theID
+ * @param entry
+ * @param list
+ * @param subList
+ */
+cBuildingListItem::cBuildingListItem(int theID, s_Special entry, cBuildingList *list, int subList) :
+                    cBuildingListItem(SPECIAL, theID, 0, entry.icon, entry.buildTime, list, subList, false) {
+}
+
+/**
  * Constructor for Upgrades
  * @param theID
  * @param entry
@@ -61,6 +76,9 @@ cBuildingListItem::cBuildingListItem(int theID, s_Upgrade entry, cBuildingList *
 }
 
 cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
+}
+
+cBuildingListItem::cBuildingListItem(int theID, s_Special entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
 }
 
 /**
@@ -125,6 +143,9 @@ int cBuildingListItem::getBuildTime() {
     if (type == UPGRADE) {
         return upgrades[buildId].buildTime;
     }
+    if (type == SPECIAL) {
+        return specials[buildId].buildTime;
+    }
     // assumes other things (ie super weapons and such) are also under 'units' array.
     return units[buildId].build_time;
 }
@@ -134,7 +155,23 @@ bool cBuildingListItem::isDoneBuilding() {
 }
 
 bool cBuildingListItem::isTypeUpgrade() {
-    return getBuildType() == eBuildType::UPGRADE;
+    return isType(eBuildType::UPGRADE);
+}
+
+bool cBuildingListItem::isTypeStructure() {
+    return isType(eBuildType::STRUCTURE);
+}
+
+bool cBuildingListItem::isTypeUnit() {
+    return isType(eBuildType::UNIT);
+}
+
+bool cBuildingListItem::isTypeSpecial() {
+    return isType(eBuildType::SPECIAL);
+}
+
+bool cBuildingListItem::isType(eBuildType value) {
+    return getBuildType() == value;
 }
 
 s_Upgrade cBuildingListItem::getS_Upgrade() {
@@ -144,6 +181,15 @@ s_Upgrade cBuildingListItem::getS_Upgrade() {
         buildId = 1;
     }
     return upgrades[buildId];
+}
+
+s_Special cBuildingListItem::getS_Special() {
+    int buildId = getBuildId();
+    if (getBuildType() != eBuildType::SPECIAL){
+        logbook("ERROR!!! - calling gets_Special while type is not SPECIAL! - falling back to buildId 1 as safety");
+        buildId = 1;
+    }
+    return specials[buildId];
 }
 
 s_UnitP cBuildingListItem::getS_UnitP() {
@@ -175,3 +221,36 @@ eListType cBuildingListItem::getListType() {
     return eListType::LIST_NONE;
 }
 
+int cBuildingListItem::calculateBuildProgressFrameBasedOnBuildProgress() {
+    // frame to draw (for building in progress)
+    int iFrame = health_bar(31, progress, getTotalBuildTime());
+
+    if (iFrame > 31) {
+        iFrame = 31;
+    }
+
+    return iFrame;
+}
+
+void cBuildingListItem::decreaseProgressFrameTimer() {
+    TIMER_progressFrame--;
+}
+
+float cBuildingListItem::getProgressFrameTimer() {
+    return TIMER_progressFrame;
+}
+
+void cBuildingListItem::resetProgressFrameTimer() {
+    // total time to build is progress * 35 (time unit).
+    // divide that by frames (31), and get the time between frames!
+    int timeSpent = timerCap * totalBuildTime;
+    if (timeSpent > 0) {
+        TIMER_progressFrame = timeSpent / 31;
+    } else {
+        TIMER_progressFrame = 0;
+    }
+}
+
+void cBuildingListItem::setTimerCap(int value) {
+    timerCap = value;
+}

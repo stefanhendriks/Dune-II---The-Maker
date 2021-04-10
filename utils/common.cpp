@@ -40,16 +40,21 @@ void logbook(const char *txt) {
   }
 }
 
+/**
+ * Returns true if x,y is within the playable map boundaries
+ * @param x
+ * @param y
+ * @return
+ */
 // determine if this cell is not out of boundries
-bool BORDER_POS(int x, int y)
-{
-	if (x < 1) return false;
-    if (x > (game.map_width-1)) return false;
+bool BORDER_POS(int x, int y) {
+    if (x < 1) return false;
+    if (x > (game.map_width - 2)) return false;
 
     if (y < 1) return false;
-    if (y > (game.map_height-1)) return false;
+    if (y > (game.map_height - 2)) return false;
 
-	return true; // the fix-border-pos function did not change/correct the positions! yay
+    return true;
 }
 
 /**
@@ -105,75 +110,51 @@ void FIX_POS(int &x, int &y) {
 }
 
 
-
-
-void INSTALL_PLAYERS()
-{
-	for (int i=0; i < MAX_PLAYERS; i++)
-		player[i].init(i);
+void INIT_ALL_PLAYERS() {
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        player[i].init(i);
+    }
 }
 
 
-
-void INSTALL_HOUSES()
-{
 /********************************
  House Rules
  ********************************/
+void INSTALL_HOUSES() {
+    // General / Default / No House
+    houses[GENERALHOUSE].swap_color = 128;
+    houses[GENERALHOUSE].minimap_color = makecol(128, 128, 128);
 
-  // General / Default / No House
-  houses[GENERALHOUSE].swap_color   = PAN_CENTER;
-  houses[GENERALHOUSE].minimap_color = makecol(PAN_CENTER, PAN_CENTER, PAN_CENTER);
+    // Harkonnen
+    houses[HARKONNEN].swap_color = -1;  // 144
+    houses[HARKONNEN].minimap_color = makecol(255, 0, 0);
 
-  // Harkonnen
-  houses[HARKONNEN].swap_color = -1;  // 144
-  houses[HARKONNEN].minimap_color = makecol(125,0,0);
+    // Atreides
+    houses[ATREIDES].swap_color = 160;
+    houses[ATREIDES].minimap_color = makecol(0, 0, 255);
 
-  // Atreides
-  houses[ATREIDES].swap_color  = 160;
-  houses[ATREIDES].minimap_color = makecol(24,32,125);
+    // Ordos
+    houses[ORDOS].swap_color = 176;
+    houses[ORDOS].minimap_color = makecol(0, 255, 0);
 
-  // Ordos
-  houses[ORDOS].swap_color     = 176;
-  houses[ORDOS].minimap_color = makecol(24,125,24);
+    // Mercenary
+    houses[MERCENARY].swap_color = 192;
+    houses[MERCENARY].minimap_color = makecol(214, 121, 16);
 
-  // Mercenary
-  houses[MERCENARY].swap_color    = 192;
-  houses[MERCENARY].minimap_color = makecol(214, 121, 16);
+    // Sardaukar
+    houses[SARDAUKAR].swap_color = 208;
+    houses[SARDAUKAR].minimap_color = makecol(255, 0, 255);
 
-  // Sardaukar
-  houses[SARDAUKAR].swap_color = 208;
-  houses[SARDAUKAR].minimap_color = makecol(137,24,137);
+    // Fremen
+    houses[FREMEN].swap_color = 224;
+    houses[FREMEN].minimap_color = makecol(194, 125, 60); // Fremen is colored as "sand" on the minimap
 
-  // Fremen
-  houses[FREMEN].swap_color = 224;
-  houses[FREMEN].minimap_color = makecol(214,149,0);
+    // GREY
 
-  // GREY
-
-  // Corrino (?)
-  houses[CORRINO].swap_color   = 136;
-  houses[CORRINO].minimap_color = makecol(192,192,192); // grey
-
+    // ???
+    houses[CORRINO].swap_color = 136;
+    houses[CORRINO].minimap_color = makecol(192, 192, 192); // grey
 }
-
-
-/**
- * Returns true if left mouse button is pressed.
- * @return
- */
-bool MOUSE_BTN_LEFT() {
-	return cMouse::isLeftButtonPressed();
-}
-
-/**
- * Returns true if right mouse button is pressed
- * @return
- */
-bool MOUSE_BTN_RIGHT() {
-	return cMouse::isRightButtonPressed();
-}
-
 
 /*****************************
  Unit Rules
@@ -220,6 +201,14 @@ void install_units()
     // list properties
     units[i].listId           = 0;
     units[i].subListId        = 0;
+
+    // attack related
+    units[i].canAttackAirUnits = false;
+
+    // capturing / damage upon entering structure related
+    units[i].canEnterAndDamageStructure = false;
+    units[i].attackIsEnterStructure = false;
+    units[i].damageOnEnterStructure = 0.0f;
 
     strcpy(units[i].name, "\0");
   }
@@ -359,6 +348,7 @@ void install_units()
   units[LAUNCHER].bullets = ROCKET_NORMAL; // our gassy rocket
   units[LAUNCHER].listId=LIST_UNITS;
   units[LAUNCHER].subListId=SUBLIST_HEAVYFCTRY;
+  units[LAUNCHER].canAttackAirUnits=true;
   strcpy(units[LAUNCHER].name, "Launcher");
 
   // Unit        : Quad
@@ -464,6 +454,9 @@ void install_units()
   units[SOLDIER].squish=false;
   units[SOLDIER].listId=LIST_FOOT_UNITS;
   units[SOLDIER].subListId=SUBLIST_INFANTRY;
+  units[SOLDIER].canEnterAndDamageStructure = true;
+  units[SOLDIER].attackIsEnterStructure = false;
+  units[SOLDIER].damageOnEnterStructure = 10.0f;
   strcpy(units[SOLDIER].name, "Soldier");
 
 
@@ -482,6 +475,9 @@ void install_units()
   units[INFANTRY].squish=false;
   units[INFANTRY].listId=LIST_FOOT_UNITS;
   units[INFANTRY].subListId=SUBLIST_INFANTRY;
+  units[INFANTRY].canEnterAndDamageStructure = true;
+  units[INFANTRY].attackIsEnterStructure = false;
+  units[INFANTRY].damageOnEnterStructure = 25.0f;
   strcpy(units[INFANTRY].name, "Light Infantry");
 
   // Unit        : Single Trooper
@@ -498,6 +494,10 @@ void install_units()
   units[TROOPER].listId=LIST_FOOT_UNITS;
   units[TROOPER].subListId=SUBLIST_TROOPERS;
   units[TROOPER].squish=false;
+  units[TROOPER].canAttackAirUnits=true;
+  units[TROOPER].canEnterAndDamageStructure = true;
+  units[TROOPER].attackIsEnterStructure = false;
+  units[TROOPER].damageOnEnterStructure = 12.0f;
 
   // Unit        : Group Trooper
   // Description : 3 troopers
@@ -514,6 +514,10 @@ void install_units()
   units[TROOPERS].listId=LIST_FOOT_UNITS;
   units[TROOPERS].subListId=SUBLIST_TROOPERS;
   units[TROOPERS].squish=false;
+  units[TROOPERS].canAttackAirUnits=true;
+  units[TROOPERS].canEnterAndDamageStructure = true;
+  units[TROOPERS].attackIsEnterStructure = false;
+  units[TROOPERS].damageOnEnterStructure = 35.0f;
 
   // Unit        : Fremen
   // Description : A single fremen
@@ -522,14 +526,16 @@ void install_units()
   units[UNIT_FREMEN_ONE].bmp_height = 16*2;
   units[UNIT_FREMEN_ONE].bmp_startpixel = 0;
   units[UNIT_FREMEN_ONE].bmp_frames = 3; // 2 extra frames
-  strcpy(units[UNIT_FREMEN_ONE].name, "Fremen");
+  strcpy(units[UNIT_FREMEN_ONE].name, "Fremen (1)");
   units[UNIT_FREMEN_ONE].icon      = ICON_SPECIAL_FREMEN;
   units[UNIT_FREMEN_ONE].bullets = ROCKET_SMALL_FREMEN;
   units[UNIT_FREMEN_ONE].second_shot = false;
   units[UNIT_FREMEN_ONE].infantry = true;
   units[UNIT_FREMEN_ONE].squish=false;
-  units[UNIT_FREMEN_ONE].listId=LIST_PALACE;
-  units[UNIT_FREMEN_ONE].subListId=0;
+  units[UNIT_FREMEN_ONE].canAttackAirUnits=true;
+
+//  units[UNIT_FREMEN_ONE].listId=LIST_PALACE;
+//  units[UNIT_FREMEN_ONE].subListId=0;
 
   // Unit        : Fremen
   // Description : A group of Fremen
@@ -538,14 +544,15 @@ void install_units()
   units[UNIT_FREMEN_THREE].bmp_height = 16*2;
   units[UNIT_FREMEN_THREE].bmp_startpixel = 0;
   units[UNIT_FREMEN_THREE].bmp_frames = 3; // 2 extra frames
-  strcpy(units[UNIT_FREMEN_THREE].name, "Fremen");
+  strcpy(units[UNIT_FREMEN_THREE].name, "Fremen (3)");
   units[UNIT_FREMEN_THREE].icon      = ICON_SPECIAL_FREMEN;
   units[UNIT_FREMEN_THREE].bullets = ROCKET_SMALL_FREMEN;
   units[UNIT_FREMEN_THREE].second_shot = true;
   units[UNIT_FREMEN_THREE].infantry = true;
   units[UNIT_FREMEN_THREE].squish=false;
-  units[UNIT_FREMEN_THREE].listId=LIST_PALACE;
-  units[UNIT_FREMEN_THREE].subListId=0;
+  units[UNIT_FREMEN_THREE].canAttackAirUnits=true;
+//  units[UNIT_FREMEN_THREE].listId=LIST_PALACE;
+//  units[UNIT_FREMEN_THREE].subListId=0;
 
   // Unit        : Saboteur
   // Description : Special infantry unit, moves like trike, deadly as hell, not detectable on radar!
@@ -558,38 +565,19 @@ void install_units()
   units[SABOTEUR].speed = 0; // very fast
   units[SABOTEUR].hp = 60;   // quite some health
   units[SABOTEUR].cost = 0;
-  units[SABOTEUR].sight = 3; // immense sight! (sorta scouting guys)
+  units[SABOTEUR].sight = 4; // immense sight! (sorta scouting guys)
   units[SABOTEUR].range = 2;
   units[SABOTEUR].attack_frequency = 0;
   units[SABOTEUR].turnspeed = 0; // very fast
   strcpy(units[SABOTEUR].name, "Saboteur");
-  units[SABOTEUR].infantry = true;
   units[SABOTEUR].icon      = ICON_SPECIAL_SABOTEUR;
   units[SABOTEUR].squish=false;
+  units[SABOTEUR].infantry = true; // infantry unit, so it can be squished
   units[SABOTEUR].listId=LIST_PALACE;
   units[SABOTEUR].subListId=0;
-
-  // Unit        : Death Hand
-  // Description : A missile that destroys a large area. Is actually not a unit at all.
-  units[MISSILE].build_time = 1000;
-  units[MISSILE].bmp_width  = 16*2;
-  units[MISSILE].bmp_height = 16*2;
-  units[MISSILE].bmp_startpixel = 0;
-  units[MISSILE].bmp_frames = 3; // 2 extra frames
-  units[MISSILE].speed = 0; // very fast
-  units[MISSILE].hp = 60;   // quite some health
-  units[MISSILE].cost = 0;
-  units[MISSILE].sight = 3; // immense sight! (sorta scouting guys)
-  units[MISSILE].range = 2;
-  units[MISSILE].attack_frequency = 0;
-  units[MISSILE].turnspeed = 0; // very fast
-  strcpy(units[MISSILE].name, "Death Hand");
-  units[MISSILE].infantry = true;
-  units[MISSILE].icon      = ICON_SPECIAL_MISSILE;
-  units[MISSILE].squish=false;
-  units[MISSILE].listId=LIST_PALACE;
-  units[MISSILE].subListId=0;
-
+  units[SABOTEUR].canEnterAndDamageStructure = true;
+  units[SABOTEUR].attackIsEnterStructure = true;
+  units[SABOTEUR].damageOnEnterStructure = 9999.99f; // a lot of damage (instant destroy)
 
   // Unit        : Sandworm
   units[SANDWORM].speed = 3; // very fast
@@ -606,6 +594,70 @@ void install_units()
 
   // Unit        : <name>
   // Description : <description>
+
+}
+
+void install_specials() {
+
+    for (int i = 0; i < MAX_SPECIALTYPES; i++) {
+        specials[i].icon = -1;
+        specials[i].providesType = eBuildType::UNIT;
+        specials[i].buildTime = 0;
+        specials[i].deployFrom = eDeployFromType::AT_RANDOM_CELL;
+        specials[i].deployAtStructure = -1;
+        specials[i].units = 0;
+        specials[i].house = eHouseBitFlag::Unknown;
+        specials[i].autoBuild = false;
+        specials[i].deployTargetType = eDeployTargetType::TARGET_NONE;
+        specials[i].deployTargetPrecision = 0;
+        specials[i].listId = -1;
+        specials[i].subListId = -1;
+        strcpy(specials[i].description, "\0");
+    }
+
+    // Deploy Saboteur
+    specials[SPECIAL_SABOTEUR].icon = ICON_SPECIAL_SABOTEUR;
+    specials[SPECIAL_SABOTEUR].house=eHouseBitFlag::Ordos;
+    specials[SPECIAL_SABOTEUR].autoBuild=true;
+    specials[SPECIAL_SABOTEUR].providesType = eBuildType::UNIT;
+    specials[SPECIAL_SABOTEUR].providesTypeId = SABOTEUR;
+    specials[SPECIAL_SABOTEUR].deployFrom = eDeployFromType::AT_STRUCTURE;
+    specials[SPECIAL_SABOTEUR].deployAtStructure = PALACE;
+    specials[SPECIAL_SABOTEUR].units = 1;
+    specials[SPECIAL_SABOTEUR].buildTime = 10;
+    specials[SPECIAL_SABOTEUR].listId=LIST_PALACE;
+    specials[SPECIAL_SABOTEUR].subListId=0;
+    strcpy(specials[SPECIAL_SABOTEUR].description, "Saboteur");
+
+    // Deploy Fremen
+    specials[SPECIAL_FREMEN].icon = ICON_SPECIAL_FREMEN;
+    specials[SPECIAL_FREMEN].house=eHouseBitFlag::Atreides;
+    specials[SPECIAL_FREMEN].autoBuild=true;
+    specials[SPECIAL_FREMEN].providesType = eBuildType::UNIT;
+    specials[SPECIAL_FREMEN].providesTypeId = UNIT_FREMEN_THREE;
+    specials[SPECIAL_FREMEN].deployFrom = eDeployFromType::AT_RANDOM_CELL;
+    specials[SPECIAL_FREMEN].deployAtStructure = PALACE; // This is not used with AT_RANDOM_CELL ...
+    specials[SPECIAL_FREMEN].units = 6; // ... but this is
+    specials[SPECIAL_FREMEN].buildTime = 10;
+    specials[SPECIAL_FREMEN].listId=LIST_PALACE;
+    specials[SPECIAL_FREMEN].subListId=0;
+    strcpy(specials[SPECIAL_FREMEN].description, "Fremen");
+
+    // Launch Death Hand
+    specials[SPECIAL_DEATHHAND].icon = ICON_SPECIAL_MISSILE;
+    specials[SPECIAL_DEATHHAND].house = Harkonnen | Sardaukar;
+    specials[SPECIAL_DEATHHAND].autoBuild=true;
+    specials[SPECIAL_DEATHHAND].providesType = eBuildType::BULLET;
+    specials[SPECIAL_DEATHHAND].providesTypeId = ROCKET_BIG;
+    specials[SPECIAL_DEATHHAND].deployFrom = eDeployFromType::AT_STRUCTURE; // the rocket is fired FROM ...
+    specials[SPECIAL_DEATHHAND].deployAtStructure = PALACE; // ... the palace
+    specials[SPECIAL_DEATHHAND].deployTargetType = eDeployTargetType::TARGET_INACCURATE_CELL;
+    specials[SPECIAL_DEATHHAND].units = 1;
+    specials[SPECIAL_DEATHHAND].buildTime = 10;
+    specials[SPECIAL_DEATHHAND].deployTargetPrecision = 6;
+    specials[SPECIAL_DEATHHAND].listId=LIST_PALACE;
+    specials[SPECIAL_DEATHHAND].subListId=0;
+    strcpy(specials[SPECIAL_DEATHHAND].description, "Death Hand");
 
 }
 
@@ -627,6 +679,7 @@ void install_bullets()
     bullets[i].max_deadframes = 4; // 4 frame animation
     bullets[i].bmp_width = 8*2;
     bullets[i].sound = -1;    // no sound
+    bullets[i].explosionSize = 1; // 1 tile sized explosion
   }
 
   // huge rocket/missile
@@ -635,8 +688,9 @@ void install_bullets()
   bullets[ROCKET_BIG].bmp_width = 48;
   bullets[ROCKET_BIG].damage = 999;
   bullets[ROCKET_BIG].damage_inf = 999;
-  bullets[ROCKET_BIG].max_frames = 0;
+  bullets[ROCKET_BIG].max_frames = 1;
   bullets[ROCKET_BIG].sound = SOUND_ROCKET;
+  bullets[ROCKET_BIG].explosionSize = 7;
 
 
     // small rocket (for ornithopter)
@@ -1051,6 +1105,7 @@ void install_structures() {
     structures[i].list = -1; // no list attached
     structures[i].queuable = false;
     structures[i].configured = false;
+    structures[i].canAttackAirUnits = false;
     strcpy(structures[i].name,   "Unknown");
   }
 
@@ -1261,6 +1316,7 @@ void install_structures() {
   structures[RTURRET].icon  = ICON_STR_RTURRET;
   structures[RTURRET].sight = 10;
   structures[RTURRET].configured = true;
+  structures[RTURRET].canAttackAirUnits = true;
   strcpy(structures[RTURRET].name, "Rocket Turret");
 
   // Structure    : Windtrap

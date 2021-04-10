@@ -86,7 +86,7 @@ void cSelectYourNextConquestState::think() {
                 regionPiece.iAlpha += 3;
 
                 // speed up when holding mouse button
-                if (MOUSE_BTN_LEFT()) {
+                if (cMouse::isLeftButtonPressed()) {
                     regionPiece.iAlpha += 3;
                 }
             }

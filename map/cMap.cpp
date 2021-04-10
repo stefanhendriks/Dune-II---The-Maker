@@ -139,43 +139,100 @@ bool cMap::occupied(int iCell) {
 	return false;
 }
 
-bool cMap::occupied(int iCll, int iUnitID)
-{
-    bool bResult=false;
+/**
+ * Checks if a cary-all (passed with iUnitID) can deploy a unit at iCll
+ * @param iCll (cell to deploy)
+ * @param iUnitID (the carry-all)
+ * @return
+ */
+bool cMap::canDeployUnitAtCell(int iCll, int iUnitID) {
+    if (iCll < 0 || iUnitID < 0)
+        return false;
 
+    cUnit &pUnit = unit[iUnitID];
+    if (!pUnit.isAirbornUnit()) return false; // weird unit passed in
+    if (pUnit.iNewUnitType < 0) return false; // safe-guard when this unit has no new unit to spawn
+
+    s_UnitP &unitToDeploy = units[pUnit.iNewUnitType];
+
+    int structureIdOnMap = map.getCellIdStructuresLayer(iCll);
+    if (structureIdOnMap > -1) {
+        // the cell contains a structure that the unit wants to enter (for repairment?)
+        if (pUnit.iStructureID > -1) {
+            if (structureIdOnMap == pUnit.iStructureID) {
+                return true;
+            }
+        }
+
+        // all other cases are occupied / blocked
+        return false;
+    }
+
+    if (!unitToDeploy.airborn) {
+        int cellIdOnMap = map.getCellIdUnitLayer(iCll);
+        if (cellIdOnMap > -1 && cellIdOnMap != iUnitID) {
+            return false; // other unit at cell
+        }
+    }
+
+    // walls block as do mountains
+    if (map.getCellType(iCll) == TERRAIN_WALL) {
+        return false;
+    }
+
+    // mountains only block infantry
+    if (map.getCellType(iCll) == TERRAIN_MOUNTAIN) {
+        // we can deploy infantry types on mountains, airborn units can fly over
+        if (!unitToDeploy.infantry && !unitToDeploy.airborn) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool cMap::occupied(int iCll, int iUnitID) {
     if (iCll < 0 || iUnitID < 0)
         return true;
 
-    if (map.cell[iCll].id[MAPID_UNITS] > -1 &&
-		map.cell[iCll].id[MAPID_UNITS] != iUnitID)
-        bResult=true;
+    cUnit &pUnit = unit[iUnitID];
 
     // TODO: when unit wants to enter a structure...
 
-    if (map.cell[iCll].id[MAPID_STRUCTURES] > -1 )
-	{
-		// we are on top of a structure we do NOT want to enter...
-		if (unit[iUnitID].iStructureID > -1)
-		{
-			if (map.cell[iCll].id[MAPID_STRUCTURES] != unit[iUnitID].iStructureID)
-			bResult=true;
-		}
-		else
-			bResult=true;
-	}
+    int structureIdOnMap = map.getCellIdStructuresLayer(iCll);
+    if (structureIdOnMap > -1) {
+        // the cell contains a structure that the unit wants to enter
+        if (pUnit.iStructureID > -1) {
+            if (structureIdOnMap == pUnit.iStructureID) {
+                return false;
+            }
+        }
+
+        // all other cases are occupied / blocked
+        return true;
+    }
+
+    // non airborn units can block each other
+    if (!pUnit.isAirbornUnit() && !pUnit.isSandworm()) {
+        int cellIdOnMap = map.getCellIdUnitLayer(iCll);
+        if (cellIdOnMap > -1 && cellIdOnMap != iUnitID) {
+            return true; // other unit at cell
+        }
+    }
 
     // walls block as do mountains
-    if (map.cell[iCll].type == TERRAIN_WALL)
-        bResult=true;
+    if (map.getCellType(iCll) == TERRAIN_WALL) {
+        return true;
+    }
 
     // mountains only block infantry
-    if (units[unit[iUnitID].iType].infantry == false)
-        if (map.cell[iCll].type == TERRAIN_MOUNTAIN)
-           bResult=true;
+    if (map.getCellType(iCll) == TERRAIN_MOUNTAIN) {
+        if (!pUnit.isInfantryUnit() && !pUnit.isAirbornUnit()) {
+            return true;
+        }
+    }
 
-
-
-    return bResult;
+    return false;
 }
 
 // do the static info thinking
@@ -517,4 +574,17 @@ int cMap::getTotalCountCellType(int cellType) {
         }
     }
     return count;
+}
+
+int cMap::getCellSlowDown(int iCell) {
+    int cellType = map.getCellType(iCell);
+
+    if (cellType == TERRAIN_SAND) return 2;
+    if (cellType == TERRAIN_MOUNTAIN) return 5;
+    if (cellType == TERRAIN_HILL) return 3;
+    if (cellType == TERRAIN_SPICEHILL) return 3;
+    if (cellType == TERRAIN_ROCK) return 1;
+    if (cellType == TERRAIN_SLAB) return 0;
+
+    return 1;
 }

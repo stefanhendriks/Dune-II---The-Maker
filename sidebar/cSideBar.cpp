@@ -35,6 +35,7 @@ void cSideBar::setList(int listId, cBuildingList* list) {
  */
 void cSideBar::think() {
 	thinkAvailabilityLists();
+	thinkProgressAnimation();
 }
 
 /**
@@ -96,7 +97,7 @@ void cSideBar::thinkInteraction() {
 
 		// interaction is possible.
 		if (list->isOverButton(mouse_x, mouse_y)) {
-			if (MOUSE_BTN_LEFT()) {
+            if (cMouse::isLeftButtonPressed()) {
 				// clicked on it. Set focus on this one
 				selectedListID = i;
 				char msg[255];
@@ -147,6 +148,8 @@ void cSideBar::thinkInteraction() {
             // icon is in "Place it" mode, meaning if clicked the "place the thing" state should be set
             if (item->shouldPlaceIt()) {
                 game.bPlaceIt = true;
+            } else if (item->shouldDeployIt()) {
+                game.bDeployIt = true;
             } else {
                 startBuildingItemIfOk(item);
             }
@@ -168,6 +171,7 @@ void cSideBar::thinkInteraction() {
             if (item->getTimesToBuild() > 0) {
                 item->decreaseTimesToBuild();
                 item->setPlaceIt(false);
+                item->setDeployIt(false);
 
                 if (item->getTimesToBuild() == 0) {
                     cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "(Human) Item is last item in queue, will give money back.");
@@ -204,19 +208,22 @@ void cSideBar::drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem
         // now we have in miliseconds, we know the amount of seconds too.
         int seconds = buildTimeInMs / 1000;
 
-        if (item->getBuildType() == STRUCTURE) {
-            s_Structures structureType = structures[item->getBuildId()];
+        if (item->isTypeStructure()) {
+            s_Structures structureType = item->getS_Structures();
             sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
-        } else if (item->getBuildType() == UNIT) {
-            s_UnitP unitType = units[item->getBuildId()];
+        } else if (item->isTypeUnit()) {
+            s_UnitP unitType = item->getS_UnitP();
             if (item->getBuildCost() > 0) {
                 sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), unitType.name, seconds);
             } else {
                 sprintf(msg, "%s", units[item->getBuildId()].name);
             }
-        } else if (item->getBuildType() == UPGRADE){
-            s_Upgrade upgrade = upgrades[item->getBuildId()];
+        } else if (item->isTypeUpgrade()){
+            s_Upgrade upgrade = item->getS_Upgrade();
             sprintf(msg, "UPGRADE: $%d | %s | %d Secs", item->getBuildCost(), upgrade.description, seconds);
+        } else if (item->isTypeSpecial()) {
+            s_Special special = item->getS_Special();
+            sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), special.description, seconds);
         } else {
             sprintf(msg, "UNKNOWN BUILD TYPE");
         }
@@ -275,4 +282,28 @@ cBuildingListItem * cSideBar::getBuildingListItem(int listId, int buildId) const
     if (pList == nullptr) return nullptr;
 
     return pList->getItemByBuildId(buildId);
+}
+
+void cSideBar::thinkProgressAnimation() {
+    for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {
+        cBuildingList *list = getList(i);
+        if (list == nullptr) continue;
+        if (!list->isAvailable()) continue; // not available, so no interaction possible
+
+        for (int j = 0; j < MAX_ITEMS; j++) {
+            cBuildingListItem *item = list->getItem(j);
+            if (item == nullptr) continue;
+            if (!item->isBuilding()) continue;
+
+            int frameToBecome = item->calculateBuildProgressFrameBasedOnBuildProgress();
+
+            if (item->getBuildProgressFrame() < frameToBecome) {
+                item->decreaseProgressFrameTimer();
+                if (item->getProgressFrameTimer() < 0) {
+                    item->increaseBuildProgressFrame();
+                    item->resetProgressFrameTimer();
+                }
+            }
+        }
+    }
 }
