@@ -60,7 +60,6 @@ protected:
 		cRectangle *m_RectMinimap; // the minimap (map) itself
 		cRectangle *m_RectFullMinimap; // the total space it could take
         cMapUtils *m_mapUtils;
-        cCellCalculator * cellCalculator;
 
         eMinimapStatus status;
 

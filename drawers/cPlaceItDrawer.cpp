@@ -1,11 +1,10 @@
 #include "../include/d2tmh.h"
 
 cPlaceItDrawer::cPlaceItDrawer(cPlayer * thePlayer) : m_Player(thePlayer) {
-	cellCalculator = new cCellCalculator(&map);
+
 }
 
 cPlaceItDrawer::~cPlaceItDrawer() {
-	delete cellCalculator;
 	m_Player = nullptr;
 }
 
@@ -55,8 +54,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 #define SCANWIDTH	1
 
-	int iCellX = cellCalculator->getX(mouseCell);
-	int iCellY = cellCalculator->getY(mouseCell);
+	int iCellX = map.getCellX(mouseCell);
+	int iCellY = map.getCellY(mouseCell);
 
 	// check
 	int iStartX = iCellX-SCANWIDTH;

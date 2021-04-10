@@ -19,12 +19,9 @@
 cMap::cMap() {
 	TIMER_scroll=0;
 	iScrollSpeed=1;
-	cellCalculator = NULL;
 }
 
 cMap::~cMap() {
-	if (cellCalculator) delete cellCalculator;
-
 	// do not trigger getInstance from structure factory
     for (int i=0; i < MAX_STRUCTURES; i++) {
         // clear out all structures
@@ -37,16 +34,8 @@ cMap::~cMap() {
     }
 }
 
-void cMap::resetCellCalculator() {
-	if (cellCalculator) {
-		delete cellCalculator;
-	}
-	cellCalculator = new cCellCalculator(this);
-}
-
 void cMap::init(int width, int height) {
     INIT_REINFORCEMENT();
-    resetCellCalculator();
 
     // clear out all cells
     cMapUtils * mapUtils = new cMapUtils(this);
@@ -551,7 +540,7 @@ void cMap::thinkInteraction() {
 int cMap::mouse_draw_x() {
     if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
         int mouseCell = player[HUMAN].getGameControlsContext()->getMouseCell();
-        int absX = mapCamera->getAbsoluteXPositionFromCell(mouseCell);
+        int absX = getAbsoluteXPositionFromCell(mouseCell);
         return mapCamera->getWindowXPosition(absX);
     }
     return -1;
@@ -560,7 +549,7 @@ int cMap::mouse_draw_x() {
 int cMap::mouse_draw_y() {
     if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
         int mouseCell = player[HUMAN].getGameControlsContext()->getMouseCell();
-        int absY = mapCamera->getAbsoluteYPositionFromCell(mouseCell);
+        int absY = getAbsoluteYPositionFromCell(mouseCell);
         return mapCamera->getWindowYPosition(absY);
     }
     return -1;
@@ -587,4 +576,241 @@ int cMap::getCellSlowDown(int iCell) {
     if (cellType == TERRAIN_SLAB) return 0;
 
     return 1;
+}
+
+int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell) {
+    assert(destinationCell > -1);
+    // Cell x and y coordinates
+    int iCllX = getCellX(destinationCell);
+    int iCllY = getCellY(destinationCell);
+
+    // STEP 1: determine starting
+    int iStartCell=-1;
+    int lDistance=9999;
+
+    int tDistance=9999;
+    int cll=-1;
+
+    // HORIZONTAL cells
+    for (int iX=0; iX < game.map_width; iX++) {
+        // check when Y = 0 (top)
+        tDistance = distance(iX, 0, iCllX, iCllY);
+
+        if (tDistance < lDistance) {
+            lDistance = tDistance;
+
+            cll = makeCell(iX, 0);
+
+            if (map.occupied(cll) == false) {
+                iStartCell = cll;
+            }
+        }
+
+        // check when Y = map_height (bottom)
+        tDistance = distance(iX, game.map_height-1, iCllX, iCllY);
+
+        if (tDistance < lDistance) {
+            lDistance = tDistance;
+
+            cll = makeCell(iX, game.map_height - 1);
+
+            if (map.occupied(cll) == false) {
+                iStartCell = cll;
+            }
+        }
+    }
+
+    // VERTICAL cells
+    for (int iY=0; iY < game.map_height; iY++)
+    {
+        // check when X = 0 (left)
+        tDistance = distance(0, iY, iCllX, iCllY);
+
+        if (tDistance < lDistance) {
+            lDistance = tDistance;
+
+            cll = makeCell(0, iY);
+
+            if (map.occupied(cll) == false) {
+                iStartCell = cll;
+            }
+        }
+
+        // check when XY = map_width (bottom)
+        tDistance = distance(game.map_width-1, iY, iCllX, iCllY);
+
+        if (tDistance < lDistance) {
+            lDistance = tDistance;
+            cll = makeCell(game.map_width - 1, iY);
+
+            if (map.occupied(cll) == false) {
+                iStartCell = cll;
+            }
+        }
+    }
+
+    return iStartCell;
+}
+
+double cMap::distance(int x1, int y1, int x2, int y2) {
+    if (x1 == x2 && y1 == y2) return 1; // when all the same, distance is 1 ...
+
+    int A = abs(x2-x1) * abs(x2-x1);
+    int B = abs(y2-y1) * abs(y2-y1);
+    return sqrt((double)(A+B)); // get C from A and B
+}
+
+int cMap::getCellY(int c) {
+    if (c < 0 || c >= MAX_CELLS) {
+        return -1;
+    }
+
+    return (c / width);
+}
+
+int cMap::getCellX(int c) {
+    if (c < 0 || c >= MAX_CELLS) {
+        return -1;
+    }
+
+    int cellX = c - ((c / width) * width);
+    return cellX;
+}
+
+bool cMap::isCellAdjacentToOtherCell(int thisCell, int otherCell) {
+    if (getCellAbove(thisCell) == otherCell) return true;
+    if (getCellBelow(thisCell) == otherCell) return true;
+    if (getCellLeft(thisCell) == otherCell) return true;
+    if (getCellRight(thisCell) == otherCell) return true;
+
+    //
+    if (getCellUpperLeft(thisCell) == otherCell) return true;
+    if (getCellUpperRight(thisCell) == otherCell) return true;
+    if (getCellLowerLeft(thisCell) == otherCell) return true;
+    if (getCellLowerRight(thisCell) == otherCell) return true;
+
+    return false;
+}
+
+int cMap::getCellLowerRight(int c)  {
+    int lowerRightCell = getCellBelow(c) + 1;
+    if (lowerRightCell >= MAX_CELLS) return -1;
+    if (lowerRightCell < 0) return -1;
+
+    return lowerRightCell;
+}
+
+int cMap::getCellLowerLeft(int c) {
+    int lowerLeftCell = getCellBelow(c) - 1;
+    if (lowerLeftCell < 0) return -1;
+    if (lowerLeftCell >= MAX_CELLS) return -1;
+    return lowerLeftCell;
+}
+
+int cMap::getCellUpperRight(int c) {
+    int upperRightCell = getCellAbove(c) + 1;
+    if (upperRightCell < 0) return -1;
+
+    return upperRightCell;
+}
+
+int cMap::getCellUpperLeft(int c) {
+    int upperLeftCell = getCellAbove(c) - 1;
+    if (upperLeftCell < 0) return -1;
+
+    return upperLeftCell;
+}
+
+int cMap::getCellRight(int c) {
+    int x = getCellX(c);
+    int cellRight = x + 1;
+    if (cellRight >= MAX_CELLS) return -1;
+    if (cellRight >= MAP_W_MAX) return -1;
+
+    return c + 1;
+}
+
+int cMap::getCellLeft(int c) {
+    if (c < 0) return -1;
+    int x = getCellX(c);
+    int cellLeft = x - 1;
+    if (cellLeft < 0) return -1;
+    return c - 1;
+}
+
+int cMap::getCellBelow(int c) {
+    if (c < 0) return -1;
+    int cellBelow = c + width;
+    if (cellBelow >= MAX_CELLS)
+        return -1;
+
+    return cellBelow;
+}
+
+int cMap::getCellAbove(int c) {
+    if (c < 0) return -1;
+    int cellAbove = c - width;
+
+    if (cellAbove < 0) return -1;
+
+    return cellAbove;
+}
+
+int cMap::getAbsoluteYPositionFromCell(int cell) {
+    if (cell < 0) return -1;
+    return getCellY(cell) * TILESIZE_HEIGHT_PIXELS;
+}
+
+int cMap::getAbsoluteXPositionFromCell(int cell) {
+    if (cell < 0) return -1;
+    return getCellX(cell) * TILESIZE_WIDTH_PIXELS;
+}
+
+int cMap::makeCell(int x, int y) {
+    assert(x > -1);
+    assert(x < MAP_W_MAX); // should never be higher!
+    assert(y > -1);
+    assert(y < MAP_W_MAX);
+
+    // create cell
+    int cell = getCellWithMapDimensions(x, y);
+
+    assert(cell < MAX_CELLS); // may never be => (will since MAX_CELLS-1 is max in array!)
+    assert(cell > -1); // may never be < 0
+
+    return cell;
+}
+
+double cMap::distance(int cell1, int cell2) {
+    int x1 = getCellX(cell1);
+    int y1 = getCellY(cell1);
+
+    int x2 = getCellX(cell2);
+    int y2 = getCellY(cell2);
+    return ABS_length(x1, y1, x2, y2);
+}
+
+int cMap::getCellWithMapBorders(int x, int y) {
+    // internal vars are 1 based (ie 64x64 means 0-63, which really means 1...62 are valid)
+    int maxHeight = (height-2); // hence the -2!
+    int maxWidth = (width-2);
+
+    if (x < 1) return -1;
+    if (y < 1) return -1;
+    if (x > maxWidth) return -1;
+    if (y > maxHeight) return -1;
+
+    return getCellWithMapDimensions(x, y);
+}
+
+int cMap::getCellWithMapDimensions(int x, int y)  {
+    int mapWidth = width;
+    int mapHeight = height;
+    // (over the) boundaries result in cell -1
+    if (x < 0) return -1;
+    if (x >= mapWidth) return -1;
+    if (y < 0) return -1;
+    if (y >= mapHeight) return -1;
+
+    return (y * mapWidth) + x;
 }

@@ -78,8 +78,8 @@ void FIX_BORDER_POS(int &x, int &y) {
         if (x < 1) {
             x = 1;
         }
-        if (x > (game.map_width - 1)) {
-            x = (game.map_width - 1);
+        if (x > (game.map_width - 2)) {
+            x = (game.map_width - 2);
         }
     }
 
@@ -88,8 +88,8 @@ void FIX_BORDER_POS(int &x, int &y) {
         if (y < 1) {
             y = 1;
         }
-        if (y > (game.map_height - 1)) {
-            y = (game.map_height - 1);
+        if (y > (game.map_height - 2)) {
+            y = (game.map_height - 2);
         }
     }
 }
@@ -99,13 +99,13 @@ void FIX_POS(int &x, int &y) {
     // filled in
     if (x) {
         if (x < 0) x = 0;
-        if (x > game.map_width) x = game.map_width;
+        if (x >= map.getWidth()) x = (map.getWidth()-1);
     }
 
     // filled in
     if (y) {
         if (y < 0) y = 0;
-        if (y > game.map_height) y = game.map_height;
+        if (y >= map.getHeight()) y = (map.getHeight() -1);
     }
 }
 
@@ -1361,10 +1361,7 @@ int keepBetween(int value, int min, int max) {
 
 // return a border cell, close to iCll
 int iFindCloseBorderCell(int iCll) {
-	cCellCalculator * calculator = new cCellCalculator(&map);
-	int result = calculator->findCloseMapBorderCellRelativelyToDestinationCel(iCll);
-	delete calculator;
-	return result;
+    return map.findCloseMapBorderCellRelativelyToDestinationCel(iCll);
 }
 
 
@@ -1374,8 +1371,8 @@ int distanceBetweenCellAndCenterOfScreen(int iCell) {
     int centerX = mapCamera->getViewportCenterX();
     int centerY = mapCamera->getViewportCenterY();
 
-    int cellX = mapCamera->getAbsoluteXPositionFromCell(iCell);
-    int cellY = mapCamera->getAbsoluteYPositionFromCell(iCell);
+    int cellX = map.getAbsoluteXPositionFromCell(iCell);
+    int cellY = map.getAbsoluteYPositionFromCell(iCell);
 
     return ABS_length(centerX, centerY, cellX, cellY);
 }

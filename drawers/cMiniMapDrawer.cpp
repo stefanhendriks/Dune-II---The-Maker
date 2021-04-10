@@ -12,7 +12,6 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * t
 	status = eMinimapStatus::NOTAVAILABLE;
 	iTrans = 0;
     m_mapUtils = new cMapUtils(map);
-    cellCalculator = map->getCellCalculator();
 
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;
@@ -36,7 +35,6 @@ cMiniMapDrawer::~cMiniMapDrawer() {
 	delete m_RectMinimap;
 	delete m_RectFullMinimap;
     delete m_mapUtils;
-    // do not delete cellCalculator, as we get it from Map (we don't own it)
 }
 
 void cMiniMapDrawer::drawViewPortRectangle() {
@@ -298,7 +296,7 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
     int newX = mouseMiniMapX;
     int newY = mouseMiniMapY;
 
-    return cellCalculator->getCellWithMapBorders(newX, newY);
+    return map->getCellWithMapBorders(newX, newY);
 }
 
 void cMiniMapDrawer::think() {

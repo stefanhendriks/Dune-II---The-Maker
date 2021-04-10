@@ -33,43 +33,27 @@ bool bCellValid(int c) {
 }
 
 // return the X value from a cell
-int iCellGiveX(int c)
-{
-  if (c < 0 || c >= MAX_CELLS) {
-    return -1;
-  }
-  return (c - ((c/MAP_W_MAX) * MAP_W_MAX));
+int iCellGiveX(int c) {
+    return map.getCellX(c);
 }
 
 // return the Y value from a cell
-int iCellGiveY(int c)
-{
-    if (c < 0 || c >= MAX_CELLS) {
-		if (DEBUGGING) {
-            logbook("ERROR: Encountered invalid cell");
-//            assert(false);
-        }
-        return -1;
-    }
-
-  return (c / MAP_W_MAX);
+int iCellGiveY(int c) {
+    return map.getCellY(c);
 }
 
 
 // make cell number out of X and Y value
 int iCellMake(int x, int y) {
-    cCellCalculator * cellCalculator = map.getCellCalculator();
-    return cellCalculator->getCell(x, y);
+    return map.makeCell(x, y);
 }
 
 int iCellMakeWhichCanReturnMinusOne(int x, int y) {
-    cCellCalculator * cellCalculator = map.getCellCalculator();
-    return cellCalculator->getCellWithMapDimensions(x, y, game.map_width, game.map_height);
+    return map.getCellWithMapDimensions(x, y);
 }
 
 int iCellMakeWhichCanReturnMinusOneWithinMapBorders(int x, int y) {
-    cCellCalculator * cellCalculator = map.getCellCalculator();
-    return cellCalculator->getCellWithMapBorders(x, y);
+    return map.getCellWithMapBorders(x, y);
 }
 
 // returns in fRadians
@@ -268,97 +252,48 @@ double ABS_length(int x1, int y1, int x2, int y2) {
   return sqrt((double)(A+B)); // A2 + B2 = C2 :)
 }
 
-
 // Above
-int CELL_ABOVE(int c)
-{
-  if ((c-MAP_W_MAX) < 0)
-    return -1;
-  else
-    return (c-MAP_W_MAX);
+int CELL_ABOVE(int c) {
+    return map.getCellAbove(c);
 }
 
 // Under
-int CELL_UNDER(int c)
-{
-  if ((c+MAP_W_MAX) >= MAX_CELLS)
-    return -1;
-  else
-    return (c+MAP_W_MAX);
+int CELL_UNDER(int c) {
+    return map.getCellBelow(c);
 }
 
 // Left
 int CELL_LEFT(int c) {
-    int x = iCellGiveX(c);
-
-    if (x - 1 >= 0)  // don't go too much to the left
-        if (c - 1 >= 0)
-            return c - 1;
-
-    return -1;
+    return map.getCellLeft(c);
 }
 
 // Right
 int CELL_RIGHT(int c) {
-    int x = iCellGiveX(c);
-
-    if (x + 1 < MAP_W_MAX)
-        if (c + 1 < MAX_CELLS) // make sure we don't overdo it
-            return c + 1;
-
-    return -1;
+    return map.getCellRight(c);
 }
-
 
 // Up / LEFT
 int CELL_U_LEFT(int c) {
-    if ((CELL_ABOVE(c) - 1) > -1)
-        return (CELL_ABOVE(c) - 1);      // upper left is ONE row - 1 cell
-
-    return -1;
+    return map.getCellUpperLeft(c);
 }
 
 // Up / RIGHT
 int CELL_U_RIGHT(int c) {
-    if ((CELL_ABOVE(c) + 1) > -1)
-        return (CELL_ABOVE(c) + 1);      // upper right is ONE row + 1 cell (to the right)
-
-    return -1;
+    return map.getCellUpperRight(c);
 }
 
 // Low / LEFT
-int CELL_L_LEFT(int c)
-{
-  if ((CELL_UNDER(c)-1) <= MAX_CELLS)
-    return (CELL_UNDER(c)-1);
-  else
-    return -1;
+int CELL_L_LEFT(int c) {
+    return map.getCellLowerLeft(c);
 }
 
 // Low / RIGHT
-int CELL_L_RIGHT(int c)
-{
-  if ((CELL_UNDER(c)+1) <= MAX_CELLS)
-    return (CELL_UNDER(c)+1);
-  else
-    return -1;
+int CELL_L_RIGHT(int c) {
+  return map.getCellLowerRight(c);
 }
 
 
-bool CELL_BORDERS(int iOrigin, int iCell)
-{
-    // return true or false if the iCell borders to iOrigin
-    if (CELL_ABOVE(iOrigin) == iCell) return true;
-    if (CELL_UNDER(iOrigin) == iCell) return true;
-    if (CELL_LEFT(iOrigin) == iCell) return true;
-    if (CELL_RIGHT(iOrigin) == iCell) return true;
-
-    //
-    if (CELL_U_LEFT(iOrigin) == iCell) return true;
-    if (CELL_U_RIGHT(iOrigin) == iCell) return true;
-    if (CELL_L_LEFT(iOrigin) == iCell) return true;
-    if (CELL_L_RIGHT(iOrigin) == iCell) return true;
-
-    return false;
+bool CELL_BORDERS(int iOrigin, int iCell) {
+    return map.isCellAdjacentToOtherCell(iOrigin, iCell);
 }
 

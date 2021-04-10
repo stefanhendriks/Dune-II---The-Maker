@@ -64,17 +64,15 @@ void cMapEditor::createField(int cell, int terrainType, int size) {
 
     if (cell < 0) return;
 
-    cCellCalculator *cellCalculator = map.getCellCalculator();
-
-    int x = cellCalculator->getX(cell);
-    int y = cellCalculator->getY(cell);
+    int x = map.getCellX(cell);
+    int y = map.getCellY(cell);
 
     if (x < 0) {
-        x = rnd(game.map_width);
+        x = rnd(map.getWidth());
     }
 
     if (y < 0) {
-        y = rnd(game.map_height);
+        y = rnd(map.getHeight());
     }
 
     if (terrainType == TERRAIN_ROCK && size < 0) {
@@ -91,7 +89,7 @@ void cMapEditor::createField(int cell, int terrainType, int size) {
     int iOrgY = y;
 
     for (int i = 0; i < size; i++) {
-        int c = cellCalculator->getCellWithMapBorders(x, y);
+        int c = map.getCellWithMapBorders(x, y);
 
         iDist = ABS_length(x, y, iOrgX, iOrgY);
 
@@ -193,7 +191,7 @@ int cMapEditor::getWallTerrainIndex(bool up, bool down, bool left, bool right) {
  * NOTE: This is not true for walls!
  */
 int cMapEditor::getDefaultTerrainIndex(bool up, bool down, bool left, bool right) {
-    // fix compatability for now
+    // fix compatibility for now
     bool a = up;
     bool u = down;
     bool l = left;
@@ -322,24 +320,6 @@ int cMapEditor::smoothRockCell(int cell) {
         isRightSpecificTerrainType(cell, TERRAIN_MOUNTAIN) ||
         isRightSpecificTerrainType(cell, TERRAIN_WALL);
 
-
-    /*
-    // Extra for debris! (broken stuff)
-    if ((above_type >= STR_B_BOTTOM && above_type <= STR_TURRET))
-    a = true;
-
-    // rock under?
-    if ((under_type >= STR_B_BOTTOM && under_type <= STR_TURRET))
-    u = true;
-
-    // rock left?
-    if ((left_type >= STR_B_BOTTOM && left_type <= STR_TURRET))
-    l = true;
-
-    // rock right?
-    if ((right_type >= STR_B_BOTTOM && right_type <= STR_TURRET))
-    r = true; */
-
     return getDefaultTerrainIndex(a, d, l, r);
 }
 
@@ -425,11 +405,10 @@ void cMapEditor::removeSingleRockSpots() {
     int startY = 1;
     int endX = map.getWidth() - 1;
     int endY = map.getHeight() - 1;
-    cCellCalculator *cellCalculator = map.getCellCalculator();
 
     for (int x = startX; x < endX; x++) {
         for (int y = startY; y < endY; y++) {
-            int cll = cellCalculator->getCellWithMapDimensions(x, y, game.map_width, game.map_height);
+            int cll = map.getCellWithMapDimensions(x, y);
             if (cll < 0) continue;
 
             int terrainType = map.getCellType(cll);

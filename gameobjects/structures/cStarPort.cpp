@@ -82,7 +82,6 @@ void cStarPort::think_deploy()
 					  play_voice(SOUND_VOICE_05_ATR); // unit deployed
 				  } else {
 					  // could not find cell to deploy to, reinforce it
-					  cCellCalculator * cellCalculator = new cCellCalculator(&map);
 					  if (rallyPoint > -1) {
 						  cellToDeployTo = rallyPoint;
 					  }
@@ -92,9 +91,8 @@ void cStarPort::think_deploy()
 						  // assume that the cell to drop is the location of the structure itself
 						  cellToDeployTo = getCell();
 					  }
-					  int cellAtBorderOfMap = cellCalculator->findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
+					  int cellAtBorderOfMap = map.findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
 					  REINFORCE(iPlayer, item->getBuildId(), cellToDeployTo, cellAtBorderOfMap);
-					  delete cellCalculator;
 				  }
 			  } else {
 				  // item is null, no more items to deploy.

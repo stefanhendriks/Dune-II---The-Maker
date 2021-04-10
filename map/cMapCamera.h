@@ -18,13 +18,10 @@
 #ifndef CMAPCAMERA_H_
 #define CMAPCAMERA_H_
 
-#define TILESIZE_WIDTH_PIXELS 32
-#define TILESIZE_HEIGHT_PIXELS 32
-
 class cMapCamera {
 
 public:
-    cMapCamera();
+    cMapCamera(cMap * theMap);
 
     ~cMapCamera();
 
@@ -61,12 +58,12 @@ public:
     }
 
     int getWindowXPositionFromCellWithOffset(int cell, int offset) {
-        int absoluteXPosition = getAbsoluteXPositionFromCell(cell);
+        int absoluteXPosition = pMap->getAbsoluteXPositionFromCell(cell);
         return getWindowXPositionWithOffset(absoluteXPosition, offset);
     }
 
     int getWindowYPositionFromCellWithOffset(int cell, int offset) {
-        int absoluteYPosition = getAbsoluteYPositionFromCell(cell);
+        int absoluteYPosition = pMap->getAbsoluteYPositionFromCell(cell);
         return getWindowYPositionWithOffset(absoluteYPosition, offset);
     }
 
@@ -145,10 +142,6 @@ public:
 
     void setViewportPosition(int x, int y);
 
-    int getAbsoluteXPositionFromCell(int cell);
-
-    int getAbsoluteYPositionFromCell(int cell);
-
 protected:
 
 private:
@@ -168,14 +161,15 @@ private:
     // Zoom level, 1 == normal, > 1 is zooming in. < 1 is zooming out.
     float zoomLevel;
 
-    cCellCalculator *cellCalculator;
-
     // the calculated width and height, taking zoomlevel into account
     float tileHeight;
     float tileWidth;
     int halfTile;
 
     void adjustViewport(float screenX, float screenY);
+
+    // the map this camera is viewing
+    cMap * pMap;
 };
 
 #endif /* CMAPCAMERA_H_ */

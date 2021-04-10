@@ -1110,7 +1110,6 @@ void cGame::setup_skirmish() {
 
         // START
         if ((cMouse::isLeftButtonClicked() && iSkirmishMap > -1)) {
-            cCellCalculator *cellCalculator = new cCellCalculator(&map);
             // Starting skirmish mode
             bSkirmish=true;
 
@@ -1296,7 +1295,7 @@ void cGame::setup_skirmish() {
                         }
                     }
 
-                    int cell = cellCalculator->getCellWithMapBorders(iX, iY);
+                    int cell = map.getCellWithMapBorders(iX, iY);
                     int r = UNIT_CREATE(cell, iType, p, true);
                     if (r > -1)
                     {
@@ -1316,8 +1315,6 @@ void cGame::setup_skirmish() {
             setState(GAME_PLAYING);
             drawManager->getMessageDrawer()->initCombatPosition();
 
-            // delete cell calculator
-            delete cellCalculator;
         } // mouse clicks on START (and skirmish map is selected)
     } // mouse hovers over "START"
 
@@ -2098,7 +2095,7 @@ bool cGame::setupGame() {
 	selectYourNextConquestState->INSTALL_WORLD();
 
     delete mapCamera;
-	mapCamera = new cMapCamera();
+	mapCamera = new cMapCamera(&map);
 
     delete drawManager;
 	drawManager = new cDrawManager(&player[HUMAN]);
