@@ -9,24 +9,28 @@ cPlayerOrdosDifficultySettings::~cPlayerOrdosDifficultySettings() {
 
 }
 
-int cPlayerOrdosDifficultySettings::getBuildSpeed(int iSpeed) {
+float cPlayerOrdosDifficultySettings::getBuildSpeed(int iSpeed) {
 	return (int) (iSpeed * 0.8f);
 }
 
-int cPlayerOrdosDifficultySettings::getDumpSpeed(int iSpeed) {
+float cPlayerOrdosDifficultySettings::getDumpSpeed(int iSpeed) {
 	return (int) (iSpeed * 0.8f);
 }
 
-int cPlayerOrdosDifficultySettings::getHarvestSpeed(int iSpeed) {
+float cPlayerOrdosDifficultySettings::getHarvestSpeed(int iSpeed) {
 	return (int) (iSpeed * 0.8f);
 }
 
-int cPlayerOrdosDifficultySettings::getInflictDamage(int iDamageInflicted) {
+float cPlayerOrdosDifficultySettings::getInflictDamage(int iDamageInflicted) {
 	return (iDamageInflicted * 0.8f);
 }
 
-int cPlayerOrdosDifficultySettings::getMoveSpeed(int iUnitType) {
-	return (int)(units[iUnitType].speed);
+float cPlayerOrdosDifficultySettings::getMoveSpeed(int iUnitType, int terrainSlowDown) {
+    if (iUnitType == SABOTEUR) {
+        return units[iUnitType].speed + ((float)terrainSlowDown * 0.3f); // slow downs are much less influential for saboteur
+    }
+
+	return (int)((units[iUnitType].speed + terrainSlowDown) * 0.95f);
 }
 
 

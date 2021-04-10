@@ -8,26 +8,26 @@ cPlayerHarkonnenDifficultySettings::~cPlayerHarkonnenDifficultySettings() {
 
 }
 
-int cPlayerHarkonnenDifficultySettings::getBuildSpeed(int iSpeed) {
+float cPlayerHarkonnenDifficultySettings::getBuildSpeed(int iSpeed) {
 	return (int) (iSpeed * 1.2f);
 }
 
-int cPlayerHarkonnenDifficultySettings::getDumpSpeed(int iSpeed) {
+float cPlayerHarkonnenDifficultySettings::getDumpSpeed(int iSpeed) {
 	// harkonnen dumps slower
 	return (int) (iSpeed * 1.2f);
 }
 
-int cPlayerHarkonnenDifficultySettings::getHarvestSpeed(int iSpeed) {
+float cPlayerHarkonnenDifficultySettings::getHarvestSpeed(int iSpeed) {
 	return (int) (iSpeed * 1.2f);
 }
 
 // damage done by Harkonnen is 20% more in overall
-int cPlayerHarkonnenDifficultySettings::getInflictDamage(int iDamageInflicted) {
+float cPlayerHarkonnenDifficultySettings::getInflictDamage(int iDamageInflicted) {
 	return (int) (iDamageInflicted * 1.2);
 }
 
-int cPlayerHarkonnenDifficultySettings::getMoveSpeed(int iUnitType) {
-	return (int)(units[iUnitType].speed);
+float cPlayerHarkonnenDifficultySettings::getMoveSpeed(int iUnitType, int terrainSlowDown) {
+	return (int)(units[iUnitType].speed) + ((float)terrainSlowDown * 1.1);
 }
 
 

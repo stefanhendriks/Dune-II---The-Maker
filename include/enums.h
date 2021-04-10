@@ -47,6 +47,25 @@ enum eLogLevel {
 	LOG_FATAL
 };
 
+// what is the intent of the action given to the unit?
+enum eUnitActionIntent {
+    INTENT_NONE, // none
+    INTENT_MOVE, // move to target
+    INTENT_ATTACK, // attack target
+    INTENT_REPAIR, // repair at target
+    INTENT_CAPTURE, // capture target
+    INTENT_UNLOAD_SPICE // deposit spice
+};
+
+// what is the intent of the action given to the unit?
+enum eUnitMoveToCellResult {
+    MOVERESULT_BUSY, // still busy moving between cells (offsets != 0)
+    MOVERESULT_AT_CELL, // arrived at a cell (but it is not the end-goal)
+    MOVERESULT_AT_GOALCELL, // arrived at the GOAL cell
+    MOVERESULT_WAIT_FOR_CARRYALL,
+    MOVERESULT_SLOWDOWN, // the unit has to 'wait' (ie its slowdown is in effect)
+};
+
 // 0x01 ==   1 == "00000001"
 // 0x02 ==   2 == "00000010"
 // 0x04 ==   4 == "00000100"
@@ -62,6 +81,82 @@ enum eHouseBitFlag {
     Sardaukar = 0x08,
     Fremen = 0x10,
     Unknown = 0x20
+};
+
+
+// what type of thing do we build?
+// a unit/structure of something special (super weapon)
+
+// BE MINDFUL when changing order of this enum, as it is used. If somewhere the 0/1 (ordinal) is stored and assumes
+// it reflects the values below, it might break when changing the order.
+enum eBuildType {
+    STRUCTURE, // 0
+    UNIT,      // 1
+    UPGRADE,   // 2
+    SPECIAL,   // 3
+    BULLET     // 4 (ie, used for super weapon)
+};
+
+enum eDeployTargetType {
+    TARGET_NONE,
+
+    /**
+     * Player specifies exactly cell where to deploy.
+     */
+    TARGET_SPECIFIC_CELL,
+
+    /**
+     * Player specifies cell where to deploy, but the actual cell to deploy
+     * is determined by make it more inaccurate. The inaccuracy is determined by
+     * a different variable.
+     */
+    TARGET_INACCURATE_CELL,
+};
+
+/**
+ * Used to determine how deployment is arranged. Usually AT_STRUCTURE is default behavior (ie for spawning next
+ * of a structure. AT_RANDOM_CELL is used for Fremen Super Weapon.
+ */
+enum eDeployFromType {
+    /**
+     * Random cell
+     */
+    AT_RANDOM_CELL,
+
+    /**
+     * Deploy at structure
+     */
+    AT_STRUCTURE
+};
+
+enum eListType {
+    LIST_NONE,
+    LIST_CONSTYARD,
+    LIST_FOOT_UNITS, // infantry, soldier, trooper, troopers, etc.
+    LIST_UNITS, // quad, trike, tanks, air units
+    LIST_STARPORT, // special list to order stuff
+    LIST_PALACE, // REMOVE? (ie super weapon icon should always show top left/right?)
+    LIST_UPGRADES, // possible upgrades
+    LIST_MAX // max amount of lists
+};
+
+static const eListType AllListTypes[] = {
+        LIST_NONE,
+        LIST_CONSTYARD,
+        LIST_FOOT_UNITS,
+        LIST_UNITS,
+        LIST_STARPORT,
+        LIST_PALACE,
+        LIST_UPGRADES
+};
+
+// the BuildingListItemState
+enum eBuildingListItemState {
+    AVAILABLE,
+    BUILDING,
+    PENDING_UPGRADE,    // an upgrade is blocking this item to be built
+    PENDING_BUILDING,   // another item being built is blocking this item to be upgraded
+    UNAVAILABLE
 };
 
 #endif /* ENUMS_H_ */

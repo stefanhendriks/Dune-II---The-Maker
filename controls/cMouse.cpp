@@ -85,6 +85,10 @@ bool cMouse::isOverRectangle(cRectangle *rectangle) {
     return rectangle->isMouseOver();
 }
 
+/**
+ * Is player moving map camera with right mouse button pressed/dragging?
+ * @return
+ */
 bool cMouse::isMapScrolling() {
     return mouse_mv_x1 > -1 && mouse_mv_y1 > -1 && mouse_mv_x2 > -1 && mouse_mv_y2 > -1;
 }

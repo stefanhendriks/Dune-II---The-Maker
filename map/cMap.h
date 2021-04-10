@@ -19,6 +19,7 @@ public:
 
     void init(int width, int height);
 
+	bool canDeployUnitAtCell(int iCell, int iUnitId);
 	bool occupied(int iCell);
 	bool occupied(int iCll, int iUnitID);
 	bool occupiedInDimension(int iCell, int dimension);
@@ -144,6 +145,12 @@ public:
         return false;
     }
 
+    bool isCellPassableFoot(int cellNr) {
+        tCell *pCell = getCell(cellNr);
+        if (pCell) return pCell->passableFoot;
+        return false;
+    }
+
     /**
      * returns if id of layer units is filled (if so, a unit is recorded to be on this cell)
      * @param cellNr
@@ -178,6 +185,13 @@ public:
      */
     int getCellIdStructuresLayer(int cellNr) {
         return cellGetIdFromLayer(cellNr, MAPID_STRUCTURES);
+    }
+    
+    bool isCellPassableForFootUnits(int cellNr) {
+        bool isPassable = isCellPassableFoot(cellNr); // -> this will block for ALL units, so don't do this
+        int unitId = getCellIdUnitLayer(cellNr);
+        int strucId = getCellIdStructuresLayer(cellNr);
+        return isPassable && unitId < 0 && strucId < 0;
     }
 
     void cellTakeDamage(int cellNr, int damage) {
@@ -252,6 +266,11 @@ public:
         if (pCell) pCell->passable = value;
     }
 
+    void cellChangePassableFoot(int cellNr, bool value) {
+        tCell *pCell = getCell(cellNr);
+        if (pCell) pCell->passableFoot = value;
+    }
+
     void cellInit(int cellNr) {
         tCell *pCell = getCell(cellNr);
         if (!pCell) return; // bail
@@ -259,6 +278,7 @@ public:
         pCell->credits = 0;
         pCell->health = 0;
         pCell->passable = true;
+        pCell->passableFoot = true;
         pCell->tile = 0;
         pCell->type = TERRAIN_SAND;    // refers to gfxdata!
 
@@ -316,6 +336,8 @@ public:
      * @return
      */
     int getTotalCountCellType(int cellType);
+
+    int getCellSlowDown(int i);
 
 private:
         tCell cell[MAX_CELLS];

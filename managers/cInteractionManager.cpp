@@ -47,14 +47,21 @@ void cInteractionManager::mouseInteractWithBattlefield() {
         mapCamera->zoomIn();
     }
 
-    if (game.bPlaceIt && cMouse::isRightButtonClicked()) {
-        // not moving the map with the right mouse button, then cancel placement
-        if (mouse_mv_x2 < -1 && mouse_mv_y2 < -1) { // < -1 means we have had this evaluation before :/
-            game.bPlaceIt = false;
+    if (cMouse::isRightButtonClicked()) {
+        // not moving the map with the right mouse button, then this means it is a 'click' so act accordingly
+        bool isANormalButtonClick = mouse_mv_x2 < -1 && mouse_mv_y2 < -1; // < -1 means we have had this evaluation before :/
+        if (isANormalButtonClick) {
+            if (game.bPlaceIt) {
+                game.bPlaceIt = false;
+            }
+            if (game.bDeployIt) {
+                game.bDeployIt = false;
+            }
         }
     }
 
-    // make -1 to -2, so that we can prevent placeIt=false when just stopped viewport dragging
+    // HACK HACK:
+    // make -1 to -2, so that we can prevent placeIt/deployIt=false when just stopped viewport dragging
     if (mouse_mv_x2 == -1) {
         mouse_mv_x2 = -2;
     }

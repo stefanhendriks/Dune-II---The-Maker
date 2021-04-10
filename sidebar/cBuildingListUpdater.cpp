@@ -188,6 +188,22 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
         listUnits->addUnitToList(CARRYALL, SUBLIST_HIGHTECH);
     }
 
+	if (structureType == PALACE) {
+        cBuildingList *listPalace = sideBar->getList(LIST_PALACE);
+        // special weapons
+        switch (house) {
+            case ATREIDES:
+                listPalace->addSpecialToList(SPECIAL_FREMEN, 0);
+                break;
+            case HARKONNEN:
+                listPalace->addSpecialToList(SPECIAL_DEATHHAND,0);
+                break;
+            case ORDOS:
+                listPalace->addSpecialToList(SPECIAL_SABOTEUR, 0);
+                break;
+        }
+	}
+
     evaluateUpgrades();
 
     // do something
@@ -495,6 +511,12 @@ void cBuildingListUpdater::onBuildItemCompleted(cBuildingListItem *pItem) {
     if (pItem->isTypeUpgrade()) {
         // do nothing, this is normally called via OnUpgradeCompleted, see method above.
         logbook("Wrongfully called onBuildItemCompleted when OnUpgradeCompleted was expected.");
+        return;
+    }
+
+    if (pItem->isTypeSpecial()) {
+        // do stuff here for special item
+        const s_Special &special = pItem->getS_Special();
         return;
     }
 

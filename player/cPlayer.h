@@ -32,8 +32,6 @@ class cPlayer {
 
 		void init(int id);
 
-		int iTeam;
-
 		int use_power;      // total amount of power usage
 		int has_power;      // total amount of power generated
 
@@ -94,7 +92,6 @@ class cPlayer {
 		// delete
 		void deleteSideBar() { if (sidebar) delete sidebar; }
 
-
 		std::string asString() const {
 		    char msg[512];
 		    sprintf(msg, "Player [id=%d, human=%b, sidebar=%d]", this->id, this->m_Human, this->sidebar);
@@ -112,6 +109,7 @@ class cPlayer {
         bool hasBarracks() const;
 
         bool hasAtleastOneStructure(int structureType) const;
+
 
         void decreaseStructureAmount(int structureType);
         void increaseStructureAmount(int structureType);
@@ -136,9 +134,17 @@ class cPlayer {
             iStructureUpgradeLevel[structureType]++;
         }
 
-    void giveCredits(float amountToGive);
+        void setTeam(int value) { iTeam = value; }
 
-    float hasEnoughCreditsForUnit(int unitType);
+        void giveCredits(float amountToGive);
+
+        float hasEnoughCreditsForUnit(int unitType);
+
+        std::vector<int> getAllMyUnits();
+
+        std::vector<int> getAllMyStructures();
+
+    bool isSameTeamAs(cPlayer *pPlayer);
 
 private:
 		int getRGBColorForHouse(int houseId);
@@ -165,8 +171,10 @@ private:
 		int minimapColor;			// color of this team on minimap;
 		int emblemBackgroundColor;	// color of the emblem background
 		int id;	// this id is the reference to the player array
+        int iTeam;
 
-		BITMAP * bmp_structure[MAX_STRUCTURETYPES];
+
+        BITMAP * bmp_structure[MAX_STRUCTURETYPES];
 
 		BITMAP * bmp_unit[MAX_UNITTYPES]; // the body of unit
 		BITMAP * bmp_unit_top[MAX_UNITTYPES]; // optionally a 'top' of unit (barrel of tank, for example)
@@ -177,6 +185,7 @@ private:
         int iPrimaryBuilding[MAX_STRUCTURETYPES];	// remember the primary ID (structure id) of each structure type
         int iStructures[MAX_STRUCTURETYPES]; // remember what is built for each type of structure
         int iStructureUpgradeLevel[MAX_STRUCTURETYPES]; // remember the upgrade level for each structure type
+        std::string getHouseNameForId(int house) const;
 };
 
 #endif

@@ -1,6 +1,4 @@
 #include "../include/d2tmh.h"
-#include "cItemBuilder.h"
-
 
 cItemBuilder::cItemBuilder(cPlayer * thePlayer, cBuildingListUpdater * buildingListUpdater) {
 	assert(thePlayer);
@@ -68,6 +66,7 @@ void cItemBuilder::think() {
 
         // determines how fast an item is built, this is the so called 'delay' before 1 'build time tick' has passed
         int timerCap = getTimerCap(item);
+        item->setTimerCap(timerCap);
 
         // not yet done building
         if (timers[i] < timerCap) continue;
@@ -91,9 +90,14 @@ void cItemBuilder::think() {
             continue;
         }
 
+        // check if frame being drawn for building is still showing, if so wait for it
+        if (item->getBuildProgressFrame() < 31) {
+            continue; // wait
+        }
+
         // DONE building
         if (item->getBuildType() == STRUCTURE) {
-            // play voice when placeIt is false
+            // play voice when placeIt is false`
             if (!item->shouldPlaceIt()) {
                 if (m_Player->isHuman()) {
                     play_voice(SOUND_VOICE_01_ATR); // "Construction Complete"
@@ -108,47 +112,7 @@ void cItemBuilder::think() {
 
             // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
             if (!units[item->getBuildId()].airborn) {
-                int structureTypeByItem = structureUtils.findStructureTypeByTypeOfList(item);
-                assert(structureTypeByItem > -1);
-                int structureToDeployUnit = structureUtils.findStructureToDeployUnit(m_Player, structureTypeByItem);
-                if (structureToDeployUnit > -1) {
-                    cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
-                    // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
-                    int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
-                    if (cell > -1) {
-                        pStructureToDeploy->setAnimating(true); // animate
-                        int unitId = UNIT_CREATE(cell, item->getBuildId(), m_Player->getId(), false);
-                        int rallyPoint = pStructureToDeploy->getRallyPoint();
-                        if (rallyPoint > -1) {
-                            unit[unitId].move_to(rallyPoint, -1, -1);
-                        }
-                    } else {
-                        logbook("cItemBuilder: huh? I was promised that this structure would have some place to deploy unit at!?");
-                    }
-                } else {
-                    structureToDeployUnit = m_Player->getPrimaryStructureForStructureType(structureTypeByItem);
-                    if (structureToDeployUnit < 0) {
-                        // find any structure of type (regardless if we can deploy or not)
-                        for (int structureId = 0; structureId < MAX_STRUCTURES; structureId++) {
-                            cAbstractStructure *pStructure = structure[structureId];
-                            if (pStructure &&
-                                pStructure->isValid() &&
-                                pStructure->belongsTo(m_Player->getId()) &&
-                                pStructure->getType() == structureTypeByItem) {
-                                structureToDeployUnit = structureId;
-                                break;
-                            }
-                        }
-                    }
-
-                    int cellToDeploy = structure[structureToDeployUnit]->getCell();
-                    cAbstractStructure * pStructureToDeploy = structure[structureToDeployUnit];
-                    if (pStructureToDeploy->getRallyPoint() > -1) {
-                        cellToDeploy = pStructureToDeploy->getRallyPoint();
-                    }
-
-                    REINFORCE(m_Player->getId(), item->getBuildId(), cellToDeploy, -1);
-                }
+                deployUnit(item, item->getBuildId());
             } else {
                 // airborn unit
                 int structureToDeployUnit = structureUtils.findHiTechToDeployAirUnit(m_Player);
@@ -158,7 +122,7 @@ void cItemBuilder::think() {
                     int unitId = UNIT_CREATE(pStructureToDeploy->getCell(), item->getBuildId(), m_Player->getId(), false);
                     int rallyPoint = pStructureToDeploy->getRallyPoint();
                     if (rallyPoint > -1) {
-                        unit[unitId].move_to(rallyPoint, -1, -1);
+                        unit[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
                     }
                 } else {
                     // got destroyed very recently
@@ -167,7 +131,65 @@ void cItemBuilder::think() {
 
         } else if (item->getBuildType() == SPECIAL) {
             buildingListUpdater->onBuildItemCompleted(item);
-            // super weapons and that kind of stuff
+            const s_Special &special = item->getS_Special();
+
+            if (special.providesType == eBuildType::UNIT) {
+                item->decreaseTimesToBuild(); // decrease amount of times to build
+                if (special.deployFrom == AT_STRUCTURE) {
+                    if (special.providesType == UNIT) {
+                        deployUnit(item, special.providesTypeId);
+                    }
+                    item->stopBuilding();
+                    removeItemFromList(item);
+                } else if (special.deployFrom == AT_RANDOM_CELL) {
+                    if (special.providesType == UNIT) {
+                        // determine cell
+                        cCellCalculator cellCalculator = cCellCalculator(&map);
+                        int iCll = cellCalculator.getCellWithMapBorders(4 + rnd(game.map_width - 8),
+                                                                        4 + rnd(game.map_height - 8));
+
+                        for (int j = 0; j < special.units; j++) {
+                            bool passable = map.isCellPassableForFootUnits(iCll);
+
+                            if (passable) {
+                                UNIT_CREATE(iCll, special.providesTypeId, FREMEN, false);
+                            } else {
+                                REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
+                            }
+
+                            int x = iCellGiveX(iCll);
+                            int y = iCellGiveY(iCll);
+                            int amount = rnd(2) + 1;
+
+                            // randomly shift the cell one coordinate up/down/left/right
+                            switch (rnd(4)) {
+                                case 0:
+                                    x += amount;
+                                    break;
+                                case 1:
+                                    y += amount;
+                                    break;
+                                case 2:
+                                    x -= amount;
+                                    break;
+                                case 3:
+                                    y -= amount;
+                                    break;
+                            }
+                            // change cell
+                            FIX_POS(x, y);
+
+                            iCll = cellCalculator.getCell(x, y);
+                        }
+                    }
+                    item->stopBuilding();
+                    removeItemFromList(item);
+                }
+            } else if (special.providesType == eBuildType::BULLET) {
+                if (special.deployFrom == AT_STRUCTURE) {
+                    item->setDeployIt(true);
+                }
+            }
         } else if (item->getBuildType() == UPGRADE) {
             buildingListUpdater->onUpgradeCompleted(item);
             removeItemFromList(item);
@@ -182,8 +204,7 @@ void cItemBuilder::think() {
         // stop building this item when we are done
         if (item->getTimesToBuild() == 0) {	// no more items to build
             // stop building (set flags)
-            item->setIsBuilding(false);
-            item->resetProgress(); // set back progress
+            item->stopBuilding();
 
             // remove this item from the build list (does not delete item, so pointer is still valid)
             removeItemFromList(item);
@@ -202,6 +223,52 @@ void cItemBuilder::think() {
             startBuilding(item);
         }
 	}
+}
+
+void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
+    int structureTypeByItem = structureUtils.findStructureTypeByTypeOfList(item);
+    assert(structureTypeByItem > -1);
+    int structureToDeployUnit = structureUtils.findStructureToDeployUnit(m_Player, structureTypeByItem);
+    int buildIdToProduce = buildId;
+    if (structureToDeployUnit > -1) {
+        cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
+        // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
+        int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
+        if (cell > -1) {
+            pStructureToDeploy->setAnimating(true); // animate
+            int unitId = UNIT_CREATE(cell, buildIdToProduce, m_Player->getId(), false);
+            int rallyPoint = pStructureToDeploy->getRallyPoint();
+            if (rallyPoint > -1) {
+                unit[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
+            }
+        } else {
+            logbook("cItemBuilder: huh? I was promised that this structure would have some place to deploy unit at!?");
+        }
+    } else {
+        structureToDeployUnit = m_Player->getPrimaryStructureForStructureType(structureTypeByItem);
+        if (structureToDeployUnit < 0) {
+            // find any structure of type (regardless if we can deploy or not)
+            for (int structureId = 0; structureId < MAX_STRUCTURES; structureId++) {
+                cAbstractStructure *pStructure = structure[structureId];
+                if (pStructure &&
+                    pStructure->isValid() &&
+                    pStructure->belongsTo(m_Player->getId()) &&
+                    pStructure->getType() == structureTypeByItem) {
+                    structureToDeployUnit = structureId;
+                    break;
+                }
+            }
+        }
+
+        cAbstractStructure * pStructureToDeploy = structure[structureToDeployUnit];
+        if (pStructureToDeploy && pStructureToDeploy->isValid()) {
+            int cellToDeploy = structure[structureToDeployUnit]->getCell();
+            if (pStructureToDeploy->getRallyPoint() > -1) {
+                cellToDeploy = pStructureToDeploy->getRallyPoint();
+            }
+            REINFORCE(m_Player->getId(), buildIdToProduce, cellToDeploy, -1);
+        }
+    }
 }
 
 /**
@@ -472,6 +539,8 @@ cBuildingListItem * cItemBuilder::getItem(int position) {
 void cItemBuilder::startBuilding(cBuildingListItem *item) {
     if (item == nullptr) return;
     item->setIsBuilding(true);
+    item->setTimerCap(getTimerCap(item));
+    item->resetProgressFrameTimer();
     buildingListUpdater->onBuildItemStarted(item);
 }
 

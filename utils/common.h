@@ -6,7 +6,7 @@
   Contact: stefanhen83@gmail.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2020 (c) code by Stefan Hendriks
+  2001 - 2021 (c) code by Stefan Hendriks
 
   */
 
@@ -17,14 +17,11 @@ int BETWEEN(int val, int min, int max);
 void FIX_BORDER_POS(int &x, int &y);
 void FIX_POS(int &x, int &y);
 
-bool MOUSE_BTN_LEFT();
-bool MOUSE_BTN_RIGHT();
-
 int keepBetween(int value, int min, int max);
 
 // Installment of properties/settings in the game.
 void INSTALL_HOUSES();
-void INSTALL_PLAYERS();
+void INIT_ALL_PLAYERS();
 
 void INIT_PREVIEWS();
 
@@ -32,6 +29,7 @@ void install_structures();
 void install_units();
 void install_bullets();
 void install_upgrades();
+void install_specials();
 
 float health_bar(float max_w, int i, int w);
 

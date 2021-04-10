@@ -8,6 +8,8 @@
 #ifndef STRUCTS_H_
 #define STRUCTS_H_
 
+#include "enums.h"
+
 // Unit properties
 // the s_UnitP struct is holding all properties for a specific unit type.
 // note: The unit properties are actually set in common.cpp , like the houses!
@@ -25,7 +27,7 @@ struct s_UnitP {
   int    bmp_startpixel; // The X axis starting pixel (i.e. for the harvester)
 
   int    hp;             // Amount of hitpoints at maximum
-  int    speed;          // speed (0 being uberly slow, 1000 being super fast).
+  int    speed;          // speed (0 being super fast, the higher the number, the slower).
   int    turnspeed;
   int    attack_frequency;  // timer for attacking
 
@@ -67,6 +69,13 @@ struct s_UnitP {
   // list related
   int listId;               // ie LIST_FOOT_UNITS or LIST_UNITS
   int subListId;            // ie SUBLIST_LIGHTFCTRY
+
+  // attack related
+  bool canAttackAirUnits;   // ie for rocket typed units
+
+  bool canEnterAndDamageStructure;  // can this unit enter a structure and damage it? (and eventually capture?)
+  bool attackIsEnterStructure;      // for saboteur only really
+  float damageOnEnterStructure;     // the damage inflicted to a structure when entered
 };
 
 // Structure types
@@ -105,6 +114,8 @@ struct s_Structures {
   bool queuable;        // can this item be queued in the buildList? (default = false)
 
   bool configured;     // is this structure configured? (poor man solution)
+
+  bool canAttackAirUnits; // for turrets
 };
 
 /**
@@ -141,6 +152,44 @@ struct s_Upgrade {
 
 };
 
+/**
+ * Upgrades are tied to structures (ie this is used to upgrade a structure type). After
+ * the upgrade is completed, the result is always an increased upgrade count.
+ *
+ * Then, also, this struct provides which item and what kind of item will be made available.
+ */
+struct s_Special {
+    int icon;            // icon id
+
+    char description[64]; // ie: "Upgrade to 4slab"
+
+    int buildTime;     // how long it takes to 'build' (ie wait before ready)
+
+    eBuildType providesType;
+    int providesTypeId;   // slot of type it points to (typeId)
+
+    int units;   // amount of units to spawn at once
+
+    eDeployFromType deployFrom; // for Fremen, deploys unit to random cell
+
+    eDeployTargetType deployTargetType; // for ie DeathHand, how 'accurate' the deploy target will become
+
+    /**
+     * how accurate (for deployTargetType == INACCURATE), ie the amount of cells it can be off.
+     * A 0 means 100% accurate (ie nothing to fudge), 1 means 1 cell off, etc.
+     */
+    int deployTargetPrecision;
+
+    unsigned char house; // which house(s) have access to this?
+
+    bool autoBuild; // if true, then this item is built automatically
+
+    int deployAtStructure; // if deployFrom == STRUCTURE, then this is the structure type to deploy at
+
+    int listId;
+    int subListId;
+};
+
 // House properties
 struct s_House {
   int swap_color;           // color index to start swapping with.
@@ -148,8 +197,7 @@ struct s_House {
 };
 
 
-struct s_Bullet
-{
+struct s_Bullet {
 
   BITMAP *bmp;        // a reference to its bitmap. (16 bits here!)
   int deadbmp;        // when the bullet dies, it will use this bmp to show its animation
@@ -157,6 +205,7 @@ struct s_Bullet
 
   int damage;         // how much damage it does -> vehicles
   int damage_inf;     // how much damage it does -> infantry
+  int explosionSize;  // square like explosion, defaults 1 (=1x1 tile), 2 means 2x2, etc.
   int max_frames;     // when > 0 it animates automatically
   int max_deadframes; // max dead frames
 

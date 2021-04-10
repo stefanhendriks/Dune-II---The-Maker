@@ -21,9 +21,7 @@ public:
     void think_guard();
     void think_unit_occupation();
 
-    void draw(int iStage);
-
-	int getType();
+    int getType() const;
 	int getSpiceSiloCapacity();
 
 };

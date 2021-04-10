@@ -35,11 +35,10 @@ public:
     int iOwnerUnit;     // unit who shoots
     int iOwnerStructure;// structure who shoots (rocket/normal turret for example)
     int iPlayer;        // what player shot this? (for damage control)
-    
 
-    // when set, the bullet will track down the bastard, but only for a while
-    int iHoming;        // homing to unit...
-    int TIMER_homing;   // when timer set, > 0 means homing
+    // when set, the bullet will follow the unit, but only for a while
+    int iHoming;
+    int TIMER_homing;   // when timer set, > 0 means homing (follow unit until timer runs out)
 
     // Movement
     int iGoalCell;      // the goal cell (goal of path)    
@@ -57,11 +56,11 @@ private:
 
     void die();
 
-    void damageStructure(int idOfStructureAtCell);
+    void damageStructure(int idOfStructureAtCell, double factor);
 
     cPlayer * getPlayer() const;
 
-    int getDamageToInflictToNonInfantry() const;
+    float getDamageToInflictToNonInfantry() const;
 
     s_Bullet gets_Bullet() const;
 
@@ -75,29 +74,29 @@ private:
 
     int getRandomY() const;
 
-    void damageWall(int cell) const;
+    void damageWall(int cell, double factor) const;
 
     bool isAtGoalCell() const;
 
     void arrivedAtGoalLogic();
 
-    void damageSandworm(int cell) const;
+    void damageSandworm(int cell, double factor) const;
 
-    void detonateSpiceBloom(int cell) const;
+    void detonateSpiceBloom(int cell, double factor) const;
 
-    void damageGroundUnit(int cell) const;
+    void damageGroundUnit(int cell, double factor) const;
 
-    int getDamageToInflictToInfantry() const;
+    float getDamageToInflictToInfantry() const;
 
-    int getDamageToInflictToUnit(cUnit &unitTakingDamage) const;
+    float getDamageToInflictToUnit(cUnit &unitTakingDamage) const;
 
     bool isDeviatorGas() const;
 
     bool isRocket() const;
 
-    void damageAirUnit(int cell) const;
+    void damageAirUnit(int cell, double factor) const;
 
-    void damageTerrain(int cell) const;
+    void damageTerrain(int cell, double factor) const;
 
     bool isSonicWave() const;
 

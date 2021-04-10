@@ -6,7 +6,7 @@ cSpiceSilo::cSpiceSilo() {
 
 }
 
-int cSpiceSilo::getType() {
+int cSpiceSilo::getType() const {
 	return SILO;
 }
 

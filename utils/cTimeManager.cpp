@@ -138,10 +138,15 @@ void cTimeManager::handleTimerGlobal() {
 			// structures think
 			for (int i=0; i < MAX_STRUCTURES; i++) {
                 cAbstractStructure *pStructure = structure[i];
-                if (pStructure && pStructure->isValid()) {
+                if (pStructure == nullptr) continue;
+                if (pStructure->isValid()) {
                     pStructure->think();           // think about actions going on
                     pStructure->think_animation(); // think about animating
                     pStructure->think_guard();     // think about 'guarding' the area (turrets only)
+                }
+                if (pStructure->isDead()) {
+                    // cleanup
+                    cStructureFactory::getInstance()->deleteStructureInstance(pStructure);
                 }
             }
 

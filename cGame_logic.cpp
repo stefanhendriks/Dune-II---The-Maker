@@ -20,7 +20,6 @@
 #include <algorithm>
 #include <random>
 #include "include/d2tmh.h"
-#include "cGame.h"
 
 
 cGame::cGame() {
@@ -75,6 +74,9 @@ void cGame::init() {
 	bPlaceIt=false;			// we do not place
 	bPlacedIt=false;
 
+	bDeployIt=false;
+	bDeployedIt=false;
+
 	map_width  = 64;
 	map_height = 64;
 
@@ -110,7 +112,7 @@ void cGame::init() {
 
 	// Units & Structures are already initialized in map.init()
 	if (game.bMp3 && mp3_music) {
-	    almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
+	    almp3_stop_autopoll_mp3(mp3_music); // stop auto updateState
 	}
 
 	// Load properties
@@ -135,6 +137,9 @@ void cGame::mission_init() {
 
 	bPlaceIt=false;			// we do not place
 	bPlacedIt=false;
+
+    bDeployIt=false;
+    bDeployedIt=false;
 
 	mouse_tile = MOUSE_NORMAL;
 
@@ -172,27 +177,26 @@ void cGame::mission_init() {
 
 
 void cGame::think_winlose() {
-    bool bSucces=false;
-    bool bFailed=true;
+    bool bSucces = false;
+    bool bFailed = true;
 
     // determine if player is still alive
-    for (int i=0; i < MAX_STRUCTURES; i++)
-        if (structure[i])
-            if (structure[i]->getOwner() == 0)
-            {
-                bFailed=false; // no, we are not failing just yet
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+        if (structure[i]) {
+            if (structure[i]->getOwner() == 0) {
+                bFailed = false; // no, we are not failing just yet
                 break;
             }
+        }
+    }
 
     // determine if any unit is found
-    if (bFailed)
-    {
+    if (bFailed) {
         // check if any unit is ours, if not, we have a problem (airborn does not count)
-        for (int i=0; i < MAX_UNITS; i++)
+        for (int i = 0; i < MAX_UNITS; i++)
             if (unit[i].isValid())
-                if (unit[i].iPlayer == 0)
-                {
-                    bFailed=false;
+                if (unit[i].iPlayer == 0) {
+                    bFailed = false;
                     break;
                 }
     }
@@ -307,7 +311,7 @@ bool cGame::isMusicPlaying() {
     return MIDI_music_playing();
 }
 
-void cGame::poll() {
+void cGame::updateState() {
 	cMouse::updateState();
 	for (int i = 0; i < MAX_PLAYERS; i++) {
         cPlayer *pPlayer = &player[i];
@@ -322,52 +326,51 @@ void cGame::poll() {
         if (i != HUMAN) continue; // non HUMAN players are done
         mouse_tile = MOUSE_NORMAL;
 
-        // change this when selecting stuff
+        // change the mouse tile depending on what we're hovering over
         int mc = context->getMouseCell();
         if (mc > -1) {
 
             // check if any unit is 'selected'
-            for (int i=0; i < MAX_UNITS; i++) {
-                if (unit[i].isValid()) {
-                    if (unit[i].iPlayer == 0) {
-                        if (unit[i].bSelected) {
-                            mouse_tile = MOUSE_MOVE;
-                            break;
-                        }
-                    }
+            for (int j=0; j < MAX_UNITS; j++) {
+                cUnit &cUnit = unit[j];
+                if (!cUnit.isValid()) continue;
+                if (cUnit.iPlayer != HUMAN) continue;
+                if (cUnit.bSelected) {
+                    mouse_tile = MOUSE_MOVE;
+                    break;
                 }
             }
 
-            if (mouse_tile == MOUSE_MOVE)
-            {
+
+            if (mouse_tile == MOUSE_MOVE) {
                 // change to attack cursor if hovering over enemy unit
                 if (mapUtils->isCellVisibleForPlayerId(HUMAN, mc)) {
 
                     int idOfUnitOnCell = map.getCellIdUnitLayer(mc);
 
-                    if (idOfUnitOnCell > -1)
-                    {
+                    if (idOfUnitOnCell > -1) {
                         int id = idOfUnitOnCell;
 
-                        if (unit[id].iPlayer > 0)
+                        if (!unit[id].getPlayer()->isSameTeamAs(&player[HUMAN])) {
                             mouse_tile = MOUSE_ATTACK;
+                        }
                     }
 
                     int idOfStructureOnCell = map.getCellIdStructuresLayer(mc);
 
-                    if (idOfStructureOnCell > -1)
-                    {
+                    if (idOfStructureOnCell > -1) {
                         int id = idOfStructureOnCell;
 
-                        if (structure[id]->getOwner() > 0)
+                        if (!structure[id]->getPlayer()->isSameTeamAs(&player[HUMAN])) {
                             mouse_tile = MOUSE_ATTACK;
+                        }
                     }
 
-                    if (key[KEY_LCONTROL]) {
+                    if (key[KEY_LCONTROL]) { // force attack
                         mouse_tile = MOUSE_ATTACK;
                     }
 
-                    if (key[KEY_ALT]) {
+                    if (key[KEY_ALT]) { // force move
                         mouse_tile = MOUSE_MOVE;
                     }
 
@@ -375,22 +378,22 @@ void cGame::poll() {
             }
         }
 
-        if (mouse_tile == MOUSE_NORMAL)
-        {
+        if (mouse_tile == MOUSE_NORMAL) {
             // when selecting a structure
-            if (game.selected_structure > -1)
-            {
+            if (game.selected_structure > -1) {
                 int id = game.selected_structure;
-                if (structure[id]->getOwner() == 0)
-                    if (key[KEY_LCONTROL])
+                cAbstractStructure *pStructure = structure[id];
+                if (pStructure && pStructure->getOwner() == HUMAN) {
+                    if (key[KEY_LCONTROL]) {
                         mouse_tile = MOUSE_RALLY;
-
+                    }
+                }
             }
         }
 
         bPlacedIt=false;
+        bDeployedIt = false;
 
-        //selected_structure=-1;
         hover_unit=-1;
     }
 }
@@ -407,6 +410,7 @@ void cGame::combat() {
         iFadeAction = 2;
     // -----------------
 	bPlacedIt = bPlaceIt;
+	bDeployedIt = bDeployIt;
 
     drawManager->drawCombatState();
 	interactionManager->interact();
@@ -615,10 +619,13 @@ void cGame::menu()
 void cGame::init_skirmish() const {
     game.mission_init();
 
-    for (int p = 0; p < AI_WORM; p++) {
+    for (int p = HUMAN; p < AI_WORM; p++) {
         player[p].credits = 2500;
-        player[p].iTeam = p;
+        player[p].setTeam(p);
     }
+
+    // Fremen allies with Human by default
+    player[FREMEN].setTeam(HUMAN);
 }
 
 void cGame::setup_skirmish() {
@@ -1148,44 +1155,68 @@ void cGame::setup_skirmish() {
             }
 
             // set up players and their units
-            for (int p=0; p < AI_WORM; p++)	{
+            for (int p=0; p < MAX_PLAYERS; p++)	{
 
                 cPlayer &cPlayer = player[p];
-                int iHouse = cPlayer.getHouse();
+                cAIPlayer &aiPlayer = aiplayer[p];
+                int iHouse = cPlayer.getHouse(); // get house selected, which can be 0 for RANDOM
 
-                // house = 0 means pick random house
-                if (iHouse==0 && p < 4) { // (all players above 4 are non-playing AI 'sides'
-                    bool bOk=false;
+                // not playing.. do nothing (only for playable factions)
+                bool playableFaction = p < AI_CPU5;
 
-                    while (bOk == false) {
-                        if (p > HUMAN) // cpu player
-                            iHouse = rnd(4)+1;
-                        else // human may not be sardaukar
-                            iHouse = rnd(3)+1; // hark = 1, atr = 2, ord = 3, sar = 4
+                if (playableFaction) {
+                    if (!aiPlayer.bPlaying) continue;
 
-                        bool bFound=false;
-                        for (int pl=0; pl < AI_WORM; pl++) {
-                            if (player[pl].getHouse() > 0 && player[pl].getHouse() == iHouse) {
-                                bFound=true;
+                    // house = 0 means pick random house
+                    if (iHouse == 0) {
+                        bool bOk=false;
+
+                        while (bOk == false) {
+                            if (p > HUMAN) {
+                                iHouse = rnd(4)+1;
+                                // cpu player
+                            } else {// human may not be sardaukar
+                                iHouse = rnd(3) + 1; // hark = 1, atr = 2, ord = 3, sar = 4
+                            }
+
+                            bool houseInUse=false;
+                            for (int pl=0; pl < AI_WORM; pl++) {
+                                if (player[pl].getHouse() > 0 &&
+                                    player[pl].getHouse() == iHouse) {
+                                    houseInUse=true;
+                                }
+                            }
+
+                            if (!houseInUse) {
+                                bOk=true;
                             }
                         }
-
-                        if (!bFound) {
-                            bOk=true;
-                        }
+                    }
+                } else {
+                    aiPlayer.bPlaying = true;
+                    if (p == AI_CPU5) {
+                        iHouse = FREMEN;
+                    } else {
+                        iHouse = GENERALHOUSE;
                     }
                 }
 
-                if (p == 5) {
-                    iHouse = FREMEN;
+                // TEAM Logic
+                if (p == HUMAN) {
+                    cPlayer.setTeam(0);
+                } else if (p == AI_CPU5) {
+                    cPlayer.setTeam(0);
+                } else if (p == AI_CPU6) {
+                    cPlayer.setTeam(2); // worm team is against everyone
+                } else {
+                    // all other AI's are their own team (campaign == AI's are friends, here they are enemies)
+                    cPlayer.setTeam(p);
                 }
 
                 cPlayer.setHouse(iHouse);
 
-                // not playing.. do nothing
-                if (aiplayer[p].bPlaying == false) {
-                    continue;
-                }
+                // from here, ignore non playable factions
+                if (!playableFaction) continue;
 
                 cPlayer.focus_cell = iStartPositions[p];
 
@@ -1206,7 +1237,7 @@ void cGame::setup_skirmish() {
                 int u=0;
 
                 // create units
-                while (u < aiplayer[p].iUnits) {
+                while (u < aiPlayer.iUnits) {
                     int iX=iCellGiveX(cPlayer.focus_cell);
                     int iY=iCellGiveY(cPlayer.focus_cell);
                     int iType=rnd(12);
@@ -1274,7 +1305,7 @@ void cGame::setup_skirmish() {
                 }
 
                 char msg[255];
-                sprintf(msg,"Wants %d amount of units; amount created %d", aiplayer[p].iUnits, u);
+                sprintf(msg, "Wants %d amount of units; amount created %d", aiPlayer.iUnits, u);
                 cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, iHouse);
             }
 
@@ -1544,7 +1575,7 @@ void cGame::run() {
 	while (bPlaying) {
 		TimeManager.processTime();
 		clear(bmp_screen);
-		poll(); // update state
+        updateState();
 		handleTimeSlicing(); // handle time diff (needs to change!)
 		runGameState(); // run game state, includes interaction + drawing
 		interactionManager->interactWithKeyboard(); // generic interaction
@@ -1625,7 +1656,7 @@ void cGame::shutdown() {
 
 	// MP3 Library
 	if (mp3_music) {
-		almp3_stop_autopoll_mp3(mp3_music); // stop auto poll
+		almp3_stop_autopoll_mp3(mp3_music); // stop auto updateState
 		almp3_destroy_mp3(mp3_music);
 	}
 
@@ -2051,14 +2082,19 @@ bool cGame::setupGame() {
 	set_volume(iMaxVolume, 150);
 
 	// A few messages for the player
-	logbook("Installing:  PLAYERS");
-	INSTALL_PLAYERS();
-	logbook("Installing:  HOUSES");
+	logbook("Initializing:  PLAYERS");
+    INIT_ALL_PLAYERS();
+	logbook("Setup:  HOUSES");
 	INSTALL_HOUSES();
+    logbook("Setup:  STRUCTURES");
 	install_structures();
+    logbook("Setup:  PROJECTILES");
 	install_bullets();
+    logbook("Setup:  UNITS");
 	install_units();
-	logbook("Installing:  WORLD");
+    logbook("Setup:  SPECIALS");
+	install_specials();
+	logbook("Setup:  WORLD");
 	selectYourNextConquestState->INSTALL_WORLD();
 
     delete mapCamera;

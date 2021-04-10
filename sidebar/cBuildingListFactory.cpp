@@ -102,19 +102,6 @@ void cBuildingListFactory::initializeList(cBuildingList *list, eListType listTyp
         list->setButtonDrawX(startX);
 		list->setButtonIconIdPressed(LIST_BTN_PALACE);
 		list->setButtonIconIdUnpressed(LIST_BTN_PALACE);
-
-		// special weapons
-		switch (house) {
-			case ATREIDES:
-				list->addUnitToList(UNIT_FREMEN_THREE, 0);
-				break;
-			case HARKONNEN:
-				list->addUnitToList(MISSILE,0);
-				break;
-			case ORDOS:
-				list->addUnitToList(SABOTEUR, 0);
-				break;
-		}
 	}
 
 	startX += widthOfButtonIncludingMargin;

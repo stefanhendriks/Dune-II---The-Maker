@@ -1124,7 +1124,6 @@ int getUnitTypeFromChar(char chunk[35]) {
     if (caseInsCompare(unitString, "Ornithopter")) return ORNITHOPTER;
     if (caseInsCompare(unitString, "Sandworm")) return SANDWORM;
     if (caseInsCompare(unitString, "Saboteur")) return SABOTEUR;
-    if (caseInsCompare(unitString, "MISSILE")) return MISSILE;
     if (caseInsCompare(unitString, "ONEFREMEN")) return UNIT_FREMEN_ONE;
     if (caseInsCompare(unitString, "THREEFREMEN")) return UNIT_FREMEN_THREE;
 
@@ -1477,49 +1476,57 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                 }
 
             } else if (section == INI_UNITS) {
-
-                // ORIGINAL DUNE 2 MISSION. EVERYBODY IS AGAINST U
+                // ORIGINAL DUNE 2 MISSION.
                 if (bSetUpPlayers) {
-                    logbook("Going to setup players");
-                    int iRealID = 1; // because 0 is human
+                    logbook("INI: Going to setup players");
+                    int iCPUId = 1; // index for CPU's, starts at 1 because ID 0 is HUMAN player
 
-                    for (int iP = 0; iP < MAX_PLAYERS; iP++) // till 6 , since player 6 itself is sandworm
+                    for (int playerIndex = 0; playerIndex < MAX_PLAYERS; playerIndex++) // till 6 , since player 6 itself is sandworm
                     {
                         char msg[255];
                         memset(msg, 0, sizeof(msg));
-                        sprintf(msg, "House for id [%d] is [%d] - human id is [%d]", iP, iPl_house[iP], iHumanID);
+                        int housePlayer = iPl_house[playerIndex];
+                        sprintf(msg, "House for id [%d] is [%d] - human id is [%d]", playerIndex, housePlayer, iHumanID);
                         logbook(msg);
-                        if (iPl_house[iP] > -1) {
-                            if (iP == iHumanID) {
+                        if (housePlayer > -1) {
+                            int creditsPlayer = iPl_credits[playerIndex];
+                            if (playerIndex == iHumanID) {
                                 char msg[255];
                                 memset(msg, 0, sizeof(msg));
-                                sprintf(msg, "Setting up human player, credits to [%d]", iPl_credits[iP]);
+                                sprintf(msg, "INI: Setting up human player, credits to [%d], house [%d] and team [%d]", creditsPlayer, housePlayer, 0);
                                 logbook(msg);
-                                player[HUMAN].credits = iPl_credits[iP];
-                                player[HUMAN].setHouse(iPl_house[iP]);
-                                player[HUMAN].iTeam = 0;
+                                player[HUMAN].credits = creditsPlayer;
+                                player[HUMAN].setHouse(housePlayer);
+                                player[HUMAN].setTeam(0);
                                 assert(drawManager);
                                 if (drawManager->getCreditsDrawer()) {
                                     drawManager->getCreditsDrawer()->setCredits();
                                 }
 
-                                if (iPl_quota[iP] > 0) {
-                                    game.iWinQuota = iPl_quota[iP];
+                                if (iPl_quota[playerIndex] > 0) {
+                                    game.iWinQuota = iPl_quota[playerIndex];
                                 }
                             } else {
-                                // CPU player
-                                player[iRealID].iTeam = 1; // All AI players are on the same team
+                                int iTeam = 1; // All AI players are on the same team
 
-                                // belong to player team
-                                if (iPl_house[iP] == FREMEN) {
+                                // FREMEN house belongs
+                                if (housePlayer == FREMEN) {
                                     if (player[HUMAN].getHouse() == ATREIDES) {
-                                        player[iRealID].iTeam = 0;
+                                        iTeam = 0; // same team as human player
                                     }
                                 }
 
-                                player[iRealID].credits = iPl_credits[iP];
-                                player[iRealID].setHouse(iPl_house[iP]);
-                                iRealID++;
+                                player[iCPUId].setTeam(iTeam);
+
+                                char msg[255];
+                                memset(msg, 0, sizeof(msg));
+                                sprintf(msg, "INI: Setting up CPU player, credits to [%d], house to [%d] and team [%d]",
+                                        creditsPlayer, housePlayer, iTeam);
+                                logbook(msg);
+
+                                player[iCPUId].credits = creditsPlayer;
+                                player[iCPUId].setHouse(housePlayer);
+                                iCPUId++;
                             }
                         }
                     }
@@ -1576,17 +1583,10 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 
                             // HACK HACK : Set up fremen house here
                             if (iHouse == FREMEN) {
-                                player[5].setHouse(FREMEN); // set up palette
-                                player[5].credits = 9999; // lots of money for the fremen
-
-                                iController = 5;
+                                player[AI_CPU5].setHouse(FREMEN); // set up palette
+                                player[AI_CPU5].credits = 9999; // lots of money for the fremen
+                                iController = AI_CPU5;
                             }
-
-
-                            // Quickfix: fremen house in original dune 2, is house 6 (not detectable)
-                            // in this game.
-                            //if (iHouse == FREMEN)
-                            //	iController = 6;
 
                             if (iController < 0) {
                                 char msg[256];
@@ -1616,52 +1616,39 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 
 
                 if (iController > -1) {
-                    //int uID = create_unit(iController, iCell, iType, ACTION_GUARD, -1);
                     UNIT_CREATE(iCell, iType, iController, true);
-                    //	CREATE_UNIT(iCell, iType, iController);
-
-                    /*
-                    if (bOrDune == false && uID > -1)
-                    {
-                        unit[uID].hp = iHP;
-                        unit[uID].body_face = iFacingBody;
-                        unit[uID].body_head = iFacingHead;
-                        unit[uID].body_should_face = iFacingBody;
-                        unit[uID].head_should_face = iFacingHead;
-                    }*/
                 }
             } else if (section == INI_STRUCTURES) {
-                // In case some funny-face of Westwood did first the structures section, we still set up players then...
-                // har har har..
-                // ORIGINAL DUNE 2 MISSION. EVERYBODY IS AGAINST U
+                // ORIGINAL DUNE 2 MISSION. (duplicate code?)
                 if (bSetUpPlayers) {
-                    int iRealID = 1;
+                    int iCPUId = 1; // starts from 1 because ID 0 is HUMAN player
 
                     for (int iP = 0; iP < MAX_PLAYERS; iP++) // till 6 , since player 6 itself is sandworm
                     {
                         if (iPl_house[iP] > -1)
                             if (iP == iHumanID) {
-                                player[0].credits = iPl_credits[iP];
-                                player[0].setHouse(iPl_house[iP]);
-                                player[0].iTeam = 0;
+                                player[HUMAN].credits = iPl_credits[iP];
+                                player[HUMAN].setHouse(iPl_house[iP]);
+                                player[HUMAN].setTeam(0);
 
                                 if (iPl_quota[iP] > 0) {
                                     game.iWinQuota = iPl_quota[iP];
                                 }
                             } else {
                                 // CPU player
-                                player[iRealID].iTeam = 1; // All AI players are on the same team
+                                int iTeam = 1; // All AI players are on the same team
 
-                                // belong to player team
+                                // Except FREMEN, it is allies with ATREIDES
                                 if (iPl_house[iP] == FREMEN) {
                                     if (player[HUMAN].getHouse() == ATREIDES) {
-                                        player[iRealID].iTeam = 0;
+                                        iTeam = 0;
                                     }
                                 }
 
-                                player[iRealID].credits = iPl_credits[iP];
-                                player[iRealID].setHouse(iPl_house[iP]);
-                                iRealID++;
+                                player[iCPUId].setTeam(iTeam);
+                                player[iCPUId].credits = iPl_credits[iP];
+                                player[iCPUId].setHouse(iPl_house[iP]);
+                                iCPUId++;
                             }
                     }
                     bSetUpPlayers = false;
@@ -1956,7 +1943,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 
         logbook("[SCENARIO] Done reading");
     }
-    player[AI_WORM].iTeam = -2;
+    player[AI_WORM].setTeam(2); // the WORM player is nobody's ally
     mapEditor.smoothMap();
 }
 

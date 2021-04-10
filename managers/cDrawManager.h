@@ -28,6 +28,7 @@ class cDrawManager {
 		void drawSidebar();
 		void drawCredits();
 		void drawStructurePlacing();
+		void drawDeployment();
 		void drawMessage();
 		void drawCombatMouse();
 		void drawRallyPoint();

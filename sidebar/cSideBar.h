@@ -83,6 +83,10 @@ public:
     static const int TotalHeightBeforePowerBarStarts =
             TopBarHeight + HeightOfMinimap + HorizontalCandyBarHeight + PowerBarMargingHeight;
 
+    static bool isMouseOverSidebar(cGame &game) {
+        return cMouse::getX() > game.screen_x - cSideBar::SidebarWidth;
+    }
+
 private:
 
     // the lists:
@@ -97,6 +101,8 @@ private:
     bool startBuildingItemIfOk(cBuildingListItem *item) const;
 
     void drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem *item) const;
+
+    void thinkProgressAnimation();
 };
 
 #endif /* CSIDEBAR_H_ */
