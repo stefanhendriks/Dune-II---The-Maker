@@ -174,6 +174,12 @@ struct s_Special {
 
     eDeployTargetType deployTargetType; // for ie DeathHand, how 'accurate' the deploy target will become
 
+    /**
+     * how accurate (for deployTargetType == INACCURATE), ie the amount of cells it can be off.
+     * A 0 means 100% accurate (ie nothing to fudge), 1 means 1 cell off, etc.
+     */
+    int deployTargetPrecision;
+
     unsigned char house; // which house(s) have access to this?
 
     bool autoBuild; // if true, then this item is built automatically
