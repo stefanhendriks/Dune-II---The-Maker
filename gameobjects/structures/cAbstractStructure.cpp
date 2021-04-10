@@ -69,11 +69,11 @@ cAbstractStructure::~cAbstractStructure() {
 }
 
 int cAbstractStructure::pos_x() {
-    return mapCamera->getAbsoluteXPositionFromCell(iCell);
+    return map.getAbsoluteXPositionFromCell(iCell);
 }
 
 int cAbstractStructure::pos_y() {
-    return mapCamera->getAbsoluteYPositionFromCell(iCell);
+    return map.getAbsoluteYPositionFromCell(iCell);
 }
 
 // X drawing position
@@ -162,18 +162,16 @@ void cAbstractStructure::die() {
 	int iCY=iCellGiveY(iCll);
 
     // create destroy particles
-    for (int w=0; w < iWidth; w++)
-    {
-        for (int h=0; h < iHeight; h++)
-        {
+    for (int w = 0; w < iWidth; w++) {
+        for (int h = 0; h < iHeight; h++) {
 			iCll=iCellMake(iCX+w, iCY+h);
 
 			map.cellChangeType(iCll, TERRAIN_ROCK);
 			mapEditor.smoothAroundCell(iCll);
 
             int half = 16;
-            int posX = mapCamera->getAbsoluteXPositionFromCell(iCll);
-            int posY = mapCamera->getAbsoluteYPositionFromCell(iCll);
+            int posX = map.getAbsoluteXPositionFromCell(iCll);
+            int posY = map.getAbsoluteYPositionFromCell(iCll);
 
             PARTICLE_CREATE(posX + half,
                             posY + half, OBJECT_BOOM01, -1, -1);

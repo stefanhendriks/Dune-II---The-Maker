@@ -10,6 +10,12 @@
 
   */
 
+#define TILESIZE_WIDTH_PIXELS 32
+#define TILESIZE_HEIGHT_PIXELS 32
+
+#ifndef CMAP_H
+#define CMAP_H
+
 class cMap {
 
 public:
@@ -24,6 +30,84 @@ public:
 	bool occupied(int iCll, int iUnitID);
 	bool occupiedInDimension(int iCell, int dimension);
 	bool occupiedByType(int iCell);
+
+	/**
+	 * Returns cell , taking given map width/height into account. This includes the invisible border around the map.
+	 * If you want to take the invisible border into account use getCellWithMapBorders instead.
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+    int getCellWithMapDimensions(int x, int y);
+
+    /**
+    * Return map cell; taking the map borders into account. If x or y falls out of bounds, this function will return
+    * -1. If you want to include the invisible map borders, use getCellWithMapDimensions instead.
+    *
+    * @param x
+    * @param y
+    * @return
+    */
+    int getCellWithMapBorders(int x, int y);
+
+
+    /**
+	Shortcut method, which takes cells as arguments, creates x1, y1 and x2, y2 out of them
+	and runs the normal distance method to get the distance.
+    **/
+    double distance(int cell1, int cell2);
+
+    /**
+        Return a cell from an X,Y coordinate.
+
+        Remember that coordinates are 1-64 based. While the array in Map (tCell) is 0-till 4096.
+
+        This means that the coordinate 1,1 is NOT the first row, but it is : 0,0. This also means the
+        MAX at the right is *not* MAP_W_MAX, but it is MAP_W_MAX - 1.
+        (it is 0-63 instead of 1-64).
+
+        This method will not do any fancy tricks to fix the boundaries, instead it will assert its input and output.
+
+        Use <b>getCellWithMapBorders</b> if you want a safe way to get a cell within the <i>playable</i> map boundaries.
+        Use <b>getCellWithMapDimensions</b> if you want a safe way to get a cell within the <i>maximum</i> map boundaries.
+    **/
+    int makeCell(int x, int y);
+
+    int getAbsoluteXPositionFromCell(int cell);
+
+    int getAbsoluteYPositionFromCell(int cell);
+
+    int getCellAbove(int c);
+
+	int getCellBelow(int c);
+
+    int getCellLeft(int c);
+
+	int getCellRight(int c);
+
+	int getCellUpperLeft(int c);
+
+	int getCellUpperRight(int c);
+
+	int getCellLowerLeft(int c);
+
+    int getCellLowerRight(int c);
+
+    /**
+     * returns true if one cell is adjacent to another cell
+     */
+	bool isCellAdjacentToOtherCell(int thisCell, int otherCell);
+
+    /**
+        The X coordinate is found by finding out how many 'rows' (the Y) are there, then
+        the remaining of that value is the X.
+    **/
+    int getCellX(int c);
+
+    /**
+	    The Y coordinate is found by finding as many MAP_W_MAX can fit in the given cell
+    **/
+    int getCellY(int c);
 
 	/**
 	 * Returns true/false when x,y coordinate is within bounds of the map. Taking invisible boundary into account.
@@ -52,6 +136,9 @@ public:
 	    return  x > 0 && x <= (width-2) &&
 	            y > 0 && y <= (height -2);
 	}
+
+    double distance(int x1, int y1, int x2, int y2);
+    int findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell);
 
     // Drawing
     int  mouse_draw_x();
@@ -307,9 +394,6 @@ public:
 
     void setVisible(int iCell, int iPlayer, bool flag) { iVisible[iCell][iPlayer] = flag; }
 
-    cCellCalculator * getCellCalculator() { return cellCalculator; }
-    void resetCellCalculator();
-
     /**
      * Get height of map in cells
      * @return
@@ -348,10 +432,9 @@ private:
     	int TIMER_scroll;
     	int iScrollSpeed;
 
-    	// sizes of the map
+    	// sizes of the map (outer limits, including the invisible map boundaries)
     	int height, width;
-
-    	cCellCalculator * cellCalculator;
 };
 
 
+#endif

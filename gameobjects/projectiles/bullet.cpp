@@ -38,15 +38,11 @@ void cBullet::init() {
 }
 
 int cBullet::pos_x() const {
-    return mapCamera->getAbsoluteXPositionFromCell(iCell) + iOffsetX;
-//    int iCellX = iCellGiveX(iCell);
-//    return (iCellX * TILESIZE_WIDTH_PIXELS) + iOffsetX;
+    return map.getAbsoluteXPositionFromCell(iCell) + iOffsetX;
 }
 
 int cBullet::pos_y() const {
-    return mapCamera->getAbsoluteYPositionFromCell(iCell) + iOffsetY;
-//    int iCellY = iCellGiveY(iCell);
-//    return (iCellY * TILESIZE_HEIGHT_PIXELS) + iOffsetY;
+    return map.getAbsoluteYPositionFromCell(iCell) + iOffsetY;
 }
 
 int cBullet::draw_x() {
@@ -304,8 +300,8 @@ void cBullet::arrivedAtGoalLogic() {
                 int half = 16;
                 int randomX = -8 + rnd(half);
                 int randomY = -8 + rnd(half);
-                int posX = mapCamera->getAbsoluteXPositionFromCell(cellToDamage) + randomX;
-                int posY = mapCamera->getAbsoluteYPositionFromCell(cellToDamage) + randomY;
+                int posX = map.getAbsoluteXPositionFromCell(cellToDamage) + randomX;
+                int posY = map.getAbsoluteYPositionFromCell(cellToDamage) + randomY;
                 PARTICLE_CREATE(posX, posY, sBullet.deadbmp, -1, -1);
             }
 

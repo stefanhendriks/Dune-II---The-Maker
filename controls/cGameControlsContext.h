@@ -62,8 +62,6 @@ class cGameControlsContext {
 
 		// context belongs to specific player
 		cPlayer * player;
-		cCellCalculator * cellCalculator;
-
 };
 
 #endif /* CGAMECONTROLSCONTEXT_H_ */

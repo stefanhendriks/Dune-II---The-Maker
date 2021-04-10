@@ -2,12 +2,10 @@
 
 
 cStructureUtils::cStructureUtils() {
-	cellCalculator = nullptr;
 	init(&map);
 }
 
 cStructureUtils::~cStructureUtils() {
-	delete cellCalculator;
 }
 
 int cStructureUtils::getHeightOfStructureTypeInCells(int structureType) {
@@ -212,7 +210,7 @@ int cStructureUtils::findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCel
         if (pStructure->getType() != structureType) continue;
 
         if (pStructure->iUnitID < 0) {	// no other unit is heading to this structure
-            long distance = cellCalculator->distance(cell, pStructure->getCell());
+            long distance = map.distance(cell, pStructure->getCell());
 
             // if distance is lower than last found distance, it is the closest for now.
             if (distance < shortestDistance) {
@@ -237,13 +235,11 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
 	assert(cellOfStructure > -1);
 
 	for (int w = 0; w < theStructure->getWidth(); w++) {
-		for (int h = 0; h < theStructure->getHeight(); h++)
-		{
+		for (int h = 0; h < theStructure->getHeight(); h++)	{
+			int xOfStructureCell = map.getCellX(cellOfStructure);
+			int yOfStructureCell = map.getCellY(cellOfStructure);
 
-			int xOfStructureCell = cellCalculator->getX(cellOfStructure);
-			int yOfStructureCell = cellCalculator->getY(cellOfStructure);
-
-			int iCell = cellCalculator->getCell(xOfStructureCell + w, yOfStructureCell + h);
+			int iCell = map.makeCell(xOfStructureCell + w, yOfStructureCell + h);
 
 			map.cellSetIdForLayer(iCell, dimensionId, theStructure->getStructureId());
 		}
@@ -340,8 +336,7 @@ int cStructureUtils::getTotalPowerOutForPlayer(cPlayer * pPlayer) {
 }
 
 void cStructureUtils::init(cMap *pMap) {
-    delete cellCalculator;
-    cellCalculator = new cCellCalculator(pMap);
+//    cellCalculator = new cCellCalculator(pMap);
 }
 
 int cStructureUtils::findHiTechToDeployAirUnit(cPlayer *pPlayer) {

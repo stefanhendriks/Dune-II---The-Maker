@@ -7,15 +7,12 @@ cMapDrawer::cMapDrawer(cMap * theMap, cPlayer * thePlayer, cMapCamera * theCamer
 	assert(theCamera);
 	map = theMap;
 	camera = theCamera;
-	cellCalculator = new cCellCalculator(map);
 	bmp_temp = nullptr;
 }
 
 cMapDrawer::~cMapDrawer() {
 	map = nullptr;
 	camera = nullptr;
-	delete cellCalculator;
-	cellCalculator = nullptr;
     m_Player = nullptr;
 	if (bmp_temp) {
 	    destroy_bitmap(bmp_temp);
@@ -44,10 +41,10 @@ void cMapDrawer::drawShroud(int startX, int startY) {
 
             if (iCell < 0) continue;
 
-            int absoluteXCoordinateOnMap = cellCalculator->getAbsoluteX(iCell);
+            int absoluteXCoordinateOnMap = map->getAbsoluteXPositionFromCell(iCell);
             float fDrawX = mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
 
-            int absoluteYCoordinateOnMap = cellCalculator->getAbsoluteY(iCell);
+            int absoluteYCoordinateOnMap = map->getAbsoluteYPositionFromCell(iCell);
             float fDrawY = mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
 
             if (DEBUGGING && key[KEY_D] && key[KEY_TAB]) {
@@ -108,8 +105,8 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                 continue;
 			}
 
-            int cellX = cellCalculator->getX(iCell);
-            int cellY = cellCalculator->getY(iCell);
+            int cellX = map->getCellX(iCell);
+            int cellY = map->getCellY(iCell);
 
             // skip outer border cells
             if (cellX == 0 || cellX == (game.map_width-1) ||
@@ -123,10 +120,10 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                 continue;
 			}
 
-			int absoluteXCoordinateOnMap = cellCalculator->getAbsoluteX(iCell);
+			int absoluteXCoordinateOnMap = map->getAbsoluteXPositionFromCell(iCell);
             float fDrawX = mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
 
-            int absoluteYCoordinateOnMap = cellCalculator->getAbsoluteY(iCell);
+            int absoluteYCoordinateOnMap = map->getAbsoluteYPositionFromCell(iCell);
             float fDrawY = mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
 
             // Draw terrain
@@ -165,8 +162,8 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                 if (mouseCell > -1) {
                     int cellX = (viewportX / 32);
                     int cellY = (viewportY / 32);
-                    int mcX = cellCalculator->getX(mouseCell);
-                    int mcY = cellCalculator->getY(mouseCell);
+                    int mcX = map->getCellX(mouseCell);
+                    int mcY = map->getCellY(mouseCell);
 
                     if (mcX == cellX && mcY == cellY) {
                         fblend_rect_trans(bmp_screen, iDrawX, iDrawY, iTileWidth, iTileHeight, makecol(255, 255, 0), 96);

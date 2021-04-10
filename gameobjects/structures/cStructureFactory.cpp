@@ -3,11 +3,9 @@
 cStructureFactory *cStructureFactory::instance = NULL;
 
 cStructureFactory::cStructureFactory() {
-	cellCalculator = new cCellCalculator(&map);
 }
 
 cStructureFactory::~cStructureFactory() {
-   delete cellCalculator;
 }
 
 cStructureFactory *cStructureFactory::getInstance() {
@@ -353,14 +351,14 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
 	int height = structures[iStructureType].bmp_height / 32;
 	int width = structures[iStructureType].bmp_width / 32;
 
-	int cellX = cellCalculator->getX(iCell);
-	int cellY = cellCalculator->getY(iCell);
+	int cellX = map.getCellX(iCell);
+	int cellY = map.getCellY(iCell);
 
 	int endCellX = cellX + width;
 	int endCellY = cellY + height;
 	for (int x = cellX; x < endCellX; x++) {
 		for (int y = cellY; y < endCellY; y++) {
-			int cell = cellCalculator->getCellWithMapDimensions(x, y, game.map_width, game.map_height);
+			int cell = map.getCellWithMapDimensions(x, y);
 			mapEditor.createCell(cell, TERRAIN_SLAB, 0);
 		}
 	}

@@ -7,7 +7,7 @@
 
 #include "../include/d2tmh.h"
 
-cMapCamera::cMapCamera() {
+cMapCamera::cMapCamera(cMap * theMap) : pMap(theMap) {
     viewportStartX = viewportStartY = 32;
 	TIMER_move=0;
 	zoomLevel = 1.0f;
@@ -23,12 +23,9 @@ cMapCamera::cMapCamera() {
     viewportHeight=windowHeight;
 
     calibrate();
-
-	cellCalculator = new cCellCalculator(&map);
 }
 
 cMapCamera::~cMapCamera() {
-	delete cellCalculator;
 }
 
 void cMapCamera::zoomIn() {
@@ -72,16 +69,6 @@ void cMapCamera::calibrate() {
     viewportHeight = divideByZoomLevel(windowHeight);
 }
 
-int cMapCamera::getAbsoluteXPositionFromCell(int cell) {
-    if (cell < 0) return -1;
-    return cellCalculator->getX(cell) * 32;
-}
-
-int cMapCamera::getAbsoluteYPositionFromCell(int cell) {
-    if (cell < 0) return -1;
-    return cellCalculator->getY(cell) * 32;
-}
-
 void cMapCamera::keepViewportWithinReasonableBounds() {
     int halfViewportWidth = viewportWidth / 2;
     int halfViewportHeight = viewportHeight / 2;
@@ -110,8 +97,8 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell) {
 	if (cell < 0) cell = 0;
 	if (cell >= MAX_CELLS) cell = (MAX_CELLS-1);
 
-	int mapCellX = getAbsoluteXPositionFromCell(cell);
-	int mapCellY = getAbsoluteYPositionFromCell(cell);
+	int mapCellX = pMap->getAbsoluteXPositionFromCell(cell);
+	int mapCellY = pMap->getAbsoluteYPositionFromCell(cell);
 
 	// determine the half of our screen
 	int halfViewportWidth = viewportWidth / 2;

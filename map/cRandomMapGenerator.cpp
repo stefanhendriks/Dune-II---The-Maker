@@ -24,8 +24,6 @@ void cRandomMapGenerator::generateRandomMap() {
     int a_rock = 6 + rnd(game.iSkirmishStartPoints);
     int a_hill = 2 + rnd(8);
 
-
-
     // rock terrain is placed not near centre, also, we want 4 plateaus be
     // placed not too near to each other
     int iSpotRock[6]; // first 4
@@ -48,12 +46,10 @@ void cRandomMapGenerator::generateRandomMap() {
     // y = 180
     draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GENERATING].dat, 160, 180);
 
-    cCellCalculator *cellCalculator = map.getCellCalculator();
-
     // draw
 
     while (a_rock > 0) {
-        int iCll = cellCalculator->getCellWithMapBorders(4 + rnd(game.map_width - 8), 4 + rnd(game.map_height - 8));
+        int iCll = map.getCellWithMapBorders(4 + rnd(game.map_width - 8), 4 + rnd(game.map_height - 8));
         if (iCll < 0) continue;
 
         bool bOk = true;
@@ -131,6 +127,7 @@ void cRandomMapGenerator::generateRandomMap() {
     while (a_spice > 0) {
         int iCll = iCellMakeWhichCanReturnMinusOne(rnd(game.map_width), rnd(game.map_height));
         mapEditor.createField(iCll, TERRAIN_SPICE, 2500);
+        iProgress += 10;
         a_spice--;
         // blit on screen
         rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));

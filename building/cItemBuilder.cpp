@@ -144,8 +144,7 @@ void cItemBuilder::think() {
                 } else if (special.deployFrom == AT_RANDOM_CELL) {
                     if (special.providesType == UNIT) {
                         // determine cell
-                        cCellCalculator cellCalculator = cCellCalculator(&map);
-                        int iCll = cellCalculator.getCellWithMapBorders(4 + rnd(game.map_width - 8),
+                        int iCll = map.getCellWithMapBorders(4 + rnd(game.map_width - 8),
                                                                         4 + rnd(game.map_height - 8));
 
                         for (int j = 0; j < special.units; j++) {
@@ -179,7 +178,7 @@ void cItemBuilder::think() {
                             // change cell
                             FIX_POS(x, y);
 
-                            iCll = cellCalculator.getCell(x, y);
+                            iCll = map.makeCell(x, y);
                         }
                     }
                     item->stopBuilding();

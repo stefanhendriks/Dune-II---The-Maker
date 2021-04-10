@@ -37,8 +37,6 @@ class cStructureUtils {
 protected:
 
 	private:
-		cCellCalculator * cellCalculator;
-
         int getStructureTypeByUnitBuildId(int unitBuildId) const;
 };
 
