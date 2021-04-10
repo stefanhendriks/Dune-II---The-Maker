@@ -609,6 +609,7 @@ void install_specials() {
         specials[i].house = eHouseBitFlag::Unknown;
         specials[i].autoBuild = false;
         specials[i].deployTargetType = eDeployTargetType::TARGET_NONE;
+        specials[i].deployTargetPrecision = 0;
         specials[i].listId = -1;
         specials[i].subListId = -1;
         strcpy(specials[i].description, "\0");
@@ -653,6 +654,7 @@ void install_specials() {
     specials[SPECIAL_DEATHHAND].deployTargetType = eDeployTargetType::TARGET_INACCURATE_CELL;
     specials[SPECIAL_DEATHHAND].units = 1;
     specials[SPECIAL_DEATHHAND].buildTime = 10;
+    specials[SPECIAL_DEATHHAND].deployTargetPrecision = 6;
     specials[SPECIAL_DEATHHAND].listId=LIST_PALACE;
     specials[SPECIAL_DEATHHAND].subListId=0;
     strcpy(specials[SPECIAL_DEATHHAND].description, "Death Hand");
