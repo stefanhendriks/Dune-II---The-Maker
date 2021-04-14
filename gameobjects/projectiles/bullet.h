@@ -29,7 +29,7 @@ public:
 
     bool bAlive;
 
-    int iCell;          // cell of bullet   
+    int iCell;          // cell of bullet - calculated in think_move() based on posX/posY
     int iType;          // type of bullet    
     
     int iOwnerUnit;     // unit who shoots
@@ -40,10 +40,11 @@ public:
     int iHoming;
     int TIMER_homing;   // when timer set, > 0 means homing (follow unit until timer runs out)
 
-    // Movement
-    int iGoalCell;      // the goal cell (goal of path)    
-    float iOffsetX;       // X offset
-    float iOffsetY;       // Y offset
+    // absolute coordinates of bullet
+    float posX;
+    float posY;
+    float targetX;
+    float targetY;
 
     int iFrame;         // frame for rockets
 
@@ -76,9 +77,9 @@ private:
 
     void damageWall(int cell, double factor) const;
 
-    bool isAtGoalCell() const;
+    bool isAtDestination() const;
 
-    void arrivedAtGoalLogic();
+    void arrivedAtDestinationLogic();
 
     void damageSandworm(int cell, double factor) const;
 

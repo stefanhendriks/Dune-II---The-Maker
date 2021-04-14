@@ -11,6 +11,7 @@
   */
 
 #include "../../include/d2tmh.h"
+#include "cAbstractStructure.h"
 
 
 // "default" Constructor
@@ -375,7 +376,15 @@ void cAbstractStructure::damage(int hp) {
     logbook(msg);
 
     if (iHitPoints < 1) {
+        // TODO: update statistics? (structure lost)
         die();
+    } else {
+        int iChance = getSmokeChance();
+
+        // Structure on fire?
+        if (rnd(100) < iChance) {
+            PARTICLE_CREATE(getRandomPosX(), getRandomPosY(), OBJECT_SMOKE, -1, -1);
+        }
     }
 }
 
@@ -504,10 +513,10 @@ bool cAbstractStructure::isDamaged() {
  */
 int cAbstractStructure::getSmokeChance() {
     if (getHitPoints() < (getMaxHP() / 2)) {
-        return 45;
+        return 35;
     }
 
-    return 15;
+    return 10;
 }
 
 bool cAbstractStructure::belongsTo(int playerId) const {
@@ -527,4 +536,12 @@ void cAbstractStructure::getsCapturedBy(cPlayer *pPlayer) {
     getPlayer()->decreaseStructureAmount(getType());
     iPlayer = pPlayer->getId();
     pPlayer->increaseStructureAmount(getType());
+}
+
+int cAbstractStructure::getRandomPosX() {
+    return pos_x() + rnd(getWidthInPixels()); // posX = most left, so just increase
+}
+
+int cAbstractStructure::getRandomPosY() {
+    return pos_y() + rnd(getHeightInPixels()); // posY = top coordinate, so just increase
 }

@@ -67,10 +67,24 @@ public:
         return getWindowYPositionWithOffset(absoluteYPosition, offset);
     }
 
+    /**
+     * Translates an absolute X position into a position on the window. The offset is substracted after translating
+     * between absolute x coordinate to window coordinate. Zoom level is applied at last.
+     * @param absoluteXPosition
+     * @param offset
+     * @return
+     */
     int getWindowXPositionWithOffset(int absoluteXPosition, int offset) {
         return factorZoomLevel((absoluteXPosition - viewportStartX)+offset);
     }
 
+    /**
+     * Translates an absolute Y position into a position on the window. The offset is substracted after translating
+     * between absolute x coordinate to window coordinate. Zoom level is applied at last.
+     * @param absoluteYPosition
+     * @param offset
+     * @return
+     */
     int getWindowYPositionWithOffset(int absoluteYPosition, int offset) {
         return factorZoomLevel((absoluteYPosition - viewportStartY)+offset) + heightOfTopBar;
     }

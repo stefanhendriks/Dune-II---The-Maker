@@ -766,6 +766,14 @@ int cMap::getAbsoluteXPositionFromCell(int cell) {
     return getCellX(cell) * TILESIZE_WIDTH_PIXELS;
 }
 
+int cMap::getAbsoluteXPositionFromCellCentered(int cell) {
+    return getAbsoluteXPositionFromCell(cell) + (TILESIZE_WIDTH_PIXELS / 2);
+}
+
+int cMap::getAbsoluteYPositionFromCellCentered(int cell) {
+    return getAbsoluteYPositionFromCell(cell) + (TILESIZE_HEIGHT_PIXELS / 2);
+}
+
 int cMap::makeCell(int x, int y) {
     assert(x > -1);
     assert(x < MAP_W_MAX); // should never be higher!
