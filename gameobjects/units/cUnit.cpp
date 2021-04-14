@@ -2482,7 +2482,7 @@ void cUnit::think_move() {
                         } else {
                             if (pStructure->getHitPoints() < pStructure->getCaptureHP()) {
                                 // make structure switch sides
-                                pStructure->setOwner(iPlayer);
+                                pStructure->getsCapturedBy(getPlayer());
                                 die(false, false);
                             } else {
                                 // the unit will die and inflict damage
