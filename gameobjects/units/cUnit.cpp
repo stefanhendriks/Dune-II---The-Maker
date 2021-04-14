@@ -1710,8 +1710,8 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe) {
 
 void cUnit::shoot(int iShootCell) {
     // particles are rendered at the center, so do it here as well
-    int iShootX = pos_x() + getBmpWidth() / 2;
-    int iShootY = pos_y() + getBmpHeight() / 2;
+    int iShootX = pos_x() + (getBmpWidth() / 2);
+    int iShootY = pos_y() + (getBmpHeight() / 2);
     int bmp_head = convert_angle(iHeadFacing);
 
     if (iType == TANK) {

@@ -21,9 +21,10 @@ void cBullet::init() {
     iType = -1;          // type of bullet
 
     // Movement
-    iGoalCell = -1;      // the goal cell (goal of path)
-    iOffsetX = -1;       // X offset
-    iOffsetY = -1;       // Y offset
+    posX = -1;
+    posY = -1;
+    targetX = -1;
+    targetY = -1;
 
     iOwnerUnit = -1;     // unit who shoots
     iOwnerStructure = -1;// structure who shoots (rocket turret?)
@@ -38,20 +39,21 @@ void cBullet::init() {
 }
 
 int cBullet::pos_x() const {
-    return map.getAbsoluteXPositionFromCell(iCell) + iOffsetX;
+    return posX;
 }
 
 int cBullet::pos_y() const {
-    return map.getAbsoluteYPositionFromCell(iCell) + iOffsetY;
+    return posY;
 }
 
 int cBullet::draw_x() {
-    int bmpOffset = TILESIZE_WIDTH_PIXELS - getBulletBmpWidth();
+    int bmpOffset = (getBulletBmpWidth()/2) * -1;
     return mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
 }
 
 int cBullet::draw_y() {
-    return mapCamera->getWindowYPosition(pos_y());
+    int bmpOffset = (getBulletBmpHeight()/2) * -1;
+    return mapCamera->getWindowYPositionWithOffset(pos_y(), bmpOffset);
 }
 
 // draw the bullet
@@ -65,13 +67,7 @@ void cBullet::draw() {
     if (y < getBulletBmpHeight() || y > game.screen_y + getBulletBmpHeight())
         return;
 
-    int x1, y1, x2, y2;
-    x1 = iCellGiveX(iCell);
-    y1 = iCellGiveY(iCell);
-    x2 = iCellGiveX(iGoalCell);
-    y2 = iCellGiveY(iGoalCell);
-
-    int fa = bullet_face_angle(fDegrees(x1, y1, x2, y2));
+    int fa = bullet_face_angle(fDegrees(posX, posY, targetX, targetY));
     int ba = bullet_correct_angle(fa);
 
     int h = 32;
@@ -179,7 +175,9 @@ void cBullet::think() {
 
         if (iHoming > -1) {
             if (unit[iHoming].isValid()) {
-                iGoalCell = unit[iHoming].iCell;
+                int cll = unit[iHoming].iCell;
+                targetX = map.getAbsoluteXPositionFromCell(cll);
+                targetY = map.getAbsoluteYPositionFromCell(cll);
             }
         }
     }
@@ -189,6 +187,8 @@ void cBullet::think() {
 
 
 void cBullet::think_move() {
+    iCell = mapCamera->getCellFromAbsolutePosition(posX, posY);
+
     int iCellX = iCellGiveX(iCell);
     int iCellY = iCellGiveY(iCell);
 
@@ -201,8 +201,8 @@ void cBullet::think_move() {
     // move bullet a bit towards its goal
     moveBulletTowardsGoal();
 
-    if (isAtGoalCell()) {
-        arrivedAtGoalLogic();
+    if (isAtDestination()) {
+        arrivedAtDestinationLogic();
         return;
     }
 
@@ -247,7 +247,7 @@ void cBullet::think_move() {
     } // non-flying bullets
 }
 
-void cBullet::arrivedAtGoalLogic() {
+void cBullet::arrivedAtDestinationLogic() {
     //
     // we handle different kind of places where we can inflict damage
     // and we don't bail out after doing that, allowing to inflict damage on several layers on the battle field
@@ -300,8 +300,8 @@ void cBullet::arrivedAtGoalLogic() {
                 int half = 16;
                 int randomX = -8 + rnd(half);
                 int randomY = -8 + rnd(half);
-                int posX = map.getAbsoluteXPositionFromCell(cellToDamage) + randomX;
-                int posY = map.getAbsoluteYPositionFromCell(cellToDamage) + randomY;
+                int posX = map.getAbsoluteXPositionFromCellCentered(cellToDamage) + randomX;
+                int posY = map.getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
                 PARTICLE_CREATE(posX, posY, sBullet.deadbmp, -1, -1);
             }
 
@@ -401,7 +401,7 @@ void cBullet::damageGroundUnit(int cell, double factor) const {
 
     if (isDeviatorGas()) {
         // TODO: Stefan: is this needed?!- aren't we playing sound effects in a more generic way?
-        play_sound_id_with_distance(SOUND_GAS, distanceBetweenCellAndCenterOfScreen(iCell));
+        play_sound_id_with_distance(SOUND_GAS, distanceBetweenCellAndCenterOfScreen(cell));
 
         // take over unit
         if (rnd(100) < 40) { // TODO: make property for probability of capturing unit?
@@ -468,8 +468,10 @@ void cBullet::damageSandworm(int cell, double factor) const {
     worm.takeDamage(damage);
 }
 
-bool cBullet::isAtGoalCell() const {
-    return iCell == iGoalCell;
+bool cBullet::isAtDestination() const {
+    int distanceX = abs(targetX - posX);
+    int distanceY = abs(targetY - posY);
+    return distanceX < 2 && distanceY < 2;
 }
 
 /**
@@ -496,62 +498,14 @@ void cBullet::damageWall(int cell, double factor) const {
 }
 
 void cBullet::moveBulletTowardsGoal() {
-    int iCellX = iCellGiveX(iCell);
-    int iCellY = iCellGiveY(iCell);
-    int iGoalCellX = iCellGiveX(iGoalCell);
-    int iGoalCellY = iCellGiveY(iGoalCell);
-
     // step 1 : look to the correct direction
-    float angle = fRadians(iCellX, iCellY, iGoalCellX, iGoalCellY);
+    float angle = fRadians(posX, posY, targetX, targetY);
 
     // now do some thing to make
     // 1/8 of a cell (2 pixels) per movement
-    int movespeed = 2; // this is fixed!
-    iOffsetX += cos(angle) * movespeed;
-    iOffsetY += sin(angle) * movespeed;
-
-    bool update_me = false;
-
-    // update when to much on the right.
-    if (iOffsetX > 31) {
-        iOffsetX -= 32;
-        iCell++;
-        update_me = true;
-    }
-
-    // update when to much on the left
-    if (iOffsetX < -31) {
-        iOffsetX += 32;
-        iCell--;
-        update_me = true;
-    }
-
-    // update when to much up
-    if (iOffsetY < -31) {
-        iOffsetY += 32;
-        iCell -= MAP_W_MAX;
-        update_me = true;
-    }
-
-    // update when to much down
-    if (iOffsetY > 31) {
-        iOffsetY -= 32;
-        iCell += MAP_W_MAX;
-        update_me = true;
-    }
-
-    // TODO: replace logic iCell determining based on abs pixel positions on map!?
-
-    if (iCell == iGoalCell) {
-        iOffsetX = iOffsetY = 0;
-    }
-
-    if (update_me) {
-        if (!bCellValid(iCell)) {
-            if (iCell > (MAX_CELLS - 1)) iCell = MAX_CELLS - 1;
-            if (iCell < 0) iCell = 0;
-        }
-    }
+    int movespeed = 2; // this is fixed! (TODO: move this to bullet type data)
+    posX += cos(angle) * movespeed;
+    posY += sin(angle) * movespeed;
 }
 
 /**
@@ -651,20 +605,12 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor) {
 
     pStructure->damage(iDamage);
 
-    int iChance = pStructure->getSmokeChance();
-
-    // smoke
-    if (rnd(100) < iChance) {
-        PARTICLE_CREATE(getRandomX(), getRandomY(), OBJECT_SMOKE, -1, -1);
-    }
-
-    // The damage function says dying should not be part of it, so it is put here?!
-    if (pStructure->getHitPoints() <= 0) {
+    if (pStructure->isDead()) {
         if (pUnit) {
-            // TODO: update statistics
+            // TODO: update statistics (structures destroyed ??)
         }
-        pStructure->die();
     }
+
 }
 
 /**

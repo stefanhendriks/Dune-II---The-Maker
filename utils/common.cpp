@@ -1608,17 +1608,25 @@ int create_bullet(int type, int cell, int goal_cell, int unitWhichShoots, int st
     newBullet.init();
 
     newBullet.iType = type;
-    newBullet.iCell = cell;
+    newBullet.posX = map.getAbsoluteXPositionFromCellCentered(cell);
+    newBullet.posY = map.getAbsoluteYPositionFromCellCentered(cell);
     newBullet.iOwnerStructure = structureWhichShoots;
     newBullet.iOwnerUnit = unitWhichShoots;
 
-    newBullet.iGoalCell = goal_cell;
+    newBullet.targetX = map.getAbsoluteXPositionFromCellCentered(goal_cell);
+    newBullet.targetY = map.getAbsoluteYPositionFromCellCentered(goal_cell);
+
+    int structureIdAtGoalCell = map.getCellIdStructuresLayer(goal_cell);
+    if (structureIdAtGoalCell > -1) {
+        cAbstractStructure *pStructure = structure[structureIdAtGoalCell];
+        if (pStructure && pStructure->isValid()) {
+            newBullet.targetX = pStructure->getRandomPosX();
+            newBullet.targetY = pStructure->getRandomPosY();
+        }
+    }
 
     newBullet.bAlive = true;
     newBullet.iFrame = 0;
-
-    newBullet.iOffsetX = 8 + rnd(9);
-    newBullet.iOffsetY = 8 + rnd(9);
 
     newBullet.iPlayer = -1;
 

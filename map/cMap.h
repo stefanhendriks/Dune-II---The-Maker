@@ -77,6 +77,20 @@ public:
 
     int getAbsoluteYPositionFromCell(int cell);
 
+    /**
+     * Like absoluteX position, but then centers within cell (ie adds half tile)
+     * @param cell
+     * @return
+     */
+    int getAbsoluteXPositionFromCellCentered(int cell);
+
+    /**
+     * Like absoluteX position, but then centers within cell (ie adds half tile)
+     * @param cell
+     * @return
+     */
+    int getAbsoluteYPositionFromCellCentered(int cell);
+
     int getCellAbove(int c);
 
 	int getCellBelow(int c);
