@@ -518,3 +518,13 @@ bool cAbstractStructure::belongsTo(const cPlayer * other) const {
     if (other == nullptr) return false;
     return belongsTo(other->getId());
 }
+
+/**
+ * Makes sure this structure switches owner, and takes care of the player internal bookkeeping.
+ * @param pPlayer
+ */
+void cAbstractStructure::getsCapturedBy(cPlayer *pPlayer) {
+    getPlayer()->decreaseStructureAmount(getType());
+    iPlayer = pPlayer->getId();
+    pPlayer->increaseStructureAmount(getType());
+}

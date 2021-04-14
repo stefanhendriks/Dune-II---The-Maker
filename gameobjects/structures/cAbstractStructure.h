@@ -165,6 +165,8 @@ class cAbstractStructure {
 
         bool belongsTo(int playerId) const;
         bool belongsTo(const cPlayer * other) const;
+
+    void getsCapturedBy(cPlayer *pPlayer);
 };
 
 #endif
