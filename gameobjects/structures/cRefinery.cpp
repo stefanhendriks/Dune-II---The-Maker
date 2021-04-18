@@ -99,7 +99,7 @@ void cRefinery::think_unit_occupation() {
     int iNewCell = getNonOccupiedCellAroundStructure();
 
     if (iNewCell > -1) {
-        cUnit.iCell = iNewCell;
+        cUnit.setCell(iNewCell);
 
         // let player know...
         if (cUnit.iPlayer == 0)
@@ -112,19 +112,17 @@ void cRefinery::think_unit_occupation() {
     }
 
     // done & restore unit
-    cUnit.iOffsetX = 0;
-    cUnit.iOffsetY = 0;
     cUnit.iCredits = 0;
     cUnit.iStructureID = -1;
     cUnit.restoreFromTempHitPoints();
-    cUnit.iGoalCell = cUnit.iCell;
+    cUnit.iGoalCell = cUnit.getCell();
     cUnit.iPathIndex = -1;
     cUnit.updateCellXAndY();
 
     cUnit.TIMER_movewait = 0;
     cUnit.TIMER_thinkwait = 0;
 
-    map.cellSetIdForLayer(cUnit.iCell, MAPID_UNITS, iUnitID);
+    map.cellSetIdForLayer(cUnit.getCell(), MAPID_UNITS, iUnitID);
 
     // perhaps we can find a carryall to help us out
     int iHarvestCell = UNIT_find_harvest_spot(iUnitID);
@@ -174,5 +172,5 @@ void cRefinery::think_guard()
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cRefinery::getSpiceSiloCapacity() {
 	float percentage = ((float)getHitPoints() / (float)structures[getType()].hp);
-	return 1000*percentage;
+	return 1000 * percentage;
 }

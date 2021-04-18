@@ -515,15 +515,15 @@ bool cAbstractStructure::isDamaged() {
 
 /**
  * Probability between 0-100 when to create smoke particles.
- * Based on health of structure. (< 50% has 3x higher probability to spawn smoke)
+ * Based on health of structure.
  * @return
  */
 int cAbstractStructure::getSmokeChance() {
     if (getHitPoints() < (getMaxHP() / 2)) {
-        return 35;
+        return 15;
     }
 
-    return 10;
+    return 5;
 }
 
 bool cAbstractStructure::belongsTo(int playerId) const {

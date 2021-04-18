@@ -47,8 +47,6 @@ public:
 
     int iID;            // index of unit in the unit array
 
-    int iCell;          // cell of unit    
-   
     int iType;          // type of unit
 
     int iGroup;         // belongs to group...
@@ -60,10 +58,8 @@ public:
     // Movement
     int iNextCell;      // where to move to (next cell)
     int iGoalCell;      // the goal cell (goal of path)    
-    int iCellX;         // my cell x
-    int iCellY;         // my cell y
-    float iOffsetX;       // X offset
-    float iOffsetY;       // Y offset
+//    float iOffsetX;       // X offset
+//    float iOffsetY;       // Y offset
     int iPath[MAX_PATH_SIZE];    // path of unit
     int iPathIndex;     // where are we?
     int iPathFails;     // failed...
@@ -252,6 +248,11 @@ public:
 
     void setMaxHitPoints();
 
+    void setCell(int cll);
+    int getCell() { return iCell; }
+    int getCellX() { return iCellX; }
+    int getCellY() { return iCellY; }
+
     cPlayer *getPlayer();
 
 private:
@@ -263,6 +264,11 @@ private:
 
     void forgetAboutCurrentPathAndPrepareToCreateNewOne();
     void forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait);
+
+    int iCell;          // cell of unit
+    int iCellX;         // my cell x
+    int iCellY;         // my cell y
+    float posX, posY;   // absolute x, y coordinates (pixel based)
 
     eUnitMoveToCellResult moveToNextCellLogic();
 };
