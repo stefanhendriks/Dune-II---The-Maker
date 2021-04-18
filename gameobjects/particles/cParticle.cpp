@@ -560,13 +560,9 @@ void cParticle::think()
 }
 
 
-
-
-int PARTICLE_NEW()
-{
-    for (int i=0; i < MAX_PARTICLES; i++)
-    {
-        if (particle[i].bAlive==false)
+int PARTICLE_NEW() {
+    for (int i = 0; i < MAX_PARTICLES; i++) {
+        if (!particle[i].bAlive)
             return i;
     }
 
