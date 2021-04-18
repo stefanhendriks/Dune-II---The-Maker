@@ -52,7 +52,7 @@ void cRepairFacility::think_repairUnit() {// must repair...
                 int iNewCell = getNonOccupiedCellAroundStructure();
 
                 if (iNewCell > -1) {
-                    unitToRepair.iCell = iNewCell;
+                    unitToRepair.setCell(iNewCell);
                 } else {
                     logbook("Could not find space for this unit");
                     // TODO: Pick up by carry-all!?
@@ -63,7 +63,7 @@ void cRepairFacility::think_repairUnit() {// must repair...
 
                 unitToRepair.iTempHitPoints = -1;
 
-                unitToRepair.iGoalCell = unitToRepair.iCell;
+                unitToRepair.iGoalCell = unitToRepair.getCell();
                 unitToRepair.iPathIndex = -1;
 
                 unitToRepair.TIMER_movewait = 0;
@@ -72,7 +72,7 @@ void cRepairFacility::think_repairUnit() {// must repair...
                 if (getRallyPoint() > -1)
                     unitToRepair.move_to(getRallyPoint(), -1, -1);
 
-                map.cellSetIdForLayer(unitToRepair.iCell, MAPID_UNITS, iUnitID);
+                map.cellSetIdForLayer(unitToRepair.getCell(), MAPID_UNITS, iUnitID);
 
                 iUnitID = -1;
             }

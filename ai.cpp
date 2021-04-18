@@ -381,8 +381,8 @@ void cAIPlayer::think_spiceBlooms() {
 
                 int d = ABS_length(iCellGiveX(iBloom),
                                    iCellGiveY(iBloom),
-                                   iCellGiveX(cUnit.iCell),
-                                   iCellGiveY(cUnit.iCell));
+                                   iCellGiveX(cUnit.getCell()),
+                                   iCellGiveY(cUnit.getCell()));
 
                 if (d < iDist) {
                     iUnit = i;
@@ -477,7 +477,7 @@ void cAIPlayer::think_repair() {
                     {
                         // head off to repair
                     	int iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
-                                unit[i].iCell, REPAIR, &player[ID]);
+                                unit[i].getCell(), REPAIR, &player[ID]);
 
 						if (iNewID > -1) {
 							int iCarry = CARRYALL_TRANSFER(i, structure[iNewID]->getCell() + 2);
@@ -643,7 +643,7 @@ void cAIPlayer::think_attack() {
         if (!cUnit.isIdle()) continue; // skip non-idle units
 
         if (isAttackingUnit)
-            UNIT_ORDER_ATTACK(i, unit[iTarget].iCell, iTarget, -1, -1);
+            UNIT_ORDER_ATTACK(i, unit[iTarget].getCell(), iTarget, -1, -1);
         else
             UNIT_ORDER_ATTACK(i, structure[iTarget]->getCell(), -1, iTarget, -1);
 
@@ -1213,7 +1213,7 @@ int AI_RANDOM_UNIT_TARGET(int iPlayer, int playerIndexToAttack) {
         if (cUnit.iPlayer != playerIndexToAttack) continue;
         // unit belongs to player of the player we wish to attack
 
-        bool isVisibleForPlayer = mapUtils->isCellVisible(&cPlayer, cUnit.iCell);
+        bool isVisibleForPlayer = mapUtils->isCellVisible(&cPlayer, cUnit.getCell());
 
         if (DEBUGGING) {
             char msg[255];
@@ -1637,7 +1637,7 @@ void cAIPlayer::think_fremen_superweapon() {
                     int cell = structure[structureIdToAttack]->getCell();
                     UNIT_ORDER_ATTACK(id, cell, -1, structureIdToAttack, -1);
                 } else if (unitIdToAttack > -1) {
-                    UNIT_ORDER_ATTACK(id, unit[unitIdToAttack].iCell, unitIdToAttack, -1, -1);
+                    UNIT_ORDER_ATTACK(id, unit[unitIdToAttack].getCell(), unitIdToAttack, -1, -1);
                 }
                 break;
             }

@@ -224,6 +224,12 @@ void cItemBuilder::think() {
 	}
 }
 
+/**
+ * Creates a unit and deploys it somewhere. Called after building complete (or super weapon FREMEN)
+ *
+ * @param item
+ * @param buildId
+ */
 void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
     int structureTypeByItem = structureUtils.findStructureTypeByTypeOfList(item);
     assert(structureTypeByItem > -1);
