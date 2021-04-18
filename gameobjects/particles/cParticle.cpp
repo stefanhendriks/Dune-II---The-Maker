@@ -29,8 +29,7 @@
 // TODO: constructor/destructor
 
 // init
-void cParticle::init()
-{
+void cParticle::init() {
     // used or not:
     bAlive=false;       // alive
 
@@ -57,8 +56,7 @@ void cParticle::init()
 }
 
 // valid
-bool cParticle::isValid()
-{
+bool cParticle::isValid() {
     return bAlive;
 }
 

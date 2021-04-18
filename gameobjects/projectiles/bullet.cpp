@@ -162,8 +162,7 @@ void cBullet::think() {
         }
 
         if (bCreatePuf) {
-            int half = getBulletBmpWidth() / 2;
-            PARTICLE_CREATE(pos_x() + half, pos_y() + half, BULLET_PUF, -1, -1);
+            PARTICLE_CREATE(pos_x(), pos_y(), BULLET_PUF, -1, -1);
         }
 
         TIMER_frame = 0;
