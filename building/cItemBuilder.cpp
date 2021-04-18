@@ -156,8 +156,8 @@ void cItemBuilder::think() {
                                 REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
                             }
 
-                            int x = iCellGiveX(iCll);
-                            int y = iCellGiveY(iCll);
+                            int x = map.getCellX(iCll);
+                            int y = map.getCellY(iCll);
                             int amount = rnd(2) + 1;
 
                             // randomly shift the cell one coordinate up/down/left/right

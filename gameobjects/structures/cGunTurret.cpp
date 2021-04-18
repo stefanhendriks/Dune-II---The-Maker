@@ -46,11 +46,15 @@ void cGunTurret::think_animation() {
 void cGunTurret::think_attack() {
     cUnit &unitTarget = unit[iTargetID];
     if (unitTarget.isValid()) {
-        int iCellX = iCellGiveX(getCell());
-        int iCellY = iCellGiveY(getCell());
+        int c2 = getCell();
+        int iCellX = map.getCellX(c2);
+        int c = getCell();
+        int iCellY = map.getCellY(c);
 
-        int iTargetX = iCellGiveX(unitTarget.getCell());
-        int iTargetY = iCellGiveY(unitTarget.getCell());
+        int c3 = unitTarget.getCell();
+        int iTargetX = map.getCellX(c3);
+        int c1 = unitTarget.getCell();
+        int iTargetY = map.getCellY(c1);
 
         int d = fDegrees(iCellX, iCellY, iTargetX, iTargetY);
         int f = face_angle(d); // get the angle
@@ -145,8 +149,10 @@ void cGunTurret::think_guard() {
     TIMER_guard++;
 
     if (TIMER_guard > 10) {
-        int iCellX = iCellGiveX(getCell());
-        int iCellY = iCellGiveY(getCell());
+        int c2 = getCell();
+        int iCellX = map.getCellX(c2);
+        int c = getCell();
+        int iCellY = map.getCellY(c);
 
         int iDistance=9999; // closest distance
 
@@ -172,7 +178,9 @@ void cGunTurret::think_guard() {
                 }
             }
 
-            int distance = ABS_length(iCellX, iCellY, iCellGiveX(cUnit.getCell()), iCellGiveY(cUnit.getCell()));
+            int c1 = cUnit.getCell();
+            int c3 = cUnit.getCell();
+            int distance = ABS_length(iCellX, iCellY, map.getCellX(c3), map.getCellY(c1));
 
             if (distance <= getSight()) {
                 if (cUnit.isAttackableAirUnit()) {

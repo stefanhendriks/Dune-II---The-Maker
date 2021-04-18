@@ -435,7 +435,21 @@ public:
      */
     int getTotalCountCellType(int cellType);
 
+    /**
+     * Depending on terrain type, return amount of 'slow down' is experienced by ground unit (this assumes it is about
+     * ground units). 0 means no slow down (SLAB), the higher the more slow down. Default is 1 (slight slow down).
+     * @param i
+     * @return
+     */
     int getCellSlowDown(int i);
+
+    /**
+     * Checks if param c (cell index) is within the boundaries of the Array (thus, this also accepts the outer
+     * map boundaries)
+     * @param c
+     * @return
+     */
+    bool isValidCell(int c);
 
 private:
         tCell cell[MAX_CELLS];

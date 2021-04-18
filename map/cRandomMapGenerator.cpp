@@ -56,8 +56,8 @@ void cRandomMapGenerator::generateRandomMap() {
         if (iSpot < 6) {
             for (int s = 0; s < 6; s++) {
                 if (iSpotRock[s] > -1) {
-                    if (ABS_length(iCellGiveX(iCll), iCellGiveY(iCll), iCellGiveX(iSpotRock[s]),
-                                   iCellGiveY(iSpotRock[s])) < iDistance) {
+                    if (ABS_length(map.getCellX(iCll), map.getCellY(iCll), map.getCellX(iSpotRock[s]),
+                                   map.getCellY(iSpotRock[s])) < iDistance) {
                         bOk = false;
                     } else {
                         iFails++;
@@ -125,7 +125,9 @@ void cRandomMapGenerator::generateRandomMap() {
     blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
 
     while (a_spice > 0) {
-        int iCll = iCellMakeWhichCanReturnMinusOne(rnd(game.map_width), rnd(game.map_height));
+        int x = rnd(game.map_width);
+        int y = rnd(game.map_height);
+        int iCll = map.getCellWithMapDimensions(x, y);
         mapEditor.createField(iCll, TERRAIN_SPICE, 2500);
         iProgress += 10;
         a_spice--;
@@ -135,7 +137,9 @@ void cRandomMapGenerator::generateRandomMap() {
     }
 
     while (a_hill > 0) {
-        int cell = iCellMakeWhichCanReturnMinusOne(rnd(game.map_width), rnd(game.map_height));
+        int x = rnd(game.map_width);
+        int y = rnd(game.map_height);
+        int cell = map.getCellWithMapDimensions(x, y);
         mapEditor.createField(cell, TERRAIN_HILL, 500 + rnd(500));
         a_hill--;
         iProgress += 10;
@@ -163,7 +167,7 @@ void cRandomMapGenerator::generateRandomMap() {
                 rectfill(screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
             }
 
-            int cll = iCellMakeWhichCanReturnMinusOne(x, y);
+            int cll = map.getCellWithMapDimensions(x, y);
             if (cll < 0) continue;
 
             int iColor = makecol(194, 125, 60);
@@ -180,8 +184,8 @@ void cRandomMapGenerator::generateRandomMap() {
 
             for (int s = 0; s < 4; s++) {
                 if (PreviewMap[0].iStartCell[s] > -1) {
-                    int sx = iCellGiveX(PreviewMap[0].iStartCell[s]);
-                    int sy = iCellGiveY(PreviewMap[0].iStartCell[s]);
+                    int sx = map.getCellX(PreviewMap[0].iStartCell[s]);
+                    int sy = map.getCellY(PreviewMap[0].iStartCell[s]);
 
                     if (sx == x && sy == y)
                         iColor = makecol(255, 255, 255);

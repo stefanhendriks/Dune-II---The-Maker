@@ -75,7 +75,7 @@ void cMiniMapDrawer::drawTerrain() {
 
 		for (int y = 0; y < (game.map_height); y++) {
 			iColor = makecol(0, 0, 0);
-			int iCll = iCellMake(x, y);
+            int iCll = ::map.makeCell(x, y);
 
 			if (map->isVisible(iCll, m_Player->getId())) {
 				iColor = getRGBColorForTerrainType(map->getCellType(iCll));
@@ -124,7 +124,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
                 continue;
             }
 
-			int iCll = iCellMake(x, y);
+            int iCll = ::map.makeCell(x, y);
 
 			if (!map->isVisible(iCll, m_Player->getId())) {
 			    // invisible cell

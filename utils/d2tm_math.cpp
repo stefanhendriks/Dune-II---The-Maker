@@ -21,41 +21,6 @@
 
 #include "../include/d2tmh.h"
 
-
-/**
- * Checks if param c (cell index) is within the boundaries of the Array (thus, this also accepts the outer
- * map boundaries)
- * @param c
- * @return
- */
-bool bCellValid(int c) {
-    return !(c < 0 || c >= MAX_CELLS);
-}
-
-// return the X value from a cell
-int iCellGiveX(int c) {
-    return map.getCellX(c);
-}
-
-// return the Y value from a cell
-int iCellGiveY(int c) {
-    return map.getCellY(c);
-}
-
-
-// make cell number out of X and Y value
-int iCellMake(int x, int y) {
-    return map.makeCell(x, y);
-}
-
-int iCellMakeWhichCanReturnMinusOne(int x, int y) {
-    return map.getCellWithMapDimensions(x, y);
-}
-
-int iCellMakeWhichCanReturnMinusOneWithinMapBorders(int x, int y) {
-    return map.getCellWithMapBorders(x, y);
-}
-
 // returns in fRadians
 float fRadians(int x1, int y1, int x2, int y2)
 {

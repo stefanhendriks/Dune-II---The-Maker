@@ -379,10 +379,12 @@ void cAIPlayer::think_spiceBlooms() {
                 if (cUnit.iAction != ACTION_GUARD) continue; // skip units which are doing something else
                 if (!cUnit.isInfantryUnit()) continue; // skip non-infantry units
 
-                int d = ABS_length(iCellGiveX(iBloom),
-                                   iCellGiveY(iBloom),
-                                   iCellGiveX(cUnit.getCell()),
-                                   iCellGiveY(cUnit.getCell()));
+                int c = cUnit.getCell();
+                int c1 = cUnit.getCell();
+                int d = ABS_length(map.getCellX(iBloom),
+                                   map.getCellY(iBloom),
+                                   map.getCellX(c1),
+                                   map.getCellY(c));
 
                 if (d < iDist) {
                     iUnit = i;
@@ -1333,8 +1335,10 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
         if (pStructure->getOwner() != ID) continue;
 
         // scan around
-        int iStartX=iCellGiveX(pStructure->getCell());
-        int iStartY=iCellGiveY(pStructure->getCell());
+        int c1 = pStructure->getCell();
+        int iStartX= map.getCellX(c1);
+        int c = pStructure->getCell();
+        int iStartY= map.getCellY(c);
 
         int iEndX = iStartX + pStructure->getWidth() + 1;
         int iEndY = iStartY + pStructure->getHeight()  + 1;
@@ -1345,15 +1349,15 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
 //        // check above structure if it can place
         for (int sx = topLeftX; sx < iEndX; sx++) {
             int sy = iStartY;
-            int cell = iCellMakeWhichCanReturnMinusOne(sx, sy);
+            int cell = map.getCellWithMapDimensions(sx, sy);
 
             int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
 
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),
-                                           iCellGiveY(player[ID].focus_cell));
+                    int iDist = ABS_length(sx, sy, map.getCellX(player[ID].focus_cell),
+                                           map.getCellY(player[ID].focus_cell));
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
@@ -1373,15 +1377,15 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
         // check underneath structure
         for (int sx = topLeftX; sx < iEndX; sx++) {
             int sy = underNeathStructureY;
-            int cell = iCellMakeWhichCanReturnMinusOne(sx, sy);
+            int cell = map.getCellWithMapDimensions(sx, sy);
 
             int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
 
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),
-                                           iCellGiveY(player[ID].focus_cell));
+                    int iDist = ABS_length(sx, sy, map.getCellX(player[ID].focus_cell),
+                                           map.getCellY(player[ID].focus_cell));
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
@@ -1400,15 +1404,15 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
         // check left side
         for (int sy = topLeftY; sy < iEndY; sy++) {
             int sx = topLeftX;
-            int cell = iCellMakeWhichCanReturnMinusOne(sx, sy);
+            int cell = map.getCellWithMapDimensions(sx, sy);
 
             int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
 
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),
-                                           iCellGiveY(player[ID].focus_cell));
+                    int iDist = ABS_length(sx, sy, map.getCellX(player[ID].focus_cell),
+                                           map.getCellY(player[ID].focus_cell));
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
@@ -1428,15 +1432,15 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
         int rightOfStructure = iStartX + pStructure->getWidth();
         for (int sy = topLeftY; sy < iEndY; sy++) {
             int sx = rightOfStructure;
-            int cell = iCellMakeWhichCanReturnMinusOne(sx, sy);
+            int cell = map.getCellWithMapDimensions(sx, sy);
 
             int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
 
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),
-                                           iCellGiveY(player[ID].focus_cell));
+                    int iDist = ABS_length(sx, sy, map.getCellX(player[ID].focus_cell),
+                                           map.getCellY(player[ID].focus_cell));
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
@@ -1660,7 +1664,7 @@ int CLOSE_SPICE_BLOOM(int iCell) {
 
     if (iCell < 0) {
         // use cell at center
-        iCell = iCellMakeWhichCanReturnMinusOne(halfWidth, halfHeight);
+        iCell = map.getCellWithMapDimensions(halfWidth, halfHeight);
         iDistance = map.getWidth();
     }
 
@@ -1668,15 +1672,15 @@ int CLOSE_SPICE_BLOOM(int iCell) {
     int closestBloomFoundSoFar=-1;
     int bloomsEvaluated = 0;
 
-    cx = iCellGiveX(iCell);
-    cy = iCellGiveY(iCell);
+    cx = map.getCellX(iCell);
+    cy = map.getCellY(iCell);
 
     for (int i=0; i < MAX_CELLS; i++) {
         int cellType = map.getCellType(i);
         if (cellType != TERRAIN_BLOOM) continue;
         bloomsEvaluated++;
 
-        int d = ABS_length(cx, cy, iCellGiveX(i), iCellGiveY(i));
+        int d = ABS_length(cx, cy, map.getCellX(i), map.getCellY(i));
 
         if (d < iDistance) {
             closestBloomFoundSoFar = i;

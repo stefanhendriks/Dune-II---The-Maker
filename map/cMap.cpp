@@ -65,7 +65,7 @@ void cMap::init(int width, int height) {
 }
 
 void cMap::smudge_increase(int iType, int iCell) {
-    if (!bCellValid(iCell)) return;
+    if (!map.isValidCell(iCell)) return;
     tCell *pCell = getCell(iCell);
 
     if (pCell->smudgetype < 0)
@@ -257,8 +257,8 @@ void cMap::clear_spot(int c, int size, int playerId) {
 
     // Get the x and y and make a circle around it of 16xR, then calculate of every step the cell and
     // clear it
-    int cx = iCellGiveX(c);
-    int cy = iCellGiveY(c);
+    int cx = map.getCellX(c);
+    int cy = map.getCellY(c);
 
     if (cx < 0 || cy < 0)
         return;
@@ -341,7 +341,7 @@ void cMap::clear_spot(int c, int size, int playerId) {
             logbook(msg);
             }*/
 
-            int cl = iCellMakeWhichCanReturnMinusOne(cell_x, cell_y);
+            int cl = map.getCellWithMapDimensions(cell_x, cell_y);
             if (cl < 0) continue;
 
             if (!iVisible[cl][playerId]) {
@@ -821,4 +821,8 @@ int cMap::getCellWithMapDimensions(int x, int y)  {
     if (y >= mapHeight) return -1;
 
     return (y * mapWidth) + x;
+}
+
+bool cMap::isValidCell(int c) {
+    return !(c < 0 || c >= MAX_CELLS);
 }

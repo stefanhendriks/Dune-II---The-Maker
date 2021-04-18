@@ -122,8 +122,8 @@ void cMapEditor::createField(int cell, int terrainType, int size) {
         }
 
         if (rnd(100) < 25) {
-            x = iCellGiveX(cell);
-            y = iCellGiveY(cell);
+            x = map.getCellX(cell);
+            y = map.getCellY(cell);
         }
 
 

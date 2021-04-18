@@ -75,7 +75,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	// Determine if structure to be placed is within build distance
 	for (int iX=iStartX; iX < iEndX; iX++) {
 		for (int iY=iStartY; iY < iEndY; iY++) {
-            int iCll = iCellMakeWhichCanReturnMinusOne(iX, iY);
+            int iCll = map.getCellWithMapDimensions(iX, iY);
 
 			if (iCll > -1) {
                 int idOfStructureAtCell = map.getCellIdStructuresLayer(iCll);
@@ -119,7 +119,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 break;
             }
 
-            int iCll = iCellMake(cellX, cellY);
+            int iCll = map.makeCell(cellX, cellY);
 
 			if (!map.isCellPassable(iCll))
 				iTile = PLACE_BAD;

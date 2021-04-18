@@ -164,13 +164,13 @@ void cAbstractStructure::die() {
     }
 
 	int iCll=iCell;
-	int iCX=iCellGiveX(iCll);
-	int iCY=iCellGiveY(iCll);
+    int iCX= map.getCellX(iCll);
+    int iCY= map.getCellY(iCll);
 
     // create destroy particles
     for (int w = 0; w < iWidth; w++) {
         for (int h = 0; h < iHeight; h++) {
-			iCll=iCellMake(iCX+w, iCY+h);
+            iCll= map.makeCell(iCX + w, iCY + h);
 
 			map.cellChangeType(iCll, TERRAIN_ROCK);
 			mapEditor.smoothAroundCell(iCll);
@@ -245,8 +245,8 @@ void cAbstractStructure::think_prebuild() {
  * @return
  */
 int cAbstractStructure::getNonOccupiedCellAroundStructure() {
-    int iStartX = iCellGiveX(iCell);
-    int iStartY = iCellGiveY(iCell);
+    int iStartX = map.getCellX(iCell);
+    int iStartY = map.getCellY(iCell);
 
     int iEndX = (iStartX + iWidth) + 1;
     int iEndY = (iStartY + iHeight) + 1;
@@ -266,7 +266,7 @@ int cAbstractStructure::getNonOccupiedCellAroundStructure() {
             FIX_BORDER_POS(iCx, iCy);
 
             // so they are for sure not at the outer edges on the map now...
-            int cll = iCellMakeWhichCanReturnMinusOneWithinMapBorders(iCx, iCy);
+            int cll = map.getCellWithMapBorders(iCx, iCy);
 
             if (cll > -1 && !map.occupied(cll)) {
                 return cll;

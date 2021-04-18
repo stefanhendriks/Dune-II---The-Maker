@@ -235,14 +235,14 @@ void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, 
 	int iWidth = structures[iStructureType].bmp_width / 32;;
 	int iHeight = structures[iStructureType].bmp_height / 32;
 
-	int iCellX = iCellGiveX(iCell);
-	int iCellY = iCellGiveY(iCell);
+    int iCellX = map.getCellX(iCell);
+    int iCellY = map.getCellY(iCell);
 	int iCellXMax = iCellX + iWidth;
 	int iCellYMax = iCellY + iHeight;
 
 	for (int x = iCellX; x < iCellXMax; x++) {
 		for (int y = iCellY; y < iCellYMax; y++) {
-			map.clear_spot(iCellMake(x, y), iSight, iPlayer);
+            map.clear_spot(map.makeCell(x, y), iSight, iPlayer);
 		}
 	}
 }
@@ -288,13 +288,13 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDT
 
     int slabs=0;
     int total=w*h;
-    int x = iCellGiveX(iCell);
-    int y = iCellGiveY(iCell);
+    int x = map.getCellX(iCell);
+    int y = map.getCellY(iCell);
 
     for (int cx=0; cx < w; cx++)
         for (int cy=0; cy < h; cy++)
         {
-            int cll=iCellMake(cx+x, cy+y); // <-- some evil global thing that calculates the cell...
+            int cll= map.makeCell(cx + x, cy + y); // <-- some evil global thing that calculates the cell...
 
 			// check if terrain allows it.
             if (map.getCellType(cll) != TERRAIN_ROCK &&
