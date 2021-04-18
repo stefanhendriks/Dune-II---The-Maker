@@ -958,7 +958,7 @@ void INI_Load_seed(int seed) {
         for (int mapX = 0; mapX < 64; mapX++) {
             char c = seedMap->getCellTypeCharacter(mapX, mapY);
             int type = seedMap->getCellType(mapX, mapY);
-            int iCell = iCellMake(mapX, mapY);
+            int iCell = map.makeCell(mapX, mapY);
             mapEditor.createCell(iCell, type, 0);
         }
     }
@@ -1403,7 +1403,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                             int iCellY = (original_dune2_cell / 64);
 
                             // Now recalculate it
-                            d2tm_cell = iCellMake(iCellX, iCellY);
+                            d2tm_cell = map.makeCell(iCellX, iCellY);
                             blooms[iBloomID] = d2tm_cell;
                             memset(word, 0, sizeof(word)); // clear string
 
@@ -1455,7 +1455,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                             int iCellY = (original_dune2_cell / 64);
 
                             // Now recalculate it
-                            d2tm_cell = iCellMake(iCellX, iCellY);
+                            d2tm_cell = map.makeCell(iCellX, iCellY);
                             fields[iFieldID] = d2tm_cell;
                             memset(word, 0, sizeof(word)); // clear string
 
@@ -2271,7 +2271,7 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan) {
     // first clear it all out
     for (int x = 0; x < game.map_width; x++) {
         for (int y = 0; y < game.map_height; y++) {
-            int cll = iCellMake(x, y);
+            int cll = map.makeCell(x, y);
             PreviewMap[iNew].mapdata[cll] = TERRAIN_SAND;
         }
     }
@@ -2368,7 +2368,7 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan) {
                     letter[0] = '\0';
                     letter[0] = linefeed[iX];
 
-                    int iCll = iCellMake((iX + 1), (iYLine + 1));
+                    int iCll = map.makeCell((iX + 1), (iYLine + 1));
 
                     int iColor = makecol(194, 125, 60);
 
@@ -2430,8 +2430,8 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan) {
         // starting points
         for (int i = 0; i < 5; i++) {
             if (PreviewMap[iNew].iStartCell[i] > -1) {
-                int x = iCellGiveX(PreviewMap[iNew].iStartCell[i]);
-                int y = iCellGiveY(PreviewMap[iNew].iStartCell[i]);
+                int x = map.getCellX(PreviewMap[iNew].iStartCell[i]);
+                int y = map.getCellY(PreviewMap[iNew].iStartCell[i]);
 
                 putpixel(PreviewMap[iNew].terrain, 1 + (x * 2), 1 + (y * 2), makecol(255, 255, 255));
                 putpixel(PreviewMap[iNew].terrain, 1 + (x * 2) + 1, 1 + (y * 2), makecol(255, 255, 255));

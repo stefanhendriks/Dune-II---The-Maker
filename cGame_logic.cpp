@@ -1237,8 +1237,8 @@ void cGame::setup_skirmish() {
 
                 // create units
                 while (u < aiPlayer.iUnits) {
-                    int iX=iCellGiveX(cPlayer.focus_cell);
-                    int iY=iCellGiveY(cPlayer.focus_cell);
+                    int iX= map.getCellX(cPlayer.focus_cell);
+                    int iY= map.getCellY(cPlayer.focus_cell);
                     int iType=rnd(12);
 
                     iX-=4;

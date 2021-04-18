@@ -211,5 +211,5 @@ void cMapCamera::thinkInteraction() {
 }
 
 int cMapCamera::getCellFromAbsolutePosition(int x, int y) {
-    return iCellMakeWhichCanReturnMinusOne((x / 32), (y / 32));
+    return map.getCellWithMapDimensions((x / 32), (y / 32));
 }
