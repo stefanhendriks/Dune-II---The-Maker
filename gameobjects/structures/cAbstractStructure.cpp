@@ -27,6 +27,9 @@ cAbstractStructure::cAbstractStructure() {
 
     iFrame=-1;
 
+    posX = -1;
+    posY = -1;
+
     bRepair=false;
     bAnimate=false;
 
@@ -67,14 +70,16 @@ cAbstractStructure::~cAbstractStructure() {
     }
     iHitPoints = -1;
     iCell = -1;
+    posX = -1;
+    posY = -1;
 }
 
 int cAbstractStructure::pos_x() {
-    return map.getAbsoluteXPositionFromCell(iCell);
+    return posX;
 }
 
 int cAbstractStructure::pos_y() {
-    return map.getAbsoluteYPositionFromCell(iCell);
+    return posY;
 }
 
 // X drawing position
@@ -410,6 +415,8 @@ void cAbstractStructure::setHitPoints(int hp) {
 
 void cAbstractStructure::setCell(int cell) {
 	iCell = cell;
+    posX = map.getAbsoluteXPositionFromCell(iCell);
+    posY = map.getAbsoluteYPositionFromCell(iCell);
 }
 
 void cAbstractStructure::setOwner(int player) {
