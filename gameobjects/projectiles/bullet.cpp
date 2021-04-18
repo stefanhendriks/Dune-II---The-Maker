@@ -295,12 +295,8 @@ void cBullet::arrivedAtDestinationLogic() {
 
             // create particle of explosion
             if (sBullet.deadbmp > -1) {
-                // depending on 'explosion size'
-                int half = 16;
-                int randomX = -8 + rnd(half);
-                int randomY = -8 + rnd(half);
-                int posX = map.getAbsoluteXPositionFromCellCentered(cellToDamage) + randomX;
-                int posY = map.getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
+                int posX = map.getAbsoluteXPositionFromCellCentered(cellToDamage) + getRandomX();
+                int posY = map.getAbsoluteYPositionFromCellCentered(cellToDamage) + getRandomY();
                 PARTICLE_CREATE(posX, posY, sBullet.deadbmp, -1, -1);
             }
 
