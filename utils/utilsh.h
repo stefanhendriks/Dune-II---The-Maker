@@ -24,7 +24,6 @@
 #include "cStructureUtils.h"
 
 #include "cTimeManager.h"
-#include "cMapUtils.h"
 #include "cListUtils.h"
 
 #endif /* UTILSH_H_ */

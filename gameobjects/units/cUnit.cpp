@@ -25,7 +25,7 @@ struct ASTAR {
 };
 
 // Temp map
-ASTAR temp_map[MAX_CELLS];
+ASTAR temp_map[4096];
 
 // Class specific on top
 // Globals on bottom
@@ -409,7 +409,7 @@ bool cUnit::isValid() {
     if (iHitPoints < 0 && iTempHitPoints < 0)
         return false;
 
-    if (iCell < 0 || iCell >= MAX_CELLS)
+    if (iCell < 0 || iCell >= map.getMaxCells())
         return false;
 
     return true;
@@ -815,7 +815,7 @@ void cUnit::think_guard() {
                     continue;
 
                 // not ours and its visible
-                if (mapUtils->isCellVisibleForPlayerId(iPlayer, potentialThreath.iCell) && // is visible for ai as well?
+                if (map.isVisible(potentialThreath.iCell, iPlayer) && // is visible for ai as well?
                     potentialThreath.isAirbornUnit() == isAirbornUnit()) {
 
                     int distance = ABS_length(iCellX, iCellY, potentialThreath.iCellX, potentialThreath.iCellY);
@@ -870,7 +870,7 @@ void cUnit::think_guard() {
                         bool bAlly = getPlayer()->isSameTeamAs(pStructure->getPlayer());
 
                         // not ours and its visible
-                        if (mapUtils->isCellVisibleForPlayerId(iPlayer, pStructure->getCell()) &&
+                        if (map.isVisible(pStructure->getCell(), iPlayer) &&
                             !bAlly) {
                             int c = pStructure->getCell();
                             int c1 = pStructure->getCell();
@@ -1061,7 +1061,7 @@ void cUnit::think() {
 
                     // not ours and its visible
                     if (cUnit.iPlayer != iPlayer &&
-                        mapUtils->isCellVisibleForPlayerId(iPlayer, cUnit.iCell) &&
+                        map.isVisible(cUnit.iCell, iPlayer) &&
                         units[cUnit.iType].airborn == false) // do not attack airborn units!?
                     {
                         int distance = ABS_length(iCellX, iCellY, cUnit.iCellX, cUnit.iCellY);
@@ -1098,7 +1098,7 @@ void cUnit::think() {
 
                     // not ours and its visible
                     if (pStructure->getPlayerId() != iPlayer && // enemy
-                        mapUtils->isCellVisibleForPlayerId(iPlayer, pStructure->getCell())) {
+                        map.isVisible(pStructure->getCell(), iPlayer)) {
                         int c = pStructure->getCell();
                         int cellX = map.getCellX(c);
                         int c1 = pStructure->getCell();
@@ -3195,7 +3195,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
 
                     // is not visible, always good (since we dont know yet if its blocked!)
-                    if (mapUtils->isCellVisibleForPlayerId(controller, cll) == false) {
+                    if (map.isVisible(cll, controller) == false) {
                         good = true;
                     } else {
                         // walls stop us
@@ -3515,7 +3515,7 @@ int UNIT_find_harvest_spot(int id) {
     int TargetSpiceHillDistance = 40;
 
 
-    for (int i = 0; i < (MAX_CELLS); i++)
+    for (int i = 0; i < map.getMaxCells(); i++)
         if (map.getCellCredits(i) > 0 && i != cUnit.getCell()) {
             // check if its not out of reach
             int dx = map.getCellX(i);
@@ -3598,7 +3598,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
 
     if (iStartCell < 0) {
         iStart += rnd(64);
-        if (iStart >= MAX_CELLS)
+        if (iStart >= map.getMaxCells())
             iStart -= 64;
 
         iStartCell = iFindCloseBorderCell(iStart);

@@ -347,7 +347,7 @@ void cAbstractStructure::setHeight(int height) {
 
 void cAbstractStructure::setRallyPoint(int cell) {
 	assert(cell > -2); // -1 is allowed (means disable);
-	assert(cell < MAX_CELLS);
+	assert(cell < map.getMaxCells());
 	iRallyPoint = cell;
 }
 
@@ -489,7 +489,7 @@ bool cAbstractStructure::isValid() {
     if (dead) // flagged for deletion, so no longer 'valid'
         return false;
 
-    if (iCell < 0 || iCell >= MAX_CELLS)
+    if (!map.isValidCell(iCell))
         return false;
 
     return true;

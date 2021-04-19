@@ -10,6 +10,8 @@
 
   */
 
+#include <vector>
+
 #define TILESIZE_WIDTH_PIXELS 32
 #define TILESIZE_HEIGHT_PIXELS 32
 
@@ -185,7 +187,7 @@ public:
      */
     tCell * getCell(int cellNr) {
         if (cellNr < 0) return nullptr;
-        if (cellNr >= MAX_CELLS) return nullptr;
+        if (cellNr >= maxCells) return nullptr;
         return &cell[cellNr];
     }
     
@@ -212,6 +214,9 @@ public:
         if (idLayer < 0 || idLayer >= 4) return; // safeguard layers
         tCell *pCell = getCell(cellNr);
         if (!pCell) return;
+        if (id > MAX_UNITS) {
+            int foo = 123;
+        }
         pCell->id[idLayer] = id;
     }
 
@@ -334,7 +339,17 @@ public:
 
     void cellChangeType(int cellNr, int type) {
         tCell *pCell = getCell(cellNr);
-        if (pCell) pCell->type = type;
+        if (pCell) {
+            if (type > TERRAIN_WALL) {
+                int foo = 0;
+                foo = 2 + 2;
+                pCell->type = type;
+            } else if (type < TERRAIN_BLOOM) {
+                pCell->type = type;
+            } else {
+                pCell->type = type;
+            }
+        }
     }
 
     void cellChangeHealth(int cellNr, int value) {
@@ -388,10 +403,11 @@ public:
 
         // clear out the ID stuff
         memset(pCell->id, -1, sizeof(pCell->id));
+        memset(pCell->iVisible, 0, sizeof(pCell->iVisible));
 
-        for (int i = 0; i < MAX_PLAYERS; i++) {
-            setVisible(cellNr, i, false);
-        }
+//        for (int i = 0; i < MAX_PLAYERS; i++) {
+//            setVisible(cellNr, i, false);
+//        }
     }
 
     void remove_id(int iIndex, int iIDType);    // removes ID of IDtype (unit/structure), etc
@@ -401,12 +417,16 @@ public:
     bool isTimeToScroll() { return (TIMER_scroll > iScrollSpeed); }
 
     bool isVisible(int iCell, int iPlayer) {
-        if (iCell < 0 || iCell >= MAX_CELLS) return false;
+        if (!isValidCell(iCell)) return false;
         if (iPlayer < 0 || iPlayer >= MAX_PLAYERS) return false;
-        return iVisible[iCell][iPlayer];
+        return cell[iCell].iVisible[iPlayer];
     }
 
-    void setVisible(int iCell, int iPlayer, bool flag) { iVisible[iCell][iPlayer] = flag; }
+    bool isVisible(cPlayer *thePlayer, int iCell);
+
+    void setVisible(int iCell, int iPlayer, bool flag) {
+        cell[iCell].iVisible[iPlayer] = flag;
+    }
 
     /**
      * Get height of map in cells
@@ -451,10 +471,18 @@ public:
      */
     bool isValidCell(int c);
 
-private:
-        tCell cell[MAX_CELLS];
+    int getRandomCell();
 
-    	bool iVisible[MAX_CELLS][MAX_PLAYERS];      // visibility for <player>
+    int getMaxCells() {
+        return maxCells;
+    }
+
+    void createCell(int cell, int terrainType, int tile);
+
+    void clearAllCells();
+
+private:
+        std::vector<tCell> cell;
 
     	// Scrolling around map, timer based
     	int TIMER_scroll;
@@ -462,6 +490,8 @@ private:
 
     	// sizes of the map (outer limits, including the invisible map boundaries)
     	int height, width;
+
+    	int maxCells;
 };
 
 

@@ -216,7 +216,7 @@ struct s_Bullet {
 // SKIRMISH MAP PREVIEW DATA
 struct s_PreviewMap {
      BITMAP *terrain;        // terrain
-     int mapdata[MAX_CELLS]; // map data
+     int mapdata[4096];      // map data (64x64 cell based (for now))
      int iPlayers;           // players
      int iStartCell[5];      // starting locations
      char name[80];          // name

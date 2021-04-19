@@ -95,7 +95,7 @@ void cMapCamera::keepViewportWithinReasonableBounds() {
 void cMapCamera::centerAndJumpViewPortToCell(int cell) {
 	// fix any boundaries
 	if (cell < 0) cell = 0;
-	if (cell >= MAX_CELLS) cell = (MAX_CELLS-1);
+	if (cell >= map.getMaxCells()) cell = (map.getMaxCells()-1);
 
 	int mapCellX = pMap->getAbsoluteXPositionFromCell(cell);
 	int mapCellY = pMap->getAbsoluteYPositionFromCell(cell);

@@ -1,8 +1,7 @@
 #ifndef CCELL_H_
 #define CCELL_H_
 
-struct tCell
-{
+struct tCell {
     int credits;        // harvesting
     int type;           // refers to gfxdata
     int tile;           // the tile to draw (* 32 (on x scale))
@@ -12,6 +11,8 @@ struct tCell
     bool passable;      // passable? > pathfinder (TRUE = default)
     bool passableFoot;  // passable for foot units? > pathfinder (TRUE = default)
 
+    bool iVisible[MAX_PLAYERS];      // visibility for <player>
+
     // there are 4 'dimensions' of this cell. Each represents the perspective of
     // an entity that is either a unit, structure, the 'worms' dimension and the 'air' dimension.
     int id[4];          // ID of
@@ -20,20 +21,5 @@ struct tCell
                         // 2 = air
                         // 3 = worm
 };
-
-
-// TODO: Make cell a class
-//class cCell {
-//
-//	public:
-//
-//
-//	protected:
-//
-//
-//	private:
-//
-//
-//};
 
 #endif /* CCELL_H_ */

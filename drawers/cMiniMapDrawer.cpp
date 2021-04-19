@@ -11,7 +11,6 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * t
 	iStaticFrame = STAT14;
 	status = eMinimapStatus::NOTAVAILABLE;
 	iTrans = 0;
-    m_mapUtils = new cMapUtils(map);
 
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;
@@ -34,7 +33,6 @@ cMiniMapDrawer::~cMiniMapDrawer() {
     status = eMinimapStatus::NOTAVAILABLE;
 	delete m_RectMinimap;
 	delete m_RectFullMinimap;
-    delete m_mapUtils;
 }
 
 void cMiniMapDrawer::drawViewPortRectangle() {

@@ -32,8 +32,6 @@ class cStructureUtils {
 		int getTotalPowerUsageForPlayer(cPlayer * pPlayer);
 		int getTotalSpiceCapacityForPlayer(cPlayer * pPlayer);
 
-    void init(cMap *pMap);
-
 protected:
 
 	private:

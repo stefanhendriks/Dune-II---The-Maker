@@ -2,7 +2,6 @@
 
 
 cStructureUtils::cStructureUtils() {
-	init(&map);
 }
 
 cStructureUtils::~cStructureUtils() {
@@ -196,7 +195,7 @@ int cStructureUtils::getStructureTypeByUnitBuildId(int unitBuildId) const {
 int cStructureUtils::findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(int cell, int structureType, cPlayer * pPlayer) {
 	assert(pPlayer);
 	assert(structureType > -1);
-	assert(cell >= 0 || cell < MAX_CELLS);
+	assert(map.isValidCell(cell));
 
 	int foundStructureId=-1;	// found structure id
 	long shortestDistance=9999; // max distance to search in
@@ -259,7 +258,7 @@ bool cStructureUtils::isStructureVisibleOnScreen(cAbstractStructure *structure) 
 }
 
 bool cStructureUtils::isMouseOverStructure(cAbstractStructure *structure, int screenX, int screenY) {
-	assert(structure);
+    if (!structure) return false;
 
 	// translate the structure coordinates to screen coordinates
 	int drawX = structure->iDrawX();
@@ -271,7 +270,8 @@ bool cStructureUtils::isMouseOverStructure(cAbstractStructure *structure, int sc
 }
 
 int cStructureUtils::getTotalPowerUsageForPlayer(cPlayer * pPlayer) {
-	assert(pPlayer);
+    if (!pPlayer) return -1;
+
 	int totalPowerUsage = 0;
 
 	for (int i = 0; i < MAX_STRUCTURES; i++) {
@@ -288,6 +288,8 @@ int cStructureUtils::getTotalPowerUsageForPlayer(cPlayer * pPlayer) {
 }
 
 int cStructureUtils::getTotalSpiceCapacityForPlayer(cPlayer * pPlayer) {
+    if (!pPlayer) return -1;
+
 	int totalCapacity = 0;
 	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
@@ -311,7 +313,8 @@ int cStructureUtils::getTotalSpiceCapacityForPlayer(cPlayer * pPlayer) {
 }
 
 int cStructureUtils::getTotalPowerOutForPlayer(cPlayer * pPlayer) {
-	assert(pPlayer);
+    if (!pPlayer) return -1;
+
 	int totalPowerOut = 0;
 	for (int i = 0; i < MAX_STRUCTURES; i++) {
 		cAbstractStructure * theStructure = structure[i];
@@ -333,10 +336,6 @@ int cStructureUtils::getTotalPowerOutForPlayer(cPlayer * pPlayer) {
 	    // ?? (mission 9 etc AI has no power)
 	}
 	return totalPowerOut;
-}
-
-void cStructureUtils::init(cMap *pMap) {
-//    cellCalculator = new cCellCalculator(pMap);
 }
 
 int cStructureUtils::findHiTechToDeployAirUnit(cPlayer *pPlayer) {

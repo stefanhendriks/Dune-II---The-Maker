@@ -48,13 +48,13 @@ void cMapDrawer::drawShroud(int startX, int startY) {
             float fDrawY = mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
 
             if (DEBUGGING && key[KEY_D] && key[KEY_TAB]) {
-				if (mapUtils->isCellVisibleForPlayerId(iPl, iCell)) {
+				if (map->isVisible(iCell, iPl)) {
 					// do nothing
 				} else {
 					rectfill(bmp_screen, fDrawX, fDrawY, fDrawX+tileWidth, fDrawY+tileHeight, makecol(0,0,0));
 				}
 			} else {
-				if (mapUtils->isCellVisibleForPlayerId(iPl, iCell)) {
+				if (map->isVisible(iCell, iPl)) {
                     int tile = determineWhichShroudTileToDraw(iCell, iPl);
 
                     if (tile > -1) {
@@ -101,7 +101,7 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
             if (iCell < 0) continue;
 
 			// not visible for player, so do not draw
-			if (!mapUtils->isCellVisibleForPlayerId(iPl, iCell)) {
+			if (!map->isVisible(iCell, iPl)) {
                 continue;
 			}
 
@@ -127,12 +127,19 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
             float fDrawY = mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
 
             // Draw terrain
-            blit((BITMAP *) gfxdata[cell->type].dat,
-                 bmp_temp,
-                 cell->tile * 32, 0, // keep 32 here, because in BMP this is the size of the tiles
-                 0, 0,
-                 32, 32
-            );
+            if (cell->type < TERRAIN_BLOOM || cell->type > TERRAIN_WALL) {
+                // somehow, invalid type
+                cRectangle rectangle = cRectangle(0, 0, 32, 32);
+                allegroDrawer->drawRectangleFilled(bmp_temp, &rectangle, makecol(245, 245, 245));
+            } else {
+                // valid type
+                blit((BITMAP *) gfxdata[cell->type].dat,
+                     bmp_temp,
+                     cell->tile * 32, 0, // keep 32 here, because in BMP this is the size of the tiles
+                     0, 0,
+                     32, 32
+                );
+            }
 
             // draw Smudge if necessary
             if (cell->smudgetype > -1 && cell->smudgetile > -1) {
@@ -248,7 +255,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
     a=u=l=r=true;
 
     if (above > -1)	{
-        if (mapUtils->isCellVisibleForPlayerId(playerId, above)) {
+        if (map->isVisible(above, playerId)) {
             a = false;  // visible
         }
     } else {
@@ -256,7 +263,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
     }
 
     if (under > -1) {
-        if (mapUtils->isCellVisibleForPlayerId(playerId, under)) {
+        if (map->isVisible(under, playerId)) {
             u = false;  // visible
         }
     } else {
@@ -264,7 +271,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
     }
 
     if (left > -1) {
-        if (mapUtils->isCellVisibleForPlayerId(playerId, left)) {
+        if (map->isVisible(left, playerId)) {
             l = false;  // visible
         }
     } else {
@@ -272,7 +279,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
     }
 
     if (right > -1) {
-        if (mapUtils->isCellVisibleForPlayerId(playerId, right)) {
+        if (map->isVisible(right, playerId)) {
             r = false;  // visible
         }
     } else {

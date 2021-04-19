@@ -11,6 +11,8 @@
   */
 
 #include "../include/d2tmh.h"
+#include "cMap.h"
+
 
 #include <math.h>
 
@@ -19,6 +21,7 @@
 cMap::cMap() {
 	TIMER_scroll=0;
 	iScrollSpeed=1;
+	maxCells = 0;
 }
 
 cMap::~cMap() {
@@ -37,9 +40,11 @@ cMap::~cMap() {
 void cMap::init(int width, int height) {
     INIT_REINFORCEMENT();
 
+    maxCells = width * height;
+    cell = std::vector<tCell>(maxCells, tCell());
+
     // clear out all cells
-    cMapUtils * mapUtils = new cMapUtils(this);
-    mapUtils->clearAllCells();
+    clearAllCells();
 
     cStructureFactory::getInstance()->deleteAllExistingStructures();
 
@@ -58,9 +63,7 @@ void cMap::init(int width, int height) {
 	TIMER_scroll=0;
 	iScrollSpeed=1;
 
-	delete mapUtils;
-
-    this->width = width;
+	this->width = width;
     this->height = height;
 }
 
@@ -96,16 +99,16 @@ void cMap::smudge_increase(int iType, int iCell) {
  * @return
  */
 bool cMap::occupiedByType(int iCell) {
-    if (iCell < 0 || iCell >= MAX_CELLS) return false;
+    if (iCell < 0 || iCell >= maxCells) return false;
 
-	if (map.cell[iCell].type == TERRAIN_WALL) return true;
-	if (map.cell[iCell].type == TERRAIN_MOUNTAIN) return true;
+	if (map.getCellType(iCell) == TERRAIN_WALL) return true;
+	if (map.getCellType(iCell) == TERRAIN_MOUNTAIN) return true;
 
 	return false;
 }
 
 bool cMap::occupiedInDimension(int iCell, int dimension) {
-    if (iCell < 0 || iCell >= MAX_CELLS) return false;
+    if (!map.isValidCell(iCell)) return false;
     if (dimension < 0 || dimension >= MAPID_MAX) return false;
 
 	return map.cell[iCell].id[dimension] > -1;
@@ -118,7 +121,7 @@ bool cMap::occupiedInDimension(int iCell, int dimension) {
  * @return
  */
 bool cMap::occupied(int iCell) {
-    if (iCell < 0 || iCell >= MAX_CELLS) return false;
+    if (iCell < 0 || iCell >= maxCells) return false;
 
     if (occupiedInDimension(iCell, MAPID_UNITS)) return true;
     if (occupiedInDimension(iCell, MAPID_AIR)) return true;
@@ -241,10 +244,10 @@ void cMap::draw_bullets() {
     }
 }
 
-void cMap::clear_all(int playerId)
-{
-    for (int c=0; c < MAX_CELLS; c++)
-        iVisible[c][playerId] = true;
+void cMap::clear_all(int playerId) {
+    for (int c=0; c < maxCells; c++) {
+        cell[c].iVisible[playerId] = true;
+    }
 }
 
 void cMap::clear_spot(int c, int size) {
@@ -263,7 +266,7 @@ void cMap::clear_spot(int c, int size, int playerId) {
     if (cx < 0 || cy < 0)
         return;
 
-    map.iVisible[c][playerId] = true;
+    map.cell[c].iVisible[c] = true;
 
 #define TILE_SIZE_PIXELS 32
 
@@ -344,9 +347,9 @@ void cMap::clear_spot(int c, int size, int playerId) {
             int cl = map.getCellWithMapDimensions(cell_x, cell_y);
             if (cl < 0) continue;
 
-            if (!iVisible[cl][playerId]) {
+            if (!cell[c].iVisible[playerId]) {
 
-                iVisible[cl][playerId] = true;     // make visible
+                cell[c].iVisible[playerId] = true;     // make visible
 
                 // human unit detected enemy, now be scared and play some neat music
                 if (playerId == HUMAN) {
@@ -377,7 +380,7 @@ void cMap::clear_spot(int c, int size, int playerId) {
 //
 void cMap::remove_id(int iIndex, int iIDType) {
     // Search through the entire map and remove the id
-	for (int iCell=0; iCell < MAX_CELLS; iCell++) {
+	for (int iCell=0; iCell < maxCells; iCell++) {
         tCell &tCell = cell[iCell];
         if (tCell.id[iIDType] == iIndex) {
             tCell.id[iIDType] = -1;
@@ -471,8 +474,9 @@ void cMap::draw_units() {
         if (cellOfMouse.id[MAPID_UNITS] > -1) {
             int iUnitId = cellOfMouse.id[MAPID_UNITS];
 
-        if (unit[iUnitId].iTempHitPoints < 0)
-            game.hover_unit = iUnitId;
+            if (unit[iUnitId].iTempHitPoints < 0) {
+                game.hover_unit = iUnitId;
+            }
 
         } else if (cellOfMouse.id[MAPID_WORMS] > -1) {
             int iUnitId = cellOfMouse.id[MAPID_WORMS];
@@ -557,7 +561,7 @@ int cMap::mouse_draw_y() {
 
 int cMap::getTotalCountCellType(int cellType) {
     int count = 0;
-    for (int c = 0; c < MAX_CELLS; c++) {
+    for (int c = 0; c < maxCells; c++) {
         if (getCellType(c) == cellType) {
             count++;
         }
@@ -661,7 +665,7 @@ double cMap::distance(int x1, int y1, int x2, int y2) {
 }
 
 int cMap::getCellY(int c) {
-    if (c < 0 || c >= MAX_CELLS) {
+    if (c < 0 || c >= maxCells) {
         return -1;
     }
 
@@ -669,7 +673,7 @@ int cMap::getCellY(int c) {
 }
 
 int cMap::getCellX(int c) {
-    if (c < 0 || c >= MAX_CELLS) {
+    if (c < 0 || c >= maxCells) {
         return -1;
     }
 
@@ -694,7 +698,7 @@ bool cMap::isCellAdjacentToOtherCell(int thisCell, int otherCell) {
 
 int cMap::getCellLowerRight(int c)  {
     int lowerRightCell = getCellBelow(c) + 1;
-    if (lowerRightCell >= MAX_CELLS) return -1;
+    if (lowerRightCell >= maxCells) return -1;
     if (lowerRightCell < 0) return -1;
 
     return lowerRightCell;
@@ -703,7 +707,7 @@ int cMap::getCellLowerRight(int c)  {
 int cMap::getCellLowerLeft(int c) {
     int lowerLeftCell = getCellBelow(c) - 1;
     if (lowerLeftCell < 0) return -1;
-    if (lowerLeftCell >= MAX_CELLS) return -1;
+    if (lowerLeftCell >= maxCells) return -1;
     return lowerLeftCell;
 }
 
@@ -724,8 +728,8 @@ int cMap::getCellUpperLeft(int c) {
 int cMap::getCellRight(int c) {
     int x = getCellX(c);
     int cellRight = x + 1;
-    if (cellRight >= MAX_CELLS) return -1;
-    if (cellRight >= MAP_W_MAX) return -1;
+    if (cellRight >= maxCells) return -1;
+    if (cellRight >= width) return -1;
 
     return c + 1;
 }
@@ -741,7 +745,7 @@ int cMap::getCellLeft(int c) {
 int cMap::getCellBelow(int c) {
     if (c < 0) return -1;
     int cellBelow = c + width;
-    if (cellBelow >= MAX_CELLS)
+    if (cellBelow >= maxCells)
         return -1;
 
     return cellBelow;
@@ -776,14 +780,14 @@ int cMap::getAbsoluteYPositionFromCellCentered(int cell) {
 
 int cMap::makeCell(int x, int y) {
     assert(x > -1);
-    assert(x < MAP_W_MAX); // should never be higher!
+    assert(x < width); // should never be higher!
     assert(y > -1);
-    assert(y < MAP_W_MAX);
+    assert(y < height);
 
     // create cell
     int cell = getCellWithMapDimensions(x, y);
 
-    assert(cell < MAX_CELLS); // may never be => (will since MAX_CELLS-1 is max in array!)
+    assert(cell < maxCells); // may never be => (will since MAX_CELLS-1 is max in array!)
     assert(cell > -1); // may never be < 0
 
     return cell;
@@ -824,5 +828,63 @@ int cMap::getCellWithMapDimensions(int x, int y)  {
 }
 
 bool cMap::isValidCell(int c) {
-    return !(c < 0 || c >= MAX_CELLS);
+    return !(c < 0 || c >= maxCells);
+}
+
+/**
+ * Returns a random cell, disregards playable borders
+ * @return
+ */
+int cMap::getRandomCell() {
+    return rnd(maxCells);
+}
+
+void cMap::createCell(int cell, int terrainType, int tile) {
+    if (!isValidCell(cell)) return;
+    if (terrainType > TERRAIN_WALL) return;
+    if (terrainType < TERRAIN_BLOOM) return;
+    if (tile < 0) return;
+    if (tile > 16) return;
+
+    assert(terrainType >= TERRAIN_BLOOM);
+    assert(terrainType <= TERRAIN_WALL);
+    assert(tile > -1);
+    assert(tile < 17);
+
+    // Set
+    map.cellChangeType(cell, terrainType);
+    map.cellChangeTile(cell, tile);
+    map.cellChangeCredits(cell, 0);
+    if (terrainType == TERRAIN_BLOOM) {
+        map.cellChangeCredits(cell, -23);
+    }
+    map.cellChangePassable(cell, true);
+    map.cellChangePassableFoot(cell, true);
+
+    map.cellChangeSmudgeTile(cell, -1);
+    map.cellChangeSmudgeType(cell, -1);
+
+    // when spice
+    if (terrainType == TERRAIN_SPICE || terrainType == TERRAIN_SPICEHILL) {
+        map.cellChangeCredits(cell, 50 + rnd(250));
+    } else if (terrainType == TERRAIN_MOUNTAIN) {
+        map.cellChangePassable(cell, false);
+        map.cellChangePassableFoot(cell, true);
+    } else if (terrainType == TERRAIN_WALL) {
+        map.cellChangeHealth(cell, 100);
+        map.cellChangePassable(cell, false);
+        map.cellChangePassableFoot(cell, false);
+    }
+}
+
+void cMap::clearAllCells() {
+    for (int c=0; c < getMaxCells(); c++) {
+        cellInit(c);
+    }
+}
+
+bool cMap::isVisible(cPlayer *thePlayer, int iCell) {
+    if (!thePlayer) return false;
+    int playerId = thePlayer->getId();
+    return isVisible(iCell, playerId);
 }

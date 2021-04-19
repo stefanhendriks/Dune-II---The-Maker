@@ -152,7 +152,6 @@ void cGame::mission_init() {
     TIMER_shake=0;
 
     map.init(game.map_width, game.map_height);
-    structureUtils.init(&map);
 
     // clear out players but not entirely
     for (int i=0; i < MAX_PLAYERS; i++) {
@@ -344,7 +343,7 @@ void cGame::updateState() {
 
             if (mouse_tile == MOUSE_MOVE) {
                 // change to attack cursor if hovering over enemy unit
-                if (mapUtils->isCellVisibleForPlayerId(HUMAN, mc)) {
+                if (map.isVisible(mc, HUMAN)) {
 
                     int idOfUnitOnCell = map.getCellIdUnitLayer(mc);
 
@@ -1126,7 +1125,7 @@ void cGame::setup_skirmish() {
             startCellsOnSkirmishMap = iStartPositions.size();
 
             // REGENERATE MAP DATA FROM INFO
-            for (int c=0; c < MAX_CELLS; c++) {
+            for (int c=0; c < map.getMaxCells(); c++) {
                 mapEditor.createCell(c, PreviewMap[iSkirmishMap].mapdata[c], 0);
             }
 
@@ -1614,7 +1613,6 @@ void cGame::shutdown() {
     delete drawManager;
 
     delete mapCamera;
-    delete mapUtils;
     delete interactionManager;
 
 
@@ -2099,9 +2097,6 @@ bool cGame::setupGame() {
 
     delete drawManager;
 	drawManager = new cDrawManager(&player[HUMAN]);
-
-    delete mapUtils;
-	mapUtils = new cMapUtils(&map);
 
 	game.init();
 
