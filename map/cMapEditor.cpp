@@ -14,48 +14,8 @@ cMapEditor::cMapEditor() {
 cMapEditor::~cMapEditor() {
 }
 
-void cMapEditor::clearMap(int terrainType) {
-    for (int i = 0; i < MAX_CELLS; i++) {
-        createCell(i, terrainType, 0);
-    }
-}
-
 void cMapEditor::createCell(int cell, int terrainType, int tile) {
-    if (cell < 0) return; // do nothing
-    if (cell >= MAX_CELLS) return;
-    if (terrainType > TERRAIN_WALL) return;
-    if (terrainType < TERRAIN_BLOOM) return;
-    if (tile < 0) return;
-    if (tile > 16) return;
-
-    assert(cell > -1);
-    assert(cell < MAX_CELLS);
-    assert(terrainType >= TERRAIN_BLOOM);
-    assert(terrainType <= TERRAIN_WALL);
-    assert(tile > -1);
-    assert(tile < 17);
-
-    // Set
-    map.cellChangeType(cell, terrainType);
-    map.cellChangeTile(cell, tile);
-    map.cellChangeCredits(cell, 0);
-    map.cellChangePassable(cell, true);
-    map.cellChangePassableFoot(cell, true);
-
-    map.cellChangeSmudgeTile(cell, -1);
-    map.cellChangeSmudgeType(cell, -1);
-
-    // when spice
-    if (terrainType == TERRAIN_SPICE || terrainType == TERRAIN_SPICEHILL) {
-        map.cellChangeCredits(cell, 50 + rnd(250));
-    } else if (terrainType == TERRAIN_MOUNTAIN) {
-        map.cellChangePassable(cell, false);
-        map.cellChangePassableFoot(cell, true);
-    } else if (terrainType == TERRAIN_WALL) {
-        map.cellChangeHealth(cell, 100);
-        map.cellChangePassable(cell, false);
-        map.cellChangePassableFoot(cell, false);
-    }
+    map.createCell(cell, terrainType, tile);
 }
 
 void cMapEditor::createField(int cell, int terrainType, int size) {
@@ -234,8 +194,7 @@ bool cMapEditor::isAboveSpecificTerrainType(int sourceCell, int terrainType) {
 }
 
 bool cMapEditor::isSpecificTerrainType(int cell, int terrainType) {
-    if (cell < 0) return false;
-    if (cell >= MAX_CELLS) return false;
+    if (!map.isValidCell(cell)) return false;
     return map.getCellType(cell) == terrainType;
 }
 
@@ -438,7 +397,7 @@ void cMapEditor::removeSingleRockSpots() {
 }
 
 void cMapEditor::smoothMap() {
-    for (int c = 0; c < MAX_CELLS; c++) {
+    for (int c = 0; c < map.getMaxCells(); c++) {
         smoothCell(c);
     }
 }

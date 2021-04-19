@@ -6,9 +6,9 @@ cSeedMap::cSeedMap() {
 
 void cSeedMap::setCellType(int x, int y, int type) {
 	assert(x > -1);
-	assert(x < MAP_W_MAX);
+	assert(x < 64);
 	assert(y > -1);
-	assert(y < MAP_H_MAX);
+	assert(y < 64);
 	assert(type > -1);
 	assert(type < TERRAIN_WALL);
 	map[x][y] = type;
@@ -16,9 +16,9 @@ void cSeedMap::setCellType(int x, int y, int type) {
 
 int cSeedMap::getCellType(int x, int y) {
 	assert(x > -1);
-	assert(x < MAP_W_MAX);
+	assert(x < 64);
 	assert(y > -1);
-	assert(y < MAP_H_MAX);
+	assert(y < 64);
 	return map[x][y];
 }
 

@@ -46,12 +46,6 @@
 // Max length of a path (per unit)
 #define MAX_PATH_SIZE    256
 
-
-#define MAP_W_MAX        64     // max of width
-#define MAP_H_MAX        64     // max of height
-
-#define MAX_CELLS    (MAP_W_MAX * MAP_H_MAX) // use width and height to determine max
-
 // INTRO SCENES:
 #define SCENE_NONE		-1
 #define SCENE_DUNE		0

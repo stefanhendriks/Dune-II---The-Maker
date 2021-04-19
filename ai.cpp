@@ -352,7 +352,7 @@ void cAIPlayer::think_spiceBlooms() {
         // randomly create a new spice bloom somewhere on the map
         int iCll = -1;
         for (int i = 0; i < 10; i++) {
-            int cell = rnd(MAX_CELLS);
+            int cell = map.getRandomCell();
             if (map.getCellType(cell) == TERRAIN_SAND) {
                 iCll = cell;
                 break;
@@ -1105,7 +1105,7 @@ void cAIPlayer::think_worm() {
 
             // find new spot to go to
             for (int iTries = 0; iTries < 10; iTries++) {
-                int iMoveTo = rnd(MAX_CELLS);
+                int iMoveTo = map.getRandomCell();
 
                 if (map.getCellType(iMoveTo) == TERRAIN_SAND ||
                     map.getCellType(iMoveTo) == TERRAIN_HILL ||
@@ -1215,7 +1215,7 @@ int AI_RANDOM_UNIT_TARGET(int iPlayer, int playerIndexToAttack) {
         if (cUnit.iPlayer != playerIndexToAttack) continue;
         // unit belongs to player of the player we wish to attack
 
-        bool isVisibleForPlayer = mapUtils->isCellVisible(&cPlayer, cUnit.getCell());
+        bool isVisibleForPlayer = map.isVisible(&cPlayer, cUnit.getCell());
 
         if (DEBUGGING) {
             char msg[255];
@@ -1254,7 +1254,7 @@ int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer)
     for (int i=0; i < MAX_STRUCTURES; i++)
         if (structure[i])
             if (structure[i]->getOwner() == iAttackPlayer)
-				if (mapUtils->isCellVisibleForPlayerId(iPlayer, structure[i]->getCell()) ||
+				if (map.isVisible(structure[i]->getCell(), iPlayer) ||
 					game.bSkirmish)
 				{
 					iTargets[iT] = i;
@@ -1675,7 +1675,7 @@ int CLOSE_SPICE_BLOOM(int iCell) {
     cx = map.getCellX(iCell);
     cy = map.getCellY(iCell);
 
-    for (int i=0; i < MAX_CELLS; i++) {
+    for (int i=0; i < map.getMaxCells(); i++) {
         int cellType = map.getCellType(i);
         if (cellType != TERRAIN_BLOOM) continue;
         bloomsEvaluated++;
@@ -1703,7 +1703,7 @@ int CLOSE_SPICE_BLOOM(int iCell) {
     memset(iTargets, -1, sizeof(iTargets));
     int iT=0;
 
-    for (int i=0; i < MAX_CELLS; i++) {
+    for (int i=0; i < map.getMaxCells(); i++) {
         int cellType = map.getCellType(i);
         if (cellType == TERRAIN_BLOOM) {
             iTargets[iT] = i;
