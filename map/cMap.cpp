@@ -266,7 +266,7 @@ void cMap::clear_spot(int c, int size, int playerId) {
     if (cx < 0 || cy < 0)
         return;
 
-    map.cell[c].iVisible[c] = true;
+    map.cell[c].iVisible[playerId] = true;
 
 #define TILE_SIZE_PIXELS 32
 
