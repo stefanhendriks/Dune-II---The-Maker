@@ -16,7 +16,7 @@ cRandomMapGenerator::~cRandomMapGenerator() {
 
 void cRandomMapGenerator::generateRandomMap() {
     // create random map
-    map.init(game.map_width, game.map_height);
+    map.init(64, 64);
 
     // <> is MAP_WIDTH+MAP_HEIGHT / <a number>
 
@@ -49,7 +49,7 @@ void cRandomMapGenerator::generateRandomMap() {
     // draw
 
     while (a_rock > 0) {
-        int iCll = map.getCellWithMapBorders(4 + rnd(game.map_width - 8), 4 + rnd(game.map_height - 8));
+        int iCll = map.getRandomCellWithinMapWithSafeDistanceFromBorder(4);
         if (iCll < 0) continue;
 
         bool bOk = true;
@@ -125,9 +125,7 @@ void cRandomMapGenerator::generateRandomMap() {
     blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
 
     while (a_spice > 0) {
-        int x = rnd(game.map_width);
-        int y = rnd(game.map_height);
-        int iCll = map.getCellWithMapDimensions(x, y);
+        int iCll = map.getRandomCellWithinMapWithSafeDistanceFromBorder(0);
         mapEditor.createField(iCll, TERRAIN_SPICE, 2500);
         iProgress += 10;
         a_spice--;
@@ -137,9 +135,7 @@ void cRandomMapGenerator::generateRandomMap() {
     }
 
     while (a_hill > 0) {
-        int x = rnd(game.map_width);
-        int y = rnd(game.map_height);
-        int cell = map.getCellWithMapDimensions(x, y);
+        int cell = map.getRandomCellWithinMapWithSafeDistanceFromBorder(0);
         mapEditor.createField(cell, TERRAIN_HILL, 500 + rnd(500));
         a_hill--;
         iProgress += 10;

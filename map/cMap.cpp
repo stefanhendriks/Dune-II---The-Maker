@@ -596,7 +596,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell) 
     int cll=-1;
 
     // HORIZONTAL cells
-    for (int iX=0; iX < game.map_width; iX++) {
+    for (int iX=0; iX < width; iX++) {
         // check when Y = 0 (top)
         tDistance = distance(iX, 0, iCllX, iCllY);
 
@@ -611,12 +611,12 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell) 
         }
 
         // check when Y = map_height (bottom)
-        tDistance = distance(iX, game.map_height-1, iCllX, iCllY);
+        tDistance = distance(iX, height-1, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
 
-            cll = makeCell(iX, game.map_height - 1);
+            cll = makeCell(iX, height - 1);
 
             if (map.occupied(cll) == false) {
                 iStartCell = cll;
@@ -625,7 +625,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell) 
     }
 
     // VERTICAL cells
-    for (int iY=0; iY < game.map_height; iY++)
+    for (int iY=0; iY < height; iY++)
     {
         // check when X = 0 (left)
         tDistance = distance(0, iY, iCllX, iCllY);
@@ -641,11 +641,11 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell) 
         }
 
         // check when XY = map_width (bottom)
-        tDistance = distance(game.map_width-1, iY, iCllX, iCllY);
+        tDistance = distance(width-1, iY, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
-            cll = makeCell(game.map_width - 1, iY);
+            cll = makeCell(width - 1, iY);
 
             if (map.occupied(cll) == false) {
                 iStartCell = cll;
@@ -887,4 +887,22 @@ bool cMap::isVisible(cPlayer *thePlayer, int iCell) {
     if (!thePlayer) return false;
     int playerId = thePlayer->getId();
     return isVisible(iCell, playerId);
+}
+
+void cMap::resize(int width, int height) {
+    maxCells = width * height;
+    this->width = width;
+    this->height = height;
+    cell.resize(maxCells);
+}
+
+int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance) {
+    return getCellWithMapBorders(
+            distance + rnd(width - (distance * 2)),
+            distance + rnd(height - (distance * 2))
+            );
+}
+
+bool cMap::isWithinBoundaries(int c) {
+    return isWithinBoundaries(getCellX(c), getCellY(c));
 }

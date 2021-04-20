@@ -144,8 +144,7 @@ void cItemBuilder::think() {
                 } else if (special.deployFrom == AT_RANDOM_CELL) {
                     if (special.providesType == UNIT) {
                         // determine cell
-                        int iCll = map.getCellWithMapBorders(4 + rnd(game.map_width - 8),
-                                                                        4 + rnd(game.map_height - 8));
+                        int iCll = map.getRandomCellWithinMapWithSafeDistanceFromBorder(4);
 
                         for (int j = 0; j < special.units; j++) {
                             bool passable = map.isCellPassableForFootUnits(iCll);

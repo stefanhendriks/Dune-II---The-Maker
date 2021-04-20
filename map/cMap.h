@@ -52,6 +52,7 @@ public:
     */
     int getCellWithMapBorders(int x, int y);
 
+    int getRandomCellWithinMapWithSafeDistanceFromBorder(int desiredMinimalDistance);
 
     /**
 	Shortcut method, which takes cells as arguments, creates x1, y1 and x2, y2 out of them
@@ -124,6 +125,8 @@ public:
 	    The Y coordinate is found by finding as many MAP_W_MAX can fit in the given cell
     **/
     int getCellY(int c);
+
+    bool isWithinBoundaries(int c);
 
 	/**
 	 * Returns true/false when x,y coordinate is within bounds of the map. Taking invisible boundary into account.
@@ -480,6 +483,8 @@ public:
     void createCell(int cell, int terrainType, int tile);
 
     void clearAllCells();
+
+    void resize(int width, int height);
 
 private:
         std::vector<tCell> cell;

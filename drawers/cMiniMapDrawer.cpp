@@ -68,12 +68,12 @@ void cMiniMapDrawer::drawTerrain() {
 
 	int iColor=makecol(0,0,0);
 
-	for (int x = 0; x < (game.map_width); x++) {
+	for (int x = 0; x < (map->getWidth()); x++) {
 		iDrawY = drawY; // reset Y coordinate for drawing for each column
 
-		for (int y = 0; y < (game.map_height); y++) {
-			iColor = makecol(0, 0, 0);
-            int iCll = ::map.makeCell(x, y);
+        for (int y = 0; y < (map->getHeight()); y++) {
+            iColor = makecol(0, 0, 0);
+            int iCll = map->makeCell(x, y);
 
 			if (map->isVisible(iCll, m_Player->getId())) {
 				iColor = getRGBColorForTerrainType(map->getCellType(iCll));
@@ -111,18 +111,14 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
 
 	int iColor=allegroDrawer->getColor_BLACK();
 
-	for (int x = 0; x < (game.map_width); x++) {
-		for (int y = 0; y < (game.map_height); y++) {
+	for (int x = 0; x < map->getWidth(); x++) {
+		for (int y = 0; y < map->getHeight(); y++) {
             // do not show the helper border
-            if (x == 0 || y == 0) {
-                continue;
-            }
+            if (!map->isWithinBoundaries(x, y)) continue;
 
-            if (x == 63 || y == 63) {
-                continue;
-            }
+            int iCll = map->makeCell(x, y);
 
-            int iCll = ::map.makeCell(x, y);
+
 
 			if (!map->isVisible(iCll, m_Player->getId())) {
 			    // invisible cell

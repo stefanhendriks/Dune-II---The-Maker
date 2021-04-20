@@ -182,21 +182,21 @@ void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(
 			}
 		}
 
-        int leftToCell = iCell + 1;
+        int leftToCell = map.getCellLeft(iCell);
         if (map.occupied(leftToCell) == false) {
 			if (map.getCellType(leftToCell) == TERRAIN_ROCK) {
 				mapEditor.createCell(leftToCell, TERRAIN_SLAB, 0);
 			}
 		}
 
-        int oneRowBelowCell = iCell + game.map_width;
+        int oneRowBelowCell = map.getCellBelow(iCell);
         if (map.occupied(oneRowBelowCell) == false) {
 			if (map.getCellType(oneRowBelowCell) == TERRAIN_ROCK) {
 				mapEditor.createCell(oneRowBelowCell, TERRAIN_SLAB, 0);
 			}
 		}
 
-        int rightToRowBelowCell = oneRowBelowCell + 1;
+        int rightToRowBelowCell = map.getCellRight(oneRowBelowCell);
         if (map.occupied(rightToRowBelowCell) == false) {
 			if (map.getCellType(rightToRowBelowCell) == TERRAIN_ROCK) {
 				mapEditor.createCell(rightToRowBelowCell, TERRAIN_SLAB, 0);
