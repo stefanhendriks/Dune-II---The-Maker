@@ -1528,10 +1528,7 @@ void cUnit::think_move_air() {
         }
 
         // move randomly
-        int rx = rnd(game.map_width);
-        int ry = rnd(game.map_height);
-
-        iGoalCell = map.getCellWithMapDimensions(rx, ry);
+        iGoalCell = map.getRandomCellWithinMapWithSafeDistanceFromBorder(2);
         return;
     }
 

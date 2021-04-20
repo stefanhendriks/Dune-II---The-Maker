@@ -105,12 +105,8 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                 continue;
 			}
 
-            int cellX = map->getCellX(iCell);
-            int cellY = map->getCellY(iCell);
-
             // skip outer border cells
-            if (cellX == 0 || cellX == (game.map_width-1) ||
-                cellY == 0 || cellY == (game.map_height-1)) {
+            if (!map->isWithinBoundaries(iCell)) {
                 continue;
             }
 

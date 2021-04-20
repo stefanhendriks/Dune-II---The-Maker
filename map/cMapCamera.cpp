@@ -81,12 +81,12 @@ void cMapCamera::keepViewportWithinReasonableBounds() {
         viewportStartY = -halfViewportHeight;
     }
 
-    int maxWidth = (game.map_width * TILESIZE_WIDTH_PIXELS) + halfViewportWidth;
+    int maxWidth = (map.getWidth() * TILESIZE_WIDTH_PIXELS) + halfViewportWidth;
     if (getViewportEndX() > maxWidth) {
         viewportStartX = maxWidth-viewportWidth;
     }
 
-    int maxHeight = (game.map_height * TILESIZE_HEIGHT_PIXELS) + halfViewportHeight;
+    int maxHeight = (map.getHeight() * TILESIZE_HEIGHT_PIXELS) + halfViewportHeight;
     if ((getViewportEndY()) > maxHeight) {
         viewportStartY = maxHeight-viewportHeight;
     }
@@ -196,14 +196,14 @@ void cMapCamera::thinkInteraction() {
 	}
 
 	if (mouse_x >= (game.screen_x-2) || key[KEY_RIGHT]) {
-		if (getViewportEndX() < ((game.map_width*TILESIZE_WIDTH_PIXELS)+halfViewportWidth)) {
+		if (getViewportEndX() < ((map.getWidth()*TILESIZE_WIDTH_PIXELS)+halfViewportWidth)) {
             setViewportPosition(viewportStartX += 1, viewportStartY);
 			mouse_tile = MOUSE_RIGHT;
 		}
 	}
 
 	if (mouse_y >= (game.screen_y-2) || key[KEY_DOWN]) {
-		if ((getViewportEndY()) < ((game.map_height*TILESIZE_HEIGHT_PIXELS)+halfViewportHeight)) {
+		if ((getViewportEndY()) < ((map.getHeight()*TILESIZE_HEIGHT_PIXELS)+halfViewportHeight)) {
             setViewportPosition(viewportStartX, viewportStartY += 1);
 			mouse_tile = MOUSE_DOWN;
 		}
