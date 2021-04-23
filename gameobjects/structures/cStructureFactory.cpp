@@ -182,10 +182,10 @@ void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(
 			}
 		}
 
-        int leftToCell = map.getCellLeft(iCell);
-        if (map.occupied(leftToCell) == false) {
-			if (map.getCellType(leftToCell) == TERRAIN_ROCK) {
-				mapEditor.createCell(leftToCell, TERRAIN_SLAB, 0);
+        int cellRight = map.getCellRight(iCell);
+        if (map.occupied(cellRight) == false) {
+			if (map.getCellType(cellRight) == TERRAIN_ROCK) {
+				mapEditor.createCell(cellRight, TERRAIN_SLAB, 0);
 			}
 		}
 

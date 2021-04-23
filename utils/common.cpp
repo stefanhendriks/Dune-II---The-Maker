@@ -1717,9 +1717,12 @@ void INIT_PREVIEWS() {
         // clear out name
         memset(previewMap.name, 0, sizeof(previewMap.name));
 
+        int maxCells = 4096; // 64x64 map
         // clear out map data
-        memset(previewMap.mapdata, -1, sizeof(previewMap.mapdata));
-
+        if (i == 0) {
+            maxCells = 128*128;
+        }
+        previewMap.mapdata = std::vector<int>(maxCells, -1);
 
         previewMap.iPlayers = 0;
 

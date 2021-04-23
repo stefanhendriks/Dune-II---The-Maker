@@ -147,13 +147,6 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                         0,
                         32,
                         32);
-//                masked_blit((BITMAP *) gfxdata[SMUDGE].dat, bmp_temp,
-//                            cell->smudgetile * 32,
-//                            cell->smudgetype * 32,
-//                            0,
-//                            0,
-//                            32,
-//                            32);
             }
 
             int iDrawX = round(fDrawX);

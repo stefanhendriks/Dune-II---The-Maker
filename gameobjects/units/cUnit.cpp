@@ -25,7 +25,7 @@ struct ASTAR {
 };
 
 // Temp map
-ASTAR temp_map[4096];
+ASTAR temp_map[16384]; // 4096 = 64x64 map, 16384 = 128x128 map
 
 // Class specific on top
 // Globals on bottom
@@ -1220,7 +1220,7 @@ void cUnit::think() {
                     char msg[255];
                     sprintf(msg, "Returning to refinery ID %d", refineryStructureId);
                     LOG(msg);
-                    move_to(refinery->getCell() + rnd(2) + (rnd(2) * 64), refineryStructureId, -1, INTENT_UNLOAD_SPICE); // move yourself...
+                    move_to(refinery->getCell() + rnd(2) + (rnd(2) * map.getWidth()), refineryStructureId, -1, INTENT_UNLOAD_SPICE); // move yourself...
                     TIMER_movewait = 0;
                 } else {
                     TIMER_movewait = 500; // wait for pickup!

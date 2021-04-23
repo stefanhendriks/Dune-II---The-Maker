@@ -48,7 +48,8 @@ protected:
 
 		int getRGBColorForTerrainType(int terrainType);
 
-		void drawDot(int x, int y, int color);
+		void drawDoubleDot(int x, int y, int color);
+		void drawSingleDot(int x, int y, int color);
 
 		int getMapHeightInPixels();
 		int getMapWidthInPixels();

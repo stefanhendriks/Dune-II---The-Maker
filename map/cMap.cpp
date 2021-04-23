@@ -6,7 +6,7 @@
   Contact: stefanhen83@gmail.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2010 (c) code by Stefan Hendriks
+  2001 - 2021 (c) code by Stefan Hendriks
 
   */
 
@@ -15,8 +15,6 @@
 
 
 #include <math.h>
-
-#define WATCH_PLAYER 0
 
 cMap::cMap() {
 	TIMER_scroll=0;
@@ -63,7 +61,7 @@ void cMap::init(int width, int height) {
 	TIMER_scroll=0;
 	iScrollSpeed=1;
 
-	this->width = width;
+    this->width = width;
     this->height = height;
 }
 
@@ -258,112 +256,53 @@ void cMap::clear_spot(int c, int size) {
 
 void cMap::clear_spot(int c, int size, int playerId) {
 
-    // Get the x and y and make a circle around it of 16xR, then calculate of every step the cell and
-    // clear it
-    int cx = map.getCellX(c);
-    int cy = map.getCellY(c);
+    if (!map.isWithinBoundaries(c)) return;
 
-    if (cx < 0 || cy < 0)
-        return;
+    map.setVisible(c, playerId, true);
 
-    map.cell[c].iVisible[playerId] = true;
+    rectfill(bmp_screen, mouse_x, mouse_y, mouse_x + 32, mouse_y + 32, makecol(255, 255, 0));
 
-#define TILE_SIZE_PIXELS 32
+    // go around 360 fDegrees and calculate new stuff.
+    for (float dr = 1; dr < size; dr++) {
+        for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
+            // need a smarter way to do this (less CPU intensive).
 
-    // go around 360 fDegrees and calculate new stuff
-    for (int dr = 1; dr < size; dr++) {
-        for (double d = 0; d < 360; d++) {
-            int x = cx, y = cy;
+            int x = map.getAbsoluteXPositionFromCellCentered(c);
+            int y = map.getAbsoluteYPositionFromCellCentered(c);
 
-            // when scrolling, compensate
-            x -= mapCamera->getViewportStartX() / 32;
-            y -= mapCamera->getViewportStartY() / 32;
+            float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
+            float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
 
-            // convert to pixels (*32)
-            x *= TILE_SIZE_PIXELS;
-            y *= TILE_SIZE_PIXELS;
-
-            y += 42;
-
-            // center on unit
-            x += 16;
-            y += 16;
-
-
-            int dx, dy;
-            dx = x;
-            dy = y;
-
-            x = (x + (cos(d) * ((dr * 32))));
-            y = (y + (sin(d) * ((dr * 32))));
-
-            // DEBUG
-
-            //line (bmp_screen, dx, dy, x, y, makecol(255,255,255));
-            //if (DEBUGGING)
-            //  putpixel(bmp_screen, x, y, makecol(255,255,0));
-
-            //putpixel(bmp_screen, dx, dy, makecol(0,255,0));
-            // DEBUG
+            x = (x + dr1);
+            y = (y + dr2);
 
             // convert back
+            int cl = mapCamera->getCellFromAbsolutePosition(x, y);
 
-            int cell_x, cell_y;
-
-            cell_y = y;
-            cell_y -= 42;
-            cell_y += mapCamera->getViewportStartY();
-            cell_y = cell_y / 32;
-
-            cell_x = x;
-            cell_x += mapCamera->getViewportStartX();
-            cell_x = cell_x / 32;
-
-
-            /*
-            if (DEBUGGING)
-            {
-
-            int iDrawX = (cell_x-scroll_x)*32;
-            int iDrawY = (((cell_y-scroll_y)*32)+42);
-
-            rectfill(bmp_screen, iDrawX, iDrawY, iDrawX+32, iDrawY+32, makecol(0,32,0));
-
-            }*/
-
-
-            FIX_POS(cell_x, cell_y);
-
-            //draw the cells
-
-            /*
-            if (game.state == GAME_PLAYING)
-            {
-            char msg[255];
-            sprintf(msg, "X %d, Y %d -> CX %d, CY = %d", x, y, cell_x, cell_y);
-            logbook(msg);
-            }*/
-
-            int cl = map.getCellWithMapDimensions(cell_x, cell_y);
             if (cl < 0) continue;
 
-            if (!cell[c].iVisible[playerId]) {
+//            if (DEBUGGING) {
+//                int cellDrawX = mapCamera->getWindowXPositionFromCell(cl);
+//                int cellDrawY = mapCamera->getWindowYPositionFromCell(cl);
+//                rectfill(bmp_screen, cellDrawX, cellDrawY, cellDrawX+32, cellDrawY+32, makecol(0,32,0));
+//            }
 
-                cell[c].iVisible[playerId] = true;     // make visible
+            if (!map.isVisible(cl, playerId)) {
+                map.setVisible(cl, playerId, true);
 
-                // human unit detected enemy, now be scared and play some neat music
+                // human unit detected enemy/sandworm, this influences music
                 if (playerId == HUMAN) {
-                    if (cell[cl].id[MAPID_UNITS] > -1) {
-                        int id = cell[cl].id[MAPID_UNITS];
-
-                        if (unit[id].iPlayer != HUMAN) // NOT friend
+                    int unitId = map.getCellIdUnitLayer(cl);
+                    if (unitId > -1) {
+                        cUnit &cUnit = unit[unitId];
+                        if (cUnit.isValid() && cUnit.getPlayer()->isSameTeamAs(&player[playerId])) // NOT friend
                         {
                             // when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
                             if (game.iMusicType == MUSIC_PEACE) {
                                 playMusicByType(MUSIC_ATTACK);
 
                                 // warning... bla bla
-                                if (unit[id].iType == SANDWORM)
+                                if (cUnit.iType == SANDWORM)
                                     play_voice(SOUND_VOICE_10_ATR);  // omg a sandworm, RUN!
                                 else
                                     play_voice(SOUND_VOICE_09_ATR);  // enemy unit

@@ -8,6 +8,7 @@
 #ifndef STRUCTS_H_
 #define STRUCTS_H_
 
+#include <vector>
 #include "enums.h"
 
 // Unit properties
@@ -217,7 +218,7 @@ struct s_Bullet {
 struct s_PreviewMap {
      BITMAP *terrain;        // terrain
      int width, height;      // width & height of map
-     int mapdata[4096];      // map data (64x64 cell based (for now))
+     std::vector<int> mapdata;
      int iPlayers;           // players
      int iStartCell[5];      // starting locations
      char name[80];          // name
