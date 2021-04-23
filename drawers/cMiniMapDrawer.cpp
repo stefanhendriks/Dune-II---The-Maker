@@ -42,11 +42,17 @@ void cMiniMapDrawer::drawViewPortRectangle() {
     iWidth--;
     iHeight--;
 
-    int startX = drawX + ((mapCamera->getViewportStartX() / TILESIZE_WIDTH_PIXELS) * 2);
-    int startY = drawY + ((mapCamera->getViewportStartY() / TILESIZE_HEIGHT_PIXELS) * 2);
+    int pixelSize = 2;
 
-    int minimapWidth = (iWidth * 2) + 1;
-    int minimapHeight = (iHeight * 2) + 1;
+    if (map->getWidth() > 64 || map->getHeight() > 64) {
+        pixelSize = 1;
+    }
+
+    int startX = drawX + ((mapCamera->getViewportStartX() / TILESIZE_WIDTH_PIXELS) * pixelSize);
+    int startY = drawY + ((mapCamera->getViewportStartY() / TILESIZE_HEIGHT_PIXELS) * pixelSize);
+
+    int minimapWidth = (iWidth * pixelSize) + 1;
+    int minimapHeight = (iHeight * pixelSize) + 1;
 
     rect(bmp_screen, startX, startY, startX + minimapWidth, startY + minimapHeight, makecol(255, 255, 255));
 }
@@ -63,14 +69,11 @@ int cMiniMapDrawer::getMapHeightInPixels() {
 
 void cMiniMapDrawer::drawTerrain() {
 	// startX = MAX_SCREEN_X - 129
-	int iDrawX=drawX;
-	int iDrawY=drawY;
+    bool isBigMap = map->getWidth() > 64 || map->getHeight() > 64;
 
-	int iColor=makecol(0,0,0);
+    int iColor = 0;
 
 	for (int x = 0; x < (map->getWidth()); x++) {
-		iDrawY = drawY; // reset Y coordinate for drawing for each column
-
         for (int y = 0; y < (map->getHeight()); y++) {
             iColor = makecol(0, 0, 0);
             int iCll = map->makeCell(x, y);
@@ -81,21 +84,21 @@ void cMiniMapDrawer::drawTerrain() {
 
 			// TODO: make flexible map borders
 			// do not show the helper border
-			if (x == 0 || y == 0) {
+			if (!map->isWithinBoundaries(x, y)) {
 				iColor = makecol(0, 0, 0);
 			}
 
-			if (x == 63 || y == 63) {
-				iColor = makecol(0, 0, 0);
-			}
-
-			// double sized 'pixels'.
-			drawDot(iDrawX + x, iDrawY + y, iColor);
-
-			iDrawY += 1;
+			int iDrawX = drawX + x;
+			int iDrawY = drawY + y;
+            if (isBigMap) {
+                drawSingleDot(iDrawX, iDrawY, iColor);
+            } else {
+                // double sized 'pixels'.
+                iDrawX += x;
+                iDrawY += y;
+                drawDoubleDot(iDrawX, iDrawY, iColor);
+            }
 		}
-
-		iDrawX += 1;
 	}
 }
 
@@ -105,9 +108,6 @@ void cMiniMapDrawer::drawTerrain() {
  * @param playerOnly (if false, draws all other players than m_Player)
  */
 void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
-	int iDrawX=drawX;
-	int iDrawY=drawY;
-
 
 	int iColor=allegroDrawer->getColor_BLACK();
 
@@ -117,8 +117,6 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
             if (!map->isWithinBoundaries(x, y)) continue;
 
             int iCll = map->makeCell(x, y);
-
-
 
 			if (!map->isVisible(iCll, m_Player->getId())) {
 			    // invisible cell
@@ -164,8 +162,16 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
 
             // no need to draw black on black background
             if (iColor != allegroDrawer->getColor_BLACK()) {
-                // double sized 'pixels'. (FOR NOW)
-                drawDot(iDrawX + (x*2), iDrawY + (y*2), iColor);
+                int iDrawX=drawX + x;
+                int iDrawY=drawY + y;
+
+                if (map->getWidth() > 64 || map->getHeight() > 64) {
+                    drawSingleDot(iDrawX, iDrawY, iColor);
+                } else {
+                    iDrawX += x;
+                    iDrawY += y;
+                    drawDoubleDot(iDrawX, iDrawY, iColor);
+                }
             }
 		}
 	}
@@ -202,8 +208,6 @@ int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
 }
 
 void cMiniMapDrawer::interact() {
-
-
 	if (m_RectMinimap->isMouseOver() && // on minimap
 	    cMouse::isLeftButtonPressed() && !cMouse::isBoxSelecting() // pressed the mouse and not boxing anything..
 	    ) {
@@ -268,12 +272,16 @@ void cMiniMapDrawer::drawStaticFrame() {
      }
 }
 
-void cMiniMapDrawer::drawDot(int x, int y, int color) {
+void cMiniMapDrawer::drawDoubleDot(int x, int y, int color) {
 	// draw a double sized 'pixel'
 	putpixel(bmp_screen, x, y, color);
 	putpixel(bmp_screen, x + 1, y, color);
 	putpixel(bmp_screen, x + 1, y + 1, color);
 	putpixel(bmp_screen, x, y + 1, color);
+}
+
+void cMiniMapDrawer::drawSingleDot(int x, int y, int color) {
+	putpixel(bmp_screen, x, y, color);
 }
 
 int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
@@ -283,8 +291,13 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
 
     // HACK HACK: Major assumption here - if map dimensions ever get > 64x64 this will BREAK!
     // However, every dot is (due the 64x64 map) 2 pixels wide...
-    mouseMiniMapX /= 2;
-    mouseMiniMapY /= 2;
+    if (map->getHeight() > 64 || map->getWidth() > 64) {
+        // do nothing
+    } else {
+        // old behavior assumes double sized pixels
+        mouseMiniMapX /= 2;
+        mouseMiniMapY /= 2;
+    }
 
     // the mouse is the center of the screen, so substract half of the viewport coordinates
     int newX = mouseMiniMapX;

@@ -41,6 +41,12 @@ public:
 
     void moveTo(int theX, int theY);
 
+    /**
+     * Returns the pixel coordinate on the window to draw onto. Use this function to convert absolute
+     * coordinates into window coordinates so you can draw something.
+     * @param absoluteXPosition
+     * @return
+     */
     int getWindowXPosition(int absoluteXPosition) {
         return getWindowXPositionWithOffset(absoluteXPosition, 0);
     }

@@ -17,6 +17,7 @@ class cRandomMapGenerator {
 
 	private:
 
+    void drawProgress(float progress) const;
 };
 
 #endif /* CRANDOMMAPGENERATOR_H_ */

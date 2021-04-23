@@ -129,7 +129,7 @@ public:
     bool isWithinBoundaries(int c);
 
 	/**
-	 * Returns true/false when x,y coordinate is within bounds of the map. Taking invisible boundary into account.
+	 * Returns true/false when x,y coordinate is within playable bounds of the map. Taking invisible boundary into account.
 	 * @param x
 	 * @param y
 	 * @return
