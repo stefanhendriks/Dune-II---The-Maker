@@ -260,8 +260,6 @@ void cMap::clear_spot(int c, int size, int playerId) {
 
     map.setVisible(c, playerId, true);
 
-    rectfill(bmp_screen, mouse_x, mouse_y, mouse_x + 32, mouse_y + 32, makecol(255, 255, 0));
-
     // go around 360 fDegrees and calculate new stuff.
     for (float dr = 1; dr < size; dr++) {
         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
