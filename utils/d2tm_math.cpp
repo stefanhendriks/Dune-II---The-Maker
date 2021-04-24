@@ -178,7 +178,10 @@ int convert_angle(int face_angle)
   if (face_angle == FACE_DOWN)        return 6;
   if (face_angle == FACE_DOWNRIGHT)   return 7;
 
-  assert(false);
+  char msg[255];
+  sprintf(msg, "INVALID: Received face angle [%d], which is unsupported. Returning 0 as result!?", face_angle);
+  logbook(msg);
+
   return 0; // theoretically cannot reach here, return 0 in all other cases
 }
 
