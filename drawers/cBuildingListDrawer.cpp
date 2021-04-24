@@ -126,7 +126,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
         int iDrawYEnd = iDrawY + heightOfIcon;
 
         // asumes drawing for human player
-        bool cannotPayIt = m_Player->hasEnoughCreditsFor(item->getBuildCost());
+        bool cannotPayIt = !m_Player->hasEnoughCreditsFor(item->getBuildCost());
 
         // icon id must be set , assert it.
 		assert(item->getIconId() > -1);
