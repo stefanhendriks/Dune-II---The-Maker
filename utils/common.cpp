@@ -48,13 +48,7 @@ void logbook(const char *txt) {
  */
 // determine if this cell is not out of boundries
 bool BORDER_POS(int x, int y) {
-    if (x < 1) return false;
-    if (x > (game.map_width - 2)) return false;
-
-    if (y < 1) return false;
-    if (y > (game.map_height - 2)) return false;
-
-    return true;
+    return map.isWithinBoundaries(x, y);
 }
 
 /**
@@ -78,8 +72,8 @@ void FIX_BORDER_POS(int &x, int &y) {
         if (x < 1) {
             x = 1;
         }
-        if (x > (game.map_width - 1)) {
-            x = (game.map_width - 1);
+        if (x > (map.getWidth() - 2)) {
+            x = (map.getWidth() - 2);
         }
     }
 
@@ -88,8 +82,8 @@ void FIX_BORDER_POS(int &x, int &y) {
         if (y < 1) {
             y = 1;
         }
-        if (y > (game.map_height - 1)) {
-            y = (game.map_height - 1);
+        if (y > (map.getHeight() - 2)) {
+            y = (map.getHeight() - 2);
         }
     }
 }
@@ -99,13 +93,13 @@ void FIX_POS(int &x, int &y) {
     // filled in
     if (x) {
         if (x < 0) x = 0;
-        if (x > game.map_width) x = game.map_width;
+        if (x >= map.getWidth()) x = (map.getWidth()-1);
     }
 
     // filled in
     if (y) {
         if (y < 0) y = 0;
-        if (y > game.map_height) y = game.map_height;
+        if (y >= map.getHeight()) y = (map.getHeight() -1);
     }
 }
 
@@ -1361,10 +1355,7 @@ int keepBetween(int value, int min, int max) {
 
 // return a border cell, close to iCll
 int iFindCloseBorderCell(int iCll) {
-	cCellCalculator * calculator = new cCellCalculator(&map);
-	int result = calculator->findCloseMapBorderCellRelativelyToDestinationCel(iCll);
-	delete calculator;
-	return result;
+    return map.findCloseMapBorderCellRelativelyToDestinationCel(iCll);
 }
 
 
@@ -1374,8 +1365,8 @@ int distanceBetweenCellAndCenterOfScreen(int iCell) {
     int centerX = mapCamera->getViewportCenterX();
     int centerY = mapCamera->getViewportCenterY();
 
-    int cellX = mapCamera->getAbsoluteXPositionFromCell(iCell);
-    int cellY = mapCamera->getAbsoluteYPositionFromCell(iCell);
+    int cellX = map.getAbsoluteXPositionFromCell(iCell);
+    int cellY = map.getAbsoluteYPositionFromCell(iCell);
 
     return ABS_length(centerX, centerY, cellX, cellY);
 }
@@ -1611,17 +1602,25 @@ int create_bullet(int type, int cell, int goal_cell, int unitWhichShoots, int st
     newBullet.init();
 
     newBullet.iType = type;
-    newBullet.iCell = cell;
+    newBullet.posX = map.getAbsoluteXPositionFromCellCentered(cell);
+    newBullet.posY = map.getAbsoluteYPositionFromCellCentered(cell);
     newBullet.iOwnerStructure = structureWhichShoots;
     newBullet.iOwnerUnit = unitWhichShoots;
 
-    newBullet.iGoalCell = goal_cell;
+    newBullet.targetX = map.getAbsoluteXPositionFromCellCentered(goal_cell);
+    newBullet.targetY = map.getAbsoluteYPositionFromCellCentered(goal_cell);
+
+    int structureIdAtGoalCell = map.getCellIdStructuresLayer(goal_cell);
+    if (structureIdAtGoalCell > -1) {
+        cAbstractStructure *pStructure = structure[structureIdAtGoalCell];
+        if (pStructure && pStructure->isValid()) {
+            newBullet.targetX = pStructure->getRandomPosX();
+            newBullet.targetY = pStructure->getRandomPosY();
+        }
+    }
 
     newBullet.bAlive = true;
     newBullet.iFrame = 0;
-
-    newBullet.iOffsetX = 8 + rnd(9);
-    newBullet.iOffsetY = 8 + rnd(9);
 
     newBullet.iPlayer = -1;
 
@@ -1710,32 +1709,36 @@ void Shimmer(int r, int x, int y)
 }
 
 // Skirmish map initialization
-void INIT_PREVIEWS()
-{
-    for (int i=0; i < MAX_SKIRMISHMAPS; i++)
-    {
-        PreviewMap[i].terrain = NULL;
+void INIT_PREVIEWS() {
+    for (int i = 0; i < MAX_SKIRMISHMAPS; i++) {
+        s_PreviewMap &previewMap = PreviewMap[i];
+        previewMap.terrain = NULL;
 
-		// clear out name
-        memset(PreviewMap[i].name , 0, sizeof(PreviewMap[i].name));
+        // clear out name
+        memset(previewMap.name, 0, sizeof(previewMap.name));
 
+        int maxCells = 4096; // 64x64 map
         // clear out map data
-        memset(PreviewMap[i].mapdata, TERRAIN_SAND, sizeof(PreviewMap[i].mapdata));
+        if (i == 0) {
+            maxCells = 128*128;
+        }
+        previewMap.mapdata = std::vector<int>(maxCells, -1);
 
-        //sprintf(PreviewMap[i].name, "Map %d", i);
-		//
-        PreviewMap[i].iPlayers=0;
+        previewMap.iPlayers = 0;
 
-        PreviewMap[i].iStartCell[0]=-1;
-        PreviewMap[i].iStartCell[1]=-1;
-        PreviewMap[i].iStartCell[2]=-1;
-        PreviewMap[i].iStartCell[3]=-1;
-        PreviewMap[i].iStartCell[4]=-1;
+        previewMap.width = 0;
+        previewMap.height = 0;
+
+        previewMap.iStartCell[0] = -1;
+        previewMap.iStartCell[1] = -1;
+        previewMap.iStartCell[2] = -1;
+        previewMap.iStartCell[3] = -1;
+        previewMap.iStartCell[4] = -1;
     }
 
-	sprintf(PreviewMap[0].name, "RANDOM MAP");
-	//PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
-	PreviewMap[0].terrain = create_bitmap(PAN_CENTER, PAN_CENTER);
+    sprintf(PreviewMap[0].name, "RANDOM MAP");
+    //PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
+    PreviewMap[0].terrain = create_bitmap(PAN_CENTER, PAN_CENTER);
 }
 
 /**

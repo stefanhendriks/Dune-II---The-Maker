@@ -61,9 +61,6 @@ public:
 	void mission_init(); // initialize variables for mission loading only
 	void run();			// run the game
 
-	int map_width;
-	int map_height;
-
     int iRegion;        // what region is selected? (changed by cSelectYourNextConquestState class)
 	int iMission;		// what mission are we playing? (= techlevel)
 

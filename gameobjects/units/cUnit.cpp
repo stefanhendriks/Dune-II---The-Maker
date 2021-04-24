@@ -12,7 +12,6 @@
 
 #include <math.h>
 #include "../../include/d2tmh.h"
-#include "cUnit.h"
 
 
 // Path creation definitions / var
@@ -26,7 +25,7 @@ struct ASTAR {
 };
 
 // Temp map
-ASTAR temp_map[MAX_CELLS];
+ASTAR temp_map[16384]; // 4096 = 64x64 map, 16384 = 128x128 map
 
 // Class specific on top
 // Globals on bottom
@@ -35,8 +34,6 @@ void cUnit::init(int i) {
     fExperience = 0;
 
     iID = i;
-
-    iCell = 0;          // cell of unit
 
     iType = 0;          // type of unit
 
@@ -50,10 +47,11 @@ void cUnit::init(int i) {
     // Movement
     iNextCell = -1;      // where to move to (next cell)
     iGoalCell = -1;      // the goal cell (goal of path)
+    iCell = -1;          // cell of unit
     iCellX = -1;
     iCellY = -1;
-    iOffsetX = 0;       // X offset
-    iOffsetY = 0;       // Y offset
+    posX = -1;
+    posY = -1;
     memset(iPath, -1, sizeof(iPath));    // path of unit
     iPathIndex = -1;     // where are we?
     iPathFails = 0;
@@ -238,7 +236,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                                                     distanceBetweenCellAndCenterOfScreen(iCell));
 
                     // calculate cell and damage stuff around this
-                    int cll = iCellMake((iCellX - 1) + cx, (iCellY - 1) + cy);
+                    int cll = map.makeCell((iCellX - 1) + cx, (iCellY - 1) + cy);
 
                     if (cll == iCell)
                         continue; // do not do own cell
@@ -411,18 +409,20 @@ bool cUnit::isValid() {
     if (iHitPoints < 0 && iTempHitPoints < 0)
         return false;
 
-    if (iCell < 0 || iCell >= MAX_CELLS)
+    if (iCell < 0 || iCell >= map.getMaxCells())
         return false;
 
     return true;
 }
 
 int cUnit::pos_x() {
-    return (iCellX * TILESIZE_WIDTH_PIXELS) + iOffsetX;
+//    return (iCellX * TILESIZE_WIDTH_PIXELS) + iOffsetX;
+    return posX;
 }
 
 int cUnit::pos_y() {
-    return (iCellY * TILESIZE_HEIGHT_PIXELS) + iOffsetY;
+//    return (iCellY * TILESIZE_HEIGHT_PIXELS) + iOffsetY;
+    return posY;
 }
 
 int cUnit::draw_x() {
@@ -698,8 +698,8 @@ void cUnit::draw() {
 
 // TODO: only do this when iCell is updated
 void cUnit::updateCellXAndY() {
-    iCellX = iCellGiveX(iCell);
-    iCellY = iCellGiveY(iCell);
+    iCellX = map.getCellX(iCell);
+    iCellY = map.getCellY(iCell);
 }
 
 void cUnit::move_to(int iCll, int iStrucID, int iUnitID) {
@@ -717,8 +717,9 @@ void cUnit::move_to(int iCll, int iStrucID, int iUnitID, eUnitActionIntent inten
     iAttackCell = -1;
 
     // only when not moving (half on tile) reset nextcell
-    if (iOffsetX == 0 && iOffsetY == 0)
+    if (!isMovingBetweenCells()) {
         iNextCell = -1;
+    }
 
     iAction = ACTION_MOVE;
     this->intent = intent;
@@ -814,7 +815,7 @@ void cUnit::think_guard() {
                     continue;
 
                 // not ours and its visible
-                if (mapUtils->isCellVisibleForPlayerId(iPlayer, potentialThreath.iCell) && // is visible for ai as well?
+                if (map.isVisible(potentialThreath.iCell, iPlayer) && // is visible for ai as well?
                     potentialThreath.isAirbornUnit() == isAirbornUnit()) {
 
                     int distance = ABS_length(iCellX, iCellY, potentialThreath.iCellX, potentialThreath.iCellY);
@@ -869,10 +870,12 @@ void cUnit::think_guard() {
                         bool bAlly = getPlayer()->isSameTeamAs(pStructure->getPlayer());
 
                         // not ours and its visible
-                        if (mapUtils->isCellVisibleForPlayerId(iPlayer, pStructure->getCell()) &&
+                        if (map.isVisible(pStructure->getCell(), iPlayer) &&
                             !bAlly) {
-                            int distance = ABS_length(iCellX, iCellY, iCellGiveX(pStructure->getCell()),
-                                                      iCellGiveY(pStructure->getCell()));
+                            int c = pStructure->getCell();
+                            int c1 = pStructure->getCell();
+                            int distance = ABS_length(iCellX, iCellY, map.getCellX(c1),
+                                                      map.getCellY(c));
 
                             int sight = getUnitType().sight + 3;
 
@@ -1058,7 +1061,7 @@ void cUnit::think() {
 
                     // not ours and its visible
                     if (cUnit.iPlayer != iPlayer &&
-                        mapUtils->isCellVisibleForPlayerId(iPlayer, cUnit.iCell) &&
+                        map.isVisible(cUnit.iCell, iPlayer) &&
                         units[cUnit.iType].airborn == false) // do not attack airborn units!?
                     {
                         int distance = ABS_length(iCellX, iCellY, cUnit.iCellX, cUnit.iCellY);
@@ -1095,9 +1098,11 @@ void cUnit::think() {
 
                     // not ours and its visible
                     if (pStructure->getPlayerId() != iPlayer && // enemy
-                        mapUtils->isCellVisibleForPlayerId(iPlayer, pStructure->getCell())) {
-                        int cellX = iCellGiveX(pStructure->getCell());
-                        int cellY = iCellGiveX(pStructure->getCell());
+                        map.isVisible(pStructure->getCell(), iPlayer)) {
+                        int c = pStructure->getCell();
+                        int cellX = map.getCellX(c);
+                        int c1 = pStructure->getCell();
+                        int cellY = map.getCellX(c1);
                         int distance = ABS_length(iCellX, iCellY, pStructure->getCell(), unit[i].iCellY);
 
                         // attack closest structure
@@ -1215,7 +1220,7 @@ void cUnit::think() {
                     char msg[255];
                     sprintf(msg, "Returning to refinery ID %d", refineryStructureId);
                     LOG(msg);
-                    move_to(refinery->getCell() + rnd(2) + (rnd(2) * 64), refineryStructureId, -1, INTENT_UNLOAD_SPICE); // move yourself...
+                    move_to(refinery->getCell() + rnd(2) + (rnd(2) * map.getWidth()), refineryStructureId, -1, INTENT_UNLOAD_SPICE); // move yourself...
                     TIMER_movewait = 0;
                 } else {
                     TIMER_movewait = 500; // wait for pickup!
@@ -1265,7 +1270,7 @@ void cUnit::think_move_air() {
 
     iNextCell = getNextCellToMoveTo();
 
-    if (!bCellValid(iCell)) {
+    if (!map.isValidCell(iCell)) {
         die(true, false);
 
         // KILL UNITS WHO SOMEHOW GET INVALID
@@ -1275,15 +1280,15 @@ void cUnit::think_move_air() {
         return;
     }
 
-    if (!bCellValid(iNextCell))
+    if (!map.isValidCell(iNextCell))
         iNextCell = iCell;
 
-    if (!bCellValid(iGoalCell))
+    if (!map.isValidCell(iGoalCell))
         iGoalCell = iCell;
 
     // same cell (no goal specified or something)
     if (iNextCell == iCell) {
-        bool isWithinMapBoundaries = BORDER_POS(iCellGiveX(iCell), iCellGiveY(iCell));
+        bool isWithinMapBoundaries = BORDER_POS(iCellX, iCellY);
 
         // reinforcement stuff happens here...
         if (iTransferType == TRANSFER_DIE) {
@@ -1362,7 +1367,7 @@ void cUnit::think_move_air() {
                         if (!map.occupied(iCell, iUnitID) && isWithinMapBoundaries) {
 
                             // dump it here
-                            unitToPickupOrDrop.iCell = iCell;
+                            unitToPickupOrDrop.setCell(iCell);
                             unitToPickupOrDrop.iGoalCell = iCell;
                             unitToPickupOrDrop.updateCellXAndY(); // update cellx and celly
                             map.cellSetIdForLayer(iCell, MAPID_UNITS, iUnitID);
@@ -1377,8 +1382,6 @@ void cUnit::think_move_air() {
                             unitToPickupOrDrop.iHeadShouldFace = iHeadShouldFace;
                             unitToPickupOrDrop.iBodyFacing = iBodyFacing;
                             unitToPickupOrDrop.iBodyShouldFace = iBodyShouldFace;
-                            unitToPickupOrDrop.iOffsetX = 0;
-                            unitToPickupOrDrop.iOffsetY = 0;
 
                             // clear spot
                             map.clear_spot(iCell, unitToPickupOrDrop.getUnitType().sight, iPlayer);
@@ -1405,7 +1408,7 @@ void cUnit::think_move_air() {
                                         // store this
                                         unitToPickupOrDrop.iTempHitPoints = unitToPickupOrDrop.iHitPoints;
                                         unitToPickupOrDrop.iHitPoints = -1; // 'kill' unit
-                                        unitToPickupOrDrop.iCell = structureUnitWantsToEnter->getCell();
+                                        unitToPickupOrDrop.setCell(structureUnitWantsToEnter->getCell());
                                         unitToPickupOrDrop.updateCellXAndY();
 
                                         map.remove_id(unitIdOfUnitThatHasBeenPickedUp, MAPID_UNITS);
@@ -1426,7 +1429,7 @@ void cUnit::think_move_air() {
                             int ry = (iCellY - 2) + rnd(5);
                             FIX_BORDER_POS(rx, ry);
 
-                            iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
+                            iGoalCell = map.getCellWithMapDimensions(rx, ry);
 
                             iBringTarget = iGoalCell;
                             return;
@@ -1519,16 +1522,13 @@ void cUnit::think_move_air() {
                 int ry = (iCellY - 4) + rnd(7);
                 FIX_BORDER_POS(rx, ry);
 
-                iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
+                iGoalCell = map.getCellWithMapDimensions(rx, ry);
                 return;
             }
         }
 
         // move randomly
-        int rx = rnd(game.map_width);
-        int ry = rnd(game.map_height);
-
-        iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
+        iGoalCell = map.getRandomCellWithinMapWithSafeDistanceFromBorder(2);
         return;
     }
 
@@ -1536,8 +1536,8 @@ void cUnit::think_move_air() {
     TIMER_move++;
 
     // now move
-    int cx = iCellGiveX(iGoalCell);
-    int cy = iCellGiveY(iGoalCell);
+    int cx = map.getCellX(iGoalCell);
+    int cy = map.getCellY(iGoalCell);
 
     int iSlowDown = 0;
 
@@ -1590,64 +1590,68 @@ void cUnit::think_move_air() {
     iBodyFacing = f;
     iHeadFacing = f;
 
+    map.cellResetIdFromLayer(iCell, MAPID_AIR);
 
     float angle = fRadians(iCellX, iCellY, cx, cy);
 
     // now do some thing to make
     // 1/8 of a cell (2 pixels) per movement
-    iOffsetX += cos(angle) * 2;
-    iOffsetY += sin(angle) * 2;
+    int movespeed = 2;
+    posX += cos(angle) * movespeed;
+    posY += sin(angle) * movespeed;
 
-    bool update_me = false;
-    // update when to much on the right.
-    if (iOffsetX > 31) {
-        iOffsetX -= 32;
-        map.cellResetIdFromLayer(iCell, MAPID_AIR);
-        iCell++;
-        update_me = true;
-    }
+//    bool update_me = false;
+//    // update when to much on the right.
+//    if (iOffsetX > 31) {
+//        iOffsetX -= 32;
+//        map.cellResetIdFromLayer(iCell, MAPID_AIR);
+//        iCell++;
+//        update_me = true;
+//    }
+//
+//    // update when to much on the left
+//    if (iOffsetX < -31) {
+//        iOffsetX += 32;
+//        map.cellResetIdFromLayer(iCell, MAPID_AIR);
+//        iCell--;
+//        update_me = true;
+//    }
+//
+//    // update when to much up
+//    if (iOffsetY < -31) {
+//        iOffsetY += 32;
+//        map.cellResetIdFromLayer(iCell, MAPID_AIR);
+//        iCell -= MAP_W_MAX;
+//        update_me = true;
+//    }
+//
+//    // update when to much down
+//    if (iOffsetY > 31) {
+//        iOffsetY -= 32;
+//        map.cellResetIdFromLayer(iCell, MAPID_AIR);
+//        iCell += MAP_W_MAX;
+//        update_me = true;
+//    }
+//
+//    if (iCell == iGoalCell)
+//        iOffsetX = iOffsetY = 0;
 
-    // update when to much on the left
-    if (iOffsetX < -31) {
-        iOffsetX += 32;
-        map.cellResetIdFromLayer(iCell, MAPID_AIR);
-        iCell--;
-        update_me = true;
-    }
-
-    // update when to much up
-    if (iOffsetY < -31) {
-        iOffsetY += 32;
-        map.cellResetIdFromLayer(iCell, MAPID_AIR);
-        iCell -= MAP_W_MAX;
-        update_me = true;
-    }
-
-    // update when to much down
-    if (iOffsetY > 31) {
-        iOffsetY -= 32;
-        map.cellResetIdFromLayer(iCell, MAPID_AIR);
-        iCell += MAP_W_MAX;
-        update_me = true;
-    }
-
-    if (iCell == iGoalCell)
-        iOffsetX = iOffsetY = 0;
-
-    if (update_me) {
-        if (!bCellValid(iCell)) {
-            if (DEBUGGING) {
-                LOG("UNIT : Aircraft : ERROR : Correction applied in cell data");
-            }
-
-            if (iCell > (MAX_CELLS - 1)) iCell = MAX_CELLS - 1;
-            if (iCell < 0) iCell = 0;
-        }
-
-        map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
-
-        updateCellXAndY();
-    }
+//    if (update_me) {
+//        if (!bCellValid(iCell)) {
+//            if (DEBUGGING) {
+//                LOG("UNIT : Aircraft : ERROR : Correction applied in cell data");
+//            }
+//
+//            if (iCell > (MAX_CELLS - 1)) iCell = MAX_CELLS - 1;
+//            if (iCell < 0) iCell = 0;
+//        }
+//
+//        map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
+//
+    iCell = mapCamera->getCellFromAbsolutePosition(posX, posY);
+    updateCellXAndY();
+    map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
+//    }
 }
 
 // Carryall-order
@@ -1710,8 +1714,8 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe) {
 
 void cUnit::shoot(int iShootCell) {
     // particles are rendered at the center, so do it here as well
-    int iShootX = pos_x() + getBmpWidth() / 2;
-    int iShootY = pos_y() + getBmpHeight() / 2;
+    int iShootX = pos_x() + (getBmpWidth() / 2);
+    int iShootY = pos_y() + (getBmpHeight() / 2);
     int bmp_head = convert_angle(iHeadFacing);
 
     if (iType == TANK) {
@@ -1734,8 +1738,8 @@ int cUnit::getNextCellToMoveTo() {
 
     if (iPathIndex < 0) {
         if (iNextCell < 0) {
-            iOffsetX = 0;
-            iOffsetY = 0;
+//            iOffsetX = 0;
+//            iOffsetY = 0;
             LOG("No pathindex & no nextcell, resetting unit");
             return iCell; // same as our location
         }
@@ -1745,8 +1749,8 @@ int cUnit::getNextCellToMoveTo() {
 
     // not valid OR same location
     if (iPath[iPathIndex] < 0) {
-        iOffsetX = 0;
-        iOffsetY = 0;
+//        iOffsetX = 0;
+//        iOffsetY = 0;
         LOG("No valid iPATH[pathindex]");
         return iCell; // same as our location
     }
@@ -1814,7 +1818,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                             }
                         }
 
-                        if (ABS_length(iCellX, iCellY, iCellGiveX(iDestCell), iCellGiveY(iDestCell)) <
+                        if (ABS_length(iCellX, iCellY, map.getCellX(iDestCell), map.getCellY(iDestCell)) <
                             units[iType].range) {
                             // within range, don't move (just prepare retaliation fire)
                         } else {
@@ -1973,26 +1977,26 @@ void cUnit::think_attack() {
             }
         }
     }
-    int iDestX = iCellGiveX(iGoalCell);
-    int iDestY = iCellGiveY(iGoalCell);
+    int iDestX = map.getCellX(iGoalCell);
+    int iDestY = map.getCellY(iGoalCell);
 
     // Distance check
 
     int distance = ABS_length(iCellX, iCellY, iDestX, iDestY);
 
     if (units[iType].airborn == false) {
-        if (distance <= units[iType].range && iOffsetX == 0 && iOffsetY == 0) {
+        if (distance <= units[iType].range && !isMovingBetweenCells()) {
             // in range , fire and such
 
             // Facing
-            int d = fDegrees(iCellX, iCellY, iCellGiveX(iGoalCell), iCellGiveY(iGoalCell));
+            int d = fDegrees(iCellX, iCellY, map.getCellX(iGoalCell), map.getCellY(iGoalCell));
             int f = face_angle(d); // get the angle
 
             // set body facing
             iBodyShouldFace = f;
 
             // HEAD faces goal directly
-            d = fDegrees(iCellX, iCellY, iCellGiveX(iGoalCell), iCellGiveY(iGoalCell));
+            d = fDegrees(iCellX, iCellY, map.getCellX(iGoalCell), map.getCellY(iGoalCell));
             f = face_angle(d); // get the angle
 
             iHeadShouldFace = f;
@@ -2003,8 +2007,8 @@ void cUnit::think_attack() {
 
                 if (iType == LAUNCHER || iType == DEVIATOR) {
                     if (distance < units[iType].range) {
-                        int dx = iCellGiveX(iGc);
-                        int dy = iCellGiveY(iGc);
+                        int dx = map.getCellX(iGc);
+                        int dy = map.getCellY(iGc);
 
                         int dif = (units[iType].range - distance) / 2;
 
@@ -2014,7 +2018,7 @@ void cUnit::think_attack() {
                         dy -= (dif);
                         dy += rnd(dif * 2);
 
-                        iGc = iCellMakeWhichCanReturnMinusOne(dx, dy);
+                        iGc = map.getCellWithMapDimensions(dx, dy);
                     }
                 }
 
@@ -2072,14 +2076,14 @@ void cUnit::think_attack() {
             // in range , fire and such
 
             // Facing
-            int d = fDegrees(iCellX, iCellY, iCellGiveX(iGoalCell), iCellGiveY(iGoalCell));
+            int d = fDegrees(iCellX, iCellY, map.getCellX(iGoalCell), map.getCellY(iGoalCell));
             int f = face_angle(d); // get the angle
 
             // set body facing
             iBodyShouldFace = f;
 
             // HEAD faces goal directly
-            d = fDegrees(iCellX, iCellY, iCellGiveX(iGoalCell), iCellGiveY(iGoalCell));
+            d = fDegrees(iCellX, iCellY, map.getCellX(iGoalCell), map.getCellY(iGoalCell));
             f = face_angle(d); // get the angle
 
             iHeadShouldFace = f;
@@ -2113,12 +2117,12 @@ void cUnit::think_attack() {
                             shoot(iGc);
                             TIMER_attack = -20;
 
-                            int rx = iCellGiveX(iGc) - 16 + rnd(32);
-                            int ry = iCellGiveY(iGc) - 16 + rnd(32);
+                            int rx = map.getCellX(iGc) - 16 + rnd(32);
+                            int ry = map.getCellY(iGc) - 16 + rnd(32);
                             iAttackUnit = -1;
                             iAttackStructure = -1;
                             iAction = ACTION_MOVE;
-                            iGoalCell = iCellMakeWhichCanReturnMinusOne(rx, ry);
+                            iGoalCell = map.getCellWithMapDimensions(rx, ry);
                         }
                     }
 
@@ -2285,14 +2289,14 @@ void cUnit::think_move() {
     }
 
     // Facing
-    int d = fDegrees(iCellX, iCellY, iCellGiveX(iNextCell), iCellGiveY(iNextCell));
+    int d = fDegrees(iCellX, iCellY, map.getCellX(iNextCell), map.getCellY(iNextCell));
     int f = face_angle(d); // get the angle
 
     // set body facing
     iBodyShouldFace = f;
 
     // HEAD faces goal directly
-    d = fDegrees(iCellX, iCellY, iCellGiveX(iGoalCell), iCellGiveY(iGoalCell));
+    d = fDegrees(iCellX, iCellY, map.getCellX(iGoalCell), map.getCellY(iGoalCell));
     f = face_angle(d); // get the angle
 
     iHeadShouldFace = f;
@@ -2462,7 +2466,7 @@ void cUnit::think_move() {
                             iHitPoints = -1; // 'kill' unit
 
                             map.remove_id(iID, MAPID_UNITS);
-                            iCell = pStructure->getCell();
+                            setCell(pStructure->getCell());
 
                             LOG("-> Enter structure #3");
                         } // enter..
@@ -2482,7 +2486,7 @@ void cUnit::think_move() {
                         } else {
                             if (pStructure->getHitPoints() < pStructure->getCaptureHP()) {
                                 // make structure switch sides
-                                pStructure->setOwner(iPlayer);
+                                pStructure->getsCapturedBy(getPlayer());
                                 die(false, false);
                             } else {
                                 // the unit will die and inflict damage
@@ -2511,8 +2515,8 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
     int bToLeft = -1;         // 0 = go left, 1 = go right
     int bToDown = -1;         // 0 = go down, 1 = go up
 
-    int iNextX = iCellGiveX(iNextCell);
-    int iNextY = iCellGiveY(iNextCell);
+    int iNextX = map.getCellX(iNextCell);
+    int iNextY = map.getCellY(iNextCell);
 
     // Compare X, Y coordinates
     if (iNextX < iCellX)
@@ -2552,22 +2556,11 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         map.cellSetIdForLayer(iNextCell, MAPID_WORMS, iID);
 
         // when sandworm, add particle stuff
-        int iOffX = abs(iOffsetX);
-        int iOffY = abs(iOffsetY);
-        if ((iOffX == 8 || iOffX == 16 || iOffX == 24 || iOffX == 32) ||
-            (iOffY == 8 || iOffY == 16 || iOffY == 24 || iOffY == 32)) {
-            int half = 16;
-            int iParX = pos_x() + half;
-            int iParY = pos_y() + half;
-
-            PARTICLE_CREATE(iParX, iParY, OBJECT_WORMTRAIL, -1, -1);
-        }
+        PARTICLE_CREATE(posX, posY, OBJECT_WORMTRAIL, -1, -1);
     }
 
-
     // 100% on cell, no offset
-    if (iOffsetX == 0 && iOffsetY == 0) {
-
+    if (!isMovingBetweenCells()) {
         int half = 16;
         int iParX = pos_x() + half;
         int iParY = pos_y() + half;
@@ -2608,17 +2601,16 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         }
     }
 
-
     // movement in pixels
     if (bToLeft == 0)
-        iOffsetX--;
+        posX--;
     else if (bToLeft == 1)
-        iOffsetX++;
+        posX++;
 
     if (bToDown == 0)
-        iOffsetY++;
+        posY++;
     else if (bToDown == 1)
-        iOffsetY--;
+        posY--;
 
     // When moving, infantry has some animation
     if (isInfantryUnit()) {
@@ -2634,8 +2626,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         }
     }
 
-    // take care of this:
-    if (iOffsetX > 31 || iOffsetX < -31 || iOffsetY < -31 || iOffsetY > 31) {
+    if (!isMovingBetweenCells()) {
         // when we are chasing, we now set on attack...
         if (iAction == ACTION_CHASE) {
             iAction = ACTION_ATTACK;
@@ -2649,9 +2640,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
             map.cellResetIdFromLayer(iCell, MAPID_UNITS);
         }
 
-        iCell = iNextCell;
-        iOffsetX = 0.0f;
-        iOffsetY = 0.0f;
+        setCell(iNextCell);
         iPathIndex++;
         iPathFails = 0; // we change this to 0... every cell
 
@@ -2755,7 +2744,10 @@ void cUnit::think_position() {
 }
 
 bool cUnit::isMovingBetweenCells() {
-    return iOffsetX != 0 || iOffsetY != 0;
+    // when not perfectly divisible then it is 'between' cells.
+    return (((int)posX) % TILESIZE_WIDTH_PIXELS != 0 || ((int)posY) % TILESIZE_HEIGHT_PIXELS != 0);
+//
+//    return iOffsetX != 0 || iOffsetY != 0;
 }
 
 bool cUnit::isDamaged() {
@@ -2830,6 +2822,12 @@ void cUnit::move_to(int iGoalCell) {
     move_to(iGoalCell, structureID, unitID, intent);
 }
 
+void cUnit::setCell(int cll) {
+    this->iCell = cll;
+    this->posX = map.getAbsoluteXPositionFromCell(cll);
+    this->posY = map.getAbsoluteYPositionFromCell(cll);
+}
+
 // return new valid ID
 int UNIT_NEW() {
     for (int i = 0; i < MAX_UNITS; i++)
@@ -2849,7 +2847,7 @@ int UNIT_NEW() {
  * @return
  */
 int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
-    if (!bCellValid(iCll)) {
+    if (!map.isValidCell(iCll)) {
         logbook("UNIT_CREATE: Invalid cell as param");
         return -1;
     }
@@ -2896,7 +2894,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
     cUnit &newUnit = unit[iNewId];
     newUnit.init(iNewId);
 
-    newUnit.iCell = iCll;
+    newUnit.setCell(iCll);
     newUnit.iBodyFacing = rnd(8);
     newUnit.iHeadFacing = rnd(8);
 
@@ -2975,7 +2973,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
   -1 = FAIL (goalcell = cell, or cannot find path)
   -2 = Cannot move, all surrounded (blocked)
   -3 = Too many paths created
-  -4 = Offset is not 0
+  -4 = Offset is not 0 (moving between cells)
   -99= iUnitId is < 0 (invalid input)
   */
 int CREATE_PATH(int iUnitId, int iPathCountUnits) {
@@ -2988,7 +2986,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
     cUnit &cUnit = unit[iUnitId];
 
     // do not start calculating anything before we are on 0,0 x,y wise on a cell
-    if (cUnit.iOffsetX != 0 || cUnit.iOffsetY != 0) {
+    if (cUnit.isMovingBetweenCells()) {
         logbook("CREATE_PATH -- END 2");
         return -4; // no calculation before we are straight on a cell
     }
@@ -3001,7 +2999,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
         return -3;
     }
 
-    int iCell = cUnit.iCell; // current cell
+    int iCell = cUnit.getCell(); // current cell
 
     // When the goal == cell, then skip.
     if (iCell == cUnit.iGoalCell) {
@@ -3042,11 +3040,11 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
     the_cll = -1;
     ex = -1;
     ey = -1;
-    cx = iCellGiveX(iCell);
-    cy = iCellGiveY(iCell);
+    cx = map.getCellX(iCell);
+    cy = map.getCellY(iCell);
 
     // set very first... our start cell
-    temp_map[iCell].cost = ABS_length(cx, cy, iCellGiveX(goal_cell), iCellGiveY(goal_cell));
+    temp_map[iCell].cost = ABS_length(cx, cy, map.getCellX(goal_cell), map.getCellY(goal_cell));
     temp_map[iCell].parent = -1;
     temp_map[iCell].state = CLOSED;
 
@@ -3086,8 +3084,8 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
             }
         }
 
-        cx = iCellGiveX(iCell);
-        cy = iCellGiveY(iCell);
+        cx = map.getCellX(iCell);
+        cy = map.getCellY(iCell);
 
         // starting position is cx-1 and cy-1
         sx = cx - 1;
@@ -3118,7 +3116,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
             // circle around cell Y wise
             for (cy = sy; cy <= ey; cy++) {
                 // only check the 'cell' that is NOT the current cell.
-                int cll = iCellMakeWhichCanReturnMinusOneWithinMapBorders(cx, cy);
+                int cll = map.getCellWithMapBorders(cx, cy);
 
                 // skip invalid cells
                 if (cll < 0)
@@ -3194,7 +3192,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
 
                     // is not visible, always good (since we dont know yet if its blocked!)
-                    if (mapUtils->isCellVisibleForPlayerId(controller, cll) == false) {
+                    if (map.isVisible(cll, controller) == false) {
                         good = true;
                     } else {
                         // walls stop us
@@ -3240,8 +3238,8 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
                     temp_map[cll].state == CLOSED &&          // and is closed (else its not valid to check)
                     (good)) // and its not occupied (but may be occupied by own id!
                 {
-                    int gcx = iCellGiveX(goal_cell);
-                    int gcy = iCellGiveY(goal_cell);
+                    int gcx = map.getCellX(goal_cell);
+                    int gcy = map.getCellY(goal_cell);
 
                     // calculate the cost
                     double d_cost = ABS_length(cx, cy, gcx, gcy) + temp_map[cll].cost;
@@ -3342,7 +3340,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
             if (pi >= MAX_PATH_SIZE)
                 cp = false;
 
-            if (sc == cUnit.iCell)
+            if (sc == cUnit.getCell())
                 cp = false;
         }
 
@@ -3387,7 +3385,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
         // take the closest bordering cell as 'far' away to start with
         for (int i = 1; i < MAX_PATH_SIZE; i++) {
             if (cUnit.iPath[i] > -1) {
-                if (CELL_BORDERS(cUnit.iCell, cUnit.iPath[i]))
+                if (CELL_BORDERS(cUnit.getCell(), cUnit.iPath[i]))
                     cUnit.iPathIndex = i;
             }
         }
@@ -3430,25 +3428,25 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID) {
     //
     int iSize = 1;
-    int iStartX = iCellGiveX(iCll) - iSize;
-    int iStartY = iCellGiveY(iCll) - iSize;
-    int iEndX = iCellGiveX(iCll) + iSize;
-    int iEndY = iCellGiveX(iCll) + iSize;
+    int iStartX = map.getCellX(iCll) - iSize;
+    int iStartY = map.getCellY(iCll) - iSize;
+    int iEndX = map.getCellX(iCll) + iSize;
+    int iEndY = map.getCellX(iCll) + iSize;
 
     float dDistance = 9999;
 
-    int ix = iCellGiveX(iMyCell);
-    int iy = iCellGiveY(iMyCell);
+    int ix = map.getCellX(iMyCell);
+    int iy = map.getCellY(iMyCell);
 
     bool bSearch = true;
 
     int iTheClosest = -1;
 
     while (bSearch) {
-        iStartX = iCellGiveX(iCll) - iSize;
-        iStartY = iCellGiveY(iCll) - iSize;
-        iEndX = iCellGiveX(iCll) + iSize;
-        iEndY = iCellGiveY(iCll) + iSize;
+        iStartX = map.getCellX(iCll) - iSize;
+        iStartY = map.getCellY(iCll) - iSize;
+        iEndX = map.getCellX(iCll) + iSize;
+        iEndY = map.getCellY(iCll) + iSize;
 
         // Fix boundries
         FIX_BORDER_POS(iStartX, iStartY);
@@ -3458,7 +3456,7 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID) {
         for (int iSX = iStartX; iSX < iEndX; iSX++)
             for (int iSY = iStartY; iSY < iEndY; iSY++) {
                 // find an empty cell
-                int cll = iCellMakeWhichCanReturnMinusOne(iSX, iSY);
+                int cll = map.getCellWithMapDimensions(iSX, iSY);
 
                 float dDistance2 = ABS_length(iSX, iSY, ix, iy);
 
@@ -3501,9 +3499,10 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID) {
 
 int UNIT_find_harvest_spot(int id) {
     // finds the closest harvest spot
-    unit[id].updateCellXAndY();
-    int cx = unit[id].iCellX;
-    int cy = unit[id].iCellY;
+    cUnit &cUnit = unit[id];
+    cUnit.updateCellXAndY();
+    int cx = cUnit.getCellX();
+    int cy = cUnit.getCellY();
 
     int TargetSpice = -1;
     int TargetSpiceHill = -1;
@@ -3513,11 +3512,11 @@ int UNIT_find_harvest_spot(int id) {
     int TargetSpiceHillDistance = 40;
 
 
-    for (int i = 0; i < (MAX_CELLS); i++)
-        if (map.getCellCredits(i) > 0 && i != unit[id].iCell) {
+    for (int i = 0; i < map.getMaxCells(); i++)
+        if (map.getCellCredits(i) > 0 && i != cUnit.getCell()) {
             // check if its not out of reach
-            int dx = iCellGiveX(i);
-            int dy = iCellGiveY(i);
+            int dx = map.getCellX(i);
+            int dy = map.getCellY(i);
 
             // skip bordered ones
             if (BORDER_POS(dx, dy) == false)
@@ -3540,7 +3539,7 @@ int UNIT_find_harvest_spot(int id) {
             if (map.occupied(i, id))
                 continue; // occupied
 
-            int d = ABS_length(cx, cy, iCellGiveX(i), iCellGiveY(i));
+            int d = ABS_length(cx, cy, map.getCellX(i), map.getCellY(i));
 
             int cellType = map.getCellType(i);
             if (cellType == TERRAIN_SPICE) {
@@ -3586,7 +3585,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
         return;
 
     //if (iCll < 0 || iCll >= MAX_CELLS)
-    if (bCellValid(iCll) == false)
+    if (map.isValidCell(iCll) == false)
         return;
 
     if (iStart < 0)
@@ -3596,7 +3595,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
 
     if (iStartCell < 0) {
         iStart += rnd(64);
-        if (iStart >= MAX_CELLS)
+        if (iStart >= map.getMaxCells())
             iStart -= 64;
 
         iStartCell = iFindCloseBorderCell(iStart);
@@ -3788,8 +3787,9 @@ int UNIT_FREE_AROUND_MOVE(int iUnit) {
 
     cUnit &cUnit = unit[iUnit];
 
-    int iStartX = iCellGiveX(cUnit.iCell);
-    int iStartY = iCellGiveY(cUnit.iCell);
+    cUnit.updateCellXAndY();
+    int iStartX = cUnit.getCellX();
+    int iStartY = cUnit.getCellY();
 
     int iWidth = rnd(4);
 
@@ -3808,7 +3808,7 @@ int UNIT_FREE_AROUND_MOVE(int iUnit) {
 
     for (int x = iStartX; x < iEndX; x++) {
         for (int y = iStartY; y < iEndY; y++) {
-            int cll = iCellMakeWhichCanReturnMinusOneWithinMapBorders(x, y);
+            int cll = map.getCellWithMapBorders(x, y);
 
             if (cll > -1 && !map.occupied(cll)) {
                 iClls[foundCoordinates] = cll;

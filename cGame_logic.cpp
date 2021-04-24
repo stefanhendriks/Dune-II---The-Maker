@@ -35,7 +35,7 @@ cGame::cGame() {
 	ini_screen_height=-1;
 
     memset(version, 0, sizeof(version));
-    sprintf(version, "0.5.0");
+    sprintf(version, "0.5.5");
 
     pMentat = nullptr;
 }
@@ -77,10 +77,7 @@ void cGame::init() {
 	bDeployIt=false;
 	bDeployedIt=false;
 
-	map_width  = 64;
-	map_height = 64;
-
-	mouse_tile = MOUSE_NORMAL;
+    mouse_tile = MOUSE_NORMAL;
 
 	fade_select=255;
 
@@ -95,7 +92,7 @@ void cGame::init() {
 
     iMusicType=MUSIC_MENU;
 
-	map.init(map_width, map_height);
+	map.init(64, 64);
 
 	for (int i=0; i < MAX_PLAYERS; i++) {
 		player[i].init(i);
@@ -151,8 +148,7 @@ void cGame::mission_init() {
     shake_y=0;
     TIMER_shake=0;
 
-    map.init(game.map_width, game.map_height);
-    structureUtils.init(&map);
+    map.init(64, 64);
 
     // clear out players but not entirely
     for (int i=0; i < MAX_PLAYERS; i++) {
@@ -344,7 +340,7 @@ void cGame::updateState() {
 
             if (mouse_tile == MOUSE_MOVE) {
                 // change to attack cursor if hovering over enemy unit
-                if (mapUtils->isCellVisibleForPlayerId(HUMAN, mc)) {
+                if (map.isVisible(mc, HUMAN)) {
 
                     int idOfUnitOnCell = map.getCellIdUnitLayer(mc);
 
@@ -719,16 +715,17 @@ void cGame::setup_skirmish() {
 	// iSkirmishMap holds an index of which map to load, where index 0 means random map generated, although
 	// this is only meaningful for rendering, the loading (more below) of that map does not care if it is
 	// randomly generated or not.
-	if (iSkirmishMap > -1) {
+    s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
+    if (iSkirmishMap > -1) {
 	    // Render skirmish map as-is (pre-loaded map)
 		if (iSkirmishMap > 0) {
-            if (PreviewMap[iSkirmishMap].name[0] != '\0') {
-                if (PreviewMap[iSkirmishMap].terrain) {
-                    draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, previewMapX, previewMapY);
+            if (selectedMap.name[0] != '\0') {
+                if (selectedMap.terrain) {
+                    draw_sprite(bmp_screen, selectedMap.terrain, previewMapX, previewMapY);
                 }
 
                 // count starting points
-                for (int s : PreviewMap[iSkirmishMap].iStartCell) {
+                for (int s : selectedMap.iStartCell) {
                     if (s > -1) {
                         iStartingPoints++;
                     }
@@ -741,16 +738,16 @@ void cGame::setup_skirmish() {
             // when mouse is hovering, draw it, else do not
             if ((mouse_x >= previewMapX && mouse_x < (previewMapX + previewMapWidth) && (mouse_y >= previewMapY && mouse_y < (previewMapY + previewMapHeight))))
             {
-                if (PreviewMap[iSkirmishMap].name[0] != '\0') {
-                    if (PreviewMap[iSkirmishMap].terrain) {
-                        draw_sprite(bmp_screen, PreviewMap[iSkirmishMap].terrain, previewMapX, previewMapY);
+                if (selectedMap.name[0] != '\0') {
+                    if (selectedMap.terrain) {
+                        draw_sprite(bmp_screen, selectedMap.terrain, previewMapX, previewMapY);
                     }
                 }
             }
             else
             {
-                if (PreviewMap[iSkirmishMap].name[0] != '\0') {
-                    if (PreviewMap[iSkirmishMap].terrain) {
+                if (selectedMap.name[0] != '\0') {
+                    if (selectedMap.terrain) {
                         draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat, previewMapX, previewMapY);
                     }
                 }
@@ -822,8 +819,7 @@ void cGame::setup_skirmish() {
 			    // Mouse reaction
                 iColor=makecol(255,0,0);
 
-				if (cMouse::isLeftButtonClicked())
-				{
+				if (cMouse::isLeftButtonClicked()) {
                     GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapListFrameWidth, iHeightPixels);
 					iSkirmishMap=i;
 
@@ -1110,7 +1106,6 @@ void cGame::setup_skirmish() {
 
         // START
         if ((cMouse::isLeftButtonClicked() && iSkirmishMap > -1)) {
-            cCellCalculator *cellCalculator = new cCellCalculator(&map);
             // Starting skirmish mode
             bSkirmish=true;
 
@@ -1119,7 +1114,7 @@ void cGame::setup_skirmish() {
 
             int startCellsOnSkirmishMap=0;
             for (int s=0; s < 5; s++) {
-                int startPosition = PreviewMap[iSkirmishMap].iStartCell[s];
+                int startPosition = selectedMap.iStartCell[s];
                 if (startPosition < 0) continue;
                 iStartPositions.push_back(startPosition);
             }
@@ -1127,8 +1122,10 @@ void cGame::setup_skirmish() {
             startCellsOnSkirmishMap = iStartPositions.size();
 
             // REGENERATE MAP DATA FROM INFO
-            for (int c=0; c < MAX_CELLS; c++) {
-                mapEditor.createCell(c, PreviewMap[iSkirmishMap].mapdata[c], 0);
+            map.init(selectedMap.width, selectedMap.height);
+
+            for (int c=0; c < map.getMaxCells(); c++) {
+                mapEditor.createCell(c, selectedMap.mapdata[c], 0);
             }
 
             mapEditor.smoothMap();
@@ -1238,8 +1235,8 @@ void cGame::setup_skirmish() {
 
                 // create units
                 while (u < aiPlayer.iUnits) {
-                    int iX=iCellGiveX(cPlayer.focus_cell);
-                    int iY=iCellGiveY(cPlayer.focus_cell);
+                    int iX= map.getCellX(cPlayer.focus_cell);
+                    int iY= map.getCellY(cPlayer.focus_cell);
                     int iType=rnd(12);
 
                     iX-=4;
@@ -1296,7 +1293,7 @@ void cGame::setup_skirmish() {
                         }
                     }
 
-                    int cell = cellCalculator->getCellWithMapBorders(iX, iY);
+                    int cell = map.getCellWithMapBorders(iX, iY);
                     int r = UNIT_CREATE(cell, iType, p, true);
                     if (r > -1)
                     {
@@ -1316,8 +1313,6 @@ void cGame::setup_skirmish() {
             setState(GAME_PLAYING);
             drawManager->getMessageDrawer()->initCombatPosition();
 
-            // delete cell calculator
-            delete cellCalculator;
         } // mouse clicks on START (and skirmish map is selected)
     } // mouse hovers over "START"
 
@@ -1617,7 +1612,6 @@ void cGame::shutdown() {
     delete drawManager;
 
     delete mapCamera;
-    delete mapUtils;
     delete interactionManager;
 
 
@@ -2098,13 +2092,10 @@ bool cGame::setupGame() {
 	selectYourNextConquestState->INSTALL_WORLD();
 
     delete mapCamera;
-	mapCamera = new cMapCamera();
+	mapCamera = new cMapCamera(&map);
 
     delete drawManager;
 	drawManager = new cDrawManager(&player[HUMAN]);
-
-    delete mapUtils;
-	mapUtils = new cMapUtils(&map);
 
 	game.init();
 

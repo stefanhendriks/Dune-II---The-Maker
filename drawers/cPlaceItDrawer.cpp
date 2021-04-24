@@ -1,11 +1,10 @@
 #include "../include/d2tmh.h"
 
 cPlaceItDrawer::cPlaceItDrawer(cPlayer * thePlayer) : m_Player(thePlayer) {
-	cellCalculator = new cCellCalculator(&map);
+
 }
 
 cPlaceItDrawer::~cPlaceItDrawer() {
-	delete cellCalculator;
 	m_Player = nullptr;
 }
 
@@ -55,8 +54,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 #define SCANWIDTH	1
 
-	int iCellX = cellCalculator->getX(mouseCell);
-	int iCellY = cellCalculator->getY(mouseCell);
+	int iCellX = map.getCellX(mouseCell);
+	int iCellY = map.getCellY(mouseCell);
 
 	// check
 	int iStartX = iCellX-SCANWIDTH;
@@ -76,7 +75,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	// Determine if structure to be placed is within build distance
 	for (int iX=iStartX; iX < iEndX; iX++) {
 		for (int iY=iStartY; iY < iEndY; iY++) {
-            int iCll = iCellMakeWhichCanReturnMinusOne(iX, iY);
+            int iCll = map.getCellWithMapDimensions(iX, iY);
 
 			if (iCll > -1) {
                 int idOfStructureAtCell = map.getCellIdStructuresLayer(iCll);
@@ -120,7 +119,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 break;
             }
 
-            int iCll = iCellMake(cellX, cellY);
+            int iCll = map.makeCell(cellX, cellY);
 
 			if (!map.isCellPassable(iCll))
 				iTile = PLACE_BAD;

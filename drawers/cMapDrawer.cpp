@@ -7,15 +7,12 @@ cMapDrawer::cMapDrawer(cMap * theMap, cPlayer * thePlayer, cMapCamera * theCamer
 	assert(theCamera);
 	map = theMap;
 	camera = theCamera;
-	cellCalculator = new cCellCalculator(map);
 	bmp_temp = nullptr;
 }
 
 cMapDrawer::~cMapDrawer() {
 	map = nullptr;
 	camera = nullptr;
-	delete cellCalculator;
-	cellCalculator = nullptr;
     m_Player = nullptr;
 	if (bmp_temp) {
 	    destroy_bitmap(bmp_temp);
@@ -44,20 +41,20 @@ void cMapDrawer::drawShroud(int startX, int startY) {
 
             if (iCell < 0) continue;
 
-            int absoluteXCoordinateOnMap = cellCalculator->getAbsoluteX(iCell);
+            int absoluteXCoordinateOnMap = map->getAbsoluteXPositionFromCell(iCell);
             float fDrawX = mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
 
-            int absoluteYCoordinateOnMap = cellCalculator->getAbsoluteY(iCell);
+            int absoluteYCoordinateOnMap = map->getAbsoluteYPositionFromCell(iCell);
             float fDrawY = mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
 
             if (DEBUGGING && key[KEY_D] && key[KEY_TAB]) {
-				if (mapUtils->isCellVisibleForPlayerId(iPl, iCell)) {
+				if (map->isVisible(iCell, iPl)) {
 					// do nothing
 				} else {
 					rectfill(bmp_screen, fDrawX, fDrawY, fDrawX+tileWidth, fDrawY+tileHeight, makecol(0,0,0));
 				}
 			} else {
-				if (mapUtils->isCellVisibleForPlayerId(iPl, iCell)) {
+				if (map->isVisible(iCell, iPl)) {
                     int tile = determineWhichShroudTileToDraw(iCell, iPl);
 
                     if (tile > -1) {
@@ -104,16 +101,12 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
             if (iCell < 0) continue;
 
 			// not visible for player, so do not draw
-			if (!mapUtils->isCellVisibleForPlayerId(iPl, iCell)) {
+			if (!map->isVisible(iCell, iPl)) {
                 continue;
 			}
 
-            int cellX = cellCalculator->getX(iCell);
-            int cellY = cellCalculator->getY(iCell);
-
             // skip outer border cells
-            if (cellX == 0 || cellX == (game.map_width-1) ||
-                cellY == 0 || cellY == (game.map_height-1)) {
+            if (!map->isWithinBoundaries(iCell)) {
                 continue;
             }
 
@@ -123,19 +116,26 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                 continue;
 			}
 
-			int absoluteXCoordinateOnMap = cellCalculator->getAbsoluteX(iCell);
+			int absoluteXCoordinateOnMap = map->getAbsoluteXPositionFromCell(iCell);
             float fDrawX = mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
 
-            int absoluteYCoordinateOnMap = cellCalculator->getAbsoluteY(iCell);
+            int absoluteYCoordinateOnMap = map->getAbsoluteYPositionFromCell(iCell);
             float fDrawY = mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
 
             // Draw terrain
-            blit((BITMAP *) gfxdata[cell->type].dat,
-                 bmp_temp,
-                 cell->tile * 32, 0, // keep 32 here, because in BMP this is the size of the tiles
-                 0, 0,
-                 32, 32
-            );
+            if (cell->type < TERRAIN_BLOOM || cell->type > TERRAIN_WALL) {
+                // somehow, invalid type
+                cRectangle rectangle = cRectangle(0, 0, 32, 32);
+                allegroDrawer->drawRectangleFilled(bmp_temp, &rectangle, makecol(245, 245, 245));
+            } else {
+                // valid type
+                blit((BITMAP *) gfxdata[cell->type].dat,
+                     bmp_temp,
+                     cell->tile * 32, 0, // keep 32 here, because in BMP this is the size of the tiles
+                     0, 0,
+                     32, 32
+                );
+            }
 
             // draw Smudge if necessary
             if (cell->smudgetype > -1 && cell->smudgetile > -1) {
@@ -147,13 +147,6 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                         0,
                         32,
                         32);
-//                masked_blit((BITMAP *) gfxdata[SMUDGE].dat, bmp_temp,
-//                            cell->smudgetile * 32,
-//                            cell->smudgetype * 32,
-//                            0,
-//                            0,
-//                            32,
-//                            32);
             }
 
             int iDrawX = round(fDrawX);
@@ -165,8 +158,8 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                 if (mouseCell > -1) {
                     int cellX = (viewportX / 32);
                     int cellY = (viewportY / 32);
-                    int mcX = cellCalculator->getX(mouseCell);
-                    int mcY = cellCalculator->getY(mouseCell);
+                    int mcX = map->getCellX(mouseCell);
+                    int mcY = map->getCellY(mouseCell);
 
                     if (mcX == cellX && mcY == cellY) {
                         fblend_rect_trans(bmp_screen, iDrawX, iDrawY, iTileWidth, iTileHeight, makecol(255, 255, 0), 96);
@@ -251,7 +244,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
     a=u=l=r=true;
 
     if (above > -1)	{
-        if (mapUtils->isCellVisibleForPlayerId(playerId, above)) {
+        if (map->isVisible(above, playerId)) {
             a = false;  // visible
         }
     } else {
@@ -259,7 +252,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
     }
 
     if (under > -1) {
-        if (mapUtils->isCellVisibleForPlayerId(playerId, under)) {
+        if (map->isVisible(under, playerId)) {
             u = false;  // visible
         }
     } else {
@@ -267,7 +260,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
     }
 
     if (left > -1) {
-        if (mapUtils->isCellVisibleForPlayerId(playerId, left)) {
+        if (map->isVisible(left, playerId)) {
             l = false;  // visible
         }
     } else {
@@ -275,7 +268,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
     }
 
     if (right > -1) {
-        if (mapUtils->isCellVisibleForPlayerId(playerId, right)) {
+        if (map->isVisible(right, playerId)) {
             r = false;  // visible
         }
     } else {

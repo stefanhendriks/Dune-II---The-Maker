@@ -7,7 +7,7 @@
 
 #include "../include/d2tmh.h"
 
-cMapCamera::cMapCamera() {
+cMapCamera::cMapCamera(cMap * theMap) : pMap(theMap) {
     viewportStartX = viewportStartY = 32;
 	TIMER_move=0;
 	zoomLevel = 1.0f;
@@ -23,12 +23,9 @@ cMapCamera::cMapCamera() {
     viewportHeight=windowHeight;
 
     calibrate();
-
-	cellCalculator = new cCellCalculator(&map);
 }
 
 cMapCamera::~cMapCamera() {
-	delete cellCalculator;
 }
 
 void cMapCamera::zoomIn() {
@@ -72,16 +69,6 @@ void cMapCamera::calibrate() {
     viewportHeight = divideByZoomLevel(windowHeight);
 }
 
-int cMapCamera::getAbsoluteXPositionFromCell(int cell) {
-    if (cell < 0) return -1;
-    return cellCalculator->getX(cell) * 32;
-}
-
-int cMapCamera::getAbsoluteYPositionFromCell(int cell) {
-    if (cell < 0) return -1;
-    return cellCalculator->getY(cell) * 32;
-}
-
 void cMapCamera::keepViewportWithinReasonableBounds() {
     int halfViewportWidth = viewportWidth / 2;
     int halfViewportHeight = viewportHeight / 2;
@@ -94,12 +81,12 @@ void cMapCamera::keepViewportWithinReasonableBounds() {
         viewportStartY = -halfViewportHeight;
     }
 
-    int maxWidth = (game.map_width * TILESIZE_WIDTH_PIXELS) + halfViewportWidth;
+    int maxWidth = (map.getWidth() * TILESIZE_WIDTH_PIXELS) + halfViewportWidth;
     if (getViewportEndX() > maxWidth) {
         viewportStartX = maxWidth-viewportWidth;
     }
 
-    int maxHeight = (game.map_height * TILESIZE_HEIGHT_PIXELS) + halfViewportHeight;
+    int maxHeight = (map.getHeight() * TILESIZE_HEIGHT_PIXELS) + halfViewportHeight;
     if ((getViewportEndY()) > maxHeight) {
         viewportStartY = maxHeight-viewportHeight;
     }
@@ -108,10 +95,10 @@ void cMapCamera::keepViewportWithinReasonableBounds() {
 void cMapCamera::centerAndJumpViewPortToCell(int cell) {
 	// fix any boundaries
 	if (cell < 0) cell = 0;
-	if (cell >= MAX_CELLS) cell = (MAX_CELLS-1);
+	if (cell >= map.getMaxCells()) cell = (map.getMaxCells()-1);
 
-	int mapCellX = getAbsoluteXPositionFromCell(cell);
-	int mapCellY = getAbsoluteYPositionFromCell(cell);
+	int mapCellX = pMap->getAbsoluteXPositionFromCell(cell);
+	int mapCellY = pMap->getAbsoluteYPositionFromCell(cell);
 
 	// determine the half of our screen
 	int halfViewportWidth = viewportWidth / 2;
@@ -209,14 +196,14 @@ void cMapCamera::thinkInteraction() {
 	}
 
 	if (mouse_x >= (game.screen_x-2) || key[KEY_RIGHT]) {
-		if (getViewportEndX() < ((game.map_width*TILESIZE_WIDTH_PIXELS)+halfViewportWidth)) {
+		if (getViewportEndX() < ((map.getWidth()*TILESIZE_WIDTH_PIXELS)+halfViewportWidth)) {
             setViewportPosition(viewportStartX += 1, viewportStartY);
 			mouse_tile = MOUSE_RIGHT;
 		}
 	}
 
 	if (mouse_y >= (game.screen_y-2) || key[KEY_DOWN]) {
-		if ((getViewportEndY()) < ((game.map_height*TILESIZE_HEIGHT_PIXELS)+halfViewportHeight)) {
+		if ((getViewportEndY()) < ((map.getHeight()*TILESIZE_HEIGHT_PIXELS)+halfViewportHeight)) {
             setViewportPosition(viewportStartX, viewportStartY += 1);
 			mouse_tile = MOUSE_DOWN;
 		}
@@ -224,5 +211,5 @@ void cMapCamera::thinkInteraction() {
 }
 
 int cMapCamera::getCellFromAbsolutePosition(int x, int y) {
-    return iCellMakeWhichCanReturnMinusOne((x / 32), (y / 32));
+    return map.getCellWithMapDimensions((x / 32), (y / 32));
 }

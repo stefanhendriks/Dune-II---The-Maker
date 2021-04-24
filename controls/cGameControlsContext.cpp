@@ -11,13 +11,11 @@ cGameControlsContext::cGameControlsContext(cPlayer * thePlayer) {
 	assert(thePlayer);
 	player = thePlayer;
 	mouseCell = -99;
-	cellCalculator = new cCellCalculator(&map);
 	drawToolTip = false;
 }
 
 cGameControlsContext::~cGameControlsContext() {
 	player = NULL;
-	delete cellCalculator;
 }
 
 
@@ -53,16 +51,19 @@ void cGameControlsContext::updateMouseCell() {
 }
 
 int cGameControlsContext::getMouseCellFromScreen(int heightTopBar, int screenY, int screenX) const {
+    // TODO: mapCamera->getCellFromViewportPosition(x,y) ?
     int iMouseX = mapCamera->divideByZoomLevel(screenX);
     int iMouseY = mapCamera->divideByZoomLevel(screenY - heightTopBar);
 
+    // absolute coordinates
     int viewportMouseX = iMouseX + mapCamera->getViewportStartX();
     int viewportMouseY = iMouseY + mapCamera->getViewportStartY();
 
+    // map coordinates
     int mapX = viewportMouseX / TILESIZE_WIDTH_PIXELS;
     int mapY = viewportMouseY / TILESIZE_HEIGHT_PIXELS;
 
-    return cellCalculator->getCellWithMapBorders(mapX, mapY);
+    return map.getCellWithMapBorders(mapX, mapY);
 }
 
 void cGameControlsContext::determineToolTip() {

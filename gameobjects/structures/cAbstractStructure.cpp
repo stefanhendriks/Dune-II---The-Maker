@@ -11,6 +11,7 @@
   */
 
 #include "../../include/d2tmh.h"
+#include "cAbstractStructure.h"
 
 
 // "default" Constructor
@@ -25,6 +26,9 @@ cAbstractStructure::cAbstractStructure() {
     iPlayer=-1;
 
     iFrame=-1;
+
+    posX = -1;
+    posY = -1;
 
     bRepair=false;
     bAnimate=false;
@@ -66,14 +70,16 @@ cAbstractStructure::~cAbstractStructure() {
     }
     iHitPoints = -1;
     iCell = -1;
+    posX = -1;
+    posY = -1;
 }
 
 int cAbstractStructure::pos_x() {
-    return mapCamera->getAbsoluteXPositionFromCell(iCell);
+    return posX;
 }
 
 int cAbstractStructure::pos_y() {
-    return mapCamera->getAbsoluteYPositionFromCell(iCell);
+    return posY;
 }
 
 // X drawing position
@@ -158,22 +164,20 @@ void cAbstractStructure::die() {
     }
 
 	int iCll=iCell;
-	int iCX=iCellGiveX(iCll);
-	int iCY=iCellGiveY(iCll);
+    int iCX= map.getCellX(iCll);
+    int iCY= map.getCellY(iCll);
 
     // create destroy particles
-    for (int w=0; w < iWidth; w++)
-    {
-        for (int h=0; h < iHeight; h++)
-        {
-			iCll=iCellMake(iCX+w, iCY+h);
+    for (int w = 0; w < iWidth; w++) {
+        for (int h = 0; h < iHeight; h++) {
+            iCll= map.makeCell(iCX + w, iCY + h);
 
 			map.cellChangeType(iCll, TERRAIN_ROCK);
 			mapEditor.smoothAroundCell(iCll);
 
             int half = 16;
-            int posX = mapCamera->getAbsoluteXPositionFromCell(iCll);
-            int posY = mapCamera->getAbsoluteYPositionFromCell(iCll);
+            int posX = map.getAbsoluteXPositionFromCell(iCll);
+            int posY = map.getAbsoluteYPositionFromCell(iCll);
 
             PARTICLE_CREATE(posX + half,
                             posY + half, OBJECT_BOOM01, -1, -1);
@@ -241,8 +245,8 @@ void cAbstractStructure::think_prebuild() {
  * @return
  */
 int cAbstractStructure::getNonOccupiedCellAroundStructure() {
-    int iStartX = iCellGiveX(iCell);
-    int iStartY = iCellGiveY(iCell);
+    int iStartX = map.getCellX(iCell);
+    int iStartY = map.getCellY(iCell);
 
     int iEndX = (iStartX + iWidth) + 1;
     int iEndY = (iStartY + iHeight) + 1;
@@ -262,7 +266,7 @@ int cAbstractStructure::getNonOccupiedCellAroundStructure() {
             FIX_BORDER_POS(iCx, iCy);
 
             // so they are for sure not at the outer edges on the map now...
-            int cll = iCellMakeWhichCanReturnMinusOneWithinMapBorders(iCx, iCy);
+            int cll = map.getCellWithMapBorders(iCx, iCy);
 
             if (cll > -1 && !map.occupied(cll)) {
                 return cll;
@@ -343,7 +347,7 @@ void cAbstractStructure::setHeight(int height) {
 
 void cAbstractStructure::setRallyPoint(int cell) {
 	assert(cell > -2); // -1 is allowed (means disable);
-	assert(cell < MAX_CELLS);
+	assert(cell < map.getMaxCells());
 	iRallyPoint = cell;
 }
 
@@ -377,7 +381,15 @@ void cAbstractStructure::damage(int hp) {
     logbook(msg);
 
     if (iHitPoints < 1) {
+        // TODO: update statistics? (structure lost)
         die();
+    } else {
+        int iChance = getSmokeChance();
+
+        // Structure on fire?
+        if (rnd(100) < iChance) {
+            PARTICLE_CREATE(getRandomPosX(), getRandomPosY(), OBJECT_SMOKE, -1, -1);
+        }
     }
 }
 
@@ -403,6 +415,8 @@ void cAbstractStructure::setHitPoints(int hp) {
 
 void cAbstractStructure::setCell(int cell) {
 	iCell = cell;
+    posX = map.getAbsoluteXPositionFromCell(iCell);
+    posY = map.getAbsoluteYPositionFromCell(iCell);
 }
 
 void cAbstractStructure::setOwner(int player) {
@@ -475,7 +489,7 @@ bool cAbstractStructure::isValid() {
     if (dead) // flagged for deletion, so no longer 'valid'
         return false;
 
-    if (iCell < 0 || iCell >= MAX_CELLS)
+    if (!map.isValidCell(iCell))
         return false;
 
     return true;
@@ -501,15 +515,15 @@ bool cAbstractStructure::isDamaged() {
 
 /**
  * Probability between 0-100 when to create smoke particles.
- * Based on health of structure. (< 50% has 3x higher probability to spawn smoke)
+ * Based on health of structure.
  * @return
  */
 int cAbstractStructure::getSmokeChance() {
     if (getHitPoints() < (getMaxHP() / 2)) {
-        return 45;
+        return 15;
     }
 
-    return 15;
+    return 5;
 }
 
 bool cAbstractStructure::belongsTo(int playerId) const {
@@ -519,4 +533,22 @@ bool cAbstractStructure::belongsTo(int playerId) const {
 bool cAbstractStructure::belongsTo(const cPlayer * other) const {
     if (other == nullptr) return false;
     return belongsTo(other->getId());
+}
+
+/**
+ * Makes sure this structure switches owner, and takes care of the player internal bookkeeping.
+ * @param pPlayer
+ */
+void cAbstractStructure::getsCapturedBy(cPlayer *pPlayer) {
+    getPlayer()->decreaseStructureAmount(getType());
+    iPlayer = pPlayer->getId();
+    pPlayer->increaseStructureAmount(getType());
+}
+
+int cAbstractStructure::getRandomPosX() {
+    return pos_x() + rnd(getWidthInPixels()); // posX = most left, so just increase
+}
+
+int cAbstractStructure::getRandomPosY() {
+    return pos_y() + rnd(getHeightInPixels()); // posY = top coordinate, so just increase
 }
