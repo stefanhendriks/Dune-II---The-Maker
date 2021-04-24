@@ -1,21 +1,4 @@
-/* 
 
-  Dune II - The Maker
-
-  Author : Stefan Hendriks
-  Contact: stefanhen83@gmail.com
-  Website: http://dune2themaker.fundynamic.com
-
-  2001 - 2020 (c) code by Stefan Hendriks
-
-  */
-
-
-int iCellGiveX(int c);
-int iCellGiveY(int c);
-int iCellMake(int x, int y);
-int iCellMakeWhichCanReturnMinusOne(int x, int y);
-int iCellMakeWhichCanReturnMinusOneWithinMapBorders(int x, int y);
 
 // Angle stuff for unit facing
 float fDegrees(int x1, int y1, int x2, int y2);
@@ -26,8 +9,6 @@ int convert_angle(int face_angle);
 // bullet only
 int bullet_face_angle(float angle);
 int bullet_correct_angle(int face_angle);
-
-bool bCellValid(int c);
 
 
 // randomizing timer(s)

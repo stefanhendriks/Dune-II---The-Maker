@@ -159,8 +159,8 @@ void cDrawManager::drawDeployment() {
                 deployCell = iMouseCell;
             } else if (special.deployTargetType == eDeployTargetType::TARGET_INACCURATE_CELL) {
                 int precision = special.deployTargetPrecision;
-                int mouseCellX = iCellGiveX(iMouseCell) - precision;
-                int mouseCellY = iCellGiveY(iMouseCell) - precision;
+                int mouseCellX = map.getCellX(iMouseCell) - precision;
+                int mouseCellY = map.getCellY(iMouseCell) - precision;
 
                 int posX = mouseCellX + rnd((precision*2) + 1);
                 int posY = mouseCellY + rnd((precision*2) + 1);
@@ -171,7 +171,7 @@ void cDrawManager::drawDeployment() {
                         precision);
                 logbook(msg);
 
-                deployCell = iCellMake(posX, posY);
+                deployCell = map.makeCell(posX, posY);
             }
 
 

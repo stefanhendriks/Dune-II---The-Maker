@@ -17,14 +17,11 @@ cOrderProcesser::cOrderProcesser(cPlayer *thePlayer) {
 	removeAllItems();
 	updatePricesForStarport();
 	unitIdOfFrigateSent = -1;
-	cellCalculator = new cCellCalculator(&map);
 }
 
 cOrderProcesser::~cOrderProcesser() {
 	removeAllItems();
     m_Player = NULL;
-	delete cellCalculator;
-	cellCalculator = NULL;
 }
 
 cBuildingListItem * cOrderProcesser::getItemToDeploy() {
@@ -201,7 +198,7 @@ void cOrderProcesser::sendFrigate() {
 		structure[structureId]->setAnimating(true);
 		int destinationCell = structure[structureId]->getCell();
 
-		int iStartCell = cellCalculator->findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
+		int iStartCell = map.findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
 
 		if (iStartCell < 0) {
 			logbook("cOrderProcesser::sendFrigate : unable to find start cell to spawn frigate");

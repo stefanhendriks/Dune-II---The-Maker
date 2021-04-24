@@ -45,7 +45,7 @@ void cKeyboardManager::interact() {
 
         if (key[KEY_F4]) {
             if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
-                map.clear_spot(player[HUMAN].getGameControlsContext()->getMouseCell(), 3, 0);
+                map.clear_spot(player[HUMAN].getGameControlsContext()->getMouseCell(), 6, HUMAN);
             }
         }
     }

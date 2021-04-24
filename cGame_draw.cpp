@@ -200,7 +200,7 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
 
                         cStructureUtils structureUtils;
                         int	iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
-                                hoverUnit.iCell, REPAIR, &humanPlayer);
+                                hoverUnit.getCell(), REPAIR, &humanPlayer);
 
                         if (iNewID > -1) {
                             int iCarry = CARRYALL_TRANSFER(hover_unit, structure[iNewID]->getCell() + 2);

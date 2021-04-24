@@ -33,7 +33,9 @@ class cAbstractStructure {
 		bool bAnimate;      // Do its special animation? (unit leaving building, starport
 							// dropping something, etc)
 
-		bool dead;		// set to true when die() is called, and thus this structure can be deleted.
+		bool dead;		    // set to true when die() is called, and thus this structure can be deleted.
+
+		int posX, posY;     // structures do not move, so these are calculated once and then simply returned.
 
 
 	protected:
@@ -165,6 +167,11 @@ class cAbstractStructure {
 
         bool belongsTo(int playerId) const;
         bool belongsTo(const cPlayer * other) const;
+
+        int getRandomPosX();
+        int getRandomPosY();
+
+    void getsCapturedBy(cPlayer *pPlayer);
 };
 
 #endif

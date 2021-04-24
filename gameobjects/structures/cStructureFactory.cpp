@@ -3,11 +3,9 @@
 cStructureFactory *cStructureFactory::instance = NULL;
 
 cStructureFactory::cStructureFactory() {
-	cellCalculator = new cCellCalculator(&map);
 }
 
 cStructureFactory::~cStructureFactory() {
-   delete cellCalculator;
 }
 
 cStructureFactory *cStructureFactory::getInstance() {
@@ -92,7 +90,8 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 
 	float fPercent = (float)iPercent/100; // divide by 100 (to make it 0.x)
 
-    int hp = structures[iStructureType].hp;
+    s_Structures &sStructures = structures[iStructureType];
+    int hp = sStructures.hp;
     if (hp < 0) {
         cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "Structure to create has no hp, aborting creation.");
         return nullptr;
@@ -123,7 +122,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
         logbook(msg2);
     }
 
-    int structureSize = structures[iStructureType].bmp_width * structures[iStructureType].bmp_height;
+    int structureSize = sStructures.bmp_width * sStructures.bmp_height;
 
     // assign to array
 	structure[iNewId] = str;
@@ -138,9 +137,8 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	str->setHitPoints((int)fHealth);
     str->setFrame(rnd(1)); // random start frame (flag)
     str->setStructureId(iNewId);
-
-	str->setWidth(structures[str->getType()].bmp_width/TILESIZE_WIDTH_PIXELS);
-	str->setHeight(structures[str->getType()].bmp_height/TILESIZE_HEIGHT_PIXELS);
+	str->setWidth(sStructures.bmp_width / TILESIZE_WIDTH_PIXELS);
+	str->setHeight(sStructures.bmp_height / TILESIZE_HEIGHT_PIXELS);
 
  	// clear fog around structure
 	clearFogForStructureType(iCell, str);
@@ -184,21 +182,21 @@ void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(
 			}
 		}
 
-        int leftToCell = iCell + 1;
-        if (map.occupied(leftToCell) == false) {
-			if (map.getCellType(leftToCell) == TERRAIN_ROCK) {
-				mapEditor.createCell(leftToCell, TERRAIN_SLAB, 0);
+        int cellRight = map.getCellRight(iCell);
+        if (map.occupied(cellRight) == false) {
+			if (map.getCellType(cellRight) == TERRAIN_ROCK) {
+				mapEditor.createCell(cellRight, TERRAIN_SLAB, 0);
 			}
 		}
 
-        int oneRowBelowCell = iCell + game.map_width;
+        int oneRowBelowCell = map.getCellBelow(iCell);
         if (map.occupied(oneRowBelowCell) == false) {
 			if (map.getCellType(oneRowBelowCell) == TERRAIN_ROCK) {
 				mapEditor.createCell(oneRowBelowCell, TERRAIN_SLAB, 0);
 			}
 		}
 
-        int rightToRowBelowCell = oneRowBelowCell + 1;
+        int rightToRowBelowCell = map.getCellRight(oneRowBelowCell);
         if (map.occupied(rightToRowBelowCell) == false) {
 			if (map.getCellType(rightToRowBelowCell) == TERRAIN_ROCK) {
 				mapEditor.createCell(rightToRowBelowCell, TERRAIN_SLAB, 0);
@@ -237,14 +235,14 @@ void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, 
 	int iWidth = structures[iStructureType].bmp_width / 32;;
 	int iHeight = structures[iStructureType].bmp_height / 32;
 
-	int iCellX = iCellGiveX(iCell);
-	int iCellY = iCellGiveY(iCell);
+    int iCellX = map.getCellX(iCell);
+    int iCellY = map.getCellY(iCell);
 	int iCellXMax = iCellX + iWidth;
 	int iCellYMax = iCellY + iHeight;
 
 	for (int x = iCellX; x < iCellXMax; x++) {
 		for (int y = iCellY; y < iCellYMax; y++) {
-			map.clear_spot(iCellMake(x, y), iSight, iPlayer);
+            map.clear_spot(map.makeCell(x, y), iSight, iPlayer);
 		}
 	}
 }
@@ -290,13 +288,13 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDT
 
     int slabs=0;
     int total=w*h;
-    int x = iCellGiveX(iCell);
-    int y = iCellGiveY(iCell);
+    int x = map.getCellX(iCell);
+    int y = map.getCellY(iCell);
 
     for (int cx=0; cx < w; cx++)
         for (int cy=0; cy < h; cy++)
         {
-            int cll=iCellMake(cx+x, cy+y); // <-- some evil global thing that calculates the cell...
+            int cll= map.makeCell(cx + x, cy + y); // <-- some evil global thing that calculates the cell...
 
 			// check if terrain allows it.
             if (map.getCellType(cll) != TERRAIN_ROCK &&
@@ -353,14 +351,14 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
 	int height = structures[iStructureType].bmp_height / 32;
 	int width = structures[iStructureType].bmp_width / 32;
 
-	int cellX = cellCalculator->getX(iCell);
-	int cellY = cellCalculator->getY(iCell);
+	int cellX = map.getCellX(iCell);
+	int cellY = map.getCellY(iCell);
 
 	int endCellX = cellX + width;
 	int endCellY = cellY + height;
 	for (int x = cellX; x < endCellX; x++) {
 		for (int y = cellY; y < endCellY; y++) {
-			int cell = cellCalculator->getCellWithMapDimensions(x, y, game.map_width, game.map_height);
+			int cell = map.getCellWithMapDimensions(x, y);
 			mapEditor.createCell(cell, TERRAIN_SLAB, 0);
 		}
 	}

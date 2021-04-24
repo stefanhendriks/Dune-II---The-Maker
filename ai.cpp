@@ -352,7 +352,7 @@ void cAIPlayer::think_spiceBlooms() {
         // randomly create a new spice bloom somewhere on the map
         int iCll = -1;
         for (int i = 0; i < 10; i++) {
-            int cell = rnd(MAX_CELLS);
+            int cell = map.getRandomCell();
             if (map.getCellType(cell) == TERRAIN_SAND) {
                 iCll = cell;
                 break;
@@ -379,10 +379,12 @@ void cAIPlayer::think_spiceBlooms() {
                 if (cUnit.iAction != ACTION_GUARD) continue; // skip units which are doing something else
                 if (!cUnit.isInfantryUnit()) continue; // skip non-infantry units
 
-                int d = ABS_length(iCellGiveX(iBloom),
-                                   iCellGiveY(iBloom),
-                                   iCellGiveX(cUnit.iCell),
-                                   iCellGiveY(cUnit.iCell));
+                int c = cUnit.getCell();
+                int c1 = cUnit.getCell();
+                int d = ABS_length(map.getCellX(iBloom),
+                                   map.getCellY(iBloom),
+                                   map.getCellX(c1),
+                                   map.getCellY(c));
 
                 if (d < iDist) {
                     iUnit = i;
@@ -477,7 +479,7 @@ void cAIPlayer::think_repair() {
                     {
                         // head off to repair
                     	int iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
-                                unit[i].iCell, REPAIR, &player[ID]);
+                                unit[i].getCell(), REPAIR, &player[ID]);
 
 						if (iNewID > -1) {
 							int iCarry = CARRYALL_TRANSFER(i, structure[iNewID]->getCell() + 2);
@@ -643,7 +645,7 @@ void cAIPlayer::think_attack() {
         if (!cUnit.isIdle()) continue; // skip non-idle units
 
         if (isAttackingUnit)
-            UNIT_ORDER_ATTACK(i, unit[iTarget].iCell, iTarget, -1, -1);
+            UNIT_ORDER_ATTACK(i, unit[iTarget].getCell(), iTarget, -1, -1);
         else
             UNIT_ORDER_ATTACK(i, structure[iTarget]->getCell(), -1, iTarget, -1);
 
@@ -1103,7 +1105,7 @@ void cAIPlayer::think_worm() {
 
             // find new spot to go to
             for (int iTries = 0; iTries < 10; iTries++) {
-                int iMoveTo = rnd(MAX_CELLS);
+                int iMoveTo = map.getRandomCell();
 
                 if (map.getCellType(iMoveTo) == TERRAIN_SAND ||
                     map.getCellType(iMoveTo) == TERRAIN_HILL ||
@@ -1213,7 +1215,7 @@ int AI_RANDOM_UNIT_TARGET(int iPlayer, int playerIndexToAttack) {
         if (cUnit.iPlayer != playerIndexToAttack) continue;
         // unit belongs to player of the player we wish to attack
 
-        bool isVisibleForPlayer = mapUtils->isCellVisible(&cPlayer, cUnit.iCell);
+        bool isVisibleForPlayer = map.isVisible(&cPlayer, cUnit.getCell());
 
         if (DEBUGGING) {
             char msg[255];
@@ -1252,7 +1254,7 @@ int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer)
     for (int i=0; i < MAX_STRUCTURES; i++)
         if (structure[i])
             if (structure[i]->getOwner() == iAttackPlayer)
-				if (mapUtils->isCellVisibleForPlayerId(iPlayer, structure[i]->getCell()) ||
+				if (map.isVisible(structure[i]->getCell(), iPlayer) ||
 					game.bSkirmish)
 				{
 					iTargets[iT] = i;
@@ -1333,8 +1335,10 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
         if (pStructure->getOwner() != ID) continue;
 
         // scan around
-        int iStartX=iCellGiveX(pStructure->getCell());
-        int iStartY=iCellGiveY(pStructure->getCell());
+        int c1 = pStructure->getCell();
+        int iStartX= map.getCellX(c1);
+        int c = pStructure->getCell();
+        int iStartY= map.getCellY(c);
 
         int iEndX = iStartX + pStructure->getWidth() + 1;
         int iEndY = iStartY + pStructure->getHeight()  + 1;
@@ -1345,15 +1349,15 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
 //        // check above structure if it can place
         for (int sx = topLeftX; sx < iEndX; sx++) {
             int sy = iStartY;
-            int cell = iCellMakeWhichCanReturnMinusOne(sx, sy);
+            int cell = map.getCellWithMapDimensions(sx, sy);
 
             int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
 
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),
-                                           iCellGiveY(player[ID].focus_cell));
+                    int iDist = ABS_length(sx, sy, map.getCellX(player[ID].focus_cell),
+                                           map.getCellY(player[ID].focus_cell));
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
@@ -1373,15 +1377,15 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
         // check underneath structure
         for (int sx = topLeftX; sx < iEndX; sx++) {
             int sy = underNeathStructureY;
-            int cell = iCellMakeWhichCanReturnMinusOne(sx, sy);
+            int cell = map.getCellWithMapDimensions(sx, sy);
 
             int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
 
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),
-                                           iCellGiveY(player[ID].focus_cell));
+                    int iDist = ABS_length(sx, sy, map.getCellX(player[ID].focus_cell),
+                                           map.getCellY(player[ID].focus_cell));
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
@@ -1400,15 +1404,15 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
         // check left side
         for (int sy = topLeftY; sy < iEndY; sy++) {
             int sx = topLeftX;
-            int cell = iCellMakeWhichCanReturnMinusOne(sx, sy);
+            int cell = map.getCellWithMapDimensions(sx, sy);
 
             int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
 
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),
-                                           iCellGiveY(player[ID].focus_cell));
+                    int iDist = ABS_length(sx, sy, map.getCellX(player[ID].focus_cell),
+                                           map.getCellY(player[ID].focus_cell));
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
@@ -1428,15 +1432,15 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
         int rightOfStructure = iStartX + pStructure->getWidth();
         for (int sy = topLeftY; sy < iEndY; sy++) {
             int sx = rightOfStructure;
-            int cell = iCellMakeWhichCanReturnMinusOne(sx, sy);
+            int cell = map.getCellWithMapDimensions(sx, sy);
 
             int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
 
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, iCellGiveX(player[ID].focus_cell),
-                                           iCellGiveY(player[ID].focus_cell));
+                    int iDist = ABS_length(sx, sy, map.getCellX(player[ID].focus_cell),
+                                           map.getCellY(player[ID].focus_cell));
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
@@ -1637,7 +1641,7 @@ void cAIPlayer::think_fremen_superweapon() {
                     int cell = structure[structureIdToAttack]->getCell();
                     UNIT_ORDER_ATTACK(id, cell, -1, structureIdToAttack, -1);
                 } else if (unitIdToAttack > -1) {
-                    UNIT_ORDER_ATTACK(id, unit[unitIdToAttack].iCell, unitIdToAttack, -1, -1);
+                    UNIT_ORDER_ATTACK(id, unit[unitIdToAttack].getCell(), unitIdToAttack, -1, -1);
                 }
                 break;
             }
@@ -1660,7 +1664,7 @@ int CLOSE_SPICE_BLOOM(int iCell) {
 
     if (iCell < 0) {
         // use cell at center
-        iCell = iCellMakeWhichCanReturnMinusOne(halfWidth, halfHeight);
+        iCell = map.getCellWithMapDimensions(halfWidth, halfHeight);
         iDistance = map.getWidth();
     }
 
@@ -1668,15 +1672,15 @@ int CLOSE_SPICE_BLOOM(int iCell) {
     int closestBloomFoundSoFar=-1;
     int bloomsEvaluated = 0;
 
-    cx = iCellGiveX(iCell);
-    cy = iCellGiveY(iCell);
+    cx = map.getCellX(iCell);
+    cy = map.getCellY(iCell);
 
-    for (int i=0; i < MAX_CELLS; i++) {
+    for (int i=0; i < map.getMaxCells(); i++) {
         int cellType = map.getCellType(i);
         if (cellType != TERRAIN_BLOOM) continue;
         bloomsEvaluated++;
 
-        int d = ABS_length(cx, cy, iCellGiveX(i), iCellGiveY(i));
+        int d = ABS_length(cx, cy, map.getCellX(i), map.getCellY(i));
 
         if (d < iDistance) {
             closestBloomFoundSoFar = i;
@@ -1699,7 +1703,7 @@ int CLOSE_SPICE_BLOOM(int iCell) {
     memset(iTargets, -1, sizeof(iTargets));
     int iT=0;
 
-    for (int i=0; i < MAX_CELLS; i++) {
+    for (int i=0; i < map.getMaxCells(); i++) {
         int cellType = map.getCellType(i);
         if (cellType == TERRAIN_BLOOM) {
             iTargets[iT] = i;

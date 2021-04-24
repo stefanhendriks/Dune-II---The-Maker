@@ -144,9 +144,7 @@ void cItemBuilder::think() {
                 } else if (special.deployFrom == AT_RANDOM_CELL) {
                     if (special.providesType == UNIT) {
                         // determine cell
-                        cCellCalculator cellCalculator = cCellCalculator(&map);
-                        int iCll = cellCalculator.getCellWithMapBorders(4 + rnd(game.map_width - 8),
-                                                                        4 + rnd(game.map_height - 8));
+                        int iCll = map.getRandomCellWithinMapWithSafeDistanceFromBorder(4);
 
                         for (int j = 0; j < special.units; j++) {
                             bool passable = map.isCellPassableForFootUnits(iCll);
@@ -157,8 +155,8 @@ void cItemBuilder::think() {
                                 REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
                             }
 
-                            int x = iCellGiveX(iCll);
-                            int y = iCellGiveY(iCll);
+                            int x = map.getCellX(iCll);
+                            int y = map.getCellY(iCll);
                             int amount = rnd(2) + 1;
 
                             // randomly shift the cell one coordinate up/down/left/right
@@ -179,7 +177,7 @@ void cItemBuilder::think() {
                             // change cell
                             FIX_POS(x, y);
 
-                            iCll = cellCalculator.getCell(x, y);
+                            iCll = map.makeCell(x, y);
                         }
                     }
                     item->stopBuilding();
@@ -225,6 +223,12 @@ void cItemBuilder::think() {
 	}
 }
 
+/**
+ * Creates a unit and deploys it somewhere. Called after building complete (or super weapon FREMEN)
+ *
+ * @param item
+ * @param buildId
+ */
 void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
     int structureTypeByItem = structureUtils.findStructureTypeByTypeOfList(item);
     assert(structureTypeByItem > -1);

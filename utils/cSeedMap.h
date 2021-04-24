@@ -9,7 +9,7 @@
 class cSeedMap {
 
 private:
-	int map[MAP_W_MAX][MAP_H_MAX];
+	int map[64][64];
 
 public:
 	cSeedMap();

@@ -48,7 +48,8 @@ protected:
 
 		int getRGBColorForTerrainType(int terrainType);
 
-		void drawDot(int x, int y, int color);
+		void drawDoubleDot(int x, int y, int color);
+		void drawSingleDot(int x, int y, int color);
 
 		int getMapHeightInPixels();
 		int getMapWidthInPixels();
@@ -59,8 +60,6 @@ protected:
 		cMapCamera *mapCamera;
 		cRectangle *m_RectMinimap; // the minimap (map) itself
 		cRectangle *m_RectFullMinimap; // the total space it could take
-        cMapUtils *m_mapUtils;
-        cCellCalculator * cellCalculator;
 
         eMinimapStatus status;
 

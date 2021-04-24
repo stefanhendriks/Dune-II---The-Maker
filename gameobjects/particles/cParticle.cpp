@@ -1,4 +1,5 @@
 /*
+/*
 
   Dune II - The Maker
 
@@ -29,8 +30,7 @@
 // TODO: constructor/destructor
 
 // init
-void cParticle::init()
-{
+void cParticle::init() {
     // used or not:
     bAlive=false;       // alive
 
@@ -57,8 +57,7 @@ void cParticle::init()
 }
 
 // valid
-bool cParticle::isValid()
-{
+bool cParticle::isValid() {
     return bAlive;
 }
 
@@ -562,13 +561,9 @@ void cParticle::think()
 }
 
 
-
-
-int PARTICLE_NEW()
-{
-    for (int i=0; i < MAX_PARTICLES; i++)
-    {
-        if (particle[i].bAlive==false)
+int PARTICLE_NEW() {
+    for (int i = 0; i < MAX_PARTICLES; i++) {
+        if (!particle[i].bAlive)
             return i;
     }
 

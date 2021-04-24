@@ -16,25 +16,28 @@ cRandomMapGenerator::~cRandomMapGenerator() {
 
 void cRandomMapGenerator::generateRandomMap() {
     // create random map
-    map.init(game.map_width, game.map_height);
+    map.init(128, 128);
 
-    // <> is MAP_WIDTH+MAP_HEIGHT / <a number>
-
-    int a_spice = rnd((game.iSkirmishStartPoints * 2)) + (game.iSkirmishStartPoints * 2);
-    int a_rock = 6 + rnd(game.iSkirmishStartPoints);
-    int a_hill = 2 + rnd(8);
-
-
+    int a_spice = rnd((game.iSkirmishStartPoints * 8)) + (game.iSkirmishStartPoints * 12);
+    int a_rock = 32 + rnd(game.iSkirmishStartPoints*3);
+    int a_hill = 2 + rnd(12);
 
     // rock terrain is placed not near centre, also, we want 4 plateaus be
     // placed not too near to each other
-    int iSpotRock[6]; // first 4
+    int maxRockSpots = 18;
+    int iSpotRock[18]; // first 4
     memset(iSpotRock, -1, sizeof(iSpotRock));
+
+    int totalSpots = a_spice + a_rock + a_hill;
+    float piece = (float)1.0f / totalSpots;
 
     int iSpot = 0;
     int iFails = 0;
 
-    memset(PreviewMap[0].iStartCell, -1, sizeof(PreviewMap[0].iStartCell));
+    s_PreviewMap &randomMapEntry = PreviewMap[0];
+    randomMapEntry.width = 128;
+    randomMapEntry.height = 128;
+    memset(randomMapEntry.iStartCell, -1, sizeof(randomMapEntry.iStartCell));
 
     int iDistance = 16;
 
@@ -42,26 +45,23 @@ void cRandomMapGenerator::generateRandomMap() {
     if (game.iSkirmishStartPoints == 3) iDistance = 26;
     if (game.iSkirmishStartPoints == 4) iDistance = 22;
 
-    int iProgress = 0;
+    float progress = 0;
 
     // x = 160
     // y = 180
     draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_GENERATING].dat, 160, 180);
 
-    cCellCalculator *cellCalculator = map.getCellCalculator();
-
     // draw
-
     while (a_rock > 0) {
-        int iCll = cellCalculator->getCellWithMapBorders(4 + rnd(game.map_width - 8), 4 + rnd(game.map_height - 8));
+        int iCll = map.getRandomCellWithinMapWithSafeDistanceFromBorder(4);
         if (iCll < 0) continue;
 
         bool bOk = true;
-        if (iSpot < 6) {
-            for (int s = 0; s < 6; s++) {
+        if (iSpot < maxRockSpots) {
+            for (int s = 0; s < maxRockSpots; s++) {
                 if (iSpotRock[s] > -1) {
-                    if (ABS_length(iCellGiveX(iCll), iCellGiveY(iCll), iCellGiveX(iSpotRock[s]),
-                                   iCellGiveY(iSpotRock[s])) < iDistance) {
+                    if (ABS_length(map.getCellX(iCll), map.getCellY(iCll), map.getCellX(iSpotRock[s]),
+                                   map.getCellY(iSpotRock[s])) < iDistance) {
                         bOk = false;
                     } else {
                         iFails++;
@@ -76,16 +76,16 @@ void cRandomMapGenerator::generateRandomMap() {
         }
 
         if (bOk) {
-            iProgress += 5;
-            mapEditor.createField(iCll, TERRAIN_ROCK, 5500 + rnd(1500));
+            progress += piece;
+            mapEditor.createField(iCll, TERRAIN_ROCK, 5500 + rnd(3500));
 
             if (iSpot < game.iSkirmishStartPoints) {
-                PreviewMap[0].iStartCell[iSpot] = iCll;
+                randomMapEntry.iStartCell[iSpot] = iCll;
             } else {
                 mapEditor.createField(iCll, TERRAIN_MOUNTAIN, 5 + rnd(15));
             }
 
-            if (iSpot < 6) {
+            if (iSpot < maxRockSpots) {
                 iSpotRock[iSpot] = iCll;
             }
 
@@ -93,7 +93,7 @@ void cRandomMapGenerator::generateRandomMap() {
             a_rock--;
 
             // blit on screen
-            rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
+            drawProgress(progress);
             blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
 
         }
@@ -112,61 +112,59 @@ void cRandomMapGenerator::generateRandomMap() {
     mapEditor.removeSingleRockSpots();
 
     // blit on screen
-    rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
+    drawProgress(progress);
     blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
 
     mapEditor.removeSingleRockSpots();
 
 
     // blit on screen
-    rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
+    drawProgress(progress);
     blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
 
     mapEditor.removeSingleRockSpots();
 
     // blit on screen
-    rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
+    drawProgress(progress);
     blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
 
     while (a_spice > 0) {
-        int iCll = iCellMakeWhichCanReturnMinusOne(rnd(game.map_width), rnd(game.map_height));
+        int iCll = map.getRandomCellWithinMapWithSafeDistanceFromBorder(0);
         mapEditor.createField(iCll, TERRAIN_SPICE, 2500);
+        progress += piece;
         a_spice--;
         // blit on screen
-        rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
+        drawProgress(progress);
         blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
     }
 
     while (a_hill > 0) {
-        int cell = iCellMakeWhichCanReturnMinusOne(rnd(game.map_width), rnd(game.map_height));
+        int cell = map.getRandomCellWithinMapWithSafeDistanceFromBorder(0);
         mapEditor.createField(cell, TERRAIN_HILL, 500 + rnd(500));
         a_hill--;
-        iProgress += 10;
+        progress += piece;
         // blit on screen
-        rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
+        drawProgress(progress);
         blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
     }
 
     // end of map creation
-
     mapEditor.smoothMap();
 
     // blit on screen
-    iProgress += 25;
-    rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
+    progress += 25;
+    drawProgress(progress);
     blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
 
-    clear_to_color(PreviewMap[0].terrain, makecol(0, 0, 0));
+    clear_to_color(randomMapEntry.terrain, makecol(0, 0, 0));
 
     // now put in previewmap 0
-    for (int x = 0; x < 64; x++)
-        for (int y = 0; y < 64; y++) {
+    for (int x = 0; x < map.getWidth(); x++)
+        for (int y = 0; y < map.getHeight(); y++) {
 
-            if (iProgress < 210 && rnd(100) < 3) {
-                rectfill(screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
-            }
+            drawProgress(progress);
 
-            int cll = iCellMakeWhichCanReturnMinusOne(x, y);
+            int cll = map.getCellWithMapDimensions(x, y);
             if (cll < 0) continue;
 
             int iColor = makecol(194, 125, 60);
@@ -179,26 +177,27 @@ void cRandomMapGenerator::generateRandomMap() {
             if (cellType == TERRAIN_SPICE) iColor = makecol(186, 93, 32);
             if (cellType == TERRAIN_HILL) iColor = makecol(188, 115, 50);
 
-            PreviewMap[0].mapdata[cll] = cellType;
+            randomMapEntry.mapdata[cll] = cellType;
 
             for (int s = 0; s < 4; s++) {
-                if (PreviewMap[0].iStartCell[s] > -1) {
-                    int sx = iCellGiveX(PreviewMap[0].iStartCell[s]);
-                    int sy = iCellGiveY(PreviewMap[0].iStartCell[s]);
+                if (randomMapEntry.iStartCell[s] > -1) {
+                    int sx = map.getCellX(randomMapEntry.iStartCell[s]);
+                    int sy = map.getCellY(randomMapEntry.iStartCell[s]);
 
                     if (sx == x && sy == y)
                         iColor = makecol(255, 255, 255);
                 }
             }
 
-            putpixel(PreviewMap[0].terrain, (x * 2), (y * 2), iColor);
-            putpixel(PreviewMap[0].terrain, (x * 2) + 1, (y * 2), iColor);
-            putpixel(PreviewMap[0].terrain, (x * 2) + 1, (y * 2) + 1, iColor);
-            putpixel(PreviewMap[0].terrain, (x * 2), (y * 2) + 1, iColor);
+            putpixel(randomMapEntry.terrain, x, y, iColor);
         }
 
     // blit on screen
-    iProgress = 211;
-    rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
+    drawProgress(progress);
     blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+}
+
+void cRandomMapGenerator::drawProgress(float progress) const {
+    int iProgress = progress * 211;
+    rectfill(bmp_screen, 216, 225, 216 + iProgress, 257, makecol(255, 0, 0));
 }
