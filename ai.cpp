@@ -1215,7 +1215,7 @@ int AI_RANDOM_UNIT_TARGET(int iPlayer, int playerIndexToAttack) {
         if (cUnit.iPlayer != playerIndexToAttack) continue;
         // unit belongs to player of the player we wish to attack
 
-        bool isVisibleForPlayer = map.isVisible(&cPlayer, cUnit.getCell());
+        bool isVisibleForPlayer = map.isVisible(cUnit.getCell(), &cPlayer);
 
         if (DEBUGGING) {
             char msg[255];

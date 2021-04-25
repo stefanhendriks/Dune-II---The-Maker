@@ -174,7 +174,7 @@ public:
     void draw_think();
 
     void clear_all(int playerId);
-    void clear_spot(int cell, int size, int playerId);
+    void clearShroud(int cell, int size, int playerId);
 
     /**
      * Clears shroud for all players at cell
@@ -425,11 +425,28 @@ public:
         return cell[iCell].iVisible[iPlayer];
     }
 
-    bool isVisible(cPlayer *thePlayer, int iCell);
+    /**
+     * is Cell visible for player?
+     * @param iCell
+     * @param
+     */
+    bool isVisible(int iCell, cPlayer *thePlayer);
 
-    void setVisible(int iCell, int iPlayer, bool flag) {
-        cell[iCell].iVisible[iPlayer] = flag;
+    /**
+     * Makes cell visible for player (ID)
+     * @param iCell
+     * @param iPlayer
+     */
+    void setVisibleFor(int iCell, int iPlayer) {
+        setVisible(iCell, iPlayer, true);
     }
+
+    /**
+     * Makes cell visible for player (pointer)
+     * @param iCell
+     * @param pPlayer
+     */
+    void setVisibleFor(int iCell, cPlayer *pPlayer);
 
     /**
      * Get height of map in cells
@@ -487,16 +504,18 @@ public:
     void resize(int width, int height);
 
 private:
-        std::vector<tCell> cell;
+    void setVisible(int iCell, int iPlayer, bool flag);
 
-    	// Scrolling around map, timer based
-    	int TIMER_scroll;
-    	int iScrollSpeed;
+    std::vector<tCell> cell;
 
-    	// sizes of the map (outer limits, including the invisible map boundaries)
-    	int height, width;
+    // Scrolling around map, timer based
+    int TIMER_scroll;
+    int iScrollSpeed;
 
-    	int maxCells;
+    // sizes of the map (outer limits, including the invisible map boundaries)
+    int height, width;
+
+    int maxCells;
 };
 
 

@@ -250,15 +250,15 @@ void cMap::clear_all(int playerId) {
 
 void cMap::clear_spot(int c, int size) {
     for (int p = 0; p < MAX_PLAYERS; p++) {
-        clear_spot(c, size, p);
+        clearShroud(c, size, p);
     }
 }
 
-void cMap::clear_spot(int c, int size, int playerId) {
+void cMap::clearShroud(int c, int size, int playerId) {
 
     if (!map.isWithinBoundaries(c)) return;
 
-    map.setVisible(c, playerId, true);
+    map.setVisibleFor(c, playerId);
 
     // go around 360 fDegrees and calculate new stuff.
     for (float dr = 1; dr < size; dr++) {
@@ -286,7 +286,7 @@ void cMap::clear_spot(int c, int size, int playerId) {
 //            }
 
             if (!map.isVisible(cl, playerId)) {
-                map.setVisible(cl, playerId, true);
+                map.setVisible(cl, playerId);
 
                 // human unit detected enemy/sandworm, this influences music
                 if (playerId == HUMAN) {
@@ -820,7 +820,7 @@ void cMap::clearAllCells() {
     }
 }
 
-bool cMap::isVisible(cPlayer *thePlayer, int iCell) {
+bool cMap::isVisible(int iCell, cPlayer *thePlayer) {
     if (!thePlayer) return false;
     int playerId = thePlayer->getId();
     return isVisible(iCell, playerId);
@@ -842,4 +842,16 @@ int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance) {
 
 bool cMap::isWithinBoundaries(int c) {
     return isWithinBoundaries(getCellX(c), getCellY(c));
+}
+
+void cMap::setVisibleFor(int iCell, cPlayer *pPlayer) {
+    if (!pPlayer) return;
+    setVisible(iCell, pPlayer->getId(), true);
+}
+
+void cMap::setVisible(int iCell, int iPlayer, bool flag) {
+    if (!isValidCell(iCell)) return;
+    if (iPlayer < 0 || iPlayer >= MAX_PLAYERS) return;
+
+    cell[iCell].iVisible[iPlayer] = flag;
 }

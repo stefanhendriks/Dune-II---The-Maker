@@ -242,7 +242,7 @@ void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, 
 
 	for (int x = iCellX; x < iCellXMax; x++) {
 		for (int y = iCellY; y < iCellYMax; y++) {
-            map.clear_spot(map.makeCell(x, y), iSight, iPlayer);
+            map.clearShroud(map.makeCell(x, y), iSight, iPlayer);
 		}
 	}
 }
