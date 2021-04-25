@@ -8,14 +8,23 @@ class cPlaceItDrawer {
 
 		void draw(cBuildingListItem *itemToPlace);
 
-	protected:
+    void onMouseClickedLeft(int x, int y);
+
+protected:
 		void drawStructureIdAtCell(cBuildingListItem *itemToPlace, int cell);
 		void drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell);
 
 	private:
 
-		cCellCalculator * cellCalculator;
+        bool bWithinBuildDistance;
+        bool bMayPlace;
+        int iTotalRocks;
+        int iTotalBlocks;
+
+        cStructureUtils structureUtils;
+
         cPlayer * m_Player;
+        cBuildingListItem *itemToPlace;
 };
 
 #endif /* CPLACEITDRAWER_H_ */

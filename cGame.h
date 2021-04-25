@@ -18,6 +18,8 @@
 //#include <controls/cGameControlsContext.h>
 //#include <player/cPlayer.h>
 
+#include <controls/cMouse.h>
+
 // forward declaration :/ sigh should really look into these includes and such
 class cRectangle;
 class cAbstractMentat;
@@ -135,7 +137,13 @@ public:
 
     void think_state();
 
+    cMouse *getMouse() {
+        return mouse; // NOOOO
+    }
+
 private:
+    cMouse *mouse;
+
 	void updateState();
 	void combat();		// the combat part (main) of the game
 	bool isMusicPlaying();

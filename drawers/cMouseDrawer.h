@@ -8,6 +8,8 @@ class cMouseDrawer {
 
 		void draw();
 
+		void onMouseAt(int x, int y);
+
 		void drawToolTip();
 
 	protected:
@@ -25,6 +27,7 @@ class cMouseDrawer {
 	private:
 		cMouseToolTip * mouseToolTip;
 		cPlayer * m_Player;
+		int mouseX, mouseY;
 };
 
 #endif	/* CMOUSEDRAWER_H */

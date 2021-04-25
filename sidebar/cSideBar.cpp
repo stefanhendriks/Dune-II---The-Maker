@@ -5,6 +5,7 @@
 cSideBar::cSideBar(cPlayer * thePlayer) : m_Player(thePlayer) {
     assert(thePlayer != nullptr && "Expected player to be not null!");
 	selectedListID = -1; // nothing is selected
+	isMouseOverSidebarValue = false;
 	memset(lists, 0, sizeof(lists));
 }
 
@@ -79,125 +80,6 @@ void cSideBar::thinkAvailabilityLists() {
     // UPGRADES LIST (for now is always available - later should be depending on items in list)
     cBuildingList * upgradesList = getList(LIST_UPGRADES);
     upgradesList->setAvailable(true);
-}
-
-/**
- * Think about interaction (fps based)
- *
- */
-void cSideBar::thinkInteraction() {
-    cBuildingListDrawer * buildingListDrawer = drawManager->getBuildingListDrawer();
-
-    // button interaction
-	for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {
-		if (i == selectedListID) continue; // skip selected list for button interaction
-		cBuildingList *list = getList(i);
-        if (list == nullptr) continue;
-		if (!list->isAvailable()) continue; // not available, so no interaction possible
-
-		// interaction is possible.
-		if (list->isOverButton(mouse_x, mouse_y)) {
-            if (cMouse::isLeftButtonPressed()) {
-				// clicked on it. Set focus on this one
-				selectedListID = i;
-				char msg[255];
-				sprintf(msg, "selectedListID becomes [%d], m_PlayerId = [%d]", i, m_Player->getId());
-				logbook(msg);
-                play_sound_id(SOUND_BUTTON, 64); // click sound
-				break;
-			}
-		}
-	}
-
-	if (selectedListID < 0) return;
-
-	// when mouse pressed, build item if over item
-    cBuildingList *list = getList(selectedListID);
-
-    if (list == nullptr) return;
-
-    if (!list->isAvailable()) {
-        // unselect this list
-        m_Player->getSideBar()->setSelectedListId(-1);
-        return;
-    }
-
-    cOrderProcesser * orderProcesser = m_Player->getOrderProcesser();
-    cOrderDrawer * orderDrawer = drawManager->getOrderDrawer();
-
-    // allow clicking on the order button
-    if (list->getType() == LIST_STARPORT) {
-        if (cMouse::isLeftButtonClicked() && orderDrawer->isMouseOverOrderButton()) {
-            assert(orderProcesser);
-
-            // handle "order" button interaction
-            if (orderProcesser->canPlaceOrder()) {
-                orderProcesser->placeOrder();
-            }
-        }
-    }
-
-    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, mouse_x, mouse_y);
-    if (item == nullptr) return;
-
-    // mouse is over item - draw "messagebar"
-    drawMessageBarWithItemInfo(list, item);
-
-    if (cMouse::isLeftButtonClicked()) {
-        if (list->getType() != LIST_STARPORT) {
-            // icon is in "Place it" mode, meaning if clicked the "place the thing" state should be set
-            if (item->shouldPlaceIt()) {
-                game.bPlaceIt = true;
-            } else if (item->shouldDeployIt()) {
-                game.bDeployIt = true;
-            } else {
-                startBuildingItemIfOk(item);
-            }
-        } else {
-            // add orders
-            if (orderProcesser->acceptsOrders()) {
-                if (m_Player->credits >= item->getBuildCost()) {
-                    item->increaseTimesOrdered();
-                    orderProcesser->addOrder(item);
-                    m_Player->substractCredits(item->getBuildCost());
-                }
-            }
-        }
-    }
-
-    if (cMouse::isRightButtonClicked()) {
-        // anything but the starport can 'build' things
-        if (list->getType() != LIST_STARPORT) {
-            if (item->getTimesToBuild() > 0) {
-                item->decreaseTimesToBuild();
-                item->setPlaceIt(false);
-                item->setDeployIt(false);
-
-                if (item->getTimesToBuild() == 0) {
-                    cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "(Human) Item is last item in queue, will give money back.");
-                    // only give money back for item that is being built
-                    if (item->isBuilding()) {
-                        // calculate the amount of money back:
-                        m_Player->giveCredits(item->getRefundAmount());
-                        m_Player->getBuildingListUpdater()->onBuildItemCancelled(item);
-                    }
-                    item->setIsBuilding(false);
-                    item->resetProgress();
-                    cItemBuilder *itemBuilder = m_Player->getItemBuilder();
-                    itemBuilder->removeItemFromList(item);
-                }
-                // else, only the number is decreased (used for queueing)
-            }
-        } else {
-            assert(orderProcesser);
-            if (!orderProcesser->isOrderPlaced()) {
-                if (item->getTimesOrdered() > 0) {
-                    item->decreaseTimesOrdered();
-                    orderProcesser->removeOrder(item);
-                }
-            }
-        }
-    }
 }
 
 void cSideBar::drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem *item) const {
@@ -303,6 +185,146 @@ void cSideBar::thinkProgressAnimation() {
                     item->increaseBuildProgressFrame();
                     item->resetProgressFrameTimer();
                 }
+            }
+        }
+    }
+}
+
+void cSideBar::onMouseAt(int x, int y) {
+    isMouseOverSidebarValue = x > (game.screen_x - cSideBar::SidebarWidth);
+
+    // TODO: MOVE DRAWING LOGIC TO A MORE SANE PLACE
+    if (selectedListID < 0) return;
+
+    // when mouse pressed, build item if over item
+    cBuildingList *list = getList(selectedListID);
+
+    cBuildingListDrawer * buildingListDrawer = drawManager->getBuildingListDrawer();
+    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, x, y);
+    if (item == nullptr) return;
+
+    // mouse is over item - draw "messagebar"
+    drawMessageBarWithItemInfo(list, item);
+}
+
+void cSideBar::onMouseClickedLeft(int x, int y) {
+
+    // button interaction
+    for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {
+        if (i == selectedListID) continue; // skip selected list for button interaction
+        cBuildingList *list = getList(i);
+        if (list == nullptr) continue;
+        if (!list->isAvailable()) continue; // not available, so no interaction possible
+
+        // interaction is possible.
+        if (list->isOverButton(x, y)) {
+            // clicked on it. Set focus on this one
+            selectedListID = i;
+            char msg[255];
+            sprintf(msg, "selectedListID becomes [%d], m_PlayerId = [%d]", i, m_Player->getId());
+            logbook(msg);
+            play_sound_id(SOUND_BUTTON, 64); // click sound
+            break;
+        }
+    }
+
+    if (selectedListID < 0) return;
+
+    // when mouse pressed, build item if over item
+    cBuildingList *list = getList(selectedListID);
+
+    if (list == nullptr) return;
+
+    if (!list->isAvailable()) {
+        // unselect this list
+        m_Player->getSideBar()->setSelectedListId(-1);
+        return;
+    }
+
+    cOrderProcesser * orderProcesser = m_Player->getOrderProcesser();
+    cOrderDrawer * orderDrawer = drawManager->getOrderDrawer();
+
+    // allow clicking on the order button
+    if (list->getType() == LIST_STARPORT) {
+        if (orderDrawer->isMouseOverOrderButton()) {
+            assert(orderProcesser);
+
+            // handle "order" button interaction
+            if (orderProcesser->canPlaceOrder()) {
+                orderProcesser->placeOrder();
+            }
+        }
+    }
+
+    cBuildingListDrawer * buildingListDrawer = drawManager->getBuildingListDrawer();
+    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, x, y);
+    if (item == nullptr) return;
+
+    // mouse is over item - draw "messagebar"
+    drawMessageBarWithItemInfo(list, item);
+
+    if (list->getType() != LIST_STARPORT) {
+        // icon is in "Place it" mode, meaning if clicked the "place the thing" state should be set
+        if (item->shouldPlaceIt()) {
+            game.bPlaceIt = true;
+        } else if (item->shouldDeployIt()) {
+            game.bDeployIt = true;
+        } else {
+            startBuildingItemIfOk(item);
+        }
+    } else {
+        // add orders
+        if (orderProcesser->acceptsOrders()) {
+            if (m_Player->credits >= item->getBuildCost()) {
+                item->increaseTimesOrdered();
+                orderProcesser->addOrder(item);
+                m_Player->substractCredits(item->getBuildCost());
+            }
+        }
+    }
+}
+
+void cSideBar::onMouseClickedRight(int x, int y) {
+    if (selectedListID < 0) return;
+
+    // when mouse pressed, build item if over item
+    cBuildingList *list = getList(selectedListID);
+
+    cBuildingListDrawer * buildingListDrawer = drawManager->getBuildingListDrawer();
+    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, x, y);
+    if (item == nullptr) return;
+
+    // anything but the starport can 'build' things
+    if (list->getType() != LIST_STARPORT) {
+        if (item->getTimesToBuild() > 0) {
+            item->decreaseTimesToBuild();
+            item->setPlaceIt(false);
+            item->setDeployIt(false);
+
+            if (item->getTimesToBuild() == 0) {
+                cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "(Human) Item is last item in queue, will give money back.");
+                // only give money back for item that is being built
+                if (item->isBuilding()) {
+                    // calculate the amount of money back:
+                    m_Player->giveCredits(item->getRefundAmount());
+                    m_Player->getBuildingListUpdater()->onBuildItemCancelled(item);
+                }
+                item->setIsBuilding(false);
+                item->resetProgress();
+                cItemBuilder *itemBuilder = m_Player->getItemBuilder();
+                itemBuilder->removeItemFromList(item);
+            }
+            // else, only the number is decreased (used for queueing)
+        }
+    } else {
+        cOrderProcesser * orderProcesser = m_Player->getOrderProcesser();
+        cOrderDrawer * orderDrawer = drawManager->getOrderDrawer();
+
+        assert(orderProcesser);
+        if (!orderProcesser->isOrderPlaced()) {
+            if (item->getTimesOrdered() > 0) {
+                item->decreaseTimesOrdered();
+                orderProcesser->removeOrder(item);
             }
         }
     }

@@ -1,8 +1,10 @@
 #include "../include/d2tmh.h"
+#include "cOrderDrawer.h"
 
 
 cOrderDrawer::cOrderDrawer() {
     buttonBitmap = (BITMAP *)gfxinter[BTN_ORDER].dat;
+    _isMouseOverOrderButton = false;
     int halfOfButton = buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
     int halfOfHeightLeftForButton = 50 / 2; // 50 = height of 1 row icons which is removed for Starport
@@ -17,7 +19,7 @@ cOrderDrawer::~cOrderDrawer() {
 }
 
 bool cOrderDrawer::isMouseOverOrderButton() {
-    return buttonRect->isMouseOver();
+    return _isMouseOverOrderButton;
 }
 
 void cOrderDrawer::drawOrderPlaced() {
@@ -58,4 +60,8 @@ void cOrderDrawer::drawRectangleOrderButton() {
     int color = player[HUMAN].getHouseFadingColor();
     allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
     allegroDrawer->drawRectangle(bmp_screen, x+1, y+1, width-2, height-2, color);
+}
+
+void cOrderDrawer::onMouseAt(int x, int y) {
+    _isMouseOverOrderButton = buttonRect->isMouseOver(x, y);
 }

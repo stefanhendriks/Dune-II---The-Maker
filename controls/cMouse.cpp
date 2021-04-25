@@ -6,10 +6,6 @@
  */
 
 #include "../include/d2tmh.h"
-#include "cMouse.h"
-
-
-cMouse *cMouse::instance = NULL;
 
 cMouse::cMouse() {
 	x=y=z=0;
@@ -22,67 +18,92 @@ cMouse::cMouse() {
 	mouseScrolledUp=false;
 	mouseScrolledDown=false;
 	zValuePreviousFrame = mouse_z;
+	interactionManager = nullptr; // set later
 }
 
 cMouse::~cMouse() {
-
+    interactionManager = nullptr; // we do not own this, so don't delete
 }
 
-cMouse *cMouse::getInstance() {
-	if (instance == nullptr) {
-		instance = new cMouse();
-	}
-
-	return instance;
-}
-
-void cMouse::updateState() {
-    cMouse * mouse = getInstance();
-    mouse->x = mouse_x;
-    mouse->y = mouse_y;
-    mouse->z = mouse_z;
+void cMouse::updateState() {    
+    x = mouse_x;
+    y = mouse_y;
+    z = mouse_z;
 
 	// check if leftButtonIsPressed=true (which is the previous frame)
-    mouse->leftButtonPressedInPreviousFrame = mouse->leftButtonPressed;
-    mouse->rightButtonPressedInPreviousFrame = mouse->rightButtonPressed;
+    leftButtonPressedInPreviousFrame = leftButtonPressed;
+    rightButtonPressedInPreviousFrame = rightButtonPressed;
 
-    mouse->leftButtonPressed = mouse_b & 1;
-    mouse->rightButtonPressed = mouse_b & 2;
+    leftButtonPressed = mouse_b & 1;
+    rightButtonPressed = mouse_b & 2;
 
 	// now check if the leftButtonPressed == false, but the previous frame was true (if so, it is
 	// counted as a click)
-    mouse->leftButtonClicked = (mouse->leftButtonPressedInPreviousFrame == true && mouse->leftButtonPressed == false);
-    mouse->rightButtonClicked = (mouse->rightButtonPressedInPreviousFrame == true && mouse->rightButtonPressed == false);
+    leftButtonClicked = (leftButtonPressedInPreviousFrame == true && leftButtonPressed == false);
+    rightButtonClicked = (rightButtonPressedInPreviousFrame == true && rightButtonPressed == false);
 
-    mouse->mouseScrolledUp = mouse->mouseScrolledDown = false;
+    mouseScrolledUp = mouseScrolledDown = false;
 
-	if (mouse->z > mouse->zValuePreviousFrame) {
-        mouse->mouseScrolledUp = true;
+	if (z > zValuePreviousFrame) {
+        mouseScrolledUp = true;
 	}
 
-	if (mouse->z < mouse->zValuePreviousFrame) {
-        mouse->mouseScrolledDown = true;
+	if (z < zValuePreviousFrame) {
+        mouseScrolledDown = true;
 	}
 
-    mouse->zValuePreviousFrame = mouse->z;
+    zValuePreviousFrame = z;
 
 	// cap mouse z
-	if (mouse->z > 10 || mouse->z < -10) {
-        mouse->z = 0;
+	if (z > 10 || z < -10) {
+        z = 0;
 		position_mouse_z(0); // allegro function
 	}
+
+	// mouse moved
+	if (interactionManager) {
+        interactionManager->onMouseAt(x, y);
+
+        if (mouseScrolledUp) {
+            interactionManager->onMouseScrolledUp();
+        }
+
+        if (mouseScrolledDown) {
+            interactionManager->onMouseScrolledDown();
+        }
+
+        if (leftButtonPressed) {
+            interactionManager->onMouseClickedLeft(x, y);
+        }
+
+        if (rightButtonPressed) {
+            interactionManager->onMouseClickedRight(x, y);
+        }
+    }
+
+    // HACK HACK:
+    // make -1 to -2, so that we can prevent placeIt/deployIt=false when just stopped viewport dragging
+    if (mouse_mv_x2 == -1) {
+        mouse_mv_x2 = -2;
+    }
+    if (mouse_mv_y2 == -1) {
+        mouse_mv_y2 = -2;
+    }
 }
 
 void cMouse::positionMouseCursor(int x, int y) {
 	position_mouse(x, y); // allegro function
+	if (interactionManager) {
+        interactionManager->onMouseAt(x, y);
+    }
 }
 
 bool cMouse::isOverRectangle(int x, int y, int width, int height) {
-    return cRectangle::isWithin(cMouse::getX(), cMouse::getY(), x, y, width, height);
+    return cRectangle::isWithin(getX(), getY(), x, y, width, height);
 }
 
 bool cMouse::isOverRectangle(cRectangle *rectangle) {
-    return rectangle->isMouseOver();
+    return rectangle->isMouseOver(getX(), getY());
 }
 
 /**
@@ -97,10 +118,4 @@ bool cMouse::isBoxSelecting() {
     return mouse_co_x1 > -1 && mouse_co_y1 > -1 &&
     mouse_co_x2 != mouse_co_x1 && mouse_co_y2 != mouse_co_y1 &&
     mouse_co_x2 > -1 && mouse_co_y2 > -1;
-}
-
-void cMouse::destroy() {
-    if (instance) {
-        delete instance;
-    }
 }
