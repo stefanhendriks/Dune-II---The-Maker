@@ -37,16 +37,17 @@ cAbstractStructure *cStructureFactory::createStructureInstance(int type) {
 	return NULL;
 }
 
-void cStructureFactory::deleteStructureInstance(cAbstractStructure *structure) {
+void cStructureFactory::deleteStructureInstance(cAbstractStructure *pStructure) {
     // notify building list updater
-    cPlayer * pPlayer = &player[structure->getPlayerId()];
+    cPlayer * pPlayer = &player[pStructure->getPlayerId()];
     cBuildingListUpdater * buildingListUpdater = pPlayer->getBuildingListUpdater();
     if (buildingListUpdater) {
-        buildingListUpdater->onStructureDestroyed(structure->getType());
+        buildingListUpdater->onStructureDestroyed(pStructure->getType());
     }
 
     // delete memory acquired
-    delete structure;
+    structure[pStructure->getStructureId()] = nullptr;
+    delete pStructure;
 }
 
 
