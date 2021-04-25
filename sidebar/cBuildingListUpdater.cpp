@@ -496,6 +496,11 @@ void cBuildingListUpdater::onBuildItemStarted(cBuildingListItem *pItem) {
         return;
     }
 
+    if (pItem->isTypeSpecial()) {
+        // do nothing
+        return;
+    }
+
     // it is a unit/structure/special
     cSideBar *sideBar = m_Player->getSideBar();
     cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
