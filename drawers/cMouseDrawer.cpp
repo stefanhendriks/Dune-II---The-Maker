@@ -1,8 +1,11 @@
 #include "../include/d2tmh.h"
+#include "cMouseDrawer.h"
+
 
 cMouseDrawer::cMouseDrawer(cPlayer * thePlayer) : m_Player(thePlayer) {
     assert(thePlayer);
 	mouseToolTip = new cMouseToolTip(player);
+	mouseX = mouseY = 0;
 }
 
 cMouseDrawer::~cMouseDrawer() {
@@ -10,31 +13,31 @@ cMouseDrawer::~cMouseDrawer() {
 }
 
 void cMouseDrawer::draw() {
-    int x = cMouse::getX();
-    int y = cMouse::getY();
+    int mouseDrawX = mouseX;
+    int mouseDrawY = mouseY;
 
     // adjust coordinates of drawing according to the specific mouse sprite/tile
     if (mouse_tile == MOUSE_DOWN){
-        y-=16;
+        mouseDrawY-=16;
     }
     else if (mouse_tile == MOUSE_RIGHT){
-        x-=16;
+        mouseDrawX-=16;
     }
     else if (mouse_tile == MOUSE_MOVE || mouse_tile == MOUSE_RALLY) {
-        x-=16;
-        y-=16;
+        mouseDrawX-=16;
+        mouseDrawY-=16;
     }
     else if (mouse_tile == MOUSE_ATTACK){
-        x-=16;
-        y-=16;
+        mouseDrawX-=16;
+        mouseDrawY-=16;
     }
     else if (mouse_tile == MOUSE_REPAIR){
-        x-=16;
-        y-=16;
+        mouseDrawX-=16;
+        mouseDrawY-=16;
     }
     else if (mouse_tile == MOUSE_PICK){
-        x-=16;
-        y-=16;
+        mouseDrawX-=16;
+        mouseDrawY-=16;
     }
     else{
     }
@@ -44,11 +47,11 @@ void cMouseDrawer::draw() {
         textDrawer.drawTextWithOneInteger(0, 0, "MouseCell %d", m_Player->getGameControlsContext()->getMouseCell());
     }
 
-    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, x, y);
+    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouseDrawX, mouseDrawY);
 }
 
 int cMouseDrawer::getDrawXToolTip(int width) {
-	int x = cMouse::getX() + 32;
+	int x = mouseX + 32;
 
 	// correct drawing position so it does not fall off screen.
 	int diffX = (x + width) - game.screen_x;
@@ -59,7 +62,7 @@ int cMouseDrawer::getDrawXToolTip(int width) {
 }
 
 int cMouseDrawer::getDrawYToolTip(int height) {
-	int y = cMouse::getY() + 32;
+	int y = mouseY + 32;
 
 	// correct drawing position so it does not fall off screen.
 	int diffY = (y + height) - game.screen_y;
@@ -271,4 +274,9 @@ void cMouseDrawer::drawToolTipSiloInformation(cAbstractStructure * theStructure,
 	} else {
 		textWriter->write("Spice usage : Unknown");
 	}
+}
+
+void cMouseDrawer::onMouseAt(int x, int y) {
+    this->mouseX = x;
+    this->mouseY = y;
 }

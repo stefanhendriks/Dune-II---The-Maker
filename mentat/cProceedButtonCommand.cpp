@@ -7,7 +7,7 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
         drawManager->getMessageDrawer()->initCombatPosition();
 
         // CENTER MOUSE
-        cMouse::positionMouseCursor(game.screen_x / 2, game.screen_y / 2);
+        game.getMouse()->positionMouseCursor(game.screen_x / 2, game.screen_y / 2);
 
         game.FADE_OUT();
 

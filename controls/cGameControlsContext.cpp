@@ -6,6 +6,8 @@
  */
 
 #include "../include/d2tmh.h"
+#include "cGameControlsContext.h"
+
 
 cGameControlsContext::cGameControlsContext(cPlayer * thePlayer) {
 	assert(thePlayer);
@@ -19,20 +21,8 @@ cGameControlsContext::~cGameControlsContext() {
 }
 
 
-void cGameControlsContext::updateState() {
-    updateMouseCell();
-    if (isMouseOnBattleField()) {
-        determineToolTip();
-        determineHoveringOverStructureId();
-        determineHoveringOverUnitId();
-    }
-}
-
-void cGameControlsContext::updateMouseCell() {
-    int screenY = cMouse::getY();
-    int screenX = cMouse::getX();
-
-    if (screenY < cSideBar::TopBarHeight) {
+void cGameControlsContext::updateMouseCell(int mouseX, int mouseY) {
+    if (mouseY < cSideBar::TopBarHeight) {
 		mouseCell = MOUSECELL_TOPBAR; // at the top bar or higher, so no mouse cell id.
 		return;
 	}
@@ -42,28 +32,30 @@ void cGameControlsContext::updateMouseCell() {
         return;
     }
 
-	if (screenX > (game.screen_x - cSideBar::SidebarWidth)) {
+	if (mouseX > (game.screen_x - cSideBar::SidebarWidth)) {
 		mouseCell = MOUSECELL_SIDEBAR; // on sidebar
 		return;
 	}
 
-    mouseCell = getMouseCellFromScreen(cSideBar::TopBarHeight, screenY, screenX);
+    mouseCell = getMouseCellFromScreen(mouseX, mouseY);
 }
 
-int cGameControlsContext::getMouseCellFromScreen(int heightTopBar, int screenY, int screenX) const {
-    // TODO: mapCamera->getCellFromViewportPosition(x,y) ?
-    int iMouseX = mapCamera->divideByZoomLevel(screenX);
-    int iMouseY = mapCamera->divideByZoomLevel(screenY - heightTopBar);
+int cGameControlsContext::getMouseCellFromScreen(int mouseX, int mouseY) const {
+    int absMapX = mapCamera->getAbsMapMouseX(mouseX);
+    int absMapY = mapCamera->getAbsMapMouseY(mouseY);
+//    int iMouseX = mapCamera->divideByZoomLevel(mouseX);
+//    int iMouseY = mapCamera->divideByZoomLevel(mouseY - heightTopBar);
+//
+//    // absolute coordinates
+//    int viewportMouseX = iMouseX + mapCamera->getViewportStartX();
+//    int viewportMouseY = iMouseY + mapCamera->getViewportStartY();
+//
+//    // map coordinates
+//    int mapX = viewportMouseX / TILESIZE_WIDTH_PIXELS;
+//    int mapY = viewportMouseY / TILESIZE_HEIGHT_PIXELS;
 
-    // absolute coordinates
-    int viewportMouseX = iMouseX + mapCamera->getViewportStartX();
-    int viewportMouseY = iMouseY + mapCamera->getViewportStartY();
-
-    // map coordinates
-    int mapX = viewportMouseX / TILESIZE_WIDTH_PIXELS;
-    int mapY = viewportMouseY / TILESIZE_HEIGHT_PIXELS;
-
-    return map.getCellWithMapBorders(mapX, mapY);
+    return mapCamera->getCellFromAbsolutePosition(absMapX, absMapY);
+//    return map.getCellWithMapBorders(mapX, mapY);
 }
 
 void cGameControlsContext::determineToolTip() {
@@ -73,7 +65,7 @@ void cGameControlsContext::determineToolTip() {
 	}
 }
 
-void cGameControlsContext::determineHoveringOverStructureId() {
+void cGameControlsContext::determineHoveringOverStructureId(int mouseX, int mouseY) {
 	mouseHoveringOverStructureId = -1;
 
 	for (int i=0; i < MAX_STRUCTURES; i++) {
@@ -81,8 +73,9 @@ void cGameControlsContext::determineHoveringOverStructureId() {
 
 		if (theStructure) {
 			if (structureUtils.isStructureVisibleOnScreen(theStructure)) {
-				if (structureUtils.isMouseOverStructure(theStructure, cMouse::getX(), cMouse::getY())) {
+				if (structureUtils.isMouseOverStructure(theStructure, mouseX, mouseY)) {
 					mouseHoveringOverStructureId = i;
+					break;
 				}
 			}
 		}
@@ -98,4 +91,16 @@ cAbstractStructure * cGameControlsContext::getStructurePointerWhereMouseHovers()
 		return NULL;
 	}
 	return structure[mouseHoveringOverStructureId];
+}
+
+void cGameControlsContext::onMouseAt(int x, int y) {
+    updateMouseCell(x, y);
+    if (isMouseOnBattleField()) {
+        determineToolTip();
+        determineHoveringOverStructureId(x, y);
+        determineHoveringOverUnitId();
+    } else {
+        mouseHoveringOverStructureId = -1;
+        mouseHoveringOverUnitId = -1;
+    }
 }

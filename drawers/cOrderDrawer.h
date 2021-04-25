@@ -20,9 +20,13 @@ class cOrderDrawer {
 
         void drawRectangleOrderButton();
 
+        void onMouseAt(int x, int y);
+
 protected:
 
 	private:
+        bool _isMouseOverOrderButton;
+
         cRectangle * buttonRect;
         BITMAP * buttonBitmap;
 

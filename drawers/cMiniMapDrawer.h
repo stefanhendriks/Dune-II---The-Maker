@@ -23,7 +23,6 @@ class cMiniMapDrawer {
 		~cMiniMapDrawer();
 
 		void draw();
-		void interact();
 
 		void setStaticFrame(int value) { iStaticFrame = value; }
 		int getStaticFrame() { return iStaticFrame; }
@@ -40,6 +39,9 @@ class cMiniMapDrawer {
 
         void setPlayer(cPlayer * thePlayer);
 
+		void onMouseAt(int x, int y);
+		void onMouseClickedLeft(int x, int y);
+
 protected:
 
 		void drawTerrain();
@@ -55,6 +57,9 @@ protected:
 		int getMapWidthInPixels();
 
 	private:
+
+		bool _isMouseOver;
+
 		cMap *map;	// the minimap drawer reads data from here
 		cPlayer * m_Player;	// the m_Player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
 		cMapCamera *mapCamera;

@@ -38,8 +38,7 @@ void cDrawManager::drawCombatState() {
 
 	// Only draw units/structures, etc, when we do NOT press D
 	// TODO: this should be something like : if (keyboard->isDebuggingStructures())
-	if (!key[KEY_D] || !key[KEY_TAB])
-	{
+	if (!key[KEY_D] || !key[KEY_TAB]) {
 		structureDrawer->drawStructuresFirstLayer();
 	}
 
@@ -150,7 +149,7 @@ void cDrawManager::drawDeployment() {
     int iMouseCell = m_Player->getGameControlsContext()->getMouseCell();
 
     //
-    if (cMouse::isLeftButtonClicked() && iMouseCell > -1) {
+    if (game.getMouse()->isLeftButtonClicked() && iMouseCell > -1) {
         if (itemToDeploy->getBuildType() == eBuildType::SPECIAL) {
             const s_Special &special = itemToDeploy->getS_Special();
 
