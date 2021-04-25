@@ -1384,7 +1384,7 @@ void cUnit::think_move_air() {
                             unitToPickupOrDrop.iBodyShouldFace = iBodyShouldFace;
 
                             // clear spot
-                            map.clear_spot(iCell, unitToPickupOrDrop.getUnitType().sight, iPlayer);
+                            map.clearShroud(iCell, unitToPickupOrDrop.getUnitType().sight, iPlayer);
 
                             int unitIdOfUnitThatHasBeenPickedUp = iUnitID;
 
@@ -2670,10 +2670,10 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         if (iPlayer == AI_CPU5 && player[HUMAN].isHouse(ATREIDES)) {
             // TODO: make this work for all allied forces
             // hackish way to get Fog of war clearance by allied fremen units (super weapon).
-            map.clear_spot(iCell, units[iType].sight, HUMAN);
+            map.clearShroud(iCell, units[iType].sight, HUMAN);
         }
 
-        map.clear_spot(iCell, units[iType].sight, iPlayer);
+        map.clearShroud(iCell, units[iType].sight, iPlayer);
 
         // The goal did change probably, or something else forces us to reconsider
         if (bCalculateNewPath) {
@@ -2948,7 +2948,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
 
     newUnit.updateCellXAndY();
 
-    map.clear_spot(iCll, sUnitType.sight, iPlayer);
+    map.clearShroud(iCll, sUnitType.sight, iPlayer);
 
     return iNewId;
 }
