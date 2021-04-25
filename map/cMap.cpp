@@ -286,7 +286,7 @@ void cMap::clearShroud(int c, int size, int playerId) {
 //            }
 
             if (!map.isVisible(cl, playerId)) {
-                map.setVisible(cl, playerId);
+                map.setVisibleFor(cl, playerId);
 
                 // human unit detected enemy/sandworm, this influences music
                 if (playerId == HUMAN) {
