@@ -209,7 +209,7 @@ void cGame::think_winlose() {
         for (int i = 0; i < MAX_STRUCTURES; i++) {
             cAbstractStructure *pStructure = structure[i];
             if (pStructure == nullptr) continue;
-            if (pStructure->getOwner() == HUMAN || pStructure->getOwner() == AI_WORM) continue;
+            if (pStructure->getOwner() == HUMAN || pStructure->getOwner() == AI_WORM || pStructure->getOwner() == AI_CPU5) continue;
             bAllDead = false;
             break;
         }
@@ -220,8 +220,8 @@ void cGame::think_winlose() {
             for (int i = 0; i < MAX_UNITS; i++) {
                 cUnit &cUnit = unit[i];
                 if (!cUnit.isValid()) continue;
-                if (cUnit.iPlayer == HUMAN || cUnit.iPlayer == AI_WORM) continue;
-                if (cUnit.isAirbornUnit()) continue;
+                if (cUnit.iPlayer == HUMAN || cUnit.iPlayer == AI_WORM || cUnit.iPlayer == AI_CPU5) continue;
+                if (cUnit.isAirbornUnit()) continue; // do not count airborn units
                 bAllDead = false;
                 break;
             }
