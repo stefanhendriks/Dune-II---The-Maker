@@ -34,9 +34,6 @@ public:
 	bool isLeftButtonClicked() { return leftButtonClicked; }
 	bool isRightButtonClicked() { return rightButtonClicked; }
 
-	bool isMouseScrolledUp() { return mouseScrolledUp; }
-	bool isMouseScrolledDown() { return mouseScrolledDown; }
-
 	int getX() { return x; }
 	int getY() { return y; }
 	int getZ() { return z; }

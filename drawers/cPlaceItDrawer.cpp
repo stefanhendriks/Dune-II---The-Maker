@@ -176,30 +176,6 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	set_trans_blender(0, 0, 0, 128);
 
 	destroy_bitmap(temp);
-
-	// clicked mouse button
-	// TODO: move to INTERACT function?
-    if (bMayPlace && bWithinBuildDistance)	{
-        int iHealthPercent = 50; // the minimum is 50% (with no slabs)
-
-        if (iTotalRocks > 0) {
-            iHealthPercent += health_bar(50, iTotalRocks, iTotalBlocks);
-        }
-
-        play_sound_id(SOUND_PLACE);
-        m_Player->getStructurePlacer()->placeStructure(mouseCell, structureId, iHealthPercent);
-        m_Player->getBuildingListUpdater()->onBuildItemCompleted(itemToPlace);
-
-        game.bPlaceIt=false;
-
-        itemToPlace->decreaseTimesToBuild();
-        itemToPlace->setPlaceIt(false);
-        itemToPlace->setIsBuilding(false);
-        itemToPlace->resetProgress();
-        if (itemToPlace->getTimesToBuild() < 1) {
-            m_Player->getItemBuilder()->removeItemFromList(itemToPlace);
-        }
-    }
 }
 
 void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int cell) {
@@ -239,7 +215,8 @@ void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int c
     destroy_bitmap(temp);
 }
 
-void cPlaceItDrawer::onMouseClickedLeft(int x, int y) {
+void cPlaceItDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
+    // this assumes the context has been updated beforehand...
     int mouseCell = m_Player->getGameControlsContext()->getMouseCell();
 
     if (mouseCell < 0) {
@@ -272,5 +249,14 @@ void cPlaceItDrawer::onMouseClickedLeft(int x, int y) {
         if (itemToPlace->getTimesToBuild() < 1) {
             m_Player->getItemBuilder()->removeItemFromList(itemToPlace);
         }
+        itemToPlace = nullptr;
+    }
+}
+
+void cPlaceItDrawer::onNotify(const s_MouseEvent &event) {
+    switch (event.eventType) {
+        case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
+            onMouseClickedLeft(event);
+            return;
     }
 }

@@ -213,3 +213,16 @@ void cMapCamera::thinkInteraction() {
 int cMapCamera::getCellFromAbsolutePosition(int x, int y) {
     return map.getCellWithMapDimensions((x / 32), (y / 32));
 }
+
+void cMapCamera::onNotify(s_MouseEvent &event) {
+    // MOUSE WHEEL scrolling causes zooming in/out
+    switch (event.eventType) {
+        case eMouseEventType::MOUSE_SCROLLED_UP:
+            mapCamera->zoomOut();
+            return;
+        case eMouseEventType::MOUSE_SCROLLED_DOWN:
+            mapCamera->zoomIn();
+            return;
+    }
+
+}

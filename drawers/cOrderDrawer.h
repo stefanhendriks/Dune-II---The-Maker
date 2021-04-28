@@ -9,26 +9,32 @@
 #define CORDERDRAWER_H_
 
 class cOrderDrawer {
-	public:
-		cOrderDrawer();
-		~cOrderDrawer();
+public:
+    cOrderDrawer(cPlayer *thePlayer);
 
-		void drawOrderButton(cPlayer * thePlayer);
-		void drawOrderPlaced();
+    ~cOrderDrawer();
 
-		bool isMouseOverOrderButton();
+    void drawOrderButton(cPlayer *thePlayer);
 
-        void drawRectangleOrderButton();
+    void drawOrderPlaced();
 
-        void onMouseAt(int x, int y);
+    void drawRectangleOrderButton();
+
+    void onNotify(const s_MouseEvent &event);
+
+    void setPlayer(cPlayer *pPlayer);
 
 protected:
 
-	private:
-        bool _isMouseOverOrderButton;
+private:
+    void onMouseAt(const s_MouseEvent &event);
+    void onMouseClickedLeft(const s_MouseEvent &event);
 
-        cRectangle * buttonRect;
-        BITMAP * buttonBitmap;
+    bool _isMouseOverOrderButton;
+
+    cPlayer * m_Player;
+    cRectangle *buttonRect;
+    BITMAP *buttonBitmap;
 
 };
 

@@ -39,8 +39,7 @@ class cMiniMapDrawer {
 
         void setPlayer(cPlayer * thePlayer);
 
-		void onMouseAt(int x, int y);
-		void onMouseClickedLeft(int x, int y);
+	    void onNotify(const s_MouseEvent &event);
 
 protected:
 
@@ -57,6 +56,8 @@ protected:
 		int getMapWidthInPixels();
 
 	private:
+		void onMouseAt(const s_MouseEvent &event);
+		void onMouseClickedLeft(const s_MouseEvent &event);
 
 		bool _isMouseOver;
 

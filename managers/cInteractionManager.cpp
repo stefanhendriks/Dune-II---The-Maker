@@ -31,18 +31,10 @@ void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer) {
     logbook(msg);
 }
 
-void cInteractionManager::onMouseClickedLeft(int x, int y) {
-    cGameControlsContext *pContext = m_Player->getGameControlsContext();
-    if (pContext->isMouseOnSidebarOrMinimap()) {
-        sidebar->onMouseClickedLeft(x, y);
-    }
-
-    miniMapDrawer->onMouseClickedLeft(x, y);
-
-    placeItDrawer->onMouseClickedLeft(x, y);
+void cInteractionManager::onMouseClickedLeft(s_MouseEvent &event) {
 }
 
-void cInteractionManager::onMouseClickedRight(int x, int y) {
+void cInteractionManager::onMouseClickedRight(s_MouseEvent &event) {
     // not moving the map with the right mouse button, then this means it is a 'click' so act accordingly
     bool isANormalButtonClick = mouse_mv_x2 < -1 && mouse_mv_y2 < -1; // < -1 means we have had this evaluation before :/
     if (isANormalButtonClick) {
@@ -53,31 +45,54 @@ void cInteractionManager::onMouseClickedRight(int x, int y) {
             game.bDeployIt = false;
         }
     }
+}
 
-    cGameControlsContext *pContext = m_Player->getGameControlsContext();
-    if (pContext->isMouseOnSidebarOrMinimap()) {
-        sidebar->onMouseClickedRight(x, y);
+void cInteractionManager::onMouseAt(s_MouseEvent &mouseEvent) {
+}
+
+void cInteractionManager::onMouseScrolledUp(s_MouseEvent &mouseEvent) {
+}
+
+void cInteractionManager::onMouseScrolledDown(s_MouseEvent &mouseEvent) {
+}
+
+/**
+ * Called by mouse to send an event.
+ * @param mouseEvent
+ */
+void cInteractionManager::onNotify(s_MouseEvent &mouseEvent) {
+    char msg[255];
+    sprintf(msg, "cInteractionManager::onNotify %s x=%d, y=%d, z=%d", mouseEvent.toString(mouseEvent.eventType), mouseEvent.x, mouseEvent.y, mouseEvent.z);
+    logbook(msg);
+
+    // process these events by itself (if any implementation is present)...
+    switch (mouseEvent.eventType) {
+        case eMouseEventType::MOUSE_MOVED_TO:
+            onMouseAt(mouseEvent);
+            break;
+        case eMouseEventType::MOUSE_SCROLLED_UP:
+            onMouseScrolledUp(mouseEvent);
+            break;
+        case eMouseEventType::MOUSE_SCROLLED_DOWN:
+            onMouseScrolledDown(mouseEvent);
+            break;
+        case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
+            onMouseClickedLeft(mouseEvent);
+            break;
+        case eMouseEventType::MOUSE_RIGHT_BUTTON_CLICKED:
+            onMouseClickedRight(mouseEvent);
+            break;
     }
-}
 
-void cInteractionManager::onMouseAt(int x, int y) {
+    // now call all its other interested listeners
     cGameControlsContext *pContext = m_Player->getGameControlsContext();
-    pContext->onMouseAt(x, y);
+    pContext->onNotify(mouseEvent); // must be first because other classes rely on this context
 
-    if (pContext->isMouseOnSidebarOrMinimap()) {
-        sidebar->onMouseAt(x, y);
-    }
+    sidebar->onNotify(mouseEvent);
+    placeItDrawer->onNotify(mouseEvent);
+    mapCamera->onNotify(mouseEvent);
+    mouseDrawer->onNotify(mouseEvent);
+    miniMapDrawer->onNotify(mouseEvent);
+    orderDrawer->onNotify(mouseEvent);
 
-    mouseDrawer->onMouseAt(x, y);
-    miniMapDrawer->onMouseAt(x, y);
-    orderDrawer->onMouseAt(x, y);
-}
-
-void cInteractionManager::onMouseScrolledUp() {
-    // MOUSE WHEEL scrolling causes zooming in/out
-    mapCamera->zoomOut();
-}
-
-void cInteractionManager::onMouseScrolledDown() {
-    mapCamera->zoomIn();
 }

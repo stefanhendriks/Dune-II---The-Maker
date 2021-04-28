@@ -190,24 +190,23 @@ void cSideBar::thinkProgressAnimation() {
     }
 }
 
-void cSideBar::onMouseAt(int x, int y) {
-    isMouseOverSidebarValue = x > (game.screen_x - cSideBar::SidebarWidth);
+void cSideBar::onMouseAt(const s_MouseEvent &event) {
+    isMouseOverSidebarValue = event.x > (game.screen_x - cSideBar::SidebarWidth);
 
-    // TODO: MOVE DRAWING LOGIC TO A MORE SANE PLACE
     if (selectedListID < 0) return;
 
-    // when mouse pressed, build item if over item
+    // when mouse is selecting a list, and over an item, then draw message bar...!?
     cBuildingList *list = getList(selectedListID);
-
     cBuildingListDrawer * buildingListDrawer = drawManager->getBuildingListDrawer();
-    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, x, y);
+    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.x, event.y);
     if (item == nullptr) return;
 
     // mouse is over item - draw "messagebar"
+    // TODO: move this whole 'draw something' out of the onMouseAt function
     drawMessageBarWithItemInfo(list, item);
 }
 
-void cSideBar::onMouseClickedLeft(int x, int y) {
+void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
 
     // button interaction
     for (int i = LIST_CONSTYARD; i < LIST_MAX; i++) {
@@ -217,7 +216,7 @@ void cSideBar::onMouseClickedLeft(int x, int y) {
         if (!list->isAvailable()) continue; // not available, so no interaction possible
 
         // interaction is possible.
-        if (list->isOverButton(x, y)) {
+        if (list->isOverButton(event.x, event.y)) {
             // clicked on it. Set focus on this one
             selectedListID = i;
             char msg[255];
@@ -241,23 +240,15 @@ void cSideBar::onMouseClickedLeft(int x, int y) {
         return;
     }
 
-    cOrderProcesser * orderProcesser = m_Player->getOrderProcesser();
     cOrderDrawer * orderDrawer = drawManager->getOrderDrawer();
 
-    // allow clicking on the order button
+    // allow clicking on the order button, send event through...
     if (list->getType() == LIST_STARPORT) {
-        if (orderDrawer->isMouseOverOrderButton()) {
-            assert(orderProcesser);
-
-            // handle "order" button interaction
-            if (orderProcesser->canPlaceOrder()) {
-                orderProcesser->placeOrder();
-            }
-        }
+        orderDrawer->onNotify(event);
     }
 
     cBuildingListDrawer * buildingListDrawer = drawManager->getBuildingListDrawer();
-    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, x, y);
+    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.x, event.y);
     if (item == nullptr) return;
 
     // mouse is over item - draw "messagebar"
@@ -273,6 +264,8 @@ void cSideBar::onMouseClickedLeft(int x, int y) {
             startBuildingItemIfOk(item);
         }
     } else {
+        cOrderProcesser * orderProcesser = m_Player->getOrderProcesser();
+
         // add orders
         if (orderProcesser->acceptsOrders()) {
             if (m_Player->credits >= item->getBuildCost()) {
@@ -284,14 +277,14 @@ void cSideBar::onMouseClickedLeft(int x, int y) {
     }
 }
 
-void cSideBar::onMouseClickedRight(int x, int y) {
+void cSideBar::onMouseClickedRight(const s_MouseEvent &event) {
     if (selectedListID < 0) return;
 
     // when mouse pressed, build item if over item
     cBuildingList *list = getList(selectedListID);
 
     cBuildingListDrawer * buildingListDrawer = drawManager->getBuildingListDrawer();
-    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, x, y);
+    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.x, event.y);
     if (item == nullptr) return;
 
     // anything but the starport can 'build' things
@@ -327,5 +320,26 @@ void cSideBar::onMouseClickedRight(int x, int y) {
                 orderProcesser->removeOrder(item);
             }
         }
+    }
+}
+
+void cSideBar::onNotify(const s_MouseEvent &event) {
+    cGameControlsContext *pContext = m_Player->getGameControlsContext();
+
+    if (!pContext->isMouseOnSidebarOrMinimap()) {
+        // ignore these events because mouse is not on sidebar or minimap
+        return;
+    }
+
+    switch (event.eventType) {
+        case eMouseEventType::MOUSE_MOVED_TO:
+            onMouseAt(event);
+            return;
+        case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
+            onMouseClickedLeft(event);
+            return;
+        case eMouseEventType::MOUSE_RIGHT_BUTTON_CLICKED:
+            onMouseClickedRight(event);
+            return;
     }
 }

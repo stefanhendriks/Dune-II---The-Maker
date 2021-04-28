@@ -1,10 +1,8 @@
 #include "../include/d2tmh.h"
-#include "cOrderDrawer.h"
 
 
-cOrderDrawer::cOrderDrawer() {
+cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : m_Player(thePlayer) {
     buttonBitmap = (BITMAP *)gfxinter[BTN_ORDER].dat;
-    _isMouseOverOrderButton = false;
     int halfOfButton = buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
     int halfOfHeightLeftForButton = 50 / 2; // 50 = height of 1 row icons which is removed for Starport
@@ -16,10 +14,6 @@ cOrderDrawer::cOrderDrawer() {
 
 cOrderDrawer::~cOrderDrawer() {
     delete buttonRect;
-}
-
-bool cOrderDrawer::isMouseOverOrderButton() {
-    return _isMouseOverOrderButton;
 }
 
 void cOrderDrawer::drawOrderPlaced() {
@@ -50,6 +44,10 @@ void cOrderDrawer::drawOrderButton(cPlayer * thePlayer) {
 	} else {
 		draw_sprite(bmp_screen, buttonBitmap, buttonRect->getX(), buttonRect->getY());
 	}
+
+    if (_isMouseOverOrderButton) {
+        drawRectangleOrderButton();
+    }
 }
 
 void cOrderDrawer::drawRectangleOrderButton() {
@@ -60,8 +58,36 @@ void cOrderDrawer::drawRectangleOrderButton() {
     int color = player[HUMAN].getHouseFadingColor();
     allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
     allegroDrawer->drawRectangle(bmp_screen, x+1, y+1, width-2, height-2, color);
+    _isMouseOverOrderButton = false;
 }
 
-void cOrderDrawer::onMouseAt(int x, int y) {
-    _isMouseOverOrderButton = buttonRect->isMouseOver(x, y);
+void cOrderDrawer::onMouseAt(const s_MouseEvent &event) {
+    _isMouseOverOrderButton = buttonRect->isMouseOver(event.x, event.y);
+}
+
+void cOrderDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
+    cOrderProcesser * orderProcesser = m_Player->getOrderProcesser();
+
+    // handle "order" button interaction
+    if (_isMouseOverOrderButton) {
+        if (orderProcesser->canPlaceOrder()) {
+            orderProcesser->placeOrder();
+        }
+    }
+
+}
+
+void cOrderDrawer::onNotify(const s_MouseEvent &event) {
+    switch (event.eventType) {
+        case eMouseEventType::MOUSE_MOVED_TO:
+            onMouseAt(event);
+            return;
+        case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
+            onMouseClickedLeft(event);
+            return;
+    }
+}
+
+void cOrderDrawer::setPlayer(cPlayer *pPlayer) {
+    this->m_Player = pPlayer;
 }

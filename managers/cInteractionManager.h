@@ -18,6 +18,7 @@ class cMiniMapDrawer;
 class cMouseDrawer;
 class cPlaceItDrawer;
 class cOrderDrawer;
+struct s_MouseEvent;
 
 #include "cKeyboardManager.h"
 
@@ -26,11 +27,7 @@ class cInteractionManager {
 		cInteractionManager(cPlayer * thePlayer);
 		~cInteractionManager();
 
-		void onMouseAt(int x, int y);
-		void onMouseClickedLeft(int x, int y);
-		void onMouseClickedRight(int x, int y);
-		void onMouseScrolledUp();
-		void onMouseScrolledDown();
+		void onNotify(s_MouseEvent &mouseEvent);
 
 		void interactWithKeyboard();
 
@@ -45,6 +42,11 @@ class cInteractionManager {
 		cPlaceItDrawer * placeItDrawer;
 		cOrderDrawer * orderDrawer;
 
+        void onMouseAt(s_MouseEvent &mouseEvent);
+        void onMouseClickedLeft(s_MouseEvent &mouseEvent);
+        void onMouseClickedRight(s_MouseEvent &mouseEvent);
+        void onMouseScrolledUp(s_MouseEvent &mouseEvent);
+        void onMouseScrolledDown(s_MouseEvent &mouseEvent);
 };
 
 #endif /* CINTERACTIONMANAGER_H_ */

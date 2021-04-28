@@ -62,22 +62,43 @@ void cMouse::updateState() {
 
 	// mouse moved
 	if (interactionManager) {
-        interactionManager->onMouseAt(x, y);
+	    // by default, notify about movement (TODO: Only do this when x,y is changed)
+        s_MouseEvent event {
+                eMouseEventType::MOUSE_MOVED_TO,
+                x,
+                y,
+                z
+        };
+        interactionManager->onNotify(event);
 
         if (mouseScrolledUp) {
-            interactionManager->onMouseScrolledUp();
+            event.eventType = eMouseEventType::MOUSE_SCROLLED_UP;
+            interactionManager->onNotify(event);
         }
 
         if (mouseScrolledDown) {
-            interactionManager->onMouseScrolledDown();
+            event.eventType = eMouseEventType::MOUSE_SCROLLED_DOWN;
+            interactionManager->onNotify(event);
         }
 
         if (leftButtonPressed) {
-            interactionManager->onMouseClickedLeft(x, y);
+            event.eventType = eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED;
+            interactionManager->onNotify(event);
+        }
+
+        if (leftButtonClicked) {
+            event.eventType = eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED;
+            interactionManager->onNotify(event);
         }
 
         if (rightButtonPressed) {
-            interactionManager->onMouseClickedRight(x, y);
+            event.eventType = eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED;
+            interactionManager->onNotify(event);
+        }
+
+        if (rightButtonClicked) {
+            event.eventType = eMouseEventType::MOUSE_RIGHT_BUTTON_CLICKED;
+            interactionManager->onNotify(event);
         }
     }
 
@@ -94,7 +115,13 @@ void cMouse::updateState() {
 void cMouse::positionMouseCursor(int x, int y) {
 	position_mouse(x, y); // allegro function
 	if (interactionManager) {
-        interactionManager->onMouseAt(x, y);
+	    s_MouseEvent event {
+                eMouseEventType::MOUSE_MOVED_TO,
+                0,
+                0,
+                0
+	    };
+        interactionManager->onNotify(event);
     }
 }
 

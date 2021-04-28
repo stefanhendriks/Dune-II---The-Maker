@@ -51,10 +51,6 @@ public:
 
     ~cSideBar();
 
-    void onMouseAt(int x, int y);
-    void onMouseClickedLeft(int x, int y);
-    void onMouseClickedRight(int x, int y);
-
     cBuildingList *getList(int listId) { return lists[listId]; }
 
     bool startBuildingItemIfOk(int listId, int buildId) const;
@@ -90,7 +86,12 @@ public:
         return isMouseOverSidebarValue;
     }
 
+    void onNotify(const s_MouseEvent &event);
+
 private:
+    void onMouseAt(const s_MouseEvent &event);
+    void onMouseClickedLeft(const s_MouseEvent &event);
+    void onMouseClickedRight(const s_MouseEvent &event);
 
     // the lists:
     cBuildingList *lists[LIST_MAX];
