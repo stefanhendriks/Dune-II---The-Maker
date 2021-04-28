@@ -162,7 +162,7 @@ public:
 
     void setViewportPosition(int x, int y);
 
-    void onNotify(s_MouseEvent &event);
+    void onNotify(const s_MouseEvent &event);
 
 protected:
 

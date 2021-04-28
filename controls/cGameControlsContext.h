@@ -42,7 +42,7 @@ class cGameControlsContext {
 
 		int getMouseCellFromScreen(int mouseX, int mouseY) const;
 
-        void onNotify(s_MouseEvent &event);
+        void onNotify(const s_MouseEvent &event);
 
 protected:
 		void determineToolTip();
@@ -51,7 +51,7 @@ protected:
 
 
 	private:
-        void onMouseAt(s_MouseEvent &event);
+        void onMouseAt(const s_MouseEvent &event);
 
         void updateMouseCell(int mouseX, int mouseY);
 
