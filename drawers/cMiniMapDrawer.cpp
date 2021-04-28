@@ -11,6 +11,7 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * t
 	iStaticFrame = STAT14;
 	status = eMinimapStatus::NOTAVAILABLE;
 	iTrans = 0;
+    _isMouseOver = false;
 
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;
@@ -207,18 +208,6 @@ int cMiniMapDrawer::getRGBColorForTerrainType(int terrainType) {
 	}
 }
 
-void cMiniMapDrawer::interact() {
-	if (m_RectMinimap->isMouseOver() && // on minimap
-	    cMouse::isLeftButtonPressed() && !cMouse::isBoxSelecting() // pressed the mouse and not boxing anything..
-	    ) {
-
-	    if (m_Player->hasAtleastOneStructure(RADAR)) {
-            int mouseCellOnMinimap = getMouseCell(mouse_x, mouse_y);
-            mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
-        }
-	}
-}
-
 void cMiniMapDrawer::draw() {
     if (!map) return;
 
@@ -355,10 +344,38 @@ void cMiniMapDrawer::think() {
     }
 }
 
+void cMiniMapDrawer::onMouseAt(const s_MouseEvent &event) {
+    _isMouseOver = m_RectMinimap->isMouseOver(event.x, event.y);
+}
+
 bool cMiniMapDrawer::isMouseOver() {
-    return m_RectMinimap->isMouseOver();
+    return _isMouseOver;
 }
 
 void cMiniMapDrawer::setPlayer(cPlayer *thePlayer) {
     this->m_Player = thePlayer;
+}
+
+void cMiniMapDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
+    if (m_RectMinimap->isWithin(event.x, event.y) && // on minimap
+        !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
+            ) {
+
+        if (m_Player->hasAtleastOneStructure(RADAR)) {
+            int mouseCellOnMinimap = getMouseCell(mouse_x, mouse_y);
+            mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
+        }
+    }
+}
+
+void cMiniMapDrawer::onNotify(const s_MouseEvent &event) {
+    switch (event.eventType) {
+        case eMouseEventType::MOUSE_MOVED_TO:
+            onMouseAt(event);
+            return;
+        case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
+            onMouseClickedLeft(event);
+            return;
+    }
+
 }

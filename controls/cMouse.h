@@ -8,60 +8,50 @@
 #ifndef CMOUSE_H_
 #define CMOUSE_H_
 
+#include <managers/cInteractionManager.h>
+
 class cRectangle;
+class cInteractionManager; // some kind of observer thingy
 
 class cMouse {
 
 public:
 	cMouse();
+	~cMouse();
 
-	static void destroy();
+	void updateState(); // updates state from Allegro, calls appropiate on* methods on gameControlContext class
 
-	static void updateState(); // updates state from Allegro
+	void setMouseObserver(cMouseObserver *mouseObserver) {
+	    this->_mouseObserver = mouseObserver;
+	}
 
 	// these functions return true when the mouse button is being hold down
-//	bool isLeftButtonPressed() { return leftButtonPressed; }
-//	bool isRightButtonPressed() { return rightButtonPressed; }
-
-	static bool isLeftButtonPressed() { return getInstance()->leftButtonPressed; }
-	static bool isRightButtonPressed() { return getInstance()->rightButtonPressed; }
+	bool isLeftButtonPressed() { return leftButtonPressed; }
+	bool isRightButtonPressed() { return rightButtonPressed; }
 
 	// these functions return true when the mouse button was pressed in the previous
 	// frame, but released in the current (which is counted as a 'click')
-//	bool isLeftButtonClicked() { return leftButtonClicked; }
-//	bool isRightButtonClicked() { return rightButtonClicked; }
-	static bool isLeftButtonClicked() { return getInstance()->leftButtonClicked; }
-	static bool isRightButtonClicked() { return getInstance()->rightButtonClicked; }
+	bool isLeftButtonClicked() { return leftButtonClicked; }
+	bool isRightButtonClicked() { return rightButtonClicked; }
 
-	static bool isMouseScrolledUp() { return getInstance()->mouseScrolledUp; }
-	static bool isMouseScrolledDown() { return getInstance()->mouseScrolledDown; }
+	int getX() { return x; }
+	int getY() { return y; }
+	int getZ() { return z; }
 
-	static int getX() { return getInstance()->x; }
-	static int getY() { return getInstance()->y; }
-	static int getZ() { return getInstance()->z; }
+	void positionMouseCursor(int x, int y);
 
-	static void positionMouseCursor(int x, int y);
+    bool isOverRectangle(int x, int y, int width, int height);
 
-	static void init() {
-	    getInstance(); // this will create a new instance
-	}
+	bool isOverRectangle(cRectangle *rectangle);
 
-    static bool isOverRectangle(int x, int y, int width, int height);
+    bool isMapScrolling();
 
-	static bool isOverRectangle(cRectangle *rectangle);
-
-    static bool isMapScrolling();
-
-    static bool isBoxSelecting();
-
-protected:
-	~cMouse();
+    bool isBoxSelecting();
 
 private:
-    static cMouse *getInstance();
-    static cMouse *instance;
+    cMouseObserver * _mouseObserver;
 
-	bool leftButtonPressed;
+    bool leftButtonPressed;
 	bool rightButtonPressed;
 
 	bool leftButtonClicked;

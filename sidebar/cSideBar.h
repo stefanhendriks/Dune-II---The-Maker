@@ -61,7 +61,6 @@ public:
     cBuildingListItem * getBuildingListItem(int listId, int buildId) const;
 
     void think();    // timer based
-    void thinkInteraction(); // fps based
 
     // set
     // no set Player, re-create Sidebar object instead if needed
@@ -83,15 +82,22 @@ public:
     static const int TotalHeightBeforePowerBarStarts =
             TopBarHeight + HeightOfMinimap + HorizontalCandyBarHeight + PowerBarMargingHeight;
 
-    static bool isMouseOverSidebar(cGame &game) {
-        return cMouse::getX() > game.screen_x - cSideBar::SidebarWidth;
+    bool isMouseOverSidebar() {
+        return isMouseOverSidebarValue;
     }
 
+    void onNotify(const s_MouseEvent &event);
+
 private:
+    void onMouseAt(const s_MouseEvent &event);
+    void onMouseClickedLeft(const s_MouseEvent &event);
+    void onMouseClickedRight(const s_MouseEvent &event);
 
     // the lists:
     cBuildingList *lists[LIST_MAX];
     cPlayer *m_Player;
+
+    bool isMouseOverSidebarValue;
 
     int selectedListID;
 

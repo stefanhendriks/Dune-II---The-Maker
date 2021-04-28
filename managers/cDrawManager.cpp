@@ -6,7 +6,7 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) : m_Player(thePlayer) {
 	assert(&thePlayer);
 	creditsDrawer = new CreditsDrawer(thePlayer);
 	sidebarDrawer = new cSideBarDrawer(thePlayer);
-	orderDrawer = new cOrderDrawer();
+	orderDrawer = new cOrderDrawer(thePlayer);
 	mapDrawer = new cMapDrawer(&map, thePlayer, mapCamera);
 	miniMapDrawer = new cMiniMapDrawer(&map, thePlayer, mapCamera);
 	particleDrawer = new cParticleDrawer();
@@ -38,8 +38,7 @@ void cDrawManager::drawCombatState() {
 
 	// Only draw units/structures, etc, when we do NOT press D
 	// TODO: this should be something like : if (keyboard->isDebuggingStructures())
-	if (!key[KEY_D] || !key[KEY_TAB])
-	{
+	if (!key[KEY_D] || !key[KEY_TAB]) {
 		structureDrawer->drawStructuresFirstLayer();
 	}
 
@@ -150,7 +149,7 @@ void cDrawManager::drawDeployment() {
     int iMouseCell = m_Player->getGameControlsContext()->getMouseCell();
 
     //
-    if (cMouse::isLeftButtonClicked() && iMouseCell > -1) {
+    if (game.getMouse()->isLeftButtonClicked() && iMouseCell > -1) {
         if (itemToDeploy->getBuildType() == eBuildType::SPECIAL) {
             const s_Special &special = itemToDeploy->getS_Special();
 
@@ -246,7 +245,7 @@ void cDrawManager::setPlayerToDraw(cPlayer * playerToDraw) {
     this->m_Player = playerToDraw;
     this->creditsDrawer->setPlayer(playerToDraw);
     this->sidebarDrawer->setPlayer(playerToDraw);
-//    this->orderDrawer->setPlayer(playerToDraw);
+    this->orderDrawer->setPlayer(playerToDraw);
     this->miniMapDrawer->setPlayer(playerToDraw);
     interactionManager->setPlayerToInteractFor(playerToDraw);
 }

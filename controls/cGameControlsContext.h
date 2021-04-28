@@ -22,8 +22,6 @@ class cGameControlsContext {
 		cGameControlsContext(cPlayer *thePlayer);
 		~cGameControlsContext();
 
-		void updateState();
-
 		int getIdOfStructureWhereMouseHovers() { return mouseHoveringOverStructureId; }
 		int getIdOfUnitWhereMouseHovers() { return mouseHoveringOverUnitId; }
 
@@ -42,16 +40,21 @@ class cGameControlsContext {
 
 		cAbstractStructure * getStructurePointerWhereMouseHovers();
 
-		int getMouseCellFromScreen(int heightTopBar, int screenY, int screenX) const;
+		int getMouseCellFromScreen(int mouseX, int mouseY) const;
 
-	protected:
-		void updateMouseCell();
+        void onNotify(const s_MouseEvent &event);
+
+protected:
 		void determineToolTip();
-		void determineHoveringOverStructureId();
+		void determineHoveringOverStructureId(int mouseX, int mouseY);
 		void determineHoveringOverUnitId();
 
 
 	private:
+        void onMouseAt(const s_MouseEvent &event);
+
+        void updateMouseCell(int mouseX, int mouseY);
+
 		int mouseHoveringOverStructureId;
 		int mouseHoveringOverUnitId;
 

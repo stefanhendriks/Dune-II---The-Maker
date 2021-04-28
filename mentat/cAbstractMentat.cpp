@@ -282,7 +282,7 @@ void cAbstractMentat::draw_movie() {
 void cAbstractMentat::interact() {
     if (state == INIT) return;
     if (state == SPEAKING) {
-        if (cMouse::isLeftButtonClicked()) {
+        if (game.getMouse()->isLeftButtonClicked()) {
             if (TIMER_Speaking > 0) {
                 TIMER_Speaking = 1;
             }
@@ -291,14 +291,14 @@ void cAbstractMentat::interact() {
     }
     if (state != AWAITING_RESPONSE) return;
 
-    if (cMouse::isLeftButtonClicked()) {
+    if (game.getMouse()->isLeftButtonClicked()) {
         // execute left button logic
-        if (leftButton && leftButton->isMouseOver()) {
+        if (leftButton && leftButton->isMouseOver(mouse_x, mouse_y)) {
             leftButtonCommand->execute(*this);
         }
 
         // execute right button logic
-        if (rightButton && rightButton->isMouseOver()) {
+        if (rightButton && rightButton->isMouseOver(mouse_x, mouse_y)) {
             rightButtonCommand->execute(*this);
         }
     }

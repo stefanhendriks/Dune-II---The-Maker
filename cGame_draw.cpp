@@ -27,7 +27,7 @@ void cGame::losing() {
 
     draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
-    if (cMouse::isLeftButtonClicked()) {
+    if (mouse->isLeftButtonClicked()) {
         // OMG, MENTAT IS NOT HAPPY
         state = GAME_LOSEBRIEF;
 
@@ -48,7 +48,7 @@ void cGame::winning() {
 
     draw_sprite(bmp_screen, (BITMAP *) gfxdata[MOUSE_NORMAL].dat, mouse_x, mouse_y);
 
-    if (cMouse::isLeftButtonClicked()) {
+    if (mouse->isLeftButtonClicked()) {
         // Mentat will be happy, after that enter "Select your next Conquest"
         state = GAME_WINBRIEF;
 
@@ -76,7 +76,7 @@ void cGame::combat_mouse() {
         combat_mouse_normalCombatInteraction(context, humanPlayer, bOrderingUnits);
     } // NOT PLACING / DEPLOYING STUFF
 
-    if (cMouse::isRightButtonPressed()) {
+    if (mouse->isRightButtonPressed()) {
         mouse_combat_dragViewportInteraction();
     } else {
         mouse_combat_resetDragViewportInteraction();
@@ -114,7 +114,7 @@ void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGa
 
         if (structure[structureId]->getOwner() == HUMAN &&
             structure[structureId]->isDamaged()) {
-            if (cMouse::isLeftButtonClicked()) {
+            if (mouse->isLeftButtonClicked()) {
 
                 if (!structure[structureId]->isRepairing()) {
                     structure[structureId]->setRepairing(true);
@@ -129,7 +129,7 @@ void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGa
     } // MOUSE PRESSED
 
     // select structure
-    if (cMouse::isLeftButtonClicked() && bOrderingUnits == false && !key[KEY_R]) {
+    if (mouse->isLeftButtonClicked() && bOrderingUnits == false && !key[KEY_R]) {
         game.selected_structure = context->getIdOfStructureWhereMouseHovers();
 
         // select list that belongs to structure when it is ours
@@ -195,7 +195,7 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
         if (key[KEY_R] && humanPlayer.hasAtleastOneStructure(REPAIR)) {
             if (hoverUnit.iPlayer == HUMAN) {
                 if (hoverUnit.isDamaged() && !hoverUnit.isInfantryUnit() && !hoverUnit.isAirbornUnit())	{
-                    if (cMouse::isLeftButtonClicked()) {
+                    if (mouse->isLeftButtonClicked()) {
                         // find closest repair bay to move to
 
                         cStructureUtils structureUtils;
@@ -229,12 +229,12 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
 
     // when mouse hovers above a valid cell
     if (mouseCell > -1) {
-        if (cMouse::isRightButtonClicked() && !cMouse::isMapScrolling()) {
+        if (mouse->isRightButtonClicked() && !mouse->isMapScrolling()) {
             UNIT_deselect_all();
         }
 
         // single clicking and moving
-        if (cMouse::isLeftButtonClicked()) {
+        if (mouse->isLeftButtonClicked()) {
             bool bParticle=false;
 
             if (mouse_tile == MOUSE_RALLY) {
@@ -335,7 +335,7 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
         }
     }
 
-    if (cMouse::isLeftButtonPressed()) {
+    if (mouse->isLeftButtonPressed()) {
         // When the mouse is pressed, we will check if the first coordinates are filled in
         // if so, we will update the second coordinates. If the player holds his mouse we
         // keep updating the second coordinates and create a rectangle to select units with.
@@ -346,7 +346,7 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
 
                 // assign 2nd coordinates
                 mouse_co_x2 = mouse_x;
-                if (cSideBar::isMouseOverSidebar(game)) {
+                if (mouse_x > game.screen_x - cSideBar::SidebarWidth) {
                     mouse_co_x2 = game.screen_x - cSideBar::SidebarWidth - 1;
                 }
 
@@ -370,7 +370,7 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
     } else {
         // where we box selecting? then this must be the unpress of the mouse button and thus we
         // should start selecting units within the rectangle
-        if (cMouse::isBoxSelecting()) {
+        if (mouse->isBoxSelecting()) {
             mouse_status = MOUSE_STATE_NORMAL;
 
             int min_x, min_y;
