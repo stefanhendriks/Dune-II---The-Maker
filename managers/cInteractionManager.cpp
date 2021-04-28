@@ -2,12 +2,15 @@
 #include "cInteractionManager.h"
 
 
-cInteractionManager::cInteractionManager(cPlayer * thePlayer) {
+cInteractionManager::cInteractionManager(cPlayer * thePlayer) : cMouseObserver() {
 	assert(thePlayer);
 	// does not own these things!
-	sidebar = thePlayer->getSideBar();
 	m_Player = thePlayer;
+    sidebar = thePlayer->getSideBar();
 	miniMapDrawer = drawManager->getMiniMapDrawer();
+	mouseDrawer = drawManager->getMouseDrawer();
+	placeItDrawer = drawManager->getPlaceItDrawer();
+	orderDrawer = drawManager->getOrderDrawer();
 }
 
 cInteractionManager::~cInteractionManager() {
@@ -16,58 +19,8 @@ cInteractionManager::~cInteractionManager() {
 	miniMapDrawer = nullptr;
 }
 
-void cInteractionManager::interact() {
-    cGameControlsContext *pContext = m_Player->getGameControlsContext();
-
-    if (pContext->isMouseOnSidebarOrMinimap()) {
-        mouseInteractWithSidebarOrMinimap();
-    }
-
-    if (pContext->isMouseOnBattleField()) {
-        mouseInteractWithBattlefield();
-    }
-}
-
 void cInteractionManager::interactWithKeyboard(){
     keyboardManager.interact();
-}
-
-void cInteractionManager::mouseInteractWithSidebarOrMinimap() {
-	sidebar->thinkInteraction();
-	miniMapDrawer->interact();
-}
-
-void cInteractionManager::mouseInteractWithBattlefield() {
-    // MOUSE WHEEL scrolling causes zooming in/out
-    if (cMouse::isMouseScrolledUp()) {
-        mapCamera->zoomOut();
-    }
-
-    if (cMouse::isMouseScrolledDown()) {
-        mapCamera->zoomIn();
-    }
-
-    if (cMouse::isRightButtonClicked()) {
-        // not moving the map with the right mouse button, then this means it is a 'click' so act accordingly
-        bool isANormalButtonClick = mouse_mv_x2 < -1 && mouse_mv_y2 < -1; // < -1 means we have had this evaluation before :/
-        if (isANormalButtonClick) {
-            if (game.bPlaceIt) {
-                game.bPlaceIt = false;
-            }
-            if (game.bDeployIt) {
-                game.bDeployIt = false;
-            }
-        }
-    }
-
-    // HACK HACK:
-    // make -1 to -2, so that we can prevent placeIt/deployIt=false when just stopped viewport dragging
-    if (mouse_mv_x2 == -1) {
-        mouse_mv_x2 = -2;
-    }
-    if (mouse_mv_y2 == -1) {
-        mouse_mv_y2 = -2;
-    }
 }
 
 void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer) {
@@ -76,4 +29,70 @@ void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer) {
     char msg[255];
     sprintf(msg, "cInteractionManager::setPlayerToInteractFor for player [%d] [%s]", thePlayer->getId(), thePlayer->getHouseName().c_str());
     logbook(msg);
+}
+
+void cInteractionManager::onMouseClickedLeft(const s_MouseEvent &event) {
+}
+
+void cInteractionManager::onMouseClickedRight(const s_MouseEvent &event) {
+    // not moving the map with the right mouse button, then this means it is a 'click' so act accordingly
+    bool isANormalButtonClick = mouse_mv_x2 < -1 && mouse_mv_y2 < -1; // < -1 means we have had this evaluation before :/
+    if (isANormalButtonClick) {
+        if (game.bPlaceIt) {
+            game.bPlaceIt = false;
+        }
+        if (game.bDeployIt) {
+            game.bDeployIt = false;
+        }
+    }
+}
+
+void cInteractionManager::onMouseAt(const s_MouseEvent &mouseEvent) {
+}
+
+void cInteractionManager::onMouseScrolledUp(const s_MouseEvent &mouseEvent) {
+}
+
+void cInteractionManager::onMouseScrolledDown(const s_MouseEvent &mouseEvent) {
+}
+
+/**
+ * Called by mouse to send an event.
+ * @param mouseEvent
+ */
+void cInteractionManager::onNotify(const s_MouseEvent &mouseEvent) {
+    char msg[255];
+    sprintf(msg, "cInteractionManager::onNotify %s x=%d, y=%d, z=%d", mouseEvent.toString(mouseEvent.eventType), mouseEvent.x, mouseEvent.y, mouseEvent.z);
+    logbook(msg);
+
+    // process these events by itself (if any implementation is present)...
+    switch (mouseEvent.eventType) {
+        case eMouseEventType::MOUSE_MOVED_TO:
+            onMouseAt(mouseEvent);
+            break;
+        case eMouseEventType::MOUSE_SCROLLED_UP:
+            onMouseScrolledUp(mouseEvent);
+            break;
+        case eMouseEventType::MOUSE_SCROLLED_DOWN:
+            onMouseScrolledDown(mouseEvent);
+            break;
+        case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
+            onMouseClickedLeft(mouseEvent);
+            break;
+        case eMouseEventType::MOUSE_RIGHT_BUTTON_CLICKED:
+            onMouseClickedRight(mouseEvent);
+            break;
+    }
+
+    // now call all its other interested listeners
+    cGameControlsContext *pContext = m_Player->getGameControlsContext();
+    pContext->onNotify(mouseEvent); // must be first because other classes rely on this context
+
+    sidebar->onNotify(mouseEvent);
+    placeItDrawer->onNotify(mouseEvent);
+    mapCamera->onNotify(mouseEvent);
+    mouseDrawer->onNotify(mouseEvent);
+    miniMapDrawer->onNotify(mouseEvent);
+    orderDrawer->onNotify(mouseEvent);
+
 }

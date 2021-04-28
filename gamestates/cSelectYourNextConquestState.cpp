@@ -86,7 +86,7 @@ void cSelectYourNextConquestState::think() {
                 regionPiece.iAlpha += 3;
 
                 // speed up when holding mouse button
-                if (cMouse::isLeftButtonPressed()) {
+                if (game.getMouse()->isLeftButtonPressed()) {
                     regionPiece.iAlpha += 3;
                 }
             }
@@ -313,7 +313,7 @@ void cSelectYourNextConquestState::interact() {
         }
     }
 
-    if (cMouse::isLeftButtonClicked() && bClickable) {
+    if (game.getMouse()->isLeftButtonClicked() && bClickable) {
         // selected....
         int iReg = 0;
         for (int ir = 0; ir < MAX_REGIONS; ir++) {
@@ -458,7 +458,7 @@ int cSelectYourNextConquestState::REGION_OVER() {
 
     // when mouse is not even on the map, return -1
     cRectangle mapRect(offsetX + 16, offsetY + 72, 608, 241);
-    if (!mapRect.isMouseOver()) return -1;
+    if (!mapRect.isMouseOver(mouseX, mouseY)) return -1;
 
     // from here, we are on a region
 

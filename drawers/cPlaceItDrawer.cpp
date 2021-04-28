@@ -1,11 +1,16 @@
 #include "../include/d2tmh.h"
 
 cPlaceItDrawer::cPlaceItDrawer(cPlayer * thePlayer) : m_Player(thePlayer) {
-
+    bWithinBuildDistance = false;
+    bMayPlace = true;
+    itemToPlace = nullptr;
+    iTotalBlocks = 0;
+    iTotalRocks = 0;
 }
 
 cPlaceItDrawer::~cPlaceItDrawer() {
 	m_Player = nullptr;
+    itemToPlace = nullptr;
 }
 
 void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace) {
@@ -25,18 +30,18 @@ void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace) {
 
 	drawStructureIdAtCell(itemToPlace, iMouseCell);
 	drawStatusOfStructureAtCell(itemToPlace, iMouseCell);
+	this->itemToPlace = itemToPlace;
 }
 
 void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell) {
 	assert(itemToPlace);
 	if (mouseCell < 0) return;
 
-	cStructureUtils structureUtils;
 	int structureId = itemToPlace->getBuildId();
 	assert(structureId > -1);
 
-	bool bWithinBuildDistance=false;
-	bool bMayPlace=true;
+	bWithinBuildDistance = false;
+	bMayPlace=true;
 
 	int iTile = PLACE_ROCK;	// rocky placement = ok, but bad for power
 
@@ -48,9 +53,9 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     int cellHeight = structureUtils.getHeightOfStructureTypeInCells(structureId);
 
     //
-	int iTotalBlocks = cellWidth * cellHeight;
+	iTotalBlocks = cellWidth * cellHeight;
 
-	int iTotalRocks=0.0;
+	iTotalRocks=0.0;
 
 #define SCANWIDTH	1
 
@@ -171,32 +176,6 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	set_trans_blender(0, 0, 0, 128);
 
 	destroy_bitmap(temp);
-
-	// clicked mouse button
-	// TODO: move to INTERACT function?
-	if (cMouse::isLeftButtonClicked()) {
-		if (bMayPlace && bWithinBuildDistance)	{
-			int iHealthPercent = 50; // the minimum is 50% (with no slabs)
-
-			if (iTotalRocks > 0) {
-				iHealthPercent += health_bar(50, iTotalRocks, iTotalBlocks);
-			}
-
-            play_sound_id(SOUND_PLACE);
-			m_Player->getStructurePlacer()->placeStructure(mouseCell, structureId, iHealthPercent);
-            m_Player->getBuildingListUpdater()->onBuildItemCompleted(itemToPlace);
-
-			game.bPlaceIt=false;
-
-			itemToPlace->decreaseTimesToBuild();
-			itemToPlace->setPlaceIt(false);
-			itemToPlace->setIsBuilding(false);
-			itemToPlace->resetProgress();
-			if (itemToPlace->getTimesToBuild() < 1) {
-                m_Player->getItemBuilder()->removeItemFromList(itemToPlace);
-			}
-		}
-	}
 }
 
 void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int cell) {
@@ -234,4 +213,50 @@ void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int c
     draw_trans_sprite(bmp_screen, temp, iDrawX, iDrawY);
 
     destroy_bitmap(temp);
+}
+
+void cPlaceItDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
+    // this assumes the context has been updated beforehand...
+    int mouseCell = m_Player->getGameControlsContext()->getMouseCell();
+
+    if (mouseCell < 0) {
+        return;
+    }
+
+    if (itemToPlace == nullptr) {
+        return;
+    }
+
+    int structureId = itemToPlace->getBuildId();
+
+    if (bMayPlace && bWithinBuildDistance)	{
+        int iHealthPercent = 50; // the minimum is 50% (with no slabs)
+
+        if (iTotalRocks > 0) {
+            iHealthPercent += health_bar(50, iTotalRocks, iTotalBlocks);
+        }
+
+        play_sound_id(SOUND_PLACE);
+        m_Player->getStructurePlacer()->placeStructure(mouseCell, structureId, iHealthPercent);
+        m_Player->getBuildingListUpdater()->onBuildItemCompleted(itemToPlace);
+
+        game.bPlaceIt=false;
+
+        itemToPlace->decreaseTimesToBuild();
+        itemToPlace->setPlaceIt(false);
+        itemToPlace->setIsBuilding(false);
+        itemToPlace->resetProgress();
+        if (itemToPlace->getTimesToBuild() < 1) {
+            m_Player->getItemBuilder()->removeItemFromList(itemToPlace);
+        }
+        itemToPlace = nullptr;
+    }
+}
+
+void cPlaceItDrawer::onNotify(const s_MouseEvent &event) {
+    switch (event.eventType) {
+        case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
+            onMouseClickedLeft(event);
+            return;
+    }
 }

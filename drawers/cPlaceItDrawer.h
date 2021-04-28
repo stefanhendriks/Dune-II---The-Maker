@@ -2,20 +2,32 @@
 #define CPLACEITDRAWER_H_
 
 class cPlaceItDrawer {
-	public:
-		cPlaceItDrawer(cPlayer * thePlayer);
-		~cPlaceItDrawer();
+public:
+    cPlaceItDrawer(cPlayer *thePlayer);
 
-		void draw(cBuildingListItem *itemToPlace);
+    ~cPlaceItDrawer();
 
-	protected:
-		void drawStructureIdAtCell(cBuildingListItem *itemToPlace, int cell);
-		void drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell);
+    void draw(cBuildingListItem *itemToPlace);
 
-	private:
+    void onNotify(const s_MouseEvent &event);
 
-		cCellCalculator * cellCalculator;
-        cPlayer * m_Player;
+protected:
+    void drawStructureIdAtCell(cBuildingListItem *itemToPlace, int cell);
+
+    void drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell);
+
+private:
+    void onMouseClickedLeft(const s_MouseEvent &event);
+
+    bool bWithinBuildDistance;
+    bool bMayPlace;
+    int iTotalRocks;
+    int iTotalBlocks;
+
+    cStructureUtils structureUtils;
+
+    cPlayer *m_Player;
+    cBuildingListItem *itemToPlace;
 };
 
 #endif /* CPLACEITDRAWER_H_ */

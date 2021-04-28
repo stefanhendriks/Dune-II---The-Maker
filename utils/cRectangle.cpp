@@ -1,8 +1,6 @@
 //
 // Created by shendriks on 9/3/2020.
 //
-#include <controls/cMouse.h>
-
 #include "cRectangle.h"
 
 cRectangle::~cRectangle() {
@@ -25,6 +23,6 @@ bool cRectangle::isOverlapping(cRectangle *other) {
     return false;
 }
 
-bool cRectangle::isMouseOver() {
-    return cMouse::isOverRectangle(this->x, this->y, this->width, this->height);
+bool cRectangle::isMouseOver(int mouseX, int mouseY) {
+    return isWithin(mouseX, mouseY);
 }

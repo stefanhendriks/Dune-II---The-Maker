@@ -1,7 +1,7 @@
 #include "../include/d2tmh.h"
 
 
-cOrderDrawer::cOrderDrawer() {
+cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : m_Player(thePlayer) {
     buttonBitmap = (BITMAP *)gfxinter[BTN_ORDER].dat;
     int halfOfButton = buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
@@ -14,10 +14,6 @@ cOrderDrawer::cOrderDrawer() {
 
 cOrderDrawer::~cOrderDrawer() {
     delete buttonRect;
-}
-
-bool cOrderDrawer::isMouseOverOrderButton() {
-    return buttonRect->isMouseOver();
 }
 
 void cOrderDrawer::drawOrderPlaced() {
@@ -48,6 +44,10 @@ void cOrderDrawer::drawOrderButton(cPlayer * thePlayer) {
 	} else {
 		draw_sprite(bmp_screen, buttonBitmap, buttonRect->getX(), buttonRect->getY());
 	}
+
+    if (_isMouseOverOrderButton) {
+        drawRectangleOrderButton();
+    }
 }
 
 void cOrderDrawer::drawRectangleOrderButton() {
@@ -58,4 +58,36 @@ void cOrderDrawer::drawRectangleOrderButton() {
     int color = player[HUMAN].getHouseFadingColor();
     allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
     allegroDrawer->drawRectangle(bmp_screen, x+1, y+1, width-2, height-2, color);
+    _isMouseOverOrderButton = false;
+}
+
+void cOrderDrawer::onMouseAt(const s_MouseEvent &event) {
+    _isMouseOverOrderButton = buttonRect->isMouseOver(event.x, event.y);
+}
+
+void cOrderDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
+    cOrderProcesser * orderProcesser = m_Player->getOrderProcesser();
+
+    // handle "order" button interaction
+    if (_isMouseOverOrderButton) {
+        if (orderProcesser->canPlaceOrder()) {
+            orderProcesser->placeOrder();
+        }
+    }
+
+}
+
+void cOrderDrawer::onNotify(const s_MouseEvent &event) {
+    switch (event.eventType) {
+        case eMouseEventType::MOUSE_MOVED_TO:
+            onMouseAt(event);
+            return;
+        case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
+            onMouseClickedLeft(event);
+            return;
+    }
+}
+
+void cOrderDrawer::setPlayer(cPlayer *pPlayer) {
+    this->m_Player = pPlayer;
 }

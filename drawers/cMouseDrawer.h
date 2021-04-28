@@ -10,7 +10,9 @@ class cMouseDrawer {
 
 		void drawToolTip();
 
-	protected:
+        void onNotify(const s_MouseEvent &event);
+
+protected:
 		void drawToolTipBackground();
 		void drawToolTipGeneralInformation(cAbstractStructure * theStructure, cTextWriter *textWriter);
 		void drawToolTipWindTrapInformation(cWindTrap * theWindTrap, cTextWriter *textWriter);
@@ -23,8 +25,11 @@ class cMouseDrawer {
 		int getHeightToolTip();
 
 	private:
+        void onMouseAt(const s_MouseEvent &event);
+
 		cMouseToolTip * mouseToolTip;
 		cPlayer * m_Player;
+		int mouseX, mouseY;
 };
 
 #endif	/* CMOUSEDRAWER_H */

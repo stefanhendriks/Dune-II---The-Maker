@@ -16,6 +16,9 @@ class cDrawManager {
 		cMessageDrawer *getMessageDrawer() { return messageDrawer; }
 		cMiniMapDrawer *getMiniMapDrawer() { return miniMapDrawer; }
 		cOrderDrawer *getOrderDrawer() { return orderDrawer; }
+        cMouseDrawer *getMouseDrawer() { return mouseDrawer; }
+        cPlaceItDrawer *getPlaceItDrawer() { return placeitDrawer; }
+
 		cBuildingListDrawer *getBuildingListDrawer() { return sidebarDrawer->getBuildingListDrawer(); }
 
         void drawMouse();

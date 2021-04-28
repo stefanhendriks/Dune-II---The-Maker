@@ -143,12 +143,12 @@ void cMapCamera::setViewportPosition(int x, int y) {
 
 void cMapCamera::thinkInteraction() {
     // Mouse is 'dragging' (border select) so do not do anything
-    if (cMouse::isBoxSelecting()) {
+    if (game.getMouse()->isBoxSelecting()) {
         return;
     }
 
     // mouse is 'moving by pressing right mouse button', this supersedes behavior with borders
-    if (cMouse::isMapScrolling()) {
+    if (game.getMouse()->isMapScrolling()) {
 
         // difference in pixels (- means up/left, + means down/right)
         int diffX = mouse_mv_x2 - mouse_mv_x1;
@@ -212,4 +212,17 @@ void cMapCamera::thinkInteraction() {
 
 int cMapCamera::getCellFromAbsolutePosition(int x, int y) {
     return map.getCellWithMapDimensions((x / 32), (y / 32));
+}
+
+void cMapCamera::onNotify(const s_MouseEvent &event) {
+    // MOUSE WHEEL scrolling causes zooming in/out
+    switch (event.eventType) {
+        case eMouseEventType::MOUSE_SCROLLED_UP:
+            mapCamera->zoomOut();
+            return;
+        case eMouseEventType::MOUSE_SCROLLED_DOWN:
+            mapCamera->zoomIn();
+            return;
+    }
+
 }

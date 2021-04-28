@@ -25,7 +25,7 @@ public:
 
     bool isOverlapping(cRectangle *other);
 
-    bool isMouseOver();
+    bool isMouseOver(int mouseX, int mouseY);
 
     int getX() { return x; }
     int getEndX() { return x + width; }

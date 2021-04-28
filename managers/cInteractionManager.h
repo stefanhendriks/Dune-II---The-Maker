@@ -9,31 +9,45 @@
  *
  */
 
-
 #ifndef CINTERACTIONMANAGER_H_
 #define CINTERACTIONMANAGER_H_
 
-class cInteractionManager {
+class cPlayer;
+class cSideBar;
+class cMiniMapDrawer;
+class cMouseDrawer;
+class cPlaceItDrawer;
+class cOrderDrawer;
+struct s_MouseEvent;
+
+#include "cKeyboardManager.h"
+#include "cMouseObserver.h"
+
+class cInteractionManager : public cMouseObserver {
 	public:
 		cInteractionManager(cPlayer * thePlayer);
 		~cInteractionManager();
 
-		void interact();
+		void onNotify(const s_MouseEvent &mouseEvent);
+
 		void interactWithKeyboard();
 
 		void setPlayerToInteractFor(cPlayer * thePlayer);
-
-	protected:
-		void mouseInteractWithSidebarOrMinimap();
 
 	private:
 		cSideBar * sidebar;
 		cMiniMapDrawer * miniMapDrawer;
 		cKeyboardManager keyboardManager;
 		cPlayer * m_Player;
+		cMouseDrawer * mouseDrawer;
+		cPlaceItDrawer * placeItDrawer;
+		cOrderDrawer * orderDrawer;
 
-
-    void mouseInteractWithBattlefield();
+        void onMouseAt(const s_MouseEvent &mouseEvent);
+        void onMouseClickedLeft(const s_MouseEvent &mouseEvent);
+        void onMouseClickedRight(const s_MouseEvent &mouseEvent);
+        void onMouseScrolledUp(const s_MouseEvent &mouseEvent);
+        void onMouseScrolledDown(const s_MouseEvent &mouseEvent);
 };
 
 #endif /* CINTERACTIONMANAGER_H_ */
