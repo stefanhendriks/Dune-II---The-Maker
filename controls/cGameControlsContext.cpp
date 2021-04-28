@@ -93,14 +93,22 @@ cAbstractStructure * cGameControlsContext::getStructurePointerWhereMouseHovers()
 	return structure[mouseHoveringOverStructureId];
 }
 
-void cGameControlsContext::onMouseAt(int x, int y) {
-    updateMouseCell(x, y);
+void cGameControlsContext::onMouseAt(s_MouseEvent &event) {
+    updateMouseCell(event.x, event.y);
     if (isMouseOnBattleField()) {
         determineToolTip();
-        determineHoveringOverStructureId(x, y);
+        determineHoveringOverStructureId(event.x, event.y);
         determineHoveringOverUnitId();
     } else {
         mouseHoveringOverStructureId = -1;
         mouseHoveringOverUnitId = -1;
+    }
+}
+
+void cGameControlsContext::onNotify(s_MouseEvent &event) {
+    switch (event.eventType) {
+        case eMouseEventType::MOUSE_MOVED_TO:
+            onMouseAt(event);
+            return;
     }
 }

@@ -344,8 +344,8 @@ void cMiniMapDrawer::think() {
     }
 }
 
-void cMiniMapDrawer::onMouseAt(int x, int y) {
-    _isMouseOver = m_RectMinimap->isMouseOver(x, y);
+void cMiniMapDrawer::onMouseAt(const s_MouseEvent &event) {
+    _isMouseOver = m_RectMinimap->isMouseOver(event.x, event.y);
 }
 
 bool cMiniMapDrawer::isMouseOver() {
@@ -356,8 +356,8 @@ void cMiniMapDrawer::setPlayer(cPlayer *thePlayer) {
     this->m_Player = thePlayer;
 }
 
-void cMiniMapDrawer::onMouseClickedLeft(int x, int y) {
-    if (m_RectMinimap->isWithin(x, y) && // on minimap
+void cMiniMapDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
+    if (m_RectMinimap->isWithin(event.x, event.y) && // on minimap
         !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
             ) {
 
@@ -366,4 +366,16 @@ void cMiniMapDrawer::onMouseClickedLeft(int x, int y) {
             mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
         }
     }
+}
+
+void cMiniMapDrawer::onNotify(const s_MouseEvent &event) {
+    switch (event.eventType) {
+        case eMouseEventType::MOUSE_MOVED_TO:
+            onMouseAt(event);
+            return;
+        case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
+            onMouseClickedLeft(event);
+            return;
+    }
+
 }

@@ -182,9 +182,6 @@ void cSideBarDrawer::drawBuildingLists() {
     // allow clicking on the order button
     if (selectedList && selectedList->getType() == LIST_STARPORT) {
         orderDrawer->drawOrderButton(m_Player);
-        if (orderDrawer->isMouseOverOrderButton()) {
-            orderDrawer->drawRectangleOrderButton();
-        }
     }
 }
 

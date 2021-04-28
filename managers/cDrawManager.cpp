@@ -6,7 +6,7 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) : m_Player(thePlayer) {
 	assert(&thePlayer);
 	creditsDrawer = new CreditsDrawer(thePlayer);
 	sidebarDrawer = new cSideBarDrawer(thePlayer);
-	orderDrawer = new cOrderDrawer();
+	orderDrawer = new cOrderDrawer(thePlayer);
 	mapDrawer = new cMapDrawer(&map, thePlayer, mapCamera);
 	miniMapDrawer = new cMiniMapDrawer(&map, thePlayer, mapCamera);
 	particleDrawer = new cParticleDrawer();
@@ -245,7 +245,7 @@ void cDrawManager::setPlayerToDraw(cPlayer * playerToDraw) {
     this->m_Player = playerToDraw;
     this->creditsDrawer->setPlayer(playerToDraw);
     this->sidebarDrawer->setPlayer(playerToDraw);
-//    this->orderDrawer->setPlayer(playerToDraw);
+    this->orderDrawer->setPlayer(playerToDraw);
     this->miniMapDrawer->setPlayer(playerToDraw);
     interactionManager->setPlayerToInteractFor(playerToDraw);
 }
