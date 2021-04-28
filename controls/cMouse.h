@@ -21,8 +21,8 @@ public:
 
 	void updateState(); // updates state from Allegro, calls appropiate on* methods on gameControlContext class
 
-	void setInteractionManager(cInteractionManager *pInteractionManager) {
-	    this->interactionManager = pInteractionManager;
+	void setMouseObserver(cMouseObserver *mouseObserver) {
+	    this->_mouseObserver = mouseObserver;
 	}
 
 	// these functions return true when the mouse button is being hold down
@@ -49,7 +49,7 @@ public:
     bool isBoxSelecting();
 
 private:
-    cInteractionManager * interactionManager;
+    cMouseObserver * _mouseObserver;
 
     bool leftButtonPressed;
 	bool rightButtonPressed;

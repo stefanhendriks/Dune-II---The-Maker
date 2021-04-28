@@ -311,7 +311,6 @@ void cSideBar::onMouseClickedRight(const s_MouseEvent &event) {
         }
     } else {
         cOrderProcesser * orderProcesser = m_Player->getOrderProcesser();
-        cOrderDrawer * orderDrawer = drawManager->getOrderDrawer();
 
         assert(orderProcesser);
         if (!orderProcesser->isOrderPlaced()) {

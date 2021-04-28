@@ -2,7 +2,7 @@
 #include "cInteractionManager.h"
 
 
-cInteractionManager::cInteractionManager(cPlayer * thePlayer) {
+cInteractionManager::cInteractionManager(cPlayer * thePlayer) : cMouseObserver() {
 	assert(thePlayer);
 	// does not own these things!
 	m_Player = thePlayer;
@@ -31,10 +31,10 @@ void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer) {
     logbook(msg);
 }
 
-void cInteractionManager::onMouseClickedLeft(s_MouseEvent &event) {
+void cInteractionManager::onMouseClickedLeft(const s_MouseEvent &event) {
 }
 
-void cInteractionManager::onMouseClickedRight(s_MouseEvent &event) {
+void cInteractionManager::onMouseClickedRight(const s_MouseEvent &event) {
     // not moving the map with the right mouse button, then this means it is a 'click' so act accordingly
     bool isANormalButtonClick = mouse_mv_x2 < -1 && mouse_mv_y2 < -1; // < -1 means we have had this evaluation before :/
     if (isANormalButtonClick) {
@@ -47,20 +47,20 @@ void cInteractionManager::onMouseClickedRight(s_MouseEvent &event) {
     }
 }
 
-void cInteractionManager::onMouseAt(s_MouseEvent &mouseEvent) {
+void cInteractionManager::onMouseAt(const s_MouseEvent &mouseEvent) {
 }
 
-void cInteractionManager::onMouseScrolledUp(s_MouseEvent &mouseEvent) {
+void cInteractionManager::onMouseScrolledUp(const s_MouseEvent &mouseEvent) {
 }
 
-void cInteractionManager::onMouseScrolledDown(s_MouseEvent &mouseEvent) {
+void cInteractionManager::onMouseScrolledDown(const s_MouseEvent &mouseEvent) {
 }
 
 /**
  * Called by mouse to send an event.
  * @param mouseEvent
  */
-void cInteractionManager::onNotify(s_MouseEvent &mouseEvent) {
+void cInteractionManager::onNotify(const s_MouseEvent &mouseEvent) {
     char msg[255];
     sprintf(msg, "cInteractionManager::onNotify %s x=%d, y=%d, z=%d", mouseEvent.toString(mouseEvent.eventType), mouseEvent.x, mouseEvent.y, mouseEvent.z);
     logbook(msg);

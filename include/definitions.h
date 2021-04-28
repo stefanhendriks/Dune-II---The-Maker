@@ -29,9 +29,6 @@
 #define MOD_D2TM		1
 //#define MOD_MINE		2		// own made mod
 
-#define Y_DRAWOFFSET	24
-
-#define MAX_WORLD		4			// 4 worlds is enough for now
 #define MAX_REGIONS		27			// not more then 27 regions as dune 2 has
 
 // MATH

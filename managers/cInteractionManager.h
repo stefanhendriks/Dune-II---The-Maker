@@ -21,13 +21,14 @@ class cOrderDrawer;
 struct s_MouseEvent;
 
 #include "cKeyboardManager.h"
+#include "cMouseObserver.h"
 
-class cInteractionManager {
+class cInteractionManager : public cMouseObserver {
 	public:
 		cInteractionManager(cPlayer * thePlayer);
 		~cInteractionManager();
 
-		void onNotify(s_MouseEvent &mouseEvent);
+		void onNotify(const s_MouseEvent &mouseEvent);
 
 		void interactWithKeyboard();
 
@@ -42,11 +43,11 @@ class cInteractionManager {
 		cPlaceItDrawer * placeItDrawer;
 		cOrderDrawer * orderDrawer;
 
-        void onMouseAt(s_MouseEvent &mouseEvent);
-        void onMouseClickedLeft(s_MouseEvent &mouseEvent);
-        void onMouseClickedRight(s_MouseEvent &mouseEvent);
-        void onMouseScrolledUp(s_MouseEvent &mouseEvent);
-        void onMouseScrolledDown(s_MouseEvent &mouseEvent);
+        void onMouseAt(const s_MouseEvent &mouseEvent);
+        void onMouseClickedLeft(const s_MouseEvent &mouseEvent);
+        void onMouseClickedRight(const s_MouseEvent &mouseEvent);
+        void onMouseScrolledUp(const s_MouseEvent &mouseEvent);
+        void onMouseScrolledDown(const s_MouseEvent &mouseEvent);
 };
 
 #endif /* CINTERACTIONMANAGER_H_ */

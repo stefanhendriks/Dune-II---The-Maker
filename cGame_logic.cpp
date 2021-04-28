@@ -2113,7 +2113,7 @@ bool cGame::setupGame() {
  * Set up players
  */
 void cGame::setup_players() {
-    mouse->setInteractionManager(nullptr);
+    mouse->setMouseObserver(nullptr);
 
 	// make sure each player has an own item builder
 	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
@@ -2144,7 +2144,7 @@ void cGame::setup_players() {
     delete interactionManager;
     cPlayer *humanPlayer = &player[HUMAN];
     interactionManager = new cInteractionManager(humanPlayer);
-    mouse->setInteractionManager(interactionManager);
+    mouse->setMouseObserver(interactionManager);
 }
 
 bool cGame::isState(int thisState) {
