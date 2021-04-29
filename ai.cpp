@@ -17,13 +17,13 @@
 // TODO: constructor/destructors
 
 // cAIPlayer functions
-void cAIPlayer::init(int iID) {
-    ID = iID;
+void cAIPlayer::init(cPlayer *thePlayer) {
+    _player = thePlayer;
 
 	// SKIRMISH RELATED SETTINGS
 	// TODO: move this out of here, this basically ensures there is one playable AI at start (when setting up
 	// skirmish game)
-	if (iID > 1) {
+	if (_player->getId() > 1) {
         bPlaying = false;
     } else {
         bPlaying = true;
@@ -43,22 +43,21 @@ void cAIPlayer::init(int iID) {
 
     TIMER_Upgrades = 50;
     TIMER_BuildUnits = 300; // give m_Player advantage to build his stuff first, before computer grows his army
-//    TIMER_blooms = 200;
-    TIMER_blooms = 50;
+    TIMER_blooms = 200;
     TIMER_repair = 500;
 }
 
-void cAIPlayer::BUILD_STRUCTURE(int iStrucType) {
+void cAIPlayer::buildStructureIfAllowed(int iStrucType) {
     if (isBuildingStructure()) {
         char msg[255];
-        sprintf(msg, "BUILD_STRUCTURE AI[%d] wants to build structure type [%d(=%s)] but it is still building a structure - ABORTING", ID, iStrucType, structures[iStrucType].name);
+        sprintf(msg, "buildStructureIfAllowed AI[%d] wants to build structure type [%d(=%s)] but it is still building a structure - ABORTING", _player->getId(), iStrucType, structures[iStrucType].name);
         logbook(msg);
         return;
     }
 
     if (isBuildingStructureAwaitingPlacement()) {
         char msg[255];
-        sprintf(msg, "BUILD_STRUCTURE AI[%d] wants to build structure type [%d(=%s)] but it is still awaiting placement of a structure", ID, iStrucType, structures[iStrucType].name);
+        sprintf(msg, "buildStructureIfAllowed AI[%d] wants to build structure type [%d(=%s)] but it is still awaiting placement of a structure", _player->getId(), iStrucType, structures[iStrucType].name);
         logbook(msg);
         return;
     }
@@ -66,11 +65,9 @@ void cAIPlayer::BUILD_STRUCTURE(int iStrucType) {
 	// not building & busy placing
 
 	// check if its allowed at all
-    cPlayer &cPlayer = player[ID];
-
-    if (!cPlayer.hasAtleastOneStructure(CONSTYARD)) {
+    if (!_player->hasAtleastOneStructure(CONSTYARD)) {
         char msg[255];
-        sprintf(msg, "BUILD_STRUCTURE AI[%d] wants to build structure type [%d(=%s)] but can't because no CONSTYARD present.", ID, iStrucType, structures[iStrucType].name);
+        sprintf(msg, "buildStructureIfAllowed AI[%d] wants to build structure type [%d(=%s)] but can't because no CONSTYARD present.", _player->getId(), iStrucType, structures[iStrucType].name);
         logbook(msg);
         return;
     }
@@ -79,11 +76,8 @@ void cAIPlayer::BUILD_STRUCTURE(int iStrucType) {
 }
 
 bool cAIPlayer::BUILD_UNIT(int iUnitType) {
-
     // Fix up house mixtures
-    const cPlayer &cPlayer = player[ID];
-
-    if (cPlayer.getHouse() == HARKONNEN || cPlayer.getHouse() == SARDAUKAR) {
+    if (_player->getHouse() == HARKONNEN || _player->getHouse() == SARDAUKAR) {
         if (iUnitType == INFANTRY) iUnitType = TROOPERS;
         if (iUnitType == SOLDIER) iUnitType = TROOPER;
         if (iUnitType == TRIKE) iUnitType = QUAD;
@@ -95,18 +89,18 @@ bool cAIPlayer::BUILD_UNIT(int iUnitType) {
         if (iUnitType == SOLDIER) iUnitType = TROOPER;
     }
 
-    if (cPlayer.getHouse() == ORDOS) {
+    if (_player->getHouse() == ORDOS) {
         if (iUnitType == TRIKE) iUnitType = RAIDER;
     }
 
-    cantBuildReason reason = canAIBuildUnit(ID, iUnitType);
+    cantBuildReason reason = canBuildUnit(iUnitType);
 
     if (reason != cantBuildReason::NONE) {
         if (reason == cantBuildReason::REQUIRES_UPGRADE) {
             // try to build upgrade instead?
             cBuildingListItem *upgrade = isUpgradeAvailableToGrantUnit(iUnitType);
             if (upgrade != nullptr) {
-                if (upgrade->isAvailable() && cPlayer.hasEnoughCreditsFor(upgrade->getCosts())) {
+                if (upgrade->isAvailable() && _player->hasEnoughCreditsFor(upgrade->getCosts())) {
                     char msg[255];
                     sprintf(msg, "BUILD_UNIT: Cannot build %s because I need to upgrade; starting upgrade now.",
                             units[iUnitType].name);
@@ -179,11 +173,9 @@ bool cAIPlayer::BUILD_UNIT(int iUnitType) {
 }
 
 bool cAIPlayer::startBuildingUnit(int iUnitType) const {
-    const cPlayer &cPlayer = player[ID];
-
     s_UnitP &unitType = units[iUnitType];
     int listId = unitType.listId;
-    bool startedBuilding = cPlayer.getSideBar()->startBuildingItemIfOk(listId, iUnitType);
+    bool startedBuilding = _player->getSideBar()->startBuildingItemIfOk(listId, iUnitType);
 
     if (DEBUGGING) {
         char msg[255];
@@ -198,12 +190,10 @@ bool cAIPlayer::startBuildingUnit(int iUnitType) const {
 }
 
 void cAIPlayer::startBuildingStructure(int iStructureType) const {
-    const cPlayer &cPlayer = player[ID];
-
     // Duplicated logic - for now - determining lists by unit id.
     int listId = LIST_CONSTYARD;
 
-    bool startedBuilding = cPlayer.getSideBar()->startBuildingItemIfOk(listId, iStructureType);
+    bool startedBuilding = _player->getSideBar()->startBuildingItemIfOk(listId, iStructureType);
 
     if (DEBUGGING) {
         char msg[255];
@@ -217,9 +207,8 @@ void cAIPlayer::startBuildingStructure(int iStructureType) const {
 }
 
 void cAIPlayer::startUpgrading(int iUpgradeType) const {
-    const cPlayer &cPlayer = player[ID];
     int listId = LIST_UPGRADES;
-    bool startedBuilding = cPlayer.getSideBar()->startBuildingItemIfOk(listId, iUpgradeType);
+    bool startedBuilding = _player->getSideBar()->startBuildingItemIfOk(listId, iUpgradeType);
 
     if (DEBUGGING) {
         char msg[255];
@@ -233,8 +222,7 @@ void cAIPlayer::startUpgrading(int iUpgradeType) const {
 }
 
 bool cAIPlayer::isBuildingUnitType(int iUnitType) const {
-    const cPlayer &cPlayer = player[ID];
-    cItemBuilder *pItemBuilder = cPlayer.getItemBuilder();
+    cItemBuilder *pItemBuilder = _player->getItemBuilder();
 
     int listId = units[iUnitType].listId;
     int subListId = units[iUnitType].subListId;
@@ -246,9 +234,7 @@ bool cAIPlayer::isBuildingUnitType(int iUnitType) const {
  * Returns true if anything is built from ConstYard
  */
 cBuildingListItem *cAIPlayer::isBuildingStructure() const {
-    const cPlayer &cPlayer = player[ID];
-    cItemBuilder *pItemBuilder = cPlayer.getItemBuilder();
-
+    cItemBuilder *pItemBuilder = _player->getItemBuilder();
     return pItemBuilder->getListItemWhichIsBuilding(LIST_CONSTYARD, 0);
 }
 
@@ -256,8 +242,7 @@ cBuildingListItem *cAIPlayer::isBuildingStructure() const {
  * Returns true if anything is built from ConstYard
  */
 bool cAIPlayer::isBuildingStructureAwaitingPlacement() const {
-    const cPlayer &cPlayer = player[ID];
-    cItemBuilder *pItemBuilder = cPlayer.getItemBuilder();
+    cItemBuilder *pItemBuilder = _player->getItemBuilder();
 
     return pItemBuilder->isAnythingBeingBuiltForListIdAwaitingPlacement(LIST_CONSTYARD, 0);
 }
@@ -271,8 +256,7 @@ int cAIPlayer::getStructureTypeBeingBuilt() const {
 }
 
 cBuildingListItem *cAIPlayer::getStructureBuildingListItemBeingBuilt() const {
-    const cPlayer &cPlayer = player[ID];
-    cItemBuilder *pItemBuilder = cPlayer.getItemBuilder();
+    cItemBuilder *pItemBuilder = _player->getItemBuilder();
 
     return pItemBuilder->getListItemWhichIsBuilding(LIST_CONSTYARD, 0);
 }
@@ -294,8 +278,6 @@ bool cAIPlayer::think_buildingplacement() {
             }
         }
 
-        cPlayer &cPlayer = player[ID];
-
         // find place to place structure
         if (buildingStructureAwaitingPlacement) {
             int structureType = getStructureTypeBeingBuilt();
@@ -311,15 +293,15 @@ bool cAIPlayer::think_buildingplacement() {
 //                }
 
                 cBuildingListItem *pItem = getStructureBuildingListItemBeingBuilt();
-                cPlayer.getStructurePlacer()->placeStructure(iCll, structureType, iHealthPercent);
-                cPlayer.getBuildingListUpdater()->onBuildItemCompleted(pItem);
+                _player->getStructurePlacer()->placeStructure(iCll, structureType, iHealthPercent);
+                _player->getBuildingListUpdater()->onBuildItemCompleted(pItem);
 
                 pItem->decreaseTimesToBuild();
                 pItem->setPlaceIt(false);
                 pItem->setIsBuilding(false);
                 pItem->resetProgress();
                 if (pItem->getTimesToBuild() < 1) {
-                    cPlayer.getItemBuilder()->removeItemFromList(pItem);
+                    _player->getItemBuilder()->removeItemFromList(pItem);
                 }
                 // delay base build thinking a bit, so the new structure will be taken into account when deciding
                 // which structure to build next
@@ -367,15 +349,14 @@ void cAIPlayer::think_spiceBlooms() {
             // with a soldier or something
             int iUnit = -1;
             int iDist = 9999;
-            cPlayer &cPlayer = player[ID];
-            int iBloom = CLOSE_SPICE_BLOOM(cPlayer.focus_cell);
+            int iBloom = CLOSE_SPICE_BLOOM(_player->focus_cell);
 
             // TODO: Move this to a unit repository thingy which can query the units
             for (int i = 0; i < MAX_UNITS; i++) {
                 cUnit &cUnit = unit[i];
                 if (!cUnit.isValid()) continue;
                 if (cUnit.iPlayer == HUMAN) continue; // skip human units
-                if (cUnit.iPlayer != ID) continue; // skip units which are not my own
+                if (cUnit.iPlayer != _player->getId()) continue; // skip units which are not my own
                 if (cUnit.iAction != ACTION_GUARD) continue; // skip units which are doing something else
                 if (!cUnit.isInfantryUnit()) continue; // skip non-infantry units
 
@@ -407,24 +388,24 @@ void cAIPlayer::think_spiceBlooms() {
 }
 
 void cAIPlayer::think() {
-    if (ID < 0 || ID > AI_WORM) {
+    if (_player->getId() < 0 || _player->getId() > AI_WORM) {
         logbook("ERROR!!! AI has invalid ID to think with!?");
         return;
     }
 
     if (game.bDisableAI) return; // do nothing
 
-    if (ID == HUMAN) {
+    if (_player->getId() == HUMAN) {
         return; // AI is human / skip
     }
 
     if (game.bSkirmish) {
-        if (!aiplayer[ID].bPlaying) return; // skip non playing AI?
+        if (!bPlaying) return; // skip non playing AI?
     }
 
 //    if (ID == 1) {
 //        char msg[255];
-//        sprintf(msg, "AI[%d]: TIMER_think [%d]", ID, TIMER_think);
+//        sprintf(msg, "AI[%d]: TIMER_think [%d]", _player->getId(), TIMER_think);
 //        logbook(msg);
 //    }
 
@@ -437,7 +418,7 @@ void cAIPlayer::think() {
     TIMER_think = 25;
 
     // Worm thinking
-    if (ID == AI_WORM) {
+    if (_player->getId() == AI_WORM) {
         if (rnd(100) < 25) {
             think_worm();
         }
@@ -445,7 +426,7 @@ void cAIPlayer::think() {
         return;
     }
 
-    if (ID == AI_CPU5) {
+    if (_player->getId() == AI_CPU5) {
         // AI_CPU5 is assumed to be FREMEN house (used for the Atreides "super weapon: deploy Fremen"
         think_fremen_superweapon();
         return;
@@ -458,6 +439,7 @@ void cAIPlayer::think() {
     think_upgrades();
     think_buildarmy();
     think_attack();
+    think_repair();
 }
 
 void cAIPlayer::think_repair() {
@@ -470,30 +452,31 @@ void cAIPlayer::think_repair() {
 
     // check if we must repair, only if we have a repair structure ofcourse
     // and we have some money to spare for repairs
-    if (player[ID].hasAtleastOneStructure(REPAIR) && player[ID].credits > 250) {
+    if (_player->hasAtleastOneStructure(REPAIR) && _player->credits > 250) {
         // yes, we can repair
         for (int i=0; i < MAX_UNITS; i++) {
-            if (unit[i].isValid()) {
-                if (unit[i].iPlayer == ID) {
-                    if (unit[i].isDamaged())
+            cUnit &pUnit = unit[i];
+            if (pUnit.isValid()) {
+                if (pUnit.iPlayer == _player->getId()) {
+                    if (pUnit.isDamaged())
                     {
                         // head off to repair
                     	int iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
-                                unit[i].getCell(), REPAIR, &player[ID]);
+                                pUnit.getCell(), REPAIR, _player);
 
 						if (iNewID > -1) {
 							int iCarry = CARRYALL_TRANSFER(i, structure[iNewID]->getCell() + 2);
 
 							if (iCarry > -1) {
 								// yehaw we will be picked up!
-								unit[i].TIMER_movewait = 100;
-								unit[i].TIMER_thinkwait = 100;
+								pUnit.TIMER_movewait = 100;
+                                pUnit.TIMER_thinkwait = 100;
 							} else {
-								UNIT_ORDER_MOVE(i, structure[iNewID]->getCell());
+							    pUnit.move_to(structure[iNewID]->getCell());
 							}
 
-							unit[i].iStructureID = iNewID;
-							unit[i].iGoalCell = structure[iNewID]->getCell();
+                            pUnit.iStructureID = iNewID;
+                            pUnit.iGoalCell = structure[iNewID]->getCell();
 						}
                     }
                 }
@@ -508,12 +491,11 @@ void cAIPlayer::think_repair() {
 void cAIPlayer::think_attack() {
     if (TIMER_attack > 0) {
         TIMER_attack--;
-        think_repair();
         return;
     }
 
     char msg[255];
-    sprintf(msg, "AI [%d] think_attack() - start", ID);
+    sprintf(msg, "AI [%d] think_attack() - start", _player->getId());
     logbook(msg);
 
     TIMER_attack = (rnd(900) + 100);
@@ -527,7 +509,6 @@ void cAIPlayer::think_attack() {
     int iAttackPlayer = 0; // HUMAN
 
 
-    cPlayer &thisPlayer = player[ID];
     if (game.bSkirmish) {
         // skirmish games will make the ai a bit more agressive!
         armySize += 3 + rnd(7);
@@ -538,15 +519,15 @@ void cAIPlayer::think_attack() {
         memset(iPl, -1, sizeof(iPl));
 
         for (int p = 0; p < AI_WORM; p++) {
-            if (p != ID) {
+            if (p != _player->getId()) {
                 bool bOk = false;
                 if (p == 0) bOk = true;
                 if (p > 1 && aiplayer[p].bPlaying) bOk = true;
 
                 cPlayer &pPlayer = player[p];
                 // skip same team
-                //.iTeam != thisPlayer.iTeam
-                if (pPlayer.isSameTeamAs(&thisPlayer)) {
+                //.iTeam != _player->iTeam
+                if (pPlayer.isSameTeamAs(_player)) {
                     iPl[iPlID] = p;
                     iPlID++;
                 }
@@ -556,14 +537,14 @@ void cAIPlayer::think_attack() {
         iAttackPlayer = iPl[rnd(iPlID)];
         if (DEBUGGING) {
             char msg[255];
-            sprintf(msg, "AI (id=%d) - Attacking player id %d", this->ID, iAttackPlayer);
+            sprintf(msg, "AI (id=%d) - Attacking player id %d", this->_player->getId(), iAttackPlayer);
             logbook(msg);
         }
     }
 
     // only when ai has a wor/barracks to regenerate his troops, send off infantry sometimes.
-    bool hasHeavyOrLightFactory = thisPlayer.hasAtleastOneStructure(LIGHTFACTORY) || thisPlayer.hasAtleastOneStructure(HEAVYFACTORY);
-    bool hasInfantryStructures = thisPlayer.hasAtleastOneStructure(WOR) || thisPlayer.hasAtleastOneStructure(BARRACKS);
+    bool hasHeavyOrLightFactory = _player->hasAtleastOneStructure(LIGHTFACTORY) || _player->hasAtleastOneStructure(HEAVYFACTORY);
+    bool hasInfantryStructures = _player->hasAtleastOneStructure(WOR) || _player->hasAtleastOneStructure(BARRACKS);
     if (hasInfantryStructures && !hasHeavyOrLightFactory) {
         bInfantryOnly = true;
     }
@@ -572,7 +553,7 @@ void cAIPlayer::think_attack() {
     for (int i = 0; i < MAX_UNITS; i++) {
         cUnit &cUnit = unit[i];
         if (!cUnit.isValid()) continue;
-        if (cUnit.iPlayer != ID) continue; // skip all units but my own
+        if (cUnit.iPlayer != _player->getId()) continue; // skip all units but my own
         if (cUnit.isHarvester()) continue; // skip harvesters
         if (cUnit.isAirbornUnit()) continue; // skip airborn
         if (!cUnit.isIdle()) continue; // skip non-idle units
@@ -581,24 +562,25 @@ void cAIPlayer::think_attack() {
 
     if (unitsAvailable < (armySize / 2)) {
         char msg[255];
-        sprintf(msg, "AI: (ID=%d) skipping attack, because we have %d units available for attacking which is less than 50 percent of requested army size %d", ID, unitsAvailable, armySize);
+        sprintf(msg, "AI: (ID=%d) skipping attack, because we have %d units available for attacking which is less than 50 percent of requested army size %d", _player->getId(), unitsAvailable, armySize);
         logbook(msg);
+        return;
     }
 
     // flip coin, either attack a random unit or structure
     if (rnd(100) < 50) {
-        iTarget = AI_RANDOM_STRUCTURE_TARGET(ID, iAttackPlayer);
+        iTarget = findRandomStructureTarget(iAttackPlayer);
 
         if (iTarget < 0) {
-            iTarget = AI_RANDOM_UNIT_TARGET(ID, iAttackPlayer);
+            iTarget = findRandomUnitTarget(iAttackPlayer);
             isAttackingUnit = true;
         }
     } else {
-        iTarget = AI_RANDOM_UNIT_TARGET(ID, iAttackPlayer);
+        iTarget = findRandomUnitTarget(iAttackPlayer);
         isAttackingUnit = true;
 
         if (iTarget < 0) {
-            iTarget = AI_RANDOM_STRUCTURE_TARGET(ID, iAttackPlayer);
+            iTarget = findRandomStructureTarget(iAttackPlayer);
             isAttackingUnit = false;
         }
     }
@@ -639,7 +621,7 @@ void cAIPlayer::think_attack() {
     for (int i = 0; i < MAX_UNITS; i++) {
         cUnit &cUnit = unit[i];
         if (!cUnit.isValid()) continue;
-        if (cUnit.iPlayer != ID) continue; // skip all units but my own
+        if (cUnit.iPlayer != _player->getId()) continue; // skip all units but my own
         if (cUnit.isHarvester()) continue; // skip harvesters
         if (cUnit.isAirbornUnit()) continue; // skip airborn
         if (!cUnit.isIdle()) continue; // skip non-idle units
@@ -657,23 +639,22 @@ void cAIPlayer::think_attack() {
     if (DEBUGGING) {
         char msg[255];
         if (isAttackingUnit) {
-            sprintf(msg, "AI: I (id=%d) ordered %d units to attack player %d (armySize=%d), UNIT %d", ID, unitsOrderedToAttack, iAttackPlayer, armySize, iTarget);
+            sprintf(msg, "AI: I (id=%d) ordered %d units to attack player %d (armySize=%d), UNIT %d", _player->getId(), unitsOrderedToAttack, iAttackPlayer, armySize, iTarget);
         } else {
-            sprintf(msg, "AI: I (id=%d) ordered %d units to attack player %d (armySize=%d), STRUCTURE %d", ID, unitsOrderedToAttack, iAttackPlayer, armySize, iTarget);
+            sprintf(msg, "AI: I (id=%d) ordered %d units to attack player %d (armySize=%d), STRUCTURE %d", _player->getId(), unitsOrderedToAttack, iAttackPlayer, armySize, iTarget);
         }
         logbook(msg);
     }
 
     char msg2[255];
-    sprintf(msg2, "AI [%d] think_attack() - end", ID);
+    sprintf(msg2, "AI [%d] think_attack() - end", _player->getId());
     logbook(msg2);
-
 }
 
 
 void cAIPlayer::think_upgrades() {
     // prevent human m_Player thinking
-    if (ID == HUMAN) {
+    if (_player->getId() == HUMAN) {
         return; // do not build for human! :)
     }
 
@@ -685,20 +666,17 @@ void cAIPlayer::think_upgrades() {
     TIMER_Upgrades = 20;
 
     // logic for remaining upgrades? (ie super weapons?)
-    cPlayer &cPlayer = player[ID];
-
-    if (cPlayer.hasAtleastOneStructure(HEAVYFACTORY)) {
+    if (_player->hasAtleastOneStructure(HEAVYFACTORY)) {
         // check if there is an upgrade for MCV available
         cBuildingListItem *upgrade = isUpgradeAvailableToGrantUnit(MCV);
-        if (upgrade != nullptr && upgrade->isAvailable() && cPlayer.hasEnoughCreditsFor(upgrade->getCosts())) {
+        if (upgrade != nullptr && upgrade->isAvailable() && _player->hasEnoughCreditsFor(upgrade->getCosts())) {
             startUpgrading(upgrade->getBuildId());
         }
     }
 }
 
 void cAIPlayer::think_buildarmy() {
-    // prevent human m_Player thinking
-    if (ID == HUMAN)
+    if (_player->getId() == HUMAN)
         return; // do not build for human! :)
 
     if (TIMER_BuildUnits > 0) {
@@ -712,10 +690,8 @@ void cAIPlayer::think_buildarmy() {
     int iMission = game.iMission;
 	int iChance = 10;
 
-    cPlayer &cPlayer = player[ID];
-
-    if (cPlayer.getHouse() == HARKONNEN ||
-        cPlayer.getHouse() == SARDAUKAR) {
+    if (_player->getHouse() == HARKONNEN ||
+        _player->getHouse() == SARDAUKAR) {
 		if (iMission <= 2) {
 			iChance=50;
 		} else {
@@ -730,26 +706,30 @@ void cAIPlayer::think_buildarmy() {
 		}
 	}
 
+    char msg[255];
+    sprintf(msg, "AI[%d] - think_buildarmy() : iMission = %d and iChance is %d", _player->getId(), iMission, iChance);
+    logbook(msg);
+
     // Skirmish override
     if (game.bSkirmish) {
         // chance depends on ideal size of foot soldier army
-        int groundUnits = cPlayer.getAmountOfUnitsForType(std::vector<int>{TROOPERS, TROOPER, INFANTRY, SOLDIER});
+        int groundUnits = _player->getAmountOfUnitsForType(std::vector<int>{TROOPERS, TROOPER, INFANTRY, SOLDIER});
         float idealSize = 7;
         iChance = (idealSize - groundUnits) * (100.0f / idealSize);
         char msg[255];
-        sprintf(msg, "AI[%d] determines chance to build infantry units. Counted %d. Ideal size %f, iChance is %d", ID, groundUnits, idealSize, iChance);
+        sprintf(msg, "AI[%d] - think_buildarmy() : Determines chance to build infantry units. Counted %d. Ideal size %f, iChance is %d", _player->getId(), groundUnits, idealSize, iChance);
         logbook(msg);
     }
 
     if (iMission > 1 && rnd(100) < iChance) {
-        if (cPlayer.hasEnoughCreditsForUnit(INFANTRY) || cPlayer.hasEnoughCreditsForUnit(TROOPERS)) {
+        if (_player->hasEnoughCreditsForUnit(INFANTRY) || _player->hasEnoughCreditsForUnit(TROOPERS)) {
             char msg[255];
-            sprintf(msg, "AI[%d]: Wants to build infantry/troopers.", ID);
+            sprintf(msg, "AI[%d] - think_buildarmy() : Wants to build infantry/troopers.", _player->getId());
             logbook(msg);
             BUILD_UNIT(INFANTRY); // (INFANTRY->TROOPERS CONVERSION IN FUNCTION)
         } else {
             char msg[255];
-            sprintf(msg, "AI[%d]: Wants to build soldier/trooper.", ID);
+            sprintf(msg, "AI[%d]: Wants to build soldier/trooper.", _player->getId());
             logbook(msg);
             BUILD_UNIT(SOLDIER); // (SOLDIER->TROOPER CONVERSION IN FUNCTION)
         }
@@ -771,34 +751,41 @@ void cAIPlayer::think_buildarmy() {
 
 	// build quads / trikes
     if (iMission > 2 && rnd(100) < iChance) {
-        if (cPlayer.credits > units[QUAD].cost)
+        if (_player->credits > units[QUAD].cost)
         {
-			BUILD_UNIT(QUAD);
+            char msg[255];
+            sprintf(msg, "AI[%d] - think_buildarmy() : Wants to build QUAD.", _player->getId());
+            logbook(msg);
+
+            BUILD_UNIT(QUAD);
         }
-        else if (cPlayer.credits > units[TRIKE].cost)
+        else if (_player->credits > units[TRIKE].cost)
 		{
+            char msg[255];
+            sprintf(msg, "AI[%d] - think_buildarmy() : Wants to build TRIKE.", _player->getId());
+            logbook(msg);
 			BUILD_UNIT(TRIKE);
 		}
     }
 
     int harvesters = 0;     // harvesters
-    if (cPlayer.hasAtleastOneStructure(HEAVYFACTORY)) {
+    if (_player->hasAtleastOneStructure(HEAVYFACTORY)) {
         // how many harvesters do we own?
         for (int i=0; i < MAX_UNITS; i++) {
             if (!unit[i].isValid()) continue;
-            if (unit[i].iPlayer == ID && unit[i].iType == HARVESTER)
+            if (unit[i].iPlayer == _player->getId() && unit[i].iType == HARVESTER)
                harvesters++;
         }
 
         // 1 harvester for each refinery please
-        if (harvesters < cPlayer.getAmountOfStructuresForType(REFINERY)) {
-            if (cPlayer.hasEnoughCreditsFor(units[HARVESTER].cost)) {
+        if (harvesters < _player->getAmountOfStructuresForType(REFINERY)) {
+            if (_player->hasEnoughCreditsFor(units[HARVESTER].cost)) {
                 BUILD_UNIT(HARVESTER); // build harvester
             }
         }
-        else if (harvesters >= cPlayer.getAmountOfStructuresForType(REFINERY)) {
+        else if (harvesters >= _player->getAmountOfStructuresForType(REFINERY)) {
             // enough harvesters , try to get ratio 2 harvesters for one refinery
-            if (harvesters < (cPlayer.getAmountOfStructuresForType(REFINERY) * 2)) {
+            if (harvesters < (_player->getAmountOfStructuresForType(REFINERY) * 2)) {
                 if (rnd(100) < 15) {
                     BUILD_UNIT(HARVESTER);
                 }
@@ -807,10 +794,10 @@ void cAIPlayer::think_buildarmy() {
     } // Harvester buy logic
 
     // ability to build carryalls
-    if (cPlayer.hasAtleastOneStructure(HIGHTECH)) {
-        if (cPlayer.hasEnoughCreditsForUnit(CARRYALL)) {
+    if (_player->hasAtleastOneStructure(HIGHTECH)) {
+        if (_player->hasEnoughCreditsForUnit(CARRYALL)) {
             int optimalAmountCarryAlls = (harvesters + 1) / 2;
-            int carryalls = cPlayer.getAmountOfUnitsForType(CARRYALL);     // carryalls
+            int carryalls = _player->getAmountOfUnitsForType(CARRYALL);     // carryalls
 
             if (carryalls < optimalAmountCarryAlls) {
                 if (rnd(100) < 30) {
@@ -820,8 +807,8 @@ void cAIPlayer::think_buildarmy() {
         }
 
         if (iMission > 6) {
-            if (cPlayer.getHouse() == ATREIDES) {
-                if (cPlayer.credits > cPlayer.hasEnoughCreditsForUnit(ORNITHOPTER)) {
+            if (_player->getHouse() == ATREIDES) {
+                if (_player->credits > _player->hasEnoughCreditsForUnit(ORNITHOPTER)) {
                     if (rnd(100) < 15) {
                         BUILD_UNIT(ORNITHOPTER);
                     }
@@ -831,24 +818,24 @@ void cAIPlayer::think_buildarmy() {
     }
 
     if (iMission >= 8 || game.bSkirmish) {
-        bool canBuySpecial = cPlayer.hasAtleastOneStructure(HEAVYFACTORY) && cPlayer.hasAtleastOneStructure(IX);
+        bool canBuySpecial = _player->hasAtleastOneStructure(HEAVYFACTORY) && _player->hasAtleastOneStructure(IX);
         if (canBuySpecial) {
             int iSpecial = DEVASTATOR;
 
-            if (cPlayer.getHouse() == ATREIDES) {
+            if (_player->getHouse() == ATREIDES) {
                 iSpecial = SONICTANK;
             }
 
-            if (cPlayer.getHouse() == ORDOS) {
+            if (_player->getHouse() == ORDOS) {
                 iSpecial = DEVIATOR;
             }
 
-            if (cPlayer.hasEnoughCreditsForUnit(iSpecial)) {
+            if (_player->hasEnoughCreditsForUnit(iSpecial)) {
                 BUILD_UNIT(iSpecial);
             }
         }
 
-        if (cPlayer.hasEnoughCreditsForUnit(SIEGETANK)) {
+        if (_player->hasEnoughCreditsForUnit(SIEGETANK)) {
             // enough to buy launcher , tank
             int nr = rnd(100);
             if (nr < 30)
@@ -857,44 +844,44 @@ void cAIPlayer::think_buildarmy() {
                 BUILD_UNIT(TANK);
             else if (nr > 60)
                 BUILD_UNIT(SIEGETANK);
-        } else if (cPlayer.hasEnoughCreditsForUnit(LAUNCHER)) {
+        } else if (_player->hasEnoughCreditsForUnit(LAUNCHER)) {
             if (rnd(100) < 50)
                 BUILD_UNIT(LAUNCHER);
             else
                 BUILD_UNIT(TANK);
-        } else if (cPlayer.hasEnoughCreditsForUnit(TANK)) {
+        } else if (_player->hasEnoughCreditsForUnit(TANK)) {
             BUILD_UNIT(TANK);
         }
     }
 
 
     if (iMission == 4 && rnd(100) < 70) {
-        if (cPlayer.hasEnoughCreditsForUnit(TANK)) {
+        if (_player->hasEnoughCreditsForUnit(TANK)) {
             BUILD_UNIT(TANK);
         }
     }
 
     if (iMission == 5) {
-        if (cPlayer.hasEnoughCreditsForUnit(LAUNCHER)) {
+        if (_player->hasEnoughCreditsForUnit(LAUNCHER)) {
             if (rnd(100) < 50) {
                 BUILD_UNIT(LAUNCHER);
             } else {
                 BUILD_UNIT(TANK);
             }
-        } else if (cPlayer.hasEnoughCreditsForUnit(TANK)) {
+        } else if (_player->hasEnoughCreditsForUnit(TANK)) {
             BUILD_UNIT(TANK);
         }
     }
 
     if (iMission == 6) {
         // when enough money, 50/50 on siege/launcher. Else just buy a tank or do nothing
-        if (cPlayer.hasEnoughCreditsForUnit(SIEGETANK)) {
+        if (_player->hasEnoughCreditsForUnit(SIEGETANK)) {
             if (rnd(100) < 50) {
                 BUILD_UNIT(SIEGETANK);
             } else {
                 BUILD_UNIT(LAUNCHER);
             }
-        } else if (cPlayer.hasEnoughCreditsForUnit(TANK)) {
+        } else if (_player->hasEnoughCreditsForUnit(TANK)) {
             {
                 if (rnd(100) < 30)
                     BUILD_UNIT(TANK); // buy a normal tank in mission 6
@@ -904,12 +891,12 @@ void cAIPlayer::think_buildarmy() {
 
     if (iMission == 7) {
         // when enough money, 50/50 on siege/launcher. Else just buy a tank or do nothing
-        if (cPlayer.credits > units[SIEGETANK].cost) {
+        if (_player->credits > units[SIEGETANK].cost) {
             if (rnd(100) < 50)
                 BUILD_UNIT(SIEGETANK);
             else
                 BUILD_UNIT(LAUNCHER);
-        } else if (cPlayer.credits > units[TANK].cost) {
+        } else if (_player->credits > units[TANK].cost) {
             if (rnd(100) < 30)
                 BUILD_UNIT(TANK); // buy a normal tank in mission 6
         }
@@ -917,12 +904,12 @@ void cAIPlayer::think_buildarmy() {
 }
 
 void cAIPlayer::think_buildbase() {
-    if (ID == HUMAN) {
+    if (_player->getId() == HUMAN) {
         return; // human m_Player does not think for buildbase
     }
 
     char msg[255];
-    sprintf(msg, "AI[%d]: DELAY_buildbase [%d]", ID, DELAY_buildbase);
+    sprintf(msg, "AI[%d]: DELAY_buildbase [%d]", _player->getId(), DELAY_buildbase);
     logbook(msg);
     if (DELAY_buildbase > 0) {
         DELAY_buildbase--;
@@ -944,7 +931,7 @@ void cAIPlayer::think_skirmishBuildBase() {
     cBuildingListItem *pUpgrade = isUpgradingConstyard();
     if (pUpgrade) {
         char msg[255];
-        sprintf(msg, "AI[%d] think_buildbase() - upgrade [%s] in progress [%d/%d] for ConstYard.", ID, pUpgrade->getS_Upgrade().description, pUpgrade->getBuildTime(), pUpgrade->getTotalBuildTime());
+        sprintf(msg, "AI[%d] think_skirmishBuildBase() - upgrade [%s] in progress [%d/%d] for ConstYard.", _player->getId(), pUpgrade->getS_Upgrade().description, pUpgrade->getBuildTime(), pUpgrade->getTotalBuildTime());
         logbook(msg);
         return; // wait for upgrade to be completed
     }
@@ -952,22 +939,20 @@ void cAIPlayer::think_skirmishBuildBase() {
     bool result = think_buildingplacement();
     if (result) {
         char msg[255];
-        sprintf(msg, "AI[%d] think_buildingplacement returns true, delaying!", ID);
-        DELAY_buildbase = 3;
+        sprintf(msg, "AI[%d] think_skirmishBuildBase() - think_buildingplacement returns true, delaying!", _player->getId());
+        DELAY_buildbase = 5;
         return;
     }
 
     cBuildingListItem *pBuildingStructure = isBuildingStructure();
     if (pBuildingStructure) {
         char msg[255];
-        sprintf(msg, "AI[%d] think_buildbase() - building structure [%s]; [%d/%d] wait for that to complete.", ID, pBuildingStructure->getS_Structures().name, pBuildingStructure->getProgress(), pBuildingStructure->getTotalBuildTime());
+        sprintf(msg, "AI[%d] think_skirmishBuildBase() - building structure [%s]; [%d/%d] wait for that to complete.", _player->getId(), pBuildingStructure->getS_Structures().name, pBuildingStructure->getProgress(), pBuildingStructure->getTotalBuildTime());
         logbook(msg);
         return; // wait
     }
 
-    cPlayer &cPlayer = player[ID];
-
-    if (!cPlayer.hasAtleastOneStructure(CONSTYARD)) {
+    if (!_player->hasAtleastOneStructure(CONSTYARD)) {
         // if player has HEAVY FACTORY, try to build MVC and then get new Const Yard.
 //            char msg[255];
 //            sprintf(msg, "AI[%d] think_buildbase() - No Constyard present, bail.", ID);
@@ -975,62 +960,83 @@ void cAIPlayer::think_skirmishBuildBase() {
         return;
     }
 
-    // when no windtrap, then build one (or when low power)
-    if (!cPlayer.hasAtleastOneStructure(WINDTRAP) ||
-        !cPlayer.bEnoughPower()) {
-        BUILD_STRUCTURE(WINDTRAP);
+    bool isLowOnCash = !_player->hasEnoughCreditsFor(300);
+
+    // when no windtrap, then build one regardless of low on cash
+    if (!_player->hasAtleastOneStructure(WINDTRAP) ||
+        !_player->bEnoughPower() &&
+        _player->hasEnoughCreditsForStructure(WINDTRAP)) {
+        buildStructureIfAllowed(WINDTRAP);
         return;
     }
 
     // build refinery
-    if (!cPlayer.hasAtleastOneStructure(REFINERY)) {
-        BUILD_STRUCTURE(REFINERY);
+    if (!_player->hasAtleastOneStructure(REFINERY) &&
+        _player->hasEnoughCreditsForStructure(REFINERY)) {
+        buildStructureIfAllowed(REFINERY);
         return;
+    }
+
+    if (isLowOnCash) {
+        return; // wait a bit
     }
 
     // build wor / barracks
-    if (cPlayer.getHouse() == ATREIDES) {
-        if (!cPlayer.hasAtleastOneStructure(BARRACKS)) {
-            BUILD_STRUCTURE(BARRACKS);
+    if (_player->getHouse() == ATREIDES) {
+        if (!_player->hasAtleastOneStructure(BARRACKS)) {
+            buildStructureIfAllowed(BARRACKS);
             return;
         }
     } else {
-        if (!cPlayer.hasAtleastOneStructure(WOR)) {
-            BUILD_STRUCTURE(WOR);
+        if (!_player->hasAtleastOneStructure(WOR)) {
+            buildStructureIfAllowed(WOR);
             return;
         }
     }
 
-    if (!cPlayer.hasAtleastOneStructure(RADAR)) {
-        BUILD_STRUCTURE(RADAR);
+    if (!_player->hasAtleastOneStructure(RADAR)) {
+        buildStructureIfAllowed(RADAR);
         return;
     }
 
-    if (!cPlayer.hasAtleastOneStructure(LIGHTFACTORY)) {
-        BUILD_STRUCTURE(LIGHTFACTORY);
+    if (!_player->hasAtleastOneStructure(LIGHTFACTORY)) {
+        buildStructureIfAllowed(LIGHTFACTORY);
         return;
     }
 
     // from here, we can build turrets
-    if (!cPlayer.hasAtleastOneStructure(HEAVYFACTORY)) {
-        BUILD_STRUCTURE(HEAVYFACTORY);
+    if (!_player->hasAtleastOneStructure(HEAVYFACTORY)) {
+        buildStructureIfAllowed(HEAVYFACTORY);
+        return;
+    }
+
+    bool hasEnoughMoneyToAlsoBuildArmy = _player->hasEnoughCreditsFor(600);
+    if (!hasEnoughMoneyToAlsoBuildArmy) {
+        return; // skip, do not build defenses if we can't even build some units as well
+    }
+
+    // build refinery
+    if (_player->getAmountOfStructuresForType(REFINERY) < 2)
+    {
+        buildStructureIfAllowed(REFINERY);
         return;
     }
 
     // when mission is lower then 5, build normal turrets
     if (game.iMission <= 5) {
         int amountOfTurretsWanted = 3;
-        if (cPlayer.getAmountOfStructuresForType(TURRET) < amountOfTurretsWanted) {
-            BUILD_STRUCTURE(TURRET);
+        if (_player->getAmountOfStructuresForType(TURRET) < amountOfTurretsWanted) {
+            buildStructureIfAllowed(TURRET);
             return;
         }
     }
 
+
     if (game.iMission >= 6) {
         // Requires an upgrade
         if (isStructureAvailableForBuilding(RTURRET)) {
-            if (cPlayer.getAmountOfStructuresForType(RTURRET) < 3) {
-                BUILD_STRUCTURE(RTURRET);
+            if (_player->getAmountOfStructuresForType(RTURRET) < 3) {
+                buildStructureIfAllowed(RTURRET);
                 return;
             }
         } else {
@@ -1052,43 +1058,34 @@ void cAIPlayer::think_skirmishBuildBase() {
         }
     }
 
-    // build refinery
-    if (cPlayer.getAmountOfStructuresForType(REFINERY) < 2)
-    {
-        BUILD_STRUCTURE(REFINERY);
+    if (!_player->hasAtleastOneStructure(HIGHTECH)) {
+        buildStructureIfAllowed(HIGHTECH);
         return;
     }
 
-    if (!cPlayer.hasAtleastOneStructure(HIGHTECH))
+    if (_player->hasAtleastOneStructure(REPAIR))
     {
-        BUILD_STRUCTURE(HIGHTECH);
+        buildStructureIfAllowed(REPAIR);
         return;
     }
 
-    if (cPlayer.hasAtleastOneStructure(REPAIR))
+    if (!_player->hasAtleastOneStructure(PALACE))
     {
-        BUILD_STRUCTURE(REPAIR);
-        return;
-    }
-
-    if (!cPlayer.hasAtleastOneStructure(PALACE))
-    {
-        BUILD_STRUCTURE(PALACE);
+        buildStructureIfAllowed(PALACE);
         return;
     }
 
     if (game.iMission >= 6)
     {
-        if (cPlayer.getAmountOfStructuresForType(RTURRET) < 9)
+        if (_player->getAmountOfStructuresForType(RTURRET) < 9)
         {
-            BUILD_STRUCTURE(RTURRET);
+            buildStructureIfAllowed(RTURRET);
             return;
         }
     }
 
-    if (cPlayer.getAmountOfStructuresForType(STARPORT) < 1)
-    {
-        BUILD_STRUCTURE(STARPORT);
+    if (_player->getAmountOfStructuresForType(STARPORT) < 1) {
+        buildStructureIfAllowed(STARPORT);
         return;
     }
 }
@@ -1096,13 +1093,13 @@ void cAIPlayer::think_skirmishBuildBase() {
 void cAIPlayer::think_worm() {
     // loop through all its worms and move them around
     for (int i=0; i < MAX_UNITS; i++) {
-        if (!unit[i].isValid()) continue;
-        if (unit[i].iType != SANDWORM) continue;
-        if (unit[i].iPlayer != ID) continue;
+        cUnit &pUnit = unit[i];
+        if (!pUnit.isValid()) continue;
+        if (pUnit.iType != SANDWORM) continue;
+        if (pUnit.iPlayer != _player->getId()) continue;
 
         // when on guard
-        if (unit[i].iAction == ACTION_GUARD) {
-
+        if (pUnit.iAction == ACTION_GUARD) {
             // find new spot to go to
             for (int iTries = 0; iTries < 10; iTries++) {
                 int iMoveTo = map.getRandomCell();
@@ -1111,7 +1108,7 @@ void cAIPlayer::think_worm() {
                     map.getCellType(iMoveTo) == TERRAIN_HILL ||
                     map.getCellType(iMoveTo) == TERRAIN_SPICE ||
                     map.getCellType(iMoveTo) == TERRAIN_SPICEHILL) {
-                    UNIT_ORDER_MOVE(i, iMoveTo);
+                    pUnit.move_to(iMoveTo);
                     break;
                 }
             }
@@ -1131,7 +1128,7 @@ void cAIPlayer::think_worm() {
  * @param iUnitType
  * @return
  */
-int AI_STRUCTYPE(int iUnitType) {
+int cAIPlayer::getStructureTypeByUnitType(int iUnitType) {
     // Default = heavyfactory, so do a check if its NOT.
 
     // light vehicles
@@ -1151,58 +1148,51 @@ int AI_STRUCTYPE(int iUnitType) {
 // This function will do a check what kind of structure is needed to build the unittype
 // Basicly the function returns true when its valid to build the unittype, or false
 // when its impossible (due no structure, money, etc)
-cantBuildReason canAIBuildUnit(int iPlayer, int iUnitType) {
+cantBuildReason cAIPlayer::canBuildUnit(int iUnitType) {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
-    cPlayer &cPlayer = player[iPlayer];
-
     char msg[255];
-    sprintf(msg, "canAIBuildUnit: Wanting to build iUnitType = [%d(=%s)] for player [%d(=%s)]; allowed?...", iUnitType, units[iUnitType].name, iPlayer, cPlayer.getHouseName().c_str());
+    sprintf(msg, "canBuildUnit: Wanting to build iUnitType = [%d(=%s)] for player [%d(=%s)]; allowed?...", iUnitType, units[iUnitType].name, _player->getId(), _player->getHouseName().c_str());
     logbook(msg);
 
     // CHECK 1: Do we have the money?
-    if (!cPlayer.hasEnoughCreditsForUnit(iUnitType)) {
+    if (!_player->hasEnoughCreditsForUnit(iUnitType)) {
         char msg[255];
-        sprintf(msg, "canAIBuildUnit: FALSE, because cost %d higher than credits %d", units[iUnitType].cost, cPlayer.credits);
+        sprintf(msg, "canBuildUnit: FALSE, because cost %d higher than credits %d", units[iUnitType].cost, _player->credits);
         logbook(msg);
         return cantBuildReason::NOT_ENOUGH_MONEY; // NOPE
     }
 
     // CHECK 2: Aren't we building this already?
-    if (aiplayer[iPlayer].isBuildingUnitType(iUnitType)) {
+    if (isBuildingUnitType(iUnitType)) {
         char msg[255];
-        sprintf(msg, "canAIBuildUnit: FALSE, because already building unitType");
+        sprintf(msg, "canBuildUnit: FALSE, because already building unitType");
         logbook(msg);
         return cantBuildReason::ALREADY_BUILDING;
     }
 
-    int iStrucType = AI_STRUCTYPE(iUnitType);
+    int iStrucType = getStructureTypeByUnitType(iUnitType);
 
     // Do the reality-check, do we have the building needed?
-    if (!cPlayer.hasAtleastOneStructure(iStrucType)) {
+    if (!_player->hasAtleastOneStructure(iStrucType)) {
         char msg[255];
-        sprintf(msg, "canAIBuildUnit: FALSE, because we do not own the required structure type [%s] for this unit: [%s]", structures[iStrucType].name, units[iUnitType].name);
+        sprintf(msg, "canBuildUnit: FALSE, because we do not own the required structure type [%s] for this unit: [%s]", structures[iStrucType].name, units[iUnitType].name);
         logbook(msg);
         return cantBuildReason::REQUIRES_STRUCTURE;
     }
 
-    cAIPlayer &aiPlayer = aiplayer[iPlayer];
-    if (!aiPlayer.isUnitAvailableForBuilding(iUnitType)) {
+    if (!isUnitAvailableForBuilding(iUnitType)) {
         // not available to build (not in list)
         // assume it requires an upgrade?
         return cantBuildReason::REQUIRES_UPGRADE;
     }
 
-    logbook("canAIBuildUnit: ALLOWED");
+    logbook("canBuildUnit: ALLOWED");
 
     return cantBuildReason::NONE;
 }
 
-int AI_RANDOM_UNIT_TARGET(int iPlayer, int playerIndexToAttack) {
-    if (iPlayer < 0 || iPlayer >= MAX_PLAYERS) return -1;
-
-    cPlayer &cPlayer = player[iPlayer];
-
+int cAIPlayer::findRandomUnitTarget(int playerIndexToAttack) {
     // Randomly assemble list, and then pick one
     int iTargets[100];
     memset(iTargets, -1, sizeof(iTargets));
@@ -1215,12 +1205,11 @@ int AI_RANDOM_UNIT_TARGET(int iPlayer, int playerIndexToAttack) {
         if (cUnit.iPlayer != playerIndexToAttack) continue;
         // unit belongs to player of the player we wish to attack
 
-        bool isVisibleForPlayer = map.isVisible(cUnit.getCell(), &cPlayer);
+        bool isVisibleForPlayer = map.isVisible(cUnit.getCell(), _player);
 
         if (DEBUGGING) {
             char msg[255];
-            sprintf(msg, "AI %d (House %d) -> Visible = %d", iPlayer, cPlayer.getHouse(),
-                    isVisibleForPlayer);
+            sprintf(msg, "AI %d (House %d) -> Visible = %d", _player->getId(), _player->getHouse(), isVisibleForPlayer);
             logbook(msg);
         }
 
@@ -1243,8 +1232,7 @@ int AI_RANDOM_UNIT_TARGET(int iPlayer, int playerIndexToAttack) {
     return iTargets[rnd(maxTargets)];
 }
 
-int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer)
-{
+int cAIPlayer::findRandomStructureTarget(int iAttackPlayer) {
     // Randomly assemble list, and then pick one
     int iTargets[100];
     memset(iTargets, -1, sizeof(iTargets));
@@ -1254,7 +1242,7 @@ int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer)
     for (int i=0; i < MAX_STRUCTURES; i++)
         if (structure[i])
             if (structure[i]->getOwner() == iAttackPlayer)
-				if (map.isVisible(structure[i]->getCell(), iPlayer) ||
+				if (map.isVisible(structure[i]->getCell(), _player->getId()) ||
 					game.bSkirmish)
 				{
 					iTargets[iT] = i;
@@ -1332,7 +1320,7 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
         // valid
         cAbstractStructure *pStructure = structure[i];
         if (pStructure == nullptr) continue;
-        if (pStructure->getOwner() != ID) continue;
+        if (pStructure->getOwner() != _player->getId()) continue;
 
         // scan around
         int c1 = pStructure->getCell();
@@ -1356,13 +1344,13 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, map.getCellX(player[ID].focus_cell),
-                                           map.getCellY(player[ID].focus_cell));
+                    int iDist = ABS_length(sx, sy, map.getCellX(_player->focus_cell),
+                                           map.getCellY(_player->focus_cell));
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
                         iGoodCells[iGoodCellID] = cell;
-                        // do not increment iGoodCellID, so we overwrite (and end up further and further)
+                        // do not increment iGoodCell_player->getId(), so we overwrite (and end up further and further)
                     }
 
                 } else {
@@ -1384,13 +1372,13 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, map.getCellX(player[ID].focus_cell),
-                                           map.getCellY(player[ID].focus_cell));
+                    int iDist = ABS_length(sx, sy, map.getCellX(_player->focus_cell),
+                                           map.getCellY(_player->focus_cell));
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
                         iGoodCells[iGoodCellID] = cell;
-                        // do not increment iGoodCellID, so we overwrite (and end up further and further)
+                        // do not increment iGoodCell_player->getId(), so we overwrite (and end up further and further)
                     }
 
                 } else {
@@ -1411,13 +1399,13 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, map.getCellX(player[ID].focus_cell),
-                                           map.getCellY(player[ID].focus_cell));
+                    int iDist = ABS_length(sx, sy, map.getCellX(_player->focus_cell),
+                                           map.getCellY(_player->focus_cell));
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
                         iGoodCells[iGoodCellID] = cell;
-                        // do not increment iGoodCellID, so we overwrite (and end up further and further)
+                        // do not increment iGoodCell_player->getId(), so we overwrite (and end up further and further)
                     }
 
                 } else {
@@ -1439,13 +1427,13 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, map.getCellX(player[ID].focus_cell),
-                                           map.getCellY(player[ID].focus_cell));
+                    int iDist = ABS_length(sx, sy, map.getCellX(_player->focus_cell),
+                                           map.getCellY(_player->focus_cell));
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
                         iGoodCells[iGoodCellID] = cell;
-                        // do not increment iGoodCellID, so we overwrite (and end up further and further)
+                        // do not increment iGoodCell_player->getId(), so we overwrite (and end up further and further)
                     }
 
                 } else {
@@ -1478,8 +1466,7 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
  * @return
  */
 bool cAIPlayer::isStructureAvailableForBuilding(int iStructureType) const {
-    const cPlayer &cPlayer = player[ID];
-    cBuildingListItem *pItem = cPlayer.getSideBar()->getBuildingListItem(LIST_CONSTYARD, iStructureType);
+    cBuildingListItem *pItem = _player->getSideBar()->getBuildingListItem(LIST_CONSTYARD, iStructureType);
     return pItem != nullptr;
 }
 
@@ -1491,11 +1478,10 @@ bool cAIPlayer::isStructureAvailableForBuilding(int iStructureType) const {
  */
 bool cAIPlayer::isUnitAvailableForBuilding(int iUnitType) const {
     int listId = units[iUnitType].listId;
-    const cPlayer &cPlayer = player[ID];
-    cBuildingListItem *pItem = cPlayer.getSideBar()->getBuildingListItem(listId, iUnitType);
+    cBuildingListItem *pItem = _player->getSideBar()->getBuildingListItem(listId, iUnitType);
     char msg[255];
     bool result = pItem != nullptr;
-    sprintf(msg, "AI[%d] isUnitAvailableForBuilding(unitType=%d) -> %s", ID, iUnitType, result ? "TRUE" : "FALSE");
+    sprintf(msg, "AI[%d] isUnitAvailableForBuilding(unitType=%d) -> %s", _player->getId(), iUnitType, result ? "TRUE" : "FALSE");
     logbook(msg);
     return result;
 }
@@ -1508,8 +1494,7 @@ bool cAIPlayer::isUnitAvailableForBuilding(int iUnitType) const {
  * @return
  */
 cBuildingListItem * cAIPlayer::isUpgradeAvailableToGrantStructure(int iStructureType) const {
-    const cPlayer &cPlayer = player[ID];
-    cBuildingList *pList = cPlayer.getSideBar()->getList(LIST_UPGRADES);
+    cBuildingList *pList = _player->getSideBar()->getList(LIST_UPGRADES);
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *pItem = pList->getItem(i);
         if (pItem == nullptr) continue;
@@ -1531,8 +1516,7 @@ cBuildingListItem * cAIPlayer::isUpgradeAvailableToGrantStructure(int iStructure
  * @return
  */
 cBuildingListItem * cAIPlayer::isUpgradeAvailableToGrantUnit(int iUnitType) const {
-    const cPlayer &cPlayer = player[ID];
-    cBuildingList *pList = cPlayer.getSideBar()->getList(LIST_UPGRADES);
+    cBuildingList *pList = _player->getSideBar()->getList(LIST_UPGRADES);
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *pItem = pList->getItem(i);
         if (pItem == nullptr) continue;
@@ -1555,11 +1539,10 @@ cBuildingListItem * cAIPlayer::isUpgradeAvailableToGrantUnit(int iUnitType) cons
  * @return
  */
 cBuildingListItem * cAIPlayer::isUpgradingList(int listId, int sublistId) const {
-    const cPlayer &cPlayer = player[ID];
-    cBuildingList *upgradesList = cPlayer.getSideBar()->getList(LIST_UPGRADES);
+    cBuildingList *upgradesList = _player->getSideBar()->getList(LIST_UPGRADES);
     if (upgradesList == nullptr) {
         char msg[255];
-        sprintf(msg, "AI[%d] - isUpgradingList for listId [%d] and sublistId [%d], could not find upgradesList!? - will return FALSE.", ID, listId, sublistId);
+        sprintf(msg, "AI[%d] - isUpgradingList for listId [%d] and sublistId [%d], could not find upgradesList!? - will return FALSE.", _player->getId(), listId, sublistId);
         logbook(msg);
         assert(false);
         return nullptr;
@@ -1586,10 +1569,8 @@ cBuildingListItem * cAIPlayer::isUpgradingConstyard() const {
 
 void cAIPlayer::think_fremen_superweapon() {
     // find any unit that does not attack, and let it attack an enemy?
-    cPlayer &cPlayer = player[ID];
-
     bool foundIdleUnit = false;
-    std::vector<int> ids = cPlayer.getAllMyUnits();
+    std::vector<int> ids = _player->getAllMyUnits();
     for (auto & id : ids) {
         cUnit &cUnit = unit[id];
         if (cUnit.isIdle()) {
@@ -1600,7 +1581,7 @@ void cAIPlayer::think_fremen_superweapon() {
 
     if (foundIdleUnit) {
         char msg[255];
-        sprintf(msg, "think_fremen_superweapon AI[%d] - found idle unit(s) to attack with.", ID);
+        sprintf(msg, "think_fremen_superweapon AI[%d] - found idle unit(s) to attack with.", _player->getId());
         logbook(msg);
         // attack things!
         int playerIdToAttack = -1;
@@ -1608,8 +1589,8 @@ void cAIPlayer::think_fremen_superweapon() {
         int structureIdToAttack = -1;
 
         for (int i = 1; i < MAX_PLAYERS; i++) {
-            if (i == ID) continue; // skip self
-            if (player[i].isSameTeamAs(&cPlayer)) continue; // skip same team players
+            if (i == _player->getId()) continue; // skip self
+            if (player[i].isSameTeamAs(_player)) continue; // skip same team players
 
             std::vector<int> unitIds = player[i].getAllMyUnits();
             if (!unitIds.empty()) {
@@ -1630,7 +1611,7 @@ void cAIPlayer::think_fremen_superweapon() {
 
         }
 
-        sprintf(msg, "think_fremen_superweapon AI[%d] - found idle unit(s) to attack with.", ID);
+        sprintf(msg, "think_fremen_superweapon AI[%d] - found idle unit(s) to attack with.", _player->getId());
         logbook(msg);
 
         // order units to attack!
@@ -1639,9 +1620,9 @@ void cAIPlayer::think_fremen_superweapon() {
             if (cUnit.isIdle()) {
                 if (structureIdToAttack > -1) {
                     int cell = structure[structureIdToAttack]->getCell();
-                    UNIT_ORDER_ATTACK(id, cell, -1, structureIdToAttack, -1);
+                    UNIT_ORDER_ATTACK(_player->getId(), cell, -1, structureIdToAttack, -1);
                 } else if (unitIdToAttack > -1) {
-                    UNIT_ORDER_ATTACK(id, unit[unitIdToAttack].getCell(), unitIdToAttack, -1, -1);
+                    UNIT_ORDER_ATTACK(_player->getId(), unit[unitIdToAttack].getCell(), unitIdToAttack, -1, -1);
                 }
                 break;
             }

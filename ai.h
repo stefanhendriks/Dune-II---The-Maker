@@ -10,13 +10,12 @@
 
   */
 
+#ifndef AIH_H
+#define AIH_H
+
 // Computer Opponent variables
 
 // helpers
-int AI_STRUCTYPE(int iUnitType);
-int AI_RANDOM_STRUCTURE_TARGET(int iPlayer, int iAttackPlayer);
-int AI_RANDOM_UNIT_TARGET(int iPlayer, int playerIndexToAttack);
-
 int CLOSE_SPICE_BLOOM(int iCell);
 
 enum cantBuildReason {
@@ -46,8 +45,6 @@ enum cantBuildReason {
     NONE
 };
 
-cantBuildReason canAIBuildUnit(int iPlayer, int iUnitType);
-
 // ai specific variables for a m_Player
 class cAIPlayer {
 
@@ -61,11 +58,9 @@ public:
 	bool bPlaying;			// does this AI m_Player play?
 	int  iUnits;			// units to start with (min = 1)
     int  iCheckingPlaceStructure; // checking place structure smoothenss (be nice to cpu)
-    
 
-	// --- 
-
-    int ID; 
+	// ---
+	cPlayer *_player;
 
     int TIMER_BuildUnits;       // when to build units?
     int TIMER_Upgrades;         //
@@ -75,7 +70,7 @@ public:
 
     // harvester reinforcements
     int TIMER_blooms;                 // harv
-    void init(int iID);             // initialize
+    void init(cPlayer *thePlayer);             // initialize
 	
     void think();
     void think_worm();
@@ -91,8 +86,9 @@ public:
     
     void think_repair(); // ai repairing units
 
-	void BUILD_STRUCTURE(int iStrucType);
+	void buildStructureIfAllowed(int iStrucType);
     bool BUILD_UNIT(int iUnitType);
+    cantBuildReason canBuildUnit(int iUnitType);
 
 	int  findCellToPlaceStructure(int iStructureType);
 
@@ -117,9 +113,11 @@ public:
     cBuildingListItem *getStructureBuildingListItemBeingBuilt() const;
 
     void think_fremen_superweapon();
+
+    int findRandomUnitTarget(int playerIndexToAttack);
+    int getStructureTypeByUnitType(int iUnitType);
+    int findRandomStructureTarget(int iAttackPlayer);
+
 };
 
-
-
-
-
+#endif

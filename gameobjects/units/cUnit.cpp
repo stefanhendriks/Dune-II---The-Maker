@@ -839,7 +839,7 @@ void cUnit::think_guard() {
             if (iPlayer > HUMAN) {
                 if (unitToAttack.isInfantryUnit() && isUnitWhoCanSquishInfantry()) {
                     // AI will try to squish infantry units
-                    UNIT_ORDER_MOVE(iID, unitToAttack.iCell);
+                    move_to(unitToAttack.iCell);
                 } else {
                     UNIT_ORDER_ATTACK(iID, unitToAttack.iCell, unitIdSelectedForAttacking, -1, -1);
                 }
@@ -1785,7 +1785,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
 
                 if (unit[iShotUnit].isInfantryUnit() && !isMovingBetweenCells()) {
                     // this harvester will try to run over the infantry that attacks it
-                    UNIT_ORDER_MOVE(iID, unit[iShotUnit].iCell);
+                    move_to(unit[iShotUnit].iCell);
                 } else {
                     // under attack, retreat to base? find nearby units to help out?
                 }
@@ -1794,7 +1794,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                 if (iAction != ACTION_ATTACK) {
                     if (isUnitWhoCanSquishInfantry() && unitWhoShotMeIsInfantry) {
                         // AI tries to run over infantry units that attack it
-                        UNIT_ORDER_MOVE(iID, unit[iShotUnit].iCell);
+                        move_to(unit[iShotUnit].iCell);
                     } else {
                         // else simply shoot it
                         if (!unitWhoShotMeIsAirborn) {
@@ -1825,7 +1825,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                             // out of range unit, attack it
                             if (isUnitWhoCanSquishInfantry() && unitWhoShotMeIsInfantry) {
                                 // AI tries to run over infantry units that attack it
-                                UNIT_ORDER_MOVE(iID, unit[iShotUnit].iCell);
+                                move_to(unit[iShotUnit].iCell);
                             } else {
                                 // else simply shoot it
                                 if (!unitWhoShotMeIsAirborn) {
@@ -2253,7 +2253,7 @@ void cUnit::think_move() {
                         int iF = UNIT_FREE_AROUND_MOVE(iID);
 
                         if (iF > -1) {
-                            UNIT_ORDER_MOVE(iID, iF);
+                            move_to(iF);
                         }
                     }
                 }
@@ -2918,7 +2918,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
 
         if (iF > -1) {
             logbook("Order move #2");
-            UNIT_ORDER_MOVE(iNewId, iF);
+            unit[iNewId].move_to(iF);
         }
     }
 
@@ -3634,7 +3634,6 @@ int CARRYALL_TRANSFER(int iuID, int iGoal) {
         if (cUnit.iType != CARRYALL) continue; // skip non-carry-all units
         if (cUnit.iTransferType != TRANSFER_NONE) continue; // skip busy carry-alls
 
-
         // assign an order
         cUnit.carryall_order(iuID, TRANSFER_PICKUP, iGoal, -1);
         return i;
@@ -3674,7 +3673,7 @@ void UNIT_ORDER_ATTACK(int iUnitID, int iGoalCell, int iUnit, int iStructure, in
 
     if (cUnit.iType == SABOTEUR) {
         // saboteur does not attack, but only captures
-        UNIT_ORDER_MOVE(iUnitID, iGoalCell);
+        cUnit.move_to(iGoalCell);
         return;
     }
 
@@ -3685,12 +3684,6 @@ void UNIT_ORDER_ATTACK(int iUnitID, int iGoalCell, int iUnit, int iStructure, in
     cUnit.iAttackStructure = iStructure;
     cUnit.iAttackUnit = iUnit;
     cUnit.iAttackCell = iAttackCell;
-}
-
-
-void UNIT_ORDER_MOVE(int iUnitID, int iGoalCell) {
-    cUnit &cUnit = unit[iUnitID];
-    cUnit.move_to(iGoalCell);
 }
 
 
