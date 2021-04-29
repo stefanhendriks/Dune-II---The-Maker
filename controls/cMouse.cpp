@@ -18,14 +18,15 @@ cMouse::cMouse() {
 	mouseScrolledUp=false;
 	mouseScrolledDown=false;
 	zValuePreviousFrame = mouse_z;
-	interactionManager = nullptr; // set later
+	_mouseObserver = nullptr; // set later
 }
 
 cMouse::~cMouse() {
-    interactionManager = nullptr; // we do not own this, so don't delete
+    _mouseObserver = nullptr; // we do not own this, so don't delete
 }
 
-void cMouse::updateState() {    
+void cMouse::updateState() {
+    bool didMouseMove = x != mouse_x || y != mouse_y;
     x = mouse_x;
     y = mouse_y;
     z = mouse_z;
@@ -61,44 +62,46 @@ void cMouse::updateState() {
 	}
 
 	// mouse moved
-	if (interactionManager) {
-	    // by default, notify about movement (TODO: Only do this when x,y is changed)
+	if (_mouseObserver) {
         s_MouseEvent event {
                 eMouseEventType::MOUSE_MOVED_TO,
                 x,
                 y,
                 z
         };
-        interactionManager->onNotify(event);
+
+        if (didMouseMove) {
+            _mouseObserver->onNotify(event);
+        }
 
         if (mouseScrolledUp) {
             event.eventType = eMouseEventType::MOUSE_SCROLLED_UP;
-            interactionManager->onNotify(event);
+            _mouseObserver->onNotify(event);
         }
 
         if (mouseScrolledDown) {
             event.eventType = eMouseEventType::MOUSE_SCROLLED_DOWN;
-            interactionManager->onNotify(event);
+            _mouseObserver->onNotify(event);
         }
 
         if (leftButtonPressed) {
             event.eventType = eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED;
-            interactionManager->onNotify(event);
+            _mouseObserver->onNotify(event);
         }
 
         if (leftButtonClicked) {
             event.eventType = eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED;
-            interactionManager->onNotify(event);
+            _mouseObserver->onNotify(event);
         }
 
         if (rightButtonPressed) {
             event.eventType = eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED;
-            interactionManager->onNotify(event);
+            _mouseObserver->onNotify(event);
         }
 
         if (rightButtonClicked) {
             event.eventType = eMouseEventType::MOUSE_RIGHT_BUTTON_CLICKED;
-            interactionManager->onNotify(event);
+            _mouseObserver->onNotify(event);
         }
     }
 
@@ -114,14 +117,14 @@ void cMouse::updateState() {
 
 void cMouse::positionMouseCursor(int x, int y) {
 	position_mouse(x, y); // allegro function
-	if (interactionManager) {
+	if (_mouseObserver) {
 	    s_MouseEvent event {
                 eMouseEventType::MOUSE_MOVED_TO,
                 0,
                 0,
                 0
 	    };
-        interactionManager->onNotify(event);
+        _mouseObserver->onNotify(event);
     }
 }
 

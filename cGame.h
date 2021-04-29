@@ -25,6 +25,7 @@ class cRectangle;
 class cAbstractMentat;
 class cPlayer;
 class cGameControlsContext;
+class cInteractionManager;
 
 class cGame {
 
@@ -141,7 +142,11 @@ public:
         return mouse; // NOOOO
     }
 
+    void setPlayerToInteractFor(cPlayer *pPlayer);
+
 private:
+    cInteractionManager *_interactionManager;
+
     cMouse *mouse;
 
 	void updateState();

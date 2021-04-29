@@ -10,9 +10,6 @@
 cKeyboardManager::cKeyboardManager() {
 }
 
-cKeyboardManager::cKeyboardManager(const cKeyboardManager& orig) {
-}
-
 cKeyboardManager::~cKeyboardManager() {
 }
 
@@ -72,12 +69,16 @@ void cKeyboardManager::takeScreenshot() const {
 void cKeyboardManager::DEBUG_KEYS() {
     if (key[KEY_0]) {
         drawManager->setPlayerToDraw(&player[0]);
+        game.setPlayerToInteractFor(&player[0]);
     } else if (key[KEY_1]) {
         drawManager->setPlayerToDraw(&player[1]);
+        game.setPlayerToInteractFor(&player[1]);
     } else if (key[KEY_2]) {
         drawManager->setPlayerToDraw(&player[2]);
+        game.setPlayerToInteractFor(&player[2]);
     } else if (key[KEY_3]) {
         drawManager->setPlayerToDraw(&player[3]);
+        game.setPlayerToInteractFor(&player[3]);
     }
 
     //JUMP TO MISSION 9
@@ -90,6 +91,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         playMusicByType(MUSIC_BRIEFING);
         game.createAndPrepareMentatForHumanPlayer();
     }
+
     // WIN MISSION
     if (key[KEY_F2]) {
         if (game.iWinQuota > -1)

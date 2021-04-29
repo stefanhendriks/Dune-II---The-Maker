@@ -42,7 +42,6 @@ extern cRegion        world[MAX_REGIONS];
 extern cTimeManager   TimeManager;
 extern cStructureUtils structureUtils;
 extern cDrawManager   *drawManager;
-extern cInteractionManager *interactionManager;
 extern cAllegroDrawer      *allegroDrawer;
 
 // ...
