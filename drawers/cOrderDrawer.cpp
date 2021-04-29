@@ -10,6 +10,7 @@ cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : m_Player(thePlayer) {
     buttonRect = new cRectangle((game.screen_x - halfOfSidebar) - halfOfButton,
                                 (game.screen_y - halfOfHeightLeftForButton) - halfOfButtonHeight,
                                 buttonBitmap->w, buttonBitmap->h);
+    _isMouseOverOrderButton = false;
 }
 
 cOrderDrawer::~cOrderDrawer() {
@@ -58,7 +59,6 @@ void cOrderDrawer::drawRectangleOrderButton() {
     int color = player[HUMAN].getHouseFadingColor();
     allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
     allegroDrawer->drawRectangle(bmp_screen, x+1, y+1, width-2, height-2, color);
-    _isMouseOverOrderButton = false;
 }
 
 void cOrderDrawer::onMouseAt(const s_MouseEvent &event) {

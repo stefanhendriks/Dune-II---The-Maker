@@ -356,7 +356,7 @@ void cMiniMapDrawer::setPlayer(cPlayer *thePlayer) {
     this->m_Player = thePlayer;
 }
 
-void cMiniMapDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
+void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event) {
     if (m_RectMinimap->isWithin(event.x, event.y) && // on minimap
         !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
             ) {
@@ -374,7 +374,10 @@ void cMiniMapDrawer::onNotify(const s_MouseEvent &event) {
             onMouseAt(event);
             return;
         case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
-            onMouseClickedLeft(event);
+            onMousePressedLeft(event); // click has same behavior as 'press'
+            return;
+        case eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED:
+            onMousePressedLeft(event);
             return;
     }
 
