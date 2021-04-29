@@ -247,7 +247,7 @@ void cDrawManager::setPlayerToDraw(cPlayer * playerToDraw) {
     this->sidebarDrawer->setPlayer(playerToDraw);
     this->orderDrawer->setPlayer(playerToDraw);
     this->miniMapDrawer->setPlayer(playerToDraw);
-    interactionManager->setPlayerToInteractFor(playerToDraw);
+    this->mapDrawer->setPlayer(playerToDraw);
 }
 
 //int points[] =

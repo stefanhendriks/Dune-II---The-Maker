@@ -13,6 +13,8 @@ class cMapDrawer {
 		cMapDrawer(cMap * theMap, cPlayer * thePlayer, cMapCamera * theCamera);
 		~cMapDrawer();
 
+		void setPlayer(cPlayer * thePlayer);
+
 		void drawTerrain(int startX, int startY);
 		void drawShroud(int startX, int startY);
 
@@ -21,7 +23,7 @@ class cMapDrawer {
 
 	private:
 		cMap * map;
-		cPlayer * m_Player;
+		cPlayer * _player;
 		cMapCamera * camera;
 
 		// bitmap for drawing tiles, and possibly stretching (depending on zoom level)

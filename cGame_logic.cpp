@@ -1570,7 +1570,7 @@ void cGame::run() {
         updateState();
 		handleTimeSlicing(); // handle time diff (needs to change!)
 		runGameState(); // run game state, includes interaction + drawing
-		interactionManager->interactWithKeyboard(); // generic interaction
+		_interactionManager->interactWithKeyboard(); // generic interaction
 		shakeScreenAndBlitBuffer(); // finally draw the bmp_screen to real screen (double buffering)
 		frame_count++;
 	}
@@ -1609,7 +1609,7 @@ void cGame::shutdown() {
     delete drawManager;
 
     delete mapCamera;
-    delete interactionManager;
+    delete _interactionManager;
 
 
     cStructureFactory::destroy();
@@ -2141,10 +2141,10 @@ void cGame::setup_players() {
 		thePlayer->setTechLevel(game.iMission);
 	}
 
-    delete interactionManager;
+    delete _interactionManager;
     cPlayer *humanPlayer = &player[HUMAN];
-    interactionManager = new cInteractionManager(humanPlayer);
-    mouse->setMouseObserver(interactionManager);
+    _interactionManager = new cInteractionManager(humanPlayer);
+    mouse->setMouseObserver(_interactionManager);
 }
 
 bool cGame::isState(int thisState) {
@@ -2272,4 +2272,8 @@ void cGame::think_state() {
     if (gameState) {
         gameState->think();
     }
+}
+
+void cGame::setPlayerToInteractFor(cPlayer *pPlayer) {
+    _interactionManager->setPlayerToInteractFor(pPlayer);
 }
