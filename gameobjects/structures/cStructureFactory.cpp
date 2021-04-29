@@ -300,13 +300,13 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDT
 			// check if terrain allows it.
             if (map.getCellType(cll) != TERRAIN_ROCK &&
                 map.getCellType(cll) != TERRAIN_SLAB) {
-				logbook("getSlabStatus will return -2, reason: terrain is not rock or slab.");
+//				logbook("getSlabStatus will return -2, reason: terrain is not rock or slab.");
                 return -2; // cannot place on sand
             }
 
 			// another structure found on this location, return -2 meaning "blocked"
             if (map.getCellIdStructuresLayer(cll) > -1) {
-				logbook("getSlabStatus will return -2, reason: another structure found on one of the cells");
+//				logbook("getSlabStatus will return -2, reason: another structure found on one of the cells");
                 return -2;
             }
 
@@ -321,12 +321,12 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDT
                         // ok; this may be ignored.
 					} else {
 						// not the unit to be ignored.
-						logbook("getSlabStatus will return -2, reason: unit found that blocks placement; is not ignored");
+//						logbook("getSlabStatus will return -2, reason: unit found that blocks placement; is not ignored");
 						return -2;
 					}
 				} else {
 					// no iUnitIDToIgnore given, this means always -2
-					logbook("getSlabStatus will return -2, reason: unit found that blocks placement; no id to ignore");
+//					logbook("getSlabStatus will return -2, reason: unit found that blocks placement; no id to ignore");
                     return -2;
 				}
             }

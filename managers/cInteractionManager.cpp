@@ -61,9 +61,9 @@ void cInteractionManager::onMouseScrolledDown(const s_MouseEvent &mouseEvent) {
  * @param mouseEvent
  */
 void cInteractionManager::onNotify(const s_MouseEvent &mouseEvent) {
-    char msg[255];
-    sprintf(msg, "cInteractionManager::onNotify %s x=%d, y=%d, z=%d", mouseEvent.toString(mouseEvent.eventType), mouseEvent.x, mouseEvent.y, mouseEvent.z);
-    logbook(msg);
+//    char msg[255];
+//    sprintf(msg, "cInteractionManager::onNotify %s x=%d, y=%d, z=%d", mouseEvent.toString(mouseEvent.eventType), mouseEvent.x, mouseEvent.y, mouseEvent.z);
+//    logbook(msg);
 
     // process these events by itself (if any implementation is present)...
     switch (mouseEvent.eventType) {

@@ -280,7 +280,6 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits);
 int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 
 void UNIT_deselect_all();
-void UNIT_ORDER_MOVE(int iUnitID, int iGoalCell);
 
 void UNIT_ORDER_ATTACK(int iUnitID, int iGoalCell, int iUnit, int iStructure, int iAttackCell);
 

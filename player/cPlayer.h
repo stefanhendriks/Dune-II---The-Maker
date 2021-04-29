@@ -115,6 +115,9 @@ class cPlayer {
         void increaseStructureAmount(int structureType);
 
         bool hasEnoughCreditsFor(float requestedAmount) const;
+        bool hasEnoughCreditsForUnit(int unitType);
+        bool hasEnoughCreditsForStructure(int structureType);
+        bool hasEnoughCreditsForUpgrade(int upgradeType);
 
         int getPrimaryStructureForStructureType(int structureType) const {
             return iPrimaryBuilding[structureType];
@@ -138,7 +141,6 @@ class cPlayer {
 
         void giveCredits(float amountToGive);
 
-        float hasEnoughCreditsForUnit(int unitType);
 
         std::vector<int> getAllMyUnits();
 

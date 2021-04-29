@@ -96,7 +96,7 @@ void cGame::init() {
 
 	for (int i=0; i < MAX_PLAYERS; i++) {
 		player[i].init(i);
-        aiplayer[i].init(i);
+        aiplayer[i].init(&player[i]);
     }
 
 	for (int i=0; i < MAX_UNITS; i++) {
@@ -157,7 +157,7 @@ void cGame::mission_init() {
         player[i].init(i);
         player[i].setHouse(h);
 
-        aiplayer[i].init(i);
+        aiplayer[i].init(&player[i]);
 
         if (bSkirmish) {
             player[i].credits = 2500;

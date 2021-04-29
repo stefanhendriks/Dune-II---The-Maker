@@ -211,7 +211,7 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
                                 hoverUnit.TIMER_thinkwait = 100;
                             } else {
                                 logbook("Order move #5");
-                                UNIT_ORDER_MOVE(hover_unit, structure[iNewID]->getCell());
+                                unit[hover_unit].move_to(structure[iNewID]->getCell());
                             }
 
                             hoverUnit.TIMER_blink = 5;
@@ -271,7 +271,7 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
                     for (int i=0; i < MAX_UNITS; i++) {
                         cUnit &cUnit = unit[i];
                         if (cUnit.isValid() && cUnit.iPlayer == HUMAN && cUnit.bSelected) {
-                            UNIT_ORDER_MOVE(i, mouseCell);
+                            cUnit.move_to(mouseCell);
 
                             if (cUnit.isInfantryUnit()) {
                                 bPlayInf = true;

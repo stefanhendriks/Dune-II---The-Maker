@@ -487,6 +487,21 @@ bool cPlayer::hasEnoughCreditsFor(float requestedAmount) const {
     return credits > requestedAmount;
 }
 
+bool cPlayer::hasEnoughCreditsForUnit(int unitType) {
+    if (unitType < 0 || unitType >= MAX_UNITTYPES) return false;
+    return this->credits >= units[unitType].cost;
+}
+
+bool cPlayer::hasEnoughCreditsForStructure(int structureType) {
+    if (structureType < 0 || structureType >= MAX_STRUCTURETYPES) return false;
+    return this->credits >= structures[structureType].cost;
+}
+
+bool cPlayer::hasEnoughCreditsForUpgrade(int upgradeType) {
+    if (upgradeType < 0 || upgradeType >= MAX_UPGRADETYPES) return false;
+    return this->credits >= upgrades[upgradeType].cost;
+}
+
 /**
  * Returns house based fading/pulsating color
  * @return
@@ -585,11 +600,6 @@ std::string cPlayer::getHouseNameForId(int house) const {
 
 void cPlayer::giveCredits(float amountToGive) {
     credits += amountToGive;
-}
-
-float cPlayer::hasEnoughCreditsForUnit(int unitType) {
-    if (unitType < 0 || unitType >= MAX_UNITTYPES) return false;
-    return this->credits > units[unitType].cost;
 }
 
 std::vector<int> cPlayer::getAllMyUnits() {
