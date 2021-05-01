@@ -2852,6 +2852,10 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
         return -1;
     }
 
+    // check if unit already exists on location
+    if (map.cellGetIdFromLayer(iCll, MAPID_STRUCTURES) > -1) {
+        return -1; // cannot place unit, structure exists
+    }
     s_UnitP &sUnitType = units[unitType];
 
     int mapIdIndex = MAPID_UNITS;
