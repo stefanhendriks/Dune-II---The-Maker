@@ -349,7 +349,7 @@ void cAIPlayer::think_spiceBlooms() {
             // with a soldier or something
             int iUnit = -1;
             int iDist = 9999;
-            int iBloom = CLOSE_SPICE_BLOOM(_player->focus_cell);
+            int iBloom = CLOSE_SPICE_BLOOM(_player->getFocusCell());
 
             // TODO: Move this to a unit repository thingy which can query the units
             for (int i = 0; i < MAX_UNITS; i++) {
@@ -452,7 +452,7 @@ void cAIPlayer::think_repair() {
 
     // check if we must repair, only if we have a repair structure ofcourse
     // and we have some money to spare for repairs
-    if (_player->hasAtleastOneStructure(REPAIR) && _player->credits > 250) {
+    if (_player->hasAtleastOneStructure(REPAIR) && _player->hasEnoughCreditsFor(250)) {
         // yes, we can repair
         for (int i=0; i < MAX_UNITS; i++) {
             cUnit &pUnit = unit[i];
@@ -751,7 +751,7 @@ void cAIPlayer::think_buildarmy() {
 
 	// build quads / trikes
     if (iMission > 2 && rnd(100) < iChance) {
-        if (_player->credits > units[QUAD].cost)
+        if (_player->hasEnoughCreditsForUnit(QUAD))
         {
             char msg[255];
             sprintf(msg, "AI[%d] - think_buildarmy() : Wants to build QUAD.", _player->getId());
@@ -759,7 +759,7 @@ void cAIPlayer::think_buildarmy() {
 
             BUILD_UNIT(QUAD);
         }
-        else if (_player->credits > units[TRIKE].cost)
+        else if (_player->hasEnoughCreditsForUnit(TRIKE))
 		{
             char msg[255];
             sprintf(msg, "AI[%d] - think_buildarmy() : Wants to build TRIKE.", _player->getId());
@@ -808,7 +808,7 @@ void cAIPlayer::think_buildarmy() {
 
         if (iMission > 6) {
             if (_player->getHouse() == ATREIDES) {
-                if (_player->credits > _player->hasEnoughCreditsForUnit(ORNITHOPTER)) {
+                if (_player->hasEnoughCreditsForUnit(ORNITHOPTER)) {
                     if (rnd(100) < 15) {
                         BUILD_UNIT(ORNITHOPTER);
                     }
@@ -891,12 +891,12 @@ void cAIPlayer::think_buildarmy() {
 
     if (iMission == 7) {
         // when enough money, 50/50 on siege/launcher. Else just buy a tank or do nothing
-        if (_player->credits > units[SIEGETANK].cost) {
+        if (_player->hasEnoughCreditsForUnit(SIEGETANK)) {
             if (rnd(100) < 50)
                 BUILD_UNIT(SIEGETANK);
             else
                 BUILD_UNIT(LAUNCHER);
-        } else if (_player->credits > units[TANK].cost) {
+        } else if (_player->hasEnoughCreditsForUnit(TANK)) {
             if (rnd(100) < 30)
                 BUILD_UNIT(TANK); // buy a normal tank in mission 6
         }
@@ -1158,7 +1158,7 @@ cantBuildReason cAIPlayer::canBuildUnit(int iUnitType) {
     // CHECK 1: Do we have the money?
     if (!_player->hasEnoughCreditsForUnit(iUnitType)) {
         char msg[255];
-        sprintf(msg, "canBuildUnit: FALSE, because cost %d higher than credits %d", units[iUnitType].cost, _player->credits);
+        sprintf(msg, "canBuildUnit: FALSE, because cost %d higher than credits %d", units[iUnitType].cost, _player->getCredits());
         logbook(msg);
         return cantBuildReason::NOT_ENOUGH_MONEY; // NOPE
     }
@@ -1270,7 +1270,7 @@ void cAIPlayer::think_repair_structure(cAbstractStructure *struc)
 	// think of repairing, only when it is not being repaired yet.
 	if (!struc->isRepairing()) {
 		// when ai has a lot of money, repair even faster
-		if (player[struc->getOwner()].credits > 1000) {
+		if (player[struc->getOwner()].hasEnoughCreditsFor(1000)) {
 			if (struc->getHitPoints() < (struc->getS_StructuresType().hp))  {
 				struc->setRepairing(true);
 			}
@@ -1344,8 +1344,7 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, map.getCellX(_player->focus_cell),
-                                           map.getCellY(_player->focus_cell));
+                    int iDist = map.distance(map.getCellWithMapDimensions(sx, sy), _player->getFocusCell());
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
@@ -1372,8 +1371,7 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, map.getCellX(_player->focus_cell),
-                                           map.getCellY(_player->focus_cell));
+                    int iDist = map.distance(map.getCellWithMapDimensions(sx, sy), _player->getFocusCell());
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
@@ -1399,8 +1397,7 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, map.getCellX(_player->focus_cell),
-                                           map.getCellY(_player->focus_cell));
+                    int iDist = map.distance(map.getCellWithMapDimensions(sx, sy), _player->getFocusCell());
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;
@@ -1427,8 +1424,7 @@ int cAIPlayer::findCellToPlaceStructure(int iStructureType) {
             if (r > -2) {
                 if (iStructureType == TURRET && iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = ABS_length(sx, sy, map.getCellX(_player->focus_cell),
-                                           map.getCellY(_player->focus_cell));
+                    int iDist = map.distance(map.getCellWithMapDimensions(sx, sy), _player->getFocusCell());
 
                     if (iDist >= iDistance) {
                         iDistance = iDist;

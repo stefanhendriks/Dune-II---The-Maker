@@ -13,6 +13,7 @@
 #include <vector>
 #include <algorithm>
 #include "../include/d2tmh.h"
+#include "cPlayer.h"
 
 
 cPlayer::cPlayer() {
@@ -75,6 +76,10 @@ void cPlayer::clearStructureTypeBitmaps() {
         }
         bmp_structure[i] = nullptr;
     }
+}
+
+void cPlayer::setFocusCell(int cll) {
+    this->focusCell_ = cll;
 }
 
 void cPlayer::clearUnitTypeBitmaps() {
@@ -196,15 +201,13 @@ void cPlayer::init(int id) {
 	}
 
 	credits	=	0;
-	max_credits	= 1000;
-	focus_cell	=	0;
+    maxCredits_	= 1000;
+    focusCell_	=	0;
 
-	use_power=0;
-	has_power=0;
+    powerUsage_=0;
+    powerProduce_=0;
 
     iTeam=-1;
-
-    TIMER_attack=-1;			// -1 = determine if its ok to attack, > 0 is , decrease timer, 0 = attack
 }
 
 /**
@@ -319,12 +322,12 @@ int cPlayer::getEmblemBackgroundColorForHouse(int houseId) {
 }
 
 bool cPlayer::bEnoughSpiceCapacityToStoreCredits() const {
-    return max_credits > credits;
+    return maxCredits_ > credits;
 }
 
 bool cPlayer::bEnoughPower() const {
 	if (game.bSkirmish) {
-       return has_power >= use_power;
+       return powerProduce_ >= powerUsage_;
     }
 
     // AI cheats on power
@@ -340,7 +343,7 @@ bool cPlayer::bEnoughPower() const {
         }
     }
 
-    return has_power >= use_power;
+    return powerProduce_ >= powerUsage_;
 }
 
 bool cPlayer::hasRadarAndEnoughPower() const {
@@ -630,3 +633,46 @@ bool cPlayer::isSameTeamAs(cPlayer *pPlayer) {
     if (pPlayer == nullptr) return false;
     return pPlayer->iTeam == iTeam;
 }
+
+void cPlayer::update() {
+    powerUsage_ = structureUtils.getTotalPowerUsageForPlayer(this);
+    powerProduce_ = structureUtils.getTotalPowerOutForPlayer(this);
+    // update spice capacity
+    maxCredits_ = structureUtils.getTotalSpiceCapacityForPlayer(this);
+}
+
+int cPlayer::getCredits() {
+    return credits;
+}
+
+void cPlayer::setCredits(int credits) {
+    this->credits = credits;
+}
+
+void cPlayer::substractCredits(int amount)  {
+    credits -= amount;
+}
+
+float cPlayer::getMaxCredits() {
+    return maxCredits_;
+}
+
+int cPlayer::getPowerProduced() {
+    return powerProduce_;
+}
+
+int cPlayer::getPowerUsage() {
+    return powerUsage_;
+}
+
+/**
+ * Gives the player credits, but caps at max spice/credits capacity.
+ * @param amount
+ */
+void cPlayer::dumpCredits(int amount) {
+    giveCredits(amount);
+    if (credits > maxCredits_) {
+        credits = maxCredits_;
+    }
+}
+

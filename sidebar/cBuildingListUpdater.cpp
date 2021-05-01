@@ -358,7 +358,7 @@ void cBuildingListUpdater::evaluateUpgrades() {
                     // only give money back for item that is being built
                     if (item->isBuilding()) {
                         // calculate the amount of money back:
-                        m_Player->credits += item->getRefundAmount();
+                        m_Player->giveCredits(item->getRefundAmount());
                     }
                     item->setIsBuilding(false);
                     item->resetProgress();

@@ -116,9 +116,14 @@ void cTimeManager::handleTimerGlobal() {
 
 
 		if (drawManager) {
-			if (drawManager->getCreditsDrawer()) {
-				drawManager->getCreditsDrawer()->think();
-			}
+		    if (game.isState(GAME_PLAYING)) {
+                if (drawManager->getCreditsDrawer()) {
+                    drawManager->getCreditsDrawer()->think();
+                }
+            }
+
+		    // this thing is also in another state
+		    // TODO: this should be all moved to state specific think/update functions
 			if (drawManager->getMessageDrawer()) {
 				drawManager->getMessageDrawer()->think();
 			}

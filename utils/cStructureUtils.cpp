@@ -305,7 +305,7 @@ int cStructureUtils::getTotalSpiceCapacityForPlayer(cPlayer * pPlayer) {
             cRefinery * refinery = dynamic_cast<cRefinery*>(theStructure);
             capacity = refinery->getSpiceSiloCapacity();
         } else if (theStructure->getType() == CONSTYARD) {
-            capacity = 5;
+            capacity = 1000; // by default CONSTYARD has space for some credits
         }
         totalCapacity += capacity;
 	}

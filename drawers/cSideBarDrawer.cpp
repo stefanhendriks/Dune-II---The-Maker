@@ -206,12 +206,15 @@ void cSideBarDrawer::drawCreditsUsage() {
 
     allegroDrawer->drawRectangleFilled(bmp_screen, &powerBarRect, allegroDrawer->getColor_BLACK());
 
+    // STEFAN: 01/05/2021 -> looks like a lot of this code can be moved to the player class to retrieve max spice capacity
+    // and so forth.
+
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
     int maxSpiceCapacity = 1000; // this is still hard coded, need to move to INI file
     int structuresWithSpice = m_Player->getAmountOfStructuresForType(REFINERY) + m_Player->getAmountOfStructuresForType(SILO);
     float totalSpiceCapacity = (1 + structuresWithSpice) * maxSpiceCapacity;
-    float maxSpice = (float)m_Player->max_credits / totalSpiceCapacity;
-    float spiceStored = (float)m_Player->credits / totalSpiceCapacity;
+    float maxSpice = (float)m_Player->getMaxCredits() / totalSpiceCapacity;
+    float spiceStored = (float)m_Player->getCredits() / totalSpiceCapacity;
 
     float barHeightToDraw = barTotalHeight * maxSpice;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -223,7 +226,7 @@ void cSideBarDrawer::drawCreditsUsage() {
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerOutY = barY + (barTotalHeight - barHeightToDraw);
 
-    float spiceCapacityRatio = ((float)m_Player->credits + 1) / ((float)m_Player->max_credits + 1);
+    float spiceCapacityRatio = ((float)m_Player->getCredits() + 1) / ((float)m_Player->getMaxCredits() + 1);
     if (spiceCapacityRatio < 0) spiceCapacityRatio= 0;
     if (spiceCapacityRatio > 1) spiceCapacityRatio= 1;
     int r = spiceCapacityRatio * 255;
@@ -265,8 +268,8 @@ void cSideBarDrawer::drawPowerUsage() const {
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
     int maxPowerOutageOfWindtrap = structures[WINDTRAP].power_give;
     float totalPowerOutput = (1 + (m_Player->getAmountOfStructuresForType(WINDTRAP)))*maxPowerOutageOfWindtrap;
-    float powerIn = (float)m_Player->has_power / totalPowerOutput;
-    float powerUse = (float)m_Player->use_power / totalPowerOutput;
+    float powerIn = (float)m_Player->getPowerProduced() / totalPowerOutput;
+    float powerUse = (float)m_Player->getPowerUsage() / totalPowerOutput;
 
     float barHeightToDraw = barTotalHeight * powerIn;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -278,7 +281,7 @@ void cSideBarDrawer::drawPowerUsage() const {
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerOutY = barY + (barTotalHeight - barHeightToDraw);
 
-    float powerUsageRatio = ((float)m_Player->use_power + 1) / ((float)m_Player->has_power + 1);
+    float powerUsageRatio = ((float)m_Player->getPowerUsage() + 1) / ((float)m_Player->getPowerProduced() + 1);
     int r = powerUsageRatio * 255;
     int g = (1.1 - powerUsageRatio) * 255;
 

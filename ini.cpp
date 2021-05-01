@@ -1311,8 +1311,9 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                 }
 
                 if (wordtype == WORD_FOCUS) {
-                    player[0].focus_cell = INI_WordValueINT(linefeed);
-                    mapCamera->centerAndJumpViewPortToCell(player[0].focus_cell);
+                    int focusCell = INI_WordValueINT(linefeed);
+                    player[0].setFocusCell(focusCell);
+                    mapCamera->centerAndJumpViewPortToCell(focusCell);
                 }
             }
 
@@ -1494,7 +1495,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                                 memset(msg, 0, sizeof(msg));
                                 sprintf(msg, "INI: Setting up human player, credits to [%d], house [%d] and team [%d]", creditsPlayer, housePlayer, 0);
                                 logbook(msg);
-                                player[HUMAN].credits = creditsPlayer;
+                                player[HUMAN].setCredits(creditsPlayer);
                                 player[HUMAN].setHouse(housePlayer);
                                 player[HUMAN].setTeam(0);
                                 assert(drawManager);
@@ -1523,7 +1524,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                                         creditsPlayer, housePlayer, iTeam);
                                 logbook(msg);
 
-                                player[iCPUId].credits = creditsPlayer;
+                                player[iCPUId].setCredits(creditsPlayer);
                                 player[iCPUId].setHouse(housePlayer);
                                 iCPUId++;
                             }
@@ -1583,7 +1584,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                             // HACK HACK : Set up fremen house here
                             if (iHouse == FREMEN) {
                                 player[AI_CPU5].setHouse(FREMEN); // set up palette
-                                player[AI_CPU5].credits = 9999; // lots of money for the fremen
+                                player[AI_CPU5].setCredits(9999); // lots of money for the fremen
                                 iController = AI_CPU5;
                             }
 
@@ -1626,7 +1627,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                     {
                         if (iPl_house[iP] > -1)
                             if (iP == iHumanID) {
-                                player[HUMAN].credits = iPl_credits[iP];
+                                player[HUMAN].setCredits(iPl_credits[iP]);
                                 player[HUMAN].setHouse(iPl_house[iP]);
                                 player[HUMAN].setTeam(0);
 
@@ -1645,7 +1646,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                                 }
 
                                 player[iCPUId].setTeam(iTeam);
-                                player[iCPUId].credits = iPl_credits[iP];
+                                player[iCPUId].setCredits(iPl_credits[iP]);
                                 player[iCPUId].setHouse(iPl_house[iP]);
                                 iCPUId++;
                             }
@@ -1849,7 +1850,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                         } else if (iPart == 2) {
                             // Homebase is home of that house
                             if (strcmp(chunk, "Homebase") == 0) {
-                                iCell = player[iController].focus_cell;
+                                iCell = player[iController].getFocusCell();
                             } else {
                                 // enemy base
 
@@ -1857,12 +1858,12 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                                     // Find corresponding house and get controller
                                     for (int i = 0; i < MAX_PLAYERS; i++)
                                         if (player[i].getHouse() == iHouse && i != iController) {
-                                            iCell = player[i].focus_cell;
+                                            iCell = player[i].getFocusCell();
                                             break;
                                         }
                                 } else {
                                     // computer player must find enemy = human
-                                    iCell = player[0].focus_cell;
+                                    iCell = player[0].getFocusCell();
                                 }
                             }
 
@@ -1892,18 +1893,6 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
         }
 
         fclose(stream);
-        // When loading an original dune 2 scenario, we do a trick now to make the
-        // players start okay.
-
-        // Now apply map settings to all players
-        for (int iP = 0; iP < MAX_PLAYERS; iP++) {
-            // minimum of 1000 credits storage per level
-            if (player[iP].max_credits < 1000) {
-                player[iP].max_credits = 1000;
-            }
-
-
-        }
 
         mapEditor.smoothMap();
 

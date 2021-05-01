@@ -144,19 +144,20 @@ void cAbstractStructure::die() {
 
     thePlayer.decreaseStructureAmount(getType()); // remove from player building indexes
 
-    // fix up power usage
-    thePlayer.use_power -= structures[getType()].power_drain;
-
-    // less power
-    thePlayer.has_power -= structures[getType()].power_give;
-
-	if (getType() == SILO) {
-        thePlayer.max_credits -= 1000;
-	}
-
-	if (getType() == REFINERY) {
-        thePlayer.max_credits -= 1500;
-	}
+    //
+//    // fix up power usage
+//    thePlayer.powerUsage_ -= structures[getType()].power_drain;
+//
+//    // less power
+//    thePlayer.powerProduce_ -= structures[getType()].power_give;
+//
+//	if (getType() == SILO) {
+//        thePlayer.maxCredits_ -= 1000;
+//	}
+//
+//	if (getType() == REFINERY) {
+//        thePlayer.maxCredits_ -= 1500;
+//	}
 
     // UnitID > -1, means the unit inside will die too
     if (iUnitID > -1) {
@@ -325,7 +326,7 @@ void cAbstractStructure::think_damage() {
 
         // AI reacting to this damage
         // TODO: remove here
-		if (iPlayer != HUMAN && player[iPlayer].credits > 50) {
+		if (iPlayer != HUMAN && player[iPlayer].hasEnoughCreditsFor(50)) {
 			if (iHitPoints < ((structures[getType()].hp / 4)*3)) { // lower than 75%
                 bRepair=true;
 			}
@@ -441,17 +442,14 @@ void cAbstractStructure::think_repair()
 {
     // REPAIRING
     if (bRepair) {
-		if (player[iPlayer].credits > 1.0f) {
+		if (player[iPlayer].hasEnoughCreditsFor(1.0f)) {
 			TIMER_repair++;
 
 			if (TIMER_repair > 7)
 			{
 				TIMER_repair=0;
 				iHitPoints += structures[getType()].fixhp;
-				player[iPlayer].credits--;
-				if (player[iPlayer].credits < 0.0f) {
-					player[iPlayer].credits = 0.0f;
-				}
+				player[iPlayer].substractCredits(1);
 			}
 
 			// done repairing

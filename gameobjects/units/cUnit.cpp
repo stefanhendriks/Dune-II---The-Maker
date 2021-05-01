@@ -2856,7 +2856,9 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
     if (map.cellGetIdFromLayer(iCll, MAPID_STRUCTURES) > -1) {
         return -1; // cannot place unit, structure exists
     }
+
     s_UnitP &sUnitType = units[unitType];
+
 
     int mapIdIndex = MAPID_UNITS;
     if (sUnitType.airborn) {
@@ -3713,7 +3715,7 @@ void THINK_REINFORCEMENTS() {
             } else {
                 // deliver
                 REINFORCE(reinforcements[i].iPlayer, reinforcements[i].iUnitType, reinforcements[i].iCell,
-                          player[reinforcements[i].iPlayer].focus_cell);
+                          player[reinforcements[i].iPlayer].getFocusCell());
 
                 // and make this unvalid
                 reinforcements[i].iCell = -1;
