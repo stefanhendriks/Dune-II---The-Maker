@@ -95,7 +95,7 @@ void cKeyboardManager::DEBUG_KEYS() {
     // WIN MISSION
     if (key[KEY_F2]) {
         if (game.iWinQuota > -1)
-            player[0].credits = game.iWinQuota + 1;
+            player[0].setCredits(game.iWinQuota + 1);
         else {
             game.destroyAllStructures(false);
             game.destroyAllUnits(false);
@@ -110,7 +110,7 @@ void cKeyboardManager::DEBUG_KEYS() {
     // GIVE 299999 CREDITS TO ALL PLAYERS
     if (key[KEY_F4] && !key[KEY_LSHIFT]) {
         for (int i = 0; i < AI_WORM; i++) {
-            player[i].credits = 299999;
+            player[i].setCredits(299999);
         }
     }
 
@@ -215,7 +215,7 @@ void cKeyboardManager::GAME_KEYS() {
     else {
         // Center on focus cell
         if (key[KEY_H]) {
-            mapCamera->centerAndJumpViewPortToCell(player[HUMAN].focus_cell);
+            mapCamera->centerAndJumpViewPortToCell(player[HUMAN].getFocusCell());
         }
 
         // Center on the selected structure

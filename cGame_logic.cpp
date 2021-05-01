@@ -160,7 +160,7 @@ void cGame::mission_init() {
         aiplayer[i].init(&player[i]);
 
         if (bSkirmish) {
-            player[i].credits = 2500;
+            player[i].setCredits(2500);
         }
     }
 
@@ -200,7 +200,7 @@ void cGame::think_winlose() {
 
     // win by money quota
     if (iWinQuota > 0) {
-        if (player[HUMAN].credits >= iWinQuota) {
+        if (player[HUMAN].hasEnoughCreditsFor(iWinQuota)) {
             bSucces = true;
         }
     } else {
@@ -316,10 +316,7 @@ void cGame::updateState() {
         cPlayer *pPlayer = &player[i];
         cGameControlsContext *context = pPlayer->getGameControlsContext();
 
-        pPlayer->use_power = structureUtils.getTotalPowerUsageForPlayer(pPlayer);
-        pPlayer->has_power = structureUtils.getTotalPowerOutForPlayer(pPlayer);
-        // update spice capacity
-        pPlayer->max_credits = structureUtils.getTotalSpiceCapacityForPlayer(pPlayer);
+        pPlayer->update();
 
         if (i != HUMAN) continue; // non HUMAN players are done
         mouse_tile = MOUSE_NORMAL;
@@ -615,7 +612,7 @@ void cGame::init_skirmish() const {
     game.mission_init();
 
     for (int p = HUMAN; p < AI_WORM; p++) {
-        player[p].credits = 2500;
+        player[p].setCredits(2500);
         player[p].setTeam(p);
     }
 
@@ -891,13 +888,14 @@ void cGame::setup_skirmish() {
 			char cHouse[30];
 			memset(cHouse, 0, sizeof(cHouse));
 
-			if (player[p].getHouse() == ATREIDES) {
+            cPlayer &cPlayer = player[p];
+            if (cPlayer.getHouse() == ATREIDES) {
 				sprintf(cHouse, "Atreides");
-			} else if (player[p].getHouse() == HARKONNEN) {
+			} else if (cPlayer.getHouse() == HARKONNEN) {
 				sprintf(cHouse, "Harkonnen");
-			} else if (player[p].getHouse() == ORDOS) {
+			} else if (cPlayer.getHouse() == ORDOS) {
 				sprintf(cHouse, "Ordos");
-			} else if (player[p].getHouse() == SARDAUKAR) {
+			} else if (cPlayer.getHouse() == SARDAUKAR) {
 				sprintf(cHouse, "Sardaukar");
 			} else {
 				sprintf(cHouse, "Random");
@@ -931,34 +929,34 @@ void cGame::setup_skirmish() {
 
 				if (mouse->isLeftButtonClicked())
 				{
-					player[p].setHouse((player[p].getHouse()+1));
+					cPlayer.setHouse((cPlayer.getHouse() + 1));
 					if (p > 0)
 					{
-						if (player[p].getHouse() > 4) {
-							player[p].setHouse(0);
+						if (cPlayer.getHouse() > 4) {
+							cPlayer.setHouse(0);
 						}
 					}
 					else
 					{
-						if (player[p].getHouse() > 3) {
-							player[p].setHouse(0);
+						if (cPlayer.getHouse() > 3) {
+							cPlayer.setHouse(0);
 						}
 					}
 				}
 
 				if (mouse->isRightButtonClicked())
 				{
-					player[p].setHouse((player[p].getHouse()-1));
+					cPlayer.setHouse((cPlayer.getHouse() - 1));
 					if (p > 0)
 					{
-						if (player[p].getHouse() < 0) {
-							player[p].setHouse(4);
+						if (cPlayer.getHouse() < 0) {
+							cPlayer.setHouse(4);
 						}
 					}
 					else
 					{
-						if (player[p].getHouse() < 0) {
-							player[p].setHouse(3);
+						if (cPlayer.getHouse() < 0) {
+							cPlayer.setHouse(3);
 						}
 					}
 				}
@@ -967,7 +965,7 @@ void cGame::setup_skirmish() {
 			// Credits
 			bHover=false;
 
-			alfont_textprintf(bmp_screen, bene_font, 174,iDrawY+1, makecol(0,0,0), "%d", (int)player[p].credits);
+			alfont_textprintf(bmp_screen, bene_font, 174,iDrawY+1, makecol(0,0,0), "%d", (int) cPlayer.getCredits());
 
 			//rect(bmp_screen, 174, iDrawY, 230, iDrawY+16, makecol(255,255,255));
 
@@ -976,37 +974,37 @@ void cGame::setup_skirmish() {
 
 			if (p == 0)
 			{
-				alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", (int)player[p].credits);
+				alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", (int) cPlayer.getCredits());
 			}
 			else
 			{
 				if (aiPlayer.bPlaying)
-					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", (int)player[p].credits);
+					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", (int) cPlayer.getCredits());
 				else
-					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(128,128,128), "%d", (int)player[p].credits);
+					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(128,128,128), "%d", (int) cPlayer.getCredits());
 
 			}
 
 			if (bHover)
 			{
 				if (aiPlayer.bPlaying)
-					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(fade_select,0,0), "%d", (int)player[p].credits);
+					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(fade_select,0,0), "%d", (int) cPlayer.getCredits());
 				else
-					alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol((fade_select/2),(fade_select/2),(fade_select/2)), "%d", player[p].credits);
+					alfont_textprintf(bmp_screen, bene_font, 174, iDrawY, makecol((fade_select/2),(fade_select/2),(fade_select/2)), "%d", cPlayer.getCredits());
 
 				if (mouse->isLeftButtonClicked())
 				{
-					player[p].credits += 500;
-					if (player[p].credits > 10000) {
-						player[p].credits = 1000;
+                    cPlayer.giveCredits(500);
+					if (cPlayer.getCredits() > 10000) {
+                        cPlayer.setCredits(1000);
 					}
 				}
 
 				if (mouse->isRightButtonClicked())
 				{
-					player[p].credits -= 500;
-					if (player[p].credits < 1000) {
-						player[p].credits = 10000;
+                    cPlayer.substractCredits(500);
+					if (cPlayer.getCredits() < 1000) {
+                        cPlayer.setCredits(10000);
 					}
 				}
 			}
@@ -1214,19 +1212,19 @@ void cGame::setup_skirmish() {
                 // from here, ignore non playable factions
                 if (!playableFaction) continue;
 
-                cPlayer.focus_cell = iStartPositions[p];
+                cPlayer.setFocusCell(iStartPositions[p]);
 
                 // Set map position
                 if (p == HUMAN) {
-                    mapCamera->centerAndJumpViewPortToCell(cPlayer.focus_cell);
+                    mapCamera->centerAndJumpViewPortToCell(cPlayer.getFocusCell());
                 }
 
                 // create constyard
-                cAbstractStructure *s = cStructureFactory::getInstance()->createStructure(cPlayer.focus_cell, CONSTYARD, p);
+                cAbstractStructure *s = cStructureFactory::getInstance()->createStructure(cPlayer.getFocusCell(), CONSTYARD, p);
 
                 // when failure, create mcv instead
                 if (s == NULL) {
-                    UNIT_CREATE(cPlayer.focus_cell, MCV, p, true);
+                    UNIT_CREATE(cPlayer.getFocusCell(), MCV, p, true);
                 }
 
                 // amount of units
@@ -1234,8 +1232,8 @@ void cGame::setup_skirmish() {
 
                 // create units
                 while (u < aiPlayer.iUnits) {
-                    int iX= map.getCellX(cPlayer.focus_cell);
-                    int iY= map.getCellY(cPlayer.focus_cell);
+                    int iX= map.getCellX(cPlayer.getFocusCell());
+                    int iY= map.getCellY(cPlayer.getFocusCell());
                     int iType=rnd(12);
 
                     iX-=4;

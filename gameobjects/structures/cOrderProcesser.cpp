@@ -172,7 +172,7 @@ void cOrderProcesser::removeItem(int slot) {
 	orderedItems[slot] = NULL;
 	// give money back to player
 	if (pricePaidForItem[slot] > 0) {
-        m_Player->credits += pricePaidForItem[slot];
+        m_Player->giveCredits(pricePaidForItem[slot]);
 	}
 	// and reset the amount
 	pricePaidForItem[slot] = -1;

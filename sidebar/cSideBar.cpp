@@ -268,7 +268,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
 
         // add orders
         if (orderProcesser->acceptsOrders()) {
-            if (m_Player->credits >= item->getBuildCost()) {
+            if (m_Player->hasEnoughCreditsFor(item->getBuildCost())) {
                 item->increaseTimesOrdered();
                 orderProcesser->addOrder(item);
                 m_Player->substractCredits(item->getBuildCost());

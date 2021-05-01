@@ -231,8 +231,8 @@ void cMouseDrawer::drawToolTipWindTrapInformation(cWindTrap * theWindTrap, cText
 	assert(theWindTrap);
 	assert(textWriter);
 	if (theWindTrap->getOwner() == HUMAN) {
-		int powerOut = theWindTrap->getPlayer()->has_power;
-		int powerUse = theWindTrap->getPlayer()->use_power;
+		int powerOut = theWindTrap->getPlayer()->getPowerProduced();
+		int powerUse = theWindTrap->getPlayer()->getPowerUsage();
 
 		if (powerUse <= powerOut) {
 			textWriter->writeWithTwoIntegers("Total usage : %d/%d (OK)", powerUse, powerOut);
@@ -263,8 +263,8 @@ void cMouseDrawer::drawToolTipSiloInformation(cAbstractStructure * theStructure,
 		}
 
 		cPlayer *thePlayer = theStructure->getPlayer();
-		int maxSpice = thePlayer->max_credits;
-		int currentSpice =  thePlayer->credits;
+		int maxSpice = thePlayer->getMaxCredits();
+		int currentSpice =  thePlayer->getCredits();
 		if (currentSpice <= maxSpice) {
 			textWriter->writeWithTwoIntegers("Total usage : %d/%d (OK)", currentSpice, maxSpice);
 		} else {
