@@ -29,6 +29,7 @@ cPlayer::cPlayer() {
 	memset(bmp_structure, 0, sizeof(bmp_structure));
 	memset(bmp_unit, 0, sizeof(bmp_unit));
 	memset(bmp_unit_top, 0, sizeof(bmp_unit_top));
+	brain_ = nullptr;
 }
 
 cPlayer::~cPlayer() {
@@ -52,6 +53,9 @@ cPlayer::~cPlayer() {
 	}
     if (difficultySettings) {
         delete difficultySettings;
+    }
+    if (brain_) {
+        delete brain_;
     }
     // cannot do this in destructor, as Allegro is already shutdown
 //    destroyAllegroBitmaps();
@@ -170,7 +174,7 @@ void cPlayer::setGameControlsContext(cGameControlsContext *theGameControlsContex
 	gameControlsContext = theGameControlsContext;
 }
 
-void cPlayer::init(int id) {
+void cPlayer::init(int id, cPlayerBrain *brain) {
     if (id < 0 || id >= MAX_PLAYERS) {
         char msg[255];
         sprintf(msg, "Error initializing player, id %d is not valid.", id);
@@ -179,6 +183,13 @@ void cPlayer::init(int id) {
     assert(id >= HUMAN);
     assert(id < MAX_PLAYERS);
     this->id = id;
+
+    // delete old brain object if it was set before
+    if (brain_) {
+        delete brain_;
+    }
+    // set new brain
+    brain_ = brain;
 
     memcpy(pal, general_palette, sizeof(pal));
 	house = GENERALHOUSE;
@@ -634,6 +645,9 @@ bool cPlayer::isSameTeamAs(cPlayer *pPlayer) {
     return pPlayer->iTeam == iTeam;
 }
 
+/**
+ * Update player state
+ */
 void cPlayer::update() {
     powerUsage_ = structureUtils.getTotalPowerUsageForPlayer(this);
     powerProduce_ = structureUtils.getTotalPowerOutForPlayer(this);
@@ -673,6 +687,15 @@ void cPlayer::dumpCredits(int amount) {
     giveCredits(amount);
     if (credits > maxCredits_) {
         credits = maxCredits_;
+    }
+}
+
+/**
+ * Think function (called when AI should do something). Delegates to brain (if set).
+ */
+void cPlayer::think() {
+    if (brain_) {
+        brain_->think();
     }
 }
 
