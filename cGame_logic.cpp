@@ -222,6 +222,8 @@ void cGame::think_winlose() {
                 if (!cUnit.isValid()) continue;
                 if (cUnit.iPlayer == HUMAN || cUnit.iPlayer == AI_WORM || cUnit.iPlayer == AI_CPU5) continue;
                 if (cUnit.isAirbornUnit()) continue; // do not count airborn units
+                if (cUnit.isDead()) continue; // in case we have some 'half-dead' units that got passed the isValid check...
+                                              // a better way for this would be to have such units in a separate collection.
                 bAllDead = false;
                 break;
             }
