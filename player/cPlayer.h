@@ -31,7 +31,7 @@ public:
 
     PALETTE pal;        // each player has its own 256 color scheme (used for coloring units)
 
-    void init(int id);
+    void init(int id, cPlayerBrain *brain);
 
     bool bEnoughPower() const;
 
@@ -184,6 +184,8 @@ public:
 
     void dumpCredits(int amount);
 
+    void think();
+
 private:
     int getRGBColorForHouse(int houseId);
 
@@ -236,6 +238,7 @@ private:
 
     int focusCell_;        // this is the cell that will be showed in the game centralized upon map loading
 
+    cPlayerBrain *brain_;
 };
 
 #endif

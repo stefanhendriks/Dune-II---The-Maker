@@ -21,7 +21,6 @@ int keepBetween(int value, int min, int max);
 
 // Installment of properties/settings in the game.
 void INSTALL_HOUSES();
-void INIT_ALL_PLAYERS();
 
 void INIT_PREVIEWS();
 
@@ -51,7 +50,6 @@ int create_bullet(int type, int cell, int goal_cell, int unitWhichShoots, int st
 
 int distanceBetweenCellAndCenterOfScreen(int iCell);
 
-void bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor);
 int getAmountReservedVoicesAndInstallSound();
 
 //void masked_stretch_blit(BITMAP *s, BITMAP *d, int s_x, int s_y, int s_w, int s_h, int d_x, int d_y, int d_w, int d_h);

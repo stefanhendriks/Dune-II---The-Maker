@@ -15,6 +15,11 @@ class cGameControlsContext;
 // statistics
 #include "cPlayerStatistics.h"
 
+#include "cPlayerBrain.h"
+#include "cPlayerBrainEmpty.h"
+#include "cPlayerBrainFremenSuperWeapon.h"
+#include "cPlayerBrainSandworm.h"
+
 // player class itself
 #include "cPlayer.h"
 

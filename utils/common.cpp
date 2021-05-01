@@ -104,13 +104,6 @@ void FIX_POS(int &x, int &y) {
 }
 
 
-void INIT_ALL_PLAYERS() {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        player[i].init(i);
-    }
-}
-
-
 /********************************
  House Rules
  ********************************/
@@ -1739,20 +1732,6 @@ void INIT_PREVIEWS() {
     sprintf(PreviewMap[0].name, "RANDOM MAP");
     //PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
     PreviewMap[0].terrain = create_bitmap(PAN_CENTER, PAN_CENTER);
-}
-
-/**
-	Function that will go through all pixels and will replace a certain color with another.
-    Ie, this can be used to create the fading animation for Windtraps.
-**/
-void bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor) {
-	for (int x = 0; x < bmp->w; x++) {
-		for (int y = 0; y < bmp->h; y++) {
-			if (getpixel(bmp, x, y) == colorToReplace) {
-				putpixel(bmp, x, y, newColor);
-			}
-		}
-	}
 }
 
 int getAmountReservedVoicesAndInstallSound() {

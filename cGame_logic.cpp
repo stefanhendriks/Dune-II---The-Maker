@@ -95,7 +95,7 @@ void cGame::init() {
 	map.init(64, 64);
 
 	for (int i=0; i < MAX_PLAYERS; i++) {
-		player[i].init(i);
+		player[i].init(i, new cPlayerBrainEmpty(&player[i]));
         aiplayer[i].init(&player[i]);
     }
 
@@ -154,7 +154,15 @@ void cGame::mission_init() {
     for (int i=0; i < MAX_PLAYERS; i++) {
         int h = player[i].getHouse();
 
-        player[i].init(i);
+        if (i == HUMAN) {
+            player[i].init(i, new cPlayerBrainEmpty(&player[i]));
+        } else if (i < AI_CPU5) {
+            player[i].init(i, new cPlayerBrainEmpty(&player[i]));
+        } else if (i == AI_CPU5) {
+            player[i].init(i, new cPlayerBrainFremenSuperWeapon(&player[i]));
+        } else if (i == AI_CPU6) {
+            player[i].init(i, new cPlayerBrainSandworm(&player[i]));
+        }
         player[i].setHouse(h);
 
         aiplayer[i].init(&player[i]);
@@ -1751,13 +1759,13 @@ bool cGame::setupGame() {
 	LOCK_VARIABLE(allegro_timerSecond);
 
 	LOCK_FUNCTION(allegro_timerunits);
-	LOCK_FUNCTION(allegro_timerglobal);
-	LOCK_FUNCTION(allegro_timerfps);
+	LOCK_FUNCTION(allegro_timergametime);
+	LOCK_FUNCTION(allegro_timerseconds);
 
 	// Install timers
 	install_int(allegro_timerunits, 100); // 100 miliseconds
-	install_int(allegro_timerglobal, 5); // 5 miliseconds
-	install_int(allegro_timerfps, 1000); // 1000 miliseconds (seconds)
+    install_int(allegro_timergametime, 5); // 5 miliseconds
+    install_int(allegro_timerseconds, 1000); // 1000 miliseconds (seconds)
 
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Set up timer related variables", "LOCK_VARIABLE/LOCK_FUNCTION", OUTC_SUCCESS);
 
@@ -2074,8 +2082,10 @@ bool cGame::setupGame() {
 
 	// A few messages for the player
 	logbook("Initializing:  PLAYERS");
-    INIT_ALL_PLAYERS();
-	logbook("Setup:  HOUSES");
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        player[i].init(i, nullptr);
+    }
+    logbook("Setup:  HOUSES");
 	INSTALL_HOUSES();
     logbook("Setup:  STRUCTURES");
 	install_structures();

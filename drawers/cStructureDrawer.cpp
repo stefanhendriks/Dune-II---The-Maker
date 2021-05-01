@@ -166,7 +166,7 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
         allegroDrawer->maskedStretchBlit(structure->getShadowBitmap(), bmp_screen, 0, iSourceY, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
     }
 
-    bitmap_replace_color(wind, makecol(40, 40, 182), makecol(0, 0, fade));
+    allegroDrawer->bitmap_replace_color(wind, makecol(40, 40, 182), makecol(0, 0, fade));
 
     allegroDrawer->maskedStretchBlit(wind, bmp_screen, 0, 0, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
 

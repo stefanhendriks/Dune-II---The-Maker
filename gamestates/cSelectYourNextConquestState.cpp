@@ -404,7 +404,7 @@ void cSelectYourNextConquestState::REGION_SETUP(int iMission, int iHouse) {
 
     // prepare players, so we know house index == player index (for colorizing region pieces)
     for (int i = 1; i < FREMEN; i++) {
-        player[i].init(i);
+        player[i].init(i, nullptr);
         player[i].setHouse(i);
     }
 
