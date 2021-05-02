@@ -1932,6 +1932,8 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
         logbook("[SCENARIO] Done reading");
     }
     player[AI_WORM].setTeam(2); // the WORM player is nobody's ally
+    player[FREMEN].setTeam(HUMAN);
+
     mapEditor.smoothMap();
 }
 
