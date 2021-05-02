@@ -73,7 +73,6 @@ public:
     void init(cPlayer *thePlayer);             // initialize
 	
     void think();
-    void think_worm();
     void think_buildarmy();
     void think_buildbase();
     void think_upgrades();
@@ -111,8 +110,6 @@ public:
 
     int getStructureTypeBeingBuilt() const;
     cBuildingListItem *getStructureBuildingListItemBeingBuilt() const;
-
-    void think_fremen_superweapon();
 
     int findRandomUnitTarget(int playerIndexToAttack);
     int getStructureTypeByUnitType(int iUnitType);
