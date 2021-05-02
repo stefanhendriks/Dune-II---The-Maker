@@ -152,23 +152,29 @@ void cGame::mission_init() {
 
     // clear out players but not entirely
     for (int i=0; i < MAX_PLAYERS; i++) {
-        int h = player[i].getHouse();
+        cPlayer &cPlayer = player[i];
+        int h = cPlayer.getHouse();
 
-        if (i == HUMAN) {
-            player[i].init(i, new cPlayerBrainEmpty(&player[i]));
-        } else if (i < AI_CPU5) {
-            player[i].init(i, new cPlayerBrainEmpty(&player[i]));
-        } else if (i == AI_CPU5) {
-            player[i].init(i, new cPlayerBrainFremenSuperWeapon(&player[i]));
-        } else if (i == AI_CPU6) {
-            player[i].init(i, new cPlayerBrainSandworm(&player[i]));
+        if (game.bDisableAI) {
+            cPlayer.init(i, nullptr);
+        } else {
+            if (i == HUMAN) {
+                cPlayer.init(i, new cPlayerBrainEmpty(&cPlayer));
+            } else if (i < AI_CPU5) {
+                // TODO: playing attribute? (from ai player class?)
+                cPlayer.init(i, new cPlayerBrainEmpty(&cPlayer));
+            } else if (i == AI_CPU5) {
+                cPlayer.init(i, new cPlayerBrainFremenSuperWeapon(&cPlayer));
+            } else if (i == AI_CPU6) {
+                cPlayer.init(i, new cPlayerBrainSandworm(&cPlayer));
+            }
         }
-        player[i].setHouse(h);
+        cPlayer.setHouse(h);
 
-        aiplayer[i].init(&player[i]);
+        aiplayer[i].init(&cPlayer);
 
         if (bSkirmish) {
-            player[i].setCredits(2500);
+            cPlayer.setCredits(2500);
         }
     }
 

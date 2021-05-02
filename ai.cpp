@@ -417,21 +417,6 @@ void cAIPlayer::think() {
 
     TIMER_think = 25;
 
-    // Worm thinking
-    if (_player->getId() == AI_WORM) {
-        if (rnd(100) < 25) {
-            think_worm();
-        }
-
-        return;
-    }
-
-    if (_player->getId() == AI_CPU5) {
-        // AI_CPU5 is assumed to be FREMEN house (used for the Atreides "super weapon: deploy Fremen"
-        think_fremen_superweapon();
-        return;
-    }
-
     // think about fair harvester stuff
     think_spiceBlooms();
 
@@ -1090,36 +1075,6 @@ void cAIPlayer::think_skirmishBuildBase() {
     }
 }
 
-void cAIPlayer::think_worm() {
-    // loop through all its worms and move them around
-    for (int i=0; i < MAX_UNITS; i++) {
-        cUnit &pUnit = unit[i];
-        if (!pUnit.isValid()) continue;
-        if (pUnit.iType != SANDWORM) continue;
-        if (pUnit.iPlayer != _player->getId()) continue;
-
-        // when on guard
-        if (pUnit.iAction == ACTION_GUARD) {
-            // find new spot to go to
-            for (int iTries = 0; iTries < 10; iTries++) {
-                int iMoveTo = map.getRandomCell();
-
-                if (map.getCellType(iMoveTo) == TERRAIN_SAND ||
-                    map.getCellType(iMoveTo) == TERRAIN_HILL ||
-                    map.getCellType(iMoveTo) == TERRAIN_SPICE ||
-                    map.getCellType(iMoveTo) == TERRAIN_SPICEHILL) {
-                    pUnit.move_to(iMoveTo);
-                    break;
-                }
-            }
-        }
-    }
-
-//    char msg2[255];
-//    sprintf(msg2, "AI [%d] think_worm() - end", ID);
-//    logbook(msg2);
-}
-
 /////////////////////////////////////////////////
 
 
@@ -1561,69 +1516,6 @@ cBuildingListItem * cAIPlayer::isUpgradingList(int listId, int sublistId) const 
 
 cBuildingListItem * cAIPlayer::isUpgradingConstyard() const {
     return isUpgradingList(LIST_CONSTYARD, 0);
-}
-
-void cAIPlayer::think_fremen_superweapon() {
-    // find any unit that does not attack, and let it attack an enemy?
-    bool foundIdleUnit = false;
-    std::vector<int> ids = _player->getAllMyUnits();
-    for (auto & id : ids) {
-        cUnit &cUnit = unit[id];
-        if (cUnit.isIdle()) {
-            foundIdleUnit = true;
-            break;
-        }
-    }
-
-    if (foundIdleUnit) {
-        char msg[255];
-        sprintf(msg, "think_fremen_superweapon AI[%d] - found idle unit(s) to attack with.", _player->getId());
-        logbook(msg);
-        // attack things!
-        int playerIdToAttack = -1;
-        int unitIdToAttack = -1;
-        int structureIdToAttack = -1;
-
-        for (int i = 1; i < MAX_PLAYERS; i++) {
-            if (i == _player->getId()) continue; // skip self
-            if (player[i].isSameTeamAs(_player)) continue; // skip same team players
-
-            std::vector<int> unitIds = player[i].getAllMyUnits();
-            if (!unitIds.empty()) {
-                playerIdToAttack = i;
-                std::random_shuffle(unitIds.begin(), unitIds.end());
-                unitIdToAttack = unitIds.front();
-                if (rnd(100) > 30) break;
-            }
-
-            std::vector<int> structureIds = player[i].getAllMyStructures();
-            if (!structureIds.empty()) {
-                // pick structure to attack
-                playerIdToAttack = i;
-                std::random_shuffle(structureIds.begin(), structureIds.end());
-                structureIdToAttack = structureIds.front();
-                if (rnd(100) > 30) break;
-            }
-
-        }
-
-        sprintf(msg, "think_fremen_superweapon AI[%d] - found idle unit(s) to attack with.", _player->getId());
-        logbook(msg);
-
-        // order units to attack!
-        for (auto & id : ids) {
-            cUnit &cUnit = unit[id];
-            if (cUnit.isIdle()) {
-                if (structureIdToAttack > -1) {
-                    int cell = structure[structureIdToAttack]->getCell();
-                    UNIT_ORDER_ATTACK(_player->getId(), cell, -1, structureIdToAttack, -1);
-                } else if (unitIdToAttack > -1) {
-                    UNIT_ORDER_ATTACK(_player->getId(), unit[unitIdToAttack].getCell(), unitIdToAttack, -1, -1);
-                }
-                break;
-            }
-        }
-    }
 }
 
 /**

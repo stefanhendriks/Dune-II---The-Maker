@@ -11,6 +11,8 @@ public:
 
     void think();
 
+private:
+    int TIMER_think;
 };
 
 
