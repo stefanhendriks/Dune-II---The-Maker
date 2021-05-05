@@ -16,7 +16,8 @@ cStructurePlacer::~cStructurePlacer() {
     player = NULL;
 }
 
-void cStructurePlacer::placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage) {
+// TODO: move to player
+cAbstractStructure* cStructurePlacer::placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage) {
 	// create structure
-	cStructureFactory::getInstance()->createStructure(destinationCell, iStructureTypeId, player->getId(), healthPercentage);
+	return cStructureFactory::getInstance()->createStructure(destinationCell, iStructureTypeId, player->getId(), healthPercentage);
 }

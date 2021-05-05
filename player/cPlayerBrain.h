@@ -17,7 +17,7 @@ public:
     virtual void think() = 0;
 
 protected:
-    cPlayer *player_;
+    cPlayer *player;
 
 private:
 

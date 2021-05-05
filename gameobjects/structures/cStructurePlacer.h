@@ -22,7 +22,7 @@ class cStructurePlacer {
 		cStructurePlacer(cPlayer *thePlayer);
 		~cStructurePlacer();
 
-		void placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage);
+        cAbstractStructure* placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage);
 
 	protected:
 

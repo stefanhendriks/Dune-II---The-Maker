@@ -10,7 +10,7 @@ cPlayerBrainSandworm::~cPlayerBrainSandworm() {
 
 void cPlayerBrainSandworm::think() {
     char msg[255];
-    sprintf(msg, "cPlayerBrainSandworm::think(), for player [%d]", player_->getId());
+    sprintf(msg, "cPlayerBrainSandworm::think(), for player [%d]", player->getId());
     logbook(msg);
     TIMER_think++;
     if (TIMER_think < 10) {
@@ -26,7 +26,7 @@ void cPlayerBrainSandworm::think() {
         cUnit &pUnit = unit[i];
         if (!pUnit.isValid()) continue;
         if (pUnit.iType != SANDWORM) continue;
-        if (pUnit.iPlayer != player_->getId()) continue;
+        if (pUnit.iPlayer != player->getId()) continue;
 
         // when on guard
         if (pUnit.iAction == ACTION_GUARD) {
