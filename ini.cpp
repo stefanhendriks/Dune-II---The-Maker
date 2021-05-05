@@ -1312,7 +1312,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 
                 if (wordtype == WORD_FOCUS) {
                     int focusCell = INI_WordValueINT(linefeed);
-                    player[0].setFocusCell(focusCell);
+                    players[0].setFocusCell(focusCell);
                     mapCamera->centerAndJumpViewPortToCell(focusCell);
                 }
             }
@@ -1495,9 +1495,9 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                                 memset(msg, 0, sizeof(msg));
                                 sprintf(msg, "INI: Setting up human player, credits to [%d], house [%d] and team [%d]", creditsPlayer, housePlayer, 0);
                                 logbook(msg);
-                                player[HUMAN].setCredits(creditsPlayer);
-                                player[HUMAN].setHouse(housePlayer);
-                                player[HUMAN].setTeam(0);
+                                players[HUMAN].setCredits(creditsPlayer);
+                                players[HUMAN].setHouse(housePlayer);
+                                players[HUMAN].setTeam(0);
                                 assert(drawManager);
                                 if (drawManager->getCreditsDrawer()) {
                                     drawManager->getCreditsDrawer()->setCredits();
@@ -1511,12 +1511,12 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 
                                 // FREMEN house belongs
                                 if (housePlayer == FREMEN) {
-                                    if (player[HUMAN].getHouse() == ATREIDES) {
+                                    if (players[HUMAN].getHouse() == ATREIDES) {
                                         iTeam = 0; // same team as human player
                                     }
                                 }
 
-                                player[iCPUId].setTeam(iTeam);
+                                players[iCPUId].setTeam(iTeam);
 
                                 char msg[255];
                                 memset(msg, 0, sizeof(msg));
@@ -1524,8 +1524,8 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                                         creditsPlayer, housePlayer, iTeam);
                                 logbook(msg);
 
-                                player[iCPUId].setCredits(creditsPlayer);
-                                player[iCPUId].setHouse(housePlayer);
+                                players[iCPUId].setCredits(creditsPlayer);
+                                players[iCPUId].setHouse(housePlayer);
                                 iCPUId++;
                             }
                         }
@@ -1576,15 +1576,15 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 
                             // Search for a player with this house
                             for (int i = 0; i < MAX_PLAYERS; i++)
-                                if (player[i].getHouse() == iHouse) {
+                                if (players[i].getHouse() == iHouse) {
                                     iController = i; // set controller here.. phew
                                     break;
                                 }
 
                             // HACK HACK : Set up fremen house here
                             if (iHouse == FREMEN) {
-                                player[AI_CPU5].setHouse(FREMEN); // set up palette
-                                player[AI_CPU5].setCredits(9999); // lots of money for the fremen
+                                players[AI_CPU5].setHouse(FREMEN); // set up palette
+                                players[AI_CPU5].setCredits(9999); // lots of money for the fremen
                                 iController = AI_CPU5;
                             }
 
@@ -1627,9 +1627,9 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                     {
                         if (iPl_house[iP] > -1)
                             if (iP == iHumanID) {
-                                player[HUMAN].setCredits(iPl_credits[iP]);
-                                player[HUMAN].setHouse(iPl_house[iP]);
-                                player[HUMAN].setTeam(0);
+                                players[HUMAN].setCredits(iPl_credits[iP]);
+                                players[HUMAN].setHouse(iPl_house[iP]);
+                                players[HUMAN].setTeam(0);
 
                                 if (iPl_quota[iP] > 0) {
                                     game.iWinQuota = iPl_quota[iP];
@@ -1640,14 +1640,14 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 
                                 // Except FREMEN, it is allies with ATREIDES
                                 if (iPl_house[iP] == FREMEN) {
-                                    if (player[HUMAN].getHouse() == ATREIDES) {
+                                    if (players[HUMAN].getHouse() == ATREIDES) {
                                         iTeam = 0;
                                     }
                                 }
 
-                                player[iCPUId].setTeam(iTeam);
-                                player[iCPUId].setCredits(iPl_credits[iP]);
-                                player[iCPUId].setHouse(iPl_house[iP]);
+                                players[iCPUId].setTeam(iTeam);
+                                players[iCPUId].setCredits(iPl_credits[iP]);
+                                players[iCPUId].setHouse(iPl_house[iP]);
                                 iCPUId++;
                             }
                     }
@@ -1708,7 +1708,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                                     //char msg[80];
                                     //sprintf(msg, "i=%d, ihouse=%d, house=%d", i, iHouse, player[i].house);
                                     //logbook(msg);
-                                    if (player[i].getHouse() == iHouse) {
+                                    if (players[i].getHouse() == iHouse) {
                                         iController = i; // set controller here.. phew
                                         break;
                                     }
@@ -1735,7 +1735,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 
                                 // Search for a player with this house
                                 for (int i = 0; i < MAX_PLAYERS; i++) {
-                                    if (player[i].getHouse() == iHouse) {
+                                    if (players[i].getHouse() == iHouse) {
                                         iController = i; // set controller here.. phew
                                         break;
                                     }
@@ -1838,7 +1838,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                             if (iHouse > -1) {
                                 // Search for a player with this house
                                 for (int i = 0; i < MAX_PLAYERS; i++) {
-                                    if (player[i].getHouse() == iHouse) {
+                                    if (players[i].getHouse() == iHouse) {
                                         iController = i; // set controller here.. phew
                                         break;
                                     }
@@ -1850,20 +1850,20 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                         } else if (iPart == 2) {
                             // Homebase is home of that house
                             if (strcmp(chunk, "Homebase") == 0) {
-                                iCell = player[iController].getFocusCell();
+                                iCell = players[iController].getFocusCell();
                             } else {
                                 // enemy base
 
                                 if (iController == 0) {
                                     // Find corresponding house and get controller
                                     for (int i = 0; i < MAX_PLAYERS; i++)
-                                        if (player[i].getHouse() == iHouse && i != iController) {
-                                            iCell = player[i].getFocusCell();
+                                        if (players[i].getHouse() == iHouse && i != iController) {
+                                            iCell = players[i].getFocusCell();
                                             break;
                                         }
                                 } else {
                                     // computer player must find enemy = human
-                                    iCell = player[0].getFocusCell();
+                                    iCell = players[0].getFocusCell();
                                 }
                             }
 
@@ -1931,8 +1931,8 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 
         logbook("[SCENARIO] Done reading");
     }
-    player[AI_WORM].setTeam(2); // the WORM player is nobody's ally
-    player[FREMEN].setTeam(HUMAN);
+    players[AI_WORM].setTeam(2); // the WORM player is nobody's ally
+    players[FREMEN].setTeam(HUMAN);
 
     mapEditor.smoothMap();
 }

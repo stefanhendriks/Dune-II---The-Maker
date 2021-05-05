@@ -65,7 +65,7 @@ void cGame::winning() {
 
 // Draw the mouse in combat mode, and do its interactions
 void cGame::combat_mouse() {
-    cPlayer &humanPlayer = player[HUMAN];
+    cPlayer &humanPlayer = players[HUMAN];
     cGameControlsContext *context = humanPlayer.getGameControlsContext();
     bool bOrderingUnits=false;
 

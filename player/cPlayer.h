@@ -188,6 +188,9 @@ public:
 
     void think();
 
+    bool canBuildUnitType(int iUnitType) const;
+    bool canBuildStructureType(int iStructureType) const;
+
 private:
     int getRGBColorForHouse(int houseId);
 

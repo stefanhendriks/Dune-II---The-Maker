@@ -1,7 +1,7 @@
 #include "../include/d2tmh.h"
 
 
-cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : m_Player(thePlayer) {
+cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer) {
     buttonBitmap = (BITMAP *)gfxinter[BTN_ORDER].dat;
     int halfOfButton = buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
@@ -56,7 +56,7 @@ void cOrderDrawer::drawRectangleOrderButton() {
     int y = buttonRect->getY();
     int width = buttonRect->getWidth();
     int height = buttonRect->getHeight();
-    int color = player[HUMAN].getHouseFadingColor();
+    int color = players[HUMAN].getHouseFadingColor();
     allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
     allegroDrawer->drawRectangle(bmp_screen, x+1, y+1, width-2, height-2, color);
 }
@@ -66,7 +66,7 @@ void cOrderDrawer::onMouseAt(const s_MouseEvent &event) {
 }
 
 void cOrderDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
-    cOrderProcesser * orderProcesser = m_Player->getOrderProcesser();
+    cOrderProcesser * orderProcesser = player->getOrderProcesser();
 
     // handle "order" button interaction
     if (_isMouseOverOrderButton) {
@@ -89,5 +89,5 @@ void cOrderDrawer::onNotify(const s_MouseEvent &event) {
 }
 
 void cOrderDrawer::setPlayer(cPlayer *pPlayer) {
-    this->m_Player = pPlayer;
+    this->player = pPlayer;
 }

@@ -293,7 +293,7 @@ void cMap::clearShroud(int c, int size, int playerId) {
                     int unitId = map.getCellIdUnitLayer(cl);
                     if (unitId > -1) {
                         cUnit &cUnit = unit[unitId];
-                        if (cUnit.isValid() && cUnit.getPlayer()->isSameTeamAs(&player[playerId])) // NOT friend
+                        if (cUnit.isValid() && cUnit.getPlayer()->isSameTeamAs(&players[playerId])) // NOT friend
                         {
                             // when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
                             if (game.iMusicType == MUSIC_PEACE) {
@@ -404,7 +404,7 @@ void cMap::draw_units() {
     }
 
     // TODO: move somewhere else than drawing function
-    int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
+    int mc = players[HUMAN].getGameControlsContext()->getMouseCell();
     if (mc > -1) {
         tCell &cellOfMouse = map.cell[mc];
 
@@ -479,8 +479,8 @@ void cMap::thinkInteraction() {
 }
 
 int cMap::mouse_draw_x() {
-    if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
-        int mouseCell = player[HUMAN].getGameControlsContext()->getMouseCell();
+    if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
+        int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell();
         int absX = getAbsoluteXPositionFromCell(mouseCell);
         return mapCamera->getWindowXPosition(absX);
     }
@@ -488,8 +488,8 @@ int cMap::mouse_draw_x() {
 }
 
 int cMap::mouse_draw_y() {
-    if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
-        int mouseCell = player[HUMAN].getGameControlsContext()->getMouseCell();
+    if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
+        int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell();
         int absY = getAbsoluteYPositionFromCell(mouseCell);
         return mapCamera->getWindowYPosition(absY);
     }

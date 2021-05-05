@@ -38,7 +38,7 @@ class cItemBuilder {
         cBuildingListItem *items[MAX_ITEMS];
         int getFreeSlot();
 
-        cPlayer * m_Player; // the m_Player context for this builder
+        cPlayer * player; // the player context for this builder
         cBuildingListUpdater * buildingListUpdater;
 
 		int timers[MAX_ITEMS];

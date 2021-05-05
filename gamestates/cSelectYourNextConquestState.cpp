@@ -48,7 +48,7 @@ void cSelectYourNextConquestState::think() {
             iRegionSceneAlpha = 255;
         }
 
-        int iHouse = player[0].getHouse();
+        int iHouse = players[0].getHouse();
         int iMission = game.iMission;
 
         if (regionSceneState == SCENE_INIT) {
@@ -134,9 +134,9 @@ void cSelectYourNextConquestState::draw() {
     // 3. Click next region
     // 4. Set up region and go to GAME_BRIEFING, which will do the rest...-> fade out
 
-    int iHouse = player[0].getHouse();
+    int iHouse = players[0].getHouse();
 
-    PALETTE &humanPlayerPalette = player[0].pal;
+    PALETTE &humanPlayerPalette = players[0].pal;
     select_palette(humanPlayerPalette);
 
     if (state == eRegionState::REGSTATE_INTRODUCTION) {
@@ -404,8 +404,8 @@ void cSelectYourNextConquestState::REGION_SETUP(int iMission, int iHouse) {
 
     // prepare players, so we know house index == player index (for colorizing region pieces)
     for (int i = 1; i < FREMEN; i++) {
-        player[i].init(i, nullptr);
-        player[i].setHouse(i);
+        players[i].init(i, nullptr);
+        players[i].setHouse(i);
     }
 
     return;
@@ -422,15 +422,15 @@ void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) {
     if (regionPiece.iHouse > -1) {
         // single player campaign has house ID == player ID, so we can do this hack and assume player with iHouse
         // is the player we want to get the correct house collor for this piece...
-        cPlayer &temp = player[regionPiece.iHouse];
+        cPlayer &temp = players[regionPiece.iHouse];
         select_palette(temp.pal);
         drawRegion(regionPiece);
     } // House > -1
 
     // select your next conquest... always draw them in the human playing house color
     if (regionPiece.bSelectable && state == eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) {
-        int iHouse = player[HUMAN].getHouse();
-        cPlayer &temp = player[iHouse];
+        int iHouse = players[HUMAN].getHouse();
+        cPlayer &temp = players[iHouse];
         select_palette(temp.pal);
         drawRegion(regionPiece);
     }

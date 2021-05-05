@@ -2,7 +2,7 @@
 #include "CreditsDrawer.h"
 
 
-CreditsDrawer::CreditsDrawer(cPlayer * thePlayer) : m_Player(thePlayer){
+CreditsDrawer::CreditsDrawer(cPlayer * thePlayer) : player(thePlayer){
 	assert(thePlayer);
 	bmp = NULL;
 	memset(offset_credit, 0, sizeof(offset_credit));
@@ -26,7 +26,7 @@ CreditsDrawer::~CreditsDrawer() {
 }
 
 void CreditsDrawer::setCredits() {
-	setCredits((int)m_Player->getCredits());
+	setCredits((int)player->getCredits());
 }
 
 void CreditsDrawer::setCredits(int amount) {
@@ -49,7 +49,7 @@ void CreditsDrawer::think() {
 		// determine new currentCredits
 		// TODO: make it 'roll' instead of 'jump' to the newest credits?
 		previousCredits = currentCredits;
-		int newCurrentCredits = (int)m_Player->getCredits();
+		int newCurrentCredits = (int)player->getCredits();
 
 		if (newCurrentCredits != previousCredits) {
 			int diff = newCurrentCredits - previousCredits;
@@ -262,7 +262,7 @@ bool CreditsDrawer::hasDrawnCurrentCredits() {
 }
 
 void CreditsDrawer::setPlayer(cPlayer *thePlayer) {
-    this->m_Player = thePlayer;
+    this->player = thePlayer;
 }
 
 

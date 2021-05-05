@@ -1,6 +1,6 @@
 #include "../include/d2tmh.h"
 
-cPlaceItDrawer::cPlaceItDrawer(cPlayer * thePlayer) : m_Player(thePlayer) {
+cPlaceItDrawer::cPlaceItDrawer(cPlayer * thePlayer) : player(thePlayer) {
     bWithinBuildDistance = false;
     bMayPlace = true;
     itemToPlace = nullptr;
@@ -9,7 +9,7 @@ cPlaceItDrawer::cPlaceItDrawer(cPlayer * thePlayer) : m_Player(thePlayer) {
 }
 
 cPlaceItDrawer::~cPlaceItDrawer() {
-	m_Player = nullptr;
+    player = nullptr;
     itemToPlace = nullptr;
 }
 
@@ -18,11 +18,11 @@ void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace) {
 	assert(itemToPlace->getBuildType() == STRUCTURE);
 
 	// this is only done when bPlaceIt=true
-	if (m_Player->getSideBar() == NULL) {
+	if (player->getSideBar() == NULL) {
 		return;
 	}
 
-	int iMouseCell = m_Player->getGameControlsContext()->getMouseCell();
+	int iMouseCell = player->getGameControlsContext()->getMouseCell();
 
 	if (iMouseCell < 0) {
 		return;
@@ -205,7 +205,7 @@ void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int c
 	} else if (structureId == WALL) {
         bmp = (BITMAP *)gfxdata[PLACE_WALL].dat;
 	} else {
-        bmp = m_Player->getStructureBitmap(structureId);
+        bmp = player->getStructureBitmap(structureId);
 	}
 
     allegroDrawer->stretchBlit(bmp, temp, 0, 0, width, height, 0, 0, scaledWidth, scaledHeight);
@@ -217,7 +217,7 @@ void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int c
 
 void cPlaceItDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
     // this assumes the context has been updated beforehand...
-    int mouseCell = m_Player->getGameControlsContext()->getMouseCell();
+    int mouseCell = player->getGameControlsContext()->getMouseCell();
 
     if (mouseCell < 0) {
         return;
@@ -237,8 +237,8 @@ void cPlaceItDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
         }
 
         play_sound_id(SOUND_PLACE);
-        m_Player->getStructurePlacer()->placeStructure(mouseCell, structureId, iHealthPercent);
-        m_Player->getBuildingListUpdater()->onBuildItemCompleted(itemToPlace);
+        player->getStructurePlacer()->placeStructure(mouseCell, structureId, iHealthPercent);
+        player->getBuildingListUpdater()->onBuildItemCompleted(itemToPlace);
 
         game.bPlaceIt=false;
 
@@ -247,7 +247,7 @@ void cPlaceItDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
         itemToPlace->setIsBuilding(false);
         itemToPlace->resetProgress();
         if (itemToPlace->getTimesToBuild() < 1) {
-            m_Player->getItemBuilder()->removeItemFromList(itemToPlace);
+            player->getItemBuilder()->removeItemFromList(itemToPlace);
         }
         itemToPlace = nullptr;
     }

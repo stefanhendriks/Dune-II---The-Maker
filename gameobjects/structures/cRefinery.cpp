@@ -67,7 +67,7 @@ void cRefinery::think_unit_occupation() {
 
     cUnit.TIMER_harvest++;
 
-    cPlayerDifficultySettings *difficultySettings = player[getOwner()].getDifficultySettings();
+    cPlayerDifficultySettings *difficultySettings = players[getOwner()].getDifficultySettings();
 
     if (cUnit.TIMER_harvest < difficultySettings->getDumpSpeed(10)) return;
 
@@ -90,7 +90,7 @@ void cRefinery::think_unit_occupation() {
             iAmount = cUnit.iCredits;
         }
 
-        cPlayer &cPlayer = player[cUnit.iPlayer];
+        cPlayer &cPlayer = players[cUnit.iPlayer];
         cPlayer.dumpCredits(iAmount);
 
         cUnit.iCredits -= iAmount;

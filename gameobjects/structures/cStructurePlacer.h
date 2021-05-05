@@ -27,7 +27,7 @@ class cStructurePlacer {
 	protected:
 
 	private:
-		cPlayer * m_Player;
+		cPlayer * player;
 };
 
 #endif /* CSTRUCTUREPLACER_H_ */

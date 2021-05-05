@@ -1423,11 +1423,11 @@ void play_sound_id_with_distance(int s, int iDistance) {
 }
 
 void play_voice(int iType) {
-	if (player[0].getHouse() == HARKONNEN) {
+	if (players[0].getHouse() == HARKONNEN) {
 		iType++;
 	}
 
-	if (player[0].getHouse() == ORDOS) {
+	if (players[0].getHouse() == ORDOS) {
 		iType+=2;
 	}
 
@@ -1510,7 +1510,7 @@ void playMusicByType(int iType) {
     } else if (iType == MUSIC_CONQUEST) {
     	iNumber=MIDI_SCENARIO;
     } else if (iType == MUSIC_BRIEFING) {
-      int houseIndex = player[HUMAN].getHouse();
+      int houseIndex = players[HUMAN].getHouse();
         if (houseIndex == ATREIDES)         iNumber=MIDI_MENTAT_ATR;
         if (houseIndex == HARKONNEN)     	iNumber=MIDI_MENTAT_HAR;
         if (houseIndex == ORDOS)     		iNumber=MIDI_MENTAT_ORD;
@@ -1534,7 +1534,7 @@ void playMusicByType(int iType) {
         } else if (iType == MUSIC_CONQUEST) {
             sprintf(filename, "mp3/nextconq.mp3");
         } else if (iType == MUSIC_BRIEFING) {
-          int houseIndex = player[HUMAN].getHouse();
+          int houseIndex = players[HUMAN].getHouse();
             if (houseIndex == ATREIDES)	sprintf(filename, "mp3/mentata.mp3");
             if (houseIndex == HARKONNEN)	sprintf(filename, "mp3/mentath.mp3");
             if (houseIndex == ORDOS)		sprintf(filename, "mp3/mentato.mp3");

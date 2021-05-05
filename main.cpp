@@ -33,7 +33,7 @@ cRandomMapGenerator 		randomMapGenerator;
 cAbstractStructure     	*	structure[MAX_STRUCTURES];
 cUnit          				unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
 cMapCamera				*	mapCamera;
-cPlayer        				player[MAX_PLAYERS];             // player is
+cPlayer        				players[MAX_PLAYERS];             // player is
 cAIPlayer      				aiplayer[MAX_PLAYERS];           // related to aiplayer (except nr 0=human)
 cParticle      				particle[MAX_PARTICLES];
 cBullet        				bullet[MAX_BULLETS];

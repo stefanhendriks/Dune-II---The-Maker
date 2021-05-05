@@ -2,9 +2,9 @@
 #include "cMouseDrawer.h"
 
 
-cMouseDrawer::cMouseDrawer(cPlayer * thePlayer) : m_Player(thePlayer) {
+cMouseDrawer::cMouseDrawer(cPlayer * thePlayer) : player(thePlayer) {
     assert(thePlayer);
-	mouseToolTip = new cMouseToolTip(player);
+	mouseToolTip = new cMouseToolTip(players);
 	mouseX = mouseY = 0;
 }
 
@@ -44,7 +44,7 @@ void cMouseDrawer::draw() {
 
 //    if (DEBUGGING) {
 //        cTextDrawer textDrawer(bene_font);
-//        textDrawer.drawTextWithOneInteger(0, 0, "MouseCell %d", m_Player->getGameControlsContext()->getMouseCell());
+//        textDrawer.drawTextWithOneInteger(0, 0, "MouseCell %d", player->getGameControlsContext()->getMouseCell());
 //    }
 
     draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouseDrawX, mouseDrawY);
@@ -73,7 +73,7 @@ int cMouseDrawer::getDrawYToolTip(int height) {
 }
 
 int cMouseDrawer::getWidthToolTip() {
-	cGameControlsContext * context = m_Player->getGameControlsContext();
+	cGameControlsContext * context = player->getGameControlsContext();
 
 	if (context->isMouseOverStructure()) {
 		return 150;
@@ -83,7 +83,7 @@ int cMouseDrawer::getWidthToolTip() {
 }
 
 int cMouseDrawer::getHeightToolTip() {
-	cGameControlsContext * context = m_Player->getGameControlsContext();
+	cGameControlsContext * context = player->getGameControlsContext();
 
 	if (context->isMouseOverStructure()) {
 		cAbstractStructure * theStructure = context->getStructurePointerWhereMouseHovers();
@@ -127,7 +127,7 @@ void cMouseDrawer::drawToolTip() {
 	int x = getDrawXToolTip(width);
 	int y = getDrawYToolTip(height);
 
-	cGameControlsContext * context = m_Player->getGameControlsContext();
+	cGameControlsContext * context = player->getGameControlsContext();
 
 	if (context->isMouseOverStructure()) {
 		cTextWriter * textWriter = new cTextWriter((x + 2), (y + 2), small_font, 12);
@@ -153,7 +153,7 @@ void cMouseDrawer::drawToolTip() {
 }
 
 void cMouseDrawer::drawToolTipBackground() {
-	cGameControlsContext * context = m_Player->getGameControlsContext();
+	cGameControlsContext * context = player->getGameControlsContext();
 
 	int width = getWidthToolTip();
 	int height = getHeightToolTip();
@@ -161,7 +161,7 @@ void cMouseDrawer::drawToolTipBackground() {
 	int x = getDrawXToolTip(width);
 	int y = getDrawYToolTip(height);
 
-	int color = m_Player->getMinimapColor();
+	int color = player->getMinimapColor();
 
 	if (context->isMouseOverStructure()) {
 		cAbstractStructure * theStructure = context->getStructurePointerWhereMouseHovers();
@@ -201,7 +201,7 @@ void cMouseDrawer::drawToolTipBackground() {
 void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure * theStructure, cTextWriter *textWriter) {
 	assert(theStructure);
 	assert(textWriter);
-	if (theStructure->belongsTo(m_Player)) {
+	if (theStructure->belongsTo(player)) {
 		textWriter->writeWithOneInteger("Sight : %d", theStructure->getSight());
 		textWriter->writeWithOneInteger("Range : %d", theStructure->getRange());
 	} else {

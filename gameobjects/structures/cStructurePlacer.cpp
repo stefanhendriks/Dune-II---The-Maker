@@ -9,14 +9,14 @@
 
 cStructurePlacer::cStructurePlacer(cPlayer * thePlayer) {
 	assert(thePlayer);
-    m_Player = thePlayer;
+    player = thePlayer;
 }
 
 cStructurePlacer::~cStructurePlacer() {
-    m_Player = NULL;
+    player = NULL;
 }
 
 void cStructurePlacer::placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage) {
 	// create structure
-	cStructureFactory::getInstance()->createStructure(destinationCell, iStructureTypeId, m_Player->getId(), healthPercentage);
+	cStructureFactory::getInstance()->createStructure(destinationCell, iStructureTypeId, player->getId(), healthPercentage);
 }

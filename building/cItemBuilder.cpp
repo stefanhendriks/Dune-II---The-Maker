@@ -2,7 +2,7 @@
 
 cItemBuilder::cItemBuilder(cPlayer * thePlayer, cBuildingListUpdater * buildingListUpdater) {
 	assert(thePlayer);
-	this->m_Player = thePlayer;
+	this->player = thePlayer;
     this->buildingListUpdater = buildingListUpdater;
 	removeAllItems();
 	memset(timers, 0, sizeof(timers));
@@ -15,28 +15,28 @@ cItemBuilder::~cItemBuilder() {
 int cItemBuilder::getTimerCap(cBuildingListItem *item) {
 	int iTimerCap = 35; // was 35 = ORIGINAL
 
-    // when m_Player has low power, produce twice as slow
+    // when player has low power, produce twice as slow
     if (item->getBuildType() == UNIT) {
         // the given unit will get out of a specific structure. This type
         // is within the units properties.
         int structureTypeItLeavesFrom = units[item->getBuildId()].structureTypeItLeavesFrom;
-        int structureCount = m_Player->getAmountOfStructuresForType(structureTypeItLeavesFrom);
+        int structureCount = player->getAmountOfStructuresForType(structureTypeItLeavesFrom);
         if (structureCount > 1) {
             iTimerCap /= structureCount;
         }
     } else if (item->getBuildType() == STRUCTURE) {
         // the given unit will get out of a specific structure. This type
         // is within the units properties.
-        int structureCount = m_Player->getAmountOfStructuresForType(CONSTYARD);
+        int structureCount = player->getAmountOfStructuresForType(CONSTYARD);
         if (structureCount > 1) {
             iTimerCap /= structureCount;
         }
     }
 
-    cPlayerDifficultySettings *difficultySettings = m_Player->getDifficultySettings();
+    cPlayerDifficultySettings *difficultySettings = player->getDifficultySettings();
     iTimerCap = difficultySettings->getBuildSpeed(iTimerCap);
 
-    if (!m_Player->bEnoughPower()) {
+    if (!player->bEnoughPower()) {
         iTimerCap *= 6; // make painful
     }
 
@@ -81,11 +81,11 @@ void cItemBuilder::think() {
 
         if (!isDoneBuilding) {
             // Not done building yet , and can pay for progress?
-            if (!item->shouldPlaceIt() && m_Player->hasEnoughCreditsFor(priceForTimeUnit)) {
+            if (!item->shouldPlaceIt() && player->hasEnoughCreditsFor(priceForTimeUnit)) {
                 // increase progress
                 item->increaseProgress(1);
                 // pay
-                m_Player->substractCredits(priceForTimeUnit);
+                player->substractCredits(priceForTimeUnit);
             }
             continue;
         }
@@ -99,7 +99,7 @@ void cItemBuilder::think() {
         if (item->getBuildType() == STRUCTURE) {
             // play voice when placeIt is false`
             if (!item->shouldPlaceIt()) {
-                if (m_Player->isHuman()) {
+                if (player->isHuman()) {
                     play_voice(SOUND_VOICE_01_ATR); // "Construction Complete"
                 }
                 item->setPlaceIt(true);
@@ -115,11 +115,11 @@ void cItemBuilder::think() {
                 deployUnit(item, item->getBuildId());
             } else {
                 // airborn unit
-                int structureToDeployUnit = structureUtils.findHiTechToDeployAirUnit(m_Player);
+                int structureToDeployUnit = structureUtils.findHiTechToDeployAirUnit(player);
                 if (structureToDeployUnit > -1) {
                     cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
                     pStructureToDeploy->setAnimating(true); // animate
-                    int unitId = UNIT_CREATE(pStructureToDeploy->getCell(), item->getBuildId(), m_Player->getId(), false);
+                    int unitId = UNIT_CREATE(pStructureToDeploy->getCell(), item->getBuildId(), player->getId(), false);
                     int rallyPoint = pStructureToDeploy->getRallyPoint();
                     if (rallyPoint > -1) {
                         unit[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
@@ -232,7 +232,7 @@ void cItemBuilder::think() {
 void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
     int structureTypeByItem = structureUtils.findStructureTypeByTypeOfList(item);
     assert(structureTypeByItem > -1);
-    int structureToDeployUnit = structureUtils.findStructureToDeployUnit(m_Player, structureTypeByItem);
+    int structureToDeployUnit = structureUtils.findStructureToDeployUnit(player, structureTypeByItem);
     int buildIdToProduce = buildId;
     if (structureToDeployUnit > -1) {
         cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
@@ -240,7 +240,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
         int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
         if (cell > -1) {
             pStructureToDeploy->setAnimating(true); // animate
-            int unitId = UNIT_CREATE(cell, buildIdToProduce, m_Player->getId(), false);
+            int unitId = UNIT_CREATE(cell, buildIdToProduce, player->getId(), false);
             int rallyPoint = pStructureToDeploy->getRallyPoint();
             if (rallyPoint > -1) {
                 unit[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
@@ -249,14 +249,14 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
             logbook("cItemBuilder: huh? I was promised that this structure would have some place to deploy unit at!?");
         }
     } else {
-        structureToDeployUnit = m_Player->getPrimaryStructureForStructureType(structureTypeByItem);
+        structureToDeployUnit = player->getPrimaryStructureForStructureType(structureTypeByItem);
         if (structureToDeployUnit < 0) {
             // find any structure of type (regardless if we can deploy or not)
             for (int structureId = 0; structureId < MAX_STRUCTURES; structureId++) {
                 cAbstractStructure *pStructure = structure[structureId];
                 if (pStructure &&
                     pStructure->isValid() &&
-                    pStructure->belongsTo(m_Player->getId()) &&
+                    pStructure->belongsTo(player->getId()) &&
                     pStructure->getType() == structureTypeByItem) {
                     structureToDeployUnit = structureId;
                     break;
@@ -270,7 +270,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
             if (pStructureToDeploy->getRallyPoint() > -1) {
                 cellToDeploy = pStructureToDeploy->getRallyPoint();
             }
-            REINFORCE(m_Player->getId(), buildIdToProduce, cellToDeploy, -1);
+            REINFORCE(player->getId(), buildIdToProduce, cellToDeploy, -1);
         }
     }
 }

@@ -38,7 +38,7 @@ class cInteractionManager : public cMouseObserver {
 		cSideBar * sidebar;
 		cMiniMapDrawer * miniMapDrawer;
 		cKeyboardManager keyboardManager;
-		cPlayer * m_Player;
+		cPlayer * player;
 		cMouseDrawer * mouseDrawer;
 		cPlaceItDrawer * placeItDrawer;
 		cOrderDrawer * orderDrawer;

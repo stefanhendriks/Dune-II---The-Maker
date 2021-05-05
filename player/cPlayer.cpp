@@ -703,3 +703,30 @@ void cPlayer::setBrain(cPlayerBrain *brain) {
     brain_ = brain;
 }
 
+
+/**
+ * Checks if the given structureType is available for producing.
+ *
+ * @param iStructureType
+ * @return
+ */
+bool cPlayer::canBuildStructureType(int iStructureType) const {
+    cBuildingListItem *pItem = sidebar->getBuildingListItem(LIST_CONSTYARD, iStructureType);
+    return pItem != nullptr;
+}
+
+/**
+ * Checks if the given unitType is available for producing.
+ *
+ * @param iUnitType
+ * @return
+ */
+bool cPlayer::canBuildUnitType(int iUnitType) const {
+    int listId = units[iUnitType].listId;
+    cBuildingListItem *pItem = sidebar->getBuildingListItem(listId, iUnitType);
+    char msg[255];
+    bool result = pItem != nullptr;
+    sprintf(msg, "cPlayer[%d] canBuildUnitType(unitType=%d) -> %s", getId(), iUnitType, result ? "TRUE" : "FALSE");
+    logbook(msg);
+    return result;
+}
