@@ -1880,13 +1880,19 @@ void cUnit::LOG(const char *txt) {
 void cUnit::think_attack() {
     updateCellXAndY();
 
+    cUnit &attackUnit = unit[iAttackUnit];
+    if (!attackUnit.isValid() || attackUnit.isDead()) {
+        iAttackUnit = -1;
+        iAction = ACTION_GUARD;
+        return;
+    }
 
     if (iType == SANDWORM) {
         if (iAttackUnit > -1) {
-            iGoalCell = unit[iAttackUnit].iCell;
+            iGoalCell = attackUnit.iCell;
             if (iGoalCell == iCell) {
                 // eat
-                unit[iAttackUnit].die(false, false);
+                attackUnit.die(false, false);
                 int half = 16;
                 int iParX = pos_x() + half;
                 int iParY = pos_y() + half;
@@ -1899,7 +1905,7 @@ void cUnit::think_attack() {
                 TIMER_wormeat += rnd(150);
                 return;
             } else {
-                int cellType = map.getCellType(unit[iAttackUnit].iCell);
+                int cellType = map.getCellType(attackUnit.iCell);
                 if (cellType != TERRAIN_SAND &&
                     cellType != TERRAIN_HILL &&
                     cellType != TERRAIN_SPICE &&
@@ -1915,16 +1921,15 @@ void cUnit::think_attack() {
 
             }
 
-        } else
+        } else {
             iAction = ACTION_GUARD;
-
-
+        }
         return;
     }
 
     // make sure the goalcell is correct
     if (iAttackUnit > -1) {
-        iGoalCell = unit[iAttackUnit].iCell;
+        iGoalCell = attackUnit.iCell;
     }
 
     if (iAttackStructure > -1) {
@@ -1942,11 +1947,10 @@ void cUnit::think_attack() {
 
     if (iAttackCell > -1) {
         iGoalCell = iAttackCell;
-        LOG("I am attacking a cell.. right");
     }
 
     if (iAttackUnit > -1) {
-        if (unit[iAttackUnit].iHitPoints < 0) {
+        if (attackUnit.iHitPoints < 0) {
             iAttackUnit = -1;
             iGoalCell = iCell;
             iAction = ACTION_GUARD;
@@ -2028,7 +2032,7 @@ void cUnit::think_attack() {
                 if (TIMER_attack >= units[iType].attack_frequency) {
                     if (TIMER_attack == units[iType].attack_frequency) {
                         if (iAttackUnit > -1) {
-                            if (unit[iAttackUnit].iPlayer == iPlayer) {
+                            if (attackUnit.iPlayer == iPlayer) {
                                 // unit got converted
                                 iAttackUnit = -1;
                                 iAction = ACTION_GUARD;
@@ -2056,7 +2060,7 @@ void cUnit::think_attack() {
         } else {
 
             // chase unit
-            if (unit[iAttackUnit].iType != SANDWORM) {
+            if (attackUnit.iType != SANDWORM) {
                 iAction = ACTION_CHASE;
                 bCalculateNewPath = true;
             } else {
@@ -2098,7 +2102,7 @@ void cUnit::think_attack() {
                 if (TIMER_attack >= units[iType].attack_frequency) {
                     if (TIMER_attack == units[iType].attack_frequency) {
                         if (iAttackUnit > -1) {
-                            if (unit[iAttackUnit].iPlayer == iPlayer) {
+                            if (attackUnit.iPlayer == iPlayer) {
                                 // unit got converted
                                 iAttackUnit = -1;
                                 iAction = ACTION_MOVE;
