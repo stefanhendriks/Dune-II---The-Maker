@@ -191,6 +191,33 @@ public:
     bool canBuildUnitType(int iUnitType) const;
     bool canBuildStructureType(int iStructureType) const;
 
+    int getStructureTypeBeingBuilt() const;
+    cBuildingListItem *getStructureBuildingListItemBeingBuilt() const;
+
+    int  findCellToPlaceStructure(int iStructureType);
+
+    /**
+     * Returns true if anything is built from ConstYard
+     */
+    bool isBuildingStructureAwaitingPlacement() const;
+
+    cBuildingListItem * isUpgradeAvailableToGrantUnit(int iUnitType) const;
+    cBuildingListItem * isUpgradeAvailableToGrantStructure(int iStructureType) const;
+
+    cBuildingListItem * isUpgradingList(int listId, int sublistId) const;
+    cBuildingListItem * isUpgradingConstyard() const;
+    cBuildingListItem * isBuildingStructure() const;
+    bool isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) const;
+
+    bool startBuildingUnit(int iUnitType) const;
+    void startBuildingStructure(int iStructureType) const;
+    void startUpgrading(int iUpgradeType) const;
+
+    eCantBuildReason canBuildUnit(int iUnitType);
+
+    int findRandomUnitTarget(int playerIndexToAttack);
+    int findRandomStructureTarget(int iAttackPlayer);
+
 private:
     int getRGBColorForHouse(int houseId);
 
