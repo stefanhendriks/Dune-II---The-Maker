@@ -12,7 +12,7 @@ cPlayerBrainFremenSuperWeapon::~cPlayerBrainFremenSuperWeapon() {
 void cPlayerBrainFremenSuperWeapon::think() {
     // find any unit that does not attack, and let it attack an enemy?
     bool foundIdleUnit = false;
-    std::vector<int> ids = player_->getAllMyUnits();
+    std::vector<int> ids = player->getAllMyUnits();
     for (auto & id : ids) {
         cUnit &cUnit = unit[id];
         if (cUnit.isIdle()) {
@@ -23,13 +23,13 @@ void cPlayerBrainFremenSuperWeapon::think() {
 
     if (!foundIdleUnit) {
         char msg[255];
-        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() AI[%d] - NO idle unit(s) to attack with.", player_->getId());
+        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() AI[%d] - NO idle unit(s) to attack with.", player->getId());
         logbook(msg);
         return;
     }
 
     char msg[255];
-    sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() AI[%d] - found %d idle unit(s) to attack with.", player_->getId(), ids.size());
+    sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() AI[%d] - found %d idle unit(s) to attack with.", player->getId(), ids.size());
     logbook(msg);
 
     // attack things!
@@ -37,8 +37,8 @@ void cPlayerBrainFremenSuperWeapon::think() {
     int structureIdToAttack = -1;
 
     for (int i = 1; i < MAX_PLAYERS; i++) {
-        if (i == player_->getId()) continue; // skip self
-        if (players[i].isSameTeamAs(player_)) continue; // skip same team players
+        if (i == player->getId()) continue; // skip self
+        if (players[i].isSameTeamAs(player)) continue; // skip same team players
 
         // some chance to skip this player...
         if (rnd(100) > 70) {
@@ -54,7 +54,7 @@ void cPlayerBrainFremenSuperWeapon::think() {
         }
 
         // or which structure
-        std::vector<int> structureIds = players[i].getAllMyStructures();
+        std::vector<int> structureIds = players[i].getAllMyStructuresAsId();
         if (!structureIds.empty()) {
             // pick structure to attack
             std::random_shuffle(structureIds.begin(), structureIds.end());
@@ -64,7 +64,7 @@ void cPlayerBrainFremenSuperWeapon::think() {
     }
 
     memset(msg, 0, sizeof(msg));
-    sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() AI[%d] - unitIdToAttack = %d, structureIdToAttack = %d.", player_->getId(), unitIdToAttack, structureIdToAttack);
+    sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() AI[%d] - unitIdToAttack = %d, structureIdToAttack = %d.", player->getId(), unitIdToAttack, structureIdToAttack);
     logbook(msg);
 
     // order units to attack!
@@ -81,6 +81,6 @@ void cPlayerBrainFremenSuperWeapon::think() {
     }
 
     memset(msg, 0, sizeof(msg));
-    sprintf(msg, "cPlayerBrainFremenSuperWeapon::think(), for player [%d] - FINISHED", player_->getId());
+    sprintf(msg, "cPlayerBrainFremenSuperWeapon::think(), for player [%d] - FINISHED", player->getId());
     logbook(msg);
 }

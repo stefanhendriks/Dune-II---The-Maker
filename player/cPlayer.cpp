@@ -1,6 +1,7 @@
 #include <vector>
 #include <algorithm>
 #include "../include/d2tmh.h"
+#include "cPlayer.h"
 
 
 cPlayer::cPlayer() {
@@ -610,7 +611,7 @@ std::vector<int> cPlayer::getAllMyUnits() {
     return ids;
 }
 
-std::vector<int> cPlayer::getAllMyStructures() {
+std::vector<int> cPlayer::getAllMyStructuresAsId() {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_STRUCTURES; i++) {
         cAbstractStructure * abstractStructure = structure[i];
@@ -690,24 +691,11 @@ void cPlayer::setBrain(cPlayerBrain *brain) {
     brain_ = brain;
 }
 
-
-/**
- * Checks if the given structureType is available for producing.
- *
- * @param iStructureType
- * @return
- */
 bool cPlayer::canBuildStructureType(int iStructureType) const {
     cBuildingListItem *pItem = sidebar->getBuildingListItem(LIST_CONSTYARD, iStructureType);
     return pItem != nullptr;
 }
 
-/**
- * Checks if the given unitType is available for producing.
- *
- * @param iUnitType
- * @return
- */
 bool cPlayer::canBuildUnitType(int iUnitType) const {
     int listId = units[iUnitType].listId;
     cBuildingListItem *pItem = sidebar->getBuildingListItem(listId, iUnitType);
@@ -1061,9 +1049,6 @@ int cPlayer::findCellToPlaceStructure(int iStructureType) {
     return -1;
 }
 
-// This function will do a check what kind of structure is needed to build the unittype
-// Basicly the function returns true when its valid to build the unittype, or false
-// when its impossible (due no structure, money, etc)
 eCantBuildReason cPlayer::canBuildUnit(int iUnitType) {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
@@ -1179,4 +1164,47 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer) {
 
 
     return (iTargets[rnd(iT)]);
+}
+
+eCantBuildReason cPlayer::canBuildStructure(int iStructureType) {
+    // Once known, a check will be made to see if the AI has a structure to produce that
+    // unit type. If not, it will return false.
+    char msg[255];
+    s_Structures &structureType = structures[iStructureType];
+    sprintf(msg, "canBuildStructure: Wanting to build iStructureType = [%d(=%s)] for player [%d(=%s)]; allowed?...", iStructureType, structureType.name, getId(), getHouseName().c_str());
+    logbook(msg);
+
+    // CHECK 1: Do we have the money?
+    if (!hasEnoughCreditsForStructure(iStructureType)) {
+        char msg[255];
+        sprintf(msg, "canBuildStructure: FALSE, because cost %d higher than credits %d", structureType.cost, getCredits());
+        logbook(msg);
+        return eCantBuildReason::NOT_ENOUGH_MONEY; // NOPE
+    }
+
+    // Do the reality-check, do we have the building needed?
+    if (!hasAtleastOneStructure(CONSTYARD)) {
+        char msg[255];
+        sprintf(msg, "canBuildStructure: FALSE, because we do not own the required structure type [%s] for this structure: [%s]", structures[CONSTYARD].name, structureType.name);
+        logbook(msg);
+        return eCantBuildReason::REQUIRES_STRUCTURE;
+    }
+
+    // CHECK 2: Are we building another structure already?
+    if (isBuildingStructure()) {
+        char msg[255];
+        sprintf(msg, "canBuildStructure: FALSE, because already building (another) structure");
+        logbook(msg);
+        return eCantBuildReason::ALREADY_BUILDING;
+    }
+
+    if (!canBuildStructureType(iStructureType)) {
+        // not available to build (not in list)
+        // assume it requires an upgrade?
+        return eCantBuildReason::REQUIRES_UPGRADE;
+    }
+
+    logbook("canBuildStructure: ALLOWED");
+
+    return eCantBuildReason::NONE;
 }

@@ -172,7 +172,7 @@ public:
 
     std::vector<int> getAllMyUnits();
 
-    std::vector<int> getAllMyStructures();
+    std::vector<int> getAllMyStructuresAsId();
 
     bool isSameTeamAs(cPlayer *pPlayer);
 
@@ -188,8 +188,33 @@ public:
 
     void think();
 
+    /**
+     * Checks if the given unitType is available for producing; does not check if it is allowed to do so. Use
+     * canBuildUnit for that.
+     *
+     * @param iUnitType
+     * @return
+     */
     bool canBuildUnitType(int iUnitType) const;
+
+    /**
+     * Check if we can build unit of type. Returns a reason when it can't. If the reason is NONE it means it can be built.
+     */
+    eCantBuildReason canBuildUnit(int iUnitType);
+
+
+    /**
+     * Checks if the given structureType is available for producing; does not check if it is allowed to do so. Use
+     * canBuildStructure for that.
+     *
+     * @param iStructureType
+     * @return
+     */
     bool canBuildStructureType(int iStructureType) const;
+    /**
+     * Check if we can build structure of type. Returns a reason when it can't. If the reason is NONE it means it can be built.
+     */
+    eCantBuildReason canBuildStructure(int iStructureType);
 
     int getStructureTypeBeingBuilt() const;
     cBuildingListItem *getStructureBuildingListItemBeingBuilt() const;
@@ -212,8 +237,6 @@ public:
     bool startBuildingUnit(int iUnitType) const;
     void startBuildingStructure(int iStructureType) const;
     void startUpgrading(int iUpgradeType) const;
-
-    eCantBuildReason canBuildUnit(int iUnitType);
 
     int findRandomUnitTarget(int playerIndexToAttack);
     int findRandomStructureTarget(int iAttackPlayer);

@@ -124,6 +124,13 @@ enum eBuildType {
     BULLET     // 4 (ie, used for super weapon)
 };
 
+namespace buildOrder {
+	enum eBuildOrderState {
+		PROCESSME,
+		BUILDING,
+		REMOVEME
+	};
+}
 enum eDeployTargetType {
     TARGET_NONE,
 
