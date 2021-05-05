@@ -33,6 +33,8 @@ public:
 
     void init(int id, cPlayerBrain *brain);
 
+    void setBrain(cPlayerBrain *brain);
+
     bool bEnoughPower() const;
 
     bool bEnoughSpiceCapacityToStoreCredits() const;
