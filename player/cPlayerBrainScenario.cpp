@@ -21,6 +21,7 @@ void cPlayerBrainScenario::think() {
 
     // now do some real stuff
 
+
     char msg[255];
     memset(msg, 0, sizeof(msg));
     sprintf(msg, "cPlayerBrainScenario::think(), for player [%d] - FINISHED", player_->getId());

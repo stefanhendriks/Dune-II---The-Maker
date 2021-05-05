@@ -112,7 +112,7 @@ public:
     cBuildingListItem *getStructureBuildingListItemBeingBuilt() const;
 
     int findRandomUnitTarget(int playerIndexToAttack);
-    int getStructureTypeByUnitType(int iUnitType);
+
     int findRandomStructureTarget(int iAttackPlayer);
 
 };
