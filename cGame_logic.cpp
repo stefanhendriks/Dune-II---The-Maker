@@ -95,7 +95,7 @@ void cGame::init() {
 	map.init(64, 64);
 
 	for (int i=0; i < MAX_PLAYERS; i++) {
-		player[i].init(i, new cPlayerBrainEmpty(&player[i]));
+		player[i].init(i, nullptr);
         aiplayer[i].init(&player[i]);
     }
 
@@ -152,29 +152,33 @@ void cGame::mission_init() {
 
     // clear out players but not entirely
     for (int i=0; i < MAX_PLAYERS; i++) {
-        cPlayer &cPlayer = player[i];
-        int h = cPlayer.getHouse();
+        cPlayer &pPlayer = player[i];
+        int h = pPlayer.getHouse();
 
-        if (game.bDisableAI) {
-            cPlayer.init(i, nullptr);
-        } else {
-            if (i == HUMAN) {
-                cPlayer.init(i, new cPlayerBrainEmpty(&cPlayer));
-            } else if (i < AI_CPU5) {
-                // TODO: playing attribute? (from ai player class?)
-                cPlayer.init(i, new cPlayerBrainEmpty(&cPlayer));
-            } else if (i == AI_CPU5) {
-                cPlayer.init(i, new cPlayerBrainFremenSuperWeapon(&cPlayer));
-            } else if (i == AI_CPU6) {
-                cPlayer.init(i, new cPlayerBrainSandworm(&cPlayer));
+        if (i == HUMAN) {
+            pPlayer.init(i, nullptr);
+        } else if (i < AI_CPU5) {
+            // TODO: playing attribute? (from ai player class?)
+            if (game.bDisableAI) {
+                pPlayer.init(i, nullptr);
+            } else {
+                if (game.bSkirmish) {
+                    pPlayer.init(i, new cPlayerBrainEmpty(&pPlayer));
+                } else {
+                    pPlayer.init(i, new cPlayerBrainScenario(&pPlayer));
+                }
             }
+        } else if (i == AI_CPU5) {
+            pPlayer.init(i, new cPlayerBrainFremenSuperWeapon(&pPlayer));
+        } else if (i == AI_CPU6) {
+            pPlayer.init(i, new cPlayerBrainSandworm(&pPlayer));
         }
-        cPlayer.setHouse(h);
+        pPlayer.setHouse(h);
 
-        aiplayer[i].init(&cPlayer);
+        aiplayer[i].init(&pPlayer);
 
         if (bSkirmish) {
-            cPlayer.setCredits(2500);
+            pPlayer.setCredits(2500);
         }
     }
 
