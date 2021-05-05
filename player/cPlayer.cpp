@@ -184,12 +184,7 @@ void cPlayer::init(int id, cPlayerBrain *brain) {
     assert(id < MAX_PLAYERS);
     this->id = id;
 
-    // delete old brain object if it was set before
-    if (brain_) {
-        delete brain_;
-    }
-    // set new brain
-    brain_ = brain;
+    setBrain(brain);
 
     memcpy(pal, general_palette, sizeof(pal));
 	house = GENERALHOUSE;
@@ -697,5 +692,14 @@ void cPlayer::think() {
     if (brain_) {
         brain_->think();
     }
+}
+
+void cPlayer::setBrain(cPlayerBrain *brain) {
+    // delete old brain object if it was set before
+    if (brain_) {
+        delete brain_;
+    }
+    // set new brain
+    brain_ = brain;
 }
 
