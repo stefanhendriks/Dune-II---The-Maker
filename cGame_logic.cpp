@@ -95,8 +95,8 @@ void cGame::init() {
 	map.init(64, 64);
 
 	for (int i=0; i < MAX_PLAYERS; i++) {
-		player[i].init(i, nullptr);
-        aiplayer[i].init(&player[i]);
+		players[i].init(i, nullptr);
+        aiplayer[i].init(&players[i]);
     }
 
 	for (int i=0; i < MAX_UNITS; i++) {
@@ -152,7 +152,7 @@ void cGame::mission_init() {
 
     // clear out players but not entirely
     for (int i=0; i < MAX_PLAYERS; i++) {
-        cPlayer &pPlayer = player[i];
+        cPlayer &pPlayer = players[i];
         int h = pPlayer.getHouse();
 
         if (i == HUMAN) {
@@ -218,7 +218,7 @@ void cGame::think_winlose() {
 
     // win by money quota
     if (iWinQuota > 0) {
-        if (player[HUMAN].hasEnoughCreditsFor(iWinQuota)) {
+        if (players[HUMAN].hasEnoughCreditsFor(iWinQuota)) {
             bSucces = true;
         }
     } else {
@@ -331,7 +331,7 @@ void cGame::updateState() {
     mouse->updateState(); // calls observers that are interested in mouse changes etc
 
 	for (int i = 0; i < MAX_PLAYERS; i++) {
-        cPlayer *pPlayer = &player[i];
+        cPlayer *pPlayer = &players[i];
         cGameControlsContext *context = pPlayer->getGameControlsContext();
 
         pPlayer->update();
@@ -364,7 +364,7 @@ void cGame::updateState() {
                     if (idOfUnitOnCell > -1) {
                         int id = idOfUnitOnCell;
 
-                        if (!unit[id].getPlayer()->isSameTeamAs(&player[HUMAN])) {
+                        if (!unit[id].getPlayer()->isSameTeamAs(&players[HUMAN])) {
                             mouse_tile = MOUSE_ATTACK;
                         }
                     }
@@ -374,7 +374,7 @@ void cGame::updateState() {
                     if (idOfStructureOnCell > -1) {
                         int id = idOfStructureOnCell;
 
-                        if (!structure[id]->getPlayer()->isSameTeamAs(&player[HUMAN])) {
+                        if (!structure[id]->getPlayer()->isSameTeamAs(&players[HUMAN])) {
                             mouse_tile = MOUSE_ATTACK;
                         }
                     }
@@ -630,12 +630,12 @@ void cGame::init_skirmish() const {
     game.mission_init();
 
     for (int p = HUMAN; p < AI_WORM; p++) {
-        player[p].setCredits(2500);
-        player[p].setTeam(p);
+        players[p].setCredits(2500);
+        players[p].setTeam(p);
     }
 
     // Fremen allies with Human by default
-    player[FREMEN].setTeam(HUMAN);
+    players[FREMEN].setTeam(HUMAN);
 }
 
 void cGame::setup_skirmish() {
@@ -906,7 +906,7 @@ void cGame::setup_skirmish() {
 			char cHouse[30];
 			memset(cHouse, 0, sizeof(cHouse));
 
-            cPlayer &cPlayer = player[p];
+            cPlayer &cPlayer = players[p];
             if (cPlayer.getHouse() == ATREIDES) {
 				sprintf(cHouse, "Atreides");
 			} else if (cPlayer.getHouse() == HARKONNEN) {
@@ -1169,7 +1169,7 @@ void cGame::setup_skirmish() {
             // set up players and their units
             for (int p=0; p < MAX_PLAYERS; p++)	{
 
-                cPlayer &cPlayer = player[p];
+                cPlayer &cPlayer = players[p];
                 cAIPlayer &aiPlayer = aiplayer[p];
                 int iHouse = cPlayer.getHouse(); // get house selected, which can be 0 for RANDOM
 
@@ -1193,8 +1193,8 @@ void cGame::setup_skirmish() {
 
                             bool houseInUse=false;
                             for (int pl=0; pl < AI_WORM; pl++) {
-                                if (player[pl].getHouse() > 0 &&
-                                    player[pl].getHouse() == iHouse) {
+                                if (players[pl].getHouse() > 0 &&
+                                    players[pl].getHouse() == iHouse) {
                                     houseInUse=true;
                                 }
                             }
@@ -1635,7 +1635,7 @@ void cGame::shutdown() {
     cBuildingListFactory::destroy();
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        player[i].destroyAllegroBitmaps();
+        players[i].destroyAllegroBitmaps();
     }
 
     delete allegroDrawer;
@@ -2093,7 +2093,7 @@ bool cGame::setupGame() {
 	// A few messages for the player
 	logbook("Initializing:  PLAYERS");
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        player[i].init(i, nullptr);
+        players[i].init(i, nullptr);
     }
     logbook("Setup:  HOUSES");
 	INSTALL_HOUSES();
@@ -2112,7 +2112,7 @@ bool cGame::setupGame() {
 	mapCamera = new cMapCamera(&map);
 
     delete drawManager;
-	drawManager = new cDrawManager(&player[HUMAN]);
+	drawManager = new cDrawManager(&players[HUMAN]);
 
 	game.init();
 
@@ -2137,7 +2137,7 @@ void cGame::setup_players() {
 
 	// make sure each player has an own item builder
 	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
-		cPlayer * thePlayer = &player[i];
+		cPlayer * thePlayer = &players[i];
 
 		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer);
 		thePlayer->setSideBar(sidebar);
@@ -2162,7 +2162,7 @@ void cGame::setup_players() {
 	}
 
     delete _interactionManager;
-    cPlayer *humanPlayer = &player[HUMAN];
+    cPlayer *humanPlayer = &players[HUMAN];
     _interactionManager = new cInteractionManager(humanPlayer);
     mouse->setMouseObserver(_interactionManager);
 }
@@ -2222,7 +2222,7 @@ cGame::~cGame() {
 }
 
 void cGame::prepareMentatForPlayer() {
-    int house = player[HUMAN].getHouse();
+    int house = players[HUMAN].getHouse();
     if (state == GAME_BRIEFING) {
         game.mission_init();
         game.setup_players();
@@ -2248,7 +2248,7 @@ void cGame::prepareMentatForPlayer() {
 
 void cGame::createAndPrepareMentatForHumanPlayer() {
     delete pMentat;
-    int houseIndex = player[0].getHouse();
+    int houseIndex = players[0].getHouse();
     if (houseIndex == ATREIDES) {
         pMentat = new cAtreidesMentat();
     } else if (houseIndex == HARKONNEN) {
@@ -2284,7 +2284,7 @@ void cGame::prepareMentatToTellAboutHouse(int house) {
 }
 
 void cGame::loadScenario() {
-    int iHouse = player[HUMAN].getHouse();
+    int iHouse = players[HUMAN].getHouse();
     INI_Load_scenario(iHouse, game.iRegion, pMentat);
 }
 

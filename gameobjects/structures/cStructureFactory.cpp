@@ -39,7 +39,7 @@ cAbstractStructure *cStructureFactory::createStructureInstance(int type) {
 
 void cStructureFactory::deleteStructureInstance(cAbstractStructure *pStructure) {
     // notify building list updater
-    cPlayer * pPlayer = &player[pStructure->getPlayerId()];
+    cPlayer * pPlayer = &players[pStructure->getPlayerId()];
     cBuildingListUpdater * buildingListUpdater = pPlayer->getBuildingListUpdater();
     if (buildingListUpdater) {
         buildingListUpdater->onStructureDestroyed(pStructure->getType());
@@ -150,7 +150,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	}
 
     // handle update
-    cPlayer * pPlayer = &player[iPlayer];
+    cPlayer * pPlayer = &players[iPlayer];
     cBuildingListUpdater * buildingListUpdater = pPlayer->getBuildingListUpdater();
     if (buildingListUpdater) {
         buildingListUpdater->onStructureCreated(iStructureType);
@@ -168,7 +168,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 **/
 void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(int iCell, int iStructureType, int iPlayer) {
     // add this structure to the array of the player (for some score management)
-    cPlayer &cPlayer = player[iPlayer];
+    cPlayer &cPlayer = players[iPlayer];
     cPlayer.increaseStructureAmount(iStructureType);
 
 	if (iStructureType == SLAB1) {

@@ -32,7 +32,7 @@ class cBuildingListUpdater {
 private:
 		// this player will be used to read state from
 		// in order to know what to update
-		cPlayer * m_Player;
+		cPlayer * player;
 
         void applyUpgrade(const s_Upgrade &upgradeType);
 };

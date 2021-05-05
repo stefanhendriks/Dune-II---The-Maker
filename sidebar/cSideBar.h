@@ -95,7 +95,7 @@ private:
 
     // the lists:
     cBuildingList *lists[LIST_MAX];
-    cPlayer *m_Player;
+    cPlayer *player;
 
     bool isMouseOverSidebarValue;
 

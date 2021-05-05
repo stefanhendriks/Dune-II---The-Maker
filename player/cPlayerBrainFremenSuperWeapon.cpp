@@ -38,7 +38,7 @@ void cPlayerBrainFremenSuperWeapon::think() {
 
     for (int i = 1; i < MAX_PLAYERS; i++) {
         if (i == player_->getId()) continue; // skip self
-        if (player[i].isSameTeamAs(player_)) continue; // skip same team players
+        if (players[i].isSameTeamAs(player_)) continue; // skip same team players
 
         // some chance to skip this player...
         if (rnd(100) > 70) {
@@ -46,7 +46,7 @@ void cPlayerBrainFremenSuperWeapon::think() {
         }
 
         // nope! now choose which unit to attack
-        std::vector<int> unitIds = player[i].getAllMyUnits();
+        std::vector<int> unitIds = players[i].getAllMyUnits();
         if (!unitIds.empty()) {
             std::random_shuffle(unitIds.begin(), unitIds.end());
             unitIdToAttack = unitIds.front();
@@ -54,7 +54,7 @@ void cPlayerBrainFremenSuperWeapon::think() {
         }
 
         // or which structure
-        std::vector<int> structureIds = player[i].getAllMyStructures();
+        std::vector<int> structureIds = players[i].getAllMyStructures();
         if (!structureIds.empty()) {
             // pick structure to attack
             std::random_shuffle(structureIds.begin(), structureIds.end());

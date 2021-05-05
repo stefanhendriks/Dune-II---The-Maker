@@ -104,7 +104,7 @@ BITMAP * cAbstractStructure::getShadowBitmap() {
 cPlayer * cAbstractStructure::getPlayer() {
 	assert(iPlayer >= HUMAN);
 	assert(iPlayer < MAX_PLAYERS);
-	return &player[iPlayer];
+	return &players[iPlayer];
 }
 
 int cAbstractStructure::getMaxHP() {
@@ -140,7 +140,7 @@ void cAbstractStructure::die() {
     structure[id]=NULL;
 
     // Destroy structure, take stuff in effect for the player
-    cPlayer &thePlayer = player[iPlayer];
+    cPlayer &thePlayer = players[iPlayer];
 
     thePlayer.decreaseStructureAmount(getType()); // remove from player building indexes
 
@@ -326,7 +326,7 @@ void cAbstractStructure::think_damage() {
 
         // AI reacting to this damage
         // TODO: remove here
-		if (iPlayer != HUMAN && player[iPlayer].hasEnoughCreditsFor(50)) {
+		if (iPlayer != HUMAN && players[iPlayer].hasEnoughCreditsFor(50)) {
 			if (iHitPoints < ((structures[getType()].hp / 4)*3)) { // lower than 75%
                 bRepair=true;
 			}
@@ -442,14 +442,14 @@ void cAbstractStructure::think_repair()
 {
     // REPAIRING
     if (bRepair) {
-		if (player[iPlayer].hasEnoughCreditsFor(1.0f)) {
+		if (players[iPlayer].hasEnoughCreditsFor(1.0f)) {
 			TIMER_repair++;
 
 			if (TIMER_repair > 7)
 			{
 				TIMER_repair=0;
 				iHitPoints += structures[getType()].fixhp;
-				player[iPlayer].substractCredits(1);
+				players[iPlayer].substractCredits(1);
 			}
 
 			// done repairing

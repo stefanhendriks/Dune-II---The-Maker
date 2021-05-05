@@ -1,10 +1,3 @@
-/*
- * cOrderDrawer.h
- *
- *  Created on: 9-aug-2010
- *      Author: Stefan
- */
-
 #ifndef CORDERDRAWER_H_
 #define CORDERDRAWER_H_
 
@@ -32,7 +25,7 @@ private:
 
     bool _isMouseOverOrderButton;
 
-    cPlayer * m_Player;
+    cPlayer * player;
     cRectangle *buttonRect;
     BITMAP *buttonBitmap;
 

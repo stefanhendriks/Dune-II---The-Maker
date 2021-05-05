@@ -28,7 +28,7 @@ protected:
         void onMouseAt(const s_MouseEvent &event);
 
 		cMouseToolTip * mouseToolTip;
-		cPlayer * m_Player;
+		cPlayer * player;
 		int mouseX, mouseY;
 };
 

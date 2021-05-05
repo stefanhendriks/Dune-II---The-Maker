@@ -1,7 +1,7 @@
 #include "../include/d2tmh.h"
 
 
-cBuildingListDrawer::cBuildingListDrawer(cPlayer *thePlayer) : m_Player(thePlayer) {
+cBuildingListDrawer::cBuildingListDrawer(cPlayer *thePlayer) : player(thePlayer) {
     textDrawer = new cTextDrawer(game_font);
 }
 
@@ -35,7 +35,7 @@ void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list) {
     int width = 33;
     int height = ((BITMAP *)gfxinter[id].dat)->h;
 
-    int color = m_Player->getSelectFadingColor();
+    int color = player->getSelectFadingColor();
 
     allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
     allegroDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width-2, height-2, color);
@@ -76,7 +76,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
     }
 
     if (pressed) {
-        int color = m_Player->getHouseFadingColor();
+        int color = player->getHouseFadingColor();
 
         allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
         allegroDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width-2, height-2, color);
@@ -102,7 +102,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 	int iDrawX=getDrawX();
 	int iDrawY=getDrawY();
 
-    int selectFadingColor = m_Player->getSelectFadingColor();
+    int selectFadingColor = player->getSelectFadingColor();
 
     int end = MAX_ITEMS;
 
@@ -126,7 +126,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
         int iDrawYEnd = iDrawY + heightOfIcon;
 
         // asumes drawing for human player
-        bool cannotPayIt = !m_Player->hasEnoughCreditsFor(item->getBuildCost());
+        bool cannotPayIt = !player->hasEnoughCreditsFor(item->getBuildCost());
 
         // icon id must be set , assert it.
 		assert(item->getIconId() > -1);
@@ -188,7 +188,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 
 				// Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
 				if (item->isPendingUpgrading()) {
-                    int errorFadingColor = m_Player->getErrorFadingColor();
+                    int errorFadingColor = player->getErrorFadingColor();
                     rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
@@ -202,7 +202,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 
 				// Pending building (ie: a build is progressing, blocking the upgrade)
 				if (item->isPendingBuilding()) {
-                    int errorFadingColor = m_Player->getErrorFadingColor();
+                    int errorFadingColor = player->getErrorFadingColor();
                     rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
@@ -223,7 +223,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
 				if (cannotPayIt) {
 					set_trans_blender(0,0,0,128);
 					fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
-					int errorFadingColor = m_Player->getErrorFadingColor();
+					int errorFadingColor = player->getErrorFadingColor();
 					rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
 					line(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
 					line(bmp_screen, iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
@@ -367,5 +367,5 @@ cBuildingListItem * cBuildingListDrawer::isOverItemCoordinates(cBuildingList *li
 }
 
 void cBuildingListDrawer::setPlayer(cPlayer *thePlayer) {
-    this->m_Player = thePlayer;
+    this->player = thePlayer;
 }

@@ -5,7 +5,7 @@
 cInteractionManager::cInteractionManager(cPlayer * thePlayer) : cMouseObserver() {
 	assert(thePlayer);
 	// does not own these things!
-	m_Player = thePlayer;
+	player = thePlayer;
     sidebar = thePlayer->getSideBar();
 	miniMapDrawer = drawManager->getMiniMapDrawer();
 	mouseDrawer = drawManager->getMouseDrawer();
@@ -14,7 +14,7 @@ cInteractionManager::cInteractionManager(cPlayer * thePlayer) : cMouseObserver()
 }
 
 cInteractionManager::~cInteractionManager() {
-    m_Player = nullptr;
+    player = nullptr;
 	sidebar = nullptr;
 	miniMapDrawer = nullptr;
 }
@@ -25,7 +25,7 @@ void cInteractionManager::interactWithKeyboard(){
 
 void cInteractionManager::setPlayerToInteractFor(cPlayer *thePlayer) {
     this->sidebar = thePlayer->getSideBar();
-    this->m_Player = thePlayer;
+    this->player = thePlayer;
     char msg[255];
     sprintf(msg, "cInteractionManager::setPlayerToInteractFor for player [%d] [%s]", thePlayer->getId(), thePlayer->getHouseName().c_str());
     logbook(msg);
@@ -85,7 +85,7 @@ void cInteractionManager::onNotify(const s_MouseEvent &mouseEvent) {
     }
 
     // now call all its other interested listeners
-    cGameControlsContext *pContext = m_Player->getGameControlsContext();
+    cGameControlsContext *pContext = player->getGameControlsContext();
     pContext->onNotify(mouseEvent); // must be first because other classes rely on this context
 
     sidebar->onNotify(mouseEvent);

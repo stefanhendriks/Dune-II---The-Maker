@@ -45,7 +45,7 @@ enum cantBuildReason {
     NONE
 };
 
-// ai specific variables for a m_Player
+// ai specific variables for a player
 class cAIPlayer {
 
 private:
@@ -55,12 +55,12 @@ private:
 public:
 
 	// SKIRMISH
-	bool bPlaying;			// does this AI m_Player play?
+	bool bPlaying;			// does this AI player play?
 	int  iUnits;			// units to start with (min = 1)
     int  iCheckingPlaceStructure; // checking place structure smoothenss (be nice to cpu)
 
 	// ---
-	cPlayer *_player;
+	cPlayer *player;
 
     int TIMER_BuildUnits;       // when to build units?
     int TIMER_Upgrades;         //
@@ -102,17 +102,14 @@ public:
     void startBuildingStructure(int iStructureType) const;
     void startUpgrading(int iUpgradeType) const;
 
-    bool isUnitAvailableForBuilding(int iUnitType) const;
     cBuildingListItem * isUpgradeAvailableToGrantUnit(int iUnitType) const;
 
-    bool isStructureAvailableForBuilding(int iStructureType) const;
     cBuildingListItem * isUpgradeAvailableToGrantStructure(int iStructureType) const;
 
     int getStructureTypeBeingBuilt() const;
     cBuildingListItem *getStructureBuildingListItemBeingBuilt() const;
 
     int findRandomUnitTarget(int playerIndexToAttack);
-
     int findRandomStructureTarget(int iAttackPlayer);
 
 };

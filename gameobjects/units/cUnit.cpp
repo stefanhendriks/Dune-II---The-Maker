@@ -131,7 +131,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 
     // when HARVESTER, check if there are any friends , if not, then deliver one
     if (iType == HARVESTER && // a harvester died
-        player[iPlayer].hasAtleastOneStructure(REFINERY)) { // and its player still has a refinery
+        players[iPlayer].hasAtleastOneStructure(REFINERY)) { // and its player still has a refinery
 
         // check if the player has any harvester left
         bool bFoundHarvester = false;
@@ -628,7 +628,7 @@ void cUnit::draw() {
     int iSelX = ux;
     int iSelY = uy;
 
-    cPlayer &cPlayer = player[this->iPlayer];
+    cPlayer &cPlayer = players[this->iPlayer];
 
     // Draw SHADOW
     BITMAP *shadow = cPlayer.getUnitShadowBitmap(iType, bmp_body, iFrame);
@@ -1158,7 +1158,7 @@ void cUnit::think() {
                 bFindRefinery = true;
 
             // when we should harvest...
-            cPlayerDifficultySettings *difficultySettings = player[iPlayer].getDifficultySettings();
+            cPlayerDifficultySettings *difficultySettings = players[iPlayer].getDifficultySettings();
             if (TIMER_harvest > (difficultySettings->getHarvestSpeed(units[iType].harvesting_speed)) &&
                 iCredits < units[iType].credit_capacity) {
                 TIMER_harvest = 1;
@@ -1199,7 +1199,7 @@ void cUnit::think() {
                 sprintf(msg, "Going to look for a refinery, playerId [%d], cell [%d]", iPlayer, iCell);
                 logbook(msg);
                 int refineryStructureId = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
-                        iCell, REFINERY, &player[iPlayer]);
+                        iCell, REFINERY, &players[iPlayer]);
 
                 if (refineryStructureId < 0) {
                     // none found, wait
@@ -1459,7 +1459,7 @@ void cUnit::think_move_air() {
                     ((cStarPort *) structure[iStrucId])->setFrigateDroppedPackage(true);
                 } else {
                     int closestStarport = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
-                            iCell, STARPORT, &player[iPlayer]);
+                            iCell, STARPORT, &players[iPlayer]);
 
                     // find closest Starport to deliver next (Starport got mid-way destroyed)
                     if (closestStarport < 0) {
@@ -1873,7 +1873,7 @@ void cUnit::LOG(const char *txt) {
     // logs unit stuff, but gives unit information
     char msg[512];
     sprintf(msg, "[UNIT[%d]: %s - House %d, iCell = %d, iGoal = %d ] '%s'", iID, units[iType].name,
-            player[iPlayer].getHouse(), iCell, iGoalCell, txt);
+            players[iPlayer].getHouse(), iCell, iGoalCell, txt);
     logbook(msg);
 }
 
@@ -2545,7 +2545,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
     int cellType = map.getCellType(iCell);
     int iSlowDown = map.getCellSlowDown(iCell);
 
-    cPlayerDifficultySettings *difficultySettings = player[iPlayer].getDifficultySettings();
+    cPlayerDifficultySettings *difficultySettings = players[iPlayer].getDifficultySettings();
     if (TIMER_move < ((difficultySettings->getMoveSpeed(iType, iSlowDown)))) {
         return eUnitMoveToCellResult::MOVERESULT_SLOWDOWN; // get out
     }
@@ -2671,7 +2671,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
             }
         }
 
-        if (iPlayer == AI_CPU5 && player[HUMAN].isHouse(ATREIDES)) {
+        if (iPlayer == AI_CPU5 && players[HUMAN].isHouse(ATREIDES)) {
             // TODO: make this work for all allied forces
             // hackish way to get Fog of war clearance by allied fremen units (super weapon).
             map.clearShroud(iCell, units[iType].sight, HUMAN);
@@ -2772,7 +2772,7 @@ bool cUnit::isUnitWhoCanSquishInfantry() {
 }
 
 cPlayer *cUnit::getPlayer() {
-    return &player[iPlayer];
+    return &players[iPlayer];
 }
 
 bool cUnit::isSaboteur() {
@@ -3719,7 +3719,7 @@ void THINK_REINFORCEMENTS() {
             } else {
                 // deliver
                 REINFORCE(reinforcements[i].iPlayer, reinforcements[i].iUnitType, reinforcements[i].iCell,
-                          player[reinforcements[i].iPlayer].getFocusCell());
+                          players[reinforcements[i].iPlayer].getFocusCell());
 
                 // and make this unvalid
                 reinforcements[i].iCell = -1;
@@ -3769,7 +3769,7 @@ void SET_REINFORCEMENT(int iCll, int iPlyr, int iTime, int iUType) {
 
     char msg[255];
     sprintf(msg, "[%d] Reinforcement: Controller = %d, House %d, Time %d, Type = %d", iIndex, iPlyr,
-            player[iPlyr].getHouse(), iTime, iUType);
+            players[iPlyr].getHouse(), iTime, iUType);
     logbook(msg);
 
     // DEBUG DEBUG

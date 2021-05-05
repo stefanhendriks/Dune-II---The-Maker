@@ -64,8 +64,8 @@ void cTimeManager::handleTimerAllegroTimerSeconds() {
             }
 
             for (int i = 0; i < MAX_PLAYERS; i++) {
-                if (player[i].getOrderProcesser()) {
-                    cOrderProcesser *orderProcesser = player[i].getOrderProcesser();
+                if (players[i].getOrderProcesser()) {
+                    cOrderProcesser *orderProcesser = players[i].getOrderProcesser();
                     assert(orderProcesser);
                     orderProcesser->think();
                 }
@@ -136,7 +136,7 @@ void cTimeManager::handleTimerGameTime() {
         }
 
         for (int i = HUMAN; i < MAX_PLAYERS; i++) {
-            cPlayer &cPlayer = player[i];
+            cPlayer &cPlayer = players[i];
             cSideBar *sidebar = cPlayer.getSideBar();
             if (sidebar) {
                 sidebar->think();
@@ -162,7 +162,7 @@ void cTimeManager::handleTimerGameTime() {
             }
 
             for (int i = 0; i < MAX_PLAYERS; i++) {
-                cItemBuilder *itemBuilder = player[i].getItemBuilder();
+                cItemBuilder *itemBuilder = players[i].getItemBuilder();
                 if (itemBuilder) {
                     itemBuilder->think();
                 }
@@ -253,7 +253,7 @@ void cTimeManager::handleTimerUnits() {
 
             // DO NOT THINK FOR HUMAN PLAYER (== 0)
             for (int i = 0; i < MAX_PLAYERS; i++) {
-                player[i].think();
+                players[i].think();
                 aiplayer[i].think();
             }
 

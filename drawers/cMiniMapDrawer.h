@@ -62,7 +62,7 @@ protected:
 		bool _isMouseOver;
 
 		cMap *map;	// the minimap drawer reads data from here
-		cPlayer * m_Player;	// the m_Player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
+		cPlayer * player;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
 		cMapCamera *mapCamera;
 		cRectangle *m_RectMinimap; // the minimap (map) itself
 		cRectangle *m_RectFullMinimap; // the total space it could take

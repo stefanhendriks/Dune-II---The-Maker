@@ -3,7 +3,7 @@
 #include "cMapDrawer.h"
 
 
-cMapDrawer::cMapDrawer(cMap * theMap, cPlayer * thePlayer, cMapCamera * theCamera) : _player(thePlayer) {
+cMapDrawer::cMapDrawer(cMap * theMap, cPlayer * thePlayer, cMapCamera * theCamera) : player(thePlayer) {
 	assert(theMap);
 	assert(theCamera);
 	map = theMap;
@@ -14,7 +14,7 @@ cMapDrawer::cMapDrawer(cMap * theMap, cPlayer * thePlayer, cMapCamera * theCamer
 cMapDrawer::~cMapDrawer() {
 	map = nullptr;
 	camera = nullptr;
-    _player = nullptr;
+    player = nullptr;
 	if (bmp_temp) {
 	    destroy_bitmap(bmp_temp);
 	}
@@ -32,7 +32,7 @@ void cMapDrawer::drawShroud(int startX, int startY) {
     int colorDepthScreen = bitmap_color_depth(bmp_screen);
     BITMAP *temp = create_bitmap_ex(colorDepthScreen, iTileWidth, iTileHeight);
 
-    int iPl = _player->getId();
+    int iPl = player->getId();
 
     for (int viewportX = camera->getViewportStartX(); viewportX < camera->getViewportEndX() + 32; viewportX+= 32) {
 
@@ -90,8 +90,8 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
     int iTileHeight = (tileHeight + 1);
     int iTileWidth = (tileWidth + 1);
 
-	int iPl = _player->getId();
-    int mouseCell = _player->getGameControlsContext()->getMouseCell();
+	int iPl = player->getId();
+    int mouseCell = player->getGameControlsContext()->getMouseCell();
 
 	// draw vertical rows..
 	for (int viewportX = camera->getViewportStartX(); viewportX < camera->getViewportEndX() + 32; viewportX+= 32) {
@@ -325,5 +325,5 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
 }
 
 void cMapDrawer::setPlayer(cPlayer *thePlayer) {
-    _player = thePlayer;
+    player = thePlayer;
 }
