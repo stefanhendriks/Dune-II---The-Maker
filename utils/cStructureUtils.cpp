@@ -147,6 +147,12 @@ int cStructureUtils::findStructureTypeByTypeOfList(cBuildingListItem *item) {
     return getStructureTypeByUnitBuildId(unitBuildId);
 }
 
+/**
+ * Return from which structure type a certain unit type will be deployed from.
+ * TODO: configure this in unit type itself?
+ * @param unitBuildId
+ * @return
+ */
 int cStructureUtils::getStructureTypeByUnitBuildId(int unitBuildId) const {
     switch(unitBuildId) {
         case INFANTRY:

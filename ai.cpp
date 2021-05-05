@@ -1078,28 +1078,6 @@ void cAIPlayer::think_skirmishBuildBase() {
 /////////////////////////////////////////////////
 
 
-/**
- * Returns what kind of structure will build this unit type
- * @param iUnitType
- * @return
- */
-int cAIPlayer::getStructureTypeByUnitType(int iUnitType) {
-    // Default = heavyfactory, so do a check if its NOT.
-
-    // light vehicles
-    if (iUnitType == TRIKE || iUnitType == RAIDER || iUnitType == QUAD) return LIGHTFACTORY;
-
-    // soldiers and troopers
-    if (iUnitType == INFANTRY || iUnitType == SOLDIER) return BARRACKS;
-
-    if (iUnitType == TROOPER || iUnitType == TROOPERS) return WOR;
-
-    // airborn stuff
-    if (iUnitType == CARRYALL || iUnitType == ORNITHOPTER) return HIGHTECH;
-
-    return HEAVYFACTORY;
-}
-
 // This function will do a check what kind of structure is needed to build the unittype
 // Basicly the function returns true when its valid to build the unittype, or false
 // when its impossible (due no structure, money, etc)
@@ -1126,7 +1104,7 @@ cantBuildReason cAIPlayer::canBuildUnit(int iUnitType) {
         return cantBuildReason::ALREADY_BUILDING;
     }
 
-    int iStrucType = getStructureTypeByUnitType(iUnitType);
+    int iStrucType = structureUtils.getStructureTypeByUnitBuildId(iUnitType);
 
     // Do the reality-check, do we have the building needed?
     if (!_player->hasAtleastOneStructure(iStrucType)) {
