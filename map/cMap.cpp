@@ -855,3 +855,63 @@ void cMap::setVisible(int iCell, int iPlayer, bool flag) {
 
     cell[iCell].iVisible[iPlayer] = flag;
 }
+
+int cMap::findNearestSpiceBloom(int iCell) {
+    int quarterOfMap = getWidth() / 4;
+    int iDistance = quarterOfMap;
+    int halfWidth = getWidth() / 2;
+    int halfHeight = getHeight() / 2;
+
+    if (iCell < 0) {
+        // use cell at center
+        iCell = map.getCellWithMapDimensions(halfWidth, halfHeight);
+        iDistance = map.getWidth();
+    }
+
+    int cx, cy;
+    int closestBloomFoundSoFar=-1;
+    int bloomsEvaluated = 0;
+
+    cx = map.getCellX(iCell);
+    cy = map.getCellY(iCell);
+
+    for (int i=0; i < map.getMaxCells(); i++) {
+        int cellType = map.getCellType(i);
+        if (cellType != TERRAIN_BLOOM) continue;
+        bloomsEvaluated++;
+
+        int d = ABS_length(cx, cy, map.getCellX(i), map.getCellY(i));
+
+        if (d < iDistance) {
+            closestBloomFoundSoFar = i;
+            iDistance = d;
+        }
+    }
+
+    // found a close spice bloom
+    if (closestBloomFoundSoFar > 0) {
+        return closestBloomFoundSoFar;
+    }
+
+    // no spice blooms evaluated, abort
+    if (bloomsEvaluated < 0) {
+        return -1;
+    }
+
+    // randomly pick one
+    int iTargets[10];
+    memset(iTargets, -1, sizeof(iTargets));
+    int iT=0;
+
+    for (int i=0; i < map.getMaxCells(); i++) {
+        int cellType = map.getCellType(i);
+        if (cellType == TERRAIN_BLOOM) {
+            iTargets[iT] = i;
+            iT++;
+            if (iT >= 10) break;
+        }
+    }
+
+    // when finished, return bloom
+    return iTargets[rnd(iT)];
+}

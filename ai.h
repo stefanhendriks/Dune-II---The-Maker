@@ -6,17 +6,12 @@
   Contact: stefanhen83@gmail.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2020 (c) code by Stefan Hendriks
+  2001 - 2021 (c) code by Stefan Hendriks
 
   */
 
 #ifndef AIH_H
 #define AIH_H
-
-// Computer Opponent variables
-
-// helpers
-int CLOSE_SPICE_BLOOM(int iCell);
 
 // ai specific variables for a player
 class cAIPlayer {
@@ -30,7 +25,6 @@ public:
 	// SKIRMISH
 	bool bPlaying;			// does this AI player play?
 	int  iUnits;			// units to start with (min = 1)
-    int  iCheckingPlaceStructure; // checking place structure smoothenss (be nice to cpu)
 
 	// ---
 	cPlayer *player;

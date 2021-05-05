@@ -35,8 +35,6 @@ void cAIPlayer::init(cPlayer *thePlayer) {
     DELAY_buildbase = 0;
     TIMER_think=rnd(10);        // timer for thinking itself (calling main routine)
 
-    iCheckingPlaceStructure=-1;
-
 	// -- END
 
     TIMER_attack = (700 + rnd(400));
@@ -202,7 +200,7 @@ void cAIPlayer::think_spiceBlooms() {
             // with a soldier or something
             int iUnit = -1;
             int iDist = 9999;
-            int iBloom = CLOSE_SPICE_BLOOM(player->getFocusCell());
+            int iBloom = map.findNearestSpiceBloom(player->getFocusCell());
 
             // TODO: Move this to a unit repository thingy which can query the units
             for (int i = 0; i < MAX_UNITS; i++) {
@@ -947,69 +945,3 @@ void cAIPlayer::think_repair_structure(cAbstractStructure *struc)
 	}
 }
 
-/**
- * Find the closest spice bloom compared to iCell. If iCell < 0 then use middle of map. If no close cell is found
- * a fall back of 'select any spice bloom randomly' is performed.
- * <br/>
- * @param iCell
- * @return > -1 if found or < 0 upon failure
- */
-int CLOSE_SPICE_BLOOM(int iCell) {
-    int quarterOfMap = map.getWidth() / 4;
-    int iDistance = quarterOfMap;
-    int halfWidth = map.getWidth() / 2;
-    int halfHeight = map.getHeight() / 2;
-
-    if (iCell < 0) {
-        // use cell at center
-        iCell = map.getCellWithMapDimensions(halfWidth, halfHeight);
-        iDistance = map.getWidth();
-    }
-
-    int cx, cy;
-    int closestBloomFoundSoFar=-1;
-    int bloomsEvaluated = 0;
-
-    cx = map.getCellX(iCell);
-    cy = map.getCellY(iCell);
-
-    for (int i=0; i < map.getMaxCells(); i++) {
-        int cellType = map.getCellType(i);
-        if (cellType != TERRAIN_BLOOM) continue;
-        bloomsEvaluated++;
-
-        int d = ABS_length(cx, cy, map.getCellX(i), map.getCellY(i));
-
-        if (d < iDistance) {
-            closestBloomFoundSoFar = i;
-            iDistance = d;
-        }
-    }
-
-    // found a close spice bloom
-    if (closestBloomFoundSoFar > 0) {
-        return closestBloomFoundSoFar;
-    }
-
-    // no spice blooms evaluated, abort
-    if (bloomsEvaluated < 0) {
-        return -1;
-    }
-
-    // randomly pick one
-    int iTargets[10];
-    memset(iTargets, -1, sizeof(iTargets));
-    int iT=0;
-
-    for (int i=0; i < map.getMaxCells(); i++) {
-        int cellType = map.getCellType(i);
-        if (cellType == TERRAIN_BLOOM) {
-            iTargets[iT] = i;
-            iT++;
-            if (iT >= 10) break;
-        }
-    }
-
-    // when finished, return bloom
-    return iTargets[rnd(iT)];
-}

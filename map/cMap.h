@@ -503,6 +503,15 @@ public:
 
     void resize(int width, int height);
 
+    /**
+     * Finds the nearest spice Bloom near cell. If param <b>iCell</b> &lt; 0 then use middle of map.
+     * If no close cell is found
+     * a fall back of 'select any spice bloom randomly' is performed.
+     * @param iCell
+     * @return > -1 if found or < 0 upon failure
+     */
+    int findNearestSpiceBloom(int iCell);
+
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 
