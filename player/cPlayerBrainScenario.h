@@ -12,7 +12,7 @@ public:
     void think();
 
 private:
-    int TIMER_think;
+    int TIMER_initialDelay;
 };
 
 
