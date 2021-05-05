@@ -8,6 +8,33 @@
 #ifndef ENUMS_H_
 #define ENUMS_H_
 
+enum eCantBuildReason {
+	/**
+     * Not enough money to build it
+     */
+	NOT_ENOUGH_MONEY,
+
+	/**
+     * The thing to build requires an upgrade
+     */
+	REQUIRES_UPGRADE,
+
+	/**
+     * Already building the thing (does not take queueing into account)
+     */
+	ALREADY_BUILDING,
+
+	/**
+     * Requires a structure to build this (??) - this should not happen (anymore) though
+     */
+	REQUIRES_STRUCTURE,
+
+	/**
+     * There is no reason we can't build it (ie SUCCESS)
+     */
+	NONE
+};
+
 enum eLogComponent {
 	COMP_UNITS,
 	COMP_STRUCTURES,

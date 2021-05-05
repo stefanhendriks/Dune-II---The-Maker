@@ -18,33 +18,6 @@
 // helpers
 int CLOSE_SPICE_BLOOM(int iCell);
 
-enum cantBuildReason {
-    /**
-     * Not enough money to build it
-     */
-    NOT_ENOUGH_MONEY,
-
-    /**
-     * The thing to build requires an upgrade
-     */
-    REQUIRES_UPGRADE,
-
-    /**
-     * Already building the thing (does not take queueing into account)
-     */
-    ALREADY_BUILDING,
-
-    /**
-     * Requires a structure to build this (??) - this should not happen (anymore) though
-     */
-    REQUIRES_STRUCTURE,
-
-    /**
-     * There is no reason we can't build it (ie SUCCESS)
-     */
-    NONE
-};
-
 // ai specific variables for a player
 class cAIPlayer {
 
@@ -87,30 +60,6 @@ public:
 
 	void buildStructureIfAllowed(int iStrucType);
     bool BUILD_UNIT(int iUnitType);
-    cantBuildReason canBuildUnit(int iUnitType);
-
-	int  findCellToPlaceStructure(int iStructureType);
-
-    bool isBuildingUnitType(int iUnitType) const;
-    cBuildingListItem * isUpgradingList(int listId, int sublistId) const;
-    cBuildingListItem * isUpgradingConstyard() const;
-    cBuildingListItem * isBuildingStructure() const;
-    bool isBuildingStructureAwaitingPlacement() const;
-
-
-    bool startBuildingUnit(int iUnitType) const;
-    void startBuildingStructure(int iStructureType) const;
-    void startUpgrading(int iUpgradeType) const;
-
-    cBuildingListItem * isUpgradeAvailableToGrantUnit(int iUnitType) const;
-
-    cBuildingListItem * isUpgradeAvailableToGrantStructure(int iStructureType) const;
-
-    int getStructureTypeBeingBuilt() const;
-    cBuildingListItem *getStructureBuildingListItemBeingBuilt() const;
-
-    int findRandomUnitTarget(int playerIndexToAttack);
-    int findRandomStructureTarget(int iAttackPlayer);
 
 };
 
