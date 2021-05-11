@@ -231,8 +231,8 @@ public:
     bool isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) const;
 
     bool startBuildingUnit(int iUnitType) const;
-    void startBuildingStructure(int iStructureType) const;
-    void startUpgrading(int iUpgradeType) const;
+    bool startBuildingStructure(int iStructureType) const;
+    bool startUpgrading(int iUpgradeType) const;
 
     int findRandomUnitTarget(int playerIndexToAttack);
     int findRandomStructureTarget(int iAttackPlayer);

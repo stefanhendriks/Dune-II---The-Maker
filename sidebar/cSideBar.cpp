@@ -115,7 +115,10 @@ void cSideBar::drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem
 }
 
 bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
-    if (item == nullptr) return false;
+    if (item == nullptr) {
+        return false;
+    }
+
     if (item->shouldPlaceIt()) {
         logbook("Attempting to build an item that is in the \"Place it\" mode - which should not happen - ignoring!");
         return false;
