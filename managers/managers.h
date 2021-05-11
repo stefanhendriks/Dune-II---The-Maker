@@ -13,6 +13,5 @@ class cPlayer;
 #include "cDrawManager.h"
 #include "cKeyboardManager.h"
 #include "cInteractionManager.h"
-#include "cMouseObserver.h"
 
 #endif /* MANAGERH_H_ */

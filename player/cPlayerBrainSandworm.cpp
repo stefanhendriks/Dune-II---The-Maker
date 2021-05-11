@@ -1,4 +1,6 @@
 #include "../include/d2tmh.h"
+#include "cPlayerBrainSandworm.h"
+
 
 cPlayerBrainSandworm::cPlayerBrainSandworm(cPlayer * player) : cPlayerBrain(player) {
     TIMER_think = 0;
@@ -44,5 +46,9 @@ void cPlayerBrainSandworm::think() {
             }
         }
     }
+
+}
+
+void cPlayerBrainSandworm::onNotify(const s_GameEvent &event) {
 
 }

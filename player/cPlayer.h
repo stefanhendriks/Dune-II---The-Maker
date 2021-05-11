@@ -22,7 +22,7 @@
 
 #include <vector>
 
-class cPlayer {
+class cPlayer : public cScenarioObserver {
 
 public:
     cPlayer();
@@ -237,7 +237,27 @@ public:
     int findRandomUnitTarget(int playerIndexToAttack);
     int findRandomStructureTarget(int iAttackPlayer);
 
+    /**
+     * Places structure (if allowed), source is building list item (ie something the player/AI built and wanted to place). Also
+     * takes care of the buildingList management after placement. The buildingList management is applied regardless if
+     * the structure got placed or not.
+     *
+     * @param destinationCell   where to put it
+     * @param itemToPlace       which building list item to use? (used to derive which kind of structure, etc)
+     * @return
+     */
     cAbstractStructure* placeStructure(int destinationCell, cBuildingListItem *itemToPlace);
+
+    /**
+     * Places structure, usually the source is somewhere else (a unit, MCV; or from map loading).
+     * @param destinationCell   where to put it
+     * @param iStructureTypeId structure type
+     * @param healthPercentage 0-100
+     * @return
+     */
+    cAbstractStructure* placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage);
+
+    void onNotify(const s_GameEvent &event);
 
 private:
     int getRGBColorForHouse(int houseId);

@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <random>
 #include "include/d2tmh.h"
+#include "cGame.h"
 
 
 cGame::cGame() {
@@ -2293,4 +2294,19 @@ void cGame::think_state() {
 
 void cGame::setPlayerToInteractFor(cPlayer *pPlayer) {
     _interactionManager->setPlayerToInteractFor(pPlayer);
+}
+
+void cGame::onNotify(const s_GameEvent &event) {
+
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        players[i].onNotify(event);
+    }
+
+//    switch (event.eventType) {
+//        case eGameEventType::GAME_EVENT_STRUCTURE_DESTROYED:
+//            return;
+//        default:
+//        return;
+//    }
+
 }

@@ -125,7 +125,7 @@ class cAbstractStructure {
 		int pos_x();
 		int pos_y();
 
-		bool isDead() { return dead; } // if set, then it is elegible for cleanup
+		bool isDead() { return dead; } // if set, then it is eligible for cleanup
 
 		int getArmor() { return armor; }
 		int getWidth() { return iWidth; }

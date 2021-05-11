@@ -21,14 +21,14 @@ class cOrderDrawer;
 struct s_MouseEvent;
 
 #include "cKeyboardManager.h"
-#include "cMouseObserver.h"
+#include "../observers/cMouseObserver.h"
 
 class cInteractionManager : public cMouseObserver {
 	public:
 		cInteractionManager(cPlayer * thePlayer);
 		~cInteractionManager();
 
-		void onNotify(const s_MouseEvent &mouseEvent);
+		void onNotify(const s_MouseEvent &mouseEvent) override;
 
 		void interactWithKeyboard();
 

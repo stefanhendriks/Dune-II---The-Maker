@@ -11,6 +11,8 @@ public:
 
     void think();
 
+    void onNotify(const s_GameEvent &event) override;
+
 private:
     int TIMER_think;
 };

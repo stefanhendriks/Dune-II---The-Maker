@@ -32,15 +32,15 @@ public:
     cPlayerBrainScenario(cPlayer * player);
     ~cPlayerBrainScenario();
 
-    void think();
+    void think() override;
+
+    void onNotify(const s_GameEvent &event) override;
 
 private:
     int TIMER_initialDelay;
     int TIMER_scanBase;
     int TIMER_processBuildOrders;
-    bool shouldScanBaseAndStoreIt;
 
-    void storeMyBase();
     void scanBase();
     void processBuildOrders();
     void addBuildOrder(S_buildOrder order);

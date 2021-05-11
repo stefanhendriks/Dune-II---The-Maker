@@ -6,7 +6,7 @@
   Contact: stefanhen83@gmail.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2010 (c) code by Stefan Hendriks
+  2001 - 2021 (c) code by Stefan Hendriks
 
   */
 
@@ -19,6 +19,7 @@
 //#include <player/cPlayer.h>
 
 #include <controls/cMouse.h>
+#include <observers/cScenarioObserver.h>
 
 // forward declaration :/ sigh should really look into these includes and such
 class cRectangle;
@@ -27,7 +28,7 @@ class cPlayer;
 class cGameControlsContext;
 class cInteractionManager;
 
-class cGame {
+class cGame : public cScenarioObserver {
 
 public:
 
@@ -144,6 +145,8 @@ public:
 
     void setPlayerToInteractFor(cPlayer *pPlayer);
 
+    void onNotify(const s_GameEvent &event) override;
+
 private:
     cInteractionManager *_interactionManager;
 
@@ -185,9 +188,7 @@ private:
 
     void mouse_combat_resetDragViewportInteraction() const;
 
-    void
-    mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGameControlsContext *context,
-                                               bool bOrderingUnits) const;
+    void mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGameControlsContext *context, bool bOrderingUnits) const;
 };
 
 #endif
