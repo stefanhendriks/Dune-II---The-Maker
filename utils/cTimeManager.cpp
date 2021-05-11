@@ -155,8 +155,8 @@ void cTimeManager::handleTimerGameTime() {
                     pStructure->think_animation(); // think about animating
                     pStructure->think_guard();     // think about 'guarding' the area (turrets only)
                 }
+
                 if (pStructure->isDead()) {
-                    // cleanup
                     cStructureFactory::getInstance()->deleteStructureInstance(pStructure);
                 }
             }

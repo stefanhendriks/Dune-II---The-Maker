@@ -53,8 +53,7 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
     int techLevel = player->getTechLevel();
 
     char msg[255];
-    sprintf(msg, "onStructureCreatedCampaignMode - for player [%d], structureType [%d], techlevel [%d], house [%d]",
-            player->getId(), structureType, techLevel, house);
+    sprintf(msg, "For player [%d], structureType [%d], techlevel [%d], house [%d]", player->getId(), structureType, techLevel, house);
     cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureCreatedCampaignMode", msg);
 
     assert(listConstYard);

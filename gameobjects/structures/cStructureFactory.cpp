@@ -40,13 +40,6 @@ cAbstractStructure *cStructureFactory::createStructureInstance(int type) {
 }
 
 void cStructureFactory::deleteStructureInstance(cAbstractStructure *pStructure) {
-    // notify building list updater
-    cPlayer * pPlayer = &players[pStructure->getPlayerId()];
-    cBuildingListUpdater * buildingListUpdater = pPlayer->getBuildingListUpdater();
-    if (buildingListUpdater) {
-        buildingListUpdater->onStructureDestroyed(pStructure->getType());
-    }
-
     // delete memory acquired
     structure[pStructure->getStructureId()] = nullptr;
     delete pStructure;
@@ -151,14 +144,18 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 		REINFORCE(iPlayer, HARVESTER, iCell+2, iCell+2);
 	}
 
-    // handle update
-    cPlayer * pPlayer = &players[iPlayer];
-    cBuildingListUpdater * buildingListUpdater = pPlayer->getBuildingListUpdater();
-    if (buildingListUpdater) {
-        buildingListUpdater->onStructureCreated(iStructureType);
-    }
-
     structureUtils.putStructureOnDimension(MAPID_STRUCTURES, str);
+
+    // handle update
+    s_GameEvent event {
+            .eventType = eGameEventType::GAME_EVENT_STRUCTURE_CREATED,
+            .entityType = eBuildType::STRUCTURE,
+            .entityID = str->getStructureId(),
+            .entityOwnerID = iPlayer,
+            .entitySpecificType = iStructureType
+    };
+
+    game.onNotify(event);
 
     return str;
 }

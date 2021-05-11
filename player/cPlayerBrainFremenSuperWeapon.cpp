@@ -1,5 +1,7 @@
 #include <algorithm>
 #include "../include/d2tmh.h"
+#include "cPlayerBrainFremenSuperWeapon.h"
+
 
 cPlayerBrainFremenSuperWeapon::cPlayerBrainFremenSuperWeapon(cPlayer * player) : cPlayerBrain(player) {
 
@@ -83,4 +85,8 @@ void cPlayerBrainFremenSuperWeapon::think() {
     memset(msg, 0, sizeof(msg));
     sprintf(msg, "cPlayerBrainFremenSuperWeapon::think(), for player [%d] - FINISHED", player->getId());
     logbook(msg);
+}
+
+void cPlayerBrainFremenSuperWeapon::onNotify(const s_GameEvent &event) {
+    // not interested
 }

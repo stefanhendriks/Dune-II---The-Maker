@@ -9,8 +9,9 @@ public:
     cPlayerBrainEmpty(cPlayer * player);
     ~cPlayerBrainEmpty();
 
-    void think();
+    void think() override;
 
+    void onNotify(const s_GameEvent &event) override;
 };
 
 

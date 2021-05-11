@@ -225,6 +225,16 @@ void cAbstractStructure::die() {
 
     // elegible for cleanup
     dead = true;
+
+    s_GameEvent event {
+        .eventType = eGameEventType::GAME_EVENT_STRUCTURE_DESTROYED,
+        .entityType = eBuildType::STRUCTURE,
+        .entityID = getStructureId(),
+        .entityOwnerID = getPlayerId(),
+        .entitySpecificType = getType()
+    };
+
+    game.onNotify(event);
 }
 
 

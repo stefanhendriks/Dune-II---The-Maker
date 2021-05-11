@@ -6,9 +6,12 @@
 #define D2TM_CPLAYERBRAIN_H
 
 
-class cPlayer;
+#include <observers/cScenarioObserver.h>
 
-class cPlayerBrain {
+class cPlayer;
+class cAbstractStructure;
+
+class cPlayerBrain : public cScenarioObserver {
 
 public:
     cPlayerBrain(cPlayer * player);

@@ -923,9 +923,10 @@ void cUnit::think() {
     if (TIMER_blink > 0)
         TIMER_blink--;
 
+    cPlayer *pPlayer = getPlayer();
     if (iType == MCV) {
-        if (iPlayer == 0) {
-            if (bSelected)
+        if (pPlayer->isHuman()) {
+            if (bSelected) {
                 if (key[KEY_D]) {
                     cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
 
@@ -937,14 +938,16 @@ void cUnit::think() {
                         die(false, false);
 
                         // place const yard
-                        pStructureFactory->createStructure(iLocation, CONSTYARD, 0, 100);
+                        pPlayer->placeStructure(iLocation, CONSTYARD, 100);
+                        return;
                     }
                 }
+            }
         }
     }
 
     // HEAD is not facing correctly
-    if (units[iType].airborn == false) {
+    if (!isAirbornUnit()) {
         if (iBodyFacing == iBodyShouldFace) {
             if (iHeadFacing != iHeadShouldFace) {
 
@@ -1058,7 +1061,7 @@ void cUnit::think() {
                 cUnit &cUnit = unit[i];
                 if (cUnit.isValid() && i != iID) {
 
-                    if (getPlayer()->isSameTeamAs(cUnit.getPlayer()))
+                    if (pPlayer->isSameTeamAs(cUnit.getPlayer()))
                         continue;
 
                     // not ours and its visible
@@ -1095,7 +1098,7 @@ void cUnit::think() {
                     if (!pStructure->isValid()) continue;
 
                     // skip same team
-                    if (getPlayer()->isSameTeamAs(pStructure->getPlayer()))
+                    if (pPlayer->isSameTeamAs(pStructure->getPlayer()))
                         continue;
 
                     // not ours and its visible

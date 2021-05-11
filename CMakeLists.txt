@@ -29,6 +29,8 @@ file(GLOB d2tm_SRC
         "gameobjects/projectiles/*.cpp"
         "gameobjects/particles/*.h"
         "gameobjects/particles/*.cpp"
+        "observers/*.h"
+        "observers/*.cpp"
         "gamestates/*.h"
         "gamestates/*.cpp"
         "gui/*.h"

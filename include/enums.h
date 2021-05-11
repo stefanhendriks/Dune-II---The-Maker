@@ -204,4 +204,10 @@ enum eMouseEventType {
 	MOUSE_SCROLLED_DOWN
 };
 
+enum eGameEventType {
+	GAME_EVENT_NONE,
+    GAME_EVENT_STRUCTURE_DESTROYED,
+    GAME_EVENT_STRUCTURE_CREATED,
+};
+
 #endif /* ENUMS_H_ */
