@@ -927,15 +927,17 @@ void cUnit::think() {
         if (iPlayer == 0) {
             if (bSelected)
                 if (key[KEY_D]) {
-                    int iGood = cStructureFactory::getInstance()->getSlabStatus(iCell, CONSTYARD, iID);
+                    cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
 
-                    if (iGood >= -1) {
+                    bool result = pStructureFactory->canPlaceStructureAt(iCell, CONSTYARD, iID);
+
+                    if (result) {
                         int iLocation = iCell;
 
                         die(false, false);
 
                         // place const yard
-                        cStructureFactory::getInstance()->createStructure(iLocation, CONSTYARD, 0, 100);
+                        pStructureFactory->createStructure(iLocation, CONSTYARD, 0, 100);
                     }
                 }
         }

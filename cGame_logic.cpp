@@ -2148,9 +2148,6 @@ void cGame::setup_players() {
         cItemBuilder * itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
         thePlayer->setItemBuilder(itemBuilder);
 
-		cStructurePlacer * structurePlacer = new cStructurePlacer(thePlayer);
-		thePlayer->setStructurePlacer(structurePlacer);
-
 		cOrderProcesser * orderProcesser = new cOrderProcesser(thePlayer);
 		thePlayer->setOrderProcesser(orderProcesser);
 

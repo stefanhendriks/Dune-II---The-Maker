@@ -240,12 +240,7 @@ void cAbstractStructure::think_prebuild() {
     }
 }
 
-/**
- * Searches around the border of a structure (from top left to bottom right) for a free cell. If found, returns it.
- * If fails, it returns -1
- * @return
- */
-int cAbstractStructure::getNonOccupiedCellAroundStructure() {
+std::vector<int> cAbstractStructure::getCellsAroundStructure() {
     int iStartX = map.getCellX(iCell);
     int iStartY = map.getCellY(iCell);
 
@@ -255,23 +250,31 @@ int cAbstractStructure::getNonOccupiedCellAroundStructure() {
     iStartX--;
     iStartY--;
 
-    int iCx = 0;
-    int iCy = 0;
+    std::vector<int> cells = std::vector<int>();
 
     for (int x = iStartX; x < iEndX; x++) {
         for (int y = iStartY; y < iEndY; y++) {
-            iCx = x;
-            iCy = y;
-
-            // iCx and iCy are passed by reference
-            FIX_BORDER_POS(iCx, iCy);
-
-            // so they are for sure not at the outer edges on the map now...
-            int cll = map.getCellWithMapBorders(iCx, iCy);
-
-            if (cll > -1 && !map.occupied(cll)) {
-                return cll;
+            int cell = map.getCellWithMapBorders(x, y);
+            if (cell > -1) {
+                cells.push_back(cell);
             }
+        }
+    }
+
+    return cells;
+}
+
+/**
+ * Searches around the border of a structure (from top left to bottom right) for a free cell. If found, returns it.
+ * If fails, it returns -1
+ * @return
+ */
+int cAbstractStructure::getNonOccupiedCellAroundStructure() {
+    const std::vector<int> &cells = getCellsAroundStructure();
+
+    for (auto &cll : cells) {
+        if (!map.occupied(cll)) {
+            return cll;
         }
     }
 

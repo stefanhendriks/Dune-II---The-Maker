@@ -43,7 +43,9 @@ public:
 
 	void updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(int iCell, int iStructureType, int iPlayer);
 
-	int getSlabStatus(int iCell, int iStructureType, int iUnitIDToIgnore);
+	int getSlabStatus(int iCell, int iStructureType);
+	bool canPlaceStructureAt(int iCell, int iStructureType, int iUnitIDToIgnore);
+	bool canPlaceStructureAt(int iCell, int iStructureType);
 
 private:
     cAbstractStructure *createStructureInstance(int type);

@@ -65,8 +65,6 @@ public:
 
     void setTechLevel(int theTechLevel) { techLevel = theTechLevel; }
 
-    void setStructurePlacer(cStructurePlacer *theStructurePlacer);
-
     void setOrderProcesser(cOrderProcesser *theOrderProcesser);
 
     void setGameControlsContext(cGameControlsContext *theGameControlsContext);
@@ -91,8 +89,6 @@ public:
     int getTechLevel() const { return techLevel; }
 
     int getId() const { return id; }
-
-    cStructurePlacer *getStructurePlacer() const { return structurePlacer; }
 
     cOrderProcesser *getOrderProcesser() const { return orderProcesser; }
 
@@ -241,6 +237,8 @@ public:
     int findRandomUnitTarget(int playerIndexToAttack);
     int findRandomStructureTarget(int iAttackPlayer);
 
+    cAbstractStructure* placeStructure(int destinationCell, cBuildingListItem *itemToPlace);
+
 private:
     int getRGBColorForHouse(int houseId);
 
@@ -258,7 +256,6 @@ private:
     cItemBuilder *itemBuilder; // each player can build items
 
     cBuildingListUpdater *buildingListUpdater; // modifies list of sidebar on upgrades
-    cStructurePlacer *structurePlacer;    // used to place structures and handle updates in sidebar accordingly
     cOrderProcesser *orderProcesser; // process orders for starport
 
     cGameControlsContext *gameControlsContext;
