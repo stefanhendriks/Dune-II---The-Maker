@@ -27,7 +27,7 @@ class cBuildingListUpdater {
 
         void onBuildItemStarted(cBuildingListItem *pItem);
 
-    void onBuildItemCompleted(cBuildingListItem *pItem);
+        void onBuildItemCompleted(cBuildingListItem *pItem);
 
 private:
 		// this player will be used to read state from
@@ -35,6 +35,15 @@ private:
 		cPlayer * player;
 
         void applyUpgrade(const s_Upgrade &upgradeType);
+
+        void onStructureCreatedSkirmishMode(int structureType) const;
+
+        void onStructureCreatedCampaignMode(int structureType) const;
+
+        void onStructureDestroyedSkirmishMode(int structureType) const;
+
+        void onStructureDestroyedCampaignMode(int structureType) const;
+
 };
 
 #endif /* CBUILDINGLISTUPDATER_H_ */
