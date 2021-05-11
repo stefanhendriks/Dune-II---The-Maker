@@ -41,8 +41,8 @@ void cPlayerBrainScenario::think() {
     if (TIMER_processBuildOrders > 0) {
         TIMER_processBuildOrders--;
     } else {
-        processBuildOrders();
         TIMER_processBuildOrders = 25;
+        processBuildOrders();
 
         if (player->isBuildingStructureAwaitingPlacement()) {
             int structureType = player->getStructureTypeBeingBuilt();
@@ -58,6 +58,7 @@ void cPlayerBrainScenario::think() {
                     player->placeStructure(iCll, pItem);
 
                     buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
+                    break;
                 }
             }
         }
@@ -120,6 +121,12 @@ void cPlayerBrainScenario::addBuildOrder(S_buildOrder order) {
     }
     buildOrders.push_back(order);
 
+    // re-order based on priority
+    std::sort( buildOrders.begin(), buildOrders.end(), [ ]( const S_buildOrder& lhs, const S_buildOrder& rhs )
+    {
+        return lhs.priority > rhs.priority;
+    });
+
     char msg[255];
     sprintf(msg, "cPlayerBrainScenario::addBuildOrder() - player [%d / %s] results into the following build orders:", player->getId(), player->getHouseName().c_str());
     logbook(msg);
@@ -148,14 +155,16 @@ void cPlayerBrainScenario::processBuildOrders() {
         if (buildOrder.state != buildOrder::eBuildOrderState::PROCESSME) continue; // only process those which are marked
 
         if (buildOrder.buildType == eBuildType::STRUCTURE) {
-            if (player->canBuildStructure(buildOrder.buildId)) {
-                player->startBuildingStructure(buildOrder.buildId);
-                buildOrder.state = buildOrder::eBuildOrderState::BUILDING;
+            if (player->canBuildStructure(buildOrder.buildId) == eCantBuildReason::NONE) {
+                if (player->startBuildingStructure(buildOrder.buildId)) {
+                    buildOrder.state = buildOrder::eBuildOrderState::BUILDING;
+                }
             }
         } else if (buildOrder.buildType == eBuildType::UNIT) {
-            if (player->canBuildUnit(buildOrder.buildId)) {
-                player->startBuildingUnit(buildOrder.buildId);
-                buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
+            if (player->canBuildUnit(buildOrder.buildId) == eCantBuildReason::NONE) {
+                if (player->startBuildingUnit(buildOrder.buildId)) {
+                    buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
+                }
             }
         }
     }

@@ -824,8 +824,7 @@ bool cPlayer::startBuildingUnit(int iUnitType) const {
     return startedBuilding;
 }
 
-void cPlayer::startBuildingStructure(int iStructureType) const {
-    // Duplicated logic - for now - determining lists by unit id.
+bool cPlayer::startBuildingStructure(int iStructureType) const {
     int listId = LIST_CONSTYARD;
 
     bool startedBuilding = sidebar->startBuildingItemIfOk(listId, iStructureType);
@@ -839,9 +838,10 @@ void cPlayer::startBuildingStructure(int iStructureType) const {
         }
         logbook(msg);
     }
+    return startedBuilding;
 }
 
-void cPlayer::startUpgrading(int iUpgradeType) const {
+bool cPlayer::startUpgrading(int iUpgradeType) const {
     int listId = LIST_UPGRADES;
     bool startedBuilding = sidebar->startBuildingItemIfOk(listId, iUpgradeType);
 
@@ -854,6 +854,7 @@ void cPlayer::startUpgrading(int iUpgradeType) const {
         }
         logbook(msg);
     }
+    return startedBuilding;
 }
 
 /**
