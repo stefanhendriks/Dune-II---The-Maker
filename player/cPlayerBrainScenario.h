@@ -16,6 +16,14 @@ struct S_buildOrder {
     int buildId;        // ie QUAD
     int placeAt;        // if buildType = STRUCTURE, this is the cell it should be placed at
     buildOrder::eBuildOrderState state;
+//
+//    bool operator<(const S_buildOrder &order) const {
+//        return (priority < order.priority);
+//    }
+//
+//    bool operator>(const S_buildOrder &order) const {
+//        return (priority > order.priority);
+//    }
 };
 
 class cPlayerBrainScenario : public cPlayerBrain {

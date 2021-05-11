@@ -1,4 +1,6 @@
 #include "include/d2tmh.h"
+#include "cBuildingListUpdater.h"
+
 
 cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer) {
 	assert(thePlayer);
@@ -8,24 +10,197 @@ cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer) {
 void cBuildingListUpdater::onStructureCreated(int structureType) {
     logbook("onStructureCreated - begin");
 
-	// activate/deactivate any lists if needed
+    if (player->isHuman()) {
+        // always strict (skirmish) mode. Which means, do not cheat...
+        onStructureCreatedSkirmishMode(structureType);
+        evaluateUpgrades();
+    } else {
+        // AI players...
+
+        if (game.bSkirmish) {
+            // on skirmish mode use the 'strict' / no cheating mode (same as human players)
+            onStructureCreatedSkirmishMode(structureType);
+            evaluateUpgrades();
+        } else {
+            // but on campaign missions, the AI has to cheat in order to be more fun...
+            onStructureCreatedCampaignMode(structureType);
+            // AI does use upgrades at all...
+        }
+    }
+
+    // do something
+    logbook("onStructureCreated - end");
+}
+
+void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) const {
+
+    // this is (should be) only called by the AI and in Campaign mode.
+    // there the AI only re-builds things. The tech-tree used for players makes no sense if you compare it
+    // with the AI. The AI can build anything, even with low power. For example, mission 9 has AI's with low
+    // power (yet their turrets should work), but also they don't have all structures to have others (ie, there
+    // is a PALACE, but AI players do not have the prerequisites for such a structure).
+    //
+    // long story short: we give the AI the ability to build *any* structure (and *any* unit, though that is
+    // limited to techLevel so the AI can't build things that the player cant unit-wise).
+
+    // activate/deactivate any lists if needed
     cSideBar *sideBar = player->getSideBar();
     cBuildingList *listConstYard = sideBar->getList(LIST_CONSTYARD);
     cBuildingList *listFootUnits = sideBar->getList(LIST_FOOT_UNITS);
     cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
 
-	int house = player->getHouse();
-	int techLevel = player->getTechLevel();
+    int house = player->getHouse();
+    int techLevel = player->getTechLevel();
 
     char msg[255];
-    sprintf(msg, "onStructureCreated - for player [%d], structureType [%d], techlevel [%d], house [%d]", player->getId(), structureType, techLevel, house);
-    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureCreated", msg);
+    sprintf(msg, "onStructureCreatedCampaignMode - for player [%d], structureType [%d], techlevel [%d], house [%d]",
+            player->getId(), structureType, techLevel, house);
+    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureCreatedCampaignMode", msg);
 
-	assert(listConstYard);
-	assert(listFootUnits);
-	assert(listConstYard);
+    assert(listConstYard);
+    assert(listFootUnits);
+    assert(listConstYard);
 
-	if (structureType == CONSTYARD) {
+    if (structureType == CONSTYARD) {
+        // add items
+        listConstYard->addStructureToList(SLAB1, 0);
+        listConstYard->addStructureToList(SLAB4, 0);
+
+        // we don't care about techlevel here - since we only rebuild bases anyway...
+        listConstYard->addStructureToList(WALL, 0);
+        listConstYard->addStructureToList(WINDTRAP, 0);
+        listConstYard->addStructureToList(REFINERY, 0);
+        listConstYard->addStructureToList(LIGHTFACTORY, 0);
+        listConstYard->addStructureToList(BARRACKS, 0);
+        listConstYard->addStructureToList(WOR, 0);
+        listConstYard->addStructureToList(RADAR, 0);
+        listConstYard->addStructureToList(SILO, 0);
+        listConstYard->addStructureToList(PALACE, 0);
+        listConstYard->addStructureToList(TURRET, 0);
+        listConstYard->addStructureToList(RTURRET, 0);
+        listConstYard->addStructureToList(IX, 0);
+        listConstYard->addStructureToList(HEAVYFACTORY, 0);
+        listConstYard->addStructureToList(HIGHTECH, 0);
+        listConstYard->addStructureToList(REPAIR, 0);
+        listConstYard->addStructureToList(STARPORT, 0);
+    }
+
+    if (structureType == LIGHTFACTORY) {
+        if (house == ATREIDES) {
+            listUnits->addUnitToList(TRIKE, SUBLIST_LIGHTFCTRY);
+        } else if (house == ORDOS) {
+            listUnits->addUnitToList(RAIDER, SUBLIST_LIGHTFCTRY);
+        } else if (house == HARKONNEN) {
+            listUnits->addUnitToList(QUAD, SUBLIST_LIGHTFCTRY);
+        }
+
+        if (techLevel >= 3) {
+            listUnits->addUnitToList(QUAD, SUBLIST_LIGHTFCTRY);
+        }
+    }
+
+    // Heavyfactory
+    if (structureType == HEAVYFACTORY) {
+        listUnits->addUnitToList(TANK, SUBLIST_HEAVYFCTRY);
+        listUnits->addUnitToList(HARVESTER, SUBLIST_HEAVYFCTRY);
+        if (house != ORDOS) {
+            listUnits->addUnitToList(LAUNCHER, SUBLIST_HEAVYFCTRY);
+        }
+        listUnits->addUnitToList(SIEGETANK, SUBLIST_HEAVYFCTRY);
+        listUnits->addUnitToList(MCV, SUBLIST_HEAVYFCTRY);
+    }
+
+    ///////////////////////////////////
+    // ADJUSTMENTS TO INFANTRY LIST
+    ///////////////////////////////////
+    if (structureType == BARRACKS) {
+        listFootUnits->addUnitToList(SOLDIER, SUBLIST_INFANTRY);
+        if (techLevel >= 2) {
+            listFootUnits->addUnitToList(INFANTRY, SUBLIST_INFANTRY);
+        }
+    } else if (structureType == WOR) {
+        listFootUnits->addUnitToList(TROOPER, SUBLIST_TROOPERS);
+        if (techLevel > 2) {
+            listFootUnits->addUnitToList(TROOPERS, SUBLIST_TROOPERS);
+        }
+    }
+
+    ///////////////////////////////////
+    // ADJUSTMENTS TO HEAVY FACTORY LIST
+    ///////////////////////////////////
+
+    // Heavyfactory
+    if (techLevel >= 7) {
+        if (house == ATREIDES) {
+            listUnits->addUnitToList(SONICTANK, SUBLIST_HEAVYFCTRY);
+        } else if (house == HARKONNEN || house == SARDAUKAR) {
+            listUnits->addUnitToList(DEVASTATOR, SUBLIST_HEAVYFCTRY);
+        } else if (house == ORDOS) {
+            listUnits->addUnitToList(DEVIATOR, SUBLIST_HEAVYFCTRY);
+        }
+    }
+
+    if (structureType == HIGHTECH) {
+        listUnits->addUnitToList(CARRYALL, SUBLIST_HIGHTECH);
+        if (house == ATREIDES || house == ORDOS) {
+            listUnits->addUnitToList(ORNITHOPTER, SUBLIST_HIGHTECH);
+        }
+    }
+
+    if (structureType == STARPORT) {
+        cBuildingList *list = sideBar->getList(LIST_STARPORT);
+        list->addUnitToList(INFANTRY, 0);
+        list->addUnitToList(TROOPERS, 0);
+        list->addUnitToList(TRIKE, 0);
+        list->addUnitToList(QUAD, 0);
+        list->addUnitToList(TANK, 0);
+        list->addUnitToList(MCV, 0);
+        list->addUnitToList(HARVESTER, 0);
+        list->addUnitToList(LAUNCHER, 0);
+        list->addUnitToList(SIEGETANK, 0);
+        list->addUnitToList(CARRYALL, 0);
+    }
+
+    if (structureType == PALACE) {
+        cBuildingList *listPalace = sideBar->getList(LIST_PALACE);
+        // special weapons
+        switch (house) {
+            case ATREIDES:
+                listPalace->addSpecialToList(SPECIAL_FREMEN, 0);
+                break;
+            case HARKONNEN:
+                listPalace->addSpecialToList(SPECIAL_DEATHHAND, 0);
+                break;
+            case SARDAUKAR:
+                listPalace->addSpecialToList(SPECIAL_DEATHHAND, 0);
+                break;
+            case ORDOS:
+                listPalace->addSpecialToList(SPECIAL_SABOTEUR, 0);
+                break;
+        }
+    }
+}
+
+void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) const {
+    // activate/deactivate any lists if needed
+    cSideBar *sideBar = player->getSideBar();
+    cBuildingList *listConstYard = sideBar->getList(LIST_CONSTYARD);
+    cBuildingList *listFootUnits = sideBar->getList(LIST_FOOT_UNITS);
+    cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
+
+    int house = player->getHouse();
+    int techLevel = player->getTechLevel();
+
+    char msg[255];
+    sprintf(msg, "onStructureCreatedSkirmishMode - for player [%d], structureType [%d], techlevel [%d], house [%d]",
+            player->getId(), structureType, techLevel, house);
+    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureCreatedSkirmishMode", msg);
+
+    assert(listConstYard);
+    assert(listFootUnits);
+    assert(listConstYard);
+
+    if (structureType == CONSTYARD) {
         // add items
         listConstYard->addStructureToList(SLAB1, 0);
         logbook("onStructureCreated - added SLAB1 to list");
@@ -51,11 +226,11 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
         logbook("onStructureCreated - added WINDTRAP to list");
     }
 
-	if (structureType == WINDTRAP) {
-		listConstYard->addStructureToList(REFINERY, 0);
-	}
+    if (structureType == WINDTRAP) {
+        listConstYard->addStructureToList(REFINERY, 0);
+    }
 
-	if (structureType == STARPORT) {
+    if (structureType == STARPORT) {
         cBuildingList *list = sideBar->getList(LIST_STARPORT);
         list->addUnitToList(INFANTRY, 0);
         list->addUnitToList(TROOPERS, 0);
@@ -67,46 +242,46 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
         list->addUnitToList(LAUNCHER, 0);
         list->addUnitToList(SIEGETANK, 0);
         list->addUnitToList(CARRYALL, 0);
-	}
+    }
 
-	if (structureType == REFINERY) {
-		if (techLevel >= 2) {
-			listConstYard->addStructureToList(LIGHTFACTORY,0);
+    if (structureType == REFINERY) {
+        if (techLevel >= 2) {
+            listConstYard->addStructureToList(LIGHTFACTORY, 0);
 
-			if (house == ATREIDES ||
-				house == ORDOS ||
-				house == FREMEN) {
-				listConstYard->addStructureToList(BARRACKS, 0);
+            if (house == ATREIDES ||
+                house == ORDOS ||
+                house == FREMEN) {
+                listConstYard->addStructureToList(BARRACKS, 0);
 
-				if (house == ORDOS && techLevel >= 5) {
-					listConstYard->addStructureToList(WOR, 0);
-				}
-			} else if (
-					house == HARKONNEN ||
-					house == SARDAUKAR ||
-					house == FREMEN ||
-					house == MERCENARY) {
-				listConstYard->addStructureToList(WOR, 0);
-			}
-		}
+                if (house == ORDOS && techLevel >= 5) {
+                    listConstYard->addStructureToList(WOR, 0);
+                }
+            } else if (
+                    house == HARKONNEN ||
+                    house == SARDAUKAR ||
+                    house == FREMEN ||
+                    house == MERCENARY) {
+                listConstYard->addStructureToList(WOR, 0);
+            }
+        }
 
-		if (techLevel >= 3) {
-			listConstYard->addStructureToList(RADAR, 0);
-		}
+        if (techLevel >= 3) {
+            listConstYard->addStructureToList(RADAR, 0);
+        }
 
-		listConstYard->addStructureToList(SILO, 0);
-	}
+        listConstYard->addStructureToList(SILO, 0);
+    }
 
 
-	if (structureType == RADAR) {
+    if (structureType == RADAR) {
         if (techLevel >= 5) {
-			listConstYard->addStructureToList(TURRET, 0);
-		}
+            listConstYard->addStructureToList(TURRET, 0);
+        }
 
-		if (techLevel >= 8) {
-			listConstYard->addStructureToList(PALACE, 0);
-		}
-	}
+        if (techLevel >= 8) {
+            listConstYard->addStructureToList(PALACE, 0);
+        }
+    }
 
     if (structureType == STARPORT) {
         // House of IX is available if Starport is built
@@ -115,20 +290,19 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
         }
     }
 
-	if (structureType == LIGHTFACTORY)
-	{
-		if (techLevel >=4) {
-			listConstYard->addStructureToList(HEAVYFACTORY, 0);
-		}
+    if (structureType == LIGHTFACTORY) {
+        if (techLevel >= 4) {
+            listConstYard->addStructureToList(HEAVYFACTORY, 0);
+        }
 
-		if (techLevel >=5) {
-			listConstYard->addStructureToList(HIGHTECH, 0);
-			listConstYard->addStructureToList(REPAIR, 0);
-		}
+        if (techLevel >= 5) {
+            listConstYard->addStructureToList(HIGHTECH, 0);
+            listConstYard->addStructureToList(REPAIR, 0);
+        }
 
-		if (techLevel >= 6) {
-			listConstYard->addStructureToList(STARPORT, 0);
-		}
+        if (techLevel >= 6) {
+            listConstYard->addStructureToList(STARPORT, 0);
+        }
 
         if (house == ATREIDES) {
             listUnits->addUnitToList(TRIKE, SUBLIST_LIGHTFCTRY);
@@ -141,28 +315,28 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
             listUnits->addUnitToList(RAIDER, SUBLIST_LIGHTFCTRY);
             listUnits->addUnitToList(QUAD, SUBLIST_LIGHTFCTRY);
         }
-	}
+    }
 
-	// Heavyfactory
+    // Heavyfactory
     if (structureType == HEAVYFACTORY) {
         listUnits->addUnitToList(TANK, SUBLIST_HEAVYFCTRY);
         listUnits->addUnitToList(HARVESTER, SUBLIST_HEAVYFCTRY);
     }
 
     ///////////////////////////////////
-	// ADJUSTMENTS TO INFANTRY LIST
-	///////////////////////////////////
-	if (structureType == BARRACKS) {
+    // ADJUSTMENTS TO INFANTRY LIST
+    ///////////////////////////////////
+    if (structureType == BARRACKS) {
         listFootUnits->addUnitToList(SOLDIER, SUBLIST_INFANTRY);
     } else if (structureType == WOR) {
         listFootUnits->addUnitToList(TROOPER, SUBLIST_TROOPERS);
     }
 
-	///////////////////////////////////
-	// ADJUSTMENTS TO HEAVY FACTORY LIST
-	///////////////////////////////////
+    ///////////////////////////////////
+    // ADJUSTMENTS TO HEAVY FACTORY LIST
+    ///////////////////////////////////
 
-	// Heavyfactory
+    // Heavyfactory
     if (techLevel >= 7) {
         if (player->hasAtleastOneStructure(HEAVYFACTORY) &&
             player->hasAtleastOneStructure(IX)) {
@@ -184,11 +358,11 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
         }
     }
 
-	if (structureType == HIGHTECH) {
+    if (structureType == HIGHTECH) {
         listUnits->addUnitToList(CARRYALL, SUBLIST_HIGHTECH);
     }
 
-	if (structureType == PALACE) {
+    if (structureType == PALACE) {
         cBuildingList *listPalace = sideBar->getList(LIST_PALACE);
         // special weapons
         switch (house) {
@@ -196,18 +370,16 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
                 listPalace->addSpecialToList(SPECIAL_FREMEN, 0);
                 break;
             case HARKONNEN:
-                listPalace->addSpecialToList(SPECIAL_DEATHHAND,0);
+                listPalace->addSpecialToList(SPECIAL_DEATHHAND, 0);
+                break;
+            case SARDAUKAR:
+                listPalace->addSpecialToList(SPECIAL_DEATHHAND, 0);
                 break;
             case ORDOS:
                 listPalace->addSpecialToList(SPECIAL_SABOTEUR, 0);
                 break;
         }
-	}
-
-    evaluateUpgrades();
-
-    // do something
-    logbook("onStructureCreated - end");
+    }
 }
 
 // structure destroyed..
@@ -218,8 +390,6 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
     cSideBar *sideBar = player->getSideBar();
     cItemBuilder *pItemBuilder = player->getItemBuilder();
     cBuildingList *listConstYard = sideBar->getList(LIST_CONSTYARD);
-    cBuildingList *listFootUnits = sideBar->getList(LIST_FOOT_UNITS);
-    cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
 
     if (structureType == STARPORT) {
         if (!player->hasAtleastOneStructure(STARPORT)) {
@@ -231,56 +401,28 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
         }
     }
 
-    // do something
-    int house = player->getHouse();
-    int techLevel = player->getTechLevel();
-
     if (!player->hasAtleastOneStructure(CONSTYARD)) {
         pItemBuilder->removeItemsFromListType(LIST_CONSTYARD, SUBLIST_CONSTYARD);
         listConstYard->removeAllSublistItems(SUBLIST_CONSTYARD);        
     }
 
-    if (techLevel >= 7) {
-        if (!player->hasAtleastOneStructure(HEAVYFACTORY) ||
-            !player->hasAtleastOneStructure(IX)) {
-            if (player->getHouse() == ATREIDES) {
-                pItemBuilder->removeItemsByBuildId(UNIT, SONICTANK);
-                listUnits->removeItemFromListByBuildId(SONICTANK);
-            } else if (player->getHouse() == HARKONNEN) {
-                pItemBuilder->removeItemsByBuildId(UNIT, DEVASTATOR);
-                listUnits->removeItemFromListByBuildId(DEVASTATOR);
-            } else if (player->getHouse() == ORDOS) {
-                pItemBuilder->removeItemsByBuildId(UNIT, DEVIATOR);
-                listUnits->removeItemFromListByBuildId(DEVIATOR);
-            }
+    if (player->isHuman()) {
+        // always strict (skirmish) mode. Which means, do not cheat...
+        onStructureDestroyedSkirmishMode(structureType);
+        evaluateUpgrades();
+    } else {
+        // AI players...
+
+        if (game.bSkirmish) {
+            // on skirmish mode use the 'strict' / no cheating mode (same as human players)
+            onStructureDestroyedSkirmishMode(structureType);
+            evaluateUpgrades();
+        } else {
+            // but on campaign missions, the AI has to cheat in order to be more fun...
+            onStructureDestroyedCampaignMode(structureType);
+            // AI does use upgrades at all...
         }
     }
-
-    if (!player->hasAtleastOneStructure(HIGHTECH)) {
-        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_HIGHTECH);
-        listUnits->removeAllSublistItems(SUBLIST_HIGHTECH);
-    }
-
-    if (!player->hasAtleastOneStructure(LIGHTFACTORY)) {
-        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_LIGHTFCTRY);
-        listUnits->removeAllSublistItems(SUBLIST_LIGHTFCTRY);
-    }
-
-    if (!player->hasAtleastOneStructure(HEAVYFACTORY)) {
-        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_HEAVYFCTRY);
-        listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
-    }
-
-    if (!player->hasAtleastOneStructure(PALACE)) {
-        pItemBuilder->removeItemsFromListType(LIST_PALACE, 0);
-        listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
-    }
-
-//    char msg[255];
-//    sprintf(msg, "onStructureDestroyed - for player [%d], structureType [%d], techlevel [%d], house [%d]", player->getId(), structureType, techLevel, house);
-//    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureDestroyed", msg);
-
-    evaluateUpgrades();
 
     logbook("onStructureDestroyed - end");
 }
@@ -529,4 +671,78 @@ void cBuildingListUpdater::onBuildItemCompleted(cBuildingListItem *pItem) {
     cSideBar *sideBar = player->getSideBar();
     cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
     listUpgrades->setStatusAvailable(pItem->getSubList());
+}
+
+void cBuildingListUpdater::onStructureDestroyedSkirmishMode(int structureType) const {
+    cSideBar *sideBar = player->getSideBar();
+    cItemBuilder *pItemBuilder = player->getItemBuilder();
+    cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
+
+    int house = player->getHouse();
+    int techLevel = player->getTechLevel();
+
+    if (techLevel >= 7) {
+        if (!player->hasAtleastOneStructure(HEAVYFACTORY) ||
+            !player->hasAtleastOneStructure(IX)) {
+            if (player->getHouse() == ATREIDES) {
+                pItemBuilder->removeItemsByBuildId(UNIT, SONICTANK);
+                listUnits->removeItemFromListByBuildId(SONICTANK);
+            } else if (player->getHouse() == HARKONNEN) {
+                pItemBuilder->removeItemsByBuildId(UNIT, DEVASTATOR);
+                listUnits->removeItemFromListByBuildId(DEVASTATOR);
+            } else if (player->getHouse() == ORDOS) {
+                pItemBuilder->removeItemsByBuildId(UNIT, DEVIATOR);
+                listUnits->removeItemFromListByBuildId(DEVIATOR);
+            }
+        }
+    }
+
+    if (!player->hasAtleastOneStructure(HIGHTECH)) {
+        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_HIGHTECH);
+        listUnits->removeAllSublistItems(SUBLIST_HIGHTECH);
+    }
+
+    if (!player->hasAtleastOneStructure(LIGHTFACTORY)) {
+        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_LIGHTFCTRY);
+        listUnits->removeAllSublistItems(SUBLIST_LIGHTFCTRY);
+    }
+
+    if (!player->hasAtleastOneStructure(HEAVYFACTORY)) {
+        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_HEAVYFCTRY);
+        listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
+    }
+
+    if (!player->hasAtleastOneStructure(PALACE)) {
+        pItemBuilder->removeItemsFromListType(LIST_PALACE, 0);
+        listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
+    }
+}
+
+void cBuildingListUpdater::onStructureDestroyedCampaignMode(int structureType) const {
+    cSideBar *sideBar = player->getSideBar();
+    cItemBuilder *pItemBuilder = player->getItemBuilder();
+    cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
+
+    int house = player->getHouse();
+    int techLevel = player->getTechLevel();
+
+    if (!player->hasAtleastOneStructure(HIGHTECH)) {
+        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_HIGHTECH);
+        listUnits->removeAllSublistItems(SUBLIST_HIGHTECH);
+    }
+
+    if (!player->hasAtleastOneStructure(LIGHTFACTORY)) {
+        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_LIGHTFCTRY);
+        listUnits->removeAllSublistItems(SUBLIST_LIGHTFCTRY);
+    }
+
+    if (!player->hasAtleastOneStructure(HEAVYFACTORY)) {
+        pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_HEAVYFCTRY);
+        listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
+    }
+
+    if (!player->hasAtleastOneStructure(PALACE)) {
+        pItemBuilder->removeItemsFromListType(LIST_PALACE, 0);
+        listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
+    }
 }
