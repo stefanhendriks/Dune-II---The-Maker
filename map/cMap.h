@@ -512,6 +512,16 @@ public:
      */
     int findNearestSpiceBloom(int iCell);
 
+    /**
+     * Returns true if a structure may be placed at this cell. This evaluates if terrain type allows placement AND
+     * if any other structure occupies this cell. It does *not* check if a unit is at this cell. If invalid cell
+     * is given this also returns false.
+     *
+     * @param cell
+     * @return
+     */
+    bool canPlaceStructureAtCell(int cell);
+
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 

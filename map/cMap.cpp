@@ -915,3 +915,20 @@ int cMap::findNearestSpiceBloom(int iCell) {
     // when finished, return bloom
     return iTargets[rnd(iT)];
 }
+
+bool cMap::canPlaceStructureAtCell(int cll) {
+    if (!isValidCell(cll)) return false;
+    int cellType = getCellType(cll);
+    // TODO: make this a flag in the cell/terrain type kind? (there is no such thing yet, its all hard-coded)
+    bool allowedCellType = cellType == TERRAIN_SLAB || cellType == TERRAIN_ROCK;
+    if (!allowedCellType) {
+        return false;
+    }
+
+    // another structure found on this location, "blocked"
+    if (getCellIdStructuresLayer(cll) > -1) {
+        return false;
+    }
+
+    return true;
+}

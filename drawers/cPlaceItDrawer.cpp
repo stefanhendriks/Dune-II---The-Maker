@@ -227,28 +227,11 @@ void cPlaceItDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
         return;
     }
 
-    int structureId = itemToPlace->getBuildId();
-
     if (bMayPlace && bWithinBuildDistance)	{
-        int iHealthPercent = 50; // the minimum is 50% (with no slabs)
-
-        if (iTotalRocks > 0) {
-            iHealthPercent += health_bar(50, iTotalRocks, iTotalBlocks);
-        }
-
         play_sound_id(SOUND_PLACE);
-        player->getStructurePlacer()->placeStructure(mouseCell, structureId, iHealthPercent);
-        player->getBuildingListUpdater()->onBuildItemCompleted(itemToPlace);
+        player->placeStructure(mouseCell, itemToPlace);
 
         game.bPlaceIt=false;
-
-        itemToPlace->decreaseTimesToBuild();
-        itemToPlace->setPlaceIt(false);
-        itemToPlace->setIsBuilding(false);
-        itemToPlace->resetProgress();
-        if (itemToPlace->getTimesToBuild() < 1) {
-            player->getItemBuilder()->removeItemFromList(itemToPlace);
-        }
         itemToPlace = nullptr;
     }
 }

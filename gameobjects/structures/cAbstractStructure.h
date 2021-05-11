@@ -101,6 +101,13 @@ class cAbstractStructure {
 		// Functionality
 		int getNonOccupiedCellAroundStructure();
 
+		/**
+		 * Returns all (valid!) cells that are around a structure. This only checks if the cell is within the
+		 * playable map boundaries, but does not check if cells are occupied.
+		 * @return
+		 */
+		std::vector<int> getCellsAroundStructure();
+
 		// getters
 
 		// convenience get method, which should eventually only be used in rare cases as all properties should be

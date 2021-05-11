@@ -1,4 +1,6 @@
 #include "../../include/d2tmh.h"
+#include "cStructureFactory.h"
+
 
 cStructureFactory *cStructureFactory::instance = NULL;
 
@@ -81,10 +83,10 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	// When 100% of the structure is blocked, this method is never called
 	// therefore we can assume that SLAB4 can be placed always partially
 	// when here.
-	int result = getSlabStatus(iCell, iStructureType, -1);
+	bool canPlace = canPlaceStructureAt(iCell, iStructureType);
 
-	// we may not place it, GUI messed up
-    if (result < -1 && iStructureType != SLAB4) {
+	// we may not place it
+    if (!canPlace && iStructureType != SLAB4) {
         cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "cannot create structure: slab status < -1, and type != SLAB4, returning NULL");
         return nullptr;
     }
@@ -263,85 +265,43 @@ int cStructureFactory::getFreeSlot() {
 
 /**
 <p>
-	This function will check if at iCell (the upper left corner of a structure) a structure
-	can be placed of type "iStructureType". If iUnitIDTOIgnore is > -1, then if any unit is
-	supposidly 'blocking' this structure from placing, it will be ignored.
+ This function will return how many (if any) slabs are found for the surface of a structure type. This function
+ does *not* check if a structure can be placed at this location.
  </p>
 <p>
-	Ie, you will use the iUnitIDToIgnore value when you want to create a Const Yard on the
-	location of an MCV.
+	Ie, given a constyard of 2x2 (4 cells), this can return 0 (no slabs) or 4 (fully slabbed) or in between.
 </p>
  <p>
  <b>Returns:</b><br>
- <ul>
- <li>-2  = ERROR / Cannot be placed at this location with the params given.</li>
- <li>-1  = PERFECT / Can be placed, and entire structure has pavement (slabs)</li>
- <li>>=0 = GOOD but it is not slabbed all (so not perfect)</li>
- <ul>
+ Any amount of cells that are "slabbed".
  </p>
 **/
-int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDToIgnore) {
-    if (iCell < 0) return -2;
+int cStructureFactory::getSlabStatus(int iCell, int iStructureType) {
+    if (!map.isValidCell(iCell)) return 0;
 
     // checks if this structure can be placed on this cell
-    int w = structures[iStructureType].bmp_width/32;
-    int h = structures[iStructureType].bmp_height/32;
+    int w = structures[iStructureType].bmp_width / TILESIZE_WIDTH_PIXELS;
+    int h = structures[iStructureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
 
-    int slabs=0;
-    int total=w*h;
+    int slabs = 0;
+
     int x = map.getCellX(iCell);
     int y = map.getCellY(iCell);
 
-    for (int cx=0; cx < w; cx++)
-        for (int cy=0; cy < h; cy++)
-        {
-            int cll= map.makeCell(cx + x, cy + y); // <-- some evil global thing that calculates the cell...
+    for (int cx = 0; cx < w; cx++) {
+        for (int cy = 0; cy < h; cy++) {
+            int cll = map.getCellWithMapBorders(cx + x, cy + y);
 
-			// check if terrain allows it.
-            if (map.getCellType(cll) != TERRAIN_ROCK &&
-                map.getCellType(cll) != TERRAIN_SLAB) {
-//				logbook("getSlabStatus will return -2, reason: terrain is not rock or slab.");
-                return -2; // cannot place on sand
+            if (cll < 0) {
+                continue;
             }
 
-			// another structure found on this location, return -2 meaning "blocked"
-            if (map.getCellIdStructuresLayer(cll) > -1) {
-//				logbook("getSlabStatus will return -2, reason: another structure found on one of the cells");
-                return -2;
-            }
-
-			// unit found on location where structure wants to be placed. Check if
-			// it may be ignored, if not, return -2.
-            int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
-            if (idOfUnitAtCell > -1)
-            {
-                if (iUnitIDToIgnore > -1)
-                {
-                    if (idOfUnitAtCell == iUnitIDToIgnore) {
-                        // ok; this may be ignored.
-					} else {
-						// not the unit to be ignored.
-//						logbook("getSlabStatus will return -2, reason: unit found that blocks placement; is not ignored");
-						return -2;
-					}
-				} else {
-					// no iUnitIDToIgnore given, this means always -2
-//					logbook("getSlabStatus will return -2, reason: unit found that blocks placement; no id to ignore");
-                    return -2;
-				}
-            }
-
-            // now check if the 'terrain' type is 'slab'. If that is true, increase value of found slabs.
-			if (map.getCellType(cll) == TERRAIN_SLAB) {
+            // If the 'terrain' type is 'slab' increase value of found slabs.
+            if (map.getCellType(cll) == TERRAIN_SLAB) {
                 slabs++;
-			}
+            }
         }
-
-
-		// if the amount of slabs equals the amount of total slabs possible, return a perfect status.
-		if (slabs >= total) {
-			return -1; // perfect
-		}
+    }
 
     return slabs; // ranges from 0 to <max slabs possible of building (ie height * width in cells)
 }
@@ -382,4 +342,89 @@ void cStructureFactory::destroy() {
     if (instance) {
         delete instance;
     }
+}
+
+/**
+<p>
+	This function will check if at iCell (the upper left corner of a structure) a structure
+	can be placed of type "iStructureType". If iUnitIDTOIgnore is > -1, then if any unit is
+	supposedly 'blocking' this structure from placing, it will be ignored.
+ </p>
+<p>
+	Ie, you will use the iUnitIDToIgnore value when you want to create a Const Yard on the
+	location of an MCV.
+</p>
+ <p>
+	If you know the structure can be placed, you can use getSlabStatus to get the amount of 'slabs' are covering
+    the structure dimensions in order to calculate the structure health upon placement.
+</p>
+ <p>
+ <b>Returns:</b><br>
+ <ul>
+ <li>true = can place structure</li>
+ <li>false = cannot place structure (reason can be, out of map boundaries, invalid terrain, etc)</li>
+ <ul>
+ </p>
+
+ * @param iCell
+ * @param iStructureType
+ * @param iUnitIDToIgnore
+ * @return
+ */
+bool cStructureFactory::canPlaceStructureAt(int iCell, int iStructureType, int iUnitIDToIgnore) {
+    if (!map.isValidCell(iCell)) return false;
+
+    // checks if this structure can be placed on this cell
+    int w = structures[iStructureType].bmp_width/TILESIZE_WIDTH_PIXELS;
+    int h = structures[iStructureType].bmp_height/TILESIZE_HEIGHT_PIXELS;
+
+    int x = map.getCellX(iCell);
+    int y = map.getCellY(iCell);
+
+    for (int cx = 0; cx < w; cx++) {
+        for (int cy = 0; cy < h; cy++) {
+            int cll = map.getCellWithMapBorders(cx + x, cy + y);
+
+            if (!map.canPlaceStructureAtCell(cll)) {
+                return false;
+            }
+
+            int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
+            if (idOfUnitAtCell > -1) {
+                if (iUnitIDToIgnore > -1) {
+                    if (idOfUnitAtCell != iUnitIDToIgnore) {
+                        // not the unit to ignore.
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+/**
+<p>
+	This function will check if at iCell (the upper left corner of a structure) a structure
+	can be placed of type "iStructureType". This is calling  canPlaceStructureAt without any
+    unitID to ignore. Meaning, any unit, structure, or invalid terrain type will make this function return false.
+ </p>
+ <p>
+ <b>Returns:</b><br>
+ <ul>
+ <li>true = can place structure</li>
+ <li>false = cannot place structure (reason can be, out of map boundaries, invalid terrain, unit/structure blocking etc)</li>
+ <ul>
+ </p>
+
+ * @param iCell
+ * @param iStructureType
+ * @param iUnitIDToIgnore
+ * @return
+ */
+bool cStructureFactory::canPlaceStructureAt(int iCell, int iStructureType) {
+    return canPlaceStructureAt(iCell, iStructureType, -1);
 }

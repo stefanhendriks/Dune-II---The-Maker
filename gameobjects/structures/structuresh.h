@@ -21,7 +21,6 @@
 #include "cIx.h"
 
 #include "cStructureFactory.h"
-#include "cStructurePlacer.h"
 #include "cOrderProcesser.h"
 
 #endif

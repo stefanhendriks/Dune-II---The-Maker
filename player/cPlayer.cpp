@@ -8,7 +8,6 @@ cPlayer::cPlayer() {
 	itemBuilder = NULL;
 	orderProcesser = NULL;
 	sidebar = NULL;
-	structurePlacer = NULL;
 	buildingListUpdater = NULL;
 	gameControlsContext = NULL;
 	char msg[255];
@@ -29,9 +28,6 @@ cPlayer::~cPlayer() {
 	}
 	if (sidebar) {
 		delete sidebar;
-	}
-	if (structurePlacer) {
-		delete structurePlacer;
 	}
 	if (buildingListUpdater) {
 		delete buildingListUpdater;
@@ -128,16 +124,6 @@ void cPlayer::setOrderProcesser(cOrderProcesser * theOrderProcesser) {
 	}
 
 	orderProcesser = theOrderProcesser;
-}
-
-void cPlayer::setStructurePlacer(cStructurePlacer * theStructurePlacer) {
-	assert(theStructurePlacer);
-
-	if (structurePlacer) {
-		delete structurePlacer;
-	}
-
-	structurePlacer = theStructurePlacer;
 }
 
 void cPlayer::setBuildingListUpdater(cBuildingListUpdater *theBuildingListUpgrader) {
@@ -918,6 +904,7 @@ int cPlayer::findCellToPlaceStructure(int iStructureType) {
 
         // scan around
         int c1 = pStructure->getCell();
+
         int iStartX= map.getCellX(c1);
         int c = pStructure->getCell();
         int iStartY= map.getCellY(c);
@@ -933,10 +920,10 @@ int cPlayer::findCellToPlaceStructure(int iStructureType) {
             int sy = iStartY;
             int cell = map.getCellWithMapDimensions(sx, sy);
 
-            int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
+            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType);
 
-            if (r > -2) {
-                if (iStructureType == TURRET && iStructureType == RTURRET) {
+            if (r) {
+                if (iStructureType == TURRET || iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
                     int iDist = map.distance(map.getCellWithMapDimensions(sx, sy), getFocusCell());
 
@@ -960,10 +947,10 @@ int cPlayer::findCellToPlaceStructure(int iStructureType) {
             int sy = underNeathStructureY;
             int cell = map.getCellWithMapDimensions(sx, sy);
 
-            int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
+            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType);
 
-            if (r > -2) {
-                if (iStructureType == TURRET && iStructureType == RTURRET) {
+            if (r) {
+                if (iStructureType == TURRET || iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
                     int iDist = map.distance(map.getCellWithMapDimensions(sx, sy), getFocusCell());
 
@@ -986,10 +973,10 @@ int cPlayer::findCellToPlaceStructure(int iStructureType) {
             int sx = topLeftX;
             int cell = map.getCellWithMapDimensions(sx, sy);
 
-            int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
+            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType);
 
-            if (r > -2) {
-                if (iStructureType == TURRET && iStructureType == RTURRET) {
+            if (r) {
+                if (iStructureType == TURRET || iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
                     int iDist = map.distance(map.getCellWithMapDimensions(sx, sy), getFocusCell());
 
@@ -1013,10 +1000,10 @@ int cPlayer::findCellToPlaceStructure(int iStructureType) {
             int sx = rightOfStructure;
             int cell = map.getCellWithMapDimensions(sx, sy);
 
-            int r = pStructureFactory->getSlabStatus(cell, iStructureType, -1);
+            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType);
 
-            if (r > -2) {
-                if (iStructureType == TURRET && iStructureType == RTURRET) {
+            if (r) {
+                if (iStructureType == TURRET || iStructureType == RTURRET) {
                     // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
                     int iDist = map.distance(map.getCellWithMapDimensions(sx, sy), getFocusCell());
 
@@ -1207,4 +1194,43 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType) {
     logbook("canBuildStructure: ALLOWED");
 
     return eCantBuildReason::NONE;
+}
+
+/**
+ * This function places a structure (if allowed!). Then, it will make sure the itemToPlace gets
+ * substracted from its according build list. (even if placement fails!)
+ * @param destinationCell
+ * @param itemToPlace
+ * @return
+ */
+cAbstractStructure* cPlayer::placeStructure(int destinationCell, cBuildingListItem *itemToPlace) {
+    int iStructureTypeId = itemToPlace->getBuildId();
+    // create structure
+    cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
+
+    bool canPlace = pStructureFactory->canPlaceStructureAt(destinationCell, iStructureTypeId);
+    if (!canPlace) {
+        return nullptr;
+    }
+
+    int slabbed = pStructureFactory->getSlabStatus(destinationCell, iStructureTypeId);
+    int height = structures[iStructureTypeId].bmp_height/TILESIZE_HEIGHT_PIXELS;
+    int width = structures[iStructureTypeId].bmp_width/TILESIZE_WIDTH_PIXELS;
+    int surface = width*height;
+
+    int healthPercentage = 50 + health_bar(50, slabbed, surface); // the minimum is 50% (with no slabs)
+
+    cAbstractStructure *pStructure = pStructureFactory->createStructure(destinationCell, iStructureTypeId, getId(),
+                                                                        healthPercentage);
+
+    buildingListUpdater->onBuildItemCompleted(itemToPlace);
+    itemToPlace->decreaseTimesToBuild();
+    itemToPlace->setPlaceIt(false);
+    itemToPlace->setIsBuilding(false);
+    itemToPlace->resetProgress();
+    if (itemToPlace->getTimesToBuild() < 1) {
+        itemBuilder->removeItemFromList(itemToPlace);
+    }
+
+    return pStructure;
 }

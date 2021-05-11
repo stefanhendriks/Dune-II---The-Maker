@@ -135,25 +135,8 @@ bool cAIPlayer::think_buildingplacement() {
             int iCll = player->findCellToPlaceStructure(structureType);
 
             if (iCll > -1) {
-                int iHealthPercent = 50; // the minimum is 50% (with no slabs)
-
-                // TODO: This logic is duplicated in cPlaceItDrawer, this should be somewhere
-                // generic, unrelated to player in places (ie, the health determination?)
-//                if (iTotalRocks > 0) {
-//                    iHealthPercent += health_bar(50, iTotalRocks, iTotalBlocks);
-//                }
-
                 cBuildingListItem *pItem = player->getStructureBuildingListItemBeingBuilt();
-                player->getStructurePlacer()->placeStructure(iCll, structureType, iHealthPercent);
-                player->getBuildingListUpdater()->onBuildItemCompleted(pItem);
-
-                pItem->decreaseTimesToBuild();
-                pItem->setPlaceIt(false);
-                pItem->setIsBuilding(false);
-                pItem->resetProgress();
-                if (pItem->getTimesToBuild() < 1) {
-                    player->getItemBuilder()->removeItemFromList(pItem);
-                }
+                player->placeStructure(iCll, pItem);
                 // delay base build thinking a bit, so the new structure will be taken into account when deciding
                 // which structure to build next
                 return true;

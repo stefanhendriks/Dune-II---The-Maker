@@ -53,26 +53,9 @@ void cPlayerBrainScenario::think() {
 
                 if (buildOrder.buildId == structureType) {
                     int iCll = buildOrder.placeAt;
-                    int iHealthPercent = 50; // the minimum is 50% (with no slabs)
-
-                        // TODO: This logic is duplicated in cPlaceItDrawer, this should be somewhere
-                        // generic, unrelated to player in places (ie, the health determination?)
-//                if (iTotalRocks > 0) {
-//                    iHealthPercent += health_bar(50, iTotalRocks, iTotalBlocks);
-//                }
 
                     cBuildingListItem *pItem = player->getStructureBuildingListItemBeingBuilt();
-                    cAbstractStructure *newStructure = player->getStructurePlacer()->placeStructure(iCll, structureType,
-                                                                                                    iHealthPercent);
-                    player->getBuildingListUpdater()->onBuildItemCompleted(pItem);
-
-                    pItem->decreaseTimesToBuild();
-                    pItem->setPlaceIt(false);
-                    pItem->setIsBuilding(false);
-                    pItem->resetProgress();
-                    if (pItem->getTimesToBuild() < 1) {
-                        player->getItemBuilder()->removeItemFromList(pItem);
-                    }
+                    player->placeStructure(iCll, pItem);
 
                     buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
                 }
