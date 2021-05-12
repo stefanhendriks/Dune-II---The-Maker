@@ -47,6 +47,10 @@ private:
 
     std::vector<S_structurePosition> myBase;
     std::vector<S_buildOrder> buildOrders;
+
+    void onMyStructureDestroyed(const s_GameEvent &event);
+
+    void OnMyStructureCreated(const s_GameEvent &event);
 };
 
 
