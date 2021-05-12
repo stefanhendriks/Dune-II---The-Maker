@@ -148,52 +148,61 @@ void cPlayerBrainScenario::scanBase() {
 void cPlayerBrainScenario::onNotify(const s_GameEvent &event) {
     if (event.entityOwnerID == player->getId()) {
         if (event.eventType == eGameEventType::GAME_EVENT_STRUCTURE_DESTROYED) {
-            // a structure got destroyed, figure out which one it is in my base plan, and update its state
-            for (auto & structurePosition : myBase) {
-                if (structurePosition.structureId == event.entityID) {
-                    // this structure got destroyed, so mark it as destroyed in my base plan
-                    structurePosition.isDestroyed = true;
-                    // and add order to rebuild it
-                    addBuildOrder((S_buildOrder) {
-                            buildType : eBuildType::STRUCTURE,
-                            priority : 1,
-                            buildId : structurePosition.type,
-                            placeAt : structurePosition.cell,
-                            state : buildOrder::eBuildOrderState::PROCESSME,
-                    });
-                }
-            }
+            onMyStructureDestroyed(event);
         } else if (event.eventType == eGameEventType::GAME_EVENT_STRUCTURE_CREATED) {
-            // a structure was created, update our baseplan
-            cAbstractStructure *pStructure = structure[event.entityID];
-            int placedAtCell = pStructure->getCell();
-            bool foundExistingStructureInBase = false;
-            for (auto & structurePosition : myBase) {
-                if (!structurePosition.isDestroyed) continue; // not destroyed, hence cannot be rebuilt
+            OnMyStructureCreated(event);
 
-                if (structurePosition.cell == placedAtCell) {
-                    assert(structurePosition.type == event.entitySpecificType); // should be same structure type...
-                    // seems my structure, same location.
-                    structurePosition.structureId = event.entityID;
-                    structurePosition.isDestroyed = false; // no longer destroyed!
-                    foundExistingStructureInBase = true;
-                }
-            }
+        }
+    }
+}
 
-            if (!foundExistingStructureInBase) {
-                char msg[255];
-                sprintf(msg, "cPlayerBrainScenario::onNotify() - player [%d / %s] concluded to add structure %s to base register:", player->getId(), player->getHouseName().c_str(), pStructure->getS_StructuresType().name);
-                logbook(msg);
+void cPlayerBrainScenario::OnMyStructureCreated(const s_GameEvent &event) {
+    // a structure was created, update our baseplan
+    cAbstractStructure *pStructure = structure[event.entityID];
+    int placedAtCell = pStructure->getCell();
+    bool foundExistingStructureInBase = false;
+    for (auto & structurePosition : myBase) {
+        if (!structurePosition.isDestroyed) continue; // not destroyed, hence cannot be rebuilt
 
-                // new structure placed, update base register
-                S_structurePosition position = {
-                        .cell = pStructure->getCell(),
-                        .type = pStructure->getType(),
-                        .structureId = pStructure->getStructureId(),
-                        .isDestroyed = pStructure->isDead()
-                };
-                myBase.push_back(position);
-            }
+        if (structurePosition.cell == placedAtCell) {
+            assert(structurePosition.type == event.entitySpecificType); // should be same structure type...
+            // seems my structure, same location.
+            structurePosition.structureId = event.entityID;
+            structurePosition.isDestroyed = false; // no longer destroyed!
+            foundExistingStructureInBase = true;
+        }
+    }
+
+    if (!foundExistingStructureInBase) {
+        char msg[255];
+        sprintf(msg, "cPlayerBrainScenario::onNotify() - player [%d / %s] concluded to add structure %s to base register:", player->getId(), player->getHouseName().c_str(), pStructure->getS_StructuresType().name);
+        logbook(msg);
+
+        // new structure placed, update base register
+        S_structurePosition position = {
+                .cell = pStructure->getCell(),
+                .type = pStructure->getType(),
+                .structureId = pStructure->getStructureId(),
+                .isDestroyed = pStructure->isDead()
+        };
+        myBase.push_back(position);
+    }
+}
+
+void cPlayerBrainScenario::onMyStructureDestroyed(const s_GameEvent &event) {
+    // a structure got destroyed, figure out which one it is in my base plan, and update its state
+    for (auto & structurePosition : myBase) {
+        if (structurePosition.structureId == event.entityID) {
+            // this structure got destroyed, so mark it as destroyed in my base plan
+            structurePosition.isDestroyed = true;
+            // and add order to rebuild it
+            addBuildOrder((S_buildOrder) {
+                    buildType : STRUCTURE,
+                    priority : 1,
+                    buildId : structurePosition.type,
+                    placeAt : structurePosition.cell,
+                    state : buildOrder::PROCESSME,
+            });
         }
     }
 }
