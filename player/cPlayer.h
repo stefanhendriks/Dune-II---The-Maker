@@ -35,6 +35,8 @@ public:
 
     void setBrain(cPlayerBrain *brain);
 
+    void setAutoSlabStructures(bool value);
+
     bool bEnoughPower() const;
 
     bool bEnoughSpiceCapacityToStoreCredits() const;
@@ -311,6 +313,8 @@ private:
     int focusCell_;        // this is the cell that will be showed in the game centralized upon map loading
 
     cPlayerBrain *brain_;
+
+    bool autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
 };
 
 #endif

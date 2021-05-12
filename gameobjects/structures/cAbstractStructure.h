@@ -72,7 +72,7 @@ class cAbstractStructure {
 		int TIMER_flag;     // flag animation
 		int TIMER_fade;     // fading timer
 
-		int TIMER_damage;   // damaging stuff
+		int TIMER_decay;   // damaging stuff
 		int TIMER_prebuild; // prebuild timer
 
 		// -------------
@@ -87,7 +87,7 @@ class cAbstractStructure {
 		virtual int getType() const = 0;		  // implementation gives type of structure
 		void think_prebuild();            // prebuild animation
 		void think_repair();              // repair thinking
-		void think_damage();              // think about damaging through time
+		void think_decay();              // think about damaging through time
 		void think_flag();				  // think method for flag animation
 
 		int getSmokeChance();             // probability to create smoke particle
@@ -167,7 +167,8 @@ class cAbstractStructure {
 		void setBuildingFase(int value) { iBuildFase = value; }
 		void setRepairing(bool value);
 
-		void damage(int hp); // damage structure for x amount of hp
+		void damage(int hp);
+		void decay(int hp);
     	float getHealthNormalized();
 
     	bool isDamaged();
@@ -179,6 +180,8 @@ class cAbstractStructure {
         int getRandomPosY();
 
     void getsCapturedBy(cPlayer *pPlayer);
+
+    void startRepairing();
 };
 
 #endif

@@ -167,6 +167,7 @@ void cGame::mission_init() {
                     pPlayer.init(i, new cPlayerBrainEmpty(&pPlayer));
                 } else {
                     pPlayer.init(i, new cPlayerBrainScenario(&pPlayer));
+                    pPlayer.setAutoSlabStructures(true); // campaign based AI's autoslab structures...
                 }
             }
         } else if (i == AI_CPU5) {
@@ -2303,7 +2304,7 @@ void cGame::onNotify(const s_GameEvent &event) {
     }
 
 //    switch (event.eventType) {
-//        case eGameEventType::GAME_EVENT_STRUCTURE_DESTROYED:
+//        case eGameEventType::GAME_EVENT_DESTROYED:
 //            return;
 //        default:
 //        return;

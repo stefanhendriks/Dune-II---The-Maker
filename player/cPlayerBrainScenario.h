@@ -50,7 +50,12 @@ private:
 
     void onMyStructureDestroyed(const s_GameEvent &event);
 
-    void OnMyStructureCreated(const s_GameEvent &event);
+    void onMyStructureCreated(const s_GameEvent &event);
+
+    void onMyStructureAttacked(const s_GameEvent &event);
+
+    void onMyStructureDecayed(const s_GameEvent &event);
+
 };
 
 

@@ -47,6 +47,8 @@ public:
 	bool canPlaceStructureAt(int iCell, int iStructureType, int iUnitIDToIgnore);
 	bool canPlaceStructureAt(int iCell, int iStructureType);
 
+    void slabStructure(int iCll, int iStructureType, int iPlayer);
+
 private:
     cAbstractStructure *createStructureInstance(int type);
 

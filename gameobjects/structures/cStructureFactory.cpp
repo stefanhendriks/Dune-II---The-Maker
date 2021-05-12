@@ -63,14 +63,6 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	assert(iPlayer >= 0);
 	assert(iPlayer <= MAX_PLAYERS);
 
-	int iNewId = getFreeSlot();
-
-	// fail
-    if (iNewId < 0) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "No free slot available, returning NULL");
-        return nullptr;
-    }
-
     if (iPercent > 100) iPercent = 100;
 
 	// When 100% of the structure is blocked, this method is never called
@@ -84,15 +76,6 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
         return nullptr;
     }
 
-	float fPercent = (float)iPercent/100; // divide by 100 (to make it 0.x)
-
-    s_Structures &sStructures = structures[iStructureType];
-    int hp = sStructures.hp;
-    if (hp < 0) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "Structure to create has no hp, aborting creation.");
-        return nullptr;
-    }
-
     updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(iCell, iStructureType, iPlayer);
 	clearFogForStructureType(iCell, iStructureType, 2, iPlayer);
 
@@ -102,7 +85,24 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 		return NULL;
 	}
 
-	cAbstractStructure *str = createStructureInstance(iStructureType);
+    float fPercent = (float)iPercent/100; // divide by 100 (to make it 0.x)
+
+    s_Structures &sStructures = structures[iStructureType];
+    int hp = sStructures.hp;
+    if (hp < 0) {
+        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "Structure to create has no hp, aborting creation.");
+        return nullptr;
+    }
+
+    int iNewId = getFreeSlot();
+
+    // fail
+    if (iNewId < 0) {
+        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "No free slot available, returning NULL");
+        return nullptr;
+    }
+
+    cAbstractStructure *str = createStructureInstance(iStructureType);
 
 	if (str == NULL) {
         cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "cannot create structure: createStructureInstance returned NULL");
@@ -128,7 +128,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
     str->setOwner(iPlayer);
     str->setBuildingFase(1); // prebuild
     str->TIMER_prebuild = std::min(structureSize/16, 250); // prebuild timer. A structure of 64x64 will result in 256, bigger structure has longer timer
-    str->TIMER_damage = rnd(1000)+100;
+    str->TIMER_decay = rnd(1000) + 100;
     str->fConcrete = (1 - fPercent);
 	str->setHitPoints((int)fHealth);
     str->setFrame(rnd(1)); // random start frame (flag)
@@ -148,7 +148,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 
     // handle update
     s_GameEvent event {
-            .eventType = eGameEventType::GAME_EVENT_STRUCTURE_CREATED,
+            .eventType = eGameEventType::GAME_EVENT_CREATED,
             .entityType = eBuildType::STRUCTURE,
             .entityID = str->getStructureId(),
             .entityOwnerID = iPlayer,
@@ -424,4 +424,23 @@ bool cStructureFactory::canPlaceStructureAt(int iCell, int iStructureType, int i
  */
 bool cStructureFactory::canPlaceStructureAt(int iCell, int iStructureType) {
     return canPlaceStructureAt(iCell, iStructureType, -1);
+}
+
+void cStructureFactory::slabStructure(int iCll, int iStructureType, int iPlayer) {
+    const s_Structures &sStructures = structures[iStructureType];
+
+    int width = sStructures.bmp_width / TILESIZE_WIDTH_PIXELS;
+    int height = sStructures.bmp_height / TILESIZE_HEIGHT_PIXELS;
+
+    int x = map.getCellX(iCll);
+    int y = map.getCellY(iCll);
+
+    int endX = x + width;
+    int endY = y + height;
+
+    for (int sx = x; sx < endX; sx++) {
+        for (int sy = y; sy < endY; sy++) {
+            createStructure(map.getCellWithMapBorders(sx, sy), SLAB1, iPlayer);
+        }
+    }
 }
