@@ -18,6 +18,7 @@ cPlayer::cPlayer() {
     memset(bmp_unit, 0, sizeof(bmp_unit));
     memset(bmp_unit_top, 0, sizeof(bmp_unit_top));
     brain_ = nullptr;
+    autoSlabStructures = false;
 }
 
 cPlayer::~cPlayer() {
@@ -1235,6 +1236,10 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, cBuildingListIt
         return nullptr;
     }
 
+    if (autoSlabStructures) {
+        pStructureFactory->slabStructure(destinationCell, iStructureTypeId, getId());
+    }
+
     int slabbed = pStructureFactory->getSlabStatus(destinationCell, iStructureTypeId);
     int height = structures[iStructureTypeId].bmp_height / TILESIZE_HEIGHT_PIXELS;
     int width = structures[iStructureTypeId].bmp_width / TILESIZE_WIDTH_PIXELS;
@@ -1262,9 +1267,9 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, cBuildingListIt
 void cPlayer::onNotify(const s_GameEvent &event) {
     // notify building list updater if it was a structure of mine. So it gets removed from the building list.
     if (event.entityOwnerID == getId()) {
-        if (event.eventType == eGameEventType::GAME_EVENT_STRUCTURE_DESTROYED) {
+        if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED) {
             buildingListUpdater->onStructureDestroyed(event.entitySpecificType);
-        } else if (event.eventType == eGameEventType::GAME_EVENT_STRUCTURE_CREATED) {
+        } else if (event.eventType == eGameEventType::GAME_EVENT_CREATED) {
             buildingListUpdater->onStructureCreated(event.entitySpecificType);
         }
     }
@@ -1273,4 +1278,8 @@ void cPlayer::onNotify(const s_GameEvent &event) {
     if (brain_) {
         brain_->onNotify(event);
     }
+}
+
+void cPlayer::setAutoSlabStructures(bool value) {
+    autoSlabStructures = value;
 }

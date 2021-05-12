@@ -910,21 +910,20 @@ void cAIPlayer::think_skirmishBuildBase() {
 
 /////////////////////////////////////////////////
 
-void cAIPlayer::think_repair_structure(cAbstractStructure *struc)
-{
-	// think of repairing, only when it is not being repaired yet.
-	if (!struc->isRepairing()) {
-		// when ai has a lot of money, repair even faster
-		if (players[struc->getOwner()].hasEnoughCreditsFor(1000)) {
-			if (struc->getHitPoints() < (struc->getS_StructuresType().hp))  {
-				struc->setRepairing(true);
-			}
-		} else {
-			// AUTO-REPAIR BY AI
-			if (struc->getHitPoints() < (struc->getS_StructuresType().hp/2)) {
-				struc->setRepairing(true);
-			}
-		}
-	}
+void cAIPlayer::think_repair_structure(cAbstractStructure *struc) {
+//	// think of repairing, only when it is not being repaired yet.
+//	if (!struc->isRepairing()) {
+//		// when ai has a lot of money, repair even faster
+//		if (players[struc->getOwner()].hasEnoughCreditsFor(1000)) {
+//			if (struc->getHitPoints() < (struc->getS_StructuresType().hp))  {
+//				struc->setRepairing(true);
+//			}
+//		} else {
+//			// AUTO-REPAIR BY AI
+//			if (struc->getHitPoints() < (struc->getS_StructuresType().hp/2)) {
+//				struc->setRepairing(true);
+//			}
+//		}
+//	}
 }
 

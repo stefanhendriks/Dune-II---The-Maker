@@ -206,8 +206,10 @@ enum eMouseEventType {
 
 enum eGameEventType {
 	GAME_EVENT_NONE,
-    GAME_EVENT_STRUCTURE_DESTROYED,
-    GAME_EVENT_STRUCTURE_CREATED,
+    GAME_EVENT_DESTROYED,
+	GAME_EVENT_CREATED,
+    GAME_EVENT_DAMAGED, 	// damaged by projectile
+    GAME_EVENT_DECAY,		// damaged by decay
 };
 
 #endif /* ENUMS_H_ */

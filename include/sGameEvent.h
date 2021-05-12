@@ -15,8 +15,8 @@ struct s_GameEvent {
     static const char* toString(const eGameEventType &eventType) {
         switch (eventType) {
             case eGameEventType::GAME_EVENT_NONE: return "GAME_EVENT_NONE";
-            case eGameEventType::GAME_EVENT_STRUCTURE_CREATED: return "GAME_EVENT_STRUCTURE_CREATED";
-            case eGameEventType::GAME_EVENT_STRUCTURE_DESTROYED: return "GAME_EVENT_STRUCTURE_DESTROYED";
+            case eGameEventType::GAME_EVENT_CREATED: return "GAME_EVENT_CREATED";
+            case eGameEventType::GAME_EVENT_DESTROYED: return "GAME_EVENT_DESTROYED";
             default:
                 assert(false);
                 break;

@@ -146,17 +146,27 @@ void cPlayerBrainScenario::scanBase() {
 }
 
 void cPlayerBrainScenario::onNotify(const s_GameEvent &event) {
-    if (event.entityOwnerID == player->getId()) {
-        if (event.eventType == eGameEventType::GAME_EVENT_STRUCTURE_DESTROYED) {
-            onMyStructureDestroyed(event);
-        } else if (event.eventType == eGameEventType::GAME_EVENT_STRUCTURE_CREATED) {
-            OnMyStructureCreated(event);
-
+    if (event.entityOwnerID == player->getId() && event.entityType == eBuildType::STRUCTURE) {
+        switch (event.eventType) {
+            case eGameEventType::GAME_EVENT_DESTROYED:
+                onMyStructureDestroyed(event);
+                break;
+            case eGameEventType::GAME_EVENT_CREATED:
+                onMyStructureCreated(event);
+                break;
+            case eGameEventType::GAME_EVENT_DAMAGED:
+                onMyStructureAttacked(event);
+                // help I'm under attack.. do something smart
+                break;
+            case eGameEventType::GAME_EVENT_DECAY:
+                onMyStructureDecayed(event);
+                // should repair when under 75%?
+                break;
         }
     }
 }
 
-void cPlayerBrainScenario::OnMyStructureCreated(const s_GameEvent &event) {
+void cPlayerBrainScenario::onMyStructureCreated(const s_GameEvent &event) {
     // a structure was created, update our baseplan
     cAbstractStructure *pStructure = structure[event.entityID];
     int placedAtCell = pStructure->getCell();
@@ -203,6 +213,30 @@ void cPlayerBrainScenario::onMyStructureDestroyed(const s_GameEvent &event) {
                     placeAt : structurePosition.cell,
                     state : buildOrder::PROCESSME,
             });
+        }
+    }
+}
+
+void cPlayerBrainScenario::onMyStructureAttacked(const s_GameEvent &event) {
+    if (player->hasEnoughCreditsFor(50)) {
+        cAbstractStructure *pStructure = structure[event.entityID];
+        if (!pStructure->isRepairing()) {
+            s_Structures &sStructures = structures[event.entitySpecificType];
+            if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
+                pStructure->startRepairing();
+            }
+        }
+    }
+}
+
+void cPlayerBrainScenario::onMyStructureDecayed(const s_GameEvent &event) {
+    if (player->hasEnoughCreditsFor(50)) {
+        cAbstractStructure *pStructure = structure[event.entityID];
+        if (!pStructure->isRepairing()) {
+            s_Structures &sStructures = structures[event.entitySpecificType];
+            if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
+                pStructure->startRepairing();
+            }
         }
     }
 }
