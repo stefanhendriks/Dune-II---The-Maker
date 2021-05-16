@@ -594,6 +594,7 @@ void cPlayer::giveCredits(float amountToGive) {
     credits += amountToGive;
 }
 
+// TODO: This could be done smarter once we receive notifications when a unit gets created/destroyed!
 std::vector<int> cPlayer::getAllMyUnits() {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_UNITTYPES; i++) {
@@ -606,6 +607,7 @@ std::vector<int> cPlayer::getAllMyUnits() {
     return ids;
 }
 
+// TODO: This can be done smarter because we receive notifications when a structure gets created/destroyed!
 std::vector<int> cPlayer::getAllMyStructuresAsId() {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_STRUCTURES; i++) {

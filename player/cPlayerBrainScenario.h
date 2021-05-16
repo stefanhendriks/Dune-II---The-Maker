@@ -2,29 +2,8 @@
 #define D2TM_CPLAYERBRAINSCENARIO_H
 
 #include "cPlayerBrain.h"
-
-struct S_structurePosition {
-    int cell;
-    int type;
-    int structureId;
-    bool isDestroyed;
-};
-
-struct S_buildOrder {
-    eBuildType buildType; // ie UNIT
-    int priority;       // the higher, the more priority to build this
-    int buildId;        // ie QUAD
-    int placeAt;        // if buildType = STRUCTURE, this is the cell it should be placed at
-    buildOrder::eBuildOrderState state;
-//
-//    bool operator<(const S_buildOrder &order) const {
-//        return (priority < order.priority);
-//    }
-//
-//    bool operator>(const S_buildOrder &order) const {
-//        return (priority > order.priority);
-//    }
-};
+#include "cPlayerBrainData.h"
+#include "cPlayerBrainMission.h"
 
 class cPlayerBrainScenario : public cPlayerBrain {
 
@@ -37,14 +16,14 @@ public:
     void onNotify(const s_GameEvent &event) override;
 
 private:
+    ePlayerBrainScenarioState state;
+
     int TIMER_initialDelay;
     int TIMER_scanBase;
-    int TIMER_processBuildOrders;
 
-    void scanBase();
-    void processBuildOrders();
     void addBuildOrder(S_buildOrder order);
 
+    std::vector<cPlayerBrainMission> missions;
     std::vector<S_structurePosition> myBase;
     std::vector<S_buildOrder> buildOrders;
 
@@ -56,6 +35,17 @@ private:
 
     void onMyStructureDecayed(const s_GameEvent &event);
 
+    void thinkState_Waiting();
+
+    void thinkState_ScanBase();
+
+    void thinkState_Missions();
+
+    void thinkState_Evaluate();
+
+    void thinkState_EndGame();
+
+    void thinkState_ProcessBuildOrders();
 };
 
 
