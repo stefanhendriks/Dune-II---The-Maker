@@ -17,6 +17,8 @@ struct s_GameEvent {
             case eGameEventType::GAME_EVENT_NONE: return "GAME_EVENT_NONE";
             case eGameEventType::GAME_EVENT_CREATED: return "GAME_EVENT_CREATED";
             case eGameEventType::GAME_EVENT_DESTROYED: return "GAME_EVENT_DESTROYED";
+            case eGameEventType::GAME_EVENT_DAMAGED: return "GAME_EVENT_DAMAGED";
+            case eGameEventType::GAME_EVENT_DECAY: return "GAME_EVENT_DECAY";
             default:
                 assert(false);
                 break;

@@ -4,9 +4,9 @@
 
 
 cPlayerBrainScenario::cPlayerBrainScenario(cPlayer * player) : cPlayerBrain(player) {
+    state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_WAITING;
     TIMER_initialDelay = 100;
-    TIMER_processBuildOrders = 100;
-    TIMER_scanBase = -1;
+    TIMER_scanBase = 50;
     myBase = std::vector<S_structurePosition>();
     buildOrders = std::vector<S_buildOrder>();
 }
@@ -16,47 +16,25 @@ cPlayerBrainScenario::~cPlayerBrainScenario() {
 }
 
 void cPlayerBrainScenario::think() {
-    TIMER_initialDelay--;
-    if (TIMER_initialDelay > 0) {
-        char msg[255];
-        memset(msg, 0, sizeof(msg));
-        sprintf(msg, "cPlayerBrainScenario::think(), for player [%d] - Initial Delay still active...", player->getId());
-        logbook(msg);
-        return;
-    }
-
-    if (TIMER_scanBase > 0) {
-        TIMER_scanBase--;
-    } else if (TIMER_scanBase == 0) {
-        // once scanned, keep an eye on any destroyed structures
-        scanBase();
-        TIMER_scanBase--; // makes it invalid, hence won't do anything
-    }
-
-    if (TIMER_processBuildOrders > 0) {
-        TIMER_processBuildOrders--;
-    } else {
-        TIMER_processBuildOrders = 25;
-        processBuildOrders();
-
-        if (player->isBuildingStructureAwaitingPlacement()) {
-            int structureType = player->getStructureTypeBeingBuilt();
-            for (auto & buildOrder : buildOrders) {
-                if (buildOrder.buildType != eBuildType::STRUCTURE) {
-                    continue;
-                }
-
-                if (buildOrder.buildId == structureType) {
-                    int iCll = buildOrder.placeAt;
-
-                    cBuildingListItem *pItem = player->getStructureBuildingListItemBeingBuilt();
-                    player->placeStructure(iCll, pItem);
-
-                    buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
-                    break;
-                }
-            }
-        }
+    switch (state) {
+        case ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_WAITING:
+            thinkState_Waiting();
+            return;
+        case ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_SCAN_BASE:
+            thinkState_ScanBase();
+            return;
+        case ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_MISSIONS:
+            thinkState_Missions();
+            return;
+        case ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_PROCESS_BUILDORDERS:
+            thinkState_ProcessBuildOrders();
+            return;
+        case ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_EVALUATE:
+            thinkState_Evaluate();
+            return;
+        case ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_ENDGAME:
+            thinkState_EndGame();
+            return;
     }
 
     // now do some real stuff
@@ -68,19 +46,19 @@ void cPlayerBrainScenario::think() {
 }
 
 void cPlayerBrainScenario::addBuildOrder(S_buildOrder order) {
-    // check if we can find a similar build order
-    for (auto & buildOrder : buildOrders) {
-        if (buildOrder.buildType != order.buildType) continue;
-        if (buildOrder.buildId != order.buildId) continue;
-
-        if (order.buildType == eBuildType::STRUCTURE) {
-            if (buildOrder.placeAt != order.placeAt) continue;
-        }
-
-        // found same, if so, then simply increase priority?
-        buildOrder.priority++;
-        return; // stop
-    }
+//    // check if we can find a similar build order
+//    for (auto & buildOrder : buildOrders) {
+//        if (buildOrder.buildType != order.buildType) continue;
+//        if (buildOrder.buildId != order.buildId) continue;
+//
+//        if (order.buildType == eBuildType::STRUCTURE) {
+//            if (buildOrder.placeAt != order.placeAt) continue;
+//        }
+//
+//        // found same, if so, then simply increase priority?
+////        buildOrder.priority++;
+//        return; // stop
+//    }
     buildOrders.push_back(order);
 
     // re-order based on priority
@@ -111,57 +89,35 @@ void cPlayerBrainScenario::addBuildOrder(S_buildOrder order) {
     }
 }
 
-void cPlayerBrainScenario::processBuildOrders() {
-    // check if we can find a similar build order
-    for (auto & buildOrder : buildOrders) {
-        if (buildOrder.state != buildOrder::eBuildOrderState::PROCESSME) continue; // only process those which are marked
+void cPlayerBrainScenario::onNotify(const s_GameEvent &event) {
+    if (event.entityOwnerID == player->getId()) {
 
-        if (buildOrder.buildType == eBuildType::STRUCTURE) {
-            if (player->canBuildStructure(buildOrder.buildId) == eCantBuildReason::NONE) {
-                if (player->startBuildingStructure(buildOrder.buildId)) {
-                    buildOrder.state = buildOrder::eBuildOrderState::BUILDING;
-                }
-            }
-        } else if (buildOrder.buildType == eBuildType::UNIT) {
-            if (player->canBuildUnit(buildOrder.buildId) == eCantBuildReason::NONE) {
-                if (player->startBuildingUnit(buildOrder.buildId)) {
-                    buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
-                }
+        // events about my structures
+        if (event.entityType == eBuildType::STRUCTURE) {
+            switch (event.eventType) {
+                case eGameEventType::GAME_EVENT_DESTROYED:
+                    onMyStructureDestroyed(event);
+                    break;
+                case eGameEventType::GAME_EVENT_CREATED:
+                    onMyStructureCreated(event);
+                    break;
+                case eGameEventType::GAME_EVENT_DAMAGED:
+                    onMyStructureAttacked(event);
+                    // help I'm under attack.. do something smart
+                    break;
+                case eGameEventType::GAME_EVENT_DECAY:
+                    onMyStructureDecayed(event);
+                    // should repair when under 75%?
+                    break;
             }
         }
-    }
 
-    // delete any buildOrders which are flagged to remove
-    buildOrders.erase(
-    std::remove_if(
-        buildOrders.begin(),
-        buildOrders.end(),
-            [](const S_buildOrder &o) { return o.state == buildOrder::eBuildOrderState::REMOVEME; }),
-    buildOrders.end()
-    );
-}
-
-void cPlayerBrainScenario::scanBase() {
-    // do repairs?
-}
-
-void cPlayerBrainScenario::onNotify(const s_GameEvent &event) {
-    if (event.entityOwnerID == player->getId() && event.entityType == eBuildType::STRUCTURE) {
-        switch (event.eventType) {
-            case eGameEventType::GAME_EVENT_DESTROYED:
-                onMyStructureDestroyed(event);
-                break;
-            case eGameEventType::GAME_EVENT_CREATED:
-                onMyStructureCreated(event);
-                break;
-            case eGameEventType::GAME_EVENT_DAMAGED:
-                onMyStructureAttacked(event);
-                // help I'm under attack.. do something smart
-                break;
-            case eGameEventType::GAME_EVENT_DECAY:
-                onMyStructureDecayed(event);
-                // should repair when under 75%?
-                break;
+        // Notify my missions about creations/destroyed things only (for now?)
+        if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED || event.eventType == eGameEventType::GAME_EVENT_CREATED) {
+            // notify missions about this event as well, might be important
+            for (auto & mission : missions) {
+                mission.onNotify(event);
+            }
         }
     }
 }
@@ -239,4 +195,139 @@ void cPlayerBrainScenario::onMyStructureDecayed(const s_GameEvent &event) {
             }
         }
     }
+}
+
+void cPlayerBrainScenario::thinkState_Waiting() {
+    TIMER_initialDelay--;
+    if (TIMER_initialDelay > 0) {
+        char msg[255];
+        sprintf(msg, "cPlayerBrainScenario::thinkState_Waiting(), for player [%d] - Initial Delay still active...", player->getId());
+        logbook(msg);
+        return;
+    }
+
+    // delay is done, now go into the scan base/missions/evaluate loop
+    state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_SCAN_BASE;
+}
+
+void cPlayerBrainScenario::thinkState_ScanBase() {
+    if (TIMER_scanBase > 0) {
+        TIMER_scanBase--;
+        return;
+    }
+
+    char msg[255];
+    sprintf(msg, "cPlayerBrainScenario::thinkState_ScanBase(), for player [%d]", player->getId());
+    logbook(msg);
+
+    // go through base and initiate repairs where needed?
+    // TODO:
+
+    // reset timer (for the next time we end up here)
+    TIMER_scanBase = 50;
+    state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_MISSIONS;
+}
+
+void cPlayerBrainScenario::thinkState_Missions() {
+    char msg[255];
+    sprintf(msg, "cPlayerBrainScenario::thinkState_Missions(), for player [%d]", player->getId());
+    logbook(msg);
+
+    if (missions.empty()) {
+        // create attack mission
+        cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK);
+        missions.push_back(someMission);
+    }
+
+    // all missions are allowed to think now
+    for (auto &mission : missions) {
+        const std::vector<S_buildOrder> &buildOrders = mission.think();
+        for (auto &buildOrder : buildOrders) {
+            addBuildOrder(buildOrder);
+        }
+    }
+
+
+    state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_PROCESS_BUILDORDERS;
+}
+
+void cPlayerBrainScenario::thinkState_Evaluate() {
+    char msg[255];
+    sprintf(msg, "cPlayerBrainScenario::thinkState_Evaluate(), for player [%d]", player->getId());
+    logbook(msg);
+
+    if (player->getAmountOfStructuresForType(CONSTYARD) == 0) {
+        // no constyards, endgame
+        state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_ENDGAME;
+        return;
+    }
+
+    // Re-iterate over all (pending) buildOrders - and check if we are still going to do that or we might want to
+    // up/downplay some priorities and re-sort?
+    // Example: Money is short, Harvester is in build queue, but not high in priority?
+
+    // loop to scan_base which has a delay of 250 ticks
+    state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_SCAN_BASE;
+}
+
+void cPlayerBrainScenario::thinkState_EndGame() {
+    // ...
+//    char msg[255];
+//    sprintf(msg, "cPlayerBrainScenario::thinkState_EndGame(), for player [%d]", player->getId());
+//    logbook(msg);
+}
+
+void cPlayerBrainScenario::thinkState_ProcessBuildOrders() {
+    char msg[255];
+    sprintf(msg, "cPlayerBrainScenario::thinkState_ProcessBuildOrders(), for player [%d]", player->getId());
+    logbook(msg);
+
+    // check if we can find a similar build order
+    for (auto & buildOrder : buildOrders) {
+        if (buildOrder.state != buildOrder::eBuildOrderState::PROCESSME) continue; // only process those which are marked
+
+        if (buildOrder.buildType == eBuildType::STRUCTURE) {
+            if (player->canBuildStructure(buildOrder.buildId) == eCantBuildReason::NONE) {
+                if (player->startBuildingStructure(buildOrder.buildId)) {
+                    buildOrder.state = buildOrder::eBuildOrderState::BUILDING;
+                }
+            }
+        } else if (buildOrder.buildType == eBuildType::UNIT) {
+            if (player->canBuildUnit(buildOrder.buildId) == eCantBuildReason::NONE) {
+                if (player->startBuildingUnit(buildOrder.buildId)) {
+                    buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
+                }
+            }
+        }
+    }
+
+    // delete any buildOrders which are flagged to remove
+    buildOrders.erase(
+            std::remove_if(
+                    buildOrders.begin(),
+                    buildOrders.end(),
+                    [](const S_buildOrder &o) { return o.state == buildOrder::eBuildOrderState::REMOVEME; }),
+            buildOrders.end()
+    );
+
+    if (player->isBuildingStructureAwaitingPlacement()) {
+        int structureType = player->getStructureTypeBeingBuilt();
+        for (auto & buildOrder : buildOrders) {
+            if (buildOrder.buildType != eBuildType::STRUCTURE) {
+                continue;
+            }
+
+            if (buildOrder.buildId == structureType) {
+                int iCll = buildOrder.placeAt;
+
+                cBuildingListItem *pItem = player->getStructureBuildingListItemBeingBuilt();
+                player->placeStructure(iCll, pItem);
+
+                buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
+                break;
+            }
+        }
+    }
+
+    state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_EVALUATE;
 }
