@@ -235,18 +235,14 @@ void cPlayerBrainScenario::thinkState_Missions() {
 
     if (missions.empty()) {
         // create attack mission
-        cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK);
+        cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK, this);
         missions.push_back(someMission);
     }
 
     // all missions are allowed to think now
     for (auto &mission : missions) {
-        const std::vector<S_buildOrder> &buildOrders = mission.think();
-        for (auto &buildOrder : buildOrders) {
-            addBuildOrder(buildOrder);
-        }
+        mission.think();
     }
-
 
     state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_PROCESS_BUILDORDERS;
 }

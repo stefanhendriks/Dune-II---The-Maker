@@ -13,7 +13,9 @@
 #ifndef D2TM_UNIT_H
 #define D2TM_UNIT_H
 
-// Define TRANSFER stuff for reinforcements	
+#include <player/cPlayerBrainMission.h>
+
+// Define TRANSFER stuff for reinforcements
 class cRectangle; // forward declaration :(
 
 #define TRANSFER_NONE	-1				// nothing to transfer
@@ -255,7 +257,15 @@ public:
 
     cPlayer *getPlayer();
 
+    void assignMission(cPlayerBrainMission * aMission);
+    void unAssignMission();
+    bool isAssignedAnyMission();
+    bool isAssignedMission(cPlayerBrainMission *aMission);
+
 private:
+
+    cPlayerBrainMission *mission; // is this unit assigned to a mission?
+
     int iHitPoints;     // hitpoints of unit
 
     bool isUnitWhoCanSquishInfantry();

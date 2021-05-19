@@ -15,13 +15,13 @@ public:
 
     void onNotify(const s_GameEvent &event) override;
 
+    void addBuildOrder(S_buildOrder order);
+
 private:
     ePlayerBrainScenarioState state;
 
     int TIMER_initialDelay;
     int TIMER_scanBase;
-
-    void addBuildOrder(S_buildOrder order);
 
     std::vector<cPlayerBrainMission> missions;
     std::vector<S_structurePosition> myBase;

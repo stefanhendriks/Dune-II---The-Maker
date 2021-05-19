@@ -5,6 +5,7 @@
 #include "cPlayerBrainData.h"
 #include <observers/cScenarioObserver.h>
 
+class cPlayerBrainScenario;
 
 enum ePlayerBrainMissionKind {
     /**
@@ -75,9 +76,19 @@ struct S_groupKind {
     int type;
 
     /**
-     * How many of that kind?
+     * How many of that type of unit do we want?
      */
-    int amount;
+    int required;
+
+    /**
+     * How many have we ordered so far?
+     */
+    int ordered;
+
+    /**
+     * How many are really produced?
+     */
+    int produced;
 };
 
 
@@ -85,32 +96,35 @@ class cPlayerBrainMission : public cScenarioObserver {
 
 public:
 
-    cPlayerBrainMission(cPlayer * player, const ePlayerBrainMissionKind & kind);
+    cPlayerBrainMission(cPlayer * player, const ePlayerBrainMissionKind & kind, cPlayerBrainScenario *brain);
     ~cPlayerBrainMission();
 
-    std::vector<S_buildOrder> think();
+    void think();
 
     void onNotify(const s_GameEvent &event);
 
-
 private:
+
+    int target;
+
+    int targetStructureID;
+    int targetUnitID;
 
     cPlayer * player;
 
     const ePlayerBrainMissionKind kind;
+
+    cPlayerBrainScenario *brain;
 
     ePlayerBrainMissionState state;
 
     // store which units where created (and thus part of this team)
     std::vector<int> units;
 
-    // how the group of units look like that would execute the mission
+    // the desired group of units
     std::vector<S_groupKind> group;
 
-    std::vector<S_buildOrder> buildOrders;
-
     void thinkState_Initial();
-
 
     void thinkState_PrepareGatherResources();
 

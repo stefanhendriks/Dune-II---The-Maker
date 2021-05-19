@@ -31,6 +31,8 @@ ASTAR temp_map[16384]; // 4096 = 64x64 map, 16384 = 128x128 map
 // Globals on bottom
 
 void cUnit::init(int i) {
+    mission = nullptr;
+
     fExperience = 0;
 
     iID = i;
@@ -2732,6 +2734,7 @@ bool cUnit::isInfantryUnit() {
 
 cUnit::cUnit() {
     dimensions = nullptr;
+    mission = nullptr;
     init(-1);
 }
 
@@ -2836,6 +2839,23 @@ void cUnit::setCell(int cll) {
     this->posX = map.getAbsoluteXPositionFromCell(cll);
     this->posY = map.getAbsoluteYPositionFromCell(cll);
 }
+
+void cUnit::assignMission(cPlayerBrainMission * aMission) {
+    mission = aMission;
+}
+
+bool cUnit::isAssignedAnyMission() {
+    return mission != nullptr;
+}
+
+bool cUnit::isAssignedMission(cPlayerBrainMission *aMission) {
+    return mission == aMission;
+}
+
+void cUnit::unAssignMission() {
+    mission == nullptr;
+}
+
 
 // return new valid ID
 int UNIT_NEW() {
@@ -2963,6 +2983,16 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
     newUnit.updateCellXAndY();
 
     map.clearShroud(iCll, sUnitType.sight, iPlayer);
+
+    s_GameEvent event {
+            .eventType = eGameEventType::GAME_EVENT_CREATED,
+            .entityType = eBuildType::UNIT,
+            .entityID = iNewId,
+            .entityOwnerID = iPlayer,
+            .entitySpecificType = unitType
+    };
+
+    game.onNotify(event);
 
     return iNewId;
 }
