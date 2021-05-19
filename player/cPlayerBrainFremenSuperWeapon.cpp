@@ -24,9 +24,9 @@ void cPlayerBrainFremenSuperWeapon::think() {
     }
 
     if (!foundIdleUnit) {
-        char msg[255];
-        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() AI[%d] - NO idle unit(s) to attack with.", player->getId());
-        logbook(msg);
+//        char msg[255];
+//        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() AI[%d] - NO idle unit(s) to attack with.", player->getId());
+//        logbook(msg);
         return;
     }
 
