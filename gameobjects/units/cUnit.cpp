@@ -388,6 +388,18 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
         cUnit.move_to(iCell, -1, -1);
     }
 
+    // before re-initing, send out event, so in case we need to handle the event and fetch the data from that
+    // entity then we can atleast pry it for data...
+    s_GameEvent event {
+            .eventType = eGameEventType::GAME_EVENT_DESTROYED,
+            .entityType = eBuildType::UNIT,
+            .entityID = iID,
+            .entityOwnerID = iPlayer,
+            .entitySpecificType = iType
+    };
+
+    game.onNotify(event);
+
     init(iID);    // re-init
 
     for (int i = 0; i < MAPID_MAX; i++) {
