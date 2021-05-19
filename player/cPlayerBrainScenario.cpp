@@ -224,7 +224,7 @@ void cPlayerBrainScenario::thinkState_ScanBase() {
     // TODO:
 
     // reset timer (for the next time we end up here)
-    TIMER_scanBase = 50;
+    TIMER_scanBase = 25;
     state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_MISSIONS;
 }
 
@@ -232,6 +232,15 @@ void cPlayerBrainScenario::thinkState_Missions() {
     char msg[255];
     sprintf(msg, "cPlayerBrainScenario::thinkState_Missions(), for player [%d]", player->getId());
     logbook(msg);
+
+    // delete any missions which are ended
+    missions.erase(
+            std::remove_if(
+                    missions.begin(),
+                    missions.end(),
+                    [](cPlayerBrainMission m) { return m.isEnded(); }),
+            missions.end()
+    );
 
     if (missions.empty()) {
         // create attack mission

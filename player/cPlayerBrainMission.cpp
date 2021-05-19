@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "../include/d2tmh.h"
 
 
@@ -35,6 +37,9 @@ void cPlayerBrainMission::think() {
         case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_EXECUTE:
             thinkState_Execute();
             break;
+        case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_ENDED:
+            // do nothing
+            break;
     }
 }
 
@@ -44,7 +49,24 @@ void cPlayerBrainMission::onNotify(const s_GameEvent &event) {
     logbook(msg);
 
     if (event.entityOwnerID != player->getId()) {
-        // not concerning my entities
+        // enemy entity
+        if (event.eventType == GAME_EVENT_DESTROYED) {
+            // enemy unit or structure destroyed, if it was our target re-think our target then.
+            if (event.entityType == eBuildType::UNIT) {
+                if (targetUnitID == event.entityID) {
+                    targetUnitID = -1;
+                    target = -1;
+                    state = PLAYERBRAINMISSION_STATE_SELECT_TARGET;
+                }
+            } else if (event.entityType == eBuildType::STRUCTURE) {
+                if (targetUnitID == event.entityID) {
+                    targetStructureID = -1;
+                    target = -1;
+                    state = PLAYERBRAINMISSION_STATE_SELECT_TARGET;
+                }
+            }
+        }
+
         return;
     }
 
@@ -57,7 +79,7 @@ void cPlayerBrainMission::onNotify(const s_GameEvent &event) {
                 // this unit has not been assigned to a mission yet
                 if (!entityUnit.isAssignedAnyMission()) {
                     // assign this unit to my team and my mission
-                    units.push_back(event.entityID);
+                    units.push_back(entityUnit.iID);
                     entityUnit.assignMission(this);
 
                     // update bookkeeping that we have produced something
@@ -73,6 +95,20 @@ void cPlayerBrainMission::onNotify(const s_GameEvent &event) {
 
                     state = PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES;
                 }
+            }
+        }
+    } else if (event.eventType == GAME_EVENT_DESTROYED) {
+        if (event.entityType == eBuildType::UNIT) {
+            //std::vector<int>::iterator
+            auto position = std::find(units.begin(), units.end(), event.entityID);
+            if (position != units.end()) {
+                // found unit in our list, so someone of ours got destroyed!
+                units.erase(position);
+            }
+
+            if (units.empty()) {
+                // group got destroyed, mission ENDED
+                state = PLAYERBRAINMISSION_STATE_ENDED;
             }
         }
     }
@@ -179,4 +215,8 @@ void cPlayerBrainMission::thinkState_PrepareAwaitResources() {
     sprintf(msg, "cPlayerBrainMission::thinkState_PrepareAwaitResources(), for player [%d]", player->getId());
     logbook(msg);
     // wait for things to be produced...
+}
+
+bool cPlayerBrainMission::isEnded() const {
+    return state == PLAYERBRAINMISSION_STATE_ENDED;
 }

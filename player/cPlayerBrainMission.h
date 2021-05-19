@@ -67,6 +67,11 @@ enum ePlayerBrainMissionState {
      */
     PLAYERBRAINMISSION_STATE_EXECUTE,
 
+    /**
+     * Mission ended
+     */
+    PLAYERBRAINMISSION_STATE_ENDED,
+
 };
 
 struct S_groupKind {
@@ -97,11 +102,13 @@ class cPlayerBrainMission : public cScenarioObserver {
 public:
 
     cPlayerBrainMission(cPlayer * player, const ePlayerBrainMissionKind & kind, cPlayerBrainScenario *brain);
-    ~cPlayerBrainMission();
+    ~cPlayerBrainMission() override;
 
     void think();
 
     void onNotify(const s_GameEvent &event);
+
+    bool isEnded() const;
 
 private:
 
@@ -112,7 +119,7 @@ private:
 
     cPlayer * player;
 
-    const ePlayerBrainMissionKind kind;
+    ePlayerBrainMissionKind kind;
 
     cPlayerBrainScenario *brain;
 
