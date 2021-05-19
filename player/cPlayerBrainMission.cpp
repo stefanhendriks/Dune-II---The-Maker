@@ -142,11 +142,15 @@ void cPlayerBrainMission::thinkState_SelectTarget() {
     logbook(msg);
 
     // and execute whatever?? (can merge with select target state?)
-    const std::vector<int> &myStructureIds = player[0].getAllMyStructuresAsId();
-    if(!myStructureIds.empty()) {
-        const int &first = myStructureIds.front();
-        target = structure[first]->getCell();
-        targetStructureID = structure[first]->getStructureId();
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+        cAbstractStructure * theStructure = structure[i];
+        if (!theStructure) continue;
+        if (!theStructure->isValid()) continue;
+        if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+        // enemy structure
+        target = theStructure->getCell();
+        targetStructureID = theStructure->getStructureId();
+        break;
     }
 
     state = ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_EXECUTE;
