@@ -281,6 +281,8 @@ private:
     float posX, posY;   // absolute x, y coordinates (pixel based)
 
     eUnitMoveToCellResult moveToNextCellLogic();
+
+    int getRange() const;
 };
 
 
