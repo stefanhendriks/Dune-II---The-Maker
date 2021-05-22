@@ -31,9 +31,9 @@ public:
 
     PALETTE pal;        // each player has its own 256 color scheme (used for coloring units)
 
-    void init(int id, cPlayerBrain *brain);
+    void init(int id, brains::cPlayerBrain *brain);
 
-    void setBrain(cPlayerBrain *brain);
+    void setBrain(brains::cPlayerBrain *brain);
 
     void setAutoSlabStructures(bool value);
 
@@ -312,7 +312,7 @@ private:
 
     int focusCell_;        // this is the cell that will be showed in the game centralized upon map loading
 
-    cPlayerBrain *brain_;
+    brains::cPlayerBrain *brain_;
 
     bool autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
 };

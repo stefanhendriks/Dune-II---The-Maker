@@ -2866,7 +2866,7 @@ void cUnit::setCell(int cll) {
     this->posY = map.getAbsoluteYPositionFromCell(cll);
 }
 
-void cUnit::assignMission(cPlayerBrainMission * aMission) {
+void cUnit::assignMission(brains::cPlayerBrainMission * aMission) {
     mission = aMission;
 }
 
@@ -2874,7 +2874,7 @@ bool cUnit::isAssignedAnyMission() {
     return mission != nullptr;
 }
 
-bool cUnit::isAssignedMission(cPlayerBrainMission *aMission) {
+bool cUnit::isAssignedMission(brains::cPlayerBrainMission *aMission) {
     return mission == aMission;
 }
 

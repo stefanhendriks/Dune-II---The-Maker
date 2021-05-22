@@ -13,7 +13,7 @@
 #ifndef D2TM_UNIT_H
 #define D2TM_UNIT_H
 
-#include <player/cPlayerBrainMission.h>
+#include <player/brains/missions/cPlayerBrainMission.h>
 
 // Define TRANSFER stuff for reinforcements
 class cRectangle; // forward declaration :(
@@ -257,14 +257,14 @@ public:
 
     cPlayer *getPlayer();
 
-    void assignMission(cPlayerBrainMission * aMission);
+    void assignMission(brains::cPlayerBrainMission * aMission);
     void unAssignMission();
     bool isAssignedAnyMission();
-    bool isAssignedMission(cPlayerBrainMission *aMission);
+    bool isAssignedMission(brains::cPlayerBrainMission *aMission);
 
 private:
 
-    cPlayerBrainMission *mission; // is this unit assigned to a mission?
+    brains::cPlayerBrainMission *mission; // is this unit assigned to a mission?
 
     int iHitPoints;     // hitpoints of unit
 
