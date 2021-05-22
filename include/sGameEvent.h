@@ -11,6 +11,7 @@ struct s_GameEvent {
     int entityID;           // which entity? (ID)
     int entityOwnerID;      // who owns this entity? (player ID)
     int entitySpecificType; // type of <entityType>, ie, if entityType is STRUCTURE. This value can be CONSTYARD
+    bool isReinforce = false;       // only applicable for UNIT and CREATED events. So we can distinguish between 'normal' CREATED units and reinforced units.
 
     static const char* toString(const eGameEventType &eventType) {
         switch (eventType) {

@@ -33,6 +33,9 @@ ASTAR temp_map[16384]; // 4096 = 64x64 map, 16384 = 128x128 map
 void cUnit::init(int i) {
     mission = nullptr;
 
+    isReinforcement = false; // set to true by REINFORCE when a carry-all is spawned to bring a 'real' reinforcement. So we can
+                             // emit the proper CREATED game event later. :/
+
     fExperience = 0;
 
     iID = i;
@@ -1503,19 +1506,9 @@ void cUnit::think_move_air() {
             if (canDeployAtCell && isWithinMapBoundaries) {
                 // drop unit
                 if (iNewUnitType > -1) {
-                    int id = UNIT_CREATE(iCell, iNewUnitType, iPlayer, true);
+                    int id = UNIT_CREATE(iCell, iNewUnitType, iPlayer, true, isReinforcement);
 
                     map.cellSetIdForLayer(iCell, MAPID_UNITS, id);
-
-                    // when it is a TRANSFER_NEW_LEAVE , and AI, we auto-assign team number here
-                    // - Normally done in AI.CPP, though from here it is out of our hands.
-                    if (iTransferType == TRANSFER_NEW_LEAVE) {
-                        if (iPlayer > HUMAN) {
-                            if (id > -1) {
-                                unit[id].iGroup = rnd(3) + 1; // assign group
-                            }
-                        }
-                    }
                 }
 
                 // now make sure this carry-all will not be drawn as having a unit:
@@ -2894,6 +2887,7 @@ int UNIT_NEW() {
 
 /**
  * Creates a new unit, when bOnStart is true, it will prevent AI players from moving a unit immediately a bit.
+ * Assumes the creation of a unit is NOT a reinforcement.
  *
  * @param iCll
  * @param unitType
@@ -2902,6 +2896,21 @@ int UNIT_NEW() {
  * @return
  */
 int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
+    return UNIT_CREATE(iCll, unitType, iPlayer, bOnStart, false);
+}
+
+/**
+ * Creates a new unit, when bOnStart is true, it will prevent AI players from moving a unit immediately a bit.
+ *
+ *
+ * @param iCll
+ * @param unitType
+ * @param iPlayer
+ * @param bOnStart
+ * @param isReinforement flag to set on event
+ * @return
+ */
+int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement) {
     if (!map.isValidCell(iCll)) {
         logbook("UNIT_CREATE: Invalid cell as param");
         return -1;
@@ -3015,7 +3024,8 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {
             .entityType = eBuildType::UNIT,
             .entityID = iNewId,
             .entityOwnerID = iPlayer,
-            .entitySpecificType = unitType
+            .entitySpecificType = unitType,
+            .isReinforce = isReinforcement
     };
 
     game.onNotify(event);
@@ -3641,14 +3651,19 @@ int UNIT_find_harvest_spot(int id) {
     return TargetSpice;
 }
 
-// Reinforce:
-// create a new unit by sending it:
-// arguments:
-// iPlr = player index
-// iTpe = unit type
-// iCll = location where to bring it
-
+/**
+ * Reinforce:
+ * create a new unit by sending it:
+ * @param iPlr player index
+ * @param iTpe unit type
+ * @param iCll location where to bring it
+ * @param iStart where to start from
+ * Assumes this is a 'real' reinforcement.
+ */
 void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
+    REINFORCE(iPlr, iTpe, iCll, iStart, true);
+}
+void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
 
     // handle invalid arguments
     if (iPlr < 0 || iTpe < 0)
@@ -3677,12 +3692,11 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
     }
 
     char msg[255];
-    sprintf(msg, "REINFORCE: Bringing unit type %d for player %d. Starting from cell %d, going to cell %d", iTpe, iPlr,
-            iStartCell, iCll);
+    sprintf(msg, "REINFORCE: Bringing unit type %d for player %d. Starting from cell %d, going to cell %d", iTpe, iPlr, iStartCell, iCll);
     logbook(msg);
 
     // STEP 2: create carryall
-    int iUnit = UNIT_CREATE(iStartCell, CARRYALL, iPlr, true);
+    int iUnit = UNIT_CREATE(iStartCell, CARRYALL, iPlr, true, isReinforcement);
 
     // STEP 3: assign order to carryall
     unit[iUnit].carryall_order(-1, TRANSFER_NEW_LEAVE, iCll, iTpe);

@@ -11,9 +11,9 @@ namespace brains {
     }
 
     void cPlayerBrainEmpty::think() {
-        char msg[255];
-        sprintf(msg, "cPlayerBrainEmpty::think(), for player [%d]", player->getId());
-        logbook(msg);
+//        char msg[255];
+//        sprintf(msg, "cPlayerBrainEmpty::think(), for player [%d]", player->getId());
+//        logbook(msg);
     }
 
     void cPlayerBrainEmpty::onNotify(const s_GameEvent &event) {

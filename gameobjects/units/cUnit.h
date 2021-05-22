@@ -268,6 +268,8 @@ private:
 
     int iHitPoints;     // hitpoints of unit
 
+    bool isReinforcement; // is this a 'real' reinforcement or not? (applies to Carry-All only)
+
     bool isUnitWhoCanSquishInfantry();
 
     bool isSaboteur();
@@ -286,9 +288,37 @@ private:
 };
 
 
-
 int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart);
+
+/**
+ * creates a unit, the isReinforcement flag is true when the unit is created for / by reinforcements. This
+ * flag will make sure to trigger a different event type (not CREATED, but REINFORCED) so that we can distinguish
+ * between them.
+ *
+ * @param iCll
+ * @param unitType
+ * @param iPlayer
+ * @param bOnStart
+ * @param isReinforcement
+ * @return
+ */
+int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement);
+
 int CREATE_PATH(int iUnitId, int iPathCountUnits);
+
+void REINFORCE(int iPlr, int iTpe, int iCll, int iStart);
+
+/**
+ * Allows overriding reinforement flag, ie used when a unit is reinforced by construction or other way, rather
+ * than a 'real' reinforcement.
+ * @param iPlr
+ * @param iTpe
+ * @param iCll
+ * @param iStart
+ * @param isReinforcement
+ */
+void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);
+
 int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 
 void UNIT_deselect_all();
@@ -296,7 +326,7 @@ void UNIT_deselect_all();
 void UNIT_ORDER_ATTACK(int iUnitID, int iGoalCell, int iUnit, int iStructure, int iAttackCell);
 
 int UNIT_find_harvest_spot(int id);
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart);
+
 int CARRYALL_TRANSFER(int iuID, int iGoal);
 
 int UNIT_FREE_AROUND_MOVE(int iUnit);

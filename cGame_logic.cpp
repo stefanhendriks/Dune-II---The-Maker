@@ -151,6 +151,10 @@ void cGame::mission_init() {
 
     map.init(64, 64);
 
+    int maxThinkingAIs = MAX_PLAYERS;
+    if (bOneAi) {
+        maxThinkingAIs = 1;
+    }
     // clear out players but not entirely
     for (int i=0; i < MAX_PLAYERS; i++) {
         cPlayer &pPlayer = players[i];
@@ -164,12 +168,21 @@ void cGame::mission_init() {
                 pPlayer.init(i, nullptr);
             } else {
                 if (game.bSkirmish) {
-                    pPlayer.init(i, new brains::cPlayerBrainEmpty(&pPlayer));
+                    if (maxThinkingAIs > 0) {
+                        pPlayer.init(i, new brains::cPlayerBrainEmpty(&pPlayer));
+                    } else {
+                        pPlayer.init(i, nullptr);
+                    }
                 } else {
-                    pPlayer.init(i, new brains::cPlayerBrainCampaign(&pPlayer));
+                    if (maxThinkingAIs > 0) {
+                        pPlayer.init(i, new brains::cPlayerBrainCampaign(&pPlayer));
+                    } else {
+                        pPlayer.init(i, nullptr);
+                    }
                     pPlayer.setAutoSlabStructures(true); // campaign based AI's autoslab structures...
                 }
             }
+            maxThinkingAIs--;
         } else if (i == AI_CPU5) {
             pPlayer.init(i, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
         } else if (i == AI_CPU6) {

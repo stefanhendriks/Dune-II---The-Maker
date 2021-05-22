@@ -6,9 +6,8 @@ namespace brains {
 
     cPlayerBrainMission::cPlayerBrainMission(cPlayer *player, const ePlayerBrainMissionKind &kind,
                                              cPlayerBrainCampaign *brain, std::vector<S_groupKind> group) : player(
-            player), kind(kind), state(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL), brain(brain),
+            player), kind(kind), state(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES), brain(brain),
                                                                                                             group(group) {
-        group = std::vector<S_groupKind>();
         units = std::vector<int>();
         target = -1;
         targetStructureID = -1;
@@ -24,11 +23,7 @@ namespace brains {
         sprintf(msg, "cPlayerBrainMission::think(), for player [%d]", player->getId());
         logbook(msg);
 
-        // Refactor into state objects? (depending on complexity this might be better)
         switch (state) {
-            case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL:
-                thinkState_Initial();
-                break;
             case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES:
                 thinkState_PrepareGatherResources();
                 break;
@@ -78,9 +73,10 @@ namespace brains {
         }
 
         if (event.eventType == GAME_EVENT_CREATED) {
-            // since we are awaiting resources, we claim it.
-            if (state == PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES) {
-                if (event.entityType == eBuildType::UNIT) {
+            // since we are assembling resources, listen to these events.
+            if (state == PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES || state == PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES) {
+                // unit got created, not reinforced
+                if (event.entityType == eBuildType::UNIT && !event.isReinforce) {
                     cUnit &entityUnit = unit[event.entityID];
 
                     // this unit has not been assigned to a mission yet
@@ -124,26 +120,21 @@ namespace brains {
         }
     }
 
-    void cPlayerBrainMission::thinkState_Initial() {
-        char msg[255];
-        sprintf(msg, "cPlayerBrainMission::thinkState_Initial(), for player [%d]", player->getId());
-        logbook(msg);
-
-        // determine what kind of attack group we want? (or should be be told upon mission creation?...)
-//        group.push_back((S_groupKind) {
-//                type : QUAD,
-//                required: 3,
-//                ordered: 0,
-//                produced: 0,
-//        });
-
-        state = ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES;
-    }
-
     void cPlayerBrainMission::thinkState_PrepareGatherResources() {
         char msg[255];
         sprintf(msg, "cPlayerBrainMission::thinkState_PrepareGatherResources(), for player [%d]", player->getId());
         logbook(msg);
+
+        memset(msg, 0, sizeof(msg));
+        sprintf(msg, "cPlayerBrainMission::thinkState_PrepareGatherResources(), for player [%d]: this is the army I have so far...", player->getId());
+        logbook(msg);
+
+        for (auto &myUnitId : units) {
+            cUnit &myUnit = unit[myUnitId];
+            memset(msg, 0, sizeof(msg));
+            sprintf(msg, "cPlayerBrainMission::thinkState_PrepareGatherResources(), for player [%d]: Unit %d, type %d (%s)", player->getId(), myUnit.iID, myUnit.iType, myUnit.getUnitType().name);
+            logbook(msg);
+        }
 
         bool somethingLeftToBuild = false;
         for (auto &unitIWant : group) {
@@ -208,6 +199,23 @@ namespace brains {
         char msg[255];
         sprintf(msg, "cPlayerBrainMission::thinkState_Execute(), for player [%d]", player->getId());
         logbook(msg);
+
+        bool teamIsStillAlive = false;
+        for (auto &myUnit : units) {
+            cUnit &aUnit = unit[myUnit];
+            if (aUnit.isValid() &&
+                aUnit.isAssignedMission(this)) { // in case this unit ID was re-spawned...
+                teamIsStillAlive = true;
+                break;
+            }
+        }
+
+        if (!teamIsStillAlive) {
+            // HACK HACK: somehow missed an event?
+            logbook("cPlayerBrainMission::thinkState_Execute(): team is no longer valid / alive. Going to PLAYERBRAINMISSION_STATE_ENDED state. (HACK)");
+            state = PLAYERBRAINMISSION_STATE_ENDED;
+            return;
+        }
 
         for (auto &myUnit : units) {
             cUnit &aUnit = unit[myUnit];
