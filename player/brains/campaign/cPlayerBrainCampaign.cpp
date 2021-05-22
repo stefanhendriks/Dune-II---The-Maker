@@ -102,7 +102,6 @@ namespace brains {
 
     void cPlayerBrainCampaign::onNotify(const s_GameEvent &event) {
         if (event.entityOwnerID == player->getId()) {
-
             // events about my structures
             if (event.entityType == eBuildType::STRUCTURE) {
                 switch (event.eventType) {
@@ -122,14 +121,14 @@ namespace brains {
                         break;
                 }
             }
+        }
 
-            // Notify my missions about creations/destroyed things only (for now?)
-            if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED ||
-                event.eventType == eGameEventType::GAME_EVENT_CREATED) {
-                // notify missions about this event as well, might be important
-                for (auto &mission : missions) {
-                    mission.onNotify(event);
-                }
+        // Notify my missions about creations/destroyed things only (for now?)
+        if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED ||
+            event.eventType == eGameEventType::GAME_EVENT_CREATED ||
+            event.eventType == eGameEventType::GAME_EVENT_DEVIATED) {
+            for (auto &mission : missions) {
+                mission.onNotify(event);
             }
         }
     }

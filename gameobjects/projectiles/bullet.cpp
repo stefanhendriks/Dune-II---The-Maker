@@ -398,21 +398,31 @@ void cBullet::damageGroundUnit(int cell, double factor) const {
         }
     }
 
-    if (isDeviatorGas()) {
+    if (gets_Bullet().deviateProbability > 0 && iOwnerUnit > -1) {
+        // can deviate a unit upon impact
+
         // TODO: Stefan: is this needed?!- aren't we playing sound effects in a more generic way?
+        // TODO: impact sound effect should be configured!?
         play_sound_id_with_distance(SOUND_GAS, distanceBetweenCellAndCenterOfScreen(cell));
 
         // take over unit
-        if (rnd(100) < 40) { // TODO: make property for probability of capturing unit?
-            if (iOwnerUnit > -1) {
-                cUnit &ownerUnit = unit[iOwnerUnit];
+        if (rnd(100) < gets_Bullet().deviateProbability) {
+            cUnit &ownerUnit = unit[iOwnerUnit];
+            if (ownerUnit.isValid()) {
                 groundUnitTakingDamage.iPlayer = ownerUnit.iPlayer;
-            }
+                groundUnitTakingDamage.iGroup = -1;
 
-            groundUnitTakingDamage.iAttackStructure = -1;
-            groundUnitTakingDamage.iAttackUnit = -1;
-            groundUnitTakingDamage.iGroup = -1;
-            groundUnitTakingDamage.iAction = ACTION_GUARD;
+                // send out event that this unit got deviated (and what the new owner ID is)
+                s_GameEvent event {
+                        .eventType = eGameEventType::GAME_EVENT_DEVIATED,
+                        .entityType = eBuildType::UNIT,
+                        .entityID = groundUnitTakingDamage.iID,
+                        .entityOwnerID = groundUnitTakingDamage.iPlayer, // <-- is now changed
+                        .entitySpecificType = groundUnitTakingDamage.iType
+                };
+
+                game.onNotify(event);
+            }
         }
     }
 }

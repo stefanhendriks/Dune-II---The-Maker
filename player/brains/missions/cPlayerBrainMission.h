@@ -136,6 +136,14 @@ namespace brains {
         void thinkState_Execute();
 
         void thinkState_PrepareAwaitResources();
+
+        void removeUnitIdFromListIfPresent(int unitIdToRemove);
+
+        void onEventCreated(const s_GameEvent &event);
+
+        void onEventDestroyed(const s_GameEvent &event);
+
+        void onEventDeviated(const s_GameEvent &event);
     };
 
 }
