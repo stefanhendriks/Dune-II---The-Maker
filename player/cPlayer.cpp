@@ -150,7 +150,7 @@ void cPlayer::setGameControlsContext(cGameControlsContext *theGameControlsContex
     gameControlsContext = theGameControlsContext;
 }
 
-void cPlayer::init(int id, cPlayerBrain *brain) {
+void cPlayer::init(int id, brains::cPlayerBrain *brain) {
     if (id < 0 || id >= MAX_PLAYERS) {
         char msg[255];
         sprintf(msg, "Error initializing player, id %d is not valid.", id);
@@ -679,7 +679,7 @@ void cPlayer::think() {
     }
 }
 
-void cPlayer::setBrain(cPlayerBrain *brain) {
+void cPlayer::setBrain(brains::cPlayerBrain *brain) {
     // delete old brain object if it was set before
     if (brain_) {
         delete brain_;

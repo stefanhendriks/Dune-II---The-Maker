@@ -164,16 +164,16 @@ void cGame::mission_init() {
                 pPlayer.init(i, nullptr);
             } else {
                 if (game.bSkirmish) {
-                    pPlayer.init(i, new cPlayerBrainEmpty(&pPlayer));
+                    pPlayer.init(i, new brains::cPlayerBrainEmpty(&pPlayer));
                 } else {
-                    pPlayer.init(i, new cPlayerBrainScenario(&pPlayer));
+                    pPlayer.init(i, new brains::cPlayerBrainCampaign(&pPlayer));
                     pPlayer.setAutoSlabStructures(true); // campaign based AI's autoslab structures...
                 }
             }
         } else if (i == AI_CPU5) {
-            pPlayer.init(i, new cPlayerBrainFremenSuperWeapon(&pPlayer));
+            pPlayer.init(i, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
         } else if (i == AI_CPU6) {
-            pPlayer.init(i, new cPlayerBrainSandworm(&pPlayer));
+            pPlayer.init(i, new brains::cPlayerBrainSandworm(&pPlayer));
         }
         pPlayer.setHouse(h);
 
