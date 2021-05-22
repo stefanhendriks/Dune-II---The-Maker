@@ -667,6 +667,7 @@ void install_bullets()
     bullets[i].bmp_width = 8*2;
     bullets[i].sound = -1;    // no sound
     bullets[i].explosionSize = 1; // 1 tile sized explosion
+    bullets[i].deviateProbability = 0; // no probability of deviating a unit
   }
 
   // huge rocket/missile
@@ -789,6 +790,7 @@ void install_bullets()
   bullets[BULLET_GAS].max_frames = 1;
   bullets[BULLET_GAS].max_deadframes = 4;
   bullets[BULLET_GAS].sound = SOUND_ROCKET;
+  bullets[BULLET_GAS].deviateProbability = 34; // 1 out of 3(ish) should be effective
 
   // normal turret shot
   bullets[BULLET_TURRET].bmp     = (BITMAP *)gfxdata[BULLET_DOT_MEDIUM].dat;

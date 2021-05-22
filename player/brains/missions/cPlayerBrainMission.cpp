@@ -44,39 +44,73 @@ namespace brains {
 
     void cPlayerBrainMission::onNotify(const s_GameEvent &event) {
         char msg[255];
-        sprintf(msg, "cPlayerBrainMission::onNotify(), for player [%d] -> %s", player->getId(),
-                event.toString(event.eventType));
+        sprintf(msg, "cPlayerBrainMission::onNotify(), for player [%d] -> %s", player->getId(), event.toString(event.eventType));
         logbook(msg);
 
-        if (event.entityOwnerID != player->getId()) {
-            // enemy entity
-            if (targetUnitID > -1 || targetStructureID > -1) {
-                if (event.eventType == GAME_EVENT_DESTROYED) {
-                    // enemy unit or structure destroyed, if it was our target re-think our target then.
-                    if (event.entityType == eBuildType::UNIT) {
-                        if (targetUnitID == event.entityID) {
-                            targetUnitID = -1;
-                            target = -1;
-                            state = PLAYERBRAINMISSION_STATE_SELECT_TARGET;
-                        }
-                    } else if (event.entityType == eBuildType::STRUCTURE) {
-                        if (targetUnitID == event.entityID) {
-                            targetStructureID = -1;
-                            target = -1;
-                            state = PLAYERBRAINMISSION_STATE_SELECT_TARGET;
-                        }
+        switch(event.eventType) {
+            case GAME_EVENT_CREATED:
+                onEventCreated(event);
+                break;
+            case GAME_EVENT_DESTROYED:
+                onEventDestroyed(event);
+                break;
+            case GAME_EVENT_DEVIATED:
+                onEventDeviated(event);
+                break;
+        }
+    }
+
+    void cPlayerBrainMission::onEventDeviated(const s_GameEvent &event) {
+        if (event.entityType == UNIT) {
+            cUnit &entityUnit = unit[event.entityID];
+            if (entityUnit.getPlayer() != player) {
+                // not our unit, if it was in our units list, remove it.
+                removeUnitIdFromListIfPresent(event.entityID);
+            } else {
+                // the unit is ours, if it was a target, then we can forget it.
+                if (targetUnitID == event.entityID) {
+                    // our target got deviated, so it is no longer a threat
+                    targetUnitID = -1;
+                    target = -1;
+                    state = PLAYERBRAINMISSION_STATE_SELECT_TARGET;
+                }
+            }
+        }
+    }
+
+    void cPlayerBrainMission::onEventDestroyed(const s_GameEvent &event) {
+        if (event.entityType == UNIT) {
+            if (event.entityOwnerID == player->getId()) {
+                removeUnitIdFromListIfPresent(event.entityID);
+            } else {
+                if (event.entityOwnerID != player->getId()) {
+                    // our target got destroyed
+                    if (targetUnitID == event.entityID) {
+                        targetUnitID = -1;
+                        target = -1;
+                        state = PLAYERBRAINMISSION_STATE_SELECT_TARGET;
                     }
                 }
             }
-
-            return;
+        } else if (event.entityType == STRUCTURE) {
+            if (event.entityOwnerID != player->getId()) {
+                // our target got destroyed
+                if (targetStructureID == event.entityID) {
+                    targetStructureID = -1;
+                    target = -1;
+                    state = PLAYERBRAINMISSION_STATE_SELECT_TARGET;
+                }
+            }
         }
+    }
 
-        if (event.eventType == GAME_EVENT_CREATED) {
-            // since we are assembling resources, listen to these events.
+    void cPlayerBrainMission::onEventCreated(const s_GameEvent &event) {
+        // since we are assembling resources, listen to these events.
+        if (event.entityOwnerID == player->getId()) {
+            // it is an event about my own stuff
             if (state == PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES || state == PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES) {
                 // unit got created, not reinforced
-                if (event.entityType == eBuildType::UNIT && !event.isReinforce) {
+                if (event.entityType == UNIT && !event.isReinforce) {
                     cUnit &entityUnit = unit[event.entityID];
 
                     // this unit has not been assigned to a mission yet
@@ -100,23 +134,18 @@ namespace brains {
                     }
                 }
             }
-        } else if (event.eventType == GAME_EVENT_DESTROYED) {
-            if (event.entityType == eBuildType::UNIT) {
-                //std::vector<int>::iterator
-                auto position = std::find(units.begin(), units.end(), event.entityID);
-                if (position != units.end()) {
-                    // found unit in our list, so someone of ours got destroyed!
-                    units.erase(position);
-                }
+        }
+    }
 
-                if (units.empty()) {
-                    // group got destroyed, mission ENDED
-                    char msg[255];
-                    sprintf(msg, "cPlayerBrainMission::onNotify(), for player [%d], mission state PLAYERBRAINMISSION_STATE_ENDED", player->getId());
-                    logbook(msg);
-                    state = PLAYERBRAINMISSION_STATE_ENDED;
-                }
-            }
+    /**
+     * Scans our 'units' list for the unitIdToRemove, if present, remove it.
+     * @param unitIdToRemove
+     */
+    void cPlayerBrainMission::removeUnitIdFromListIfPresent(int unitIdToRemove) {
+        auto position = std::find(units.begin(), units.end(), unitIdToRemove);
+        if (position != units.end()) {
+            // found unit in our list, so someone of ours got destroyed!
+            units.erase(position);
         }
     }
 
@@ -189,7 +218,9 @@ namespace brains {
             // enemy structure
             target = theStructure->getCell();
             targetStructureID = theStructure->getStructureId();
-            break;
+            if (rnd(100) < 25) {
+                break; // this way we kind of have randomly another target...
+            }
         }
 
         state = ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_EXECUTE;
@@ -199,6 +230,15 @@ namespace brains {
         char msg[255];
         sprintf(msg, "cPlayerBrainMission::thinkState_Execute(), for player [%d]", player->getId());
         logbook(msg);
+
+        if (units.empty()) {
+            char msg[255];
+            sprintf(msg, "cPlayerBrainMission::thinkState_Execute(), for player [%d], group of units is destroyed. Setting state to PLAYERBRAINMISSION_STATE_ENDED", player->getId());
+            logbook(msg);
+
+            state = PLAYERBRAINMISSION_STATE_ENDED;
+            return;
+        }
 
         bool teamIsStillAlive = false;
         for (auto &myUnit : units) {
