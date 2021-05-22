@@ -43,12 +43,6 @@ namespace brains {
     };
 
     enum ePlayerBrainMissionState {
-
-        /**
-         * Initial state (begin state)
-         */
-        PLAYERBRAINMISSION_STATE_INITIAL,
-
         /**
          * Gather required resources (units), either via selecting existing ones or by building new ones
          */
@@ -134,8 +128,6 @@ namespace brains {
 
         // the desired group of units
         std::vector<S_groupKind> group;
-
-        void thinkState_Initial();
 
         void thinkState_PrepareGatherResources();
 

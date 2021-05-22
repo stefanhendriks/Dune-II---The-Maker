@@ -103,6 +103,9 @@ int frame_count, fps;  // fps and such
 #endif
 
 int handleArguments(int argc, char *argv[]) {
+    game.bDisableAI = false;
+    game.bOneAi = false;
+    game.windowed = false;
 
 	if (argc > 1) {
 		for (int i = 1; i < argc; i++) {
@@ -126,7 +129,8 @@ int handleArguments(int argc, char *argv[]) {
                 bDoDebug = true;
 			} else if (command.compare("-noai") == 0) {
                 game.bDisableAI = true;
-
+            } else if (command.compare("-oneai") == 0) {
+                game.bOneAi = true;
             }
 		}
 	} // arguments passed
