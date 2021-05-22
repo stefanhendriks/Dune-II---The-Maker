@@ -82,6 +82,30 @@ namespace brains {
         if (event.entityType == UNIT) {
             if (event.entityOwnerID == player->getId()) {
                 removeUnitIdFromListIfPresent(event.entityID);
+
+                // it is an event about my own stuff
+                if (state == PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES || state == PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES) {
+                    cUnit &entityUnit = unit[event.entityID];
+
+                    auto position = std::find(units.begin(), units.end(), event.entityID);
+                    if (position != units.end()) {
+                        // found unit in our list, so a unit we produced before and assigned to our
+                        // team got destroyed!
+
+                        // update bookkeeping that we have to produce it again
+                        for (auto &unitIWant : group) {
+                            if (unitIWant.type == event.entitySpecificType) {
+                                // in case we have multiple entries with same type we check if > 0
+                                if (unitIWant.produced > 0) {
+                                    unitIWant.produced--; // decrease produced amount
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    state = PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES;
+                }
             } else {
                 if (event.entityOwnerID != player->getId()) {
                     // our target got destroyed
