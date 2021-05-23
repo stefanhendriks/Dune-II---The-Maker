@@ -1269,10 +1269,12 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, cBuildingListIt
 void cPlayer::onNotify(const s_GameEvent &event) {
     // notify building list updater if it was a structure of mine. So it gets removed from the building list.
     if (event.entityOwnerID == getId()) {
-        if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED) {
-            buildingListUpdater->onStructureDestroyed(event.entitySpecificType);
-        } else if (event.eventType == eGameEventType::GAME_EVENT_CREATED) {
-            buildingListUpdater->onStructureCreated(event.entitySpecificType);
+        if (event.entityType == eBuildType::STRUCTURE) {
+            if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED) {
+                buildingListUpdater->onStructureDestroyed(event.entitySpecificType);
+            } else if (event.eventType == eGameEventType::GAME_EVENT_CREATED) {
+                buildingListUpdater->onStructureCreated(event.entitySpecificType);
+            }
         }
     }
 
