@@ -309,20 +309,13 @@ bool cPlayer::bEnoughSpiceCapacityToStoreCredits() const {
 }
 
 bool cPlayer::bEnoughPower() const {
-    if (game.bSkirmish) {
-        return powerProduce_ >= powerUsage_;
-    }
-
-    // AI cheats on power
-    if (id > 0) {
-        // original dune 2 , the AI cheats.
-        // Unfortunatly D2TM has to cheat too, else the game will
-        // be unplayable.
-        if (iStructures[WINDTRAP] > 0) {
-            // always enough power so it seems?
-            return true;
-        } else {
-            return false; // not enough power
+    if (!game.bSkirmish) {
+        // AI cheats on power
+        if (!m_Human) {
+            // Dune 2 non-skirmish AI cheats; else it will be unplayable in some missions.
+            // the Dune 2 AI basically has always enough power, to make it somewhat more 'fair' lets check for
+            // ConstYard + Windtrap. If both destroyed we are out of power.
+            return hasAtleastOneStructure(WINDTRAP) || hasAtleastOneStructure(CONSTYARD);
         }
     }
 
