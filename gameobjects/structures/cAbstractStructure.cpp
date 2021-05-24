@@ -215,7 +215,7 @@ void cAbstractStructure::die() {
         .eventType = eGameEventType::GAME_EVENT_DESTROYED,
         .entityType = eBuildType::STRUCTURE,
         .entityID = getStructureId(),
-        .entityOwnerID = getPlayerId(),
+        .player = getPlayer(),
         .entitySpecificType = getType()
     };
 
@@ -373,7 +373,7 @@ void cAbstractStructure::decay(int hp) {
             .eventType = eGameEventType::GAME_EVENT_DECAY,
             .entityType = eBuildType::STRUCTURE,
             .entityID = getStructureId(),
-            .entityOwnerID = getPlayerId(),
+            .player = getPlayer(),
             .entitySpecificType = getType()
     };
 
@@ -416,7 +416,7 @@ void cAbstractStructure::damage(int hp) {
                 .eventType = eGameEventType::GAME_EVENT_DAMAGED,
                 .entityType = eBuildType::STRUCTURE,
                 .entityID = getStructureId(),
-                .entityOwnerID = getPlayerId(),
+                .player = getPlayer(),
                 .entitySpecificType = getType()
         };
 

@@ -17,7 +17,7 @@ class cGameControlsContext;
 
 #include "player/brains/cPlayerBrain.h"
 #include "player/brains/cPlayerBrainEmpty.h"
-#include "player/brains/campaign/cPlayerBrainCampaign.h"
+#include "player/brains/cPlayerBrainCampaign.h"
 #include "player/brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
 #include "player/brains/cPlayerBrainSandworm.h"
 

@@ -12,6 +12,8 @@
 
 #include <math.h>
 #include "../../include/d2tmh.h"
+#include "cUnit.h"
+
 
 
 // Path creation definitions / var
@@ -397,7 +399,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
             .eventType = eGameEventType::GAME_EVENT_DESTROYED,
             .entityType = eBuildType::UNIT,
             .entityID = iID,
-            .entityOwnerID = iPlayer,
+            .player = getPlayer(),
             .entitySpecificType = iType
     };
 
@@ -2295,7 +2297,6 @@ void cUnit::think_move() {
 
                 if (iResult == -3) {
                     logbook("I just failed, ugh");
-                    return;
                 }
 
                 // We failed
@@ -2875,6 +2876,14 @@ void cUnit::unAssignMission() {
     mission == nullptr;
 }
 
+int cUnit::getPlayerId() const {
+     return iPlayer;
+}
+
+int cUnit::getType() const {
+    return iType;
+}
+
 
 // return new valid ID
 int UNIT_NEW() {
@@ -3023,8 +3032,9 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
             .eventType = eGameEventType::GAME_EVENT_CREATED,
             .entityType = eBuildType::UNIT,
             .entityID = iNewId,
-            .entityOwnerID = iPlayer,
+            .player = newUnit.getPlayer(),
             .entitySpecificType = unitType,
+            .atCell = -1,
             .isReinforce = isReinforcement
     };
 

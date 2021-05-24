@@ -262,6 +262,15 @@ public:
     bool isAssignedAnyMission();
     bool isAssignedMission(brains::cPlayerBrainMission *aMission);
 
+    int getPlayerId() const;
+
+    /**
+     * Returns type of unit (ie QUAD, TANK, etc)
+     *
+     * @return
+     */
+    int getType() const;
+
 private:
 
     brains::cPlayerBrainMission *mission; // is this unit assigned to a mission?

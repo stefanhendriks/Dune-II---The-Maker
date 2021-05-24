@@ -151,7 +151,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
             .eventType = eGameEventType::GAME_EVENT_CREATED,
             .entityType = eBuildType::STRUCTURE,
             .entityID = str->getStructureId(),
-            .entityOwnerID = iPlayer,
+            .player = str->getPlayer(),
             .entitySpecificType = iStructureType
     };
 

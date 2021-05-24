@@ -9,7 +9,7 @@ namespace brains {
             player), kind(kind), state(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES), brain(brain),
                                                                                                             group(group) {
         units = std::vector<int>();
-        target = -1;
+        targetCell = -1;
         targetStructureID = -1;
         targetUnitID = -1;
     }
@@ -71,7 +71,7 @@ namespace brains {
                 if (targetUnitID == event.entityID) {
                     // our target got deviated, so it is no longer a threat
                     targetUnitID = -1;
-                    target = -1;
+                    targetCell = -1;
                     state = PLAYERBRAINMISSION_STATE_SELECT_TARGET;
                 }
             }
@@ -80,7 +80,7 @@ namespace brains {
 
     void cPlayerBrainMission::onEventDestroyed(const s_GameEvent &event) {
         if (event.entityType == UNIT) {
-            if (event.entityOwnerID == player->getId()) {
+            if (event.player == player) {
                 removeUnitIdFromListIfPresent(event.entityID);
 
                 // it is an event about my own stuff
@@ -107,21 +107,19 @@ namespace brains {
                     state = PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES;
                 }
             } else {
-                if (event.entityOwnerID != player->getId()) {
-                    // our target got destroyed
-                    if (targetUnitID == event.entityID) {
-                        targetUnitID = -1;
-                        target = -1;
-                        state = PLAYERBRAINMISSION_STATE_SELECT_TARGET;
-                    }
+                // our target got destroyed
+                if (targetUnitID == event.entityID) {
+                    targetUnitID = -1;
+                    targetCell = -1;
+                    state = PLAYERBRAINMISSION_STATE_SELECT_TARGET;
                 }
             }
         } else if (event.entityType == STRUCTURE) {
-            if (event.entityOwnerID != player->getId()) {
+            if (event.player != player) {
                 // our target got destroyed
                 if (targetStructureID == event.entityID) {
                     targetStructureID = -1;
-                    target = -1;
+                    targetCell = -1;
                     state = PLAYERBRAINMISSION_STATE_SELECT_TARGET;
                 }
             }
@@ -130,7 +128,7 @@ namespace brains {
 
     void cPlayerBrainMission::onEventCreated(const s_GameEvent &event) {
         // since we are assembling resources, listen to these events.
-        if (event.entityOwnerID == player->getId()) {
+        if (event.player == player) {
             // it is an event about my own stuff
             if (state == PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES || state == PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES) {
                 // unit got created, not reinforced
@@ -233,18 +231,22 @@ namespace brains {
         sprintf(msg, "cPlayerBrainMission::thinkState_SelectTarget(), for player [%d]", player->getId());
         logbook(msg);
 
-        // and execute whatever?? (can merge with select target state?)
-        for (int i = 0; i < MAX_STRUCTURES; i++) {
-            cAbstractStructure *theStructure = structure[i];
-            if (!theStructure) continue;
-            if (!theStructure->isValid()) continue;
-            if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
-            // enemy structure
-            target = theStructure->getCell();
-            targetStructureID = theStructure->getStructureId();
-            if (rnd(100) < 25) {
-                break; // this way we kind of have randomly another target...
+        if (kind == ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK) {
+            // and execute whatever?? (can merge with select target state?)
+            for (int i = 0; i < MAX_STRUCTURES; i++) {
+                cAbstractStructure *theStructure = structure[i];
+                if (!theStructure) continue;
+                if (!theStructure->isValid()) continue;
+                if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+                // enemy structure
+                targetCell = theStructure->getCell();
+                targetStructureID = theStructure->getStructureId();
+                if (rnd(100) < 25) {
+                    break; // this way we kind of have randomly another target...
+                }
             }
+        } else if (kind == ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE) {
+            targetCell = map.getRandomCellWithinMapWithSafeDistanceFromBorder(2);
         }
 
         state = ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_EXECUTE;
@@ -281,14 +283,34 @@ namespace brains {
             return;
         }
 
-        for (auto &myUnit : units) {
-            cUnit &aUnit = unit[myUnit];
-            if (!aUnit.isValid()) {
 
-            } else {
-                if (aUnit.isIdle()) {
+        // executing mission
+        if (kind == ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK) {
+           for (auto &myUnit : units) {
+                cUnit &aUnit = unit[myUnit];
+                if (aUnit.isValid() && aUnit.isIdle()) {
                     logbook("cPlayerBrainMission::thinkState_Execute(): Ordering unit to attack!");
-                    UNIT_ORDER_ATTACK(myUnit, target, -1, targetStructureID, -1);
+                    UNIT_ORDER_ATTACK(myUnit, targetCell, -1, targetStructureID, -1);
+                }
+            }
+        } else if (kind == ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE) {
+            for (auto &myUnit : units) {
+                cUnit &aUnit = unit[myUnit];
+                if (aUnit.isValid()) {
+                    if (aUnit.isIdle()) {
+                        if (map.distance(aUnit.getCell(), targetCell) < 4) {
+                            targetCell = -1;
+                            state = PLAYERBRAINMISSION_STATE_SELECT_TARGET; // select new target
+                        } else {
+                            aUnit.move_to(targetCell);
+                        }
+                    } else {
+                        if (map.distance(aUnit.getCell(), targetCell) < 2) {
+                            // almost there. Select new target.
+                            targetCell = -1;
+                            state = PLAYERBRAINMISSION_STATE_SELECT_TARGET; // select new target
+                        }
+                    }
                 }
             }
         }

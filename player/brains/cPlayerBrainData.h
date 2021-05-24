@@ -3,11 +3,26 @@
 
 namespace brains {
 
-    enum ePlayerBrainScenarioState {
+    enum ePlayerBrainState {
+
+        PLAYERBRAIN_PEACEFUL,
+
+        PLAYERBRAIN_ENEMY_DETECTED,
+
+        PLAYERBRAIN_LOSING,
+
+        PLAYERBRAIN_WINNING
+
+    };
+
+    /**
+     * Initially AI is peaceful as it has not discovered any enemies yet
+     */
+    enum ePlayerBrainCampaignThinkState {
         /**
-         * Initially AI is in waiting mode.
+         * The AI takes a little rest (does nothing) for a certain amount of time.
          */
-        PLAYERBRAIN_SCENARIO_STATE_WAITING,
+        PLAYERBRAIN_SCENARIO_STATE_REST,
 
         /**
          * Scan base, requires any repairs?
@@ -34,6 +49,7 @@ namespace brains {
          * Player is nearly defeated
          */
         PLAYERBRAIN_SCENARIO_STATE_ENDGAME
+
     };
 
     struct S_structurePosition {

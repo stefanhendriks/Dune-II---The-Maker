@@ -46,7 +46,7 @@ void setMusicVolume(int i);
 
 void playMusicByType(int iType);
 void Shimmer(int r, int x, int y);
-int create_bullet(int type, int cell, int goal_cell, int unitWhichShoots, int structureWhichShoots);
+int create_bullet(int type, int cell, int targetCell, int unitWhichShoots, int structureWhichShoots);
 
 int distanceBetweenCellAndCenterOfScreen(int iCell);
 
