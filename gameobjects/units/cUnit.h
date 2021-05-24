@@ -257,10 +257,10 @@ public:
 
     cPlayer *getPlayer();
 
-    void assignMission(brains::cPlayerBrainMission * aMission);
+    void assignMission(int aMission);
     void unAssignMission();
     bool isAssignedAnyMission();
-    bool isAssignedMission(brains::cPlayerBrainMission *aMission);
+    bool isAssignedMission(int aMission);
 
     int getPlayerId() const;
 
@@ -273,7 +273,7 @@ public:
 
 private:
 
-    brains::cPlayerBrainMission *mission; // is this unit assigned to a mission?
+    int mission; // is this unit assigned to a mission?
 
     int iHitPoints;     // hitpoints of unit
 

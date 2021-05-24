@@ -263,8 +263,12 @@ namespace brains {
         } else {
             // no longer peaceful
             if (state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
-                if (missions.empty()) {
-                    // create attack mission
+                // find any attack missions, keep at max 1 (for now?)
+                auto position = std::find_if(missions.begin(), missions.end(), [](const cPlayerBrainMission & mission){ return mission.isAttackingMission(); });
+                if (position != missions.end()) {
+                    // we have an attack mission
+                } else {
+                    // we have no attack mission
                     std::vector<S_groupKind> group = std::vector<S_groupKind>();
                     group.push_back((S_groupKind) {
                             type : QUAD,
