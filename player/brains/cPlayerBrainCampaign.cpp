@@ -6,7 +6,12 @@ namespace brains {
     cPlayerBrainCampaign::cPlayerBrainCampaign(cPlayer *player) : cPlayerBrain(player) {
         state = ePlayerBrainState::PLAYERBRAIN_PEACEFUL;
         thinkState = ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_REST;
-        TIMER_rest = 100;
+        // timer is substracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
+        // 10*60 -> 1 minute. * 4 -> 4 minutes
+        TIMER_rest = (10 * 60) * 4;
+        if (game.bNoAiRest) {
+            TIMER_rest = 10;
+        }
         myBase = std::vector<S_structurePosition>();
         buildOrders = std::vector<S_buildOrder>();
         discoveredEnemyAtCell = std::set<int>();
@@ -404,6 +409,7 @@ namespace brains {
                         if (cUnit.isValid() && !cUnit.getPlayer()->isSameTeamAs(player)) {
                             // found enemy unit
                             state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                            TIMER_rest = 0; // if we where still 'resting' then stop this now.
                             discoveredEnemyAtCell.insert(event.atCell);
                         }
                     } else if (event.entityType == eBuildType::STRUCTURE) {
@@ -411,6 +417,7 @@ namespace brains {
                         if (!pStructure->getPlayer()->isSameTeamAs(player)) {
                             // found enemy structure
                             state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                            TIMER_rest = 0; // if we where still 'resting' then stop this now.
                             discoveredEnemyAtCell.insert(event.atCell);
                         }
                     }
@@ -425,6 +432,8 @@ namespace brains {
                             if (cUnit.isValid() && cUnit.getPlayer() == player) {
                                 // found my unit
                                 state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                                TIMER_rest = 0; // if we where still 'resting' then stop this now.
+                                discoveredEnemyAtCell.insert(cUnit.getCell());
                             }
                         } else if (event.entityType == eBuildType::STRUCTURE) {
                             cAbstractStructure *pStructure = structure[event.entityID];
@@ -432,6 +441,9 @@ namespace brains {
                             if (pStructure->getPlayer() == player) {
                                 // found my structure
                                 state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                                TIMER_rest = 0; // if we where still 'resting' then stop this now.
+//                                discoveredEnemyAtCell.insert(pStructure.getCell());
+                                // TODO: Record we have found an enemy structure...
                             }
                         }
                     } else {

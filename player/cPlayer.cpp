@@ -664,7 +664,7 @@ void cPlayer::dumpCredits(int amount) {
 }
 
 /**
- * Think function (called when AI should do something). Delegates to brain (if set).
+ * Think function (called when AI should do something). Delegates to brain (if set). Called for every 100ms tick.
  */
 void cPlayer::think() {
     if (brain_) {

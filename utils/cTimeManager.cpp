@@ -239,24 +239,26 @@ void cTimeManager::handleTimerGameTime() {
  * units timer is called every 100 ms, try to keep up with that.
  */
 void cTimeManager::handleTimerUnits() {
-
     while (timerUnits > 0) {
         if (game.isState(GAME_PLAYING)) {
             // units think
-            for (int i = 0; i < MAX_UNITS; i++)
-                if (unit[i].isValid()) {
-                    unit[i].think();
+            for (int i = 0; i < MAX_UNITS; i++) {
+                cUnit &cUnit = unit[i];
+                if (cUnit.isValid()) {
+                    cUnit.think();
 
                     // Think attack style
-                    if (unit[i].iAction == ACTION_ATTACK)
-                        unit[i].think_attack();
+                    if (cUnit.iAction == ACTION_ATTACK) {
+                        cUnit.think_attack();
+                    }
                 }
+            }
+
             map.think_minimap();
 
-            // DO NOT THINK FOR HUMAN PLAYER (== 0)
             for (int i = 0; i < MAX_PLAYERS; i++) {
                 players[i].think();
-                aiplayer[i].think();
+                aiplayer[i].think(); // <-- this should be removed!!
             }
 
         }
