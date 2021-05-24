@@ -113,7 +113,11 @@ namespace brains {
 
         bool isEnded() const;
 
+        bool isAttackingMission() const;
+
     private:
+
+        int uniqueIdentifier;
 
         int targetCell;
 

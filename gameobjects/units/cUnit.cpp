@@ -33,7 +33,7 @@ ASTAR temp_map[16384]; // 4096 = 64x64 map, 16384 = 128x128 map
 // Globals on bottom
 
 void cUnit::init(int i) {
-    mission = nullptr;
+    mission = -1;
 
     isReinforcement = false; // set to true by REINFORCE when a carry-all is spawned to bring a 'real' reinforcement. So we can
                              // emit the proper CREATED game event later. :/
@@ -2754,7 +2754,7 @@ bool cUnit::isInfantryUnit() {
 
 cUnit::cUnit() {
     dimensions = nullptr;
-    mission = nullptr;
+    mission = -1;
     init(-1);
 }
 
@@ -2860,20 +2860,20 @@ void cUnit::setCell(int cll) {
     this->posY = map.getAbsoluteYPositionFromCell(cll);
 }
 
-void cUnit::assignMission(brains::cPlayerBrainMission * aMission) {
+void cUnit::assignMission(int aMission) {
     mission = aMission;
 }
 
 bool cUnit::isAssignedAnyMission() {
-    return mission != nullptr;
+    return mission > -1;
 }
 
-bool cUnit::isAssignedMission(brains::cPlayerBrainMission *aMission) {
+bool cUnit::isAssignedMission(int aMission) {
     return mission == aMission;
 }
 
 void cUnit::unAssignMission() {
-    mission == nullptr;
+    mission = -1;
 }
 
 int cUnit::getPlayerId() const {

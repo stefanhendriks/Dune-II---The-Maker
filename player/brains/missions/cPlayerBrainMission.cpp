@@ -12,6 +12,7 @@ namespace brains {
         targetCell = -1;
         targetStructureID = -1;
         targetUnitID = -1;
+        uniqueIdentifier = rnd(50000); // create random nr, low chance that it becomes a duplicate
     }
 
     cPlayerBrainMission::~cPlayerBrainMission() {
@@ -137,15 +138,15 @@ namespace brains {
 
                     // this unit has not been assigned to a mission yet
                     if (!entityUnit.isAssignedAnyMission()) {
-                        // assign this unit to my team and my mission
-                        units.push_back(entityUnit.iID);
-                        entityUnit.assignMission(this);
-
                         // update bookkeeping that we have produced something
                         for (auto &unitIWant : group) {
                             if (unitIWant.type == event.entitySpecificType) {
                                 // in case we have multiple entries with same type we check for produced vs required
                                 if (unitIWant.produced < unitIWant.required) {
+                                    // assign this unit to my team and my mission
+                                    units.push_back(entityUnit.iID);
+                                    entityUnit.assignMission(uniqueIdentifier);
+
                                     unitIWant.produced++; // increase produced amount
                                     break;
                                 }
@@ -270,7 +271,7 @@ namespace brains {
         for (auto &myUnit : units) {
             cUnit &aUnit = unit[myUnit];
             if (aUnit.isValid() &&
-                aUnit.isAssignedMission(this)) { // in case this unit ID was re-spawned...
+                aUnit.isAssignedMission(uniqueIdentifier)) { // in case this unit ID was re-spawned...
                 teamIsStillAlive = true;
                 break;
             }
@@ -325,6 +326,10 @@ namespace brains {
 
     bool cPlayerBrainMission::isEnded() const {
         return state == PLAYERBRAINMISSION_STATE_ENDED;
+    }
+
+    bool cPlayerBrainMission::isAttackingMission() const {
+        return kind == ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK;
     }
 
 }
