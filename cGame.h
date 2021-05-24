@@ -54,6 +54,7 @@ public:
     bool bDisableAI;            // disable AI thinking?
     bool bOneAi;                // disable all but one AI brain? (default == false)
     bool bDisableReinforcements;// disable any reinforcements from scenario ini file?
+    bool bNoAiRest;             // Campaign AI does not have long initial REST time
     bool bPlayMusic;            // play any music?
     bool bMp3;                  // use mp3 files instead of midi
 

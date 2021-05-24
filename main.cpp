@@ -107,6 +107,7 @@ int handleArguments(int argc, char *argv[]) {
     game.bDisableReinforcements = false;
     game.bOneAi = false;
     game.windowed = false;
+    game.bNoAiRest = false;
 
 	if (argc > 1) {
 		for (int i = 1; i < argc; i++) {
@@ -134,6 +135,8 @@ int handleArguments(int argc, char *argv[]) {
                 game.bOneAi = true;
             } else if (command.compare("-noreinforcements") == 0) {
                 game.bDisableReinforcements = true;
+            } else if (command.compare("-noairest") == 0) {
+                game.bNoAiRest = true;
             }
 		}
 	} // arguments passed
