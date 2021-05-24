@@ -1568,16 +1568,16 @@ void playMusicByType(int iType) {
 }
 
 /**
- * Creates a bullet, of type, starting at *cell* and moving towards *goal_cell*. The 'unitWhichShoots' or
+ * Creates a bullet, of type, starting at *cell* and moving towards *targetCell*. The 'unitWhichShoots' or
  * 'structureWhichShoots' is the owner of the bullet.
  * @param type
  * @param cell
- * @param goal_cell
+ * @param targetCell
  * @param unitWhichShoots
  * @param structureWhichShoots
  * @return
  */
-int create_bullet(int type, int cell, int goal_cell, int unitWhichShoots, int structureWhichShoots) {
+int create_bullet(int type, int cell, int targetCell, int unitWhichShoots, int structureWhichShoots) {
     int new_id = -1;
 
     for (int i = 0; i < MAX_BULLETS; i++)
@@ -1602,12 +1602,12 @@ int create_bullet(int type, int cell, int goal_cell, int unitWhichShoots, int st
     newBullet.iOwnerStructure = structureWhichShoots;
     newBullet.iOwnerUnit = unitWhichShoots;
 
-    newBullet.targetX = map.getAbsoluteXPositionFromCellCentered(goal_cell);
-    newBullet.targetY = map.getAbsoluteYPositionFromCellCentered(goal_cell);
+    newBullet.targetX = map.getAbsoluteXPositionFromCellCentered(targetCell);
+    newBullet.targetY = map.getAbsoluteYPositionFromCellCentered(targetCell);
 
-    int structureIdAtGoalCell = map.getCellIdStructuresLayer(goal_cell);
-    if (structureIdAtGoalCell > -1) {
-        cAbstractStructure *pStructure = structure[structureIdAtGoalCell];
+    int structureIdAtTargetCell = map.getCellIdStructuresLayer(targetCell);
+    if (structureIdAtTargetCell > -1) {
+        cAbstractStructure *pStructure = structure[structureIdAtTargetCell];
         if (pStructure && pStructure->isValid()) {
             newBullet.targetX = pStructure->getRandomPosX();
             newBullet.targetY = pStructure->getRandomPosY();
@@ -1622,16 +1622,22 @@ int create_bullet(int type, int cell, int goal_cell, int unitWhichShoots, int st
     if (unitWhichShoots > -1 ) {
         cUnit &cUnit = unit[unitWhichShoots];
         newBullet.iPlayer = cUnit.iPlayer;
-        // if an airborn unit shoots (ie Ornithopter), reveal on map
+        // if an airborn unit shoots (ie Ornithopter), reveal on map for everyone
         if (cUnit.isAirbornUnit()) {
-            map.clear_spot(cell, cUnit.getUnitType().sight);
+            map.clearShroudForAllPlayers(cell, cUnit.getUnitType().sight);
         }
     }
 
     if (structureWhichShoots > -1) {
         cAbstractStructure *pStructure = structure[structureWhichShoots];
         newBullet.iPlayer = pStructure->getOwner();
-        map.clear_spot(cell, pStructure->getS_StructuresType().sight);
+
+        int unitIdAtTargetCell = map.getCellIdStructuresLayer(targetCell);
+        if (unitIdAtTargetCell > -1) {
+            cUnit &unitTarget = unit[unitIdAtTargetCell];
+            // reveal for player which is being attacked
+            map.clearShroud(cell, pStructure->getS_StructuresType().sight, unitTarget.iPlayer);
+        }
     }
 
     if (newBullet.iPlayer < 0) {

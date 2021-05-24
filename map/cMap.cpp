@@ -248,14 +248,13 @@ void cMap::clear_all(int playerId) {
     }
 }
 
-void cMap::clear_spot(int c, int size) {
+void cMap::clearShroudForAllPlayers(int c, int size) {
     for (int p = 0; p < MAX_PLAYERS; p++) {
         clearShroud(c, size, p);
     }
 }
 
 void cMap::clearShroud(int c, int size, int playerId) {
-
     if (!map.isWithinBoundaries(c)) return;
 
     map.setVisibleFor(c, playerId);
@@ -288,24 +287,35 @@ void cMap::clearShroud(int c, int size, int playerId) {
             if (!map.isVisible(cl, playerId)) {
                 map.setVisibleFor(cl, playerId);
 
-                // human unit detected enemy/sandworm, this influences music
-                if (playerId == HUMAN) {
-                    int unitId = map.getCellIdUnitLayer(cl);
-                    if (unitId > -1) {
-                        cUnit &cUnit = unit[unitId];
-                        if (cUnit.isValid() && cUnit.getPlayer()->isSameTeamAs(&players[playerId])) // NOT friend
-                        {
-                            // when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
-                            if (game.iMusicType == MUSIC_PEACE) {
-                                playMusicByType(MUSIC_ATTACK);
+                int structureId = map.getCellIdStructuresLayer(cl);
+                if (structureId > -1) {
+                    cAbstractStructure *pStructure = structure[structureId];
+                    s_GameEvent event {
+                            .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
+                            .entityType = eBuildType::STRUCTURE,
+                            .entityID = structureId,
+                            .player = &players[playerId],
+                            .entitySpecificType = pStructure->getType(),
+                            .atCell = cl
+                    };
 
-                                // warning... bla bla
-                                if (cUnit.iType == SANDWORM)
-                                    play_voice(SOUND_VOICE_10_ATR);  // omg a sandworm, RUN!
-                                else
-                                    play_voice(SOUND_VOICE_09_ATR);  // enemy unit
-                            }
-                        }
+                    game.onNotify(event);
+                }
+
+                int unitId = map.getCellIdUnitLayer(cl);
+                if (unitId > -1) {
+                    cUnit &cUnit = unit[unitId];
+                    if (cUnit.isValid()) {
+                        s_GameEvent event{
+                                .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
+                                .entityType = eBuildType::UNIT,
+                                .entityID = unitId,
+                                .player = &players[playerId],
+                                .entitySpecificType = cUnit.getType(),
+                                .atCell = cl
+                        };
+
+                        game.onNotify(event);
                     }
                 }
             } // make visible

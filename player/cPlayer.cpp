@@ -1261,7 +1261,7 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, cBuildingListIt
 
 void cPlayer::onNotify(const s_GameEvent &event) {
     // notify building list updater if it was a structure of mine. So it gets removed from the building list.
-    if (event.entityOwnerID == getId()) {
+    if (event.player == this) {
         if (event.entityType == eBuildType::STRUCTURE) {
             if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED) {
                 buildingListUpdater->onStructureDestroyed(event.entitySpecificType);
@@ -1279,4 +1279,22 @@ void cPlayer::onNotify(const s_GameEvent &event) {
 
 void cPlayer::setAutoSlabStructures(bool value) {
     autoSlabStructures = value;
+}
+
+int cPlayer::getScoutingUnitType() {
+    // TODO: make this configurable within house props
+    switch (house) {
+        case HARKONNEN:
+            return QUAD;
+        case ATREIDES:
+            return TRIKE;
+        case ORDOS:
+            return RAIDER;
+        case SARDAUKAR:
+            return QUAD;
+        case FREMEN:
+            return TRIKE;
+    }
+
+    return TRIKE;
 }

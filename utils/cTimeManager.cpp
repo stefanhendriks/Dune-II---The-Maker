@@ -51,7 +51,9 @@ void cTimeManager::handleTimerAllegroTimerSeconds() {
         if (game.isState(GAME_PLAYING)) {
             game.paths_created = 0;
 
-            THINK_REINFORCEMENTS();
+            if (!game.bDisableReinforcements) {
+                THINK_REINFORCEMENTS();
+            }
 
             // starports think per second for deployment (if any)
             for (int i = 0; i < MAX_STRUCTURES; i++) {

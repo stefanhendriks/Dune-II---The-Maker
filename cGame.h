@@ -53,6 +53,7 @@ public:
     bool bPlaySound;            // play sound?
     bool bDisableAI;            // disable AI thinking?
     bool bOneAi;                // disable all but one AI brain? (default == false)
+    bool bDisableReinforcements;// disable any reinforcements from scenario ini file?
     bool bPlayMusic;            // play any music?
     bool bMp3;                  // use mp3 files instead of midi
 
@@ -147,6 +148,7 @@ public:
     void setPlayerToInteractFor(cPlayer *pPlayer);
 
     void onNotify(const s_GameEvent &event) override;
+    void onEventDiscovered(const s_GameEvent &event);
 
 private:
     cInteractionManager *_interactionManager;

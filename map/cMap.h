@@ -174,6 +174,14 @@ public:
     void draw_think();
 
     void clear_all(int playerId);
+
+    /**
+     * Clear circular area, with `cell` as center and the circle being of `size` (in cells).
+     * Clears on map for playerId.
+     * @param cell
+     * @param size
+     * @param playerId
+     */
     void clearShroud(int cell, int size, int playerId);
 
     /**
@@ -181,7 +189,7 @@ public:
      * @param c
      * @param size
      */
-    void clear_spot(int cell, int size);
+    void clearShroudForAllPlayers(int cell, int size);
 
     /**
      * returns pointer to cell or nullptr when not valid

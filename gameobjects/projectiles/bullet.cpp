@@ -417,7 +417,7 @@ void cBullet::damageGroundUnit(int cell, double factor) const {
                         .eventType = eGameEventType::GAME_EVENT_DEVIATED,
                         .entityType = eBuildType::UNIT,
                         .entityID = groundUnitTakingDamage.iID,
-                        .entityOwnerID = groundUnitTakingDamage.iPlayer, // <-- is now changed
+                        .player = groundUnitTakingDamage.getPlayer(), // <-- is now changed
                         .entitySpecificType = groundUnitTakingDamage.iType
                 };
 

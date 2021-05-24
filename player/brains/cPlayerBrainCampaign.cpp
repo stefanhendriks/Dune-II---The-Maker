@@ -4,15 +4,19 @@
 namespace brains {
 
     cPlayerBrainCampaign::cPlayerBrainCampaign(cPlayer *player) : cPlayerBrain(player) {
-        state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_WAITING;
-        TIMER_initialDelay = 100;
-        TIMER_scanBase = 50;
+        state = ePlayerBrainState::PLAYERBRAIN_PEACEFUL;
+        thinkState = ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_REST;
+        TIMER_rest = 100;
         myBase = std::vector<S_structurePosition>();
         buildOrders = std::vector<S_buildOrder>();
+        discoveredEnemyAtCell = std::set<int>();
     }
 
     cPlayerBrainCampaign::~cPlayerBrainCampaign() {
-
+        discoveredEnemyAtCell.clear();
+        buildOrders.clear();
+        myBase.clear();
+        missions.clear();
     }
 
 /**
@@ -21,23 +25,23 @@ namespace brains {
     void cPlayerBrainCampaign::think() {
         // for now use a switch statement for this state machine. If we need anything
         // more sophisticated we can always use the State Pattern.
-        switch (state) {
-            case ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_WAITING:
-                thinkState_Waiting();
+        switch (thinkState) {
+            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_REST:
+                thinkState_Rest();
                 return;
-            case ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_SCAN_BASE:
+            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_SCAN_BASE:
                 thinkState_ScanBase();
                 return;
-            case ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_MISSIONS:
+            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_MISSIONS:
                 thinkState_Missions();
                 return;
-            case ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_PROCESS_BUILDORDERS:
+            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_PROCESS_BUILDORDERS:
                 thinkState_ProcessBuildOrders();
                 return;
-            case ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_EVALUATE:
+            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_EVALUATE:
                 thinkState_Evaluate();
                 return;
-            case ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_ENDGAME:
+            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_ENDGAME:
                 thinkState_EndGame();
                 return;
         }
@@ -101,7 +105,7 @@ namespace brains {
     }
 
     void cPlayerBrainCampaign::onNotify(const s_GameEvent &event) {
-        if (event.entityOwnerID == player->getId()) {
+        if (event.player == player) {
             // events about my structures
             if (event.entityType == eBuildType::STRUCTURE) {
                 switch (event.eventType) {
@@ -123,13 +127,13 @@ namespace brains {
             }
         }
 
-        // Notify my missions about creations/destroyed things only (for now?)
-        if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED ||
-            event.eventType == eGameEventType::GAME_EVENT_CREATED ||
-            event.eventType == eGameEventType::GAME_EVENT_DEVIATED) {
-            for (auto &mission : missions) {
-                mission.onNotify(event);
-            }
+        if (event.eventType == eGameEventType::GAME_EVENT_DISCOVERED) {
+            onEntityDiscoveredEvent(event);
+        }
+
+        // notify mission about any kind of event
+        for (auto &mission : missions) {
+            mission.onNotify(event);
         }
     }
 
@@ -210,26 +214,7 @@ namespace brains {
         }
     }
 
-    void cPlayerBrainCampaign::thinkState_Waiting() {
-        TIMER_initialDelay--;
-        if (TIMER_initialDelay > 0) {
-            char msg[255];
-            sprintf(msg, "cPlayerBrainCampaign::thinkState_Waiting(), for player [%d] - Initial Delay still active...",
-                    player->getId());
-            logbook(msg);
-            return;
-        }
-
-        // delay is done, now go into the scan base/missions/evaluate loop
-        state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_SCAN_BASE;
-    }
-
     void cPlayerBrainCampaign::thinkState_ScanBase() {
-        if (TIMER_scanBase > 0) {
-            TIMER_scanBase--;
-            return;
-        }
-
         char msg[255];
         sprintf(msg, "cPlayerBrainCampaign::thinkState_ScanBase(), for player [%d]", player->getId());
         logbook(msg);
@@ -238,8 +223,7 @@ namespace brains {
         // TODO:
 
         // reset timer (for the next time we end up here)
-        TIMER_scanBase = 25;
-        state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_MISSIONS;
+        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_MISSIONS);
     }
 
     void cPlayerBrainCampaign::thinkState_Missions() {
@@ -256,24 +240,44 @@ namespace brains {
                 missions.end()
         );
 
-        if (missions.empty()) {
-            // create attack mission
-            std::vector<S_groupKind> group = std::vector<S_groupKind>();
-            group.push_back((S_groupKind) {
-                type : QUAD,
-                required: 3,
-                ordered: 0,
-                produced: 0,
-            });
-            group.push_back((S_groupKind) {
-                type : TANK,
-                required: 2,
-                ordered: 0,
-                produced: 0,
-            });
+        if (state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
+            // it might send out something to scout?
+            if (missions.empty()) {
+                // add scouting mission
+                std::vector<S_groupKind> group = std::vector<S_groupKind>();
+                group.push_back((S_groupKind) {
+                        type : player->getScoutingUnitType(),
+                        required: 1,
+                        ordered: 0,
+                        produced: 0,
+                });
 
-            cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK, this, group);
-            missions.push_back(someMission);
+                cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group);
+                missions.push_back(someMission);
+            }
+        } else {
+            // no longer peaceful
+            if (state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
+                if (missions.empty()) {
+                    // create attack mission
+                    std::vector<S_groupKind> group = std::vector<S_groupKind>();
+                    group.push_back((S_groupKind) {
+                            type : QUAD,
+                            required: 3,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                    group.push_back((S_groupKind) {
+                            type : TANK,
+                            required: 2,
+                            ordered: 0,
+                            produced: 0,
+                    });
+
+                    cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK, this, group);
+                    missions.push_back(someMission);
+                }
+            }
         }
 
         // all missions are allowed to think now
@@ -281,7 +285,7 @@ namespace brains {
             mission.think();
         }
 
-        state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_PROCESS_BUILDORDERS;
+        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_PROCESS_BUILDORDERS);
     }
 
     void cPlayerBrainCampaign::thinkState_Evaluate() {
@@ -291,7 +295,7 @@ namespace brains {
 
         if (player->getAmountOfStructuresForType(CONSTYARD) == 0) {
             // no constyards, endgame
-            state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_ENDGAME;
+            changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_ENDGAME);
             return;
         }
 
@@ -299,8 +303,9 @@ namespace brains {
         // up/downplay some priorities and re-sort?
         // Example: Money is short, Harvester is in build queue, but not high in priority?
 
-        // loop to scan_base which has a delay of 250 ticks
-        state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_SCAN_BASE;
+        // take a rest, before going into a new loop again
+        TIMER_rest = 100;
+        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_REST);
     }
 
     void cPlayerBrainCampaign::thinkState_EndGame() {
@@ -363,7 +368,81 @@ namespace brains {
             }
         }
 
-        state = ePlayerBrainScenarioState::PLAYERBRAIN_SCENARIO_STATE_EVALUATE;
+        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_EVALUATE);
     }
 
+    void cPlayerBrainCampaign::changeThinkStateTo(const ePlayerBrainCampaignThinkState& newState) {
+        char msg[255];
+        sprintf(msg, "cPlayerBrainCampaign::changeThinkStateTo(), for player [%d] - from %s to %s", player->getId(),
+                ePlayerBrainCampaignThinkStateString(thinkState),
+                ePlayerBrainCampaignThinkStateString(newState));
+        logbook(msg);
+        this->thinkState = newState;
+    }
+
+    void cPlayerBrainCampaign::thinkState_Rest() {
+        TIMER_rest--;
+        if (TIMER_rest > 0) {
+            char msg[255];
+            sprintf(msg, "cPlayerBrainCampaign::thinkState_Rest(), for player [%d] - rest %d", player->getId(), TIMER_rest);
+            logbook(msg);
+            return;
+        }
+
+        // resting is done, now go into the scan base/missions/evaluate loop
+        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_SCAN_BASE);
+    }
+
+    void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event) {
+        if (state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
+            bool wormsign = event.entityType == eBuildType::UNIT && event.entitySpecificType == SANDWORM;
+            if (!wormsign) {
+                if (event.player == player) {
+                    // i discovered something
+                    if (event.entityType == eBuildType::UNIT) {
+                        cUnit &cUnit = unit[event.entityID];
+                        if (cUnit.isValid() && !cUnit.getPlayer()->isSameTeamAs(player)) {
+                            // found enemy unit
+                            state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                            discoveredEnemyAtCell.insert(event.atCell);
+                        }
+                    } else if (event.entityType == eBuildType::STRUCTURE) {
+                        cAbstractStructure *pStructure = structure[event.entityID];
+                        if (!pStructure->getPlayer()->isSameTeamAs(player)) {
+                            // found enemy structure
+                            state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                            discoveredEnemyAtCell.insert(event.atCell);
+                        }
+                    }
+                } else {
+                    // event.player == player who discovered something
+                    if (event.player == &players[AI_WORM]) {
+                        // ignore anything that the WORM AI player detected.
+                    } else if (!event.player->isSameTeamAs(player)) {
+                        if (event.entityType == eBuildType::UNIT) {
+                            cUnit &cUnit = unit[event.entityID];
+                            // the other player discovered a unit of mine
+                            if (cUnit.isValid() && cUnit.getPlayer() == player) {
+                                // found my unit
+                                state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                            }
+                        } else if (event.entityType == eBuildType::STRUCTURE) {
+                            cAbstractStructure *pStructure = structure[event.entityID];
+                            // the other player discovered a structure of mine
+                            if (pStructure->getPlayer() == player) {
+                                // found my structure
+                                state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
+                            }
+                        }
+                    } else {
+                        // discovered teammate... (do something else?)
+                    }
+                }
+            } else {
+
+            }
+        } else {
+            // what to do?
+        }
+    }
 }

@@ -21,6 +21,11 @@ namespace brains {
         PLAYERBRAINMISSION_KIND_EXPLORE,
 
         /**
+         * Improve economy (ie, build Carry-All's, harvesters, etc)
+         */
+        PLAYERBRAINMISSION_IMPROVE_ECONOMY,
+
+        /**
          * Explore the map, find spice patch(es)
          */
         PLAYERBRAINMISSION_KIND_FIND_SPICE,
@@ -110,7 +115,7 @@ namespace brains {
 
     private:
 
-        int target;
+        int targetCell;
 
         int targetStructureID;
         int targetUnitID;

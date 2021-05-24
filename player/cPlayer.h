@@ -261,6 +261,8 @@ public:
 
     void onNotify(const s_GameEvent &event);
 
+    int getScoutingUnitType();
+
 private:
     int getRGBColorForHouse(int houseId);
 

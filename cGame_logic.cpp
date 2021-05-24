@@ -2316,11 +2316,49 @@ void cGame::onNotify(const s_GameEvent &event) {
         players[i].onNotify(event);
     }
 
-//    switch (event.eventType) {
-//        case eGameEventType::GAME_EVENT_DESTROYED:
-//            return;
-//        default:
-//        return;
-//    }
+    switch (event.eventType) {
+        case eGameEventType::GAME_EVENT_DISCOVERED:
+            onEventDiscovered(event);
+            return;
+        default:
+        return;
+    }
 
+}
+
+void cGame::onEventDiscovered(const s_GameEvent &event) {
+    int voiceId = -1;
+
+    // when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
+    if (game.iMusicType == MUSIC_PEACE) {
+        bool triggerMusic = false;
+
+        if (event.entityType == eBuildType::UNIT) {
+            cUnit &cUnit = unit[event.entityID];
+
+            if (!event.player->isSameTeamAs(&players[HUMAN])) {
+                triggerMusic = true;
+                if (cUnit.iType == SANDWORM) {
+                    voiceId = SOUND_VOICE_10_ATR;
+                } else {
+                    voiceId = SOUND_VOICE_09_ATR;
+                }
+            }
+        } else if (event.entityType == eBuildType::STRUCTURE) {
+            if (!event.player->isSameTeamAs(&players[HUMAN])) {
+                // only things that can harm us will trigger attack music?
+                if (event.entitySpecificType == RTURRET || event.entitySpecificType == TURRET) {
+                    triggerMusic = true;
+                }
+            }
+        }
+
+        if (triggerMusic) {
+            playMusicByType(MUSIC_ATTACK);
+        }
+    }
+
+    if (voiceId > -1) {
+        play_voice(voiceId);
+    }
 }
