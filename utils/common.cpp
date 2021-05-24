@@ -1081,7 +1081,6 @@ void install_structures() {
     structures[i].sight = 1;
     structures[i].bmp_width = 32*2;
     structures[i].bmp_height = 32*2;
-    structures[i].sight = 5;
     structures[i].hp = 1; // low health
 	structures[i].fixhp = -1; // no fixing hp yet
     structures[i].fadecol = -1;
@@ -1568,16 +1567,16 @@ void playMusicByType(int iType) {
 }
 
 /**
- * Creates a bullet, of type, starting at *cell* and moving towards *targetCell*. The 'unitWhichShoots' or
+ * Creates a bullet, of type, starting at *fromCell* and moving towards *targetCell*. The 'unitWhichShoots' or
  * 'structureWhichShoots' is the owner of the bullet.
  * @param type
- * @param cell
+ * @param fromCell
  * @param targetCell
  * @param unitWhichShoots
  * @param structureWhichShoots
  * @return
  */
-int create_bullet(int type, int cell, int targetCell, int unitWhichShoots, int structureWhichShoots) {
+int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots) {
     int new_id = -1;
 
     for (int i = 0; i < MAX_BULLETS; i++)
@@ -1597,8 +1596,8 @@ int create_bullet(int type, int cell, int targetCell, int unitWhichShoots, int s
     newBullet.init();
 
     newBullet.iType = type;
-    newBullet.posX = map.getAbsoluteXPositionFromCellCentered(cell);
-    newBullet.posY = map.getAbsoluteYPositionFromCellCentered(cell);
+    newBullet.posX = map.getAbsoluteXPositionFromCellCentered(fromCell);
+    newBullet.posY = map.getAbsoluteYPositionFromCellCentered(fromCell);
     newBullet.iOwnerStructure = structureWhichShoots;
     newBullet.iOwnerUnit = unitWhichShoots;
 
@@ -1624,7 +1623,7 @@ int create_bullet(int type, int cell, int targetCell, int unitWhichShoots, int s
         newBullet.iPlayer = cUnit.iPlayer;
         // if an airborn unit shoots (ie Ornithopter), reveal on map for everyone
         if (cUnit.isAirbornUnit()) {
-            map.clearShroudForAllPlayers(cell, cUnit.getUnitType().sight);
+            map.clearShroudForAllPlayers(fromCell, 2);
         }
     }
 
@@ -1632,11 +1631,11 @@ int create_bullet(int type, int cell, int targetCell, int unitWhichShoots, int s
         cAbstractStructure *pStructure = structure[structureWhichShoots];
         newBullet.iPlayer = pStructure->getOwner();
 
-        int unitIdAtTargetCell = map.getCellIdStructuresLayer(targetCell);
+        int unitIdAtTargetCell = map.getCellIdUnitLayer(targetCell);
         if (unitIdAtTargetCell > -1) {
             cUnit &unitTarget = unit[unitIdAtTargetCell];
             // reveal for player which is being attacked
-            map.clearShroud(cell, pStructure->getS_StructuresType().sight, unitTarget.iPlayer);
+            map.clearShroud(fromCell, 2, unitTarget.iPlayer);
         }
     }
 
@@ -1646,7 +1645,7 @@ int create_bullet(int type, int cell, int targetCell, int unitWhichShoots, int s
 
     // play sound (when we have one)
     if (bullets[type].sound > -1)
-        play_sound_id_with_distance(bullets[type].sound, distanceBetweenCellAndCenterOfScreen(cell));
+        play_sound_id_with_distance(bullets[type].sound, distanceBetweenCellAndCenterOfScreen(fromCell));
 
     return new_id;
 }
