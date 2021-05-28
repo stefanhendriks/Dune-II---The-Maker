@@ -3,49 +3,14 @@
 
 #include <vector>
 #include "player/brains/cPlayerBrainData.h"
+#include "cPlayerBrainMissionKind.h"
+
 #include <observers/cScenarioObserver.h>
 
 namespace brains {
 
     class cPlayerBrainCampaign;
-
-    enum ePlayerBrainMissionKind {
-        /**
-         * Attack enemy player (generally)
-         */
-        PLAYERBRAINMISSION_KIND_ATTACK,
-
-        /**
-         * Explore the map
-         */
-        PLAYERBRAINMISSION_KIND_EXPLORE,
-
-        /**
-         * Improve economy (ie, build Carry-All's, harvesters, etc)
-         */
-        PLAYERBRAINMISSION_IMPROVE_ECONOMY,
-
-        /**
-         * Explore the map, find spice patch(es)
-         */
-        PLAYERBRAINMISSION_KIND_FIND_SPICE,
-
-        /**
-         * Attack enemy player (generally) from the air
-         */
-        PLAYERBRAINMISSION_KIND_AIRSTRIKE,
-
-        /**
-         * Defend area?
-         */
-        PLAYERBRAINMISSION_KIND_DEFEND,
-
-        /**
-         * Harass enemy ... (harvesters?)
-         */
-        PLAYERBRAINMISSION_KIND_HARASS,
-
-    };
+    class cPlayerBrainMissionKind;
 
     enum ePlayerBrainMissionState {
         /**
@@ -64,7 +29,7 @@ namespace brains {
         PLAYERBRAINMISSION_STATE_SELECT_TARGET,
 
         /**
-         * Start executing the mission
+         * Start executing the "Mission kind"
          */
         PLAYERBRAINMISSION_STATE_EXECUTE,
 
@@ -98,6 +63,12 @@ namespace brains {
     };
 
 
+    /**
+     * A mission is something where resources are gathered, and used for some kind of action to produce a desired
+     * result. The cPlayerBrainMission takes care of gathering resources and when needed executing the actual
+     * mission (the mission "kind"). The mission kind is a separate object that is constructed based on the
+     * ePlayerBrainMissionKind enum.
+     */
     class cPlayerBrainMission : public cScenarioObserver {
 
     public:
@@ -107,6 +78,19 @@ namespace brains {
 
         ~cPlayerBrainMission() override;
 
+        /**
+         * Copy constructor
+         * @param src
+         */
+        cPlayerBrainMission(const cPlayerBrainMission &src);
+
+        /**
+         * Assignment operator
+         * @param rhs
+         * @return
+         */
+        cPlayerBrainMission& operator=(const cPlayerBrainMission &rhs);
+
         void think();
 
         void onNotify(const s_GameEvent &event);
@@ -115,18 +99,19 @@ namespace brains {
 
         bool isAttackingMission() const;
 
+        void changeState(ePlayerBrainMissionState newState);
+
+        std::vector<int> & getUnits();
+
     private:
 
         int uniqueIdentifier;
 
-        int targetCell;
-
-        int targetStructureID;
-        int targetUnitID;
-
         cPlayer *player;
 
         ePlayerBrainMissionKind kind;
+
+        cPlayerBrainMissionKind *missionKind;
 
         cPlayerBrainCampaign *brain;
 
@@ -153,6 +138,20 @@ namespace brains {
         void onEventDestroyed(const s_GameEvent &event);
 
         void onEventDeviated(const s_GameEvent &event);
+
+        static const char* ePlayerBrainMissionStateString(const ePlayerBrainMissionState &state) {
+            switch (state) {
+                case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_SELECT_TARGET: return "PLAYERBRAINMISSION_STATE_SELECT_TARGET";
+                case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_ENDED: return "PLAYERBRAINMISSION_STATE_ENDED";
+                case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES: return "PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES";
+                case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES: return "PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES";
+                case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_EXECUTE: return "PLAYERBRAINMISSION_STATE_EXECUTE";
+                default:
+                    assert(false);
+                    break;
+            }
+            return "";
+        }
     };
 
 }
