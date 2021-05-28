@@ -15,6 +15,7 @@ class cGameControlsContext;
 // statistics
 #include "cPlayerStatistics.h"
 
+// brains
 #include "player/brains/cPlayerBrain.h"
 #include "player/brains/cPlayerBrainEmpty.h"
 #include "player/brains/cPlayerBrainCampaign.h"
