@@ -356,6 +356,7 @@ namespace brains {
                     produced: 0,
             });
             addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10));
+            return;
         }
 
         // MISSION 4
@@ -407,6 +408,101 @@ namespace brains {
                 });
                 addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10));
             }
+            return;
+        }
+
+        // MISSION 5
+        if (game.iMission == 5) {
+            std::vector<S_groupKind> group = std::vector<S_groupKind>();
+            if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
+                group.push_back((S_groupKind) {
+                        type : trikeKind,
+                        required: 1,
+                        ordered: 0,
+                        produced: 0,
+                });
+                group.push_back((S_groupKind) {
+                        type : QUAD,
+                        required: 1 + rnd(2),
+                        ordered: 0,
+                        produced: 0,
+                });
+            } else {
+                group.push_back((S_groupKind) {
+                        type : QUAD,
+                        required: 1 + rnd(2),
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15));
+
+            group = std::vector<S_groupKind>();
+            if (rnd(100) < 50) {
+                group.push_back((S_groupKind) {
+                        type : QUAD,
+                        required: 1,
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+            if (player->getHouse() != ORDOS) {
+                if (rnd(100) < 75) {
+                    group.push_back((S_groupKind) {
+                            type : LAUNCHER,
+                            required: 1 + rnd(2),
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+                group.push_back((S_groupKind) {
+                        type : TANK,
+                        required: 1 + rnd(2),
+                        ordered: 0,
+                        produced: 0,
+                });
+            } else {
+                group.push_back((S_groupKind) {
+                        type : TANK,
+                        required: 4 + rnd(2),
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15));
+
+            // 25% chance we want another different attack force
+            if (rnd(100) < 25) {
+                group = std::vector<S_groupKind>();
+                group.push_back((S_groupKind) {
+                        type : TANK,
+                        required: 2,
+                        ordered: 0,
+                        produced: 0,
+                });
+                if (player->getHouse() != ORDOS) {
+                    if (rnd(100) < 75) {
+                        group.push_back((S_groupKind) {
+                                type : LAUNCHER,
+                                required: 1 + rnd(2),
+                                ordered: 0,
+                                produced: 0,
+                        });
+                    }
+                }
+                addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10));
+            }
+            group = std::vector<S_groupKind>();
+            if (rnd(100) < 50) {
+                group.push_back((S_groupKind) {
+                        type : infantryKind,
+                        required: 2 + rnd(4),
+                        ordered: 0,
+                        produced: 0,
+                });
+                addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10));
+            }
+            return;
         }
     }
 
