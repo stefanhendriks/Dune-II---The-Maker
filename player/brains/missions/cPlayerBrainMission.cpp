@@ -11,9 +11,13 @@
 namespace brains {
 
     cPlayerBrainMission::cPlayerBrainMission(cPlayer *player, const ePlayerBrainMissionKind &kind,
-                                             cPlayerBrainCampaign *brain, std::vector<S_groupKind> group) : player(
-            player), kind(kind), state(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES), brain(brain),
-                                                                                                            group(group) {
+                                             cPlayerBrainCampaign *brain, std::vector<S_groupKind> group, int initialDelay) :
+                                             player(player),
+                                             kind(kind),
+                                             state(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY),
+                                             brain(brain),
+                                             group(group),
+                                             TIMER_delay(initialDelay) {
         units = std::vector<int>();
         uniqueIdentifier = rnd(50000); // create random nr, low chance that it becomes a duplicate
 
@@ -45,6 +49,9 @@ namespace brains {
         logbook(msg);
 
         switch (state) {
+            case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY:
+                thinkState_InitialDelay();
+                break;
             case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES:
                 thinkState_PrepareGatherResources();
                 break;
@@ -170,6 +177,21 @@ namespace brains {
             // found unit in our list, so someone of ours got destroyed!
             units.erase(position);
         }
+    }
+
+    void cPlayerBrainMission::thinkState_InitialDelay() {
+        char msg[255];
+        sprintf(msg, "cPlayerBrainMission::thinkState_InitialDelay(), for player [%d], delay = %d", player->getId(), TIMER_delay);
+        logbook(msg);
+        if (TIMER_delay > 0) {
+            TIMER_delay--;
+        }
+
+        if (TIMER_delay < 1) {
+            // start gathering resources now
+            changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES);
+        }
+
     }
 
     void cPlayerBrainMission::thinkState_PrepareGatherResources() {
@@ -316,6 +338,7 @@ namespace brains {
         this->group = rhs.group;
         this->brain = rhs.brain;
         this->kind = rhs.kind;
+        this->TIMER_delay = rhs.TIMER_delay;
 
         return *this;
     }
@@ -328,7 +351,8 @@ namespace brains {
         units(src.units),
         group(src.group),
         brain(src.brain),
-        kind(src.kind)
+        kind(src.kind),
+        TIMER_delay(src.TIMER_delay)
     {
 
     }

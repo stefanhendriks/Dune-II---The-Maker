@@ -90,6 +90,10 @@ namespace brains {
         void thinkState_Rest();
 
         void onEntityDiscoveredEvent(const s_GameEvent &event);
+
+        void produceMissions();
+
+        void addMission(ePlayerBrainMissionKind kind, const std::vector<S_groupKind> &group, int initialDelay);
     };
 
 }
