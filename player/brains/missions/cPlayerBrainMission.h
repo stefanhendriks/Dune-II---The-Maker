@@ -14,6 +14,11 @@ namespace brains {
 
     enum ePlayerBrainMissionState {
         /**
+         * Use an initial delay to play with the synchronisity between missions
+         */
+        PLAYERBRAINMISSION_STATE_INITIAL_DELAY,
+
+        /**
          * Gather required resources (units), either via selecting existing ones or by building new ones
          */
         PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES,
@@ -74,7 +79,7 @@ namespace brains {
     public:
 
         cPlayerBrainMission(cPlayer *player, const ePlayerBrainMissionKind &kind, cPlayerBrainCampaign *brain,
-                            std::vector<S_groupKind> group);
+                            std::vector<S_groupKind> group, int initialDelay);
 
         ~cPlayerBrainMission() override;
 
@@ -105,6 +110,8 @@ namespace brains {
 
     private:
 
+        int TIMER_delay;
+
         int uniqueIdentifier;
 
         cPlayer *player;
@@ -122,6 +129,8 @@ namespace brains {
 
         // the desired group of units
         std::vector<S_groupKind> group;
+
+        void thinkState_InitialDelay();
 
         void thinkState_PrepareGatherResources();
 
@@ -146,6 +155,7 @@ namespace brains {
                 case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES: return "PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES";
                 case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES: return "PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES";
                 case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_EXECUTE: return "PLAYERBRAINMISSION_STATE_EXECUTE";
+                case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY: return "PLAYERBRAINMISSION_STATE_INITIAL_DELAY";
                 default:
                     assert(false);
                     break;
