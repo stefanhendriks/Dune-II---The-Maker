@@ -308,14 +308,14 @@ namespace brains {
         if (this == &rhs)
             return *this;
 
-        cPlayerBrainMission tmp(rhs);
-        this->missionKind = tmp.missionKind;
-        this->player = tmp.player;
-        this->units = tmp.units;
-        this->uniqueIdentifier = tmp.uniqueIdentifier;
-        this->state = tmp.state;
-        this->group = tmp.group;
-        this->brain = tmp.brain;
+        this->player = rhs.player;
+        this->state = rhs.state;
+        this->missionKind = rhs.missionKind->clone(player, this);
+        this->uniqueIdentifier = rhs.uniqueIdentifier;
+        this->units = rhs.units;
+        this->group = rhs.group;
+        this->brain = rhs.brain;
+        this->kind = rhs.kind;
 
         return *this;
     }
@@ -327,7 +327,8 @@ namespace brains {
         uniqueIdentifier(src.uniqueIdentifier),
         units(src.units),
         group(src.group),
-        brain(src.brain)
+        brain(src.brain),
+        kind(src.kind)
     {
 
     }
