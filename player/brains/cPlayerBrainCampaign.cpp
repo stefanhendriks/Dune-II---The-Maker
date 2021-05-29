@@ -244,6 +244,7 @@ namespace brains {
                         [](cPlayerBrainMission m) { return m.isEnded(); }),
                 missions.end()
         );
+        // TODO: remember which missions are deleted and replenish those 'kinds' ?
 
         if (state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
             // it might send out something to scout?
@@ -268,6 +269,8 @@ namespace brains {
                 if (position != missions.end()) {
                     // we have an attack mission
                 } else {
+                    // TODO: this can be smarter, ie when a certain mission is gone, then this should be called
+                    // and only replenish missions that have been 'ended'
                     produceMissions();
                 }
             }
