@@ -421,7 +421,7 @@ namespace brains {
                         ordered: 0,
                         produced: 0,
                 });
-                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 3);
+                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
             } else {
                 // we already have mission 4, meaning we have the additional harvester.
                 // If we have only 1 harvester than that means the harvester we got
