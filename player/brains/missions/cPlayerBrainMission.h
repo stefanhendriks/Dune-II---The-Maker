@@ -79,7 +79,7 @@ namespace brains {
     public:
 
         cPlayerBrainMission(cPlayer *player, const ePlayerBrainMissionKind &kind, cPlayerBrainCampaign *brain,
-                            std::vector<S_groupKind> group, int initialDelay);
+                            std::vector<S_groupKind> group, int initialDelay, int uniqueId);
 
         ~cPlayerBrainMission() override;
 
@@ -107,6 +107,10 @@ namespace brains {
         void changeState(ePlayerBrainMissionState newState);
 
         std::vector<int> & getUnits();
+
+        int getUniqueId() const {
+            return uniqueIdentifier;
+        }
 
     private:
 

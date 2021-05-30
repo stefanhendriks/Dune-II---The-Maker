@@ -11,15 +11,16 @@
 namespace brains {
 
     cPlayerBrainMission::cPlayerBrainMission(cPlayer *player, const ePlayerBrainMissionKind &kind,
-                                             cPlayerBrainCampaign *brain, std::vector<S_groupKind> group, int initialDelay) :
+                                             cPlayerBrainCampaign *brain, std::vector<S_groupKind> group,
+                                             int initialDelay, int uniqueId) :
                                              player(player),
                                              kind(kind),
                                              state(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY),
                                              brain(brain),
                                              group(group),
-                                             TIMER_delay(initialDelay) {
+                                             TIMER_delay(initialDelay),
+                                             uniqueIdentifier(uniqueId) {
         units = std::vector<int>();
-        uniqueIdentifier = rnd(50000); // create random nr, low chance that it becomes a duplicate
 
         missionKind = nullptr;
         switch (kind) {
@@ -29,11 +30,6 @@ namespace brains {
             case PLAYERBRAINMISSION_KIND_EXPLORE:
                 missionKind = new cPlayerBrainMissionKindExplore(player, this);
                 break;
-        }
-
-        int a = 10;
-        if (missionKind) {
-            missionKind->think_SelectTarget();
         }
     }
 
@@ -332,7 +328,11 @@ namespace brains {
 
         this->player = rhs.player;
         this->state = rhs.state;
-        this->missionKind = rhs.missionKind->clone(player, this);
+        if (rhs.missionKind) {
+            this->missionKind = rhs.missionKind->clone(player, this);
+        } else {
+            this->missionKind = nullptr;
+        }
         this->uniqueIdentifier = rhs.uniqueIdentifier;
         this->units = rhs.units;
         this->group = rhs.group;
@@ -346,7 +346,6 @@ namespace brains {
     cPlayerBrainMission::cPlayerBrainMission(const cPlayerBrainMission &src) :
         player(src.player),
         state(src.state),
-        missionKind(src.missionKind->clone(src.player, this)),
         uniqueIdentifier(src.uniqueIdentifier),
         units(src.units),
         group(src.group),
@@ -354,7 +353,11 @@ namespace brains {
         kind(src.kind),
         TIMER_delay(src.TIMER_delay)
     {
-
+        if (src.missionKind) {
+            missionKind = src.missionKind->clone(src.player, this);
+        } else {
+            missionKind = nullptr;
+        }
     }
 
 }
