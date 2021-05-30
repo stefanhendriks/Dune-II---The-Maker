@@ -410,17 +410,36 @@ namespace brains {
                 addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
             }
         }
-        // build additional harvester
-        if (!hasMission(4)) {
-            group = std::vector<S_groupKind>();
-            group.push_back((S_groupKind) {
-                    type : HARVESTER,
-                    required: 1,
-                    ordered: 0,
-                    produced: 0,
-            });
-            addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
-        }
+        // build additional harvester (we want 2 harvesters in total)
+        int harvesters = player->getAmountOfUnitsForType(HARVESTER);
+        if (harvesters < 2) {
+            if (!hasMission(4)) {
+                group = std::vector<S_groupKind>();
+                group.push_back((S_groupKind) {
+                        type : HARVESTER,
+                        required: 1,
+                        ordered: 0,
+                        produced: 0,
+                });
+                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 3);
+            } else {
+                // we already have mission 4, meaning we have the additional harvester.
+                // If we have only 1 harvester than that means the harvester we got
+                // from our refinery got destroyed. Rebuild that one; and assign that to mission "4".
+                if (!hasMission(5)) {
+                    if (harvesters > 0) {
+                        group = std::vector<S_groupKind>();
+                        group.push_back((S_groupKind) {
+                                type : HARVESTER,
+                                required: 1,
+                                ordered: 0,
+                                produced: 0,
+                        });
+                        // different mission ID
+                        addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 5);
+                    }
+                }
+            }
     }
 
     void cPlayerBrainCampaign::produceLevel4Missions(int trikeKind, int infantryKind) {
@@ -480,14 +499,12 @@ namespace brains {
 
         // build additional harvester (we want 2 harvesters in total)
         int harvesters = player->getAmountOfUnitsForType(HARVESTER);
-        int desiredAmountHarvesters = 2;
         if (harvesters < 2) {
-            int amountToBuild = desiredAmountHarvesters - harvesters;
             if (!hasMission(3)) {
                 group = std::vector<S_groupKind>();
                 group.push_back((S_groupKind) {
                         type : HARVESTER,
-                        required: amountToBuild,
+                        required: 1,
                         ordered: 0,
                         produced: 0,
                 });
@@ -496,16 +513,18 @@ namespace brains {
                 // we already have mission 3, meaning we have the additional harvester.
                 // If we have only 1 harvester than that means the harvester we got
                 // from our refinery got destroyed. Rebuild that one; and assign that to mission "4".
-                if (harvesters > 0) {
-                    group = std::vector<S_groupKind>();
-                    group.push_back((S_groupKind) {
-                            type : HARVESTER,
-                            required: amountToBuild,
-                            ordered: 0,
-                            produced: 0,
-                    });
-                    // different mission ID
-                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
+                if (!hasMission(4)) {
+                    if (harvesters > 0) {
+                        group = std::vector<S_groupKind>();
+                        group.push_back((S_groupKind) {
+                                type : HARVESTER,
+                                required: 1,
+                                ordered: 0,
+                                produced: 0,
+                        });
+                        // different mission ID
+                        addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
+                    }
                 }
             }
         }
