@@ -440,6 +440,7 @@ namespace brains {
                     }
                 }
             }
+        }
     }
 
     void cPlayerBrainCampaign::produceLevel4Missions(int trikeKind, int infantryKind) {
