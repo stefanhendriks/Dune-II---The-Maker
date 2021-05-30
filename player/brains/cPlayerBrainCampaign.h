@@ -93,7 +93,18 @@ namespace brains {
 
         void produceMissions();
 
-        void addMission(ePlayerBrainMissionKind kind, const std::vector<S_groupKind> &group, int initialDelay);
+        void addMission(ePlayerBrainMissionKind kind, const std::vector<S_groupKind> &group, int initialDelay,
+                        int id);
+
+        bool hasMission(const int id);
+
+        void produceLevel2Missions(int soldierKind, int infantryKind);
+
+        void produceLevel3Missions(int trikeKind, int soldierKind, int infantryKind);
+
+        void produceLevel4Missions(int trikeKind, int infantryKind);
+
+        void produceLevel5Missions(int trikeKind, int infantryKind);
     };
 
 }

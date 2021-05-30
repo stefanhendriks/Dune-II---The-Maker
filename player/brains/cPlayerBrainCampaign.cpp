@@ -248,7 +248,7 @@ namespace brains {
 
         if (state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
             // it might send out something to scout?
-            if (missions.empty()) {
+            if (!hasMission(99)) {
                 // add scouting mission
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
                 group.push_back((S_groupKind) {
@@ -258,21 +258,13 @@ namespace brains {
                         produced: 0,
                 });
 
-                cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, rnd(5));
+                cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, rnd(5), 99);
                 missions.push_back(someMission);
             }
         } else {
             // no longer peaceful
             if (state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
-                // find any attack missions, keep at max 1 (for now?)
-                auto position = std::find_if(missions.begin(), missions.end(), [](const cPlayerBrainMission & mission){ return mission.isAttackingMission(); });
-                if (position != missions.end()) {
-                    // we have an attack mission
-                } else {
-                    // TODO: this can be smarter, ie when a certain mission is gone, then this should be called
-                    // and only replenish missions that have been 'ended'
-                    produceMissions();
-                }
+                produceMissions();
             }
         }
 
@@ -286,7 +278,6 @@ namespace brains {
 
     void cPlayerBrainCampaign::produceMissions() {
         // TODO: we can also read 'TEAMS' from a Scenario and use that instead of hard-coding?
-
         int trikeKind = TRIKE;
         if (player->getHouse() == ORDOS) {
             trikeKind = RAIDER;
@@ -300,123 +291,30 @@ namespace brains {
             infantryKind = TROOPERS;
         }
 
-        // MISSION 2
         if (game.iMission == 2) {
-            std::vector<S_groupKind> group = std::vector<S_groupKind>();
-            group.push_back((S_groupKind) {
-                    type : soldierKind,
-                    required: 2 + rnd(1),
-                    ordered: 0,
-                    produced: 0,
-            });
-            group.push_back((S_groupKind) {
-                    type : infantryKind,
-                    required: 1 + rnd(1),
-                    ordered: 0,
-                    produced: 0,
-            });
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10));
+            produceLevel2Missions(soldierKind, infantryKind);
             return;
         }
 
-        // MISSION 3
         if (game.iMission == 3) {
-            std::vector<S_groupKind> group = std::vector<S_groupKind>();
-            if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
-                group.push_back((S_groupKind) {
-                        type : QUAD,
-                        required: 1 + rnd(2),
-                        ordered: 0,
-                        produced: 0,
-                });
-                group.push_back((S_groupKind) {
-                        type : trikeKind,
-                        required: 1 + rnd(1),
-                        ordered: 0,
-                        produced: 0,
-                });
-            } else {
-                group.push_back((S_groupKind) {
-                        type : QUAD,
-                        required: 2 + rnd(3),
-                        ordered: 0,
-                        produced: 0,
-                });
-            }
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15));
-            group = std::vector<S_groupKind>();
-
-            group.push_back((S_groupKind) {
-                    type : soldierKind,
-                    required: 1 + rnd(3),
-                    ordered: 0,
-                    produced: 0,
-            });
-            group.push_back((S_groupKind) {
-                    type : infantryKind,
-                    required: 1 + rnd(2),
-                    ordered: 0,
-                    produced: 0,
-            });
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10));
+            produceLevel3Missions(trikeKind, soldierKind, infantryKind);
             return;
         }
 
-        // MISSION 4
         if (game.iMission == 4) {
-            std::vector<S_groupKind> group = std::vector<S_groupKind>();
-            if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
-                group.push_back((S_groupKind) {
-                        type : trikeKind,
-                        required: 1 + rnd(1),
-                        ordered: 0,
-                        produced: 0,
-                });
-                group.push_back((S_groupKind) {
-                        type : QUAD,
-                        required: 1 + rnd(3),
-                        ordered: 0,
-                        produced: 0,
-                });
-            } else {
-                group.push_back((S_groupKind) {
-                        type : QUAD,
-                        required: 2 + rnd(2),
-                        ordered: 0,
-                        produced: 0,
-                });
-            }
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15));
-            group = std::vector<S_groupKind>();
-            group.push_back((S_groupKind) {
-                    type : TANK,
-                    required: 1 + rnd(2),
-                    ordered: 0,
-                    produced: 0,
-            });
-            group.push_back((S_groupKind) {
-                    type : QUAD,
-                    required: 1,
-                    ordered: 0,
-                    produced: 0,
-            });
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10));
-            group = std::vector<S_groupKind>();
-            if (rnd(100) < 50) {
-                group.push_back((S_groupKind) {
-                        type : infantryKind,
-                        required: 2 + rnd(4),
-                        ordered: 0,
-                        produced: 0,
-                });
-                addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10));
-            }
+            produceLevel4Missions(trikeKind, infantryKind);
             return;
         }
 
-        // MISSION 5
         if (game.iMission == 5) {
-            std::vector<S_groupKind> group = std::vector<S_groupKind>();
+            produceLevel5Missions(trikeKind, infantryKind);
+            return;
+        }
+    }
+
+    void cPlayerBrainCampaign::produceLevel5Missions(int trikeKind, int infantryKind) {
+        std::vector<S_groupKind> group = std::vector<S_groupKind>();
+        if (!hasMission(0)) {
             if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
                 group.push_back((S_groupKind) {
                         type : trikeKind,
@@ -438,8 +336,10 @@ namespace brains {
                         produced: 0,
                 });
             }
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15));
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
+        }
 
+        if (!hasMission(1)) {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
                 group.push_back((S_groupKind) {
@@ -472,8 +372,10 @@ namespace brains {
                         produced: 0,
                 });
             }
-            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15));
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
+        }
 
+        if (!hasMission(2)) {
             // 25% chance we want another different attack force
             if (rnd(100) < 25) {
                 group = std::vector<S_groupKind>();
@@ -493,8 +395,10 @@ namespace brains {
                         });
                     }
                 }
-                addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10));
+                addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10), 2);
             }
+        }
+        if (!hasMission(3)) {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
                 group.push_back((S_groupKind) {
@@ -503,14 +407,184 @@ namespace brains {
                         ordered: 0,
                         produced: 0,
                 });
-                addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10));
+                addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
             }
-            return;
+        }
+        // build additional harvester
+        if (!hasMission(4)) {
+            group = std::vector<S_groupKind>();
+            group.push_back((S_groupKind) {
+                    type : HARVESTER,
+                    required: 1,
+                    ordered: 0,
+                    produced: 0,
+            });
+            addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
         }
     }
 
-    void cPlayerBrainCampaign::addMission(ePlayerBrainMissionKind kind, const std::vector<S_groupKind> &group, int initialDelay) {
-        cPlayerBrainMission someMission(player, kind, this, group, initialDelay);
+    void cPlayerBrainCampaign::produceLevel4Missions(int trikeKind, int infantryKind) {
+        std::vector<S_groupKind> group = std::vector<S_groupKind>();
+        if (!hasMission(0)) {
+            if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
+                group.push_back((S_groupKind) {
+                        type : trikeKind,
+                        required: 1 + rnd(1),
+                        ordered: 0,
+                        produced: 0,
+                });
+                group.push_back((S_groupKind) {
+                        type : QUAD,
+                        required: 1 + rnd(3),
+                        ordered: 0,
+                        produced: 0,
+                });
+            } else {
+                group.push_back((S_groupKind) {
+                        type : QUAD,
+                        required: 2 + rnd(2),
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
+        }
+        if (!hasMission(1)) {
+            group = std::vector<S_groupKind>();
+            group.push_back((S_groupKind) {
+                    type : TANK,
+                    required: 1 + rnd(2),
+                    ordered: 0,
+                    produced: 0,
+            });
+            group.push_back((S_groupKind) {
+                    type : QUAD,
+                    required: 1,
+                    ordered: 0,
+                    produced: 0,
+            });
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10), 1);
+        }
+        if (!hasMission(2)) {
+            group = std::vector<S_groupKind>();
+            if (rnd(100) < 50) {
+                group.push_back((S_groupKind) {
+                        type : infantryKind,
+                        required: 2 + rnd(4),
+                        ordered: 0,
+                        produced: 0,
+                });
+                addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 2);
+            }
+        }
+
+        // build additional harvester (we want 2 harvesters in total)
+        int harvesters = player->getAmountOfUnitsForType(HARVESTER);
+        int desiredAmountHarvesters = 2;
+        if (harvesters < 2) {
+            int amountToBuild = desiredAmountHarvesters - harvesters;
+            if (!hasMission(3)) {
+                group = std::vector<S_groupKind>();
+                group.push_back((S_groupKind) {
+                        type : HARVESTER,
+                        required: amountToBuild,
+                        ordered: 0,
+                        produced: 0,
+                });
+                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 3);
+            } else {
+                // we already have mission 3, meaning we have the additional harvester.
+                // If we have only 1 harvester than that means the harvester we got
+                // from our refinery got destroyed. Rebuild that one; and assign that to mission "4".
+                if (harvesters > 0) {
+                    group = std::vector<S_groupKind>();
+                    group.push_back((S_groupKind) {
+                            type : HARVESTER,
+                            required: amountToBuild,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                    // different mission ID
+                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
+                }
+            }
+        }
+    }
+
+    void cPlayerBrainCampaign::produceLevel3Missions(int trikeKind, int soldierKind, int infantryKind) {
+        std::vector<S_groupKind> group = std::vector<S_groupKind>();
+        if (!hasMission(0)) {
+            if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
+                group.push_back((S_groupKind) {
+                        type : QUAD,
+                        required: 1 + rnd(2),
+                        ordered: 0,
+                        produced: 0,
+                });
+                group.push_back((S_groupKind) {
+                        type : trikeKind,
+                        required: 1 + rnd(1),
+                        ordered: 0,
+                        produced: 0,
+                });
+            } else {
+                group.push_back((S_groupKind) {
+                        type : QUAD,
+                        required: 2 + rnd(3),
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
+        }
+        if (!hasMission(1)) {
+            group = std::vector<S_groupKind>();
+
+            group.push_back((S_groupKind) {
+                    type : soldierKind,
+                    required: 1 + rnd(3),
+                    ordered: 0,
+                    produced: 0,
+            });
+            group.push_back((S_groupKind) {
+                    type : infantryKind,
+                    required: 1 + rnd(2),
+                    ordered: 0,
+                    produced: 0,
+            });
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 1);
+        }
+    }
+
+    void cPlayerBrainCampaign::produceLevel2Missions(int soldierKind, int infantryKind) {
+        if (!hasMission(0)) {
+            std::vector<S_groupKind> group = std::vector<S_groupKind>();
+            group.push_back((S_groupKind) {
+                    type : soldierKind,
+                    required: 2 + rnd(1),
+                    ordered: 0,
+                    produced: 0,
+            });
+            group.push_back((S_groupKind) {
+                    type : infantryKind,
+                    required: 1 + rnd(1),
+                    ordered: 0,
+                    produced: 0,
+            });
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 0);
+        }
+    }
+
+    bool cPlayerBrainCampaign::hasMission(const int id) {
+        auto position = std::find_if(missions.begin(), missions.end(), [&id](const cPlayerBrainMission & mission){ return mission.getUniqueId() == id; });
+        bool hasMission = position != missions.end();
+        return hasMission;
+    }
+
+    void cPlayerBrainCampaign::addMission(ePlayerBrainMissionKind kind, const std::vector<S_groupKind> &group,
+                                          int initialDelay,
+                                          int id) {
+        cPlayerBrainMission someMission(player, kind, this, group, initialDelay, id);
         missions.push_back(someMission);
     }
 
