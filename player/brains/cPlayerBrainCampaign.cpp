@@ -1291,7 +1291,7 @@ namespace brains {
                     group = std::vector<S_groupKind>();
                     if (rnd(100) < 10) {
                         group.push_back((S_groupKind) {
-                                buildType: eBuildType::SPECIAL,
+                                buildType: eBuildType::UNIT,
                                 type : ORNITHOPTER,
                                 required: 1 + rnd(2),
                                 ordered: 0,
@@ -1308,7 +1308,7 @@ namespace brains {
                 group = std::vector<S_groupKind>();
                 if (rnd(100) < 10) {
                     group.push_back((S_groupKind) {
-                            buildType: eBuildType::SPECIAL,
+                            buildType: eBuildType::UNIT,
                             type : CARRYALL,
                             required: 2,
                             ordered: 0,
@@ -1325,7 +1325,7 @@ namespace brains {
                     group = std::vector<S_groupKind>();
                     if (rnd(100) < 10) {
                         group.push_back((S_groupKind) {
-                                buildType: eBuildType::SPECIAL,
+                                buildType: eBuildType::UNIT,
                                 type : ORNITHOPTER,
                                 required: 1 + rnd(2),
                                 ordered: 0,
@@ -1342,7 +1342,7 @@ namespace brains {
                 group = std::vector<S_groupKind>();
                 if (rnd(100) < 10) {
                     group.push_back((S_groupKind) {
-                            buildType: eBuildType::SPECIAL,
+                            buildType: eBuildType::UNIT,
                             type : CARRYALL,
                             required: 2,
                             ordered: 0,
