@@ -252,6 +252,7 @@ namespace brains {
                 // add scouting mission
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : player->getScoutingUnitType(),
                         required: 1,
                         ordered: 0,
@@ -315,6 +316,21 @@ namespace brains {
             produceLevel6Missions(trikeKind, infantryKind);
             return;
         }
+
+        if (game.iMission == 7) {
+            produceLevel7Missions(trikeKind, infantryKind);
+            return;
+        }
+
+        if (game.iMission == 8) {
+            produceLevel8Missions(trikeKind, infantryKind);
+            return;
+        }
+
+        if (game.iMission == 9) {
+            produceLevel9Missions(trikeKind, infantryKind);
+            return;
+        }
     }
 
     void cPlayerBrainCampaign::produceLevel5Missions(int trikeKind, int infantryKind) {
@@ -322,12 +338,14 @@ namespace brains {
         if (!hasMission(0)) {
             if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : trikeKind,
                         required: 1,
                         ordered: 0,
                         produced: 0,
                 });
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : QUAD,
                         required: 1 + rnd(2),
                         ordered: 0,
@@ -335,6 +353,7 @@ namespace brains {
                 });
             } else {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : QUAD,
                         required: 1 + rnd(3),
                         ordered: 0,
@@ -348,6 +367,7 @@ namespace brains {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : QUAD,
                         required: 1,
                         ordered: 0,
@@ -357,6 +377,7 @@ namespace brains {
             if (player->getHouse() != ORDOS) {
                 if (rnd(100) < 75) {
                     group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
                             type : LAUNCHER,
                             required: 1 + rnd(2),
                             ordered: 0,
@@ -364,6 +385,7 @@ namespace brains {
                     });
                 }
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : TANK,
                         required: 1 + rnd(4),
                         ordered: 0,
@@ -371,6 +393,7 @@ namespace brains {
                 });
             } else {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : TANK,
                         required: 4 + rnd(2),
                         ordered: 0,
@@ -385,6 +408,7 @@ namespace brains {
             if (rnd(100) < 25) {
                 group = std::vector<S_groupKind>();
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : TANK,
                         required: 2,
                         ordered: 0,
@@ -393,6 +417,7 @@ namespace brains {
                 if (player->getHouse() != ORDOS) {
                     if (rnd(100) < 75) {
                         group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
                                 type : LAUNCHER,
                                 required: 1 + rnd(2),
                                 ordered: 0,
@@ -407,6 +432,7 @@ namespace brains {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : infantryKind,
                         required: 2 + rnd(4),
                         ordered: 0,
@@ -421,6 +447,7 @@ namespace brains {
             if (!hasMission(4)) {
                 group = std::vector<S_groupKind>();
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : HARVESTER,
                         required: 1,
                         ordered: 0,
@@ -435,6 +462,7 @@ namespace brains {
                     if (harvesters > 0) {
                         group = std::vector<S_groupKind>();
                         group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
                                 type : HARVESTER,
                                 required: 1,
                                 ordered: 0,
@@ -453,12 +481,14 @@ namespace brains {
         if (!hasMission(0)) {
             if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : trikeKind,
                         required: 1,
                         ordered: 0,
                         produced: 0,
                 });
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : QUAD,
                         required: 1 + rnd(2),
                         ordered: 0,
@@ -466,6 +496,7 @@ namespace brains {
                 });
             } else {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : QUAD,
                         required: 1 + rnd(3),
                         ordered: 0,
@@ -479,6 +510,7 @@ namespace brains {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : QUAD,
                         required: 1,
                         ordered: 0,
@@ -488,6 +520,7 @@ namespace brains {
             if (player->getHouse() != ORDOS) {
                 if (rnd(100) < 75) {
                     group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
                             type : LAUNCHER,
                             required: 1 + rnd(3),
                             ordered: 0,
@@ -496,6 +529,7 @@ namespace brains {
                 }
                 if (rnd(100) < 75) {
                     group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
                             type : TANK,
                             required: 2 + rnd(4),
                             ordered: 0,
@@ -504,6 +538,7 @@ namespace brains {
                 }
                 if (rnd(100) < 75) {
                     group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
                             type : SIEGETANK,
                             required: 3 + rnd(4),
                             ordered: 0,
@@ -512,12 +547,14 @@ namespace brains {
                 }
             } else {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : TANK,
                         required: 2 + rnd(4),
                         ordered: 0,
                         produced: 0,
                 });
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : SIEGETANK,
                         required: 3 + rnd(3),
                         ordered: 0,
@@ -532,6 +569,7 @@ namespace brains {
             if (rnd(100) < 25) {
                 group = std::vector<S_groupKind>();
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : TANK,
                         required: 2,
                         ordered: 0,
@@ -539,6 +577,7 @@ namespace brains {
                 });
                 if (rnd(100) < 75) {
                     group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
                             type : SIEGETANK,
                             required: 1 + rnd(2),
                             ordered: 0,
@@ -548,6 +587,7 @@ namespace brains {
                 if (player->getHouse() != ORDOS) {
                     if (rnd(100) < 75) {
                         group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
                                 type : LAUNCHER,
                                 required: 1 + rnd(2),
                                 ordered: 0,
@@ -562,6 +602,7 @@ namespace brains {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : infantryKind,
                         required: 1 + rnd(2),
                         ordered: 0,
@@ -576,6 +617,7 @@ namespace brains {
             if (!hasMission(4)) {
                 group = std::vector<S_groupKind>();
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : HARVESTER,
                         required: 2,
                         ordered: 0,
@@ -591,6 +633,7 @@ namespace brains {
                     if (harvesters > 0) {
                         group = std::vector<S_groupKind>();
                         group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
                                 type : HARVESTER,
                                 required: 2,
                                 ordered: 0,
@@ -604,17 +647,765 @@ namespace brains {
         }
     }
 
+    void cPlayerBrainCampaign::produceLevel7Missions(int trikeKind, int infantryKind) {
+        std::vector<S_groupKind> group = std::vector<S_groupKind>();
+        if (!hasMission(0)) {
+            if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : trikeKind,
+                        required: 1,
+                        ordered: 0,
+                        produced: 0,
+                });
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : QUAD,
+                        required: 1 + rnd(2),
+                        ordered: 0,
+                        produced: 0,
+                });
+            } else {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : QUAD,
+                        required: 1 + rnd(3),
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
+        }
+
+        if (!hasMission(1)) {
+            group = std::vector<S_groupKind>();
+            if (rnd(100) < 50) {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : QUAD,
+                        required: 1,
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+            if (player->getHouse() != ORDOS) {
+                if (rnd(100) < 75) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : LAUNCHER,
+                            required: 1 + rnd(3),
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+                if (rnd(100) < 75) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : TANK,
+                            required: 2 + rnd(4),
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+                if (rnd(100) < 75) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : SIEGETANK,
+                            required: 3 + rnd(4),
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+            } else {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : TANK,
+                        required: 2 + rnd(4),
+                        ordered: 0,
+                        produced: 0,
+                });
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : SIEGETANK,
+                        required: 3 + rnd(3),
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
+        }
+
+        if (!hasMission(2)) {
+            // 25% chance we want another different attack force
+            if (rnd(100) < 25) {
+                group = std::vector<S_groupKind>();
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : TANK,
+                        required: 2,
+                        ordered: 0,
+                        produced: 0,
+                });
+                if (rnd(100) < 75) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : SIEGETANK,
+                            required: 1 + rnd(2),
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+                if (player->getHouse() != ORDOS) {
+                    if (rnd(100) < 75) {
+                        group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
+                                type : LAUNCHER,
+                                required: 1 + rnd(2),
+                                ordered: 0,
+                                produced: 0,
+                        });
+                    }
+                }
+                addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10), 2);
+            }
+        }
+        if (!hasMission(3)) {
+            group = std::vector<S_groupKind>();
+            if (rnd(100) < 50) {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : infantryKind,
+                        required: 1 + rnd(2),
+                        ordered: 0,
+                        produced: 0,
+                });
+                addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
+            }
+        }
+        // build additional harvester (we want 2 harvesters in total)
+        int harvesters = player->getAmountOfUnitsForType(HARVESTER);
+        if (harvesters < 4) {
+            if (!hasMission(4)) {
+                group = std::vector<S_groupKind>();
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : HARVESTER,
+                        required: 2,
+                        ordered: 0,
+                        produced: 0,
+                });
+                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
+            } else {
+                // we already have mission 4, meaning we have the additional harvester.
+                // If we have only 1 harvester than that means the harvester we got
+                // from our refinery got destroyed (2 refineries in this mission).
+                // Rebuild that one; and assign that to mission "4".
+                if (!hasMission(5)) {
+                    if (harvesters > 0) {
+                        group = std::vector<S_groupKind>();
+                        group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
+                                type : HARVESTER,
+                                required: 2,
+                                ordered: 0,
+                                produced: 0,
+                        });
+                        // different mission ID
+                        addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 5);
+                    }
+                }
+            }
+        }
+        // build ornithopters
+        if (player->getHouse() == ATREIDES || player->getHouse() == ORDOS) {
+            if (player->hasAtleastOneStructure(HIGHTECH)) {
+                if (!hasMission(6)) {
+                    group = std::vector<S_groupKind>();
+                    if (rnd(100) < 10) {
+                        group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
+                                type : ORNITHOPTER,
+                                required: 1 + rnd(2),
+                                ordered: 0,
+                                produced: 0,
+                        });
+                        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 6);
+                    }
+                }
+            }
+        }
+        // build carry-alls if required
+        if (player->hasAtleastOneStructure(HIGHTECH)) {
+            if (!hasMission(7)) {
+                group = std::vector<S_groupKind>();
+                if (rnd(100) < 10) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : CARRYALL,
+                            required: 2,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(10), 7);
+                }
+            }
+        }
+    }
+
+    void cPlayerBrainCampaign::produceLevel8Missions(int trikeKind, int infantryKind) {
+        std::vector<S_groupKind> group = std::vector<S_groupKind>();
+        if (!hasMission(0)) {
+            if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : trikeKind,
+                        required: 1,
+                        ordered: 0,
+                        produced: 0,
+                });
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : QUAD,
+                        required: 1 + rnd(2),
+                        ordered: 0,
+                        produced: 0,
+                });
+            } else {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : QUAD,
+                        required: 1 + rnd(3),
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
+        }
+
+        if (!hasMission(1)) {
+            group = std::vector<S_groupKind>();
+            if (rnd(100) < 50) {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : QUAD,
+                        required: 1,
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+            if (player->getHouse() != ORDOS) {
+                if (rnd(100) < 75) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : LAUNCHER,
+                            required: 1 + rnd(3),
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+                if (rnd(100) < 75) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : TANK,
+                            required: 2 + rnd(4),
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+                if (rnd(100) < 75) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : SIEGETANK,
+                            required: 3 + rnd(4),
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+            } else {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : TANK,
+                        required: 2 + rnd(4),
+                        ordered: 0,
+                        produced: 0,
+                });
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : SIEGETANK,
+                        required: 3 + rnd(3),
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
+        }
+
+        if (!hasMission(2)) {
+            // 25% chance we want another different attack force
+            if (rnd(100) < 25) {
+                group = std::vector<S_groupKind>();
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : TANK,
+                        required: 2,
+                        ordered: 0,
+                        produced: 0,
+                });
+                if (rnd(100) < 75) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : SIEGETANK,
+                            required: 1 + rnd(2),
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+                if (player->getHouse() != ORDOS) {
+                    if (rnd(100) < 75) {
+                        group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
+                                type : LAUNCHER,
+                                required: 1 + rnd(2),
+                                ordered: 0,
+                                produced: 0,
+                        });
+                    }
+                }
+                addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10), 2);
+            }
+        }
+        if (!hasMission(3)) {
+            group = std::vector<S_groupKind>();
+            if (rnd(100) < 50) {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : infantryKind,
+                        required: 1 + rnd(2),
+                        ordered: 0,
+                        produced: 0,
+                });
+                addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
+            }
+        }
+        // build additional harvester (we want 2 harvesters in total)
+        int harvesters = player->getAmountOfUnitsForType(HARVESTER);
+        if (harvesters < 4) {
+            if (!hasMission(4)) {
+                group = std::vector<S_groupKind>();
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : HARVESTER,
+                        required: 2,
+                        ordered: 0,
+                        produced: 0,
+                });
+                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
+            } else {
+                // we already have mission 4, meaning we have the additional harvester.
+                // If we have only 1 harvester than that means the harvester we got
+                // from our refinery got destroyed (2 refineries in this mission).
+                // Rebuild that one; and assign that to mission "4".
+                if (!hasMission(5)) {
+                    if (harvesters > 0) {
+                        group = std::vector<S_groupKind>();
+                        group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
+                                type : HARVESTER,
+                                required: 2,
+                                ordered: 0,
+                                produced: 0,
+                        });
+                        // different mission ID
+                        addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 5);
+                    }
+                }
+            }
+        }
+        // build ornithopters
+        if (player->getHouse() == ATREIDES || player->getHouse() == ORDOS) {
+            if (player->hasAtleastOneStructure(HIGHTECH)) {
+                if (!hasMission(6)) {
+                    group = std::vector<S_groupKind>();
+                    if (rnd(100) < 10) {
+                        group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
+                                type : ORNITHOPTER,
+                                required: 1 + rnd(2),
+                                ordered: 0,
+                                produced: 0,
+                        });
+                        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 6);
+                    }
+                }
+            }
+        }
+        // build carry-alls if required
+        if (player->hasAtleastOneStructure(HIGHTECH)) {
+            if (!hasMission(7)) {
+                group = std::vector<S_groupKind>();
+                if (rnd(100) < 10) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : CARRYALL,
+                            required: 2,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(10), 7);
+                }
+            }
+        }
+        if (player->hasAtleastOneStructure(PALACE)) {
+            if (player->getHouse() == ATREIDES) {
+                if (!hasMission(8)) {
+                    group = std::vector<S_groupKind>();
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::SPECIAL,
+                            type : SPECIAL_FREMEN,
+                            required: 1,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, rnd(10), 8);
+                }
+            } else if (player->getHouse() == HARKONNEN || player->getHouse() == SARDAUKAR) {
+                if (!hasMission(8)) {
+                    group = std::vector<S_groupKind>();
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::SPECIAL,
+                            type : SPECIAL_DEATHHAND,
+                            required: 1,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, rnd(10), 8);
+                }
+            } else if (player->getHouse() == ORDOS) {
+                if (!hasMission(8)) {
+                    group = std::vector<S_groupKind>();
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::SPECIAL,
+                            type : SPECIAL_SABOTEUR,
+                            required: 1,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, rnd(10), 8);
+                }
+            }
+        }
+    }
+
+    void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind) {
+        std::vector<S_groupKind> group = std::vector<S_groupKind>();
+        if (!hasMission(0)) {
+            if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : trikeKind,
+                        required: 2,
+                        ordered: 0,
+                        produced: 0,
+                });
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : QUAD,
+                        required: 2,
+                        ordered: 0,
+                        produced: 0,
+                });
+            } else {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : QUAD,
+                        required: 2,
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 0);
+        }
+
+        if (!hasMission(1)) {
+            group = std::vector<S_groupKind>();
+            if (rnd(100) < 50) {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : QUAD,
+                        required: 1,
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+            if (player->getHouse() != ORDOS) {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : LAUNCHER,
+                        required: 1 + rnd(3),
+                        ordered: 0,
+                        produced: 0,
+                });
+                if (rnd(100) < 35) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : TANK,
+                            required: 2 + rnd(4),
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : SIEGETANK,
+                        required: 3 + rnd(4),
+                        ordered: 0,
+                        produced: 0,
+                });
+
+                if (player->getHouse() == ATREIDES) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : SONICTANK,
+                            required: 2,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                } else if (player->getHouse() == HARKONNEN || player->getHouse() == SARDAUKAR) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : DEVASTATOR,
+                            required: 2,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+            } else {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : TANK,
+                        required: 2 + rnd(4),
+                        ordered: 0,
+                        produced: 0,
+                });
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : SIEGETANK,
+                        required: 3 + rnd(3),
+                        ordered: 0,
+                        produced: 0,
+                });
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : DEVIATOR,
+                        required: 2,
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+            addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
+        }
+
+        if (!hasMission(2)) {
+            // 25% chance we want another different attack force
+            if (rnd(100) < 25) {
+                group = std::vector<S_groupKind>();
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : TANK,
+                        required: 2,
+                        ordered: 0,
+                        produced: 0,
+                });
+                if (rnd(100) < 75) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : SIEGETANK,
+                            required: 1 + rnd(2),
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+                if (player->getHouse() != ORDOS) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : LAUNCHER,
+                            required: 1 + rnd(2),
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+                addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, 10 + rnd(10), 2);
+            }
+        }
+        if (!hasMission(3)) {
+            group = std::vector<S_groupKind>();
+            if (rnd(100) < 5) {
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : infantryKind,
+                        required: 1 + rnd(2),
+                        ordered: 0,
+                        produced: 0,
+                });
+                addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 3);
+            }
+        }
+        // build additional harvester (we want 2 harvesters in total)
+        int harvesters = player->getAmountOfUnitsForType(HARVESTER);
+        if (harvesters < 4) {
+            if (!hasMission(4)) {
+                group = std::vector<S_groupKind>();
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : HARVESTER,
+                        required: 2,
+                        ordered: 0,
+                        produced: 0,
+                });
+                addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 4);
+            } else {
+                // we already have mission 4, meaning we have the additional harvester.
+                // If we have only 1 harvester than that means the harvester we got
+                // from our refinery got destroyed (2 refineries in this mission).
+                // Rebuild that one; and assign that to mission "4".
+                if (!hasMission(5)) {
+                    if (harvesters > 0) {
+                        group = std::vector<S_groupKind>();
+                        group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
+                                type : HARVESTER,
+                                required: 2,
+                                ordered: 0,
+                                produced: 0,
+                        });
+                        // different mission ID
+                        addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(25), 5);
+                    }
+                }
+            }
+        }
+        // build ornithopters
+        if (player->getHouse() == ATREIDES || player->getHouse() == ORDOS) {
+            if (player->hasAtleastOneStructure(HIGHTECH)) {
+                if (!hasMission(6)) {
+                    group = std::vector<S_groupKind>();
+                    if (rnd(100) < 10) {
+                        group.push_back((S_groupKind) {
+                                buildType: eBuildType::SPECIAL,
+                                type : ORNITHOPTER,
+                                required: 1 + rnd(2),
+                                ordered: 0,
+                                produced: 0,
+                        });
+                        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 6);
+                    }
+                }
+            }
+        }
+        // build carry-alls if required
+        if (player->hasAtleastOneStructure(HIGHTECH)) {
+            if (!hasMission(7)) {
+                group = std::vector<S_groupKind>();
+                if (rnd(100) < 10) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::SPECIAL,
+                            type : CARRYALL,
+                            required: 2,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(10), 7);
+                }
+            }
+        }
+        // build ornithopters
+        if (player->getHouse() == ATREIDES || player->getHouse() == ORDOS) {
+            if (player->hasAtleastOneStructure(HIGHTECH)) {
+                if (!hasMission(6)) {
+                    group = std::vector<S_groupKind>();
+                    if (rnd(100) < 10) {
+                        group.push_back((S_groupKind) {
+                                buildType: eBuildType::SPECIAL,
+                                type : ORNITHOPTER,
+                                required: 1 + rnd(2),
+                                ordered: 0,
+                                produced: 0,
+                        });
+                        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(10), 6);
+                    }
+                }
+            }
+        }
+        // build carry-alls if required
+        if (player->hasAtleastOneStructure(HIGHTECH)) {
+            if (!hasMission(7)) {
+                group = std::vector<S_groupKind>();
+                if (rnd(100) < 10) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::SPECIAL,
+                            type : CARRYALL,
+                            required: 2,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                    addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(10), 7);
+                }
+            }
+        }
+        if (player->hasAtleastOneStructure(PALACE)) {
+            if (player->getHouse() == ATREIDES) {
+                if (!hasMission(8)) {
+                    group = std::vector<S_groupKind>();
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::SPECIAL,
+                            type : SPECIAL_FREMEN,
+                            required: 1,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, rnd(10), 8);
+                }
+            } else if (player->getHouse() == HARKONNEN || player->getHouse() == SARDAUKAR) {
+                if (!hasMission(8)) {
+                    group = std::vector<S_groupKind>();
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::SPECIAL,
+                            type : SPECIAL_DEATHHAND,
+                            required: 1,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, rnd(10), 8);
+                }
+            } else if (player->getHouse() == ORDOS) {
+                if (!hasMission(8)) {
+                    group = std::vector<S_groupKind>();
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::SPECIAL,
+                            type : SPECIAL_SABOTEUR,
+                            required: 1,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, rnd(10), 8);
+                }
+            }
+        }
+    }
+
     void cPlayerBrainCampaign::produceLevel4Missions(int trikeKind, int infantryKind) {
         std::vector<S_groupKind> group = std::vector<S_groupKind>();
         if (!hasMission(0)) {
             if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : trikeKind,
                         required: 1 + rnd(1),
                         ordered: 0,
                         produced: 0,
                 });
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : QUAD,
                         required: 1 + rnd(3),
                         ordered: 0,
@@ -622,6 +1413,7 @@ namespace brains {
                 });
             } else {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : QUAD,
                         required: 2 + rnd(2),
                         ordered: 0,
@@ -633,12 +1425,14 @@ namespace brains {
         if (!hasMission(1)) {
             group = std::vector<S_groupKind>();
             group.push_back((S_groupKind) {
+                    buildType: eBuildType::UNIT,
                     type : TANK,
                     required: 1 + rnd(3),
                     ordered: 0,
                     produced: 0,
             });
             group.push_back((S_groupKind) {
+                    buildType: eBuildType::UNIT,
                     type : QUAD,
                     required: 1,
                     ordered: 0,
@@ -650,6 +1444,7 @@ namespace brains {
             group = std::vector<S_groupKind>();
             if (rnd(100) < 50) {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : infantryKind,
                         required: 2 + rnd(4),
                         ordered: 0,
@@ -665,6 +1460,7 @@ namespace brains {
             if (!hasMission(3)) {
                 group = std::vector<S_groupKind>();
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : HARVESTER,
                         required: 1,
                         ordered: 0,
@@ -679,6 +1475,7 @@ namespace brains {
                     if (harvesters > 0) {
                         group = std::vector<S_groupKind>();
                         group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
                                 type : HARVESTER,
                                 required: 1,
                                 ordered: 0,
@@ -697,12 +1494,14 @@ namespace brains {
         if (!hasMission(0)) {
             if (player->getHouse() != HARKONNEN && player->getHouse() != SARDAUKAR) {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : QUAD,
                         required: 1 + rnd(2),
                         ordered: 0,
                         produced: 0,
                 });
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : trikeKind,
                         required: 1 + rnd(1),
                         ordered: 0,
@@ -710,6 +1509,7 @@ namespace brains {
                 });
             } else {
                 group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
                         type : QUAD,
                         required: 2 + rnd(3),
                         ordered: 0,
@@ -722,12 +1522,14 @@ namespace brains {
             group = std::vector<S_groupKind>();
 
             group.push_back((S_groupKind) {
+                    buildType: eBuildType::UNIT,
                     type : soldierKind,
                     required: 1 + rnd(3),
                     ordered: 0,
                     produced: 0,
             });
             group.push_back((S_groupKind) {
+                    buildType: eBuildType::UNIT,
                     type : infantryKind,
                     required: 1 + rnd(2),
                     ordered: 0,
@@ -741,12 +1543,14 @@ namespace brains {
         if (!hasMission(0)) {
             std::vector<S_groupKind> group = std::vector<S_groupKind>();
             group.push_back((S_groupKind) {
+                    buildType: eBuildType::UNIT,
                     type : soldierKind,
                     required: 2 + rnd(1),
                     ordered: 0,
                     produced: 0,
             });
             group.push_back((S_groupKind) {
+                    buildType: eBuildType::UNIT,
                     type : infantryKind,
                     required: 1 + rnd(1),
                     ordered: 0,
@@ -785,7 +1589,7 @@ namespace brains {
         // Example: Money is short, Harvester is in build queue, but not high in priority?
 
         // take a little rest, before going into a new loop again?
-//        TIMER_rest = 5 + rnd(15);
+        TIMER_rest = 10;
         changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_REST);
     }
 
@@ -817,6 +1621,10 @@ namespace brains {
                     if (player->startBuildingUnit(buildOrder.buildId)) {
                         buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
                     }
+                }
+            } else if (buildOrder.buildType == eBuildType::SPECIAL) {
+                if (player->startBuildingSpecial(buildOrder.buildId)) {
+                    buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
                 }
             }
         }
@@ -862,8 +1670,8 @@ namespace brains {
     }
 
     void cPlayerBrainCampaign::thinkState_Rest() {
-        TIMER_rest--;
         if (TIMER_rest > 0) {
+            TIMER_rest--;
             char msg[255];
             sprintf(msg, "cPlayerBrainCampaign::thinkState_Rest(), for player [%d] - rest %d", player->getId(), TIMER_rest);
             logbook(msg);

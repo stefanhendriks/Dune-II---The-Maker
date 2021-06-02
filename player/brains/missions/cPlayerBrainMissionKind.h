@@ -43,6 +43,21 @@ namespace brains {
          */
         PLAYERBRAINMISSION_KIND_HARASS,
 
+        /**
+         * Super weapon usage: Fremen
+         */
+        PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN,
+
+        /**
+         * Super weapon usage: Saboteur
+         */
+        PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR,
+
+        /**
+         * Super weapon usage: Deathhand
+         */
+        PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND,
+
     };
 
     class cPlayerBrainMissionKind : public cScenarioObserver {

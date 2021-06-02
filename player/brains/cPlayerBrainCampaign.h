@@ -107,6 +107,12 @@ namespace brains {
         void produceLevel5Missions(int trikeKind, int infantryKind);
 
         void produceLevel6Missions(int trikeKind, int infantryKind);
+
+        void produceLevel7Missions(int trikeKind, int infantryKind);
+
+        void produceLevel8Missions(int trikeKind, int infantryKind);
+
+        void produceLevel9Missions(int trikeKind, int infantryKind);
     };
 
 }

@@ -47,7 +47,12 @@ namespace brains {
 
     struct S_groupKind {
         /**
-         * Which kind of unit?
+         * Which kind of thing to build? (UNIT/STRUCTURE/SPECIAL?)
+         */
+        eBuildType buildType;
+
+        /**
+         * Which type of that buildType? (ie , in case buildType == UNIT, this is QUAD for example)
          */
         int type;
 

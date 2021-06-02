@@ -851,6 +851,25 @@ bool cPlayer::startBuildingStructure(int iStructureType) const {
     return startedBuilding;
 }
 
+bool cPlayer::startBuildingSpecial(int iSpecialType) const {
+    int listId = LIST_PALACE;
+
+    bool startedBuilding = sidebar->startBuildingItemIfOk(listId, iSpecialType);
+
+    if (DEBUGGING) {
+        char msg[255];
+        if (startedBuilding) {
+            sprintf(msg, "Wanting to build special [%s] iSpecialType = [%d], with listId[%d] - SUCCESS",
+                    specials[iSpecialType].description, iSpecialType, listId);
+        } else {
+            sprintf(msg, "Wanting to build special [%s] iSpecialType = [%d], with listId[%d] - FAILED",
+                    specials[iSpecialType].description, iSpecialType, listId);
+        }
+        logbook(msg);
+    }
+    return startedBuilding;
+}
+
 bool cPlayer::startUpgrading(int iUpgradeType) const {
     int listId = LIST_UPGRADES;
     bool startedBuilding = sidebar->startBuildingItemIfOk(listId, iUpgradeType);

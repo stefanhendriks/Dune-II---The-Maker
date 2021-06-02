@@ -234,6 +234,7 @@ public:
 
     bool startBuildingUnit(int iUnitType) const;
     bool startBuildingStructure(int iStructureType) const;
+    bool startBuildingSpecial(int iSpecialType) const;
     bool startUpgrading(int iUpgradeType) const;
 
     int findRandomUnitTarget(int playerIndexToAttack);
