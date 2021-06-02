@@ -27,6 +27,12 @@ namespace brains {
             case PLAYERBRAINMISSION_KIND_ATTACK:
                 missionKind = new cPlayerBrainMissionKindAttack(player, this);
                 break;
+            case PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR:
+                missionKind = new cPlayerBrainMissionKindAttack(player, this);
+                break;
+            case PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN:
+                missionKind = new cPlayerBrainMissionKindAttack(player, this);
+                break;
             case PLAYERBRAINMISSION_KIND_EXPLORE:
                 missionKind = new cPlayerBrainMissionKindExplore(player, this);
                 break;
@@ -225,18 +231,18 @@ namespace brains {
         }
 
         // assumes group contains units, just create build orders from the desired group of units...?
-        for (auto &unitIWant : group) {
-            if (unitIWant.produced < unitIWant.required) {
-                if (unitIWant.ordered <= unitIWant.produced) { // order one at a time only
+        for (auto &thingIWant : group) {
+            if (thingIWant.produced < thingIWant.required) {
+                if (thingIWant.ordered <= thingIWant.produced) { // order one at a time only
                     brain->addBuildOrder((S_buildOrder) {
-                            buildType : eBuildType::UNIT,
+                            buildType : thingIWant.buildType,
                             priority : 0,
-                            buildId : unitIWant.type,
+                            buildId : thingIWant.type,
                             placeAt : -1,
                             state : buildOrder::eBuildOrderState::PROCESSME,
                     });
                     // remember we placed a build order
-                    unitIWant.ordered++;
+                    thingIWant.ordered++;
                 }
             }
         }
