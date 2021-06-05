@@ -5,6 +5,7 @@
 #include <assert.h>
 
 class cPlayer;
+class cBuildingListItem;
 
 struct s_GameEvent {
     eGameEventType eventType = eGameEventType::GAME_EVENT_NONE;
@@ -29,6 +30,7 @@ struct s_GameEvent {
     int entitySpecificType; // type of <entityType>, ie, if entityType is STRUCTURE. This value can be CONSTYARD
     int atCell = -1;        // if applicable (== > -1) where on the map did this event happen?
     bool isReinforce = false;       // only applicable for UNIT and CREATED events. So we can distinguish between 'normal' CREATED units and reinforced units.
+    cBuildingListItem *buildingListItem = nullptr; // if buildingListItem is ready (special, or not)
 
     // TODO: figure out a way to have bags of data depending on type of event without the need of expanding this generic GAME_EVENT struct
 
@@ -41,6 +43,8 @@ struct s_GameEvent {
             case eGameEventType::GAME_EVENT_DECAY: return "GAME_EVENT_DECAY";
             case eGameEventType::GAME_EVENT_DEVIATED: return "GAME_EVENT_DEVIATED";
             case eGameEventType::GAME_EVENT_DISCOVERED: return "GAME_EVENT_DISCOVERED";
+            case eGameEventType::GAME_EVENT_SPECIAL_READY: return "GAME_EVENT_SPECIAL_READY";
+            case eGameEventType::GAME_EVENT_SPECIAL_DEPLOYED: return "GAME_EVENT_SPECIAL_DEPLOYED";
             default:
                 assert(false);
                 break;

@@ -150,6 +150,7 @@ public:
 
     void onNotify(const s_GameEvent &event) override;
     void onEventDiscovered(const s_GameEvent &event);
+    void onEventSpecialDeployed(const s_GameEvent &event);
 
 private:
     cInteractionManager *_interactionManager;
