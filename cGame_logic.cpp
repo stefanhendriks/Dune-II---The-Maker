@@ -2320,6 +2320,9 @@ void cGame::onNotify(const s_GameEvent &event) {
         case eGameEventType::GAME_EVENT_DISCOVERED:
             onEventDiscovered(event);
             return;
+        case eGameEventType::GAME_EVENT_SPECIAL_DEPLOYED:
+            onEventSpecialDeployed(event);
+            return;
         default:
         return;
     }
@@ -2361,4 +2364,56 @@ void cGame::onEventDiscovered(const s_GameEvent &event) {
     if (voiceId > -1) {
         play_voice(voiceId);
     }
+}
+
+void cGame::onEventSpecialDeployed(const s_GameEvent &event) {
+    cBuildingListItem *itemToDeploy = event.buildingListItem;
+    int iMouseCell = event.atCell;
+    cPlayer *player = event.player;
+    if (itemToDeploy->getBuildType() == eBuildType::SPECIAL) {
+        const s_Special &special = itemToDeploy->getS_Special();
+
+        int deployCell = -1;
+        if (special.deployTargetType == eDeployTargetType::TARGET_SPECIFIC_CELL) {
+            deployCell = iMouseCell;
+        } else if (special.deployTargetType == eDeployTargetType::TARGET_INACCURATE_CELL) {
+            int precision = special.deployTargetPrecision;
+            int mouseCellX = map.getCellX(iMouseCell) - precision;
+            int mouseCellY = map.getCellY(iMouseCell) - precision;
+
+            int posX = mouseCellX + rnd((precision*2) + 1);
+            int posY = mouseCellY + rnd((precision*2) + 1);
+            FIX_POS(posX, posY);
+
+            char msg[255];
+            sprintf(msg, "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = %d,%d - target pos =%d,%d - precision %d", mouseCellY, mouseCellY, posX, posY,
+                    precision);
+            logbook(msg);
+
+            deployCell = map.makeCell(posX, posY);
+        }
+
+
+        if (special.providesType == eBuildType::BULLET) {
+            // from where
+            int structureId = structureUtils.findStructureBy(player->getId(), special.deployAtStructure, false);
+            if (structureId > -1) {
+                cAbstractStructure *pStructure = structure[structureId];
+                if (pStructure && pStructure->isValid()) {
+                    play_sound_id(SOUND_PLACE);
+                    create_bullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
+                }
+            }
+        }
+    }
+
+    itemToDeploy->decreaseTimesToBuild();
+    itemToDeploy->setDeployIt(false);
+    itemToDeploy->setIsBuilding(false);
+    itemToDeploy->resetProgress();
+    if (itemToDeploy->getTimesToBuild() < 1) {
+        player->getItemBuilder()->removeItemFromList(itemToDeploy);
+    }
+
+    game.bDeployIt = false;
 }
