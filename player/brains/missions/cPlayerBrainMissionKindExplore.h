@@ -18,11 +18,13 @@ namespace brains {
 
         cPlayerBrainMissionKind * clone(cPlayer *player, cPlayerBrainMission * mission) override;
 
-        void think_SelectTarget() override;
+        bool think_SelectTarget() override;
 
         void think_Execute() override;
 
         void onNotify(const s_GameEvent &event) override;
+
+        const char *toString() override { return "cPlayerBrainMissionKindExplore"; }
 
     private:
         int targetCell;

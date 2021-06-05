@@ -5,6 +5,7 @@
 // these are kinds of missions we can execute (has more elaborate logic here)
 #include "cPlayerBrainMissionKindAttack.h"
 #include "cPlayerBrainMissionKindExplore.h"
+#include "cPlayerBrainMissionKindDeathHand.h"
 #include "cPlayerBrainMission.h"
 
 
@@ -29,6 +30,9 @@ namespace brains {
                 break;
             case PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR:
                 missionKind = new cPlayerBrainMissionKindAttack(player, this);
+                break;
+            case PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND:
+                missionKind = new cPlayerBrainMissionKindDeathHand(player, this);
                 break;
             case PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN:
                 missionKind = new cPlayerBrainMissionKindAttack(player, this);
@@ -257,10 +261,14 @@ namespace brains {
         logbook(msg);
 
         if (missionKind) {
-            missionKind->think_SelectTarget();
+            // on successful selecting target, go to execute state.
+            // TODO: make sure to not repeat select target step every frame? (have some delay?)
+            if (missionKind->think_SelectTarget()) {
+                changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_EXECUTE);
+            }
+        } else {
+            changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_EXECUTE);
         }
-
-        changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_EXECUTE);
     }
 
     void cPlayerBrainMission::thinkState_Execute() {
@@ -268,9 +276,15 @@ namespace brains {
         sprintf(msg, "cPlayerBrainMission::thinkState_Execute(), for player [%d]", player->getId());
         logbook(msg);
 
+        if (missionKind) {
+            missionKind->think_Execute();
+        }
+
         if (units.empty()) {
             char msg[255];
-            sprintf(msg, "cPlayerBrainMission::thinkState_Execute(), for player [%d], group of units is destroyed. Setting state to PLAYERBRAINMISSION_STATE_ENDED", player->getId());
+            sprintf(msg,
+                    "cPlayerBrainMission::thinkState_Execute(), for player [%d], group of units is destroyed. Setting state to PLAYERBRAINMISSION_STATE_ENDED",
+                    player->getId());
             logbook(msg);
 
             changeState(PLAYERBRAINMISSION_STATE_ENDED);
@@ -293,10 +307,6 @@ namespace brains {
             changeState(PLAYERBRAINMISSION_STATE_ENDED);
             return;
         }
-
-        if (missionKind) {
-            missionKind->think_Execute();
-        }
     }
 
     void cPlayerBrainMission::thinkState_PrepareAwaitResources() {
@@ -316,7 +326,8 @@ namespace brains {
 
     void cPlayerBrainMission::changeState(ePlayerBrainMissionState newState) {
         char msg[255];
-        sprintf(msg, "cPlayerBrainMission::changeState(), for player [%d] - from %s to %s", player->getId(),
+        sprintf(msg, "cPlayerBrainMission::changeState(), for player [%d] - mission [%s] - from %s to %s", player->getId(),
+                missionKind ? missionKind->toString() : "NO_MISSION",
                 ePlayerBrainMissionStateString(state),
                 ePlayerBrainMissionStateString(newState));
         logbook(msg);

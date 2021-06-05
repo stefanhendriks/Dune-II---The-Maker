@@ -13,8 +13,9 @@ namespace brains {
 
     }
 
-    void cPlayerBrainMissionKindExplore::think_SelectTarget() {
+    bool cPlayerBrainMissionKindExplore::think_SelectTarget() {
         targetCell = map.getRandomCellWithinMapWithSafeDistanceFromBorder(2);
+        return true;
     }
 
     void cPlayerBrainMissionKindExplore::think_Execute() {

@@ -15,7 +15,7 @@ namespace brains {
 
     }
 
-    void cPlayerBrainMissionKindAttack::think_SelectTarget() {
+    bool cPlayerBrainMissionKindAttack::think_SelectTarget() {
         // and execute whatever?? (can merge with select target state?)
         for (int i = 0; i < MAX_STRUCTURES; i++) {
             cAbstractStructure *theStructure = structure[i];
@@ -28,6 +28,7 @@ namespace brains {
                 break; // this way we kind of have randomly another target...
             }
         }
+        return targetStructureID > -1;
     }
 
     void cPlayerBrainMissionKindAttack::think_Execute() {

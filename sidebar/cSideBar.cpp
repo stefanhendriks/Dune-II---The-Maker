@@ -262,7 +262,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
         if (item->shouldPlaceIt()) {
             game.bPlaceIt = true;
         } else if (item->shouldDeployIt()) {
-            game.bDeployIt = true;
+            game.bDeployIt = true; // this puts the "deploy/launch it at mode" state active.
         } else {
             startBuildingItemIfOk(item);
         }
