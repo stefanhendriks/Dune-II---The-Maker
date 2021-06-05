@@ -96,104 +96,7 @@ void cItemBuilder::think() {
         }
 
         // DONE building
-        if (item->getBuildType() == STRUCTURE) {
-            // play voice when placeIt is false`
-            if (!item->shouldPlaceIt()) {
-                if (player->isHuman()) {
-                    play_voice(SOUND_VOICE_01_ATR); // "Construction Complete"
-                }
-                item->setPlaceIt(true);
-            }
-        } else if (item->getBuildType() == UNIT) {
-            buildingListUpdater->onBuildItemCompleted(item);
-            item->decreaseTimesToBuild(); // decrease amount of times to build
-
-            assert(item->getTimesToBuild() > -1);
-
-            // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
-            if (!units[item->getBuildId()].airborn) {
-                deployUnit(item, item->getBuildId());
-            } else {
-                // airborn unit
-                int structureToDeployUnit = structureUtils.findHiTechToDeployAirUnit(player);
-                if (structureToDeployUnit > -1) {
-                    cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
-                    pStructureToDeploy->setAnimating(true); // animate
-                    int unitId = UNIT_CREATE(pStructureToDeploy->getCell(), item->getBuildId(), player->getId(), false);
-                    int rallyPoint = pStructureToDeploy->getRallyPoint();
-                    if (rallyPoint > -1) {
-                        unit[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
-                    }
-                } else {
-                    // got destroyed very recently
-                }
-            }
-
-        } else if (item->getBuildType() == SPECIAL) {
-            buildingListUpdater->onBuildItemCompleted(item);
-            const s_Special &special = item->getS_Special();
-
-            if (special.providesType == eBuildType::UNIT) {
-                item->decreaseTimesToBuild(); // decrease amount of times to build
-                if (special.deployFrom == AT_STRUCTURE) {
-                    if (special.providesType == UNIT) {
-                        deployUnit(item, special.providesTypeId);
-                    }
-                    item->stopBuilding();
-                    removeItemFromList(item);
-                } else if (special.deployFrom == AT_RANDOM_CELL) {
-                    if (special.providesType == UNIT) {
-                        // determine cell
-                        int iCll = map.getRandomCellWithinMapWithSafeDistanceFromBorder(4);
-
-                        for (int j = 0; j < special.units; j++) {
-                            bool passable = map.isCellPassableForFootUnits(iCll);
-
-                            if (passable) {
-                                UNIT_CREATE(iCll, special.providesTypeId, FREMEN, false);
-                            } else {
-                                REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
-                            }
-
-                            int x = map.getCellX(iCll);
-                            int y = map.getCellY(iCll);
-                            int amount = rnd(2) + 1;
-
-                            // randomly shift the cell one coordinate up/down/left/right
-                            switch (rnd(4)) {
-                                case 0:
-                                    x += amount;
-                                    break;
-                                case 1:
-                                    y += amount;
-                                    break;
-                                case 2:
-                                    x -= amount;
-                                    break;
-                                case 3:
-                                    y -= amount;
-                                    break;
-                            }
-                            // change cell
-                            FIX_POS(x, y);
-
-                            iCll = map.makeCell(x, y);
-                        }
-                    }
-                    item->stopBuilding();
-                    removeItemFromList(item);
-                }
-            } else if (special.providesType == eBuildType::BULLET) {
-                if (special.deployFrom == AT_STRUCTURE) {
-                    item->setDeployIt(true);
-                }
-            }
-        } else if (item->getBuildType() == UPGRADE) {
-            buildingListUpdater->onUpgradeCompleted(item);
-            removeItemFromList(item);
-//            list->removeItemFromList(item->getSlotId()); // no need to explicitly remove from list, will be done by onUpgradeCompleted
-            continue;
-        }
+        itemIsDoneBuildingLogic(item);
 
         bool isAbleToBuildNewOneImmediately = item->getBuildType() == UNIT;
 
@@ -221,6 +124,121 @@ void cItemBuilder::think() {
             startBuilding(item);
         }
 	}
+}
+
+void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
+    if (item->getBuildType() == STRUCTURE) {
+        // play voice when placeIt is false`
+        if (!item->shouldPlaceIt()) {
+            if (player->isHuman()) {
+                play_voice(SOUND_VOICE_01_ATR); // "Construction Complete"
+            }
+            item->setPlaceIt(true);
+        }
+    } else if (item->getBuildType() == UNIT) {
+        buildingListUpdater->onBuildItemCompleted(item);
+        item->decreaseTimesToBuild(); // decrease amount of times to build
+
+        assert(item->getTimesToBuild() > -1);
+
+        // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
+        if (!units[item->getBuildId()].airborn) {
+            deployUnit(item, item->getBuildId());
+        } else {
+            // airborn unit
+            int structureToDeployUnit = structureUtils.findHiTechToDeployAirUnit(player);
+            if (structureToDeployUnit > -1) {
+                cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
+                pStructureToDeploy->setAnimating(true); // animate
+                int unitId = UNIT_CREATE(pStructureToDeploy->getCell(), item->getBuildId(), player->getId(), false);
+                int rallyPoint = pStructureToDeploy->getRallyPoint();
+                if (rallyPoint > -1) {
+                    unit[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
+                }
+            } else {
+                // got destroyed very recently
+            }
+        }
+
+    } else if (item->getBuildType() == SPECIAL) {
+        buildingListUpdater->onBuildItemCompleted(item);
+        const s_Special &special = item->getS_Special();
+
+        if (special.providesType == UNIT) {
+            item->decreaseTimesToBuild(); // decrease amount of times to build
+            if (special.deployFrom == AT_STRUCTURE) {
+                if (special.providesType == UNIT) {
+                    deployUnit(item, special.providesTypeId);
+                }
+                item->stopBuilding();
+                removeItemFromList(item);
+            } else if (special.deployFrom == AT_RANDOM_CELL) {
+                if (special.providesType == UNIT) {
+                    // determine cell
+                    int iCll = map.getRandomCellWithinMapWithSafeDistanceFromBorder(4);
+
+                    for (int j = 0; j < special.units; j++) {
+                        bool passable = map.isCellPassableForFootUnits(iCll);
+
+                        if (passable) {
+                            UNIT_CREATE(iCll, special.providesTypeId, FREMEN, false);
+                        } else {
+                            REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
+                        }
+
+                        int x = map.getCellX(iCll);
+                        int y = map.getCellY(iCll);
+                        int amount = rnd(2) + 1;
+
+                        // randomly shift the cell one coordinate up/down/left/right
+                        switch (rnd(4)) {
+                            case 0:
+                                x += amount;
+                                break;
+                            case 1:
+                                y += amount;
+                                break;
+                            case 2:
+                                x -= amount;
+                                break;
+                            case 3:
+                                y -= amount;
+                                break;
+                        }
+                        // change cell
+                        FIX_POS(x, y);
+
+                        iCll = map.makeCell(x, y);
+                    }
+                }
+                item->stopBuilding();
+                removeItemFromList(item);
+            }
+        } else if (special.providesType == BULLET) {
+            if (special.deployFrom == AT_STRUCTURE) {
+                if (!item->shouldDeployIt()) {
+                    item->setDeployIt(true);
+
+                    s_GameEvent event {
+                            .eventType = eGameEventType::GAME_EVENT_SPECIAL_READY,
+                            .entityType = eBuildType::SPECIAL,
+                            .entityID = -1,
+                            .player = player,
+                            .entitySpecificType = -1,
+                            .atCell = -1,
+                            .isReinforce = false,
+                            .buildingListItem = item
+                    };
+
+                    game.onNotify(event);
+                }
+            }
+        }
+    } else if (item->getBuildType() == UPGRADE) {
+        buildingListUpdater->onUpgradeCompleted(item);
+        removeItemFromList(item);
+//            list->removeItemFromList(item->getSlotId()); // no need to explicitly remove from list, will be done by onUpgradeCompleted
+    }
 }
 
 /**

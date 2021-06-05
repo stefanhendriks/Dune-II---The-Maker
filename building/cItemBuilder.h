@@ -51,6 +51,8 @@ class cItemBuilder {
         cBuildingListItem * getBuildingListItem(eBuildType buildType, int iBuildId);
 
         void deployUnit(cBuildingListItem *item, int buildId) const;
+
+    void itemIsDoneBuildingLogic(cBuildingListItem *item);
 };
 
 #endif /* CITEMBUILDER_H_ */

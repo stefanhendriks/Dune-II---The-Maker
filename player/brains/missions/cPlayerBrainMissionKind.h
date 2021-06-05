@@ -68,13 +68,15 @@ namespace brains {
 
         virtual ~cPlayerBrainMissionKind() = 0;
 
-        virtual void think_SelectTarget() = 0;
+        virtual bool think_SelectTarget() = 0;
 
         virtual void think_Execute() = 0;
 
         virtual cPlayerBrainMissionKind * clone(cPlayer *player, cPlayerBrainMission * mission) = 0;
 
         virtual void onNotify(const s_GameEvent &event) override = 0;
+
+        virtual const char *toString() = 0;
 
     protected:
 
