@@ -1,8 +1,10 @@
 #ifndef D2TM_SGAMEEVENT_H
 #define D2TM_SGAMEEVENT_H
 
+#include <string>
 #include "enums.h"
 #include <assert.h>
+#include <utils/common.h>
 
 class cPlayer;
 class cBuildingListItem;
@@ -50,6 +52,21 @@ struct s_GameEvent {
                 break;
         }
         return "";
+    }
+
+    static const std::string toString(const s_GameEvent &event) {
+        char msg[255];
+        sprintf(msg, "cGameEvent [type=%s], [entityType=%s], [entityId=%d], [entitySpecificType=%d =%s], [isReinforce=%s], [atCell=%d], [buildingListItem=%s]",
+                toString(event.eventType),
+                toStringBuildType(event.entityType),
+                event.entityID,
+                event.entitySpecificType,
+                toStringBuildTypeSpecificType(event.entityType, event.entitySpecificType),
+                event.isReinforce ? "true" : "false",
+                event.atCell,
+                event.buildingListItem ? "present" : "nullptr"
+                );
+        return std::string(msg);
     }
 };
 

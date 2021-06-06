@@ -1,6 +1,5 @@
 #include "include/d2tmh.h"
 
-#include "cPlayerBrainMissionKind.h"
 #include "cPlayerBrainMissionKindAttack.h"
 
 namespace brains {
@@ -16,16 +15,30 @@ namespace brains {
     }
 
     bool cPlayerBrainMissionKindAttack::think_SelectTarget() {
-        // and execute whatever?? (can merge with select target state?)
-        for (int i = 0; i < MAX_STRUCTURES; i++) {
-            cAbstractStructure *theStructure = structure[i];
-            if (!theStructure) continue;
-            if (!theStructure->isValid()) continue;
-            if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
-            // enemy structure
-            targetStructureID = theStructure->getStructureId();
-            if (rnd(100) < 25) {
-                break; // this way we kind of have randomly another target...
+        if (rnd(100) < 50) {
+            targetStructureID = -1;
+            for (int i = 0; i < MAX_UNITS; i++) {
+                cUnit &cUnit = unit[i];
+                if (!cUnit.isValid()) continue;
+                if (!cUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+                // enemy structure
+                targetUnitID = i;
+                if (rnd(100) < 5) {
+                    break; // this way we kind of have randomly another target...
+                }
+            }
+        } else {
+            targetUnitID = -1;
+            for (int i = 0; i < MAX_STRUCTURES; i++) {
+                cAbstractStructure *theStructure = structure[i];
+                if (!theStructure) continue;
+                if (!theStructure->isValid()) continue;
+                if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+                // enemy structure
+                targetStructureID = theStructure->getStructureId();
+                if (rnd(100) < 10) {
+                    break; // this way we kind of have randomly another target...
+                }
             }
         }
         return targetStructureID > -1;
