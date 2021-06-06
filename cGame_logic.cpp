@@ -2311,6 +2311,7 @@ void cGame::setPlayerToInteractFor(cPlayer *pPlayer) {
 }
 
 void cGame::onNotify(const s_GameEvent &event) {
+    logbook(s_GameEvent::toString(event).c_str());
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
         players[i].onNotify(event);

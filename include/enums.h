@@ -8,6 +8,8 @@
 #ifndef ENUMS_H_
 #define ENUMS_H_
 
+#include <assert.h>
+
 enum eCantBuildReason {
 	/**
      * Not enough money to build it
@@ -123,6 +125,20 @@ enum eBuildType {
     SPECIAL,   // 3
     BULLET     // 4 (ie, used for super weapon)
 };
+
+static const char* toStringBuildType(const eBuildType &buildType) {
+    switch (buildType) {
+        case eBuildType::SPECIAL: return "SPECIAL";
+        case eBuildType::UNIT: return "UNIT";
+        case eBuildType::STRUCTURE: return "STRUCTURE";
+        case eBuildType::BULLET: return "BULLET";
+        case eBuildType::UPGRADE: return "UPGRADE";
+        default:
+            assert(false && "Unknown buildType?");
+            break;
+    }
+    return "";
+}
 
 namespace buildOrder {
 	enum eBuildOrderState {

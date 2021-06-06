@@ -213,6 +213,8 @@ struct s_Bullet {
     int sound;          // Sound produced when 'shot' (or explosion sound)
 
     int deviateProbability;   // how high probability it deviates a unit (changes sides) (0 = no chance, 100 = 100% chance)
+
+    char description[64]; // ie: "bullet"
 };
 
 // SKIRMISH MAP PREVIEW DATA

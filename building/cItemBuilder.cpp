@@ -288,7 +288,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
             if (pStructureToDeploy->getRallyPoint() > -1) {
                 cellToDeploy = pStructureToDeploy->getRallyPoint();
             }
-            REINFORCE(player->getId(), buildIdToProduce, cellToDeploy, -1);
+            REINFORCE(player->getId(), buildIdToProduce, cellToDeploy, -1, false);
         }
     }
 }

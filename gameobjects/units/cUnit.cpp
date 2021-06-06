@@ -2814,41 +2814,45 @@ void cUnit::move_to(int iGoalCell) {
     int unitID = -1;
     if (iGoalCell > -1) {
         structureID = map.getCellIdStructuresLayer(iGoalCell);
-        if (structureID > -1) {
-            cAbstractStructure *pStructure = structure[structureID];
-            if (pStructure) {
-                bool friendlyStructure = getPlayer()->isSameTeamAs(pStructure->getPlayer());
-                if (friendlyStructure) {
-                    if (isInfantryUnit()) {
-                        structureID = -1; // reset back, we don't allow capturing own/allied buildings
-                    } else if (isHarvester()) {
-                        if (pStructure->getType() == REFINERY) {
-                            // unit ordered to move to refinery, let refinery animate about that.
-                            pStructure->setAnimating(true);
-                            intent = eUnitActionIntent::INTENT_UNLOAD_SPICE;
-                        } else if (pStructure->getType() == REPAIR) {
-                            intent = eUnitActionIntent::INTENT_REPAIR;
-                        }
-                    } else {
-                        if (pStructure->getType() == REPAIR) {
-                            intent = eUnitActionIntent::INTENT_REPAIR;
-                        }
+        unitID = map.getCellIdUnitLayer(iGoalCell);
+    }
+
+    if (structureID > -1) {
+        cAbstractStructure *pStructure = structure[structureID];
+        if (pStructure) {
+            bool friendlyStructure = getPlayer()->isSameTeamAs(pStructure->getPlayer());
+            if (friendlyStructure) {
+                if (isInfantryUnit()) {
+                    structureID = -1; // reset back, we don't allow capturing own/allied buildings
+                } else if (isHarvester()) {
+                    if (pStructure->getType() == REFINERY) {
+                        // unit ordered to move to refinery, let refinery animate about that.
+                        pStructure->setAnimating(true);
+                        intent = eUnitActionIntent::INTENT_UNLOAD_SPICE;
+                    } else if (pStructure->getType() == REPAIR) {
+                        intent = eUnitActionIntent::INTENT_REPAIR;
                     }
                 } else {
-                    // if capturable... (TODO)
-                    if (isInfantryUnit()) {
-                        intent = eUnitActionIntent::INTENT_CAPTURE;
+                    if (pStructure->getType() == REPAIR) {
+                        intent = eUnitActionIntent::INTENT_REPAIR;
                     }
+                }
+            } else {
+                // if capturable... (TODO)
+                if (isInfantryUnit() || isSaboteur()) {
+                    intent = eUnitActionIntent::INTENT_CAPTURE;
+                } else {
+                    //
+                    intent = eUnitActionIntent::INTENT_MOVE;
                 }
             }
         }
 
-        unitID = map.getCellIdUnitLayer(iGoalCell);
-    }
-
-    if (isSaboteur() && intent != eUnitActionIntent::INTENT_CAPTURE) {
-        // i want to know
-        int bla = 0;
+        if (isSaboteur() && intent != eUnitActionIntent::INTENT_CAPTURE) {
+            // i want to know
+            logbook("ERROR: Expected saboteur to have INTENT_CAPTURE!");
+            assert(false && "Expected saboteur to have INTENT_CAPTURE");
+        }
     }
 
     move_to(iGoalCell, structureID, unitID, intent);
@@ -3663,12 +3667,14 @@ int UNIT_find_harvest_spot(int id) {
 
 /**
  * Reinforce:
- * create a new unit by sending it:
+ * Assumes this is a 'real' reinforcement. (ie triggered by map)
+ * create a new unit by sending it
+ *
  * @param iPlr player index
  * @param iTpe unit type
  * @param iCll location where to bring it
  * @param iStart where to start from
- * Assumes this is a 'real' reinforcement.
+
  */
 void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
     REINFORCE(iPlr, iTpe, iCll, iStart, true);
@@ -3765,9 +3771,10 @@ void UNIT_ORDER_ATTACK(int iUnitID, int iGoalCell, int iUnit, int iStructure, in
         return;
     }
 
+    // TODO: We have somewhere else something with "intents", so this whole if statement should be removed / replaced?
     if (cUnit.iType == SABOTEUR) {
         // saboteur does not attack, but only captures
-        cUnit.move_to(iGoalCell);
+        cUnit.move_to(iGoalCell, iStructure, -1, eUnitActionIntent::INTENT_CAPTURE);
         return;
     }
 

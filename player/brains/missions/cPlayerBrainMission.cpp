@@ -6,8 +6,7 @@
 #include "cPlayerBrainMissionKindAttack.h"
 #include "cPlayerBrainMissionKindExplore.h"
 #include "cPlayerBrainMissionKindDeathHand.h"
-#include "cPlayerBrainMission.h"
-
+#include "cPlayerBrainMissionKindSaboteur.h"
 
 namespace brains {
 
@@ -29,7 +28,7 @@ namespace brains {
                 missionKind = new cPlayerBrainMissionKindAttack(player, this);
                 break;
             case PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR:
-                missionKind = new cPlayerBrainMissionKindAttack(player, this);
+                missionKind = new cPlayerBrainMissionKindSaboteur(player, this);
                 break;
             case PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND:
                 missionKind = new cPlayerBrainMissionKindDeathHand(player, this);
@@ -152,18 +151,42 @@ namespace brains {
                     // this unit has not been assigned to a mission yet
                     if (!entityUnit.isAssignedAnyMission()) {
                         // update bookkeeping that we have produced something
-                        for (auto &unitIWant : group) {
-                            if (unitIWant.type == event.entitySpecificType) {
+                        for (auto &thingIWant : group) {
+                            // straightforward type match
+                            if (thingIWant.type == event.entitySpecificType) {
                                 // in case we have multiple entries with same type we check for produced vs required
-                                if (unitIWant.produced < unitIWant.required) {
+                                if (thingIWant.produced < thingIWant.required) {
                                     // assign this unit to my team and my mission
                                     units.push_back(entityUnit.iID);
                                     entityUnit.assignMission(uniqueIdentifier);
 
-                                    unitIWant.produced++; // increase produced amount
+                                    thingIWant.produced++; // increase produced amount
                                     break;
                                 }
+                            } else if (thingIWant.buildType == eBuildType::SPECIAL) {
+                                // or a special kind of thing I ordered should produce a unit
+                                if (specials[thingIWant.type].providesType == eBuildType::UNIT) {
+                                    // it provides a unit AND the kind of unit it provides matches that what
+                                    // has been created... then we *also* are interested.
+                                    if (specials[thingIWant.type].providesTypeId == event.entitySpecificType) {
+                                        // in case we have multiple entries with same type we check for produced vs required
+
+                                        // do not look at produced property, because we should have only ONE SPECIAL KIND
+                                        // of mission anyway. (ie one FREMEN or one SABOTEUR producing, etc)
+                                        // meaning we assign any unit that derived from this to our group.
+
+//                                        if (thingIWant.produced < thingIWant.required) {
+                                            // assign this unit to my team and my mission
+                                            units.push_back(entityUnit.iID);
+                                            entityUnit.assignMission(uniqueIdentifier);
+
+                                            thingIWant.produced++; // increase produced amount
+                                            break;
+//                                        }
+                                    }
+                                }
                             }
+
                         }
 
                         changeState(PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES);

@@ -611,7 +611,7 @@ void install_specials() {
     specials[SPECIAL_SABOTEUR].deployFrom = eDeployFromType::AT_STRUCTURE;
     specials[SPECIAL_SABOTEUR].deployAtStructure = PALACE;
     specials[SPECIAL_SABOTEUR].units = 1;
-    specials[SPECIAL_SABOTEUR].buildTime = 10;
+    specials[SPECIAL_SABOTEUR].buildTime = 100;
     specials[SPECIAL_SABOTEUR].listId=LIST_PALACE;
     specials[SPECIAL_SABOTEUR].subListId=0;
     strcpy(specials[SPECIAL_SABOTEUR].description, "Saboteur");
@@ -625,7 +625,7 @@ void install_specials() {
     specials[SPECIAL_FREMEN].deployFrom = eDeployFromType::AT_RANDOM_CELL;
     specials[SPECIAL_FREMEN].deployAtStructure = PALACE; // This is not used with AT_RANDOM_CELL ...
     specials[SPECIAL_FREMEN].units = 6; // ... but this is
-    specials[SPECIAL_FREMEN].buildTime = 10;
+    specials[SPECIAL_FREMEN].buildTime = 100;
     specials[SPECIAL_FREMEN].listId=LIST_PALACE;
     specials[SPECIAL_FREMEN].subListId=0;
     strcpy(specials[SPECIAL_FREMEN].description, "Fremen");
@@ -668,6 +668,7 @@ void install_bullets()
     bullets[i].sound = -1;    // no sound
     bullets[i].explosionSize = 1; // 1 tile sized explosion
     bullets[i].deviateProbability = 0; // no probability of deviating a unit
+    strcpy(bullets[i].description, "Unknown");
   }
 
   // huge rocket/missile
@@ -679,7 +680,7 @@ void install_bullets()
   bullets[ROCKET_BIG].max_frames = 1;
   bullets[ROCKET_BIG].sound = SOUND_ROCKET;
   bullets[ROCKET_BIG].explosionSize = 7;
-
+  strcpy(bullets[ROCKET_BIG].description, "ROCKET_BIG");
 
     // small rocket (for ornithopter)
   bullets[ROCKET_SMALL_ORNI].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_SMALL].dat;
@@ -690,6 +691,7 @@ void install_bullets()
   bullets[ROCKET_SMALL_ORNI].max_frames = 1;
   bullets[ROCKET_SMALL_ORNI].sound = SOUND_ROCKET_SMALL;
   bullets[ROCKET_SMALL_ORNI].max_deadframes = 1;
+  strcpy(bullets[ROCKET_SMALL_ORNI].description, "ROCKET_SMALL_ORNI");
 
   // small rocket
   bullets[ROCKET_SMALL].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_SMALL].dat;
@@ -700,6 +702,7 @@ void install_bullets()
   bullets[ROCKET_SMALL].max_frames = 1;
   bullets[ROCKET_SMALL].sound = SOUND_ROCKET_SMALL;
   bullets[ROCKET_SMALL].max_deadframes = 1;
+  strcpy(bullets[ROCKET_SMALL].description, "ROCKET_SMALL");
 
   // small rocket - fremen rocket
   bullets[ROCKET_SMALL_FREMEN].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_SMALL].dat;
@@ -710,6 +713,7 @@ void install_bullets()
   bullets[ROCKET_SMALL_FREMEN].max_frames = 1;
   bullets[ROCKET_SMALL_FREMEN].sound = SOUND_ROCKET_SMALL;
   bullets[ROCKET_SMALL_FREMEN].max_deadframes = 1;
+  strcpy(bullets[ROCKET_SMALL_FREMEN].description, "ROCKET_SMALL_FREMEN");
 
   // normal rocket
   bullets[ROCKET_NORMAL].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_NORMAL].dat;
@@ -720,6 +724,7 @@ void install_bullets()
   bullets[ROCKET_NORMAL].max_frames = 1;
   bullets[ROCKET_NORMAL].sound = SOUND_ROCKET;
   bullets[ROCKET_NORMAL].max_deadframes = 4;
+  strcpy(bullets[ROCKET_NORMAL].description, "ROCKET_NORMAL");
 
   // soldier shot
   bullets[BULLET_SMALL].bmp     = (BITMAP *)gfxdata[BULLET_DOT_SMALL].dat;
@@ -730,6 +735,7 @@ void install_bullets()
   bullets[BULLET_SMALL].max_frames = 0;
   bullets[BULLET_SMALL].sound = SOUND_GUN;
   bullets[BULLET_SMALL].max_deadframes = 0;
+  strcpy(bullets[BULLET_SMALL].description, "BULLET_SMALL");
 
   // trike shot
   bullets[BULLET_TRIKE].bmp     = (BITMAP *)gfxdata[BULLET_DOT_SMALL].dat;
@@ -740,6 +746,7 @@ void install_bullets()
   bullets[BULLET_TRIKE].max_frames = 0;
   bullets[BULLET_TRIKE].sound = SOUND_MACHINEGUN;
   bullets[BULLET_TRIKE].max_deadframes = 0;
+  strcpy(bullets[BULLET_TRIKE].description, "BULLET_TRIKE");
 
   // quad shot
   bullets[BULLET_QUAD].bmp     = (BITMAP *)gfxdata[BULLET_DOT_SMALL].dat;
@@ -750,6 +757,7 @@ void install_bullets()
   bullets[BULLET_QUAD].max_frames = 0;
   bullets[BULLET_QUAD].sound = SOUND_MACHINEGUN;
   bullets[BULLET_QUAD].max_deadframes = 0;
+  strcpy(bullets[BULLET_QUAD].description, "BULLET_QUAD");
 
   // normal tank shot
   bullets[BULLET_TANK].bmp     = (BITMAP *)gfxdata[BULLET_DOT_MEDIUM].dat;
@@ -760,6 +768,7 @@ void install_bullets()
   bullets[BULLET_TANK].max_frames = 0;
   bullets[BULLET_TANK].sound = SOUND_EXPL_ROCKET;
   bullets[BULLET_TANK].max_deadframes = 1;
+  strcpy(bullets[BULLET_TANK].description, "BULLET_TANK");
 
   // siege tank shot
   bullets[BULLET_SIEGE].bmp     = (BITMAP *)gfxdata[BULLET_DOT_MEDIUM].dat;
@@ -770,6 +779,7 @@ void install_bullets()
   bullets[BULLET_SIEGE].max_frames = 0;
   bullets[BULLET_SIEGE].sound = SOUND_EXPL_ROCKET;
   bullets[BULLET_SIEGE].max_deadframes = 2;
+  strcpy(bullets[BULLET_SIEGE].description, "BULLET_SIEGE");
 
   // devastator shot
   bullets[BULLET_DEVASTATOR].bmp     = (BITMAP *)gfxdata[BULLET_DOT_LARGE].dat;
@@ -780,6 +790,7 @@ void install_bullets()
   bullets[BULLET_DEVASTATOR].max_frames = 0;
   bullets[BULLET_DEVASTATOR].sound = SOUND_EXPL_ROCKET;
   bullets[BULLET_DEVASTATOR].max_deadframes = 1;
+  strcpy(bullets[BULLET_DEVASTATOR].description, "BULLET_DEVASTATOR");
 
   // Gas rocket of a deviator
   bullets[BULLET_GAS].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_NORMAL].dat;
@@ -791,6 +802,7 @@ void install_bullets()
   bullets[BULLET_GAS].max_deadframes = 4;
   bullets[BULLET_GAS].sound = SOUND_ROCKET;
   bullets[BULLET_GAS].deviateProbability = 34; // 1 out of 3(ish) should be effective
+  strcpy(bullets[BULLET_GAS].description, "BULLET_GAS");
 
   // normal turret shot
   bullets[BULLET_TURRET].bmp     = (BITMAP *)gfxdata[BULLET_DOT_MEDIUM].dat;
@@ -801,6 +813,7 @@ void install_bullets()
   bullets[BULLET_TURRET].max_frames = 0;
   bullets[BULLET_TURRET].max_deadframes = 1;
   bullets[BULLET_TURRET].sound = SOUND_GUNTURRET;
+  strcpy(bullets[BULLET_TURRET].description, "BULLET_TURRET");
 
   // EXEPTION: Shimmer/ Sonic tank
   bullets[BULLET_SHIMMER].bmp     = NULL;
@@ -811,6 +824,7 @@ void install_bullets()
   bullets[BULLET_SHIMMER].max_frames = 0;
   bullets[BULLET_SHIMMER].max_deadframes = 0;
   bullets[BULLET_SHIMMER].sound = SOUND_SHIMMER;
+  strcpy(bullets[BULLET_SHIMMER].description, "BULLET_SHIMMER");
 
   // rocket of rocket turret
   bullets[ROCKET_RTURRET].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_NORMAL].dat;
@@ -821,6 +835,7 @@ void install_bullets()
   bullets[ROCKET_RTURRET].max_frames = 1;
   bullets[ROCKET_RTURRET].sound = SOUND_ROCKET;
   bullets[ROCKET_RTURRET].max_deadframes = 4;
+  strcpy(bullets[ROCKET_RTURRET].description, "ROCKET_RTURRET");
 
   // SABOTEUR BULLET - FAKE BULLET
   bullets[BULLET_SAB].bmp     = NULL;
@@ -831,41 +846,7 @@ void install_bullets()
   bullets[BULLET_SAB].max_frames = 1;
   bullets[BULLET_SAB].sound = -1;
   bullets[BULLET_SAB].max_deadframes = 4;
-
-
-  /****************** EXPLOSIONS *****************/
-
-  bullets[EXPL_ONE].bmp     = (BITMAP *)gfxdata[BULLET_DOT_SMALL].dat;
-  bullets[EXPL_ONE].deadbmp = -1;
-  bullets[EXPL_ONE].bmp_width = 16*2;
-  bullets[EXPL_ONE].damage = 0;
-  bullets[EXPL_ONE].max_frames = 0;
-  bullets[EXPL_ONE].max_deadframes = 4;
-
-  // 2 of structure explosions
-  bullets[EXPL_TWO].bmp     = (BITMAP *)gfxdata[BULLET_DOT_SMALL].dat;
-  bullets[EXPL_TWO].deadbmp = -1;
-  bullets[EXPL_TWO].bmp_width = 16*2;
-  bullets[EXPL_TWO].damage = 0;
-  bullets[EXPL_TWO].max_frames = 0;
-  bullets[EXPL_TWO].max_deadframes = 4;
-
-  // Tank explosion #1
-  bullets[EXPL_TANK].bmp     = (BITMAP *)gfxdata[BULLET_DOT_SMALL].dat;
-  bullets[EXPL_TANK].deadbmp = -1;
-  bullets[EXPL_TANK].bmp_width = 24*2;
-  bullets[EXPL_TANK].damage = 0;
-  bullets[EXPL_TANK].max_frames = 0;
-  bullets[EXPL_TANK].max_deadframes = 4;
-
-  // Tank explosion #2
-  bullets[EXPL_TANK_TWO].bmp     = (BITMAP *)gfxdata[BULLET_DOT_SMALL].dat;
-  bullets[EXPL_TANK_TWO].deadbmp = -1;
-  bullets[EXPL_TANK_TWO].bmp_width = 24*2;
-  bullets[EXPL_TANK_TWO].damage = 0;
-  bullets[EXPL_TANK_TWO].max_frames = 0;
-  bullets[EXPL_TANK_TWO].max_deadframes = 4;
-
+  strcpy(bullets[BULLET_SAB].description, "BULLET_SAB");
 }
 
 
@@ -1644,8 +1625,9 @@ int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, i
     }
 
     // play sound (when we have one)
-    if (bullets[type].sound > -1)
-        play_sound_id_with_distance(bullets[type].sound, distanceBetweenCellAndCenterOfScreen(fromCell));
+    s_Bullet &sBullet = bullets[type];
+    if (sBullet.sound > -1)
+        play_sound_id_with_distance(sBullet.sound, distanceBetweenCellAndCenterOfScreen(fromCell));
 
     return new_id;
 }
@@ -1764,4 +1746,23 @@ int getAmountReservedVoicesAndInstallSound() {
 	}
 
 	return voices;
+}
+
+const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId) {
+    switch (buildType) {
+        case eBuildType::SPECIAL:
+            return specials[specificTypeId].description;
+        case eBuildType::UNIT:
+            return units[specificTypeId].name;
+        case eBuildType::STRUCTURE:
+            return structures[specificTypeId].name;
+        case eBuildType::BULLET:
+            return bullets[specificTypeId].description;
+        case eBuildType::UPGRADE:
+            return upgrades[specificTypeId].description;
+        default:
+            assert(false && "Unknown buildType?");
+            break;
+    }
+    return "";
 }

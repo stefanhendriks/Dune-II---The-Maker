@@ -1,6 +1,5 @@
 #include "include/d2tmh.h"
 
-#include "cPlayerBrainMissionKind.h"
 #include "cPlayerBrainMissionKindDeathHand.h"
 
 namespace brains {
