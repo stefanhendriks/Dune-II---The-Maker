@@ -39,7 +39,7 @@ namespace brains {
         int unitIdToAttack = -1;
         int structureIdToAttack = -1;
 
-        for (int i = 1; i < MAX_PLAYERS; i++) {
+        for (int i = 0; i < MAX_PLAYERS; i++) {
             if (i == player->getId()) continue; // skip self
             if (players[i].isSameTeamAs(player)) continue; // skip same team players
 
