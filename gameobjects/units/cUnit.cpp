@@ -1780,6 +1780,11 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
         return;
     }
 
+    if (isSaboteur()) {
+        // ignore being shot?
+        return;
+    }
+
     if (iShotUnit > -1) {
         cUnit &unitWhoShotMe = unit[iShotUnit];
         bool unitWhoShotMeIsInfantry = unitWhoShotMe.isInfantryUnit();
