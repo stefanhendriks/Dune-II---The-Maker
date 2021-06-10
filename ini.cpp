@@ -12,6 +12,22 @@
 
 #include "include/d2tmh.h"
 
+bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
+                                const int *iPl_quota, const char *linefeed);
+
+bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
+                                     const int *iPl_quota, char *linefeed);
+
+void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed);
+
+void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *linefeed);
+
+int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, int *iPl_quota, char *linefeed);
+
+void INI_Scenario_Section_Basic(cAbstractMentat *pMentat, char *value, int wordtype, char *linefeed);
+
+void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *iPl_house, const int *iPl_quota);
+
 using namespace std;
 
 /*
@@ -579,12 +595,6 @@ int INI_WordType(char word[25], int section) {
 
 // Scenario section types
 int SCEN_INI_SectionType(char section[30], int last) {
-// if (strcmp(section, "PLAYERS") == 0)
-    //  return INI_PLAYER;
-
-    //if (strcmp(section, "MAP") == 0)
-    //return INI_TERRAIN;
-
     if (strcmp(section, "UNITS") == 0)
         return INI_UNITS;
 
@@ -621,11 +631,7 @@ int SCEN_INI_SectionType(char section[30], int last) {
     if (strcmp(section, "Mercenary") == 0)
         return INI_HOUSEMERCENARY;
 
-
-
-    // When nothing found; we assume its just a new ID tag for some unit or structure
-    // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's
-    return last;
+    return -1;
 }
 
 
@@ -1263,28 +1269,36 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 
             // line is not starting empty and section is found
             if (linesection[0] != '\0' && strlen(linesection) > 1) {
-                section = SCEN_INI_SectionType(linesection, section);
-                char msg[255];
-                sprintf(msg, "[SCENARIO] found section '%s', resulting in section id [%d]", linesection, section);
-                logbook(msg);
-
-                if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
-                    iPlayerID++;
-
-                    if (iPlayerID > (MAX_PLAYERS - 1)) {
-                        iPlayerID = (MAX_PLAYERS - 1);
-                    }
-
-                    if (section == INI_HOUSEATREIDES) iPl_house[iPlayerID] = ATREIDES;
-                    if (section == INI_HOUSEORDOS) iPl_house[iPlayerID] = ORDOS;
-                    if (section == INI_HOUSEHARKONNEN) iPl_house[iPlayerID] = HARKONNEN;
-                    if (section == INI_HOUSEMERCENARY) iPl_house[iPlayerID] = MERCENARY;
-                    if (section == INI_HOUSEFREMEN) iPl_house[iPlayerID] = FREMEN;
-                    if (section == INI_HOUSESARDAUKAR) iPl_house[iPlayerID] = SARDAUKAR;
+                int sectionType = SCEN_INI_SectionType(linesection, section);
+                if (sectionType > -1) {
+                    // found a section
+                    section = sectionType;
 
                     char msg[255];
-                    sprintf(msg, "[SCENARIO] Setting house to [%d] for playerId [%d]", iPl_house[iPlayerID], iPlayerID);
+                    sprintf(msg, "[SCENARIO] found section '%s', resulting in section id [%d]", linesection, section);
                     logbook(msg);
+
+                    if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
+                        iPlayerID++;
+
+                        if (iPlayerID > (MAX_PLAYERS - 1)) {
+                            iPlayerID = (MAX_PLAYERS - 1);
+                        }
+
+                        int house = -1;
+                        if (section == INI_HOUSEATREIDES) house = ATREIDES;
+                        if (section == INI_HOUSEORDOS) house = ORDOS;
+                        if (section == INI_HOUSEHARKONNEN) house = HARKONNEN;
+                        if (section == INI_HOUSEMERCENARY) house = MERCENARY;
+                        if (section == INI_HOUSEFREMEN) house = FREMEN;
+                        if (section == INI_HOUSESARDAUKAR) house = SARDAUKAR;
+
+                        iPl_house[iPlayerID] = house;
+
+                        char msg[255];
+                        sprintf(msg, "[SCENARIO] Setting house to [%d] for playerId [%d]", iPl_house[iPlayerID], iPlayerID);
+                        logbook(msg);
+                    }
                 }
                 continue; // next line
             }
@@ -1296,600 +1310,27 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
             }
 
             if (section == INI_BASIC) {
-                if (wordtype == WORD_BRIEFPICTURE) {
-                    // Load name, and load proper briefingpicture
-                    memset(value, 0, sizeof(value));
-
-                    string scenefile = INI_WordValueString(linefeed);
-                    string scene = INI_SceneFileToScene(scenefile);
-
-                    scene = INI_SceneFileToScene(scenefile);
-
-                    if (!isInString(scene, "unknown")) {
-                        pMentat->loadScene(scene);
-                    }
-                }
-
-                if (wordtype == WORD_FOCUS) {
-                    int focusCell = INI_WordValueINT(linefeed);
-                    players[0].setFocusCell(focusCell);
-                    mapCamera->centerAndJumpViewPortToCell(focusCell);
-                }
+                INI_Scenario_Section_Basic(pMentat, value, wordtype, linefeed);
             }
 
             // Dune 2 house found, load player data
             if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
-                char msg[255];
-                memset(msg, 0, sizeof(msg));
-                sprintf(msg, "Section is between atreides and mercenary, the playerId is [%d]. WordType is [%d]",
-                        iPlayerID, wordtype);
-                logbook(msg);
-                // link house (found, because > -1)
-                if (iPlayerID > -1) {
-                    if (wordtype == WORD_BRAIN) {
-                        char cBrain[256];
-                        memset(cBrain, 0, sizeof(cBrain));
-                        INI_WordValueCHAR(linefeed, cBrain);
-
-                        char msg[255];
-                        memset(msg, 0, sizeof(msg));
-                        sprintf(msg, "Brain is [%s]", cBrain);
-                        logbook(msg);
-
-                        // We know the human brain now, this should be player 0...
-                        if (strcmp(cBrain, "Human") == 0) {
-                            char msg[255];
-                            memset(msg, 0, sizeof(msg));
-                            sprintf(msg, "Found human player for id [%d]", iPlayerID);
-                            logbook(msg);
-                            iHumanID = iPlayerID;
-                        } else {
-                            logbook("This brain is not human...");
-                        }
-
-                    } else if (wordtype == WORD_CREDITS) {
-                        int credits = INI_WordValueINT(linefeed) - 1;
-                        char msg[255];
-                        memset(msg, 0, sizeof(msg));
-                        sprintf(msg, "Set credits for player id [%d] to [%d]", iPlayerID, credits);
-                        logbook(msg);
-
-                        iPl_credits[iPlayerID] = credits;
-                    } else if (wordtype == WORD_QUOTA) {
-                        iPl_quota[iPlayerID] = INI_WordValueINT(linefeed);
-                    }
+                int result = INI_Scenario_Section_House(wordtype, iPlayerID, iPl_credits, iPl_quota, linefeed);
+                if (result > -1) {
+                    iHumanID = result;
                 }
             }
 
             if (section == INI_MAP) {
-                map.init(64, 64);
-
-                // original dune 2 maps have 64x64 maps
-                if (wordtype == WORD_MAPSEED) {
-                    logbook("[SCENARIO] -> [MAP] Seed=");
-                    INI_Load_seed(INI_WordValueINT(linefeed));
-                }
-
-                // Loaded before SEED
-                if (wordtype == WORD_MAPBLOOM) {
-                    // This should put spice blooms in our array
-                    // Logic: read till next "," , then use that number to determine
-                    // where the bloom will be (as cell nr)
-                    logbook("[SCENARIO] -> [MAP] Bloom=");
-
-                    int iBloomID = 0;
-                    int iStringID = 6;    // B L O O M = <6>
-                    int iWordID = 0;
-
-                    char word[10];
-                    memset(word, 0, sizeof(word)); // clear string
-
-                    for (iStringID; iStringID < MAX_LINE_LENGTH; iStringID++) {
-                        // until we encounter a "," ...
-
-                        char letter[1];
-                        letter[0] = '\0';
-                        letter[0] = linefeed[iStringID];
-
-                        // its a comma!
-                        if (letter[0] == ',' || letter[0] == '\0' || letter[0] == '\n') {
-                            // from prevID TILL now is a number
-                            iWordID = 0;
-
-                            int original_dune2_cell = atoi(word);
-                            int d2tm_cell = -1;
-
-                            int iCellX = (original_dune2_cell - ((original_dune2_cell / 64) * 64));
-                            int iCellY = (original_dune2_cell / 64);
-
-                            // Now recalculate it
-                            d2tm_cell = map.makeCell(iCellX, iCellY);
-                            blooms[iBloomID] = d2tm_cell;
-                            memset(word, 0, sizeof(word)); // clear string
-
-                            if (iBloomID < 29)
-                                iBloomID++;
-
-                            if (letter[0] == '\0' || letter[0] == '\n')
-                                break; // get out
-                        } else {
-                            word[iWordID] = letter[0]; // copy
-                            if (iWordID < 9)
-                                iWordID++;
-
-                        }
-                    }
-
-
-                }
-                    // Loaded before SEED
-                else if (wordtype == WORD_MAPFIELD) {
-                    // This should put spice blooms in our array
-                    // Logic: read till next "," , then use that number to determine
-                    // where the bloom will be (as cell nr)
-
-                    logbook("[SCENARIO] -> [MAP] Field=");
-                    int iFieldID = 0;
-                    int iStringID = 6;    // F I E L D = <6>
-                    int iWordID = 0;
-
-                    char word[10];
-                    memset(word, 0, sizeof(word)); // clear string
-
-                    for (iStringID; iStringID < MAX_LINE_LENGTH; iStringID++) {
-                        // until we encounter a "," ...
-
-                        char letter[1];
-                        letter[0] = '\0';
-                        letter[0] = linefeed[iStringID];
-
-                        // its a comma!
-                        if (letter[0] == ',' || letter[0] == '\0' || letter[0] == '\n') {
-                            // from prevID TILL now is a number
-                            iWordID = 0;
-
-                            int original_dune2_cell = atoi(word);
-                            int d2tm_cell = -1;
-
-                            int iCellX = (original_dune2_cell - ((original_dune2_cell / 64) * 64));
-                            int iCellY = (original_dune2_cell / 64);
-
-                            // Now recalculate it
-                            d2tm_cell = map.makeCell(iCellX, iCellY);
-                            fields[iFieldID] = d2tm_cell;
-                            memset(word, 0, sizeof(word)); // clear string
-
-                            if (iFieldID < 29)
-                                iFieldID++;
-
-                            if (letter[0] == '\0' || letter[0] == '\n')
-                                break; // get out
-                        } else {
-                            word[iWordID] = letter[0]; // copy
-                            if (iWordID < 9)
-                                iWordID++;
-
-                        }
-                    }
-
-
-                }
-
+                INI_Scenario_Section_MAP(blooms, fields, wordtype, linefeed);
             } else if (section == INI_UNITS) {
-                // ORIGINAL DUNE 2 MISSION.
-                if (bSetUpPlayers) {
-                    logbook("INI: Going to setup players");
-                    int iCPUId = 1; // index for CPU's, starts at 1 because ID 0 is HUMAN player
-
-                    for (int playerIndex = 0; playerIndex < MAX_PLAYERS; playerIndex++) // till 6 , since player 6 itself is sandworm
-                    {
-                        char msg[255];
-                        memset(msg, 0, sizeof(msg));
-                        int housePlayer = iPl_house[playerIndex];
-                        sprintf(msg, "House for id [%d] is [%d] - human id is [%d]", playerIndex, housePlayer, iHumanID);
-                        logbook(msg);
-                        if (housePlayer > -1) {
-                            int creditsPlayer = iPl_credits[playerIndex];
-                            if (playerIndex == iHumanID) {
-                                char msg[255];
-                                memset(msg, 0, sizeof(msg));
-                                sprintf(msg, "INI: Setting up human player, credits to [%d], house [%d] and team [%d]", creditsPlayer, housePlayer, 0);
-                                logbook(msg);
-                                players[HUMAN].setCredits(creditsPlayer);
-                                players[HUMAN].setHouse(housePlayer);
-                                players[HUMAN].setTeam(0);
-                                assert(drawManager);
-                                if (drawManager->getCreditsDrawer()) {
-                                    drawManager->getCreditsDrawer()->setCredits();
-                                }
-
-                                if (iPl_quota[playerIndex] > 0) {
-                                    game.iWinQuota = iPl_quota[playerIndex];
-                                }
-                            } else {
-                                int iTeam = 1; // All AI players are on the same team
-
-                                // FREMEN house belongs
-                                if (housePlayer == FREMEN) {
-                                    if (players[HUMAN].getHouse() == ATREIDES) {
-                                        iTeam = 0; // same team as human player
-                                    }
-                                }
-
-                                players[iCPUId].setTeam(iTeam);
-
-                                char msg[255];
-                                memset(msg, 0, sizeof(msg));
-                                sprintf(msg, "INI: Setting up CPU player, credits to [%d], house to [%d] and team [%d]",
-                                        creditsPlayer, housePlayer, iTeam);
-                                logbook(msg);
-
-                                players[iCPUId].setCredits(creditsPlayer);
-                                players[iCPUId].setHouse(housePlayer);
-                                iCPUId++;
-                            }
-                        }
-                    }
-
-                    bSetUpPlayers = false;
-                }
-
-                int iPart = -1; /*
-							0 = Controller
-							1 = Type
-							2 = HP
-							3 = Cell
-							4 = Facing (body)
-							5 = Facing (head)
-							*/
-
-                // Skip ID= part. It is just for fun there.
-                int iController, iType, iHP, iCell, iFacingBody, iFacingHead;
-                iController = iType = iHP = iCell = iFacingBody = iFacingHead = -1;
-
-                char chunk[25];
-                bool bClearChunk = true;
-                bool bSkipped = false;
-                int iC = -1;
-
-                for (int c = 0; c < MAX_LINE_LENGTH; c++) {
-                    // clear chunk
-                    if (bClearChunk) {
-                        for (int ic = 0; ic < 25; ic++)
-                            chunk[ic] = '\0';
-                        iC = 0;
-                        bClearChunk = false;
-                    }
-
-                    // Fill in chunk
-                    if (iC < 25 && bSkipped && linefeed[c] != ',') {
-                        chunk[iC] = linefeed[c];
-                        iC++;
-                    }
-
-                    // , means next part. A ' ' means end
-                    if (linefeed[c] == ',' || linefeed[c] == '\0') {
-                        iPart++;
-
-                        if (iPart == 0) {
-                            int iHouse = getHouseFromChar(chunk);
-
-                            // Search for a player with this house
-                            for (int i = 0; i < MAX_PLAYERS; i++)
-                                if (players[i].getHouse() == iHouse) {
-                                    iController = i; // set controller here.. phew
-                                    break;
-                                }
-
-                            // HACK HACK : Set up fremen house here
-                            if (iHouse == FREMEN) {
-                                players[AI_CPU5].setHouse(FREMEN); // set up palette
-                                players[AI_CPU5].setCredits(9999); // lots of money for the fremen
-                                iController = AI_CPU5;
-                            }
-
-                            if (iController < 0) {
-                                char msg[256];
-                                sprintf(msg, "WARNING: Cannot identify house/controller -> STRING '%s'", chunk);
-                                logbook(msg);
-                            }
-
-                        } else if (iPart == 1) {
-                            iType = getUnitTypeFromChar(chunk);
-                        }
-                            // do nothing in part 2
-                        else if (iPart == 3) {
-                            iCell = atoi(chunk);
-
-
-                        } else if (iPart == 4)
-                            break;
-
-
-                        bClearChunk = true;
-                    }
-
-                    // found the = mark, this means we start chopping now!
-                    if (linefeed[c] == '=')
-                        bSkipped = true;
-                }
-
-
-                if (iController > -1) {
-                    UNIT_CREATE(iCell, iType, iController, true);
-                }
+                bSetUpPlayers = INI_Scenario_Section_Units(iHumanID, bSetUpPlayers, iPl_credits, iPl_house, iPl_quota, linefeed);
             } else if (section == INI_STRUCTURES) {
-                // ORIGINAL DUNE 2 MISSION. (duplicate code?)
-                if (bSetUpPlayers) {
-                    int iCPUId = 1; // starts from 1 because ID 0 is HUMAN player
-
-                    for (int iP = 0; iP < MAX_PLAYERS; iP++) // till 6 , since player 6 itself is sandworm
-                    {
-                        if (iPl_house[iP] > -1)
-                            if (iP == iHumanID) {
-                                players[HUMAN].setCredits(iPl_credits[iP]);
-                                players[HUMAN].setHouse(iPl_house[iP]);
-                                players[HUMAN].setTeam(0);
-
-                                if (iPl_quota[iP] > 0) {
-                                    game.iWinQuota = iPl_quota[iP];
-                                }
-                            } else {
-                                // CPU player
-                                int iTeam = 1; // All AI players are on the same team
-
-                                // Except FREMEN, it is allies with ATREIDES
-                                if (iPl_house[iP] == FREMEN) {
-                                    if (players[HUMAN].getHouse() == ATREIDES) {
-                                        iTeam = 0;
-                                    }
-                                }
-
-                                players[iCPUId].setTeam(iTeam);
-                                players[iCPUId].setCredits(iPl_credits[iP]);
-                                players[iCPUId].setHouse(iPl_house[iP]);
-                                iCPUId++;
-                            }
-                    }
-                    bSetUpPlayers = false;
-                }
-
-
-                int iPart = -1; /*
-							0 = Controller
-							1 = Type
-							2 = HP
-							3 = Cell
-							*/
-
-                // Skip ID= part. It is just for fun there.
-                int iController, iType, iHP, iCell;
-                iController = iType = iHP = iCell = -1;
-
-                char chunk[25];
-                bool bClearChunk = true;
-                bool bSkipped = false;
-                int iC = -1;
-                bool bGen = false;
-                int iIS = -1;
-
-                // check if this is a 'gen'
-                if (strstr(linefeed, "GEN") != NULL) bGen = true;
-
-                for (int c = 0; c < MAX_LINE_LENGTH; c++) {
-                    // clear chunk
-                    if (bClearChunk) {
-                        for (int ic = 0; ic < 25; ic++) {
-                            chunk[ic] = '\0';
-                        }
-
-                        iC = 0;
-                        bClearChunk = false;
-                    }
-
-                    // Fill in chunk
-                    if (iC < 25 && bSkipped && linefeed[c] != ',') {
-                        chunk[iC] = linefeed[c];
-                        iC++;
-                    }
-
-
-                    // , means next part. A ' ' means end
-                    if (linefeed[c] == ',' || linefeed[c] == '\0') {
-                        iPart++;
-
-                        // this line is not GENXXX
-                        if (bGen == false) {
-                            if (iPart == 0) {
-                                int iHouse = getHouseFromChar(chunk);
-
-                                // Search for a player with this house
-                                for (int i = 0; i < MAX_PLAYERS; i++) {
-                                    //char msg[80];
-                                    //sprintf(msg, "i=%d, ihouse=%d, house=%d", i, iHouse, player[i].house);
-                                    //logbook(msg);
-                                    if (players[i].getHouse() == iHouse) {
-                                        iController = i; // set controller here.. phew
-                                        break;
-                                    }
-                                }
-                                // Quickfix: fremen house in original dune 2, is house 6 (not detectable)
-                                // in this game.
-                                //if (iHouse == FREMEN)
-                                //	iController = 6;
-
-                                if (iController < 0) {
-                                    logbook("WARNING: Identifying house/controller of structure (typo?)");
-                                    logbook(chunk);
-                                }
-                            } else if (iPart == 1) {
-                                iType = getStructureTypeFromChar(chunk);
-                            } else if (iPart == 3) {
-                                iCell = atoi(chunk);
-
-                                break;
-                            }
-                        } else {
-                            if (iPart == 0) {
-                                int iHouse = getHouseFromChar(chunk);;
-
-                                // Search for a player with this house
-                                for (int i = 0; i < MAX_PLAYERS; i++) {
-                                    if (players[i].getHouse() == iHouse) {
-                                        iController = i; // set controller here.. phew
-                                        break;
-                                    }
-                                }
-                            } else if (iPart == 1) {
-                                // Figure out the cell shit of this GEN
-                                char cCell[5];
-                                for (int cc = 0; cc < 5; cc++)
-                                    cCell[cc] = '\0';
-
-                                int iCC = 0;
-                                for (int cc = 3; cc < iIS; cc++) {
-                                    cCell[iCC] = linefeed[cc];
-                                    iCC++;
-                                }
-
-                                int iGenCell = atoi(cCell);
-
-                                iCell = iGenCell;
-
-                                if (strcmp(chunk, "Wall") == 0) iType = WALL;
-                                if (strcmp(chunk, "Concrete") == 0) iType = SLAB1;
-                                break;
-                            }
-                        }
-
-                        bClearChunk = true;
-                    }
-
-                    // found the = mark, this means we start chopping now!
-                    if (linefeed[c] == '=') {
-                        bSkipped = true;
-                        iIS = c;
-                    }
-                }
-
-                if (iController > -1) {
-                    // anything lower than SLAB1 means a 'normal' structure (TODO: make this less tight coupled)
-                    if (iType < SLAB1) {
-                        if (iType != CONSTYARD) {
-                            cStructureFactory::getInstance()->createSlabForStructureType(iCell, iType);
-                        }
-                        cStructureFactory::getInstance()->createStructure(iCell, iType, iController, 100);
-                    } else {
-                        if (iType == SLAB1) {
-                            mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
-                            //map.cell[iCell].tile = SLAB;
-                        }
-                        if (iType == WALL) {
-                            mapEditor.createCell(iCell, TERRAIN_WALL, 0);
-                        }
-                    }
-                } else {
-                    logbook("WARNING: Identifying house/controller of structure (typo?)");
-                }
+                bSetUpPlayers = INI_Scenario_Section_Structures(iHumanID, bSetUpPlayers, iPl_credits, iPl_house, iPl_quota, linefeed);
             } else if (section == INI_REINFORCEMENTS) {
-                logbook("[SCENARIO] -> REINFORCEMENTS");
-
-                int iPart = -1; /*
-							0 = Controller
-							1 = Type
-							2 = HP
-							3 = Cell
-							*/
-
-                // Skip ID= part. It is just for fun there.
-                int iController, iType, iTime, iCell;
-                iController = iType = iTime = iCell = -1;
-
-                char chunk[25];
-                bool bClearChunk = true;
-                bool bSkipped = false;
-                int iC = -1;
-                int iIS = -1;
-
-
-                for (int c = 0; c < MAX_LINE_LENGTH; c++) {
-                    // clear chunk
-                    if (bClearChunk) {
-                        memset(chunk, 0, sizeof(chunk));
-                        //for (int ic=0; ic < 25; ic++)
-                        //	chunk[ic] = '\0';
-                        iC = 0;
-                        bClearChunk = false;
-                    }
-
-                    // Fill in chunk
-                    if (iC < 25 && bSkipped && linefeed[c] != ',') {
-                        chunk[iC] = linefeed[c];
-                        iC++;
-                    }
-
-                    // , means next part. A ' ' means end
-                    if (linefeed[c] == ',' || linefeed[c] == '\0' || linefeed[c] == '+') {
-                        iPart++;
-
-                        if (iPart == 0) {
-                            int iHouse = getHouseFromChar(chunk);
-
-                            if (iHouse > -1) {
-                                // Search for a player with this house
-                                for (int i = 0; i < MAX_PLAYERS; i++) {
-                                    if (players[i].getHouse() == iHouse) {
-                                        iController = i; // set controller here.. phew
-                                        break;
-                                    }
-                                }
-                            }
-                        } else if (iPart == 1) {
-                            iType = getUnitTypeFromChar(chunk);
-
-                        } else if (iPart == 2) {
-                            // Homebase is home of that house
-                            if (strcmp(chunk, "Homebase") == 0) {
-                                iCell = players[iController].getFocusCell();
-                            } else {
-                                // enemy base
-
-                                if (iController == 0) {
-                                    // Find corresponding house and get controller
-                                    for (int i = 0; i < MAX_PLAYERS; i++)
-                                        if (players[i].getHouse() == iHouse && i != iController) {
-                                            iCell = players[i].getFocusCell();
-                                            break;
-                                        }
-                                } else {
-                                    // computer player must find enemy = human
-                                    iCell = players[0].getFocusCell();
-                                }
-                            }
-
-                        } else if (iPart == 3) {
-                            int iGenCell = atoi(chunk);
-                            iTime = iGenCell;
-                            SET_REINFORCEMENT(iCell, iController, iTime, iType);
-                            break;
-                        }
-
-                        bClearChunk = true;
-                    }
-
-                    // found the = mark, this means we start chopping now!
-                    if (linefeed[c] == '=') {
-                        bSkipped = true;
-                        iIS = c;
-                    }
-
-
-                }
+                INI_Scenario_Section_Reinforcements(iHouse, linefeed);
             }
-
-
             wordtype = WORD_NONE;
-
         }
 
         fclose(stream);
@@ -1931,10 +1372,599 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
 
         logbook("[SCENARIO] Done reading");
     }
-    players[AI_WORM].setTeam(2); // the WORM player is nobody's ally
-    players[FREMEN].setTeam(HUMAN);
 
     mapEditor.smoothMap();
+}
+
+void INI_Scenario_Section_Basic(cAbstractMentat *pMentat, char *value, int wordtype, char *linefeed) {
+    if (wordtype == WORD_BRIEFPICTURE) {
+        // Load name, and load proper briefingpicture
+        memset(value, 0, sizeof(value));
+
+        string scenefile = INI_WordValueString(linefeed);
+        string scene = INI_SceneFileToScene(scenefile);
+
+        scene = INI_SceneFileToScene(scenefile);
+
+        if (!isInString(scene, "unknown")) {
+            pMentat->loadScene(scene);
+        }
+    }
+
+    if (wordtype == WORD_FOCUS) {
+        int focusCell = INI_WordValueINT(linefeed);
+        players[0].setFocusCell(focusCell);
+        mapCamera->centerAndJumpViewPortToCell(focusCell);
+    }
+}
+
+int INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, int *iPl_quota, char *linefeed) {
+    int iHumanID = -1;
+    char msg[255];
+    memset(msg, 0, sizeof(msg));
+    sprintf(msg, "Section is between atreides and mercenary, the playerId is [%d]. WordType is [%d]",
+            iPlayerID, wordtype);
+    logbook(msg);
+    // link house (found, because > -1)
+    if (iPlayerID > -1) {
+        if (wordtype == WORD_BRAIN) {
+            char cBrain[256];
+            memset(cBrain, 0, sizeof(cBrain));
+            INI_WordValueCHAR(linefeed, cBrain);
+
+            char msg[255];
+            memset(msg, 0, sizeof(msg));
+            sprintf(msg, "Brain is [%s]", cBrain);
+            logbook(msg);
+
+            // We know the human brain now, this should be player 0 in our game (!?)...
+            if (strcmp(cBrain, "Human") == 0) {
+                char msg[255];
+                memset(msg, 0, sizeof(msg));
+                sprintf(msg, "Found human player for id [%d]", iPlayerID);
+                logbook(msg);
+                iHumanID = iPlayerID;
+            } else {
+                logbook("This brain is not human...");
+            }
+        } else if (wordtype == WORD_CREDITS) {
+            int credits = INI_WordValueINT(linefeed) - 1;
+            char msg[255];
+            memset(msg, 0, sizeof(msg));
+            sprintf(msg, "Set credits for player id [%d] to [%d]", iPlayerID, credits);
+            logbook(msg);
+
+            iPl_credits[iPlayerID] = credits;
+        } else if (wordtype == WORD_QUOTA) {
+            iPl_quota[iPlayerID] = INI_WordValueINT(linefeed);
+        }
+    }
+    return iHumanID;
+}
+
+void INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, char *linefeed) {
+    map.init(64, 64);
+
+    // original dune 2 maps have 64x64 maps
+    if (wordtype == WORD_MAPSEED) {
+        logbook("[SCENARIO] -> [MAP] Seed=");
+        INI_Load_seed(INI_WordValueINT(linefeed));
+    }
+
+    // Loaded before SEED
+    if (wordtype == WORD_MAPBLOOM) {
+        // This should put spice blooms in our array
+        // Logic: read till next "," , then use that number to determine
+        // where the bloom will be (as cell nr)
+        logbook("[SCENARIO] -> [MAP] Bloom=");
+
+        int iBloomID = 0;
+        int iStringID = 6;    // B L O O M = <6>
+        int iWordID = 0;
+
+        char word[10];
+        memset(word, 0, sizeof(word)); // clear string
+
+        for (iStringID; iStringID < MAX_LINE_LENGTH; iStringID++) {
+            // until we encounter a "," ...
+
+            char letter[1];
+            letter[0] = '\0';
+            letter[0] = linefeed[iStringID];
+
+            // its a comma!
+            if (letter[0] == ',' || letter[0] == '\0' || letter[0] == '\n') {
+                // from prevID TILL now is a number
+                iWordID = 0;
+
+                int original_dune2_cell = atoi(word);
+                int d2tm_cell = -1;
+
+                int iCellX = (original_dune2_cell - ((original_dune2_cell / 64) * 64));
+                int iCellY = (original_dune2_cell / 64);
+
+                // Now recalculate it
+                d2tm_cell = map.makeCell(iCellX, iCellY);
+                blooms[iBloomID] = d2tm_cell;
+                memset(word, 0, sizeof(word)); // clear string
+
+                if (iBloomID < 29)
+                    iBloomID++;
+
+                if (letter[0] == '\0' || letter[0] == '\n')
+                    break; // get out
+            } else {
+                word[iWordID] = letter[0]; // copy
+                if (iWordID < 9)
+                    iWordID++;
+
+            }
+        }
+
+
+    }
+        // Loaded before SEED
+    else if (wordtype == WORD_MAPFIELD) {
+        // This should put spice blooms in our array
+        // Logic: read till next "," , then use that number to determine
+        // where the bloom will be (as cell nr)
+
+        logbook("[SCENARIO] -> [MAP] Field=");
+        int iFieldID = 0;
+        int iStringID = 6;    // F I E L D = <6>
+        int iWordID = 0;
+
+        char word[10];
+        memset(word, 0, sizeof(word)); // clear string
+
+        for (iStringID; iStringID < MAX_LINE_LENGTH; iStringID++) {
+            // until we encounter a "," ...
+
+            char letter[1];
+            letter[0] = '\0';
+            letter[0] = linefeed[iStringID];
+
+            // its a comma!
+            if (letter[0] == ',' || letter[0] == '\0' || letter[0] == '\n') {
+                // from prevID TILL now is a number
+                iWordID = 0;
+
+                int original_dune2_cell = atoi(word);
+                int d2tm_cell = -1;
+
+                int iCellX = (original_dune2_cell - ((original_dune2_cell / 64) * 64));
+                int iCellY = (original_dune2_cell / 64);
+
+                // Now recalculate it
+                d2tm_cell = map.makeCell(iCellX, iCellY);
+                fields[iFieldID] = d2tm_cell;
+                memset(word, 0, sizeof(word)); // clear string
+
+                if (iFieldID < 29)
+                    iFieldID++;
+
+                if (letter[0] == '\0' || letter[0] == '\n')
+                    break; // get out
+            } else {
+                word[iWordID] = letter[0]; // copy
+                if (iWordID < 9)
+                    iWordID++;
+
+            }
+        }
+
+
+    }
+}
+
+void INI_Scenario_Section_Reinforcements(int iHouse, const char *linefeed) {
+    logbook("[SCENARIO] -> REINFORCEMENTS");
+
+    int iPart = -1; /*
+                0 = Controller
+                1 = Type
+                2 = HP
+                3 = Cell
+                */
+
+    // Skip ID= part. It is just for fun there.
+    int iController, iType, iTime, iCell;
+    iController = iType = iTime = iCell = -1;
+
+    char chunk[25];
+    bool bClearChunk = true;
+    bool bSkipped = false;
+    int iC = -1;
+    int iIS = -1;
+
+
+    for (int c = 0; c < MAX_LINE_LENGTH; c++) {
+        // clear chunk
+        if (bClearChunk) {
+            memset(chunk, 0, sizeof(chunk));
+            //for (int ic=0; ic < 25; ic++)
+            //	chunk[ic] = '\0';
+            iC = 0;
+            bClearChunk = false;
+        }
+
+        // Fill in chunk
+        if (iC < 25 && bSkipped && linefeed[c] != ',') {
+            chunk[iC] = linefeed[c];
+            iC++;
+        }
+
+        // , means next part. A ' ' means end
+        if (linefeed[c] == ',' || linefeed[c] == '\0' || linefeed[c] == '+') {
+            iPart++;
+
+            if (iPart == 0) {
+                int iHouse = getHouseFromChar(chunk);
+
+                if (iHouse > -1) {
+                    // Search for a player with this house
+                    for (int i = 0; i < MAX_PLAYERS; i++) {
+                        if (players[i].getHouse() == iHouse) {
+                            iController = i; // set controller here.. phew
+                            break;
+                        }
+                    }
+                }
+            } else if (iPart == 1) {
+                iType = getUnitTypeFromChar(chunk);
+
+            } else if (iPart == 2) {
+                // Homebase is home of that house
+                if (strcmp(chunk, "Homebase") == 0) {
+                    iCell = players[iController].getFocusCell();
+                } else {
+                    // enemy base
+
+                    if (iController == 0) {
+                        // Find corresponding house and get controller
+                        for (int i = 0; i < MAX_PLAYERS; i++)
+                            if (players[i].getHouse() == iHouse && i != iController) {
+                                iCell = players[i].getFocusCell();
+                                break;
+                            }
+                    } else {
+                        // computer player must find enemy = human
+                        iCell = players[0].getFocusCell();
+                    }
+                }
+
+            } else if (iPart == 3) {
+                int iGenCell = atoi(chunk);
+                iTime = iGenCell;
+                SET_REINFORCEMENT(iCell, iController, iTime, iType);
+                break;
+            }
+
+            bClearChunk = true;
+        }
+
+        // found the = mark, this means we start chopping now!
+        if (linefeed[c] == '=') {
+            bSkipped = true;
+            iIS = c;
+        }
+
+
+    }
+}
+
+bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
+                                     const int *iPl_quota,
+                                     char *linefeed) {// ORIGINAL DUNE 2 MISSION. (duplicate code?)
+    if (bSetUpPlayers) {
+        INI_Scenario_SetupPlayers(iHumanID, iPl_credits, iPl_house, iPl_quota);
+        bSetUpPlayers = false;
+    }
+
+    int iPart = -1; /*
+                0 = Controller
+                1 = Type
+                2 = HP
+                3 = Cell
+                */
+
+    // Skip ID= part. It is just for fun there.
+    int iController, iType, iHP, iCell;
+    iController = iType = iHP = iCell = -1;
+
+    char chunk[25];
+    bool bClearChunk = true;
+    bool bSkipped = false;
+    int iC = -1;
+    bool bGen = false;
+    int iIS = -1;
+
+    // check if this is a 'gen'
+    if (strstr(linefeed, "GEN") != NULL) bGen = true;
+
+    for (int c = 0; c < MAX_LINE_LENGTH; c++) {
+        // clear chunk
+        if (bClearChunk) {
+            for (int ic = 0; ic < 25; ic++) {
+                chunk[ic] = '\0';
+            }
+
+            iC = 0;
+            bClearChunk = false;
+        }
+
+        // Fill in chunk
+        if (iC < 25 && bSkipped && linefeed[c] != ',') {
+            chunk[iC] = linefeed[c];
+            iC++;
+        }
+
+
+        // , means next part. A ' ' means end
+        if (linefeed[c] == ',' || linefeed[c] == '\0') {
+            iPart++;
+
+            // this line is not GENXXX
+            if (bGen == false) {
+                if (iPart == 0) {
+                    int iHouse = getHouseFromChar(chunk);
+
+                    // Search for a player with this house
+                    for (int i = 0; i < MAX_PLAYERS; i++) {
+                        //char msg[80];
+                        //sprintf(msg, "i=%d, ihouse=%d, house=%d", i, iHouse, player[i].house);
+                        //logbook(msg);
+                        if (players[i].getHouse() == iHouse) {
+                            iController = i; // set controller here.. phew
+                            break;
+                        }
+                    }
+                    // Quickfix: fremen house in original dune 2, is house 6 (not detectable)
+                    // in this game.
+                    //if (iHouse == FREMEN)
+                    //	iController = 6;
+
+                    if (iController < 0) {
+                        logbook("WARNING: Identifying house/controller of structure (typo?)");
+                        logbook(chunk);
+                    }
+                } else if (iPart == 1) {
+                    iType = getStructureTypeFromChar(chunk);
+                } else if (iPart == 3) {
+                    iCell = atoi(chunk);
+
+                    break;
+                }
+            } else {
+                if (iPart == 0) {
+                    int iHouse = getHouseFromChar(chunk);;
+
+                    // Search for a player with this house
+                    for (int i = 0; i < MAX_PLAYERS; i++) {
+                        if (players[i].getHouse() == iHouse) {
+                            iController = i; // set controller here.. phew
+                            break;
+                        }
+                    }
+                } else if (iPart == 1) {
+                    // Figure out the cell shit of this GEN
+                    char cCell[5];
+                    for (int cc = 0; cc < 5; cc++)
+                        cCell[cc] = '\0';
+
+                    int iCC = 0;
+                    for (int cc = 3; cc < iIS; cc++) {
+                        cCell[iCC] = linefeed[cc];
+                        iCC++;
+                    }
+
+                    int iGenCell = atoi(cCell);
+
+                    iCell = iGenCell;
+
+                    if (strcmp(chunk, "Wall") == 0) iType = WALL;
+                    if (strcmp(chunk, "Concrete") == 0) iType = SLAB1;
+                    break;
+                }
+            }
+
+            bClearChunk = true;
+        }
+
+        // found the = mark, this means we start chopping now!
+        if (linefeed[c] == '=') {
+            bSkipped = true;
+            iIS = c;
+        }
+    }
+
+    if (iController > -1) {
+        // anything lower than SLAB1 means a 'normal' structure (TODO: make this less tight coupled)
+        if (iType < SLAB1) {
+            if (iType != CONSTYARD) {
+                cStructureFactory::getInstance()->createSlabForStructureType(iCell, iType);
+            }
+            cStructureFactory::getInstance()->createStructure(iCell, iType, iController, 100);
+        } else {
+            if (iType == SLAB1) {
+                mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
+                //map.cell[iCell].tile = SLAB;
+            }
+            if (iType == WALL) {
+                mapEditor.createCell(iCell, TERRAIN_WALL, 0);
+            }
+        }
+    } else {
+        logbook("WARNING: Identifying house/controller of structure (typo?)");
+    }
+    return bSetUpPlayers;
+}
+
+bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
+                                const int *iPl_quota, const char *linefeed) {// ORIGINAL DUNE 2 MISSION.
+
+    // setupPlayers is required, because we do matching based on name of house, hence, once
+    // we encounter either a UNITS or STRUCTURES section, the assumption is made that all HOUSE information
+    // has been processed.
+    if (bSetUpPlayers) {
+        INI_Scenario_SetupPlayers(iHumanID, iPl_credits, iPl_house, iPl_quota);
+        bSetUpPlayers = false;
+    }
+
+    int iPart = -1; /*
+                0 = Controller
+                1 = Type
+                2 = HP
+                3 = Cell
+                4 = Facing (body)
+                5 = Facing (head)
+                */
+
+    // Skip ID= part. It is just for fun there.
+    int iController, iType, iHP, iCell, iFacingBody, iFacingHead;
+    iController = iType = iHP = iCell = iFacingBody = iFacingHead = -1;
+
+    char chunk[25];
+    bool bClearChunk = true;
+    bool bSkipped = false;
+    int iC = -1;
+
+    for (int c = 0; c < MAX_LINE_LENGTH; c++) {
+        
+        // clear chunk
+        if (bClearChunk) {
+            for (int ic = 0; ic < 25; ic++)
+                chunk[ic] = '\0';
+            iC = 0;
+            bClearChunk = false;
+        }
+
+        // Fill in chunk
+        if (iC < 25 && bSkipped && linefeed[c] != ',') {
+            chunk[iC] = linefeed[c];
+            iC++;
+        }
+
+        // , means next part. A ' ' means end
+        if (linefeed[c] == ',' || linefeed[c] == '\0') {
+            iPart++;
+
+            if (iPart == INI_UNITS_PART_CONTROLLER) {
+                int iHouse = getHouseFromChar(chunk);
+
+                // Search for a player with this house
+                for (int i = 0; i < MAX_PLAYERS; i++) {
+                    // this is why we require setUpPlayers... because it matches by house type
+                    if (players[i].getHouse() == iHouse) {
+                        iController = i; // set controller here.. phew
+                        break;
+                    }
+                }
+
+                if (iController < 0) {
+                    char msg[256];
+                    sprintf(msg, "WARNING: Cannot identify house/controller -> STRING '%s'", chunk);
+                    logbook(msg);
+                }
+
+            } else if (iPart == INI_UNITS_PART_TYPE) {
+                iType = getUnitTypeFromChar(chunk);
+            } else if (iPart == INI_UNITS_PART_HP) {
+                // do nothing in part 2 (for now!?)
+            } else if (iPart == INI_UNITS_PART_CELL) {
+                iCell = atoi(chunk);
+            } else if (iPart == INI_UNITS_PART_FACING_BODY) {
+                // we don't seem to care about facings...
+                break;
+            }
+
+            bClearChunk = true;
+        }
+
+        // found the = mark, this means we start chopping now!
+        if (linefeed[c] == '=')
+            bSkipped = true;
+    }
+
+    if (iController > -1) {
+        UNIT_CREATE(iCell, iType, iController, true);
+    }
+
+    return bSetUpPlayers;
+}
+
+void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *iPl_house, const int *iPl_quota) {
+    logbook("INI: Going to setup players");
+    int iCPUId = 1; // index for CPU's, starts at 1 because ID 0 is HUMAN player
+
+    int teamIndexAI = 1;
+    bool fremenIsHumanAlly = false;
+
+    for (int playerIndex = 0; playerIndex < MAX_PLAYERS; playerIndex++) // till 6 , since player 6 itself is sandworm
+    {
+        char msg[255];
+        memset(msg, 0, sizeof(msg));
+        int housePlayer = iPl_house[playerIndex];
+        sprintf(msg, "House for id [%d] is [%d] - human id is [%d]", playerIndex, housePlayer, iHumanID);
+        logbook(msg);
+        if (housePlayer > -1) {
+            int creditsPlayer = iPl_credits[playerIndex];
+            if (playerIndex == iHumanID) {
+                char msg[255];
+                memset(msg, 0, sizeof(msg));
+                sprintf(msg, "INI: Setting up human player, credits to [%d], house [%d] and team [%d]", creditsPlayer, housePlayer, 0);
+                logbook(msg);
+                players[HUMAN].setCredits(creditsPlayer);
+                players[HUMAN].setHouse(housePlayer);
+                players[HUMAN].setTeam(0);
+
+                // Fremen are always the same CPU index, so check what house the human player is, and depending
+                // on that set up FREMEN player team
+                players[AI_CPU5].setHouse(FREMEN);
+                if (housePlayer == ATREIDES) {
+                    fremenIsHumanAlly = true;
+                }
+
+                assert(drawManager);
+                if (drawManager->getCreditsDrawer()) {
+                    drawManager->getCreditsDrawer()->setCredits();
+                }
+
+                if (iPl_quota[playerIndex] > 0) {
+                    game.iWinQuota = iPl_quota[playerIndex];
+                }
+            } else {
+                if (housePlayer == FREMEN) {
+                    // seems like a non-standard Dune 2 mission, this will break
+                    assert(false && "No FREMEN supported in INI files yet");
+                }
+
+                players[iCPUId].setTeam(teamIndexAI);
+
+                char msg[255];
+                memset(msg, 0, sizeof(msg));
+                sprintf(msg, "INI: Setting up CPU player, credits to [%d], house to [%d] and team [%d]",
+                        creditsPlayer, housePlayer, teamIndexAI);
+                logbook(msg);
+
+                players[iCPUId].setCredits(creditsPlayer);
+                players[iCPUId].setHouse(housePlayer);
+                iCPUId++;
+            }
+        } else {
+            // there is no house set for this player index (from the ini file that is!)
+        }
+    }
+
+    if (fremenIsHumanAlly) {
+        // same team as human
+        players[AI_CPU5].setTeam(0);
+    } else {
+        // same team as enemy cpu's
+        players[AI_CPU5].setTeam(teamIndexAI);
+    }
+
+    players[AI_WORM].setTeam(2); // the WORM player is nobody's ally, ever
 }
 
 void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstractMentat *pMentat) {

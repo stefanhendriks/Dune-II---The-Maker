@@ -168,8 +168,7 @@ void cGunTurret::think_guard() {
             cUnit &cUnit = unit[i];
             if (!cUnit.isValid()) continue;
             if (cUnit.iPlayer == getOwner()) continue; // skip own units
-            bool bSameTeam = getPlayer()->isSameTeamAs(cUnit.getPlayer());
-            if (bSameTeam) continue; // skip same team units
+            if (cUnit.getPlayer()->isSameTeamAs(getPlayer())) continue;
             if (!map.isVisible(cUnit.getCell(), getPlayer())) continue; // not visible for player
 
             if (canAttackAirUnits()) {
