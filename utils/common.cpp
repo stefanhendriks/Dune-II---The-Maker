@@ -611,7 +611,8 @@ void install_specials() {
     specials[SPECIAL_SABOTEUR].deployFrom = eDeployFromType::AT_STRUCTURE;
     specials[SPECIAL_SABOTEUR].deployAtStructure = PALACE;
     specials[SPECIAL_SABOTEUR].units = 1;
-    specials[SPECIAL_SABOTEUR].buildTime = 100;
+//    specials[SPECIAL_SABOTEUR].buildTime = 10;
+    specials[SPECIAL_SABOTEUR].buildTime = 2468; // ~ 6 minutes (but times 1.2 to compensate for faster Ordos building = 2468 to get real 6 minutes)
     specials[SPECIAL_SABOTEUR].listId=LIST_PALACE;
     specials[SPECIAL_SABOTEUR].subListId=0;
     strcpy(specials[SPECIAL_SABOTEUR].description, "Saboteur");
@@ -625,7 +626,8 @@ void install_specials() {
     specials[SPECIAL_FREMEN].deployFrom = eDeployFromType::AT_RANDOM_CELL;
     specials[SPECIAL_FREMEN].deployAtStructure = PALACE; // This is not used with AT_RANDOM_CELL ...
     specials[SPECIAL_FREMEN].units = 6; // ... but this is
-    specials[SPECIAL_FREMEN].buildTime = 100;
+//    specials[SPECIAL_FREMEN].buildTime = 10;
+    specials[SPECIAL_FREMEN].buildTime = 1371; // ~ 4 minutes (atreides has baseline build times, ie = real time)
     specials[SPECIAL_FREMEN].listId=LIST_PALACE;
     specials[SPECIAL_FREMEN].subListId=0;
     strcpy(specials[SPECIAL_FREMEN].description, "Fremen");
@@ -640,7 +642,10 @@ void install_specials() {
     specials[SPECIAL_DEATHHAND].deployAtStructure = PALACE; // ... the palace
     specials[SPECIAL_DEATHHAND].deployTargetType = eDeployTargetType::TARGET_INACCURATE_CELL;
     specials[SPECIAL_DEATHHAND].units = 1;
-    specials[SPECIAL_DEATHHAND].buildTime = 10;
+//    specials[SPECIAL_DEATHHAND].buildTime = 10;
+    specials[SPECIAL_DEATHHAND].buildTime = 3428; // ~ 10 minutes with base line (Atreides difficulty)
+                                                  // (342.8 = ~ 1 minute) -> harkonnen is done * 1.2 so it becomes 12 minutes real-time which is ok)
+                                                  // considering the Dune 2 Insider guide mentions 11 to 12 minutes for Harkonnen.
     specials[SPECIAL_DEATHHAND].deployTargetPrecision = 6;
     specials[SPECIAL_DEATHHAND].listId=LIST_PALACE;
     specials[SPECIAL_DEATHHAND].subListId=0;

@@ -146,7 +146,7 @@ int cBuildingListItem::getBuildTime() {
     if (type == SPECIAL) {
         return specials[buildId].buildTime;
     }
-    // assumes other things (ie super weapons and such) are also under 'units' array.
+    // assumes units by default
     return units[buildId].build_time;
 }
 
