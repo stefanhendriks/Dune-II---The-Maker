@@ -173,7 +173,7 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain) {
     m_Human = (id == HUMAN);
 
     if (difficultySettings) delete difficultySettings;
-    difficultySettings = new cPlayerAtreidesDifficultySettings();
+    difficultySettings = new cPlayerDifficultySettings();
 
     // Reset structures amount
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
@@ -208,17 +208,7 @@ void cPlayer::setHouse(int iHouse) {
         delete difficultySettings;
     }
 
-    if (iHouse == ATREIDES) {
-        difficultySettings = new cPlayerAtreidesDifficultySettings();
-    } else if (iHouse == ORDOS) {
-        difficultySettings = new cPlayerOrdosDifficultySettings();
-    } else if (iHouse == HARKONNEN) {
-        difficultySettings = new cPlayerHarkonnenDifficultySettings();
-    } else {
-        // for now default is atreides
-        // TODO: create for other houses difficultysettings
-        difficultySettings = new cPlayerAtreidesDifficultySettings();
-    }
+    difficultySettings = cPlayerDifficultySettings::createFromHouse(iHouse);
 
     if (currentHouse != iHouse) {
         // copy entire palette

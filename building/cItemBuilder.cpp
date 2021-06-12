@@ -12,6 +12,43 @@ cItemBuilder::~cItemBuilder() {
     removeAllItems();
 }
 
+/**
+ * Timer cap is the 'delay' to consider how much the timer must have passed before progressing one tick for
+ * building things. Ie, consider something has a buildTime of 200, this means the game timer (5 ms) has to run 200 times
+ * which equals 1 second. However, from the 200 times, the delay timer has been increased, and only after the delay the
+ * actual progress of building an item will pass.
+ *
+ * Meaning:
+ * - 200 times gameloop
+ * - default timer cap / delay = 35 times
+ * - 200 / 35 = 5.714 progress items (or, 5 progress ticks, and still going on with the actual delay).
+ * - do consider that the amount delay is based on chosen team. Some build slower, some faster. Ie, the 35 is baseline
+ *   but is multiplied by the actual house difficulty settings. Atreides = baseline, Harkonnen builds slower; Ordos
+ *   faster.
+ *
+ * BuildTime meaning:
+ * - when a buildTime in the INI file is "100", this can be calculated into seconds like so:
+ *   - 100 build time units * 35 = 3500 (3500 game ticks)
+ *   - 3500 game ticks (* 5 miliseconds) = 17500 miliseconds
+ *   - meaning: 17,5 seconds.
+ * - the other way around:
+ *  - given 17,5 seconds, that is 17500 milliseconds
+ *  - 17500 / 5 = 3500 game ticks
+ *  - 3500 / (default timer cap 35) = 100 build time
+ *
+ *  Example:
+ *  If you want to have a build taking 1 minute (60 seconds), then:
+ *  - 60 seconds -> 60000 milliseconds
+ *  - 60000 / 5 = 12000 game ticks
+ *  - 12000 / 35 = a buildTime of 342.85 (~ 343)
+ *  (343 * 35 * 5 = 60025 ~ milliseconds)
+ *
+ * Also:
+ * - when low power, the timer cap is increased so that building things become a real pain.
+ *
+ * @param item
+ * @return
+ */
 int cItemBuilder::getTimerCap(cBuildingListItem *item) {
 	int iTimerCap = 35; // was 35 = ORIGINAL
 
