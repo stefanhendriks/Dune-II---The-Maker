@@ -24,9 +24,9 @@ namespace brains {
         missions.clear();
     }
 
-/**
- * Think function called every tick (handleTimerUnits, ~ 100 ms).
-  */
+    /**
+     * Think function called every tick (handleTimerUnits, ~ 100 ms).
+     */
     void cPlayerBrainCampaign::think() {
         // for now use a switch statement for this state machine. If we need anything
         // more sophisticated we can always use the State Pattern.
@@ -1589,7 +1589,7 @@ namespace brains {
         // Example: Money is short, Harvester is in build queue, but not high in priority?
 
         // take a little rest, before going into a new loop again?
-        TIMER_rest = 10;
+        TIMER_rest = 25;
         changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_REST);
     }
 
