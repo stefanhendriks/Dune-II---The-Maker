@@ -22,33 +22,33 @@ namespace brains {
         /**
          * The AI takes a little rest (does nothing) for a certain amount of time.
          */
-        PLAYERBRAIN_SCENARIO_STATE_REST,
+        PLAYERBRAIN_CAMPAIGN_STATE_REST,
 
         /**
          * Scan base, requires any repairs?
          */
-        PLAYERBRAIN_SCENARIO_STATE_SCAN_BASE,
+        PLAYERBRAIN_CAMPAIGN_STATE_SCAN_BASE,
 
         /**
          * Scan missions, do we have any? If not, think of some...
          */
-        PLAYERBRAIN_SCENARIO_STATE_MISSIONS,
+        PLAYERBRAIN_CAMPAIGN_STATE_MISSIONS,
 
         /**
          * Process build orders
          */
-        PLAYERBRAIN_SCENARIO_STATE_PROCESS_BUILDORDERS,
+        PLAYERBRAIN_CAMPAIGN_STATE_PROCESS_BUILDORDERS,
 
         /**
          * Evaluate state of affairs so far. Enough money in the bank? Base doing ok?
          * This could result into state ENDGAME.
          */
-        PLAYERBRAIN_SCENARIO_STATE_EVALUATE,
+        PLAYERBRAIN_CAMPAIGN_STATE_EVALUATE,
 
         /**
          * Player is nearly defeated
          */
-        PLAYERBRAIN_SCENARIO_STATE_ENDGAME
+        PLAYERBRAIN_CAMPAIGN_STATE_ENDGAME
 
     };
 
