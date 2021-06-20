@@ -114,7 +114,6 @@ namespace brains {
 
         void produceLevel9Missions(int trikeKind, int infantryKind);
 
-        void onMySpecialIsReady(const s_GameEvent &event);
     };
 
 }
