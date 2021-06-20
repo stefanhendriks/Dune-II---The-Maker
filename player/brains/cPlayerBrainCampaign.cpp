@@ -5,7 +5,7 @@ namespace brains {
 
     cPlayerBrainCampaign::cPlayerBrainCampaign(cPlayer *player) : cPlayerBrain(player) {
         state = ePlayerBrainState::PLAYERBRAIN_PEACEFUL;
-        thinkState = ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_REST;
+        thinkState = ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST;
         // timer is substracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
         // 10*60 -> 1 minute. * 4 -> 4 minutes
         TIMER_rest = (10 * 60) * 4;
@@ -31,22 +31,22 @@ namespace brains {
         // for now use a switch statement for this state machine. If we need anything
         // more sophisticated we can always use the State Pattern.
         switch (thinkState) {
-            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_REST:
+            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST:
                 thinkState_Rest();
                 return;
-            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_SCAN_BASE:
+            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_SCAN_BASE:
                 thinkState_ScanBase();
                 return;
-            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_MISSIONS:
+            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_MISSIONS:
                 thinkState_Missions();
                 return;
-            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_PROCESS_BUILDORDERS:
+            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_PROCESS_BUILDORDERS:
                 thinkState_ProcessBuildOrders();
                 return;
-            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_EVALUATE:
+            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_EVALUATE:
                 thinkState_Evaluate();
                 return;
-            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_ENDGAME:
+            case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_ENDGAME:
                 thinkState_EndGame();
                 return;
         }
@@ -224,11 +224,8 @@ namespace brains {
         sprintf(msg, "cPlayerBrainCampaign::thinkState_ScanBase(), for player [%d]", player->getId());
         logbook(msg);
 
-        // go through base and initiate repairs where needed?
-        // TODO:
-
         // reset timer (for the next time we end up here)
-        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_MISSIONS);
+        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_MISSIONS);
     }
 
     void cPlayerBrainCampaign::thinkState_Missions() {
@@ -244,7 +241,6 @@ namespace brains {
                         [](cPlayerBrainMission m) { return m.isEnded(); }),
                 missions.end()
         );
-        // TODO: remember which missions are deleted and replenish those 'kinds' ?
 
         if (state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
             // it might send out something to scout?
@@ -274,7 +270,7 @@ namespace brains {
             mission.think();
         }
 
-        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_PROCESS_BUILDORDERS);
+        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_PROCESS_BUILDORDERS);
     }
 
     void cPlayerBrainCampaign::produceMissions() {
@@ -1580,7 +1576,7 @@ namespace brains {
 
         if (player->getAmountOfStructuresForType(CONSTYARD) == 0) {
             // no constyards, endgame
-            changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_ENDGAME);
+            changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_ENDGAME);
             return;
         }
 
@@ -1590,7 +1586,7 @@ namespace brains {
 
         // take a little rest, before going into a new loop again?
         TIMER_rest = 25;
-        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_REST);
+        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST);
     }
 
     void cPlayerBrainCampaign::thinkState_EndGame() {
@@ -1657,7 +1653,7 @@ namespace brains {
             }
         }
 
-        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_EVALUATE);
+        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_EVALUATE);
     }
 
     void cPlayerBrainCampaign::changeThinkStateTo(const ePlayerBrainCampaignThinkState& newState) {
@@ -1679,7 +1675,7 @@ namespace brains {
         }
 
         // resting is done, now go into the scan base/missions/evaluate loop
-        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_SCAN_BASE);
+        changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_SCAN_BASE);
     }
 
     void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event) {
@@ -1738,7 +1734,7 @@ namespace brains {
 
             }
         } else {
-            // what to do?
+            // non peaceful state, what to do? react? etc.
         }
     }
 

@@ -61,12 +61,12 @@ namespace brains {
 
         static const char* ePlayerBrainCampaignThinkStateString(const ePlayerBrainCampaignThinkState &state) {
             switch (state) {
-                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_EVALUATE: return "PLAYERBRAIN_SCENARIO_STATE_EVALUATE";
-                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_PROCESS_BUILDORDERS: return "PLAYERBRAIN_SCENARIO_STATE_PROCESS_BUILDORDERS";
-                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_SCAN_BASE: return "PLAYERBRAIN_SCENARIO_STATE_SCAN_BASE";
-                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_ENDGAME: return "PLAYERBRAIN_SCENARIO_STATE_ENDGAME";
-                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_MISSIONS: return "PLAYERBRAIN_SCENARIO_STATE_MISSIONS";
-                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_SCENARIO_STATE_REST: return "PLAYERBRAIN_SCENARIO_STATE_REST";
+                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_EVALUATE: return "PLAYERBRAIN_CAMPAIGN_STATE_EVALUATE";
+                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_PROCESS_BUILDORDERS: return "PLAYERBRAIN_CAMPAIGN_STATE_PROCESS_BUILDORDERS";
+                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_SCAN_BASE: return "PLAYERBRAIN_CAMPAIGN_STATE_SCAN_BASE";
+                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_ENDGAME: return "PLAYERBRAIN_CAMPAIGN_STATE_ENDGAME";
+                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_MISSIONS: return "PLAYERBRAIN_CAMPAIGN_STATE_MISSIONS";
+                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST: return "PLAYERBRAIN_CAMPAIGN_STATE_REST";
                 default:
                     assert(false);
                     break;
