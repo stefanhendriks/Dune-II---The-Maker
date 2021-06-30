@@ -23,7 +23,6 @@
 
 // Player related
 #include "../player/playerh.h"
-#include "../ai.h"
 
 #include "gui.h"
 #include "drawers.h"

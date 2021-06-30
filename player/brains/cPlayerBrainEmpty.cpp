@@ -1,4 +1,6 @@
 #include "include/d2tmh.h"
+#include "cPlayerBrainEmpty.h"
+
 
 namespace brains {
 
@@ -11,13 +13,15 @@ namespace brains {
     }
 
     void cPlayerBrainEmpty::think() {
-//        char msg[255];
-//        sprintf(msg, "cPlayerBrainEmpty::think(), for player [%d]", player->getId());
-//        logbook(msg);
+        // NOOP
     }
 
     void cPlayerBrainEmpty::onNotify(const s_GameEvent &event) {
+        // NOOP
+    }
 
+    void cPlayerBrainEmpty::addBuildOrder(S_buildOrder order) {
+        // NOOP
     }
 
 }

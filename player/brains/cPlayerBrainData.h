@@ -16,7 +16,7 @@ namespace brains {
     };
 
     /**
-     * Initially AI is peaceful as it has not discovered any enemies yet
+     * Campaign brain think states
      */
     enum ePlayerBrainCampaignThinkState {
         /**
@@ -46,9 +46,46 @@ namespace brains {
         PLAYERBRAIN_CAMPAIGN_STATE_EVALUATE,
 
         /**
-         * Player is nearly defeated
+         * AI Player is nearly defeated
          */
         PLAYERBRAIN_CAMPAIGN_STATE_ENDGAME
+
+    };
+
+    /**
+     * Skirmish AI brain think states
+     */
+    enum ePlayerBrainSkirmishThinkState {
+        /**
+         * The AI takes a little rest (does nothing) for a certain amount of time.
+         */
+        PLAYERBRAIN_SKIRMISH_STATE_REST,
+
+        /**
+         * Base thinking (building required buildings, etc)
+         */
+        PLAYERBRAIN_SKIRMISH_STATE_BASE,
+
+        /**
+         * Scan missions, do we have any? If not, think of some...
+         */
+        PLAYERBRAIN_SKIRMISH_STATE_MISSIONS,
+
+        /**
+         * Process build orders
+         */
+        PLAYERBRAIN_SKIRMISH_STATE_PROCESS_BUILDORDERS,
+
+        /**
+         * Evaluate state of affairs so far. Enough money in the bank? Base doing ok?
+         * This could result into state ENDGAME.
+         */
+        PLAYERBRAIN_SKIRMISH_STATE_EVALUATE,
+
+        /**
+         * AI Player is nearly defeated
+         */
+        PLAYERBRAIN_SKIRMISH_STATE_ENDGAME
 
     };
 

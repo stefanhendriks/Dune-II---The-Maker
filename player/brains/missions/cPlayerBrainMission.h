@@ -9,7 +9,7 @@
 
 namespace brains {
 
-    class cPlayerBrainCampaign;
+    class cPlayerBrain;
     class cPlayerBrainMissionKind;
 
     enum ePlayerBrainMissionState {
@@ -83,7 +83,7 @@ namespace brains {
 
     public:
 
-        cPlayerBrainMission(cPlayer *player, const ePlayerBrainMissionKind &kind, cPlayerBrainCampaign *brain,
+        cPlayerBrainMission(cPlayer *player, const ePlayerBrainMissionKind &kind, cPlayerBrain *brain,
                             std::vector<S_groupKind> group, int initialDelay, int uniqueId);
 
         ~cPlayerBrainMission() override;
@@ -129,7 +129,7 @@ namespace brains {
 
         cPlayerBrainMissionKind *missionKind;
 
-        cPlayerBrainCampaign *brain;
+        cPlayerBrain *brain;
 
         ePlayerBrainMissionState state;
 

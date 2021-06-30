@@ -11,7 +11,7 @@
 namespace brains {
 
     cPlayerBrainMission::cPlayerBrainMission(cPlayer *player, const ePlayerBrainMissionKind &kind,
-                                             cPlayerBrainCampaign *brain, std::vector<S_groupKind> group,
+                                             cPlayerBrain *brain, std::vector<S_groupKind> group,
                                              int initialDelay, int uniqueId) :
                                              player(player),
                                              kind(kind),

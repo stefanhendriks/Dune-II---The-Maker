@@ -2,6 +2,7 @@
 #define D2TM_CPLAYERBRAIN_H
 
 #include <observers/cScenarioObserver.h>
+#include "cPlayerBrainData.h"
 
 class cPlayer;
 class cAbstractStructure;
@@ -16,6 +17,8 @@ namespace brains {
         virtual ~cPlayerBrain() = 0;
 
         virtual void think() = 0;
+
+        virtual void addBuildOrder(S_buildOrder order) = 0;
 
     protected:
         cPlayer *player;
