@@ -458,18 +458,11 @@ void cAbstractStructure::setOwner(int player) {
 	Think actions like any other structure would have.
 **/
 void cAbstractStructure::think() {
-	// AI
-    if (iPlayer > 0) {
-    	aiplayer[iPlayer].think_repair_structure(this);
-    }
-
-    // Other
     think_decay();
     think_repair();
 }
 
-void cAbstractStructure::think_repair()
-{
+void cAbstractStructure::think_repair() {
     // REPAIRING
     if (bRepair) {
 		if (players[iPlayer].hasEnoughCreditsFor(1.0f)) {

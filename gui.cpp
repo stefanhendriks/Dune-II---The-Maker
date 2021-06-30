@@ -56,6 +56,18 @@ void GUI_DRAW_BENE_TEXT(int x, int y, const std::string& text)
     alfont_textprintf(bmp_screen, bene_font, x, y, makecol(255, 255, 255), cstring);
 }
 
+/**
+ * Draws a text at x, y; when  mouse hovers over it, it will render the text with hoverColor, else with white.
+ *
+ * It will return true when mouse hovers above it.
+ *
+ * @param x
+ * @param y
+ * @param text
+ * @param hoverColor
+ *
+ * @return true if mouse is hovering over this
+ */
 bool GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(int x, int y, const std::string& text, int hoverColor)
 {
     const char *cstring = text.c_str();

@@ -190,11 +190,6 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
     int house = player->getHouse();
     int techLevel = player->getTechLevel();
 
-    char msg[255];
-    sprintf(msg, "onStructureCreatedSkirmishMode - for player [%d], structureType [%d], techlevel [%d], house [%d]",
-            player->getId(), structureType, techLevel, house);
-    cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "onStructureCreatedSkirmishMode", msg);
-
     assert(listConstYard);
     assert(listFootUnits);
     assert(listConstYard);

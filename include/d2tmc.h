@@ -35,7 +35,6 @@ extern cUnit          unit[MAX_UNITS];
 extern cRandomMapGenerator randomMapGenerator;
 extern cMapCamera	  *mapCamera;
 extern cPlayer        players[MAX_PLAYERS];
-extern cAIPlayer      aiplayer[MAX_PLAYERS];           // related to aiplayer (except nr 0=human)
 extern cParticle      particle[MAX_PARTICLES];
 extern cBullet        bullet[MAX_BULLETS];
 extern cRegion        world[MAX_REGIONS];

@@ -1,5 +1,5 @@
-#ifndef D2TM_CPLAYERBRAINCAMPAIGN_H
-#define D2TM_CPLAYERBRAINCAMPAIGN_H
+#ifndef D2TM_CPLAYERBRAINSKIRMISH_H
+#define D2TM_CPLAYERBRAINSKIRMISH_H
 
 #include "player/brains/cPlayerBrain.h"
 #include "player/brains/cPlayerBrainData.h"
@@ -8,27 +8,26 @@
 
 namespace brains {
 
-/**
- * The cPlayerBrainCampaign is responsible for being an AI brain during campaign missions. This is different
- * compared to the Skirmish brain.
- */
-    class cPlayerBrainCampaign : public cPlayerBrain {
+    /**
+     * The cPlayerBrainSkirmish is responsible for being an AI brain during skirmish games.
+     */
+    class cPlayerBrainSkirmish : public cPlayerBrain {
 
     public:
-        cPlayerBrainCampaign(cPlayer *player);
+        cPlayerBrainSkirmish(cPlayer *player);
 
-        ~cPlayerBrainCampaign();
+        ~cPlayerBrainSkirmish();
 
         void think() override;
 
         void onNotify(const s_GameEvent &event) override;
 
-        void addBuildOrder(S_buildOrder order) override;
+        void addBuildOrder(S_buildOrder order);
 
     private:
         ePlayerBrainState state;
 
-        ePlayerBrainCampaignThinkState thinkState;
+        ePlayerBrainSkirmishThinkState thinkState;
 
         int TIMER_rest;
 
@@ -47,7 +46,7 @@ namespace brains {
 
         void onMyStructureDecayed(const s_GameEvent &event);
 
-        void thinkState_ScanBase();
+        void thinkState_Base();
 
         void thinkState_Missions();
 
@@ -57,16 +56,16 @@ namespace brains {
 
         void thinkState_ProcessBuildOrders();
 
-        void changeThinkStateTo(const ePlayerBrainCampaignThinkState& newState);
+        void changeThinkStateTo(const ePlayerBrainSkirmishThinkState& newState);
 
-        static const char* ePlayerBrainCampaignThinkStateString(const ePlayerBrainCampaignThinkState &state) {
+        static const char* ePlayerBrainSkirmishThinkStateString(const ePlayerBrainSkirmishThinkState &state) {
             switch (state) {
-                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_EVALUATE: return "PLAYERBRAIN_CAMPAIGN_STATE_EVALUATE";
-                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_PROCESS_BUILDORDERS: return "PLAYERBRAIN_CAMPAIGN_STATE_PROCESS_BUILDORDERS";
-                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_SCAN_BASE: return "PLAYERBRAIN_CAMPAIGN_STATE_SCAN_BASE";
-                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_ENDGAME: return "PLAYERBRAIN_CAMPAIGN_STATE_ENDGAME";
-                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_MISSIONS: return "PLAYERBRAIN_CAMPAIGN_STATE_MISSIONS";
-                case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST: return "PLAYERBRAIN_CAMPAIGN_STATE_REST";
+                case ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_EVALUATE: return "PLAYERBRAIN_SKIRMISH_STATE_EVALUATE";
+                case ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_PROCESS_BUILDORDERS: return "PLAYERBRAIN_SKIRMISH_STATE_PROCESS_BUILDORDERS";
+                case ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_BASE: return "PLAYERBRAIN_SKIRMISH_STATE_BASE";
+                case ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_ENDGAME: return "PLAYERBRAIN_SKIRMISH_STATE_ENDGAME";
+                case ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_MISSIONS: return "PLAYERBRAIN_SKIRMISH_STATE_MISSIONS";
+                case ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST: return "PLAYERBRAIN_SKIRMISH_STATE_REST";
                 default:
                     assert(false);
                     break;
@@ -98,24 +97,8 @@ namespace brains {
 
         bool hasMission(const int id);
 
-        void produceLevel2Missions(int soldierKind, int infantryKind);
-
-        void produceLevel3Missions(int trikeKind, int soldierKind, int infantryKind);
-
-        void produceLevel4Missions(int trikeKind, int infantryKind);
-
-        void produceLevel5Missions(int trikeKind, int infantryKind);
-
-        void produceLevel6Missions(int trikeKind, int infantryKind);
-
-        void produceLevel7Missions(int trikeKind, int infantryKind);
-
-        void produceLevel8Missions(int trikeKind, int infantryKind);
-
-        void produceLevel9Missions(int trikeKind, int infantryKind);
-
     };
 
 }
 
-#endif //D2TM_CPLAYERBRAINCAMPAIGN_H
+#endif //D2TM_CPLAYERBRAINSKIRMISH_H

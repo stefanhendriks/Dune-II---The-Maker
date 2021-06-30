@@ -258,7 +258,6 @@ void cTimeManager::handleTimerUnits() {
 
             for (int i = 0; i < MAX_PLAYERS; i++) {
                 players[i].think();
-                aiplayer[i].think(); // <-- this should be removed!!
             }
 
         }

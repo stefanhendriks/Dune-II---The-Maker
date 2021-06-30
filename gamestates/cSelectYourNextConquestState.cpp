@@ -548,7 +548,7 @@ void cSelectYourNextConquestState::INSTALL_WORLD() {
 }
 
 eGameStateType cSelectYourNextConquestState::getType() {
-    return SELECT_YOUR_NEXT_CONQUEST;
+    return GAMESTATE_SELECT_YOUR_NEXT_CONQUEST;
 }
 
 void cSelectYourNextConquestState::conquerRegions() {

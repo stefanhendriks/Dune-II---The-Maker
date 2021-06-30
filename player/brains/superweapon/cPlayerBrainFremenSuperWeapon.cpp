@@ -1,5 +1,7 @@
 #include <algorithm>
 #include "include/d2tmh.h"
+#include "cPlayerBrainFremenSuperWeapon.h"
+
 
 namespace brains {
 
@@ -91,6 +93,10 @@ namespace brains {
 
     void cPlayerBrainFremenSuperWeapon::onNotify(const s_GameEvent &event) {
         // not interested
+    }
+
+    void cPlayerBrainFremenSuperWeapon::addBuildOrder(S_buildOrder order) {
+
     }
 
 }

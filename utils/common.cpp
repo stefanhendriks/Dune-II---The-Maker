@@ -1725,7 +1725,7 @@ void INIT_PREVIEWS() {
 
     sprintf(PreviewMap[0].name, "RANDOM MAP");
     //PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
-    PreviewMap[0].terrain = create_bitmap(PAN_CENTER, PAN_CENTER);
+    PreviewMap[0].terrain = create_bitmap(128, 128);
 }
 
 int getAmountReservedVoicesAndInstallSound() {

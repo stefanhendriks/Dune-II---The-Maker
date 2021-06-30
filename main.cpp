@@ -6,7 +6,7 @@
   Contact: stefanhen83@gmail.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2010 (c) code by Stefan Hendriks
+  2001 - 2021 (c) code by Stefan Hendriks
 
   */
 
@@ -16,8 +16,6 @@ using namespace std;
 
 bool bDoDebug = false;
 int	iRest = 1;	// default rest value
-
-// Server/Client system
 
 // the ultimate game variable(s)
 cGame          				game;
@@ -34,7 +32,6 @@ cAbstractStructure     	*	structure[MAX_STRUCTURES];
 cUnit          				unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
 cMapCamera				*	mapCamera;
 cPlayer        				players[MAX_PLAYERS];             // player is
-cAIPlayer      				aiplayer[MAX_PLAYERS];           // related to aiplayer (except nr 0=human)
 cParticle      				particle[MAX_PARTICLES];
 cBullet        				bullet[MAX_BULLETS];
 cRegion        				world[MAX_REGIONS];
@@ -89,7 +86,6 @@ int mouse_mv_y1;
 int mouse_mv_x2;
 int mouse_mv_y2;
 
-int mouse_status;     // status of the mouse (see main.h)
 int mouse_tile;       // mouse picture in gfxdata
 
 // Timers

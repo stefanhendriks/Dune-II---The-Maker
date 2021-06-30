@@ -371,8 +371,6 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
         // where we box selecting? then this must be the unpress of the mouse button and thus we
         // should start selecting units within the rectangle
         if (mouse->isBoxSelecting()) {
-            mouse_status = MOUSE_STATE_NORMAL;
-
             int min_x, min_y;
             int max_x, max_y;
 

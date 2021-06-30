@@ -32,6 +32,7 @@ public:
 	// these functions return true when the mouse button was pressed in the previous
 	// frame, but released in the current (which is counted as a 'click')
 	bool isLeftButtonClicked() { return leftButtonClicked; }
+
 	bool isRightButtonClicked() { return rightButtonClicked; }
 
 	int getX() { return x; }
