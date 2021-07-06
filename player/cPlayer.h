@@ -264,6 +264,8 @@ public:
 
     int getScoutingUnitType();
 
+    static std::string getHouseNameForId(int house);
+
 private:
     int getRGBColorForHouse(int houseId);
 
@@ -305,7 +307,6 @@ private:
     int iPrimaryBuilding[MAX_STRUCTURETYPES];    // remember the primary ID (structure id) of each structure type
     int iStructures[MAX_STRUCTURETYPES]; // remember what is built for each type of structure
     int iStructureUpgradeLevel[MAX_STRUCTURETYPES]; // remember the upgrade level for each structure type
-    std::string getHouseNameForId(int house) const;
 
     int powerUsage_;      // total amount of power usage
     int powerProduce_;      // total amount of power generated

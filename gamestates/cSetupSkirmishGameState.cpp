@@ -295,14 +295,10 @@ void cSetupSkirmishGameState::draw() {
             memset(cHouse, 0, sizeof(cHouse));
 
             cPlayer &cPlayer = players[p];
-            if (cPlayer.getHouse() == ATREIDES) {
-                sprintf(cHouse, "Atreides");
-            } else if (cPlayer.getHouse() == HARKONNEN) {
-                sprintf(cHouse, "Harkonnen");
-            } else if (cPlayer.getHouse() == ORDOS) {
-                sprintf(cHouse, "Ordos");
-            } else if (cPlayer.getHouse() == SARDAUKAR) {
-                sprintf(cHouse, "Sardaukar");
+
+
+            if (aiPlayer.iHouse > 0) {
+                sprintf(cHouse, cPlayer::getHouseNameForId(aiPlayer.iHouse).c_str());
             } else {
                 sprintf(cHouse, "Random");
             }
