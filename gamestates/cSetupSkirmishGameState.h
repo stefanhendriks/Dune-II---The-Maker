@@ -9,6 +9,7 @@ class cGame;
 struct s_SkirmishPlayer {
     bool bPlaying;
     int iUnits;
+    int iHouse;
 };
 
 class cSetupSkirmishGameState : public cGameState {
@@ -25,7 +26,7 @@ public:
 
 private:
     cTextDrawer textDrawer;
-    s_SkirmishPlayer aiplayer[MAX_PLAYERS];
+    s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS];
     cMouse * mouse;
 };
 
