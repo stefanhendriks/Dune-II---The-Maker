@@ -4,8 +4,15 @@
 
 cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(theGame) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        aiplayer[i].bPlaying = false;
-        aiplayer[i].iUnits = 3;
+        // index 0 == human player, but to keep our lives sane we don't change the index.
+
+        // player 0 (HUMAN) is always playing,
+        // and 1 additional AI is minimally required to play
+        skirmishPlayer[i].bPlaying = (i <= 1);
+
+        // just some defaults
+        skirmishPlayer[i].iUnits = 3;
+        skirmishPlayer[i].iHouse = 0; // random house
     }
     textDrawer = cTextDrawer(bene_font);
 
@@ -247,7 +254,7 @@ void cSetupSkirmishGameState::draw() {
         int iDrawY=playerListBarY + 4 +(p*22);
         if (p < iStartingPoints) {
             // player playing or not
-            s_SkirmishPlayer &aiPlayer = aiplayer[p];
+            s_SkirmishPlayer &aiPlayer = skirmishPlayer[p];
             if (p == HUMAN)	{
                 alfont_textprintf(bmp_screen, bene_font, 4,iDrawY+1, makecol(0,0,0), "Human");
                 alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol(255,255,255), "Human");
@@ -328,34 +335,36 @@ void cSetupSkirmishGameState::draw() {
 
                 if (mouse->isLeftButtonClicked())
                 {
-                    cPlayer.setHouse((cPlayer.getHouse() + 1));
+                    aiPlayer.iHouse++;
+
+                    // Only human player can be Sardaukar?
                     if (p > 0)
                     {
-                        if (cPlayer.getHouse() > 4) {
-                            cPlayer.setHouse(0);
+                        if (aiPlayer.iHouse > SARDAUKAR) {
+                            aiPlayer.iHouse = 0;
                         }
                     }
                     else
                     {
-                        if (cPlayer.getHouse() > 3) {
-                            cPlayer.setHouse(0);
+                        if (aiPlayer.iHouse > ORDOS) {
+                            aiPlayer.iHouse = 0;
                         }
                     }
                 }
 
                 if (mouse->isRightButtonClicked())
                 {
-                    cPlayer.setHouse((cPlayer.getHouse() - 1));
+                    aiPlayer.iHouse--;
                     if (p > 0)
                     {
-                        if (cPlayer.getHouse() < 0) {
-                            cPlayer.setHouse(4);
+                        if (aiPlayer.iHouse < 0) {
+                            aiPlayer.iHouse = SARDAUKAR;
                         }
                     }
                     else
                     {
-                        if (cPlayer.getHouse() < 0) {
-                            cPlayer.setHouse(3);
+                        if (aiPlayer.iHouse < 0) {
+                            aiPlayer.iHouse =ORDOS;
                         }
                     }
                 }
@@ -581,17 +590,17 @@ void cSetupSkirmishGameState::interact() {
             }
 
             // set up players and their units
-            for (int p=0; p < MAX_PLAYERS; p++)	{
+            for (int p = 0; p < MAX_PLAYERS; p++)	{
 
-                cPlayer &cPlayer = players[p];
-                s_SkirmishPlayer &aiPlayer = aiplayer[p];
-                int iHouse = cPlayer.getHouse(); // get house selected, which can be 0 for RANDOM
+                s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
+
+                int iHouse = sSkirmishPlayer.iHouse; // get house selected, which can be 0 for RANDOM
 
                 // not playing.. do nothing (only for playable factions)
                 bool playableFaction = p < AI_CPU5;
 
                 if (playableFaction) {
-                    if (!aiPlayer.bPlaying) continue;
+                    if (!sSkirmishPlayer.bPlaying) continue;
 
                     // house = 0 means pick random house
                     if (iHouse == 0) {
@@ -607,8 +616,8 @@ void cSetupSkirmishGameState::interact() {
 
                             bool houseInUse=false;
                             for (int pl=0; pl < AI_WORM; pl++) {
-                                if (players[pl].getHouse() > 0 &&
-                                    players[pl].getHouse() == iHouse) {
+                                if (skirmishPlayer[pl].iHouse > 0 &&
+                                    skirmishPlayer[pl].iHouse == iHouse) {
                                     houseInUse=true;
                                 }
                             }
@@ -619,13 +628,14 @@ void cSetupSkirmishGameState::interact() {
                         }
                     }
                 } else {
-                    aiPlayer.bPlaying = true;
                     if (p == AI_CPU5) {
                         iHouse = FREMEN;
                     } else {
                         iHouse = GENERALHOUSE;
                     }
                 }
+
+                cPlayer &cPlayer = players[p];
 
                 // TEAM Logic
                 if (p == HUMAN) {
@@ -663,7 +673,7 @@ void cSetupSkirmishGameState::interact() {
                 int u=0;
 
                 // create units
-                while (u < aiPlayer.iUnits) {
+                while (u < sSkirmishPlayer.iUnits) {
                     int iX= map.getCellX(cPlayer.getFocusCell());
                     int iY= map.getCellY(cPlayer.getFocusCell());
                     int iType=rnd(12);
@@ -731,7 +741,7 @@ void cSetupSkirmishGameState::interact() {
                 }
 
                 char msg[255];
-                sprintf(msg, "Wants %d amount of units; amount created %d", aiPlayer.iUnits, u);
+                sprintf(msg, "Wants %d amount of units; amount created %d", sSkirmishPlayer.iUnits, u);
                 cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, iHouse);
             }
 
