@@ -552,7 +552,7 @@ std::string cPlayer::getHouseName() {
     return getHouseNameForId(house);
 }
 
-std::string cPlayer::getHouseNameForId(int house) const {
+std::string cPlayer::getHouseNameForId(int house) {
     if (house == ATREIDES) {
         return "Atreides";
     } else if (house == HARKONNEN) {
