@@ -12,6 +12,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
 
         // just some defaults
         skirmishPlayer[i].iUnits = 3;
+        skirmishPlayer[i].iCredits = 2500;
         skirmishPlayer[i].iHouse = 0; // random house
     }
     textDrawer = cTextDrawer(bene_font);
@@ -252,9 +253,10 @@ void cSetupSkirmishGameState::draw() {
     // draw players who will be playing ;)
     for (int p=0; p < (AI_WORM-1); p++)	{
         int iDrawY=playerListBarY + 4 +(p*22);
+        s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
+
         if (p < iStartingPoints) {
             // player playing or not
-            s_SkirmishPlayer &aiPlayer = skirmishPlayer[p];
             if (p == HUMAN)	{
                 alfont_textprintf(bmp_screen, bene_font, 4,iDrawY+1, makecol(0,0,0), "Human");
                 alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol(255,255,255), "Human");
@@ -264,7 +266,7 @@ void cSetupSkirmishGameState::draw() {
 
                 // move hovers over... :/
                 if ((mouse_x >= 4 && mouse_x <= 73) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16))) {
-                    if (aiPlayer.bPlaying) {
+                    if (sSkirmishPlayer.bPlaying) {
                         alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, makecol(game.getFadeSelect(), 0, 0), "  CPU");
                     } else {
                         // not available
@@ -273,16 +275,16 @@ void cSetupSkirmishGameState::draw() {
                     }
 
                     if (mouse->isLeftButtonClicked())	{
-                        if (aiPlayer.bPlaying) {
-                            aiPlayer.bPlaying = false;
+                        if (sSkirmishPlayer.bPlaying) {
+                            sSkirmishPlayer.bPlaying = false;
                         } else {
-                            aiPlayer.bPlaying = true;
+                            sSkirmishPlayer.bPlaying = true;
                         }
                     }
                 }
                 else
                 {
-                    if (aiPlayer.bPlaying)
+                    if (sSkirmishPlayer.bPlaying)
                         alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol(255,255,255), "  CPU");
                     else
                         alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol(128,128,128), "  CPU");
@@ -297,8 +299,8 @@ void cSetupSkirmishGameState::draw() {
             cPlayer &cPlayer = players[p];
 
 
-            if (aiPlayer.iHouse > 0) {
-                sprintf(cHouse, cPlayer::getHouseNameForId(aiPlayer.iHouse).c_str());
+            if (sSkirmishPlayer.iHouse > 0) {
+                sprintf(cHouse, cPlayer::getHouseNameForId(sSkirmishPlayer.iHouse).c_str());
             } else {
                 sprintf(cHouse, "Random");
             }
@@ -314,7 +316,7 @@ void cSetupSkirmishGameState::draw() {
             }
             else
             {
-                if (aiPlayer.bPlaying)
+                if (sSkirmishPlayer.bPlaying)
                     alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol(255,255,255), "%s", cHouse);
                 else
                     alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol(128,128,128), "%s", cHouse);
@@ -323,7 +325,7 @@ void cSetupSkirmishGameState::draw() {
 
             if (bHover)
             {
-                if (aiPlayer.bPlaying)
+                if (sSkirmishPlayer.bPlaying)
                     alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol(game.getFadeSelect(),0,0), "%s", cHouse);
                 else
                     alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol((game.getFadeSelect()/2),(game.getFadeSelect()/2),(game.getFadeSelect()/2)), "%s", cHouse);
@@ -331,36 +333,36 @@ void cSetupSkirmishGameState::draw() {
 
                 if (mouse->isLeftButtonClicked())
                 {
-                    aiPlayer.iHouse++;
+                    sSkirmishPlayer.iHouse++;
 
                     // Only human player can be Sardaukar?
                     if (p > 0)
                     {
-                        if (aiPlayer.iHouse > SARDAUKAR) {
-                            aiPlayer.iHouse = 0;
+                        if (sSkirmishPlayer.iHouse > SARDAUKAR) {
+                            sSkirmishPlayer.iHouse = 0;
                         }
                     }
                     else
                     {
-                        if (aiPlayer.iHouse > ORDOS) {
-                            aiPlayer.iHouse = 0;
+                        if (sSkirmishPlayer.iHouse > ORDOS) {
+                            sSkirmishPlayer.iHouse = 0;
                         }
                     }
                 }
 
                 if (mouse->isRightButtonClicked())
                 {
-                    aiPlayer.iHouse--;
+                    sSkirmishPlayer.iHouse--;
                     if (p > 0)
                     {
-                        if (aiPlayer.iHouse < 0) {
-                            aiPlayer.iHouse = SARDAUKAR;
+                        if (sSkirmishPlayer.iHouse < 0) {
+                            sSkirmishPlayer.iHouse = SARDAUKAR;
                         }
                     }
                     else
                     {
-                        if (aiPlayer.iHouse < 0) {
-                            aiPlayer.iHouse =ORDOS;
+                        if (sSkirmishPlayer.iHouse < 0) {
+                            sSkirmishPlayer.iHouse =ORDOS;
                         }
                     }
                 }
@@ -369,7 +371,7 @@ void cSetupSkirmishGameState::draw() {
             // Credits
             bHover=false;
 
-            alfont_textprintf(bmp_screen, bene_font, 174,iDrawY+1, makecol(0,0,0), "%d", (int) cPlayer.getCredits());
+            alfont_textprintf(bmp_screen, bene_font, 174,iDrawY+1, makecol(0,0,0), "%d", sSkirmishPlayer.iCredits);
 
             //rect(bmp_screen, 174, iDrawY, 230, iDrawY+16, makecol(255,255,255));
 
@@ -378,37 +380,37 @@ void cSetupSkirmishGameState::draw() {
 
             if (p == 0)
             {
-                alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", (int) cPlayer.getCredits());
+                alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", sSkirmishPlayer.iCredits);
             }
             else
             {
-                if (aiPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", (int) cPlayer.getCredits());
+                if (sSkirmishPlayer.bPlaying)
+                    alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", sSkirmishPlayer.iCredits);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(128,128,128), "%d", (int) cPlayer.getCredits());
+                    alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(128,128,128), "%d", sSkirmishPlayer.iCredits);
 
             }
 
             if (bHover)
             {
-                if (aiPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(game.getFadeSelect(),0,0), "%d", (int) cPlayer.getCredits());
+                if (sSkirmishPlayer.bPlaying)
+                    alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(game.getFadeSelect(),0,0), "%d", sSkirmishPlayer.iCredits);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 174, iDrawY, makecol((game.getFadeSelect()/2),(game.getFadeSelect()/2),(game.getFadeSelect()/2)), "%d", cPlayer.getCredits());
+                    alfont_textprintf(bmp_screen, bene_font, 174, iDrawY, makecol((game.getFadeSelect()/2),(game.getFadeSelect()/2),(game.getFadeSelect()/2)), "%d", sSkirmishPlayer.iCredits);
 
                 if (mouse->isLeftButtonClicked())
                 {
-                    cPlayer.giveCredits(500);
-                    if (cPlayer.getCredits() > 10000) {
-                        cPlayer.setCredits(1000);
+                    sSkirmishPlayer.iCredits += 500;
+                    if (sSkirmishPlayer.iCredits > 10000) {
+                        sSkirmishPlayer.iCredits = 1000;
                     }
                 }
 
                 if (mouse->isRightButtonClicked())
                 {
-                    cPlayer.substractCredits(500);
-                    if (cPlayer.getCredits() < 1000) {
-                        cPlayer.setCredits(10000);
+                    sSkirmishPlayer.iCredits -= 500;
+                    if (sSkirmishPlayer.iCredits < 1000) {
+                        sSkirmishPlayer.iCredits = 10000;
                     }
                 }
             }
@@ -416,7 +418,7 @@ void cSetupSkirmishGameState::draw() {
             // Units
             bHover = false;
 
-            alfont_textprintf(bmp_screen, bene_font, 269,iDrawY+1, makecol(0,0,0), "%d", aiPlayer.iUnits);
+            alfont_textprintf(bmp_screen, bene_font, 269,iDrawY+1, makecol(0,0,0), "%d", sSkirmishPlayer.iUnits);
 
             //rect(bmp_screen, 269, iDrawY, 290, iDrawY+16, makecol(255,255,255));
 
@@ -425,37 +427,37 @@ void cSetupSkirmishGameState::draw() {
 
             if (p == 0)
             {
-                alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(255,255,255), "%d", aiPlayer.iUnits);
+                alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(255,255,255), "%d", sSkirmishPlayer.iUnits);
             }
             else
             {
-                if (aiPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(255,255,255), "%d", aiPlayer.iUnits);
+                if (sSkirmishPlayer.bPlaying)
+                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(255,255,255), "%d", sSkirmishPlayer.iUnits);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(128,128,128), "%d", aiPlayer.iUnits);
+                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(128,128,128), "%d", sSkirmishPlayer.iUnits);
 
             }
 
             if (bHover)
             {
-                if (aiPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(game.getFadeSelect(),0,0), "%d", aiPlayer.iUnits);
+                if (sSkirmishPlayer.bPlaying)
+                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(game.getFadeSelect(),0,0), "%d", sSkirmishPlayer.iUnits);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol((game.getFadeSelect()/2),(game.getFadeSelect()/2),(game.getFadeSelect()/2)), "%d", aiPlayer.iUnits);
+                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol((game.getFadeSelect()/2),(game.getFadeSelect()/2),(game.getFadeSelect()/2)), "%d", sSkirmishPlayer.iUnits);
 
                 if (mouse->isLeftButtonClicked())
                 {
-                    aiPlayer.iUnits++;
-                    if (aiPlayer.iUnits > 10) {
-                        aiPlayer.iUnits = 1;
+                    sSkirmishPlayer.iUnits++;
+                    if (sSkirmishPlayer.iUnits > 10) {
+                        sSkirmishPlayer.iUnits = 1;
                     }
                 }
 
                 if (mouse->isRightButtonClicked())
                 {
-                    aiPlayer.iUnits--;
-                    if (aiPlayer.iUnits < 1) {
-                        aiPlayer.iUnits = 10;
+                    sSkirmishPlayer.iUnits--;
+                    if (sSkirmishPlayer.iUnits < 1) {
+                        sSkirmishPlayer.iUnits = 10;
                     }
                 }
             }
@@ -585,6 +587,11 @@ void cSetupSkirmishGameState::interact() {
                 }
             }
 
+            int maxThinkingAIs = MAX_PLAYERS;
+            if (game.bOneAi) {
+                maxThinkingAIs = 1;
+            }
+
             // set up players and their units
             for (int p = 0; p < MAX_PLAYERS; p++)	{
 
@@ -635,16 +642,21 @@ void cSetupSkirmishGameState::interact() {
 
                 // TEAM Logic
                 if (p == HUMAN) {
-                    cPlayer.setTeam(0);
+                    cPlayer.init(p, nullptr);
                 } else if (p == AI_CPU5) {
-                    cPlayer.setTeam(0);
+                    cPlayer.init(p, new brains::cPlayerBrainFremenSuperWeapon(&cPlayer));
                 } else if (p == AI_CPU6) {
-                    cPlayer.setTeam(2); // worm team is against everyone
+                    cPlayer.init(p, new brains::cPlayerBrainSandworm(&cPlayer));
                 } else {
-                    // all other AI's are their own team (campaign == AI's are friends, here they are enemies)
-                    cPlayer.setTeam(p);
+                    if (maxThinkingAIs > 0) {
+                        cPlayer.init(p, new brains::cPlayerBrainSkirmish(&cPlayer));
+                        maxThinkingAIs--;
+                    } else {
+                        cPlayer.init(p, nullptr);
+                    }
                 }
 
+                cPlayer.setCredits(sSkirmishPlayer.iCredits);
                 cPlayer.setHouse(iHouse);
 
                 // from here, ignore non playable factions
@@ -739,6 +751,26 @@ void cSetupSkirmishGameState::interact() {
                 char msg[255];
                 sprintf(msg, "Wants %d amount of units; amount created %d", sSkirmishPlayer.iUnits, u);
                 cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, iHouse);
+            }
+
+            // TODO:
+            // TEAM LOGIC here, so we can decide which is Atreides and thus should be allied with Fremen...
+            for (int p = 0; p < MAX_PLAYERS; p++) {
+                cPlayer &player = players[p];
+                if (p == HUMAN) {
+                    player.setTeam(HUMAN);
+                } else if (p == AI_CPU5) {
+                    player.setTeam(AI_CPU5);
+                } else if (p == AI_CPU6) {
+                    player.setTeam(AI_CPU6); // worm team is against everyone
+                } else {
+                    if (player.getHouse() == ATREIDES) {
+                        player.setTeam(AI_CPU5); // ally with the Fremen
+                    } else {
+                        // all other AI's are their own team (campaign == AI's are friends, here they are enemies)
+                        player.setTeam(p);
+                    }
+                }
             }
 
             game.FADE_OUT();
