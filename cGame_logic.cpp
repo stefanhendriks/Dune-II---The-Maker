@@ -639,14 +639,6 @@ void cGame::menu()
 
 void cGame::init_skirmish() const {
     game.mission_init();
-
-    for (int p = HUMAN; p < AI_WORM; p++) {
-        players[p].setCredits(2500);
-        players[p].setTeam(p);
-    }
-
-    // Fremen allies with Human by default
-    players[FREMEN].setTeam(HUMAN);
 }
 
 void cGame::setup_skirmish() {
