@@ -1,5 +1,7 @@
 #include <algorithm>
 #include "include/d2tmh.h"
+#include "cPlayerBrainSkirmish.h"
+
 
 namespace brains {
 
@@ -9,7 +11,7 @@ namespace brains {
 //         timer is substracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
 //         10*60 -> 1 minute. * 4 -> 4 minutes
 //        TIMER_rest = (10 * 60) * 4;
-        TIMER_rest = 10;
+        TIMER_rest = 100;
         if (game.bNoAiRest) {
             TIMER_rest = 10;
         }
@@ -61,19 +63,21 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::addBuildOrder(S_buildOrder order) {
-//    // check if we can find a similar build order
-//    for (auto & buildOrder : buildOrders) {
-//        if (buildOrder.buildType != order.buildType) continue;
-//        if (buildOrder.buildId != order.buildId) continue;
-//
-//        if (order.buildType == eBuildType::STRUCTURE) {
-//            if (buildOrder.placeAt != order.placeAt) continue;
-//        }
-//
-//        // found same, if so, then simply increase priority?
-////        buildOrder.priority++;
-//        return; // stop
-//    }
+        // check if we can find a similar build order
+        if (order.buildType == eBuildType::STRUCTURE) {
+            for (auto &buildOrder : buildOrders) {
+                if (buildOrder.buildType != order.buildType) continue;
+                if (buildOrder.buildId != order.buildId) continue;
+
+                if (order.buildType == eBuildType::STRUCTURE) {
+                    if (buildOrder.placeAt != order.placeAt) continue;
+                }
+
+                // found same, if so, then simply increase priority?
+                //        buildOrder.priority++;
+                return; // stop
+            }
+        }
         buildOrders.push_back(order);
 
         // re-order based on priority
@@ -224,6 +228,24 @@ namespace brains {
         char msg[255];
         sprintf(msg, "cPlayerBrainSkirmish::thinkState_ScanBase(), for player [%d]", player->getId());
         logbook(msg);
+
+        // structure placement is done in thinkState_ProcessBuildOrders() !
+
+        if (!player->isBuildingStructure() && !player->isBuildingStructureAwaitingPlacement()) {
+            // think about what structure to build AND where to place it
+            const s_SkirmishPlayer_PlaceForStructure &result = thinkAboutNextStructureToBuildAndPlace();
+            // add it to the build queue
+
+            if (result.structureType > -1 && result.cell > -1) {
+                addBuildOrder((S_buildOrder) {
+                        buildType : STRUCTURE,
+                        priority : 1,
+                        buildId : result.structureType,
+                        placeAt : result.cell,
+                        state : buildOrder::PROCESSME,
+                });
+            }
+        }
 
         // reset timer (for the next time we end up here)
         changeThinkStateTo(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_MISSIONS);
@@ -470,6 +492,145 @@ namespace brains {
         } else {
             // non peaceful state, what to do? react? etc.
         }
+    }
+
+    s_SkirmishPlayer_PlaceForStructure cPlayerBrainSkirmish::thinkAboutNextStructureToBuildAndPlace() {
+        s_SkirmishPlayer_PlaceForStructure result;
+
+        // think about structure type first
+        int structureTypeToBuild = getStructureToBuild();
+
+        // then where to place it
+        int cellToPlaceStructureAt = -1;
+        if (structureTypeToBuild > -1) {
+            cellToPlaceStructureAt = findCellToPlaceStructure(structureTypeToBuild);
+        }
+
+        result.structureType = structureTypeToBuild;
+        result.cell = cellToPlaceStructureAt;
+        return result;
+
+    }
+
+    /**
+     * A very crude way to determine which structure to build.
+     * This can be improved much further still, but that will be done another time...
+     * @return
+     */
+    int cPlayerBrainSkirmish::getStructureToBuild() const {
+        if (!player->bEnoughPower()) {
+            return WINDTRAP;
+        }
+
+        int structureIWantToBuild = getStructureIdToBuildWithoutConsideringPowerUsage();
+
+        // determine if we have enough power for the thing we want to build, if not, build a windtrap first...
+        if (structureIWantToBuild > -1 && !player->hasEnoughPowerFor(structureIWantToBuild)) {
+            return WINDTRAP;
+        }
+
+        return structureIWantToBuild;
+    }
+
+    int cPlayerBrainSkirmish::getStructureIdToBuildWithoutConsideringPowerUsage() const {
+        // first basic needs
+        if (!player->hasAtleastOneStructure(REFINERY)) {
+            return REFINERY;
+        }
+        // nothing to build
+        return -1;
+    }
+
+    int cPlayerBrainSkirmish::findCellToPlaceStructure(int structureType) {
+        // find place (fast, if possible), where to place it
+        // ignore any units (we can move them out of the way). But do take
+        // terrain and other structures into consideration!
+
+        const std::vector<int> &allMyStructuresAsId = player->getAllMyStructuresAsId();
+        std::vector<int> potentialCells = std::vector<int>();
+
+        int iWidth = structures[structureType].bmp_width / TILESIZE_WIDTH_PIXELS;
+        int iHeight = structures[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
+
+        cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
+
+        for (auto &id : allMyStructuresAsId) {
+            cAbstractStructure * aStructure = structure[id];
+
+            // go around any structure, and try to find a cell where we can place a structure.
+            int iStartX = map.getCellX(aStructure->getCell());
+            int iStartY = map.getCellY(aStructure->getCell());
+
+            int iEndX = iStartX + aStructure->getWidth() + 1; // plus 1 because we want to evaluate at the right of "aStructure" as well.
+            int iEndY = iStartY + aStructure->getHeight()  + 1; // plus 1 because we want to evaluate at the bottom of "aStructure" as well.
+
+            // start is topleft/above structure, but also take size of the structure to place
+            // into acount. So ie, a structure of 2x2 will be attempted (at first) at y - 2.
+            // attempt at 'top' first:
+            int topLeftX = iStartX - iWidth;
+            int topLeftY = iStartY - iHeight;
+
+            // check: from top left to top right
+            for (int sx = topLeftX; sx < iEndX; sx++) {
+                int cell = map.makeCell(sx, topLeftY);
+
+                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType);
+                if (canPlaceStructureAt) {
+                    potentialCells.push_back(cell);
+                }
+            }
+
+            int bottomLeftX = topLeftX;
+            int bottomLeftY = iEndY;
+            // check: from bottom left to bottom right
+            for (int sx = bottomLeftX; sx < iEndX; sx++) {
+                int cell = map.makeCell(sx, bottomLeftY);
+
+                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType);
+                if (canPlaceStructureAt) {
+                    potentialCells.push_back(cell);
+                }
+            }
+
+            // left to structure (not from top!)
+            int justLeftX = topLeftX;
+            int justLeftY = iStartY;
+            for (int sy = justLeftY; sy < iEndY; sy++) {
+                int cell = map.makeCell(justLeftX, sy);
+
+                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType);
+                if (canPlaceStructureAt) {
+                    potentialCells.push_back(cell);
+                }
+            }
+
+            // right to structure (not top!)
+            int justRightX = iEndX;
+            int justRightY = iStartY;
+            for (int sy = justRightY; sy < iEndY; sy++) {
+                int cell = map.makeCell(justRightX, sy);
+
+                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType);
+                if (canPlaceStructureAt) {
+                    potentialCells.push_back(cell);
+                }
+            }
+
+            // if we have found any we randomly abort
+            if (!potentialCells.empty()) {
+                if (rnd(100) < 33) {
+                    break;
+                }
+            }
+        }
+
+        if (!potentialCells.empty()) {
+            // found one, shuffle, and then return the first
+            std::random_shuffle(potentialCells.begin(), potentialCells.end());
+            return potentialCells.front();
+        }
+
+        return -1;
     }
 
 }

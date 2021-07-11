@@ -930,7 +930,7 @@ bool cMap::canPlaceStructureAtCell(int cll) {
     if (!isValidCell(cll)) return false;
     int cellType = getCellType(cll);
     // TODO: make this a flag in the cell/terrain type kind? (there is no such thing yet, its all hard-coded)
-    bool allowedCellType = cellType == TERRAIN_SLAB || cellType == TERRAIN_ROCK;
+    bool allowedCellType = (cellType == TERRAIN_SLAB || cellType == TERRAIN_ROCK);
     if (!allowedCellType) {
         return false;
     }

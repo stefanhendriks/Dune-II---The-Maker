@@ -139,6 +139,8 @@ public:
 
     void increaseStructureAmount(int structureType);
 
+    bool hasEnoughPowerFor(int structureType) const;
+
     bool hasEnoughCreditsFor(float requestedAmount) const;
 
     bool hasEnoughCreditsForUnit(int unitType);
