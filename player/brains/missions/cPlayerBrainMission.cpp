@@ -343,10 +343,6 @@ namespace brains {
         return state == PLAYERBRAINMISSION_STATE_ENDED;
     }
 
-    bool cPlayerBrainMission::isAttackingMission() const {
-        return kind == ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK;
-    }
-
     void cPlayerBrainMission::changeState(ePlayerBrainMissionState newState) {
         char msg[255];
         sprintf(msg, "cPlayerBrainMission::changeState(), for player [%d] - mission [%s] - from %s to %s", player->getId(),
