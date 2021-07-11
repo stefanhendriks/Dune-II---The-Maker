@@ -107,8 +107,6 @@ namespace brains {
 
         bool isEnded() const;
 
-        bool isAttackingMission() const;
-
         void changeState(ePlayerBrainMissionState newState);
 
         std::vector<int> & getUnits();
