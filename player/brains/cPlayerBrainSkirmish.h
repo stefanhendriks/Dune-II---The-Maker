@@ -8,6 +8,11 @@
 
 namespace brains {
 
+    struct s_SkirmishPlayer_PlaceForStructure {
+        int structureType;
+        int cell;
+    };
+
     /**
      * The cPlayerBrainSkirmish is responsible for being an AI brain during skirmish games.
      */
@@ -97,6 +102,13 @@ namespace brains {
 
         bool hasMission(const int id);
 
+        s_SkirmishPlayer_PlaceForStructure thinkAboutNextStructureToBuildAndPlace();
+
+        int findCellToPlaceStructure(int structureType);
+
+        int getStructureToBuild() const;
+
+        int getStructureIdToBuildWithoutConsideringPowerUsage() const;
     };
 
 }

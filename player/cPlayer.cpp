@@ -1307,3 +1307,9 @@ int cPlayer::getScoutingUnitType() {
 
     return TRIKE;
 }
+
+bool cPlayer::hasEnoughPowerFor(int structureType) const {
+    assert(structureType > 0);
+    int powerLeft = powerProduce_ - powerUsage_;
+    return structures[structureType].power_drain <= powerLeft;
+}
