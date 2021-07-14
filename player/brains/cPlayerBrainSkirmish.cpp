@@ -562,7 +562,7 @@ namespace brains {
             int iStartY = map.getCellY(aStructure->getCell());
 
             int iEndX = iStartX + aStructure->getWidth() + 1; // plus 1 because we want to evaluate at the right of "aStructure" as well.
-            int iEndY = iStartY + aStructure->getHeight()  + 1; // plus 1 because we want to evaluate at the bottom of "aStructure" as well.
+            int iEndY = iStartY + aStructure->getHeight(); // not plus 1 because iStartY is 1st cell , so it is already included (and height is 1 based).
 
             // start is topleft/above structure, but also take size of the structure to place
             // into acount. So ie, a structure of 2x2 will be attempted (at first) at y - 2.
