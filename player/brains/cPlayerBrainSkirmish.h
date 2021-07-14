@@ -34,6 +34,10 @@ namespace brains {
 
         ePlayerBrainSkirmishThinkState thinkState;
 
+        ePlayerBrainSkirmishEconomyState economyState;
+
+        int COUNT_badEconomy;
+
         int TIMER_rest;
 
         // at which cells did we detect an enemy? Remember those.

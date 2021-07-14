@@ -269,6 +269,8 @@ public:
     static std::string getHouseNameForId(int house);
 
 private:
+    cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
+
     int getRGBColorForHouse(int houseId);
 
     int getEmblemBackgroundColorForHouse(int houseId);
