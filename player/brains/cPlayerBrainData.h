@@ -52,6 +52,16 @@ namespace brains {
 
     };
 
+    enum ePlayerBrainSkirmishEconomyState {
+        // Everything is in order
+        PLAYERBRAIN_ECONOMY_STATE_NORMAL,
+
+        // We need to improve our economy
+        PLAYERBRAIN_ECONOMY_STATE_IMPROVE,
+
+        // We need get cash quickly (sell?) - we cannot 'sell' yet, but this would be a way to get funds to rebuild economy/etc
+        PLAYERBRAIN_ECONOMY_STATE_SELL_FOR_CASH,
+    };
     /**
      * Skirmish AI brain think states
      */

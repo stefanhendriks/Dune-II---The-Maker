@@ -722,17 +722,7 @@ bool cPlayer::isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) cons
  * @return
  */
 cBuildingListItem *cPlayer::isUpgradeAvailableToGrantStructure(int iStructureType) const {
-    cBuildingList *pList = sidebar->getList(LIST_UPGRADES);
-    for (int i = 0; i < MAX_ITEMS; i++) {
-        cBuildingListItem *pItem = pList->getItem(i);
-        if (pItem == nullptr) continue;
-        const s_Upgrade &theUpgrade = pItem->getS_Upgrade();
-        if (theUpgrade.providesType != STRUCTURE) continue;
-        if (theUpgrade.providesTypeId == iStructureType) {
-            return pItem;
-        }
-    }
-    return nullptr;
+    return isUpgradeAvailableToGrant(STRUCTURE, iStructureType);
 }
 
 
@@ -744,13 +734,25 @@ cBuildingListItem *cPlayer::isUpgradeAvailableToGrantStructure(int iStructureTyp
  * @return
  */
 cBuildingListItem *cPlayer::isUpgradeAvailableToGrantUnit(int iUnitType) const {
+    return isUpgradeAvailableToGrant(UNIT, iUnitType);
+}
+
+/**
+ * Checks if an upgrade exists for the 'providesType' (ie UNIT/STRUCTURE) and a specific kind of that type (providesTypeId), ie
+ * a QUAD, or RTURRET, etc.
+ *
+ * @param providesType (UNIT/STRUCTURE)
+ * @param providesTypeId (ex: QUAD, TANK, RTURRET, etc)
+ * @return
+ */
+cBuildingListItem *cPlayer::isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const {
     cBuildingList *pList = sidebar->getList(LIST_UPGRADES);
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *pItem = pList->getItem(i);
         if (pItem == nullptr) continue;
         const s_Upgrade &theUpgrade = pItem->getS_Upgrade();
-        if (theUpgrade.providesType != UNIT) continue;
-        if (theUpgrade.providesTypeId == iUnitType) {
+        if (theUpgrade.providesType != providesType) continue;
+        if (theUpgrade.providesTypeId == providesTypeId) {
             return pItem;
         }
     }
@@ -1309,7 +1311,7 @@ int cPlayer::getScoutingUnitType() {
 }
 
 bool cPlayer::hasEnoughPowerFor(int structureType) const {
-    assert(structureType > 0);
+    assert(structureType > -1);
     int powerLeft = powerProduce_ - powerUsage_;
     return structures[structureType].power_drain <= powerLeft;
 }

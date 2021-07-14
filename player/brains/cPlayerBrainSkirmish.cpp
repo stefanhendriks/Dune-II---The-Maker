@@ -18,6 +18,7 @@ namespace brains {
         myBase = std::vector<S_structurePosition>();
         buildOrders = std::vector<S_buildOrder>();
         discoveredEnemyAtCell = std::set<int>();
+        economyState = ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_NORMAL;
     }
 
     cPlayerBrainSkirmish::~cPlayerBrainSkirmish() {
@@ -339,6 +340,25 @@ namespace brains {
         // Re-iterate over all (pending) buildOrders - and check if we are still going to do that or we might want to
         // up/downplay some priorities and re-sort?
         // Example: Money is short, Harvester is in build queue, but not high in priority?
+        if (player->hasAtleastOneStructure(REFINERY)) {
+            if (economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
+                if (player->getCredits() < 300) {
+                    // count the times we are in this shape, after a certain time we switch to IMPROVE state
+                    COUNT_badEconomy++;
+                    if (COUNT_badEconomy > 10) {
+                        economyState = PLAYERBRAIN_ECONOMY_STATE_IMPROVE;
+                    }
+                }
+            } else if (economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
+                if (player->getCredits() > 300) {
+                    COUNT_badEconomy--;
+                    if (COUNT_badEconomy < 3) {
+                        COUNT_badEconomy = 0;
+                        economyState = PLAYERBRAIN_ECONOMY_STATE_NORMAL;
+                    }
+                }
+            }
+        }
 
         // take a little rest, before going into a new loop again?
         TIMER_rest = 25;
@@ -528,15 +548,64 @@ namespace brains {
         if (structureIWantToBuild > -1 && !player->hasEnoughPowerFor(structureIWantToBuild)) {
             return WINDTRAP;
         }
+        
+        // can build it?
+        eCantBuildReason reason = player->canBuildStructure(structureIWantToBuild);
+        if (reason != eCantBuildReason::NONE) {
+            // there is a reason why we cannot build it
+            switch (reason) {
+                case REQUIRES_UPGRADE:
+                    // build the upgrade instead
+                    if (structureIWantToBuild == RTURRET) {
+                        // upgrade ...
+                        cBuildingListItem *pItem = player->isUpgradeAvailableToGrantStructure(RTURRET);
+                        if (!pItem) {
+                            // we first need to upgrade to SLAB4 before we can upgrade to RTURRET
+                            pItem = player->isUpgradeAvailableToGrantStructure(SLAB4);
+                        }
+
+                        // we have something to upgrade
+                        if (!player->startUpgrading(pItem->getBuildId())) {
+                            // failed to build upgrade.
+                        } else {
+                            // we should wait a bit before re-evaluating base building
+                        }
+                    } else if (structureIWantToBuild == SLAB4) {
+
+                    }
+                    break;
+                case REQUIRES_STRUCTURE:
+                    // update state, we don't have a constyard anymore!
+                    break;
+                case NOT_ENOUGH_MONEY:
+                    // economy is bad? set state for that
+                    break;
+                case ALREADY_BUILDING:
+                    // already building something, so don't return any id to build
+                    return -1;
+            }
+        }
 
         return structureIWantToBuild;
     }
 
     int cPlayerBrainSkirmish::getStructureIdToBuildWithoutConsideringPowerUsage() const {
-        // first basic needs
-        if (!player->hasAtleastOneStructure(REFINERY)) {
-            return REFINERY;
+        if (!player->hasAtleastOneStructure(REFINERY))      return REFINERY;
+        if (economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
+            if (player->getAmountOfStructuresForType(REFINERY) < 3) {
+                return REFINERY;
+            }
         }
+        // play around with the order... (depending on difficulty, or type of ai, etc?)
+        if (!player->hasAtleastOneStructure(LIGHTFACTORY))  return LIGHTFACTORY;
+        if (!player->hasAtleastOneStructure(RADAR))  return RADAR;
+        if (!player->hasAtleastOneStructure(HEAVYFACTORY))  return HEAVYFACTORY;
+        if (!player->hasAtleastOneStructure(STARPORT))  return STARPORT;
+        if (!player->hasAtleastOneStructure(PALACE))  return PALACE;
+
+        if (player->getAmountOfStructuresForType(TURRET) < 2)  return TURRET;
+        if (player->getAmountOfStructuresForType(RTURRET) < 6)  return RTURRET;
+
         // nothing to build
         return -1;
     }
@@ -546,6 +615,8 @@ namespace brains {
         // ignore any units (we can move them out of the way). But do take
         // terrain and other structures into consideration!
 
+        int centerOfBase = player->getFocusCell();
+        
         const std::vector<int> &allMyStructuresAsId = player->getAllMyStructuresAsId();
         std::vector<int> potentialCells = std::vector<int>();
 
@@ -625,8 +696,32 @@ namespace brains {
         }
 
         if (!potentialCells.empty()) {
-            // found one, shuffle, and then return the first
-            std::random_shuffle(potentialCells.begin(), potentialCells.end());
+            if (structureType == TURRET || structureType == RTURRET) {
+                // first shuffle, before going through the list
+                std::random_shuffle(potentialCells.begin(), potentialCells.end());
+
+                std::vector<int> potentialFurtherCells = std::vector<int>();
+                int found = 0;
+                double distance = 128; // arbitrary distance as 'border'
+                for (auto &potentialCell : potentialCells) {
+                    double dist = map.distance(centerOfBase, potentialCell);
+                    if (dist > distance) {
+                        potentialFurtherCells.push_back(potentialCell);
+                        found++;
+                        if (found > 5) {
+                            break;
+                        }
+                    }
+                }
+
+                if (!potentialFurtherCells.empty()) {
+                    // shuffle the 5 'furthest'
+                    std::random_shuffle(potentialFurtherCells.begin(), potentialFurtherCells.end());
+                }
+            } else {
+                // found one, shuffle, and then return the first
+                std::random_shuffle(potentialCells.begin(), potentialCells.end());
+            }
             return potentialCells.front();
         }
 

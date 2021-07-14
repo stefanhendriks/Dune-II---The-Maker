@@ -531,7 +531,7 @@ cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingPlacement(int listTyp
  * @return
  */
 bool cItemBuilder::isBuildListItemTheFirstOfItsListType(cBuildingListItem *item) {
-	return findBuildingListItemOfSameListAs(item) == NULL;
+	return findBuildingListItemOfSameListAs(item) == nullptr;
 }
 
 /**

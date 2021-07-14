@@ -134,7 +134,11 @@ bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
             itemBuilder->addItemToList(item);
         } else if (firstOfItsListType) { // may only build if there is nothing else in the list type being built
             itemBuilder->addItemToList(item);
+        } else {
+            // fail
+            return false;
         }
+
         list->setLastClickedId(item->getSlotId());
         return true;
     }

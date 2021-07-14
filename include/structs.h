@@ -146,7 +146,7 @@ struct s_Upgrade {
                         // above, so if you require CONSTYARD *and* RADAR you set structureType=CONSTYARD and needsStructure=RADAR, keep -1
                         // if you don't require any additional structure
 
-    int providesType;    // UNIT or STRUCTURE (0/1)
+    eBuildType providesType;    // UNIT or STRUCTURE, etc
 
     int providesTypeId;   // upgrade results into getting this typeId (type depends on 'providesType') (points to s_Unit/s_Structure)
     int providesTypeList; // into which list will this type be made available?
