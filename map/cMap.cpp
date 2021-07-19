@@ -926,7 +926,7 @@ int cMap::findNearestSpiceBloom(int iCell) {
     return iTargets[rnd(iT)];
 }
 
-bool cMap::canPlaceStructureAtCell(int cll) {
+bool cMap::isValidTerrainForStructureAtCell(int cll) {
     if (!isValidCell(cll)) return false;
     int cellType = getCellType(cll);
     // TODO: make this a flag in the cell/terrain type kind? (there is no such thing yet, its all hard-coded)
@@ -935,10 +935,20 @@ bool cMap::canPlaceStructureAtCell(int cll) {
         return false;
     }
 
-    // another structure found on this location, "blocked"
-    if (getCellIdStructuresLayer(cll) > -1) {
-        return false;
-    }
-
     return true;
+}
+
+/**
+ * returns a (randomized) cell. Taking cell param as 'start' position and 'distance' the amount of cells you want to
+ * move away.
+ * @param cell
+ * @param distance
+ */
+int cMap::getRandomCellFrom(int cell, int distance) {
+    int totalDistance = (distance * 2) + 1;
+    int startX = getCellX(cell);
+    int startY = getCellY(cell);
+    int newX = (startX - distance) + rnd(totalDistance);
+    int newY = (startY - distance) + rnd(totalDistance);
+    return getCellWithMapBorders(newX, newY);
 }

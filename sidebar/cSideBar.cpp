@@ -296,26 +296,7 @@ void cSideBar::onMouseClickedRight(const s_MouseEvent &event) {
 
     // anything but the starport can 'build' things
     if (list->getType() != LIST_STARPORT) {
-        if (item->getTimesToBuild() > 0) {
-            item->decreaseTimesToBuild();
-            item->setPlaceIt(false);
-            item->setDeployIt(false);
-
-            if (item->getTimesToBuild() == 0) {
-                cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "(Human) Item is last item in queue, will give money back.");
-                // only give money back for item that is being built
-                if (item->isBuilding()) {
-                    // calculate the amount of money back:
-                    player->giveCredits(item->getRefundAmount());
-                    player->getBuildingListUpdater()->onBuildItemCancelled(item);
-                }
-                item->setIsBuilding(false);
-                item->resetProgress();
-                cItemBuilder *itemBuilder = player->getItemBuilder();
-                itemBuilder->removeItemFromList(item);
-            }
-            // else, only the number is decreased (used for queueing)
-        }
+        cancelBuildingListItem(item);
     } else {
         cOrderProcesser * orderProcesser = player->getOrderProcesser();
 
@@ -326,6 +307,29 @@ void cSideBar::onMouseClickedRight(const s_MouseEvent &event) {
                 orderProcesser->removeOrder(item);
             }
         }
+    }
+}
+
+void cSideBar::cancelBuildingListItem(cBuildingListItem *item) {
+    if (item->getTimesToBuild() > 0) {
+        item->decreaseTimesToBuild();
+        item->setPlaceIt(false);
+        item->setDeployIt(false);
+
+        if (item->getTimesToBuild() == 0) {
+            cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
+            // only give money back for item that is being built
+            if (item->isBuilding()) {
+                // calculate the amount of money back:
+                player->giveCredits(item->getRefundAmount());
+                player->getBuildingListUpdater()->onBuildItemCancelled(item);
+            }
+            item->setIsBuilding(false);
+            item->resetProgress();
+            cItemBuilder *itemBuilder = player->getItemBuilder();
+            itemBuilder->removeItemFromList(item);
+        }
+        // else, only the number is decreased (used for queueing)
     }
 }
 

@@ -8,6 +8,9 @@
 
 namespace brains {
 
+    const int MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_HARVESTER = 98;
+    const int MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_CARRYALL = 99;
+
     struct s_SkirmishPlayer_PlaceForStructure {
         int structureType;
         int cell;
@@ -67,6 +70,8 @@ namespace brains {
 
         void changeThinkStateTo(const ePlayerBrainSkirmishThinkState& newState);
 
+        void changeEconomyStateTo(const ePlayerBrainSkirmishEconomyState& newState);
+
         static const char* ePlayerBrainSkirmishThinkStateString(const ePlayerBrainSkirmishThinkState &state) {
             switch (state) {
                 case ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_EVALUATE: return "PLAYERBRAIN_SKIRMISH_STATE_EVALUATE";
@@ -75,6 +80,18 @@ namespace brains {
                 case ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_ENDGAME: return "PLAYERBRAIN_SKIRMISH_STATE_ENDGAME";
                 case ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_MISSIONS: return "PLAYERBRAIN_SKIRMISH_STATE_MISSIONS";
                 case ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST: return "PLAYERBRAIN_SKIRMISH_STATE_REST";
+                default:
+                    assert(false);
+                    break;
+            }
+            return "";
+        }
+
+        static const char* ePlayerBrainSkirmishEconomyStateString(const ePlayerBrainSkirmishEconomyState &state) {
+            switch (state) {
+                case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_NORMAL: return "PLAYERBRAIN_ECONOMY_STATE_NORMAL";
+                case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_IMPROVE: return "PLAYERBRAIN_ECONOMY_STATE_IMPROVE";
+                case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_SELL_FOR_CASH: return "PLAYERBRAIN_ECONOMY_STATE_SELL_FOR_CASH";
                 default:
                     assert(false);
                     break;
@@ -113,6 +130,8 @@ namespace brains {
         int getStructureToBuild() const;
 
         int getStructureIdToBuildWithoutConsideringPowerUsage() const;
+
+        bool hasBuildOrderQueuedForStructure();
     };
 
 }

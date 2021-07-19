@@ -53,7 +53,7 @@ public:
     int getFocusCell() { return focusCell_; }
 
     // house
-    std::string getHouseName();
+    std::string getHouseName() const;
     int getHouse() const { return house; }
     bool isHouse(int houseId) const { return house == houseId; }
     void setHouse(int iHouse);
@@ -268,6 +268,12 @@ public:
 
     static std::string getHouseNameForId(int house);
 
+    void logStructures();
+
+    void cancelBuildingListItem(cBuildingListItem *item);
+
+    void cancelStructureBuildingListItemBeingBuilt();
+
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 
@@ -323,6 +329,7 @@ private:
     brains::cPlayerBrain *brain_;
 
     bool autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
+
 };
 
 #endif

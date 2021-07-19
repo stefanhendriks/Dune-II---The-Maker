@@ -137,16 +137,15 @@ void cTimeManager::handleTimerGameTime() {
             }
         }
 
-        for (int i = HUMAN; i < MAX_PLAYERS; i++) {
-            cPlayer &cPlayer = players[i];
-            cSideBar *sidebar = cPlayer.getSideBar();
-            if (sidebar) {
-                sidebar->think();
-            }
-        }
-
         // THINKING ONLY WHEN PLAYING / COMBAT
         if (game.isState(GAME_PLAYING)) {
+            for (int i = HUMAN; i < MAX_PLAYERS; i++) {
+                cPlayer &cPlayer = players[i];
+                cSideBar *sidebar = cPlayer.getSideBar();
+                if (sidebar) {
+                    sidebar->think();
+                }
+            }
 
             // structures think
             for (int i = 0; i < MAX_STRUCTURES; i++) {

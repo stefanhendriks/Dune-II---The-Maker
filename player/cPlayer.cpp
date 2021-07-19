@@ -448,6 +448,7 @@ bool cPlayer::hasBarracks() const {
 bool cPlayer::hasAtleastOneStructure(int structureType) const {
     if (structureType < 0) return false;
     if (structureType >= MAX_STRUCTURETYPES) return false;
+
     return iStructures[structureType] > 0;
 }
 
@@ -548,7 +549,7 @@ void cPlayer::decreaseStructureAmount(int structureType) {
     logbook(msg);
 }
 
-std::string cPlayer::getHouseName() {
+std::string cPlayer::getHouseName() const {
     return getHouseNameForId(house);
 }
 
@@ -944,7 +945,7 @@ int cPlayer::findCellToPlaceStructure(int iStructureType) {
             int sy = iStartY;
             int cell = map.getCellWithMapDimensions(sx, sy);
 
-            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType);
+            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType).success;
 
             if (r) {
                 if (iStructureType == TURRET || iStructureType == RTURRET) {
@@ -971,7 +972,7 @@ int cPlayer::findCellToPlaceStructure(int iStructureType) {
             int sy = underNeathStructureY;
             int cell = map.getCellWithMapDimensions(sx, sy);
 
-            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType);
+            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType).success;
 
             if (r) {
                 if (iStructureType == TURRET || iStructureType == RTURRET) {
@@ -997,7 +998,7 @@ int cPlayer::findCellToPlaceStructure(int iStructureType) {
             int sx = topLeftX;
             int cell = map.getCellWithMapDimensions(sx, sy);
 
-            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType);
+            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType).success;
 
             if (r) {
                 if (iStructureType == TURRET || iStructureType == RTURRET) {
@@ -1024,7 +1025,7 @@ int cPlayer::findCellToPlaceStructure(int iStructureType) {
             int sx = rightOfStructure;
             int cell = map.getCellWithMapDimensions(sx, sy);
 
-            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType);
+            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType).success;
 
             if (r) {
                 if (iStructureType == TURRET || iStructureType == RTURRET) {
@@ -1237,7 +1238,7 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, cBuildingListIt
     // create structure
     cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
 
-    bool canPlace = pStructureFactory->canPlaceStructureAt(destinationCell, iStructureTypeId);
+    bool canPlace = pStructureFactory->canPlaceStructureAt(destinationCell, iStructureTypeId).success;
     if (!canPlace) {
         return nullptr;
     }
@@ -1314,4 +1315,27 @@ bool cPlayer::hasEnoughPowerFor(int structureType) const {
     assert(structureType > -1);
     int powerLeft = powerProduce_ - powerUsage_;
     return structures[structureType].power_drain <= powerLeft;
+}
+
+void cPlayer::logStructures() {
+    char title[255];
+    sprintf(title, "cPlayer::hasAtleastOneStructure for player [%d] / [%s]", getId(), getHouseName().c_str());
+    logbook(title);
+
+    for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
+        char msg[255];
+        sprintf(msg, "[%s] amount [%d]", structures[i].name, iStructures[i]);
+        logbook(msg);
+    }
+}
+
+void cPlayer::cancelBuildingListItem(cBuildingListItem *item) {
+    this->sidebar->cancelBuildingListItem(item);
+}
+
+void cPlayer::cancelStructureBuildingListItemBeingBuilt() {
+    cBuildingListItem *pItem = getStructureBuildingListItemBeingBuilt();
+    if (pItem) {
+        cancelBuildingListItem(pItem);
+    }
 }

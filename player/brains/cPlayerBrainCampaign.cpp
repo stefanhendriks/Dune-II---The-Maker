@@ -278,6 +278,8 @@ namespace brains {
         int trikeKind = TRIKE;
         if (player->getHouse() == ORDOS) {
             trikeKind = RAIDER;
+        } else if (player->getHouse() == HARKONNEN) {
+            trikeKind = QUAD;
         }
 
         int soldierKind = SOLDIER;

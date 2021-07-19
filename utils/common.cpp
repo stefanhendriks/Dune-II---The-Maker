@@ -878,7 +878,7 @@ void install_upgrades() {
 
     // First upgrade Constyard: 4Slabs
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].enabled = true;
-    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].house = Atreides | Harkonnen | Ordos;
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].house = Atreides | Harkonnen | Ordos | Sardaukar;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].techLevel = 4; // start from mission 4
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].icon = ICON_STR_4SLAB;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].cost = structures[CONSTYARD].cost / 2;
@@ -895,7 +895,7 @@ void install_upgrades() {
 
     // Second upgrade Constyard: Rturret
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].enabled = true;
-    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].house = Atreides | Harkonnen | Ordos;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].house = Atreides | Harkonnen | Ordos | Sardaukar;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].techLevel = 6;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].icon = ICON_STR_RTURRET;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].cost = structures[CONSTYARD].cost / 2;
