@@ -68,7 +68,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	// When 100% of the structure is blocked, this method is never called
 	// therefore we can assume that SLAB4 can be placed always partially
 	// when here.
-	bool canPlace = canPlaceStructureAt(iCell, iStructureType);
+	bool canPlace = canPlaceStructureAt(iCell, iStructureType).success;
 
 	// we may not place it
     if (!canPlace && iStructureType != SLAB4) {
@@ -368,8 +368,12 @@ void cStructureFactory::destroy() {
  * @param iUnitIDToIgnore
  * @return
  */
-bool cStructureFactory::canPlaceStructureAt(int iCell, int iStructureType, int iUnitIDToIgnore) {
-    if (!map.isValidCell(iCell)) return false;
+s_PlaceResult cStructureFactory::canPlaceStructureAt(int iCell, int iStructureType, int iUnitIDToIgnore) {
+    s_PlaceResult result;
+    if (!map.isValidCell(iCell)) {
+        result.outOfBounds = true;
+        return result;
+    }
 
     // checks if this structure can be placed on this cell
     int w = structures[iStructureType].bmp_width/TILESIZE_WIDTH_PIXELS;
@@ -382,26 +386,34 @@ bool cStructureFactory::canPlaceStructureAt(int iCell, int iStructureType, int i
         for (int cy = 0; cy < h; cy++) {
             int cll = map.getCellWithMapBorders(cx + x, cy + y);
 
-            if (!map.canPlaceStructureAtCell(cll)) {
-                return false;
+            if (!result.badTerrain && !map.isValidTerrainForStructureAtCell(cll)) {
+                result.badTerrain = true;
+            }
+
+            // another structure found on this location, "blocked"
+            int structureId = map.getCellIdStructuresLayer(cll);
+            if (structureId > -1) {
+                result.structureIds.insert(structureId);
             }
 
             int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
             if (idOfUnitAtCell > -1) {
                 if (iUnitIDToIgnore > -1) {
                     if (idOfUnitAtCell != iUnitIDToIgnore) {
-                        // not the unit to ignore.
-                        return false;
+                        result.unitIds.insert(idOfUnitAtCell);
                     }
                 } else {
-                    return false;
+                    result.unitIds.insert(idOfUnitAtCell);
                 }
             }
         }
     }
 
-    return true;
+    result.success = (result.badTerrain == false && result.unitIds.empty() && result.structureIds.empty());
+
+    return result;
 }
+
 
 /**
 <p>
@@ -412,8 +424,7 @@ bool cStructureFactory::canPlaceStructureAt(int iCell, int iStructureType, int i
  <p>
  <b>Returns:</b><br>
  <ul>
- <li>true = can place structure</li>
- <li>false = cannot place structure (reason can be, out of map boundaries, invalid terrain, unit/structure blocking etc)</li>
+ <li>result object</li>
  <ul>
  </p>
 
@@ -422,7 +433,7 @@ bool cStructureFactory::canPlaceStructureAt(int iCell, int iStructureType, int i
  * @param iUnitIDToIgnore
  * @return
  */
-bool cStructureFactory::canPlaceStructureAt(int iCell, int iStructureType) {
+s_PlaceResult cStructureFactory::canPlaceStructureAt(int iCell, int iStructureType) {
     return canPlaceStructureAt(iCell, iStructureType, -1);
 }
 

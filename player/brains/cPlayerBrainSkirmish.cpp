@@ -19,6 +19,7 @@ namespace brains {
         buildOrders = std::vector<S_buildOrder>();
         discoveredEnemyAtCell = std::set<int>();
         economyState = ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_NORMAL;
+        COUNT_badEconomy = 0;
     }
 
     cPlayerBrainSkirmish::~cPlayerBrainSkirmish() {
@@ -232,7 +233,7 @@ namespace brains {
 
         // structure placement is done in thinkState_ProcessBuildOrders() !
 
-        if (!player->isBuildingStructure() && !player->isBuildingStructureAwaitingPlacement()) {
+        if (!player->isBuildingStructure() && !player->isBuildingStructureAwaitingPlacement() && !hasBuildOrderQueuedForStructure()) {
             // think about what structure to build AND where to place it
             const s_SkirmishPlayer_PlaceForStructure &result = thinkAboutNextStructureToBuildAndPlace();
             // add it to the build queue
@@ -245,6 +246,24 @@ namespace brains {
                         placeAt : result.cell,
                         state : buildOrder::PROCESSME,
                 });
+            }
+        }
+
+        // think about upgrades as well
+        if (economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
+            if (player->hasAtleastOneStructure(LIGHTFACTORY)) {
+                if (player->getHouse() != HARKONNEN) {
+                    eCantBuildReason reason = player->canBuildUnit(QUAD);
+                    if (reason == eCantBuildReason::REQUIRES_UPGRADE) {
+                        // all need to upgrade except Harkonnen
+                        cBuildingListItem *pItem = player->isUpgradeAvailableToGrantUnit(QUAD);
+                        if (pItem) {
+                            player->startUpgrading(pItem->getBuildId());
+                        } else {
+                            assert(false && "Expected to be able to upgrade for QUAD");
+                        }
+                    }
+                }
             }
         }
 
@@ -298,10 +317,11 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::produceMissions() {
-        // TODO: we can also read 'TEAMS' from a Scenario and use that instead of hard-coding?
         int trikeKind = TRIKE;
         if (player->getHouse() == ORDOS) {
             trikeKind = RAIDER;
+        } else if (player->getHouse() == HARKONNEN) {
+            trikeKind = QUAD;
         }
 
         int soldierKind = SOLDIER;
@@ -311,6 +331,98 @@ namespace brains {
             soldierKind = TROOPER;
             infantryKind = TROOPERS;
         }
+
+        std::vector<S_groupKind> group = std::vector<S_groupKind>();
+
+        if (economyState == ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
+            int idealAmountHarvesters = player->getAmountOfStructuresForType(REFINERY) * 2;
+            int amountOfHarvesters = player->getAmountOfUnitsForType(HARVESTER);
+            if (player->hasAtleastOneStructure(HEAVYFACTORY)) {
+                if (amountOfHarvesters < idealAmountHarvesters) {
+                    if (!hasMission(MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_HARVESTER)) {
+                        group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
+                                type : HARVESTER,
+                                required: 1,
+                                ordered: 0,
+                                produced: 0,
+                        });
+                        addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(15), MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_HARVESTER);
+                    }
+                }
+            }
+
+            // TODO: make this even smarter (ie don't build when also building harvester, etc)
+            if (player->hasAtleastOneStructure(HIGHTECH)) {
+                int idealAmountOfCarryAlls = (amountOfHarvesters/2)+1;
+                if (player->getAmountOfUnitsForType(CARRYALL) < idealAmountOfCarryAlls) {
+                    if (!hasMission(MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_CARRYALL)) {
+                        group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
+                                type : CARRYALL,
+                                required: 1,
+                                ordered: 0,
+                                produced: 0,
+                        });
+                        addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(15), MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_CARRYALL);
+                    }
+                }
+            }
+        }
+
+        if (state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
+            //
+            return;
+        }
+
+        if (state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
+            if (!hasMission(1)) {
+                // TODO: depending on upgrades available; create appropiate army, for now depend on non-upgradable things
+                if (player->hasAtleastOneStructure(HEAVYFACTORY)) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : TANK,
+                            required: 2,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+                if (player->hasAtleastOneStructure(LIGHTFACTORY)) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : trikeKind,
+                            required: 2,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+
+                if (player->hasAtleastOneStructure(WOR)) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : TROOPER,
+                            required: 2,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+
+                if (player->hasAtleastOneStructure(BARRACKS)) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : SOLDIER,
+                            required: 2,
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+
+                addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
+            }
+            return;
+        }
+
+        // ..?
     }
 
     bool cPlayerBrainSkirmish::hasMission(const int id) {
@@ -328,7 +440,8 @@ namespace brains {
 
     void cPlayerBrainSkirmish::thinkState_Evaluate() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::thinkState_Evaluate(), for player [%d]", player->getId());
+        sprintf(msg, "cPlayerBrainSkirmish::thinkState_Evaluate(), for player [%d], credits [%d], COUNT_badEconomy [%d], economyState [%s]", player->getId(), player->getCredits(), COUNT_badEconomy,
+                ePlayerBrainSkirmishEconomyStateString(economyState));
         logbook(msg);
 
         if (player->getAmountOfStructuresForType(CONSTYARD) == 0) {
@@ -342,19 +455,19 @@ namespace brains {
         // Example: Money is short, Harvester is in build queue, but not high in priority?
         if (player->hasAtleastOneStructure(REFINERY)) {
             if (economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
-                if (player->getCredits() < 300) {
+                if (player->getCredits() < 150) {
                     // count the times we are in this shape, after a certain time we switch to IMPROVE state
                     COUNT_badEconomy++;
                     if (COUNT_badEconomy > 10) {
-                        economyState = PLAYERBRAIN_ECONOMY_STATE_IMPROVE;
+                        changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_IMPROVE);
                     }
                 }
             } else if (economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
-                if (player->getCredits() > 300) {
+                if (player->getCredits() > 150) {
                     COUNT_badEconomy--;
                     if (COUNT_badEconomy < 3) {
                         COUNT_badEconomy = 0;
-                        economyState = PLAYERBRAIN_ECONOMY_STATE_NORMAL;
+                        changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_NORMAL);
                     }
                 }
             }
@@ -412,20 +525,92 @@ namespace brains {
 
         if (player->isBuildingStructureAwaitingPlacement()) {
             int structureType = player->getStructureTypeBeingBuilt();
+
+            struct S_buildOrder * matchingOrder = nullptr;
             for (auto &buildOrder : buildOrders) {
                 if (buildOrder.buildType != eBuildType::STRUCTURE) {
                     continue;
                 }
-
                 if (buildOrder.buildId == structureType) {
-                    int iCll = buildOrder.placeAt;
-
-                    cBuildingListItem *pItem = player->getStructureBuildingListItemBeingBuilt();
-                    player->placeStructure(iCll, pItem);
-
-                    buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
-                    break;
+                    matchingOrder = &buildOrder;
                 }
+            }
+
+            if (matchingOrder) {
+                int iCll = matchingOrder->placeAt;
+
+                cBuildingListItem *pItem = player->getStructureBuildingListItemBeingBuilt();
+                const s_PlaceResult &placeResult = cStructureFactory::getInstance()->canPlaceStructureAt(iCll,
+                                                                                                         pItem->getBuildId());
+
+                if (placeResult.success) {
+                    player->placeStructure(iCll, pItem);
+                    matchingOrder->state = buildOrder::eBuildOrderState::REMOVEME;
+                } else {
+                    // unable to place it, we determined previously that we could, so what to do?
+
+                    bool changedPlacePosition = false;
+                    if (placeResult.badTerrain) {
+                        // pick a new spot?
+                        int newCell = findCellToPlaceStructure(pItem->getBuildId());
+                        if (newCell < 0) {
+                            // cancel building this thing
+                            player->cancelBuildingListItem(pItem);
+                            matchingOrder->state = buildOrder::eBuildOrderState::REMOVEME;
+                        } else {
+                            // update the cell, it will be retried in the next think iteration
+                            matchingOrder->placeAt = newCell;
+                            changedPlacePosition = true;
+                        }
+                    }
+
+                    // find any unit that is from us, and move it away
+                    // if there is any enemy player, then find a new place.
+                    if (!placeResult.unitIds.empty()) {
+                        for (auto &unitId : placeResult.unitIds) {
+                            cUnit &aUnit = unit[unitId];
+                            if (!aUnit.isValid()) continue;
+                            if (aUnit.getPlayer() == player) {
+                                // move it
+                                aUnit.move_to(map.getRandomCellFrom(aUnit.getCell(), 3));
+                            } else {
+                                // if (aUnit.getPlayer()->isSameTeamAs(player)) { // who knows, a teammate is willing to move away when it is AI?
+                                if (!changedPlacePosition) {
+                                    int newCell = findCellToPlaceStructure(pItem->getBuildId());
+                                    if (newCell < 0) {
+                                        // cancel building this thing
+                                        player->cancelBuildingListItem(pItem);
+                                        matchingOrder->state = buildOrder::eBuildOrderState::REMOVEME;
+                                    } else {
+                                        // update the cell, it will be retried in the next think iteration
+                                        matchingOrder->placeAt = newCell;
+                                        changedPlacePosition = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // find any unit that is from us, and move it away
+                    // if there is any enemy player, then find a new place.
+                    if (!placeResult.structureIds.empty()) {
+                        if (!changedPlacePosition) {
+                            int newCell = findCellToPlaceStructure(pItem->getBuildId());
+                            if (newCell < 0) {
+                                // cancel building this thing
+                                player->cancelBuildingListItem(pItem);
+                                matchingOrder->state = buildOrder::eBuildOrderState::REMOVEME;
+                            } else {
+                                // update the cell, it will be retried in the next think iteration
+                                matchingOrder->placeAt = newCell;
+                                changedPlacePosition = true;
+                            }
+                        }
+                    }
+                }
+            } else {
+                // whut? there is something in progress, but we are not aware of it? cancel build
+                player->cancelStructureBuildingListItemBeingBuilt();
             }
         }
 
@@ -439,6 +624,15 @@ namespace brains {
                 ePlayerBrainSkirmishThinkStateString(newState));
         logbook(msg);
         this->thinkState = newState;
+    }
+
+    void cPlayerBrainSkirmish::changeEconomyStateTo(const ePlayerBrainSkirmishEconomyState &newState) {
+        char msg[255];
+        sprintf(msg, "cPlayerBrainSkirmish::changeEconomyStateTo(), for player [%d] - from %s to %s", player->getId(),
+                ePlayerBrainSkirmishEconomyStateString(economyState),
+                ePlayerBrainSkirmishEconomyStateString(newState));
+        logbook(msg);
+        this->economyState = newState;
     }
 
     void cPlayerBrainSkirmish::thinkState_Rest() {
@@ -564,12 +758,17 @@ namespace brains {
                             pItem = player->isUpgradeAvailableToGrantStructure(SLAB4);
                         }
 
-                        // we have something to upgrade
-                        if (!player->startUpgrading(pItem->getBuildId())) {
-                            // failed to build upgrade.
-                        } else {
-                            // we should wait a bit before re-evaluating base building
+                        if (pItem != nullptr) {
+                            // we have something to upgrade
+                            if (!player->startUpgrading(pItem->getBuildId())) {
+                                // failed to build upgrade.
+                            } else {
+                                // we should wait a bit before re-evaluating base building
+                            }
                         }
+
+                        // in both cases, we should first wait, so return -1 anyways
+                        return -1;
                     } else if (structureIWantToBuild == SLAB4) {
 
                     }
@@ -590,6 +789,8 @@ namespace brains {
     }
 
     int cPlayerBrainSkirmish::getStructureIdToBuildWithoutConsideringPowerUsage() const {
+        player->logStructures();
+
         if (!player->hasAtleastOneStructure(REFINERY))      return REFINERY;
         if (economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
             if (player->getAmountOfStructuresForType(REFINERY) < 3) {
@@ -601,10 +802,11 @@ namespace brains {
         if (!player->hasAtleastOneStructure(RADAR))  return RADAR;
         if (!player->hasAtleastOneStructure(HEAVYFACTORY))  return HEAVYFACTORY;
         if (!player->hasAtleastOneStructure(STARPORT))  return STARPORT;
-        if (!player->hasAtleastOneStructure(PALACE))  return PALACE;
 
         if (player->getAmountOfStructuresForType(TURRET) < 2)  return TURRET;
         if (player->getAmountOfStructuresForType(RTURRET) < 6)  return RTURRET;
+
+        if (!player->hasAtleastOneStructure(PALACE))  return PALACE;
 
         // nothing to build
         return -1;
@@ -645,7 +847,7 @@ namespace brains {
             for (int sx = topLeftX; sx < iEndX; sx++) {
                 int cell = map.makeCell(sx, topLeftY);
 
-                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType);
+                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
                 if (canPlaceStructureAt) {
                     potentialCells.push_back(cell);
                 }
@@ -657,7 +859,7 @@ namespace brains {
             for (int sx = bottomLeftX; sx < iEndX; sx++) {
                 int cell = map.makeCell(sx, bottomLeftY);
 
-                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType);
+                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
                 if (canPlaceStructureAt) {
                     potentialCells.push_back(cell);
                 }
@@ -669,7 +871,7 @@ namespace brains {
             for (int sy = justLeftY; sy < iEndY; sy++) {
                 int cell = map.makeCell(justLeftX, sy);
 
-                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType);
+                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
                 if (canPlaceStructureAt) {
                     potentialCells.push_back(cell);
                 }
@@ -681,7 +883,7 @@ namespace brains {
             for (int sy = justRightY; sy < iEndY; sy++) {
                 int cell = map.makeCell(justRightX, sy);
 
-                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType);
+                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
                 if (canPlaceStructureAt) {
                     potentialCells.push_back(cell);
                 }
@@ -697,27 +899,30 @@ namespace brains {
 
         if (!potentialCells.empty()) {
             if (structureType == TURRET || structureType == RTURRET) {
-                // first shuffle, before going through the list
+//                // first shuffle, before going through the list
+//                std::random_shuffle(potentialCells.begin(), potentialCells.end());
+//
+//                std::vector<int> potentialFurtherCells = std::vector<int>();
+//                int found = 0;
+//                double distance = 128; // arbitrary distance as 'border'
+//                for (auto &potentialCell : potentialCells) {
+//                    double dist = map.distance(centerOfBase, potentialCell);
+//                    if (dist > distance) {
+//                        potentialFurtherCells.push_back(potentialCell);
+//                        found++;
+//                        if (found > 5) {
+//                            break;
+//                        }
+//                    }
+//                }
+//
+//                if (!potentialFurtherCells.empty()) {
+//                    // shuffle the 5 'furthest'
+//                    std::random_shuffle(potentialFurtherCells.begin(), potentialFurtherCells.end());
+//                }
+
+                // for now pick random position, but in the future do something more smart
                 std::random_shuffle(potentialCells.begin(), potentialCells.end());
-
-                std::vector<int> potentialFurtherCells = std::vector<int>();
-                int found = 0;
-                double distance = 128; // arbitrary distance as 'border'
-                for (auto &potentialCell : potentialCells) {
-                    double dist = map.distance(centerOfBase, potentialCell);
-                    if (dist > distance) {
-                        potentialFurtherCells.push_back(potentialCell);
-                        found++;
-                        if (found > 5) {
-                            break;
-                        }
-                    }
-                }
-
-                if (!potentialFurtherCells.empty()) {
-                    // shuffle the 5 'furthest'
-                    std::random_shuffle(potentialFurtherCells.begin(), potentialFurtherCells.end());
-                }
             } else {
                 // found one, shuffle, and then return the first
                 std::random_shuffle(potentialCells.begin(), potentialCells.end());
@@ -726,6 +931,15 @@ namespace brains {
         }
 
         return -1;
+    }
+
+    bool cPlayerBrainSkirmish::hasBuildOrderQueuedForStructure() {
+        for (auto &buildOrder : buildOrders) {
+            if (buildOrder.buildType == eBuildType::STRUCTURE && buildOrder.state != buildOrder::REMOVEME) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

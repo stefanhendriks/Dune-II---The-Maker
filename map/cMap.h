@@ -525,10 +525,12 @@ public:
      * if any other structure occupies this cell. It does *not* check if a unit is at this cell. If invalid cell
      * is given this also returns false.
      *
-     * @param cell
+     * @param cll
      * @return
      */
-    bool canPlaceStructureAtCell(int cell);
+    bool isValidTerrainForStructureAtCell(int cell);
+
+    int getRandomCellFrom(int cell, int distance);
 
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
