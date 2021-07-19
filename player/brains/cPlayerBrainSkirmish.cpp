@@ -571,8 +571,10 @@ namespace brains {
                             cUnit &aUnit = unit[unitId];
                             if (!aUnit.isValid()) continue;
                             if (aUnit.getPlayer() == player) {
-                                // move it
-                                aUnit.move_to(map.getRandomCellFrom(aUnit.getCell(), 3));
+                                // move it when idle, else don't do a thing
+                                if (aUnit.isIdle()) {
+                                    aUnit.move_to(map.getRandomCellFrom(aUnit.getCell(), 3));
+                                }
                             } else {
                                 // if (aUnit.getPlayer()->isSameTeamAs(player)) { // who knows, a teammate is willing to move away when it is AI?
                                 if (!changedPlacePosition) {
