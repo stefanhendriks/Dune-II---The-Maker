@@ -158,11 +158,17 @@ namespace brains {
             if (!structurePosition.isDestroyed) continue; // not destroyed, hence cannot be rebuilt
 
             if (structurePosition.cell == placedAtCell) {
-                assert(structurePosition.type == event.entitySpecificType); // should be same structure type...
-                // seems my structure, same location.
-                structurePosition.structureId = event.entityID;
-                structurePosition.isDestroyed = false; // no longer destroyed!
-                foundExistingStructureInBase = true;
+                if (structurePosition.type == event.entitySpecificType) {
+                    // same structure type, at same place
+                    structurePosition.structureId = event.entityID;
+                    structurePosition.isDestroyed = false; // no longer destroyed!
+                    foundExistingStructureInBase = true;
+                } else {
+                    // different structure type, but same place! So our base layout no longer matches up.
+                    structurePosition.structureId = event.entityID;
+                    structurePosition.type = structurePosition.type; // overwrite type
+                    structurePosition.isDestroyed = false; // overwrite type
+                }
             }
         }
 
@@ -246,24 +252,6 @@ namespace brains {
                         placeAt : result.cell,
                         state : buildOrder::PROCESSME,
                 });
-            }
-        }
-
-        // think about upgrades as well
-        if (economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
-            if (player->hasAtleastOneStructure(LIGHTFACTORY)) {
-                if (player->getHouse() != HARKONNEN) {
-                    eCantBuildReason reason = player->canBuildUnit(QUAD);
-                    if (reason == eCantBuildReason::REQUIRES_UPGRADE) {
-                        // all need to upgrade except Harkonnen
-                        cBuildingListItem *pItem = player->isUpgradeAvailableToGrantUnit(QUAD);
-                        if (pItem) {
-                            player->startUpgrading(pItem->getBuildId());
-                        } else {
-                            assert(false && "Expected to be able to upgrade for QUAD");
-                        }
-                    }
-                }
             }
         }
 
@@ -361,8 +349,7 @@ namespace brains {
                         produced: 0,
                 });
 
-                cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, rnd(5), MISSION_SCOUT1);
-                missions.push_back(someMission);
+                addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15), MISSION_SCOUT1);
             } else if (!hasMission(MISSION_SCOUT2)) {
                 // add scouting mission
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
@@ -374,8 +361,7 @@ namespace brains {
                         produced: 0,
                 });
 
-                cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, rnd(5), MISSION_SCOUT2);
-                missions.push_back(someMission);
+                addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15), MISSION_SCOUT2);
             } if (!hasMission(MISSION_SCOUT3)) {
                 // add scouting mission
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
@@ -387,8 +373,7 @@ namespace brains {
                         produced: 0,
                 });
 
-                cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, rnd(5), MISSION_SCOUT3);
-                missions.push_back(someMission);
+                addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15), MISSION_SCOUT3);
             } if (!hasMission(MISSION_GUARDFORCE)) {
                 // add defending force
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
@@ -406,15 +391,14 @@ namespace brains {
                         ordered: 0,
                         produced: 0,
                 });
-                cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_DEFEND, this, group, rnd(5), MISSION_GUARDFORCE);
-                missions.push_back(someMission);
+                addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_DEFEND, group, rnd(15), MISSION_GUARDFORCE);
             }
 
             return;
         }
 
         if (state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
-            if (!hasMission(1)) {
+            if (!hasMission(MISSION_ATTACK1)) {
                 // TODO: depending on upgrades available; create appropriate army, for now depend on non-upgradable things
                 if (player->hasAtleastOneStructure(HEAVYFACTORY)) {
                     group.push_back((S_groupKind) {
@@ -456,7 +440,39 @@ namespace brains {
                     });
                 }
 
-                addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), 1);
+                addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), MISSION_ATTACK1);
+            }
+            if (!hasMission(MISSION_ATTACK2)) {
+                // TODO: depending on upgrades available; create appropriate army, for now depend on non-upgradable things
+                if (player->hasAtleastOneStructure(HEAVYFACTORY)) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : SIEGETANK,
+                            required: rnd(2),
+                            ordered: 0,
+                            produced: 0,
+                    });
+
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : LAUNCHER,
+                            required: rnd(2),
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+
+                if (player->hasAtleastOneStructure(LIGHTFACTORY)) {
+                    group.push_back((S_groupKind) {
+                            buildType: eBuildType::UNIT,
+                            type : trikeKind,
+                            required: rnd(2),
+                            ordered: 0,
+                            produced: 0,
+                    });
+                }
+
+                addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), MISSION_ATTACK2);
             }
             return;
         }
@@ -560,9 +576,38 @@ namespace brains {
                     buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
                 }
             } else if (buildOrder.buildType == eBuildType::UNIT) {
-                if (player->canBuildUnit(buildOrder.buildId) == eCantBuildReason::NONE) {
+                eCantBuildReason reason = player->canBuildUnit(buildOrder.buildId, false);
+                if (reason == eCantBuildReason::NONE) {
                     if (player->startBuildingUnit(buildOrder.buildId)) {
                         buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
+                    }
+                } else if (reason == eCantBuildReason::REQUIRES_UPGRADE) {
+                    // first check if there is an upgrade available directly granting the unit we want (ie LAUNCHER?)
+                    cBuildingListItem *pItem = player->isUpgradeAvailableToGrantUnit(buildOrder.buildId);
+
+                    if (!pItem) {
+                        // not found, first check if MCV upgrade exists. It is required before anything else.
+                        pItem = player->isUpgradeAvailableToGrantUnit(MCV);
+                    }
+
+                    if (buildOrder.buildId == SIEGETANK) {
+                        if (!pItem) {
+                            // still not found, if we want to build a SIEGETANK, we need to upgrade to LAUNCHER?
+                            // check that too
+                            pItem = player->isUpgradeAvailableToGrantUnit(LAUNCHER);
+                        }
+                    }
+
+                    if (pItem) {
+                        if (!pItem->isBuilding()) {
+                            bool b = player->startUpgrading(pItem->getBuildId());
+                            if (!b) {
+                                // not upgrading... for whatever reason, remove it from the list
+                                buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
+                            }
+                        } else {
+                            // wait for upgrade to pass, so don't do anything.
+                        }
                     }
                 }
             } else if (buildOrder.buildType == eBuildType::SPECIAL) {

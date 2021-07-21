@@ -15,8 +15,8 @@ namespace brains {
     const int MISSION_SCOUT3 = 95;
     const int MISSION_GUARDFORCE = 94;
     const int MISSION_ATTACK1 = 93;
-    const int MISSION_ATTACK2 = 93;
-    const int MISSION_ATTACK3 = 93;
+    const int MISSION_ATTACK2 = 92;
+    const int MISSION_ATTACK3 = 91;
 
     struct s_SkirmishPlayer_PlaceForStructure {
         int structureType;
