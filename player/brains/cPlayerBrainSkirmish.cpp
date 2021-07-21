@@ -350,7 +350,7 @@ namespace brains {
         }
 
         if (state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
-            if (!hasMission(MISSION_SCOUT)) {
+            if (!hasMission(MISSION_SCOUT1)) {
                 // add scouting mission
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
                 group.push_back((S_groupKind) {
@@ -361,7 +361,52 @@ namespace brains {
                         produced: 0,
                 });
 
-                cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, rnd(5), MISSION_SCOUT);
+                cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, rnd(5), MISSION_SCOUT1);
+                missions.push_back(someMission);
+            } else if (!hasMission(MISSION_SCOUT2)) {
+                // add scouting mission
+                std::vector<S_groupKind> group = std::vector<S_groupKind>();
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : player->getScoutingUnitType(),
+                        required: 1,
+                        ordered: 0,
+                        produced: 0,
+                });
+
+                cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, rnd(5), MISSION_SCOUT2);
+                missions.push_back(someMission);
+            } if (!hasMission(MISSION_SCOUT3)) {
+                // add scouting mission
+                std::vector<S_groupKind> group = std::vector<S_groupKind>();
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : player->getScoutingUnitType(),
+                        required: 1,
+                        ordered: 0,
+                        produced: 0,
+                });
+
+                cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, rnd(5), MISSION_SCOUT3);
+                missions.push_back(someMission);
+            } if (!hasMission(MISSION_GUARDFORCE)) {
+                // add defending force
+                std::vector<S_groupKind> group = std::vector<S_groupKind>();
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : QUAD,
+                        required: 1,
+                        ordered: 0,
+                        produced: 0,
+                });
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : TANK,
+                        required: 2,
+                        ordered: 0,
+                        produced: 0,
+                });
+                cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_DEFEND, this, group, rnd(5), MISSION_GUARDFORCE);
                 missions.push_back(someMission);
             }
 
@@ -370,7 +415,7 @@ namespace brains {
 
         if (state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
             if (!hasMission(1)) {
-                // TODO: depending on upgrades available; create appropiate army, for now depend on non-upgradable things
+                // TODO: depending on upgrades available; create appropriate army, for now depend on non-upgradable things
                 if (player->hasAtleastOneStructure(HEAVYFACTORY)) {
                     group.push_back((S_groupKind) {
                             buildType: eBuildType::UNIT,
@@ -380,6 +425,7 @@ namespace brains {
                             produced: 0,
                     });
                 }
+
                 if (player->hasAtleastOneStructure(LIGHTFACTORY)) {
                     group.push_back((S_groupKind) {
                             buildType: eBuildType::UNIT,
@@ -552,8 +598,7 @@ namespace brains {
                 int iCll = matchingOrder->placeAt;
 
                 cBuildingListItem *pItem = player->getStructureBuildingListItemBeingBuilt();
-                const s_PlaceResult &placeResult = cStructureFactory::getInstance()->canPlaceStructureAt(iCll,
-                                                                                                         pItem->getBuildId());
+                const s_PlaceResult &placeResult = player->canPlaceStructureAt(iCll, pItem->getBuildId());
 
                 if (placeResult.success) {
                     player->placeStructure(iCll, pItem);

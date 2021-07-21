@@ -10,7 +10,13 @@ namespace brains {
 
     const int MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_HARVESTER = 98;
     const int MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_CARRYALL = 99;
-    const int MISSION_SCOUT = 97;
+    const int MISSION_SCOUT1 = 97;
+    const int MISSION_SCOUT2 = 96;
+    const int MISSION_SCOUT3 = 95;
+    const int MISSION_GUARDFORCE = 94;
+    const int MISSION_ATTACK1 = 93;
+    const int MISSION_ATTACK2 = 93;
+    const int MISSION_ATTACK3 = 93;
 
     struct s_SkirmishPlayer_PlaceForStructure {
         int structureType;

@@ -896,6 +896,16 @@ bool cPlayer::isBuildingStructureAwaitingPlacement() const {
     return itemBuilder->isAnythingBeingBuiltForListIdAwaitingPlacement(LIST_CONSTYARD, 0);
 }
 
+/**
+ * Evaluates where to place a structure. Returns a cell where structure can be placed. Will assume the area has
+ * proper terrain, is not blocked by any other structure. If there are any friendly units there, it assumes
+ * they can be moved away, and thus ignores them. However, enemy units will block placement.
+ *
+ * When no cell can be found, this function will return -1
+ *
+ * @param structureType
+ * @return
+ */
 int cPlayer::findCellToPlaceStructure(int structureType) {
     // find place (fast, if possible), where to place it
     // ignore any units (we can move them out of the way). But do take
@@ -908,8 +918,6 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
 
     int iWidth = structures[structureType].bmp_width / TILESIZE_WIDTH_PIXELS;
     int iHeight = structures[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
-
-    cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
 
     for (auto &id : allMyStructuresAsId) {
         cAbstractStructure * aStructure = structure[id];
@@ -931,7 +939,8 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
         for (int sx = topLeftX; sx < iEndX; sx++) {
             int cell = map.makeCell(sx, topLeftY);
 
-            bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
+            const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
+            bool canPlaceStructureAt = result.success || result.onlyMyUnitsBlock;
             if (canPlaceStructureAt) {
                 potentialCells.push_back(cell);
             }
@@ -943,7 +952,8 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
         for (int sx = bottomLeftX; sx < iEndX; sx++) {
             int cell = map.makeCell(sx, bottomLeftY);
 
-            bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
+            const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
+            bool canPlaceStructureAt = result.success || result.onlyMyUnitsBlock;
             if (canPlaceStructureAt) {
                 potentialCells.push_back(cell);
             }
@@ -951,11 +961,12 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
 
         // left to structure (not from top!)
         int justLeftX = topLeftX;
-        int justLeftY = iStartY;
+        int justLeftY = iStartY - (iHeight - 1);
         for (int sy = justLeftY; sy < iEndY; sy++) {
             int cell = map.makeCell(justLeftX, sy);
 
-            bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
+            const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
+            bool canPlaceStructureAt = result.success || result.onlyMyUnitsBlock;
             if (canPlaceStructureAt) {
                 potentialCells.push_back(cell);
             }
@@ -963,11 +974,12 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
 
         // right to structure (not top!)
         int justRightX = iEndX;
-        int justRightY = iStartY;
+        int justRightY = iStartY - (iHeight - 1);
         for (int sy = justRightY; sy < iEndY; sy++) {
             int cell = map.makeCell(justRightX, sy);
 
-            bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
+            const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
+            bool canPlaceStructureAt = result.success || result.onlyMyUnitsBlock;
             if (canPlaceStructureAt) {
                 potentialCells.push_back(cell);
             }
@@ -1193,7 +1205,7 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, cBuildingListIt
     // create structure
     cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
 
-    bool canPlace = pStructureFactory->canPlaceStructureAt(destinationCell, iStructureTypeId).success;
+    bool canPlace = canPlaceStructureAt(destinationCell, iStructureTypeId).success;
     if (!canPlace) {
         return nullptr;
     }
@@ -1293,4 +1305,106 @@ void cPlayer::cancelStructureBuildingListItemBeingBuilt() {
     if (pItem) {
         cancelBuildingListItem(pItem);
     }
+}
+
+/**
+<p>
+	This function will check if at iCell (the upper left corner of a structure) a structure
+	can be placed of type "iStructureType". This is calling  canPlaceStructureAt without any
+    unitID to ignore. Meaning, any unit, structure, or invalid terrain type will make this function return false.
+ </p>
+ <p>
+ <b>Returns:</b><br>
+ <ul>
+ <li>result object</li>
+ <ul>
+ </p>
+
+ * @param iCell
+ * @param iStructureType
+ * @param iUnitIDToIgnore
+ * @return
+ */
+s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType) {
+    return canPlaceStructureAt(iCell, iStructureType, -1);
+}
+
+
+/**
+<p>
+	This function will check if at iCell (the upper left corner of a structure) a structure
+	can be placed of type "iStructureType". If iUnitIDTOIgnore is > -1, then if any unit is
+	supposedly 'blocking' this structure from placing, it will be ignored.
+ </p>
+<p>
+	Ie, you will use the iUnitIDToIgnore value when you want to create a Const Yard on the
+	location of an MCV.
+</p>
+ <p>
+	If you know the structure can be placed, you can use getSlabStatus to get the amount of 'slabs' are covering
+    the structure dimensions in order to calculate the structure health upon placement.
+</p>
+ <p>
+ <b>Returns:</b><br>
+ <ul>
+ <li>s_PlaceResult = if success there is nothing in the way to place structure</li>
+ <ul>
+ </p>
+
+ * @param iCell
+ * @param iStructureType
+ * @param iUnitIDToIgnore
+ * @return
+ */
+s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iUnitIDToIgnore) {
+    s_PlaceResult result;
+
+    if (!map.isValidCell(iCell)) {
+        result.outOfBounds = true;
+        return result;
+    }
+
+    // checks if this structure can be placed on this cell
+    int w = structures[iStructureType].bmp_width/TILESIZE_WIDTH_PIXELS;
+    int h = structures[iStructureType].bmp_height/TILESIZE_HEIGHT_PIXELS;
+
+    int x = map.getCellX(iCell);
+    int y = map.getCellY(iCell);
+
+    bool foundUnitFromOtherPlayerThanMe = false;
+
+    for (int cx = 0; cx < w; cx++) {
+        for (int cy = 0; cy < h; cy++) {
+            int cll = map.getCellWithMapBorders(cx + x, cy + y);
+
+            if (!result.badTerrain && !map.isValidTerrainForStructureAtCell(cll)) {
+                result.badTerrain = true;
+            }
+
+            // another structure found on this location, "blocked"
+            int structureId = map.getCellIdStructuresLayer(cll);
+            if (structureId > -1) {
+                result.structureIds.insert(structureId);
+            }
+
+            int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
+            if (idOfUnitAtCell > -1) {
+                if (unit[idOfUnitAtCell].isValid() && unit[idOfUnitAtCell].getPlayer() != this) {
+                    foundUnitFromOtherPlayerThanMe = true;
+                }
+                if (iUnitIDToIgnore > -1) {
+                    if (idOfUnitAtCell != iUnitIDToIgnore) {
+                        result.unitIds.insert(idOfUnitAtCell);
+                    }
+                } else {
+                    result.unitIds.insert(idOfUnitAtCell);
+                }
+            }
+        }
+    }
+
+    result.success = (result.badTerrain == false && result.unitIds.empty() && result.structureIds.empty());
+    result.onlyMyUnitsBlock = (result.badTerrain == false && !foundUnitFromOtherPlayerThanMe && result.structureIds.empty());
+
+    return result;
 }
