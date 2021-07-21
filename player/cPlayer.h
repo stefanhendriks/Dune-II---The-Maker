@@ -226,6 +226,8 @@ public:
      */
     eCantBuildReason canBuildUnit(int iUnitType);
 
+    eCantBuildReason canBuildUnit(int iUnitType, bool checkIfAffordable);
+
 
     /**
      * Checks if the given structureType is available for producing; does not check if it is allowed to do so. Use

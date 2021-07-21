@@ -1029,7 +1029,7 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
     return -1;
 }
 
-eCantBuildReason cPlayer::canBuildUnit(int iUnitType) {
+eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable) {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
     char msg[255];
@@ -1038,12 +1038,14 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType) {
     logbook(msg);
 
     // CHECK 1: Do we have the money?
-    if (!hasEnoughCreditsForUnit(iUnitType)) {
-        char msg[255];
-        sprintf(msg, "canBuildUnit: FALSE, because cost %d higher than credits %d", units[iUnitType].cost,
-                getCredits());
-        logbook(msg);
-        return eCantBuildReason::NOT_ENOUGH_MONEY; // NOPE
+    if (checkIfAffordable) {
+        if (!hasEnoughCreditsForUnit(iUnitType)) {
+            char msg[255];
+            sprintf(msg, "canBuildUnit: FALSE, because cost %d higher than credits %d", units[iUnitType].cost,
+                    getCredits());
+            logbook(msg);
+            return eCantBuildReason::NOT_ENOUGH_MONEY; // NOPE
+        }
     }
 
     // CHECK 2: Are we building this unit type?
@@ -1074,6 +1076,10 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType) {
     logbook("canBuildUnit: ALLOWED");
 
     return eCantBuildReason::NONE;
+}
+
+eCantBuildReason cPlayer::canBuildUnit(int iUnitType) {
+    return canBuildUnit(iUnitType, true);
 }
 
 int cPlayer::findRandomUnitTarget(int playerIndexToAttack) {
