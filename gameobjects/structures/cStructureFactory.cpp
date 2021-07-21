@@ -65,24 +65,13 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 
     if (iPercent > 100) iPercent = 100;
 
-	// When 100% of the structure is blocked, this method is never called
-	// therefore we can assume that SLAB4 can be placed always partially
-	// when here.
-	bool canPlace = canPlaceStructureAt(iCell, iStructureType).success;
-
-	// we may not place it
-    if (!canPlace && iStructureType != SLAB4) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "cannot create structure: slab status < -1, and type != SLAB4, returning NULL");
-        return nullptr;
-    }
-
     updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(iCell, iStructureType, iPlayer);
 	clearFogForStructureType(iCell, iStructureType, 2, iPlayer);
 
 	// SLAB and WALL is not a real structure. The terrain is manipulated
 	// therefore quit here, as we won't place real structure.
     if (iStructureType == SLAB1 || iStructureType == SLAB4 || iStructureType == WALL) {
-		return NULL;
+		return nullptr;
 	}
 
     float fPercent = (float)iPercent/100; // divide by 100 (to make it 0.x)
@@ -341,101 +330,6 @@ void cStructureFactory::destroy() {
     }
 }
 
-/**
-<p>
-	This function will check if at iCell (the upper left corner of a structure) a structure
-	can be placed of type "iStructureType". If iUnitIDTOIgnore is > -1, then if any unit is
-	supposedly 'blocking' this structure from placing, it will be ignored.
- </p>
-<p>
-	Ie, you will use the iUnitIDToIgnore value when you want to create a Const Yard on the
-	location of an MCV.
-</p>
- <p>
-	If you know the structure can be placed, you can use getSlabStatus to get the amount of 'slabs' are covering
-    the structure dimensions in order to calculate the structure health upon placement.
-</p>
- <p>
- <b>Returns:</b><br>
- <ul>
- <li>true = can place structure</li>
- <li>false = cannot place structure (reason can be, out of map boundaries, invalid terrain, etc)</li>
- <ul>
- </p>
-
- * @param iCell
- * @param iStructureType
- * @param iUnitIDToIgnore
- * @return
- */
-s_PlaceResult cStructureFactory::canPlaceStructureAt(int iCell, int iStructureType, int iUnitIDToIgnore) {
-    s_PlaceResult result;
-    if (!map.isValidCell(iCell)) {
-        result.outOfBounds = true;
-        return result;
-    }
-
-    // checks if this structure can be placed on this cell
-    int w = structures[iStructureType].bmp_width/TILESIZE_WIDTH_PIXELS;
-    int h = structures[iStructureType].bmp_height/TILESIZE_HEIGHT_PIXELS;
-
-    int x = map.getCellX(iCell);
-    int y = map.getCellY(iCell);
-
-    for (int cx = 0; cx < w; cx++) {
-        for (int cy = 0; cy < h; cy++) {
-            int cll = map.getCellWithMapBorders(cx + x, cy + y);
-
-            if (!result.badTerrain && !map.isValidTerrainForStructureAtCell(cll)) {
-                result.badTerrain = true;
-            }
-
-            // another structure found on this location, "blocked"
-            int structureId = map.getCellIdStructuresLayer(cll);
-            if (structureId > -1) {
-                result.structureIds.insert(structureId);
-            }
-
-            int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
-            if (idOfUnitAtCell > -1) {
-                if (iUnitIDToIgnore > -1) {
-                    if (idOfUnitAtCell != iUnitIDToIgnore) {
-                        result.unitIds.insert(idOfUnitAtCell);
-                    }
-                } else {
-                    result.unitIds.insert(idOfUnitAtCell);
-                }
-            }
-        }
-    }
-
-    result.success = (result.badTerrain == false && result.unitIds.empty() && result.structureIds.empty());
-
-    return result;
-}
-
-
-/**
-<p>
-	This function will check if at iCell (the upper left corner of a structure) a structure
-	can be placed of type "iStructureType". This is calling  canPlaceStructureAt without any
-    unitID to ignore. Meaning, any unit, structure, or invalid terrain type will make this function return false.
- </p>
- <p>
- <b>Returns:</b><br>
- <ul>
- <li>result object</li>
- <ul>
- </p>
-
- * @param iCell
- * @param iStructureType
- * @param iUnitIDToIgnore
- * @return
- */
-s_PlaceResult cStructureFactory::canPlaceStructureAt(int iCell, int iStructureType) {
-    return canPlaceStructureAt(iCell, iStructureType, -1);
-}
 
 void cStructureFactory::slabStructure(int iCll, int iStructureType, int iPlayer) {
     const s_Structures &sStructures = structures[iStructureType];

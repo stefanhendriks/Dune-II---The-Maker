@@ -949,7 +949,7 @@ void cUnit::think() {
                 if (key[KEY_D]) {
                     cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
 
-                    bool result = pStructureFactory->canPlaceStructureAt(iCell, CONSTYARD, iID).success;
+                    bool result = getPlayer()->canPlaceStructureAt(iCell, CONSTYARD, iID).success;
 
                     if (result) {
                         int iLocation = iCell;

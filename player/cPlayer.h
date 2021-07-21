@@ -22,6 +22,26 @@
 
 #include <vector>
 
+
+struct s_PlaceResult {
+    bool success = false; // if true, all is ok
+
+    bool onlyMyUnitsBlock = false;  // if true, then it means when success=false,
+    // ONLY units block the placement, but they are the units of the requesting player.
+    // which can be fixed (by AI) to move them away.
+
+    // else, these are one of the reasons why it was not a success
+    bool badTerrain = false; // not valid to place
+
+    bool outOfBounds = false; // (one of the cells) is out of bounds
+
+    // these units block it
+    std::set<int> unitIds = std::set<int>();
+
+    // these structures block it
+    std::set<int> structureIds = std::set<int>();
+};
+
 class cPlayer : public cScenarioObserver {
 
 public:
@@ -277,6 +297,9 @@ public:
     void cancelBuildingListItem(cBuildingListItem *item);
 
     void cancelStructureBuildingListItemBeingBuilt();
+
+    s_PlaceResult canPlaceStructureAt(int iCell, int iStructureType, int iUnitIDToIgnore);
+    s_PlaceResult canPlaceStructureAt(int iCell, int iStructureType);
 
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
