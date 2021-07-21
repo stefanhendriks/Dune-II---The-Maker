@@ -36,6 +36,10 @@ namespace brains {
             case PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN:
                 missionKind = new cPlayerBrainMissionKindAttack(player, this);
                 break;
+            case PLAYERBRAINMISSION_KIND_DEFEND:
+                //TODO: Defend mission...
+//                missionKind = new cPlayerBrainMissionKindAttack(player, this);
+                break;
             case PLAYERBRAINMISSION_KIND_EXPLORE:
                 missionKind = new cPlayerBrainMissionKindExplore(player, this);
                 break;
