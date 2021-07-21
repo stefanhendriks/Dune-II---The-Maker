@@ -855,6 +855,19 @@ void cUnit::think_guard() {
         if (unitIdSelectedForAttacking > -1) {
             cUnit &unitToAttack = unit[unitIdSelectedForAttacking];
 
+            if (unitToAttack.isValid()) {
+                s_GameEvent event{
+                        .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
+                        .entityType = eBuildType::UNIT,
+                        .entityID = unitToAttack.iID,
+                        .player = getPlayer(),
+                        .entitySpecificType = unitToAttack.getType(),
+                        .atCell = unitToAttack.iCell
+                };
+
+                game.onNotify(event);
+            }
+
             if (iPlayer > HUMAN) {
                 if (unitToAttack.isInfantryUnit() && isUnitWhoCanSquishInfantry()) {
                     // AI will try to squish infantry units
