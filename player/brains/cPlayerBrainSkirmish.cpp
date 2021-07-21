@@ -285,28 +285,7 @@ namespace brains {
                 missions.end()
         );
 
-        if (state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
-            // it might send out something to scout?
-            if (!hasMission(99)) {
-                // add scouting mission
-                std::vector<S_groupKind> group = std::vector<S_groupKind>();
-                group.push_back((S_groupKind) {
-                        buildType: eBuildType::UNIT,
-                        type : player->getScoutingUnitType(),
-                        required: 1,
-                        ordered: 0,
-                        produced: 0,
-                });
-
-                cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, rnd(5), 99);
-                missions.push_back(someMission);
-            }
-        } else {
-            // no longer peaceful
-            if (state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
-                produceMissions();
-            }
-        }
+        produceMissions();
 
         // all missions are allowed to think now
         for (auto &mission : missions) {
@@ -371,7 +350,21 @@ namespace brains {
         }
 
         if (state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {
-            //
+            if (!hasMission(MISSION_SCOUT)) {
+                // add scouting mission
+                std::vector<S_groupKind> group = std::vector<S_groupKind>();
+                group.push_back((S_groupKind) {
+                        buildType: eBuildType::UNIT,
+                        type : player->getScoutingUnitType(),
+                        required: 1,
+                        ordered: 0,
+                        produced: 0,
+                });
+
+                cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, rnd(5), MISSION_SCOUT);
+                missions.push_back(someMission);
+            }
+
             return;
         }
 
