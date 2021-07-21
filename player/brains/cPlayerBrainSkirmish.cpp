@@ -564,7 +564,7 @@ namespace brains {
                     bool changedPlacePosition = false;
                     if (placeResult.badTerrain) {
                         // pick a new spot?
-                        int newCell = findCellToPlaceStructure(pItem->getBuildId());
+                        int newCell = player->findCellToPlaceStructure(pItem->getBuildId());
                         if (newCell < 0) {
                             // cancel building this thing
                             player->cancelBuildingListItem(pItem);
@@ -590,7 +590,7 @@ namespace brains {
                             } else {
                                 // if (aUnit.getPlayer()->isSameTeamAs(player)) { // who knows, a teammate is willing to move away when it is AI?
                                 if (!changedPlacePosition) {
-                                    int newCell = findCellToPlaceStructure(pItem->getBuildId());
+                                    int newCell = player->findCellToPlaceStructure(pItem->getBuildId());
                                     if (newCell < 0) {
                                         // cancel building this thing
                                         player->cancelBuildingListItem(pItem);
@@ -609,7 +609,7 @@ namespace brains {
                     // if there is any enemy player, then find a new place.
                     if (!placeResult.structureIds.empty()) {
                         if (!changedPlacePosition) {
-                            int newCell = findCellToPlaceStructure(pItem->getBuildId());
+                            int newCell = player->findCellToPlaceStructure(pItem->getBuildId());
                             if (newCell < 0) {
                                 // cancel building this thing
                                 player->cancelBuildingListItem(pItem);
@@ -731,7 +731,7 @@ namespace brains {
         // then where to place it
         int cellToPlaceStructureAt = -1;
         if (structureTypeToBuild > -1) {
-            cellToPlaceStructureAt = findCellToPlaceStructure(structureTypeToBuild);
+            cellToPlaceStructureAt = player->findCellToPlaceStructure(structureTypeToBuild);
         }
 
         result.structureType = structureTypeToBuild;
@@ -837,127 +837,6 @@ namespace brains {
         if (!player->hasAtleastOneStructure(PALACE))  return PALACE;
 
         // nothing to build
-        return -1;
-    }
-
-    int cPlayerBrainSkirmish::findCellToPlaceStructure(int structureType) {
-        // find place (fast, if possible), where to place it
-        // ignore any units (we can move them out of the way). But do take
-        // terrain and other structures into consideration!
-
-        int centerOfBase = player->getFocusCell();
-        
-        const std::vector<int> &allMyStructuresAsId = player->getAllMyStructuresAsId();
-        std::vector<int> potentialCells = std::vector<int>();
-
-        int iWidth = structures[structureType].bmp_width / TILESIZE_WIDTH_PIXELS;
-        int iHeight = structures[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
-
-        cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
-
-        for (auto &id : allMyStructuresAsId) {
-            cAbstractStructure * aStructure = structure[id];
-
-            // go around any structure, and try to find a cell where we can place a structure.
-            int iStartX = map.getCellX(aStructure->getCell());
-            int iStartY = map.getCellY(aStructure->getCell());
-
-            int iEndX = iStartX + aStructure->getWidth(); // not plus 1 because iStartX is 1st cell
-            int iEndY = iStartY + aStructure->getHeight(); // not plus 1 because iStartY is 1st cell
-
-            // start is topleft/above structure, but also take size of the structure to place
-            // into acount. So ie, a structure of 2x2 will be attempted (at first) at y - 2.
-            // attempt at 'top' first:
-            int topLeftX = iStartX - iWidth;
-            int topLeftY = iStartY - iHeight;
-
-            // check: from top left to top right
-            for (int sx = topLeftX; sx < iEndX; sx++) {
-                int cell = map.makeCell(sx, topLeftY);
-
-                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
-                if (canPlaceStructureAt) {
-                    potentialCells.push_back(cell);
-                }
-            }
-
-            int bottomLeftX = topLeftX;
-            int bottomLeftY = iEndY;
-            // check: from bottom left to bottom right
-            for (int sx = bottomLeftX; sx < iEndX; sx++) {
-                int cell = map.makeCell(sx, bottomLeftY);
-
-                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
-                if (canPlaceStructureAt) {
-                    potentialCells.push_back(cell);
-                }
-            }
-
-            // left to structure (not from top!)
-            int justLeftX = topLeftX;
-            int justLeftY = iStartY;
-            for (int sy = justLeftY; sy < iEndY; sy++) {
-                int cell = map.makeCell(justLeftX, sy);
-
-                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
-                if (canPlaceStructureAt) {
-                    potentialCells.push_back(cell);
-                }
-            }
-
-            // right to structure (not top!)
-            int justRightX = iEndX;
-            int justRightY = iStartY;
-            for (int sy = justRightY; sy < iEndY; sy++) {
-                int cell = map.makeCell(justRightX, sy);
-
-                bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
-                if (canPlaceStructureAt) {
-                    potentialCells.push_back(cell);
-                }
-            }
-
-            // if we have found any we randomly abort
-            if (!potentialCells.empty()) {
-                if (rnd(100) < 33) {
-                    break;
-                }
-            }
-        }
-
-        if (!potentialCells.empty()) {
-            if (structureType == TURRET || structureType == RTURRET) {
-//                // first shuffle, before going through the list
-//                std::random_shuffle(potentialCells.begin(), potentialCells.end());
-//
-//                std::vector<int> potentialFurtherCells = std::vector<int>();
-//                int found = 0;
-//                double distance = 128; // arbitrary distance as 'border'
-//                for (auto &potentialCell : potentialCells) {
-//                    double dist = map.distance(centerOfBase, potentialCell);
-//                    if (dist > distance) {
-//                        potentialFurtherCells.push_back(potentialCell);
-//                        found++;
-//                        if (found > 5) {
-//                            break;
-//                        }
-//                    }
-//                }
-//
-//                if (!potentialFurtherCells.empty()) {
-//                    // shuffle the 5 'furthest'
-//                    std::random_shuffle(potentialFurtherCells.begin(), potentialFurtherCells.end());
-//                }
-
-                // for now pick random position, but in the future do something more smart
-                std::random_shuffle(potentialCells.begin(), potentialCells.end());
-            } else {
-                // found one, shuffle, and then return the first
-                std::random_shuffle(potentialCells.begin(), potentialCells.end());
-            }
-            return potentialCells.front();
-        }
-
         return -1;
     }
 
