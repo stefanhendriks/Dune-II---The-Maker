@@ -896,175 +896,122 @@ bool cPlayer::isBuildingStructureAwaitingPlacement() const {
     return itemBuilder->isAnythingBeingBuiltForListIdAwaitingPlacement(LIST_CONSTYARD, 0);
 }
 
-int cPlayer::findCellToPlaceStructure(int iStructureType) {
-    // loop through all structures, and try to place structure
-    // next to them:
-    //         ww
-    //           ss
-    //           ss
+int cPlayer::findCellToPlaceStructure(int structureType) {
+    // find place (fast, if possible), where to place it
+    // ignore any units (we can move them out of the way). But do take
+    // terrain and other structures into consideration!
 
-    // s = structure:
-    // w = start point (+ width of structure).
+    int centerOfBase = getFocusCell();
 
-    // so starting at : x - width , y - height.
-    // ending at      : x + width of structure + width of type
-    // ...            : y + height of s + height of type
+    const std::vector<int> &allMyStructuresAsId = getAllMyStructuresAsId();
+    std::vector<int> potentialCells = std::vector<int>();
 
-    if (iStructureType < 0) return -1;
-
-    int iWidth = structures[iStructureType].bmp_width / 32;
-    int iHeight = structures[iStructureType].bmp_height / 32;
-
-    int iDistance = 0;
-
-    int iGoodCells[50]; // remember 50 possible locations
-    int iGoodCellID = 0;
-
-    // clear out table of good locations
-    memset(iGoodCells, -1, sizeof(iGoodCells));
-
-    bool bGood = false;
+    int iWidth = structures[structureType].bmp_width / TILESIZE_WIDTH_PIXELS;
+    int iHeight = structures[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
 
     cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
 
-    // loop through structures of player
-    for (int i = 0; i < MAX_STRUCTURES; i++) {
+    for (auto &id : allMyStructuresAsId) {
+        cAbstractStructure * aStructure = structure[id];
 
-        // valid
-        cAbstractStructure *pStructure = structure[i];
-        if (pStructure == nullptr) continue;
-        if (pStructure->getOwner() != getId()) continue;
+        // go around any structure, and try to find a cell where we can place a structure.
+        int iStartX = map.getCellX(aStructure->getCell());
+        int iStartY = map.getCellY(aStructure->getCell());
 
-        // scan around
-        int c1 = pStructure->getCell();
+        int iEndX = iStartX + aStructure->getWidth(); // not plus 1 because iStartX is 1st cell
+        int iEndY = iStartY + aStructure->getHeight(); // not plus 1 because iStartY is 1st cell
 
-        int iStartX = map.getCellX(c1);
-        int c = pStructure->getCell();
-        int iStartY = map.getCellY(c);
-
-        int iEndX = iStartX + pStructure->getWidth() + 1;
-        int iEndY = iStartY + pStructure->getHeight() + 1;
-
+        // start is topleft/above structure, but also take size of the structure to place
+        // into acount. So ie, a structure of 2x2 will be attempted (at first) at y - 2.
+        // attempt at 'top' first:
         int topLeftX = iStartX - iWidth;
         int topLeftY = iStartY - iHeight;
 
-//        // check above structure if it can place
+        // check: from top left to top right
         for (int sx = topLeftX; sx < iEndX; sx++) {
-            int sy = iStartY;
-            int cell = map.getCellWithMapDimensions(sx, sy);
+            int cell = map.makeCell(sx, topLeftY);
 
-            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType).success;
-
-            if (r) {
-                if (iStructureType == TURRET || iStructureType == RTURRET) {
-                    // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = map.distance(map.getCellWithMapDimensions(sx, sy), getFocusCell());
-
-                    if (iDist >= iDistance) {
-                        iDistance = iDist;
-                        iGoodCells[iGoodCellID] = cell;
-                        // do not increment iGoodCell_player->getId(), so we overwrite (and end up further and further)
-                    }
-
-                } else {
-                    // for turrets, the most far counts
-                    iGoodCells[iGoodCellID] = cell;
-                    iGoodCellID++;
-                }
+            bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
+            if (canPlaceStructureAt) {
+                potentialCells.push_back(cell);
             }
-        } // sx
+        }
 
-        int underNeathStructureY = iStartY + pStructure->getHeight();
-        // check underneath structure
-        for (int sx = topLeftX; sx < iEndX; sx++) {
-            int sy = underNeathStructureY;
-            int cell = map.getCellWithMapDimensions(sx, sy);
+        int bottomLeftX = topLeftX;
+        int bottomLeftY = iEndY;
+        // check: from bottom left to bottom right
+        for (int sx = bottomLeftX; sx < iEndX; sx++) {
+            int cell = map.makeCell(sx, bottomLeftY);
 
-            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType).success;
-
-            if (r) {
-                if (iStructureType == TURRET || iStructureType == RTURRET) {
-                    // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = map.distance(map.getCellWithMapDimensions(sx, sy), getFocusCell());
-
-                    if (iDist >= iDistance) {
-                        iDistance = iDist;
-                        iGoodCells[iGoodCellID] = cell;
-                        // do not increment iGoodCell_player->getId(), so we overwrite (and end up further and further)
-                    }
-
-                } else {
-                    // for turrets, the most far counts
-                    iGoodCells[iGoodCellID] = cell;
-                    iGoodCellID++;
-                }
+            bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
+            if (canPlaceStructureAt) {
+                potentialCells.push_back(cell);
             }
-        } // sx
+        }
 
-        // check left side
-        for (int sy = topLeftY; sy < iEndY; sy++) {
-            int sx = topLeftX;
-            int cell = map.getCellWithMapDimensions(sx, sy);
+        // left to structure (not from top!)
+        int justLeftX = topLeftX;
+        int justLeftY = iStartY;
+        for (int sy = justLeftY; sy < iEndY; sy++) {
+            int cell = map.makeCell(justLeftX, sy);
 
-            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType).success;
-
-            if (r) {
-                if (iStructureType == TURRET || iStructureType == RTURRET) {
-                    // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = map.distance(map.getCellWithMapDimensions(sx, sy), getFocusCell());
-
-                    if (iDist >= iDistance) {
-                        iDistance = iDist;
-                        iGoodCells[iGoodCellID] = cell;
-                        // do not increment iGoodCell_player->getId(), so we overwrite (and end up further and further)
-                    }
-
-                } else {
-                    // for turrets, the most far counts
-                    iGoodCells[iGoodCellID] = cell;
-                    iGoodCellID++;
-                }
+            bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
+            if (canPlaceStructureAt) {
+                potentialCells.push_back(cell);
             }
-        } // sx
+        }
 
-        // check right side
-        int rightOfStructure = iStartX + pStructure->getWidth();
-        for (int sy = topLeftY; sy < iEndY; sy++) {
-            int sx = rightOfStructure;
-            int cell = map.getCellWithMapDimensions(sx, sy);
+        // right to structure (not top!)
+        int justRightX = iEndX;
+        int justRightY = iStartY;
+        for (int sy = justRightY; sy < iEndY; sy++) {
+            int cell = map.makeCell(justRightX, sy);
 
-            bool r = pStructureFactory->canPlaceStructureAt(cell, iStructureType).success;
-
-            if (r) {
-                if (iStructureType == TURRET || iStructureType == RTURRET) {
-                    // for turrets, find the most 'far out' places (so they end up at the 'outer ring' of the base)
-                    int iDist = map.distance(map.getCellWithMapDimensions(sx, sy), getFocusCell());
-
-                    if (iDist >= iDistance) {
-                        iDistance = iDist;
-                        iGoodCells[iGoodCellID] = cell;
-                        // do not increment iGoodCell_player->getId(), so we overwrite (and end up further and further)
-                    }
-
-                } else {
-                    // for turrets, the most far counts
-                    iGoodCells[iGoodCellID] = cell;
-                    iGoodCellID++;
-                }
+            bool canPlaceStructureAt = pStructureFactory->canPlaceStructureAt(cell, structureType).success;
+            if (canPlaceStructureAt) {
+                potentialCells.push_back(cell);
             }
-        } // sx
+        }
 
-        if (iGoodCellID > 10) {
-            break; // found 10 good spots
+        // if we have found any we randomly abort
+        if (!potentialCells.empty()) {
+            if (rnd(100) < 33) {
+                break;
+            }
         }
     }
 
-    if (iGoodCellID > 0) {
-        char msg[255];
-        sprintf(msg, "Found %d possible cells to place structureType [%d(=%s)]", iGoodCellID, iStructureType,
-                structures[iStructureType].name);
-        logbook(msg);
-        return (iGoodCells[rnd(iGoodCellID)]);
+    if (!potentialCells.empty()) {
+        if (structureType == TURRET || structureType == RTURRET) {
+//                // first shuffle, before going through the list
+//                std::random_shuffle(potentialCells.begin(), potentialCells.end());
+//
+//                std::vector<int> potentialFurtherCells = std::vector<int>();
+//                int found = 0;
+//                double distance = 128; // arbitrary distance as 'border'
+//                for (auto &potentialCell : potentialCells) {
+//                    double dist = map.distance(centerOfBase, potentialCell);
+//                    if (dist > distance) {
+//                        potentialFurtherCells.push_back(potentialCell);
+//                        found++;
+//                        if (found > 5) {
+//                            break;
+//                        }
+//                    }
+//                }
+//
+//                if (!potentialFurtherCells.empty()) {
+//                    // shuffle the 5 'furthest'
+//                    std::random_shuffle(potentialFurtherCells.begin(), potentialFurtherCells.end());
+//                }
+
+            // for now pick random position, but in the future do something more smart
+            std::random_shuffle(potentialCells.begin(), potentialCells.end());
+        } else {
+            // found one, shuffle, and then return the first
+            std::random_shuffle(potentialCells.begin(), potentialCells.end());
+        }
+        return potentialCells.front();
     }
 
     return -1;

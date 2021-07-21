@@ -127,8 +127,6 @@ namespace brains {
 
         s_SkirmishPlayer_PlaceForStructure thinkAboutNextStructureToBuildAndPlace();
 
-        int findCellToPlaceStructure(int structureType);
-
         int getStructureToBuild() const;
 
         int getStructureIdToBuildWithoutConsideringPowerUsage() const;
