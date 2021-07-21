@@ -294,8 +294,16 @@ int cPlayer::getEmblemBackgroundColorForHouse(int houseId) {
     }
 }
 
+bool cPlayer::hasAlmostReachMaxSpiceStorageCapacity() const {
+    return !bEnoughSpiceCapacityToStoreCredits(250);
+}
+
 bool cPlayer::bEnoughSpiceCapacityToStoreCredits() const {
-    return maxCredits_ > credits;
+    return bEnoughSpiceCapacityToStoreCredits(0);
+}
+
+bool cPlayer::bEnoughSpiceCapacityToStoreCredits(int threshold) const {
+    return (maxCredits_ - threshold) > credits;
 }
 
 bool cPlayer::bEnoughPower() const {

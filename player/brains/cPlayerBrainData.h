@@ -59,6 +59,9 @@ namespace brains {
         // We need to improve our economy
         PLAYERBRAIN_ECONOMY_STATE_IMPROVE,
 
+        // We have a bad economy
+        PLAYERBRAIN_ECONOMY_STATE_BAD,
+
         // We need get cash quickly (sell?) - we cannot 'sell' yet, but this would be a way to get funds to rebuild economy/etc
         PLAYERBRAIN_ECONOMY_STATE_SELL_FOR_CASH,
     };
