@@ -454,28 +454,45 @@ namespace brains {
         // up/downplay some priorities and re-sort?
         // Example: Money is short, Harvester is in build queue, but not high in priority?
         if (player->hasAtleastOneStructure(REFINERY)) {
-            if (economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
-                if (player->getCredits() < 150) {
-                    // count the times we are in this shape, after a certain time we switch to IMPROVE state
-                    COUNT_badEconomy++;
-                    if (COUNT_badEconomy > 10) {
-                        changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_IMPROVE);
-                    }
-                }
-            } else if (economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
-                if (player->getCredits() > 150) {
-                    COUNT_badEconomy--;
-                    if (COUNT_badEconomy < 3) {
-                        COUNT_badEconomy = 0;
-                        changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_NORMAL);
-                    }
-                }
-            }
+            evaluateEconomyState();
         }
 
         // take a little rest, before going into a new loop again?
         TIMER_rest = 25;
         changeThinkStateTo(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST);
+    }
+
+    void cPlayerBrainSkirmish::evaluateEconomyState() {
+        if (economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
+            if (player->getCredits() < 150) {
+                // count the times we are in this shape, after a certain time we switch to IMPROVE state
+                COUNT_badEconomy++;
+                if (COUNT_badEconomy > 5) {
+                    changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_IMPROVE);
+                }
+            }
+        } else {
+            // reduce economy score when we have more than 150 bucks
+            if (player->getCredits() > 150) {
+                COUNT_badEconomy--;
+                if (COUNT_badEconomy < 1) {
+                    COUNT_badEconomy = 0;
+                    changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_NORMAL);
+                }
+            }
+
+            if (economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
+                // when in 'trying to improve economy state' increase bad economy score when things really go bad?
+                if (player->getCredits() < 75) {
+                    COUNT_badEconomy++;
+                    if (COUNT_badEconomy > 25) {
+                        changeEconomyStateTo(PLAYERBRAIN_ECONOMY_STATE_BAD);
+                    }
+                }
+            } else if (economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
+                // we're in a pinch now - economy wise
+            }
+        }
     }
 
     void cPlayerBrainSkirmish::thinkState_EndGame() {
@@ -500,6 +517,8 @@ namespace brains {
                     if (player->startBuildingStructure(buildOrder.buildId)) {
                         buildOrder.state = buildOrder::eBuildOrderState::BUILDING;
                     }
+                } else {
+                    buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
                 }
             } else if (buildOrder.buildType == eBuildType::UNIT) {
                 if (player->canBuildUnit(buildOrder.buildId) == eCantBuildReason::NONE) {
@@ -794,18 +813,32 @@ namespace brains {
         player->logStructures();
 
         if (!player->hasAtleastOneStructure(REFINERY))      return REFINERY;
-        if (economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
+        if (economyState == PLAYERBRAIN_ECONOMY_STATE_IMPROVE || economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
             if (player->getAmountOfStructuresForType(REFINERY) < 3) {
                 return REFINERY;
             }
         }
+
+        // don't build anything else for now
+        if (economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
+            return -1;
+        }
+
+        if (player->hasAlmostReachMaxSpiceStorageCapacity()) {
+            return SILO;
+        }
+
         // play around with the order... (depending on difficulty, or type of ai, etc?)
         if (!player->hasAtleastOneStructure(LIGHTFACTORY))  return LIGHTFACTORY;
         if (!player->hasAtleastOneStructure(RADAR))  return RADAR;
         if (!player->hasAtleastOneStructure(HEAVYFACTORY))  return HEAVYFACTORY;
         if (!player->hasAtleastOneStructure(STARPORT))  return STARPORT;
+        if (!player->hasAtleastOneStructure(HIGHTECH))  return HIGHTECH;
 
         if (player->getAmountOfStructuresForType(TURRET) < 2)  return TURRET;
+
+        if (!player->hasAtleastOneStructure(IX))  return IX;
+
         if (player->getAmountOfStructuresForType(RTURRET) < 6)  return RTURRET;
 
         if (!player->hasAtleastOneStructure(PALACE))  return PALACE;

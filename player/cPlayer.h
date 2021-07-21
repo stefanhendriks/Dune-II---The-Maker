@@ -41,6 +41,10 @@ public:
 
     bool bEnoughSpiceCapacityToStoreCredits() const;
 
+    bool hasAlmostReachMaxSpiceStorageCapacity() const;
+
+    bool bEnoughSpiceCapacityToStoreCredits(int threshold) const;
+
     // credits
     void substractCredits(int amount);
     void setCredits(int credits);

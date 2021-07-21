@@ -91,6 +91,7 @@ namespace brains {
             switch (state) {
                 case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_NORMAL: return "PLAYERBRAIN_ECONOMY_STATE_NORMAL";
                 case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_IMPROVE: return "PLAYERBRAIN_ECONOMY_STATE_IMPROVE";
+                case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_BAD: return "PLAYERBRAIN_ECONOMY_STATE_BAD";
                 case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_SELL_FOR_CASH: return "PLAYERBRAIN_ECONOMY_STATE_SELL_FOR_CASH";
                 default:
                     assert(false);
@@ -132,6 +133,8 @@ namespace brains {
         int getStructureIdToBuildWithoutConsideringPowerUsage() const;
 
         bool hasBuildOrderQueuedForStructure();
+
+        void evaluateEconomyState();
     };
 
 }
