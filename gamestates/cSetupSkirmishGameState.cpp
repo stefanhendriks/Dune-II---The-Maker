@@ -603,7 +603,12 @@ void cSetupSkirmishGameState::interact() {
                 bool playableFaction = p < AI_CPU5;
 
                 if (playableFaction) {
-                    if (!sSkirmishPlayer.bPlaying) continue;
+                    if (!sSkirmishPlayer.bPlaying) {
+                        // make sure it is a brain dead AI...
+                        cPlayer &cPlayer = players[p];
+                        cPlayer.init(p, nullptr);
+                        continue;
+                    }
 
                     // house = 0 means pick random house
                     if (iHouse == 0) {
