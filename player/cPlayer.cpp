@@ -716,8 +716,9 @@ cBuildingListItem *cPlayer::getStructureBuildingListItemBeingBuilt() const {
  * @return
  */
 bool cPlayer::isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) const {
-    int listId = units[iUnitType].listId;
-    int subListId = units[iUnitType].subListId;
+    s_UnitP &p = units[iUnitType];
+    int listId = p.listId;
+    int subListId = p.subListId;
 
     return itemBuilder->isAnythingBeingBuiltForListId(listId, subListId);
 }
@@ -1084,6 +1085,10 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType) {
     return canBuildUnit(iUnitType, true);
 }
 
+bool cPlayer::canBuildUnitBool(int iUnitType) {
+    return canBuildUnit(iUnitType, false) == eCantBuildReason::NONE;
+}
+
 int cPlayer::findRandomUnitTarget(int playerIndexToAttack) {
     // Randomly assemble list, and then pick one
     int iTargets[100];
@@ -1295,8 +1300,27 @@ int cPlayer::getScoutingUnitType() {
     return TRIKE;
 }
 
+int cPlayer::getSpecialUnitType() {
+    // TODO: make this configurable within house props
+    switch (house) {
+        case HARKONNEN:
+            return DEVASTATOR;
+        case ATREIDES:
+            return SONICTANK;
+        case ORDOS:
+            return DEVIATOR;
+        case SARDAUKAR:
+            return DEVASTATOR;
+        case FREMEN:
+            return TRIKE;
+    }
+
+    return TRIKE;
+}
+
 bool cPlayer::hasEnoughPowerFor(int structureType) const {
-    assert(structureType > -1);
+    assert(structureType > -1 && "hasEnoughPowerFor called with structureType < 0!");
+    assert(structureType < MAX_STRUCTURETYPES && "hasEnoughPowerFor called with structureType >= MAX_STRUCTURETYPES!");
     int powerLeft = powerProduce_ - powerUsage_;
     return structures[structureType].power_drain <= powerLeft;
 }

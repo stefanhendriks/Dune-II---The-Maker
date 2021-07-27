@@ -1607,6 +1607,8 @@ namespace brains {
             if (buildOrder.state != buildOrder::eBuildOrderState::PROCESSME)
                 continue; // only process those which are marked
 
+            assert(buildOrder.buildId > -1 && "(cPlayerBrainCampaign) A build order with no buildId got in the buildOrders list, which is not allowed!");
+
             if (buildOrder.buildType == eBuildType::STRUCTURE) {
                 if (player->canBuildStructure(buildOrder.buildId) == eCantBuildReason::NONE) {
                     if (player->startBuildingStructure(buildOrder.buildId)) {

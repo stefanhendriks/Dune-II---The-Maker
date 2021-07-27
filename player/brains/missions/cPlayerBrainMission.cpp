@@ -44,6 +44,17 @@ namespace brains {
                 missionKind = new cPlayerBrainMissionKindExplore(player, this);
                 break;
         }
+
+        char msg[255];
+        sprintf(msg, "cPlayerBrainMission of type %s", ePlayerBrainMissionKindString(kind));
+        player->log(msg);
+
+        for (auto &item : group) {
+            char msg[255];
+            sprintf(msg, "Item buildType [%s], type/buildId[%d], required [%d]", eBuildTypeString(item.buildType), item.type, item.required);
+            player->log(msg);
+            assert(item.type > -1 && "type/buildId must be > -1 !");
+        }
     }
 
     cPlayerBrainMission::~cPlayerBrainMission() {
@@ -263,6 +274,7 @@ namespace brains {
 
         // assumes group contains units, just create build orders from the desired group of units...?
         for (auto &thingIWant : group) {
+            assert(thingIWant.type > -1 && "cPlayerBrainMission - expected to have a type/buildId of > -1!");
             if (thingIWant.produced < thingIWant.required) {
                 if (thingIWant.ordered <= thingIWant.produced) { // order one at a time only
                     brain->addBuildOrder((S_buildOrder) {

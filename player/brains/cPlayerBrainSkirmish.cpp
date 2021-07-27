@@ -312,6 +312,7 @@ namespace brains {
                                 produced: 0,
                         });
                         addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(15), MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_HARVESTER);
+                        return;
                     }
                 }
             }
@@ -329,6 +330,7 @@ namespace brains {
                                 produced: 0,
                         });
                         addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(15), MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_CARRYALL);
+                        return;
                     }
                 }
             }
@@ -347,6 +349,7 @@ namespace brains {
                 });
 
                 addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15), MISSION_SCOUT1);
+                return;
             } else if (!hasMission(MISSION_SCOUT2)) {
                 // add scouting mission
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
@@ -359,6 +362,7 @@ namespace brains {
                 });
 
                 addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15), MISSION_SCOUT2);
+                return;
             } if (!hasMission(MISSION_SCOUT3)) {
                 // add scouting mission
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
@@ -371,6 +375,7 @@ namespace brains {
                 });
 
                 addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15), MISSION_SCOUT3);
+                return;
             } if (!hasMission(MISSION_GUARDFORCE)) {
                 // add defending force
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
@@ -389,9 +394,8 @@ namespace brains {
                         produced: 0,
                 });
                 addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_DEFEND, group, rnd(15), MISSION_GUARDFORCE);
+                return;
             }
-
-            return;
         }
 
         if (state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
@@ -438,58 +442,102 @@ namespace brains {
                 }
 
                 addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), MISSION_ATTACK1);
+                return;
             }
 
             if (!hasMission(MISSION_ATTACK2)) {
+                produceSkirmishGroundAttackMission(trikeKind, group, MISSION_ATTACK2);
+                return;
+            }
 
-                if (player->hasAtleastOneStructure(HEAVYFACTORY)) {
-                    if (player->canBuildUnitType(SIEGETANK) && rnd(100) < 33) {
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : SIEGETANK,
-                                required: rnd(3),
-                                ordered: 0,
-                                produced: 0,
-                        });
-                    }
+            if (!hasMission(MISSION_ATTACK3)) {
+                produceSkirmishGroundAttackMission(trikeKind, group, MISSION_ATTACK3);
+                return;
+            }
 
-                    if (player->canBuildUnitType(LAUNCHER) && rnd(100) < 33) {
-                        group.push_back((S_groupKind) {
-                                buildType: eBuildType::UNIT,
-                                type : LAUNCHER,
-                                required: rnd(3),
-                                ordered: 0,
-                                produced: 0,
-                        });
-                    }
-                }
+            if (!hasMission(MISSION_ATTACK4)) {
+                produceSkirmishGroundAttackMission(trikeKind, group, MISSION_ATTACK4);
+                return;
+            }
 
-                if (player->canBuildUnitType(trikeKind) && rnd(100) < 33) {
+            if (!hasMission(MISSION_ATTACK5)) {
+                if (player->canBuildUnitBool(ORNITHOPTER)) {
                     group.push_back((S_groupKind) {
                             buildType: eBuildType::UNIT,
-                            type : trikeKind,
-                            required: rnd(2),
+                            type : ORNITHOPTER,
+                            required: rnd(3),
                             ordered: 0,
                             produced: 0,
                     });
+                    addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15),
+                               MISSION_ATTACK3);
+                    return;
                 }
+            }
+        }
 
-                if (player->canBuildUnitType(QUAD) && rnd(100) < 33) {
+        // ..?
+    }
+
+    void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int trikeKind, std::vector<S_groupKind> &group, int missionId) {
+        if (player->hasAtleastOneStructure(HEAVYFACTORY)) {
+            if (rnd(100) < 33) {
+                group.push_back((S_groupKind) {
+                        buildType: UNIT,
+                        type : SIEGETANK,
+                        required: rnd(3),
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+
+            if (player->getHouse() != ORDOS) {
+                if (rnd(100) < 33) {
                     group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : QUAD,
+                            buildType: UNIT,
+                            type : LAUNCHER,
                             required: rnd(3),
                             ordered: 0,
                             produced: 0,
                     });
                 }
-
-                addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), MISSION_ATTACK2);
             }
-            return;
         }
 
-        // ..?
+        if (player->canBuildUnitBool(trikeKind) && rnd(100) < 33) {
+            group.push_back((S_groupKind) {
+                    buildType: UNIT,
+                    type : trikeKind,
+                    required: rnd(2),
+                    ordered: 0,
+                    produced: 0,
+            });
+        }
+
+        if (player->canBuildUnitBool(QUAD) && rnd(100) < 33) {
+            group.push_back((S_groupKind) {
+                    buildType: UNIT,
+                    type : QUAD,
+                    required: rnd(3),
+                    ordered: 0,
+                    produced: 0,
+            });
+        }
+
+        if (player->hasAtleastOneStructure(IX)) {
+            int specialType = player->getSpecialUnitType();
+            if (player->canBuildUnitBool(specialType) && rnd(100) < 33) {
+                group.push_back((S_groupKind) {
+                        buildType: UNIT,
+                        type : specialType,
+                        required: rnd(3),
+                        ordered: 0,
+                        produced: 0,
+                });
+            }
+        }
+
+        addMission(PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), missionId);
     }
 
     bool cPlayerBrainSkirmish::hasMission(const int id) {
@@ -578,6 +626,8 @@ namespace brains {
         for (auto &buildOrder : buildOrders) {
             if (buildOrder.state != buildOrder::eBuildOrderState::PROCESSME)
                 continue; // only process those which are marked
+
+            assert(buildOrder.buildId > -1 && "(cPlayerBrainSkirmish) A build order with no buildId got in the buildOrders list, which is not allowed!");
 
             if (buildOrder.buildType == eBuildType::STRUCTURE) {
                 if (player->canBuildStructure(buildOrder.buildId) == eCantBuildReason::NONE) {
@@ -854,11 +904,16 @@ namespace brains {
 
         int structureIWantToBuild = getStructureIdToBuildWithoutConsideringPowerUsage();
 
+        // nothing the AI wants to build right now...
+        if (structureIWantToBuild < 0) {
+            return -1;
+        }
+
         // determine if we have enough power for the thing we want to build, if not, build a windtrap first...
-        if (structureIWantToBuild > -1 && !player->hasEnoughPowerFor(structureIWantToBuild)) {
+        if (!player->hasEnoughPowerFor(structureIWantToBuild)) {
             return WINDTRAP;
         }
-        
+
         // can build it?
         eCantBuildReason reason = player->canBuildStructure(structureIWantToBuild);
         if (reason != eCantBuildReason::NONE) {

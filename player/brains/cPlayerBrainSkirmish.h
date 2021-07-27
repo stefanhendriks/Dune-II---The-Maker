@@ -17,6 +17,8 @@ namespace brains {
     const int MISSION_ATTACK1 = 93;
     const int MISSION_ATTACK2 = 92;
     const int MISSION_ATTACK3 = 91;
+    const int MISSION_ATTACK4 = 90;
+    const int MISSION_ATTACK5 = 89;
 
     const int MOMENT_CONSIDER_ADDITIONAL_REFINERY = 1200; // after 2 minutes consider building 2nd refinery
 
@@ -144,6 +146,8 @@ namespace brains {
         bool hasBuildOrderQueuedForStructure();
 
         void evaluateEconomyState();
+
+        void produceSkirmishGroundAttackMission(int trikeKind, std::vector<S_groupKind> &group, int missionId);
     };
 
 }

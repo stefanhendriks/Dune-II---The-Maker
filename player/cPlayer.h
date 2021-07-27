@@ -226,6 +226,13 @@ public:
      */
     eCantBuildReason canBuildUnit(int iUnitType);
 
+    /**
+     * Returns true if the unit can be bought, takes not money into account, but all other rules do apply
+     * @param iUnitType
+     * @return
+     */
+    bool canBuildUnitBool(int iUnitType);
+
     eCantBuildReason canBuildUnit(int iUnitType, bool checkIfAffordable);
 
 
@@ -291,6 +298,7 @@ public:
     void onNotify(const s_GameEvent &event);
 
     int getScoutingUnitType();
+    int getSpecialUnitType();
 
     static std::string getHouseNameForId(int house);
 
