@@ -13,7 +13,7 @@ cPlayer::cPlayer() {
     char msg[255];
     sprintf(msg, "MAX_STRUCTURETYPES=[%d], sizeof bmp_structure=%d, sizeof(BITMAP *)", MAX_STRUCTURETYPES,
             sizeof(bmp_structure), sizeof(BITMAP *));
-    logbook(msg);
+    logbook(msg); // no log(), because we cant assume player is fully initialized yet
     memset(bmp_structure, 0, sizeof(bmp_structure));
     memset(bmp_unit, 0, sizeof(bmp_unit));
     memset(bmp_unit_top, 0, sizeof(bmp_unit_top));
@@ -57,12 +57,12 @@ void cPlayer::clearStructureTypeBitmaps() {
         if (bmp_structure[i]) {
 //            char msg[255];
 //            sprintf(msg, "clearStructureTypeBitmaps: Destroying bmp_structure for index [%d].", i);
-//            logbook(msg);
+//            log(msg);
             destroy_bitmap(bmp_structure[i]);
         } else {
 //            char msg[255];
 //            sprintf(msg, "clearStructureTypeBitmaps: Index [%d] is null.", i);
-//            logbook(msg);
+//            log(msg);
         }
         bmp_structure[i] = nullptr;
     }
@@ -76,9 +76,9 @@ void cPlayer::clearUnitTypeBitmaps() {
     for (int i = 0; i < MAX_UNITTYPES; i++) {
         if (bmp_unit[i]) {
             if (DEBUGGING) {
-                char msg[255];
-                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit for index [%d].", i);
-                logbook(msg);
+//                char msg[255];
+//                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit for index [%d].", i);
+//                log(msg);
             }
             destroy_bitmap(bmp_unit[i]);
         }
@@ -86,9 +86,9 @@ void cPlayer::clearUnitTypeBitmaps() {
 
         if (bmp_unit_top[i]) {
             if (DEBUGGING) {
-                char msg[255];
-                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit_top for index [%d].", i);
-                logbook(msg);
+//                char msg[255];
+//                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit_top for index [%d].", i);
+//                log(msg);
             }
             destroy_bitmap(bmp_unit_top[i]);
         }
@@ -154,7 +154,7 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain) {
     if (id < 0 || id >= MAX_PLAYERS) {
         char msg[255];
         sprintf(msg, "Error initializing player, id %d is not valid.", id);
-        logbook(msg);
+        logbook(msg); // no log(), as house still has to be set up
     }
     assert(id >= HUMAN);
     assert(id < MAX_PLAYERS);
@@ -201,7 +201,7 @@ void cPlayer::setHouse(int iHouse) {
     char msg[255];
     sprintf(msg, "cPlayer[%d]::setHouse - Current house is [%d/%s], setting house to [%d/%s]", this->id, currentHouse,
             this->getHouseNameForId(currentHouse).c_str(), iHouse, this->getHouseNameForId(iHouse).c_str());
-    logbook(msg);
+    logbook(msg); // not yet set up house properly.. so use logbook instead of log()
     house = iHouse;      // use rules of this house
 
     if (difficultySettings) {
@@ -540,9 +540,9 @@ void cPlayer::increaseStructureAmount(int structureType) {
     iStructures[structureType]++;
 
     char msg[255];
-    sprintf(msg, "Player[%d] - increaseStructureAmount result: iStructures[%d(=%s)]=%d", id, structureType,
+    sprintf(msg, "increaseStructureAmount result: iStructures[%d(=%s)]=%d", structureType,
             structures[structureType].name, iStructures[structureType]);
-    logbook(msg);
+    log(msg);
 }
 
 void cPlayer::decreaseStructureAmount(int structureType) {
@@ -552,9 +552,9 @@ void cPlayer::decreaseStructureAmount(int structureType) {
     iStructures[structureType]--;
 
     char msg[255];
-    sprintf(msg, "Player[%d] - decreaseStructureAmount result: iStructures[%d(=%s)]=%d", id, structureType,
+    sprintf(msg, "decreaseStructureAmount result: iStructures[%d(=%s)]=%d", structureType,
             structures[structureType].name, iStructures[structureType]);
-    logbook(msg);
+    log(msg);
 }
 
 std::string cPlayer::getHouseName() const {
@@ -690,8 +690,8 @@ bool cPlayer::canBuildUnitType(int iUnitType) const {
     cBuildingListItem *pItem = sidebar->getBuildingListItem(listId, iUnitType);
     char msg[255];
     bool result = pItem != nullptr;
-    sprintf(msg, "cPlayer[%d] canBuildUnitType(unitType=%d) -> %s", getId(), iUnitType, result ? "TRUE" : "FALSE");
-    logbook(msg);
+    sprintf(msg, "canBuildUnitType(unitType=%d) -> %s", iUnitType, result ? "TRUE" : "FALSE");
+    log(msg);
     return result;
 }
 
@@ -781,9 +781,9 @@ cBuildingListItem *cPlayer::isUpgradingList(int listId, int sublistId) const {
     if (upgradesList == nullptr) {
         char msg[255];
         sprintf(msg,
-                "AI[%d] - isUpgradingList for listId [%d] and sublistId [%d], could not find upgradesList!? - will return FALSE.",
+                "isUpgradingList for listId [%d] and sublistId [%d], could not find upgradesList!? - will return FALSE.",
                 getId(), listId, sublistId);
-        logbook(msg);
+        log(msg);
         assert(false);
         return nullptr;
     }
@@ -828,7 +828,7 @@ bool cPlayer::startBuildingUnit(int iUnitType) const {
             sprintf(msg, "Wanting to build unit [%s] iUnitType = [%d], with listId[%d] - FAILED", unitType.name,
                     iUnitType, listId);
         }
-        logbook(msg);
+        log(msg);
     }
     return startedBuilding;
 }
@@ -847,7 +847,7 @@ bool cPlayer::startBuildingStructure(int iStructureType) const {
             sprintf(msg, "Wanting to build structure [%s] iStructureType = [%d], with listId[%d] - FAILED",
                     structures[iStructureType].name, iStructureType, listId);
         }
-        logbook(msg);
+        log(msg);
     }
     return startedBuilding;
 }
@@ -866,7 +866,7 @@ bool cPlayer::startBuildingSpecial(int iSpecialType) const {
             sprintf(msg, "Wanting to build special [%s] iSpecialType = [%d], with listId[%d] - FAILED",
                     specials[iSpecialType].description, iSpecialType, listId);
         }
-        logbook(msg);
+        log(msg);
     }
     return startedBuilding;
 }
@@ -884,7 +884,7 @@ bool cPlayer::startUpgrading(int iUpgradeType) const {
             sprintf(msg, "Wanting to start upgrade [%s] iUpgradeType = [%d], with listId[%d] - FAILED",
                     upgrades[iUpgradeType].description, iUpgradeType, listId);
         }
-        logbook(msg);
+        log(msg);
     }
     return startedBuilding;
 }
@@ -1033,17 +1033,15 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable) {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
     char msg[255];
-    sprintf(msg, "canBuildUnit: Wanting to build iUnitType = [%d(=%s)] for player [%d(=%s)]; allowed?...", iUnitType,
-            units[iUnitType].name, getId(), getHouseName().c_str());
-    logbook(msg);
+    sprintf(msg, "canBuildUnit: Wanting to build iUnitType = [%d(=%s)] allowed?...", iUnitType, units[iUnitType].name);
+    log(msg);
 
     // CHECK 1: Do we have the money?
     if (checkIfAffordable) {
         if (!hasEnoughCreditsForUnit(iUnitType)) {
             char msg[255];
-            sprintf(msg, "canBuildUnit: FALSE, because cost %d higher than credits %d", units[iUnitType].cost,
-                    getCredits());
-            logbook(msg);
+            sprintf(msg, "canBuildUnit: FALSE, because cost %d higher than credits %d", units[iUnitType].cost, getCredits());
+            log(msg);
             return eCantBuildReason::NOT_ENOUGH_MONEY; // NOPE
         }
     }
@@ -1052,7 +1050,7 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable) {
     if (isBuildingSomethingInSameListSubListAsUnitType(iUnitType)) {
         char msg[255];
         sprintf(msg, "canBuildUnit: FALSE, because already building unitType");
-        logbook(msg);
+        log(msg);
         return eCantBuildReason::ALREADY_BUILDING;
     }
 
@@ -1063,17 +1061,21 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable) {
         char msg[255];
         sprintf(msg, "canBuildUnit: FALSE, because we do not own the required structure type [%s] for this unit: [%s]",
                 structures[iStrucType].name, units[iUnitType].name);
-        logbook(msg);
+        log(msg);
         return eCantBuildReason::REQUIRES_STRUCTURE;
     }
 
     if (!canBuildUnitType(iUnitType)) {
         // not available to build (not in list)
         // assume it requires an upgrade?
+        char msg[255];
+        sprintf(msg, "canBuildUnit: REQUIRES_UPGRADE, because we can't find it in the expected list [%d] for this unit: [%s]",
+                units[iUnitType].listId, units[iUnitType].name);
+        log(msg);
         return eCantBuildReason::REQUIRES_UPGRADE;
     }
 
-    logbook("canBuildUnit: ALLOWED");
+    log("canBuildUnit: ALLOWED");
 
     return eCantBuildReason::NONE;
 }
@@ -1099,8 +1101,8 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack) {
 
         if (DEBUGGING) {
             char msg[255];
-            sprintf(msg, "AI %d (House %d) -> Visible = %d", getId(), getHouse(), isVisibleForPlayer);
-            logbook(msg);
+            sprintf(msg, "Visible = %d", isVisibleForPlayer);
+            log(msg);
         }
 
         // HACK HACK: the AI player does not need to discover an enemy player yet
@@ -1116,7 +1118,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack) {
     if (DEBUGGING) {
         char msg[255];
         sprintf(msg, "Targets %d", maxTargets);
-        logbook(msg);
+        log(msg);
     }
 
     return iTargets[rnd(maxTargets)];
@@ -1146,7 +1148,7 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer) {
     if (DEBUGGING) {
         char msg[255];
         sprintf(msg, "STR] Targets %d", iT);
-        logbook(msg);
+        log(msg);
     }
 
 
@@ -1154,20 +1156,26 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer) {
 }
 
 eCantBuildReason cPlayer::canBuildStructure(int iStructureType) {
+    char msg[255];
+    sprintf(msg, "canBuildStructure: Wanting to build iStructureType = [%d]", iStructureType);
+    log(msg);
+
+    assert(iStructureType > -1 && "Structure type must be > -1");
+    assert(iStructureType < MAX_STRUCTURETYPES && "Structure type must be < MAX_STRUCTURETYPES");
+
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
-    char msg[255];
-    s_Structures &structureType = structures[iStructureType];
-    sprintf(msg, "canBuildStructure: Wanting to build iStructureType = [%d(=%s)] for player [%d(=%s)]; allowed?...",
-            iStructureType, structureType.name, getId(), getHouseName().c_str());
-    logbook(msg);
+    const s_Structures &structureType = structures[iStructureType];
+    sprintf(msg, "canBuildStructure: Wanting to build iStructureType = [%d(=%s)], allowed?...",
+            iStructureType, structureType.name);
+    log(msg);
 
     // CHECK 1: Do we have the money?
     if (!hasEnoughCreditsForStructure(iStructureType)) {
         char msg[255];
-        sprintf(msg, "canBuildStructure: FALSE, because cost %d higher than credits %d", structureType.cost,
+        sprintf(msg, "canBuildStructure: FALSE, reason NOT_ENOUGH_MONEY: because cost %d > credits %d", structureType.cost,
                 getCredits());
-        logbook(msg);
+        log(msg);
         return eCantBuildReason::NOT_ENOUGH_MONEY; // NOPE
     }
 
@@ -1175,27 +1183,30 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType) {
     if (!hasAtleastOneStructure(CONSTYARD)) {
         char msg[255];
         sprintf(msg,
-                "canBuildStructure: FALSE, because we do not own the required structure type [%s] for this structure: [%s]",
+                "canBuildStructure: FALSE, reason REQUIRES_STRUCTURE: we do not own the required structure type [%s] for this structure: [%s]",
                 structures[CONSTYARD].name, structureType.name);
-        logbook(msg);
+        log(msg);
         return eCantBuildReason::REQUIRES_STRUCTURE;
     }
 
     // CHECK 2: Are we building another structure already?
     if (isBuildingStructure()) {
         char msg[255];
-        sprintf(msg, "canBuildStructure: FALSE, because already building (another) structure");
-        logbook(msg);
+        sprintf(msg, "canBuildStructure: FALSE, reason ALREADY_BUILDING");
+        log(msg);
         return eCantBuildReason::ALREADY_BUILDING;
     }
 
     if (!canBuildStructureType(iStructureType)) {
         // not available to build (not in list)
         // assume it requires an upgrade?
+        char msg[255];
+        sprintf(msg, "canBuildStructure: FALSE, reason REQUIRES_UPGRADE: because we can't find structure in list");
+        log(msg);
         return eCantBuildReason::REQUIRES_UPGRADE;
     }
 
-    logbook("canBuildStructure: ALLOWED");
+    log("canBuildStructure: ALLOWED");
 
     return eCantBuildReason::NONE;
 }
@@ -1291,14 +1302,10 @@ bool cPlayer::hasEnoughPowerFor(int structureType) const {
 }
 
 void cPlayer::logStructures() {
-    char title[255];
-    sprintf(title, "cPlayer::hasAtleastOneStructure for player [%d] / [%s]", getId(), getHouseName().c_str());
-    logbook(title);
-
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
         char msg[255];
         sprintf(msg, "[%s] amount [%d]", structures[i].name, iStructures[i]);
-        logbook(msg);
+        log(msg);
     }
 }
 
@@ -1413,4 +1420,12 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
     result.onlyMyUnitsBlock = (result.badTerrain == false && !foundUnitFromOtherPlayerThanMe && result.structureIds.empty());
 
     return result;
+}
+
+int cPlayer::log(const char *txt) const {
+    if (DEBUGGING) {
+        char msg[1024];
+        sprintf(msg, "PLAYER [%d(=%s)] : %s", getId(), getHouseName().c_str(), txt);
+        logbook(msg);
+    }
 }

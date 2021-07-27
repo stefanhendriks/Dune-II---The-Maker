@@ -7,7 +7,7 @@ namespace brains {
     cPlayerBrainMissionKindDeathHand::cPlayerBrainMissionKindDeathHand(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
         target = -1;
         itemToDeploy = nullptr;
-        logbook("cPlayerBrainMissionKindDeathHand() constructor");
+        player->log("cPlayerBrainMissionKindDeathHand() constructor");
     }
 
     cPlayerBrainMissionKindDeathHand::~cPlayerBrainMissionKindDeathHand() {
@@ -49,8 +49,8 @@ namespace brains {
 
     void cPlayerBrainMissionKindDeathHand::onNotify(const s_GameEvent &event) {
         char msg[255];
-        sprintf(msg, "cPlayerBrainMissionKindDeathHand::onNotify(), for player [%d] -> %s", player->getId(), event.toString(event.eventType));
-        logbook(msg);
+        sprintf(msg, "cPlayerBrainMissionKindDeathHand::onNotify() -> %s", event.toString(event.eventType));
+        player->log(msg);
 
         switch(event.eventType) {
             case eGameEventType::GAME_EVENT_SPECIAL_READY:

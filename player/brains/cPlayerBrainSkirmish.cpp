@@ -11,10 +11,8 @@ namespace brains {
 //         timer is substracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
 //         10*60 -> 1 minute. * 4 -> 4 minutes
 //        TIMER_rest = (10 * 60) * 4;
-        TIMER_rest = 100;
-        if (game.bNoAiRest) {
-            TIMER_rest = 10;
-        }
+        TIMER_rest = rnd(25); // todo: based on difficulty?
+        TIMER_ai = 0; // increased every 100 ms with 1. (ie 10 ticks is 1 second)
         myBase = std::vector<S_structurePosition>();
         buildOrders = std::vector<S_buildOrder>();
         discoveredEnemyAtCell = std::set<int>();
@@ -33,6 +31,7 @@ namespace brains {
      * Think function called every tick (handleTimerUnits, ~ 100 ms).
      */
     void cPlayerBrainSkirmish::think() {
+        TIMER_ai++;
         // for now use a switch statement for this state machine. If we need anything
         // more sophisticated we can always use the State Pattern.
         switch (thinkState) {
@@ -60,8 +59,8 @@ namespace brains {
 
         char msg[255];
         memset(msg, 0, sizeof(msg));
-        sprintf(msg, "cPlayerBrainSkirmish::think(), for player [%d] - FINISHED", player->getId());
-        logbook(msg);
+        sprintf(msg, "cPlayerBrainSkirmish::think() - FINISHED");
+        player->log(msg);
     }
 
     void cPlayerBrainSkirmish::addBuildOrder(S_buildOrder order) {
@@ -88,10 +87,8 @@ namespace brains {
         });
 
         char msg[255];
-        sprintf(msg,
-                "cPlayerBrainSkirmish::addBuildOrder() - player [%d / %s] results into the following build orders:",
-                player->getId(), player->getHouseName().c_str());
-        logbook(msg);
+        sprintf(msg, "cPlayerBrainSkirmish::addBuildOrder() - results into the following build orders:");
+        player->log(msg);
 
         int id = 0;
         for (auto &buildOrder : buildOrders) {
@@ -110,7 +107,7 @@ namespace brains {
                 sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=NOT YET IMPLEMENTED), priority = %d", id,
                         buildOrder.buildId, buildOrder.priority);
             }
-            logbook(msg);
+            player->log(msg);
 
             id++;
         }
@@ -175,9 +172,9 @@ namespace brains {
         if (!foundExistingStructureInBase) {
             char msg[255];
             sprintf(msg,
-                    "cPlayerBrainSkirmish::onNotify() - player [%d / %s] concluded to add structure %s to base register:",
-                    player->getId(), player->getHouseName().c_str(), pStructure->getS_StructuresType().name);
-            logbook(msg);
+                    "cPlayerBrainSkirmish::onNotify() - concluded to add structure %s to base register:",
+                    pStructure->getS_StructuresType().name);
+            player->log(msg);
 
             // new structure placed, update base register
             S_structurePosition position = {
@@ -234,8 +231,8 @@ namespace brains {
 
     void cPlayerBrainSkirmish::thinkState_Base() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::thinkState_ScanBase(), for player [%d]", player->getId());
-        logbook(msg);
+        sprintf(msg, "cPlayerBrainSkirmish::thinkState_ScanBase()");
+        player->log(msg);
 
         // structure placement is done in thinkState_ProcessBuildOrders() !
 
@@ -261,8 +258,8 @@ namespace brains {
 
     void cPlayerBrainSkirmish::thinkState_Missions() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::thinkState_Missions(), for player [%d]", player->getId());
-        logbook(msg);
+        sprintf(msg, "cPlayerBrainSkirmish::thinkState_Missions()");
+        player->log(msg);
 
         // delete any missions which are ended
         missions.erase(
@@ -442,31 +439,46 @@ namespace brains {
 
                 addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_ATTACK, group, rnd(15), MISSION_ATTACK1);
             }
-            if (!hasMission(MISSION_ATTACK2)) {
-                // TODO: depending on upgrades available; create appropriate army, for now depend on non-upgradable things
-                if (player->hasAtleastOneStructure(HEAVYFACTORY)) {
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::UNIT,
-                            type : SIEGETANK,
-                            required: rnd(2),
-                            ordered: 0,
-                            produced: 0,
-                    });
 
+            if (!hasMission(MISSION_ATTACK2)) {
+
+                if (player->hasAtleastOneStructure(HEAVYFACTORY)) {
+                    if (player->canBuildUnitType(SIEGETANK) && rnd(100) < 33) {
+                        group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
+                                type : SIEGETANK,
+                                required: rnd(3),
+                                ordered: 0,
+                                produced: 0,
+                        });
+                    }
+
+                    if (player->canBuildUnitType(LAUNCHER) && rnd(100) < 33) {
+                        group.push_back((S_groupKind) {
+                                buildType: eBuildType::UNIT,
+                                type : LAUNCHER,
+                                required: rnd(3),
+                                ordered: 0,
+                                produced: 0,
+                        });
+                    }
+                }
+
+                if (player->canBuildUnitType(trikeKind) && rnd(100) < 33) {
                     group.push_back((S_groupKind) {
                             buildType: eBuildType::UNIT,
-                            type : LAUNCHER,
+                            type : trikeKind,
                             required: rnd(2),
                             ordered: 0,
                             produced: 0,
                     });
                 }
 
-                if (player->hasAtleastOneStructure(LIGHTFACTORY)) {
+                if (player->canBuildUnitType(QUAD) && rnd(100) < 33) {
                     group.push_back((S_groupKind) {
                             buildType: eBuildType::UNIT,
-                            type : trikeKind,
-                            required: rnd(2),
+                            type : QUAD,
+                            required: rnd(3),
                             ordered: 0,
                             produced: 0,
                     });
@@ -495,9 +507,9 @@ namespace brains {
 
     void cPlayerBrainSkirmish::thinkState_Evaluate() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::thinkState_Evaluate(), for player [%d], credits [%d], COUNT_badEconomy [%d], economyState [%s]", player->getId(), player->getCredits(), COUNT_badEconomy,
+        sprintf(msg, "cPlayerBrainSkirmish::thinkState_Evaluate() : credits [%d], COUNT_badEconomy [%d], economyState [%s]", player->getCredits(), COUNT_badEconomy,
                 ePlayerBrainSkirmishEconomyStateString(economyState));
-        logbook(msg);
+        player->log(msg);
 
         if (player->getAmountOfStructuresForType(CONSTYARD) == 0) {
             // no constyards, endgame
@@ -559,8 +571,8 @@ namespace brains {
 
     void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::thinkState_ProcessBuildOrders(), for player [%d]", player->getId());
-        logbook(msg);
+        sprintf(msg, "cPlayerBrainSkirmish::thinkState_ProcessBuildOrders()");
+        player->log(msg);
 
         // check if we can find a similar build order
         for (auto &buildOrder : buildOrders) {
@@ -723,19 +735,19 @@ namespace brains {
 
     void cPlayerBrainSkirmish::changeThinkStateTo(const ePlayerBrainSkirmishThinkState& newState) {
         char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::changeThinkStateTo(), for player [%d] - from %s to %s", player->getId(),
+        sprintf(msg, "cPlayerBrainSkirmish::changeThinkStateTo(), from %s to %s",
                 ePlayerBrainSkirmishThinkStateString(thinkState),
                 ePlayerBrainSkirmishThinkStateString(newState));
-        logbook(msg);
+        player->log(msg);
         this->thinkState = newState;
     }
 
     void cPlayerBrainSkirmish::changeEconomyStateTo(const ePlayerBrainSkirmishEconomyState &newState) {
         char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::changeEconomyStateTo(), for player [%d] - from %s to %s", player->getId(),
+        sprintf(msg, "cPlayerBrainSkirmish::changeEconomyStateTo(), from %s to %s",
                 ePlayerBrainSkirmishEconomyStateString(economyState),
                 ePlayerBrainSkirmishEconomyStateString(newState));
-        logbook(msg);
+        player->log(msg);
         this->economyState = newState;
     }
 
@@ -743,8 +755,8 @@ namespace brains {
         if (TIMER_rest > 0) {
             TIMER_rest--;
             char msg[255];
-            sprintf(msg, "cPlayerBrainSkirmish::thinkState_Rest(), for player [%d] - rest %d", player->getId(), TIMER_rest);
-            logbook(msg);
+            sprintf(msg, "cPlayerBrainSkirmish::thinkState_Rest(), rest %d", TIMER_rest);
+            player->log(msg);
             return;
         }
 
@@ -905,6 +917,14 @@ namespace brains {
         // don't build anything else for now
         if (economyState == PLAYERBRAIN_ECONOMY_STATE_BAD) {
             return -1;
+        }
+
+        if (TIMER_ai > MOMENT_CONSIDER_ADDITIONAL_REFINERY) {
+            // time to think about an additional refinery
+            if (rnd(100) < 33 && player->getAmountOfStructuresForType(REFINERY) < 3) {
+                // build one
+                return REFINERY;
+            }
         }
 
         if (player->hasAlmostReachMaxSpiceStorageCapacity()) {
