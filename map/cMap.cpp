@@ -940,15 +940,17 @@ bool cMap::isValidTerrainForStructureAtCell(int cll) {
 
 /**
  * returns a (randomized) cell. Taking cell param as 'start' position and 'distance' the amount of cells you want to
- * move away.
+ * move away. This function will not chose a random position between cell and position. Hence, the amount of cells
+ * to move is guaranteed to be so many cells away.
  * @param cell
  * @param distance
  */
 int cMap::getRandomCellFrom(int cell, int distance) {
-    int totalDistance = (distance * 2) + 1;
     int startX = getCellX(cell);
     int startY = getCellY(cell);
-    int newX = (startX - distance) + rnd(totalDistance);
-    int newY = (startY - distance) + rnd(totalDistance);
+    int xDir = rnd(100) < 50 ? -1 : 1;
+    int yDir = rnd(100) < 50 ? -1 : 1;
+    int newX = (startX - distance) + (xDir * distance);
+    int newY = (startY - distance) + (yDir * distance);
     return getCellWithMapBorders(newX, newY);
 }
