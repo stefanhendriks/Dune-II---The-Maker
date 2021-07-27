@@ -55,8 +55,8 @@ namespace brains {
 
         char msg[255];
         memset(msg, 0, sizeof(msg));
-        sprintf(msg, "cPlayerBrainCampaign::think(), for player [%d] - FINISHED", player->getId());
-        logbook(msg);
+        sprintf(msg, "cPlayerBrainCampaign::think() - FINISHED");
+        player->log(msg);
     }
 
     void cPlayerBrainCampaign::addBuildOrder(S_buildOrder order) {
@@ -82,9 +82,8 @@ namespace brains {
 
         char msg[255];
         sprintf(msg,
-                "cPlayerBrainCampaign::addBuildOrder() - player [%d / %s] results into the following build orders:",
-                player->getId(), player->getHouseName().c_str());
-        logbook(msg);
+                "cPlayerBrainCampaign::addBuildOrder() - results into the following build orders:");
+        player->log(msg);
 
         int id = 0;
         for (auto &buildOrder : buildOrders) {
@@ -103,7 +102,7 @@ namespace brains {
                 sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=NOT YET IMPLEMENTED), priority = %d", id,
                         buildOrder.buildId, buildOrder.priority);
             }
-            logbook(msg);
+            player->log(msg);
 
             id++;
         }
@@ -162,9 +161,9 @@ namespace brains {
         if (!foundExistingStructureInBase) {
             char msg[255];
             sprintf(msg,
-                    "cPlayerBrainCampaign::onNotify() - player [%d / %s] concluded to add structure %s to base register:",
-                    player->getId(), player->getHouseName().c_str(), pStructure->getS_StructuresType().name);
-            logbook(msg);
+                    "cPlayerBrainCampaign::onNotify() - concluded to add structure %s to base register:",
+                    pStructure->getS_StructuresType().name);
+            player->log(msg);
 
             // new structure placed, update base register
             S_structurePosition position = {
@@ -221,8 +220,8 @@ namespace brains {
 
     void cPlayerBrainCampaign::thinkState_ScanBase() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainCampaign::thinkState_ScanBase(), for player [%d]", player->getId());
-        logbook(msg);
+        sprintf(msg, "cPlayerBrainCampaign::thinkState_ScanBase()");
+        player->log(msg);
 
         // reset timer (for the next time we end up here)
         changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_MISSIONS);
@@ -230,8 +229,8 @@ namespace brains {
 
     void cPlayerBrainCampaign::thinkState_Missions() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainCampaign::thinkState_Missions(), for player [%d]", player->getId());
-        logbook(msg);
+        sprintf(msg, "cPlayerBrainCampaign::thinkState_Missions()");
+        player->log(msg);
 
         // delete any missions which are ended
         missions.erase(
@@ -1573,8 +1572,8 @@ namespace brains {
 
     void cPlayerBrainCampaign::thinkState_Evaluate() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainCampaign::thinkState_Evaluate(), for player [%d]", player->getId());
-        logbook(msg);
+        sprintf(msg, "cPlayerBrainCampaign::thinkState_Evaluate()");
+        player->log(msg);
 
         if (player->getAmountOfStructuresForType(CONSTYARD) == 0) {
             // no constyards, endgame
@@ -1600,8 +1599,8 @@ namespace brains {
 
     void cPlayerBrainCampaign::thinkState_ProcessBuildOrders() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainCampaign::thinkState_ProcessBuildOrders(), for player [%d]", player->getId());
-        logbook(msg);
+        sprintf(msg, "cPlayerBrainCampaign::thinkState_ProcessBuildOrders()");
+        player->log(msg);
 
         // check if we can find a similar build order
         for (auto &buildOrder : buildOrders) {
@@ -1660,10 +1659,10 @@ namespace brains {
 
     void cPlayerBrainCampaign::changeThinkStateTo(const ePlayerBrainCampaignThinkState& newState) {
         char msg[255];
-        sprintf(msg, "cPlayerBrainCampaign::changeThinkStateTo(), for player [%d] - from %s to %s", player->getId(),
+        sprintf(msg, "cPlayerBrainCampaign::changeThinkStateTo(), from %s to %s",
                 ePlayerBrainCampaignThinkStateString(thinkState),
                 ePlayerBrainCampaignThinkStateString(newState));
-        logbook(msg);
+        player->log(msg);
         this->thinkState = newState;
     }
 
@@ -1671,8 +1670,8 @@ namespace brains {
         if (TIMER_rest > 0) {
             TIMER_rest--;
             char msg[255];
-            sprintf(msg, "cPlayerBrainCampaign::thinkState_Rest(), for player [%d] - rest %d", player->getId(), TIMER_rest);
-            logbook(msg);
+            sprintf(msg, "cPlayerBrainCampaign::thinkState_Rest(), rest %d", TIMER_rest);
+            player->log(msg);
             return;
         }
 

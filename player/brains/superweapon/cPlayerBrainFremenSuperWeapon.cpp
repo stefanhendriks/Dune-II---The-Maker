@@ -69,9 +69,9 @@ namespace brains {
         }
 
         memset(msg, 0, sizeof(msg));
-        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() AI[%d] - unitIdToAttack = %d, structureIdToAttack = %d.",
-                player->getId(), unitIdToAttack, structureIdToAttack);
-        logbook(msg);
+        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() - unitIdToAttack = %d, structureIdToAttack = %d.",
+                unitIdToAttack, structureIdToAttack);
+        player->log(msg);
 
         // order units to attack!
         for (auto &id : ids) {
@@ -87,8 +87,8 @@ namespace brains {
         }
 
         memset(msg, 0, sizeof(msg));
-        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think(), for player [%d] - FINISHED", player->getId());
-        logbook(msg);
+        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() - FINISHED");
+        player->log(msg);
     }
 
     void cPlayerBrainFremenSuperWeapon::onNotify(const s_GameEvent &event) {

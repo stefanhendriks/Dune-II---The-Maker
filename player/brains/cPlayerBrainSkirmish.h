@@ -18,6 +18,8 @@ namespace brains {
     const int MISSION_ATTACK2 = 92;
     const int MISSION_ATTACK3 = 91;
 
+    const int MOMENT_CONSIDER_ADDITIONAL_REFINERY = 1200; // after 2 minutes consider building 2nd refinery
+
     struct s_SkirmishPlayer_PlaceForStructure {
         int structureType;
         int cell;
@@ -49,6 +51,8 @@ namespace brains {
         int COUNT_badEconomy;
 
         int TIMER_rest;
+
+        int TIMER_ai;
 
         // at which cells did we detect an enemy? Remember those.
         std::set<int> discoveredEnemyAtCell;

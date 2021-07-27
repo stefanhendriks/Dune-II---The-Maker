@@ -6,7 +6,7 @@ namespace brains {
 
     cPlayerBrainMissionKindSaboteur::cPlayerBrainMissionKindSaboteur(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
         targetStructureID = -1;
-        logbook("cPlayerBrainMissionKindSaboteur() constructor");
+        player->log("cPlayerBrainMissionKindSaboteur() constructor");
     }
 
     cPlayerBrainMissionKindSaboteur::~cPlayerBrainMissionKindSaboteur() {
@@ -44,7 +44,7 @@ namespace brains {
             for (auto &myUnit : units) {
                 cUnit &aUnit = unit[myUnit];
                 if (aUnit.isValid() && aUnit.isIdle()) {
-                    logbook("cPlayerBrainMission::thinkState_Execute(): Ordering unit to attack!");
+                    player->log("cPlayerBrainMission::thinkState_Execute(): Ordering unit to attack!");
                     UNIT_ORDER_ATTACK(myUnit, pStructure->getCell(), -1, targetStructureID, -1);
                 }
             }
@@ -53,8 +53,8 @@ namespace brains {
 
     void cPlayerBrainMissionKindSaboteur::onNotify(const s_GameEvent &event) {
         char msg[255];
-        sprintf(msg, "cPlayerBrainMissionKindSaboteur::onNotify(), for player [%d] -> %s", player->getId(), event.toString(event.eventType));
-        logbook(msg);
+        sprintf(msg, "cPlayerBrainMissionKindSaboteur::onNotify() -> %s", event.toString(event.eventType));
+        player->log(msg);
 
         switch(event.eventType) {
             case GAME_EVENT_DESTROYED:
