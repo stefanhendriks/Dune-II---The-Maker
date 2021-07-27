@@ -58,7 +58,7 @@ struct s_GameEvent {
         char msg[255];
         sprintf(msg, "cGameEvent [type=%s], [entityType=%s], [entityId=%d], [entitySpecificType=%d =%s], [isReinforce=%s], [atCell=%d], [buildingListItem=%s]",
                 toString(event.eventType),
-                toStringBuildType(event.entityType),
+                eBuildTypeString(event.entityType),
                 event.entityID,
                 event.entitySpecificType,
                 toStringBuildTypeSpecificType(event.entityType, event.entitySpecificType),
