@@ -938,7 +938,8 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
 
         // check: from top left to top right
         for (int sx = topLeftX; sx < iEndX; sx++) {
-            int cell = map.makeCell(sx, topLeftY);
+            int cell = map.getCellWithMapBorders(sx, topLeftY);
+            if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
             bool canPlaceStructureAt = result.success || result.onlyMyUnitsBlock;
@@ -951,7 +952,8 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
         int bottomLeftY = iEndY;
         // check: from bottom left to bottom right
         for (int sx = bottomLeftX; sx < iEndX; sx++) {
-            int cell = map.makeCell(sx, bottomLeftY);
+            int cell = map.getCellWithMapBorders(sx, bottomLeftY);
+            if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
             bool canPlaceStructureAt = result.success || result.onlyMyUnitsBlock;
@@ -964,7 +966,8 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
         int justLeftX = topLeftX;
         int justLeftY = iStartY - (iHeight - 1);
         for (int sy = justLeftY; sy < iEndY; sy++) {
-            int cell = map.makeCell(justLeftX, sy);
+            int cell = map.getCellWithMapBorders(justLeftX, sy);
+            if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
             bool canPlaceStructureAt = result.success || result.onlyMyUnitsBlock;
@@ -977,7 +980,8 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
         int justRightX = iEndX;
         int justRightY = iStartY - (iHeight - 1);
         for (int sy = justRightY; sy < iEndY; sy++) {
-            int cell = map.makeCell(justRightX, sy);
+            int cell = map.getCellWithMapBorders(justRightX, sy);
+            if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
             bool canPlaceStructureAt = result.success || result.onlyMyUnitsBlock;
