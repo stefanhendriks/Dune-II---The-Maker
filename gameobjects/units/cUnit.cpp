@@ -726,8 +726,9 @@ void cUnit::move_to(int iCll, int iStrucID, int iUnitID) {
 }
 
 void cUnit::move_to(int iCll, int iStrucID, int iUnitID, eUnitActionIntent intent) {
-    log("ORDERED TO MOVE");
-
+    char msg[255];
+    sprintf(msg, "(move_to - START) : to cell [%d], iStrucID[%d], unitId[%d] (to attack, if > -1), intent[%s]", iCll, iStrucID, iUnitID, eUnitActionIntentString(intent));
+    log(msg);
     iGoalCell = iCll;
     iStructureID = iStrucID;
     this->iUnitID = iUnitID;
@@ -750,10 +751,7 @@ void cUnit::move_to(int iCll, int iStrucID, int iUnitID, eUnitActionIntent inten
             structure[iStrucID]->iUnitID = iUnitID;
         }
     }
-
-    char msg[255];
-    sprintf(msg, "%s", units[iType].name);
-    log(msg);
+    log("(move_to - FINISHED)");
 }
 
 
