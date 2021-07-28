@@ -726,10 +726,10 @@ int cMap::getAbsoluteYPositionFromCellCentered(int cell) {
 }
 
 int cMap::makeCell(int x, int y) {
-    assert(x > -1);
-    assert(x < width); // should never be higher!
-    assert(y > -1);
-    assert(y < height);
+    assert(x > -1 && "makeCell x must be > -1");
+    assert(x < width && "makeCell x must be < width"); // should never be higher!
+    assert(y > -1 && "makeCell y must be > -1");
+    assert(y < height && "makeCell y must be < height");
 
     // create cell
     int cell = getCellWithMapDimensions(x, y);
