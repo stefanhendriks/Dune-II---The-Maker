@@ -243,9 +243,9 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                                                     distanceBetweenCellAndCenterOfScreen(iCell));
 
                     // calculate cell and damage stuff around this
-                    int cll = map.makeCell((iCellX - 1) + cx, (iCellY - 1) + cy);
+                    int cll = map.getCellWithMapBorders((iCellX - 1) + cx, (iCellY - 1) + cy);
 
-                    if (cll == iCell)
+                    if (cll < 0 || cll == iCell)
                         continue; // do not do own cell
 
                     if (map.getCellType(cll) == TERRAIN_WALL) {
