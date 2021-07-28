@@ -236,19 +236,22 @@ namespace brains {
 
         // structure placement is done in thinkState_ProcessBuildOrders() !
 
-        if (!player->isBuildingStructure() && !player->isBuildingStructureAwaitingPlacement() && !hasBuildOrderQueuedForStructure()) {
-            // think about what structure to build AND where to place it
-            const s_SkirmishPlayer_PlaceForStructure &result = thinkAboutNextStructureToBuildAndPlace();
-            // add it to the build queue
+        if (player->hasAtleastOneStructure(CONSTYARD)) {
+            if (!player->isBuildingStructure() && !player->isBuildingStructureAwaitingPlacement() &&
+                !hasBuildOrderQueuedForStructure()) {
+                // think about what structure to build AND where to place it
+                const s_SkirmishPlayer_PlaceForStructure &result = thinkAboutNextStructureToBuildAndPlace();
+                // add it to the build queue
 
-            if (result.structureType > -1 && result.cell > -1) {
-                addBuildOrder((S_buildOrder) {
-                        buildType : STRUCTURE,
-                        priority : 1,
-                        buildId : result.structureType,
-                        placeAt : result.cell,
-                        state : buildOrder::PROCESSME,
-                });
+                if (result.structureType > -1 && result.cell > -1) {
+                    addBuildOrder((S_buildOrder) {
+                            buildType : STRUCTURE,
+                            priority : 1,
+                            buildId : result.structureType,
+                            placeAt : result.cell,
+                            state : buildOrder::PROCESSME,
+                    });
+                }
             }
         }
 

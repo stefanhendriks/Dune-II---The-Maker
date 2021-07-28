@@ -1446,7 +1446,7 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
     return result;
 }
 
-int cPlayer::log(const char *txt) const {
+void cPlayer::log(const char *txt) const {
     if (DEBUGGING) {
         char msg[1024];
         sprintf(msg, "PLAYER [%d(=%s)] : %s", getId(), getHouseName().c_str(), txt);

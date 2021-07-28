@@ -1329,9 +1329,7 @@ bool cGame::setupGame() {
 
 	logbook("MOUSE: Mouse speed set");
 
-	logbook("\n----");
-	logbook("GAME ");
-	logbook("----");
+    logger->logHeader("GAME");
 
 	/*** Data files ***/
 
@@ -1386,7 +1384,7 @@ bool cGame::setupGame() {
 
 	game.bPlaying = true;
 	game.screenshot = 0;
-	game.state = -1;
+	game.state = GAME_INITIALIZE;
 
 	// Mouse stuff
 	mouse_tile = 0;
@@ -1476,7 +1474,7 @@ bool cGame::isState(int thisState) {
 
 void cGame::setState(int newState) {
     char msg[255];
-    sprintf(msg, "Setting state from %d to %d", state, newState);
+    sprintf(msg, "Setting state from %d(=%s) to %d(=%s)", state, stateString(state), newState, stateString(newState));
     logbook(msg);
 
     if (gameState != nullptr) {
