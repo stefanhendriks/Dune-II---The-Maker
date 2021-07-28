@@ -8,7 +8,7 @@ cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer) {
 }
 
 void cBuildingListUpdater::onStructureCreated(int structureType) {
-    logbook("onStructureCreated - begin");
+    player->log("onStructureCreated - begin");
 
     if (player->isHuman()) {
         // always strict (skirmish) mode. Which means, do not cheat...
@@ -29,7 +29,7 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
     }
 
     // do something
-    logbook("onStructureCreated - end");
+    player->log("onStructureCreated - end");
 }
 
 void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) const {
@@ -197,27 +197,27 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
     if (structureType == CONSTYARD) {
         // add items
         listConstYard->addStructureToList(SLAB1, 0);
-        logbook("onStructureCreated - added SLAB1 to list");
+        player->log("onStructureCreated - added SLAB1 to list");
 
         if (techLevel >= 2) {
             if (house == ATREIDES || house == ORDOS) {
                 listConstYard->addStructureToList(BARRACKS, 0);
-                logbook("onStructureCreated - added BARRACKS to list");
+                player->log("onStructureCreated - added BARRACKS to list");
             }
             if (house == HARKONNEN) {
                 listConstYard->addStructureToList(WOR, 0);
-                logbook("onStructureCreated - added WOR to list");
+                player->log("onStructureCreated - added WOR to list");
             }
         }
 
         if (techLevel >= 4) {
             //list->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4])); // only available after upgrading
             listConstYard->addStructureToList(WALL, 0);
-            logbook("onStructureCreated - added WALL to list");
+            player->log("onStructureCreated - added WALL to list");
         }
 
         listConstYard->addStructureToList(WINDTRAP, 0);
-        logbook("onStructureCreated - added WINDTRAP to list");
+        player->log("onStructureCreated - added WINDTRAP to list");
     }
 
     if (structureType == WINDTRAP) {
@@ -376,9 +376,13 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
     }
 }
 
-// structure destroyed..
+/**
+ * A structure of *structureType* got destroyed...
+ *
+ * @param structureType
+ */
 void cBuildingListUpdater::onStructureDestroyed(int structureType) {
-    logbook("onStructureDestroyed - begin");
+    player->log("onStructureDestroyed - begin");
 
     // activate/deactivate any lists if needed
     cSideBar *sideBar = player->getSideBar();
@@ -418,12 +422,12 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
         }
     }
 
-    logbook("onStructureDestroyed - end");
+    player->log("onStructureDestroyed - end");
 }
 
 
 void cBuildingListUpdater::evaluateUpgrades() {
-    logbook("evaluateUpgrades - start");
+    player->log("evaluateUpgrades - start");
     cSideBar *sideBar = player->getSideBar();
     cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
 
@@ -438,7 +442,7 @@ void cBuildingListUpdater::evaluateUpgrades() {
             // house specific upgrade, player house does not match
             char msg[255];
             sprintf(msg, "Upgrade [%s] has not same house.", upgrade.description);
-            logbook(msg);
+            player->log(msg);
             continue;
         }
 
@@ -450,7 +454,7 @@ void cBuildingListUpdater::evaluateUpgrades() {
             addToUpgradesList = false;
             char msg[255];
             sprintf(msg, "Upgrade [%s] has not required structureType (upgrade.structureType) #1 [%s].", upgrade.description, structures[upgrade.structureType].name);
-            logbook(msg);
+            player->log(msg);
         }
 
         // check if player has the additional structure (if required)
@@ -460,7 +464,7 @@ void cBuildingListUpdater::evaluateUpgrades() {
                 addToUpgradesList = false;
                 char msg[255];
                 sprintf(msg, "Upgrade [%s] has not required additional structureType (upgrade.needsStructureType) [%s].", upgrade.description, structures[upgrade.needsStructureType].name);
-                logbook(msg);
+                player->log(msg);
             }
         }
 
@@ -474,12 +478,12 @@ void cBuildingListUpdater::evaluateUpgrades() {
                 applyUpgrade(upgrade);
                 char msg[255];
                 sprintf(msg, "Upgrade [%s] has already been achieved, so re-apply. StructureUpgradeLevel=%d and upgrade.atUpgradeLevel=%d.", upgrade.description, structureUpgradeLevel, upgrade.atUpgradeLevel);
-                logbook(msg);
+                player->log(msg);
             }
             addToUpgradesList = false;
             char msg[255];
             sprintf(msg, "Upgrade [%s] will not be offered because it has a different atUpgradeLevel. StructureUpgradeLevel=%d and upgrade.atUpgradeLevel=%d not required additional structureType (upgrade.needsStructureType).", upgrade.description, structureUpgradeLevel, upgrade.atUpgradeLevel);
-            logbook(msg);
+            player->log(msg);
         }
 
         if (addToUpgradesList) {
@@ -508,7 +512,7 @@ void cBuildingListUpdater::evaluateUpgrades() {
         }
     }
 
-    logbook("evaluateUpgrades - end");
+    player->log("evaluateUpgrades - end");
 }
 
 /**
@@ -517,8 +521,8 @@ void cBuildingListUpdater::evaluateUpgrades() {
 void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item) {
 	assert(item);
     if (!item->isTypeUpgrade()) {
-        logbook("ERROR ERROR ERROR! -> the provided item is NOT an upgrade type!");
-        assert(false);
+        player->log("ERROR ERROR ERROR! -> the provided item is NOT an upgrade type!");
+        assert(false && "the provided item is NOT an upgrade type!");
         return;
     }
 
@@ -570,7 +574,7 @@ void cBuildingListUpdater::applyUpgrade(const s_Upgrade &upgradeType) {
  */
 void cBuildingListUpdater::onUpgradeStarted(cBuildingListItem *pItem) {
     assert(pItem);
-    assert(pItem->isTypeUpgrade());
+    assert(pItem->isTypeUpgrade() && "Expected type upgrade");
     cSideBar *sideBar = player->getSideBar();
 
     // get the structure type it is upgrading
@@ -588,9 +592,9 @@ void cBuildingListUpdater::onUpgradeStarted(cBuildingListItem *pItem) {
  * @param pItem
  */
 void cBuildingListUpdater::onUpgradeCancelled(cBuildingListItem *pItem) {
-    cLogger::getInstance()->logCommentLine("onUpgradeCancelled - start");
+    player->log("onUpgradeCancelled - start");
     assert(pItem);
-    assert(pItem->isTypeUpgrade());
+    assert(pItem->isTypeUpgrade() && "Expected type Upgrade for onUpgradeCancelled");
 
     cSideBar *sideBar = player->getSideBar();
 
@@ -602,11 +606,11 @@ void cBuildingListUpdater::onUpgradeCancelled(cBuildingListItem *pItem) {
     cBuildingList *listBeingUpgraded = sideBar->getList(listType);
     listBeingUpgraded->setStatusAvailable(subListType);
 
-    cLogger::getInstance()->logCommentLine("onUpgradeCancelled - end");
+    player->log("onUpgradeCancelled - end");
 }
 
 void cBuildingListUpdater::onBuildItemCancelled(cBuildingListItem *pItem) {
-    cLogger::getInstance()->logCommentLine("onBuildItemCancelled - start");
+    player->log("onBuildItemCancelled - start");
     if (pItem == nullptr) return;
     if (pItem->isTypeUpgrade()) {
         onUpgradeCancelled(pItem);
@@ -618,7 +622,7 @@ void cBuildingListUpdater::onBuildItemCancelled(cBuildingListItem *pItem) {
     cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
     listUpgrades->setStatusAvailable(pItem->getSubList());
 
-    cLogger::getInstance()->logCommentLine("onBuildItemCancelled - end");
+    player->log("onBuildItemCancelled - end");
 }
 
 /**
@@ -651,7 +655,7 @@ void cBuildingListUpdater::onBuildItemCompleted(cBuildingListItem *pItem) {
     if (pItem == nullptr) return;
     if (pItem->isTypeUpgrade()) {
         // do nothing, this is normally called via OnUpgradeCompleted, see method above.
-        logbook("Wrongfully called onBuildItemCompleted when OnUpgradeCompleted was expected.");
+        player->log("Wrongfully called onBuildItemCompleted when OnUpgradeCompleted was expected.");
         return;
     }
 

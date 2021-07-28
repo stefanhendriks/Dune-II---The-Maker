@@ -311,7 +311,7 @@ public:
     s_PlaceResult canPlaceStructureAt(int iCell, int iStructureType, int iUnitIDToIgnore);
     s_PlaceResult canPlaceStructureAt(int iCell, int iStructureType);
 
-    log(const char *txt) const;
+    void log(const char *txt) const;
 
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;

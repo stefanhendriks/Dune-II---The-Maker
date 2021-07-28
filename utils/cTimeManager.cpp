@@ -20,14 +20,18 @@ cTimeManager::cTimeManager() {
 void cTimeManager::capTimers() {
     if (timerUnits > 10) {
         if (DEBUGGING) {
-            logbook("WARNING: Exeptional high timer; capped");
+            char msg[255];
+            sprintf(msg, "WARNING: Exeptional high unit timer (%d); capped at 10", timerUnits);
+            logbook(msg);
             timerUnits = 10;
         }
     }
 
     if (timerGlobal > 40) {
         if (DEBUGGING) {
-            logbook("WARNING: Exeptional high timer; capped");
+            char msg[255];
+            sprintf(msg, "WARNING: Exeptional high global timer (%d); capped at 40", timerGlobal);
+            logbook(msg);
             timerGlobal = 40;
         }
     }
@@ -35,7 +39,9 @@ void cTimeManager::capTimers() {
     /* Taking 10 seconds to render a frame? i hope not **/
     if (timerSecond > 10) {
         if (DEBUGGING) {
-            logbook("WARNING: Exeptional high timer; capped");
+            char msg[255];
+            sprintf(msg, "WARNING: Exeptional high timer second (%d); capped at 40", timerSecond);
+            logbook(msg);
             timerSecond = 10;
         }
     }
