@@ -1323,7 +1323,7 @@ void cUnit::think_move_air() {
 
     // same cell (no goal specified or something)
     if (iNextCell == iCell) {
-        bool isWithinMapBoundaries = BORDER_POS(iCellX, iCellY);
+        bool isWithinMapBoundaries = map.isWithinBoundaries(iCellX, iCellY);
 
         // reinforcement stuff happens here...
         if (iTransferType == TRANSFER_DIE) {
@@ -1763,8 +1763,6 @@ int cUnit::getNextCellToMoveTo() {
 
     if (iPathIndex < 0) {
         if (iNextCell < 0) {
-//            iOffsetX = 0;
-//            iOffsetY = 0;
             log("No pathindex & no nextcell, resetting unit");
             return iCell; // same as our location
         }
@@ -1774,8 +1772,6 @@ int cUnit::getNextCellToMoveTo() {
 
     // not valid OR same location
     if (iPath[iPathIndex] < 0) {
-//        iOffsetX = 0;
-//        iOffsetY = 0;
         log("No valid iPATH[pathindex]");
         return iCell; // same as our location
     }
@@ -2477,7 +2473,8 @@ void cUnit::think_move() {
                 forgetAboutCurrentPathAndPrepareToCreateNewOne();
             }
         } else {
-            // all other cases
+            // all other cases (ie terrain blocking, etc)
+            forgetAboutCurrentPathAndPrepareToCreateNewOne();
         }
         return;
     }
@@ -3630,7 +3627,7 @@ int UNIT_find_harvest_spot(int id) {
             int dy = map.getCellY(i);
 
             // skip bordered ones
-            if (BORDER_POS(dx, dy) == false)
+            if (map.isWithinBoundaries(dx, dy) == false)
                 continue;
 
             /*

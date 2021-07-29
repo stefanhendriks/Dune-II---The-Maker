@@ -46,10 +46,6 @@ void logbook(const char *txt) {
  * @param y
  * @return
  */
-// determine if this cell is not out of boundries
-bool BORDER_POS(int x, int y) {
-    return map.isWithinBoundaries(x, y);
-}
 
 /**
  * Returns value within MIN/MAX provided
