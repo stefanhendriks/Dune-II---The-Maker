@@ -2900,6 +2900,25 @@ int cUnit::getType() const {
     return iType;
 }
 
+/**
+ * Returns true when a unit is surrounded by things that cant move, ie structures or terrain.
+ * @return
+ */
+bool cUnit::isUnableToMove() {
+    if (map.occupied(CELL_LEFT(iCell), iID) &&
+        map.occupied(CELL_RIGHT(iCell), iID) &&
+        map.occupied(CELL_ABOVE(iCell), iID) &&
+        map.occupied(CELL_UNDER(iCell), iID) &&
+        map.occupied(CELL_L_LEFT(iCell), iID) &&
+        map.occupied(CELL_L_RIGHT(iCell), iID) &&
+        map.occupied(CELL_U_RIGHT(iCell), iID) &&
+        map.occupied(CELL_U_LEFT(iCell), iID)) {
+        return true;
+    }
+
+    return false;
+}
+
 
 // return new valid ID
 int UNIT_NEW() {
