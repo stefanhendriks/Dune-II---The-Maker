@@ -1627,8 +1627,9 @@ int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, i
 
     // play sound (when we have one)
     s_Bullet &sBullet = bullets[type];
-    if (sBullet.sound > -1)
+    if (sBullet.sound > -1) {
         play_sound_id_with_distance(sBullet.sound, distanceBetweenCellAndCenterOfScreen(fromCell));
+    }
 
     return new_id;
 }

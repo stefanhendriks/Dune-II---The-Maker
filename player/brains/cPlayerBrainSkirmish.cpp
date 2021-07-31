@@ -94,18 +94,18 @@ namespace brains {
         for (auto &buildOrder : buildOrders) {
             memset(msg, 0, sizeof(msg));
             if (buildOrder.buildType == eBuildType::UNIT) {
-                sprintf(msg, "[%d] - type = UNIT, buildId = %d (=%s), priority = %d", id, buildOrder.buildId,
-                        units[buildOrder.buildId].name, buildOrder.priority);
+                sprintf(msg, "[%d] - type = UNIT, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
+                        units[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::STRUCTURE) {
-                sprintf(msg, "[%d] - type = STRUCTURE, buildId = %d (=%s), priority = %d, place at %d", id,
+                sprintf(msg, "[%d] - type = STRUCTURE, buildId = %d (=%s), priority = %d, place at %d, state = %s", id,
                         buildOrder.buildId, structures[buildOrder.buildId].name, buildOrder.priority,
-                        buildOrder.placeAt);
+                        buildOrder.placeAt, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::SPECIAL) {
-                sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=%s), priority = %d", id, buildOrder.buildId,
-                        specials[buildOrder.buildId].description, buildOrder.priority);
+                sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
+                        specials[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::BULLET) {
-                sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=NOT YET IMPLEMENTED), priority = %d", id,
-                        buildOrder.buildId, buildOrder.priority);
+                sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=NOT YET IMPLEMENTED), priority = %d, state = %s", id,
+                        buildOrder.buildId, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             }
             player->log(msg);
 
