@@ -222,9 +222,20 @@ public:
     bool canBuildUnitType(int iUnitType) const;
 
     /**
+     * Checks if the given iType is available for producing; does not check if it is allowed to do so. Use
+     * canBuilSpecial for that.
+     *
+     * @param iType
+     * @return
+     */
+    bool canBuildSpecialType(int iType) const;
+
+    /**
      * Check if we can build unit of type. Returns a reason when it can't. If the reason is NONE it means it can be built.
      */
     eCantBuildReason canBuildUnit(int iUnitType);
+
+    eCantBuildReason canBuildSpecial(int iType);
 
     /**
      * Returns true if the unit can be bought, takes not money into account, but all other rules do apply
@@ -369,6 +380,7 @@ private:
 
     bool autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
 
+    bool isBuildingAnythingForListAndSublist(int listId, int subListId) const;
 };
 
 #endif

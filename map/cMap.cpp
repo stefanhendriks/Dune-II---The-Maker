@@ -181,6 +181,13 @@ bool cMap::canDeployUnitAtCell(int iCll, int iUnitID) {
     return true;
 }
 
+/**
+ * Returns true if cell is occupied, for a given unit. The unitId is given so it can ignore its own ID if that
+ * is recorded on map data. (ie when moving, a unit can occupy 2 cells at once).
+ * @param iCll
+ * @param iUnitID
+ * @return
+ */
 bool cMap::occupied(int iCll, int iUnitID) {
     if (iCll < 0 || iUnitID < 0)
         return true;

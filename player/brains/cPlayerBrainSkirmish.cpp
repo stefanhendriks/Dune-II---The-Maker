@@ -479,10 +479,45 @@ namespace brains {
             }
         }
 
-        // ..?
+        if (player->canBuildSpecial(SPECIAL_DEATHHAND) == eCantBuildReason::NONE && !hasMission(SPECIAL_MISSION1)) {
+            std::vector<S_groupKind> group = std::vector<S_groupKind>();
+            group.push_back((S_groupKind) {
+                    buildType: eBuildType::SPECIAL,
+                    type : SPECIAL_DEATHHAND,
+                    required: 1,
+                    ordered: 0,
+                    produced: 0,
+            });
+            addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, rnd(10), SPECIAL_MISSION1);
+        }
+
+        if (player->canBuildSpecial(SPECIAL_SABOTEUR) == eCantBuildReason::NONE && !hasMission(SPECIAL_MISSION2)) {
+            std::vector<S_groupKind> group = std::vector<S_groupKind>();
+            group.push_back((S_groupKind) {
+                    buildType: eBuildType::SPECIAL,
+                    type : SPECIAL_SABOTEUR,
+                    required: 1,
+                    ordered: 0,
+                    produced: 0,
+            });
+            addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, rnd(10), SPECIAL_MISSION2);
+        }
+
+        if (player->canBuildSpecial(SPECIAL_FREMEN) == eCantBuildReason::NONE && !hasMission(SPECIAL_MISSION3)) {
+            std::vector<S_groupKind> group = std::vector<S_groupKind>();
+            group.push_back((S_groupKind) {
+                    buildType: eBuildType::SPECIAL,
+                    type : SPECIAL_FREMEN,
+                    required: 1,
+                    ordered: 0,
+                    produced: 0,
+            });
+            addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, rnd(10), SPECIAL_MISSION3);
+        }
     }
 
-    void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int trikeKind, std::vector<S_groupKind> &group, int missionId) {
+    void cPlayerBrainSkirmish::produceSkirmishGroundAttackMission(int trikeKind, int missionId) {
+        std::vector<S_groupKind> group = std::vector<S_groupKind>();
         if (player->hasAtleastOneStructure(HEAVYFACTORY)) {
             if (rnd(100) < 33) {
                 group.push_back((S_groupKind) {
@@ -674,6 +709,9 @@ namespace brains {
                             // wait for upgrade to pass, so don't do anything.
                         }
                     }
+                } else if (reason == eCantBuildReason::REQUIRES_ADDITIONAL_STRUCTURE || reason == eCantBuildReason::REQUIRES_STRUCTURE) {
+                    // remove from list
+                    buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
                 }
             } else if (buildOrder.buildType == eBuildType::SPECIAL) {
                 if (player->startBuildingSpecial(buildOrder.buildId)) {

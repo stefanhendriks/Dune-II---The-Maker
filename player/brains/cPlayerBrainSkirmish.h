@@ -5,6 +5,7 @@
 #include "player/brains/cPlayerBrainData.h"
 #include "player/brains/missions/cPlayerBrainMission.h"
 #include <set>
+#include <player/cPlayer.h>
 
 namespace brains {
 
@@ -19,6 +20,10 @@ namespace brains {
     const int MISSION_ATTACK3 = 91;
     const int MISSION_ATTACK4 = 90;
     const int MISSION_ATTACK5 = 89;
+
+    const int SPECIAL_MISSION1 = 50;
+    const int SPECIAL_MISSION2 = 51;
+    const int SPECIAL_MISSION3 = 52;
 
     const int MOMENT_CONSIDER_ADDITIONAL_REFINERY = 1200; // after 2 minutes consider building 2nd refinery
 
@@ -147,7 +152,11 @@ namespace brains {
 
         void evaluateEconomyState();
 
-        void produceSkirmishGroundAttackMission(int trikeKind, std::vector<S_groupKind> &group, int missionId);
+        void produceSkirmishGroundAttackMission(int trikeKind, int missionId);
+
+        void findNewLocationOrMoveAnyBlockingUnitsOrCancelBuild(S_buildOrder *pBuildOrder, cBuildingListItem *pItem, const s_PlaceResult &placeResult);
+
+        bool findNewPlaceToPlaceStructureOrCancelBuild(S_buildOrder *pBuildOrder, cBuildingListItem *pItem);
     };
 
 }
