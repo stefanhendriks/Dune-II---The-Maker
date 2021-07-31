@@ -286,6 +286,8 @@ public:
         return "";
     }
 
+    bool isUnableToMove();
+
 private:
 
     int mission; // is this unit assigned to a mission?

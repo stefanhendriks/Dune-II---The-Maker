@@ -714,68 +714,7 @@ namespace brains {
                     player->placeStructure(iCll, pItem);
                     matchingOrder->state = buildOrder::eBuildOrderState::REMOVEME;
                 } else {
-                    // unable to place it, we determined previously that we could, so what to do?
-
-                    bool changedPlacePosition = false;
-                    if (placeResult.badTerrain) {
-                        // pick a new spot?
-                        int newCell = player->findCellToPlaceStructure(pItem->getBuildId());
-                        if (newCell < 0) {
-                            // cancel building this thing
-                            player->cancelBuildingListItem(pItem);
-                            matchingOrder->state = buildOrder::eBuildOrderState::REMOVEME;
-                        } else {
-                            // update the cell, it will be retried in the next think iteration
-                            matchingOrder->placeAt = newCell;
-                            changedPlacePosition = true;
-                        }
-                    }
-
-                    // find any unit that is from us, and move it away
-                    // if there is any enemy player, then find a new place.
-                    if (!placeResult.unitIds.empty()) {
-                        for (auto &unitId : placeResult.unitIds) {
-                            cUnit &aUnit = unit[unitId];
-                            if (!aUnit.isValid()) continue;
-                            if (aUnit.getPlayer() == player) {
-                                // move it when idle, else don't do a thing
-                                if (aUnit.isIdle()) {
-                                    aUnit.move_to(map.getRandomCellFrom(aUnit.getCell(), 3));
-                                }
-                            } else {
-                                // if (aUnit.getPlayer()->isSameTeamAs(player)) { // who knows, a teammate is willing to move away when it is AI?
-                                if (!changedPlacePosition) {
-                                    int newCell = player->findCellToPlaceStructure(pItem->getBuildId());
-                                    if (newCell < 0) {
-                                        // cancel building this thing
-                                        player->cancelBuildingListItem(pItem);
-                                        matchingOrder->state = buildOrder::eBuildOrderState::REMOVEME;
-                                    } else {
-                                        // update the cell, it will be retried in the next think iteration
-                                        matchingOrder->placeAt = newCell;
-                                        changedPlacePosition = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    // find any unit that is from us, and move it away
-                    // if there is any enemy player, then find a new place.
-                    if (!placeResult.structureIds.empty()) {
-                        if (!changedPlacePosition) {
-                            int newCell = player->findCellToPlaceStructure(pItem->getBuildId());
-                            if (newCell < 0) {
-                                // cancel building this thing
-                                player->cancelBuildingListItem(pItem);
-                                matchingOrder->state = buildOrder::eBuildOrderState::REMOVEME;
-                            } else {
-                                // update the cell, it will be retried in the next think iteration
-                                matchingOrder->placeAt = newCell;
-                                changedPlacePosition = true;
-                            }
-                        }
-                    }
+                    findNewLocationOrMoveAnyBlockingUnitsOrCancelBuild(matchingOrder, pItem, placeResult);
                 }
             } else {
                 // whut? there is something in progress, but we are not aware of it? cancel build
@@ -784,6 +723,63 @@ namespace brains {
         }
 
         changeThinkStateTo(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_EVALUATE);
+    }
+
+    bool cPlayerBrainSkirmish::findNewPlaceToPlaceStructureOrCancelBuild(S_buildOrder *pBuildOrder, cBuildingListItem *pItem) {
+        // pick a new spot?
+        int newCell = player->findCellToPlaceStructure(pItem->getBuildId());
+
+        if (newCell < 0) {
+            // cancel building this thing
+            player->cancelBuildingListItem(pItem);
+            pBuildOrder->state = buildOrder::REMOVEME;
+            return false;
+        }
+
+        // update the cell, it will be retried in the next think iteration
+        pBuildOrder->placeAt = newCell;
+        return true;
+    }
+
+    void cPlayerBrainSkirmish::findNewLocationOrMoveAnyBlockingUnitsOrCancelBuild(S_buildOrder *pBuildOrder,
+                                                                                  cBuildingListItem *pItem,
+                                                                                  const s_PlaceResult &placeResult) {
+        // unable to place it, we determined previously that we could, so what to do?
+        bool changedPlacePosition = false;
+        if (placeResult.badTerrain) {
+            findNewPlaceToPlaceStructureOrCancelBuild(pBuildOrder, pItem);
+            return;
+        }
+
+        // find any unit that is from us, and move it away
+        // if there is any enemy player, then find a new place.
+        if (!placeResult.unitIds.empty()) {
+            for (auto &unitId : placeResult.unitIds) {
+                cUnit &aUnit = unit[unitId];
+                if (!aUnit.isValid()) continue;
+                if (aUnit.getPlayer() == player) {
+                    if (aUnit.isUnableToMove()) {
+                        // it can't move, so we have to think of another place position
+                        findNewPlaceToPlaceStructureOrCancelBuild(pBuildOrder, pItem);
+                        return;
+                    }
+                    // move it when idle, else don't do a thing
+                    if (aUnit.isIdle()) {
+                        aUnit.move_to(map.getRandomCellFrom(aUnit.getCell(), 3));
+                    }
+                } else {
+                    // if (aUnit.getPlayer()->isSameTeamAs(player)) { // who knows, a teammate is willing to move away when it is AI?
+                    findNewPlaceToPlaceStructureOrCancelBuild(pBuildOrder, pItem);
+                    return;
+                }
+            }
+        }
+
+        // find any unit that is from us, and move it away
+        // if there is any enemy player, then find a new place.
+        if (!placeResult.structureIds.empty()) {
+            findNewPlaceToPlaceStructureOrCancelBuild(pBuildOrder, pItem);
+        }
     }
 
     void cPlayerBrainSkirmish::changeThinkStateTo(const ePlayerBrainSkirmishThinkState& newState) {
