@@ -268,13 +268,10 @@ void cBullet::arrivedAtDestinationLogic() {
     float maxDistanceFromCenter = halfExplosionSize + 0.5f;
     for (int sx = startX; sx < endX; sx++) {
         for (int sy = startY; sy < endY; sy++) {
-            int iCx = sx;
-            int iCy = sy;
-            FIX_BORDER_POS(iCx, iCy);
+            int cellToDamage = map.getCellWithMapBorders(sx, sy);
+            if (cellToDamage < 0) continue;
 
-            int cellToDamage = map.makeCell(iCx, iCy);
-
-            float actualDistance = ABS_length(iCx, iCy, x, y);
+            float actualDistance = ABS_length(sx, sy, x, y);
             if (actualDistance > maxDistanceFromCenter) actualDistance = maxDistanceFromCenter;
 
             float factor = 1.0f;
@@ -282,8 +279,14 @@ void cBullet::arrivedAtDestinationLogic() {
                 factor = 1.0f - (actualDistance / maxDistanceFromCenter);
             }
 
+            int half = 16;
+            int randomX = -8 + rnd(half);
+            int randomY = -8 + rnd(half);
+            int posX = map.getAbsoluteXPositionFromCellCentered(cellToDamage) + randomX;
+            int posY = map.getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
+
             char msg[255];
-            sprintf(msg, "iCell %d : cellToDamage : %d : ExplosionSize is %d, maxDistanceFromCenter is %f , actualDistance = %f, iCx=%d, iCy=%d and factor = %f", iCell, cellToDamage, sBullet.explosionSize, maxDistanceFromCenter, actualDistance, iCx, iCy, factor);
+            sprintf(msg, "iCell %d : cellToDamage : %d : ExplosionSize is %d, maxDistanceFromCenter is %f , actualDistance = %f, x=%d, y=%d and factor = %f", iCell, cellToDamage, sBullet.explosionSize, maxDistanceFromCenter, actualDistance, sx, sy, factor);
             logbook(msg);
 
             damageStructure(cellToDamage, factor);                 // damage structure at cell if applicable
@@ -296,12 +299,19 @@ void cBullet::arrivedAtDestinationLogic() {
             // create particle of explosion
             if (sBullet.deadbmp > -1) {
                 // depending on 'explosion size'
-                int half = 16;
-                int randomX = -8 + rnd(half);
-                int randomY = -8 + rnd(half);
-                int posX = map.getAbsoluteXPositionFromCellCentered(cellToDamage) + randomX;
-                int posY = map.getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
                 PARTICLE_CREATE(posX, posY, sBullet.deadbmp, -1, -1);
+            }
+
+            if (iType == ROCKET_BIG) {
+                // HACK HACK: produce sounds here... should be taken from bullet data structure; or via events
+                // so that elsewhere this can be handled.
+                if (rnd(100) < 35) {
+                    play_sound_id_with_distance(SOUND_TANKDIE + rnd(2),
+                                                distanceBetweenCellAndCenterOfScreen(cellToDamage));
+                }
+                if (rnd(100) < 25) {
+                    PARTICLE_CREATE(posX, posY, OBJECT_SMOKE, -1, -1);
+                }
             }
 
             damageTerrain(cellToDamage, factor);
