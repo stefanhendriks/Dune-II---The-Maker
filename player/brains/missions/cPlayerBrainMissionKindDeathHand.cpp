@@ -45,6 +45,8 @@ namespace brains {
         game.onNotify(event);
 
         itemToDeploy = nullptr;
+        // done
+        mission->changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_ENDED);
     }
 
     void cPlayerBrainMissionKindDeathHand::onNotify(const s_GameEvent &event) {

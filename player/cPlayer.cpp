@@ -695,6 +695,19 @@ bool cPlayer::canBuildUnitType(int iUnitType) const {
     return result;
 }
 
+bool cPlayer::canBuildSpecialType(int iType) const {
+    int listId = specials[iType].listId;
+    cBuildingListItem *pItem = sidebar->getBuildingListItem(listId, iType);
+
+    bool result = pItem != nullptr;
+
+    char msg[255];
+    sprintf(msg, "canBuildSpecialType(iType=%d) -> %s", iType, result ? "TRUE" : "FALSE");
+    log(msg);
+
+    return result;
+}
+
 int cPlayer::getStructureTypeBeingBuilt() const {
     cBuildingListItem *pItem = getStructureBuildingListItemBeingBuilt();
     if (pItem) {
@@ -720,6 +733,11 @@ bool cPlayer::isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) cons
     int listId = p.listId;
     int subListId = p.subListId;
 
+    return isBuildingAnythingForListAndSublist(listId, subListId);
+}
+
+bool cPlayer::isBuildingAnythingForListAndSublist(int listId,
+                                                  int subListId) const {
     return itemBuilder->isAnythingBeingBuiltForListId(listId, subListId);
 }
 
@@ -1070,6 +1088,16 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable) {
         return eCantBuildReason::REQUIRES_STRUCTURE;
     }
 
+    if (iUnitType == DEVASTATOR || iUnitType == SONICTANK || iUnitType == DEVIATOR) {
+        if (!hasAtleastOneStructure(IX)) {
+            char msg[255];
+            sprintf(msg, "canBuildUnit: FALSE, because we do not own the required ADDITIONAL structure type [%s] for this unit: [%s]",
+                    structures[IX].name, units[iUnitType].name);
+            log(msg);
+            return eCantBuildReason::REQUIRES_ADDITIONAL_STRUCTURE;
+        }
+    }
+
     if (!canBuildUnitType(iUnitType)) {
         // not available to build (not in list)
         // assume it requires an upgrade?
@@ -1081,6 +1109,47 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable) {
     }
 
     log("canBuildUnit: ALLOWED");
+
+    return eCantBuildReason::NONE;
+}
+
+eCantBuildReason cPlayer::canBuildSpecial(int iType) {
+    // Once known, a check will be made to see if the AI has a structure to produce that
+    // unit type. If not, it will return false.
+    char msg[255];
+    s_Special &special = specials[iType];
+    sprintf(msg, "canBuildSpecial: Wanting to build iType = [%d(=%s)] allowed?...", iType, special.description);
+    log(msg);
+
+    // Do we have the building needed?
+    int iStrucType = PALACE; // TODO: get from "special" data structure?
+    if (!hasAtleastOneStructure(iStrucType)) {
+        char msg[255];
+        sprintf(msg, "canBuildUnit: FALSE, because we do not own the required structure type [%s] for [%s]",
+                structures[iStrucType].name, special.description);
+        log(msg);
+        return eCantBuildReason::REQUIRES_STRUCTURE;
+    }
+
+    // Are we building this thing already?
+    if (isBuildingAnythingForListAndSublist(special.listId, special.subListId)) {
+        char msg[255];
+        sprintf(msg, "canBuildSpecial: FALSE, because already building it");
+        log(msg);
+        return eCantBuildReason::ALREADY_BUILDING;
+    }
+
+    if (!canBuildSpecialType(iType)) {
+        // not available to build (not in list)
+        // assume it requires an upgrade?
+        char msg[255];
+        sprintf(msg, "canBuildUnit: REQUIRES_UPGRADE, because we can't find it in the expected list [%d] for this special: [%s]",
+                special.listId, special.description);
+        log(msg);
+        return eCantBuildReason::REQUIRES_UPGRADE;
+    }
+
+    log("canBuildSpecial: ALLOWED");
 
     return eCantBuildReason::NONE;
 }

@@ -7,6 +7,7 @@
 #include "cPlayerBrainMissionKindExplore.h"
 #include "cPlayerBrainMissionKindDeathHand.h"
 #include "cPlayerBrainMissionKindSaboteur.h"
+#include "cPlayerBrainMissionKindFremen.h"
 
 namespace brains {
 
@@ -34,7 +35,7 @@ namespace brains {
                 missionKind = new cPlayerBrainMissionKindDeathHand(player, this);
                 break;
             case PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN:
-                missionKind = new cPlayerBrainMissionKindAttack(player, this);
+                missionKind = new cPlayerBrainMissionKindFremen(player, this);
                 break;
             case PLAYERBRAINMISSION_KIND_DEFEND:
                 //TODO: Defend mission...
@@ -232,7 +233,6 @@ namespace brains {
         }
 
         if (TIMER_delay < 1) {
-            // start gathering resources now
             changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES);
         }
 
@@ -291,7 +291,12 @@ namespace brains {
         }
 
         // now we wait until it is finished
-        changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES);
+        if (kind == PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN) {
+            // when fremen, just go to execution state
+            changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_EXECUTE);
+        } else {
+            changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES);
+        }
     }
 
     void cPlayerBrainMission::thinkState_SelectTarget() {

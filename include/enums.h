@@ -27,9 +27,19 @@ enum eCantBuildReason {
 	ALREADY_BUILDING,
 
 	/**
-     * Requires a structure to build this (??) - this should not happen (anymore) though
+     * Requires a structure to build this (producing structure)
      */
 	REQUIRES_STRUCTURE,
+
+	/**
+     * Requires an additional structure to build this (ie, IX for special units)
+     */
+	REQUIRES_ADDITIONAL_STRUCTURE,
+
+	/**
+     * The required thing to build is not available
+     */
+	NOT_AVAILABLE,
 
 	/**
      * There is no reason we can't build it (ie SUCCESS)
@@ -146,6 +156,18 @@ namespace buildOrder {
 		BUILDING,
 		REMOVEME
 	};
+
+    static const char* eBuildOrderStateString(const eBuildOrderState &state) {
+        switch (state) {
+            case eBuildOrderState::PROCESSME: return "PROCESSME";
+            case eBuildOrderState::REMOVEME: return "REMOVEME";
+            case eBuildOrderState::BUILDING: return "BUILDING";
+            default:
+                assert(false && "Unknown eBuildOrderState");
+                break;
+        }
+        return "";
+    }
 }
 enum eDeployTargetType {
     TARGET_NONE,
