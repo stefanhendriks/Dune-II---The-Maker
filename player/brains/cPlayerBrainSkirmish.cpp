@@ -685,17 +685,21 @@ namespace brains {
                     // first check if there is an upgrade available directly granting the unit we want (ie LAUNCHER?)
                     cBuildingListItem *pItem = player->isUpgradeAvailableToGrantUnit(buildOrder.buildId);
 
-                    if (!pItem) {
-                        // not found, first check if MCV upgrade exists. It is required before anything else.
-                        pItem = player->isUpgradeAvailableToGrantUnit(MCV);
-                    }
-
-                    if (buildOrder.buildId == SIEGETANK) {
+                    if (!buildOrder.buildId != ORNITHOPTER) {
                         if (!pItem) {
-                            // still not found, if we want to build a SIEGETANK, we need to upgrade to LAUNCHER?
-                            // check that too
-                            pItem = player->isUpgradeAvailableToGrantUnit(LAUNCHER);
+                            // not found, first check if MCV upgrade exists. It is required before anything else.
+                            pItem = player->isUpgradeAvailableToGrantUnit(MCV);
                         }
+
+                        if (!pItem) {
+                            if (buildOrder.buildId == SIEGETANK) {
+                                // still not found, if we want to build a SIEGETANK, we need to upgrade to LAUNCHER?
+                                // check that too
+                                pItem = player->isUpgradeAvailableToGrantUnit(LAUNCHER);
+                            }
+                        }
+                    } else {
+                        pItem = player->isUpgradeAvailableToGrantUnit(ORNITHOPTER);
                     }
 
                     if (pItem) {
