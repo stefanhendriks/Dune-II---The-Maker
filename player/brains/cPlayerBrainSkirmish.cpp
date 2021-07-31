@@ -237,7 +237,8 @@ namespace brains {
         // structure placement is done in thinkState_ProcessBuildOrders() !
 
         if (player->hasAtleastOneStructure(CONSTYARD)) {
-            if (!player->isBuildingStructure() && !player->isBuildingStructureAwaitingPlacement() &&
+            if (!player->isBuildingStructure() &&
+                !player->isBuildingStructureAwaitingPlacement() &&
                 !hasBuildOrderQueuedForStructure()) {
                 // think about what structure to build AND where to place it
                 const s_SkirmishPlayer_PlaceForStructure &result = thinkAboutNextStructureToBuildAndPlace();
@@ -299,14 +300,13 @@ namespace brains {
             infantryKind = TROOPERS;
         }
 
-        std::vector<S_groupKind> group = std::vector<S_groupKind>();
-
         if (economyState == ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_IMPROVE) {
             int idealAmountHarvesters = player->getAmountOfStructuresForType(REFINERY) * 2;
             int amountOfHarvesters = player->getAmountOfUnitsForType(HARVESTER);
             if (player->hasAtleastOneStructure(HEAVYFACTORY)) {
                 if (amountOfHarvesters < idealAmountHarvesters) {
                     if (!hasMission(MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_HARVESTER)) {
+                        std::vector<S_groupKind> group = std::vector<S_groupKind>();
                         group.push_back((S_groupKind) {
                                 buildType: eBuildType::UNIT,
                                 type : HARVESTER,
@@ -315,7 +315,6 @@ namespace brains {
                                 produced: 0,
                         });
                         addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(15), MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_HARVESTER);
-                        return;
                     }
                 }
             }
@@ -325,6 +324,7 @@ namespace brains {
                 int idealAmountOfCarryAlls = (amountOfHarvesters/2)+1;
                 if (player->getAmountOfUnitsForType(CARRYALL) < idealAmountOfCarryAlls) {
                     if (!hasMission(MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_CARRYALL)) {
+                        std::vector<S_groupKind> group = std::vector<S_groupKind>();
                         group.push_back((S_groupKind) {
                                 buildType: eBuildType::UNIT,
                                 type : CARRYALL,
@@ -333,7 +333,6 @@ namespace brains {
                                 produced: 0,
                         });
                         addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(15), MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_CARRYALL);
-                        return;
                     }
                 }
             }
@@ -352,7 +351,6 @@ namespace brains {
                 });
 
                 addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15), MISSION_SCOUT1);
-                return;
             } else if (!hasMission(MISSION_SCOUT2)) {
                 // add scouting mission
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
@@ -365,7 +363,6 @@ namespace brains {
                 });
 
                 addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15), MISSION_SCOUT2);
-                return;
             } if (!hasMission(MISSION_SCOUT3)) {
                 // add scouting mission
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
@@ -378,7 +375,6 @@ namespace brains {
                 });
 
                 addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, group, rnd(15), MISSION_SCOUT3);
-                return;
             } if (!hasMission(MISSION_GUARDFORCE)) {
                 // add defending force
                 std::vector<S_groupKind> group = std::vector<S_groupKind>();
@@ -397,12 +393,12 @@ namespace brains {
                         produced: 0,
                 });
                 addMission(ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_DEFEND, group, rnd(15), MISSION_GUARDFORCE);
-                return;
             }
         }
 
         if (state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
             if (!hasMission(MISSION_ATTACK1)) {
+                std::vector<S_groupKind> group = std::vector<S_groupKind>();
                 // TODO: depending on upgrades available; create appropriate army, for now depend on non-upgradable things
                 if (player->hasAtleastOneStructure(HEAVYFACTORY)) {
                     group.push_back((S_groupKind) {
@@ -449,22 +445,16 @@ namespace brains {
             }
 
             if (!hasMission(MISSION_ATTACK2)) {
-                produceSkirmishGroundAttackMission(trikeKind, group, MISSION_ATTACK2);
-                return;
-            }
-
-            if (!hasMission(MISSION_ATTACK3)) {
-                produceSkirmishGroundAttackMission(trikeKind, group, MISSION_ATTACK3);
-                return;
-            }
-
-            if (!hasMission(MISSION_ATTACK4)) {
-                produceSkirmishGroundAttackMission(trikeKind, group, MISSION_ATTACK4);
-                return;
+                produceSkirmishGroundAttackMission(trikeKind, MISSION_ATTACK2);
+            } else if (!hasMission(MISSION_ATTACK3)) {
+                produceSkirmishGroundAttackMission(trikeKind, MISSION_ATTACK3);
+            } else if (!hasMission(MISSION_ATTACK4)) {
+                produceSkirmishGroundAttackMission(trikeKind, MISSION_ATTACK4);
             }
 
             if (!hasMission(MISSION_ATTACK5)) {
                 if (player->canBuildUnitBool(ORNITHOPTER)) {
+                    std::vector<S_groupKind> group = std::vector<S_groupKind>();
                     group.push_back((S_groupKind) {
                             buildType: eBuildType::UNIT,
                             type : ORNITHOPTER,
@@ -653,6 +643,7 @@ namespace brains {
 //    char msg[255];
 //    sprintf(msg, "cPlayerBrainSkirmish::thinkState_EndGame(), for player [%d]", player->getId());
 //    logbook(msg);
+
     }
 
     void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders() {
