@@ -12,7 +12,6 @@
 
 void logbook(const char *txt);
 
-bool BORDER_POS(int x, int y);
 int BETWEEN(int val, int min, int max);
 void FIX_BORDER_POS(int &x, int &y);
 void FIX_POS(int &x, int &y);
@@ -21,7 +20,6 @@ int keepBetween(int value, int min, int max);
 
 // Installment of properties/settings in the game.
 void INSTALL_HOUSES();
-void INIT_ALL_PLAYERS();
 
 void INIT_PREVIEWS();
 
@@ -47,12 +45,13 @@ void setMusicVolume(int i);
 
 void playMusicByType(int iType);
 void Shimmer(int r, int x, int y);
-int create_bullet(int type, int cell, int goal_cell, int unitWhichShoots, int structureWhichShoots);
+int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots);
 
 int distanceBetweenCellAndCenterOfScreen(int iCell);
 
-void bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor);
 int getAmountReservedVoicesAndInstallSound();
+
+const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId);
 
 //void masked_stretch_blit(BITMAP *s, BITMAP *d, int s_x, int s_y, int s_w, int s_h, int d_x, int d_y, int d_w, int d_h);
 //void stretch_blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int src_w, int src_h, int dst_x, int dst_y, int dst_w, int dst_h);

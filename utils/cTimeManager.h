@@ -25,8 +25,8 @@ private:
 	int timerGlobal;
 
 	void handleTimerUnits();
-	void handleTimerFPS();
-	void handleTimerGlobal();
+	void handleTimerAllegroTimerSeconds();
+	void handleTimerGameTime();
 
 	void capTimers();
 

@@ -13,7 +13,10 @@
 #ifndef STRUCTURE_FACTORY
 #define STRUCTURE_FACTORY
 
+#include <set>
+
 class cStructureFactory {
+
 
 private:
 	static cStructureFactory *instance;
@@ -43,7 +46,9 @@ public:
 
 	void updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(int iCell, int iStructureType, int iPlayer);
 
-	int getSlabStatus(int iCell, int iStructureType, int iUnitIDToIgnore);
+	int getSlabStatus(int iCell, int iStructureType);
+
+    void slabStructure(int iCll, int iStructureType, int iPlayer);
 
 private:
     cAbstractStructure *createStructureInstance(int type);

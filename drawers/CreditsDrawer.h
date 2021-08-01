@@ -8,7 +8,7 @@
 #ifndef CREDITSDRAWER_H_
 #define CREDITSDRAWER_H_
 
-// the credits drawer takes state of a m_Player, and draws the credits accordingly
+// the credits drawer takes state of a player, and draws the credits accordingly
 
 class CreditsDrawer {
 public:
@@ -26,7 +26,7 @@ public:
 	void setPlayer(cPlayer * thePlayer);
 
 private:
-	cPlayer * m_Player; //
+	cPlayer * player; //
 	BITMAP *bmp;	 // a bitmap being drawn on
 
 	void thinkAboutIndividualCreditOffsets();

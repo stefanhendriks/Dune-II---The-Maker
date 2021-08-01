@@ -22,7 +22,7 @@ void cStructureDrawer::drawStructuresSecondLayer() {
 }
 
 void cStructureDrawer::drawStructuresHealthBars() {
-	cGameControlsContext * context = player[HUMAN].getGameControlsContext();
+	cGameControlsContext * context = players[HUMAN].getGameControlsContext();
 
     // DRAW HEALTH
     if (context->isMouseOverStructure())
@@ -166,7 +166,7 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
         allegroDrawer->maskedStretchBlit(structure->getShadowBitmap(), bmp_screen, 0, iSourceY, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
     }
 
-    bitmap_replace_color(wind, makecol(40, 40, 182), makecol(0, 0, fade));
+    allegroDrawer->bitmap_replace_color(wind, makecol(40, 40, 182), makecol(0, 0, fade));
 
     allegroDrawer->maskedStretchBlit(wind, bmp_screen, 0, 0, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
 
@@ -213,7 +213,7 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
 	assert(structure);
 
 	// always select proper palette (of owner)
-    select_palette(player[structure->getOwner()].pal);
+    select_palette(players[structure->getOwner()].pal);
 
 	// when layer is <= 1 the building is just being placed. The prebuild
 	// animation should be be drawn or, the normal drawing is shown (ie the
@@ -296,14 +296,14 @@ void cStructureDrawer::drawStructuresForLayer(int layer) {
             // draw
             drawStructureForLayer(theStructure, layer);
 
-            if (player[0].getPrimaryStructureForStructureType(theStructure->getType()) == i) {
+            if (players[0].getPrimaryStructureForStructureType(theStructure->getType()) == i) {
                 int color = theStructure->getPlayer()->getMinimapColor();
                 // TODO: change it into fading color or something other than this ugly rectangle.
                 drawRectangeOfStructure(theStructure, color);
             }
 
             if (i == game.selected_structure) {
-                drawRectangeOfStructure(theStructure, player[HUMAN].getSelectFadingColor());
+                drawRectangeOfStructure(theStructure, players[HUMAN].getSelectFadingColor());
             }
         }
 	}

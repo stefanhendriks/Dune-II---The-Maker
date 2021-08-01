@@ -39,7 +39,7 @@ private:
 	cBuildingList *list;
 	cTextDrawer *textDrawer;
 
-	cPlayer * m_Player;
+	cPlayer * player;
 };
 
 #endif /* CBUILDINGLISTDRAWER_H_ */

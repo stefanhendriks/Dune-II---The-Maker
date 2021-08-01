@@ -1,10 +1,3 @@
-/*
- * cMapDrawer.h
- *
- *  Created on: 10-aug-2010
- *      Author: Stefan
- */
-
 #ifndef CMAPDRAWER_H_
 #define CMAPDRAWER_H_
 
@@ -23,7 +16,7 @@ class cMapDrawer {
 
 	private:
 		cMap * map;
-		cPlayer * _player;
+		cPlayer * player;
 		cMapCamera * camera;
 
 		// bitmap for drawing tiles, and possibly stretching (depending on zoom level)

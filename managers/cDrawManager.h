@@ -53,7 +53,7 @@ class cDrawManager {
 
 		// TODO: bullet/projectile drawer
 
-		cPlayer * m_Player;
+		cPlayer * player;
 
 		BITMAP *topBarBmp;
 };

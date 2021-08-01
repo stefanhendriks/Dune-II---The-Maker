@@ -22,7 +22,7 @@ protected:
 		void drawMinimap();
 		void drawOptionsBar();
 	private:
-        cPlayer * m_Player;
+        cPlayer * player;
 		cBuildingListDrawer * buildingListDrawer;
 		cSideBar * sidebar;
 

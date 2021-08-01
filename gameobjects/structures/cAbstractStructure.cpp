@@ -47,7 +47,7 @@ cAbstractStructure::cAbstractStructure() {
     TIMER_flag=-1;
     TIMER_fade=-1;
 
-    TIMER_damage=0;   // damaging stuff
+    TIMER_decay=0;   // damaging stuff
     TIMER_prebuild=0;
 
     id = -1; // invalid ID at first, it is set in the structureFactory
@@ -104,7 +104,7 @@ BITMAP * cAbstractStructure::getShadowBitmap() {
 cPlayer * cAbstractStructure::getPlayer() {
 	assert(iPlayer >= HUMAN);
 	assert(iPlayer < MAX_PLAYERS);
-	return &player[iPlayer];
+	return &players[iPlayer];
 }
 
 int cAbstractStructure::getMaxHP() {
@@ -140,23 +140,9 @@ void cAbstractStructure::die() {
     structure[id]=NULL;
 
     // Destroy structure, take stuff in effect for the player
-    cPlayer &thePlayer = player[iPlayer];
+    cPlayer &thePlayer = players[iPlayer];
 
     thePlayer.decreaseStructureAmount(getType()); // remove from player building indexes
-
-    // fix up power usage
-    thePlayer.use_power -= structures[getType()].power_drain;
-
-    // less power
-    thePlayer.has_power -= structures[getType()].power_give;
-
-	if (getType() == SILO) {
-        thePlayer.max_credits -= 1000;
-	}
-
-	if (getType() == REFINERY) {
-        thePlayer.max_credits -= 1500;
-	}
 
     // UnitID > -1, means the unit inside will die too
     if (iUnitID > -1) {
@@ -220,10 +206,20 @@ void cAbstractStructure::die() {
     map.remove_id(id, MAPID_STRUCTURES);
 
     // screen shaking
-    game.TIMER_shake = (iWidth * iHeight) * 20;
+    game.shakeScreen((iWidth * iHeight) * 20);
 
     // elegible for cleanup
     dead = true;
+
+    s_GameEvent event {
+        .eventType = eGameEventType::GAME_EVENT_DESTROYED,
+        .entityType = eBuildType::STRUCTURE,
+        .entityID = getStructureId(),
+        .player = getPlayer(),
+        .entitySpecificType = getType()
+    };
+
+    game.onNotify(event);
 }
 
 
@@ -239,12 +235,7 @@ void cAbstractStructure::think_prebuild() {
     }
 }
 
-/**
- * Searches around the border of a structure (from top left to bottom right) for a free cell. If found, returns it.
- * If fails, it returns -1
- * @return
- */
-int cAbstractStructure::getNonOccupiedCellAroundStructure() {
+std::vector<int> cAbstractStructure::getCellsAroundStructure() {
     int iStartX = map.getCellX(iCell);
     int iStartY = map.getCellY(iCell);
 
@@ -254,23 +245,31 @@ int cAbstractStructure::getNonOccupiedCellAroundStructure() {
     iStartX--;
     iStartY--;
 
-    int iCx = 0;
-    int iCy = 0;
+    std::vector<int> cells = std::vector<int>();
 
     for (int x = iStartX; x < iEndX; x++) {
         for (int y = iStartY; y < iEndY; y++) {
-            iCx = x;
-            iCy = y;
-
-            // iCx and iCy are passed by reference
-            FIX_BORDER_POS(iCx, iCy);
-
-            // so they are for sure not at the outer edges on the map now...
-            int cll = map.getCellWithMapBorders(iCx, iCy);
-
-            if (cll > -1 && !map.occupied(cll)) {
-                return cll;
+            int cell = map.getCellWithMapBorders(x, y);
+            if (cell > -1) {
+                cells.push_back(cell);
             }
+        }
+    }
+
+    return cells;
+}
+
+/**
+ * Searches around the border of a structure (from top left to bottom right) for a free cell. If found, returns it.
+ * If fails, it returns -1
+ * @return
+ */
+int cAbstractStructure::getNonOccupiedCellAroundStructure() {
+    const std::vector<int> &cells = getCellsAroundStructure();
+
+    for (auto &cll : cells) {
+        if (!map.occupied(cll)) {
+            return cll;
         }
     }
 
@@ -311,25 +310,19 @@ void cAbstractStructure::think_flag() {
     }
 }
 
-void cAbstractStructure::think_damage() {
-    TIMER_damage--;
-    if (TIMER_damage < 0) {
-        TIMER_damage = rnd(500)+250;
+void cAbstractStructure::think_decay() {
+    TIMER_decay--;
+    if (TIMER_decay > 0) {
+        return; // wait until timer is passed
+    }
 
-        // chance based (so it does not decay all the time)
-        if (rnd(100) < getPercentageNotPaved()) {
-			if (iHitPoints > (structures[getType()].hp / 2)) {
-				iHitPoints -= 1;
-			}
+    TIMER_decay = rnd(500) + 500;
+
+    // chance based (so it does not decay all the time)
+    if (rnd(100) < getPercentageNotPaved()) {
+        if (iHitPoints > (getS_StructuresType().hp / 2)) {
+            decay(1);
         }
-
-        // AI reacting to this damage
-        // TODO: remove here
-		if (iPlayer != HUMAN && player[iPlayer].credits > 50) {
-			if (iHitPoints < ((structures[getType()].hp / 4)*3)) { // lower than 75%
-                bRepair=true;
-			}
-		}
     }
 }
 
@@ -357,6 +350,34 @@ void cAbstractStructure::setAnimating(bool value) {
 
 void cAbstractStructure::setFrame(int frame) {
 	iFrame = frame;
+}
+
+/**
+	Damage structure by amount of hp. The amount passed to this method
+	must be > 0. When it is < 0, it will be wrapped to > 0 anyway and
+	an error is written in the log.
+
+	Decay will never get structure below 1 HP (so won't let the building be destroyed).
+**/
+void cAbstractStructure::decay(int hp) {
+    int damage = hp;
+    if (damage < 0) {
+        logbook("cAbstractStructure::decay() got negative parameter, wrapped");
+        damage *= -1; // - * - = +
+    }
+
+    iHitPoints -= damage; // do damage
+    if (iHitPoints < 1) iHitPoints = 1;
+
+    s_GameEvent event {
+            .eventType = eGameEventType::GAME_EVENT_DECAY,
+            .entityType = eBuildType::STRUCTURE,
+            .entityID = getStructureId(),
+            .player = getPlayer(),
+            .entitySpecificType = getType()
+    };
+
+    game.onNotify(event);
 }
 
 
@@ -390,6 +411,16 @@ void cAbstractStructure::damage(int hp) {
         if (rnd(100) < iChance) {
             PARTICLE_CREATE(getRandomPosX(), getRandomPosY(), OBJECT_SMOKE, -1, -1);
         }
+
+        s_GameEvent event {
+                .eventType = eGameEventType::GAME_EVENT_DAMAGED,
+                .entityType = eBuildType::STRUCTURE,
+                .entityID = getStructureId(),
+                .player = getPlayer(),
+                .entitySpecificType = getType()
+        };
+
+        game.onNotify(event);
     }
 }
 
@@ -427,31 +458,21 @@ void cAbstractStructure::setOwner(int player) {
 	Think actions like any other structure would have.
 **/
 void cAbstractStructure::think() {
-	// AI
-    if (iPlayer > 0) {
-    	aiplayer[iPlayer].think_repair_structure(this);
-    }
-
-    // Other
-    think_damage();
+    think_decay();
     think_repair();
 }
 
-void cAbstractStructure::think_repair()
-{
+void cAbstractStructure::think_repair() {
     // REPAIRING
     if (bRepair) {
-		if (player[iPlayer].credits > 1.0f) {
+		if (players[iPlayer].hasEnoughCreditsFor(1.0f)) {
 			TIMER_repair++;
 
 			if (TIMER_repair > 7)
 			{
 				TIMER_repair=0;
 				iHitPoints += structures[getType()].fixhp;
-				player[iPlayer].credits--;
-				if (player[iPlayer].credits < 0.0f) {
-					player[iPlayer].credits = 0.0f;
-				}
+				players[iPlayer].substractCredits(1);
 			}
 
 			// done repairing
@@ -464,8 +485,7 @@ void cAbstractStructure::think_repair()
 	}
 }
 
-s_Structures cAbstractStructure::
-getS_StructuresType() const {
+s_Structures cAbstractStructure::getS_StructuresType() const {
 	return structures[getType()];
 }
 
@@ -474,8 +494,7 @@ int cAbstractStructure::getPercentageNotPaved() {
 }
 
 bool cAbstractStructure::isPrimary() {
-	cPlayer * thePlayer = getPlayer();
-	return thePlayer->getPrimaryStructureForStructureType(getType()) == id;
+    return getPlayer()->getPrimaryStructureForStructureType(getType()) == id;
 }
 
 int cAbstractStructure::getPowerUsage() {
@@ -551,4 +570,8 @@ int cAbstractStructure::getRandomPosX() {
 
 int cAbstractStructure::getRandomPosY() {
     return pos_y() + rnd(getHeightInPixels()); // posY = top coordinate, so just increase
+}
+
+void cAbstractStructure::startRepairing() {
+    bRepair = true;
 }

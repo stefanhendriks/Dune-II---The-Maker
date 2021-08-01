@@ -8,6 +8,45 @@
 #ifndef ENUMS_H_
 #define ENUMS_H_
 
+#include <assert.h>
+
+enum eCantBuildReason {
+	/**
+     * Not enough money to build it
+     */
+	NOT_ENOUGH_MONEY,
+
+	/**
+     * The thing to build requires an upgrade
+     */
+	REQUIRES_UPGRADE,
+
+	/**
+     * Already building the thing (does not take queueing into account)
+     */
+	ALREADY_BUILDING,
+
+	/**
+     * Requires a structure to build this (producing structure)
+     */
+	REQUIRES_STRUCTURE,
+
+	/**
+     * Requires an additional structure to build this (ie, IX for special units)
+     */
+	REQUIRES_ADDITIONAL_STRUCTURE,
+
+	/**
+     * The required thing to build is not available
+     */
+	NOT_AVAILABLE,
+
+	/**
+     * There is no reason we can't build it (ie SUCCESS)
+     */
+	NONE
+};
+
 enum eLogComponent {
 	COMP_UNITS,
 	COMP_STRUCTURES,
@@ -97,6 +136,39 @@ enum eBuildType {
     BULLET     // 4 (ie, used for super weapon)
 };
 
+static const char* eBuildTypeString(const eBuildType &buildType) {
+    switch (buildType) {
+        case eBuildType::SPECIAL: return "SPECIAL";
+        case eBuildType::UNIT: return "UNIT";
+        case eBuildType::STRUCTURE: return "STRUCTURE";
+        case eBuildType::BULLET: return "BULLET";
+        case eBuildType::UPGRADE: return "UPGRADE";
+        default:
+            assert(false && "Unknown buildType?");
+            break;
+    }
+    return "";
+}
+
+namespace buildOrder {
+	enum eBuildOrderState {
+		PROCESSME,
+		BUILDING,
+		REMOVEME
+	};
+
+    static const char* eBuildOrderStateString(const eBuildOrderState &state) {
+        switch (state) {
+            case eBuildOrderState::PROCESSME: return "PROCESSME";
+            case eBuildOrderState::REMOVEME: return "REMOVEME";
+            case eBuildOrderState::BUILDING: return "BUILDING";
+            default:
+                assert(false && "Unknown eBuildOrderState");
+                break;
+        }
+        return "";
+    }
+}
 enum eDeployTargetType {
     TARGET_NONE,
 
@@ -168,6 +240,18 @@ enum eMouseEventType {
 	MOUSE_LEFT_BUTTON_PRESSED,
 	MOUSE_SCROLLED_UP,
 	MOUSE_SCROLLED_DOWN
+};
+
+enum eGameEventType {
+	GAME_EVENT_NONE,
+    GAME_EVENT_DESTROYED,     // an entity was created
+    GAME_EVENT_DEVIATED,      // an entity was deviated (switched player ownership)
+    GAME_EVENT_DISCOVERED,    // an entity was discovered
+	GAME_EVENT_CREATED,       // an entity was destroyed
+    GAME_EVENT_DAMAGED, 	  // damaged by projectile
+    GAME_EVENT_DECAY,		  // damaged by decay
+    GAME_EVENT_SPECIAL_READY, // special weapon READY (ie deathhand can be launched)
+    GAME_EVENT_SPECIAL_DEPLOYED, // special weapon DEPLOYED (ie deathhand launched)
 };
 
 #endif /* ENUMS_H_ */

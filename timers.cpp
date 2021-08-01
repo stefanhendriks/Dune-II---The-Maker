@@ -6,16 +6,16 @@
 
 #ifdef ALLEGRO_H
 	/** FPS timer **/
-	void allegro_timerfps() {
+	void allegro_timerseconds() {
 		allegro_timerSecond++;
 	}
-	END_OF_FUNCTION(allegro_timerfps);
+	END_OF_FUNCTION(allegro_timerseconds);
 
 	/** Global timer **/
-	void allegro_timerglobal() {
+	void allegro_timergametime() {
 		allegro_timerGlobal++;
 	}
-	END_OF_FUNCTION(allegro_timerglobal);
+	END_OF_FUNCTION(allegro_timergametime);
 
 	/** Unit timer **/
 	void allegro_timerunits() {

@@ -1,10 +1,3 @@
-/*
- * cParticleDrawer.h
- *
- *  Created on: 11-aug-2010
- *      Author: Stefan
- */
-
 #ifndef CPARTICLEDRAWER_H_
 #define CPARTICLEDRAWER_H_
 

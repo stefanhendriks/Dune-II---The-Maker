@@ -26,7 +26,7 @@ private:
 
     cStructureUtils structureUtils;
 
-    cPlayer *m_Player;
+    cPlayer *player;
     cBuildingListItem *itemToPlace;
 };
 

@@ -84,6 +84,7 @@
 //#define HOUSE_SLOTS       10      // amount of House 'types'
 
 // Game states (state machine)
+#define GAME_INITIALIZE  -1      // initialize game
 #define GAME_OVER         0      // game over
 #define GAME_MENU         1      // in a menu
 #define GAME_PLAYING      2      // playing the actual game

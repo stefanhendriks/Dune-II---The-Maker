@@ -19,28 +19,46 @@
  *
  * Example: A 'default' house takes 10 HP damage. But an easier house will take 80% of that.
  *
- * Each cPlayer class holds a reference to a cPlayerDifficultySettings implementation which
- * will give the player the given properties.
+ * Each cPlayer class holds a reference to a cPlayerDifficultySettings
  *
  */
 class cPlayerDifficultySettings {
 	public:
-		cPlayerDifficultySettings();
-		virtual ~cPlayerDifficultySettings() = 0;
+        cPlayerDifficultySettings();
+		cPlayerDifficultySettings(float moveSpeedFactor, float buildSpeedFactor, float harvestSpeedFactor, float dumpSpeedFactor, float inflictDamageFactor);
 
-		virtual float getMoveSpeed(int iUnitType, int terrainSlowDown) = 0;	// get move speed of a unit
+        ~cPlayerDifficultySettings();
 
-		virtual float getBuildSpeed(int iSpeed) = 0;		// get build speed
+        // get move speed of a unit
+		float getMoveSpeed(int iUnitType, int terrainSlowDown);
 
-		virtual float getHarvestSpeed(int iSpeed) = 0;	// get harvesting speed
+        // get build speed
+		float getBuildSpeed(int iSpeed);
 
-		virtual float getDumpSpeed(int iSpeed) = 0;		// get harvester 'dumping spice in refinery' speed
+        // get harvesting speed (or rather, the delay before harvesting one unit of spice)
+		float getHarvestSpeed(int iSpeed);
 
-		virtual float getInflictDamage(int iDamageInflicted) = 0;	// get damage inflicted by this house
+        // get harvester 'dumping spice in refinery' speed (or rather, the delay before dumping credits)
+		float getDumpSpeed(int iSpeed);
+
+		// get damage inflicted by this house
+		float getInflictDamage(int iDamageInflicted);
+
+		/**
+		 * Factory method for constructing this based on House type
+		 * @param house
+		 * @return
+		 */
+		static cPlayerDifficultySettings * createFromHouse(int house);
 
 	protected:
 
 	private:
+        float m_moveSpeedFactor;
+	    float m_buildSpeedFactor;
+	    float m_harvestSpeedFactor;
+	    float m_dumpSpeedFactor;
+	    float m_inflictDamageFactor;
 
 };
 

@@ -38,7 +38,7 @@ class cItemBuilder {
         cBuildingListItem *items[MAX_ITEMS];
         int getFreeSlot();
 
-        cPlayer * m_Player; // the m_Player context for this builder
+        cPlayer * player; // the player context for this builder
         cBuildingListUpdater * buildingListUpdater;
 
 		int timers[MAX_ITEMS];
@@ -51,6 +51,8 @@ class cItemBuilder {
         cBuildingListItem * getBuildingListItem(eBuildType buildType, int iBuildId);
 
         void deployUnit(cBuildingListItem *item, int buildId) const;
+
+    void itemIsDoneBuildingLogic(cBuildingListItem *item);
 };
 
 #endif /* CITEMBUILDER_H_ */

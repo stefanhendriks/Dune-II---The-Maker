@@ -212,3 +212,18 @@ void cAllegroDrawer::setTransBlender(int red, int green, int blue, int alpha) {
 void cAllegroDrawer::drawSprite(BITMAP *dest, BITMAP *src, int x, int y) {
     draw_sprite(dest, src, x, y);
 }
+
+
+/**
+	Function that will go through all pixels and will replace a certain color with another.
+    Ie, this can be used to create the fading animation for Windtraps.
+**/
+void cAllegroDrawer::bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor) {
+    for (int x = 0; x < bmp->w; x++) {
+        for (int y = 0; y < bmp->h; y++) {
+            if (getpixel(bmp, x, y) == colorToReplace) {
+                putpixel(bmp, x, y, newColor);
+            }
+        }
+    }
+}

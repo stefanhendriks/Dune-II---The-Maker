@@ -1,4 +1,6 @@
 #include "../../include/d2tmh.h"
+#include "cStructureFactory.h"
+
 
 cStructureFactory *cStructureFactory::instance = NULL;
 
@@ -38,13 +40,6 @@ cAbstractStructure *cStructureFactory::createStructureInstance(int type) {
 }
 
 void cStructureFactory::deleteStructureInstance(cAbstractStructure *pStructure) {
-    // notify building list updater
-    cPlayer * pPlayer = &player[pStructure->getPlayerId()];
-    cBuildingListUpdater * buildingListUpdater = pPlayer->getBuildingListUpdater();
-    if (buildingListUpdater) {
-        buildingListUpdater->onStructureDestroyed(pStructure->getType());
-    }
-
     // delete memory acquired
     structure[pStructure->getStructureId()] = nullptr;
     delete pStructure;
@@ -68,28 +63,18 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	assert(iPlayer >= 0);
 	assert(iPlayer <= MAX_PLAYERS);
 
-	int iNewId = getFreeSlot();
-
-	// fail
-    if (iNewId < 0) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "No free slot available, returning NULL");
-        return nullptr;
-    }
-
     if (iPercent > 100) iPercent = 100;
 
-	// When 100% of the structure is blocked, this method is never called
-	// therefore we can assume that SLAB4 can be placed always partially
-	// when here.
-	int result = getSlabStatus(iCell, iStructureType, -1);
+    updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(iCell, iStructureType, iPlayer);
+	clearFogForStructureType(iCell, iStructureType, 2, iPlayer);
 
-	// we may not place it, GUI messed up
-    if (result < -1 && iStructureType != SLAB4) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "cannot create structure: slab status < -1, and type != SLAB4, returning NULL");
-        return nullptr;
-    }
+	// SLAB and WALL is not a real structure. The terrain is manipulated
+	// therefore quit here, as we won't place real structure.
+    if (iStructureType == SLAB1 || iStructureType == SLAB4 || iStructureType == WALL) {
+		return nullptr;
+	}
 
-	float fPercent = (float)iPercent/100; // divide by 100 (to make it 0.x)
+    float fPercent = (float)iPercent/100; // divide by 100 (to make it 0.x)
 
     s_Structures &sStructures = structures[iStructureType];
     int hp = sStructures.hp;
@@ -98,16 +83,15 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
         return nullptr;
     }
 
-    updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(iCell, iStructureType, iPlayer);
-	clearFogForStructureType(iCell, iStructureType, 2, iPlayer);
+    int iNewId = getFreeSlot();
 
-	// SLAB and WALL is not a real structure. The terrain is manipulated
-	// therefore quit here, as we won't place real structure.
-    if (iStructureType == SLAB1 || iStructureType == SLAB4 || iStructureType == WALL) {
-		return NULL;
-	}
+    // fail
+    if (iNewId < 0) {
+        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "No free slot available, returning NULL");
+        return nullptr;
+    }
 
-	cAbstractStructure *str = createStructureInstance(iStructureType);
+    cAbstractStructure *str = createStructureInstance(iStructureType);
 
 	if (str == NULL) {
         cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "cannot create structure: createStructureInstance returned NULL");
@@ -133,7 +117,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
     str->setOwner(iPlayer);
     str->setBuildingFase(1); // prebuild
     str->TIMER_prebuild = std::min(structureSize/16, 250); // prebuild timer. A structure of 64x64 will result in 256, bigger structure has longer timer
-    str->TIMER_damage = rnd(1000)+100;
+    str->TIMER_decay = rnd(1000) + 100;
     str->fConcrete = (1 - fPercent);
 	str->setHitPoints((int)fHealth);
     str->setFrame(rnd(1)); // random start frame (flag)
@@ -149,14 +133,18 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 		REINFORCE(iPlayer, HARVESTER, iCell+2, iCell+2);
 	}
 
-    // handle update
-    cPlayer * pPlayer = &player[iPlayer];
-    cBuildingListUpdater * buildingListUpdater = pPlayer->getBuildingListUpdater();
-    if (buildingListUpdater) {
-        buildingListUpdater->onStructureCreated(iStructureType);
-    }
-
     structureUtils.putStructureOnDimension(MAPID_STRUCTURES, str);
+
+    // handle update
+    s_GameEvent event {
+            .eventType = eGameEventType::GAME_EVENT_CREATED,
+            .entityType = eBuildType::STRUCTURE,
+            .entityID = str->getStructureId(),
+            .player = str->getPlayer(),
+            .entitySpecificType = iStructureType
+    };
+
+    game.onNotify(event);
 
     return str;
 }
@@ -168,7 +156,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 **/
 void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(int iCell, int iStructureType, int iPlayer) {
     // add this structure to the array of the player (for some score management)
-    cPlayer &cPlayer = player[iPlayer];
+    cPlayer &cPlayer = players[iPlayer];
     cPlayer.increaseStructureAmount(iStructureType);
 
 	if (iStructureType == SLAB1) {
@@ -263,85 +251,43 @@ int cStructureFactory::getFreeSlot() {
 
 /**
 <p>
-	This function will check if at iCell (the upper left corner of a structure) a structure
-	can be placed of type "iStructureType". If iUnitIDTOIgnore is > -1, then if any unit is
-	supposidly 'blocking' this structure from placing, it will be ignored.
+ This function will return how many (if any) slabs are found for the surface of a structure type. This function
+ does *not* check if a structure can be placed at this location.
  </p>
 <p>
-	Ie, you will use the iUnitIDToIgnore value when you want to create a Const Yard on the
-	location of an MCV.
+	Ie, given a constyard of 2x2 (4 cells), this can return 0 (no slabs) or 4 (fully slabbed) or in between.
 </p>
  <p>
  <b>Returns:</b><br>
- <ul>
- <li>-2  = ERROR / Cannot be placed at this location with the params given.</li>
- <li>-1  = PERFECT / Can be placed, and entire structure has pavement (slabs)</li>
- <li>>=0 = GOOD but it is not slabbed all (so not perfect)</li>
- <ul>
+ Any amount of cells that are "slabbed".
  </p>
 **/
-int cStructureFactory::getSlabStatus(int iCell, int iStructureType, int iUnitIDToIgnore) {
-    if (iCell < 0) return -2;
+int cStructureFactory::getSlabStatus(int iCell, int iStructureType) {
+    if (!map.isValidCell(iCell)) return 0;
 
     // checks if this structure can be placed on this cell
-    int w = structures[iStructureType].bmp_width/32;
-    int h = structures[iStructureType].bmp_height/32;
+    int w = structures[iStructureType].bmp_width / TILESIZE_WIDTH_PIXELS;
+    int h = structures[iStructureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
 
-    int slabs=0;
-    int total=w*h;
+    int slabs = 0;
+
     int x = map.getCellX(iCell);
     int y = map.getCellY(iCell);
 
-    for (int cx=0; cx < w; cx++)
-        for (int cy=0; cy < h; cy++)
-        {
-            int cll= map.makeCell(cx + x, cy + y); // <-- some evil global thing that calculates the cell...
+    for (int cx = 0; cx < w; cx++) {
+        for (int cy = 0; cy < h; cy++) {
+            int cll = map.getCellWithMapBorders(cx + x, cy + y);
 
-			// check if terrain allows it.
-            if (map.getCellType(cll) != TERRAIN_ROCK &&
-                map.getCellType(cll) != TERRAIN_SLAB) {
-//				logbook("getSlabStatus will return -2, reason: terrain is not rock or slab.");
-                return -2; // cannot place on sand
+            if (cll < 0) {
+                continue;
             }
 
-			// another structure found on this location, return -2 meaning "blocked"
-            if (map.getCellIdStructuresLayer(cll) > -1) {
-//				logbook("getSlabStatus will return -2, reason: another structure found on one of the cells");
-                return -2;
-            }
-
-			// unit found on location where structure wants to be placed. Check if
-			// it may be ignored, if not, return -2.
-            int idOfUnitAtCell = map.getCellIdUnitLayer(cll);
-            if (idOfUnitAtCell > -1)
-            {
-                if (iUnitIDToIgnore > -1)
-                {
-                    if (idOfUnitAtCell == iUnitIDToIgnore) {
-                        // ok; this may be ignored.
-					} else {
-						// not the unit to be ignored.
-//						logbook("getSlabStatus will return -2, reason: unit found that blocks placement; is not ignored");
-						return -2;
-					}
-				} else {
-					// no iUnitIDToIgnore given, this means always -2
-//					logbook("getSlabStatus will return -2, reason: unit found that blocks placement; no id to ignore");
-                    return -2;
-				}
-            }
-
-            // now check if the 'terrain' type is 'slab'. If that is true, increase value of found slabs.
-			if (map.getCellType(cll) == TERRAIN_SLAB) {
+            // If the 'terrain' type is 'slab' increase value of found slabs.
+            if (map.getCellType(cll) == TERRAIN_SLAB) {
                 slabs++;
-			}
+            }
         }
-
-
-		// if the amount of slabs equals the amount of total slabs possible, return a perfect status.
-		if (slabs >= total) {
-			return -1; // perfect
-		}
+    }
 
     return slabs; // ranges from 0 to <max slabs possible of building (ie height * width in cells)
 }
@@ -381,5 +327,25 @@ void cStructureFactory::destroy() {
     cStructureFactory::getInstance()->deleteAllExistingStructures();
     if (instance) {
         delete instance;
+    }
+}
+
+
+void cStructureFactory::slabStructure(int iCll, int iStructureType, int iPlayer) {
+    const s_Structures &sStructures = structures[iStructureType];
+
+    int width = sStructures.bmp_width / TILESIZE_WIDTH_PIXELS;
+    int height = sStructures.bmp_height / TILESIZE_HEIGHT_PIXELS;
+
+    int x = map.getCellX(iCll);
+    int y = map.getCellY(iCll);
+
+    int endX = x + width;
+    int endY = y + height;
+
+    for (int sx = x; sx < endX; sx++) {
+        for (int sy = y; sy < endY; sy++) {
+            createStructure(map.getCellWithMapBorders(sx, sy), SLAB1, iPlayer);
+        }
     }
 }

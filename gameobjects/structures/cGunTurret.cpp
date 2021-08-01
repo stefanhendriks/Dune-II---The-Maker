@@ -160,6 +160,8 @@ void cGunTurret::think_guard() {
         int iWorm=-1;       // worm lowest priority
         int iDanger=-1;     // danger id (unit to attack)
 
+        int prevTarget = iTargetID;
+
         iTargetID=-1;       // no target
 
         // scan area for units
@@ -168,8 +170,7 @@ void cGunTurret::think_guard() {
             cUnit &cUnit = unit[i];
             if (!cUnit.isValid()) continue;
             if (cUnit.iPlayer == getOwner()) continue; // skip own units
-            bool bSameTeam = getPlayer()->isSameTeamAs(cUnit.getPlayer());
-            if (bSameTeam) continue; // skip same team units
+            if (cUnit.getPlayer()->isSameTeamAs(getPlayer())) continue;
             if (!map.isVisible(cUnit.getCell(), getPlayer())) continue; // not visible for player
 
             if (canAttackAirUnits()) {
@@ -179,8 +180,7 @@ void cGunTurret::think_guard() {
             }
 
             int c1 = cUnit.getCell();
-            int c3 = cUnit.getCell();
-            int distance = ABS_length(iCellX, iCellY, map.getCellX(c3), map.getCellY(c1));
+            int distance = ABS_length(iCellX, iCellY, map.getCellX(c1), map.getCellY(c1));
 
             if (distance <= getSight()) {
                 if (cUnit.isAttackableAirUnit()) {
@@ -202,6 +202,23 @@ void cGunTurret::think_guard() {
             iTargetID = iDanger;
         } else if (iWorm > -1) {
             iTargetID = iWorm;
+        }
+
+        // discovered a new target
+        if (iTargetID > -1 && iTargetID != prevTarget) {
+            cUnit &unitToAttack = unit[iTargetID];
+            if (unitToAttack.isValid()) {
+                s_GameEvent event{
+                        .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
+                        .entityType = eBuildType::UNIT,
+                        .entityID = unitToAttack.iID,
+                        .player = getPlayer(),
+                        .entitySpecificType = unitToAttack.getType(),
+                        .atCell = unitToAttack.getCell()
+                };
+
+                game.onNotify(event);
+            }
         }
 
         TIMER_guard=0-rnd(20);

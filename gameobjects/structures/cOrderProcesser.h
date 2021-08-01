@@ -76,7 +76,7 @@ private:
     cBuildingListItem *orderedItems[MAX_ITEMS_TO_ORDER];
     int pricePaidForItem[MAX_ITEMS_TO_ORDER];
 
-    cPlayer *m_Player;
+    cPlayer *player;
 
     bool orderPlaced;
 

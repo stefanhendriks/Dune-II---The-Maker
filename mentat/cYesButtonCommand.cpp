@@ -7,7 +7,7 @@ void cYesButtonCommand::execute(cAbstractMentat& mentat) {
     game.iRegion  = 1;
     game.mission_init();
 
-    player[HUMAN].setHouse(mentat.getHouse());
+    players[HUMAN].setHouse(mentat.getHouse());
 
     // play correct mentat music
     playMusicByType(MUSIC_BRIEFING);

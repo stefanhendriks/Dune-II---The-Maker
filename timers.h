@@ -11,8 +11,8 @@
   */
 
 #ifndef TIMERS_H
-	void allegro_timerfps();	/** FPS timer **/
-	void allegro_timerglobal(); /** Global timer **/
+	void allegro_timerseconds();	/** FPS timer **/
+	void allegro_timergametime(); /** Global timer **/
 	void allegro_timerunits();	/** Unit timer **/
 
 	extern volatile int allegro_timerSecond;

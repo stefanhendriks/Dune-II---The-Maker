@@ -181,6 +181,13 @@ bool cMap::canDeployUnitAtCell(int iCll, int iUnitID) {
     return true;
 }
 
+/**
+ * Returns true if cell is occupied, for a given unit. The unitId is given so it can ignore its own ID if that
+ * is recorded on map data. (ie when moving, a unit can occupy 2 cells at once).
+ * @param iCll
+ * @param iUnitID
+ * @return
+ */
 bool cMap::occupied(int iCll, int iUnitID) {
     if (iCll < 0 || iUnitID < 0)
         return true;
@@ -248,14 +255,13 @@ void cMap::clear_all(int playerId) {
     }
 }
 
-void cMap::clear_spot(int c, int size) {
+void cMap::clearShroudForAllPlayers(int c, int size) {
     for (int p = 0; p < MAX_PLAYERS; p++) {
         clearShroud(c, size, p);
     }
 }
 
 void cMap::clearShroud(int c, int size, int playerId) {
-
     if (!map.isWithinBoundaries(c)) return;
 
     map.setVisibleFor(c, playerId);
@@ -288,24 +294,35 @@ void cMap::clearShroud(int c, int size, int playerId) {
             if (!map.isVisible(cl, playerId)) {
                 map.setVisibleFor(cl, playerId);
 
-                // human unit detected enemy/sandworm, this influences music
-                if (playerId == HUMAN) {
-                    int unitId = map.getCellIdUnitLayer(cl);
-                    if (unitId > -1) {
-                        cUnit &cUnit = unit[unitId];
-                        if (cUnit.isValid() && cUnit.getPlayer()->isSameTeamAs(&player[playerId])) // NOT friend
-                        {
-                            // when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
-                            if (game.iMusicType == MUSIC_PEACE) {
-                                playMusicByType(MUSIC_ATTACK);
+                int structureId = map.getCellIdStructuresLayer(cl);
+                if (structureId > -1) {
+                    cAbstractStructure *pStructure = structure[structureId];
+                    s_GameEvent event {
+                            .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
+                            .entityType = eBuildType::STRUCTURE,
+                            .entityID = structureId,
+                            .player = &players[playerId],
+                            .entitySpecificType = pStructure->getType(),
+                            .atCell = cl
+                    };
 
-                                // warning... bla bla
-                                if (cUnit.iType == SANDWORM)
-                                    play_voice(SOUND_VOICE_10_ATR);  // omg a sandworm, RUN!
-                                else
-                                    play_voice(SOUND_VOICE_09_ATR);  // enemy unit
-                            }
-                        }
+                    game.onNotify(event);
+                }
+
+                int unitId = map.getCellIdUnitLayer(cl);
+                if (unitId > -1) {
+                    cUnit &cUnit = unit[unitId];
+                    if (cUnit.isValid()) {
+                        s_GameEvent event{
+                                .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
+                                .entityType = eBuildType::UNIT,
+                                .entityID = unitId,
+                                .player = &players[playerId],
+                                .entitySpecificType = cUnit.getType(),
+                                .atCell = cl
+                        };
+
+                        game.onNotify(event);
                     }
                 }
             } // make visible
@@ -404,7 +421,7 @@ void cMap::draw_units() {
     }
 
     // TODO: move somewhere else than drawing function
-    int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
+    int mc = players[HUMAN].getGameControlsContext()->getMouseCell();
     if (mc > -1) {
         tCell &cellOfMouse = map.cell[mc];
 
@@ -479,8 +496,8 @@ void cMap::thinkInteraction() {
 }
 
 int cMap::mouse_draw_x() {
-    if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
-        int mouseCell = player[HUMAN].getGameControlsContext()->getMouseCell();
+    if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
+        int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell();
         int absX = getAbsoluteXPositionFromCell(mouseCell);
         return mapCamera->getWindowXPosition(absX);
     }
@@ -488,8 +505,8 @@ int cMap::mouse_draw_x() {
 }
 
 int cMap::mouse_draw_y() {
-    if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
-        int mouseCell = player[HUMAN].getGameControlsContext()->getMouseCell();
+    if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
+        int mouseCell = players[HUMAN].getGameControlsContext()->getMouseCell();
         int absY = getAbsoluteYPositionFromCell(mouseCell);
         return mapCamera->getWindowYPosition(absY);
     }
@@ -716,10 +733,10 @@ int cMap::getAbsoluteYPositionFromCellCentered(int cell) {
 }
 
 int cMap::makeCell(int x, int y) {
-    assert(x > -1);
-    assert(x < width); // should never be higher!
-    assert(y > -1);
-    assert(y < height);
+    assert(x > -1 && "makeCell x must be > -1");
+    assert(x < width && "makeCell x must be < width"); // should never be higher!
+    assert(y > -1 && "makeCell y must be > -1");
+    assert(y < height && "makeCell y must be < height");
 
     // create cell
     int cell = getCellWithMapDimensions(x, y);
@@ -854,4 +871,93 @@ void cMap::setVisible(int iCell, int iPlayer, bool flag) {
     if (iPlayer < 0 || iPlayer >= MAX_PLAYERS) return;
 
     cell[iCell].iVisible[iPlayer] = flag;
+}
+
+int cMap::findNearestSpiceBloom(int iCell) {
+    int quarterOfMap = getWidth() / 4;
+    int iDistance = quarterOfMap;
+    int halfWidth = getWidth() / 2;
+    int halfHeight = getHeight() / 2;
+
+    if (iCell < 0) {
+        // use cell at center
+        iCell = map.getCellWithMapDimensions(halfWidth, halfHeight);
+        iDistance = map.getWidth();
+    }
+
+    int cx, cy;
+    int closestBloomFoundSoFar=-1;
+    int bloomsEvaluated = 0;
+
+    cx = map.getCellX(iCell);
+    cy = map.getCellY(iCell);
+
+    for (int i=0; i < map.getMaxCells(); i++) {
+        int cellType = map.getCellType(i);
+        if (cellType != TERRAIN_BLOOM) continue;
+        bloomsEvaluated++;
+
+        int d = ABS_length(cx, cy, map.getCellX(i), map.getCellY(i));
+
+        if (d < iDistance) {
+            closestBloomFoundSoFar = i;
+            iDistance = d;
+        }
+    }
+
+    // found a close spice bloom
+    if (closestBloomFoundSoFar > 0) {
+        return closestBloomFoundSoFar;
+    }
+
+    // no spice blooms evaluated, abort
+    if (bloomsEvaluated < 0) {
+        return -1;
+    }
+
+    // randomly pick one
+    int iTargets[10];
+    memset(iTargets, -1, sizeof(iTargets));
+    int iT=0;
+
+    for (int i=0; i < map.getMaxCells(); i++) {
+        int cellType = map.getCellType(i);
+        if (cellType == TERRAIN_BLOOM) {
+            iTargets[iT] = i;
+            iT++;
+            if (iT >= 10) break;
+        }
+    }
+
+    // when finished, return bloom
+    return iTargets[rnd(iT)];
+}
+
+bool cMap::isValidTerrainForStructureAtCell(int cll) {
+    if (!isValidCell(cll)) return false;
+    int cellType = getCellType(cll);
+    // TODO: make this a flag in the cell/terrain type kind? (there is no such thing yet, its all hard-coded)
+    bool allowedCellType = (cellType == TERRAIN_SLAB || cellType == TERRAIN_ROCK);
+    if (!allowedCellType) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * returns a (randomized) cell. Taking cell param as 'start' position and 'distance' the amount of cells you want to
+ * move away. This function will not chose a random position between cell and position. Hence, the amount of cells
+ * to move is guaranteed to be so many cells away.
+ * @param cell
+ * @param distance
+ */
+int cMap::getRandomCellFrom(int cell, int distance) {
+    int startX = getCellX(cell);
+    int startY = getCellY(cell);
+    int xDir = rnd(100) < 50 ? -1 : 1;
+    int yDir = rnd(100) < 50 ? -1 : 1;
+    int newX = (startX - distance) + (xDir * distance);
+    int newY = (startY - distance) + (yDir * distance);
+    return getCellWithMapBorders(newX, newY);
 }

@@ -1,6 +1,6 @@
 #include "../include/d2tmh.h"
 
-cSideBarDrawer::cSideBarDrawer(cPlayer * thePlayer) : m_Player(thePlayer) {
+cSideBarDrawer::cSideBarDrawer(cPlayer * thePlayer) : player(thePlayer) {
     assert(thePlayer);
 	buildingListDrawer = new cBuildingListDrawer(thePlayer);
 	candybar = nullptr;
@@ -71,7 +71,7 @@ void cSideBarDrawer::createCandyBar() {
 }
 
 void cSideBarDrawer::drawHouseGui() {
-	set_palette(m_Player->pal);
+	set_palette(player->pal);
 
 	// black out sidebar
 	rectfill(bmp_screen, (game.screen_x-cSideBar::SidebarWidth), 0, game.screen_x, game.screen_y, makecol(0,0,0));
@@ -88,7 +88,7 @@ void cSideBarDrawer::drawBuildingLists() {
 	// draw the sidebar itself (the backgrounds, borders, etc)
 
     // !??! sidebar is not set earlier...but can be re-set, so keep doing this :(
-    sidebar = m_Player->getSideBar();
+    sidebar = player->getSideBar();
 
 	// draw the buildlist icons
 	int selectedListId = sidebar->getSelectedListID();
@@ -181,7 +181,7 @@ void cSideBarDrawer::drawBuildingLists() {
 
     // allow clicking on the order button
     if (selectedList && selectedList->getType() == LIST_STARPORT) {
-        orderDrawer->drawOrderButton(m_Player);
+        orderDrawer->drawOrderButton(player);
     }
 }
 
@@ -206,12 +206,15 @@ void cSideBarDrawer::drawCreditsUsage() {
 
     allegroDrawer->drawRectangleFilled(bmp_screen, &powerBarRect, allegroDrawer->getColor_BLACK());
 
+    // STEFAN: 01/05/2021 -> looks like a lot of this code can be moved to the player class to retrieve max spice capacity
+    // and so forth.
+
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
     int maxSpiceCapacity = 1000; // this is still hard coded, need to move to INI file
-    int structuresWithSpice = m_Player->getAmountOfStructuresForType(REFINERY) + m_Player->getAmountOfStructuresForType(SILO);
+    int structuresWithSpice = player->getAmountOfStructuresForType(REFINERY) + player->getAmountOfStructuresForType(SILO);
     float totalSpiceCapacity = (1 + structuresWithSpice) * maxSpiceCapacity;
-    float maxSpice = (float)m_Player->max_credits / totalSpiceCapacity;
-    float spiceStored = (float)m_Player->credits / totalSpiceCapacity;
+    float maxSpice = (float)player->getMaxCredits() / totalSpiceCapacity;
+    float spiceStored = (float)player->getCredits() / totalSpiceCapacity;
 
     float barHeightToDraw = barTotalHeight * maxSpice;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -223,7 +226,7 @@ void cSideBarDrawer::drawCreditsUsage() {
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerOutY = barY + (barTotalHeight - barHeightToDraw);
 
-    float spiceCapacityRatio = ((float)m_Player->credits + 1) / ((float)m_Player->max_credits + 1);
+    float spiceCapacityRatio = ((float)player->getCredits() + 1) / ((float)player->getMaxCredits() + 1);
     if (spiceCapacityRatio < 0) spiceCapacityRatio= 0;
     if (spiceCapacityRatio > 1) spiceCapacityRatio= 1;
     int r = spiceCapacityRatio * 255;
@@ -232,10 +235,10 @@ void cSideBarDrawer::drawCreditsUsage() {
     if (r > 255) r = 255;
     if (g > 255) g = 255;
 
-    if (m_Player->bEnoughSpiceCapacityToStoreCredits()) {
+    if (player->bEnoughSpiceCapacityToStoreCredits()) {
         rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, makecol(r, g, 32));
     } else {
-        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, m_Player->getErrorFadingColor());
+        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, player->getErrorFadingColor());
     }
 
     line(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
@@ -264,9 +267,9 @@ void cSideBarDrawer::drawPowerUsage() const {
 
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
     int maxPowerOutageOfWindtrap = structures[WINDTRAP].power_give;
-    float totalPowerOutput = (1 + (m_Player->getAmountOfStructuresForType(WINDTRAP)))*maxPowerOutageOfWindtrap;
-    float powerIn = (float)m_Player->has_power / totalPowerOutput;
-    float powerUse = (float)m_Player->use_power / totalPowerOutput;
+    float totalPowerOutput = (1 + (player->getAmountOfStructuresForType(WINDTRAP))) * maxPowerOutageOfWindtrap;
+    float powerIn = (float)player->getPowerProduced() / totalPowerOutput;
+    float powerUse = (float)player->getPowerUsage() / totalPowerOutput;
 
     float barHeightToDraw = barTotalHeight * powerIn;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -278,17 +281,17 @@ void cSideBarDrawer::drawPowerUsage() const {
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerOutY = barY + (barTotalHeight - barHeightToDraw);
 
-    float powerUsageRatio = ((float)m_Player->use_power + 1) / ((float)m_Player->has_power + 1);
+    float powerUsageRatio = ((float)player->getPowerUsage() + 1) / ((float)player->getPowerProduced() + 1);
     int r = powerUsageRatio * 255;
     int g = (1.1 - powerUsageRatio) * 255;
 
     if (r > 255) r = 255;
     if (g > 255) g = 255;
 
-    if (m_Player->bEnoughPower()) {
+    if (player->bEnoughPower()) {
         rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, makecol(r, g, 32));
     } else {
-        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, m_Player->getErrorFadingColor());
+        rectfill(bmp_screen, barX, powerOutY, barX + barWidth, barY + barTotalHeight, player->getErrorFadingColor());
     }
 
     line(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
@@ -318,16 +321,16 @@ void cSideBarDrawer::drawMinimap() {
 	// ------
 	// 67, 50 (width/height)
 
-    bool hasRadarAndEnoughPower = m_Player->hasRadarAndEnoughPower();
+    bool hasRadarAndEnoughPower = player->hasRadarAndEnoughPower();
 
     if (hasRadarAndEnoughPower){
         return; // bail, because we render the minimap
     }
 
     // else, we render the house emblem
-	rectfill(bmp_screen, drawX + 1, cSideBar::TopBarHeight + 1, game.screen_x, drawY, m_Player->getEmblemBackgroundColor());
+	rectfill(bmp_screen, drawX + 1, cSideBar::TopBarHeight + 1, game.screen_x, drawY, player->getEmblemBackgroundColor());
 
-	if (m_Player->isHouse(ATREIDES) || m_Player->isHouse(HARKONNEN) || m_Player->isHouse(ORDOS)) {
+	if (player->isHouse(ATREIDES) || player->isHouse(HARKONNEN) || player->isHouse(ORDOS)) {
 	    int bitmapId = BMP_SELECT_HOUSE_ATREIDES;
 
         int srcX = 11;
@@ -337,11 +340,11 @@ void cSideBarDrawer::drawMinimap() {
         int emblemWidth = 68;
         int emblemHeight = 50;
 
-        if (m_Player->isHouse(HARKONNEN)) {
+        if (player->isHouse(HARKONNEN)) {
             bitmapId = BMP_SELECT_HOUSE_HARKONNEN;
         }
 
-        if (m_Player->isHouse(ORDOS)) {
+        if (player->isHouse(ORDOS)) {
             bitmapId = BMP_SELECT_HOUSE_ORDOS;
             emblemHeight = 49;
             srcY = 11;
@@ -376,6 +379,6 @@ void cSideBarDrawer::drawOptionsBar() {
 }
 
 void cSideBarDrawer::setPlayer(cPlayer *pPlayer) {
-    this->m_Player = pPlayer;
+    this->player = pPlayer;
     this->buildingListDrawer->setPlayer(pPlayer);
 }
