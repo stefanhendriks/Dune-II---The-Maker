@@ -644,6 +644,54 @@ namespace brains {
 //    sprintf(msg, "cPlayerBrainSkirmish::thinkState_EndGame(), for player [%d]", player->getId());
 //    logbook(msg);
 
+        bool foundIdleUnit = false;
+        std::vector<int> ids = player->getAllMyUnits();
+        for (auto &id : ids) {
+            cUnit &cUnit = unit[id];
+            if (cUnit.isIdle()) {
+                foundIdleUnit = true;
+                break;
+            }
+        }
+
+        if (!foundIdleUnit) {
+            return;
+        }
+
+        int cellToAttack = -1;
+        if (rnd(100) < 50) {
+            for (int i = 0; i < MAX_UNITS; i++) {
+                cUnit &cUnit = unit[i];
+                if (!cUnit.isValid()) continue;
+                if (!cUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+                // enemy structure
+                cellToAttack = cUnit.getCell();
+                if (rnd(100) < 5) {
+                    break; // this way we kind of have randomly another target...
+                }
+            }
+        } else {
+            for (int i = 0; i < MAX_STRUCTURES; i++) {
+                cAbstractStructure *theStructure = structure[i];
+                if (!theStructure) continue;
+                if (!theStructure->isValid()) continue;
+                if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+                // enemy structure
+                cellToAttack = theStructure->getCell();
+                if (rnd(100) < 10) {
+                    break; // this way we kind of have randomly another target...
+                }
+            }
+        }
+
+        if (cellToAttack > -1) {
+            for (auto &id : ids) {
+                cUnit &pUnit = unit[id];
+                if (pUnit.isIdle()) {
+                    pUnit.attackAt(cellToAttack);
+                }
+            }
+        }
     }
 
     void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders() {

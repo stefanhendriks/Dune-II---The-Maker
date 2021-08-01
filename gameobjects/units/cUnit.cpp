@@ -721,6 +721,35 @@ void cUnit::updateCellXAndY() {
     iCellY = map.getCellY(iCell);
 }
 
+void cUnit::attackUnit(int targetUnit) {
+    UNIT_ORDER_ATTACK(iID, unit[targetUnit].iCell, targetUnit, -1, -1);
+}
+
+void cUnit::attackStructure(int targetStructure) {
+    UNIT_ORDER_ATTACK(iID, structure[targetStructure]->getCell(), -1, targetStructure, -1);
+}
+
+void cUnit::attackCell(int cell) {
+    UNIT_ORDER_ATTACK(iID, cell, -1, -1, -1);
+}
+
+void cUnit::attackAt(int cell) {
+    if (!map.isWithinBoundaries(cell)) return;
+    int structureId = map.getCellIdStructuresLayer(cell);
+    if (structureId > -1) {
+        attackStructure(structureId);
+        return;
+    }
+
+    int unitId = map.getCellIdUnitLayer(cell);
+    if (unitId > -1) {
+        attackUnit(unitId);
+        return;
+    }
+
+    attackCell(cell);
+}
+
 void cUnit::move_to(int iCll, int iStrucID, int iUnitID) {
     move_to(iCll, iStrucID, iUnitID, eUnitActionIntent::INTENT_MOVE);
 }
