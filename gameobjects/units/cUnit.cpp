@@ -722,26 +722,46 @@ void cUnit::updateCellXAndY() {
 }
 
 void cUnit::attackUnit(int targetUnit) {
+    char msg[255];
+    sprintf(msg, "attackUnit() : target is [%d]", targetUnit);
+    log(msg);
     UNIT_ORDER_ATTACK(iID, unit[targetUnit].iCell, targetUnit, -1, -1);
 }
 
 void cUnit::attackStructure(int targetStructure) {
+    char msg[255];
+    sprintf(msg, "attackStructure() : target is [%d]", targetStructure);
+    log(msg);
     UNIT_ORDER_ATTACK(iID, structure[targetStructure]->getCell(), -1, targetStructure, -1);
 }
 
 void cUnit::attackCell(int cell) {
+    char msg[255];
+    sprintf(msg, "attackCell() : cell target is [%d]", cell);
+    log(msg);
     UNIT_ORDER_ATTACK(iID, cell, -1, -1, -1);
 }
 
 void cUnit::attackAt(int cell) {
-    if (!map.isWithinBoundaries(cell)) return;
+    char msg[255];
+    sprintf(msg, "attackAt() : cell target is [%d]", cell);
+    log(msg);
+
+    if (!map.isWithinBoundaries(cell)) {
+        log("attackAt() : Invalid cell, aborting");
+        return;
+    }
+
+    int unitId = map.getCellIdUnitLayer(cell);
     int structureId = map.getCellIdStructuresLayer(cell);
+    sprintf(msg, "attackAt() : cell target is [%d], structureId [%d], unitId [%d]", cell, structureId, unitId);
+    log(msg);
+
     if (structureId > -1) {
         attackStructure(structureId);
         return;
     }
 
-    int unitId = map.getCellIdUnitLayer(cell);
     if (unitId > -1) {
         attackUnit(unitId);
         return;
@@ -895,15 +915,15 @@ void cUnit::think_guard() {
                 game.onNotify(event);
             }
 
-            if (iPlayer > HUMAN) {
+            if (!getPlayer()->isHuman()) {
                 if (unitToAttack.isInfantryUnit() && isUnitWhoCanSquishInfantry()) {
                     // AI will try to squish infantry units
                     move_to(unitToAttack.iCell);
                 } else {
-                    UNIT_ORDER_ATTACK(iID, unitToAttack.iCell, unitIdSelectedForAttacking, -1, -1);
+                    attackUnit(unitIdSelectedForAttacking);
                 }
             } else {
-                UNIT_ORDER_ATTACK(iID, unitToAttack.iCell, unitIdSelectedForAttacking, -1, -1);
+                attackUnit(unitIdSelectedForAttacking);
             }
 
             if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == HUMAN) {
@@ -950,10 +970,9 @@ void cUnit::think_guard() {
             }
 
             if (structureIdSelectedForAttacking > -1) {
+                attackStructure(structureIdSelectedForAttacking);
 
-                UNIT_ORDER_ATTACK(iID, structure[structureIdSelectedForAttacking]->getCell(), -1,
-                                  structureIdSelectedForAttacking, -1);
-
+                // !?!?
                 if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0) {
                     playMusicByType(MUSIC_ATTACK);
                 }
@@ -1142,9 +1161,7 @@ void cUnit::think() {
 
             // target known?
             if (iTarget > -1) {
-                UNIT_ORDER_ATTACK(iID, unit[iTarget].iCell, iTarget, -1, -1);
-                if (DEBUGGING)
-                    log("FOUND ENEMY TO ATTACK");
+                attackUnit(iTarget);
             } else {
                 // no unit found, attack structure
                 // scan for enemy activities.
@@ -1179,7 +1196,7 @@ void cUnit::think() {
                 }
 
                 if (iTarget > -1) {
-                    UNIT_ORDER_ATTACK(iID, unit[iTarget].iCell, -1, iTarget, -1);
+                    attackStructure(iTarget);
                 }
             }
         } else if (iAttackUnit < 0 && TIMER_attack < 0) {
@@ -1831,7 +1848,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
             // only auto attack back when it is not an airborn unit
             // note: guard state already takes care of scanning for air units and attacking them
             if (!unitWhoShotMeIsAirborn) {
-                UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1, -1);
+                attackUnit(iShotUnit);
             }
         }
 
@@ -1853,7 +1870,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                     } else {
                         // else simply shoot it
                         if (!unitWhoShotMeIsAirborn) {
-                            UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1, -1);
+                            attackUnit(iShotUnit);
                         }
                     }
                 } else {
@@ -1884,7 +1901,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                             } else {
                                 // else simply shoot it
                                 if (!unitWhoShotMeIsAirborn) {
-                                    UNIT_ORDER_ATTACK(iID, unit[iShotUnit].iCell, iShotUnit, -1, -1);
+                                    attackUnit(iShotUnit);
                                 }
                             }
                         }

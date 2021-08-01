@@ -45,7 +45,7 @@ namespace brains {
                 cUnit &aUnit = unit[myUnit];
                 if (aUnit.isValid() && aUnit.isIdle()) {
                     player->log("cPlayerBrainMission::thinkState_Execute(): Ordering unit to attack!");
-                    UNIT_ORDER_ATTACK(myUnit, pStructure->getCell(), -1, targetStructureID, -1);
+                    aUnit.attackStructure(targetStructureID);
                 }
             }
         }

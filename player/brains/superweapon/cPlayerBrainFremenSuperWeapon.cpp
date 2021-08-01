@@ -38,8 +38,7 @@ namespace brains {
         logbook(msg);
 
         // attack things!
-        int unitIdToAttack = -1;
-        int structureIdToAttack = -1;
+        int cellToAttack = -1;
 
         for (int i = 0; i < MAX_PLAYERS; i++) {
             if (i == player->getId()) continue; // skip self
@@ -54,7 +53,7 @@ namespace brains {
             std::vector<int> unitIds = players[i].getAllMyUnits();
             if (!unitIds.empty()) {
                 std::random_shuffle(unitIds.begin(), unitIds.end());
-                unitIdToAttack = unitIds.front();
+                cellToAttack = unit[unitIds.front()].getCell();
                 if (rnd(100) > 30) break;
             }
 
@@ -63,27 +62,20 @@ namespace brains {
             if (!structureIds.empty()) {
                 // pick structure to attack
                 std::random_shuffle(structureIds.begin(), structureIds.end());
-                structureIdToAttack = structureIds.front();
+                cellToAttack = structure[structureIds.front()]->getCell();
                 if (rnd(100) > 30) break;
             }
         }
 
         memset(msg, 0, sizeof(msg));
-        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() - unitIdToAttack = %d, structureIdToAttack = %d.",
-                unitIdToAttack, structureIdToAttack);
+        sprintf(msg, "cPlayerBrainFremenSuperWeapon::think() - cellToAttack = %d", cellToAttack);
         player->log(msg);
 
         // order units to attack!
         for (auto &id : ids) {
-            cUnit &cUnit = unit[id];
-            if (!cUnit.isIdle()) continue;
-            if (structureIdToAttack > -1) {
-                int cell = structure[structureIdToAttack]->getCell();
-                UNIT_ORDER_ATTACK(id, cell, -1, structureIdToAttack, -1);
-            } else if (unitIdToAttack > -1) {
-                int cell = unit[unitIdToAttack].getCell();
-                UNIT_ORDER_ATTACK(id, cell, unitIdToAttack, -1, -1);
-            }
+            cUnit &pUnit = unit[id];
+            if (!pUnit.isIdle()) continue;
+            pUnit.attackAt(cellToAttack);
         }
 
         memset(msg, 0, sizeof(msg));
