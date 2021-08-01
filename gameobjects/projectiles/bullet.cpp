@@ -309,7 +309,7 @@ void cBullet::arrivedAtDestinationLogic() {
                     play_sound_id_with_distance(SOUND_TANKDIE + rnd(2),
                                                 distanceBetweenCellAndCenterOfScreen(cellToDamage));
                 }
-                if (rnd(100) < 25) {
+                if (rnd(100) < 20) {
                     PARTICLE_CREATE(posX, posY, OBJECT_SMOKE, -1, -1);
                 }
             }
