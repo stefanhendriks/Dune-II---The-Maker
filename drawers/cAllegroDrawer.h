@@ -42,6 +42,8 @@ class cAllegroDrawer {
 
         int getColor_BLACK() { return colorBlack; }
 
+    void bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor);
+
     void setTransBlender(int red, int green, int blue, int alpha);
 
 protected:

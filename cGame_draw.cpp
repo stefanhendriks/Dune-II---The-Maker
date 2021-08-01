@@ -65,7 +65,7 @@ void cGame::winning() {
 
 // Draw the mouse in combat mode, and do its interactions
 void cGame::combat_mouse() {
-    cPlayer &humanPlayer = player[HUMAN];
+    cPlayer &humanPlayer = players[HUMAN];
     cGameControlsContext *context = humanPlayer.getGameControlsContext();
     bool bOrderingUnits=false;
 
@@ -285,20 +285,25 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
                 } else if (mouse_tile == MOUSE_ATTACK) {
                     // check who or what to attack
                     for (int i=0; i < MAX_UNITS; i++) {
-                        if (unit[i].isValid() && unit[i].iPlayer == HUMAN && unit[i].bSelected)	{
+                        cUnit &pUnit = unit[i];
+                        if (pUnit.isValid() && pUnit.iPlayer == HUMAN && pUnit.bSelected)	{
                             int iAttackCell=-1;
 
                             if (!context->isMouseOverStructure() && game.hover_unit < 0) {
                                 iAttackCell = mouseCell;
                             }
 
-                            UNIT_ORDER_ATTACK(i, mouseCell, game.hover_unit, context->getIdOfStructureWhereMouseHovers(), iAttackCell);
+                            if (iAttackCell > -1) {
+                                pUnit.attackCell(iAttackCell);
+                            } else {
+                                pUnit.attackAt(mouseCell);
+                            }
 
                             if (game.hover_unit > -1) {
                                 unit[game.hover_unit].TIMER_blink = 5;
                             }
 
-                            if (units[unit[i].iType].infantry) {
+                            if (pUnit.isInfantryUnit()) {
                                 bPlayInf=true;
                             } else {
                                 bPlayRep=true;
@@ -371,8 +376,6 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
         // where we box selecting? then this must be the unpress of the mouse button and thus we
         // should start selecting units within the rectangle
         if (mouse->isBoxSelecting()) {
-            mouse_status = MOUSE_STATE_NORMAL;
-
             int min_x, min_y;
             int max_x, max_y;
 

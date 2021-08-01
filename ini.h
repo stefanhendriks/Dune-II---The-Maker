@@ -168,6 +168,13 @@
 
 #define MAX_LINE_LENGTH     256
 
+#define INI_UNITS_PART_CONTROLLER   0
+#define INI_UNITS_PART_TYPE         1
+#define INI_UNITS_PART_HP           2
+#define INI_UNITS_PART_CELL         3
+#define INI_UNITS_PART_FACING_BODY  4
+#define INI_UNITS_PART_FACING_HEAD  5
+
 // Scenario loading
 //void INI_Load_scenario(bool bOrDune, char filename[30] );
 void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat);

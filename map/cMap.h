@@ -174,6 +174,14 @@ public:
     void draw_think();
 
     void clear_all(int playerId);
+
+    /**
+     * Clear circular area, with `cell` as center and the circle being of `size` (in cells).
+     * Clears on map for playerId.
+     * @param cell
+     * @param size
+     * @param playerId
+     */
     void clearShroud(int cell, int size, int playerId);
 
     /**
@@ -181,7 +189,7 @@ public:
      * @param c
      * @param size
      */
-    void clear_spot(int cell, int size);
+    void clearShroudForAllPlayers(int cell, int size);
 
     /**
      * returns pointer to cell or nullptr when not valid
@@ -502,6 +510,27 @@ public:
     void clearAllCells();
 
     void resize(int width, int height);
+
+    /**
+     * Finds the nearest spice Bloom near cell. If param <b>iCell</b> &lt; 0 then use middle of map.
+     * If no close cell is found
+     * a fall back of 'select any spice bloom randomly' is performed.
+     * @param iCell
+     * @return > -1 if found or < 0 upon failure
+     */
+    int findNearestSpiceBloom(int iCell);
+
+    /**
+     * Returns true if a structure may be placed at this cell. This evaluates if terrain type allows placement AND
+     * if any other structure occupies this cell. It does *not* check if a unit is at this cell. If invalid cell
+     * is given this also returns false.
+     *
+     * @param cll
+     * @return
+     */
+    bool isValidTerrainForStructureAtCell(int cell);
+
+    int getRandomCellFrom(int cell, int distance);
 
 private:
     void setVisible(int iCell, int iPlayer, bool flag);

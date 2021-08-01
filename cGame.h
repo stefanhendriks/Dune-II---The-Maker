@@ -6,7 +6,7 @@
   Contact: stefanhen83@gmail.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2010 (c) code by Stefan Hendriks
+  2001 - 2021 (c) code by Stefan Hendriks
 
   */
 
@@ -19,6 +19,7 @@
 //#include <player/cPlayer.h>
 
 #include <controls/cMouse.h>
+#include <observers/cScenarioObserver.h>
 
 // forward declaration :/ sigh should really look into these includes and such
 class cRectangle;
@@ -27,7 +28,7 @@ class cPlayer;
 class cGameControlsContext;
 class cInteractionManager;
 
-class cGame {
+class cGame : public cScenarioObserver {
 
 public:
 
@@ -51,6 +52,9 @@ public:
 
     bool bPlaySound;            // play sound?
     bool bDisableAI;            // disable AI thinking?
+    bool bOneAi;                // disable all but one AI brain? (default == false)
+    bool bDisableReinforcements;// disable any reinforcements from scenario ini file?
+    bool bNoAiRest;             // Campaign AI does not have long initial REST time
     bool bPlayMusic;            // play any music?
     bool bMp3;                  // use mp3 files instead of midi
 
@@ -74,10 +78,6 @@ public:
 
     int iMusicVolume;       // volume of the mp3 / midi
 
-    // throttle stuff
-	int shake_x;
-    int shake_y;
-    int TIMER_shake;
 
     int iMusicType;
 
@@ -142,7 +142,39 @@ public:
         return mouse; // NOOOO
     }
 
+    void shakeScreen(int duration);
+
     void setPlayerToInteractFor(cPlayer *pPlayer);
+
+    void onNotify(const s_GameEvent &event) override;
+    void onEventDiscovered(const s_GameEvent &event);
+    void onEventSpecialDeployed(const s_GameEvent &event);
+
+    static const char* stateString(const int &state) {
+        switch (state) {
+            case GAME_INITIALIZE: return "GAME_INITIALIZE";
+            case GAME_OVER: return "GAME_OVER";
+            case GAME_MENU: return "GAME_MENU";
+            case GAME_PLAYING: return "GAME_PLAYING";
+            case GAME_BRIEFING: return "GAME_BRIEFING";
+            case GAME_EDITING: return "GAME_EDITING";
+            case GAME_OPTIONS: return "GAME_OPTIONS";
+            case GAME_REGION: return "GAME_REGION";
+            case GAME_SELECT_HOUSE: return "GAME_SELECT_HOUSE";
+            case GAME_TELLHOUSE: return "GAME_TELLHOUSE";
+            case GAME_WINNING: return "GAME_WINNING";
+            case GAME_WINBRIEF: return "GAME_WINBRIEF";
+            case GAME_LOSEBRIEF: return "GAME_LOSEBRIEF";
+            case GAME_LOSING: return "GAME_LOSING";
+            case GAME_SETUPSKIRMISH: return "GAME_SETUPSKIRMISH";
+            default:
+                assert(false);
+                break;
+        }
+        return "";
+    }
+
+    void reduceShaking();
 
 private:
     cInteractionManager *_interactionManager;
@@ -178,6 +210,11 @@ private:
     bool bFadeSelectDir;    // fade select direction
     void prepareMentatToTellAboutHouse(int house);
 
+    // screen shaking
+    int shake_x;
+    int shake_y;
+    int TIMER_shake;
+
     void combat_mouse_normalCombatInteraction(cGameControlsContext *context, cPlayer &humanPlayer,
                                               bool &bOrderingUnits) const;
 
@@ -185,9 +222,7 @@ private:
 
     void mouse_combat_resetDragViewportInteraction() const;
 
-    void
-    mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGameControlsContext *context,
-                                               bool bOrderingUnits) const;
+    void mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGameControlsContext *context, bool bOrderingUnits) const;
 };
 
 #endif

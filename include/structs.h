@@ -77,6 +77,7 @@ struct s_UnitP {
   bool canEnterAndDamageStructure;  // can this unit enter a structure and damage it? (and eventually capture?)
   bool attackIsEnterStructure;      // for saboteur only really
   float damageOnEnterStructure;     // the damage inflicted to a structure when entered
+
 };
 
 // Structure types
@@ -145,7 +146,7 @@ struct s_Upgrade {
                         // above, so if you require CONSTYARD *and* RADAR you set structureType=CONSTYARD and needsStructure=RADAR, keep -1
                         // if you don't require any additional structure
 
-    int providesType;    // UNIT or STRUCTURE (0/1)
+    eBuildType providesType;    // UNIT or STRUCTURE, etc
 
     int providesTypeId;   // upgrade results into getting this typeId (type depends on 'providesType') (points to s_Unit/s_Structure)
     int providesTypeList; // into which list will this type be made available?
@@ -199,19 +200,21 @@ struct s_House {
 
 
 struct s_Bullet {
+    BITMAP *bmp;        // a reference to its bitmap. (16 bits here!)
+    int deadbmp;        // when the bullet dies, it will use this bmp to show its animation
+    int bmp_width;      // how much pixels a bullet is (wide)
 
-  BITMAP *bmp;        // a reference to its bitmap. (16 bits here!)
-  int deadbmp;        // when the bullet dies, it will use this bmp to show its animation
-  int bmp_width;      // how much pixels a bullet is (wide)
+    int damage;         // how much damage it does -> vehicles
+    int damage_inf;     // how much damage it does -> infantry
+    int explosionSize;  // square like explosion, defaults 1 (=1x1 tile), 2 means 2x2, etc.
+    int max_frames;     // when > 0 it animates automatically
+    int max_deadframes; // max dead frames
 
-  int damage;         // how much damage it does -> vehicles
-  int damage_inf;     // how much damage it does -> infantry
-  int explosionSize;  // square like explosion, defaults 1 (=1x1 tile), 2 means 2x2, etc.
-  int max_frames;     // when > 0 it animates automatically
-  int max_deadframes; // max dead frames
+    int sound;          // Sound produced when 'shot' (or explosion sound)
 
-  int sound;          // Sound produced when 'shot' (or explosion sound)
+    int deviateProbability;   // how high probability it deviates a unit (changes sides) (0 = no chance, 100 = 100% chance)
 
+    char description[64]; // ie: "bullet"
 };
 
 // SKIRMISH MAP PREVIEW DATA

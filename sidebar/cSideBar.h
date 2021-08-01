@@ -82,11 +82,9 @@ public:
     static const int TotalHeightBeforePowerBarStarts =
             TopBarHeight + HeightOfMinimap + HorizontalCandyBarHeight + PowerBarMargingHeight;
 
-    bool isMouseOverSidebar() {
-        return isMouseOverSidebarValue;
-    }
-
     void onNotify(const s_MouseEvent &event);
+
+    void cancelBuildingListItem(cBuildingListItem *item);
 
 private:
     void onMouseAt(const s_MouseEvent &event);
@@ -95,7 +93,7 @@ private:
 
     // the lists:
     cBuildingList *lists[LIST_MAX];
-    cPlayer *m_Player;
+    cPlayer *player;
 
     bool isMouseOverSidebarValue;
 

@@ -67,7 +67,7 @@ void cRefinery::think_unit_occupation() {
 
     cUnit.TIMER_harvest++;
 
-    cPlayerDifficultySettings *difficultySettings = player[getOwner()].getDifficultySettings();
+    cPlayerDifficultySettings *difficultySettings = players[getOwner()].getDifficultySettings();
 
     if (cUnit.TIMER_harvest < difficultySettings->getDumpSpeed(10)) return;
 
@@ -78,18 +78,20 @@ void cRefinery::think_unit_occupation() {
         int iAmount = 5;
 
         // cap at max
-        if (cUnit.iCredits > units[cUnit.iType].credit_capacity)
-            cUnit.iCredits = units[cUnit.iType].credit_capacity;
+        s_UnitP &unitType = units[cUnit.iType];
 
+        if (cUnit.iCredits > unitType.credit_capacity) {
+            cUnit.iCredits = unitType.credit_capacity;
+            // this fixes the upper bound (so no unit can cheat !?)
+        }
 
+        // can substract credits? if not, choose remaining
         if ((cUnit.iCredits - iAmount) < 0) {
             iAmount = cUnit.iCredits;
         }
 
-        if (player[cUnit.iPlayer].credits < player[cUnit.iPlayer].max_credits) {
-            player[cUnit.iPlayer].credits += iAmount;
-            // TODO: update harvested amount (player stats)
-        }
+        cPlayer &cPlayer = players[cUnit.iPlayer];
+        cPlayer.dumpCredits(iAmount);
 
         cUnit.iCredits -= iAmount;
         return;

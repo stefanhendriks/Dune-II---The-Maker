@@ -2,7 +2,7 @@
 #include "cMiniMapDrawer.h"
 
 
-cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * theMapCamera) : m_Player(thePlayer) {
+cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * theMapCamera) : player(thePlayer) {
 	assert(theMap);
 	assert(thePlayer);
 	assert(theMapCamera);
@@ -79,7 +79,7 @@ void cMiniMapDrawer::drawTerrain() {
             iColor = makecol(0, 0, 0);
             int iCll = map->makeCell(x, y);
 
-			if (map->isVisible(iCll, m_Player->getId())) {
+			if (map->isVisible(iCll, player->getId())) {
 				iColor = getRGBColorForTerrainType(map->getCellType(iCll));
 			}
 
@@ -106,7 +106,7 @@ void cMiniMapDrawer::drawTerrain() {
 /**
  * Draws minimap units and structures.
  *
- * @param playerOnly (if false, draws all other players than m_Player)
+ * @param playerOnly (if false, draws all other players than player)
  */
 void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
 
@@ -119,7 +119,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
 
             int iCll = map->makeCell(x, y);
 
-			if (!map->isVisible(iCll, m_Player->getId())) {
+			if (!map->isVisible(iCll, player->getId())) {
 			    // invisible cell
 			    continue;
 			}
@@ -130,27 +130,27 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
             if (idOfStructureAtCell > -1) {
                 int	iPlr = structure[idOfStructureAtCell]->getOwner();
                 if (playerOnly) {
-                    if (iPlr != m_Player->getId()) continue; // skip non m_Player units
+                    if (iPlr != player->getId()) continue; // skip non player units
                 }
-                iColor = player[iPlr].getMinimapColor();
+                iColor = players[iPlr].getMinimapColor();
             }
 
             int idOfUnitAtCell = map->getCellIdUnitLayer(iCll);
             if (idOfUnitAtCell > -1) {
                 int iPlr = unit[idOfUnitAtCell].iPlayer;
                 if (playerOnly) {
-                    if (iPlr != m_Player->getId()) continue; // skip non m_Player units
+                    if (iPlr != player->getId()) continue; // skip non player units
                 }
-                iColor = player[iPlr].getMinimapColor();
+                iColor = players[iPlr].getMinimapColor();
             }
 
             int idOfAirUnitAtCell = map->getCellIdAirUnitLayer(iCll);
             if (idOfAirUnitAtCell > -1) {
                 int iPlr = unit[idOfAirUnitAtCell].iPlayer;
                 if (playerOnly) {
-                    if (iPlr != m_Player->getId()) continue; // skip non m_Player units
+                    if (iPlr != player->getId()) continue; // skip non player units
                 }
-                iColor = player[iPlr].getMinimapColor();
+                iColor = players[iPlr].getMinimapColor();
             }
 
             int idOfWormAtCell = map->getCellIdWormsLayer(iCll);
@@ -158,7 +158,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) {
                 if (playerOnly) {
                     continue; // skip sandworms
                 }
-                iColor = m_Player->getSelectFadingColor();
+                iColor = player->getSelectFadingColor();
             }
 
             // no need to draw black on black background
@@ -296,7 +296,7 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
 }
 
 void cMiniMapDrawer::think() {
-    if (m_Player->hasAtleastOneStructure(RADAR)) {
+    if (player->hasAtleastOneStructure(RADAR)) {
         if (status == eMinimapStatus::NOTAVAILABLE) {
             status = eMinimapStatus::POWERUP;
         }
@@ -306,7 +306,7 @@ void cMiniMapDrawer::think() {
 
     if (status == eMinimapStatus::NOTAVAILABLE) return;
 
-    bool hasRadarAndEnoughPower = (m_Player->getAmountOfStructuresForType(RADAR) > 0) && m_Player->bEnoughPower();
+    bool hasRadarAndEnoughPower = (player->getAmountOfStructuresForType(RADAR) > 0) && player->bEnoughPower();
 
     // minimap state is enough power
     if (status == eMinimapStatus::POWERUP || status == eMinimapStatus::RENDERMAP) {
@@ -353,7 +353,7 @@ bool cMiniMapDrawer::isMouseOver() {
 }
 
 void cMiniMapDrawer::setPlayer(cPlayer *thePlayer) {
-    this->m_Player = thePlayer;
+    this->player = thePlayer;
 }
 
 void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event) {
@@ -361,7 +361,7 @@ void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event) {
         !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
             ) {
 
-        if (m_Player->hasAtleastOneStructure(RADAR)) {
+        if (player->hasAtleastOneStructure(RADAR)) {
             int mouseCellOnMinimap = getMouseCell(mouse_x, mouse_y);
             mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
         }

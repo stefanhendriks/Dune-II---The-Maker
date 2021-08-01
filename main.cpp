@@ -6,7 +6,7 @@
   Contact: stefanhen83@gmail.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2010 (c) code by Stefan Hendriks
+  2001 - 2021 (c) code by Stefan Hendriks
 
   */
 
@@ -16,8 +16,6 @@ using namespace std;
 
 bool bDoDebug = false;
 int	iRest = 1;	// default rest value
-
-// Server/Client system
 
 // the ultimate game variable(s)
 cGame          				game;
@@ -33,8 +31,7 @@ cRandomMapGenerator 		randomMapGenerator;
 cAbstractStructure     	*	structure[MAX_STRUCTURES];
 cUnit          				unit[MAX_UNITS];                // units in the game (max MAX_UNITS amount)
 cMapCamera				*	mapCamera;
-cPlayer        				player[MAX_PLAYERS];             // player is
-cAIPlayer      				aiplayer[MAX_PLAYERS];           // related to aiplayer (except nr 0=human)
+cPlayer        				players[MAX_PLAYERS];             // player is
 cParticle      				particle[MAX_PARTICLES];
 cBullet        				bullet[MAX_BULLETS];
 cRegion        				world[MAX_REGIONS];
@@ -89,7 +86,6 @@ int mouse_mv_y1;
 int mouse_mv_x2;
 int mouse_mv_y2;
 
-int mouse_status;     // status of the mouse (see main.h)
 int mouse_tile;       // mouse picture in gfxdata
 
 // Timers
@@ -103,6 +99,11 @@ int frame_count, fps;  // fps and such
 #endif
 
 int handleArguments(int argc, char *argv[]) {
+    game.bDisableAI = false;
+    game.bDisableReinforcements = false;
+    game.bOneAi = false;
+    game.windowed = false;
+    game.bNoAiRest = false;
 
 	if (argc > 1) {
 		for (int i = 1; i < argc; i++) {
@@ -126,7 +127,12 @@ int handleArguments(int argc, char *argv[]) {
                 bDoDebug = true;
 			} else if (command.compare("-noai") == 0) {
                 game.bDisableAI = true;
-
+            } else if (command.compare("-oneai") == 0) {
+                game.bOneAi = true;
+            } else if (command.compare("-noreinforcements") == 0) {
+                game.bDisableReinforcements = true;
+            } else if (command.compare("-noairest") == 0) {
+                game.bNoAiRest = true;
             }
 		}
 	} // arguments passed

@@ -2,7 +2,7 @@
 #include "cDrawManager.h"
 
 
-cDrawManager::cDrawManager(cPlayer * thePlayer) : m_Player(thePlayer) {
+cDrawManager::cDrawManager(cPlayer * thePlayer) : player(thePlayer) {
 	assert(&thePlayer);
 	creditsDrawer = new CreditsDrawer(thePlayer);
 	sidebarDrawer = new cSideBarDrawer(thePlayer);
@@ -111,7 +111,7 @@ void cDrawManager::drawRallyPoint() {
     int endX = drawX;
     int endY = drawY;
 
-    line(bmp_screen, startX, startY, endX, endY, player[HUMAN].getMinimapColor());
+    line(bmp_screen, startX, startY, endX, endY, players[HUMAN].getMinimapColor());
 }
 
 void cDrawManager::drawSidebar() {
@@ -126,7 +126,7 @@ void cDrawManager::drawStructurePlacing() {
     if (!game.bPlaceIt) return;
 
 
-    cBuildingListItem *itemToPlace = m_Player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
+    cBuildingListItem *itemToPlace = player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
     if (itemToPlace == nullptr) return;
 
     assert(placeitDrawer);
@@ -143,60 +143,23 @@ void cDrawManager::drawDeployment() {
     // mouse attack special?
     mouse_tile = MOUSE_ATTACK;
 
-    cBuildingListItem *itemToDeploy = m_Player->getSideBar()->getList(LIST_PALACE)->getItemToDeploy();
+    cBuildingListItem *itemToDeploy = player->getSideBar()->getList(LIST_PALACE)->getItemToDeploy();
     if (itemToDeploy == nullptr) return;
 
-    int iMouseCell = m_Player->getGameControlsContext()->getMouseCell();
+    int iMouseCell = player->getGameControlsContext()->getMouseCell();
 
-    //
     if (game.getMouse()->isLeftButtonClicked() && iMouseCell > -1) {
-        if (itemToDeploy->getBuildType() == eBuildType::SPECIAL) {
-            const s_Special &special = itemToDeploy->getS_Special();
-
-            int deployCell = -1;
-            if (special.deployTargetType == eDeployTargetType::TARGET_SPECIFIC_CELL) {
-                deployCell = iMouseCell;
-            } else if (special.deployTargetType == eDeployTargetType::TARGET_INACCURATE_CELL) {
-                int precision = special.deployTargetPrecision;
-                int mouseCellX = map.getCellX(iMouseCell) - precision;
-                int mouseCellY = map.getCellY(iMouseCell) - precision;
-
-                int posX = mouseCellX + rnd((precision*2) + 1);
-                int posY = mouseCellY + rnd((precision*2) + 1);
-                FIX_POS(posX, posY);
-
-                char msg[255];
-                sprintf(msg, "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = %d,%d - target pos =%d,%d - precision %d", mouseCellY, mouseCellY, posX, posY,
-                        precision);
-                logbook(msg);
-
-                deployCell = map.makeCell(posX, posY);
-            }
-
-
-            if (special.providesType == eBuildType::BULLET) {
-                // from where
-                int structureId = structureUtils.findStructureBy(this->m_Player->getId(), special.deployAtStructure,
-                                                                 false);
-                if (structureId > -1) {
-                    cAbstractStructure *pStructure = structure[structureId];
-                    if (pStructure && pStructure->isValid()) {
-                        play_sound_id(SOUND_PLACE);
-                        create_bullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
-                    }
-                }
-            }
-        }
-
-        itemToDeploy->decreaseTimesToBuild();
-        itemToDeploy->setDeployIt(false);
-        itemToDeploy->setIsBuilding(false);
-        itemToDeploy->resetProgress();
-        if (itemToDeploy->getTimesToBuild() < 1) {
-            m_Player->getItemBuilder()->removeItemFromList(itemToDeploy);
-        }
-
-        game.bDeployIt = false;
+        s_GameEvent event {
+                .eventType = eGameEventType::GAME_EVENT_SPECIAL_DEPLOYED,
+                .entityType = eBuildType::SPECIAL,
+                .entityID = -1,
+                .player = player,
+                .entitySpecificType = -1,
+                .atCell = iMouseCell,
+                .isReinforce = false,
+                .buildingListItem = itemToDeploy
+        };
+        game.onNotify(event);
     }
 }
 
@@ -211,7 +174,7 @@ void cDrawManager::drawMessage() {
 void cDrawManager::drawCombatMouse() {
     drawMouse();
 
-    cGameControlsContext *context = m_Player->getGameControlsContext();
+    cGameControlsContext *context = player->getGameControlsContext();
     if (context->shouldDrawToolTip()) {
         mouseDrawer->drawToolTip();
     }
@@ -242,7 +205,7 @@ void cDrawManager::destroy() {
 }
 
 void cDrawManager::setPlayerToDraw(cPlayer * playerToDraw) {
-    this->m_Player = playerToDraw;
+    this->player = playerToDraw;
     this->creditsDrawer->setPlayer(playerToDraw);
     this->sidebarDrawer->setPlayer(playerToDraw);
     this->orderDrawer->setPlayer(playerToDraw);

@@ -13,7 +13,9 @@
 #ifndef D2TM_UNIT_H
 #define D2TM_UNIT_H
 
-// Define TRANSFER stuff for reinforcements	
+#include <player/brains/missions/cPlayerBrainMission.h>
+
+// Define TRANSFER stuff for reinforcements
 class cRectangle; // forward declaration :(
 
 #define TRANSFER_NONE	-1				// nothing to transfer
@@ -139,7 +141,7 @@ public:
     void think_attack();
     void think_guard();
 
-	void LOG(const char *txt);
+	void log(const char *txt) const;
 
     void think_hit(int iShotUnit, int iShotStructure);
 
@@ -255,8 +257,54 @@ public:
 
     cPlayer *getPlayer();
 
+    void assignMission(int aMission);
+    void unAssignMission();
+    bool isAssignedAnyMission();
+    bool isAssignedMission(int aMission);
+
+    int getPlayerId() const;
+
+    /**
+     * Returns type of unit (ie QUAD, TANK, etc)
+     *
+     * @return
+     */
+    int getType() const;
+
+    static const char* eUnitActionIntentString(const eUnitActionIntent &intent) {
+        switch (intent) {
+            case eUnitActionIntent::INTENT_CAPTURE: return "INTENT_CAPTURE";
+            case eUnitActionIntent::INTENT_MOVE: return "INTENT_MOVE";
+            case eUnitActionIntent::INTENT_ATTACK: return "INTENT_ATTACK";
+            case eUnitActionIntent::INTENT_NONE: return "INTENT_NONE";
+            case eUnitActionIntent::INTENT_REPAIR: return "INTENT_REPAIR";
+            case eUnitActionIntent::INTENT_UNLOAD_SPICE: return "INTENT_UNLOAD_SPICE";
+            default:
+                assert(false);
+                break;
+        }
+        return "";
+    }
+
+    bool isUnableToMove();
+
+    void attackUnit(int targetUnit);
+    void attackStructure(int targetStructure);
+    void attackCell(int cell);
+
+    /**
+     * Figures out if at cell is a unit, structure or nothing, and invokes the appropiate attackUnit/Structure/Cell function.
+     * @param cell
+     */
+    void attackAt(int cell);
+
 private:
+
+    int mission; // is this unit assigned to a mission?
+
     int iHitPoints;     // hitpoints of unit
+
+    bool isReinforcement; // is this a 'real' reinforcement or not? (applies to Carry-All only)
 
     bool isUnitWhoCanSquishInfantry();
 
@@ -271,12 +319,42 @@ private:
     float posX, posY;   // absolute x, y coordinates (pixel based)
 
     eUnitMoveToCellResult moveToNextCellLogic();
+
+    int getRange() const;
 };
 
 
-
 int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart);
+
+/**
+ * creates a unit, the isReinforcement flag is true when the unit is created for / by reinforcements. This
+ * flag will make sure to trigger a different event type (not CREATED, but REINFORCED) so that we can distinguish
+ * between them.
+ *
+ * @param iCll
+ * @param unitType
+ * @param iPlayer
+ * @param bOnStart
+ * @param isReinforcement
+ * @return
+ */
+int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement);
+
 int CREATE_PATH(int iUnitId, int iPathCountUnits);
+
+void REINFORCE(int iPlr, int iTpe, int iCll, int iStart);
+
+/**
+ * Allows overriding reinforement flag, ie used when a unit is reinforced by construction or other way, rather
+ * than a 'real' reinforcement.
+ * @param iPlr
+ * @param iTpe
+ * @param iCll
+ * @param iStart
+ * @param isReinforcement
+ */
+void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);
+
 int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 
 void UNIT_deselect_all();
@@ -284,7 +362,7 @@ void UNIT_deselect_all();
 void UNIT_ORDER_ATTACK(int iUnitID, int iGoalCell, int iUnit, int iStructure, int iAttackCell);
 
 int UNIT_find_harvest_spot(int id);
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart);
+
 int CARRYALL_TRANSFER(int iuID, int iGoal);
 
 int UNIT_FREE_AROUND_MOVE(int iUnit);

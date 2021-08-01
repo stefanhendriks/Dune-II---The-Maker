@@ -2,7 +2,7 @@
 #include "cSideBar.h"
 
 
-cSideBar::cSideBar(cPlayer * thePlayer) : m_Player(thePlayer) {
+cSideBar::cSideBar(cPlayer * thePlayer) : player(thePlayer) {
     assert(thePlayer != nullptr && "Expected player to be not null!");
 	selectedListID = -1; // nothing is selected
 	isMouseOverSidebarValue = false;
@@ -48,31 +48,31 @@ void cSideBar::thinkAvailabilityLists() {
 	cBuildingList * constyardList = getList(LIST_CONSTYARD);
 	assert(constyardList);
 
-	constyardList->setAvailable(m_Player->hasAtleastOneStructure(CONSTYARD));
+	constyardList->setAvailable(player->hasAtleastOneStructure(CONSTYARD));
 
 	// INFANTRY LIST
 	cBuildingList * infantryList = getList(LIST_FOOT_UNITS);
 
-    infantryList->setAvailable(m_Player->hasBarracks() || m_Player->hasWor());
+    infantryList->setAvailable(player->hasBarracks() || player->hasWor());
 
 	// LIGHTFC LIST
 	cBuildingList * listUnits = getList(LIST_UNITS);
-    listUnits->setAvailable(m_Player->hasAtleastOneStructure(LIGHTFACTORY) ||
-                            m_Player->hasAtleastOneStructure(HEAVYFACTORY) ||
-                            m_Player->hasAtleastOneStructure(HIGHTECH)
+    listUnits->setAvailable(player->hasAtleastOneStructure(LIGHTFACTORY) ||
+                            player->hasAtleastOneStructure(HEAVYFACTORY) ||
+                            player->hasAtleastOneStructure(HIGHTECH)
     );
 
 	// PALACE LIST
 	cBuildingList * palaceList = getList(LIST_PALACE);
-	palaceList->setAvailable(m_Player->hasAtleastOneStructure(PALACE));
+	palaceList->setAvailable(player->hasAtleastOneStructure(PALACE));
 
 	// STARPORT LIST
 	cBuildingList * starportList = getList(LIST_STARPORT);
-	starportList->setAvailable(m_Player->hasAtleastOneStructure(STARPORT));
+	starportList->setAvailable(player->hasAtleastOneStructure(STARPORT));
 
 	// when available, check if we accept orders
 	if (starportList->isAvailable()) {
-		cOrderProcesser * orderProcesser = m_Player->getOrderProcesser();
+		cOrderProcesser * orderProcesser = player->getOrderProcesser();
 		bool acceptsOrders = orderProcesser->acceptsOrders();
 		starportList->setAcceptsOrders(acceptsOrders);
 	}
@@ -115,7 +115,10 @@ void cSideBar::drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem
 }
 
 bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
-    if (item == nullptr) return false;
+    if (item == nullptr) {
+        return false;
+    }
+
     if (item->shouldPlaceIt()) {
         logbook("Attempting to build an item that is in the \"Place it\" mode - which should not happen - ignoring!");
         return false;
@@ -124,14 +127,18 @@ bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
     cBuildingList *list = item->getList();
     if (item->isAvailable()) {
         // Item should not be placed, so it can be built
-        cItemBuilder *itemBuilder = m_Player->getItemBuilder();
+        cItemBuilder *itemBuilder = player->getItemBuilder();
         bool firstOfItsListType = itemBuilder->isBuildListItemTheFirstOfItsListType(item);
 
         if (item->isQueuable()) {
             itemBuilder->addItemToList(item);
         } else if (firstOfItsListType) { // may only build if there is nothing else in the list type being built
             itemBuilder->addItemToList(item);
+        } else {
+            // fail
+            return false;
         }
+
         list->setLastClickedId(item->getSlotId());
         return true;
     }
@@ -220,7 +227,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
             // clicked on it. Set focus on this one
             selectedListID = i;
             char msg[255];
-            sprintf(msg, "selectedListID becomes [%d], m_PlayerId = [%d]", i, m_Player->getId());
+            sprintf(msg, "selectedListID becomes [%d], m_PlayerId = [%d]", i, player->getId());
             logbook(msg);
             play_sound_id(SOUND_BUTTON, 64); // click sound
             break;
@@ -236,7 +243,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
 
     if (!list->isAvailable()) {
         // unselect this list
-        m_Player->getSideBar()->setSelectedListId(-1);
+        player->getSideBar()->setSelectedListId(-1);
         return;
     }
 
@@ -259,19 +266,19 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
         if (item->shouldPlaceIt()) {
             game.bPlaceIt = true;
         } else if (item->shouldDeployIt()) {
-            game.bDeployIt = true;
+            game.bDeployIt = true; // this puts the "deploy/launch it at mode" state active.
         } else {
             startBuildingItemIfOk(item);
         }
     } else {
-        cOrderProcesser * orderProcesser = m_Player->getOrderProcesser();
+        cOrderProcesser * orderProcesser = player->getOrderProcesser();
 
         // add orders
         if (orderProcesser->acceptsOrders()) {
-            if (m_Player->credits >= item->getBuildCost()) {
+            if (player->hasEnoughCreditsFor(item->getBuildCost())) {
                 item->increaseTimesOrdered();
                 orderProcesser->addOrder(item);
-                m_Player->substractCredits(item->getBuildCost());
+                player->substractCredits(item->getBuildCost());
             }
         }
     }
@@ -289,28 +296,9 @@ void cSideBar::onMouseClickedRight(const s_MouseEvent &event) {
 
     // anything but the starport can 'build' things
     if (list->getType() != LIST_STARPORT) {
-        if (item->getTimesToBuild() > 0) {
-            item->decreaseTimesToBuild();
-            item->setPlaceIt(false);
-            item->setDeployIt(false);
-
-            if (item->getTimesToBuild() == 0) {
-                cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "(Human) Item is last item in queue, will give money back.");
-                // only give money back for item that is being built
-                if (item->isBuilding()) {
-                    // calculate the amount of money back:
-                    m_Player->giveCredits(item->getRefundAmount());
-                    m_Player->getBuildingListUpdater()->onBuildItemCancelled(item);
-                }
-                item->setIsBuilding(false);
-                item->resetProgress();
-                cItemBuilder *itemBuilder = m_Player->getItemBuilder();
-                itemBuilder->removeItemFromList(item);
-            }
-            // else, only the number is decreased (used for queueing)
-        }
+        cancelBuildingListItem(item);
     } else {
-        cOrderProcesser * orderProcesser = m_Player->getOrderProcesser();
+        cOrderProcesser * orderProcesser = player->getOrderProcesser();
 
         assert(orderProcesser);
         if (!orderProcesser->isOrderPlaced()) {
@@ -322,8 +310,31 @@ void cSideBar::onMouseClickedRight(const s_MouseEvent &event) {
     }
 }
 
+void cSideBar::cancelBuildingListItem(cBuildingListItem *item) {
+    if (item->getTimesToBuild() > 0) {
+        item->decreaseTimesToBuild();
+        item->setPlaceIt(false);
+        item->setDeployIt(false);
+
+        if (item->getTimesToBuild() == 0) {
+            cLogger::getInstance()->log(LOG_INFO, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
+            // only give money back for item that is being built
+            if (item->isBuilding()) {
+                // calculate the amount of money back:
+                player->giveCredits(item->getRefundAmount());
+                player->getBuildingListUpdater()->onBuildItemCancelled(item);
+            }
+            item->setIsBuilding(false);
+            item->resetProgress();
+            cItemBuilder *itemBuilder = player->getItemBuilder();
+            itemBuilder->removeItemFromList(item);
+        }
+        // else, only the number is decreased (used for queueing)
+    }
+}
+
 void cSideBar::onNotify(const s_MouseEvent &event) {
-    cGameControlsContext *pContext = m_Player->getGameControlsContext();
+    cGameControlsContext *pContext = player->getGameControlsContext();
 
     if (!pContext->isMouseOnSidebarOrMinimap()) {
         // ignore these events because mouse is not on sidebar or minimap

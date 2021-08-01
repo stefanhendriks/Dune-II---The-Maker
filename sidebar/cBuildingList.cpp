@@ -110,7 +110,7 @@ void cBuildingList::addSpecialToList(int specialType, int subList) {
 
 bool cBuildingList::addItemToList(cBuildingListItem * item) {
 	if (isItemInList(item)) {
-		logbook("Will not add, item is already in list.");
+//		logbook("Will not add, item is already in list.");
 		// item is already in list, do not add
 		return false;
 	}

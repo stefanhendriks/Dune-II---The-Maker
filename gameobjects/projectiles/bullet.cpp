@@ -268,13 +268,10 @@ void cBullet::arrivedAtDestinationLogic() {
     float maxDistanceFromCenter = halfExplosionSize + 0.5f;
     for (int sx = startX; sx < endX; sx++) {
         for (int sy = startY; sy < endY; sy++) {
-            int iCx = sx;
-            int iCy = sy;
-            FIX_BORDER_POS(iCx, iCy);
+            int cellToDamage = map.getCellWithMapBorders(sx, sy);
+            if (cellToDamage < 0) continue;
 
-            int cellToDamage = map.makeCell(iCx, iCy);
-
-            float actualDistance = ABS_length(iCx, iCy, x, y);
+            float actualDistance = ABS_length(sx, sy, x, y);
             if (actualDistance > maxDistanceFromCenter) actualDistance = maxDistanceFromCenter;
 
             float factor = 1.0f;
@@ -282,8 +279,14 @@ void cBullet::arrivedAtDestinationLogic() {
                 factor = 1.0f - (actualDistance / maxDistanceFromCenter);
             }
 
+            int half = 16;
+            int randomX = -8 + rnd(half);
+            int randomY = -8 + rnd(half);
+            int posX = map.getAbsoluteXPositionFromCellCentered(cellToDamage) + randomX;
+            int posY = map.getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
+
             char msg[255];
-            sprintf(msg, "iCell %d : cellToDamage : %d : ExplosionSize is %d, maxDistanceFromCenter is %f , actualDistance = %f, iCx=%d, iCy=%d and factor = %f", iCell, cellToDamage, sBullet.explosionSize, maxDistanceFromCenter, actualDistance, iCx, iCy, factor);
+            sprintf(msg, "iCell %d : cellToDamage : %d : ExplosionSize is %d, maxDistanceFromCenter is %f , actualDistance = %f, x=%d, y=%d and factor = %f", iCell, cellToDamage, sBullet.explosionSize, maxDistanceFromCenter, actualDistance, sx, sy, factor);
             logbook(msg);
 
             damageStructure(cellToDamage, factor);                 // damage structure at cell if applicable
@@ -296,16 +299,27 @@ void cBullet::arrivedAtDestinationLogic() {
             // create particle of explosion
             if (sBullet.deadbmp > -1) {
                 // depending on 'explosion size'
-                int half = 16;
-                int randomX = -8 + rnd(half);
-                int randomY = -8 + rnd(half);
-                int posX = map.getAbsoluteXPositionFromCellCentered(cellToDamage) + randomX;
-                int posY = map.getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
                 PARTICLE_CREATE(posX, posY, sBullet.deadbmp, -1, -1);
+            }
+
+            if (iType == ROCKET_BIG) {
+                // HACK HACK: produce sounds here... should be taken from bullet data structure; or via events
+                // so that elsewhere this can be handled.
+                if (rnd(100) < 35) {
+                    play_sound_id_with_distance(SOUND_TANKDIE + rnd(2),
+                                                distanceBetweenCellAndCenterOfScreen(cellToDamage));
+                }
+                if (rnd(100) < 20) {
+                    PARTICLE_CREATE(posX, posY, OBJECT_SMOKE, -1, -1);
+                }
             }
 
             damageTerrain(cellToDamage, factor);
         }
+    }
+
+    if (iType == ROCKET_BIG) {
+        game.shakeScreen(40);
     }
 
     die();
@@ -398,21 +412,31 @@ void cBullet::damageGroundUnit(int cell, double factor) const {
         }
     }
 
-    if (isDeviatorGas()) {
+    if (gets_Bullet().deviateProbability > 0 && iOwnerUnit > -1) {
+        // can deviate a unit upon impact
+
         // TODO: Stefan: is this needed?!- aren't we playing sound effects in a more generic way?
+        // TODO: impact sound effect should be configured!?
         play_sound_id_with_distance(SOUND_GAS, distanceBetweenCellAndCenterOfScreen(cell));
 
         // take over unit
-        if (rnd(100) < 40) { // TODO: make property for probability of capturing unit?
-            if (iOwnerUnit > -1) {
-                cUnit &ownerUnit = unit[iOwnerUnit];
+        if (rnd(100) < gets_Bullet().deviateProbability) {
+            cUnit &ownerUnit = unit[iOwnerUnit];
+            if (ownerUnit.isValid()) {
                 groundUnitTakingDamage.iPlayer = ownerUnit.iPlayer;
-            }
+                groundUnitTakingDamage.iGroup = -1;
 
-            groundUnitTakingDamage.iAttackStructure = -1;
-            groundUnitTakingDamage.iAttackUnit = -1;
-            groundUnitTakingDamage.iGroup = -1;
-            groundUnitTakingDamage.iAction = ACTION_GUARD;
+                // send out event that this unit got deviated (and what the new owner ID is)
+                s_GameEvent event {
+                        .eventType = eGameEventType::GAME_EVENT_DEVIATED,
+                        .entityType = eBuildType::UNIT,
+                        .entityID = groundUnitTakingDamage.iID,
+                        .player = groundUnitTakingDamage.getPlayer(), // <-- is now changed
+                        .entitySpecificType = groundUnitTakingDamage.iType
+                };
+
+                game.onNotify(event);
+            }
         }
     }
 }
@@ -454,7 +478,7 @@ void cBullet::detonateSpiceBloom(int cell, double factor) const {
     // change type of terrain to sand
     mapEditor.createCell(cell, TERRAIN_SAND, 0);
     mapEditor.createField(cell, TERRAIN_SPICE, 50 + (rnd(75)));
-    game.TIMER_shake = 20;
+    game.shakeScreen(20);
 }
 
 void cBullet::damageSandworm(int cell, double factor) const {
@@ -567,7 +591,7 @@ s_Bullet cBullet::gets_Bullet() const {
 }
 
 cPlayer * cBullet::getPlayer() const {
-    return &player[iPlayer];
+    return &players[iPlayer];
 }
 
 /**

@@ -46,10 +46,6 @@ void logbook(const char *txt) {
  * @param y
  * @return
  */
-// determine if this cell is not out of boundries
-bool BORDER_POS(int x, int y) {
-    return map.isWithinBoundaries(x, y);
-}
 
 /**
  * Returns value within MIN/MAX provided
@@ -100,13 +96,6 @@ void FIX_POS(int &x, int &y) {
     if (y) {
         if (y < 0) y = 0;
         if (y >= map.getHeight()) y = (map.getHeight() -1);
-    }
-}
-
-
-void INIT_ALL_PLAYERS() {
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        player[i].init(i);
     }
 }
 
@@ -618,7 +607,8 @@ void install_specials() {
     specials[SPECIAL_SABOTEUR].deployFrom = eDeployFromType::AT_STRUCTURE;
     specials[SPECIAL_SABOTEUR].deployAtStructure = PALACE;
     specials[SPECIAL_SABOTEUR].units = 1;
-    specials[SPECIAL_SABOTEUR].buildTime = 10;
+//    specials[SPECIAL_SABOTEUR].buildTime = 10;
+    specials[SPECIAL_SABOTEUR].buildTime = 2468; // ~ 6 minutes (but times 1.2 to compensate for faster Ordos building = 2468 to get real 6 minutes)
     specials[SPECIAL_SABOTEUR].listId=LIST_PALACE;
     specials[SPECIAL_SABOTEUR].subListId=0;
     strcpy(specials[SPECIAL_SABOTEUR].description, "Saboteur");
@@ -632,7 +622,8 @@ void install_specials() {
     specials[SPECIAL_FREMEN].deployFrom = eDeployFromType::AT_RANDOM_CELL;
     specials[SPECIAL_FREMEN].deployAtStructure = PALACE; // This is not used with AT_RANDOM_CELL ...
     specials[SPECIAL_FREMEN].units = 6; // ... but this is
-    specials[SPECIAL_FREMEN].buildTime = 10;
+//    specials[SPECIAL_FREMEN].buildTime = 10;
+    specials[SPECIAL_FREMEN].buildTime = 1371; // ~ 4 minutes (atreides has baseline build times, ie = real time)
     specials[SPECIAL_FREMEN].listId=LIST_PALACE;
     specials[SPECIAL_FREMEN].subListId=0;
     strcpy(specials[SPECIAL_FREMEN].description, "Fremen");
@@ -647,7 +638,10 @@ void install_specials() {
     specials[SPECIAL_DEATHHAND].deployAtStructure = PALACE; // ... the palace
     specials[SPECIAL_DEATHHAND].deployTargetType = eDeployTargetType::TARGET_INACCURATE_CELL;
     specials[SPECIAL_DEATHHAND].units = 1;
-    specials[SPECIAL_DEATHHAND].buildTime = 10;
+//    specials[SPECIAL_DEATHHAND].buildTime = 10;
+    specials[SPECIAL_DEATHHAND].buildTime = 3428; // ~ 10 minutes with base line (Atreides difficulty)
+                                                  // (342.8 = ~ 1 minute) -> harkonnen is done * 1.2 so it becomes 12 minutes real-time which is ok)
+                                                  // considering the Dune 2 Insider guide mentions 11 to 12 minutes for Harkonnen.
     specials[SPECIAL_DEATHHAND].deployTargetPrecision = 6;
     specials[SPECIAL_DEATHHAND].listId=LIST_PALACE;
     specials[SPECIAL_DEATHHAND].subListId=0;
@@ -674,6 +668,8 @@ void install_bullets()
     bullets[i].bmp_width = 8*2;
     bullets[i].sound = -1;    // no sound
     bullets[i].explosionSize = 1; // 1 tile sized explosion
+    bullets[i].deviateProbability = 0; // no probability of deviating a unit
+    strcpy(bullets[i].description, "Unknown");
   }
 
   // huge rocket/missile
@@ -685,7 +681,7 @@ void install_bullets()
   bullets[ROCKET_BIG].max_frames = 1;
   bullets[ROCKET_BIG].sound = SOUND_ROCKET;
   bullets[ROCKET_BIG].explosionSize = 7;
-
+  strcpy(bullets[ROCKET_BIG].description, "ROCKET_BIG");
 
     // small rocket (for ornithopter)
   bullets[ROCKET_SMALL_ORNI].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_SMALL].dat;
@@ -696,6 +692,7 @@ void install_bullets()
   bullets[ROCKET_SMALL_ORNI].max_frames = 1;
   bullets[ROCKET_SMALL_ORNI].sound = SOUND_ROCKET_SMALL;
   bullets[ROCKET_SMALL_ORNI].max_deadframes = 1;
+  strcpy(bullets[ROCKET_SMALL_ORNI].description, "ROCKET_SMALL_ORNI");
 
   // small rocket
   bullets[ROCKET_SMALL].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_SMALL].dat;
@@ -706,6 +703,7 @@ void install_bullets()
   bullets[ROCKET_SMALL].max_frames = 1;
   bullets[ROCKET_SMALL].sound = SOUND_ROCKET_SMALL;
   bullets[ROCKET_SMALL].max_deadframes = 1;
+  strcpy(bullets[ROCKET_SMALL].description, "ROCKET_SMALL");
 
   // small rocket - fremen rocket
   bullets[ROCKET_SMALL_FREMEN].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_SMALL].dat;
@@ -716,6 +714,7 @@ void install_bullets()
   bullets[ROCKET_SMALL_FREMEN].max_frames = 1;
   bullets[ROCKET_SMALL_FREMEN].sound = SOUND_ROCKET_SMALL;
   bullets[ROCKET_SMALL_FREMEN].max_deadframes = 1;
+  strcpy(bullets[ROCKET_SMALL_FREMEN].description, "ROCKET_SMALL_FREMEN");
 
   // normal rocket
   bullets[ROCKET_NORMAL].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_NORMAL].dat;
@@ -726,6 +725,7 @@ void install_bullets()
   bullets[ROCKET_NORMAL].max_frames = 1;
   bullets[ROCKET_NORMAL].sound = SOUND_ROCKET;
   bullets[ROCKET_NORMAL].max_deadframes = 4;
+  strcpy(bullets[ROCKET_NORMAL].description, "ROCKET_NORMAL");
 
   // soldier shot
   bullets[BULLET_SMALL].bmp     = (BITMAP *)gfxdata[BULLET_DOT_SMALL].dat;
@@ -736,6 +736,7 @@ void install_bullets()
   bullets[BULLET_SMALL].max_frames = 0;
   bullets[BULLET_SMALL].sound = SOUND_GUN;
   bullets[BULLET_SMALL].max_deadframes = 0;
+  strcpy(bullets[BULLET_SMALL].description, "BULLET_SMALL");
 
   // trike shot
   bullets[BULLET_TRIKE].bmp     = (BITMAP *)gfxdata[BULLET_DOT_SMALL].dat;
@@ -746,6 +747,7 @@ void install_bullets()
   bullets[BULLET_TRIKE].max_frames = 0;
   bullets[BULLET_TRIKE].sound = SOUND_MACHINEGUN;
   bullets[BULLET_TRIKE].max_deadframes = 0;
+  strcpy(bullets[BULLET_TRIKE].description, "BULLET_TRIKE");
 
   // quad shot
   bullets[BULLET_QUAD].bmp     = (BITMAP *)gfxdata[BULLET_DOT_SMALL].dat;
@@ -756,6 +758,7 @@ void install_bullets()
   bullets[BULLET_QUAD].max_frames = 0;
   bullets[BULLET_QUAD].sound = SOUND_MACHINEGUN;
   bullets[BULLET_QUAD].max_deadframes = 0;
+  strcpy(bullets[BULLET_QUAD].description, "BULLET_QUAD");
 
   // normal tank shot
   bullets[BULLET_TANK].bmp     = (BITMAP *)gfxdata[BULLET_DOT_MEDIUM].dat;
@@ -766,6 +769,7 @@ void install_bullets()
   bullets[BULLET_TANK].max_frames = 0;
   bullets[BULLET_TANK].sound = SOUND_EXPL_ROCKET;
   bullets[BULLET_TANK].max_deadframes = 1;
+  strcpy(bullets[BULLET_TANK].description, "BULLET_TANK");
 
   // siege tank shot
   bullets[BULLET_SIEGE].bmp     = (BITMAP *)gfxdata[BULLET_DOT_MEDIUM].dat;
@@ -776,6 +780,7 @@ void install_bullets()
   bullets[BULLET_SIEGE].max_frames = 0;
   bullets[BULLET_SIEGE].sound = SOUND_EXPL_ROCKET;
   bullets[BULLET_SIEGE].max_deadframes = 2;
+  strcpy(bullets[BULLET_SIEGE].description, "BULLET_SIEGE");
 
   // devastator shot
   bullets[BULLET_DEVASTATOR].bmp     = (BITMAP *)gfxdata[BULLET_DOT_LARGE].dat;
@@ -786,6 +791,7 @@ void install_bullets()
   bullets[BULLET_DEVASTATOR].max_frames = 0;
   bullets[BULLET_DEVASTATOR].sound = SOUND_EXPL_ROCKET;
   bullets[BULLET_DEVASTATOR].max_deadframes = 1;
+  strcpy(bullets[BULLET_DEVASTATOR].description, "BULLET_DEVASTATOR");
 
   // Gas rocket of a deviator
   bullets[BULLET_GAS].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_NORMAL].dat;
@@ -796,6 +802,8 @@ void install_bullets()
   bullets[BULLET_GAS].max_frames = 1;
   bullets[BULLET_GAS].max_deadframes = 4;
   bullets[BULLET_GAS].sound = SOUND_ROCKET;
+  bullets[BULLET_GAS].deviateProbability = 34; // 1 out of 3(ish) should be effective
+  strcpy(bullets[BULLET_GAS].description, "BULLET_GAS");
 
   // normal turret shot
   bullets[BULLET_TURRET].bmp     = (BITMAP *)gfxdata[BULLET_DOT_MEDIUM].dat;
@@ -806,6 +814,7 @@ void install_bullets()
   bullets[BULLET_TURRET].max_frames = 0;
   bullets[BULLET_TURRET].max_deadframes = 1;
   bullets[BULLET_TURRET].sound = SOUND_GUNTURRET;
+  strcpy(bullets[BULLET_TURRET].description, "BULLET_TURRET");
 
   // EXEPTION: Shimmer/ Sonic tank
   bullets[BULLET_SHIMMER].bmp     = NULL;
@@ -816,6 +825,7 @@ void install_bullets()
   bullets[BULLET_SHIMMER].max_frames = 0;
   bullets[BULLET_SHIMMER].max_deadframes = 0;
   bullets[BULLET_SHIMMER].sound = SOUND_SHIMMER;
+  strcpy(bullets[BULLET_SHIMMER].description, "BULLET_SHIMMER");
 
   // rocket of rocket turret
   bullets[ROCKET_RTURRET].bmp     = (BITMAP *)gfxdata[BULLET_ROCKET_NORMAL].dat;
@@ -826,6 +836,7 @@ void install_bullets()
   bullets[ROCKET_RTURRET].max_frames = 1;
   bullets[ROCKET_RTURRET].sound = SOUND_ROCKET;
   bullets[ROCKET_RTURRET].max_deadframes = 4;
+  strcpy(bullets[ROCKET_RTURRET].description, "ROCKET_RTURRET");
 
   // SABOTEUR BULLET - FAKE BULLET
   bullets[BULLET_SAB].bmp     = NULL;
@@ -836,41 +847,7 @@ void install_bullets()
   bullets[BULLET_SAB].max_frames = 1;
   bullets[BULLET_SAB].sound = -1;
   bullets[BULLET_SAB].max_deadframes = 4;
-
-
-  /****************** EXPLOSIONS *****************/
-
-  bullets[EXPL_ONE].bmp     = (BITMAP *)gfxdata[BULLET_DOT_SMALL].dat;
-  bullets[EXPL_ONE].deadbmp = -1;
-  bullets[EXPL_ONE].bmp_width = 16*2;
-  bullets[EXPL_ONE].damage = 0;
-  bullets[EXPL_ONE].max_frames = 0;
-  bullets[EXPL_ONE].max_deadframes = 4;
-
-  // 2 of structure explosions
-  bullets[EXPL_TWO].bmp     = (BITMAP *)gfxdata[BULLET_DOT_SMALL].dat;
-  bullets[EXPL_TWO].deadbmp = -1;
-  bullets[EXPL_TWO].bmp_width = 16*2;
-  bullets[EXPL_TWO].damage = 0;
-  bullets[EXPL_TWO].max_frames = 0;
-  bullets[EXPL_TWO].max_deadframes = 4;
-
-  // Tank explosion #1
-  bullets[EXPL_TANK].bmp     = (BITMAP *)gfxdata[BULLET_DOT_SMALL].dat;
-  bullets[EXPL_TANK].deadbmp = -1;
-  bullets[EXPL_TANK].bmp_width = 24*2;
-  bullets[EXPL_TANK].damage = 0;
-  bullets[EXPL_TANK].max_frames = 0;
-  bullets[EXPL_TANK].max_deadframes = 4;
-
-  // Tank explosion #2
-  bullets[EXPL_TANK_TWO].bmp     = (BITMAP *)gfxdata[BULLET_DOT_SMALL].dat;
-  bullets[EXPL_TANK_TWO].deadbmp = -1;
-  bullets[EXPL_TANK_TWO].bmp_width = 24*2;
-  bullets[EXPL_TANK_TWO].damage = 0;
-  bullets[EXPL_TANK_TWO].max_frames = 0;
-  bullets[EXPL_TANK_TWO].max_deadframes = 4;
-
+  strcpy(bullets[BULLET_SAB].description, "BULLET_SAB");
 }
 
 
@@ -897,7 +874,7 @@ void install_upgrades() {
 
     // First upgrade Constyard: 4Slabs
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].enabled = true;
-    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].house = Atreides | Harkonnen | Ordos;
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].house = Atreides | Harkonnen | Ordos | Sardaukar;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].techLevel = 4; // start from mission 4
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].icon = ICON_STR_4SLAB;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].cost = structures[CONSTYARD].cost / 2;
@@ -914,7 +891,7 @@ void install_upgrades() {
 
     // Second upgrade Constyard: Rturret
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].enabled = true;
-    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].house = Atreides | Harkonnen | Ordos;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].house = Atreides | Harkonnen | Ordos | Sardaukar;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].techLevel = 6;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].icon = ICON_STR_RTURRET;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].cost = structures[CONSTYARD].cost / 2;
@@ -1086,7 +1063,6 @@ void install_structures() {
     structures[i].sight = 1;
     structures[i].bmp_width = 32*2;
     structures[i].bmp_height = 32*2;
-    structures[i].sight = 5;
     structures[i].hp = 1; // low health
 	structures[i].fixhp = -1; // no fixing hp yet
     structures[i].fadecol = -1;
@@ -1430,11 +1406,11 @@ void play_sound_id_with_distance(int s, int iDistance) {
 }
 
 void play_voice(int iType) {
-	if (player[0].getHouse() == HARKONNEN) {
+	if (players[0].getHouse() == HARKONNEN) {
 		iType++;
 	}
 
-	if (player[0].getHouse() == ORDOS) {
+	if (players[0].getHouse() == ORDOS) {
 		iType+=2;
 	}
 
@@ -1517,7 +1493,7 @@ void playMusicByType(int iType) {
     } else if (iType == MUSIC_CONQUEST) {
     	iNumber=MIDI_SCENARIO;
     } else if (iType == MUSIC_BRIEFING) {
-      int houseIndex = player[HUMAN].getHouse();
+      int houseIndex = players[HUMAN].getHouse();
         if (houseIndex == ATREIDES)         iNumber=MIDI_MENTAT_ATR;
         if (houseIndex == HARKONNEN)     	iNumber=MIDI_MENTAT_HAR;
         if (houseIndex == ORDOS)     		iNumber=MIDI_MENTAT_ORD;
@@ -1541,7 +1517,7 @@ void playMusicByType(int iType) {
         } else if (iType == MUSIC_CONQUEST) {
             sprintf(filename, "mp3/nextconq.mp3");
         } else if (iType == MUSIC_BRIEFING) {
-          int houseIndex = player[HUMAN].getHouse();
+          int houseIndex = players[HUMAN].getHouse();
             if (houseIndex == ATREIDES)	sprintf(filename, "mp3/mentata.mp3");
             if (houseIndex == HARKONNEN)	sprintf(filename, "mp3/mentath.mp3");
             if (houseIndex == ORDOS)		sprintf(filename, "mp3/mentato.mp3");
@@ -1573,16 +1549,16 @@ void playMusicByType(int iType) {
 }
 
 /**
- * Creates a bullet, of type, starting at *cell* and moving towards *goal_cell*. The 'unitWhichShoots' or
+ * Creates a bullet, of type, starting at *fromCell* and moving towards *targetCell*. The 'unitWhichShoots' or
  * 'structureWhichShoots' is the owner of the bullet.
  * @param type
- * @param cell
- * @param goal_cell
+ * @param fromCell
+ * @param targetCell
  * @param unitWhichShoots
  * @param structureWhichShoots
  * @return
  */
-int create_bullet(int type, int cell, int goal_cell, int unitWhichShoots, int structureWhichShoots) {
+int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots) {
     int new_id = -1;
 
     for (int i = 0; i < MAX_BULLETS; i++)
@@ -1602,17 +1578,17 @@ int create_bullet(int type, int cell, int goal_cell, int unitWhichShoots, int st
     newBullet.init();
 
     newBullet.iType = type;
-    newBullet.posX = map.getAbsoluteXPositionFromCellCentered(cell);
-    newBullet.posY = map.getAbsoluteYPositionFromCellCentered(cell);
+    newBullet.posX = map.getAbsoluteXPositionFromCellCentered(fromCell);
+    newBullet.posY = map.getAbsoluteYPositionFromCellCentered(fromCell);
     newBullet.iOwnerStructure = structureWhichShoots;
     newBullet.iOwnerUnit = unitWhichShoots;
 
-    newBullet.targetX = map.getAbsoluteXPositionFromCellCentered(goal_cell);
-    newBullet.targetY = map.getAbsoluteYPositionFromCellCentered(goal_cell);
+    newBullet.targetX = map.getAbsoluteXPositionFromCellCentered(targetCell);
+    newBullet.targetY = map.getAbsoluteYPositionFromCellCentered(targetCell);
 
-    int structureIdAtGoalCell = map.getCellIdStructuresLayer(goal_cell);
-    if (structureIdAtGoalCell > -1) {
-        cAbstractStructure *pStructure = structure[structureIdAtGoalCell];
+    int structureIdAtTargetCell = map.getCellIdStructuresLayer(targetCell);
+    if (structureIdAtTargetCell > -1) {
+        cAbstractStructure *pStructure = structure[structureIdAtTargetCell];
         if (pStructure && pStructure->isValid()) {
             newBullet.targetX = pStructure->getRandomPosX();
             newBullet.targetY = pStructure->getRandomPosY();
@@ -1627,16 +1603,22 @@ int create_bullet(int type, int cell, int goal_cell, int unitWhichShoots, int st
     if (unitWhichShoots > -1 ) {
         cUnit &cUnit = unit[unitWhichShoots];
         newBullet.iPlayer = cUnit.iPlayer;
-        // if an airborn unit shoots (ie Ornithopter), reveal on map
+        // if an airborn unit shoots (ie Ornithopter), reveal on map for everyone
         if (cUnit.isAirbornUnit()) {
-            map.clear_spot(cell, cUnit.getUnitType().sight);
+            map.clearShroudForAllPlayers(fromCell, 2);
         }
     }
 
     if (structureWhichShoots > -1) {
         cAbstractStructure *pStructure = structure[structureWhichShoots];
         newBullet.iPlayer = pStructure->getOwner();
-        map.clear_spot(cell, pStructure->getS_StructuresType().sight);
+
+        int unitIdAtTargetCell = map.getCellIdUnitLayer(targetCell);
+        if (unitIdAtTargetCell > -1) {
+            cUnit &unitTarget = unit[unitIdAtTargetCell];
+            // reveal for player which is being attacked
+            map.clearShroud(fromCell, 2, unitTarget.iPlayer);
+        }
     }
 
     if (newBullet.iPlayer < 0) {
@@ -1644,8 +1626,10 @@ int create_bullet(int type, int cell, int goal_cell, int unitWhichShoots, int st
     }
 
     // play sound (when we have one)
-    if (bullets[type].sound > -1)
-        play_sound_id_with_distance(bullets[type].sound, distanceBetweenCellAndCenterOfScreen(cell));
+    s_Bullet &sBullet = bullets[type];
+    if (sBullet.sound > -1) {
+        play_sound_id_with_distance(sBullet.sound, distanceBetweenCellAndCenterOfScreen(fromCell));
+    }
 
     return new_id;
 }
@@ -1738,21 +1722,7 @@ void INIT_PREVIEWS() {
 
     sprintf(PreviewMap[0].name, "RANDOM MAP");
     //PreviewMap[0].terrain = (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat;
-    PreviewMap[0].terrain = create_bitmap(PAN_CENTER, PAN_CENTER);
-}
-
-/**
-	Function that will go through all pixels and will replace a certain color with another.
-    Ie, this can be used to create the fading animation for Windtraps.
-**/
-void bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor) {
-	for (int x = 0; x < bmp->w; x++) {
-		for (int y = 0; y < bmp->h; y++) {
-			if (getpixel(bmp, x, y) == colorToReplace) {
-				putpixel(bmp, x, y, newColor);
-			}
-		}
-	}
+    PreviewMap[0].terrain = create_bitmap(128, 128);
 }
 
 int getAmountReservedVoicesAndInstallSound() {
@@ -1778,4 +1748,23 @@ int getAmountReservedVoicesAndInstallSound() {
 	}
 
 	return voices;
+}
+
+const char* toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId) {
+    switch (buildType) {
+        case eBuildType::SPECIAL:
+            return specials[specificTypeId].description;
+        case eBuildType::UNIT:
+            return units[specificTypeId].name;
+        case eBuildType::STRUCTURE:
+            return structures[specificTypeId].name;
+        case eBuildType::BULLET:
+            return bullets[specificTypeId].description;
+        case eBuildType::UPGRADE:
+            return upgrades[specificTypeId].description;
+        default:
+            assert(false && "Unknown buildType?");
+            break;
+    }
+    return "";
 }

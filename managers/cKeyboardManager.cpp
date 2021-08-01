@@ -41,8 +41,8 @@ void cKeyboardManager::interact() {
     if (DEBUGGING) {
 
         if (key[KEY_F4]) {
-            if (player[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
-                map.clearShroud(player[HUMAN].getGameControlsContext()->getMouseCell(), 6, HUMAN);
+            if (players[HUMAN].getGameControlsContext()->getMouseCell() > -1) {
+                map.clearShroud(players[HUMAN].getGameControlsContext()->getMouseCell(), 6, HUMAN);
             }
         }
     }
@@ -68,21 +68,21 @@ void cKeyboardManager::takeScreenshot() const {
 
 void cKeyboardManager::DEBUG_KEYS() {
     if (key[KEY_0]) {
-        drawManager->setPlayerToDraw(&player[0]);
-        game.setPlayerToInteractFor(&player[0]);
+        drawManager->setPlayerToDraw(&players[0]);
+        game.setPlayerToInteractFor(&players[0]);
     } else if (key[KEY_1]) {
-        drawManager->setPlayerToDraw(&player[1]);
-        game.setPlayerToInteractFor(&player[1]);
+        drawManager->setPlayerToDraw(&players[1]);
+        game.setPlayerToInteractFor(&players[1]);
     } else if (key[KEY_2]) {
-        drawManager->setPlayerToDraw(&player[2]);
-        game.setPlayerToInteractFor(&player[2]);
+        drawManager->setPlayerToDraw(&players[2]);
+        game.setPlayerToInteractFor(&players[2]);
     } else if (key[KEY_3]) {
-        drawManager->setPlayerToDraw(&player[3]);
-        game.setPlayerToInteractFor(&player[3]);
+        drawManager->setPlayerToDraw(&players[3]);
+        game.setPlayerToInteractFor(&players[3]);
     }
 
     //JUMP TO MISSION 9
-    if (key[KEY_F1] && player[HUMAN].getHouse() > 0) {
+    if (key[KEY_F1] && players[HUMAN].getHouse() > 0) {
         game.mission_init();
         game.iMission = 9;
         game.iRegion = 22;
@@ -95,7 +95,7 @@ void cKeyboardManager::DEBUG_KEYS() {
     // WIN MISSION
     if (key[KEY_F2]) {
         if (game.iWinQuota > -1)
-            player[0].credits = game.iWinQuota + 1;
+            players[0].setCredits(game.iWinQuota + 1);
         else {
             game.destroyAllStructures(false);
             game.destroyAllUnits(false);
@@ -110,13 +110,13 @@ void cKeyboardManager::DEBUG_KEYS() {
     // GIVE 299999 CREDITS TO ALL PLAYERS
     if (key[KEY_F4] && !key[KEY_LSHIFT]) {
         for (int i = 0; i < AI_WORM; i++) {
-            player[i].credits = 299999;
+            players[i].setCredits(299999);
         }
     }
 
     //DESTROY UNIT OR BUILDING
     if (key[KEY_F4] && key[KEY_LSHIFT]) {
-        int mc = player[HUMAN].getGameControlsContext()->getMouseCell();
+        int mc = players[HUMAN].getGameControlsContext()->getMouseCell();
         if (mc > -1) {
             int idOfUnitAtCell = map.getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
@@ -135,7 +135,7 @@ void cKeyboardManager::DEBUG_KEYS() {
     }
 
     //JUMP TO MISSION 3
-    if (key[KEY_F6] && player[HUMAN].getHouse() > 0) {
+    if (key[KEY_F6] && players[HUMAN].getHouse() > 0) {
         game.mission_init();
         game.iMission = 3;
         game.iRegion = 6;
@@ -146,7 +146,7 @@ void cKeyboardManager::DEBUG_KEYS() {
     }
 
     //JUMP TO MISSION 4
-    if (key[KEY_F7] && player[HUMAN].getHouse() > 0) {
+    if (key[KEY_F7] && players[HUMAN].getHouse() > 0) {
         game.mission_init();
         game.iMission = 4;
         game.iRegion = 10;
@@ -156,7 +156,7 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.createAndPrepareMentatForHumanPlayer();
     }
     //JUMP TO MISSION 5
-    if (key[KEY_F8] && player[HUMAN].getHouse() > 0) {
+    if (key[KEY_F8] && players[HUMAN].getHouse() > 0) {
         game.mission_init();
         game.iMission = 5;
         game.iRegion = 13;
@@ -215,7 +215,7 @@ void cKeyboardManager::GAME_KEYS() {
     else {
         // Center on focus cell
         if (key[KEY_H]) {
-            mapCamera->centerAndJumpViewPortToCell(player[HUMAN].focus_cell);
+            mapCamera->centerAndJumpViewPortToCell(players[HUMAN].getFocusCell());
         }
 
         // Center on the selected structure

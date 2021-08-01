@@ -147,6 +147,12 @@ int cStructureUtils::findStructureTypeByTypeOfList(cBuildingListItem *item) {
     return getStructureTypeByUnitBuildId(unitBuildId);
 }
 
+/**
+ * Return from which structure type a certain unit type will be deployed from.
+ * TODO: configure this in unit type itself?
+ * @param unitBuildId
+ * @return
+ */
 int cStructureUtils::getStructureTypeByUnitBuildId(int unitBuildId) const {
     switch(unitBuildId) {
         case INFANTRY:
@@ -305,7 +311,7 @@ int cStructureUtils::getTotalSpiceCapacityForPlayer(cPlayer * pPlayer) {
             cRefinery * refinery = dynamic_cast<cRefinery*>(theStructure);
             capacity = refinery->getSpiceSiloCapacity();
         } else if (theStructure->getType() == CONSTYARD) {
-            capacity = 5;
+            capacity = 1000; // by default CONSTYARD has space for some credits
         }
         totalCapacity += capacity;
 	}
