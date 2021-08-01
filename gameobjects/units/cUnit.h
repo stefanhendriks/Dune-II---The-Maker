@@ -288,6 +288,16 @@ public:
 
     bool isUnableToMove();
 
+    void attackUnit(int targetUnit);
+    void attackStructure(int targetStructure);
+    void attackCell(int cell);
+
+    /**
+     * Figures out if at cell is a unit, structure or nothing, and invokes the appropiate attackUnit/Structure/Cell function.
+     * @param cell
+     */
+    void attackAt(int cell);
+
 private:
 
     int mission; // is this unit assigned to a mission?
