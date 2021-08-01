@@ -183,9 +183,7 @@ void cTimeManager::handleTimerGameTime() {
                 map.resetScrollTimer();
             }
 
-            if (game.TIMER_shake > 0) {
-                game.TIMER_shake--;
-            }
+            game.reduceShaking();
 
             // units think (move only)
             for (int i = 0; i < MAX_UNITS; i++) {

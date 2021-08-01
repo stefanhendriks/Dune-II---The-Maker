@@ -211,7 +211,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                 PARTICLE_CREATE(iDieX, iDieY - 24, OBJECT_SMOKE, -1, -1);
 
             if (iType == HARVESTER) {
-                game.TIMER_shake = 25;
+                game.shakeScreen(25);
                 mapEditor.createField(iCell, TERRAIN_SPICE, ((iCredits + 1) / 7));
             }
 
@@ -1069,7 +1069,7 @@ void cUnit::think() {
         map.remove_id(iID, MAPID_UNITS);
 
         die(true, false);
-        game.TIMER_shake = 20;
+        game.shakeScreen(20);
         return;
     }
 
