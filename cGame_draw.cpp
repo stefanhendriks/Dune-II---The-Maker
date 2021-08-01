@@ -285,20 +285,25 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
                 } else if (mouse_tile == MOUSE_ATTACK) {
                     // check who or what to attack
                     for (int i=0; i < MAX_UNITS; i++) {
-                        if (unit[i].isValid() && unit[i].iPlayer == HUMAN && unit[i].bSelected)	{
+                        cUnit &pUnit = unit[i];
+                        if (pUnit.isValid() && pUnit.iPlayer == HUMAN && pUnit.bSelected)	{
                             int iAttackCell=-1;
 
                             if (!context->isMouseOverStructure() && game.hover_unit < 0) {
                                 iAttackCell = mouseCell;
                             }
 
-                            UNIT_ORDER_ATTACK(i, mouseCell, game.hover_unit, context->getIdOfStructureWhereMouseHovers(), iAttackCell);
+                            if (iAttackCell > -1) {
+                                pUnit.attackCell(iAttackCell);
+                            } else {
+                                pUnit.attackAt(mouseCell);
+                            }
 
                             if (game.hover_unit > -1) {
                                 unit[game.hover_unit].TIMER_blink = 5;
                             }
 
-                            if (units[unit[i].iType].infantry) {
+                            if (pUnit.isInfantryUnit()) {
                                 bPlayInf=true;
                             } else {
                                 bPlayRep=true;
