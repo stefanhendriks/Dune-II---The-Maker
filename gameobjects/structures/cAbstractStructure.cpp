@@ -206,7 +206,7 @@ void cAbstractStructure::die() {
     map.remove_id(id, MAPID_STRUCTURES);
 
     // screen shaking
-    game.TIMER_shake = (iWidth * iHeight) * 20;
+    game.shakeScreen((iWidth * iHeight) * 20);
 
     // elegible for cleanup
     dead = true;

@@ -901,6 +901,9 @@ void cGame::run() {
 	}
 }
 
+void cGame::shakeScreen(int duration) {
+    game.TIMER_shake += duration;
+}
 
 /**
 	Shutdown the game
@@ -1712,4 +1715,10 @@ void cGame::onEventSpecialDeployed(const s_GameEvent &event) {
     }
 
     game.bDeployIt = false;
+}
+
+void cGame::reduceShaking() {
+    if (TIMER_shake > 0) {
+        TIMER_shake--;
+    }
 }

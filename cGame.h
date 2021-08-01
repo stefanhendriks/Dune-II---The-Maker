@@ -78,10 +78,6 @@ public:
 
     int iMusicVolume;       // volume of the mp3 / midi
 
-    // throttle stuff
-	int shake_x;
-    int shake_y;
-    int TIMER_shake;
 
     int iMusicType;
 
@@ -146,6 +142,8 @@ public:
         return mouse; // NOOOO
     }
 
+    void shakeScreen(int duration);
+
     void setPlayerToInteractFor(cPlayer *pPlayer);
 
     void onNotify(const s_GameEvent &event) override;
@@ -175,6 +173,8 @@ public:
         }
         return "";
     }
+
+    void reduceShaking();
 
 private:
     cInteractionManager *_interactionManager;
@@ -209,6 +209,11 @@ private:
     int fade_select;        // fade color when selected
     bool bFadeSelectDir;    // fade select direction
     void prepareMentatToTellAboutHouse(int house);
+
+    // screen shaking
+    int shake_x;
+    int shake_y;
+    int TIMER_shake;
 
     void combat_mouse_normalCombatInteraction(cGameControlsContext *context, cPlayer &humanPlayer,
                                               bool &bOrderingUnits) const;

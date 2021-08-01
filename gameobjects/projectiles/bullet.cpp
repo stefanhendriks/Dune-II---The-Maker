@@ -318,6 +318,10 @@ void cBullet::arrivedAtDestinationLogic() {
         }
     }
 
+    if (iType == ROCKET_BIG) {
+        game.shakeScreen(40);
+    }
+
     die();
 }
 
@@ -474,7 +478,7 @@ void cBullet::detonateSpiceBloom(int cell, double factor) const {
     // change type of terrain to sand
     mapEditor.createCell(cell, TERRAIN_SAND, 0);
     mapEditor.createField(cell, TERRAIN_SPICE, 50 + (rnd(75)));
-    game.TIMER_shake = 20;
+    game.shakeScreen(20);
 }
 
 void cBullet::damageSandworm(int cell, double factor) const {
