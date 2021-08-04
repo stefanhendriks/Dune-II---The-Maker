@@ -47,7 +47,7 @@ void cMouseDrawer::draw() {
 //        textDrawer.drawTextWithOneInteger(0, 0, "MouseCell %d", player->getGameControlsContext()->getMouseCell());
 //    }
 
-    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouseDrawX, mouseDrawY);
+    allegroDrawer->drawSprite(bmp_screen, mouse_tile, mouseDrawX, mouseDrawY);
 }
 
 int cMouseDrawer::getDrawXToolTip(int width) {

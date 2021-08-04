@@ -1,16 +1,9 @@
-/*
- * cAllegroDrawer.h
- *
- *  Created on: 5 dec. 2010
- *      Author: Stefan
- */
-
 #ifndef CALLEGRODRAWER_H_
 #define CALLEGRODRAWER_H_
 
 class cAllegroDrawer {
 	public:
-		cAllegroDrawer();
+		cAllegroDrawer(cAllegroDataRepository * dataRepository);
 		virtual ~cAllegroDrawer();
 
 		cRectangle * fromBitmap(int x, int y, BITMAP *src);
@@ -19,6 +12,7 @@ class cAllegroDrawer {
 		void drawCenteredSpriteVertical(BITMAP *dest, BITMAP *src, int x);
 		void drawCenteredSprite(BITMAP *dest, BITMAP *src);
 		void drawSprite(BITMAP *dest, BITMAP *src, int x, int y);
+		void drawSprite(BITMAP *dest, int index, int x, int y);
 
 		void drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP* src, float percentage);
 
@@ -51,6 +45,9 @@ protected:
 		int getCenteredYPosForBitmap(BITMAP *bmp);
 
 		int colorBlack;
+
+private:
+    cAllegroDataRepository * m_dataRepository;
 };
 
 #endif /* CALLEGRODRAWER_H_ */

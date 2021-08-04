@@ -303,9 +303,10 @@ void cSideBarDrawer::drawPowerUsage() const {
     line(bmp_screen, barX, barY, barX, barY + barTotalHeight, darker); // left side |
     line(bmp_screen, barX, barY, barX+barWidth, barY, darker); // top side _
 
-    textDrawer->drawText(barX-1, barY - 21, makecol(0,0,0),"P");
-    textDrawer->drawText(barX+1, barY - 19, makecol(0,0,0),"P");
-    textDrawer->drawText(barX, barY - 20, "P");
+    allegroDrawer->drawSprite(bmp_screen, D2TM_BITMAP_ICON_POWER, barX-3, barY - 21);
+//    textDrawer->drawText(barX-1, barY - 21, makecol(0,0,0),"P");
+//    textDrawer->drawText(barX+1, barY - 19, makecol(0,0,0),"P");
+//    textDrawer->drawText(barX, barY - 20, "P");
 }
 
 void cSideBarDrawer::drawMinimap() {
