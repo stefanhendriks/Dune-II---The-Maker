@@ -181,7 +181,7 @@ void cKeyboardManager::GAME_KEYS() {
     }
 
     // WHEN PRESSED CTRL, MEANING, ADD....
-    if (key[KEY_LCONTROL]) {
+    if (key[KEY_LCONTROL] || key[KEY_RCONTROL]) {
         // UNIT GROUPING
         if (iGroup > 0) {
 

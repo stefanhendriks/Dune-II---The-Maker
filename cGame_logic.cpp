@@ -391,7 +391,7 @@ void cGame::updateState() {
                         }
                     }
 
-                    if (key[KEY_LCONTROL]) { // force attack
+                    if (key[KEY_LCONTROL] || key[KEY_RCONTROL]) { // force attack
                         mouse_tile = MOUSE_ATTACK;
                     }
 
@@ -409,7 +409,7 @@ void cGame::updateState() {
                 int id = game.selected_structure;
                 cAbstractStructure *pStructure = structure[id];
                 if (pStructure && pStructure->getOwner() == HUMAN) {
-                    if (key[KEY_LCONTROL]) {
+                    if (key[KEY_LCONTROL] || key[KEY_RCONTROL]) {
                         mouse_tile = MOUSE_RALLY;
                     }
                 }
