@@ -29,10 +29,12 @@ copy campaign\info.txt bin\campaign\info.txt
 echo 5. Creating new data directory
 mkdir bin\data
 mkdir bin\data\scenes
+mkdir bin\data\bmp
 echo 6. Copying data files
 copy data\*.dat bin\data
 copy data\*.fon bin\data
 copy data\*.ttf bin\data
+copy data\bmp\*.* bin\data\bmp
 echo 7. Copying scenes
 copy data\scenes\*.* bin\data\scenes
 echo 8. Create save game directories

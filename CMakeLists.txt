@@ -17,6 +17,7 @@ file(GLOB d2tm_SRC
         "controls/*.h"
         "controls/*.cpp"
         "data/*.h"
+        "data/*.cpp"
         "drawers/*.h"
         "drawers/*.cpp"
         "gameobjects/*.h"

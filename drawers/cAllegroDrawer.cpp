@@ -1,19 +1,14 @@
-/*
- * cAllegroDrawer.cpp
- *
- *  Created on: 5 dec. 2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 #include "cAllegroDrawer.h"
 
 
-cAllegroDrawer::cAllegroDrawer() {
+cAllegroDrawer::cAllegroDrawer(cAllegroDataRepository * dataRepository) : m_dataRepository(dataRepository) {
     colorBlack=makecol(0,0,0);
 }
 
 cAllegroDrawer::~cAllegroDrawer() {
+    // do not delete data repository, we do not own it!
+    m_dataRepository = nullptr;
 }
 
 void cAllegroDrawer::stretchSprite(BITMAP *src, BITMAP *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight) {
@@ -226,4 +221,10 @@ void cAllegroDrawer::bitmap_replace_color(BITMAP *bmp, int colorToReplace, int n
             }
         }
     }
+}
+
+void cAllegroDrawer::drawSprite(BITMAP *dest, int index, int x, int y) {
+    sBitmap * sBitmap = m_dataRepository->getBitmapAt(index);
+    if (!sBitmap) return; // failed, bail!
+    drawSprite(dest, sBitmap->bitmap, x, y);
 }

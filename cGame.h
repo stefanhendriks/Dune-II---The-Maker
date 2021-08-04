@@ -20,6 +20,7 @@
 
 #include <controls/cMouse.h>
 #include <observers/cScenarioObserver.h>
+#include <data/cAllegroDataRepository.h>
 
 // forward declaration :/ sigh should really look into these includes and such
 class cRectangle;
@@ -178,6 +179,7 @@ public:
 
 private:
     cInteractionManager *_interactionManager;
+    cAllegroDataRepository *m_dataRepository;
 
     cMouse *mouse;
 
@@ -197,6 +199,8 @@ private:
 
     bool isResolutionInGameINIFoundAndSet();
     void setScreenResolutionFromGameIniSettings();
+
+    void install_bitmaps();
 
 	/** game state **/
 	int state;

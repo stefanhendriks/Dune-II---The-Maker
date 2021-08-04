@@ -949,6 +949,7 @@ void cGame::shutdown() {
     }
 
     delete allegroDrawer;
+    delete m_dataRepository;
     delete mouse;
 
     if (gfxdata) {
@@ -1048,7 +1049,8 @@ bool cGame::setupGame() {
 		return false;
 	}
 
-    allegroDrawer = new cAllegroDrawer();
+    m_dataRepository = new cAllegroDataRepository();
+    allegroDrawer = new cAllegroDrawer(m_dataRepository);
 
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
 
@@ -1402,6 +1404,8 @@ bool cGame::setupGame() {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         players[i].init(i, nullptr);
     }
+    logbook("Setup:  BITMAPS");
+    install_bitmaps();
     logbook("Setup:  HOUSES");
 	INSTALL_HOUSES();
     logbook("Setup:  STRUCTURES");
@@ -1721,4 +1725,19 @@ void cGame::reduceShaking() {
     if (TIMER_shake > 0) {
         TIMER_shake--;
     }
+}
+
+void cGame::install_bitmaps() {
+    m_dataRepository->loadBitmapAt(D2TM_BITMAP_ICON_POWER, "./data/bmp/icon_power_sidebar3.bmp");
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_ATTACK, MOUSE_ATTACK);
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_DOWN, MOUSE_DOWN);
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_LEFT, MOUSE_LEFT);
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_MOVE, MOUSE_MOVE);
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_NORMAL, MOUSE_NORMAL);
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_PICK, MOUSE_PICK);
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_RALLY, MOUSE_RALLY);
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_REPAIR, MOUSE_REPAIR);
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_RIGHT, MOUSE_RIGHT);
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_UP, MOUSE_UP);
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOVE_INDICATOR, MOVE_INDICATOR);
 }
