@@ -72,8 +72,9 @@ void cTimeManager::handleTimerAllegroTimerSeconds() {
             }
 
             for (int i = 0; i < MAX_PLAYERS; i++) {
-                if (players[i].getOrderProcesser()) {
-                    cOrderProcesser *orderProcesser = players[i].getOrderProcesser();
+                cPlayer &player = players[i];
+                if (player.getOrderProcesser()) {
+                    cOrderProcesser *orderProcesser = player.getOrderProcesser();
                     assert(orderProcesser);
                     orderProcesser->think();
                 }

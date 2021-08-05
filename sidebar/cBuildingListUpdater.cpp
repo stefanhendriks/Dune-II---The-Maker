@@ -156,8 +156,14 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
         list->addUnitToList(MCV, 0);
         list->addUnitToList(HARVESTER, 0);
         list->addUnitToList(LAUNCHER, 0);
-        list->addUnitToList(SIEGETANK, 0);
-        list->addUnitToList(CARRYALL, 0);
+
+        if (techLevel > 6) {
+            list->addUnitToList(SIEGETANK, 0);
+        }
+
+        if (techLevel > 7 && (house != HARKONNEN && house != SARDAUKAR)) {
+            list->addUnitToList(ORNITHOPTER, 0);
+        }
     }
 
     if (structureType == PALACE) {
@@ -234,8 +240,17 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
         list->addUnitToList(MCV, 0);
         list->addUnitToList(HARVESTER, 0);
         list->addUnitToList(LAUNCHER, 0);
-        list->addUnitToList(SIEGETANK, 0);
-        list->addUnitToList(CARRYALL, 0);
+
+        if (techLevel > 6) {
+            list->addUnitToList(SIEGETANK, 0);
+        }
+
+        if (techLevel > 7 && (house != HARKONNEN && house != SARDAUKAR)) {
+            list->addUnitToList(ORNITHOPTER, 0);
+        }
+
+        // TODO: use events for this
+        player->getOrderProcesser()->updatePricesForStarport();
     }
 
     if (structureType == REFINERY) {
@@ -279,7 +294,7 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
 
     if (structureType == STARPORT) {
         // House of IX is available if Starport is built
-        if (techLevel >= 7) {
+        if (techLevel >= 8) {
             listConstYard->addStructureToList(IX, 0);
         }
     }
