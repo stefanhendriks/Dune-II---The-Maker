@@ -151,6 +151,14 @@ public:
         return value / zoomLevel;
     }
 
+    int getWindowWidth() {
+        return windowWidth;
+    }
+
+    int getWindowHeight() {
+        return windowHeight;
+    }
+
     // Calculates viewport and tile width/height
     void calibrate();
 
