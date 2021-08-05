@@ -49,13 +49,19 @@ class cDrawManager {
 		cStructureDrawer * structureDrawer;
 		cMouseDrawer * mouseDrawer;
 
-		// TODO: unitDrawer
+        BITMAP *optionsBar;
+
+        int sidebarColor;
+
+    // TODO: unitDrawer
 
 		// TODO: bullet/projectile drawer
 
 		cPlayer * player;
 
 		BITMAP *topBarBmp;
+
+    void drawOptionBar();
 };
 
 #endif

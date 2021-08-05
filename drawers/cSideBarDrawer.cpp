@@ -4,7 +4,6 @@ cSideBarDrawer::cSideBarDrawer(cPlayer * thePlayer) : player(thePlayer) {
     assert(thePlayer);
 	buildingListDrawer = new cBuildingListDrawer(thePlayer);
 	candybar = nullptr;
-	optionsBar = nullptr;
 	sidebarColor = makecol(214, 149, 20);
     textDrawer = new cTextDrawer(bene_font);
     sidebar = nullptr;
@@ -14,9 +13,6 @@ cSideBarDrawer::~cSideBarDrawer() {
 	delete buildingListDrawer;
 	if (candybar) {
 		destroy_bitmap(candybar);
-	}
-	if (optionsBar) {
-		destroy_bitmap(optionsBar);
 	}
 	delete textDrawer;
 	sidebar = nullptr;
@@ -71,17 +67,6 @@ void cSideBarDrawer::createCandyBar() {
 }
 
 void cSideBarDrawer::drawHouseGui() {
-	set_palette(player->pal);
-
-	// black out sidebar
-	rectfill(bmp_screen, (game.screen_x-cSideBar::SidebarWidth), 0, game.screen_x, game.screen_y, makecol(0,0,0));
-
-    // upper bar
-    rectfill(bmp_screen, 0, 0, game.screen_x, cSideBar::TopBarHeight, makecol(0,0,0));
-
-    drawCandybar();
-
-    drawMinimap();
 }
 
 void cSideBarDrawer::drawBuildingLists() {
@@ -187,8 +172,15 @@ void cSideBarDrawer::drawBuildingLists() {
 
 // draws the sidebar on screen
 void cSideBarDrawer::draw() {
-	drawHouseGui();
-    drawOptionsBar();
+    set_palette(player->pal);
+
+    // black out sidebar
+    rectfill(bmp_screen, (game.screen_x-cSideBar::SidebarWidth), 0, game.screen_x, game.screen_y, makecol(0,0,0));
+
+    drawCandybar();
+
+    drawMinimap();
+    drawCapacities();
     drawBuildingLists();
 }
 
@@ -360,23 +352,6 @@ void cSideBarDrawer::drawMinimap() {
         allegroDrawer->stretchBlit((BITMAP *) gfxinter[bitmapId].dat, bmp_screen, srcX, srcY, emblemWidth,
                                    emblemHeight, drawX, drawY, emblemDesiredWidth, emblemDesiredHeight);
     }
-}
-
-void cSideBarDrawer::drawOptionsBar() {
-	if (optionsBar == NULL) {
-		optionsBar = create_bitmap(game.screen_x, 40);
-		clear_to_color(optionsBar, sidebarColor);
-
-//		// credits
-//		draw_sprite(optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOPBAR_CREDITS].dat, (game.screen_x - 240), 0);
-
-		for (int w = 0; w < (game.screen_x + 800); w += 789) {
-			draw_sprite(optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOP_BAR].dat, w, 31);
-		}
-
-	}
-	draw_sprite(bmp_screen, optionsBar, 0, 0);
-    drawCapacities();
 }
 
 void cSideBarDrawer::setPlayer(cPlayer *pPlayer) {
