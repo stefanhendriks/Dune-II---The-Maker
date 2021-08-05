@@ -20,7 +20,6 @@ protected:
 		void drawCandybar();
 
 		void drawMinimap();
-		void drawOptionsBar();
 	private:
         cPlayer * player;
 		cBuildingListDrawer * buildingListDrawer;
@@ -28,7 +27,6 @@ protected:
 
 		// the 'candybar' is the bar with the ball at the top. Colored with the house color.
 		BITMAP *candybar;
-		BITMAP *optionsBar;
 		cTextDrawer *textDrawer;
 
 		int sidebarColor;

@@ -15,6 +15,8 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) : player(thePlayer) {
 	structureDrawer = new cStructureDrawer();
 	mouseDrawer = new cMouseDrawer(thePlayer);
     topBarBmp = nullptr;
+    optionsBar = nullptr;
+    sidebarColor = makecol(214, 149, 20);
 }
 
 cDrawManager::~cDrawManager() {
@@ -28,11 +30,15 @@ cDrawManager::~cDrawManager() {
 	delete placeitDrawer;
 	delete structureDrawer;
 	delete mouseDrawer;
+    if (optionsBar) {
+        destroy_bitmap(optionsBar);
+    }
 }
 
 void cDrawManager::drawCombatState() {
     // MAP
 	assert(mapDrawer);
+	allegroDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), game.screen_y);
     mapDrawer->drawTerrain(0, 42);
 
 	// Only draw units/structures, etc, when we do NOT press D
@@ -58,9 +64,12 @@ void cDrawManager::drawCombatState() {
 
 	drawRallyPoint();
 
-	// GUI
+    allegroDrawer->resetClippingFor(bmp_screen);
+
+    // GUI
 	drawSidebar();
-	miniMapDrawer->draw();
+
+	drawOptionBar();
 
 	allegroDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), mapCamera->getWindowHeight());
 	drawStructurePlacing();
@@ -76,6 +85,8 @@ void cDrawManager::drawCombatState() {
 	// DO COMBAT MOUSE (TODO: remove this eventually, as it updates state and that is not what
 	// this class should be doing)
     game.combat_mouse();
+
+    allegroDrawer->resetClippingFor(bmp_screen);
 
 	// MOUSE
     drawCombatMouse();
@@ -117,7 +128,10 @@ void cDrawManager::drawRallyPoint() {
 }
 
 void cDrawManager::drawSidebar() {
+    allegroDrawer->setClippingFor(bmp_screen, game.screen_x-cSideBar::SidebarWidth, 0, game.screen_x, game.screen_y);
     sidebarDrawer->draw();
+    miniMapDrawer->draw();
+    allegroDrawer->resetClippingFor(bmp_screen);
 }
 
 /**
@@ -214,6 +228,22 @@ void cDrawManager::setPlayerToDraw(cPlayer * playerToDraw) {
     this->miniMapDrawer->setPlayer(playerToDraw);
     this->mapDrawer->setPlayer(playerToDraw);
 }
+
+void cDrawManager::drawOptionBar() {
+    // upper bar
+    rectfill(bmp_screen, 0, 0, game.screen_x, cSideBar::TopBarHeight, makecol(0,0,0));
+    if (optionsBar == NULL) {
+        optionsBar = create_bitmap(game.screen_x, 40);
+        clear_to_color(optionsBar, sidebarColor);
+
+        for (int w = 0; w < (game.screen_x + 800); w += 789) {
+            draw_sprite(optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOP_BAR].dat, w, 31);
+        }
+
+    }
+    draw_sprite(bmp_screen, optionsBar, 0, 0);
+}
+
 
 //int points[] =
 //{
