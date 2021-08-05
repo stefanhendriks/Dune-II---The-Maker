@@ -14,7 +14,6 @@ cMapCamera::cMapCamera(cMap * theMap) : pMap(theMap) {
 
     int widthOfSidebar = cSideBar::SidebarWidth;
     heightOfTopBar = cSideBar::TopBarHeight;
-//    heightOfTopBar = 42;
 
     windowWidth=game.screen_x-widthOfSidebar;
     windowHeight= game.screen_y - heightOfTopBar;
