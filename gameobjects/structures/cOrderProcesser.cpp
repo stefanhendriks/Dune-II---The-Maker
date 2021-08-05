@@ -12,7 +12,7 @@ cOrderProcesser::cOrderProcesser(cPlayer *thePlayer) {
 	orderPlaced = false;
 	frigateSent = false;
 	secondsUntilArrival = -1;
-	secondsUntilNewPricesWillBeCalculated = getRandomizedSecondsToWait();
+	secondsUntilNewPricesWillBeCalculated = 1; // initially randomize prices immediately
 	memset(pricePaidForItem, -1, sizeof(pricePaidForItem));
 	removeAllItems();
 	updatePricesForStarport();
