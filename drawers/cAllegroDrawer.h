@@ -14,6 +14,9 @@ class cAllegroDrawer {
 		void drawSprite(BITMAP *dest, BITMAP *src, int x, int y);
 		void drawSprite(BITMAP *dest, int index, int x, int y);
 
+		void resetClippingFor(BITMAP *bmp);
+		void setClippingFor(BITMAP *bmp, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY);
+
 		void drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP* src, float percentage);
 
 		void blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);

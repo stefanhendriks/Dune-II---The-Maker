@@ -33,7 +33,6 @@ cDrawManager::~cDrawManager() {
 void cDrawManager::drawCombatState() {
     // MAP
 	assert(mapDrawer);
-	map.draw_think();
     mapDrawer->drawTerrain(0, 42);
 
 	// Only draw units/structures, etc, when we do NOT press D
@@ -63,8 +62,11 @@ void cDrawManager::drawCombatState() {
 	drawSidebar();
 	miniMapDrawer->draw();
 
+	allegroDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), mapCamera->getWindowHeight());
 	drawStructurePlacing();
-	drawDeployment();
+    allegroDrawer->resetClippingFor(bmp_screen);
+
+    drawDeployment();
     drawTopBarBackground();
 	drawCredits();
 
