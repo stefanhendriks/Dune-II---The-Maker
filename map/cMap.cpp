@@ -487,10 +487,6 @@ void cMap::draw_units_2nd() {
     set_trans_blender(0, 0, 0, 128);
 }
 
-// TODO: move this somewhere to a mouse related class
-void cMap::draw_think() {
-}
-
 void cMap::thinkInteraction() {
 	mapCamera->thinkInteraction();
 }

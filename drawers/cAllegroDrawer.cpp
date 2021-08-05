@@ -228,3 +228,13 @@ void cAllegroDrawer::drawSprite(BITMAP *dest, int index, int x, int y) {
     if (!sBitmap) return; // failed, bail!
     drawSprite(dest, sBitmap->bitmap, x, y);
 }
+
+void cAllegroDrawer::resetClippingFor(BITMAP *bmp) {
+    if (!bmp) return;
+    setClippingFor(bmp, 0, 0, bmp->w, bmp->h);
+}
+
+void cAllegroDrawer::setClippingFor(BITMAP *bmp, int topLeftX, int topLeftY, int bottomRightX, int bottomRightY) {
+    if (!bmp) return;
+    set_clip_rect(bmp, topLeftX, topLeftY, bottomRightX, bottomRightY);
+}

@@ -171,7 +171,6 @@ public:
 
     void thinkInteraction();
     void think_minimap();
-    void draw_think();
 
     void clear_all(int playerId);
 
