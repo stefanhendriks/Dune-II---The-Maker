@@ -110,6 +110,8 @@ public:
 
     int getErrorFadingColor() const;
 
+    int getPrimaryBuildingFadingColor() const;
+
     int getSelectFadingColor() const;
 
     int getTechLevel() const { return techLevel; }
@@ -172,6 +174,10 @@ public:
     bool hasEnoughCreditsForStructure(int structureType);
 
     bool hasEnoughCreditsForUpgrade(int upgradeType);
+
+    bool isPrimaryStructureForStructureType(int structureType, int structureId) const {
+        return getPrimaryStructureForStructureType(structureType) == structureId;
+    }
 
     int getPrimaryStructureForStructureType(int structureType) const {
         return iPrimaryBuilding[structureType];

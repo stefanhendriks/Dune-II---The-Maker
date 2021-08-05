@@ -509,6 +509,15 @@ int cPlayer::getErrorFadingColor() const {
 }
 
 /**
+ * Returns the error fading color (red to black pulsating)
+ * @return
+ */
+int cPlayer::getPrimaryBuildingFadingColor() const {
+    int fadeSelect = game.getFadeSelect();
+    return makecol(0, fadeSelect, 0); // green fading
+}
+
+/**
  * Returns the fading white color
  * @return
  */

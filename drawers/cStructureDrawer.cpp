@@ -296,14 +296,15 @@ void cStructureDrawer::drawStructuresForLayer(int layer) {
             // draw
             drawStructureForLayer(theStructure, layer);
 
-            if (players[0].getPrimaryStructureForStructureType(theStructure->getType()) == i) {
-                int color = theStructure->getPlayer()->getMinimapColor();
-                // TODO: change it into fading color or something other than this ugly rectangle.
-                drawRectangeOfStructure(theStructure, color);
+            cPlayer &player = players[HUMAN]; // TODO: Pass it as variable? (instead of getting it from here)
+            // regardless if selected, render this so you know from which structure things will come?
+            if (player.isPrimaryStructureForStructureType(theStructure->getType(), i)) {
+                drawRectangeOfStructure(theStructure, player.getPrimaryBuildingFadingColor());
+                continue;
             }
 
             if (i == game.selected_structure) {
-                drawRectangeOfStructure(theStructure, players[HUMAN].getSelectFadingColor());
+                drawRectangeOfStructure(theStructure, player.getSelectFadingColor());
             }
         }
 	}
