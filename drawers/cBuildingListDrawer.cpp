@@ -264,6 +264,15 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
             textDrawer->drawText(textX, textY, msg);
 		}
 
+        if (DEBUGGING) {
+            if (key[KEY_TAB] && key[KEY_D]) {
+                int textX = iDrawX + 41;
+                int textY = iDrawY + 40;
+
+                textDrawer->drawTextWithOneInteger(textX, textY, "%d", item->getSubList());
+            }
+        }
+
 		// draw rectangle when mouse hovers over icon
 		if (isOverItemCoordinates_Boolean(mouse_x, mouse_y, iDrawX, iDrawY)) {
 			rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), selectFadingColor);
@@ -279,7 +288,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
             iDrawX=getDrawX();
             iDrawY+=50;
         }
-	}
+    }
 
 	set_clip_rect(bmp_screen, 0, 0, game.screen_x, game.screen_y);
 }
