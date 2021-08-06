@@ -222,7 +222,7 @@ void cBullet::think_move() {
     }
 
     // non flying bullets hit against a wall, except for bullets from turrets
-    if (cellTypeAtCell == TERRAIN_WALL && !isTurretBullet()) {
+    if (cellTypeAtCell == TERRAIN_WALL) {
         arrivedAtDestinationLogic();
         return;
     }
@@ -233,11 +233,11 @@ void cBullet::think_move() {
         int id = idOfStructureAtCell;
         bool bHitsEnemyBuilding = false;
 
-        if (isTurretBullet()) {
+        if (iOwnerStructure > -1) {
             if (id != iOwnerStructure) {
                 bHitsEnemyBuilding = true;
             } else {
-                // do not shoot yourself
+                // do not hit own structures
                 if (structure[id]->getOwner() != iPlayer) {
                     bHitsEnemyBuilding = true;
                 }
@@ -361,7 +361,7 @@ bool cBullet::isSonicWave() const {
  */
 void cBullet::damageAirUnit(int cell, double factor) const {
     if (!map.isValidCell(cell)) return;
-    if (!isRocket()) return;
+    if (!canDamageAirUnits()) return;
     int id = map.getCellIdAirUnitLayer(cell);
     if (id < 0) return;
     if (iOwnerUnit > 0 && id == iOwnerUnit) return; // do not damage self
@@ -536,35 +536,12 @@ void cBullet::moveBulletTowardsGoal() {
     posY += sin(angle) * movespeed;
 }
 
-/**
- * Is bullet from a turret
- * @return
- */
-bool cBullet::isTurretBullet() const {
-    return iType == BULLET_TURRET;
-}
-
 bool cBullet::isGroundBullet() const {
-    return iType == BULLET_SMALL ||
-           iType == BULLET_TRIKE ||
-           iType == BULLET_QUAD ||
-           iType == BULLET_TANK ||
-           iType == BULLET_SIEGE ||
-           iType == BULLET_DEVASTATOR ||
-           iType == BULLET_TURRET;
+    return gets_Bullet().groundBullet;
 }
 
-
-bool cBullet::isDeviatorGas() const {
-    return iType == BULLET_GAS;
-}
-
-bool cBullet::isRocket() const {
-    return iType == ROCKET_NORMAL ||
-           iType == ROCKET_SMALL_ORNI ||
-           iType == ROCKET_SMALL ||
-           iType == ROCKET_SMALL_FREMEN ||
-           iType == ROCKET_RTURRET;
+bool cBullet::canDamageAirUnits() const {
+    return gets_Bullet().canDamageAirUnits;
 }
 
 float cBullet::getDamageToInflictToNonInfantry() const {

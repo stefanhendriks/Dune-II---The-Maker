@@ -214,7 +214,11 @@ struct s_Bullet {
 
     int deviateProbability;   // how high probability it deviates a unit (changes sides) (0 = no chance, 100 = 100% chance)
 
+    bool groundBullet;   // if true, then it gets blocked by walls, mountains or structures. False == flying bullets, ie, rockets
+    bool canDamageAirUnits;   // if true, then upon impact the bullet can also damage air units
+
     char description[64]; // ie: "bullet"
+
 };
 
 // SKIRMISH MAP PREVIEW DATA
