@@ -865,36 +865,42 @@ void cUnit::think_guard() {
 
         } else // not sandworm
         {
-
+            int airUnitToAttack = -1;
             for (int i = 0; i < MAX_UNITS; i++) {
                 if (i == iID) continue; // skip self
                 cUnit &potentialThreath = unit[i];
                 if (!potentialThreath.isValid()) continue;
+                if (potentialThreath.getPlayerId() == getPlayerId()) continue; // skip own units
 
                 bool bSameTeam = getPlayer()->isSameTeamAs(potentialThreath.getPlayer());
-                if (bSameTeam) continue; // skip same team player
+                if (bSameTeam) continue; // skip same team players / allies
 
-                // this unit is a non-air unit. And its potential threat IS an air unit. If we can't attack it skip it
-                if (!isAirbornUnit() &&
-                    !canAttackAirUnits() &&
-                    potentialThreath.isAttackableAirUnit())
-                    continue;
+                if (!map.isVisible(potentialThreath.iCell, iPlayer)) continue; // skip non-visible potential enemy units
 
-                // not ours and its visible
-                if (map.isVisible(potentialThreath.iCell, iPlayer) && // is visible for ai as well?
-                    potentialThreath.isAirbornUnit() == isAirbornUnit()) {
+                if (potentialThreath.isAirbornUnit() && // potential threat is air unit
+                    !isAirbornUnit() &&                 // but I am not
+                    !canAttackAirUnits())               // and I can't attack air units...
+                    continue;                           // then bail
 
-                    int distance = ABS_length(iCellX, iCellY, potentialThreath.iCellX, potentialThreath.iCellY);
+                int distance = ABS_length(iCellX, iCellY, potentialThreath.iCellX, potentialThreath.iCellY);
 
-                    // TODO: perhaps make this configurable, so you can set the 'aggressiveness' of units?
-                    int range = units[iType].sight + 3; // do react earlier than already in range.
+                // TODO: perhaps make this configurable, so you can set the 'aggressiveness' of units?
+                int range = units[iType].sight + 3; // do react earlier than already in range.
 
-                    if (distance <= range && distance < iDistance) {
-                        // ATTACK
-                        iDistance = distance;
-                        unitIdSelectedForAttacking = i;
+                if (distance <= range && distance < iDistance) {
+                    // ATTACK
+                    iDistance = distance;
+                    unitIdSelectedForAttacking = i;
+                    // I am not air unit, enemy is.
+                    if (!isAirbornUnit() && canAttackAirUnits() && potentialThreath.isAirbornUnit()) {
+                        airUnitToAttack = i;
                     }
                 }
+            }
+
+            if (airUnitToAttack > -1) {
+                // air units override ground units for units that can attack air units ?
+                unitIdSelectedForAttacking = airUnitToAttack;
             }
 
         }
@@ -1795,7 +1801,22 @@ void cUnit::shoot(int iShootCell) {
         PARTICLE_CREATE(iShootX, iShootY, OBJECT_SIEGESHOOT, -1, bmp_head);
     }
 
-    create_bullet(units[iType].bullets, iCell, iShootCell, iID, -1);
+    int bulletType = units[iType].bulletType;
+    if (bulletType < 0) return; // no bullet type to spawn
+
+    int iBull = create_bullet(bulletType, iCell, iShootCell, iID, -1);
+
+    cUnit * attackUnit = nullptr;
+    if (iAttackUnit > -1) {
+        attackUnit = &unit[iAttackUnit];
+        if (attackUnit && !attackUnit->isValid()) {
+            // allowing homing bullets towards air units from the ground
+            if (iBull > -1 && attackUnit->isAirbornUnit()) {
+                bullet[iBull].iHoming = iAttackUnit;
+                bullet[iBull].TIMER_homing = 200;
+            }
+        }
+    }
 }
 
 int cUnit::getNextCellToMoveTo() {
@@ -2068,6 +2089,8 @@ void cUnit::think_attack() {
 
     int distance = ABS_length(iCellX, iCellY, iDestX, iDestY);
 
+    s_UnitP &sUnits = getUnitType();
+
     if (!isAirbornUnit()) {
         if (distance <= getRange() && !isMovingBetweenCells()) {
             // in range , fire and such
@@ -2090,11 +2113,11 @@ void cUnit::think_attack() {
                 int iGc = iGoalCell;
 
                 if (iType == LAUNCHER || iType == DEVIATOR) {
-                    if (distance < units[iType].range) {
+                    if (distance < sUnits.range) {
                         int dx = map.getCellX(iGc);
                         int dy = map.getCellY(iGc);
 
-                        int dif = (units[iType].range - distance) / 2;
+                        int dif = (sUnits.range - distance) / 2;
 
                         dx -= (dif);
                         dx += rnd(dif * 2);
@@ -2109,8 +2132,8 @@ void cUnit::think_attack() {
                 // facing ok?
 
                 TIMER_attack++;
-                if (TIMER_attack >= units[iType].attack_frequency) {
-                    if (TIMER_attack == units[iType].attack_frequency) {
+                if (TIMER_attack >= sUnits.attack_frequency) {
+                    if (TIMER_attack == sUnits.attack_frequency) {
                         if (iAttackUnit > -1) {
                             if (attackUnit->getPlayer()->isSameTeamAs(getPlayer())) {
                                 // unit got converted
@@ -2123,11 +2146,11 @@ void cUnit::think_attack() {
                         shoot(iGc);
                     }
 
-                    if (units[iType].second_shot == false) {
+                    if (sUnits.fireTwice == false) {
                         //shoot(iGoalCell);
                         TIMER_attack = 0;
                     } else {
-                        if (TIMER_attack > (units[iType].attack_frequency + (units[iType].attack_frequency / 6))) {
+                        if (TIMER_attack > (sUnits.attack_frequency + (sUnits.attack_frequency / 6))) {
                             shoot(iGc);
                             TIMER_attack = 0;
                         }
@@ -2159,7 +2182,7 @@ void cUnit::think_attack() {
         }
     } // NON AIRBORN UNITS ATTACK THINKING
     else {
-        if (distance <= units[iType].range) {
+        if (distance <= sUnits.range) {
             // in range , fire and such
 
             // Facing
@@ -2182,8 +2205,8 @@ void cUnit::think_attack() {
                 // facing ok?
 
                 TIMER_attack++;
-                if (TIMER_attack >= units[iType].attack_frequency) {
-                    if (TIMER_attack == units[iType].attack_frequency) {
+                if (TIMER_attack >= sUnits.attack_frequency) {
+                    if (TIMER_attack == sUnits.attack_frequency) {
                         if (iAttackUnit > -1) {
                             if (attackUnit->getPlayer()->isSameTeamAs(getPlayer())) {
                                 // unit got converted
@@ -2196,11 +2219,11 @@ void cUnit::think_attack() {
                         shoot(iGc);
                     }
 
-                    if (units[iType].second_shot == false) {
+                    if (sUnits.fireTwice == false) {
                         //shoot(iGoalCell);
                         TIMER_attack = 0;
                     } else {
-                        if (TIMER_attack > (units[iType].attack_frequency + (units[iType].attack_frequency / 6))) {
+                        if (TIMER_attack > (sUnits.attack_frequency + (sUnits.attack_frequency / 6))) {
                             shoot(iGc);
                             TIMER_attack = -20;
 

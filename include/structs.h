@@ -34,7 +34,7 @@ struct s_UnitP {
 
   int    build_time;        // how long it takes for building this thing
 
-  int    bullets;           // type of bullet
+  int    bulletType;           // type of bullet
   int    max_bullets;       // Maximum of 'bullets' it can fire at a time
 
   int    type;              // type of unit,
@@ -50,7 +50,7 @@ struct s_UnitP {
   bool infantry;            // legged unit? (infantry)
   bool free_roam;           // (airborn only) - does it free roam?
 
-  bool second_shot;         // can shoot 2 times?
+  bool fireTwice;         // can shoot 2 times?
 
   bool squish;              // can this unit squish infantry?
 

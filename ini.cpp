@@ -2212,7 +2212,7 @@ void INI_Install_Game(string filename) {
                     }
 
                     // Booleans
-                    if (wordtype == WORD_SECONDSHOT) units[id].second_shot = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_SECONDSHOT) units[id].fireTwice = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_ISINFANTRY) units[id].infantry = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_FREEROAM) units[id].free_roam = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_ISAIRBORN) units[id].airborn = INI_WordValueBOOL(linefeed);

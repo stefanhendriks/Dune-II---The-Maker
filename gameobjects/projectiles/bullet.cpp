@@ -370,16 +370,6 @@ void cBullet::damageAirUnit(int cell, double factor) const {
 
     cUnit &airUnit = unit[id];
     airUnit.takeDamage(iDamage);
-
-    if (airUnit.isDead()) {
-        int iID = iOwnerUnit;
-
-        if (iID > -1) {
-            if (unit[iID].isValid()) {
-                // TODO: update statistics
-            }
-        }
-    }
 }
 
 /**
@@ -391,6 +381,7 @@ void cBullet::damageGroundUnit(int cell, double factor) const {
     if (!map.isValidCell(cell)) return;
     int id = map.getCellIdUnitLayer(cell);
     if (id < 0) return;
+    if (iOwnerUnit > 0 && id == iOwnerUnit) return; // do not damage self
 
     cUnit &groundUnitTakingDamage = unit[id];
 

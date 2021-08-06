@@ -164,13 +164,13 @@ void install_units()
     units[i].speed            = 0;
     units[i].icon             = -1;
     units[i].hp               = -1;
-    units[i].bullets          = -1;
+    units[i].bulletType          = -1;
     units[i].attack_frequency = -1;
     units[i].build_time       = -1;
     units[i].airborn          = false;
     units[i].infantry         = false;
     units[i].free_roam        = false;
-    units[i].second_shot      = false;
+    units[i].fireTwice      = false;
     units[i].squish           = true;     // most units can squish
     units[i].range            = -1;
     units[i].sight            = -1;
@@ -220,8 +220,8 @@ void install_units()
   units[ORNITHOPTER].bmp_startpixel = 0;
   units[ORNITHOPTER].bmp_frames = 4; // we have at max 3 extra frames
   units[ORNITHOPTER].icon = ICON_UNIT_ORNITHOPTER;
-  units[ORNITHOPTER].bullets = ROCKET_SMALL_ORNI;
-  units[ORNITHOPTER].second_shot = true;
+  units[ORNITHOPTER].bulletType = ROCKET_SMALL_ORNI;
+  units[ORNITHOPTER].fireTwice = true;
   units[ORNITHOPTER].airborn = true;   // is airborn
   units[ORNITHOPTER].free_roam=true; // may freely roam the air
   units[ORNITHOPTER].listId=LIST_UNITS;
@@ -236,8 +236,8 @@ void install_units()
   units[DEVASTATOR].bmp_startpixel = 0;
   units[DEVASTATOR].bmp_height = 23*2;
   units[DEVASTATOR].bmp_frames = 1;
-  units[DEVASTATOR].bullets = BULLET_DEVASTATOR;
-  units[DEVASTATOR].second_shot = true;
+  units[DEVASTATOR].bulletType = BULLET_DEVASTATOR;
+  units[DEVASTATOR].fireTwice = true;
   units[DEVASTATOR].icon    = ICON_UNIT_DEVASTATOR;
   units[DEVASTATOR].listId=LIST_UNITS;
   units[DEVASTATOR].subListId=SUBLIST_HEAVYFCTRY;
@@ -267,7 +267,7 @@ void install_units()
   units[TANK].bmp_startpixel = 0;
   units[TANK].bmp_height = 16*2;
   units[TANK].bmp_frames = 0;
-  units[TANK].bullets = BULLET_TANK;
+  units[TANK].bulletType = BULLET_TANK;
   units[TANK].icon    = ICON_UNIT_TANK;
   units[TANK].listId=LIST_UNITS;
   units[TANK].subListId=SUBLIST_HEAVYFCTRY;
@@ -283,8 +283,8 @@ void install_units()
   units[SIEGETANK].bmp_startpixel = 1;
   units[SIEGETANK].bmp_height = 18*2;
   units[SIEGETANK].bmp_frames = 0;
-  units[SIEGETANK].bullets = BULLET_SIEGE;
-  units[SIEGETANK].second_shot = true;
+  units[SIEGETANK].bulletType = BULLET_SIEGE;
+  units[SIEGETANK].fireTwice = true;
   units[SIEGETANK].icon    = ICON_UNIT_SIEGETANK;
   units[SIEGETANK].listId=LIST_UNITS;
   units[SIEGETANK].subListId=SUBLIST_HEAVYFCTRY;
@@ -312,7 +312,7 @@ void install_units()
   units[DEVIATOR].bmp_startpixel = 0;
   units[DEVIATOR].bmp_frames = 1;
   units[DEVIATOR].icon = ICON_UNIT_DEVIATOR;
-  units[DEVIATOR].bullets = BULLET_GAS; // our gassy rocket
+  units[DEVIATOR].bulletType = BULLET_GAS; // our gassy rocket
   units[DEVIATOR].listId=LIST_UNITS;
   units[DEVIATOR].subListId=SUBLIST_HEAVYFCTRY;
   strcpy(units[DEVIATOR].name, "Deviator");
@@ -326,9 +326,9 @@ void install_units()
   units[LAUNCHER].bmp_startpixel = 0;
   units[LAUNCHER].bmp_frames = 1;
   units[LAUNCHER].icon = ICON_UNIT_LAUNCHER;
-  units[LAUNCHER].second_shot = true;
+  units[LAUNCHER].fireTwice = true;
   //units[LAUNCHER].bullets = ROCKET_NORMAL; // our gassy rocket
-  units[LAUNCHER].bullets = ROCKET_NORMAL; // our gassy rocket
+  units[LAUNCHER].bulletType = ROCKET_NORMAL; // our gassy rocket
   units[LAUNCHER].listId=LIST_UNITS;
   units[LAUNCHER].subListId=SUBLIST_HEAVYFCTRY;
   units[LAUNCHER].canAttackAirUnits=true;
@@ -343,8 +343,8 @@ void install_units()
   units[QUAD].bmp_startpixel = 0;
   units[QUAD].bmp_frames = 1;
   units[QUAD].icon = ICON_UNIT_QUAD;
-  units[QUAD].second_shot = true;
-  units[QUAD].bullets = BULLET_QUAD;
+  units[QUAD].fireTwice = true;
+  units[QUAD].bulletType = BULLET_QUAD;
   units[QUAD].squish=false;
   units[QUAD].listId=LIST_UNITS;
   units[QUAD].subListId=SUBLIST_LIGHTFCTRY;
@@ -360,7 +360,7 @@ void install_units()
   units[TRIKE].bmp_startpixel = 0;
   units[TRIKE].bmp_frames = 1;
   units[TRIKE].icon = ICON_UNIT_TRIKE;
-  units[TRIKE].bullets = BULLET_TRIKE;
+  units[TRIKE].bulletType = BULLET_TRIKE;
   units[TRIKE].squish=false;
   units[TRIKE].listId=LIST_UNITS;
   units[TRIKE].subListId=SUBLIST_LIGHTFCTRY;
@@ -376,7 +376,7 @@ void install_units()
   units[RAIDER].bmp_frames = 1;
   strcpy(units[RAIDER].name, "Raider Trike");
   units[RAIDER].icon = ICON_UNIT_RAIDER;
-  units[RAIDER].bullets = BULLET_TRIKE;
+  units[RAIDER].bulletType = BULLET_TRIKE;
   units[RAIDER].squish=false;
   units[RAIDER].listId=LIST_UNITS;
   units[RAIDER].subListId=SUBLIST_LIGHTFCTRY;
@@ -417,7 +417,7 @@ void install_units()
   units[SONICTANK].bmp_height = 16*2;
   units[SONICTANK].bmp_startpixel = 0;
   units[SONICTANK].bmp_frames = 1; // no extra frames
-  units[SONICTANK].bullets = BULLET_SHIMMER;
+  units[SONICTANK].bulletType = BULLET_SHIMMER;
   units[SONICTANK].icon = ICON_UNIT_SONICTANK;
   units[SONICTANK].listId=LIST_UNITS;
   units[SONICTANK].subListId=SUBLIST_HEAVYFCTRY;
@@ -432,7 +432,7 @@ void install_units()
   units[SOLDIER].bmp_startpixel = 0;
   units[SOLDIER].bmp_frames = 3; // 2 extra frames
   units[SOLDIER].infantry=true;
-  units[SOLDIER].bullets  = BULLET_SMALL;
+  units[SOLDIER].bulletType  = BULLET_SMALL;
   units[SOLDIER].icon       = ICON_UNIT_SOLDIER;
   units[SOLDIER].squish=false;
   units[SOLDIER].listId=LIST_FOOT_UNITS;
@@ -452,8 +452,8 @@ void install_units()
   units[INFANTRY].bmp_frames = 3; // 2 extra frames
   units[INFANTRY].speed = 8;
   units[INFANTRY].infantry = true;
-  units[INFANTRY].bullets  = BULLET_SMALL;
-  units[INFANTRY].second_shot = true;
+  units[INFANTRY].bulletType  = BULLET_SMALL;
+  units[INFANTRY].fireTwice = true;
   units[INFANTRY].icon = ICON_UNIT_INFANTRY;
   units[INFANTRY].squish=false;
   units[INFANTRY].listId=LIST_FOOT_UNITS;
@@ -472,7 +472,7 @@ void install_units()
   units[TROOPER].bmp_frames = 3; // 2 extra frames
   strcpy(units[TROOPER].name, "Trooper");
   units[TROOPER].infantry = true;
-  units[TROOPER].bullets = ROCKET_SMALL;
+  units[TROOPER].bulletType = ROCKET_SMALL;
   units[TROOPER].icon      = ICON_UNIT_TROOPER;
   units[TROOPER].listId=LIST_FOOT_UNITS;
   units[TROOPER].subListId=SUBLIST_TROOPERS;
@@ -491,8 +491,8 @@ void install_units()
   units[TROOPERS].bmp_frames = 3; // 2 extra frames
   strcpy(units[TROOPERS].name, "Troopers");
   units[TROOPERS].icon      = ICON_UNIT_TROOPERS;
-  units[TROOPERS].bullets = ROCKET_SMALL;
-  units[TROOPERS].second_shot = true;
+  units[TROOPERS].bulletType = ROCKET_SMALL;
+  units[TROOPERS].fireTwice = true;
   units[TROOPERS].infantry = true;
   units[TROOPERS].listId=LIST_FOOT_UNITS;
   units[TROOPERS].subListId=SUBLIST_TROOPERS;
@@ -511,8 +511,8 @@ void install_units()
   units[UNIT_FREMEN_ONE].bmp_frames = 3; // 2 extra frames
   strcpy(units[UNIT_FREMEN_ONE].name, "Fremen (1)");
   units[UNIT_FREMEN_ONE].icon      = ICON_SPECIAL_FREMEN;
-  units[UNIT_FREMEN_ONE].bullets = ROCKET_SMALL_FREMEN;
-  units[UNIT_FREMEN_ONE].second_shot = false;
+  units[UNIT_FREMEN_ONE].bulletType = ROCKET_SMALL_FREMEN;
+  units[UNIT_FREMEN_ONE].fireTwice = false;
   units[UNIT_FREMEN_ONE].infantry = true;
   units[UNIT_FREMEN_ONE].squish=false;
   units[UNIT_FREMEN_ONE].canAttackAirUnits=true;
@@ -529,8 +529,8 @@ void install_units()
   units[UNIT_FREMEN_THREE].bmp_frames = 3; // 2 extra frames
   strcpy(units[UNIT_FREMEN_THREE].name, "Fremen (3)");
   units[UNIT_FREMEN_THREE].icon      = ICON_SPECIAL_FREMEN;
-  units[UNIT_FREMEN_THREE].bullets = ROCKET_SMALL_FREMEN;
-  units[UNIT_FREMEN_THREE].second_shot = true;
+  units[UNIT_FREMEN_THREE].bulletType = ROCKET_SMALL_FREMEN;
+  units[UNIT_FREMEN_THREE].fireTwice = true;
   units[UNIT_FREMEN_THREE].infantry = true;
   units[UNIT_FREMEN_THREE].squish=false;
   units[UNIT_FREMEN_THREE].canAttackAirUnits=true;
