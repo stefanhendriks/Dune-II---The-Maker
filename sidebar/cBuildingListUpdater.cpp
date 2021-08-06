@@ -28,7 +28,7 @@ void cBuildingListUpdater::onStructureCreated(int structureType) {
         }
     }
 
-    // do something
+    player->logStructures();
     player->log("onStructureCreated - end");
 }
 
@@ -394,6 +394,9 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
 /**
  * A structure of *structureType* got destroyed...
  *
+ * This is called *after* the structure count has been updated. Ie you can use player->hasAtleastOneStructure() because
+ * it already is updated to the new state.
+ *
  * @param structureType
  */
 void cBuildingListUpdater::onStructureDestroyed(int structureType) {
@@ -437,6 +440,7 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType) {
         }
     }
 
+    player->logStructures();
     player->log("onStructureDestroyed - end");
 }
 
