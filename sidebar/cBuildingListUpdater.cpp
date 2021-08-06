@@ -730,8 +730,9 @@ void cBuildingListUpdater::onStructureDestroyedSkirmishMode(int structureType) c
     }
 
     if (!player->hasAtleastOneStructure(PALACE)) {
+        cBuildingList *listPalace = sideBar->getList(LIST_PALACE);
         pItemBuilder->removeItemsFromListType(LIST_PALACE, 0);
-        listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
+        listPalace->removeAllSublistItems(0);
     }
 }
 
@@ -759,7 +760,9 @@ void cBuildingListUpdater::onStructureDestroyedCampaignMode(int structureType) c
     }
 
     if (!player->hasAtleastOneStructure(PALACE)) {
+        cBuildingList *listPalace = sideBar->getList(LIST_PALACE);
         pItemBuilder->removeItemsFromListType(LIST_PALACE, 0);
-        listUnits->removeAllSublistItems(SUBLIST_HEAVYFCTRY);
+        listPalace->removeAllSublistItems(0);
     }
+
 }
