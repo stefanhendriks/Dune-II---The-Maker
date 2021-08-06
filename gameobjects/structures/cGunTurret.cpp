@@ -149,9 +149,8 @@ void cGunTurret::think_guard() {
     TIMER_guard++;
 
     if (TIMER_guard > 10) {
-        int c2 = getCell();
-        int iCellX = map.getCellX(c2);
         int c = getCell();
+        int iCellX = map.getCellX(c);
         int iCellY = map.getCellY(c);
 
         int iDistance=9999; // closest distance
@@ -170,10 +169,10 @@ void cGunTurret::think_guard() {
             cUnit &cUnit = unit[i];
             if (!cUnit.isValid()) continue;
             if (cUnit.iPlayer == getOwner()) continue; // skip own units
-            if (cUnit.getPlayer()->isSameTeamAs(getPlayer())) continue;
-            if (!map.isVisible(cUnit.getCell(), getPlayer())) continue; // not visible for player
+            if (cUnit.getPlayer()->isSameTeamAs(getPlayer())) continue; // skip allied units
+            if (!map.isVisible(cUnit.getCell(), getPlayer())) continue; // skip not visible
 
-            if (canAttackAirUnits()) {
+            if (!canAttackAirUnits()) {
                 if (cUnit.isAirbornUnit()) {
                     continue; // it was airborn, and normal turrets cannot hit this
                 }
