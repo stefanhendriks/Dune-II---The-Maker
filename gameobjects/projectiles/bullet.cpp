@@ -208,42 +208,47 @@ void cBullet::think_move() {
     int idOfStructureAtCell = map.getCellIdStructuresLayer(iCell);
     int cellTypeAtCell = map.getCellType(iCell);
 
-    // still heading towards goal; we might hit something while flying
-    if (isNonFlyingTerrainBullet()) {
+    if (!isNonFlyingTerrainBullet()) {
+        return;
+    }
 
-        // hit structures, walls and mountains
-        if (cellTypeAtCell == TERRAIN_MOUNTAIN) {
-            die();
-            return;
-        }
+    // from here, all bullets that are not 'flying' (ie can't get over things).
+    // these bullets will be blocked by other buildings, walls, mountains
 
-        // non flying bullets hit against a wall, except for bullets from turrets
-        if (cellTypeAtCell == TERRAIN_WALL && !isTurretBullet()) {
-            damageWall(iCell, 0);
-        }
+    // hit structures, walls and mountains
+    if (cellTypeAtCell == TERRAIN_MOUNTAIN) {
+        arrivedAtDestinationLogic();
+        return;
+    }
 
-        if (idOfStructureAtCell > -1) {
-            // structures block non flying bullets, except when it is from the structure
-            // which spawned the bullet. It will also 'shoot over' our own buildings.
-            int id = idOfStructureAtCell;
-            bool bHitsEnemyBuilding = false;
+    // non flying bullets hit against a wall, except for bullets from turrets
+    if (cellTypeAtCell == TERRAIN_WALL && !isTurretBullet()) {
+        arrivedAtDestinationLogic();
+        return;
+    }
 
-            if (isTurretBullet()) {
-                if (id != iOwnerStructure) {
+    if (idOfStructureAtCell > -1) {
+        // structures block non flying bullets, except when it is from the structure
+        // which spawned the bullet. It will also 'shoot over' our own buildings.
+        int id = idOfStructureAtCell;
+        bool bHitsEnemyBuilding = false;
+
+        if (isTurretBullet()) {
+            if (id != iOwnerStructure) {
+                bHitsEnemyBuilding = true;
+            } else {
+                // do not shoot yourself
+                if (structure[id]->getOwner() != iPlayer) {
                     bHitsEnemyBuilding = true;
-                } else {
-                    // do not shoot yourself
-                    if (structure[id]->getOwner() != iPlayer) {
-                        bHitsEnemyBuilding = true;
-                    }
                 }
             }
-
-            if (bHitsEnemyBuilding) {
-                damageStructure(idOfStructureAtCell, 0);
-            }
         }
-    } // non-flying bullets
+
+        if (bHitsEnemyBuilding) {
+            arrivedAtDestinationLogic();
+            return;
+        }
+    }
 }
 
 void cBullet::arrivedAtDestinationLogic() {
