@@ -187,7 +187,7 @@ public:
      * @return
      */
     bool isAirbornUnit() {
-        return iType == CARRYALL || iType == ORNITHOPTER || iType == FRIGATE;
+        return getUnitType().airborn;
     }
 
     /**
