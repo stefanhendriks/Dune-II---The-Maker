@@ -1621,6 +1621,13 @@ int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, i
             // reveal for player which is being attacked
             map.clearShroud(fromCell, 2, unitTarget.iPlayer);
         }
+
+        unitIdAtTargetCell = map.getCellIdAirUnitLayer(targetCell);
+        if (unitIdAtTargetCell > -1) {
+            cUnit &unitTarget = unit[unitIdAtTargetCell];
+            // reveal for player which is being attacked
+            map.clearShroud(fromCell, 2, unitTarget.iPlayer);
+        }
     }
 
     if (newBullet.iPlayer < 0) {
