@@ -67,8 +67,6 @@ private:
 
     bool isGroundBullet() const;
 
-    bool isTurretBullet() const;
-
     void moveBulletTowardsGoal();
 
     int getRandomX() const;
@@ -91,9 +89,7 @@ private:
 
     float getDamageToInflictToUnit(cUnit &unitTakingDamage) const;
 
-    bool isDeviatorGas() const;
-
-    bool isRocket() const;
+    bool canDamageAirUnits() const;
 
     void damageAirUnit(int cell, double factor) const;
 
