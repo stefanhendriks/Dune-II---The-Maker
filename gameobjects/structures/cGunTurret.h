@@ -5,7 +5,7 @@ class cGunTurret : public cAbstractStructure
 private:
    int iHeadFacing;        // (for turrets only) what is this structure facing at?
    int iShouldHeadFacing;  // where should we look face at?
-   int iTargetID;           // target id
+   int iTargetID;           // target id (assumes is always a unit)
 
    int TIMER_fire;
    int TIMER_turn;
