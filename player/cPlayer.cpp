@@ -1408,11 +1408,13 @@ bool cPlayer::hasEnoughPowerFor(int structureType) const {
 }
 
 void cPlayer::logStructures() {
+    log("cPlayer::logStructures() START");
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
         char msg[255];
         sprintf(msg, "[%s] amount [%d]", structures[i].name, iStructures[i]);
         log(msg);
     }
+    log("cPlayer::logStructures() END");
 }
 
 void cPlayer::cancelBuildingListItem(cBuildingListItem *item) {
