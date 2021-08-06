@@ -208,7 +208,7 @@ void cBullet::think_move() {
     int idOfStructureAtCell = map.getCellIdStructuresLayer(iCell);
     int cellTypeAtCell = map.getCellType(iCell);
 
-    if (!isNonFlyingTerrainBullet()) {
+    if (!isGroundBullet()) {
         return;
     }
 
@@ -544,7 +544,7 @@ bool cBullet::isTurretBullet() const {
     return iType == BULLET_TURRET;
 }
 
-bool cBullet::isNonFlyingTerrainBullet() const {
+bool cBullet::isGroundBullet() const {
     return iType == BULLET_SMALL ||
            iType == BULLET_TRIKE ||
            iType == BULLET_QUAD ||

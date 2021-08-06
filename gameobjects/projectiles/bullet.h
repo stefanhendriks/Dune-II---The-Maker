@@ -65,7 +65,7 @@ private:
 
     s_Bullet gets_Bullet() const;
 
-    bool isNonFlyingTerrainBullet() const;
+    bool isGroundBullet() const;
 
     bool isTurretBullet() const;
 
