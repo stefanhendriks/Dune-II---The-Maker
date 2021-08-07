@@ -206,7 +206,22 @@ void cOrderProcesser::sendFrigate() {
 		} else {
 			// STEP 2: create frigate
 			int unitId = UNIT_CREATE(iStartCell, FRIGATE, player->getId(), true);
-			// STEP 3: assign order to frigate (use carryall order function)
+
+            // STEP 2b: make sure its facing the starport directly
+            int iCellX = map.getCellX(iStartCell);
+            int iCellY = map.getCellY(iStartCell);
+            int cx = map.getCellX(destinationCell);
+            int cy = map.getCellY(destinationCell);
+
+            int d = fDegrees(iCellX, iCellY, cx, cy);
+            int f = face_angle(d); // get the angle
+
+            unit[unitId].iBodyShouldFace = f;
+            unit[unitId].iBodyFacing = f;
+            unit[unitId].iHeadShouldFace = f;
+            unit[unitId].iHeadFacing = f;
+
+            // STEP 3: assign order to frigate (use carryall order function)
 			unit[unitId].carryall_order(-1, TRANSFER_NEW_LEAVE, destinationCell, -1);
 			unitIdOfFrigateSent = unitId;
 			frigateSent = true;

@@ -1034,31 +1034,30 @@ void cUnit::think() {
     if (!isAirbornUnit()) {
         if (iBodyFacing == iBodyShouldFace) {
             if (iHeadFacing != iHeadShouldFace) {
-
                 TIMER_turn++;
-
-
                 if (TIMER_turn > (units[iType].turnspeed)) {
                     TIMER_turn = 0;
 
-                    int d = 1;
+                    iHeadFacing = determineNewFacing(iHeadFacing, iHeadShouldFace);
 
-                    int toleft = (iHeadFacing + 8) - iHeadShouldFace;
-                    if (toleft > 7) toleft -= 8;
-
-                    int toright = abs(toleft - 8);
-
-                    if (toright == toleft) d = -1 + (rnd(2));
-                    if (toleft > toright) d = 1;
-                    if (toright > toleft) d = -1;
-
-                    iHeadFacing += d;
-
-                    if (iHeadFacing < 0)
-                        iHeadFacing = 7;
-
-                    if (iHeadFacing > 7)
-                        iHeadFacing = 0;
+//                    int d = 1;
+//
+//                    int toleft = (iHeadFacing + 8) - iHeadShouldFace;
+//                    if (toleft > 7) toleft -= 8;
+//
+//                    int toright = abs(toleft - 8);
+//
+//                    if (toright == toleft) d = -1 + (rnd(2));
+//                    if (toleft > toright) d = 1;
+//                    if (toright > toleft) d = -1;
+//
+//                    iHeadFacing += d;
+//
+//                    if (iHeadFacing < 0)
+//                        iHeadFacing = 7;
+//
+//                    if (iHeadFacing > 7)
+//                        iHeadFacing = 0;
 
 
                 } // turn
@@ -1069,37 +1068,15 @@ void cUnit::think() {
             } // head facing
 
         } else {
-            // BODY is not facing correctly
-            TIMER_turn++;
-
-
-            if (TIMER_turn > (units[iType].turnspeed)) {
-                TIMER_turn = 0;
-
-                int d = 1;
-
-                int toleft = (iBodyFacing + 8) - iBodyShouldFace;
-                if (toleft > 7) toleft -= 8;
-
-                int toright = abs(toleft - 8);
-
-                if (toright == toleft) d = -1 + (rnd(2));
-                if (toleft > toright) d = 1;
-                if (toright > toleft) d = -1;
-
-                iBodyFacing += d;
-
-                if (iBodyFacing < 0)
-                    iBodyFacing = 7;
-
-                if (iBodyFacing > 7)
-                    iBodyFacing = 0;
-
-
-            } // turn
+            think_turn_to_desired_body_facing();
         }
 
-    } // airborn stuff
+    } else {
+        // air units, have only 'body' facing
+        if (iBodyFacing != iBodyShouldFace) {
+            think_turn_to_desired_body_facing();
+        }
+    }
 
     // when waiting.. wait
     if (TIMER_thinkwait > 0) {
@@ -1338,10 +1315,55 @@ void cUnit::think() {
             // any other transfer, means it is filled from start...
             if (iTransferType != TRANSFER_PICKUP)
                 iFrame = 1;
+void cUnit::think_turn_to_desired_body_facing() {
+    // BODY is not facing correctly
+    TIMER_turn++;
+
+    float turnspeed = units[iType].turnspeed;
+    if (isAirbornUnit()) {
+        // when closer to goal, turnspeed decreases.
+        double distance = map.distance(iCell, iGoalCell);
+        int distanceInCells = 6;
+        if (distance < distanceInCells) {
+            turnspeed = (turnspeed/distanceInCells) * distance;
         } else {
-            iFrame = 0;
+            // when close to a border, then reduce turnspeed so that orni's wont crash over the map borders
+            if ((iCellX < 4 || iCellX >= (map.getWidth()-4)) || (iCellY < 4 || iCellY >= (map.getHeight()-4))) {
+                turnspeed = 0;
+            }
         }
     }
+
+    if (TIMER_turn > turnspeed) {
+        TIMER_turn = 0;
+
+        iBodyFacing = determineNewFacing(iBodyFacing, iBodyShouldFace);
+    } // turn body
+}
+
+int cUnit::determineNewFacing(int currentFacing, int desiredFacing) {
+    int newFacing = currentFacing;
+
+    int d = 1;
+
+    int toleft = (newFacing + 8) - desiredFacing;
+    if (toleft > 7) toleft -= 8;
+
+    int toright = abs(toleft - 8);
+
+    if (toright == toleft) d = -1 + (rnd(2));
+    if (toleft > toright) d = 1;
+    if (toright > toleft) d = -1;
+
+    newFacing += d;
+
+    if (newFacing < 0)
+        newFacing = 7;
+
+    if (newFacing > 7)
+        newFacing = 0;
+
+    return newFacing;
 }
 
 // aircraft specific thinking
@@ -1660,75 +1682,68 @@ void cUnit::think_move_air() {
 
     TIMER_move = 0;
 
-    // step 1 : look to the correct direction
-    int d = fDegrees(iCellX, iCellY, cx, cy);
+    // air units 'turn around' facing the ideal angle. But they can't turn around swiftly, only when very close.
+    int d = fDegrees(iCellX, iCellY, goalCellX, goalCellY);
+    int idealAngle = face_angle(d);
     int f = face_angle(d); // get the angle
+    float angle = 0;
 
-    iBodyFacing = f;
+    iBodyShouldFace = idealAngle;
+    if (iBodyFacing != iBodyShouldFace) {
+        // not ideal angle, the aircraft flies straight ahead which it is facing.
+        // since we don't have a velocity vector, we do it like this for now:
+        int nextX = iCellX;
+        int nextY = iCellY;
+
+        switch (iBodyFacing) {
+            case FACE_UP:
+                nextY--;
+                break;
+            case FACE_UPRIGHT:
+                nextY--;
+                nextX++;
+                break;
+            case FACE_RIGHT:
+                nextX++;
+                break;
+            case FACE_DOWNRIGHT:
+                nextY++;
+                nextX++;
+                break;
+            case FACE_DOWN:
+                nextY++;
+                break;
+            case FACE_DOWNLEFT:
+                nextY++;
+                nextX--;
+                break;
+            case FACE_LEFT:
+                nextX--;
+                break;
+            case FACE_UPLEFT:
+                nextY--;
+                nextX--;
+                break;
+        }
+        angle = fRadians(iCellX, iCellY, nextX, nextY);
+    } else {
+        // using ideal angle, just fly straight towards goal
+        angle = fRadians(iCellX, iCellY, goalCellX, goalCellY);
+    }
+
     iHeadFacing = f;
 
     map.cellResetIdFromLayer(iCell, MAPID_AIR);
 
-    float angle = fRadians(iCellX, iCellY, cx, cy);
-
-    // now do some thing to make
-    // 1/8 of a cell (2 pixels) per movement
-    int movespeed = 2;
+//    int movespeed = getUnitType().speed;
+    int movespeed = 2; // 2 pixels, the actual 'speed' is done by the delay above using TIMER_move! :/
     posX += cos(angle) * movespeed;
     posY += sin(angle) * movespeed;
 
-//    bool update_me = false;
-//    // update when to much on the right.
-//    if (iOffsetX > 31) {
-//        iOffsetX -= 32;
-//        map.cellResetIdFromLayer(iCell, MAPID_AIR);
-//        iCell++;
-//        update_me = true;
-//    }
-//
-//    // update when to much on the left
-//    if (iOffsetX < -31) {
-//        iOffsetX += 32;
-//        map.cellResetIdFromLayer(iCell, MAPID_AIR);
-//        iCell--;
-//        update_me = true;
-//    }
-//
-//    // update when to much up
-//    if (iOffsetY < -31) {
-//        iOffsetY += 32;
-//        map.cellResetIdFromLayer(iCell, MAPID_AIR);
-//        iCell -= MAP_W_MAX;
-//        update_me = true;
-//    }
-//
-//    // update when to much down
-//    if (iOffsetY > 31) {
-//        iOffsetY -= 32;
-//        map.cellResetIdFromLayer(iCell, MAPID_AIR);
-//        iCell += MAP_W_MAX;
-//        update_me = true;
-//    }
-//
-//    if (iCell == iGoalCell)
-//        iOffsetX = iOffsetY = 0;
-
-//    if (update_me) {
-//        if (!bCellValid(iCell)) {
-//            if (DEBUGGING) {
-//                log("UNIT : Aircraft : ERROR : Correction applied in cell data");
-//            }
-//
-//            if (iCell > (MAX_CELLS - 1)) iCell = MAX_CELLS - 1;
-//            if (iCell < 0) iCell = 0;
-//        }
-//
-//        map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
-//
     iCell = mapCamera->getCellFromAbsolutePosition(posX, posY);
+
     updateCellXAndY();
     map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
-//    }
 }
 
 // Carryall-order
@@ -3818,6 +3833,19 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
     int iUnit = UNIT_CREATE(iStartCell, CARRYALL, iPlr, true, isReinforcement);
 
     // STEP 3: assign order to carryall
+    int iCellX = map.getCellX(iStartCell);
+    int iCellY = map.getCellY(iStartCell);
+    int cx = map.getCellX(iCll);
+    int cy = map.getCellY(iCll);
+
+    int d = fDegrees(iCellX, iCellY, cx, cy);
+    int f = face_angle(d); // get the angle
+
+    unit[iUnit].iBodyShouldFace = f;
+    unit[iUnit].iBodyFacing = f;
+    unit[iUnit].iHeadShouldFace = f;
+    unit[iUnit].iHeadFacing = f;
+
     unit[iUnit].carryall_order(-1, TRANSFER_NEW_LEAVE, iCll, iTpe);
 }
 
