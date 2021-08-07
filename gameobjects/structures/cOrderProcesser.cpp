@@ -236,12 +236,6 @@ void cOrderProcesser::setOrderHasBeenProcessed() {
 	orderPlaced = false;
 	frigateSent = false;
 	removeAllItems();
-	if (unitIdOfFrigateSent > 0) {
-	    if (unit[unitIdOfFrigateSent].isValid()) {
-	        // destroy frigate
-	        unit[unitIdOfFrigateSent].die(true, false);
-	    }
-	}
 	unitIdOfFrigateSent = -1;
 }
 
