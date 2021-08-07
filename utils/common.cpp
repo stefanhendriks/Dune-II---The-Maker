@@ -223,6 +223,7 @@ void install_units()
   units[ORNITHOPTER].bulletType = ROCKET_SMALL_ORNI;
   units[ORNITHOPTER].fireTwice = true;
   units[ORNITHOPTER].airborn = true;   // is airborn
+  units[ORNITHOPTER].squish = false;   // can't squish infantry
   units[ORNITHOPTER].free_roam=true; // may freely roam the air
   units[ORNITHOPTER].listId=LIST_UNITS;
   units[ORNITHOPTER].subListId=SUBLIST_HIGHTECH;
