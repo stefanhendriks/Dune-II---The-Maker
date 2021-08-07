@@ -260,6 +260,31 @@ std::vector<int> cAbstractStructure::getCellsAroundStructure() {
 }
 
 /**
+ * Returns a list of all cells that this structure occupies. Ie a windtrap of 2x2 returns a list of 4 cells.
+ * @return
+ */
+std::vector<int> cAbstractStructure::getCellsOfStructure() {
+    int iStartX = map.getCellX(iCell);
+    int iStartY = map.getCellY(iCell);
+
+    int iEndX = (iStartX + iWidth);
+    int iEndY = (iStartY + iHeight);
+
+    std::vector<int> cells = std::vector<int>();
+
+    for (int x = iStartX; x < iEndX; x++) {
+        for (int y = iStartY; y < iEndY; y++) {
+            int cell = map.getCellWithMapBorders(x, y);
+            if (cell > -1) {
+                cells.push_back(cell);
+            }
+        }
+    }
+
+    return cells;
+}
+
+/**
  * Searches around the border of a structure (from top left to bottom right) for a free cell. If found, returns it.
  * If fails, it returns -1
  * @return
