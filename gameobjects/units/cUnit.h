@@ -97,6 +97,7 @@ public:
 	int iCarryTarget;	// Unit ID to carry, but is not carried yet
 	int iBringTarget;	// Where to bring the carried unit (when iUnitID > -1)
 	int iNewUnitType;	// new unit that will be brought, will be this type
+	int lastDroppedOffCell; // last cell where we dropepd off a unit
 	bool bPickedUp;		// picked up the unit?
 	
     // Drawing
@@ -159,10 +160,11 @@ public:
 
     int TIMER_move;     // movement timer
     int TIMER_movewait; // wait for move think...
+    int TIMER_movedelay; // if given, it will delay movement
 
     int TIMER_thinkwait;    // wait with normal thinking..
 
-    int TIMER_turn;     // turning around
+    float TIMER_turn;     // turning around
     int TIMER_frame;    // frame
 
     int TIMER_harvest;  // harvesting
@@ -298,6 +300,8 @@ public:
      */
     void attackAt(int cell);
 
+    bool canSquishInfantry();
+
 private:
 
     int mission; // is this unit assigned to a mission?
@@ -306,7 +310,6 @@ private:
 
     bool isReinforcement; // is this a 'real' reinforcement or not? (applies to Carry-All only)
 
-    bool isUnitWhoCanSquishInfantry();
 
     bool isSaboteur();
 
@@ -321,6 +324,16 @@ private:
     eUnitMoveToCellResult moveToNextCellLogic();
 
     int getRange() const;
+
+    void think_turn_to_desired_body_facing();
+
+    void selectTargetForOrnithopter(cPlayer *pPlayer);
+
+    void think_ornithopter(cPlayer *pPlayer);
+
+    void think_carryAll();
+
+    int determineNewFacing(int currentFacing, int desiredFacing);
 };
 
 
