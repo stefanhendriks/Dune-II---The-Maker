@@ -59,8 +59,8 @@ MP3Music=false
 [UNIT: ORNITHOPTER]
 ; Unit properties
 HitPoints=40
-MoveSpeed=1
-TurnSpeed=1
+MoveSpeed=0
+TurnSpeed=2
 ; Attackfrequency is used a bit differently for ornithopters, they have a
 ; stalled thinking after they have launched their rockets. 
 AttackFrequency=2
@@ -78,9 +78,9 @@ Cost=500
 ; -----------------
 [UNIT: CARRYALL]
 ; Unit properties
-HitPoints=999
-MoveSpeed=0
-TurnSpeed=2
+HitPoints=50
+MoveSpeed=1
+TurnSpeed=3
 AttackFrequency=0
 Sight=0
 Range=0
