@@ -107,6 +107,7 @@ class cAbstractStructure {
 		 * @return
 		 */
 		std::vector<int> getCellsAroundStructure();
+		std::vector<int> getCellsOfStructure();
 
 		// getters
 
