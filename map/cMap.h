@@ -291,7 +291,7 @@ public:
      * @return
      */
     int getCellIdWormsLayer(int cellNr) {
-        return cellGetIdFromLayer(cellNr, MAPID_AIR);
+        return cellGetIdFromLayer(cellNr, MAPID_WORMS);
     }
 
     /**
