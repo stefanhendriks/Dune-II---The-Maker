@@ -196,22 +196,16 @@ void cTimeManager::handleTimerGameTime() {
                 // aircraft
                 if (cUnit.isAirbornUnit()) {
                     cUnit.think_move_air();
-                }
-
-                // move
-                if (cUnit.iAction == ACTION_MOVE || cUnit.iAction == ACTION_CHASE) {
-                    cUnit.think_move();
+                } else {
+                    // move
+                    if (cUnit.iAction == ACTION_MOVE || cUnit.iAction == ACTION_CHASE) {
+                        cUnit.think_move();
+                    }
                 }
 
                 // guard
                 if (cUnit.iAction == ACTION_GUARD) {
                     cUnit.think_guard();
-                }
-
-                // move in air
-                if (cUnit.iType == ORNITHOPTER &&
-                    cUnit.iAction == ACTION_ATTACK) {
-                    cUnit.think_move_air(); // keep flying even when attacking
                 }
             }
 
