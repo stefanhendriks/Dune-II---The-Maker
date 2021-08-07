@@ -30,7 +30,7 @@ class cPlayerDifficultySettings {
         ~cPlayerDifficultySettings();
 
         // get move speed of a unit
-		float getMoveSpeed(int iUnitType, int terrainSlowDown);
+		float getMoveSpeed(int iUnitType, int slowDown);
 
         // get build speed
 		float getBuildSpeed(int iSpeed);

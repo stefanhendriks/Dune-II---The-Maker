@@ -26,8 +26,8 @@ cPlayerDifficultySettings::~cPlayerDifficultySettings() {
 
 }
 
-float cPlayerDifficultySettings::getMoveSpeed(int iUnitType, int terrainSlowDown) {
-    return (int)(units[iUnitType].speed) + ((float)terrainSlowDown * m_moveSpeedFactor);
+float cPlayerDifficultySettings::getMoveSpeed(int iUnitType, int slowDown) {
+    return (int)(units[iUnitType].speed) + ((float)slowDown * m_moveSpeedFactor);
 }
 
 float cPlayerDifficultySettings::getBuildSpeed(int iSpeed) {
