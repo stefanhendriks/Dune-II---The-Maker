@@ -592,6 +592,10 @@ void cSetupSkirmishGameState::interact() {
                 maxThinkingAIs = 1;
             }
 
+            if (game.bDisableAI) {
+                maxThinkingAIs = 0;
+            }
+
             // set up players and their units
             for (int p = 0; p < MAX_PLAYERS; p++)	{
 
