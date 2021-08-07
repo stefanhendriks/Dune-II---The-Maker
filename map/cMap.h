@@ -11,6 +11,7 @@
   */
 
 #include <vector>
+#include <gameobjects/structures/cAbstractStructure.h>
 
 #define TILESIZE_WIDTH_PIXELS 32
 #define TILESIZE_HEIGHT_PIXELS 32
@@ -530,6 +531,10 @@ public:
     bool isValidTerrainForStructureAtCell(int cell);
 
     int getRandomCellFrom(int cell, int distance);
+
+    int getRandomCellFromWithRandomDistance(int cell, int distance);
+
+    bool isStructureVisible(cAbstractStructure *pStructure, int iPlayer);
 
 private:
     void setVisible(int iCell, int iPlayer, bool flag);

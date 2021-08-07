@@ -957,3 +957,39 @@ int cMap::getRandomCellFrom(int cell, int distance) {
     int newY = (startY - distance) + (yDir * distance);
     return getCellWithMapBorders(newX, newY);
 }
+
+/**
+ * Like getRandomCellFrom, but will randomize x/y coordinate. Using 'distance' to create a square around 'cell' (as center)
+ * Hence, this could result in a cell being returned much closer than distance. But never further away than distance.
+ * @param cell
+ * @param distance
+ * @return
+ */
+int cMap::getRandomCellFromWithRandomDistance(int cell, int distance) {
+    int startX = getCellX(cell);
+    int startY = getCellY(cell);
+    int newX = (startX - distance) + (rnd(distance*2));
+    int newY = (startY - distance) + (rnd(distance*2));
+    return getCellWithMapBorders(newX, newY);
+}
+/**
+ * Takes structure, evaluates all its cells, and if any of these are visible, this function returns true.
+ *
+ * @param pStructure
+ * @param iPlayer
+ * @return
+ */
+bool cMap::isStructureVisible(cAbstractStructure *pStructure, int iPlayer) {
+    if (!pStructure) return false;
+    if (!pStructure->isValid()) return false;
+
+    // iterate over all cells of structure
+    const std::vector<int> &cells = pStructure->getCellsOfStructure();
+    for (auto &cll : cells) {
+        if (map.isVisible(cll, iPlayer)) {
+            return true;
+        }
+    }
+
+    return false;
+}
