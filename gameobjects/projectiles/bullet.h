@@ -83,7 +83,7 @@ private:
 
     void detonateSpiceBloom(int cell, double factor) const;
 
-    void damageGroundUnit(int cell, double factor) const;
+    bool damageGroundUnit(int cell, double factor) const;
 
     float getDamageToInflictToInfantry() const;
 
@@ -91,7 +91,7 @@ private:
 
     bool canDamageAirUnits() const;
 
-    void damageAirUnit(int cell, double factor) const;
+    bool damageAirUnit(int cell, double factor) const;
 
     void damageTerrain(int cell, double factor) const;
 
