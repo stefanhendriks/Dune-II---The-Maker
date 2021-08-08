@@ -1274,7 +1274,6 @@ void cUnit::selectTargetForOrnithopter(cPlayer *pPlayer) {
     for (int i = 0; i < MAX_UNITS; i++) {
         cUnit &target = unit[i];
         if (target.isValid() && i != iID) {
-
             if (pPlayer->isSameTeamAs(target.getPlayer()))
                 continue;
 
@@ -2139,155 +2138,34 @@ void cUnit::think_attack() {
 
     int distance = ABS_length(iCellX, iCellY, iDestX, iDestY);
 
-    s_UnitP &sUnits = getUnitType();
-
     if (!isAirbornUnit()) {
-        if (distance <= getRange() && !isMovingBetweenCells()) {
-            // in range , fire and such
-
-            // Facing
-            int d = fDegrees(iCellX, iCellY, map.getCellX(iGoalCell), map.getCellY(iGoalCell));
-            int f = face_angle(d); // get the angle
-
-            // set body facing
-            iBodyShouldFace = f;
-
-            // HEAD faces goal directly
-            d = fDegrees(iCellX, iCellY, map.getCellX(iGoalCell), map.getCellY(iGoalCell));
-            f = face_angle(d); // get the angle
-
-            iHeadShouldFace = f;
-
-            if (iBodyShouldFace == iBodyFacing && iHeadShouldFace == iHeadFacing) {
-
-                int iGc = iGoalCell;
-
-                if (iType == LAUNCHER || iType == DEVIATOR) {
-                    if (distance < sUnits.range) {
-                        int dx = map.getCellX(iGc);
-                        int dy = map.getCellY(iGc);
-
-                        int dif = (sUnits.range - distance) / 2;
-
-                        dx -= (dif);
-                        dx += rnd(dif * 2);
-
-                        dy -= (dif);
-                        dy += rnd(dif * 2);
-
-                        iGc = map.getCellWithMapDimensions(dx, dy);
-                    }
-                }
-
-                // facing ok?
-
-                TIMER_attack++;
-                if (TIMER_attack >= sUnits.attack_frequency) {
-                    if (TIMER_attack == sUnits.attack_frequency) {
-                        if (iAttackUnit > -1) {
-                            if (attackUnit->getPlayer()->isSameTeamAs(getPlayer())) {
-                                // unit got converted
-                                iAttackUnit = -1;
-                                iAction = ACTION_GUARD;
-                                return;
-                            }
-                        }
-
-                        shoot(iGc);
-                    }
-
-                    if (sUnits.fireTwice == false) {
-                        //shoot(iGoalCell);
-                        TIMER_attack = 0;
-                    } else {
-                        if (TIMER_attack > (sUnits.attack_frequency + (sUnits.attack_frequency / 6))) {
-                            shoot(iGc);
-                            TIMER_attack = 0;
-                        }
-                    }
-
-                }
-
-            }
-
-        } else { // not within distance
-            if (iAttackStructure > -1) {
-                iAction = ACTION_CHASE;
-                bCalculateNewPath = true;
-            } else if (iAttackUnit > -1) {
-                // chase unit
-                if (!attackUnit->isSandworm()) {
-                    iAction = ACTION_CHASE;
-                    bCalculateNewPath = true;
-                } else {
-                    // do not chase sandworms, very ... inconvenient
-                    iAction = ACTION_GUARD;
-                    iGoalCell = iCell;
-                    iNextCell = iCell;
-                    iPathIndex = -1;
-                    // clear path
-                    memset(iPath, -1, sizeof(iPath));
-                }
+        if (!isMovingBetweenCells()) {
+            if (distance <= getRange()) {
+                setAngleTowardsTargetAndFireBullets(distance);
+            } else { // not within distance
+                startChasingEnemy(attackUnit);
             }
         }
-    } // NON AIRBORN UNITS ATTACK THINKING
-    else {
-        if (distance <= sUnits.range) {
-            // in range , fire and such
+    } else {
+        s_UnitP &unitType = getUnitType();
 
-            // Facing
-            int d = fDegrees(iCellX, iCellY, map.getCellX(iGoalCell), map.getCellY(iGoalCell));
-            int f = face_angle(d); // get the angle
+        // NON AIRBORN UNITS ATTACK THINKING
+        int minDistance = 2;
 
-            // set body facing
-            iBodyShouldFace = f;
+        if (distance > minDistance && distance <= getRange()) {
+            // when this function returns true, it is done firing bullets
+            if (setAngleTowardsTargetAndFireBullets(distance)) {
+                int randomCellFrom = map.getRandomCellFrom(iGoalCell, 16);
+                int rx = map.getCellX(randomCellFrom);
+                int ry = map.getCellY(randomCellFrom);
 
-            // HEAD faces goal directly
-            d = fDegrees(iCellX, iCellY, map.getCellX(iGoalCell), map.getCellY(iGoalCell));
-            f = face_angle(d); // get the angle
-
-            iHeadShouldFace = f;
-
-            if (iBodyShouldFace == iBodyFacing && iHeadShouldFace == iHeadFacing) {
-
-                int iGc = iGoalCell;
-
-                // facing ok?
-
-                TIMER_attack++;
-                if (TIMER_attack >= sUnits.attack_frequency) {
-                    if (TIMER_attack == sUnits.attack_frequency) {
-                        if (iAttackUnit > -1) {
-                            if (attackUnit->getPlayer()->isSameTeamAs(getPlayer())) {
-                                // unit got converted
-                                iAttackUnit = -1;
-                                iAction = ACTION_MOVE;
-                                return;
-                            }
-                        }
-
-                        shoot(iGc);
-                    }
-
-                    if (sUnits.fireTwice == false) {
-                        TIMER_attack = 0;
-                    } else {
-                        if (TIMER_attack > (sUnits.attack_frequency + (sUnits.attack_frequency / 4))) {
-                            shoot(iGc);
-                            TIMER_attack = -20;
-
-                            int randomCellFrom = map.getRandomCellFrom(iGc, 16);
-                            int rx = map.getCellX(randomCellFrom);
-                            int ry = map.getCellY(randomCellFrom);
-                            iAttackUnit = -1;
-                            iAttackStructure = -1;
-                            iAction = ACTION_MOVE;
-                            iGoalCell = map.getCellWithMapDimensions(rx, ry);
-                        }
-                    }
-                }
+                iAttackUnit = -1;
+                iAttackStructure = -1;
+                iAction = ACTION_MOVE;
+                iGoalCell = map.getCellWithMapDimensions(rx, ry);
             }
         } else {
+            // stop attacking, move instead?
             iAction = ACTION_MOVE;
             iAttackUnit = -1;
             iAttackStructure = -1;
@@ -2295,9 +2173,91 @@ void cUnit::think_attack() {
     }
 }
 
-int cUnit::getRange() const { return units[iType].range; }
+int cUnit::getFaceAngleToCell(int cell) const {
+    int d = fDegrees(iCellX, iCellY, map.getCellX(cell), map.getCellY(cell));
+    return face_angle(d); // get the angle
+}
 
-s_UnitP &cUnit::getUnitType() {
+void cUnit::startChasingEnemy(cUnit *attackUnit) {
+    if (iAttackStructure > -1) {
+        iAction = ACTION_CHASE;
+        bCalculateNewPath = true;
+    } else if (iAttackUnit > -1) {
+        // chase unit, but only when ground unit
+        if (!attackUnit->isSandworm() && !attackUnit->isAirbornUnit()) {
+            iAction = ACTION_CHASE;
+            bCalculateNewPath = true;
+        } else {
+            // do not chase sandworms or other air units, very ... inconvenient
+            iAction = ACTION_GUARD;
+            iGoalCell = iCell;
+            iNextCell = iCell;
+            iPathIndex = -1;
+            // clear path
+            memset(iPath, -1, sizeof(iPath));
+        }
+    }
+}
+
+bool cUnit::setAngleTowardsTargetAndFireBullets(int distance) {
+    s_UnitP &unitType = getUnitType();
+    // in range , fire and such
+
+    // Facing
+    int angle = getFaceAngleToCell(iGoalCell);
+
+    iBodyShouldFace = angle;
+    iHeadShouldFace = angle;
+
+    if (iBodyShouldFace == iBodyFacing && iHeadShouldFace == iHeadFacing) {
+
+        TIMER_attack++;
+        if (TIMER_attack >= unitType.attack_frequency) {
+            int shootCell = iGoalCell;
+
+            if (iType == LAUNCHER || iType == DEVIATOR) {
+                if (distance < unitType.range) {
+                    int dx = map.getCellX(shootCell);
+                    int dy = map.getCellY(shootCell);
+
+                    int dif = (unitType.range - distance) / 2;
+
+                    dx -= (dif);
+                    dx += rnd(dif * 2);
+
+                    dy -= (dif);
+                    dy += rnd(dif * 2);
+
+                    shootCell = map.getCellWithMapDimensions(dx, dy);
+                }
+            }
+
+            // first bullet
+            if (TIMER_attack == unitType.attack_frequency) {
+                shoot(shootCell);
+            }
+
+            if (unitType.fireTwice == false) {
+                TIMER_attack = 0;
+                return true;
+            } else {
+                int secondShotTimeLimit = unitType.attack_frequency + (unitType.attack_frequency / 4);
+                if (TIMER_attack > secondShotTimeLimit) {
+                    shoot(shootCell);
+                    TIMER_attack = 0;
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+int cUnit::getRange() const {
+    return getUnitType().range;
+}
+
+s_UnitP &cUnit::getUnitType() const {
     return units[iType];
 }
 
@@ -2905,9 +2865,7 @@ void cUnit::think_position() {
 
 bool cUnit::isMovingBetweenCells() {
     // when not perfectly divisible then it is 'between' cells.
-    return (((int)posX) % TILESIZE_WIDTH_PIXELS != 0 || ((int)posY) % TILESIZE_HEIGHT_PIXELS != 0);
-//
-//    return iOffsetX != 0 || iOffsetY != 0;
+    return ((int)posX) % TILESIZE_WIDTH_PIXELS != 0 || ((int)posY) % TILESIZE_HEIGHT_PIXELS != 0;
 }
 
 bool cUnit::isDamaged() {
