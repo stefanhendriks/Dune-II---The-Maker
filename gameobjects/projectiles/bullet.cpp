@@ -294,12 +294,18 @@ void cBullet::arrivedAtDestinationLogic() {
             sprintf(msg, "iCell %d : cellToDamage : %d : ExplosionSize is %d, maxDistanceFromCenter is %f , actualDistance = %f, x=%d, y=%d and factor = %f", iCell, cellToDamage, sBullet.explosionSize, maxDistanceFromCenter, actualDistance, sx, sy, factor);
             logbook(msg);
 
-            damageStructure(cellToDamage, factor);                 // damage structure at cell if applicable
-            damageWall(cellToDamage, factor);                      // damage wall if applicable
-            detonateSpiceBloom(cellToDamage, factor);              // detonate spice bloom if applicable
-            damageSandworm(cellToDamage, factor);                  // inflict damage on sandworm if applicable
-            damageGroundUnit(cellToDamage, factor);                // inflict damage on ground unit if applicable
-            damageAirUnit(cellToDamage, factor);                   // inflict damage on air unit (if rocket)
+            // when air layer is hit, it won't damage ground things
+            if (!damageAirUnit(cellToDamage, factor)) {                // inflict damage on air unit (if rocket)
+                damageStructure(cellToDamage, factor);                 // damage structure at cell if applicable
+                damageWall(cellToDamage, factor);                      // damage wall if applicable
+
+                if (!damageGroundUnit(cellToDamage, factor)) {         // inflict damage on ground unit if applicable
+                    // only inflict damage when nothing 'above it' (ie a ground unit) is hit first.
+                    damageSandworm(cellToDamage, factor);              // inflict damage on sandworm if applicable
+
+                    detonateSpiceBloom(cellToDamage, factor);          // detonate spice bloom if applicable
+                }
+            }
 
             // create particle of explosion
             if (sBullet.deadbmp > -1) {
@@ -357,19 +363,21 @@ bool cBullet::isSonicWave() const {
 }
 
 /**
- * Handle damaging at cell, if cell is invalid or this bullet type is not a rocket, it will abort.
+ * Handle damaging at cell, returns true if an (non-owner) unit is damaged.
+ * Returns false when cell is invalid, bullet cannot damage air units, or if unit at cell is same as owner of this bullet.
  */
-void cBullet::damageAirUnit(int cell, double factor) const {
-    if (!map.isValidCell(cell)) return;
-    if (!canDamageAirUnits()) return;
+bool cBullet::damageAirUnit(int cell, double factor) const {
+    if (!map.isValidCell(cell)) return false;
+    if (!canDamageAirUnits()) return false;
     int id = map.getCellIdAirUnitLayer(cell);
-    if (id < 0) return;
-    if (iOwnerUnit > 0 && id == iOwnerUnit) return; // do not damage self
+    if (id < 0) return false;
+    if (iOwnerUnit > 0 && id == iOwnerUnit) return false; // do not damage self
 
     float iDamage = getDamageToInflictToNonInfantry() * factor;
 
     cUnit &airUnit = unit[id];
     airUnit.takeDamage(iDamage);
+    return true;
 }
 
 /**
@@ -377,11 +385,11 @@ void cBullet::damageAirUnit(int cell, double factor) const {
  * If cell param is invalid or no ground unit exists at (valid) cell, then this method aborts.
  * @param cell
  */
-void cBullet::damageGroundUnit(int cell, double factor) const {
-    if (!map.isValidCell(cell)) return;
+bool cBullet::damageGroundUnit(int cell, double factor) const {
+    if (!map.isValidCell(cell)) return false;
     int id = map.getCellIdUnitLayer(cell);
-    if (id < 0) return;
-    if (iOwnerUnit > 0 && id == iOwnerUnit) return; // do not damage self
+    if (id < 0) return false;
+    if (iOwnerUnit > 0 && id == iOwnerUnit) return false; // do not damage self
 
     cUnit &groundUnitTakingDamage = unit[id];
 
@@ -435,6 +443,7 @@ void cBullet::damageGroundUnit(int cell, double factor) const {
             }
         }
     }
+    return true;
 }
 
 /**
