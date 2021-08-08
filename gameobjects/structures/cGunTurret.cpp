@@ -65,7 +65,7 @@ void cGunTurret::think_attack() {
         // if attacking an airunit, then don't care about facing (we use homing missiles)
         bool isFacingTarget = iShouldHeadFacing == iHeadFacing;
 
-        if (isFacingTarget || unitTarget.isAirbornUnit()) {
+        if (isFacingTarget) {
             TIMER_fire++;
 
             int iDistance = ABS_length(iCellX, iCellY, iTargetX, iTargetY);
@@ -76,29 +76,37 @@ void cGunTurret::think_attack() {
                 return;
             }
 
+            // TODO: Move to property 'fireRate' ?
             int iSlowDown = 200; // fire-rate of turret
             if (TIMER_fire > iSlowDown) {
                 int iTargetCell = unitTarget.getCell();
 
                 int bulletType = BULLET_TURRET; // short range bullet
-
-                if (getType() == RTURRET && iDistance > 3) {
-                    bulletType = ROCKET_RTURRET; // long-range bullet,
+                if (unitTarget.isAirbornUnit()) {
+                    bulletType = ROCKET_RTURRET;
                 } else {
-                    int half = 16;
-                    int iShootX = pos_x() + half;
-                    int iShootY = pos_y() + half;
-                    int bmp_head = convert_angle(iHeadFacing);
-                    PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);
+                    // TODO: move '3' to property (distanceForSecondaryFire?)
+                    if (getType() == RTURRET && iDistance > 3) {
+                        bulletType = ROCKET_RTURRET; // long-range bullet,
+                    } else {
+                        int half = 16;
+                        int iShootX = pos_x() + half;
+                        int iShootY = pos_y() + half;
+                        int bmp_head = convert_angle(iHeadFacing);
+                        PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);
+                    }
                 }
 
                 int iBull = create_bullet(bulletType, getCell(), iTargetCell, -1, id);
 
                 // only rockets are homing
-                if (iBull > -1 && bulletType == ROCKET_RTURRET && unitTarget.isAirbornUnit()) {
-                    // it is a homing missile!
-                    bullet[iBull].iHoming = iTargetID;
-                    bullet[iBull].TIMER_homing = 200;
+                if (unitTarget.isAirbornUnit()) {
+                    if (iBull > -1 && bulletType == ROCKET_RTURRET) {
+                        // it is a homing missile!
+                        bullet[iBull].iHoming = iTargetID;
+                        // TODO: property for homing?
+                        bullet[iBull].TIMER_homing = 200;
+                    }
                 }
 
                 TIMER_fire = 0;
