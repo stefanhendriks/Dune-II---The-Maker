@@ -993,3 +993,19 @@ bool cMap::isStructureVisible(cAbstractStructure *pStructure, int iPlayer) {
 
     return false;
 }
+
+bool cMap::isAtMapBoundaries(int cell) {
+    bool validCell = isValidCell(cell);
+    if (!validCell) return false;
+
+    int maxHeight = (height-2); // hence the -2!
+    int maxWidth = (width-2);
+
+    int x = getCellX(cell);
+    int y = getCellY(cell);
+
+    if (x ==1 || x == maxWidth) return true;
+    if (y == 1 || y == maxHeight) return true;
+
+    return false;
+}

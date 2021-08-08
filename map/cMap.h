@@ -536,6 +536,8 @@ public:
 
     bool isStructureVisible(cAbstractStructure *pStructure, int iPlayer);
 
+    bool isAtMapBoundaries(int cell);
+
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 

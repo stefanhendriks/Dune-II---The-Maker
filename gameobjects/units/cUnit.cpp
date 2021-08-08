@@ -1407,6 +1407,14 @@ void cUnit::think_move_air() {
         return;
     }
 
+    if (map.isAtMapBoundaries(iCell)) {
+        if (!isReinforcement) {
+            // let unit face directly to ideal angle, so it won't fly into its doom (out of map)
+            iBodyFacing = iBodyShouldFace;
+            iHeadFacing = iHeadShouldFace;
+        }
+    }
+
     if (!map.isValidCell(iNextCell))
         iNextCell = iCell;
 
