@@ -726,21 +726,51 @@ void cUnit::attackUnit(int targetUnit) {
     char msg[255];
     sprintf(msg, "attackUnit() : target is [%d]", targetUnit);
     log(msg);
-    UNIT_ORDER_ATTACK(iID, unit[targetUnit].iCell, targetUnit, -1, -1);
+    attack(unit[targetUnit].iCell, targetUnit, -1, -1);
 }
 
 void cUnit::attackStructure(int targetStructure) {
     char msg[255];
     sprintf(msg, "attackStructure() : target is [%d]", targetStructure);
     log(msg);
-    UNIT_ORDER_ATTACK(iID, structure[targetStructure]->getCell(), -1, targetStructure, -1);
+    attack(structure[targetStructure]->getCell(), -1, targetStructure, -1);
 }
 
 void cUnit::attackCell(int cell) {
     char msg[255];
     sprintf(msg, "attackCell() : cell target is [%d]", cell);
     log(msg);
-    UNIT_ORDER_ATTACK(iID, cell, -1, -1, -1);
+    attack(cell, -1, -1, -1);
+}
+
+void cUnit::attack(int iGoalCell, int iUnit, int iStructure, int iAttackCell) {
+    // basically the same as move, but since we use iAction as ATTACK
+    // it will think first in attack mode, determining if it will be CHASE now or not.
+    // if not, it will just fire.
+
+    char msg[255];
+    sprintf(msg, "Attacking UNIT ID [%d], STRUCTURE ID [%d], ATTACKCLL [%d], GoalCell [%d]", iUnit, iStructure,
+            iAttackCell, iGoalCell);
+    log(msg);
+
+    if (iUnit < 0 && iStructure < 0 && iAttackCell < 0) {
+        log("What is this? Ordered to attack but no target?");
+        return;
+    }
+
+    // TODO: We have somewhere else something with "intents", so this whole if statement should be removed / replaced?
+    if (isSaboteur()) {
+        // saboteur does not attack, but only captures
+        move_to(iGoalCell, iStructure, -1, eUnitActionIntent::INTENT_CAPTURE);
+        return;
+    }
+
+    iAction = ACTION_ATTACK;
+    iGoalCell = iGoalCell;
+    iAttackStructure = iStructure;
+    iAttackUnit = iUnit;
+    iAttackCell = iAttackCell;
+    forgetAboutCurrentPathAndPrepareToCreateNewOne(rnd(5));
 }
 
 void cUnit::attackAt(int cell) {
@@ -782,7 +812,6 @@ void cUnit::move_to(int iCll, int iStrucID, int iUnitID, eUnitActionIntent inten
     iGoalCell = iCll;
     iStructureID = iStrucID;
     this->iUnitID = iUnitID;
-    iPathIndex = -1;
     iAttackStructure = -1;
     iAttackCell = -1;
 
@@ -794,13 +823,14 @@ void cUnit::move_to(int iCll, int iStrucID, int iUnitID, eUnitActionIntent inten
     iAction = ACTION_MOVE;
     this->intent = intent;
 
-    memset(iPath, -1, sizeof(iPath));
+    forgetAboutCurrentPathAndPrepareToCreateNewOne(rnd(5));
 
     if (iStrucID > -1) {
         if (structure[iStrucID]) {
             structure[iStrucID]->iUnitID = iUnitID;
         }
     }
+
     log("(move_to - FINISHED)");
 }
 
@@ -1871,30 +1901,26 @@ void cUnit::shoot(int iShootCell) {
 
 int cUnit::getNextCellToMoveTo() {
     if (isAirbornUnit()) {
-        // Aircraft
-        if (iGoalCell == iCell)
+        if (iGoalCell == iCell) {
             return iCell;
+        }
 
         return iGoalCell; // return the goal
     }
 
     if (iPathIndex < 0) {
-        if (iNextCell < 0) {
-            log("No pathindex & no nextcell, resetting unit");
-            return iCell; // same as our location
-        }
-
-        return iNextCell;
+        return -1;
     }
 
     // not valid OR same location
-    if (iPath[iPathIndex] < 0) {
-        log("No valid iPATH[pathindex]");
-        return iCell; // same as our location
+    int nextCell = iPath[iPathIndex];
+    if (nextCell < 0) {
+        log("No valid iPATH[pathindex], nextCell is < 0");
+        return -1;
     }
 
     // now, we are sure it will be another location
-    return iPath[iPathIndex];
+    return nextCell;
 }
 
 // ouch, who shot me?
@@ -2045,7 +2071,7 @@ void cUnit::think_attack() {
                 play_sound_id_with_distance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(iCell));
                 iAction = ACTION_GUARD;
                 iAttackUnit = -1;
-                bCalculateNewPath = true;
+                forgetAboutCurrentPathAndPrepareToCreateNewOne();
                 TIMER_wormeat += rnd(150);
                 return;
             } else {
@@ -2059,12 +2085,9 @@ void cUnit::think_attack() {
                     iAttackUnit = -1;
                 } else {
                     iAction = ACTION_CHASE;
-                    bCalculateNewPath = true;
+                    forgetAboutCurrentPathAndPrepareToCreateNewOne();
                 }
-
-
             }
-
         } else {
             iAction = ACTION_GUARD;
         }
@@ -2135,7 +2158,6 @@ void cUnit::think_attack() {
     int iDestY = map.getCellY(iGoalCell);
 
     // Distance check
-
     int distance = ABS_length(iCellX, iCellY, iDestX, iDestY);
 
     if (!isAirbornUnit()) {
@@ -2143,7 +2165,12 @@ void cUnit::think_attack() {
             if (distance <= getRange()) {
                 setAngleTowardsTargetAndFireBullets(distance);
             } else { // not within distance
-                startChasingEnemy(attackUnit);
+                startChasingTarget();
+            }
+        } else {
+            if (distance > getRange()) {
+                // atleast don't try to attack it
+                startChasingTarget();
             }
         }
     } else {
@@ -2178,23 +2205,25 @@ int cUnit::getFaceAngleToCell(int cell) const {
     return face_angle(d); // get the angle
 }
 
-void cUnit::startChasingEnemy(cUnit *attackUnit) {
+void cUnit::startChasingTarget() {
     if (iAttackStructure > -1) {
         iAction = ACTION_CHASE;
-        bCalculateNewPath = true;
+        // a structure does not move, so don't need to re-calculate path?
+//        forgetAboutCurrentPathAndPrepareToCreateNewOne();
     } else if (iAttackUnit > -1) {
+        cUnit * attackUnit = &unit[iAttackUnit];
         // chase unit, but only when ground unit
         if (!attackUnit->isSandworm() && !attackUnit->isAirbornUnit()) {
             iAction = ACTION_CHASE;
-            bCalculateNewPath = true;
+            // only think of new path when our target moved
+            if (attackUnit->getCell() != iGoalCell) {
+                forgetAboutCurrentPathAndPrepareToCreateNewOne();
+            }
         } else {
             // do not chase sandworms or other air units, very ... inconvenient
             iAction = ACTION_GUARD;
             iGoalCell = iCell;
-            iNextCell = iCell;
-            iPathIndex = -1;
-            // clear path
-            memset(iPath, -1, sizeof(iPath));
+            forgetAboutCurrentPathAndPrepareToCreateNewOne();
         }
     }
 }
@@ -2267,6 +2296,11 @@ void cUnit::think_move() {
         assert(false && "Expected to have a valid unit calling think_move()");
     }
 
+    // this is about non-aircraft only, so bail for aircraft units
+    if (isAirbornUnit()) {
+        return;
+    }
+
     if (iTempHitPoints > -1) {
         return;
     }
@@ -2276,148 +2310,108 @@ void cUnit::think_move() {
         return;
     }
 
-    // aircraft
-    if (isAirbornUnit()) {
-        return;
-    }
-
-//    char msg[255];
-//    sprintf(msg, "Unit [%d] - %s - think_move() - Start", iID, getUnitType().name);
-//    log(msg);
-
     // when there is a valid goal cell (differs), then we go further
     if (iGoalCell == iCell) {
         iAction = ACTION_GUARD; // do nothing
-
-        // clear path
-        memset(iPath, -1, sizeof(iPath));
-
+        forgetAboutCurrentPathAndPrepareToCreateNewOne();
         return;
     }
 
-    // soldiers
-    /*
-    if (iType == TROOPER ||
-        iType == TROOPERS ||
-        iType == INFANTRY ||
-        iType == SOLDIER ||
-        iType == SABOTEUR)
-    {
-        think_move_foot();
-        return;
-    }*/
+    // not moving between cells, check if there is a new cell to move to
+    if (!isMovingBetweenCells()) {
+        iNextCell = getNextCellToMoveTo();
 
-    // everything from here is wheeled or tracked
-    // QUAD, TRIKE, TANK, etc
-    iNextCell = getNextCellToMoveTo();
+        // no next cell determined
+        if (iNextCell < 0) {
+            forgetAboutCurrentPathAndPrepareToCreateNewOne(0);
 
-    // Same cell? Get out of here
-    if (iNextCell == iCell) {
-        // clear path
-        memset(iPath, -1, sizeof(iPath));
-        iPathIndex = -1;
+            // when we do have a different goal, we should get a path:
+            if (iGoalCell != iCell) {
+                char msg[255];
+                int iResult = CREATE_PATH(iID, 0); // do not take units into account yet
+                sprintf(msg, "Create path ... result = %d", iResult);
+                log(msg);
 
-        // when we do have a different goal, we should get a path:
-        if (iGoalCell != iCell) {
-            char msg[255];
-            int iResult = CREATE_PATH(iID, 0); // do not take units into account yet
-            sprintf(msg, "Create path ... result = %d", iResult);
-            log(msg);
+                // On fail:
+                if (iResult < 0) {
+                    // simply failed
+                    if (iResult == -1) {
+                        // Check why, is our goal cell occupied?
+                        int uID = map.getCellIdUnitLayer(iGoalCell);
+                        int sID = map.getCellIdStructuresLayer(iGoalCell);
 
-            // On fail:
-            if (iPathIndex < 0) {
-                // simply failed
-                if (iResult == -1) {
-                    // Check why, is our goal cell occupied?
-                    int uID = map.getCellIdUnitLayer(iGoalCell);
-                    int sID = map.getCellIdStructuresLayer(iGoalCell);
+                        // Other unit is on goal cell, do something about it.
 
-                    // Other unit is on goal cell, do something about it.
+                        // uh oh
+                        if (uID > -1 && uID != iID) {
+                            // occupied, not by self
+                            // find a goal cell near to it
+                            int iNewGoal = RETURN_CLOSE_GOAL(iGoalCell, iCell, iID);
 
-                    // uh oh
-                    if (uID > -1 && uID != iID) {
-                        // occupied, not by self
-                        // find a goal cell near to it
-                        int iNewGoal = RETURN_CLOSE_GOAL(iGoalCell, iCell, iID);
+                            if (iNewGoal == iGoalCell) {
+                                // same goal, cant find new, stop
+                                iGoalCell = iCell;
+                                log("Could not find alternative goal");
+                                iPathIndex = -1;
+                                iPathFails = 0;
+                                return;
 
-                        if (iNewGoal == iGoalCell) {
-                            // same goal, cant find new, stop
+                            } else {
+                                iGoalCell = iNewGoal;
+                                TIMER_movewait = rnd(20);
+                                log("Found alternative goal");
+                                return;
+                            }
+                        } else if (sID > -1 && iStructureID > -1 && iStructureID != sID) {
+                            log("Want to enter structure, yet ID's do not match");
+                            log("Resetting structure id and such to redo what i was doing?");
+                            iStructureID = -1;
                             iGoalCell = iCell;
-                            log("Could not find alternative goal");
                             iPathIndex = -1;
                             iPathFails = 0;
-                            return;
-
                         } else {
-                            iGoalCell = iNewGoal;
-                            TIMER_movewait = rnd(20);
-                            log("Found alternative goal");
-                            return;
-                        }
-                    } else if (sID > -1 && iStructureID > -1 && iStructureID != sID) {
-                        log("Want to enter structure, yet ID's do not match");
-                        log("Resetting structure id and such to redo what i was doing?");
-                        iStructureID = -1;
-                        iGoalCell = iCell;
-                        iPathIndex = -1;
-                        iPathFails = 0;
-                    } else {
-                        log("Something else blocks path, but goal itself is not occupied.");
-                        iGoalCell = iCell;
-                        iPathIndex = -1;
-                        iPathFails = 0;
-                        iStructureID = -1;
+                            log("Something else blocks path, but goal itself is not occupied.");
+                            iGoalCell = iCell;
+                            iPathIndex = -1;
+                            iPathFails = 0;
+                            iStructureID = -1;
 
-                        // random move around
-                        int iF = UNIT_FREE_AROUND_MOVE(iID);
+                            // random move around
+                            int iF = UNIT_FREE_AROUND_MOVE(iID);
 
-                        if (iF > -1) {
-                            move_to(iF);
+                            if (iF > -1) {
+                                move_to(iF);
+                            }
                         }
+                    } else if (iResult == -2) {
+                        // we have a problem here, units/stuff around us blocks the unit
+                        log("Units surround me, what to do?");
+                    } else if (iResult == -3) {
+                        log("I just failed, ugh");
                     }
+
+                    // We failed
+                    iPathFails++;
+
+                    if (iPathFails > 2) {
+                        // stop trying
+                        iGoalCell = iCell;
+                        iPathFails = 0;
+                        iPathIndex = -1;
+                        if (TIMER_movewait <= 0)
+                            TIMER_movewait = 100;
+                    }
+                } else {
+                    //log("SUCCES");
                 }
-
-                if (iResult == -2) {
-                    // we have a problem here, units/stuff around us blocks the unit
-                    log("Units surround me, what to do?");
-                }
-
-                if (iResult == -3) {
-                    log("I just failed, ugh");
-                }
-
-                // We failed
-                iPathFails++;
-
-                if (iPathFails > 2) {
-                    // stop trying
-                    iGoalCell = iCell;
-                    iPathFails = 0;
-                    iPathIndex = -1;
-                    if (TIMER_movewait <= 0)
-                        TIMER_movewait = 100;
-                }
-
-
-            } else {
-                //log("SUCCES");
-            }
-        }
-        return;
+            } // must go somewhere (has a goal)
+            return;
+        } // didn't get valid nextCell
     }
 
-    // Facing
-    int d = fDegrees(iCellX, iCellY, map.getCellX(iNextCell), map.getCellY(iNextCell));
-    int f = face_angle(d); // get the angle
-
-    // set body facing
-    iBodyShouldFace = f;
-
-    // HEAD faces goal directly
-    d = fDegrees(iCellX, iCellY, map.getCellX(iGoalCell), map.getCellY(iGoalCell));
-    f = face_angle(d); // get the angle
-
-    iHeadShouldFace = f;
+    // Update the 'should' facing (ideal facing) of body and head.
+    iBodyShouldFace = getFaceAngleToCell(iNextCell);
+    iHeadShouldFace = getFaceAngleToCell(iGoalCell);
 
     // check
     bool bOccupied = false;
@@ -2525,11 +2519,10 @@ void cUnit::think_move() {
         if (iNextCell == iGoalCell) {
             // it is our goal cell, close enough
             iGoalCell = iCell;
-
-            memset(iPath, -1, sizeof(iPath));
-            iPathIndex = -1;
+            forgetAboutCurrentPathAndPrepareToCreateNewOne();
             return;
-        } else if (idOfStructureAtNextCell > -1) { // blocked by structure
+        } else if (idOfStructureAtNextCell > -1) {
+            // blocked by structure
             forgetAboutCurrentPathAndPrepareToCreateNewOne();
         } else if (idOfUnitAtNextCell > -1) {
             // From here, assume a unit is standing in our way. First check if this unit will
@@ -2624,10 +2617,7 @@ void cUnit::think_move() {
 }
 
 /**
- * This moves a unit to a new cell, (pixel by pixel). It uses 'offsets' based on the current cell (tile).
- * TODO: Refactor this so that units have absolute pixel coordinates and tiles are derived from that.
- *
- * Returns TRUE if arrived at goal cell.
+ * This moves a unit to a new cell, (pixel by pixel).
  */
 eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
     // When we should move:
@@ -2745,6 +2735,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         }
     }
 
+    // movement is done, determine what to do with new state.
     if (!isMovingBetweenCells()) {
         // when we are chasing, we now set on attack...
         if (iAction == ACTION_CHASE) {
@@ -2832,7 +2823,6 @@ void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne() {
 void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait) {
     memset(iPath, -1, sizeof(iPath));
     iPathIndex = -1;
-    iNextCell = iCell;
     TIMER_movewait = timeToWait;
 }
 
@@ -3873,39 +3863,6 @@ void UNIT_deselect_all() {
         }
     }
 }
-
-void UNIT_ORDER_ATTACK(int iUnitID, int iGoalCell, int iUnit, int iStructure, int iAttackCell) {
-    // basically the same as move, but since we use iAction as ATTACK
-    // it will think first in attack mode, determining if it will be CHASE now or not.
-    // if not, it will just fire.
-
-    char msg[255];
-    sprintf(msg, "Attacking UNIT ID [%d], STRUCTURE ID [%d], ATTACKCLL [%d], GoalCell [%d]", iUnit, iStructure,
-            iAttackCell, iGoalCell);
-    cUnit &cUnit = unit[iUnitID];
-    cUnit.log(msg);
-
-    if (iUnit < 0 && iStructure < 0 && iAttackCell < 0) {
-        cUnit.log("What is this? Ordered to attack but no target?");
-        return;
-    }
-
-    // TODO: We have somewhere else something with "intents", so this whole if statement should be removed / replaced?
-    if (cUnit.iType == SABOTEUR) {
-        // saboteur does not attack, but only captures
-        cUnit.move_to(iGoalCell, iStructure, -1, eUnitActionIntent::INTENT_CAPTURE);
-        return;
-    }
-
-    cUnit.iAction = ACTION_ATTACK;
-    cUnit.iGoalCell = iGoalCell;
-    cUnit.iNextCell = -1;
-    cUnit.bCalculateNewPath = true;
-    cUnit.iAttackStructure = iStructure;
-    cUnit.iAttackUnit = iUnit;
-    cUnit.iAttackCell = iAttackCell;
-}
-
 
 ///////////////////////////////////////////////////////////////////////
 // REINFORCEMENT STUFF

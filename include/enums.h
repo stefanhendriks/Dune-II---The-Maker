@@ -98,11 +98,27 @@ enum eUnitActionIntent {
 
 // what is the intent of the action given to the unit?
 enum eUnitMoveToCellResult {
-    MOVERESULT_BUSY, // still busy moving between cells (offsets != 0)
-    MOVERESULT_AT_CELL, // arrived at a cell (but it is not the end-goal)
-    MOVERESULT_AT_GOALCELL, // arrived at the GOAL cell
+    /**
+     * still busy moving between cells (offsets != 0)
+     */
+    MOVERESULT_BUSY,
+
+    /**
+     * arrived at a cell (but it is not the end-goal)
+     */
+    MOVERESULT_AT_CELL,
+
+    /**
+     * arrived at the GOAL cell
+     */
+    MOVERESULT_AT_GOALCELL,
+
     MOVERESULT_WAIT_FOR_CARRYALL,
-    MOVERESULT_SLOWDOWN, // the unit has to 'wait' (ie its slowdown is in effect)
+
+    /**
+     * the unit has to 'wait' (ie its slowdown is in effect)
+     */
+    MOVERESULT_SLOWDOWN,
 };
 
 // 0x01 ==   1 == "00000001"
