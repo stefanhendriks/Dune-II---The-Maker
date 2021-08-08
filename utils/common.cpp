@@ -392,7 +392,7 @@ void install_units()
   units[FRIGATE].bmp_startpixel = 0;
   units[FRIGATE].bmp_frames = 2; // we have at max 1 extra frame
   units[FRIGATE].speed = 2;
-  units[FRIGATE].turnspeed = 40;
+  units[FRIGATE].turnspeed = 4;
   units[FRIGATE].airborn = true;
   units[FRIGATE].squish = false;
   units[FRIGATE].free_roam = true; // Frigate does not roam, yet needed?
