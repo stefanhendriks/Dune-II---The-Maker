@@ -176,7 +176,7 @@ public:
 
     int TIMER_wormeat;  // when do we eat? (when worm)
 
-    s_UnitP& getUnitType();
+    s_UnitP& getUnitType() const;
 
     /**
      * Return current health normalized (between 0.0 and 1.0)
@@ -334,6 +334,12 @@ private:
     void think_carryAll();
 
     int determineNewFacing(int currentFacing, int desiredFacing);
+
+    bool setAngleTowardsTargetAndFireBullets(int distance);
+
+    void startChasingEnemy(cUnit *attackUnit);
+
+    int getFaceAngleToCell(int cell) const;
 };
 
 
