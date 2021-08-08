@@ -337,9 +337,11 @@ private:
 
     bool setAngleTowardsTargetAndFireBullets(int distance);
 
-    void startChasingEnemy(cUnit *attackUnit);
+    void startChasingTarget();
 
     int getFaceAngleToCell(int cell) const;
+
+    void attack(int iGoalCell, int iUnit, int iStructure, int iAttackCell);
 };
 
 
@@ -377,8 +379,6 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);
 int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 
 void UNIT_deselect_all();
-
-void UNIT_ORDER_ATTACK(int iUnitID, int iGoalCell, int iUnit, int iStructure, int iAttackCell);
 
 int UNIT_find_harvest_spot(int id);
 

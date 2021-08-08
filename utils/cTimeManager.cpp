@@ -198,7 +198,7 @@ void cTimeManager::handleTimerGameTime() {
                     cUnit.think_move_air();
                 } else {
                     // move
-                    if (cUnit.iAction == ACTION_MOVE || cUnit.iAction == ACTION_CHASE) {
+                    if (cUnit.iAction == ACTION_MOVE || cUnit.iAction == ACTION_CHASE || cUnit.isMovingBetweenCells()) {
                         cUnit.think_move();
                     }
                 }
