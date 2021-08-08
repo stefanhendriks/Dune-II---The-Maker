@@ -149,7 +149,6 @@ void cGunTurret::think_turning() {
 }
 
 void cGunTurret::think_guard() {
-    // TURRET CODE HERE
     if (!getPlayer()->bEnoughPower()) {
         return;
     }
@@ -157,6 +156,8 @@ void cGunTurret::think_guard() {
     TIMER_guard++;
 
     if (TIMER_guard > 10) {
+        TIMER_guard=0-rnd(20);
+
         int c = getCell();
         int iCellX = map.getCellX(c);
         int iCellY = map.getCellY(c);
@@ -182,7 +183,7 @@ void cGunTurret::think_guard() {
 
             if (!canAttackAirUnits()) {
                 if (cUnit.isAirbornUnit()) {
-                    continue; // it was airborn, and normal turrets cannot hit this
+                    continue; // it was airborn, and turrets which can't attack air units cannot hit this, so skip
                 }
             }
 
@@ -227,8 +228,6 @@ void cGunTurret::think_guard() {
                 game.onNotify(event);
             }
         }
-
-        TIMER_guard=0-rnd(20);
     }
 }
 
