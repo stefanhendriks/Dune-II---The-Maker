@@ -457,29 +457,34 @@ void cMap::draw_units_2nd() {
 
     // draw health of units
     for (int i=0; i < MAX_UNITS; i++) {
-        if (unit[i].isValid()) {
-            if (unit[i].bSelected) {
-               unit[i].draw_health();
-			   unit[i].draw_experience();
+        cUnit &pUnit = unit[i];
+        if (pUnit.isValid()) {
+            if (pUnit.bSelected) {
+               pUnit.draw_health();
+			   pUnit.draw_experience();
 			}
         }
     }
 
 	// draw airborn units
     for (int i=0; i < MAX_UNITS; i++) {
-        cUnit &cUnit = unit[i];
-        if (!cUnit.isValid()) continue;
-        if (!cUnit.isAirbornUnit()) continue;
+        cUnit &pUnit = unit[i];
+        if (!pUnit.isValid()) continue;
+        if (!pUnit.isAirbornUnit()) continue;
 
-        if (cUnit.dimensions->isOverlapping(game.mapViewport)) {
-            cUnit.draw();
+        if (pUnit.dimensions->isOverlapping(game.mapViewport)) {
+            pUnit.draw();
+            // HACK HACK: Should be == ACTIVE PLAYER
+//            if (pUnit.getPlayer()->isHuman()) {
+                pUnit.draw_health();
+//            }
         }
 
         if (key[KEY_D]) {
-            allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
-            putpixel(bmp_screen, cUnit.center_draw_x(), cUnit.center_draw_y(), makecol(255, 0, 255));
+            allegroDrawer->drawRectangle(bmp_screen, pUnit.dimensions, makecol(255, 0, 255));
+            putpixel(bmp_screen, pUnit.center_draw_x(), pUnit.center_draw_y(), makecol(255, 0, 255));
             if (key[KEY_TAB]) { // render unit id
-                alfont_textprintf(bmp_screen, game_font, cUnit.draw_x(), cUnit.draw_y(), makecol(255, 255, 255), "%d", i);
+                alfont_textprintf(bmp_screen, game_font, pUnit.draw_x(), pUnit.draw_y(), makecol(255, 255, 255), "%d", i);
             }
         }
     }
