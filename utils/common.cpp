@@ -912,7 +912,7 @@ void install_upgrades() {
 
     // LIGHTFACTORY UPGRADES, only for ATREIDES and ORDOS
     upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].enabled = true;
-    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].house = Atreides | Ordos;
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].house = Atreides | Ordos | Sardaukar;
     upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].techLevel = 3;
     upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].icon = ICON_UNIT_QUAD;
     upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].cost = structures[LIGHTFACTORY].cost / 2;
@@ -932,7 +932,7 @@ void install_upgrades() {
 
     // ALL HOUSES GET MVC
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].enabled = true;
-    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].house = Atreides | Ordos | Harkonnen;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].house = Atreides | Ordos | Harkonnen | Sardaukar;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].techLevel = 4;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].icon = ICON_UNIT_MCV;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].cost = structures[HEAVYFACTORY].cost / 2;
@@ -950,7 +950,7 @@ void install_upgrades() {
 
     // Harkonnen/Atreides only
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].enabled = true;
-    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].house = Atreides | Harkonnen;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].house = Atreides | Harkonnen | Sardaukar;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].techLevel = 5;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].icon = ICON_UNIT_LAUNCHER;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].cost = structures[HEAVYFACTORY].cost / 2;
@@ -967,7 +967,7 @@ void install_upgrades() {
     strcpy(upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].description, "Build Rocket Launcher at Heavy Factory");
 
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].enabled = true;
-    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].house = Atreides | Harkonnen;
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].house = Atreides | Harkonnen | Sardaukar;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].techLevel = 6;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].icon = ICON_UNIT_SIEGETANK;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].cost = structures[HEAVYFACTORY].cost / 2;
@@ -1002,7 +1002,7 @@ void install_upgrades() {
 
     // HI-TECH UPGRADES (Ordos/Atreides only)
     upgrades[UPGRADE_TYPE_HITECH_ORNI].enabled = true;
-    upgrades[UPGRADE_TYPE_HITECH_ORNI].house = Atreides | Ordos;
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].house = Atreides | Ordos | Sardaukar;
     upgrades[UPGRADE_TYPE_HITECH_ORNI].techLevel = 8;
     upgrades[UPGRADE_TYPE_HITECH_ORNI].icon = ICON_UNIT_ORNITHOPTER;
     upgrades[UPGRADE_TYPE_HITECH_ORNI].cost = structures[HIGHTECH].cost / 2;
@@ -1019,7 +1019,7 @@ void install_upgrades() {
 
     // WOR (Harkonnen & Ordos)
     upgrades[UPGRADE_TYPE_WOR_TROOPERS].enabled = true;
-    upgrades[UPGRADE_TYPE_WOR_TROOPERS].house = Harkonnen | Ordos;
+    upgrades[UPGRADE_TYPE_WOR_TROOPERS].house = Harkonnen | Ordos | Sardaukar;
     upgrades[UPGRADE_TYPE_WOR_TROOPERS].techLevel = 3;
     upgrades[UPGRADE_TYPE_WOR_TROOPERS].icon = ICON_UNIT_TROOPERS;
     upgrades[UPGRADE_TYPE_WOR_TROOPERS].cost = structures[WOR].cost / 2;
@@ -1036,7 +1036,7 @@ void install_upgrades() {
 
     // BARRACKS (Atreides & Ordos)
     upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].enabled = true;
-    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].house = Atreides | Ordos;
+    upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].house = Atreides | Ordos | Sardaukar;
     upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].techLevel = 3;
     upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].icon = ICON_UNIT_INFANTRY;
     upgrades[UPGRADE_TYPE_BARRACKS_INFANTRY].cost = structures[BARRACKS].cost / 2;
