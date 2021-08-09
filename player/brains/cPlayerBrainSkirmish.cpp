@@ -12,6 +12,9 @@ namespace brains {
 //         10*60 -> 1 minute. * 4 -> 4 minutes
 //        TIMER_rest = (10 * 60) * 4;
         TIMER_rest = rnd(25); // todo: based on difficulty?
+        if (game.bNoAiRest) {
+            TIMER_rest = 10;
+        }
         TIMER_ai = 0; // increased every 100 ms with 1. (ie 10 ticks is 1 second)
         myBase = std::vector<S_structurePosition>();
         buildOrders = std::vector<S_buildOrder>();
@@ -601,7 +604,7 @@ namespace brains {
         }
 
         // take a little rest, before going into a new loop again?
-        TIMER_rest = 25;
+        TIMER_rest = 10;
         changeThinkStateTo(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST);
     }
 
@@ -753,8 +756,8 @@ namespace brains {
                         }
                     }
                 } else if (reason == eCantBuildReason::REQUIRES_ADDITIONAL_STRUCTURE || reason == eCantBuildReason::REQUIRES_STRUCTURE) {
-                    // remove from list
-                    buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
+                    // remove from list?
+//                    buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
                 }
             } else if (buildOrder.buildType == eBuildType::SPECIAL) {
                 if (player->startBuildingSpecial(buildOrder.buildId)) {
