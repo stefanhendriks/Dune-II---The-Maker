@@ -229,122 +229,13 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
 
     // when mouse hovers above a valid cell
     if (mouseCell > -1) {
-        if (mouse->isRightButtonClicked() && !mouse->isMapScrolling()) {
-            UNIT_deselect_all();
-        }
-
-        // single clicking and moving
-        if (mouse->isLeftButtonClicked()) {
-            bool bParticle=false;
-
-            if (mouse_tile == MOUSE_RALLY) {
-                int id = game.selected_structure;
-                if (id > -1)
-                    if (structure[id]->getOwner() == HUMAN) {
-                        structure[id]->setRallyPoint(mouseCell);
-                        bParticle=true;
-                    }
-            }
-
-            if (hover_unit > -1 && (mouse_tile == MOUSE_NORMAL || mouse_tile == MOUSE_PICK)) {
-                cUnit &hoverUnit = unit[hover_unit];
-                if (hoverUnit.iPlayer == 0) {
-                    if (!key[KEY_LSHIFT]) {
-                        UNIT_deselect_all();
-                    }
-
-                    hoverUnit.bSelected=true;
-
-                    if (unitInfo[hoverUnit.iType].infantry == false) {
-                        play_sound_id(SOUND_REPORTING);
-                    } else {
-                        play_sound_id(SOUND_YESSIR);
-                    }
-
-                }
-            } else {
-                bool bPlayInf=false;
-                bool bPlayRep=false;
-
-                if (mouse_tile == MOUSE_MOVE) {
-                    // any selected unit will move
-                    for (int i=0; i < MAX_UNITS; i++) {
-                        cUnit &cUnit = unit[i];
-                        if (cUnit.isValid() && cUnit.iPlayer == HUMAN && cUnit.bSelected) {
-                            cUnit.move_to(mouseCell);
-
-                            if (cUnit.isInfantryUnit()) {
-                                bPlayInf = true;
-                            } else {
-                                bPlayRep = true;
-                            }
-
-                            bParticle=true;
-                        }
-                    }
-                } else if (mouse_tile == MOUSE_ATTACK) {
-                    // check who or what to attack
-                    for (int i=0; i < MAX_UNITS; i++) {
-                        cUnit &pUnit = unit[i];
-                        if (pUnit.isValid() && pUnit.iPlayer == HUMAN && pUnit.bSelected)	{
-                            int iAttackCell=-1;
-
-                            if (!context->isMouseOverStructure() && game.hover_unit < 0) {
-                                iAttackCell = mouseCell;
-                            }
-
-                            if (iAttackCell > -1) {
-                                pUnit.attackCell(iAttackCell);
-                            } else {
-                                pUnit.attackAt(mouseCell);
-                            }
-
-                            if (game.hover_unit > -1) {
-                                unit[game.hover_unit].TIMER_blink = 5;
-                            }
-
-                            if (pUnit.isInfantryUnit()) {
-                                bPlayInf=true;
-                            } else {
-                                bPlayRep=true;
-                            }
-
-                            bParticle=true;
-                        }
-                    }
-                }
-
-                // AUDITIVE FEEDBACK
-                if (bPlayInf || bPlayRep) {
-                    if (bPlayInf)
-                        play_sound_id(SOUND_MOVINGOUT + rnd(2));
-
-                    if (bPlayRep)
-                        play_sound_id(SOUND_ACKNOWLEDGED + rnd(3));
-
-                    bOrderingUnits=true;
-                }
-
-            }
-
-            if (bParticle) {
-                int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
-                int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
-
-                if (mouse_tile == MOUSE_ATTACK) {
-                    PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, ATTACK_INDICATOR, -1, -1);
-                } else {
-                    PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, MOVE_INDICATOR, -1, -1);
-                }
-            }
-        }
+        mouseOnBattlefield(context, mouseCell, bOrderingUnits);
     }
 
     if (mouse->isLeftButtonPressed()) {
         // When the mouse is pressed, we will check if the first coordinates are filled in
         // if so, we will update the second coordinates. If the player holds his mouse we
         // keep updating the second coordinates and create a rectangle to select units with.
-
         if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
             if (abs(mouse_x - mouse_co_x1) > 4 &&
                 abs(mouse_y - mouse_co_y1) > 4) {
@@ -473,5 +364,117 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
         mouse_co_y1 = -1;
         mouse_co_x2 = -1;
         mouse_co_y2 = -1;
+    }
+}
+
+void cGame::mouseOnBattlefield(cGameControlsContext *context, int mouseCell, bool &bOrderingUnits) const {
+    if (mouse->isRightButtonClicked() && !mouse->isMapScrolling()) {
+        UNIT_deselect_all();
+    }
+
+    // single clicking and moving
+    if (mouse->isLeftButtonClicked()) {
+        bool bParticle=false;
+
+        if (mouse_tile == MOUSE_RALLY) {
+            int id = game.selected_structure;
+            if (id > -1)
+                if (structure[id]->getOwner() == HUMAN) {
+                    structure[id]->setRallyPoint(mouseCell);
+                    bParticle=true;
+                }
+        }
+
+        if (hover_unit > -1 && (mouse_tile == MOUSE_NORMAL || mouse_tile == MOUSE_PICK)) {
+            cUnit &hoverUnit = unit[hover_unit];
+            if (hoverUnit.iPlayer == 0) {
+                if (!key[KEY_LSHIFT]) {
+                    UNIT_deselect_all();
+                }
+
+                hoverUnit.bSelected=true;
+
+                if (unitInfo[hoverUnit.iType].infantry == false) {
+                    play_sound_id(SOUND_REPORTING);
+                } else {
+                    play_sound_id(SOUND_YESSIR);
+                }
+
+            }
+        } else {
+            bool bPlayInf=false;
+            bool bPlayRep=false;
+
+            if (mouse_tile == MOUSE_MOVE) {
+                // any selected unit will move
+                for (int i=0; i < MAX_UNITS; i++) {
+                    cUnit &cUnit = unit[i];
+                    if (cUnit.isValid() && cUnit.iPlayer == HUMAN && cUnit.bSelected) {
+                        cUnit.move_to(mouseCell);
+
+                        if (cUnit.isInfantryUnit()) {
+                            bPlayInf = true;
+                        } else {
+                            bPlayRep = true;
+                        }
+
+                        bParticle=true;
+                    }
+                }
+            } else if (mouse_tile == MOUSE_ATTACK) {
+                // check who or what to attack
+                for (int i=0; i < MAX_UNITS; i++) {
+                    cUnit &pUnit = unit[i];
+                    if (pUnit.isValid() && pUnit.iPlayer == HUMAN && pUnit.bSelected)	{
+                        int iAttackCell=-1;
+
+                        if (!context->isMouseOverStructure() && game.hover_unit < 0) {
+                            iAttackCell = mouseCell;
+                        }
+
+                        if (iAttackCell > -1) {
+                            pUnit.attackCell(iAttackCell);
+                        } else {
+                            pUnit.attackAt(mouseCell);
+                        }
+
+                        if (game.hover_unit > -1) {
+                            unit[game.hover_unit].TIMER_blink = 5;
+                        }
+
+                        if (pUnit.isInfantryUnit()) {
+                            bPlayInf=true;
+                        } else {
+                            bPlayRep=true;
+                        }
+
+                        bParticle=true;
+                    }
+                }
+            }
+
+            // AUDITIVE FEEDBACK
+            if (bPlayInf || bPlayRep) {
+                if (bPlayInf)
+                    play_sound_id(SOUND_MOVINGOUT + rnd(2));
+
+                if (bPlayRep)
+                    play_sound_id(SOUND_ACKNOWLEDGED + rnd(3));
+
+                bOrderingUnits=true;
+            }
+
+        }
+
+        if (bParticle) {
+            int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
+            int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
+
+            if (mouse_tile == MOUSE_ATTACK) {
+                PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, ATTACK_INDICATOR, -1, -1);
+            } else {
+                PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, MOVE_INDICATOR, -1, -1);
+            }
+        }
     }
 }

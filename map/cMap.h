@@ -538,6 +538,13 @@ public:
 
     bool isAtMapBoundaries(int cell);
 
+    /**
+     * Put in x, y and they will be evaluated (and fixed).
+     * @param x
+     * @param y
+     */
+    void fixCoordinatesToBeWithinPlayableMap(int &x, int &y);
+
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 

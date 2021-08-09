@@ -1014,3 +1014,7 @@ bool cMap::isAtMapBoundaries(int cell) {
 
     return false;
 }
+
+void cMap::fixCoordinatesToBeWithinPlayableMap(int &x, int &y) {
+    FIX_BORDER_POS(x, y);
+}

@@ -281,12 +281,14 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY) {
     // HACK HACK: Major assumption here - if map dimensions ever get > 64x64 this will BREAK!
     // However, every dot is (due the 64x64 map) 2 pixels wide...
     if (map->getHeight() > 64 || map->getWidth() > 64) {
-        // do nothing
+        // do nothing (assume, 1 cell = 1 pixel)
     } else {
-        // old behavior assumes double sized pixels
+        // old behavior assumes 1 cell = 2x2 pixels
         mouseMiniMapX /= 2;
         mouseMiniMapY /= 2;
     }
+
+    map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
 
     // the mouse is the center of the screen, so substract half of the viewport coordinates
     int newX = mouseMiniMapX;
@@ -357,7 +359,7 @@ void cMiniMapDrawer::setPlayer(cPlayer *thePlayer) {
 }
 
 void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event) {
-    if (m_RectMinimap->isWithin(event.x, event.y) && // on minimap
+    if (m_RectFullMinimap->isWithin(event.x, event.y) && // on minimap space
         !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
             ) {
 
