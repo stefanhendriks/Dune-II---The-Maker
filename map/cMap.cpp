@@ -143,7 +143,7 @@ bool cMap::canDeployUnitAtCell(int iCll, int iUnitID) {
     if (!pUnit.isAirbornUnit()) return false; // weird unit passed in
     if (pUnit.iNewUnitType < 0) return false; // safe-guard when this unit has no new unit to spawn
 
-    s_UnitP &unitToDeploy = units[pUnit.iNewUnitType];
+    s_UnitP &unitToDeploy = unitInfo[pUnit.iNewUnitType];
 
     int structureIdOnMap = map.getCellIdStructuresLayer(iCll);
     if (structureIdOnMap > -1) {

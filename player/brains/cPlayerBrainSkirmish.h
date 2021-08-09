@@ -25,7 +25,12 @@ namespace brains {
     const int SPECIAL_MISSION2 = 51;
     const int SPECIAL_MISSION3 = 52;
 
+    // 10 = 1 second.
+    // 100 = 10 seconds.
+    // 600 = 60 seconds (1 minute)
     const int MOMENT_CONSIDER_ADDITIONAL_REFINERY = 1200; // after 2 minutes consider building 2nd refinery
+
+    const int MOMENT_PRODUCE_ADDITIONAL_UNITS = 3000; // after 5 minutes consider building additional units
 
     struct s_SkirmishPlayer_PlaceForStructure {
         int structureType;
@@ -90,6 +95,8 @@ namespace brains {
 
         void changeEconomyStateTo(const ePlayerBrainSkirmishEconomyState& newState);
 
+        bool allMissionsAreDoneGatheringResources();
+
         static const char* ePlayerBrainSkirmishThinkStateString(const ePlayerBrainSkirmishThinkState &state) {
             switch (state) {
                 case ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_EVALUATE: return "PLAYERBRAIN_SKIRMISH_STATE_EVALUATE";
@@ -150,6 +157,8 @@ namespace brains {
 
         bool hasBuildOrderQueuedForStructure();
 
+        bool hasBuildOrderQueuedForUnit(int buildId);
+
         void evaluateEconomyState();
 
         void produceSkirmishGroundAttackMission(int trikeKind, int missionId);
@@ -157,6 +166,10 @@ namespace brains {
         void findNewLocationOrMoveAnyBlockingUnitsOrCancelBuild(S_buildOrder *pBuildOrder, cBuildingListItem *pItem, const s_PlaceResult &placeResult);
 
         bool findNewPlaceToPlaceStructureOrCancelBuild(S_buildOrder *pBuildOrder, cBuildingListItem *pItem);
+
+        void addBuildOrderForUnit(int type);
+
+        void buildUnitIfICanAndNotAlreadyQueued(int type);
     };
 
 }

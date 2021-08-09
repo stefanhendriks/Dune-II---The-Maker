@@ -255,7 +255,7 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
 
                     hoverUnit.bSelected=true;
 
-                    if (units[hoverUnit.iType].infantry == false) {
+                    if (unitInfo[hoverUnit.iType].infantry == false) {
                         play_sound_id(SOUND_REPORTING);
                     } else {
                         play_sound_id(SOUND_YESSIR);
@@ -435,7 +435,7 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
                         attackingUnitSelected = true;
                     }
 
-                    if (units[cUnit.iType].infantry) {
+                    if (unitInfo[cUnit.iType].infantry) {
                         bPlayInf = true;
                     } else {
                         bPlayRep = true;

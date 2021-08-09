@@ -98,7 +98,7 @@ namespace brains {
             memset(msg, 0, sizeof(msg));
             if (buildOrder.buildType == eBuildType::UNIT) {
                 sprintf(msg, "[%d] - type = UNIT, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
-                        units[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
+                        unitInfo[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::STRUCTURE) {
                 sprintf(msg, "[%d] - type = STRUCTURE, buildId = %d (=%s), priority = %d, place at %d, state = %s", id,
                         buildOrder.buildId, structures[buildOrder.buildId].name, buildOrder.priority,
@@ -284,7 +284,73 @@ namespace brains {
             mission.think();
         }
 
+        if (TIMER_ai > MOMENT_PRODUCE_ADDITIONAL_UNITS) {
+            if (allMissionsAreDoneGatheringResources()) {
+                // build units, as long as we have some money on the bank.
+                // these units are produced without a mission.
+                if (player->getCredits() > 800) {
+                    if (rnd(100) < 15) {
+                        // when the player has it, it will be build
+                        buildUnitIfICanAndNotAlreadyQueued(SONICTANK);
+                        buildUnitIfICanAndNotAlreadyQueued(DEVIATOR);
+                        buildUnitIfICanAndNotAlreadyQueued(DEVASTATOR);
+                    }
+                    if (rnd(100) < 15) {
+                        if (player->getAmountOfUnitsForType(SIEGETANK) < 8) {
+                            buildUnitIfICanAndNotAlreadyQueued(SIEGETANK);
+                        }
+                    }
+                    if (rnd(100) < 15) {
+                        if (player->getAmountOfUnitsForType(LAUNCHER) < 6) {
+                            buildUnitIfICanAndNotAlreadyQueued(LAUNCHER);
+                        }
+                    }
+                    if (rnd(100) < 15) {
+                        if (player->getAmountOfUnitsForType(QUAD) < 5) {
+                            buildUnitIfICanAndNotAlreadyQueued(QUAD);
+                        }
+                    }
+                    if (rnd(100) < 15) {
+                        if (player->getAmountOfUnitsForType(TANK) < 4) {
+                            buildUnitIfICanAndNotAlreadyQueued(TANK);
+                        }
+                    }
+                    if (rnd(100) < 15) {
+                        if (player->getAmountOfUnitsForType(ORNITHOPTER) < 3) {
+                            buildUnitIfICanAndNotAlreadyQueued(ORNITHOPTER);
+                        }
+                    }
+                    if (rnd(100) < 15) {
+                        if (player->getAmountOfUnitsForType(HARVESTER) < 6) {
+                            buildUnitIfICanAndNotAlreadyQueued(HARVESTER);
+                        }
+                    }
+                    if (rnd(100) < 15) {
+                        if (player->getAmountOfUnitsForType(CARRYALL) < 3) {
+                            buildUnitIfICanAndNotAlreadyQueued(CARRYALL);
+                        }
+                    }
+                }
+            }
+        }
+
         changeThinkStateTo(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_PROCESS_BUILDORDERS);
+    }
+
+    void cPlayerBrainSkirmish::buildUnitIfICanAndNotAlreadyQueued(int type) {
+        if (player->canBuildUnitBool(type) && !hasBuildOrderQueuedForUnit(type)) {
+            addBuildOrderForUnit(type);
+        }
+    }
+
+    void cPlayerBrainSkirmish::addBuildOrderForUnit(int type) {
+        addBuildOrder((S_buildOrder) {
+            buildType : UNIT,
+            priority : 0,
+            buildId : type,
+            placeAt : -1,
+            state : buildOrder::PROCESSME,
+        });
     }
 
     void cPlayerBrainSkirmish::produceMissions() {
@@ -604,7 +670,7 @@ namespace brains {
         }
 
         // take a little rest, before going into a new loop again?
-        TIMER_rest = 10;
+        TIMER_rest = cPlayerBrain::RestTime;
         changeThinkStateTo(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST);
     }
 
@@ -1095,6 +1161,24 @@ namespace brains {
             }
         }
         return false;
+    }
+
+    bool cPlayerBrainSkirmish::hasBuildOrderQueuedForUnit(int buildId) {
+        for (auto &buildOrder : buildOrders) {
+            if (buildOrder.buildType == eBuildType::UNIT && buildOrder.state != buildOrder::REMOVEME && buildOrder.buildId == buildId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool cPlayerBrainSkirmish::allMissionsAreDoneGatheringResources() {
+        for (auto &mission : missions) {
+            if (!mission.isDoneGatheringResources()) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

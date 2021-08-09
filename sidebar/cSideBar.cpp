@@ -98,7 +98,7 @@ void cSideBar::drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem
             if (item->getBuildCost() > 0) {
                 sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), unitType.name, seconds);
             } else {
-                sprintf(msg, "%s", units[item->getBuildId()].name);
+                sprintf(msg, "%s", unitInfo[item->getBuildId()].name);
             }
         } else if (item->isTypeUpgrade()){
             s_Upgrade upgrade = item->getS_Upgrade();

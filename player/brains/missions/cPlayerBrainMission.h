@@ -115,9 +115,14 @@ namespace brains {
             return uniqueIdentifier;
         }
 
+        bool isDoneGatheringResources();
+
+        void log(const char *txt);
     private:
 
         int TIMER_delay;
+
+        int TIMER_awaitingGatheringResoures;
 
         int uniqueIdentifier;
 

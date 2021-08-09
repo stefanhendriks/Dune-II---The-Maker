@@ -90,7 +90,7 @@ namespace brains {
             memset(msg, 0, sizeof(msg));
             if (buildOrder.buildType == eBuildType::UNIT) {
                 sprintf(msg, "[%d] - type = UNIT, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
-                        units[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
+                        unitInfo[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::STRUCTURE) {
                 sprintf(msg, "[%d] - type = STRUCTURE, buildId = %d (=%s), priority = %d, place at %d, state = %s", id,
                         buildOrder.buildId, structures[buildOrder.buildId].name, buildOrder.priority,
@@ -1586,7 +1586,7 @@ namespace brains {
         // Example: Money is short, Harvester is in build queue, but not high in priority?
 
         // take a little rest, before going into a new loop again?
-        TIMER_rest = 25;
+        TIMER_rest = cPlayerBrain::RestTime;
         changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST);
     }
 

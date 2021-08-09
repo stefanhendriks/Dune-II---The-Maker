@@ -56,7 +56,7 @@ int cItemBuilder::getTimerCap(cBuildingListItem *item) {
     if (item->getBuildType() == UNIT) {
         // the given unit will get out of a specific structure. This type
         // is within the units properties.
-        int structureTypeItLeavesFrom = units[item->getBuildId()].structureTypeItLeavesFrom;
+        int structureTypeItLeavesFrom = unitInfo[item->getBuildId()].structureTypeItLeavesFrom;
         int structureCount = player->getAmountOfStructuresForType(structureTypeItLeavesFrom);
         if (structureCount > 1) {
             iTimerCap /= structureCount;
@@ -179,7 +179,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
         assert(item->getTimesToBuild() > -1);
 
         // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
-        if (!units[item->getBuildId()].airborn) {
+        if (!unitInfo[item->getBuildId()].airborn) {
             deployUnit(item, item->getBuildId());
         } else {
             // airborn unit
