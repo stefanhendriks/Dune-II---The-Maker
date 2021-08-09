@@ -653,43 +653,44 @@ void cSetupSkirmishGameState::interact() {
                     }
                 }
 
-                cPlayer &cPlayer = players[p];
+                cPlayer &pPlayer = players[p];
 
                 // TEAM Logic
                 if (p == HUMAN) {
-                    cPlayer.init(p, nullptr);
+                    pPlayer.init(p, nullptr);
                 } else if (p == AI_CPU5) {
-                    cPlayer.init(p, new brains::cPlayerBrainFremenSuperWeapon(&cPlayer));
+                    pPlayer.init(p, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
                 } else if (p == AI_CPU6) {
-                    cPlayer.init(p, new brains::cPlayerBrainSandworm(&cPlayer));
+                    pPlayer.init(p, new brains::cPlayerBrainSandworm(&pPlayer));
                 } else {
                     if (maxThinkingAIs > 0) {
-                        cPlayer.init(p, new brains::cPlayerBrainSkirmish(&cPlayer));
+                        pPlayer.init(p, new brains::cPlayerBrainSkirmish(&pPlayer));
                         maxThinkingAIs--;
                     } else {
-                        cPlayer.init(p, nullptr);
+                        pPlayer.init(p, nullptr);
                     }
                 }
 
-                cPlayer.setCredits(sSkirmishPlayer.iCredits);
-                cPlayer.setHouse(iHouse);
+                pPlayer.setCredits(sSkirmishPlayer.iCredits);
+                pPlayer.setHouse(iHouse);
 
                 // from here, ignore non playable factions
                 if (!playableFaction) continue;
 
-                cPlayer.setFocusCell(iStartPositions[p]);
+                pPlayer.setFocusCell(iStartPositions[p]);
 
                 // Set map position
                 if (p == HUMAN) {
-                    mapCamera->centerAndJumpViewPortToCell(cPlayer.getFocusCell());
+                    mapCamera->centerAndJumpViewPortToCell(pPlayer.getFocusCell());
                 }
 
                 // create constyard
-                cAbstractStructure *s = cStructureFactory::getInstance()->createStructure(cPlayer.getFocusCell(), CONSTYARD, p);
-
-                // when failure, create mcv instead
-                if (s == NULL) {
-                    UNIT_CREATE(cPlayer.getFocusCell(), MCV, p, true);
+                const s_PlaceResult &result = pPlayer.canPlaceStructureAt(pPlayer.getFocusCell(), CONSTYARD);
+                if (!result.success) {
+                    // when failure, create mcv instead
+                    UNIT_CREATE(pPlayer.getFocusCell(), MCV, p, true);
+                } else {
+                    pPlayer.placeStructure(pPlayer.getFocusCell(), CONSTYARD, 100);
                 }
 
                 // amount of units
@@ -697,8 +698,8 @@ void cSetupSkirmishGameState::interact() {
 
                 // create units
                 while (u < sSkirmishPlayer.iUnits) {
-                    int iX= map.getCellX(cPlayer.getFocusCell());
-                    int iY= map.getCellY(cPlayer.getFocusCell());
+                    int iX= map.getCellX(pPlayer.getFocusCell());
+                    int iY= map.getCellY(pPlayer.getFocusCell());
                     int iType=rnd(12);
 
                     iX-=4;
@@ -707,7 +708,7 @@ void cSetupSkirmishGameState::interact() {
                     iY+=rnd(9);
 
                     // convert house specific stuff
-                    if (cPlayer.getHouse() == ATREIDES) {
+                    if (pPlayer.getHouse() == ATREIDES) {
                         if (iType == DEVASTATOR || iType == DEVIATOR) {
                             iType = SONICTANK;
                         }
@@ -726,7 +727,7 @@ void cSetupSkirmishGameState::interact() {
                     }
 
                     // ordos
-                    if (cPlayer.getHouse() == ORDOS) {
+                    if (pPlayer.getHouse() == ORDOS) {
                         if (iType == DEVASTATOR || iType == SONICTANK) {
                             iType = DEVIATOR;
                         }
@@ -737,7 +738,7 @@ void cSetupSkirmishGameState::interact() {
                     }
 
                     // harkonnen
-                    if (cPlayer.getHouse() == HARKONNEN) {
+                    if (pPlayer.getHouse() == HARKONNEN) {
                         if (iType == DEVIATOR || iType == SONICTANK) {
                             iType = DEVASTATOR;
                         }
