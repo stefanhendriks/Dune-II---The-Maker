@@ -63,24 +63,18 @@ int BETWEEN(int val, int min, int max) {
 // fixes the positions according to the PLAYABLE size of the map (for unit
 // dumping, etc)
 void FIX_BORDER_POS(int &x, int &y) {
-    // filled in
-    if (x) {
-        if (x < 1) {
-            x = 1;
-        }
-        if (x > (map.getWidth() - 2)) {
-            x = (map.getWidth() - 2);
-        }
+    if (x < 1) {
+        x = 1;
+    }
+    if (x > (map.getWidth() - 2)) {
+        x = (map.getWidth() - 2);
     }
 
-    // filled in
-    if (y) {
-        if (y < 1) {
-            y = 1;
-        }
-        if (y > (map.getHeight() - 2)) {
-            y = (map.getHeight() - 2);
-        }
+    if (y < 1) {
+        y = 1;
+    }
+    if (y > (map.getHeight() - 2)) {
+        y = (map.getHeight() - 2);
     }
 }
 

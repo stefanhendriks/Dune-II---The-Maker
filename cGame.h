@@ -227,6 +227,8 @@ private:
     void mouse_combat_resetDragViewportInteraction() const;
 
     void mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGameControlsContext *context, bool bOrderingUnits) const;
+
+    void mouseOnBattlefield(cGameControlsContext *context, int mouseCell, bool &bOrderingUnits) const;
 };
 
 #endif
