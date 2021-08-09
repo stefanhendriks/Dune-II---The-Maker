@@ -76,7 +76,7 @@ void cGame::combat_mouse() {
         combat_mouse_normalCombatInteraction(context, humanPlayer, bOrderingUnits);
     } // NOT PLACING / DEPLOYING STUFF
 
-    if (mouse->isRightButtonPressed()) {
+    if (mouse->isRightButtonPressed() && context->isMouseOnBattleField()) {
         mouse_combat_dragViewportInteraction();
     } else {
         mouse_combat_resetDragViewportInteraction();
