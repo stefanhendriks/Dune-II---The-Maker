@@ -199,6 +199,8 @@ public:
 
     void setTeam(int value) { iTeam = value; }
 
+    int getTeam() { return iTeam; }
+
 
     std::vector<int> getAllMyUnits();
 

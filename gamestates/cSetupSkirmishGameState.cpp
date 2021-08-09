@@ -762,25 +762,28 @@ void cSetupSkirmishGameState::interact() {
                 cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, iHouse);
             }
 
-            // TODO:
             // TEAM LOGIC here, so we can decide which is Atreides and thus should be allied with Fremen...
             for (int p = 0; p < MAX_PLAYERS; p++) {
                 cPlayer &player = players[p];
                 if (p == HUMAN) {
                     player.setTeam(HUMAN);
-                } else if (p == AI_CPU5) {
+                } else if (p == AI_CPU5) { // AI for fremen (super weapon)
                     player.setTeam(AI_CPU5);
                 } else if (p == AI_CPU6) {
                     player.setTeam(AI_CPU6); // worm team is against everyone
                 } else {
-                    if (player.getHouse() == ATREIDES) {
-                        player.setTeam(AI_CPU5); // ally with the Fremen
-                    } else {
-                        // all other AI's are their own team (campaign == AI's are friends, here they are enemies)
-                        player.setTeam(p);
-                    }
+                    // all other AI's are their own team (campaign == AI's are friends, here they are enemies)
+                    player.setTeam(p);
                 }
             }
+
+            for (int p = 0; p < MAX_PLAYERS; p++) {
+                cPlayer &player = players[p];
+                if (player.getHouse() == ATREIDES) {
+                    players[AI_CPU5].setTeam(player.getTeam());
+                }
+            }
+
 
             game.FADE_OUT();
             playMusicByType(MUSIC_PEACE);
