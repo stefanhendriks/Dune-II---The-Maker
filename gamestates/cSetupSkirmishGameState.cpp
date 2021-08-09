@@ -628,9 +628,15 @@ void cSetupSkirmishGameState::interact() {
 
                             bool houseInUse=false;
                             for (int pl=0; pl < AI_WORM; pl++) {
+                                // already in use by other skirmish set-up players
                                 if (skirmishPlayer[pl].iHouse > 0 &&
                                     skirmishPlayer[pl].iHouse == iHouse) {
                                     houseInUse=true;
+                                }
+
+                                if (players[pl].getHouse() == iHouse) {
+                                    // already in use by a already-setup player
+                                    houseInUse = true;
                                 }
                             }
 
