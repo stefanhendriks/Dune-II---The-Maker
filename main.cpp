@@ -43,7 +43,7 @@ cAllegroDrawer          *   allegroDrawer = nullptr;
 s_PreviewMap     			PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory
 s_House         			houses[MAX_HOUSES];
 s_Structures    			structures[MAX_STRUCTURETYPES];         // structure types
-s_UnitP         			units[MAX_UNITTYPES];              // unit types
+s_UnitP         			unitInfo[MAX_UNITTYPES];              // unit types
 s_Upgrade                   upgrades[MAX_UPGRADETYPES];        // upgrade types
 s_Special                   specials[MAX_SPECIALTYPES];        // special types
 s_Bullet        			bullets[MAX_BULLET_TYPES];          // bullet slots

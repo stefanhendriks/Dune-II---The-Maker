@@ -12,6 +12,8 @@ namespace brains {
     class cPlayerBrain : public cScenarioObserver {
 
     public:
+        const static int RestTime = 10;
+
         cPlayerBrain(cPlayer *player);
 
         virtual ~cPlayerBrain() = 0;

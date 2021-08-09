@@ -2191,43 +2191,43 @@ void INI_Install_Game(string filename) {
                 // Valid ID
                 if (section == INI_UNITS && id > -1) {
                     // Unit properties
-                    if (wordtype == WORD_HITPOINTS) units[id].hp = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_HITPOINTS) unitInfo[id].hp = INI_WordValueINT(linefeed);
 
-                    if (wordtype == WORD_COST) units[id].cost = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_COST) unitInfo[id].cost = INI_WordValueINT(linefeed);
 
-                    if (wordtype == WORD_MOVESPEED) units[id].speed = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_TURNSPEED) units[id].turnspeed = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_ATTACKFREQ) units[id].attack_frequency = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_MOVESPEED) unitInfo[id].speed = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_TURNSPEED) unitInfo[id].turnspeed = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_ATTACKFREQ) unitInfo[id].attack_frequency = INI_WordValueINT(linefeed);
 
-                    if (wordtype == WORD_SIGHT) units[id].sight = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_SIGHT) unitInfo[id].sight = INI_WordValueINT(linefeed);
 
-                    if (wordtype == WORD_RANGE) units[id].range = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_BUILDTIME) units[id].build_time = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_RANGE) unitInfo[id].range = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_BUILDTIME) unitInfo[id].build_time = INI_WordValueINT(linefeed);
 
                     // Unit description
                     if (wordtype == WORD_DESCRIPTION) {
                         char n[256];
                         INI_WordValueCHAR(linefeed, n);
-                        sprintf(units[id].name, "%s", n);
+                        sprintf(unitInfo[id].name, "%s", n);
                     }
 
                     // Booleans
-                    if (wordtype == WORD_SECONDSHOT) units[id].fireTwice = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_ISINFANTRY) units[id].infantry = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_FREEROAM) units[id].free_roam = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_ISAIRBORN) units[id].airborn = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_SECONDSHOT) unitInfo[id].fireTwice = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_ISINFANTRY) unitInfo[id].infantry = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_FREEROAM) unitInfo[id].free_roam = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_ISAIRBORN) unitInfo[id].airborn = INI_WordValueBOOL(linefeed);
 
                     // Harvester specific properties.
-                    if (wordtype == WORD_HARVESTLIMIT) units[id].credit_capacity = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_HARVESTSPEED) units[id].harvesting_speed = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_HARVESTAMOUNT) units[id].harvesting_amount = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_HARVESTLIMIT) unitInfo[id].credit_capacity = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_HARVESTSPEED) unitInfo[id].harvesting_speed = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_HARVESTAMOUNT) unitInfo[id].harvesting_amount = INI_WordValueINT(linefeed);
 
                     if (wordtype == WORD_PRODUCER) {
                         string producerString = INI_WordValueString(linefeed);
                         // determine structure type from that
                         int type = INI_StructureType(producerString);
 //        	  int type = INI_StructureType(producerString.c_str());
-                        units[id].structureTypeItLeavesFrom = type;
+                        unitInfo[id].structureTypeItLeavesFrom = type;
                     }
                 }
             }

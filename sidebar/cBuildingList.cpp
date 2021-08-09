@@ -95,7 +95,7 @@ void cBuildingList::addStructureToList(int structureType, int subList) {
 }
 
 void cBuildingList::addUnitToList(int unitType, int subList) {
-    cBuildingListItem *item = new cBuildingListItem(unitType, units[unitType], subList);
+    cBuildingListItem *item = new cBuildingListItem(unitType, unitInfo[unitType], subList);
     if (!addItemToList(item)) {
         delete item;
     }

@@ -8,6 +8,8 @@
 #include "cPlayerBrainMissionKindDeathHand.h"
 #include "cPlayerBrainMissionKindSaboteur.h"
 #include "cPlayerBrainMissionKindFremen.h"
+#include "cPlayerBrainMission.h"
+
 
 namespace brains {
 
@@ -22,7 +24,7 @@ namespace brains {
                                              TIMER_delay(initialDelay),
                                              uniqueIdentifier(uniqueId) {
         units = std::vector<int>();
-
+        TIMER_awaitingGatheringResoures = -1;
         missionKind = nullptr;
         switch (kind) {
             case PLAYERBRAINMISSION_KIND_ATTACK:
@@ -48,12 +50,12 @@ namespace brains {
 
         char msg[255];
         sprintf(msg, "cPlayerBrainMission of type %s", ePlayerBrainMissionKindString(kind));
-        player->log(msg);
+        log(msg);
 
         for (auto &item : group) {
             char msg[255];
             sprintf(msg, "Item buildType [%s], type/buildId[%d], required [%d]", eBuildTypeString(item.buildType), item.type, item.required);
-            player->log(msg);
+            log(msg);
             assert(item.type > -1 && "type/buildId must be > -1 !");
         }
     }
@@ -67,7 +69,7 @@ namespace brains {
     void cPlayerBrainMission::think() {
         char msg[255];
         sprintf(msg, "cPlayerBrainMission::think()");
-        player->log(msg);
+        log(msg);
 
         switch (state) {
             case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY:
@@ -94,7 +96,7 @@ namespace brains {
     void cPlayerBrainMission::onNotify(const s_GameEvent &event) {
         char msg[255];
         sprintf(msg, "cPlayerBrainMission::onNotify() -> %s", event.toString(event.eventType));
-        player->log(msg);
+        log(msg);
 
         switch(event.eventType) {
             case GAME_EVENT_CREATED:
@@ -191,14 +193,12 @@ namespace brains {
                                         // of mission anyway. (ie one FREMEN or one SABOTEUR producing, etc)
                                         // meaning we assign any unit that derived from this to our group.
 
-//                                        if (thingIWant.produced < thingIWant.required) {
-                                            // assign this unit to my team and my mission
-                                            units.push_back(entityUnit.iID);
-                                            entityUnit.assignMission(uniqueIdentifier);
+                                        // assign this unit to my team and my mission
+                                        units.push_back(entityUnit.iID);
+                                        entityUnit.assignMission(uniqueIdentifier);
 
-                                            thingIWant.produced++; // increase produced amount
-                                            break;
-//                                        }
+                                        thingIWant.produced++; // increase produced amount
+                                        break;
                                     }
                                 }
                             }
@@ -227,7 +227,7 @@ namespace brains {
     void cPlayerBrainMission::thinkState_InitialDelay() {
         char msg[255];
         sprintf(msg, "cPlayerBrainMission::thinkState_InitialDelay(), delay = %d", TIMER_delay);
-        player->log(msg);
+        log(msg);
         if (TIMER_delay > 0) {
             TIMER_delay--;
         }
@@ -241,17 +241,17 @@ namespace brains {
     void cPlayerBrainMission::thinkState_PrepareGatherResources() {
         char msg[255];
         sprintf(msg, "cPlayerBrainMission::thinkState_PrepareGatherResources()");
-        player->log(msg);
+        log(msg);
 
         memset(msg, 0, sizeof(msg));
         sprintf(msg, "cPlayerBrainMission::thinkState_PrepareGatherResources() : this is the army I have so far...");
-        player->log(msg);
+        log(msg);
 
         for (auto &myUnitId : units) {
             cUnit &myUnit = unit[myUnitId];
             memset(msg, 0, sizeof(msg));
             sprintf(msg, "cPlayerBrainMission::thinkState_PrepareGatherResources() : Unit %d, type %d (%s)", myUnit.iID, myUnit.iType, myUnit.getUnitType().name);
-            player->log(msg);
+            log(msg);
         }
 
         bool somethingLeftToBuild = false;
@@ -267,16 +267,45 @@ namespace brains {
             sprintf(msg,
                     "cPlayerBrainMission::thinkState_PrepareGatherResources() : nothing left to build",
                     player->getId());
-            player->log(msg);
+            log(msg);
             changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET);
             return;
         }
 
+        const std::vector<int> &allMyUnits = player->getAllMyUnits();
+        
         // assumes group contains units, just create build orders from the desired group of units...?
         for (auto &thingIWant : group) {
             assert(thingIWant.type > -1 && "cPlayerBrainMission - expected to have a type/buildId of > -1!");
             if (thingIWant.produced < thingIWant.required) {
                 if (thingIWant.ordered <= thingIWant.produced) { // order one at a time only
+
+                    if (thingIWant.buildType == eBuildType::UNIT) {
+                        for (auto &unitId : allMyUnits) {
+                            cUnit &pUnit = unit[unitId];
+                            if (!pUnit.isValid()) continue;
+                            if (pUnit.getType() != thingIWant.type) continue;
+                            if (!pUnit.isIdle()) continue;
+                            if (pUnit.isAssignedAnyMission()) continue; // already assigned to a mission
+
+                            // claim it for this mission!
+                            pUnit.assignMission(this->uniqueIdentifier);
+                            thingIWant.produced++; // update bookkeeping, no need to order it, we already have it
+                            char msg[255];
+                            sprintf(msg, "Found idle unit [%d] to assign to mission [%d]", unitId, this->uniqueIdentifier);
+                            log(msg);
+
+                            if (thingIWant.produced == thingIWant.required) break; // stop searching, we have everything
+                        }
+
+                        if (thingIWant.produced == thingIWant.required) {
+                            // we could assemble all of them with idle units, so skip
+                            continue; // notice, we continue in the 'group' for loop here!
+                        }
+                    }
+
+                    // else, we order stuff!
+//                    while (thingIWant.ordered < thingIWant.required) {
                     brain->addBuildOrder((S_buildOrder) {
                             buildType : thingIWant.buildType,
                             priority : 0,
@@ -284,8 +313,29 @@ namespace brains {
                             placeAt : -1,
                             state : buildOrder::eBuildOrderState::PROCESSME,
                     });
+                    int buildTime = 0;
+                    switch (thingIWant.buildType) {
+                        case UNIT:
+                            buildTime = unitInfo[thingIWant.type].build_time;
+                            break;
+                        case STRUCTURE:
+                            buildTime = structures[thingIWant.type].build_time;
+                            break;
+                        case SPECIAL:
+                            buildTime = specials[thingIWant.type].buildTime;
+                            break;
+                        default:
+                            buildTime = 50;
+                    }
+
+                    // amount of 'think' iterations to wait before we bail the mission
+                    int timeToWait = (buildTime > 0 ? buildTime / cPlayerBrain::RestTime : 1) + 5;
+
+                    TIMER_awaitingGatheringResoures += timeToWait;
+
                     // remember we placed a build order
                     thingIWant.ordered++;
+//                    }
                 }
             }
         }
@@ -302,7 +352,7 @@ namespace brains {
     void cPlayerBrainMission::thinkState_SelectTarget() {
         char msg[255];
         sprintf(msg, "cPlayerBrainMission::thinkState_SelectTarget()");
-        player->log(msg);
+        log(msg);
 
         if (missionKind) {
             // on successful selecting target, go to execute state.
@@ -318,7 +368,7 @@ namespace brains {
     void cPlayerBrainMission::thinkState_Execute() {
         char msg[255];
         sprintf(msg, "cPlayerBrainMission::thinkState_Execute()");
-        player->log(msg);
+        log(msg);
 
         if (missionKind) {
             missionKind->think_Execute();
@@ -328,7 +378,7 @@ namespace brains {
             char msg[255];
             sprintf(msg,
                     "cPlayerBrainMission::thinkState_Execute() : group of units is destroyed. Setting state to PLAYERBRAINMISSION_STATE_ENDED");
-            player->log(msg);
+            log(msg);
 
             changeState(PLAYERBRAINMISSION_STATE_ENDED);
             return;
@@ -346,7 +396,7 @@ namespace brains {
 
         if (!teamIsStillAlive) {
             // HACK HACK: somehow missed an event?
-            player->log("cPlayerBrainMission::thinkState_Execute(): team is no longer valid / alive. Going to PLAYERBRAINMISSION_STATE_ENDED state. (HACK)");
+            log("cPlayerBrainMission::thinkState_Execute(): team is no longer valid / alive. Going to PLAYERBRAINMISSION_STATE_ENDED state. (HACK)");
             changeState(PLAYERBRAINMISSION_STATE_ENDED);
             return;
         }
@@ -354,9 +404,25 @@ namespace brains {
 
     void cPlayerBrainMission::thinkState_PrepareAwaitResources() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainMission::thinkState_PrepareAwaitResources()");
-        player->log(msg);
+        sprintf(msg, "cPlayerBrainMission::thinkState_PrepareAwaitResources() - TIMER_awaitingGatheringResoures = [%d]", TIMER_awaitingGatheringResoures);
+        log(msg);
         // wait for things to be produced...
+        if (TIMER_awaitingGatheringResoures > 0) {
+            TIMER_awaitingGatheringResoures--;
+        } else {
+            char msg[255];
+            sprintf(msg, "Done with waiting for resources, going to either end mission or just go with it.");
+            log(msg);
+            // we're done waiting...
+            if (units.empty()) {
+                // end mission, when we have no units to work with
+                changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_ENDED);
+            } else {
+                // execute missions with what we have, so just select a target and go!
+                changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_SELECT_TARGET);
+            }
+        }
+
     }
 
     bool cPlayerBrainMission::isEnded() const {
@@ -365,11 +431,10 @@ namespace brains {
 
     void cPlayerBrainMission::changeState(ePlayerBrainMissionState newState) {
         char msg[255];
-        sprintf(msg, "cPlayerBrainMission::changeState(), mission [%s] - from %s to %s",
-                missionKind ? missionKind->toString() : "NO_MISSION",
+        sprintf(msg, "cPlayerBrainMission::changeState() - from %s to %s",
                 ePlayerBrainMissionStateString(state),
                 ePlayerBrainMissionStateString(newState));
-        player->log(msg);
+        log(msg);
         state = newState;
     }
 
@@ -395,6 +460,7 @@ namespace brains {
         this->brain = rhs.brain;
         this->kind = rhs.kind;
         this->TIMER_delay = rhs.TIMER_delay;
+        this->TIMER_awaitingGatheringResoures = rhs.TIMER_awaitingGatheringResoures;
 
         return *this;
     }
@@ -407,13 +473,30 @@ namespace brains {
         group(src.group),
         brain(src.brain),
         kind(src.kind),
-        TIMER_delay(src.TIMER_delay)
+        TIMER_delay(src.TIMER_delay),
+        TIMER_awaitingGatheringResoures(src.TIMER_awaitingGatheringResoures)
     {
         if (src.missionKind) {
             missionKind = src.missionKind->clone(src.player, this);
         } else {
             missionKind = nullptr;
         }
+    }
+
+    /**
+     * returns true, if the mission is no longer in 'gather resources' state(s)
+     * @return
+     */
+    bool cPlayerBrainMission::isDoneGatheringResources() {
+        return state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES &&
+                state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY &&
+                state != ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES;
+    }
+
+    void cPlayerBrainMission::log(const char *txt) {
+        char msg[1024];
+        sprintf(msg, "cPlayerBrainMission [%d, %s] | %s", uniqueIdentifier, missionKind ? missionKind->toString() : "NO_MISSION", txt);
+        player->log(msg);
     }
 
 }

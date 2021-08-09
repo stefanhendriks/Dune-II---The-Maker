@@ -102,7 +102,7 @@ int cBuildingListItem::getCosts() {
     int costs = 0;
 
     if (type == UNIT) {
-        costs = units[buildId].cost;
+        costs = unitInfo[buildId].cost;
     } else if (type == STRUCTURE) {
         costs = structures[buildId].cost;
     } else if (type == UPGRADE) {
@@ -147,7 +147,7 @@ int cBuildingListItem::getBuildTime() {
         return specials[buildId].buildTime;
     }
     // assumes units by default
-    return units[buildId].build_time;
+    return unitInfo[buildId].build_time;
 }
 
 bool cBuildingListItem::isDoneBuilding() {
@@ -198,7 +198,7 @@ s_UnitP cBuildingListItem::getS_UnitP() {
         logbook("ERROR!!! - calling getS_UnitP while type is not UNIT! - falling back to buildId 1 as safety");
         buildId = 1;
     }
-    return units[buildId];
+    return unitInfo[buildId];
 }
 
 s_Structures cBuildingListItem::getS_Structures() {

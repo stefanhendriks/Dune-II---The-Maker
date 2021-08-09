@@ -252,7 +252,7 @@ void cKeyboardManager::GAME_KEYS() {
                         if (unit[i].iGroup == iGroup) {
                             unit[i].bSelected = true;
 
-                            if (units[unit[i].iType].infantry) {
+                            if (unitInfo[unit[i].iType].infantry) {
                                 bPlayInf = true;
                             } else {
                                 bPlayRep = true;
