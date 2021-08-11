@@ -91,4 +91,8 @@ namespace brains {
 
     }
 
+    void cPlayerBrainFremenSuperWeapon::thinkFast() {
+
+    }
+
 }
