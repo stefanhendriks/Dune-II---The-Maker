@@ -12,7 +12,9 @@ namespace brains {
 
         ~cPlayerBrainFremenSuperWeapon();
 
-        void think();
+        void think() override;
+
+        void thinkFast() override;
 
         void onNotify(const s_GameEvent &event) override;
 
