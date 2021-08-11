@@ -85,8 +85,7 @@ void cSideBar::thinkAvailabilityLists() {
 void cSideBar::drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem *item) const {
     char msg[255];
     if (list->isAcceptsOrders()) {
-        // build time is in global time units , using a timer cap of 35 * 5 miliseconds = 175 miliseconds
-        int buildTimeInMs = item->getTotalBuildTime() * 175;
+        int buildTimeInMs = item->getTotalBuildTimeInMs();
         // now we have in miliseconds, we know the amount of seconds too.
         int seconds = buildTimeInMs / 1000;
 

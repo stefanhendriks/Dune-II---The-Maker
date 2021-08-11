@@ -241,16 +241,56 @@ float cBuildingListItem::getProgressFrameTimer() {
 }
 
 void cBuildingListItem::resetProgressFrameTimer() {
-    // total time to build is progress * 35 (time unit).
+    // total time to build is progress * 35 (time unit). (in ticks)
     // divide that by frames (31), and get the time between frames!
-    int timeSpent = timerCap * totalBuildTime;
-    if (timeSpent > 0) {
-        TIMER_progressFrame = timeSpent / 31;
+    int buildTimeInTicks = getTotalBuildTimeInTicks();
+    if (buildTimeInTicks > 0) {
+        TIMER_progressFrame = buildTimeInTicks / 31;
     } else {
         TIMER_progressFrame = 0;
     }
 }
 
+int cBuildingListItem::getTotalBuildTimeInTicks() const {
+    int timeSpent = timerCap * totalBuildTime;
+    return timeSpent;
+}
+
 void cBuildingListItem::setTimerCap(int value) {
     timerCap = value;
+}
+
+/**
+ * Assumes the itembuilder think is called every 5 ms. Meaning for every 1 second (1000ms), the think function
+ * is called 200 times. Depending on timerCap, this calculates into how much progress is made. To calculate
+ * the actual ms it will take to build it; the totalBuildTime (= ticks) is taken TIMES timerCap, this is the amount of
+ * 'ticks' you should do. Every tick is 5 ms, times 5 gives the total amount of ms.
+ * @return
+ */
+int cBuildingListItem::getTotalBuildTimeInMs() {
+    int totalTicks = totalBuildTime * timerCap;
+    return totalTicks * 5; // 5 = ms for every time we call the itemBuilder
+}
+
+const int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId) {
+    int buildTime = 0;
+    switch (type) {
+        case UNIT:
+            buildTime = unitInfo[buildId].build_time;
+            break;
+        case STRUCTURE:
+            buildTime = structures[buildId].build_time;
+            break;
+        case SPECIAL:
+            buildTime = specials[buildId].buildTime;
+            break;
+        case UPGRADE:
+            buildTime = upgrades[buildId].buildTime;
+            break;
+        case BULLET:
+            buildTime = 0;
+        default:
+            buildTime = 0;
+    }
+    return buildTime * 35;
 }
