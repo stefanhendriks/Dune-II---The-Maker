@@ -174,6 +174,8 @@ namespace brains {
             }
             return "";
         }
+
+        void onEventCannotBuild(const s_GameEvent &event);
     };
 
 }

@@ -819,8 +819,19 @@ namespace brains {
                         }
                     }
                 } else if (reason == eCantBuildReason::REQUIRES_ADDITIONAL_STRUCTURE || reason == eCantBuildReason::REQUIRES_STRUCTURE) {
-                    // remove from list?
-//                    buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
+                    // notify whoever is interested that the requested thing being built is not available for building...
+                    s_GameEvent event {
+                            .eventType = eGameEventType::GAME_EVENT_CANNOT_BUILD,
+                            .entityType = buildOrder.buildType,
+                            .entityID = -1,
+                            .player = player,
+                            .entitySpecificType = buildOrder.buildId,
+                            .atCell = -1,
+                            .isReinforce = false,
+                            .buildingListItem = nullptr
+                    };
+
+                    game.onNotify(event);
                 }
             } else if (buildOrder.buildType == eBuildType::SPECIAL) {
                 if (player->startBuildingSpecial(buildOrder.buildId)) {
