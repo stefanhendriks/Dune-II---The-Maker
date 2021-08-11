@@ -11,9 +11,9 @@ namespace brains {
     }
 
     void cPlayerBrainSandworm::think() {
-        char msg[255];
-        sprintf(msg, "cPlayerBrainSandworm::think()");
-        player->log(msg);
+//        char msg[255];
+//        sprintf(msg, "cPlayerBrainSandworm::think()");
+//        log(msg);
         TIMER_think++;
         if (TIMER_think < 10) {
             return;

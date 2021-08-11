@@ -52,6 +52,7 @@ namespace brains {
         sprintf(msg, "cPlayerBrainMission of type %s", ePlayerBrainMissionKindString(kind));
         log(msg);
 
+        log("Items to produce for mission:");
         for (auto &item : group) {
             char msg[255];
             sprintf(msg, "Item buildType [%s], type/buildId[%d], required [%d]", eBuildTypeString(item.buildType), item.type, item.required);
@@ -70,9 +71,6 @@ namespace brains {
      * Called every 5 ms.
      */
     void cPlayerBrainMission::think() {
-        char msg[255];
-        sprintf(msg, "cPlayerBrainMission::think()");
-        log(msg);
 
         switch (state) {
             case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY:
@@ -232,7 +230,7 @@ namespace brains {
 
     void cPlayerBrainMission::thinkState_InitialDelay() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainMission::thinkState_InitialDelay(), delay = %d", TIMER_delay);
+        sprintf(msg, "thinkState_InitialDelay(), delay = %d", TIMER_delay);
         log(msg);
         if (TIMER_delay > 0) {
             TIMER_delay--;
@@ -246,11 +244,11 @@ namespace brains {
 
     void cPlayerBrainMission::thinkState_PrepareGatherResources() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainMission::thinkState_PrepareGatherResources()");
+        sprintf(msg, "thinkState_PrepareGatherResources()");
         log(msg);
 
         memset(msg, 0, sizeof(msg));
-        sprintf(msg, "cPlayerBrainMission::thinkState_PrepareGatherResources() : this is the army I have so far...");
+        sprintf(msg, "thinkState_PrepareGatherResources() : this is the army I have so far...");
         log(msg);
 
         for (auto &myUnitId : units) {
@@ -357,7 +355,7 @@ namespace brains {
 
     void cPlayerBrainMission::thinkState_SelectTarget() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainMission::thinkState_SelectTarget()");
+        sprintf(msg, "thinkState_SelectTarget()");
         log(msg);
 
         if (missionKind) {
@@ -373,7 +371,7 @@ namespace brains {
 
     void cPlayerBrainMission::thinkState_Execute() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainMission::thinkState_Execute()");
+        sprintf(msg, "thinkState_Execute()");
         log(msg);
 
         if (missionKind) {
@@ -383,7 +381,7 @@ namespace brains {
         if (units.empty()) {
             char msg[255];
             sprintf(msg,
-                    "cPlayerBrainMission::thinkState_Execute() : group of units is destroyed. Setting state to PLAYERBRAINMISSION_STATE_ENDED");
+                    "thinkState_Execute() : group of units is destroyed. Setting state to PLAYERBRAINMISSION_STATE_ENDED");
             log(msg);
 
             changeState(PLAYERBRAINMISSION_STATE_ENDED);
@@ -402,16 +400,18 @@ namespace brains {
 
         if (!teamIsStillAlive) {
             // HACK HACK: somehow missed an event?
-            log("cPlayerBrainMission::thinkState_Execute(): team is no longer valid / alive. Going to PLAYERBRAINMISSION_STATE_ENDED state. (HACK)");
+            log("thinkState_Execute(): team is no longer valid / alive. Going to PLAYERBRAINMISSION_STATE_ENDED state. (HACK)");
             changeState(PLAYERBRAINMISSION_STATE_ENDED);
             return;
         }
     }
 
     void cPlayerBrainMission::thinkState_PrepareAwaitResources() {
-        char msg[255];
-        sprintf(msg, "cPlayerBrainMission::thinkState_PrepareAwaitResources() - TIMER_awaitingGatheringResoures = [%d]", TIMER_awaitingGatheringResoures);
-        log(msg);
+        if (TIMER_awaitingGatheringResoures % 10 == 0) {
+            char msg[255];
+            sprintf(msg, "thinkState_PrepareAwaitResources() - TIMER_awaitingGatheringResoures = [%d]", TIMER_awaitingGatheringResoures);
+            log(msg);
+        }
         // wait for things to be produced...
         if (TIMER_awaitingGatheringResoures > 0) {
             TIMER_awaitingGatheringResoures--;
@@ -437,7 +437,7 @@ namespace brains {
 
     void cPlayerBrainMission::changeState(ePlayerBrainMissionState newState) {
         char msg[255];
-        sprintf(msg, "cPlayerBrainMission::changeState() - from %s to %s",
+        sprintf(msg, "changeState() - from %s to %s",
                 ePlayerBrainMissionStateString(state),
                 ePlayerBrainMissionStateString(newState));
         log(msg);
@@ -501,7 +501,11 @@ namespace brains {
 
     void cPlayerBrainMission::log(const char *txt) {
         char msg[1024];
-        sprintf(msg, "cPlayerBrainMission [%d, %s] | %s", uniqueIdentifier, missionKind ? missionKind->toString() : "NO_MISSION", txt);
+        sprintf(msg, "cPlayerBrainMission [%d, %s, %s] | %s",
+                uniqueIdentifier,
+                missionKind ? missionKind->toString() : "NO_MISSION",
+                ePlayerBrainMissionStateString(state),
+                txt);
         player->log(msg);
     }
 
@@ -530,4 +534,5 @@ namespace brains {
             }
         }
     }
+
 }
