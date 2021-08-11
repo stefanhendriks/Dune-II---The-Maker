@@ -97,6 +97,8 @@ namespace brains {
 
         virtual const char *toString() = 0;
 
+        void log(const char*txt);
+
     protected:
 
         cPlayer *player;

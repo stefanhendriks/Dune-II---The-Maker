@@ -44,7 +44,7 @@ namespace brains {
     void cPlayerBrainMissionKindExplore::onNotify(const s_GameEvent &event) {
         char msg[255];
         sprintf(msg, "cPlayerBrainMissionKindExplore::onNotify() -> %s", event.toString(event.eventType));
-        player->log(msg);
+        log(msg);
     }
 
     cPlayerBrainMissionKind *cPlayerBrainMissionKindExplore::clone(cPlayer *player, cPlayerBrainMission * mission) {

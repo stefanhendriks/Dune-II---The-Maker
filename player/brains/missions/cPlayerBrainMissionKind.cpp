@@ -1,4 +1,6 @@
 #include "d2tmh.h"
+#include "cPlayerBrainMissionKind.h"
+
 
 namespace brains {
 
@@ -8,6 +10,12 @@ namespace brains {
 
     cPlayerBrainMissionKind::~cPlayerBrainMissionKind() {
 
+    }
+
+    void cPlayerBrainMissionKind::log(const char *txt) {
+        char msg[1024];
+        sprintf(msg, "cPlayerBrainMissionKind | %s", txt);
+        mission->log(txt);
     }
 
 }

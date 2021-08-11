@@ -59,8 +59,8 @@ namespace brains {
 
         char msg[255];
         memset(msg, 0, sizeof(msg));
-        sprintf(msg, "cPlayerBrainSkirmish::think() - FINISHED");
-        player->log(msg);
+        sprintf(msg, "think() - FINISHED");
+        log(msg);
     }
 
     void cPlayerBrainSkirmish::addBuildOrder(S_buildOrder order) {
@@ -87,8 +87,8 @@ namespace brains {
         });
 
         char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::addBuildOrder() - results into the following build orders:");
-        player->log(msg);
+        sprintf(msg, "addBuildOrder() - results into the following build orders:");
+        log(msg);
 
         int id = 0;
         for (auto &buildOrder : buildOrders) {
@@ -107,7 +107,7 @@ namespace brains {
                 sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=NOT YET IMPLEMENTED), priority = %d, state = %s", id,
                         buildOrder.buildId, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             }
-            player->log(msg);
+            log(msg);
 
             id++;
         }
@@ -174,7 +174,7 @@ namespace brains {
             sprintf(msg,
                     "cPlayerBrainSkirmish::onNotify() - concluded to add structure %s to base register:",
                     pStructure->getS_StructuresType().name);
-            player->log(msg);
+            log(msg);
 
             // new structure placed, update base register
             S_structurePosition position = {
@@ -231,8 +231,8 @@ namespace brains {
 
     void cPlayerBrainSkirmish::thinkState_Base() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::thinkState_ScanBase()");
-        player->log(msg);
+        sprintf(msg, "thinkState_ScanBase()");
+        log(msg);
 
         // structure placement is done in thinkState_ProcessBuildOrders() !
 
@@ -262,8 +262,15 @@ namespace brains {
 
     void cPlayerBrainSkirmish::thinkState_Missions() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::thinkState_Missions()");
-        player->log(msg);
+        sprintf(msg, "thinkState_Missions()");
+        log(msg);
+
+        if (DEBUGGING) {
+            char msg[255];
+            sprintf(msg, "Missions - before deleting");
+            log(msg);
+            logMissions();
+        }
 
         // delete any missions which are ended
         missions.erase(
@@ -274,8 +281,20 @@ namespace brains {
                 missions.end()
         );
 
+        if (DEBUGGING) {
+            char msg[255];
+            sprintf(msg, "Missions - after deleting - before produceMissions()");
+            log(msg);
+            logMissions();
+        }
+
         produceMissions();
 
+        if (DEBUGGING) {
+            char msg[255];
+            sprintf(msg, "Missions - after produceMissions()");
+            log(msg);
+            logMissions();
         }
 
         if (TIMER_ai > MOMENT_PRODUCE_ADDITIONAL_UNITS) {
@@ -329,6 +348,12 @@ namespace brains {
         }
 
         changeThinkStateTo(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_PROCESS_BUILDORDERS);
+    }
+
+    void cPlayerBrainSkirmish::logMissions() {
+        for (auto &mission : missions) {
+            mission.log("Exists");
+        }
     }
 
     void cPlayerBrainSkirmish::buildUnitIfICanAndNotAlreadyQueued(int type) {
@@ -646,9 +671,9 @@ namespace brains {
 
     void cPlayerBrainSkirmish::thinkState_Evaluate() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::thinkState_Evaluate() : credits [%d], COUNT_badEconomy [%d], economyState [%s]", player->getCredits(), COUNT_badEconomy,
+        sprintf(msg, "thinkState_Evaluate() : credits [%d], COUNT_badEconomy [%d], economyState [%s]", player->getCredits(), COUNT_badEconomy,
                 ePlayerBrainSkirmishEconomyStateString(economyState));
-        player->log(msg);
+        log(msg);
 
         if (player->getAmountOfStructuresForType(CONSTYARD) == 0) {
             // no constyards, endgame
@@ -759,8 +784,8 @@ namespace brains {
 
     void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders() {
         char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::thinkState_ProcessBuildOrders()");
-        player->log(msg);
+        sprintf(msg, "thinkState_ProcessBuildOrders()");
+        log(msg);
 
         // check if we can find a similar build order
         for (auto &buildOrder : buildOrders) {
@@ -939,10 +964,10 @@ namespace brains {
 
     void cPlayerBrainSkirmish::changeThinkStateTo(const ePlayerBrainSkirmishThinkState& newState) {
         char msg[255];
-        sprintf(msg, "cPlayerBrainSkirmish::changeThinkStateTo(), from %s to %s",
+        sprintf(msg, "changeThinkStateTo(), from %s to %s",
                 ePlayerBrainSkirmishThinkStateString(thinkState),
                 ePlayerBrainSkirmishThinkStateString(newState));
-        player->log(msg);
+        log(msg);
         this->thinkState = newState;
     }
 
@@ -951,7 +976,7 @@ namespace brains {
         sprintf(msg, "cPlayerBrainSkirmish::changeEconomyStateTo(), from %s to %s",
                 ePlayerBrainSkirmishEconomyStateString(economyState),
                 ePlayerBrainSkirmishEconomyStateString(newState));
-        player->log(msg);
+        log(msg);
         this->economyState = newState;
     }
 
@@ -960,7 +985,7 @@ namespace brains {
             TIMER_rest--;
             char msg[255];
             sprintf(msg, "cPlayerBrainSkirmish::thinkState_Rest(), rest %d", TIMER_rest);
-            player->log(msg);
+            log(msg);
             return;
         }
 
@@ -1191,4 +1216,18 @@ namespace brains {
             mission.think();
         }
     }
+
+    void cPlayerBrainSkirmish::log(const char *txt) {
+        char msg[1024];
+        sprintf(msg, "cPlayerBrainSkirmish [state=%s, economyState=%s, TIMER_rest=%d, TIMER_ai=%d, COUNT_badEconomy=%d] | %s",
+                ePlayerBrainSkirmishThinkState(state),
+                ePlayerBrainSkirmishEconomyStateString(economyState),
+                this->TIMER_rest,
+                this->TIMER_ai,
+                this->COUNT_badEconomy,
+                txt);
+
+        player->log(txt);
+    }
+
 }

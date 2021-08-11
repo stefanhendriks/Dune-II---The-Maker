@@ -50,9 +50,12 @@ namespace brains {
         void think() override;
 
         void thinkFast() override;
+
         void onNotify(const s_GameEvent &event) override;
 
         void addBuildOrder(S_buildOrder order);
+
+        void log(const char* txt);
 
     private:
         ePlayerBrainState state;
@@ -171,6 +174,8 @@ namespace brains {
         void addBuildOrderForUnit(int type);
 
         void buildUnitIfICanAndNotAlreadyQueued(int type);
+
+        void logMissions();
     };
 
 }
