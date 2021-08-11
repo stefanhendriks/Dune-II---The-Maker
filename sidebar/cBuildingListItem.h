@@ -24,6 +24,7 @@ public:
 
 	// gettters
 	int getTotalBuildTime() { return totalBuildTime; }
+	int getTotalBuildTimeInMs();
 	int getIconId() { return icon; }
 
 	/**
@@ -152,6 +153,10 @@ public:
     void resetProgressFrameTimer();
 
     void setTimerCap(int i);
+
+    int getTotalBuildTimeInTicks() const;
+
+    static const int getTotalBuildTimeInTicks(eBuildType type, int buildId);
 
 private:
 	void setProgress(int value) { progress = value; }
