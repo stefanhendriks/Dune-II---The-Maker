@@ -147,11 +147,8 @@ void cTimeManager::handleTimerGameTime() {
         // THINKING ONLY WHEN PLAYING / COMBAT
         if (game.isState(GAME_PLAYING)) {
             for (int i = HUMAN; i < MAX_PLAYERS; i++) {
-                cPlayer &cPlayer = players[i];
-                cSideBar *sidebar = cPlayer.getSideBar();
-                if (sidebar) {
-                    sidebar->think();
-                }
+                cPlayer &pPlayer = players[i];
+                pPlayer.thinkFast();
             }
 
             // structures think

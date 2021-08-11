@@ -24,6 +24,11 @@ namespace brains {
          */
         virtual void think() = 0;
 
+        /**
+         * called, every 5 ms
+         */
+        virtual void thinkFast() = 0;
+
         virtual void addBuildOrder(S_buildOrder order) = 0;
 
     protected:

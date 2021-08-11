@@ -11,7 +11,9 @@ namespace brains {
         cPlayerBrainSandworm(cPlayer * player);
         ~cPlayerBrainSandworm();
 
-        void think();
+        void think() override;
+
+        void thinkFast() override;
 
         void onNotify(const s_GameEvent &event) override;
 

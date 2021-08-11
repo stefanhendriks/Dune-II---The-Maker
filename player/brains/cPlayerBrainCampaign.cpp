@@ -1,5 +1,7 @@
 #include <algorithm>
 #include "include/d2tmh.h"
+#include "cPlayerBrainCampaign.h"
+
 
 namespace brains {
 
@@ -259,11 +261,6 @@ namespace brains {
             if (state == ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED) {
                 produceMissions();
             }
-        }
-
-        // all missions are allowed to think now
-        for (auto &mission : missions) {
-            mission.think();
         }
 
         changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_PROCESS_BUILDORDERS);
@@ -1735,6 +1732,12 @@ namespace brains {
             }
         } else {
             // non peaceful state, what to do? react? etc.
+        }
+    }
+
+    void cPlayerBrainCampaign::thinkFast() {
+        for (auto &mission : missions) {
+            mission.think();
         }
     }
 

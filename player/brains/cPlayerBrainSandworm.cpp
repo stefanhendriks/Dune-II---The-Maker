@@ -56,4 +56,8 @@ namespace brains {
     void cPlayerBrainSandworm::addBuildOrder(S_buildOrder order) {
 
     }
+
+    void cPlayerBrainSandworm::thinkFast() {
+
+    }
 }

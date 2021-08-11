@@ -276,9 +276,6 @@ namespace brains {
 
         produceMissions();
 
-        // all missions are allowed to think now
-        for (auto &mission : missions) {
-            mission.think();
         }
 
         if (TIMER_ai > MOMENT_PRODUCE_ADDITIONAL_UNITS) {
@@ -1189,4 +1186,9 @@ namespace brains {
         return true;
     }
 
+    void cPlayerBrainSkirmish::thinkFast() {
+        for (auto &mission : missions) {
+            mission.think();
+        }
+    }
 }

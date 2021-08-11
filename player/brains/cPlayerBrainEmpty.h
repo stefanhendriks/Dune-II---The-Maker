@@ -14,6 +14,8 @@ namespace brains {
 
         void think() override;
 
+        void thinkFast() override;
+
         void onNotify(const s_GameEvent &event) override;
 
         void addBuildOrder(S_buildOrder order) override;
