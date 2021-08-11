@@ -47,6 +47,7 @@ struct s_GameEvent {
             case eGameEventType::GAME_EVENT_DISCOVERED: return "GAME_EVENT_DISCOVERED";
             case eGameEventType::GAME_EVENT_SPECIAL_READY: return "GAME_EVENT_SPECIAL_READY";
             case eGameEventType::GAME_EVENT_SPECIAL_DEPLOYED: return "GAME_EVENT_SPECIAL_DEPLOYED";
+            case eGameEventType::GAME_EVENT_CANNOT_BUILD: return "GAME_EVENT_CANNOT_BUILD";
             default:
                 assert(false);
                 break;

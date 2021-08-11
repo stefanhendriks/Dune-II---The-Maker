@@ -102,6 +102,9 @@ namespace brains {
         log(msg);
 
         switch(event.eventType) {
+            case GAME_EVENT_CANNOT_BUILD:
+                onEventCannotBuild(event);
+                break;
             case GAME_EVENT_CREATED:
                 onEventCreated(event);
                 break;
@@ -502,4 +505,29 @@ namespace brains {
         player->log(msg);
     }
 
+    void cPlayerBrainMission::onEventCannotBuild(const s_GameEvent &event) {
+        // event is for us
+        if (event.player != player) {
+            return;
+        }
+
+        // it is an event about my own stuff
+        if (state == PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES || state == PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES) {
+            if (event.entityType == UNIT) {
+                // check if we wanted to build this thing, but it is impossible for now, so discard it.
+                for (auto &thingIWant : group) {
+                    if (thingIWant.type == event.entitySpecificType) {
+                        // set to same value, so we don't want to produce it anymore.
+                        thingIWant.produced = thingIWant.required;
+                        char msg[255];
+                        sprintf(msg, "Cannot build [%d, %s], found a match and removed it from things I want.",
+                                event.entitySpecificType,
+                                toStringBuildTypeSpecificType(event.entityType, event.entitySpecificType)
+                                );
+                        log(msg);
+                    }
+                }
+            }
+        }
+    }
 }
