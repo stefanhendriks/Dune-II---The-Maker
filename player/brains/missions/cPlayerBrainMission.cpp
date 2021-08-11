@@ -66,6 +66,9 @@ namespace brains {
         }
     }
 
+    /**
+     * Called every 5 ms.
+     */
     void cPlayerBrainMission::think() {
         char msg[255];
         sprintf(msg, "cPlayerBrainMission::think()");

@@ -24,9 +24,6 @@ namespace brains {
         missions.clear();
     }
 
-    /**
-     * Think function called every tick (handleTimerUnits, ~ 100 ms).
-     */
     void cPlayerBrainCampaign::think() {
         // for now use a switch statement for this state machine. If we need anything
         // more sophisticated we can always use the State Pattern.

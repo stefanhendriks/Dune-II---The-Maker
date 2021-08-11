@@ -1805,7 +1805,7 @@ bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl
 
     // setupPlayers is required, because we do matching based on name of house, hence, once
     // we encounter either a UNITS or STRUCTURES section, the assumption is made that all HOUSE information
-    // has been processed.
+    // has been isProcessed.
     if (bSetUpPlayers) {
         INI_Scenario_SetupPlayers(iHumanID, iPl_credits, iPl_house, iPl_quota);
         bSetUpPlayers = false;
