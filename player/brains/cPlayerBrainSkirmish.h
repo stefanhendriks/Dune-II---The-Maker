@@ -25,9 +25,9 @@ namespace brains {
     const int SPECIAL_MISSION2 = 51;
     const int SPECIAL_MISSION3 = 52;
 
-    // 10 = 1 second.
-    // 100 = 10 seconds.
-    // 600 = 60 seconds (1 minute)
+    // 10 ticks = 1 second.
+    // 100 ticks = 10 seconds.
+    // 600 ticks = 60 seconds (1 minute)
     const int MOMENT_CONSIDER_ADDITIONAL_REFINERY = 1200; // after 2 minutes consider building 2nd refinery
 
     const int MOMENT_PRODUCE_ADDITIONAL_UNITS = 3000; // after 5 minutes consider building additional units

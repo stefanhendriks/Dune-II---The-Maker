@@ -30,9 +30,6 @@ namespace brains {
         missions.clear();
     }
 
-    /**
-     * Think function called every tick (handleTimerUnits, ~ 100 ms).
-     */
     void cPlayerBrainSkirmish::think() {
         TIMER_ai++;
         // for now use a switch statement for this state machine. If we need anything

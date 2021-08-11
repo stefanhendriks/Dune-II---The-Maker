@@ -80,6 +80,9 @@ int cItemBuilder::getTimerCap(cBuildingListItem *item) {
 	return iTimerCap;
 }
 
+/**
+ * Called every 5 ms
+ */
 void cItemBuilder::think() {
 	// go through all the items and increase progress counters...
 	for (int i = 0; i < MAX_ITEMS; i++) {
