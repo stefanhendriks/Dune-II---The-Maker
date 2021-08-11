@@ -332,6 +332,8 @@ public:
 
     void log(const char *txt) const;
 
+    void thinkFast();
+
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 

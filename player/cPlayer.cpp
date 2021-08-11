@@ -680,6 +680,20 @@ void cPlayer::think() {
     }
 }
 
+/**
+ * Think function, called every 5 ms.
+ */
+void cPlayer::thinkFast() {
+    if (sidebar) {
+        sidebar->think();
+    }
+
+    if (brain_) {
+        brain_->thinkFast();
+    }
+}
+
+
 void cPlayer::setBrain(brains::cPlayerBrain *brain) {
     // delete old brain object if it was set before
     if (brain_) {
@@ -1537,3 +1551,4 @@ void cPlayer::log(const char *txt) const {
         logbook(msg);
     }
 }
+

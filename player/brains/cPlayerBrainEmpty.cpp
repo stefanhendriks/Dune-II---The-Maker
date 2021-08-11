@@ -24,4 +24,8 @@ namespace brains {
         // NOOP
     }
 
+    void cPlayerBrainEmpty::thinkFast() {
+        // NOOP
+    }
+
 }
