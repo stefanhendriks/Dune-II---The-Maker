@@ -5,7 +5,6 @@
 namespace brains {
 
     cPlayerBrainMissionKindFremen::cPlayerBrainMissionKindFremen(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
-        log("cPlayerBrainMissionKindFremen() constructor");
     }
 
     cPlayerBrainMissionKindFremen::~cPlayerBrainMissionKindFremen() {

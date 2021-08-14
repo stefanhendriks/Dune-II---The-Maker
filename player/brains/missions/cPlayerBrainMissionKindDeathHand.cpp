@@ -7,7 +7,6 @@ namespace brains {
     cPlayerBrainMissionKindDeathHand::cPlayerBrainMissionKindDeathHand(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
         target = -1;
         itemToDeploy = nullptr;
-        log("cPlayerBrainMissionKindDeathHand() constructor");
     }
 
     cPlayerBrainMissionKindDeathHand::~cPlayerBrainMissionKindDeathHand() {
@@ -20,7 +19,10 @@ namespace brains {
             cAbstractStructure *theStructure = structure[i];
             if (!theStructure) continue;
             if (!theStructure->isValid()) continue;
-            if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+            if (theStructure->getPlayer() == player) continue; // skip self
+            if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies
+            if (!map.isStructureVisible(theStructure, player)) continue; // skip non-visible targets
+
             // enemy structure
             target = theStructure->getCell();
             if (rnd(100) < 25) {

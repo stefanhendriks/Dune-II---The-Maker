@@ -176,6 +176,12 @@ namespace brains {
         }
 
         void onEventCannotBuild(const s_GameEvent &event);
+
+        bool producedAllRequiredUnits();
+
+        void onEventCannotCreatePath(const s_GameEvent &event);
+
+        void logUnits();
     };
 
 }

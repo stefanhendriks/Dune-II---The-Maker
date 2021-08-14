@@ -176,12 +176,6 @@
 #define ORDOS_TALK		22
 // .. add another id for another house
 
-// BRAINS:
-#define BRAIN_AI        1
-#define BRAIN_CLIENT    2
-#define BRAIN_NONE      3
-#define BRAIN_AI_WORM   4
-
 // Structure types
 #define PALACE            0         // cPalace
 #define WINDTRAP          1         // cWindTrap

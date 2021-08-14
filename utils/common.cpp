@@ -40,6 +40,22 @@ void logbook(const char *txt) {
   }
 }
 
+int slowThinkMsToTicks(int desiredMs) {
+    if (desiredMs < 100) {
+        return 1; // fastest thinking is 1 tick (100 ms)
+    }
+    // "slow" thinking, is 1 tick == 100ms
+    return desiredMs / 100;
+}
+
+int fastThinkMsToTicks(int desiredMs) {
+    if (desiredMs < 5) {
+        return 1; // fastest thinking is 1 tick (5 ms)
+    }
+    // "fast" thinking, is 1 tick == 5ms
+    return desiredMs / 5;
+}
+
 /**
  * Returns true if x,y is within the playable map boundaries
  * @param x

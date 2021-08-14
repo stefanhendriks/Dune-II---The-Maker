@@ -269,6 +269,7 @@ enum eGameEventType {
     GAME_EVENT_SPECIAL_READY, // special weapon READY (ie deathhand can be launched)
     GAME_EVENT_SPECIAL_DEPLOYED, // special weapon DEPLOYED (ie deathhand launched)
     GAME_EVENT_CANNOT_BUILD, // cannot build requested thing
+    GAME_EVENT_CANNOT_CREATE_PATH, // cannot create a path to destination, help!
 };
 
 #endif /* ENUMS_H_ */

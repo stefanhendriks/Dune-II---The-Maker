@@ -50,7 +50,7 @@ cItemBuilder::~cItemBuilder() {
  * @return
  */
 int cItemBuilder::getTimerCap(cBuildingListItem *item) {
-	int iTimerCap = 35; // was 35 = ORIGINAL
+	int iTimerCap = cBuildingListItem::DefaultTimerCap;
 
     // when player has low power, produce twice as slow
     if (item->getBuildType() == UNIT) {

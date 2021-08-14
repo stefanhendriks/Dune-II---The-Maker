@@ -2394,12 +2394,27 @@ void cUnit::think_move() {
                     iPathFails++;
 
                     if (iPathFails > 2) {
-                        // stop trying
+                        // notify that we can't create path, we should do something about this?
+                        // at this point we can still ready unit state about path goal, etc.
+                        s_GameEvent event {
+                                .eventType = eGameEventType::GAME_EVENT_CANNOT_CREATE_PATH,
+                                .entityType = eBuildType::UNIT,
+                                .entityID = iID,
+                                .player = getPlayer(),
+                                .entitySpecificType = iType,
+                                .atCell = -1,
+                                .isReinforce = isReinforcement
+                        };
+
+                        game.onNotify(event);
+
+                        // stop trying - forget about path stuff
                         iGoalCell = iCell;
                         iPathFails = 0;
                         iPathIndex = -1;
-                        if (TIMER_movewait <= 0)
+                        if (TIMER_movewait <= 0) {
                             TIMER_movewait = 100;
+                        }
                     }
                 } else {
                     //log("SUCCES");
@@ -3203,14 +3218,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
     }
 
     // when all around the unit there is no space, dont even bother
-    if (map.occupied(CELL_LEFT(iCell), iUnitId) &&
-        map.occupied(CELL_RIGHT(iCell), iUnitId) &&
-        map.occupied(CELL_ABOVE(iCell), iUnitId) &&
-        map.occupied(CELL_UNDER(iCell), iUnitId) &&
-        map.occupied(CELL_L_LEFT(iCell), iUnitId) &&
-        map.occupied(CELL_L_RIGHT(iCell), iUnitId) &&
-        map.occupied(CELL_U_RIGHT(iCell), iUnitId) &&
-        map.occupied(CELL_U_LEFT(iCell), iUnitId)) {
+    if (pUnit.isUnableToMove()) {
         pUnit.log("CREATE_PATH -- END 5");
         pUnit.TIMER_movewait = 30 + rnd(50);
         return -2;
