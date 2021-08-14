@@ -68,6 +68,8 @@ namespace brains {
 
         int TIMER_rest;
 
+        int TIMER_produceMissionCooldown;
+
         int TIMER_ai;
 
         // at which cells did we detect an enemy? Remember those.
@@ -148,7 +150,7 @@ namespace brains {
 
         void produceMissions();
 
-        void addMission(ePlayerBrainMissionKind kind, const std::vector<S_groupKind> &group, int initialDelay,
+        void addMission(ePlayerBrainMissionKind kind, std::vector<S_groupKind> &group, int initialDelay,
                         int id);
 
         bool hasMission(const int id);
@@ -165,7 +167,7 @@ namespace brains {
 
         void evaluateEconomyState();
 
-        void produceSkirmishGroundAttackMission(int trikeKind, int missionId);
+        void produceSkirmishGroundAttackMission(int missionId);
 
         void findNewLocationOrMoveAnyBlockingUnitsOrCancelBuild(S_buildOrder *pBuildOrder, cBuildingListItem *pItem, const s_PlaceResult &placeResult);
 
@@ -176,6 +178,14 @@ namespace brains {
         void buildUnitIfICanAndNotAlreadyQueued(int type);
 
         void logMissions();
+
+        void produceMissionsDuringPeacetime(int scoutingUnitType);
+
+        void produceAttackingMissions(int scoutingUnitType);
+
+        void produceSuperWeaponMissionsWhenApplicable();
+
+        void produceEconomyImprovingMissions();
     };
 
 }

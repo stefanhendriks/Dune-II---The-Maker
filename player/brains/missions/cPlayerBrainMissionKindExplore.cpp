@@ -6,7 +6,6 @@ namespace brains {
 
     cPlayerBrainMissionKindExplore::cPlayerBrainMissionKindExplore(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
         targetCell = -1;
-        logbook("cPlayerBrainMissionKindExplore() constructor");
     }
 
     cPlayerBrainMissionKindExplore::~cPlayerBrainMissionKindExplore() {

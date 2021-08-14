@@ -977,6 +977,19 @@ int cMap::getRandomCellFromWithRandomDistance(int cell, int distance) {
     int newY = (startY - distance) + (rnd(distance*2));
     return getCellWithMapBorders(newX, newY);
 }
+
+/**
+ * Takes structure, evaluates all its cells, and if any of these are visible, this function returns true.
+ *
+ * @param pStructure
+ * @param thePlayer
+ * @return
+ */
+bool cMap::isStructureVisible(cAbstractStructure *pStructure, cPlayer *thePlayer) {
+    if (!thePlayer) return false;
+    return isStructureVisible(pStructure, thePlayer->getId());
+}
+
 /**
  * Takes structure, evaluates all its cells, and if any of these are visible, this function returns true.
  *

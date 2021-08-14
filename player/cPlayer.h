@@ -256,13 +256,13 @@ public:
 
 
     /**
-     * Checks if the given structureType is available for producing; does not check if it is allowed to do so. Use
-     * canBuildStructure for that.
+     * Checks if the given structureType is available for producing (in list of constyard);
+     * does not check if it is allowed to do so. Use canBuildStructure for that.
      *
      * @param iStructureType
      * @return
      */
-    bool canBuildStructureType(int iStructureType) const;
+    bool isStructureTypeAvailableForConstruction(int iStructureType) const;
     /**
      * Check if we can build structure of type. Returns a reason when it can't. If the reason is NONE it means it can be built.
      */
@@ -290,6 +290,8 @@ public:
     bool startBuildingStructure(int iStructureType) const;
     bool startBuildingSpecial(int iSpecialType) const;
     bool startUpgrading(int iUpgradeType) const;
+
+    bool startUpgradingForUnitIfPossible(int iUpgradeType) const;
 
     int findRandomUnitTarget(int playerIndexToAttack);
     int findRandomStructureTarget(int iAttackPlayer);

@@ -6,7 +6,6 @@ namespace brains {
 
     cPlayerBrainMissionKindSaboteur::cPlayerBrainMissionKindSaboteur(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
         targetStructureID = -1;
-        log("cPlayerBrainMissionKindSaboteur() constructor");
     }
 
     cPlayerBrainMissionKindSaboteur::~cPlayerBrainMissionKindSaboteur() {
@@ -21,7 +20,10 @@ namespace brains {
             cAbstractStructure *theStructure = structure[i];
             if (!theStructure) continue;
             if (!theStructure->isValid()) continue;
-            if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+            if (theStructure->getPlayer() == player) continue; // skip self
+            if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies
+            if (!map.isStructureVisible(theStructure, player)) continue; // skip non-visible targets
+
             // enemy structure
             targetStructureID = theStructure->getStructureId();
             if (rnd(100) < 25) {

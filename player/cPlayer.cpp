@@ -703,7 +703,7 @@ void cPlayer::setBrain(brains::cPlayerBrain *brain) {
     brain_ = brain;
 }
 
-bool cPlayer::canBuildStructureType(int iStructureType) const {
+bool cPlayer::isStructureTypeAvailableForConstruction(int iStructureType) const {
     cBuildingListItem *pItem = sidebar->getBuildingListItem(LIST_CONSTYARD, iStructureType);
     return pItem != nullptr;
 }
@@ -1298,7 +1298,7 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType) {
         return eCantBuildReason::ALREADY_BUILDING;
     }
 
-    if (!canBuildStructureType(iStructureType)) {
+    if (!isStructureTypeAvailableForConstruction(iStructureType)) {
         // not available to build (not in list)
         // assume it requires an upgrade?
         char msg[255];
@@ -1550,5 +1550,13 @@ void cPlayer::log(const char *txt) const {
         sprintf(msg, "PLAYER [%d(=%s)] : %s", getId(), getHouseName().c_str(), txt);
         logbook(msg);
     }
+}
+
+bool cPlayer::startUpgradingForUnitIfPossible(int iUpgradeType) const {
+    cBuildingListItem *upgrade = isUpgradeAvailableToGrantUnit(iUpgradeType);
+    if(upgrade && upgrade->isAvailable() && !upgrade->isBuilding()) {
+        return startUpgrading(upgrade->getBuildId());
+    }
+    return false;
 }
 

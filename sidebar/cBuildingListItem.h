@@ -22,6 +22,8 @@ public:
     cBuildingListItem(int theID, s_UnitP entry, int subList);
     cBuildingListItem(int theID, s_Upgrade entry, int subList);
 
+    static const int DefaultTimerCap = 35;
+
 	// gettters
 	int getTotalBuildTime() { return totalBuildTime; }
 	int getTotalBuildTimeInMs();

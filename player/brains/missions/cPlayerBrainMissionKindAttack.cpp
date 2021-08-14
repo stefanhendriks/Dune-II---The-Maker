@@ -7,7 +7,6 @@ namespace brains {
     cPlayerBrainMissionKindAttack::cPlayerBrainMissionKindAttack(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
         targetStructureID = -1;
         targetUnitID = -1;
-        log("cPlayerBrainMissionKindAttack() constructor");
     }
 
     cPlayerBrainMissionKindAttack::~cPlayerBrainMissionKindAttack() {
@@ -18,10 +17,12 @@ namespace brains {
         if (rnd(100) < 50) {
             targetStructureID = -1;
             for (int i = 0; i < MAX_UNITS; i++) {
-                cUnit &cUnit = unit[i];
-                if (!cUnit.isValid()) continue;
-                if (!cUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
-                // enemy structure
+                cUnit &pUnit = unit[i];
+                if (!pUnit.isValid()) continue;
+                if (pUnit.getPlayer() == player) continue; // skip self
+                if (!pUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+                if (!map.isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
+                // enemy unit
                 targetUnitID = i;
                 if (rnd(100) < 5) {
                     break; // this way we kind of have randomly another target...
@@ -33,7 +34,10 @@ namespace brains {
                 cAbstractStructure *theStructure = structure[i];
                 if (!theStructure) continue;
                 if (!theStructure->isValid()) continue;
-                if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+                if (theStructure->getPlayer() == player) continue; // skip self
+                if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies
+                if (!map.isStructureVisible(theStructure, player)) continue; // skip non-visible targets
+
                 // enemy structure
                 targetStructureID = theStructure->getStructureId();
                 if (rnd(100) < 10) {
@@ -41,7 +45,7 @@ namespace brains {
                 }
             }
         }
-        return targetStructureID > -1;
+        return targetStructureID > -1 || targetUnitID > -1;
     }
 
     void cPlayerBrainMissionKindAttack::think_Execute() {

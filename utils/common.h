@@ -10,6 +10,20 @@
 
   */
 
+/**
+ * returns ticks for desired amount of miliseconds (for slow thinking, 1 tick == 100ms)
+ * @param desiredMs
+ * @return
+ */
+int slowThinkMsToTicks(int desiredMs);
+
+/**
+ * returns ticks for desired amount of miliseconds (for fast thinking, 1 tick == 5ms)
+ * @param desiredMs
+ * @return
+ */
+int fastThinkMsToTicks(int desiredMs);
+
 void logbook(const char *txt);
 
 int BETWEEN(int val, int min, int max);

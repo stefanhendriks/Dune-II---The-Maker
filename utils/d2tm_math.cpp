@@ -260,7 +260,6 @@ int CELL_L_RIGHT(int c) {
   return map.getCellLowerRight(c);
 }
 
-
 bool CELL_BORDERS(int iOrigin, int iCell) {
     return map.isCellAdjacentToOtherCell(iOrigin, iCell);
 }
