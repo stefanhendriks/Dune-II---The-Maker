@@ -1700,16 +1700,14 @@ void cUnit::think_move_air() {
     int goalCellX = map.getCellX(iGoalCell);
     int goalCellY = map.getCellY(iGoalCell);
 
-    int iSlowDown = 0;
-
     // use this when picking something up
-
     if (iUnitID > -1 || (iTransferType != TRANSFER_DIE && iTransferType != TRANSFER_NONE)) {
         int iLength = ABS_length(iCellX, iCellY, goalCellX, goalCellY);
 
         if (iType != FRIGATE) {
             // 'sand dust' when nearing target and hovering over sandy terrain
-            if (iLength < 8) {
+            int dist = 6;
+            if (iLength < dist) {
                 if (rnd(100) < 5) {
                     int cellType = map.getCellType(iCell);
                     if (cellType == TERRAIN_SAND ||
@@ -1721,23 +1719,21 @@ void cUnit::think_move_air() {
                         PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
                     }
                 }
-                iSlowDown = 8 - iLength;
+                TIMER_movedelay = (dist - iLength) * (dist * 6);
             }
         } else {
-            if (iLength > 6) {
-                iLength = 6;
+            int dist = 6;
+            if (iLength < dist) {
+                TIMER_movedelay = (dist - iLength) * (dist * 6);
             }
-
-            iSlowDown = 12 - iLength;
-
         }
     }
 
+    int iSlowDown = 0;
     if (TIMER_movedelay > 0) {
         iSlowDown = (TIMER_movedelay/20);
         TIMER_movedelay--;
     }
-
 
     cPlayerDifficultySettings *difficultySettings = getPlayer()->getDifficultySettings();
 
