@@ -1450,16 +1450,16 @@ void cGame::setup_players() {
 	for (int i = HUMAN; i < MAX_PLAYERS; i++) {
 		cPlayer * thePlayer = &players[i];
 
-		cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer);
-		thePlayer->setSideBar(sidebar);
-
 		cBuildingListUpdater * buildingListUpdater = new cBuildingListUpdater(thePlayer);
 		thePlayer->setBuildingListUpdater(buildingListUpdater);
 
         cItemBuilder * itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
         thePlayer->setItemBuilder(itemBuilder);
 
-		cOrderProcesser * orderProcesser = new cOrderProcesser(thePlayer);
+        cSideBar * sidebar = cSideBarFactory::getInstance()->createSideBar(thePlayer);
+        thePlayer->setSideBar(sidebar);
+
+        cOrderProcesser * orderProcesser = new cOrderProcesser(thePlayer);
 		thePlayer->setOrderProcesser(orderProcesser);
 
 		cGameControlsContext * gameControlsContext = new cGameControlsContext(thePlayer);
@@ -1612,68 +1612,34 @@ void cGame::setPlayerToInteractFor(cPlayer *pPlayer) {
 void cGame::onNotify(const s_GameEvent &event) {
     logbook(s_GameEvent::toString(event).c_str());
 
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        players[i].onNotify(event);
-    }
-
-    // TODO: notify game state
-    // gameState->onNotify(event);
-
+    // game itself handles events
     switch (event.eventType) {
         case eGameEventType::GAME_EVENT_DISCOVERED:
             onEventDiscovered(event);
-            return;
-        case eGameEventType::GAME_EVENT_SPECIAL_DEPLOYED:
-            onEventSpecialDeployed(event);
-            return;
+            break;
+        case eGameEventType::GAME_EVENT_SPECIAL_LAUNCH:
+            onEventSpecialLaunch(event);
+            break;
         default:
-        return;
+            break;
+    }
+
+    // players handles events
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        players[i].onNotify(event);
     }
 
 }
 
 void cGame::onEventDiscovered(const s_GameEvent &event) {
-    int voiceId = -1;
 
-    // when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
-    if (game.iMusicType == MUSIC_PEACE) {
-        bool triggerMusic = false;
-
-        if (event.entityType == eBuildType::UNIT) {
-            cUnit &cUnit = unit[event.entityID];
-
-            if (!event.player->isSameTeamAs(&players[HUMAN])) {
-                triggerMusic = true;
-                if (cUnit.iType == SANDWORM) {
-                    voiceId = SOUND_VOICE_10_ATR;
-                } else {
-                    voiceId = SOUND_VOICE_09_ATR;
-                }
-            }
-        } else if (event.entityType == eBuildType::STRUCTURE) {
-            if (!event.player->isSameTeamAs(&players[HUMAN])) {
-                // only things that can harm us will trigger attack music?
-                if (event.entitySpecificType == RTURRET || event.entitySpecificType == TURRET) {
-                    triggerMusic = true;
-                }
-            }
-        }
-
-        if (triggerMusic) {
-            playMusicByType(MUSIC_ATTACK);
-        }
-    }
-
-    if (voiceId > -1) {
-        play_voice(voiceId);
-    }
 }
 
-void cGame::onEventSpecialDeployed(const s_GameEvent &event) {
+void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
     cBuildingListItem *itemToDeploy = event.buildingListItem;
     int iMouseCell = event.atCell;
     cPlayer *player = event.player;
-    if (itemToDeploy->getBuildType() == eBuildType::SPECIAL) {
+    if (itemToDeploy->isTypeSpecial()) {
         const s_Special &special = itemToDeploy->getS_Special();
 
         int deployCell = -1;
@@ -1719,6 +1685,20 @@ void cGame::onEventSpecialDeployed(const s_GameEvent &event) {
     }
 
     game.bDeployIt = false;
+
+    // notify game that the item just has been finished!
+    s_GameEvent newEvent {
+            .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
+            .entityType = itemToDeploy->getBuildType(),
+            .entityID = -1,
+            .player = nullptr,
+            .entitySpecificType = itemToDeploy->getBuildId(),
+            .atCell = -1,
+            .isReinforce = false,
+            .buildingListItem = nullptr
+    };
+
+    game.onNotify(newEvent);
 }
 
 void cGame::reduceShaking() {

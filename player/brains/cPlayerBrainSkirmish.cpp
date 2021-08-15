@@ -103,7 +103,7 @@ namespace brains {
                         buildOrder.placeAt, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::SPECIAL) {
                 sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
-                        specials[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
+                        specialInfo[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::BULLET) {
                 sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=NOT YET IMPLEMENTED), priority = %d, state = %s", id,
                         buildOrder.buildId, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
@@ -150,6 +150,12 @@ namespace brains {
     void cPlayerBrainSkirmish::onMyStructureCreated(const s_GameEvent &event) {
         // a structure was created, update our baseplan
         cAbstractStructure *pStructure = structure[event.entityID];
+
+        if (event.entitySpecificType == PALACE) {
+            // built a palace, create super weapon missions asap!
+            TIMER_produceMissionCooldown = 0;
+        }
+
         int placedAtCell = pStructure->getCell();
         bool foundExistingStructureInBase = false;
         for (auto &structurePosition : myBase) {
@@ -408,6 +414,9 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::produceMissions() {
+        // super weapon missions are required to be active at all times.
+        produceSuperWeaponMissionsWhenApplicable();
+
         // if cooldown is set, do that, so we don't spam missions in a very short amount of time
         if (TIMER_produceMissionCooldown > 0) {
             char msg[255];
@@ -416,9 +425,6 @@ namespace brains {
             TIMER_produceMissionCooldown--;
             return;
         }
-
-        // Super weapons are awesome, so they come first
-        produceSuperWeaponMissionsWhenApplicable();
 
         int scoutingUnitType = player->getScoutingUnitType();
 
@@ -479,39 +485,24 @@ namespace brains {
     }
 
     void cPlayerBrainSkirmish::produceSuperWeaponMissionsWhenApplicable() {
-        if (player->canBuildSpecial(SPECIAL_DEATHHAND) == NONE && !hasMission(SPECIAL_MISSION1)) {
+        if (player->couldBuildSpecial(SPECIAL_DEATHHAND) && !hasMission(SPECIAL_MISSION1)) {
             std::vector<S_groupKind> group = std::vector<S_groupKind>();
-            group.push_back((S_groupKind) {
-                    buildType: SPECIAL,
-                    type : SPECIAL_DEATHHAND,
-                    required: 1,
-                    ordered: 0,
-                    produced: 0,
-            });
+            // no need to add resources to mission, they are auto-produced.
+            // TODO: Think of a way to make this script/configurable
             addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, rnd(10), SPECIAL_MISSION1);
         }
 
-        if (player->canBuildSpecial(SPECIAL_SABOTEUR) == NONE && !hasMission(SPECIAL_MISSION2)) {
+        if (player->couldBuildSpecial(SPECIAL_SABOTEUR) && !hasMission(SPECIAL_MISSION2)) {
             std::vector<S_groupKind> group = std::vector<S_groupKind>();
-            group.push_back((S_groupKind) {
-                    buildType: SPECIAL,
-                    type : SPECIAL_SABOTEUR,
-                    required: 1,
-                    ordered: 0,
-                    produced: 0,
-            });
+            // no need to add resources to mission, they are auto-produced.
+            // TODO: Think of a way to make this script/configurable
             addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, rnd(10), SPECIAL_MISSION2);
         }
 
-        if (player->canBuildSpecial(SPECIAL_FREMEN) == NONE && !hasMission(SPECIAL_MISSION3)) {
+        if (player->couldBuildSpecial(SPECIAL_FREMEN) && !hasMission(SPECIAL_MISSION3)) {
             std::vector<S_groupKind> group = std::vector<S_groupKind>();
-            group.push_back((S_groupKind) {
-                    buildType: SPECIAL,
-                    type : SPECIAL_FREMEN,
-                    required: 1,
-                    ordered: 0,
-                    produced: 0,
-            });
+            // no need to add resources to mission, they are auto-produced.
+            // TODO: Think of a way to make this script/configurable
             addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, rnd(10), SPECIAL_MISSION3);
         }
     }
@@ -1257,7 +1248,7 @@ namespace brains {
             }
         }
 
-        if (player->hasAlmostReachMaxSpiceStorageCapacity()) {
+        if (player->hasAlmostReachMaxSpiceStorageCapacity() && rnd(100) < 15) {
             return SILO;
         }
 
@@ -1267,22 +1258,51 @@ namespace brains {
         if (player->isStructureTypeAvailableForConstruction(WOR)) {
             if (!player->hasAtleastOneStructure(WOR)) return WOR;
         }
+
+        if (!player->hasAtleastOneStructure(PALACE) && rnd(100) < 5)  return PALACE;
+
         if (player->isStructureTypeAvailableForConstruction(BARRACKS)) {
             if (!player->hasAtleastOneStructure(BARRACKS)) return BARRACKS;
         }
+
         if (!player->hasAtleastOneStructure(HEAVYFACTORY))  return HEAVYFACTORY;
         if (!player->hasAtleastOneStructure(STARPORT))  return STARPORT;
         if (!player->hasAtleastOneStructure(HIGHTECH))  return HIGHTECH;
+
+        if (!player->hasAtleastOneStructure(PALACE) && rnd(100) < 15)  return PALACE;
 
         if (player->getAmountOfStructuresForType(TURRET) < 2)  return TURRET;
 
         if (!player->hasAtleastOneStructure(IX))  return IX;
 
+        if (!player->hasAtleastOneStructure(PALACE) && rnd(100) < 15)  return PALACE;
+
         if (player->getAmountOfStructuresForType(RTURRET) < 6)  return RTURRET;
+
+        if (!player->hasAtleastOneStructure(PALACE) && rnd(100) < 15)  return PALACE;
 
         if (!player->hasAtleastOneStructure(REPAIR))  return REPAIR;
 
+        if (player->getAmountOfStructuresForType(HEAVYFACTORY) < 2 && rnd(100) < 15) return HEAVYFACTORY;
+
         if (!player->hasAtleastOneStructure(PALACE))  return PALACE;
+
+        if (player->getAmountOfStructuresForType(HEAVYFACTORY) < 2) return HEAVYFACTORY;
+
+        if (player->getAmountOfStructuresForType(LIGHTFACTORY) < 2) return LIGHTFACTORY;
+
+        if (player->isStructureTypeAvailableForConstruction(WOR)) {
+            if (player->getAmountOfStructuresForType(WOR) < 2) return WOR;
+        }
+
+        if (player->isStructureTypeAvailableForConstruction(BARRACKS)) {
+            if (player->getAmountOfStructuresForType(BARRACKS) < 2) return BARRACKS;
+        }
+
+        // already has everything, this makes more sense now
+        if (player->hasAlmostReachMaxSpiceStorageCapacity()) {
+            return SILO;
+        }
 
         // nothing to build
         return -1;

@@ -93,7 +93,9 @@ namespace brains {
 
         virtual cPlayerBrainMissionKind * clone(cPlayer *player, cPlayerBrainMission * mission) = 0;
 
-        virtual void onNotify(const s_GameEvent &event) override = 0;
+        virtual void onNotify_SpecificStateSwitch(const s_GameEvent &event) = 0;
+
+        void onNotify(const s_GameEvent &event);
 
         virtual const char *toString() = 0;
 
@@ -103,6 +105,19 @@ namespace brains {
 
         cPlayer *player;
         cPlayerBrainMission *mission;
+
+        // This adds extra abilities to switch to a different state, without getting timed-out.
+        cPlayer *specificPlayerForEventToGoToSelectTargetState; // by default == owning player
+
+        // this is an event that should happen for the player (specificPlayerForEventToGoToSelectTargetState)
+        eGameEventType specificEventTypeToGoToSelectTargetState;
+
+        // if provided, the event (specificEventTypeToGoToSelectTargetState) - should also have these specific properties
+        eBuildType specificBuildTypeToGoToSelectTargetState;
+
+        int specificBuildIdToGoToSelectTargetState;
+
+        void onExecuteSpecificStateSwitch(const s_GameEvent &event);
     };
 
 }

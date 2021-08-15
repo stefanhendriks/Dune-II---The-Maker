@@ -26,6 +26,8 @@ namespace brains {
 
         const char *toString() override { return "cPlayerBrainMissionKindExplore"; }
 
+        void onNotify_SpecificStateSwitch(const s_GameEvent &event) override;
+
     private:
         int targetCell;
     };

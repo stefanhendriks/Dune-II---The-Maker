@@ -166,11 +166,11 @@ void cDrawManager::drawDeployment() {
 
     if (game.getMouse()->isLeftButtonClicked() && iMouseCell > -1) {
         s_GameEvent event {
-                .eventType = eGameEventType::GAME_EVENT_SPECIAL_DEPLOYED,
+                .eventType = eGameEventType::GAME_EVENT_SPECIAL_LAUNCH,
                 .entityType = eBuildType::SPECIAL,
                 .entityID = -1,
                 .player = player,
-                .entitySpecificType = -1,
+                .entitySpecificType = itemToDeploy->getBuildId(),
                 .atCell = iMouseCell,
                 .isReinforce = false,
                 .buildingListItem = itemToDeploy

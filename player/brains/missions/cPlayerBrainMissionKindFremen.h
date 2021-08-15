@@ -26,6 +26,7 @@ namespace brains {
 
         const char *toString() override { return "cPlayerBrainMissionKindFremen"; }
 
+        void onNotify_SpecificStateSwitch(const s_GameEvent &event) override;
     private:
     };
 

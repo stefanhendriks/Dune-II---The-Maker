@@ -149,7 +149,7 @@ public:
 
     void onNotify(const s_GameEvent &event) override;
     void onEventDiscovered(const s_GameEvent &event);
-    void onEventSpecialDeployed(const s_GameEvent &event);
+    void onEventSpecialLaunch(const s_GameEvent &event);
 
     static const char* stateString(const int &state) {
         switch (state) {

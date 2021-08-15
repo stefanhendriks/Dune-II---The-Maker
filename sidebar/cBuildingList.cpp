@@ -102,7 +102,8 @@ void cBuildingList::addUnitToList(int unitType, int subList) {
 }
 
 void cBuildingList::addSpecialToList(int specialType, int subList) {
-    cBuildingListItem *item = new cBuildingListItem(specialType, specials[specialType], subList);
+    s_Special &special = specialInfo[specialType];
+    cBuildingListItem *item = new cBuildingListItem(specialType, special, subList);
     if (!addItemToList(item)) {
         delete item;
     }
@@ -129,6 +130,25 @@ bool cBuildingList::addItemToList(cBuildingListItem * item) {
 //	char msg[355];
 //	sprintf(msg, "Icon added with id [%d] added to cBuilding list, put in slot[%d], set maxItems to [%d]", item->getBuildId(), slot, maxItems);
 //	logbook(msg);
+
+    // notify game that the item just has been added!
+    cPlayer *pPlayer = this->m_itemBuilder->getPlayer();
+    int buildId = item->getBuildId();
+    eBuildType buildType = item->getBuildType();
+
+    s_GameEvent event {
+            .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_ADDED,
+            .entityType = buildType,
+            .entityID = -1,
+            .player = pPlayer,
+            .entitySpecificType = buildId,
+            .atCell = -1,
+            .isReinforce = false,
+            .buildingListItem = item
+    };
+
+    game.onNotify(event);
+
     return true;
 }
 
@@ -343,4 +363,9 @@ cBuildingListItem *cBuildingList::getFirstItemInSubList(int sublistId) {
         return pItem;
     }
     return nullptr;
+}
+
+void cBuildingList::setItemBuilder(cItemBuilder *value) {
+    assert(value && "cBuildingList::setItemBuilder - Expected to set to a non-null value");
+    m_itemBuilder = value;
 }

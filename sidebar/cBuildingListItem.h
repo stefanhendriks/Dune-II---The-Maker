@@ -159,6 +159,10 @@ public:
     int getTotalBuildTimeInTicks() const;
 
     static const int getTotalBuildTimeInTicks(eBuildType type, int buildId);
+    static const int getListId(eBuildType type, int buildId);
+    static const bool isAutoBuild(eBuildType type, int buildId);
+
+    bool isAutoBuild();
 
 private:
 	void setProgress(int value) { progress = value; }

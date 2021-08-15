@@ -110,7 +110,7 @@ void cKeyboardManager::DEBUG_KEYS() {
     // GIVE 299999 CREDITS TO ALL PLAYERS
     if (key[KEY_F4] && !key[KEY_LSHIFT]) {
         for (int i = 0; i < AI_WORM; i++) {
-            players[i].setCredits(299999);
+            players[i].setCredits(5000);
         }
     }
 

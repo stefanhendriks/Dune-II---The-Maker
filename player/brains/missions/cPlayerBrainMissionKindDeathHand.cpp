@@ -6,7 +6,11 @@ namespace brains {
 
     cPlayerBrainMissionKindDeathHand::cPlayerBrainMissionKindDeathHand(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
         target = -1;
-        itemToDeploy = nullptr;
+        itemToLaunch = nullptr;
+        specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET; // ready for launch!
+        specificBuildTypeToGoToSelectTargetState = eBuildType::SPECIAL;
+        specificBuildIdToGoToSelectTargetState = SPECIAL_DEATHHAND;
+        specificPlayerForEventToGoToSelectTargetState = player;
     }
 
     cPlayerBrainMissionKindDeathHand::~cPlayerBrainMissionKindDeathHand() {
@@ -35,31 +39,38 @@ namespace brains {
     void cPlayerBrainMissionKindDeathHand::think_Execute() {
         // launch missile by sending event
         s_GameEvent event {
-                .eventType = eGameEventType::GAME_EVENT_SPECIAL_DEPLOYED,
-                .entityType = eBuildType::SPECIAL,
+                .eventType = eGameEventType::GAME_EVENT_SPECIAL_LAUNCH,
+                .entityType = itemToLaunch->getBuildType(),
                 .entityID = -1,
                 .player = player,
-                .entitySpecificType = -1,
+                .entitySpecificType = itemToLaunch->getBuildId(),
                 .atCell = target,
                 .isReinforce = false,
-                .buildingListItem = itemToDeploy
+                .buildingListItem = itemToLaunch
         };
         game.onNotify(event);
 
-        itemToDeploy = nullptr;
-        // done
-        mission->changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_ENDED);
+        // clear out item
+        itemToLaunch = nullptr;
+
+        // clear out target, figure next target later
+        target = -1;
+
+        // wait for the next missile to be ready!
+        mission->changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES);
     }
 
     void cPlayerBrainMissionKindDeathHand::onNotify(const s_GameEvent &event) {
+        cPlayerBrainMissionKind::onNotify(event);
+
         char msg[255];
         sprintf(msg, "cPlayerBrainMissionKindDeathHand::onNotify() -> %s", event.toString(event.eventType));
         log(msg);
 
+
         switch(event.eventType) {
-            case eGameEventType::GAME_EVENT_SPECIAL_READY:
-                onMySpecialIsReady(event);
-                // should repair when under 75%?
+            case eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED:
+                onBuildItemCancelled(event);
                 break;
         }
     }
@@ -67,18 +78,34 @@ namespace brains {
     cPlayerBrainMissionKind *cPlayerBrainMissionKindDeathHand::clone(cPlayer *player, cPlayerBrainMission * mission) {
         cPlayerBrainMissionKindDeathHand *copy = new cPlayerBrainMissionKindDeathHand(player, mission);
         copy->target = target;
-        copy->itemToDeploy = itemToDeploy;
+        copy->itemToLaunch = itemToLaunch;
+        copy->specificEventTypeToGoToSelectTargetState = specificEventTypeToGoToSelectTargetState;
+        copy->specificPlayerForEventToGoToSelectTargetState = specificPlayerForEventToGoToSelectTargetState;
+        copy->specificBuildTypeToGoToSelectTargetState = specificBuildTypeToGoToSelectTargetState;
+        copy->specificBuildIdToGoToSelectTargetState = specificBuildIdToGoToSelectTargetState;
         return copy;
     }
 
-    void cPlayerBrainMissionKindDeathHand::onMySpecialIsReady(const s_GameEvent &event) {
+    void cPlayerBrainMissionKindDeathHand::onBuildItemCancelled(const s_GameEvent &event) {
         if (event.player == player) {
-            if (event.entityType == eBuildType::SPECIAL) {
-                itemToDeploy = event.buildingListItem;
+            // looks like the thing we had stored is being cancelled, so forget about it
+            // this is usually done by a human player interfering (ie, when debugging)
+            if (event.buildingListItem == itemToLaunch) {
+                itemToLaunch = nullptr;
+                mission->changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES);
             }
+        }
+    }
 
-            // missile ready, select target
-            mission->changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_SELECT_TARGET);
+    void cPlayerBrainMissionKindDeathHand::onNotify_SpecificStateSwitch(const s_GameEvent &event) {
+        // here we know it is the specific thing we are interested in (hence the "SpecificStateSwitch" name)
+        if (event.player == player) {
+            // it has a buildingListItem, so it is for us to command (launch!)
+            if (event.buildingListItem) {
+                itemToLaunch = event.buildingListItem;
+            } else {
+                assert(false && "Expected to have a buildingListItem");
+            }
         }
     }
 

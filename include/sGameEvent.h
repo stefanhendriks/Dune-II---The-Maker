@@ -45,12 +45,15 @@ struct s_GameEvent {
             case eGameEventType::GAME_EVENT_DECAY: return "GAME_EVENT_DECAY";
             case eGameEventType::GAME_EVENT_DEVIATED: return "GAME_EVENT_DEVIATED";
             case eGameEventType::GAME_EVENT_DISCOVERED: return "GAME_EVENT_DISCOVERED";
-            case eGameEventType::GAME_EVENT_SPECIAL_READY: return "GAME_EVENT_SPECIAL_READY";
-            case eGameEventType::GAME_EVENT_SPECIAL_DEPLOYED: return "GAME_EVENT_SPECIAL_DEPLOYED";
+            case eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET: return "GAME_EVENT_SPECIAL_SELECT_TARGET";
+            case eGameEventType::GAME_EVENT_SPECIAL_LAUNCH: return "GAME_EVENT_SPECIAL_LAUNCH";
             case eGameEventType::GAME_EVENT_CANNOT_BUILD: return "GAME_EVENT_CANNOT_BUILD";
             case eGameEventType::GAME_EVENT_CANNOT_CREATE_PATH: return "GAME_EVENT_CANNOT_CREATE_PATH";
+            case eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED: return "GAME_EVENT_LIST_ITEM_FINISHED";
+            case eGameEventType::GAME_EVENT_LIST_ITEM_ADDED: return "GAME_EVENT_LIST_ITEM_ADDED";
+            case eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED: return "GAME_EVENT_LIST_ITEM_CANCELLED";
             default:
-                assert(false);
+                assert(false && "Unknown game event type for toString()");
                 break;
         }
         return "";

@@ -110,7 +110,7 @@ public:
 
     void resetTimesOrderedForAllItems();
 
-    void setItemBuilder(cItemBuilder *value) { m_itemBuilder = value; }
+    void setItemBuilder(cItemBuilder *value);
 
 protected:
     // nothing

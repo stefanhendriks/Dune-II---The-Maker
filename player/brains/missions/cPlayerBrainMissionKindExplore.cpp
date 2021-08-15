@@ -41,6 +41,7 @@ namespace brains {
     }
 
     void cPlayerBrainMissionKindExplore::onNotify(const s_GameEvent &event) {
+        cPlayerBrainMissionKind::onNotify(event);
         char msg[255];
         sprintf(msg, "cPlayerBrainMissionKindExplore::onNotify() -> %s", event.toString(event.eventType));
         log(msg);
@@ -49,7 +50,15 @@ namespace brains {
     cPlayerBrainMissionKind *cPlayerBrainMissionKindExplore::clone(cPlayer *player, cPlayerBrainMission * mission) {
         cPlayerBrainMissionKindExplore *copy = new cPlayerBrainMissionKindExplore(player, mission);
         copy->targetCell = targetCell;
+        copy->specificEventTypeToGoToSelectTargetState = specificEventTypeToGoToSelectTargetState;
+        copy->specificPlayerForEventToGoToSelectTargetState = specificPlayerForEventToGoToSelectTargetState;
+        copy->specificBuildTypeToGoToSelectTargetState = specificBuildTypeToGoToSelectTargetState;
+        copy->specificBuildIdToGoToSelectTargetState = specificBuildIdToGoToSelectTargetState;
         return copy;
+    }
+
+    void cPlayerBrainMissionKindExplore::onNotify_SpecificStateSwitch(const s_GameEvent &event) {
+        // NOOP
     }
 
 }

@@ -243,6 +243,13 @@ public:
      */
     eCantBuildReason canBuildUnit(int iUnitType);
 
+    /**
+     * Returns true/false if this house could (ever) build this special type
+     * @param iType
+     * @return
+     */
+    bool couldBuildSpecial(int iType);
+
     eCantBuildReason canBuildSpecial(int iType);
 
     /**
@@ -393,6 +400,12 @@ private:
     bool autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
 
     bool isBuildingAnythingForListAndSublist(int listId, int subListId) const;
+
+    bool startBuilding(cBuildingListItem *pItem);
+
+    bool startBuilding(eBuildType buildType, int buildId);
+
+    void onEntityDiscovered(const s_GameEvent &event);
 };
 
 #endif

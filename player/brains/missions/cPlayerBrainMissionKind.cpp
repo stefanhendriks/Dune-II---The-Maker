@@ -6,6 +6,13 @@ namespace brains {
 
     cPlayerBrainMissionKind::cPlayerBrainMissionKind(cPlayer *player, cPlayerBrainMission * mission) : player(player), mission(mission) {
         player->log("cPlayerBrainMissionKind() constructor");
+        specificPlayerForEventToGoToSelectTargetState = player;
+
+        // if not NONE...
+        specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_NONE;
+
+        specificBuildIdToGoToSelectTargetState = -1; // if > -1, the specificBuildTypeToGoToSelectTargetState should also be given
+        specificBuildTypeToGoToSelectTargetState = eBuildType::STRUCTURE; // bogus without buildId
     }
 
     cPlayerBrainMissionKind::~cPlayerBrainMissionKind() {
@@ -21,6 +28,51 @@ namespace brains {
         char msg[1024];
         sprintf(msg, "cPlayerBrainMissionKind | %s", txt);
         mission->log(txt);
+    }
+
+    void cPlayerBrainMissionKind::onNotify(const s_GameEvent &event) {
+        char msg[255];
+        sprintf(msg, "cPlayerBrainMissionKind::onNotify() -> %s", event.toString(event.eventType));
+        log(msg);
+
+        if (event.player == specificPlayerForEventToGoToSelectTargetState) {
+            if (specificEventTypeToGoToSelectTargetState != eGameEventType::GAME_EVENT_NONE) {
+                bool executeSpecificStateSwitch = false;
+                if (event.eventType == specificEventTypeToGoToSelectTargetState) {
+                    if (specificBuildIdToGoToSelectTargetState > -1) {
+                        executeSpecificStateSwitch = (
+                                event.entitySpecificType == specificBuildIdToGoToSelectTargetState &&
+                                event.entityType == specificBuildTypeToGoToSelectTargetState
+                        );
+                    } else {
+                        executeSpecificStateSwitch = true;
+                    }
+                }
+                if (executeSpecificStateSwitch) {
+                    onExecuteSpecificStateSwitch(event);
+                }
+            }
+        }
+    }
+
+    void cPlayerBrainMissionKind::onExecuteSpecificStateSwitch(const s_GameEvent &event) {
+        // unit got created, not reinforced - add it to the units list (ie saboteur to command)
+        if (event.entityType == UNIT && !event.isReinforce) {
+            cUnit &entityUnit = unit[event.entityID];
+
+            // this unit has not been assigned to a mission yet
+            if (!entityUnit.isAssignedAnyMission()) {
+                entityUnit.assignMission(mission->getUniqueId());
+                mission->getUnits().push_back(entityUnit.iID);
+            }
+        }
+
+
+        // just before we set select-target state, we call this method. So our child-implementations
+        // can change state accordingly
+        onNotify_SpecificStateSwitch(event);
+
+        mission->changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET);
     }
 
 }

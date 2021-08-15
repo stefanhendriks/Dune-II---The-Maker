@@ -96,7 +96,7 @@ namespace brains {
                         buildOrder.placeAt, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::SPECIAL) {
                 sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
-                        specials[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
+                        specialInfo[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::BULLET) {
                 sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=NOT YET IMPLEMENTED), priority = %d, state = %s", id,
                         buildOrder.buildId, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
@@ -1047,41 +1047,28 @@ namespace brains {
             }
         }
         if (player->hasAtleastOneStructure(PALACE)) {
+            int MISSION_ID_SUPERWEAPON = 8;
+
             if (player->getHouse() == ATREIDES) {
-                if (!hasMission(8)) {
+                if (!hasMission(MISSION_ID_SUPERWEAPON)) {
                     group = std::vector<S_groupKind>();
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::SPECIAL,
-                            type : SPECIAL_FREMEN,
-                            required: 1,
-                            ordered: 0,
-                            produced: 0,
-                    });
-                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, rnd(10), 8);
+                    // no need to add resources to mission, they are auto-produced.
+                    // TODO: Think of a way to make this script/configurable
+                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, rnd(10), MISSION_ID_SUPERWEAPON);
                 }
             } else if (player->getHouse() == HARKONNEN || player->getHouse() == SARDAUKAR) {
-                if (!hasMission(8)) {
+                if (!hasMission(MISSION_ID_SUPERWEAPON)) {
                     group = std::vector<S_groupKind>();
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::SPECIAL,
-                            type : SPECIAL_DEATHHAND,
-                            required: 1,
-                            ordered: 0,
-                            produced: 0,
-                    });
-                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, rnd(10), 8);
+                    // no need to add resources to mission, they are auto-produced.
+                    // TODO: Think of a way to make this script/configurable
+                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, rnd(10), MISSION_ID_SUPERWEAPON);
                 }
             } else if (player->getHouse() == ORDOS) {
-                if (!hasMission(8)) {
+                if (!hasMission(MISSION_ID_SUPERWEAPON)) {
                     group = std::vector<S_groupKind>();
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::SPECIAL,
-                            type : SPECIAL_SABOTEUR,
-                            required: 1,
-                            ordered: 0,
-                            produced: 0,
-                    });
-                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, rnd(10), 8);
+                    // no need to add resources to mission, they are auto-produced.
+                    // TODO: Think of a way to make this script/configurable
+                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, rnd(10), MISSION_ID_SUPERWEAPON);
                 }
             }
         }
@@ -1347,37 +1334,22 @@ namespace brains {
             if (player->getHouse() == ATREIDES) {
                 if (!hasMission(8)) {
                     group = std::vector<S_groupKind>();
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::SPECIAL,
-                            type : SPECIAL_FREMEN,
-                            required: 1,
-                            ordered: 0,
-                            produced: 0,
-                    });
+                    // no need to add resources to mission, they are auto-produced.
+                    // TODO: Think of a way to make this script/configurable
                     addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, rnd(10), 8);
                 }
             } else if (player->getHouse() == HARKONNEN || player->getHouse() == SARDAUKAR) {
                 if (!hasMission(8)) {
                     group = std::vector<S_groupKind>();
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::SPECIAL,
-                            type : SPECIAL_DEATHHAND,
-                            required: 1,
-                            ordered: 0,
-                            produced: 0,
-                    });
+                    // no need to add resources to mission, they are auto-produced.
+                    // TODO: Think of a way to make this script/configurable
                     addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, rnd(10), 8);
                 }
             } else if (player->getHouse() == ORDOS) {
                 if (!hasMission(8)) {
                     group = std::vector<S_groupKind>();
-                    group.push_back((S_groupKind) {
-                            buildType: eBuildType::SPECIAL,
-                            type : SPECIAL_SABOTEUR,
-                            required: 1,
-                            ordered: 0,
-                            produced: 0,
-                    });
+                    // no need to add resources to mission, they are auto-produced.
+                    // TODO: Think of a way to make this script/configurable
                     addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, rnd(10), 8);
                 }
             }
