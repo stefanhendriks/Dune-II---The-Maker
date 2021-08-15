@@ -6,6 +6,9 @@ namespace brains {
 
     cPlayerBrainMissionKindSaboteur::cPlayerBrainMissionKindSaboteur(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
         targetStructureID = -1;
+        specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_CREATED; // saboteur created
+        specificBuildTypeToGoToSelectTargetState = specialInfo[SPECIAL_SABOTEUR].providesType;
+        specificBuildIdToGoToSelectTargetState = specialInfo[SPECIAL_SABOTEUR].providesTypeId;
     }
 
     cPlayerBrainMissionKindSaboteur::~cPlayerBrainMissionKindSaboteur() {
@@ -54,6 +57,8 @@ namespace brains {
     }
 
     void cPlayerBrainMissionKindSaboteur::onNotify(const s_GameEvent &event) {
+        cPlayerBrainMissionKind::onNotify(event);
+
         char msg[255];
         sprintf(msg, "cPlayerBrainMissionKindSaboteur::onNotify() -> %s", event.toString(event.eventType));
         log(msg);
@@ -80,7 +85,15 @@ namespace brains {
     cPlayerBrainMissionKind *cPlayerBrainMissionKindSaboteur::clone(cPlayer *player, cPlayerBrainMission * mission) {
         cPlayerBrainMissionKindSaboteur *copy = new cPlayerBrainMissionKindSaboteur(player, mission);
         copy->targetStructureID = targetStructureID;
+        copy->specificEventTypeToGoToSelectTargetState = specificEventTypeToGoToSelectTargetState;
+        copy->specificPlayerForEventToGoToSelectTargetState = specificPlayerForEventToGoToSelectTargetState;
+        copy->specificBuildTypeToGoToSelectTargetState = specificBuildTypeToGoToSelectTargetState;
+        copy->specificBuildIdToGoToSelectTargetState = specificBuildIdToGoToSelectTargetState;
         return copy;
+    }
+
+    void cPlayerBrainMissionKindSaboteur::onNotify_SpecificStateSwitch(const s_GameEvent &event) {
+        // NOOP
     }
 
 }

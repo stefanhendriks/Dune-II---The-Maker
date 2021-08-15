@@ -24,6 +24,8 @@ namespace brains {
 
         void onNotify(const s_GameEvent &event) override;
 
+        void onNotify_SpecificStateSwitch(const s_GameEvent &event) override;
+
         const char *toString() override { return "cPlayerBrainMissionKindAttack"; }
 
     private:
@@ -33,6 +35,10 @@ namespace brains {
         void onEventDeviated(const s_GameEvent &event);
 
         void onEventDestroyed(const s_GameEvent &event);
+
+        int findEnemyUnit() const;
+
+        int findEnemyStructure() const;
     };
 
 }

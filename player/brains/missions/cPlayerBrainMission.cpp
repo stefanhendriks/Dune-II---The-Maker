@@ -26,18 +26,26 @@ namespace brains {
         units = std::vector<int>();
         TIMER_awaitingGatheringResoures = -1;
         missionKind = nullptr;
+        specialEventMakesStateSwitchToSelectTarget = false;
+        missionWithUnits = true; // by default, the missions are executed with units
+
         switch (kind) {
             case PLAYERBRAINMISSION_KIND_ATTACK:
                 missionKind = new cPlayerBrainMissionKindAttack(player, this);
                 break;
             case PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR:
                 missionKind = new cPlayerBrainMissionKindSaboteur(player, this);
+                specialEventMakesStateSwitchToSelectTarget = true;
                 break;
             case PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND:
                 missionKind = new cPlayerBrainMissionKindDeathHand(player, this);
+                specialEventMakesStateSwitchToSelectTarget = true;
+                missionWithUnits = false; // this is a non-unit mission
                 break;
             case PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN:
                 missionKind = new cPlayerBrainMissionKindFremen(player, this);
+                specialEventMakesStateSwitchToSelectTarget = true;
+                missionWithUnits = false; // this is a non-unit mission , Fremen units are not our own
                 break;
             case PLAYERBRAINMISSION_KIND_DEFEND:
                 //TODO: Defend mission...
@@ -190,10 +198,10 @@ namespace brains {
                                 }
                             } else if (thingIWant.buildType == eBuildType::SPECIAL) {
                                 // or a special kind of thing I ordered should produce a unit
-                                if (specials[thingIWant.type].providesType == eBuildType::UNIT) {
+                                if (specialInfo[thingIWant.type].providesType == eBuildType::UNIT) {
                                     // it provides a unit AND the kind of unit it provides matches that what
                                     // has been created... then we *also* are interested.
-                                    if (specials[thingIWant.type].providesTypeId == event.entitySpecificType) {
+                                    if (specialInfo[thingIWant.type].providesTypeId == event.entitySpecificType) {
                                         // in case we have multiple entries with same type we check for produced vs required
 
                                         // do not look at produced property, because we should have only ONE SPECIAL KIND
@@ -345,7 +353,7 @@ namespace brains {
                                 // this should not happen!?
                             }
                         } else if (thingIWant.buildType == SPECIAL) {
-                            // "specials" are from the "palace" list
+                            // "specialInfo" are from the "palace" list
                             cBuildingListItem *pItem = pSideBar->getBuildingListItem(LIST_PALACE,
                                                                                      thingIWant.type);
                             if (pItem) {
@@ -379,6 +387,12 @@ namespace brains {
             }
         }
 
+        if (!missionWithUnits) {
+            changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES);
+            return; // bail, mission without units will wait for events
+        }
+
+        // all other (normal) missions can go to select target state if we acquired all units
         if (producedAllRequiredUnits()) {
             char msg[255];
             sprintf(msg,
@@ -389,13 +403,8 @@ namespace brains {
             return;
         }
 
-        // now we wait until it is finished
-        if (kind == PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN) {
-            // when fremen, just go to execution state
-            changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_EXECUTE);
-        } else {
-            changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES);
-        }
+        // in all other cases, wait for resources
+        changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES);
     }
 
     void cPlayerBrainMission::logUnits() {
@@ -407,6 +416,10 @@ namespace brains {
         }
     }
 
+    /**
+     * Checks if all things this mission requires are produced.
+     * @return
+     */
     bool cPlayerBrainMission::producedAllRequiredUnits() {
         for (auto &unitIWant : group) {
             if (unitIWant.produced < unitIWant.required) {
@@ -422,8 +435,6 @@ namespace brains {
         log(msg);
 
         if (missionKind) {
-            // on successful selecting target, go to execute state.
-            // TODO: make sure to not repeat select target step every frame? (have some delay?)
             if (missionKind->think_SelectTarget()) {
                 changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_EXECUTE);
             }
@@ -440,6 +451,13 @@ namespace brains {
         if (missionKind) {
             missionKind->think_Execute();
         }
+
+        if (!missionWithUnits) {
+            return;
+        }
+
+        // From here on out, we assume the mission has units. And thus, it should change state whenever it has no more
+        // units.
 
         if (units.empty()) {
             char msg[255];
@@ -475,6 +493,12 @@ namespace brains {
             sprintf(msg, "thinkState_PrepareAwaitResources() - TIMER_awaitingGatheringResoures = [%d]", TIMER_awaitingGatheringResoures);
             log(msg);
         }
+
+        if (specialEventMakesStateSwitchToSelectTarget) {
+            // keep waiting, because we wait for a specific event to happen
+            return;
+        }
+
         // wait for things to be produced...
         if (TIMER_awaitingGatheringResoures > 0) {
             TIMER_awaitingGatheringResoures--;
@@ -530,6 +554,8 @@ namespace brains {
         this->kind = rhs.kind;
         this->TIMER_delay = rhs.TIMER_delay;
         this->TIMER_awaitingGatheringResoures = rhs.TIMER_awaitingGatheringResoures;
+        this->missionWithUnits = rhs.missionWithUnits;
+        this->specialEventMakesStateSwitchToSelectTarget = rhs.specialEventMakesStateSwitchToSelectTarget;
 
         return *this;
     }
@@ -543,7 +569,9 @@ namespace brains {
         brain(src.brain),
         kind(src.kind),
         TIMER_delay(src.TIMER_delay),
-        TIMER_awaitingGatheringResoures(src.TIMER_awaitingGatheringResoures)
+        TIMER_awaitingGatheringResoures(src.TIMER_awaitingGatheringResoures),
+        specialEventMakesStateSwitchToSelectTarget(src.specialEventMakesStateSwitchToSelectTarget),
+        missionWithUnits(src.missionWithUnits)
     {
         if (src.missionKind) {
             missionKind = src.missionKind->clone(src.player, this);

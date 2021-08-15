@@ -28,15 +28,19 @@ namespace brains {
 
         const char *toString() override { return "cPlayerBrainMissionKindDeathHand"; }
 
+        void onNotify_SpecificStateSwitch(const s_GameEvent &event) override;
+
     private:
         int target;
-        cBuildingListItem * itemToDeploy;
+        cBuildingListItem * itemToLaunch;
 
         void onEventDeviated(const s_GameEvent &event);
 
         void onEventDestroyed(const s_GameEvent &event);
 
-        void onMySpecialIsReady(const s_GameEvent &event);
+        void onMySpecialSelectTarget(const s_GameEvent &event);
+
+        void onBuildItemCancelled(const s_GameEvent &event);
     };
 
 }

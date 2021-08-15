@@ -144,7 +144,7 @@ int cBuildingListItem::getBuildTime() {
         return upgrades[buildId].buildTime;
     }
     if (type == SPECIAL) {
-        return specials[buildId].buildTime;
+        return specialInfo[buildId].buildTime;
     }
     // assumes units by default
     return unitInfo[buildId].build_time;
@@ -189,7 +189,7 @@ s_Special cBuildingListItem::getS_Special() {
         logbook("ERROR!!! - calling gets_Special while type is not SPECIAL! - falling back to buildId 1 as safety");
         buildId = 1;
     }
-    return specials[buildId];
+    return specialInfo[buildId];
 }
 
 s_UnitP cBuildingListItem::getS_UnitP() {
@@ -262,14 +262,11 @@ void cBuildingListItem::setTimerCap(int value) {
 
 /**
  * Assumes the itembuilder think is called every 5 ms. Meaning for every 1 second (1000ms), the think function
- * is called 200 times. Depending on timerCap, this calculates into how much progress is made. To calculate
- * the actual ms it will take to build it; the totalBuildTime (= ticks) is taken TIMES timerCap, this is the amount of
- * 'ticks' you should do. Every tick is 5 ms, times 5 gives the total amount of ms.
+ * is called 200 times. Every tick is 5 ms, times 5 gives the total amount of ms.
  * @return
  */
 int cBuildingListItem::getTotalBuildTimeInMs() {
-    int totalTicks = totalBuildTime * timerCap;
-    return totalTicks * 5; // 5 = ms for every time we call the itemBuilder
+    return getTotalBuildTimeInTicks() * 5; // 5 = ms for every time we call the itemBuilder
 }
 
 const int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId) {
@@ -282,7 +279,7 @@ const int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int build
             buildTime = structures[buildId].build_time;
             break;
         case SPECIAL:
-            buildTime = specials[buildId].buildTime;
+            buildTime = specialInfo[buildId].buildTime;
             break;
         case UPGRADE:
             buildTime = upgrades[buildId].buildTime;
@@ -293,4 +290,34 @@ const int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int build
             buildTime = 0;
     }
     return buildTime * 35;
+}
+
+const int cBuildingListItem::getListId(eBuildType type, int buildId) {
+    switch (type) {
+        case UNIT:
+            return unitInfo[buildId].listId;
+        case STRUCTURE:
+            return structures[buildId].list;
+        case SPECIAL:
+            return specialInfo[buildId].listId;
+            break;
+        case UPGRADE:
+//            return upgrades[buildId].;
+            return LIST_UPGRADES;
+            break;
+    }
+    return -1;
+}
+
+const bool cBuildingListItem::isAutoBuild(eBuildType type, int buildId) {
+    switch (type) {
+        case SPECIAL:
+            return specialInfo[buildId].autoBuild;
+            break;
+    }
+    return false;
+}
+
+bool cBuildingListItem::isAutoBuild() {
+    return cBuildingListItem::isAutoBuild(type, buildId);
 }

@@ -16,36 +16,54 @@ namespace brains {
     bool cPlayerBrainMissionKindAttack::think_SelectTarget() {
         if (rnd(100) < 50) {
             targetStructureID = -1;
-            for (int i = 0; i < MAX_UNITS; i++) {
-                cUnit &pUnit = unit[i];
-                if (!pUnit.isValid()) continue;
-                if (pUnit.getPlayer() == player) continue; // skip self
-                if (!pUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
-                if (!map.isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
-                // enemy unit
-                targetUnitID = i;
-                if (rnd(100) < 5) {
-                    break; // this way we kind of have randomly another target...
-                }
+            targetUnitID = findEnemyUnit();
+            if (targetUnitID < 0) {
+                targetStructureID = findEnemyStructure();
             }
         } else {
             targetUnitID = -1;
-            for (int i = 0; i < MAX_STRUCTURES; i++) {
-                cAbstractStructure *theStructure = structure[i];
-                if (!theStructure) continue;
-                if (!theStructure->isValid()) continue;
-                if (theStructure->getPlayer() == player) continue; // skip self
-                if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies
-                if (!map.isStructureVisible(theStructure, player)) continue; // skip non-visible targets
-
-                // enemy structure
-                targetStructureID = theStructure->getStructureId();
-                if (rnd(100) < 10) {
-                    break; // this way we kind of have randomly another target...
-                }
+            targetStructureID = findEnemyStructure();
+            if (targetStructureID < 0) {
+                targetUnitID = findEnemyStructure();
             }
         }
         return targetStructureID > -1 || targetUnitID > -1;
+    }
+
+    int cPlayerBrainMissionKindAttack::findEnemyStructure() const {
+        int target = 0;
+        for (int i = 0; i < MAX_STRUCTURES; i++) {
+            cAbstractStructure *theStructure = structure[i];
+            if (!theStructure) continue;
+            if (!theStructure->isValid()) continue;
+            if (theStructure->getPlayer() == player) continue; // skip self
+            if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies
+            if (!map.isStructureVisible(theStructure, player)) continue; // skip non-visible targets
+
+            // enemy structure
+            target =  theStructure->getStructureId();
+            if (rnd(100) < 10) {
+                break; // this way we kind of have randomly another target...
+            }
+        }
+        return target;
+    }
+
+    int cPlayerBrainMissionKindAttack::findEnemyUnit() const {
+        int target = 0;
+        for (int i = 0; i < MAX_UNITS; i++) {
+            cUnit &pUnit = unit[i];
+            if (!pUnit.isValid()) continue;
+            if (pUnit.getPlayer() == player) continue; // skip self
+            if (!pUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+            if (!map.isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
+            // enemy unit
+            target = i;
+            if (rnd(100) < 5) {
+                break; // this way we kind of have randomly another target...
+            }
+        }
+        return target;
     }
 
     void cPlayerBrainMissionKindAttack::think_Execute() {
@@ -56,7 +74,11 @@ namespace brains {
 
         if (targetStructureID > -1) {
             cAbstractStructure *pStructure = structure[targetStructureID];
-            assert(pStructure != nullptr);
+            if (!pStructure || !pStructure->isValid()) {
+                mission->changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET);
+                return;
+            }
+
             const std::vector<int> &units = mission->getUnits();
             for (auto &myUnit : units) {
                 cUnit &aUnit = unit[myUnit];
@@ -79,6 +101,8 @@ namespace brains {
     }
 
     void cPlayerBrainMissionKindAttack::onNotify(const s_GameEvent &event) {
+        cPlayerBrainMissionKind::onNotify(event);
+
         char msg[255];
         sprintf(msg, "cPlayerBrainMissionKindAttack::onNotify() -> %s", event.toString(event.eventType));
         log(msg);
@@ -131,7 +155,15 @@ namespace brains {
         cPlayerBrainMissionKindAttack *copy = new cPlayerBrainMissionKindAttack(player, mission);
         copy->targetUnitID = targetUnitID;
         copy->targetStructureID = targetStructureID;
+        copy->specificEventTypeToGoToSelectTargetState = specificEventTypeToGoToSelectTargetState;
+        copy->specificPlayerForEventToGoToSelectTargetState = specificPlayerForEventToGoToSelectTargetState;
+        copy->specificBuildTypeToGoToSelectTargetState = specificBuildTypeToGoToSelectTargetState;
+        copy->specificBuildIdToGoToSelectTargetState = specificBuildIdToGoToSelectTargetState;
         return copy;
+    }
+
+    void cPlayerBrainMissionKindAttack::onNotify_SpecificStateSwitch(const s_GameEvent &event) {
+        // NOOP
     }
 
 }

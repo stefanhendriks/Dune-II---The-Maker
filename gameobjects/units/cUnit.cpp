@@ -2398,7 +2398,7 @@ void cUnit::think_move() {
                                 .entityID = iID,
                                 .player = getPlayer(),
                                 .entitySpecificType = iType,
-                                .atCell = -1,
+                                .atCell = iCell,
                                 .isReinforce = isReinforcement
                         };
 
@@ -2906,7 +2906,7 @@ void cUnit::move_to(int iGoalCell) {
 
     if (structureID > -1) {
         cAbstractStructure *pStructure = structure[structureID];
-        if (pStructure) {
+        if (pStructure && pStructure->isValid()) {
             bool friendlyStructure = getPlayer()->isSameTeamAs(pStructure->getPlayer());
             if (friendlyStructure) {
                 if (isInfantryUnit()) {
@@ -2933,12 +2933,6 @@ void cUnit::move_to(int iGoalCell) {
                     intent = eUnitActionIntent::INTENT_MOVE;
                 }
             }
-        }
-
-        if (isSaboteur() && intent != eUnitActionIntent::INTENT_CAPTURE) {
-            // i want to know
-            log("ERROR: Expected saboteur to have INTENT_CAPTURE!");
-            assert(false && "Expected saboteur to have INTENT_CAPTURE");
         }
     }
 

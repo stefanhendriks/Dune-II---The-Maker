@@ -136,6 +136,10 @@ namespace brains {
 
         ePlayerBrainMissionState state;
 
+        bool specialEventMakesStateSwitchToSelectTarget;
+
+        bool missionWithUnits;
+
         // store which units where created (and thus part of this team)
         std::vector<int> units;
 
@@ -182,6 +186,8 @@ namespace brains {
         void onEventCannotCreatePath(const s_GameEvent &event);
 
         void logUnits();
+
+        void onExecuteSpecificStateSwitch(const s_GameEvent &event);
     };
 
 }

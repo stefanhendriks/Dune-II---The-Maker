@@ -34,6 +34,8 @@ class cItemBuilder {
         cBuildingListItem *getListItemWhichIsBuilding(int listType, int sublistType);
         cBuildingListItem *getListItemWhichIsAwaitingPlacement(int listType, int sublistType);
 
+        cPlayer * getPlayer() { return player; };
+
 	private:
         cBuildingListItem *items[MAX_ITEMS];
         int getFreeSlot();

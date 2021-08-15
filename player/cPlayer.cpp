@@ -719,7 +719,7 @@ bool cPlayer::canBuildUnitType(int iUnitType) const {
 }
 
 bool cPlayer::canBuildSpecialType(int iType) const {
-    int listId = specials[iType].listId;
+    int listId = specialInfo[iType].listId;
     cBuildingListItem *pItem = sidebar->getBuildingListItem(listId, iType);
 
     bool result = pItem != nullptr;
@@ -903,10 +903,10 @@ bool cPlayer::startBuildingSpecial(int iSpecialType) const {
         char msg[255];
         if (startedBuilding) {
             sprintf(msg, "Wanting to build special [%s] iSpecialType = [%d], with listId[%d] - SUCCESS",
-                    specials[iSpecialType].description, iSpecialType, listId);
+                    specialInfo[iSpecialType].description, iSpecialType, listId);
         } else {
             sprintf(msg, "Wanting to build special [%s] iSpecialType = [%d], with listId[%d] - FAILED",
-                    specials[iSpecialType].description, iSpecialType, listId);
+                    specialInfo[iSpecialType].description, iSpecialType, listId);
         }
         log(msg);
     }
@@ -1140,7 +1140,7 @@ eCantBuildReason cPlayer::canBuildSpecial(int iType) {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
     char msg[255];
-    s_Special &special = specials[iType];
+    s_Special &special = specialInfo[iType];
     sprintf(msg, "canBuildSpecial: Wanting to build iType = [%d(=%s)] allowed?...", iType, special.description);
     log(msg);
 
@@ -1359,11 +1359,24 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, cBuildingListIt
 void cPlayer::onNotify(const s_GameEvent &event) {
     // notify building list updater if it was a structure of mine. So it gets removed from the building list.
     if (event.player == this) {
+        if (event.eventType == eGameEventType::GAME_EVENT_DISCOVERED) {
+            onEntityDiscovered(event);
+        }
+
         if (event.entityType == eBuildType::STRUCTURE) {
             if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED) {
                 buildingListUpdater->onStructureDestroyed(event.entitySpecificType);
             } else if (event.eventType == eGameEventType::GAME_EVENT_CREATED) {
                 buildingListUpdater->onStructureCreated(event.entitySpecificType);
+            }
+        }
+
+        if (event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED ||
+            event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_ADDED ||
+            event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED ||
+            event.eventType == eGameEventType::GAME_EVENT_SPECIAL_LAUNCH) {
+            if (cBuildingListItem::isAutoBuild(event.entityType, event.entitySpecificType)) {
+                startBuilding(event.entityType, event.entitySpecificType);
             }
         }
     }
@@ -1556,6 +1569,81 @@ bool cPlayer::startUpgradingForUnitIfPossible(int iUpgradeType) const {
     cBuildingListItem *upgrade = isUpgradeAvailableToGrantUnit(iUpgradeType);
     if(upgrade && upgrade->isAvailable() && !upgrade->isBuilding()) {
         return startUpgrading(upgrade->getBuildId());
+    }
+    return false;
+}
+
+bool cPlayer::startBuilding(cBuildingListItem *pItem) {
+    if (!pItem) {
+        log("startBuilding: Cannot start building null item!");
+        return false;
+    }
+    
+    return startBuilding(pItem->getBuildType(), pItem->getBuildId());
+}
+
+void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
+    if (!event.player->isHuman()) {
+        // do nothing
+        return;
+    }
+
+    int voiceId = -1;
+
+    // when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
+    if (game.iMusicType == MUSIC_PEACE) {
+        bool triggerMusic = false;
+        if (event.entityType == eBuildType::UNIT) {
+            cUnit &cUnit = unit[event.entityID];
+
+            if (!event.player->isSameTeamAs(this)) {
+                triggerMusic = true;
+                if (cUnit.iType == SANDWORM) {
+                    voiceId = SOUND_VOICE_10_ATR;
+                } else {
+                    voiceId = SOUND_VOICE_09_ATR;
+                }
+            }
+        } else if (event.entityType == eBuildType::STRUCTURE) {
+            if (!event.player->isSameTeamAs(this)) {
+                // only things that can harm us will trigger attack music?
+                if (event.entitySpecificType == RTURRET || event.entitySpecificType == TURRET) {
+                    triggerMusic = true;
+                }
+            }
+        }
+
+        if (triggerMusic) {
+            playMusicByType(MUSIC_ATTACK);
+        }
+    }
+
+    if (voiceId > -1) {
+        play_voice(voiceId);
+    }
+}
+
+bool cPlayer::startBuilding(eBuildType buildType, int buildId) {
+    switch (buildType) {
+        case SPECIAL:
+            return startBuildingSpecial(buildId);
+        case STRUCTURE:
+            return startBuildingStructure(buildId);
+        case UNIT:
+            return startBuildingUnit(buildId);
+        case UPGRADE:
+            return startUpgrading(buildId);
+        default:
+            assert(false && "startBuilding: Unknown buildType !?");
+    }
+    return false;
+}
+
+bool cPlayer::couldBuildSpecial(int iType) {
+    s_Special &special = specialInfo[iType];
+    if (special.house & getHouseBitFlag()) {
+        // it is applicable for this house
+        return true;
     }
     return false;
 }
