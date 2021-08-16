@@ -1706,7 +1706,10 @@ void cUnit::think_move_air() {
 
         if (iType != FRIGATE) {
             // 'sand dust' when nearing target and hovering over sandy terrain
-            int dist = 6;
+            // 6 * 6 = 36
+            int dist = 4;
+            int maxSlowDown = 36;
+            float slowDownStep = maxSlowDown / dist;
             if (iLength < dist) {
                 if (rnd(100) < 5) {
                     int cellType = map.getCellType(iCell);
@@ -1719,7 +1722,7 @@ void cUnit::think_move_air() {
                         PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
                     }
                 }
-                TIMER_movedelay = (dist - iLength) * (dist * 6);
+                TIMER_movedelay = (dist - iLength) * (dist * slowDownStep);
             }
         } else {
             int dist = 6;
