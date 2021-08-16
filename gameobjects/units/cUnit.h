@@ -342,6 +342,8 @@ private:
     int getFaceAngleToCell(int cell) const;
 
     void attack(int iGoalCell, int iUnit, int iStructure, int iAttackCell);
+
+    int findNewDropLocation(int unitTypeToDrop, int cell) const;
 };
 
 

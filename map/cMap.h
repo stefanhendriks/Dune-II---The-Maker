@@ -29,6 +29,7 @@ public:
     void init(int width, int height);
 
 	bool canDeployUnitAtCell(int iCell, int iUnitId);
+	bool canDeployUnitTypeAtCell(int iCell, int iUnitType);
 	bool occupied(int iCell);
 	bool occupied(int iCll, int iUnitID);
 	bool occupiedInDimension(int iCell, int dimension);
@@ -303,7 +304,7 @@ public:
     int getCellIdStructuresLayer(int cellNr) {
         return cellGetIdFromLayer(cellNr, MAPID_STRUCTURES);
     }
-    
+
     bool isCellPassableForFootUnits(int cellNr) {
         bool isPassable = isCellPassableFoot(cellNr); // -> this will block for ALL units, so don't do this
         int unitId = getCellIdUnitLayer(cellNr);
@@ -546,6 +547,9 @@ public:
      * @param y
      */
     void fixCoordinatesToBeWithinPlayableMap(int &x, int &y);
+
+    int findNearByValidDropLocation(int cell, int range, int unitTypeToDrop);
+    int findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop);
 
 private:
     void setVisible(int iCell, int iPlayer, bool flag);

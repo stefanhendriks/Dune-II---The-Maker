@@ -1371,7 +1371,7 @@ void cUnit::think_turn_to_desired_body_facing() {
     if (isAirbornUnit()) {
         // when closer to goal, turnspeed decreases.
         double distance = map.distance(iCell, iGoalCell);
-        int distanceInCells = 6;
+        int distanceInCells = 8;
         if (distance < distanceInCells) {
             turnspeed = (turnspeed/distanceInCells) * distance;
         } else {
@@ -1587,17 +1587,9 @@ void cUnit::think_move_air() {
                             int pufY = (pos_y() + getBmpHeight() / 2);
                             PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
                         } else {
-                            if (DEBUGGING)
-                                log("Could not dump here, searching other spot");
-
                             // find a new spot
                             updateCellXAndY();
-                            int rx = (iCellX - 2) + rnd(5);
-                            int ry = (iCellY - 2) + rnd(5);
-                            FIX_BORDER_POS(rx, ry);
-
-                            iGoalCell = map.getCellWithMapDimensions(rx, ry);
-
+                            iGoalCell = findNewDropLocation(unit[iUnitID].iType, iCell);
                             iBringTarget = iGoalCell;
                             return;
                         }
@@ -1675,11 +1667,7 @@ void cUnit::think_move_air() {
             } else {
                 // find a new spot for delivery
                 updateCellXAndY();
-                int rx = (iCellX - 4) + rnd(7);
-                int ry = (iCellY - 4) + rnd(7);
-                FIX_BORDER_POS(rx, ry);
-
-                iGoalCell = map.getCellWithMapDimensions(rx, ry);
+                iGoalCell = findNewDropLocation(iNewUnitType, iCell);
                 return;
             }
         }
@@ -1808,6 +1796,17 @@ void cUnit::think_move_air() {
 
     updateCellXAndY();
     map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
+}
+
+int cUnit::findNewDropLocation(int unitTypeToDrop, int cell) const {
+    int dropLocation = map.findNearByValidDropLocation(cell, 4, unitTypeToDrop);
+    if (dropLocation < 0) {
+        dropLocation = map.findNearByValidDropLocation(cell, 8, unitTypeToDrop);
+    }
+    if (dropLocation < 0) {
+        dropLocation = map.findNearByValidDropLocation(cell, 16, unitTypeToDrop);
+    }
+    return dropLocation;
 }
 
 // Carryall-order

@@ -129,23 +129,43 @@ bool cMap::occupied(int iCell) {
 	return false;
 }
 
+bool cMap::canDeployUnitTypeAtCell(int iCell, int iUnitType) {
+    if (iCell < 0 || iUnitType < 0)
+        return false;
+
+    s_UnitP &unitToDeploy = unitInfo[iUnitType];
+
+    bool isAirbornUnit = unitToDeploy.airborn;
+    bool isInfantryUnit = unitToDeploy.infantry;
+
+    if (isAirbornUnit) return true;
+
+    if (isInfantryUnit && map.isCellPassableForFootUnits(iCell)) return true;
+
+    if (!map.isCellPassable(iCell)) return false;
+
+    int unitId = getCellIdUnitLayer(iCell);
+    int strucId = getCellIdStructuresLayer(iCell);
+
+    return unitId < 0 && strucId < 0;
+}
+
 /**
- * Checks if a cary-all (passed with iUnitID) can deploy a unit at iCll
+ * Checks if a cary-all (passed with iUnitID) can deploy a unit at iCll.
+ *
  * @param iCll (cell to deploy)
  * @param iUnitID (the carry-all)
  * @return
  */
-bool cMap::canDeployUnitAtCell(int iCll, int iUnitID) {
-    if (iCll < 0 || iUnitID < 0)
+bool cMap::canDeployUnitAtCell(int iCell, int iUnitID) {
+    if (iCell < 0 || iUnitID < 0)
         return false;
 
     cUnit &pUnit = unit[iUnitID];
     if (!pUnit.isAirbornUnit()) return false; // weird unit passed in
     if (pUnit.iNewUnitType < 0) return false; // safe-guard when this unit has no new unit to spawn
 
-    s_UnitP &unitToDeploy = unitInfo[pUnit.iNewUnitType];
-
-    int structureIdOnMap = map.getCellIdStructuresLayer(iCll);
+    int structureIdOnMap = map.getCellIdStructuresLayer(iCell);
     if (structureIdOnMap > -1) {
         // the cell contains a structure that the unit wants to enter (for repairment?)
         if (pUnit.iStructureID > -1) {
@@ -158,22 +178,27 @@ bool cMap::canDeployUnitAtCell(int iCll, int iUnitID) {
         return false;
     }
 
-    if (!unitToDeploy.airborn) {
-        int cellIdOnMap = map.getCellIdUnitLayer(iCll);
+    s_UnitP &unitToDeploy = unitInfo[pUnit.iNewUnitType];
+
+    bool isAirbornUnit = unitToDeploy.airborn;
+    bool isInfantryUnit = unitToDeploy.infantry;
+
+    if (!isAirbornUnit) {
+        int cellIdOnMap = map.getCellIdUnitLayer(iCell);
         if (cellIdOnMap > -1 && cellIdOnMap != iUnitID) {
             return false; // other unit at cell
         }
     }
 
     // walls block as do mountains
-    if (map.getCellType(iCll) == TERRAIN_WALL) {
+    if (map.getCellType(iCell) == TERRAIN_WALL) {
         return false;
     }
 
     // mountains only block infantry
-    if (map.getCellType(iCll) == TERRAIN_MOUNTAIN) {
+    if (map.getCellType(iCell) == TERRAIN_MOUNTAIN) {
         // we can deploy infantry types on mountains, airborn units can fly over
-        if (!unitToDeploy.infantry && !unitToDeploy.airborn) {
+        if (!isInfantryUnit && !isAirbornUnit) {
             return false;
         }
     }
@@ -284,12 +309,6 @@ void cMap::clearShroud(int c, int size, int playerId) {
             int cl = mapCamera->getCellFromAbsolutePosition(x, y);
 
             if (cl < 0) continue;
-
-//            if (DEBUGGING) {
-//                int cellDrawX = mapCamera->getWindowXPositionFromCell(cl);
-//                int cellDrawY = mapCamera->getWindowYPositionFromCell(cl);
-//                rectfill(bmp_screen, cellDrawX, cellDrawY, cellDrawX+32, cellDrawY+32, makecol(0,32,0));
-//            }
 
             if (!map.isVisible(cl, playerId)) {
                 map.setVisibleFor(cl, playerId);
@@ -1030,4 +1049,60 @@ bool cMap::isAtMapBoundaries(int cell) {
 
 void cMap::fixCoordinatesToBeWithinPlayableMap(int &x, int &y) {
     FIX_BORDER_POS(x, y);
+}
+
+int cMap::findNearByValidDropLocation(int cell, int range, int unitTypeToDrop) {
+    // go around 360 fDegrees and calculate new stuff.
+    for (float dr = 1; dr < range; dr++) { // go outwards
+        for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
+            // need a smarter way to do this (less CPU intensive).
+
+            int x = map.getAbsoluteXPositionFromCellCentered(cell);
+            int y = map.getAbsoluteYPositionFromCellCentered(cell);
+
+            float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
+            float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
+
+            x = (x + dr1);
+            y = (y + dr2);
+
+            // convert back
+            int cl = mapCamera->getCellFromAbsolutePosition(x, y);
+
+            if (cl < 0) continue;
+
+            if (map.canDeployUnitTypeAtCell(cl, unitTypeToDrop)) {
+                return cl;
+            }
+        }
+    }
+    return -1;
+}
+
+int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop) {
+    // go around 360 fDegrees and calculate new stuff.
+    for (float dr = 1; dr < range; dr++) { // go outwards
+        for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
+            // need a smarter way to do this (less CPU intensive).
+
+            int x = map.getAbsoluteXPositionFromCellCentered(cell);
+            int y = map.getAbsoluteYPositionFromCellCentered(cell);
+
+            float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
+            float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
+
+            x = (x + dr1);
+            y = (y + dr2);
+
+            // convert back
+            int cl = mapCamera->getCellFromAbsolutePosition(x, y);
+
+            if (cl < 0) continue;
+
+            if (map.canDeployUnitAtCell(cell, unitIDToDrop)) {
+                return cell;
+            }
+        }
+    }
+    return -1;
 }
