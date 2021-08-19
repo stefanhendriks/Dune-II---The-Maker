@@ -198,36 +198,6 @@ int cStructureUtils::getStructureTypeByUnitBuildId(int unitBuildId) const {
 	}
 }
 
-int cStructureUtils::findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(int cell, int structureType, cPlayer * pPlayer) {
-	assert(pPlayer);
-	assert(structureType > -1);
-	assert(map.isValidCell(cell));
-
-	int foundStructureId=-1;	// found structure id
-	long shortestDistance=9999; // max distance to search in
-
-	int playerId = pPlayer->getId();
-
-	for (int i=0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *pStructure = structure[i];
-        if (pStructure == nullptr) continue;
-        if (pStructure->getOwner() != playerId) continue;
-        if (pStructure->getType() != structureType) continue;
-
-        if (pStructure->iUnitID < 0) {	// no other unit is heading to this structure
-            long distance = map.distance(cell, pStructure->getCell());
-
-            // if distance is lower than last found distance, it is the closest for now.
-            if (distance < shortestDistance) {
-                foundStructureId=i;
-                shortestDistance=distance;
-            }
-        }
-	}
-
-	return foundStructureId;
-}
-
 void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructure * theStructure) {
 	if (!theStructure) {
 	    logbook("!theStruture");

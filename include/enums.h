@@ -96,8 +96,8 @@ enum eUnitActionIntent {
     INTENT_UNLOAD_SPICE // deposit spice
 };
 
-// what is the intent of the action given to the unit?
 enum eUnitMoveToCellResult {
+
     /**
      * still busy moving between cells (offsets != 0)
      */

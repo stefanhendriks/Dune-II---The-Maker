@@ -66,7 +66,7 @@ void cMap::init(int width, int height) {
 }
 
 void cMap::smudge_increase(int iType, int iCell) {
-    if (!map.isValidCell(iCell)) return;
+    if (!isValidCell(iCell)) return;
     tCell *pCell = getCell(iCell);
 
     if (pCell->smudgetype < 0)
@@ -151,7 +151,7 @@ bool cMap::canDeployUnitTypeAtCell(int iCell, int iUnitType) {
 }
 
 /**
- * Checks if a cary-all (passed with iUnitID) can deploy a unit at iCll.
+ * Checks if a cary-all (passed with iUnitIDWithinStructure) can deploy a unit at iCll.
  *
  * @param iCll (cell to deploy)
  * @param iUnitID (the carry-all)
@@ -219,13 +219,12 @@ bool cMap::occupied(int iCll, int iUnitID) {
 
     cUnit &pUnit = unit[iUnitID];
 
-    // TODO: when unit wants to enter a structure...
-
     int structureIdOnMap = map.getCellIdStructuresLayer(iCll);
     if (structureIdOnMap > -1) {
         // the cell contains a structure that the unit wants to enter
         if (pUnit.iStructureID > -1) {
             if (structureIdOnMap == pUnit.iStructureID) {
+                // the unit wants to enter this structure, so it does not block the unit
                 return false;
             }
         }
@@ -1105,4 +1104,107 @@ int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDr
         }
     }
     return -1;
+}
+
+/**
+ * Scans structures, belonging to player. If it is the same type it will be returned.
+ * @param player
+ * @param structureType
+ * @return
+ */
+cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, cPlayer * player) {
+    assert(player);
+    assert(structureType > -1);
+    assert(isValidCell(cell));
+
+    int foundStructureId=-1;	// found structure id
+    long shortestDistance=9999; // max distance to search in
+
+    const std::vector<int> &myStructuresAsId = player->getAllMyStructuresAsId();
+    for (auto &i : myStructuresAsId) {
+        cAbstractStructure *pStructure = structure[i];
+        if (pStructure == nullptr) continue;
+        if (pStructure->getType() != structureType) continue;
+
+        long distance = map.distance(cell, pStructure->getCell());
+
+        // if distance is lower than last found distance, it is the closest for now.
+        if (distance < shortestDistance) {
+            foundStructureId=i;
+            shortestDistance=distance;
+        }
+    }
+
+    if (foundStructureId > -1) {
+        return structure[foundStructureId];
+    }
+
+    return nullptr;
+}
+
+cAbstractStructure * cMap::findClosestAvailableStructureType(int cell, int structureType, cPlayer *pPlayer) {
+    assert(pPlayer);
+    assert(structureType > -1);
+    assert(isValidCell(cell));
+
+    int foundStructureId=-1;	// found structure id
+    long shortestDistance=9999; // max distance to search in
+
+    const std::vector<int> &myStructuresAsId = pPlayer->getAllMyStructuresAsId();
+    for (auto &i : myStructuresAsId) {
+        cAbstractStructure *pStructure = structure[i];
+        if (pStructure == nullptr) continue;
+        if (pStructure->getType() != structureType) continue;
+        if (pStructure->hasUnitWithin()) continue; // already occupied
+
+        long distance = map.distance(cell, pStructure->getCell());
+
+        // if distance is lower than last found distance, it is the closest for now.
+        if (distance < shortestDistance) {
+            foundStructureId=i;
+            shortestDistance=distance;
+        }
+    }
+
+    if (foundStructureId > -1) {
+        return structure[foundStructureId];
+    }
+
+    return nullptr;
+}
+
+cAbstractStructure * cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int structureType, cPlayer * pPlayer) {
+    assert(pPlayer);
+    assert(structureType > -1);
+    assert(isValidCell(cell));
+
+    int foundStructureId=-1;	// found structure id
+    long shortestDistance=9999; // max distance to search in
+
+    int playerId = pPlayer->getId();
+
+    const std::vector<int> &myStructuresAsId = pPlayer->getAllMyStructuresAsId();
+    for (auto &i : myStructuresAsId) {
+        cAbstractStructure *pStructure = structure[i];
+        if (pStructure == nullptr) continue;
+        if (pStructure->getOwner() != playerId) continue;
+        if (pStructure->getType() != structureType) continue;
+        if (pStructure->hasUnitWithin()) continue; // already occupied
+
+        if (!pStructure->hasUnitHeadingTowards()) {	// no other unit is heading to this structure
+            long distance = map.distance(cell, pStructure->getCell());
+
+            // if distance is lower than last found distance, it is the closest for now.
+            if (distance < shortestDistance) {
+                foundStructureId=i;
+                shortestDistance=distance;
+            }
+        }
+    }
+
+    if (foundStructureId > -1) {
+        return structure[foundStructureId];
+    }
+
+    return nullptr;
 }

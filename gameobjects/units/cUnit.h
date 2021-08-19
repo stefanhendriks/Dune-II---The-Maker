@@ -91,11 +91,11 @@ public:
 
 	// Carry-All specific
 	int iTransferType;	// -1 = none, 0 = new (and stay), 1 = carrying existing unit , 2 = new (and leave)
-						// iUnitID = unit we CARRY (when TransferType == 1)
+						// iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
 						// iTempHitPoints = hp of unit when transfertype = 1
 
 	int iCarryTarget;	// Unit ID to carry, but is not carried yet
-	int iBringTarget;	// Where to bring the carried unit (when iUnitID > -1)
+	int iBringTarget;	// Where to bring the carried unit (when iUnitIDWithinStructure > -1)
 	int iNewUnitType;	// new unit that will be brought, will be this type
 	int lastDroppedOffCell; // last cell where we dropepd off a unit
 	bool bPickedUp;		// picked up the unit?
@@ -148,9 +148,17 @@ public:
 
     int getNextCellToMoveTo(); // what is the next cell to move to
 
+    void move_to_enter_structure(cAbstractStructure *pStructure, eUnitActionIntent intent);
     void move_to(int iGoalCell);
-    void move_to(int iCll, int iStrucID, int iUnitID, eUnitActionIntent intent);
-    void move_to(int iCll, int iStrucID, int iUnitID);
+    void move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUnitActionIntent intent);
+    void move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup);
+
+    cAbstractStructure * findBestStructureCandidateToHeadTo(int structureType);
+    void findBestStructureCandidateAndHeadTowardsItOrWait(int structureType, bool allowCarryallTransfer);
+
+    cAbstractStructure * findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int structureType);
+    cAbstractStructure * findClosestAvailableStructureType(int structureType);
+    cAbstractStructure * findClosestStructureType(int structureType);
 
 	// carryall-functions:
 	void carryall_order(int iuID, int iTransfer, int iBring, int iTpe);
@@ -236,6 +244,11 @@ public:
         if (isDead()) {
             die(true, false);
         }
+    }
+
+    void setHp(int hp) {
+        // debug purposes only
+        iHitPoints = hp;
     }
 
     /**
@@ -344,6 +357,15 @@ private:
     void attack(int iGoalCell, int iUnit, int iStructure, int iAttackCell);
 
     int findNewDropLocation(int unitTypeToDrop, int cell) const;
+
+    /**
+     * Returns a pointer to a structure the unit wants to enter. If the unit wants to enter an invalid structure,
+     * this function will return nullptr.
+     * @return
+     */
+    cAbstractStructure *getStructureUnitWantsToEnter() const;
+
+    cUnit& getUnitToPickupOrDrop() const;
 };
 
 

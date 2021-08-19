@@ -312,6 +312,36 @@ public:
         return isPassable && unitId < 0 && strucId < 0;
     }
 
+    /**
+     * Finds the closest structure (compared to cell param) of required type, for player.
+     * It also checks if the structure is not occupied by any unit AND that no other unit is already heading towards the structure.
+     *
+     * Returns nullptr if none found.
+     *
+     * @return pointer to cAbstractStructure
+     */
+    cAbstractStructure * findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int structureType, cPlayer *pPlayer);
+
+    /**
+     * Finds the closest structure (compared to cell param) of required type, for player.
+     * It also checks if the structure is not occupied by any unit. It does not care if any other unit is already heading for this structure.
+     *
+     * Returns nullptr if none found.
+     *
+     * @return pointer to cAbstractStructure
+     */
+    cAbstractStructure * findClosestAvailableStructureType(int cell, int structureType, cPlayer *pPlayer);
+
+    /**
+     * Finds the closest structure (compared to cell param) of required type, for player.
+     * It does not care if structure is occupied nor does it care if any other unit is already heading for this structure.
+     *
+     * Returns nullptr if none found.
+     *
+     * @return pointer to cAbstractStructure
+     */
+    cAbstractStructure * findClosestStructureType(int cell, int structureType, cPlayer * player);
+
     void cellTakeDamage(int cellNr, int damage) {
         tCell *pCell = getCell(cellNr);
         if (pCell) {
