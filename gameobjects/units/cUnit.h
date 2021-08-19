@@ -315,6 +315,8 @@ public:
 
     bool canSquishInfantry();
 
+    void carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell);
+
 private:
 
     int mission; // is this unit assigned to a mission?
@@ -366,6 +368,10 @@ private:
     cAbstractStructure *getStructureUnitWantsToEnter() const;
 
     cUnit& getUnitToPickupOrDrop() const;
+
+    bool findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *candidate, int destCell);
+
+    void awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate);
 };
 
 
@@ -405,6 +411,8 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID);
 void UNIT_deselect_all();
 
 int UNIT_find_harvest_spot(int id);
+
+int CARRYALL_FREE_FOR_TRANSFER(int iPlayer);
 
 int CARRYALL_TRANSFER(int iuID, int iGoal);
 

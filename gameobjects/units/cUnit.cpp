@@ -1488,21 +1488,34 @@ void cUnit::think_move_air() {
                         if (!map.occupied(iCell, iUnitID) && isWithinMapBoundaries) {
                             // valid structure
                             cAbstractStructure *structureUnitWantsToEnter = unitToPickupOrDrop.getStructureUnitWantsToEnter();
-                            if (structureUnitWantsToEnter) {
-                                if (structureUnitWantsToEnter->hasUnitWithin()) {
-                                    // TODO: Do this with events
-                                    // already became occupied, so try to find a different kind of structure
-                                    int type = structureUnitWantsToEnter->getType();
-                                    cAbstractStructure *alternative = findBestStructureCandidateToHeadTo(type);
 
-                                    if (alternative) {
-                                        iGoalCell = alternative->getCell();
-                                        return;
-                                    } else {
-                                        // !?
-                                        iGoalCell = map.getRandomCellFrom(iCell, 3);
-                                    }
-                                }
+                            if (structureUnitWantsToEnter) {
+                                bool isAttemptingDeployingAtStructure = map.getCellIdStructuresLayer(iCell) == structureUnitWantsToEnter->getStructureId();
+
+                                if (isAttemptingDeployingAtStructure) {
+                                    if (structureUnitWantsToEnter->hasUnitWithin() ||
+                                        structureUnitWantsToEnter->hasUnitEntering()) {
+                                        // TODO: Do this with events
+                                        // already became occupied, so try to find a different kind of structure
+                                        int type = structureUnitWantsToEnter->getType();
+                                        cAbstractStructure *alternative = findClosestAvailableStructureType(type);
+
+                                        if (alternative) {
+                                            iGoalCell = alternative->getRandomStructureCell();
+                                            iBringTarget = iGoalCell;
+                                            unitToPickupOrDrop.awaitBeingPickedUpToBeTransferedByCarryAllToStructure(alternative);
+                                            return;
+                                        } else {
+                                            // !?
+                                            int dropLocation = map.findNearByValidDropLocation(iCell, 3,
+                                                                                               unitToPickupOrDrop.iType);
+//                                            carryAll_transferUnitTo(iUnitID, dropLocation);
+                                            iGoalCell = dropLocation;
+                                            iBringTarget = dropLocation;
+                                            return;
+                                        }
+                                    } // structure is being occupied or just about to be occupied
+                                } // attempts to unload above structure
                             }
 
                             // dump it here
@@ -3046,19 +3059,54 @@ void cUnit::findBestStructureCandidateAndHeadTowardsItOrWait(int structureType, 
         return;
     }
 
-    // how? carry-all or ride?
-    int r = CARRYALL_TRANSFER(iID, candidate->getCell() + 2);
+    int destCell = candidate->getCell() + 2;
 
-    if (r > -1) {
-        TIMER_movewait = 500; // wait for pickup!
-        TIMER_thinkwait = 500;
-        // TODO: somehow remember we want to do something here!?
-        return;
+    // try to get a carry-all to help when a bit bigger distance
+    if (map.distance(iCell, destCell) > 4) {
+        if (findAndOrderCarryAllToBringMeToStructureAtCell(candidate, destCell)) {
+            return;
+        }
     }
 
-    // no Carry-all found, then move yourself :)
+    // no Carry-all found, or distance too short
     move_to_enter_structure(candidate, INTENT_UNLOAD_SPICE);
     TIMER_movewait = 0;
+}
+
+bool cUnit::findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *candidate, int destCell) {
+    int r = CARRYALL_FREE_FOR_TRANSFER(iPlayer);
+    if (r < 0) {
+        return false;
+    }
+
+    cUnit &carryAll = unit[r];
+    carryAll.carryAll_transferUnitTo(iID, destCell);
+
+    // todo: "getCellWhereToBringUnit"? where to enter structure so to speak?
+    awaitBeingPickedUpToBeTransferedByCarryAllToStructure(candidate);
+
+    // TODO: somehow remember we want to do something here!?
+    return true;
+}
+
+void cUnit::carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell) {
+    carryall_order(unitIdToTransfer, TRANSFER_PICKUP, destinationCell, -1);
+}
+
+void cUnit::awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate) {
+    TIMER_movewait = 500; // wait for pickup!
+    TIMER_thinkwait = 500;
+    if (!candidate->hasUnitHeadingTowards() && !candidate->hasUnitWithin()) {
+        candidate->unitHeadsTowardsStructure(iID);
+        iStructureID = candidate->getStructureId();
+    } else {
+        // we chose to head towards this structure, but we can't claim it; this is
+        // the situation that more units than available structures are heading towards the same structure
+        // in this case we only remember the structureId, as we still have the intent to head towards it.
+        // we let the other code that with "entering a structure" deal with any possibly already occupied
+        // structure stuff.
+        iStructureID = candidate->getStructureId();
+    }
 }
 
 
@@ -3898,6 +3946,21 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
     unit[iUnit].carryall_order(-1, TRANSFER_NEW_LEAVE, iCll, iTpe);
 }
 
+int CARRYALL_FREE_FOR_TRANSFER(int iPlayer) {
+    // find a free carry all, and bring unit to goal..
+    for (int i = 0; i < MAX_UNITS; i++) {
+        cUnit &cUnit = unit[i];
+        if (!cUnit.isValid()) continue;
+        if (cUnit.iPlayer != iPlayer) continue;
+        if (cUnit.iType != CARRYALL) continue; // skip non-carry-all units
+        if (cUnit.iTransferType != TRANSFER_NONE) continue; // skip busy carry-alls
+        
+        return i;
+    }
+    
+    return -1;
+}
+
 /**
  * Finds a free carryall of the same player as unit iuID. Returns > -1 which is the ID of the
  * carry-all which is going to pick up the unit. Or < 0 if no carry-all has been found to transfer unit.
@@ -3906,20 +3969,12 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
  * @return
  */
 int CARRYALL_TRANSFER(int iuID, int iGoal) {
-    // find a free carry all, and bring unit to goal..
-    for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &cUnit = unit[i];
-        if (!cUnit.isValid()) continue;
-        if (cUnit.iPlayer != unit[iuID].iPlayer) continue;
-        if (cUnit.iType != CARRYALL) continue; // skip non-carry-all units
-        if (cUnit.iTransferType != TRANSFER_NONE) continue; // skip busy carry-alls
-
-        // assign an order
+    int carryAllUnitId = CARRYALL_FREE_FOR_TRANSFER(unit[iuID].iPlayer);
+    if (carryAllUnitId > -1) {
+        cUnit &cUnit = unit[carryAllUnitId];
         cUnit.carryall_order(iuID, TRANSFER_PICKUP, iGoal, -1);
-        return i;
     }
-
-    return -1; // fail
+    return carryAllUnitId;
 }
 
 /**
