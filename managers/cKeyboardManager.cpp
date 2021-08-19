@@ -129,9 +129,21 @@ void cKeyboardManager::DEBUG_KEYS() {
             }
         }
     }
-    // REVEAL  MAP
-    if (key[KEY_F5]) {
-        map.clear_all(HUMAN);
+
+    //DESTROY UNIT OR BUILDING
+    if (key[KEY_F5] && key[KEY_LSHIFT]) {
+        int mc = players[HUMAN].getGameControlsContext()->getMouseCell();
+        if (mc > -1) {
+            int idOfUnitAtCell = map.getCellIdUnitLayer(mc);
+            if (idOfUnitAtCell > -1) {
+                unit[idOfUnitAtCell].setHp(25);
+            }
+        }
+    } else {
+        // REVEAL  MAP
+        if (key[KEY_F5]) {
+            map.clear_all(HUMAN);
+        }
     }
 
     //JUMP TO MISSION 3
