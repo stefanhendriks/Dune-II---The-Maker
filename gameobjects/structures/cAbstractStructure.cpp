@@ -37,7 +37,8 @@ cAbstractStructure::cAbstractStructure() {
 
     iBuildFase=-1;
 
-    iUnitID=-1;
+    iUnitIDWithinStructure = -1;
+    iUnitIDHeadingForStructure = -1;
 
     iWidth=-1;
     iHeight=-1;
@@ -145,8 +146,8 @@ void cAbstractStructure::die() {
     thePlayer.decreaseStructureAmount(getType()); // remove from player building indexes
 
     // UnitID > -1, means the unit inside will die too
-    if (iUnitID > -1) {
-        unit[iUnitID].init(iUnitID); // die here... softly
+    if (iUnitIDWithinStructure > -1) {
+        unit[iUnitIDWithinStructure].init(iUnitIDWithinStructure); // die here... softly
     }
 
 	int iCll=iCell;
@@ -307,11 +308,10 @@ void cAbstractStructure::think_guard() {
 
 // This method thinks about basic animation
 void cAbstractStructure::think_animation() {
-// show (common) prebuild animation
+    // show (common) prebuild animation
 	if (iBuildFase < 10) {
         think_prebuild();
 	}
-
 }
 
 void cAbstractStructure::setRepairing(bool value) {
@@ -599,4 +599,92 @@ int cAbstractStructure::getRandomPosY() {
 
 void cAbstractStructure::startRepairing() {
     bRepair = true;
+}
+
+void cAbstractStructure::setUnitIdWithin(int unitId) {
+    if (unitId > -1) {
+        if (unitId != iUnitIDWithinStructure) {
+            assert(iUnitIDWithinStructure < 0 &&
+                   "cAbstractStructure::setUnitIdWithin - Cannot set iUnitIDWithinStructure, because it has been set already!");
+        }
+    }
+    this->iUnitIDWithinStructure = unitId;
+}
+
+void cAbstractStructure::setUnitIdHeadingTowards(int unitId) {
+    if (unitId > -1) {
+        if (unitId != iUnitIDHeadingForStructure) {
+            assert(iUnitIDHeadingForStructure < 0 &&
+                   "cAbstractStructure::setUnitIdHeadingTowards - Cannot set iUnitIDHeadingForStructure, because it has been set already!");
+        }
+    }
+    this->iUnitIDHeadingForStructure = unitId;
+}
+
+void cAbstractStructure::setUnitIdEntering(int unitId) {
+    if (unitId > -1) {
+        if (unitId != iUnitIDEnteringStructure) {
+            assert(iUnitIDEnteringStructure < 0 &&
+                   "cAbstractStructure::setUnitIdHeadingTowards - Cannot set iUnitIDEnteringStructure, because it has been set already!");
+        }
+    }
+    this->iUnitIDEnteringStructure = unitId;
+}
+
+void cAbstractStructure::unitEnteredStructure(int unitID) {
+    setUnitIdHeadingTowards(-1);
+    setUnitIdWithin(unitID);
+    setUnitIdEntering(-1);
+    setAnimating(false);
+    setFrame(0);
+}
+
+void cAbstractStructure::unitLeavesStructure() {
+    cUnit &unitToLeave = unit[iUnitIDWithinStructure];
+    int iNewCell = getNonOccupiedCellAroundStructure();
+
+    if (iNewCell > -1) {
+        unitToLeave.setCell(iNewCell);
+    } else {
+        logbook("Could not find space for this unit");
+        // TODO: Pick up by carry-all!?
+    }
+
+    // done & restore unit
+    unitToLeave.iCredits = 0;
+    unitToLeave.iStructureID = -1;
+
+    unitToLeave.TIMER_harvest = 0;
+    unitToLeave.restoreFromTempHitPoints();
+
+    unitToLeave.iGoalCell = unitToLeave.getCell();
+    unitToLeave.iPathIndex = -1;
+
+    unitToLeave.TIMER_movewait = 0;
+    unitToLeave.TIMER_thinkwait = 0;
+
+    if (getRallyPoint() > -1) {
+        unitToLeave.move_to(getRallyPoint(), -1, -1);
+    }
+
+    map.cellSetIdForLayer(unitToLeave.getCell(), MAPID_UNITS, iUnitIDWithinStructure);
+
+    setUnitIdWithin(-1);
+    setUnitIdHeadingTowards(-1);
+    setAnimating(false);
+}
+
+void cAbstractStructure::startEnteringStructure(int unitID) {
+    setUnitIdWithin(-1);
+    setUnitIdEntering(unitID);
+    setUnitIdHeadingTowards(-1);
+}
+
+void cAbstractStructure::unitHeadsTowardsStructure(int unitId) {
+    setUnitIdHeadingTowards(unitId);
+    setAnimating(true);
+}
+
+int cAbstractStructure::getRandomStructureCell() {
+    return getCell() + rnd(getWidth()) + (rnd(getHeight()) * map.getWidth());
 }

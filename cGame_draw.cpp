@@ -197,28 +197,7 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
                 if (hoverUnit.isDamaged() && !hoverUnit.isInfantryUnit() && !hoverUnit.isAirbornUnit())	{
                     if (mouse->isLeftButtonClicked()) {
                         // find closest repair bay to move to
-
-                        cStructureUtils structureUtils;
-                        int	iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
-                                hoverUnit.getCell(), REPAIR, &humanPlayer);
-
-                        if (iNewID > -1) {
-                            int iCarry = CARRYALL_TRANSFER(hover_unit, structure[iNewID]->getCell() + 2);
-
-                            if (iCarry > -1) {
-                                // yehaw we will be picked up!
-                                hoverUnit.TIMER_movewait = 100;
-                                hoverUnit.TIMER_thinkwait = 100;
-                            } else {
-                                logbook("Order move #5");
-                                unit[hover_unit].move_to(structure[iNewID]->getCell());
-                            }
-
-                            hoverUnit.TIMER_blink = 5;
-                            hoverUnit.iStructureID = iNewID;
-                            hoverUnit.iGoalCell = structure[iNewID]->getCell();
-                        }
-
+                        hoverUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true);
                     }
 
                     mouse_tile = MOUSE_REPAIR;

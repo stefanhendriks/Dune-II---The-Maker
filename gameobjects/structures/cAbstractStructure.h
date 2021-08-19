@@ -37,6 +37,11 @@ class cAbstractStructure {
 
 		int posX, posY;     // structures do not move, so these are calculated once and then simply returned.
 
+		int iUnitIDWithinStructure;        // >-1 means ID to unit that 'occupies' the building (ie, a harvester, or a unit to repair)
+
+		int iUnitIDEnteringStructure;      // >-1 means ID to unit that is entering this structure (it is in the process of occupying a cell of the structure)
+
+		int iUnitIDHeadingForStructure;    // >-1 means ID to unit that heads for this structure
 
 	protected:
         int id;				// the id within the structure[] array
@@ -63,8 +68,6 @@ class cAbstractStructure {
 		float fConcrete;     // how much concrete is *not* beneath this building (percentage)?
 							 // meaning, when 0% , it is all concrete. But if 10%, it means 10% of the building
 							 // is not covered.
-
-		int iUnitID;        // >-1 means ID to unit
 
 
 		// TIMERS that all structures use
@@ -138,7 +141,13 @@ class cAbstractStructure {
 		int getOwner() { return iPlayer; } // return the player id who owns this structure
 		int getRallyPoint() { return iRallyPoint; }
 		int getFrame() { return iFrame; }
+
+		/**
+		 * Returns the ID within the structures array
+		 * @return
+		 */
 		int getStructureId() { return id; }
+
 		int getMaxHP();
 		int getCaptureHP();
 		int getSight();
@@ -150,8 +159,19 @@ class cAbstractStructure {
 		bool isAnimating() { return bAnimate; }
 		bool isPrimary();
 		bool isRepairing() { return bRepair; }
-		bool hasUnitWithin() const { return iUnitID > -1; }
-		int getUnitIdWithin() const { return iUnitID; }
+
+		bool hasUnitWithin() const { return iUnitIDWithinStructure > -1; }
+		int getUnitIdWithin() const { return iUnitIDWithinStructure; }
+		void setUnitIdWithin(int unitId);
+
+		bool hasUnitHeadingTowards() const { return iUnitIDHeadingForStructure > -1; }
+		int getUnitIdHeadingTowards() const { return iUnitIDHeadingForStructure; }
+		void setUnitIdHeadingTowards(int unitId);
+
+		bool hasUnitEntering() const { return iUnitIDEnteringStructure > -1; }
+		int getUnitIdEntering() const { return iUnitIDEnteringStructure; }
+		void setUnitIdEntering(int unitId);
+
 		bool isValid();
 		bool canAttackAirUnits() const { return getS_StructuresType().canAttackAirUnits; }
 
@@ -180,9 +200,24 @@ class cAbstractStructure {
         int getRandomPosX();
         int getRandomPosY();
 
-    void getsCapturedBy(cPlayer *pPlayer);
+        void getsCapturedBy(cPlayer *pPlayer);
 
-    void startRepairing();
+        void startRepairing();
+
+        void startEnteringStructure(int unitID);
+
+        void unitEnteredStructure(int unitID);
+
+        /**
+         * Makes current unitID within structure leave it, restoring it on the map next to a free cell.
+         * Making it also move to rally-point if set.
+         * @return
+         */
+        void unitLeavesStructure();
+
+        void unitHeadsTowardsStructure(int unitId);
+
+        int getRandomStructureCell();
 };
 
 #endif

@@ -24,8 +24,6 @@ public:
 
     int findStructureTypeByTypeOfList(cBuildingListItem *item);
 
-    int findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(int cell, int structureType, cPlayer *pPlayer);
-
     int getHeightOfStructureTypeInCells(int structureType);
 
     int getWidthOfStructureTypeInCells(int structureType);

@@ -20,7 +20,7 @@ cRepairFacility::~cRepairFacility() {
 void cRepairFacility::think() {
 
     // Repair unit here (if any)
-    if (iUnitID > -1) {
+    if (hasUnitWithin()) {
         think_repairUnit();
     }
 
@@ -30,51 +30,37 @@ void cRepairFacility::think() {
 }
 
 void cRepairFacility::think_repairUnit() {// must repair...
+    int iUnitID = getUnitIdWithin();
     cUnit &unitToRepair = unit[iUnitID];
     int maxHpForUnitType = unitInfo[unitToRepair.iType].hp;
 
     if (unitToRepair.iTempHitPoints < maxHpForUnitType) {
         TIMER_repairunit++;
 
-        if (TIMER_repairunit < 15) return;
+        // TODO: move to structure info? (or unit info?)
+        int REPAIR_SPEED = 15;
+
+        if (TIMER_repairunit < REPAIR_SPEED) return;
 
         TIMER_repairunit = 0;
 
         cPlayer *pPlayer = getPlayer();
         if (pPlayer->hasEnoughCreditsFor(2)) {
-            unitToRepair.iTempHitPoints += 3; // ie, unit with 300 HP, costs 100 to repair
-            pPlayer->substractCredits(1);
+            // TODO: Move repair rate per tick (how much hp per tick will be increased?) into unit info?
+            int REPAIR_RATE_HP_PER_TICK = 3; // ie, unit with 300 HP, costs 100 to repair
+
+            unitToRepair.iTempHitPoints += REPAIR_RATE_HP_PER_TICK;
+
+            // TODO: Move to unit info
+            // Cost per tick to repair unit for REPAIR_RATE_HP_PER_TICK amount
+            int REPAIR_COST_PER_TICK = 1;
+            pPlayer->substractCredits(REPAIR_COST_PER_TICK);
 
             if (unitToRepair.iTempHitPoints >= maxHpForUnitType) {
                 unitToRepair.setMaxHitPoints();
 
                 // dump unit, get rid of it
-                int iNewCell = getNonOccupiedCellAroundStructure();
-
-                if (iNewCell > -1) {
-                    unitToRepair.setCell(iNewCell);
-                } else {
-                    logbook("Could not find space for this unit");
-                    // TODO: Pick up by carry-all!?
-                }
-
-                // done & restore unit
-                unitToRepair.iStructureID = -1;
-
-                unitToRepair.iTempHitPoints = -1;
-
-                unitToRepair.iGoalCell = unitToRepair.getCell();
-                unitToRepair.iPathIndex = -1;
-
-                unitToRepair.TIMER_movewait = 0;
-                unitToRepair.TIMER_thinkwait = 0;
-
-                if (getRallyPoint() > -1)
-                    unitToRepair.move_to(getRallyPoint(), -1, -1);
-
-                map.cellSetIdForLayer(unitToRepair.getCell(), MAPID_UNITS, iUnitID);
-
-                iUnitID = -1;
+                unitLeavesStructure();
             }
         }
     }

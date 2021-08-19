@@ -87,11 +87,11 @@ void cUnit::init(int i) {
 
     // Carry-All specific
     iTransferType = -1;    // -1 = none, 0 = new , 1 = carrying existing unit
-    // iUnitID = unit we CARRY (when TransferType == 1)
+    // iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
     // iTempHitPoints = hp of unit when transfertype = 1
 
     iCarryTarget = -1;    // Unit ID to carry, but is not carried yet
-    iBringTarget = -1;    // Where to bring the carried unit (when iUnitID > -1)
+    iBringTarget = -1;    // Where to bring the carried unit (when iUnitIDWithinStructure > -1)
     iNewUnitType = -1;    // new unit that will be brought, will be this type
     bPickedUp = false;        // picked up the unit?
 
@@ -159,18 +159,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
         // No harvester found, deliver one
         if (!bFoundHarvester) {
             // deliver
-
-            cAbstractStructure *refinery = nullptr;
-            for (int k = 0; k < MAX_STRUCTURES; k++) {
-                cAbstractStructure *theStructure = structure[k];
-                if (!theStructure) continue;
-                if (theStructure->getOwner() != iPlayer) continue;
-                if (theStructure->getType() != REFINERY) continue;
-
-                // found!
-                refinery = theStructure;
-                break;
-            }
+            cAbstractStructure *refinery = findClosestStructureType(REFINERY);
 
             // found a refinery, deliver harvester to that
             if (refinery) {
@@ -358,7 +347,6 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
     }
 
     if (bSquish) {
-
         // when we do not 'blow up', we died by something else. Only infantry will be 'squished' here now.
         if (iType == SOLDIER || iType == TROOPER || iType == UNIT_FREMEN_ONE) {
             PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_SQUISH01 + rnd(2), iPlayer, iFrame);
@@ -367,15 +355,13 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
             PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_SQUISH03, iPlayer, iFrame);
             play_sound_id_with_distance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
         }
-
     }
 
     // NOW IT IS FREE FOR USAGE AGAIN
-
     if (iStructureID > -1) {
         cAbstractStructure *pStructure = structure[iStructureID];
         if (pStructure && pStructure->isValid()) {
-            pStructure->setAnimating(false);
+            // TODO: Use events, and let structure deal with this themselves!
         }
     }
 
@@ -436,12 +422,10 @@ bool cUnit::isValid() {
 }
 
 int cUnit::pos_x() {
-//    return (iCellX * TILESIZE_WIDTH_PIXELS) + iOffsetX;
     return posX;
 }
 
 int cUnit::pos_y() {
-//    return (iCellY * TILESIZE_HEIGHT_PIXELS) + iOffsetY;
     return posY;
 }
 
@@ -801,17 +785,17 @@ void cUnit::attackAt(int cell) {
     attackCell(cell);
 }
 
-void cUnit::move_to(int iCll, int iStrucID, int iUnitID) {
-    move_to(iCll, iStrucID, iUnitID, eUnitActionIntent::INTENT_MOVE);
+void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup) {
+    move_to(iCll, iStructureIdToEnter, iUnitIdToPickup, eUnitActionIntent::INTENT_MOVE);
 }
 
-void cUnit::move_to(int iCll, int iStrucID, int iUnitID, eUnitActionIntent intent) {
+void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUnitActionIntent intent) {
     char msg[255];
-    sprintf(msg, "(move_to - START) : to cell [%d], iStrucID[%d], unitId[%d] (to attack, if > -1), intent[%s]", iCll, iStrucID, iUnitID, eUnitActionIntentString(intent));
+    sprintf(msg, "(move_to - START) : to cell [%d], iStructureIdToEnter[%d], iUnitIdToPickup[%d] (to attack, if > -1), intent[%s]", iCll, iStructureIdToEnter, iUnitIdToPickup, eUnitActionIntentString(intent));
     log(msg);
     iGoalCell = iCll;
-    iStructureID = iStrucID;
-    this->iUnitID = iUnitID;
+    iStructureID = iStructureIdToEnter;
+    iUnitID = iUnitIdToPickup;
     iAttackStructure = -1;
     iAttackCell = -1;
 
@@ -823,13 +807,7 @@ void cUnit::move_to(int iCll, int iStrucID, int iUnitID, eUnitActionIntent inten
     iAction = ACTION_MOVE;
     this->intent = intent;
 
-    forgetAboutCurrentPathAndPrepareToCreateNewOne(rnd(5));
-
-    if (iStrucID > -1) {
-        if (structure[iStrucID]) {
-            structure[iStrucID]->iUnitID = iUnitID;
-        }
-    }
+    forgetAboutCurrentPathAndPrepareToCreateNewOne();
 
     log("(move_to - FINISHED)");
 }
@@ -1202,53 +1180,17 @@ void cUnit::think() {
                         map.cellChangeTile(iCell, 0);
                     }
 
-                    // create new path to this thingy
-                    //iGoalCell =  UNIT_find_harvest_spot(iID);
-                    //iPathIndex=-1; // create new path
-
                     move_to(UNIT_find_harvest_spot(iID), -1, -1);
 
                     mapEditor.smoothAroundCell(iCell);
                 }
             }
 
-
             // refinery required, go find one that is available
             if (bFindRefinery) {
-                iFrame = 0;
-                char msg[255];
-                sprintf(msg, "Going to look for a refinery, playerId [%d], cell [%d]", iPlayer, iCell);
-                log(msg);
-                int refineryStructureId = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
-                        iCell, REFINERY, &players[iPlayer]);
-
-                if (refineryStructureId < 0) {
-                    // none found, wait
-                    TIMER_thinkwait = 10;
-                    return;
-                }
-
-                // found a refinery, lets check if we can find a carry-all that will bring us
-                cAbstractStructure *refinery = structure[refineryStructureId];
-                refinery->setAnimating(true);
-
-                // how? carry-all or ride?
-                int r = CARRYALL_TRANSFER(iID, refinery->getCell() + 2);
-
-                iStructureID = refineryStructureId;
-
-                if (r < 0) {
-                    char msg[255];
-                    sprintf(msg, "Returning to refinery ID %d", refineryStructureId);
-                    log(msg);
-                    move_to(refinery->getCell() + rnd(2) + (rnd(2) * map.getWidth()), refineryStructureId, -1, INTENT_UNLOAD_SPICE); // move yourself...
-                    TIMER_movewait = 0;
-                } else {
-                    TIMER_movewait = 500; // wait for pickup!
-                    TIMER_thinkwait = 500;
-                }
+                findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true);
+                return;
             }
-
         } else {
             // ??
             iFrame = 0;
@@ -1261,8 +1203,20 @@ void cUnit::think() {
     }
 }
 
+cAbstractStructure * cUnit::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int structureType) {
+    return map.findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(iCell, structureType, getPlayer());
+}
+
+cAbstractStructure * cUnit::findClosestAvailableStructureType(int structureType) {
+    return map.findClosestAvailableStructureType(iCell, structureType, getPlayer());
+}
+
+cAbstractStructure * cUnit::findClosestStructureType(int structureType) {
+    return map.findClosestStructureType(iCell, structureType, getPlayer());
+}
+
 void cUnit::think_carryAll() {// A carry-all has something when:
-// - it carries a unit (iUnitID > -1)
+// - it carries a unit (iUnitIDWithinStructure > -1)
 // - it has the flag TRANSFER_NEW_
 
     if ((iTransferType == TRANSFER_NEW_STAY ||
@@ -1465,7 +1419,7 @@ void cUnit::think_move_air() {
         if (iTransferType == TRANSFER_PICKUP) {
             if (iUnitID > -1) {
                 // Not yet picked up the unit
-                cUnit &unitToPickupOrDrop = unit[iUnitID];
+                cUnit &unitToPickupOrDrop = getUnitToPickupOrDrop();
                 if (!bPickedUp) {
                     if (!unitToPickupOrDrop.isValid()) {
                         iTransferType = TRANSFER_NONE; // nope...
@@ -1485,7 +1439,7 @@ void cUnit::think_move_air() {
 
                                 bPickedUp = true; // set state in aircraft, that it has picked up a unit
 
-                                // so we set the tempHitpoints so the unit 'dissapears' from the map without being
+                                // so we set the tempHitpoints so the unit 'disappears' from the map without being
                                 // really dead.
                                 unitToPickupOrDrop.iTempHitPoints = unitToPickupOrDrop.iHitPoints;
 
@@ -1532,6 +1486,24 @@ void cUnit::think_move_air() {
 
                         // check if its valid for this unit...
                         if (!map.occupied(iCell, iUnitID) && isWithinMapBoundaries) {
+                            // valid structure
+                            cAbstractStructure *structureUnitWantsToEnter = unitToPickupOrDrop.getStructureUnitWantsToEnter();
+                            if (structureUnitWantsToEnter) {
+                                if (structureUnitWantsToEnter->hasUnitWithin()) {
+                                    // TODO: Do this with events
+                                    // already became occupied, so try to find a different kind of structure
+                                    int type = structureUnitWantsToEnter->getType();
+                                    cAbstractStructure *alternative = findBestStructureCandidateToHeadTo(type);
+
+                                    if (alternative) {
+                                        iGoalCell = alternative->getCell();
+                                        return;
+                                    } else {
+                                        // !?
+                                        iGoalCell = map.getRandomCellFrom(iCell, 3);
+                                    }
+                                }
+                            }
 
                             // dump it here
                             unitToPickupOrDrop.setCell(iCell);
@@ -1559,28 +1531,21 @@ void cUnit::think_move_air() {
                             iTempHitPoints = -1; // reset this
                             iTransferType = TRANSFER_NONE; // done
 
-                            // WHEN DUMPING A HARVESTER IN A REFINERY
-                            // make it enter the refinery instantly
-                            if (unitToPickupOrDrop.isHarvester() && unitToPickupOrDrop.iStructureID > -1) {
-                                // valid structure
-                                cAbstractStructure *structureUnitWantsToEnter = structure[unitToPickupOrDrop.iStructureID];
-                                if (structureUnitWantsToEnter && structureUnitWantsToEnter->isValid()) {
-                                    // when this structure is not occupied
-                                    if (structureUnitWantsToEnter->iUnitID < 0) {
-                                        // get in!
-                                        structureUnitWantsToEnter->setAnimating(false);
-                                        structureUnitWantsToEnter->iUnitID = unitIdOfUnitThatHasBeenPickedUp;  // !!
-                                        structureUnitWantsToEnter->setFrame(0);
+                            // make it enter the structure instantly
+                            if (structureUnitWantsToEnter) {
+                                // when this structure is not occupied
+                                if (!structureUnitWantsToEnter->hasUnitWithin()) {
+                                    // get in!
+                                    structureUnitWantsToEnter->unitEnteredStructure(unitIdOfUnitThatHasBeenPickedUp);
 
-                                        // store this
-                                        unitToPickupOrDrop.iTempHitPoints = unitToPickupOrDrop.iHitPoints;
-                                        unitToPickupOrDrop.iHitPoints = -1; // 'kill' unit
-                                        unitToPickupOrDrop.setCell(structureUnitWantsToEnter->getCell());
-                                        unitToPickupOrDrop.updateCellXAndY();
+                                    // store this
+                                    unitToPickupOrDrop.iTempHitPoints = unitToPickupOrDrop.iHitPoints;
+                                    unitToPickupOrDrop.iHitPoints = -1; // 'kill' unit
+                                    unitToPickupOrDrop.setCell(structureUnitWantsToEnter->getCell());
+                                    unitToPickupOrDrop.updateCellXAndY();
 
-                                        map.remove_id(unitIdOfUnitThatHasBeenPickedUp, MAPID_UNITS);
-                                    } // enter..
-                                }
+                                    map.remove_id(unitIdOfUnitThatHasBeenPickedUp, MAPID_UNITS);
+                                } // enter..
                             }
 
                             int pufX = (pos_x() + getBmpWidth() / 2);
@@ -1617,16 +1582,16 @@ void cUnit::think_move_air() {
                     structure[iStrucId]->setAnimating(true); // keep animating
                     ((cStarPort *) structure[iStrucId])->setFrigateDroppedPackage(true);
                 } else {
-                    int closestStarport = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
-                            iCell, STARPORT, &players[iPlayer]);
+                    // we don't expect this to go wrong :/
+                    cAbstractStructure *starport = findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(STARPORT);
 
                     // find closest Starport to deliver next (Starport got mid-way destroyed)
-                    if (closestStarport < 0) {
+                    if (!starport) {
                         // not found, die
                         die(true, false);
                     } else {
-                        iGoalCell = structure[closestStarport]->getCell();
-                        structure[closestStarport]->setAnimating(true); // start animating
+                        iGoalCell = starport->getCell();
+                        starport->setUnitIdHeadingTowards(iID);
                     }
                 }
 
@@ -1796,6 +1761,22 @@ void cUnit::think_move_air() {
 
     updateCellXAndY();
     map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
+}
+
+cUnit &cUnit::getUnitToPickupOrDrop() const {
+    assert(iUnitID > -1 && "cUnit::getUnitToPickupOrDrop() called for invalid iUnitIDWithinStructure!");
+    return unit[iUnitID];
+}
+
+cAbstractStructure *cUnit::getStructureUnitWantsToEnter() const {
+    cAbstractStructure *structureUnitWantsToEnter = nullptr;
+    if (iStructureID > -1) {
+        structureUnitWantsToEnter = structure[iStructureID];
+        if (!structureUnitWantsToEnter->isValid()) {
+            structureUnitWantsToEnter = nullptr;
+        }
+    }
+    return structureUnitWantsToEnter;
 }
 
 int cUnit::findNewDropLocation(int unitTypeToDrop, int cell) const {
@@ -2466,43 +2447,52 @@ void cUnit::think_move() {
                     // repair/spice unloading structures can only 'contain' ONE unit. So if it is occupied, find another.
                     if (intent == eUnitActionIntent::INTENT_UNLOAD_SPICE ||
                         intent == eUnitActionIntent::INTENT_REPAIR) {
-                        if (pStructure->iUnitID > -1 || // structure is occupied by unit
+                        bool findAlternativeStructure = false;
+
+                        // another unit is entering this structure
+                        if (pStructure->hasUnitEntering() && pStructure->getUnitIdEntering() != iID) {
+                            findAlternativeStructure = true;
+                            bOccupied = true;
+                        }
+
+                        if (pStructure->hasUnitWithin() || // structure is occupied by unit
                             !pStructure->getPlayer()->isSameTeamAs(getPlayer())) { // or (no longer) of my team
-
-                            // find alternative structure type nearby
-                            int iNewID = structureUtils.findClosestStructureTypeWhereNoUnitIsHeadingToComparedToCell(
-                                    iCell,
-                                    pStructure->getType(),
-                                    getPlayer());
-
-                            if (iNewID > -1 && iNewID != iStructureID) {
-                                iStructureID = iNewID;
-                                move_to(structure[iNewID]->getCell());
-                            } else {
-                                // stop moving (it is occupied!)
-                                iNextCell = iCell;
-                                iGoalCell = iCell;
-                                TIMER_movewait = 100; // we wait
-                                return;
-                            }
+                            findAlternativeStructure = true;
                             bOccupied = true;
                         } else {  // structure is occupied by unit
                             // not occupied, continue!
                         }
+
+                        if (findAlternativeStructure) {
+                            // find alternative structure type nearby
+                            cAbstractStructure *candidate = findBestStructureCandidateToHeadTo(pStructure->getType());
+
+                            if (candidate && candidate->getStructureId() != iStructureID) {
+                                // founder an alternative
+                                move_to_enter_structure(candidate, intent);
+                                return; // bail, else the logic below will kick of (ugh, bad code)
+                            } else {
+                                // wait, maybe we can enter later!
+                                TIMER_movewait = 100; // we wait
+                                return; // bail, else the logic below will kick of (ugh, bad code)
+                            }
+                        }
                     } else if (intent == eUnitActionIntent::INTENT_CAPTURE) {
                         if (pStructure->getPlayer()->isSameTeamAs(getPlayer())) {
-                            // stop!
                             iStructureID = -1;
                             iGoalCell = iCell;
                             iNextCell = iCell;
                             TIMER_movewait = 100; // we wait
-                            bOccupied = true; // obviously
-                            return;
+                            bOccupied = true; // obviously - but will do nothing :S
+                            return; // bail, else the logic below will kick of (ugh, bad code)
                         }
+                    } else {
+                        bOccupied = true;
                     }
                 } else {
                     // structure is no longer valid, what now?
                     // .. not occupied?
+                    bOccupied = true;
                 }
             } else {
                 // wrong structure, so blocks
@@ -2576,15 +2566,12 @@ void cUnit::think_move() {
                 idOfStructureAtCurrentCell > -1 && idOfStructureAtCurrentCell == iStructureID) {
                 cAbstractStructure *pStructure = structure[iStructureID];
                 if (pStructure && pStructure->isValid()) {
-
                     if (intent == eUnitActionIntent::INTENT_REPAIR ||
                         intent == eUnitActionIntent::INTENT_UNLOAD_SPICE) {
                         // when this structure is not occupied
                         if (!pStructure->hasUnitWithin()) {
                             // unit enters structure!
-                            pStructure->setAnimating(false);
-                            pStructure->iUnitID = iID;
-                            pStructure->setFrame(0);
+                            pStructure->unitEnteredStructure(iID);
 
                             // store this
                             iTempHitPoints = iHitPoints;
@@ -2623,6 +2610,14 @@ void cUnit::think_move() {
                     } else {
                         int i = 5;
                     }
+                }
+            }
+        } else if (result == eUnitMoveToCellResult::MOVERESULT_BUSY) {
+            // not occupied cell;
+            if (idOfStructureAtNextCell > -1) {
+                cAbstractStructure *pStructure = structure[idOfStructureAtNextCell];
+                if (pStructure && pStructure->isValid()) {
+                    pStructure->startEnteringStructure(iID);
                 }
             }
         }
@@ -2826,7 +2821,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
  * after that the unit will think of a new path to create.
  */
 void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne() {
-    forgetAboutCurrentPathAndPrepareToCreateNewOne(100);
+    forgetAboutCurrentPathAndPrepareToCreateNewOne(35);
 }
 
 /**
@@ -2915,8 +2910,6 @@ void cUnit::move_to(int iGoalCell) {
                     structureID = -1; // reset back, we don't allow capturing own/allied buildings
                 } else if (isHarvester()) {
                     if (pStructure->getType() == REFINERY) {
-                        // unit ordered to move to refinery, let refinery animate about that.
-                        pStructure->setAnimating(true);
                         intent = eUnitActionIntent::INTENT_UNLOAD_SPICE;
                     } else if (pStructure->getType() == REPAIR) {
                         intent = eUnitActionIntent::INTENT_REPAIR;
@@ -2991,6 +2984,81 @@ bool cUnit::isUnableToMove() {
     }
 
     return false;
+}
+
+void cUnit::move_to_enter_structure(cAbstractStructure *pStructure, eUnitActionIntent intent) {
+    if (!pStructure) return;
+    if (!pStructure->isValid()) return;
+
+    // found a candidate, lets check if we can find a carry-all that will bring us
+    if (!pStructure->hasUnitHeadingTowards() && !pStructure->hasUnitWithin()) {
+        pStructure->unitHeadsTowardsStructure(iID);
+        iStructureID = pStructure->getStructureId();
+    } else {
+        // we chose to head towards this structure, but we can't claim it; this is
+        // the situation that more units than available structures are heading towards the same structure
+        // in this case we only remember the structureId, as we still have the intent to head towards it.
+        // we let the other code that with "entering a structure" deal with any possibly already occupied
+        // structure stuff.
+        iStructureID = pStructure->getStructureId();
+    }
+    move_to(pStructure->getRandomStructureCell(), pStructure->getStructureId(), -1, intent);
+}
+
+cAbstractStructure *cUnit::findBestStructureCandidateToHeadTo(int structureType) {
+    cAbstractStructure * candidate = findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(structureType);
+    // TODO: we could do this even better, by scanning the structures once. Remembering distance and a 'state'
+    // so to speak, ie "AVAILABLE, NOT AVAILABLE, ALREADY_HEADING", etc. That way we only need to scan once, and don't
+    // need to call these functions multiple times. Also, the logic could be more smart then which (distance) to pick.
+    // but for now settle with this - as I want 0.6.0 get done at some point. So deliberately deferring the optimisation
+    // in favor of getting things done.
+    if (candidate) {
+        return candidate;
+    }
+
+    candidate = findClosestAvailableStructureType(structureType);
+    if (candidate) {
+        return candidate;
+    }
+
+    return findClosestStructureType(structureType);
+}
+
+void cUnit::findBestStructureCandidateAndHeadTowardsItOrWait(int structureType, bool allowCarryallTransfer) {
+    iFrame = 0; // stop animating
+    assert(structureType > -1);
+
+    char msg[255];
+    sprintf(msg, "cUnit::findBestStructureCandidateAndHeadTowardsItOrWait - Going to look for a [%s]", structures[structureType].name);
+    log(msg);
+
+    cAbstractStructure *candidate = findBestStructureCandidateToHeadTo(structureType);
+
+    if (!candidate) {
+        // none found, wait
+        TIMER_thinkwait = 10;
+        return;
+    }
+
+    if (!allowCarryallTransfer) {
+        move_to_enter_structure(candidate, INTENT_UNLOAD_SPICE);
+        TIMER_movewait = 0;
+        return;
+    }
+
+    // how? carry-all or ride?
+    int r = CARRYALL_TRANSFER(iID, candidate->getCell() + 2);
+
+    if (r > -1) {
+        TIMER_movewait = 500; // wait for pickup!
+        TIMER_thinkwait = 500;
+        // TODO: somehow remember we want to do something here!?
+        return;
+    }
+
+    // no Carry-all found, then move yourself :)
+    move_to_enter_structure(candidate, INTENT_UNLOAD_SPICE);
+    TIMER_movewait = 0;
 }
 
 
