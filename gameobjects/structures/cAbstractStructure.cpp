@@ -631,12 +631,20 @@ void cAbstractStructure::setUnitIdEntering(int unitId) {
     this->iUnitIDEnteringStructure = unitId;
 }
 
-void cAbstractStructure::unitEnteredStructure(int unitID) {
+void cAbstractStructure::enterStructure(int unitId) {
     setUnitIdHeadingTowards(-1);
-    setUnitIdWithin(unitID);
+    setUnitIdWithin(unitId);
     setUnitIdEntering(-1);
     setAnimating(false);
     setFrame(0);
+
+    cUnit &pUnit = unit[unitId];
+
+    pUnit.hideUnit();
+    pUnit.setCell(getCell());
+    pUnit.updateCellXAndY();
+
+    map.remove_id(unitId, MAPID_UNITS);
 }
 
 void cAbstractStructure::unitLeavesStructure() {
@@ -674,9 +682,9 @@ void cAbstractStructure::unitLeavesStructure() {
     setAnimating(false);
 }
 
-void cAbstractStructure::startEnteringStructure(int unitID) {
+void cAbstractStructure::startEnteringStructure(int unitId) {
     setUnitIdWithin(-1);
-    setUnitIdEntering(unitID);
+    setUnitIdEntering(unitId);
     setUnitIdHeadingTowards(-1);
 }
 
@@ -687,4 +695,13 @@ void cAbstractStructure::unitHeadsTowardsStructure(int unitId) {
 
 int cAbstractStructure::getRandomStructureCell() {
     return getCell() + rnd(getWidth()) + (rnd(getHeight()) * map.getWidth());
+}
+
+/**
+ * Returns true when a different unit id is entering the structure or it has been occupied
+ * @param unitId
+ * @return
+ */
+bool cAbstractStructure::isInProcessOfBeingEnteredOrOccupiedByUnit(int unitId) {
+    return hasUnitWithin() || (hasUnitEntering() && getUnitIdEntering() != unitId);
 }

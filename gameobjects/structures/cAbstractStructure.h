@@ -204,9 +204,9 @@ class cAbstractStructure {
 
         void startRepairing();
 
-        void startEnteringStructure(int unitID);
+        void startEnteringStructure(int unitId);
 
-        void unitEnteredStructure(int unitID);
+        void enterStructure(int unitId);
 
         /**
          * Makes current unitID within structure leave it, restoring it on the map next to a free cell.
@@ -218,6 +218,8 @@ class cAbstractStructure {
         void unitHeadsTowardsStructure(int unitId);
 
         int getRandomStructureCell();
+
+        bool isInProcessOfBeingEnteredOrOccupiedByUnit(int unitId);
 };
 
 #endif
