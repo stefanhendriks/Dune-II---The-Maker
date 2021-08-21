@@ -1493,8 +1493,7 @@ void cUnit::think_move_air() {
                                 bool isAttemptingDeployingAtStructure = map.getCellIdStructuresLayer(iCell) == structureUnitWantsToEnter->getStructureId();
 
                                 if (isAttemptingDeployingAtStructure) {
-                                    if (structureUnitWantsToEnter->hasUnitWithin() ||
-                                        structureUnitWantsToEnter->hasUnitEntering()) {
+                                    if (structureUnitWantsToEnter->isInProcessOfBeingEnteredOrOccupiedByUnit(unitToPickupOrDrop.iID)) {
                                         // TODO: Do this with events
                                         // already became occupied, so try to find a different kind of structure
                                         int type = structureUnitWantsToEnter->getType();
@@ -1518,11 +1517,12 @@ void cUnit::think_move_air() {
                                 } // attempts to unload above structure
                             }
 
-                            // dump it here
+                            // dump it here (unload from carry-all)
                             unitToPickupOrDrop.setCell(iCell);
                             unitToPickupOrDrop.iGoalCell = iCell;
                             unitToPickupOrDrop.updateCellXAndY(); // update cellx and celly
                             map.cellSetIdForLayer(iCell, MAPID_UNITS, iUnitID);
+
                             unitToPickupOrDrop.iHitPoints = unitToPickupOrDrop.iTempHitPoints;
                             unitToPickupOrDrop.iTempHitPoints = -1;
                             unitToPickupOrDrop.TIMER_movewait = 0;
@@ -1546,19 +1546,9 @@ void cUnit::think_move_air() {
 
                             // make it enter the structure instantly
                             if (structureUnitWantsToEnter) {
-                                // when this structure is not occupied
-                                if (!structureUnitWantsToEnter->hasUnitWithin()) {
-                                    // get in!
-                                    structureUnitWantsToEnter->unitEnteredStructure(unitIdOfUnitThatHasBeenPickedUp);
-
-                                    // store this
-                                    unitToPickupOrDrop.iTempHitPoints = unitToPickupOrDrop.iHitPoints;
-                                    unitToPickupOrDrop.iHitPoints = -1; // 'kill' unit
-                                    unitToPickupOrDrop.setCell(structureUnitWantsToEnter->getCell());
-                                    unitToPickupOrDrop.updateCellXAndY();
-
-                                    map.remove_id(unitIdOfUnitThatHasBeenPickedUp, MAPID_UNITS);
-                                } // enter..
+                                if (!structureUnitWantsToEnter->isInProcessOfBeingEnteredOrOccupiedByUnit(unitIdOfUnitThatHasBeenPickedUp)) {
+                                    structureUnitWantsToEnter->enterStructure(unitIdOfUnitThatHasBeenPickedUp);
+                                }
                             }
 
                             int pufX = (pos_x() + getBmpWidth() / 2);
@@ -2582,18 +2572,9 @@ void cUnit::think_move() {
                     if (intent == eUnitActionIntent::INTENT_REPAIR ||
                         intent == eUnitActionIntent::INTENT_UNLOAD_SPICE) {
                         // when this structure is not occupied
-                        if (!pStructure->hasUnitWithin()) {
-                            // unit enters structure!
-                            pStructure->unitEnteredStructure(iID);
-
-                            // store this
-                            iTempHitPoints = iHitPoints;
-                            iHitPoints = -1; // 'kill' unit
-
-                            map.remove_id(iID, MAPID_UNITS);
-                            setCell(pStructure->getCell());
-
-                            log("-> Enter structure #3");
+                        if (!pStructure->isInProcessOfBeingEnteredOrOccupiedByUnit(iID)) {
+                            pStructure->enterStructure(iID);
+                            return;
                         } // enter..
                         else {
                             // looks like it is occupied, find alternative
@@ -3107,6 +3088,11 @@ void cUnit::awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStruc
         // structure stuff.
         iStructureID = candidate->getStructureId();
     }
+}
+
+void cUnit::hideUnit() {
+    iTempHitPoints = iHitPoints;
+    iHitPoints = -1; // 'kill' unit
 }
 
 

@@ -317,6 +317,8 @@ public:
 
     void carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell);
 
+    void hideUnit();
+
 private:
 
     int mission; // is this unit assigned to a mission?
