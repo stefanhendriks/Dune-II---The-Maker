@@ -193,6 +193,12 @@ public:
     float getHealthNormalized();
 
     /**
+     * Return temp health hitpoints normalized (between 0.0 and 1.0) (when unit is 'hidden')
+     * @return
+     */
+    float getTempHealthNormalized();
+
+    /**
      * is this unit an airborn unit?
      * @return
      */

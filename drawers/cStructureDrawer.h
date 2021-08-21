@@ -37,6 +37,9 @@ class cStructureDrawer {
 	private:
         cStructureUtils structureUtils;
 
+    void renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const;
+
+    void renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const;
 };
 
 #endif /* CSTRUCTUREDRAWER_H_ */

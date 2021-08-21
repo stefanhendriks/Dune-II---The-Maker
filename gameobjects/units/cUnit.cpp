@@ -480,6 +480,12 @@ float cUnit::getHealthNormalized() {
     return (iHitPoints / flMAX);
 }
 
+float cUnit::getTempHealthNormalized() {
+    s_UnitP &unitType = getUnitType();
+    float flMAX = unitType.hp;
+    return (iTempHitPoints / flMAX);
+}
+
 void cUnit::draw_health() {
     // draw units health
     float width_x = mapCamera->factorZoomLevel(getBmpWidth());
