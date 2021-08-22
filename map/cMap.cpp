@@ -828,9 +828,12 @@ void cMap::createCell(int cell, int terrainType, int tile) {
     map.cellChangeType(cell, terrainType);
     map.cellChangeTile(cell, tile);
     map.cellChangeCredits(cell, 0);
+    map.cellChangeHealth(cell, 0);
+
     if (terrainType == TERRAIN_BLOOM) {
         map.cellChangeCredits(cell, -23);
     }
+
     map.cellChangePassable(cell, true);
     map.cellChangePassableFoot(cell, true);
 
@@ -844,7 +847,9 @@ void cMap::createCell(int cell, int terrainType, int tile) {
         map.cellChangePassable(cell, false);
         map.cellChangePassableFoot(cell, true);
     } else if (terrainType == TERRAIN_WALL) {
-        map.cellChangeHealth(cell, 100);
+        int wallHealth = 100;
+
+        map.cellChangeHealth(cell, wallHealth);
         map.cellChangePassable(cell, false);
         map.cellChangePassableFoot(cell, false);
     }

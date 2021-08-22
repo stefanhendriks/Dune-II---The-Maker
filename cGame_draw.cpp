@@ -387,48 +387,39 @@ void cGame::mouseOnBattlefield(cGameControlsContext *context, int mouseCell, boo
             if (mouse_tile == MOUSE_MOVE) {
                 // any selected unit will move
                 for (int i=0; i < MAX_UNITS; i++) {
-                    cUnit &cUnit = unit[i];
-                    if (cUnit.isValid() && cUnit.iPlayer == HUMAN && cUnit.bSelected) {
-                        cUnit.move_to(mouseCell);
+                    cUnit &pUnit = unit[i];
+                    if (!pUnit.isValid()) continue;
+                    if (!pUnit.bSelected) continue;
+                    if (!pUnit.getPlayer()->isHuman()) continue;
 
-                        if (cUnit.isInfantryUnit()) {
-                            bPlayInf = true;
-                        } else {
-                            bPlayRep = true;
-                        }
+                    pUnit.move_to(mouseCell);
 
-                        bParticle=true;
+                    if (pUnit.isInfantryUnit()) {
+                        bPlayInf = true;
+                    } else {
+                        bPlayRep = true;
                     }
+
+                    bParticle=true;
                 }
             } else if (mouse_tile == MOUSE_ATTACK) {
                 // check who or what to attack
                 for (int i=0; i < MAX_UNITS; i++) {
                     cUnit &pUnit = unit[i];
-                    if (pUnit.isValid() && pUnit.iPlayer == HUMAN && pUnit.bSelected)	{
-                        int iAttackCell=-1;
+                    if (!pUnit.isValid()) continue;
+                    if (!pUnit.bSelected) continue;
+                    if (!pUnit.getPlayer()->isHuman()) continue;
 
-                        if (!context->isMouseOverStructure() && game.hover_unit < 0) {
-                            iAttackCell = mouseCell;
-                        }
+                    // Order unit to attack at cell
+                    pUnit.attackAt(mouseCell);
 
-                        if (iAttackCell > -1) {
-                            pUnit.attackCell(iAttackCell);
-                        } else {
-                            pUnit.attackAt(mouseCell);
-                        }
-
-                        if (game.hover_unit > -1) {
-                            unit[game.hover_unit].TIMER_blink = 5;
-                        }
-
-                        if (pUnit.isInfantryUnit()) {
-                            bPlayInf=true;
-                        } else {
-                            bPlayRep=true;
-                        }
-
-                        bParticle=true;
+                    if (pUnit.isInfantryUnit()) {
+                        bPlayInf=true;
+                    } else {
+                        bPlayRep=true;
                     }
+
+                    bParticle=true;
                 }
             }
 

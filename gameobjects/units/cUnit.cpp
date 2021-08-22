@@ -730,7 +730,7 @@ void cUnit::attackCell(int cell) {
     char msg[255];
     sprintf(msg, "attackCell() : cell target is [%d]", cell);
     log(msg);
-    attack(cell, -1, -1, -1);
+    attack(cell, -1, -1, cell);
 }
 
 void cUnit::attack(int iGoalCell, int iUnit, int iStructure, int iAttackCell) {
@@ -756,10 +756,10 @@ void cUnit::attack(int iGoalCell, int iUnit, int iStructure, int iAttackCell) {
     }
 
     iAction = ACTION_ATTACK;
-    iGoalCell = iGoalCell;
+    this->iGoalCell = iGoalCell;
     iAttackStructure = iStructure;
     iAttackUnit = iUnit;
-    iAttackCell = iAttackCell;
+    this->iAttackCell = iAttackCell;
     forgetAboutCurrentPathAndPrepareToCreateNewOne(rnd(5));
 }
 
@@ -2130,9 +2130,8 @@ void cUnit::think_attack() {
     }
 
     if (iAttackCell > -1) {
-        if (map.getCellType(iAttackCell) == TERRAIN_BLOOM) {
-            // this is ok
-        } else {
+        if (map.getCellType(iAttackCell) == TERRAIN_BLOOM || map.getCellType(iAttackCell) == TERRAIN_WALL) {
+            // stop attacking a spice bloom or a wall when it got destroyed
             if (map.getCellHealth(iAttackCell) < 0) {
                 // it is destroyed
                 iAttackCell = -1;
@@ -2142,11 +2141,8 @@ void cUnit::think_attack() {
         }
     }
 
-    int iDestX = map.getCellX(iGoalCell);
-    int iDestY = map.getCellY(iGoalCell);
-
     // Distance check
-    int distance = ABS_length(iCellX, iCellY, iDestX, iDestY);
+    int distance = map.distance(iCell, iGoalCell);
 
     if (!isAirbornUnit()) {
         if (!isMovingBetweenCells()) {
@@ -2164,7 +2160,7 @@ void cUnit::think_attack() {
     } else {
         s_UnitP &unitType = getUnitType();
 
-        // NON AIRBORN UNITS ATTACK THINKING
+        // AIRBORN UNITS ATTACK THINKING
         int minDistance = 2;
 
         if (distance > minDistance && distance <= getRange()) {
@@ -2213,6 +2209,8 @@ void cUnit::startChasingTarget() {
             iGoalCell = iCell;
             forgetAboutCurrentPathAndPrepareToCreateNewOne();
         }
+    } else if (iAttackCell > -1) {
+        iAction = ACTION_CHASE;
     }
 }
 
