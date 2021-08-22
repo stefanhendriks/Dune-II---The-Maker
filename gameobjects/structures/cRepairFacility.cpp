@@ -55,14 +55,12 @@ void cRepairFacility::think_repairUnit() {// must repair...
             // Cost per tick to repair unit for REPAIR_RATE_HP_PER_TICK amount
             int REPAIR_COST_PER_TICK = 1;
             pPlayer->substractCredits(REPAIR_COST_PER_TICK);
-
-            if (unitToRepair.iTempHitPoints >= maxHpForUnitType) {
-                unitToRepair.setMaxHitPoints();
-
-                // dump unit, get rid of it
-                unitLeavesStructure();
-            }
         }
+    } else if (unitToRepair.iTempHitPoints >= maxHpForUnitType) {
+        unitToRepair.setMaxHitPoints();
+
+        // dump unit, get rid of it
+        unitLeavesStructure();
     }
 }
 
