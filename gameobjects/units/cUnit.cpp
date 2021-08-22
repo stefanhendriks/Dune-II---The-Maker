@@ -3,18 +3,15 @@
   Dune II - The Maker
 
   Author : Stefan Hendriks
-  Contact: stefanhen83@gmail.com
+  Contact: stefan@fundynamic.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2020 (c) code by Stefan Hendriks
+  2001 - 2021 (c) code by Stefan Hendriks
 
   */
 
 #include <math.h>
 #include "../../include/d2tmh.h"
-#include "cUnit.h"
-
-
 
 // Path creation definitions / var
 #define CLOSED        -1
