@@ -1409,6 +1409,43 @@ int cPlayer::getScoutingUnitType() {
     return TRIKE;
 }
 
+
+int cPlayer::getInfantryType() {
+    // TODO: make this configurable within house props
+    switch (house) {
+        case HARKONNEN:
+            return TROOPERS;
+        case ATREIDES:
+            return INFANTRY;
+        case ORDOS:
+            return INFANTRY;
+        case SARDAUKAR:
+            return TROOPERS;
+        case FREMEN:
+            return UNIT_FREMEN_THREE;
+    }
+
+    return INFANTRY;
+}
+
+int cPlayer::getSoldierType() {
+    // TODO: make this configurable within house props
+    switch (house) {
+        case HARKONNEN:
+            return TROOPER;
+        case ATREIDES:
+            return SOLDIER;
+        case ORDOS:
+            return SOLDIER;
+        case SARDAUKAR:
+            return TROOPER;
+        case FREMEN:
+            return UNIT_FREMEN_ONE;
+    }
+
+    return SOLDIER;
+}
+
 int cPlayer::getSpecialUnitType() {
     // TODO: make this configurable within house props
     switch (house) {
@@ -1646,5 +1683,32 @@ bool cPlayer::couldBuildSpecial(int iType) {
         return true;
     }
     return false;
+}
+
+/**
+ * Checks if 'requestedUnitType' is a unit Type this house can build. If not, it will return house specific
+ * alternatives. Returns requestedUnitType if the type is allowed for house.
+ *
+ * @param requestedUnitType
+ * @return
+ */
+int cPlayer::getSameOrSimilarUnitType(int requestedUnitType) {
+    // correct type for specific player type
+    if (requestedUnitType == DEVASTATOR || requestedUnitType == DEVIATOR || requestedUnitType == SONICTANK) {
+        return getSpecialUnitType();
+    }
+
+    if (requestedUnitType == SOLDIER || requestedUnitType == TROOPER) {
+        return getSoldierType();
+    }
+
+    if (requestedUnitType == INFANTRY || requestedUnitType == TROOPERS) {
+        return getInfantryType();
+    }
+
+    if (requestedUnitType == QUAD || requestedUnitType == TRIKE || requestedUnitType == RAIDER) {
+        return getScoutingUnitType();
+    }
+    return requestedUnitType;
 }
 
