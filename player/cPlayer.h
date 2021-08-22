@@ -3,7 +3,7 @@
   Dune II - The Maker
 
   Author : Stefan Hendriks
-  Contact: stefanhen83@gmail.com
+  Contact: stefan@fundynamic.com
   Website: http://dune2themaker.fundynamic.com
 
   2001 - 2010 (c) code by Stefan Hendriks

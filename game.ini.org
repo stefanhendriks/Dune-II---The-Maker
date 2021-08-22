@@ -8,7 +8,7 @@
 ;	file created at 24/12/02
 ;
 ;	Author: Stefan Hendriks
-;	Contact: stefanhen83@gmail.com
+;	Contact: stefan@fundynamic.com
 ;	Website: http://www.fundynamic.nl
 ;  	         http://arrakis.dune2k.com
 ;
