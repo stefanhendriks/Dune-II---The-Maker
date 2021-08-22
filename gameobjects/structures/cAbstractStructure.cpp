@@ -39,6 +39,7 @@ cAbstractStructure::cAbstractStructure() {
 
     iUnitIDWithinStructure = -1;
     iUnitIDHeadingForStructure = -1;
+    iUnitIDEnteringStructure = -1;
 
     iWidth=-1;
     iHeight=-1;
@@ -148,6 +149,16 @@ void cAbstractStructure::die() {
     // UnitID > -1, means the unit inside will die too
     if (iUnitIDWithinStructure > -1) {
         unit[iUnitIDWithinStructure].init(iUnitIDWithinStructure); // die here... softly
+    }
+
+    if (iUnitIDEnteringStructure > -1) {
+        unit[iUnitIDEnteringStructure].die(true, false);
+    }
+
+    if (iUnitIDHeadingForStructure > -1) {
+        // reset structure ID
+        unit[iUnitIDHeadingForStructure].iStructureID = -1;
+        iUnitIDHeadingForStructure = -1;
     }
 
 	int iCll=iCell;

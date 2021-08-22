@@ -101,7 +101,7 @@ enum eUnitMoveToCellResult {
     /**
      * still busy moving between cells (offsets != 0)
      */
-    MOVERESULT_BUSY,
+    MOVERESULT_BUSY_MOVING,
 
     /**
      * arrived at a cell (but it is not the end-goal)
