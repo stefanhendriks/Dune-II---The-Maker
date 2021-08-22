@@ -11,7 +11,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
         skirmishPlayer[i].bPlaying = (i <= 1);
 
         // just some defaults
-        skirmishPlayer[i].iUnits = 3;
+        skirmishPlayer[i].startingUnits = 3;
         skirmishPlayer[i].iCredits = 2500;
         skirmishPlayer[i].iHouse = 0; // random house
     }
@@ -418,7 +418,7 @@ void cSetupSkirmishGameState::draw() {
             // Units
             bHover = false;
 
-            alfont_textprintf(bmp_screen, bene_font, 269,iDrawY+1, makecol(0,0,0), "%d", sSkirmishPlayer.iUnits);
+            alfont_textprintf(bmp_screen, bene_font, 269,iDrawY+1, makecol(0,0,0), "%d", sSkirmishPlayer.startingUnits);
 
             //rect(bmp_screen, 269, iDrawY, 290, iDrawY+16, makecol(255,255,255));
 
@@ -427,37 +427,37 @@ void cSetupSkirmishGameState::draw() {
 
             if (p == 0)
             {
-                alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(255,255,255), "%d", sSkirmishPlayer.iUnits);
+                alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(255,255,255), "%d", sSkirmishPlayer.startingUnits);
             }
             else
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(255,255,255), "%d", sSkirmishPlayer.iUnits);
+                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(255,255,255), "%d", sSkirmishPlayer.startingUnits);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(128,128,128), "%d", sSkirmishPlayer.iUnits);
+                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(128,128,128), "%d", sSkirmishPlayer.startingUnits);
 
             }
 
             if (bHover)
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(game.getFadeSelect(),0,0), "%d", sSkirmishPlayer.iUnits);
+                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(game.getFadeSelect(),0,0), "%d", sSkirmishPlayer.startingUnits);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol((game.getFadeSelect()/2),(game.getFadeSelect()/2),(game.getFadeSelect()/2)), "%d", sSkirmishPlayer.iUnits);
+                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol((game.getFadeSelect()/2),(game.getFadeSelect()/2),(game.getFadeSelect()/2)), "%d", sSkirmishPlayer.startingUnits);
 
                 if (mouse->isLeftButtonClicked())
                 {
-                    sSkirmishPlayer.iUnits++;
-                    if (sSkirmishPlayer.iUnits > 10) {
-                        sSkirmishPlayer.iUnits = 1;
+                    sSkirmishPlayer.startingUnits++;
+                    if (sSkirmishPlayer.startingUnits > 10) {
+                        sSkirmishPlayer.startingUnits = 1;
                     }
                 }
 
                 if (mouse->isRightButtonClicked())
                 {
-                    sSkirmishPlayer.iUnits--;
-                    if (sSkirmishPlayer.iUnits < 1) {
-                        sSkirmishPlayer.iUnits = 10;
+                    sSkirmishPlayer.startingUnits--;
+                    if (sSkirmishPlayer.startingUnits < 1) {
+                        sSkirmishPlayer.startingUnits = 10;
                     }
                 }
             }
@@ -596,9 +596,8 @@ void cSetupSkirmishGameState::interact() {
                 maxThinkingAIs = 0;
             }
 
-            // set up players and their units
+            // set up players
             for (int p = 0; p < MAX_PLAYERS; p++)	{
-
                 s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
 
                 int iHouse = sSkirmishPlayer.iHouse; // get house selected, which can be 0 for RANDOM
@@ -692,81 +691,52 @@ void cSetupSkirmishGameState::interact() {
                 } else {
                     pPlayer.placeStructure(pPlayer.getFocusCell(), CONSTYARD, 100);
                 }
+            }
 
-                // amount of units
-                int u=0;
 
-                // create units
-                while (u < sSkirmishPlayer.iUnits) {
-                    int iX= map.getCellX(pPlayer.getFocusCell());
-                    int iY= map.getCellY(pPlayer.getFocusCell());
-                    int iType=rnd(12);
+            // amount of units
+            int u=0;
+            int maxAmountOfStartingUnits = 0;
 
-                    iX-=4;
-                    iY-=4;
-                    iX+=rnd(9);
-                    iY+=rnd(9);
+            for (int p = 0; p < MAX_PLAYERS; p++) {
+                s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
+                if (sSkirmishPlayer.startingUnits > maxAmountOfStartingUnits) {
+                    maxAmountOfStartingUnits = sSkirmishPlayer.startingUnits;
+                }
+            }
 
-                    // convert house specific stuff
-                    if (pPlayer.getHouse() == ATREIDES) {
-                        if (iType == DEVASTATOR || iType == DEVIATOR) {
-                            iType = SONICTANK;
-                        }
+            // create units
+            while (u < maxAmountOfStartingUnits) {
+                // pick a random unit type
+                int iType = rnd(12);
 
-                        if (iType == TROOPERS) {
-                            iType = INFANTRY;
-                        }
+                for (int p = 0; p < MAX_PLAYERS; p++) {
+                    cPlayer &pPlayer = players[p];
+                    s_SkirmishPlayer &pSkirmishPlayer = skirmishPlayer[p];
 
-                        if (iType == TROOPER) {
-                            iType = SOLDIER;
-                        }
+                    if (!pSkirmishPlayer.bPlaying) continue; // skip non playing players
 
-                        if (iType == RAIDER) {
-                            iType = TRIKE;
-                        }
+                    if (u >= pSkirmishPlayer.startingUnits) {
+                        continue; // skip this player
                     }
 
-                    // ordos
-                    if (pPlayer.getHouse() == ORDOS) {
-                        if (iType == DEVASTATOR || iType == SONICTANK) {
-                            iType = DEVIATOR;
-                        }
+                    int iPlayerUnitType = pPlayer.getSameOrSimilarUnitType(iType);
 
-                        if (iType == TRIKE) {
-                            iType = RAIDER;
-                        }
-                    }
+                    int minRange = 3;
+                    int maxRange = 12;
+                    int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(pPlayer.getFocusCell(),
+                                                                                       minRange,
+                                                                                       maxRange,
+                                                                                       iPlayerUnitType);
 
-                    // harkonnen
-                    if (pPlayer.getHouse() == HARKONNEN) {
-                        if (iType == DEVIATOR || iType == SONICTANK) {
-                            iType = DEVASTATOR;
-                        }
+                    UNIT_CREATE(cell, iPlayerUnitType, p, true);
 
-                        if (iType == TRIKE || iType == RAIDER) {
-                            iType = QUAD;
-                        }
-
-                        if (iType == SOLDIER) {
-                            iType = TROOPER;
-                        }
-
-                        if (iType == INFANTRY) {
-                            iType = TROOPERS;
-                        }
-                    }
-
-                    int cell = map.getCellWithMapBorders(iX, iY);
-                    int r = UNIT_CREATE(cell, iType, p, true);
-                    if (r > -1)
-                    {
-                        u++;
-                    }
+                    char msg[255];
+                    sprintf(msg, "Wants %d amount of units; amount created %d", pSkirmishPlayer.startingUnits, u);
+                    cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, pPlayer.getHouse());
                 }
 
-                char msg[255];
-                sprintf(msg, "Wants %d amount of units; amount created %d", sSkirmishPlayer.iUnits, u);
-                cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, iHouse);
+                u++;
             }
 
             // TEAM LOGIC here, so we can decide which is Atreides and thus should be allied with Fremen...

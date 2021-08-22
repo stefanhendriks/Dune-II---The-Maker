@@ -1050,9 +1050,14 @@ void cMap::fixCoordinatesToBeWithinPlayableMap(int &x, int &y) {
     FIX_BORDER_POS(x, y);
 }
 
-int cMap::findNearByValidDropLocation(int cell, int range, int unitTypeToDrop) {
+int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int unitTypeToDrop) {
+
+    if (minRange < 1) {
+        minRange = 1;
+    }
+
     // go around 360 fDegrees and calculate new stuff.
-    for (float dr = 1; dr < range; dr++) { // go outwards
+    for (float dr = minRange; dr < range; dr++) { // go outwards
         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
             // need a smarter way to do this (less CPU intensive).
 
@@ -1076,6 +1081,10 @@ int cMap::findNearByValidDropLocation(int cell, int range, int unitTypeToDrop) {
         }
     }
     return -1;
+}
+
+int cMap::findNearByValidDropLocation(int cell, int range, int unitTypeToDrop) {
+    return findNearByValidDropLocation(cell, 1, range, unitTypeToDrop);
 }
 
 int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop) {
@@ -1207,4 +1216,8 @@ cAbstractStructure * cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeading
     }
 
     return nullptr;
+}
+
+int cMap::getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minRange, int maxRange, int unitType) {
+    return findNearByValidDropLocation(cell, minRange, maxRange, unitType);
 }

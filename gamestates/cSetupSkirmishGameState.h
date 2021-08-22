@@ -8,7 +8,7 @@ class cGame;
 
 struct s_SkirmishPlayer {
     bool bPlaying;
-    int iUnits;
+    int startingUnits;
     int iCredits;
     int iHouse;
 };

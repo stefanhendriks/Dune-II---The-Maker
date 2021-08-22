@@ -565,6 +565,8 @@ public:
 
     int getRandomCellFromWithRandomDistance(int cell, int distance);
 
+    int getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minRange, int maxRange, int unitType);
+
     bool isStructureVisible(cAbstractStructure *pStructure, int iPlayer);
 
     bool isStructureVisible(cAbstractStructure *pStructure, cPlayer *thePlayer);
@@ -579,6 +581,8 @@ public:
     void fixCoordinatesToBeWithinPlayableMap(int &x, int &y);
 
     int findNearByValidDropLocation(int cell, int range, int unitTypeToDrop);
+    int findNearByValidDropLocation(int cell, int minRange, int maxRange, int unitTypeToDrop);
+
     int findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop);
 
 private:

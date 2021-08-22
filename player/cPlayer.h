@@ -343,6 +343,12 @@ public:
 
     void thinkFast();
 
+    int getSoldierType();
+
+    int getInfantryType();
+
+    int getSameOrSimilarUnitType(int requestedUnitType);
+
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 
