@@ -52,7 +52,7 @@ void cRepairFacility::think_repairUnit() {// must repair...
             int REPAIR_RATE_HP_PER_TICK = 3; // ie, unit with 300 HP, costs 100 to repair
 
             unitToRepair.iTempHitPoints += REPAIR_RATE_HP_PER_TICK;
-            
+
             // TODO: Move to unit info
             // Cost per tick to repair unit for REPAIR_RATE_HP_PER_TICK amount
             pPlayer->substractCredits(REPAIR_COST_PER_TICK);
