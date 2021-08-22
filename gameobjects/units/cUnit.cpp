@@ -1778,7 +1778,7 @@ cAbstractStructure *cUnit::getStructureUnitWantsToEnter() const {
     cAbstractStructure *structureUnitWantsToEnter = nullptr;
     if (iStructureID > -1) {
         structureUnitWantsToEnter = structure[iStructureID];
-        if (!structureUnitWantsToEnter->isValid()) {
+        if (structureUnitWantsToEnter && !structureUnitWantsToEnter->isValid()) {
             structureUnitWantsToEnter = nullptr;
         }
     }
@@ -2453,14 +2453,17 @@ void cUnit::think_move() {
                         intent == eUnitActionIntent::INTENT_REPAIR) {
                         bool findAlternativeStructure = false;
 
-                        // another unit is entering this structure
-                        if (pStructure->hasUnitEntering() && pStructure->getUnitIdEntering() != iID) {
+                        // another unit is entering this structure (or it is occupied)
+                        if (pStructure->isInProcessOfBeingEnteredOrOccupiedByUnit(iID)) {
                             findAlternativeStructure = true;
                             bOccupied = true;
+                        } else {
+                            // start entering the structure at next cell
+                            pStructure->startEnteringStructure(iID);
                         }
 
-                        if (pStructure->hasUnitWithin() || // structure is occupied by unit
-                            !pStructure->getPlayer()->isSameTeamAs(getPlayer())) { // or (no longer) of my team
+                        // TODO: this should be done via events (EVENT_CAPTURED? and then make unit choose different structure)
+                        if (!pStructure->getPlayer()->isSameTeamAs(getPlayer())) { // no longer of my team
                             findAlternativeStructure = true;
                             bOccupied = true;
                         } else {  // structure is occupied by unit
@@ -2605,14 +2608,6 @@ void cUnit::think_move() {
                     } else {
                         int i = 5;
                     }
-                }
-            }
-        } else if (result == eUnitMoveToCellResult::MOVERESULT_BUSY) {
-            // not occupied cell;
-            if (idOfStructureAtNextCell > -1) {
-                cAbstractStructure *pStructure = structure[idOfStructureAtNextCell];
-                if (pStructure && pStructure->isValid()) {
-                    pStructure->startEnteringStructure(iID);
                 }
             }
         }
@@ -2808,7 +2803,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         TIMER_movewait = 2 + ((getUnitType().speed + iSlowDown) * 3);
         return eUnitMoveToCellResult::MOVERESULT_AT_CELL;
     }
-    return eUnitMoveToCellResult::MOVERESULT_BUSY;
+    return eUnitMoveToCellResult::MOVERESULT_BUSY_MOVING;
 }
 
 /**
