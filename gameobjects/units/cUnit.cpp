@@ -1922,6 +1922,8 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
 
     if (iShotUnit > -1) {
         cUnit &unitWhoShotMe = unit[iShotUnit];
+        if (unitWhoShotMe.getPlayer()->isSameTeamAs(getPlayer())) return; // ignore friendly fire
+
         bool unitWhoShotMeIsInfantry = unitWhoShotMe.isInfantryUnit();
         bool unitWhoShotMeIsAirborn = unitWhoShotMe.isAirbornUnit();
 
