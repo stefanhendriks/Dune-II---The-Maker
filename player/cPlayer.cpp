@@ -1620,39 +1620,59 @@ bool cPlayer::startBuilding(cBuildingListItem *pItem) {
 }
 
 void cPlayer::onEntityDiscovered(const s_GameEvent &event) {
-    if (!event.player->isHuman()) {
-        // do nothing
+//    if (!event.player->isHuman()) { // todo == interacting player? (have a mentat/sound thing that listens to events??)
+//        // do nothing
+//        return;
+//    }
+    if (game.iMusicType != MUSIC_PEACE) {
+        // nothing to do here music-wise
         return;
     }
+
+    bool discoveringPlayerIsSameTeamAsThisPlayer = isSameTeamAs(event.player);
 
     int voiceId = -1;
 
     // when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
-    if (game.iMusicType == MUSIC_PEACE) {
-        bool triggerMusic = false;
-        if (event.entityType == eBuildType::UNIT) {
-            cUnit &cUnit = unit[event.entityID];
+    bool triggerMusic = false;
+    if (event.entityType == eBuildType::UNIT) {
+        cUnit &pUnit = unit[event.entityID];
+        bool detectedEntityIsHuman = pUnit.getPlayer()->isHuman();
 
-            if (!event.player->isSameTeamAs(this)) {
+        // unit discovered is NOT the same team, so enemy detected / music trigger
+        if (detectedEntityIsHuman || isHuman()) {
+            if (discoveringPlayerIsSameTeamAsThisPlayer && !isSameTeamAs(pUnit.getPlayer())) {
                 triggerMusic = true;
-                if (cUnit.iType == SANDWORM) {
+                if (pUnit.iType == SANDWORM) {
                     voiceId = SOUND_VOICE_10_ATR;
                 } else {
                     voiceId = SOUND_VOICE_09_ATR;
                 }
             }
-        } else if (event.entityType == eBuildType::STRUCTURE) {
-            if (!event.player->isSameTeamAs(this)) {
+        } else {
+            // this entity, nor I am human. So do not care about music stuff.
+            return;
+        }
+    } else if (event.entityType == eBuildType::STRUCTURE) {
+        cAbstractStructure *pStructure = structure[event.entityID];
+        bool detectedEntityIsHuman = pStructure->getPlayer()->isHuman();
+
+        // structure discovered is NOT the same team, so enemy detected / music trigger
+        if (detectedEntityIsHuman || isHuman()) {
+            if (discoveringPlayerIsSameTeamAsThisPlayer && !isSameTeamAs(pStructure->getPlayer())) {
                 // only things that can harm us will trigger attack music?
                 if (event.entitySpecificType == RTURRET || event.entitySpecificType == TURRET) {
                     triggerMusic = true;
                 }
             }
+        } else {
+            // this entity, nor I am human. So do not care about music stuff.
+            return;
         }
+    }
 
-        if (triggerMusic) {
-            playMusicByType(MUSIC_ATTACK);
-        }
+    if (triggerMusic) {
+        playMusicByType(MUSIC_ATTACK);
     }
 
     if (voiceId > -1) {
