@@ -12,10 +12,15 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     memset(iRegionHouse, -1, sizeof(iRegionHouse));
     memset(cRegionText, 0, sizeof(cRegionText));
 
+    calculateOffset();
+
+    regionClickMapBmp = nullptr;
+}
+
+void cSelectYourNextConquestState::calculateOffset() {
     offsetX = (game.screen_x - 640) / 2;
     offsetY = (game.screen_y - 480) / 2; // same goes for offsetY (but then for 480 height).
 
-    regionClickMapBmp = nullptr;
 }
 
 cSelectYourNextConquestState::~cSelectYourNextConquestState() {

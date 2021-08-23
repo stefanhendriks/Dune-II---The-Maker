@@ -65,6 +65,8 @@ public:
 
     void destroy();
 
+    void calculateOffset();
+
 private:
 
     eRegionState state;
