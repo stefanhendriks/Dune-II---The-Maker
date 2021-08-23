@@ -1168,6 +1168,8 @@ bool cGame::setupGame() {
 
 	}
 
+	selectYourNextConquestState->calculateOffset();
+
 	alfont_text_mode(-1);
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set mode to -1", OUTC_SUCCESS);
 
