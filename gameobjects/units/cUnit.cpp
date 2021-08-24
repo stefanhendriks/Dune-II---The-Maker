@@ -154,16 +154,7 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
     } // a harvester died, check if we have to deliver a new one to the player
 
     if (iStructureID > -1) {
-        cAbstractStructure *pStructure = structure[iStructureID];
-        if (pStructure->isValid()) {
-            if (pStructure->getUnitIdHeadingTowards() == iID) {
-                // update structure state that this unit is no longer heading towards this building
-                pStructure->unitStopsHeadingTowardsStructure();
-            } else if (pStructure->getUnitIdEntering() == iID) {
-                // update structure state that this unit is no longer entering this building
-                pStructure->unitStopsEnteringStructure();
-            }
-        }
+        notifyStructureWeWantedToEnterThatStopGoingToIt();
     }
 
     if (bBlowUp) {
@@ -396,6 +387,19 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
     for (int i = 0; i < MAPID_MAX; i++) {
         if (i != MAPID_STRUCTURES) {
             map.remove_id(iID, i);
+        }
+    }
+}
+
+void cUnit::notifyStructureWeWantedToEnterThatStopGoingToIt() const {
+    cAbstractStructure *pStructure = getStructureUnitWantsToEnter();
+    if (pStructure->isValid()) {
+        if (pStructure->getUnitIdHeadingTowards() == iID) {
+            // update structure state that this unit is no longer heading towards this building
+            pStructure->unitStopsHeadingTowardsStructure();
+        } else if (pStructure->getUnitIdEntering() == iID) {
+            // update structure state that this unit is no longer entering this building
+            pStructure->unitStopsEnteringStructure();
         }
     }
 }
@@ -799,8 +803,21 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
     sprintf(msg, "(move_to - START) : to cell [%d], iStructureIdToEnter[%d], iUnitIdToPickup[%d] (to attack, if > -1), intent[%s]", iCll, iStructureIdToEnter, iUnitIdToPickup, eUnitActionIntentString(intent));
     log(msg);
     iGoalCell = iCll;
+    if (iStructureID > -1) {
+        notifyStructureWeWantedToEnterThatStopGoingToIt();
+    }
+
     iStructureID = iStructureIdToEnter;
+
+    if (iStructureIdToEnter > -1) {
+        cAbstractStructure *pStructure = structure[iStructureIdToEnter];
+        if (!pStructure->hasUnitHeadingTowards() && !pStructure->hasUnitWithin()) {
+            pStructure->unitHeadsTowardsStructure(iID);
+        }
+    }
+
     iUnitID = iUnitIdToPickup;
+
     iAttackStructure = -1;
     iAttackCell = -1;
 
