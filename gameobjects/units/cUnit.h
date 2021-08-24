@@ -380,6 +380,8 @@ private:
     bool findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *candidate, int destCell);
 
     void awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate);
+
+    void notifyStructureWeWantedToEnterThatStopGoingToIt() const;
 };
 
 
