@@ -165,6 +165,14 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
         }
     } // a harvester died, check if we have to deliver a new one to the player
 
+    if (iStructureID > -1) {
+        cAbstractStructure *pStructure = structure[iStructureID];
+        if (pStructure->isValid() && pStructure->getUnitIdHeadingTowards() == iID) {
+            // update structure state that this unit is no longer heading towards this building
+            pStructure->unitStopsHeadingTowardsStructure();
+        }
+    }
+
     if (bBlowUp) {
         if (iType == TRIKE || iType == RAIDER || iType == QUAD) {
             // play quick 'boom' sound and show animation

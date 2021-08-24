@@ -716,3 +716,8 @@ int cAbstractStructure::getRandomStructureCell() {
 bool cAbstractStructure::isInProcessOfBeingEnteredOrOccupiedByUnit(int unitId) {
     return hasUnitWithin() || (hasUnitEntering() && getUnitIdEntering() != unitId);
 }
+
+void cAbstractStructure::unitStopsHeadingTowardsStructure() {
+    setUnitIdHeadingTowards(-1);
+    setAnimating(false);
+}

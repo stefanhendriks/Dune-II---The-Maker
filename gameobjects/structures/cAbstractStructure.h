@@ -220,6 +220,8 @@ class cAbstractStructure {
         int getRandomStructureCell();
 
         bool isInProcessOfBeingEnteredOrOccupiedByUnit(int unitId);
+
+        void unitStopsHeadingTowardsStructure();
 };
 
 #endif
