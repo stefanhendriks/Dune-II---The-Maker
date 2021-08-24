@@ -155,9 +155,14 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 
     if (iStructureID > -1) {
         cAbstractStructure *pStructure = structure[iStructureID];
-        if (pStructure->isValid() && pStructure->getUnitIdHeadingTowards() == iID) {
-            // update structure state that this unit is no longer heading towards this building
-            pStructure->unitStopsHeadingTowardsStructure();
+        if (pStructure->isValid()) {
+            if (pStructure->getUnitIdHeadingTowards() == iID) {
+                // update structure state that this unit is no longer heading towards this building
+                pStructure->unitStopsHeadingTowardsStructure();
+            } else if (pStructure->getUnitIdEntering() == iID) {
+                // update structure state that this unit is no longer entering this building
+                pStructure->unitStopsEnteringStructure();
+            }
         }
     }
 

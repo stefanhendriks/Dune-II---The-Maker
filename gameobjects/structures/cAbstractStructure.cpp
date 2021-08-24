@@ -721,3 +721,8 @@ void cAbstractStructure::unitStopsHeadingTowardsStructure() {
     setUnitIdHeadingTowards(-1);
     setAnimating(false);
 }
+
+void cAbstractStructure::unitStopsEnteringStructure() {
+    setUnitIdEntering(-1);
+    setAnimating(false);
+}
