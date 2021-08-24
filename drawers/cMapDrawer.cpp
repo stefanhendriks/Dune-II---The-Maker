@@ -173,36 +173,10 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
             }
 
             // Draw more debugging information
-            if (key[KEY_D] && key[KEY_TAB]) {
-                int iClr = makecol(255, 0, 0);
-
-                bool bDraw = false;
-
-                if (!map->isCellPassable(iCell)) {
-                    iClr = makecol(0, 255, 0);
-                    if (!map->isCellPassableFoot(iCell)) {
-                        iClr = makecol(0, 198, 0);
-                    }
-                    bDraw = true;
-                } else if (!map->isCellPassableFoot(iCell)) {
-                    iClr = makecol(0, 198, 0);
-                    bDraw = true;
+            if (DEBUGGING) {
+                if (key[KEY_D] && key[KEY_TAB]) {
+                    drawCellAsColoredTile(tileWidth, tileHeight, iCell, fDrawX, fDrawY);
                 }
-
-                if (map->getCellIdStructuresLayer(iCell) > -1) {
-                    iClr = makecol(0, 255, 0);
-                    bDraw = true;
-                }
-
-                if (map->getCellIdUnitLayer(iCell) > -1) {
-                    iClr = makecol(0, 0, 255);
-                    bDraw = true;
-                }
-
-                if (bDraw) {
-                    rectfill(bmp_screen, fDrawX, fDrawY, fDrawX + tileWidth, fDrawY + tileHeight, iClr);
-                }
-
             }
 		}
 	}
@@ -227,6 +201,37 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
 //                mapCamera->getZoomLevel());
 //
 //        logbook(msg);
+    }
+}
+
+void cMapDrawer::drawCellAsColoredTile(float tileWidth, float tileHeight, int iCell, float fDrawX, float fDrawY) {
+    int iClr = makecol(255, 0, 0);
+
+    bool bDraw = false;
+
+    if (!map->isCellPassable(iCell)) {
+        iClr = makecol(0, 255, 0);
+        if (!map->isCellPassableFoot(iCell)) {
+            iClr = makecol(0, 198, 0);
+        }
+        bDraw = true;
+    } else if (!map->isCellPassableFoot(iCell)) {
+        iClr = makecol(0, 198, 0);
+        bDraw = true;
+    }
+
+    if (map->getCellIdStructuresLayer(iCell) > -1) {
+        iClr = makecol(0, 255, 0);
+        bDraw = true;
+    }
+
+    if (map->getCellIdUnitLayer(iCell) > -1) {
+        iClr = makecol(0, 0, 255);
+        bDraw = true;
+    }
+
+    if (bDraw) {
+        rectfill(bmp_screen, fDrawX, fDrawY, fDrawX + tileWidth, fDrawY + tileHeight, iClr);
     }
 }
 
