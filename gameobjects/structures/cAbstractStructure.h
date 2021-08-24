@@ -222,6 +222,8 @@ class cAbstractStructure {
         bool isInProcessOfBeingEnteredOrOccupiedByUnit(int unitId);
 
         void unitStopsHeadingTowardsStructure();
+
+        void unitStopsEnteringStructure();
 };
 
 #endif
