@@ -2883,6 +2883,10 @@ bool cUnit::isDamaged() {
 
 void cUnit::restoreFromTempHitPoints() {
     iHitPoints = iTempHitPoints; // restore true hitpoints
+    int maxHp = getUnitType().hp;
+    if (iHitPoints > maxHp) {
+        iHitPoints = maxHp;
+    }
     iTempHitPoints = -1; // get rid of this hack
 }
 
