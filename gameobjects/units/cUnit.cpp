@@ -135,26 +135,14 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
     int iDieY = pos_y() + getUnitType().bmp_height / 2;
 
     // when HARVESTER, check if there are any friends , if not, then deliver one
-    if (iType == HARVESTER && // a harvester died
-        players[iPlayer].hasAtleastOneStructure(REFINERY)) { // and its player still has a refinery
+    if (isHarvester() && // a harvester died
+        getPlayer()->hasAtleastOneStructure(REFINERY)) { // and its player still has a refinery
 
+        int harvesters = getPlayer()->getAmountOfUnitsForType(HARVESTER);
         // check if the player has any harvester left
-        bool bFoundHarvester = false;
-        for (int i = 0; i < MAX_UNITS; i++) {
-            if (i != iID) {
-                cUnit &theUnit = unit[i];
-
-                if (theUnit.isValid() && theUnit.iType == HARVESTER) {
-                    if (theUnit.iPlayer == iPlayer) {
-                        bFoundHarvester = true;
-                        break;
-                    }
-                }
-            }
-        }
 
         // No harvester found, deliver one
-        if (!bFoundHarvester) {
+        if (harvesters < 1) {
             // deliver
             cAbstractStructure *refinery = findClosestStructureType(REFINERY);
 
@@ -276,15 +264,16 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
                         // structure hit!
                         int id = idOfStructureAtCell;
 
-                        if (structure[id]->getHitPoints() > 0) {
+                        cAbstractStructure *pStructure = structure[id];
+                        if (pStructure->getHitPoints() > 0) {
 
                             int iDamage = 150 + rnd(100);
-                            structure[id]->damage(iDamage);
+                            pStructure->damage(iDamage);
 
                             int iChance = 10;
 
-                            if (structure[id] &&
-                                structure[id]->getHitPoints() < (structures[structure[id]->getType()].hp / 2)) {
+                            if (pStructure &&
+                                pStructure->getHitPoints() < (structures[pStructure->getType()].hp / 2)) {
                                 iChance = 30;
                             }
 
