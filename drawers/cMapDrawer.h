@@ -23,6 +23,8 @@ class cMapDrawer {
         BITMAP *bmp_temp;
 
     int determineWhichShroudTileToDraw(int cll, int playerId) const;
+
+    void drawCellAsColoredTile(float tileWidth, float tileHeight, int iCell, float fDrawX, float fDrawY);
 };
 
 #endif /* CMAPDRAWER_H_ */

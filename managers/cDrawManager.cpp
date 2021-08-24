@@ -43,9 +43,9 @@ void cDrawManager::drawCombatState() {
 
 	// Only draw units/structures, etc, when we do NOT press D
 	// TODO: this should be something like : if (keyboard->isDebuggingStructures())
-	if (!key[KEY_D] || !key[KEY_TAB]) {
-		structureDrawer->drawStructuresFirstLayer();
-	}
+    if (!key[KEY_D] || !key[KEY_TAB]) {
+        structureDrawer->drawStructuresFirstLayer();
+    }
 
 	// draw layer 1 (beneath units, on top of terrain)
 	particleDrawer->drawLowerLayer();

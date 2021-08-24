@@ -379,7 +379,7 @@ void cMap::draw_units() {
             cUnit.draw();
         }
 
-        if (key[KEY_D]) {
+        if (DEBUGGING && key[KEY_D]) {
             allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
             putpixel(bmp_screen, cUnit.center_draw_x(), cUnit.center_draw_y(), makecol(255, 0, 255));
             if (key[KEY_TAB]) { // render unit id
@@ -403,7 +403,7 @@ void cMap::draw_units() {
 
         }
 
-        if (key[KEY_D]) {
+        if (DEBUGGING && key[KEY_D]) {
             allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
             putpixel(bmp_screen, cUnit.center_draw_x(), cUnit.center_draw_y(), makecol(255, 0, 255));
             if (key[KEY_TAB]) { // render unit id
@@ -428,7 +428,7 @@ void cMap::draw_units() {
             cUnit.draw();
         }
 
-        if (key[KEY_D]) {
+        if (DEBUGGING && key[KEY_D]) {
             allegroDrawer->drawRectangle(bmp_screen, cUnit.dimensions, makecol(255, 0, 255));
             putpixel(bmp_screen, cUnit.center_draw_x(), cUnit.center_draw_y(), makecol(255, 0, 255));
             if (key[KEY_TAB]) { // render unit id
@@ -498,7 +498,7 @@ void cMap::draw_units_2nd() {
 //            }
         }
 
-        if (key[KEY_D]) {
+        if (DEBUGGING && key[KEY_D]) {
             allegroDrawer->drawRectangle(bmp_screen, pUnit.dimensions, makecol(255, 0, 255));
             putpixel(bmp_screen, pUnit.center_draw_x(), pUnit.center_draw_y(), makecol(255, 0, 255));
             if (key[KEY_TAB]) { // render unit id
