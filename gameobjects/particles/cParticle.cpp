@@ -82,12 +82,6 @@ void cParticle::draw() {
     if (dy < 0 || dy > game.screen_y)
         return;
 
-    /*
-    if (iType == OBJECT_WORMTRAIL)
-    {
-        Shimmer((16/(iFrame+1)), dx, dy);
-    }*/
-
     // valid in boundaries
     BITMAP *temp = create_bitmap(iWidth, iHeight);
 
