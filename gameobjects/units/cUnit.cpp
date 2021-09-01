@@ -393,6 +393,8 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 
 void cUnit::notifyStructureWeWantedToEnterThatStopGoingToIt() const {
     cAbstractStructure *pStructure = getStructureUnitWantsToEnter();
+    if (pStructure == nullptr) return; // nothing to do here
+
     if (pStructure->isValid()) {
         if (pStructure->getUnitIdHeadingTowards() == iID) {
             // update structure state that this unit is no longer heading towards this building
