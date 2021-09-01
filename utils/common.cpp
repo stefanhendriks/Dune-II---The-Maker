@@ -689,6 +689,7 @@ void install_bullets() {
         bullets[i].deviateProbability = 0; // no probability of deviating a unit
         bullets[i].groundBullet = false; // if true, then it gets blocked by walls, mountains or structures. False == flying bullets, ie, rockets
         bullets[i].canDamageAirUnits = false; // if true, then upon impact the bullet can also damage air units
+        bullets[i].canDamageGround = false; // if true, then upon impact the bullet can also damage ground (walls, slabs, etc)
         strcpy(bullets[i].description, "Unknown");
     }
 
@@ -702,6 +703,7 @@ void install_bullets() {
     bullets[ROCKET_BIG].sound = SOUND_ROCKET;
     bullets[ROCKET_BIG].explosionSize = 7;
     bullets[ROCKET_BIG].canDamageAirUnits = true;
+    bullets[ROCKET_BIG].canDamageGround = true;
     strcpy(bullets[ROCKET_BIG].description, "ROCKET_BIG");
 
     // small rocket (for ornithopter)
@@ -714,6 +716,7 @@ void install_bullets() {
     bullets[ROCKET_SMALL_ORNI].sound = SOUND_ROCKET_SMALL;
     bullets[ROCKET_SMALL_ORNI].canDamageAirUnits = true;
     bullets[ROCKET_SMALL_ORNI].max_deadframes = 1;
+    bullets[ROCKET_SMALL_ORNI].canDamageGround = true;
     strcpy(bullets[ROCKET_SMALL_ORNI].description, "ROCKET_SMALL_ORNI");
 
     // small rocket
@@ -726,6 +729,7 @@ void install_bullets() {
     bullets[ROCKET_SMALL].sound = SOUND_ROCKET_SMALL;
     bullets[ROCKET_SMALL].canDamageAirUnits = true;
     bullets[ROCKET_SMALL].max_deadframes = 1;
+    bullets[ROCKET_SMALL].canDamageGround = true;
     strcpy(bullets[ROCKET_SMALL].description, "ROCKET_SMALL");
 
     // small rocket - fremen rocket
@@ -738,6 +742,7 @@ void install_bullets() {
     bullets[ROCKET_SMALL_FREMEN].sound = SOUND_ROCKET_SMALL;
     bullets[ROCKET_SMALL_FREMEN].max_deadframes = 1;
     bullets[ROCKET_SMALL_FREMEN].canDamageAirUnits = true;
+    bullets[ROCKET_SMALL_FREMEN].canDamageGround = true;
     strcpy(bullets[ROCKET_SMALL_FREMEN].description, "ROCKET_SMALL_FREMEN");
 
     // normal rocket
@@ -750,6 +755,7 @@ void install_bullets() {
     bullets[ROCKET_NORMAL].sound = SOUND_ROCKET;
     bullets[ROCKET_NORMAL].max_deadframes = 4;
     bullets[ROCKET_NORMAL].canDamageAirUnits = true;
+    bullets[ROCKET_NORMAL].canDamageGround = true;
     strcpy(bullets[ROCKET_NORMAL].description, "ROCKET_NORMAL");
 
     // soldier shot
@@ -798,6 +804,7 @@ void install_bullets() {
     bullets[BULLET_TANK].sound = SOUND_EXPL_ROCKET;
     bullets[BULLET_TANK].max_deadframes = 1;
     bullets[BULLET_TANK].groundBullet = true;
+    bullets[BULLET_TANK].canDamageGround = true;
     strcpy(bullets[BULLET_TANK].description, "BULLET_TANK");
 
     // siege tank shot
@@ -810,6 +817,7 @@ void install_bullets() {
     bullets[BULLET_SIEGE].sound = SOUND_EXPL_ROCKET;
     bullets[BULLET_SIEGE].max_deadframes = 2;
     bullets[BULLET_SIEGE].groundBullet = true;
+    bullets[BULLET_SIEGE].canDamageGround = true;
     strcpy(bullets[BULLET_SIEGE].description, "BULLET_SIEGE");
 
     // devastator shot
@@ -822,6 +830,7 @@ void install_bullets() {
     bullets[BULLET_DEVASTATOR].sound = SOUND_EXPL_ROCKET;
     bullets[BULLET_DEVASTATOR].max_deadframes = 1;
     bullets[BULLET_DEVASTATOR].groundBullet = true;
+    bullets[BULLET_DEVASTATOR].canDamageGround = true;
     strcpy(bullets[BULLET_DEVASTATOR].description, "BULLET_DEVASTATOR");
 
     // Gas rocket of a deviator
@@ -846,6 +855,7 @@ void install_bullets() {
     bullets[BULLET_TURRET].max_deadframes = 1;
     bullets[BULLET_TURRET].sound = SOUND_GUNTURRET;
     bullets[BULLET_TURRET].groundBullet = false; // this can fly over structures, walls, mountains, yes!
+    bullets[BULLET_TURRET].canDamageGround = true;
     strcpy(bullets[BULLET_TURRET].description, "BULLET_TURRET");
 
     // EXEPTION: Shimmer/ Sonic tank
@@ -869,6 +879,7 @@ void install_bullets() {
     bullets[ROCKET_RTURRET].sound = SOUND_ROCKET;
     bullets[ROCKET_RTURRET].max_deadframes = 4;
     bullets[ROCKET_RTURRET].canDamageAirUnits = true;
+    bullets[ROCKET_RTURRET].canDamageGround = true;
     strcpy(bullets[ROCKET_RTURRET].description, "ROCKET_RTURRET");
 }
 

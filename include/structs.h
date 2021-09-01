@@ -219,6 +219,7 @@ struct s_Bullet {
 
     char description[64]; // ie: "bullet"
 
+    bool canDamageGround; // when true, this bullet can damage ground (ie walls, concrete, etc)
 };
 
 // SKIRMISH MAP PREVIEW DATA
