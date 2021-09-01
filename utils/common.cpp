@@ -1676,59 +1676,44 @@ int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, i
 
 
 // Make shimmer
-void Shimmer(int r, int x, int y)
-{
-  // r = radius
-  // X, Y = position
+void Shimmer(int r, int x, int y) {
+    int x1, y1;
+    int nx, ny;
+    int gp = 0;     // Get Pixel Result
+    int tc = 0;
 
-  /*
-    Logic
+    // go around 360 fDegrees (twice as fast now)
+    float step = std::fmax(1.0f, mapCamera->divideByZoomLevel(4));
 
-    Each X and Y position will be taken and will be switched with a randomly choosen neighbouring
-    pixel.
+    for (float dr = 0; dr < r; dr += step) {
+        for (double d = 0; d < 360; d++) {
+            x1 = (x + (cos(d) * (dr)));
+            y1 = (y + (sin(d) * (dr)));
 
-    Shimmer effect is done on BMP_SCREEN only.
-  */
+            if (x1 < 0) x1 = 0;
+            if (y1 < 0) y1 = 0;
+            if (x1 >= game.screen_x) x1 = game.screen_x - 1;
+            if (y1 >= game.screen_y) y1 = game.screen_y - 1;
 
-  int x1,y1;
-  int nx,ny;
-  int gp=0;     // Get Pixel Result
-  int tc=0;
+            gp = getpixel(bmp_screen, x1, y1); // use this inline function to speed up things.
+            // Now choose random spot to 'switch' with.
+            nx = (x1 - 1) + rnd(2);
+            ny = (y1 - 1) + rnd(2);
 
-  // go around 360 fDegrees (twice as fast now)
-  for (int dr=0; dr < r; dr+=3)
-  {
-    for (double d=0; d < 360; d++)
-    {
-       x1 = (x + (cos(d)*(dr)));
-       y1 = (y + (sin(d)*(dr)));
+            if (nx < 0) nx = 0;
+            if (ny < 0) ny = 0;
+            if (nx >= game.screen_x) nx = game.screen_x - 1;
+            if (ny >= game.screen_y) ny = game.screen_y - 1;
 
-       if (x1 < 0) x1=0;
-       if (y1 < 0) y1=0;
-       if (x1 >= game.screen_x) x1 = game.screen_x-1;
-       if (y1 >= game.screen_y) y1 = game.screen_y-1;
+            tc = getpixel(bmp_screen, nx, ny);
 
-       gp = getpixel(bmp_screen, x1,y1); // use this inline function to speed up things.
-       // Now choose random spot to 'switch' with.
-       nx=(x1-1) + rnd(2);
-       ny=(y1-1) + rnd(2);
-
-       if (nx < 0) nx=0;
-       if (ny < 0) ny=0;
-       if (nx >= game.screen_x) nx=game.screen_x-1;
-       if (ny >= game.screen_y) ny=game.screen_y-1;
-
-       tc = getpixel(bmp_screen, nx,ny);
-
-       if (gp > -1 && tc > -1)
-       {
-        // Now switch colors
-        putpixel(bmp_screen, nx, ny, gp);
-        putpixel(bmp_screen, x1, y1, tc);
-       }
-
+            if (gp > -1 && tc > -1) {
+                // Now switch colors
+                putpixel(bmp_screen, nx, ny, gp);
+                putpixel(bmp_screen, x1, y1, tc);
+            }
+        }
     }
-  }
 
 }
 
