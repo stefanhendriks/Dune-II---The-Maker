@@ -257,12 +257,22 @@ public:
         return -1;
     }
 
+    /**
+     * Returns if the cell is passable for non-infantry ground units
+     * @param cellNr
+     * @return
+     */
     bool isCellPassable(int cellNr) {
         tCell *pCell = getCell(cellNr);
         if (pCell) return pCell->passable;
         return false;
     }
 
+    /**
+     * Returns if the cell is passable for infantry ground units
+     * @param cellNr
+     * @return
+     */
     bool isCellPassableFoot(int cellNr) {
         tCell *pCell = getCell(cellNr);
         if (pCell) return pCell->passableFoot;

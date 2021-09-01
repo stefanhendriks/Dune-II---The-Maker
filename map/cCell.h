@@ -8,7 +8,7 @@ struct tCell {
     int smudgetile;     // smudge tile id (drawn upon the tile)
     int smudgetype;     // smudge type id
     int health;         // hitpoints for specific tile (used for walls)
-    bool passable;      // passable? > pathfinder (TRUE = default)
+    bool passable;      // passable? > pathfinder (TRUE = default) (passable for ground units, non infantry)
     bool passableFoot;  // passable for foot units? > pathfinder (TRUE = default)
 
     bool iVisible[MAX_PLAYERS];      // visibility for <player>
