@@ -965,16 +965,7 @@ void cUnit::think_guard() {
             } else {
                 attackUnit(unitIdSelectedForAttacking);
             }
-
-            if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == HUMAN) {
-                playMusicByType(MUSIC_ATTACK);
-
-                // warning... bla bla
-                if (unitToAttack.iType == SANDWORM)
-                    play_voice(SOUND_VOICE_10_ATR); // wormsign
-                else
-                    play_voice(SOUND_VOICE_09_ATR); // enemy unit approaching
-            }
+            
             return;
         } else {
             int structureIdSelectedForAttacking = -1;
