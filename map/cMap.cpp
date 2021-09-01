@@ -1226,3 +1226,11 @@ cAbstractStructure * cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeading
 int cMap::getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minRange, int maxRange, int unitType) {
     return findNearByValidDropLocation(cell, minRange, maxRange, unitType);
 }
+
+bool cMap::isCellPassableForWorm(int cell) {
+    int cellType = getCellType(cell);
+    return cellType == TERRAIN_SAND ||
+           cellType == TERRAIN_HILL ||
+           cellType == TERRAIN_SPICE ||
+           cellType == TERRAIN_SPICEHILL;
+}

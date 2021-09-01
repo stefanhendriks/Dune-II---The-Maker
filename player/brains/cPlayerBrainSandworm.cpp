@@ -23,23 +23,21 @@ namespace brains {
         // TODO: make this more smart, ie, keep a collection of pointers in player, so we don't
         // need to loop over ALL units all the time.
 
+//        this->player->getAllMyUnits();
         // loop through all its worms and move them around
         for (int i = 0; i < MAX_UNITS; i++) {
             cUnit &pUnit = unit[i];
             if (!pUnit.isValid()) continue;
-            if (pUnit.iType != SANDWORM) continue;
-            if (pUnit.iPlayer != player->getId()) continue;
+            if (!pUnit.isSandworm()) continue;
+            if (pUnit.getPlayer() != player) continue;
 
             // when on guard
-            if (pUnit.iAction == ACTION_GUARD) {
+            if (pUnit.isIdle()) {
                 // find new spot to go to
                 for (int iTries = 0; iTries < 10; iTries++) {
                     int iMoveTo = map.getRandomCell();
 
-                    if (map.getCellType(iMoveTo) == TERRAIN_SAND ||
-                        map.getCellType(iMoveTo) == TERRAIN_HILL ||
-                        map.getCellType(iMoveTo) == TERRAIN_SPICE ||
-                        map.getCellType(iMoveTo) == TERRAIN_SPICEHILL) {
+                    if (map.isCellPassableForWorm(iMoveTo)) {
                         pUnit.move_to(iMoveTo);
                         continue;
                     }
