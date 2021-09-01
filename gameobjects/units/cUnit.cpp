@@ -3158,7 +3158,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
     int mapIdIndex = MAPID_UNITS;
     if (sUnitType.airborn) {
         mapIdIndex = MAPID_AIR;
-    } else if (sUnitType.type == SANDWORM) {
+    } else if (unitType == SANDWORM) {
         mapIdIndex = MAPID_WORMS;
     }
 
