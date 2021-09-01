@@ -583,6 +583,8 @@ public:
 
     int findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop);
 
+    bool isCellPassableForWorm(int cell);
+
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 
