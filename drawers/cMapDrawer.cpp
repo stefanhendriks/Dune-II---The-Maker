@@ -231,7 +231,7 @@ void cMapDrawer::drawCellAsColoredTile(float tileWidth, float tileHeight, int iC
     }
 
     if (bDraw) {
-        rectfill(bmp_screen, fDrawX, fDrawY, fDrawX + tileWidth, fDrawY + tileHeight, iClr);
+        rect(bmp_screen, fDrawX, fDrawY, fDrawX + (tileWidth-1), fDrawY + (tileHeight-1), iClr);
     }
 }
 
