@@ -383,8 +383,6 @@ public:
         tCell *pCell = getCell(cellNr);
         if (pCell) {
             if (type > TERRAIN_WALL) {
-                int foo = 0;
-                foo = 2 + 2;
                 pCell->type = type;
             } else if (type < TERRAIN_BLOOM) {
                 pCell->type = type;

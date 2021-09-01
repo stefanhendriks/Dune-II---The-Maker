@@ -336,8 +336,15 @@ void cBullet::arrivedAtDestinationLogic() {
     die();
 }
 
+/**
+ * Only when bullet can damage ground, this function will do something.
+ * @param cell
+ * @param factor
+ */
 void cBullet::damageTerrain(int cell, double factor) const {
     if (!map.isValidCell(cell)) return;
+    if (!canDamageGround()) return;
+
     float iDamage = getDamageToInflictToNonInfantry() * factor;
 
     int idOfStructureAtCell = map.getCellIdStructuresLayer(cell);
@@ -347,7 +354,7 @@ void cBullet::damageTerrain(int cell, double factor) const {
 
     if (cellTypeAtCell == TERRAIN_SLAB) {
         // change into rock, get destroyed. But only when we did not hit a structure.
-        if (idOfStructureAtCell < 0 && !isInfantryBullet() && !isSonicWave()) {
+        if (idOfStructureAtCell < 0) {
             map.cellChangeType(cell, TERRAIN_ROCK);
             mapEditor.smoothAroundCell(cell);
         }
@@ -640,4 +647,8 @@ int cBullet::getRandomX() const {
 
 void cBullet::die() {
     bAlive = false;
+}
+
+bool cBullet::canDamageGround() const {
+    return gets_Bullet().canDamageGround;
 }

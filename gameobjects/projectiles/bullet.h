@@ -100,5 +100,7 @@ private:
     bool isInfantryBullet() const;
 
     cPlayerDifficultySettings *getDifficultySettings() const;
+
+    bool canDamageGround() const;
 };
 
