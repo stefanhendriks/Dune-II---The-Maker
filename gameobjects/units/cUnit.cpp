@@ -115,6 +115,7 @@ void cUnit::init(int i) {
     TIMER_bored = 0;    // how long are we bored?
     TIMER_attack = 0;
     TIMER_wormeat = 0;
+    TIMER_wormtrail = 0;
     TIMER_movedelay = 0;
 }
 
@@ -620,8 +621,11 @@ void cUnit::draw() {
     int ux = draw_x();
     int uy = draw_y();
 
-    if (iType == SANDWORM) {
-        Shimmer(20, ux + (mapCamera->getZoomedHalfTileSize()), uy + (mapCamera->getZoomedHalfTileSize()));
+    if (isSandworm()) {
+        // randomize drawing shimmer effect, as it is expensive
+        if (rnd(100) < 15) {
+            Shimmer(TILESIZE_HEIGHT_PIXELS, center_draw_x(), center_draw_y());
+        }
         return;
     }
 
@@ -857,172 +861,149 @@ void cUnit::think_guard() {
     }
 
     TIMER_bored++; // we are bored ow yeah
-    TIMER_guard++; // scan time
-
-    if (TIMER_guard > 5) {
-        // scan area
-        TIMER_guard = 0 - (rnd(5)); // do not scan all at the same time
-
-        updateCellXAndY();
-        // scan
-        int iDistance = 9999;
-        int unitIdSelectedForAttacking = -1;
-
-        // non airborn units thinking
-        if (isSandworm()) {
-            if (TIMER_wormeat > 0) {
-                TIMER_wormeat--;
-                return; // get back, not hungry just yet
-            }
-
-            for (int i = 0; i < MAX_UNITS; i++) {
-                if (unit[i].isValid() && i != iID) {
-                    // not ours and its visible
-                    if (unit[i].iPlayer != iPlayer &&
-                        !unit[i].isAirbornUnit()) {
-                        int cellType = map.getCellType(unit[i].iCell);
-                        if (cellType == TERRAIN_SAND ||
-                            cellType == TERRAIN_HILL ||
-                            cellType == TERRAIN_SPICE ||
-                            cellType == TERRAIN_SPICEHILL) {
-                            int distance = ABS_length(iCellX, iCellY, unit[i].iCellX, unit[i].iCellY);
-
-                            if (distance <= unitInfo[iType].sight && distance < iDistance) {
-                                // ATTACK
-                                iDistance = distance;
-                                unitIdSelectedForAttacking = i;
-                                // log("WORM FOUND ENEMY");
-                            }
-                        } // valid terrain
-                    }
-
-                }
-            }
-
-        } else // not sandworm
-        {
-            int airUnitToAttack = -1;
-            for (int i = 0; i < MAX_UNITS; i++) {
-                if (i == iID) continue; // skip self
-                cUnit &potentialThreath = unit[i];
-                if (!potentialThreath.isValid()) continue;
-                if (potentialThreath.getPlayerId() == getPlayerId()) continue; // skip own units
-
-                bool bSameTeam = getPlayer()->isSameTeamAs(potentialThreath.getPlayer());
-                if (bSameTeam) continue; // skip same team players / allies
-
-                if (!map.isVisible(potentialThreath.iCell, iPlayer)) continue; // skip non-visible potential enemy units
-
-                if (potentialThreath.isAirbornUnit() && // potential threat is air unit
-                    !isAirbornUnit() &&                 // but I am not
-                    !canAttackAirUnits())               // and I can't attack air units...
-                    continue;                           // then bail
-
-                int distance = ABS_length(iCellX, iCellY, potentialThreath.iCellX, potentialThreath.iCellY);
-
-                // TODO: perhaps make this configurable, so you can set the 'aggressiveness' of units?
-                int range = unitInfo[iType].sight + 3; // do react earlier than already in range.
-
-                if (distance <= range && distance < iDistance) {
-                    // ATTACK
-                    iDistance = distance;
-                    unitIdSelectedForAttacking = i;
-                    // I am not air unit, enemy is.
-                    if (!isAirbornUnit() && canAttackAirUnits() && potentialThreath.isAirbornUnit()) {
-                        airUnitToAttack = i;
-                    }
-                }
-            }
-
-            if (airUnitToAttack > -1) {
-                // air units override ground units for units that can attack air units ?
-                unitIdSelectedForAttacking = airUnitToAttack;
-            }
-
-        }
-
-        if (unitIdSelectedForAttacking > -1) {
-            cUnit &unitToAttack = unit[unitIdSelectedForAttacking];
-
-            if (unitToAttack.isValid()) {
-                s_GameEvent event{
-                        .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
-                        .entityType = eBuildType::UNIT,
-                        .entityID = unitToAttack.iID,
-                        .player = getPlayer(),
-                        .entitySpecificType = unitToAttack.getType(),
-                        .atCell = unitToAttack.iCell
-                };
-
-                game.onNotify(event);
-            }
-
-            if (!getPlayer()->isHuman()) {
-                if (unitToAttack.isInfantryUnit() && canSquishInfantry()) {
-                    // AI will try to squish infantry units
-                    move_to(unitToAttack.iCell);
-                } else {
-                    attackUnit(unitIdSelectedForAttacking);
-                }
-            } else {
-                attackUnit(unitIdSelectedForAttacking);
-            }
-            
-            return;
-        } else {
-            int structureIdSelectedForAttacking = -1;
-
-            if (!isSandworm() && iPlayer > HUMAN) {
-                // nothing found yet to attack;
-                // ai units will auto-attack structures nearby
-
-                for (int i = 0; i < MAX_STRUCTURES; i++) {
-                    cAbstractStructure *pStructure = structure[i];
-                    if (pStructure && i != iID) {
-                        bool bAlly = getPlayer()->isSameTeamAs(pStructure->getPlayer());
-
-                        // not ours and its visible
-                        if (map.isVisible(pStructure->getCell(), iPlayer) &&
-                            !bAlly) {
-                            int c = pStructure->getCell();
-                            int c1 = pStructure->getCell();
-                            int distance = ABS_length(iCellX, iCellY, map.getCellX(c1),
-                                                      map.getCellY(c));
-
-                            int sight = getUnitType().sight + 3;
-
-                            if (distance <= sight && distance < iDistance) {
-                                // ATTACK
-                                iDistance = distance;
-                                structureIdSelectedForAttacking = i;
-                            }
-                        }
-
-                    }
-                }
-            }
-
-            if (structureIdSelectedForAttacking > -1) {
-                attackStructure(structureIdSelectedForAttacking);
-
-                // !?!?
-                if (game.iMusicType == MUSIC_PEACE && iType != SANDWORM && iPlayer == 0) {
-                    playMusicByType(MUSIC_ATTACK);
-                }
-            }
-        }
-
-    }
-
-
     if (TIMER_bored > 3500) {
         TIMER_bored = 0;
         iBodyShouldFace = rnd(8);
         iHeadShouldFace = rnd(8);
     }
 
-    // When bored we turn our body and head sometimes, so do it here:
+    TIMER_guard++; // scan time
+    if (TIMER_guard < 5) return;
 
+    // scan area
+    TIMER_guard = 0 - (rnd(5)); // do not scan all at the same time
+
+    updateCellXAndY();
+
+    // scan
+    int iDistance = 9999;
+    int unitIdSelectedForAttacking = -1;
+
+    if (isSandworm()) {
+        if (TIMER_wormeat > 0) {
+            TIMER_wormeat--;
+            return; // get back, not hungry just yet
+        }
+
+        for (int i = 0; i < MAX_UNITS; i++) {
+            cUnit &potentialDinner = unit[i];
+            if (i == iID) continue;
+            if (!potentialDinner.isValid()) continue;
+            if (potentialDinner.getPlayer()->isSameTeamAs(getPlayer())) continue;
+            if (potentialDinner.isAirbornUnit()) continue;
+
+            if (map.isCellPassableForWorm(iCell)) {
+                double distance = map.distance(iCell, potentialDinner.iCell);
+
+                if (distance <= getSight() && distance < iDistance) {
+                    // ATTACK
+                    iDistance = distance;
+                    unitIdSelectedForAttacking = i;
+                    // log("WORM FOUND ENEMY");
+                }
+            } // valid terrain
+
+        }
+
+    } else // not sandworm
+    {
+        int airUnitToAttack = -1;
+        for (int i = 0; i < MAX_UNITS; i++) {
+            if (i == iID) continue; // skip self
+            cUnit &potentialThreath = unit[i];
+            if (!potentialThreath.isValid()) continue;
+            if (potentialThreath.getPlayerId() == getPlayerId()) continue; // skip own units
+
+            bool bSameTeam = getPlayer()->isSameTeamAs(potentialThreath.getPlayer());
+            if (bSameTeam) continue; // skip same team players / allies
+
+            if (!map.isVisible(potentialThreath.iCell, iPlayer)) continue; // skip non-visible potential enemy units
+
+            if (potentialThreath.isAirbornUnit() && // potential threat is air unit
+                !isAirbornUnit() &&                 // but I am not
+                !canAttackAirUnits())               // and I can't attack air units...
+                continue;                           // then bail
+
+            int distance = ABS_length(iCellX, iCellY, potentialThreath.iCellX, potentialThreath.iCellY);
+
+            // TODO: perhaps make this configurable, so you can set the 'aggressiveness' of units?
+            int range = unitInfo[iType].sight + 3; // do react earlier than already in range.
+
+            if (distance <= range && distance < iDistance) {
+                // ATTACK
+                iDistance = distance;
+                unitIdSelectedForAttacking = i;
+                // I am not air unit, enemy is.
+                if (!isAirbornUnit() && canAttackAirUnits() && potentialThreath.isAirbornUnit()) {
+                    airUnitToAttack = i;
+                }
+            }
+        }
+
+        if (airUnitToAttack > -1) {
+            // air units override ground units for units that can attack air units ?
+            unitIdSelectedForAttacking = airUnitToAttack;
+        }
+
+    }
+
+    if (unitIdSelectedForAttacking > -1) {
+        cUnit &unitToAttack = unit[unitIdSelectedForAttacking];
+
+        if (unitToAttack.isValid()) {
+            s_GameEvent event{
+                    .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
+                    .entityType = eBuildType::UNIT,
+                    .entityID = unitToAttack.iID,
+                    .player = getPlayer(),
+                    .entitySpecificType = unitToAttack.getType(),
+                    .atCell = unitToAttack.iCell
+            };
+
+            game.onNotify(event);
+        }
+
+        // TODO: move this code somewhere else?
+        if (!getPlayer()->isHuman()) {
+            if (unitToAttack.isInfantryUnit() && canSquishInfantry()) {
+                // AI will try to squish infantry units
+                move_to(unitToAttack.iCell);
+            } else {
+                attackUnit(unitIdSelectedForAttacking);
+            }
+        } else {
+            attackUnit(unitIdSelectedForAttacking);
+        }
+
+        return;
+    }
+
+    // no unit found for attacking
+    if (!isSandworm() && !getPlayer()->isHuman()) {
+        // ai units will auto-attack structures nearby
+
+        int structureIdSelectedForAttacking = -1;
+
+        for (int i = 0; i < MAX_STRUCTURES; i++) {
+            cAbstractStructure *pStructure = structure[i];
+            if (!pStructure) continue;
+            if (!pStructure->isValid()) continue;
+            if (getPlayer()->isSameTeamAs(pStructure->getPlayer())) continue;
+            if (!map.isStructureVisible(pStructure, iPlayer)) continue; // not visible
+
+            int distance = map.distance(iCell, pStructure->getRandomStructureCell());
+            int sight = getSight() + 3;
+
+            if (distance <= sight && distance < iDistance) {
+                iDistance = distance;
+                structureIdSelectedForAttacking = i;
+            }
+        }
+
+        if (structureIdSelectedForAttacking > -1) {
+            attackStructure(structureIdSelectedForAttacking);
+        }
+    }
 }
 
 bool cUnit::isSandworm() const {
@@ -2060,18 +2041,13 @@ void cUnit::think_attack() {
         if (iAttackUnit > -1) {
             iGoalCell = attackUnit->iCell;
             if (iGoalCell == iCell) {
-                // eat
                 attackUnit->die(false, false);
-                int half = 16;
-                int iParX = pos_x() + half;
-                int iParY = pos_y() + half;
-
-                PARTICLE_CREATE(iParX, iParY, OBJECT_WORMEAT, -1, -1);
+                PARTICLE_CREATE(pos_x_centered(), pos_y_centered(), OBJECT_WORMEAT, -1, -1);
                 play_sound_id_with_distance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(iCell));
                 iAction = ACTION_GUARD;
                 iAttackUnit = -1;
                 forgetAboutCurrentPathAndPrepareToCreateNewOne();
-                TIMER_wormeat += rnd(150);
+                TIMER_wormeat += 25 + rnd(150);
                 return;
             } else {
                 int cellType = map.getCellType(attackUnit->iCell);
@@ -2281,6 +2257,10 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance) {
 
 int cUnit::getRange() const {
     return getUnitType().range;
+}
+
+int cUnit::getSight() const {
+    return getUnitType().sight;
 }
 
 s_UnitP &cUnit::getUnitType() const {
@@ -2676,8 +2656,13 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
     } else {
         map.cellSetIdForLayer(iNextCell, MAPID_WORMS, iID);
 
-        // when sandworm, add particle stuff
-        PARTICLE_CREATE(posX, posY, OBJECT_WORMTRAIL, -1, -1);
+        // add a worm trail behind worm randomly for now (just not every frame, or else this spams a great
+        // deal of particles overlapping eachother.
+        TIMER_wormtrail++;
+        if (TIMER_wormtrail > 4) {
+            PARTICLE_CREATE(pos_x_centered(), pos_y_centered(), OBJECT_WORMTRAIL, -1, -1);
+            TIMER_wormtrail = 0;
+        }
     }
 
     // 100% on cell, no offset
@@ -2819,6 +2804,10 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
     }
     return eUnitMoveToCellResult::MOVERESULT_BUSY_MOVING;
 }
+
+int cUnit::pos_y_centered() { return pos_y() + (getBmpHeight() / 2); }
+
+int cUnit::pos_x_centered() { return pos_x() + (getBmpWidth() / 2); }
 
 /**
  * Clears the created path, resets next-cell to current cell. Sets timer to wait to 100. So that
@@ -3170,21 +3159,15 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
     }
 
     // check if placed on invalid terrain type
-    int cellType = map.getCellType(iCll);
     if (unitType == SANDWORM) {
-        if (cellType != TERRAIN_SAND &&
-            cellType != TERRAIN_SPICE &&
-            cellType != TERRAIN_HILL &&
-            cellType != TERRAIN_SPICEHILL)
-            return -1;
-    }
-
-
-    // not airborn, and not infantry, may not be placed on walls and mountains.
-    if (!sUnitType.infantry && !sUnitType.airborn) {
-        if (cellType == TERRAIN_MOUNTAIN || cellType == TERRAIN_WALL) {
+        if (!map.isCellPassableForWorm(iCll)) {
             return -1;
         }
+    }
+
+    bool validCell = map.canDeployUnitTypeAtCell(iCll, unitType);
+    if (!validCell) {
+        return -1;
     }
 
     int iNewId = UNIT_NEW();
@@ -3236,17 +3219,6 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
 
     // Put on map too!:
     map.cellSetIdForLayer(iCll, mapIdIndex, iNewId);
-
-    if (unitType == SANDWORM) {
-        map.cellSetIdForLayer(iCll, MAPID_WORMS, iNewId);
-    } else if (!newUnit.isAirbornUnit()) {  // not airborn
-        newUnit.iPlayer = iPlayer;
-        map.cellSetIdForLayer(iCll, MAPID_UNITS, iNewId);
-    } else {
-        // aircraft
-        newUnit.iPlayer = iPlayer;
-        map.cellSetIdForLayer(iCll, MAPID_AIR, iNewId);
-    }
 
     newUnit.updateCellXAndY();
 

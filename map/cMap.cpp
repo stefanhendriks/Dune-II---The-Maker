@@ -137,8 +137,13 @@ bool cMap::canDeployUnitTypeAtCell(int iCell, int iUnitType) {
 
     bool isAirbornUnit = unitToDeploy.airborn;
     bool isInfantryUnit = unitToDeploy.infantry;
+    bool isWorm = (iUnitType == SANDWORM);
 
     if (isAirbornUnit) return true;
+
+    if (isWorm) {
+        return map.isCellPassableForWorm(iCell);
+    }
 
     if (isInfantryUnit && map.isCellPassableForFootUnits(iCell)) return true;
 

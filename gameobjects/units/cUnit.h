@@ -184,6 +184,8 @@ public:
 
     int TIMER_wormeat;  // when do we eat? (when worm)
 
+    int TIMER_wormtrail;  // when to spawn a trail when moving
+
     s_UnitP& getUnitType() const;
 
     /**
@@ -243,7 +245,9 @@ public:
 
     bool isMovingBetweenCells();
 
-    bool isIdle() { return iAction == ACTION_GUARD; }
+    bool isIdle() {
+        return iAction == ACTION_GUARD;
+    }
 
     void takeDamage(int damage) {
         iHitPoints -= damage;
@@ -348,6 +352,8 @@ private:
 
     int getRange() const;
 
+    int getSight() const;
+
     void think_turn_to_desired_body_facing();
 
     void selectTargetForOrnithopter(cPlayer *pPlayer);
@@ -382,6 +388,10 @@ private:
     void awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate);
 
     void notifyStructureWeWantedToEnterThatStopGoingToIt() const;
+
+    int pos_x_centered();
+
+    int pos_y_centered();
 };
 
 
