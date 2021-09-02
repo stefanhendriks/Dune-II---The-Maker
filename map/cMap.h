@@ -12,6 +12,7 @@
 
 #include <vector>
 #include <gameobjects/structures/cAbstractStructure.h>
+#include <gameobjects/units/cUnit.h>
 
 #define TILESIZE_WIDTH_PIXELS 32
 #define TILESIZE_HEIGHT_PIXELS 32
@@ -608,6 +609,8 @@ private:
     int height, width;
 
     int maxCells;
+
+    void drawUnitDebug(int i, cUnit &pUnit) const;
 };
 
 
