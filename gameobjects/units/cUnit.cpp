@@ -440,17 +440,17 @@ int cUnit::draw_x() {
     return mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
 }
 
-int cUnit::center_draw_x() {
-    return draw_x() + (mapCamera->factorZoomLevel(getBmpWidth()) / 2);
-}
-
-int cUnit::center_draw_y() {
-    return draw_y() + (mapCamera->factorZoomLevel(getBmpHeight()) / 2);
-}
-
 int cUnit::draw_y() {
     int bmpOffset = (TILESIZE_HEIGHT_PIXELS - getBmpHeight()) / 2;
     return mapCamera->getWindowYPositionWithOffset(pos_y(), bmpOffset);
+}
+
+int cUnit::center_draw_x() {
+    return mapCamera->getWindowXPosition(pos_x_centered());
+}
+
+int cUnit::center_draw_y() {
+    return mapCamera->getWindowYPosition(pos_y_centered());
 }
 
 int cUnit::getBmpHeight() const {
@@ -891,18 +891,14 @@ void cUnit::think_guard() {
             if (!potentialDinner.isValid()) continue;
             if (potentialDinner.getPlayer()->isSameTeamAs(getPlayer())) continue;
             if (potentialDinner.isAirbornUnit()) continue;
+            if (!map.isCellPassableForWorm(iCell)) continue;
 
-            if (map.isCellPassableForWorm(iCell)) {
-                double distance = map.distance(iCell, potentialDinner.iCell);
+            double distance = map.distance(iCell, potentialDinner.iCell);
 
-                if (distance <= getSight() && distance < iDistance) {
-                    // ATTACK
-                    iDistance = distance;
-                    unitIdSelectedForAttacking = i;
-                    // log("WORM FOUND ENEMY");
-                }
-            } // valid terrain
-
+            if (distance <= getSight() && distance < iDistance) {
+                iDistance = distance;
+                unitIdSelectedForAttacking = i;
+            }
         }
 
     } else // not sandworm
@@ -2805,9 +2801,54 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
     return eUnitMoveToCellResult::MOVERESULT_BUSY_MOVING;
 }
 
-int cUnit::pos_y_centered() { return pos_y() + (getBmpHeight() / 2); }
+int cUnit::pos_y_centered() {
+    // see pos_x_centered for logic/documentation
+    int bmpOffset = getBmpHeightOffsetRelativeToTile() + getBmpHeightHalf();
+    return pos_y() + bmpOffset;
+}
 
-int cUnit::pos_x_centered() { return pos_x() + (getBmpWidth() / 2); }
+int cUnit::getBmpHeightHalf() const {
+    return (getBmpHeight() / 2);
+}
+
+int cUnit::getBmpHeightOffsetRelativeToTile() const {
+    return (TILESIZE_WIDTH_PIXELS - getBmpHeight()) / 2;
+}
+
+int cUnit::pos_x_centered() {
+    // posX is cell based (still). So it starts at top-left of the cell.
+    // that is the reason why draw_x has to calculate the offset by taking cell width and then substract
+    // the bmp image width. The remainder is divided by 2. THEN substract it.
+
+    // This will make sure that units that are too big will be drawn 'out of the cell'. (offset will be -17 or higher)
+    // while units that are too small are drawn more 'into' the cell. (offset is -16 or lower)
+
+    // FYI: Sandworms have a size of 48x48 pixels Shimmer/sandtrail. Meaning they get 'out of cell bounds'
+
+    // To determine the 'center' of the unit, we have to first get to the 'top left' of the unit. Using the above
+    // described method. And then, simply *add* half of the unit size. So we end up at the center of the unit.
+
+    // example: 32 = tile size, 48 = unit width
+    // (32 - 48) = -16 / 2 = -8
+    int bmpOffset = getBmpWidthOffsetRelativeToTile();
+
+    // -8 + (48/2=24) = 16
+    bmpOffset += getBmpWidthHalf(); // add half again, so we end up in center again
+
+    return pos_x() + bmpOffset;
+
+    // DO NOTE: Once we decided that unit coordinates should *always* be the center of a cell (ie, like particles
+    // and bullets) - then this logic will be redundant. But, the cell-by-cell movement still depends on the x,y
+    // coordinates to 'snap' to those grid coordinates. So for now it is kept like this.
+}
+
+int cUnit::getBmpWidthHalf() const {
+    return (getBmpWidth() / 2);
+}
+
+int cUnit::getBmpWidthOffsetRelativeToTile() const {
+    return (TILESIZE_WIDTH_PIXELS - getBmpWidth()) / 2;
+}
 
 /**
  * Clears the created path, resets next-cell to current cell. Sets timer to wait to 100. So that
