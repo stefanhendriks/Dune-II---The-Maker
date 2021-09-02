@@ -576,8 +576,8 @@ void install_units() {
     unitInfo[SANDWORM].speed = 3; // very fast
     unitInfo[SANDWORM].bmp = (BITMAP *) gfxdata[UNIT_SANDWORM].dat;
     unitInfo[SANDWORM].hp = 9999;
-    unitInfo[SANDWORM].bmp_width = 24 * 2;
-    unitInfo[SANDWORM].bmp_height = 24 * 2;
+    unitInfo[SANDWORM].bmp_width = 48;
+    unitInfo[SANDWORM].bmp_height = 48;
     unitInfo[SANDWORM].turnspeed = 0; // very fast
     unitInfo[SANDWORM].sight = 16;
     strcpy(unitInfo[SANDWORM].name, "Sandworm");
@@ -1675,7 +1675,12 @@ int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, i
 }
 
 
-// Make shimmer
+/**
+ * Scramble the pixels. In a radius "r" around position X,Y at the screen! (the x,y are screencoordinates!)
+ * @param r
+ * @param x
+ * @param y
+ */
 void Shimmer(int r, int x, int y) {
     int x1, y1;
     int nx, ny;
