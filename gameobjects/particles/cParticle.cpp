@@ -76,9 +76,11 @@ void cParticle::draw() {
     int dx = draw_x();
     int dy = draw_y();
 
+    // TODO: This is culling, and that responsibility should be somewhere else
     if (dx < 0 || dx > game.screen_x)
         return;
 
+    // TODO: This is culling, and that responsibility should be somewhere else
     if (dy < 0 || dy > game.screen_y)
         return;
 
@@ -89,13 +91,13 @@ void cParticle::draw() {
     clear_to_color(temp, makecol(255,0,255));
 
     // now blit it
-    if (iHousePal < 0) {
-        blit((BITMAP *) gfxdata[iType].dat, temp, (iWidth * iFrame), 0, 0, 0, iWidth, iHeight);
-    } else {
+    if (iHousePal > 0) {
         select_palette(players[iHousePal].pal);
-        blit((BITMAP *)gfxdata[iType].dat, temp, (iWidth*iFrame), 0, 0, 0, iWidth, iHeight);
     }
 
+    blit((BITMAP *) gfxdata[iType].dat, temp, (iWidth * iFrame), 0, 0, 0, iWidth, iHeight);
+
+    // create proper sized bitmap
     int bmp_width = mapCamera->factorZoomLevel(iWidth);
     int bmp_height = mapCamera->factorZoomLevel(iHeight);
 
@@ -656,12 +658,18 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame) {
     }
 
     // tanks exploding
+    if (iType == OBJECT_WORMEAT) {
+        particle[iNewId].iAlpha=255;
+        particle[iNewId].iWidth=48;
+        particle[iNewId].iHeight=48;
+    }
+
+    // tanks exploding
     if (iType == EXPLOSION_TANK_ONE ||
         iType == EXPLOSION_TANK_TWO ||
         iType == EXPLOSION_STRUCTURE01 ||
         iType == EXPLOSION_STRUCTURE02 ||
-        iType == EXPLOSION_GAS ||
-        iType == OBJECT_WORMEAT)
+        iType == EXPLOSION_GAS)
     {
 
 		if (iType != EXPLOSION_STRUCTURE01 && iType != EXPLOSION_STRUCTURE02)
