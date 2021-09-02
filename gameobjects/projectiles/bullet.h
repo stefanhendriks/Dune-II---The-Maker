@@ -40,9 +40,10 @@ public:
     int iHoming;
     int TIMER_homing;   // when timer set, > 0 means homing (follow unit until timer runs out)
 
-    // absolute coordinates of bullet
+    // absolute coordinates of bullet. These coordinates are the 'center' of a bullet.
     float posX;
     float posY;
+
     float targetX;
     float targetY;
 
