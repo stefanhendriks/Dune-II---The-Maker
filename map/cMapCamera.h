@@ -74,25 +74,25 @@ public:
     }
 
     /**
-     * Translates an absolute X position into a position on the window. The offset is substracted after translating
+     * Translates an absolute X position into a position on the window. The offset is added after translating
      * between absolute x coordinate to window coordinate. Zoom level is applied at last.
      * @param absoluteXPosition
      * @param offset
      * @return
      */
     int getWindowXPositionWithOffset(int absoluteXPosition, int offset) {
-        return factorZoomLevel((absoluteXPosition - viewportStartX)+offset);
+        return factorZoomLevel((absoluteXPosition - viewportStartX) + offset);
     }
 
     /**
-     * Translates an absolute Y position into a position on the window. The offset is substracted after translating
+     * Translates an absolute Y position into a position on the window. The offset is added after translating
      * between absolute x coordinate to window coordinate. Zoom level is applied at last.
      * @param absoluteYPosition
      * @param offset
      * @return
      */
     int getWindowYPositionWithOffset(int absoluteYPosition, int offset) {
-        return factorZoomLevel((absoluteYPosition - viewportStartY)+offset) + heightOfTopBar;
+        return factorZoomLevel((absoluteYPosition - viewportStartY) + offset) + heightOfTopBar;
     }
 
     // These methods need to use zoomfactor to properly calculate the position on the map
