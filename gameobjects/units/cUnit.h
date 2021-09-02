@@ -344,9 +344,13 @@ private:
     void forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait);
 
     int iCell;          // cell of unit
+
     int iCellX;         // my cell x
     int iCellY;         // my cell y
-    float posX, posY;   // absolute x, y coordinates (pixel based)
+
+    // absolute x, y coordinates (pixel based). Do note, these are oriented at top left of cell, and
+    // thus are snapped to the grid.
+    float posX, posY;
 
     eUnitMoveToCellResult moveToNextCellLogic();
 
@@ -392,6 +396,14 @@ private:
     int pos_x_centered();
 
     int pos_y_centered();
+
+    int getBmpWidthOffsetRelativeToTile() const;
+
+    int getBmpWidthHalf() const;
+
+    int getBmpHeightOffsetRelativeToTile() const;
+
+    int getBmpHeightHalf() const;
 };
 
 
