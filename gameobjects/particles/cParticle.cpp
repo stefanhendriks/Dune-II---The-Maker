@@ -437,30 +437,56 @@ void cParticle::think()
         iType == EXPLOSION_TANK_TWO ||
         iType == EXPLOSION_STRUCTURE01 ||
         iType == EXPLOSION_STRUCTURE02 ||
-        iType == EXPLOSION_GAS ||
-        iType == OBJECT_WORMEAT)
+        iType == EXPLOSION_GAS)
     {
         TIMER_frame--;
 
+        if (TIMER_frame < 0) {
 
-
-        if (TIMER_frame < 0)
-        {
-            if (iFrame <= 3)
-                TIMER_frame=28;
-            else
-				TIMER_frame=10;
+            // delay for next frame(s)
+            if (iFrame <= 3) {
+                TIMER_frame = 28;
+            } else {
+                TIMER_frame = 10;
+            }
 
             iFrame++;
 
-            if (iFrame > 3)
-            {
-                iFrame=4;
+            if (iFrame > 3) {
+                iFrame = 4;
 
-                iAlpha-=35;
+                iAlpha -= 15;
 
-                if (iAlpha < 25)
-                    bAlive=false;
+                if (iAlpha < 25) {
+                    bAlive = false;
+                }
+            }
+        }
+    }
+
+    if (iType == OBJECT_WORMEAT)
+    {
+        TIMER_frame--;
+
+        if (TIMER_frame < 0) {
+            iFrame++;
+
+            // delay for next frame(s)
+            if (iFrame <= 3) {
+                // begins slow, and speeds up after each frame
+//                TIMER_frame = (4 - iFrame) * 32;
+                TIMER_frame = 80;
+            } else {
+                // frame will stick at 4 (eaten)
+                iFrame = 4;
+
+                // fade out
+                iAlpha -= 15;
+
+                // until particle dies
+                if (iAlpha < 25) {
+                    bAlive = false;
+                }
             }
         }
     }
@@ -662,6 +688,7 @@ void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame) {
         particle[iNewId].iAlpha=255;
         particle[iNewId].iWidth=48;
         particle[iNewId].iHeight=48;
+        particle[iNewId].TIMER_frame=80; // 2,5 * 32 (a tad slower than on 3 frames)
     }
 
     // tanks exploding
