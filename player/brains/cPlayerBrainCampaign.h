@@ -14,6 +14,10 @@ namespace brains {
  */
     class cPlayerBrainCampaign : public cPlayerBrain {
 
+    const int SPECIAL_MISSION1 = 50;
+    const int SPECIAL_MISSION2 = 51;
+    const int SPECIAL_MISSION3 = 52;
+
     public:
         cPlayerBrainCampaign(cPlayer *player);
 

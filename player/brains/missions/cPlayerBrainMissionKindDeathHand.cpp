@@ -33,6 +33,23 @@ namespace brains {
                 break; // this way we kind of have randomly another target...
             }
         }
+
+        if (target < 0) {
+            // find any unit to attack instead
+            for (int i = 0; i < MAX_UNITS; i++) {
+                cUnit &pUnit = unit[i];
+                if (!pUnit.isValid()) continue;
+                if (pUnit.getPlayer() == player) continue; // skip self
+                if (pUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+                if (!map.isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
+                // enemy unit
+                target = i;
+                if (rnd(100) < 5) {
+                    break; // this way we kind of have randomly another target...
+                }
+            }
+        }
+
         return target > -1;
     }
 

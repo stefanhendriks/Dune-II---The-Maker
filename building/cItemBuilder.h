@@ -30,9 +30,11 @@ class cItemBuilder {
 
 		bool isAnythingBeingBuiltForListId(int listType, int sublistType);
         bool isAnythingBeingBuiltForListIdAwaitingPlacement(int listType, int sublistType);
+        bool isAnythingBeingBuiltForListIdAwaitingDeployment(int listType, int sublistType);
 
         cBuildingListItem *getListItemWhichIsBuilding(int listType, int sublistType);
         cBuildingListItem *getListItemWhichIsAwaitingPlacement(int listType, int sublistType);
+        cBuildingListItem *getListItemWhichIsAwaitingDeployment(int listType, int sublistType);
 
         cPlayer * getPlayer() { return player; };
 

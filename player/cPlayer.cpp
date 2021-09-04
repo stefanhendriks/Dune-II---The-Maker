@@ -932,11 +932,28 @@ bool cPlayer::startUpgrading(int iUpgradeType) const {
 }
 
 /**
- * Returns true if anything is built from ConstYard
+ * Returns true if anything is built and awaiting placement from ConstYard
  */
 bool cPlayer::isBuildingStructureAwaitingPlacement() const {
     return itemBuilder->isAnythingBeingBuiltForListIdAwaitingPlacement(LIST_CONSTYARD, 0);
 }
+
+/**
+ * Returns true if anything is built & awaiting deployment from Palace
+ */
+bool cPlayer::isSpecialAwaitingPlacement() const {
+    return itemBuilder->isAnythingBeingBuiltForListIdAwaitingDeployment(LIST_PALACE, 0);
+}
+
+/**
+ *
+ * @return
+ */
+cBuildingListItem * cPlayer::getSpecialAwaitingPlacement() const {
+    return itemBuilder->getListItemWhichIsAwaitingDeployment(LIST_PALACE, 0);
+}
+
+
 
 /**
  * Evaluates where to place a structure. Returns a cell where structure can be placed. Will assume the area has
