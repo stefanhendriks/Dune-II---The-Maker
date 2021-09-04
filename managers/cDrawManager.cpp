@@ -88,8 +88,53 @@ void cDrawManager::drawCombatState() {
 
     allegroDrawer->resetClippingFor(bmp_screen);
 
+    if (game.bDrawUsages) {
+        drawDebugInfoUsages();
+    }
+
 	// MOUSE
     drawCombatMouse();
+}
+
+void cDrawManager::drawDebugInfoUsages() const {
+    int unitsUsed = 0;
+    for (int i = 0; i < MAX_UNITS; i++) {
+        if (unit[i].isValid()) {
+            unitsUsed++;
+        }
+    }
+
+    int structuresUsed = 0;
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+        cAbstractStructure *pStructure = structure[i];
+        if (pStructure) {
+            structuresUsed++;
+        }
+    }
+
+    int bulletsUsed = 0;
+    for (int i = 0; i < MAX_BULLETS; i++) {
+        cBullet &pBullet = bullet[i];
+        if (pBullet.bAlive) {
+            bulletsUsed++;
+        }
+    }
+
+    int particlesUsed = 0;
+    for (int i = 0; i < MAX_PARTICLES; i++) {
+        cParticle &pParticle = particle[i];
+        if (pParticle.isValid()) {
+            particlesUsed++;
+        }
+    }
+
+    int startY = 74;
+    int height = 14;
+    cTextDrawer textDrawer(game_font);
+    textDrawer.drawTextWithTwoIntegers(0, startY, "Units %d/%d", unitsUsed, MAX_UNITS);
+    textDrawer.drawTextWithTwoIntegers(0, startY + 1*height, "Structures %d/%d", structuresUsed, MAX_STRUCTURES);
+    textDrawer.drawTextWithTwoIntegers(0, startY + 2*height, "Bullets %d/%d", bulletsUsed, MAX_BULLETS);
+    textDrawer.drawTextWithTwoIntegers(0, startY + 3*height, "Particles %d/%d", particlesUsed, MAX_PARTICLES);
 }
 
 void cDrawManager::drawCredits() {

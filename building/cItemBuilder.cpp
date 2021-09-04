@@ -197,9 +197,11 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
                     cAbstractStructure *pStructureToDeploy = structure[structureToDeployUnit];
                     pStructureToDeploy->setAnimating(true); // animate
                     int unitId = UNIT_CREATE(pStructureToDeploy->getCell(), buildId, player->getId(), false);
-                    int rallyPoint = pStructureToDeploy->getRallyPoint();
-                    if (rallyPoint > -1) {
-                        unit[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
+                    if (unitId > -1) {
+                        int rallyPoint = pStructureToDeploy->getRallyPoint();
+                        if (rallyPoint > -1) {
+                            unit[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
+                        }
                     }
                 } else {
                     // got destroyed very recently
@@ -356,9 +358,11 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const {
         if (cell > -1) {
             pStructureToDeploy->setAnimating(true); // animate
             int unitId = UNIT_CREATE(cell, buildIdToProduce, player->getId(), false);
-            int rallyPoint = pStructureToDeploy->getRallyPoint();
-            if (rallyPoint > -1) {
-                unit[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
+            if (unitId > -1) {
+                int rallyPoint = pStructureToDeploy->getRallyPoint();
+                if (rallyPoint > -1) {
+                    unit[unitId].move_to(rallyPoint, -1, -1, INTENT_MOVE);
+                }
             }
         } else {
             logbook("cItemBuilder: huh? I was promised that this structure would have some place to deploy unit at!?");

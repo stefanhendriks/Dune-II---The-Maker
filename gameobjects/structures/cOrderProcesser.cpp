@@ -206,6 +206,10 @@ void cOrderProcesser::sendFrigate() {
 		} else {
 			// STEP 2: create frigate
 			int unitId = UNIT_CREATE(iStartCell, FRIGATE, player->getId(), true);
+            if (unitId < 0) {
+                logbook("cOrderProcesser::sendFrigate : unable to spawn frigate");
+                return;
+            }
 
             // STEP 2b: make sure its facing the starport directly
             int iCellX = map.getCellX(iStartCell);

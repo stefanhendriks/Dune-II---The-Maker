@@ -1605,7 +1605,9 @@ void cUnit::think_move_air() {
                 if (iNewUnitType > -1) {
                     int id = UNIT_CREATE(iCell, iNewUnitType, iPlayer, true, isReinforcement);
 
-                    map.cellSetIdForLayer(iCell, MAPID_UNITS, id);
+                    if (id > -1) {
+                        map.cellSetIdForLayer(iCell, MAPID_UNITS, id);
+                    }
                 }
 
                 // now make sure this carry-all will not be drawn as having a unit:
@@ -3903,19 +3905,19 @@ int UNIT_find_harvest_spot(int id) {
  * @param iStart where to start from
 
  */
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
-    REINFORCE(iPlr, iTpe, iCll, iStart, true);
+int REINFORCE(int iPlr, int iTpe, int iCll, int iStart) {
+   return REINFORCE(iPlr, iTpe, iCll, iStart, true);
 }
 
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
+int REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
 
     // handle invalid arguments
     if (iPlr < 0 || iTpe < 0)
-        return;
+        return -1;
 
     //if (iCll < 0 || iCll >= MAX_CELLS)
     if (map.isValidCell(iCll) == false)
-        return;
+        return -1;
 
     if (iStart < 0)
         iStart = iCll;
@@ -3932,7 +3934,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
 
     if (iStartCell < 0) {
         logbook("ERROR (reinforce): Could not figure a startcell");
-        return;
+        return -1;
     }
 
     char msg[255];
@@ -3941,6 +3943,11 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
 
     // STEP 2: create carryall
     int iUnit = UNIT_CREATE(iStartCell, CARRYALL, iPlr, true, isReinforcement);
+    if (iUnit < 0) {
+        // cannot create carry-all!
+        logbook("ERROR (reinforce): Cannot create CARRYALL unit.");
+        return -1;
+    }
 
     // STEP 3: assign order to carryall
     int iCellX = map.getCellX(iStartCell);
@@ -3960,14 +3967,13 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement) {
 }
 
 int CARRYALL_FREE_FOR_TRANSFER(int iPlayer) {
-    // find a free carry all, and bring unit to goal..
+    // find a free carry all
     for (int i = 0; i < MAX_UNITS; i++) {
         cUnit &cUnit = unit[i];
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != iPlayer) continue;
         if (cUnit.iType != CARRYALL) continue; // skip non-carry-all units
         if (cUnit.iTransferType != TRANSFER_NONE) continue; // skip busy carry-alls
-        
         return i;
     }
     
