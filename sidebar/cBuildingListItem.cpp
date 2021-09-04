@@ -20,7 +20,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     this->totalBuildTime = totalBuildTime;
     this->type = type;
     this->queuable = queuable;
-    timerCap = cBuildingListItem::DefaultTimerCap;
+    timerCap = DEBUGGING ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
     progress = 0;
     buildFrameToDraw = 0;
     state = AVAILABLE;
