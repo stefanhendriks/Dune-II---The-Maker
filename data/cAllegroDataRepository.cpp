@@ -49,7 +49,7 @@ int cAllegroDataRepository::loadBitmap(char *file) {
     return slot;
 }
 
-bool cAllegroDataRepository::loadBitmapAt(int index, char *file) {
+bool cAllegroDataRepository::loadBitmapAt(int index, const char *file) {
     if (index < 0) return false;
     if (index >= MAX_BITMAPS) return false;
 
