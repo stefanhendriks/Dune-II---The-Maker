@@ -31,7 +31,7 @@ namespace brains {
     }
 
     int cPlayerBrainMissionKindAttack::findEnemyStructure() const {
-        int target = 0;
+        int target = -1;
         for (int i = 0; i < MAX_STRUCTURES; i++) {
             cAbstractStructure *theStructure = structure[i];
             if (!theStructure) continue;
@@ -50,12 +50,12 @@ namespace brains {
     }
 
     int cPlayerBrainMissionKindAttack::findEnemyUnit() const {
-        int target = 0;
+        int target = -1;
         for (int i = 0; i < MAX_UNITS; i++) {
             cUnit &pUnit = unit[i];
             if (!pUnit.isValid()) continue;
             if (pUnit.getPlayer() == player) continue; // skip self
-            if (!pUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+            if (pUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
             if (!map.isVisible(pUnit.getCell(), player)) continue; // skip non visible targets
             // enemy unit
             target = i;
