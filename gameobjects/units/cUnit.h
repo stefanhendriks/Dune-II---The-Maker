@@ -329,6 +329,8 @@ public:
 
     void hideUnit();
 
+    void actionGuard();
+
 private:
 
     int mission; // is this unit assigned to a mission?
@@ -404,6 +406,12 @@ private:
     int getBmpHeightOffsetRelativeToTile() const;
 
     int getBmpHeightHalf() const;
+
+    void think_attack_sandworm();
+
+    void createExplosionParticle();
+
+    void createSquishedParticle();
 };
 
 
