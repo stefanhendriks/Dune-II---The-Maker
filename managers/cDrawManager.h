@@ -62,6 +62,8 @@ class cDrawManager {
 		BITMAP *topBarBmp;
 
     void drawOptionBar();
+
+    void drawDebugInfoUsages() const;
 };
 
 #endif

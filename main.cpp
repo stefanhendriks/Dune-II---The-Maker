@@ -101,6 +101,7 @@ int frame_count, fps;  // fps and such
 int handleArguments(int argc, char *argv[]) {
     game.bDisableAI = false;
     game.bDisableReinforcements = false;
+    game.bDrawUsages = false;
     game.bOneAi = false;
     game.windowed = false;
     game.bNoAiRest = false;
@@ -133,6 +134,8 @@ int handleArguments(int argc, char *argv[]) {
                 game.bDisableReinforcements = true;
             } else if (command.compare("-noairest") == 0) {
                 game.bNoAiRest = true;
+            } else if (command.compare("-usages") == 0) {
+                game.bDrawUsages = true;
             }
 		}
 	} // arguments passed
