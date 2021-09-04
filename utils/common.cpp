@@ -236,6 +236,7 @@ void install_units() {
     unitInfo[ORNITHOPTER].free_roam = true; // may freely roam the air
     unitInfo[ORNITHOPTER].listId = LIST_UNITS;
     unitInfo[ORNITHOPTER].subListId = SUBLIST_HIGHTECH;
+//    unitInfo[ORNITHOPTER].canAttackAirUnits = true; // orni's can attack other air units
     strcpy(unitInfo[ORNITHOPTER].name, "Ornithopter");
 
     // Unit        : Devastator
@@ -617,11 +618,7 @@ void install_specials() {
     specialInfo[SPECIAL_SABOTEUR].deployFrom = eDeployFromType::AT_STRUCTURE;
     specialInfo[SPECIAL_SABOTEUR].deployAtStructure = PALACE;
     specialInfo[SPECIAL_SABOTEUR].units = 1;
-    if (DEBUGGING) {
-        specialInfo[SPECIAL_SABOTEUR].buildTime = 10;
-    } else {
-        specialInfo[SPECIAL_SABOTEUR].buildTime = 2468; // ~ 6 minutes (but times 1.2 to compensate for faster Ordos building = 2468 to get real 6 minutes)
-    }
+    specialInfo[SPECIAL_SABOTEUR].buildTime = 2468; // ~ 6 minutes (but times 1.2 to compensate for faster Ordos building = 2468 to get real 6 minutes)
     specialInfo[SPECIAL_SABOTEUR].listId=LIST_PALACE;
     specialInfo[SPECIAL_SABOTEUR].subListId=0;
     strcpy(specialInfo[SPECIAL_SABOTEUR].description, "Saboteur");
@@ -635,11 +632,7 @@ void install_specials() {
     specialInfo[SPECIAL_FREMEN].deployFrom = eDeployFromType::AT_RANDOM_CELL;
     specialInfo[SPECIAL_FREMEN].deployAtStructure = PALACE; // This is not used with AT_RANDOM_CELL ...
     specialInfo[SPECIAL_FREMEN].units = 6; // ... but this is
-    if (DEBUGGING) {
-        specialInfo[SPECIAL_FREMEN].buildTime = 10;
-    } else {
-        specialInfo[SPECIAL_FREMEN].buildTime = 1371; // ~ 4 minutes (atreides has baseline build times, ie = real time)
-    }
+    specialInfo[SPECIAL_FREMEN].buildTime = 1371; // ~ 4 minutes (atreides has baseline build times, ie = real time)
     specialInfo[SPECIAL_FREMEN].listId=LIST_PALACE;
     specialInfo[SPECIAL_FREMEN].subListId=0;
     strcpy(specialInfo[SPECIAL_FREMEN].description, "Fremen");
@@ -654,13 +647,9 @@ void install_specials() {
     specialInfo[SPECIAL_DEATHHAND].deployAtStructure = PALACE; // ... the palace
     specialInfo[SPECIAL_DEATHHAND].deployTargetType = eDeployTargetType::TARGET_INACCURATE_CELL;
     specialInfo[SPECIAL_DEATHHAND].units = 1;
-    if (DEBUGGING) {
-        specialInfo[SPECIAL_DEATHHAND].buildTime = 10;
-    } else {
-        specialInfo[SPECIAL_DEATHHAND].buildTime = 3428; // ~ 10 minutes with base line (Atreides difficulty)
+    specialInfo[SPECIAL_DEATHHAND].buildTime = 3428; // ~ 10 minutes with base line (Atreides difficulty)
         // (342.8 = ~ 1 minute) -> harkonnen is done * 1.2 so it becomes 12 minutes real-time which is ok)
         // considering the Dune 2 Insider guide mentions 11 to 12 minutes for Harkonnen.
-    }
 
     specialInfo[SPECIAL_DEATHHAND].deployTargetPrecision = 6;
     specialInfo[SPECIAL_DEATHHAND].listId=LIST_PALACE;
@@ -910,16 +899,14 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].house = Atreides | Harkonnen | Ordos | Sardaukar;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].techLevel = 4; // start from mission 4
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].icon = ICON_STR_4SLAB;
-    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].cost = structures[CONSTYARD].cost / 2;
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].cost = 200;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].structureType = CONSTYARD;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].atUpgradeLevel = 0;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesType = STRUCTURE;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeId = SLAB4;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeList = LIST_CONSTYARD;
     upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeSubList = SUBLIST_CONSTYARD;
-    if (!DEBUGGING) {
-        upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].buildTime = 50;
-    }
+    upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].buildTime = 50;
     strcpy(upgrades[UPGRADE_TYPE_CONSTYARD_SLAB4].description, "Build 4 concrete slabs at once");
 
     // Second upgrade Constyard: Rturret
@@ -927,7 +914,7 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].house = Atreides | Harkonnen | Ordos | Sardaukar;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].techLevel = 6;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].icon = ICON_STR_RTURRET;
-    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].cost = structures[CONSTYARD].cost / 2;
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].cost = 200;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].needsStructureType = RADAR;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].structureType = CONSTYARD;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].atUpgradeLevel = 1;
@@ -935,9 +922,8 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeId = RTURRET;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeList = LIST_CONSTYARD;
     upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeSubList = SUBLIST_CONSTYARD;
-    if (!DEBUGGING) {
-        upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].buildTime = 150;
-    }
+    upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].buildTime = 150;
+
     strcpy(upgrades[UPGRADE_TYPE_CONSTYARD_RTURRET].description, "Build Rocket Turret");
 
     // LIGHTFACTORY UPGRADES, only for ATREIDES and ORDOS
@@ -953,9 +939,8 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeId = QUAD;
     upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeList = LIST_UNITS;
     upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeSubList =  SUBLIST_LIGHTFCTRY;
-    if (!DEBUGGING) {
-        upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].buildTime = 150;
-    }
+    upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].buildTime = 150;
+
     strcpy(upgrades[UPGRADE_TYPE_LIGHTFCTRY_QUAD].description, "Build Quad at Light Factory");
 
     // HEAVYFACTORY UPGRADES:
@@ -973,9 +958,8 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeId = MCV;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeList = LIST_UNITS;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    if (!DEBUGGING) {
-        upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].buildTime = 150;
-    }
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].buildTime = 150;
+
     strcpy(upgrades[UPGRADE_TYPE_HEAVYFCTRY_MVC].description, "Build MCV at Heavy Factory");
 
     // Harkonnen/Atreides only
@@ -991,9 +975,8 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeId = LAUNCHER;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeList = LIST_UNITS;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    if (!DEBUGGING) {
-        upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].buildTime = 150;
-    }
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].buildTime = 150;
+
     strcpy(upgrades[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].description, "Build Rocket Launcher at Heavy Factory");
 
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].enabled = true;
@@ -1008,9 +991,8 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeId = SIEGETANK;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeList = LIST_UNITS;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    if (!DEBUGGING) {
-        upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].buildTime = 150;
-    }
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].buildTime = 150;
+
     strcpy(upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].description, "Build Siege Tank at Heavy Factory");
 
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].enabled = true;
@@ -1025,9 +1007,8 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeId = SIEGETANK;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeList = LIST_UNITS;
     upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    if (!DEBUGGING) {
-        upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].buildTime = 150;
-    }
+    upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].buildTime = 150;
+
     strcpy(upgrades[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].description, "Build Siege Tank at Heavy Factory");
 
     // HI-TECH UPGRADES (Ordos/Atreides only)
@@ -1042,9 +1023,7 @@ void install_upgrades() {
     upgrades[UPGRADE_TYPE_HITECH_ORNI].providesTypeId = ORNITHOPTER;
     upgrades[UPGRADE_TYPE_HITECH_ORNI].providesTypeList = LIST_UNITS;
     upgrades[UPGRADE_TYPE_HITECH_ORNI].providesTypeSubList = SUBLIST_HIGHTECH;
-    if (!DEBUGGING) {
-        upgrades[UPGRADE_TYPE_HITECH_ORNI].buildTime = 150;
-    }
+    upgrades[UPGRADE_TYPE_HITECH_ORNI].buildTime = 150;
     strcpy(upgrades[UPGRADE_TYPE_HITECH_ORNI].description, "Build Ornithopter at Hi-Tech");
 
     // WOR (Harkonnen & Ordos)
