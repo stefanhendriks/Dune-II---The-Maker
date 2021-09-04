@@ -283,6 +283,29 @@ namespace brains {
             infantryKind = TROOPERS;
         }
 
+        if (player->hasAtleastOneStructure(PALACE)) {
+            if (player->couldBuildSpecial(SPECIAL_DEATHHAND) && !hasMission(SPECIAL_MISSION1)) {
+                std::vector<S_groupKind> group = std::vector<S_groupKind>();
+                // no need to add resources to mission, they are auto-produced.
+                // TODO: Think of a way to make this script/configurable
+                addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, rnd(10), SPECIAL_MISSION1);
+            }
+
+            if (player->couldBuildSpecial(SPECIAL_SABOTEUR) && !hasMission(SPECIAL_MISSION2)) {
+                std::vector<S_groupKind> group = std::vector<S_groupKind>();
+                // no need to add resources to mission, they are auto-produced.
+                // TODO: Think of a way to make this script/configurable
+                addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, rnd(10), SPECIAL_MISSION2);
+            }
+
+            if (player->couldBuildSpecial(SPECIAL_FREMEN) && !hasMission(SPECIAL_MISSION3)) {
+                std::vector<S_groupKind> group = std::vector<S_groupKind>();
+                // no need to add resources to mission, they are auto-produced.
+                // TODO: Think of a way to make this script/configurable
+                addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, rnd(10), SPECIAL_MISSION3);
+            }
+        }
+
         if (game.iMission == 2) {
             produceLevel2Missions(soldierKind, infantryKind);
             return;
@@ -1046,32 +1069,6 @@ namespace brains {
                 }
             }
         }
-        if (player->hasAtleastOneStructure(PALACE)) {
-            int MISSION_ID_SUPERWEAPON = 8;
-
-            if (player->getHouse() == ATREIDES) {
-                if (!hasMission(MISSION_ID_SUPERWEAPON)) {
-                    group = std::vector<S_groupKind>();
-                    // no need to add resources to mission, they are auto-produced.
-                    // TODO: Think of a way to make this script/configurable
-                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, rnd(10), MISSION_ID_SUPERWEAPON);
-                }
-            } else if (player->getHouse() == HARKONNEN || player->getHouse() == SARDAUKAR) {
-                if (!hasMission(MISSION_ID_SUPERWEAPON)) {
-                    group = std::vector<S_groupKind>();
-                    // no need to add resources to mission, they are auto-produced.
-                    // TODO: Think of a way to make this script/configurable
-                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, rnd(10), MISSION_ID_SUPERWEAPON);
-                }
-            } else if (player->getHouse() == ORDOS) {
-                if (!hasMission(MISSION_ID_SUPERWEAPON)) {
-                    group = std::vector<S_groupKind>();
-                    // no need to add resources to mission, they are auto-produced.
-                    // TODO: Think of a way to make this script/configurable
-                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, rnd(10), MISSION_ID_SUPERWEAPON);
-                }
-            }
-        }
     }
 
     void cPlayerBrainCampaign::produceLevel9Missions(int trikeKind, int infantryKind) {
@@ -1327,30 +1324,6 @@ namespace brains {
                             produced: 0,
                     });
                     addMission(PLAYERBRAINMISSION_IMPROVE_ECONOMY, group, rnd(10), 7);
-                }
-            }
-        }
-        if (player->hasAtleastOneStructure(PALACE)) {
-            if (player->getHouse() == ATREIDES) {
-                if (!hasMission(8)) {
-                    group = std::vector<S_groupKind>();
-                    // no need to add resources to mission, they are auto-produced.
-                    // TODO: Think of a way to make this script/configurable
-                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, rnd(10), 8);
-                }
-            } else if (player->getHouse() == HARKONNEN || player->getHouse() == SARDAUKAR) {
-                if (!hasMission(8)) {
-                    group = std::vector<S_groupKind>();
-                    // no need to add resources to mission, they are auto-produced.
-                    // TODO: Think of a way to make this script/configurable
-                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, rnd(10), 8);
-                }
-            } else if (player->getHouse() == ORDOS) {
-                if (!hasMission(8)) {
-                    group = std::vector<S_groupKind>();
-                    // no need to add resources to mission, they are auto-produced.
-                    // TODO: Think of a way to make this script/configurable
-                    addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, rnd(10), 8);
                 }
             }
         }

@@ -284,6 +284,8 @@ public:
      * Returns true if anything is built from ConstYard
      */
     bool isBuildingStructureAwaitingPlacement() const;
+    bool isSpecialAwaitingPlacement() const;
+    cBuildingListItem * getSpecialAwaitingPlacement() const;
 
     cBuildingListItem * isUpgradeAvailableToGrantUnit(int iUnitType) const;
     cBuildingListItem * isUpgradeAvailableToGrantStructure(int iStructureType) const;

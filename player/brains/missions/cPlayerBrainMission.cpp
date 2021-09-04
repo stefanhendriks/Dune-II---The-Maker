@@ -299,6 +299,11 @@ namespace brains {
                             // we could assemble all of them with idle units, so skip
                             continue; // notice, we continue in the 'group' for loop here!
                         }
+                    } else if (thingIWant.buildType == eBuildType::SPECIAL) {
+                        if (player->isSpecialAwaitingPlacement()) {
+                            thingIWant.produced = thingIWant.required;
+                            continue;
+                        }
                     }
 
                     // else, we order stuff, if we didn't already?
@@ -388,7 +393,24 @@ namespace brains {
         }
 
         if (!missionWithUnits) {
-            changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES);
+            if (!player->isSpecialAwaitingPlacement()) {
+                changeState(ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_PREPARE_AWAIT_RESOURCES);
+            } else {
+                // in reality this event already has been sent, but this mission did not exist yet
+                cBuildingListItem *item = player->getSpecialAwaitingPlacement();
+                s_GameEvent event {
+                        .eventType = eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET,
+                        .entityType = item->getBuildType(),
+                        .entityID = -1,
+                        .player = player,
+                        .entitySpecificType = item->getBuildId(),
+                        .atCell = -1,
+                        .isReinforce = false,
+                        .buildingListItem = item // mandatory for this event!
+                };
+                // fake notification for missionKind so that its state gets updated...
+                missionKind->onNotify(event);
+            }
             return; // bail, mission without units will wait for events
         }
 

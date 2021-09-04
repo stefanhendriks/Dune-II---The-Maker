@@ -535,6 +535,18 @@ bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingPlacement(int listType, 
 }
 
 /**
+ * Returns true if any item awaits deployment for the listType / subListType.
+ * If you wish to know which item , use getListItemWhichIsAwaitingDeployment()
+ * @param listType
+ * @param sublistType
+ * @return
+ */
+bool cItemBuilder::isAnythingBeingBuiltForListIdAwaitingDeployment(int listType, int sublistType) {
+    cBuildingListItem *pItem = getListItemWhichIsAwaitingDeployment(listType, sublistType);
+    return pItem != nullptr;
+}
+
+/**
  * Iterates over listType and subList, finds any item that isBuilding() returns true.
  * @param listType
  * @param sublistType
@@ -560,7 +572,7 @@ cBuildingListItem *cItemBuilder::getListItemWhichIsBuilding(int listType, int su
 }
 
 /**
- * Iterates over listType and subList, finds any item that isBuilding() returns true.
+ * Iterates over listType and subList, returns item that needs to be placed
  * @param listType
  * @param sublistType
  * @return
@@ -576,6 +588,32 @@ cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingPlacement(int listTyp
             if (pList && listType == pList->getType() &&
                 sublistType == listItem->getSubList()) {
                 if (listItem->shouldPlaceIt()) {
+                    pItem = listItem;
+                    break;
+                }
+            }
+        }
+    }
+    return pItem;
+}
+
+/**
+ * Iterates over listType and subList, returns item that should be deployed
+ * @param listType
+ * @param sublistType
+ * @return
+ */
+cBuildingListItem *cItemBuilder::getListItemWhichIsAwaitingDeployment(int listType, int sublistType) {
+    cBuildingListItem *pItem = nullptr;
+
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *listItem = getItem(i);
+        if (listItem) {
+            cBuildingList *pList = listItem->getList();
+            // check if list is available
+            if (pList && listType == pList->getType() &&
+                sublistType == listItem->getSubList()) {
+                if (listItem->shouldDeployIt()) {
                     pItem = listItem;
                     break;
                 }
