@@ -11,7 +11,6 @@
   */
 
 #include "../../include/d2tmh.h"
-#include "cAbstractStructure.h"
 
 
 // "default" Constructor
@@ -139,7 +138,7 @@ void cAbstractStructure::die() {
     }
 
 	// remove from array
-    structure[id]=NULL;
+    structure[id] = nullptr;
 
     // Destroy structure, take stuff in effect for the player
     cPlayer &thePlayer = players[iPlayer];
@@ -220,7 +219,7 @@ void cAbstractStructure::die() {
     // screen shaking
     game.shakeScreen((iWidth * iHeight) * 20);
 
-    // elegible for cleanup
+    // eligible for cleanup
     dead = true;
 
     s_GameEvent event {
