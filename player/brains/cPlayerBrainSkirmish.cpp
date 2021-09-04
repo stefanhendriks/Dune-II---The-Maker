@@ -834,7 +834,7 @@ namespace brains {
             for (int i = 0; i < MAX_UNITS; i++) {
                 cUnit &cUnit = unit[i];
                 if (!cUnit.isValid()) continue;
-                if (!cUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+                if (cUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
                 // enemy structure
                 cellToAttack = cUnit.getCell();
                 if (rnd(100) < 5) {
