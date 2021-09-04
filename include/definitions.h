@@ -77,8 +77,8 @@
 // MEMORY USAGE: (units, structures, etc , more info below)
 #define MAX_UNITS        300     // max of units in the game
 #define MAX_STRUCTURES   200     // max of structures in the game
-#define MAX_BULLETS      600     // max of bullets in the game at once
-#define MAX_PARTICLES    1200	 // max of particles in the game at once
+#define MAX_BULLETS      300     // max of bullets in the game at once
+#define MAX_PARTICLES    600	 // max of particles in the game at once
 #define MAX_REINFORCEMENTS 50    // max of 50 reinforcements
 #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
 //#define HOUSE_SLOTS       10      // amount of House 'types'
