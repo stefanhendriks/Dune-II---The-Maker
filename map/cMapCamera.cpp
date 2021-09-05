@@ -216,10 +216,10 @@ int cMapCamera::getCellFromAbsolutePosition(int x, int y) {
 void cMapCamera::onNotify(const s_MouseEvent &event) {
     // MOUSE WHEEL scrolling causes zooming in/out
     switch (event.eventType) {
-        case eMouseEventType::MOUSE_SCROLLED_UP:
+        case eMouseEventType::MOUSE_SCROLLED_DOWN:
             mapCamera->zoomOut();
             return;
-        case eMouseEventType::MOUSE_SCROLLED_DOWN:
+        case eMouseEventType::MOUSE_SCROLLED_UP:
             mapCamera->zoomIn();
             return;
     }
