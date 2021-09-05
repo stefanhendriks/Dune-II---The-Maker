@@ -1587,7 +1587,7 @@ namespace brains {
                     int iCll = buildOrder.placeAt;
 
                     cBuildingListItem *pItem = player->getStructureBuildingListItemBeingBuilt();
-                    player->placeStructure(iCll, pItem);
+                    player->placeItem(iCll, pItem);
 
                     buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
                     break;
