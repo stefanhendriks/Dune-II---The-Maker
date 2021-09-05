@@ -1330,14 +1330,12 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType) {
 }
 
 cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage) {
-    // create structure
     cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
     return pStructureFactory->createStructure(destinationCell, iStructureTypeId, getId(), healthPercentage);
 }
 
-cAbstractStructure *cPlayer::placeStructure(int destinationCell, cBuildingListItem *itemToPlace) {
+cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *itemToPlace) {
     int iStructureTypeId = itemToPlace->getBuildId();
-    // create structure
     cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
 
     bool canPlace = canPlaceStructureAt(destinationCell, iStructureTypeId).success;
@@ -1528,7 +1526,11 @@ void cPlayer::cancelStructureBuildingListItemBeingBuilt() {
  * @return
  */
 s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType) {
-    return canPlaceStructureAt(iCell, iStructureType, -1);
+    if (iStructureType != SLAB4) {
+        return canPlaceStructureAt(iCell, iStructureType, -1);
+    }
+    // SLAB4 logic is a bit different
+    return canPlaceConcreteAt(iCell, iStructureType);
 }
 
 
@@ -1747,5 +1749,46 @@ int cPlayer::getSameOrSimilarUnitType(int requestedUnitType) {
         return getScoutingUnitType();
     }
     return requestedUnitType;
+}
+
+/**
+ * Concrete slabs logic
+ * @param iCell
+ * @return
+ */
+s_PlaceResult cPlayer::canPlaceConcreteAt(int iCell, int iStructureType) {
+    s_PlaceResult result;
+
+    if (!map.isValidCell(iCell)) {
+        result.outOfBounds = true;
+        return result;
+    }
+
+    // checks if this structure can be placed on this cell
+    int w = structures[iStructureType].bmp_width/TILESIZE_WIDTH_PIXELS;
+    int h = structures[iStructureType].bmp_height/TILESIZE_HEIGHT_PIXELS;
+
+    int x = map.getCellX(iCell);
+    int y = map.getCellY(iCell);
+
+    bool foundUnitFromOtherPlayerThanMe = false;
+
+    for (int cx = 0; cx < w; cx++) {
+        for (int cy = 0; cy < h; cy++) {
+            int cll = map.getCellWithMapBorders(cx + x, cy + y);
+
+            if (!result.badTerrain && !map.isValidTerrainForConcreteAtCell(cll)) {
+                result.badTerrain = true;
+            }
+
+            // we don't care about unit/structures being there, we place slabs only where we can, so this
+            // function ignores the presence of any structures/units
+        }
+    }
+
+    result.success = (result.badTerrain == false && result.unitIds.empty() && result.structureIds.empty());
+    result.onlyMyUnitsBlock = (result.badTerrain == false && !foundUnitFromOtherPlayerThanMe && result.structureIds.empty());
+
+    return result;
 }
 

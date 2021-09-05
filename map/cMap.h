@@ -596,6 +596,8 @@ public:
 
     bool isCellPassableForWorm(int cell);
 
+    bool isValidTerrainForConcreteAtCell(int cell);
+
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 

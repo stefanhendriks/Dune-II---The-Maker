@@ -1230,3 +1230,15 @@ bool cMap::isCellPassableForWorm(int cell) {
            cellType == TERRAIN_SPICE ||
            cellType == TERRAIN_SPICEHILL;
 }
+
+bool cMap::isValidTerrainForConcreteAtCell(int cell) {
+    if (!isValidCell(cell)) return false;
+    int cellType = getCellType(cell);
+    // TODO: make this a flag in the cell/terrain type kind? (there is no such thing yet, its all hard-coded)
+    bool allowedCellType = (cellType == TERRAIN_SLAB || cellType == TERRAIN_ROCK);
+    if (!allowedCellType) {
+        return false;
+    }
+
+    return true;
+}

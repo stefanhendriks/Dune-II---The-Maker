@@ -293,6 +293,7 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType) {
 }
 
 void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType) {
+    // DUPLICATED BY slabStructure?
 	assert(iCell > -1);
 
 	int height = structures[iStructureType].bmp_height / 32;

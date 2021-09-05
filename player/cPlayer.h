@@ -314,7 +314,7 @@ public:
      * @param itemToPlace       which building list item to use? (used to derive which kind of structure, etc)
      * @return
      */
-    cAbstractStructure* placeStructure(int destinationCell, cBuildingListItem *itemToPlace);
+    cAbstractStructure* placeItem(int destinationCell, cBuildingListItem *itemToPlace);
 
     /**
      * Places structure, usually the source is somewhere else (a unit, MCV; or from map loading).
@@ -340,6 +340,7 @@ public:
 
     s_PlaceResult canPlaceStructureAt(int iCell, int iStructureType, int iUnitIDToIgnore);
     s_PlaceResult canPlaceStructureAt(int iCell, int iStructureType);
+    s_PlaceResult canPlaceConcreteAt(int iCell, int iStructureType);
 
     void log(const char *txt) const;
 

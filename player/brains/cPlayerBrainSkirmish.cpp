@@ -974,7 +974,7 @@ namespace brains {
                 const s_PlaceResult &placeResult = player->canPlaceStructureAt(iCll, pItem->getBuildId());
 
                 if (placeResult.success) {
-                    player->placeStructure(iCll, pItem);
+                    player->placeItem(iCll, pItem);
                     matchingOrder->state = buildOrder::eBuildOrderState::REMOVEME;
                 } else {
                     findNewLocationOrMoveAnyBlockingUnitsOrCancelBuild(matchingOrder, pItem, placeResult);
