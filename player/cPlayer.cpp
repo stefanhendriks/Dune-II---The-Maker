@@ -598,11 +598,11 @@ void cPlayer::giveCredits(float amountToGive) {
 // TODO: This could be done smarter once we receive notifications when a unit gets created/destroyed!
 std::vector<int> cPlayer::getAllMyUnits() {
     std::vector<int> ids = std::vector<int>();
-    for (int i = 0; i < MAX_UNITTYPES; i++) {
-        cUnit &cUnit = unit[i];
-        if (!cUnit.isValid()) continue;
-        if (cUnit.isDead()) continue;
-        if (cUnit.iPlayer != getId()) continue;
+    for (int i = 0; i < MAX_UNITS; i++) {
+        cUnit &pUnit = unit[i];
+        if (!pUnit.isValid()) continue;
+        if (pUnit.isDead()) continue;
+        if (pUnit.belongsTo(this)) continue;
         ids.push_back(i);
     }
     return ids;

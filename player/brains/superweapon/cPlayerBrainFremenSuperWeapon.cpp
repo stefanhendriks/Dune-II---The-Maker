@@ -41,8 +41,10 @@ namespace brains {
         int cellToAttack = -1;
 
         for (int i = 0; i < MAX_PLAYERS; i++) {
-            if (i == player->getId()) continue; // skip self
-            if (players[i].isSameTeamAs(player)) continue; // skip same team players
+            cPlayer *pPlayer = &players[i];
+            if (pPlayer == nullptr) continue;
+            if (pPlayer == player) continue; // skip self
+            if (pPlayer->isSameTeamAs(player)) continue; // skip same team players
 
             // some chance to skip this player...
             if (rnd(100) > 70) {
@@ -50,7 +52,7 @@ namespace brains {
             }
 
             // nope! now choose which unit to attack
-            std::vector<int> unitIds = players[i].getAllMyUnits();
+            std::vector<int> unitIds = pPlayer->getAllMyUnits();
             if (!unitIds.empty()) {
                 std::random_shuffle(unitIds.begin(), unitIds.end());
                 cellToAttack = unit[unitIds.front()].getCell();
@@ -58,7 +60,7 @@ namespace brains {
             }
 
             // or which structure
-            std::vector<int> structureIds = players[i].getAllMyStructuresAsId();
+            std::vector<int> structureIds = pPlayer->getAllMyStructuresAsId();
             if (!structureIds.empty()) {
                 // pick structure to attack
                 std::random_shuffle(structureIds.begin(), structureIds.end());
