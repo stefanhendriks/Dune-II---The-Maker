@@ -905,7 +905,7 @@ void cUnit::think_guard() {
             if (i == iID) continue; // skip self
             cUnit &potentialThreath = unit[i];
             if (!potentialThreath.isValid()) continue;
-            if (potentialThreath.getPlayerId() == getPlayerId()) continue; // skip own units
+            if (potentialThreath.belongsTo(getPlayer())) continue; // skip own units
             if (getPlayer()->isSameTeamAs(potentialThreath.getPlayer())) continue; // skip same team players / allies
             if (potentialThreath.isAttackableAirUnit()) continue; // skip air units, already did that
             if (!map.isVisible(potentialThreath.iCell, iPlayer)) continue; // skip non-visible potential enemy units
