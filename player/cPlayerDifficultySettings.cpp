@@ -69,10 +69,10 @@ cPlayerDifficultySettings *cPlayerDifficultySettings::createFromHouse(int house)
         case SARDAUKAR:
             return new cPlayerDifficultySettings(
                     1.2f,
-                    1.4f, // Sardaukar builds even slower than Harkonnen
-                    1.2f,
-                    1.2f,
-                    1.2f
+                    1.25f, // Sardaukar builds even slower than Harkonnen
+                    1.1f,
+                    1.1f,
+                    1.25f // slightly more damage than Harkonnen
             );
     }
 
