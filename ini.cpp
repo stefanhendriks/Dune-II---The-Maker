@@ -2291,12 +2291,15 @@ void INI_LOAD_SKIRMISH(char filename[80], bool bScan) {
 
     // first clear it all out (previewMap always assumes 64x64 data - for now)
     s_PreviewMap &previewMap = PreviewMap[iNew];
-    for (int x = 0; x < 64; x++) {
-        for (int y = 0; y < 64; y++) {
-            int cll = map.makeCell(x, y); // we initialized so this makes sense
-            previewMap.mapdata[cll] = -1;
-        }
-    }
+    int maxCells = 64*64;
+//    for (int x = 0; x < 64; x++) {
+//        for (int y = 0; y < 64; y++) {
+//            int cll = map.makeCell(x, y); // we initialized so this makes sense
+//            previewMap.mapdata[cll] = -1;
+//        }
+//    }
+
+    previewMap.mapdata = std::vector<int>(maxCells, -1);
 
     // Load file
 
