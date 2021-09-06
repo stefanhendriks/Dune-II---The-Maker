@@ -602,7 +602,7 @@ std::vector<int> cPlayer::getAllMyUnits() {
         cUnit &pUnit = unit[i];
         if (!pUnit.isValid()) continue;
         if (pUnit.isDead()) continue;
-        if (pUnit.belongsTo(this)) continue;
+        if (!pUnit.belongsTo(this)) continue;
         ids.push_back(i);
     }
     return ids;
