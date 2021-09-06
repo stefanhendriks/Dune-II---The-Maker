@@ -23,7 +23,7 @@ public:
     cBuildingListItem(int theID, s_Upgrade entry, int subList);
 
     static const int DefaultTimerCap = 35;
-    static const int DebugTimerCap = 15;
+    static const int DebugTimerCap = 2;
 
 	// gettters
 	int getTotalBuildTime() { return totalBuildTime; }
