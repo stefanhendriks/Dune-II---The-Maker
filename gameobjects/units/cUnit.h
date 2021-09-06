@@ -331,6 +331,8 @@ public:
 
     void actionGuard();
 
+    bool belongsTo(cPlayer *pPlayer);
+
 private:
 
     int mission; // is this unit assigned to a mission?

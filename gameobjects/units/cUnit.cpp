@@ -3160,6 +3160,11 @@ void cUnit::hideUnit() {
     iHitPoints = -1; // 'kill' unit
 }
 
+bool cUnit::belongsTo(cPlayer *pPlayer) {
+    if (pPlayer == nullptr) return false;
+    return pPlayer->getId() == iPlayer;
+}
+
 
 // return new valid ID
 int UNIT_NEW() {
