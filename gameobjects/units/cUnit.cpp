@@ -2089,6 +2089,12 @@ void cUnit::think_attack() {
                 actionGuard();
                 return;
             }
+        } else {
+            if (!getPlayer()->isHuman()) {
+                // non human units should stop attacking the ground
+                actionGuard();
+                return;
+            }
         }
     }
 
