@@ -346,12 +346,14 @@ int cPlayer::getAmountOfUnitsForType(int unitType) const {
     if (unitType < 0 || unitType > MAX_UNITTYPES) return -1;
     int count = 0;
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &cUnit = unit[i];
-        if (!cUnit.isValid()) continue;
-        if (cUnit.iPlayer != this->getId()) continue;
-        if (cUnit.iType == unitType) {
+        cUnit &pUnit = unit[i];
+        if (!pUnit.isValid()) continue;
+        if (pUnit.iPlayer != this->getId()) continue;
+        if (pUnit.isMarkedForRemoval()) continue; // skip units marked for removal, UGH this feels so wrong!
+        if (pUnit.iType == unitType) {
             count++;
         }
+        // TODO: Also count airborn units carrying any units here
     }
     return count;
 }
@@ -1384,6 +1386,10 @@ void cPlayer::onNotify(const s_GameEvent &event) {
             } else if (event.eventType == eGameEventType::GAME_EVENT_CREATED) {
                 buildingListUpdater->onStructureCreated(event.entitySpecificType);
             }
+        } else if (event.entityType == eBuildType::UNIT) {
+            if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED) {
+                onMyUnitDestroyed(event);
+            }
         }
 
         if (event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED ||
@@ -1790,5 +1796,29 @@ s_PlaceResult cPlayer::canPlaceConcreteAt(int iCell, int iStructureType) {
     result.onlyMyUnitsBlock = (result.badTerrain == false && !foundUnitFromOtherPlayerThanMe && result.structureIds.empty());
 
     return result;
+}
+
+void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
+    cUnit &pUnit = unit[event.entityID];
+
+    // If a harvester died, and it is the last. And we have atleast one REFINERY; then send a Harvester to that
+    // player
+    if (pUnit.isHarvester() && // a harvester died
+        hasAtleastOneStructure(REFINERY)) { // and its player still has a refinery
+
+        int harvesters = getAmountOfUnitsForType(HARVESTER);
+        // check if the player has any harvester left
+
+        // No harvester found, deliver one
+        if (harvesters < 1) {
+            // deliver
+            cAbstractStructure *refinery = pUnit.findClosestStructureType(REFINERY);
+
+            // found a refinery, deliver harvester to that
+            if (refinery) {
+                REINFORCE(id, HARVESTER, refinery->getCell(), -1);
+            }
+        }
+    }
 }
 

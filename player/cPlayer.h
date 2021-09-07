@@ -415,6 +415,8 @@ private:
     bool startBuilding(eBuildType buildType, int buildId);
 
     void onEntityDiscovered(const s_GameEvent &event);
+
+    void onMyUnitDestroyed(const s_GameEvent &event);
 };
 
 #endif
