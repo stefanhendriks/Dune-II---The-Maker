@@ -46,6 +46,8 @@ void cUnit::init(int i) {
 
     iPlayer = -1;        // belongs to player
 
+    bRemoveMe = false;
+
     iGroup = -1;
 
     // Movement
@@ -129,8 +131,17 @@ void cUnit::recreateDimensions() {
 }
 
 void cUnit::die(bool bBlowUp, bool bSquish) {
+    // DO NOTE: We do *not* set the HP to -1 here for a reason. Being: that the isValid() function checks for
+    // health and that will give us a unit ID that is the *same* as this unit ID. (see UNIT_NEW() implementation).
+    // hence we don't want to fiddle with that (for now), but instead we set a "removeMe" flag.
+    //
+    // Usually the Hitpoints will be < 0; but the die() function could be called without a unit having < 0 HP for now
+    // via debug (and other) possible means. Hence, we don't want to rely on this and introduced this flag.
+    //
+    // TODO: this should be revisited and fixed in a later version properly!
+    bRemoveMe = true;
+
     // Animation / Sound
-    // TODO: update statistics player
 
     // Anyone who was attacking this unit is on actionGuard
     for (int i = 0; i < MAX_UNITS; i++) {
@@ -140,25 +151,6 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 
         cUnit.actionGuard();
     }
-
-    // when HARVESTER, check if there are any friends , if not, then deliver one
-    if (isHarvester() && // a harvester died
-        getPlayer()->hasAtleastOneStructure(REFINERY)) { // and its player still has a refinery
-
-        int harvesters = getPlayer()->getAmountOfUnitsForType(HARVESTER);
-        // check if the player has any harvester left
-
-        // No harvester found, deliver one
-        if (harvesters < 1) {
-            // deliver
-            cAbstractStructure *refinery = findClosestStructureType(REFINERY);
-
-            // found a refinery, deliver harvester to that
-            if (refinery) {
-                REINFORCE(iPlayer, HARVESTER, refinery->getCell(), -1);
-            }
-        }
-    } // a harvester died, check if we have to deliver a new one to the player
 
     if (iStructureID > -1) {
         notifyStructureWeWantedToEnterThatStopGoingToIt();
@@ -408,21 +400,30 @@ void cUnit::notifyStructureWeWantedToEnterThatStopGoingToIt() const {
 
 
 /**
- * Returns true when it belongs to a player and is alive. If it is dead it will return false.
- * If it has any invalid cell (which should never happen really) then it will return false as well.
+ * Returns true when it belongs to a player. If removeMe flag is set, it does not care if it is dead yet; and will return true.
+ * Meaning, a dead unit still is valid when removeMe flag is set. This is usually done when a unit is in the process of
+ * dying but the HP is > 0.
  * @return
  */
 bool cUnit::isValid() {
     if (iPlayer < 0)
         return false;
 
-    // no hitpoints (dead) and not in a structure
-    if (iHitPoints < 0 && iTempHitPoints < 0)
-        return false;
-
+    // invalid cell, not good
     if (iCell < 0 || iCell >= map.getMaxCells())
         return false;
 
+    // not marked (not dying) so do a health check. Else, don't care about health check.
+    if (bRemoveMe == false) {
+        // no hitpoints (dead) and not in a structure
+        if (iHitPoints < 0 && iTempHitPoints < 0)
+            return false;
+    }
+
+    // when eligible for removal, it is still 'valid'. We do this so other code does not pick this unit
+    // while it is in the process of dying or something. The whole resource cleaning and creating should
+    // be done differently, this is a mess.
+    // see also UNIT_NEW() which returns an id of a 'unused' unit based on the isValid() function.
     return true;
 }
 
@@ -1807,7 +1808,6 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe) {
         return; // we cannot do multiple things at a time!!
 
     if (iTransfer == TRANSFER_NEW_STAY || iTransfer == TRANSFER_NEW_LEAVE) {
-
         // bring a new unit, depending on the iTransfer the carryall who brings this will be
         // removed after he brought the unit...
 
@@ -1830,8 +1830,6 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe) {
         iNewUnitType = iTpe;
 
         bPickedUp = false;
-
-
         // DONE!
     } else if (iTransfer == TRANSFER_PICKUP && iuID > -1) {
 
@@ -3163,6 +3161,10 @@ void cUnit::hideUnit() {
 bool cUnit::belongsTo(cPlayer *pPlayer) {
     if (pPlayer == nullptr) return false;
     return pPlayer->getId() == iPlayer;
+}
+
+bool cUnit::isMarkedForRemoval() {
+    return bRemoveMe;
 }
 
 

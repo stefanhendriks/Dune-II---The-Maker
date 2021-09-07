@@ -333,7 +333,11 @@ public:
 
     bool belongsTo(cPlayer *pPlayer);
 
+    bool isMarkedForRemoval();
+
 private:
+
+    bool bRemoveMe; // if true, then this unit wants to be cleared (ie, is no longer valid)
 
     int mission; // is this unit assigned to a mission?
 
