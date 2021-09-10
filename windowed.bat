@@ -1,1 +1,1 @@
-"d2tm.exe" -windowed -nosound
+"d2tm.exe" -windowed
