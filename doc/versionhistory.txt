@@ -1,10 +1,12 @@
 Dune II - The Maker
 ===================
-Contact	: stefanhen83@gmail.com
+Contact	: stefan[at]fundynamic.com
 Url	#1	: http://www.dune2themaker.com
 Url	#2	: http://dune2themaker.fundynamic.com
 Github  : https://github.com/stefanhendriks/Dune-II---The-Maker
 Forums  : https://forum.dune2k.com/forum/19-arrakis/
+Twitter : @dune2themaker
+Discord : https://dune2themaker.fundynamic.com/discord
 
 ==========
 DISCLAIMER
@@ -21,7 +23,7 @@ USE AT YOUR OWN RISK.
 ===================
 Version information
 ===================
-Version number	: 0.5.0
+Version number	: 0.6.0
 
 
 ===========
@@ -31,56 +33,47 @@ This game is a tribute and a Dune 2 remake that is more up to date with the
 current standards yet still keeps the 'nostalgia' (as far as that can go with remakes).
 
 
-
 ========
 Features
 ========
-* 800x600 or higher screen resolution
+* 1080p or higher screen resolution (minimum is 800x600)
 * Smooth gameplay
   - C&C like controls
   - "point and click" gameplay
+  - map zooming (mouse wheel)
   - easy to use interface
-* Shortkeys
+  - queueing
+* Hotkeys
   - hold R (and click accordingly) to repair units and structures
-  - press B to rebuild last built item in selected list
   - Unit selected: hold CTRL to force attack 
   - Structure selected: hold CTRL to set rally point
   	- can be used on anything that has to do with units (repair facility, etc)
-* Double sized and enhanced dune 2 graphics:
+* Double sized and enhanced (by hand) dune 2 graphics:
   - sharp units/structures
   - real-shadows blending for units
   - enhanced terrain
   - enhanced shroud
-  - drawn graphics resemble size of original dune 2 (so it looks 'big' , yes, but better)  
+  - drawn graphics resemble size of original dune 2
 * Able play the original Dune 2 campaign
-* Able to show the strategy/campaign map, use similiar animations and has the same
+  - lacks cutscenes
+  - lacks scoring screen
+  - no end-scene yet and credits
+* Able to show the strategy/campaign map, use similar animations and has the same
   campaigns as in the original dune 2
 * Uses the dune 2 tech-level tree
 * Ability to generate dune 2 seed maps
 * Uses all original dune 2 (english) mission briefings
 * Little animation 'system' for nice effects (fading, explosions, smoke, etc)
 * Ability to play Skirmish games (4 players max)
-   - note, max map size is 64x64
+   - Map size is 128x128
    - with random map generator
-   - ability to create your own maps (see skirmish folder)
+   - ability to create your own maps (see skirmish folder, map size is 64x64)
    
-
-
-==========
-CHANGELOG:
-==========
-For the list of changes, see github release notes.
-
-==========
-TO-DO LIST
-==========
-See Github issues.
-
 ===================
 System Requirements
 ===================
 The program has been tested on several systems; though it is timer based
-the ideal is 30 fps or higher for a fluent gameplay overall. Windowed mode
+the ideal is 60 fps or higher for a fluent gameplay overall. Windowed mode
 is slower in general then full-screen. Most systems with just Windows would
 run the program. 
 
@@ -182,15 +175,16 @@ Ruurd Nijdam
 rphl
 Rene
 
-Books:
+Books / Must reads:
 C++ Grand Cru (Stevem Holzner)
-
+Game Programming Patterns - http://gameprogrammingpatterns.com/
 
 D2TM is based on:
 
 Dune 2 - "The Battle for Arrakis" by Westwood Studios & Virgin Interactive
 
-Credits of DUNE II:
+Credits of DUNE II (not affiliated with this remake):
+-----------------------------------------------------
 
 Design					Joseph Bostic, Aaron E. Powell
 Programming				Joseph Bostic, Scott K. Bowen
