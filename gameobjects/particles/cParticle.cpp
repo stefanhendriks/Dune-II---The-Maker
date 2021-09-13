@@ -92,7 +92,8 @@ void cParticle::draw() {
 
     // now blit it
     if (iHousePal > 0) {
-        select_palette(players[iHousePal].pal);
+        cPlayer &player = players[iHousePal];
+        select_palette(player.pal);
     }
 
     blit((BITMAP *) gfxdata[iType].dat, temp, (iWidth * iFrame), 0, 0, 0, iWidth, iHeight);
