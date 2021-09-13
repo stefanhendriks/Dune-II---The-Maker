@@ -43,8 +43,6 @@ cGame::cGame() {
 
 
 void cGame::init() {
-	iMaxVolume = 220;
-
 	screenshot=0;
 	bPlaying=true;
 
@@ -57,7 +55,7 @@ void cGame::init() {
 
     iSkirmishMap=-1;
 
-    iMusicVolume=128; // volume is 0...
+    iMusicVolume=96; // volume is 0...
 
 	paths_created=0;
 	hover_unit=-1;
@@ -123,7 +121,7 @@ void cGame::init() {
 void cGame::mission_init() {
     mapCamera->resetZoom();
 
-    iMusicVolume=128; // volume is 0...
+    iMusicVolume=96; // volume is 0...
 
 	paths_created=0;
 	hover_unit=-1;
@@ -1218,7 +1216,7 @@ bool cGame::setupGame() {
 	int maxSounds = getAmountReservedVoicesAndInstallSound();
 	memset(msg, 0, sizeof(msg));
 
-	if (maxSounds > -1) {
+    if (maxSounds > -1) {
 		sprintf(msg, "Successfully installed sound. %d voices reserved", maxSounds);
 		logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg, OUTC_SUCCESS);
 	} else {
@@ -1226,9 +1224,13 @@ bool cGame::setupGame() {
 	}
 	soundPlayer = new cSoundPlayer(maxSounds);
 
-	/***
-	Bitmap Creation
-	***/
+    // normal sounds are loud, the music is lower (its background music, so it should not be disturbing)
+    iMaxVolume = 220;
+    set_volume(iMaxVolume, 110);
+
+    /***
+    Bitmap Creation
+    ***/
     mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.screen_x-cSideBar::SidebarWidth, game.screen_y-cSideBar::TopBarHeight);
 
 	bmp_screen = create_bitmap(game.screen_x, game.screen_y);
@@ -1397,9 +1399,6 @@ bool cGame::setupGame() {
 	mouse_tile = 0;
 
 	set_palette(general_palette);
-
-	// normal sounds are loud, the music is lower (its background music, so it should not be disturbing)
-	set_volume(iMaxVolume, 150);
 
 	// A few messages for the player
 	logbook("Initializing:  PLAYERS");
