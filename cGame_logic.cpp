@@ -238,6 +238,7 @@ void cGame::think_winlose() {
             cAbstractStructure *pStructure = structure[i];
             if (pStructure == nullptr) continue;
             if (pStructure->getOwner() == HUMAN || pStructure->getOwner() == AI_WORM || pStructure->getOwner() == AI_CPU5) continue;
+            if (pStructure->getPlayer()->isSameTeamAs(&players[HUMAN])) continue; // skip players of same team as human player
             bAllDead = false;
             break;
         }
@@ -246,12 +247,13 @@ void cGame::think_winlose() {
         if (bAllDead) {
             // check units now
             for (int i = 0; i < MAX_UNITS; i++) {
-                cUnit &cUnit = unit[i];
-                if (!cUnit.isValid()) continue;
-                if (cUnit.iPlayer == HUMAN || cUnit.iPlayer == AI_WORM || cUnit.iPlayer == AI_CPU5) continue;
-                if (cUnit.isAirbornUnit()) continue; // do not count airborn units
-                if (cUnit.isDead()) continue; // in case we have some 'half-dead' units that got passed the isValid check...
+                cUnit &pUnit = unit[i];
+                if (!pUnit.isValid()) continue;
+                if (pUnit.iPlayer == HUMAN || pUnit.iPlayer == AI_WORM || pUnit.iPlayer == AI_CPU5) continue;
+                if (pUnit.isAirbornUnit()) continue; // do not count airborn units
+                if (pUnit.isDead()) continue; // in case we have some 'half-dead' units that got passed the isValid check...
                                               // a better way for this would be to have such units in a separate collection.
+                if (pUnit.getPlayer()->isSameTeamAs(&players[HUMAN])) continue; // skip players of same team as human player
                 bAllDead = false;
                 break;
             }
