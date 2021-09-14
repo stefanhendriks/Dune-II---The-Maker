@@ -725,3 +725,26 @@ void cAbstractStructure::unitStopsEnteringStructure() {
     setUnitIdEntering(-1);
     setAnimating(false);
 }
+
+/**
+ * Call this when a unit will stop going for this structure, for whatever reason. It could either be dead or it
+ * simply stops moving to this structure. In any case, call this function set the structure state if this structure
+ * would have expected this unitID
+ * @param unitID
+ */
+void cAbstractStructure::unitIsNoLongerInteractingWithStructure(int unitID) {
+    if (unitID < 0) return; // we don't care about invalid ID's
+
+    if (iUnitIDWithinStructure == unitID) {
+        // this is weird, but set it to -1
+        iUnitIDWithinStructure = -1;
+    }
+    if (iUnitIDHeadingForStructure == unitID) {
+        // update structure state that this unit is no longer heading towards this building
+        unitStopsHeadingTowardsStructure();
+    }
+    if (iUnitIDEnteringStructure == unitID) {
+        // update structure state that this unit is no longer entering this building
+        unitStopsEnteringStructure();
+    }
+}

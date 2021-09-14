@@ -98,8 +98,7 @@ public:
 	int iBringTarget;	// Where to bring the carried unit (when iUnitIDWithinStructure > -1)
 	int iNewUnitType;	// new unit that will be brought, will be this type
 	int lastDroppedOffCell; // last cell where we dropepd off a unit
-	bool bPickedUp;		// picked up the unit?
-	
+
     // Drawing
     int iBodyFacing;    // Body of tanks facing
     int iHeadFacing;    // Head of tanks facing
@@ -337,6 +336,9 @@ public:
 
 private:
 
+    int willBePickedUpBy;	// is unit picked up (by carry-all), if so by which one?
+    bool bPickedUp;     // did this unit pick up a unit? (this unit is a carry-all or frigate)
+
     bool bRemoveMe; // if true, then this unit wants to be cleared (ie, is no longer valid)
 
     int mission; // is this unit assigned to a mission?
@@ -399,7 +401,7 @@ private:
 
     void awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate);
 
-    void notifyStructureWeWantedToEnterThatStopGoingToIt() const;
+    void unitWillNoLongerBeInteractingWithStructure() const;
 
     int pos_x_centered();
 
@@ -418,6 +420,10 @@ private:
     void createExplosionParticle();
 
     void createSquishedParticle();
+
+    void forgetAboutUnitToPickUp();
+
+    void tellCarryAllThatWouldPickMeUpToForgetAboutMe() const;
 };
 
 

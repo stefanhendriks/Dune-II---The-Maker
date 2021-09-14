@@ -224,6 +224,8 @@ class cAbstractStructure {
         void unitStopsHeadingTowardsStructure();
 
         void unitStopsEnteringStructure();
+
+    void unitIsNoLongerInteractingWithStructure(int unitID);
 };
 
 #endif
