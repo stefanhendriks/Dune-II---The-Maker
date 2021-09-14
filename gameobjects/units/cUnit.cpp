@@ -92,7 +92,8 @@ void cUnit::init(int i) {
     iCarryTarget = -1;    // Unit ID to carry, but is not carried yet
     iBringTarget = -1;    // Where to bring the carried unit (when iUnitIDWithinStructure > -1)
     iNewUnitType = -1;    // new unit that will be brought, will be this type
-    bPickedUp = false;        // picked up the unit?
+    bPickedUp = false;    // carry-all/frigate: picked up the unit? (TODO: change this into states!)
+    willBePickedUpBy = -1;// ID of the carry-all that will pick up this unit
 
     // harv
     iCredits = 0;
@@ -145,15 +146,27 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 
     // Anyone who was attacking this unit is on actionGuard
     for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &cUnit = unit[i];
-        if (!cUnit.isValid()) continue; // skip invalid
-        if (cUnit.iAttackUnit != iID) continue; // skip those who did not want to attack me
+        cUnit &pUnit = unit[i];
+        if (!pUnit.isValid()) continue; // skip invalid
+        if (pUnit.iAttackUnit != iID) continue; // skip those who did not want to attack me
 
-        cUnit.actionGuard();
+        pUnit.actionGuard();
     }
 
     if (iStructureID > -1) {
-        notifyStructureWeWantedToEnterThatStopGoingToIt();
+        unitWillNoLongerBeInteractingWithStructure();
+    }
+
+    if (isAirbornUnit()) {
+        if (iUnitID > -1) {
+            // we intended to pick up this unit
+            cUnit &pUnit = unit[iUnitID];
+            if (pUnit.isValid()) {
+                pUnit.willBePickedUpBy = -1; // no longer being picked up by this one
+            }
+        }
+    } else {
+        tellCarryAllThatWouldPickMeUpToForgetAboutMe();
     }
 
     if (bBlowUp) {
@@ -383,17 +396,15 @@ void cUnit::createExplosionParticle() {
     }
 }
 
-void cUnit::notifyStructureWeWantedToEnterThatStopGoingToIt() const {
+void cUnit::unitWillNoLongerBeInteractingWithStructure() const {
     cAbstractStructure *pStructure = getStructureUnitWantsToEnter();
     if (pStructure == nullptr) return; // nothing to do here
 
     if (pStructure->isValid()) {
-        if (pStructure->getUnitIdHeadingTowards() == iID) {
-            // update structure state that this unit is no longer heading towards this building
-            pStructure->unitStopsHeadingTowardsStructure();
-        } else if (pStructure->getUnitIdEntering() == iID) {
-            // update structure state that this unit is no longer entering this building
-            pStructure->unitStopsEnteringStructure();
+        pStructure->unitIsNoLongerInteractingWithStructure(iID);
+        if (iUnitID > -1) {
+            // in case I am a Carry-All and Carry-ing a unit
+            pStructure->unitIsNoLongerInteractingWithStructure(iUnitID);
         }
     }
 }
@@ -810,8 +821,10 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
     log(msg);
     iGoalCell = iCll;
     if (iStructureID > -1) {
-        notifyStructureWeWantedToEnterThatStopGoingToIt();
+        unitWillNoLongerBeInteractingWithStructure();
     }
+
+    tellCarryAllThatWouldPickMeUpToForgetAboutMe();
 
     iStructureID = iStructureIdToEnter;
 
@@ -838,6 +851,20 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
     forgetAboutCurrentPathAndPrepareToCreateNewOne();
 
     log("(move_to - FINISHED)");
+}
+
+/**
+ * If this unit would be picked up by a carry-all (identifiedby willBePickedUpBy ID), then let it know we no
+ * longer want to be picked up. Ie, we died, or we wanted to move away ourselves and the carry-all should not
+ * interfere.
+ */
+void cUnit::tellCarryAllThatWouldPickMeUpToForgetAboutMe() const {
+    if (willBePickedUpBy > -1) {
+        cUnit &pUnit = unit[willBePickedUpBy];
+        if (pUnit.isValid()) {
+            pUnit.forgetAboutUnitToPickUp();
+        }
+    }
 }
 
 
@@ -1424,26 +1451,25 @@ void cUnit::think_move_air() {
                 // Not yet picked up the unit
                 cUnit &unitToPickupOrDrop = getUnitToPickupOrDrop();
                 if (!bPickedUp) {
-                    if (!unitToPickupOrDrop.isValid()) {
-                        iTransferType = TRANSFER_NONE; // nope...
+                    if (!unitToPickupOrDrop.isValid() || unitToPickupOrDrop.isDead()) {
+                        forgetAboutUnitToPickUp();
                         return;
                     }
 
                     // I believe this statement is always true, as we do not set flag
-                    // on unit that is being picked up
+                    // on unit that is being picked up!? (unit to pick up is not changed, the CARRY-ALL is though)
                     if (unitToPickupOrDrop.bPickedUp == false) {
-                        // check where the unit is:
-                        int iTheGoal = unitToPickupOrDrop.iCell;
-
-                        if (iCell == iTheGoal) {
+                        // CARRY-ALL: when we are at the same cell as the unit to pick up
+                        if (iCell == unitToPickupOrDrop.iCell) {
                             // when this unit is NOT moving
                             if (!unitToPickupOrDrop.isMovingBetweenCells()) {
                                 TIMER_movedelay = 300; // this will make carry-all speed up slowly
 
-                                bPickedUp = true; // set state in aircraft, that it has picked up a unit
+                                unitToPickupOrDrop.willBePickedUpBy = -1; // set state in aircraft, that it has picked up a unit
+                                bPickedUp = true;
 
                                 // so we set the tempHitpoints so the unit 'disappears' from the map without being
-                                // really dead.
+                                // really dead. TODO: use state for this instead
                                 unitToPickupOrDrop.iTempHitPoints = unitToPickupOrDrop.iHitPoints;
 
                                 // now remove hitpoints (HACK HACK)
@@ -1472,9 +1498,7 @@ void cUnit::think_move_air() {
                                 iGoalCell = unitToPickupOrDrop.iCell;
                                 iCarryTarget = unitToPickupOrDrop.iCell;
                             } else {
-                                // forget about this
-                                iGoalCell = iCell;
-                                iTransferType = TRANSFER_NONE;
+                                forgetAboutUnitToPickUp();
                             }
                             return;
                         }
@@ -1771,6 +1795,12 @@ void cUnit::think_move_air() {
     map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
 }
 
+void cUnit::forgetAboutUnitToPickUp() {// forget about this
+    iGoalCell = iCell;
+    iTransferType = TRANSFER_NONE;
+    iUnitID = -1;
+}
+
 cUnit &cUnit::getUnitToPickupOrDrop() const {
     assert(iUnitID > -1 && "cUnit::getUnitToPickupOrDrop() called for invalid iUnitIDWithinStructure!");
     return unit[iUnitID];
@@ -1834,11 +1864,12 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe) {
     } else if (iTransfer == TRANSFER_PICKUP && iuID > -1) {
 
         // the carryall must pickup the unit, and then bring it to the iBring stuff
-        if (unit[iuID].isValid()) {
+        cUnit &pUnit = unit[iuID];
+        if (pUnit.isValid()) {
             iTransferType = iTransfer;
 
-            iGoalCell = unit[iuID].iCell; // first go to the target to pick it up
-            iCarryTarget = unit[iuID].iCell; // same here...
+            iGoalCell = pUnit.iCell; // first go to the target to pick it up
+            iCarryTarget = pUnit.iCell; // same here...
 
             iNewUnitType = -1;
 
@@ -1847,8 +1878,10 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe) {
 
             bPickedUp = false;
 
-            // what unit do we carry? (in case the unit moves away)
+            // which unit do we intent to pick up?
             iUnitID = iuID;
+            // let the unit know we intent to pick it up
+            pUnit.willBePickedUpBy = iID;
         }
     }
 }

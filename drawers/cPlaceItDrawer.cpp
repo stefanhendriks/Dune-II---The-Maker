@@ -142,8 +142,10 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 			int unitIdOnMap = map.getCellIdUnitLayer(iCll);
 			if (unitIdOnMap > -1) {
-				if (!unit[unitIdOnMap].bPickedUp) // only when not picked up, take this in (fixes carryall carrying this unit bug)
-					iTile = PLACE_BAD;
+                // temporarily dead units do not block, but alive units (non-dead) do block placement
+				if (!unit[unitIdOnMap].isDead()) {
+                    iTile = PLACE_BAD;
+                }
 			}
 
 			// DRAWING & RULER

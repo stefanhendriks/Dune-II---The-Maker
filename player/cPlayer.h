@@ -206,6 +206,8 @@ public:
 
     std::vector<int> getAllMyStructuresAsId();
 
+    std::vector<int> getAllMyStructuresAsIdForType(int structureType);
+
     bool isSameTeamAs(cPlayer *pPlayer);
 
     void update();

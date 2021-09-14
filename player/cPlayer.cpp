@@ -612,13 +612,23 @@ std::vector<int> cPlayer::getAllMyUnits() {
 
 // TODO: This can be done smarter because we receive notifications when a structure gets created/destroyed!
 std::vector<int> cPlayer::getAllMyStructuresAsId() {
+    return getAllMyStructuresAsIdForType(-1);
+}
+
+std::vector<int> cPlayer::getAllMyStructuresAsIdForType(int structureType) {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < MAX_STRUCTURES; i++) {
         cAbstractStructure *abstractStructure = structure[i];
         if (!abstractStructure) continue;
         if (!abstractStructure->isValid()) continue;
         if (!abstractStructure->belongsTo(this)) continue;
-        ids.push_back(i);
+        if (structureType < 0) {
+            ids.push_back(i);
+        } else {
+            if (abstractStructure->getType() == structureType) {
+                ids.push_back(i);
+            }
+        }
     }
     return ids;
 }
@@ -1803,20 +1813,27 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
 
     // If a harvester died, and it is the last. And we have atleast one REFINERY; then send a Harvester to that
     // player
-    if (pUnit.isHarvester() && // a harvester died
-        hasAtleastOneStructure(REFINERY)) { // and its player still has a refinery
+    if (pUnit.isHarvester()) { // a harvester died
+        const std::vector<int> &refineries = getAllMyStructuresAsIdForType(REFINERY);
 
-        int harvesters = getAmountOfUnitsForType(HARVESTER);
-        // check if the player has any harvester left
+        if (!refineries.empty()) { // and its player still has a refinery)
+            int harvesters = getAmountOfUnitsForType(HARVESTER);
+            // check if the player has any harvester left
 
-        // No harvester found, deliver one
-        if (harvesters < 1) {
-            // deliver
-            cAbstractStructure *refinery = pUnit.findClosestStructureType(REFINERY);
+            // No harvester found, deliver one
+            if (harvesters < 1) {
+                // deliver
+                cAbstractStructure *refinery = pUnit.findClosestStructureType(REFINERY);
 
-            // found a refinery, deliver harvester to that
-            if (refinery) {
-                REINFORCE(id, HARVESTER, refinery->getCell(), -1);
+                // found a refinery, deliver harvester to that
+                if (refinery) {
+                    REINFORCE(id, HARVESTER, refinery->getCell(), -1);
+                }
+            }
+        } else {
+            for (auto &structureId: refineries) {
+                cAbstractStructure *pStructure = structure[structureId];
+                pStructure->unitIsNoLongerInteractingWithStructure(event.entityID);
             }
         }
     }
