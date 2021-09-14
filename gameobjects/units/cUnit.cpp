@@ -255,7 +255,7 @@ void cUnit::createExplosionParticle() {
 
         if (iType == HARVESTER) {
             game.shakeScreen(25);
-            mapEditor.createField(iCell, TERRAIN_SPICE, ((iCredits + 1) / 7));
+            mapEditor.createRandomField(iCell, TERRAIN_SPICE, ((iCredits + 1) / 7));
         }
 
         if (iType == ORNITHOPTER) {
@@ -1136,7 +1136,7 @@ void cUnit::think() {
         // change type of terrain to sand
         mapEditor.createCell(iCell, TERRAIN_SAND, 0);
 
-        mapEditor.createField(iCell, TERRAIN_SPICE, 25 + (rnd(50)));
+        mapEditor.createRandomField(iCell, TERRAIN_SPICE, 25 + (rnd(50)));
 
         // kill unit
         map.remove_id(iID, MAPID_UNITS);

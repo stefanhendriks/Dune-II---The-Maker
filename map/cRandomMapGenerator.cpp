@@ -77,12 +77,12 @@ void cRandomMapGenerator::generateRandomMap() {
 
         if (bOk) {
             progress += piece;
-            mapEditor.createField(iCll, TERRAIN_ROCK, 5500 + rnd(3500));
+            mapEditor.createRandomField(iCll, TERRAIN_ROCK, 5500 + rnd(3500));
 
             if (iSpot < game.iSkirmishStartPoints) {
                 randomMapEntry.iStartCell[iSpot] = iCll;
             } else {
-                mapEditor.createField(iCll, TERRAIN_MOUNTAIN, 5 + rnd(15));
+                mapEditor.createRandomField(iCll, TERRAIN_MOUNTAIN, 5 + rnd(15));
             }
 
             if (iSpot < maxRockSpots) {
@@ -130,7 +130,7 @@ void cRandomMapGenerator::generateRandomMap() {
 
     while (a_spice > 0) {
         int iCll = map.getRandomCellWithinMapWithSafeDistanceFromBorder(0);
-        mapEditor.createField(iCll, TERRAIN_SPICE, 2500);
+        mapEditor.createRandomField(iCll, TERRAIN_SPICE, 2500);
         progress += piece;
         a_spice--;
         // blit on screen
@@ -140,12 +140,19 @@ void cRandomMapGenerator::generateRandomMap() {
 
     while (a_hill > 0) {
         int cell = map.getRandomCellWithinMapWithSafeDistanceFromBorder(0);
-        mapEditor.createField(cell, TERRAIN_HILL, 500 + rnd(500));
+        mapEditor.createRandomField(cell, TERRAIN_HILL, 500 + rnd(500));
         a_hill--;
         progress += piece;
         // blit on screen
         drawProgress(progress);
         blit(bmp_screen, screen, 0, 0, 0, 0, game.screen_x, game.screen_y);
+    }
+
+
+    for (int s = 0; s < 4; s++) {
+        // make sure starting location has rock to have CONSTYARD placed, which makes sure we don't need to
+        // spawn an MCV (fixing https://github.com/stefanhendriks/Dune-II---The-Maker/issues/312)
+        mapEditor.createSquaredField(randomMapEntry.iStartCell[s], TERRAIN_ROCK, 2);
     }
 
     // end of map creation

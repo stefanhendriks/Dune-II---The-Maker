@@ -20,7 +20,8 @@ class cMapEditor {
 		void smoothAroundCell(int cell);	// smooth cells above, under, left and right given cell
 		void removeSingleRockSpots();		// when single rock cells have less than 3 neighbors, remove them
 
-		void createField(int cell, int terraintType, int size); // create a field on the map
+		void createRandomField(int cell, int terrainType, int size); // create a randomized field on the map
+		void createSquaredField(int cell, int terrainType, int size); // create a square field on the map
 
 		/**
 		 * Sets/changes cell state. If cell < 0 will do nothing.

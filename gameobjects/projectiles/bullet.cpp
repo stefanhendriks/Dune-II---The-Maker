@@ -489,7 +489,7 @@ void cBullet::detonateSpiceBloom(int cell, double factor) const {
 
     // change type of terrain to sand
     mapEditor.createCell(cell, TERRAIN_SAND, 0);
-    mapEditor.createField(cell, TERRAIN_SPICE, 50 + (rnd(75)));
+    mapEditor.createRandomField(cell, TERRAIN_SPICE, 50 + (rnd(75)));
     game.shakeScreen(20);
 }
 
