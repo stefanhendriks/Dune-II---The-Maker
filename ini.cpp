@@ -1365,7 +1365,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
                     sprintf(msg, "[SCENARIO] Placing spice FIELD at cell : %d", fields[iB]);
                     logbook(msg);
                 }
-                mapEditor.createField(fields[iB], TERRAIN_SPICE, 25 + (rnd(50)));
+                mapEditor.createRandomField(fields[iB], TERRAIN_SPICE, 25 + (rnd(50)));
             }
 
         }

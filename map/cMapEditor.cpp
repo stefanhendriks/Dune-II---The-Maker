@@ -18,7 +18,7 @@ void cMapEditor::createCell(int cell, int terrainType, int tile) {
     map.createCell(cell, terrainType, tile);
 }
 
-void cMapEditor::createField(int cell, int terrainType, int size) {
+void cMapEditor::createRandomField(int cell, int terrainType, int size) {
     assert(terrainType >= TERRAIN_BLOOM);
     assert(terrainType <= TERRAIN_WALL);
 
@@ -55,7 +55,7 @@ void cMapEditor::createField(int cell, int terrainType, int size) {
 
         if (iDist > rnd(4) + 4) {
             if (rnd(100) < 5) {
-                createField(c, terrainType, 100);
+                createRandomField(c, terrainType, 100);
             }
         }
 
@@ -104,6 +104,26 @@ void cMapEditor::createField(int cell, int terrainType, int size) {
         }
 
         FIX_POS(x, y);
+    }
+
+    smoothMap();
+}
+
+void cMapEditor::createSquaredField(int cell, int terrainType, int size) {
+    assert(terrainType >= TERRAIN_BLOOM);
+    assert(terrainType <= TERRAIN_WALL);
+
+    if (cell < 0) return;
+
+    int x = map.getCellX(cell);
+    int y = map.getCellY(cell);
+
+
+    for (int fx = x; fx < x+size; fx++) {
+        for (int fy = y; fy < y+size; fy++) {
+            int c = map.getCellWithMapBorders(fx,fy);
+            createCell(c, terrainType, 0);
+        }
     }
 
     smoothMap();
