@@ -1,10 +1,3 @@
-/*
- * cScreenResolution.cpp
- *
- *  Created on: 24 dec. 2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
 cScreenResolution::cScreenResolution(int theWidth, int theHeight) {
@@ -18,8 +11,7 @@ cScreenResolution::~cScreenResolution() {
 }
 
 void cScreenResolution::printLog() {
-	//cLogger::getInstance()->log
 	char msg[255];
-	sprintf(msg, "cBestScreenResolutionFinder:: width = %d, height = %d, tested = %d, usable = %d", width, height, tested, usable);
+	sprintf(msg, "cScreenResolution:: width = %d, height = %d, tested = %d, usable = %d", width, height, tested, usable);
 	logbook(msg);
 }

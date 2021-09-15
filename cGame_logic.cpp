@@ -624,6 +624,12 @@ void cGame::menu()
 		textDrawer.drawTextBottomLeft("Music: MIDI");
     }
 
+    if (DEBUGGING) {
+        char mouseTxt[255];
+        sprintf(mouseTxt, "%d, %d", mouse_x, mouse_y);
+        textDrawer.drawText(0, 0, mouseTxt);
+    }
+
    	// MOUSE
     draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
 
@@ -1124,6 +1130,7 @@ bool cGame::setupGame() {
 
 		char msg[255];
 		sprintf(msg, "Initializing graphics mode (windowed) with resolution %d by %d, colorDepth %d.", game.screen_x, game.screen_y, colorDepth);
+        logbook(msg);
 
 		if (r > -1) {
 			logger->log(LOG_INFO, COMP_ALLEGRO, msg, "Succesfully created window with graphics mode.", OUTC_SUCCESS);
@@ -1141,18 +1148,21 @@ bool cGame::setupGame() {
 			setScreenResolutionFromGameIniSettings();
 			r = set_gfx_mode(GFX_AUTODETECT_FULLSCREEN, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
 			char msg[255];
-			sprintf(msg,"Setting up %dx%d resolution from ini file.", game.ini_screen_width, game.ini_screen_height);
+			sprintf(msg,"Setting up %dx%d resolution from ini file (using colorDepth %d). r = %d", game.ini_screen_width, game.ini_screen_height, colorDepth, r);
 			cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", msg);
-            mustAutoDetectResolution = (r > -1);
+            mustAutoDetectResolution = r < 0;
 		} else {
             cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Custom resolution from ini file.", "No resolution defined in ini file.");
+            mustAutoDetectResolution = true;
 		}
 
 		// find best possible resolution
-		if (!mustAutoDetectResolution) {
-            cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, "Autodetecting resolutions", "Commencing");
+		if (mustAutoDetectResolution) {
+            char msg[255];
+            sprintf(msg, "Autodetecting resolutions at color depth %d", colorDepth);
+            cLogger::getInstance()->log(LOG_INFO, COMP_ALLEGRO, msg, "Commencing");
             // find best possible resolution
-            cBestScreenResolutionFinder bestScreenResolutionFinder;
+            cBestScreenResolutionFinder bestScreenResolutionFinder(colorDepth);
             bestScreenResolutionFinder.checkResolutions();
             bool result = bestScreenResolutionFinder.acquireBestScreenResolutionFullScreen();
 
@@ -1171,7 +1181,7 @@ bool cGame::setupGame() {
 	selectYourNextConquestState->calculateOffset();
 
 	alfont_text_mode(-1);
-	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set mode to -1", OUTC_SUCCESS);
+	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
 
 
 	game_font = alfont_load_font("data/arakeen.fon");

@@ -1,10 +1,3 @@
-/*
- * cBestScreenResolutionFinder.h
- *
- *  Created on: 24 dec. 2010
- *      Author: Stefan
- */
-
 #ifndef CBESTSCREENRESOLUTIONFINDER_H_
 #define CBESTSCREENRESOLUTIONFINDER_H_
 
@@ -12,7 +5,7 @@
 
 class cBestScreenResolutionFinder {
 	public:
-		cBestScreenResolutionFinder();
+		cBestScreenResolutionFinder(int desiredColorDepth);
 		virtual ~cBestScreenResolutionFinder();
 
 		bool acquireBestScreenResolutionFullScreen();
@@ -22,6 +15,7 @@ class cBestScreenResolutionFinder {
 	private:
         cScreenResolution * screenResolutions[MAX_SCREEN_RESOLUTIONS];
         int resolutionIndex;
+        int desiredColorDepth;
 
         void init();
         void addScreenResolution(int width, int height);
