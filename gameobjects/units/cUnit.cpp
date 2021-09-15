@@ -266,7 +266,8 @@ void cUnit::createExplosionParticle() {
         // Frigate death particle? (doesnt exist in Dune 2, but would be cool to have)
     }
 
-    if (iType == DEVASTATOR) {
+    // when Saboteur dies let it explode like Devastator!
+    if (iType == DEVASTATOR || iType == SABOTEUR) {
         int iOrgDieX = iDieX;
         int iOrgDieY = iDieY;
 
@@ -2838,6 +2839,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
 
             if (potentialDeadUnit.iCell == iCell) {
                 if (potentialDeadUnit.isSaboteur()) {
+                    // this unit takes damage, catches the explosion so to speak
                     takeDamage(potentialDeadUnit.getUnitType().damageOnEnterStructure);
                 }
 
