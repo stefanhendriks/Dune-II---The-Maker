@@ -85,7 +85,7 @@ namespace brains {
 
         cPlayerBrainMissionKind(cPlayer *player, cPlayerBrainMission * mission);
 
-        virtual ~cPlayerBrainMissionKind() = 0;
+        ~cPlayerBrainMissionKind();
 
         virtual bool think_SelectTarget() = 0;
 
