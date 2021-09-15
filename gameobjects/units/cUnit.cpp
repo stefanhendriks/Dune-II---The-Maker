@@ -258,7 +258,8 @@ void cUnit::createExplosionParticle() {
             mapEditor.createRandomField(iCell, TERRAIN_SPICE, ((iCredits + 1) / 7));
         }
 
-        if (iType == ORNITHOPTER) {
+        // For now carry-all and ornithopter share same death particle
+        if (iType == ORNITHOPTER || iType == CARRYALL) {
             PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_ORNI, -1, -1);
         }
 
