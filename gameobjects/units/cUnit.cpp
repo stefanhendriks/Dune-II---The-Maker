@@ -448,12 +448,20 @@ int cUnit::pos_y() {
 }
 
 int cUnit::draw_x() {
-    int bmpOffset = (TILESIZE_WIDTH_PIXELS - getBmpWidth()) / 2;
+    return draw_x(getBmpWidth());
+}
+
+int cUnit::draw_x(int bmpWidth) {
+    int bmpOffset = (TILESIZE_WIDTH_PIXELS - bmpWidth) / 2;
     return mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
 }
 
 int cUnit::draw_y() {
-    int bmpOffset = (TILESIZE_HEIGHT_PIXELS - getBmpHeight()) / 2;
+    return draw_y(getBmpHeight());
+}
+
+int cUnit::draw_y(int bmpHeight) {
+    int bmpOffset = (TILESIZE_HEIGHT_PIXELS - bmpHeight) / 2;
     return mapCamera->getWindowYPositionWithOffset(pos_y(), bmpOffset);
 }
 
@@ -715,13 +723,19 @@ void cUnit::draw() {
     }
 
     if (bSelected) {
-//       draw_sprite(bmp_screen, (BITMAP *)gfxdata[FOCUS].dat, iSelX/*+startpixel*/-2, iSelY);
         BITMAP *focusBitmap = (BITMAP *) gfxdata[FOCUS].dat;
         int bmp_width = focusBitmap->w;
         int bmp_height = focusBitmap->h;
-        allegroDrawer->maskedStretchBlit(focusBitmap, bmp_screen, 0, 0, bmp_width, bmp_height, iSelX/*+startpixel*/- 2,
-                                         iSelY, mapCamera->factorZoomLevel(bmp_width),
-                                         mapCamera->factorZoomLevel(bmp_height));
+
+        int x = draw_x(bmp_width);
+        int y = draw_y(bmp_height);
+
+        allegroDrawer->maskedStretchBlit(focusBitmap,
+                                         bmp_screen,
+                                         0, 0, bmp_width, bmp_height, x, y,
+                                         mapCamera->factorZoomLevel(bmp_width),
+                                         mapCamera->factorZoomLevel(bmp_height)
+                                         );
     }
 
 
