@@ -74,6 +74,8 @@ namespace brains {
         if (missionKind) {
             delete missionKind;
         }
+        player = nullptr;
+        brain = nullptr;
     }
 
     /**
@@ -592,8 +594,8 @@ namespace brains {
         kind(src.kind),
         TIMER_delay(src.TIMER_delay),
         TIMER_awaitingGatheringResoures(src.TIMER_awaitingGatheringResoures),
-        specialEventMakesStateSwitchToSelectTarget(src.specialEventMakesStateSwitchToSelectTarget),
-        missionWithUnits(src.missionWithUnits)
+        missionWithUnits(src.missionWithUnits),
+        specialEventMakesStateSwitchToSelectTarget(src.specialEventMakesStateSwitchToSelectTarget)
     {
         if (src.missionKind) {
             missionKind = src.missionKind->clone(src.player, this);

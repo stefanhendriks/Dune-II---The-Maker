@@ -186,8 +186,6 @@ namespace brains {
         void onEventCannotCreatePath(const s_GameEvent &event);
 
         void logUnits();
-
-        void onExecuteSpecificStateSwitch(const s_GameEvent &event);
     };
 
 }

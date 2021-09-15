@@ -16,7 +16,8 @@ namespace brains {
     }
 
     cPlayerBrainMissionKind::~cPlayerBrainMissionKind() {
-
+        this->mission = nullptr; // we do not own it, so don't delete it
+        this->player = nullptr; // we do not own it, so don't delete it
     }
 
     /**
