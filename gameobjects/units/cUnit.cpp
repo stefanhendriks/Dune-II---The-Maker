@@ -513,6 +513,8 @@ float cUnit::getTempHealthNormalized() {
 }
 
 void cUnit::draw_health() {
+    if (iHitPoints < 0) return;
+
     // draw units health
     float width_x = mapCamera->factorZoomLevel(getBmpWidth());
     int height_y = mapCamera->factorZoomLevel(4);
@@ -2523,6 +2525,7 @@ void cUnit::think_move() {
                         } else {
                             // start entering the structure at next cell
                             pStructure->startEnteringStructure(iID);
+                            bSelected = false; // deselect unit
                         }
 
                         // TODO: this should be done via events (EVENT_CAPTURED? and then make unit choose different structure)
