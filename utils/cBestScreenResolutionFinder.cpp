@@ -10,10 +10,14 @@
 /**
  *
  */
-cBestScreenResolutionFinder::cBestScreenResolutionFinder() {
+cBestScreenResolutionFinder::cBestScreenResolutionFinder(int desiredColorDepth) {
     resolutionIndex = 0;
+    this->desiredColorDepth = desiredColorDepth;
     init();
-//    addScreenResolution(3840, 2160); // 4k (seems to break?)
+    // tries them in this order (1st come first serve)
+    // do note, when DPI is > 100% in OS (atleast in Windows) things seem to get wonky.
+    // see also: https://github.com/stefanhendriks/Dune-II---The-Maker/issues/314
+    addScreenResolution(3840, 2160); // 4k
     addScreenResolution(2048, 1536); // 4:3 aspect ratio
     addScreenResolution(1920, 1440); // 4:3 aspect ratio
     addScreenResolution(1920, 1080); // Full HD
@@ -22,7 +26,6 @@ cBestScreenResolutionFinder::cBestScreenResolutionFinder() {
     addScreenResolution(1366, 768);  // widescreen
     addScreenResolution(1024, 768);
     addScreenResolution(800, 600);
-    addScreenResolution(640, 480);
 }
 
 cBestScreenResolutionFinder::~cBestScreenResolutionFinder() {
@@ -66,7 +69,7 @@ void cBestScreenResolutionFinder::checkResolutions() {
 #endif
 
     if (!isGfxModeListSet(modeList)) {
-        logbook("Must detect resolutions by testing them out!?");
+        logbook("Must detect resolutions by testing them out.");
         detectScreenResolutionsByTestingThemOut();
         return;
     }
@@ -77,7 +80,6 @@ void cBestScreenResolutionFinder::checkResolutions() {
 }
 
 void cBestScreenResolutionFinder::setMatchingScreenResolutionsToTestedAndUsable(GFX_MODE_LIST * modeList) {
-	logbook("setMatchingScreenResolutionsToTestedAndUsable");
 	assert(modeList);
 
 	GFX_MODE * modes = modeList->mode;
@@ -86,24 +88,26 @@ void cBestScreenResolutionFinder::setMatchingScreenResolutionsToTestedAndUsable(
 	for (int iMode=0; iMode < modeList->num_modes; iMode++) {
 		GFX_MODE mode = modes[iMode];
 
-		// we match only 16 bit color depth modes, as we use 16bpp in fullscreen mode
-		if (mode.bpp == 16) {
-			cScreenResolution * screenResolution = findMatchingScreenResolution(mode.width, mode.height);
-			if (screenResolution) {
-				screenResolution->setUsable(true);
-				screenResolution->setTested(true);
-			}
-		}
+        cScreenResolution * screenResolution = findMatchingScreenResolution(mode.width, mode.height);
+        if (mode.bpp != desiredColorDepth) {
+            continue;
+        }
+
+        if (screenResolution) {
+            screenResolution->setUsable(true);
+            screenResolution->setTested(true);
+            screenResolution->printLog();
+        }
 	}
 }
 
 cScreenResolution * cBestScreenResolutionFinder::findMatchingScreenResolution(int width, int height) {
 	for (auto screenResolution : screenResolutions) {
-			if (screenResolution) {
-			if (screenResolution->getWidth() == width && screenResolution->getHeight() == height) {
-				return screenResolution;
-			}
-		}
+        if (screenResolution) {
+            if (screenResolution->getWidth() == width && screenResolution->getHeight() == height) {
+                return screenResolution;
+            }
+        }
 	}
 	return nullptr;
 }
@@ -128,6 +132,7 @@ bool cBestScreenResolutionFinder::acquireBestScreenResolutionFullScreen() {
                 if (screenResolution->isUsable()) {
                     game.screen_x = screenResolution->getWidth();
                     game.screen_y = screenResolution->getHeight();
+
                     int r;
 #ifdef UNIX
                     r = set_gfx_mode(GFX_AUTODETECT, game.screen_x, game.screen_y, game.screen_x, game.screen_y);
