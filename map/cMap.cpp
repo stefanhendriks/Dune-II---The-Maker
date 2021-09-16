@@ -452,9 +452,7 @@ void cMap::draw_units() {
 void cMap::drawUnitDebug(int i, cUnit &pUnit) const {
     allegroDrawer->drawRectangle(bmp_screen, pUnit.dimensions, makecol(255, 0, 255));
     putpixel(bmp_screen, pUnit.center_draw_x(), pUnit.center_draw_y(), makecol(255, 0, 255));
-    if (key[KEY_TAB]) { // render unit id
-        alfont_textprintf(bmp_screen, game_font, pUnit.draw_x(), pUnit.draw_y(), makecol(255, 255, 255), "%d", i);
-    }
+    alfont_textprintf(bmp_screen, game_font, pUnit.draw_x(), pUnit.draw_y(), makecol(255, 255, 255), "%d", i);
 }
 
 // draw 2nd layer for units, this is health/spice bars and eventually airborn units (last)
