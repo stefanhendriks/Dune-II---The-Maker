@@ -230,6 +230,11 @@ void cMapDrawer::drawCellAsColoredTile(float tileWidth, float tileHeight, int iC
         bDraw = true;
     }
 
+    if (map->getCellIdAirUnitLayer(iCell) > -1) {
+        iClr = makecol(255, 255, 0);
+        bDraw = true;
+    }
+
     if (bDraw) {
         rect(bmp_screen, fDrawX, fDrawY, fDrawX + (tileWidth-1), fDrawY + (tileHeight-1), iClr);
     }
