@@ -453,7 +453,11 @@ int cUnit::draw_x() {
 }
 
 int cUnit::draw_x(int bmpWidth) {
+    // Example:
+    // unit with 48 width (harvester, carry-all)
+    // (32 - 48) = -16 / 2 = -8
     int bmpOffset = (TILESIZE_WIDTH_PIXELS - bmpWidth) / 2;
+    // x is -8 pixels (ie, 8 pixels more to the left than top-left corner (pos_x) of a cell
     return mapCamera->getWindowXPositionWithOffset(pos_x(), bmpOffset);
 }
 
@@ -462,6 +466,7 @@ int cUnit::draw_y() {
 }
 
 int cUnit::draw_y(int bmpHeight) {
+    // same as draw_x
     int bmpOffset = (TILESIZE_HEIGHT_PIXELS - bmpHeight) / 2;
     return mapCamera->getWindowYPositionWithOffset(pos_y(), bmpOffset);
 }
@@ -1807,7 +1812,8 @@ void cUnit::think_move_air() {
     posX += cos(angle) * movespeed;
     posY += sin(angle) * movespeed;
 
-    iCell = mapCamera->getCellFromAbsolutePosition(posX, posY);
+    // Cell of unit is determined by its center
+    iCell = mapCamera->getCellFromAbsolutePosition(pos_x_centered(), pos_y_centered());
 
     updateCellXAndY();
     map.cellSetIdForLayer(iCell, MAPID_AIR, iID);
@@ -2880,9 +2886,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
 }
 
 int cUnit::pos_y_centered() {
-    // see pos_x_centered for logic/documentation
-    int bmpOffset = getBmpHeightOffsetRelativeToTile() + getBmpHeightHalf();
-    return pos_y() + bmpOffset;
+    return pos_y() + 16;
 }
 
 int cUnit::getBmpHeightHalf() const {
@@ -2894,30 +2898,7 @@ int cUnit::getBmpHeightOffsetRelativeToTile() const {
 }
 
 int cUnit::pos_x_centered() {
-    // posX is cell based (still). So it starts at top-left of the cell.
-    // that is the reason why draw_x has to calculate the offset by taking cell width and then substract
-    // the bmp image width. The remainder is divided by 2. THEN substract it.
-
-    // This will make sure that units that are too big will be drawn 'out of the cell'. (offset will be -17 or higher)
-    // while units that are too small are drawn more 'into' the cell. (offset is -16 or lower)
-
-    // FYI: Sandworms have a size of 48x48 pixels Shimmer/sandtrail. Meaning they get 'out of cell bounds'
-
-    // To determine the 'center' of the unit, we have to first get to the 'top left' of the unit. Using the above
-    // described method. And then, simply *add* half of the unit size. So we end up at the center of the unit.
-
-    // example: 32 = tile size, 48 = unit width
-    // (32 - 48) = -16 / 2 = -8
-    int bmpOffset = getBmpWidthOffsetRelativeToTile();
-
-    // -8 + (48/2=24) = 16
-    bmpOffset += getBmpWidthHalf(); // add half again, so we end up in center again
-
-    return pos_x() + bmpOffset;
-
-    // DO NOTE: Once we decided that unit coordinates should *always* be the center of a cell (ie, like particles
-    // and bullets) - then this logic will be redundant. But, the cell-by-cell movement still depends on the x,y
-    // coordinates to 'snap' to those grid coordinates. So for now it is kept like this.
+    return pos_x() + 16;
 }
 
 int cUnit::getBmpWidthHalf() const {
