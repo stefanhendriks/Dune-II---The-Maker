@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 # set the project name
 project(d2tm)
 
+# this cmakelist file is directly tied to MinGW, if you know a better way please let me know (PR, comment, etc)
 link_directories("lib/mingw")
 
 # add the executableS
@@ -69,6 +70,6 @@ file(GLOB d2tm_SRC
 target_sources(d2tm
         PUBLIC ${d2tm_SRC})
 
+# TODO: Point to mingw include dir?
 target_include_directories(d2tm
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/building ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
