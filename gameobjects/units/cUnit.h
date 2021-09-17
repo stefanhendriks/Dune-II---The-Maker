@@ -407,14 +407,6 @@ private:
 
     int pos_y_centered();
 
-    int getBmpWidthOffsetRelativeToTile() const;
-
-    int getBmpWidthHalf() const;
-
-    int getBmpHeightOffsetRelativeToTile() const;
-
-    int getBmpHeightHalf() const;
-
     void think_attack_sandworm();
 
     void createExplosionParticle();

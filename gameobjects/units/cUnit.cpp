@@ -2889,24 +2889,8 @@ int cUnit::pos_y_centered() {
     return pos_y() + 16;
 }
 
-int cUnit::getBmpHeightHalf() const {
-    return (getBmpHeight() / 2);
-}
-
-int cUnit::getBmpHeightOffsetRelativeToTile() const {
-    return (TILESIZE_WIDTH_PIXELS - getBmpHeight()) / 2;
-}
-
 int cUnit::pos_x_centered() {
     return pos_x() + 16;
-}
-
-int cUnit::getBmpWidthHalf() const {
-    return (getBmpWidth() / 2);
-}
-
-int cUnit::getBmpWidthOffsetRelativeToTile() const {
-    return (TILESIZE_WIDTH_PIXELS - getBmpWidth()) / 2;
 }
 
 /**
