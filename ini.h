@@ -108,11 +108,13 @@
 #define WORD_ISAIRBORN    51    // game.ini (Unit is airborn?)
 #define WORD_ABLETOCARRY  52    // game.ini (Able to transport units, aka CarryAll)
 #define WORD_FREEROAM     53    // game.ini (Will freely roam around the map?)
-#define WORD_ISINFANTRY   54    // game.ini (Act as infantry? squisable...)
+#define WORD_ISINFANTRY   54    // game.ini (Act as infantry?)
 #define WORD_HARVESTAMOUNT 55   // game.ini (How much a harvester takes every step)
 #define WORD_HARVESTSPEED  56   // game.ini (How many ticks needed per step)
 #define WORD_HARVESTLIMIT  57   // game.ini (Max a harvester can hold)
 #define WORD_PRODUCER	88		// game.ini (Producing structure of unit)
+#define WORD_ISSQUISHABLE 189    // game.ini (Is unit squishable?)
+#define WORD_CANSQUISH    190    // game.ini (Can squish unit?)
 
 //
 #define WORD_HOUSE			60

@@ -180,7 +180,8 @@ void install_units() {
         unitInfo[i].infantry = false;
         unitInfo[i].free_roam = false;
         unitInfo[i].fireTwice = false;
-        unitInfo[i].squish = true;     // most units can squish
+        unitInfo[i].squish = true;             // most units can squish (infantry)
+        unitInfo[i].canBeSquished = false;     // most units cannot be squished
         unitInfo[i].range = -1;
         unitInfo[i].sight = -1;
         unitInfo[i].queuable = true;
@@ -446,6 +447,7 @@ void install_units() {
     unitInfo[SOLDIER].bulletType = BULLET_SMALL;
     unitInfo[SOLDIER].icon = ICON_UNIT_SOLDIER;
     unitInfo[SOLDIER].squish = false;
+    unitInfo[SOLDIER].canBeSquished = true;
     unitInfo[SOLDIER].listId = LIST_FOOT_UNITS;
     unitInfo[SOLDIER].subListId = SUBLIST_INFANTRY;
     unitInfo[SOLDIER].canEnterAndDamageStructure = true;
@@ -467,6 +469,7 @@ void install_units() {
     unitInfo[INFANTRY].fireTwice = true;
     unitInfo[INFANTRY].icon = ICON_UNIT_INFANTRY;
     unitInfo[INFANTRY].squish = false;
+    unitInfo[INFANTRY].canBeSquished = true;
     unitInfo[INFANTRY].listId = LIST_FOOT_UNITS;
     unitInfo[INFANTRY].subListId = SUBLIST_INFANTRY;
     unitInfo[INFANTRY].canEnterAndDamageStructure = true;
@@ -488,6 +491,7 @@ void install_units() {
     unitInfo[TROOPER].listId = LIST_FOOT_UNITS;
     unitInfo[TROOPER].subListId = SUBLIST_TROOPERS;
     unitInfo[TROOPER].squish = false;
+    unitInfo[TROOPER].canBeSquished = true;
     unitInfo[TROOPER].canAttackAirUnits = true;
     unitInfo[TROOPER].canEnterAndDamageStructure = true;
     unitInfo[TROOPER].attackIsEnterStructure = false;
@@ -508,6 +512,7 @@ void install_units() {
     unitInfo[TROOPERS].listId = LIST_FOOT_UNITS;
     unitInfo[TROOPERS].subListId = SUBLIST_TROOPERS;
     unitInfo[TROOPERS].squish = false;
+    unitInfo[TROOPERS].canBeSquished = true;
     unitInfo[TROOPERS].canAttackAirUnits = true;
     unitInfo[TROOPERS].canEnterAndDamageStructure = true;
     unitInfo[TROOPERS].attackIsEnterStructure = false;
@@ -526,6 +531,7 @@ void install_units() {
     unitInfo[UNIT_FREMEN_ONE].fireTwice = false;
     unitInfo[UNIT_FREMEN_ONE].infantry = true;
     unitInfo[UNIT_FREMEN_ONE].squish = false;
+    unitInfo[UNIT_FREMEN_ONE].canBeSquished = true;
     unitInfo[UNIT_FREMEN_ONE].canAttackAirUnits = true;
 
 //  units[UNIT_FREMEN_ONE].listId=LIST_PALACE;
@@ -544,6 +550,7 @@ void install_units() {
     unitInfo[UNIT_FREMEN_THREE].fireTwice = true;
     unitInfo[UNIT_FREMEN_THREE].infantry = true;
     unitInfo[UNIT_FREMEN_THREE].squish = false;
+    unitInfo[UNIT_FREMEN_THREE].canBeSquished = true;
     unitInfo[UNIT_FREMEN_THREE].canAttackAirUnits = true;
 //  units[UNIT_FREMEN_THREE].listId=LIST_PALACE;
 //  units[UNIT_FREMEN_THREE].subListId=0;
@@ -566,6 +573,7 @@ void install_units() {
     strcpy(unitInfo[SABOTEUR].name, "Saboteur");
     unitInfo[SABOTEUR].icon = ICON_SPECIAL_SABOTEUR;
     unitInfo[SABOTEUR].squish = false;
+    unitInfo[SABOTEUR].canBeSquished = true;
     unitInfo[SABOTEUR].infantry = true; // infantry unit, so it can be squished
     unitInfo[SABOTEUR].listId = LIST_PALACE;
     unitInfo[SABOTEUR].subListId = 0;

@@ -2830,27 +2830,23 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         iPathIndex++;
         iPathFails = 0; // we change this to 0... every cell
 
-        // POLL now
         updateCellXAndY();
 
         // quick scan for infantry we squish
         // TODO: this can be sped up
-        for (int iq = 0; iq < MAX_UNITS; iq++) {
-            cUnit &potentialDeadUnit = unit[iq];
-            if (!potentialDeadUnit.isValid()) continue;
-            if (potentialDeadUnit.isSandworm()) continue; // sandworms cannot be squished
-            if (!potentialDeadUnit.isInfantryUnit()) continue; // (TODO: units[unit[iq].iType].canBeSquished)
-            if (potentialDeadUnit.iPlayer == iPlayer)
-                continue; // can't squish own units (but we can squish allied units?)
+        if (canSquishInfantry()) {
+            int unitIdAtCell = map.getCellIdUnitLayer(iCell);
+            if (unitIdAtCell > -1) {
+                cUnit &potentialDeadUnit = unit[unitIdAtCell];
+                if (potentialDeadUnit.isValid() && potentialDeadUnit.canBeSquished()) {
+                    if (potentialDeadUnit.isSaboteur()) {
+                        // this unit takes damage, catches the explosion so to speak
+                        takeDamage(potentialDeadUnit.getUnitType().damageOnEnterStructure);
+                    }
 
-            if (potentialDeadUnit.iCell == iCell) {
-                if (potentialDeadUnit.isSaboteur()) {
-                    // this unit takes damage, catches the explosion so to speak
-                    takeDamage(potentialDeadUnit.getUnitType().damageOnEnterStructure);
+                    // die
+                    potentialDeadUnit.die(false, true);
                 }
-
-                // die
-                potentialDeadUnit.die(false, true);
             }
         }
 
@@ -2962,6 +2958,10 @@ void cUnit::setMaxHitPoints() {
 
 bool cUnit::canSquishInfantry() {
     return getUnitType().squish;
+}
+
+bool cUnit::canBeSquished() {
+    return getUnitType().canBeSquished;
 }
 
 cPlayer *cUnit::getPlayer() {
@@ -3429,7 +3429,6 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
     int sx, sy;
     double cost = -1;
-    bool is_worm = (pUnit.iType == SANDWORM);
 
     // WHILE VALID TO RUN THIS LOOP
     while (valid) {
@@ -3506,7 +3505,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
                 // not a sandworm
                 int cellType = map.getCellType(cll);
-                if (!is_worm) {
+                if (!pUnit.isSandworm()) {
                     // Step by step determine if its good
                     // 2 fases:
                     // 1 -> Occupation by unit/structures
@@ -3563,8 +3562,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
                         }
                     }
 
-
-                    // is not visible, always good (since we dont know yet if its blocked!)
+                    // is not visible, always good (since we don't know yet if its blocked!)
                     if (map.isVisible(cll, controller) == false) {
                         good = true;
                     } else {
@@ -3581,17 +3579,8 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
                         }
                     }
                 } else {
-                    // is worm
-
-                    // when not on sand, on spice or on sandhill, it is BAD
-                    if (cellType == TERRAIN_SAND ||
-                        cellType == TERRAIN_SPICE ||
-                        cellType == TERRAIN_HILL ||
-                        cellType == TERRAIN_SPICEHILL) {
-                        good = true;
-                    } else {
-                        good = false;
-                    }
+                    // Sandworm only cares about terrain type for good/bad cells
+                    good = map.isCellPassableForWorm(cll);
                 }
 
                 // it is the goal cell

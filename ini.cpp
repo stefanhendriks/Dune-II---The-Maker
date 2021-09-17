@@ -475,6 +475,12 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "IsInfantry") == 0)
             return WORD_ISINFANTRY;
 
+        if (strcmp(word, "Squishable") == 0)
+            return WORD_ISSQUISHABLE;
+
+        if (strcmp(word, "CanSquish") == 0)
+            return WORD_CANSQUISH;
+
         if (strcmp(word, "IsAirborn") == 0)
             return WORD_ISAIRBORN;
 
@@ -2214,6 +2220,8 @@ void INI_Install_Game(string filename) {
                     // Booleans
                     if (wordtype == WORD_SECONDSHOT) unitInfo[id].fireTwice = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_ISINFANTRY) unitInfo[id].infantry = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_ISSQUISHABLE) unitInfo[id].canBeSquished = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_CANSQUISH) unitInfo[id].canBeSquished = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_FREEROAM) unitInfo[id].free_roam = INI_WordValueBOOL(linefeed);
                     if (wordtype == WORD_ISAIRBORN) unitInfo[id].airborn = INI_WordValueBOOL(linefeed);
 

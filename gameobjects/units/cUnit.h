@@ -322,7 +322,17 @@ public:
      */
     void attackAt(int cell);
 
+    /**
+     * Can squish infantry units
+     * @return
+     */
     bool canSquishInfantry();
+
+    /**
+     * Returns true if this unit can be squished by other units
+     * @return
+     */
+    bool canBeSquished();
 
     void carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell);
 
