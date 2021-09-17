@@ -58,7 +58,8 @@ public:
         sprintf(cRegionText[iRegionIndex], "%s", txt);
     }
 
-    void REGION_SETUP(int iMission, int iHouse);
+    void REGION_SETUP_LOST_MISSION(int iMission, int iHouse);
+    void REGION_SETUP_NEXT_MISSION(int iMission, int iHouse);
     void INSTALL_WORLD();
 
     void conquerRegions();
