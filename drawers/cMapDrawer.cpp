@@ -174,9 +174,7 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
 
             // Draw more debugging information
             if (DEBUGGING) {
-                if (key[KEY_D] && key[KEY_TAB]) {
-                    drawCellAsColoredTile(tileWidth, tileHeight, iCell, fDrawX, fDrawY);
-                }
+                drawCellAsColoredTile(tileWidth, tileHeight, iCell, fDrawX, fDrawY);
             }
 		}
 	}

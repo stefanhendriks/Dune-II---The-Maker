@@ -102,6 +102,7 @@ int handleArguments(int argc, char *argv[]) {
     game.bDisableAI = false;
     game.bDisableReinforcements = false;
     game.bDrawUsages = false;
+    game.bDrawUnitDebug = false;
     game.bOneAi = false;
     game.windowed = false;
     game.bNoAiRest = false;
@@ -124,8 +125,11 @@ int handleArguments(int argc, char *argv[]) {
 				game.bPlayMusic = false;
 				game.bPlaySound = false;
 			} else if (command.compare("-debug") == 0) {
-			    // debugging enabled
+			    // generic debugging enabled
                 bDoDebug = true;
+			} else if (command.compare("-debug-units") == 0) {
+                // unit debugging enabled
+                game.bDrawUnitDebug = true;
 			} else if (command.compare("-noai") == 0) {
                 game.bDisableAI = true;
             } else if (command.compare("-oneai") == 0) {

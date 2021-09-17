@@ -1,10 +1,3 @@
-/*
- * definitions.h
- *
- *  Created on: 7-nov-2010
- *      Author: Stefan
- */
-
 #ifndef DEFINITIONS_H_
 #define DEFINITIONS_H_
 

@@ -746,7 +746,13 @@ void cUnit::draw() {
                                          );
     }
 
+    if (game.bDrawUnitDebug) {
+        // render pixel at the very center
+        putpixel(bmp_screen, center_draw_x(), center_draw_y(), makecol(255, 255, 0));
 
+        // render from the units top-left to center pixel
+        line(bmp_screen, draw_x(), draw_y(), center_draw_x(), center_draw_y(), makecol(255, 255, 0));
+    }
 }
 
 // TODO: only do this when iCell is updated
