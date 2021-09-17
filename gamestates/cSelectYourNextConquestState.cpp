@@ -57,7 +57,7 @@ void cSelectYourNextConquestState::think() {
         int iMission = game.iMission;
 
         if (regionSceneState == SCENE_INIT) {
-            REGION_SETUP(iMission, iHouse);
+            REGION_SETUP_NEXT_MISSION(iMission, iHouse);
             drawManager->getMessageDrawer()->setMessage("3 Houses have come to Dune.");
             transitionToNextRegionSceneState(SCENE_THREE_HOUSES_COME_FOR_DUNE);
         } else if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
@@ -384,9 +384,26 @@ void cSelectYourNextConquestState::interact() {
     }
 }
 
-void cSelectYourNextConquestState::REGION_SETUP(int iMission, int iHouse) {
+void cSelectYourNextConquestState::REGION_SETUP_LOST_MISSION(int iMission, int iHouse) {
     // The first mission, nothing is 'ready', as the pieces gets placed and taken by the houses.
-    // Later, after mission 2, the pieces are already taken. Thats what this function takes care off
+    // Later, after mission 2, the pieces are already taken. That's what this function takes care off
+    // making sure everything is 'there' to go on with. Hard-coded stuff.
+    drawManager->getMessageDrawer()->initRegionPosition(offsetX, offsetY);
+
+    selectNextConquestAlpha = 1;
+
+    // prepare players, so we know house index == player index (for colorizing region pieces)
+    for (int i = 1; i < FREMEN; i++) {
+        players[i].init(i, nullptr);
+        players[i].setHouse(i);
+    }
+
+    return;
+}
+
+void cSelectYourNextConquestState::REGION_SETUP_NEXT_MISSION(int iMission, int iHouse) {
+    // The first mission, nothing is 'ready', as the pieces gets placed and taken by the houses.
+    // Later, after mission 2, the pieces are already taken. That's what this function takes care off
     // making sure everything is 'there' to go on with. Hard-coded stuff.
     drawManager->getMessageDrawer()->initRegionPosition(offsetX, offsetY);
 
