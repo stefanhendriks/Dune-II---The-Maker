@@ -51,6 +51,7 @@ struct s_UnitP {
   bool fireTwice;         // can shoot 2 times?
 
   bool squish;              // can this unit squish infantry?
+  bool canBeSquished;       // can this unit be squished (is this a squishable unit)
 
   char name[64];            // name of unit
 
