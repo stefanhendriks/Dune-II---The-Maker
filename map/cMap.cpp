@@ -374,7 +374,7 @@ void cMap::draw_units() {
         if (!pUnit.isValid()) continue;
 
         // DEBUG MODE: DRAW PATHS
-        if (DEBUGGING && pUnit.bSelected) {
+        if (game.bDrawUnitDebug) {
             pUnit.draw_path();
         }
 
@@ -384,9 +384,7 @@ void cMap::draw_units() {
             pUnit.draw();
         }
 
-        if (DEBUGGING && key[KEY_D]) {
-            drawUnitDebug(i, pUnit);
-        }
+        drawUnitDebug(i, pUnit);
 
     }
 
@@ -401,13 +399,9 @@ void cMap::draw_units() {
         if (pUnit.dimensions->isOverlapping(game.mapViewport)) {
             // draw
             pUnit.draw();
-
         }
 
-        if (DEBUGGING && key[KEY_D]) {
-            drawUnitDebug(i, pUnit);
-        }
-
+        drawUnitDebug(i, pUnit);
     }
 
     // then: draw ground units
@@ -416,7 +410,7 @@ void cMap::draw_units() {
         if (!pUnit.isValid()) continue;
 
         if (pUnit.isAirbornUnit() ||
-            pUnit.iType == SANDWORM ||
+            pUnit.isSandworm() ||
             pUnit.isInfantryUnit())
             continue; // skip airborn, infantry and sandworm
 
@@ -425,9 +419,7 @@ void cMap::draw_units() {
             pUnit.draw();
         }
 
-        if (DEBUGGING && key[KEY_D]) {
-            drawUnitDebug(i, pUnit);
-        }
+        drawUnitDebug(i, pUnit);
     }
 
     // TODO: move somewhere else than drawing function
@@ -450,6 +442,8 @@ void cMap::draw_units() {
 }
 
 void cMap::drawUnitDebug(int i, cUnit &pUnit) const {
+    if (!game.bDrawUnitDebug) return;
+
     allegroDrawer->drawRectangle(bmp_screen, pUnit.dimensions, makecol(255, 0, 255));
     putpixel(bmp_screen, pUnit.center_draw_x(), pUnit.center_draw_y(), makecol(255, 0, 255));
     alfont_textprintf(bmp_screen, game_font, pUnit.draw_x(), pUnit.draw_y(), makecol(255, 255, 255), "%d", i);
@@ -496,7 +490,7 @@ void cMap::draw_units_2nd() {
 //            }
         }
 
-        if (DEBUGGING && key[KEY_D]) {
+        if (DEBUGGING) {
             drawUnitDebug(i, pUnit);
         }
     }
