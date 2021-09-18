@@ -454,15 +454,9 @@ void cGame::stateMentat(cAbstractMentat *pMentat) {
     if (iAlphaScreen == 0)
         iFadeAction = 2;
     // -----------------
-
     draw_sprite(bmp_screen, bmp_backgroundMentat, 0, 0);
 
-	// draw speaking animation, and text, etc
-    if (pMentat == nullptr) {
-        cTextDrawer textDrawer(game_font);
-        textDrawer.drawText(100, 100, "THIS IS WRONG 2 !!");
-        return;
-    }
+    mouse_tile = MOUSE_NORMAL;
 
     pMentat->draw();
     pMentat->interact();
