@@ -1346,6 +1346,12 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureT
     return pStructureFactory->createStructure(destinationCell, iStructureTypeId, getId(), healthPercentage);
 }
 
+/**
+ * Place building list item
+ * @param destinationCell
+ * @param itemToPlace
+ * @return
+ */
 cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *itemToPlace) {
     int iStructureTypeId = itemToPlace->getBuildId();
     cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
@@ -1780,30 +1786,8 @@ s_PlaceResult cPlayer::canPlaceConcreteAt(int iCell, int iStructureType) {
         return result;
     }
 
-    // checks if this structure can be placed on this cell
-    int w = structures[iStructureType].bmp_width/TILESIZE_WIDTH_PIXELS;
-    int h = structures[iStructureType].bmp_height/TILESIZE_HEIGHT_PIXELS;
-
-    int x = map.getCellX(iCell);
-    int y = map.getCellY(iCell);
-
-    bool foundUnitFromOtherPlayerThanMe = false;
-
-    for (int cx = 0; cx < w; cx++) {
-        for (int cy = 0; cy < h; cy++) {
-            int cll = map.getCellWithMapBorders(cx + x, cy + y);
-
-            if (!result.badTerrain && !map.isValidTerrainForConcreteAtCell(cll)) {
-                result.badTerrain = true;
-            }
-
-            // we don't care about unit/structures being there, we place slabs only where we can, so this
-            // function ignores the presence of any structures/units
-        }
-    }
-
-    result.success = (result.badTerrain == false && result.unitIds.empty() && result.structureIds.empty());
-    result.onlyMyUnitsBlock = (result.badTerrain == false && !foundUnitFromOtherPlayerThanMe && result.structureIds.empty());
+    result.success = true;
+    result.onlyMyUnitsBlock = false;
 
     return result;
 }

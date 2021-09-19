@@ -36,7 +36,7 @@ cAbstractStructure *cStructureFactory::createStructureInstance(int type) {
     if (type == IX)      return new cIx;
     if (type == WOR)      return new cWor;
     if (type == BARRACKS)      return new cBarracks;
-	return NULL;
+	return nullptr;
 }
 
 void cStructureFactory::deleteStructureInstance(cAbstractStructure *pStructure) {
