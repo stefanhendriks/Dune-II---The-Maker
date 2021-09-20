@@ -285,7 +285,7 @@
 #define EXPL_TANK_TWO     25  // another explosion of a tank etc
 
 // Particle types
-#define PARTYPE_SMOKE		1
+#define PARTICLE_MOVE		1
 #define PARTYPE_REPAIRBLINK 2
 
 // smudge

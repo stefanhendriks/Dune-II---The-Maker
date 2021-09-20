@@ -1,5 +1,4 @@
 /*
-/*
 
   Dune II - The Maker
 
@@ -8,45 +7,25 @@
   Website: http://dune2themaker.fundynamic.com
 
   2001 - 2021 (c) code by Stefan Hendriks
-
-  ---------------------------------------------------
-  Particle = every effect in the game:
-
- - smoke pufs
- - move indicator
- etc.
-
- most stuff = hardcoded
-
- Nice thing is, every particle = related with the bitmap id. Each bitmap can behave differently;
- by adding code to the 'think' function.
-
- TODO: make main class and sub-classes?
 */
-
 
 #include "../../include/d2tmh.h"
 
-
-// TODO: constructor/destructor
-
 // init
 void cParticle::init() {
-    // used or not:
-    bAlive=false;       // alive
+    bAlive=false;       // alive (if yes, it is in use, if not it can be used)
+    iAlpha=-1;			// alpha number
 
-    iAlpha=-1;			// alpha
+    frameWidth=32;      // default width of frame
+    frameHeight=frameWidth;
 
-    iWidth=32;          // default width of frame
-    iHeight=iWidth;
-
-    // Drawing effects
     x=0;
     y=0;              // x and y position to draw (absolute numbers)
-    iFrame=0;         // frame
+    frameIndex=0;
     iType=0;          // type
 
     layer=0;          // default layer = 0 (on top)
+    bmp = nullptr;
 
     iHousePal=-1;     // when specified, use this palette for drawing (and its an 8 bit picture then!)
 
@@ -63,12 +42,12 @@ bool cParticle::isValid() {
 }
 
 int cParticle::draw_x() {
-    int bmpOffset = (iWidth/2) * -1;
+    int bmpOffset = (frameWidth / 2) * -1;
     return mapCamera->getWindowXPositionWithOffset(x, bmpOffset);
 }
 
 int cParticle::draw_y() {
-    int bmpOffset = (iHeight/2) * -1;
+    int bmpOffset = (frameHeight / 2) * -1;
     return mapCamera->getWindowYPositionWithOffset(y, bmpOffset);
 }
 
@@ -86,7 +65,7 @@ void cParticle::draw() {
         return;
 
     // valid in boundaries
-    BITMAP *temp = create_bitmap(iWidth, iHeight);
+    BITMAP *temp = create_bitmap(frameWidth, frameHeight);
 
     // transparency
     clear_to_color(temp, makecol(255,0,255));
@@ -97,21 +76,27 @@ void cParticle::draw() {
         select_palette(player.pal);
     }
 
-    allegroDrawer->blitFromGfxData(iType, temp, (iWidth * iFrame), 0, iWidth, iHeight, 0, 0);
+    if (bmp) {
+        // new behavior
+        allegroDrawer->blit(bmp, temp, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
+    } else {
+        // old behavior
+        allegroDrawer->blitFromGfxData(iType, temp, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
+    }
 
     // create proper sized bitmap
-    int bmp_width = mapCamera->factorZoomLevel(iWidth);
-    int bmp_height = mapCamera->factorZoomLevel(iHeight);
+    int bmp_width = mapCamera->factorZoomLevel(frameWidth);
+    int bmp_height = mapCamera->factorZoomLevel(frameHeight);
 
     // create bmp that is the stretched version of temp
     BITMAP *stretched = create_bitmap(bmp_width + 1, bmp_height + 1);
     clear_to_color(stretched, makecol(255, 0, 255)); // mask color
-    allegroDrawer->maskedStretchBlit(temp, stretched, 0, 0, iWidth, iHeight, 0, 0, bmp_width, bmp_height);
+    allegroDrawer->maskedStretchBlit(temp, stretched, 0, 0, frameWidth, frameHeight, 0, 0, bmp_width, bmp_height);
 
     // temp is no longer needed
     destroy_bitmap(temp);
 
-    // drawX and drawY = is the draw coordinates but centered within cell (iWidth/Height are the cell size?)
+    // drawX and drawY = is the draw coordinates but centered within cell (frameWidth/Height are the cell size?)
     int drawX = dx;
     int drawY = dy;
 
@@ -175,10 +160,10 @@ void cParticle::think() {
 
         if (TIMER_frame < 0)
         {
-            iFrame++;
+            frameIndex++;
             TIMER_frame=100+rnd(100);
 
-            if (iFrame > 5)
+            if (frameIndex > 5)
                 bAlive=false;
 
             iAlpha-=16;
@@ -193,13 +178,13 @@ void cParticle::think() {
         if (TIMER_frame < 0)
         {
             TIMER_frame = 15;
-            iFrame++;
+            frameIndex++;
         }
 
-        if (iFrame > 9)
+        if (frameIndex > 9)
         {
             iAlpha-=35;
-            iFrame=9;
+            frameIndex=9;
 
             if (iAlpha < 10)
                 bAlive=false;
@@ -214,12 +199,12 @@ void cParticle::think() {
 
         if (TIMER_frame < 0)
         {
-         iFrame++;
+         frameIndex++;
 
 
-         if (iFrame > 2)
+         if (frameIndex > 2)
          {
-            iFrame=2;
+             frameIndex=2;
             iAlpha -=10;
 
             if (iAlpha < 10)
@@ -243,10 +228,10 @@ void cParticle::think() {
             iAlpha-=20;
             TIMER_frame=5;
 
-            if (iFrame < 1 && iAlpha < 220)
-                iFrame++;
+            if (frameIndex < 1 && iAlpha < 220)
+                frameIndex++;
 
-            if (iFrame >= 1 && iAlpha < 10)
+            if (frameIndex >= 1 && iAlpha < 10)
                 bAlive=false;
 
         }
@@ -269,10 +254,10 @@ void cParticle::think() {
         if (TIMER_frame < 0)
         {
             TIMER_frame = 50;
-            iFrame++;
+            frameIndex++;
 
-            if (iFrame > 2)
-                iFrame = 0;
+            if (frameIndex > 2)
+                frameIndex = 0;
 
             if (TIMER_dead < 0)
             {
@@ -324,9 +309,9 @@ void cParticle::think() {
         {
             TIMER_frame = 15;
 
-            iFrame++;
+            frameIndex++;
 
-            if (iFrame > 7)
+            if (frameIndex > 7)
                 bAlive=false;
         }
 
@@ -362,11 +347,11 @@ void cParticle::think() {
         {
             TIMER_frame=10;
 
-            iFrame++;
+            frameIndex++;
 
-            if (iFrame > 1)
+            if (frameIndex > 1)
             {
-                iFrame=1;
+                frameIndex=1;
 
                 iAlpha-=25;
 
@@ -385,11 +370,11 @@ void cParticle::think() {
         {
             TIMER_frame=10;
 
-            iFrame++;
+            frameIndex++;
 
-            if (iFrame > 3)
+            if (frameIndex > 3)
             {
-                iFrame=4;
+                frameIndex=4;
 
                 iAlpha-=35;
 
@@ -405,16 +390,16 @@ void cParticle::think() {
 
         if (TIMER_frame < 0)
         {
-            if (iFrame <= 3)
+            if (frameIndex <= 3)
                 TIMER_frame=100;
             else
                 TIMER_frame=20;
 
-            iFrame++;
+            frameIndex++;
 
-            if (iFrame > 3)
+            if (frameIndex > 3)
             {
-                iFrame=4;
+                frameIndex=4;
 
                 iAlpha-=5;
 
@@ -435,16 +420,16 @@ void cParticle::think() {
         if (TIMER_frame < 0) {
 
             // delay for next frame(s)
-            if (iFrame <= 3) {
+            if (frameIndex <= 3) {
                 TIMER_frame = 28;
             } else {
                 TIMER_frame = 10;
             }
 
-            iFrame++;
+            frameIndex++;
 
-            if (iFrame > 3) {
-                iFrame = 4;
+            if (frameIndex > 3) {
+                frameIndex = 4;
 
                 iAlpha -= 15;
 
@@ -460,16 +445,16 @@ void cParticle::think() {
         TIMER_frame--;
 
         if (TIMER_frame < 0) {
-            iFrame++;
+            frameIndex++;
 
             // delay for next frame(s)
-            if (iFrame <= 3) {
+            if (frameIndex <= 3) {
                 // begins slow, and speeds up after each frame
-//                TIMER_frame = (4 - iFrame) * 32;
+//                TIMER_frame = (4 - frameIndex) * 32;
                 TIMER_frame = 80;
             } else {
                 // frame will stick at 4 (eaten)
-                iFrame = 4;
+                frameIndex = 4;
 
                 // fade out
                 iAlpha -= 15;
@@ -489,8 +474,8 @@ void cParticle::think() {
         if (TIMER_frame < 0)
         {
             TIMER_frame=10;
-            iFrame++;
-            if (iFrame > 1)
+            frameIndex++;
+            if (frameIndex > 1)
                 bAlive=false;
 
         }
@@ -547,12 +532,12 @@ void cParticle::think() {
         {
             TIMER_frame=20;
 
-            iFrame++;
+            frameIndex++;
 
 
 
-            if (iFrame > 2)
-                iFrame=0;
+            if (frameIndex > 2)
+                frameIndex=0;
 
             if (TIMER_dead < 0)
             {
@@ -580,7 +565,12 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         return;
 
     cParticle &pParticle = particle[iNewId];
-    pParticle.init();
+    if (iType > -1 && iType < MAX_PARTICLE_TYPES) {
+        s_Particle &sParticle = particleInfo[iType];
+        pParticle.init(sParticle);
+    } else {
+        pParticle.init();
+    }
 
     pParticle.x = x;
     pParticle.y = y;
@@ -588,7 +578,7 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     pParticle.iType = iType;
 
     // depending on type, set TIMER_dead & FRAME & FRAME TIME
-    pParticle.iFrame = 0;
+    pParticle.frameIndex = 0;
     pParticle.TIMER_dead = 0;
     pParticle.TIMER_frame = 10;
 
@@ -607,16 +597,16 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     if (iType == EXPLOSION_TRIKE)
     {
         pParticle.iAlpha=255;
-        pParticle.iWidth=48;
-        pParticle.iHeight=48;
+        pParticle.frameWidth=48;
+        pParticle.frameHeight=48;
         PARTICLE_CREATE(x, y, OBJECT_BOOM03, -1, 0);
     }
 
     if (iType == OBJECT_SMOKE)
     {
         pParticle.iAlpha=0;
-        pParticle.iWidth=32;
-        pParticle.iHeight=48;
+        pParticle.frameWidth=32;
+        pParticle.frameHeight=48;
         pParticle.TIMER_dead=900;
         PARTICLE_CREATE(x+16, y+42, OBJECT_SMOKE_SHADOW, -1, -1);
     }
@@ -624,8 +614,8 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     if (iType == OBJECT_SMOKE_SHADOW)
     {
         pParticle.iAlpha=0;
-        pParticle.iWidth=36;
-        pParticle.iHeight=38;
+        pParticle.frameWidth=36;
+        pParticle.frameHeight=38;
         pParticle.TIMER_dead=1000;
     }
 
@@ -638,8 +628,8 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     if (iType == BULLET_PUF)
     {
-        pParticle.iHeight = 18;
-        pParticle.iWidth  = 18;
+        pParticle.frameHeight = 18;
+        pParticle.frameWidth  = 18;
         pParticle.iAlpha  = -1;
     }
 
@@ -660,8 +650,8 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     // tanks exploding
     if (iType == OBJECT_WORMEAT) {
         pParticle.iAlpha=255;
-        pParticle.iWidth=48;
-        pParticle.iHeight=48;
+        pParticle.frameWidth=48;
+        pParticle.frameHeight=48;
         pParticle.TIMER_frame=80; // 2,5 * 32 (a tad slower than on 3 frames)
     }
 
@@ -677,16 +667,16 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
             PARTICLE_CREATE(x, y, OBJECT_BOOM02, -1, 0);
 
         pParticle.iAlpha=255;
-        pParticle.iWidth=48;
-        pParticle.iHeight=48;
+        pParticle.frameWidth=48;
+        pParticle.frameHeight=48;
     }
 
     // worm trail
     if (iType == OBJECT_WORMTRAIL)
     {
         pParticle.iAlpha=96;
-        pParticle.iWidth=48;
-        pParticle.iHeight=48;
+        pParticle.frameWidth=48;
+        pParticle.frameHeight=48;
 
         pParticle.layer=1; // other layer
     }
@@ -701,11 +691,11 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     if (iType == OBJECT_TANKSHOOT || iType == OBJECT_SIEGESHOOT)
     {
-        pParticle.iFrame=iFrame;
+        pParticle.frameIndex=iFrame;
         pParticle.TIMER_dead = 50;
         pParticle.iAlpha=128;
-        pParticle.iWidth=64;
-        pParticle.iHeight=64;
+        pParticle.frameWidth=64;
+        pParticle.frameHeight=64;
     }
 
     if (iType == EXPLOSION_SQUISH01 ||
@@ -713,11 +703,11 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         iType == EXPLOSION_SQUISH03 ||
         iType == EXPLOSION_ORNI)
     {
-        pParticle.iFrame=0;
+        pParticle.frameIndex=0;
         pParticle.TIMER_frame = 50;
-        pParticle.iWidth=32;
+        pParticle.frameWidth=32;
         pParticle.iAlpha=255;
-        pParticle.iHeight=32;
+        pParticle.frameHeight=32;
         pParticle.layer=1;
     }
 
@@ -732,10 +722,10 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     if (iType == OBJECT_CARRYPUFF)
     {
-        pParticle.iFrame=0;
+        pParticle.frameIndex=0;
         pParticle.TIMER_frame= 50 + rnd(50);
-        pParticle.iWidth=96;
-        pParticle.iHeight=96;
+        pParticle.frameWidth=96;
+        pParticle.frameHeight=96;
         pParticle.layer=1;
         pParticle.iAlpha= 96 + rnd(64);
     }
@@ -749,22 +739,22 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     if (iType == OBJECT_BOOM01)
     {
         pParticle.iAlpha=240;
-        pParticle.iWidth=512;
-        pParticle.iHeight=512;
+        pParticle.frameWidth=512;
+        pParticle.frameHeight=512;
     }
 
     if (iType == OBJECT_BOOM02)
     {
         pParticle.iAlpha=230;
-        pParticle.iWidth=256;
-        pParticle.iHeight=256;
+        pParticle.frameWidth=256;
+        pParticle.frameHeight=256;
     }
 
     if (iType == OBJECT_BOOM03)
     {
         pParticle.iAlpha=220;
-        pParticle.iWidth=128;
-        pParticle.iHeight=128;
+        pParticle.frameWidth=128;
+        pParticle.frameHeight=128;
     }
 }
 
@@ -775,6 +765,11 @@ int cParticle::findNewSlot() {
     }
 
     return -1;
+}
+
+void cParticle::init(s_Particle &particleInfo) {
+    init();
+    bmp = particleInfo.bmp;
 }
 
 /**
