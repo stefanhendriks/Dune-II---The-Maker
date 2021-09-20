@@ -10,43 +10,46 @@
 
   */
 
-// - see in .cpp file what it is
-
-//
-
-class cParticle
-{
+class cParticle {
 public:
 
     // used or not:
     bool bAlive;        // alive
 
     // Drawing effects
-    long x, y;			// x and y position to draw (absolute numbers). This is the 'center' of a particle, not top left!
+    long x, y;            // x and y position to draw (absolute numbers). This is the 'center' of a particle, not top left!
     int iFrame;         // frame
     int iType;          // type
-	int iAlpha;			// alpha
+    int iAlpha;            // alpha
 
     int iWidth;         // width of frame
     int iHeight;        // height of frame
-    
+
     // TIMERS
     int TIMER_frame;    // frame animation timers (when < 0, next frame, etc)
-                        // when TIMER_dead < 0, the last frame lets this thing die
+    // when TIMER_dead < 0, the last frame lets this thing die
 
     int TIMER_dead;     // when > -1, this timer will determine when the thing dies
 
     int layer;          // when to draw
-    
+
     int iHousePal;      // when specified, use this palette for drawing (and its an 8 bit picture then!)
 
     // ---------
     int draw_x();
+
     int draw_y();
+
     void draw();
-    bool isValid();        
+
+    bool isValid();
+
     void init();
+
     void think();       // particles do some sort of thinking , really! :)
+
+    static void create(long x, long y, int iType, int iHouse, int iFrame);
+    static int findNewSlot();
 };
 
 void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame);

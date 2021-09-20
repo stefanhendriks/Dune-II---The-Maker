@@ -198,6 +198,10 @@ struct s_House {
 };
 
 
+struct s_Particle {
+
+};
+
 struct s_Bullet {
     BITMAP *bmp;        // a reference to its bitmap. (16 bits here!)
     int deadbmp;        // when the bullet dies, it will use this bmp to show its animation

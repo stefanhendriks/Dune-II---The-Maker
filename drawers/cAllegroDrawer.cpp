@@ -238,3 +238,7 @@ void cAllegroDrawer::setClippingFor(BITMAP *bmp, int topLeftX, int topLeftY, int
     if (!bmp) return;
     set_clip_rect(bmp, topLeftX, topLeftY, bottomRightX, bottomRightY);
 }
+
+void cAllegroDrawer::blitFromGfxData(int index, BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
+    blit((BITMAP *) gfxdata[index].dat, dest, src_x, src_y, width, height, pos_x, pos_y);
+}
