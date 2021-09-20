@@ -767,7 +767,7 @@ int cParticle::findNewSlot() {
     return -1;
 }
 
-void cParticle::init(s_Particle &particleInfo) {
+void cParticle::init(const s_Particle &particleInfo) {
     init();
     bmp = particleInfo.bmp;
 }
