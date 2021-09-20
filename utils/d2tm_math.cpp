@@ -102,20 +102,12 @@ float fDegrees(int x1, int y1, int x2, int y2)
   return angle;
 }
 
-// for bullets; bullets have twice as many facing's. (16).
-int bullet_face_angle(float angle)
-{
+// for bullets; bullets have twice as many angles (facings) than units. (16)
+int bullet_face_angle(float angle) {
   int a = (int)angle;
-  int chop = (45/2);        // 45/2 fDegrees is one chop now
-  a = (abs)(a-360);
+  int chop = (45/2);        // 45/2 fDegrees is one chop now (TODO: Make this configurable)
+  a = abs(a-360);
   return (a/chop);
-}
-
-// Return the correct face angle (for drawing that is)
-int bullet_correct_angle(int face_angle)
-{
-  int fa=face_angle;
-  return fa;
 }
 
 // Give correct facing angle, used in MAIN.H
