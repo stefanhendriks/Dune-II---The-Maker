@@ -13,17 +13,22 @@
   */
 
 
-class cBullet
-{
+class cBullet {
 
 public:
 
     void init();
+
     void draw();
+
     int pos_x() const;
+
     int pos_y() const;
-    int  draw_x();
-    int  draw_y();
+
+    int draw_x();
+
+    int draw_y();
+
     void think();       // think (when dying, doing damage, etc)
     void think_move();  // thinking for movement
 
@@ -31,7 +36,7 @@ public:
 
     int iCell;          // cell of bullet - calculated in think_move() based on posX/posY
     int iType;          // type of bullet    
-    
+
     int iOwnerUnit;     // unit who shoots
     int iOwnerStructure;// structure who shoots (rocket/normal turret for example)
     int iPlayer;        // what player shot this? (for damage control)
@@ -54,13 +59,14 @@ public:
 private:
 
     int getBulletBmpWidth() const;
+
     int getBulletBmpHeight() const;
 
     void die();
 
     void damageStructure(int idOfStructureAtCell, double factor);
 
-    cPlayer * getPlayer() const;
+    cPlayer *getPlayer() const;
 
     float getDamageToInflictToNonInfantry() const;
 
