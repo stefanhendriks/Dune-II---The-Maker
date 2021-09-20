@@ -601,7 +601,7 @@ void install_units() {
 
 void install_particles() {
     for (int i = 0; i < MAX_SPECIALTYPES; i++) {
-        particleInfo[i].
+//        particleInfo[i]
     }
 }
 

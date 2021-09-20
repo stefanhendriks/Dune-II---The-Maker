@@ -26,7 +26,6 @@
 
 
 #include "../../include/d2tmh.h"
-#include "cParticle.h"
 
 
 // TODO: constructor/destructor
@@ -98,7 +97,7 @@ void cParticle::draw() {
         select_palette(player.pal);
     }
 
-    allegroDrawer->blitFromGfxData(iType, temp, (iWidth * iFrame), 0, 0, 0, iWidth, iHeight);
+    allegroDrawer->blitFromGfxData(iType, temp, (iWidth * iFrame), 0, iWidth, iHeight, 0, 0);
 
     // create proper sized bitmap
     int bmp_width = mapCamera->factorZoomLevel(iWidth);

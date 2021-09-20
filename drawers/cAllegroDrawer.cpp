@@ -166,6 +166,7 @@ int cAllegroDrawer::getCenteredYPosForBitmap(BITMAP *bmp) {
 
 void cAllegroDrawer::blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
     // use :: so we use global scope Allegro blitSprite
+    if (src == nullptr || dest == nullptr) return;
     ::blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
 }
 
@@ -239,6 +240,7 @@ void cAllegroDrawer::setClippingFor(BITMAP *bmp, int topLeftX, int topLeftY, int
     set_clip_rect(bmp, topLeftX, topLeftY, bottomRightX, bottomRightY);
 }
 
-void cAllegroDrawer::blitFromGfxData(int index, BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
-    blit((BITMAP *) gfxdata[index].dat, dest, src_x, src_y, width, height, pos_x, pos_y);
+void cAllegroDrawer::blitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
+    BITMAP *src = (BITMAP *) gfxdata[index].dat;
+    this->blit(src, dest, src_x, src_y, width, height, pos_x, pos_y);
 }
