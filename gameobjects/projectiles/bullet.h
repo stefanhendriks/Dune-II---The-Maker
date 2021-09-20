@@ -1,5 +1,7 @@
 #include <player/cPlayerDifficultySettings.h>
 
+static const int ANIMATION_SPEED = 12;
+
 /*
 
   Dune II - The Maker

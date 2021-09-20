@@ -203,10 +203,11 @@ struct s_Bullet {
     int deadbmp;        // when the bullet dies, it will use this bmp to show its animation
     int bmp_width;      // how much pixels a bullet is (wide)
 
-    int damage;         // how much damage it does -> vehicles
-    int damage_inf;     // how much damage it does -> infantry
+    int damage;         // how much damage it does to vehicles
+    int damage_inf;     // how much damage it does to infantry
     int explosionSize;  // square like explosion, defaults 1 (=1x1 tile), 2 means 2x2, etc.
-    int max_frames;     // when > 0 it animates automatically
+    int smokeParticle;   // spawn smoke particles while traveling? (if > -1)
+    int max_frames;     // when > 0 it animates automatically so many frames. If you want to flicker between frame 0 and 1, max_frames should be 1
     int max_deadframes; // max dead frames
 
     int sound;          // Sound produced when 'shot' (or explosion sound)
