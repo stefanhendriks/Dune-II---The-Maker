@@ -46,7 +46,7 @@ public:
     bool isValid();
 
     void init();
-    void init(s_Particle &particleInfo);
+    void init(const s_Particle &particleInfo);
 
     void think();       // particles do some sort of thinking , really! :)
 
