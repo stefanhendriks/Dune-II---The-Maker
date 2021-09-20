@@ -17,10 +17,10 @@ public:
     cBuildingListItem(eBuildType type, int buildId, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList, bool queuable);
 
 	// easier constructors (they have no LIST, this is intentional and assigned later to the item by add**toList functions in the cBuildingList.cpp class
-    cBuildingListItem(int theID, s_Structures entry, int subList);
-    cBuildingListItem(int theID, s_Special entry, int subList);
-    cBuildingListItem(int theID, s_UnitP entry, int subList);
-    cBuildingListItem(int theID, s_Upgrade entry, int subList);
+    cBuildingListItem(int theID, s_StructureInfo entry, int subList);
+    cBuildingListItem(int theID, s_SpecialInfo entry, int subList);
+    cBuildingListItem(int theID, s_UnitInfo entry, int subList);
+    cBuildingListItem(int theID, s_UpgradeInfo entry, int subList);
 
     static const int DefaultTimerCap = 35;
     static const int DebugTimerCap = 2;
@@ -72,10 +72,10 @@ public:
 	int getSlotId() { return slotId; } // return index of items[] array (set after adding item to list, default is < 0)
 	int getTimesOrdered() { return timesOrdered; }
 
-	s_Special getS_Special();
-	s_Upgrade getS_Upgrade();
-	s_UnitP getS_UnitP();
-	s_Structures getS_Structures();
+	s_SpecialInfo& getS_Special();
+	s_UpgradeInfo& getS_Upgrade();
+	s_UnitInfo& getS_UnitP();
+	s_StructureInfo& getS_Structures();
 
 	int getCosts();
 
@@ -193,10 +193,10 @@ private:
 
 	cBuildingList *myList;
 
-    cBuildingListItem(int theID, s_Structures entry, cBuildingList* list, int subList);
-    cBuildingListItem(int theID, s_UnitP entry, cBuildingList* list, int subList);
-    cBuildingListItem(int theID, s_Upgrade entry, cBuildingList* list, int subList);
-    cBuildingListItem(int theID, s_Special entry, cBuildingList *list, int subList);
+    cBuildingListItem(int theID, s_StructureInfo entry, cBuildingList* list, int subList);
+    cBuildingListItem(int theID, s_UnitInfo entry, cBuildingList* list, int subList);
+    cBuildingListItem(int theID, s_UpgradeInfo entry, cBuildingList* list, int subList);
+    cBuildingListItem(int theID, s_SpecialInfo entry, cBuildingList *list, int subList);
 
     bool isType(eBuildType value);
 };

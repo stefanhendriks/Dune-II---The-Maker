@@ -54,7 +54,7 @@ void cRefinery::think_unit_occupation() {
         int iAmount = 5;
 
         // cap at max
-        s_UnitP &unitType = unitInfo[cUnit.iType];
+        s_UnitInfo &unitType = sUnitInfo[cUnit.iType];
 
         if (cUnit.iCredits > unitType.credit_capacity) {
             cUnit.iCredits = unitType.credit_capacity;
@@ -125,6 +125,6 @@ void cRefinery::think_guard()
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cRefinery::getSpiceSiloCapacity() {
-	float percentage = ((float)getHitPoints() / (float)structures[getType()].hp);
+	float percentage = ((float)getHitPoints() / (float)sStructureInfo[getType()].hp);
 	return 1000 * percentage;
 }

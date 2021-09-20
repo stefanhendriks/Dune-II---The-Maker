@@ -49,7 +49,7 @@ cBuildingListItem::~cBuildingListItem() {
  * @param list
  * @param subList
  */
-cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingList *list, int subList) :
+cBuildingListItem::cBuildingListItem(int theID, s_StructureInfo entry, cBuildingList *list, int subList) :
                     cBuildingListItem(STRUCTURE, theID, entry.cost, entry.icon, entry.build_time, list, subList, entry.queuable) {
 }
 
@@ -60,7 +60,7 @@ cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, cBuildingLis
  * @param list
  * @param subList
  */
-cBuildingListItem::cBuildingListItem(int theID, s_Special entry, cBuildingList *list, int subList) :
+cBuildingListItem::cBuildingListItem(int theID, s_SpecialInfo entry, cBuildingList *list, int subList) :
                     cBuildingListItem(SPECIAL, theID, 0, entry.icon, entry.buildTime, list, subList, false) {
 }
 
@@ -71,14 +71,14 @@ cBuildingListItem::cBuildingListItem(int theID, s_Special entry, cBuildingList *
  * @param list
  * @param subList
  */
-cBuildingListItem::cBuildingListItem(int theID, s_Upgrade entry, cBuildingList *list, int subList) :
+cBuildingListItem::cBuildingListItem(int theID, s_UpgradeInfo entry, cBuildingList *list, int subList) :
                     cBuildingListItem(UPGRADE, theID, entry.cost, entry.icon, entry.buildTime, list, subList, false) {
 }
 
-cBuildingListItem::cBuildingListItem(int theID, s_Structures entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
+cBuildingListItem::cBuildingListItem(int theID, s_StructureInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
 }
 
-cBuildingListItem::cBuildingListItem(int theID, s_Special entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
+cBuildingListItem::cBuildingListItem(int theID, s_SpecialInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
 }
 
 /**
@@ -88,25 +88,25 @@ cBuildingListItem::cBuildingListItem(int theID, s_Special entry, int subList) : 
  * @param list
  * @param subList
  */
-cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, cBuildingList *list, int subList) :
+cBuildingListItem::cBuildingListItem(int theID, s_UnitInfo entry, cBuildingList *list, int subList) :
                     cBuildingListItem(UNIT, theID, entry.cost, entry.icon, entry.build_time, list, subList, entry.queuable) {
 }
 
-cBuildingListItem::cBuildingListItem(int theID, s_UnitP entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
+cBuildingListItem::cBuildingListItem(int theID, s_UnitInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
 }
 
-cBuildingListItem::cBuildingListItem(int theID, s_Upgrade entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
+cBuildingListItem::cBuildingListItem(int theID, s_UpgradeInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList) {
 }
 
 int cBuildingListItem::getCosts() {
     int costs = 0;
 
     if (type == UNIT) {
-        costs = unitInfo[buildId].cost;
+        costs = sUnitInfo[buildId].cost;
     } else if (type == STRUCTURE) {
-        costs = structures[buildId].cost;
+        costs = sStructureInfo[buildId].cost;
     } else if (type == UPGRADE) {
-        costs = upgrades[buildId].cost;
+        costs = sUpgradeInfo[buildId].cost;
     }
     return costs;
 }
@@ -138,16 +138,16 @@ void cBuildingListItem::increaseProgress(int byAmount) {
 int cBuildingListItem::getBuildTime() {
 //    if (DEBUGGING) return 1;
     if (type == STRUCTURE) {
-        return structures[buildId].build_time;
+        return sStructureInfo[buildId].build_time;
     }
     if (type == UPGRADE) {
-        return upgrades[buildId].buildTime;
+        return sUpgradeInfo[buildId].buildTime;
     }
     if (type == SPECIAL) {
-        return specialInfo[buildId].buildTime;
+        return sSpecialInfo[buildId].buildTime;
     }
     // assumes units by default
-    return unitInfo[buildId].build_time;
+    return sUnitInfo[buildId].build_time;
 }
 
 bool cBuildingListItem::isDoneBuilding() {
@@ -174,40 +174,40 @@ bool cBuildingListItem::isType(eBuildType value) {
     return getBuildType() == value;
 }
 
-s_Upgrade cBuildingListItem::getS_Upgrade() {
+s_UpgradeInfo& cBuildingListItem::getS_Upgrade() {
     int buildId = getBuildId();
     if (getBuildType() != eBuildType::UPGRADE){
         logbook("ERROR!!! - calling getS_Upgrade while type is not UPGRADE! - falling back to buildId 1 as safety");
         buildId = 1;
     }
-    return upgrades[buildId];
+    return sUpgradeInfo[buildId];
 }
 
-s_Special cBuildingListItem::getS_Special() {
+s_SpecialInfo& cBuildingListItem::getS_Special() {
     int buildId = getBuildId();
     if (getBuildType() != eBuildType::SPECIAL){
         logbook("ERROR!!! - calling gets_Special while type is not SPECIAL! - falling back to buildId 1 as safety");
         buildId = 1;
     }
-    return specialInfo[buildId];
+    return sSpecialInfo[buildId];
 }
 
-s_UnitP cBuildingListItem::getS_UnitP() {
+s_UnitInfo& cBuildingListItem::getS_UnitP() {
     int buildId = getBuildId();
     if (getBuildType() != eBuildType::UNIT){
         logbook("ERROR!!! - calling getS_UnitP while type is not UNIT! - falling back to buildId 1 as safety");
         buildId = 1;
     }
-    return unitInfo[buildId];
+    return sUnitInfo[buildId];
 }
 
-s_Structures cBuildingListItem::getS_Structures() {
+s_StructureInfo& cBuildingListItem::getS_Structures() {
     int buildId = getBuildId();
     if (getBuildType() != eBuildType::STRUCTURE){
         logbook("ERROR!!! - calling getS_Structures while type is not STRUCTURE! - falling back to buildId 1 as safety");
         buildId = 1;
     }
-    return structures[buildId];
+    return sStructureInfo[buildId];
 }
 
 void cBuildingListItem::resetTimesOrdered() {
@@ -273,16 +273,16 @@ const int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int build
     int buildTime = 0;
     switch (type) {
         case UNIT:
-            buildTime = unitInfo[buildId].build_time;
+            buildTime = sUnitInfo[buildId].build_time;
             break;
         case STRUCTURE:
-            buildTime = structures[buildId].build_time;
+            buildTime = sStructureInfo[buildId].build_time;
             break;
         case SPECIAL:
-            buildTime = specialInfo[buildId].buildTime;
+            buildTime = sSpecialInfo[buildId].buildTime;
             break;
         case UPGRADE:
-            buildTime = upgrades[buildId].buildTime;
+            buildTime = sUpgradeInfo[buildId].buildTime;
             break;
         case BULLET:
             buildTime = 0;
@@ -295,14 +295,14 @@ const int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int build
 const int cBuildingListItem::getListId(eBuildType type, int buildId) {
     switch (type) {
         case UNIT:
-            return unitInfo[buildId].listId;
+            return sUnitInfo[buildId].listId;
         case STRUCTURE:
-            return structures[buildId].list;
+            return sStructureInfo[buildId].list;
         case SPECIAL:
-            return specialInfo[buildId].listId;
+            return sSpecialInfo[buildId].listId;
             break;
         case UPGRADE:
-//            return upgrades[buildId].;
+//            return sUpgradeInfo[buildId].;
             return LIST_UPGRADES;
             break;
     }
@@ -312,7 +312,7 @@ const int cBuildingListItem::getListId(eBuildType type, int buildId) {
 const bool cBuildingListItem::isAutoBuild(eBuildType type, int buildId) {
     switch (type) {
         case SPECIAL:
-            return specialInfo[buildId].autoBuild;
+            return sSpecialInfo[buildId].autoBuild;
             break;
     }
     return false;

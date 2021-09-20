@@ -39,16 +39,16 @@ cDrawManager   			*	drawManager = NULL;
 
 cAllegroDrawer          *   allegroDrawer = nullptr;
 
-// Structs
-s_PreviewMap     			PreviewMap[MAX_SKIRMISHMAPS];
-s_House         			houses[MAX_HOUSES];
-s_Structures    			structures[MAX_STRUCTURETYPES];
-s_UnitP         			unitInfo[MAX_UNITTYPES];
-s_Upgrade                   upgrades[MAX_UPGRADETYPES];
-s_Special                   specialInfo[MAX_SPECIALTYPES];
-s_Bullet        			bullets[MAX_BULLET_TYPES];
-s_Particle        			particleInfo[MAX_PARTICLE_TYPES];
-sReinforcement  			reinforcements[MAX_REINFORCEMENTS];
+// Structs of all kinds of objects (*info)
+s_PreviewMap     			    PreviewMap[MAX_SKIRMISHMAPS];
+s_HouseInfo         			sHouseInfo[MAX_HOUSES];
+s_StructureInfo    			    sStructureInfo[MAX_STRUCTURETYPES];
+s_UnitInfo         			    sUnitInfo[MAX_UNITTYPES];
+s_UpgradeInfo                   sUpgradeInfo[MAX_UPGRADETYPES];
+s_SpecialInfo                   sSpecialInfo[MAX_SPECIALTYPES];
+s_BulletInfo        			sBulletInfo[MAX_BULLET_TYPES];
+s_ParticleInfo        			sParticleInfo[MAX_PARTICLE_TYPES];
+sReinforcement  			    reinforcements[MAX_REINFORCEMENTS];
 
 // palette
 PALETTE general_palette;

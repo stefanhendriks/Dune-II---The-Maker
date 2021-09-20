@@ -185,7 +185,7 @@ public:
 
     int TIMER_wormtrail;  // when to spawn a trail when moving
 
-    s_UnitP& getUnitType() const;
+    s_UnitInfo& getUnitType() const;
 
     /**
      * Return current health normalized (between 0.0 and 1.0)

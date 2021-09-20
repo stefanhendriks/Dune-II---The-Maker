@@ -2197,45 +2197,45 @@ void INI_Install_Game(string filename) {
                 // Valid ID
                 if (section == INI_UNITS && id > -1) {
                     // Unit properties
-                    if (wordtype == WORD_HITPOINTS) unitInfo[id].hp = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_HITPOINTS) sUnitInfo[id].hp = INI_WordValueINT(linefeed);
 
-                    if (wordtype == WORD_COST) unitInfo[id].cost = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_COST) sUnitInfo[id].cost = INI_WordValueINT(linefeed);
 
-                    if (wordtype == WORD_MOVESPEED) unitInfo[id].speed = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_TURNSPEED) unitInfo[id].turnspeed = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_ATTACKFREQ) unitInfo[id].attack_frequency = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_MOVESPEED) sUnitInfo[id].speed = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_TURNSPEED) sUnitInfo[id].turnspeed = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_ATTACKFREQ) sUnitInfo[id].attack_frequency = INI_WordValueINT(linefeed);
 
-                    if (wordtype == WORD_SIGHT) unitInfo[id].sight = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_SIGHT) sUnitInfo[id].sight = INI_WordValueINT(linefeed);
 
-                    if (wordtype == WORD_RANGE) unitInfo[id].range = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_BUILDTIME) unitInfo[id].build_time = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_RANGE) sUnitInfo[id].range = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_BUILDTIME) sUnitInfo[id].build_time = INI_WordValueINT(linefeed);
 
                     // Unit description
                     if (wordtype == WORD_DESCRIPTION) {
                         char n[256];
                         INI_WordValueCHAR(linefeed, n);
-                        sprintf(unitInfo[id].name, "%s", n);
+                        sprintf(sUnitInfo[id].name, "%s", n);
                     }
 
                     // Booleans
-                    if (wordtype == WORD_SECONDSHOT) unitInfo[id].fireTwice = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_ISINFANTRY) unitInfo[id].infantry = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_ISSQUISHABLE) unitInfo[id].canBeSquished = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_CANSQUISH) unitInfo[id].canBeSquished = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_FREEROAM) unitInfo[id].free_roam = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_ISAIRBORN) unitInfo[id].airborn = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_SECONDSHOT) sUnitInfo[id].fireTwice = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_ISINFANTRY) sUnitInfo[id].infantry = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_ISSQUISHABLE) sUnitInfo[id].canBeSquished = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_CANSQUISH) sUnitInfo[id].canBeSquished = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_FREEROAM) sUnitInfo[id].free_roam = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_ISAIRBORN) sUnitInfo[id].airborn = INI_WordValueBOOL(linefeed);
 
                     // Harvester specific properties.
-                    if (wordtype == WORD_HARVESTLIMIT) unitInfo[id].credit_capacity = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_HARVESTSPEED) unitInfo[id].harvesting_speed = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_HARVESTAMOUNT) unitInfo[id].harvesting_amount = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_HARVESTLIMIT) sUnitInfo[id].credit_capacity = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_HARVESTSPEED) sUnitInfo[id].harvesting_speed = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_HARVESTAMOUNT) sUnitInfo[id].harvesting_amount = INI_WordValueINT(linefeed);
 
                     if (wordtype == WORD_PRODUCER) {
                         string producerString = INI_WordValueString(linefeed);
                         // determine structure type from that
                         int type = INI_StructureType(producerString);
 //        	  int type = INI_StructureType(producerString.c_str());
-                        unitInfo[id].structureTypeItLeavesFrom = type;
+                        sUnitInfo[id].structureTypeItLeavesFrom = type;
                     }
                 }
             }
@@ -2243,15 +2243,15 @@ void INI_Install_Game(string filename) {
             // Structure w0h00
             if (section == INI_STRUCTURES && id > -1) {
                 if (wordtype == WORD_HITPOINTS) {
-                    structures[id].hp = INI_WordValueINT(linefeed);
+                    sStructureInfo[id].hp = INI_WordValueINT(linefeed);
                 }
-                if (wordtype == WORD_FIXHP) structures[id].fixhp = INI_WordValueINT(linefeed);
+                if (wordtype == WORD_FIXHP) sStructureInfo[id].fixhp = INI_WordValueINT(linefeed);
 
-                if (wordtype == WORD_POWERDRAIN) structures[id].power_drain = INI_WordValueINT(linefeed);
-                if (wordtype == WORD_POWERGIVE) structures[id].power_give = INI_WordValueINT(linefeed);
+                if (wordtype == WORD_POWERDRAIN) sStructureInfo[id].power_drain = INI_WordValueINT(linefeed);
+                if (wordtype == WORD_POWERGIVE) sStructureInfo[id].power_give = INI_WordValueINT(linefeed);
 
-                if (wordtype == WORD_COST) structures[id].cost = INI_WordValueINT(linefeed);
-                if (wordtype == WORD_BUILDTIME) structures[id].build_time = INI_WordValueINT(linefeed);
+                if (wordtype == WORD_COST) sStructureInfo[id].cost = INI_WordValueINT(linefeed);
+                if (wordtype == WORD_BUILDTIME) sStructureInfo[id].build_time = INI_WordValueINT(linefeed);
 
             }
 

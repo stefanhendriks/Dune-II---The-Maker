@@ -7,8 +7,8 @@ namespace brains {
     cPlayerBrainMissionKindSaboteur::cPlayerBrainMissionKindSaboteur(cPlayer *player, cPlayerBrainMission * mission) :  cPlayerBrainMissionKind(player, mission) {
         targetStructureID = -1;
         specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_CREATED; // saboteur created
-        specificBuildTypeToGoToSelectTargetState = specialInfo[SPECIAL_SABOTEUR].providesType;
-        specificBuildIdToGoToSelectTargetState = specialInfo[SPECIAL_SABOTEUR].providesTypeId;
+        specificBuildTypeToGoToSelectTargetState = sSpecialInfo[SPECIAL_SABOTEUR].providesType;
+        specificBuildIdToGoToSelectTargetState = sSpecialInfo[SPECIAL_SABOTEUR].providesTypeId;
     }
 
     cPlayerBrainMissionKindSaboteur::~cPlayerBrainMissionKindSaboteur() {

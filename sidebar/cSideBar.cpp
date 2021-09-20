@@ -90,20 +90,20 @@ void cSideBar::drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem
         int seconds = buildTimeInMs / 1000;
 
         if (item->isTypeStructure()) {
-            s_Structures structureType = item->getS_Structures();
+            s_StructureInfo structureType = item->getS_Structures();
             sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
         } else if (item->isTypeUnit()) {
-            s_UnitP unitType = item->getS_UnitP();
+            s_UnitInfo unitType = item->getS_UnitP();
             if (item->getBuildCost() > 0) {
                 sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), unitType.name, seconds);
             } else {
-                sprintf(msg, "%s", unitInfo[item->getBuildId()].name);
+                sprintf(msg, "%s", sUnitInfo[item->getBuildId()].name);
             }
         } else if (item->isTypeUpgrade()){
-            s_Upgrade upgrade = item->getS_Upgrade();
+            s_UpgradeInfo upgrade = item->getS_Upgrade();
             sprintf(msg, "UPGRADE: $%d | %s | %d Secs", item->getBuildCost(), upgrade.description, seconds);
         } else if (item->isTypeSpecial()) {
-            s_Special special = item->getS_Special();
+            s_SpecialInfo special = item->getS_Special();
             sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), special.description, seconds);
         } else {
             sprintf(msg, "UNKNOWN BUILD TYPE");

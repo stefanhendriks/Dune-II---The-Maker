@@ -27,7 +27,7 @@ cPlayerDifficultySettings::~cPlayerDifficultySettings() {
 }
 
 float cPlayerDifficultySettings::getMoveSpeed(int iUnitType, int slowDown) {
-    return (int)(unitInfo[iUnitType].speed) + ((float)slowDown * m_moveSpeedFactor);
+    return (int)(sUnitInfo[iUnitType].speed) + ((float)slowDown * m_moveSpeedFactor);
 }
 
 float cPlayerDifficultySettings::getBuildSpeed(int iSpeed) {

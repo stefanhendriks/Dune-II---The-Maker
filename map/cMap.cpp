@@ -133,7 +133,7 @@ bool cMap::canDeployUnitTypeAtCell(int iCell, int iUnitType) {
     if (iCell < 0 || iUnitType < 0)
         return false;
 
-    s_UnitP &unitToDeploy = unitInfo[iUnitType];
+    s_UnitInfo &unitToDeploy = sUnitInfo[iUnitType];
 
     bool isAirbornUnit = unitToDeploy.airborn;
     bool isInfantryUnit = unitToDeploy.infantry;
@@ -183,7 +183,7 @@ bool cMap::canDeployUnitAtCell(int iCell, int iUnitID) {
         return false;
     }
 
-    s_UnitP &unitToDeploy = unitInfo[pUnit.iNewUnitType];
+    s_UnitInfo &unitToDeploy = sUnitInfo[pUnit.iNewUnitType];
 
     bool isAirbornUnit = unitToDeploy.airborn;
     bool isInfantryUnit = unitToDeploy.infantry;
