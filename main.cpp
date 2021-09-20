@@ -40,14 +40,15 @@ cDrawManager   			*	drawManager = NULL;
 cAllegroDrawer          *   allegroDrawer = nullptr;
 
 // Structs
-s_PreviewMap     			PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory
+s_PreviewMap     			PreviewMap[MAX_SKIRMISHMAPS];
 s_House         			houses[MAX_HOUSES];
-s_Structures    			structures[MAX_STRUCTURETYPES];         // structure types
-s_UnitP         			unitInfo[MAX_UNITTYPES];              // unit types
-s_Upgrade                   upgrades[MAX_UPGRADETYPES];        // upgrade types
-s_Special                   specialInfo[MAX_SPECIALTYPES];        // special types
-s_Bullet        			bullets[MAX_BULLET_TYPES];          // bullet slots
-sReinforcement  			reinforcements[MAX_REINFORCEMENTS];  // reinforcement slots
+s_Structures    			structures[MAX_STRUCTURETYPES];
+s_UnitP         			unitInfo[MAX_UNITTYPES];
+s_Upgrade                   upgrades[MAX_UPGRADETYPES];
+s_Special                   specialInfo[MAX_SPECIALTYPES];
+s_Bullet        			bullets[MAX_BULLET_TYPES];
+s_Particle        			particleInfo[MAX_PARTICLE_TYPES];
+sReinforcement  			reinforcements[MAX_REINFORCEMENTS];
 
 // palette
 PALETTE general_palette;

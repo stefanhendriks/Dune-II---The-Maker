@@ -43,16 +43,16 @@ extern cStructureUtils structureUtils;
 extern cDrawManager   *drawManager;
 extern cAllegroDrawer      *allegroDrawer;
 
-extern s_PreviewMap    PreviewMap[MAX_SKIRMISHMAPS];      // max of 100 maps in skirmish directory
-
 // kinds of entities (houses, structures, units, upgrades, specials, bullets, reinforcements)
-extern s_House         houses[MAX_HOUSES];                //
-extern s_Structures    structures[MAX_STRUCTURETYPES];    // structure types
-extern s_UnitP         unitInfo[MAX_UNITTYPES];           // unit info
-extern s_Upgrade       upgrades[MAX_UPGRADETYPES];        // upgrade types
-extern s_Special       specialInfo[MAX_SPECIALTYPES];     // special info - for now super weapons
-extern s_Bullet        bullets[MAX_BULLET_TYPES];         // bullet slots
-extern sReinforcement  reinforcements[MAX_REINFORCEMENTS];// reinforcement slots
+extern s_PreviewMap     		PreviewMap[MAX_SKIRMISHMAPS];        // max of 100 maps in skirmish directory
+extern s_House         			houses[MAX_HOUSES];
+extern s_Structures    			structures[MAX_STRUCTURETYPES];
+extern s_UnitP         			unitInfo[MAX_UNITTYPES];
+extern s_Upgrade                upgrades[MAX_UPGRADETYPES];
+extern s_Special                specialInfo[MAX_SPECIALTYPES];
+extern s_Bullet        			bullets[MAX_BULLET_TYPES];
+extern s_Particle        		particleInfo[MAX_PARTICLE_TYPES];
+extern sReinforcement  			reinforcements[MAX_REINFORCEMENTS];
 
 // MP3 Music support
 extern ALMP3_MP3 *mp3_music;

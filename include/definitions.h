@@ -126,7 +126,10 @@
 #define MAX_STRUCTURETYPES  50    // max of building types
 
 // BULLETS stuff
-#define MAX_BULLET_TYPES      30    // max of 30 types of bullets
+#define MAX_BULLET_TYPES      30
+
+// PARTICLES
+#define MAX_PARTICLE_TYPES    30
 
 // Lists stuff
 #define MAX_ICONS       30      // max of 30 icons per list

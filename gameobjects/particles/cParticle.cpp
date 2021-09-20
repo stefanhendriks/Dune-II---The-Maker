@@ -26,6 +26,8 @@
 
 
 #include "../../include/d2tmh.h"
+#include "cParticle.h"
+
 
 // TODO: constructor/destructor
 
@@ -96,7 +98,7 @@ void cParticle::draw() {
         select_palette(player.pal);
     }
 
-    blit((BITMAP *) gfxdata[iType].dat, temp, (iWidth * iFrame), 0, 0, 0, iWidth, iHeight);
+    allegroDrawer->blitFromGfxData(iType, temp, (iWidth * iFrame), 0, 0, 0, iWidth, iHeight);
 
     // create proper sized bitmap
     int bmp_width = mapCamera->factorZoomLevel(iWidth);
@@ -132,15 +134,7 @@ void cParticle::draw() {
 
 
 // think
-void cParticle::think()
-{/*
-    if (iType == PARTYPE_SMOKE)
-    {
-
-
-        return;
-    }*/
-
+void cParticle::think() {
 	if (iType == OBJECT_BOOM01 || iType == OBJECT_BOOM02 || iType == OBJECT_BOOM03)
 	{
 		TIMER_frame++;
@@ -171,9 +165,8 @@ void cParticle::think()
 
 		if (iAlpha < 1)
 			bAlive=false;
+        }
 
-	//	y-= 16;
-		}
 		return;
 	}
 
@@ -190,7 +183,6 @@ void cParticle::think()
                 bAlive=false;
 
             iAlpha-=16;
-
         }
     }
 
@@ -207,7 +199,6 @@ void cParticle::think()
 
         if (iFrame > 9)
         {
-            //logbook("Particle died");
             iAlpha-=35;
             iFrame=9;
 
@@ -583,8 +574,202 @@ void cParticle::think()
 
 }
 
+void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
+    int iNewId = findNewSlot();
 
-int PARTICLE_NEW() {
+    if (iNewId < 0)
+        return;
+
+    cParticle &pParticle = particle[iNewId];
+    pParticle.init();
+
+    pParticle.x = x;
+    pParticle.y = y;
+
+    pParticle.iType = iType;
+
+    // depending on type, set TIMER_dead & FRAME & FRAME TIME
+    pParticle.iFrame = 0;
+    pParticle.TIMER_dead = 0;
+    pParticle.TIMER_frame = 10;
+
+    pParticle.iHousePal = iHouse;
+
+    pParticle.iAlpha = -1;
+
+    pParticle.bAlive = true;
+
+    if (iType == PARTYPE_REPAIRBLINK)
+        pParticle.iAlpha = 255;
+
+    if (iType == MOVE_INDICATOR || iType == ATTACK_INDICATOR)
+        pParticle.iAlpha = 128;
+
+    if (iType == EXPLOSION_TRIKE)
+    {
+        pParticle.iAlpha=255;
+        pParticle.iWidth=48;
+        pParticle.iHeight=48;
+        PARTICLE_CREATE(x, y, OBJECT_BOOM03, -1, 0);
+    }
+
+    if (iType == OBJECT_SMOKE)
+    {
+        pParticle.iAlpha=0;
+        pParticle.iWidth=32;
+        pParticle.iHeight=48;
+        pParticle.TIMER_dead=900;
+        PARTICLE_CREATE(x+16, y+42, OBJECT_SMOKE_SHADOW, -1, -1);
+    }
+
+    if (iType == OBJECT_SMOKE_SHADOW)
+    {
+        pParticle.iAlpha=0;
+        pParticle.iWidth=36;
+        pParticle.iHeight=38;
+        pParticle.TIMER_dead=1000;
+    }
+
+    if (iType == TRACK_DIA || iType == TRACK_HOR || iType == TRACK_VER || iType == TRACK_DIA2)
+    {
+        pParticle.iAlpha=128;
+        pParticle.TIMER_dead=2000;
+        pParticle.layer=1; // other layer
+    }
+
+    if (iType == BULLET_PUF)
+    {
+        pParticle.iHeight = 18;
+        pParticle.iWidth  = 18;
+        pParticle.iAlpha  = -1;
+    }
+
+    // bullets of tanks explode
+    if (iType == EXPLOSION_BULLET)
+    {
+
+    }
+
+    // trike exploding
+    if (iType == EXPLOSION_FIRE)
+    {
+        pParticle.iAlpha=255;
+        pParticle.TIMER_dead= 750 + rnd(500);
+        pParticle.iAlpha = rnd(255);
+    }
+
+    // tanks exploding
+    if (iType == OBJECT_WORMEAT) {
+        pParticle.iAlpha=255;
+        pParticle.iWidth=48;
+        pParticle.iHeight=48;
+        pParticle.TIMER_frame=80; // 2,5 * 32 (a tad slower than on 3 frames)
+    }
+
+    // tanks exploding
+    if (iType == EXPLOSION_TANK_ONE ||
+        iType == EXPLOSION_TANK_TWO ||
+        iType == EXPLOSION_STRUCTURE01 ||
+        iType == EXPLOSION_STRUCTURE02 ||
+        iType == EXPLOSION_GAS)
+    {
+
+        if (iType != EXPLOSION_STRUCTURE01 && iType != EXPLOSION_STRUCTURE02)
+            PARTICLE_CREATE(x, y, OBJECT_BOOM02, -1, 0);
+
+        pParticle.iAlpha=255;
+        pParticle.iWidth=48;
+        pParticle.iHeight=48;
+    }
+
+    // worm trail
+    if (iType == OBJECT_WORMTRAIL)
+    {
+        pParticle.iAlpha=96;
+        pParticle.iWidth=48;
+        pParticle.iHeight=48;
+
+        pParticle.layer=1; // other layer
+    }
+
+    if (iType == OBJECT_DEADINF01 ||
+        iType == OBJECT_DEADINF02)
+    {
+        pParticle.TIMER_dead = 500 + rnd(500);
+        pParticle.iAlpha=255;
+        pParticle.layer=1; // other layer
+    }
+
+    if (iType == OBJECT_TANKSHOOT || iType == OBJECT_SIEGESHOOT)
+    {
+        pParticle.iFrame=iFrame;
+        pParticle.TIMER_dead = 50;
+        pParticle.iAlpha=128;
+        pParticle.iWidth=64;
+        pParticle.iHeight=64;
+    }
+
+    if (iType == EXPLOSION_SQUISH01 ||
+        iType == EXPLOSION_SQUISH02 ||
+        iType == EXPLOSION_SQUISH03 ||
+        iType == EXPLOSION_ORNI)
+    {
+        pParticle.iFrame=0;
+        pParticle.TIMER_frame = 50;
+        pParticle.iWidth=32;
+        pParticle.iAlpha=255;
+        pParticle.iHeight=32;
+        pParticle.layer=1;
+    }
+
+    if (iType == OBJECT_SIEGEDIE) {
+        pParticle.iAlpha=255;
+        pParticle.TIMER_frame= 500 + rnd(300);
+
+        PARTICLE_CREATE(x, y-18, EXPLOSION_FIRE, -1, -1);
+        PARTICLE_CREATE(x, y-18, OBJECT_SMOKE, -1, -1);
+        PARTICLE_CREATE(x, y, OBJECT_BOOM02, -1, 0);
+    }
+
+    if (iType == OBJECT_CARRYPUFF)
+    {
+        pParticle.iFrame=0;
+        pParticle.TIMER_frame= 50 + rnd(50);
+        pParticle.iWidth=96;
+        pParticle.iHeight=96;
+        pParticle.layer=1;
+        pParticle.iAlpha= 96 + rnd(64);
+    }
+
+    if (iType == EXPLOSION_ROCKET || iType == EXPLOSION_ROCKET_SMALL) {
+        pParticle.iAlpha = 255;
+        // also create bloom
+        PARTICLE_CREATE(x, y, OBJECT_BOOM03, iHouse, 0);
+    }
+
+    if (iType == OBJECT_BOOM01)
+    {
+        pParticle.iAlpha=240;
+        pParticle.iWidth=512;
+        pParticle.iHeight=512;
+    }
+
+    if (iType == OBJECT_BOOM02)
+    {
+        pParticle.iAlpha=230;
+        pParticle.iWidth=256;
+        pParticle.iHeight=256;
+    }
+
+    if (iType == OBJECT_BOOM03)
+    {
+        pParticle.iAlpha=220;
+        pParticle.iWidth=128;
+        pParticle.iHeight=128;
+    }
+}
+
+int cParticle::findNewSlot() {
     for (int i = 0; i < MAX_PARTICLES; i++) {
         if (!particle[i].bAlive)
             return i;
@@ -602,199 +787,7 @@ int PARTICLE_NEW() {
  * @param iFrame
  */
 void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame) {
-    int iNewId = PARTICLE_NEW();
-
-    if (iNewId < 0)
-        return;
-
-    particle[iNewId].init();
-
-    particle[iNewId].x = x;
-    particle[iNewId].y = y;
-
-    particle[iNewId].iType = iType;
-
-     // depending on type, set TIMER_dead & FRAME & FRAME TIME
-    particle[iNewId].iFrame = 0;
-    particle[iNewId].TIMER_dead = 0;
-    particle[iNewId].TIMER_frame = 10;
-
-    particle[iNewId].iHousePal = iHouse;
-
-	particle[iNewId].iAlpha = -1;
-
-    particle[iNewId].bAlive = true;
-
-	if (iType == PARTYPE_REPAIRBLINK)
-		particle[iNewId].iAlpha = 255;
-
-	if (iType == MOVE_INDICATOR || iType == ATTACK_INDICATOR)
-		particle[iNewId].iAlpha = 128;
-
-    if (iType == EXPLOSION_TRIKE)
-    {
-        particle[iNewId].iAlpha=255;
-        particle[iNewId].iWidth=48;
-        particle[iNewId].iHeight=48;
-		PARTICLE_CREATE(x, y, OBJECT_BOOM03, -1, 0);
-    }
-
-    if (iType == OBJECT_SMOKE)
-    {
-        particle[iNewId].iAlpha=0;
-        particle[iNewId].iWidth=32;
-        particle[iNewId].iHeight=48;
-        particle[iNewId].TIMER_dead=900;
-        PARTICLE_CREATE(x+16, y+42, OBJECT_SMOKE_SHADOW, -1, -1);
-    }
-
-    if (iType == OBJECT_SMOKE_SHADOW)
-    {
-        particle[iNewId].iAlpha=0;
-        particle[iNewId].iWidth=36;
-        particle[iNewId].iHeight=38;
-        particle[iNewId].TIMER_dead=1000;
-    }
-
-    if (iType == TRACK_DIA || iType == TRACK_HOR || iType == TRACK_VER || iType == TRACK_DIA2)
-    {
-        particle[iNewId].iAlpha=128;
-        particle[iNewId].TIMER_dead=2000;
-        particle[iNewId].layer=1; // other layer
-    }
-
-    if (iType == BULLET_PUF)
-    {
-        particle[iNewId].iHeight = 18;
-        particle[iNewId].iWidth  = 18;
-        particle[iNewId].iAlpha  = -1;
-    }
-
-    // bullets of tanks explode
-    if (iType == EXPLOSION_BULLET)
-    {
-
-    }
-
-    // trike exploding
-    if (iType == EXPLOSION_FIRE)
-    {
-        particle[iNewId].iAlpha=255;
-        particle[iNewId].TIMER_dead=750+rnd(500);
-        particle[iNewId].iAlpha = rnd(255);
-    }
-
-    // tanks exploding
-    if (iType == OBJECT_WORMEAT) {
-        particle[iNewId].iAlpha=255;
-        particle[iNewId].iWidth=48;
-        particle[iNewId].iHeight=48;
-        particle[iNewId].TIMER_frame=80; // 2,5 * 32 (a tad slower than on 3 frames)
-    }
-
-    // tanks exploding
-    if (iType == EXPLOSION_TANK_ONE ||
-        iType == EXPLOSION_TANK_TWO ||
-        iType == EXPLOSION_STRUCTURE01 ||
-        iType == EXPLOSION_STRUCTURE02 ||
-        iType == EXPLOSION_GAS)
-    {
-
-		if (iType != EXPLOSION_STRUCTURE01 && iType != EXPLOSION_STRUCTURE02)
-			PARTICLE_CREATE(x, y, OBJECT_BOOM02, -1, 0);
-
-		particle[iNewId].iAlpha=255;
-        particle[iNewId].iWidth=48;
-        particle[iNewId].iHeight=48;
-    }
-
-    // worm trail
-    if (iType == OBJECT_WORMTRAIL)
-    {
-        particle[iNewId].iAlpha=96;
-        particle[iNewId].iWidth=48;
-        particle[iNewId].iHeight=48;
-
-		particle[iNewId].layer=1; // other layer
-    }
-
-    if (iType == OBJECT_DEADINF01 ||
-        iType == OBJECT_DEADINF02)
-    {
-        particle[iNewId].TIMER_dead = 500 + rnd(500);
-        particle[iNewId].iAlpha=255;
-        particle[iNewId].layer=1; // other layer
-    }
-
-    if (iType == OBJECT_TANKSHOOT || iType == OBJECT_SIEGESHOOT)
-    {
-        particle[iNewId].iFrame=iFrame;
-        particle[iNewId].TIMER_dead = 50;
-        particle[iNewId].iAlpha=128;
-        particle[iNewId].iWidth=64;
-        particle[iNewId].iHeight=64;
-    }
-
-    if (iType == EXPLOSION_SQUISH01 ||
-        iType == EXPLOSION_SQUISH02 ||
-        iType == EXPLOSION_SQUISH03 ||
-        iType == EXPLOSION_ORNI)
-    {
-        particle[iNewId].iFrame=0;
-        particle[iNewId].TIMER_frame = 50;
-        particle[iNewId].iWidth=32;
-        particle[iNewId].iAlpha=255;
-        particle[iNewId].iHeight=32;
-        particle[iNewId].layer=1;
-    }
-
-
-    if (iType == OBJECT_SIEGEDIE)
-    {
-        particle[iNewId].iAlpha=255;
-        particle[iNewId].TIMER_frame=500 + rnd(300);
-        PARTICLE_CREATE(x, y-18, EXPLOSION_FIRE, -1, -1);
-        PARTICLE_CREATE(x, y-18, OBJECT_SMOKE, -1, -1);
-
-		PARTICLE_CREATE(x, y, OBJECT_BOOM02, -1, 0);
-    }
-
-    if (iType == OBJECT_CARRYPUFF)
-    {
-        particle[iNewId].iFrame=0;
-        particle[iNewId].TIMER_frame=50+rnd(50);
-        particle[iNewId].iWidth=96;
-        particle[iNewId].iHeight=96;
-        particle[iNewId].layer=1;
-        particle[iNewId].iAlpha=96+rnd(64);
-    }
-
-    if (iType == EXPLOSION_ROCKET || iType == EXPLOSION_ROCKET_SMALL) {
-        particle[iNewId].iAlpha = 255;
-        // also create bloom
-        PARTICLE_CREATE(x, y, OBJECT_BOOM03, iHouse, 0);
-    }
-
-	if (iType == OBJECT_BOOM01)
-	{
-		particle[iNewId].iAlpha=240;
-		particle[iNewId].iWidth=512;
-		particle[iNewId].iHeight=512;
-	}
-
-	if (iType == OBJECT_BOOM02)
-	{
-		particle[iNewId].iAlpha=230;
-		particle[iNewId].iWidth=256;
-		particle[iNewId].iHeight=256;
-	}
-
-	if (iType == OBJECT_BOOM03)
-	{
-		particle[iNewId].iAlpha=220;
-		particle[iNewId].iWidth=128;
-		particle[iNewId].iHeight=128;
-	}
+    cParticle::create(x, y, iType, iHouse, iFrame);
 }
 
 
