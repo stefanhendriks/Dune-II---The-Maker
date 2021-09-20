@@ -128,45 +128,24 @@ int cBullet::getBulletBmpHeight() const {
 
 
 void cBullet::think() {
-    // frame animation first
-    TIMER_frame++;
+    int maxFrames = gets_Bullet().max_frames;
+    if (maxFrames > 0) {
+        // frame animation first
+        TIMER_frame++;
 
-    // TODO: Make bullets create smoke trails using some config instead of this hard-coded thing
-    if (TIMER_frame > 12) {
-        bool bCreatePuf = false;
-
-        // big rockets create smoke
-        if (iType == ROCKET_NORMAL ||
-            iType == BULLET_GAS ||
-            iType == ROCKET_RTURRET ||
-            iType == ROCKET_BIG) {
-
+        if (TIMER_frame > ANIMATION_SPEED) {
             iFrame++;
-            if (iFrame > 1) { // fire animation of rocket
+            if (iFrame > maxFrames) { // fire animation of rocket
                 iFrame = 0;
             }
 
-            bCreatePuf = true;
-        }
-
-        // smaller rockets don't create smoke... except for ornithopters
-        if (iType == ROCKET_SMALL || iType == ROCKET_SMALL_ORNI) {
-            iFrame++;
-            if (iFrame > 1) {
-                iFrame = 0;
+            int smokeParticle = gets_Bullet().smokeParticle;
+            if (smokeParticle > -1) {
+                PARTICLE_CREATE(pos_x(), pos_y(), smokeParticle, -1, -1);
             }
 
-            if (iType == ROCKET_SMALL_ORNI) {
-                bCreatePuf = true;
-            }
-
+            TIMER_frame = 0;
         }
-
-        if (bCreatePuf) {
-            PARTICLE_CREATE(pos_x(), pos_y(), BULLET_PUF, -1, -1);
-        }
-
-        TIMER_frame = 0;
     }
 
     // when this bastard is homing... set goal

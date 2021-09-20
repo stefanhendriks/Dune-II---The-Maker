@@ -680,6 +680,7 @@ void install_bullets() {
         bullets[i].damage_inf = 0;  // damage to infantry
         bullets[i].max_frames = 1;  // 1 frame animation
         bullets[i].max_deadframes = 4; // 4 frame animation
+        bullets[i].smokeParticle = -1; // by default no smoke particle is spawned
         bullets[i].bmp_width = 8 * 2;
         bullets[i].sound = -1;    // no sound
         bullets[i].explosionSize = 1; // 1 tile sized explosion
@@ -701,6 +702,7 @@ void install_bullets() {
     bullets[ROCKET_BIG].explosionSize = 7;
     bullets[ROCKET_BIG].canDamageAirUnits = true;
     bullets[ROCKET_BIG].canDamageGround = true;
+    bullets[ROCKET_BIG].smokeParticle = BULLET_PUF;
     strcpy(bullets[ROCKET_BIG].description, "ROCKET_BIG");
 
     // small rocket (for ornithopter)
@@ -714,6 +716,7 @@ void install_bullets() {
     bullets[ROCKET_SMALL_ORNI].canDamageAirUnits = true;
     bullets[ROCKET_SMALL_ORNI].max_deadframes = 1;
     bullets[ROCKET_SMALL_ORNI].canDamageGround = true;
+    bullets[ROCKET_SMALL_ORNI].smokeParticle = BULLET_PUF;
     strcpy(bullets[ROCKET_SMALL_ORNI].description, "ROCKET_SMALL_ORNI");
 
     // small rocket
@@ -727,6 +730,7 @@ void install_bullets() {
     bullets[ROCKET_SMALL].canDamageAirUnits = true;
     bullets[ROCKET_SMALL].max_deadframes = 1;
     bullets[ROCKET_SMALL].canDamageGround = true;
+//    bullets[ROCKET_SMALL].smokeParticle = BULLET_PUF; // small rockets have no smoke trail yet
     strcpy(bullets[ROCKET_SMALL].description, "ROCKET_SMALL");
 
     // small rocket - fremen rocket
@@ -740,6 +744,7 @@ void install_bullets() {
     bullets[ROCKET_SMALL_FREMEN].max_deadframes = 1;
     bullets[ROCKET_SMALL_FREMEN].canDamageAirUnits = true;
     bullets[ROCKET_SMALL_FREMEN].canDamageGround = true;
+//    bullets[ROCKET_SMALL_FREMEN].smokeParticle = true; // not yet
     strcpy(bullets[ROCKET_SMALL_FREMEN].description, "ROCKET_SMALL_FREMEN");
 
     // normal rocket
@@ -753,6 +758,7 @@ void install_bullets() {
     bullets[ROCKET_NORMAL].max_deadframes = 4;
     bullets[ROCKET_NORMAL].canDamageAirUnits = true;
     bullets[ROCKET_NORMAL].canDamageGround = true;
+    bullets[ROCKET_NORMAL].smokeParticle = BULLET_PUF;
     strcpy(bullets[ROCKET_NORMAL].description, "ROCKET_NORMAL");
 
     // soldier shot
@@ -840,6 +846,7 @@ void install_bullets() {
     bullets[BULLET_GAS].max_deadframes = 4;
     bullets[BULLET_GAS].sound = SOUND_ROCKET;
     bullets[BULLET_GAS].deviateProbability = 34; // 1 out of 3(ish) should be effective
+    bullets[BULLET_GAS].smokeParticle = BULLET_PUF;
     strcpy(bullets[BULLET_GAS].description, "BULLET_GAS");
 
     // normal turret shot
@@ -877,6 +884,7 @@ void install_bullets() {
     bullets[ROCKET_RTURRET].max_deadframes = 4;
     bullets[ROCKET_RTURRET].canDamageAirUnits = true;
     bullets[ROCKET_RTURRET].canDamageGround = true;
+    bullets[ROCKET_RTURRET].smokeParticle = BULLET_PUF;
     strcpy(bullets[ROCKET_RTURRET].description, "ROCKET_RTURRET");
 }
 
