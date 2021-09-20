@@ -56,7 +56,7 @@ int cItemBuilder::getTimerCap(cBuildingListItem *item) {
     if (item->getBuildType() == UNIT) {
         // the given unit will get out of a specific structure. This type
         // is within the units properties.
-        int structureTypeItLeavesFrom = unitInfo[item->getBuildId()].structureTypeItLeavesFrom;
+        int structureTypeItLeavesFrom = sUnitInfo[item->getBuildId()].structureTypeItLeavesFrom;
         int structureCount = player->getAmountOfStructuresForType(structureTypeItLeavesFrom);
         if (structureCount > 1) {
             iTimerCap /= structureCount;
@@ -223,7 +223,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
             game.onNotify(newEvent);
         } else if (eBuildType == SPECIAL) {
             buildingListUpdater->onBuildItemCompleted(item);
-            const s_Special &special = item->getS_Special();
+            const s_SpecialInfo &special = item->getS_Special();
 
             if (special.providesType == UNIT) {
                 item->decreaseTimesToBuild(); // decrease amount of times to build

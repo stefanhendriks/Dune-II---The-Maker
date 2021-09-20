@@ -101,7 +101,7 @@ public:
     void setAcceptsOrders(bool value) { acceptsOrders = value; }
 
     /**
-    * type of list (see cSideBarFactory) , ie 0 = CONSTYARD, last is IX (upgrades), etc.
+    * type of list (see cSideBarFactory) , ie 0 = CONSTYARD, last is IX (sUpgradeInfo), etc.
     * @param value
     */
     eListType getType() { return typeOfList; }

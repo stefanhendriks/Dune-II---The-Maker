@@ -117,7 +117,7 @@ class cAbstractStructure {
 		// convenience get method, which should eventually only be used in rare cases as all properties should be
 		// TODO: copied from this struct to this class, so each structure can change the properties without
 		// changing the entire game rules.
-		s_Structures getS_StructuresType() const;
+		s_StructureInfo getS_StructuresType() const;
 		cPlayer * getPlayer();
 
 		// Really sure you need this? You can use getPlayer() ?

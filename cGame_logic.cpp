@@ -1649,7 +1649,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
     int iMouseCell = event.atCell;
     cPlayer *player = event.player;
     if (itemToDeploy->isTypeSpecial()) {
-        const s_Special &special = itemToDeploy->getS_Special();
+        const s_SpecialInfo &special = itemToDeploy->getS_Special();
 
         int deployCell = -1;
         if (special.deployTargetType == eDeployTargetType::TARGET_SPECIFIC_CELL) {

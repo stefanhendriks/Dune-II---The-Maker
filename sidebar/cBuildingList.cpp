@@ -80,29 +80,29 @@ cBuildingListItem * cBuildingList::getItemByBuildId(int buildId) {
 }
 
 void cBuildingList::addUpgradeToList(int upgradeType) {
-    cBuildingListItem *item = new cBuildingListItem(upgradeType, upgrades[upgradeType],
-                                                    upgrades[upgradeType].providesTypeSubList);
+    cBuildingListItem *item = new cBuildingListItem(upgradeType, sUpgradeInfo[upgradeType],
+                                                    sUpgradeInfo[upgradeType].providesTypeSubList);
     if (!addItemToList(item)) {
         delete item;
     }
 }
 
 void cBuildingList::addStructureToList(int structureType, int subList) {
-    cBuildingListItem *item = new cBuildingListItem(structureType, structures[structureType], subList);
+    cBuildingListItem *item = new cBuildingListItem(structureType, sStructureInfo[structureType], subList);
     if (!addItemToList(item)) {
         delete item;
     }
 }
 
 void cBuildingList::addUnitToList(int unitType, int subList) {
-    cBuildingListItem *item = new cBuildingListItem(unitType, unitInfo[unitType], subList);
+    cBuildingListItem *item = new cBuildingListItem(unitType, sUnitInfo[unitType], subList);
     if (!addItemToList(item)) {
         delete item;
     }
 }
 
 void cBuildingList::addSpecialToList(int specialType, int subList) {
-    s_Special &special = specialInfo[specialType];
+    s_SpecialInfo &special = sSpecialInfo[specialType];
     cBuildingListItem *item = new cBuildingListItem(specialType, special, subList);
     if (!addItemToList(item)) {
         delete item;

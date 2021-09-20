@@ -224,7 +224,7 @@ enum eListType {
     LIST_UNITS, // quad, trike, tanks, air units
     LIST_STARPORT, // special list to order stuff
     LIST_PALACE, // REMOVE? (ie super weapon icon should always show top left/right?)
-    LIST_UPGRADES, // possible upgrades
+    LIST_UPGRADES, // possible sUpgradeInfo
     LIST_MAX // max amount of lists
 };
 

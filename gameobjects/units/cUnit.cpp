@@ -335,7 +335,7 @@ void cUnit::createExplosionParticle() {
                         int iChance = 10;
 
                         if (pStructure &&
-                            pStructure->getHitPoints() < (structures[pStructure->getType()].hp / 2)) {
+                            pStructure->getHitPoints() < (sStructureInfo[pStructure->getType()].hp / 2)) {
                             iChance = 30;
                         }
 
@@ -480,7 +480,7 @@ int cUnit::center_draw_y() {
 }
 
 int cUnit::getBmpHeight() const {
-    return unitInfo[iType].bmp_height;
+    return sUnitInfo[iType].bmp_height;
 }
 
 void cUnit::draw_spice() {
@@ -503,17 +503,17 @@ void cUnit::draw_spice() {
 }
 
 int cUnit::getBmpWidth() const {
-    return unitInfo[iType].bmp_width;
+    return sUnitInfo[iType].bmp_width;
 }
 
 float cUnit::getHealthNormalized() {
-    s_UnitP &unitType = getUnitType();
+    s_UnitInfo &unitType = getUnitType();
     float flMAX = unitType.hp;
     return (iHitPoints / flMAX);
 }
 
 float cUnit::getTempHealthNormalized() {
-    s_UnitP &unitType = getUnitType();
+    s_UnitInfo &unitType = getUnitType();
     float flMAX = unitType.hp;
     return (iTempHitPoints / flMAX);
 }
@@ -657,7 +657,7 @@ void cUnit::draw() {
         return;
     }
 
-    s_UnitP &unitType = getUnitType();
+    s_UnitInfo &unitType = getUnitType();
     int bmp_width = unitType.bmp_width;
     int bmp_height = unitType.bmp_height;
 
@@ -1106,7 +1106,7 @@ void cUnit::think() {
         if (iBodyFacing == iBodyShouldFace) {
             if (iHeadFacing != iHeadShouldFace) {
                 TIMER_turn++;
-                if (TIMER_turn > (unitInfo[iType].turnspeed)) {
+                if (TIMER_turn > (sUnitInfo[iType].turnspeed)) {
                     TIMER_turn = 0;
 
                     iHeadFacing = determineNewFacing(iHeadFacing, iHeadShouldFace);
@@ -1161,7 +1161,7 @@ void cUnit::think() {
     // when any unit is on a spice bloom, you got a problem, you die!
     int cellType = map.getCellType(iCell);
     if (cellType == TERRAIN_BLOOM
-        && unitInfo[iType].airborn == false) {
+        && sUnitInfo[iType].airborn == false) {
         // change type of terrain to sand
         mapEditor.createCell(iCell, TERRAIN_SAND, 0);
 
@@ -1198,11 +1198,11 @@ void cUnit::think() {
             if (cellType == TERRAIN_SPICE ||
                 cellType == TERRAIN_SPICEHILL) {
                 // do timer stuff
-                if (iCredits < unitInfo[iType].credit_capacity)
+                if (iCredits < sUnitInfo[iType].credit_capacity)
                     TIMER_harvest++;
             } else {
                 // not on spice, find a new location
-                if (iCredits < unitInfo[iType].credit_capacity) {
+                if (iCredits < sUnitInfo[iType].credit_capacity) {
                     // find harvest cell
                     move_to(UNIT_find_harvest_spot(iID), -1, -1);
                 } else {
@@ -1212,13 +1212,13 @@ void cUnit::think() {
                 }
             }
 
-            if (iCredits >= unitInfo[iType].credit_capacity)
+            if (iCredits >= sUnitInfo[iType].credit_capacity)
                 bFindRefinery = true;
 
             // when we should harvest...
             cPlayerDifficultySettings *difficultySettings = players[iPlayer].getDifficultySettings();
-            if (TIMER_harvest > (difficultySettings->getHarvestSpeed(unitInfo[iType].harvesting_speed)) &&
-                iCredits < unitInfo[iType].credit_capacity) {
+            if (TIMER_harvest > (difficultySettings->getHarvestSpeed(sUnitInfo[iType].harvesting_speed)) &&
+                iCredits < sUnitInfo[iType].credit_capacity) {
                 TIMER_harvest = 1;
 
                 iFrame++;
@@ -1226,8 +1226,8 @@ void cUnit::think() {
                 if (iFrame > 3)
                     iFrame = 1;
 
-                iCredits += unitInfo[iType].harvesting_amount;
-                map.cellTakeCredits(iCell, unitInfo[iType].harvesting_amount);
+                iCredits += sUnitInfo[iType].harvesting_amount;
+                map.cellTakeCredits(iCell, sUnitInfo[iType].harvesting_amount);
 
                 // turn into sand/spice (when spicehill)
                 if (map.getCellCredits(iCell) <= 0) {
@@ -1380,7 +1380,7 @@ void cUnit::think_turn_to_desired_body_facing() {
     // BODY is not facing correctly
     TIMER_turn++;
 
-    float turnspeed = unitInfo[iType].turnspeed;
+    float turnspeed = sUnitInfo[iType].turnspeed;
     if (isAirbornUnit()) {
         // when closer to goal, turnspeed decreases.
         double distance = map.distance(iCell, iGoalCell);
@@ -1928,7 +1928,7 @@ void cUnit::shoot(int iShootCell) {
         PARTICLE_CREATE(iShootX, iShootY, OBJECT_SIEGESHOOT, -1, bmp_head);
     }
 
-    int bulletType = unitInfo[iType].bulletType;
+    int bulletType = sUnitInfo[iType].bulletType;
     if (bulletType < 0) return; // no bullet type to spawn
 
     int iBull = create_bullet(bulletType, iCell, iShootCell, iID, -1);
@@ -2036,7 +2036,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                         }
 
                         if (ABS_length(iCellX, iCellY, map.getCellX(iDestCell), map.getCellY(iDestCell)) <
-                            unitInfo[iType].range) {
+                            sUnitInfo[iType].range) {
                             // within range, don't move (just prepare retaliation fire)
                         } else {
                             // out of range unit, attack it
@@ -2060,7 +2060,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
     if (isInfantryUnit()) {
         if (iType == INFANTRY || iType == TROOPERS) {
             // turn into soldier or trooper when on 50% health
-            if (iHitPoints <= (unitInfo[iType].hp / 3)) {
+            if (iHitPoints <= (sUnitInfo[iType].hp / 3)) {
                 // leave 2 dead bodies (of 3 ;))
 
                 // turn into single one
@@ -2070,7 +2070,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                 if (iType == TROOPERS)
                     iType = TROOPER;
 
-                iHitPoints = unitInfo[iType].hp;
+                iHitPoints = sUnitInfo[iType].hp;
 
                 int half = 16;
                 int iDieX = pos_x() + half;
@@ -2089,7 +2089,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
 void cUnit::log(const char *txt) const {
     // logs unit stuff, but gives unit information
     char msg[512];
-    sprintf(msg, "[UNIT[%d]: type = %d(=%s), iCell = %d, iGoalCell = %d] '%s'", iID, iType, unitInfo[iType].name, iCell, iGoalCell, txt);
+    sprintf(msg, "[UNIT[%d]: type = %d(=%s), iCell = %d, iGoalCell = %d] '%s'", iID, iType, sUnitInfo[iType].name, iCell, iGoalCell, txt);
     players[iPlayer].log(msg);
 }
 
@@ -2178,7 +2178,7 @@ void cUnit::think_attack() {
             }
         }
     } else {
-        s_UnitP &unitType = getUnitType();
+        s_UnitInfo &unitType = getUnitType();
 
         // AIRBORN UNITS ATTACK THINKING
         int minDistance = 2;
@@ -2286,7 +2286,7 @@ void cUnit::startChasingTarget() {
 }
 
 bool cUnit::setAngleTowardsTargetAndFireBullets(int distance) {
-    s_UnitP &unitType = getUnitType();
+    s_UnitInfo &unitType = getUnitType();
     // in range , fire and such
 
     // Facing
@@ -2347,8 +2347,8 @@ int cUnit::getSight() const {
     return getUnitType().sight;
 }
 
-s_UnitP &cUnit::getUnitType() const {
-    return unitInfo[iType];
+s_UnitInfo &cUnit::getUnitType() const {
+    return sUnitInfo[iType];
 }
 
 // thinking about movement (which is called upon a faster rate)
@@ -2859,10 +2859,10 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         if (iPlayer == AI_CPU5 && players[HUMAN].isHouse(ATREIDES)) {
             // TODO: make this work for all allied forces
             // hackish way to get Fog of war clearance by allied fremen units (super weapon).
-            map.clearShroud(iCell, unitInfo[iType].sight, HUMAN);
+            map.clearShroud(iCell, sUnitInfo[iType].sight, HUMAN);
         }
 
-        map.clearShroud(iCell, unitInfo[iType].sight, iPlayer);
+        map.clearShroud(iCell, sUnitInfo[iType].sight, iPlayer);
 
         // The goal did change probably, or something else forces us to reconsider
         if (bCalculateNewPath) {
@@ -2914,7 +2914,7 @@ void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait) {
 }
 
 bool cUnit::isInfantryUnit() {
-    return unitInfo[iType].infantry;
+    return sUnitInfo[iType].infantry;
 }
 
 cUnit::cUnit() {
@@ -3116,7 +3116,7 @@ void cUnit::findBestStructureCandidateAndHeadTowardsItOrWait(int structureType, 
     assert(structureType > -1);
 
     char msg[255];
-    sprintf(msg, "cUnit::findBestStructureCandidateAndHeadTowardsItOrWait - Going to look for a [%s]", structures[structureType].name);
+    sprintf(msg, "cUnit::findBestStructureCandidateAndHeadTowardsItOrWait - Going to look for a [%s]", sStructureInfo[structureType].name);
     log(msg);
 
     cAbstractStructure *candidate = findBestStructureCandidateToHeadTo(structureType);
@@ -3238,7 +3238,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
         return -1;
     }
 
-    s_UnitP &sUnitType = unitInfo[unitType];
+    s_UnitInfo &sUnitType = sUnitInfo[unitType];
 
     // check if unit already exists on location
     if (!sUnitType.airborn && map.cellGetIdFromLayer(iCll, MAPID_STRUCTURES) > -1) {
@@ -3835,7 +3835,7 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID) {
                 {
                     // depending on unit type, do not choose walls (or mountains)
                     int cellType = map.getCellType(cll);
-                    if (unitInfo[unit[iID].iType].infantry) {
+                    if (sUnitInfo[unit[iID].iType].infantry) {
                         if (cellType == TERRAIN_MOUNTAIN)
                             continue; // do not use this one
                     }

@@ -34,7 +34,7 @@ private:
 		// in order to know what to update
 		cPlayer * player;
 
-        void applyUpgrade(const s_Upgrade &upgradeType);
+        void applyUpgrade(const s_UpgradeInfo &upgradeType);
 
         void onStructureCreatedSkirmishMode(int structureType) const;
 

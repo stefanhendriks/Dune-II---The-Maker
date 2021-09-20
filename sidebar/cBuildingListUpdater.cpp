@@ -451,7 +451,7 @@ void cBuildingListUpdater::evaluateUpgrades() {
     cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
 
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
-        s_Upgrade &upgrade = upgrades[i];
+        s_UpgradeInfo &upgrade = sUpgradeInfo[i];
         if (!upgrade.enabled) continue;
         // check techlevel (this is a non-changing value per mission, usually coupled with mission nr, ie
         // mission 1 = techlevel 1. Mission 9 = techlevel 9. Skirmish is usually techlevel 9.
@@ -472,7 +472,7 @@ void cBuildingListUpdater::evaluateUpgrades() {
         if (!hasAtLeastOneStructureForStructureType) {
             addToUpgradesList = false;
             char msg[255];
-            sprintf(msg, "Upgrade [%s] has not required structureType (upgrade.structureType) #1 [%s].", upgrade.description, structures[upgrade.structureType].name);
+            sprintf(msg, "Upgrade [%s] has not required structureType (upgrade.structureType) #1 [%s].", upgrade.description, sStructureInfo[upgrade.structureType].name);
             player->log(msg);
         }
 
@@ -482,7 +482,7 @@ void cBuildingListUpdater::evaluateUpgrades() {
             if (!hasAtleastOneNeedStructureType) {
                 addToUpgradesList = false;
                 char msg[255];
-                sprintf(msg, "Upgrade [%s] has not required additional structureType (upgrade.needsStructureType) [%s].", upgrade.description, structures[upgrade.needsStructureType].name);
+                sprintf(msg, "Upgrade [%s] has not required additional structureType (upgrade.needsStructureType) [%s].", upgrade.description, sStructureInfo[upgrade.needsStructureType].name);
                 player->log(msg);
             }
         }
@@ -545,7 +545,7 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item) {
         return;
     }
 
-    const s_Upgrade &upgradeType = item->getS_Upgrade();
+    const s_UpgradeInfo &upgradeType = item->getS_Upgrade();
 
     // Upgrade structure + provide any unit or structure
     player->increaseStructureUpgradeLevel(upgradeType.structureType);
@@ -562,7 +562,7 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item) {
  * needs to be re-applied.
  * @param item
  */
-void cBuildingListUpdater::applyUpgrade(const s_Upgrade &upgradeType) {
+void cBuildingListUpdater::applyUpgrade(const s_UpgradeInfo &upgradeType) {
     cSideBar *sideBar = player->getSideBar();
     int listType = upgradeType.providesTypeList;
     int subListType = upgradeType.providesTypeSubList;
@@ -597,7 +597,7 @@ void cBuildingListUpdater::onUpgradeStarted(cBuildingListItem *pItem) {
     cSideBar *sideBar = player->getSideBar();
 
     // get the structure type it is upgrading
-    const s_Upgrade &upgrade = pItem->getS_Upgrade();
+    const s_UpgradeInfo &upgrade = pItem->getS_Upgrade();
     int listType = upgrade.providesTypeList;
     int subListType = upgrade.providesTypeSubList;
 
@@ -618,7 +618,7 @@ void cBuildingListUpdater::onUpgradeCancelled(cBuildingListItem *pItem) {
     cSideBar *sideBar = player->getSideBar();
 
     // get the structure type it is upgrading
-    const s_Upgrade &upgrade = pItem->getS_Upgrade();
+    const s_UpgradeInfo &upgrade = pItem->getS_Upgrade();
     int listType = upgrade.providesTypeList;
     int subListType = upgrade.providesTypeSubList;
 
@@ -680,7 +680,7 @@ void cBuildingListUpdater::onBuildItemCompleted(cBuildingListItem *pItem) {
 
     if (pItem->isTypeSpecial()) {
         // do stuff here for special item
-        const s_Special &special = pItem->getS_Special();
+        const s_SpecialInfo &special = pItem->getS_Special();
         return;
     }
 

@@ -566,7 +566,7 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     cParticle &pParticle = particle[iNewId];
     if (iType > -1 && iType < MAX_PARTICLE_TYPES) {
-        s_Particle &sParticle = particleInfo[iType];
+        s_ParticleInfo &sParticle = sParticleInfo[iType];
         pParticle.init(sParticle);
     } else {
         pParticle.init();
@@ -767,7 +767,7 @@ int cParticle::findNewSlot() {
     return -1;
 }
 
-void cParticle::init(const s_Particle &particleInfo) {
+void cParticle::init(const s_ParticleInfo &particleInfo) {
     init();
     bmp = particleInfo.bmp;
 }

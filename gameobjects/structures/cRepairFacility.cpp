@@ -32,7 +32,7 @@ void cRepairFacility::think() {
 void cRepairFacility::think_repairUnit() {// must repair...
     int iUnitID = getUnitIdWithin();
     cUnit &unitToRepair = unit[iUnitID];
-    int maxHpForUnitType = unitInfo[unitToRepair.iType].hp;
+    int maxHpForUnitType = sUnitInfo[unitToRepair.iType].hp;
 
     if (unitToRepair.iTempHitPoints < maxHpForUnitType) {
         TIMER_repairunit++;

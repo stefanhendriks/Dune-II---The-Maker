@@ -107,8 +107,8 @@ void cBullet::draw() {
         return;
     }
 
-    if (bullets[iType].bmp != NULL) {
-        BITMAP *src = (BITMAP *) bullets[iType].bmp;
+    if (sBulletInfo[iType].bmp != NULL) {
+        BITMAP *src = (BITMAP *) sBulletInfo[iType].bmp;
         allegroDrawer->maskedStretchBlit(src,
                                          bmp_screen,
                                          sx, sy,
@@ -119,7 +119,7 @@ void cBullet::draw() {
 }
 
 int cBullet::getBulletBmpWidth() const {
-    return bullets[iType].bmp_width;
+    return sBulletInfo[iType].bmp_width;
 }
 
 int cBullet::getBulletBmpHeight() const {
@@ -243,7 +243,7 @@ void cBullet::arrivedAtDestinationLogic() {
     // for instance: damage a wall, but also a unit (ornithopter), and so forth
     //
 
-    s_Bullet const &sBullet = gets_Bullet();
+    const s_BulletInfo &sBullet = gets_Bullet();
 
     // damage is inflicted to size of explosion
     int x = map.getCellX(iCell);
@@ -399,7 +399,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const {
             if (ownerUnit.isValid()) {
                 // TODO: update statistics
 
-                if (unitInfo[groundUnitTakingDamage.iType].infantry) {
+                if (sUnitInfo[groundUnitTakingDamage.iType].infantry) {
                     ownerUnit.fExperience += 0.25; // 4 kills = 1 star
                 } else {
                     ownerUnit.fExperience += 0.45; // ~ 3 kills = 1 star
@@ -453,7 +453,7 @@ float cBullet::getDamageToInflictToUnit(cUnit &unitTakingDamage) const {
 float cBullet::getDamageToInflictToInfantry() const {
     cPlayerDifficultySettings *difficultySettings = getDifficultySettings();
 
-    float result = difficultySettings->getInflictDamage(bullets[iType].damage_inf);
+    float result = difficultySettings->getInflictDamage(sBulletInfo[iType].damage_inf);
 
     if (iOwnerUnit > -1) {
         float fDam = unit[iOwnerUnit].fExpDamage() * result;
@@ -538,7 +538,7 @@ bool cBullet::canDamageAirUnits() const {
 
 float cBullet::getDamageToInflictToNonInfantry() const {
     cPlayerDifficultySettings *pDifficultySettings = getDifficultySettings();
-    const s_Bullet &sBullet = gets_Bullet();
+    const s_BulletInfo &sBullet = gets_Bullet();
     float iDamage = pDifficultySettings->getInflictDamage(sBullet.damage);
 
     // increase damage by experience of unit
@@ -560,8 +560,8 @@ cPlayerDifficultySettings *cBullet::getDifficultySettings() const {
     return pDifficultySettings;
 }
 
-s_Bullet cBullet::gets_Bullet() const {
-    return bullets[iType];
+s_BulletInfo cBullet::gets_Bullet() const {
+    return sBulletInfo[iType];
 }
 
 cPlayer * cBullet::getPlayer() const {
@@ -581,7 +581,7 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor) {
 
     cPlayerDifficultySettings *difficultySettings = getDifficultySettings();
 
-    float iDamage = difficultySettings->getInflictDamage(bullets[iType].damage) * factor;
+    float iDamage = difficultySettings->getInflictDamage(sBulletInfo[iType].damage) * factor;
 
     cUnit *pUnit = nullptr;
     if (iOwnerUnit > -1) {
