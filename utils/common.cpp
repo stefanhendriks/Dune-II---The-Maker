@@ -1606,6 +1606,10 @@ int create_bullet(int type, int fromCell, int targetCell, int unitWhichShoots, i
     newBullet.targetX = map.getAbsoluteXPositionFromCellCentered(targetCell);
     newBullet.targetY = map.getAbsoluteYPositionFromCellCentered(targetCell);
 
+    // if we start firing from a mountain, flag it so the bullet won't be blocked by mountains along
+    // the way
+    newBullet.bStartedFromMountain = map.getCell(fromCell)->type == TERRAIN_MOUNTAIN;
+
     int structureIdAtTargetCell = map.getCellIdStructuresLayer(targetCell);
     if (structureIdAtTargetCell > -1) {
         cAbstractStructure *pStructure = structure[structureIdAtTargetCell];

@@ -3,8 +3,8 @@
 
 struct tCell {
     int credits;        // harvesting
-    int type;           // refers to gfxdata
-    int tile;           // the tile to draw (* 32 (on x scale))
+    int type;           // refers to gfxdata (terrain type)
+    int tile;           // the tile to draw
     int smudgetile;     // smudge tile id (drawn upon the tile)
     int smudgetype;     // smudge type id
     int health;         // hitpoints for specific tile (used for walls)

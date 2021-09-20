@@ -8,8 +8,6 @@ int convert_angle(int face_angle);
 
 // bullet only
 int bullet_face_angle(float angle);
-int bullet_correct_angle(int face_angle);
-
 
 // randomizing timer(s)
 int rnd(int max);

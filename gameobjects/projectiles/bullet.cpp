@@ -16,6 +16,7 @@
 
 void cBullet::init() {
     bAlive = false;
+    bStartedFromMountain = false;
 
     iCell = -1;          // cell of bullet
     iType = -1;          // type of bullet
@@ -67,8 +68,7 @@ void cBullet::draw() {
     if (y < getBulletBmpHeight() || y > game.screen_y + getBulletBmpHeight())
         return;
 
-    int fa = bullet_face_angle(fDegrees(posX, posY, targetX, targetY));
-    int ba = bullet_correct_angle(fa);
+    int ba = bullet_face_angle(fDegrees(posX, posY, targetX, targetY));
 
     int h = 32;
     int bmp_width = getBulletBmpWidth();
@@ -131,6 +131,7 @@ void cBullet::think() {
     // frame animation first
     TIMER_frame++;
 
+    // TODO: Make bullets create smoke trails using some config instead of this hard-coded thing
     if (TIMER_frame > 12) {
         bool bCreatePuf = false;
 
@@ -215,20 +216,22 @@ void cBullet::think_move() {
     // from here, all bullets that are not 'flying' (ie can't get over things).
     // these bullets will be blocked by other buildings, walls, mountains
 
-    // hit structures, walls and mountains
-    if (cellTypeAtCell == TERRAIN_MOUNTAIN) {
-        arrivedAtDestinationLogic();
-        return;
-    }
+    // hit structures, walls and mountains only when being fired from 'below'
+    if (!bStartedFromMountain) {
+        if (cellTypeAtCell == TERRAIN_MOUNTAIN) {
+            arrivedAtDestinationLogic();
+            return;
+        }
 
-    // non flying bullets hit against a wall, except for bullets from turrets
-    if (cellTypeAtCell == TERRAIN_WALL) {
-        arrivedAtDestinationLogic();
-        return;
+        // non flying bullets hit against a wall, except for bullets from turrets
+        if (cellTypeAtCell == TERRAIN_WALL) {
+            arrivedAtDestinationLogic();
+            return;
+        }
     }
 
     if (idOfStructureAtCell > -1) {
-        // structures block non flying bullets, except when it is from the structure
+        // structures block non-flying bullets, except when it is from the structure
         // which spawned the bullet. It will also 'shoot over' our own buildings.
         int id = idOfStructureAtCell;
         bool bHitsEnemyBuilding = false;
@@ -237,11 +240,14 @@ void cBullet::think_move() {
             if (id != iOwnerStructure) {
                 bHitsEnemyBuilding = true;
             } else {
-                // do not hit own structures
-                if (structure[id]->getOwner() != iPlayer) {
+                // do not hit own or allied structures
+                if (!structure[id]->getPlayer()->isSameTeamAs(getPlayer())) {
                     bHitsEnemyBuilding = true;
                 }
             }
+        } else {
+            // OG Dune 2 effect: Hit structures
+            bHitsEnemyBuilding = true;
         }
 
         if (bHitsEnemyBuilding) {
