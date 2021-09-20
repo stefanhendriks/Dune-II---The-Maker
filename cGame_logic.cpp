@@ -1423,6 +1423,8 @@ bool cGame::setupGame() {
 	install_units();
     logbook("Setup:  SPECIALS");
 	install_specials();
+    logbook("Setup:  PARTICLES");
+	install_particles();
 	logbook("Setup:  WORLD");
 	selectYourNextConquestState->INSTALL_WORLD();
 
