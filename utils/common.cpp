@@ -600,9 +600,10 @@ void install_units() {
 }
 
 void install_particles() {
-    for (int i = 0; i < MAX_SPECIALTYPES; i++) {
-//        particleInfo[i]
+    for (int i = 0; i < MAX_PARTICLE_TYPES; i++) {
+        particleInfo[i].bmp = nullptr;
     }
+    particleInfo[PARTICLE_MOVE].bmp = (BITMAP *) gfxdata[MOVE_INDICATOR].dat;
 }
 
 void install_specials() {

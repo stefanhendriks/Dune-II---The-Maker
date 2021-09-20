@@ -199,7 +199,7 @@ struct s_House {
 
 
 struct s_Particle {
-
+    BITMAP *bmp;         // a pointer to a BITMAP to draw
 };
 
 struct s_Bullet {

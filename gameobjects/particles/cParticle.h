@@ -17,13 +17,14 @@ public:
     bool bAlive;        // alive
 
     // Drawing effects
-    long x, y;            // x and y position to draw (absolute numbers). This is the 'center' of a particle, not top left!
-    int iFrame;         // frame
-    int iType;          // type
-    int iAlpha;            // alpha
+    long x, y;              // x and y position to draw (absolute numbers). This is the 'center' of a particle, not top left!
+    int iType;              // type
+    BITMAP * bmp;           // pointer to bitmap to draw (not owner of bitmap!)
+    int iAlpha;             // alpha
 
-    int iWidth;         // width of frame
-    int iHeight;        // height of frame
+    int frameIndex;         // frame to draw
+    int frameWidth;         // width of frame
+    int frameHeight;        // height of frame
 
     // TIMERS
     int TIMER_frame;    // frame animation timers (when < 0, next frame, etc)
@@ -31,7 +32,7 @@ public:
 
     int TIMER_dead;     // when > -1, this timer will determine when the thing dies
 
-    int layer;          // when to draw
+    int layer;          // on which layer to draw
 
     int iHousePal;      // when specified, use this palette for drawing (and its an 8 bit picture then!)
 
@@ -45,6 +46,7 @@ public:
     bool isValid();
 
     void init();
+    void init(s_Particle &particleInfo);
 
     void think();       // particles do some sort of thinking , really! :)
 
