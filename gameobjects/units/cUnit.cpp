@@ -2838,21 +2838,25 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
 
         updateCellXAndY();
 
-        // quick scan for infantry we squish
-        // TODO: this can be sped up
+        // check any units that are on our cell as well.
+        // perhaps this could be sped up somehow if we had more than 1 unit on a cell possible (for now we don't have
+        // this). An alternative is to have a function return per 'segment' the units within it (so we don't need to
+        // iterate over all units
         if (canSquishInfantry()) {
-            int unitIdAtCell = map.getCellIdUnitLayer(iCell);
-            if (unitIdAtCell > -1) {
-                cUnit &potentialDeadUnit = unit[unitIdAtCell];
-                if (potentialDeadUnit.isValid() && potentialDeadUnit.canBeSquished()) {
-                    if (potentialDeadUnit.isSaboteur()) {
-                        // this unit takes damage, catches the explosion so to speak
-                        takeDamage(potentialDeadUnit.getUnitType().damageOnEnterStructure);
-                    }
+            for (int iq = 0; iq < MAX_UNITS; iq++) {
+                cUnit &potentialDeadUnit = unit[iq];
+                if (iq == iID) continue; // skip self
+                if (!potentialDeadUnit.isValid()) continue;
+                if (potentialDeadUnit.iCell != iCell) continue; // not on my cell
+                if (!potentialDeadUnit.canBeSquished()) continue;
 
-                    // die
-                    potentialDeadUnit.die(false, true);
+                if (potentialDeadUnit.isSaboteur()) {
+                    // this unit takes damage, catches the explosion so to speak
+                    takeDamage(potentialDeadUnit.getUnitType().damageOnEnterStructure);
                 }
+
+                // die
+                potentialDeadUnit.die(false, true);
             }
         }
 
