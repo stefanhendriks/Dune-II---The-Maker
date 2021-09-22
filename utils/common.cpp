@@ -601,9 +601,14 @@ void install_units() {
 
 void install_particles() {
     for (int i = 0; i < MAX_PARTICLE_TYPES; i++) {
-        sParticleInfo[i].bmp = nullptr;
+        s_ParticleInfo &particleInfo = sParticleInfo[i];
+        particleInfo.bmpIndex = -1;
+        particleInfo.startAlpha = -1;
+
     }
-    sParticleInfo[PARTICLE_MOVE].bmp = (BITMAP *) gfxdata[MOVE_INDICATOR].dat;
+
+    sParticleInfo[PARTICLE_MOVE].bmpIndex = D2TM_BITMAP_PARTICLE_MOVE;
+    sParticleInfo[PARTICLE_MOVE].startAlpha = 128;
 }
 
 void install_specials() {

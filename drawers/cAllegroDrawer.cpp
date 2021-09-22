@@ -164,6 +164,11 @@ int cAllegroDrawer::getCenteredYPosForBitmap(BITMAP *bmp) {
 	return (game.screen_y / 2) - halfOfHeight;
 }
 
+void cAllegroDrawer::blit(sBitmap *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
+    if (src == nullptr) return;
+    blit(src->bitmap, dest, src_x, src_y, width, height, pos_x, pos_y);
+}
+
 void cAllegroDrawer::blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
     // use :: so we use global scope Allegro blitSprite
     if (src == nullptr || dest == nullptr) return;
