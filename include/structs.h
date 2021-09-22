@@ -202,6 +202,7 @@ struct s_ParticleInfo {
 
     int startAlpha;         // 0-255 (anything else == 255 = opaque)
 
+    bool usesAdditiveBlending; // type of blending used when alpha > 0 and < 255 (default = transparent, if this is set to false)
 };
 
 struct s_BulletInfo {
