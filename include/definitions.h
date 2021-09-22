@@ -286,7 +286,6 @@
 
 // Particle types
 #define PARTICLE_MOVE		1
-#define PARTYPE_REPAIRBLINK 2
 
 // smudge
 #define SMUDGE_ROCK 0
