@@ -53,15 +53,18 @@ int cParticle::draw_y() {
 
 // draw
 void cParticle::draw() {
-    int dx = draw_x();
-    int dy = draw_y();
+    s_ParticleInfo &particleInfo = sParticleInfo[iType];
+
+    // drawX and drawY = is the draw coordinates but centered within cell (frameWidth/Height are the cell size?)
+    int drawX = draw_x();
+    int drawY = draw_y();
 
     // TODO: This is culling, and that responsibility should be somewhere else
-    if (dx < 0 || dx > game.screen_x)
+    if (drawX < 0 || drawX > game.screen_x)
         return;
 
     // TODO: This is culling, and that responsibility should be somewhere else
-    if (dy < 0 || dy > game.screen_y)
+    if (drawY < 0 || drawY > game.screen_y)
         return;
 
     // valid in boundaries
@@ -96,16 +99,12 @@ void cParticle::draw() {
     // temp is no longer needed
     destroy_bitmap(temp);
 
-    // drawX and drawY = is the draw coordinates but centered within cell (frameWidth/Height are the cell size?)
-    int drawX = dx;
-    int drawY = dy;
-
-    if (iAlpha > -1) {
-		if (iType != D2TM_PARTICLE_OBJECT_BOOM01 && iType != D2TM_PARTICLE_OBJECT_BOOM02 && iType != D2TM_PARTICLE_OBJECT_BOOM03) {
-            set_trans_blender(0,0,0, iAlpha);
-			draw_trans_sprite(bmp_screen, stretched, drawX, drawY);
-		} else {
+    if (isUsingAlphaChannel()) {
+		if (particleInfo.usesAdditiveBlending) {
             fblend_add(stretched, bmp_screen, drawX, drawY, iAlpha);
+		} else {
+            set_trans_blender(0,0,0, iAlpha);
+            draw_trans_sprite(bmp_screen, stretched, drawX, drawY);
         }
 	} else {
         draw_sprite(bmp_screen, stretched, drawX, drawY);
@@ -115,6 +114,8 @@ void cParticle::draw() {
 
     destroy_bitmap(stretched);
 }
+
+bool cParticle::isUsingAlphaChannel() const { return iAlpha > -1 && iAlpha < 255; }
 
 
 // think

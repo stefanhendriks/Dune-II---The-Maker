@@ -52,6 +52,8 @@ public:
 
     static void create(long x, long y, int iType, int iHouse, int iFrame);
     static int findNewSlot();
+
+    bool isUsingAlphaChannel() const;
 };
 
 void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame);
