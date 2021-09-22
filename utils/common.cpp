@@ -604,11 +604,15 @@ void install_particles() {
         s_ParticleInfo &particleInfo = sParticleInfo[i];
         particleInfo.bmpIndex = -1;
         particleInfo.startAlpha = -1;
-
     }
 
-    sParticleInfo[PARTICLE_MOVE].bmpIndex = D2TM_BITMAP_PARTICLE_MOVE;
-    sParticleInfo[PARTICLE_MOVE].startAlpha = 128;
+    // move
+    sParticleInfo[D2TM_PARTICLE_MOVE].bmpIndex = D2TM_BITMAP_PARTICLE_MOVE;
+    sParticleInfo[D2TM_PARTICLE_MOVE].startAlpha = 128;
+
+    // attack
+    sParticleInfo[D2TM_PARTICLE_ATTACK].bmpIndex = D2TM_BITMAP_PARTICLE_ATTACK;
+    sParticleInfo[D2TM_PARTICLE_ATTACK].startAlpha = 128;
 }
 
 void install_specials() {

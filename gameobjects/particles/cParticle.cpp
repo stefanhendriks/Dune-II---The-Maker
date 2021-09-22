@@ -151,7 +151,7 @@ void cParticle::think() {
     }
 
     // move
-    if (iType == PARTICLE_MOVE || iType == ATTACK_INDICATOR)
+    if (iType == D2TM_PARTICLE_MOVE || iType == D2TM_PARTICLE_ATTACK)
     {
         TIMER_frame--;
 
@@ -568,7 +568,7 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     pParticle.bAlive = true;
 
-    if (iType == PARTICLE_MOVE || iType == ATTACK_INDICATOR)
+    if (iType == D2TM_PARTICLE_MOVE || iType == D2TM_PARTICLE_ATTACK)
         pParticle.iAlpha = 128;
 
     if (iType == EXPLOSION_TRIKE)
