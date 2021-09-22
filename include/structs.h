@@ -204,6 +204,7 @@ struct s_ParticleInfo {
 
     bool usesAdditiveBlending; // type of blending used when alpha > 0 and < 255 (default = transparent, if this is set to false)
 
+    int layer;              // at which 'layer' (z-index like) to draw particle (0 = top (over unit), 1 = bottom (beneath unit))
     int frameWidth;         // width of frame
     int frameHeight;        // height of frame
 
