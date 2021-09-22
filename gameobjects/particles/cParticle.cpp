@@ -16,9 +16,6 @@ void cParticle::init() {
     bAlive=false;       // alive (if yes, it is in use, if not it can be used)
     iAlpha=-1;			// alpha number
 
-    frameWidth=32;      // default width of frame
-    frameHeight=frameWidth;
-
     x=0;
     y=0;              // x and y position to draw (absolute numbers)
     frameIndex=0;
@@ -42,18 +39,20 @@ bool cParticle::isValid() {
 }
 
 int cParticle::draw_x() {
-    int bmpOffset = (frameWidth / 2) * -1;
+    int bmpOffset = (getFrameWidth() / 2) * -1;
     return mapCamera->getWindowXPositionWithOffset(x, bmpOffset);
 }
 
 int cParticle::draw_y() {
-    int bmpOffset = (frameHeight / 2) * -1;
+    int bmpOffset = (getFrameHeight() / 2) * -1;
     return mapCamera->getWindowYPositionWithOffset(y, bmpOffset);
 }
 
 // draw
 void cParticle::draw() {
-    s_ParticleInfo &particleInfo = sParticleInfo[iType];
+    s_ParticleInfo particleInfo = getParticleInfo();
+    int frameWidth = getFrameWidth();
+    int frameHeight = getFrameHeight();
 
     // drawX and drawY = is the draw coordinates but centered within cell (frameWidth/Height are the cell size?)
     int drawX = draw_x();
@@ -115,7 +114,14 @@ void cParticle::draw() {
     destroy_bitmap(stretched);
 }
 
-bool cParticle::isUsingAlphaChannel() const { return iAlpha > -1 && iAlpha < 255; }
+s_ParticleInfo cParticle::getParticleInfo() const {
+    s_ParticleInfo &particleInfo = sParticleInfo[iType];
+    return particleInfo;
+}
+
+bool cParticle::isUsingAlphaChannel() const {
+    return iAlpha > -1 && iAlpha < 255;
+}
 
 
 // think
@@ -569,42 +575,27 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     if (iType == D2TM_PARTICLE_EXPLOSION_TRIKE)
     {
-        pParticle.iAlpha=255;
-        pParticle.frameWidth=48;
-        pParticle.frameHeight=48;
+        // TODO: Spawn additional particle property
         PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM03, -1, 0);
     }
 
     if (iType == D2TM_PARTICLE_SMOKE)
     {
-        pParticle.iAlpha=0;
-        pParticle.frameWidth=32;
-        pParticle.frameHeight=48;
         pParticle.TIMER_dead=900;
         PARTICLE_CREATE(x+16, y+42, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1);
     }
 
     if (iType == D2TM_PARTICLE_SMOKE_SHADOW)
     {
-        pParticle.iAlpha=0;
-        pParticle.frameWidth=36;
-        pParticle.frameHeight=38;
         pParticle.TIMER_dead=1000;
     }
 
     if (iType == D2TM_PARTICLE_TRACK_DIA || iType == D2TM_PARTICLE_TRACK_HOR || iType == D2TM_PARTICLE_TRACK_VER || iType == D2TM_PARTICLE_TRACK_DIA2)
     {
-        pParticle.iAlpha=128;
         pParticle.TIMER_dead=2000;
-        pParticle.layer=1; // other layer
+        pParticle.layer=1; // TODO: make property -- other layer
     }
 
-    if (iType == D2TM_PARTICLE_BULLET_PUF)
-    {
-        pParticle.frameHeight = 18;
-        pParticle.frameWidth  = 18;
-        pParticle.iAlpha  = -1;
-    }
 
     // trike exploding
     if (iType == D2TM_PARTICLE_EXPLOSION_FIRE)
@@ -616,9 +607,6 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     // tanks exploding
     if (iType == D2TM_PARTICLE_WORMEAT) {
-        pParticle.iAlpha=255;
-        pParticle.frameWidth=48;
-        pParticle.frameHeight=48;
         pParticle.TIMER_frame=80; // 2,5 * 32 (a tad slower than on 3 frames)
     }
 
@@ -633,18 +621,11 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         if (iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE01 && iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE02)
             PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0);
 
-        pParticle.iAlpha=255;
-        pParticle.frameWidth=48;
-        pParticle.frameHeight=48;
     }
 
     // worm trail
     if (iType == D2TM_PARTICLE_WORMTRAIL)
     {
-        pParticle.iAlpha=96;
-        pParticle.frameWidth=48;
-        pParticle.frameHeight=48;
-
         pParticle.layer=1; // other layer
     }
 
@@ -660,9 +641,6 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     {
         pParticle.frameIndex=iFrame;
         pParticle.TIMER_dead = 50;
-        pParticle.iAlpha=128;
-        pParticle.frameWidth=64;
-        pParticle.frameHeight=64;
     }
 
     if (iType == D2TM_PARTICLE_SQUISH01 ||
@@ -672,9 +650,6 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     {
         pParticle.frameIndex=0;
         pParticle.TIMER_frame = 50;
-        pParticle.frameWidth=32;
-        pParticle.iAlpha=255;
-        pParticle.frameHeight=32;
         pParticle.layer=1;
     }
 
@@ -691,8 +666,6 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     {
         pParticle.frameIndex=0;
         pParticle.TIMER_frame= 50 + rnd(50);
-        pParticle.frameWidth=96;
-        pParticle.frameHeight=96;
         pParticle.layer=1;
         pParticle.iAlpha= 96 + rnd(64);
     }
@@ -703,26 +676,6 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0);
     }
 
-    if (iType == D2TM_PARTICLE_OBJECT_BOOM01)
-    {
-        pParticle.iAlpha=240;
-        pParticle.frameWidth=512;
-        pParticle.frameHeight=512;
-    }
-
-    if (iType == D2TM_PARTICLE_OBJECT_BOOM02)
-    {
-        pParticle.iAlpha=230;
-        pParticle.frameWidth=256;
-        pParticle.frameHeight=256;
-    }
-
-    if (iType == D2TM_PARTICLE_OBJECT_BOOM03)
-    {
-        pParticle.iAlpha=220;
-        pParticle.frameWidth=128;
-        pParticle.frameHeight=128;
-    }
 }
 
 int cParticle::findNewSlot() {
@@ -747,6 +700,14 @@ void cParticle::init(const s_ParticleInfo &particleInfo) {
         iAlpha = 255;
     }
 
+}
+
+int cParticle::getFrameWidth() {
+    return getParticleInfo().frameWidth;
+}
+
+int cParticle::getFrameHeight() {
+    return getParticleInfo().frameHeight;
 }
 
 /**

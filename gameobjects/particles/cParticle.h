@@ -23,8 +23,6 @@ public:
     int iAlpha;             // alpha
 
     int frameIndex;         // frame to draw
-    int frameWidth;         // width of frame
-    int frameHeight;        // height of frame
 
     // TIMERS
     int TIMER_frame;    // frame animation timers (when < 0, next frame, etc)
@@ -54,6 +52,12 @@ public:
     static int findNewSlot();
 
     bool isUsingAlphaChannel() const;
+
+private:
+    int getFrameWidth();
+    int getFrameHeight();
+
+    s_ParticleInfo getParticleInfo() const;
 };
 
 void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame);
