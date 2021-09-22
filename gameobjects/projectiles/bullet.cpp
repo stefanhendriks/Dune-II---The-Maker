@@ -293,9 +293,9 @@ void cBullet::arrivedAtDestinationLogic() {
             }
 
             // create particle of explosion
-            if (sBullet.deadbmp > -1) {
+            if (sBullet.deathParticle > -1) {
                 // depending on 'explosion size'
-                PARTICLE_CREATE(posX, posY, sBullet.deadbmp, -1, -1);
+                PARTICLE_CREATE(posX, posY, sBullet.deathParticle, -1, -1);
             }
 
             if (iType == ROCKET_BIG) {
@@ -306,7 +306,7 @@ void cBullet::arrivedAtDestinationLogic() {
                                                 distanceBetweenCellAndCenterOfScreen(cellToDamage));
                 }
                 if (rnd(100) < 20) {
-                    PARTICLE_CREATE(posX, posY, OBJECT_SMOKE, -1, -1);
+                    PARTICLE_CREATE(posX, posY, D2TM_PARTICLE_SMOKE, -1, -1);
                 }
             }
 

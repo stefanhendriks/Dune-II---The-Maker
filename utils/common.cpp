@@ -613,6 +613,40 @@ void install_particles() {
     // attack
     sParticleInfo[D2TM_PARTICLE_ATTACK].bmpIndex = D2TM_BITMAP_PARTICLE_ATTACK;
     sParticleInfo[D2TM_PARTICLE_ATTACK].startAlpha = 128;
+
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TRIKE].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_TRIKE;
+    sParticleInfo[D2TM_PARTICLE_SMOKE].bmpIndex = D2TM_BITMAP_PARTICLE_SMOKE;
+    sParticleInfo[D2TM_PARTICLE_SMOKE_SHADOW].bmpIndex = D2TM_BITMAP_PARTICLE_SMOKE_SHADOW;
+
+    sParticleInfo[D2TM_PARTICLE_TRACK_DIA].bmpIndex = D2TM_BITMAP_PARTICLE_TRACK_DIA;
+    sParticleInfo[D2TM_PARTICLE_TRACK_HOR].bmpIndex = D2TM_BITMAP_PARTICLE_TRACK_HOR;
+    sParticleInfo[D2TM_PARTICLE_TRACK_VER].bmpIndex = D2TM_BITMAP_PARTICLE_TRACK_VER;
+    sParticleInfo[D2TM_PARTICLE_TRACK_DIA2].bmpIndex = D2TM_BITMAP_PARTICLE_TRACK_DIA2;
+    sParticleInfo[D2TM_PARTICLE_BULLET_PUF].bmpIndex = D2TM_BITMAP_PARTICLE_BULLET_PUF;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_FIRE].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_FIRE;
+    sParticleInfo[D2TM_PARTICLE_WORMEAT].bmpIndex = D2TM_BITMAP_PARTICLE_WORMEAT;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_ONE].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_TANK_ONE;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_TWO].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_TANK_TWO;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_STRUCTURE01;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_STRUCTURE02;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_GAS].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_GAS;
+    sParticleInfo[D2TM_PARTICLE_WORMTRAIL].bmpIndex = D2TM_BITMAP_PARTICLE_WORMTRAIL;
+    sParticleInfo[D2TM_PARTICLE_DEADINF01].bmpIndex = D2TM_BITMAP_PARTICLE_DEADINF01;
+    sParticleInfo[D2TM_PARTICLE_DEADINF02].bmpIndex = D2TM_BITMAP_PARTICLE_DEADINF02;
+    sParticleInfo[D2TM_PARTICLE_TANKSHOOT].bmpIndex = D2TM_BITMAP_PARTICLE_TANKSHOOT;
+    sParticleInfo[D2TM_PARTICLE_SIEGESHOOT].bmpIndex = D2TM_BITMAP_PARTICLE_SIEGESHOOT;
+    sParticleInfo[D2TM_PARTICLE_SQUISH01].bmpIndex = D2TM_BITMAP_PARTICLE_SQUISH01;
+    sParticleInfo[D2TM_PARTICLE_SQUISH02].bmpIndex = D2TM_BITMAP_PARTICLE_SQUISH02;
+    sParticleInfo[D2TM_PARTICLE_SQUISH03].bmpIndex = D2TM_BITMAP_PARTICLE_SQUISH03;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_ORNI;
+    sParticleInfo[D2TM_PARTICLE_SIEGEDIE].bmpIndex = D2TM_BITMAP_PARTICLE_SIEGEDIE;
+    sParticleInfo[D2TM_PARTICLE_CARRYPUFF].bmpIndex = D2TM_BITMAP_PARTICLE_CARRYPUFF;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ROCKET].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_ROCKET;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_ROCKET_SMALL;
+    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM01].bmpIndex = D2TM_BITMAP_PARTICLE_OBJECT_BOOM01;
+    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM02].bmpIndex = D2TM_BITMAP_PARTICLE_OBJECT_BOOM02;
+    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM03].bmpIndex = D2TM_BITMAP_PARTICLE_OBJECT_BOOM03;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_BULLET].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_BULLET;
 }
 
 void install_specials() {
@@ -691,7 +725,7 @@ void install_bullets() {
 
     for (int i = 0; i < MAX_BULLET_TYPES; i++) {
         sBulletInfo[i].bmp = NULL; // in case an invalid bitmap; default is a small rocket
-        sBulletInfo[i].deadbmp = -1; // this points to a bitmap (in data file, using index)
+        sBulletInfo[i].deathParticle = -1; // this points to a bitmap (in data file, using index)
         sBulletInfo[i].damage = 0;      // damage to vehicles
         sBulletInfo[i].damage_inf = 0;  // damage to infantry
         sBulletInfo[i].max_frames = 1;  // 1 frame animation
@@ -709,7 +743,7 @@ void install_bullets() {
 
     // huge rocket/missile
     sBulletInfo[ROCKET_BIG].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_LARGE].dat;
-    sBulletInfo[ROCKET_BIG].deadbmp = EXPLOSION_STRUCTURE01;
+    sBulletInfo[ROCKET_BIG].deathParticle = D2TM_PARTICLE_EXPLOSION_STRUCTURE01;
     sBulletInfo[ROCKET_BIG].bmp_width = 48;
     sBulletInfo[ROCKET_BIG].damage = 999;
     sBulletInfo[ROCKET_BIG].damage_inf = 999;
@@ -718,12 +752,12 @@ void install_bullets() {
     sBulletInfo[ROCKET_BIG].explosionSize = 7;
     sBulletInfo[ROCKET_BIG].canDamageAirUnits = true;
     sBulletInfo[ROCKET_BIG].canDamageGround = true;
-    sBulletInfo[ROCKET_BIG].smokeParticle = BULLET_PUF;
+    sBulletInfo[ROCKET_BIG].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
     strcpy(sBulletInfo[ROCKET_BIG].description, "ROCKET_BIG");
 
     // small rocket (for ornithopter)
     sBulletInfo[ROCKET_SMALL_ORNI].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_SMALL].dat;
-    sBulletInfo[ROCKET_SMALL_ORNI].deadbmp = EXPLOSION_ROCKET_SMALL;
+    sBulletInfo[ROCKET_SMALL_ORNI].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
     sBulletInfo[ROCKET_SMALL_ORNI].bmp_width = 16;
     sBulletInfo[ROCKET_SMALL_ORNI].damage = 12; // they can do pretty damage
     sBulletInfo[ROCKET_SMALL_ORNI].damage_inf = 9;
@@ -732,12 +766,12 @@ void install_bullets() {
     sBulletInfo[ROCKET_SMALL_ORNI].canDamageAirUnits = true;
     sBulletInfo[ROCKET_SMALL_ORNI].max_deadframes = 1;
     sBulletInfo[ROCKET_SMALL_ORNI].canDamageGround = true;
-    sBulletInfo[ROCKET_SMALL_ORNI].smokeParticle = BULLET_PUF;
+    sBulletInfo[ROCKET_SMALL_ORNI].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
     strcpy(sBulletInfo[ROCKET_SMALL_ORNI].description, "ROCKET_SMALL_ORNI");
 
     // small rocket
     sBulletInfo[ROCKET_SMALL].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_SMALL].dat;
-    sBulletInfo[ROCKET_SMALL].deadbmp = EXPLOSION_ROCKET_SMALL;
+    sBulletInfo[ROCKET_SMALL].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
     sBulletInfo[ROCKET_SMALL].bmp_width = 16;
     sBulletInfo[ROCKET_SMALL].damage = 10; // was 8
     sBulletInfo[ROCKET_SMALL].damage_inf = 8; // was 4
@@ -751,7 +785,7 @@ void install_bullets() {
 
     // small rocket - fremen rocket
     sBulletInfo[ROCKET_SMALL_FREMEN].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_SMALL].dat;
-    sBulletInfo[ROCKET_SMALL_FREMEN].deadbmp = EXPLOSION_ROCKET_SMALL;
+    sBulletInfo[ROCKET_SMALL_FREMEN].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
     sBulletInfo[ROCKET_SMALL_FREMEN].bmp_width = 16;
     sBulletInfo[ROCKET_SMALL_FREMEN].damage = 22;
     sBulletInfo[ROCKET_SMALL_FREMEN].damage_inf = 20;
@@ -765,7 +799,7 @@ void install_bullets() {
 
     // normal rocket
     sBulletInfo[ROCKET_NORMAL].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_NORMAL].dat;
-    sBulletInfo[ROCKET_NORMAL].deadbmp = EXPLOSION_ROCKET;
+    sBulletInfo[ROCKET_NORMAL].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET;
     sBulletInfo[ROCKET_NORMAL].bmp_width = 32;
     sBulletInfo[ROCKET_NORMAL].damage = 76;
     sBulletInfo[ROCKET_NORMAL].damage_inf = 36;  // less damage on infantry
@@ -774,12 +808,12 @@ void install_bullets() {
     sBulletInfo[ROCKET_NORMAL].max_deadframes = 4;
     sBulletInfo[ROCKET_NORMAL].canDamageAirUnits = true;
     sBulletInfo[ROCKET_NORMAL].canDamageGround = true;
-    sBulletInfo[ROCKET_NORMAL].smokeParticle = BULLET_PUF;
+    sBulletInfo[ROCKET_NORMAL].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
     strcpy(sBulletInfo[ROCKET_NORMAL].description, "ROCKET_NORMAL");
 
     // soldier shot
     sBulletInfo[BULLET_SMALL].bmp = (BITMAP *) gfxdata[BULLET_DOT_SMALL].dat;
-    sBulletInfo[BULLET_SMALL].deadbmp = EXPLOSION_BULLET; // not used anyway
+    sBulletInfo[BULLET_SMALL].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     sBulletInfo[BULLET_SMALL].bmp_width = 6;
     sBulletInfo[BULLET_SMALL].damage = 4; // vehicles are no match
     sBulletInfo[BULLET_SMALL].damage_inf = 10; // infantry vs infantry means big time damage
@@ -791,7 +825,7 @@ void install_bullets() {
 
     // trike shot
     sBulletInfo[BULLET_TRIKE].bmp = (BITMAP *) gfxdata[BULLET_DOT_SMALL].dat;
-    sBulletInfo[BULLET_TRIKE].deadbmp = EXPLOSION_BULLET; // not used anyway
+    sBulletInfo[BULLET_TRIKE].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     sBulletInfo[BULLET_TRIKE].bmp_width = 6;
     sBulletInfo[BULLET_TRIKE].damage = 3; // trikes do not do much damage to vehicles
     sBulletInfo[BULLET_TRIKE].damage_inf = 6; // but more to infantry
@@ -803,7 +837,7 @@ void install_bullets() {
 
     // quad shot
     sBulletInfo[BULLET_QUAD].bmp = (BITMAP *) gfxdata[BULLET_DOT_SMALL].dat;
-    sBulletInfo[BULLET_QUAD].deadbmp = EXPLOSION_BULLET; // not used anyway
+    sBulletInfo[BULLET_QUAD].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     sBulletInfo[BULLET_QUAD].bmp_width = 6;
     sBulletInfo[BULLET_QUAD].damage = 6;
     sBulletInfo[BULLET_QUAD].damage_inf = 8; // bigger impact on infantry
@@ -815,7 +849,7 @@ void install_bullets() {
 
     // normal tank shot
     sBulletInfo[BULLET_TANK].bmp = (BITMAP *) gfxdata[BULLET_DOT_MEDIUM].dat;
-    sBulletInfo[BULLET_TANK].deadbmp = EXPLOSION_BULLET; // not used anyway
+    sBulletInfo[BULLET_TANK].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     sBulletInfo[BULLET_TANK].bmp_width = 8;
     sBulletInfo[BULLET_TANK].damage = 12;
     sBulletInfo[BULLET_TANK].damage_inf = 4;  // infantry is not much damaged
@@ -828,7 +862,7 @@ void install_bullets() {
 
     // siege tank shot
     sBulletInfo[BULLET_SIEGE].bmp = (BITMAP *) gfxdata[BULLET_DOT_MEDIUM].dat;
-    sBulletInfo[BULLET_SIEGE].deadbmp = EXPLOSION_BULLET; // not used anyway
+    sBulletInfo[BULLET_SIEGE].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     sBulletInfo[BULLET_SIEGE].bmp_width = 8;
     sBulletInfo[BULLET_SIEGE].damage = 24;
     sBulletInfo[BULLET_SIEGE].damage_inf = 6; // infantry is not as much damaged
@@ -841,7 +875,7 @@ void install_bullets() {
 
     // devastator shot
     sBulletInfo[BULLET_DEVASTATOR].bmp = (BITMAP *) gfxdata[BULLET_DOT_LARGE].dat;
-    sBulletInfo[BULLET_DEVASTATOR].deadbmp = EXPLOSION_ROCKET_SMALL; // not used anyway
+    sBulletInfo[BULLET_DEVASTATOR].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL; // not used anyway
     sBulletInfo[BULLET_DEVASTATOR].bmp_width = 8;
     sBulletInfo[BULLET_DEVASTATOR].damage = 30;
     sBulletInfo[BULLET_DEVASTATOR].damage_inf = 12; // infantry again not much damaged
@@ -854,7 +888,7 @@ void install_bullets() {
 
     // Gas rocket of a deviator
     sBulletInfo[BULLET_GAS].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_NORMAL].dat;
-    sBulletInfo[BULLET_GAS].deadbmp = EXPLOSION_GAS;
+    sBulletInfo[BULLET_GAS].deathParticle = D2TM_PARTICLE_EXPLOSION_GAS;
     sBulletInfo[BULLET_GAS].bmp_width = 32;
     sBulletInfo[BULLET_GAS].damage = 1;
     sBulletInfo[BULLET_GAS].damage_inf = 1;
@@ -867,7 +901,7 @@ void install_bullets() {
 
     // normal turret shot
     sBulletInfo[BULLET_TURRET].bmp = (BITMAP *) gfxdata[BULLET_DOT_MEDIUM].dat;
-    sBulletInfo[BULLET_TURRET].deadbmp = EXPLOSION_BULLET; // not used anyway
+    sBulletInfo[BULLET_TURRET].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     sBulletInfo[BULLET_TURRET].bmp_width = 8;
     sBulletInfo[BULLET_TURRET].damage = 12;
     sBulletInfo[BULLET_TURRET].damage_inf = 12; // infantry is a hard target
@@ -880,7 +914,7 @@ void install_bullets() {
 
     // EXEPTION: Shimmer/ Sonic tank
     sBulletInfo[BULLET_SHIMMER].bmp = NULL;
-    sBulletInfo[BULLET_SHIMMER].deadbmp = -1;
+    sBulletInfo[BULLET_SHIMMER].deathParticle = -1;
     sBulletInfo[BULLET_SHIMMER].bmp_width = 0;
     sBulletInfo[BULLET_SHIMMER].damage = 55;
     sBulletInfo[BULLET_SHIMMER].damage_inf = 70; // infantry cant stand the sound, die very fast
@@ -891,7 +925,7 @@ void install_bullets() {
 
     // rocket of rocket turret
     sBulletInfo[ROCKET_RTURRET].bmp = (BITMAP *) gfxdata[BULLET_ROCKET_NORMAL].dat;
-    sBulletInfo[ROCKET_RTURRET].deadbmp = EXPLOSION_ROCKET_SMALL;
+    sBulletInfo[ROCKET_RTURRET].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
     sBulletInfo[ROCKET_RTURRET].bmp_width = 16 * 2;
     sBulletInfo[ROCKET_RTURRET].damage = 25;
     sBulletInfo[ROCKET_RTURRET].damage_inf = 10; // infantry is a bit tougher
