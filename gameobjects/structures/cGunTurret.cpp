@@ -93,7 +93,7 @@ void cGunTurret::think_attack() {
                         int iShootX = pos_x() + half;
                         int iShootY = pos_y() + half;
                         int bmp_head = convert_angle(iHeadFacing);
-                        PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);
+                        PARTICLE_CREATE(iShootX, iShootY, D2TM_PARTICLE_TANKSHOOT, -1, bmp_head);
                     }
                 }
 

@@ -177,7 +177,7 @@ void cAbstractStructure::die() {
             int posY = map.getAbsoluteYPositionFromCell(iCll);
 
             PARTICLE_CREATE(posX + half,
-                            posY + half, OBJECT_BOOM01, -1, -1);
+                            posY + half, D2TM_PARTICLE_OBJECT_BOOM01, -1, -1);
 
             for (int i=0; i < 3; i++)
             {
@@ -185,7 +185,7 @@ void cAbstractStructure::die() {
 
                 // create particle
                 PARTICLE_CREATE(posX + half,
-                                posY + half, EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
+                                posY + half, D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
 
                 // create smoke
                 if (rnd(100) < 15) {
@@ -193,7 +193,7 @@ void cAbstractStructure::die() {
                     int randomY = -8 + rnd(16);
 
                     PARTICLE_CREATE(posX + half + randomX,
-                                    posY + half + randomY, OBJECT_SMOKE, -1, -1);
+                                    posY + half + randomY, D2TM_PARTICLE_SMOKE, -1, -1);
                 }
 
                 // create fire
@@ -202,7 +202,7 @@ void cAbstractStructure::die() {
                     int randomY = -8 + rnd(16);
 
                     PARTICLE_CREATE(posX + half + randomX,
-                                    posY + half + randomY, EXPLOSION_FIRE, -1, -1);
+                                    posY + half + randomY, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1);
                 }
 
             }
@@ -444,7 +444,7 @@ void cAbstractStructure::damage(int hp) {
 
         // Structure on fire?
         if (rnd(100) < iChance) {
-            PARTICLE_CREATE(getRandomPosX(), getRandomPosY(), OBJECT_SMOKE, -1, -1);
+            PARTICLE_CREATE(getRandomPosX(), getRandomPosY(), D2TM_PARTICLE_SMOKE, -1, -1);
         }
 
         s_GameEvent event {

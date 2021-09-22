@@ -206,7 +206,7 @@ struct s_ParticleInfo {
 
 struct s_BulletInfo {
     BITMAP *bmp;        // a reference to its bitmap. (16 bits here!)
-    int deadbmp;        // when the bullet dies, it will use this bmp to show its animation
+    int deathParticle;   // when the bullet dies, it will use this particle to show its death
     int bmp_width;      // how much pixels a bullet is (wide)
 
     int damage;         // how much damage it does to vehicles

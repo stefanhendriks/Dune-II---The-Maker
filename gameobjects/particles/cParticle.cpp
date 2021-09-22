@@ -101,7 +101,7 @@ void cParticle::draw() {
     int drawY = dy;
 
     if (iAlpha > -1) {
-		if (iType != OBJECT_BOOM01 && iType != OBJECT_BOOM02 && iType != OBJECT_BOOM03) {
+		if (iType != D2TM_PARTICLE_OBJECT_BOOM01 && iType != D2TM_PARTICLE_OBJECT_BOOM02 && iType != D2TM_PARTICLE_OBJECT_BOOM03) {
             set_trans_blender(0,0,0, iAlpha);
 			draw_trans_sprite(bmp_screen, stretched, drawX, drawY);
 		} else {
@@ -119,7 +119,7 @@ void cParticle::draw() {
 
 // think
 void cParticle::think() {
-	if (iType == OBJECT_BOOM01 || iType == OBJECT_BOOM02 || iType == OBJECT_BOOM03)
+	if (iType == D2TM_PARTICLE_OBJECT_BOOM01 || iType == D2TM_PARTICLE_OBJECT_BOOM02 || iType == D2TM_PARTICLE_OBJECT_BOOM03)
 	{
 		TIMER_frame++;
 
@@ -134,7 +134,7 @@ void cParticle::think() {
 		}
 	}
 
-    if (iType == OBJECT_CARRYPUFF)
+    if (iType == D2TM_PARTICLE_CARRYPUFF)
     {
         TIMER_frame--;
 
@@ -173,7 +173,7 @@ void cParticle::think() {
         return;
     }
 
-    if (iType == OBJECT_SIEGEDIE)
+    if (iType == D2TM_PARTICLE_SIEGEDIE)
     {
         TIMER_frame--;
 
@@ -200,7 +200,7 @@ void cParticle::think() {
         }
     }
 
-	if (iType == EXPLOSION_TRIKE)
+	if (iType == D2TM_PARTICLE_EXPLOSION_TRIKE)
     {
         TIMER_frame--;
         if (TIMER_frame < 0)
@@ -217,16 +217,16 @@ void cParticle::think() {
         }
     }
 
-    if (iType == OBJECT_SMOKE ||
-        iType == OBJECT_SMOKE_SHADOW)
+    if (iType == D2TM_PARTICLE_SMOKE ||
+        iType == D2TM_PARTICLE_SMOKE_SHADOW)
     {
         TIMER_frame--;
         TIMER_dead--;
         if (iAlpha < 255 && TIMER_dead > 0)
         {
-            if (iType == OBJECT_SMOKE)
+            if (iType == D2TM_PARTICLE_SMOKE)
                 iAlpha++;
-            else if (iType == OBJECT_SMOKE_SHADOW)
+            else if (iType == D2TM_PARTICLE_SMOKE_SHADOW)
                 if (iAlpha < 128)
                     iAlpha++;
         }
@@ -242,7 +242,7 @@ void cParticle::think() {
             if (TIMER_dead < 0)
             {
                 TIMER_dead = -1;
-                if (iType == OBJECT_SMOKE_SHADOW)
+                if (iType == D2TM_PARTICLE_SMOKE_SHADOW)
                     iAlpha -=10;
                 else
                     iAlpha -= 14;
@@ -253,7 +253,7 @@ void cParticle::think() {
         }
     }
 
-    if (iType == TRACK_DIA || iType == TRACK_HOR || iType == TRACK_VER || iType == TRACK_DIA2)
+    if (iType == D2TM_PARTICLE_TRACK_DIA || iType == D2TM_PARTICLE_TRACK_HOR || iType == D2TM_PARTICLE_TRACK_VER || iType == D2TM_PARTICLE_TRACK_DIA2)
     {
         TIMER_frame--;
         TIMER_dead--;
@@ -281,7 +281,7 @@ void cParticle::think() {
         }
     }
 
-    if (iType == BULLET_PUF)
+    if (iType == D2TM_PARTICLE_BULLET_PUF)
     {
         TIMER_frame--;
 
@@ -297,8 +297,8 @@ void cParticle::think() {
 
     }
 
-    if (iType == OBJECT_DEADINF01 ||
-        iType == OBJECT_DEADINF02)
+    if (iType == D2TM_PARTICLE_DEADINF01 ||
+        iType == D2TM_PARTICLE_DEADINF02)
     {
         TIMER_frame--;
         TIMER_dead--;
@@ -319,7 +319,7 @@ void cParticle::think() {
 
     }
 
-    if (iType == EXPLOSION_ROCKET_SMALL)
+    if (iType == D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL)
     {
         TIMER_frame--;
 
@@ -342,7 +342,7 @@ void cParticle::think() {
     }
 
     // normal rocket explosion (of launchers)
-    if (iType == EXPLOSION_ROCKET)
+    if (iType == D2TM_PARTICLE_EXPLOSION_ROCKET)
     {
         TIMER_frame--;
 
@@ -364,7 +364,7 @@ void cParticle::think() {
         }
     }
 
-    if (iType == OBJECT_WORMTRAIL)
+    if (iType == D2TM_PARTICLE_WORMTRAIL)
     {
         TIMER_frame--;
 
@@ -389,11 +389,11 @@ void cParticle::think() {
         }
     }
     // tank explosion(s)
-    if (iType == EXPLOSION_TANK_ONE ||
-        iType == EXPLOSION_TANK_TWO ||
-        iType == EXPLOSION_STRUCTURE01 ||
-        iType == EXPLOSION_STRUCTURE02 ||
-        iType == EXPLOSION_GAS)
+    if (iType == D2TM_PARTICLE_EXPLOSION_TANK_ONE ||
+        iType == D2TM_PARTICLE_EXPLOSION_TANK_TWO ||
+        iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE01 ||
+        iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE02 ||
+        iType == D2TM_PARTICLE_EXPLOSION_GAS)
     {
         TIMER_frame--;
 
@@ -420,7 +420,7 @@ void cParticle::think() {
         }
     }
 
-    if (iType == OBJECT_WORMEAT)
+    if (iType == D2TM_PARTICLE_WORMEAT)
     {
         TIMER_frame--;
 
@@ -448,7 +448,7 @@ void cParticle::think() {
     }
 
     // bullets of tanks explode
-    if (iType == EXPLOSION_BULLET)
+    if (iType == D2TM_PARTICLE_EXPLOSION_BULLET)
     {
         TIMER_frame--;
         if (TIMER_frame < 0)
@@ -462,10 +462,10 @@ void cParticle::think() {
 
     }
 
-    if (iType == EXPLOSION_SQUISH01 ||
-        iType == EXPLOSION_SQUISH02 ||
-        iType == EXPLOSION_SQUISH03 ||
-        iType == EXPLOSION_ORNI)
+    if (iType == D2TM_PARTICLE_SQUISH01 ||
+        iType == D2TM_PARTICLE_SQUISH02 ||
+        iType == D2TM_PARTICLE_SQUISH03 ||
+        iType == D2TM_PARTICLE_EXPLOSION_ORNI)
     {
         TIMER_frame--;
         if (TIMER_frame < 0)
@@ -479,7 +479,7 @@ void cParticle::think() {
         }
     }
 
-    if (iType == OBJECT_TANKSHOOT || iType == OBJECT_SIEGESHOOT)
+    if (iType == D2TM_PARTICLE_TANKSHOOT || iType == D2TM_PARTICLE_SIEGESHOOT)
     {
         TIMER_frame--;
         TIMER_dead--;
@@ -504,7 +504,7 @@ void cParticle::think() {
 
 
 
-    if (iType == EXPLOSION_FIRE)
+    if (iType == D2TM_PARTICLE_EXPLOSION_FIRE)
     {
         TIMER_frame--;
         TIMER_dead--;
@@ -566,24 +566,24 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     pParticle.bAlive = true;
 
-    if (iType == EXPLOSION_TRIKE)
+    if (iType == D2TM_PARTICLE_EXPLOSION_TRIKE)
     {
         pParticle.iAlpha=255;
         pParticle.frameWidth=48;
         pParticle.frameHeight=48;
-        PARTICLE_CREATE(x, y, OBJECT_BOOM03, -1, 0);
+        PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM03, -1, 0);
     }
 
-    if (iType == OBJECT_SMOKE)
+    if (iType == D2TM_PARTICLE_SMOKE)
     {
         pParticle.iAlpha=0;
         pParticle.frameWidth=32;
         pParticle.frameHeight=48;
         pParticle.TIMER_dead=900;
-        PARTICLE_CREATE(x+16, y+42, OBJECT_SMOKE_SHADOW, -1, -1);
+        PARTICLE_CREATE(x+16, y+42, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1);
     }
 
-    if (iType == OBJECT_SMOKE_SHADOW)
+    if (iType == D2TM_PARTICLE_SMOKE_SHADOW)
     {
         pParticle.iAlpha=0;
         pParticle.frameWidth=36;
@@ -591,28 +591,22 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         pParticle.TIMER_dead=1000;
     }
 
-    if (iType == TRACK_DIA || iType == TRACK_HOR || iType == TRACK_VER || iType == TRACK_DIA2)
+    if (iType == D2TM_PARTICLE_TRACK_DIA || iType == D2TM_PARTICLE_TRACK_HOR || iType == D2TM_PARTICLE_TRACK_VER || iType == D2TM_PARTICLE_TRACK_DIA2)
     {
         pParticle.iAlpha=128;
         pParticle.TIMER_dead=2000;
         pParticle.layer=1; // other layer
     }
 
-    if (iType == BULLET_PUF)
+    if (iType == D2TM_PARTICLE_BULLET_PUF)
     {
         pParticle.frameHeight = 18;
         pParticle.frameWidth  = 18;
         pParticle.iAlpha  = -1;
     }
 
-    // bullets of tanks explode
-    if (iType == EXPLOSION_BULLET)
-    {
-
-    }
-
     // trike exploding
-    if (iType == EXPLOSION_FIRE)
+    if (iType == D2TM_PARTICLE_EXPLOSION_FIRE)
     {
         pParticle.iAlpha=255;
         pParticle.TIMER_dead= 750 + rnd(500);
@@ -620,7 +614,7 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     }
 
     // tanks exploding
-    if (iType == OBJECT_WORMEAT) {
+    if (iType == D2TM_PARTICLE_WORMEAT) {
         pParticle.iAlpha=255;
         pParticle.frameWidth=48;
         pParticle.frameHeight=48;
@@ -628,15 +622,15 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     }
 
     // tanks exploding
-    if (iType == EXPLOSION_TANK_ONE ||
-        iType == EXPLOSION_TANK_TWO ||
-        iType == EXPLOSION_STRUCTURE01 ||
-        iType == EXPLOSION_STRUCTURE02 ||
-        iType == EXPLOSION_GAS)
+    if (iType == D2TM_PARTICLE_EXPLOSION_TANK_ONE ||
+        iType == D2TM_PARTICLE_EXPLOSION_TANK_TWO ||
+        iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE01 ||
+        iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE02 ||
+        iType == D2TM_PARTICLE_EXPLOSION_GAS)
     {
 
-        if (iType != EXPLOSION_STRUCTURE01 && iType != EXPLOSION_STRUCTURE02)
-            PARTICLE_CREATE(x, y, OBJECT_BOOM02, -1, 0);
+        if (iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE01 && iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE02)
+            PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0);
 
         pParticle.iAlpha=255;
         pParticle.frameWidth=48;
@@ -644,7 +638,7 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     }
 
     // worm trail
-    if (iType == OBJECT_WORMTRAIL)
+    if (iType == D2TM_PARTICLE_WORMTRAIL)
     {
         pParticle.iAlpha=96;
         pParticle.frameWidth=48;
@@ -653,15 +647,15 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         pParticle.layer=1; // other layer
     }
 
-    if (iType == OBJECT_DEADINF01 ||
-        iType == OBJECT_DEADINF02)
+    if (iType == D2TM_PARTICLE_DEADINF01 ||
+        iType == D2TM_PARTICLE_DEADINF02)
     {
         pParticle.TIMER_dead = 500 + rnd(500);
         pParticle.iAlpha=255;
         pParticle.layer=1; // other layer
     }
 
-    if (iType == OBJECT_TANKSHOOT || iType == OBJECT_SIEGESHOOT)
+    if (iType == D2TM_PARTICLE_TANKSHOOT || iType == D2TM_PARTICLE_SIEGESHOOT)
     {
         pParticle.frameIndex=iFrame;
         pParticle.TIMER_dead = 50;
@@ -670,10 +664,10 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         pParticle.frameHeight=64;
     }
 
-    if (iType == EXPLOSION_SQUISH01 ||
-        iType == EXPLOSION_SQUISH02 ||
-        iType == EXPLOSION_SQUISH03 ||
-        iType == EXPLOSION_ORNI)
+    if (iType == D2TM_PARTICLE_SQUISH01 ||
+        iType == D2TM_PARTICLE_SQUISH02 ||
+        iType == D2TM_PARTICLE_SQUISH03 ||
+        iType == D2TM_PARTICLE_EXPLOSION_ORNI)
     {
         pParticle.frameIndex=0;
         pParticle.TIMER_frame = 50;
@@ -683,16 +677,16 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         pParticle.layer=1;
     }
 
-    if (iType == OBJECT_SIEGEDIE) {
+    if (iType == D2TM_PARTICLE_SIEGEDIE) {
         pParticle.iAlpha=255;
         pParticle.TIMER_frame= 500 + rnd(300);
 
-        PARTICLE_CREATE(x, y-18, EXPLOSION_FIRE, -1, -1);
-        PARTICLE_CREATE(x, y-18, OBJECT_SMOKE, -1, -1);
-        PARTICLE_CREATE(x, y, OBJECT_BOOM02, -1, 0);
+        PARTICLE_CREATE(x, y-18, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1);
+        PARTICLE_CREATE(x, y-18, D2TM_PARTICLE_SMOKE, -1, -1);
+        PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0);
     }
 
-    if (iType == OBJECT_CARRYPUFF)
+    if (iType == D2TM_PARTICLE_CARRYPUFF)
     {
         pParticle.frameIndex=0;
         pParticle.TIMER_frame= 50 + rnd(50);
@@ -702,27 +696,27 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         pParticle.iAlpha= 96 + rnd(64);
     }
 
-    if (iType == EXPLOSION_ROCKET || iType == EXPLOSION_ROCKET_SMALL) {
+    if (iType == D2TM_PARTICLE_EXPLOSION_ROCKET || iType == D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL) {
         pParticle.iAlpha = 255;
         // also create bloom
-        PARTICLE_CREATE(x, y, OBJECT_BOOM03, iHouse, 0);
+        PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0);
     }
 
-    if (iType == OBJECT_BOOM01)
+    if (iType == D2TM_PARTICLE_OBJECT_BOOM01)
     {
         pParticle.iAlpha=240;
         pParticle.frameWidth=512;
         pParticle.frameHeight=512;
     }
 
-    if (iType == OBJECT_BOOM02)
+    if (iType == D2TM_PARTICLE_OBJECT_BOOM02)
     {
         pParticle.iAlpha=230;
         pParticle.frameWidth=256;
         pParticle.frameHeight=256;
     }
 
-    if (iType == OBJECT_BOOM03)
+    if (iType == D2TM_PARTICLE_OBJECT_BOOM03)
     {
         pParticle.iAlpha=220;
         pParticle.frameWidth=128;
