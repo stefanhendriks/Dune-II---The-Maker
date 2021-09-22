@@ -151,7 +151,7 @@ void cParticle::think() {
     }
 
     // move
-    if (iType == MOVE_INDICATOR || iType == ATTACK_INDICATOR)
+    if (iType == PARTICLE_MOVE || iType == ATTACK_INDICATOR)
     {
         TIMER_frame--;
 
@@ -568,7 +568,7 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     pParticle.bAlive = true;
 
-    if (iType == MOVE_INDICATOR || iType == ATTACK_INDICATOR)
+    if (iType == PARTICLE_MOVE || iType == ATTACK_INDICATOR)
         pParticle.iAlpha = 128;
 
     if (iType == EXPLOSION_TRIKE)
@@ -746,7 +746,17 @@ int cParticle::findNewSlot() {
 
 void cParticle::init(const s_ParticleInfo &particleInfo) {
     init();
-    bmp = particleInfo.bmp;
+
+    if (particleInfo.bmpIndex > -1) {
+        bmp = game.getDataRepository()->getBitmapAt(particleInfo.bmpIndex);
+    }
+
+    if (particleInfo.startAlpha > -1 && particleInfo.startAlpha < 256) {
+        iAlpha = particleInfo.startAlpha;
+    } else {
+        iAlpha = 255;
+    }
+
 }
 
 /**

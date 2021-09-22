@@ -19,7 +19,7 @@ public:
     // Drawing effects
     long x, y;              // x and y position to draw (absolute numbers). This is the 'center' of a particle, not top left!
     int iType;              // type
-    BITMAP * bmp;           // pointer to bitmap to draw (not owner of bitmap!)
+    sBitmap * bmp;          // pointer to bitmap to draw (not owner of bitmap!)
     int iAlpha;             // alpha
 
     int frameIndex;         // frame to draw

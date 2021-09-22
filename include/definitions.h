@@ -285,7 +285,10 @@
 #define EXPL_TANK_TWO     25  // another explosion of a tank etc
 
 // Particle types
-#define PARTICLE_MOVE		1
+const int PARTICLE_MOVE	= 1; // particle used for indicating when move order has been received
+
+// Bitmap types
+const int D2TM_BITMAP_PARTICLE_MOVE = 1;
 
 // smudge
 #define SMUDGE_ROCK 0

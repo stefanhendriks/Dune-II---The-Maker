@@ -1728,5 +1728,7 @@ void cGame::install_bitmaps() {
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_REPAIR, MOUSE_REPAIR);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_RIGHT, MOUSE_RIGHT);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOUSE_UP, MOUSE_UP);
-    m_dataRepository->loadBitmapFromDataFileGfxDataAt(MOVE_INDICATOR, MOVE_INDICATOR);
+
+    // Particle stuff
+    m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_MOVE, MOVE_INDICATOR);
 }

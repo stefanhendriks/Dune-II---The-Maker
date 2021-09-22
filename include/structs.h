@@ -192,9 +192,16 @@ struct s_HouseInfo {
 
 /**
  * Particle info
+ * A particle can have 3 states:
+ * - fade in
+ * - animating
+ * - fade out (either while animating or not)
  */
 struct s_ParticleInfo {
-    BITMAP *bmp;         // a pointer to a BITMAP to draw
+    int bmpIndex;           // index of bmp to draw (index in DataRepository)
+
+    int startAlpha;         // 0-255 (anything else == 255 = opaque)
+
 };
 
 struct s_BulletInfo {
