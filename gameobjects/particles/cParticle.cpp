@@ -564,12 +564,7 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     pParticle.iHousePal = iHouse;
 
-    pParticle.iAlpha = -1;
-
     pParticle.bAlive = true;
-
-    if (iType == D2TM_PARTICLE_MOVE || iType == D2TM_PARTICLE_ATTACK)
-        pParticle.iAlpha = 128;
 
     if (iType == EXPLOSION_TRIKE)
     {
