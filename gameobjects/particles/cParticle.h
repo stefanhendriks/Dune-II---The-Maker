@@ -30,8 +30,6 @@ public:
 
     int TIMER_dead;     // when > -1, this timer will determine when the thing dies
 
-    int layer;          // on which layer to draw
-
     int iHousePal;      // when specified, use this palette for drawing (and its an 8 bit picture then!)
 
     // ---------
@@ -52,6 +50,8 @@ public:
     static int findNewSlot();
 
     bool isUsingAlphaChannel() const;
+
+    int getLayer();
 
 private:
     int getFrameWidth();

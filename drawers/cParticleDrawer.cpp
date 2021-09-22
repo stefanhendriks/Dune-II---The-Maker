@@ -18,9 +18,10 @@ void cParticleDrawer::drawHigherLayer() {
 
 void cParticleDrawer::drawLayer(int layer) {
 	for (int i=0; i < MAX_PARTICLES; i++) {
-		if (particle[i].isValid() &&
-		    particle[i].layer == layer) {
-			particle[i].draw();
+        cParticle &pParticle = particle[i];
+        if (pParticle.isValid() &&
+            pParticle.getLayer() == layer) {
+			pParticle.draw();
 		}
 	}
 }

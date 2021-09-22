@@ -21,7 +21,6 @@ void cParticle::init() {
     frameIndex=0;
     iType=0;          // type
 
-    layer=0;          // default layer = 0 (on top)
     bmp = nullptr;
 
     iHousePal=-1;     // when specified, use this palette for drawing (and its an 8 bit picture then!)
@@ -593,7 +592,6 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     if (iType == D2TM_PARTICLE_TRACK_DIA || iType == D2TM_PARTICLE_TRACK_HOR || iType == D2TM_PARTICLE_TRACK_VER || iType == D2TM_PARTICLE_TRACK_DIA2)
     {
         pParticle.TIMER_dead=2000;
-        pParticle.layer=1; // TODO: make property -- other layer
     }
 
 
@@ -623,18 +621,11 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     }
 
-    // worm trail
-    if (iType == D2TM_PARTICLE_WORMTRAIL)
-    {
-        pParticle.layer=1; // other layer
-    }
-
     if (iType == D2TM_PARTICLE_DEADINF01 ||
         iType == D2TM_PARTICLE_DEADINF02)
     {
         pParticle.TIMER_dead = 500 + rnd(500);
         pParticle.iAlpha=255;
-        pParticle.layer=1; // other layer
     }
 
     if (iType == D2TM_PARTICLE_TANKSHOOT || iType == D2TM_PARTICLE_SIEGESHOOT)
@@ -650,7 +641,6 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     {
         pParticle.frameIndex=0;
         pParticle.TIMER_frame = 50;
-        pParticle.layer=1;
     }
 
     if (iType == D2TM_PARTICLE_SIEGEDIE) {
@@ -666,7 +656,6 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     {
         pParticle.frameIndex=0;
         pParticle.TIMER_frame= 50 + rnd(50);
-        pParticle.layer=1;
         pParticle.iAlpha= 96 + rnd(64);
     }
 
@@ -708,6 +697,10 @@ int cParticle::getFrameWidth() {
 
 int cParticle::getFrameHeight() {
     return getParticleInfo().frameHeight;
+}
+
+int cParticle::getLayer() {
+    return getParticleInfo().layer;
 }
 
 /**

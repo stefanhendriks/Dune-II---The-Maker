@@ -320,6 +320,10 @@ const int D2TM_PARTICLE_OBJECT_BOOM02           = 32;
 const int D2TM_PARTICLE_OBJECT_BOOM03           = 33;
 const int D2TM_PARTICLE_EXPLOSION_BULLET        = 34;
 
+// Particle drawing layers
+const int D2TM_RENDER_LAYER_PARTICLE_TOP        = 0;
+const int D2TM_RENDER_LAYER_PARTICLE_BOTTOM     = 1;
+
 // Bitmap types
 const int D2TM_BITMAP_PARTICLE_MOVE	                   = 1;
 const int D2TM_BITMAP_PARTICLE_ATTACK                  = 2;
