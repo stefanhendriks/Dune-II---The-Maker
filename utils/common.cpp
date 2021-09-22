@@ -604,6 +604,11 @@ void install_particles() {
         s_ParticleInfo &particleInfo = sParticleInfo[i];
         particleInfo.bmpIndex = -1;
         particleInfo.startAlpha = -1;
+        particleInfo.usesAdditiveBlending = false;
+
+        // default to 32x32 (for now)
+        particleInfo.frameWidth = 32;
+        particleInfo.frameHeight = 32;
     }
 
     // move
@@ -615,32 +620,114 @@ void install_particles() {
     sParticleInfo[D2TM_PARTICLE_ATTACK].startAlpha = 128;
 
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_TRIKE].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_TRIKE;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TRIKE].startAlpha = 255;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TRIKE].frameWidth = 48;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TRIKE].frameHeight = 48;
+
     sParticleInfo[D2TM_PARTICLE_SMOKE].bmpIndex = D2TM_BITMAP_PARTICLE_SMOKE;
+    sParticleInfo[D2TM_PARTICLE_SMOKE].startAlpha = 0;
+    sParticleInfo[D2TM_PARTICLE_SMOKE].frameWidth = 32;
+    sParticleInfo[D2TM_PARTICLE_SMOKE].frameHeight = 48;
+
+
     sParticleInfo[D2TM_PARTICLE_SMOKE_SHADOW].bmpIndex = D2TM_BITMAP_PARTICLE_SMOKE_SHADOW;
+    sParticleInfo[D2TM_PARTICLE_SMOKE_SHADOW].startAlpha = 0;
+    sParticleInfo[D2TM_PARTICLE_SMOKE_SHADOW].frameWidth = 36;
+    sParticleInfo[D2TM_PARTICLE_SMOKE_SHADOW].frameHeight = 38;
 
     sParticleInfo[D2TM_PARTICLE_TRACK_DIA].bmpIndex = D2TM_BITMAP_PARTICLE_TRACK_DIA;
+    sParticleInfo[D2TM_PARTICLE_TRACK_DIA].startAlpha = 128;
+
     sParticleInfo[D2TM_PARTICLE_TRACK_HOR].bmpIndex = D2TM_BITMAP_PARTICLE_TRACK_HOR;
+    sParticleInfo[D2TM_PARTICLE_TRACK_HOR].startAlpha = 128;
+
     sParticleInfo[D2TM_PARTICLE_TRACK_VER].bmpIndex = D2TM_BITMAP_PARTICLE_TRACK_VER;
+    sParticleInfo[D2TM_PARTICLE_TRACK_VER].startAlpha = 128;
+
     sParticleInfo[D2TM_PARTICLE_TRACK_DIA2].bmpIndex = D2TM_BITMAP_PARTICLE_TRACK_DIA2;
+    sParticleInfo[D2TM_PARTICLE_TRACK_DIA2].startAlpha = 128;
+
     sParticleInfo[D2TM_PARTICLE_BULLET_PUF].bmpIndex = D2TM_BITMAP_PARTICLE_BULLET_PUF;
+    sParticleInfo[D2TM_PARTICLE_BULLET_PUF].frameWidth = 18;
+    sParticleInfo[D2TM_PARTICLE_BULLET_PUF].frameHeight = 18;
+
+
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_FIRE].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_FIRE;
+
     sParticleInfo[D2TM_PARTICLE_WORMEAT].bmpIndex = D2TM_BITMAP_PARTICLE_WORMEAT;
+    sParticleInfo[D2TM_PARTICLE_WORMEAT].startAlpha = 255;
+    sParticleInfo[D2TM_PARTICLE_WORMEAT].frameWidth = 48;
+    sParticleInfo[D2TM_PARTICLE_WORMEAT].frameHeight = 48;
+
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_ONE].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_TANK_ONE;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_ONE].startAlpha = 255;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_ONE].frameWidth = 48;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_ONE].frameHeight = 48;
+
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_TWO].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_TANK_TWO;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_TWO].startAlpha = 255;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_TWO].frameWidth = 48;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_TANK_TWO].frameHeight = 48;
+
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_STRUCTURE01;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].startAlpha = 255;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].frameWidth = 48;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE01].frameHeight = 48;
+
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_STRUCTURE02;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].startAlpha = 255;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].frameWidth = 48;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_STRUCTURE02].frameHeight = 48;
+
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_GAS].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_GAS;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_GAS].startAlpha = 255;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_GAS].frameWidth = 48;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_GAS].frameHeight = 48;
+
     sParticleInfo[D2TM_PARTICLE_WORMTRAIL].bmpIndex = D2TM_BITMAP_PARTICLE_WORMTRAIL;
+    sParticleInfo[D2TM_PARTICLE_WORMTRAIL].startAlpha = 96;
+    sParticleInfo[D2TM_PARTICLE_WORMTRAIL].frameWidth = 48;
+    sParticleInfo[D2TM_PARTICLE_WORMTRAIL].frameHeight = 48;
+
     sParticleInfo[D2TM_PARTICLE_DEADINF01].bmpIndex = D2TM_BITMAP_PARTICLE_DEADINF01;
     sParticleInfo[D2TM_PARTICLE_DEADINF02].bmpIndex = D2TM_BITMAP_PARTICLE_DEADINF02;
+
     sParticleInfo[D2TM_PARTICLE_TANKSHOOT].bmpIndex = D2TM_BITMAP_PARTICLE_TANKSHOOT;
+    sParticleInfo[D2TM_PARTICLE_TANKSHOOT].startAlpha = 128;
+    sParticleInfo[D2TM_PARTICLE_TANKSHOOT].frameWidth = 64;
+    sParticleInfo[D2TM_PARTICLE_TANKSHOOT].frameHeight = 64;
+
     sParticleInfo[D2TM_PARTICLE_SIEGESHOOT].bmpIndex = D2TM_BITMAP_PARTICLE_SIEGESHOOT;
+    sParticleInfo[D2TM_PARTICLE_SIEGESHOOT].startAlpha = 128;
+    sParticleInfo[D2TM_PARTICLE_SIEGESHOOT].frameWidth = 64;
+    sParticleInfo[D2TM_PARTICLE_SIEGESHOOT].frameHeight = 64;
+
     sParticleInfo[D2TM_PARTICLE_SQUISH01].bmpIndex = D2TM_BITMAP_PARTICLE_SQUISH01;
+    sParticleInfo[D2TM_PARTICLE_SQUISH01].startAlpha = 255;
+    sParticleInfo[D2TM_PARTICLE_SQUISH01].frameWidth = 32;
+    sParticleInfo[D2TM_PARTICLE_SQUISH01].frameHeight = 32;
+
     sParticleInfo[D2TM_PARTICLE_SQUISH02].bmpIndex = D2TM_BITMAP_PARTICLE_SQUISH02;
+    sParticleInfo[D2TM_PARTICLE_SQUISH02].startAlpha = 255;
+    sParticleInfo[D2TM_PARTICLE_SQUISH02].frameWidth = 32;
+    sParticleInfo[D2TM_PARTICLE_SQUISH02].frameHeight = 32;
+
     sParticleInfo[D2TM_PARTICLE_SQUISH03].bmpIndex = D2TM_BITMAP_PARTICLE_SQUISH03;
+    sParticleInfo[D2TM_PARTICLE_SQUISH03].startAlpha = 255;
+    sParticleInfo[D2TM_PARTICLE_SQUISH03].frameWidth = 32;
+    sParticleInfo[D2TM_PARTICLE_SQUISH03].frameHeight = 32;
+
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_ORNI;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].startAlpha = 255;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].frameWidth = 32;
+    sParticleInfo[D2TM_PARTICLE_EXPLOSION_ORNI].frameHeight = 32;
+
     sParticleInfo[D2TM_PARTICLE_SIEGEDIE].bmpIndex = D2TM_BITMAP_PARTICLE_SIEGEDIE;
+
     sParticleInfo[D2TM_PARTICLE_CARRYPUFF].bmpIndex = D2TM_BITMAP_PARTICLE_CARRYPUFF;
+    sParticleInfo[D2TM_PARTICLE_CARRYPUFF].frameWidth = 96;
+    sParticleInfo[D2TM_PARTICLE_CARRYPUFF].frameHeight = 96;
+
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_ROCKET].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_ROCKET;
     sParticleInfo[D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL].bmpIndex = D2TM_BITMAP_PARTICLE_EXPLOSION_ROCKET_SMALL;
 
@@ -649,12 +736,21 @@ void install_particles() {
     // the nice flare/light effects that come with explosions
     sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM01].bmpIndex = D2TM_BITMAP_PARTICLE_OBJECT_BOOM01;
     sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM01].usesAdditiveBlending = true;
+    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM01].startAlpha = 240;
+    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM01].frameWidth = 512;
+    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM01].frameHeight = 512;
             ;
     sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM02].bmpIndex = D2TM_BITMAP_PARTICLE_OBJECT_BOOM02;
     sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM02].usesAdditiveBlending = true;
+    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM02].startAlpha = 230;
+    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM02].frameWidth = 256;
+    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM02].frameHeight = 256;
 
     sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM03].bmpIndex = D2TM_BITMAP_PARTICLE_OBJECT_BOOM03;
     sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM03].usesAdditiveBlending = true;
+    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM03].startAlpha = 220;
+    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM03].frameWidth = 128;
+    sParticleInfo[D2TM_PARTICLE_OBJECT_BOOM03].frameHeight = 128;
 
 }
 
@@ -905,7 +1001,7 @@ void install_bullets() {
     sBulletInfo[BULLET_GAS].max_deadframes = 4;
     sBulletInfo[BULLET_GAS].sound = SOUND_ROCKET;
     sBulletInfo[BULLET_GAS].deviateProbability = 34; // 1 out of 3(ish) should be effective
-    sBulletInfo[BULLET_GAS].smokeParticle = BULLET_PUF;
+    sBulletInfo[BULLET_GAS].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
     strcpy(sBulletInfo[BULLET_GAS].description, "BULLET_GAS");
 
     // normal turret shot
@@ -943,7 +1039,7 @@ void install_bullets() {
     sBulletInfo[ROCKET_RTURRET].max_deadframes = 4;
     sBulletInfo[ROCKET_RTURRET].canDamageAirUnits = true;
     sBulletInfo[ROCKET_RTURRET].canDamageGround = true;
-    sBulletInfo[ROCKET_RTURRET].smokeParticle = BULLET_PUF;
+    sBulletInfo[ROCKET_RTURRET].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
     strcpy(sBulletInfo[ROCKET_RTURRET].description, "ROCKET_RTURRET");
 }
 
