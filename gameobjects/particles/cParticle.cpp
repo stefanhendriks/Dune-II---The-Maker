@@ -134,26 +134,6 @@ void cParticle::think() {
 		}
 	}
 
-	// repair blink
-	if (iType == PARTYPE_REPAIRBLINK)
-	{
-		// lower iAlpha
-
-		TIMER_frame++;
-
-		if (TIMER_frame > 5)
-		{
-
-		 iAlpha--;
-		 TIMER_frame = 0;
-
-		if (iAlpha < 1)
-			bAlive=false;
-        }
-
-		return;
-	}
-
     if (iType == OBJECT_CARRYPUFF)
     {
         TIMER_frame--;
@@ -587,9 +567,6 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     pParticle.iAlpha = -1;
 
     pParticle.bAlive = true;
-
-    if (iType == PARTYPE_REPAIRBLINK)
-        pParticle.iAlpha = 255;
 
     if (iType == MOVE_INDICATOR || iType == ATTACK_INDICATOR)
         pParticle.iAlpha = 128;
