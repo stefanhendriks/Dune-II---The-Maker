@@ -24,6 +24,7 @@ public:
 
     void draw();
 
+    bool isWithinViewport(cRectangle *viewport);
 
     void think();
 
@@ -34,12 +35,15 @@ private:
     int getFrameWidth();
     int getFrameHeight();
 
-    s_ParticleInfo getParticleInfo() const;
+    s_ParticleInfo& getParticleInfo() const;
 
     // x and y position to draw (absolute numbers).
     // This is the 'center' of a particle from a drawing perspective. Meaning the center of the
     // bitmap rendered is at this x,y coordinate
     long x, y;
+
+    // the actual position + dimensions of particle
+    cRectangle * dimensions;
 
     int iType;
 
@@ -69,8 +73,10 @@ private:
     int draw_y();
 
     void init(const s_ParticleInfo &particleInfo);
-
+    void think_position();
     bool isUsingAlphaChannel() const;
+
+    void recreateDimensions();
 };
 
 void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame);
