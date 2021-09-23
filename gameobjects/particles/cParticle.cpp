@@ -11,6 +11,15 @@
 
 #include "../../include/d2tmh.h"
 
+cParticle::cParticle() {
+    init();
+}
+
+cParticle::~cParticle() {
+    bmp = nullptr;
+}
+
+
 // init
 void cParticle::init() {
     bAlive=false;       // alive (if yes, it is in use, if not it can be used)
@@ -22,6 +31,7 @@ void cParticle::init() {
     iType=0;          // type
 
     bmp = nullptr;
+    drawXBmpOffset = drawYBmpOffset = 0;
 
     iHousePal=-1;     // when specified, use this palette for drawing (and its an 8 bit picture then!)
 
@@ -38,13 +48,11 @@ bool cParticle::isValid() {
 }
 
 int cParticle::draw_x() {
-    int bmpOffset = (getFrameWidth() / 2) * -1;
-    return mapCamera->getWindowXPositionWithOffset(x, bmpOffset);
+    return mapCamera->getWindowXPositionWithOffset(x, drawXBmpOffset);
 }
 
 int cParticle::draw_y() {
-    int bmpOffset = (getFrameHeight() / 2) * -1;
-    return mapCamera->getWindowYPositionWithOffset(y, bmpOffset);
+    return mapCamera->getWindowYPositionWithOffset(y, drawYBmpOffset);
 }
 
 // draw
@@ -571,6 +579,9 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     pParticle.iHousePal = iHouse;
 
     pParticle.bAlive = true;
+
+    pParticle.drawXBmpOffset = (pParticle.getFrameWidth() / 2) * -1;
+    pParticle.drawYBmpOffset = (pParticle.getFrameHeight() / 2) * -1;
 
     if (iType == D2TM_PARTICLE_EXPLOSION_TRIKE)
     {

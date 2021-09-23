@@ -13,12 +13,40 @@
 class cParticle {
 public:
 
+    cParticle();
+    ~cParticle();
+
+    // Factory methods
+    static void create(long x, long y, int iType, int iHouse, int iFrame);
+    static int findNewSlot();
+
+    void init();
+
+    void draw();
+
+
+    void think();
+
+    bool isValid();
+    int getLayer();
+
+private:
+    int getFrameWidth();
+    int getFrameHeight();
+
+    s_ParticleInfo getParticleInfo() const;
+
+    // x and y position to draw (absolute numbers).
+    // This is the 'center' of a particle from a drawing perspective. Meaning the center of the
+    // bitmap rendered is at this x,y coordinate
+    long x, y;
+
+    int iType;
+
     // used or not:
     bool bAlive;        // alive
 
     // Drawing effects
-    long x, y;              // x and y position to draw (absolute numbers). This is the 'center' of a particle, not top left!
-    int iType;              // type
     sBitmap * bmp;          // pointer to bitmap to draw (not owner of bitmap!)
     int iAlpha;             // alpha
 
@@ -32,32 +60,17 @@ public:
 
     int iHousePal;      // when specified, use this palette for drawing (and its an 8 bit picture then!)
 
-    // ---------
+    //
+    int drawXBmpOffset;
+    int drawYBmpOffset;
+
     int draw_x();
 
     int draw_y();
 
-    void draw();
-
-    bool isValid();
-
-    void init();
     void init(const s_ParticleInfo &particleInfo);
 
-    void think();       // particles do some sort of thinking , really! :)
-
-    static void create(long x, long y, int iType, int iHouse, int iFrame);
-    static int findNewSlot();
-
     bool isUsingAlphaChannel() const;
-
-    int getLayer();
-
-private:
-    int getFrameWidth();
-    int getFrameHeight();
-
-    s_ParticleInfo getParticleInfo() const;
 };
 
 void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame);
