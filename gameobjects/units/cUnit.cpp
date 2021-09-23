@@ -2840,9 +2840,9 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         updateCellXAndY();
 
         // check any units that are on our cell as well.
-        // perhaps this could be sped up somehow if we had more than 1 unit on a cell possible (for now we don't have
+        // perhaps this could be sped up if we had more than 1 unit on a cell possible (for now we don't have
         // this). An alternative is to have a function return per 'segment' the units within it (so we don't need to
-        // iterate over all units
+        // iterate over all units)
         if (canSquishInfantry()) {
             for (int iq = 0; iq < MAX_UNITS; iq++) {
                 cUnit &potentialDeadUnit = unit[iq];
