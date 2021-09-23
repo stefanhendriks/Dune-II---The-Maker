@@ -380,7 +380,7 @@ void cMap::draw_units() {
 
         if (pUnit.iType != SANDWORM) continue;
 
-        if (pUnit.dimensions->isOverlapping(game.mapViewport)) {
+        if (pUnit.isWithinViewport(game.mapViewport)) {
             pUnit.draw();
         }
 
@@ -396,7 +396,7 @@ void cMap::draw_units() {
         if (!pUnit.isInfantryUnit())
             continue; // skip non-infantry units
 
-        if (pUnit.dimensions->isOverlapping(game.mapViewport)) {
+        if (pUnit.isWithinViewport(game.mapViewport)) {
             // draw
             pUnit.draw();
         }
@@ -414,7 +414,7 @@ void cMap::draw_units() {
             pUnit.isInfantryUnit())
             continue; // skip airborn, infantry and sandworm
 
-        if (pUnit.dimensions->isOverlapping(game.mapViewport)) {
+        if (pUnit.isWithinViewport(game.mapViewport)) {
             // draw
             pUnit.draw();
         }
@@ -444,9 +444,7 @@ void cMap::draw_units() {
 void cMap::drawUnitDebug(int i, cUnit &pUnit) const {
     if (!game.bDrawUnitDebug) return;
 
-    allegroDrawer->drawRectangle(bmp_screen, pUnit.dimensions, makecol(255, 0, 255));
-    putpixel(bmp_screen, pUnit.center_draw_x(), pUnit.center_draw_y(), makecol(255, 0, 255));
-    alfont_textprintf(bmp_screen, game_font, pUnit.draw_x(), pUnit.draw_y(), makecol(255, 255, 255), "%d", i);
+    pUnit.draw_debug();
 }
 
 // draw 2nd layer for units, this is health/spice bars and eventually airborn units (last)
@@ -482,17 +480,15 @@ void cMap::draw_units_2nd() {
         if (!pUnit.isValid()) continue;
         if (!pUnit.isAirbornUnit()) continue;
 
-        if (pUnit.dimensions->isOverlapping(game.mapViewport)) {
+        if (pUnit.isWithinViewport(game.mapViewport)) {
             pUnit.draw();
-            // HACK HACK: Should be == ACTIVE PLAYER
-//            if (pUnit.getPlayer()->isHuman()) {
-                pUnit.draw_health();
-//            }
+            // TODO: Only human players?
+            pUnit.draw_health();
+            if (DEBUGGING) {
+                drawUnitDebug(i, pUnit);
+            }
         }
 
-        if (DEBUGGING) {
-            drawUnitDebug(i, pUnit);
-        }
     }
 
     set_trans_blender(0, 0, 0, 128);

@@ -3202,6 +3202,17 @@ bool cUnit::isMarkedForRemoval() {
     return bRemoveMe;
 }
 
+bool cUnit::isWithinViewport(cRectangle *viewport) {
+    if (viewport == nullptr) return false;
+    return dimensions->isOverlapping(viewport);
+}
+
+void cUnit::draw_debug() {
+    allegroDrawer->drawRectangle(bmp_screen, dimensions, makecol(255, 0, 255));
+    putpixel(bmp_screen, center_draw_x(), center_draw_y(), makecol(255, 0, 255));
+    alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), makecol(255, 255, 255), "%d", iID);
+}
+
 
 // return new valid ID
 int UNIT_NEW() {

@@ -1235,9 +1235,13 @@ bool cGame::setupGame() {
     set_volume(iMaxVolume, 110);
 
     /***
+     * Viewport(s)
+     */
+    mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.screen_x-cSideBar::SidebarWidth, game.screen_y-cSideBar::TopBarHeight);
+
+    /***
     Bitmap Creation
     ***/
-    mapViewport = new cRectangle(0, cSideBar::TopBarHeight, game.screen_x-cSideBar::SidebarWidth, game.screen_y-cSideBar::TopBarHeight);
 
 	bmp_screen = create_bitmap(game.screen_x, game.screen_y);
 

@@ -207,7 +207,10 @@ void cTimeManager::handleTimerGameTime() {
             }
 
             for (int i = 0; i < MAX_PARTICLES; i++) {
-                if (particle[i].isValid()) particle[i].think();
+                cParticle &pParticle = particle[i];
+                if (pParticle.isValid()) {
+                    pParticle.think();
+                }
             }
 
             // when not drawing the options, the game does all it needs to do
