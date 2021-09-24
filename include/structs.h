@@ -208,6 +208,7 @@ struct s_ParticleInfo {
     int frameWidth;         // width of frame
     int frameHeight;        // height of frame
 
+    bool oldParticle;       // if true, then keep old behavior for now (will be removed)
 };
 
 struct s_BulletInfo {

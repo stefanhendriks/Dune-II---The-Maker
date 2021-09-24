@@ -75,6 +75,7 @@ private:
 
     void init(const s_ParticleInfo &particleInfo);
     void think_position();
+    void think_new();
     bool isUsingAlphaChannel() const;
 
     void recreateDimensions();

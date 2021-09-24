@@ -611,6 +611,9 @@ void install_particles() {
         // default to 32x32 (for now)
         particleInfo.frameWidth = 32;
         particleInfo.frameHeight = 32;
+
+        // mark particles as old for now
+        particleInfo.oldParticle = true;
     }
 
     // move

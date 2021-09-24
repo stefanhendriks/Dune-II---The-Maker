@@ -8,6 +8,8 @@ cParticleDrawer::cParticleDrawer() {
 }
 
 cParticleDrawer::~cParticleDrawer() {
+    particlesLowerLayer.clear();
+    particlesTopLayer.clear();
 }
 
 void cParticleDrawer::determineParticlesToDraw() {
