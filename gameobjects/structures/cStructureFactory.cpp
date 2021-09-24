@@ -76,7 +76,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 
     float fPercent = (float)iPercent/100; // divide by 100 (to make it 0.x)
 
-    s_Structures &sStructures = structures[iStructureType];
+    s_StructureInfo &sStructures = sStructureInfo[iStructureType];
     int hp = sStructures.hp;
     if (hp < 0) {
         cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "Structure to create has no hp, aborting creation.");
@@ -213,7 +213,7 @@ void cStructureFactory::clearFogForStructureType(int iCell, cAbstractStructure *
 		return;
 	}
 
-	clearFogForStructureType(iCell, str->getType(), structures[str->getType()].sight, str->getOwner());
+	clearFogForStructureType(iCell, str->getType(), sStructureInfo[str->getType()].sight, str->getOwner());
 }
 
 /**
@@ -221,8 +221,8 @@ void cStructureFactory::clearFogForStructureType(int iCell, cAbstractStructure *
 	determined from the iStructureType
 **/
 void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, int iSight, int iPlayer) {
-	int iWidth = structures[iStructureType].bmp_width / 32;;
-	int iHeight = structures[iStructureType].bmp_height / 32;
+	int iWidth = sStructureInfo[iStructureType].bmp_width / 32;;
+	int iHeight = sStructureInfo[iStructureType].bmp_height / 32;
 
     int iCellX = map.getCellX(iCell);
     int iCellY = map.getCellY(iCell);
@@ -266,8 +266,8 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType) {
     if (!map.isValidCell(iCell)) return 0;
 
     // checks if this structure can be placed on this cell
-    int w = structures[iStructureType].bmp_width / TILESIZE_WIDTH_PIXELS;
-    int h = structures[iStructureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
+    int w = sStructureInfo[iStructureType].bmp_width / TILESIZE_WIDTH_PIXELS;
+    int h = sStructureInfo[iStructureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
 
     int slabs = 0;
 
@@ -296,8 +296,8 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
     // DUPLICATED BY slabStructure?
 	assert(iCell > -1);
 
-	int height = structures[iStructureType].bmp_height / 32;
-	int width = structures[iStructureType].bmp_width / 32;
+	int height = sStructureInfo[iStructureType].bmp_height / 32;
+	int width = sStructureInfo[iStructureType].bmp_width / 32;
 
 	int cellX = map.getCellX(iCell);
 	int cellY = map.getCellY(iCell);
@@ -333,7 +333,7 @@ void cStructureFactory::destroy() {
 
 
 void cStructureFactory::slabStructure(int iCll, int iStructureType, int iPlayer) {
-    const s_Structures &sStructures = structures[iStructureType];
+    const s_StructureInfo &sStructures = sStructureInfo[iStructureType];
 
     int width = sStructures.bmp_width / TILESIZE_WIDTH_PIXELS;
     int height = sStructures.bmp_height / TILESIZE_HEIGHT_PIXELS;

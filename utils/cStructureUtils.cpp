@@ -10,13 +10,13 @@ cStructureUtils::~cStructureUtils() {
 int cStructureUtils::getHeightOfStructureTypeInCells(int structureType) {
 	assert(structureType >= 0);
 	assert(structureType < MAX_STRUCTURETYPES);
-	return structures[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
+	return sStructureInfo[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
 }
 
 int cStructureUtils::getWidthOfStructureTypeInCells(int structureType) {
 	assert(structureType >= 0);
 	assert(structureType < MAX_STRUCTURETYPES);
-	return structures[structureType].bmp_width / TILESIZE_WIDTH_PIXELS;
+	return sStructureInfo[structureType].bmp_width / TILESIZE_WIDTH_PIXELS;
 }
 
 
@@ -94,7 +94,7 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer * pPlayer, int structureT
 
 	if (DEBUGGING) {
 		char msg[255];
-		sprintf(msg, "Looking for primary building (type %d, name %s, pPlayer %d)", structureType, structures[structureType].name, playerId);
+		sprintf(msg, "Looking for primary building (type %d, name %s, pPlayer %d)", structureType, sStructureInfo[structureType].name, playerId);
 		logbook(msg);
 	}
 
@@ -136,7 +136,7 @@ int cStructureUtils::findStructureTypeByTypeOfList(cBuildingListItem *item) {
     }
 
     if (item->isTypeSpecial()) {
-        const s_Special &special = item->getS_Special();
+        const s_SpecialInfo &special = item->getS_Special();
         if (special.providesType == UNIT) {
 	        return special.deployAtStructure;
 	    }

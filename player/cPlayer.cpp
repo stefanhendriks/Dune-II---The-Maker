@@ -219,8 +219,8 @@ void cPlayer::setHouse(int iHouse) {
         logbook(msg);
 
         // now set the different colors based upon house
-        if (houses[house].swap_color > -1) {
-            int start = houses[house].swap_color;
+        if (sHouseInfo[house].swap_color > -1) {
+            int start = sHouseInfo[house].swap_color;
             int s = 144;                // original position (harkonnen)
             char msg[255];
             sprintf(msg, "cPlayer[%d]::setHouse - Swap_color index is %d.", this->id, start);
@@ -232,7 +232,7 @@ void cPlayer::setHouse(int iHouse) {
             }
         }
 
-        minimapColor = houses[house].minimap_color;
+        minimapColor = sHouseInfo[house].minimap_color;
         emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
         destroyAllegroBitmaps();
@@ -244,7 +244,7 @@ void cPlayer::setHouse(int iHouse) {
 
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
-            s_Structures &structureType = structures[i];
+            s_StructureInfo &structureType = sStructureInfo[i];
 
             if (!structureType.configured) continue;
 
@@ -259,7 +259,7 @@ void cPlayer::setHouse(int iHouse) {
 
         // same goes for units
         for (int i = 0; i < MAX_UNITTYPES; i++) {
-            s_UnitP &unitType = unitInfo[i];
+            s_UnitInfo &unitType = sUnitInfo[i];
 
             bmp_unit[i] = create_bitmap_ex(colorDepthBmpScreen, unitType.bmp->w, unitType.bmp->h);
             if (!bmp_unit[i]) {
@@ -425,9 +425,9 @@ BITMAP *cPlayer::getUnitTopBitmap(int index) {
  * @return
  */
 BITMAP *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFrame) {
-    if (unitInfo[index].shadow) {
-        int bmp_width = unitInfo[index].bmp_width;
-        int bmp_height = unitInfo[index].bmp_height;
+    if (sUnitInfo[index].shadow) {
+        int bmp_width = sUnitInfo[index].bmp_width;
+        int bmp_height = sUnitInfo[index].bmp_height;
         int start_x = bodyFacing * bmp_width;
         int start_y = bmp_height * animationFrame;
 
@@ -441,7 +441,7 @@ BITMAP *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFra
         BITMAP *shadow = create_bitmap_ex(colorDepth, bmp_width, bmp_height);
         clear_to_color(shadow, makecol(255, 0, 255));
 
-        blit((BITMAP *) unitInfo[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
+        blit((BITMAP *) sUnitInfo[index].shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
         return shadow;
     }
     return nullptr;
@@ -468,17 +468,17 @@ bool cPlayer::hasEnoughCreditsFor(float requestedAmount) const {
 
 bool cPlayer::hasEnoughCreditsForUnit(int unitType) {
     if (unitType < 0 || unitType >= MAX_UNITTYPES) return false;
-    return this->credits >= unitInfo[unitType].cost;
+    return this->credits >= sUnitInfo[unitType].cost;
 }
 
 bool cPlayer::hasEnoughCreditsForStructure(int structureType) {
     if (structureType < 0 || structureType >= MAX_STRUCTURETYPES) return false;
-    return this->credits >= structures[structureType].cost;
+    return this->credits >= sStructureInfo[structureType].cost;
 }
 
 bool cPlayer::hasEnoughCreditsForUpgrade(int upgradeType) {
     if (upgradeType < 0 || upgradeType >= MAX_UPGRADETYPES) return false;
-    return this->credits >= upgrades[upgradeType].cost;
+    return this->credits >= sUpgradeInfo[upgradeType].cost;
 }
 
 /**
@@ -497,7 +497,7 @@ int cPlayer::getHouseFadingColor() const {
         return makecol(0, fadeSelect, 0);
     }
 
-    // TODO other houses (Sardaukar, etc)
+    // TODO other sHouseInfo (Sardaukar, etc)
     return makecol(fadeSelect, fadeSelect, fadeSelect);
 }
 
@@ -552,7 +552,7 @@ void cPlayer::increaseStructureAmount(int structureType) {
 
     char msg[255];
     sprintf(msg, "increaseStructureAmount result: iStructures[%d(=%s)]=%d", structureType,
-            structures[structureType].name, iStructures[structureType]);
+            sStructureInfo[structureType].name, iStructures[structureType]);
     log(msg);
 }
 
@@ -564,7 +564,7 @@ void cPlayer::decreaseStructureAmount(int structureType) {
 
     char msg[255];
     sprintf(msg, "decreaseStructureAmount result: iStructures[%d(=%s)]=%d", structureType,
-            structures[structureType].name, iStructures[structureType]);
+            sStructureInfo[structureType].name, iStructures[structureType]);
     log(msg);
 }
 
@@ -721,7 +721,7 @@ bool cPlayer::isStructureTypeAvailableForConstruction(int iStructureType) const 
 }
 
 bool cPlayer::canBuildUnitType(int iUnitType) const {
-    int listId = unitInfo[iUnitType].listId;
+    int listId = sUnitInfo[iUnitType].listId;
     cBuildingListItem *pItem = sidebar->getBuildingListItem(listId, iUnitType);
     char msg[255];
     bool result = pItem != nullptr;
@@ -731,7 +731,7 @@ bool cPlayer::canBuildUnitType(int iUnitType) const {
 }
 
 bool cPlayer::canBuildSpecialType(int iType) const {
-    int listId = specialInfo[iType].listId;
+    int listId = sSpecialInfo[iType].listId;
     cBuildingListItem *pItem = sidebar->getBuildingListItem(listId, iType);
 
     bool result = pItem != nullptr;
@@ -764,7 +764,7 @@ cBuildingListItem *cPlayer::getStructureBuildingListItemBeingBuilt() const {
  * @return
  */
 bool cPlayer::isBuildingSomethingInSameListSubListAsUnitType(int iUnitType) const {
-    s_UnitP &p = unitInfo[iUnitType];
+    s_UnitInfo &p = sUnitInfo[iUnitType];
     int listId = p.listId;
     int subListId = p.subListId;
 
@@ -813,7 +813,7 @@ cBuildingListItem *cPlayer::isUpgradeAvailableToGrant(eBuildType providesType, i
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *pItem = pList->getItem(i);
         if (pItem == nullptr) continue;
-        const s_Upgrade &theUpgrade = pItem->getS_Upgrade();
+        const s_UpgradeInfo &theUpgrade = pItem->getS_Upgrade();
         if (theUpgrade.providesType != providesType) continue;
         if (theUpgrade.providesTypeId == providesTypeId) {
             return pItem;
@@ -845,7 +845,7 @@ cBuildingListItem *cPlayer::isUpgradingList(int listId, int sublistId) const {
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *pItem = upgradesList->getItem(i);
         if (pItem == nullptr) continue;
-        const s_Upgrade &theUpgrade = pItem->getS_Upgrade();
+        const s_UpgradeInfo &theUpgrade = pItem->getS_Upgrade();
         // is this upgrade applicable to the listId/sublistId we're interested in?
         if (theUpgrade.providesTypeList == listId && theUpgrade.providesTypeSubList == sublistId) {
             if (pItem->isBuilding()) {
@@ -869,7 +869,7 @@ cBuildingListItem *cPlayer::isBuildingStructure() const {
 }
 
 bool cPlayer::startBuildingUnit(int iUnitType) const {
-    s_UnitP &unitType = unitInfo[iUnitType];
+    s_UnitInfo &unitType = sUnitInfo[iUnitType];
     int listId = unitType.listId;
     bool startedBuilding = sidebar->startBuildingItemIfOk(listId, iUnitType);
 
@@ -896,10 +896,10 @@ bool cPlayer::startBuildingStructure(int iStructureType) const {
         char msg[255];
         if (startedBuilding) {
             sprintf(msg, "Wanting to build structure [%s] iStructureType = [%d], with listId[%d] - SUCCESS",
-                    structures[iStructureType].name, iStructureType, listId);
+                    sStructureInfo[iStructureType].name, iStructureType, listId);
         } else {
             sprintf(msg, "Wanting to build structure [%s] iStructureType = [%d], with listId[%d] - FAILED",
-                    structures[iStructureType].name, iStructureType, listId);
+                    sStructureInfo[iStructureType].name, iStructureType, listId);
         }
         log(msg);
     }
@@ -915,10 +915,10 @@ bool cPlayer::startBuildingSpecial(int iSpecialType) const {
         char msg[255];
         if (startedBuilding) {
             sprintf(msg, "Wanting to build special [%s] iSpecialType = [%d], with listId[%d] - SUCCESS",
-                    specialInfo[iSpecialType].description, iSpecialType, listId);
+                    sSpecialInfo[iSpecialType].description, iSpecialType, listId);
         } else {
             sprintf(msg, "Wanting to build special [%s] iSpecialType = [%d], with listId[%d] - FAILED",
-                    specialInfo[iSpecialType].description, iSpecialType, listId);
+                    sSpecialInfo[iSpecialType].description, iSpecialType, listId);
         }
         log(msg);
     }
@@ -933,10 +933,10 @@ bool cPlayer::startUpgrading(int iUpgradeType) const {
         char msg[255];
         if (startedBuilding) {
             sprintf(msg, "Wanting to start upgrade [%s] iUpgradeType = [%d], with listId[%d] - SUCCESS",
-                    upgrades[iUpgradeType].description, iUpgradeType, listId);
+                    sUpgradeInfo[iUpgradeType].description, iUpgradeType, listId);
         } else {
             sprintf(msg, "Wanting to start upgrade [%s] iUpgradeType = [%d], with listId[%d] - FAILED",
-                    upgrades[iUpgradeType].description, iUpgradeType, listId);
+                    sUpgradeInfo[iUpgradeType].description, iUpgradeType, listId);
         }
         log(msg);
     }
@@ -987,8 +987,8 @@ int cPlayer::findCellToPlaceStructure(int structureType) {
     const std::vector<int> &allMyStructuresAsId = getAllMyStructuresAsId();
     std::vector<int> potentialCells = std::vector<int>();
 
-    int iWidth = structures[structureType].bmp_width / TILESIZE_WIDTH_PIXELS;
-    int iHeight = structures[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
+    int iWidth = sStructureInfo[structureType].bmp_width / TILESIZE_WIDTH_PIXELS;
+    int iHeight = sStructureInfo[structureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
 
     for (auto &id : allMyStructuresAsId) {
         cAbstractStructure * aStructure = structure[id];
@@ -1108,14 +1108,14 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable) {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
     char msg[255];
-    sprintf(msg, "canBuildUnit: Wanting to build iUnitType = [%d(=%s)] allowed?...", iUnitType, unitInfo[iUnitType].name);
+    sprintf(msg, "canBuildUnit: Wanting to build iUnitType = [%d(=%s)] allowed?...", iUnitType, sUnitInfo[iUnitType].name);
     log(msg);
 
     // CHECK 1: Do we have the money?
     if (checkIfAffordable) {
         if (!hasEnoughCreditsForUnit(iUnitType)) {
             char msg[255];
-            sprintf(msg, "canBuildUnit: FALSE, because cost %d higher than credits %d", unitInfo[iUnitType].cost, getCredits());
+            sprintf(msg, "canBuildUnit: FALSE, because cost %d higher than credits %d", sUnitInfo[iUnitType].cost, getCredits());
             log(msg);
             return eCantBuildReason::NOT_ENOUGH_MONEY; // NOPE
         }
@@ -1135,7 +1135,7 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable) {
     if (!hasAtleastOneStructure(iStrucType)) {
         char msg[255];
         sprintf(msg, "canBuildUnit: FALSE, because we do not own the required structure type [%s] for this unit: [%s]",
-                structures[iStrucType].name, unitInfo[iUnitType].name);
+                sStructureInfo[iStrucType].name, sUnitInfo[iUnitType].name);
         log(msg);
         return eCantBuildReason::REQUIRES_STRUCTURE;
     }
@@ -1144,7 +1144,7 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable) {
         if (!hasAtleastOneStructure(IX)) {
             char msg[255];
             sprintf(msg, "canBuildUnit: FALSE, because we do not own the required ADDITIONAL structure type [%s] for this unit: [%s]",
-                    structures[IX].name, unitInfo[iUnitType].name);
+                    sStructureInfo[IX].name, sUnitInfo[iUnitType].name);
             log(msg);
             return eCantBuildReason::REQUIRES_ADDITIONAL_STRUCTURE;
         }
@@ -1155,7 +1155,7 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable) {
         // assume it requires an upgrade?
         char msg[255];
         sprintf(msg, "canBuildUnit: REQUIRES_UPGRADE, because we can't find it in the expected list [%d] for this unit: [%s]",
-                unitInfo[iUnitType].listId, unitInfo[iUnitType].name);
+                sUnitInfo[iUnitType].listId, sUnitInfo[iUnitType].name);
         log(msg);
         return eCantBuildReason::REQUIRES_UPGRADE;
     }
@@ -1169,7 +1169,7 @@ eCantBuildReason cPlayer::canBuildSpecial(int iType) {
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
     char msg[255];
-    s_Special &special = specialInfo[iType];
+    s_SpecialInfo &special = sSpecialInfo[iType];
     sprintf(msg, "canBuildSpecial: Wanting to build iType = [%d(=%s)] allowed?...", iType, special.description);
     log(msg);
 
@@ -1178,7 +1178,7 @@ eCantBuildReason cPlayer::canBuildSpecial(int iType) {
     if (!hasAtleastOneStructure(iStrucType)) {
         char msg[255];
         sprintf(msg, "canBuildUnit: FALSE, because we do not own the required structure type [%s] for [%s]",
-                structures[iStrucType].name, special.description);
+                sStructureInfo[iStrucType].name, special.description);
         log(msg);
         return eCantBuildReason::REQUIRES_STRUCTURE;
     }
@@ -1295,7 +1295,7 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType) {
 
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
-    const s_Structures &structureType = structures[iStructureType];
+    const s_StructureInfo &structureType = sStructureInfo[iStructureType];
     sprintf(msg, "canBuildStructure: Wanting to build iStructureType = [%d(=%s)], allowed?...",
             iStructureType, structureType.name);
     log(msg);
@@ -1314,7 +1314,7 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType) {
         char msg[255];
         sprintf(msg,
                 "canBuildStructure: FALSE, reason REQUIRES_STRUCTURE: we do not own the required structure type [%s] for this structure: [%s]",
-                structures[CONSTYARD].name, structureType.name);
+                sStructureInfo[CONSTYARD].name, structureType.name);
         log(msg);
         return eCantBuildReason::REQUIRES_STRUCTURE;
     }
@@ -1366,8 +1366,8 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
     }
 
     int slabbed = pStructureFactory->getSlabStatus(destinationCell, iStructureTypeId);
-    int height = structures[iStructureTypeId].bmp_height / TILESIZE_HEIGHT_PIXELS;
-    int width = structures[iStructureTypeId].bmp_width / TILESIZE_WIDTH_PIXELS;
+    int height = sStructureInfo[iStructureTypeId].bmp_height / TILESIZE_HEIGHT_PIXELS;
+    int width = sStructureInfo[iStructureTypeId].bmp_width / TILESIZE_WIDTH_PIXELS;
     int surface = width * height;
 
     int healthPercentage = 50 + health_bar(50, slabbed, surface); // the minimum is 50% (with no slabs)
@@ -1505,14 +1505,14 @@ bool cPlayer::hasEnoughPowerFor(int structureType) const {
     assert(structureType > -1 && "hasEnoughPowerFor called with structureType < 0!");
     assert(structureType < MAX_STRUCTURETYPES && "hasEnoughPowerFor called with structureType >= MAX_STRUCTURETYPES!");
     int powerLeft = powerProduce_ - powerUsage_;
-    return structures[structureType].power_drain <= powerLeft;
+    return sStructureInfo[structureType].power_drain <= powerLeft;
 }
 
 void cPlayer::logStructures() {
     log("cPlayer::logStructures() START");
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
         char msg[255];
-        sprintf(msg, "[%s] amount [%d]", structures[i].name, iStructures[i]);
+        sprintf(msg, "[%s] amount [%d]", sStructureInfo[i].name, iStructures[i]);
         log(msg);
     }
     log("cPlayer::logStructures() END");
@@ -1591,8 +1591,8 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
     }
 
     // checks if this structure can be placed on this cell
-    int w = structures[iStructureType].bmp_width/TILESIZE_WIDTH_PIXELS;
-    int h = structures[iStructureType].bmp_height/TILESIZE_HEIGHT_PIXELS;
+    int w = sStructureInfo[iStructureType].bmp_width / TILESIZE_WIDTH_PIXELS;
+    int h = sStructureInfo[iStructureType].bmp_height / TILESIZE_HEIGHT_PIXELS;
 
     int x = map.getCellX(iCell);
     int y = map.getCellY(iCell);
@@ -1738,7 +1738,7 @@ bool cPlayer::startBuilding(eBuildType buildType, int buildId) {
 }
 
 bool cPlayer::couldBuildSpecial(int iType) {
-    s_Special &special = specialInfo[iType];
+    s_SpecialInfo &special = sSpecialInfo[iType];
     if (special.house & getHouseBitFlag()) {
         // it is applicable for this house
         return true;

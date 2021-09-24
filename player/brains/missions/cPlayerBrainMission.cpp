@@ -200,10 +200,10 @@ namespace brains {
                                 }
                             } else if (thingIWant.buildType == eBuildType::SPECIAL) {
                                 // or a special kind of thing I ordered should produce a unit
-                                if (specialInfo[thingIWant.type].providesType == eBuildType::UNIT) {
+                                if (sSpecialInfo[thingIWant.type].providesType == eBuildType::UNIT) {
                                     // it provides a unit AND the kind of unit it provides matches that what
                                     // has been created... then we *also* are interested.
-                                    if (specialInfo[thingIWant.type].providesTypeId == event.entitySpecificType) {
+                                    if (sSpecialInfo[thingIWant.type].providesTypeId == event.entitySpecificType) {
                                         // in case we have multiple entries with same type we check for produced vs required
 
                                         // do not look at produced property, because we should have only ONE SPECIAL KIND
@@ -341,7 +341,7 @@ namespace brains {
                         cSideBar *pSideBar = player->getSideBar();
                         int awaitingResourcesTimeToIncrease = 15;
                         if (thingIWant.buildType == UNIT) {
-                            cBuildingListItem *pItem = pSideBar->getBuildingListItem(unitInfo[thingIWant.type].listId,
+                            cBuildingListItem *pItem = pSideBar->getBuildingListItem(sUnitInfo[thingIWant.type].listId,
                                                                                      thingIWant.type);
 
                             if (pItem) {
@@ -360,7 +360,7 @@ namespace brains {
                                 // this should not happen!?
                             }
                         } else if (thingIWant.buildType == SPECIAL) {
-                            // "specialInfo" are from the "palace" list
+                            // "sSpecialInfo" are from the "palace" list
                             cBuildingListItem *pItem = pSideBar->getBuildingListItem(LIST_PALACE,
                                                                                      thingIWant.type);
                             if (pItem) {

@@ -36,8 +36,8 @@ void cStructureDrawer::drawRectangeOfStructure(cAbstractStructure * theStructure
 	assert(theStructure);
 	int drawX = theStructure->iDrawX();
 	int drawY = theStructure->iDrawY();
-    int width = structures[theStructure->getType()].bmp_width - 1;
-    int height = structures[theStructure->getType()].bmp_height - 1;
+    int width = sStructureInfo[theStructure->getType()].bmp_width - 1;
+    int height = sStructureInfo[theStructure->getType()].bmp_height - 1;
 
     int width_x = mapCamera->factorZoomLevel(width);
     int height_y = mapCamera->factorZoomLevel(height);

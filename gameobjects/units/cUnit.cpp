@@ -210,10 +210,10 @@ void cUnit::createSquishedParticle() {
     int iDieY = pos_y_centered();
     // when we do not 'blow up', we died by something else. Only infantry will be 'squished' here now.
     if (iType == SOLDIER || iType == TROOPER || iType == UNIT_FREMEN_ONE) {
-        PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_SQUISH01 + rnd(2), iPlayer, iFrame);
+        PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_SQUISH01 + rnd(2), iPlayer, iFrame);
         play_sound_id_with_distance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
     } else if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
-        PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_SQUISH03, iPlayer, iFrame);
+        PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_SQUISH03, iPlayer, iFrame);
         play_sound_id_with_distance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
     }
 }
@@ -224,18 +224,18 @@ void cUnit::createExplosionParticle() {
 
     if (iType == TRIKE || iType == RAIDER || iType == QUAD) {
         // play quick 'boom' sound and show animation
-        PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_TRIKE, -1, -1);
+        PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TRIKE, -1, -1);
         play_sound_id_with_distance(SOUND_TRIKEDIE, distanceBetweenCellAndCenterOfScreen(iCell));
 
         if (rnd(100) < 30) {
-            PARTICLE_CREATE(iDieX, iDieY - 24, OBJECT_SMOKE, -1, -1);
+            PARTICLE_CREATE(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE, -1, -1);
         }
     }
 
     if (iType == SIEGETANK || iType == DEVASTATOR && rnd(100) < 25) {
         if (iBodyFacing == FACE_UPLEFT ||
             iBodyFacing == FACE_DOWNRIGHT) {
-            PARTICLE_CREATE(iDieX, iDieY, OBJECT_SIEGEDIE, iPlayer, -1);
+            PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_SIEGEDIE, iPlayer, -1);
         }
     }
 
@@ -243,15 +243,15 @@ void cUnit::createExplosionParticle() {
         iType == HARVESTER || iType == ORNITHOPTER || iType == MCV || iType == FRIGATE) {
         // play quick 'boom' sound and show animation
         if (rnd(100) < 50) {
-            PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_TANK_ONE, -1, -1);
+            PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_ONE, -1, -1);
             play_sound_id_with_distance(SOUND_TANKDIE2, distanceBetweenCellAndCenterOfScreen(iCell));
         } else {
-            PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_TANK_TWO, -1, -1);
+            PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_TWO, -1, -1);
             play_sound_id_with_distance(SOUND_TANKDIE, distanceBetweenCellAndCenterOfScreen(iCell));
         }
 
         if (rnd(100) < 30)
-            PARTICLE_CREATE(iDieX, iDieY - 24, OBJECT_SMOKE, -1, -1);
+            PARTICLE_CREATE(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE, -1, -1);
 
         if (iType == HARVESTER) {
             game.shakeScreen(25);
@@ -260,7 +260,7 @@ void cUnit::createExplosionParticle() {
 
         // For now carry-all and ornithopter share same death particle
         if (iType == ORNITHOPTER || iType == CARRYALL) {
-            PARTICLE_CREATE(iDieX, iDieY, EXPLOSION_ORNI, -1, -1);
+            PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_ORNI, -1, -1);
         }
 
         // Frigate death particle? (doesnt exist in Dune 2, but would be cool to have)
@@ -281,7 +281,7 @@ void cUnit::createExplosionParticle() {
 
 
                 for (int i = 0; i < 2; i++)
-                    PARTICLE_CREATE(iDieX + (cx * 32), iDieY + (cy * 32), EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
+                    PARTICLE_CREATE(iDieX + (cx * 32), iDieY + (cy * 32), D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
 
                 if (rnd(100) < 35)
                     play_sound_id_with_distance(SOUND_TANKDIE + rnd(2),
@@ -335,14 +335,14 @@ void cUnit::createExplosionParticle() {
                         int iChance = 10;
 
                         if (pStructure &&
-                            pStructure->getHitPoints() < (structures[pStructure->getType()].hp / 2)) {
+                            pStructure->getHitPoints() < (sStructureInfo[pStructure->getType()].hp / 2)) {
                             iChance = 30;
                         }
 
                         if (rnd(100) < iChance) {
                             long x = pos_x() + (mapCamera->getViewportStartX()) + 16 + (-8 + rnd(16));
                             long y = pos_y() + (mapCamera->getViewportStartY()) + 16 + (-8 + rnd(16));
-                            PARTICLE_CREATE(x, y, OBJECT_SMOKE, -1, -1);
+                            PARTICLE_CREATE(x, y, D2TM_PARTICLE_SMOKE, -1, -1);
                         }
                     }
                 }
@@ -372,19 +372,19 @@ void cUnit::createExplosionParticle() {
             }
 
 
-        PARTICLE_CREATE(iOrgDieX, iOrgDieY, OBJECT_BOOM02, -1, -1);
+        PARTICLE_CREATE(iOrgDieX, iOrgDieY, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
 
-        PARTICLE_CREATE(iOrgDieX - 32, iOrgDieY, OBJECT_BOOM02, -1, -1);
-        PARTICLE_CREATE(iOrgDieX + 32, iOrgDieY, OBJECT_BOOM02, -1, -1);
-        PARTICLE_CREATE(iOrgDieX, iOrgDieY - 32, OBJECT_BOOM02, -1, -1);
-        PARTICLE_CREATE(iOrgDieX, iOrgDieY + 32, OBJECT_BOOM02, -1, -1);
+        PARTICLE_CREATE(iOrgDieX - 32, iOrgDieY, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
+        PARTICLE_CREATE(iOrgDieX + 32, iOrgDieY, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
+        PARTICLE_CREATE(iOrgDieX, iOrgDieY - 32, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
+        PARTICLE_CREATE(iOrgDieX, iOrgDieY + 32, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
 
     }
 
     if (iType == TROOPER || iType == SOLDIER || iType == UNIT_FREMEN_ONE) {
         // create particle of dead body
 
-        PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF02, iPlayer, -1);
+        PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_DEADINF02, iPlayer, -1);
 
         play_sound_id_with_distance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
     }
@@ -392,7 +392,7 @@ void cUnit::createExplosionParticle() {
     if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
         // create particle of dead body
 
-        PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF01, iPlayer, -1);
+        PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_DEADINF01, iPlayer, -1);
 
         play_sound_id_with_distance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
     }
@@ -480,7 +480,7 @@ int cUnit::center_draw_y() {
 }
 
 int cUnit::getBmpHeight() const {
-    return unitInfo[iType].bmp_height;
+    return sUnitInfo[iType].bmp_height;
 }
 
 void cUnit::draw_spice() {
@@ -503,17 +503,17 @@ void cUnit::draw_spice() {
 }
 
 int cUnit::getBmpWidth() const {
-    return unitInfo[iType].bmp_width;
+    return sUnitInfo[iType].bmp_width;
 }
 
 float cUnit::getHealthNormalized() {
-    s_UnitP &unitType = getUnitType();
+    s_UnitInfo &unitType = getUnitType();
     float flMAX = unitType.hp;
     return (iHitPoints / flMAX);
 }
 
 float cUnit::getTempHealthNormalized() {
-    s_UnitP &unitType = getUnitType();
+    s_UnitInfo &unitType = getUnitType();
     float flMAX = unitType.hp;
     return (iTempHitPoints / flMAX);
 }
@@ -657,7 +657,7 @@ void cUnit::draw() {
         return;
     }
 
-    s_UnitP &unitType = getUnitType();
+    s_UnitInfo &unitType = getUnitType();
     int bmp_width = unitType.bmp_width;
     int bmp_height = unitType.bmp_height;
 
@@ -1106,7 +1106,7 @@ void cUnit::think() {
         if (iBodyFacing == iBodyShouldFace) {
             if (iHeadFacing != iHeadShouldFace) {
                 TIMER_turn++;
-                if (TIMER_turn > (unitInfo[iType].turnspeed)) {
+                if (TIMER_turn > (sUnitInfo[iType].turnspeed)) {
                     TIMER_turn = 0;
 
                     iHeadFacing = determineNewFacing(iHeadFacing, iHeadShouldFace);
@@ -1161,7 +1161,7 @@ void cUnit::think() {
     // when any unit is on a spice bloom, you got a problem, you die!
     int cellType = map.getCellType(iCell);
     if (cellType == TERRAIN_BLOOM
-        && unitInfo[iType].airborn == false) {
+        && sUnitInfo[iType].airborn == false) {
         // change type of terrain to sand
         mapEditor.createCell(iCell, TERRAIN_SAND, 0);
 
@@ -1198,11 +1198,11 @@ void cUnit::think() {
             if (cellType == TERRAIN_SPICE ||
                 cellType == TERRAIN_SPICEHILL) {
                 // do timer stuff
-                if (iCredits < unitInfo[iType].credit_capacity)
+                if (iCredits < sUnitInfo[iType].credit_capacity)
                     TIMER_harvest++;
             } else {
                 // not on spice, find a new location
-                if (iCredits < unitInfo[iType].credit_capacity) {
+                if (iCredits < sUnitInfo[iType].credit_capacity) {
                     // find harvest cell
                     move_to(UNIT_find_harvest_spot(iID), -1, -1);
                 } else {
@@ -1212,13 +1212,13 @@ void cUnit::think() {
                 }
             }
 
-            if (iCredits >= unitInfo[iType].credit_capacity)
+            if (iCredits >= sUnitInfo[iType].credit_capacity)
                 bFindRefinery = true;
 
             // when we should harvest...
             cPlayerDifficultySettings *difficultySettings = players[iPlayer].getDifficultySettings();
-            if (TIMER_harvest > (difficultySettings->getHarvestSpeed(unitInfo[iType].harvesting_speed)) &&
-                iCredits < unitInfo[iType].credit_capacity) {
+            if (TIMER_harvest > (difficultySettings->getHarvestSpeed(sUnitInfo[iType].harvesting_speed)) &&
+                iCredits < sUnitInfo[iType].credit_capacity) {
                 TIMER_harvest = 1;
 
                 iFrame++;
@@ -1226,8 +1226,8 @@ void cUnit::think() {
                 if (iFrame > 3)
                     iFrame = 1;
 
-                iCredits += unitInfo[iType].harvesting_amount;
-                map.cellTakeCredits(iCell, unitInfo[iType].harvesting_amount);
+                iCredits += sUnitInfo[iType].harvesting_amount;
+                map.cellTakeCredits(iCell, sUnitInfo[iType].harvesting_amount);
 
                 // turn into sand/spice (when spicehill)
                 if (map.getCellCredits(iCell) <= 0) {
@@ -1380,7 +1380,7 @@ void cUnit::think_turn_to_desired_body_facing() {
     // BODY is not facing correctly
     TIMER_turn++;
 
-    float turnspeed = unitInfo[iType].turnspeed;
+    float turnspeed = sUnitInfo[iType].turnspeed;
     if (isAirbornUnit()) {
         // when closer to goal, turnspeed decreases.
         double distance = map.distance(iCell, iGoalCell);
@@ -1514,7 +1514,7 @@ void cUnit::think_move_air() {
                                 int pufX = (pos_x() + getBmpWidth() / 2);
                                 int pufY = (pos_y() + getBmpHeight() / 2);
 
-                                PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
+                                PARTICLE_CREATE(pufX, pufY, D2TM_PARTICLE_CARRYPUFF, -1, -1);
 
                                 log("Pick up unit");
                                 return;
@@ -1609,7 +1609,7 @@ void cUnit::think_move_air() {
 
                             int pufX = (pos_x() + getBmpWidth() / 2);
                             int pufY = (pos_y() + getBmpHeight() / 2);
-                            PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
+                            PARTICLE_CREATE(pufX, pufY, D2TM_PARTICLE_CARRYPUFF, -1, -1);
                         } else {
                             // find a new spot
                             updateCellXAndY();
@@ -1733,7 +1733,7 @@ void cUnit::think_move_air() {
                         cellType == TERRAIN_SPICEHILL) {
                         int pufX = (pos_x() + getBmpWidth() / 2);
                         int pufY = (pos_y() + getBmpHeight() / 2);
-                        PARTICLE_CREATE(pufX, pufY, OBJECT_CARRYPUFF, -1, -1);
+                        PARTICLE_CREATE(pufX, pufY, D2TM_PARTICLE_CARRYPUFF, -1, -1);
                     }
                 }
                 TIMER_movedelay = (dist - iLength) * (dist * slowDownStep);
@@ -1922,13 +1922,14 @@ void cUnit::shoot(int iShootCell) {
     int iShootY = pos_y() + (getBmpHeight() / 2);
     int bmp_head = convert_angle(iHeadFacing);
 
+    // TODO: add this in sUnitInfo
     if (iType == TANK) {
-        PARTICLE_CREATE(iShootX, iShootY, OBJECT_TANKSHOOT, -1, bmp_head);
+        PARTICLE_CREATE(iShootX, iShootY, D2TM_PARTICLE_TANKSHOOT, -1, bmp_head);
     } else if (iType == SIEGETANK) {
-        PARTICLE_CREATE(iShootX, iShootY, OBJECT_SIEGESHOOT, -1, bmp_head);
+        PARTICLE_CREATE(iShootX, iShootY, D2TM_PARTICLE_SIEGESHOOT, -1, bmp_head);
     }
 
-    int bulletType = unitInfo[iType].bulletType;
+    int bulletType = sUnitInfo[iType].bulletType;
     if (bulletType < 0) return; // no bullet type to spawn
 
     int iBull = create_bullet(bulletType, iCell, iShootCell, iID, -1);
@@ -2036,7 +2037,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                         }
 
                         if (ABS_length(iCellX, iCellY, map.getCellX(iDestCell), map.getCellY(iDestCell)) <
-                            unitInfo[iType].range) {
+                            sUnitInfo[iType].range) {
                             // within range, don't move (just prepare retaliation fire)
                         } else {
                             // out of range unit, attack it
@@ -2060,7 +2061,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
     if (isInfantryUnit()) {
         if (iType == INFANTRY || iType == TROOPERS) {
             // turn into soldier or trooper when on 50% health
-            if (iHitPoints <= (unitInfo[iType].hp / 3)) {
+            if (iHitPoints <= (sUnitInfo[iType].hp / 3)) {
                 // leave 2 dead bodies (of 3 ;))
 
                 // turn into single one
@@ -2070,13 +2071,13 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                 if (iType == TROOPERS)
                     iType = TROOPER;
 
-                iHitPoints = unitInfo[iType].hp;
+                iHitPoints = sUnitInfo[iType].hp;
 
                 int half = 16;
                 int iDieX = pos_x() + half;
                 int iDieY = pos_y() + half;
 
-                PARTICLE_CREATE(iDieX, iDieY, OBJECT_DEADINF01, iPlayer, -1);
+                PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_DEADINF01, iPlayer, -1);
 
                 play_sound_id_with_distance(SOUND_DIE01 + rnd(5),
                                             distanceBetweenCellAndCenterOfScreen(iCell));
@@ -2089,7 +2090,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
 void cUnit::log(const char *txt) const {
     // logs unit stuff, but gives unit information
     char msg[512];
-    sprintf(msg, "[UNIT[%d]: type = %d(=%s), iCell = %d, iGoalCell = %d] '%s'", iID, iType, unitInfo[iType].name, iCell, iGoalCell, txt);
+    sprintf(msg, "[UNIT[%d]: type = %d(=%s), iCell = %d, iGoalCell = %d] '%s'", iID, iType, sUnitInfo[iType].name, iCell, iGoalCell, txt);
     players[iPlayer].log(msg);
 }
 
@@ -2178,7 +2179,7 @@ void cUnit::think_attack() {
             }
         }
     } else {
-        s_UnitP &unitType = getUnitType();
+        s_UnitInfo &unitType = getUnitType();
 
         // AIRBORN UNITS ATTACK THINKING
         int minDistance = 2;
@@ -2226,7 +2227,7 @@ void cUnit::think_attack_sandworm() {
         if (iGoalCell == iCell) {
             attackUnit->die(false, false);
 
-            PARTICLE_CREATE(pos_x_centered(), pos_y_centered(), OBJECT_WORMEAT, -1, -1);
+            PARTICLE_CREATE(pos_x_centered(), pos_y_centered(), D2TM_PARTICLE_WORMEAT, -1, -1);
             play_sound_id_with_distance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(iCell));
             actionGuard();
             TIMER_wormeat += 25 + rnd(150);
@@ -2286,7 +2287,7 @@ void cUnit::startChasingTarget() {
 }
 
 bool cUnit::setAngleTowardsTargetAndFireBullets(int distance) {
-    s_UnitP &unitType = getUnitType();
+    s_UnitInfo &unitType = getUnitType();
     // in range , fire and such
 
     // Facing
@@ -2347,8 +2348,8 @@ int cUnit::getSight() const {
     return getUnitType().sight;
 }
 
-s_UnitP &cUnit::getUnitType() const {
-    return unitInfo[iType];
+s_UnitInfo &cUnit::getUnitType() const {
+    return sUnitInfo[iType];
 }
 
 // thinking about movement (which is called upon a faster rate)
@@ -2745,7 +2746,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         // deal of particles overlapping eachother.
         TIMER_wormtrail++;
         if (TIMER_wormtrail > 4) {
-            PARTICLE_CREATE(pos_x_centered(), pos_y_centered(), OBJECT_WORMTRAIL, -1, -1);
+            PARTICLE_CREATE(pos_x_centered(), pos_y_centered(), D2TM_PARTICLE_WORMTRAIL, -1, -1);
             TIMER_wormtrail = 0;
         }
     }
@@ -2766,26 +2767,26 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
 
             // horizontal when only going horizontal
             if (bToLeft > -1 && bToDown < 0)
-                PARTICLE_CREATE(iParX, iParY, TRACK_HOR, -1, -1);
+                PARTICLE_CREATE(iParX, iParY, D2TM_PARTICLE_TRACK_HOR, -1, -1);
 
             // vertical, when only going vertical
             if (bToDown > -1 && bToLeft < 0)
-                PARTICLE_CREATE(iParX, iParY, TRACK_VER, -1, -1);
+                PARTICLE_CREATE(iParX, iParY, D2TM_PARTICLE_TRACK_VER, -1, -1);
 
             // diagonal when going both ways
             if (bToDown > -1 && bToLeft > -1) {
                 if (bToDown == 0) {
                     // going up
                     if (bToLeft == 1)
-                        PARTICLE_CREATE(iParX, iParY, TRACK_DIA, -1, -1);
+                        PARTICLE_CREATE(iParX, iParY, D2TM_PARTICLE_TRACK_DIA, -1, -1);
                     else
-                        PARTICLE_CREATE(iParX, iParY, TRACK_DIA2, -1, -1);
+                        PARTICLE_CREATE(iParX, iParY, D2TM_PARTICLE_TRACK_DIA2, -1, -1);
 
                 } else {
                     if (bToLeft == 0)
-                        PARTICLE_CREATE(iParX, iParY, TRACK_DIA, -1, -1);
+                        PARTICLE_CREATE(iParX, iParY, D2TM_PARTICLE_TRACK_DIA, -1, -1);
                     else
-                        PARTICLE_CREATE(iParX, iParY, TRACK_DIA2, -1, -1);
+                        PARTICLE_CREATE(iParX, iParY, D2TM_PARTICLE_TRACK_DIA2, -1, -1);
                 }
 
             }
@@ -2839,9 +2840,9 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         updateCellXAndY();
 
         // check any units that are on our cell as well.
-        // perhaps this could be sped up somehow if we had more than 1 unit on a cell possible (for now we don't have
+        // perhaps this could be sped up if we had more than 1 unit on a cell possible (for now we don't have
         // this). An alternative is to have a function return per 'segment' the units within it (so we don't need to
-        // iterate over all units
+        // iterate over all units)
         if (canSquishInfantry()) {
             for (int iq = 0; iq < MAX_UNITS; iq++) {
                 cUnit &potentialDeadUnit = unit[iq];
@@ -2863,10 +2864,10 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         if (iPlayer == AI_CPU5 && players[HUMAN].isHouse(ATREIDES)) {
             // TODO: make this work for all allied forces
             // hackish way to get Fog of war clearance by allied fremen units (super weapon).
-            map.clearShroud(iCell, unitInfo[iType].sight, HUMAN);
+            map.clearShroud(iCell, sUnitInfo[iType].sight, HUMAN);
         }
 
-        map.clearShroud(iCell, unitInfo[iType].sight, iPlayer);
+        map.clearShroud(iCell, sUnitInfo[iType].sight, iPlayer);
 
         // The goal did change probably, or something else forces us to reconsider
         if (bCalculateNewPath) {
@@ -2918,7 +2919,7 @@ void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait) {
 }
 
 bool cUnit::isInfantryUnit() {
-    return unitInfo[iType].infantry;
+    return sUnitInfo[iType].infantry;
 }
 
 cUnit::cUnit() {
@@ -3120,7 +3121,7 @@ void cUnit::findBestStructureCandidateAndHeadTowardsItOrWait(int structureType, 
     assert(structureType > -1);
 
     char msg[255];
-    sprintf(msg, "cUnit::findBestStructureCandidateAndHeadTowardsItOrWait - Going to look for a [%s]", structures[structureType].name);
+    sprintf(msg, "cUnit::findBestStructureCandidateAndHeadTowardsItOrWait - Going to look for a [%s]", sStructureInfo[structureType].name);
     log(msg);
 
     cAbstractStructure *candidate = findBestStructureCandidateToHeadTo(structureType);
@@ -3201,6 +3202,17 @@ bool cUnit::isMarkedForRemoval() {
     return bRemoveMe;
 }
 
+bool cUnit::isWithinViewport(cRectangle *viewport) {
+    if (viewport == nullptr) return false;
+    return dimensions->isOverlapping(viewport);
+}
+
+void cUnit::draw_debug() {
+    allegroDrawer->drawRectangle(bmp_screen, dimensions, makecol(255, 0, 255));
+    putpixel(bmp_screen, center_draw_x(), center_draw_y(), makecol(255, 0, 255));
+    alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), makecol(255, 255, 255), "%d", iID);
+}
+
 
 // return new valid ID
 int UNIT_NEW() {
@@ -3242,7 +3254,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
         return -1;
     }
 
-    s_UnitP &sUnitType = unitInfo[unitType];
+    s_UnitInfo &sUnitType = sUnitInfo[unitType];
 
     // check if unit already exists on location
     if (!sUnitType.airborn && map.cellGetIdFromLayer(iCll, MAPID_STRUCTURES) > -1) {
@@ -3839,7 +3851,7 @@ int RETURN_CLOSE_GOAL(int iCll, int iMyCell, int iID) {
                 {
                     // depending on unit type, do not choose walls (or mountains)
                     int cellType = map.getCellType(cll);
-                    if (unitInfo[unit[iID].iType].infantry) {
+                    if (sUnitInfo[unit[iID].iType].infantry) {
                         if (cellType == TERRAIN_MOUNTAIN)
                             continue; // do not use this one
                     }

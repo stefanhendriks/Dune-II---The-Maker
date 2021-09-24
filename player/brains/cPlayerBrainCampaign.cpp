@@ -89,14 +89,14 @@ namespace brains {
             memset(msg, 0, sizeof(msg));
             if (buildOrder.buildType == eBuildType::UNIT) {
                 sprintf(msg, "[%d] - type = UNIT, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
-                        unitInfo[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
+                        sUnitInfo[buildOrder.buildId].name, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::STRUCTURE) {
                 sprintf(msg, "[%d] - type = STRUCTURE, buildId = %d (=%s), priority = %d, place at %d, state = %s", id,
-                        buildOrder.buildId, structures[buildOrder.buildId].name, buildOrder.priority,
+                        buildOrder.buildId, sStructureInfo[buildOrder.buildId].name, buildOrder.priority,
                         buildOrder.placeAt, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::SPECIAL) {
                 sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=%s), priority = %d, state = %s", id, buildOrder.buildId,
-                        specialInfo[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
+                        sSpecialInfo[buildOrder.buildId].description, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
             } else if (buildOrder.buildType == eBuildType::BULLET) {
                 sprintf(msg, "[%d] - type = SPECIAL, buildId = %d (=NOT YET IMPLEMENTED), priority = %d, state = %s", id,
                         buildOrder.buildId, buildOrder.priority, eBuildOrderStateString(buildOrder.state));
@@ -197,7 +197,7 @@ namespace brains {
         if (player->hasEnoughCreditsFor(50)) {
             cAbstractStructure *pStructure = structure[event.entityID];
             if (!pStructure->isRepairing()) {
-                s_Structures &sStructures = structures[event.entitySpecificType];
+                s_StructureInfo &sStructures = sStructureInfo[event.entitySpecificType];
                 if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
                     pStructure->startRepairing();
                 }
@@ -209,7 +209,7 @@ namespace brains {
         if (player->hasEnoughCreditsFor(50)) {
             cAbstractStructure *pStructure = structure[event.entityID];
             if (!pStructure->isRepairing()) {
-                s_Structures &sStructures = structures[event.entitySpecificType];
+                s_StructureInfo &sStructures = sStructureInfo[event.entitySpecificType];
                 if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
                     pStructure->startRepairing();
                 }

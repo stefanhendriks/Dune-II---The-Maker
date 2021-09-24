@@ -19,7 +19,9 @@ class cAllegroDrawer {
 
 		void drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP* src, float percentage);
 
+		void blit(sBitmap *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
 		void blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
+		void blitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
 		void blitSprite(BITMAP *src, BITMAP *dest, cRectangle *rectangle);
 
 		void stretchSprite(BITMAP *src, BITMAP *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight);

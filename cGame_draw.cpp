@@ -305,7 +305,7 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
                         attackingUnitSelected = true;
                     }
 
-                    if (unitInfo[cUnit.iType].infantry) {
+                    if (sUnitInfo[cUnit.iType].infantry) {
                         bPlayInf = true;
                     } else {
                         bPlayRep = true;
@@ -373,7 +373,7 @@ void cGame::mouseOnBattlefield(cGameControlsContext *context, int mouseCell, boo
 
                 hoverUnit.bSelected=true;
 
-                if (unitInfo[hoverUnit.iType].infantry == false) {
+                if (sUnitInfo[hoverUnit.iType].infantry == false) {
                     play_sound_id(SOUND_REPORTING);
                 } else {
                     play_sound_id(SOUND_YESSIR);
@@ -441,9 +441,9 @@ void cGame::mouseOnBattlefield(cGameControlsContext *context, int mouseCell, boo
             int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
 
             if (mouse_tile == MOUSE_ATTACK) {
-                PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, ATTACK_INDICATOR, -1, -1);
+                PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, D2TM_PARTICLE_ATTACK, -1, -1);
             } else {
-                PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, MOVE_INDICATOR, -1, -1);
+                PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, D2TM_PARTICLE_MOVE, -1, -1);
             }
         }
     }

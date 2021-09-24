@@ -1,10 +1,3 @@
-/*
- * structs.h
- *
- *  Created on: 7-nov-2010
- *      Author: Stefan
- */
-
 #ifndef STRUCTS_H_
 #define STRUCTS_H_
 
@@ -12,10 +5,10 @@
 #include "enums.h"
 
 // Unit properties
-// the s_UnitP struct is holding all properties for a specific unit type.
-// note: The unit properties are actually set in common.cpp , like the houses!
+// the s_UnitInfo struct is holding all properties for a specific unit type.
+// note: The unit properties are actually set in common.cpp , like the sHouseInfo!
 // note: Some values are now read via INI.CPP (GAME.INI reader).
-struct s_UnitP {
+struct s_UnitInfo {
   BITMAP  *bmp;         // each unit has a reference to his 8 bit bitmap.
   BITMAP  *top;         // top of unit
   BITMAP  *shadow;      // shadow of unit (24 bit)
@@ -80,7 +73,7 @@ struct s_UnitP {
 };
 
 // Structure types
-struct s_Structures {
+struct s_StructureInfo {
   // Structures
   BITMAP *bmp;         // a pointer to the 8 bit bitmap
   BITMAP *shadow;	   // a pointer to the shadow bitmap
@@ -125,7 +118,7 @@ struct s_Structures {
  *
  * Then, also, this struct provides which item and what kind of item will be made available.
  */
-struct s_Upgrade {
+struct s_UpgradeInfo {
     bool enabled;        // set to true to use this upgrade logic
 
     int icon;            // icon id
@@ -159,7 +152,7 @@ struct s_Upgrade {
  *
  * Then, also, this struct provides which item and what kind of item will be made available.
  */
-struct s_Special {
+struct s_SpecialInfo {
     int icon;            // icon id
 
     char description[64]; // ie: "Upgrade to 4slab"
@@ -192,15 +185,34 @@ struct s_Special {
 };
 
 // House properties
-struct s_House {
+struct s_HouseInfo {
   int swap_color;           // color index to start swapping with.
   int minimap_color;        // rgb value on minimap
 };
 
+/**
+ * Particle info
+ * A particle can have 3 states:
+ * - fade in
+ * - animating
+ * - fade out (either while animating or not)
+ */
+struct s_ParticleInfo {
+    int bmpIndex;           // index of bmp to draw (index in DataRepository)
 
-struct s_Bullet {
+    int startAlpha;         // 0-255 (anything else == 255 = opaque)
+
+    bool usesAdditiveBlending; // type of blending used when alpha > 0 and < 255 (default = transparent, if this is set to false)
+
+    int layer;              // at which 'layer' (z-index like) to draw particle (0 = top (over unit), 1 = bottom (beneath unit))
+    int frameWidth;         // width of frame
+    int frameHeight;        // height of frame
+
+};
+
+struct s_BulletInfo {
     BITMAP *bmp;        // a reference to its bitmap. (16 bits here!)
-    int deadbmp;        // when the bullet dies, it will use this bmp to show its animation
+    int deathParticle;   // when the bullet dies, it will use this particle to show its death
     int bmp_width;      // how much pixels a bullet is (wide)
 
     int damage;         // how much damage it does to vehicles

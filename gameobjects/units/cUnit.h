@@ -111,6 +111,8 @@ public:
 	
 	float fExpDamage();	// experience damage by bullet (extra damage that is)
 
+    bool isWithinViewport(cRectangle *viewport);
+
     // ------------
     void init(int i);        // inits units
     int draw_x();
@@ -185,7 +187,7 @@ public:
 
     int TIMER_wormtrail;  // when to spawn a trail when moving
 
-    s_UnitP& getUnitType() const;
+    s_UnitInfo& getUnitType() const;
 
     /**
      * Return current health normalized (between 0.0 and 1.0)
@@ -235,8 +237,6 @@ public:
     int getBmpWidth() const;
 
     int getBmpHeight() const;
-
-    cRectangle * dimensions;
 
     void recreateDimensions();
 
@@ -344,6 +344,8 @@ public:
 
     bool isMarkedForRemoval();
 
+    void draw_debug();
+
 private:
 
     int willBePickedUpBy;	// is unit picked up (by carry-all), if so by which one?
@@ -373,6 +375,8 @@ private:
     float posX, posY;
 
     eUnitMoveToCellResult moveToNextCellLogic();
+
+    cRectangle * dimensions;
 
     int getRange() const;
 

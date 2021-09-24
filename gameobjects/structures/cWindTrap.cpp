@@ -78,7 +78,7 @@ void cWindTrap::think_guard() {
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 
 int cWindTrap::getPowerOut() {
-    float percentage = ((float) getHitPoints() / (float) structures[getType()].hp);
+    float percentage = ((float) getHitPoints() / (float) sStructureInfo[getType()].hp);
     return getMaxPowerOut() * percentage;
 }
 

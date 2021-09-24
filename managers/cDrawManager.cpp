@@ -48,6 +48,7 @@ void cDrawManager::drawCombatState() {
     }
 
 	// draw layer 1 (beneath units, on top of terrain)
+    particleDrawer->determineParticlesToDraw();
 	particleDrawer->drawLowerLayer();
 
 	map.draw_units();
@@ -59,7 +60,7 @@ void cDrawManager::drawCombatState() {
 
 	map.draw_units_2nd();
 
-	particleDrawer->drawHigherLayer();
+    particleDrawer->drawTopLayer();
 	mapDrawer->drawShroud(0, 42);
 
 	drawRallyPoint();
@@ -90,6 +91,7 @@ void cDrawManager::drawCombatState() {
 
     if (game.bDrawUsages) {
         drawDebugInfoUsages();
+        particleDrawer->drawDebugInfo();
     }
 
 	// MOUSE
