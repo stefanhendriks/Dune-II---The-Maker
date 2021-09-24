@@ -441,9 +441,9 @@ void cGame::mouseOnBattlefield(cGameControlsContext *context, int mouseCell, boo
             int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
 
             if (mouse_tile == MOUSE_ATTACK) {
-                PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, D2TM_PARTICLE_ATTACK, -1, -1);
+                cParticle::create(absoluteXCoordinate, absoluteYCoordinate, D2TM_PARTICLE_ATTACK, -1, -1);
             } else {
-                PARTICLE_CREATE(absoluteXCoordinate, absoluteYCoordinate, D2TM_PARTICLE_MOVE, -1, -1);
+                cParticle::create(absoluteXCoordinate, absoluteYCoordinate, D2TM_PARTICLE_MOVE, -1, -1);
             }
         }
     }

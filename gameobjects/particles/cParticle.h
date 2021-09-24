@@ -64,9 +64,10 @@ private:
 
     int iHousePal;      // when specified, use this palette for drawing (and its an 8 bit picture then!)
 
-    //
     int drawXBmpOffset;
     int drawYBmpOffset;
+
+    bool oldParticle;
 
     int draw_x();
 
@@ -78,7 +79,5 @@ private:
 
     void recreateDimensions();
 };
-
-void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame);
 
 

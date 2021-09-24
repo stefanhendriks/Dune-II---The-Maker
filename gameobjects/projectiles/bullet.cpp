@@ -141,7 +141,9 @@ void cBullet::think() {
 
             int smokeParticle = gets_Bullet().smokeParticle;
             if (smokeParticle > -1) {
-                PARTICLE_CREATE(pos_x(), pos_y(), smokeParticle, -1, -1);
+                long x = pos_x();
+                long y = pos_y();
+                cParticle::create(x, y, smokeParticle, -1, -1);
             }
 
             TIMER_frame = 0;
@@ -295,7 +297,7 @@ void cBullet::arrivedAtDestinationLogic() {
             // create particle of explosion
             if (sBullet.deathParticle > -1) {
                 // depending on 'explosion size'
-                PARTICLE_CREATE(posX, posY, sBullet.deathParticle, -1, -1);
+                cParticle::create(posX, posY, sBullet.deathParticle, -1, -1);
             }
 
             if (iType == ROCKET_BIG) {
@@ -306,7 +308,7 @@ void cBullet::arrivedAtDestinationLogic() {
                                                 distanceBetweenCellAndCenterOfScreen(cellToDamage));
                 }
                 if (rnd(100) < 20) {
-                    PARTICLE_CREATE(posX, posY, D2TM_PARTICLE_SMOKE, -1, -1);
+                    cParticle::create(posX, posY, D2TM_PARTICLE_SMOKE, -1, -1);
                 }
             }
 
