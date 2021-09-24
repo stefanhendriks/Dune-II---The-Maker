@@ -10,6 +10,8 @@
 */
 
 #include "../../include/d2tmh.h"
+#include "cParticle.h"
+
 
 cParticle::cParticle() {
     dimensions = nullptr;
@@ -150,6 +152,13 @@ bool cParticle::isWithinViewport(cRectangle *viewport) {
 void cParticle::think() {
     think_position();
 
+    if (!oldParticle) {
+        // new thinking
+        think_new();
+        return;
+    }
+
+    // old way
     if (iType == D2TM_PARTICLE_OBJECT_BOOM01 || iType == D2TM_PARTICLE_OBJECT_BOOM02 ||
         iType == D2TM_PARTICLE_OBJECT_BOOM03) {
         TIMER_frame++;
@@ -661,6 +670,7 @@ void cParticle::init(const s_ParticleInfo &particleInfo) {
         iAlpha = 255;
     }
 
+    oldParticle = particleInfo.oldParticle;
 }
 
 int cParticle::getFrameWidth() {
@@ -682,4 +692,6 @@ void cParticle::recreateDimensions() {
     dimensions = new cRectangle(draw_x(), draw_y(), getFrameWidth(), getFrameHeight());
 }
 
+void cParticle::think_new() {
 
+}
