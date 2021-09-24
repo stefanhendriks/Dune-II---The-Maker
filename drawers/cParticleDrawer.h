@@ -7,13 +7,14 @@ class cParticleDrawer {
 		~cParticleDrawer();
 
 		void drawLowerLayer();
-		void drawHigherLayer();
+		void drawTopLayer();
+        void drawDebugInfo();
 
-	protected:
-		void drawLayer(int layer);
+        void determineParticlesToDraw();
 
 	private:
-
+        std::vector<int> particlesLowerLayer;
+        std::vector<int> particlesTopLayer;
 };
 
 #endif /* CPARTICLEDRAWER_H_ */

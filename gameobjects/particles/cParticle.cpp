@@ -1,5 +1,4 @@
 /*
-/*
 
   Dune II - The Maker
 
@@ -8,52 +7,44 @@
   Website: http://dune2themaker.fundynamic.com
 
   2001 - 2021 (c) code by Stefan Hendriks
-
-  ---------------------------------------------------
-  Particle = every effect in the game:
-
- - smoke pufs
- - move indicator
- etc.
-
- most stuff = hardcoded
-
- Nice thing is, every particle = related with the bitmap id. Each bitmap can behave differently;
- by adding code to the 'think' function.
-
- TODO: make main class and sub-classes?
 */
-
 
 #include "../../include/d2tmh.h"
 
-// TODO: constructor/destructor
+cParticle::cParticle() {
+    dimensions = nullptr;
+    init();
+}
+
+cParticle::~cParticle() {
+    bmp = nullptr;
+    if (dimensions) delete dimensions;
+}
+
 
 // init
 void cParticle::init() {
-    // used or not:
-    bAlive=false;       // alive
+    bAlive = false;       // alive (if yes, it is in use, if not it can be used)
+    iAlpha = -1;            // alpha number
 
-    iAlpha=-1;			// alpha
+    x = 0;
+    y = 0;              // x and y position to draw (absolute numbers)
+    frameIndex = 0;
+    iType = 0;          // type
 
-    iWidth=32;          // default width of frame
-    iHeight=iWidth;
+    bmp = nullptr;
+    drawXBmpOffset = drawYBmpOffset = 0;
 
-    // Drawing effects
-    x=0;
-    y=0;              // x and y position to draw (absolute numbers)
-    iFrame=0;         // frame
-    iType=0;          // type
-
-    layer=0;          // default layer = 0 (on top)
-
-    iHousePal=-1;     // when specified, use this palette for drawing (and its an 8 bit picture then!)
+    iHousePal = -1;     // when specified, use this palette for drawing (and its an 8 bit picture then!)
 
     // TIMERS
-    TIMER_frame=0;    // frame animation timers (when < 0, next frame, etc)
-                      // when TIMER_dead < 0, the last frame lets this thing die
+    TIMER_frame = 0;    // frame animation timers (when < 0, next frame, etc)
+    // when TIMER_dead < 0, the last frame lets this thing die
 
-    TIMER_dead=0;     // when > -1, this timer will determine when the thing dies
+    TIMER_dead = 0;     // when > -1, this timer will determine when the thing dies
+
+    if (dimensions) delete dimensions;
+    dimensions = nullptr;
 }
 
 // valid
@@ -62,33 +53,37 @@ bool cParticle::isValid() {
 }
 
 int cParticle::draw_x() {
-    int bmpOffset = (iWidth/2) * -1;
-    return mapCamera->getWindowXPositionWithOffset(x, bmpOffset);
+    return mapCamera->getWindowXPositionWithOffset(x, drawXBmpOffset);
 }
 
 int cParticle::draw_y() {
-    int bmpOffset = (iHeight/2) * -1;
-    return mapCamera->getWindowYPositionWithOffset(y, bmpOffset);
+    return mapCamera->getWindowYPositionWithOffset(y, drawYBmpOffset);
+}
+
+/**
+ * Poor man solution to frequently update the dimensions of unit, better would be using events?
+ * (onMove, onViewportMove, onViewportZoom?)
+ */
+void cParticle::think_position() {
+    // keep updating dimensions
+    dimensions->move(draw_x(), draw_y());
+    if (mapCamera) {
+        dimensions->resize(mapCamera->factorZoomLevel(getFrameWidth()),
+                           mapCamera->factorZoomLevel(getFrameHeight()));
+    }
 }
 
 // draw
 void cParticle::draw() {
-    int dx = draw_x();
-    int dy = draw_y();
-
-    // TODO: This is culling, and that responsibility should be somewhere else
-    if (dx < 0 || dx > game.screen_x)
-        return;
-
-    // TODO: This is culling, and that responsibility should be somewhere else
-    if (dy < 0 || dy > game.screen_y)
-        return;
+    s_ParticleInfo particleInfo = getParticleInfo();
+    int frameWidth = getFrameWidth();
+    int frameHeight = getFrameHeight();
 
     // valid in boundaries
-    BITMAP *temp = create_bitmap(iWidth, iHeight);
+    BITMAP *temp = create_bitmap(frameWidth, frameHeight);
 
     // transparency
-    clear_to_color(temp, makecol(255,0,255));
+    clear_to_color(temp, makecol(255, 0, 255));
 
     // now blit it
     if (iHousePal > 0) {
@@ -96,365 +91,320 @@ void cParticle::draw() {
         select_palette(player.pal);
     }
 
-    blit((BITMAP *) gfxdata[iType].dat, temp, (iWidth * iFrame), 0, 0, 0, iWidth, iHeight);
+    if (bmp) {
+        // new behavior
+        allegroDrawer->blit(bmp, temp, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
+    } else {
+        // old behavior
+        allegroDrawer->blitFromGfxData(iType, temp, (frameWidth * frameIndex), 0, frameWidth, frameHeight, 0, 0);
+    }
 
     // create proper sized bitmap
-    int bmp_width = mapCamera->factorZoomLevel(iWidth);
-    int bmp_height = mapCamera->factorZoomLevel(iHeight);
+    int bmp_width = mapCamera->factorZoomLevel(frameWidth);
+    int bmp_height = mapCamera->factorZoomLevel(frameHeight);
 
     // create bmp that is the stretched version of temp
     BITMAP *stretched = create_bitmap(bmp_width + 1, bmp_height + 1);
     clear_to_color(stretched, makecol(255, 0, 255)); // mask color
-    allegroDrawer->maskedStretchBlit(temp, stretched, 0, 0, iWidth, iHeight, 0, 0, bmp_width, bmp_height);
+    allegroDrawer->maskedStretchBlit(temp, stretched, 0, 0, frameWidth, frameHeight, 0, 0, bmp_width, bmp_height);
 
     // temp is no longer needed
     destroy_bitmap(temp);
 
-    // drawX and drawY = is the draw coordinates but centered within cell (iWidth/Height are the cell size?)
-    int drawX = dx;
-    int drawY = dy;
+    int drawX = draw_x();
+    int drawY = draw_y();
 
-    if (iAlpha > -1) {
-		if (iType != OBJECT_BOOM01 && iType != OBJECT_BOOM02 && iType != OBJECT_BOOM03) {
-            set_trans_blender(0,0,0, iAlpha);
-			draw_trans_sprite(bmp_screen, stretched, drawX, drawY);
-		} else {
+    if (isUsingAlphaChannel()) {
+        if (particleInfo.usesAdditiveBlending) {
             fblend_add(stretched, bmp_screen, drawX, drawY, iAlpha);
+        } else {
+            set_trans_blender(0, 0, 0, iAlpha);
+            draw_trans_sprite(bmp_screen, stretched, drawX, drawY);
         }
-	} else {
+    } else {
         draw_sprite(bmp_screen, stretched, drawX, drawY);
     }
 
-	set_trans_blender(0,0,0,128);
+    set_trans_blender(0, 0, 0, 128);
 
     destroy_bitmap(stretched);
 }
 
+s_ParticleInfo& cParticle::getParticleInfo() const {
+    s_ParticleInfo &particleInfo = sParticleInfo[iType];
+    return particleInfo;
+}
+
+bool cParticle::isUsingAlphaChannel() const {
+    return iAlpha > -1 && iAlpha < 255;
+}
+
+bool cParticle::isWithinViewport(cRectangle *viewport) {
+    if (viewport == nullptr) return false;
+    return dimensions->isOverlapping(viewport);
+}
+
 
 // think
-void cParticle::think()
-{/*
-    if (iType == PARTYPE_SMOKE)
-    {
+void cParticle::think() {
+    think_position();
 
+    if (iType == D2TM_PARTICLE_OBJECT_BOOM01 || iType == D2TM_PARTICLE_OBJECT_BOOM02 ||
+        iType == D2TM_PARTICLE_OBJECT_BOOM03) {
+        TIMER_frame++;
 
-        return;
-    }*/
+        if (TIMER_frame > 0) {
+            TIMER_frame = 0;
 
-	if (iType == OBJECT_BOOM01 || iType == OBJECT_BOOM02 || iType == OBJECT_BOOM03)
-	{
-		TIMER_frame++;
+            iAlpha -= 2;
 
-		if (TIMER_frame > 0)
-		{
-			TIMER_frame=0;
+            if (iAlpha < 1)
+                bAlive = false;
+        }
+    }
 
-			iAlpha-=2;
-
-			if (iAlpha < 1)
-				bAlive=false;
-		}
-	}
-
-	// repair blink
-	if (iType == PARTYPE_REPAIRBLINK)
-	{
-		// lower iAlpha
-
-		TIMER_frame++;
-
-		if (TIMER_frame > 5)
-		{
-
-		 iAlpha--;
-		 TIMER_frame = 0;
-
-		if (iAlpha < 1)
-			bAlive=false;
-
-	//	y-= 16;
-		}
-		return;
-	}
-
-    if (iType == OBJECT_CARRYPUFF)
-    {
+    if (iType == D2TM_PARTICLE_CARRYPUFF) {
         TIMER_frame--;
 
-        if (TIMER_frame < 0)
-        {
-            iFrame++;
-            TIMER_frame=100+rnd(100);
+        if (TIMER_frame < 0) {
+            frameIndex++;
+            TIMER_frame = 100 + rnd(100);
 
-            if (iFrame > 5)
-                bAlive=false;
+            if (frameIndex > 5)
+                bAlive = false;
 
-            iAlpha-=16;
-
+            iAlpha -= 16;
         }
     }
 
     // move
-    if (iType == MOVE_INDICATOR || iType == ATTACK_INDICATOR)
-    {
+    if (iType == D2TM_PARTICLE_MOVE || iType == D2TM_PARTICLE_ATTACK) {
         TIMER_frame--;
 
-        if (TIMER_frame < 0)
-        {
+        if (TIMER_frame < 0) {
             TIMER_frame = 15;
-            iFrame++;
+            frameIndex++;
         }
 
-        if (iFrame > 9)
-        {
-            //logbook("Particle died");
-            iAlpha-=35;
-            iFrame=9;
+        if (frameIndex > 9) {
+            iAlpha -= 35;
+            frameIndex = 9;
 
             if (iAlpha < 10)
-                bAlive=false;
+                bAlive = false;
         }
 
         return;
     }
 
-    if (iType == OBJECT_SIEGEDIE)
-    {
+    if (iType == D2TM_PARTICLE_SIEGEDIE) {
         TIMER_frame--;
 
-        if (TIMER_frame < 0)
-        {
-         iFrame++;
+        if (TIMER_frame < 0) {
+            frameIndex++;
 
 
-         if (iFrame > 2)
-         {
-            iFrame=2;
-            iAlpha -=10;
+            if (frameIndex > 2) {
+                frameIndex = 2;
+                iAlpha -= 10;
 
-            if (iAlpha < 10)
-                bAlive=false;
+                if (iAlpha < 10)
+                    bAlive = false;
 
-            TIMER_frame=10;
+                TIMER_frame = 10;
 
-         }
-         else
-             TIMER_frame=250;
+            } else
+                TIMER_frame = 250;
 
 
         }
     }
 
-	if (iType == EXPLOSION_TRIKE)
-    {
+    if (iType == D2TM_PARTICLE_EXPLOSION_TRIKE) {
         TIMER_frame--;
-        if (TIMER_frame < 0)
-        {
-            iAlpha-=20;
-            TIMER_frame=5;
+        if (TIMER_frame < 0) {
+            iAlpha -= 20;
+            TIMER_frame = 5;
 
-            if (iFrame < 1 && iAlpha < 220)
-                iFrame++;
+            if (frameIndex < 1 && iAlpha < 220)
+                frameIndex++;
 
-            if (iFrame >= 1 && iAlpha < 10)
-                bAlive=false;
+            if (frameIndex >= 1 && iAlpha < 10)
+                bAlive = false;
 
         }
     }
 
-    if (iType == OBJECT_SMOKE ||
-        iType == OBJECT_SMOKE_SHADOW)
-    {
+    if (iType == D2TM_PARTICLE_SMOKE ||
+        iType == D2TM_PARTICLE_SMOKE_SHADOW) {
         TIMER_frame--;
         TIMER_dead--;
-        if (iAlpha < 255 && TIMER_dead > 0)
-        {
-            if (iType == OBJECT_SMOKE)
+        if (iAlpha < 255 && TIMER_dead > 0) {
+            if (iType == D2TM_PARTICLE_SMOKE)
                 iAlpha++;
-            else if (iType == OBJECT_SMOKE_SHADOW)
+            else if (iType == D2TM_PARTICLE_SMOKE_SHADOW)
                 if (iAlpha < 128)
                     iAlpha++;
         }
 
-        if (TIMER_frame < 0)
-        {
+        if (TIMER_frame < 0) {
             TIMER_frame = 50;
-            iFrame++;
+            frameIndex++;
 
-            if (iFrame > 2)
-                iFrame = 0;
+            if (frameIndex > 2)
+                frameIndex = 0;
 
-            if (TIMER_dead < 0)
-            {
+            if (TIMER_dead < 0) {
                 TIMER_dead = -1;
-                if (iType == OBJECT_SMOKE_SHADOW)
-                    iAlpha -=10;
+                if (iType == D2TM_PARTICLE_SMOKE_SHADOW)
+                    iAlpha -= 10;
                 else
                     iAlpha -= 14;
 
                 if (iAlpha < 10)
-                    bAlive=false;
+                    bAlive = false;
             }
         }
     }
 
-    if (iType == TRACK_DIA || iType == TRACK_HOR || iType == TRACK_VER || iType == TRACK_DIA2)
-    {
+    if (iType == D2TM_PARTICLE_TRACK_DIA || iType == D2TM_PARTICLE_TRACK_HOR || iType == D2TM_PARTICLE_TRACK_VER ||
+        iType == D2TM_PARTICLE_TRACK_DIA2) {
         TIMER_frame--;
         TIMER_dead--;
-        if (TIMER_frame < 0)
-        {
-            TIMER_frame=10;
+        if (TIMER_frame < 0) {
+            TIMER_frame = 10;
             if (rnd(100) < 10 && iAlpha > 192)
                 iAlpha--;
 
-            if (TIMER_dead > 0)
-            {
+            if (TIMER_dead > 0) {
                 if (iAlpha < 255)
-                    iAlpha+=2;
+                    iAlpha += 2;
 
-            }
-            else
-            {
+            } else {
                 // its dying
                 if (iAlpha > 10)
-                    iAlpha-=10;
+                    iAlpha -= 10;
                 else
-                    bAlive=false;
+                    bAlive = false;
 
             }
         }
     }
 
-    if (iType == BULLET_PUF)
-    {
+    if (iType == D2TM_PARTICLE_BULLET_PUF) {
         TIMER_frame--;
 
-        if (TIMER_frame < 0)
-        {
+        if (TIMER_frame < 0) {
             TIMER_frame = 15;
 
-            iFrame++;
+            frameIndex++;
 
-            if (iFrame > 7)
-                bAlive=false;
+            if (frameIndex > 7)
+                bAlive = false;
         }
 
     }
 
-    if (iType == OBJECT_DEADINF01 ||
-        iType == OBJECT_DEADINF02)
-    {
+    if (iType == D2TM_PARTICLE_DEADINF01 ||
+        iType == D2TM_PARTICLE_DEADINF02) {
         TIMER_frame--;
         TIMER_dead--;
 
-        if (TIMER_frame < 0)
-        {
-            if (TIMER_dead < 0)
-            {
+        if (TIMER_frame < 0) {
+            if (TIMER_dead < 0) {
                 TIMER_dead = -1;
-                iAlpha-=5;
+                iAlpha -= 5;
 
                 if (iAlpha < 5)
-                    bAlive=false;
+                    bAlive = false;
             }
 
-            TIMER_frame=10;
+            TIMER_frame = 10;
         }
 
     }
 
-    if (iType == EXPLOSION_ROCKET_SMALL)
-    {
+    if (iType == D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL) {
         TIMER_frame--;
 
-        if (TIMER_frame < 0)
-        {
-            TIMER_frame=10;
+        if (TIMER_frame < 0) {
+            TIMER_frame = 10;
 
-            iFrame++;
+            frameIndex++;
 
-            if (iFrame > 1)
-            {
-                iFrame=1;
+            if (frameIndex > 1) {
+                frameIndex = 1;
 
-                iAlpha-=25;
+                iAlpha -= 25;
 
                 if (iAlpha < 25)
-                    bAlive=false;
+                    bAlive = false;
             }
         }
     }
 
     // normal rocket explosion (of launchers)
-    if (iType == EXPLOSION_ROCKET)
-    {
+    if (iType == D2TM_PARTICLE_EXPLOSION_ROCKET) {
         TIMER_frame--;
 
-        if (TIMER_frame < 0)
-        {
-            TIMER_frame=10;
+        if (TIMER_frame < 0) {
+            TIMER_frame = 10;
 
-            iFrame++;
+            frameIndex++;
 
-            if (iFrame > 3)
-            {
-                iFrame=4;
+            if (frameIndex > 3) {
+                frameIndex = 4;
 
-                iAlpha-=35;
+                iAlpha -= 35;
 
                 if (iAlpha < 25)
-                    bAlive=false;
+                    bAlive = false;
             }
         }
     }
 
-    if (iType == OBJECT_WORMTRAIL)
-    {
+    if (iType == D2TM_PARTICLE_WORMTRAIL) {
         TIMER_frame--;
 
-        if (TIMER_frame < 0)
-        {
-            if (iFrame <= 3)
-                TIMER_frame=100;
+        if (TIMER_frame < 0) {
+            if (frameIndex <= 3)
+                TIMER_frame = 100;
             else
-                TIMER_frame=20;
+                TIMER_frame = 20;
 
-            iFrame++;
+            frameIndex++;
 
-            if (iFrame > 3)
-            {
-                iFrame=4;
+            if (frameIndex > 3) {
+                frameIndex = 4;
 
-                iAlpha-=5;
+                iAlpha -= 5;
 
                 if (iAlpha < 5)
-                    bAlive=false;
+                    bAlive = false;
             }
         }
     }
     // tank explosion(s)
-    if (iType == EXPLOSION_TANK_ONE ||
-        iType == EXPLOSION_TANK_TWO ||
-        iType == EXPLOSION_STRUCTURE01 ||
-        iType == EXPLOSION_STRUCTURE02 ||
-        iType == EXPLOSION_GAS)
-    {
+    if (iType == D2TM_PARTICLE_EXPLOSION_TANK_ONE ||
+        iType == D2TM_PARTICLE_EXPLOSION_TANK_TWO ||
+        iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE01 ||
+        iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE02 ||
+        iType == D2TM_PARTICLE_EXPLOSION_GAS) {
         TIMER_frame--;
 
         if (TIMER_frame < 0) {
 
             // delay for next frame(s)
-            if (iFrame <= 3) {
+            if (frameIndex <= 3) {
                 TIMER_frame = 28;
             } else {
                 TIMER_frame = 10;
             }
 
-            iFrame++;
+            frameIndex++;
 
-            if (iFrame > 3) {
-                iFrame = 4;
+            if (frameIndex > 3) {
+                frameIndex = 4;
 
                 iAlpha -= 15;
 
@@ -465,21 +415,20 @@ void cParticle::think()
         }
     }
 
-    if (iType == OBJECT_WORMEAT)
-    {
+    if (iType == D2TM_PARTICLE_WORMEAT) {
         TIMER_frame--;
 
         if (TIMER_frame < 0) {
-            iFrame++;
+            frameIndex++;
 
             // delay for next frame(s)
-            if (iFrame <= 3) {
+            if (frameIndex <= 3) {
                 // begins slow, and speeds up after each frame
-//                TIMER_frame = (4 - iFrame) * 32;
+//                TIMER_frame = (4 - frameIndex) * 32;
                 TIMER_frame = 80;
             } else {
                 // frame will stick at 4 (eaten)
-                iFrame = 4;
+                frameIndex = 4;
 
                 // fade out
                 iAlpha -= 15;
@@ -493,89 +442,73 @@ void cParticle::think()
     }
 
     // bullets of tanks explode
-    if (iType == EXPLOSION_BULLET)
-    {
+    if (iType == D2TM_PARTICLE_EXPLOSION_BULLET) {
         TIMER_frame--;
-        if (TIMER_frame < 0)
-        {
-            TIMER_frame=10;
-            iFrame++;
-            if (iFrame > 1)
-                bAlive=false;
+        if (TIMER_frame < 0) {
+            TIMER_frame = 10;
+            frameIndex++;
+            if (frameIndex > 1)
+                bAlive = false;
 
         }
 
     }
 
-    if (iType == EXPLOSION_SQUISH01 ||
-        iType == EXPLOSION_SQUISH02 ||
-        iType == EXPLOSION_SQUISH03 ||
-        iType == EXPLOSION_ORNI)
-    {
+    if (iType == D2TM_PARTICLE_SQUISH01 ||
+        iType == D2TM_PARTICLE_SQUISH02 ||
+        iType == D2TM_PARTICLE_SQUISH03 ||
+        iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
         TIMER_frame--;
-        if (TIMER_frame < 0)
-        {
-           if (iAlpha > 5)
-               iAlpha-=5;
-           else
-               bAlive=false;
+        if (TIMER_frame < 0) {
+            if (iAlpha > 5)
+                iAlpha -= 5;
+            else
+                bAlive = false;
 
-           TIMER_frame=50;
+            TIMER_frame = 50;
         }
     }
 
-    if (iType == OBJECT_TANKSHOOT || iType == OBJECT_SIEGESHOOT)
-    {
+    if (iType == D2TM_PARTICLE_TANKSHOOT || iType == D2TM_PARTICLE_SIEGESHOOT) {
         TIMER_frame--;
         TIMER_dead--;
-        if (TIMER_frame < 0)
-        {
-            TIMER_frame=2;
-            if (TIMER_dead > 0)
-            {
-                if (iAlpha+5 < 255)
+        if (TIMER_frame < 0) {
+            TIMER_frame = 2;
+            if (TIMER_dead > 0) {
+                if (iAlpha + 5 < 255)
                     iAlpha += 5;
-            }
-            else
-            {
-                TIMER_dead=-1;
-            iAlpha-=15;
+            } else {
+                TIMER_dead = -1;
+                iAlpha -= 15;
 
-            if (iAlpha < 10)
-                bAlive=false;
+                if (iAlpha < 10)
+                    bAlive = false;
             }
         }
     }
 
 
-
-    if (iType == EXPLOSION_FIRE)
-    {
+    if (iType == D2TM_PARTICLE_EXPLOSION_FIRE) {
         TIMER_frame--;
         TIMER_dead--;
-        if (TIMER_frame < 0)
-        {
-            TIMER_frame=20;
+        if (TIMER_frame < 0) {
+            TIMER_frame = 20;
 
-            iFrame++;
-
+            frameIndex++;
 
 
-            if (iFrame > 2)
-                iFrame=0;
+            if (frameIndex > 2)
+                frameIndex = 0;
 
-            if (TIMER_dead < 0)
-            {
-                iAlpha-=20;
+            if (TIMER_dead < 0) {
+                iAlpha -= 20;
                 if (iAlpha < 10)
-                    bAlive=false;
-            }
-            else
-            {
-             if (iAlpha+15 < 255)
-                 iAlpha +=15;
-             else
-                 iAlpha=255;
+                    bAlive = false;
+            } else {
+                if (iAlpha + 15 < 255)
+                    iAlpha += 15;
+                else
+                    iAlpha = 255;
             }
 
         }
@@ -583,14 +516,165 @@ void cParticle::think()
 
 }
 
+void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
+    int iNewId = findNewSlot();
 
-int PARTICLE_NEW() {
+    if (iNewId < 0)
+        return;
+
+    cParticle &pParticle = particle[iNewId];
+    if (iType > -1 && iType < MAX_PARTICLE_TYPES) {
+        s_ParticleInfo &sParticle = sParticleInfo[iType];
+        pParticle.init(sParticle);
+    } else {
+        pParticle.init();
+    }
+
+    pParticle.x = x;
+    pParticle.y = y;
+
+    pParticle.iType = iType;
+
+    // depending on type, set TIMER_dead & FRAME & FRAME TIME
+    pParticle.frameIndex = 0;
+    pParticle.TIMER_dead = 0;
+    pParticle.TIMER_frame = 10;
+
+    pParticle.iHousePal = iHouse;
+
+    pParticle.bAlive = true;
+
+    pParticle.drawXBmpOffset = (pParticle.getFrameWidth() / 2) * -1;
+    pParticle.drawYBmpOffset = (pParticle.getFrameHeight() / 2) * -1;
+    pParticle.recreateDimensions();
+
+    if (iType == D2TM_PARTICLE_EXPLOSION_TRIKE) {
+        // TODO: Spawn additional particle property
+        PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM03, -1, 0);
+    }
+
+    if (iType == D2TM_PARTICLE_SMOKE) {
+        pParticle.TIMER_dead = 900;
+        PARTICLE_CREATE(x + 16, y + 42, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1);
+    }
+
+    if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
+        pParticle.TIMER_dead = 1000;
+    }
+
+    if (iType == D2TM_PARTICLE_TRACK_DIA || iType == D2TM_PARTICLE_TRACK_HOR || iType == D2TM_PARTICLE_TRACK_VER ||
+        iType == D2TM_PARTICLE_TRACK_DIA2) {
+        pParticle.TIMER_dead = 2000;
+    }
+
+
+    // trike exploding
+    if (iType == D2TM_PARTICLE_EXPLOSION_FIRE) {
+        pParticle.iAlpha = 255;
+        pParticle.TIMER_dead = 750 + rnd(500);
+        pParticle.iAlpha = rnd(255);
+    }
+
+    // tanks exploding
+    if (iType == D2TM_PARTICLE_WORMEAT) {
+        pParticle.TIMER_frame = 80; // 2,5 * 32 (a tad slower than on 3 frames)
+    }
+
+    // tanks exploding
+    if (iType == D2TM_PARTICLE_EXPLOSION_TANK_ONE ||
+        iType == D2TM_PARTICLE_EXPLOSION_TANK_TWO ||
+        iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE01 ||
+        iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE02 ||
+        iType == D2TM_PARTICLE_EXPLOSION_GAS) {
+
+        if (iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE01 && iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE02)
+            PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0);
+
+    }
+
+    if (iType == D2TM_PARTICLE_DEADINF01 ||
+        iType == D2TM_PARTICLE_DEADINF02) {
+        pParticle.TIMER_dead = 500 + rnd(500);
+        pParticle.iAlpha = 255;
+    }
+
+    if (iType == D2TM_PARTICLE_TANKSHOOT || iType == D2TM_PARTICLE_SIEGESHOOT) {
+        pParticle.frameIndex = iFrame;
+        pParticle.TIMER_dead = 50;
+    }
+
+    if (iType == D2TM_PARTICLE_SQUISH01 ||
+        iType == D2TM_PARTICLE_SQUISH02 ||
+        iType == D2TM_PARTICLE_SQUISH03 ||
+        iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
+        pParticle.frameIndex = 0;
+        pParticle.TIMER_frame = 50;
+    }
+
+    if (iType == D2TM_PARTICLE_SIEGEDIE) {
+        pParticle.iAlpha = 255;
+        pParticle.TIMER_frame = 500 + rnd(300);
+
+        PARTICLE_CREATE(x, y - 18, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1);
+        PARTICLE_CREATE(x, y - 18, D2TM_PARTICLE_SMOKE, -1, -1);
+        PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0);
+    }
+
+    if (iType == D2TM_PARTICLE_CARRYPUFF) {
+        pParticle.frameIndex = 0;
+        pParticle.TIMER_frame = 50 + rnd(50);
+        pParticle.iAlpha = 96 + rnd(64);
+    }
+
+    if (iType == D2TM_PARTICLE_EXPLOSION_ROCKET || iType == D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL) {
+        pParticle.iAlpha = 255;
+        // also create bloom
+        PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0);
+    }
+
+}
+
+int cParticle::findNewSlot() {
     for (int i = 0; i < MAX_PARTICLES; i++) {
         if (!particle[i].bAlive)
             return i;
     }
 
     return -1;
+}
+
+void cParticle::init(const s_ParticleInfo &particleInfo) {
+    init();
+
+    if (particleInfo.bmpIndex > -1) {
+        bmp = game.getDataRepository()->getBitmapAt(particleInfo.bmpIndex);
+    }
+
+    if (particleInfo.startAlpha > -1 && particleInfo.startAlpha < 256) {
+        iAlpha = particleInfo.startAlpha;
+    } else {
+        iAlpha = 255;
+    }
+
+}
+
+int cParticle::getFrameWidth() {
+    return getParticleInfo().frameWidth;
+}
+
+int cParticle::getFrameHeight() {
+    return getParticleInfo().frameHeight;
+}
+
+int cParticle::getLayer() {
+    return getParticleInfo().layer;
+}
+
+void cParticle::recreateDimensions() {
+    if (dimensions) {
+        delete dimensions;
+    }
+    dimensions = new cRectangle(draw_x(), draw_y(), getFrameWidth(), getFrameHeight());
 }
 
 /**
@@ -602,199 +686,7 @@ int PARTICLE_NEW() {
  * @param iFrame
  */
 void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame) {
-    int iNewId = PARTICLE_NEW();
-
-    if (iNewId < 0)
-        return;
-
-    particle[iNewId].init();
-
-    particle[iNewId].x = x;
-    particle[iNewId].y = y;
-
-    particle[iNewId].iType = iType;
-
-     // depending on type, set TIMER_dead & FRAME & FRAME TIME
-    particle[iNewId].iFrame = 0;
-    particle[iNewId].TIMER_dead = 0;
-    particle[iNewId].TIMER_frame = 10;
-
-    particle[iNewId].iHousePal = iHouse;
-
-	particle[iNewId].iAlpha = -1;
-
-    particle[iNewId].bAlive = true;
-
-	if (iType == PARTYPE_REPAIRBLINK)
-		particle[iNewId].iAlpha = 255;
-
-	if (iType == MOVE_INDICATOR || iType == ATTACK_INDICATOR)
-		particle[iNewId].iAlpha = 128;
-
-    if (iType == EXPLOSION_TRIKE)
-    {
-        particle[iNewId].iAlpha=255;
-        particle[iNewId].iWidth=48;
-        particle[iNewId].iHeight=48;
-		PARTICLE_CREATE(x, y, OBJECT_BOOM03, -1, 0);
-    }
-
-    if (iType == OBJECT_SMOKE)
-    {
-        particle[iNewId].iAlpha=0;
-        particle[iNewId].iWidth=32;
-        particle[iNewId].iHeight=48;
-        particle[iNewId].TIMER_dead=900;
-        PARTICLE_CREATE(x+16, y+42, OBJECT_SMOKE_SHADOW, -1, -1);
-    }
-
-    if (iType == OBJECT_SMOKE_SHADOW)
-    {
-        particle[iNewId].iAlpha=0;
-        particle[iNewId].iWidth=36;
-        particle[iNewId].iHeight=38;
-        particle[iNewId].TIMER_dead=1000;
-    }
-
-    if (iType == TRACK_DIA || iType == TRACK_HOR || iType == TRACK_VER || iType == TRACK_DIA2)
-    {
-        particle[iNewId].iAlpha=128;
-        particle[iNewId].TIMER_dead=2000;
-        particle[iNewId].layer=1; // other layer
-    }
-
-    if (iType == BULLET_PUF)
-    {
-        particle[iNewId].iHeight = 18;
-        particle[iNewId].iWidth  = 18;
-        particle[iNewId].iAlpha  = -1;
-    }
-
-    // bullets of tanks explode
-    if (iType == EXPLOSION_BULLET)
-    {
-
-    }
-
-    // trike exploding
-    if (iType == EXPLOSION_FIRE)
-    {
-        particle[iNewId].iAlpha=255;
-        particle[iNewId].TIMER_dead=750+rnd(500);
-        particle[iNewId].iAlpha = rnd(255);
-    }
-
-    // tanks exploding
-    if (iType == OBJECT_WORMEAT) {
-        particle[iNewId].iAlpha=255;
-        particle[iNewId].iWidth=48;
-        particle[iNewId].iHeight=48;
-        particle[iNewId].TIMER_frame=80; // 2,5 * 32 (a tad slower than on 3 frames)
-    }
-
-    // tanks exploding
-    if (iType == EXPLOSION_TANK_ONE ||
-        iType == EXPLOSION_TANK_TWO ||
-        iType == EXPLOSION_STRUCTURE01 ||
-        iType == EXPLOSION_STRUCTURE02 ||
-        iType == EXPLOSION_GAS)
-    {
-
-		if (iType != EXPLOSION_STRUCTURE01 && iType != EXPLOSION_STRUCTURE02)
-			PARTICLE_CREATE(x, y, OBJECT_BOOM02, -1, 0);
-
-		particle[iNewId].iAlpha=255;
-        particle[iNewId].iWidth=48;
-        particle[iNewId].iHeight=48;
-    }
-
-    // worm trail
-    if (iType == OBJECT_WORMTRAIL)
-    {
-        particle[iNewId].iAlpha=96;
-        particle[iNewId].iWidth=48;
-        particle[iNewId].iHeight=48;
-
-		particle[iNewId].layer=1; // other layer
-    }
-
-    if (iType == OBJECT_DEADINF01 ||
-        iType == OBJECT_DEADINF02)
-    {
-        particle[iNewId].TIMER_dead = 500 + rnd(500);
-        particle[iNewId].iAlpha=255;
-        particle[iNewId].layer=1; // other layer
-    }
-
-    if (iType == OBJECT_TANKSHOOT || iType == OBJECT_SIEGESHOOT)
-    {
-        particle[iNewId].iFrame=iFrame;
-        particle[iNewId].TIMER_dead = 50;
-        particle[iNewId].iAlpha=128;
-        particle[iNewId].iWidth=64;
-        particle[iNewId].iHeight=64;
-    }
-
-    if (iType == EXPLOSION_SQUISH01 ||
-        iType == EXPLOSION_SQUISH02 ||
-        iType == EXPLOSION_SQUISH03 ||
-        iType == EXPLOSION_ORNI)
-    {
-        particle[iNewId].iFrame=0;
-        particle[iNewId].TIMER_frame = 50;
-        particle[iNewId].iWidth=32;
-        particle[iNewId].iAlpha=255;
-        particle[iNewId].iHeight=32;
-        particle[iNewId].layer=1;
-    }
-
-
-    if (iType == OBJECT_SIEGEDIE)
-    {
-        particle[iNewId].iAlpha=255;
-        particle[iNewId].TIMER_frame=500 + rnd(300);
-        PARTICLE_CREATE(x, y-18, EXPLOSION_FIRE, -1, -1);
-        PARTICLE_CREATE(x, y-18, OBJECT_SMOKE, -1, -1);
-
-		PARTICLE_CREATE(x, y, OBJECT_BOOM02, -1, 0);
-    }
-
-    if (iType == OBJECT_CARRYPUFF)
-    {
-        particle[iNewId].iFrame=0;
-        particle[iNewId].TIMER_frame=50+rnd(50);
-        particle[iNewId].iWidth=96;
-        particle[iNewId].iHeight=96;
-        particle[iNewId].layer=1;
-        particle[iNewId].iAlpha=96+rnd(64);
-    }
-
-    if (iType == EXPLOSION_ROCKET || iType == EXPLOSION_ROCKET_SMALL) {
-        particle[iNewId].iAlpha = 255;
-        // also create bloom
-        PARTICLE_CREATE(x, y, OBJECT_BOOM03, iHouse, 0);
-    }
-
-	if (iType == OBJECT_BOOM01)
-	{
-		particle[iNewId].iAlpha=240;
-		particle[iNewId].iWidth=512;
-		particle[iNewId].iHeight=512;
-	}
-
-	if (iType == OBJECT_BOOM02)
-	{
-		particle[iNewId].iAlpha=230;
-		particle[iNewId].iWidth=256;
-		particle[iNewId].iHeight=256;
-	}
-
-	if (iType == OBJECT_BOOM03)
-	{
-		particle[iNewId].iAlpha=220;
-		particle[iNewId].iWidth=128;
-		particle[iNewId].iHeight=128;
-	}
+    cParticle::create(x, y, iType, iHouse, iFrame);
 }
 
 

@@ -98,7 +98,7 @@ BITMAP * cAbstractStructure::getBitmap() {
 }
 
 BITMAP * cAbstractStructure::getShadowBitmap() {
-	s_Structures structureType = getS_StructuresType();
+	s_StructureInfo structureType = getS_StructuresType();
 	return structureType.shadow;
 }
 
@@ -110,23 +110,23 @@ cPlayer * cAbstractStructure::getPlayer() {
 
 int cAbstractStructure::getMaxHP() {
 	int type = getType();
-	return structures[type].hp;
+	return sStructureInfo[type].hp;
 }
 
 int cAbstractStructure::getCaptureHP() {
 	int type = getType();
     // TODO: Capture hp threshold (property in structure)
-    return ((float)structures[type].hp) * 0.30f;
+    return ((float)sStructureInfo[type].hp) * 0.30f;
 }
 
 int cAbstractStructure::getSight() {
 	int type = getType();
-	return structures[type].sight;
+	return sStructureInfo[type].sight;
 }
 
 int cAbstractStructure::getRange() {
 	int type = getType();
-	return structures[type].sight;
+	return sStructureInfo[type].sight;
 }
 
 
@@ -177,7 +177,7 @@ void cAbstractStructure::die() {
             int posY = map.getAbsoluteYPositionFromCell(iCll);
 
             PARTICLE_CREATE(posX + half,
-                            posY + half, OBJECT_BOOM01, -1, -1);
+                            posY + half, D2TM_PARTICLE_OBJECT_BOOM01, -1, -1);
 
             for (int i=0; i < 3; i++)
             {
@@ -185,7 +185,7 @@ void cAbstractStructure::die() {
 
                 // create particle
                 PARTICLE_CREATE(posX + half,
-                                posY + half, EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
+                                posY + half, D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
 
                 // create smoke
                 if (rnd(100) < 15) {
@@ -193,7 +193,7 @@ void cAbstractStructure::die() {
                     int randomY = -8 + rnd(16);
 
                     PARTICLE_CREATE(posX + half + randomX,
-                                    posY + half + randomY, OBJECT_SMOKE, -1, -1);
+                                    posY + half + randomY, D2TM_PARTICLE_SMOKE, -1, -1);
                 }
 
                 // create fire
@@ -202,7 +202,7 @@ void cAbstractStructure::die() {
                     int randomY = -8 + rnd(16);
 
                     PARTICLE_CREATE(posX + half + randomX,
-                                    posY + half + randomY, EXPLOSION_FIRE, -1, -1);
+                                    posY + half + randomY, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1);
                 }
 
             }
@@ -444,7 +444,7 @@ void cAbstractStructure::damage(int hp) {
 
         // Structure on fire?
         if (rnd(100) < iChance) {
-            PARTICLE_CREATE(getRandomPosX(), getRandomPosY(), OBJECT_SMOKE, -1, -1);
+            PARTICLE_CREATE(getRandomPosX(), getRandomPosY(), D2TM_PARTICLE_SMOKE, -1, -1);
         }
 
         s_GameEvent event {
@@ -464,7 +464,7 @@ void cAbstractStructure::damage(int hp) {
  */
 void cAbstractStructure::setHitPoints(int hp) {
 	iHitPoints = hp;
-	int maxHp = structures[getType()].hp;
+	int maxHp = sStructureInfo[getType()].hp;
 
 	if (iHitPoints > maxHp) {
 		char msg[256];
@@ -506,7 +506,7 @@ void cAbstractStructure::think_repair() {
 			if (TIMER_repair > 7)
 			{
 				TIMER_repair=0;
-				iHitPoints += structures[getType()].fixhp;
+				iHitPoints += sStructureInfo[getType()].fixhp;
 				players[iPlayer].substractCredits(1);
 			}
 
@@ -516,12 +516,12 @@ void cAbstractStructure::think_repair() {
 				bRepair=false;
 			}
 		}
-		assert(iHitPoints <= structures[getType()].hp);
+		assert(iHitPoints <= sStructureInfo[getType()].hp);
 	}
 }
 
-s_Structures cAbstractStructure::getS_StructuresType() const {
-	return structures[getType()];
+s_StructureInfo cAbstractStructure::getS_StructuresType() const {
+	return sStructureInfo[getType()];
 }
 
 int cAbstractStructure::getPercentageNotPaved() {
@@ -550,7 +550,7 @@ bool cAbstractStructure::isValid() {
 }
 
 float cAbstractStructure::getHealthNormalized() {
-    const s_Structures &structureType = getS_StructuresType();
+    const s_StructureInfo &structureType = getS_StructuresType();
     float flMAX  = structureType.hp;
     return (iHitPoints / flMAX);
 }

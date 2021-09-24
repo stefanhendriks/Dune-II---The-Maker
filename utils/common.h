@@ -42,6 +42,7 @@ void install_units();
 void install_bullets();
 void install_upgrades();
 void install_specials();
+void install_particles();
 
 float health_bar(float max_w, int i, int w);
 

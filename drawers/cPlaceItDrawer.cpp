@@ -45,8 +45,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 	int iTile = PLACE_ROCK;	// rocky placement = ok, but bad for power
 
-    int width = structures[structureId].bmp_width;
-    int height = structures[structureId].bmp_height;
+    int width = sStructureInfo[structureId].bmp_width;
+    int height = sStructureInfo[structureId].bmp_height;
     int scaledWidth = mapCamera->factorZoomLevel(width);
     int scaledHeight = mapCamera->factorZoomLevel(height);
     int cellWidth = structureUtils.getWidthOfStructureTypeInCells(structureId);
@@ -190,8 +190,8 @@ void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int c
 	int iDrawY = map.mouse_draw_y();
 
     BITMAP *temp;
-    int width = structures[structureId].bmp_width;
-    int height = structures[structureId].bmp_height;
+    int width = sStructureInfo[structureId].bmp_width;
+    int height = sStructureInfo[structureId].bmp_height;
 
     int scaledWidth = mapCamera->factorZoomLevel(width);
     int scaledHeight = mapCamera->factorZoomLevel(height);

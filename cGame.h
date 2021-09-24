@@ -179,6 +179,10 @@ public:
 
     void reduceShaking();
 
+    cAllegroDataRepository * getDataRepository() {
+        return m_dataRepository;
+    }
+
 private:
     cInteractionManager *_interactionManager;
     cAllegroDataRepository *m_dataRepository;

@@ -73,7 +73,7 @@ private:
 
     float getDamageToInflictToNonInfantry() const;
 
-    s_Bullet gets_Bullet() const;
+    s_BulletInfo gets_Bullet() const;
 
     bool isGroundBullet() const;
 

@@ -258,7 +258,7 @@ void cSideBarDrawer::drawPowerUsage() const {
     allegroDrawer->drawRectangleFilled(bmp_screen, &powerBarRect, allegroDrawer->getColor_BLACK());
 
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
-    int maxPowerOutageOfWindtrap = structures[WINDTRAP].power_give;
+    int maxPowerOutageOfWindtrap = sStructureInfo[WINDTRAP].power_give;
     float totalPowerOutput = (1 + (player->getAmountOfStructuresForType(WINDTRAP))) * maxPowerOutageOfWindtrap;
     float powerIn = (float)player->getPowerProduced() / totalPowerOutput;
     float powerUse = (float)player->getPowerUsage() / totalPowerOutput;

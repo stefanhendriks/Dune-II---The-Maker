@@ -126,7 +126,10 @@
 #define MAX_STRUCTURETYPES  50    // max of building types
 
 // BULLETS stuff
-#define MAX_BULLET_TYPES      30    // max of 30 types of bullets
+#define MAX_BULLET_TYPES      30
+
+// PARTICLES
+#define MAX_PARTICLE_TYPES    50
 
 // Lists stuff
 #define MAX_ICONS       30      // max of 30 icons per list
@@ -282,8 +285,81 @@
 #define EXPL_TANK_TWO     25  // another explosion of a tank etc
 
 // Particle types
-#define PARTYPE_SMOKE		1
-#define PARTYPE_REPAIRBLINK 2
+const int D2TM_PARTICLE_MOVE	                = 1; // particle used for indicating when move order has been received
+const int D2TM_PARTICLE_ATTACK                  = 2; // particle used for indicating when attack order has been received
+const int D2TM_PARTICLE_EXPLOSION_TRIKE         = 3;
+const int D2TM_PARTICLE_SMOKE                   = 4;
+const int D2TM_PARTICLE_SMOKE_SHADOW            = 5;
+const int D2TM_PARTICLE_TRACK_DIA               = 6;
+const int D2TM_PARTICLE_TRACK_HOR               = 7;
+const int D2TM_PARTICLE_TRACK_VER               = 8;
+const int D2TM_PARTICLE_TRACK_DIA2              = 9;
+const int D2TM_PARTICLE_BULLET_PUF              = 10;
+const int D2TM_PARTICLE_EXPLOSION_FIRE          = 11;
+const int D2TM_PARTICLE_WORMEAT                 = 12;
+const int D2TM_PARTICLE_EXPLOSION_TANK_ONE      = 13;
+const int D2TM_PARTICLE_EXPLOSION_TANK_TWO      = 14;
+const int D2TM_PARTICLE_EXPLOSION_STRUCTURE01   = 15;
+const int D2TM_PARTICLE_EXPLOSION_STRUCTURE02   = 16;
+const int D2TM_PARTICLE_EXPLOSION_GAS           = 17;
+const int D2TM_PARTICLE_WORMTRAIL               = 18;
+const int D2TM_PARTICLE_DEADINF01               = 19;
+const int D2TM_PARTICLE_DEADINF02               = 20;
+const int D2TM_PARTICLE_TANKSHOOT               = 21;
+const int D2TM_PARTICLE_SIEGESHOOT              = 22;
+const int D2TM_PARTICLE_SQUISH01                = 23;
+const int D2TM_PARTICLE_SQUISH02                = 24;
+const int D2TM_PARTICLE_SQUISH03                = 25;
+const int D2TM_PARTICLE_EXPLOSION_ORNI          = 26;
+const int D2TM_PARTICLE_SIEGEDIE                = 27;
+const int D2TM_PARTICLE_CARRYPUFF               = 28;
+const int D2TM_PARTICLE_EXPLOSION_ROCKET        = 29;
+const int D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL  = 30;
+const int D2TM_PARTICLE_OBJECT_BOOM01           = 31;
+const int D2TM_PARTICLE_OBJECT_BOOM02           = 32;
+const int D2TM_PARTICLE_OBJECT_BOOM03           = 33;
+const int D2TM_PARTICLE_EXPLOSION_BULLET        = 34;
+
+// Particle drawing layers
+const int D2TM_RENDER_LAYER_PARTICLE_TOP        = 0;
+const int D2TM_RENDER_LAYER_PARTICLE_BOTTOM     = 1;
+
+// Bitmap types
+const int D2TM_BITMAP_PARTICLE_MOVE	                   = 1;
+const int D2TM_BITMAP_PARTICLE_ATTACK                  = 2;
+const int D2TM_BITMAP_PARTICLE_EXPLOSION_TRIKE         = 3;
+const int D2TM_BITMAP_PARTICLE_SMOKE                   = 4;
+const int D2TM_BITMAP_PARTICLE_SMOKE_SHADOW            = 5;
+const int D2TM_BITMAP_PARTICLE_TRACK_DIA               = 6;
+const int D2TM_BITMAP_PARTICLE_TRACK_HOR               = 7;
+const int D2TM_BITMAP_PARTICLE_TRACK_VER               = 8;
+const int D2TM_BITMAP_PARTICLE_TRACK_DIA2              = 9;
+const int D2TM_BITMAP_PARTICLE_BULLET_PUF              = 10;
+const int D2TM_BITMAP_PARTICLE_EXPLOSION_FIRE          = 11;
+const int D2TM_BITMAP_PARTICLE_WORMEAT                 = 12;
+const int D2TM_BITMAP_PARTICLE_EXPLOSION_TANK_ONE      = 13;
+const int D2TM_BITMAP_PARTICLE_EXPLOSION_TANK_TWO      = 14;
+const int D2TM_BITMAP_PARTICLE_EXPLOSION_STRUCTURE01   = 15;
+const int D2TM_BITMAP_PARTICLE_EXPLOSION_STRUCTURE02   = 16;
+const int D2TM_BITMAP_PARTICLE_EXPLOSION_GAS           = 17;
+const int D2TM_BITMAP_PARTICLE_WORMTRAIL               = 18;
+const int D2TM_BITMAP_PARTICLE_DEADINF01               = 19;
+const int D2TM_BITMAP_PARTICLE_DEADINF02               = 20;
+const int D2TM_BITMAP_PARTICLE_TANKSHOOT               = 21;
+const int D2TM_BITMAP_PARTICLE_SIEGESHOOT              = 22;
+const int D2TM_BITMAP_PARTICLE_SQUISH01                = 23;
+const int D2TM_BITMAP_PARTICLE_SQUISH02                = 24;
+const int D2TM_BITMAP_PARTICLE_SQUISH03                = 25;
+const int D2TM_BITMAP_PARTICLE_EXPLOSION_ORNI          = 26;
+const int D2TM_BITMAP_PARTICLE_SIEGEDIE                = 27;
+const int D2TM_BITMAP_PARTICLE_CARRYPUFF               = 28;
+const int D2TM_BITMAP_PARTICLE_EXPLOSION_ROCKET        = 29;
+const int D2TM_BITMAP_PARTICLE_EXPLOSION_ROCKET_SMALL  = 30;
+const int D2TM_BITMAP_PARTICLE_OBJECT_BOOM01           = 31;
+const int D2TM_BITMAP_PARTICLE_OBJECT_BOOM02           = 32;
+const int D2TM_BITMAP_PARTICLE_OBJECT_BOOM03           = 33;
+const int D2TM_BITMAP_PARTICLE_EXPLOSION_BULLET        = 34;
+
 
 // smudge
 #define SMUDGE_ROCK 0
