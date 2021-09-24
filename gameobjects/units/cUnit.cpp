@@ -210,10 +210,11 @@ void cUnit::createSquishedParticle() {
     int iDieY = pos_y_centered();
     // when we do not 'blow up', we died by something else. Only infantry will be 'squished' here now.
     if (iType == SOLDIER || iType == TROOPER || iType == UNIT_FREMEN_ONE) {
-        PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_SQUISH01 + rnd(2), iPlayer, iFrame);
+        int iType1 = D2TM_PARTICLE_SQUISH01 + rnd(2);
+        cParticle::create(iDieX, iDieY, iType1, iPlayer, iFrame);
         play_sound_id_with_distance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
     } else if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
-        PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_SQUISH03, iPlayer, iFrame);
+        cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SQUISH03, iPlayer, iFrame);
         play_sound_id_with_distance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(iCell));
     }
 }
@@ -224,18 +225,18 @@ void cUnit::createExplosionParticle() {
 
     if (iType == TRIKE || iType == RAIDER || iType == QUAD) {
         // play quick 'boom' sound and show animation
-        PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TRIKE, -1, -1);
+        cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TRIKE, -1, -1);
         play_sound_id_with_distance(SOUND_TRIKEDIE, distanceBetweenCellAndCenterOfScreen(iCell));
 
         if (rnd(100) < 30) {
-            PARTICLE_CREATE(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE, -1, -1);
+            cParticle::create(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE, -1, -1);
         }
     }
 
     if (iType == SIEGETANK || iType == DEVASTATOR && rnd(100) < 25) {
         if (iBodyFacing == FACE_UPLEFT ||
             iBodyFacing == FACE_DOWNRIGHT) {
-            PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_SIEGEDIE, iPlayer, -1);
+            cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SIEGEDIE, iPlayer, -1);
         }
     }
 
@@ -243,15 +244,16 @@ void cUnit::createExplosionParticle() {
         iType == HARVESTER || iType == ORNITHOPTER || iType == MCV || iType == FRIGATE) {
         // play quick 'boom' sound and show animation
         if (rnd(100) < 50) {
-            PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_ONE, -1, -1);
+            cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_ONE, -1, -1);
             play_sound_id_with_distance(SOUND_TANKDIE2, distanceBetweenCellAndCenterOfScreen(iCell));
         } else {
-            PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_TWO, -1, -1);
+            cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_TWO, -1, -1);
             play_sound_id_with_distance(SOUND_TANKDIE, distanceBetweenCellAndCenterOfScreen(iCell));
         }
 
-        if (rnd(100) < 30)
-            PARTICLE_CREATE(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE, -1, -1);
+        if (rnd(100) < 30) {
+            cParticle::create(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE, -1, -1);
+        }
 
         if (iType == HARVESTER) {
             game.shakeScreen(25);
@@ -260,7 +262,7 @@ void cUnit::createExplosionParticle() {
 
         // For now carry-all and ornithopter share same death particle
         if (iType == ORNITHOPTER || iType == CARRYALL) {
-            PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_ORNI, -1, -1);
+            cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_ORNI, -1, -1);
         }
 
         // Frigate death particle? (doesnt exist in Dune 2, but would be cool to have)
@@ -280,8 +282,10 @@ void cUnit::createExplosionParticle() {
             for (int cy = 0; cy < 3; cy++) {
 
 
-                for (int i = 0; i < 2; i++)
-                    PARTICLE_CREATE(iDieX + (cx * 32), iDieY + (cy * 32), D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
+                for (int i = 0; i < 2; i++) {
+                    int iType1 = D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + rnd(2);
+                    cParticle::create(iDieX + (cx * 32), iDieY + (cy * 32), iType1, -1, -1);
+                }
 
                 if (rnd(100) < 35)
                     play_sound_id_with_distance(SOUND_TANKDIE + rnd(2),
@@ -342,7 +346,7 @@ void cUnit::createExplosionParticle() {
                         if (rnd(100) < iChance) {
                             long x = pos_x() + (mapCamera->getViewportStartX()) + 16 + (-8 + rnd(16));
                             long y = pos_y() + (mapCamera->getViewportStartY()) + 16 + (-8 + rnd(16));
-                            PARTICLE_CREATE(x, y, D2TM_PARTICLE_SMOKE, -1, -1);
+                            cParticle::create(x, y, D2TM_PARTICLE_SMOKE, -1, -1);
                         }
                     }
                 }
@@ -372,19 +376,19 @@ void cUnit::createExplosionParticle() {
             }
 
 
-        PARTICLE_CREATE(iOrgDieX, iOrgDieY, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
+        cParticle::create(iOrgDieX, iOrgDieY, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
 
-        PARTICLE_CREATE(iOrgDieX - 32, iOrgDieY, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
-        PARTICLE_CREATE(iOrgDieX + 32, iOrgDieY, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
-        PARTICLE_CREATE(iOrgDieX, iOrgDieY - 32, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
-        PARTICLE_CREATE(iOrgDieX, iOrgDieY + 32, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
+        cParticle::create(iOrgDieX - 32, iOrgDieY, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
+        cParticle::create(iOrgDieX + 32, iOrgDieY, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
+        cParticle::create(iOrgDieX, iOrgDieY - 32, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
+        cParticle::create(iOrgDieX, iOrgDieY + 32, D2TM_PARTICLE_OBJECT_BOOM02, -1, -1);
 
     }
 
     if (iType == TROOPER || iType == SOLDIER || iType == UNIT_FREMEN_ONE) {
         // create particle of dead body
 
-        PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_DEADINF02, iPlayer, -1);
+        cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF02, iPlayer, -1);
 
         play_sound_id_with_distance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
     }
@@ -392,7 +396,7 @@ void cUnit::createExplosionParticle() {
     if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
         // create particle of dead body
 
-        PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_DEADINF01, iPlayer, -1);
+        cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF01, iPlayer, -1);
 
         play_sound_id_with_distance(SOUND_DIE01 + rnd(5), distanceBetweenCellAndCenterOfScreen(iCell));
     }
@@ -1514,7 +1518,7 @@ void cUnit::think_move_air() {
                                 int pufX = (pos_x() + getBmpWidth() / 2);
                                 int pufY = (pos_y() + getBmpHeight() / 2);
 
-                                PARTICLE_CREATE(pufX, pufY, D2TM_PARTICLE_CARRYPUFF, -1, -1);
+                                cParticle::create(pufX, pufY, D2TM_PARTICLE_CARRYPUFF, -1, -1);
 
                                 log("Pick up unit");
                                 return;
@@ -1609,7 +1613,7 @@ void cUnit::think_move_air() {
 
                             int pufX = (pos_x() + getBmpWidth() / 2);
                             int pufY = (pos_y() + getBmpHeight() / 2);
-                            PARTICLE_CREATE(pufX, pufY, D2TM_PARTICLE_CARRYPUFF, -1, -1);
+                            cParticle::create(pufX, pufY, D2TM_PARTICLE_CARRYPUFF, -1, -1);
                         } else {
                             // find a new spot
                             updateCellXAndY();
@@ -1733,7 +1737,7 @@ void cUnit::think_move_air() {
                         cellType == TERRAIN_SPICEHILL) {
                         int pufX = (pos_x() + getBmpWidth() / 2);
                         int pufY = (pos_y() + getBmpHeight() / 2);
-                        PARTICLE_CREATE(pufX, pufY, D2TM_PARTICLE_CARRYPUFF, -1, -1);
+                        cParticle::create(pufX, pufY, D2TM_PARTICLE_CARRYPUFF, -1, -1);
                     }
                 }
                 TIMER_movedelay = (dist - iLength) * (dist * slowDownStep);
@@ -1924,9 +1928,9 @@ void cUnit::shoot(int iShootCell) {
 
     // TODO: add this in sUnitInfo
     if (iType == TANK) {
-        PARTICLE_CREATE(iShootX, iShootY, D2TM_PARTICLE_TANKSHOOT, -1, bmp_head);
+        cParticle::create(iShootX, iShootY, D2TM_PARTICLE_TANKSHOOT, -1, bmp_head);
     } else if (iType == SIEGETANK) {
-        PARTICLE_CREATE(iShootX, iShootY, D2TM_PARTICLE_SIEGESHOOT, -1, bmp_head);
+        cParticle::create(iShootX, iShootY, D2TM_PARTICLE_SIEGESHOOT, -1, bmp_head);
     }
 
     int bulletType = sUnitInfo[iType].bulletType;
@@ -2077,7 +2081,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                 int iDieX = pos_x() + half;
                 int iDieY = pos_y() + half;
 
-                PARTICLE_CREATE(iDieX, iDieY, D2TM_PARTICLE_DEADINF01, iPlayer, -1);
+                cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF01, iPlayer, -1);
 
                 play_sound_id_with_distance(SOUND_DIE01 + rnd(5),
                                             distanceBetweenCellAndCenterOfScreen(iCell));
@@ -2227,7 +2231,9 @@ void cUnit::think_attack_sandworm() {
         if (iGoalCell == iCell) {
             attackUnit->die(false, false);
 
-            PARTICLE_CREATE(pos_x_centered(), pos_y_centered(), D2TM_PARTICLE_WORMEAT, -1, -1);
+            long x = pos_x_centered();
+            long y = pos_y_centered();
+            cParticle::create(x, y, D2TM_PARTICLE_WORMEAT, -1, -1);
             play_sound_id_with_distance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(iCell));
             actionGuard();
             TIMER_wormeat += 25 + rnd(150);
@@ -2746,7 +2752,9 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
         // deal of particles overlapping eachother.
         TIMER_wormtrail++;
         if (TIMER_wormtrail > 4) {
-            PARTICLE_CREATE(pos_x_centered(), pos_y_centered(), D2TM_PARTICLE_WORMTRAIL, -1, -1);
+            long x = pos_x_centered();
+            long y = pos_y_centered();
+            cParticle::create(x, y, D2TM_PARTICLE_WORMTRAIL, -1, -1);
             TIMER_wormtrail = 0;
         }
     }
@@ -2766,27 +2774,33 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
             !isSandworm()) {
 
             // horizontal when only going horizontal
-            if (bToLeft > -1 && bToDown < 0)
-                PARTICLE_CREATE(iParX, iParY, D2TM_PARTICLE_TRACK_HOR, -1, -1);
+            if (bToLeft > -1 && bToDown < 0) {
+                cParticle::create(iParX, iParY, D2TM_PARTICLE_TRACK_HOR, -1, -1);
+            }
 
             // vertical, when only going vertical
-            if (bToDown > -1 && bToLeft < 0)
-                PARTICLE_CREATE(iParX, iParY, D2TM_PARTICLE_TRACK_VER, -1, -1);
+            if (bToDown > -1 && bToLeft < 0) {
+                cParticle::create(iParX, iParY, D2TM_PARTICLE_TRACK_VER, -1, -1);
+            }
 
             // diagonal when going both ways
             if (bToDown > -1 && bToLeft > -1) {
                 if (bToDown == 0) {
                     // going up
-                    if (bToLeft == 1)
-                        PARTICLE_CREATE(iParX, iParY, D2TM_PARTICLE_TRACK_DIA, -1, -1);
-                    else
-                        PARTICLE_CREATE(iParX, iParY, D2TM_PARTICLE_TRACK_DIA2, -1, -1);
+                    if (bToLeft == 1) {
+                        cParticle::create(iParX, iParY, D2TM_PARTICLE_TRACK_DIA, -1, -1);
+                    }
+                    else {
+                        cParticle::create(iParX, iParY, D2TM_PARTICLE_TRACK_DIA2, -1, -1);
+                    }
 
                 } else {
-                    if (bToLeft == 0)
-                        PARTICLE_CREATE(iParX, iParY, D2TM_PARTICLE_TRACK_DIA, -1, -1);
-                    else
-                        PARTICLE_CREATE(iParX, iParY, D2TM_PARTICLE_TRACK_DIA2, -1, -1);
+                    if (bToLeft == 0) {
+                        cParticle::create(iParX, iParY, D2TM_PARTICLE_TRACK_DIA, -1, -1);
+                    }
+                    else {
+                        cParticle::create(iParX, iParY, D2TM_PARTICLE_TRACK_DIA2, -1, -1);
+                    }
                 }
 
             }

@@ -176,24 +176,22 @@ void cAbstractStructure::die() {
             int posX = map.getAbsoluteXPositionFromCell(iCll);
             int posY = map.getAbsoluteYPositionFromCell(iCll);
 
-            PARTICLE_CREATE(posX + half,
-                            posY + half, D2TM_PARTICLE_OBJECT_BOOM01, -1, -1);
+            cParticle::create(posX + half, posY + half, D2TM_PARTICLE_OBJECT_BOOM01, -1, -1);
 
             for (int i=0; i < 3; i++)
             {
 				map.smudge_increase(SMUDGE_ROCK, iCll);
 
                 // create particle
-                PARTICLE_CREATE(posX + half,
-                                posY + half, D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + rnd(2), -1, -1);
+                int iType = D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + rnd(2);
+                cParticle::create(posX + half, posY + half, iType, -1, -1);
 
                 // create smoke
                 if (rnd(100) < 15) {
                     int randomX = -8 + rnd(16);
                     int randomY = -8 + rnd(16);
 
-                    PARTICLE_CREATE(posX + half + randomX,
-                                    posY + half + randomY, D2TM_PARTICLE_SMOKE, -1, -1);
+                    cParticle::create(posX + half + randomX, posY + half + randomY, D2TM_PARTICLE_SMOKE, -1, -1);
                 }
 
                 // create fire
@@ -201,8 +199,8 @@ void cAbstractStructure::die() {
                     int randomX = -8 + rnd(16);
                     int randomY = -8 + rnd(16);
 
-                    PARTICLE_CREATE(posX + half + randomX,
-                                    posY + half + randomY, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1);
+                    cParticle::create(posX + half + randomX, posY + half + randomY, D2TM_PARTICLE_EXPLOSION_FIRE, -1,
+                                      -1);
                 }
 
             }
@@ -444,7 +442,9 @@ void cAbstractStructure::damage(int hp) {
 
         // Structure on fire?
         if (rnd(100) < iChance) {
-            PARTICLE_CREATE(getRandomPosX(), getRandomPosY(), D2TM_PARTICLE_SMOKE, -1, -1);
+            long x = getRandomPosX();
+            long y = getRandomPosY();
+            cParticle::create(x, y, D2TM_PARTICLE_SMOKE, -1, -1);
         }
 
         s_GameEvent event {

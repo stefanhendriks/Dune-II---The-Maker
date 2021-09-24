@@ -24,6 +24,7 @@ cParticle::~cParticle() {
 
 // init
 void cParticle::init() {
+    oldParticle = true;
     bAlive = false;       // alive (if yes, it is in use, if not it can be used)
     iAlpha = -1;            // alpha number
 
@@ -267,7 +268,9 @@ void cParticle::think() {
         }
     }
 
-    if (iType == D2TM_PARTICLE_TRACK_DIA || iType == D2TM_PARTICLE_TRACK_HOR || iType == D2TM_PARTICLE_TRACK_VER ||
+    if (iType == D2TM_PARTICLE_TRACK_DIA ||
+        iType == D2TM_PARTICLE_TRACK_HOR ||
+        iType == D2TM_PARTICLE_TRACK_VER ||
         iType == D2TM_PARTICLE_TRACK_DIA2) {
         TIMER_frame--;
         TIMER_dead--;
@@ -519,8 +522,9 @@ void cParticle::think() {
 void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     int iNewId = findNewSlot();
 
-    if (iNewId < 0)
+    if (iNewId < 0) {
         return;
+    }
 
     cParticle &pParticle = particle[iNewId];
     if (iType > -1 && iType < MAX_PARTICLE_TYPES) {
@@ -550,12 +554,12 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     if (iType == D2TM_PARTICLE_EXPLOSION_TRIKE) {
         // TODO: Spawn additional particle property
-        PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM03, -1, 0);
+        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, -1, 0);
     }
 
     if (iType == D2TM_PARTICLE_SMOKE) {
         pParticle.TIMER_dead = 900;
-        PARTICLE_CREATE(x + 16, y + 42, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1);
+        create(x + 16, y + 42, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1);
     }
 
     if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
@@ -587,8 +591,9 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE02 ||
         iType == D2TM_PARTICLE_EXPLOSION_GAS) {
 
-        if (iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE01 && iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE02)
-            PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0);
+        if (iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE01 && iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE02) {
+            create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0);
+        }
 
     }
 
@@ -615,9 +620,9 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         pParticle.iAlpha = 255;
         pParticle.TIMER_frame = 500 + rnd(300);
 
-        PARTICLE_CREATE(x, y - 18, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1);
-        PARTICLE_CREATE(x, y - 18, D2TM_PARTICLE_SMOKE, -1, -1);
-        PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0);
+        create(x, y - 18, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1);
+        create(x, y - 18, D2TM_PARTICLE_SMOKE, -1, -1);
+        create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0);
     }
 
     if (iType == D2TM_PARTICLE_CARRYPUFF) {
@@ -629,7 +634,7 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     if (iType == D2TM_PARTICLE_EXPLOSION_ROCKET || iType == D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL) {
         pParticle.iAlpha = 255;
         // also create bloom
-        PARTICLE_CREATE(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0);
+        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0);
     }
 
 }
@@ -675,18 +680,6 @@ void cParticle::recreateDimensions() {
         delete dimensions;
     }
     dimensions = new cRectangle(draw_x(), draw_y(), getFrameWidth(), getFrameHeight());
-}
-
-/**
- * Creates a particle at exact coordinates
- * @param x
- * @param y
- * @param iType
- * @param iHouse
- * @param iFrame
- */
-void PARTICLE_CREATE(long x, long y, int iType, int iHouse, int iFrame) {
-    cParticle::create(x, y, iType, iHouse, iFrame);
 }
 
 
