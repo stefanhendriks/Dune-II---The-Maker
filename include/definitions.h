@@ -132,8 +132,8 @@
 #define MAX_PARTICLE_TYPES    50
 
 // Lists stuff
-#define MAX_ICONS       30      // max of 30 icons per list
-#define MAX_ITEMS		MAX_ICONS
+#define MAX_ICONS       30          // max of 30 icons per list
+#define MAX_ITEMS		MAX_ICONS   // because in theory the item builder should be able to build each icon simultaniously
 
 // #TIMERS
 #define TIMER_GUARD         10
