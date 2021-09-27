@@ -14,6 +14,9 @@ static const int ANIMATION_SPEED = 12;
 
   */
 
+#ifndef CBULLET_H_
+#define CBULLET_H_
+
 
 class cBullet {
 
@@ -114,3 +117,4 @@ private:
     bool canDamageGround() const;
 };
 
+#endif
