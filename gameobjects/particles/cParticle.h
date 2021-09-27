@@ -10,6 +10,9 @@
 
   */
 
+#ifndef CPARTICLE_H_
+#define CPARTICLE_H_
+
 class cParticle {
 public:
 
@@ -81,4 +84,4 @@ private:
     void recreateDimensions();
 };
 
-
+#endif

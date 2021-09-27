@@ -10,7 +10,6 @@
 */
 
 #include "../../include/d2tmh.h"
-#include "cParticle.h"
 
 
 cParticle::cParticle() {
