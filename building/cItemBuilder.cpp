@@ -178,6 +178,19 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
                 play_voice(SOUND_VOICE_01_ATR); // "Construction Complete"
             }
             item->setPlaceIt(true);
+
+            s_GameEvent event {
+                    .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_PLACE_IT,
+                    .entityType = item->getBuildType(),
+                    .entityID = -1,
+                    .player = player,
+                    .entitySpecificType = item->getBuildId(),
+                    .atCell = -1,
+                    .isReinforce = false,
+                    .buildingListItem = item // mandatory for this event!
+            };
+
+            game.onNotify(event);
         }
     } else {
         if (eBuildType == UNIT) {

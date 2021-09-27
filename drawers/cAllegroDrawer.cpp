@@ -249,3 +249,7 @@ void cAllegroDrawer::blitFromGfxData(int index, BITMAP *dest, int src_x, int src
     BITMAP *src = (BITMAP *) gfxdata[index].dat;
     this->blit(src, dest, src_x, src_y, width, height, pos_x, pos_y);
 }
+
+int cAllegroDrawer::getColorByNormValue(int r, int g, int b, float norm) {
+    return makecol((r * norm), (g * norm), (b * norm));
+}

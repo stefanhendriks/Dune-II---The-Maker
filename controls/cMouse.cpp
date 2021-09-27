@@ -71,37 +71,37 @@ void cMouse::updateState() {
         };
 
         if (didMouseMove) {
-            _mouseObserver->onNotify(event);
+            _mouseObserver->onNotifyMouseEvent(event);
         }
 
         if (mouseScrolledUp) {
             event.eventType = eMouseEventType::MOUSE_SCROLLED_UP;
-            _mouseObserver->onNotify(event);
+            _mouseObserver->onNotifyMouseEvent(event);
         }
 
         if (mouseScrolledDown) {
             event.eventType = eMouseEventType::MOUSE_SCROLLED_DOWN;
-            _mouseObserver->onNotify(event);
+            _mouseObserver->onNotifyMouseEvent(event);
         }
 
         if (leftButtonPressed) {
             event.eventType = eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED;
-            _mouseObserver->onNotify(event);
+            _mouseObserver->onNotifyMouseEvent(event);
         }
 
         if (leftButtonClicked) {
             event.eventType = eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED;
-            _mouseObserver->onNotify(event);
+            _mouseObserver->onNotifyMouseEvent(event);
         }
 
         if (rightButtonPressed) {
             event.eventType = eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED;
-            _mouseObserver->onNotify(event);
+            _mouseObserver->onNotifyMouseEvent(event);
         }
 
         if (rightButtonClicked) {
             event.eventType = eMouseEventType::MOUSE_RIGHT_BUTTON_CLICKED;
-            _mouseObserver->onNotify(event);
+            _mouseObserver->onNotifyMouseEvent(event);
         }
     }
 
@@ -124,7 +124,7 @@ void cMouse::positionMouseCursor(int x, int y) {
                 0,
                 0
 	    };
-        _mouseObserver->onNotify(event);
+        _mouseObserver->onNotifyMouseEvent(event);
     }
 }
 

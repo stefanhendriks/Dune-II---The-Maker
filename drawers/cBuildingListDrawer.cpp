@@ -18,11 +18,11 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw) {
 }
 
 void cBuildingListDrawer::drawListWithStructures(cBuildingList *list, int listIDToDraw) {
-    drawList(list, listIDToDraw, true);
+    drawList(list, true);
 }
 
 void cBuildingListDrawer::drawListWithUnitsOrAbilities(cBuildingList *list, int listIDToDraw) {
-    drawList(list, listIDToDraw, false);
+    drawList(list, false);
 }
 
 void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list) {
@@ -76,10 +76,20 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed) {
     }
 
     if (pressed) {
+        list->stopFlashing();
+
         int color = player->getHouseFadingColor();
 
         allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
-        allegroDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width-2, height-2, color);
+        allegroDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width - 2, height - 2, color);
+    } else {
+        if (list->isFlashing()) {
+            int color = list->getFlashingColor();
+
+            allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
+            allegroDrawer->drawRectangle(bmp_screen, x + 1, y + 1, width - 2, height - 2, color);
+            allegroDrawer->drawRectangle(bmp_screen, x + 2, y + 2, width - 3, height - 3, color);
+        }
     }
 }
 
@@ -97,7 +107,7 @@ int cBuildingListDrawer::getDrawY() {
  *
  * @param startId
  */
-void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool shouldDrawStructureSize) {
+void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructureSize) {
 	// starting draw coordinates
 	int iDrawX=getDrawX();
 	int iDrawY=getDrawY();
@@ -182,7 +192,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw, bool s
                 }
             }
 
-			if (!item->isAvailable() || isBuildingSameSubListItem || !list->isAcceptsOrders()) {
+			if (!item->isAvailable() || isBuildingSameSubListItem) {
 				set_trans_blender(0,0,0,128);
 				fblend_trans((BITMAP *)gfxinter[PROGRESSNA].dat, bmp_screen, iDrawX, iDrawY, 64);
 

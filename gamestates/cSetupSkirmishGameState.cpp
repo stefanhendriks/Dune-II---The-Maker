@@ -250,6 +250,9 @@ void cSetupSkirmishGameState::draw() {
 
     bool bHover=false;
 
+    int selectedRedFadeColor = game.getColorFadeSelected(255, 0, 0);
+    int disabledFadeColor = game.getColorFadeSelected(128, 128, 128);
+
     // draw players who will be playing ;)
     for (int p=0; p < (AI_WORM-1); p++)	{
         int iDrawY=playerListBarY + 4 +(p*22);
@@ -267,11 +270,10 @@ void cSetupSkirmishGameState::draw() {
                 // move hovers over... :/
                 if ((mouse_x >= 4 && mouse_x <= 73) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16))) {
                     if (sSkirmishPlayer.bPlaying) {
-                        alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, makecol(game.getFadeSelect(), 0, 0), "  CPU");
+                        alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, selectedRedFadeColor, "  CPU");
                     } else {
                         // not available
-                        alfont_textprintf(bmp_screen, bene_font, 4, iDrawY,
-                                          makecol((game.getFadeSelect() / 2), (game.getFadeSelect() / 2), (game.getFadeSelect() / 2)), "  CPU");
+                        alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, disabledFadeColor, "  CPU");
                     }
 
                     if (mouse->isLeftButtonClicked())	{
@@ -326,9 +328,9 @@ void cSetupSkirmishGameState::draw() {
             if (bHover)
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol(game.getFadeSelect(),0,0), "%s", cHouse);
+                    alfont_textprintf(bmp_screen, bene_font, 74, iDrawY, selectedRedFadeColor, "%s", cHouse);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol((game.getFadeSelect()/2),(game.getFadeSelect()/2),(game.getFadeSelect()/2)), "%s", cHouse);
+                    alfont_textprintf(bmp_screen, bene_font, 74, iDrawY, disabledFadeColor, "%s", cHouse);
 
 
                 if (mouse->isLeftButtonClicked())
@@ -394,9 +396,9 @@ void cSetupSkirmishGameState::draw() {
             if (bHover)
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(game.getFadeSelect(),0,0), "%d", sSkirmishPlayer.iCredits);
+                    alfont_textprintf(bmp_screen, bene_font, 174, iDrawY, selectedRedFadeColor, "%d", sSkirmishPlayer.iCredits);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 174, iDrawY, makecol((game.getFadeSelect()/2),(game.getFadeSelect()/2),(game.getFadeSelect()/2)), "%d", sSkirmishPlayer.iCredits);
+                    alfont_textprintf(bmp_screen, bene_font, 174, iDrawY, disabledFadeColor, "%d", sSkirmishPlayer.iCredits);
 
                 if (mouse->isLeftButtonClicked())
                 {
@@ -441,9 +443,9 @@ void cSetupSkirmishGameState::draw() {
             if (bHover)
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(game.getFadeSelect(),0,0), "%d", sSkirmishPlayer.startingUnits);
+                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, selectedRedFadeColor, "%d", sSkirmishPlayer.startingUnits);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol((game.getFadeSelect()/2),(game.getFadeSelect()/2),(game.getFadeSelect()/2)), "%d", sSkirmishPlayer.startingUnits);
+                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, disabledFadeColor, "%d", sSkirmishPlayer.startingUnits);
 
                 if (mouse->isLeftButtonClicked())
                 {

@@ -118,3 +118,10 @@ void cTextDrawer::setFont(ALFONT_FONT *theFont) {
 cRectangle *cTextDrawer::getAsRectangle(int x, int y, const char * msg) {
     return new cRectangle(x, y, textLength(msg), getFontHeight());
 }
+
+void cTextDrawer::drawTextWithOneFloat(int x, int y, int color, const char *msg, float var) {
+    if (applyShadow) {
+        alfont_textprintf(bmp_screen, font, x + 1,y + 1, makecol(0,0,0), msg, var);
+    }
+    alfont_textprintf(bmp_screen, font, x,y, makecol(255,255,255), msg, var);
+}

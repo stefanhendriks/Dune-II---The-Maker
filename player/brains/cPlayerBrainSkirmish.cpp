@@ -954,6 +954,7 @@ namespace brains {
                 buildOrders.end()
         );
 
+        // TODO: use an event "structure ready for placement" for this?
         if (player->isBuildingStructureAwaitingPlacement()) {
             int structureType = player->getStructureTypeBeingBuilt();
 

@@ -53,8 +53,6 @@ public:
     bool isItemInList(cBuildingListItem *item);
 
     // get
-    int getTimer() { return TIMER_progress; }
-
     int getLastClickedId() { return lastClickedId; }
 
     int getButtonIconIdPressed() { return buttonIconIdPressed; }
@@ -65,17 +63,13 @@ public:
 
     int getButtonDrawY() { return buttonDrawY; }
 
-    bool isAvailable() { return available; }
-
-    bool isAcceptsOrders() { return acceptsOrders; }
+    bool isAvailable() { return maxItems > 0; }
 
     std::array<int, 5> isBuildingItem();
 
     cBuildingListItem *getItemByBuildId(int buildId);
 
     // set
-    void setTimer(int value) { TIMER_progress = value; }
-
     void setStatusPendingUpgrade(int subListId);
 
     void setStatusPendingBuilding(int subListId);
@@ -94,11 +88,7 @@ public:
 
     void setButtonDrawY(int value) { buttonDrawY = value; }
 
-    void setAvailable(bool value) { available = value; }
-
     void setLastClickedId(int value) { lastClickedId = value; }
-
-    void setAcceptsOrders(bool value) { acceptsOrders = value; }
 
     /**
     * type of list (see cSideBarFactory) , ie 0 = CONSTYARD, last is IX (sUpgradeInfo), etc.
@@ -111,6 +101,16 @@ public:
     void resetTimesOrderedForAllItems();
 
     void setItemBuilder(cItemBuilder *value);
+
+    void startFlashing();
+
+    bool isFlashing() { return TIMER_flashing > 0; }
+
+    int getFlashingColor();
+
+    void think();
+
+    void stopFlashing();
 
 protected:
     // nothing
@@ -126,8 +126,8 @@ private:
     int buttonWidth;
     int buttonHeight;
 
-    bool available;         // is this list available?
-    bool acceptsOrders;     // accepts orders
+    int TIMER_flashing;
+
     int maxItems;         // how many items have been set in the list?
 
     // the list of icons

@@ -82,9 +82,13 @@ public:
     static const int TotalHeightBeforePowerBarStarts =
             TopBarHeight + HeightOfMinimap + HorizontalCandyBarHeight + PowerBarMargingHeight;
 
-    void onNotify(const s_MouseEvent &event);
+    void onNotifyMouseEvent(const s_MouseEvent &event);
 
     void cancelBuildingListItem(cBuildingListItem *item);
+
+    void onNotify(const s_GameEvent &event);
+
+    void findFirstActiveListAndSelectIt();
 
 private:
     void onMouseAt(const s_MouseEvent &event);
@@ -99,14 +103,21 @@ private:
 
     int selectedListID;
 
-    // methods
-    void thinkAvailabilityLists();
-
     bool startBuildingItemIfOk(cBuildingListItem *item) const;
 
     void drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem *item) const;
 
     void thinkProgressAnimation();
+
+    cBuildingList *getSelectedList() const;
+
+    void onListBecameUnavailableEvent(const s_GameEvent &event);
+
+    void onListBecameAvailableEvent(const s_GameEvent &event);
+
+    void onSpecialReadyToDeployEvent(const s_GameEvent &event) const;
+
+    void onListItemReadyToPlaceEvent(const s_GameEvent &event) const;
 };
 
 #endif /* CSIDEBAR_H_ */

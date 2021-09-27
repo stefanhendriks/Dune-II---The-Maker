@@ -11,7 +11,7 @@ class cMouseObserver {
 public:
     virtual ~cMouseObserver();
 
-    virtual void onNotify(const s_MouseEvent &event) = 0;
+    virtual void onNotifyMouseEvent(const s_MouseEvent &event) = 0;
 };
 
 

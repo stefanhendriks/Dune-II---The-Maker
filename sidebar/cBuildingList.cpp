@@ -4,30 +4,26 @@
 
 
 cBuildingList::cBuildingList(eListType listType) {
-	TIMER_progress = 0;
+	TIMER_flashing = 0;
 	lastClickedId = 0;
 	buttonIconIdPressed = 0;	// the button to draw at the left of the list
 	buttonDrawX = 0;
 	buttonDrawY = 0;
-	available = false;		 // is this list available?
 	memset(items, 0, sizeof(items));
 	typeOfList = listType;
 	maxItems = 0;
-	acceptsOrders = true; // at default true, will be set to FALSE/TRUE by starport logic for starport list only
     m_itemBuilder = nullptr;
 }
 
 cBuildingList::~cBuildingList() {
-	TIMER_progress = 0;
+    TIMER_flashing = 0;
 	lastClickedId = 0;
 	buttonIconIdPressed = 0;	// the button to draw at the left of the list
 	buttonDrawX = 0;
 	buttonDrawY = 0;
-	available = false;		 // is this list available?
 	removeAllItems();
 	memset(items, 0, sizeof(items));
 	maxItems = 0;
-	acceptsOrders = false;
     m_itemBuilder = nullptr;
 }
 
@@ -44,7 +40,7 @@ cBuildingListItem * cBuildingList::getItem(int i) {
  */
 int cBuildingList::getFreeSlot() {
 	for (int i = 0; i < MAX_ICONS; i++) {
-		if (items[i] == NULL) {
+		if (items[i] == nullptr) {
 			return i; // return free slot
 		}
 	}
@@ -122,6 +118,8 @@ bool cBuildingList::addItemToList(cBuildingListItem * item) {
         return false;
 	}
 
+    bool beforeAddingAvailable = isAvailable();
+
 	// add
 	items[slotId] = item;
 	item->setSlotId(slotId);
@@ -148,6 +146,23 @@ bool cBuildingList::addItemToList(cBuildingListItem * item) {
     };
 
     game.onNotify(event);
+
+    if (isAvailable() != beforeAddingAvailable) {
+        // emit another event that this list became available! (so that sidebar can animate things)
+        s_GameEvent event {
+                .eventType = eGameEventType::GAME_EVENT_LIST_BECAME_AVAILABLE,
+                .entityType = buildType,
+                .entityID = -1,
+                .player = pPlayer,
+                .entitySpecificType = buildId,
+                .atCell = -1,
+                .isReinforce = false,
+                .buildingListItem = item,
+                .buildingList = this
+        };
+
+        game.onNotify(event);
+    }
 
     return true;
 }
@@ -182,6 +197,8 @@ bool cBuildingList::removeItemFromList(int position) {
         m_itemBuilder->removeItemFromList(item);
 	}
 
+    bool beforeRemovingAvailable = isAvailable();
+
 	delete item;
     items[position] = nullptr;
 
@@ -197,6 +214,23 @@ bool cBuildingList::removeItemFromList(int position) {
     }
 
     maxItems--; // now we can do this
+
+    if (isAvailable() != beforeRemovingAvailable) {
+        // emit another event that this list became un-available!
+        s_GameEvent event {
+                .eventType = eGameEventType::GAME_EVENT_LIST_BECAME_UNAVAILABLE,
+                .entityType = eBuildType::UNIT, // BOGUS
+                .entityID = -1,
+                .player = this->m_itemBuilder->getPlayer(),
+                .entitySpecificType = -1, // BOGUS
+                .atCell = -1,
+                .isReinforce = false,
+                .buildingListItem = nullptr,
+                .buildingList = this
+        };
+
+        game.onNotify(event);
+    }
     return true;
 }
 
@@ -368,4 +402,22 @@ cBuildingListItem *cBuildingList::getFirstItemInSubList(int sublistId) {
 void cBuildingList::setItemBuilder(cItemBuilder *value) {
     assert(value && "cBuildingList::setItemBuilder - Expected to set to a non-null value");
     m_itemBuilder = value;
+}
+
+int cBuildingList::getFlashingColor() {
+    return game.getColorFadeSelected(255, 207, 41);
+}
+
+void cBuildingList::think() {
+    if (TIMER_flashing > 0) {
+        TIMER_flashing--;
+    }
+}
+
+void cBuildingList::stopFlashing() {
+    TIMER_flashing = 0;
+}
+
+void cBuildingList::startFlashing() {
+    TIMER_flashing = 2500;
 }

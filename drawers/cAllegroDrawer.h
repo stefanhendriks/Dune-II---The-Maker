@@ -41,9 +41,11 @@ class cAllegroDrawer {
 
         int getColor_BLACK() { return colorBlack; }
 
-    void bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor);
+        void bitmap_replace_color(BITMAP *bmp, int colorToReplace, int newColor);
 
-    void setTransBlender(int red, int green, int blue, int alpha);
+        void setTransBlender(int red, int green, int blue, int alpha);
+
+        int getColorByNormValue(int r, int g, int b, float norm);
 
 protected:
 		int getCenteredXPosForBitmap(BITMAP *bmp, int totalWidth);
