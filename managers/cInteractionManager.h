@@ -28,7 +28,7 @@ class cInteractionManager : public cMouseObserver {
 		cInteractionManager(cPlayer * thePlayer);
 		~cInteractionManager();
 
-		void onNotify(const s_MouseEvent &mouseEvent) override;
+		void onNotifyMouseEvent(const s_MouseEvent &mouseEvent) override;
 
 		void interactWithKeyboard();
 

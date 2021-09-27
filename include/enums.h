@@ -267,12 +267,16 @@ enum eGameEventType {
     GAME_EVENT_DAMAGED, 	  // damaged by projectile
     GAME_EVENT_DECAY,		  // damaged by decay
     GAME_EVENT_SPECIAL_SELECT_TARGET, // special weapon READY (ie deathhand can be launched)
+    GAME_EVENT_LIST_ITEM_PLACE_IT, // list item is ready for placement (structure)
     GAME_EVENT_SPECIAL_LAUNCH, // LAUNCHes special weapon (ie deathhand)
     GAME_EVENT_CANNOT_BUILD, // cannot build requested thing
     GAME_EVENT_CANNOT_CREATE_PATH, // cannot create a path to destination, help!
-    GAME_EVENT_LIST_ITEM_ADDED, // list item has been added (not nescesarily available)
+    GAME_EVENT_LIST_BECAME_AVAILABLE, // list became available
+    GAME_EVENT_LIST_BECAME_UNAVAILABLE, // list became unavailable
+    GAME_EVENT_LIST_ITEM_ADDED, // list item has been added (not necessarily available)
     GAME_EVENT_LIST_ITEM_FINISHED, // list item has been constructed & deployed, and became available again for construction
 	GAME_EVENT_LIST_ITEM_CANCELLED, // list item has been cancelled
+	GAME_EVENT_ABOUT_TO_BEGIN, // we're about to play the mission! (kind of init state)
 };
 
 #endif /* ENUMS_H_ */

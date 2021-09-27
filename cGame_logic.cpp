@@ -78,7 +78,7 @@ void cGame::init() {
 
     mouse_tile = MOUSE_NORMAL;
 
-	fade_select=255;
+	fade_select=1.0f;
 
     bFadeSelectDir=true;    // fade select direction
 
@@ -138,7 +138,7 @@ void cGame::mission_init() {
 
 	mouse_tile = MOUSE_NORMAL;
 
-	fade_select=255;
+	fade_select=1.0f;
 
     bFadeSelectDir=true;    // fade select direction
 
@@ -503,6 +503,8 @@ void cGame::menu()
 //	allegroDrawer.drawSpriteCenteredRelativelyVertical(bmp_screen, (BITMAP *)gfxinter[BMP_D2TM].dat, 0.3);
 //    GUI_DRAW_FRAME(257, 319, 130,143);
 //	// draw menu
+//    textDrawer.drawTextWithOneFloat(0, 32, makecol(255, 255, 255), "Fadeselect = %f", fade_select);
+
 	int logoWidth = ((BITMAP*)gfxinter[BMP_D2TM].dat)->w;
 	int logoHeight = ((BITMAP*)gfxinter[BMP_D2TM].dat)->h;
 
@@ -1502,39 +1504,47 @@ void cGame::setState(int newState) {
             // destroy game state object, unless we talk about the region select
             // because it needs to remember while we play the game (for now)
             delete gameState;
-            gameState = nullptr;
-        } else {
-            gameState = nullptr;
         }
+        gameState = nullptr;
     }
 
     if (newState == GAME_REGION) {
         gameState = selectYourNextConquestState;
     } else if (newState == GAME_SETUPSKIRMISH) {
         gameState = new cSetupSkirmishGameState(*this);
+    } else if (newState == GAME_PLAYING) {
+        // handle update
+        s_GameEvent event {
+                .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
+        };
+        // the game is about to begin!
+        game.onNotify(event);
     }
 
 	state = newState;
 }
 
-int cGame::getFadeSelect() {
-    return fade_select;
-}
-
 void cGame::think_fading() {
     // Fading / pulsating of selected stuff
+    static float fadeSelectIncrement = (1/256.0f);
     if (bFadeSelectDir) {
-        fade_select++;
+        fade_select += fadeSelectIncrement;
 
         // when 255, then fade back
-        if (fade_select > 254) bFadeSelectDir=false;
+        if (fade_select > 0.99) {
+            fade_select = 1.0f;
+            bFadeSelectDir=false;
+        }
 
         return;
     }
 
-    fade_select--;
+    fade_select -= fadeSelectIncrement;
     // not too dark,
-    if (fade_select < 32) bFadeSelectDir = true;
+    // 0.03125
+    if (fade_select < 0.3125f)  {
+        bFadeSelectDir = true;
+    }
 }
 
 cGame::~cGame() {
@@ -1770,4 +1780,15 @@ void cGame::install_bitmaps() {
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_OBJECT_BOOM03, OBJECT_BOOM03);
     m_dataRepository->loadBitmapFromDataFileGfxDataAt(D2TM_BITMAP_PARTICLE_EXPLOSION_BULLET, EXPLOSION_BULLET);
 
+}
+
+int cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag) {
+    int desiredRed = rFlag ? r * fade_select : r;
+    int desiredGreen = gFlag ? g * fade_select : g;
+    int desiredBlue = bFlag ? b * fade_select : b;
+    return makecol(desiredRed, desiredGreen, desiredBlue);
+}
+
+int cGame::getColorFadeSelected(int color) {
+    return getColorFadeSelected(getr(color), getg(color), getb(color));
 }

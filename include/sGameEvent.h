@@ -8,6 +8,7 @@
 
 class cPlayer;
 class cBuildingListItem;
+class cBuildingList;
 
 struct s_GameEvent {
     eGameEventType eventType = eGameEventType::GAME_EVENT_NONE;
@@ -16,23 +17,24 @@ struct s_GameEvent {
      * kind of entity this applies to.
      * In case of eventType == DISCOVERED, this is the entityType being discovered
      */
-    eBuildType entityType;
+    eBuildType entityType = eBuildType::SPECIAL;
 
     /**
      * which entity? (ID),
      * in case of eventType == DISCOVERED, this is the entityID being discovered
      */
-    int entityID;
+    int entityID = -1;
 
     /**
      * If eventType == CREATED/DESTROYED/DEVIATED/DAMAGED refers to player of entity.
      * If eventType == DISCOVERED then this player refers to the player who has discovered the entity.
      */
-    cPlayer *player;
-    int entitySpecificType; // type of <entityType>, ie, if entityType is STRUCTURE. This value can be CONSTYARD
+    cPlayer *player = nullptr;
+    int entitySpecificType = -1; // type of <entityType>, ie, if entityType is STRUCTURE. This value can be CONSTYARD
     int atCell = -1;        // if applicable (== > -1) where on the map did this event happen?
     bool isReinforce = false;       // only applicable for UNIT and CREATED events. So we can distinguish between 'normal' CREATED units and reinforced units.
     cBuildingListItem *buildingListItem = nullptr; // if buildingListItem is ready (special, or not)
+    cBuildingList *buildingList = nullptr; // in case buildingList is available (or not)
 
     // TODO: figure out a way to have bags of data depending on type of event without the need of expanding this generic GAME_EVENT struct
 
@@ -52,6 +54,10 @@ struct s_GameEvent {
             case eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED: return "GAME_EVENT_LIST_ITEM_FINISHED";
             case eGameEventType::GAME_EVENT_LIST_ITEM_ADDED: return "GAME_EVENT_LIST_ITEM_ADDED";
             case eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED: return "GAME_EVENT_LIST_ITEM_CANCELLED";
+            case eGameEventType::GAME_EVENT_LIST_BECAME_AVAILABLE: return "GAME_EVENT_LIST_BECAME_AVAILABLE";
+            case eGameEventType::GAME_EVENT_LIST_BECAME_UNAVAILABLE: return "GAME_EVENT_LIST_BECAME_UNAVAILABLE";
+            case eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN: return "GAME_EVENT_ABOUT_TO_BEGIN";
+            case eGameEventType::GAME_EVENT_LIST_ITEM_PLACE_IT: return "GAME_EVENT_LIST_ITEM_PLACE_IT";
             default:
                 assert(false && "Unknown game event type for toString()");
                 break;

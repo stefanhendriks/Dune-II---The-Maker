@@ -127,7 +127,26 @@ public:
 	void destroyAllUnits(bool);
 	void destroyAllStructures(bool);
 
-    int getFadeSelect();
+    int getColorFadeSelected(int r, int g, int b) {
+        // Fade with all rgb
+        return getColorFadeSelected(r, g, b, true, true, true);
+    }
+
+    int getColorFadeSelectedRed(int r, int g, int b) {
+        return getColorFadeSelected(r, g, b, true, false, false);
+    }
+
+    int getColorFadeSelectedGreen(int r, int g, int b) {
+        return getColorFadeSelected(r, g, b, false, true, false);
+    }
+
+    int getColorFadeSelectedBlue(int r, int g, int b) {
+        return getColorFadeSelected(r, g, b, false, false, true);
+    }
+
+    int getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag);
+
+    int getColorFadeSelected(int color);
 
     void think_fading();
 
@@ -216,7 +235,7 @@ private:
 	cSoundPlayer *soundPlayer;
 	cAbstractMentat *pMentat;
 
-    int fade_select;        // fade color when selected
+    float fade_select;        // fade color when selected
     bool bFadeSelectDir;    // fade select direction
     void prepareMentatToTellAboutHouse(int house);
 

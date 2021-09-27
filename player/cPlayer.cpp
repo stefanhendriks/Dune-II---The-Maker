@@ -486,19 +486,19 @@ bool cPlayer::hasEnoughCreditsForUpgrade(int upgradeType) {
  * @return
  */
 int cPlayer::getHouseFadingColor() const {
-    int fadeSelect = game.getFadeSelect();
+    int color = makecol(255, 255, 255);
     if (house == ATREIDES) {
-        return makecol(0, 0, fadeSelect);
+        color = makecol(0, 0, 255);
     }
     if (house == HARKONNEN) {
-        return makecol(fadeSelect, 0, 0);
+        color = makecol(255, 0, 0);
     }
     if (house == ORDOS) {
-        return makecol(0, fadeSelect, 0);
+        color = makecol(0, 255, 0);
     }
 
     // TODO other sHouseInfo (Sardaukar, etc)
-    return makecol(fadeSelect, fadeSelect, fadeSelect);
+    return game.getColorFadeSelected(color);
 }
 
 /**
@@ -506,8 +506,7 @@ int cPlayer::getHouseFadingColor() const {
  * @return
  */
 int cPlayer::getErrorFadingColor() const {
-    int fadeSelect = game.getFadeSelect();
-    return makecol(fadeSelect, 0, 0); // red fading
+    return game.getColorFadeSelectedRed(255, 0, 0);
 }
 
 /**
@@ -515,8 +514,7 @@ int cPlayer::getErrorFadingColor() const {
  * @return
  */
 int cPlayer::getPrimaryBuildingFadingColor() const {
-    int fadeSelect = game.getFadeSelect();
-    return makecol(0, fadeSelect, 0); // green fading
+    return game.getColorFadeSelectedGreen(0, 255, 0);
 }
 
 /**
@@ -524,8 +522,7 @@ int cPlayer::getPrimaryBuildingFadingColor() const {
  * @return
  */
 int cPlayer::getSelectFadingColor() const {
-    int fadeSelect = game.getFadeSelect();
-    return makecol(fadeSelect, fadeSelect, fadeSelect); // white fading
+    return game.getColorFadeSelected(255, 255, 255);
 }
 
 eHouseBitFlag cPlayer::getHouseBitFlag() {
@@ -1421,6 +1418,10 @@ void cPlayer::onNotify(const s_GameEvent &event) {
     // pass event to brain
     if (brain_) {
         brain_->onNotify(event);
+    }
+
+    if (sidebar) {
+        sidebar->onNotify(event);
     }
 }
 

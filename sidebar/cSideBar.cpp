@@ -35,82 +35,36 @@ void cSideBar::setList(int listId, cBuildingList* list) {
  * Thinking for sidebar - timer based
  */
 void cSideBar::think() {
-	thinkAvailabilityLists();
 	thinkProgressAnimation();
-}
-
-/**
- * Think about the availability of lists.
- * TODO: move this to the cBuildingListUpdater? (event driven??)
- */
-void cSideBar::thinkAvailabilityLists() {
-	// CONSTYARD LIST
-	cBuildingList * constyardList = getList(LIST_CONSTYARD);
-	assert(constyardList);
-
-	constyardList->setAvailable(player->hasAtleastOneStructure(CONSTYARD));
-
-	// INFANTRY LIST
-	cBuildingList * infantryList = getList(LIST_FOOT_UNITS);
-
-    infantryList->setAvailable(player->hasBarracks() || player->hasWor());
-
-	// LIGHTFC LIST
-	cBuildingList * listUnits = getList(LIST_UNITS);
-    listUnits->setAvailable(player->hasAtleastOneStructure(LIGHTFACTORY) ||
-                            player->hasAtleastOneStructure(HEAVYFACTORY) ||
-                            player->hasAtleastOneStructure(HIGHTECH)
-    );
-
-	// PALACE LIST
-	cBuildingList * palaceList = getList(LIST_PALACE);
-	palaceList->setAvailable(player->hasAtleastOneStructure(PALACE));
-
-	// STARPORT LIST
-	cBuildingList * starportList = getList(LIST_STARPORT);
-	starportList->setAvailable(player->hasAtleastOneStructure(STARPORT));
-
-	// when available, check if we accept orders
-	if (starportList->isAvailable()) {
-		cOrderProcesser * orderProcesser = player->getOrderProcesser();
-		bool acceptsOrders = orderProcesser->acceptsOrders();
-		starportList->setAcceptsOrders(acceptsOrders);
-	}
-
-    // UPGRADES LIST (for now is always available - later should be depending on items in list)
-    cBuildingList * upgradesList = getList(LIST_UPGRADES);
-    upgradesList->setAvailable(true);
 }
 
 void cSideBar::drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem *item) const {
     char msg[255];
-    if (list->isAcceptsOrders()) {
-        int buildTimeInMs = item->getTotalBuildTimeInMs();
-        // now we have in miliseconds, we know the amount of seconds too.
-        int seconds = buildTimeInMs / 1000;
+    int buildTimeInMs = item->getTotalBuildTimeInMs();
+    // now we have in miliseconds, we know the amount of seconds too.
+    int seconds = buildTimeInMs / 1000;
 
-        if (item->isTypeStructure()) {
-            s_StructureInfo structureType = item->getS_Structures();
-            sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
-        } else if (item->isTypeUnit()) {
-            s_UnitInfo unitType = item->getS_UnitP();
-            if (item->getBuildCost() > 0) {
-                sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), unitType.name, seconds);
-            } else {
-                sprintf(msg, "%s", sUnitInfo[item->getBuildId()].name);
-            }
-        } else if (item->isTypeUpgrade()){
-            s_UpgradeInfo upgrade = item->getS_Upgrade();
-            sprintf(msg, "UPGRADE: $%d | %s | %d Secs", item->getBuildCost(), upgrade.description, seconds);
-        } else if (item->isTypeSpecial()) {
-            s_SpecialInfo special = item->getS_Special();
-            sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), special.description, seconds);
+    if (item->isTypeStructure()) {
+        s_StructureInfo structureType = item->getS_Structures();
+        sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
+    } else if (item->isTypeUnit()) {
+        s_UnitInfo unitType = item->getS_UnitP();
+        if (item->getBuildCost() > 0) {
+            sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), unitType.name, seconds);
         } else {
-            sprintf(msg, "UNKNOWN BUILD TYPE");
+            sprintf(msg, "%s", sUnitInfo[item->getBuildId()].name);
         }
-
-        drawManager->getMessageDrawer()->setMessage(msg);
+    } else if (item->isTypeUpgrade()){
+        s_UpgradeInfo upgrade = item->getS_Upgrade();
+        sprintf(msg, "UPGRADE: $%d | %s | %d Secs", item->getBuildCost(), upgrade.description, seconds);
+    } else if (item->isTypeSpecial()) {
+        s_SpecialInfo special = item->getS_Special();
+        sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), special.description, seconds);
+    } else {
+        sprintf(msg, "UNKNOWN BUILD TYPE");
     }
+
+    drawManager->getMessageDrawer()->setMessage(msg);
 }
 
 bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
@@ -177,6 +131,8 @@ void cSideBar::thinkProgressAnimation() {
         cBuildingList *list = getList(i);
         if (list == nullptr) continue;
         if (!list->isAvailable()) continue; // not available, so no interaction possible
+
+        list->think();
 
         for (int j = 0; j < MAX_ITEMS; j++) {
             cBuildingListItem *item = list->getItem(j);
@@ -347,7 +303,7 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item) {
     }
 }
 
-void cSideBar::onNotify(const s_MouseEvent &event) {
+void cSideBar::onNotifyMouseEvent(const s_MouseEvent &event) {
     cGameControlsContext *pContext = player->getGameControlsContext();
 
     if (!pContext->isMouseOnSidebarOrMinimap()) {
@@ -366,4 +322,74 @@ void cSideBar::onNotify(const s_MouseEvent &event) {
             onMouseClickedRight(event);
             return;
     }
+}
+
+void cSideBar::onNotify(const s_GameEvent &event) {
+    // event is for specific player, and we are not that player...
+    if (event.player != nullptr && event.player != player) {
+        return;
+    }
+
+    // for us, or for no player in particular
+    switch(event.eventType) {
+        case eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET:
+            onSpecialReadyToDeployEvent(event);
+            break;
+        case eGameEventType::GAME_EVENT_LIST_ITEM_PLACE_IT:
+            onListItemReadyToPlaceEvent(event);
+            break;
+        case eGameEventType::GAME_EVENT_LIST_BECAME_AVAILABLE:
+            onListBecameAvailableEvent(event);
+            break;
+        case eGameEventType::GAME_EVENT_LIST_BECAME_UNAVAILABLE:
+            onListBecameUnavailableEvent(event);
+            break;
+        case eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN:
+            findFirstActiveListAndSelectIt();
+            break;
+        default:
+            break;
+    }
+}
+
+void cSideBar::onListItemReadyToPlaceEvent(const s_GameEvent &event) const {
+    event.buildingListItem->getList()->startFlashing();
+}
+
+void cSideBar::onSpecialReadyToDeployEvent(const s_GameEvent &event) const {
+    event.buildingListItem->getList()->startFlashing();
+}
+
+void cSideBar::onListBecameAvailableEvent(const s_GameEvent &event) {
+    event.buildingList->startFlashing();
+}
+
+void cSideBar::onListBecameUnavailableEvent(const s_GameEvent &event) {
+    cBuildingList *pList = getSelectedList();
+    if (pList == event.buildingList) {
+        this->selectedListID = -1;
+        findFirstActiveListAndSelectIt();
+    }
+}
+
+cBuildingList *cSideBar::getSelectedList() const {
+    if (selectedListID < 0) return nullptr;
+    return lists[selectedListID];
+}
+
+void cSideBar::findFirstActiveListAndSelectIt() {
+    char msg[255];
+    sprintf(msg, "cSideBar::findFirstActiveListAndSelectIt - current selectedListID is [%d]", selectedListID);
+    logbook(msg);
+    selectedListID = -1;
+    for (int i = 0; i < LIST_MAX; i++) {
+        cBuildingList *pList = lists[i];
+        if (pList && pList->isAvailable()) {
+            selectedListID = i;
+            break;
+        }
+    }
+    memset(msg, 0, sizeof(msg));
+    sprintf(msg, "cSideBar::findFirstActiveListAndSelectIt - new selectedListID is [%d]", selectedListID);
+    logbook(msg);
 }

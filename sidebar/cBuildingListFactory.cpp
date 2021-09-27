@@ -60,8 +60,6 @@ void cBuildingListFactory::initializeList(cBuildingList *list, eListType listTyp
 
 	int startX = getButtonDrawXStart();
 
-	list->setAvailable(false);
-
 	// now set it up
 	if (listType == LIST_CONSTYARD) {
 		list->setButtonDrawX(startX);

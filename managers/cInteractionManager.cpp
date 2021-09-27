@@ -1,6 +1,4 @@
 #include "../include/d2tmh.h"
-#include "cInteractionManager.h"
-
 
 cInteractionManager::cInteractionManager(cPlayer * thePlayer) : cMouseObserver() {
 	assert(thePlayer);
@@ -60,9 +58,9 @@ void cInteractionManager::onMouseScrolledDown(const s_MouseEvent &mouseEvent) {
  * Called by mouse to send an event.
  * @param mouseEvent
  */
-void cInteractionManager::onNotify(const s_MouseEvent &mouseEvent) {
+void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
 //    char msg[255];
-//    sprintf(msg, "cInteractionManager::onNotify %s x=%d, y=%d, z=%d", mouseEvent.toString(mouseEvent.eventType), mouseEvent.x, mouseEvent.y, mouseEvent.z);
+//    sprintf(msg, "cInteractionManager::onNotifyMouseEvent %s x=%d, y=%d, z=%d", mouseEvent.toString(mouseEvent.eventType), mouseEvent.x, mouseEvent.y, mouseEvent.z);
 //    logbook(msg);
 
     // process these events by itself (if any implementation is present)...
@@ -88,7 +86,7 @@ void cInteractionManager::onNotify(const s_MouseEvent &mouseEvent) {
     cGameControlsContext *pContext = player->getGameControlsContext();
     pContext->onNotify(mouseEvent); // must be first because other classes rely on this context
 
-    sidebar->onNotify(mouseEvent);
+    sidebar->onNotifyMouseEvent(mouseEvent);
     placeItDrawer->onNotify(mouseEvent);
     mapCamera->onNotify(mouseEvent);
     mouseDrawer->onNotify(mouseEvent);

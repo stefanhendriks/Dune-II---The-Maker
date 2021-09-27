@@ -16,6 +16,7 @@ class cTextDrawer {
 
 		void setFont(ALFONT_FONT *theFont);
 
+		void drawTextWithOneFloat(int x, int y, int color, const char * msg, float var);
 		void drawTextWithOneInteger(int x, int y, int color, const char * msg, int var);
 		void drawTextWithOneInteger(int x, int y, const char * msg, int var);
 		void drawTextWithTwoIntegers(int x, int y, const char * msg, int var1, int var2);

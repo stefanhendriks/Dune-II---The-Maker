@@ -173,8 +173,7 @@ void cGame::mouse_combat_dragViewportInteraction() const {
             mouse_mv_y2 = mouse_y;
 
             // draw a line
-            line(bmp_screen, mouse_mv_x1, mouse_mv_y1, mouse_mv_x2, mouse_mv_y2,
-                 makecol(game.fade_select, game.fade_select, game.fade_select));
+            line(bmp_screen, mouse_mv_x1, mouse_mv_y1, mouse_mv_x2, mouse_mv_y2, game.getColorFadeSelected(255, 255, 255));
         }
     }
 }
@@ -231,8 +230,7 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
                 }
 
                 // and draw the selection box
-                rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2,
-                     makecol(game.fade_select, game.fade_select, game.fade_select));
+                rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2, game.getColorFadeSelected(255, 255, 255));
             }
 
             // Note that we have to fix up the coordinates when checking 'within border'
