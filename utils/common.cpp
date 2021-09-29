@@ -1537,15 +1537,17 @@ int iFindCloseBorderCell(int iCll) {
 
 
 int distanceBetweenCellAndCenterOfScreen(int iCell) {
-    assert(iCell > -1);
+    if (map.isValidCell(iCell)) {
+        int centerX = mapCamera->getViewportCenterX();
+        int centerY = mapCamera->getViewportCenterY();
 
-    int centerX = mapCamera->getViewportCenterX();
-    int centerY = mapCamera->getViewportCenterY();
+        int cellX = map.getAbsoluteXPositionFromCell(iCell);
+        int cellY = map.getAbsoluteYPositionFromCell(iCell);
 
-    int cellX = map.getAbsoluteXPositionFromCell(iCell);
-    int cellY = map.getAbsoluteYPositionFromCell(iCell);
-
-    return ABS_length(centerX, centerY, cellX, cellY);
+        return ABS_length(centerX, centerY, cellX, cellY);
+    }
+    // return as if very close?
+    return 1;
 }
 
 void play_sound_id(int s, int volume) {
