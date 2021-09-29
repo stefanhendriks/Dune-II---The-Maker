@@ -72,7 +72,7 @@ public:
     static const int TopBarHeight = 42;
     static const int HeightOfMinimap = 200 + 8;
     static const int WidthOfMinimap = 200;
-    static const int PowerBarMargingHeight = 32; // for a power icon
+    static const int PowerBarMarginHeight = 32; // for a power icon
 
     // Horizontal candybar is below minimap
     static const int HorizontalCandyBarHeight = 12;
@@ -80,7 +80,7 @@ public:
     static const int HeightOfListButton = 34;
 
     static const int TotalHeightBeforePowerBarStarts =
-            TopBarHeight + HeightOfMinimap + HorizontalCandyBarHeight + PowerBarMargingHeight;
+            TopBarHeight + HeightOfMinimap + HorizontalCandyBarHeight + PowerBarMarginHeight;
 
     void onNotifyMouseEvent(const s_MouseEvent &event);
 
@@ -105,7 +105,7 @@ private:
 
     bool startBuildingItemIfOk(cBuildingListItem *item) const;
 
-    void drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem *item) const;
+    void drawMessageBarWithItemInfo(cBuildingListItem *item) const;
 
     void thinkProgressAnimation();
 

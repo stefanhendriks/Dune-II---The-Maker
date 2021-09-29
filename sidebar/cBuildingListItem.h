@@ -25,10 +25,12 @@ public:
     static const int DefaultTimerCap = 35;
     static const int DebugTimerCap = 2;
 
-	// gettters
+	// getters
 	int getTotalBuildTime() { return totalBuildTime; }
 	int getTotalBuildTimeInMs();
+	int getProgressBuildTimeInMs(); // how much time has passed for build item
 	int getIconId() { return icon; }
+    std::string getInfo();
 
 	/**
 	 * The buildId is the 'type', ie if eBuildType == STRUCTURE, then buildId refers to what *kind* of structure. Ie, the
@@ -199,6 +201,8 @@ private:
     cBuildingListItem(int theID, s_SpecialInfo entry, cBuildingList *list, int subList);
 
     bool isType(eBuildType value);
+
+    int getInTicks(int getTimeInTicks) const;
 };
 
 #endif

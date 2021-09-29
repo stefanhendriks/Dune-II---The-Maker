@@ -1,9 +1,14 @@
 #ifndef CMESSAGEDRAWER_H_
 #define CMESSAGEDRAWER_H_
 
-enum eMessageDraweState {
+enum eMessageDrawerState {
     COMBAT,
     NEXT_CONQUEST
+};
+
+enum eMessageDrawerFadingState {
+    FADE_IN,
+    FADE_OUT
 };
 
 class cMessageDrawer {
@@ -17,6 +22,8 @@ class cMessageDrawer {
 
 		void init();
 		void destroy();
+
+        void setKeepMessage(bool value);
 
 		void initRegionPosition(int offsetX, int offsetY);
 
@@ -37,9 +44,12 @@ class cMessageDrawer {
 		BITMAP *bmpBar;
 		BITMAP *temp;
 
-        eMessageDraweState state;
+        eMessageDrawerState state;
+        eMessageDrawerFadingState fadeState;
 
-    void createMessageBarBmp(int desiredWidth);
+        bool keepMessage;
+
+        void createMessageBarBmp(int desiredWidth);
 };
 
 #endif /* CMESSAGEDRAWER_H_ */

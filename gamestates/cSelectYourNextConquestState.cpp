@@ -276,6 +276,7 @@ void cSelectYourNextConquestState::drawStateConquerRegions() { // draw dune firs
     if (isFinishedConqueringRegions && isDisplayingMessage) {
         state = REGSTATE_SELECT_NEXT_CONQUEST;
         drawManager->getMessageDrawer()->setMessage("Select your next region.");
+        drawManager->getMessageDrawer()->setKeepMessage(true);
     }
 }
 

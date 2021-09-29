@@ -59,10 +59,6 @@ void cInteractionManager::onMouseScrolledDown(const s_MouseEvent &mouseEvent) {
  * @param mouseEvent
  */
 void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
-//    char msg[255];
-//    sprintf(msg, "cInteractionManager::onNotifyMouseEvent %s x=%d, y=%d, z=%d", mouseEvent.toString(mouseEvent.eventType), mouseEvent.x, mouseEvent.y, mouseEvent.z);
-//    logbook(msg);
-
     // process these events by itself (if any implementation is present)...
     switch (mouseEvent.eventType) {
         case eMouseEventType::MOUSE_MOVED_TO:
@@ -86,11 +82,15 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
     cGameControlsContext *pContext = player->getGameControlsContext();
     pContext->onNotify(mouseEvent); // must be first because other classes rely on this context
 
-    sidebar->onNotifyMouseEvent(mouseEvent);
-    placeItDrawer->onNotify(mouseEvent);
-    mapCamera->onNotify(mouseEvent);
+    // TODO: call state instead (get rid of this interaction manager thing, so we don't need to do this)
+    if (game.isState(GAME_PLAYING)) {
+        sidebar->onNotifyMouseEvent(mouseEvent);
+        placeItDrawer->onNotify(mouseEvent);
+        mapCamera->onNotify(mouseEvent);
+        miniMapDrawer->onNotify(mouseEvent);
+        orderDrawer->onNotify(mouseEvent);
+    }
+
     mouseDrawer->onNotify(mouseEvent);
-    miniMapDrawer->onNotify(mouseEvent);
-    orderDrawer->onNotify(mouseEvent);
 
 }

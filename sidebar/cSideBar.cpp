@@ -38,33 +38,8 @@ void cSideBar::think() {
 	thinkProgressAnimation();
 }
 
-void cSideBar::drawMessageBarWithItemInfo(cBuildingList *list, cBuildingListItem *item) const {
-    char msg[255];
-    int buildTimeInMs = item->getTotalBuildTimeInMs();
-    // now we have in miliseconds, we know the amount of seconds too.
-    int seconds = buildTimeInMs / 1000;
-
-    if (item->isTypeStructure()) {
-        s_StructureInfo structureType = item->getS_Structures();
-        sprintf(msg, "$%d | %s | %d Power | %d Secs", item->getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
-    } else if (item->isTypeUnit()) {
-        s_UnitInfo unitType = item->getS_UnitP();
-        if (item->getBuildCost() > 0) {
-            sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), unitType.name, seconds);
-        } else {
-            sprintf(msg, "%s", sUnitInfo[item->getBuildId()].name);
-        }
-    } else if (item->isTypeUpgrade()){
-        s_UpgradeInfo upgrade = item->getS_Upgrade();
-        sprintf(msg, "UPGRADE: $%d | %s | %d Secs", item->getBuildCost(), upgrade.description, seconds);
-    } else if (item->isTypeSpecial()) {
-        s_SpecialInfo special = item->getS_Special();
-        sprintf(msg, "$%d | %s | %d Secs", item->getBuildCost(), special.description, seconds);
-    } else {
-        sprintf(msg, "UNKNOWN BUILD TYPE");
-    }
-
-    drawManager->getMessageDrawer()->setMessage(msg);
+void cSideBar::drawMessageBarWithItemInfo(cBuildingListItem *item) const {
+    drawManager->getMessageDrawer()->setMessage(item->getInfo().c_str());
 }
 
 bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const {
@@ -154,6 +129,7 @@ void cSideBar::thinkProgressAnimation() {
 
 void cSideBar::onMouseAt(const s_MouseEvent &event) {
     isMouseOverSidebarValue = event.x > (game.screen_x - cSideBar::SidebarWidth);
+    drawManager->getMessageDrawer()->setKeepMessage(isMouseOverSidebarValue);
 
     if (selectedListID < 0) return;
 
@@ -165,7 +141,7 @@ void cSideBar::onMouseAt(const s_MouseEvent &event) {
 
     // mouse is over item - draw "messagebar"
     // TODO: move this whole 'draw something' out of the onMouseAt function
-    drawMessageBarWithItemInfo(list, item);
+    drawMessageBarWithItemInfo(item);
 }
 
 void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
@@ -214,7 +190,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
     if (item == nullptr) return;
 
     // mouse is over item - draw "messagebar"
-    drawMessageBarWithItemInfo(list, item);
+    drawMessageBarWithItemInfo(item);
 
     if (list->getType() != LIST_STARPORT) {
         // icon is in "Place it" mode, meaning if clicked the "place the thing" state should be set
@@ -307,7 +283,12 @@ void cSideBar::onNotifyMouseEvent(const s_MouseEvent &event) {
     cGameControlsContext *pContext = player->getGameControlsContext();
 
     if (!pContext->isMouseOnSidebarOrMinimap()) {
-        // ignore these events because mouse is not on sidebar or minimap
+        // we're only interested in mouse movement
+        switch (event.eventType) {
+            case eMouseEventType::MOUSE_MOVED_TO:
+                onMouseAt(event);
+                return;
+        }
         return;
     }
 
