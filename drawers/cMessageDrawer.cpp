@@ -1,8 +1,11 @@
 #include "../include/d2tmh.h"
+#include "cMessageDrawer.h"
+
 
 cMessageDrawer::cMessageDrawer() {
     bmpBar = nullptr;
     temp = nullptr;
+    keepMessage = false;
 	init();
 }
 
@@ -21,7 +24,9 @@ void cMessageDrawer::destroy() {
 
 void cMessageDrawer::init() {
     state = COMBAT;
-	iMessageAlpha = -1;
+    fadeState = eMessageDrawerFadingState::FADE_IN;
+    keepMessage = false;
+    iMessageAlpha = -1;
 	memset(cMessage, 0, sizeof(cMessage));
 	TIMER_message = 0;
 	initCombatPosition();
@@ -51,36 +56,46 @@ void cMessageDrawer::createMessageBarBmp(int desiredWidth) {
 }
 
 void cMessageDrawer::think() {
-	int iLimit=250;
+    if (cMessage[0] != '\0') {
+        // no message, bail
+    }
 
-	if (game.isState(GAME_REGION)) {
-		iLimit=600;
-	}
-
-	if (cMessage[0] != '\0')
+    if (fadeState == eMessageDrawerFadingState::FADE_IN)
 	{
-		TIMER_message++;
+        TIMER_message++;
+
+        int iLimit=250;
+
+        if (game.isState(GAME_REGION)) {
+            iLimit=600;
+        }
 
 		// and clear message after shown
 		if (TIMER_message > iLimit) {
-			memset(cMessage, 0, sizeof(cMessage));
+            if (!keepMessage) {
+                fadeState = eMessageDrawerFadingState::FADE_OUT;
+            }
 		}
 
 		iMessageAlpha+=3;
-		// fade in
+		// fade in, with a max...
 		if (iMessageAlpha > 254) {
 			iMessageAlpha = 255;
 		}
+        return;
 	}
-	else
-	{
-		iMessageAlpha-=6;
-		if (iMessageAlpha < 0) {
-			iMessageAlpha=-1;
-		}
 
-		TIMER_message=0;
-	}
+    // fade out
+    iMessageAlpha-=6;
+    if (iMessageAlpha < 0) {
+        iMessageAlpha=-1;
+    }
+
+    // clear message
+    if (iMessageAlpha < 1) {
+        memset(cMessage, 0, sizeof(cMessage));
+    }
+    TIMER_message=0;
 }
 
 /**
@@ -91,6 +106,7 @@ void cMessageDrawer::think() {
  */
 void cMessageDrawer::setMessage(const char msg[255]) {
 	TIMER_message=0;
+    fadeState = eMessageDrawerFadingState::FADE_IN;
 	memset(cMessage, 0, sizeof(cMessage));
 	sprintf(cMessage, "%s", msg);
 }
@@ -117,6 +133,7 @@ void cMessageDrawer::draw() {
 
 void cMessageDrawer::initRegionPosition(int offsetX, int offsetY) {
     state = NEXT_CONQUEST;
+    keepMessage = false;
 
     int desiredWidth = 480;
 
@@ -129,6 +146,7 @@ void cMessageDrawer::initRegionPosition(int offsetX, int offsetY) {
 
 void cMessageDrawer::initCombatPosition() {
     state = COMBAT;
+    keepMessage = false;
 
     int desiredWidth = game.screen_x - cSideBar::SidebarWidth;
     createMessageBarBmp(desiredWidth);
@@ -137,4 +155,8 @@ void cMessageDrawer::initCombatPosition() {
     x = 1;
 //    y = 42;
     y = 1;
+}
+
+void cMessageDrawer::setKeepMessage(bool value) {
+    keepMessage = value;
 }

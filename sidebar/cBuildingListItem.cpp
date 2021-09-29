@@ -252,8 +252,11 @@ void cBuildingListItem::resetProgressFrameTimer() {
 }
 
 int cBuildingListItem::getTotalBuildTimeInTicks() const {
-    int timeSpent = timerCap * totalBuildTime;
-    return timeSpent;
+    return getInTicks(totalBuildTime);
+}
+
+int cBuildingListItem::getInTicks(int getTimeInTicks) const {
+    return timerCap * getTimeInTicks;
 }
 
 void cBuildingListItem::setTimerCap(int value) {
@@ -267,6 +270,15 @@ void cBuildingListItem::setTimerCap(int value) {
  */
 int cBuildingListItem::getTotalBuildTimeInMs() {
     return getTotalBuildTimeInTicks() * 5; // 5 = ms for every time we call the itemBuilder
+}
+
+/**
+ * Assumes the itembuilder think is called every 5 ms. Meaning for every 1 second (1000ms), the think function
+ * is called 200 times. Every tick is 5 ms, times 5 gives the total amount of ms.
+ * @return
+ */
+int cBuildingListItem::getProgressBuildTimeInMs() {
+    return getInTicks(progress) * 5; // 5 = ms for every time we call the itemBuilder
 }
 
 const int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId) {
@@ -320,4 +332,34 @@ const bool cBuildingListItem::isAutoBuild(eBuildType type, int buildId) {
 
 bool cBuildingListItem::isAutoBuild() {
     return cBuildingListItem::isAutoBuild(type, buildId);
+}
+
+std::string cBuildingListItem::getInfo() {
+    char msg[255];
+    int seconds = getTotalBuildTimeInMs() / 1000;
+    if (isBuilding()) {
+        int secondsInProgress = getProgressBuildTimeInMs() / 1000;
+        seconds -= secondsInProgress;
+    }
+
+    if (isTypeStructure()) {
+        s_StructureInfo structureType = getS_Structures();
+        sprintf(msg, "$%d | %s | %d Power | %d Secs", getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
+    } else if (isTypeUnit()) {
+        s_UnitInfo unitType = getS_UnitP();
+        if (getBuildCost() > 0) {
+            sprintf(msg, "$%d | %s | %d Secs", getBuildCost(), unitType.name, seconds);
+        } else {
+            sprintf(msg, "%s | %d Secs", sUnitInfo[getBuildId()].name, seconds);
+        }
+    } else if (isTypeUpgrade()){
+        s_UpgradeInfo upgrade = getS_Upgrade();
+        sprintf(msg, "UPGRADE: $%d | %s | %d Secs", getBuildCost(), upgrade.description, seconds);
+    } else if (isTypeSpecial()) {
+        s_SpecialInfo special = getS_Special();
+        sprintf(msg, "$%d | %s | %d Secs", getBuildCost(), special.description, seconds);
+    } else {
+        sprintf(msg, "ERROR: UNKNOWN BUILD TYPE");
+    }
+    return std::string(msg);
 }

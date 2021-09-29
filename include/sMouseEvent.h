@@ -1,13 +1,25 @@
 #ifndef D2TM_SMOUSEEVENT_H
 #define D2TM_SMOUSEEVENT_H
 
+#include <string>
 #include "enums.h"
 
 struct s_MouseEvent {
     eMouseEventType eventType = eMouseEventType::MOUSE_NONE;
     int x, y, z = 0;
 
-    static const char* toString(const eMouseEventType &eventType) {
+    static const std::string toString(const s_MouseEvent &event) {
+        char msg[255];
+        sprintf(msg, "s_MouseEvent [type=%s], [x=%d], [y=%d], [z=%d",
+                toStringMouseEventType(event.eventType),
+                event.x,
+                event.y,
+                event.z
+        );
+        return std::string(msg);
+    }
+
+    static const char* toStringMouseEventType(const eMouseEventType &eventType) {
         switch (eventType) {
             case eMouseEventType::MOUSE_MOVED_TO: return "MOUSE_MOVED_TO";
             case eMouseEventType::MOUSE_RIGHT_BUTTON_CLICKED: return "MOUSE_RIGHT_BUTTON_CLICKED";
