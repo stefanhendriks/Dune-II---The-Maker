@@ -164,6 +164,7 @@ bool cBuildingList::addItemToList(cBuildingListItem * item) {
         game.onNotify(event);
     }
 
+    startFlashing();
     return true;
 }
 
