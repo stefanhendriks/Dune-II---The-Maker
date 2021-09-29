@@ -64,7 +64,7 @@ public:
 
     // set
     // no set Player, re-create Sidebar object instead if needed
-    void setSelectedListId(int value) { selectedListID = value; }
+    void setSelectedListId(int value);
 
     static const int VerticalCandyBarWidth = 24;
     static const int SidebarWidthWithoutCandyBar = 200;

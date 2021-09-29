@@ -287,7 +287,13 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 		if (isOverItemCoordinates_Boolean(mouse_x, mouse_y, iDrawX, iDrawY)) {
 			rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), selectFadingColor);
 			rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, selectFadingColor);
-		}
+		} else {
+            int color = list->getFlashingColor();
+            if (item->isFlashing()) {
+                rect(bmp_screen, (iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1), (iDrawYEnd - 1), color);
+                rect(bmp_screen, iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, color);
+            }
+        }
 
 		// update coordinates, 3 icons in a row
 		if (rowNr < 2) {
