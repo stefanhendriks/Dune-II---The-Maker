@@ -167,6 +167,10 @@ public:
 
     bool isAutoBuild();
 
+    bool isFlashing();
+
+    void decreaseFlashingTimer();
+
 private:
 	void setProgress(int value) { progress = value; }
 
@@ -191,6 +195,7 @@ private:
 	int subList;            // subList id's allow us to distinguish built items within the same buildingList.
 
 	float TIMER_progressFrame; // timer used for progress drawing animation
+    int TIMER_flashing;        // if > 0 then this item is 'flashing'
 	int timerCap;           // passed in by item builder (determined by power outage, etc)
 
 	cBuildingList *myList;

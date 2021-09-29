@@ -108,22 +108,6 @@ void cSideBar::thinkProgressAnimation() {
         if (!list->isAvailable()) continue; // not available, so no interaction possible
 
         list->think();
-
-        for (int j = 0; j < MAX_ITEMS; j++) {
-            cBuildingListItem *item = list->getItem(j);
-            if (item == nullptr) continue;
-            if (!item->isBuilding()) continue;
-
-            int frameToBecome = item->calculateBuildProgressFrameBasedOnBuildProgress();
-
-            if (item->getBuildProgressFrame() < frameToBecome) {
-                item->decreaseProgressFrameTimer();
-                if (item->getProgressFrameTimer() < 0) {
-                    item->increaseBuildProgressFrame();
-                    item->resetProgressFrameTimer();
-                }
-            }
-        }
     }
 }
 
@@ -156,10 +140,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
         // interaction is possible.
         if (list->isOverButton(event.x, event.y)) {
             // clicked on it. Set focus on this one
-            selectedListID = i;
-            char msg[255];
-            sprintf(msg, "selectedListID becomes [%d], m_PlayerId = [%d]", i, player->getId());
-            logbook(msg);
+            setSelectedListId(i);
             play_sound_id(SOUND_BUTTON, 64); // click sound
             break;
         }
@@ -348,7 +329,6 @@ void cSideBar::onListBecameAvailableEvent(const s_GameEvent &event) {
 void cSideBar::onListBecameUnavailableEvent(const s_GameEvent &event) {
     cBuildingList *pList = getSelectedList();
     if (pList == event.buildingList) {
-        this->selectedListID = -1;
         findFirstActiveListAndSelectIt();
     }
 }
@@ -362,15 +342,30 @@ void cSideBar::findFirstActiveListAndSelectIt() {
     char msg[255];
     sprintf(msg, "cSideBar::findFirstActiveListAndSelectIt - current selectedListID is [%d]", selectedListID);
     logbook(msg);
-    selectedListID = -1;
     for (int i = 0; i < LIST_MAX; i++) {
         cBuildingList *pList = lists[i];
         if (pList && pList->isAvailable()) {
-            selectedListID = i;
+            setSelectedListId(i);
             break;
         }
     }
     memset(msg, 0, sizeof(msg));
     sprintf(msg, "cSideBar::findFirstActiveListAndSelectIt - new selectedListID is [%d]", selectedListID);
     logbook(msg);
+}
+
+void cSideBar::setSelectedListId(int value) {
+    char msg[255];
+    sprintf(msg, "cSideBar::setSelectedListId -  m_PlayerId = [%d] - old value [%d], new [%d]", player->getId(), selectedListID, value);
+    logbook(msg);
+
+    int oldListId = selectedListID;
+    selectedListID = value;
+    if (oldListId > -1 && oldListId < LIST_MAX) {
+        lists[oldListId]->setSelected(false);
+    }
+
+    if (selectedListID > -1 && selectedListID < LIST_MAX) {
+        lists[selectedListID]->setSelected(true);
+    }
 }

@@ -53,6 +53,8 @@ public:
     bool isItemInList(cBuildingListItem *item);
 
     // get
+    bool isSelected() { return selected; }
+
     int getLastClickedId() { return lastClickedId; }
 
     int getButtonIconIdPressed() { return buttonIconIdPressed; }
@@ -70,6 +72,8 @@ public:
     cBuildingListItem *getItemByBuildId(int buildId);
 
     // set
+    void setSelected(bool value) { selected = value; }
+
     void setStatusPendingUpgrade(int subListId);
 
     void setStatusPendingBuilding(int subListId);
@@ -129,6 +133,8 @@ private:
     int TIMER_flashing;
 
     int maxItems;         // how many items have been set in the list?
+
+    bool selected;          // is this list selected at sidebar or not?
 
     // the list of icons
     cBuildingListItem *items[MAX_ITEMS];

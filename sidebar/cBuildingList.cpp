@@ -13,6 +13,7 @@ cBuildingList::cBuildingList(eListType listType) {
 	typeOfList = listType;
 	maxItems = 0;
     m_itemBuilder = nullptr;
+    selected = false;
 }
 
 cBuildingList::~cBuildingList() {
@@ -25,6 +26,7 @@ cBuildingList::~cBuildingList() {
 	memset(items, 0, sizeof(items));
 	maxItems = 0;
     m_itemBuilder = nullptr;
+    selected = false;
 }
 
 cBuildingListItem * cBuildingList::getItem(int i) {
@@ -406,12 +408,34 @@ void cBuildingList::setItemBuilder(cItemBuilder *value) {
 }
 
 int cBuildingList::getFlashingColor() {
-    return game.getColorFadeSelected(255, 207, 41);
+    return game.getColorFadeSelected(255, 209, 64);
 }
 
 void cBuildingList::think() {
     if (TIMER_flashing > 0) {
         TIMER_flashing--;
+    }
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        cBuildingListItem *pItem = getItem(i);
+        if (!pItem) continue;
+
+        // stop flashing only when you are 'aware' of the list
+        if (isSelected()) {
+            pItem->decreaseFlashingTimer();
+        }
+
+        if (!pItem->isBuilding()) continue;
+
+        int frameToBecome = pItem->calculateBuildProgressFrameBasedOnBuildProgress();
+
+        if (pItem->getBuildProgressFrame() < frameToBecome) {
+            pItem->decreaseProgressFrameTimer();
+            if (pItem->getProgressFrameTimer() < 0) {
+                pItem->increaseBuildProgressFrame();
+                pItem->resetProgressFrameTimer();
+            }
+        }
+
     }
 }
 

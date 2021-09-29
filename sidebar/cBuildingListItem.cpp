@@ -21,6 +21,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     this->type = type;
     this->queuable = queuable;
     timerCap = DEBUGGING ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
+    TIMER_flashing = 500;
     progress = 0;
     buildFrameToDraw = 0;
     state = AVAILABLE;
@@ -362,4 +363,12 @@ std::string cBuildingListItem::getInfo() {
         sprintf(msg, "ERROR: UNKNOWN BUILD TYPE");
     }
     return std::string(msg);
+}
+
+bool cBuildingListItem::isFlashing() {
+    return TIMER_flashing > 0;
+}
+
+void cBuildingListItem::decreaseFlashingTimer() {
+    if (TIMER_flashing > 0) TIMER_flashing--;
 }
