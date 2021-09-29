@@ -20,9 +20,9 @@ void cParticleDrawer::determineParticlesToDraw() {
         if (!pParticle.isValid()) continue;
         if (!pParticle.isWithinViewport(game.mapViewport)) continue;
 
-        if (particle->getLayer() == D2TM_RENDER_LAYER_PARTICLE_BOTTOM) {
+        if (pParticle.getLayer() == D2TM_RENDER_LAYER_PARTICLE_BOTTOM) {
             particlesLowerLayer.push_back(i);
-        } else if (particle->getLayer() == D2TM_RENDER_LAYER_PARTICLE_TOP) {
+        } else if (pParticle.getLayer() == D2TM_RENDER_LAYER_PARTICLE_TOP) {
             particlesTopLayer.push_back(i);
         }
     }
