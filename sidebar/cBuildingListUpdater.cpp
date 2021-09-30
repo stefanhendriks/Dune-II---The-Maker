@@ -451,16 +451,16 @@ void cBuildingListUpdater::evaluateUpgrades() {
     cBuildingList *listUpgrades = sideBar->getList(LIST_UPGRADES);
 
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
-        s_UpgradeInfo &upgrade = sUpgradeInfo[i];
-        if (!upgrade.enabled) continue;
+        s_UpgradeInfo &upgradeInfo = sUpgradeInfo[i];
+        if (!upgradeInfo.enabled) continue;
         // check techlevel (this is a non-changing value per mission, usually coupled with mission nr, ie
         // mission 1 = techlevel 1. Mission 9 = techlevel 9. Skirmish is usually techlevel 9.
-        if (player->getTechLevel() < upgrade.techLevel) continue;
+        if (player->getTechLevel() < upgradeInfo.techLevel) continue;
 
-        if (!(upgrade.house & player->getHouseBitFlag())) {
-            // house specific upgrade, player house does not match
+        if (!(upgradeInfo.house & player->getHouseBitFlag())) {
+            // house specific upgradeInfo, player house does not match
             char msg[255];
-            sprintf(msg, "Upgrade [%s] has not same house.", upgrade.description);
+            sprintf(msg, "Upgrade [%s] has not same house.", upgradeInfo.description);
             player->log(msg);
             continue;
         }
@@ -468,40 +468,51 @@ void cBuildingListUpdater::evaluateUpgrades() {
         bool addToUpgradesList = true;
 
         // check if player has structure to upgrade
-        bool hasAtLeastOneStructureForStructureType = player->hasAtleastOneStructure(upgrade.structureType);
-        if (!hasAtLeastOneStructureForStructureType) {
+        bool hasRequiredStructureType = player->hasAtleastOneStructure(upgradeInfo.structureType);
+        if (!hasRequiredStructureType) {
             addToUpgradesList = false;
             char msg[255];
-            sprintf(msg, "Upgrade [%s] has not required structureType (upgrade.structureType) #1 [%s].", upgrade.description, sStructureInfo[upgrade.structureType].name);
+            sprintf(msg, "Upgrade [%s] has not required structureType (upgradeInfo.structureType) #1 [%s].", upgradeInfo.description, sStructureInfo[upgradeInfo.structureType].name);
             player->log(msg);
         }
 
         // check if player has the additional structure (if required)
-        if (upgrade.needsStructureType > -1) {
-            bool hasAtleastOneNeedStructureType = player->hasAtleastOneStructure(upgrade.needsStructureType);
-            if (!hasAtleastOneNeedStructureType) {
+        if (upgradeInfo.needsStructureType > -1) {
+            hasRequiredStructureType = player->hasAtleastOneStructure(upgradeInfo.needsStructureType);
+            if (!hasRequiredStructureType) {
                 addToUpgradesList = false;
                 char msg[255];
-                sprintf(msg, "Upgrade [%s] has not required additional structureType (upgrade.needsStructureType) [%s].", upgrade.description, sStructureInfo[upgrade.needsStructureType].name);
+                sprintf(msg, "Upgrade [%s] has not required additional structureType (upgradeInfo.needsStructureType) [%s].", upgradeInfo.description, sStructureInfo[upgradeInfo.needsStructureType].name);
                 player->log(msg);
             }
         }
 
-        // check if the structure to upgrade is at the expected level
-        int structureUpgradeLevel = player->getStructureUpgradeLevel(upgrade.structureType);
+        // check if the structure to upgradeInfo is at the expected level
+        int structureUpgradeLevel = player->getStructureUpgradeLevel(upgradeInfo.structureType);
 
-        if (structureUpgradeLevel != upgrade.atUpgradeLevel) {
-            // already at correct upgrade level, no = comparison because that means it should be offered
-            if (structureUpgradeLevel > upgrade.atUpgradeLevel) {
-                // this upgrade has been executed already, so apply again
-                applyUpgrade(upgrade);
-                char msg[255];
-                sprintf(msg, "Upgrade [%s] has already been achieved, so re-apply. StructureUpgradeLevel=%d and upgrade.atUpgradeLevel=%d.", upgrade.description, structureUpgradeLevel, upgrade.atUpgradeLevel);
-                player->log(msg);
+        if (structureUpgradeLevel != upgradeInfo.atUpgradeLevel) {
+            // already at correct upgradeInfo level, no = comparison because that means it should be offered
+            if (structureUpgradeLevel > upgradeInfo.atUpgradeLevel) {
+                // this upgradeInfo has been executed already, so apply again,
+                // but only if we have the required structure(s)
+                if (hasRequiredStructureType) {
+                    applyUpgrade(upgradeInfo);
+                    char msg[255];
+                    sprintf(msg,
+                            "Upgrade [%s] has already been achieved, so re-apply. StructureUpgradeLevel=%d and upgradeInfo.atUpgradeLevel=%d.",
+                            upgradeInfo.description, structureUpgradeLevel, upgradeInfo.atUpgradeLevel);
+                    player->log(msg);
+                } else {
+                    char msg[255];
+                    sprintf(msg,
+                            "Upgrade [%s] has already been achieved, But will not be re-applied because required (additional) structure type is/are present.",
+                            upgradeInfo.description);
+                    player->log(msg);
+                }
             }
             addToUpgradesList = false;
             char msg[255];
-            sprintf(msg, "Upgrade [%s] will not be offered because it has a different atUpgradeLevel. StructureUpgradeLevel=%d and upgrade.atUpgradeLevel=%d not required additional structureType (upgrade.needsStructureType).", upgrade.description, structureUpgradeLevel, upgrade.atUpgradeLevel);
+            sprintf(msg, "Upgrade [%s] will not be offered because it has a different atUpgradeLevel. StructureUpgradeLevel=%d and upgradeInfo.atUpgradeLevel=%d not required additional structureType (upgradeInfo.needsStructureType).", upgradeInfo.description, structureUpgradeLevel, upgradeInfo.atUpgradeLevel);
             player->log(msg);
         }
 
@@ -562,25 +573,25 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item) {
  * needs to be re-applied.
  * @param item
  */
-void cBuildingListUpdater::applyUpgrade(const s_UpgradeInfo &upgradeType) {
+void cBuildingListUpdater::applyUpgrade(const s_UpgradeInfo &upgradeInfo) {
     cSideBar *sideBar = player->getSideBar();
-    int listType = upgradeType.providesTypeList;
-    int subListType = upgradeType.providesTypeSubList;
+    int listType = upgradeInfo.providesTypeList;
+    int subListType = upgradeInfo.providesTypeSubList;
 
     cBuildingList *listBeingUpgraded = sideBar->getList(listType);
     listBeingUpgraded->setStatusAvailable(subListType);
     
-    assert(upgradeType.providesTypeId > -1);
-    assert(upgradeType.providesType > -1);
+    assert(upgradeInfo.providesTypeId > -1);
+    assert(upgradeInfo.providesType > -1);
 
     assert(listType > -1);
     assert(listType < LIST_UPGRADES);
 
     cBuildingList *list = sideBar->getList(listType);
-    if (upgradeType.providesType == UNIT) {
-        list->addUnitToList(upgradeType.providesTypeId, subListType);
-    } else if (upgradeType.providesType == STRUCTURE) {
-        list->addStructureToList(upgradeType.providesTypeId, subListType);
+    if (upgradeInfo.providesType == UNIT) {
+        list->addUnitToList(upgradeInfo.providesTypeId, subListType);
+    } else if (upgradeInfo.providesType == STRUCTURE) {
+        list->addStructureToList(upgradeInfo.providesTypeId, subListType);
     }
 }
 
@@ -694,6 +705,7 @@ void cBuildingListUpdater::onStructureDestroyedSkirmishMode(int structureType) c
     cSideBar *sideBar = player->getSideBar();
     cItemBuilder *pItemBuilder = player->getItemBuilder();
     cBuildingList *listUnits = sideBar->getList(LIST_UNITS);
+    cBuildingList *listFootUnits = sideBar->getList(LIST_FOOT_UNITS);
 
     int house = player->getHouse();
     int techLevel = player->getTechLevel();
@@ -717,6 +729,16 @@ void cBuildingListUpdater::onStructureDestroyedSkirmishMode(int structureType) c
     if (!player->hasAtleastOneStructure(HIGHTECH)) {
         pItemBuilder->removeItemsFromListType(LIST_UNITS, SUBLIST_HIGHTECH);
         listUnits->removeAllSublistItems(SUBLIST_HIGHTECH);
+    }
+
+    if (!player->hasAtleastOneStructure(WOR)) {
+        pItemBuilder->removeItemsFromListType(LIST_FOOT_UNITS, SUBLIST_TROOPERS);
+        listFootUnits->removeAllSublistItems(SUBLIST_TROOPERS);
+    }
+
+    if (!player->hasAtleastOneStructure(BARRACKS)) {
+        pItemBuilder->removeItemsFromListType(LIST_FOOT_UNITS, SUBLIST_INFANTRY);
+        listFootUnits->removeAllSublistItems(SUBLIST_INFANTRY);
     }
 
     if (!player->hasAtleastOneStructure(LIGHTFACTORY)) {
