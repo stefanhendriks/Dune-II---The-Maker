@@ -26,3 +26,6 @@ bool cRectangle::isOverlapping(cRectangle *other) {
 bool cRectangle::isMouseOver(int mouseX, int mouseY) {
     return isWithin(mouseX, mouseY);
 }
+
+cRectangle::cRectangle() : cRectangle(0,0,0,0){
+}

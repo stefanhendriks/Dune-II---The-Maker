@@ -127,7 +127,7 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
             if (cell->type < TERRAIN_BLOOM || cell->type > TERRAIN_WALL) {
                 // somehow, invalid type
                 cRectangle rectangle = cRectangle(0, 0, 32, 32);
-                allegroDrawer->drawRectangleFilled(bmp_temp, &rectangle, makecol(245, 245, 245));
+                allegroDrawer->drawRectangleFilled(bmp_temp, rectangle, makecol(245, 245, 245));
             } else {
                 // valid type
                 blit((BITMAP *) gfxdata[cell->type].dat,

@@ -7,14 +7,13 @@ cOrderDrawer::cOrderDrawer(cPlayer *thePlayer) : player(thePlayer) {
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
     int halfOfHeightLeftForButton = 50 / 2; // 50 = height of 1 row icons which is removed for Starport
     int halfOfButtonHeight = buttonBitmap->h / 2;
-    buttonRect = new cRectangle((game.screen_x - halfOfSidebar) - halfOfButton,
+    buttonRect = cRectangle((game.screen_x - halfOfSidebar) - halfOfButton,
                                 (game.screen_y - halfOfHeightLeftForButton) - halfOfButtonHeight,
                                 buttonBitmap->w, buttonBitmap->h);
     _isMouseOverOrderButton = false;
 }
 
 cOrderDrawer::~cOrderDrawer() {
-    delete buttonRect;
 }
 
 void cOrderDrawer::drawOrderPlaced() {
@@ -28,7 +27,7 @@ void cOrderDrawer::drawOrderPlaced() {
 	allegroDrawer->drawRectangleFilled(bmp_screen, buttonRect, makecol(0,0,0));
 
 	// trans
-	fblend_trans(bmp_trans, bmp_screen, buttonRect->getX(), buttonRect->getY(), 128);
+	fblend_trans(bmp_trans, bmp_screen, buttonRect.getX(), buttonRect.getY(), 128);
 
 	// destroy - phew
 	destroy_bitmap(bmp_trans);
@@ -43,7 +42,7 @@ void cOrderDrawer::drawOrderButton(cPlayer * thePlayer) {
 	if (orderProcesser->isOrderPlaced()) {
 		drawOrderPlaced();
 	} else {
-		draw_sprite(bmp_screen, buttonBitmap, buttonRect->getX(), buttonRect->getY());
+		draw_sprite(bmp_screen, buttonBitmap, buttonRect.getX(), buttonRect.getY());
 	}
 
     if (_isMouseOverOrderButton) {
@@ -52,17 +51,17 @@ void cOrderDrawer::drawOrderButton(cPlayer * thePlayer) {
 }
 
 void cOrderDrawer::drawRectangleOrderButton() {
-    int x = buttonRect->getX();
-    int y = buttonRect->getY();
-    int width = buttonRect->getWidth();
-    int height = buttonRect->getHeight();
-    int color = players[HUMAN].getHouseFadingColor();
+    int x = buttonRect.getX();
+    int y = buttonRect.getY();
+    int width = buttonRect.getWidth();
+    int height = buttonRect.getHeight();
+    int color = player->getHouseFadingColor();
     allegroDrawer->drawRectangle(bmp_screen, x, y, width, height, color);
     allegroDrawer->drawRectangle(bmp_screen, x+1, y+1, width-2, height-2, color);
 }
 
 void cOrderDrawer::onMouseAt(const s_MouseEvent &event) {
-    _isMouseOverOrderButton = buttonRect->isMouseOver(event.x, event.y);
+    _isMouseOverOrderButton = buttonRect.isMouseOver(event.x, event.y);
 }
 
 void cOrderDrawer::onMouseClickedLeft(const s_MouseEvent &event) {

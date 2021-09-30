@@ -64,8 +64,8 @@ protected:
 		cMap *map;	// the minimap drawer reads data from here
 		cPlayer * player;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
 		cMapCamera *mapCamera;
-		cRectangle *m_RectMinimap; // the minimap (map) itself
-		cRectangle *m_RectFullMinimap; // the total space it could take
+		cRectangle m_RectMinimap; // the minimap (map) itself
+		cRectangle m_RectFullMinimap; // the total space it could take
 
         eMinimapStatus status;
 

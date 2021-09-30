@@ -19,10 +19,7 @@ protected:
 private:
     void onMouseClickedLeft(const s_MouseEvent &event);
 
-    bool bWithinBuildDistance;
-    bool bMayPlace;
-    int iTotalRocks;
-    int iTotalBlocks;
+    bool m_bMayPlace;
 
     cStructureUtils structureUtils;
 
