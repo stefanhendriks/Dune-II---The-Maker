@@ -202,6 +202,12 @@ public:
         return m_dataRepository;
     }
 
+    int getColorPlaceNeutral();
+
+    int getColorPlaceBad();
+
+    int getColorPlaceGood();
+
 private:
     cInteractionManager *_interactionManager;
     cAllegroDataRepository *m_dataRepository;

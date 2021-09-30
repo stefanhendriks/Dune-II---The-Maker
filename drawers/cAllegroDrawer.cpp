@@ -182,9 +182,8 @@ void cAllegroDrawer::blitSprite(BITMAP *src, BITMAP *dest, cRectangle *rectangle
     blit(src, dest, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
 }
 
-void cAllegroDrawer::drawRectangle(BITMAP *dest, cRectangle *pRectangle, int color) {
-    if (pRectangle == nullptr) return;
-    rect(dest, pRectangle->getX(), pRectangle->getY(), pRectangle->getEndX(), pRectangle->getEndY(), color);
+void cAllegroDrawer::drawRectangle(BITMAP *dest, cRectangle &pRectangle, int color) {
+    rect(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
 }
 
 void cAllegroDrawer::drawRectangle(BITMAP *dest, int x, int y, int width, int height, int color) {
@@ -194,9 +193,8 @@ void cAllegroDrawer::drawRectangle(BITMAP *dest, int x, int y, int width, int he
     rect(dest, x, y, x + (width-1), y + (height-1), color);
 }
 
-void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, cRectangle *pRectangle, int color) {
-    if (pRectangle == nullptr) return;
-    rectfill(dest, pRectangle->getX(), pRectangle->getY(), pRectangle->getEndX(), pRectangle->getEndY(), color);
+void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, cRectangle &pRectangle, int color) {
+    rectfill(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
 }
 
 cRectangle *cAllegroDrawer::fromBitmap(int x, int y, BITMAP *src) {

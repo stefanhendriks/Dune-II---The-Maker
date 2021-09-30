@@ -23,8 +23,8 @@ cMiniMapDrawer::cMiniMapDrawer(cMap *theMap, cPlayer * thePlayer, cMapCamera * t
     int topLeftY = cSideBar::TopBarHeight;
     drawY = topLeftY + (halfHeightOfMinimap - halfHeightOfMap);
 
-    m_RectMinimap = new cRectangle(drawX, drawY, getMapWidthInPixels(), getMapHeightInPixels());
-    m_RectFullMinimap = new cRectangle(topLeftX, topLeftY, cSideBar::WidthOfMinimap, cSideBar::HeightOfMinimap);
+    m_RectMinimap = cRectangle(drawX, drawY, getMapWidthInPixels(), getMapHeightInPixels());
+    m_RectFullMinimap = cRectangle(topLeftX, topLeftY, cSideBar::WidthOfMinimap, cSideBar::HeightOfMinimap);
 }
 
 cMiniMapDrawer::~cMiniMapDrawer() {
@@ -32,8 +32,6 @@ cMiniMapDrawer::~cMiniMapDrawer() {
 	mapCamera = NULL;
 	iStaticFrame = STAT14;
     status = eMinimapStatus::NOTAVAILABLE;
-	delete m_RectMinimap;
-	delete m_RectFullMinimap;
 }
 
 void cMiniMapDrawer::drawViewPortRectangle() {
@@ -214,7 +212,7 @@ void cMiniMapDrawer::draw() {
     if (status == eMinimapStatus::NOTAVAILABLE) return;
 
     allegroDrawer->drawRectangleFilled(bmp_screen, m_RectFullMinimap, makecol(0,0,0));
-    set_clip_rect(bmp_screen, m_RectFullMinimap->getX(), m_RectFullMinimap->getY(), m_RectFullMinimap->getEndX(), m_RectFullMinimap->getEndY());
+    set_clip_rect(bmp_screen, m_RectFullMinimap.getX(), m_RectFullMinimap.getY(), m_RectFullMinimap.getEndX(), m_RectFullMinimap.getEndY());
 
     if (status == eMinimapStatus::POWERUP ||
         status == eMinimapStatus::RENDERMAP ||
@@ -347,7 +345,7 @@ void cMiniMapDrawer::think() {
 }
 
 void cMiniMapDrawer::onMouseAt(const s_MouseEvent &event) {
-    _isMouseOver = m_RectMinimap->isMouseOver(event.x, event.y);
+    _isMouseOver = m_RectMinimap.isMouseOver(event.x, event.y);
 }
 
 bool cMiniMapDrawer::isMouseOver() {
@@ -359,7 +357,7 @@ void cMiniMapDrawer::setPlayer(cPlayer *thePlayer) {
 }
 
 void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event) {
-    if (m_RectFullMinimap->isWithin(event.x, event.y) && // on minimap space
+    if (m_RectFullMinimap.isWithin(event.x, event.y) && // on minimap space
         !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
             ) {
 

@@ -196,7 +196,7 @@ void cSideBarDrawer::drawCreditsUsage() {
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
 
-    allegroDrawer->drawRectangleFilled(bmp_screen, &powerBarRect, allegroDrawer->getColor_BLACK());
+    allegroDrawer->drawRectangleFilled(bmp_screen, powerBarRect, allegroDrawer->getColor_BLACK());
 
     // STEFAN: 01/05/2021 -> looks like a lot of this code can be moved to the player class to retrieve max spice capacity
     // and so forth.
@@ -235,7 +235,7 @@ void cSideBarDrawer::drawCreditsUsage() {
 
     line(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
 
-    allegroDrawer->drawRectangle(bmp_screen, &powerBarRect, sidebarColor);
+    allegroDrawer->drawRectangle(bmp_screen, powerBarRect, sidebarColor);
 
     // draw darker 'sides' at the left and top
     int darker = makecol(89, 56, 0);
@@ -255,7 +255,7 @@ void cSideBarDrawer::drawPowerUsage() const {
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
 
-    allegroDrawer->drawRectangleFilled(bmp_screen, &powerBarRect, allegroDrawer->getColor_BLACK());
+    allegroDrawer->drawRectangleFilled(bmp_screen, powerBarRect, allegroDrawer->getColor_BLACK());
 
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
     int maxPowerOutageOfWindtrap = sStructureInfo[WINDTRAP].power_give;
@@ -288,7 +288,7 @@ void cSideBarDrawer::drawPowerUsage() const {
 
     line(bmp_screen, barX, powerOutY, barX+barWidth, powerOutY, makecol(255, 255, 255));
 
-    allegroDrawer->drawRectangle(bmp_screen, &powerBarRect, sidebarColor);
+    allegroDrawer->drawRectangle(bmp_screen, powerBarRect, sidebarColor);
 
     // draw darker 'sides' at the left and top
     int darker = makecol(89, 56, 0);

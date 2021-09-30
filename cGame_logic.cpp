@@ -1792,3 +1792,15 @@ int cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, boo
 int cGame::getColorFadeSelected(int color) {
     return getColorFadeSelected(getr(color), getg(color), getb(color));
 }
+
+int cGame::getColorPlaceNeutral() {
+    return getColorFadeSelected(makecol(242, 174, 36));
+}
+
+int cGame::getColorPlaceBad() {
+    return getColorFadeSelected(makecol(160, 0, 0));
+}
+
+int cGame::getColorPlaceGood() {
+    return getColorFadeSelected(makecol(64, 255, 64));
+}

@@ -1,11 +1,8 @@
 #include "../include/d2tmh.h"
 
 cPlaceItDrawer::cPlaceItDrawer(cPlayer * thePlayer) : player(thePlayer) {
-    bWithinBuildDistance = false;
-    bMayPlace = true;
+    m_bMayPlace = true;
     itemToPlace = nullptr;
-    iTotalBlocks = 0;
-    iTotalRocks = 0;
 }
 
 cPlaceItDrawer::~cPlaceItDrawer() {
@@ -40,10 +37,9 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	int structureId = itemToPlace->getBuildId();
 	assert(structureId > -1);
 
-	bWithinBuildDistance = false;
-	bMayPlace=true;
+	bool bWithinBuildDistance = false;
 
-	int iTile = PLACE_ROCK;	// rocky placement = ok, but bad for power
+    m_bMayPlace=true;
 
     int width = sStructureInfo[structureId].bmp_width;
     int height = sStructureInfo[structureId].bmp_height;
@@ -51,11 +47,6 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     int scaledHeight = mapCamera->factorZoomLevel(height);
     int cellWidth = structureUtils.getWidthOfStructureTypeInCells(structureId);
     int cellHeight = structureUtils.getHeightOfStructureTypeInCells(structureId);
-
-    //
-	iTotalBlocks = cellWidth * cellHeight;
-
-	iTotalRocks=0.0;
 
 #define SCANWIDTH	1
 
@@ -73,10 +64,6 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 	FIX_POS(iStartX, iStartY);
 	FIX_POS(iEndX, iEndY);
 
-    BITMAP *temp;
-    temp = create_bitmap(scaledWidth+1, scaledHeight+1);
-    clear_bitmap(temp);
-
 	// Determine if structure to be placed is within build distance
 	for (int iX=iStartX; iX < iEndX; iX++) {
 		for (int iY=iStartY; iY < iEndY; iY++) {
@@ -89,85 +76,91 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
                     if (structure[iID]->getOwner() == HUMAN) {
                         bWithinBuildDistance = true; // connection!
+                        break;
                     }
+
+                    // TODO: Allow placement nearby allies?
                 }
 
                 if (map.getCellType(iCll) == TERRAIN_WALL ||
                     map.getCellType(iCll) == TERRAIN_SLAB) {
                     bWithinBuildDistance=true;
                     // TODO: here we should actually find out if the slab is ours or not??
+                    break;
                 }
+            } else {
+                m_bMayPlace = false;
             }
 		}
 	}
 
 	if (!bWithinBuildDistance) {
-		bMayPlace=false;
+        m_bMayPlace=false;
 	}
 
 	int iDrawX = map.mouse_draw_x();
 	int iDrawY = map.mouse_draw_y();
 
-	// Draw over it the mask for good/bad placing (decorates temp bitmap)
-	for (int iX=0; iX < cellWidth; iX++) {
-		for (int iY=0; iY < cellHeight; iY++) {
-			iTile = PLACE_ROCK;
+    BITMAP *temp = create_bitmap(scaledWidth+1, scaledHeight+1);
+    if (!bWithinBuildDistance) {
+        clear_to_color(temp, game.getColorPlaceBad());
+    } else {
+        clear_bitmap(temp);
 
-            int cellX = iCellX + iX;
-            int cellY = iCellY + iY;
+        // Draw over it the mask for good/bad placing (decorates temp bitmap)
+        for (int iX=0; iX < cellWidth; iX++) {
+            for (int iY=0; iY < cellHeight; iY++) {
+                int placeColor = game.getColorPlaceNeutral();
 
-//            if (cellX < 1 || cellY < 1 || cellX > (game.map_width - 2) || cellX > (game.map_height - 2)) {
-            if (!map.isWithinBoundaries(cellX, cellY)) {
-                // out of bounds
-                bWithinBuildDistance=false;
-                bMayPlace=false;
-                break;
-            }
+                int cellX = iCellX + iX;
+                int cellY = iCellY + iY;
 
-            int iCll = map.makeCell(cellX, cellY);
-
-			if (!map.isCellPassable(iCll))
-				iTile = PLACE_BAD;
-
-			if (map.getCellType(iCll) != TERRAIN_ROCK)
-				iTile = PLACE_BAD;
-
-			if (map.getCellType(iCll) == TERRAIN_SLAB)
-				iTile = PLACE_GOOD;
-
-			// occupied by units or structures
-            int idOfStructureAtCell = map.getCellIdStructuresLayer(iCll);
-            if (idOfStructureAtCell > -1)
-				iTile = PLACE_BAD;
-
-			int unitIdOnMap = map.getCellIdUnitLayer(iCll);
-			if (unitIdOnMap > -1) {
-                // temporarily dead units do not block, but alive units (non-dead) do block placement
-				if (!unit[unitIdOnMap].isDead()) {
-                    iTile = PLACE_BAD;
+                if (!map.isWithinBoundaries(cellX, cellY)) {
+                    m_bMayPlace=false;
+                    break;
                 }
-			}
 
-			// DRAWING & RULER
-			if (iTile == PLACE_BAD && structureId != SLAB4)
-				bMayPlace=false;
+                int iCll = map.makeCell(cellX, cellY);
 
-			// Count this as GOOD stuff
-			if (iTile == PLACE_GOOD)
-				iTotalRocks++;
+                if (!map.isCellPassable(iCll) || map.getCellType(iCll) != TERRAIN_ROCK) {
+                    placeColor = game.getColorPlaceBad();
+                }
 
-			// Draw bad gfx on spot
-            allegroDrawer->stretchBlitFromGfxData(iTile, temp, 0, 0, 32, 32,
-                iX*mapCamera->getZoomedTileWidth(),
-                iY*mapCamera->getZoomedTileHeight(),
-                mapCamera->getZoomedTileWidth(),
-                mapCamera->getZoomedTileHeight());
-		}
+                if (map.getCellType(iCll) == TERRAIN_SLAB) {
+                    placeColor = game.getColorPlaceGood();
+                }
 
-		if (!bWithinBuildDistance) {
-			clear_to_color(temp, makecol(160,0,0));
-		}
-	}
+                // occupied by units or structures
+                int idOfStructureAtCell = map.getCellIdStructuresLayer(iCll);
+                if (idOfStructureAtCell > -1) {
+                    placeColor = game.getColorPlaceBad();
+                    // may not place when we're not placing a slab.. hack hack
+                    if (structureId != SLAB4) {
+                        m_bMayPlace = false;
+                    }
+                }
+
+                int unitIdOnMap = map.getCellIdUnitLayer(iCll);
+                if (unitIdOnMap > -1) {
+                    // temporarily dead units do not block, but alive units (non-dead) do block placement
+                    if (!unit[unitIdOnMap].isDead()) {
+                        placeColor = game.getColorPlaceBad();
+                        m_bMayPlace = false;
+                    }
+                    // TODO: Allow placement, let units move aside when clicking before placement?
+                }
+
+                // Draw bad gfx on spot
+
+                float desiredWidth = mapCamera->getZoomedTileWidth();
+                float desiredHeight = mapCamera->getZoomedTileHeight();
+                float posX = iX * desiredWidth;
+                float posY = iY * desiredHeight;
+                cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
+                allegroDrawer->drawRectangleFilled(temp, rectangle, placeColor);
+            }
+        }
+    }
 
 	// draw temp bitmap
 	set_trans_blender(0, 0, 0, 64);
@@ -189,14 +182,13 @@ void cPlaceItDrawer::drawStructureIdAtCell(cBuildingListItem *itemToPlace, int c
 	int iDrawX = map.mouse_draw_x();
 	int iDrawY = map.mouse_draw_y();
 
-    BITMAP *temp;
     int width = sStructureInfo[structureId].bmp_width;
     int height = sStructureInfo[structureId].bmp_height;
 
     int scaledWidth = mapCamera->factorZoomLevel(width);
     int scaledHeight = mapCamera->factorZoomLevel(height);
 
-    temp = create_bitmap(scaledWidth+1, scaledHeight+1);
+    BITMAP *temp = create_bitmap(scaledWidth+1, scaledHeight+1);
     clear_to_color(temp, makecol(255, 0, 255));
 
     BITMAP *bmp = nullptr;
@@ -229,7 +221,7 @@ void cPlaceItDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
         return;
     }
 
-    if (bMayPlace && bWithinBuildDistance)	{
+    if (m_bMayPlace)	{
         play_sound_id(SOUND_PLACE);
         player->placeItem(mouseCell, itemToPlace);
 

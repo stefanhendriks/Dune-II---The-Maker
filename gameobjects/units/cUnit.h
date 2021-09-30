@@ -14,9 +14,9 @@
 #define D2TM_UNIT_H
 
 #include <player/brains/missions/cPlayerBrainMission.h>
+#include <utils/cRectangle.h>
 
 // Define TRANSFER stuff for reinforcements
-class cRectangle; // forward declaration :(
 
 #define TRANSFER_NONE	-1				// nothing to transfer
 #define TRANSFER_NEW_STAY	0			// bring a new unit, and let the carryall stay
@@ -376,7 +376,7 @@ private:
 
     eUnitMoveToCellResult moveToNextCellLogic();
 
-    cRectangle * dimensions;
+    cRectangle dimensions;
 
     int getRange() const;
 

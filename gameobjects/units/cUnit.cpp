@@ -123,12 +123,8 @@ void cUnit::init(int i) {
 }
 
 void cUnit::recreateDimensions() {
-    if (dimensions) {
-        delete dimensions;
-    }
-
     // set up dimensions
-    dimensions = new cRectangle(draw_x(), draw_y(), getBmpWidth(), getBmpHeight());
+    dimensions = cRectangle(draw_x(), draw_y(), getBmpWidth(), getBmpHeight());
 }
 
 void cUnit::die(bool bBlowUp, bool bSquish) {
@@ -2937,13 +2933,11 @@ bool cUnit::isInfantryUnit() {
 }
 
 cUnit::cUnit() {
-    dimensions = nullptr;
     mission = -1;
     init(-1);
 }
 
 cUnit::~cUnit() {
-    if (dimensions) delete dimensions;
 }
 
 /**
@@ -2952,9 +2946,9 @@ cUnit::~cUnit() {
  */
 void cUnit::think_position() {
     // keep updating dimensions
-    dimensions->move(draw_x(), draw_y());
+    dimensions.move(draw_x(), draw_y());
     if (mapCamera) {
-        dimensions->resize(mapCamera->factorZoomLevel(getBmpWidth()),
+        dimensions.resize(mapCamera->factorZoomLevel(getBmpWidth()),
                            mapCamera->factorZoomLevel(getBmpHeight()));
     }
 }
@@ -3218,7 +3212,7 @@ bool cUnit::isMarkedForRemoval() {
 
 bool cUnit::isWithinViewport(cRectangle *viewport) {
     if (viewport == nullptr) return false;
-    return dimensions->isOverlapping(viewport);
+    return dimensions.isOverlapping(viewport);
 }
 
 void cUnit::draw_debug() {

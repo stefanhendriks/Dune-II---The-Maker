@@ -72,7 +72,7 @@ void cDrawManager::drawCombatState() {
 
 	drawOptionBar();
 
-	allegroDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), mapCamera->getWindowHeight());
+	allegroDrawer->setClippingFor(bmp_screen, 0, cSideBar::TopBarHeight, mapCamera->getWindowWidth(), mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
 	drawStructurePlacing();
     allegroDrawer->resetClippingFor(bmp_screen);
 

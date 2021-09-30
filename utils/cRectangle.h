@@ -8,6 +8,8 @@
 
 class cRectangle {
 public:
+    cRectangle();
+
     cRectangle(int x, int y, int width, int height) : x(x), y(y), height(height), width(width) {
     }
 
