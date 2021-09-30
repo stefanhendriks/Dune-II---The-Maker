@@ -261,7 +261,9 @@ public:
     }
 
     /**
-     * Returns true if dead (ie hitpoints <= 0)
+     * Returns true if dead (ie hitpoints <= 0). Also notice, this *ALSO* returns true (for now) when a
+     * unit is picked up by a carry-all. It is made 'deadish' by setting the iHitpoints to < 0 and remembering
+     * the hitpoints in the tempHitpoints variable.
      * @return
      */
     bool isDead() {
