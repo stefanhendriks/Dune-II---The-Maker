@@ -350,7 +350,7 @@ void cGame::mouseOnBattlefield(cGameControlsContext *context, int mouseCell, boo
     }
 
     // single clicking and moving
-    if (mouse->isLeftButtonClicked()) {
+    if (mouse->isLeftButtonClicked() && !mouse->isBoxSelecting()) {
         bool bParticle=false;
 
         if (mouse_tile == MOUSE_RALLY) {
