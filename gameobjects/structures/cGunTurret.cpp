@@ -45,16 +45,14 @@ void cGunTurret::think_animation() {
 
 void cGunTurret::think_attack() {
     cUnit &unitTarget = unit[iTargetID];
-    if (unitTarget.isValid()) {
-        int c2 = getCell();
-        int iCellX = map.getCellX(c2);
-        int c = getCell();
-        int iCellY = map.getCellY(c);
+    if (unitTarget.isValid() && !unitTarget.isDead()) {
+        int iCellX = map.getCellX(getCell());
+        int iCellY = map.getCellY(getCell());
 
-        int c3 = unitTarget.getCell();
-        int iTargetX = map.getCellX(c3);
-        int c1 = unitTarget.getCell();
-        int iTargetY = map.getCellY(c1);
+        int unitCell = unitTarget.getCell();
+
+        int iTargetX = map.getCellX(unitCell);
+        int iTargetY = map.getCellY(unitCell);
 
         int d = fDegrees(iCellX, iCellY, iTargetX, iTargetY);
         int f = face_angle(d); // get the angle
@@ -68,7 +66,7 @@ void cGunTurret::think_attack() {
         if (isFacingTarget) {
             TIMER_fire++;
 
-            int iDistance = ABS_length(iCellX, iCellY, iTargetX, iTargetY);
+            int iDistance = map.distance(getCell(), unitCell);
 
             if (iDistance > getSight()) {
                 iTargetID = -1;
