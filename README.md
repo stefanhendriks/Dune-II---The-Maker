@@ -15,6 +15,14 @@ Dune II - The Maker
 ===================
 A.k.a. D2TM. Is a [Dune 2](http://en.wikipedia.org/wiki/Dune_II) remake.
 
+- Website: [https://dune2themaker.fundynamic.com](https://dune2themaker.fundynamic.com)
+- Discord: [https://dune2themaker.fundynamic.com/discord](https://dune2themaker.fundynamic.com/discord)
+- Twitter: [https://twitter.com/dune2themaker](https://twitter.com/dune2themaker)
+
+Report bugs via Discord, Twitter or add one in Github.
+
+Read [the wiki](https://github.com/stefanhendriks/Dune-II---The-Maker/wiki) for more information about startup params, controls, and more.
+
 ## Compiling
 I work with CLion which uses CMake.
 
