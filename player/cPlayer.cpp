@@ -1340,6 +1340,10 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType) {
 
 cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage) {
     cStructureFactory *pStructureFactory = cStructureFactory::getInstance();
+    bool canPlace = canPlaceStructureAt(destinationCell, iStructureTypeId).success;
+    if (!canPlace) {
+        return nullptr;
+    }
     return pStructureFactory->createStructure(destinationCell, iStructureTypeId, getId(), healthPercentage);
 }
 
