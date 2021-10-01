@@ -1785,21 +1785,7 @@ bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int
     }
 
     if (iController > -1) {
-        // anything lower than SLAB1 means a 'normal' structure (TODO: make this less tight coupled)
-        if (iType < SLAB1) {
-            if (iType != CONSTYARD) {
-                cStructureFactory::getInstance()->createSlabForStructureType(iCell, iType);
-            }
-            cStructureFactory::getInstance()->createStructure(iCell, iType, iController, 100);
-        } else {
-            if (iType == SLAB1) {
-                mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
-                //map.cell[iCell].tile = SLAB;
-            }
-            if (iType == WALL) {
-                mapEditor.createCell(iCell, TERRAIN_WALL, 0);
-            }
-        }
+        players[iController].placeStructure(iCell, iType, 100);
     } else {
         logbook("WARNING: Identifying house/controller of structure (typo?)");
     }
