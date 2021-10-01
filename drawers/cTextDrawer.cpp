@@ -125,3 +125,14 @@ void cTextDrawer::drawTextWithOneFloat(int x, int y, int color, const char *msg,
     }
     alfont_textprintf(bmp_screen, font, x,y, makecol(255,255,255), msg, var);
 }
+
+void cTextDrawer::drawText(int x, int y, const char *msg, const char *var) {
+    drawText(x, y, makecol(255, 255, 255), msg, var);
+}
+
+void cTextDrawer::drawText(int x, int y, int color, const char *msg, const char *var) {
+    if (applyShadow) {
+        alfont_textprintf(bmp_screen, font, x + 1,y + 1, makecol(0,0,0), msg, var);
+    }
+    alfont_textprintf(bmp_screen, font, x,y, color, msg, var);
+}

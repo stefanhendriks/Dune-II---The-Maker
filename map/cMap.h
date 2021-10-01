@@ -598,6 +598,8 @@ public:
 
     bool isValidTerrainForConcreteAtCell(int cell);
 
+    bool isBigMap();
+
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 

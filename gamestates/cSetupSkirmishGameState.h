@@ -30,6 +30,8 @@ private:
     cTextDrawer textDrawer;
     s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS];
     cMouse * mouse;
+
+    bool spawnWorms;
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H
