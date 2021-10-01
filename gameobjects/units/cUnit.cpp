@@ -960,17 +960,18 @@ void cUnit::think_guard() {
     } else { // not sandworm
         for (int i = 0; i < MAX_UNITS; i++) {
             if (i == iID) continue; // skip self
-            cUnit &potentialThreath = unit[i];
-            if (!potentialThreath.isValid()) continue;
-            if (potentialThreath.belongsTo(getPlayer())) continue; // skip own units
-            if (getPlayer()->isSameTeamAs(potentialThreath.getPlayer())) continue; // skip same team players / allies
-            if (potentialThreath.isAttackableAirUnit()) continue; // skip air units, already did that
-            if (!map.isVisible(potentialThreath.iCell, iPlayer)) continue; // skip non-visible potential enemy units
+            cUnit &potentialThreat = unit[i];
+            if (!potentialThreat.isValid()) continue;
+            if (potentialThreat.belongsTo(getPlayer())) continue; // skip own units
+            if (potentialThreat.isAirbornUnit()) continue; // skip all airborn units (only focus on ground units)
+            if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
+            if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
 
-            int distance = ABS_length(iCellX, iCellY, potentialThreath.iCellX, potentialThreath.iCellY);
+            int distance = ABS_length(iCellX, iCellY, potentialThreat.iCellX, potentialThreat.iCellY);
 
             // TODO: perhaps make this configurable, so you can set the 'aggressiveness' of units?
-            int range = getSight() + 3; // do react earlier than already in range.
+//            int range = getSight() + 3; // do react earlier than already in range.
+            int range = getSight();
 
             if (distance <= range && distance < iDistance) {
                 iDistance = distance;
@@ -983,14 +984,15 @@ void cUnit::think_guard() {
             int airUnitToAttack = -1;
             for (int i = 0; i < MAX_UNITS; i++) {
                 if (i == iID) continue; // skip self
-                cUnit &potentialThreath = unit[i];
-                if (!potentialThreath.isValid()) continue;
-                if (potentialThreath.getPlayerId() == getPlayerId()) continue; // skip own units
-                if (getPlayer()->isSameTeamAs(potentialThreath.getPlayer())) continue; // skip same team players / allies
-                if (!potentialThreath.isAttackableAirUnit()) continue;
-                if (!map.isVisible(potentialThreath.iCell, iPlayer)) continue; // skip non-visible potential enemy units
+                cUnit &potentialThreat = unit[i];
+                if (!potentialThreat.isValid()) continue;
+                if (!potentialThreat.isAirbornUnit()) continue; // skip all non-airborn units right away
+                if (potentialThreat.getPlayerId() == getPlayerId()) continue; // skip own units
+                if (getPlayer()->isSameTeamAs(potentialThreat.getPlayer())) continue; // skip same team players / allies
+                if (!potentialThreat.isAttackableAirUnit()) continue;
+                if (!map.isVisible(potentialThreat.iCell, iPlayer)) continue; // skip non-visible potential enemy units
 
-                int distance = ABS_length(iCellX, iCellY, potentialThreath.iCellX, potentialThreath.iCellY);
+                int distance = ABS_length(iCellX, iCellY, potentialThreat.iCellX, potentialThreat.iCellY);
 
                 // TODO: perhaps make this configurable, so you can set the 'aggressiveness' of units?
                 int range = getSight() + 3; // do react earlier than already in range.
