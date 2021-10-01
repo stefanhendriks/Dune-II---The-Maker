@@ -11,6 +11,7 @@ struct s_SkirmishPlayer {
     int startingUnits;
     int iCredits;
     int iHouse;
+    int team;
 };
 
 class cSetupSkirmishGameState : public cGameState {

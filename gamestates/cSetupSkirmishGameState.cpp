@@ -14,6 +14,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
         skirmishPlayer[i].startingUnits = 3;
         skirmishPlayer[i].iCredits = 2500;
         skirmishPlayer[i].iHouse = 0; // random house
+        skirmishPlayer[i].team = (i+1); // all different team
     }
     textDrawer = cTextDrawer(bene_font);
 
@@ -264,7 +265,6 @@ void cSetupSkirmishGameState::draw() {
                 alfont_textprintf(bmp_screen, bene_font, 4,iDrawY+1, makecol(0,0,0), "Human");
                 alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol(255,255,255), "Human");
             } else {
-
                 alfont_textprintf(bmp_screen, bene_font, 4,iDrawY+1, makecol(0,0,0), "  CPU");
 
                 // move hovers over... :/
@@ -276,7 +276,9 @@ void cSetupSkirmishGameState::draw() {
                         alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, disabledFadeColor, "  CPU");
                     }
 
-                    if (mouse->isLeftButtonClicked())	{
+                    // only allow changing 'playing' state of CPU 2 or 3 (not 1, as there should always be one
+                    // playing CPU)
+                    if (p > 1 && mouse->isLeftButtonClicked())	{
                         if (sSkirmishPlayer.bPlaying) {
                             sSkirmishPlayer.bPlaying = false;
                         } else {
@@ -307,30 +309,31 @@ void cSetupSkirmishGameState::draw() {
                 sprintf(cHouse, "Random");
             }
 
-            alfont_textprintf(bmp_screen, bene_font, 74,iDrawY+1, makecol(0,0,0), "%s", cHouse);
+            int houseX = 74;
+            alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY + 1, makecol(0, 0, 0), "%s", cHouse);
 
-            if ((mouse_x >= 74 && mouse_x <= 150) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16)))
+            if ((mouse_x >= houseX && mouse_x <= houseX+76) && (mouse_y >= iDrawY && mouse_y <= (iDrawY + 16)))
                 bHover=true;
 
             if (p == 0)
             {
-                alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol(255,255,255), "%s", cHouse);
+                alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, makecol(255, 255, 255), "%s", cHouse);
             }
             else
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol(255,255,255), "%s", cHouse);
+                    alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, makecol(255, 255, 255), "%s", cHouse);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 74,iDrawY, makecol(128,128,128), "%s", cHouse);
+                    alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, makecol(128, 128, 128), "%s", cHouse);
 
             }
 
             if (bHover)
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 74, iDrawY, selectedRedFadeColor, "%s", cHouse);
+                    alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, selectedRedFadeColor, "%s", cHouse);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 74, iDrawY, disabledFadeColor, "%s", cHouse);
+                    alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, disabledFadeColor, "%s", cHouse);
 
 
                 if (mouse->isLeftButtonClicked())
@@ -373,32 +376,33 @@ void cSetupSkirmishGameState::draw() {
             // Credits
             bHover=false;
 
-            alfont_textprintf(bmp_screen, bene_font, 174,iDrawY+1, makecol(0,0,0), "%d", sSkirmishPlayer.iCredits);
+            int creditsTextX = 174;
+            alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY + 1, makecol(0, 0, 0), "%d", sSkirmishPlayer.iCredits);
 
             //rect(bmp_screen, 174, iDrawY, 230, iDrawY+16, makecol(255,255,255));
 
-            if ((mouse_x >= 174 && mouse_x <= 230) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16)))
+            if ((mouse_x >= creditsTextX && mouse_x <= creditsTextX+56) && (mouse_y >= iDrawY && mouse_y <= (iDrawY + 16)))
                 bHover=true;
 
             if (p == 0)
             {
-                alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", sSkirmishPlayer.iCredits);
+                alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, makecol(255, 255, 255), "%d", sSkirmishPlayer.iCredits);
             }
             else
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(255,255,255), "%d", sSkirmishPlayer.iCredits);
+                    alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, makecol(255, 255, 255), "%d", sSkirmishPlayer.iCredits);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 174,iDrawY, makecol(128,128,128), "%d", sSkirmishPlayer.iCredits);
+                    alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, makecol(128, 128, 128), "%d", sSkirmishPlayer.iCredits);
 
             }
 
             if (bHover)
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 174, iDrawY, selectedRedFadeColor, "%d", sSkirmishPlayer.iCredits);
+                    alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, selectedRedFadeColor, "%d", sSkirmishPlayer.iCredits);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 174, iDrawY, disabledFadeColor, "%d", sSkirmishPlayer.iCredits);
+                    alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, disabledFadeColor, "%d", sSkirmishPlayer.iCredits);
 
                 if (mouse->isLeftButtonClicked())
                 {
@@ -420,32 +424,33 @@ void cSetupSkirmishGameState::draw() {
             // Units
             bHover = false;
 
-            alfont_textprintf(bmp_screen, bene_font, 269,iDrawY+1, makecol(0,0,0), "%d", sSkirmishPlayer.startingUnits);
+            int startingUnitsX = 272;
+            alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY + 1, makecol(0, 0, 0), "%d", sSkirmishPlayer.startingUnits);
 
             //rect(bmp_screen, 269, iDrawY, 290, iDrawY+16, makecol(255,255,255));
 
-            if ((mouse_x >= 269 && mouse_x <= 290) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16)))
+            if ((mouse_x >= startingUnitsX && mouse_x <= startingUnitsX+21) && (mouse_y >= iDrawY && mouse_y <= (iDrawY + 16)))
                 bHover=true;
 
             if (p == 0)
             {
-                alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(255,255,255), "%d", sSkirmishPlayer.startingUnits);
+                alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, makecol(255, 255, 255), "%d", sSkirmishPlayer.startingUnits);
             }
             else
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(255,255,255), "%d", sSkirmishPlayer.startingUnits);
+                    alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, makecol(255, 255, 255), "%d", sSkirmishPlayer.startingUnits);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, makecol(128,128,128), "%d", sSkirmishPlayer.startingUnits);
+                    alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, makecol(128, 128, 128), "%d", sSkirmishPlayer.startingUnits);
 
             }
 
             if (bHover)
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, selectedRedFadeColor, "%d", sSkirmishPlayer.startingUnits);
+                    alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, selectedRedFadeColor, "%d", sSkirmishPlayer.startingUnits);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, 269, iDrawY, disabledFadeColor, "%d", sSkirmishPlayer.startingUnits);
+                    alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, disabledFadeColor, "%d", sSkirmishPlayer.startingUnits);
 
                 if (mouse->isLeftButtonClicked())
                 {
@@ -466,6 +471,49 @@ void cSetupSkirmishGameState::draw() {
 
             // Team
             bHover=false;
+
+            int teamsX = 340;
+            alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY + 1, makecol(0, 0, 0), "%d", sSkirmishPlayer.team);
+
+            if ((mouse_x >= teamsX && mouse_x <= teamsX+21) && (mouse_y >= iDrawY && mouse_y <= (iDrawY + 16)))
+                bHover=true;
+
+            if (p == 0)
+            {
+                alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, makecol(255, 255, 255), "%d", sSkirmishPlayer.team);
+            }
+            else
+            {
+                if (sSkirmishPlayer.bPlaying)
+                    alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, makecol(255, 255, 255), "%d", sSkirmishPlayer.team);
+                else
+                    alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, makecol(128, 128, 128), "%d", sSkirmishPlayer.team);
+
+            }
+
+            if (bHover)
+            {
+                if (sSkirmishPlayer.bPlaying)
+                    alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, selectedRedFadeColor, "%d", sSkirmishPlayer.team);
+                else
+                    alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, disabledFadeColor, "%d", sSkirmishPlayer.team);
+
+                if (mouse->isLeftButtonClicked())
+                {
+                    sSkirmishPlayer.team++;
+                    if (sSkirmishPlayer.team > iStartingPoints) {
+                        sSkirmishPlayer.team = 1;
+                    }
+                }
+
+                if (mouse->isRightButtonClicked())
+                {
+                    sSkirmishPlayer.team--;
+                    if (sSkirmishPlayer.team < 1) {
+                        sSkirmishPlayer.team = iStartingPoints;
+                    }
+                }
+            }
         }
     }
 
@@ -502,6 +550,10 @@ void cSetupSkirmishGameState::draw() {
 
     // MOUSE
     draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+
+    if (DEBUGGING && key[KEY_TAB]) {
+        textDrawer.drawTextWithTwoIntegers(mouse_x+16, mouse_y+16, "%d,%d", mouse_x, mouse_y);
+    }
 
     if (bFadeOut) {
         game.FADE_OUT();
@@ -744,15 +796,16 @@ void cSetupSkirmishGameState::interact() {
             // TEAM LOGIC here, so we can decide which is Atreides and thus should be allied with Fremen...
             for (int p = 0; p < MAX_PLAYERS; p++) {
                 cPlayer &player = players[p];
+                s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
                 if (p == HUMAN) {
-                    player.setTeam(HUMAN);
+                    player.setTeam(sSkirmishPlayer.team);
                 } else if (p == AI_CPU5) { // AI for fremen (super weapon)
                     player.setTeam(AI_CPU5);
                 } else if (p == AI_CPU6) {
                     player.setTeam(AI_CPU6); // worm team is against everyone
                 } else {
                     // all other AI's are their own team (campaign == AI's are friends, here they are enemies)
-                    player.setTeam(p);
+                    player.setTeam(sSkirmishPlayer.team);
                 }
             }
 

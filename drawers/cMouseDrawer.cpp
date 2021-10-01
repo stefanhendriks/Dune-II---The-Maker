@@ -42,10 +42,12 @@ void cMouseDrawer::draw() {
     else{
     }
 
-//    if (DEBUGGING) {
-//        cTextDrawer textDrawer(bene_font);
-//        textDrawer.drawTextWithOneInteger(0, 0, "MouseCell %d", player->getGameControlsContext()->getMouseCell());
-//    }
+    if (DEBUGGING) {
+        if (key[KEY_TAB]) {
+            cTextDrawer textDrawer(bene_font);
+            textDrawer.drawTextWithOneInteger(0, 0, "MouseCell %d", player->getGameControlsContext()->getMouseCell());
+        }
+    }
 
     allegroDrawer->drawSprite(bmp_screen, mouse_tile, mouseDrawX, mouseDrawY);
 }
