@@ -19,6 +19,8 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
     textDrawer = cTextDrawer(bene_font);
 
     mouse = game.getMouse();
+
+    spawnWorms = true;
 }
 
 cSetupSkirmishGameState::~cSetupSkirmishGameState() {
@@ -196,6 +198,23 @@ void cSetupSkirmishGameState::draw() {
             }
 
             bDoRandomMap=true;
+        }
+    }
+
+    int wormsX = screen_x - widthOfSomething;
+    int wormsY = startPointsY + 32;
+    int wormsHitBoxWidth = 130;
+    int wormsHitBoxHeight = 16;
+
+    textDrawer.drawText(wormsX, wormsY, "Worms? : %s", spawnWorms ? "YES" : "NO");
+
+    if ((mouse_x >= wormsX && mouse_x <= (wormsX + wormsHitBoxWidth)) && (mouse_y >= wormsY && mouse_y <= (wormsY + wormsHitBoxHeight)))
+    {
+        textDrawer.drawText(wormsX, wormsY, makecol(255, 0, 0), "Worms? : %s", spawnWorms ? "YES" : "NO");
+
+        if (mouse->isLeftButtonClicked())
+        {
+            spawnWorms = !spawnWorms;
         }
     }
 
@@ -820,7 +839,41 @@ void cSetupSkirmishGameState::interact() {
             game.FADE_OUT();
             playMusicByType(MUSIC_PEACE);
 
-            // TODO: spawn a few worms
+            // on small maps, spawn 2 worms, else on big maps 4 worms
+            if (spawnWorms) {
+                int worms = map.isBigMap() ? 4 : 2;
+                int minDistance = map.isBigMap() ? 8 : 16;
+                int maxDistance = map.isBigMap() ? 32 : 64;
+                int wormCell = map.getRandomCell();
+                int failures = 0;
+                char msg[255];
+                sprintf(msg, "Skirmish game with %d sandworms", worms);
+                logbook(msg);
+                while (worms > 0) {
+                    int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance, SANDWORM);
+                    if (cell < 0) {
+                        // retry
+                        failures++;
+                        if (failures > 10) {
+                            // too many failed attempts, just stop
+                            logbook("Failed too many times to find spot for sandworm, aborting!");
+                            break;
+                        }
+                        continue;
+                    }
+                    char msg[255];
+                    sprintf(msg, "Spawning sandworm at %d", cell);
+                    logbook(msg);
+                    UNIT_CREATE(cell, SANDWORM, AI_WORM, true);
+                    wormCell = cell; // start from here to spawn new worm
+                    worms--;
+                    failures = 0; // reset failures
+                }
+            } else {
+                logbook("Skirmish game without sandworms");
+            }
+
+
             drawManager->getMessageDrawer()->initCombatPosition();
 
             game.setState(GAME_PLAYING); // this deletes the current state object

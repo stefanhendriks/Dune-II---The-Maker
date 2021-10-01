@@ -3240,7 +3240,7 @@ int UNIT_NEW() {
  * @param iCll
  * @param unitType
  * @param iPlayer
- * @param bOnStart
+ * @param bOnStart (if true, then AI will *not* move unit away immediately to a nearby random position)
  * @return
  */
 int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart) {

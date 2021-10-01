@@ -142,15 +142,16 @@ bool cMap::canDeployUnitTypeAtCell(int iCell, int iUnitType) {
     if (isAirbornUnit) return true;
 
     if (isWorm) {
-        return map.isCellPassableForWorm(iCell);
+        int wormId = getCellIdWormsLayer(iCell);
+        return map.isCellPassableForWorm(iCell) && wormId < 0;
     }
 
     if (isInfantryUnit && map.isCellPassableForFootUnits(iCell)) return true;
 
     if (!map.isCellPassable(iCell)) return false;
 
-    int unitId = getCellIdUnitLayer(iCell);
     int strucId = getCellIdStructuresLayer(iCell);
+    int unitId = getCellIdUnitLayer(iCell);
 
     return unitId < 0 && strucId < 0;
 }
@@ -1229,4 +1230,12 @@ bool cMap::isValidTerrainForConcreteAtCell(int cell) {
     }
 
     return true;
+}
+
+/**
+ * Returns true if map is wider or higher than 64 cells
+ * @return
+ */
+bool cMap::isBigMap() {
+    return getWidth() > 64 || getHeight() > 64;
 }
