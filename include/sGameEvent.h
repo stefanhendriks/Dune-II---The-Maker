@@ -58,6 +58,8 @@ struct s_GameEvent {
             case eGameEventType::GAME_EVENT_LIST_BECAME_UNAVAILABLE: return "GAME_EVENT_LIST_BECAME_UNAVAILABLE";
             case eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN: return "GAME_EVENT_ABOUT_TO_BEGIN";
             case eGameEventType::GAME_EVENT_LIST_ITEM_PLACE_IT: return "GAME_EVENT_LIST_ITEM_PLACE_IT";
+            case eGameEventType::GAME_EVENT_SPICE_BLOOM_SPAWNED: return "GAME_EVENT_SPICE_BLOOM_SPAWNED";
+            case eGameEventType::GAME_EVENT_SPICE_BLOOM_BLEW: return "GAME_EVENT_SPICE_BLOOM_BLEW";
             default:
                 assert(false && "Unknown game event type for toString()");
                 break;

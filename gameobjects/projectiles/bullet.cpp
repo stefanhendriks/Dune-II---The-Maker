@@ -290,7 +290,7 @@ void cBullet::arrivedAtDestinationLogic() {
                     // only inflict damage when nothing 'above it' (ie a ground unit) is hit first.
                     damageSandworm(cellToDamage, factor);              // inflict damage on sandworm if applicable
 
-                    detonateSpiceBloom(cellToDamage, factor);          // detonate spice bloom if applicable
+                    detonateSpiceBloom(cellToDamage);          // detonate spice bloom if applicable
                 }
             }
 
@@ -469,15 +469,8 @@ float cBullet::getDamageToInflictToInfantry() const {
  * if cell is invalid, or terrain is not TERRAIN_BLOOM; it will abort.
  * @param cell
  */
-void cBullet::detonateSpiceBloom(int cell, double factor) const {
-    if (!map.isValidCell(cell)) return;
-    int cellTypeAtCell = map.getCellType(cell);
-    if (cellTypeAtCell != TERRAIN_BLOOM) return;
-
-    // change type of terrain to sand
-    mapEditor.createCell(cell, TERRAIN_SAND, 0);
-    mapEditor.createRandomField(cell, TERRAIN_SPICE, 50 + (rnd(75)));
-    game.shakeScreen(20);
+void cBullet::detonateSpiceBloom(int cell) const {
+    map.detonateSpiceBloom(cell);
 }
 
 void cBullet::damageSandworm(int cell, double factor) const {

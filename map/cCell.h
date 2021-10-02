@@ -2,7 +2,7 @@
 #define CCELL_H_
 
 struct tCell {
-    int credits;        // harvesting
+    int credits;        // amount of credits that can be harvested from this tile
     int type;           // refers to gfxdata (terrain type)
     int tile;           // the tile to draw
     int smudgetile;     // smudge tile id (drawn upon the tile)

@@ -32,6 +32,8 @@ private:
     cMouse * mouse;
 
     bool spawnWorms;
+    bool spawnBlooms;
+    bool detonateBlooms;
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H

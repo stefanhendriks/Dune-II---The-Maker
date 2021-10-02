@@ -194,11 +194,9 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
 
     init(iID);    // re-init
 
-    for (int i = 0; i < MAPID_MAX; i++) {
-        if (i != MAPID_STRUCTURES) {
-            map.remove_id(iID, i);
-        }
-    }
+    map.remove_id(iID, MAPID_UNITS);
+    map.remove_id(iID, MAPID_AIR);
+    map.remove_id(iID, MAPID_WORMS);
 }
 
 void cUnit::createSquishedParticle() {
@@ -1162,21 +1160,16 @@ void cUnit::think() {
 
     // when any unit is on a spice bloom, you got a problem, you die!
     int cellType = map.getCellType(iCell);
-    if (cellType == TERRAIN_BLOOM
-        && sUnitInfo[iType].airborn == false) {
-        // change type of terrain to sand
-        mapEditor.createCell(iCell, TERRAIN_SAND, 0);
+    if (!isAirbornUnit() && cellType == TERRAIN_BLOOM) {
+        map.detonateSpiceBloom(iCell);
 
-        mapEditor.createRandomField(iCell, TERRAIN_SPICE, 25 + (rnd(50)));
+        // non-sandworm units die of this
+        if (!isSandworm()) {
+            die(true, false);
+        }
 
-        // kill unit
-        map.remove_id(iID, MAPID_UNITS);
-
-        die(true, false);
-        game.shakeScreen(20);
         return;
     }
-
 
     // --- think
     if (iType == ORNITHOPTER) {
