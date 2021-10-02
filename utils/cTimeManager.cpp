@@ -173,8 +173,8 @@ void cTimeManager::handleTimerGameTime() {
                 }
             }
 
-
             map.increaseScrollTimer();
+            map.thinkFast();
 
             if (map.isTimeToScroll()) {
                 map.thinkInteraction();

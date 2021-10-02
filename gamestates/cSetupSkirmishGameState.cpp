@@ -21,6 +21,8 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
     mouse = game.getMouse();
 
     spawnWorms = true;
+    spawnBlooms = true;
+    detonateBlooms = true;
 }
 
 cSetupSkirmishGameState::~cSetupSkirmishGameState() {
@@ -62,15 +64,14 @@ void cSetupSkirmishGameState::draw() {
     int previewMapHeight = 129;
     int previewMapWidth = 129;
 
-    int sidebarWidth = 158;
-
     // title box
     GUI_DRAW_FRAME(-1, -1, topBarWidth, topBarHeight);
 
     int creditsX = (screen_x / 2) - (alfont_text_length(bene_font, "Skirmish") / 2);
     GUI_DRAW_BENE_TEXT(creditsX, 1, "Skirmish");
 
-    int topRightBoxWidth = 276;
+    int widthOfSomething = 300; //??
+    int topRightBoxWidth = widthOfSomething + 2;
 
     // Players title bar
     int playerTitleBarWidth = screen_x - topRightBoxWidth;
@@ -164,41 +165,44 @@ void cSetupSkirmishGameState::draw() {
         }
     }
 
-    int widthOfSomething = 274; //??
     int startPointsX = screen_x - widthOfSomething;
     int startPointsY = previewMapY;
-    int startPointHitBoxWidth = 130;
-    int startPointHitBoxHeight = 16;
 
-    textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, "Startpoints: %d", iStartingPoints);
+    bool bDoRandomMap = false;
 
-    bool bDoRandomMap=false;
+    if (game.iSkirmishMap == 0) {
+        int startPointHitBoxWidth = 130;
+        int startPointHitBoxHeight = 16;
+        textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, "Startpoints: %d", iStartingPoints);
 
-    if ((mouse_x >= startPointsX && mouse_x <= (startPointsX + startPointHitBoxWidth)) && (mouse_y >= startPointsY && mouse_y <= (startPointsY + startPointHitBoxHeight)))
-    {
-        textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, makecol(255, 0, 0), "Startpoints: %d", iStartingPoints);
+        if ((mouse_x >= startPointsX && mouse_x <= (startPointsX + startPointHitBoxWidth)) &&
+            (mouse_y >= startPointsY && mouse_y <= (startPointsY + startPointHitBoxHeight))) {
+            textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, makecol(255, 0, 0), "Startpoints: %d",
+                                              iStartingPoints);
 
-        if (mouse->isLeftButtonClicked())
-        {
-            game.iSkirmishStartPoints++;
+            if (mouse->isLeftButtonClicked()) {
+                game.iSkirmishStartPoints++;
 
-            if (game.iSkirmishStartPoints > 4) {
-                game.iSkirmishStartPoints = 2;
+                if (game.iSkirmishStartPoints > 4) {
+                    game.iSkirmishStartPoints = 2;
+                }
+
+                bDoRandomMap = true;
             }
 
-            bDoRandomMap=true;
-        }
+            if (mouse->isRightButtonClicked()) {
+                game.iSkirmishStartPoints--;
 
-        if (mouse->isRightButtonClicked())
-        {
-            game.iSkirmishStartPoints--;
+                if (game.iSkirmishStartPoints < 2) {
+                    game.iSkirmishStartPoints = 4;
+                }
 
-            if (game.iSkirmishStartPoints < 2) {
-                game.iSkirmishStartPoints = 4;
+                bDoRandomMap = true;
             }
-
-            bDoRandomMap=true;
         }
+    } else {
+        textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, makecol(128, 128, 128), "Startpoints: %d",
+                                          iStartingPoints);
     }
 
     int wormsX = screen_x - widthOfSomething;
@@ -216,6 +220,44 @@ void cSetupSkirmishGameState::draw() {
         {
             spawnWorms = !spawnWorms;
         }
+    }
+
+    int bloomsX = screen_x - widthOfSomething;
+    int bloomsY = wormsY + 32;
+    int bloomsHitBoxWidth = 130;
+    int bloomsHitBoxHeight = 16;
+
+    textDrawer.drawText(bloomsX, bloomsY, "Spice blooms : %s", spawnBlooms ? "YES" : "NO");
+
+    if ((mouse_x >= bloomsX && mouse_x <= (bloomsX + bloomsHitBoxWidth)) && (mouse_y >= bloomsY && mouse_y <= (bloomsY + bloomsHitBoxHeight)))
+    {
+        textDrawer.drawText(bloomsX, bloomsY, makecol(255, 0, 0), "Spice blooms : %s", spawnBlooms ? "YES" : "NO");
+
+        if (mouse->isLeftButtonClicked())
+        {
+            spawnBlooms = !spawnBlooms;
+        }
+    }
+
+    int detonateX = screen_x - widthOfSomething;
+    int detonateY = bloomsY + 32;
+    if (spawnBlooms) {
+        int detonateHitBoxWidth = 130;
+        int detonateHitBoxHeight = 16;
+
+        textDrawer.drawText(detonateX, detonateY, "Auto-detonate : %s", detonateBlooms ? "YES" : "NO");
+
+        if ((mouse_x >= detonateX && mouse_x <= (detonateX + detonateHitBoxWidth)) && (mouse_y >= detonateY && mouse_y <= (detonateY + detonateHitBoxHeight)))
+        {
+            textDrawer.drawText(detonateX, detonateY, makecol(255, 0, 0), "Auto-detonate : %s", detonateBlooms ? "YES" : "NO");
+
+            if (mouse->isLeftButtonClicked())
+            {
+                detonateBlooms = !detonateBlooms;
+            }
+        }
+    } else {
+        textDrawer.drawText(detonateX, detonateY, makecol(128, 128, 128), "Auto-detonate : -");
     }
 
     int const iHeightPixels=topBarHeight;
@@ -838,6 +880,9 @@ void cSetupSkirmishGameState::interact() {
 
             game.FADE_OUT();
             playMusicByType(MUSIC_PEACE);
+
+            map.setAutoSpawnSpiceBlooms(spawnBlooms);
+            map.setAutoDetonateSpiceBlooms(detonateBlooms);
 
             // on small maps, spawn 2 worms, else on big maps 4 worms
             if (spawnWorms) {

@@ -12,8 +12,6 @@
 
 #include "include/d2tmh.h"
 
-using namespace std;
-
 bool bDoDebug = false;
 int	iRest = 1;	// default rest value
 
@@ -110,11 +108,11 @@ int handleArguments(int argc, char *argv[]) {
 
 	if (argc > 1) {
 		for (int i = 1; i < argc; i++) {
-			string command = argv[i];
+            std::string command = argv[i];
 			if (command.compare("-game") == 0) {
 				if ((i + 1) < argc) {
 					i++;
-					game.game_filename = string(argv[i]);
+					game.game_filename = std::string(argv[i]);
 				}
 			} else if (command.compare("-windowed") == 0) {
 				// Windowed flag passed, so use that

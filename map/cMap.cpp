@@ -38,6 +38,12 @@ cMap::~cMap() {
 void cMap::init(int width, int height) {
     INIT_REINFORCEMENT();
 
+    m_bAutoDetonateSpiceBlooms = false;
+    m_bAutoSpawnSpiceBlooms = true;
+
+    TIMER_blooms = 200;
+    bloomTimers = std::map<int, int>();
+
     maxCells = width * height;
     cell = std::vector<tCell>(maxCells, tCell());
 
@@ -260,6 +266,74 @@ bool cMap::occupied(int iCll, int iUnitID) {
     }
 
     return false;
+}
+
+/**
+ * Think function, called every 5 ms
+ */
+void cMap::thinkFast() {
+    thinkAutoDetonateSpiceBlooms();
+    thinkAboutSpawningNewSpiceBlooms();
+}
+
+void cMap::thinkAboutSpawningNewSpiceBlooms() {
+    if (!m_bAutoSpawnSpiceBlooms) {
+        return;
+    }
+
+    if (TIMER_blooms > 0) {
+        TIMER_blooms--;
+        return;
+    }
+
+    // Evaluate every 10 seconds orso
+    TIMER_blooms = 50 + rnd(50);
+
+    const std::vector<int> &blooms = getAllCellsOfType(TERRAIN_BLOOM);
+    int totalSpiceBloomsCount = blooms.size();
+
+    // When no blooms are detected, we must 'spawn' one
+    int desiredAmountOfSpiceBloomsInMap = isBigMap() ? 6 : 3;
+
+    if (totalSpiceBloomsCount < desiredAmountOfSpiceBloomsInMap) {
+        // randomly create a new spice bloom somewhere on the map
+        int iCll = -1;
+        for (int i = 0; i < 10; i++) {
+            int cell = getRandomCell();
+            // find place to spawn bloom
+            if (getCellType(cell) == TERRAIN_SAND) {
+                iCll = cell;
+                break;
+            }
+        }
+
+        if (iCll > -1) {
+            // create bloom (can deal with < -1 cell)
+            mapEditor.createCell(iCll, TERRAIN_BLOOM, 0);
+        } else {
+            TIMER_blooms = 15; // try again soon
+        }
+    }
+}
+
+void cMap::thinkAutoDetonateSpiceBlooms() {// let spice bloom detonate after X amount of time
+    if (!m_bAutoDetonateSpiceBlooms) {
+        return;
+    }
+
+    std::vector<int> keys;
+    for(auto const& pair: bloomTimers) {
+        keys.push_back(pair.first);
+    }
+
+    // key == cell
+    for (auto const &key: keys) {
+        bloomTimers[key] -= 1; // decrease timer
+        if (bloomTimers[key] < 1) {
+            // detonate spice bloom
+            map.detonateSpiceBloom(key);
+        }
+    }
 }
 
 // do the static info thinking
@@ -517,16 +591,33 @@ int cMap::mouse_draw_y() {
     return -1;
 }
 
+/**
+ * Return amount of cells of a specific type. (SLOW!)
+ *
+ * TODO: This can be sped up quite a lot, by letting the mapEditor remember what it has placed (keep counter, or list, etc)
+ *
+ * @param cellType
+ * @return
+ */
 int cMap::getTotalCountCellType(int cellType) {
-    int count = 0;
-    for (int c = 0; c < maxCells; c++) {
-        if (getCellType(c) == cellType) {
-            count++;
-        }
-    }
-    return count;
+    return getAllCellsOfType(cellType).size();
 }
 
+/**
+ * Returns cell nr's which are of a specific cellType
+ *
+ * NOTE: This is a slow method, as it iterates though all possible cells
+ * @return
+ */
+std::vector<int> cMap::getAllCellsOfType(int cellType) {
+    std::vector<int> cellsOfType = std::vector<int>();
+    for (int c = 0; c < maxCells; c++) {
+        if (getCellType(c) == cellType) {
+            cellsOfType.push_back(c);
+        }
+    }
+    return cellsOfType;
+}
 int cMap::getCellSlowDown(int iCell) {
     int cellType = map.getCellType(iCell);
 
@@ -815,28 +906,39 @@ void cMap::createCell(int cell, int terrainType, int tile) {
     map.cellChangeCredits(cell, 0);
     map.cellChangeHealth(cell, 0);
 
-    if (terrainType == TERRAIN_BLOOM) {
-        map.cellChangeCredits(cell, -23);
-    }
-
     map.cellChangePassable(cell, true);
     map.cellChangePassableFoot(cell, true);
 
     map.cellChangeSmudgeTile(cell, -1);
     map.cellChangeSmudgeType(cell, -1);
 
-    // when spice
-    if (terrainType == TERRAIN_SPICE || terrainType == TERRAIN_SPICEHILL) {
-        map.cellChangeCredits(cell, 50 + rnd(250));
+    if (terrainType == TERRAIN_SPICE) {
+        map.cellChangeCredits(cell, 50 + rnd(125));
+    } else if (terrainType == TERRAIN_SPICEHILL) {
+        map.cellChangeCredits(cell, 75 + rnd(150));
     } else if (terrainType == TERRAIN_MOUNTAIN) {
         map.cellChangePassable(cell, false);
         map.cellChangePassableFoot(cell, true);
     } else if (terrainType == TERRAIN_WALL) {
-        int wallHealth = 100;
-
-        map.cellChangeHealth(cell, wallHealth);
+        map.cellChangeHealth(cell, 100);
         map.cellChangePassable(cell, false);
         map.cellChangePassableFoot(cell, false);
+    } else if (terrainType == TERRAIN_BLOOM) {
+        map.cellChangeCredits(cell, -23);
+
+        s_GameEvent event {
+                .eventType = eGameEventType::GAME_EVENT_SPICE_BLOOM_SPAWNED,
+                .entityType = eBuildType::SPECIAL,
+                .entityID = -1,
+                .player = nullptr,
+                .entitySpecificType = -1,
+                .atCell = cell,
+                .isReinforce = false,
+                .buildingListItem = nullptr,
+                .buildingList = nullptr
+        };
+
+        game.onNotify(event);
     }
 }
 
@@ -1238,4 +1340,47 @@ bool cMap::isValidTerrainForConcreteAtCell(int cell) {
  */
 bool cMap::isBigMap() {
     return getWidth() > 64 || getHeight() > 64;
+}
+
+void cMap::detonateSpiceBloom(int cell) {
+    if (!isValidCell(cell)) return;
+    int cellTypeAtCell = getCellType(cell);
+    if (cellTypeAtCell != TERRAIN_BLOOM) return;
+
+    // change type of terrain to sand
+    mapEditor.createCell(cell, TERRAIN_SAND, 0);
+    int size = 75 + (rnd(100));
+    mapEditor.createRandomField(cell, TERRAIN_SPICE, size);
+    game.shakeScreen(20);
+
+    s_GameEvent event {
+            .eventType = eGameEventType::GAME_EVENT_SPICE_BLOOM_BLEW,
+            .entityType = eBuildType::SPECIAL,
+            .entityID = -1,
+            .player = nullptr,
+            .entitySpecificType = -1,
+            .atCell = cell,
+            .isReinforce = false,
+            .buildingListItem = nullptr,
+            .buildingList = nullptr
+    };
+    game.onNotify(event);
+
+}
+
+void cMap::onNotify(const s_GameEvent &event) {
+    switch (event.eventType) {
+        case eGameEventType::GAME_EVENT_SPICE_BLOOM_SPAWNED:
+            if (m_bAutoDetonateSpiceBlooms) {
+                // 1000/5 = taking care of thinkFast 5ms loop. The second part
+                // is the actual amount of seconds we want to delay before blowing up the spice bloom
+                bloomTimers[event.atCell] = (1000 / 5) * (45 + rnd(120));
+            }
+            break;
+        case eGameEventType::GAME_EVENT_SPICE_BLOOM_BLEW:
+            if (m_bAutoDetonateSpiceBlooms) {
+                bloomTimers.erase(event.atCell);
+            }
+            break;
+    }
 }

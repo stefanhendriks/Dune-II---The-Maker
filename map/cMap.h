@@ -11,6 +11,7 @@
   */
 
 #include <vector>
+#include <map>
 #include <gameobjects/structures/cAbstractStructure.h>
 #include <gameobjects/units/cUnit.h>
 
@@ -20,7 +21,7 @@
 #ifndef CMAP_H
 #define CMAP_H
 
-class cMap {
+class cMap : public cScenarioObserver {
 
 public:
 
@@ -29,7 +30,9 @@ public:
 
     void init(int width, int height);
 
-	bool canDeployUnitAtCell(int iCell, int iUnitId);
+    void onNotify(const s_GameEvent &event) override;
+
+    bool canDeployUnitAtCell(int iCell, int iUnitId);
 	bool canDeployUnitTypeAtCell(int iCell, int iUnitType);
 	bool occupied(int iCell);
 	bool occupied(int iCll, int iUnitID);
@@ -171,6 +174,7 @@ public:
 
     void smudge_increase(int iType, int iCell);
 
+    void thinkFast();
 
     void thinkInteraction();
     void think_minimap();
@@ -209,6 +213,8 @@ public:
         if (pCell) return pCell->type;
         return -1;
     }
+
+    std::vector<int> getAllCellsOfType(int cellType);
 
     /**
      * Returns ID at layer on cell. Returns -1 when layer or cell is not valid.
@@ -600,10 +606,22 @@ public:
 
     bool isBigMap();
 
+    void detonateSpiceBloom(int cell);
+
+    bool setAutoDetonateSpiceBlooms(bool value) { m_bAutoDetonateSpiceBlooms = value; }
+
+    bool setAutoSpawnSpiceBlooms(bool value) { m_bAutoSpawnSpiceBlooms = value; }
+
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 
     std::vector<tCell> cell;
+
+    // Spice Blooms related
+    bool m_bAutoSpawnSpiceBlooms;
+    bool m_bAutoDetonateSpiceBlooms;
+    int TIMER_blooms;
+    std::map<int, int> bloomTimers;
 
     // Scrolling around map, timer based
     int TIMER_scroll;
@@ -615,6 +633,10 @@ private:
     int maxCells;
 
     void drawUnitDebug(int i, cUnit &pUnit) const;
+
+    void thinkAutoDetonateSpiceBlooms();
+
+    void thinkAboutSpawningNewSpiceBlooms();
 };
 
 

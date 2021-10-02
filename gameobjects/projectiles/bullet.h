@@ -94,7 +94,7 @@ private:
 
     void damageSandworm(int cell, double factor) const;
 
-    void detonateSpiceBloom(int cell, double factor) const;
+    void detonateSpiceBloom(int cell) const;
 
     bool damageGroundUnit(int cell, double factor) const;
 

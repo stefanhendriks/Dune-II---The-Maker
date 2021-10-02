@@ -28,8 +28,6 @@ void INI_Scenario_Section_Basic(cAbstractMentat *pMentat, char *value, int wordt
 
 void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *iPl_house, const int *iPl_quota);
 
-using namespace std;
-
 /*
  Read a line in the INI file and put it into currentLine
 */
@@ -37,7 +35,7 @@ inline bool caseInsCharCompareN(char a, char b) {
     return (toupper(a) == toupper(b));
 }
 
-bool caseInsCompare(const string &s1, const string &s2) {
+bool caseInsCompare(const std::string &s1, const std::string &s2) {
     return ((s1.size() == s2.size()) &&
             equal(s1.begin(), s1.end(), s2.begin(), caseInsCharCompareN));
 }
@@ -119,15 +117,15 @@ void INI_Word(char input[MAX_LINE_LENGTH], char word[25]) {
  * @param toFind
  * @return
  */
-bool isInString(string source, string toFind) {
-    string::size_type loc = source.find(toFind, 0);
+bool isInString(std::string source, std::string toFind) {
+    std::string::size_type loc = source.find(toFind, 0);
     if (loc == 0) {
         return true;
     }
     return false; // not found in string
 }
 
-string INI_SceneFileToScene(string scenefile) {
+std::string INI_SceneFileToScene(std::string scenefile) {
     // wsa / data
     if (isInString(scenefile, "HARVEST.WSA")) return "harvest";
     if (isInString(scenefile, "IX.WSA")) return "ix";
@@ -146,7 +144,7 @@ string INI_SceneFileToScene(string scenefile) {
     return "unknown";
 }
 
-int INI_StructureType(string structureName) {
+int INI_StructureType(std::string structureName) {
 
     if (isInString(structureName, "WINDTRAP")) return WINDTRAP;
     if (isInString(structureName, "PALACE")) return PALACE;
@@ -176,7 +174,7 @@ int INI_StructureType(string structureName) {
 
 // Reads out word[], checks structure type, and returns actual source-id
 int INI_StructureType(char word[256]) {
-    string wordAsString(word);
+    std::string wordAsString(word);
     return INI_StructureType(wordAsString);
 }
 
@@ -812,7 +810,7 @@ void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]) {
 }
 
 int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c) {
-    string resultString(result);
+    std::string resultString(result);
     return resultString.find_first_of(c, 0);
 }
 
@@ -823,8 +821,8 @@ int INI_GetPositionOfCharacter(char result[MAX_LINE_LENGTH], char c) {
  * @param result
  * @return
  */
-string INI_WordValueString(char result[MAX_LINE_LENGTH]) {
-    string resultAsString(result);
+std::string INI_WordValueString(char result[MAX_LINE_LENGTH]) {
+    std::string resultAsString(result);
     int isPos = INI_GetPositionOfCharacter(result, '=');
     int length = resultAsString.size();
     return resultAsString.substr(isPos + 1);
@@ -1001,7 +999,7 @@ bool isCommentLine(char linefeed[MAX_LINE_LENGTH]) {
  * @param iHouse
  * @return
  */
-string INI_GetHouseDirectoryName(int iHouse) {
+std::string INI_GetHouseDirectoryName(int iHouse) {
     if (iHouse == ATREIDES) return "atreides";
     if (iHouse == HARKONNEN) return "harkonnen";
     if (iHouse == SARDAUKAR) return "sardaukar";
@@ -1110,7 +1108,7 @@ void INI_Load_Regionfile(int iHouse, int iMission) {
 
 // SCENxxxx.ini loader (for both DUNE II as for DUNE II - The Maker)
 int getUnitTypeFromChar(char chunk[35]) {
-    string unitString(chunk);
+    std::string unitString(chunk);
     if (caseInsCompare(unitString, "Harvester")) return HARVESTER;
     if (caseInsCompare(unitString, "Tank")) return TANK;
     if (caseInsCompare(unitString, "COMBATTANK")) return TANK;
@@ -1195,8 +1193,8 @@ int getTechLevelByRegion(int iRegion) {
  * @param iRegion
  * @return
  */
-string INI_GetScenarioFileName(int iHouse, int iRegion) {
-    string cHouse;
+std::string INI_GetScenarioFileName(int iHouse, int iRegion) {
+    std::string cHouse;
 
     // each house has a letter for the scenario file
     if (iHouse == ATREIDES) cHouse = "a";
@@ -1215,7 +1213,7 @@ string INI_GetScenarioFileName(int iHouse, int iRegion) {
         sprintf(filename, "campaign/maps/scen%s0%d.ini", cHouse.c_str(), iRegion);
     }
 
-    return string(filename);
+    return std::string(filename);
 }
 
 
@@ -1223,7 +1221,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
     game.bSkirmish = false;
     game.mission_init();
 
-    string filename = INI_GetScenarioFileName(iHouse, iRegion);
+    std::string filename = INI_GetScenarioFileName(iHouse, iRegion);
 
     game.iMission = getTechLevelByRegion(iRegion);
 
@@ -1387,8 +1385,8 @@ void INI_Scenario_Section_Basic(cAbstractMentat *pMentat, char *value, int wordt
         // Load name, and load proper briefingpicture
         memset(value, 0, sizeof(value));
 
-        string scenefile = INI_WordValueString(linefeed);
-        string scene = INI_SceneFileToScene(scenefile);
+        std::string scenefile = INI_WordValueString(linefeed);
+        std::string scene = INI_SceneFileToScene(scenefile);
 
         scene = INI_SceneFileToScene(scenefile);
 
@@ -2048,7 +2046,7 @@ void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstrac
 
 
 // Game.ini loader
-void INI_Install_Game(string filename) {
+void INI_Install_Game(std::string filename) {
     logbook("[GAME.INI] Opening file");
 
     FILE *stream;
@@ -2217,7 +2215,7 @@ void INI_Install_Game(string filename) {
                     if (wordtype == WORD_HARVESTAMOUNT) sUnitInfo[id].harvesting_amount = INI_WordValueINT(linefeed);
 
                     if (wordtype == WORD_PRODUCER) {
-                        string producerString = INI_WordValueString(linefeed);
+                        std::string producerString = INI_WordValueString(linefeed);
                         // determine structure type from that
                         int type = INI_StructureType(producerString);
 //        	  int type = INI_StructureType(producerString.c_str());

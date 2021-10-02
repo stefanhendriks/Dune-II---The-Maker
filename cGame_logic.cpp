@@ -1635,6 +1635,8 @@ void cGame::setPlayerToInteractFor(cPlayer *pPlayer) {
 void cGame::onNotify(const s_GameEvent &event) {
     logbook(s_GameEvent::toString(event).c_str());
 
+    map.onNotify(event);
+
     // game itself handles events
     switch (event.eventType) {
         case eGameEventType::GAME_EVENT_DISCOVERED:

@@ -1,10 +1,3 @@
-/*
- * cMapEditor.cpp
- *
- *  Created on: 16 nov. 2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
 cMapEditor::cMapEditor() {
