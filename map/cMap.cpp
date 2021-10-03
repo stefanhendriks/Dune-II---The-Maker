@@ -20,6 +20,8 @@ cMap::cMap() {
 	TIMER_scroll=0;
 	iScrollSpeed=1;
 	maxCells = 0;
+    m_iDesiredAmountOfWorms = 0;
+    m_iTIMER_respawnSandworms = -1;
 }
 
 cMap::~cMap() {
@@ -41,8 +43,11 @@ void cMap::init(int width, int height) {
     m_bAutoDetonateSpiceBlooms = false;
     m_bAutoSpawnSpiceBlooms = true;
 
-    TIMER_blooms = 200;
-    bloomTimers = std::map<int, int>();
+    m_iTIMER_blooms = 200;
+    m_mBloomTimers = std::map<int, int>();
+
+    m_iDesiredAmountOfWorms = 0;
+    m_iTIMER_respawnSandworms = -1;
 
     maxCells = width * height;
     cell = std::vector<tCell>(maxCells, tCell());
@@ -274,6 +279,39 @@ bool cMap::occupied(int iCll, int iUnitID) {
 void cMap::thinkFast() {
     thinkAutoDetonateSpiceBlooms();
     thinkAboutSpawningNewSpiceBlooms();
+    thinkAboutRespawningWorms();
+}
+
+void cMap::thinkAboutRespawningWorms() {
+    if (m_iTIMER_respawnSandworms < 0) return;
+
+    if (m_iTIMER_respawnSandworms > 1) {
+        m_iTIMER_respawnSandworms--;
+        return;
+    }
+
+    // timer hit exactly '1'
+    m_iTIMER_respawnSandworms--;
+
+    int currentAmountOfWorms = players[AI_WORM].getAmountOfUnitsForType(SANDWORM);
+    if (currentAmountOfWorms < m_iDesiredAmountOfWorms) {
+        // spawn one worm, set timer again
+        int failures = 0;
+        while (failures < 10) {
+            int cell = map.getRandomCell();
+            if (!map.isCellPassableForWorm(cell)) {
+                failures++;
+                continue;
+            }
+            char msg[255];
+            sprintf(msg, "cMap::thinkAboutRespawningWorms : Spawning sandworm at %d", cell);
+            logbook(msg);
+            UNIT_CREATE(cell, SANDWORM, AI_WORM, true);
+            break;
+        }
+    }
+
+    // we have the desired amount of worms already so don't do anything
 }
 
 void cMap::thinkAboutSpawningNewSpiceBlooms() {
@@ -281,13 +319,13 @@ void cMap::thinkAboutSpawningNewSpiceBlooms() {
         return;
     }
 
-    if (TIMER_blooms > 0) {
-        TIMER_blooms--;
+    if (m_iTIMER_blooms > 0) {
+        m_iTIMER_blooms--;
         return;
     }
 
     // Evaluate every 10 seconds orso
-    TIMER_blooms = 50 + rnd(50);
+    m_iTIMER_blooms = 50 + rnd(50);
 
     const std::vector<int> &blooms = getAllCellsOfType(TERRAIN_BLOOM);
     int totalSpiceBloomsCount = blooms.size();
@@ -311,7 +349,7 @@ void cMap::thinkAboutSpawningNewSpiceBlooms() {
             // create bloom (can deal with < -1 cell)
             mapEditor.createCell(iCll, TERRAIN_BLOOM, 0);
         } else {
-            TIMER_blooms = 15; // try again soon
+            m_iTIMER_blooms = 15; // try again soon
         }
     }
 }
@@ -322,14 +360,14 @@ void cMap::thinkAutoDetonateSpiceBlooms() {// let spice bloom detonate after X a
     }
 
     std::vector<int> keys;
-    for(auto const& pair: bloomTimers) {
+    for(auto const& pair: m_mBloomTimers) {
         keys.push_back(pair.first);
     }
 
     // key == cell
     for (auto const &key: keys) {
-        bloomTimers[key] -= 1; // decrease timer
-        if (bloomTimers[key] < 1) {
+        m_mBloomTimers[key] -= 1; // decrease timer
+        if (m_mBloomTimers[key] < 1) {
             // detonate spice bloom
             map.detonateSpiceBloom(key);
         }
@@ -1374,13 +1412,90 @@ void cMap::onNotify(const s_GameEvent &event) {
             if (m_bAutoDetonateSpiceBlooms) {
                 // 1000/5 = taking care of thinkFast 5ms loop. The second part
                 // is the actual amount of seconds we want to delay before blowing up the spice bloom
-                bloomTimers[event.atCell] = (1000 / 5) * (45 + rnd(120));
+                m_mBloomTimers[event.atCell] = (1000 / 5) * (45 + rnd(120));
             }
             break;
         case eGameEventType::GAME_EVENT_SPICE_BLOOM_BLEW:
             if (m_bAutoDetonateSpiceBlooms) {
-                bloomTimers.erase(event.atCell);
+                m_mBloomTimers.erase(event.atCell);
             }
             break;
+        case eGameEventType::GAME_EVENT_DESTROYED:
+            onEntityDestroyed(event);
+            break;
+        case eGameEventType::GAME_EVENT_CREATED:
+            onEntityCreated(event);
+            break;
+    }
+}
+
+void cMap::onEntityCreated(const s_GameEvent &event) {
+    if (event.entityType != eBuildType::UNIT) return;
+
+    // only care about units
+    if (event.entitySpecificType == SANDWORM) {
+        evaluateIfWeShouldSetTimerToRespawnWorm();
+    }
+}
+
+void cMap::evaluateIfWeShouldSetTimerToRespawnWorm() {
+    int currentAmountOfWorms = players[AI_WORM].getAmountOfUnitsForType(SANDWORM);
+
+    // as long as we don't have the desired amount, set respawn timer
+    if (currentAmountOfWorms < m_iDesiredAmountOfWorms) {
+        setSandwormRespawnTimer();
+    } else {
+        // we spawned a worm and got to the total amount, so set timer to -1
+        // until a worm has been destroyed (either by enemy units or by withdrawal of worm)
+        m_iTIMER_respawnSandworms = -1;
+        if (DEBUGGING) {
+            char msg[255];
+            sprintf(msg, "cMap::evaluateIfWeShouldSetTimerToRespawnWorm set m_iTIMER_respawnSandworms to -1, because current amount sandworms (%d) == desired amount (%d)", currentAmountOfWorms,
+                    m_iDesiredAmountOfWorms);
+            logbook(msg);
+        }
+    }
+}
+
+void cMap::setSandwormRespawnTimer() {
+    //only set timer when it has been < 0 (not set already)
+    if (m_iTIMER_respawnSandworms < 0) {
+        // 1000/5 = taking care of thinkFast 5ms loop. The second part
+        // is the actual amount of seconds we want to delay
+
+        // give at least a minute (max 3) without that sandworm
+        m_iTIMER_respawnSandworms = (1000 / 5) * (60 + rnd(180));
+
+        if (DEBUGGING) {
+            char msg[255];
+            sprintf(msg, "cMap::setSandwormRespawnTimer set timer to %d", this->m_iTIMER_respawnSandworms);
+            logbook(msg);
+        }
+    } else {
+        if (DEBUGGING) {
+            char msg[255];
+            sprintf(msg, "cMap::setSandwormRespawnTimer did not change value because timer was already set (value = %d)", this->m_iTIMER_respawnSandworms);
+            logbook(msg);
+        }
+    }
+}
+
+void cMap::setDesiredAmountOfWorms(int value) {
+    if (DEBUGGING) {
+        char msg[255];
+        sprintf(msg, "cMap::setDesiredAmountOfWorms changed value from %d to %d", this->m_iDesiredAmountOfWorms, value);
+        logbook(msg);
+    }
+    m_iDesiredAmountOfWorms = value;
+    evaluateIfWeShouldSetTimerToRespawnWorm();
+}
+
+void cMap::onEntityDestroyed(const s_GameEvent &event) {
+    if (event.entityType != eBuildType::UNIT) return;
+
+    // only care about units
+    if (event.entitySpecificType == SANDWORM) {
+        // a sandworm got destroyed, set timer to re-spawn it
+        setSandwormRespawnTimer();
     }
 }

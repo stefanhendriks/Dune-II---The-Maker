@@ -612,6 +612,8 @@ public:
 
     bool setAutoSpawnSpiceBlooms(bool value) { m_bAutoSpawnSpiceBlooms = value; }
 
+    void setDesiredAmountOfWorms(int value);
+
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 
@@ -620,8 +622,12 @@ private:
     // Spice Blooms related
     bool m_bAutoSpawnSpiceBlooms;
     bool m_bAutoDetonateSpiceBlooms;
-    int TIMER_blooms;
-    std::map<int, int> bloomTimers;
+    int m_iTIMER_blooms;
+    std::map<int, int> m_mBloomTimers;
+
+    // Sandworms related
+    int m_iDesiredAmountOfWorms;
+    int m_iTIMER_respawnSandworms;
 
     // Scrolling around map, timer based
     int TIMER_scroll;
@@ -634,9 +640,19 @@ private:
 
     void drawUnitDebug(int i, cUnit &pUnit) const;
 
+    // thinking related
     void thinkAutoDetonateSpiceBlooms();
-
     void thinkAboutSpawningNewSpiceBlooms();
+    void thinkAboutRespawningWorms();
+
+    // event related
+    void onEntityDestroyed(const s_GameEvent &event);
+
+    void onEntityCreated(const s_GameEvent &event);
+
+    void setSandwormRespawnTimer();
+
+    void evaluateIfWeShouldSetTimerToRespawnWorm();
 };
 
 

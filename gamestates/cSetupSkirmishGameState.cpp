@@ -896,16 +896,17 @@ void cSetupSkirmishGameState::interact() {
 
             map.setAutoSpawnSpiceBlooms(spawnBlooms);
             map.setAutoDetonateSpiceBlooms(detonateBlooms);
+            map.setDesiredAmountOfWorms(spawnWorms);
 
-            // on small maps, spawn 2 worms, else on big maps 4 worms
+            // spawn requested amount of worms at start
             if (spawnWorms > 0) {
                 int worms = spawnWorms;
-                int minDistance = map.isBigMap() ? 8 : 16;
-                int maxDistance = map.isBigMap() ? 32 : 64;
+                int minDistance = worms * 12; // so on 64x64 maps this still could work
+                int maxDistance = worms * 32; // 128 / 4
                 int wormCell = map.getRandomCell();
                 int failures = 0;
                 char msg[255];
-                sprintf(msg, "Skirmish game with %d sandworms", worms);
+                sprintf(msg, "Skirmish game with %d sandworms, minDistance %d, maxDistance %d", worms, minDistance, maxDistance);
                 logbook(msg);
                 while (worms > 0) {
                     int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance, SANDWORM);
