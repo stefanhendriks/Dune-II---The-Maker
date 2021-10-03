@@ -253,6 +253,11 @@ public:
         if (isDead()) {
             die(true, false);
         }
+        if (iHitPoints < getUnitType().dieWhenLowerThanHP) {
+            iHitPoints = 0; // to make it appear 'dead' for the rest of the code
+            // unit does not explode in this case, simply vanishes
+            die(false, false);
+        }
     }
 
     void setHp(int hp) {
