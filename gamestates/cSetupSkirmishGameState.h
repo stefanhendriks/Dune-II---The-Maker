@@ -31,7 +31,7 @@ private:
     s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS];
     cMouse * mouse;
 
-    bool spawnWorms;
+    int spawnWorms;
     bool spawnBlooms;
     bool detonateBlooms;
 };

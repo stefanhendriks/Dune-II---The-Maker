@@ -22,9 +22,11 @@ class cTextDrawer {
 		void drawTextWithTwoIntegers(int x, int y, const char * msg, int var1, int var2);
 
         void drawText(int x, int y, const char * msg, const char *var);
+		void drawText(int x, int y, const char * msg, int var);
 		void drawText(int x, int y, const char * msg);
 
         void drawText(int x, int y, int color, const char *msg);
+        void drawText(int x, int y, int color, const char *msg, int var);
 		void drawText(int x, int y, int color, const char *msg, const char *var);
 
 		void drawTextCentered(const char * msg, int y);

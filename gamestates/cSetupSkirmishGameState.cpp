@@ -20,7 +20,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
 
     mouse = game.getMouse();
 
-    spawnWorms = true;
+    spawnWorms = 2;
     spawnBlooms = true;
     detonateBlooms = true;
 }
@@ -210,15 +210,25 @@ void cSetupSkirmishGameState::draw() {
     int wormsHitBoxWidth = 130;
     int wormsHitBoxHeight = 16;
 
-    textDrawer.drawText(wormsX, wormsY, "Worms? : %s", spawnWorms ? "YES" : "NO");
+    textDrawer.drawText(wormsX, wormsY, "Worms? : %d", spawnWorms);
 
     if ((mouse_x >= wormsX && mouse_x <= (wormsX + wormsHitBoxWidth)) && (mouse_y >= wormsY && mouse_y <= (wormsY + wormsHitBoxHeight)))
     {
-        textDrawer.drawText(wormsX, wormsY, makecol(255, 0, 0), "Worms? : %s", spawnWorms ? "YES" : "NO");
+        textDrawer.drawText(wormsX, wormsY, makecol(255, 0, 0), "Worms? : %d", spawnWorms);
 
         if (mouse->isLeftButtonClicked())
         {
-            spawnWorms = !spawnWorms;
+            spawnWorms += 1;
+            if (spawnWorms > 4) {
+                spawnWorms = 0;
+            }
+        }
+        if (mouse->isRightButtonClicked())
+        {
+            spawnWorms -= 1;
+            if (spawnWorms < 0) {
+                spawnWorms = 4;
+            }
         }
     }
 
@@ -287,6 +297,8 @@ void cSetupSkirmishGameState::draw() {
                 if (mouse->isLeftButtonClicked()) {
                     GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapListFrameWidth, iHeightPixels);
                     game.iSkirmishMap = i;
+                    bool bigMap = PreviewMap[i].height > 64 || PreviewMap[i].width > 64;
+                    spawnWorms = bigMap ? 4 : 2;
 
                     if (i == 0) {
                         bDoRandomMap=true;
@@ -598,6 +610,7 @@ void cSetupSkirmishGameState::draw() {
 
     if (bDoRandomMap) {
         randomMapGenerator.generateRandomMap();
+        spawnWorms = map.isBigMap() ? 4 : 2;
     }
 
     // back
@@ -885,8 +898,8 @@ void cSetupSkirmishGameState::interact() {
             map.setAutoDetonateSpiceBlooms(detonateBlooms);
 
             // on small maps, spawn 2 worms, else on big maps 4 worms
-            if (spawnWorms) {
-                int worms = map.isBigMap() ? 4 : 2;
+            if (spawnWorms > 0) {
+                int worms = spawnWorms;
                 int minDistance = map.isBigMap() ? 8 : 16;
                 int maxDistance = map.isBigMap() ? 32 : 64;
                 int wormCell = map.getRandomCell();

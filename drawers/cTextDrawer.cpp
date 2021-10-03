@@ -136,3 +136,11 @@ void cTextDrawer::drawText(int x, int y, int color, const char *msg, const char 
     }
     alfont_textprintf(bmp_screen, font, x,y, color, msg, var);
 }
+
+void cTextDrawer::drawText(int x, int y, int color, const char *msg, int var) {
+    drawTextWithOneInteger(x, y, color, msg, var);
+}
+
+void cTextDrawer::drawText(int x, int y, const char *msg, int var) {
+    drawText(x, y, makecol(255, 255, 255), msg, var);
+}
