@@ -141,7 +141,7 @@ public:
     void think_move();  // thinking about movement (which is called upon a faster rate)
                         // for wheeled/tracked units
     void think_attack();
-    void think_guard();
+    void thinkFast_guard();
 
 	void log(const char *txt) const;
 
@@ -252,11 +252,12 @@ public:
         iHitPoints -= damage;
         if (isDead()) {
             die(true, false);
-        }
-        if (iHitPoints < getUnitType().dieWhenLowerThanHP) {
-            iHitPoints = 0; // to make it appear 'dead' for the rest of the code
-            // unit does not explode in this case, simply vanishes
-            die(false, false);
+        } else {
+            if (iHitPoints < getUnitType().dieWhenLowerThanHP) {
+                iHitPoints = 0; // to make it appear 'dead' for the rest of the code
+                // unit does not explode in this case, simply vanishes
+                die(false, false);
+            }
         }
     }
 
@@ -366,6 +367,7 @@ private:
 
     bool isReinforcement; // is this a 'real' reinforcement or not? (applies to Carry-All only)
 
+    int unitsEaten; // worm related
 
     bool isSaboteur();
 

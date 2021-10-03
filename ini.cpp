@@ -427,6 +427,10 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "HitPoints") == 0)
             return WORD_HITPOINTS;
 
+        // Appetite
+        if (strcmp(word, "Appetite") == 0)
+            return WORD_APPETITE;
+
         // Cost
         if (strcmp(word, "Cost") == 0)
             return WORD_COST;
@@ -2182,45 +2186,48 @@ void INI_Install_Game(std::string filename) {
                 // Valid ID
                 if (section == INI_UNITS && id > -1) {
                     // Unit properties
-                    if (wordtype == WORD_HITPOINTS) sUnitInfo[id].hp = INI_WordValueINT(linefeed);
+                    s_UnitInfo &unitInfo = sUnitInfo[id];
 
-                    if (wordtype == WORD_COST) sUnitInfo[id].cost = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_HITPOINTS) unitInfo.hp = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_APPETITE) unitInfo.appetite = INI_WordValueINT(linefeed);
 
-                    if (wordtype == WORD_MOVESPEED) sUnitInfo[id].speed = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_TURNSPEED) sUnitInfo[id].turnspeed = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_ATTACKFREQ) sUnitInfo[id].attack_frequency = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_COST) unitInfo.cost = INI_WordValueINT(linefeed);
 
-                    if (wordtype == WORD_SIGHT) sUnitInfo[id].sight = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_MOVESPEED) unitInfo.speed = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_TURNSPEED) unitInfo.turnspeed = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_ATTACKFREQ) unitInfo.attack_frequency = INI_WordValueINT(linefeed);
 
-                    if (wordtype == WORD_RANGE) sUnitInfo[id].range = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_BUILDTIME) sUnitInfo[id].build_time = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_SIGHT) unitInfo.sight = INI_WordValueINT(linefeed);
+
+                    if (wordtype == WORD_RANGE) unitInfo.range = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_BUILDTIME) unitInfo.build_time = INI_WordValueINT(linefeed);
 
                     // Unit description
                     if (wordtype == WORD_DESCRIPTION) {
                         char n[256];
                         INI_WordValueCHAR(linefeed, n);
-                        sprintf(sUnitInfo[id].name, "%s", n);
+                        sprintf(unitInfo.name, "%s", n);
                     }
 
                     // Booleans
-                    if (wordtype == WORD_SECONDSHOT) sUnitInfo[id].fireTwice = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_ISINFANTRY) sUnitInfo[id].infantry = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_ISSQUISHABLE) sUnitInfo[id].canBeSquished = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_CANSQUISH) sUnitInfo[id].canBeSquished = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_FREEROAM) sUnitInfo[id].free_roam = INI_WordValueBOOL(linefeed);
-                    if (wordtype == WORD_ISAIRBORN) sUnitInfo[id].airborn = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_SECONDSHOT) unitInfo.fireTwice = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_ISINFANTRY) unitInfo.infantry = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_ISSQUISHABLE) unitInfo.canBeSquished = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_CANSQUISH) unitInfo.canBeSquished = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_FREEROAM) unitInfo.free_roam = INI_WordValueBOOL(linefeed);
+                    if (wordtype == WORD_ISAIRBORN) unitInfo.airborn = INI_WordValueBOOL(linefeed);
 
                     // Harvester specific properties.
-                    if (wordtype == WORD_HARVESTLIMIT) sUnitInfo[id].credit_capacity = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_HARVESTSPEED) sUnitInfo[id].harvesting_speed = INI_WordValueINT(linefeed);
-                    if (wordtype == WORD_HARVESTAMOUNT) sUnitInfo[id].harvesting_amount = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_HARVESTLIMIT) unitInfo.credit_capacity = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_HARVESTSPEED) unitInfo.harvesting_speed = INI_WordValueINT(linefeed);
+                    if (wordtype == WORD_HARVESTAMOUNT) unitInfo.harvesting_amount = INI_WordValueINT(linefeed);
 
                     if (wordtype == WORD_PRODUCER) {
                         std::string producerString = INI_WordValueString(linefeed);
                         // determine structure type from that
                         int type = INI_StructureType(producerString);
 //        	  int type = INI_StructureType(producerString.c_str());
-                        sUnitInfo[id].structureTypeItLeavesFrom = type;
+                        unitInfo.structureTypeItLeavesFrom = type;
                     }
                 }
             }

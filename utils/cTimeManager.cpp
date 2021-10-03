@@ -202,7 +202,7 @@ void cTimeManager::handleTimerGameTime() {
 
                 // guard
                 if (cUnit.iAction == ACTION_GUARD) {
-                    cUnit.think_guard();
+                    cUnit.thinkFast_guard();
                 }
             }
 
