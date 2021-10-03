@@ -1258,240 +1258,240 @@ void install_upgrades() {
 void install_structures() {
 
     logbook("Installing:  STRUCTURES");
-  for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
-      sStructureInfo[i].bmp = (BITMAP *)gfxdata[BUILD_WINDTRAP].dat; // in case an invalid bitmap, we are a windtrap
-	sStructureInfo[i].shadow = NULL; // in case an invalid bitmap, we are a windtrap
-    sStructureInfo[i].sight = 1;
-      sStructureInfo[i].bmp_width = 32 * 2;
-      sStructureInfo[i].bmp_height = 32 * 2;
-      sStructureInfo[i].hp = 1; // low health
-	sStructureInfo[i].fixhp = -1; // no fixing hp yet
-    sStructureInfo[i].fadecol = -1;
-      sStructureInfo[i].fademax = -1;
-      sStructureInfo[i].power_drain = 0;       // the power that this building drains...
-    sStructureInfo[i].power_give = 0;        // the power that this building gives...
-    sStructureInfo[i].cost = 0;
-      sStructureInfo[i].icon = -1; // stupid default icon
-    sStructureInfo[i].build_time = 0;
-      sStructureInfo[i].list = -1; // no list attached
-    sStructureInfo[i].queuable = false;
-      sStructureInfo[i].configured = false;
-      sStructureInfo[i].canAttackAirUnits = false;
-    strcpy(sStructureInfo[i].name, "Unknown");
-  }
+    for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
+        sStructureInfo[i].bmp = (BITMAP *) gfxdata[BUILD_WINDTRAP].dat; // in case an invalid bitmap, we are a windtrap
+        sStructureInfo[i].shadow = NULL; // in case an invalid bitmap, we are a windtrap
+        sStructureInfo[i].sight = 1;
+        sStructureInfo[i].bmp_width = 32 * 2;
+        sStructureInfo[i].bmp_height = 32 * 2;
+        sStructureInfo[i].hp = 1; // low health
+        sStructureInfo[i].fixhp = -1; // no fixing hp yet
+        sStructureInfo[i].fadecol = -1;
+        sStructureInfo[i].fademax = -1;
+        sStructureInfo[i].power_drain = 0;       // the power that this building drains...
+        sStructureInfo[i].power_give = 0;        // the power that this building gives...
+        sStructureInfo[i].cost = 0;
+        sStructureInfo[i].icon = -1; // stupid default icon
+        sStructureInfo[i].build_time = 0;
+        sStructureInfo[i].list = -1; // no list attached
+        sStructureInfo[i].queuable = false;
+        sStructureInfo[i].configured = false;
+        sStructureInfo[i].canAttackAirUnits = false;
+        strcpy(sStructureInfo[i].name, "Unknown");
+    }
 
-  // Single and 4 slabs
-  sStructureInfo[SLAB1].bmp = (BITMAP *)gfxdata[PLACE_SLAB1].dat; // in case an invalid bitmap, we are a windtrap
-  sStructureInfo[SLAB1].icon = ICON_STR_1SLAB;
-    sStructureInfo[SLAB1].hp   = 25;            // Not functional in-game, only for building
-  sStructureInfo[SLAB1].bmp_width = 16 * 2;
+    // Single and 4 slabs
+    sStructureInfo[SLAB1].bmp = (BITMAP *) gfxdata[PLACE_SLAB1].dat; // in case an invalid bitmap, we are a windtrap
+    sStructureInfo[SLAB1].icon = ICON_STR_1SLAB;
+    sStructureInfo[SLAB1].hp = 25;            // Not functional in-game, only for building
+    sStructureInfo[SLAB1].bmp_width = 16 * 2;
     sStructureInfo[SLAB1].bmp_height = 16 * 2;
     sStructureInfo[SLAB1].configured = true;
     sStructureInfo[SLAB1].queuable = true;
-  strcpy(sStructureInfo[SLAB1].name, "Concrete Slab");
+    strcpy(sStructureInfo[SLAB1].name, "Concrete Slab");
 
-    sStructureInfo[SLAB4].bmp = (BITMAP *)gfxdata[PLACE_SLAB4].dat; // in case an invalid bitmap, we are a windtrap
-  sStructureInfo[SLAB4].icon = ICON_STR_4SLAB;
-    sStructureInfo[SLAB4].hp   = 75;            // Not functional in-game, only for building
-  sStructureInfo[SLAB4].bmp_width = 32 * 2;
+    sStructureInfo[SLAB4].bmp = (BITMAP *) gfxdata[PLACE_SLAB4].dat; // in case an invalid bitmap, we are a windtrap
+    sStructureInfo[SLAB4].icon = ICON_STR_4SLAB;
+    sStructureInfo[SLAB4].hp = 75;            // Not functional in-game, only for building
+    sStructureInfo[SLAB4].bmp_width = 32 * 2;
     sStructureInfo[SLAB4].bmp_height = 32 * 2;
     sStructureInfo[SLAB4].configured = true;
     sStructureInfo[SLAB4].queuable = true;
-  strcpy(sStructureInfo[SLAB4].name, "4 Concrete Slabs");
+    strcpy(sStructureInfo[SLAB4].name, "4 Concrete Slabs");
 
 
-  // Concrete Wall
-  sStructureInfo[WALL].bmp = (BITMAP *)gfxdata[PLACE_WALL].dat; // in case an invalid bitmap, we are a windtrap
-  sStructureInfo[WALL].icon = ICON_STR_WALL;
-    sStructureInfo[WALL].hp   = 75;            // Not functional in-game, only for building
-  sStructureInfo[WALL].bmp_width = 16 * 2;
+    // Concrete Wall
+    sStructureInfo[WALL].bmp = (BITMAP *) gfxdata[PLACE_WALL].dat; // in case an invalid bitmap, we are a windtrap
+    sStructureInfo[WALL].icon = ICON_STR_WALL;
+    sStructureInfo[WALL].hp = 75;            // Not functional in-game, only for building
+    sStructureInfo[WALL].bmp_width = 16 * 2;
     sStructureInfo[WALL].bmp_height = 16 * 2;
     sStructureInfo[WALL].queuable = true;
     sStructureInfo[WALL].configured = true;
-  strcpy(sStructureInfo[WALL].name, "Concrete Wall");
+    strcpy(sStructureInfo[WALL].name, "Concrete Wall");
 
-  // Structure    : Windtrap
-  // Description  : <none>
-  sStructureInfo[WINDTRAP].bmp = (BITMAP *)gfxdata[BUILD_WINDTRAP].dat;
-    sStructureInfo[WINDTRAP].shadow = (BITMAP *)gfxdata[BUILD_WINDTRAP_SHADOW].dat; // shadow
-  sStructureInfo[WINDTRAP].fadecol = PAN_CENTER;
+    // Structure    : Windtrap
+    // Description  : <none>
+    sStructureInfo[WINDTRAP].bmp = (BITMAP *) gfxdata[BUILD_WINDTRAP].dat;
+    sStructureInfo[WINDTRAP].shadow = (BITMAP *) gfxdata[BUILD_WINDTRAP_SHADOW].dat; // shadow
+    sStructureInfo[WINDTRAP].fadecol = PAN_CENTER;
     sStructureInfo[WINDTRAP].fademax = 134;
-    sStructureInfo[WINDTRAP].icon  = ICON_STR_WINDTRAP;
+    sStructureInfo[WINDTRAP].icon = ICON_STR_WINDTRAP;
     sStructureInfo[WINDTRAP].configured = true;
-  strcpy(sStructureInfo[WINDTRAP].name, "Windtrap");
+    strcpy(sStructureInfo[WINDTRAP].name, "Windtrap");
 
-  // Structure    : Heavy Factory
-  // Description  : <none>
-  sStructureInfo[HEAVYFACTORY].bmp_width = 48 * 2;
+    // Structure    : Heavy Factory
+    // Description  : <none>
+    sStructureInfo[HEAVYFACTORY].bmp_width = 48 * 2;
     sStructureInfo[HEAVYFACTORY].bmp_height = 32 * 2;
-    sStructureInfo[HEAVYFACTORY].bmp = (BITMAP *)gfxdata[BUILD_HEAVYFACTORY].dat;
-    sStructureInfo[HEAVYFACTORY].shadow = (BITMAP *)gfxdata[BUILD_HEAVYFACTORY_SHADOW].dat; // shadow
-  sStructureInfo[HEAVYFACTORY].fadecol = -1;
+    sStructureInfo[HEAVYFACTORY].bmp = (BITMAP *) gfxdata[BUILD_HEAVYFACTORY].dat;
+    sStructureInfo[HEAVYFACTORY].shadow = (BITMAP *) gfxdata[BUILD_HEAVYFACTORY_SHADOW].dat; // shadow
+    sStructureInfo[HEAVYFACTORY].fadecol = -1;
     sStructureInfo[HEAVYFACTORY].icon = ICON_STR_HEAVYFACTORY;
     sStructureInfo[HEAVYFACTORY].configured = true;
-  strcpy(sStructureInfo[HEAVYFACTORY].name, "Heavy Factory");
+    strcpy(sStructureInfo[HEAVYFACTORY].name, "Heavy Factory");
 
-  // Structure    : Hight Tech Factory (for aircraft only)
-  // Description  : <none>
-  sStructureInfo[HIGHTECH].bmp_width = 48 * 2;
+    // Structure    : Hight Tech Factory (for aircraft only)
+    // Description  : <none>
+    sStructureInfo[HIGHTECH].bmp_width = 48 * 2;
     sStructureInfo[HIGHTECH].bmp_height = 32 * 2;
-    sStructureInfo[HIGHTECH].bmp = (BITMAP *)gfxdata[BUILD_HIGHTECH].dat;
-    sStructureInfo[HIGHTECH].shadow = (BITMAP *)gfxdata[BUILD_HIGHTECH_SHADOW].dat;
+    sStructureInfo[HIGHTECH].bmp = (BITMAP *) gfxdata[BUILD_HIGHTECH].dat;
+    sStructureInfo[HIGHTECH].shadow = (BITMAP *) gfxdata[BUILD_HIGHTECH_SHADOW].dat;
     sStructureInfo[HIGHTECH].fadecol = -1;
     sStructureInfo[HIGHTECH].icon = ICON_STR_HIGHTECH;
     sStructureInfo[HIGHTECH].configured = true;
-  strcpy(sStructureInfo[HIGHTECH].name, "Hi-Tech");
+    strcpy(sStructureInfo[HIGHTECH].name, "Hi-Tech");
 
-  // Structure    : Repair
-  // Description  : <none>
-  sStructureInfo[REPAIR].bmp_width = 48 * 2;
+    // Structure    : Repair
+    // Description  : <none>
+    sStructureInfo[REPAIR].bmp_width = 48 * 2;
     sStructureInfo[REPAIR].bmp_height = 32 * 2;
-    sStructureInfo[REPAIR].bmp = (BITMAP *)gfxdata[BUILD_REPAIR].dat;
-    sStructureInfo[REPAIR].shadow = (BITMAP *)gfxdata[BUILD_REPAIR_SHADOW].dat;
+    sStructureInfo[REPAIR].bmp = (BITMAP *) gfxdata[BUILD_REPAIR].dat;
+    sStructureInfo[REPAIR].shadow = (BITMAP *) gfxdata[BUILD_REPAIR_SHADOW].dat;
     sStructureInfo[REPAIR].fadecol = -1;
     sStructureInfo[REPAIR].icon = ICON_STR_REPAIR;
     sStructureInfo[REPAIR].configured = true;
-  strcpy(sStructureInfo[REPAIR].name, "Repair Facility");
+    strcpy(sStructureInfo[REPAIR].name, "Repair Facility");
 
-  // Structure    : Palace
-  // Description  : <none>
-  sStructureInfo[PALACE].bmp_width = 48 * 2;
+    // Structure    : Palace
+    // Description  : <none>
+    sStructureInfo[PALACE].bmp_width = 48 * 2;
     sStructureInfo[PALACE].bmp_height = 48 * 2;
-    sStructureInfo[PALACE].bmp = (BITMAP *)gfxdata[BUILD_PALACE].dat;
-    sStructureInfo[PALACE].shadow = (BITMAP *)gfxdata[BUILD_PALACE_SHADOW].dat;
+    sStructureInfo[PALACE].bmp = (BITMAP *) gfxdata[BUILD_PALACE].dat;
+    sStructureInfo[PALACE].shadow = (BITMAP *) gfxdata[BUILD_PALACE_SHADOW].dat;
     sStructureInfo[PALACE].icon = ICON_STR_PALACE;
     sStructureInfo[PALACE].configured = true;
-  strcpy(sStructureInfo[PALACE].name, "Palace");
+    strcpy(sStructureInfo[PALACE].name, "Palace");
 
-  // Structure    : Light Factory
-  // Description  : <none>
-  sStructureInfo[LIGHTFACTORY].bmp_width = 32 * 2;
+    // Structure    : Light Factory
+    // Description  : <none>
+    sStructureInfo[LIGHTFACTORY].bmp_width = 32 * 2;
     sStructureInfo[LIGHTFACTORY].bmp_height = 32 * 2;
-    sStructureInfo[LIGHTFACTORY].bmp = (BITMAP *)gfxdata[BUILD_LIGHTFACTORY].dat;
-    sStructureInfo[LIGHTFACTORY].shadow = (BITMAP *)gfxdata[BUILD_LIGHTFACTORY_SHADOW].dat;
+    sStructureInfo[LIGHTFACTORY].bmp = (BITMAP *) gfxdata[BUILD_LIGHTFACTORY].dat;
+    sStructureInfo[LIGHTFACTORY].shadow = (BITMAP *) gfxdata[BUILD_LIGHTFACTORY_SHADOW].dat;
     sStructureInfo[LIGHTFACTORY].fadecol = -1;
     sStructureInfo[LIGHTFACTORY].icon = ICON_STR_LIGHTFACTORY;
     sStructureInfo[LIGHTFACTORY].configured = true;
-  strcpy(sStructureInfo[LIGHTFACTORY].name, "Light Factory");
+    strcpy(sStructureInfo[LIGHTFACTORY].name, "Light Factory");
 
-  // Structure    : Radar
-  // Description  : <none>
-  sStructureInfo[RADAR].bmp_width = 32 * 2;
+    // Structure    : Radar
+    // Description  : <none>
+    sStructureInfo[RADAR].bmp_width = 32 * 2;
     sStructureInfo[RADAR].bmp_height = 32 * 2;
-    sStructureInfo[RADAR].bmp = (BITMAP *)gfxdata[BUILD_RADAR].dat;
-    sStructureInfo[RADAR].shadow = (BITMAP *)gfxdata[BUILD_RADAR_SHADOW].dat; // shadow
-  sStructureInfo[RADAR].sight = 12;
+    sStructureInfo[RADAR].bmp = (BITMAP *) gfxdata[BUILD_RADAR].dat;
+    sStructureInfo[RADAR].shadow = (BITMAP *) gfxdata[BUILD_RADAR_SHADOW].dat; // shadow
+    sStructureInfo[RADAR].sight = 12;
     sStructureInfo[RADAR].fadecol = -1;
     sStructureInfo[RADAR].icon = ICON_STR_RADAR;
     sStructureInfo[RADAR].configured = true;
-  strcpy(sStructureInfo[RADAR].name, "Outpost");
+    strcpy(sStructureInfo[RADAR].name, "Outpost");
 
-  // Structure    : Barracks
-  // Description  : <none>
-  sStructureInfo[BARRACKS].bmp_width = 32 * 2;
+    // Structure    : Barracks
+    // Description  : <none>
+    sStructureInfo[BARRACKS].bmp_width = 32 * 2;
     sStructureInfo[BARRACKS].bmp_height = 32 * 2;
-    sStructureInfo[BARRACKS].bmp = (BITMAP *)gfxdata[BUILD_BARRACKS].dat;
-    sStructureInfo[BARRACKS].shadow = (BITMAP *)gfxdata[BUILD_BARRACKS_SHADOW].dat;
+    sStructureInfo[BARRACKS].bmp = (BITMAP *) gfxdata[BUILD_BARRACKS].dat;
+    sStructureInfo[BARRACKS].shadow = (BITMAP *) gfxdata[BUILD_BARRACKS_SHADOW].dat;
     sStructureInfo[BARRACKS].fadecol = -1;
     sStructureInfo[BARRACKS].icon = ICON_STR_BARRACKS;
     sStructureInfo[BARRACKS].configured = true;
-  strcpy(sStructureInfo[BARRACKS].name, "Barracks");
+    strcpy(sStructureInfo[BARRACKS].name, "Barracks");
 
-  // Structure    : WOR
-  // Description  : <none>
-  sStructureInfo[WOR].bmp_width = 32 * 2;
+    // Structure    : WOR
+    // Description  : <none>
+    sStructureInfo[WOR].bmp_width = 32 * 2;
     sStructureInfo[WOR].bmp_height = 32 * 2;
-    sStructureInfo[WOR].bmp = (BITMAP *)gfxdata[BUILD_WOR].dat;
-    sStructureInfo[WOR].shadow = (BITMAP *)gfxdata[BUILD_WOR_SHADOW].dat;
+    sStructureInfo[WOR].bmp = (BITMAP *) gfxdata[BUILD_WOR].dat;
+    sStructureInfo[WOR].shadow = (BITMAP *) gfxdata[BUILD_WOR_SHADOW].dat;
     sStructureInfo[WOR].fadecol = -1;
     sStructureInfo[WOR].icon = ICON_STR_WOR;
     sStructureInfo[WOR].configured = true;
-  strcpy(sStructureInfo[WOR].name, "WOR");
+    strcpy(sStructureInfo[WOR].name, "WOR");
 
 
-  // Structure    : Silo
-  // Description  : <none>
-  sStructureInfo[SILO].bmp_width = 32 * 2;
+    // Structure    : Silo
+    // Description  : <none>
+    sStructureInfo[SILO].bmp_width = 32 * 2;
     sStructureInfo[SILO].bmp_height = 32 * 2;
-    sStructureInfo[SILO].bmp = (BITMAP *)gfxdata[BUILD_SILO].dat;
-    sStructureInfo[SILO].shadow = (BITMAP *)gfxdata[BUILD_SILO_SHADOW].dat;
+    sStructureInfo[SILO].bmp = (BITMAP *) gfxdata[BUILD_SILO].dat;
+    sStructureInfo[SILO].shadow = (BITMAP *) gfxdata[BUILD_SILO_SHADOW].dat;
     sStructureInfo[SILO].fadecol = -1;
     sStructureInfo[SILO].icon = ICON_STR_SILO;
     sStructureInfo[SILO].configured = true;
     sStructureInfo[SILO].queuable = true;
-  strcpy(sStructureInfo[SILO].name, "Spice Storage Silo");
+    strcpy(sStructureInfo[SILO].name, "Spice Storage Silo");
 
-  // Structure    : Refinery
-  // Description  : <none>
-  sStructureInfo[REFINERY].bmp_width = 48 * 2;
+    // Structure    : Refinery
+    // Description  : <none>
+    sStructureInfo[REFINERY].bmp_width = 48 * 2;
     sStructureInfo[REFINERY].bmp_height = 32 * 2;
-    sStructureInfo[REFINERY].bmp = (BITMAP *)gfxdata[BUILD_REFINERY].dat;
-    sStructureInfo[REFINERY].shadow = (BITMAP *)gfxdata[BUILD_REFINERY_SHADOW].dat;
+    sStructureInfo[REFINERY].bmp = (BITMAP *) gfxdata[BUILD_REFINERY].dat;
+    sStructureInfo[REFINERY].shadow = (BITMAP *) gfxdata[BUILD_REFINERY_SHADOW].dat;
     sStructureInfo[REFINERY].fadecol = -1;
     sStructureInfo[REFINERY].icon = ICON_STR_REFINERY;
     sStructureInfo[REFINERY].configured = true;
-  strcpy(sStructureInfo[REFINERY].name, "Spice Refinery");
+    strcpy(sStructureInfo[REFINERY].name, "Spice Refinery");
 
-  // Structure    : Construction Yard
-  // Description  : <none>
-  sStructureInfo[CONSTYARD].bmp_width = 32 * 2;
+    // Structure    : Construction Yard
+    // Description  : <none>
+    sStructureInfo[CONSTYARD].bmp_width = 32 * 2;
     sStructureInfo[CONSTYARD].bmp_height = 32 * 2;
     sStructureInfo[CONSTYARD].sight = 4;
-    sStructureInfo[CONSTYARD].bmp = (BITMAP *)gfxdata[BUILD_CONSTYARD].dat;
+    sStructureInfo[CONSTYARD].bmp = (BITMAP *) gfxdata[BUILD_CONSTYARD].dat;
     sStructureInfo[CONSTYARD].fadecol = -1;
     sStructureInfo[CONSTYARD].icon = ICON_STR_CONSTYARD;
     sStructureInfo[CONSTYARD].configured = true;
-  strcpy(sStructureInfo[CONSTYARD].name, "Construction Yard");
+    strcpy(sStructureInfo[CONSTYARD].name, "Construction Yard");
 
-  // Structure    : Starport
-  // Description  : You can order units from this structure
-  sStructureInfo[STARPORT].bmp_width = 48 * 2;
+    // Structure    : Starport
+    // Description  : You can order units from this structure
+    sStructureInfo[STARPORT].bmp_width = 48 * 2;
     sStructureInfo[STARPORT].bmp_height = 48 * 2;
-    sStructureInfo[STARPORT].bmp = (BITMAP *)gfxdata[BUILD_STARPORT].dat;
-    sStructureInfo[STARPORT].shadow = (BITMAP *)gfxdata[BUILD_STARPORT_SHADOW].dat;
+    sStructureInfo[STARPORT].bmp = (BITMAP *) gfxdata[BUILD_STARPORT].dat;
+    sStructureInfo[STARPORT].shadow = (BITMAP *) gfxdata[BUILD_STARPORT_SHADOW].dat;
     sStructureInfo[STARPORT].fadecol = -1;
-    sStructureInfo[STARPORT].icon  = ICON_STR_STARPORT;
+    sStructureInfo[STARPORT].icon = ICON_STR_STARPORT;
     sStructureInfo[STARPORT].configured = true;
-  strcpy(sStructureInfo[STARPORT].name, "Starport");
+    strcpy(sStructureInfo[STARPORT].name, "Starport");
 
-  // Structure    : House of IX
-  // Description  : Makes it possible for the player to upgrade its Heavy Factory in order to build their special weapon
-  sStructureInfo[IX].bmp_width = 32 * 2;
+    // Structure    : House of IX
+    // Description  : Makes it possible for the player to upgrade its Heavy Factory in order to build their special weapon
+    sStructureInfo[IX].bmp_width = 32 * 2;
     sStructureInfo[IX].bmp_height = 32 * 2;
-    sStructureInfo[IX].bmp = (BITMAP *)gfxdata[BUILD_IX].dat;
-    sStructureInfo[IX].shadow = (BITMAP *)gfxdata[BUILD_IX_SHADOW].dat;
+    sStructureInfo[IX].bmp = (BITMAP *) gfxdata[BUILD_IX].dat;
+    sStructureInfo[IX].shadow = (BITMAP *) gfxdata[BUILD_IX_SHADOW].dat;
     sStructureInfo[IX].fadecol = -1;
-    sStructureInfo[IX].icon  = ICON_STR_IX;
+    sStructureInfo[IX].icon = ICON_STR_IX;
     sStructureInfo[IX].configured = true;
-  strcpy(sStructureInfo[IX].name, "House of IX");
+    strcpy(sStructureInfo[IX].name, "House of IX");
 
-  // Structure    : Normal Turret
-  // Description  : defence
-  sStructureInfo[TURRET].bmp_width = 16 * 2;
+    // Structure    : Normal Turret
+    // Description  : defence
+    sStructureInfo[TURRET].bmp_width = 16 * 2;
     sStructureInfo[TURRET].bmp_height = 16 * 2;
-    sStructureInfo[TURRET].bmp = (BITMAP *)gfxdata[BUILD_TURRET].dat;
-    sStructureInfo[TURRET].shadow = (BITMAP *)gfxdata[BUILD_TURRET_SHADOW].dat;
+    sStructureInfo[TURRET].bmp = (BITMAP *) gfxdata[BUILD_TURRET].dat;
+    sStructureInfo[TURRET].shadow = (BITMAP *) gfxdata[BUILD_TURRET_SHADOW].dat;
     sStructureInfo[TURRET].fadecol = -1;
-    sStructureInfo[TURRET].icon  = ICON_STR_TURRET;
+    sStructureInfo[TURRET].icon = ICON_STR_TURRET;
     sStructureInfo[TURRET].sight = 7;
     sStructureInfo[TURRET].configured = true;
-  strcpy(sStructureInfo[TURRET].name, "Gun Turret");
+    strcpy(sStructureInfo[TURRET].name, "Gun Turret");
 
-  // Structure    : Rocket Turret
-  // Description  : defence
-  sStructureInfo[RTURRET].bmp_width = 16 * 2;
+    // Structure    : Rocket Turret
+    // Description  : defence
+    sStructureInfo[RTURRET].bmp_width = 16 * 2;
     sStructureInfo[RTURRET].bmp_height = 16 * 2;
-    sStructureInfo[RTURRET].bmp = (BITMAP *)gfxdata[BUILD_RTURRET].dat;
-    sStructureInfo[RTURRET].shadow = (BITMAP *)gfxdata[BUILD_RTURRET_SHADOW].dat;
+    sStructureInfo[RTURRET].bmp = (BITMAP *) gfxdata[BUILD_RTURRET].dat;
+    sStructureInfo[RTURRET].shadow = (BITMAP *) gfxdata[BUILD_RTURRET_SHADOW].dat;
     sStructureInfo[RTURRET].fadecol = -1;
-    sStructureInfo[RTURRET].icon  = ICON_STR_RTURRET;
+    sStructureInfo[RTURRET].icon = ICON_STR_RTURRET;
     sStructureInfo[RTURRET].sight = 10;
     sStructureInfo[RTURRET].configured = true;
     sStructureInfo[RTURRET].canAttackAirUnits = true;
-  strcpy(sStructureInfo[RTURRET].name, "Rocket Turret");
+    strcpy(sStructureInfo[RTURRET].name, "Rocket Turret");
 
-  // Structure    : Windtrap
-  // Description  : <none>
+    // Structure    : Windtrap
+    // Description  : <none>
 
 }
 
