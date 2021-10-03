@@ -324,8 +324,8 @@ void cMap::thinkAboutSpawningNewSpiceBlooms() {
         return;
     }
 
-    // Evaluate every 10 seconds orso
-    m_iTIMER_blooms = 50 + rnd(50);
+    // Evaluate every 30 seconds orso
+    m_iTIMER_blooms = (1000 / 5) * 30;
 
     const std::vector<int> &blooms = getAllCellsOfType(TERRAIN_BLOOM);
     int totalSpiceBloomsCount = blooms.size();
@@ -349,7 +349,7 @@ void cMap::thinkAboutSpawningNewSpiceBlooms() {
             // create bloom (can deal with < -1 cell)
             mapEditor.createCell(iCll, TERRAIN_BLOOM, 0);
         } else {
-            m_iTIMER_blooms = 15; // try again soon
+            m_iTIMER_blooms = (1000 / 5) * 5; // try again sooner than 30 secs
         }
     }
 }
