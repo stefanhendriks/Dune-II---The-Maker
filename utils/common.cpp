@@ -186,6 +186,7 @@ void install_units() {
         sUnitInfo[i].sight = -1;
         sUnitInfo[i].queuable = true;
         sUnitInfo[i].dieWhenLowerThanHP = -1;
+        sUnitInfo[i].appetite = -1;
 
         // harvester properties
         sUnitInfo[i].harvesting_amount = 0;
@@ -587,6 +588,7 @@ void install_units() {
     sUnitInfo[SANDWORM].bmp = (BITMAP *) gfxdata[UNIT_SANDWORM].dat;
     sUnitInfo[SANDWORM].hp = 9999; // set in game.ini to a more sane amount
     sUnitInfo[SANDWORM].dieWhenLowerThanHP = 1000;
+    sUnitInfo[SANDWORM].appetite = 10;
     sUnitInfo[SANDWORM].bmp_width = 48;
     sUnitInfo[SANDWORM].bmp_height = 48;
     sUnitInfo[SANDWORM].turnspeed = 0; // very fast

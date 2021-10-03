@@ -59,6 +59,8 @@ MP3Music=false
 [UNIT: SANDWORM]
 ; Unit properties
 HitPoints=2500
+; Amount of units it can eat, after eating the last unit it will die (to be respawned later)
+Appetite=3
 
 ; -----------------
 ; Unit: Ornithopter

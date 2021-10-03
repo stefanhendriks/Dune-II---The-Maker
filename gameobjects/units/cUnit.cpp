@@ -32,6 +32,8 @@ ASTAR temp_map[16384]; // 4096 = 64x64 map, 16384 = 128x128 map
 void cUnit::init(int i) {
     mission = -1;
 
+    unitsEaten = 0;
+
     isReinforcement = false; // set to true by REINFORCE when a carry-all is spawned to bring a 'real' reinforcement. So we can
                              // emit the proper CREATED game event later. :/
 
@@ -895,7 +897,10 @@ void cUnit::tellCarryAllThatWouldPickMeUpToForgetAboutMe() const {
 }
 
 
-void cUnit::think_guard() {
+/**
+ * Called every 5 ms
+ */
+void cUnit::thinkFast_guard() {
     if (!isValid()) {
         return;
     }
@@ -2221,13 +2226,21 @@ void cUnit::think_attack_sandworm() {
         iGoalCell = attackUnit->iCell;
         if (iGoalCell == iCell) {
             attackUnit->die(false, false);
-
+            unitsEaten++;
             long x = pos_x_centered();
             long y = pos_y_centered();
             cParticle::create(x, y, D2TM_PARTICLE_WORMEAT, -1, -1);
             play_sound_id_with_distance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(iCell));
             actionGuard();
-            TIMER_wormeat += 25 + rnd(150);
+            TIMER_movewait = (1000/5) * 3; // wait for 3 seconds before moving again
+
+            if (unitsEaten >= getUnitType().appetite) {
+                // let worm die (and respawn later)
+                this->iHitPoints = getUnitType().dieWhenLowerThanHP;
+                takeDamage(1); // get below the thresh-hold to die/vanish
+            } else {
+                TIMER_wormeat += (1000/5) * ((5*unitsEaten) + rnd((40*unitsEaten)));
+            }
             return;
         }
 
