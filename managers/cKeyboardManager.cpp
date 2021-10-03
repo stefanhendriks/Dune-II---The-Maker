@@ -127,6 +127,11 @@ void cKeyboardManager::DEBUG_KEYS() {
             if (idOfStructureAtCell > -1) {
                 structure[idOfStructureAtCell]->die();
             }
+
+            idOfUnitAtCell = map.getCellIdWormsLayer(mc);
+            if (idOfUnitAtCell > -1) {
+                unit[idOfUnitAtCell].die(false, false);
+            }
         }
     }
 
