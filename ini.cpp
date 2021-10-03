@@ -1378,6 +1378,7 @@ void INI_Load_scenario(int iHouse, int iRegion, cAbstractMentat *pMentat) {
     }
 
     mapEditor.smoothMap();
+    map.setDesiredAmountOfWorms(players[AI_WORM].getAmountOfUnitsForType(SANDWORM));
 }
 
 void INI_Scenario_Section_Basic(cAbstractMentat *pMentat, char *value, int wordtype, char *linefeed) {
