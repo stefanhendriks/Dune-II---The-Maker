@@ -15,31 +15,27 @@ namespace brains {
 //        sprintf(msg, "cPlayerBrainSandworm::think()");
 //        log(msg);
         TIMER_think++;
-        if (TIMER_think < 10) {
+        if (TIMER_think < 5) {
             return;
         }
 
         TIMER_think = 0;
-        // TODO: make this more smart, ie, keep a collection of pointers in player, so we don't
-        // need to loop over ALL units all the time.
-
-//        this->player->getAllMyUnits();
         // loop through all its worms and move them around
-        for (int i = 0; i < MAX_UNITS; i++) {
-            cUnit &pUnit = unit[i];
-            if (!pUnit.isValid()) continue;
-            if (!pUnit.isSandworm()) continue;
-            if (pUnit.getPlayer() != player) continue;
+        const std::vector<int> &wormIds = player->getAllMyUnitsForType(SANDWORM);
+        for (auto &i : wormIds) {
+            cUnit &pSandWorm = unit[i];
 
             // when on guard
-            if (pUnit.isIdle()) {
+            bool allowedToMove = pSandWorm.TIMER_movewait < 1;
+            if (pSandWorm.isIdle() && allowedToMove) {
                 // find new spot to go to
-                for (int iTries = 0; iTries < 10; iTries++) {
-                    int iMoveTo = map.getRandomCell();
+                for (int iTries = 0; iTries < 5; iTries++) {
+                    int iMoveTo = map.getRandomCellWithinMapWithSafeDistanceFromBorder(2);
 
                     if (map.isCellPassableForWorm(iMoveTo)) {
-                        pUnit.move_to(iMoveTo);
-                        continue;
+                        pSandWorm.move_to(iMoveTo);
+                        // found a spot, break out of this 'tries' loop
+                        break;
                     }
                 }
             }
