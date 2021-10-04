@@ -246,18 +246,7 @@ public:
         return iAction == ACTION_GUARD;
     }
 
-    void takeDamage(int damage) {
-        iHitPoints -= damage;
-        if (isDead()) {
-            die(true, false);
-        } else {
-            if (iHitPoints < getUnitType().dieWhenLowerThanHP) {
-                iHitPoints = 0; // to make it appear 'dead' for the rest of the code
-                // unit does not explode in this case, simply vanishes
-                die(false, false);
-            }
-        }
-    }
+    void takeDamage(int damage);
 
     void setHp(int hp) {
         // debug purposes only
