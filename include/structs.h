@@ -27,7 +27,10 @@ struct s_UnitInfo {
 
   int    build_time;        // how long it takes for building this thing
 
-  int    bulletType;           // type of bullet
+  int    bulletType;        // type of bullet to fire normally
+  int    bulletTypeSecondary;   // type of bullet when enemy is within a close range
+  int    fireSecondaryWithinRange; // if specified, the secondary bullet type is fired when enemy is within this range
+
   int    max_bullets;       // Maximum of 'bullets' it can fire at a time
 
   int    sight;             // Sight of a unit (in radius)

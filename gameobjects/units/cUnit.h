@@ -129,7 +129,7 @@ public:
 	void draw_path();
     bool isValid();     // valid unit?
 
-    void shoot(int iShootCell);  // shoot at goalcell
+    void shoot(int iTargetCell);  // shoot at goalcell
 
 	void die(bool bBlowUp, bool bSquish);			// die!
 
@@ -185,7 +185,7 @@ public:
 
     int TIMER_wormtrail;  // when to spawn a trail when moving
 
-    s_UnitInfo& getUnitType() const;
+    s_UnitInfo& getUnitInfo() const;
 
     /**
      * Return current health normalized (between 0.0 and 1.0)
@@ -204,7 +204,7 @@ public:
      * @return
      */
     bool isAirbornUnit() {
-        return getUnitType().airborn;
+        return getUnitInfo().airborn;
     }
 
     /**
@@ -227,7 +227,7 @@ public:
      * @return
      */
     bool canAttackAirUnits() {
-        return getUnitType().canAttackAirUnits;
+        return getUnitInfo().canAttackAirUnits;
     }
 
     bool isInfantryUnit();

@@ -270,7 +270,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     cRepairFacility * repairFacility = dynamic_cast<cRepairFacility*>(structure);
     int unitId = repairFacility->getUnitIdWithin();
     cUnit &pUnit = unit[unitId];
-    int iconId = pUnit.getUnitType().icon;
+    int iconId = pUnit.getUnitInfo().icon;
 
     int iconWidth = ((BITMAP *)gfxinter[iconId].dat)->w;
     int iconHeight = ((BITMAP *)gfxinter[iconId].dat)->h;

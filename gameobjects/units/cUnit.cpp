@@ -490,7 +490,7 @@ void cUnit::draw_spice() {
     int drawx = draw_x();
     int drawy = draw_y() - ((height_y * 2) + 2);
 
-    int max = getUnitType().credit_capacity;
+    int max = getUnitInfo().credit_capacity;
     int w = health_bar(width_x, iCredits, max);
 
     // bar itself
@@ -508,13 +508,13 @@ int cUnit::getBmpWidth() const {
 }
 
 float cUnit::getHealthNormalized() {
-    s_UnitInfo &unitType = getUnitType();
+    s_UnitInfo &unitType = getUnitInfo();
     float flMAX = unitType.hp;
     return (iHitPoints / flMAX);
 }
 
 float cUnit::getTempHealthNormalized() {
-    s_UnitInfo &unitType = getUnitType();
+    s_UnitInfo &unitType = getUnitInfo();
     float flMAX = unitType.hp;
     return (iTempHitPoints / flMAX);
 }
@@ -658,7 +658,7 @@ void cUnit::draw() {
         return;
     }
 
-    s_UnitInfo &unitType = getUnitType();
+    s_UnitInfo &unitType = getUnitInfo();
     int bmp_width = unitType.bmp_width;
     int bmp_height = unitType.bmp_height;
 
@@ -1602,7 +1602,7 @@ void cUnit::think_move_air() {
                             unitToPickupOrDrop.iBodyShouldFace = iBodyShouldFace;
 
                             // clear spot
-                            map.clearShroud(iCell, unitToPickupOrDrop.getUnitType().sight, iPlayer);
+                            map.clearShroud(iCell, unitToPickupOrDrop.getUnitInfo().sight, iPlayer);
 
                             int unitIdOfUnitThatHasBeenPickedUp = iUnitID;
 
@@ -1823,7 +1823,7 @@ void cUnit::think_move_air() {
 
     map.cellResetIdFromLayer(iCell, MAPID_AIR);
 
-//    int movespeed = getUnitType().speed;
+//    int movespeed = getUnitInfo().speed;
     int movespeed = 2; // 2 pixels, the actual 'speed' is done by the delay above using TIMER_move! :/
     posX += cos(angle) * movespeed;
     posY += sin(angle) * movespeed;
@@ -1926,7 +1926,7 @@ void cUnit::carryall_order(int iuID, int iTransfer, int iBring, int iTpe) {
     }
 }
 
-void cUnit::shoot(int iShootCell) {
+void cUnit::shoot(int iTargetCell) {
     // particles are rendered at the center, so do it here as well
     int iShootX = pos_x() + (getBmpWidth() / 2);
     int iShootY = pos_y() + (getBmpHeight() / 2);
@@ -1939,10 +1939,19 @@ void cUnit::shoot(int iShootCell) {
         cParticle::create(iShootX, iShootY, D2TM_PARTICLE_SIEGESHOOT, -1, bmp_head);
     }
 
-    int bulletType = sUnitInfo[iType].bulletType;
+    s_UnitInfo &unitInfo = getUnitInfo();
+    int bulletType = unitInfo.bulletType;
+    // if secondary fire is configured properly
+    if (unitInfo.fireSecondaryWithinRange > -1 && unitInfo.bulletTypeSecondary > -1) {
+        if (map.distance(iCell, iTargetCell) <= unitInfo.fireSecondaryWithinRange) {
+            bulletType = unitInfo.bulletTypeSecondary;
+        }
+    }
+    
+    
     if (bulletType < 0) return; // no bullet type to spawn
 
-    int iBull = create_bullet(bulletType, iCell, iShootCell, iID, -1);
+    int iBull = create_bullet(bulletType, iCell, iTargetCell, iID, -1);
 
     cUnit * attackUnit = nullptr;
     if (iAttackUnit > -1) {
@@ -2199,7 +2208,7 @@ void cUnit::think_attack() {
             }
         }
     } else {
-        s_UnitInfo &unitType = getUnitType();
+        s_UnitInfo &unitType = getUnitInfo();
 
         // AIRBORN UNITS ATTACK THINKING
         int minDistance = 2;
@@ -2259,9 +2268,9 @@ void cUnit::think_attack_sandworm() {
         TIMER_movewait = (1000/5) * 4; // wait for 4 seconds before moving again
         TIMER_guard = (1000/5) * 4; // timer guard works other way around..
 
-        if (unitsEaten >= getUnitType().appetite) {
+        if (unitsEaten >= getUnitInfo().appetite) {
             // let worm die (and respawn later)
-            iHitPoints = getUnitType().dieWhenLowerThanHP;
+            iHitPoints = getUnitInfo().dieWhenLowerThanHP;
             takeDamage(1); // get below the thresh-hold to die/vanish
         } else {
             TIMER_guard = (1000/5) * ((5*unitsEaten) + rnd((20*unitsEaten)));
@@ -2323,7 +2332,7 @@ void cUnit::startChasingTarget() {
 }
 
 bool cUnit::setAngleTowardsTargetAndFireBullets(int distance) {
-    s_UnitInfo &unitType = getUnitType();
+    s_UnitInfo &unitType = getUnitInfo();
     // in range , fire and such
 
     // Facing
@@ -2377,14 +2386,14 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance) {
 }
 
 int cUnit::getRange() const {
-    return getUnitType().range;
+    return getUnitInfo().range;
 }
 
 int cUnit::getSight() const {
-    return getUnitType().sight;
+    return getUnitInfo().sight;
 }
 
-s_UnitInfo &cUnit::getUnitType() const {
+s_UnitInfo &cUnit::getUnitInfo() const {
     return sUnitInfo[iType];
 }
 
@@ -2710,7 +2719,7 @@ void cUnit::thinkFast_move() {
                     } else if (intent == eUnitActionIntent::INTENT_CAPTURE || intent == eUnitActionIntent::INTENT_MOVE) {
                         if (isSaboteur()) {
                             // the unit will die and inflict damage
-                            pStructure->damage(getUnitType().damageOnEnterStructure);
+                            pStructure->damage(getUnitInfo().damageOnEnterStructure);
                             die(true, false);
                         } else {
                             if (pStructure->getHitPoints() < pStructure->getCaptureHP()) {
@@ -2720,7 +2729,7 @@ void cUnit::thinkFast_move() {
                             } else {
                                 // the unit will die and inflict damage
                                 die(true, false);
-                                pStructure->damage(getUnitType().damageOnEnterStructure);
+                                pStructure->damage(getUnitInfo().damageOnEnterStructure);
                             }
                         }
                         return; // unit is dead, no need to go further
@@ -2901,7 +2910,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
 
                 if (potentialDeadUnit.isSaboteur()) {
                     // this unit takes damage, catches the explosion so to speak
-                    takeDamage(potentialDeadUnit.getUnitType().damageOnEnterStructure);
+                    takeDamage(potentialDeadUnit.getUnitInfo().damageOnEnterStructure);
                 }
 
                 // die
@@ -2934,7 +2943,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
             return eUnitMoveToCellResult::MOVERESULT_AT_GOALCELL;
         }
 
-        TIMER_movewait = 2 + ((getUnitType().speed + iSlowDown) * 3);
+        TIMER_movewait = 2 + ((getUnitInfo().speed + iSlowDown) * 3);
         return eUnitMoveToCellResult::MOVERESULT_AT_CELL;
     }
     return eUnitMoveToCellResult::MOVERESULT_BUSY_MOVING;
@@ -2997,12 +3006,12 @@ bool cUnit::isMovingBetweenCells() {
 }
 
 bool cUnit::isDamaged() {
-    return iHitPoints < getUnitType().hp;
+    return iHitPoints < getUnitInfo().hp;
 }
 
 void cUnit::restoreFromTempHitPoints() {
     iHitPoints = iTempHitPoints; // restore true hitpoints
-    int maxHp = getUnitType().hp;
+    int maxHp = getUnitInfo().hp;
     if (iHitPoints > maxHp) {
         iHitPoints = maxHp;
     }
@@ -3010,15 +3019,15 @@ void cUnit::restoreFromTempHitPoints() {
 }
 
 void cUnit::setMaxHitPoints() {
-    iHitPoints = getUnitType().hp;
+    iHitPoints = getUnitInfo().hp;
 }
 
 bool cUnit::canSquishInfantry() {
-    return getUnitType().squish;
+    return getUnitInfo().squish;
 }
 
 bool cUnit::canBeSquished() {
-    return getUnitType().canBeSquished;
+    return getUnitInfo().canBeSquished;
 }
 
 cPlayer *cUnit::getPlayer() {
@@ -3268,7 +3277,7 @@ void cUnit::takeDamage(int damage) {
     if (isDead()) {
         die(true, false);
     } else {
-        if (iHitPoints < getUnitType().dieWhenLowerThanHP) {
+        if (iHitPoints < getUnitInfo().dieWhenLowerThanHP) {
             iHitPoints = 0; // to make it appear 'dead' for the rest of the code
             // unit does not explode in this case, simply vanishes
             die(false, false);
