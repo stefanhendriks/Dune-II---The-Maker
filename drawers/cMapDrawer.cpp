@@ -3,25 +3,25 @@
 #include "cMapDrawer.h"
 
 
-cMapDrawer::cMapDrawer(cMap * theMap, cPlayer * thePlayer, cMapCamera * theCamera) : player(thePlayer) {
-	assert(theMap);
-	assert(theCamera);
-	map = theMap;
-	camera = theCamera;
-	bmp_temp = nullptr;
+cMapDrawer::cMapDrawer(cMap *theMap, cPlayer *thePlayer, cMapCamera *theCamera) : player(thePlayer) {
+    assert(theMap);
+    assert(theCamera);
+    map = theMap;
+    camera = theCamera;
+    bmp_temp = nullptr;
 }
 
 cMapDrawer::~cMapDrawer() {
-	map = nullptr;
-	camera = nullptr;
+    map = nullptr;
+    camera = nullptr;
     player = nullptr;
-	if (bmp_temp) {
-	    destroy_bitmap(bmp_temp);
-	}
+    if (bmp_temp) {
+        destroy_bitmap(bmp_temp);
+    }
 }
 
 void cMapDrawer::drawShroud(int startX, int startY) {
-	set_trans_blender(0,0,0,128);
+    set_trans_blender(0, 0, 0, 128);
 
     float tileWidth = mapCamera->getZoomedTileWidth();
     float tileHeight = mapCamera->getZoomedTileHeight();
@@ -34,10 +34,10 @@ void cMapDrawer::drawShroud(int startX, int startY) {
 
     int iPl = player->getId();
 
-    for (int viewportX = camera->getViewportStartX(); viewportX < camera->getViewportEndX() + 32; viewportX+= 32) {
+    for (int viewportX = camera->getViewportStartX(); viewportX < camera->getViewportEndX() + 32; viewportX += 32) {
 
         // new row
-        for (int viewportY= camera->getViewportStartY(); viewportY < camera->getViewportEndY() + 32; viewportY+= 32) {
+        for (int viewportY = camera->getViewportStartY(); viewportY < camera->getViewportEndY() + 32; viewportY += 32) {
             int iCell = mapCamera->getCellFromAbsolutePosition(viewportX, viewportY);
 
             if (iCell < 0) continue;
@@ -49,39 +49,42 @@ void cMapDrawer::drawShroud(int startX, int startY) {
             float fDrawY = mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
 
             if (DEBUGGING && key[KEY_D] && key[KEY_TAB]) {
-				if (map->isVisible(iCell, iPl)) {
-					// do nothing
-				} else {
-					rectfill(bmp_screen, fDrawX, fDrawY, fDrawX+tileWidth, fDrawY+tileHeight, makecol(0,0,0));
-				}
-			} else {
-				if (map->isVisible(iCell, iPl)) {
+                if (map->isVisible(iCell, iPl)) {
+                    // do nothing
+                } else {
+                    rectfill(bmp_screen, fDrawX, fDrawY, fDrawX + tileWidth, fDrawY + tileHeight, makecol(0, 0, 0));
+                }
+            } else {
+                if (map->isVisible(iCell, iPl)) {
                     int tile = determineWhichShroudTileToDraw(iCell, iPl);
 
                     if (tile > -1) {
-                        allegroDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, tile * 32, 0, 32, 32, fDrawX, fDrawY, iTileWidth, iTileHeight);
+                        allegroDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, tile * 32, 0, 32, 32, fDrawX,
+                                                                    fDrawY, iTileWidth, iTileHeight);
                         clear_to_color(temp, makecol(255, 0, 255));
 
-                        allegroDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0, iTileWidth, iTileHeight);
+                        allegroDrawer->maskedStretchBlitFromGfxData(SHROUD_SHADOW, temp, tile * 32, 0, 32, 32, 0, 0,
+                                                                    iTileWidth, iTileHeight);
                         draw_trans_sprite(bmp_screen, temp, fDrawX, fDrawY);
                     }
                 } else {
-				    // NOT VISIBLE, DO NOT DRAW A THING THEN!
-				    // Except when there is a building here, that should not be visible ;)
-				    // tile 0 of shroud is entirely black... (effectively the same as drawing a rect here)
-				    allegroDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY, iTileWidth, iTileHeight);
-			    }
+                    // NOT VISIBLE, DO NOT DRAW A THING THEN!
+                    // Except when there is a building here, that should not be visible ;)
+                    // tile 0 of shroud is entirely black... (effectively the same as drawing a rect here)
+                    allegroDrawer->maskedStretchBlitFromGfxData(SHROUD, bmp_screen, 0, 0, 32, 32, fDrawX, fDrawY,
+                                                                iTileWidth, iTileHeight);
+                }
             }
-		}
-	}
+        }
+    }
 
-	destroy_bitmap(temp);
+    destroy_bitmap(temp);
 }
 
 void cMapDrawer::drawTerrain(int startX, int startY) {
     if (bmp_temp == nullptr) {
         int colorDepthScreen = bitmap_color_depth(bmp_screen);
-        bmp_temp=create_bitmap_ex(colorDepthScreen, 32,32);
+        bmp_temp = create_bitmap_ex(colorDepthScreen, 32, 32);
     }
 
     float tileWidth = mapCamera->getZoomedTileWidth();
@@ -90,21 +93,22 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
     int iTileHeight = (tileHeight + 1);
     int iTileWidth = (tileWidth + 1);
 
-	int iPl = player->getId();
+    int iPl = player->getId();
     int mouseCell = player->getGameControlsContext()->getMouseCell();
+    cTextDrawer textDrawer = cTextDrawer(bene_font);
 
-	// draw vertical rows..
-	for (int viewportX = camera->getViewportStartX(); viewportX < camera->getViewportEndX() + 32; viewportX+= 32) {
+    // draw vertical rows..
+    for (int viewportX = camera->getViewportStartX(); viewportX < camera->getViewportEndX() + 32; viewportX += 32) {
 
-		// new row
-		for (int viewportY= camera->getViewportStartY(); viewportY < camera->getViewportEndY() + 32; viewportY+= 32) {
-		    int iCell = mapCamera->getCellFromAbsolutePosition(viewportX, viewportY);
+        // new row
+        for (int viewportY = camera->getViewportStartY(); viewportY < camera->getViewportEndY() + 32; viewportY += 32) {
+            int iCell = mapCamera->getCellFromAbsolutePosition(viewportX, viewportY);
             if (iCell < 0) continue;
 
-			// not visible for player, so do not draw
-			if (!map->isVisible(iCell, iPl)) {
+            // not visible for player, so do not draw
+            if (!map->isVisible(iCell, iPl)) {
                 continue;
-			}
+            }
 
             // skip outer border cells
             if (!map->isWithinBoundaries(iCell)) {
@@ -113,11 +117,11 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
 
             tCell *cell = map->getCell(iCell);
 
-			if (cell == nullptr) {
+            if (cell == nullptr) {
                 continue;
-			}
+            }
 
-			int absoluteXCoordinateOnMap = map->getAbsoluteXPositionFromCell(iCell);
+            int absoluteXCoordinateOnMap = map->getAbsoluteXPositionFromCell(iCell);
             float fDrawX = mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
 
             int absoluteYCoordinateOnMap = map->getAbsoluteYPositionFromCell(iCell);
@@ -142,12 +146,12 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
             if (cell->smudgetype > -1 && cell->smudgetile > -1) {
                 // no need to stretch here, we stretch bmp_temp below
                 allegroDrawer->maskedBlitFromGfxData(SMUDGE, bmp_temp,
-                        cell->smudgetile * 32,
-                        cell->smudgetype * 32,
-                        0,
-                        0,
-                        32,
-                        32);
+                                                     cell->smudgetile * 32,
+                                                     cell->smudgetype * 32,
+                                                     0,
+                                                     0,
+                                                     32,
+                                                     32);
             }
 
             int iDrawX = round(fDrawX);
@@ -163,7 +167,8 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
                     int mcY = map->getCellY(mouseCell);
 
                     if (mcX == cellX && mcY == cellY) {
-                        fblend_rect_trans(bmp_screen, iDrawX, iDrawY, iTileWidth, iTileHeight, makecol(255, 255, 0), 96);
+                        fblend_rect_trans(bmp_screen, iDrawX, iDrawY, iTileWidth, iTileHeight, makecol(255, 255, 0),
+                                          96);
                     }
                 }
 
@@ -173,13 +178,14 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
             }
 
             // Draw more debugging information
-            if (DEBUGGING) {
+            if (DEBUGGING && key[KEY_D]) {
                 drawCellAsColoredTile(tileWidth, tileHeight, iCell, fDrawX, fDrawY);
+//                textDrawer.drawText(fDrawX, fDrawY, "%d", cell->type);
             }
-		}
-	}
+        }
+    }
 
-	if (DEBUGGING) {
+    if (DEBUGGING) {
 //        int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
 //        int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
 //        cTextDrawer textDrawer = cTextDrawer(bene_font);
@@ -187,10 +193,10 @@ void cMapDrawer::drawTerrain(int startX, int startY) {
 //        sprintf(msg, "absMouseX=%d, absMouseY=%d, window mouseX = %d, window mouseY = %d", absoluteXCoordinate, absoluteYCoordinate, mouse_x, mouse_y);
 //        logbook(msg);
 //        textDrawer.drawText(0, 100, msg);
-
+//
 //        rect(bmp_screen, startX, startY, startX + mapCamera->getAbsViewportWidth(),
 //             startY + mapCamera->getAbsViewportHeight(), makecol(255, 255, 0));
-
+//
 //        cTextDrawer textDrawer = cTextDrawer(bene_font);
 //        char msg[255];
 //        sprintf(msg, "renderStartX=%d, renderStartY=%d, renderEndX=%d, renderEndY=%d, zoom=%f",
@@ -234,7 +240,7 @@ void cMapDrawer::drawCellAsColoredTile(float tileWidth, float tileHeight, int iC
     }
 
     if (bDraw) {
-        rect(bmp_screen, fDrawX, fDrawY, fDrawX + (tileWidth-1), fDrawY + (tileHeight-1), iClr);
+        rect(bmp_screen, fDrawX, fDrawY, fDrawX + (tileWidth - 1), fDrawY + (tileHeight - 1), iClr);
     }
 }
 
@@ -243,16 +249,16 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
     if (playerId < HUMAN || playerId >= MAX_PLAYERS) return -1;
 
     int tile; // Visible stuff, now check for not visible stuff. When found, assign the proper border
-              // of shroud to it.
+    // of shroud to it.
     int above = CELL_ABOVE(cll);
     int under = CELL_UNDER(cll);
-    int left  = CELL_LEFT(cll);
+    int left = CELL_LEFT(cll);
     int right = CELL_RIGHT(cll);
 
     bool a, u, l, r;
-    a=u=l=r=true;
+    a = u = l = r = true;
 
-    if (above > -1)	{
+    if (above > -1) {
         if (map->isVisible(above, playerId)) {
             a = false;  // visible
         }
@@ -284,7 +290,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
         r = false;
     }
 
-    int t=-1;    // tile id to draw... (x axis)
+    int t = -1;    // tile id to draw... (x axis)
 
     // when above is not visible then change this border tile
     if (a == true && u == false && l == false && r == false)
@@ -326,7 +332,7 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const {
         t = 13;
 
     if (a == true && u == true && l == true && r == true)
-        t=1;
+        t = 1;
 
     tile = t - 1;
     return tile;
