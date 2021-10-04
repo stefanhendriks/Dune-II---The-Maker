@@ -344,18 +344,20 @@ int cPlayer::getAmountOfStructuresForType(int structureType) const {
  */
 int cPlayer::getAmountOfUnitsForType(int unitType) const {
     if (unitType < 0 || unitType > MAX_UNITTYPES) return -1;
-    int count = 0;
-    for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &pUnit = unit[i];
-        if (!pUnit.isValid()) continue;
-        if (pUnit.iPlayer != this->getId()) continue;
-        if (pUnit.isMarkedForRemoval()) continue; // skip units marked for removal, UGH this feels so wrong!
-        if (pUnit.iType == unitType) {
-            count++;
-        }
-        // TODO: Also count airborn units carrying any units here
-    }
-    return count;
+//    int count = 0;
+//    for (int i = 0; i < MAX_UNITS; i++) {
+//        cUnit &pUnit = unit[i];
+//        if (!pUnit.isValid()) continue;
+//        if (pUnit.iPlayer != this->getId()) continue;
+//        if (pUnit.isMarkedForRemoval()) continue; // skip units marked for removal, UGH this feels so wrong!
+//        if (pUnit.iType == unitType) {
+//            count++;
+//        }
+//        // TODO: Also count airborn units carrying any units here
+//    }
+
+    const std::vector<int> &vector = getAllMyUnitsForType(unitType);
+    return vector.size();
 }
 
 /**
@@ -595,26 +597,6 @@ void cPlayer::giveCredits(float amountToGive) {
 }
 
 /**
- * Returns all unit ids belonging to player
- *
- * NOTE: This is a slow method, as it iterates though all possible unit ids
- *
- * TODO: This could be done smarter once we receive notifications when a unit gets created/destroyed!
- * @return
- */
-std::vector<int> cPlayer::getAllMyUnits() {
-    std::vector<int> ids = std::vector<int>();
-    for (int i = 0; i < MAX_UNITS; i++) {
-        cUnit &pUnit = unit[i];
-        if (!pUnit.isValid()) continue;
-        if (pUnit.isDead()) continue;
-        if (!pUnit.belongsTo(this)) continue;
-        ids.push_back(i);
-    }
-    return ids;
-}
-
-/**
  * Returns all structure ids belonging to player
  *
  * NOTE: This is a slow method, as it iterates though all possible unit ids
@@ -633,14 +615,15 @@ std::vector<int> cPlayer::getAllMyStructuresAsIdForType(int structureType) {
         if (!abstractStructure) continue;
         if (!abstractStructure->isValid()) continue;
         if (!abstractStructure->belongsTo(this)) continue;
-        if (structureType < 0) {
-            ids.push_back(i);
-        } else {
-            if (abstractStructure->getType() == structureType) {
-                ids.push_back(i);
-            }
+
+        // should filter by structure type?
+        if (structureType > -1) {
+            if (abstractStructure->getType() != structureType) continue; // not the same? skip...
         }
+
+        ids.push_back(i);
     }
+
     return ids;
 }
 
@@ -1840,5 +1823,41 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
             }
         }
     }
+}
+
+/**
+ * Returns all unit ids belonging to player
+ *
+ * NOTE: This is a slow method, as it iterates though all possible unit ids
+ *
+ * TODO: This could be done smarter once we receive notifications when a unit gets created/destroyed!
+ * @return
+ */
+std::vector<int> cPlayer::getAllMyUnits() {
+    return getAllMyUnitsForType(-1);
+}
+
+/**
+ * Returns a vector of all unit ID's for unit type
+ *
+ * @param unitType
+ * @return
+ */
+std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const {
+    std::vector<int> ids = std::vector<int>();
+    for (int i = 0; i < MAX_UNITS; i++) {
+        cUnit &pUnit = unit[i];
+        if (!pUnit.isValid()) continue;
+        if (pUnit.isDead()) continue;
+        if (!pUnit.belongsTo(this)) continue;
+
+        // check for unit type?
+        if (unitType > -1) {
+            if (pUnit.iType != unitType) continue; // not the same type? skip
+        }
+
+        ids.push_back(i);
+    }
+    return ids;
 }
 

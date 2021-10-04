@@ -1,10 +1,3 @@
-/*
- * cStructureDrawer.cpp
- *
- *  Created on: 23-okt-2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 
 cStructureDrawer::cStructureDrawer() {

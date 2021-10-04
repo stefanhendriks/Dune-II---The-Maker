@@ -119,7 +119,6 @@ void cUnit::init(int i) {
     TIMER_guard = 0;    // guard scanning timer
     TIMER_bored = 0;    // how long are we bored?
     TIMER_attack = 0;
-    TIMER_wormeat = 0;
     TIMER_wormtrail = 0;
     TIMER_movedelay = 0;
 }
@@ -926,11 +925,20 @@ void cUnit::thinkFast_guard() {
         iHeadShouldFace = rnd(8);
     }
 
-    TIMER_guard++; // scan time
-    if (TIMER_guard < 5) return;
+    if (TIMER_guard > 0) {
+        TIMER_guard--; // scan time
+    }
+
+    if (TIMER_movewait > 0) {
+        TIMER_movewait--;
+    }
+
+    if (TIMER_movewait > 0 || TIMER_guard > 0) {
+        return;
+    }
 
     // scan area
-    TIMER_guard = 0 - (rnd(5)); // do not scan all at the same time
+    TIMER_guard = 20 + rnd(35); // do not scan all at the same time
 
     updateCellXAndY();
 
@@ -939,17 +947,13 @@ void cUnit::thinkFast_guard() {
     int unitIdSelectedForAttacking = -1;
 
     if (isSandworm()) {
-        if (TIMER_wormeat > 0) {
-            TIMER_wormeat--;
-            return; // get back, not hungry just yet
-        }
-
         for (int i = 0; i < MAX_UNITS; i++) {
             cUnit &potentialDinner = unit[i];
             if (i == iID) continue;
             if (!potentialDinner.isValid()) continue;
             if (potentialDinner.getPlayer()->isSameTeamAs(getPlayer())) continue;
             if (potentialDinner.isAirbornUnit()) continue;
+            if (potentialDinner.isSandworm()) continue; // don't eat other worms
             if (!map.isCellPassableForWorm(iCell)) continue;
 
             double distance = map.distance(iCell, potentialDinner.iCell);
@@ -1019,28 +1023,32 @@ void cUnit::thinkFast_guard() {
         cUnit &unitToAttack = unit[unitIdSelectedForAttacking];
 
         if (unitToAttack.isValid()) {
-            s_GameEvent event{
-                    .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
-                    .entityType = eBuildType::UNIT,
-                    .entityID = unitToAttack.iID,
-                    .player = getPlayer(),
-                    .entitySpecificType = unitToAttack.getType(),
-                    .atCell = unitToAttack.iCell
-            };
+//            s_GameEvent event{
+//                    .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
+//                    .entityType = eBuildType::UNIT,
+//                    .entityID = unitToAttack.iID,
+//                    .player = getPlayer(),
+//                    .entitySpecificType = unitToAttack.getType(),
+//                    .atCell = unitToAttack.iCell
+//            };
 
-            game.onNotify(event);
+//            game.onNotify(event);
         }
 
-        // TODO: move this code somewhere else?
-        if (!getPlayer()->isHuman()) {
-            if (unitToAttack.isInfantryUnit() && canSquishInfantry()) {
-                // AI will try to squish infantry units
-                move_to(unitToAttack.iCell);
+        if (isSandworm()) {
+            attackUnit(unitIdSelectedForAttacking);
+        } else {
+            // TODO: move this code somewhere else?
+            if (!getPlayer()->isHuman()) {
+                if (unitToAttack.isInfantryUnit() && canSquishInfantry()) {
+                    // AI will try to squish infantry units
+                    move_to(unitToAttack.iCell);
+                } else {
+                    attackUnit(unitIdSelectedForAttacking);
+                }
             } else {
                 attackUnit(unitIdSelectedForAttacking);
             }
-        } else {
-            attackUnit(unitIdSelectedForAttacking);
         }
 
         return;
@@ -2094,6 +2102,9 @@ void cUnit::log(const char *txt) const {
     players[iPlayer].log(msg);
 }
 
+/**
+ * Thinking, called every 100ms
+ */
 void cUnit::think_attack() {
     updateCellXAndY();
 
@@ -2206,56 +2217,62 @@ void cUnit::think_attack() {
 }
 
 void cUnit::think_attack_sandworm() {
-    cUnit * attackUnit = nullptr;
-    if (iAttackUnit > -1) {
-        attackUnit = &unit[iAttackUnit];
-
-        // should be impossible
-        if (!attackUnit) {
-            actionGuard();
-            return;
-        }
-
-        // no longer valid, or dead
-        if (!attackUnit->isValid() || attackUnit->isDead()) {
-            actionGuard();
-            return;
-        }
-
-        // update iGoalCell with where the attacking unit is (chase)
-        iGoalCell = attackUnit->iCell;
-        if (iGoalCell == iCell) {
-            attackUnit->die(false, false);
-            unitsEaten++;
-            long x = pos_x_centered();
-            long y = pos_y_centered();
-            cParticle::create(x, y, D2TM_PARTICLE_WORMEAT, -1, -1);
-            play_sound_id_with_distance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(iCell));
-            actionGuard();
-            TIMER_movewait = (1000/5) * 3; // wait for 3 seconds before moving again
-
-            if (unitsEaten >= getUnitType().appetite) {
-                // let worm die (and respawn later)
-                this->iHitPoints = getUnitType().dieWhenLowerThanHP;
-                takeDamage(1); // get below the thresh-hold to die/vanish
-            } else {
-                TIMER_wormeat += (1000/5) * ((5*unitsEaten) + rnd((40*unitsEaten)));
-            }
-            return;
-        }
-
-        if (!map.isCellPassableForWorm(attackUnit->iCell)) {
-            // forget about unit that is not preachable
-            actionGuard();
-            return;
-        }
-
-        iAction = ACTION_CHASE;
-        forgetAboutCurrentPathAndPrepareToCreateNewOne();
+    if (iAttackUnit < 0) {
+        // no attack unit
+        actionGuard();
         return;
     }
 
-    iAction = ACTION_GUARD;
+    cUnit * attackUnit = &unit[iAttackUnit];
+
+    // should be impossible
+    if (!attackUnit) {
+        actionGuard();
+        return;
+    }
+
+    // no longer valid, or dead
+    if (!attackUnit->isValid() || attackUnit->isDead()) {
+        actionGuard();
+        return;
+    }
+
+    // update iGoalCell with where the attacking unit is (chase)
+    iGoalCell = attackUnit->iCell;
+    if (iGoalCell == iCell) {
+        attackUnit->die(false, false);
+        unitsEaten++;
+        long x = pos_x_centered();
+        long y = pos_y_centered();
+        cParticle::create(x, y, D2TM_PARTICLE_WORMEAT, -1, -1);
+        play_sound_id_with_distance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(iCell));
+        actionGuard();
+        TIMER_movewait = (1000/5) * 4; // wait for 4 seconds before moving again
+        TIMER_guard = (1000/5) * 4; // timer guard works other way around..
+
+        if (unitsEaten >= getUnitType().appetite) {
+            // let worm die (and respawn later)
+            iHitPoints = getUnitType().dieWhenLowerThanHP;
+            takeDamage(1); // get below the thresh-hold to die/vanish
+        } else {
+            TIMER_guard = (1000/5) * ((5*unitsEaten) + rnd((20*unitsEaten)));
+        }
+
+        if (DEBUGGING) {
+            char msg[255];
+            sprintf(msg, "think_attack_sandworm() -> eaten unit. Units eaten %d, TIMER_guard %d", unitsEaten, TIMER_guard);
+            logbook(msg);
+        }
+        return;
+    }
+
+    if (attackUnit->isIdle() && !map.isCellPassableForWorm(attackUnit->iCell)) {
+        // forget about unit that is not reachable
+        actionGuard();
+        return;
+    }
+
+    startChasingTarget();
     return;
 }
 
@@ -2362,10 +2379,11 @@ s_UnitInfo &cUnit::getUnitType() const {
     return sUnitInfo[iType];
 }
 
-// thinking about movement (which is called upon a faster rate)
-void cUnit::think_move() {
+// thinking about movement (called every 5 ms)
+// called when ACTION_CHASE or ACTION_MOVE
+void cUnit::thinkFast_move() {
     if (!isValid()) {
-        assert(false && "Expected to have a valid unit calling think_move()");
+        assert(false && "Expected to have a valid unit calling thinkFast_move()");
     }
 
     // this is about non-aircraft only, so bail for aircraft units
@@ -2373,6 +2391,8 @@ void cUnit::think_move() {
         return;
     }
 
+    // it is a unit that is temporarily not available on the map (picked up by carry-all for instance, or
+    // within a structure)
     if (iTempHitPoints > -1) {
         return;
     }
@@ -2609,9 +2629,9 @@ void cUnit::think_move() {
         bOccupied = true;
     }
 
-    // TODO: this "think_move" thing should be abstracted somewhere, so that "occupied" becomes an abstraction
+    // TODO: this "thinkFast_move" thing should be abstracted somewhere, so that "occupied" becomes an abstraction
     // as well and thus this kind of hack can be prevented.
-    if (iType == SANDWORM) {
+    if (isSandworm()) {
         bOccupied = false;
     }
 
@@ -2840,12 +2860,13 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic() {
     if (!isMovingBetweenCells()) {
         // when we are chasing, we now set on attack...
         if (iAction == ACTION_CHASE) {
-            iAction = ACTION_ATTACK;
             // next time we think, will be checking for distance, etc
+            iAction = ACTION_ATTACK;
+            forgetAboutCurrentPathAndPrepareToCreateNewOne(0);
         }
 
         // movement to cell complete
-        if (iType == SANDWORM) {
+        if (isSandworm()) {
             map.cellResetIdFromLayer(iCell, MAPID_WORMS);
         } else {
             map.cellResetIdFromLayer(iCell, MAPID_UNITS);
@@ -3209,7 +3230,7 @@ void cUnit::hideUnit() {
     iHitPoints = -1; // 'kill' unit
 }
 
-bool cUnit::belongsTo(cPlayer *pPlayer) {
+bool cUnit::belongsTo(const cPlayer *pPlayer) const {
     if (pPlayer == nullptr) return false;
     return pPlayer->getId() == iPlayer;
 }
@@ -3227,6 +3248,10 @@ void cUnit::draw_debug() {
     allegroDrawer->drawRectangle(bmp_screen, dimensions, makecol(255, 0, 255));
     putpixel(bmp_screen, center_draw_x(), center_draw_y(), makecol(255, 0, 255));
     alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y(), makecol(255, 255, 255), "%d", iID);
+
+    if (isSandworm()) {
+        alfont_textprintf(bmp_screen, game_font, draw_x(), draw_y()-16, makecol(255, 255, 255), "%d / %d / %d", unitsEaten, TIMER_guard, TIMER_movewait);
+    }
 }
 
 
@@ -3325,7 +3350,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
     newUnit.bSelected = false;
 
     newUnit.TIMER_bored = rnd(3000);
-    newUnit.TIMER_guard = -20 + rnd(70);
+    newUnit.TIMER_guard = 20 + rnd(70);
     newUnit.recreateDimensions();
 
     // set (Correct!?) player id, when type is SANDWORM (!?)

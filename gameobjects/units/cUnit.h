@@ -138,7 +138,7 @@ public:
     void think();       // thinking in general
     void think_move_air();  // aircraft specific
     void think_move_foot(); // soldiers specific
-    void think_move();  // thinking about movement (which is called upon a faster rate)
+    void thinkFast_move();  // thinking about movement (which is called upon a faster rate)
                         // for wheeled/tracked units
     void think_attack();
     void thinkFast_guard();
@@ -182,8 +182,6 @@ public:
     int TIMER_bored;    // how long are we bored?
 
     int TIMER_attack;   // when to shoot?
-
-    int TIMER_wormeat;  // when do we eat? (when worm)
 
     int TIMER_wormtrail;  // when to spawn a trail when moving
 
@@ -348,7 +346,7 @@ public:
 
     void actionGuard();
 
-    bool belongsTo(cPlayer *pPlayer);
+    bool belongsTo(const cPlayer *pPlayer) const;
 
     bool isMarkedForRemoval();
 

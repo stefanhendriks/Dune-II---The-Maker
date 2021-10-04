@@ -204,6 +204,8 @@ public:
 
     std::vector<int> getAllMyUnits();
 
+    std::vector<int> getAllMyUnitsForType(int unitType) const;
+
     std::vector<int> getAllMyStructuresAsId();
 
     std::vector<int> getAllMyStructuresAsIdForType(int structureType);
