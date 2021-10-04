@@ -12,6 +12,8 @@
 
 #include <math.h>
 #include "../../include/d2tmh.h"
+#include "cUnit.h"
+
 
 // Path creation definitions / var
 #define CLOSED        -1
@@ -2007,7 +2009,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
             }
         }
 
-        if (iPlayer > HUMAN) {
+        if (!getPlayer()->isHuman()) {
             if (isHarvester()) {
                 if (unit[iShotUnit].isInfantryUnit() && !isMovingBetweenCells()) {
                     // this harvester will try to run over the infantry that attacks it
@@ -2022,9 +2024,16 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure) {
                         // AI tries to run over infantry units that attack it
                         move_to(unit[iShotUnit].iCell);
                     } else {
-                        // else simply shoot it
                         if (!unitWhoShotMeIsAirborn) {
-                            attackUnit(iShotUnit);
+                            if (isSandworm()) {
+                                if (map.isCellPassableForWorm(unitWhoShotMe.iCell)) {
+                                    attackUnit(iShotUnit);
+                                } else {
+                                    // tough luck :/
+                                }
+                            } else {
+                                attackUnit(iShotUnit);
+                            }
                         }
                     }
                 } else {
@@ -3254,6 +3263,19 @@ void cUnit::draw_debug() {
     }
 }
 
+void cUnit::takeDamage(int damage) {
+    iHitPoints -= damage;
+    if (isDead()) {
+        die(true, false);
+    } else {
+        if (iHitPoints < getUnitType().dieWhenLowerThanHP) {
+            iHitPoints = 0; // to make it appear 'dead' for the rest of the code
+            // unit does not explode in this case, simply vanishes
+            die(false, false);
+        }
+    }
+}
+
 
 // return new valid ID
 int UNIT_NEW() {
@@ -3563,7 +3585,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
                 if (cll == iCell)
                     continue;
 
-                // Determine if its a good cell to use or not:
+                // Determine if it is a good cell to use or not:
                 bool good = false; // not good by default
 
                 // not a sandworm
@@ -3619,7 +3641,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
                                     pUnit.canSquishInfantry()) // and the current unit can squish
                                     good = true; // its infantry we want to run over, so don't be bothered!
                             }
-                            //good=false; // it is not good, other unit blocks
+                            // it is not good, other unit blocks
                         } else {
                             good = true;
                         }
@@ -3647,7 +3669,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
                 }
 
                 // it is the goal cell
-                if (cll == goal_cell) {
+                if (cll == goal_cell && good) {
                     the_cll = cll;
                     cost = 0;
                     succes = true;
@@ -3661,7 +3683,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
                 // the cell is CLOSED (not checked yet)
                 if (cll != iCell &&                            // not checking on our own
                     temp_map[cll].state == CLOSED &&          // and is closed (else its not valid to check)
-                    (good)) // and its not occupied (but may be occupied by own id!
+                    good) // and its not occupied (but may be occupied by own id!
                 {
                     int gcx = map.getCellX(goal_cell);
                     int gcy = map.getCellY(goal_cell);
@@ -3776,7 +3798,7 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
 
         while (z > -1) {
             if (temp_path[z] > -1) {
-                // check if any other cell of temp_path also borders to the previous given cell, as that will safe us time
+                // check if any other cell of temp_path also borders to the previous given cell, as that will save us time
                 if (iPrevCell > -1) {
                     int iGoodZ = -1;
 
