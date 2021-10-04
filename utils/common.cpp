@@ -174,6 +174,8 @@ void install_units() {
         sUnitInfo[i].icon = -1;
         sUnitInfo[i].hp = -1;
         sUnitInfo[i].bulletType = -1;
+        sUnitInfo[i].bulletTypeSecondary = -1;
+        sUnitInfo[i].fireSecondaryWithinRange = -1;
         sUnitInfo[i].attack_frequency = -1;
         sUnitInfo[i].build_time = -1;
         sUnitInfo[i].airborn = false;
@@ -498,6 +500,8 @@ void install_units() {
     sUnitInfo[TROOPER].canEnterAndDamageStructure = true;
     sUnitInfo[TROOPER].attackIsEnterStructure = false;
     sUnitInfo[TROOPER].damageOnEnterStructure = 12.0f;
+    sUnitInfo[TROOPER].bulletTypeSecondary = BULLET_SMALL;
+    sUnitInfo[TROOPER].fireSecondaryWithinRange = 2;
 
     // Unit        : Group Trooper
     // Description : 3 troopers
@@ -519,6 +523,8 @@ void install_units() {
     sUnitInfo[TROOPERS].canEnterAndDamageStructure = true;
     sUnitInfo[TROOPERS].attackIsEnterStructure = false;
     sUnitInfo[TROOPERS].damageOnEnterStructure = 35.0f;
+    sUnitInfo[TROOPERS].bulletTypeSecondary = BULLET_SMALL;
+    sUnitInfo[TROOPERS].fireSecondaryWithinRange = 2;
 
     // Unit        : Fremen
     // Description : A single fremen

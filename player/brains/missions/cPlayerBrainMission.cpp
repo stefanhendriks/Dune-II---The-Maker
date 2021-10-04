@@ -435,7 +435,7 @@ namespace brains {
         for (auto &myUnitId : units) {
             cUnit &myUnit = unit[myUnitId];
             char msg[255];
-            sprintf(msg, "logUnits() : Unit %d, type %d (%s)", myUnit.iID, myUnit.iType, myUnit.getUnitType().name);
+            sprintf(msg, "logUnits() : Unit %d, type %d (%s)", myUnit.iID, myUnit.iType, myUnit.getUnitInfo().name);
             log(msg);
         }
     }
