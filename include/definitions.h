@@ -366,5 +366,10 @@ const int D2TM_BITMAP_PARTICLE_EXPLOSION_BULLET        = 34;
 #define SMUDGE_SAND 1
 #define SMUDGE_WALL 2
 
+// Win/lose bit flags, borrowed from Dune Legacy's implementation
+#define WINLOSEFLAGS_AI_NO_BUILDINGS        0x01
+#define WINLOSEFLAGS_HUMAN_HAS_BUILDINGS    0x02
+#define WINLOSEFLAGS_QUOTA                  0x04
+#define WINLOSEFLAGS_TIMEOUT                0x08
 
 #endif /* DEFINITIONS_H_ */

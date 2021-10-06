@@ -9,20 +9,14 @@
   2001 - 2021 (c) code by Stefan Hendriks
 
   */
-
-// TODO: Clean this class up big time.
-
 #ifndef D2TM_GAME_H
 #define D2TM_GAME_H
-
-//#include <controls/cGameControlsContext.h>
-//#include <player/cPlayer.h>
 
 #include <controls/cMouse.h>
 #include <observers/cScenarioObserver.h>
 #include <data/cAllegroDataRepository.h>
 
-// forward declaration :/ sigh should really look into these includes and such
+// forward declaration :/ sigh should really look into this
 class cRectangle;
 class cAbstractMentat;
 class cPlayer;
@@ -208,12 +202,10 @@ public:
 
     int getColorPlaceGood();
 
+    // win/lose flags
+    int8_t winFlags, loseFlags;
+
 private:
-    cInteractionManager *_interactionManager;
-    cAllegroDataRepository *m_dataRepository;
-
-    cMouse *mouse;
-
 	void updateState();
 	void combat();		// the combat part (main) of the game
 	bool isMusicPlaying();
@@ -233,23 +225,6 @@ private:
 
     void install_bitmaps();
 
-	/** game state **/
-	int state;
-
-	int iMaxVolume;
-
-	cSoundPlayer *soundPlayer;
-	cAbstractMentat *pMentat;
-
-    float fade_select;        // fade color when selected
-    bool bFadeSelectDir;    // fade select direction
-    void prepareMentatToTellAboutHouse(int house);
-
-    // screen shaking
-    int shake_x;
-    int shake_y;
-    int TIMER_shake;
-
     void combat_mouse_normalCombatInteraction(cGameControlsContext *context, cPlayer &humanPlayer,
                                               bool &bOrderingUnits) const;
 
@@ -260,6 +235,39 @@ private:
     void mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGameControlsContext *context, bool bOrderingUnits) const;
 
     void mouseOnBattlefield(cGameControlsContext *context, int mouseCell, bool &bOrderingUnits) const;
+
+    bool isMissionWon() const;
+
+    bool isMissionFailed() const;
+
+    void prepareMentatToTellAboutHouse(int house);
+
+    /**
+     * Variables start here
+     */
+    cInteractionManager *_interactionManager;
+    cAllegroDataRepository *m_dataRepository;
+
+    cSoundPlayer *soundPlayer;
+    cMouse *mouse;
+
+	int state;
+
+	int iMaxVolume;
+
+	cAbstractMentat *pMentat;
+
+    float fade_select;        // fade color when selected
+    bool bFadeSelectDir;    // fade select direction
+
+    // screen shaking
+    int shake_x;
+    int shake_y;
+    int TIMER_shake;
+
+    void setMissionLost();
+
+    void setMissionWon();
 };
 
 #endif
