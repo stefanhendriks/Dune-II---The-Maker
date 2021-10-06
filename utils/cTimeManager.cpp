@@ -51,6 +51,13 @@ void cTimeManager::capTimers() {
  * timerseconds timer is called every 1000 ms, try to keep up with that.
  */
 void cTimeManager::handleTimerAllegroTimerSeconds() {
+    // run this only once
+    if (timerSecond > 0) {
+        if (game.isState(GAME_PLAYING)) {
+            game.think_winlose();
+        }
+    }
+
     while (timerSecond > 0) {
         gameTime++;
 

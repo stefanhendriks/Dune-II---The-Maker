@@ -121,6 +121,9 @@ void cGame::init() {
 void cGame::mission_init() {
     mapCamera->resetZoom();
 
+    winFlags = 0;
+    loseFlags = 0;
+
     iMusicVolume=96; // volume is 0...
 
 	paths_created=0;
@@ -199,109 +202,102 @@ void cGame::mission_init() {
     drawManager->getCreditsDrawer()->setCredits();
 }
 
-
+/**
+ * Checks if human player has won or lost
+ */
 void cGame::think_winlose() {
-    bool bSucces = false;
-    bool bFailed = true;
-
-    // determine if player is still alive
-    for (int i = 0; i < MAX_STRUCTURES; i++) {
-        if (structure[i]) {
-            if (structure[i]->getOwner() == 0) {
-                bFailed = false; // no, we are not failing just yet
-                break;
-            }
-        }
+    if (isMissionFailed()) {
+        setMissionLost();
+        return;
     }
 
-    // determine if any unit is found
-    if (bFailed) {
-        // check if any unit is ours, if not, we have a problem (airborn does not count)
-        for (int i = 0; i < MAX_UNITS; i++)
-            if (unit[i].isValid())
-                if (unit[i].iPlayer == 0) {
-                    bFailed = false;
-                    break;
-                }
+    if (isMissionWon()) {
+        setMissionWon();
+        return;
     }
+}
 
+void cGame::setMissionWon() {
+    setState(GAME_WINNING);
 
+    shake_x = 0;
+    shake_y = 0;
+    TIMER_shake = 0;
+    mouse_tile = MOUSE_NORMAL;
+
+    play_voice(SOUND_VOICE_07_ATR);
+
+    playMusicByType(MUSIC_WIN);
+
+    // copy over
+    blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
+
+    allegroDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_WINNING].dat);
+}
+
+void cGame::setMissionLost() {
+    setState(GAME_LOSING);
+
+    shake_x = 0;
+    shake_y = 0;
+    TIMER_shake = 0;
+    mouse_tile = MOUSE_NORMAL;
+
+    play_voice(SOUND_VOICE_08_ATR);
+
+    playMusicByType(MUSIC_LOSE);
+
+    // copy over
+    blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
+
+    allegroDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_LOSING].dat);
+}
+
+bool cGame::isMissionFailed() const {
+    cPlayer &humanPlayer = players[HUMAN];
+    return humanPlayer.getAllMyStructuresAsId().empty() && humanPlayer.getAllMyUnits().empty();
+}
+
+bool cGame::isMissionWon() const {
     // win by money quota
+    cPlayer &humanPlayer = players[HUMAN];
+
     if (iWinQuota > 0) {
-        if (players[HUMAN].hasEnoughCreditsFor(iWinQuota)) {
-            bSucces = true;
+        if (humanPlayer.hasEnoughCreditsFor(iWinQuota)) {
+            return true;
         }
-    } else {
-        // determine if any player (except sandworm) is dead
-        bool bAllDead = true;
-        for (int i = 0; i < MAX_STRUCTURES; i++) {
-            cAbstractStructure *pStructure = structure[i];
-            if (pStructure == nullptr) continue;
-            if (pStructure->getOwner() == HUMAN || pStructure->getOwner() == AI_WORM || pStructure->getOwner() == AI_CPU5) continue;
-            if (pStructure->getPlayer()->isSameTeamAs(&players[HUMAN])) continue; // skip players of same team as human player
+    }
+
+    // determine if any player (except sandworm) is dead
+    bool bAllDead = true;
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+        cAbstractStructure *pStructure = structure[i];
+        if (pStructure == nullptr) continue;
+        if (pStructure->getOwner() == HUMAN || pStructure->getOwner() == AI_WORM || pStructure->getOwner() == AI_CPU5) continue;
+        if (pStructure->getPlayer()->isSameTeamAs(&humanPlayer)) continue; // skip players of same team as human player
+        bAllDead = false;
+        break;
+    }
+
+    // no structures found, validate units (this if-statement is there for optimizations, because looping through
+    // structures is quicker than looping through units)
+    if (bAllDead) {
+        // check units now
+        for (int i = 0; i < MAX_UNITS; i++) {
+            cUnit &pUnit = unit[i];
+            if (!pUnit.isValid()) continue;
+            if (pUnit.iPlayer == HUMAN || pUnit.iPlayer == AI_WORM || pUnit.iPlayer == AI_CPU5) continue;
+            if (pUnit.isAirbornUnit()) continue; // do not count airborn units
+            if (pUnit.isDead()) continue; // in case we have some 'half-dead' units that got passed the isValid check...
+                                          // a better way for this would be to have such units in a separate collection.
+            if (pUnit.getPlayer()->isSameTeamAs(&humanPlayer)) continue; // skip players of same team as human player
             bAllDead = false;
             break;
         }
-
-        // no structures found, validate units
-        if (bAllDead) {
-            // check units now
-            for (int i = 0; i < MAX_UNITS; i++) {
-                cUnit &pUnit = unit[i];
-                if (!pUnit.isValid()) continue;
-                if (pUnit.iPlayer == HUMAN || pUnit.iPlayer == AI_WORM || pUnit.iPlayer == AI_CPU5) continue;
-                if (pUnit.isAirbornUnit()) continue; // do not count airborn units
-                if (pUnit.isDead()) continue; // in case we have some 'half-dead' units that got passed the isValid check...
-                                              // a better way for this would be to have such units in a separate collection.
-                if (pUnit.getPlayer()->isSameTeamAs(&players[HUMAN])) continue; // skip players of same team as human player
-                bAllDead = false;
-                break;
-            }
-        }
-
-        // all dead == mission success!
-        if (bAllDead) {
-            bSucces = true;
-        }
     }
 
-
-    // On succes...
-    if (bSucces) {
-        setState(GAME_WINNING);
-
-        shake_x = 0;
-        shake_y = 0;
-        TIMER_shake = 0;
-        mouse_tile = MOUSE_NORMAL;
-
-        play_voice(SOUND_VOICE_07_ATR);
-
-        playMusicByType(MUSIC_WIN);
-
-        // copy over
-        blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
-
-        allegroDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_WINNING].dat);
-    }
-
-    if (bFailed) {
-        setState(GAME_LOSING);
-
-        shake_x = 0;
-        shake_y = 0;
-        TIMER_shake = 0;
-        mouse_tile = MOUSE_NORMAL;
-
-        play_voice(SOUND_VOICE_08_ATR);
-
-        playMusicByType(MUSIC_LOSE);
-
-        // copy over
-        blit(bmp_screen, bmp_winlose, 0, 0, 0, 0, screen_x, screen_y);
-
-        allegroDrawer->drawCenteredSprite(bmp_winlose, (BITMAP *) gfxinter[BMP_LOSING].dat);
-    }
+    // all dead == mission success!
+    return bAllDead;
 }
 
 void cGame::think_mentat() {
@@ -424,7 +420,6 @@ void cGame::updateState() {
 }
 
 void cGame::combat() {
-
 	if (iFadeAction == 1) // fading out
     {
         draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
@@ -438,9 +433,6 @@ void cGame::combat() {
 	bDeployedIt = bDeployIt;
 
     drawManager->drawCombatState();
-
-    // think win/lose
-    think_winlose();
 }
 
 // stateMentat logic + drawing mouth/eyes
