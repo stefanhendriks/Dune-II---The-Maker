@@ -83,6 +83,8 @@ void cDrawManager::drawCombatState() {
 	// THE MESSAGE
 	drawMessage();
 
+    drawNotifications();
+
 	// DO COMBAT MOUSE (TODO: remove this eventually, as it updates state and that is not what
 	// this class should be doing)
     game.combat_mouse();
@@ -289,6 +291,16 @@ void cDrawManager::drawOptionBar() {
 
     }
     draw_sprite(bmp_screen, optionsBar, 0, 0);
+}
+
+void cDrawManager::drawNotifications() {
+    std::vector<cPlayerNotification> &notifications = player->getNotifications();
+    int y = cSideBar::TopBarHeight + 14; // 12 pixels
+    cTextDrawer textDrawer(game_font);
+    for (auto &notification : notifications) {
+        textDrawer.drawText(0, y, notification.getMessage().c_str());
+        y+=13;
+    }
 }
 
 

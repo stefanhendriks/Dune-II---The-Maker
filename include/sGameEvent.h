@@ -60,6 +60,7 @@ struct s_GameEvent {
             case eGameEventType::GAME_EVENT_LIST_ITEM_PLACE_IT: return "GAME_EVENT_LIST_ITEM_PLACE_IT";
             case eGameEventType::GAME_EVENT_SPICE_BLOOM_SPAWNED: return "GAME_EVENT_SPICE_BLOOM_SPAWNED";
             case eGameEventType::GAME_EVENT_SPICE_BLOOM_BLEW: return "GAME_EVENT_SPICE_BLOOM_BLEW";
+            case eGameEventType::GAME_EVENT_PLAYER_DEFEATED: return "GAME_EVENT_PLAYER_DEFEATED";
             default:
                 assert(false && "Unknown game event type for toString()");
                 break;
