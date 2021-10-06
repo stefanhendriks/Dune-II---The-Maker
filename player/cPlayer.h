@@ -21,6 +21,7 @@
 #define PLAYER_H
 
 #include <vector>
+#include "cPlayerNotification.h"
 
 
 struct s_PlaceResult {
@@ -360,6 +361,15 @@ public:
 
     bool hasMetQuota();
 
+    /**
+     * Checks if player has anything, if so, it returns true.
+     */
+    bool evaluateStillAlive();
+
+    bool isAlive() { return alive; }
+
+    std::vector<cPlayerNotification> & getNotifications();
+
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 
@@ -429,6 +439,9 @@ private:
     // A condition to win the mission
     int spiceQuota;              // > 0 means this amount to harvest, (if win/lose flags set accordingly for game)
 
+    bool alive;
+
+    std::vector<cPlayerNotification> notifications;
 };
 
 #endif

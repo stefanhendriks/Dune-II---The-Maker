@@ -279,6 +279,7 @@ enum eGameEventType {
 	GAME_EVENT_ABOUT_TO_BEGIN, // we're about to play the mission! (kind of init state)
 	GAME_EVENT_SPICE_BLOOM_SPAWNED, // spice bloom has been spawned on the map
 	GAME_EVENT_SPICE_BLOOM_BLEW, // spice bloom has been blown up
+	GAME_EVENT_PLAYER_DEFEATED, // a player got defeated
 };
 
 #endif /* ENUMS_H_ */

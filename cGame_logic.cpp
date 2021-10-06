@@ -44,6 +44,8 @@ void cGame::init() {
 	screenshot=0;
 	bPlaying=true;
 
+    TIMER_evaluatePlayerStatus = 5;
+
     bSkirmish=false;
 	iSkirmishStartPoints=2;
 
@@ -116,6 +118,9 @@ void cGame::init() {
 // initialize for missions
 void cGame::mission_init() {
     mapCamera->resetZoom();
+
+    // first 15 seconds, do not evaluate player alive status
+    TIMER_evaluatePlayerStatus = 5;
 
     winFlags = 0;
     loseFlags = 0;
@@ -197,9 +202,36 @@ void cGame::mission_init() {
 }
 
 /**
- * Checks if human player has won or lost
+ * Thinking every second while in combat
  */
-void cGame::think_winlose() {
+void cGame::thinkSlow_combat() {
+    if (TIMER_evaluatePlayerStatus > 0) {
+        TIMER_evaluatePlayerStatus--;
+    } else {
+        // TODO: Better way is with events (ie created/destroyed). However, there is no such
+        // bookkeeping per player *yet*. So instead, for now, we "poll" for this data.
+        for (int i = 1; i < MAX_PLAYERS; i++) {
+            cPlayer &player = players[i];
+            bool isAlive = player.isAlive();
+            // evaluate all players regardless if they are alive or not (who knows, they became alive?)
+            player.evaluateStillAlive();
+
+            if (isAlive && !player.isAlive()) {
+                s_GameEvent event {
+                        .eventType = eGameEventType::GAME_EVENT_PLAYER_DEFEATED,
+                        .entityType = eBuildType::SPECIAL,
+                        .entityID = -1,
+                        .player = &player
+                };
+
+                game.onNotify(event);
+            }
+
+            // TODO: event : Player joined/became alive, etc?
+        }
+        TIMER_evaluatePlayerStatus = 2;
+    }
+
     if (isMissionFailed()) {
         setMissionLost();
         return;
@@ -252,7 +284,7 @@ bool cGame::isMissionFailed() const {
         // check for non-human players if they have met spice quota, if so, they win (and thus human player loses)
         for (int i = 1; i < MAX_PLAYERS; i++) {
             cPlayer &player = players[i];
-            if (player.hasMetQuota()) {
+            if (player.isAlive() && player.hasMetQuota()) {
                 return true;
             }
         }
@@ -314,35 +346,13 @@ bool cGame::isMissionWon() const {
 }
 
 bool cGame::allAIPlayersAreDestroyed() const {
-    bool bAllDead = true;
-    cPlayer &humanPlayer = players[HUMAN];
-    // check all enemy structures/units, if they are all dead, then we have "won"
-    for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *pStructure = structure[i];
-        if (pStructure == nullptr) continue;
-        if (pStructure->getOwner() == HUMAN || pStructure->getOwner() == AI_WORM || pStructure->getOwner() == AI_CPU5) continue;
-        if (pStructure->getPlayer()->isSameTeamAs(&humanPlayer)) continue; // skip players of same team as human player
-        bAllDead = false;
-        break;
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (i == HUMAN || i == AI_WORM || i == AI_CPU5) continue; // do not evaluate these players
+        cPlayer &player = players[i];
+        if (!player.isAlive()) continue;
+        return false;
     }
-
-    // no structures found, validate units (this if-statement is there for optimizations, because looping through
-// structures is quicker than looping through units)
-    if (bAllDead) {
-        // check units now
-        for (int i = 0; i < MAX_UNITS; i++) {
-            cUnit &pUnit = unit[i];
-            if (!pUnit.isValid()) continue;
-            if (pUnit.iPlayer == HUMAN || pUnit.iPlayer == AI_WORM || pUnit.iPlayer == AI_CPU5) continue;
-            if (pUnit.isAirbornUnit()) continue; // do not count airborn units
-            if (pUnit.isDead()) continue; // in case we have some 'half-dead' units that got passed the isValid check...
-            // a better way for this would be to have such units in a separate collection.
-            if (pUnit.getPlayer()->isSameTeamAs(&humanPlayer)) continue; // skip players of same team as human player
-            bAllDead = false;
-            break;
-        }
-    }
-    return bAllDead;
+    return true;
 }
 
 
@@ -1584,6 +1594,12 @@ void cGame::setState(int newState) {
     } else if (newState == GAME_SETUPSKIRMISH) {
         gameState = new cSetupSkirmishGameState(*this);
     } else if (newState == GAME_PLAYING) {
+        // evaluate all players, so we have initial 'alive' values set properly
+        for (int i = 1; i < MAX_PLAYERS; i++) {
+            cPlayer &player = players[i];
+            player.evaluateStillAlive();
+        }
+
         // handle update
         s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,

@@ -78,7 +78,7 @@ public:
 
     int iMusicType;
 
-    void think_winlose();
+    void thinkSlow_combat();
     void winning();       // winning
     void losing();        // losing
 
@@ -249,6 +249,12 @@ private:
 
     bool hasWinConditionHumanMustLoseAllBuildings() const;
 
+    bool hasWinConditionAIShouldLoseEverything() const;
+
+    bool allAIPlayersAreDestroyed() const;
+
+    bool hasGameOverConditionAIHasNoBuildings() const;
+
     /**
      * Variables start here
      */
@@ -272,14 +278,10 @@ private:
     int shake_y;
     int TIMER_shake;
 
+    int TIMER_evaluatePlayerStatus;
+
     // win/lose flags
     int8_t winFlags, loseFlags;
-
-    bool hasWinConditionAIShouldLoseEverything() const;
-
-    bool allAIPlayersAreDestroyed() const;
-
-    bool hasGameOverConditionAIHasNoBuildings() const;
 };
 
 #endif

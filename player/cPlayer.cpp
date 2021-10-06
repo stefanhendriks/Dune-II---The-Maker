@@ -160,6 +160,9 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain) {
     assert(id < MAX_PLAYERS);
     this->id = id;
 
+    // by default we're alive
+    alive = true;
+
     spiceQuota = 0;
 
     setBrain(brain);
@@ -699,6 +702,19 @@ void cPlayer::thinkFast() {
     if (brain_) {
         brain_->thinkFast();
     }
+
+    for (auto &notification : notifications) {
+        notification.thinkFast();
+    }
+
+    // remove notifications no longer visible
+    notifications.erase(
+            std::remove_if(
+                    notifications.begin(),
+                    notifications.end(),
+                    [](cPlayerNotification m) { return !m.isVisible(); }),
+            notifications.end()
+    );
 }
 
 
@@ -1391,7 +1407,16 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
 
 void cPlayer::onNotify(const s_GameEvent &event) {
     // notify building list updater if it was a structure of mine. So it gets removed from the building list.
+    if (event.eventType == eGameEventType::GAME_EVENT_PLAYER_DEFEATED) {
+        char msg[255];
+        sprintf(msg, "Player %s got defeated.", event.player->getHouseName().c_str());
+        notifications.push_back(cPlayerNotification(msg));
+    }
     if (event.player == this) {
+        if (event.eventType == eGameEventType::GAME_EVENT_CREATED) {
+            // it is mine
+        }
+
         if (event.eventType == eGameEventType::GAME_EVENT_DISCOVERED) {
             onEntityDiscovered(event);
         }
@@ -1865,4 +1890,35 @@ std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const {
 
 bool cPlayer::hasMetQuota() {
     return spiceQuota > 0 && hasEnoughCreditsFor(spiceQuota);
+}
+
+bool cPlayer::evaluateStillAlive() {
+    alive = false;
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+        cAbstractStructure *abstractStructure = structure[i];
+        if (!abstractStructure) continue;
+        if (!abstractStructure->isValid()) continue;
+        if (!abstractStructure->belongsTo(this)) continue;
+        alive = true;
+        break;
+    }
+
+    if (!alive) {
+        // check units now
+        for (int i = 0; i < MAX_UNITS; i++) {
+            cUnit &pUnit = unit[i];
+            if (!pUnit.isValid()) continue;
+            if (pUnit.isAirbornUnit()) continue; // do not count airborn units
+            if (pUnit.isDead()) continue; // in case we have some 'half-dead' units that got pass the isValid check...
+            // a better way for this would be to have such units in a separate collection.
+            if (!pUnit.belongsTo(this)) continue;
+            alive = true;
+            break;
+        }
+    }
+    return isAlive();
+}
+
+std::vector<cPlayerNotification> &cPlayer::getNotifications() {
+    return notifications;
 }

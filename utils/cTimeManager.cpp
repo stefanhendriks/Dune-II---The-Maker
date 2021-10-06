@@ -54,7 +54,7 @@ void cTimeManager::handleTimerAllegroTimerSeconds() {
     // run this only once
     if (timerSecond > 0) {
         if (game.isState(GAME_PLAYING)) {
-            game.think_winlose();
+            game.thinkSlow_combat();
         }
     }
 

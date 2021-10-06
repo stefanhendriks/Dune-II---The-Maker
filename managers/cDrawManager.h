@@ -1,69 +1,82 @@
-/**
-	Class responsible for all drawing
-*/
 #ifndef CDRAWMANAGER_H_
 #define CDRAWMANAGER_H_
 
 class cDrawManager {
 
-	public:
-		cDrawManager(cPlayer * thePlayer);
-		~cDrawManager();
+public:
+    cDrawManager(cPlayer *thePlayer);
 
-		void drawCombatState();
+    ~cDrawManager();
 
-		CreditsDrawer *getCreditsDrawer() { return creditsDrawer; }
-		cMessageDrawer *getMessageDrawer() { return messageDrawer; }
-		cMiniMapDrawer *getMiniMapDrawer() { return miniMapDrawer; }
-		cOrderDrawer *getOrderDrawer() { return orderDrawer; }
-        cMouseDrawer *getMouseDrawer() { return mouseDrawer; }
-        cPlaceItDrawer *getPlaceItDrawer() { return placeitDrawer; }
+    void drawCombatState();
 
-		cBuildingListDrawer *getBuildingListDrawer() { return sidebarDrawer->getBuildingListDrawer(); }
+    CreditsDrawer *getCreditsDrawer() { return creditsDrawer; }
 
-        void drawMouse();
+    cMessageDrawer *getMessageDrawer() { return messageDrawer; }
 
-		void destroy();
+    cMiniMapDrawer *getMiniMapDrawer() { return miniMapDrawer; }
 
-		void setPlayerToDraw(cPlayer * playerToDraw);
+    cOrderDrawer *getOrderDrawer() { return orderDrawer; }
 
-    protected:
-		void drawSidebar();
-		void drawCredits();
-		void drawStructurePlacing();
-		void drawDeployment();
-		void drawMessage();
-		void drawCombatMouse();
-		void drawRallyPoint();
-        void drawTopBarBackground();
+    cMouseDrawer *getMouseDrawer() { return mouseDrawer; }
 
-	private:
-		cSideBarDrawer * sidebarDrawer;
-		CreditsDrawer * creditsDrawer;
-		cOrderDrawer * orderDrawer;
-		cMapDrawer * mapDrawer;
-		cMiniMapDrawer * miniMapDrawer;
-		cParticleDrawer * particleDrawer;
-		cMessageDrawer * messageDrawer;
-		cPlaceItDrawer *placeitDrawer;
-		cStructureDrawer * structureDrawer;
-		cMouseDrawer * mouseDrawer;
+    cPlaceItDrawer *getPlaceItDrawer() { return placeitDrawer; }
 
-        BITMAP *optionsBar;
+    cBuildingListDrawer *getBuildingListDrawer() { return sidebarDrawer->getBuildingListDrawer(); }
 
-        int sidebarColor;
+    void drawMouse();
 
-    // TODO: unitDrawer
+    void destroy();
 
-		// TODO: bullet/projectile drawer
+    void setPlayerToDraw(cPlayer *playerToDraw);
 
-		cPlayer * player;
+protected:
+    void drawSidebar();
 
-		BITMAP *topBarBmp;
+    void drawCredits();
 
+    void drawStructurePlacing();
+
+    void drawDeployment();
+
+    void drawMessage();
+
+    void drawCombatMouse();
+
+    void drawRallyPoint();
+
+    void drawTopBarBackground();
+
+private:
     void drawOptionBar();
 
     void drawDebugInfoUsages() const;
+
+    void drawNotifications();
+
+    // Properties:
+    cSideBarDrawer *sidebarDrawer;
+    CreditsDrawer *creditsDrawer;
+    cOrderDrawer *orderDrawer;
+    cMapDrawer *mapDrawer;
+    cMiniMapDrawer *miniMapDrawer;
+    cParticleDrawer *particleDrawer;
+    cMessageDrawer *messageDrawer;
+    cPlaceItDrawer *placeitDrawer;
+    cStructureDrawer *structureDrawer;
+    cMouseDrawer *mouseDrawer;
+
+    BITMAP *optionsBar;
+
+    int sidebarColor;
+
+    // TODO: unitDrawer
+
+    // TODO: bullet/projectile drawer
+
+    cPlayer *player;
+
+    BITMAP *topBarBmp;
 };
 
 #endif
