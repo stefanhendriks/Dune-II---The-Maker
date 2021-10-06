@@ -240,6 +240,11 @@ int INI_WordType(char word[25], int section) {
         if (strcmp(word, "BriefPicture") == 0)
             return WORD_BRIEFPICTURE;
 
+        if (strcmp(word, "WinFlags") == 0)
+            return WORD_WINFLAGS;
+
+        if (strcmp(word, "LoseFlags") == 0)
+            return WORD_LOSEFLAGS;
 
     } else if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
         if (strcmp(word, "Team") == 0)
@@ -1398,12 +1403,14 @@ void INI_Scenario_Section_Basic(cAbstractMentat *pMentat, char *value, int wordt
         if (!isInString(scene, "unknown")) {
             pMentat->loadScene(scene);
         }
-    }
-
-    if (wordtype == WORD_FOCUS) {
+    } else if (wordtype == WORD_FOCUS) {
         int focusCell = INI_WordValueINT(linefeed);
         players[0].setFocusCell(focusCell);
         mapCamera->centerAndJumpViewPortToCell(focusCell);
+    } else if (wordtype == WORD_WINFLAGS) {
+        game.setWinFlags(INI_WordValueINT(linefeed));
+    } else if (wordtype == WORD_LOSEFLAGS) {
+        game.setLoseFlags(INI_WordValueINT(linefeed));
     }
 }
 
@@ -1899,24 +1906,26 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
     {
         char msg[255];
         memset(msg, 0, sizeof(msg));
-        int housePlayer = iPl_house[playerIndex];
-        sprintf(msg, "House for id [%d] is [%d] - human id is [%d]", playerIndex, housePlayer, iHumanID);
+        int houseForPlayer = iPl_house[playerIndex];
+        sprintf(msg, "House for id [%d] is [%d] - human id is [%d]", playerIndex, houseForPlayer, iHumanID);
         logbook(msg);
-        if (housePlayer > -1) {
+        if (houseForPlayer > -1) {
             int creditsPlayer = iPl_credits[playerIndex];
+            int quota = iPl_quota[playerIndex];
+
             if (playerIndex == iHumanID) {
                 char msg[255];
                 memset(msg, 0, sizeof(msg));
-                sprintf(msg, "INI: Setting up human player, credits to [%d], house [%d] and team [%d]", creditsPlayer, housePlayer, 0);
+                sprintf(msg, "INI: Setting up human player, credits to [%d], house [%d] and team [%d]", creditsPlayer, houseForPlayer, 0);
                 logbook(msg);
                 players[HUMAN].setCredits(creditsPlayer);
-                players[HUMAN].setHouse(housePlayer);
+                players[HUMAN].setHouse(houseForPlayer);
                 players[HUMAN].setTeam(0);
 
                 // Fremen are always the same CPU index, so check what house the human player is, and depending
                 // on that set up FREMEN player team
                 players[AI_CPU5].setHouse(FREMEN);
-                if (housePlayer == ATREIDES) {
+                if (houseForPlayer == ATREIDES) {
                     fremenIsHumanAlly = true;
                 }
 
@@ -1925,11 +1934,16 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
                     drawManager->getCreditsDrawer()->setCredits();
                 }
 
-                if (iPl_quota[playerIndex] > 0) {
-                    game.iWinQuota = iPl_quota[playerIndex];
+                if (quota > 0) {
+                    players[HUMAN].setQuota(quota);
                 }
+
             } else {
-                if (housePlayer == FREMEN) {
+                if (quota > 0) {
+                    players[iCPUId].setQuota(quota);
+                }
+
+                if (houseForPlayer == FREMEN) {
                     // seems like a non-standard Dune 2 mission, this will break
                     assert(false && "No FREMEN supported in INI files yet");
                 }
@@ -1939,11 +1953,11 @@ void INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *
                 char msg[255];
                 memset(msg, 0, sizeof(msg));
                 sprintf(msg, "INI: Setting up CPU player, credits to [%d], house to [%d] and team [%d]",
-                        creditsPlayer, housePlayer, teamIndexAI);
+                        creditsPlayer, houseForPlayer, teamIndexAI);
                 logbook(msg);
 
                 players[iCPUId].setCredits(creditsPlayer);
-                players[iCPUId].setHouse(housePlayer);
+                players[iCPUId].setHouse(houseForPlayer);
                 iCPUId++;
             }
         } else {

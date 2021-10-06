@@ -125,6 +125,8 @@
 #define WORD_MAPBLOOM       68   // scen.ini (spice blooms for DUNE 2 maps)
 #define WORD_MAPFIELD       78   // scen.ini (spice fields for DUNE 2 maps)
 #define WORD_QUOTA          79
+#define WORD_WINFLAGS       192
+#define WORD_LOSEFLAGS      193
 
 #define WORD_BRIEFPICTURE   80
 

@@ -20,8 +20,6 @@
 #include <algorithm>
 #include <random>
 #include "include/d2tmh.h"
-#include "cGame.h"
-
 
 cGame::cGame() {
 	screen_x = 800;
@@ -61,8 +59,6 @@ void cGame::init() {
 	hover_unit=-1;
 
     setState(GAME_MENU);
-
-    iWinQuota=-1;              // > 0 means, get this to win the mission, else, destroy all!
 
 	selected_structure=-1;
 
@@ -129,9 +125,7 @@ void cGame::mission_init() {
 	paths_created=0;
 	hover_unit=-1;
 
-    iWinQuota=-1;              // > 0 means, get this to win the mission, else, destroy all!
-
-	selected_structure=-1;
+    selected_structure=-1;
 
 	bPlaceIt=false;			// we do not place
 	bPlacedIt=false;
@@ -254,22 +248,75 @@ void cGame::setMissionLost() {
 }
 
 bool cGame::isMissionFailed() const {
-    cPlayer &humanPlayer = players[HUMAN];
-    return humanPlayer.getAllMyStructuresAsId().empty() && humanPlayer.getAllMyUnits().empty();
+    if (hasGameOverConditionHarvestForSpiceQuota()) {
+        // check for non-human players if they have met spice quota, if so, they win (and thus human player loses)
+        for (int i = 1; i < MAX_PLAYERS; i++) {
+            cPlayer &player = players[i];
+            if (player.hasMetQuota()) {
+                return true;
+            }
+        }
+    }
+
+    if (hasGameOverConditionPlayerHasNoBuildings()) {
+        cPlayer &humanPlayer = players[HUMAN];
+        bool hasNothing = humanPlayer.getAllMyStructuresAsId().empty() && humanPlayer.getAllMyUnits().empty();
+        if (hasNothing) {
+            /**
+             * If any of the bits in “LoseFlags” is set and the corresponding condition holds true
+             * the player has won (and the computer has lost)
+             */
+            if (hasWinConditionHumanMustLoseAllBuildings()) {
+                // this means, if any other player has lost all, that player wins, this is not (yet)
+                // supported. Mainly because we can't distinguish yet between 'active' and non-active players
+                // since we have a fixed list of players.
+
+                // so for now just do this:
+                return false; // it is meant to win the game by losing all...
+            } else {
+                return true; // nope, it should lose mission now
+            }
+        }
+    }
+
+    return false;
 }
 
 bool cGame::isMissionWon() const {
-    // win by money quota
     cPlayer &humanPlayer = players[HUMAN];
-
-    if (iWinQuota > 0) {
-        if (humanPlayer.hasEnoughCreditsFor(iWinQuota)) {
+    if (hasGameOverConditionHarvestForSpiceQuota()) {
+        if (humanPlayer.hasMetQuota()) {
             return true;
         }
     }
 
-    // determine if any player (except sandworm) is dead
+    if (hasGameOverConditionPlayerHasNoBuildings()) {
+        if (hasWinConditionHumanMustLoseAllBuildings()) {
+            bool hasNothing = humanPlayer.getAllMyStructuresAsId().empty() && humanPlayer.getAllMyUnits().empty();
+            if (hasNothing) {
+                return true;
+            }
+        }
+
+        if (hasWinConditionAIShouldLoseEverything()) {
+            if (allAIPlayersAreDestroyed()) {
+                return true;
+            }
+        }
+    } else if (hasGameOverConditionAIHasNoBuildings()) {
+        if (hasWinConditionAIShouldLoseEverything()) {
+            if (allAIPlayersAreDestroyed()) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool cGame::allAIPlayersAreDestroyed() const {
     bool bAllDead = true;
+    cPlayer &humanPlayer = players[HUMAN];
+    // check all enemy structures/units, if they are all dead, then we have "won"
     for (int i = 0; i < MAX_STRUCTURES; i++) {
         cAbstractStructure *pStructure = structure[i];
         if (pStructure == nullptr) continue;
@@ -280,7 +327,7 @@ bool cGame::isMissionWon() const {
     }
 
     // no structures found, validate units (this if-statement is there for optimizations, because looping through
-    // structures is quicker than looping through units)
+// structures is quicker than looping through units)
     if (bAllDead) {
         // check units now
         for (int i = 0; i < MAX_UNITS; i++) {
@@ -289,15 +336,47 @@ bool cGame::isMissionWon() const {
             if (pUnit.iPlayer == HUMAN || pUnit.iPlayer == AI_WORM || pUnit.iPlayer == AI_CPU5) continue;
             if (pUnit.isAirbornUnit()) continue; // do not count airborn units
             if (pUnit.isDead()) continue; // in case we have some 'half-dead' units that got passed the isValid check...
-                                          // a better way for this would be to have such units in a separate collection.
+            // a better way for this would be to have such units in a separate collection.
             if (pUnit.getPlayer()->isSameTeamAs(&humanPlayer)) continue; // skip players of same team as human player
             bAllDead = false;
             break;
         }
     }
-
-    // all dead == mission success!
     return bAllDead;
+}
+
+
+/**
+ * Remember, the 'winFlags' are used to determine when the game is "over". Only then the lose flags are evaluated
+ * and used to determine who has won. (According to the SCEN specification).
+ * @return
+ */
+bool cGame::hasWinConditionHumanMustLoseAllBuildings() const {
+    return (loseFlags & WINLOSEFLAGS_HUMAN_HAS_BUILDINGS) != 0;
+}
+
+bool cGame::hasWinConditionAIShouldLoseEverything() const {
+    return (loseFlags & WINLOSEFLAGS_AI_NO_BUILDINGS) != 0;
+}
+
+/**
+ * Game over condition: player has no buildings (WinFlags)
+ * @return
+ */
+bool cGame::hasGameOverConditionPlayerHasNoBuildings() const {
+    return (winFlags & WINLOSEFLAGS_HUMAN_HAS_BUILDINGS) != 0;
+}
+
+/**
+ * Game over condition: Spice quota reached by player
+ * @return
+ */
+bool cGame::hasGameOverConditionHarvestForSpiceQuota() const {
+    return (winFlags & WINLOSEFLAGS_QUOTA) != 0;
+}
+
+bool cGame::hasGameOverConditionAIHasNoBuildings() const {
+    return (winFlags & WINLOSEFLAGS_AI_NO_BUILDINGS) != 0;
 }
 
 void cGame::think_mentat() {
@@ -1797,4 +1876,22 @@ int cGame::getColorPlaceBad() {
 
 int cGame::getColorPlaceGood() {
     return getColorFadeSelected(makecol(64, 255, 64));
+}
+
+void cGame::setWinFlags(int value) {
+    if (DEBUGGING) {
+        char msg[255];
+        sprintf(msg, "Changing winFlags from %d to %d", winFlags, value);
+        logbook(msg);
+    }
+    winFlags = value;
+}
+
+void cGame::setLoseFlags(int value) {
+    if (DEBUGGING) {
+        char msg[255];
+        sprintf(msg, "Changing loseFlags from %d to %d", loseFlags, value);
+        logbook(msg);
+    }
+    loseFlags = value;
 }

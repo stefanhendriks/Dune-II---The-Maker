@@ -160,6 +160,8 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain) {
     assert(id < MAX_PLAYERS);
     this->id = id;
 
+    spiceQuota = 0;
+
     setBrain(brain);
 
     memcpy(pal, general_palette, sizeof(pal));
@@ -465,7 +467,7 @@ bool cPlayer::hasAtleastOneStructure(int structureType) const {
 }
 
 bool cPlayer::hasEnoughCreditsFor(float requestedAmount) const {
-    return credits > requestedAmount;
+    return credits >= requestedAmount;
 }
 
 bool cPlayer::hasEnoughCreditsForUnit(int unitType) {
@@ -1861,3 +1863,6 @@ std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const {
     return ids;
 }
 
+bool cPlayer::hasMetQuota() {
+    return spiceQuota > 0 && hasEnoughCreditsFor(spiceQuota);
+}

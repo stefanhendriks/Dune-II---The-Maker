@@ -891,6 +891,10 @@ void cSetupSkirmishGameState::interact() {
             }
 
 
+            // default flags (destroy everyone but me/my team)
+            game.setWinFlags(3);
+            game.setLoseFlags(1);
+
             game.FADE_OUT();
             playMusicByType(MUSIC_PEACE);
 
