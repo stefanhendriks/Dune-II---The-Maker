@@ -356,6 +356,10 @@ public:
 
     int getSameOrSimilarUnitType(int requestedUnitType);
 
+    void setQuota(int value) { spiceQuota = value; }
+
+    bool hasMetQuota();
+
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 
@@ -421,6 +425,10 @@ private:
     void onEntityDiscovered(const s_GameEvent &event);
 
     void onMyUnitDestroyed(const s_GameEvent &event);
+
+    // A condition to win the mission
+    int spiceQuota;              // > 0 means this amount to harvest, (if win/lose flags set accordingly for game)
+
 };
 
 #endif

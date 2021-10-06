@@ -86,7 +86,6 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.mission_init();
         game.iMission = 9;
         game.iRegion = 22;
-        game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
         game.createAndPrepareMentatForHumanPlayer();
@@ -94,20 +93,15 @@ void cKeyboardManager::DEBUG_KEYS() {
 
     // WIN MISSION
     if (key[KEY_F2]) {
-        if (game.iWinQuota > -1)
-            players[0].setCredits(game.iWinQuota + 1);
-        else {
-            game.destroyAllStructures(false);
-            game.destroyAllUnits(false);
-        }
-    }
-    // LOSE MISSION
-    if (key[KEY_F3]) {
-        game.destroyAllStructures(true);
-        game.destroyAllUnits(true);
+        game.setMissionWon();
     }
 
-    // GIVE 299999 CREDITS TO ALL PLAYERS
+    // LOSE MISSION
+    if (key[KEY_F3]) {
+        game.setMissionLost();
+    }
+
+    // GIVE CREDITS TO ALL PLAYERS
     if (key[KEY_F4] && !key[KEY_LSHIFT]) {
         for (int i = 0; i < AI_WORM; i++) {
             players[i].setCredits(5000);
@@ -156,7 +150,6 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.mission_init();
         game.iMission = 3;
         game.iRegion = 6;
-        game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
         game.createAndPrepareMentatForHumanPlayer();
@@ -167,7 +160,6 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.mission_init();
         game.iMission = 4;
         game.iRegion = 10;
-        game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
         game.createAndPrepareMentatForHumanPlayer();
@@ -177,7 +169,6 @@ void cKeyboardManager::DEBUG_KEYS() {
         game.mission_init();
         game.iMission = 5;
         game.iRegion = 13;
-        game.iWinQuota = -1;
         game.setState(GAME_BRIEFING);
         playMusicByType(MUSIC_BRIEFING);
         game.createAndPrepareMentatForHumanPlayer();

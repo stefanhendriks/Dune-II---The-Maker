@@ -78,9 +78,6 @@ public:
 
     int iMusicType;
 
-    // Condition to win the mission:
-    int iWinQuota;              // > 0 means, get this to win the mission, else, destroy all!
-
     void think_winlose();
     void winning();       // winning
     void losing();        // losing
@@ -202,8 +199,12 @@ public:
 
     int getColorPlaceGood();
 
-    // win/lose flags
-    int8_t winFlags, loseFlags;
+    void setWinFlags(int value);
+    void setLoseFlags(int value);
+
+    void setMissionLost();
+
+    void setMissionWon();
 
 private:
 	void updateState();
@@ -242,6 +243,12 @@ private:
 
     void prepareMentatToTellAboutHouse(int house);
 
+    bool hasGameOverConditionHarvestForSpiceQuota() const;
+
+    bool hasGameOverConditionPlayerHasNoBuildings() const;
+
+    bool hasWinConditionHumanMustLoseAllBuildings() const;
+
     /**
      * Variables start here
      */
@@ -265,9 +272,14 @@ private:
     int shake_y;
     int TIMER_shake;
 
-    void setMissionLost();
+    // win/lose flags
+    int8_t winFlags, loseFlags;
 
-    void setMissionWon();
+    bool hasWinConditionAIShouldLoseEverything() const;
+
+    bool allAIPlayersAreDestroyed() const;
+
+    bool hasGameOverConditionAIHasNoBuildings() const;
 };
 
 #endif
