@@ -175,16 +175,16 @@ bool cBuildingListItem::isType(eBuildType value) {
     return getBuildType() == value;
 }
 
-s_UpgradeInfo& cBuildingListItem::getS_Upgrade() {
+s_UpgradeInfo& cBuildingListItem::getUpgradeInfo() {
     int buildId = getBuildId();
     if (getBuildType() != eBuildType::UPGRADE){
-        logbook("ERROR!!! - calling getS_Upgrade while type is not UPGRADE! - falling back to buildId 1 as safety");
+        logbook("ERROR!!! - calling getUpgradeInfo while type is not UPGRADE! - falling back to buildId 1 as safety");
         buildId = 1;
     }
     return sUpgradeInfo[buildId];
 }
 
-s_SpecialInfo& cBuildingListItem::getS_Special() {
+s_SpecialInfo& cBuildingListItem::getSpecialInfo() {
     int buildId = getBuildId();
     if (getBuildType() != eBuildType::SPECIAL){
         logbook("ERROR!!! - calling gets_Special while type is not SPECIAL! - falling back to buildId 1 as safety");
@@ -193,19 +193,19 @@ s_SpecialInfo& cBuildingListItem::getS_Special() {
     return sSpecialInfo[buildId];
 }
 
-s_UnitInfo& cBuildingListItem::getS_UnitP() {
+s_UnitInfo& cBuildingListItem::getUnitInfo() {
     int buildId = getBuildId();
     if (getBuildType() != eBuildType::UNIT){
-        logbook("ERROR!!! - calling getS_UnitP while type is not UNIT! - falling back to buildId 1 as safety");
+        logbook("ERROR!!! - calling getUnitInfo while type is not UNIT! - falling back to buildId 1 as safety");
         buildId = 1;
     }
     return sUnitInfo[buildId];
 }
 
-s_StructureInfo& cBuildingListItem::getS_Structures() {
+s_StructureInfo& cBuildingListItem::getStructureInfo() {
     int buildId = getBuildId();
     if (getBuildType() != eBuildType::STRUCTURE){
-        logbook("ERROR!!! - calling getS_Structures while type is not STRUCTURE! - falling back to buildId 1 as safety");
+        logbook("ERROR!!! - calling getStructureInfo while type is not STRUCTURE! - falling back to buildId 1 as safety");
         buildId = 1;
     }
     return sStructureInfo[buildId];
@@ -344,20 +344,20 @@ std::string cBuildingListItem::getInfo() {
     }
 
     if (isTypeStructure()) {
-        s_StructureInfo structureType = getS_Structures();
+        s_StructureInfo structureType = getStructureInfo();
         sprintf(msg, "$%d | %s | %d Power | %d Secs", getBuildCost(), structureType.name, (structureType.power_give - structureType.power_drain), seconds);
     } else if (isTypeUnit()) {
-        s_UnitInfo unitType = getS_UnitP();
+        s_UnitInfo unitType = getUnitInfo();
         if (getBuildCost() > 0) {
             sprintf(msg, "$%d | %s | %d Secs", getBuildCost(), unitType.name, seconds);
         } else {
             sprintf(msg, "%s | %d Secs", sUnitInfo[getBuildId()].name, seconds);
         }
     } else if (isTypeUpgrade()){
-        s_UpgradeInfo upgrade = getS_Upgrade();
+        s_UpgradeInfo upgrade = getUpgradeInfo();
         sprintf(msg, "UPGRADE: $%d | %s | %d Secs", getBuildCost(), upgrade.description, seconds);
     } else if (isTypeSpecial()) {
-        s_SpecialInfo special = getS_Special();
+        s_SpecialInfo special = getSpecialInfo();
         sprintf(msg, "$%d | %s | %d Secs", getBuildCost(), special.description, seconds);
     } else {
         sprintf(msg, "ERROR: UNKNOWN BUILD TYPE");
@@ -371,4 +371,26 @@ bool cBuildingListItem::isFlashing() {
 
 void cBuildingListItem::decreaseFlashingTimer() {
     if (TIMER_flashing > 0) TIMER_flashing--;
+}
+
+std::string cBuildingListItem::getTypeString() {
+    return std::string(eBuildTypeString(this->type));
+}
+
+std::string cBuildingListItem::getNameString() {
+    if (isTypeStructure()) {
+        s_StructureInfo info = getStructureInfo();
+        return std::string(info.name);
+    } else if (isTypeUnit()) {
+        s_UnitInfo &info = getUnitInfo();
+        return std::string(info.name);
+    } else if (isTypeUpgrade()){
+        s_UpgradeInfo upgrade = getUpgradeInfo();
+        return std::string(upgrade.description);
+    } else if (isTypeSpecial()) {
+        s_SpecialInfo special = getSpecialInfo();
+        return std::string(special.description);
+    }
+
+    return std::string("Unknown type.");
 }

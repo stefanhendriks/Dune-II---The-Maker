@@ -295,11 +295,12 @@ void cDrawManager::drawOptionBar() {
 
 void cDrawManager::drawNotifications() {
     std::vector<cPlayerNotification> &notifications = player->getNotifications();
-    int y = cSideBar::TopBarHeight + 14; // 12 pixels
+//    int y = cSideBar::TopBarHeight + 14; // 12 pixels
+    int y = game.screen_y - 11;
     cTextDrawer textDrawer(game_font);
     for (auto &notification : notifications) {
-        textDrawer.drawText(0, y, notification.getMessage().c_str());
-        y+=13;
+        textDrawer.drawText(4, y, notification.getColor(), notification.getMessage().c_str());
+        y-=15;
     }
 }
 

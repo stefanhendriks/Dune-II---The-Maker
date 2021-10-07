@@ -200,7 +200,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
             assert(item->getTimesToBuild() > -1);
 
             // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
-            if (!item->getS_UnitP().airborn) {
+            if (!item->getUnitInfo().airborn) {
                 // ground-unit
                 deployUnit(item, buildId);
             } else {
@@ -236,7 +236,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
             game.onNotify(newEvent);
         } else if (eBuildType == SPECIAL) {
             buildingListUpdater->onBuildItemCompleted(item);
-            const s_SpecialInfo &special = item->getS_Special();
+            const s_SpecialInfo &special = item->getSpecialInfo();
 
             if (special.providesType == UNIT) {
                 item->decreaseTimesToBuild(); // decrease amount of times to build
@@ -332,23 +332,24 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item) {
                 // We do NOT send a "Finished" event here; see above - we send a special_ready instead
             }
         } else if (eBuildType == UPGRADE) {
-            buildingListUpdater->onUpgradeCompleted(item);
-            removeItemFromList(item);
-    //            list->removeItemFromList(item->getSlotId()); // no need to explicitly remove from list, will be done by onUpgradeCompleted
-
             // notify game that the item just has been finished
             s_GameEvent newEvent {
                     .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
                     .entityType = eBuildType,
                     .entityID = -1,
-                    .player = nullptr,
+                    .player = player,
                     .entitySpecificType = buildId,
                     .atCell = -1,
                     .isReinforce = false,
-                    .buildingListItem = nullptr
+                    .buildingListItem = item
             };
 
             game.onNotify(newEvent);
+
+            // these destroy the data..
+            buildingListUpdater->onUpgradeCompleted(item);
+            removeItemFromList(item);
+            //            list->removeItemFromList(item->getSlotId()); // no need to explicitly remove from list, will be done by onUpgradeCompleted
         }
     }
 }

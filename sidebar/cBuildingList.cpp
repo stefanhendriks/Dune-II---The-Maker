@@ -319,7 +319,7 @@ void cBuildingList::setStatusPendingUpgrade(int subListId) {
         if (item) {
             if (item->isTypeUpgrade()) {
                 // match the "provides" sublist id here!
-                if (item->getS_Upgrade().providesTypeSubList == subListId) {
+                if (item->getUpgradeInfo().providesTypeSubList == subListId) {
                     item->setStatusPendingUpgrade();
                 }
             } else {
@@ -338,7 +338,7 @@ void cBuildingList::setStatusAvailable(int subListId) {
         if (item) {
             if (item->isTypeUpgrade()) {
                 // match the "provides" sublist id here!
-                if (item->getS_Upgrade().providesTypeSubList == subListId) {
+                if (item->getUpgradeInfo().providesTypeSubList == subListId) {
                     item->setStatusAvailable();
                 }
             } else {
@@ -357,7 +357,7 @@ void cBuildingList::setStatusPendingBuilding(int subListId) {
         if (item) {
             if (item->isTypeUpgrade()) {
                 // match the "provides" sublist id here!
-                if (item->getS_Upgrade().providesTypeSubList == subListId) {
+                if (item->getUpgradeInfo().providesTypeSubList == subListId) {
                     item->setStatusPendingBuilding();
                 }
             } else {

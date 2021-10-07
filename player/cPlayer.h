@@ -370,6 +370,8 @@ public:
 
     std::vector<cPlayerNotification> & getNotifications();
 
+    void addNotification(const char *msg, eNotificationType type);
+
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 

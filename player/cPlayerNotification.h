@@ -3,9 +3,15 @@
 
 #include <string>
 
+enum eNotificationType {
+    NEUTRAL,    // generic message, in white
+    PRIORITY,   // a more important message, yellow
+    BAD         // bad news, in red
+};
+
 class cPlayerNotification {
 public:
-    cPlayerNotification(std::string msg);
+    cPlayerNotification(std::string msg, eNotificationType type);
 
     void thinkFast();
 
@@ -13,9 +19,15 @@ public:
 
     std::string & getMessage();
 
+    int getTimer() const { return TIMER; }
+
+    int getColor();
+
 private:
     std::string msg;
     int TIMER;
+    int initialDuration;
+    eNotificationType type;
 };
 
 #endif //D2TM_CPLAYERNOTIFICATION_H
