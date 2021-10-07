@@ -349,20 +349,7 @@ int cPlayer::getAmountOfStructuresForType(int structureType) const {
  */
 int cPlayer::getAmountOfUnitsForType(int unitType) const {
     if (unitType < 0 || unitType > MAX_UNITTYPES) return -1;
-//    int count = 0;
-//    for (int i = 0; i < MAX_UNITS; i++) {
-//        cUnit &pUnit = unit[i];
-//        if (!pUnit.isValid()) continue;
-//        if (pUnit.iPlayer != this->getId()) continue;
-//        if (pUnit.isMarkedForRemoval()) continue; // skip units marked for removal, UGH this feels so wrong!
-//        if (pUnit.iType == unitType) {
-//            count++;
-//        }
-//        // TODO: Also count airborn units carrying any units here
-//    }
-
-    const std::vector<int> &vector = getAllMyUnitsForType(unitType);
-    return vector.size();
+    return getAllMyUnitsForType(unitType).size();
 }
 
 /**
@@ -825,7 +812,7 @@ cBuildingListItem *cPlayer::isUpgradeAvailableToGrant(eBuildType providesType, i
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *pItem = pList->getItem(i);
         if (pItem == nullptr) continue;
-        const s_UpgradeInfo &theUpgrade = pItem->getS_Upgrade();
+        const s_UpgradeInfo &theUpgrade = pItem->getUpgradeInfo();
         if (theUpgrade.providesType != providesType) continue;
         if (theUpgrade.providesTypeId == providesTypeId) {
             return pItem;
@@ -857,7 +844,7 @@ cBuildingListItem *cPlayer::isUpgradingList(int listId, int sublistId) const {
     for (int i = 0; i < MAX_ITEMS; i++) {
         cBuildingListItem *pItem = upgradesList->getItem(i);
         if (pItem == nullptr) continue;
-        const s_UpgradeInfo &theUpgrade = pItem->getS_Upgrade();
+        const s_UpgradeInfo &theUpgrade = pItem->getUpgradeInfo();
         // is this upgrade applicable to the listId/sublistId we're interested in?
         if (theUpgrade.providesTypeList == listId && theUpgrade.providesTypeSubList == sublistId) {
             if (pItem->isBuilding()) {
@@ -1409,10 +1396,17 @@ void cPlayer::onNotify(const s_GameEvent &event) {
     // notify building list updater if it was a structure of mine. So it gets removed from the building list.
     if (event.eventType == eGameEventType::GAME_EVENT_PLAYER_DEFEATED) {
         char msg[255];
-        sprintf(msg, "Player %s got defeated.", event.player->getHouseName().c_str());
-        notifications.push_back(cPlayerNotification(msg));
+        sprintf(msg, "Player %d (%s) has been defeated.", event.player->getId(), event.player->getHouseName().c_str());
+        addNotification(msg, eNotificationType::BAD);
     }
+
     if (event.player == this) {
+        if (event.eventType == eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET) {
+            char msg[255];
+            sprintf(msg, "%s is ready for deployment.", event.buildingListItem->getNameString().c_str());
+            addNotification(msg, eNotificationType::PRIORITY);
+        }
+
         if (event.eventType == eGameEventType::GAME_EVENT_CREATED) {
             // it is mine
         }
@@ -1430,6 +1424,14 @@ void cPlayer::onNotify(const s_GameEvent &event) {
         } else if (event.entityType == eBuildType::UNIT) {
             if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED) {
                 onMyUnitDestroyed(event);
+            }
+        }
+
+        if (event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED) {
+            if (event.entityType == eBuildType::UPGRADE) {
+                char msg[255];
+                sprintf(msg, "Upgrade: %s completed.", event.buildingListItem->getNameString().c_str());
+                addNotification(msg, eNotificationType::PRIORITY);
             }
         }
 
@@ -1827,11 +1829,18 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
     // If a harvester died, and it is the last. And we have atleast one REFINERY; then send a Harvester to that
     // player
     if (pUnit.isHarvester()) { // a harvester died
+        addNotification("You've lost a Harvester.", eNotificationType::PRIORITY);
+
         const std::vector<int> &refineries = getAllMyStructuresAsIdForType(REFINERY);
 
         if (!refineries.empty()) { // and its player still has a refinery)
             int harvesters = getAmountOfUnitsForType(HARVESTER);
             // check if the player has any harvester left
+
+            // if 1, or less
+            if (harvesters < 2) {
+                addNotification("You have one Harvester left.", eNotificationType::NEUTRAL);
+            }
 
             // No harvester found, deliver one
             if (harvesters < 1) {
@@ -1843,10 +1852,16 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event) {
                     REINFORCE(id, HARVESTER, refinery->getCell(), -1);
                 }
             }
-        } else {
+
             for (auto &structureId: refineries) {
                 cAbstractStructure *pStructure = structure[structureId];
                 pStructure->unitIsNoLongerInteractingWithStructure(event.entityID);
+            }
+        } else {
+            int harvesters = getAmountOfUnitsForType(HARVESTER);
+
+            if (harvesters < 1) {
+                addNotification("No harvesters and refineries left!", eNotificationType::BAD);
             }
         }
     }
@@ -1877,6 +1892,7 @@ std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const {
         if (!pUnit.isValid()) continue;
         if (pUnit.isDead()) continue;
         if (!pUnit.belongsTo(this)) continue;
+        if (pUnit.isMarkedForRemoval()) continue; // do not count marked for removal units
 
         // check for unit type?
         if (unitType > -1) {
@@ -1921,4 +1937,11 @@ bool cPlayer::evaluateStillAlive() {
 
 std::vector<cPlayerNotification> &cPlayer::getNotifications() {
     return notifications;
+}
+
+void cPlayer::addNotification(const char *msg, eNotificationType type) {
+    notifications.push_back(cPlayerNotification(msg, type));
+    std::sort(notifications.begin(), notifications.end(), [](const cPlayerNotification &lhs, const cPlayerNotification &rhs) {
+        return lhs.getTimer() > rhs.getTimer();
+    });
 }

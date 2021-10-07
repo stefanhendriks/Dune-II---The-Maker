@@ -32,6 +32,9 @@ public:
 	int getIconId() { return icon; }
     std::string getInfo();
 
+    std::string getTypeString();
+    std::string getNameString();
+
 	/**
 	 * The buildId is the 'type', ie if eBuildType == STRUCTURE, then buildId refers to what *kind* of structure. Ie, the
 	 * structure type. This could be WINDTRAP, REFINERY, etc. If eBuildType is UNIT, then buildId is for TANK, QUAD, etc.
@@ -74,10 +77,10 @@ public:
 	int getSlotId() { return slotId; } // return index of items[] array (set after adding item to list, default is < 0)
 	int getTimesOrdered() { return timesOrdered; }
 
-	s_SpecialInfo& getS_Special();
-	s_UpgradeInfo& getS_Upgrade();
-	s_UnitInfo& getS_UnitP();
-	s_StructureInfo& getS_Structures();
+	s_SpecialInfo& getSpecialInfo();
+	s_UpgradeInfo& getUpgradeInfo();
+	s_UnitInfo& getUnitInfo();
+	s_StructureInfo& getStructureInfo();
 
 	int getCosts();
 

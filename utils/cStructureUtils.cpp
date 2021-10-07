@@ -136,7 +136,7 @@ int cStructureUtils::findStructureTypeByTypeOfList(cBuildingListItem *item) {
     }
 
     if (item->isTypeSpecial()) {
-        const s_SpecialInfo &special = item->getS_Special();
+        const s_SpecialInfo &special = item->getSpecialInfo();
         if (special.providesType == UNIT) {
 	        return special.deployAtStructure;
 	    }

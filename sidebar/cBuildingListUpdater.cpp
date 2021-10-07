@@ -556,7 +556,7 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item) {
         return;
     }
 
-    const s_UpgradeInfo &upgradeType = item->getS_Upgrade();
+    const s_UpgradeInfo &upgradeType = item->getUpgradeInfo();
 
     // Upgrade structure + provide any unit or structure
     player->increaseStructureUpgradeLevel(upgradeType.structureType);
@@ -608,7 +608,7 @@ void cBuildingListUpdater::onUpgradeStarted(cBuildingListItem *pItem) {
     cSideBar *sideBar = player->getSideBar();
 
     // get the structure type it is upgrading
-    const s_UpgradeInfo &upgrade = pItem->getS_Upgrade();
+    const s_UpgradeInfo &upgrade = pItem->getUpgradeInfo();
     int listType = upgrade.providesTypeList;
     int subListType = upgrade.providesTypeSubList;
 
@@ -629,7 +629,7 @@ void cBuildingListUpdater::onUpgradeCancelled(cBuildingListItem *pItem) {
     cSideBar *sideBar = player->getSideBar();
 
     // get the structure type it is upgrading
-    const s_UpgradeInfo &upgrade = pItem->getS_Upgrade();
+    const s_UpgradeInfo &upgrade = pItem->getUpgradeInfo();
     int listType = upgrade.providesTypeList;
     int subListType = upgrade.providesTypeSubList;
 
@@ -691,7 +691,7 @@ void cBuildingListUpdater::onBuildItemCompleted(cBuildingListItem *pItem) {
 
     if (pItem->isTypeSpecial()) {
         // do stuff here for special item
-        const s_SpecialInfo &special = pItem->getS_Special();
+        const s_SpecialInfo &special = pItem->getSpecialInfo();
         return;
     }
 
