@@ -278,6 +278,8 @@ enum eGameEventType {
     GAME_EVENT_LIST_ITEM_PLACE_IT,
     // LAUNCHes special weapon (ie deathhand)
     GAME_EVENT_SPECIAL_LAUNCH,
+    // special weapon has been launched! (warning)
+    GAME_EVENT_SPECIAL_LAUNCHED,
     // cannot build requested thing
     GAME_EVENT_CANNOT_BUILD,
     // cannot create a path to destination, help!

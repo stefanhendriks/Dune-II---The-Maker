@@ -6,11 +6,7 @@
   Contact: stefan@fundynamic.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2010 (c) code by Stefan Hendriks
-
-  -----------------------------------------------
-  Game menu items
-  -----------------------------------------------
+  2001 - 2021 (c) code by Stefan Hendriks
 */
 
 #include "include/d2tmh.h"
@@ -63,7 +59,7 @@ void cGame::winning() {
     }
 }
 
-// Draw the mouse in combat mode, and do its interactions
+// Draw the mouse in combat mode, and do its interactions!?
 void cGame::combat_mouse() {
     cPlayer &humanPlayer = players[HUMAN];
     cGameControlsContext *context = humanPlayer.getGameControlsContext();
@@ -73,7 +69,7 @@ void cGame::combat_mouse() {
     bool isNotDeployingSomething = bDeployIt == false && bDeployedIt == false;
 
 	if (isNotPlacingSomething && isNotDeployingSomething) {
-        combat_mouse_normalCombatInteraction(context, humanPlayer, bOrderingUnits);
+        combat_mouse_normalCombatInteraction(humanPlayer, bOrderingUnits, context->getMouseCell());
     } // NOT PLACING / DEPLOYING STUFF
 
     if (mouse->isRightButtonPressed() && context->isMouseOnBattleField()) {
@@ -93,8 +89,10 @@ void cGame::combat_mouse() {
 
 void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGameControlsContext *context,
                                                        bool bOrderingUnits) const {
+    int structureIdWhereMouseHovers = context->getIdOfStructureWhereMouseHovers();
+
     if (key[KEY_P])	{
-        int iStr=context->getIdOfStructureWhereMouseHovers();
+        int iStr= structureIdWhereMouseHovers;
 
         if (structure[iStr]->getOwner() == HUMAN) {
             if (structure[iStr]->getType() == LIGHTFACTORY ||
@@ -110,7 +108,7 @@ void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGa
 
     // REPAIR
     if (key[KEY_R] && !bOrderingUnits) {
-        int structureId = context->getIdOfStructureWhereMouseHovers();
+        int structureId = structureIdWhereMouseHovers;
 
         if (structure[structureId]->getOwner() == HUMAN &&
             structure[structureId]->isDamaged()) {
@@ -130,7 +128,7 @@ void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGa
 
     // select structure
     if (mouse->isLeftButtonClicked() && bOrderingUnits == false && !key[KEY_R]) {
-        game.selected_structure = context->getIdOfStructureWhereMouseHovers();
+        game.selected_structure = structureIdWhereMouseHovers;
 
         // select list that belongs to structure when it is ours
         cAbstractStructure * theSelectedStructure = structure[game.selected_structure];
@@ -178,10 +176,8 @@ void cGame::mouse_combat_dragViewportInteraction() const {
     }
 }
 
-void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
-                                            cPlayer &humanPlayer,
-                                            bool &bOrderingUnits) const {
-    int mouseCell = context->getMouseCell();
+void
+cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderingUnits, int mouseCell) const {
 
     // Mouse is hovering above a unit
     if (hover_unit > -1) {
@@ -207,7 +203,7 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
 
     // when mouse hovers above a valid cell
     if (mouseCell > -1) {
-        mouseOnBattlefield(context, mouseCell, bOrderingUnits);
+        mouseOnBattlefield(mouseCell, bOrderingUnits);
     }
 
     if (mouse->isLeftButtonPressed()) {
@@ -344,13 +340,13 @@ void cGame::combat_mouse_normalCombatInteraction(cGameControlsContext *context,
     }
 }
 
-void cGame::mouseOnBattlefield(cGameControlsContext *context, int mouseCell, bool &bOrderingUnits) const {
+void cGame::mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const {
     if (mouse->isRightButtonClicked() && !mouse->isMapScrolling()) {
         UNIT_deselect_all();
     }
 
     // single clicking and moving
-    if (mouse->isLeftButtonClicked() && !mouse->isBoxSelecting()) {
+    if (mouse->isLeftButtonClicked() && !mouse->isBoxSelecting() && !game.bPlaceIt) {
         bool bParticle=false;
 
         if (mouse_tile == MOUSE_RALLY) {

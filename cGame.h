@@ -115,8 +115,6 @@ public:
     void combat_mouse();
 
 	int getGroupNumberFromKeyboard();
-	void destroyAllUnits(bool);
-	void destroyAllStructures(bool);
 
     int getColorFadeSelected(int r, int g, int b) {
         // Fade with all rgb
@@ -226,8 +224,7 @@ private:
 
     void install_bitmaps();
 
-    void combat_mouse_normalCombatInteraction(cGameControlsContext *context, cPlayer &humanPlayer,
-                                              bool &bOrderingUnits) const;
+    void combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderingUnits, int mc) const;
 
     void mouse_combat_dragViewportInteraction() const;
 
@@ -235,7 +232,7 @@ private:
 
     void mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGameControlsContext *context, bool bOrderingUnits) const;
 
-    void mouseOnBattlefield(cGameControlsContext *context, int mouseCell, bool &bOrderingUnits) const;
+    void mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const;
 
     bool isMissionWon() const;
 
