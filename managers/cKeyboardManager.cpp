@@ -230,11 +230,9 @@ void cKeyboardManager::GAME_KEYS() {
 
         // Center on the selected structure
         if (key[KEY_C]) {
-            if (humanPlayer.selected_structure > -1) {
-                cAbstractStructure *selectedStructure = structure[humanPlayer.selected_structure];
-                if (selectedStructure) {
-                    mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
-                }
+            cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
+            if (selectedStructure) {
+                mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
             }
         }
 

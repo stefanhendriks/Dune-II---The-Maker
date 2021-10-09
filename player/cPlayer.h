@@ -105,6 +105,8 @@ public:
 
     cSideBar *getSideBar() const { return sidebar; }
 
+    cAbstractStructure *getSelectedStructure();
+
     eHouseBitFlag getHouseBitFlag();
 
     int getHouseFadingColor() const;
