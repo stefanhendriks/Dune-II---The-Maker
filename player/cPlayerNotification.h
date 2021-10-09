@@ -9,6 +9,18 @@ enum eNotificationType {
     BAD         // bad news, in red
 };
 
+static const char* eNotificationTypeString(const eNotificationType &type) {
+    switch (type) {
+        case eNotificationType::NEUTRAL: return "NEUTRAL";
+        case eNotificationType::PRIORITY: return "PRIORITY";
+        case eNotificationType::BAD: return "BAD";
+        default:
+            assert(false && "Unknown eNotificationType?");
+            break;
+    }
+    return "";
+}
+
 class cPlayerNotification {
 public:
     cPlayerNotification(std::string msg, eNotificationType type);
