@@ -1400,6 +1400,12 @@ void cPlayer::onNotify(const s_GameEvent &event) {
         addNotification(msg, eNotificationType::BAD);
     }
 
+    if (event.eventType == eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED) {
+        char msg[255];
+        sprintf(msg, "%s launched!", event.buildingListItem->getNameString().c_str());
+        addNotification(msg, eNotificationType::BAD);
+    }
+
     if (event.player == this) {
         if (event.eventType == eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET) {
             char msg[255];

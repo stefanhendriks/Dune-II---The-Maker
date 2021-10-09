@@ -434,6 +434,7 @@ void cGame::updateState() {
         pPlayer->update();
 
         if (i != HUMAN) continue; // non HUMAN players are done
+
         mouse_tile = MOUSE_NORMAL;
 
         // change the mouse tile depending on what we're hovering over
@@ -450,7 +451,6 @@ void cGame::updateState() {
                     break;
                 }
             }
-
 
             if (mouse_tile == MOUSE_MOVE) {
                 // change to attack cursor if hovering over enemy unit
@@ -818,47 +818,6 @@ void cGame::stateSelectHouse() {
 void cGame::stateSelectYourNextConquest() {
     gameState->draw();
     gameState->interact();
-}
-
-void cGame::destroyAllUnits(bool bHumanPlayer) {
-	if (bHumanPlayer) {
-		for (int i=0; i < MAX_UNITS; i++) {
-			if (unit[i].isValid()) {
-				if (unit[i].iPlayer == 0) {
-					unit[i].die(true, false); {
-					}
-				}
-			}
-		}
-	} else {
-		for (int i=0; i < MAX_UNITS; i++) {
-			if (unit[i].isValid()) {
-				if (unit[i].iPlayer > 0) {
-					unit[i].die(true, false);
-				}
-			}
-		}
-	}
-}
-
-void cGame::destroyAllStructures(bool bHumanPlayer) {
-	if (bHumanPlayer) {
-		for (int i=0; i < MAX_STRUCTURES; i++) {
-			if (structure[i]) {
-				if (structure[i]->getOwner() == 0) {
-					structure[i]->die();
-				}
-			}
-		}
-	} else {
-		for (int i=0; i < MAX_STRUCTURES; i++) {
-			if (structure[i]) {
-				if (structure[i]->getOwner() > 0) {
-					structure[i]->die();
-				}
-			}
-		}
-	}
 }
 
 int cGame::getGroupNumberFromKeyboard() {
@@ -1736,7 +1695,7 @@ void cGame::onNotify(const s_GameEvent &event) {
             break;
     }
 
-    // players handles events
+    // players handle events
     for (int i = 0; i < MAX_PLAYERS; i++) {
         players[i].onNotify(event);
     }
@@ -1783,6 +1742,20 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
                 if (pStructure && pStructure->isValid()) {
                     play_sound_id(SOUND_PLACE);
                     create_bullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
+
+                    // notify game that the item just has been finished!
+                    s_GameEvent newEvent {
+                            .eventType = eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED,
+                            .entityType = itemToDeploy->getBuildType(),
+                            .entityID = -1,
+                            .player = pStructure->getPlayer(),
+                            .entitySpecificType = itemToDeploy->getBuildId(),
+                            .atCell = -1,
+                            .isReinforce = false,
+                            .buildingListItem = itemToDeploy
+                    };
+
+                    game.onNotify(newEvent);
                 }
             }
         }

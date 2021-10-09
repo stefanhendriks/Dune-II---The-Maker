@@ -88,7 +88,7 @@ void cGameControlsContext::determineHoveringOverUnitId() {
 
 cAbstractStructure * cGameControlsContext::getStructurePointerWhereMouseHovers() {
 	if (mouseHoveringOverStructureId < 0) {
-		return NULL;
+		return nullptr;
 	}
 	return structure[mouseHoveringOverStructureId];
 }
