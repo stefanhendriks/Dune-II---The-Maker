@@ -68,7 +68,7 @@ public:
     int iRegion;        // what region is selected? (changed by cSelectYourNextConquestState class)
 	int iMission;		// what mission are we playing? (= techlevel)
 
-	int selected_structure;
+//	int selected_structure;
 	int hover_unit;
 
 	int paths_created;
@@ -230,7 +230,7 @@ private:
 
     void mouse_combat_resetDragViewportInteraction() const;
 
-    void mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGameControlsContext *context, bool bOrderingUnits) const;
+    void mouse_combat_hoverOverStructureInteraction(cPlayer &player, cGameControlsContext *context, bool bOrderingUnits) const;
 
     void mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const;
 

@@ -372,12 +372,28 @@ public:
 
     void addNotification(const char *msg, eNotificationType type);
 
+    int selected_structure;
+
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
+
+    void clearStructureTypeBitmaps();
+
+    void clearUnitTypeBitmaps();
 
     int getRGBColorForHouse(int houseId);
 
     int getEmblemBackgroundColorForHouse(int houseId);
+
+    bool isBuildingAnythingForListAndSublist(int listId, int subListId) const;
+
+    bool startBuilding(cBuildingListItem *pItem);
+
+    bool startBuilding(eBuildType buildType, int buildId);
+
+    void onEntityDiscovered(const s_GameEvent &event);
+
+    void onMyUnitDestroyed(const s_GameEvent &event);
 
     bool m_Human;
 
@@ -408,10 +424,6 @@ private:
     BITMAP *bmp_unit[MAX_UNITTYPES]; // the body of unit
     BITMAP *bmp_unit_top[MAX_UNITTYPES]; // optionally a 'top' of unit (barrel of tank, for example)
 
-    void clearStructureTypeBitmaps();
-
-    void clearUnitTypeBitmaps();
-
     int iPrimaryBuilding[MAX_STRUCTURETYPES];    // remember the primary ID (structure id) of each structure type
     int iStructures[MAX_STRUCTURETYPES]; // remember what is built for each type of structure
     int iStructureUpgradeLevel[MAX_STRUCTURETYPES]; // remember the upgrade level for each structure type
@@ -428,22 +440,13 @@ private:
 
     bool autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
 
-    bool isBuildingAnythingForListAndSublist(int listId, int subListId) const;
-
-    bool startBuilding(cBuildingListItem *pItem);
-
-    bool startBuilding(eBuildType buildType, int buildId);
-
-    void onEntityDiscovered(const s_GameEvent &event);
-
-    void onMyUnitDestroyed(const s_GameEvent &event);
-
     // A condition to win the mission
     int spiceQuota;              // > 0 means this amount to harvest, (if win/lose flags set accordingly for game)
 
     bool alive;
 
     std::vector<cPlayerNotification> notifications;
+
 };
 
 #endif

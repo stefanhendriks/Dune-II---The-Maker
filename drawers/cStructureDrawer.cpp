@@ -331,7 +331,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer) {
                 continue;
             }
 
-            if (i == game.selected_structure) {
+            if (i == player.selected_structure) {
                 drawRectangeOfStructure(theStructure, player.getSelectFadingColor());
             }
         }

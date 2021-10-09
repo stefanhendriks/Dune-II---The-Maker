@@ -222,15 +222,18 @@ void cKeyboardManager::GAME_KEYS() {
     }// HOLDING CTRL -> create group
     else {
         // Center on focus cell
+        cPlayer &humanPlayer = players[HUMAN];
+
         if (key[KEY_H]) {
-            mapCamera->centerAndJumpViewPortToCell(players[HUMAN].getFocusCell());
+            mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
         }
 
         // Center on the selected structure
         if (key[KEY_C]) {
-            if (game.selected_structure > -1) {
-                if (structure[game.selected_structure]) {
-                    mapCamera->centerAndJumpViewPortToCell(structure[game.selected_structure]->getCell());
+            if (humanPlayer.selected_structure > -1) {
+                cAbstractStructure *selectedStructure = structure[humanPlayer.selected_structure];
+                if (selectedStructure) {
+                    mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
                 }
             }
         }

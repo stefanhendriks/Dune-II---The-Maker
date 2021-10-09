@@ -159,6 +159,7 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain) {
     assert(id >= HUMAN);
     assert(id < MAX_PLAYERS);
     this->id = id;
+    this->selected_structure = -1;
 
     // by default we're alive
     alive = true;

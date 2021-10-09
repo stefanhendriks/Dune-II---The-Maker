@@ -61,15 +61,15 @@ void cGame::winning() {
 
 // Draw the mouse in combat mode, and do its interactions!?
 void cGame::combat_mouse() {
-    cPlayer &humanPlayer = players[HUMAN];
-    cGameControlsContext *context = humanPlayer.getGameControlsContext();
+    cPlayer &player = players[HUMAN]; // TODO: get player interacting with?
+    cGameControlsContext *context = player.getGameControlsContext();
     bool bOrderingUnits=false;
 
     bool isNotPlacingSomething = bPlaceIt == false && bPlacedIt == false;
     bool isNotDeployingSomething = bDeployIt == false && bDeployedIt == false;
 
 	if (isNotPlacingSomething && isNotDeployingSomething) {
-        combat_mouse_normalCombatInteraction(humanPlayer, bOrderingUnits, context->getMouseCell());
+        combat_mouse_normalCombatInteraction(player, bOrderingUnits, context->getMouseCell());
     } // NOT PLACING / DEPLOYING STUFF
 
     if (mouse->isRightButtonPressed() && context->isMouseOnBattleField()) {
@@ -79,15 +79,15 @@ void cGame::combat_mouse() {
     }
 
 	if (bOrderingUnits) {
-		game.selected_structure = -1;
+        player.selected_structure = -1;
 	}
 
 	if (context->isMouseOverStructure()) {
-        mouse_combat_hoverOverStructureInteraction(humanPlayer, context, bOrderingUnits);
+        mouse_combat_hoverOverStructureInteraction(player, context, bOrderingUnits);
     }
 }
 
-void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGameControlsContext *context,
+void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &player, cGameControlsContext *context,
                                                        bool bOrderingUnits) const {
     int structureIdWhereMouseHovers = context->getIdOfStructureWhereMouseHovers();
 
@@ -102,7 +102,7 @@ void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGa
                 structure[iStr]->getType() == WOR ||
                 structure[iStr]->getType() == BARRACKS ||
                 structure[iStr]->getType() == REPAIR)
-                humanPlayer.setPrimaryBuildingForStructureType(structure[iStr]->getType(), iStr);
+                player.setPrimaryBuildingForStructureType(structure[iStr]->getType(), iStr);
         }
     }
 
@@ -128,21 +128,21 @@ void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &humanPlayer, cGa
 
     // select structure
     if (mouse->isLeftButtonClicked() && bOrderingUnits == false && !key[KEY_R]) {
-        game.selected_structure = structureIdWhereMouseHovers;
+        player.selected_structure = structureIdWhereMouseHovers;
 
         // select list that belongs to structure when it is ours
-        cAbstractStructure * theSelectedStructure = structure[game.selected_structure];
+        cAbstractStructure * theSelectedStructure = structure[player.selected_structure];
         if (theSelectedStructure) {
             if (theSelectedStructure->getOwner() == HUMAN) {
                 int typeOfStructure = theSelectedStructure->getType();
                 cListUtils listUtils;
                 int listId = listUtils.findListTypeByStructureType(typeOfStructure);
                 if (listId != LIST_NONE) {
-                    humanPlayer.getSideBar()->setSelectedListId(listId);
+                    player.getSideBar()->setSelectedListId(listId);
                 }
             }
         } else {
-            game.selected_structure = -1;
+            player.selected_structure = -1;
         }
     }
 }
@@ -341,6 +341,8 @@ cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderin
 }
 
 void cGame::mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const {
+    cPlayer &player = players[HUMAN]; // TODO: get player interacting with?
+
     if (mouse->isRightButtonClicked() && !mouse->isMapScrolling()) {
         UNIT_deselect_all();
     }
@@ -350,7 +352,7 @@ void cGame::mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const {
         bool bParticle=false;
 
         if (mouse_tile == MOUSE_RALLY) {
-            int id = game.selected_structure;
+            int id = player.selected_structure;
             if (id > -1)
                 if (structure[id]->getOwner() == HUMAN) {
                     structure[id]->setRallyPoint(mouseCell);
