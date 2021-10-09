@@ -1950,4 +1950,9 @@ void cPlayer::addNotification(const char *msg, eNotificationType type) {
     std::sort(notifications.begin(), notifications.end(), [](const cPlayerNotification &lhs, const cPlayerNotification &rhs) {
         return lhs.getTimer() > rhs.getTimer();
     });
+    if (DEBUGGING) {
+        char logbookMsg[512];
+        sprintf(logbookMsg, "addNotification : type %s - %s", eNotificationTypeString(type), msg);
+        log(logbookMsg);
+    }
 }
