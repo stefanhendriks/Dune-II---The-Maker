@@ -147,8 +147,9 @@ void cDrawManager::drawCredits() {
 }
 
 void cDrawManager::drawRallyPoint() {
-    if (game.selected_structure < 0) return;
-    cAbstractStructure * theStructure = structure[game.selected_structure];
+    cPlayer &humanPlayer = players[HUMAN];
+    if (humanPlayer.selected_structure < 0) return;
+    cAbstractStructure * theStructure = structure[humanPlayer.selected_structure];
     if (!theStructure) return;
     int rallyPointCell = theStructure->getRallyPoint();
     if (rallyPointCell < 0) return;

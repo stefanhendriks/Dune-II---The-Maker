@@ -133,17 +133,17 @@ int cAbstractStructure::getRange() {
 // this structure dies
 void cAbstractStructure::die() {
     // selected structure
-    if (game.selected_structure == id) {
-        game.selected_structure = -1;
+    // TODO: remove this, based on events
+    cPlayer *pPlayer = getPlayer();
+    if (pPlayer->selected_structure == id) {
+        pPlayer->selected_structure = -1;
     }
 
 	// remove from array
     structure[id] = nullptr;
 
     // Destroy structure, take stuff in effect for the player
-    cPlayer &thePlayer = players[iPlayer];
-
-    thePlayer.decreaseStructureAmount(getType()); // remove from player building indexes
+    pPlayer->decreaseStructureAmount(getType()); // remove from player building indexes
 
     // UnitID > -1, means the unit inside will die too
     if (iUnitIDWithinStructure > -1) {
@@ -224,7 +224,7 @@ void cAbstractStructure::die() {
         .eventType = eGameEventType::GAME_EVENT_DESTROYED,
         .entityType = eBuildType::STRUCTURE,
         .entityID = getStructureId(),
-        .player = getPlayer(),
+        .player = pPlayer,
         .entitySpecificType = getType()
     };
 

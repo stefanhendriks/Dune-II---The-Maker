@@ -62,8 +62,6 @@ void cGame::init() {
 
     setState(GAME_MENU);
 
-	selected_structure=-1;
-
 	// mentat
     delete pMentat;
     pMentat = nullptr;
@@ -130,9 +128,7 @@ void cGame::mission_init() {
 	paths_created=0;
 	hover_unit=-1;
 
-    selected_structure=-1;
-
-	bPlaceIt=false;			// we do not place
+    bPlaceIt=false;			// we do not place
 	bPlacedIt=false;
 
     bDeployIt=false;
@@ -490,8 +486,8 @@ void cGame::updateState() {
 
         if (mouse_tile == MOUSE_NORMAL) {
             // when selecting a structure
-            if (game.selected_structure > -1) {
-                int id = game.selected_structure;
+            if (pPlayer->selected_structure > -1) {
+                int id = pPlayer->selected_structure;
                 cAbstractStructure *pStructure = structure[id];
                 if (pStructure && pStructure->getOwner() == HUMAN) {
                     if (key[KEY_LCONTROL] || key[KEY_RCONTROL]) {
