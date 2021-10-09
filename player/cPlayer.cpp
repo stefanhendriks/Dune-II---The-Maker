@@ -1957,3 +1957,8 @@ void cPlayer::addNotification(const char *msg, eNotificationType type) {
         log(logbookMsg);
     }
 }
+
+cAbstractStructure *cPlayer::getSelectedStructure() {
+    if (selected_structure < 0) return nullptr;
+    return structure[selected_structure];
+}
