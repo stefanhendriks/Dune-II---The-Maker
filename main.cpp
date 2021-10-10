@@ -87,9 +87,6 @@ int mouse_mv_y2;
 
 int mouse_tile;       // mouse picture in gfxdata
 
-// Timers
-int frame_count, fps;  // fps and such
-
 /** Allegro specific timer creation starts here **/
 #ifdef ALLEGRO_H
 	volatile int allegro_timerSecond = 0;

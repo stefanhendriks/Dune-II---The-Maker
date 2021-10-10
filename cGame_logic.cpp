@@ -865,7 +865,7 @@ void cGame::shakeScreenAndBlitBuffer() {
 	}
 }
 
-void cGame::runGameState() {
+void cGame::drawState() {
     switch (state) {
         case GAME_SELECT_HOUSE:
             stateSelectHouse();
@@ -915,9 +915,9 @@ void cGame::run() {
 		clear(bmp_screen);
         updateState();
 		handleTimeSlicing(); // handle time diff (needs to change!)
-		runGameState(); // run game state, includes interaction + drawing
+        drawState(); // run game state, includes interaction + drawing
 		_interactionManager->interactWithKeyboard(); // generic interaction
-		shakeScreenAndBlitBuffer(); // finally draw the bmp_screen to real screen (double buffering)
+		shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
 		frame_count++;
 	}
 }
@@ -1864,4 +1864,20 @@ void cGame::setLoseFlags(int value) {
         logbook(msg);
     }
     loseFlags = value;
+}
+
+bool cGame::isRunningAtIdealFps() {
+    return fps < IDEAL_FPS;
+}
+
+void cGame::resetFrameCount() {
+    frame_count = 0;
+}
+
+void cGame::setFps() {
+    fps = frame_count;
+}
+
+int cGame::getFps() {
+    return fps;
 }
