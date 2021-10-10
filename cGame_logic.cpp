@@ -6,15 +6,9 @@
   Contact: stefan@fundynamic.com
   Website: http://dune2themaker.fundynamic.com
 
-  2001 - 2011 (c) code by Stefan Hendriks
+  2001 - 2021 (c) code by Stefan Hendriks
 
-  -----------------------------------------
-  Initialization of variables
-  Game logic
-  Think functions
-  -----------------------------------------
-
-  */
+*/
 
 #include <vector>
 #include <algorithm>
@@ -34,7 +28,7 @@ cGame::cGame() {
 	ini_screen_height=-1;
 
     memset(version, 0, sizeof(version));
-    sprintf(version, "0.6.0");
+    sprintf(version, "0.6.x");
 
     pMentat = nullptr;
 }
