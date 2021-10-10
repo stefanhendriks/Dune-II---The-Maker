@@ -163,7 +163,6 @@ public:
 
     bool hasAtleastOneStructure(int structureType) const;
 
-
     void decreaseStructureAmount(int structureType);
 
     void increaseStructureAmount(int structureType);
@@ -374,7 +373,19 @@ public:
 
     void addNotification(const char *msg, eNotificationType type);
 
+    bool isNotPlacingSomething();
+    bool isNotDeployingSomething();
+
+    // properties (for now public, should become private)
     int selected_structure;
+
+    bool bPlaceIt;		// placing something? (for structures only)
+    bool bPlacedIt;		// for remembering, for combat_mouse stuff..
+
+    bool bDeployIt;		// deploying something? (for palace)
+    bool bDeployedIt;   // for remembering, for combat_mouse stuff..
+
+    void deselectStructure();
 
 private:
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;

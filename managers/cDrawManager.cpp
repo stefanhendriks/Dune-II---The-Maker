@@ -188,8 +188,8 @@ void cDrawManager::drawSidebar() {
  * When placing a structure, draw a transparent version of the structure we want to place.
  */
 void cDrawManager::drawStructurePlacing() {
-    if (game.bDeployIt) return; // do not do this
-    if (!game.bPlaceIt) return;
+    if (player->bDeployIt) return; // do not do this
+    if (!player->bPlaceIt) return;
 
 
     cBuildingListItem *itemToPlace = player->getSideBar()->getList(LIST_CONSTYARD)->getItemToPlace();
@@ -203,8 +203,8 @@ void cDrawManager::drawStructurePlacing() {
  * When deploying something
  */
 void cDrawManager::drawDeployment() {
-    if (game.bPlaceIt) return;
-    if (!game.bDeployIt) return;
+    if (player->bPlaceIt) return;
+    if (!player->bDeployIt) return;
 
     // mouse attack special?
     mouse_tile = MOUSE_ATTACK;

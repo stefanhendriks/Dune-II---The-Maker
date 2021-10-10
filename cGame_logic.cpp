@@ -66,12 +66,6 @@ void cGame::init() {
     delete pMentat;
     pMentat = nullptr;
 
-	bPlaceIt=false;			// we do not place
-	bPlacedIt=false;
-
-	bDeployIt=false;
-	bDeployedIt=false;
-
     mouse_tile = MOUSE_NORMAL;
 
 	fade_select=1.0f;
@@ -127,12 +121,6 @@ void cGame::mission_init() {
 
 	paths_created=0;
 	hover_unit=-1;
-
-    bPlaceIt=false;			// we do not place
-	bPlacedIt=false;
-
-    bDeployIt=false;
-    bDeployedIt=false;
 
 	mouse_tile = MOUSE_NORMAL;
 
@@ -497,8 +485,8 @@ void cGame::updateState() {
             }
         }
 
-        bPlacedIt=false;
-        bDeployedIt = false;
+        pPlayer->bPlacedIt = false;
+        pPlayer->bDeployedIt = false;
 
         hover_unit=-1;
     }
@@ -514,8 +502,9 @@ void cGame::combat() {
     if (iAlphaScreen == 0)
         iFadeAction = 2;
     // -----------------
-	bPlacedIt = bPlaceIt;
-	bDeployedIt = bDeployIt;
+    cPlayer &humanPlayer = players[HUMAN];
+    humanPlayer.bPlacedIt = humanPlayer.bPlaceIt;
+    humanPlayer.bDeployedIt = humanPlayer.bDeployIt;
 
     drawManager->drawCombatState();
 }
@@ -1765,14 +1754,16 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) {
         player->getItemBuilder()->removeItemFromList(itemToDeploy);
     }
 
-    game.bDeployIt = false;
+    if (player) {
+        player->bDeployIt = false;
+    }
 
     // notify game that the item just has been finished!
     s_GameEvent newEvent {
             .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
             .entityType = itemToDeploy->getBuildType(),
             .entityID = -1,
-            .player = nullptr,
+            .player = player,
             .entitySpecificType = itemToDeploy->getBuildId(),
             .atCell = -1,
             .isReinforce = false,

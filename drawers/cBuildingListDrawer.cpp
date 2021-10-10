@@ -160,7 +160,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 			    if (item->shouldPlaceIt()) {
                     // TODO: draw white/red (flicker)
                     int icon = READY01;
-                    if (game.bPlaceIt) {
+                    if (player->bPlaceIt) {
                         icon = READY02;
                     }
                     draw_sprite(bmp_screen, (BITMAP *) gfxinter[icon].dat, iDrawX + 3, iDrawY + 16);
@@ -168,7 +168,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                     // TODO: draw white/red (flicker)
                     // TODO: draw DEPLOY
                     int icon = READY01;
-                    if (game.bDeployIt) {
+                    if (player->bDeployIt) {
                         icon = READY02;
                     }
                     draw_sprite(bmp_screen, (BITMAP *) gfxinter[icon].dat, iDrawX + 3, iDrawY + 16);

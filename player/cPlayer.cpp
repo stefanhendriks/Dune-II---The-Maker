@@ -161,6 +161,12 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain) {
     this->id = id;
     this->selected_structure = -1;
 
+    bPlaceIt=false;			// we do not place
+    bPlacedIt=false;
+
+    bDeployIt=false;
+    bDeployedIt=false;
+
     // by default we're alive
     alive = true;
 
@@ -1961,4 +1967,16 @@ void cPlayer::addNotification(const char *msg, eNotificationType type) {
 cAbstractStructure *cPlayer::getSelectedStructure() {
     if (selected_structure < 0) return nullptr;
     return structure[selected_structure];
+}
+
+bool cPlayer::isNotPlacingSomething() {
+    return bPlaceIt == false && bPlacedIt == false;
+}
+
+bool cPlayer::isNotDeployingSomething() {
+    return bDeployIt == false && bDeployedIt == false;
+}
+
+void cPlayer::deselectStructure() {
+    selected_structure = -1;
 }
