@@ -13,43 +13,7 @@ cMouseDrawer::~cMouseDrawer() {
 }
 
 void cMouseDrawer::draw() {
-    int mouseDrawX = mouseX;
-    int mouseDrawY = mouseY;
-
-    // adjust coordinates of drawing according to the specific mouse sprite/tile
-    if (mouse_tile == MOUSE_DOWN){
-        mouseDrawY-=16;
-    }
-    else if (mouse_tile == MOUSE_RIGHT){
-        mouseDrawX-=16;
-    }
-    else if (mouse_tile == MOUSE_MOVE || mouse_tile == MOUSE_RALLY) {
-        mouseDrawX-=16;
-        mouseDrawY-=16;
-    }
-    else if (mouse_tile == MOUSE_ATTACK){
-        mouseDrawX-=16;
-        mouseDrawY-=16;
-    }
-    else if (mouse_tile == MOUSE_REPAIR){
-        mouseDrawX-=16;
-        mouseDrawY-=16;
-    }
-    else if (mouse_tile == MOUSE_PICK){
-        mouseDrawX-=16;
-        mouseDrawY-=16;
-    }
-    else{
-    }
-
-    if (DEBUGGING) {
-        if (key[KEY_TAB]) {
-            cTextDrawer textDrawer(bene_font);
-            textDrawer.drawTextWithOneInteger(0, 0, "MouseCell %d", player->getGameControlsContext()->getMouseCell());
-        }
-    }
-
-    allegroDrawer->drawSprite(bmp_screen, mouse_tile, mouseDrawX, mouseDrawY);
+    game.getMouse()->draw();
 }
 
 int cMouseDrawer::getDrawXToolTip(int width) {

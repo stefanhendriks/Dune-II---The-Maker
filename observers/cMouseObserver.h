@@ -1,7 +1,3 @@
-//
-// Created by shendriks on 4/28/2021.
-//
-
 #ifndef D2TM_CMOUSEOBSERVER_H
 #define D2TM_CMOUSEOBSERVER_H
 

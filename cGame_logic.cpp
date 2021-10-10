@@ -60,8 +60,6 @@ void cGame::init() {
     delete pMentat;
     pMentat = nullptr;
 
-    mouse_tile = MOUSE_NORMAL;
-
 	fade_select=1.0f;
 
     bFadeSelectDir=true;    // fade select direction
@@ -115,8 +113,6 @@ void cGame::mission_init() {
 
 	paths_created=0;
 	hover_unit=-1;
-
-	mouse_tile = MOUSE_NORMAL;
 
 	fade_select=1.0f;
 
@@ -227,7 +223,7 @@ void cGame::setMissionWon() {
     shake_x = 0;
     shake_y = 0;
     TIMER_shake = 0;
-    mouse_tile = MOUSE_NORMAL;
+    mouse->setTile(MOUSE_NORMAL);
 
     play_voice(SOUND_VOICE_07_ATR);
 
@@ -245,7 +241,7 @@ void cGame::setMissionLost() {
     shake_x = 0;
     shake_y = 0;
     TIMER_shake = 0;
-    mouse_tile = MOUSE_NORMAL;
+    mouse->setTile(MOUSE_NORMAL);
 
     play_voice(SOUND_VOICE_08_ATR);
 
@@ -413,7 +409,7 @@ void cGame::updateState() {
 
         if (i != HUMAN) continue; // non HUMAN players are done
 
-        mouse_tile = MOUSE_NORMAL;
+        mouse->setTile(MOUSE_NORMAL);
 
         // change the mouse tile depending on what we're hovering over
         int mc = context->getMouseCell();
@@ -425,12 +421,12 @@ void cGame::updateState() {
                 if (!cUnit.isValid()) continue;
                 if (cUnit.iPlayer != HUMAN) continue;
                 if (cUnit.bSelected) {
-                    mouse_tile = MOUSE_MOVE;
+                    mouse->setTile(MOUSE_MOVE);
                     break;
                 }
             }
 
-            if (mouse_tile == MOUSE_MOVE) {
+            if (mouse->isTile(MOUSE_MOVE)) {
                 // change to attack cursor if hovering over enemy unit
                 if (map.isVisible(mc, HUMAN)) {
 
@@ -440,7 +436,7 @@ void cGame::updateState() {
                         int id = idOfUnitOnCell;
 
                         if (!unit[id].getPlayer()->isSameTeamAs(&players[HUMAN])) {
-                            mouse_tile = MOUSE_ATTACK;
+                            mouse->setTile(MOUSE_ATTACK);
                         }
                     }
 
@@ -450,30 +446,30 @@ void cGame::updateState() {
                         int id = idOfStructureOnCell;
 
                         if (!structure[id]->getPlayer()->isSameTeamAs(&players[HUMAN])) {
-                            mouse_tile = MOUSE_ATTACK;
+                            mouse->setTile(MOUSE_ATTACK);
                         }
                     }
 
                     if (key[KEY_LCONTROL] || key[KEY_RCONTROL]) { // force attack
-                        mouse_tile = MOUSE_ATTACK;
+                        mouse->setTile(MOUSE_ATTACK);
                     }
 
                     if (key[KEY_ALT]) { // force move
-                        mouse_tile = MOUSE_MOVE;
+                        mouse->setTile(MOUSE_MOVE);
                     }
 
                 } // visible
             }
         }
 
-        if (mouse_tile == MOUSE_NORMAL) {
+        if (mouse->isTile(MOUSE_NORMAL)) {
             // when selecting a structure
             if (pPlayer->selected_structure > -1) {
                 int id = pPlayer->selected_structure;
                 cAbstractStructure *pStructure = structure[id];
                 if (pStructure && pStructure->getOwner() == HUMAN) {
                     if (key[KEY_LCONTROL] || key[KEY_RCONTROL]) {
-                        mouse_tile = MOUSE_RALLY;
+                        mouse->setTile(MOUSE_RALLY);
                     }
                 }
             }
@@ -516,12 +512,12 @@ void cGame::stateMentat(cAbstractMentat *pMentat) {
     // -----------------
     draw_sprite(bmp_screen, bmp_backgroundMentat, 0, 0);
 
-    mouse_tile = MOUSE_NORMAL;
+    mouse->setTile(MOUSE_NORMAL);
 
     pMentat->draw();
     pMentat->interact();
 
-    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+    mouse->draw();
 }
 
 // draw menu
@@ -687,7 +683,7 @@ void cGame::menu()
     }
 
    	// MOUSE
-    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+    mouse->draw();
 
 	if (key[KEY_ESC]) {
 		bPlaying=false;
@@ -786,7 +782,7 @@ void cGame::stateSelectHouse() {
     delete backButtonRect;
 
 	// MOUSE
-    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+    mouse->draw();
 
     if (bFadeOut) {
         game.FADE_OUT();
@@ -1425,9 +1421,6 @@ bool cGame::setupGame() {
 	game.bPlaying = true;
 	game.screenshot = 0;
 	game.state = GAME_INITIALIZE;
-
-	// Mouse stuff
-	mouse_tile = 0;
 
 	set_palette(general_palette);
 

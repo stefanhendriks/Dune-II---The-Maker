@@ -1,71 +1,109 @@
-/*
- * cMouse.h
- *
- *  Created on: 24-okt-2010
- *      Author: Stefan
- */
-
 #ifndef CMOUSE_H_
 #define CMOUSE_H_
 
-#include <managers/cInteractionManager.h>
+#include "../observers/cMouseObserver.h"
 
 class cRectangle;
-class cInteractionManager; // some kind of observer thingy
 
 class cMouse {
 
 public:
-	cMouse();
-	~cMouse();
+    cMouse();
 
-	void updateState(); // updates state from Allegro, calls appropiate on* methods on gameControlContext class
+    ~cMouse();
 
-	void setMouseObserver(cMouseObserver *mouseObserver) {
-	    this->_mouseObserver = mouseObserver;
-	}
+    void updateState(); // updates state from Allegro, calls appropiate on* methods on gameControlContext class
 
-	// these functions return true when the mouse button is being hold down
-	bool isLeftButtonPressed() { return leftButtonPressed; }
-	bool isRightButtonPressed() { return rightButtonPressed; }
+    void setMouseObserver(cMouseObserver *mouseObserver) {
+        this->_mouseObserver = mouseObserver;
+    }
 
-	// these functions return true when the mouse button was pressed in the previous
-	// frame, but released in the current (which is counted as a 'click')
-	bool isLeftButtonClicked() { return leftButtonClicked; }
+    void init();
 
-	bool isRightButtonClicked() { return rightButtonClicked; }
+    // these functions return true when the mouse button is being hold down
+    bool isLeftButtonPressed() { return leftButtonPressed; }
 
-	int getX() { return x; }
-	int getY() { return y; }
-	int getZ() { return z; }
+    bool isRightButtonPressed() { return rightButtonPressed; }
 
-	void positionMouseCursor(int x, int y);
+    // these functions return true when the mouse button was pressed in the previous
+    // frame, but released in the current (which is counted as a 'click')
+    bool isLeftButtonClicked() { return leftButtonClicked; }
+
+    bool isRightButtonClicked() { return rightButtonClicked; }
+
+    int getX() { return x; }
+
+    int getY() { return y; }
+
+    int getZ() { return z; }
+
+    void positionMouseCursor(int x, int y);
 
     bool isOverRectangle(int x, int y, int width, int height);
 
-	bool isOverRectangle(cRectangle *rectangle);
+    bool isOverRectangle(cRectangle *rectangle);
 
     bool isMapScrolling();
 
     bool isBoxSelecting();
 
+    /**
+     * Sets tile of gfx
+     * TODO: should become "state" so it decouples drawing and game mechanic
+     * @param value
+     */
+    void setTile(int value) { mouse_tile = value; }
+
+    void resetDragViewportInteraction();
+
+    void dragViewportInteraction();
+
+    void boxSelectLogic(int mouseCell);
+
+    cRectangle getBoxSelectRectangle();
+
+    void resetBoxSelect();
+
+    bool isTile(int value);
+
+    void draw();
+
+    bool isNormalRightClick();
+
+    int getMouseDragDeltaX();
+
+    int getMouseDragDeltaY();
+
 private:
-    cMouseObserver * _mouseObserver;
+    cMouseObserver *_mouseObserver;
 
     bool leftButtonPressed;
-	bool rightButtonPressed;
+    bool rightButtonPressed;
 
-	bool leftButtonClicked;
-	bool rightButtonClicked;
+    bool leftButtonClicked;
+    bool rightButtonClicked;
 
-	bool leftButtonPressedInPreviousFrame;
-	bool rightButtonPressedInPreviousFrame;
+    bool leftButtonPressedInPreviousFrame;
+    bool rightButtonPressedInPreviousFrame;
 
-	bool mouseScrolledUp;
-	bool mouseScrolledDown;
+    bool mouseScrolledUp;
+    bool mouseScrolledDown;
 
-	int x, y, z;	// z = scroll wheel value
-	int zValuePreviousFrame;
+    int x, y, z;    // z = scroll wheel value
+    int zValuePreviousFrame;
+
+    // Mouse information - for select box and dragging, etc
+    int mouse_co_x1;        // coordinates
+    int mouse_co_y1;        // of
+    int mouse_co_x2;        // the
+    int mouse_co_y2;        // select box
+
+    int mouse_mv_x1;        // coordinates
+    int mouse_mv_y1;        // of
+    int mouse_mv_x2;        // the
+    int mouse_mv_y2;        // dragging viewport
+
+    int mouse_tile;       // mouse picture in gfxdata
 };
 
 #endif /* CMOUSE_H_ */

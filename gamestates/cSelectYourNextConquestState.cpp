@@ -118,7 +118,7 @@ void cSelectYourNextConquestState::think() {
 }
 
 void cSelectYourNextConquestState::draw() {
-    mouse_tile = MOUSE_NORMAL; // global state of mouse
+    game.getMouse()->setTile(MOUSE_NORMAL); // global state of mouse
 
     if (game.iFadeAction == 1) // fading out
     {
@@ -290,7 +290,7 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest() {
         cRegion &region = world[regionMouseIsHoveringOver];
         if (region.bSelectable) {
             region.iAlpha = 256;
-            mouse_tile = MOUSE_ATTACK;
+            game.getMouse()->setTile(MOUSE_ATTACK);
         }
     }
 
@@ -314,7 +314,7 @@ void cSelectYourNextConquestState::interact() {
         cRegion &region = world[regionMouseIsHoveringOver];
         if (region.bSelectable) {
             region.iAlpha = 255;
-            mouse_tile = MOUSE_ATTACK;
+            game.getMouse()->setTile(MOUSE_ATTACK);
             bClickable = true;
         }
     }
@@ -385,10 +385,7 @@ void cSelectYourNextConquestState::interact() {
     }
 }
 
-void cSelectYourNextConquestState::REGION_SETUP_LOST_MISSION(int iMission, int iHouse) {
-    // The first mission, nothing is 'ready', as the pieces gets placed and taken by the houses.
-    // Later, after mission 2, the pieces are already taken. That's what this function takes care off
-    // making sure everything is 'there' to go on with. Hard-coded stuff.
+void cSelectYourNextConquestState::REGION_SETUP_LOST_MISSION() {
     drawManager->getMessageDrawer()->initRegionPosition(offsetX, offsetY);
 
     selectNextConquestAlpha = 1;
