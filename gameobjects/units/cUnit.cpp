@@ -3567,10 +3567,10 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
         FIX_BORDER_POS(sx, sy);
         FIX_BORDER_POS(ex, ey);
 
-        if (ex <= cx)
-            pUnit.log("CX = EX");
-        if (ey <= cy)
-            pUnit.log("CY = EY");
+//        if (ex <= cx)
+//            pUnit.log("CX = EX");
+//        if (ey <= cy)
+//            pUnit.log("CY = EY");
 
         cost = 999999999;
         the_cll = -1;
@@ -3635,11 +3635,11 @@ int CREATE_PATH(int iUnitId, int iPathCountUnits) {
                             if (iPathCountUnits != 0) {
                                 if (iPathCountUnits <= 0) {
                                     good = false;
-                                    char msg[255];
-                                    sprintf(msg,
-                                            "CREATE_PATH(unitId=%d) - iPathCountUnits < 0 - variable 'good' becomes 'false'",
-                                            iUnitId);
-                                    pUnit.log(msg);
+//                                    char msg[255];
+//                                    sprintf(msg,
+//                                            "CREATE_PATH(unitId=%d) - iPathCountUnits < 0 - variable 'good' becomes 'false'",
+//                                            iUnitId);
+//                                    pUnit.log(msg);
                                 }
                             }
 
