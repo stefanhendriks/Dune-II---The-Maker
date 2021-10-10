@@ -82,14 +82,6 @@ public:
     void winning();       // winning
     void losing();        // losing
 
-    // TODO: This belongs to a Mouse state?
-	bool bPlaceIt;		// placing something? (for structures only)
-	bool bPlacedIt;		// for remembering, for combat_mouse stuff..
-
-    // TODO: This belongs to a Mouse state?
-	bool bDeployIt;		// deploying something? (for palace)
-	bool bDeployedIt;   // for remembering, for combat_mouse stuff..
-
 	void setup_players();
 
     void think_music();

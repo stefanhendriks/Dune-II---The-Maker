@@ -65,10 +65,7 @@ void cGame::combat_mouse() {
     cGameControlsContext *context = player.getGameControlsContext();
     bool bOrderingUnits=false;
 
-    bool isNotPlacingSomething = bPlaceIt == false && bPlacedIt == false;
-    bool isNotDeployingSomething = bDeployIt == false && bDeployedIt == false;
-
-	if (isNotPlacingSomething && isNotDeployingSomething) {
+    if (player.isNotPlacingSomething() && player.isNotDeployingSomething()) {
         combat_mouse_normalCombatInteraction(player, bOrderingUnits, context->getMouseCell());
     } // NOT PLACING / DEPLOYING STUFF
 
@@ -79,7 +76,7 @@ void cGame::combat_mouse() {
     }
 
 	if (bOrderingUnits) {
-        player.selected_structure = -1;
+        player.deselectStructure();
 	}
 
 	if (context->isMouseOverStructure()) {
@@ -341,14 +338,14 @@ cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderin
 }
 
 void cGame::mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const {
-    cPlayer &player = players[HUMAN]; // TODO: get player interacting with?
+    const cPlayer &player = players[HUMAN]; // TODO: get player interacting with?
 
     if (mouse->isRightButtonClicked() && !mouse->isMapScrolling()) {
         UNIT_deselect_all();
     }
 
     // single clicking and moving
-    if (mouse->isLeftButtonClicked() && !mouse->isBoxSelecting() && !game.bPlaceIt) {
+    if (mouse->isLeftButtonClicked() && !mouse->isBoxSelecting() && !player.bPlaceIt) {
         bool bParticle=false;
 
         if (mouse_tile == MOUSE_RALLY) {

@@ -224,8 +224,8 @@ void cPlaceItDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
     if (m_bMayPlace)	{
         play_sound_id(SOUND_PLACE);
         player->placeItem(mouseCell, itemToPlace);
+        player->bPlaceIt=false;
 
-        game.bPlaceIt=false;
         itemToPlace = nullptr;
     }
 }
