@@ -196,6 +196,14 @@ public:
 
     void setMissionWon();
 
+    bool isRunningAtIdealFps();
+
+    void resetFrameCount();
+
+    void setFps();
+
+    int getFps();
+
 private:
 	void updateState();
 	void combat();		// the combat part (main) of the game
@@ -207,7 +215,7 @@ private:
 	void menu();		// main menu
 	void stateSelectYourNextConquest();		// region selection
 
-	void runGameState();
+	void drawState();
 	void shakeScreenAndBlitBuffer();
 	void handleTimeSlicing();
 
@@ -271,6 +279,8 @@ private:
 
     // win/lose flags
     int8_t winFlags, loseFlags;
+
+    int frame_count, fps;  // fps and such
 };
 
 #endif

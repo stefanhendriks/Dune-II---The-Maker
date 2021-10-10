@@ -82,7 +82,6 @@ extern BITMAP *bmp_throttle;
 extern BITMAP *bmp_winlose;
 
 // VARIABLES
-extern int fps, frame_count;
 extern int mouse_tile;
 extern int mouse_status;     // status of the mouse (see main.h)
 

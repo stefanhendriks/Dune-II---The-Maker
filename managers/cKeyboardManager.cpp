@@ -34,7 +34,7 @@ void cKeyboardManager::interact() {
     }
 
     if (key[KEY_F]) {
-        alfont_textprintf(bmp_screen, game_font, 0, 44, makecol(255, 255, 255), "FPS/REST: %d / %d", fps, iRest);
+        alfont_textprintf(bmp_screen, game_font, 0, 44, makecol(255, 255, 255), "FPS/REST: %d / %d", game.getFps(), iRest);
     }
 
     /* Handle here keys that are only active when debugging */

@@ -91,10 +91,10 @@ void cTimeManager::handleTimerAllegroTimerSeconds() {
 
 
         // Frame Per Second counter
-        fps = frame_count;
+        game.setFps();
 
         // 'auto resting'
-        if (fps < IDEAL_FPS) {
+        if (game.isRunningAtIdealFps()) {
             if (iRest > 0) iRest -= 1;
             if (iRest < 0) iRest = 0;
         } else {
@@ -102,9 +102,7 @@ void cTimeManager::handleTimerAllegroTimerSeconds() {
             if (iRest > 500) iRest = 500;
         }
 
-
-        // log the status
-        frame_count = 0;
+        game.resetFrameCount();
 
         timerSecond--; // done!
     }
