@@ -34,7 +34,7 @@ void cInteractionManager::onMouseClickedLeft(const s_MouseEvent &event) {
 
 void cInteractionManager::onMouseClickedRight(const s_MouseEvent &event) {
     // not moving the map with the right mouse button, then this means it is a 'click' so act accordingly
-    bool isANormalButtonClick = mouse_mv_x2 < -1 && mouse_mv_y2 < -1; // < -1 means we have had this evaluation before :/
+    bool isANormalButtonClick = game.getMouse()->isNormalRightClick();
     if (isANormalButtonClick) {
         if (player->bPlaceIt) {
             player->bPlaceIt = false;

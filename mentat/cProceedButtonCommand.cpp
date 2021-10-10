@@ -55,7 +55,7 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
             game.setState(GAME_REGION);
 
             game.iMission--; // we did not win
-            selectYourNextConquestState->REGION_SETUP_LOST_MISSION(game.iMission, players[HUMAN].getHouse());
+            selectYourNextConquestState->REGION_SETUP_LOST_MISSION();
 
             // PLAY THE MUSIC
             playMusicByType(MUSIC_CONQUEST);

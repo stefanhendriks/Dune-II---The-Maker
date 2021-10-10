@@ -74,19 +74,6 @@ ALFONT_FONT *small_font;	// small font.
 // MP3 STUFF
 ALMP3_MP3   *mp3_music; // pointer to mp3 music
 
-// Mouse information
-int mouse_co_x1;      // coordinates
-int mouse_co_y1;      // of
-int mouse_co_x2;      // the
-int mouse_co_y2;      // mouse border
-
-int mouse_mv_x1;
-int mouse_mv_y1;
-int mouse_mv_x2;
-int mouse_mv_y2;
-
-int mouse_tile;       // mouse picture in gfxdata
-
 /** Allegro specific timer creation starts here **/
 #ifdef ALLEGRO_H
 	volatile int allegro_timerSecond = 0;
@@ -150,16 +137,6 @@ int handleArguments(int argc, char *argv[]) {
 void initializingOnlyOnce() {
     gameState = nullptr;
     selectYourNextConquestState = new cSelectYourNextConquestState(game);
-
-    mouse_co_x1 = -1;      // coordinates
-    mouse_co_y1 = -1;      // of
-    mouse_co_x2 = -1;      // the
-    mouse_co_y2 = -1;      // mouse border
-
-    mouse_mv_x1 = -1;
-    mouse_mv_y1 = -1;
-    mouse_mv_x2 = -1;
-    mouse_mv_y2 = -1;
 }
 
 /**

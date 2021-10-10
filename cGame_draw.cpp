@@ -119,7 +119,7 @@ void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &player, cGameCon
 
             }
 
-            mouse_tile = MOUSE_REPAIR;
+            mouse->setTile(MOUSE_REPAIR);
         }
     } // MOUSE PRESSED
 
@@ -145,32 +145,11 @@ void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &player, cGameCon
 }
 
 void cGame::mouse_combat_resetDragViewportInteraction() const {// set to -1 only when it was > -1
-    if (mouse_mv_x1 > -1 || mouse_mv_y1 > -1 || mouse_mv_x2 > -1 || mouse_mv_y2 > -1) {
-        mouse_mv_x1 = -1;
-        if (mouse_mv_x2 > -1) mouse_mv_x2 = -1;
-
-        mouse_mv_y1 = -1;
-        if (mouse_mv_y2 > -1) mouse_mv_y2 = -1;
-    }
+    mouse->resetDragViewportInteraction();
 }
 
 void cGame::mouse_combat_dragViewportInteraction() const {
-    if (mouse_mv_x1 < 0 || mouse_mv_y1 < 0) {
-        mouse_mv_x1 = mouse_x;
-        mouse_mv_y1 = mouse_y;
-    } else {
-        // mouse mv 1st coordinates filled
-        // when mouse is deviating from this coordinate, draw a line
-
-        if (ABS_length(mouse_x, mouse_y, mouse_mv_x1, mouse_mv_y1) > 4) {
-            // assign 2nd coordinates
-            mouse_mv_x2 = mouse_x;
-            mouse_mv_y2 = mouse_y;
-
-            // draw a line
-            line(bmp_screen, mouse_mv_x1, mouse_mv_y1, mouse_mv_x2, mouse_mv_y2, game.getColorFadeSelected(255, 255, 255));
-        }
-    }
+    mouse->dragViewportInteraction();
 }
 
 void
@@ -180,7 +159,7 @@ cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderin
     if (hover_unit > -1) {
         cUnit &hoverUnit = unit[hover_unit];
         if (hoverUnit.iPlayer == HUMAN) {
-            mouse_tile = MOUSE_PICK;
+            mouse->setTile(MOUSE_PICK);
         }
 
         // wanting to repair UNITS, check if its possible
@@ -192,7 +171,7 @@ cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderin
                         hoverUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true);
                     }
 
-                    mouse_tile = MOUSE_REPAIR;
+                    mouse->setTile(MOUSE_REPAIR);
                 }
             }
         }
@@ -204,59 +183,12 @@ cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderin
     }
 
     if (mouse->isLeftButtonPressed()) {
-        // When the mouse is pressed, we will check if the first coordinates are filled in
-        // if so, we will update the second coordinates. If the player holds his mouse we
-        // keep updating the second coordinates and create a rectangle to select units with.
-        if (mouse_co_x1 > -1 && mouse_co_y1 > -1) {
-            if (abs(mouse_x - mouse_co_x1) > 4 &&
-                abs(mouse_y - mouse_co_y1) > 4) {
-
-                // assign 2nd coordinates
-                mouse_co_x2 = mouse_x;
-                if (mouse_x > game.screen_x - cSideBar::SidebarWidth) {
-                    mouse_co_x2 = game.screen_x - cSideBar::SidebarWidth - 1;
-                }
-
-                mouse_co_y2 = mouse_y;
-                if (mouse_co_y2 < cSideBar::TopBarHeight) {
-                    mouse_co_y2 = cSideBar::TopBarHeight;
-                }
-
-                // and draw the selection box
-                rect(bmp_screen, mouse_co_x1, mouse_co_y1, mouse_co_x2, mouse_co_y2, game.getColorFadeSelected(255, 255, 255));
-            }
-
-            // Note that we have to fix up the coordinates when checking 'within border'
-            // for units (when X2 < X1 for example!)
-        } else if (mouseCell > -1) {
-            // no first coordinates set, so do that here.
-            mouse_co_x1 = mouse_x;
-            mouse_co_y1 = mouse_y;
-        }
+        mouse->boxSelectLogic(mouseCell);
     } else {
         // where we box selecting? then this must be the unpress of the mouse button and thus we
         // should start selecting units within the rectangle
         if (mouse->isBoxSelecting()) {
-            int min_x, min_y;
-            int max_x, max_y;
-
-            // sort out borders:
-            if (mouse_co_x1 < mouse_co_x2) {
-                min_x = mouse_co_x1;
-                max_x = mouse_co_x2;
-            } else {
-                max_x = mouse_co_x1;
-                min_x = mouse_co_x2;
-            }
-
-            // Y coordinates
-            if (mouse_co_y1 < mouse_co_y2) {
-                min_y = mouse_co_y1;
-                max_y = mouse_co_y2;
-            } else {
-                max_y = mouse_co_y1;
-                min_y = mouse_co_y2;
-            }
+            cRectangle boxSelectRectangle = mouse->getBoxSelectRectangle();
 
             //  char msg[256];
             //  sprintf(msg, "MINX=%d, MAXX=%d, MINY=%d, MAXY=%d", min_x, min_y, max_x, max_y);
@@ -271,8 +203,6 @@ cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderin
 
             bool harvesterSelected=false;
             bool attackingUnitSelected=false;
-
-            cRectangle boxSelectRectangle(min_x, min_y, (max_x-min_x), (max_y-min_y));
 
             for (int i = 0; i < MAX_UNITS; i++) {
                 cUnit &cUnit = unit[i];
@@ -330,10 +260,7 @@ cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderin
 
         }
 
-        mouse_co_x1 = -1;
-        mouse_co_y1 = -1;
-        mouse_co_x2 = -1;
-        mouse_co_y2 = -1;
+        mouse->resetBoxSelect();
     }
 }
 
@@ -348,7 +275,7 @@ void cGame::mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const {
     if (mouse->isLeftButtonClicked() && !mouse->isBoxSelecting() && !player.bPlaceIt) {
         bool bParticle=false;
 
-        if (mouse_tile == MOUSE_RALLY) {
+        if (mouse->isTile(MOUSE_RALLY)) {
             int id = player.selected_structure;
             if (id > -1)
                 if (structure[id]->getOwner() == HUMAN) {
@@ -357,7 +284,7 @@ void cGame::mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const {
                 }
         }
 
-        if (hover_unit > -1 && (mouse_tile == MOUSE_NORMAL || mouse_tile == MOUSE_PICK)) {
+        if (hover_unit > -1 && (mouse->isTile(MOUSE_NORMAL) || mouse->isTile(MOUSE_PICK))) {
             cUnit &hoverUnit = unit[hover_unit];
             if (hoverUnit.iPlayer == 0) {
                 if (!key[KEY_LSHIFT]) {
@@ -377,7 +304,7 @@ void cGame::mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const {
             bool bPlayInf=false;
             bool bPlayRep=false;
 
-            if (mouse_tile == MOUSE_MOVE) {
+            if (mouse->isTile(MOUSE_MOVE)) {
                 // any selected unit will move
                 for (int i=0; i < MAX_UNITS; i++) {
                     cUnit &pUnit = unit[i];
@@ -395,7 +322,7 @@ void cGame::mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const {
 
                     bParticle=true;
                 }
-            } else if (mouse_tile == MOUSE_ATTACK) {
+            } else if (mouse->isTile(MOUSE_ATTACK)) {
                 // check who or what to attack
                 for (int i=0; i < MAX_UNITS; i++) {
                     cUnit &pUnit = unit[i];
@@ -433,7 +360,7 @@ void cGame::mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const {
             int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
             int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
 
-            if (mouse_tile == MOUSE_ATTACK) {
+            if (mouse->isTile(MOUSE_ATTACK)) {
                 cParticle::create(absoluteXCoordinate, absoluteYCoordinate, D2TM_PARTICLE_ATTACK, -1, -1);
             } else {
                 cParticle::create(absoluteXCoordinate, absoluteYCoordinate, D2TM_PARTICLE_MOVE, -1, -1);

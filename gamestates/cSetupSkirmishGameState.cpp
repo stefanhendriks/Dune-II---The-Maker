@@ -623,7 +623,7 @@ void cSetupSkirmishGameState::draw() {
     } // mouse hovers over "START"
 
     // MOUSE
-    draw_sprite(bmp_screen, (BITMAP *)gfxdata[mouse_tile].dat, mouse_x, mouse_y);
+    mouse->draw();
 
     if (DEBUGGING && key[KEY_TAB]) {
         textDrawer.drawTextWithTwoIntegers(mouse_x+16, mouse_y+16, "%d,%d", mouse_x, mouse_y);

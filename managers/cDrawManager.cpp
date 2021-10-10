@@ -207,7 +207,7 @@ void cDrawManager::drawDeployment() {
     if (!player->bDeployIt) return;
 
     // mouse attack special?
-    mouse_tile = MOUSE_ATTACK;
+    game.getMouse()->setTile(MOUSE_ATTACK);
 
     cBuildingListItem *itemToDeploy = player->getSideBar()->getList(LIST_PALACE)->getItemToDeploy();
     if (itemToDeploy == nullptr) return;

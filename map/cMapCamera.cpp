@@ -140,18 +140,23 @@ void cMapCamera::setViewportPosition(int x, int y) {
     keepViewportWithinReasonableBounds();
 }
 
+// TODO: replace with onNotify (mouse observer)
+// replace this with an event based system, where the
+// event "mouse moved" is captured, hence we can
+// react on those events and then move the camera around
 void cMapCamera::thinkInteraction() {
     // Mouse is 'dragging' (border select) so do not do anything
-    if (game.getMouse()->isBoxSelecting()) {
+    cMouse *pMouse = game.getMouse();
+    if (pMouse->isBoxSelecting()) {
         return;
     }
 
     // mouse is 'moving by pressing right mouse button', this supersedes behavior with borders
-    if (game.getMouse()->isMapScrolling()) {
+    if (pMouse->isMapScrolling()) {
 
         // difference in pixels (- means up/left, + means down/right)
-        int diffX = mouse_mv_x2 - mouse_mv_x1;
-        int diffY = mouse_mv_y2 - mouse_mv_y1;
+        int diffX = pMouse->getMouseDragDeltaX();
+        int diffY = pMouse->getMouseDragDeltaY();
 
         // now calculate the speed in which we want to do this, the further
         // away (greater distance) the faster.
@@ -182,7 +187,7 @@ void cMapCamera::thinkInteraction() {
 	if (mouse_x <= 1 || key[KEY_LEFT]) {
 		if (viewportStartX > -halfViewportWidth) {
             setViewportPosition(viewportStartX -= 1, viewportStartY);
-			mouse_tile = MOUSE_LEFT;
+			pMouse->setTile(MOUSE_LEFT);
 		}
 	}
 
@@ -190,21 +195,21 @@ void cMapCamera::thinkInteraction() {
 	if (mouse_y <= 1 || key[KEY_UP]) {
 		if (viewportStartY > -halfViewportHeight) {
             setViewportPosition(viewportStartX, viewportStartY -= 1);
-			mouse_tile = MOUSE_UP;
+            pMouse->setTile(MOUSE_UP);
 		}
 	}
 
 	if (mouse_x >= (game.screen_x-2) || key[KEY_RIGHT]) {
 		if (getViewportEndX() < ((map.getWidth()*TILESIZE_WIDTH_PIXELS)+halfViewportWidth)) {
             setViewportPosition(viewportStartX += 1, viewportStartY);
-			mouse_tile = MOUSE_RIGHT;
+            pMouse->setTile(MOUSE_RIGHT);
 		}
 	}
 
 	if (mouse_y >= (game.screen_y-2) || key[KEY_DOWN]) {
 		if ((getViewportEndY()) < ((map.getHeight()*TILESIZE_HEIGHT_PIXELS)+halfViewportHeight)) {
             setViewportPosition(viewportStartX, viewportStartY += 1);
-			mouse_tile = MOUSE_DOWN;
+            pMouse->setTile(MOUSE_DOWN);
 		}
 	}
 }
