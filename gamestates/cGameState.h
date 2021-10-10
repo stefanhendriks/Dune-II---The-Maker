@@ -6,7 +6,7 @@ enum eGameStateType {
     GAMESTATE_SETUP_SKIRMISH_GAME,
 };
 
-class cGameState {
+class cGameState : cMouseObserver {
 
 public:
     cGameState(cGame& theGame);
@@ -15,6 +15,8 @@ public:
     virtual void think() = 0;
     virtual void draw() = 0;
     virtual void interact() = 0;
+
+    virtual void onNotifyMouseEvent(const s_MouseEvent &event) = 0;
 
     virtual eGameStateType getType() = 0;
 
