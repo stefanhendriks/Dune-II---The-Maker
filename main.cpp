@@ -17,7 +17,6 @@ int	iRest = 1;	// default rest value
 
 // the ultimate game variable(s)
 cGame          				game;
-cGameState                  *gameState;
 cSelectYourNextConquestState *selectYourNextConquestState; // there is only 1 instance of this
 
 cTimeManager   				TimeManager;
@@ -135,7 +134,6 @@ int handleArguments(int argc, char *argv[]) {
  * atleast moving out the big game.init and game.setup_players methods.
  */
 void initializingOnlyOnce() {
-    gameState = nullptr;
     selectYourNextConquestState = new cSelectYourNextConquestState(game);
 }
 

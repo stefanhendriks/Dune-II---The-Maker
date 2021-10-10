@@ -24,6 +24,8 @@ public:
     void draw() override;
     void interact() override;
 
+    void onNotifyMouseEvent(const s_MouseEvent &event) override;
+
     eGameStateType getType() override;
 
 private:

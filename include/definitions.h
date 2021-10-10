@@ -91,7 +91,7 @@
 #define GAME_WINNING     11      // when winning, do some cool animation
 #define GAME_WINBRIEF    12      // mentat chatter when won the mission
 #define GAME_LOSEBRIEF   13      // briefing when losing
-#define GAME_LOSING      14      // when  losing, do something cool
+#define GAME_LOSING      14      // when losing, do something cool
 #define GAME_SKIRMISH    15      // playing a skirmish mission!
 #define GAME_SETUPSKIRMISH 16    // set up a skirmish game
 

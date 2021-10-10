@@ -24,7 +24,6 @@ extern int		iRest;	// rest value
 
 // game
 extern cGame		  game;
-extern cGameState     *gameState;
 extern cSelectYourNextConquestState *selectYourNextConquestState;
 
 extern cMap           map;

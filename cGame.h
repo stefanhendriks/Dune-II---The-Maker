@@ -22,8 +22,9 @@ class cAbstractMentat;
 class cPlayer;
 class cGameControlsContext;
 class cInteractionManager;
+class cGameState;
 
-class cGame : public cScenarioObserver {
+class cGame : public cScenarioObserver, cMouseObserver {
 
 public:
 
@@ -79,8 +80,10 @@ public:
     int iMusicType;
 
     void thinkSlow_combat();
-    void winning();       // winning
-    void losing();        // losing
+
+    void winning();       // winning (during combat you get the window "you have been successful"), after clicking you get to debrief
+    void losing();        // losing (during combat you get the window "you have lost"), after clicking you get to debrief
+    void options();
 
 	void setup_players();
 
@@ -150,6 +153,8 @@ public:
     void setPlayerToInteractFor(cPlayer *pPlayer);
 
     void onNotify(const s_GameEvent &event) override;
+    void onNotifyMouseEvent(const s_MouseEvent &event) override;
+
     void onEventDiscovered(const s_GameEvent &event);
     void onEventSpecialLaunch(const s_GameEvent &event);
 
@@ -281,6 +286,8 @@ private:
     int8_t winFlags, loseFlags;
 
     int frame_count, fps;  // fps and such
+
+    cGameState *gameState;
 };
 
 #endif

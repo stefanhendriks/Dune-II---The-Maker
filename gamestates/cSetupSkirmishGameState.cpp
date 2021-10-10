@@ -948,3 +948,7 @@ void cSetupSkirmishGameState::interact() {
 eGameStateType cSetupSkirmishGameState::getType() {
     return GAMESTATE_SETUP_SKIRMISH_GAME;
 }
+
+void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
+
+}

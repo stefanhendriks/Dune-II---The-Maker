@@ -588,3 +588,7 @@ void cSelectYourNextConquestState::destroy() {
         }
     }
 }
+
+void cSelectYourNextConquestState::onNotifyMouseEvent(const s_MouseEvent &event) {
+
+}

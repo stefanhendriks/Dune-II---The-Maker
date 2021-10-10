@@ -14,8 +14,11 @@
 #include <algorithm>
 #include <random>
 #include "include/d2tmh.h"
+#include "cGame.h"
+
 
 cGame::cGame() {
+    gameState = nullptr;
 	screen_x = 800;
 	screen_y = 600;
     windowed = false;
@@ -35,6 +38,7 @@ cGame::cGame() {
 
 
 void cGame::init() {
+    gameState = nullptr;
 	screenshot=0;
 	bPlaying=true;
 
@@ -896,6 +900,8 @@ void cGame::drawState() {
 		case GAME_LOSEBRIEF:
             stateMentat(pMentat);
 			break;
+        default:
+            gameState->draw();
         // TODO: GAME_STATISTICS, ETC
 	}
 }
@@ -1598,7 +1604,6 @@ void cGame::prepareMentatForPlayer() {
         } else {
             pMentat->loadScene("lose02");
         }
-
         INI_LOAD_BRIEFING(house, iRegion, INI_LOSE, pMentat);
     }
 }
@@ -1877,4 +1882,11 @@ void cGame::setFps() {
 
 int cGame::getFps() {
     return fps;
+}
+
+void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
+    // pass through any classes that are interested
+    if (gameState) {
+        gameState->onNotifyMouseEvent(event);
+    }
 }
