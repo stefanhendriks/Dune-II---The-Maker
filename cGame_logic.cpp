@@ -1507,6 +1507,11 @@ bool cGame::isState(int thisState) {
 }
 
 void cGame::setState(int newState) {
+    if (newState == state) {
+        // ignore
+        return;
+    }
+
     char msg[255];
     sprintf(msg, "Setting state from %d(=%s) to %d(=%s)", state, stateString(state), newState, stateString(newState));
     logbook(msg);
@@ -1671,7 +1676,6 @@ void cGame::onNotify(const s_GameEvent &event) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
         players[i].onNotify(event);
     }
-
 }
 
 void cGame::onEventDiscovered(const s_GameEvent &event) {
