@@ -308,7 +308,7 @@ void cAbstractMentat::initSentences() {
     memset(sentence, 0, sizeof(sentence));
 }
 
-void cAbstractMentat::setSentence(int i, char *text) {
+void cAbstractMentat::setSentence(int i, const char *text) {
     sprintf(sentence[i], "%s", text);
     char msg[512];
     sprintf(msg, "Sentence[%d]=%s", i, text);

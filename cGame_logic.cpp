@@ -673,80 +673,6 @@ void cGame::init_skirmish() const {
     game.mission_init();
 }
 
-// select house
-void cGame::stateSelectHouse() {
-    bool bFadeOut=false;
-
-	// Render the planet Dune a bit downward
-    BITMAP *duneBitmap = (BITMAP *) gfxinter[BMP_GAME_DUNE].dat;
-    draw_sprite(bmp_screen, duneBitmap, ((game.screen_x - duneBitmap->w)), ((game.screen_y - (duneBitmap->h * 0.90))));
-
-	// HOUSES
-    BITMAP *sprite = (BITMAP *) gfxinter[BMP_SELECT_YOUR_HOUSE].dat;
-    int selectYourHouseXCentered = (game.screen_x / 2) - sprite->w / 2;
-    draw_sprite(bmp_screen, sprite, selectYourHouseXCentered, 0);
-
-    int selectYourHouseY = game.screen_y * 0.25f;
-
-    int columnWidth = game.screen_x / 7; // empty, atr, empty, har, empty, ord, empty (7 columns)
-    int offset = (columnWidth / 2) - (((BITMAP *)gfxinter[BMP_SELECT_HOUSE_ATREIDES].dat)->w / 2);
-    cRectangle houseAtreides = cRectangle((columnWidth * 1) + offset, selectYourHouseY, 90, 98);
-    cRectangle houseOrdos = cRectangle((columnWidth * 3) + offset, selectYourHouseY, 90, 98);
-    cRectangle houseHarkonnen = cRectangle((columnWidth * 5) + offset, selectYourHouseY, 90, 98);
-    allegroDrawer->blitSprite((BITMAP *)gfxinter[BMP_SELECT_HOUSE_ATREIDES].dat, bmp_screen, &houseAtreides);
-    allegroDrawer->blitSprite((BITMAP *)gfxinter[BMP_SELECT_HOUSE_ORDOS].dat, bmp_screen, &houseOrdos);
-    allegroDrawer->blitSprite((BITMAP *)gfxinter[BMP_SELECT_HOUSE_HARKONNEN].dat, bmp_screen, &houseHarkonnen);
-
-    cTextDrawer textDrawer = cTextDrawer(bene_font);
-
-    // back
-    cRectangle *backButtonRect = textDrawer.getAsRectangle(0, screen_y - textDrawer.getFontHeight(), " BACK");
-    textDrawer.drawText(backButtonRect->getX(), backButtonRect->getY(), makecol(255,255,255), " BACK");
-
-    if (backButtonRect->isMouseOver(mouse->getX(), mouse->getY())) {
-        textDrawer.drawText(backButtonRect->getX(), backButtonRect->getY(), makecol(255, 0, 0), " BACK");
-    }
-
-    if (mouse->isLeftButtonClicked()) {
-        delete pMentat;
-        pMentat = nullptr;
-        if (mouse->isOverRectangle(&houseAtreides)) {
-            prepareMentatToTellAboutHouse(ATREIDES);
-
-            play_sound_id(SOUND_ATREIDES);
-
-            setState(GAME_TELLHOUSE);
-            bFadeOut=true;
-        } else if (mouse->isOverRectangle(&houseOrdos)) {
-            prepareMentatToTellAboutHouse(ORDOS);
-
-            play_sound_id(SOUND_ORDOS);
-
-            setState(GAME_TELLHOUSE);
-            bFadeOut=true;
-        } else if (mouse->isOverRectangle(&houseHarkonnen)) {
-            prepareMentatToTellAboutHouse(HARKONNEN);
-
-            play_sound_id(SOUND_HARKONNEN);
-
-            setState(GAME_TELLHOUSE);
-            bFadeOut=true;
-        } else if (backButtonRect->isMouseOver(mouse->getX(), mouse->getY())) {
-            bFadeOut=true;
-            setState(GAME_MENU);
-        }
-    }
-
-    delete backButtonRect;
-
-	// MOUSE
-    mouse->draw();
-
-    if (bFadeOut) {
-        game.START_FADING_OUT();
-    }
-}
-
 int cGame::getGroupNumberFromKeyboard() {
 	if (key[KEY_1]) {
 		return 1;
@@ -826,9 +752,6 @@ void cGame::drawState() {
     }
 
     switch (state) {
-        case GAME_SELECT_HOUSE:
-            stateSelectHouse();
-            break;
         case GAME_TELLHOUSE:
             stateMentat(pMentat);
             break;
@@ -1487,6 +1410,8 @@ void cGame::setState(int newState) {
         gameState = selectYourNextConquestState;
     } else if (newState == GAME_SETUPSKIRMISH) {
         gameState = new cSetupSkirmishGameState(*this);
+    } else if (newState == GAME_SELECT_HOUSE) {
+        gameState = new cChooseHouseGameState(*this);
     } else if (newState == GAME_PLAYING) {
         // evaluate all players, so we have initial 'alive' values set properly
         for (int i = 1; i < MAX_PLAYERS; i++) {
@@ -1591,6 +1516,8 @@ void cGame::prepareMentatToTellAboutHouse(int house) {
     } else if (house == ORDOS) {
         INI_LOAD_BRIEFING(ORDOS, 0, INI_DESCRIPTION, pMentat);
         pMentat->loadScene("plord"); // load planet of ordos
+    } else {
+        pMentat->setSentence(0, "Looks like you choose an unknown house");
     }
     // todo: Sardaukar, etc? (Super Dune 2 features)
 
@@ -1604,7 +1531,7 @@ void cGame::loadScenario() {
 
 void cGame::think_state() {
     if (gameState) {
-        gameState->think();
+        gameState->thinkFast();
     }
 }
 

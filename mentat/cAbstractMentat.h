@@ -97,7 +97,7 @@ public:
     void initSentences();
     void speak();
 
-    void setSentence(int i, char text[256]);
+    void setSentence(int i, const char text[256]);
 
     void thinkMouth();
 

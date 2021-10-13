@@ -39,7 +39,7 @@ public:
     cSelectYourNextConquestState(cGame& theGame);
     ~cSelectYourNextConquestState() override;
 
-    void think() override;
+    void thinkFast() override;
     void draw() override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
