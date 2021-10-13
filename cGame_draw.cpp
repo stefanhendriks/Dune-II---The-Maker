@@ -12,8 +12,11 @@
 #include "include/d2tmh.h"
 
 // Fading between menu items
-void cGame::FADE_OUT() {
-    iFadeAction = 1; // fade out
+void cGame::START_FADING_OUT() {
+    // set state to fade out
+    fadeAction = eFadeAction::FADE_OUT; // fade out
+
+    // copy the last bitmap of screen into a separate bitmap which we use for fading out.
     draw_sprite(bmp_fadeout, bmp_screen, 0, 0);
 }
 
@@ -34,7 +37,7 @@ void cGame::losing() {
         createAndPrepareMentatForHumanPlayer();
 
         // FADE OUT
-        FADE_OUT();
+        START_FADING_OUT();
     }
 }
 
@@ -55,7 +58,7 @@ void cGame::winning() {
         createAndPrepareMentatForHumanPlayer();
 
         // FADE OUT
-        FADE_OUT();
+        START_FADING_OUT();
     }
 }
 

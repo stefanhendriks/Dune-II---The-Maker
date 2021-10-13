@@ -48,8 +48,8 @@ void cGame::init() {
 	iSkirmishStartPoints=2;
 
     // Alpha (for fading in/out)
-    iAlphaScreen=0;           // 255 = opaque , anything else
-    iFadeAction=2;            // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
+    fadeAlpha=0;                             // 255 = opaque , anything else
+    fadeAction=eFadeAction::FADE_IN;           // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
 
     iSkirmishMap=-1;
 
@@ -487,14 +487,6 @@ void cGame::updateState() {
 }
 
 void cGame::combat() {
-	if (iFadeAction == 1) // fading out
-    {
-        draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
-        return;
-    }
-
-    if (iAlphaScreen == 0)
-        iFadeAction = 2;
     // -----------------
     cPlayer &humanPlayer = players[HUMAN];
     humanPlayer.bPlacedIt = humanPlayer.bPlaceIt;
@@ -505,15 +497,6 @@ void cGame::combat() {
 
 // stateMentat logic + drawing mouth/eyes
 void cGame::stateMentat(cAbstractMentat *pMentat) {
-    if (iFadeAction == 1) // fading out
-    {
-        draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
-        return;
-    }
-
-    if (iAlphaScreen == 0)
-        iFadeAction = 2;
-    // -----------------
     draw_sprite(bmp_screen, bmp_backgroundMentat, 0, 0);
 
     mouse->setTile(MOUSE_NORMAL);
@@ -525,20 +508,7 @@ void cGame::stateMentat(cAbstractMentat *pMentat) {
 }
 
 // draw menu
-void cGame::menu()
-{
-    // FADING STUFF
-    if (iFadeAction == 1) // fading out
-    {
-        draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
-        return;
-    }
-
-    if (iAlphaScreen == 0) {
-        iFadeAction = 2;
-    }
-    // -----------------
-
+void cGame::menu() {
     bool bFadeOut=false;
 
 	if (DEBUGGING)
@@ -694,7 +664,7 @@ void cGame::menu()
 	}
 
     if (bFadeOut) {
-        game.FADE_OUT();
+        game.START_FADING_OUT();
     }
 
 }
@@ -705,22 +675,10 @@ void cGame::init_skirmish() const {
 
 void cGame::setup_skirmish() {
     gameState->draw();
-    gameState->interact();
 }
 
 // select house
 void cGame::stateSelectHouse() {
-    // FADING STUFF
-    if (iFadeAction == 1) // fading out
-    {
-        draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
-        return;
-    }
-
-    if (iAlphaScreen == 0)
-        iFadeAction = 2;
-    // -----------------
-
     bool bFadeOut=false;
 
 	// Render the planet Dune a bit downward
@@ -789,14 +747,13 @@ void cGame::stateSelectHouse() {
     mouse->draw();
 
     if (bFadeOut) {
-        game.FADE_OUT();
+        game.START_FADING_OUT();
     }
 }
 
 // select your next conquest
 void cGame::stateSelectYourNextConquest() {
     gameState->draw();
-    gameState->interact();
 }
 
 int cGame::getGroupNumberFromKeyboard() {
@@ -851,14 +808,13 @@ void cGame::shakeScreenAndBlitBuffer() {
 	else
 	{
 		// when fading
-		if (iAlphaScreen == 255)
-			blit(bmp_screen, screen, 0, 0, 0, 0, screen_x, screen_y);
-		else
-		{
+		if (fadeAlpha == 255) {
+            blit(bmp_screen, screen, 0, 0, 0, 0, screen_x, screen_y);
+        } else {
 			BITMAP *temp = create_bitmap(game.screen_x, game.screen_y);
 			assert(temp != NULL);
 			clear(temp);
-			fblend_trans(bmp_screen, temp, 0, 0, iAlphaScreen);
+			fblend_trans(bmp_screen, temp, 0, 0, fadeAlpha);
 			blit(temp, screen, 0, 0, 0, 0, screen_x, screen_y);
 			destroy_bitmap(temp);
 		}
@@ -866,6 +822,18 @@ void cGame::shakeScreenAndBlitBuffer() {
 }
 
 void cGame::drawState() {
+    clear(bmp_screen);
+
+    if (fadeAction == eFadeAction::FADE_OUT) {
+        draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
+        return;
+    }
+
+    // this makes fade-in happen after fade-out automatically
+    if (fadeAlpha == 0) {
+        fadeAction = eFadeAction::FADE_IN;
+    }
+
     switch (state) {
         case GAME_SELECT_HOUSE:
             stateSelectHouse();
@@ -914,7 +882,6 @@ void cGame::run() {
 
 	while (bPlaying) {
 		TimeManager.processTime();
-		clear(bmp_screen);
         updateState();
 		handleTimeSlicing(); // handle time diff (needs to change!)
         drawState(); // run game state, includes interaction + drawing

@@ -22,7 +22,6 @@ public:
 
     void think() override;
     void draw() override;
-    void interact() override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
 
@@ -36,6 +35,10 @@ private:
     int spawnWorms;
     bool spawnBlooms;
     bool detonateBlooms;
+
+    void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
+
+    void onMouseLeftButtonClicked(const s_MouseEvent &event);
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H

@@ -1,10 +1,3 @@
-/*
- * enums.h
- *
- *  Created on: Aug 5, 2009
- *      Author: Stefan
- */
-
 #ifndef ENUMS_H_
 #define ENUMS_H_
 
@@ -305,6 +298,13 @@ enum eGameEventType {
 	GAME_EVENT_SPICE_BLOOM_BLEW,
     // a player got defeated
 	GAME_EVENT_PLAYER_DEFEATED,
+};
+
+// Fading action for transitioning between states
+enum eFadeAction {
+    FADE_NONE,  // no fading
+    FADE_IN,    // fade in
+    FADE_OUT    // fade out
 };
 
 #endif /* ENUMS_H_ */

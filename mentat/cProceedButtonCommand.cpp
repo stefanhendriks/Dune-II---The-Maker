@@ -9,7 +9,7 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
         // CENTER MOUSE
         game.getMouse()->positionMouseCursor(game.screen_x / 2, game.screen_y / 2);
 
-        game.FADE_OUT();
+        game.START_FADING_OUT();
 
         playMusicByType(MUSIC_PEACE);
         return;
@@ -21,7 +21,7 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
             game.setState(GAME_SETUPSKIRMISH);
             game.init_skirmish();
             playMusicByType(MUSIC_MENU);
-            game.FADE_OUT();
+            game.START_FADING_OUT();
         } else {
             logbook("cProceedButtonCommand pressed, in skirmish mode and state is not WINBRIEF nor LOSEBRIEF!?");
         }
@@ -43,7 +43,7 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
         // PLAY THE MUSIC
         playMusicByType(MUSIC_CONQUEST);
 
-        game.FADE_OUT();
+        game.START_FADING_OUT();
         return;
     }
 
@@ -67,7 +67,7 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
             mentat.resetSpeak();
         }
 
-        game.FADE_OUT();
+        game.START_FADING_OUT();
         return;
     }
 }

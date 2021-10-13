@@ -93,4 +93,8 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent) {
 
     mouseDrawer->onNotify(mouseEvent);
 
+    // LAST FOR NOW, as this can change states and thus break things. Hence, if you put this
+    // somewhere above this function, the lines after this onNotify might end up pointing to invalid memory addresses
+    // and cause a SIGSEV
+    game.onNotifyMouseEvent(mouseEvent);
 }

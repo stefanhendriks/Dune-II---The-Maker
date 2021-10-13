@@ -41,7 +41,6 @@ public:
 
     void think() override;
     void draw() override;
-    void interact() override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
 
@@ -83,7 +82,7 @@ private:
     char cRegionText[MAX_REGIONS][255]; // text for this
 
     void REGION_DRAW(cRegion &regionPiece);
-    int REGION_OVER();
+    int REGION_OVER(int mouseX, int mouseY);
     void REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile);
 
     void drawStateSelectYourNextConquest();
@@ -103,7 +102,16 @@ private:
 
     int selectNextConquestAlpha;
 
+    int regionMouseIsHoveringOver;
+
     BITMAP *regionClickMapBmp;  // this is the bmp that
+    void onMouseMove(const s_MouseEvent &event);
+
+    cRegion * getRegionMouseIsOver();
+
+    void loadScenarioAndTransitionToNextState(int iMission);
+
+    void onMouseLeftButtonClicked(const s_MouseEvent &event);
 };
 
 #endif //D2TM_CSELECTYOURNEXTCONQUESTSTATE_H

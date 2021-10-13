@@ -37,8 +37,8 @@ public:
 	char version[15];			// version number, or name.
 
     // Alpha (for fading in/out)
-    int iAlphaScreen;           // 255 = opaque , anything else
-    int iFadeAction;            // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
+    int fadeAlpha;           // 255 = opaque , anything else
+    eFadeAction fadeAction;    // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
 
     // resolution of the game
 	int screen_x;
@@ -91,7 +91,7 @@ public:
 
 	void think_mentat();
 
-    void FADE_OUT(); // fade out with current screen_bmp, this is a little game loop itself!
+    void START_FADING_OUT(); // fade out with current screen_bmp, this is a little game loop itself!
 
     void prepareMentatForPlayer();
 

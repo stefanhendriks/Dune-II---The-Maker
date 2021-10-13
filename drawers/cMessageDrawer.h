@@ -1,15 +1,17 @@
 #ifndef CMESSAGEDRAWER_H_
 #define CMESSAGEDRAWER_H_
 
-enum eMessageDrawerState {
-    COMBAT,
-    NEXT_CONQUEST
-};
+namespace messages {
+    enum eMessageDrawerState {
+        COMBAT,
+        NEXT_CONQUEST
+    };
 
-enum eMessageDrawerFadingState {
-    FADE_IN,
-    FADE_OUT
-};
+    enum eMessageDrawerFadingState {
+        FADE_IN,
+        FADE_OUT
+    };
+}
 
 class cMessageDrawer {
 	public:
@@ -44,8 +46,8 @@ class cMessageDrawer {
 		BITMAP *bmpBar;
 		BITMAP *temp;
 
-        eMessageDrawerState state;
-        eMessageDrawerFadingState fadeState;
+        messages::eMessageDrawerState state;
+        messages::eMessageDrawerFadingState fadeState;
 
         bool keepMessage;
 

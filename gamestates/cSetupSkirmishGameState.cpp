@@ -33,17 +33,6 @@ void cSetupSkirmishGameState::think() {
 }
 
 void cSetupSkirmishGameState::draw() {
-    // FADING STUFF
-    if (game.iFadeAction == 1) // fading out
-    {
-        draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
-        return;
-    }
-
-    if (game.iAlphaScreen == 0)
-        game.iFadeAction = 2;
-    // -----------------
-
     int screen_x = game.screen_x;
     int screen_y = game.screen_y;
 
@@ -619,7 +608,11 @@ void cSetupSkirmishGameState::draw() {
     }
 
     if (MOUSE_WITHIN_RECT(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
-        textDrawer.drawTextBottomRight(makecol(255, 0, 0), "START");
+        if (iSkirmishMap > -1) {
+            textDrawer.drawTextBottomRight(makecol(255, 0, 0), "START");
+        } else {
+            textDrawer.drawTextBottomRight(makecol(128, 128, 128), "START");
+        }
     } // mouse hovers over "START"
 
     // MOUSE
@@ -630,13 +623,302 @@ void cSetupSkirmishGameState::draw() {
     }
 
     if (bFadeOut) {
-        game.FADE_OUT();
+        game.START_FADING_OUT();
     }
 }
 
-void cSetupSkirmishGameState::interact() {
-    int iSkirmishMap = game.iSkirmishMap;
+void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap) {
+    s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
 
+    // this needs to be before setup_players :/
+    game.iMission=9; // high tech level (TODO: make this customizable)
+
+    game.setup_players();
+
+    // Starting skirmish mode
+    game.bSkirmish=true;
+
+    /* set up starting positions */
+    std::vector<int> iStartPositions;
+
+    int startCellsOnSkirmishMap=0;
+    for (int s=0; s < 5; s++) {
+        int startPosition = selectedMap.iStartCell[s];
+        if (startPosition < 0) continue;
+        iStartPositions.push_back(startPosition);
+    }
+
+    startCellsOnSkirmishMap = iStartPositions.size();
+
+    // REGENERATE MAP DATA FROM INFO
+    map.init(selectedMap.width, selectedMap.height);
+
+    for (int c=0; c < map.getMaxCells(); c++) {
+        mapEditor.createCell(c, selectedMap.mapdata[c], 0);
+    }
+
+    mapEditor.smoothMap();
+
+    if (DEBUGGING) {
+        logbook("Starting positions before shuffling:");
+        for (int i = 0; i < startCellsOnSkirmishMap; i++) {
+            char msg[255];
+            sprintf(msg, "iStartPositions[%d] = [%d]", i, iStartPositions[i]);
+            logbook(msg);
+        }
+    }
+
+    logbook("Shuffling starting positions");
+    std::random_shuffle(iStartPositions.begin(), iStartPositions.end());
+
+    if (DEBUGGING) {
+        logbook("Starting positions after shuffling:");
+        for (int i = 0; i < startCellsOnSkirmishMap; i++) {
+            char msg[255];
+            sprintf(msg, "iStartPositions[%d] = [%d]", i, iStartPositions[i]);
+            logbook(msg);
+        }
+    }
+
+    int maxThinkingAIs = MAX_PLAYERS;
+    if (game.bOneAi) {
+        maxThinkingAIs = 1;
+    }
+
+    if (game.bDisableAI) {
+        maxThinkingAIs = 0;
+    }
+
+    // set up players
+    for (int p = 0; p < MAX_PLAYERS; p++)	{
+        s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
+
+        int iHouse = sSkirmishPlayer.iHouse; // get house selected, which can be 0 for RANDOM
+
+        // not playing.. do nothing (only for playable factions)
+        bool playableFaction = p < AI_CPU5;
+
+        if (playableFaction) {
+            if (!sSkirmishPlayer.bPlaying) {
+                // make sure it is a brain dead AI...
+                cPlayer &cPlayer = players[p];
+                cPlayer.init(p, nullptr);
+                continue;
+            }
+
+            // house = 0 means pick random house
+            if (iHouse == 0) {
+                bool bOk=false;
+
+                while (bOk == false) {
+                    if (p > HUMAN) {
+                        iHouse = rnd(4)+1;
+                        // cpu player
+                    } else {// human may not be sardaukar
+                        iHouse = rnd(3) + 1; // hark = 1, atr = 2, ord = 3, sar = 4
+                    }
+
+                    bool houseInUse=false;
+                    for (int pl=0; pl < AI_WORM; pl++) {
+                        // already in use by other skirmish set-up players
+                        if (skirmishPlayer[pl].iHouse > 0 &&
+                            skirmishPlayer[pl].iHouse == iHouse) {
+                            houseInUse=true;
+                        }
+
+                        if (players[pl].getHouse() == iHouse) {
+                            // already in use by a already-setup player
+                            houseInUse = true;
+                        }
+                    }
+
+                    if (!houseInUse) {
+                        bOk=true;
+                    }
+                }
+            }
+        } else {
+            if (p == AI_CPU5) {
+                iHouse = FREMEN;
+            } else {
+                iHouse = GENERALHOUSE;
+            }
+        }
+
+        cPlayer &pPlayer = players[p];
+
+        // TEAM Logic
+        if (p == HUMAN) {
+            pPlayer.init(p, nullptr);
+        } else if (p == AI_CPU5) {
+            pPlayer.init(p, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
+        } else if (p == AI_CPU6) {
+            pPlayer.init(p, new brains::cPlayerBrainSandworm(&pPlayer));
+        } else {
+            if (maxThinkingAIs > 0) {
+                pPlayer.init(p, new brains::cPlayerBrainSkirmish(&pPlayer));
+                maxThinkingAIs--;
+            } else {
+                pPlayer.init(p, nullptr);
+            }
+        }
+
+        pPlayer.setCredits(sSkirmishPlayer.iCredits);
+        pPlayer.setHouse(iHouse);
+
+        // from here, ignore non playable factions
+        if (!playableFaction) continue;
+
+        pPlayer.setFocusCell(iStartPositions[p]);
+
+        // Set map position
+        if (p == HUMAN) {
+            mapCamera->centerAndJumpViewPortToCell(pPlayer.getFocusCell());
+        }
+
+        // create constyard
+        const s_PlaceResult &result = pPlayer.canPlaceStructureAt(pPlayer.getFocusCell(), CONSTYARD);
+        if (!result.success) {
+            // when failure, create mcv instead
+            UNIT_CREATE(pPlayer.getFocusCell(), MCV, p, true);
+        } else {
+            pPlayer.placeStructure(pPlayer.getFocusCell(), CONSTYARD, 100);
+        }
+    }
+
+
+    // amount of units
+    int u=0;
+    int maxAmountOfStartingUnits = 0;
+
+    for (int p = 0; p < MAX_PLAYERS; p++) {
+        s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
+        if (sSkirmishPlayer.startingUnits > maxAmountOfStartingUnits) {
+            maxAmountOfStartingUnits = sSkirmishPlayer.startingUnits;
+        }
+    }
+
+    // create units
+    while (u < maxAmountOfStartingUnits) {
+        // pick a random unit type
+        int iType = rnd(12);
+
+        for (int p = 0; p < MAX_PLAYERS; p++) {
+            cPlayer &pPlayer = players[p];
+            s_SkirmishPlayer &pSkirmishPlayer = skirmishPlayer[p];
+
+            if (!pSkirmishPlayer.bPlaying) continue; // skip non playing players
+
+            if (u >= pSkirmishPlayer.startingUnits) {
+                continue; // skip this player
+            }
+
+            int iPlayerUnitType = pPlayer.getSameOrSimilarUnitType(iType);
+
+            int minRange = 3;
+            int maxRange = 12;
+            int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(pPlayer.getFocusCell(),
+                                                                               minRange,
+                                                                               maxRange,
+                                                                               iPlayerUnitType);
+
+            UNIT_CREATE(cell, iPlayerUnitType, p, true);
+
+            char msg[255];
+            sprintf(msg, "Wants %d amount of units; amount created %d", pSkirmishPlayer.startingUnits, u);
+            cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, pPlayer.getHouse());
+        }
+
+        u++;
+    }
+
+    // TEAM LOGIC here, so we can decide which is Atreides and thus should be allied with Fremen...
+    for (int p = 0; p < MAX_PLAYERS; p++) {
+        cPlayer &player = players[p];
+        s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
+        if (p == HUMAN) {
+            player.setTeam(sSkirmishPlayer.team);
+        } else if (p == AI_CPU5) { // AI for fremen (super weapon)
+            player.setTeam(AI_CPU5);
+        } else if (p == AI_CPU6) {
+            player.setTeam(AI_CPU6); // worm team is against everyone
+        } else {
+            // all other AI's are their own team (campaign == AI's are friends, here they are enemies)
+            player.setTeam(sSkirmishPlayer.team);
+        }
+    }
+
+    for (int p = 0; p < MAX_PLAYERS; p++) {
+        cPlayer &player = players[p];
+        if (player.getHouse() == ATREIDES) {
+            players[AI_CPU5].setTeam(player.getTeam());
+        }
+    }
+
+
+    // default flags (destroy everyone but me/my team)
+    game.setWinFlags(3);
+    game.setLoseFlags(1);
+
+    playMusicByType(MUSIC_PEACE);
+
+    map.setAutoSpawnSpiceBlooms(spawnBlooms);
+    map.setAutoDetonateSpiceBlooms(detonateBlooms);
+    map.setDesiredAmountOfWorms(spawnWorms);
+
+    // spawn requested amount of worms at start
+    if (spawnWorms > 0) {
+        int worms = spawnWorms;
+        int minDistance = worms * 12; // so on 64x64 maps this still could work
+        int maxDistance = worms * 32; // 128 / 4
+        int wormCell = map.getRandomCell();
+        int failures = 0;
+        char msg[255];
+        sprintf(msg, "Skirmish game with %d sandworms, minDistance %d, maxDistance %d", worms, minDistance, maxDistance);
+        logbook(msg);
+        while (worms > 0) {
+            int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance, SANDWORM);
+            if (cell < 0) {
+                // retry
+                failures++;
+                if (failures > 10) {
+                    // too many failed attempts, just stop
+                    logbook("Failed too many times to find spot for sandworm, aborting!");
+                    break;
+                }
+                continue;
+            }
+            char msg[255];
+            sprintf(msg, "Spawning sandworm at %d", cell);
+            logbook(msg);
+            UNIT_CREATE(cell, SANDWORM, AI_WORM, true);
+            wormCell = cell; // start from here to spawn new worm
+            worms--;
+            failures = 0; // reset failures
+        }
+    } else {
+        logbook("Skirmish game without sandworms");
+    }
+
+    drawManager->getMessageDrawer()->initCombatPosition();
+
+    game.START_FADING_OUT();
+    game.setState(GAME_PLAYING); // this deletes the current state object
+}
+
+eGameStateType cSetupSkirmishGameState::getType() {
+    return GAMESTATE_SETUP_SKIRMISH_GAME;
+}
+
+void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
+    switch (event.eventType) {
+        case MOUSE_LEFT_BUTTON_CLICKED:
+            onMouseLeftButtonClicked(event);
+            break;
+    }
+}
+
+void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
     int topBarHeight = 21;
     int screen_y = game.screen_y;
     int screen_x = game.screen_x;
@@ -647,11 +929,9 @@ void cSetupSkirmishGameState::interact() {
     int backButtonX = 0;
 
     if (MOUSE_WITHIN_RECT(backButtonX, backButtonY, backButtonWidth, backButtonHeight)) {
-        if (mouse->isLeftButtonClicked()) {
-            game.FADE_OUT();
-            game.setState(GAME_MENU); // this deletes the current state object, so has to be last statement!
-            return;
-        }
+        game.START_FADING_OUT();
+        game.setState(GAME_MENU); // this deletes the current state object, so has to be last statement!
+        return;
     }
 
     int startButtonWidth = textDrawer.textLength("START");
@@ -660,295 +940,11 @@ void cSetupSkirmishGameState::interact() {
     int startButtonX = screen_x - startButtonWidth;
 
     if (MOUSE_WITHIN_RECT(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
-
+        int iSkirmishMap = game.iSkirmishMap;
         // START
-        if ((mouse->isLeftButtonClicked() && iSkirmishMap > -1)) {
-            s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
-
-            // this needs to be before setup_players :/
-            game.iMission=9; // high tech level (TODO: make this customizable)
-
-            game.setup_players();
-
-            // Starting skirmish mode
-            game.bSkirmish=true;
-
-            /* set up starting positions */
-            std::vector<int> iStartPositions;
-
-            int startCellsOnSkirmishMap=0;
-            for (int s=0; s < 5; s++) {
-                int startPosition = selectedMap.iStartCell[s];
-                if (startPosition < 0) continue;
-                iStartPositions.push_back(startPosition);
-            }
-
-            startCellsOnSkirmishMap = iStartPositions.size();
-
-            // REGENERATE MAP DATA FROM INFO
-            map.init(selectedMap.width, selectedMap.height);
-
-            for (int c=0; c < map.getMaxCells(); c++) {
-                mapEditor.createCell(c, selectedMap.mapdata[c], 0);
-            }
-
-            mapEditor.smoothMap();
-
-            if (DEBUGGING) {
-                logbook("Starting positions before shuffling:");
-                for (int i = 0; i < startCellsOnSkirmishMap; i++) {
-                    char msg[255];
-                    sprintf(msg, "iStartPositions[%d] = [%d]", i, iStartPositions[i]);
-                    logbook(msg);
-                }
-            }
-
-            logbook("Shuffling starting positions");
-            std::random_shuffle(iStartPositions.begin(), iStartPositions.end());
-
-            if (DEBUGGING) {
-                logbook("Starting positions after shuffling:");
-                for (int i = 0; i < startCellsOnSkirmishMap; i++) {
-                    char msg[255];
-                    sprintf(msg, "iStartPositions[%d] = [%d]", i, iStartPositions[i]);
-                    logbook(msg);
-                }
-            }
-
-            int maxThinkingAIs = MAX_PLAYERS;
-            if (game.bOneAi) {
-                maxThinkingAIs = 1;
-            }
-
-            if (game.bDisableAI) {
-                maxThinkingAIs = 0;
-            }
-
-            // set up players
-            for (int p = 0; p < MAX_PLAYERS; p++)	{
-                s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
-
-                int iHouse = sSkirmishPlayer.iHouse; // get house selected, which can be 0 for RANDOM
-
-                // not playing.. do nothing (only for playable factions)
-                bool playableFaction = p < AI_CPU5;
-
-                if (playableFaction) {
-                    if (!sSkirmishPlayer.bPlaying) {
-                        // make sure it is a brain dead AI...
-                        cPlayer &cPlayer = players[p];
-                        cPlayer.init(p, nullptr);
-                        continue;
-                    }
-
-                    // house = 0 means pick random house
-                    if (iHouse == 0) {
-                        bool bOk=false;
-
-                        while (bOk == false) {
-                            if (p > HUMAN) {
-                                iHouse = rnd(4)+1;
-                                // cpu player
-                            } else {// human may not be sardaukar
-                                iHouse = rnd(3) + 1; // hark = 1, atr = 2, ord = 3, sar = 4
-                            }
-
-                            bool houseInUse=false;
-                            for (int pl=0; pl < AI_WORM; pl++) {
-                                // already in use by other skirmish set-up players
-                                if (skirmishPlayer[pl].iHouse > 0 &&
-                                    skirmishPlayer[pl].iHouse == iHouse) {
-                                    houseInUse=true;
-                                }
-
-                                if (players[pl].getHouse() == iHouse) {
-                                    // already in use by a already-setup player
-                                    houseInUse = true;
-                                }
-                            }
-
-                            if (!houseInUse) {
-                                bOk=true;
-                            }
-                        }
-                    }
-                } else {
-                    if (p == AI_CPU5) {
-                        iHouse = FREMEN;
-                    } else {
-                        iHouse = GENERALHOUSE;
-                    }
-                }
-
-                cPlayer &pPlayer = players[p];
-
-                // TEAM Logic
-                if (p == HUMAN) {
-                    pPlayer.init(p, nullptr);
-                } else if (p == AI_CPU5) {
-                    pPlayer.init(p, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
-                } else if (p == AI_CPU6) {
-                    pPlayer.init(p, new brains::cPlayerBrainSandworm(&pPlayer));
-                } else {
-                    if (maxThinkingAIs > 0) {
-                        pPlayer.init(p, new brains::cPlayerBrainSkirmish(&pPlayer));
-                        maxThinkingAIs--;
-                    } else {
-                        pPlayer.init(p, nullptr);
-                    }
-                }
-
-                pPlayer.setCredits(sSkirmishPlayer.iCredits);
-                pPlayer.setHouse(iHouse);
-
-                // from here, ignore non playable factions
-                if (!playableFaction) continue;
-
-                pPlayer.setFocusCell(iStartPositions[p]);
-
-                // Set map position
-                if (p == HUMAN) {
-                    mapCamera->centerAndJumpViewPortToCell(pPlayer.getFocusCell());
-                }
-
-                // create constyard
-                const s_PlaceResult &result = pPlayer.canPlaceStructureAt(pPlayer.getFocusCell(), CONSTYARD);
-                if (!result.success) {
-                    // when failure, create mcv instead
-                    UNIT_CREATE(pPlayer.getFocusCell(), MCV, p, true);
-                } else {
-                    pPlayer.placeStructure(pPlayer.getFocusCell(), CONSTYARD, 100);
-                }
-            }
-
-
-            // amount of units
-            int u=0;
-            int maxAmountOfStartingUnits = 0;
-
-            for (int p = 0; p < MAX_PLAYERS; p++) {
-                s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
-                if (sSkirmishPlayer.startingUnits > maxAmountOfStartingUnits) {
-                    maxAmountOfStartingUnits = sSkirmishPlayer.startingUnits;
-                }
-            }
-
-            // create units
-            while (u < maxAmountOfStartingUnits) {
-                // pick a random unit type
-                int iType = rnd(12);
-
-                for (int p = 0; p < MAX_PLAYERS; p++) {
-                    cPlayer &pPlayer = players[p];
-                    s_SkirmishPlayer &pSkirmishPlayer = skirmishPlayer[p];
-
-                    if (!pSkirmishPlayer.bPlaying) continue; // skip non playing players
-
-                    if (u >= pSkirmishPlayer.startingUnits) {
-                        continue; // skip this player
-                    }
-
-                    int iPlayerUnitType = pPlayer.getSameOrSimilarUnitType(iType);
-
-                    int minRange = 3;
-                    int maxRange = 12;
-                    int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(pPlayer.getFocusCell(),
-                                                                                       minRange,
-                                                                                       maxRange,
-                                                                                       iPlayerUnitType);
-
-                    UNIT_CREATE(cell, iPlayerUnitType, p, true);
-
-                    char msg[255];
-                    sprintf(msg, "Wants %d amount of units; amount created %d", pSkirmishPlayer.startingUnits, u);
-                    cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, pPlayer.getHouse());
-                }
-
-                u++;
-            }
-
-            // TEAM LOGIC here, so we can decide which is Atreides and thus should be allied with Fremen...
-            for (int p = 0; p < MAX_PLAYERS; p++) {
-                cPlayer &player = players[p];
-                s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
-                if (p == HUMAN) {
-                    player.setTeam(sSkirmishPlayer.team);
-                } else if (p == AI_CPU5) { // AI for fremen (super weapon)
-                    player.setTeam(AI_CPU5);
-                } else if (p == AI_CPU6) {
-                    player.setTeam(AI_CPU6); // worm team is against everyone
-                } else {
-                    // all other AI's are their own team (campaign == AI's are friends, here they are enemies)
-                    player.setTeam(sSkirmishPlayer.team);
-                }
-            }
-
-            for (int p = 0; p < MAX_PLAYERS; p++) {
-                cPlayer &player = players[p];
-                if (player.getHouse() == ATREIDES) {
-                    players[AI_CPU5].setTeam(player.getTeam());
-                }
-            }
-
-
-            // default flags (destroy everyone but me/my team)
-            game.setWinFlags(3);
-            game.setLoseFlags(1);
-
-            game.FADE_OUT();
-            playMusicByType(MUSIC_PEACE);
-
-            map.setAutoSpawnSpiceBlooms(spawnBlooms);
-            map.setAutoDetonateSpiceBlooms(detonateBlooms);
-            map.setDesiredAmountOfWorms(spawnWorms);
-
-            // spawn requested amount of worms at start
-            if (spawnWorms > 0) {
-                int worms = spawnWorms;
-                int minDistance = worms * 12; // so on 64x64 maps this still could work
-                int maxDistance = worms * 32; // 128 / 4
-                int wormCell = map.getRandomCell();
-                int failures = 0;
-                char msg[255];
-                sprintf(msg, "Skirmish game with %d sandworms, minDistance %d, maxDistance %d", worms, minDistance, maxDistance);
-                logbook(msg);
-                while (worms > 0) {
-                    int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance, SANDWORM);
-                    if (cell < 0) {
-                        // retry
-                        failures++;
-                        if (failures > 10) {
-                            // too many failed attempts, just stop
-                            logbook("Failed too many times to find spot for sandworm, aborting!");
-                            break;
-                        }
-                        continue;
-                    }
-                    char msg[255];
-                    sprintf(msg, "Spawning sandworm at %d", cell);
-                    logbook(msg);
-                    UNIT_CREATE(cell, SANDWORM, AI_WORM, true);
-                    wormCell = cell; // start from here to spawn new worm
-                    worms--;
-                    failures = 0; // reset failures
-                }
-            } else {
-                logbook("Skirmish game without sandworms");
-            }
-
-
-            drawManager->getMessageDrawer()->initCombatPosition();
-
-            game.setState(GAME_PLAYING); // this deletes the current state object
+        if (iSkirmishMap > -1) {
+            prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
             return;
-        } // mouse clicks on START (and skirmish map is selected)
+        }
     } // mouse hovers over "START"
-}
-
-eGameStateType cSetupSkirmishGameState::getType() {
-    return GAMESTATE_SETUP_SKIRMISH_GAME;
-}
-
-void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
-
 }

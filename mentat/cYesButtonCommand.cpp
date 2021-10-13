@@ -11,7 +11,7 @@ void cYesButtonCommand::execute(cAbstractMentat& mentat) {
 
     // play correct mentat music
     playMusicByType(MUSIC_BRIEFING);
-    game.FADE_OUT();
+    game.START_FADING_OUT();
 
     // createAndPrepareMentatForHumanPlayer must be last, as it destroys the old mentat and its associated button (this one)
     // which is fine as long as it is the very last line of this method.
