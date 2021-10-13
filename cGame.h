@@ -214,11 +214,9 @@ private:
 	void combat();		// the combat part (main) of the game
 	bool isMusicPlaying();
 
-    void setup_skirmish();  // set up a skirmish game
 	void stateSelectHouse();		// house selection
 	void stateMentat(cAbstractMentat *pMentat);  // state mentat talking and interaction
 	void menu();		// main menu
-	void stateSelectYourNextConquest();		// region selection
 
 	void drawState();
 	void shakeScreenAndBlitBuffer();

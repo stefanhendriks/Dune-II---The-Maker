@@ -673,10 +673,6 @@ void cGame::init_skirmish() const {
     game.mission_init();
 }
 
-void cGame::setup_skirmish() {
-    gameState->draw();
-}
-
 // select house
 void cGame::stateSelectHouse() {
     bool bFadeOut=false;
@@ -749,11 +745,6 @@ void cGame::stateSelectHouse() {
     if (bFadeOut) {
         game.START_FADING_OUT();
     }
-}
-
-// select your next conquest
-void cGame::stateSelectYourNextConquest() {
-    gameState->draw();
 }
 
 int cGame::getGroupNumberFromKeyboard() {
@@ -847,16 +838,10 @@ void cGame::drawState() {
 		case GAME_BRIEFING:
             stateMentat(pMentat);
 			break;
-		case GAME_SETUPSKIRMISH:
-			setup_skirmish();
-			break;
 		case GAME_MENU:
 			menu();
 			break;
-		case GAME_REGION:
-            stateSelectYourNextConquest();
-			break;
-		case GAME_WINNING:
+        case GAME_WINNING:
 			winning();
 			break;
 		case GAME_LOSING:
