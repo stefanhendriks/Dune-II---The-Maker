@@ -2,6 +2,7 @@
 #define D2TM_CGAMESTATE_H
 
 enum eGameStateType {
+    GAMESTATE_CHOOSE_HOUSE,
     GAMESTATE_SELECT_YOUR_NEXT_CONQUEST,
     GAMESTATE_SETUP_SKIRMISH_GAME,
 };
@@ -12,7 +13,7 @@ public:
     cGameState(cGame& theGame);
     virtual ~cGameState();
 
-    virtual void think() = 0;
+    virtual void thinkFast() = 0;
     virtual void draw() = 0;
 
     virtual void onNotifyMouseEvent(const s_MouseEvent &event) = 0;

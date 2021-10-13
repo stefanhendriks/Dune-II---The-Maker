@@ -29,7 +29,7 @@ cSelectYourNextConquestState::~cSelectYourNextConquestState() {
     destroy_bitmap(regionClickMapBmp);
 }
 
-void cSelectYourNextConquestState::think() {
+void cSelectYourNextConquestState::thinkFast() {
 
     // First time INIT
     if (state == eRegionState::REGSTATE_INIT) {

@@ -28,7 +28,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
 cSetupSkirmishGameState::~cSetupSkirmishGameState() {
 }
 
-void cSetupSkirmishGameState::think() {
+void cSetupSkirmishGameState::thinkFast() {
 
 }
 

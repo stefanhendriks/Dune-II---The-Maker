@@ -209,12 +209,13 @@ public:
 
     int getFps();
 
+    void prepareMentatToTellAboutHouse(int house);
+
 private:
 	void updateState();
 	void combat();		// the combat part (main) of the game
 	bool isMusicPlaying();
 
-	void stateSelectHouse();		// house selection
 	void stateMentat(cAbstractMentat *pMentat);  // state mentat talking and interaction
 	void menu();		// main menu
 
@@ -241,8 +242,6 @@ private:
 
     bool isMissionFailed() const;
 
-    void prepareMentatToTellAboutHouse(int house);
-
     bool hasGameOverConditionHarvestForSpiceQuota() const;
 
     bool hasGameOverConditionPlayerHasNoBuildings() const;
@@ -268,7 +267,7 @@ private:
 
 	int iMaxVolume;
 
-	cAbstractMentat *pMentat;
+	cAbstractMentat *pMentat; // TODO: Move this into a gameState class (as field)?
 
     float fade_select;        // fade color when selected
     bool bFadeSelectDir;    // fade select direction
