@@ -15,6 +15,8 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame) : cGa
     calculateOffset();
 
     regionClickMapBmp = nullptr;
+
+    regionMouseIsHoveringOver = -1;
 }
 
 void cSelectYourNextConquestState::calculateOffset() {
@@ -120,16 +122,6 @@ void cSelectYourNextConquestState::think() {
 void cSelectYourNextConquestState::draw() {
     game.getMouse()->setTile(MOUSE_NORMAL); // global state of mouse
 
-    if (game.iFadeAction == 1) // fading out
-    {
-        draw_sprite(bmp_screen, bmp_fadeout, 0, 0);
-        return;
-    }
-
-    if (game.iAlphaScreen == 0) {
-        game.iFadeAction = 2;
-    }
-    // -----------------
     int veryDark = makecol(48, 28, 0);
     clear_to_color(bmp_screen, veryDark);
 
@@ -284,14 +276,10 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest() {
     draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
     draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
 
-    int regionMouseIsHoveringOver = REGION_OVER();
-
-    if (regionMouseIsHoveringOver > -1) {
-        cRegion &region = world[regionMouseIsHoveringOver];
-        if (region.bSelectable) {
-            region.iAlpha = 256;
-            game.getMouse()->setTile(MOUSE_ATTACK);
-        }
+    cRegion *pRegion = getRegionMouseIsOver();
+    if (pRegion && pRegion->bSelectable) {
+        pRegion->iAlpha = 256;
+        game.getMouse()->setTile(MOUSE_ATTACK);
     }
 
     // draw here stuff
@@ -300,89 +288,74 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest() {
     }
 }
 
-void cSelectYourNextConquestState::interact() {
-    // no interaction unless we select next conquest
-    if (state != eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) return;
+void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMission) {// Calculate mission from region:
+// region 1 = mission 1
+// region 2, 3, 4 = mission 2
+// region 5, 6, 7 = mission 3
+// region 8, 9, 10 = mission 4
+// region 11,12,13 = mission 5
+// region 14,15,16 = mission 6
+// region 17,18,19 = mission 7
+// region 20,21    = mission 8
+// region 22 = mission 9
 
-    int iMission = game.iMission;
+    // calculate region stuff, and add it up
+    int iNewReg = 0;
+    if (iMission == 0) iNewReg = 1;
+    if (iMission == 1) iNewReg = 2;
+    if (iMission == 2) iNewReg = 5;
+    if (iMission == 3) iNewReg = 8;
+    if (iMission == 4) iNewReg = 11;
+    if (iMission == 5) iNewReg = 14;
+    if (iMission == 6) iNewReg = 17;
+    if (iMission == 7) iNewReg = 20;
+    if (iMission == 8) iNewReg = 22;
 
-    int regionMouseIsHoveringOver = REGION_OVER();
-
-    bool bClickable = false;
-
-    if (regionMouseIsHoveringOver > -1) {
-        cRegion &region = world[regionMouseIsHoveringOver];
-        if (region.bSelectable) {
-            region.iAlpha = 255;
-            game.getMouse()->setTile(MOUSE_ATTACK);
-            bClickable = true;
-        }
-    }
-
-    if (game.getMouse()->isLeftButtonClicked() && bClickable) {
-        // selected....
-        int iReg = 0;
-        for (int ir = 0; ir < MAX_REGIONS; ir++) {
-            if (world[ir].bSelectable) {
-                if (ir != regionMouseIsHoveringOver) {
-                    iReg++;
-                } else {
-                    break;
-                }
+    // selected....
+    int iReg = 0;
+    for (int ir = 0; ir < MAX_REGIONS; ir++) {
+        if (world[ir].bSelectable) {
+            if (ir != regionMouseIsHoveringOver) {
+                iReg++;
+            } else {
+                break;
             }
         }
-
-
-        // Calculate mission from region:
-        // region 1 = mission 1
-        // region 2, 3, 4 = mission 2
-        // region 5, 6, 7 = mission 3
-        // region 8, 9, 10 = mission 4
-        // region 11,12,13 = mission 5
-        // region 14,15,16 = mission 6
-        // region 17,18,19 = mission 7
-        // region 20,21    = mission 8
-        // region 22 = mission 9
-
-        // calculate region stuff, and add it up
-        int iNewReg = 0;
-        if (iMission == 0) iNewReg = 1;
-        if (iMission == 1) iNewReg = 2;
-        if (iMission == 2) iNewReg = 5;
-        if (iMission == 3) iNewReg = 8;
-        if (iMission == 4) iNewReg = 11;
-        if (iMission == 5) iNewReg = 14;
-        if (iMission == 6) iNewReg = 17;
-        if (iMission == 7) iNewReg = 20;
-        if (iMission == 8) iNewReg = 22;
-
-        iNewReg += iReg;
-
-        //char msg[255];
-        //sprintf(msg, "Mission = %d", game.iMission);
-        //allegro_message(msg);
-
-        game.mission_init();
-        game.setState(GAME_BRIEFING);
-        game.iRegion = iNewReg;
-        game.iMission++;                        // FINALLY ADD MISSION NUMBER...
-
-        // set up stateMentat
-        game.createAndPrepareMentatForHumanPlayer();
-
-        // load map
-        game.loadScenario();
-
-        //sprintf(msg, "Mission = %d", game.iMission);
-        //allegro_message(msg);
-
-        playMusicByType(MUSIC_BRIEFING);
-
-        //allegro_message(msg);
-
-        state = REGSTATE_FADEOUT;
-        game.FADE_OUT();
     }
+
+    iNewReg += iReg;
+
+    //char msg[255];
+//sprintf(msg, "Mission = %d", game.iMission);
+//allegro_message(msg);
+
+    game.mission_init();
+    game.setState(GAME_BRIEFING);
+    game.iRegion = iNewReg;
+    game.iMission++;                        // FINALLY ADD MISSION NUMBER...
+
+    // set up stateMentat
+    game.createAndPrepareMentatForHumanPlayer();
+
+    // load map
+    game.loadScenario();
+
+    //sprintf(msg, "Mission = %d", game.iMission);
+//allegro_message(msg);
+
+    playMusicByType(MUSIC_BRIEFING);
+
+    //allegro_message(msg);
+
+    state = REGSTATE_FADEOUT;
+    game.START_FADING_OUT();
+}
+
+cRegion * cSelectYourNextConquestState::getRegionMouseIsOver() {
+    if (regionMouseIsHoveringOver < 0) {
+        return nullptr;
+    }
+    return &world[regionMouseIsHoveringOver];
 }
 
 void cSelectYourNextConquestState::REGION_SETUP_LOST_MISSION() {
@@ -472,10 +445,7 @@ void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const {
 }
 // End of function
 
-int cSelectYourNextConquestState::REGION_OVER() {
-    int mouseX = mouse_x;
-    int mouseY = mouse_y;
-
+int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY) {
     // when mouse is not even on the map, return -1
     cRectangle mapRect(offsetX + 16, offsetY + 72, 608, 241);
     if (!mapRect.isMouseOver(mouseX, mouseY)) return -1;
@@ -590,5 +560,34 @@ void cSelectYourNextConquestState::destroy() {
 }
 
 void cSelectYourNextConquestState::onNotifyMouseEvent(const s_MouseEvent &event) {
+    switch (event.eventType) {
+        case MOUSE_MOVED_TO:
+            onMouseMove(event);
+            break;
+        case MOUSE_LEFT_BUTTON_CLICKED:
+            onMouseLeftButtonClicked(event);
+    }
+}
 
+void cSelectYourNextConquestState::onMouseMove(const s_MouseEvent &event) {
+    // no interaction unless we select next conquest
+    if (state != eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) return;
+
+    this->regionMouseIsHoveringOver = REGION_OVER(event.x, event.y);
+
+    cRegion * region = getRegionMouseIsOver();
+    if (region && region->bSelectable) {
+        region->iAlpha = 255;
+        game.getMouse()->setTile(MOUSE_ATTACK);
+    }
+}
+
+void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
+    // no interaction unless we select next conquest
+    if (state != eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) return;
+
+    cRegion *pRegion = getRegionMouseIsOver();
+    if (pRegion && pRegion->bSelectable) {
+        loadScenarioAndTransitionToNextState(game.iMission);
+    }
 }

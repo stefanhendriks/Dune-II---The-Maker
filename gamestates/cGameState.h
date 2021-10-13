@@ -14,7 +14,6 @@ public:
 
     virtual void think() = 0;
     virtual void draw() = 0;
-    virtual void interact() = 0;
 
     virtual void onNotifyMouseEvent(const s_MouseEvent &event) = 0;
 

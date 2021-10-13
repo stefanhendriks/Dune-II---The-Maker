@@ -4,6 +4,7 @@
 #include "../include/sMouseEvent.h"
 
 class cMouseObserver {
+
 public:
     virtual ~cMouseObserver();
 

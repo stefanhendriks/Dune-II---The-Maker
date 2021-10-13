@@ -1,5 +1,4 @@
 #include "../include/d2tmh.h"
-#include "cMessageDrawer.h"
 
 
 cMessageDrawer::cMessageDrawer() {
@@ -23,8 +22,8 @@ void cMessageDrawer::destroy() {
 }
 
 void cMessageDrawer::init() {
-    state = COMBAT;
-    fadeState = eMessageDrawerFadingState::FADE_IN;
+    state = messages::eMessageDrawerState::COMBAT;
+    fadeState = messages::eMessageDrawerFadingState::FADE_IN;
     keepMessage = false;
     iMessageAlpha = -1;
 	memset(cMessage, 0, sizeof(cMessage));
@@ -60,7 +59,7 @@ void cMessageDrawer::think() {
         // no message, bail
     }
 
-    if (fadeState == eMessageDrawerFadingState::FADE_IN)
+    if (fadeState == messages::eMessageDrawerFadingState::FADE_IN)
 	{
         TIMER_message++;
 
@@ -73,7 +72,7 @@ void cMessageDrawer::think() {
 		// and clear message after shown
 		if (TIMER_message > iLimit) {
             if (!keepMessage) {
-                fadeState = eMessageDrawerFadingState::FADE_OUT;
+                fadeState = messages::eMessageDrawerFadingState::FADE_OUT;
             }
 		}
 
@@ -106,13 +105,13 @@ void cMessageDrawer::think() {
  */
 void cMessageDrawer::setMessage(const char msg[255]) {
 	TIMER_message=0;
-    fadeState = eMessageDrawerFadingState::FADE_IN;
+    fadeState = messages::eMessageDrawerFadingState::FADE_IN;
 	memset(cMessage, 0, sizeof(cMessage));
 	sprintf(cMessage, "%s", msg);
 }
 
 void cMessageDrawer::draw() {
-    if (state == COMBAT) {
+    if (state == messages::eMessageDrawerState::COMBAT) {
         draw_sprite(bmp_screen, bmpBar, x, y);
     }
 
@@ -132,7 +131,7 @@ void cMessageDrawer::draw() {
 }
 
 void cMessageDrawer::initRegionPosition(int offsetX, int offsetY) {
-    state = NEXT_CONQUEST;
+    state = messages::eMessageDrawerState::NEXT_CONQUEST;
     keepMessage = false;
 
     int desiredWidth = 480;
@@ -145,7 +144,7 @@ void cMessageDrawer::initRegionPosition(int offsetX, int offsetY) {
 }
 
 void cMessageDrawer::initCombatPosition() {
-    state = COMBAT;
+    state = messages::eMessageDrawerState::COMBAT;
     keepMessage = false;
 
     int desiredWidth = game.screen_x - cSideBar::SidebarWidth;
