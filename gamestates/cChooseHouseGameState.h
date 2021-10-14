@@ -23,7 +23,28 @@ private:
     cTextDrawer textDrawer;
     cRectangle *backButtonRect;
 
-    void onMouseLeftButtonClicked(const s_MouseEvent &event);
+    BITMAP *bmp_Dune;
+    BITMAP *bmp_SelectYourHouseTitle;
+
+    // TODO: abstract away the selectable houses
+    BITMAP *bmp_HouseAtreides;
+    BITMAP *bmp_HouseOrdos;
+    BITMAP *bmp_HouseHarkonnen;
+
+    // Click areas of house emblems
+    cRectangle houseAtreides;
+    cRectangle houseOrdos;
+    cRectangle houseHarkonnen;
+
+    int selectYourHouseXCentered;
+    cPoint coords_Dune;
+    cPoint coords_SelectYourHouseTitle;
+
+    bool hoversOverBackButton;
+
+    void onMouseLeftButtonClicked(const s_MouseEvent &event) const;
+
+    void onMouseMoved(const s_MouseEvent &event);
 };
 
 #endif //D2TM_CCHOOSEHOUSEGAMESTATE_H

@@ -7,10 +7,10 @@ class cRectangle {
 public:
     cRectangle();
 
-    cRectangle(int x, int y, int width, int height) : x(x), y(y), height(height), width(width) {
+    cRectangle(int x, int y, int width, int height) : topLeft(cPoint(x,y)), height(height), width(width) {
     }
 
-    cRectangle(cPoint &coord, cPoint &dimensions) : x(coord.x), y(coord.y), height(dimensions.x), width(dimensions.y) {
+    cRectangle(cPoint &coord, cPoint &dimensions) : topLeft(cPoint(coord.x, coord.y)), height(dimensions.x), width(dimensions.y) {
     }
 
     ~cRectangle();
@@ -26,10 +26,14 @@ public:
 
     bool isPointWithin(const cPoint &point);
 
-    int getX() { return x; }
-    int getEndX() { return x + width; }
-    int getY() { return y; }
-    int getEndY() { return y + height; }
+    bool isPointWithin(const cPoint *point) const;
+
+    cPoint & getTopLeft() { return topLeft; }
+
+    int getX() { return topLeft.x; }
+    int getEndX() { return topLeft.x + width; }
+    int getY() { return topLeft.y; }
+    int getEndY() { return topLeft.y + height; }
     int getWidth() { return width; }
     int getHeight() { return height; }
 
@@ -40,8 +44,8 @@ public:
      * @param newY
      */
     void move(int newX, int newY) {
-        this->x = newX;
-        this->y = newY;
+        topLeft.x = newX;
+        topLeft.y = newY;
     }
 
     void resize(int newWidth, int newHeight) {
@@ -50,8 +54,7 @@ public:
     }
 
 private:
-    int x;
-    int y;
+    cPoint topLeft;
     int width;
     int height;
 

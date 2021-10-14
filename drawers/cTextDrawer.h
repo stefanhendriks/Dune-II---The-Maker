@@ -25,6 +25,8 @@ class cTextDrawer {
 		void drawText(int x, int y, const char * msg, int var);
 		void drawText(int x, int y, const char * msg);
 
+        void drawText(cPoint &coords, int color, const char *msg);
+
         void drawText(int x, int y, int color, const char *msg);
         void drawText(int x, int y, int color, const char *msg, int var);
 		void drawText(int x, int y, int color, const char *msg, const char *var);
