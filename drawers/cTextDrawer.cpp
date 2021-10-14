@@ -40,6 +40,10 @@ void cTextDrawer::drawText(int x, int y, int color, const char *msg) {
 	alfont_textprintf(bmp_screen, font, x,y, color, msg);
 }
 
+void cTextDrawer::drawText(cPoint &coords, int color, const char *msg) {
+    drawText(coords.x, coords.y, color, msg);
+}
+
 void cTextDrawer::drawText(int x, int y, const char * msg) {
     drawText(x, y, makecol(255, 255, 255), msg);
 }

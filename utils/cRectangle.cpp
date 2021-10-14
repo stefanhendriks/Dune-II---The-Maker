@@ -21,13 +21,19 @@ bool cRectangle::isOverlapping(cRectangle *other) {
 }
 
 bool cRectangle::isPointWithin(int pointX, int pointY) {
-    return (pointX >= x && pointX <= (x + width)) &&
-           (pointY >= y && pointY <= (y + height));
+    return (pointX >= topLeft.x && pointX <= (topLeft.x + width)) &&
+           (pointY >= topLeft.y && pointY <= (topLeft.y + height));
 }
 
 bool cRectangle::isPointWithin(const cPoint &point) {
-    return (point.x >= x && point.x <= (x + width)) &&
-           (point.y >= y && point.y <= (y + height));
+    return (point.x >= topLeft.x && point.x <= (topLeft.x + width)) &&
+           (point.y >= topLeft.y && point.y <= (topLeft.y + height));
+}
+
+bool cRectangle::isPointWithin(const cPoint *point) const {
+    if (point == nullptr) return false;
+    return (point->x >= topLeft.x && point->x <= (topLeft.x + width)) &&
+           (point->y >= topLeft.y && point->y <= (topLeft.y + height));
 }
 
 cRectangle::cRectangle() : cRectangle(0,0,0,0){
