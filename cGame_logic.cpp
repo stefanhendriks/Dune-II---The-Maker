@@ -1520,7 +1520,6 @@ void cGame::prepareMentatToTellAboutHouse(int house) {
         pMentat->setSentence(0, "Looks like you choose an unknown house");
     }
     // todo: Sardaukar, etc? (Super Dune 2 features)
-
     pMentat->speak();
 }
 

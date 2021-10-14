@@ -21,8 +21,8 @@ cGameControlsContext::~cGameControlsContext() {
 }
 
 
-void cGameControlsContext::updateMouseCell(int mouseX, int mouseY) {
-    if (mouseY < cSideBar::TopBarHeight) {
+void cGameControlsContext::updateMouseCell(const cPoint &coords) {
+    if (coords.y < cSideBar::TopBarHeight) {
 		mouseCell = MOUSECELL_TOPBAR; // at the top bar or higher, so no mouse cell id.
 		return;
 	}
@@ -32,12 +32,12 @@ void cGameControlsContext::updateMouseCell(int mouseX, int mouseY) {
         return;
     }
 
-	if (mouseX > (game.screen_x - cSideBar::SidebarWidth)) {
+	if (coords.x > (game.screen_x - cSideBar::SidebarWidth)) {
 		mouseCell = MOUSECELL_SIDEBAR; // on sidebar
 		return;
 	}
 
-    mouseCell = getMouseCellFromScreen(mouseX, mouseY);
+    mouseCell = getMouseCellFromScreen(coords.x, coords.y);
 }
 
 int cGameControlsContext::getMouseCellFromScreen(int mouseX, int mouseY) const {
@@ -94,10 +94,10 @@ cAbstractStructure * cGameControlsContext::getStructurePointerWhereMouseHovers()
 }
 
 void cGameControlsContext::onMouseAt(const s_MouseEvent &event) {
-    updateMouseCell(event.x, event.y);
+    updateMouseCell(event.coords);
     if (isMouseOnBattleField()) {
         determineToolTip();
-        determineHoveringOverStructureId(event.x, event.y);
+        determineHoveringOverStructureId(event.coords.x, event.coords.y);
         determineHoveringOverUnitId();
     } else {
         mouseHoveringOverStructureId = -1;

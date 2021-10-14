@@ -243,8 +243,8 @@ void cMouseDrawer::drawToolTipSiloInformation(cAbstractStructure * theStructure,
 }
 
 void cMouseDrawer::onMouseAt(const s_MouseEvent &event) {
-    this->mouseX = event.x;
-    this->mouseY = event.y;
+    this->mouseX = event.coords.x;
+    this->mouseY = event.coords.y;
 }
 
 void cMouseDrawer::onNotify(const s_MouseEvent &event) {

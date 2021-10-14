@@ -112,7 +112,7 @@ void cSideBar::thinkProgressAnimation() {
 }
 
 void cSideBar::onMouseAt(const s_MouseEvent &event) {
-    isMouseOverSidebarValue = event.x > (game.screen_x - cSideBar::SidebarWidth);
+    isMouseOverSidebarValue = event.coords.x > (game.screen_x - cSideBar::SidebarWidth);
     drawManager->getMessageDrawer()->setKeepMessage(isMouseOverSidebarValue);
 
     if (selectedListID < 0) return;
@@ -120,7 +120,7 @@ void cSideBar::onMouseAt(const s_MouseEvent &event) {
     // when mouse is selecting a list, and over an item, then draw message bar...!?
     cBuildingList *list = getList(selectedListID);
     cBuildingListDrawer * buildingListDrawer = drawManager->getBuildingListDrawer();
-    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.x, event.y);
+    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.coords.x, event.coords.y);
     if (item == nullptr) return;
 
     // mouse is over item - draw "messagebar"
@@ -138,7 +138,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
         if (!list->isAvailable()) continue; // not available, so no interaction possible
 
         // interaction is possible.
-        if (list->isOverButton(event.x, event.y)) {
+        if (list->isOverButton(event.coords.x, event.coords.y)) {
             // clicked on it. Set focus on this one
             setSelectedListId(i);
             play_sound_id(SOUND_BUTTON, 64); // click sound
@@ -167,7 +167,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event) {
     }
 
     cBuildingListDrawer * buildingListDrawer = drawManager->getBuildingListDrawer();
-    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.x, event.y);
+    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.coords.x, event.coords.y);
     if (item == nullptr) return;
 
     // mouse is over item - draw "messagebar"
@@ -203,7 +203,7 @@ void cSideBar::onMouseClickedRight(const s_MouseEvent &event) {
     cBuildingList *list = getList(selectedListID);
 
     cBuildingListDrawer * buildingListDrawer = drawManager->getBuildingListDrawer();
-    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.x, event.y);
+    cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.coords.x, event.coords.y);
     if (item == nullptr) return;
 
     // anything but the starport can 'build' things

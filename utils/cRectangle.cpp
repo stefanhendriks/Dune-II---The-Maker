@@ -1,6 +1,3 @@
-//
-// Created by shendriks on 9/3/2020.
-//
 #include "cRectangle.h"
 
 cRectangle::~cRectangle() {
@@ -15,16 +12,22 @@ cRectangle::~cRectangle() {
 bool cRectangle::isOverlapping(cRectangle *other) {
     if (other == nullptr) return false;
 
-    if (other->isWithin(getX(), getY())) return true;
-    if (other->isWithin(getEndX(), getY())) return true;
-    if (other->isWithin(getX(), getEndY())) return true;
-    if (other->isWithin(getEndX(), getEndY())) return true;
+    if (other->isPointWithin(getX(), getY())) return true;
+    if (other->isPointWithin(getEndX(), getY())) return true;
+    if (other->isPointWithin(getX(), getEndY())) return true;
+    if (other->isPointWithin(getEndX(), getEndY())) return true;
 
     return false;
 }
 
-bool cRectangle::isMouseOver(int mouseX, int mouseY) {
-    return isWithin(mouseX, mouseY);
+bool cRectangle::isPointWithin(int pointX, int pointY) {
+    return (pointX >= x && pointX <= (x + width)) &&
+           (pointY >= y && pointY <= (y + height));
+}
+
+bool cRectangle::isPointWithin(const cPoint &point) {
+    return (point.x >= x && point.x <= (x + width)) &&
+           (point.y >= y && point.y <= (y + height));
 }
 
 cRectangle::cRectangle() : cRectangle(0,0,0,0){

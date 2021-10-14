@@ -1,10 +1,3 @@
-/*
- * TextDrawer.cpp
- *
- *  Created on: 31-okt-2010
- *      Author: Stefan
- */
-
 #include "../include/d2tmh.h"
 #include "cTextDrawer.h"
 
@@ -98,6 +91,7 @@ void cTextDrawer::drawTextBottomRight(int color, const char * msg) {
 }
 
 int cTextDrawer::getFontHeight() const {
+    assert(font && "Font not set!?");
     return alfont_text_height(font);
 }
 

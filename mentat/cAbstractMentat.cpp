@@ -293,12 +293,12 @@ void cAbstractMentat::interact() {
 
     if (game.getMouse()->isLeftButtonClicked()) {
         // execute left button logic
-        if (leftButton && leftButton->isMouseOver(mouse_x, mouse_y)) {
+        if (leftButton && leftButton->isPointWithin(mouse_x, mouse_y)) {
             leftButtonCommand->execute(*this);
         }
 
         // execute right button logic
-        if (rightButton && rightButton->isMouseOver(mouse_x, mouse_y)) {
+        if (rightButton && rightButton->isPointWithin(mouse_x, mouse_y)) {
             rightButtonCommand->execute(*this);
         }
     }

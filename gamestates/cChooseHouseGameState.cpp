@@ -3,10 +3,14 @@
 
 
 cChooseHouseGameState::cChooseHouseGameState(cGame &theGame) : cGameState(theGame) {
-
+    int screen_x = game.screen_x;
+    int screen_y = game.screen_y;
+    textDrawer = cTextDrawer(bene_font);
+    backButtonRect = textDrawer.getAsRectangle(0, screen_y - textDrawer.getFontHeight(), " BACK");
 }
 
 cChooseHouseGameState::~cChooseHouseGameState() {
+    delete backButtonRect;
 }
 
 void cChooseHouseGameState::thinkFast() {
@@ -14,9 +18,6 @@ void cChooseHouseGameState::thinkFast() {
 }
 
 void cChooseHouseGameState::draw() {
-    bool bFadeOut=false;
-    int screen_x = game.screen_x;
-    int screen_y = game.screen_y;
     cMouse *mouse = game.getMouse();
 
     // Render the planet Dune a bit downward
@@ -39,53 +40,40 @@ void cChooseHouseGameState::draw() {
     allegroDrawer->blitSprite((BITMAP *)gfxinter[BMP_SELECT_HOUSE_ORDOS].dat, bmp_screen, &houseOrdos);
     allegroDrawer->blitSprite((BITMAP *)gfxinter[BMP_SELECT_HOUSE_HARKONNEN].dat, bmp_screen, &houseHarkonnen);
 
-    cTextDrawer textDrawer = cTextDrawer(bene_font);
-
     // back
-    cRectangle *backButtonRect = textDrawer.getAsRectangle(0, screen_y - textDrawer.getFontHeight(), " BACK");
-    textDrawer.drawText(backButtonRect->getX(), backButtonRect->getY(), makecol(255,255,255), " BACK");
+    if (backButtonRect) {
+        textDrawer.drawText(backButtonRect->getX(), backButtonRect->getY(), makecol(255, 255, 255), " BACK");
 
-    if (backButtonRect->isMouseOver(mouse->getX(), mouse->getY())) {
-        textDrawer.drawText(backButtonRect->getX(), backButtonRect->getY(), makecol(255, 0, 0), " BACK");
-    }
-
-    if (mouse->isLeftButtonClicked()) {
-//        delete pMentat;
-//        pMentat = nullptr;
-
-        if (mouse->isOverRectangle(&houseAtreides)) {
-            game.prepareMentatToTellAboutHouse(ATREIDES);
-
-            play_sound_id(SOUND_ATREIDES);
-
-            game.setState(GAME_TELLHOUSE);
-            bFadeOut=true;
-        } else if (mouse->isOverRectangle(&houseOrdos)) {
-            game.prepareMentatToTellAboutHouse(ORDOS);
-
-            play_sound_id(SOUND_ORDOS);
-
-            game.setState(GAME_TELLHOUSE);
-            bFadeOut=true;
-        } else if (mouse->isOverRectangle(&houseHarkonnen)) {
-            game.prepareMentatToTellAboutHouse(HARKONNEN);
-
-            play_sound_id(SOUND_HARKONNEN);
-
-            game.setState(GAME_TELLHOUSE);
-            bFadeOut=true;
-        } else if (mouse->isOverRectangle(backButtonRect)) {
-            bFadeOut=true;
-            game.setState(GAME_MENU);
+        if (mouse->isOverRectangle(backButtonRect)) {
+            textDrawer.drawText(backButtonRect->getX(), backButtonRect->getY(), makecol(255, 0, 0), " BACK");
         }
     }
 
-    delete backButtonRect;
+    int transitionToState = -1;
+
+    if (mouse->isLeftButtonClicked()) {
+        if (mouse->isOverRectangle(&houseAtreides)) {
+            game.prepareMentatToTellAboutHouse(ATREIDES);
+            play_sound_id(SOUND_ATREIDES);
+            transitionToState = GAME_TELLHOUSE;
+        } else if (mouse->isOverRectangle(&houseOrdos)) {
+            game.prepareMentatToTellAboutHouse(ORDOS);
+            play_sound_id(SOUND_ORDOS);
+            transitionToState = GAME_TELLHOUSE;
+        } else if (mouse->isOverRectangle(&houseHarkonnen)) {
+            game.prepareMentatToTellAboutHouse(HARKONNEN);
+            play_sound_id(SOUND_HARKONNEN);
+            transitionToState = GAME_TELLHOUSE;
+        } else if (mouse->isOverRectangle(backButtonRect)) {
+            transitionToState = GAME_MENU;
+        }
+    }
 
     // MOUSE
     mouse->draw();
 
-    if (bFadeOut) {
+    if (transitionToState > -1) {
+        game.setState(transitionToState);
         game.START_FADING_OUT();
     }
 }

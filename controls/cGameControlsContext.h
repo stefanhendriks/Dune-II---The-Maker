@@ -53,7 +53,7 @@ protected:
 	private:
         void onMouseAt(const s_MouseEvent &event);
 
-        void updateMouseCell(int mouseX, int mouseY);
+        void updateMouseCell(const cPoint &coords);
 
 		int mouseHoveringOverStructureId;
 		int mouseHoveringOverUnitId;

@@ -2,18 +2,20 @@
 #define D2TM_SMOUSEEVENT_H
 
 #include <string>
+#include "../utils/cPoint.h"
 #include "enums.h"
 
 struct s_MouseEvent {
     eMouseEventType eventType = eMouseEventType::MOUSE_NONE;
-    int x, y, z = 0;
+    cPoint coords;
+    int z = 0;
 
     static const std::string toString(const s_MouseEvent &event) {
         char msg[255];
         sprintf(msg, "s_MouseEvent [type=%s], [x=%d], [y=%d], [z=%d",
                 toStringMouseEventType(event.eventType),
-                event.x,
-                event.y,
+                event.coords.x,
+                event.coords.y,
                 event.z
         );
         return std::string(msg);
