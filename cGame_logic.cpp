@@ -14,7 +14,6 @@
 #include <algorithm>
 #include <random>
 #include "include/d2tmh.h"
-#include "cGame.h"
 
 
 cGame::cGame() {
@@ -58,7 +57,7 @@ void cGame::init() {
 	paths_created=0;
 	hover_unit=-1;
 
-    setState(GAME_MENU);
+    setState(GAME_INITIALIZE);
 
 	// mentat
     delete pMentat;
@@ -509,164 +508,7 @@ void cGame::stateMentat(cAbstractMentat *pMentat) {
 
 // draw menu
 void cGame::menu() {
-    bool bFadeOut=false;
-
-	if (DEBUGGING)
-	{
-
-		for (int x=0; x < game.screen_x; x+= 60)
-		{
-			for (int y=0; y < game.screen_y; y+= 20)
-			{
-				rect(bmp_screen, x, y, x+50, y+10, makecol(64,64,64));
-				putpixel(bmp_screen, x, y, makecol(255,255,255));
-				alfont_textprintf(bmp_screen, bene_font, x, y, makecol(32,32,32), "Debug");
-			}
-
-		}
-	}
-
-    cTextDrawer textDrawer = cTextDrawer(bene_font);
-
-	// draw main menu title (picture is 640x480)
-//	cAllegroDrawer allegroDrawer;
-//	allegroDrawer.drawSpriteCenteredRelativelyVertical(bmp_screen, (BITMAP *)gfxinter[BMP_D2TM].dat, 0.3);
-//    GUI_DRAW_FRAME(257, 319, 130,143);
-//	// draw menu
-//    textDrawer.drawTextWithOneFloat(0, 32, makecol(255, 255, 255), "Fadeselect = %f", fade_select);
-
-	int logoWidth = ((BITMAP*)gfxinter[BMP_D2TM].dat)->w;
-	int logoHeight = ((BITMAP*)gfxinter[BMP_D2TM].dat)->h;
-
-	int logoX = (game.screen_x / 2) - (logoWidth / 2);
-	int logoY = (logoHeight/10);
-
-	draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_D2TM].dat,  logoX, logoY);
-
-	int mainMenuFrameX = 257;
-	int mainMenuFrameY = 319;
-	int mainMenuWidth = 130;
-	int mainMenuHeight = 143;
-
-	// adjust x and y according to resolution, we can add because the above values
-	// assume 640x480 resolution, and logoX/logoY are already taking care of > resolutions
-	mainMenuFrameX += logoX;
-	mainMenuFrameY += logoY;
-
-    GUI_DRAW_FRAME(mainMenuFrameX, mainMenuFrameY, mainMenuWidth,mainMenuHeight);
-
-	// Buttons:
-	int buttonsX = mainMenuFrameX + 4;
-
-	// PLAY
-	int playY = 323 + logoY;
-	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, playY, "Campaign", makecol(255, 0, 0)))
-	{
-		if (mouse->isLeftButtonClicked()) {
-			setState(GAME_SELECT_HOUSE); // select house
-			bFadeOut = true;
-		}
-	}
-
-	// SKIRMISH
-	int skirmishY = 344 + logoY;
-	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, skirmishY, "Skirmish", makecol(255, 0, 0)))
-	{
-		if (mouse->isLeftButtonClicked()) {
-			setState(GAME_SETUPSKIRMISH);
-			bFadeOut = true;
-			INI_PRESCAN_SKIRMISH();
-
-            init_skirmish();
-        }
-	}
-
-    // MULTIPLAYER
-	int multiplayerY = 364 + logoY;
-	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, multiplayerY, "Multiplayer", makecol(128, 128, 128)))
-	{
-		if (mouse->isLeftButtonClicked())
-		{
-			// NOT YET IMPLEMENTED
-			bFadeOut = true;
-		}
-	}
-
-    // LOAD
-	int loadY = 384 + logoY;
-	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, loadY, "Load", makecol(128, 128, 128)))
-	{
-		if (mouse->isLeftButtonClicked())
-		{
-			// NOT YET IMPLEMENTED
-			bFadeOut = true;
-		}
-	}
-
-    // OPTIONS
-	int optionsY = 404 + logoY;
-	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, optionsY, "Options", makecol(128, 128, 128)))
-	{
-		if (mouse->isLeftButtonClicked())
-		{
-			// NOT YET IMPLEMENTED
-			bFadeOut = true;
-		}
-	}
-
-	// HALL OF FAME
-	int hofY = 424 + logoY;
-	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, hofY, "Hall of Fame", makecol(128, 128, 128)))
-	{
-		if (mouse->isLeftButtonClicked())
-		{
-			// NOT YET IMPLEMENTED
-			bFadeOut = true;
-		}
-	}
-
-	// EXIT
-	int exitY = 444 + logoY;
-	if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, exitY, "Exit", makecol(255, 0, 0)))
-	{
-		if (mouse->isLeftButtonClicked())
-		{
-			bFadeOut = true;
-			game.bPlaying = false;
-		}
-	}
-
-	int creditsX = (screen_x / 2) - (alfont_text_length(bene_font, "CREDITS") / 2);
-	GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(creditsX, 1, "CREDITS", makecol(64, 64, 64));
-
-
-    // draw version
-	textDrawer.drawTextBottomRight(version);
-
-	// mp3 addon?
-	if (bMp3) {
-		textDrawer.drawTextBottomLeft("Music: MP3 ADD-ON");
-    } else {
-		textDrawer.drawTextBottomLeft("Music: MIDI");
-    }
-
-    if (DEBUGGING) {
-        char mouseTxt[255];
-        sprintf(mouseTxt, "%d, %d", mouse_x, mouse_y);
-        textDrawer.drawText(0, 0, mouseTxt);
-    }
-
-   	// MOUSE
-    mouse->draw();
-
-	if (key[KEY_ESC]) {
-		bPlaying=false;
-	}
-
-    if (bFadeOut) {
-        game.START_FADING_OUT();
-    }
-
+    gameState->draw();
 }
 
 void cGame::init_skirmish() const {
@@ -1333,7 +1175,10 @@ bool cGame::setupGame() {
     delete drawManager;
 	drawManager = new cDrawManager(&players[HUMAN]);
 
-	game.init();
+	game.init(); // AGAIN!?
+
+    // Now we are ready for the menu state
+    game.setState(GAME_MENU);
 
 	// do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
 	// unit/structures catalog loaded - which the install_upgrades depends on.
@@ -1410,6 +1255,8 @@ void cGame::setState(int newState) {
         gameState = selectYourNextConquestState;
     } else if (newState == GAME_SETUPSKIRMISH) {
         gameState = new cSetupSkirmishGameState(*this);
+    } else if (newState == GAME_MENU) {
+        gameState = new cMainMenuGameState(*this);
     } else if (newState == GAME_SELECT_HOUSE) {
         gameState = new cChooseHouseGameState(*this);
     } else if (newState == GAME_PLAYING) {
