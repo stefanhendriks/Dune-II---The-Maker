@@ -345,7 +345,7 @@ void cMiniMapDrawer::think() {
 }
 
 void cMiniMapDrawer::onMouseAt(const s_MouseEvent &event) {
-    _isMouseOver = m_RectMinimap.isMouseOver(event.x, event.y);
+    _isMouseOver = m_RectMinimap.isPointWithin(event.coords.x, event.coords.y);
 }
 
 bool cMiniMapDrawer::isMouseOver() {
@@ -357,7 +357,7 @@ void cMiniMapDrawer::setPlayer(cPlayer *thePlayer) {
 }
 
 void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event) {
-    if (m_RectFullMinimap.isWithin(event.x, event.y) && // on minimap space
+    if (m_RectFullMinimap.isPointWithin(event.coords.x, event.coords.y) && // on minimap space
         !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
             ) {
 

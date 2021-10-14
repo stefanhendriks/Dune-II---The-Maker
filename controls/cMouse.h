@@ -1,6 +1,7 @@
 #ifndef CMOUSE_H_
 #define CMOUSE_H_
 
+#include <utils/cPoint.h>
 #include "../observers/cMouseObserver.h"
 
 class cRectangle;
@@ -31,9 +32,9 @@ public:
 
     bool isRightButtonClicked() { return rightButtonClicked; }
 
-    int getX() { return x; }
+    int getX() { return coords.x; }
 
-    int getY() { return y; }
+    int getY() { return coords.y; }
 
     int getZ() { return z; }
 
@@ -89,7 +90,8 @@ private:
     bool mouseScrolledUp;
     bool mouseScrolledDown;
 
-    int x, y, z;    // z = scroll wheel value
+    cPoint coords;
+    int z;    // z = scroll wheel value
     int zValuePreviousFrame;
 
     // Mouse information - for select box and dragging, etc

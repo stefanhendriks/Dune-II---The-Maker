@@ -14,9 +14,7 @@
 
 
   */
-#include <time.h>
 #include <stdlib.h>
-#include <string.h>
 #include <math.h>
 
 #include "../include/d2tmh.h"
@@ -43,7 +41,7 @@ float fDegrees(int x1, int y1, int x2, int y2)
 
    Method used:
 
-   x1,y1 is always center of our 'fictial triangle'.
+   x1,y1 is always center of our 'fictional triangle'.
    Example:
 
 
@@ -255,4 +253,3 @@ int CELL_L_RIGHT(int c) {
 bool CELL_BORDERS(int iOrigin, int iCell) {
     return map.isCellAdjacentToOtherCell(iOrigin, iCell);
 }
-

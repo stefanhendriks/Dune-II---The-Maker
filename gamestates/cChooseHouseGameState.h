@@ -20,6 +20,9 @@ public:
     eGameStateType getType() override;
 
 private:
+    cTextDrawer textDrawer;
+    cRectangle *backButtonRect;
+
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
 };
 

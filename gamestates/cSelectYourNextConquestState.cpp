@@ -448,7 +448,7 @@ void cSelectYourNextConquestState::drawRegion(cRegion &regionPiece) const {
 int cSelectYourNextConquestState::REGION_OVER(int mouseX, int mouseY) {
     // when mouse is not even on the map, return -1
     cRectangle mapRect(offsetX + 16, offsetY + 72, 608, 241);
-    if (!mapRect.isMouseOver(mouseX, mouseY)) return -1;
+    if (!mapRect.isPointWithin(mouseX, mouseY)) return -1;
 
     // from here, we are on a region
 
@@ -573,7 +573,7 @@ void cSelectYourNextConquestState::onMouseMove(const s_MouseEvent &event) {
     // no interaction unless we select next conquest
     if (state != eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) return;
 
-    this->regionMouseIsHoveringOver = REGION_OVER(event.x, event.y);
+    this->regionMouseIsHoveringOver = REGION_OVER(event.coords.x, event.coords.y);
 
     cRegion * region = getRegionMouseIsOver();
     if (region && region->bSelectable) {

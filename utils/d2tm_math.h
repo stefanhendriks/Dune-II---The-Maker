@@ -1,5 +1,3 @@
-
-
 // Angle stuff for unit facing
 float fDegrees(int x1, int y1, int x2, int y2);
 float fRadians(int x1, int y1, int x2, int y2);
@@ -29,4 +27,3 @@ int CELL_L_LEFT(int c);
 int CELL_L_RIGHT(int c);
 
 bool CELL_BORDERS(int iOrigin, int iCell);
-

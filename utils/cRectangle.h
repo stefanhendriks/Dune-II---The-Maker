@@ -1,10 +1,7 @@
-//
-// Created by shendriks on 9/3/2020.
-//
-
 #ifndef D2TM_CRECTANGLE_H
 #define D2TM_CRECTANGLE_H
 
+#include "cPoint.h"
 
 class cRectangle {
 public:
@@ -13,12 +10,10 @@ public:
     cRectangle(int x, int y, int width, int height) : x(x), y(y), height(height), width(width) {
     }
 
-    ~cRectangle();
-
-    bool isWithin(int pointX, int pointY) {
-        return (pointX >= x && pointX <= (x + width)) &&
-               (pointY >= y && pointY <= (y + height));
+    cRectangle(cPoint &coord, cPoint &dimensions) : x(coord.x), y(coord.y), height(dimensions.x), width(dimensions.y) {
     }
+
+    ~cRectangle();
 
     static bool isWithin(int pointX, int pointY, int x, int y, int width, int height) {
         return (pointX >= x && pointX <= (x + width)) &&
@@ -27,7 +22,9 @@ public:
 
     bool isOverlapping(cRectangle *other);
 
-    bool isMouseOver(int mouseX, int mouseY);
+    bool isPointWithin(int x, int y);
+
+    bool isPointWithin(const cPoint &point);
 
     int getX() { return x; }
     int getEndX() { return x + width; }

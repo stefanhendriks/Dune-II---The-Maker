@@ -1,10 +1,3 @@
-/*
- * utilsh.h
- *
- *  Created on: 7-nov-2010
- *      Author: Stefan
- */
-
 #ifndef UTILSH_H_
 #define UTILSH_H_
 

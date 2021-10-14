@@ -61,7 +61,7 @@ void cOrderDrawer::drawRectangleOrderButton() {
 }
 
 void cOrderDrawer::onMouseAt(const s_MouseEvent &event) {
-    _isMouseOverOrderButton = buttonRect.isMouseOver(event.x, event.y);
+    _isMouseOverOrderButton = buttonRect.isPointWithin(event.coords);
 }
 
 void cOrderDrawer::onMouseClickedLeft(const s_MouseEvent &event) {

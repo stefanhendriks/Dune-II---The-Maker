@@ -1,7 +1,7 @@
 #include "../include/d2tmh.h"
 
-cMouse::cMouse() {
-	x=y=z=0;
+cMouse::cMouse() : coords(cPoint(0,0)){
+	z=0;
 	leftButtonPressed=false;
 	rightButtonPressed=false;
 	leftButtonPressedInPreviousFrame=false;
@@ -35,9 +35,9 @@ void cMouse::init() {
 }
 
 void cMouse::updateState() {
-    bool didMouseMove = x != mouse_x || y != mouse_y;
-    x = mouse_x;
-    y = mouse_y;
+    bool didMouseMove = coords.x != mouse_x || coords.y != mouse_y;
+    coords.x = mouse_x;
+    coords.y = mouse_y;
     z = mouse_z;
 
 	// check if leftButtonIsPressed=true (which is the previous frame)
@@ -74,8 +74,7 @@ void cMouse::updateState() {
 	if (_mouseObserver) {
         s_MouseEvent event {
                 eMouseEventType::MOUSE_MOVED_TO,
-                x,
-                y,
+                cPoint(coords),
                 z
         };
 
@@ -129,8 +128,7 @@ void cMouse::positionMouseCursor(int x, int y) {
 	if (_mouseObserver) {
 	    s_MouseEvent event {
                 eMouseEventType::MOUSE_MOVED_TO,
-                0,
-                0,
+                cPoint(0,0),
                 0
 	    };
         _mouseObserver->onNotifyMouseEvent(event);
@@ -142,7 +140,8 @@ bool cMouse::isOverRectangle(int x, int y, int width, int height) {
 }
 
 bool cMouse::isOverRectangle(cRectangle *rectangle) {
-    return rectangle->isMouseOver(getX(), getY());
+    if (rectangle == nullptr) return false;
+    return rectangle->isPointWithin(getX(), getY());
 }
 
 /**
