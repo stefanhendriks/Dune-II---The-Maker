@@ -32,7 +32,7 @@ void cSetupSkirmishGameState::thinkFast() {
 
 }
 
-void cSetupSkirmishGameState::draw() {
+void cSetupSkirmishGameState::draw() const {
     int screen_x = game.screen_x;
     int screen_y = game.screen_y;
 
@@ -207,16 +207,16 @@ void cSetupSkirmishGameState::draw() {
 
         if (mouse->isLeftButtonClicked())
         {
-            spawnWorms += 1;
+//            spawnWorms += 1;
             if (spawnWorms > 4) {
-                spawnWorms = 0;
+//                spawnWorms = 0;
             }
         }
         if (mouse->isRightButtonClicked())
         {
-            spawnWorms -= 1;
+//            spawnWorms -= 1;
             if (spawnWorms < 0) {
-                spawnWorms = 4;
+//                spawnWorms = 4;
             }
         }
     }
@@ -234,7 +234,7 @@ void cSetupSkirmishGameState::draw() {
 
         if (mouse->isLeftButtonClicked())
         {
-            spawnBlooms = !spawnBlooms;
+//            spawnBlooms = !spawnBlooms;
         }
     }
 
@@ -252,7 +252,7 @@ void cSetupSkirmishGameState::draw() {
 
             if (mouse->isLeftButtonClicked())
             {
-                detonateBlooms = !detonateBlooms;
+//                detonateBlooms = !detonateBlooms;
             }
         }
     } else {
@@ -287,7 +287,7 @@ void cSetupSkirmishGameState::draw() {
                     GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapListFrameWidth, iHeightPixels);
                     game.iSkirmishMap = i;
                     bool bigMap = PreviewMap[i].height > 64 || PreviewMap[i].width > 64;
-                    spawnWorms = bigMap ? 4 : 2;
+//                    spawnWorms = bigMap ? 4 : 2;
 
                     if (i == 0) {
                         bDoRandomMap=true;
@@ -319,7 +319,7 @@ void cSetupSkirmishGameState::draw() {
     // draw players who will be playing ;)
     for (int p=0; p < (AI_WORM-1); p++)	{
         int iDrawY=playerListBarY + 4 +(p*22);
-        s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
+        const s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
 
         if (p < iStartingPoints) {
             // player playing or not
@@ -340,13 +340,13 @@ void cSetupSkirmishGameState::draw() {
 
                     // only allow changing 'playing' state of CPU 2 or 3 (not 1, as there should always be one
                     // playing CPU)
-                    if (p > 1 && mouse->isLeftButtonClicked())	{
-                        if (sSkirmishPlayer.bPlaying) {
-                            sSkirmishPlayer.bPlaying = false;
-                        } else {
-                            sSkirmishPlayer.bPlaying = true;
-                        }
-                    }
+//                    if (p > 1 && mouse->isLeftButtonClicked())	{
+//                        if (sSkirmishPlayer.bPlaying) {
+//                            sSkirmishPlayer.bPlaying = false;
+//                        } else {
+//                            sSkirmishPlayer.bPlaying = true;
+//                        }
+//                    }
                 }
                 else
                 {
@@ -398,41 +398,41 @@ void cSetupSkirmishGameState::draw() {
                     alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, disabledFadeColor, "%s", cHouse);
 
 
-                if (mouse->isLeftButtonClicked())
-                {
-                    sSkirmishPlayer.iHouse++;
+//                if (mouse->isLeftButtonClicked())
+//                {
+//                    sSkirmishPlayer.iHouse++;
+//
+//                    // Only human player can be Sardaukar?
+//                    if (p > 0)
+//                    {
+//                        if (sSkirmishPlayer.iHouse > SARDAUKAR) {
+//                            sSkirmishPlayer.iHouse = 0;
+//                        }
+//                    }
+//                    else
+//                    {
+//                        if (sSkirmishPlayer.iHouse > ORDOS) {
+//                            sSkirmishPlayer.iHouse = 0;
+//                        }
+//                    }
+//                }
 
-                    // Only human player can be Sardaukar?
-                    if (p > 0)
-                    {
-                        if (sSkirmishPlayer.iHouse > SARDAUKAR) {
-                            sSkirmishPlayer.iHouse = 0;
-                        }
-                    }
-                    else
-                    {
-                        if (sSkirmishPlayer.iHouse > ORDOS) {
-                            sSkirmishPlayer.iHouse = 0;
-                        }
-                    }
-                }
-
-                if (mouse->isRightButtonClicked())
-                {
-                    sSkirmishPlayer.iHouse--;
-                    if (p > 0)
-                    {
-                        if (sSkirmishPlayer.iHouse < 0) {
-                            sSkirmishPlayer.iHouse = SARDAUKAR;
-                        }
-                    }
-                    else
-                    {
-                        if (sSkirmishPlayer.iHouse < 0) {
-                            sSkirmishPlayer.iHouse =ORDOS;
-                        }
-                    }
-                }
+//                if (mouse->isRightButtonClicked())
+//                {
+//                    sSkirmishPlayer.iHouse--;
+//                    if (p > 0)
+//                    {
+//                        if (sSkirmishPlayer.iHouse < 0) {
+//                            sSkirmishPlayer.iHouse = SARDAUKAR;
+//                        }
+//                    }
+//                    else
+//                    {
+//                        if (sSkirmishPlayer.iHouse < 0) {
+//                            sSkirmishPlayer.iHouse =ORDOS;
+//                        }
+//                    }
+//                }
             }
 
             // Credits
@@ -466,21 +466,21 @@ void cSetupSkirmishGameState::draw() {
                 else
                     alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, disabledFadeColor, "%d", sSkirmishPlayer.iCredits);
 
-                if (mouse->isLeftButtonClicked())
-                {
-                    sSkirmishPlayer.iCredits += 500;
-                    if (sSkirmishPlayer.iCredits > 10000) {
-                        sSkirmishPlayer.iCredits = 1000;
-                    }
-                }
-
-                if (mouse->isRightButtonClicked())
-                {
-                    sSkirmishPlayer.iCredits -= 500;
-                    if (sSkirmishPlayer.iCredits < 1000) {
-                        sSkirmishPlayer.iCredits = 10000;
-                    }
-                }
+//                if (mouse->isLeftButtonClicked())
+//                {
+//                    sSkirmishPlayer.iCredits += 500;
+//                    if (sSkirmishPlayer.iCredits > 10000) {
+//                        sSkirmishPlayer.iCredits = 1000;
+//                    }
+//                }
+//
+//                if (mouse->isRightButtonClicked())
+//                {
+//                    sSkirmishPlayer.iCredits -= 500;
+//                    if (sSkirmishPlayer.iCredits < 1000) {
+//                        sSkirmishPlayer.iCredits = 10000;
+//                    }
+//                }
             }
 
             // Units
@@ -514,21 +514,21 @@ void cSetupSkirmishGameState::draw() {
                 else
                     alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, disabledFadeColor, "%d", sSkirmishPlayer.startingUnits);
 
-                if (mouse->isLeftButtonClicked())
-                {
-                    sSkirmishPlayer.startingUnits++;
-                    if (sSkirmishPlayer.startingUnits > 10) {
-                        sSkirmishPlayer.startingUnits = 1;
-                    }
-                }
-
-                if (mouse->isRightButtonClicked())
-                {
-                    sSkirmishPlayer.startingUnits--;
-                    if (sSkirmishPlayer.startingUnits < 1) {
-                        sSkirmishPlayer.startingUnits = 10;
-                    }
-                }
+//                if (mouse->isLeftButtonClicked())
+//                {
+//                    sSkirmishPlayer.startingUnits++;
+//                    if (sSkirmishPlayer.startingUnits > 10) {
+//                        sSkirmishPlayer.startingUnits = 1;
+//                    }
+//                }
+//
+//                if (mouse->isRightButtonClicked())
+//                {
+//                    sSkirmishPlayer.startingUnits--;
+//                    if (sSkirmishPlayer.startingUnits < 1) {
+//                        sSkirmishPlayer.startingUnits = 10;
+//                    }
+//                }
             }
 
             // Team
@@ -560,21 +560,21 @@ void cSetupSkirmishGameState::draw() {
                 else
                     alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, disabledFadeColor, "%d", sSkirmishPlayer.team);
 
-                if (mouse->isLeftButtonClicked())
-                {
-                    sSkirmishPlayer.team++;
-                    if (sSkirmishPlayer.team > iStartingPoints) {
-                        sSkirmishPlayer.team = 1;
-                    }
-                }
-
-                if (mouse->isRightButtonClicked())
-                {
-                    sSkirmishPlayer.team--;
-                    if (sSkirmishPlayer.team < 1) {
-                        sSkirmishPlayer.team = iStartingPoints;
-                    }
-                }
+//                if (mouse->isLeftButtonClicked())
+//                {
+//                    sSkirmishPlayer.team++;
+//                    if (sSkirmishPlayer.team > iStartingPoints) {
+//                        sSkirmishPlayer.team = 1;
+//                    }
+//                }
+//
+//                if (mouse->isRightButtonClicked())
+//                {
+//                    sSkirmishPlayer.team--;
+//                    if (sSkirmishPlayer.team < 1) {
+//                        sSkirmishPlayer.team = iStartingPoints;
+//                    }
+//                }
             }
         }
     }
@@ -599,7 +599,7 @@ void cSetupSkirmishGameState::draw() {
 
     if (bDoRandomMap) {
         randomMapGenerator.generateRandomMap();
-        spawnWorms = map.isBigMap() ? 4 : 2;
+//        spawnWorms = map.isBigMap() ? 4 : 2;
     }
 
     // back

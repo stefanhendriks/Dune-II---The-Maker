@@ -119,7 +119,7 @@ void cSelectYourNextConquestState::thinkFast() {
 
 }
 
-void cSelectYourNextConquestState::draw() {
+void cSelectYourNextConquestState::draw() const {
     game.getMouse()->setTile(MOUSE_NORMAL); // global state of mouse
 
     int veryDark = makecol(48, 28, 0);
@@ -179,7 +179,7 @@ void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const {
     }
 }
 
-void cSelectYourNextConquestState::drawStateIntroduction() {
+void cSelectYourNextConquestState::drawStateIntroduction() const {
     if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
         allegroDrawer->setTransBlender(0, 0, 0, iRegionSceneAlpha);
 
@@ -202,7 +202,7 @@ void cSelectYourNextConquestState::drawStateIntroduction() {
     }
 }
 
-void cSelectYourNextConquestState::drawStateConquerRegions() { // draw dune first
+void cSelectYourNextConquestState::drawStateConquerRegions() const { // draw dune first
     draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
     draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
 
@@ -228,51 +228,51 @@ void cSelectYourNextConquestState::drawStateConquerRegions() { // draw dune firs
 
         // when the region is NOT this house, turn it into this house
         if (region.iHouse != houseThatConquersTheRegion) {
-            char *regionTextString = cRegionText[i];
-            bool isRegionTextGiven = regionTextString[0] != '\0';
-            bool isRegionTextEmpty = regionTextString[0] == '\0';
-
-            if ((isRegionTextGiven && isDisplayingMessage) ||
-                isRegionTextEmpty) {
-                // set this up
-                region.iHouse = houseThatConquersTheRegion;
-                region.iAlpha = 1; // this makes it > 0 and thus it will become opaque over time (see THINK function)
-
-                if (isRegionTextGiven) {
-                    drawManager->getMessageDrawer()->setMessage(regionTextString);
-                }
-
-                isFinishedConqueringRegions = false;
-                break;
-            } else {
-                isFinishedConqueringRegions = false;
-                break;
-
-            }
-        } else {
-            // house = the same
-            if (region.iAlpha >= 255) {
-                // remove this from the 'regionToConquer' index
-                iRegionConquer[i] = -1;
-                houseThatConquersTheRegion = -1; //
-                isFinishedConqueringRegions = false;
-
-                break;
-            } else if (region.iAlpha < 255) {
-                isFinishedConqueringRegions = false;
-                break; // not done yet, so wait before we do another region!
-            }
+//            char *regionTextString = cRegionText[i];
+//            bool isRegionTextGiven = regionTextString[0] != '\0';
+//            bool isRegionTextEmpty = regionTextString[0] == '\0';
+//
+//            if ((isRegionTextGiven && isDisplayingMessage) ||
+//                isRegionTextEmpty) {
+//                // set this up
+//                region.iHouse = houseThatConquersTheRegion;
+//                region.iAlpha = 1; // this makes it > 0 and thus it will become opaque over time (see THINK function)
+//
+//                if (isRegionTextGiven) {
+//                    drawManager->getMessageDrawer()->setMessage(regionTextString);
+//                }
+//
+//                isFinishedConqueringRegions = false;
+//                break;
+//            } else {
+//                isFinishedConqueringRegions = false;
+//                break;
+//
+//            }
+//        } else {
+//            // house = the same
+//            if (region.iAlpha >= 255) {
+//                // remove this from the 'regionToConquer' index
+//                iRegionConquer[i] = -1;
+//                houseThatConquersTheRegion = -1; //
+//                isFinishedConqueringRegions = false;
+//
+//                break;
+//            } else if (region.iAlpha < 255) {
+//                isFinishedConqueringRegions = false;
+//                break; // not done yet, so wait before we do another region!
+//            }
         }
     }
 
     if (isFinishedConqueringRegions && isDisplayingMessage) {
-        state = REGSTATE_SELECT_NEXT_CONQUEST;
+//        state = REGSTATE_SELECT_NEXT_CONQUEST;
         drawManager->getMessageDrawer()->setMessage("Select your next region.");
         drawManager->getMessageDrawer()->setKeepMessage(true);
     }
 }
 
-void cSelectYourNextConquestState::drawStateSelectYourNextConquest() {
+void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const {
     draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE].dat, offsetX + 16, offsetY + 73);
     draw_sprite(bmp_screen, (BITMAP *) gfxworld[WORLD_DUNE_REGIONS].dat, offsetX + 16, offsetY + 73);
 
@@ -351,7 +351,7 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     game.START_FADING_OUT();
 }
 
-cRegion * cSelectYourNextConquestState::getRegionMouseIsOver() {
+cRegion * cSelectYourNextConquestState::getRegionMouseIsOver() const {
     if (regionMouseIsHoveringOver < 0) {
         return nullptr;
     }
@@ -404,7 +404,7 @@ void cSelectYourNextConquestState::REGION_SETUP_NEXT_MISSION(int iMission, int i
     return;
 }
 
-void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) {
+void cSelectYourNextConquestState::REGION_DRAW(cRegion &regionPiece) const {
     if (regionPiece.iAlpha <= 0) {
         // no alpha, no use in drawing
         return;

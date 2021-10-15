@@ -789,9 +789,6 @@ bool cGame::setupGame() {
 		return false;
 	}
 
-    m_dataRepository = new cAllegroDataRepository();
-    allegroDrawer = new cAllegroDrawer(m_dataRepository);
-
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
 
 	int r = install_timer();
@@ -930,7 +927,7 @@ bool cGame::setupGame() {
 	}
 
 
-	bene_font = alfont_load_font("data/benegess.fon");
+    bene_font = alfont_load_font("data/benegess.fon");
 
 	if (bene_font != NULL) {
 		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded benegess.fon", OUTC_SUCCESS);
@@ -1134,7 +1131,11 @@ bool cGame::setupGame() {
 		logbook("Datafile hooked: gfxmentat.dat");
 	}
 
-	// randomize timer
+    // finally the data repository and drawer interface can be initialized
+    m_dataRepository = new cAllegroDataRepository();
+    allegroDrawer = new cAllegroDrawer(m_dataRepository);
+
+    // randomize timer
 	unsigned int t = (unsigned int) time(0);
 	char seedtxt[80];
 	sprintf(seedtxt, "Seed is %u", t);

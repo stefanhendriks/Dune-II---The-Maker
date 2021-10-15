@@ -20,9 +20,9 @@ class cAllegroDrawer {
 		void drawSpriteCenteredRelativelyVertical(BITMAP *dest, BITMAP* src, float percentage);
 
 		void blit(sBitmap *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
-		void blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
+		void blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) const;
 		void blitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y);
-		void blitSprite(BITMAP *src, BITMAP *dest, cRectangle *rectangle);
+		void blitSprite(BITMAP *src, BITMAP *dest, const cRectangle *rectangle) const;
 
 		void stretchSprite(BITMAP *src, BITMAP *dest, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
@@ -47,11 +47,19 @@ class cAllegroDrawer {
 
         int getColorByNormValue(int r, int g, int b, float norm);
 
+        void gui_DrawRect(BITMAP *dest, cRectangle &rectangle);
+        void gui_DrawRect(BITMAP *dest, cRectangle &rectangle, int gui_colorWindow, int gui_colorBorderLight, int gui_colorBorderDark);
+        void gui_DrawRectBorder(BITMAP *dest, cRectangle &rectangle, int gui_colorBorderLight, int gui_colorBorderDark);
+
 protected:
 		int getCenteredXPosForBitmap(BITMAP *bmp, int totalWidth);
 		int getCenteredYPosForBitmap(BITMAP *bmp);
 
 		int colorBlack;
+
+        int gui_colorWindow;
+        int gui_colorBorderLight;
+        int gui_colorBorderDark;
 
 private:
     cAllegroDataRepository * m_dataRepository;
