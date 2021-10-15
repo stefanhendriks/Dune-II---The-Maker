@@ -51,7 +51,7 @@ void cChooseHouseGameState::thinkFast() {
 
 }
 
-void cChooseHouseGameState::draw() {
+void cChooseHouseGameState::draw() const {
     cMouse *mouse = game.getMouse();
 
     // Render the planet Dune a bit downward

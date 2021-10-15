@@ -21,7 +21,7 @@ public:
     ~cSetupSkirmishGameState() override;
 
     void thinkFast() override;
-    void draw() override;
+    void draw() const override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
 
@@ -36,6 +36,7 @@ private:
     bool spawnBlooms;
     bool detonateBlooms;
 
+    // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);

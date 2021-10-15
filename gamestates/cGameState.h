@@ -17,7 +17,7 @@ public:
     virtual ~cGameState();
 
     virtual void thinkFast() = 0;
-    virtual void draw() = 0;
+    virtual void draw() const = 0;
 
     virtual void onNotifyMouseEvent(const s_MouseEvent &event) override = 0;
 
