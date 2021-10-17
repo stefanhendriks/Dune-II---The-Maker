@@ -2,7 +2,7 @@
 
 void cYesButtonCommand::execute(cAbstractMentat& mentat) {
     logbook("cYesButtonCommand::execute()");
-    game.setState(GAME_BRIEFING);
+    game.setNextStateToTransitionTo(GAME_BRIEFING);
     game.iMission = 1;
     game.iRegion  = 1;
     game.mission_init();

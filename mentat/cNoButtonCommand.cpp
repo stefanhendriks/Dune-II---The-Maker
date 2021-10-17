@@ -4,6 +4,6 @@ void cNoButtonCommand::execute(cAbstractMentat& mentat) {
     logbook("cNoButtonCommand::execute()");
     // head back to choose house
     players[HUMAN].setHouse(GENERALHOUSE);
-    game.setState(GAME_SELECT_HOUSE);
+    game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
     game.START_FADING_OUT();
 }
