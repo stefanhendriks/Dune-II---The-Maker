@@ -1623,6 +1623,12 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
 void cGame::transitionStateIfRequired() {
     if (nextState > -1){
         setState(nextState);
+
+        if(nextState == GAME_BRIEFING) {
+            playMusicByType(MUSIC_BRIEFING);
+            game.createAndPrepareMentatForHumanPlayer();
+        }
+
         nextState = -1;
     }
 }
