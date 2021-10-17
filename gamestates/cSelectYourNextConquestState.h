@@ -89,6 +89,8 @@ private:
 
     BITMAP *regionClickMapBmp;  // this is the bmp that
 
+    bool isFinishedConqueringRegions = true;
+
     // Functions
     void REGION_DRAW(cRegion &regionPiece) const;
 
