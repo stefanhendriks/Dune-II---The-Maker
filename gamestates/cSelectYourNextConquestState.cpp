@@ -330,7 +330,7 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
 //allegro_message(msg);
 
     game.mission_init();
-    game.setState(GAME_BRIEFING);
+    game.setNextStateToTransitionTo(GAME_BRIEFING);
     game.iRegion = iNewReg;
     game.iMission++;                        // FINALLY ADD MISSION NUMBER...
 

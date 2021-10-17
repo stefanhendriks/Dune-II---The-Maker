@@ -100,9 +100,6 @@ public:
 
 	bool isState(int thisState);
 
-    // Do not call directly
-	void setState(int newState);
-
     // Use this instead
 	void setNextStateToTransitionTo(int newState);
 
@@ -293,6 +290,8 @@ private:
     bool hasGameOverConditionAIHasNoBuildings() const;
 
     void transitionStateIfRequired();
+
+    void setState(int newState);
 };
 
 #endif

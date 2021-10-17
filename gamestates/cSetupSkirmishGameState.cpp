@@ -903,7 +903,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     drawManager->getMessageDrawer()->initCombatPosition();
 
     game.START_FADING_OUT();
-    game.setState(GAME_PLAYING); // this deletes the current state object
+    game.setNextStateToTransitionTo(GAME_PLAYING); // this deletes the current state object
 }
 
 eGameStateType cSetupSkirmishGameState::getType() {
@@ -930,7 +930,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event
 
     if (MOUSE_WITHIN_RECT(backButtonX, backButtonY, backButtonWidth, backButtonHeight)) {
         game.START_FADING_OUT();
-        game.setState(GAME_MENU); // this deletes the current state object, so has to be last statement!
+        game.setNextStateToTransitionTo(GAME_MENU); // this deletes the current state object, so has to be last statement!
         return;
     }
 
