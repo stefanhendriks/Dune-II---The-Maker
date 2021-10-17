@@ -36,8 +36,8 @@ class cAllegroDrawer {
 		void maskedStretchBlitFromGfxData(int index, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y, int desiredWidth, int desiredHeight);
 
         void drawRectangle(BITMAP *dest, int x, int y, int width, int height, int color);
-        void drawRectangle(BITMAP *dest, cRectangle &pRectangle, int color);
-        void drawRectangleFilled(BITMAP *dest, cRectangle &pRectangle, int color);
+        void drawRectangle(BITMAP *dest, const cRectangle &pRectangle, int color);
+        void drawRectangleFilled(BITMAP *dest, const cRectangle &pRectangle, int color);
 
         int getColor_BLACK() { return colorBlack; }
 
@@ -47,9 +47,9 @@ class cAllegroDrawer {
 
         int getColorByNormValue(int r, int g, int b, float norm);
 
-        void gui_DrawRect(BITMAP *dest, cRectangle &rectangle);
-        void gui_DrawRect(BITMAP *dest, cRectangle &rectangle, int gui_colorWindow, int gui_colorBorderLight, int gui_colorBorderDark);
-        void gui_DrawRectBorder(BITMAP *dest, cRectangle &rectangle, int gui_colorBorderLight, int gui_colorBorderDark);
+        void gui_DrawRect(BITMAP *dest, const cRectangle &rectangle);
+        void gui_DrawRect(BITMAP *dest, const cRectangle &rectangle, int gui_colorWindow, int gui_colorBorderLight, int gui_colorBorderDark);
+        void gui_DrawRectBorder(BITMAP *dest, const cRectangle &rectangle, int gui_colorBorderLight, int gui_colorBorderDark);
 
 protected:
 		int getCenteredXPosForBitmap(BITMAP *bmp, int totalWidth);

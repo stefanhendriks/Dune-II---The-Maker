@@ -3,6 +3,7 @@
 
 #include <utils/cRectangle.h>
 #include <observers/cMouseObserver.h>
+#include "cGuiObject.h"
 
 enum eGuiButtonRenderKind {
     OPAQUE_WITH_BORDER = 0,
@@ -16,17 +17,34 @@ enum eGuiTextAlignHorizontal {
     CENTER
 };
 
-class cGuiButton : cMouseObserver {
+class cGuiButton : public cGuiObject {
 public:
-    cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, std::string btnText);
-    cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, std::string btnText, eGuiButtonRenderKind renderKind);
-    cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, std::string btnText, int gui_colorButton, int gui_colorBorderLight, int gui_colorBorderDark);
+    cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText);
 
-    ~cGuiButton() = default;
+    cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText,
+               eGuiButtonRenderKind renderKind);
+
+    cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, int gui_colorButton,
+               int gui_colorBorderLight, int gui_colorBorderDark);
+
+    ~cGuiButton();
+
+//    /**
+//     * Copy constructor
+//     * @param src
+//    */
+//    cGuiButton(const cGuiButton &src);
+//
+//    /**
+//     * Assignment operator
+//     * @param rhs
+//     * @return
+//     */
+//    cGuiButton &operator=(const cGuiButton &rhs);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
 
-    void draw();
+    void draw() const override;
 
     bool hasFocus();
 
@@ -41,7 +59,10 @@ public:
     void setGui_ColorButton(int value);
 
     void setTextColor(int value);
+
     void setTextColorHover(int value);
+
+    void setOnLeftMouseButtonClickedAction(cGuiAction *action);
 
 private:
     cRectangle rect;
@@ -49,6 +70,7 @@ private:
     std::string btnText;
     eGuiButtonRenderKind renderKind;
     eGuiTextAlignHorizontal textAlignHorizontal;
+    cGuiAction *onLeftMouseButtonClicked_action;
 
     bool focus;
 
@@ -70,6 +92,8 @@ private:
     void onMouseRightButtonClicked(const s_MouseEvent &event);
 
     void onMouseLeftButtonPressed(const s_MouseEvent &event);
+
+    void onMouseLeftButtonClicked(const s_MouseEvent &event);
 };
 
 

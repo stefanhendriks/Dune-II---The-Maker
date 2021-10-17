@@ -7,6 +7,11 @@ class cTextDrawer;
 
 #include "cTextWriter.h"
 #include "cMouseToolTip.h"
+#include "cGuiObject.h"
+#include "cGuiAction.h"
+#include "cGuiWindow.h"
 #include "cGuiButton.h"
+
+#include "actions/actionsh.h"
 
 #endif

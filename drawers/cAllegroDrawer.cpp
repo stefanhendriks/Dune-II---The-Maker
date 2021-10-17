@@ -185,7 +185,7 @@ void cAllegroDrawer::blitSprite(BITMAP *src, BITMAP *dest, const cRectangle *rec
     blit(src, dest, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
 }
 
-void cAllegroDrawer::drawRectangle(BITMAP *dest, cRectangle &pRectangle, int color) {
+void cAllegroDrawer::drawRectangle(BITMAP *dest, const cRectangle &pRectangle, int color) {
     rect(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
 }
 
@@ -196,7 +196,7 @@ void cAllegroDrawer::drawRectangle(BITMAP *dest, int x, int y, int width, int he
     rect(dest, x, y, x + (width-1), y + (height-1), color);
 }
 
-void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, cRectangle &pRectangle, int color) {
+void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, const cRectangle &pRectangle, int color) {
     rectfill(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
 }
 
@@ -255,11 +255,11 @@ int cAllegroDrawer::getColorByNormValue(int r, int g, int b, float norm) {
     return makecol((r * norm), (g * norm), (b * norm));
 }
 
-void cAllegroDrawer::gui_DrawRect(BITMAP *dest, cRectangle &rectangle) {
+void cAllegroDrawer::gui_DrawRect(BITMAP *dest, const cRectangle &rectangle) {
     gui_DrawRect(dest, rectangle, gui_colorWindow, gui_colorBorderLight, gui_colorBorderDark);
 }
 
-void cAllegroDrawer::gui_DrawRect(BITMAP *dest, cRectangle &rectangle, int gui_colorWindow, int gui_colorBorderLight, int gui_colorBorderDark) {
+void cAllegroDrawer::gui_DrawRect(BITMAP *dest, const cRectangle &rectangle, int gui_colorWindow, int gui_colorBorderLight, int gui_colorBorderDark) {
     int x1= rectangle.getX();
     int y1 = rectangle.getY();
     int width = rectangle.getWidth();
@@ -279,7 +279,7 @@ void cAllegroDrawer::gui_DrawRect(BITMAP *dest, cRectangle &rectangle, int gui_c
     line(bmp_screen, x1, y1+height, x1+width , y1+height, gui_colorBorderDark);
 }
 
-void cAllegroDrawer::gui_DrawRectBorder(BITMAP *dest, cRectangle &rectangle, int gui_colorBorderLight,
+void cAllegroDrawer::gui_DrawRectBorder(BITMAP *dest, const cRectangle &rectangle, int gui_colorBorderLight,
                                         int gui_colorBorderDark) {
 
     int x1= rectangle.getX();
