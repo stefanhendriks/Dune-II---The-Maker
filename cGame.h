@@ -99,7 +99,12 @@ public:
 	void shutdown();
 
 	bool isState(int thisState);
+
+    // Do not call directly
 	void setState(int newState);
+
+    // Use this instead
+	void setNextStateToTransitionTo(int newState);
 
 	int getMaxVolume() { return iMaxVolume; }
 
@@ -212,16 +217,49 @@ public:
     void prepareMentatToTellAboutHouse(int house);
 
 private:
-	void updateState();
-	void combat();		// the combat part (main) of the game
-	bool isMusicPlaying();
+    /**
+     * Variables start here
+     */
+    cInteractionManager *_interactionManager;
+    cAllegroDataRepository *m_dataRepository;
 
-	void stateMentat(cAbstractMentat *pMentat);  // state mentat talking and interaction
-	void menu();		// main menu
+    cSoundPlayer *soundPlayer;
+    cMouse *mouse;
 
-	void drawState();
-	void shakeScreenAndBlitBuffer();
-	void handleTimeSlicing();
+	int state;
+
+	int iMaxVolume;
+
+	cAbstractMentat *pMentat; // TODO: Move this into a gameState class (as field)?
+
+    float fade_select;        // fade color when selected
+    bool bFadeSelectDir;    // fade select direction
+
+    // screen shaking
+    int shake_x;
+    int shake_y;
+    int TIMER_shake;
+
+    int TIMER_evaluatePlayerStatus;
+
+    // win/lose flags
+    int8_t winFlags, loseFlags;
+
+    int frame_count, fps;  // fps and such
+
+    int nextState;
+    cGameState *gameState;
+
+    void updateState();
+    void combat();		// the combat part (main) of the game
+    bool isMusicPlaying();
+
+    void stateMentat(cAbstractMentat *pMentat);  // state mentat talking and interaction
+    void menu();		// main menu
+
+    void drawState();
+    void shakeScreenAndBlitBuffer();
+    void handleTimeSlicing();
 
     bool isResolutionInGameINIFoundAndSet();
     void setScreenResolutionFromGameIniSettings();
@@ -254,37 +292,7 @@ private:
 
     bool hasGameOverConditionAIHasNoBuildings() const;
 
-    /**
-     * Variables start here
-     */
-    cInteractionManager *_interactionManager;
-    cAllegroDataRepository *m_dataRepository;
-
-    cSoundPlayer *soundPlayer;
-    cMouse *mouse;
-
-	int state;
-
-	int iMaxVolume;
-
-	cAbstractMentat *pMentat; // TODO: Move this into a gameState class (as field)?
-
-    float fade_select;        // fade color when selected
-    bool bFadeSelectDir;    // fade select direction
-
-    // screen shaking
-    int shake_x;
-    int shake_y;
-    int TIMER_shake;
-
-    int TIMER_evaluatePlayerStatus;
-
-    // win/lose flags
-    int8_t winFlags, loseFlags;
-
-    int frame_count, fps;  // fps and such
-
-    cGameState *gameState;
+    void transitionStateIfRequired();
 };
 
 #endif

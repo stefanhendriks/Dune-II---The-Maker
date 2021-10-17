@@ -4,6 +4,7 @@
 class cGame;
 
 #include <gui/cGuiButton.h>
+#include <gui/cGuiWindow.h>
 #include "cGameState.h"
 
 class cMainMenuGameState : public cGameState {
@@ -30,17 +31,9 @@ private:
 
     const cTextDrawer textDrawer;
 
-    cGuiButton * gui_btn_SelectHouse;
-    cGuiButton * gui_btn_Skirmish;
-    cGuiButton * gui_btn_Multiplayer;
-    cGuiButton * gui_btn_Load;
-    cGuiButton * gui_btn_Options;
-    cGuiButton * gui_btn_Hof;
-    cGuiButton * gui_btn_Exit;
+    cGuiWindow * gui_window;
 
     BITMAP *bmp_D2TM_Title;
-
-    void onMouseLeftButtonClicked(const s_MouseEvent &event);
 };
 
 

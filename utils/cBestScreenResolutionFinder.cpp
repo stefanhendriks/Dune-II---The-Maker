@@ -102,7 +102,7 @@ void cBestScreenResolutionFinder::setMatchingScreenResolutionsToTestedAndUsable(
 }
 
 cScreenResolution * cBestScreenResolutionFinder::findMatchingScreenResolution(int width, int height) {
-	for (auto screenResolution : screenResolutions) {
+	for (auto & screenResolution : screenResolutions) {
         if (screenResolution) {
             if (screenResolution->getWidth() == width && screenResolution->getHeight() == height) {
                 return screenResolution;

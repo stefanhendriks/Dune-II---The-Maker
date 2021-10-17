@@ -17,6 +17,7 @@
 
 
 cGame::cGame() {
+    nextState = -1;
     gameState = nullptr;
 	screen_x = 800;
 	screen_y = 600;
@@ -37,6 +38,7 @@ cGame::cGame() {
 
 
 void cGame::init() {
+    nextState = -1;
     gameState = nullptr;
 	screenshot=0;
 	bPlaying=true;
@@ -635,6 +637,7 @@ void cGame::run() {
         updateState();
 		handleTimeSlicing(); // handle time diff (needs to change!)
         drawState(); // run game state, includes interaction + drawing
+        transitionStateIfRequired();
 		_interactionManager->interactWithKeyboard(); // generic interaction
 		shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
 		frame_count++;
@@ -1615,4 +1618,15 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
     if (gameState) {
         gameState->onNotifyMouseEvent(event);
     }
+}
+
+void cGame::transitionStateIfRequired() {
+    if (nextState > -1){
+        setState(nextState);
+        nextState = -1;
+    }
+}
+
+void cGame::setNextStateToTransitionTo(int newState) {
+    nextState = newState;
 }

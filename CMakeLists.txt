@@ -37,6 +37,8 @@ file(GLOB d2tm_SRC
         "gamestates/*.cpp"
         "gui/*.h"
         "gui/*.cpp"
+        "gui/actions/*.h"
+        "gui/actions/*.cpp"
         "include/*.h"
         "mentat/*.h"
         "mentat/*.cpp"

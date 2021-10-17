@@ -1,13 +1,7 @@
 #include "d2tmh.h"
-#include "cGuiButton.h"
 
-
-cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, std::string btnText,
-                       eGuiButtonRenderKind renderKind) : cGuiButton(textDrawer, rect, btnText) {
-    this->renderKind = renderKind;
-}
-
-cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, std::string btnText) : textDrawer(textDrawer), rect(rect), btnText(btnText) {
+cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string & btnText) : textDrawer(
+        textDrawer), rect(rect), btnText(btnText) {
     gui_colorButton = makecol(176, 176, 196);
     gui_colorBorderDark = makecol(84, 84, 120);
     gui_colorBorderLight = makecol(252, 252, 252);
@@ -17,17 +11,30 @@ cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, st
     textAlignHorizontal = eGuiTextAlignHorizontal::CENTER;
     text_color = makecol(255, 255, 255); // default white color
     text_colorHover = makecol(255, 0, 0);
+    onLeftMouseButtonClicked_action = nullptr;
 }
 
-cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, std::string btnText, int gui_colorButton, int gui_colorBorderLight,
+cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText,
+                       eGuiButtonRenderKind renderKind) : cGuiButton(textDrawer, rect, btnText) {
+    this->renderKind = renderKind;
+    onLeftMouseButtonClicked_action = nullptr;
+}
+
+cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, const std::string &btnText, int gui_colorButton,
+                       int gui_colorBorderLight,
                        int gui_colorBorderDark) : cGuiButton(textDrawer, rect, btnText) {
     focus = false;
     this->gui_colorButton = gui_colorButton;
     this->gui_colorBorderLight = gui_colorBorderLight;
     this->gui_colorBorderDark = gui_colorBorderDark;
+    onLeftMouseButtonClicked_action = nullptr;
 }
 
-void cGuiButton::draw() {
+cGuiButton::~cGuiButton() {
+    delete onLeftMouseButtonClicked_action;
+}
+
+void cGuiButton::draw() const {
     switch (renderKind) {
         case OPAQUE_WITHOUT_BORDER:
             allegroDrawer->drawRectangleFilled(bmp_screen, rect, gui_colorButton);
@@ -129,6 +136,9 @@ void cGuiButton::onNotifyMouseEvent(const s_MouseEvent &event) {
         case MOUSE_RIGHT_BUTTON_CLICKED:
             onMouseRightButtonClicked(event);
             break;
+        case MOUSE_LEFT_BUTTON_CLICKED:
+            onMouseLeftButtonClicked(event);
+            break;
         case MOUSE_LEFT_BUTTON_PRESSED:
             onMouseLeftButtonPressed(event);
             break;
@@ -150,3 +160,60 @@ void cGuiButton::onMouseRightButtonClicked(const s_MouseEvent &event) {
 void cGuiButton::onMouseLeftButtonPressed(const s_MouseEvent &event) {
     pressed = focus;
 }
+
+void cGuiButton::onMouseLeftButtonClicked(const s_MouseEvent &event) {
+    if (focus) {
+        if (onLeftMouseButtonClicked_action) {
+            onLeftMouseButtonClicked_action->execute();
+        }
+    }
+}
+
+void cGuiButton::setOnLeftMouseButtonClickedAction(cGuiAction *action) {
+    this->onLeftMouseButtonClicked_action = action;
+}
+
+//
+//cGuiButton::cGuiButton(const cGuiButton &src) :
+//        rect(src.rect),
+//        textDrawer(src.textDrawer),
+//        btnText(src.btnText),
+//        renderKind(src.renderKind),
+//        textAlignHorizontal(src.textAlignHorizontal),
+//        onLeftMouseButtonClicked_action(src.onLeftMouseButtonClicked_action),
+//        focus(src.focus),
+//        gui_colorButton(src.gui_colorButton),
+//        gui_colorBorderLight(src.gui_colorBorderLight),
+//        gui_colorBorderDark(src.gui_colorBorderDark),
+//        text_color(src.text_color),
+//        text_colorHover(src.text_colorHover),
+//        pressed(src.pressed) {
+//
+//}
+
+//cGuiButton &cGuiButton::operator=(const cGuiButton &rhs) {
+//    // Guard self assignment
+//    if (this == &rhs)
+//        return *this;
+//
+//    this->rect = rhs.rect;
+//    this->textDrawer = rhs.textDrawer;
+//    this->btnText = rhs.btnText;
+//    this->renderKind = rhs.renderKind;
+//    this->textAlignHorizontal = rhs.textAlignHorizontal;
+////    if (rhs.onLeftMouseButtonClicked_action) {
+////        this->missionKind = rhs.missionKind->clone(player, this);
+////    } else {
+////        this->missionKind = nullptr;
+////    }
+//    // onLeftMouseButtonClicked_action... want, delete wordt uitgevoerd bij resizen vector ofzo meen ik
+//    this->focus = rhs.focus;
+//    this->gui_colorButton = rhs.gui_colorButton;
+//    this->gui_colorBorderLight = rhs.gui_colorBorderLight;
+//    this->gui_colorBorderDark = rhs.gui_colorBorderDark;
+//    this->text_color = rhs.text_color;
+//    this->text_colorHover = rhs.text_colorHover;
+//    this->pressed = rhs.pressed;
+//
+//    return *this;
+//}
