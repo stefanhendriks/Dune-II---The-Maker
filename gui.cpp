@@ -49,13 +49,6 @@ bool MOUSE_WITHIN_RECT(int x, int y, int width, int height)
     return ((mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y <= (y + height)));
 }
 
-void GUI_DRAW_BENE_TEXT(int x, int y, const std::string& text)
-{
-    const char *cstring = text.c_str();
-    alfont_textprintf(bmp_screen, bene_font, x + 1, y + 1, makecol(0, 0, 0), cstring);
-    alfont_textprintf(bmp_screen, bene_font, x, y, makecol(255, 255, 255), cstring);
-}
-
 /**
  * Draws a text at x, y; when  mouse hovers over it, it will render the text with hoverColor, else with white.
  *
