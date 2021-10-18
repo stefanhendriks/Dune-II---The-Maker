@@ -1,5 +1,4 @@
 #include "../include/d2tmh.h"
-#include "cTextDrawer.h"
 
 
 cTextDrawer::cTextDrawer(ALFONT_FONT *theFont) {
