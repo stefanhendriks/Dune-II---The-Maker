@@ -23,6 +23,24 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
     spawnWorms = 2;
     spawnBlooms = true;
     detonateBlooms = true;
+
+    // Colors
+    colorDarkishBackground = makecol(32, 32, 32);
+    colorDarkishBorder = makecol(227, 229, 211);
+    colorWhite = makecol(255, 255, 255);
+    colorRed = makecol(255, 0, 0); // used for hover
+    colorYellow = makecol(255, 207, 41);
+    colorDarkerYellow = makecol(225, 177, 21); // a bit darker colorYellow to give some visual clue (hover color)
+
+    // Basic coordinates
+    topBarHeight = 21;
+    previewMapHeight = 129;
+    previewMapWidth = 129;
+    widthOfSomething = 300; //??
+
+    // Screen
+    screen_x = game.screen_x;
+    screen_y = game.screen_y;
 }
 
 cSetupSkirmishGameState::~cSetupSkirmishGameState() {
@@ -36,10 +54,6 @@ void cSetupSkirmishGameState::draw() const {
     int screen_x = game.screen_x;
     int screen_y = game.screen_y;
 
-    int colorDarkishBackground = makecol(32, 32, 32);
-    int colorDarkishBorder = makecol(227, 229, 211);
-    int yellow = makecol(255, 207, 41);
-
     bool bFadeOut=false;
 
     draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_GAME_DUNE].dat, game.screen_x * 0.2, (game.screen_y * 0.5));
@@ -49,9 +63,6 @@ void cSetupSkirmishGameState::draw() const {
     }
 
     int topBarWidth = screen_x + 4;
-    int topBarHeight = 21;
-    int previewMapHeight = 129;
-    int previewMapWidth = 129;
 
     // title box
     cRectangle topBar = cRectangle(-1, -1, topBarWidth, topBarHeight);
@@ -59,10 +70,7 @@ void cSetupSkirmishGameState::draw() const {
 
     textDrawer.drawTextCentered("Skirmish", 1);
 
-    int widthOfSomething = 300; //??
     int topRightBoxWidth = widthOfSomething + 2;
-
-    int colorWhite = makecol(255, 255, 255);
 
     // Players title bar
     int playerTitleBarWidth = screen_x - topRightBoxWidth;
@@ -99,13 +107,15 @@ void cSetupSkirmishGameState::draw() const {
     int mapListFrameHeight = topBarHeight;
 
     // rectangle for map list
-    cRectangle mapList = cRectangle(mapListTopX, mapListTopY, mapListWidth, mapListHeight);
-    allegroDrawer->gui_DrawRect(bmp_screen, mapList, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    cRectangle mapListTop = cRectangle(mapListTopX, mapListTopY, mapListWidth, mapListHeight);
+    allegroDrawer->gui_DrawRect(bmp_screen, mapListTop, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+
+    cRectangle mapListFrame = cRectangle(mapListFrameX, mapListFrameY, mapListFrameWidth, mapListFrameHeight);
 
     int previewMapY = topBarHeight + 6;
     int previewMapX = screen_x - (previewMapWidth + 6);
 
-    textDrawer.drawTextCentered("Maps", mapListFrameX, mapListFrameWidth, mapListFrameY + 4, yellow);
+    textDrawer.drawTextCentered("Maps", mapListFrameX, mapListFrameWidth, mapListFrameY + 4, colorYellow);
 
     int iStartingPoints=0;
 
@@ -169,7 +179,7 @@ void cSetupSkirmishGameState::draw() const {
 
         if ((mouse_x >= startPointsX && mouse_x <= (startPointsX + startPointHitBoxWidth)) &&
             (mouse_y >= startPointsY && mouse_y <= (startPointsY + startPointHitBoxHeight))) {
-            textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, makecol(255, 0, 0), "Startpoints: %d",
+            textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, colorRed, "Startpoints: %d",
                                               iStartingPoints);
 
             if (mouse->isLeftButtonClicked()) {
@@ -206,7 +216,7 @@ void cSetupSkirmishGameState::draw() const {
 
     if ((mouse_x >= wormsX && mouse_x <= (wormsX + wormsHitBoxWidth)) && (mouse_y >= wormsY && mouse_y <= (wormsY + wormsHitBoxHeight)))
     {
-        textDrawer.drawText(wormsX, wormsY, makecol(255, 0, 0), "Worms? : %d", spawnWorms);
+        textDrawer.drawText(wormsX, wormsY, colorRed, "Worms? : %d", spawnWorms);
 
         if (mouse->isLeftButtonClicked())
         {
@@ -233,7 +243,7 @@ void cSetupSkirmishGameState::draw() const {
 
     if ((mouse_x >= bloomsX && mouse_x <= (bloomsX + bloomsHitBoxWidth)) && (mouse_y >= bloomsY && mouse_y <= (bloomsY + bloomsHitBoxHeight)))
     {
-        textDrawer.drawText(bloomsX, bloomsY, makecol(255, 0, 0), "Spice blooms : %s", spawnBlooms ? "YES" : "NO");
+        textDrawer.drawText(bloomsX, bloomsY, colorRed, "Spice blooms : %s", spawnBlooms ? "YES" : "NO");
 
         if (mouse->isLeftButtonClicked())
         {
@@ -251,7 +261,7 @@ void cSetupSkirmishGameState::draw() const {
 
         if ((mouse_x >= detonateX && mouse_x <= (detonateX + detonateHitBoxWidth)) && (mouse_y >= detonateY && mouse_y <= (detonateY + detonateHitBoxHeight)))
         {
-            textDrawer.drawText(detonateX, detonateY, makecol(255, 0, 0), "Auto-detonate : %s", detonateBlooms ? "YES" : "NO");
+            textDrawer.drawText(detonateX, detonateY, colorRed, "Auto-detonate : %s", detonateBlooms ? "YES" : "NO");
 
             if (mouse->isLeftButtonClicked())
             {
@@ -262,57 +272,13 @@ void cSetupSkirmishGameState::draw() const {
         textDrawer.drawText(detonateX, detonateY, makecol(128, 128, 128), "Auto-detonate : -");
     }
 
-    int const iHeightPixels=topBarHeight;
+    drawMapList(mapListTop, mapListFrame);
 
-    int iDrawY=-1;
-    int iDrawX=screen_x - widthOfSomething;
-    int iEndX=screen_y;
-    int iColor= colorWhite;
+    int const iHeightPixels = topBarHeight;
 
-    // yes, this means higher resolutions can show more maps.. for now
-    int maxMapsInList=std::min((mapListHeight / iHeightPixels), MAX_SKIRMISHMAPS);
-
-
-    // for every map that we read , draw here
-    for (int i=0; i < maxMapsInList; i++) {
-        if (PreviewMap[i].name[0] != '\0') {
-            iDrawY=mapListFrameY+(i*iHeightPixels)+i+iHeightPixels; // skip 1 bar because the 1st = 'random map'
-
-            bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapListFrameWidth, iHeightPixels);
-
-            iColor= colorWhite;
-
-            if (bHover)	{
-                // Mouse reaction
-                iColor=makecol(255,0,0);
-
-                if (mouse->isLeftButtonClicked()) {
-                    GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapListFrameWidth, iHeightPixels);
-                    game.iSkirmishMap = i;
-                    bool bigMap = PreviewMap[i].height > 64 || PreviewMap[i].width > 64;
-//                    spawnWorms = bigMap ? 4 : 2;
-
-                    if (i == 0) {
-                        bDoRandomMap=true;
-                    }
-                }
-            }
-
-            if (i == iSkirmishMap) {
-                iColor=yellow;
-                if (bHover) {
-                    iColor = makecol(225, 177, 21); // a bit darker yellow to give some visual clue
-                }
-                GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapListFrameWidth, iHeightPixels);
-            }
-
-            textDrawer.drawText(mapListFrameX + 4, iDrawY+4, iColor, PreviewMap[i].name);
-        }
-    }
-
+    // Header text for players
     alfont_textprintf(bmp_screen, bene_font, 4, 26, makecol(0,0,0), "Player      House      Credits       Units    Team");
     alfont_textprintf(bmp_screen, bene_font, 4, 25, colorWhite, "Player      House      Credits       Units    Team");
-
 
     bool bHover=false;
 
@@ -601,18 +567,18 @@ void cSetupSkirmishGameState::draw() const {
     textDrawer.drawTextBottomRight("START");
 
     if (bDoRandomMap) {
-        randomMapGenerator.generateRandomMap();
+//        randomMapGenerator.generateRandomMap();
 //        spawnWorms = map.isBigMap() ? 4 : 2;
     }
 
     // back
     if (MOUSE_WITHIN_RECT(backButtonX, backButtonY, backButtonWidth, backButtonHeight)) {
-        textDrawer.drawTextBottomLeft(makecol(255,0,0), " BACK");
+        textDrawer.drawTextBottomLeft(colorRed, " BACK");
     }
 
     if (MOUSE_WITHIN_RECT(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
         if (iSkirmishMap > -1) {
-            textDrawer.drawTextBottomRight(makecol(255, 0, 0), "START");
+            textDrawer.drawTextBottomRight(colorRed, "START");
         } else {
             textDrawer.drawTextBottomRight(makecol(128, 128, 128), "START");
         }
@@ -950,4 +916,50 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event
             return;
         }
     } // mouse hovers over "START"
+}
+
+void cSetupSkirmishGameState::drawMapList(cRectangle &mapList, cRectangle &mapListFrame) const {
+    int const iHeightPixels = topBarHeight;
+    int iSkirmishMap = game.iSkirmishMap;
+    int iDrawY = -1;
+    int iDrawX = screen_x - widthOfSomething;
+    int iEndX = screen_y;
+    int iColor = colorWhite;
+
+    // yes, this means higher resolutions can show more maps.. for now
+    int maxMapsInList=std::min((mapList.getHeight() / iHeightPixels), MAX_SKIRMISHMAPS);
+
+    // for every map that we read , draw here
+    for (int i=0; i < maxMapsInList; i++) {
+        if (PreviewMap[i].name[0] != '\0') {
+            iDrawY=mapListFrame.getY()+(i*iHeightPixels)+i+iHeightPixels; // skip 1 bar because the 1st = 'random map'
+
+            bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapListFrame.getWidth(), iHeightPixels);
+
+            int textColor;
+
+            // render row as 'pressed' (selected)
+            if (i == iSkirmishMap) {
+                textColor = bHover ? colorDarkerYellow : colorYellow;
+                GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapListFrame.getWidth(), iHeightPixels);
+            } else {
+                textColor = bHover ? colorRed : colorWhite;
+                if (bHover) {
+                    if (mouse->isLeftButtonClicked()) {
+                        GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapListFrame.getWidth(), iHeightPixels);
+                        game.iSkirmishMap = i;
+                        bool bigMap = PreviewMap[i].height > 64 || PreviewMap[i].width > 64;
+//                    spawnWorms = bigMap ? 4 : 2;
+
+                        if (i == 0) {
+//                            bDoRandomMap = true;
+                        }
+                    }
+                }
+            }
+
+
+            textDrawer.drawText(mapListFrame.getX() + 4, iDrawY+4, textColor, PreviewMap[i].name);
+        }
+    }
 }
