@@ -43,6 +43,7 @@ private:
     int colorRed;
     int colorYellow;
     int colorDarkerYellow;
+    int colorDisabled;
 
     // Some basic layout coordinates
     int topBarHeight;
@@ -59,6 +60,12 @@ private:
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
 
     void drawMapList(cRectangle &mapList, cRectangle &mapListFrame) const;
+
+    void drawWorms(cRectangle &wormsRect) const;
+
+    void drawBlooms(cRectangle &bloomsRect) const;
+
+    void drawDetonateBlooms(cRectangle &detonateBloomsRect) const;
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H
