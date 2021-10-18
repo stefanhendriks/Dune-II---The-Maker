@@ -36,10 +36,29 @@ private:
     bool spawnBlooms;
     bool detonateBlooms;
 
+    // Colors
+    int colorDarkishBackground;
+    int colorDarkishBorder;
+    int colorWhite;
+    int colorRed;
+    int colorYellow;
+    int colorDarkerYellow;
+
+    // Some basic layout coordinates
+    int topBarHeight;
+    int previewMapHeight;
+    int previewMapWidth;
+    int widthOfSomething;
+
+    // screen
+    int screen_x, screen_y;
+
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
+
+    void drawMapList(cRectangle &mapList, cRectangle &mapListFrame) const;
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H
