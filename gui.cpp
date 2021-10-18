@@ -34,16 +34,6 @@ bool GUI_DRAW_FRAME_PRESSED(int x1, int y1, int width, int height)
     return MOUSE_WITHIN_RECT(x1, y1, width, height);
 }
 
-bool GUI_DRAW_FRAME_WITH_COLORS(int x1, int y1, int width, int height, int borderColor, int fillColor)
-{
-    rectfill(bmp_screen, x1, y1, x1+width, y1+height, fillColor);
-    // rect
-    rect(bmp_screen, x1,y1,x1+width, y1+height, borderColor);
-
-    // if ((mouse_x >= x1 && mouse_x < (x1+width)) && (mouse_y >= y1 && mouse_y <= (y1+height)))
-    return MOUSE_WITHIN_RECT(x1, y1, width, height);
-}
-
 bool MOUSE_WITHIN_RECT(int x, int y, int width, int height)
 {
     return ((mouse_x >= x && mouse_x < (x + width)) && (mouse_y >= y && mouse_y <= (y + height)));

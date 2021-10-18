@@ -36,8 +36,8 @@ void cSetupSkirmishGameState::draw() const {
     int screen_x = game.screen_x;
     int screen_y = game.screen_y;
 
-    int darkishBackgroundColor = makecol(32, 32, 32);
-    int darkishBorderColor = makecol(227, 229, 211);
+    int colorDarkishBackground = makecol(32, 32, 32);
+    int colorDarkishBorder = makecol(227, 229, 211);
     int yellow = makecol(255, 207, 41);
 
     bool bFadeOut=false;
@@ -54,32 +54,38 @@ void cSetupSkirmishGameState::draw() const {
     int previewMapWidth = 129;
 
     // title box
-    GUI_DRAW_FRAME(-1, -1, topBarWidth, topBarHeight);
+    cRectangle topBar = cRectangle(-1, -1, topBarWidth, topBarHeight);
+    allegroDrawer->gui_DrawRect(bmp_screen, topBar);
 
     textDrawer.drawTextCentered("Skirmish", 1);
 
     int widthOfSomething = 300; //??
     int topRightBoxWidth = widthOfSomething + 2;
 
+    int colorWhite = makecol(255, 255, 255);
+
     // Players title bar
     int playerTitleBarWidth = screen_x - topRightBoxWidth;
     int playerTitleBarHeight = topBarHeight;
     int playerTitleBarX = 0;
     int playerTitleBarY = topBarHeight;
-    GUI_DRAW_FRAME_WITH_COLORS(playerTitleBarX, playerTitleBarY, playerTitleBarWidth, playerTitleBarHeight, makecol(255, 255, 255), darkishBackgroundColor );
+    cRectangle playerTitleBar = cRectangle(playerTitleBarX, playerTitleBarY, playerTitleBarWidth, playerTitleBarHeight);
+    allegroDrawer->gui_DrawRect(bmp_screen, playerTitleBar, colorDarkishBackground, colorWhite, colorWhite);
 
     // this is the box at the right from the Player list
     int topRightBoxHeight = playerTitleBarHeight + previewMapHeight;
     int topRightBoxX = screen_x - topRightBoxWidth;
     int topRightBoxY = topBarHeight;
-    GUI_DRAW_FRAME(topRightBoxX, topRightBoxY, topRightBoxWidth, topRightBoxHeight);
+    cRectangle topRightBox = cRectangle(topRightBoxX, topRightBoxY, topRightBoxWidth, topRightBoxHeight);
+    allegroDrawer->gui_DrawRect(bmp_screen, topRightBox);
 
     // player list
-    int playerListWidth = playerTitleBarWidth;
+    int playerListBarWidth = playerTitleBarWidth;
     int playerListBarHeight = topRightBoxHeight;
     int playerListBarX = 0;
     int playerListBarY = playerTitleBarY + topBarHeight;
-    GUI_DRAW_FRAME_WITH_COLORS(playerListBarX, playerListBarY, playerListWidth, playerListBarHeight, makecol(255, 255, 255), darkishBackgroundColor);
+    cRectangle playerList = cRectangle(playerListBarX, playerListBarY, playerListBarWidth, playerListBarHeight);
+    allegroDrawer->gui_DrawRect(bmp_screen, playerList, colorDarkishBackground, colorWhite, colorWhite);
 
     // map list
     int mapListHeight = screen_y - (topBarHeight + topRightBoxHeight + topBarHeight + topBarHeight);
@@ -93,13 +99,11 @@ void cSetupSkirmishGameState::draw() const {
     int mapListFrameHeight = topBarHeight;
 
     // rectangle for map list
-    GUI_DRAW_FRAME_WITH_COLORS(mapListTopX, mapListTopY, mapListWidth, mapListHeight, darkishBorderColor, darkishBackgroundColor);
+    cRectangle mapList = cRectangle(mapListTopX, mapListTopY, mapListWidth, mapListHeight);
+    allegroDrawer->gui_DrawRect(bmp_screen, mapList, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
 
     int previewMapY = topBarHeight + 6;
     int previewMapX = screen_x - (previewMapWidth + 6);
-
-    // TITLE: Map list
-    GUI_DRAW_FRAME_WITH_COLORS(mapListFrameX, mapListFrameY, mapListFrameWidth, mapListFrameHeight, darkishBorderColor, darkishBackgroundColor);
 
     textDrawer.drawTextCentered("Maps", mapListFrameX, mapListFrameWidth, mapListFrameY + 4, yellow);
 
@@ -263,7 +267,7 @@ void cSetupSkirmishGameState::draw() const {
     int iDrawY=-1;
     int iDrawX=screen_x - widthOfSomething;
     int iEndX=screen_y;
-    int iColor=makecol(255,255,255);
+    int iColor= colorWhite;
 
     // yes, this means higher resolutions can show more maps.. for now
     int maxMapsInList=std::min((mapListHeight / iHeightPixels), MAX_SKIRMISHMAPS);
@@ -276,7 +280,7 @@ void cSetupSkirmishGameState::draw() const {
 
             bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapListFrameWidth, iHeightPixels);
 
-            iColor=makecol(255,255,255);
+            iColor= colorWhite;
 
             if (bHover)	{
                 // Mouse reaction
@@ -307,7 +311,7 @@ void cSetupSkirmishGameState::draw() const {
     }
 
     alfont_textprintf(bmp_screen, bene_font, 4, 26, makecol(0,0,0), "Player      House      Credits       Units    Team");
-    alfont_textprintf(bmp_screen, bene_font, 4, 25, makecol(255,255,255), "Player      House      Credits       Units    Team");
+    alfont_textprintf(bmp_screen, bene_font, 4, 25, colorWhite, "Player      House      Credits       Units    Team");
 
 
     bool bHover=false;
@@ -324,7 +328,7 @@ void cSetupSkirmishGameState::draw() const {
             // player playing or not
             if (p == HUMAN)	{
                 alfont_textprintf(bmp_screen, bene_font, 4,iDrawY+1, makecol(0,0,0), "Human");
-                alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol(255,255,255), "Human");
+                alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, colorWhite, "Human");
             } else {
                 alfont_textprintf(bmp_screen, bene_font, 4,iDrawY+1, makecol(0,0,0), "  CPU");
 
@@ -350,7 +354,7 @@ void cSetupSkirmishGameState::draw() const {
                 else
                 {
                     if (sSkirmishPlayer.bPlaying)
-                        alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol(255,255,255), "  CPU");
+                        alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, colorWhite, "  CPU");
                     else
                         alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol(128,128,128), "  CPU");
                 }
@@ -378,12 +382,12 @@ void cSetupSkirmishGameState::draw() const {
 
             if (p == 0)
             {
-                alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, makecol(255, 255, 255), "%s", cHouse);
+                alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, colorWhite, "%s", cHouse);
             }
             else
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, makecol(255, 255, 255), "%s", cHouse);
+                    alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, colorWhite, "%s", cHouse);
                 else
                     alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, makecol(128, 128, 128), "%s", cHouse);
 
@@ -447,12 +451,12 @@ void cSetupSkirmishGameState::draw() const {
 
             if (p == 0)
             {
-                alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, makecol(255, 255, 255), "%d", sSkirmishPlayer.iCredits);
+                alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, colorWhite, "%d", sSkirmishPlayer.iCredits);
             }
             else
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, makecol(255, 255, 255), "%d", sSkirmishPlayer.iCredits);
+                    alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, colorWhite, "%d", sSkirmishPlayer.iCredits);
                 else
                     alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, makecol(128, 128, 128), "%d", sSkirmishPlayer.iCredits);
 
@@ -495,12 +499,12 @@ void cSetupSkirmishGameState::draw() const {
 
             if (p == 0)
             {
-                alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, makecol(255, 255, 255), "%d", sSkirmishPlayer.startingUnits);
+                alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, colorWhite, "%d", sSkirmishPlayer.startingUnits);
             }
             else
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, makecol(255, 255, 255), "%d", sSkirmishPlayer.startingUnits);
+                    alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, colorWhite, "%d", sSkirmishPlayer.startingUnits);
                 else
                     alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, makecol(128, 128, 128), "%d", sSkirmishPlayer.startingUnits);
 
@@ -541,12 +545,12 @@ void cSetupSkirmishGameState::draw() const {
 
             if (p == 0)
             {
-                alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, makecol(255, 255, 255), "%d", sSkirmishPlayer.team);
+                alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, colorWhite, "%d", sSkirmishPlayer.team);
             }
             else
             {
                 if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, makecol(255, 255, 255), "%d", sSkirmishPlayer.team);
+                    alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, colorWhite, "%d", sSkirmishPlayer.team);
                 else
                     alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, makecol(128, 128, 128), "%d", sSkirmishPlayer.team);
 
