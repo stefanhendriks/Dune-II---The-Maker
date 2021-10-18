@@ -31,6 +31,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
     colorRed = makecol(255, 0, 0); // used for hover
     colorYellow = makecol(255, 207, 41);
     colorDarkerYellow = makecol(225, 177, 21); // a bit darker colorYellow to give some visual clue (hover color)
+    colorDisabled = makecol(128, 128, 128);
 
     // Basic coordinates
     topBarHeight = 21;
@@ -203,7 +204,7 @@ void cSetupSkirmishGameState::draw() const {
             }
         }
     } else {
-        textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, makecol(128, 128, 128), "Startpoints: %d",
+        textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, colorDisabled, "Startpoints: %d",
                                           iStartingPoints);
     }
 
@@ -211,67 +212,26 @@ void cSetupSkirmishGameState::draw() const {
     int wormsY = startPointsY + 32;
     int wormsHitBoxWidth = 130;
     int wormsHitBoxHeight = 16;
+    cRectangle wormsRect = cRectangle(wormsX, wormsY, wormsHitBoxWidth, wormsHitBoxHeight);
 
-    textDrawer.drawText(wormsX, wormsY, "Worms? : %d", spawnWorms);
-
-    if ((mouse_x >= wormsX && mouse_x <= (wormsX + wormsHitBoxWidth)) && (mouse_y >= wormsY && mouse_y <= (wormsY + wormsHitBoxHeight)))
-    {
-        textDrawer.drawText(wormsX, wormsY, colorRed, "Worms? : %d", spawnWorms);
-
-        if (mouse->isLeftButtonClicked())
-        {
-//            spawnWorms += 1;
-            if (spawnWorms > 4) {
-//                spawnWorms = 0;
-            }
-        }
-        if (mouse->isRightButtonClicked())
-        {
-//            spawnWorms -= 1;
-            if (spawnWorms < 0) {
-//                spawnWorms = 4;
-            }
-        }
-    }
+    drawWorms(wormsRect);
 
     int bloomsX = screen_x - widthOfSomething;
     int bloomsY = wormsY + 32;
     int bloomsHitBoxWidth = 130;
     int bloomsHitBoxHeight = 16;
+    cRectangle bloomsRect = cRectangle(bloomsX, bloomsY, bloomsHitBoxWidth, bloomsHitBoxHeight);
 
-    textDrawer.drawText(bloomsX, bloomsY, "Spice blooms : %s", spawnBlooms ? "YES" : "NO");
+    drawBlooms(bloomsRect);
 
-    if ((mouse_x >= bloomsX && mouse_x <= (bloomsX + bloomsHitBoxWidth)) && (mouse_y >= bloomsY && mouse_y <= (bloomsY + bloomsHitBoxHeight)))
-    {
-        textDrawer.drawText(bloomsX, bloomsY, colorRed, "Spice blooms : %s", spawnBlooms ? "YES" : "NO");
-
-        if (mouse->isLeftButtonClicked())
-        {
-//            spawnBlooms = !spawnBlooms;
-        }
-    }
 
     int detonateX = screen_x - widthOfSomething;
     int detonateY = bloomsY + 32;
-    if (spawnBlooms) {
-        int detonateHitBoxWidth = 130;
-        int detonateHitBoxHeight = 16;
+    int detonateHitBoxWidth = 130;
+    int detonateHitBoxHeight = 16;
+    cRectangle detonateBloomsRect = cRectangle(detonateX, detonateY, detonateHitBoxWidth, detonateHitBoxHeight);
 
-        textDrawer.drawText(detonateX, detonateY, "Auto-detonate : %s", detonateBlooms ? "YES" : "NO");
-
-        if ((mouse_x >= detonateX && mouse_x <= (detonateX + detonateHitBoxWidth)) && (mouse_y >= detonateY && mouse_y <= (detonateY + detonateHitBoxHeight)))
-        {
-            textDrawer.drawText(detonateX, detonateY, colorRed, "Auto-detonate : %s", detonateBlooms ? "YES" : "NO");
-
-            if (mouse->isLeftButtonClicked())
-            {
-//                detonateBlooms = !detonateBlooms;
-            }
-        }
-    } else {
-        textDrawer.drawText(detonateX, detonateY, makecol(128, 128, 128), "Auto-detonate : -");
-    }
-
+    drawDetonateBlooms(detonateBloomsRect);
     drawMapList(mapListTop, mapListFrame);
 
     int const iHeightPixels = topBarHeight;
@@ -322,7 +282,7 @@ void cSetupSkirmishGameState::draw() const {
                     if (sSkirmishPlayer.bPlaying)
                         alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, colorWhite, "  CPU");
                     else
-                        alfont_textprintf(bmp_screen, bene_font, 4,iDrawY, makecol(128,128,128), "  CPU");
+                        alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, colorDisabled, "  CPU");
                 }
             }
 
@@ -355,7 +315,7 @@ void cSetupSkirmishGameState::draw() const {
                 if (sSkirmishPlayer.bPlaying)
                     alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, colorWhite, "%s", cHouse);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, makecol(128, 128, 128), "%s", cHouse);
+                    alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, colorDisabled, "%s", cHouse);
 
             }
 
@@ -424,7 +384,7 @@ void cSetupSkirmishGameState::draw() const {
                 if (sSkirmishPlayer.bPlaying)
                     alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, colorWhite, "%d", sSkirmishPlayer.iCredits);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, makecol(128, 128, 128), "%d", sSkirmishPlayer.iCredits);
+                    alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, colorDisabled, "%d", sSkirmishPlayer.iCredits);
 
             }
 
@@ -472,7 +432,7 @@ void cSetupSkirmishGameState::draw() const {
                 if (sSkirmishPlayer.bPlaying)
                     alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, colorWhite, "%d", sSkirmishPlayer.startingUnits);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, makecol(128, 128, 128), "%d", sSkirmishPlayer.startingUnits);
+                    alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, colorDisabled, "%d", sSkirmishPlayer.startingUnits);
 
             }
 
@@ -518,7 +478,7 @@ void cSetupSkirmishGameState::draw() const {
                 if (sSkirmishPlayer.bPlaying)
                     alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, colorWhite, "%d", sSkirmishPlayer.team);
                 else
-                    alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, makecol(128, 128, 128), "%d", sSkirmishPlayer.team);
+                    alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, colorDisabled, "%d", sSkirmishPlayer.team);
 
             }
 
@@ -580,7 +540,7 @@ void cSetupSkirmishGameState::draw() const {
         if (iSkirmishMap > -1) {
             textDrawer.drawTextBottomRight(colorRed, "START");
         } else {
-            textDrawer.drawTextBottomRight(makecol(128, 128, 128), "START");
+            textDrawer.drawTextBottomRight(colorDisabled, "START");
         }
     } // mouse hovers over "START"
 
@@ -594,6 +554,65 @@ void cSetupSkirmishGameState::draw() const {
     if (bFadeOut) {
         game.START_FADING_OUT();
     }
+}
+
+void cSetupSkirmishGameState::drawDetonateBlooms(cRectangle &detonateBloomsRect) const {
+    if (spawnBlooms) {
+        int textColor = colorWhite;
+        if (detonateBloomsRect.isPointWithin(mouse_x, mouse_y))
+        {
+            textColor = colorRed;
+            if (mouse->isLeftButtonClicked())
+            {
+//                detonateBlooms = !detonateBlooms;
+            }
+        }
+        textDrawer.drawText(detonateBloomsRect.getX(), detonateBloomsRect.getY(), textColor, "Auto-detonate : %s", detonateBlooms
+                                                                                                                   ? "YES" : "NO");
+
+    } else {
+        textDrawer.drawText(detonateBloomsRect.getX(), detonateBloomsRect.getY(), colorDisabled, "Auto-detonate : -");
+    }
+}
+
+void cSetupSkirmishGameState::drawBlooms(cRectangle &bloomsRect) const {
+    int textColor = colorWhite;
+
+    if (bloomsRect.isPointWithin(mouse_x, mouse_y))
+    {
+        textColor = colorRed;
+        if (mouse->isLeftButtonClicked())
+        {
+//            spawnBlooms = !spawnBlooms;
+        }
+    }
+
+    textDrawer.drawText(bloomsRect.getX(), bloomsRect.getY(), textColor, "Spice blooms : %s", spawnBlooms ? "YES" : "NO");
+}
+
+void cSetupSkirmishGameState::drawWorms(cRectangle &wormsRect) const {
+    int textColor = colorWhite;
+    if (wormsRect.isPointWithin(mouse_x, mouse_y))
+    {
+        textColor = colorRed;
+
+        if (mouse->isLeftButtonClicked())
+        {
+//            spawnWorms += 1;
+            if (spawnWorms > 4) {
+//                spawnWorms = 0;
+            }
+        }
+        if (mouse->isRightButtonClicked())
+        {
+//            spawnWorms -= 1;
+            if (spawnWorms < 0) {
+//                spawnWorms = 4;
+            }
+        }
+    }
+
+    textDrawer.drawText(wormsRect.getX(), wormsRect.getY(), textColor, "Worms? : %d", spawnWorms);
 }
 
 void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap) {
