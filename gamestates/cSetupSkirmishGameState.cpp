@@ -56,8 +56,7 @@ void cSetupSkirmishGameState::draw() const {
     // title box
     GUI_DRAW_FRAME(-1, -1, topBarWidth, topBarHeight);
 
-    int creditsX = (screen_x / 2) - (alfont_text_length(bene_font, "Skirmish") / 2);
-    textDrawer.drawText(creditsX, 1, "Skirmish");
+    textDrawer.drawTextCentered("Skirmish", 1);
 
     int widthOfSomething = 300; //??
     int topRightBoxWidth = widthOfSomething + 2;
