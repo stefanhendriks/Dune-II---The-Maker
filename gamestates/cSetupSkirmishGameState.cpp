@@ -123,50 +123,13 @@ void cSetupSkirmishGameState::draw() const {
     ///////
     /// DRAW PREVIEW MAP
     //////
+    cRectangle previewMapRect = cRectangle(previewMapX, previewMapY, previewMapWidth, previewMapHeight);
 
     // iSkirmishMap holds an index of which map to load, where index 0 means random map generated, although
     // this is only meaningful for rendering, the loading (more below) of that map does not care if it is
     // randomly generated or not.
-    int iSkirmishMap = game.iSkirmishMap;
-    if (iSkirmishMap > -1) {
-        s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
-        // Render skirmish map as-is (pre-loaded map)
-        if (iSkirmishMap > 0) {
-            if (selectedMap.name[0] != '\0') {
-                if (selectedMap.terrain) {
-                    draw_sprite(bmp_screen, selectedMap.terrain, previewMapX, previewMapY);
-                }
-
-                // count starting points
-                for (int s : selectedMap.iStartCell) {
-                    if (s > -1) {
-                        iStartingPoints++;
-                    }
-                }
-            }
-        } else {
-            // render the 'random generated skirmish map'
-            iStartingPoints = game.iSkirmishStartPoints;
-
-            // when mouse is hovering, draw it, else do not
-            if ((mouse_x >= previewMapX && mouse_x < (previewMapX + previewMapWidth) && (mouse_y >= previewMapY && mouse_y < (previewMapY + previewMapHeight))))
-            {
-                if (selectedMap.name[0] != '\0') {
-                    if (selectedMap.terrain) {
-                        draw_sprite(bmp_screen, selectedMap.terrain, previewMapX, previewMapY);
-                    }
-                }
-            }
-            else
-            {
-                if (selectedMap.name[0] != '\0') {
-                    if (selectedMap.terrain) {
-                        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat, previewMapX, previewMapY);
-                    }
-                }
-            }
-        }
-    }
+    int iSkirmishMap;
+    drawPreviewMapAndMore(previewMapRect, iStartingPoints, iSkirmishMap);
 
     int startPointsX = screen_x - widthOfSomething;
     int startPointsY = previewMapY;
@@ -553,6 +516,52 @@ void cSetupSkirmishGameState::draw() const {
 
     if (bFadeOut) {
         game.START_FADING_OUT();
+    }
+}
+
+void
+cSetupSkirmishGameState::drawPreviewMapAndMore(cRectangle &previewMapRect, int &iStartingPoints,
+                                               int &iSkirmishMap) const {
+    iSkirmishMap= ::game.iSkirmishMap;
+    if (iSkirmishMap > -1) {
+        s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
+        // Render skirmish map as-is (pre-loaded map)
+        if (iSkirmishMap > 0) {
+            if (selectedMap.name[0] != '\0') {
+                if (selectedMap.terrain) {
+                    draw_sprite(bmp_screen, selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
+                }
+
+                // count starting points
+                for (int s : selectedMap.iStartCell) {
+                    if (s > -1) {
+                        iStartingPoints++;
+                    }
+                }
+            }
+        } else {
+            // render the 'random generated skirmish map'
+            iStartingPoints = game.iSkirmishStartPoints;
+
+            // when mouse is hovering, draw it, else do not
+//            if ((mouse_x >= previewMapX && mouse_x < (previewMapX + previewMapWidth) && (mouse_y >= previewMapY && mouse_y < (previewMapY + previewMapHeight))))
+            if (previewMapRect.isPointWithin(mouse_x, mouse_y))
+            {
+                if (selectedMap.name[0] != '\0') {
+                    if (selectedMap.terrain) {
+                        draw_sprite(bmp_screen, selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
+                    }
+                }
+            }
+            else
+            {
+                if (selectedMap.name[0] != '\0') {
+                    if (selectedMap.terrain) {
+                        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat, previewMapRect.getX(), previewMapRect.getY());
+                    }
+                }
+            }
+        }
     }
 }
 
