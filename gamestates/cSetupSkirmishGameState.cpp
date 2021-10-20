@@ -133,43 +133,11 @@ void cSetupSkirmishGameState::draw() const {
 
     int startPointsX = screen_x - widthOfSomething;
     int startPointsY = previewMapY;
+    int startPointHitBoxWidth = 130;
+    int startPointHitBoxHeight = 16;
+    cRectangle startPoints = cRectangle(startPointsX, startPointsY, startPointHitBoxWidth, startPointHitBoxHeight);
 
-    bool bDoRandomMap = false;
-
-    if (game.iSkirmishMap == 0) {
-        int startPointHitBoxWidth = 130;
-        int startPointHitBoxHeight = 16;
-        textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, "Startpoints: %d", iStartingPoints);
-
-        if ((mouse_x >= startPointsX && mouse_x <= (startPointsX + startPointHitBoxWidth)) &&
-            (mouse_y >= startPointsY && mouse_y <= (startPointsY + startPointHitBoxHeight))) {
-            textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, colorRed, "Startpoints: %d",
-                                              iStartingPoints);
-
-            if (mouse->isLeftButtonClicked()) {
-                game.iSkirmishStartPoints++;
-
-                if (game.iSkirmishStartPoints > 4) {
-                    game.iSkirmishStartPoints = 2;
-                }
-
-                bDoRandomMap = true;
-            }
-
-            if (mouse->isRightButtonClicked()) {
-                game.iSkirmishStartPoints--;
-
-                if (game.iSkirmishStartPoints < 2) {
-                    game.iSkirmishStartPoints = 4;
-                }
-
-                bDoRandomMap = true;
-            }
-        }
-    } else {
-        textDrawer.drawTextWithOneInteger(startPointsX, startPointsY, colorDisabled, "Startpoints: %d",
-                                          iStartingPoints);
-    }
+    bool bDoRandomMap = drawStartPoints(iStartingPoints, startPoints);
 
     int wormsX = screen_x - widthOfSomething;
     int wormsY = startPointsY + 32;
@@ -210,24 +178,27 @@ void cSetupSkirmishGameState::draw() const {
 
     // draw players who will be playing ;)
     for (int p=0; p < (AI_WORM-1); p++)	{
-        int iDrawY=playerListBarY + 4 +(p*22);
+        int iDrawY= playerListBarY + 4 + (p*22);
+        int iDrawX = 4;
+
         const s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
 
         if (p < iStartingPoints) {
             // player playing or not
             if (p == HUMAN)	{
-                alfont_textprintf(bmp_screen, bene_font, 4,iDrawY+1, makecol(0,0,0), "Human");
-                alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, colorWhite, "Human");
+                textDrawer.drawText(iDrawX, iDrawY, "Human");
+//                alfont_textprintf(bmp_screen, bene_font, iDrawX,iDrawY+1, makecol(0,0,0), "Human");
+//                alfont_textprintf(bmp_screen, bene_font, iDrawX, iDrawY, colorWhite, "Human");
             } else {
-                alfont_textprintf(bmp_screen, bene_font, 4,iDrawY+1, makecol(0,0,0), "  CPU");
+                alfont_textprintf(bmp_screen, bene_font, iDrawX,iDrawY+1, makecol(0,0,0), "  CPU");
 
                 // move hovers over... :/
-                if ((mouse_x >= 4 && mouse_x <= 73) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16))) {
+                if ((mouse_x >= iDrawX && mouse_x <= 73) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16))) {
                     if (sSkirmishPlayer.bPlaying) {
-                        alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, selectedRedFadeColor, "  CPU");
+                        alfont_textprintf(bmp_screen, bene_font, iDrawX, iDrawY, selectedRedFadeColor, "  CPU");
                     } else {
                         // not available
-                        alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, disabledFadeColor, "  CPU");
+                        alfont_textprintf(bmp_screen, bene_font, iDrawX, iDrawY, disabledFadeColor, "  CPU");
                     }
 
                     // only allow changing 'playing' state of CPU 2 or 3 (not 1, as there should always be one
@@ -243,9 +214,9 @@ void cSetupSkirmishGameState::draw() const {
                 else
                 {
                     if (sSkirmishPlayer.bPlaying)
-                        alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, colorWhite, "  CPU");
+                        alfont_textprintf(bmp_screen, bene_font, iDrawX, iDrawY, colorWhite, "  CPU");
                     else
-                        alfont_textprintf(bmp_screen, bene_font, 4, iDrawY, colorDisabled, "  CPU");
+                        alfont_textprintf(bmp_screen, bene_font, iDrawX, iDrawY, colorDisabled, "  CPU");
                 }
             }
 
@@ -269,8 +240,7 @@ void cSetupSkirmishGameState::draw() const {
             if ((mouse_x >= houseX && mouse_x <= houseX+76) && (mouse_y >= iDrawY && mouse_y <= (iDrawY + 16)))
                 bHover=true;
 
-            if (p == 0)
-            {
+            if (p == 0) {
                 alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, colorWhite, "%s", cHouse);
             }
             else
@@ -282,8 +252,7 @@ void cSetupSkirmishGameState::draw() const {
 
             }
 
-            if (bHover)
-            {
+            if (bHover) {
                 if (sSkirmishPlayer.bPlaying)
                     alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, selectedRedFadeColor, "%s", cHouse);
                 else
@@ -338,8 +307,7 @@ void cSetupSkirmishGameState::draw() const {
             if ((mouse_x >= creditsTextX && mouse_x <= creditsTextX+56) && (mouse_y >= iDrawY && mouse_y <= (iDrawY + 16)))
                 bHover=true;
 
-            if (p == 0)
-            {
+            if (p == 0) {
                 alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, colorWhite, "%d", sSkirmishPlayer.iCredits);
             }
             else
@@ -351,8 +319,7 @@ void cSetupSkirmishGameState::draw() const {
 
             }
 
-            if (bHover)
-            {
+            if (bHover) {
                 if (sSkirmishPlayer.bPlaying)
                     alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, selectedRedFadeColor, "%d", sSkirmishPlayer.iCredits);
                 else
@@ -517,6 +484,41 @@ void cSetupSkirmishGameState::draw() const {
     if (bFadeOut) {
         game.START_FADING_OUT();
     }
+}
+
+bool cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, cRectangle &startPoints) const {
+    bool bDoRandomMap = false;
+
+    int textColor = colorWhite;
+    if (game.iSkirmishMap == 0) { // random map selected
+        if (startPoints.isPointWithin(mouse_x, mouse_y)) {
+            textColor = colorRed;
+
+            if (mouse->isLeftButtonClicked()) {
+                game.iSkirmishStartPoints++;
+
+                if (game.iSkirmishStartPoints > 4) {
+                    game.iSkirmishStartPoints = 2;
+                }
+
+                bDoRandomMap = true;
+            }
+
+            if (mouse->isRightButtonClicked()) {
+                game.iSkirmishStartPoints--;
+
+                if (game.iSkirmishStartPoints < 2) {
+                    game.iSkirmishStartPoints = 4;
+                }
+
+                bDoRandomMap = true;
+            }
+        }
+    } else {
+        textColor = colorDisabled;
+    }
+    textDrawer.drawTextWithOneInteger(startPoints.getX(), startPoints.getY(), textColor, "Startpoints: %d", iStartingPoints);
+    return bDoRandomMap;
 }
 
 void
