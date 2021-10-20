@@ -7,6 +7,7 @@ class cGame;
 #include "cGameState.h"
 
 struct s_SkirmishPlayer {
+    bool bHuman;
     bool bPlaying;
     int startingUnits;
     int iCredits;
@@ -70,6 +71,8 @@ private:
     void drawPreviewMapAndMore(cRectangle &previewMapRect, int &iStartingPoints, int &iSkirmishMap) const;
 
     bool drawStartPoints(int iStartingPoints, cRectangle &startPoints) const;
+
+    void drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &brainRect) const;
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H

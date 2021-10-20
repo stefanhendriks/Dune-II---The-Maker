@@ -4,17 +4,20 @@
 
 cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(theGame) {
     for (int i = 0; i < MAX_PLAYERS; i++) {
+        s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[i];
         // index 0 == human player, but to keep our lives sane we don't change the index.
 
         // player 0 (HUMAN) is always playing,
+        sSkirmishPlayer.bHuman = i == 0;
+
         // and 1 additional AI is minimally required to play
-        skirmishPlayer[i].bPlaying = (i <= 1);
+        sSkirmishPlayer.bPlaying = (i <= 1);
 
         // just some defaults
-        skirmishPlayer[i].startingUnits = 3;
-        skirmishPlayer[i].iCredits = 2500;
-        skirmishPlayer[i].iHouse = 0; // random house
-        skirmishPlayer[i].team = (i+1); // all different team
+        sSkirmishPlayer.startingUnits = 3;
+        sSkirmishPlayer.iCredits = 2500;
+        sSkirmishPlayer.iHouse = 0; // random house
+        sSkirmishPlayer.team = (i + 1); // all different team
     }
     textDrawer = cTextDrawer(bene_font);
 
@@ -185,40 +188,10 @@ void cSetupSkirmishGameState::draw() const {
 
         if (p < iStartingPoints) {
             // player playing or not
-            if (p == HUMAN)	{
-                textDrawer.drawText(iDrawX, iDrawY, "Human");
-//                alfont_textprintf(bmp_screen, bene_font, iDrawX,iDrawY+1, makecol(0,0,0), "Human");
-//                alfont_textprintf(bmp_screen, bene_font, iDrawX, iDrawY, colorWhite, "Human");
-            } else {
-                alfont_textprintf(bmp_screen, bene_font, iDrawX,iDrawY+1, makecol(0,0,0), "  CPU");
 
-                // move hovers over... :/
-                if ((mouse_x >= iDrawX && mouse_x <= 73) && (mouse_y >= iDrawY && mouse_y <= (iDrawY+16))) {
-                    if (sSkirmishPlayer.bPlaying) {
-                        alfont_textprintf(bmp_screen, bene_font, iDrawX, iDrawY, selectedRedFadeColor, "  CPU");
-                    } else {
-                        // not available
-                        alfont_textprintf(bmp_screen, bene_font, iDrawX, iDrawY, disabledFadeColor, "  CPU");
-                    }
+            cRectangle brainRect = cRectangle(iDrawX, iDrawY, 73, 16);
 
-                    // only allow changing 'playing' state of CPU 2 or 3 (not 1, as there should always be one
-                    // playing CPU)
-//                    if (p > 1 && mouse->isLeftButtonClicked())	{
-//                        if (sSkirmishPlayer.bPlaying) {
-//                            sSkirmishPlayer.bPlaying = false;
-//                        } else {
-//                            sSkirmishPlayer.bPlaying = true;
-//                        }
-//                    }
-                }
-                else
-                {
-                    if (sSkirmishPlayer.bPlaying)
-                        alfont_textprintf(bmp_screen, bene_font, iDrawX, iDrawY, colorWhite, "  CPU");
-                    else
-                        alfont_textprintf(bmp_screen, bene_font, iDrawX, iDrawY, colorDisabled, "  CPU");
-                }
-            }
+            drawPlayerBrain(sSkirmishPlayer, brainRect);
 
             // HOUSE
             bHover=false;
@@ -483,6 +456,45 @@ void cSetupSkirmishGameState::draw() const {
 
     if (bFadeOut) {
         game.START_FADING_OUT();
+    }
+}
+
+void cSetupSkirmishGameState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &brainRect) const {
+
+    int selectedRedFadeColor = game.getColorFadeSelected(255, 0, 0);
+    int disabledFadeColor = game.getColorFadeSelected(128, 128, 128);
+
+    if (sSkirmishPlayer.bHuman) {
+        textDrawer.drawText(brainRect.getX(), brainRect.getY(), "Human");
+    } else {
+        int textColor = colorWhite;
+
+        // move hovers over... :/
+        if (brainRect.isPointWithin(mouse_x, mouse_y)) {
+            if (sSkirmishPlayer.bPlaying) {
+                textColor = selectedRedFadeColor;
+            } else {
+                // not available
+                textColor = disabledFadeColor;
+            }
+
+            // only allow changing 'playing' state of CPU 2 or 3 (not 1, as there should always be one
+            // playing CPU)
+//                    if (p > 1 && mouse->isLeftButtonClicked())	{
+//                        if (sSkirmishPlayer.bPlaying) {
+//                            sSkirmishPlayer.bPlaying = false;
+//                        } else {
+//                            sSkirmishPlayer.bPlaying = true;
+//                        }
+//                    }
+        } else {
+            if (sSkirmishPlayer.bPlaying) {
+                textColor = colorWhite;
+            } else {
+                textColor = colorDisabled;
+            }
+        }
+        textDrawer.drawText(brainRect.getX(), brainRect.getY(), textColor, "  CPU");
     }
 }
 
