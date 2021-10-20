@@ -68,6 +68,8 @@ private:
     void drawDetonateBlooms(cRectangle &detonateBloomsRect) const;
 
     void drawPreviewMapAndMore(cRectangle &previewMapRect, int &iStartingPoints, int &iSkirmishMap) const;
+
+    bool drawStartPoints(int iStartingPoints, cRectangle &startPoints) const;
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H
