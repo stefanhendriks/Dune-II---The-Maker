@@ -73,6 +73,16 @@ private:
     bool drawStartPoints(int iStartingPoints, cRectangle &startPoints) const;
 
     void drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &brainRect) const;
+
+    void drawHouse(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &houseRec) const;
+
+    void drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &creditsRect) const;
+
+    int getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &rect) const;
+
+    void drawStartingPoints(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &startingUnitsRect) const;
+
+    void drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &teamsRect) const;
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H

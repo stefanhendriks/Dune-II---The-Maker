@@ -58,8 +58,6 @@ void cSetupSkirmishGameState::draw() const {
     int screen_x = game.screen_x;
     int screen_y = game.screen_y;
 
-    bool bFadeOut=false;
-
     draw_sprite(bmp_screen,(BITMAP *)gfxinter[BMP_GAME_DUNE].dat, game.screen_x * 0.2, (game.screen_y * 0.5));
 
     for (int dy=0; dy < game.screen_y; dy+=2) {
@@ -158,7 +156,6 @@ void cSetupSkirmishGameState::draw() const {
 
     drawBlooms(bloomsRect);
 
-
     int detonateX = screen_x - widthOfSomething;
     int detonateY = bloomsY + 32;
     int detonateHitBoxWidth = 130;
@@ -168,16 +165,8 @@ void cSetupSkirmishGameState::draw() const {
     drawDetonateBlooms(detonateBloomsRect);
     drawMapList(mapListTop, mapListFrame);
 
-    int const iHeightPixels = topBarHeight;
-
     // Header text for players
-    alfont_textprintf(bmp_screen, bene_font, 4, 26, makecol(0,0,0), "Player      House      Credits       Units    Team");
-    alfont_textprintf(bmp_screen, bene_font, 4, 25, colorWhite, "Player      House      Credits       Units    Team");
-
-    bool bHover=false;
-
-    int selectedRedFadeColor = game.getColorFadeSelected(255, 0, 0);
-    int disabledFadeColor = game.getColorFadeSelected(128, 128, 128);
+    textDrawer.drawText(4, 25, "Player      House      Credits       Units    Team");
 
     // draw players who will be playing ;)
     for (int p=0; p < (AI_WORM-1); p++)	{
@@ -194,43 +183,164 @@ void cSetupSkirmishGameState::draw() const {
             drawPlayerBrain(sSkirmishPlayer, brainRect);
 
             // HOUSE
-            bHover=false;
-            char cHouse[30];
-            memset(cHouse, 0, sizeof(cHouse));
-
             cPlayer &cPlayer = players[p];
 
-
-            if (sSkirmishPlayer.iHouse > 0) {
-                sprintf(cHouse, cPlayer::getHouseNameForId(sSkirmishPlayer.iHouse).c_str());
-            } else {
-                sprintf(cHouse, "Random");
-            }
-
             int houseX = 74;
-            alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY + 1, makecol(0, 0, 0), "%s", cHouse);
+            int houseY = iDrawY;
+            cRectangle houseRec = cRectangle(houseX, houseY, 76, 16);
 
-            if ((mouse_x >= houseX && mouse_x <= houseX+76) && (mouse_y >= iDrawY && mouse_y <= (iDrawY + 16)))
-                bHover=true;
+            drawHouse(sSkirmishPlayer, houseRec);
 
-            if (p == 0) {
-                alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, colorWhite, "%s", cHouse);
-            }
-            else
-            {
-                if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, colorWhite, "%s", cHouse);
-                else
-                    alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, colorDisabled, "%s", cHouse);
+            // Credits
+            int creditsX = 174;
+            int creditsY = iDrawY;
+            cRectangle creditsRect = cRectangle(creditsX, creditsY, 56, 16);
 
-            }
+            drawCredits(sSkirmishPlayer, creditsRect);
 
-            if (bHover) {
-                if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, selectedRedFadeColor, "%s", cHouse);
-                else
-                    alfont_textprintf(bmp_screen, bene_font, houseX, iDrawY, disabledFadeColor, "%s", cHouse);
+            // Units
+            int startingUnitsX = 272;
+            int startingUnitsY = iDrawY;
+            cRectangle startingUnitsRect = cRectangle(startingUnitsX, startingUnitsY, 21, 16);
+            drawStartingPoints(sSkirmishPlayer, startingUnitsRect);
 
+            // Credits
+            int teamsX = 340;
+            int teamsY = iDrawY;
+            cRectangle teamsRect = cRectangle(teamsX, teamsY, 21, 16);
+            drawTeams(sSkirmishPlayer, teamsRect);
+        }
+    }
+
+    cRectangle bottomBarRect = cRectangle(-1, screen_y - topBarHeight, screen_x + 2, topBarHeight + 2);
+    allegroDrawer->gui_DrawRect(bmp_screen, bottomBarRect);
+
+
+    // back
+    int backButtonWidth = textDrawer.textLength(" BACK");
+    int backButtonHeight = topBarHeight;
+    int backButtonY = screen_y - topBarHeight;
+    int backButtonX = 0;
+    cRectangle backButtonRect = cRectangle(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
+    int textColorBackButton = backButtonRect.isPointWithin(mouse_x, mouse_y) ? colorRed : colorWhite;
+    textDrawer.drawTextBottomLeft(textColorBackButton, " BACK");
+
+    // start
+    int startButtonWidth = textDrawer.textLength("START");
+    int startButtonHeight = topBarHeight;
+    int startButtonY = screen_y - topBarHeight;
+    int startButtonX = screen_x - startButtonWidth;
+    cRectangle startButtonRect = cRectangle(startButtonX, startButtonY, startButtonWidth, startButtonHeight);
+
+    int textColorStartButton = colorWhite;
+    if (startButtonRect.isPointWithin(mouse_x, mouse_y)) {
+        // startButtonRect.isPointWithin(mouse_x, mouse_y) ? colorRed :
+        textColorStartButton = iSkirmishMap > -1 ? colorRed : colorDisabled;
+    }
+
+    textDrawer.drawTextBottomRight(textColorStartButton, "START");
+
+    if (bDoRandomMap) {
+//        randomMapGenerator.generateRandomMap();
+//        spawnWorms = map.isBigMap() ? 4 : 2;
+    }
+
+    // MOUSE
+    mouse->draw();
+
+    if (DEBUGGING && key[KEY_TAB]) {
+        textDrawer.drawTextWithTwoIntegers(mouse_x+16, mouse_y+16, "%d,%d", mouse_x, mouse_y);
+    }
+}
+
+void cSetupSkirmishGameState::drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &teamsRect) const {
+    int textColor = getTextColorForRect(sSkirmishPlayer, teamsRect);
+    // on click:
+//                if (mouse->isLeftButtonClicked())
+//                {
+//                    sSkirmishPlayer.team++;
+//                    if (sSkirmishPlayer.team > iStartingPoints) {
+//                        sSkirmishPlayer.team = 1;
+//                    }
+//                }
+//
+//                if (mouse->isRightButtonClicked())
+//                {
+//                    sSkirmishPlayer.team--;
+//                    if (sSkirmishPlayer.team < 1) {
+//                        sSkirmishPlayer.team = iStartingPoints;
+//                    }
+//                }
+
+    textDrawer.drawText(teamsRect.getX(), teamsRect.getY(), textColor, "%d", sSkirmishPlayer.team);
+}
+
+void
+cSetupSkirmishGameState::drawStartingPoints(const s_SkirmishPlayer &sSkirmishPlayer,
+                                            cRectangle &startingUnitsRect) const {//rect(bmp_screen, 269, iDrawY, 290, iDrawY+16, makecol(255,255,255));
+
+    int textColor = getTextColorForRect(sSkirmishPlayer, startingUnitsRect);
+
+    // on click:
+//                if (mouse->isLeftButtonClicked())
+//                {
+//                    sSkirmishPlayer.startingUnits++;
+//                    if (sSkirmishPlayer.startingUnits > 10) {
+//                        sSkirmishPlayer.startingUnits = 1;
+//                    }
+//                }
+//
+//                if (mouse->isRightButtonClicked())
+//                {
+//                    sSkirmishPlayer.startingUnits--;
+//                    if (sSkirmishPlayer.startingUnits < 1) {
+//                        sSkirmishPlayer.startingUnits = 10;
+//                    }
+//                }
+
+    textDrawer.drawText(startingUnitsRect.getX(), startingUnitsRect.getY(), textColor, "%d", sSkirmishPlayer.startingUnits);
+}
+
+void cSetupSkirmishGameState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &creditsRect) const {
+    int textColor = getTextColorForRect(sSkirmishPlayer, creditsRect);
+    // on click:
+    //                if (mouse->isLeftButtonClicked())
+//                {
+//                    sSkirmishPlayer.iCredits += 500;
+//                    if (sSkirmishPlayer.iCredits > 10000) {
+//                        sSkirmishPlayer.iCredits = 1000;
+//                    }
+//                }
+//
+//                if (mouse->isRightButtonClicked())
+//                {
+//                    sSkirmishPlayer.iCredits -= 500;
+//                    if (sSkirmishPlayer.iCredits < 1000) {
+//                        sSkirmishPlayer.iCredits = 10000;
+//                    }
+//                }
+
+    textDrawer.drawText(creditsRect.getX(), creditsRect.getY(), textColor, "%d", sSkirmishPlayer.iCredits);
+}
+
+int cSetupSkirmishGameState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &rect) const {
+    if (rect.isPointWithin(mouse_x, mouse_y)) {
+        int colorSelectedRedFade = game.getColorFadeSelected(255, 0, 0);
+        int colorDisabledFade = game.getColorFadeSelected(128, 128, 128);
+        return sSkirmishPlayer.bPlaying ? colorSelectedRedFade : colorDisabledFade;
+    }
+
+    if (sSkirmishPlayer.bHuman) { // should be redundant when player is always bPlaying?
+        return colorWhite;
+    }
+
+    return sSkirmishPlayer.bPlaying ? colorWhite : colorDisabled;
+}
+
+void cSetupSkirmishGameState::drawHouse(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &houseRec) const {
+    int textColor = getTextColorForRect(sSkirmishPlayer, houseRec);
+
+    // on click:
 
 //                if (mouse->isLeftButtonClicked())
 //                {
@@ -267,219 +377,21 @@ void cSetupSkirmishGameState::draw() const {
 //                        }
 //                    }
 //                }
-            }
 
-            // Credits
-            bHover=false;
-
-            int creditsTextX = 174;
-            alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY + 1, makecol(0, 0, 0), "%d", sSkirmishPlayer.iCredits);
-
-            //rect(bmp_screen, 174, iDrawY, 230, iDrawY+16, makecol(255,255,255));
-
-            if ((mouse_x >= creditsTextX && mouse_x <= creditsTextX+56) && (mouse_y >= iDrawY && mouse_y <= (iDrawY + 16)))
-                bHover=true;
-
-            if (p == 0) {
-                alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, colorWhite, "%d", sSkirmishPlayer.iCredits);
-            }
-            else
-            {
-                if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, colorWhite, "%d", sSkirmishPlayer.iCredits);
-                else
-                    alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, colorDisabled, "%d", sSkirmishPlayer.iCredits);
-
-            }
-
-            if (bHover) {
-                if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, selectedRedFadeColor, "%d", sSkirmishPlayer.iCredits);
-                else
-                    alfont_textprintf(bmp_screen, bene_font, creditsTextX, iDrawY, disabledFadeColor, "%d", sSkirmishPlayer.iCredits);
-
-//                if (mouse->isLeftButtonClicked())
-//                {
-//                    sSkirmishPlayer.iCredits += 500;
-//                    if (sSkirmishPlayer.iCredits > 10000) {
-//                        sSkirmishPlayer.iCredits = 1000;
-//                    }
-//                }
-//
-//                if (mouse->isRightButtonClicked())
-//                {
-//                    sSkirmishPlayer.iCredits -= 500;
-//                    if (sSkirmishPlayer.iCredits < 1000) {
-//                        sSkirmishPlayer.iCredits = 10000;
-//                    }
-//                }
-            }
-
-            // Units
-            bHover = false;
-
-            int startingUnitsX = 272;
-            alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY + 1, makecol(0, 0, 0), "%d", sSkirmishPlayer.startingUnits);
-
-            //rect(bmp_screen, 269, iDrawY, 290, iDrawY+16, makecol(255,255,255));
-
-            if ((mouse_x >= startingUnitsX && mouse_x <= startingUnitsX+21) && (mouse_y >= iDrawY && mouse_y <= (iDrawY + 16)))
-                bHover=true;
-
-            if (p == 0)
-            {
-                alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, colorWhite, "%d", sSkirmishPlayer.startingUnits);
-            }
-            else
-            {
-                if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, colorWhite, "%d", sSkirmishPlayer.startingUnits);
-                else
-                    alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, colorDisabled, "%d", sSkirmishPlayer.startingUnits);
-
-            }
-
-            if (bHover)
-            {
-                if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, selectedRedFadeColor, "%d", sSkirmishPlayer.startingUnits);
-                else
-                    alfont_textprintf(bmp_screen, bene_font, startingUnitsX, iDrawY, disabledFadeColor, "%d", sSkirmishPlayer.startingUnits);
-
-//                if (mouse->isLeftButtonClicked())
-//                {
-//                    sSkirmishPlayer.startingUnits++;
-//                    if (sSkirmishPlayer.startingUnits > 10) {
-//                        sSkirmishPlayer.startingUnits = 1;
-//                    }
-//                }
-//
-//                if (mouse->isRightButtonClicked())
-//                {
-//                    sSkirmishPlayer.startingUnits--;
-//                    if (sSkirmishPlayer.startingUnits < 1) {
-//                        sSkirmishPlayer.startingUnits = 10;
-//                    }
-//                }
-            }
-
-            // Team
-            bHover=false;
-
-            int teamsX = 340;
-            alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY + 1, makecol(0, 0, 0), "%d", sSkirmishPlayer.team);
-
-            if ((mouse_x >= teamsX && mouse_x <= teamsX+21) && (mouse_y >= iDrawY && mouse_y <= (iDrawY + 16)))
-                bHover=true;
-
-            if (p == 0)
-            {
-                alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, colorWhite, "%d", sSkirmishPlayer.team);
-            }
-            else
-            {
-                if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, colorWhite, "%d", sSkirmishPlayer.team);
-                else
-                    alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, colorDisabled, "%d", sSkirmishPlayer.team);
-
-            }
-
-            if (bHover)
-            {
-                if (sSkirmishPlayer.bPlaying)
-                    alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, selectedRedFadeColor, "%d", sSkirmishPlayer.team);
-                else
-                    alfont_textprintf(bmp_screen, bene_font, teamsX, iDrawY, disabledFadeColor, "%d", sSkirmishPlayer.team);
-
-//                if (mouse->isLeftButtonClicked())
-//                {
-//                    sSkirmishPlayer.team++;
-//                    if (sSkirmishPlayer.team > iStartingPoints) {
-//                        sSkirmishPlayer.team = 1;
-//                    }
-//                }
-//
-//                if (mouse->isRightButtonClicked())
-//                {
-//                    sSkirmishPlayer.team--;
-//                    if (sSkirmishPlayer.team < 1) {
-//                        sSkirmishPlayer.team = iStartingPoints;
-//                    }
-//                }
-            }
-        }
-    }
-
-    GUI_DRAW_FRAME(-1, screen_y - topBarHeight, screen_x + 2, topBarHeight + 2);
-
-
-    // back
-    int backButtonWidth = textDrawer.textLength(" BACK");
-    int backButtonHeight = topBarHeight;
-    int backButtonY = screen_y - topBarHeight;
-    int backButtonX = 0;
-    textDrawer.drawTextBottomLeft(" BACK");
-
-    // start
-    int startButtonWidth = textDrawer.textLength("START");
-    int startButtonHeight = topBarHeight;
-    int startButtonY = screen_y - topBarHeight;
-    int startButtonX = screen_x - startButtonWidth;
-
-    textDrawer.drawTextBottomRight("START");
-
-    if (bDoRandomMap) {
-//        randomMapGenerator.generateRandomMap();
-//        spawnWorms = map.isBigMap() ? 4 : 2;
-    }
-
-    // back
-    if (MOUSE_WITHIN_RECT(backButtonX, backButtonY, backButtonWidth, backButtonHeight)) {
-        textDrawer.drawTextBottomLeft(colorRed, " BACK");
-    }
-
-    if (MOUSE_WITHIN_RECT(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
-        if (iSkirmishMap > -1) {
-            textDrawer.drawTextBottomRight(colorRed, "START");
-        } else {
-            textDrawer.drawTextBottomRight(colorDisabled, "START");
-        }
-    } // mouse hovers over "START"
-
-    // MOUSE
-    mouse->draw();
-
-    if (DEBUGGING && key[KEY_TAB]) {
-        textDrawer.drawTextWithTwoIntegers(mouse_x+16, mouse_y+16, "%d,%d", mouse_x, mouse_y);
-    }
-
-    if (bFadeOut) {
-        game.START_FADING_OUT();
-    }
+    const std::string &cPlayerHouseString = cPlayer::getHouseNameForId(sSkirmishPlayer.iHouse);
+    const char *cHouse = sSkirmishPlayer.iHouse > 0 ? cPlayerHouseString.c_str() : "Random";
+    textDrawer.drawText(houseRec.getX(), houseRec.getY(), textColor, cHouse);
 }
 
 void cSetupSkirmishGameState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &brainRect) const {
-
-    int selectedRedFadeColor = game.getColorFadeSelected(255, 0, 0);
-    int disabledFadeColor = game.getColorFadeSelected(128, 128, 128);
-
     if (sSkirmishPlayer.bHuman) {
         textDrawer.drawText(brainRect.getX(), brainRect.getY(), "Human");
     } else {
-        int textColor = colorWhite;
+        int textColor = getTextColorForRect(sSkirmishPlayer, brainRect);
 
-        // move hovers over... :/
-        if (brainRect.isPointWithin(mouse_x, mouse_y)) {
-            if (sSkirmishPlayer.bPlaying) {
-                textColor = selectedRedFadeColor;
-            } else {
-                // not available
-                textColor = disabledFadeColor;
-            }
-
-            // only allow changing 'playing' state of CPU 2 or 3 (not 1, as there should always be one
-            // playing CPU)
+        // on click:
+        // only allow changing 'playing' state of CPU 2 or 3 (not 1, as there should always be one
+        // playing CPU)
 //                    if (p > 1 && mouse->isLeftButtonClicked())	{
 //                        if (sSkirmishPlayer.bPlaying) {
 //                            sSkirmishPlayer.bPlaying = false;
@@ -487,13 +399,7 @@ void cSetupSkirmishGameState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishP
 //                            sSkirmishPlayer.bPlaying = true;
 //                        }
 //                    }
-        } else {
-            if (sSkirmishPlayer.bPlaying) {
-                textColor = colorWhite;
-            } else {
-                textColor = colorDisabled;
-            }
-        }
+
         textDrawer.drawText(brainRect.getX(), brainRect.getY(), textColor, "  CPU");
     }
 }
