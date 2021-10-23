@@ -28,6 +28,7 @@ class cTextDrawer {
 
         void drawText(int x, int y, int color, const char *msg) const;
         void drawText(int x, int y, int color, const char *msg, int var) const;
+        void drawText(int x, int y, const char *msg, int var1, int var2) const;
 		void drawText(int x, int y, int color, const char *msg, const char *var) const;
 
 		void drawTextCentered(const char * msg, int y) const;
