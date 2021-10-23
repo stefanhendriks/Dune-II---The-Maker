@@ -144,6 +144,10 @@ void cTextDrawer::drawText(int x, int y, int color, const char *msg, int var) co
     drawTextWithOneInteger(x, y, color, msg, var);
 }
 
+void cTextDrawer::drawText(int x, int y, const char *msg, int var1, int var2) const {
+    drawTextWithTwoIntegers(x, y, msg, var1, var2);
+}
+
 void cTextDrawer::drawText(int x, int y, const char *msg, int var) const {
     drawText(x, y, textColor, msg, var);
 }
