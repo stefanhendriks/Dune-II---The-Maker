@@ -52,37 +52,52 @@ private:
     int previewMapWidth;
     int widthOfSomething;
 
+    BITMAP *background;
+
     // screen
     int screen_x, screen_y;
+
+    // Rects
+    cRectangle topBar;
+    cRectangle playerTitleBar;
+    cRectangle topRightBox;
+    cRectangle playerList;
+    cRectangle mapListTop;
+    cRectangle mapListFrame;
+    cRectangle previewMapRect;
+    cRectangle startPoints;
+    cRectangle wormsRect;
+    cRectangle bloomsRect;
+    cRectangle detonateBloomsRect;
 
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
 
-    void drawMapList(cRectangle &mapList, cRectangle &mapListFrame) const;
+    void drawMapList(const cRectangle &mapList, const cRectangle &mapListFrame) const;
 
-    void drawWorms(cRectangle &wormsRect) const;
+    void drawWorms(const cRectangle &wormsRect) const;
 
-    void drawBlooms(cRectangle &bloomsRect) const;
+    void drawBlooms(const cRectangle &bloomsRect) const;
 
-    void drawDetonateBlooms(cRectangle &detonateBloomsRect) const;
+    void drawDetonateBlooms(const cRectangle &detonateBloomsRect) const;
 
-    void drawPreviewMapAndMore(cRectangle &previewMapRect, int &iStartingPoints, int &iSkirmishMap) const;
+    void drawPreviewMapAndMore(const cRectangle &previewMapRect, int &iStartingPoints, int &iSkirmishMap) const;
 
-    bool drawStartPoints(int iStartingPoints, cRectangle &startPoints) const;
+    bool drawStartPoints(int iStartingPoints, const cRectangle &startPoints) const;
 
-    void drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &brainRect) const;
+    void drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &brainRect) const;
 
-    void drawHouse(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &houseRec) const;
+    void drawHouse(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &houseRec) const;
 
-    void drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &creditsRect) const;
+    void drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &creditsRect) const;
 
-    int getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &rect) const;
+    int getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const;
 
-    void drawStartingPoints(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &startingUnitsRect) const;
+    void drawStartingPoints(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &startingUnitsRect) const;
 
-    void drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, cRectangle &teamsRect) const;
+    void drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &teamsRect) const;
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H

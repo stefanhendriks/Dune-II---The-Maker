@@ -53,6 +53,8 @@ class cAllegroDrawer {
         void gui_DrawRect(BITMAP *dest, const cRectangle &rectangle, int gui_colorWindow, int gui_colorBorderLight, int gui_colorBorderDark);
         void gui_DrawRectBorder(BITMAP *dest, const cRectangle &rectangle, int gui_colorBorderLight, int gui_colorBorderDark);
 
+    void drawLine(BITMAP *bmp, int x1, int y1, int x2, int y2, int color);
+
 protected:
 		int getCenteredXPosForBitmap(BITMAP *bmp, int totalWidth);
 		int getCenteredYPosForBitmap(BITMAP *bmp);

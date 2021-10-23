@@ -20,7 +20,7 @@ bool cRectangle::isOverlapping(cRectangle *other) {
     return false;
 }
 
-bool cRectangle::isPointWithin(int pointX, int pointY) {
+bool cRectangle::isPointWithin(int pointX, int pointY) const {
     return (pointX >= topLeft.x && pointX <= (topLeft.x + width)) &&
            (pointY >= topLeft.y && pointY <= (topLeft.y + height));
 }
