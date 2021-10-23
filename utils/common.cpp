@@ -1269,25 +1269,26 @@ void install_structures() {
 
     logbook("Installing:  STRUCTURES");
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
-        sStructureInfo[i].bmp = (BITMAP *) gfxdata[BUILD_WINDTRAP].dat; // in case an invalid bitmap, we are a windtrap
-        sStructureInfo[i].shadow = NULL; // in case an invalid bitmap, we are a windtrap
-        sStructureInfo[i].sight = 1;
-        sStructureInfo[i].bmp_width = 32 * 2;
-        sStructureInfo[i].bmp_height = 32 * 2;
-        sStructureInfo[i].hp = 1; // low health
-        sStructureInfo[i].fixhp = -1; // no fixing hp yet
-        sStructureInfo[i].fadecol = -1;
-        sStructureInfo[i].fademax = -1;
-        sStructureInfo[i].power_drain = 0;       // the power that this building drains...
-        sStructureInfo[i].power_give = 0;        // the power that this building gives...
-        sStructureInfo[i].cost = 0;
-        sStructureInfo[i].icon = -1; // stupid default icon
-        sStructureInfo[i].build_time = 0;
-        sStructureInfo[i].list = -1; // no list attached
-        sStructureInfo[i].queuable = false;
-        sStructureInfo[i].configured = false;
-        sStructureInfo[i].canAttackAirUnits = false;
-        strcpy(sStructureInfo[i].name, "Unknown");
+        s_StructureInfo &structureInfo = sStructureInfo[i];
+        structureInfo.bmp = (BITMAP *) gfxdata[BUILD_WINDTRAP].dat; // in case an invalid bitmap, we are a windtrap
+        structureInfo.shadow = nullptr; // in case an invalid bitmap, we are a windtrap
+        structureInfo.sight = 1;
+        structureInfo.bmp_width = 32 * 2;
+        structureInfo.bmp_height = 32 * 2;
+        structureInfo.hp = 1; // low health
+        structureInfo.fixhp = -1; // no fixing hp yet
+        structureInfo.fadecol = -1;
+        structureInfo.fademax = -1;
+        structureInfo.power_drain = 0;       // the power that this building drains...
+        structureInfo.power_give = 0;        // the power that this building gives...
+        structureInfo.cost = 0;
+        structureInfo.icon = -1; // stupid default icon
+        structureInfo.build_time = 0;
+        structureInfo.list = -1; // no list attached
+        structureInfo.queuable = false;
+        structureInfo.configured = false;
+        structureInfo.canAttackAirUnits = false;
+        strcpy(structureInfo.name, "Unknown");
     }
 
     // Single and 4 slabs
