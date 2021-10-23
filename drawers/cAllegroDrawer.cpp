@@ -291,3 +291,7 @@ void cAllegroDrawer::gui_DrawRectBorder(BITMAP *dest, const cRectangle &rectangl
     line(bmp_screen, x1+width, y1, x1+width , y1+height, gui_colorBorderDark);
     line(bmp_screen, x1, y1+height, x1+width , y1+height, gui_colorBorderDark);
 }
+
+void cAllegroDrawer::drawTransSprite(BITMAP *src, BITMAP *dest, int x, int y) {
+    draw_trans_sprite(dest, src, x, y);
+}
