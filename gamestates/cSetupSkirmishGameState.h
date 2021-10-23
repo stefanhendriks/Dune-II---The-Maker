@@ -4,6 +4,7 @@
 class cGame;
 
 #include <drawers/cTextDrawer.h>
+#include "gui/cGuiButton.h"
 #include "cGameState.h"
 
 struct s_SkirmishPlayer {
@@ -70,6 +71,9 @@ private:
     cRectangle bloomsRect;
     cRectangle detonateBloomsRect;
 
+    cGuiButton * backButton;
+    cGuiButton * startButton;
+
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
 
@@ -98,6 +102,8 @@ private:
     void drawStartingPoints(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &startingUnitsRect) const;
 
     void drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &teamsRect) const;
+
+    void onMouseMovedTo(const s_MouseEvent &event);
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H

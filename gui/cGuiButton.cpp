@@ -7,6 +7,7 @@ cGuiButton::cGuiButton(const cTextDrawer &textDrawer, const cRectangle &rect, co
     gui_colorBorderLight = makecol(252, 252, 252);
     focus = false;
     pressed = false;
+    enabled = true; // by default always enabled
     renderKind = eGuiButtonRenderKind::OPAQUE_WITHOUT_BORDER;
     textAlignHorizontal = eGuiTextAlignHorizontal::CENTER;
     text_color = makecol(255, 255, 255); // default white color
@@ -77,6 +78,9 @@ void cGuiButton::setRenderKind(eGuiButtonRenderKind value) {
 
 void cGuiButton::drawText() const {
     int textColor = focus ? text_colorHover : text_color;
+    if (!enabled) {
+        textColor = focus ? gui_colorBorderDark : gui_colorBorderLight;
+    }
 
     switch (textAlignHorizontal) {
         case eGuiTextAlignHorizontal::CENTER:
@@ -158,12 +162,14 @@ void cGuiButton::onMouseRightButtonClicked(const s_MouseEvent &event) {
 }
 
 void cGuiButton::onMouseLeftButtonPressed(const s_MouseEvent &event) {
-    pressed = focus;
+    if (enabled) {
+        pressed = focus;
+    }
 }
 
 void cGuiButton::onMouseLeftButtonClicked(const s_MouseEvent &event) {
     if (focus) {
-        if (onLeftMouseButtonClicked_action) {
+        if (enabled && onLeftMouseButtonClicked_action) {
             onLeftMouseButtonClicked_action->execute();
         }
     }
@@ -171,6 +177,10 @@ void cGuiButton::onMouseLeftButtonClicked(const s_MouseEvent &event) {
 
 void cGuiButton::setOnLeftMouseButtonClickedAction(cGuiAction *action) {
     this->onLeftMouseButtonClicked_action = action;
+}
+
+void cGuiButton::setEnabled(bool value) {
+    enabled = value;
 }
 
 //
