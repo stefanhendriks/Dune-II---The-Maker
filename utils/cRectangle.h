@@ -22,7 +22,7 @@ public:
 
     bool isOverlapping(cRectangle *other);
 
-    bool isPointWithin(int x, int y);
+    bool isPointWithin(int x, int y) const;
 
     bool isPointWithin(const cPoint &point);
 
