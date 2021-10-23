@@ -64,6 +64,8 @@ public:
 
     void setOnLeftMouseButtonClickedAction(cGuiAction *action);
 
+    void setEnabled(bool value);
+
 private:
     cRectangle rect;
     cTextDrawer textDrawer;
@@ -83,6 +85,8 @@ private:
 
     // pressed state
     bool pressed;
+
+    bool enabled;
 
     // Functions
     void drawText() const;

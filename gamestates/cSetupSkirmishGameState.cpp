@@ -126,11 +126,30 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
     int detonateHitBoxWidth = 130;
     int detonateHitBoxHeight = 16;
     detonateBloomsRect = cRectangle(detonateX, detonateY, detonateHitBoxWidth, detonateHitBoxHeight);
+
+    int backButtonWidth = textDrawer.textLength(" BACK");
+    int backButtonHeight = topBarHeight;
+    int backButtonY = screen_y - topBarHeight;
+    int backButtonX = 0;
+    cRectangle backButtonRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
+    backButton = new cGuiButton(textDrawer, backButtonRect, " BACK");
+    backButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
+
+    int startButtonWidth = textDrawer.textLength("START");
+    int startButtonHeight = topBarHeight;
+    int startButtonY = screen_y - topBarHeight;
+    int startButtonX = screen_x - startButtonWidth;
+    cRectangle startButtonRect = cRectangle(startButtonX, startButtonY, startButtonWidth, startButtonHeight);
+    startButton = new cGuiButton(textDrawer, startButtonRect, "START");
+    startButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
+
 }
 
 cSetupSkirmishGameState::~cSetupSkirmishGameState() {
     destroy_bitmap(background);
     background = nullptr;
+
+    delete backButton;
 }
 
 void cSetupSkirmishGameState::thinkFast() {
@@ -221,30 +240,11 @@ void cSetupSkirmishGameState::draw() const {
     cRectangle bottomBarRect = cRectangle(-1, screen_y - topBarHeight, screen_x + 2, topBarHeight + 2);
     allegroDrawer->gui_DrawRect(bmp_screen, bottomBarRect);
 
+    // For now in draw function
+    startButton->setEnabled(iSkirmishMap > -1);
 
-    // back
-    int backButtonWidth = textDrawer.textLength(" BACK");
-    int backButtonHeight = topBarHeight;
-    int backButtonY = screen_y - topBarHeight;
-    int backButtonX = 0;
-    cRectangle backButtonRect = cRectangle(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
-    int textColorBackButton = backButtonRect.isPointWithin(mouse_x, mouse_y) ? colorRed : colorWhite;
-    textDrawer.drawTextBottomLeft(textColorBackButton, " BACK");
-
-    // start
-    int startButtonWidth = textDrawer.textLength("START");
-    int startButtonHeight = topBarHeight;
-    int startButtonY = screen_y - topBarHeight;
-    int startButtonX = screen_x - startButtonWidth;
-    cRectangle startButtonRect = cRectangle(startButtonX, startButtonY, startButtonWidth, startButtonHeight);
-
-    int textColorStartButton = colorWhite;
-    if (startButtonRect.isPointWithin(mouse_x, mouse_y)) {
-        // startButtonRect.isPointWithin(mouse_x, mouse_y) ? colorRed :
-        textColorStartButton = iSkirmishMap > -1 ? colorRed : colorDisabled;
-    }
-
-    textDrawer.drawTextBottomRight(textColorStartButton, "START");
+    backButton->draw();
+    startButton->draw();
 
     if (bDoRandomMap) {
 //        randomMapGenerator.generateRandomMap();
@@ -837,7 +837,13 @@ void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
         case MOUSE_LEFT_BUTTON_CLICKED:
             onMouseLeftButtonClicked(event);
             break;
+        case MOUSE_MOVED_TO:
+            onMouseMovedTo(event);
+            break;
     }
+
+    backButton->onNotifyMouseEvent(event);
+    startButton->onNotifyMouseEvent(event);
 }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
@@ -915,4 +921,8 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList, const cRect
             textDrawer.drawText(mapListFrame.getX() + 4, iDrawY+4, textColor, PreviewMap[i].name);
         }
     }
+}
+
+void cSetupSkirmishGameState::onMouseMovedTo(const s_MouseEvent &event) {
+
 }
