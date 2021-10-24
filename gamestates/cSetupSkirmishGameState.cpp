@@ -134,6 +134,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
     cRectangle backButtonRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
     backButton = new cGuiButton(textDrawer, backButtonRect, " BACK");
     backButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
+    backButton->setOnLeftMouseButtonClickedAction(new cGuiActionToMainMenuState());
 
     int startButtonWidth = textDrawer.textLength("START");
     int startButtonHeight = topBarHeight;
@@ -850,18 +851,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event
     int topBarHeight = 21;
     int screen_y = game.screen_y;
     int screen_x = game.screen_x;
-
-    int backButtonWidth = textDrawer.textLength(" BACK");
-    int backButtonHeight = topBarHeight;
-    int backButtonY = screen_y - topBarHeight;
-    int backButtonX = 0;
-
-    if (MOUSE_WITHIN_RECT(backButtonX, backButtonY, backButtonWidth, backButtonHeight)) {
-        game.START_FADING_OUT();
-        game.setNextStateToTransitionTo(GAME_MENU); // this deletes the current state object, so has to be last statement!
-        return;
-    }
-
+    
     int startButtonWidth = textDrawer.textLength("START");
     int startButtonHeight = topBarHeight;
     int startButtonY = screen_y - topBarHeight;
