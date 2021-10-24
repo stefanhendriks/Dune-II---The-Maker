@@ -46,7 +46,6 @@ void cGame::init() {
     TIMER_evaluatePlayerStatus = 5;
 
     bSkirmish=false;
-	iSkirmishStartPoints=2;
 
     // Alpha (for fading in/out)
     fadeAlpha=0;                             // 255 = opaque , anything else

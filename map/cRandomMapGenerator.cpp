@@ -14,12 +14,12 @@ cRandomMapGenerator::~cRandomMapGenerator() {
 
 }
 
-void cRandomMapGenerator::generateRandomMap() {
+void cRandomMapGenerator::generateRandomMap(int startingPoints) {
     // create random map
     map.init(128, 128);
 
-    int a_spice = rnd((game.iSkirmishStartPoints * 8)) + (game.iSkirmishStartPoints * 12);
-    int a_rock = 32 + rnd(game.iSkirmishStartPoints*3);
+    int a_spice = rnd((startingPoints * 8)) + (startingPoints * 12);
+    int a_rock = 32 + rnd(startingPoints * 3);
     int a_hill = 2 + rnd(12);
 
     // rock terrain is placed not near centre, also, we want 4 plateaus be
@@ -41,9 +41,9 @@ void cRandomMapGenerator::generateRandomMap() {
 
     int iDistance = 16;
 
-    if (game.iSkirmishStartPoints == 2) iDistance = 32;
-    if (game.iSkirmishStartPoints == 3) iDistance = 26;
-    if (game.iSkirmishStartPoints == 4) iDistance = 22;
+    if (startingPoints == 2) iDistance = 32;
+    if (startingPoints == 3) iDistance = 26;
+    if (startingPoints == 4) iDistance = 22;
 
     float progress = 0;
 
@@ -79,7 +79,7 @@ void cRandomMapGenerator::generateRandomMap() {
             progress += piece;
             mapEditor.createRandomField(iCll, TERRAIN_ROCK, 5500 + rnd(3500));
 
-            if (iSpot < game.iSkirmishStartPoints) {
+            if (iSpot < startingPoints) {
                 randomMapEntry.iStartCell[iSpot] = iCll;
             } else {
                 mapEditor.createRandomField(iCll, TERRAIN_MOUNTAIN, 5 + rnd(15));
