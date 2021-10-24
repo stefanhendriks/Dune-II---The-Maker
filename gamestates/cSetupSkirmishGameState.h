@@ -90,7 +90,7 @@ private:
 
     void drawPreviewMapAndMore(const cRectangle &previewMapRect, int &iStartingPoints) const;
 
-    bool drawStartPoints(int iStartingPoints, const cRectangle &startPoints) const;
+    void drawStartPoints(int iStartingPoints, const cRectangle &startPoints) const;
 
     void drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &brainRect) const;
 
@@ -100,11 +100,21 @@ private:
 
     int getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const;
 
-    void drawStartingPoints(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &startingUnitsRect) const;
+    void drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &startingUnitsRect) const;
 
     void drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &teamsRect) const;
 
     void onMouseMovedTo(const s_MouseEvent &event);
+
+    void generateRandomMap();
+
+    void onMouseLeftButtonClickedAtMapList();
+
+    void onMouseLeftButtonClickedAtStartPoints();
+
+    void onMouseRightButtonClicked(const s_MouseEvent &event);
+
+    void onMouseRightButtonClickedAtStartPoints();
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H

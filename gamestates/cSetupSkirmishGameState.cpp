@@ -193,7 +193,7 @@ void cSetupSkirmishGameState::draw() const {
     // randomly generated or not.
     drawPreviewMapAndMore(previewMapRect, iStartingPoints);
 
-    bool bDoRandomMap = drawStartPoints(iStartingPoints, startPoints);
+    drawStartPoints(iStartingPoints, startPoints);
 
     drawWorms(wormsRect);
     drawBlooms(bloomsRect);
@@ -238,7 +238,7 @@ void cSetupSkirmishGameState::draw() const {
             int startingUnitsX = 272;
             int startingUnitsY = iDrawY;
             cRectangle startingUnitsRect = cRectangle(startingUnitsX, startingUnitsY, 21, 16);
-            drawStartingPoints(sSkirmishPlayer, startingUnitsRect);
+            drawStartingUnits(sSkirmishPlayer, startingUnitsRect);
 
             // Credits
             int teamsX = 340;
@@ -256,11 +256,6 @@ void cSetupSkirmishGameState::draw() const {
 
     backButton->draw();
     startButton->draw();
-
-    if (bDoRandomMap) {
-//        randomMapGenerator.generateRandomMap();
-//        spawnWorms = map.isBigMap() ? 4 : 2;
-    }
 
     // MOUSE
     mouse->draw();
@@ -293,8 +288,8 @@ void cSetupSkirmishGameState::drawTeams(const s_SkirmishPlayer &sSkirmishPlayer,
 }
 
 void
-cSetupSkirmishGameState::drawStartingPoints(const s_SkirmishPlayer &sSkirmishPlayer,
-                                            const cRectangle &startingUnitsRect) const {//rect(bmp_screen, 269, iDrawY, 290, iDrawY+16, makecol(255,255,255));
+cSetupSkirmishGameState::drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlayer,
+                                           const cRectangle &startingUnitsRect) const {
 
     int textColor = getTextColorForRect(sSkirmishPlayer, startingUnitsRect);
 
@@ -425,40 +420,18 @@ cSetupSkirmishGameState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer
     }
 }
 
-bool cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, const cRectangle &startPoints) const {
-    bool bDoRandomMap = false;
-
+void cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, const cRectangle &startPoints) const {
     int textColor = colorWhite;
     if (iSkirmishMap == 0) { // random map selected
         if (startPoints.isPointWithin(mouse_x, mouse_y)) {
             textColor = colorRed;
-
-            if (mouse->isLeftButtonClicked()) {
-                game.iSkirmishStartPoints++;
-
-                if (game.iSkirmishStartPoints > 4) {
-                    game.iSkirmishStartPoints = 2;
-                }
-
-                bDoRandomMap = true;
-            }
-
-            if (mouse->isRightButtonClicked()) {
-                game.iSkirmishStartPoints--;
-
-                if (game.iSkirmishStartPoints < 2) {
-                    game.iSkirmishStartPoints = 4;
-                }
-
-                bDoRandomMap = true;
-            }
         }
     } else {
         textColor = colorDisabled;
     }
-    textDrawer.drawTextWithOneInteger(startPoints.getX(), startPoints.getY(), textColor, "Startpoints: %d",
+
+    textDrawer.drawText(startPoints.getX(), startPoints.getY(), textColor, "Startpoints: %d",
                                       iStartingPoints);
-    return bDoRandomMap;
 }
 
 void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMapRect, int &iStartingPoints) const {
@@ -847,6 +820,9 @@ void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
         case MOUSE_LEFT_BUTTON_CLICKED:
             onMouseLeftButtonClicked(event);
             break;
+        case MOUSE_RIGHT_BUTTON_CLICKED:
+            onMouseRightButtonClicked(event);
+            break;
         case MOUSE_MOVED_TO:
             onMouseMovedTo(event);
             break;
@@ -874,15 +850,34 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event
         }
     } // mouse hovers over "START"
 
+    onMouseLeftButtonClickedAtMapList();
+    onMouseLeftButtonClickedAtStartPoints();
+}
 
+void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartPoints() {
+    if (iSkirmishMap == 0) { // random map selected
+        if (startPoints.isPointWithin(mouse_x, mouse_y)) {
+            game.iSkirmishStartPoints++;
+
+            if (game.iSkirmishStartPoints > 4) {
+                game.iSkirmishStartPoints = 2;
+            }
+
+            generateRandomMap();
+        }
+    }
+}
+
+void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
+    int const topBarHeight = 21;
     int const margin = 2;
     int const mapItemButtonHeight = topBarHeight;
-    int const mapItemButtonWidth = mapList.getWidth() - (margin*2);
-    int iDrawX = mapList.getX() + margin;
+    int const mapItemButtonWidth = mapList.getWidth() - (margin * 2);
+    int const iDrawX = mapList.getX() + margin;
 
 
     // yes, this means higher resolutions can show more maps.. for now
-    int maxMapsInList = std::min(((mapList.getHeight() / mapItemButtonHeight)-1), MAX_SKIRMISHMAPS);
+    int maxMapsInList = std::min(((mapList.getHeight() / mapItemButtonHeight) - 1), MAX_SKIRMISHMAPS);
 
     // for every map that we read , draw here
     for (int i = 0; i < maxMapsInList; i++) {
@@ -892,22 +887,23 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event
             bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
             int textColor = bHover ? colorRed : colorWhite;
-            if (bHover && mouse->isLeftButtonClicked()) {
-                if (mouse->isLeftButtonClicked()) {
-                    GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-                    iSkirmishMap = i;
-                    bool bigMap = PreviewMap[i].height > 64 || PreviewMap[i].width > 64;
-                    spawnWorms = bigMap ? 4 : 2;
+            if (bHover) {
+                GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+                iSkirmishMap = i;
 
-                    if (i == 0) {
-//                            bDoRandomMap = true;
-                    }
+                if (i == 0) {
+                    generateRandomMap();
                 }
             }
 
             textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name);
         }
     }
+}
+
+void cSetupSkirmishGameState::generateRandomMap() {
+    randomMapGenerator.generateRandomMap();
+    spawnWorms = map.isBigMap() ? 4 : 2;
 }
 
 void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const {
@@ -942,6 +938,26 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const {
     }
 }
 
+void cSetupSkirmishGameState::onMouseRightButtonClicked(const s_MouseEvent &event) {
+    onMouseRightButtonClickedAtStartPoints();
+}
+
+void cSetupSkirmishGameState::onMouseRightButtonClickedAtStartPoints() {
+    if (iSkirmishMap == 0) { // random map selected
+        if (startPoints.isPointWithin(mouse_x, mouse_y)) {
+            game.iSkirmishStartPoints--;
+
+            if (game.iSkirmishStartPoints < 2) { // < 2 startpoints is not allowed
+                game.iSkirmishStartPoints = 4; // wrap around to max
+            }
+
+            generateRandomMap();
+        }
+    }
+}
+
+
 void cSetupSkirmishGameState::onMouseMovedTo(const s_MouseEvent &event) {
 
 }
+
