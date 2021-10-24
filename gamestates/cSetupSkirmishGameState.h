@@ -38,6 +38,8 @@ private:
     int spawnWorms;
     bool spawnBlooms;
     bool detonateBlooms;
+    int iStartingPoints;
+
 
     // Colors
     int colorDarkishBackground;
@@ -67,7 +69,7 @@ private:
     cRectangle mapList;
     cRectangle mapListTitle;
     cRectangle previewMapRect;
-    cRectangle startPoints;
+    cRectangle startPointsRect;
     cRectangle wormsRect;
     cRectangle bloomsRect;
     cRectangle detonateBloomsRect;
@@ -88,7 +90,7 @@ private:
 
     void drawDetonateBlooms(const cRectangle &detonateBloomsRect) const;
 
-    void drawPreviewMapAndMore(const cRectangle &previewMapRect, int &iStartingPoints) const;
+    void drawPreviewMapAndMore(const cRectangle &previewMapRect) const;
 
     void drawStartPoints(int iStartingPoints, const cRectangle &startPoints) const;
 
@@ -115,6 +117,8 @@ private:
     void onMouseRightButtonClicked(const s_MouseEvent &event);
 
     void onMouseRightButtonClickedAtStartPoints();
+
+    void onMouseLeftButtonClickedAtStartButton();
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H

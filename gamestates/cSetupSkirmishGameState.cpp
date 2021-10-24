@@ -20,6 +20,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
         sSkirmishPlayer.team = (i + 1); // all different team
     }
 
+    iStartingPoints = 2;
     iSkirmishMap = -1;
 
     textDrawer = cTextDrawer(bene_font);
@@ -116,7 +117,7 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
     int startPointsY = previewMapY;
     int startPointHitBoxWidth = 130;
     int startPointHitBoxHeight = 16;
-    startPoints = cRectangle(startPointsX, startPointsY, startPointHitBoxWidth, startPointHitBoxHeight);
+    startPointsRect = cRectangle(startPointsX, startPointsY, startPointHitBoxWidth, startPointHitBoxHeight);
 
     int wormsX = screen_x - widthOfSomething;
     int wormsY = startPointsY + 32;
@@ -182,8 +183,6 @@ void cSetupSkirmishGameState::draw() const {
     textDrawer.drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4,
                                 colorYellow);
 
-    int iStartingPoints = 0;
-
     ///////
     /// DRAW PREVIEW MAP
     //////
@@ -191,9 +190,9 @@ void cSetupSkirmishGameState::draw() const {
     // iSkirmishMap holds an index of which map to load, where index 0 means random map generated, although
     // this is only meaningful for rendering, the loading (more below) of that map does not care if it is
     // randomly generated or not.
-    drawPreviewMapAndMore(previewMapRect, iStartingPoints);
+    drawPreviewMapAndMore(previewMapRect);
 
-    drawStartPoints(iStartingPoints, startPoints);
+    drawStartPoints(iStartingPoints, startPointsRect);
 
     drawWorms(wormsRect);
     drawBlooms(bloomsRect);
@@ -215,7 +214,6 @@ void cSetupSkirmishGameState::draw() const {
             // player playing or not
 
             cRectangle brainRect = cRectangle(iDrawX, iDrawY, 73, 16);
-
             drawPlayerBrain(sSkirmishPlayer, brainRect);
 
             // HOUSE
@@ -434,7 +432,7 @@ void cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, const cRectan
                                       iStartingPoints);
 }
 
-void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMapRect, int &iStartingPoints) const {
+void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMapRect) const {
     if (iSkirmishMap > -1) {
         s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
         // Render skirmish map as-is (pre-loaded map)
@@ -443,20 +441,11 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
                 if (selectedMap.terrain) {
                     draw_sprite(bmp_screen, selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
                 }
-
-                // count starting points
-                for (int s: selectedMap.iStartCell) {
-                    if (s > -1) {
-                        iStartingPoints++;
-                    }
-                }
             }
         } else {
             // render the 'random generated skirmish map'
-            iStartingPoints = game.iSkirmishStartPoints;
 
             // when mouse is hovering, draw it, else do not
-//            if ((mouse_x >= previewMapX && mouse_x < (previewMapX + previewMapWidth) && (mouse_y >= previewMapY && mouse_y < (previewMapY + previewMapHeight))))
             if (previewMapRect.isPointWithin(mouse_x, mouse_y)) {
                 if (selectedMap.name[0] != '\0') {
                     if (selectedMap.terrain) {
@@ -833,6 +822,55 @@ void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
 }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
+    onMouseLeftButtonClickedAtStartButton();
+    onMouseLeftButtonClickedAtMapList();
+    onMouseLeftButtonClickedAtStartPoints();
+
+//    // draw players who will be playing ;)
+//    for (int p = 0; p < (AI_WORM - 1); p++) {
+//        int iDrawY = playerList.getY() + 4 + (p * 22);
+//        int iDrawX = 4;
+//
+//        const s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
+//
+//        if (p < iStartingPoints) {
+//            // player playing or not
+//
+//            cRectangle brainRect = cRectangle(iDrawX, iDrawY, 73, 16);
+//            drawPlayerBrain(sSkirmishPlayer, brainRect);
+//
+//            // HOUSE
+//            cPlayer &cPlayer = players[p];
+//
+//            int houseX = 74;
+//            int houseY = iDrawY;
+//            cRectangle houseRec = cRectangle(houseX, houseY, 76, 16);
+//
+//            drawHouse(sSkirmishPlayer, houseRec);
+//
+//            // Credits
+//            int creditsX = 174;
+//            int creditsY = iDrawY;
+//            cRectangle creditsRect = cRectangle(creditsX, creditsY, 56, 16);
+//
+//            drawCredits(sSkirmishPlayer, creditsRect);
+//
+//            // Units
+//            int startingUnitsX = 272;
+//            int startingUnitsY = iDrawY;
+//            cRectangle startingUnitsRect = cRectangle(startingUnitsX, startingUnitsY, 21, 16);
+//            drawStartingUnits(sSkirmishPlayer, startingUnitsRect);
+//
+//            // Credits
+//            int teamsX = 340;
+//            int teamsY = iDrawY;
+//            cRectangle teamsRect = cRectangle(teamsX, teamsY, 21, 16);
+//            drawTeams(sSkirmishPlayer, teamsRect);
+//        }
+//    }
+}
+
+void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton() {
     int topBarHeight = 21;
     int screen_y = game.screen_y;
     int screen_x = game.screen_x;
@@ -846,21 +884,18 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event
         // START
         if (iSkirmishMap > -1) {
             prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
-            return;
         }
     } // mouse hovers over "START"
 
-    onMouseLeftButtonClickedAtMapList();
-    onMouseLeftButtonClickedAtStartPoints();
 }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartPoints() {
     if (iSkirmishMap == 0) { // random map selected
-        if (startPoints.isPointWithin(mouse_x, mouse_y)) {
-            game.iSkirmishStartPoints++;
+        if (startPointsRect.isPointWithin(mouse_x, mouse_y)) {
+            iStartingPoints++;
 
-            if (game.iSkirmishStartPoints > 4) {
-                game.iSkirmishStartPoints = 2;
+            if (iStartingPoints > 4) {
+                iStartingPoints = 2;
             }
 
             generateRandomMap();
@@ -893,6 +928,17 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
 
                 if (i == 0) {
                     generateRandomMap();
+                } else {
+                    s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
+                    if (selectedMap.name[0] != '\0') {
+                        iStartingPoints = 0;
+                        // count starting points
+                        for (int s: selectedMap.iStartCell) {
+                            if (s > -1) {
+                                iStartingPoints++;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -902,7 +948,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
 }
 
 void cSetupSkirmishGameState::generateRandomMap() {
-    randomMapGenerator.generateRandomMap();
+    randomMapGenerator.generateRandomMap(0);
     spawnWorms = map.isBigMap() ? 4 : 2;
 }
 
@@ -944,11 +990,11 @@ void cSetupSkirmishGameState::onMouseRightButtonClicked(const s_MouseEvent &even
 
 void cSetupSkirmishGameState::onMouseRightButtonClickedAtStartPoints() {
     if (iSkirmishMap == 0) { // random map selected
-        if (startPoints.isPointWithin(mouse_x, mouse_y)) {
-            game.iSkirmishStartPoints--;
+        if (startPointsRect.isPointWithin(mouse_x, mouse_y)) {
+            iStartingPoints--;
 
-            if (game.iSkirmishStartPoints < 2) { // < 2 startpoints is not allowed
-                game.iSkirmishStartPoints = 4; // wrap around to max
+            if (iStartingPoints < 2) { // < 2 startpoints is not allowed
+                iStartingPoints = 4; // wrap around to max
             }
 
             generateRandomMap();

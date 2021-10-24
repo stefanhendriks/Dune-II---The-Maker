@@ -13,7 +13,7 @@ class cRandomMapGenerator {
 		cRandomMapGenerator();
 		virtual ~cRandomMapGenerator();
 
-		void generateRandomMap();
+		void generateRandomMap(int startingPoints);
 
 	private:
 

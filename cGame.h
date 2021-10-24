@@ -59,7 +59,6 @@ public:
 	bool bPlaying;				// playing or not
     bool bSkirmish;             // playing a skirmish game  or not
 	int screenshot;				// screenshot taking number
-	int iSkirmishStartPoints;	// random map startpoints
 
 	void init();		// initialize all game variables
 	void mission_init(); // initialize variables for mission loading only
