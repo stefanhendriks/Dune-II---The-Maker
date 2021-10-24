@@ -19,6 +19,9 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
         sSkirmishPlayer.iHouse = 0; // random house
         sSkirmishPlayer.team = (i + 1); // all different team
     }
+
+    iSkirmishMap = -1;
+
     textDrawer = cTextDrawer(bene_font);
 
     mouse = game.getMouse();
@@ -48,13 +51,13 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
 
     // Background
     background = create_bitmap(screen_x, screen_y);
-    clear_to_color(background, makecol(0,0,0));
+    clear_to_color(background, makecol(0, 0, 0));
 
     BITMAP *dunePlanet = (BITMAP *) gfxinter[BMP_GAME_DUNE].dat;
     allegroDrawer->drawSprite(background, dunePlanet, game.screen_x * 0.2, (game.screen_y * 0.5));
 
-    for (int dy=0; dy < game.screen_y; dy+=2) {
-        allegroDrawer->drawLine(background, 0, dy, screen_x, dy, makecol(0,0,0));
+    for (int dy = 0; dy < game.screen_y; dy += 2) {
+        allegroDrawer->drawLine(background, 0, dy, screen_x, dy, makecol(0, 0, 0));
     }
 
     // Rectangles for GUI interaction
@@ -64,14 +67,15 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
     topBar = cRectangle(-1, -1, topBarWidth, topBarHeight);
 
     // Players title bar
-    int topRightBoxWidth = widthOfSomething + 2;
-    int playerTitleBarWidth = screen_x - topRightBoxWidth;
+    int widthOfSidebar = widthOfSomething + 2;
+    int playerTitleBarWidth = screen_x - widthOfSidebar;
     int playerTitleBarHeight = topBarHeight;
     int playerTitleBarX = 0;
     int playerTitleBarY = topBarHeight;
     playerTitleBar = cRectangle(playerTitleBarX, playerTitleBarY, playerTitleBarWidth, playerTitleBarHeight);
 
     // this is the box at the right from the Player list
+    int topRightBoxWidth = widthOfSidebar;
     int topRightBoxHeight = playerTitleBarHeight + previewMapHeight;
     int topRightBoxX = screen_x - topRightBoxWidth;
     int topRightBoxY = topBarHeight;
@@ -85,19 +89,24 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
     playerList = cRectangle(playerListBarX, playerListBarY, playerListBarWidth, playerListBarHeight);
 
     // map list
-    int mapListHeight = screen_y - (topBarHeight + topRightBoxHeight + topBarHeight + topBarHeight);
-    int mapListWidth = topRightBoxWidth;
-    int mapListTopX = screen_x - mapListWidth;
-    int mapListTopY = topRightBoxY + topRightBoxHeight; // ??
 
-    int mapListFrameX = screen_x - mapListWidth;
+    // title bar
+    int mapListFrameX = screen_x - topRightBoxWidth;
     int mapListFrameY = (playerListBarY + playerListBarHeight) - playerTitleBarHeight;
     int mapListFrameWidth = screen_x - mapListFrameX;
     int mapListFrameHeight = topBarHeight;
 
     // rectangle for map list
-    mapListTop = cRectangle(mapListTopX, mapListTopY, mapListWidth, mapListHeight);
-    mapListFrame = cRectangle(mapListFrameX, mapListFrameY, mapListFrameWidth, mapListFrameHeight);
+    mapListTitle = cRectangle(mapListFrameX, mapListFrameY, mapListFrameWidth, mapListFrameHeight);
+
+    // actual list of maps
+//    int mapListHeight = screen_y - (topBarHeight + topRightBoxHeight + topBarHeight + topBarHeight);
+    int mapListHeight = screen_y - (mapListTitle.getY() + mapListTitle.getHeight() + topBarHeight + 1);
+    int mapListWidth = mapListTitle.getWidth();
+    int mapListTopX = mapListTitle.getX();
+    int mapListTopY = mapListTitle.getY() + mapListTitle.getHeight();
+
+    mapList = cRectangle(mapListTopX, mapListTopY, mapListWidth, mapListHeight);
 
     int previewMapY = topBarHeight + 6;
     int previewMapX = screen_x - (previewMapWidth + 6);
@@ -167,11 +176,13 @@ void cSetupSkirmishGameState::draw() const {
     allegroDrawer->gui_DrawRect(bmp_screen, playerTitleBar, colorDarkishBackground, colorWhite, colorWhite);
     allegroDrawer->gui_DrawRect(bmp_screen, topRightBox);
     allegroDrawer->gui_DrawRect(bmp_screen, playerList, colorDarkishBackground, colorWhite, colorWhite);
-    allegroDrawer->gui_DrawRect(bmp_screen, mapListTop, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    allegroDrawer->gui_DrawRect(bmp_screen, mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    allegroDrawer->gui_DrawRect(bmp_screen, mapList);
 
-    textDrawer.drawTextCentered("Maps", mapListFrame.getX(), mapListFrame.getWidth(), mapListFrame.getY() + 4, colorYellow);
+    textDrawer.drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4,
+                                colorYellow);
 
-    int iStartingPoints=0;
+    int iStartingPoints = 0;
 
     ///////
     /// DRAW PREVIEW MAP
@@ -180,8 +191,7 @@ void cSetupSkirmishGameState::draw() const {
     // iSkirmishMap holds an index of which map to load, where index 0 means random map generated, although
     // this is only meaningful for rendering, the loading (more below) of that map does not care if it is
     // randomly generated or not.
-    int iSkirmishMap;
-    drawPreviewMapAndMore(previewMapRect, iStartingPoints, iSkirmishMap);
+    drawPreviewMapAndMore(previewMapRect, iStartingPoints);
 
     bool bDoRandomMap = drawStartPoints(iStartingPoints, startPoints);
 
@@ -189,14 +199,14 @@ void cSetupSkirmishGameState::draw() const {
     drawBlooms(bloomsRect);
 
     drawDetonateBlooms(detonateBloomsRect);
-    drawMapList(mapListTop, mapListFrame);
+    drawMapList(mapList);
 
     // Header text for players
     textDrawer.drawText(4, 25, "Player      House      Credits       Units    Team");
 
     // draw players who will be playing ;)
-    for (int p=0; p < (AI_WORM-1); p++)	{
-        int iDrawY= playerList.getY() + 4 + (p*22);
+    for (int p = 0; p < (AI_WORM - 1); p++) {
+        int iDrawY = playerList.getY() + 4 + (p * 22);
         int iDrawX = 4;
 
         const s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
@@ -256,7 +266,7 @@ void cSetupSkirmishGameState::draw() const {
     mouse->draw();
 
     if (DEBUGGING && key[KEY_TAB]) {
-        textDrawer.drawTextWithTwoIntegers(mouse_x+16, mouse_y+16, "%d,%d", mouse_x, mouse_y);
+        textDrawer.drawTextWithTwoIntegers(mouse_x + 16, mouse_y + 16, "%d,%d", mouse_x, mouse_y);
     }
 }
 
@@ -305,10 +315,12 @@ cSetupSkirmishGameState::drawStartingPoints(const s_SkirmishPlayer &sSkirmishPla
 //                    }
 //                }
 
-    textDrawer.drawText(startingUnitsRect.getX(), startingUnitsRect.getY(), textColor, "%d", sSkirmishPlayer.startingUnits);
+    textDrawer.drawText(startingUnitsRect.getX(), startingUnitsRect.getY(), textColor, "%d",
+                        sSkirmishPlayer.startingUnits);
 }
 
-void cSetupSkirmishGameState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &creditsRect) const {
+void
+cSetupSkirmishGameState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &creditsRect) const {
     int textColor = getTextColorForRect(sSkirmishPlayer, creditsRect);
     // on click:
     //                if (mouse->isLeftButtonClicked())
@@ -330,7 +342,8 @@ void cSetupSkirmishGameState::drawCredits(const s_SkirmishPlayer &sSkirmishPlaye
     textDrawer.drawText(creditsRect.getX(), creditsRect.getY(), textColor, "%d", sSkirmishPlayer.iCredits);
 }
 
-int cSetupSkirmishGameState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const {
+int
+cSetupSkirmishGameState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const {
     if (rect.isPointWithin(mouse_x, mouse_y)) {
         int colorSelectedRedFade = game.getColorFadeSelected(255, 0, 0);
         int colorDisabledFade = game.getColorFadeSelected(128, 128, 128);
@@ -390,7 +403,8 @@ void cSetupSkirmishGameState::drawHouse(const s_SkirmishPlayer &sSkirmishPlayer,
     textDrawer.drawText(houseRec.getX(), houseRec.getY(), textColor, cHouse);
 }
 
-void cSetupSkirmishGameState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &brainRect) const {
+void
+cSetupSkirmishGameState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &brainRect) const {
     if (sSkirmishPlayer.bHuman) {
         textDrawer.drawText(brainRect.getX(), brainRect.getY(), "Human");
     } else {
@@ -415,7 +429,7 @@ bool cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, const cRectan
     bool bDoRandomMap = false;
 
     int textColor = colorWhite;
-    if (game.iSkirmishMap == 0) { // random map selected
+    if (iSkirmishMap == 0) { // random map selected
         if (startPoints.isPointWithin(mouse_x, mouse_y)) {
             textColor = colorRed;
 
@@ -442,13 +456,12 @@ bool cSetupSkirmishGameState::drawStartPoints(int iStartingPoints, const cRectan
     } else {
         textColor = colorDisabled;
     }
-    textDrawer.drawTextWithOneInteger(startPoints.getX(), startPoints.getY(), textColor, "Startpoints: %d", iStartingPoints);
+    textDrawer.drawTextWithOneInteger(startPoints.getX(), startPoints.getY(), textColor, "Startpoints: %d",
+                                      iStartingPoints);
     return bDoRandomMap;
 }
 
-void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMapRect, int &iStartingPoints,
-                                               int &iSkirmishMap) const {
-    iSkirmishMap= ::game.iSkirmishMap;
+void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMapRect, int &iStartingPoints) const {
     if (iSkirmishMap > -1) {
         s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
         // Render skirmish map as-is (pre-loaded map)
@@ -459,7 +472,7 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
                 }
 
                 // count starting points
-                for (int s : selectedMap.iStartCell) {
+                for (int s: selectedMap.iStartCell) {
                     if (s > -1) {
                         iStartingPoints++;
                     }
@@ -471,19 +484,17 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
 
             // when mouse is hovering, draw it, else do not
 //            if ((mouse_x >= previewMapX && mouse_x < (previewMapX + previewMapWidth) && (mouse_y >= previewMapY && mouse_y < (previewMapY + previewMapHeight))))
-            if (previewMapRect.isPointWithin(mouse_x, mouse_y))
-            {
+            if (previewMapRect.isPointWithin(mouse_x, mouse_y)) {
                 if (selectedMap.name[0] != '\0') {
                     if (selectedMap.terrain) {
                         draw_sprite(bmp_screen, selectedMap.terrain, previewMapRect.getX(), previewMapRect.getY());
                     }
                 }
-            }
-            else
-            {
+            } else {
                 if (selectedMap.name[0] != '\0') {
                     if (selectedMap.terrain) {
-                        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_UNKNOWNMAP].dat, previewMapRect.getX(), previewMapRect.getY());
+                        draw_sprite(bmp_screen, (BITMAP *) gfxinter[BMP_UNKNOWNMAP].dat, previewMapRect.getX(),
+                                    previewMapRect.getY());
                     }
                 }
             }
@@ -494,16 +505,15 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
 void cSetupSkirmishGameState::drawDetonateBlooms(const cRectangle &detonateBloomsRect) const {
     if (spawnBlooms) {
         int textColor = colorWhite;
-        if (detonateBloomsRect.isPointWithin(mouse_x, mouse_y))
-        {
+        if (detonateBloomsRect.isPointWithin(mouse_x, mouse_y)) {
             textColor = colorRed;
-            if (mouse->isLeftButtonClicked())
-            {
+            if (mouse->isLeftButtonClicked()) {
 //                detonateBlooms = !detonateBlooms;
             }
         }
-        textDrawer.drawText(detonateBloomsRect.getX(), detonateBloomsRect.getY(), textColor, "Auto-detonate : %s", detonateBlooms
-                                                                                                                   ? "YES" : "NO");
+        textDrawer.drawText(detonateBloomsRect.getX(), detonateBloomsRect.getY(), textColor, "Auto-detonate : %s",
+                            detonateBlooms
+                            ? "YES" : "NO");
 
     } else {
         textDrawer.drawText(detonateBloomsRect.getX(), detonateBloomsRect.getY(), colorDisabled, "Auto-detonate : -");
@@ -513,33 +523,29 @@ void cSetupSkirmishGameState::drawDetonateBlooms(const cRectangle &detonateBloom
 void cSetupSkirmishGameState::drawBlooms(const cRectangle &bloomsRect) const {
     int textColor = colorWhite;
 
-    if (bloomsRect.isPointWithin(mouse_x, mouse_y))
-    {
+    if (bloomsRect.isPointWithin(mouse_x, mouse_y)) {
         textColor = colorRed;
-        if (mouse->isLeftButtonClicked())
-        {
+        if (mouse->isLeftButtonClicked()) {
 //            spawnBlooms = !spawnBlooms;
         }
     }
 
-    textDrawer.drawText(bloomsRect.getX(), bloomsRect.getY(), textColor, "Spice blooms : %s", spawnBlooms ? "YES" : "NO");
+    textDrawer.drawText(bloomsRect.getX(), bloomsRect.getY(), textColor, "Spice blooms : %s",
+                        spawnBlooms ? "YES" : "NO");
 }
 
 void cSetupSkirmishGameState::drawWorms(const cRectangle &wormsRect) const {
     int textColor = colorWhite;
-    if (wormsRect.isPointWithin(mouse_x, mouse_y))
-    {
+    if (wormsRect.isPointWithin(mouse_x, mouse_y)) {
         textColor = colorRed;
 
-        if (mouse->isLeftButtonClicked())
-        {
+        if (mouse->isLeftButtonClicked()) {
 //            spawnWorms += 1;
             if (spawnWorms > 4) {
 //                spawnWorms = 0;
             }
         }
-        if (mouse->isRightButtonClicked())
-        {
+        if (mouse->isRightButtonClicked()) {
 //            spawnWorms -= 1;
             if (spawnWorms < 0) {
 //                spawnWorms = 4;
@@ -554,18 +560,18 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     s_PreviewMap &selectedMap = PreviewMap[iSkirmishMap];
 
     // this needs to be before setup_players :/
-    game.iMission=9; // high tech level (TODO: make this customizable)
+    game.iMission = 9; // high tech level (TODO: make this customizable)
 
     game.setup_players();
 
     // Starting skirmish mode
-    game.bSkirmish=true;
+    game.bSkirmish = true;
 
     /* set up starting positions */
     std::vector<int> iStartPositions;
 
-    int startCellsOnSkirmishMap=0;
-    for (int s=0; s < 5; s++) {
+    int startCellsOnSkirmishMap = 0;
+    for (int s = 0; s < 5; s++) {
         int startPosition = selectedMap.iStartCell[s];
         if (startPosition < 0) continue;
         iStartPositions.push_back(startPosition);
@@ -576,7 +582,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     // REGENERATE MAP DATA FROM INFO
     map.init(selectedMap.width, selectedMap.height);
 
-    for (int c=0; c < map.getMaxCells(); c++) {
+    for (int c = 0; c < map.getMaxCells(); c++) {
         mapEditor.createCell(c, selectedMap.mapdata[c], 0);
     }
 
@@ -613,7 +619,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
     }
 
     // set up players
-    for (int p = 0; p < MAX_PLAYERS; p++)	{
+    for (int p = 0; p < MAX_PLAYERS; p++) {
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
 
         int iHouse = sSkirmishPlayer.iHouse; // get house selected, which can be 0 for RANDOM
@@ -631,22 +637,22 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
 
             // house = 0 means pick random house
             if (iHouse == 0) {
-                bool bOk=false;
+                bool bOk = false;
 
                 while (bOk == false) {
                     if (p > HUMAN) {
-                        iHouse = rnd(4)+1;
+                        iHouse = rnd(4) + 1;
                         // cpu player
                     } else {// human may not be sardaukar
                         iHouse = rnd(3) + 1; // hark = 1, atr = 2, ord = 3, sar = 4
                     }
 
-                    bool houseInUse=false;
-                    for (int pl=0; pl < AI_WORM; pl++) {
+                    bool houseInUse = false;
+                    for (int pl = 0; pl < AI_WORM; pl++) {
                         // already in use by other skirmish set-up players
                         if (skirmishPlayer[pl].iHouse > 0 &&
                             skirmishPlayer[pl].iHouse == iHouse) {
-                            houseInUse=true;
+                            houseInUse = true;
                         }
 
                         if (players[pl].getHouse() == iHouse) {
@@ -656,7 +662,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
                     }
 
                     if (!houseInUse) {
-                        bOk=true;
+                        bOk = true;
                     }
                 }
             }
@@ -711,7 +717,7 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
 
 
     // amount of units
-    int u=0;
+    int u = 0;
     int maxAmountOfStartingUnits = 0;
 
     for (int p = 0; p < MAX_PLAYERS; p++) {
@@ -749,7 +755,8 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
 
             char msg[255];
             sprintf(msg, "Wants %d amount of units; amount created %d", pSkirmishPlayer.startingUnits, u);
-            cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p, pPlayer.getHouse());
+            cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units", msg, OUTC_NONE, p,
+                                        pPlayer.getHouse());
         }
 
         u++;
@@ -797,10 +804,12 @@ void cSetupSkirmishGameState::prepareSkirmishGameToPlayAndTransitionToCombatStat
         int wormCell = map.getRandomCell();
         int failures = 0;
         char msg[255];
-        sprintf(msg, "Skirmish game with %d sandworms, minDistance %d, maxDistance %d", worms, minDistance, maxDistance);
+        sprintf(msg, "Skirmish game with %d sandworms, minDistance %d, maxDistance %d", worms, minDistance,
+                maxDistance);
         logbook(msg);
         while (worms > 0) {
-            int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance, SANDWORM);
+            int cell = map.getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance,
+                                                                               SANDWORM);
             if (cell < 0) {
                 // retry
                 failures++;
@@ -851,64 +860,84 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event
     int topBarHeight = 21;
     int screen_y = game.screen_y;
     int screen_x = game.screen_x;
-    
+
     int startButtonWidth = textDrawer.textLength("START");
     int startButtonHeight = topBarHeight;
     int startButtonY = screen_y - topBarHeight;
     int startButtonX = screen_x - startButtonWidth;
 
     if (MOUSE_WITHIN_RECT(startButtonX, startButtonY, startButtonWidth, startButtonHeight)) {
-        int iSkirmishMap = game.iSkirmishMap;
         // START
         if (iSkirmishMap > -1) {
             prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
             return;
         }
     } // mouse hovers over "START"
-}
 
-void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList, const cRectangle &mapListFrame) const {
-    int const iHeightPixels = topBarHeight;
-    int iSkirmishMap = game.iSkirmishMap;
-    int iDrawY = -1;
-    int iDrawX = screen_x - widthOfSomething;
-    int iEndX = screen_y;
-    int iColor = colorWhite;
+
+    int const margin = 2;
+    int const mapItemButtonHeight = topBarHeight;
+    int const mapItemButtonWidth = mapList.getWidth() - (margin*2);
+    int iDrawX = mapList.getX() + margin;
+
 
     // yes, this means higher resolutions can show more maps.. for now
-    int maxMapsInList=std::min((mapList.getHeight() / iHeightPixels), MAX_SKIRMISHMAPS);
+    int maxMapsInList = std::min(((mapList.getHeight() / mapItemButtonHeight)-1), MAX_SKIRMISHMAPS);
 
     // for every map that we read , draw here
-    for (int i=0; i < maxMapsInList; i++) {
+    for (int i = 0; i < maxMapsInList; i++) {
         if (PreviewMap[i].name[0] != '\0') {
-            iDrawY=mapListFrame.getY()+(i*iHeightPixels)+i+iHeightPixels; // skip 1 bar because the 1st = 'random map'
+            int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
 
-            bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapListFrame.getWidth(), iHeightPixels);
+            bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
 
-            int textColor;
+            int textColor = bHover ? colorRed : colorWhite;
+            if (bHover && mouse->isLeftButtonClicked()) {
+                if (mouse->isLeftButtonClicked()) {
+                    GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+                    iSkirmishMap = i;
+                    bool bigMap = PreviewMap[i].height > 64 || PreviewMap[i].width > 64;
+                    spawnWorms = bigMap ? 4 : 2;
 
-            // render row as 'pressed' (selected)
-            if (i == iSkirmishMap) {
-                textColor = bHover ? colorDarkerYellow : colorYellow;
-                GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapListFrame.getWidth(), iHeightPixels);
-            } else {
-                textColor = bHover ? colorRed : colorWhite;
-                if (bHover) {
-                    if (mouse->isLeftButtonClicked()) {
-                        GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapListFrame.getWidth(), iHeightPixels);
-                        game.iSkirmishMap = i;
-                        bool bigMap = PreviewMap[i].height > 64 || PreviewMap[i].width > 64;
-//                    spawnWorms = bigMap ? 4 : 2;
-
-                        if (i == 0) {
+                    if (i == 0) {
 //                            bDoRandomMap = true;
-                        }
                     }
                 }
             }
 
+            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name);
+        }
+    }
+}
 
-            textDrawer.drawText(mapListFrame.getX() + 4, iDrawY+4, textColor, PreviewMap[i].name);
+void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const {
+    int const margin = 2;
+    int const mapItemButtonHeight = topBarHeight;
+    int const mapItemButtonWidth = mapList.getWidth() - (margin*2);
+    int iDrawX = mapList.getX() + margin;
+
+    // yes, this means higher resolutions can show more maps.. for now
+    int maxMapsInList = std::min(((mapList.getHeight() / mapItemButtonHeight)-1), MAX_SKIRMISHMAPS);
+
+    // for every map that we read , draw here
+    for (int i = 0; i < maxMapsInList; i++) {
+        if (PreviewMap[i].name[0] != '\0') {
+            int iDrawY = mapList.getY() + (i * mapItemButtonHeight) + i;
+
+            bool bHover = GUI_DRAW_FRAME(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+
+            int textColor = bHover ? colorRed : colorWhite;
+            if (bHover && mouse->isLeftButtonClicked()) {
+                GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+            }
+
+            // selected map, always render as pressed
+            if (i == iSkirmishMap) {
+                textColor = bHover ? colorDarkerYellow : colorYellow;
+                GUI_DRAW_FRAME_PRESSED(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+            }
+
+            textDrawer.drawText(mapList.getX() + 4, iDrawY + 4, textColor, PreviewMap[i].name);
         }
     }
 }

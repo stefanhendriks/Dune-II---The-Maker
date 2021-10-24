@@ -52,8 +52,6 @@ void cGame::init() {
     fadeAlpha=0;                             // 255 = opaque , anything else
     fadeAction=eFadeAction::FADE_IN;           // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
 
-    iSkirmishMap=-1;
-
     iMusicVolume=96; // volume is 0...
 
 	paths_created=0;
