@@ -58,7 +58,6 @@ public:
 
 	bool bPlaying;				// playing or not
     bool bSkirmish;             // playing a skirmish game  or not
-	int  iSkirmishMap;			// what map is selected
 	int screenshot;				// screenshot taking number
 	int iSkirmishStartPoints;	// random map startpoints
 

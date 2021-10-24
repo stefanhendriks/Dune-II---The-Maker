@@ -34,6 +34,7 @@ private:
     s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS];
     cMouse * mouse;
 
+    int iSkirmishMap;			// what map is selected
     int spawnWorms;
     bool spawnBlooms;
     bool detonateBlooms;
@@ -63,8 +64,8 @@ private:
     cRectangle playerTitleBar;
     cRectangle topRightBox;
     cRectangle playerList;
-    cRectangle mapListTop;
-    cRectangle mapListFrame;
+    cRectangle mapList;
+    cRectangle mapListTitle;
     cRectangle previewMapRect;
     cRectangle startPoints;
     cRectangle wormsRect;
@@ -79,7 +80,7 @@ private:
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
 
-    void drawMapList(const cRectangle &mapList, const cRectangle &mapListFrame) const;
+    void drawMapList(const cRectangle &mapList) const;
 
     void drawWorms(const cRectangle &wormsRect) const;
 
@@ -87,7 +88,7 @@ private:
 
     void drawDetonateBlooms(const cRectangle &detonateBloomsRect) const;
 
-    void drawPreviewMapAndMore(const cRectangle &previewMapRect, int &iStartingPoints, int &iSkirmishMap) const;
+    void drawPreviewMapAndMore(const cRectangle &previewMapRect, int &iStartingPoints) const;
 
     bool drawStartPoints(int iStartingPoints, const cRectangle &startPoints) const;
 
