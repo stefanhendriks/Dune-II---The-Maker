@@ -500,19 +500,6 @@ void cSetupSkirmishGameState::drawWorms(const cRectangle &wormsRect) const {
     int textColor = colorWhite;
     if (wormsRect.isPointWithin(mouse_x, mouse_y)) {
         textColor = colorRed;
-
-        if (mouse->isLeftButtonClicked()) {
-//            spawnWorms += 1;
-            if (spawnWorms > 4) {
-//                spawnWorms = 0;
-            }
-        }
-        if (mouse->isRightButtonClicked()) {
-//            spawnWorms -= 1;
-            if (spawnWorms < 0) {
-//                spawnWorms = 4;
-            }
-        }
     }
 
     textDrawer.drawText(wormsRect.getX(), wormsRect.getY(), textColor, "Worms? : %d", spawnWorms);
@@ -821,10 +808,16 @@ void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
     startButton->onNotifyMouseEvent(event);
 }
 
+void cSetupSkirmishGameState::onMouseRightButtonClicked(const s_MouseEvent &event) {
+    onMouseRightButtonClickedAtStartPoints();
+    onMouseRightButtonClickedAtWorms();
+}
+
 void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
     onMouseLeftButtonClickedAtStartButton();
     onMouseLeftButtonClickedAtMapList();
     onMouseLeftButtonClickedAtStartPoints();
+    onMouseLeftButtonClickedAtWorms();
 
 //    // draw players who will be playing ;)
 //    for (int p = 0; p < (AI_WORM - 1); p++) {
@@ -868,6 +861,15 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event
 //            drawTeams(sSkirmishPlayer, teamsRect);
 //        }
 //    }
+}
+
+void cSetupSkirmishGameState::onMouseLeftButtonClickedAtWorms() {
+    if (wormsRect.isPointWithin(mouse_x, mouse_y)) {
+        spawnWorms += 1;
+        if (spawnWorms > 4) {
+            spawnWorms = 0;
+        }
+    }
 }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtStartButton() {
@@ -984,10 +986,6 @@ void cSetupSkirmishGameState::drawMapList(const cRectangle &mapList) const {
     }
 }
 
-void cSetupSkirmishGameState::onMouseRightButtonClicked(const s_MouseEvent &event) {
-    onMouseRightButtonClickedAtStartPoints();
-}
-
 void cSetupSkirmishGameState::onMouseRightButtonClickedAtStartPoints() {
     if (iSkirmishMap == 0) { // random map selected
         if (startPointsRect.isPointWithin(mouse_x, mouse_y)) {
@@ -998,6 +996,15 @@ void cSetupSkirmishGameState::onMouseRightButtonClickedAtStartPoints() {
             }
 
             generateRandomMap();
+        }
+    }
+}
+
+void cSetupSkirmishGameState::onMouseRightButtonClickedAtWorms() {
+    if (wormsRect.isPointWithin(mouse_x, mouse_y)) {
+        spawnWorms -= 1;
+        if (spawnWorms < 0) {
+            spawnWorms = 4;
         }
     }
 }
