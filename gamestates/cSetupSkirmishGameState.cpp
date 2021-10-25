@@ -466,42 +466,23 @@ void cSetupSkirmishGameState::drawPreviewMapAndMore(const cRectangle &previewMap
 
 void cSetupSkirmishGameState::drawDetonateBlooms(const cRectangle &detonateBloomsRect) const {
     if (spawnBlooms) {
-        int textColor = colorWhite;
-        if (detonateBloomsRect.isPointWithin(mouse_x, mouse_y)) {
-            textColor = colorRed;
-            if (mouse->isLeftButtonClicked()) {
-//                detonateBlooms = !detonateBlooms;
-            }
-        }
+        int textColor = detonateBloomsRect.isPointWithin(mouse_x, mouse_y) ? colorRed : colorWhite;
         textDrawer.drawText(detonateBloomsRect.getX(), detonateBloomsRect.getY(), textColor, "Auto-detonate : %s",
                             detonateBlooms
                             ? "YES" : "NO");
-
     } else {
         textDrawer.drawText(detonateBloomsRect.getX(), detonateBloomsRect.getY(), colorDisabled, "Auto-detonate : -");
     }
 }
 
 void cSetupSkirmishGameState::drawBlooms(const cRectangle &bloomsRect) const {
-    int textColor = colorWhite;
-
-    if (bloomsRect.isPointWithin(mouse_x, mouse_y)) {
-        textColor = colorRed;
-        if (mouse->isLeftButtonClicked()) {
-//            spawnBlooms = !spawnBlooms;
-        }
-    }
-
+    int textColor = bloomsRect.isPointWithin(mouse_x, mouse_y) ? colorRed : colorWhite;
     textDrawer.drawText(bloomsRect.getX(), bloomsRect.getY(), textColor, "Spice blooms : %s",
                         spawnBlooms ? "YES" : "NO");
 }
 
 void cSetupSkirmishGameState::drawWorms(const cRectangle &wormsRect) const {
-    int textColor = colorWhite;
-    if (wormsRect.isPointWithin(mouse_x, mouse_y)) {
-        textColor = colorRed;
-    }
-
+    int textColor = wormsRect.isPointWithin(mouse_x, mouse_y) ? colorRed : colorWhite;
     textDrawer.drawText(wormsRect.getX(), wormsRect.getY(), textColor, "Worms? : %d", spawnWorms);
 }
 
@@ -818,6 +799,8 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event
     onMouseLeftButtonClickedAtMapList();
     onMouseLeftButtonClickedAtStartPoints();
     onMouseLeftButtonClickedAtWorms();
+    onMouseLeftButtonClickedAtSpawnBlooms();
+    onMouseLeftButtonClickedAtDetonateBlooms();
 
 //    // draw players who will be playing ;)
 //    for (int p = 0; p < (AI_WORM - 1); p++) {
@@ -861,6 +844,20 @@ void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event
 //            drawTeams(sSkirmishPlayer, teamsRect);
 //        }
 //    }
+}
+
+void cSetupSkirmishGameState::onMouseLeftButtonClickedAtDetonateBlooms() {
+    if (spawnBlooms) {
+        if (detonateBloomsRect.isPointWithin(mouse_x, mouse_y)) {
+            detonateBlooms = !detonateBlooms;
+        }
+    }
+}
+
+void cSetupSkirmishGameState::onMouseLeftButtonClickedAtSpawnBlooms() {
+    if (bloomsRect.isPointWithin(mouse_x, mouse_y)) {
+        spawnBlooms = !spawnBlooms;
+    }
 }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtWorms() {
