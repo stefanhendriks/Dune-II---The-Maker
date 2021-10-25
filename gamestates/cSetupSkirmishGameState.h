@@ -123,6 +123,10 @@ private:
     void onMouseLeftButtonClickedAtWorms();
 
     void onMouseRightButtonClickedAtWorms();
+
+    void onMouseLeftButtonClickedAtSpawnBlooms();
+
+    void onMouseLeftButtonClickedAtDetonateBlooms();
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H
