@@ -127,6 +127,10 @@ private:
     void onMouseLeftButtonClickedAtSpawnBlooms();
 
     void onMouseLeftButtonClickedAtDetonateBlooms();
+
+    void onMouseRightButtonClickedAtPlayerList();
+
+    void onMouseLeftButtonClickedAtPlayerList();
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H

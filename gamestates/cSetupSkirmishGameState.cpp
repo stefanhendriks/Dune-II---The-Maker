@@ -265,23 +265,6 @@ void cSetupSkirmishGameState::draw() const {
 
 void cSetupSkirmishGameState::drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &teamsRect) const {
     int textColor = getTextColorForRect(sSkirmishPlayer, teamsRect);
-    // on click:
-//                if (mouse->isLeftButtonClicked())
-//                {
-//                    sSkirmishPlayer.team++;
-//                    if (sSkirmishPlayer.team > iStartingPoints) {
-//                        sSkirmishPlayer.team = 1;
-//                    }
-//                }
-//
-//                if (mouse->isRightButtonClicked())
-//                {
-//                    sSkirmishPlayer.team--;
-//                    if (sSkirmishPlayer.team < 1) {
-//                        sSkirmishPlayer.team = iStartingPoints;
-//                    }
-//                }
-
     textDrawer.drawText(teamsRect.getX(), teamsRect.getY(), textColor, "%d", sSkirmishPlayer.team);
 }
 
@@ -290,24 +273,6 @@ cSetupSkirmishGameState::drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlay
                                            const cRectangle &startingUnitsRect) const {
 
     int textColor = getTextColorForRect(sSkirmishPlayer, startingUnitsRect);
-
-    // on click:
-//                if (mouse->isLeftButtonClicked())
-//                {
-//                    sSkirmishPlayer.startingUnits++;
-//                    if (sSkirmishPlayer.startingUnits > 10) {
-//                        sSkirmishPlayer.startingUnits = 1;
-//                    }
-//                }
-//
-//                if (mouse->isRightButtonClicked())
-//                {
-//                    sSkirmishPlayer.startingUnits--;
-//                    if (sSkirmishPlayer.startingUnits < 1) {
-//                        sSkirmishPlayer.startingUnits = 10;
-//                    }
-//                }
-
     textDrawer.drawText(startingUnitsRect.getX(), startingUnitsRect.getY(), textColor, "%d",
                         sSkirmishPlayer.startingUnits);
 }
@@ -315,23 +280,6 @@ cSetupSkirmishGameState::drawStartingUnits(const s_SkirmishPlayer &sSkirmishPlay
 void
 cSetupSkirmishGameState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &creditsRect) const {
     int textColor = getTextColorForRect(sSkirmishPlayer, creditsRect);
-    // on click:
-    //                if (mouse->isLeftButtonClicked())
-//                {
-//                    sSkirmishPlayer.iCredits += 500;
-//                    if (sSkirmishPlayer.iCredits > 10000) {
-//                        sSkirmishPlayer.iCredits = 1000;
-//                    }
-//                }
-//
-//                if (mouse->isRightButtonClicked())
-//                {
-//                    sSkirmishPlayer.iCredits -= 500;
-//                    if (sSkirmishPlayer.iCredits < 1000) {
-//                        sSkirmishPlayer.iCredits = 10000;
-//                    }
-//                }
-
     textDrawer.drawText(creditsRect.getX(), creditsRect.getY(), textColor, "%d", sSkirmishPlayer.iCredits);
 }
 
@@ -352,45 +300,6 @@ cSetupSkirmishGameState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPl
 
 void cSetupSkirmishGameState::drawHouse(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &houseRec) const {
     int textColor = getTextColorForRect(sSkirmishPlayer, houseRec);
-
-    // on click:
-
-//                if (mouse->isLeftButtonClicked())
-//                {
-//                    sSkirmishPlayer.iHouse++;
-//
-//                    // Only human player can be Sardaukar?
-//                    if (p > 0)
-//                    {
-//                        if (sSkirmishPlayer.iHouse > SARDAUKAR) {
-//                            sSkirmishPlayer.iHouse = 0;
-//                        }
-//                    }
-//                    else
-//                    {
-//                        if (sSkirmishPlayer.iHouse > ORDOS) {
-//                            sSkirmishPlayer.iHouse = 0;
-//                        }
-//                    }
-//                }
-
-//                if (mouse->isRightButtonClicked())
-//                {
-//                    sSkirmishPlayer.iHouse--;
-//                    if (p > 0)
-//                    {
-//                        if (sSkirmishPlayer.iHouse < 0) {
-//                            sSkirmishPlayer.iHouse = SARDAUKAR;
-//                        }
-//                    }
-//                    else
-//                    {
-//                        if (sSkirmishPlayer.iHouse < 0) {
-//                            sSkirmishPlayer.iHouse =ORDOS;
-//                        }
-//                    }
-//                }
-
     const std::string &cPlayerHouseString = cPlayer::getHouseNameForId(sSkirmishPlayer.iHouse);
     const char *cHouse = sSkirmishPlayer.iHouse > 0 ? cPlayerHouseString.c_str() : "Random";
     textDrawer.drawText(houseRec.getX(), houseRec.getY(), textColor, cHouse);
@@ -402,18 +311,6 @@ cSetupSkirmishGameState::drawPlayerBrain(const s_SkirmishPlayer &sSkirmishPlayer
         textDrawer.drawText(brainRect.getX(), brainRect.getY(), "Human");
     } else {
         int textColor = getTextColorForRect(sSkirmishPlayer, brainRect);
-
-        // on click:
-        // only allow changing 'playing' state of CPU 2 or 3 (not 1, as there should always be one
-        // playing CPU)
-//                    if (p > 1 && mouse->isLeftButtonClicked())	{
-//                        if (sSkirmishPlayer.bPlaying) {
-//                            sSkirmishPlayer.bPlaying = false;
-//                        } else {
-//                            sSkirmishPlayer.bPlaying = true;
-//                        }
-//                    }
-
         textDrawer.drawText(brainRect.getX(), brainRect.getY(), textColor, "  CPU");
     }
 }
@@ -792,58 +689,171 @@ void cSetupSkirmishGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
 void cSetupSkirmishGameState::onMouseRightButtonClicked(const s_MouseEvent &event) {
     onMouseRightButtonClickedAtStartPoints();
     onMouseRightButtonClickedAtWorms();
+    onMouseRightButtonClickedAtPlayerList();
+}
+
+void cSetupSkirmishGameState::onMouseRightButtonClickedAtPlayerList() {// draw players who will be playing ;)
+    for (int p = 0; p < (AI_WORM - 1); p++) {
+        int iDrawY = playerList.getY() + 4 + (p * 22);
+        int iDrawX = 4;
+
+        if (p < iStartingPoints) {
+            s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
+            if (!sSkirmishPlayer.bPlaying) continue;
+
+            // HOUSE
+            cPlayer &cPlayer = players[p];
+
+            int houseX = 74;
+            int houseY = iDrawY;
+            cRectangle houseRec = cRectangle(houseX, houseY, 76, 16);
+            // on click:
+            if (houseRec.isPointWithin(mouse_x, mouse_y)) {
+                sSkirmishPlayer.iHouse--;
+                if (p > 0) {
+                    if (sSkirmishPlayer.iHouse < 0) {
+                        sSkirmishPlayer.iHouse = SARDAUKAR;
+                    }
+                } else {
+                    if (sSkirmishPlayer.iHouse < 0) {
+                        sSkirmishPlayer.iHouse = ORDOS;
+                    }
+                }
+            }
+
+            // Credits
+            int creditsX = 174;
+            int creditsY = iDrawY;
+            cRectangle creditsRect = cRectangle(creditsX, creditsY, 56, 16);
+
+            // on click:
+            if (creditsRect.isPointWithin(mouse_x, mouse_y)) {
+                sSkirmishPlayer.iCredits -= 500;
+                if (sSkirmishPlayer.iCredits < 1000) {
+                    sSkirmishPlayer.iCredits = 10000;
+                }
+            }
+
+            // Units
+            int startingUnitsX = 272;
+            int startingUnitsY = iDrawY;
+            cRectangle startingUnitsRect = cRectangle(startingUnitsX, startingUnitsY, 21, 16);
+            // on click:
+            if (startingUnitsRect.isPointWithin(mouse_x, mouse_y)) {
+                sSkirmishPlayer.startingUnits--;
+                if (sSkirmishPlayer.startingUnits < 1) {
+                    sSkirmishPlayer.startingUnits = 10;
+                }
+            }
+
+            // Credits
+            int teamsX = 340;
+            int teamsY = iDrawY;
+            cRectangle teamsRect = cRectangle(teamsX, teamsY, 21, 16);
+            // on click:
+            if (teamsRect.isPointWithin(mouse_x, mouse_y)) {
+                sSkirmishPlayer.team--;
+                if (sSkirmishPlayer.team < 1) {
+                    sSkirmishPlayer.team = iStartingPoints;
+                }
+            }
+        }
+    }
 }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClicked(const s_MouseEvent &event) {
-    onMouseLeftButtonClickedAtStartButton();
     onMouseLeftButtonClickedAtMapList();
     onMouseLeftButtonClickedAtStartPoints();
     onMouseLeftButtonClickedAtWorms();
     onMouseLeftButtonClickedAtSpawnBlooms();
     onMouseLeftButtonClickedAtDetonateBlooms();
+    onMouseLeftButtonClickedAtPlayerList();
+    onMouseLeftButtonClickedAtStartButton();
+}
 
-//    // draw players who will be playing ;)
-//    for (int p = 0; p < (AI_WORM - 1); p++) {
-//        int iDrawY = playerList.getY() + 4 + (p * 22);
-//        int iDrawX = 4;
-//
-//        const s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
-//
-//        if (p < iStartingPoints) {
-//            // player playing or not
-//
-//            cRectangle brainRect = cRectangle(iDrawX, iDrawY, 73, 16);
-//            drawPlayerBrain(sSkirmishPlayer, brainRect);
-//
-//            // HOUSE
-//            cPlayer &cPlayer = players[p];
-//
-//            int houseX = 74;
-//            int houseY = iDrawY;
-//            cRectangle houseRec = cRectangle(houseX, houseY, 76, 16);
-//
-//            drawHouse(sSkirmishPlayer, houseRec);
-//
-//            // Credits
-//            int creditsX = 174;
-//            int creditsY = iDrawY;
-//            cRectangle creditsRect = cRectangle(creditsX, creditsY, 56, 16);
-//
-//            drawCredits(sSkirmishPlayer, creditsRect);
-//
-//            // Units
-//            int startingUnitsX = 272;
-//            int startingUnitsY = iDrawY;
-//            cRectangle startingUnitsRect = cRectangle(startingUnitsX, startingUnitsY, 21, 16);
-//            drawStartingUnits(sSkirmishPlayer, startingUnitsRect);
-//
-//            // Credits
-//            int teamsX = 340;
-//            int teamsY = iDrawY;
-//            cRectangle teamsRect = cRectangle(teamsX, teamsY, 21, 16);
-//            drawTeams(sSkirmishPlayer, teamsRect);
-//        }
-//    }
+void cSetupSkirmishGameState::onMouseLeftButtonClickedAtPlayerList() {
+    for (int p = 0; p < (AI_WORM - 1); p++) {
+        int iDrawY = playerList.getY() + 4 + (p * 22);
+        int iDrawX = 4;
+
+        if (p < iStartingPoints) {
+            s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
+            // player playing or not
+
+            cRectangle brainRect = cRectangle(iDrawX, iDrawY, 73, 16);
+            // on click:
+            // only allow changing 'playing' state of CPU 2 or 3 (not 1, as there should always be one
+            // playing CPU)
+            if (brainRect.isPointWithin(mouse_x,mouse_y)) {
+                if (p > 1) {
+                    if (sSkirmishPlayer.bPlaying) {
+                        sSkirmishPlayer.bPlaying = false;
+                    } else {
+                        sSkirmishPlayer.bPlaying = true;
+                    }
+                }
+            }
+
+            if (!sSkirmishPlayer.bPlaying) continue;
+            // HOUSE
+            cPlayer &cPlayer = players[p];
+
+            int houseX = 74;
+            int houseY = iDrawY;
+            cRectangle houseRec = cRectangle(houseX, houseY, 76, 16);
+            // on click:
+            if (houseRec.isPointWithin(mouse_x, mouse_y)) {
+                sSkirmishPlayer.iHouse++;
+
+                // Only human player can be Sardaukar?
+                if (p > 0) {
+                    if (sSkirmishPlayer.iHouse > SARDAUKAR) {
+                        sSkirmishPlayer.iHouse = 0;
+                    }
+                } else {
+                    if (sSkirmishPlayer.iHouse > ORDOS) {
+                        sSkirmishPlayer.iHouse = 0;
+                    }
+                }
+            }
+
+            // Credits
+            int creditsX = 174;
+            int creditsY = iDrawY;
+            cRectangle creditsRect = cRectangle(creditsX, creditsY, 56, 16);
+            // on click:
+            if (creditsRect.isPointWithin(mouse_x, mouse_y)) {
+                sSkirmishPlayer.iCredits += 500;
+                if (sSkirmishPlayer.iCredits > 10000) {
+                    sSkirmishPlayer.iCredits = 1000;
+                }
+            }
+
+            // Units
+            int startingUnitsX = 272;
+            int startingUnitsY = iDrawY;
+            cRectangle startingUnitsRect = cRectangle(startingUnitsX, startingUnitsY, 21, 16);
+            // on click:
+            if (startingUnitsRect.isPointWithin(mouse_x, mouse_y)) {
+                sSkirmishPlayer.startingUnits++;
+                if (sSkirmishPlayer.startingUnits > 10) {
+                    sSkirmishPlayer.startingUnits = 1;
+                }
+            }
+
+            // Credits
+            int teamsX = 340;
+            int teamsY = iDrawY;
+            cRectangle teamsRect = cRectangle(teamsX, teamsY, 21, 16);
+            //  on click:
+            if (teamsRect.isPointWithin(mouse_x, mouse_y)) {
+                sSkirmishPlayer.team++;
+                if (sSkirmishPlayer.team > iStartingPoints) {
+                    sSkirmishPlayer.team = 1;
+                }
+            }
+        }
+    }
 }
 
 void cSetupSkirmishGameState::onMouseLeftButtonClickedAtDetonateBlooms() {
