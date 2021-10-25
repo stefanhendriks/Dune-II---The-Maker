@@ -119,6 +119,10 @@ private:
     void onMouseRightButtonClickedAtStartPoints();
 
     void onMouseLeftButtonClickedAtStartButton();
+
+    void onMouseLeftButtonClickedAtWorms();
+
+    void onMouseRightButtonClickedAtWorms();
 };
 
 #endif //D2TM_CSETUPSKIRMISHGAMESTATE_H
