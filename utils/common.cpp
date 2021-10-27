@@ -1449,6 +1449,7 @@ void install_structures() {
     sStructureInfo[CONSTYARD].bmp_height = 32 * 2;
     sStructureInfo[CONSTYARD].sight = 4;
     sStructureInfo[CONSTYARD].bmp = (BITMAP *) gfxdata[BUILD_CONSTYARD].dat;
+    sStructureInfo[CONSTYARD].shadow = (BITMAP *) gfxdata[BUILD_CONSTYARD_SHADOW].dat;
     sStructureInfo[CONSTYARD].fadecol = -1;
     sStructureInfo[CONSTYARD].icon = ICON_STR_CONSTYARD;
     sStructureInfo[CONSTYARD].configured = true;

@@ -2,6 +2,7 @@
 
 // Constructor
 cConstYard::cConstYard() {
+    frames = 0;
 }
 
 cConstYard::~cConstYard() {

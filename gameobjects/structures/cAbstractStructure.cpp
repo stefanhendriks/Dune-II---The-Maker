@@ -16,6 +16,7 @@
 // "default" Constructor
 cAbstractStructure::cAbstractStructure() {
     flags = std::vector<cFlag *>();
+    frames = 1;
     iHitPoints=-1;      // default = no hitpoints
     iCell=-1;
 
@@ -347,7 +348,7 @@ void cAbstractStructure::think_flag() {
         iFrame++;
 
 		// switch between 0 and 1.
-		if (iFrame > 1) {
+		if (iFrame > frames) {
             iFrame=0;
 		}
 
