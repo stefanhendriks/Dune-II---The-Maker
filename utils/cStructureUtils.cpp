@@ -363,7 +363,6 @@ int cStructureUtils::findStructureBy(int iPlayer, int iType, bool bFreeAround) {
                 }
             }
             return i; // return this structure
-            break;
         }
     }
     return -1;

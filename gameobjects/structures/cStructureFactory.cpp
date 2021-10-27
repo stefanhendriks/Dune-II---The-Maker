@@ -97,6 +97,27 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
         cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "cannot create structure: createStructureInstance returned NULL");
 		return NULL; // fail
 	}
+    
+    // add flags for structure
+    if (iStructureType == RADAR) {
+        cPlayer * player = &players[iPlayer];
+        cPoint absTopLeft = map.getAbsolutePositionFromCell(iCell);
+        // first flag coord on radar is 18,39
+        // flag is 16 pixels wide, so x becomes 18-16 = 2
+        absTopLeft.x += 2;
+        // flag is 16 pixels high, *but* its drawing has an Y offset of 6 pixels, so substract 6 from 39 => 33
+        absTopLeft.y += 33;
+        str->addFlag(new cFlag(player, absTopLeft, 12, 10));
+
+        absTopLeft = map.getAbsolutePositionFromCell(iCell);
+        // second flag coord on radar is 12,47
+        // flag is 16 pixels wide, so x becomes 12-16 = -4
+        absTopLeft.x += -4;
+        // flag is 16 pixels high, *but* its drawing has an Y offset of 6 pixels, so substract 6 from 47 => 41
+        absTopLeft.y += 41;
+
+        str->addFlag(new cFlag(player, absTopLeft, 12, 10));
+    }
 
     // calculate actual health
     float fHealth = hp * fPercent;

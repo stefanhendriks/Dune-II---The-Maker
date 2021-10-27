@@ -1,9 +1,6 @@
 /*
  * cMapCamera.h
  *
- *  Created on: 10-aug-2010
- *      Author: Stefan
- *
  *  A map camera is 'looking' at the map. Using this camera (or viewport) we can determine
  *  what to draw, how big, etc.
  *
@@ -128,8 +125,6 @@ public:
     void centerAndJumpViewPortToCell(int cell);
 
     void keepViewportWithinReasonableBounds();
-
-    int getZoomedHalfTileSize() const { return halfTile; }
 
     float getZoomedTileWidth() const { return tileWidth; }
 
