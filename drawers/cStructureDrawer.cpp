@@ -266,6 +266,7 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
         	} else {
         		drawStructureAnimation(structure);
         	}
+            structure->drawFlags();
         } else {
         	drawStructurePrebuildAnimation(structure);
         }

@@ -614,6 +614,8 @@ public:
 
     void setDesiredAmountOfWorms(int value);
 
+    cPoint getAbsolutePositionFromCell(int cell);
+
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
 

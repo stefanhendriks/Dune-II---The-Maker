@@ -1,12 +1,7 @@
-/*
- * gameobjects.h
- *
- *  Created on: 7-nov-2010
- *      Author: Stefan
- */
-
 #ifndef GAMEOBJECTS_H2_
 #define GAMEOBJECTS_H2_
+
+#include "cFlag.h"
 
 // GAME
 #include "../cGame.h"

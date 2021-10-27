@@ -33,11 +33,11 @@ void cOutPost::think_flag() {
 
 	TIMER_flag++;
 
-    if (TIMER_flag > 70) {
+    if (TIMER_flag > 35) {
         iFrame++;
 
-		// switch between 0 and 3.
-		if (iFrame > 3) {
+		// switch between 0 and 7.
+		if (iFrame > 7) {
             iFrame=0;
 		}
 

@@ -1499,3 +1499,7 @@ void cMap::onEntityDestroyed(const s_GameEvent &event) {
         setSandwormRespawnTimer();
     }
 }
+
+cPoint cMap::getAbsolutePositionFromCell(int cell) {
+    return cPoint(getAbsoluteXPositionFromCell(cell), getAbsoluteYPositionFromCell(cell));
+}
