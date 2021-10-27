@@ -58,6 +58,8 @@ class cAbstractStructure {
 		// Repairing stuff
 		bool bRepair;       // repairing? (using timer + gives animation)
 
+        int frames;         // amount of frames to iterate over in default/flag mode (old behavior, default = 1)
+
         // flags, if any
         std::vector<cFlag *> flags;
     public:
