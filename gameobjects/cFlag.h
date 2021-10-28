@@ -15,6 +15,8 @@ public:
 
     void thinkFast();
 
+    static cFlag * createBigFlag(cPlayer * player, cPoint & position);
+
 private:
     cPoint absCoords;
 
