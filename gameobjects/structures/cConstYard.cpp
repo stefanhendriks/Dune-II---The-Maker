@@ -18,7 +18,7 @@ void cConstYard::think() {
 
 void cConstYard::think_animation() {
 	cAbstractStructure::think_animation();
-	cAbstractStructure::think_flag();
+	cAbstractStructure::think_flag_new();
 }
 
 void cConstYard::think_guard() {

@@ -334,12 +334,9 @@ void cAbstractStructure::setRepairing(bool value) {
 }
 
 void cAbstractStructure::think_flag() {
-	if (isAnimating()) return; // do no flag animation when animating
+    think_flag_new();
 
-    // iterate over all flags and think
-    for (auto flag : flags) {
-        flag->thinkFast();
-    }
+    if (isAnimating()) return; // do no flag animation when animating
 
     // old flag behavior
 	TIMER_flag++;
@@ -353,6 +350,13 @@ void cAbstractStructure::think_flag() {
 		}
 
         TIMER_flag=0;
+    }
+}
+
+void cAbstractStructure::think_flag_new() {
+    // iterate over all flags and think
+    for (auto flag : flags) {
+        flag->thinkFast();
     }
 }
 
@@ -508,7 +512,11 @@ void cAbstractStructure::setOwner(int player) {
 void cAbstractStructure::think() {
     think_decay();
     think_repair();
-    think_flag();
+    if (getS_StructuresType().flags.empty()) {
+        think_flag();
+    } else {
+        think_flag_new();
+    }
 }
 
 void cAbstractStructure::think_repair() {

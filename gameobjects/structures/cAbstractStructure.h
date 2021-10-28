@@ -232,6 +232,8 @@ class cAbstractStructure {
         void unitStopsEnteringStructure();
 
         void unitIsNoLongerInteractingWithStructure(int unitID);
+
+    void think_flag_new();
 };
 
 #endif
