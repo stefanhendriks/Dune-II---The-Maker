@@ -107,16 +107,16 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
         absTopLeft.x += 2;
         // flag is 16 pixels high, *but* its drawing has an Y offset of 6 pixels, so substract 6 from 39 => 33
         absTopLeft.y += 33;
-        str->addFlag(new cFlag(player, absTopLeft, 12, 12));
+        str->addFlag(cFlag::createBigFlag(player, absTopLeft));
 
         absTopLeft = map.getAbsolutePositionFromCell(iCell);
         // second flag coord on radar is 12,47
         // flag is 16 pixels wide, so x becomes 12-16 = -4
-        absTopLeft.x += -4;
+        absTopLeft.x += -2;
         // flag is 16 pixels high, *but* its drawing has an Y offset of 6 pixels, so substract 6 from 47 => 41
         absTopLeft.y += 41;
 
-        str->addFlag(new cFlag(player, absTopLeft, 12, 12));
+        str->addFlag(cFlag::createBigFlag(player, absTopLeft));
     } else if (iStructureType == CONSTYARD) {
         cPlayer * player = &players[iPlayer];
         cPoint absTopLeft = map.getAbsolutePositionFromCell(iCell);
@@ -125,7 +125,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
         absTopLeft.x += -2;
         // flag is 16 pixels high, *but* its drawing has an Y offset of 6 pixels, so substract 6 from 14 => 8
         absTopLeft.y += 8;
-        str->addFlag(new cFlag(player, absTopLeft, 12, 12));
+        str->addFlag(cFlag::createBigFlag(player, absTopLeft));
     }
 
     // calculate actual health

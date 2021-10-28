@@ -1,4 +1,6 @@
 #include "d2tmh.h"
+#include "cFlag.h"
+
 
 cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay) :
         player(player), absCoords(absCoords),
@@ -40,4 +42,8 @@ void cFlag::thinkFast() {
         if (frame > (frames-1)) frame = 0;
         TIMER_animate = 0;
     }
+}
+
+cFlag *cFlag::createBigFlag(cPlayer * player, cPoint & position) {
+    return new cFlag(player, position, 12, 24);
 }
