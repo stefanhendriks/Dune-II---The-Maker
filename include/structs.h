@@ -78,11 +78,18 @@ struct s_UnitInfo {
 
 };
 
+struct s_FlagInfo {
+    int relX;
+    int relY; // relative X, Y position compared to top-left of structure
+};
+
 // Structure types
 struct s_StructureInfo {
   // Structures
   BITMAP *bmp;         // a pointer to the 8 bit bitmap
   BITMAP *shadow;	   // a pointer to the shadow bitmap
+
+  std::vector<s_FlagInfo> flags;
 
   int bmp_width;       // width structure (in pixels)
   int bmp_height;      // height structure (in pixels)

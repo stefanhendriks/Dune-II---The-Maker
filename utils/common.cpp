@@ -1272,6 +1272,7 @@ void install_structures() {
         s_StructureInfo &structureInfo = sStructureInfo[i];
         structureInfo.bmp = (BITMAP *) gfxdata[BUILD_WINDTRAP].dat; // in case an invalid bitmap, we are a windtrap
         structureInfo.shadow = nullptr; // in case an invalid bitmap, we are a windtrap
+        structureInfo.flags = std::vector<s_FlagInfo>();
         structureInfo.sight = 1;
         structureInfo.bmp_width = 32 * 2;
         structureInfo.bmp_height = 32 * 2;
@@ -1395,6 +1396,15 @@ void install_structures() {
     sStructureInfo[RADAR].fadecol = -1;
     sStructureInfo[RADAR].icon = ICON_STR_RADAR;
     sStructureInfo[RADAR].configured = true;
+    // outpost has 2 flags
+    sStructureInfo[RADAR].flags.push_back((s_FlagInfo) {
+            .relX = 2,
+            .relY = 33
+    });
+    sStructureInfo[RADAR].flags.push_back((s_FlagInfo) {
+            .relX = -2,
+            .relY = 41
+    });
     strcpy(sStructureInfo[RADAR].name, "Outpost");
 
     // Structure    : Barracks
@@ -1450,6 +1460,10 @@ void install_structures() {
     sStructureInfo[CONSTYARD].sight = 4;
     sStructureInfo[CONSTYARD].bmp = (BITMAP *) gfxdata[BUILD_CONSTYARD].dat;
     sStructureInfo[CONSTYARD].shadow = (BITMAP *) gfxdata[BUILD_CONSTYARD_SHADOW].dat;
+    sStructureInfo[CONSTYARD].flags.push_back((s_FlagInfo) {
+            .relX = -2,
+            .relY = 8
+    });
     sStructureInfo[CONSTYARD].fadecol = -1;
     sStructureInfo[CONSTYARD].icon = ICON_STR_CONSTYARD;
     sStructureInfo[CONSTYARD].configured = true;

@@ -76,8 +76,8 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 
     float fPercent = (float)iPercent/100; // divide by 100 (to make it 0.x)
 
-    s_StructureInfo &sStructures = sStructureInfo[iStructureType];
-    int hp = sStructures.hp;
+    s_StructureInfo &structureInfo = sStructureInfo[iStructureType];
+    int hp = structureInfo.hp;
     if (hp < 0) {
         cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "Structure to create has no hp, aborting creation.");
         return nullptr;
@@ -97,34 +97,13 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
         cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "cannot create structure: createStructureInstance returned NULL");
 		return NULL; // fail
 	}
-    
-    // add flags for structure
-    if (iStructureType == RADAR) {
-        cPlayer * player = &players[iPlayer];
-        cPoint absTopLeft = map.getAbsolutePositionFromCell(iCell);
-        // first flag coord on radar is 18,39
-        // flag is 16 pixels wide, so x becomes 18-16 = 2
-        absTopLeft.x += 2;
-        // flag is 16 pixels high, *but* its drawing has an Y offset of 6 pixels, so substract 6 from 39 => 33
-        absTopLeft.y += 33;
-        str->addFlag(cFlag::createBigFlag(player, absTopLeft));
 
-        absTopLeft = map.getAbsolutePositionFromCell(iCell);
-        // second flag coord on radar is 12,47
-        // flag is 16 pixels wide, so x becomes 12-16 = -4
-        absTopLeft.x += -2;
-        // flag is 16 pixels high, *but* its drawing has an Y offset of 6 pixels, so substract 6 from 47 => 41
-        absTopLeft.y += 41;
+    cPoint absTopLeft = map.getAbsolutePositionFromCell(iCell);
+    cPlayer * player = &players[iPlayer];
 
-        str->addFlag(cFlag::createBigFlag(player, absTopLeft));
-    } else if (iStructureType == CONSTYARD) {
-        cPlayer * player = &players[iPlayer];
-        cPoint absTopLeft = map.getAbsolutePositionFromCell(iCell);
-        // first flag coord on constyard is 14,14
-        // flag is 16 pixels wide, so x becomes 14-16 = -2
-        absTopLeft.x += -2;
-        // flag is 16 pixels high, *but* its drawing has an Y offset of 6 pixels, so substract 6 from 14 => 8
-        absTopLeft.y += 8;
+    for (auto flag : structureInfo.flags) {
+        absTopLeft.x += flag.relX;
+        absTopLeft.y += flag.relY;
         str->addFlag(cFlag::createBigFlag(player, absTopLeft));
     }
 
@@ -137,7 +116,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
         logbook(msg2);
     }
 
-    int structureSize = sStructures.bmp_width * sStructures.bmp_height;
+    int structureSize = structureInfo.bmp_width * structureInfo.bmp_height;
 
     // assign to array
 	structure[iNewId] = str;
@@ -152,8 +131,8 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	str->setHitPoints((int)fHealth);
     str->setFrame(rnd(1)); // random start frame (flag)
     str->setStructureId(iNewId);
-	str->setWidth(sStructures.bmp_width / TILESIZE_WIDTH_PIXELS);
-	str->setHeight(sStructures.bmp_height / TILESIZE_HEIGHT_PIXELS);
+	str->setWidth(structureInfo.bmp_width / TILESIZE_WIDTH_PIXELS);
+	str->setHeight(structureInfo.bmp_height / TILESIZE_HEIGHT_PIXELS);
 
  	// clear fog around structure
 	clearFogForStructureType(iCell, str);
