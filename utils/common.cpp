@@ -1373,6 +1373,11 @@ void install_structures() {
     sStructureInfo[PALACE].shadow = (BITMAP *) gfxdata[BUILD_PALACE_SHADOW].dat;
     sStructureInfo[PALACE].icon = ICON_STR_PALACE;
     sStructureInfo[PALACE].configured = true;
+    // outpost has 2 flags
+    sStructureInfo[PALACE].flags.push_back((s_FlagInfo) {
+            .relX = 13, // 29 - 16
+            .relY = 8  // 14 - 6 - flag is 16 pixels high, *but* its drawing has an Y offset of 6 pixels, so substract
+    });
     strcpy(sStructureInfo[PALACE].name, "Palace");
 
     // Structure    : Light Factory
