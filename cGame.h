@@ -58,9 +58,7 @@ public:
 
 	bool bPlaying;				// playing or not
     bool bSkirmish;             // playing a skirmish game  or not
-	int  iSkirmishMap;			// what map is selected
 	int screenshot;				// screenshot taking number
-	int iSkirmishStartPoints;	// random map startpoints
 
 	void init();		// initialize all game variables
 	void mission_init(); // initialize variables for mission loading only
@@ -99,7 +97,9 @@ public:
 	void shutdown();
 
 	bool isState(int thisState);
-	void setState(int newState);
+
+    // Use this instead
+	void setNextStateToTransitionTo(int newState);
 
 	int getMaxVolume() { return iMaxVolume; }
 
@@ -212,16 +212,49 @@ public:
     void prepareMentatToTellAboutHouse(int house);
 
 private:
-	void updateState();
-	void combat();		// the combat part (main) of the game
-	bool isMusicPlaying();
+    /**
+     * Variables start here
+     */
+    cInteractionManager *_interactionManager;
+    cAllegroDataRepository *m_dataRepository;
 
-	void stateMentat(cAbstractMentat *pMentat);  // state mentat talking and interaction
-	void menu();		// main menu
+    cSoundPlayer *soundPlayer;
+    cMouse *mouse;
 
-	void drawState();
-	void shakeScreenAndBlitBuffer();
-	void handleTimeSlicing();
+	int state;
+
+	int iMaxVolume;
+
+	cAbstractMentat *pMentat; // TODO: Move this into a gameState class (as field)?
+
+    float fade_select;        // fade color when selected
+    bool bFadeSelectDir;    // fade select direction
+
+    // screen shaking
+    int shake_x;
+    int shake_y;
+    int TIMER_shake;
+
+    int TIMER_evaluatePlayerStatus;
+
+    // win/lose flags
+    int8_t winFlags, loseFlags;
+
+    int frame_count, fps;  // fps and such
+
+    int nextState;
+    cGameState *gameState;
+
+    void updateState();
+    void combat();		// the combat part (main) of the game
+    bool isMusicPlaying();
+
+    void stateMentat(cAbstractMentat *pMentat);  // state mentat talking and interaction
+    void menu();		// main menu
+
+    void drawState();
+    void shakeScreenAndBlitBuffer();
+    void handleTimeSlicing();
 
     bool isResolutionInGameINIFoundAndSet();
     void setScreenResolutionFromGameIniSettings();
@@ -254,37 +287,9 @@ private:
 
     bool hasGameOverConditionAIHasNoBuildings() const;
 
-    /**
-     * Variables start here
-     */
-    cInteractionManager *_interactionManager;
-    cAllegroDataRepository *m_dataRepository;
+    void transitionStateIfRequired();
 
-    cSoundPlayer *soundPlayer;
-    cMouse *mouse;
-
-	int state;
-
-	int iMaxVolume;
-
-	cAbstractMentat *pMentat; // TODO: Move this into a gameState class (as field)?
-
-    float fade_select;        // fade color when selected
-    bool bFadeSelectDir;    // fade select direction
-
-    // screen shaking
-    int shake_x;
-    int shake_y;
-    int TIMER_shake;
-
-    int TIMER_evaluatePlayerStatus;
-
-    // win/lose flags
-    int8_t winFlags, loseFlags;
-
-    int frame_count, fps;  // fps and such
-
-    cGameState *gameState;
+    void setState(int newState);
 };
 
 #endif

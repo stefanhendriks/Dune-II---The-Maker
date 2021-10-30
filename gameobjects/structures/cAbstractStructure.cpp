@@ -15,6 +15,8 @@
 
 // "default" Constructor
 cAbstractStructure::cAbstractStructure() {
+    flags = std::vector<cFlag *>();
+    frames = 1;
     iHitPoints=-1;      // default = no hitpoints
     iCell=-1;
 
@@ -73,6 +75,11 @@ cAbstractStructure::~cAbstractStructure() {
     iCell = -1;
     posX = -1;
     posY = -1;
+
+    // delete all flags
+    for (auto flag : flags) {
+        delete flag;
+    }
 }
 
 int cAbstractStructure::pos_x() {
@@ -327,19 +334,29 @@ void cAbstractStructure::setRepairing(bool value) {
 }
 
 void cAbstractStructure::think_flag() {
-	if (isAnimating()) return; // do no flag animation when animating
+    think_flag_new();
 
+    if (isAnimating()) return; // do no flag animation when animating
+
+    // old flag behavior
 	TIMER_flag++;
 
     if (TIMER_flag > 70) {
         iFrame++;
 
 		// switch between 0 and 1.
-		if (iFrame > 1) {
+		if (iFrame > frames) {
             iFrame=0;
 		}
 
         TIMER_flag=0;
+    }
+}
+
+void cAbstractStructure::think_flag_new() {
+    // iterate over all flags and think
+    for (auto flag : flags) {
+        flag->thinkFast();
     }
 }
 
@@ -495,6 +512,11 @@ void cAbstractStructure::setOwner(int player) {
 void cAbstractStructure::think() {
     think_decay();
     think_repair();
+    if (getS_StructuresType().flags.empty()) {
+        think_flag();
+    } else {
+        think_flag_new();
+    }
 }
 
 void cAbstractStructure::think_repair() {
@@ -747,4 +769,14 @@ void cAbstractStructure::unitIsNoLongerInteractingWithStructure(int unitID) {
         // update structure state that this unit is no longer entering this building
         unitStopsEnteringStructure();
     }
+}
+
+void cAbstractStructure::drawFlags() {
+    for (auto flag : flags) {
+        flag->draw();
+    }
+}
+
+void cAbstractStructure::addFlag(cFlag *flag) {
+    flags.push_back(flag);
 }

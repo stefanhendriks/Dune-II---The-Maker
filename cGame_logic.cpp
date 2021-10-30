@@ -17,6 +17,7 @@
 
 
 cGame::cGame() {
+    nextState = -1;
     gameState = nullptr;
 	screen_x = 800;
 	screen_y = 600;
@@ -37,6 +38,7 @@ cGame::cGame() {
 
 
 void cGame::init() {
+    nextState = -1;
     gameState = nullptr;
 	screenshot=0;
 	bPlaying=true;
@@ -44,13 +46,10 @@ void cGame::init() {
     TIMER_evaluatePlayerStatus = 5;
 
     bSkirmish=false;
-	iSkirmishStartPoints=2;
 
     // Alpha (for fading in/out)
     fadeAlpha=0;                             // 255 = opaque , anything else
     fadeAction=eFadeAction::FADE_IN;           // 0 = NONE, 1 = fade out (go to 0), 2 = fade in (go to 255)
-
-    iSkirmishMap=-1;
 
     iMusicVolume=96; // volume is 0...
 
@@ -635,6 +634,7 @@ void cGame::run() {
         updateState();
 		handleTimeSlicing(); // handle time diff (needs to change!)
         drawState(); // run game state, includes interaction + drawing
+        transitionStateIfRequired();
 		_interactionManager->interactWithKeyboard(); // generic interaction
 		shakeScreenAndBlitBuffer(); // finally, draw the bmp_screen to real screen (double buffering)
 		frame_count++;
@@ -789,9 +789,6 @@ bool cGame::setupGame() {
 		return false;
 	}
 
-    m_dataRepository = new cAllegroDataRepository();
-    allegroDrawer = new cAllegroDrawer(m_dataRepository);
-
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Allegro init", allegro_id, OUTC_SUCCESS);
 
 	int r = install_timer();
@@ -930,7 +927,7 @@ bool cGame::setupGame() {
 	}
 
 
-	bene_font = alfont_load_font("data/benegess.fon");
+    bene_font = alfont_load_font("data/benegess.fon");
 
 	if (bene_font != NULL) {
 		logger->log(LOG_INFO, COMP_ALFONT, "Loading font", "loaded benegess.fon", OUTC_SUCCESS);
@@ -1134,7 +1131,11 @@ bool cGame::setupGame() {
 		logbook("Datafile hooked: gfxmentat.dat");
 	}
 
-	// randomize timer
+    // finally the data repository and drawer interface can be initialized
+    m_dataRepository = new cAllegroDataRepository();
+    allegroDrawer = new cAllegroDrawer(m_dataRepository);
+
+    // randomize timer
 	unsigned int t = (unsigned int) time(0);
 	char seedtxt[80];
 	sprintf(seedtxt, "Seed is %u", t);
@@ -1614,4 +1615,21 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
     if (gameState) {
         gameState->onNotifyMouseEvent(event);
     }
+}
+
+void cGame::transitionStateIfRequired() {
+    if (nextState > -1){
+        setState(nextState);
+
+        if(nextState == GAME_BRIEFING) {
+            playMusicByType(MUSIC_BRIEFING);
+            game.createAndPrepareMentatForHumanPlayer();
+        }
+
+        nextState = -1;
+    }
+}
+
+void cGame::setNextStateToTransitionTo(int newState) {
+    nextState = newState;
 }

@@ -1,9 +1,6 @@
 /*
  * cMapCamera.h
  *
- *  Created on: 10-aug-2010
- *      Author: Stefan
- *
  *  A map camera is 'looking' at the map. Using this camera (or viewport) we can determine
  *  what to draw, how big, etc.
  *
@@ -17,6 +14,8 @@
 
 #ifndef CMAPCAMERA_H_
 #define CMAPCAMERA_H_
+
+#include <cmath>
 
 class cMapCamera {
 
@@ -81,7 +80,7 @@ public:
      * @return
      */
     int getWindowXPositionWithOffset(int absoluteXPosition, int offset) {
-        return factorZoomLevel((absoluteXPosition - viewportStartX) + offset);
+        return std::round(factorZoomLevel((absoluteXPosition - viewportStartX) + offset));
     }
 
     /**
@@ -92,7 +91,7 @@ public:
      * @return
      */
     int getWindowYPositionWithOffset(int absoluteYPosition, int offset) {
-        return factorZoomLevel((absoluteYPosition - viewportStartY) + offset) + heightOfTopBar;
+        return std::round(factorZoomLevel((absoluteYPosition - viewportStartY) + offset) + heightOfTopBar);
     }
 
     // These methods need to use zoomfactor to properly calculate the position on the map
@@ -128,8 +127,6 @@ public:
     void centerAndJumpViewPortToCell(int cell);
 
     void keepViewportWithinReasonableBounds();
-
-    int getZoomedHalfTileSize() const { return halfTile; }
 
     float getZoomedTileWidth() const { return tileWidth; }
 

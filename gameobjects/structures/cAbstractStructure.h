@@ -58,6 +58,10 @@ class cAbstractStructure {
 		// Repairing stuff
 		bool bRepair;       // repairing? (using timer + gives animation)
 
+        int frames;         // amount of frames to iterate over in default/flag mode (old behavior, default = 1)
+
+        // flags, if any
+        std::vector<cFlag *> flags;
     public:
 
 		// Constructor & Destructor:
@@ -68,7 +72,6 @@ class cAbstractStructure {
 		float fConcrete;     // how much concrete is *not* beneath this building (percentage)?
 							 // meaning, when 0% , it is all concrete. But if 10%, it means 10% of the building
 							 // is not covered.
-
 
 		// TIMERS that all structures use
 		int TIMER_repair;   // repairing timer
@@ -92,6 +95,9 @@ class cAbstractStructure {
 		void think_repair();              // repair thinking
 		void think_decay();              // think about damaging through time
 		void think_flag();				  // think method for flag animation
+
+        void drawFlags();                   // draw all flags
+        void addFlag(cFlag *flag);
 
 		int getSmokeChance();             // probability to create smoke particle
 
@@ -225,7 +231,9 @@ class cAbstractStructure {
 
         void unitStopsEnteringStructure();
 
-    void unitIsNoLongerInteractingWithStructure(int unitID);
+        void unitIsNoLongerInteractingWithStructure(int unitID);
+
+    void think_flag_new();
 };
 
 #endif

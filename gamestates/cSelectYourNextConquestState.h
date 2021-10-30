@@ -40,7 +40,7 @@ public:
     ~cSelectYourNextConquestState() override;
 
     void thinkFast() override;
-    void draw() override;
+    void draw() const override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
 
@@ -70,7 +70,6 @@ public:
     void calculateOffset();
 
 private:
-
     eRegionState state;
 
     eRegionSceneState regionSceneState;
@@ -81,22 +80,6 @@ private:
 
     char cRegionText[MAX_REGIONS][255]; // text for this
 
-    void REGION_DRAW(cRegion &regionPiece);
-    int REGION_OVER(int mouseX, int mouseY);
-    void REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile);
-
-    void drawStateSelectYourNextConquest();
-
-    void drawStateConquerRegions();
-
-    void drawStateIntroduction();
-
-    void drawLogoInFourCorners(int iHouse) const;
-
-    void transitionToNextRegionSceneState(eRegionSceneState newSceneState);
-
-    void drawRegion(cRegion &regionPiece) const;
-
     int offsetX;
     int offsetY;
 
@@ -105,13 +88,35 @@ private:
     int regionMouseIsHoveringOver;
 
     BITMAP *regionClickMapBmp;  // this is the bmp that
+
+    bool isFinishedConqueringRegions = true;
+
+    // Functions
+    void REGION_DRAW(cRegion &regionPiece) const;
+
+    void drawStateSelectYourNextConquest() const;
+
+    void drawStateConquerRegions() const;
+
+    void drawStateIntroduction() const;
+
+    void drawLogoInFourCorners(int iHouse) const;
+
+    void transitionToNextRegionSceneState(eRegionSceneState newSceneState);
+
+    void drawRegion(cRegion &regionPiece) const;
+
     void onMouseMove(const s_MouseEvent &event);
 
-    cRegion * getRegionMouseIsOver();
+    int REGION_OVER(int mouseX, int mouseY);
+    void REGION_NEW(int x, int y, int iAlpha, int iHouse, int iTile);
+
+    cRegion * getRegionMouseIsOver() const;
 
     void loadScenarioAndTransitionToNextState(int iMission);
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
+
 };
 
 #endif //D2TM_CSELECTYOURNEXTCONQUESTSTATE_H

@@ -16,24 +16,24 @@ class cTextDrawer {
 
 		void setFont(ALFONT_FONT *theFont);
 
-		void drawTextWithOneFloat(int x, int y, int color, const char * msg, float var);
-		void drawTextWithOneInteger(int x, int y, int color, const char * msg, int var);
-		void drawTextWithOneInteger(int x, int y, const char * msg, int var);
-		void drawTextWithTwoIntegers(int x, int y, const char * msg, int var1, int var2);
+		void drawTextWithOneInteger(int x, int y, int color, const char * msg, int var) const;
+		void drawTextWithOneInteger(int x, int y, const char * msg, int var) const;
+		void drawTextWithTwoIntegers(int x, int y, const char * msg, int var1, int var2) const;
 
-        void drawText(int x, int y, const char * msg, const char *var);
-		void drawText(int x, int y, const char * msg, int var);
-		void drawText(int x, int y, const char * msg);
+        void drawText(int x, int y, const char * msg, const char *var) const;
+		void drawText(int x, int y, const char * msg, int var) const;
+		void drawText(int x, int y, const char * msg) const;
 
-        void drawText(cPoint &coords, int color, const char *msg);
+        void drawText(cPoint &coords, int color, const char *msg) const;
 
-        void drawText(int x, int y, int color, const char *msg);
-        void drawText(int x, int y, int color, const char *msg, int var);
-		void drawText(int x, int y, int color, const char *msg, const char *var);
+        void drawText(int x, int y, int color, const char *msg) const;
+        void drawText(int x, int y, int color, const char *msg, int var) const;
+        void drawText(int x, int y, const char *msg, int var1, int var2) const;
+		void drawText(int x, int y, int color, const char *msg, const char *var) const;
 
-		void drawTextCentered(const char * msg, int y);
-		void drawTextCentered(const char * msg, int y, int color);
-        void drawTextCentered(const char * msg, int x, int width, int y, int color);
+		void drawTextCentered(const char * msg, int y) const;
+		void drawTextCentered(const char * msg, int y, int color) const;
+        void drawTextCentered(const char * msg, int x, int width, int y, int color) const;
 
         /**
          * Draws the text within a 'box' (rectangle), positioned at X,Y. The width/height of the box determine
@@ -46,26 +46,33 @@ class cTextDrawer {
          * @param boxHeight
          * @param color
          */
-        void drawTextCenteredInBox(const char * msg, int x, int y, int boxWidth, int boxHeight, int color);
+        void drawTextCenteredInBox(const char * msg, int x, int y, int boxWidth, int boxHeight, int color) const;
 
-		void drawTextBottomRight(const char * msg);
-		void drawTextBottomLeft(const char * msg);
+        void drawTextCenteredInBox(const char * msg, const cRectangle & rect, int color) const;
 
-		void drawTextBottomRight(int color, const char * msg);
-		void drawTextBottomLeft(int color, const char * msg);
+        void drawTextCenteredInBox(const char * msg, const cRectangle & rect, int color, int offsetX, int offsetY) const;
+
+		void drawTextBottomRight(const char * msg) const;
+		void drawTextBottomLeft(const char * msg) const;
+
+		void drawTextBottomRight(int color, const char * msg) const;
+		void drawTextBottomLeft(int color, const char * msg) const;
 
 		void setApplyShadow(bool value) { applyShadow = value; }
 
-		int textLength(const char * msg);
+        void setTextColor(int value) { textColor = value; }
+		int textLength(const char * msg) const;
         int getFontHeight() const;
 
-        cRectangle * getAsRectangle(int x, int y, const char * msg);
+        cRectangle getRect(int x, int y, const char * msg) const;
+        cRectangle * getAsRectangle(int x, int y, const char * msg) const;
 	protected:
 
 	private:
 		ALFONT_FONT *font;
 		bool applyShadow;
 
+        int textColor;
 };
 
 #endif /* TEXTDRAWER_H_ */

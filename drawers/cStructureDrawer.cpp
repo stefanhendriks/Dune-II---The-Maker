@@ -40,6 +40,8 @@ void cStructureDrawer::drawRectangeOfStructure(cAbstractStructure * theStructure
 
 void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure * structure) {
 	int iDrawPreBuild = determinePreBuildAnimationIndex(structure);
+    if (iDrawPreBuild < 0) return; // bail, don't draw invalid tiles
+
     int pixelWidth = structure->getWidthInPixels();
     int pixelHeight = structure->getHeightInPixels();
 
@@ -56,15 +58,20 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure * struc
     // Draw prebuild
     draw_sprite(temp, (BITMAP *) gfxdata[iDrawPreBuild].dat, 0, 0);
     allegroDrawer->stretchSprite(temp, bmp_screen, drawX, drawY, scaledWidth, scaledHeight);
+    destroy_bitmap(temp);
 
     // Draw shadow of the prebuild animation
-    if (iDrawPreBuild != BUILD_PRE_CONST) {
-        int shadowIndex = iDrawPreBuild + 1;
-        set_trans_blender(0,0,0,128);
-        allegroDrawer->stretchSprite((BITMAP *)gfxdata[shadowIndex].dat, bmp_screen, drawX, drawY, scaledWidth, scaledHeight);
-    }
+    int shadowIndex = iDrawPreBuild + 1;
+    set_trans_blender(0,0,0,128);
+    BITMAP *shadow = (BITMAP *) gfxdata[shadowIndex].dat;
 
-    destroy_bitmap(temp);
+    BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+    clear_to_color(stretchedShadow, makecol(255, 0, 255));
+    allegroDrawer->stretchSprite(shadow, stretchedShadow, 0, 0, scaledWidth, scaledHeight);
+
+    allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
+
+    destroy_bitmap(stretchedShadow);
 }
 
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
@@ -83,12 +90,24 @@ void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
     int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
-    if (structure->getShadowBitmap()) {
-        set_trans_blender(0, 0, 0, 128);
-        allegroDrawer->maskedStretchBlit(structure->getShadowBitmap(), bmp_screen, 0, iSourceY, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
+    BITMAP *shadow = structure->getShadowBitmap();
+    if (shadow) {
+        set_trans_blender(0, 0, 0, 160);
+
+        int colorDepth = bitmap_color_depth(bmp_screen);
+        BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+        clear_to_color(stretchedShadow, makecol(255, 0, 255));
+
+        allegroDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
+                                         0, 0, scaledWidth, scaledHeight);
+
+        allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
+
+        destroy_bitmap(stretchedShadow);
     }
 
-    allegroDrawer->maskedStretchBlit(structure->getBitmap(), bmp_screen, 0, iSourceY, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
+    allegroDrawer->maskedStretchBlit(structure->getBitmap(), bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
+                                     drawX, drawY, scaledWidth, scaledHeight);
 }
 
 int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure * structure) {
@@ -155,8 +174,20 @@ void cStructureDrawer::drawStructureAnimationWindTrap(cAbstractStructure * struc
     int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
     int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
 
-    if (structure->getShadowBitmap()) {
-        allegroDrawer->maskedStretchBlit(structure->getShadowBitmap(), bmp_screen, 0, iSourceY, pixelWidth, pixelHeight, drawX, drawY, scaledWidth, scaledHeight);
+    BITMAP *shadow = structure->getShadowBitmap();
+    if (shadow) {
+        set_trans_blender(0, 0, 0, 160);
+
+        int colorDepth = bitmap_color_depth(bmp_screen);
+        BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+        clear_to_color(stretchedShadow, makecol(255, 0, 255));
+
+        allegroDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
+                                         0, 0, scaledWidth, scaledHeight);
+
+        allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
+
+        destroy_bitmap(stretchedShadow);
     }
 
     allegroDrawer->bitmap_replace_color(wind, makecol(40, 40, 182), makecol(0, 0, fade));
@@ -235,6 +266,7 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int
         	} else {
         		drawStructureAnimation(structure);
         	}
+            structure->drawFlags();
         } else {
         	drawStructurePrebuildAnimation(structure);
         }
