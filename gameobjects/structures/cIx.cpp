@@ -2,36 +2,28 @@
 
 // Constructor
 cIx::cIx() {
-
- // other variables (class specific)
-
+    // other variables (class specific)
 }
 
 int cIx::getType() const {
-	return IX;
+    return IX;
 }
 
-cIx::~cIx()
-{
+cIx::~cIx() {
 
 }
 
-
-void cIx::think()
-{
-
-	// last but not least, think like our abstraction
-	cAbstractStructure::think();
+void cIx::think() {
+    cAbstractStructure::think();
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)
 void cIx::think_animation() {
-	cAbstractStructure::think_animation();
-	cAbstractStructure::think_flag();
+    cAbstractStructure::think_animation();
+    cAbstractStructure::think_flag_new();
 }
 
-void cIx::think_guard()
-{
+void cIx::think_guard() {
 
 }
 
