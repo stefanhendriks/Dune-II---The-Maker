@@ -1501,6 +1501,10 @@ void install_structures() {
     sStructureInfo[IX].fadecol = -1;
     sStructureInfo[IX].icon = ICON_STR_IX;
     sStructureInfo[IX].configured = true;
+    sStructureInfo[IX].flags.push_back((s_FlagInfo) {
+            .relX = 45, // 60
+            .relY = 35  // 40
+    });
     strcpy(sStructureInfo[IX].name, "House of IX");
 
     // Structure    : Normal Turret
