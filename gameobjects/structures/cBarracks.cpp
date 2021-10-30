@@ -21,7 +21,7 @@ void cBarracks::think_animation() {
 		setAnimating(false);
 	}
 	cAbstractStructure::think_animation();
-	cAbstractStructure::think_flag();
+	cAbstractStructure::think_flag_new();
 }
 
 void cBarracks::think_guard() {

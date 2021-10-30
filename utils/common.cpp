@@ -1420,6 +1420,14 @@ void install_structures() {
     sStructureInfo[BARRACKS].fadecol = -1;
     sStructureInfo[BARRACKS].icon = ICON_STR_BARRACKS;
     sStructureInfo[BARRACKS].configured = true;
+    sStructureInfo[BARRACKS].flags.push_back((s_FlagInfo) {
+            .relX = 45, // 60
+            .relY = 42  // 47
+    });
+    sStructureInfo[BARRACKS].flags.push_back((s_FlagInfo) {
+            .relX = 36, // 51
+            .relY = 45  // 50
+    });
     strcpy(sStructureInfo[BARRACKS].name, "Barracks");
 
     // Structure    : WOR
