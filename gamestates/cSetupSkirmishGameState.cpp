@@ -957,7 +957,7 @@ void cSetupSkirmishGameState::onMouseLeftButtonClickedAtMapList() {
 }
 
 void cSetupSkirmishGameState::generateRandomMap() {
-    randomMapGenerator.generateRandomMap(0);
+    randomMapGenerator.generateRandomMap(iStartingPoints);
     spawnWorms = map.isBigMap() ? 4 : 2;
 }
 
