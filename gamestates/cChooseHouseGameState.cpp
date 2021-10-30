@@ -51,7 +51,7 @@ void cChooseHouseGameState::thinkFast() {
 
 }
 
-void cChooseHouseGameState::draw() {
+void cChooseHouseGameState::draw() const {
     cMouse *mouse = game.getMouse();
 
     // Render the planet Dune a bit downward
@@ -92,20 +92,20 @@ void cChooseHouseGameState::onMouseLeftButtonClicked(const s_MouseEvent &event) 
     if (event.coords.isWithinRectangle(&houseAtreides)) {
         game.prepareMentatToTellAboutHouse(ATREIDES);
         play_sound_id(SOUND_ATREIDES);
-        game.setState(GAME_TELLHOUSE);
+        game.setNextStateToTransitionTo(GAME_TELLHOUSE);
         game.START_FADING_OUT();
     } else if (event.coords.isWithinRectangle(&houseOrdos)) {
         game.prepareMentatToTellAboutHouse(ORDOS);
         play_sound_id(SOUND_ORDOS);
-        game.setState(GAME_TELLHOUSE);
+        game.setNextStateToTransitionTo(GAME_TELLHOUSE);
         game.START_FADING_OUT();
     } else if (event.coords.isWithinRectangle(&houseHarkonnen)) {
         game.prepareMentatToTellAboutHouse(HARKONNEN);
         play_sound_id(SOUND_HARKONNEN);
-        game.setState(GAME_TELLHOUSE);
+        game.setNextStateToTransitionTo(GAME_TELLHOUSE);
         game.START_FADING_OUT();
     } else if (event.coords.isWithinRectangle(backButtonRect)) {
-        game.setState(GAME_MENU);
+        game.setNextStateToTransitionTo(GAME_MENU);
         game.START_FADING_OUT();
     }
 }

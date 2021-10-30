@@ -3,6 +3,8 @@
 
 class cGame;
 
+#include <gui/cGuiButton.h>
+#include <gui/cGuiWindow.h>
 #include "cGameState.h"
 
 class cMainMenuGameState : public cGameState {
@@ -12,7 +14,7 @@ public:
     ~cMainMenuGameState() override;
 
     void thinkFast() override;
-    void draw() override;
+    void draw() const override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
 
@@ -27,7 +29,9 @@ private:
     int mainMenuWidth;
     int mainMenuHeight;
 
-    cTextDrawer textDrawer;
+    const cTextDrawer textDrawer;
+
+    cGuiWindow * gui_window;
 
     BITMAP *bmp_D2TM_Title;
 };

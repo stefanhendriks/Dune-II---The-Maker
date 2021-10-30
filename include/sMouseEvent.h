@@ -5,6 +5,7 @@
 #include "../utils/cPoint.h"
 #include "enums.h"
 
+// Rename to GUI_EVENT? Might be more appropriate
 struct s_MouseEvent {
     eMouseEventType eventType = eMouseEventType::MOUSE_NONE;
     cPoint coords;

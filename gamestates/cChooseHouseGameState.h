@@ -13,7 +13,7 @@ public:
     ~cChooseHouseGameState() override;
 
     void thinkFast() override;
-    void draw() override;
+    void draw() const override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
 
@@ -40,6 +40,7 @@ private:
     cPoint coords_Dune;
     cPoint coords_SelectYourHouseTitle;
 
+    // Functions
     bool hoversOverBackButton;
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event) const;

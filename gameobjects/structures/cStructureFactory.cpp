@@ -76,8 +76,8 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 
     float fPercent = (float)iPercent/100; // divide by 100 (to make it 0.x)
 
-    s_StructureInfo &sStructures = sStructureInfo[iStructureType];
-    int hp = sStructures.hp;
+    s_StructureInfo &structureInfo = sStructureInfo[iStructureType];
+    int hp = structureInfo.hp;
     if (hp < 0) {
         cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "Structure to create has no hp, aborting creation.");
         return nullptr;
@@ -98,6 +98,17 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 		return NULL; // fail
 	}
 
+    cPoint absTopLeft = map.getAbsolutePositionFromCell(iCell);
+    cPlayer * player = &players[iPlayer];
+
+    for (auto flag : structureInfo.flags) {
+        cPoint pos = cPoint(
+            absTopLeft.x + flag.relX,
+            absTopLeft.y + flag.relY
+        );
+        str->addFlag(cFlag::createBigFlag(player, pos));
+    }
+
     // calculate actual health
     float fHealth = hp * fPercent;
 
@@ -107,7 +118,7 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
         logbook(msg2);
     }
 
-    int structureSize = sStructures.bmp_width * sStructures.bmp_height;
+    int structureSize = structureInfo.bmp_width * structureInfo.bmp_height;
 
     // assign to array
 	structure[iNewId] = str;
@@ -122,8 +133,8 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
 	str->setHitPoints((int)fHealth);
     str->setFrame(rnd(1)); // random start frame (flag)
     str->setStructureId(iNewId);
-	str->setWidth(sStructures.bmp_width / TILESIZE_WIDTH_PIXELS);
-	str->setHeight(sStructures.bmp_height / TILESIZE_HEIGHT_PIXELS);
+	str->setWidth(structureInfo.bmp_width / TILESIZE_WIDTH_PIXELS);
+	str->setHeight(structureInfo.bmp_height / TILESIZE_HEIGHT_PIXELS);
 
  	// clear fog around structure
 	clearFogForStructureType(iCell, str);

@@ -22,7 +22,7 @@ public:
 
     bool isOverlapping(cRectangle *other);
 
-    bool isPointWithin(int x, int y);
+    bool isPointWithin(int x, int y) const;
 
     bool isPointWithin(const cPoint &point);
 
@@ -30,12 +30,12 @@ public:
 
     cPoint & getTopLeft() { return topLeft; }
 
-    int getX() { return topLeft.x; }
-    int getEndX() { return topLeft.x + width; }
-    int getY() { return topLeft.y; }
-    int getEndY() { return topLeft.y + height; }
-    int getWidth() { return width; }
-    int getHeight() { return height; }
+    int getX() const { return topLeft.x; }
+    int getEndX() const { return topLeft.x + width; }
+    int getY() const { return topLeft.y; }
+    int getEndY() const { return topLeft.y + height; }
+    int getWidth() const { return width; }
+    int getHeight() const { return height; }
 
     /**
      * Moves rectangle around, updates x and y coordinate.

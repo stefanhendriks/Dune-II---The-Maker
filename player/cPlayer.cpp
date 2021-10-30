@@ -1,15 +1,15 @@
 #include <vector>
 #include <algorithm>
 #include "../include/d2tmh.h"
-#include "cPlayer.h"
 
 
 cPlayer::cPlayer() {
-    itemBuilder = NULL;
-    orderProcesser = NULL;
-    sidebar = NULL;
-    buildingListUpdater = NULL;
-    gameControlsContext = NULL;
+    itemBuilder = nullptr;
+    orderProcesser = nullptr;
+    sidebar = nullptr;
+    buildingListUpdater = nullptr;
+    gameControlsContext = nullptr;
+    bmp_flag = nullptr;
     char msg[255];
     sprintf(msg, "MAX_STRUCTURETYPES=[%d], sizeof bmp_structure=%d, sizeof(BITMAP *)", MAX_STRUCTURETYPES,
             sizeof(bmp_structure), sizeof(BITMAP *));
@@ -48,6 +48,7 @@ cPlayer::~cPlayer() {
 }
 
 void cPlayer::destroyAllegroBitmaps() {
+    destroy_bitmap(bmp_flag);
     clearStructureTypeBitmaps();
     clearUnitTypeBitmaps();
 }
@@ -254,6 +255,12 @@ void cPlayer::setHouse(int iHouse) {
         // use this palette to draw stuff
         select_palette(pal);
 
+        // copy flag
+        BITMAP *flagBmpData = (BITMAP *) gfxdata[BUILDING_FLAG_LARGE].dat;
+        bmp_flag = create_bitmap_ex(colorDepthBmpScreen, flagBmpData->w, flagBmpData->h);
+        clear_to_color(bmp_flag, makecol(255, 0, 255));
+        draw_sprite(bmp_flag, flagBmpData, 0, 0);
+
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
             s_StructureInfo &structureType = sStructureInfo[i];
@@ -391,6 +398,10 @@ BITMAP *cPlayer::getStructureBitmap(int index) {
         return bmp_structure[index];
     }
     return nullptr;
+}
+
+BITMAP *cPlayer::getFlagBitmap() {
+    return bmp_flag;
 }
 
 /**

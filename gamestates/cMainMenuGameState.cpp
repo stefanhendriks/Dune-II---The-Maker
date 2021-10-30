@@ -1,14 +1,14 @@
 #include "d2tmh.h"
 
-cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame) {
-    textDrawer = cTextDrawer(bene_font);
-
+cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), textDrawer(cTextDrawer(bene_font)) {
     bmp_D2TM_Title = (BITMAP *) gfxinter[BMP_D2TM].dat;
 
     int logoWidth = bmp_D2TM_Title->w;
     int logoHeight = bmp_D2TM_Title->h;
 
-    logoX = (game.screen_x / 2) - (logoWidth / 2);
+    int centerOfScreen = game.screen_x / 2;
+
+    logoX = centerOfScreen - (logoWidth / 2);
     logoY = (logoHeight/10);
 
     mainMenuWidth = 130;
@@ -16,22 +16,101 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame) {
 
     // adjust x and y according to resolution, we can add because the above values
     // assume 640x480 resolution, and logoX/logoY are already taking care of > resolutions
-    mainMenuFrameX = 257 + logoX;
-    mainMenuFrameY = 319 + logoY;
+//    mainMenuFrameX = 257 + logoX;
+    mainMenuFrameX = centerOfScreen -(mainMenuWidth/2);
+    mainMenuFrameY = 319;
 
+    logoY = mainMenuFrameY - (logoHeight)*1.2f;
+
+    // Buttons:
+    int buttonsX = mainMenuFrameX + 2;
+
+    int colorInactiveHover = makecol(128, 128, 128);
+    int colorInactive = makecol(192, 192, 192);
+
+    // PLAY
+    int playY = 323;
+
+    int buttonHeight = textDrawer.getFontHeight();
+    int buttonWidth = mainMenuWidth - 8;
+
+    const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
+    gui_window = new cGuiWindow(window);
+
+    const eGuiButtonRenderKind buttonKinds = eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER;
+    const eGuiTextAlignHorizontal buttonTextAlignment = eGuiTextAlignHorizontal::CENTER;
+
+    const cRectangle &campaign = cRectangle(buttonsX, playY, buttonWidth, buttonHeight);
+
+    cGuiButton *gui_btn_SelectHouse = new cGuiButton(textDrawer, campaign, "Campaign", buttonKinds);
+    gui_btn_SelectHouse->setTextAlignHorizontal(buttonTextAlignment);
+    gui_btn_SelectHouse->setOnLeftMouseButtonClickedAction(new cGuiActionSelectHouse());
+    gui_window->addGuiObject(gui_btn_SelectHouse);
+
+    int skirmishY = 344;
+    const cRectangle &skirmish = cRectangle(buttonsX, skirmishY, buttonWidth, buttonHeight);
+    cGuiButton *gui_btn_Skirmish = new cGuiButton(textDrawer, skirmish, "Skirmish", buttonKinds);
+    gui_btn_Skirmish->setTextAlignHorizontal(buttonTextAlignment);
+    gui_btn_Skirmish->setOnLeftMouseButtonClickedAction(new cGuiActionSetupSkirmishGame());
+    gui_window->addGuiObject(gui_btn_Skirmish);
+
+    int multiplayerY = 364;
+    const cRectangle &multiplayer = cRectangle(buttonsX, multiplayerY, buttonWidth, buttonHeight);
+    cGuiButton *gui_btn_Multiplayer = new cGuiButton(textDrawer, multiplayer, "Multiplayer", buttonKinds);
+    gui_btn_Multiplayer->setTextColor(colorInactive);
+    gui_btn_Multiplayer->setTextAlignHorizontal(buttonTextAlignment);
+    gui_btn_Multiplayer->setTextColorHover(colorInactiveHover);
+    gui_btn_Multiplayer->setOnLeftMouseButtonClickedAction(new cGuiActionFadeOutOnly());
+    gui_window->addGuiObject(gui_btn_Multiplayer);
+
+    // LOAD
+    int loadY = 384;
+    const cRectangle &load = cRectangle(buttonsX, loadY, buttonWidth, buttonHeight);
+    cGuiButton *gui_btn_Load = new cGuiButton(textDrawer, load, "Load", buttonKinds);
+    gui_btn_Load->setTextColor(colorInactive);
+    gui_btn_Load->setTextAlignHorizontal(buttonTextAlignment);
+    gui_btn_Load->setTextColorHover(colorInactiveHover);
+    gui_btn_Load->setOnLeftMouseButtonClickedAction(new cGuiActionFadeOutOnly());
+    gui_window->addGuiObject(gui_btn_Load);
+
+    // OPTIONS
+    int optionsY = 404;
+    const cRectangle &options = cRectangle(buttonsX, optionsY, buttonWidth, buttonHeight);
+    cGuiButton *gui_btn_Options = new cGuiButton(textDrawer, options, "Options", buttonKinds);
+    gui_btn_Options->setTextColor(colorInactive);
+    gui_btn_Options->setTextAlignHorizontal(buttonTextAlignment);
+    gui_btn_Options->setTextColorHover(colorInactiveHover);
+    gui_btn_Options->setOnLeftMouseButtonClickedAction(new cGuiActionFadeOutOnly());
+    gui_window->addGuiObject(gui_btn_Options);
+
+    // HALL OF FAME
+    int hofY = 424;
+    const cRectangle &hof = cRectangle(buttonsX, hofY, buttonWidth, buttonHeight);
+    cGuiButton *gui_btn_Hof = new cGuiButton(textDrawer, hof, "Hall of Fame", buttonKinds);
+    gui_btn_Hof->setTextColor(colorInactive);
+    gui_btn_Hof->setTextAlignHorizontal(buttonTextAlignment);
+    gui_btn_Hof->setTextColorHover(colorInactiveHover);
+    gui_btn_Hof->setOnLeftMouseButtonClickedAction(new cGuiActionFadeOutOnly());
+    gui_window->addGuiObject(gui_btn_Hof);
+
+    // EXIT
+    int exitY = 444;
+    const cRectangle &exit = cRectangle(buttonsX, exitY, buttonWidth, buttonHeight);
+    cGuiButton *gui_btn_Exit = new cGuiButton(textDrawer, exit, "Exit", buttonKinds);
+    gui_btn_Exit->setTextAlignHorizontal(buttonTextAlignment);
+    gui_btn_Exit->setOnLeftMouseButtonClickedAction(new cGuiActionExitGame());
+    gui_window->addGuiObject(gui_btn_Exit);
 }
 
 cMainMenuGameState::~cMainMenuGameState() {
-
+    delete gui_window;
 }
 
 void cMainMenuGameState::thinkFast() {
 
 }
 
-void cMainMenuGameState::draw() {
-    bool bFadeOut=false;
-
+void cMainMenuGameState::draw() const {
     if (DEBUGGING) {
         for (int x = 0; x < game.screen_x; x += 60) {
             for (int y = 0; y < game.screen_y; y += 20) {
@@ -46,86 +125,7 @@ void cMainMenuGameState::draw() {
 
     GUI_DRAW_FRAME(mainMenuFrameX, mainMenuFrameY, mainMenuWidth,mainMenuHeight);
 
-    // Buttons:
-    int buttonsX = mainMenuFrameX + 4;
-
-    // PLAY
-    int playY = 323 + logoY;
-    if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, playY, "Campaign", makecol(255, 0, 0)))
-    {
-        if (game.getMouse()->isLeftButtonClicked()) {
-            game.setState(GAME_SELECT_HOUSE); // select house
-            bFadeOut = true;
-        }
-    }
-
-    // SKIRMISH
-    int skirmishY = 344 + logoY;
-    if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, skirmishY, "Skirmish", makecol(255, 0, 0)))
-    {
-        if (game.getMouse()->isLeftButtonClicked()) {
-            game.setState(GAME_SETUPSKIRMISH);
-            bFadeOut = true;
-            INI_PRESCAN_SKIRMISH();
-
-            game.init_skirmish();
-        }
-    }
-
-    // MULTIPLAYER
-    int multiplayerY = 364 + logoY;
-    if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, multiplayerY, "Multiplayer", makecol(128, 128, 128)))
-    {
-        if (game.getMouse()->isLeftButtonClicked())
-        {
-            // NOT YET IMPLEMENTED
-            bFadeOut = true;
-        }
-    }
-
-    // LOAD
-    int loadY = 384 + logoY;
-    if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, loadY, "Load", makecol(128, 128, 128)))
-    {
-        if (game.getMouse()->isLeftButtonClicked())
-        {
-            // NOT YET IMPLEMENTED
-            bFadeOut = true;
-        }
-    }
-
-    // OPTIONS
-    int optionsY = 404 + logoY;
-    if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, optionsY, "Options", makecol(128, 128, 128)))
-    {
-        if (game.getMouse()->isLeftButtonClicked())
-        {
-            // NOT YET IMPLEMENTED
-            bFadeOut = true;
-        }
-    }
-
-    // HALL OF FAME
-    int hofY = 424 + logoY;
-    if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, hofY, "Hall of Fame", makecol(128, 128, 128)))
-    {
-        if (game.getMouse()->isLeftButtonClicked())
-        {
-            // NOT YET IMPLEMENTED
-            bFadeOut = true;
-        }
-    }
-
-    // EXIT
-    int exitY = 444 + logoY;
-    if (GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(buttonsX, exitY, "Exit", makecol(255, 0, 0)))
-    {
-        if (game.getMouse()->isLeftButtonClicked())
-        {
-            bFadeOut = true;
-            game.bPlaying = false;
-        }
-    }
+    gui_window->draw();
 
     int creditsX = (game.screen_x / 2) - (alfont_text_length(bene_font, "CREDITS") / 2);
     GUI_DRAW_BENE_TEXT_MOUSE_SENSITIVE(creditsX, 1, "CREDITS", makecol(64, 64, 64));
@@ -153,14 +153,10 @@ void cMainMenuGameState::draw() {
     if (key[KEY_ESC]) {
         game.bPlaying=false;
     }
-
-    if (bFadeOut) {
-        game.START_FADING_OUT();
-    }
 }
 
 void cMainMenuGameState::onNotifyMouseEvent(const s_MouseEvent &event) {
-
+    gui_window->onNotifyMouseEvent(event);
 }
 
 eGameStateType cMainMenuGameState::getType() {

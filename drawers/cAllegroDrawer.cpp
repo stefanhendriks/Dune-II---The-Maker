@@ -4,6 +4,9 @@
 
 cAllegroDrawer::cAllegroDrawer(cAllegroDataRepository * dataRepository) : m_dataRepository(dataRepository) {
     colorBlack=makecol(0,0,0);
+    gui_colorWindow = makecol(176,176,196);
+    gui_colorBorderDark = makecol(84,84,120);
+    gui_colorBorderLight = makecol(252,252,252);
 }
 
 cAllegroDrawer::~cAllegroDrawer() {
@@ -169,20 +172,20 @@ void cAllegroDrawer::blit(sBitmap *src, BITMAP *dest, int src_x, int src_y, int 
     blit(src->bitmap, dest, src_x, src_y, width, height, pos_x, pos_y);
 }
 
-void cAllegroDrawer::blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) {
+void cAllegroDrawer::blit(BITMAP *src, BITMAP *dest, int src_x, int src_y, int width, int height, int pos_x, int pos_y) const {
     // use :: so we use global scope Allegro blitSprite
     if (src == nullptr || dest == nullptr) return;
     ::blit(src, dest, src_x, src_y, pos_x, pos_y, width, height);
 }
 
-void cAllegroDrawer::blitSprite(BITMAP *src, BITMAP *dest, cRectangle *rectangle) {
+void cAllegroDrawer::blitSprite(BITMAP *src, BITMAP *dest, const cRectangle *rectangle) const {
     if (rectangle == nullptr) return;
     if (src == nullptr) return;
     if (dest == nullptr) return;
     blit(src, dest, 0, 0, rectangle->getWidth(), rectangle->getHeight(), rectangle->getX(), rectangle->getY());
 }
 
-void cAllegroDrawer::drawRectangle(BITMAP *dest, cRectangle &pRectangle, int color) {
+void cAllegroDrawer::drawRectangle(BITMAP *dest, const cRectangle &pRectangle, int color) {
     rect(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
 }
 
@@ -193,7 +196,7 @@ void cAllegroDrawer::drawRectangle(BITMAP *dest, int x, int y, int width, int he
     rect(dest, x, y, x + (width-1), y + (height-1), color);
 }
 
-void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, cRectangle &pRectangle, int color) {
+void cAllegroDrawer::drawRectangleFilled(BITMAP *dest, const cRectangle &pRectangle, int color) {
     rectfill(dest, pRectangle.getX(), pRectangle.getY(), pRectangle.getEndX(), pRectangle.getEndY(), color);
 }
 
@@ -250,4 +253,49 @@ void cAllegroDrawer::blitFromGfxData(int index, BITMAP *dest, int src_x, int src
 
 int cAllegroDrawer::getColorByNormValue(int r, int g, int b, float norm) {
     return makecol((r * norm), (g * norm), (b * norm));
+}
+
+void cAllegroDrawer::gui_DrawRect(BITMAP *dest, const cRectangle &rectangle) {
+    gui_DrawRect(dest, rectangle, gui_colorWindow, gui_colorBorderLight, gui_colorBorderDark);
+}
+
+void cAllegroDrawer::gui_DrawRect(BITMAP *dest, const cRectangle &rectangle, int gui_colorWindow, int gui_colorBorderLight, int gui_colorBorderDark) {
+    int x1= rectangle.getX();
+    int y1 = rectangle.getY();
+    int width = rectangle.getWidth();
+    int height = rectangle.getHeight();
+
+    drawRectangleFilled(dest, rectangle, gui_colorWindow);
+    drawRectangle(dest, rectangle, gui_colorBorderLight);
+
+    // fill it up
+//    rectfill(bmp_screen, x1, y1, x1+width, y1+height, makecol(176,176,196));
+
+    // rect
+//    rect(bmp_screen, x1,y1,x1+width, y1+height, makecol(252,252,252));
+
+    // lines to darken the right sides
+    line(bmp_screen, x1+width, y1, x1+width , y1+height, gui_colorBorderDark);
+    line(bmp_screen, x1, y1+height, x1+width , y1+height, gui_colorBorderDark);
+}
+
+void cAllegroDrawer::gui_DrawRectBorder(BITMAP *dest, const cRectangle &rectangle, int gui_colorBorderLight,
+                                        int gui_colorBorderDark) {
+
+    int x1= rectangle.getX();
+    int y1 = rectangle.getY();
+    int width = rectangle.getWidth();
+    int height = rectangle.getHeight();
+
+    drawRectangle(dest, rectangle, gui_colorBorderLight);
+    line(bmp_screen, x1+width, y1, x1+width , y1+height, gui_colorBorderDark);
+    line(bmp_screen, x1, y1+height, x1+width , y1+height, gui_colorBorderDark);
+}
+
+void cAllegroDrawer::drawTransSprite(BITMAP *sprite, BITMAP *dest, int x, int y) {
+    draw_trans_sprite(dest, sprite, x, y);
+}
+
+void cAllegroDrawer::drawLine(BITMAP *bmp, int x1, int y1, int x2, int y2, int color) {
+    line(bmp, x1, y1, x2, y2, color);
 }

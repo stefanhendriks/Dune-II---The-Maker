@@ -691,10 +691,16 @@ void cUnit::draw() {
             destY = uy + 24; // TODO; do something with height here? the closer to target, the less distant the shadow?
         }
 
-        allegroDrawer->maskedStretchBlit(shadow, bmp_screen, 0, 0, bmp_width, bmp_height,
-                                         ux, destY,
+        int colorDepth = bitmap_color_depth(bmp_screen);
+        BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+        clear_to_color(stretchedShadow, makecol(255, 0, 255));
+        allegroDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, 0, bmp_width, bmp_height,
+                                         0, 0,
                                          scaledWidth, scaledHeight);
+
+        allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, ux, destY);
         destroy_bitmap(shadow);
+        destroy_bitmap(stretchedShadow);
     }
 
     // Draw BODY
