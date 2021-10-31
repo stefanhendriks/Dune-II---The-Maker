@@ -16,12 +16,16 @@ public:
     void thinkFast();
 
     static cFlag * createBigFlag(cPlayer * player, cPoint & position);
+    static cFlag * createSmallFlag(cPlayer * player, cPoint & position);
 
+    void setBig(bool value) { big = value; }
 private:
     cPoint absCoords;
 
     cPlayer *player;
     int TIMER_animate;
+
+    bool big;
 
     // move to 'type object' later (ie flag definitions)
     int animationDelay;

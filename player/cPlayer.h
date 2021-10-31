@@ -151,6 +151,8 @@ public:
 
     BITMAP *getFlagBitmap();
 
+    BITMAP *getFlagSmallBitmap();
+
     BITMAP *getUnitBitmap(int index);
 
     BITMAP *getUnitTopBitmap(int index);
@@ -436,6 +438,7 @@ private:
 
     BITMAP *bmp_structure[MAX_STRUCTURETYPES];
     BITMAP *bmp_flag;
+    BITMAP *bmp_flag_small;
 
     BITMAP *bmp_unit[MAX_UNITTYPES]; // the body of unit
     BITMAP *bmp_unit_top[MAX_UNITTYPES]; // optionally a 'top' of unit (barrel of tank, for example)

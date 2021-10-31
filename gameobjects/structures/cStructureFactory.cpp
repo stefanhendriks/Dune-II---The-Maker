@@ -106,7 +106,12 @@ cAbstractStructure* cStructureFactory::createStructure(int iCell, int iStructure
             absTopLeft.x + flag.relX,
             absTopLeft.y + flag.relY
         );
-        str->addFlag(cFlag::createBigFlag(player, pos));
+
+        if (flag.big) {
+            str->addFlag(cFlag::createBigFlag(player, pos));
+        } else {
+            str->addFlag(cFlag::createSmallFlag(player, pos));
+        }
     }
 
     // calculate actual health

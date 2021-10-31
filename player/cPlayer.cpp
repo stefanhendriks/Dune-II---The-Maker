@@ -10,6 +10,7 @@ cPlayer::cPlayer() {
     buildingListUpdater = nullptr;
     gameControlsContext = nullptr;
     bmp_flag = nullptr;
+    bmp_flag_small = nullptr;
     char msg[255];
     sprintf(msg, "MAX_STRUCTURETYPES=[%d], sizeof bmp_structure=%d, sizeof(BITMAP *)", MAX_STRUCTURETYPES,
             sizeof(bmp_structure), sizeof(BITMAP *));
@@ -49,6 +50,7 @@ cPlayer::~cPlayer() {
 
 void cPlayer::destroyAllegroBitmaps() {
     destroy_bitmap(bmp_flag);
+    destroy_bitmap(bmp_flag_small);
     clearStructureTypeBitmaps();
     clearUnitTypeBitmaps();
 }
@@ -255,11 +257,16 @@ void cPlayer::setHouse(int iHouse) {
         // use this palette to draw stuff
         select_palette(pal);
 
-        // copy flag
+        // copy flag(s) with correct color
         BITMAP *flagBmpData = (BITMAP *) gfxdata[BUILDING_FLAG_LARGE].dat;
         bmp_flag = create_bitmap_ex(colorDepthBmpScreen, flagBmpData->w, flagBmpData->h);
         clear_to_color(bmp_flag, makecol(255, 0, 255));
         draw_sprite(bmp_flag, flagBmpData, 0, 0);
+
+        flagBmpData = (BITMAP *) gfxdata[BUILDING_FLAG_SMALL].dat;
+        bmp_flag_small = create_bitmap_ex(colorDepthBmpScreen, flagBmpData->w, flagBmpData->h);
+        clear_to_color(bmp_flag_small, makecol(255, 0, 255));
+        draw_sprite(bmp_flag_small, flagBmpData, 0, 0);
 
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
@@ -402,6 +409,10 @@ BITMAP *cPlayer::getStructureBitmap(int index) {
 
 BITMAP *cPlayer::getFlagBitmap() {
     return bmp_flag;
+}
+
+BITMAP *cPlayer::getFlagSmallBitmap() {
+    return bmp_flag_small;
 }
 
 /**

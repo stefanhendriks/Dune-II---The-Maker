@@ -1374,8 +1374,9 @@ void install_structures() {
     sStructureInfo[PALACE].icon = ICON_STR_PALACE;
     sStructureInfo[PALACE].configured = true;
     sStructureInfo[PALACE].flags.push_back((s_FlagInfo) {
-            .relX = 13, // 29 - 16
-            .relY = 8  // 14 - 6 - flag is 16 pixels high, *but* its drawing has an Y offset of 6 pixels, so substract
+            .big = true,
+            .relX = 29,
+            .relY = 14
     });
     strcpy(sStructureInfo[PALACE].name, "Palace");
 
@@ -1402,12 +1403,14 @@ void install_structures() {
     sStructureInfo[RADAR].configured = true;
     // outpost has 2 flags
     sStructureInfo[RADAR].flags.push_back((s_FlagInfo) {
-            .relX = 2,
-            .relY = 33
+            .big = true,
+            .relX = 18,
+            .relY = 39
     });
     sStructureInfo[RADAR].flags.push_back((s_FlagInfo) {
-            .relX = -2,
-            .relY = 41
+            .big = false,
+            .relX = 14,
+            .relY = 47
     });
     strcpy(sStructureInfo[RADAR].name, "Outpost");
 
@@ -1421,12 +1424,14 @@ void install_structures() {
     sStructureInfo[BARRACKS].icon = ICON_STR_BARRACKS;
     sStructureInfo[BARRACKS].configured = true;
     sStructureInfo[BARRACKS].flags.push_back((s_FlagInfo) {
-            .relX = 45, // 60
-            .relY = 42  // 47
+            .big = true,
+            .relX = 61,
+            .relY = 48
     });
     sStructureInfo[BARRACKS].flags.push_back((s_FlagInfo) {
-            .relX = 36, // 51
-            .relY = 45  // 50
+            .big = true,
+            .relX = 51,
+            .relY = 50
     });
     strcpy(sStructureInfo[BARRACKS].name, "Barracks");
 
@@ -1473,8 +1478,9 @@ void install_structures() {
     sStructureInfo[CONSTYARD].bmp = (BITMAP *) gfxdata[BUILD_CONSTYARD].dat;
     sStructureInfo[CONSTYARD].shadow = (BITMAP *) gfxdata[BUILD_CONSTYARD_SHADOW].dat;
     sStructureInfo[CONSTYARD].flags.push_back((s_FlagInfo) {
-            .relX = -2,
-            .relY = 8
+            .big = true,
+            .relX = 14,
+            .relY = 14
     });
     sStructureInfo[CONSTYARD].fadecol = -1;
     sStructureInfo[CONSTYARD].icon = ICON_STR_CONSTYARD;
@@ -1502,8 +1508,9 @@ void install_structures() {
     sStructureInfo[IX].icon = ICON_STR_IX;
     sStructureInfo[IX].configured = true;
     sStructureInfo[IX].flags.push_back((s_FlagInfo) {
-            .relX = 45, // 60
-            .relY = 35  // 40
+            .big = true,
+            .relX = 60, // 60
+            .relY = 40  // 40
     });
     strcpy(sStructureInfo[IX].name, "House of IX");
 
