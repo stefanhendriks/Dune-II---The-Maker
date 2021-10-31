@@ -68,7 +68,7 @@ void cWindTrap::think_fade() {
 void cWindTrap::think_animation() {
     cAbstractStructure::think_animation();
     think_fade(); // windtrap specific blue fading
-    cAbstractStructure::think_flag();
+    cAbstractStructure::think_flag_new();
 }
 
 void cWindTrap::think_guard() {

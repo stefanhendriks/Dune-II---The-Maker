@@ -49,7 +49,7 @@ cFlag *cFlag::createBigFlag(cPlayer * player, cPoint & position) {
             position.x,
             position.y
     );
-    correctedPoint.x -= 16; // width of flag
+    correctedPoint.x -= 15; // width of flag
     cFlag *pFlag = new cFlag(player, correctedPoint, 12, 24);
     pFlag->setBig(true);
     return pFlag;
@@ -60,7 +60,7 @@ cFlag *cFlag::createSmallFlag(cPlayer * player, cPoint & position) {
             position.x,
             position.y
     );
-    correctedPoint.x -= 11; // width of flag
+    correctedPoint.x -= 10; // width of flag
     cFlag *pFlag = new cFlag(player, correctedPoint, 12, 24);
     pFlag->setBig(false);
     return pFlag;

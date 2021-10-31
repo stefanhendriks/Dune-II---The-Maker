@@ -1,39 +1,35 @@
 #include "../../include/d2tmh.h"
 
 // Constructor
-cWor::cWor()
-{
- // other variables (class specific)
+cWor::cWor() {
+    // other variables (class specific)
 }
 
 int cWor::getType() const {
-	return WOR;
+    return WOR;
 }
 
-cWor::~cWor()
-{
+cWor::~cWor() {
 
 }
 
-void cWor::think()
-{
-	// think like base class
-	cAbstractStructure::think();
+void cWor::think() {
+    // think like base class
+    cAbstractStructure::think();
 
 }
 
 void cWor::think_animation() {
-	// a wor does not animate, so when set, set it back to false
-	if (isAnimating()) {
-		setAnimating(false);
-	}
+    // a wor does not animate, so when set, set it back to false
+    if (isAnimating()) {
+        setAnimating(false);
+    }
 
-	cAbstractStructure::think_animation();
-	cAbstractStructure::think_flag();
+    cAbstractStructure::think_animation();
+    cAbstractStructure::think_flag_new();
 }
 
-void cWor::think_guard()
-{
+void cWor::think_guard() {
 
 }
 
