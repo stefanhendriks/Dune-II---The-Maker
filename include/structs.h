@@ -79,8 +79,9 @@ struct s_UnitInfo {
 };
 
 struct s_FlagInfo {
-    int relX;
-    int relY; // relative X, Y position compared to top-left of structure
+    bool big = true; // big flag or not?
+    int relX = 0;
+    int relY = 0; // relative X, Y position compared to top-left of structure
 };
 
 // Structure types

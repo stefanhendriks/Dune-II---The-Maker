@@ -1,5 +1,4 @@
 #include "d2tmh.h"
-#include "cFlag.h"
 
 
 cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay) :
@@ -7,10 +6,11 @@ cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay)
         frames(frames), animationDelay(animationDelay) {
     TIMER_animate = 0;
     frame = 0;
+    big = true;
 }
 
 void cFlag::draw() {
-    BITMAP *flagBitmap = player->getFlagBitmap();
+    BITMAP *flagBitmap = big? player->getFlagBitmap() : player->getFlagSmallBitmap();
     if (!flagBitmap) return;
 
     int drawX = mapCamera->getWindowXPosition(absCoords.x);
@@ -45,5 +45,23 @@ void cFlag::thinkFast() {
 }
 
 cFlag *cFlag::createBigFlag(cPlayer * player, cPoint & position) {
-    return new cFlag(player, position, 12, 24);
+    cPoint correctedPoint = cPoint(
+            position.x,
+            position.y
+    );
+    correctedPoint.x -= 16; // width of flag
+    cFlag *pFlag = new cFlag(player, correctedPoint, 12, 24);
+    pFlag->setBig(true);
+    return pFlag;
+}
+
+cFlag *cFlag::createSmallFlag(cPlayer * player, cPoint & position) {
+    cPoint correctedPoint = cPoint(
+            position.x,
+            position.y
+    );
+    correctedPoint.x -= 11; // width of flag
+    cFlag *pFlag = new cFlag(player, correctedPoint, 12, 24);
+    pFlag->setBig(false);
+    return pFlag;
 }
