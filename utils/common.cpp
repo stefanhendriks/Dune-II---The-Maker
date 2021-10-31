@@ -1330,6 +1330,11 @@ void install_structures() {
     sStructureInfo[WINDTRAP].fademax = 134;
     sStructureInfo[WINDTRAP].icon = ICON_STR_WINDTRAP;
     sStructureInfo[WINDTRAP].configured = true;
+    sStructureInfo[WINDTRAP].flags.push_back((s_FlagInfo) {
+            .big = true,
+            .relX = 53,
+            .relY = 37
+    });
     strcpy(sStructureInfo[WINDTRAP].name, "Windtrap");
 
     // Structure    : Heavy Factory
@@ -1404,13 +1409,13 @@ void install_structures() {
     // outpost has 2 flags
     sStructureInfo[RADAR].flags.push_back((s_FlagInfo) {
             .big = true,
-            .relX = 18,
-            .relY = 39
+            .relX = 17,
+            .relY = 38
     });
     sStructureInfo[RADAR].flags.push_back((s_FlagInfo) {
             .big = false,
-            .relX = 14,
-            .relY = 47
+            .relX = 12,
+            .relY = 46
     });
     strcpy(sStructureInfo[RADAR].name, "Outpost");
 
@@ -1424,12 +1429,12 @@ void install_structures() {
     sStructureInfo[BARRACKS].icon = ICON_STR_BARRACKS;
     sStructureInfo[BARRACKS].configured = true;
     sStructureInfo[BARRACKS].flags.push_back((s_FlagInfo) {
-            .big = true,
-            .relX = 61,
-            .relY = 48
+            .big = false,
+            .relX = 60,
+            .relY = 47
     });
     sStructureInfo[BARRACKS].flags.push_back((s_FlagInfo) {
-            .big = true,
+            .big = false,
             .relX = 51,
             .relY = 50
     });
@@ -1444,6 +1449,11 @@ void install_structures() {
     sStructureInfo[WOR].fadecol = -1;
     sStructureInfo[WOR].icon = ICON_STR_WOR;
     sStructureInfo[WOR].configured = true;
+    sStructureInfo[WOR].flags.push_back((s_FlagInfo) {
+            .big = true,
+            .relX = 21,
+            .relY = 31
+    });
     strcpy(sStructureInfo[WOR].name, "WOR");
 
 
@@ -1457,6 +1467,11 @@ void install_structures() {
     sStructureInfo[SILO].icon = ICON_STR_SILO;
     sStructureInfo[SILO].configured = true;
     sStructureInfo[SILO].queuable = true;
+    sStructureInfo[SILO].flags.push_back((s_FlagInfo) {
+            .big = true,
+            .relX = 43,
+            .relY = 20
+    });
     strcpy(sStructureInfo[SILO].name, "Spice Storage Silo");
 
     // Structure    : Refinery

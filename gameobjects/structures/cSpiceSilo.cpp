@@ -2,41 +2,38 @@
 
 // Constructor
 cSpiceSilo::cSpiceSilo() {
- // other variables (class specific)
+    // other variables (class specific)
 
 }
 
 int cSpiceSilo::getType() const {
-	return SILO;
+    return SILO;
 }
 
 
-cSpiceSilo::~cSpiceSilo()
-{
+cSpiceSilo::~cSpiceSilo() {
 
 }
 
 
-void cSpiceSilo::think()
-{
-	// think like base class
-	cAbstractStructure::think();
+void cSpiceSilo::think() {
+    // think like base class
+    cAbstractStructure::think();
 
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)
 void cSpiceSilo::think_animation() {
-	cAbstractStructure::think_animation();
-	cAbstractStructure::think_flag();
+    cAbstractStructure::think_animation();
+    cAbstractStructure::think_flag_new();
 }
 
-void cSpiceSilo::think_guard()
-{
+void cSpiceSilo::think_guard() {
 
 }
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cSpiceSilo::getSpiceSiloCapacity() {
-	float percentage = ((float)getHitPoints() / (float)sStructureInfo[getType()].hp);
-	return 1000 * percentage;
+    float percentage = ((float) getHitPoints() / (float) sStructureInfo[getType()].hp);
+    return 1000 * percentage;
 }
