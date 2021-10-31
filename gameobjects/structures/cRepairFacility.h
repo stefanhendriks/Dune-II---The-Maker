@@ -21,5 +21,8 @@ public:
     int getType() const;
 
     void think_repairUnit();
+
+    void startAnimating() {};
+
 };
 

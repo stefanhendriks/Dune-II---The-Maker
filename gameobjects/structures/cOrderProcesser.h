@@ -1,13 +1,3 @@
-/*
- * cOrderProcesser.h
- *
- *  Created on: 8-aug-2010
- *      Author: Stefan
- *
- *  processes orders for starport
- *
- */
-
 #ifndef CORDERPROCESSER_H_
 #define CORDERPROCESSER_H_
 

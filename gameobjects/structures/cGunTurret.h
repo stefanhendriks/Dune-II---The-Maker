@@ -20,6 +20,7 @@ public:
     void think_animation();
     void think_guard();
     void think_attack();
+    void startAnimating() {};
 
     int getType() const;
 	int getHeadFacing() { return iHeadFacing; }
