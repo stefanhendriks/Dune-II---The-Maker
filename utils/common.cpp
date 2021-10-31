@@ -1357,6 +1357,11 @@ void install_structures() {
     sStructureInfo[HIGHTECH].fadecol = -1;
     sStructureInfo[HIGHTECH].icon = ICON_STR_HIGHTECH;
     sStructureInfo[HIGHTECH].configured = true;
+    sStructureInfo[HIGHTECH].flags.push_back((s_FlagInfo) {
+            .big = true,
+            .relX = 19,
+            .relY = 36
+    });
     strcpy(sStructureInfo[HIGHTECH].name, "Hi-Tech");
 
     // Structure    : Repair

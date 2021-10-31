@@ -189,6 +189,7 @@ class cAbstractStructure {
 		void setOwner(int player); // set owner (player id) of structure
 		void setRallyPoint(int cell); // set rally point of structure
 		void setAnimating(bool value); // set animation on / off
+        virtual void startAnimating() = 0;
 		void setFrame(int frame);
 		void setStructureId(int theId) { id = theId; }
 		void setBuildingFase(int value) { iBuildFase = value; }

@@ -25,5 +25,7 @@ public:
 	bool isFrigatePackageDropped() { return frigateDroppedPackage; }
 	void setFrigateDroppedPackage (bool value) { frigateDroppedPackage = value; }
 
+    void startAnimating() {};
+
 };
 

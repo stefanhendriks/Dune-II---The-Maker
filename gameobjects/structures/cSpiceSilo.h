@@ -15,6 +15,7 @@ public:
     void think_guard();
 
     int getType() const;
+    void startAnimating() {};
 
 	int getSpiceSiloCapacity();
 };

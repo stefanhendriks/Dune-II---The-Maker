@@ -396,6 +396,7 @@ void cAbstractStructure::setRallyPoint(int cell) {
 
 void cAbstractStructure::setAnimating(bool value) {
 	bAnimate = value;
+    startAnimating();
 }
 
 void cAbstractStructure::setFrame(int frame) {

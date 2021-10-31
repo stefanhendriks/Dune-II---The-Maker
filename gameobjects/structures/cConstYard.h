@@ -10,6 +10,7 @@ public:
     void think();
     void think_animation();
     void think_guard();
+    void startAnimating() {};
 
     int getType() const;
 };

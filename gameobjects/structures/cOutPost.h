@@ -14,6 +14,7 @@ public:
     void think_animation();
     void think_guard();
     void think_flag();
+    void startAnimating() {};
 
     int getType() const;
 
