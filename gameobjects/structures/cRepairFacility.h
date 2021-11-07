@@ -3,9 +3,11 @@
 class cRepairFacility : public cAbstractStructure {
 
 private:
+    void think_animation_unitDeploy();
 
     int TIMER_repairunit;
 
+    eAnimationDirection animDir;
 public:
     cRepairFacility();
 
@@ -22,7 +24,7 @@ public:
 
     void think_repairUnit();
 
-    void startAnimating() {};
+    void startAnimating();
 
 };
 

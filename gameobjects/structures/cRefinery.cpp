@@ -1,20 +1,17 @@
 #include "../../include/d2tmh.h"
 
 // Constructor
-cRefinery::cRefinery()
-{
+cRefinery::cRefinery() {
 
-
- // other variables (class specific)
-
+    // other variables (class specific)
+    shouldAnimateWhenUnitHeadsTowardsStructure = true;
 }
 
 int cRefinery::getType() const {
-	return REFINERY;
+    return REFINERY;
 }
 
-cRefinery::~cRefinery()
-{
+cRefinery::~cRefinery() {
 
 }
 
@@ -24,9 +21,9 @@ cRefinery::~cRefinery()
 // Specific Construction Yard thinking
 void cRefinery::think() {
 
-     if (hasUnitWithin()) { // unit has entered structure
-         think_unit_occupation();
-     }
+    if (hasUnitWithin()) { // unit has entered structure
+        think_unit_occupation();
+    }
 
     // think like base class
     cAbstractStructure::think();
@@ -74,6 +71,8 @@ void cRefinery::think_unit_occupation() {
     // Dumping credits is finished
     unitLeavesStructure();
 
+    setAnimating(false);
+
     // let player know...
     if (pPlayer->isHuman()) {
         play_voice(SOUND_VOICE_02_ATR);
@@ -93,12 +92,12 @@ void cRefinery::think_unit_occupation() {
 }
 
 void cRefinery::think_harvester_deploy() {
-	if (!isAnimating()) return; // do nothing when not animating
+    if (!isAnimating()) return; // do nothing when not animating
 
     // harvester stuff
-	if (iFrame < 0)  {
+    if (iFrame < 0) {
         iFrame = 1;
-	}
+    }
 
     TIMER_flag++;
 
@@ -106,25 +105,24 @@ void cRefinery::think_harvester_deploy() {
         TIMER_flag = 0;
 
         iFrame++;
-		if (iFrame > 4) {
-			iFrame = 1;
-		}
-	}
+        if (iFrame > 4) {
+            iFrame = 1;
+        }
+    }
 }
 
 void cRefinery::think_animation() {
-	cAbstractStructure::think_animation();
-	cAbstractStructure::think_flag();
-	think_harvester_deploy();
+    cAbstractStructure::think_animation();
+    cAbstractStructure::think_flag();
+    think_harvester_deploy();
 }
 
-void cRefinery::think_guard()
-{
+void cRefinery::think_guard() {
 
 }
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cRefinery::getSpiceSiloCapacity() {
-	float percentage = ((float)getHitPoints() / (float)sStructureInfo[getType()].hp);
-	return 1000 * percentage;
+    float percentage = ((float) getHitPoints() / (float) sStructureInfo[getType()].hp);
+    return 1000 * percentage;
 }

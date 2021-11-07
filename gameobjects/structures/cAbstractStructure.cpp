@@ -42,6 +42,8 @@ cAbstractStructure::cAbstractStructure() {
     iUnitIDHeadingForStructure = -1;
     iUnitIDEnteringStructure = -1;
 
+    shouldAnimateWhenUnitHeadsTowardsStructure = false;
+
     iWidth=-1;
     iHeight=-1;
 
@@ -712,7 +714,6 @@ void cAbstractStructure::unitLeavesStructure() {
 
     setUnitIdWithin(-1);
     setUnitIdHeadingTowards(-1);
-    setAnimating(false);
 }
 
 void cAbstractStructure::startEnteringStructure(int unitId) {
@@ -723,7 +724,7 @@ void cAbstractStructure::startEnteringStructure(int unitId) {
 
 void cAbstractStructure::unitHeadsTowardsStructure(int unitId) {
     setUnitIdHeadingTowards(unitId);
-    setAnimating(true);
+    setAnimating(shouldAnimateWhenUnitHeadsTowardsStructure);
 }
 
 int cAbstractStructure::getRandomStructureCell() {

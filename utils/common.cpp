@@ -1373,6 +1373,11 @@ void install_structures() {
     sStructureInfo[REPAIR].fadecol = -1;
     sStructureInfo[REPAIR].icon = ICON_STR_REPAIR;
     sStructureInfo[REPAIR].configured = true;
+    sStructureInfo[REPAIR].flags.push_back((s_FlagInfo) {
+            .big = true,
+            .relX = 41,
+            .relY = 3
+    });
     strcpy(sStructureInfo[REPAIR].name, "Repair Facility");
 
     // Structure    : Palace
@@ -1385,7 +1390,7 @@ void install_structures() {
     sStructureInfo[PALACE].configured = true;
     sStructureInfo[PALACE].flags.push_back((s_FlagInfo) {
             .big = true,
-            .relX = 29,
+            .relX = 28,
             .relY = 14
     });
     strcpy(sStructureInfo[PALACE].name, "Palace");
