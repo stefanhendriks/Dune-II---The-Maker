@@ -62,16 +62,55 @@ void cRepairFacility::think_repairUnit() {// must repair...
 
         // dump unit, get rid of it
         unitLeavesStructure();
+
+        // show door open/close thing
+        setAnimating(true);
     }
 }
 
 void cRepairFacility::think_animation() {
     cAbstractStructure::think_animation();
-    cAbstractStructure::think_flag();
+    cAbstractStructure::think_flag_new();
+    think_animation_unitDeploy();
+}
+
+void cRepairFacility::think_animation_unitDeploy() {
+    if (!isAnimating()) return; // do nothing when not animating
+    TIMER_flag++;
+    int waitLimit = animDir == eAnimationDirection::ANIM_SPAWN_UNIT ? 120 : 30;
+    if (TIMER_flag > waitLimit) {
+
+        switch (animDir) {
+            case eAnimationDirection::ANIM_OPEN:
+                iFrame++;
+                if (iFrame > 6) {
+                    animDir = eAnimationDirection::ANIM_SPAWN_UNIT;
+                }
+                break;
+            case eAnimationDirection::ANIM_SPAWN_UNIT:
+                animDir = eAnimationDirection::ANIM_CLOSE; // and close again
+                break;
+            case eAnimationDirection::ANIM_CLOSE:
+                iFrame--;
+                if (iFrame < 1) {
+                    // no longer animating
+                    animDir = eAnimationDirection::ANIM_NONE;
+                    setAnimating(false);
+                }
+                break;
+        }
+
+        TIMER_flag = 0;
+    }
+
 }
 
 void cRepairFacility::think_guard() {
 
+}
+
+void cRepairFacility::startAnimating() {
+    animDir = isAnimating() ? eAnimationDirection::ANIM_OPEN : eAnimationDirection::ANIM_NONE;
 }
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */

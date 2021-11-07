@@ -3,6 +3,13 @@
 
 #include <assert.h>
 
+enum eAnimationDirection {
+    ANIM_NONE, // not animating
+    ANIM_OPEN, // open the dome / open door, etc
+    ANIM_SPAWN_UNIT, // this is where we actually should spawn the unit... (which we don't)
+    ANIM_CLOSE, // now close the dome / door
+};
+
 enum eCantBuildReason {
 	/**
      * Not enough money to build it

@@ -44,6 +44,7 @@ class cAbstractStructure {
 		int iUnitIDHeadingForStructure;    // >-1 means ID to unit that heads for this structure
 
 	protected:
+        bool shouldAnimateWhenUnitHeadsTowardsStructure;
         int id;				// the id within the structure[] array
 
 		int iWidth;			// width in cells (set by factory)
