@@ -220,17 +220,7 @@ void cStructureDrawer::drawStructureAnimationRefinery(cAbstractStructure * struc
 	assert(structure);
 	assert(structure->getType() == REFINERY);
 
-	int oldFrame = structure->getFrame();
-
-	// Refinery has content, then the frame is a bit different
-	if (structure->hasUnitWithin()) {
-		structure->setFrame(structure->getFrame() + 5);
-	}
-
 	drawStructureAnimation(structure);
-
-	// restore iFrame again
-	structure->setFrame(oldFrame);
 }
 
 void cStructureDrawer::drawStructureForLayer(cAbstractStructure * structure, int layer) {
