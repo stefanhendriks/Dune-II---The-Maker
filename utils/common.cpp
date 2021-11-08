@@ -1493,6 +1493,11 @@ void install_structures() {
     sStructureInfo[REFINERY].fadecol = -1;
     sStructureInfo[REFINERY].icon = ICON_STR_REFINERY;
     sStructureInfo[REFINERY].configured = true;
+    sStructureInfo[REFINERY].flags.push_back((s_FlagInfo) {
+            .big = true,
+            .relX = 45,
+            .relY = 12
+    });
     strcpy(sStructureInfo[REFINERY].name, "Spice Refinery");
 
     // Structure    : Construction Yard

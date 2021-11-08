@@ -27,7 +27,6 @@ void cRefinery::think() {
 
     // think like base class
     cAbstractStructure::think();
-
 }
 
 void cRefinery::think_unit_occupation() {
@@ -92,6 +91,15 @@ void cRefinery::think_unit_occupation() {
 }
 
 void cRefinery::think_harvester_deploy() {
+    if (hasUnitWithin()) {
+        iFrame = 4;
+        return;
+    } else {
+        if (!isAnimating()) {
+            iFrame = 0;
+        }
+    }
+
     if (!isAnimating()) return; // do nothing when not animating
 
     // harvester stuff
@@ -105,7 +113,7 @@ void cRefinery::think_harvester_deploy() {
         TIMER_flag = 0;
 
         iFrame++;
-        if (iFrame > 4) {
+        if (iFrame > 3) {
             iFrame = 1;
         }
     }
@@ -113,7 +121,7 @@ void cRefinery::think_harvester_deploy() {
 
 void cRefinery::think_animation() {
     cAbstractStructure::think_animation();
-    cAbstractStructure::think_flag();
+    cAbstractStructure::think_flag_new();
     think_harvester_deploy();
 }
 
