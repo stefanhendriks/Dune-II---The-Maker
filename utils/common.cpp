@@ -1526,6 +1526,11 @@ void install_structures() {
     sStructureInfo[STARPORT].fadecol = -1;
     sStructureInfo[STARPORT].icon = ICON_STR_STARPORT;
     sStructureInfo[STARPORT].configured = true;
+    sStructureInfo[STARPORT].flags.push_back((s_FlagInfo) {
+            .big = true,
+            .relX = 16,
+            .relY = 3
+    });
     strcpy(sStructureInfo[STARPORT].name, "Starport");
 
     // Structure    : House of IX
