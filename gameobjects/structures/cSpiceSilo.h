@@ -16,6 +16,7 @@ public:
 
     int getType() const;
     void startAnimating() {};
+    void draw() override { drawWithShadow(); }
 
 	int getSpiceSiloCapacity();
 };

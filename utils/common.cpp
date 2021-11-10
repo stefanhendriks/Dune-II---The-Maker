@@ -165,8 +165,8 @@ void install_units() {
     // some things for ALL unit types; initialization
     for (int i = 0; i < MAX_UNITTYPES; i++) {
         sUnitInfo[i].bmp = (BITMAP *) gfxdata[UNIT_QUAD].dat; // default bitmap is a quad!
-        sUnitInfo[i].top = NULL;  // no top
-        sUnitInfo[i].shadow = NULL;  // no shadow (deliverd with picture itself)
+        sUnitInfo[i].top = nullptr;  // no top
+        sUnitInfo[i].shadow = nullptr;  // no shadow (deliverd with picture itself)
         sUnitInfo[i].bmp_width = 0;
         sUnitInfo[i].bmp_height = 0;
         sUnitInfo[i].turnspeed = 0;
@@ -1271,7 +1271,8 @@ void install_structures() {
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
         s_StructureInfo &structureInfo = sStructureInfo[i];
         structureInfo.bmp = (BITMAP *) gfxdata[BUILD_WINDTRAP].dat; // in case an invalid bitmap, we are a windtrap
-        structureInfo.shadow = nullptr; // in case an invalid bitmap, we are a windtrap
+        structureInfo.shadow = nullptr;
+        structureInfo.flash = nullptr;
         structureInfo.flags = std::vector<s_FlagInfo>();
         structureInfo.sight = 1;
         structureInfo.bmp_width = 32 * 2;
@@ -1401,9 +1402,15 @@ void install_structures() {
     sStructureInfo[LIGHTFACTORY].bmp_height = 32 * 2;
     sStructureInfo[LIGHTFACTORY].bmp = (BITMAP *) gfxdata[BUILD_LIGHTFACTORY].dat;
     sStructureInfo[LIGHTFACTORY].shadow = (BITMAP *) gfxdata[BUILD_LIGHTFACTORY_SHADOW].dat;
+    sStructureInfo[LIGHTFACTORY].flash = (BITMAP *) gfxdata[BUILD_LIGHTFACTORY_FLASH].dat;
     sStructureInfo[LIGHTFACTORY].fadecol = -1;
     sStructureInfo[LIGHTFACTORY].icon = ICON_STR_LIGHTFACTORY;
     sStructureInfo[LIGHTFACTORY].configured = true;
+    sStructureInfo[LIGHTFACTORY].flags.push_back((s_FlagInfo) {
+            .big = true,
+            .relX = 41,
+            .relY = 2
+    });
     strcpy(sStructureInfo[LIGHTFACTORY].name, "Light Factory");
 
     // Structure    : Radar

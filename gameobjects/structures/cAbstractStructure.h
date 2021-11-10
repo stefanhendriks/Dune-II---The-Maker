@@ -63,6 +63,10 @@ class cAbstractStructure {
 
         // flags, if any
         std::vector<cFlag *> flags;
+
+        // draw structure with shadow
+        void drawWithShadow();
+
     public:
 
 		// Constructor & Destructor:
@@ -191,6 +195,7 @@ class cAbstractStructure {
 		void setRallyPoint(int cell); // set rally point of structure
 		void setAnimating(bool value); // set animation on / off
         virtual void startAnimating() = 0;
+        virtual void draw() = 0;
 		void setFrame(int frame);
 		void setStructureId(int theId) { id = theId; }
 		void setBuildingFase(int value) { iBuildFase = value; }

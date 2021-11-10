@@ -21,6 +21,7 @@ public:
     void think_guard();
     void think_attack();
     void startAnimating() {};
+    void draw() override { drawWithShadow(); }
 
     int getType() const;
 	int getHeadFacing() { return iHeadFacing; }

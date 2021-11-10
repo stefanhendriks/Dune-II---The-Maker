@@ -782,3 +782,38 @@ void cAbstractStructure::drawFlags() {
 void cAbstractStructure::addFlag(cFlag *flag) {
     flags.push_back(flag);
 }
+
+void cAbstractStructure::drawWithShadow() {
+    int pixelWidth = getWidthInPixels();
+    int pixelHeight = getHeightInPixels();
+
+    // structures are animated within the same source bitmap. The Y coordinates determine
+    // what frame is being drawn. So multiply the height of the structure size times frame
+    int iSourceY = pixelHeight * iFrame;
+
+    int drawX = iDrawX();
+    int drawY = iDrawY();
+
+    int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
+    int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
+
+    BITMAP *bitmapToDraw = getBitmap();
+    allegroDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
+                                     drawX, drawY, scaledWidth, scaledHeight);
+
+    BITMAP *shadow = getShadowBitmap();
+    if (shadow) {
+        set_trans_blender(0, 0, 0, 160);
+
+        int colorDepth = bitmap_color_depth(bmp_screen);
+        BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
+        clear_to_color(stretchedShadow, makecol(255, 0, 255));
+
+        allegroDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
+                                         0, 0, scaledWidth, scaledHeight);
+
+        allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
+
+        destroy_bitmap(stretchedShadow);
+    }
+}

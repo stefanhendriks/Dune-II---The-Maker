@@ -89,6 +89,7 @@ struct s_StructureInfo {
   // Structures
   BITMAP *bmp;         // a pointer to the 8 bit bitmap
   BITMAP *shadow;	   // a pointer to the shadow bitmap
+  BITMAP *flash;	   // a pointer to the flash bitmap (used to overlay when unit exits building for light/heavy fctry)
 
   std::vector<s_FlagInfo> flags;
 

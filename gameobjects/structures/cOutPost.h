@@ -15,6 +15,7 @@ public:
     void think_guard();
     void think_flag();
     void startAnimating() {};
+    void draw() override { drawWithShadow(); }
 
     int getType() const;
 

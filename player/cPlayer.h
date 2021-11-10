@@ -46,6 +46,7 @@ struct s_PlaceResult {
 class cPlayer : public cScenarioObserver {
 
 public:
+    static const int MAX_STRUCTURE_BMPS = MAX_STRUCTURETYPES*2;
     cPlayer();
 
     ~cPlayer();
@@ -148,6 +149,8 @@ public:
     }
 
     BITMAP *getStructureBitmap(int index);
+
+    BITMAP *getStructureBitmapFlash(int index);
 
     BITMAP *getFlagBitmap();
 
@@ -436,7 +439,7 @@ private:
     int iTeam;
 
 
-    BITMAP *bmp_structure[MAX_STRUCTURETYPES];
+    BITMAP *bmp_structure[MAX_STRUCTURE_BMPS];
     BITMAP *bmp_flag;
     BITMAP *bmp_flag_small;
 
