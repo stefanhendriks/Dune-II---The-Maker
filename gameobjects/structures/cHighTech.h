@@ -18,11 +18,14 @@ public:
 
     void startAnimating() override;
 
+    void draw() override { drawWithShadow(); }
+
     void think_animation();
 
     void think_guard();
 
     int getType() const;
+
 
 };
 

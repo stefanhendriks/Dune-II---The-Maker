@@ -76,38 +76,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure * struc
 
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure * structure) {
 	if (!structure) return;
-
-    int pixelWidth = structure->getWidthInPixels();
-    int pixelHeight = structure->getHeightInPixels();
-
-    // structures are animated within the same source bitmap. The Y coordinates determine
-    // what frame is being drawn. So multiply the height of the structure size times frame
-    int iSourceY = pixelHeight * structure->getFrame();
-
-    int drawX = structure->iDrawX();
-    int drawY = structure->iDrawY();
-
-    int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
-    int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
-
-    BITMAP *shadow = structure->getShadowBitmap();
-    if (shadow) {
-        set_trans_blender(0, 0, 0, 160);
-
-        int colorDepth = bitmap_color_depth(bmp_screen);
-        BITMAP *stretchedShadow = create_bitmap_ex(colorDepth, scaledWidth, scaledHeight);
-        clear_to_color(stretchedShadow, makecol(255, 0, 255));
-
-        allegroDrawer->maskedStretchBlit(shadow, stretchedShadow, 0, iSourceY, pixelWidth, pixelHeight,
-                                         0, 0, scaledWidth, scaledHeight);
-
-        allegroDrawer->drawTransSprite(stretchedShadow, bmp_screen, drawX, drawY);
-
-        destroy_bitmap(stretchedShadow);
-    }
-
-    allegroDrawer->maskedStretchBlit(structure->getBitmap(), bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
-                                     drawX, drawY, scaledWidth, scaledHeight);
+    structure->draw();
 }
 
 int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure * structure) {

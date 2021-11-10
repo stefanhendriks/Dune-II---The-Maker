@@ -21,6 +21,7 @@ public:
     void think_guard();
     void think_unit_occupation();
     void startAnimating() {};
+    void draw() override { drawWithShadow(); }
 
     int getType() const;
 	int getSpiceSiloCapacity();

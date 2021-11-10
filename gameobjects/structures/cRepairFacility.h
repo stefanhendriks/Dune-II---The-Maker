@@ -25,6 +25,7 @@ public:
     void think_repairUnit();
 
     void startAnimating();
+    void draw() override { drawWithShadow(); }
 
 };
 

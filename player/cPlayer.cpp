@@ -12,9 +12,9 @@ cPlayer::cPlayer() {
     bmp_flag = nullptr;
     bmp_flag_small = nullptr;
     char msg[255];
-    sprintf(msg, "MAX_STRUCTURETYPES=[%d], sizeof bmp_structure=%d, sizeof(BITMAP *)", MAX_STRUCTURETYPES,
+    sprintf(msg, "MAX_STRUCTURE_BMPS=[%d], sizeof bmp_structure=%d, sizeof(BITMAP *)", MAX_STRUCTURE_BMPS,
             sizeof(bmp_structure), sizeof(BITMAP *));
-    logbook(msg); // no log(), because we cant assume player is fully initialized yet
+    logbook(msg); // no log(), because we can't assume player is fully initialized yet
     memset(bmp_structure, 0, sizeof(bmp_structure));
     memset(bmp_unit, 0, sizeof(bmp_unit));
     memset(bmp_unit_top, 0, sizeof(bmp_unit_top));
@@ -56,7 +56,7 @@ void cPlayer::destroyAllegroBitmaps() {
 }
 
 void cPlayer::clearStructureTypeBitmaps() {
-    for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
+    for (int i = 0; i < MAX_STRUCTURE_BMPS; i++) {
         if (bmp_structure[i]) {
 //            char msg[255];
 //            sprintf(msg, "clearStructureTypeBitmaps: Destroying bmp_structure for index [%d].", i);
@@ -281,7 +281,22 @@ void cPlayer::setHouse(int iHouse) {
             clear_to_color(bmp_structure[i], makecol(255, 0, 255));
 
             draw_sprite(bmp_structure[i], structureType.bmp, 0, 0);
+
+            // flash bitmaps are structure type index * 2
+            if (structureType.flash) {
+                int j = MAX_STRUCTURETYPES + i;
+                BITMAP *bitmap = create_bitmap_ex(colorDepthBmpScreen, structureType.bmp->w, structureType.bmp->h);
+                if (!bitmap) {
+                    allegro_message("Could not create FLASH bmp structure bitmap!? - Imminent crash.");
+                }
+                clear_to_color(bitmap, makecol(255, 0, 255));
+
+                draw_sprite(bitmap, structureType.flash, 0, 0);
+                bmp_structure[j] = bitmap;
+            }
+
         }
+
 
         // same goes for units
         for (int i = 0; i < MAX_UNITTYPES; i++) {
@@ -405,6 +420,16 @@ BITMAP *cPlayer::getStructureBitmap(int index) {
         return bmp_structure[index];
     }
     return nullptr;
+}
+
+/**
+ * Returns the flash bitmap for structure type "index", this structure has been colorized beforehand for this player and is
+ * in same color depth as bmp_screen.
+ * @param index
+ * @return
+ */
+BITMAP *cPlayer::getStructureBitmapFlash(int index) {
+    return getStructureBitmap(MAX_STRUCTURETYPES + index); // by convention flash bmp's are stored starting at MAX + index
 }
 
 BITMAP *cPlayer::getFlagBitmap() {
