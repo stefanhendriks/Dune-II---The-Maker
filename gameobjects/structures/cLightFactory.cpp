@@ -36,8 +36,7 @@ void cLightFactory::think_animation_unitDeploy() {
             TIMER_flag = 0;
         }
     } else {
-        TIMER_flag = 0;
-        drawFlash = false;
+        setAnimating(false);
     }
 }
 
@@ -61,7 +60,7 @@ void cLightFactory::draw() {
 
         // structures are animated within the same source bitmap. The Y coordinates determine
         // what frame is being drawn. So multiply the height of the structure size times frame
-        int iSourceY = pixelHeight * iFrame;
+        int iSourceY = pixelHeight * 0; // flash have only 1 frame for now
 
         int drawX = iDrawX();
         int drawY = iDrawY();
@@ -79,7 +78,8 @@ void cLightFactory::startAnimating() {
     if (isAnimating()) {
         flashes = 5;
         drawFlash = true;
+    } else {
+        TIMER_flag = 0;
+        drawFlash = false;
     }
 }
-
-/*  STRUCTURE SPECIFIC FUNCTIONS  */

@@ -4,6 +4,11 @@ class cHeavyFactory : public cAbstractStructure {
 private:
     void think_animation_unitDeploy();
 
+    bool drawFlash;
+    int flashes;
+
+    int TIMER_animation;
+
 public:
     cHeavyFactory();
 
@@ -16,9 +21,9 @@ public:
 
     void think_guard();
 
-    void startAnimating() {};
+    void startAnimating();
 
-    void draw() override { drawWithShadow(); }
+    void draw() override;
 
     int getType() const;
 
