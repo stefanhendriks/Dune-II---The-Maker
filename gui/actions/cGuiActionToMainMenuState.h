@@ -5,7 +5,13 @@
 
 class cGuiActionToMainMenuState : public cGuiAction {
 public:
+    cGuiActionToMainMenuState();
+
     void execute() override;
+    void setFadeOut(bool value) { fadeOut = value; };
+
+private:
+    bool fadeOut;
 };
 
 

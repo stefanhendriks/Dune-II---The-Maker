@@ -77,10 +77,8 @@ cMainMenuGameState::cMainMenuGameState(cGame &theGame) : cGameState(theGame), te
     int optionsY = 404;
     const cRectangle &options = cRectangle(buttonsX, optionsY, buttonWidth, buttonHeight);
     cGuiButton *gui_btn_Options = new cGuiButton(textDrawer, options, "Options", buttonKinds);
-    gui_btn_Options->setTextColor(colorInactive);
     gui_btn_Options->setTextAlignHorizontal(buttonTextAlignment);
-    gui_btn_Options->setTextColorHover(colorInactiveHover);
-    gui_btn_Options->setOnLeftMouseButtonClickedAction(new cGuiActionFadeOutOnly());
+    gui_btn_Options->setOnLeftMouseButtonClickedAction(new cGuiActionShowOptions());
     gui_window->addGuiObject(gui_btn_Options);
 
     // HALL OF FAME

@@ -7,5 +7,6 @@
 #include "cGuiActionSetupSkirmishGame.h"
 #include "cGuiActionToMainMenuState.h"
 #include "cGuiActionStartNewSkirmishGame.h"
+#include "cGuiActionShowOptions.h"
 
 #endif //D2TM_ACTIONSH_H

@@ -1260,6 +1260,10 @@ void cGame::setState(int newState) {
         gameState = new cMainMenuGameState(*this);
     } else if (newState == GAME_SELECT_HOUSE) {
         gameState = new cChooseHouseGameState(*this);
+    } else if (newState == GAME_OPTIONS) {
+        BITMAP *background = create_bitmap(screen_x, screen_y);
+        allegroDrawer->drawSprite(background,bmp_screen, 0, 0);
+        gameState = new cOptionsState(*this, background);
     } else if (newState == GAME_PLAYING) {
         // evaluate all players, so we have initial 'alive' values set properly
         for (int i = 1; i < MAX_PLAYERS; i++) {
