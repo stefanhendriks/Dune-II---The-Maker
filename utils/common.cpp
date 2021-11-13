@@ -1344,9 +1344,15 @@ void install_structures() {
     sStructureInfo[HEAVYFACTORY].bmp_height = 32 * 2;
     sStructureInfo[HEAVYFACTORY].bmp = (BITMAP *) gfxdata[BUILD_HEAVYFACTORY].dat;
     sStructureInfo[HEAVYFACTORY].shadow = (BITMAP *) gfxdata[BUILD_HEAVYFACTORY_SHADOW].dat; // shadow
+    sStructureInfo[HEAVYFACTORY].flash = (BITMAP *) gfxdata[BUILD_HEAVYFACTORY_FLASH].dat;
     sStructureInfo[HEAVYFACTORY].fadecol = -1;
     sStructureInfo[HEAVYFACTORY].icon = ICON_STR_HEAVYFACTORY;
     sStructureInfo[HEAVYFACTORY].configured = true;
+    sStructureInfo[HEAVYFACTORY].flags.push_back((s_FlagInfo) {
+            .big = false,
+            .relX = 25,
+            .relY = 3
+    });
     strcpy(sStructureInfo[HEAVYFACTORY].name, "Heavy Factory");
 
     // Structure    : Hight Tech Factory (for aircraft only)

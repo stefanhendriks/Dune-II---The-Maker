@@ -1,64 +1,102 @@
 #include "../../include/d2tmh.h"
 
 // Constructor
-cHeavyFactory::cHeavyFactory()
-{
-
- // other variables (class specific)
-
+cHeavyFactory::cHeavyFactory() {
+    // other variables (class specific)
+    drawFlash = false;
+    flashes = 0;
+    TIMER_animation = 0;
 }
 
 int cHeavyFactory::getType() const {
-	return HEAVYFACTORY;
+    return HEAVYFACTORY;
+}
+
+cHeavyFactory::~cHeavyFactory() {
+
 }
 
 
-cHeavyFactory::~cHeavyFactory()
-{
-
-}
-
-
-/*  OVERLOADED FUNCTIONS  */
-
-void cHeavyFactory::think()
-{
-	// last but not least, think like our abstraction
-	cAbstractStructure::think();
+void cHeavyFactory::think() {
+    // last but not least, think like our abstraction
+    cAbstractStructure::think();
 }
 
 // think animation for unit deployment (when building unit is finished)
 void cHeavyFactory::think_animation_unitDeploy() {
-	if (isAnimating() == false) return; // only do when animating
+    if (!isAnimating()) {
+        drawFlash = false;
+        flashes = 0;
+        return; // do nothing when not animating
+    }
 
-    // show animation (unit finished)
-    TIMER_flag++;
-    if (TIMER_flag > 70) {
-        if(iFrame > 2) // 2 animation frames
-        {
-            iFrame=0;
-            setAnimating(false);
+    if (iFrame < 10) {
+        TIMER_animation++;
+        if (TIMER_animation > 35) {
+            TIMER_animation = 0;
+            iFrame++;
         }
-        else if (iFrame < 1)
-            iFrame=1;
+    }
 
-        iFrame++;
+    if (flashes > 0) {
+        TIMER_flag++;
+        if (TIMER_flag > 70) {
+            flashes--;
+            drawFlash = !drawFlash;
+            TIMER_flag = 0;
+        }
+    } else {
+        TIMER_flag = 0;
+        drawFlash = false;
+    }
 
-        TIMER_flag=0;
+    if (iFrame > 9) {
+        setAnimating(false);
     }
 }
 
 // Specific Animation thinking (flag animation OR its deploy animation)
-void cHeavyFactory::think_animation()
-{
-	cAbstractStructure::think_animation();
-	cAbstractStructure::think_flag();
-	think_animation_unitDeploy();
+void cHeavyFactory::think_animation() {
+    cAbstractStructure::think_animation();
+    cAbstractStructure::think_flag_new();
+    think_animation_unitDeploy();
 }
 
-void cHeavyFactory::think_guard()
-{
+void cHeavyFactory::think_guard() {
 
 }
 
-/*  STRUCTURE SPECIFIC FUNCTIONS  */
+void cHeavyFactory::draw() {
+    drawWithShadow();
+    // draw flashing light
+    if (drawFlash) {
+        int pixelWidth = getWidthInPixels();
+        int pixelHeight = getHeightInPixels();
+
+        // structures are animated within the same source bitmap. The Y coordinates determine
+        // what frame is being drawn. So multiply the height of the structure size times frame
+        int iSourceY = pixelHeight * 0; // flash have only 1 frame for now
+
+        int drawX = iDrawX();
+        int drawY = iDrawY();
+
+        int scaledWidth = mapCamera->factorZoomLevel(pixelWidth);
+        int scaledHeight = mapCamera->factorZoomLevel(pixelHeight);
+
+        BITMAP *bitmapToDraw = this->getPlayer()->getStructureBitmapFlash(getType());
+        allegroDrawer->maskedStretchBlit(bitmapToDraw, bmp_screen, 0, iSourceY, pixelWidth, pixelHeight,
+                                         drawX, drawY, scaledWidth, scaledHeight);
+    }
+}
+
+void cHeavyFactory::startAnimating() {
+    if (isAnimating()) {
+        flashes = 5;
+        drawFlash = true;
+    } else {
+        iFrame = 0;
+        flashes = 0;
+        drawFlash = false;
+        TIMER_flag = 0;
+    }
+}
