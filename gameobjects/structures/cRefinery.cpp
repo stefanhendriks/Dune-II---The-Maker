@@ -92,7 +92,7 @@ void cRefinery::think_unit_occupation() {
 
 void cRefinery::think_harvester_deploy() {
     if (hasUnitWithin()) {
-        iFrame = 4;
+        iFrame = 10;
         return;
     } else {
         if (!isAnimating()) {
@@ -104,17 +104,17 @@ void cRefinery::think_harvester_deploy() {
 
     // harvester stuff
     if (iFrame < 0) {
-        iFrame = 1;
+        iFrame = 0;
     }
 
     TIMER_flag++;
 
-    if (TIMER_flag > 70) {
+    if (TIMER_flag > 25) {
         TIMER_flag = 0;
 
         iFrame++;
-        if (iFrame > 3) {
-            iFrame = 1;
+        if (iFrame > 9) {
+            iFrame = 0;
         }
     }
 }
