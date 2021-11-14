@@ -14,6 +14,9 @@ public:
     // cGuiObject specific
     virtual void draw() const = 0; // pure virtual function
 
+    cRectangle &getRect() { return rect; };
+    void setRect(const cRectangle &newRect) { rect = newRect; }
+
 protected:
     // any gui object has a position and size. Hence its always a 'rect'.
     cRectangle rect;

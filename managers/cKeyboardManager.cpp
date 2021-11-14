@@ -27,10 +27,6 @@ void cKeyboardManager::interact() {
             game.setNextStateToTransitionTo(GAME_OPTIONS);
         }
 
-        if (key[KEY_ESC]) {
-            game.bPlaying = false;
-        }
-
         // take screenshot
         if (key[KEY_F11]) {
             takeScreenshot();

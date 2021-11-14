@@ -16,8 +16,14 @@ public:
 
     void addGuiObject(cGuiObject *guiObject);
 
+    cRectangle getRelativeRect(int x, int y, int width, int height);
+
+    void setTitle(const std::string &value) { title = value; }
+
 private:
     std::vector<cGuiObject *> gui_objects;
+    std::string title;
+    cTextDrawer textDrawer;
 };
 
 

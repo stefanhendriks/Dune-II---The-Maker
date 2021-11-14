@@ -6,7 +6,7 @@ cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState) 
                                                                                   background(background) {
     int centerOfScreen = game.screen_x / 2;
 
-    int margin = game.screen_y * 0.2;
+    int margin = game.screen_y * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
     int mainMenuWidth = game.screen_x - (margin * 2);
@@ -18,10 +18,8 @@ cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState) 
     int colorInactiveHover = makecol(128, 128, 128);
     int colorInactive = makecol(192, 192, 192);
 
-    // PLAY
-    int playY = 323;
-
-    int buttonHeight = textDrawer.getFontHeight();
+    margin = 4;
+    int buttonHeight = (textDrawer.getFontHeight() + margin);
     int buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
@@ -30,16 +28,39 @@ cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState) 
     const eGuiButtonRenderKind buttonKinds = eGuiButtonRenderKind::OPAQUE_WITH_BORDER;
     const eGuiTextAlignHorizontal buttonTextAlignment = eGuiTextAlignHorizontal::CENTER;
 
-    const cRectangle &campaign = cRectangle(buttonsX, playY, buttonWidth, buttonHeight);
+    // Title
+    char title[128];
+    sprintf(title, "Dune II - The Maker - version %s", game.version);
+
+    gui_window->setTitle(std::string(title));
 
     // EXIT
-    int back = 444;
-    const cRectangle &exit = cRectangle(buttonsX, back, buttonWidth, buttonHeight);
-    cGuiButton *gui_btn_Exit = new cGuiButton(textDrawer, exit, "Back", buttonKinds);
-    gui_btn_Exit->setTextAlignHorizontal(buttonTextAlignment);
+    int rows = 2;
+    int toMainMenu = mainMenuHeight - ((buttonHeight*rows)+(margin*rows));// 424
+    const cRectangle &toMainMenuRect = gui_window->getRelativeRect(margin, toMainMenu, buttonWidth, buttonHeight);
+    cGuiButton *gui_btn_toMenu = new cGuiButton(textDrawer, toMainMenuRect, "Back to main menu", buttonKinds);
+    gui_btn_toMenu->setTextAlignHorizontal(buttonTextAlignment);
+    cGuiActionToGameState *action2 = new cGuiActionToGameState(GAME_MENU, true);
+    gui_btn_toMenu->setOnLeftMouseButtonClickedAction(action2);
+    gui_window->addGuiObject(gui_btn_toMenu);
+
+    // QUIT game
+    int quit = mainMenuHeight - (buttonHeight + margin);// 464
+    int width = (buttonWidth / 2);
+    const cRectangle &quitRect = gui_window->getRelativeRect(margin, quit, width, buttonHeight);
+    cGuiButton *gui_btn_Quit = new cGuiButton(textDrawer, quitRect, "Quit game", buttonKinds);
+    gui_btn_Quit->setTextAlignHorizontal(buttonTextAlignment);
+    gui_btn_Quit->setOnLeftMouseButtonClickedAction(new cGuiActionExitGame());
+    gui_window->addGuiObject(gui_btn_Quit);
+
+    // BACK to where we came from
+    int back = mainMenuHeight - (buttonHeight + margin);// 444
+    const cRectangle &backRect = gui_window->getRelativeRect(margin + width + margin, back, (width - margin), buttonHeight);
+    cGuiButton *gui_btn_Back = new cGuiButton(textDrawer, backRect, "Back", buttonKinds);
+    gui_btn_Back->setTextAlignHorizontal(buttonTextAlignment);
     cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
-    gui_btn_Exit->setOnLeftMouseButtonClickedAction(action);
-    gui_window->addGuiObject(gui_btn_Exit);
+    gui_btn_Back->setOnLeftMouseButtonClickedAction(action);
+    gui_window->addGuiObject(gui_btn_Back);
 }
 
 cOptionsState::~cOptionsState() {
