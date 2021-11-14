@@ -1018,7 +1018,7 @@ std::string INI_GetHouseDirectoryName(int iHouse) {
     return "unknown";
 }
 
-void INI_Load_Regionfile(int iHouse, int iMission) {
+void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState) {
     char filename[256];
     memset(filename, 0, sizeof(filename));
     sprintf(filename, "campaign/%s/mission%d.ini", INI_GetHouseDirectoryName(iHouse).c_str(), iMission);

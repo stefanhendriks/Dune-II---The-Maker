@@ -10,7 +10,7 @@ class cGame;
 class cOptionsState : public cGameState {
 
 public:
-    cOptionsState(cGame& theGame, BITMAP *background);
+    cOptionsState(cGame& theGame, BITMAP *background, int prevState);
     ~cOptionsState() override;
 
     void thinkFast() override;
@@ -22,6 +22,8 @@ public:
 
 private:
     BITMAP *background;
+
+    int prevState;
 
     const cTextDrawer textDrawer;
 

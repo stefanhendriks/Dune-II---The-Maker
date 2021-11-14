@@ -221,11 +221,13 @@ private:
     cSoundPlayer *soundPlayer;
     cMouse *mouse;
 
+    bool missionWasWon; // hack: used for state transitioning :/
+
 	int state;
 
 	int iMaxVolume;
 
-	cAbstractMentat *pMentat; // TODO: Move this into a gameState class (as field)?
+	cAbstractMentat *pMentat; // TODO: Move this into a currentState class (as field)?
 
     float fade_select;        // fade color when selected
     bool bFadeSelectDir;    // fade select direction
@@ -243,7 +245,11 @@ private:
     int frame_count, fps;  // fps and such
 
     int nextState;
-    cGameState *gameState;
+
+    // the current game state we are running
+    cGameState *currentState;
+
+    cGameState *states[GAME_MAX_STATES];
 
     void updateState();
     void combat();		// the combat part (main) of the game

@@ -1,14 +1,16 @@
 #include "d2tmh.h"
 
-cOptionsState::cOptionsState(cGame &theGame, BITMAP *background) : cGameState(theGame), textDrawer(cTextDrawer(bene_font)),
-    background(background) {
+cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState) : cGameState(theGame),
+                                                                                  textDrawer(cTextDrawer(bene_font)),
+                                                                                  prevState(prevState),
+                                                                                  background(background) {
     int centerOfScreen = game.screen_x / 2;
 
-    int margin = game.screen_y*0.2;
+    int margin = game.screen_y * 0.2;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
-    int mainMenuWidth = game.screen_x - (margin*2);
-    int mainMenuHeight = game.screen_y - (margin*2);
+    int mainMenuWidth = game.screen_x - (margin * 2);
+    int mainMenuHeight = game.screen_y - (margin * 2);
 
     // Buttons:
     int buttonsX = mainMenuFrameX + 2;
@@ -31,12 +33,11 @@ cOptionsState::cOptionsState(cGame &theGame, BITMAP *background) : cGameState(th
     const cRectangle &campaign = cRectangle(buttonsX, playY, buttonWidth, buttonHeight);
 
     // EXIT
-    int exitY = 444;
-    const cRectangle &exit = cRectangle(buttonsX, exitY, buttonWidth, buttonHeight);
+    int back = 444;
+    const cRectangle &exit = cRectangle(buttonsX, back, buttonWidth, buttonHeight);
     cGuiButton *gui_btn_Exit = new cGuiButton(textDrawer, exit, "Back", buttonKinds);
     gui_btn_Exit->setTextAlignHorizontal(buttonTextAlignment);
-    cGuiActionToMainMenuState *action = new cGuiActionToMainMenuState();
-    action->setFadeOut(false);
+    cGuiActionToGameState *action = new cGuiActionToGameState(prevState, false);
     gui_btn_Exit->setOnLeftMouseButtonClickedAction(action);
     gui_window->addGuiObject(gui_btn_Exit);
 }
@@ -60,7 +61,7 @@ void cOptionsState::draw() const {
 
     // TODO: on keyboard event!?
     if (key[KEY_ESC]) {
-        game.bPlaying=false;
+        game.setNextStateToTransitionTo(prevState);
     }
 }
 

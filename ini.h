@@ -188,7 +188,7 @@ void INI_Load_seed(int seed);
 void INI_Install_Game(std::string filename);
 //void LOAD_BRIEFING(char filename[35]);
 void INI_LOAD_BRIEFING(int iHouse, int iScenarioFind, int iSectionFind, cAbstractMentat *pMentat);
-void INI_Load_Regionfile(int iHouse, int iMission);
+void INI_Load_Regionfile(int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState);
 
 int INI_SectionType(char section[30], int last);
 void INI_WordValueSENTENCE(char result[MAX_LINE_LENGTH], char value[256]);

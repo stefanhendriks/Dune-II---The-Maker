@@ -144,7 +144,8 @@ cSetupSkirmishGameState::cSetupSkirmishGameState(cGame &theGame) : cGameState(th
     cRectangle backButtonRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
     backButton = new cGuiButton(textDrawer, backButtonRect, " BACK");
     backButton->setRenderKind(eGuiButtonRenderKind::TRANSPARENT_WITHOUT_BORDER);
-    backButton->setOnLeftMouseButtonClickedAction(new cGuiActionToMainMenuState());
+    cGuiActionToGameState *action = new cGuiActionToGameState(GAME_MENU, true);
+    backButton->setOnLeftMouseButtonClickedAction(action);
 
     int startButtonWidth = textDrawer.textLength("START");
     int startButtonHeight = topBarHeight;

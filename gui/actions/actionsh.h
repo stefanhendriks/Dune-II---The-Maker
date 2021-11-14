@@ -5,8 +5,8 @@
 #include "cGuiActionExitGame.h"
 #include "cGuiActionFadeOutOnly.h"
 #include "cGuiActionSetupSkirmishGame.h"
-#include "cGuiActionToMainMenuState.h"
 #include "cGuiActionStartNewSkirmishGame.h"
 #include "cGuiActionShowOptions.h"
+#include "cGuiActionToGameState.h"
 
 #endif //D2TM_ACTIONSH_H

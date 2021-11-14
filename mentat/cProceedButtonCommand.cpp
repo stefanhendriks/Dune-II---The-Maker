@@ -34,12 +34,6 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
     if (game.isState(GAME_WINBRIEF)) {
         game.setNextStateToTransitionTo(GAME_REGION);
 
-        if (game.iMission > 1) {
-            selectYourNextConquestState->conquerRegions();
-        }
-
-        selectYourNextConquestState->REGION_SETUP_NEXT_MISSION(game.iMission, players[HUMAN].getHouse());
-
         // PLAY THE MUSIC
         playMusicByType(MUSIC_CONQUEST);
 
@@ -55,7 +49,6 @@ void cProceedButtonCommand::execute(cAbstractMentat &mentat) {
             game.setNextStateToTransitionTo(GAME_REGION);
 
             game.iMission--; // we did not win
-            selectYourNextConquestState->REGION_SETUP_LOST_MISSION();
 
             // PLAY THE MUSIC
             playMusicByType(MUSIC_CONQUEST);
