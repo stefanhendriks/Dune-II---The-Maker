@@ -84,7 +84,7 @@
 #define GAME_BRIEFING     3      // doing some briefing
 #define GAME_EDITING      4      // running the editor
 #define GAME_OPTIONS	  5		 // options menu
-#define GAME_REGION		  6		 // select a region
+#define GAME_REGION		  6		 // select a region / select your next conquest
 #define GAME_SELECT_HOUSE 8		 // pick a house
 #define GAME_INTRO	      9
 #define GAME_TELLHOUSE	 10		 // tell about the house
@@ -94,6 +94,7 @@
 #define GAME_LOSING      14      // when losing, do something cool
 #define GAME_SKIRMISH    15      // playing a skirmish mission!
 #define GAME_SETUPSKIRMISH 16    // set up a skirmish game
+#define GAME_MAX_STATES 17
 
 // FOR OPTIONS:
 

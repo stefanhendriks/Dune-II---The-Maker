@@ -26,6 +26,7 @@ void cSelectYourNextConquestState::calculateOffset() {
 
 cSelectYourNextConquestState::~cSelectYourNextConquestState() {
     destroy_bitmap(regionClickMapBmp);
+    destroy();
 }
 
 void cSelectYourNextConquestState::thinkFast() {
@@ -398,7 +399,7 @@ void cSelectYourNextConquestState::REGION_SETUP_NEXT_MISSION(int iMission, int i
     // Per mission assign:
     // Every house has a different campaign, so...
 
-    INI_Load_Regionfile(iHouse, iMission);
+    INI_Load_Regionfile(iHouse, iMission, this);
 
     selectNextConquestAlpha = 1;
 

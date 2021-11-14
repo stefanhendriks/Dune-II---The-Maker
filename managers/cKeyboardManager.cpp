@@ -23,6 +23,10 @@ void cKeyboardManager::interact() {
     } else {
         GAME_KEYS();
 
+        if (key[KEY_F10]) {
+            game.setNextStateToTransitionTo(GAME_OPTIONS);
+        }
+
         if (key[KEY_ESC]) {
             game.bPlaying = false;
         }

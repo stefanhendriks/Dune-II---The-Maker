@@ -17,8 +17,10 @@
 
 
 cGame::cGame() {
+    memset(states, 0, sizeof(cGameState*));
+
     nextState = -1;
-    gameState = nullptr;
+    currentState = nullptr;
 	screen_x = 800;
 	screen_y = 600;
     windowed = false;
@@ -39,7 +41,8 @@ cGame::cGame() {
 
 void cGame::init() {
     nextState = -1;
-    gameState = nullptr;
+    missionWasWon = false;
+    currentState = nullptr;
 	screenshot=0;
 	bPlaying=true;
 
@@ -220,6 +223,7 @@ void cGame::thinkSlow_combat() {
 }
 
 void cGame::setMissionWon() {
+    missionWasWon = true;
     setState(GAME_WINNING);
 
     shake_x = 0;
@@ -238,6 +242,7 @@ void cGame::setMissionWon() {
 }
 
 void cGame::setMissionLost() {
+    missionWasWon = false;
     setState(GAME_LOSING);
 
     shake_x = 0;
@@ -507,7 +512,7 @@ void cGame::stateMentat(cAbstractMentat *pMentat) {
 
 // draw menu
 void cGame::menu() {
-    gameState->draw();
+    currentState->draw();
 }
 
 void cGame::init_skirmish() const {
@@ -618,7 +623,7 @@ void cGame::drawState() {
             stateMentat(pMentat);
 			break;
         default:
-            gameState->draw();
+            currentState->draw();
         // TODO: GAME_STATISTICS, ETC
 	}
 }
@@ -652,18 +657,33 @@ void cGame::shutdown() {
 	cLogger *logger = cLogger::getInstance();
 	logger->logHeader("SHUTDOWN");
 
-    if (gameState != nullptr) {
-        if (gameState->getType() != eGameStateType::GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
-            // destroy game state object, unless we talk about the region select
-            delete gameState;
-        } else {
-            gameState = nullptr;
+    for (int i = 0; i < GAME_MAX_STATES; i++) {
+        cGameState *pState = states[i];
+        if (pState) {
+            if (pState->getType() != eGameStateType::GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
+                if (currentState == pState) {
+                    currentState = nullptr; // reset
+                }
+                delete pState;
+                states[i] = nullptr;
+            } else {
+                if (currentState == pState) {
+                    currentState = nullptr; // reset
+                }
+                states[i] = nullptr;
+            }
         }
     }
-
-    selectYourNextConquestState->destroy(); // destroy the world bitmaps
-    // delete explicitly here
-	delete selectYourNextConquestState;
+    
+    if (currentState != nullptr) {
+        assert(false);
+        if (currentState->getType() != eGameStateType::GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
+            // destroy game state object, unless we talk about the region select
+            delete currentState;
+        } else {
+            currentState = nullptr;
+        }
+    }
 
 	if (soundPlayer) {
         soundPlayer->destroyAllSounds();
@@ -906,10 +926,7 @@ bool cGame::setupGame() {
                 return false;
             }
 		}
-
 	}
-
-	selectYourNextConquestState->calculateOffset();
 
 	alfont_text_mode(-1);
 	logger->log(LOG_INFO, COMP_ALLEGRO, "Font settings", "Set text mode to -1", OUTC_SUCCESS);
@@ -1167,8 +1184,6 @@ bool cGame::setupGame() {
 	install_specials();
     logbook("Setup:  PARTICLES");
 	install_particles();
-	logbook("Setup:  WORLD");
-	selectYourNextConquestState->INSTALL_WORLD();
 
     delete mapCamera;
 	mapCamera = new cMapCamera(&map);
@@ -1243,40 +1258,76 @@ void cGame::setState(int newState) {
     sprintf(msg, "Setting state from %d(=%s) to %d(=%s)", state, stateString(state), newState, stateString(newState));
     logbook(msg);
 
-    if (gameState != nullptr) {
-        if (gameState->getType() != eGameStateType::GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
-            // destroy game state object, unless we talk about the region select
-            // because it needs to remember while we play the game (for now)
-            delete gameState;
-        }
-        gameState = nullptr;
-    }
+    if (newState > -1) {
+        bool deleteOldState = (newState != GAME_REGION && newState != GAME_PLAYING); // don't delete these states, but re-use!
 
-    if (newState == GAME_REGION) {
-        gameState = selectYourNextConquestState;
-    } else if (newState == GAME_SETUPSKIRMISH) {
-        gameState = new cSetupSkirmishGameState(*this);
-    } else if (newState == GAME_MENU) {
-        gameState = new cMainMenuGameState(*this);
-    } else if (newState == GAME_SELECT_HOUSE) {
-        gameState = new cChooseHouseGameState(*this);
-    } else if (newState == GAME_OPTIONS) {
-        BITMAP *background = create_bitmap(screen_x, screen_y);
-        allegroDrawer->drawSprite(background,bmp_screen, 0, 0);
-        gameState = new cOptionsState(*this, background);
-    } else if (newState == GAME_PLAYING) {
-        // evaluate all players, so we have initial 'alive' values set properly
-        for (int i = 1; i < MAX_PLAYERS; i++) {
-            cPlayer &player = players[i];
-            player.evaluateStillAlive();
+        if (deleteOldState) {
+            delete states[newState];
+            states[newState] = nullptr;
         }
 
-        // handle update
-        s_GameEvent event {
-                .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
-        };
-        // the game is about to begin!
-        game.onNotify(event);
+        cGameState *existingStatePtr = states[newState];
+        if (existingStatePtr) {
+            if (currentState->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
+                cSelectYourNextConquestState *pState = dynamic_cast<cSelectYourNextConquestState*>(currentState);
+
+                if (missionWasWon) {
+                    // we won
+                    if (game.iMission > 1) {
+                        pState->conquerRegions();
+                    }
+                    pState->REGION_SETUP_NEXT_MISSION(game.iMission, players[HUMAN].getHouse());
+                } else {
+                    // OR: did not win
+                    pState->REGION_SETUP_LOST_MISSION();
+                }
+            }
+
+            currentState = existingStatePtr;
+        } else {
+            cGameState *newStatePtr = nullptr;
+
+            if (newState == GAME_REGION) {
+                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(game);
+
+                pState->calculateOffset();
+                logbook("Setup:  WORLD");
+                pState->INSTALL_WORLD();
+                if (game.iMission > 1) {
+                    pState->conquerRegions();
+                }
+                // first creation
+                pState->REGION_SETUP_NEXT_MISSION(game.iMission, players[HUMAN].getHouse());
+
+                newStatePtr = pState;
+            } else if (newState == GAME_SETUPSKIRMISH) {
+                newStatePtr = new cSetupSkirmishGameState(*this);
+            } else if (newState == GAME_MENU) {
+                newStatePtr = new cMainMenuGameState(*this);
+            } else if (newState == GAME_SELECT_HOUSE) {
+                newStatePtr = new cChooseHouseGameState(*this);
+            } else if (newState == GAME_OPTIONS) {
+                BITMAP *background = create_bitmap(screen_x, screen_y);
+                allegroDrawer->drawSprite(background, bmp_screen, 0, 0);
+                newStatePtr = new cOptionsState(*this, background, state);
+            } else if (newState == GAME_PLAYING) {
+                // evaluate all players, so we have initial 'alive' values set properly
+                for (int i = 1; i < MAX_PLAYERS; i++) {
+                    cPlayer &player = players[i];
+                    player.evaluateStillAlive();
+                }
+
+                // handle update
+                s_GameEvent event{
+                        .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
+                };
+                // the game is about to begin!
+                game.onNotify(event);
+            }
+
+            states[newState] = newStatePtr;
+            currentState = newStatePtr;
+        }
     }
 
 	state = newState;
@@ -1381,8 +1432,8 @@ void cGame::loadScenario() {
 }
 
 void cGame::think_state() {
-    if (gameState) {
-        gameState->thinkFast();
+    if (currentState) {
+        currentState->thinkFast();
     }
 }
 
@@ -1616,8 +1667,8 @@ int cGame::getFps() {
 
 void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
     // pass through any classes that are interested
-    if (gameState) {
-        gameState->onNotifyMouseEvent(event);
+    if (currentState) {
+        currentState->onNotifyMouseEvent(event);
     }
 }
 
