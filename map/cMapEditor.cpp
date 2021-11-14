@@ -8,7 +8,11 @@ cMapEditor::~cMapEditor() {
 }
 
 void cMapEditor::createCell(int cell, int terrainType, int tile) {
-    map.createCell(cell, terrainType, tile);
+    int theTile = tile;
+    if (terrainType == TERRAIN_SLAB) {
+        theTile = rnd(5);
+    }
+    map.createCell(cell, terrainType, theTile);
 }
 
 void cMapEditor::createRandomField(int cell, int terrainType, int size) {
