@@ -79,11 +79,6 @@ void cOptionsState::draw() const {
 
     // MOUSE
     game.getMouse()->draw();
-
-    // TODO: on keyboard event!?
-    if (key[KEY_ESC]) {
-        game.setNextStateToTransitionTo(prevState);
-    }
 }
 
 void cOptionsState::onNotifyMouseEvent(const s_MouseEvent &event) {
