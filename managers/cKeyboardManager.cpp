@@ -23,7 +23,7 @@ void cKeyboardManager::interact() {
     } else {
         GAME_KEYS();
 
-        if (key[KEY_F10]) {
+        if (key[KEY_F10] || key[KEY_ESC]) {
             game.setNextStateToTransitionTo(GAME_OPTIONS);
         }
 

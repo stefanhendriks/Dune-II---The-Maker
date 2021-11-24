@@ -147,11 +147,13 @@ void cMessageDrawer::initCombatPosition() {
     state = messages::eMessageDrawerState::COMBAT;
     keepMessage = false;
 
-    int desiredWidth = game.screen_x - cSideBar::SidebarWidth;
+    int margin = 4;
+    int widthOfOptionsButton = 160 + margin;
+    int desiredWidth = game.screen_x - (cSideBar::SidebarWidth + widthOfOptionsButton);
     createMessageBarBmp(desiredWidth);
 
     // default positions in-game (battle mode)
-    x = 1;
+    x = widthOfOptionsButton;
 //    y = 42;
     y = 1;
 }
