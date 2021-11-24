@@ -66,6 +66,35 @@ void cSideBarDrawer::createCandyBar() {
     draw_sprite(candybar, (BITMAP *)gfxinter[BMP_GERALD_CANDYBAR_BOTTOM].dat, 0, heightInPixels - 10); // height of top = 10
 }
 
+//void cSideBarDrawer::drawHouseGui(cPlayer * thePlayer) {
+//    assert(thePlayer);
+//    set_palette(thePlayer->pal);
+//
+//    // black out
+//    rectfill(bmp_screen, (game.screen_x-160), 0, game.screen_x, game.screen_y, makecol(0,0,0));
+//
+//    // upper bar
+//    rectfill(bmp_screen, 0, 0, game.screen_x, 42, makecol(0,0,0));
+//
+//    int iHouse = thePlayer->getHouse();
+//
+//    draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_800X600].dat, 0, 0);
+//
+////    if (iHouse == ATREIDES)
+////        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_ATR].dat, 0, 0);
+////    else if (iHouse == HARKONNEN)
+////        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_HAR].dat, 0, 0);
+////    else if (iHouse == ORDOS)
+////        draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD_ORD].dat, 0, 0);
+////    else {
+////    	assert(false);
+////    }
+////	else
+//    //      draw_sprite(bmp_screen, (BITMAP *)gfxinter[BMP_GERALD].dat, 0, 0); // draw interface skeleton (THIS IS BAD IF THIS IS SHOWN)
+//
+//    // TODO: support fremen, mercenary and sardaukar
+//}
+
 void cSideBarDrawer::drawHouseGui() {
 }
 

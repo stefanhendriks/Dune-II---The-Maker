@@ -11,7 +11,7 @@ RIGHT mouse button -> deselect / cancel
 GAME KEYS:
 ----------
 
-ESC			- quits instantly! (no confirmation asked)
+ESC			- opens options menu
 
 Arrow keys	- scroll through the map (is slow)
 

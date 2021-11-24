@@ -80,6 +80,7 @@ void cDrawManager::drawCombatState() {
     drawTopBarBackground();
 	drawCredits();
 
+
 	// THE MESSAGE
 	drawMessage();
 
@@ -259,9 +260,19 @@ void cDrawManager::drawTopBarBackground() {
         for (int x = 0; x < game.screen_x; x+= topbarPiece->w) {
             allegroDrawer->drawSprite(topBarBmp, topbarPiece, x, 0);
         }
+
+        set_palette(player->pal);
+
+        allegroDrawer->drawSprite(topBarBmp, (BITMAP *)gfxinter[BTN_OPTIONS].dat, 1, 0);
     }
 
     allegroDrawer->drawSprite(bmp_screen, topBarBmp, 0, 0);
+
+    //HACK HACK: for now do it like this, instead of using an actual GUI object here
+    cRectangle optionsRect = cRectangle(0,0, 162, 30);
+    if (game.getMouse()->isLeftButtonClicked() && game.getMouse()->isOverRectangle(&optionsRect)) {
+        game.setNextStateToTransitionTo(GAME_OPTIONS);
+    }
 }
 
 void cDrawManager::destroy() {
@@ -289,8 +300,8 @@ void cDrawManager::drawOptionBar() {
         for (int w = 0; w < (game.screen_x + 800); w += 789) {
             draw_sprite(optionsBar, (BITMAP *)gfxinter[BMP_GERALD_TOP_BAR].dat, w, 31);
         }
-
     }
+
     draw_sprite(bmp_screen, optionsBar, 0, 0);
 }
 
