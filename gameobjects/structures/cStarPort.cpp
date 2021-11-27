@@ -27,24 +27,21 @@ void cStarPort::think_deployment() {
         return; // do nothing when not animating
     }
 
-    if (!frigateDroppedPackage) {
-        if (iFrame < 0) {
-            iFrame = 1;
+    if (frigateDroppedPackage) {
+        iFrame = 7;
+        return;
+    }
+
+    // Frigate is going towards starport so animate starport
+    TIMER_flag++;
+
+    if (TIMER_flag > 30) {
+        TIMER_flag = 0;
+
+        iFrame++;
+        if (iFrame > 6) {
+            iFrame = 0;
         }
-
-        TIMER_flag++;
-
-        if (TIMER_flag > 70) {
-            TIMER_flag = 0;
-
-            iFrame++;
-            if (iFrame > 3) {
-                iFrame = 1;
-            }
-        }
-    } else {
-        // show frame with the package
-        iFrame = 4;
     }
 }
 
