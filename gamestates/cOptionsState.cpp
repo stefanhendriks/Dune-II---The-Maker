@@ -4,19 +4,11 @@ cOptionsState::cOptionsState(cGame &theGame, BITMAP *background, int prevState) 
                                                                                   textDrawer(cTextDrawer(bene_font)),
                                                                                   prevState(prevState),
                                                                                   background(background) {
-    int centerOfScreen = game.screen_x / 2;
-
     int margin = game.screen_y * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
     int mainMenuWidth = game.screen_x - (margin * 2);
     int mainMenuHeight = game.screen_y - (margin * 2);
-
-    // Buttons:
-    int buttonsX = mainMenuFrameX + 2;
-
-    int colorInactiveHover = makecol(128, 128, 128);
-    int colorInactive = makecol(192, 192, 192);
 
     margin = 4;
     int buttonHeight = (textDrawer.getFontHeight() + margin);
