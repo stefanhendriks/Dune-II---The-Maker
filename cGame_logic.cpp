@@ -57,7 +57,6 @@ void cGame::init() {
     iMusicVolume=96; // volume is 0...
 
 	paths_created=0;
-	hover_unit=-1;
 
     setState(GAME_INITIALIZE);
 
@@ -117,7 +116,6 @@ void cGame::mission_init() {
     iMusicVolume=96; // volume is 0...
 
 	paths_created=0;
-	hover_unit=-1;
 
 	fade_select=1.0f;
 
@@ -408,6 +406,12 @@ bool cGame::isMusicPlaying() {
 void cGame::updateState() {
     mouse->updateState(); // calls observers that are interested in mouse changes etc
 
+    if (state != GAME_PLAYING) {
+        return;
+    }
+
+    // Mission playing state logic
+    // TODO: Move this to combat state object
 	for (int i = 0; i < MAX_PLAYERS; i++) {
         cPlayer *pPlayer = &players[i];
         cGameControlsContext *context = pPlayer->getGameControlsContext();
@@ -416,12 +420,9 @@ void cGame::updateState() {
 
         if (i != HUMAN) continue; // non HUMAN players are done
 
-        mouse->setTile(MOUSE_NORMAL);
-
         // change the mouse tile depending on what we're hovering over
         int mc = context->getMouseCell();
         if (mc > -1) {
-
             // check if any unit is 'selected'
             for (int j=0; j < MAX_UNITS; j++) {
                 cUnit &cUnit = unit[j];
@@ -467,6 +468,10 @@ void cGame::updateState() {
 
                 } // visible
             }
+        } else {
+            // TODO: base this on events
+            // not on battlefield
+            mouse->setTile(MOUSE_NORMAL);
         }
 
         if (mouse->isTile(MOUSE_NORMAL)) {
@@ -484,8 +489,6 @@ void cGame::updateState() {
 
         pPlayer->bPlacedIt = false;
         pPlayer->bDeployedIt = false;
-
-        hover_unit=-1;
     }
 }
 
@@ -1672,6 +1675,10 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event) {
     // pass through any classes that are interested
     if (currentState) {
         currentState->onNotifyMouseEvent(event);
+    } else {
+        if (state == GAME_PLAYING) {
+            onCombatMouseEvent(event);
+        }
     }
 }
 
@@ -1690,4 +1697,22 @@ void cGame::transitionStateIfRequired() {
 
 void cGame::setNextStateToTransitionTo(int newState) {
     nextState = newState;
+}
+
+void cGame::drawCombatMouse() {
+    if (mouse->isBoxSelecting()) {
+        allegroDrawer->drawRectangle(bmp_screen, mouse->getBoxSelectRectangle(), game.getColorFadeSelected(255, 255, 255));
+    }
+
+    if(mouse->isMapScrolling()) {
+        cPoint startPoint = mouse->getDragLineStartPoint();
+        cPoint endPoint = mouse->getDragLineEndPoint();
+        allegroDrawer->drawLine(bmp_screen, startPoint.x, startPoint.y, endPoint.x, endPoint.y, game.getColorFadeSelected(255, 255, 255));
+    }
+
+    mouse->draw();
+}
+
+void cGame::onCombatMouseEventMovedTo(const s_MouseEvent &event) {
+    // not needed?
 }

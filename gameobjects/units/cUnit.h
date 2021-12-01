@@ -106,9 +106,9 @@ public:
     int iHeadShouldFace;    // where should the unit look at?
     int iFrame;         // framed (animated stuff)
 
-    // selected
     bool bSelected;     // selected or not?
-	
+    bool bHovered;      // mouse hovers over this unit or not?
+
 	float fExpDamage();	// experience damage by bullet (extra damage that is)
 
     bool isWithinViewport(cRectangle *viewport);

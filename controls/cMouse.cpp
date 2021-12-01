@@ -180,9 +180,6 @@ void cMouse::dragViewportInteraction() {
             // assign 2nd coordinates
             mouse_mv_x2 = mouse_x;
             mouse_mv_y2 = mouse_y;
-
-            // draw a line
-            line(bmp_screen, mouse_mv_x1, mouse_mv_y1, mouse_mv_x2, mouse_mv_y2, game.getColorFadeSelected(255, 255, 255));
         }
     }
 }
@@ -303,4 +300,12 @@ int cMouse::getMouseDragDeltaX() {
 
 int cMouse::getMouseDragDeltaY() {
     return mouse_mv_y2 - mouse_mv_y1;
+}
+
+cPoint cMouse::getDragLineStartPoint() {
+    return cPoint(mouse_mv_x1, mouse_mv_y1);
+}
+
+cPoint cMouse::getDragLineEndPoint() {
+    return cPoint(mouse_mv_x2, mouse_mv_y2);
 }

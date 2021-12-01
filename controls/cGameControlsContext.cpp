@@ -14,6 +14,8 @@ cGameControlsContext::cGameControlsContext(cPlayer * thePlayer) {
 	player = thePlayer;
 	mouseCell = -99;
 	drawToolTip = false;
+    mouseHoveringOverUnitId = -1;
+    mouseHoveringOverStructureId = -1;
 }
 
 cGameControlsContext::~cGameControlsContext() {
@@ -83,7 +85,35 @@ void cGameControlsContext::determineHoveringOverStructureId(int mouseX, int mous
 }
 
 void cGameControlsContext::determineHoveringOverUnitId() {
-	mouseHoveringOverUnitId=-1;
+    if (mouseHoveringOverUnitId > -1) {
+        cUnit &aUnit = unit[mouseHoveringOverUnitId];
+        if (aUnit.isValid()) {
+            aUnit.bHovered = false;
+        }
+    }
+    mouseHoveringOverUnitId=-1;
+    int mc = getMouseCell();
+    tCell *cellOfMouse = map.getCell(mc);
+    if (cellOfMouse == nullptr) return; // mouse is not on battlefield
+
+    if (cellOfMouse->id[MAPID_UNITS] > -1) {
+        int iUnitId = cellOfMouse->id[MAPID_UNITS];
+
+        if (unit[iUnitId].iTempHitPoints < 0) {
+            mouseHoveringOverUnitId = iUnitId;
+        }
+
+    } else if (cellOfMouse->id[MAPID_WORMS] > -1) {
+        int iUnitId = cellOfMouse->id[MAPID_WORMS];
+        mouseHoveringOverUnitId = iUnitId;
+    }
+
+    if (mouseHoveringOverUnitId > -1) {
+        cUnit &aUnit = unit[mouseHoveringOverUnitId];
+        if (aUnit.isValid()) {
+            aUnit.bHovered = true;
+        }
+    }
 }
 
 cAbstractStructure * cGameControlsContext::getStructurePointerWhereMouseHovers() {

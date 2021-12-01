@@ -85,10 +85,14 @@ void cDrawManager::drawCombatState() {
 	drawMessage();
 
     drawNotifications();
+//
+//	// DO COMBAT MOUSE (TODO: remove this eventually, as it updates state and that is not what
+//	// this class should be doing)
+//    game.onCombatMouseEvent();
 
-	// DO COMBAT MOUSE (TODO: remove this eventually, as it updates state and that is not what
-	// this class should be doing)
-    game.combat_mouse();
+    // for now, call this on game class.
+    // TODO: move this "combat" state into own game state class
+    game.drawCombatMouse();
 
     allegroDrawer->resetClippingFor(bmp_screen);
 
