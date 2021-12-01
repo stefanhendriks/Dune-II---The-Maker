@@ -1260,6 +1260,9 @@ void cGame::setState(int newState) {
 
     if (newState > -1) {
         bool deleteOldState = (newState != GAME_REGION && newState != GAME_PLAYING); // don't delete these states, but re-use!
+        if (state == GAME_OPTIONS && newState == GAME_SETUPSKIRMISH) {
+            deleteOldState = false; // so we don't lose data when we go back
+        }
 
         if (deleteOldState) {
             delete states[newState];
