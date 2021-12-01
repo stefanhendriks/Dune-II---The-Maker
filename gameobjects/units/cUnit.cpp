@@ -33,6 +33,8 @@ ASTAR temp_map[16384]; // 4096 = 64x64 map, 16384 = 128x128 map
 
 void cUnit::init(int i) {
     mission = -1;
+    bSelected = false;
+    bHovered  = false;
 
     unitsEaten = 0;
 
@@ -3385,6 +3387,7 @@ int UNIT_CREATE(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinf
     newUnit.iGoalCell = iCll;
 
     newUnit.bSelected = false;
+    newUnit.bHovered = false;
 
     newUnit.TIMER_bored = rnd(3000);
     newUnit.TIMER_guard = 20 + rnd(70);

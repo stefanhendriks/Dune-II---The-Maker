@@ -62,8 +62,7 @@ void cGame::winning() {
     }
 }
 
-// Draw the mouse in combat mode, and do its interactions!?
-void cGame::combat_mouse() {
+void cGame::onCombatMouseEvent(const s_MouseEvent &event) {
     cPlayer &player = players[HUMAN]; // TODO: get player interacting with?
     cGameControlsContext *context = player.getGameControlsContext();
     bool bOrderingUnits=false;
@@ -72,10 +71,20 @@ void cGame::combat_mouse() {
         combat_mouse_normalCombatInteraction(player, bOrderingUnits, context->getMouseCell());
     } // NOT PLACING / DEPLOYING STUFF
 
-    if (mouse->isRightButtonPressed() && context->isMouseOnBattleField()) {
-        mouse_combat_dragViewportInteraction();
-    } else {
-        mouse_combat_resetDragViewportInteraction();
+    switch (event.eventType) {
+        case MOUSE_RIGHT_BUTTON_PRESSED:
+            if (context->isMouseOnBattleField()) {
+                mouse->dragViewportInteraction();
+            }
+            mouse->setTile(MOUSE_NORMAL);
+            break;
+        case MOUSE_MOVED_TO:
+            onCombatMouseEventMovedTo(event);
+            break;
+        default:
+            // set to -1 only when it was > -1
+            mouse->resetDragViewportInteraction();
+            break;
     }
 
 	if (bOrderingUnits) {
@@ -147,17 +156,10 @@ void cGame::mouse_combat_hoverOverStructureInteraction(cPlayer &player, cGameCon
     }
 }
 
-void cGame::mouse_combat_resetDragViewportInteraction() const {// set to -1 only when it was > -1
-    mouse->resetDragViewportInteraction();
-}
-
-void cGame::mouse_combat_dragViewportInteraction() const {
-    mouse->dragViewportInteraction();
-}
-
 void
 cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderingUnits, int mouseCell) const {
-
+    cGameControlsContext *pContext = humanPlayer.getGameControlsContext();
+    const int hover_unit = pContext->getIdOfUnitWhereMouseHovers();
     // Mouse is hovering above a unit
     if (hover_unit > -1) {
         cUnit &hoverUnit = unit[hover_unit];
@@ -178,7 +180,11 @@ cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderin
                 }
             }
         }
-    } // IF (HOVER UNIT)
+    } else {
+        if (!mouse->isTile(MOUSE_MOVE) && !mouse->isTile(MOUSE_ATTACK)){
+            mouse->setTile(MOUSE_NORMAL);
+        }
+    }
 
     // when mouse hovers above a valid cell
     if (mouseCell > -1) {
@@ -200,6 +206,7 @@ cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderin
             // Now do it!
             // deselect all units
             UNIT_deselect_all();
+            mouse->setTile(MOUSE_NORMAL);
 
             bool bPlayRep = false;
             bool bPlayInf = false;
@@ -269,9 +276,11 @@ cGame::combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderin
 
 void cGame::mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const {
     const cPlayer &player = players[HUMAN]; // TODO: get player interacting with?
+    const int hover_unit = player.getGameControlsContext()->getIdOfUnitWhereMouseHovers();
 
     if (mouse->isRightButtonClicked() && !mouse->isMapScrolling()) {
         UNIT_deselect_all();
+        mouse->setTile(MOUSE_NORMAL);
     }
 
     // single clicking and moving

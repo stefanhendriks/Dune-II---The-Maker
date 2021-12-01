@@ -387,10 +387,10 @@ public:
     int selected_structure;
 
     bool bPlaceIt;		// placing something? (for structures only)
-    bool bPlacedIt;		// for remembering, for combat_mouse stuff..
+    bool bPlacedIt;		// for remembering, for onCombatMouseEvent stuff..
 
     bool bDeployIt;		// deploying something? (for palace)
-    bool bDeployedIt;   // for remembering, for combat_mouse stuff..
+    bool bDeployedIt;   // for remembering, for onCombatMouseEvent stuff..
 
     void deselectStructure();
 

@@ -75,6 +75,10 @@ public:
 
     int getMouseDragDeltaY();
 
+    cPoint getDragLineStartPoint();
+
+    cPoint getDragLineEndPoint();
+
 private:
     cMouseObserver *_mouseObserver;
 

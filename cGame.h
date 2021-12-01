@@ -68,7 +68,7 @@ public:
 	int iMission;		// what mission are we playing? (= techlevel)
 
 //	int selected_structure;
-	int hover_unit;
+//	int hover_unit;
 
 	int paths_created;
 
@@ -107,7 +107,7 @@ public:
 	    return soundPlayer;
 	}
 
-    void combat_mouse();
+    void onCombatMouseEvent(const s_MouseEvent &event);
 
 	int getGroupNumberFromKeyboard();
 
@@ -211,6 +211,8 @@ public:
 
     void prepareMentatToTellAboutHouse(int house);
 
+    void drawCombatMouse();
+
 private:
     /**
      * Variables start here
@@ -269,10 +271,6 @@ private:
 
     void combat_mouse_normalCombatInteraction(cPlayer &humanPlayer, bool &bOrderingUnits, int mc) const;
 
-    void mouse_combat_dragViewportInteraction() const;
-
-    void mouse_combat_resetDragViewportInteraction() const;
-
     void mouse_combat_hoverOverStructureInteraction(cPlayer &player, cGameControlsContext *context, bool bOrderingUnits) const;
 
     void mouseOnBattlefield(int mouseCell, bool &bOrderingUnits) const;
@@ -296,6 +294,8 @@ private:
     void transitionStateIfRequired();
 
     void setState(int newState);
+
+    void onCombatMouseEventMovedTo(const s_MouseEvent &event);
 };
 
 #endif
