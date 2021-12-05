@@ -25,6 +25,7 @@ cParticle::~cParticle() {
 
 // init
 void cParticle::init() {
+    boundUnitID = -1;
     oldParticle = true;
     bAlive = false;       // alive (if yes, it is in use, if not it can be used)
     iAlpha = -1;            // alpha number
@@ -63,10 +64,20 @@ int cParticle::draw_y() {
 }
 
 /**
- * Poor man solution to frequently update the dimensions of unit, better would be using events?
+ * Poor man solution to frequently update the dimensions, better would be using events?
  * (onMove, onViewportMove, onViewportZoom?)
  */
 void cParticle::think_position() {
+    if (boundUnitID > -1) {
+        cUnit &pUnit = unit[boundUnitID];
+        if (pUnit.isValid()) {
+            x = pUnit.pos_x_centered();
+            y = pUnit.pos_y_centered();
+        } else {
+            bindToUnit(-1);
+        }
+    }
+
     // keep updating dimensions
     dimensions->move(draw_x(), draw_y());
     if (mapCamera) {
@@ -132,7 +143,7 @@ void cParticle::draw() {
     destroy_bitmap(stretched);
 }
 
-s_ParticleInfo& cParticle::getParticleInfo() const {
+s_ParticleInfo &cParticle::getParticleInfo() const {
     s_ParticleInfo &particleInfo = sParticleInfo[iType];
     return particleInfo;
 }
@@ -148,7 +159,7 @@ bool cParticle::isWithinViewport(cRectangle *viewport) {
 
 
 // think
-void cParticle::think() {
+void cParticle::thinkFast() {
     think_position();
 
     if (!oldParticle) {
@@ -527,11 +538,15 @@ void cParticle::think() {
 
 }
 
-void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
+int cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
+    return create(x, y, iType, iHouse, iFrame, -1);
+}
+
+int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUnitID) {
     int iNewId = findNewSlot();
 
     if (iNewId < 0) {
-        return;
+        return -1;
     }
 
     cParticle &pParticle = particle[iNewId];
@@ -544,6 +559,7 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     pParticle.x = x;
     pParticle.y = y;
+    particle->boundUnitID = iUnitID;
 
     pParticle.iType = iType;
 
@@ -562,12 +578,12 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
 
     if (iType == D2TM_PARTICLE_EXPLOSION_TRIKE) {
         // TODO: Spawn additional particle property
-        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, -1, 0);
+        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, -1, 0, iUnitID);
     }
 
     if (iType == D2TM_PARTICLE_SMOKE) {
         pParticle.TIMER_dead = 900;
-        create(x + 16, y + 42, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1);
+        create(x + 16, y + 42, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1, iUnitID);
     }
 
     if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
@@ -600,7 +616,7 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         iType == D2TM_PARTICLE_EXPLOSION_GAS) {
 
         if (iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE01 && iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE02) {
-            create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0);
+            create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0, iUnitID);
         }
 
     }
@@ -628,9 +644,9 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
         pParticle.iAlpha = 255;
         pParticle.TIMER_frame = 500 + rnd(300);
 
-        create(x, y - 18, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1);
-        create(x, y - 18, D2TM_PARTICLE_SMOKE, -1, -1);
-        create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0);
+        create(x, y - 18, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1, iUnitID);
+        create(x, y - 18, D2TM_PARTICLE_SMOKE, -1, -1, iUnitID);
+        create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0, iUnitID);
     }
 
     if (iType == D2TM_PARTICLE_CARRYPUFF) {
@@ -642,9 +658,10 @@ void cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
     if (iType == D2TM_PARTICLE_EXPLOSION_ROCKET || iType == D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL) {
         pParticle.iAlpha = 255;
         // also create bloom
-        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0);
+        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0, iUnitID);
     }
 
+    return iNewId;
 }
 
 int cParticle::findNewSlot() {
@@ -693,4 +710,14 @@ void cParticle::recreateDimensions() {
 
 void cParticle::think_new() {
 
+}
+
+void cParticle::bindToUnit(int unitID) {
+    if (boundUnitID > -1) {
+        cUnit &pUnit = unit[boundUnitID];
+        if (pUnit.isValid()) {
+            pUnit.setUnitDamagedParticleID(-1);
+        }
+    }
+    boundUnitID = unitID;
 }

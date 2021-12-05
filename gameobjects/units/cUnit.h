@@ -115,10 +115,16 @@ public:
 
     // ------------
     void init(int i);        // inits units
+
     int draw_x();
     int draw_y();
+
     int pos_x();
     int pos_y();
+
+    int pos_x_centered();
+    int pos_y_centered();
+
     int center_draw_x();
     int center_draw_y();
 
@@ -341,6 +347,10 @@ public:
 
     void draw_debug();
 
+    void setUnitDamagedParticleID(int particleID);
+
+    int getHitPoints() { return iHitPoints; }
+
 private:
 
     int willBePickedUpBy;	// is unit picked up (by carry-all), if so by which one?
@@ -365,6 +375,8 @@ private:
 
     int iCellX;         // my cell x
     int iCellY;         // my cell y
+
+    int unitDamagedParticleID; // when a unit is damaged, it can spawn a particle on top of it (ie smoke)
 
     // absolute x, y coordinates (pixel based). Do note, these are oriented at top left of cell, and
     // thus are snapped to the grid.
@@ -412,10 +424,6 @@ private:
     void awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate);
 
     void unitWillNoLongerBeInteractingWithStructure() const;
-
-    int pos_x_centered();
-
-    int pos_y_centered();
 
     void think_attack_sandworm();
 
