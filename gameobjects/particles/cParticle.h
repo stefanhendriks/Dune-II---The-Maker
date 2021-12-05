@@ -20,7 +20,8 @@ public:
     ~cParticle();
 
     // Factory methods
-    static void create(long x, long y, int iType, int iHouse, int iFrame);
+    static int create(long x, long y, int iType, int iHouse, int iFrame, int iUnitID);
+    static int create(long x, long y, int iType, int iHouse, int iFrame);
     static int findNewSlot();
 
     void init();
@@ -29,10 +30,17 @@ public:
 
     bool isWithinViewport(cRectangle *viewport);
 
-    void think();
+    void thinkFast();
 
     bool isValid();
     int getLayer();
+
+    void bindToUnit(int unitID);
+
+    void die() {
+        bindToUnit(-1);
+        bAlive = true;
+    }
 
 private:
     int getFrameWidth();
@@ -71,6 +79,8 @@ private:
     int drawYBmpOffset;
 
     bool oldParticle;
+
+    int boundUnitID;
 
     int draw_x();
 

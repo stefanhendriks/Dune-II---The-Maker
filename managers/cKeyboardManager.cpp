@@ -135,7 +135,11 @@ void cKeyboardManager::DEBUG_KEYS() {
         if (mc > -1) {
             int idOfUnitAtCell = map.getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                unit[idOfUnitAtCell].setHp(25);
+                cUnit &pUnit = unit[idOfUnitAtCell];
+                int damageToTake = pUnit.getHitPoints() - 25;
+                if (damageToTake > 0) {
+                    pUnit.takeDamage(damageToTake);
+                }
             }
         }
     } else {

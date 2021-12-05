@@ -33,6 +33,7 @@ ASTAR temp_map[16384]; // 4096 = 64x64 map, 16384 = 128x128 map
 
 void cUnit::init(int i) {
     mission = -1;
+    unitDamagedParticleID = -1;
     bSelected = false;
     bHovered  = false;
 
@@ -132,6 +133,10 @@ void cUnit::recreateDimensions() {
     dimensions = cRectangle(draw_x(), draw_y(), getBmpWidth(), getBmpHeight());
 }
 
+void cUnit::setUnitDamagedParticleID(int particleID) {
+    this->unitDamagedParticleID = particleID;
+}
+
 void cUnit::die(bool bBlowUp, bool bSquish) {
     // DO NOTE: We do *not* set the HP to -1 here for a reason. Being: that the isValid() function checks for
     // health and that will give us a unit ID that is the *same* as this unit ID. (see UNIT_NEW() implementation).
@@ -142,6 +147,15 @@ void cUnit::die(bool bBlowUp, bool bSquish) {
     //
     // TODO: this should be revisited and fixed in a later version properly!
     bRemoveMe = true;
+
+    // any damage particle dies with the unit?
+    if (unitDamagedParticleID > -1) {
+//        cParticle &pParticle = particle[unitDamagedParticleID];
+//        if (pParticle.isValid()) {
+//            pParticle.die();
+//        }
+        unitDamagedParticleID = -1;
+    }
 
     // Animation / Sound
 
@@ -3285,6 +3299,13 @@ void cUnit::takeDamage(int damage) {
     if (isDead()) {
         die(true, false);
     } else {
+        if (unitDamagedParticleID < 0) {
+            if (iHitPoints < (getUnitInfo().hp/2)) {
+                int particleID = cParticle::create(pos_x_centered(), pos_y_centered(), D2TM_PARTICLE_SMOKE, -1, -1, iID);
+                unitDamagedParticleID = particleID;
+            }
+        }
+
         if (iHitPoints < getUnitInfo().dieWhenLowerThanHP) {
             iHitPoints = 0; // to make it appear 'dead' for the rest of the code
             // unit does not explode in this case, simply vanishes
