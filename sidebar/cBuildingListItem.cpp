@@ -31,12 +31,19 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     timesOrdered  = 0;
     slotId = -1; // is set later
     this->subList = subList;
+    creditsPerProgressTime = 0;
     if (cost > 0 && totalBuildTime > 0) {
         creditsPerProgressTime = (float)this->cost / (float)this->totalBuildTime;
     }
     placeIt = false;
     deployIt = false;
     TIMER_progressFrame = 0.0f;
+    if (DEBUGGING) {
+        char msg[255];
+        sprintf(msg, "cBuildingListItem constructor [%s], cost = %d, totalBuildTime = %d, creditsPerProgressTime = %f",
+                getNameString().c_str(), cost, totalBuildTime, creditsPerProgressTime);
+        logbook(msg);
+    }
 }
 
 cBuildingListItem::~cBuildingListItem() {
