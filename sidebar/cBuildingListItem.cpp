@@ -14,36 +14,43 @@
  */
 cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, int totalBuildTime, cBuildingList *list, int subList, bool queuable) {
     assert(buildId >= 0);
-    this->buildId = buildId;
-    this->cost = cost;
     this->icon = icon;
-    this->totalBuildTime = totalBuildTime;
+    this->buildId = buildId;
     this->type = type;
-    this->queuable = queuable;
-    timerCap = DEBUGGING ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
-    TIMER_flashing = 500;
+    this->cost = cost;
+    building = false;
+    state = AVAILABLE;
     progress = 0;
     buildFrameToDraw = 0;
-    state = AVAILABLE;
-    building = false;
-    myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
     timesToBuild = 0;
     timesOrdered  = 0;
     slotId = -1; // is set later
-    this->subList = subList;
+
     creditsPerProgressTime = 0;
     if (cost > 0 && totalBuildTime > 0) {
         creditsPerProgressTime = (float)this->cost / (float)this->totalBuildTime;
     }
     placeIt = false;
     deployIt = false;
+    this->queuable = queuable;
+
+    this->totalBuildTime = totalBuildTime;
+    this->subList = subList;
+
     TIMER_progressFrame = 0.0f;
+    TIMER_flashing = 500;
+
+    timerCap = DEBUGGING ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
+
+    myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
+
     if (DEBUGGING) {
         char msg[255];
         sprintf(msg, "cBuildingListItem constructor [%s], cost = %d, totalBuildTime = %d, creditsPerProgressTime = %f",
                 getNameString().c_str(), cost, totalBuildTime, creditsPerProgressTime);
         logbook(msg);
     }
+
 }
 
 cBuildingListItem::~cBuildingListItem() {
