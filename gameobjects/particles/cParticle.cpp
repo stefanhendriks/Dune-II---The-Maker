@@ -786,5 +786,11 @@ void cParticle::addPosY(float d) {
 void cParticle::die() {
     bindToUnit(-1);
     bAlive = false;
+    if (boundParticleID > -1){
+        cParticle &pParticle = particle[boundParticleID];
+        if (pParticle.isValid()) {
+            pParticle.die();
+        }
+    }
     boundParticleID = -1;
 }
