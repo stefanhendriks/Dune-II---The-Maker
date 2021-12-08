@@ -17,6 +17,7 @@ cDrawManager::cDrawManager(cPlayer * thePlayer) : player(thePlayer) {
     topBarBmp = nullptr;
     optionsBar = nullptr;
     sidebarColor = makecol(214, 149, 20);
+    textDrawer = new cTextDrawer(game_font);
 }
 
 cDrawManager::~cDrawManager() {
@@ -33,6 +34,7 @@ cDrawManager::~cDrawManager() {
     if (optionsBar) {
         destroy_bitmap(optionsBar);
     }
+    delete textDrawer;
 }
 
 void cDrawManager::drawCombatState() {
@@ -139,11 +141,10 @@ void cDrawManager::drawDebugInfoUsages() const {
 
     int startY = 74;
     int height = 14;
-    cTextDrawer textDrawer(game_font);
-    textDrawer.drawTextWithTwoIntegers(0, startY, "Units %d/%d", unitsUsed, MAX_UNITS);
-    textDrawer.drawTextWithTwoIntegers(0, startY + 1*height, "Structures %d/%d", structuresUsed, MAX_STRUCTURES);
-    textDrawer.drawTextWithTwoIntegers(0, startY + 2*height, "Bullets %d/%d", bulletsUsed, MAX_BULLETS);
-    textDrawer.drawTextWithTwoIntegers(0, startY + 3*height, "Particles %d/%d", particlesUsed, MAX_PARTICLES);
+    textDrawer->drawTextWithTwoIntegers(0, startY, "Units %d/%d", unitsUsed, MAX_UNITS);
+    textDrawer->drawTextWithTwoIntegers(0, startY + 1*height, "Structures %d/%d", structuresUsed, MAX_STRUCTURES);
+    textDrawer->drawTextWithTwoIntegers(0, startY + 2*height, "Bullets %d/%d", bulletsUsed, MAX_BULLETS);
+    textDrawer->drawTextWithTwoIntegers(0, startY + 3*height, "Particles %d/%d", particlesUsed, MAX_PARTICLES);
 }
 
 void cDrawManager::drawCredits() {
@@ -313,9 +314,8 @@ void cDrawManager::drawNotifications() {
     std::vector<cPlayerNotification> &notifications = player->getNotifications();
 //    int y = cSideBar::TopBarHeight + 14; // 12 pixels
     int y = game.screen_y - 11;
-    cTextDrawer textDrawer(game_font);
     for (auto &notification : notifications) {
-        textDrawer.drawText(4, y, notification.getColor(), notification.getMessage().c_str());
+        textDrawer->drawText(4, y, notification.getColor(), notification.getMessage().c_str());
         y-=15;
     }
 }
