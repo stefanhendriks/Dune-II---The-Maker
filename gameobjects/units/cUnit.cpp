@@ -3320,9 +3320,19 @@ void cUnit::takeDamage(int damage) {
         die(true, false);
     } else {
         if (boundParticleId < 0) {
-            if (iHitPoints < (getUnitInfo().hp/2)) {
-                int particleId = cParticle::create(pos_x_centered(), pos_y_centered(), D2TM_PARTICLE_SMOKE, -1, -1, iID);
-                boundParticleId = particleId;
+            if (getUnitInfo().renderSmokeOnUnitWhenThresholdMet) {
+                float hpThreshold = getUnitInfo().smokeHpFactor * getUnitInfo().hp;
+                if (iHitPoints < hpThreshold) {
+                    int particleId = cParticle::create(
+                            pos_x_centered(),
+                            pos_y_centered(),
+                            D2TM_PARTICLE_SMOKE,
+                            -1,
+                            -1,
+                            iID
+                    );
+                    boundParticleId = particleId;
+                }
             }
         }
 
