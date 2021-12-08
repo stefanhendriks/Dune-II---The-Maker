@@ -26,6 +26,7 @@ cParticle::~cParticle() {
 // init
 void cParticle::init() {
     boundUnitID = -1;
+    boundParticleID = -1;
     oldParticle = true;
     bAlive = false;       // alive (if yes, it is in use, if not it can be used)
     iAlpha = -1;            // alpha number
@@ -70,10 +71,7 @@ int cParticle::draw_y() {
 void cParticle::think_position() {
     if (boundUnitID > -1) {
         cUnit &pUnit = unit[boundUnitID];
-        if (pUnit.isValid()) {
-            x = pUnit.pos_x_centered();
-            y = pUnit.pos_y_centered();
-        } else {
+        if (!pUnit.isValid()) {
             bindToUnit(-1);
         }
     }
@@ -169,7 +167,8 @@ void cParticle::thinkFast() {
     }
 
     // old way
-    if (iType == D2TM_PARTICLE_OBJECT_BOOM01 || iType == D2TM_PARTICLE_OBJECT_BOOM02 ||
+    if (iType == D2TM_PARTICLE_OBJECT_BOOM01 ||
+        iType == D2TM_PARTICLE_OBJECT_BOOM02 ||
         iType == D2TM_PARTICLE_OBJECT_BOOM03) {
         TIMER_frame++;
 
@@ -178,8 +177,10 @@ void cParticle::thinkFast() {
 
             iAlpha -= 2;
 
-            if (iAlpha < 1)
-                bAlive = false;
+            if (iAlpha < 1) {
+                die();
+                return;
+            }
         }
     }
 
@@ -190,15 +191,18 @@ void cParticle::thinkFast() {
             frameIndex++;
             TIMER_frame = 100 + rnd(100);
 
-            if (frameIndex > 5)
-                bAlive = false;
+            if (frameIndex > 5) {
+                die();
+                return;
+            }
 
             iAlpha -= 16;
         }
     }
 
     // move
-    if (iType == D2TM_PARTICLE_MOVE || iType == D2TM_PARTICLE_ATTACK) {
+    if (iType == D2TM_PARTICLE_MOVE ||
+        iType == D2TM_PARTICLE_ATTACK) {
         TIMER_frame--;
 
         if (TIMER_frame < 0) {
@@ -210,8 +214,10 @@ void cParticle::thinkFast() {
             iAlpha -= 35;
             frameIndex = 9;
 
-            if (iAlpha < 10)
-                bAlive = false;
+            if (iAlpha < 10) {
+                die();
+                return;
+            }
         }
 
         return;
@@ -223,20 +229,19 @@ void cParticle::thinkFast() {
         if (TIMER_frame < 0) {
             frameIndex++;
 
-
             if (frameIndex > 2) {
                 frameIndex = 2;
                 iAlpha -= 10;
 
-                if (iAlpha < 10)
-                    bAlive = false;
+                if (iAlpha < 10) {
+                    die();
+                    return;
+                }
 
                 TIMER_frame = 10;
-
-            } else
+            } else {
                 TIMER_frame = 250;
-
-
+            }
         }
     }
 
@@ -249,9 +254,10 @@ void cParticle::thinkFast() {
             if (frameIndex < 1 && iAlpha < 220)
                 frameIndex++;
 
-            if (frameIndex >= 1 && iAlpha < 10)
-                bAlive = false;
-
+            if (frameIndex >= 1 && iAlpha < 10) {
+                die();
+                return;
+            }
         }
     }
 
@@ -259,32 +265,44 @@ void cParticle::thinkFast() {
         iType == D2TM_PARTICLE_SMOKE_SHADOW) {
         TIMER_frame--;
         TIMER_dead--;
-        if (iAlpha < 255 && TIMER_dead > 0) {
-            if (iType == D2TM_PARTICLE_SMOKE)
+
+        // particle is not yet going to die, and still not opaque, make it fade-in
+        if (TIMER_dead > 0 && iAlpha < 255) {
+            if (iType == D2TM_PARTICLE_SMOKE) {
                 iAlpha++;
-            else if (iType == D2TM_PARTICLE_SMOKE_SHADOW)
-                if (iAlpha < 128)
+            } else if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
+                // shadow remains 128 alpha (never fully opaque)
+                if (iAlpha < 128) {
                     iAlpha++;
+                }
+            }
         }
 
+        // animation timer
         if (TIMER_frame < 0) {
             TIMER_frame = 50;
             frameIndex++;
 
-            if (frameIndex > 2)
+            if (frameIndex > 2) {
                 frameIndex = 0;
+            }
 
+            // make it fade-out at the speed we animate
             if (TIMER_dead < 0) {
                 TIMER_dead = -1;
-                if (iType == D2TM_PARTICLE_SMOKE_SHADOW)
+                if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
                     iAlpha -= 10;
-                else
+                } else {
                     iAlpha -= 14;
+                }
 
-                if (iAlpha < 10)
-                    bAlive = false;
+                if (iAlpha < 10) {
+                    die();
+                    return;
+                }
             }
         }
+        return;
     }
 
     if (iType == D2TM_PARTICLE_TRACK_DIA ||
@@ -304,10 +322,11 @@ void cParticle::thinkFast() {
 
             } else {
                 // its dying
-                if (iAlpha > 10)
+                if (iAlpha > 10) {
                     iAlpha -= 10;
-                else
-                    bAlive = false;
+                } else {
+                    die();
+                }
 
             }
         }
@@ -321,8 +340,9 @@ void cParticle::thinkFast() {
 
             frameIndex++;
 
-            if (frameIndex > 7)
-                bAlive = false;
+            if (frameIndex > 7) {
+                die();
+            }
         }
 
     }
@@ -337,8 +357,10 @@ void cParticle::thinkFast() {
                 TIMER_dead = -1;
                 iAlpha -= 5;
 
-                if (iAlpha < 5)
-                    bAlive = false;
+                if (iAlpha < 5) {
+                    die();
+                }
+
             }
 
             TIMER_frame = 10;
@@ -359,8 +381,9 @@ void cParticle::thinkFast() {
 
                 iAlpha -= 25;
 
-                if (iAlpha < 25)
-                    bAlive = false;
+                if (iAlpha < 25) {
+                    die();
+                }
             }
         }
     }
@@ -379,8 +402,9 @@ void cParticle::thinkFast() {
 
                 iAlpha -= 35;
 
-                if (iAlpha < 25)
-                    bAlive = false;
+                if (iAlpha < 25) {
+                    die();
+                }
             }
         }
     }
@@ -401,8 +425,9 @@ void cParticle::thinkFast() {
 
                 iAlpha -= 5;
 
-                if (iAlpha < 5)
-                    bAlive = false;
+                if (iAlpha < 5) {
+                    die();
+                }
             }
         }
     }
@@ -431,7 +456,7 @@ void cParticle::thinkFast() {
                 iAlpha -= 15;
 
                 if (iAlpha < 25) {
-                    bAlive = false;
+                    die();
                 }
             }
         }
@@ -457,7 +482,7 @@ void cParticle::thinkFast() {
 
                 // until particle dies
                 if (iAlpha < 25) {
-                    bAlive = false;
+                    die();
                 }
             }
         }
@@ -469,8 +494,9 @@ void cParticle::thinkFast() {
         if (TIMER_frame < 0) {
             TIMER_frame = 10;
             frameIndex++;
-            if (frameIndex > 1)
-                bAlive = false;
+            if (frameIndex > 1) {
+                die();
+            }
 
         }
 
@@ -482,10 +508,11 @@ void cParticle::thinkFast() {
         iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
         TIMER_frame--;
         if (TIMER_frame < 0) {
-            if (iAlpha > 5)
+            if (iAlpha > 5) {
                 iAlpha -= 5;
-            else
-                bAlive = false;
+            } else {
+                die();
+            }
 
             TIMER_frame = 50;
         }
@@ -503,8 +530,9 @@ void cParticle::thinkFast() {
                 TIMER_dead = -1;
                 iAlpha -= 15;
 
-                if (iAlpha < 10)
-                    bAlive = false;
+                if (iAlpha < 10) {
+                    die();
+                }
             }
         }
     }
@@ -524,8 +552,9 @@ void cParticle::thinkFast() {
 
             if (TIMER_dead < 0) {
                 iAlpha -= 20;
-                if (iAlpha < 10)
-                    bAlive = false;
+                if (iAlpha < 10) {
+                    die();
+                }
             } else {
                 if (iAlpha + 15 < 255)
                     iAlpha += 15;
@@ -535,7 +564,6 @@ void cParticle::thinkFast() {
 
         }
     }
-
 }
 
 int cParticle::create(long x, long y, int iType, int iHouse, int iFrame) {
@@ -559,7 +587,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
 
     pParticle.x = x;
     pParticle.y = y;
-    particle->boundUnitID = iUnitID;
+    pParticle.boundUnitID = iUnitID;
 
     pParticle.iType = iType;
 
@@ -582,12 +610,21 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     }
 
     if (iType == D2TM_PARTICLE_SMOKE) {
-        pParticle.TIMER_dead = 900;
-        create(x + 16, y + 42, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1, iUnitID);
+        pParticle.TIMER_dead = 1500;
+        int shadowParticleId = create(x + 16, y + 42, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1, iUnitID);
+
+        // since x, y is 'center' of particle, we have to compensate. Because smoke "starts" at the bottom (ie, its
+        // offset is not in center). So we have to subtract half of the sprite's height
+        pParticle.y += pParticle.drawYBmpOffset;
+        pParticle.boundParticleID = shadowParticleId;
     }
 
     if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
-        pParticle.TIMER_dead = 1000;
+        pParticle.TIMER_dead = 1500;
+
+        // since x, y is 'center' of particle, we have to compensate. Because smoke "starts" at the bottom (ie, its
+        // offset is not in center). So we have to subtract half of the sprite's height
+        pParticle.y += pParticle.drawYBmpOffset;
     }
 
     if (iType == D2TM_PARTICLE_TRACK_DIA || iType == D2TM_PARTICLE_TRACK_HOR || iType == D2TM_PARTICLE_TRACK_VER ||
@@ -666,7 +703,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
 
 int cParticle::findNewSlot() {
     for (int i = 0; i < MAX_PARTICLES; i++) {
-        if (!particle[i].bAlive)
+        if (!particle[i].isValid())
             return i;
     }
 
@@ -716,8 +753,38 @@ void cParticle::bindToUnit(int unitID) {
     if (boundUnitID > -1) {
         cUnit &pUnit = unit[boundUnitID];
         if (pUnit.isValid()) {
-            pUnit.setUnitDamagedParticleID(-1);
+            pUnit.setBoundParticleId(-1);
         }
     }
     boundUnitID = unitID;
+}
+
+void cParticle::addPosX(float d) {
+    this->x += d;
+    if (boundParticleID > -1) {
+        cParticle &otherParticle = particle[boundParticleID];
+        if (otherParticle.isValid()) {
+            otherParticle.addPosX(d);
+        } else {
+            boundParticleID = -1;
+        }
+    }
+}
+
+void cParticle::addPosY(float d) {
+    this->y += d;
+    if (boundParticleID > -1) {
+        cParticle &otherParticle = particle[boundParticleID];
+        if (otherParticle.isValid()) {
+            otherParticle.addPosY(d);
+        } else {
+            boundParticleID = -1;
+        }
+    }
+}
+
+void cParticle::die() {
+    bindToUnit(-1);
+    bAlive = false;
+    boundParticleID = -1;
 }

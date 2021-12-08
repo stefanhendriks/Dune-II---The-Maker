@@ -347,7 +347,7 @@ public:
 
     void draw_debug();
 
-    void setUnitDamagedParticleID(int particleID);
+    void setBoundParticleId(int particleId);
 
     int getHitPoints() { return iHitPoints; }
 
@@ -376,11 +376,14 @@ private:
     int iCellX;         // my cell x
     int iCellY;         // my cell y
 
-    int unitDamagedParticleID; // when a unit is damaged, it can spawn a particle on top of it (ie smoke)
+    int boundParticleId; // when a unit is damaged, it can spawn a particle on top of it (ie smoke)
 
     // absolute x, y coordinates (pixel based). Do note, these are oriented at top left of cell, and
     // thus are snapped to the grid.
     float posX, posY;
+
+    void setPosX(float newVal);
+    void setPosY(float newVal);
 
     eUnitMoveToCellResult moveToNextCellLogic();
 
