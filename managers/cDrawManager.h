@@ -77,6 +77,8 @@ private:
     cPlayer *player;
 
     BITMAP *topBarBmp;
+
+    cTextDrawer *textDrawer;
 };
 
 #endif
