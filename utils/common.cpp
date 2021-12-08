@@ -207,6 +207,10 @@ void install_units() {
         sUnitInfo[i].attackIsEnterStructure = false;
         sUnitInfo[i].damageOnEnterStructure = 0.0f;
 
+        // spawn smoke when damaged?
+        sUnitInfo[i].renderSmokeOnUnitWhenThresholdMet = false;
+        sUnitInfo[i].smokeHpFactor = 0.0f;
+
         strcpy(sUnitInfo[i].name, "\0");
     }
 
@@ -257,6 +261,8 @@ void install_units() {
     sUnitInfo[DEVASTATOR].icon = ICON_UNIT_DEVASTATOR;
     sUnitInfo[DEVASTATOR].listId = LIST_UNITS;
     sUnitInfo[DEVASTATOR].subListId = SUBLIST_HEAVYFCTRY;
+    sUnitInfo[DEVASTATOR].renderSmokeOnUnitWhenThresholdMet = true;
+    sUnitInfo[DEVASTATOR].smokeHpFactor = 0.5f;
     strcpy(sUnitInfo[DEVASTATOR].name, "Devastator");
 
     // Unit        : Harvester
@@ -272,6 +278,8 @@ void install_units() {
     sUnitInfo[HARVESTER].harvesting_amount = 5;
     sUnitInfo[HARVESTER].listId = LIST_UNITS;
     sUnitInfo[HARVESTER].subListId = SUBLIST_HEAVYFCTRY;
+    sUnitInfo[HARVESTER].renderSmokeOnUnitWhenThresholdMet = true;
+    sUnitInfo[HARVESTER].smokeHpFactor = 0.5f;
     strcpy(sUnitInfo[HARVESTER].name, "Harvester");
 
     // Unit        : Combattank
@@ -287,6 +295,8 @@ void install_units() {
     sUnitInfo[TANK].icon = ICON_UNIT_TANK;
     sUnitInfo[TANK].listId = LIST_UNITS;
     sUnitInfo[TANK].subListId = SUBLIST_HEAVYFCTRY;
+    sUnitInfo[TANK].renderSmokeOnUnitWhenThresholdMet = true;
+    sUnitInfo[TANK].smokeHpFactor = 0.5f;
     strcpy(sUnitInfo[TANK].name, "Tank");
 
 
@@ -304,6 +314,8 @@ void install_units() {
     sUnitInfo[SIEGETANK].icon = ICON_UNIT_SIEGETANK;
     sUnitInfo[SIEGETANK].listId = LIST_UNITS;
     sUnitInfo[SIEGETANK].subListId = SUBLIST_HEAVYFCTRY;
+    sUnitInfo[SIEGETANK].renderSmokeOnUnitWhenThresholdMet = true;
+    sUnitInfo[SIEGETANK].smokeHpFactor = 0.5f;
     strcpy(sUnitInfo[SIEGETANK].name, "Siege Tank");
 
     // Unit        : MCV
@@ -317,6 +329,8 @@ void install_units() {
     sUnitInfo[MCV].icon = ICON_UNIT_MCV;
     sUnitInfo[MCV].listId = LIST_UNITS;
     sUnitInfo[MCV].subListId = SUBLIST_HEAVYFCTRY;
+    sUnitInfo[MCV].renderSmokeOnUnitWhenThresholdMet = true;
+    sUnitInfo[MCV].smokeHpFactor = 0.5f;
     strcpy(sUnitInfo[MCV].name, "MCV");
 
 
@@ -331,6 +345,8 @@ void install_units() {
     sUnitInfo[DEVIATOR].bulletType = BULLET_GAS; // our gassy rocket
     sUnitInfo[DEVIATOR].listId = LIST_UNITS;
     sUnitInfo[DEVIATOR].subListId = SUBLIST_HEAVYFCTRY;
+    sUnitInfo[DEVIATOR].renderSmokeOnUnitWhenThresholdMet = true;
+    sUnitInfo[DEVIATOR].smokeHpFactor = 0.5f;
     strcpy(sUnitInfo[DEVIATOR].name, "Deviator");
 
     // Unit        : Launcher
@@ -348,6 +364,8 @@ void install_units() {
     sUnitInfo[LAUNCHER].listId = LIST_UNITS;
     sUnitInfo[LAUNCHER].subListId = SUBLIST_HEAVYFCTRY;
     sUnitInfo[LAUNCHER].canAttackAirUnits = true;
+    sUnitInfo[LAUNCHER].renderSmokeOnUnitWhenThresholdMet = true;
+    sUnitInfo[LAUNCHER].smokeHpFactor = 0.5f;
     strcpy(sUnitInfo[LAUNCHER].name, "Launcher");
 
     // Unit        : Quad
@@ -364,6 +382,8 @@ void install_units() {
     sUnitInfo[QUAD].squish = false;
     sUnitInfo[QUAD].listId = LIST_UNITS;
     sUnitInfo[QUAD].subListId = SUBLIST_LIGHTFCTRY;
+    sUnitInfo[QUAD].renderSmokeOnUnitWhenThresholdMet = true;
+    sUnitInfo[QUAD].smokeHpFactor = 0.5f;
     strcpy(sUnitInfo[QUAD].name, "Quad");
 
 
@@ -380,6 +400,8 @@ void install_units() {
     sUnitInfo[TRIKE].squish = false;
     sUnitInfo[TRIKE].listId = LIST_UNITS;
     sUnitInfo[TRIKE].subListId = SUBLIST_LIGHTFCTRY;
+    sUnitInfo[TRIKE].renderSmokeOnUnitWhenThresholdMet = true;
+    sUnitInfo[TRIKE].smokeHpFactor = 0.5f;
     strcpy(sUnitInfo[TRIKE].name, "Trike");
 
     // Unit        : Raider Trike (Ordos trike)
@@ -396,7 +418,8 @@ void install_units() {
     sUnitInfo[RAIDER].squish = false;
     sUnitInfo[RAIDER].listId = LIST_UNITS;
     sUnitInfo[RAIDER].subListId = SUBLIST_LIGHTFCTRY;
-
+    sUnitInfo[RAIDER].renderSmokeOnUnitWhenThresholdMet = true;
+    sUnitInfo[RAIDER].smokeHpFactor = 0.5f;
 
     // Unit        : Frigate
     // Description : Frigate
@@ -437,6 +460,9 @@ void install_units() {
     sUnitInfo[SONICTANK].icon = ICON_UNIT_SONICTANK;
     sUnitInfo[SONICTANK].listId = LIST_UNITS;
     sUnitInfo[SONICTANK].subListId = SUBLIST_HEAVYFCTRY;
+    sUnitInfo[SONICTANK].renderSmokeOnUnitWhenThresholdMet = true;
+    sUnitInfo[SONICTANK].smokeHpFactor = 0.5f;
+
     strcpy(sUnitInfo[SONICTANK].name, "Sonic Tank");
 
 
