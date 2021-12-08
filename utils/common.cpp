@@ -177,7 +177,7 @@ void install_units() {
         sUnitInfo[i].bulletTypeSecondary = -1;
         sUnitInfo[i].fireSecondaryWithinRange = -1;
         sUnitInfo[i].attack_frequency = -1;
-        sUnitInfo[i].build_time = -1;
+        sUnitInfo[i].buildTime = -1;
         sUnitInfo[i].airborn = false;
         sUnitInfo[i].infantry = false;
         sUnitInfo[i].free_roam = false;
@@ -592,7 +592,7 @@ void install_units() {
     // Unit        : Saboteur
     // Description : Special infantry unit, moves like trike, deadly as hell, not detectable on radar!
     sUnitInfo[SABOTEUR].bmp = (BITMAP *) gfxdata[UNIT_SABOTEUR].dat;
-    sUnitInfo[SABOTEUR].build_time = 1000;
+    sUnitInfo[SABOTEUR].buildTime = 1000;
     sUnitInfo[SABOTEUR].bmp_width = 16 * 2;
     sUnitInfo[SABOTEUR].bmp_height = 16 * 2;
     sUnitInfo[SABOTEUR].bmp_startpixel = 0;
@@ -1311,7 +1311,7 @@ void install_structures() {
         structureInfo.power_give = 0;        // the power that this building gives...
         structureInfo.cost = 0;
         structureInfo.icon = -1; // stupid default icon
-        structureInfo.build_time = 0;
+        structureInfo.buildTime = 0;
         structureInfo.list = -1; // no list attached
         structureInfo.queuable = false;
         structureInfo.configured = false;
