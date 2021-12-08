@@ -25,7 +25,7 @@ struct s_UnitInfo {
   int    turnspeed;
   int    attack_frequency;  // timer for attacking
 
-  int    build_time;        // how long it takes for building this thing
+  int    buildTime;        // how long it takes for building this thing
 
   int    bulletType;        // type of bullet to fire normally
   int    bulletTypeSecondary;   // type of bullet when enemy is within a close range
@@ -106,7 +106,7 @@ struct s_StructureInfo {
 
   int bullets;         // type of bullet
 
-  int build_time;      // how long it takes for building this structure
+  int buildTime;      // how long it takes for building this structure
 
 
   int power_drain;       // the power that this building drains...
