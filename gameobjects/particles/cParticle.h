@@ -20,7 +20,8 @@ public:
     ~cParticle();
 
     // Factory methods
-    static void create(long x, long y, int iType, int iHouse, int iFrame);
+    static int create(long x, long y, int iType, int iHouse, int iFrame, int iUnitID);
+    static int create(long x, long y, int iType, int iHouse, int iFrame);
     static int findNewSlot();
 
     void init();
@@ -29,10 +30,17 @@ public:
 
     bool isWithinViewport(cRectangle *viewport);
 
-    void think();
+    void thinkFast();
 
     bool isValid();
     int getLayer();
+
+    void bindToUnit(int unitID);
+
+    void die();
+
+    void addPosX(float d);
+    void addPosY(float d);
 
 private:
     int getFrameWidth();
@@ -43,7 +51,7 @@ private:
     // x and y position to draw (absolute numbers).
     // This is the 'center' of a particle from a drawing perspective. Meaning the center of the
     // bitmap rendered is at this x,y coordinate
-    long x, y;
+    float x, y;
 
     // the actual position + dimensions of particle
     cRectangle * dimensions;
@@ -63,7 +71,7 @@ private:
     int TIMER_frame;    // frame animation timers (when < 0, next frame, etc)
     // when TIMER_dead < 0, the last frame lets this thing die
 
-    int TIMER_dead;     // when > -1, this timer will determine when the thing dies
+    int TIMER_dead;     // when > -1, this timer will determine when the particle dies
 
     int iHousePal;      // when specified, use this palette for drawing (and its an 8 bit picture then!)
 
@@ -71,6 +79,9 @@ private:
     int drawYBmpOffset;
 
     bool oldParticle;
+
+    int boundUnitID;
+    int boundParticleID; // when particles are 'tied together'
 
     int draw_x();
 

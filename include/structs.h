@@ -76,6 +76,9 @@ struct s_UnitInfo {
   bool attackIsEnterStructure;      // for saboteur only really
   float damageOnEnterStructure;     // the damage inflicted to a structure when entered
 
+  bool renderSmokeOnUnitWhenThresholdMet; // if yes, spawn smoke particle (and attach to unit) when hp factor met
+  float smokeHpFactor; // 0.5 = 50% health, etc. When health is getting lower than this and unit is damaged, spawn smoke particle,
+
 };
 
 struct s_FlagInfo {
